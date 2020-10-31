@@ -1,91 +1,162 @@
-Return-Path: <SRS0=BidS=EF=vger.kernel.org=linux-cxl-owner@kernel.org>
+Return-Path: <SRS0=ThXs=EG=vger.kernel.org=linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65930C388F9
-	for <linux-cxl@archiver.kernel.org>; Fri, 30 Oct 2020 23:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98F9C388F7
+	for <linux-cxl@archiver.kernel.org>; Sat, 31 Oct 2020 10:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 011F4221EB
-	for <linux-cxl@archiver.kernel.org>; Fri, 30 Oct 2020 23:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53FF22074F
+	for <linux-cxl@archiver.kernel.org>; Sat, 31 Oct 2020 10:21:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="j7YlVXzI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YD8/d0bw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725899AbgJ3XiZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 30 Oct 2020 19:38:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbgJ3XiZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 30 Oct 2020 19:38:25 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1815C0613D5
-        for <linux-cxl@vger.kernel.org>; Fri, 30 Oct 2020 16:38:24 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id k3so10824310ejj.10
-        for <linux-cxl@vger.kernel.org>; Fri, 30 Oct 2020 16:38:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oaa2w71+rAnegpLmEA2VDedlv8/1hcf/ls0nVw+ay8M=;
-        b=j7YlVXzIXvjGz1W6wEFr2IvRljmaLyvNl6Sitp/ndZBcdpRSezt+q9fRmxZn4pLzXE
-         8eNWbtmKtKsGsAUsmqxtrEJlTHd/uU2OJpboirYrbrnJyLvtkL1Anj34NYeLjzwWz7tB
-         6gWESVcqOBo75SYm9ApScZXlMZCvXsGgPNsvRpOrXYORV17Hxx89Yb/tPeU3AdG6kkLD
-         8B3JuEHKxIL9CMAtWGbtBz/i0mmMyROApTdPYpZUD4S/j9joh9xZK+NVxnCpwTdht9PK
-         g6flXD2dkWzOUEnLOFMTFCktAIpA5VWmEYswM+mXJNHhzUCL043PXLSUjuPKoh6l9XOK
-         IMeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oaa2w71+rAnegpLmEA2VDedlv8/1hcf/ls0nVw+ay8M=;
-        b=SgRxK7pskm2gekca+yBDSHvcZ8Vdm0Ja9zkpyV9P3BvSmL5ouGRkNfhLZaDtYegttw
-         rCo37yhcw9MxfAAH4N7Id5KPGf3dCnkZ10B20Zn268b1dCOMuhHyIN8qBoi/C1JfRqF+
-         3h/3bBGEg3FTOTaUzbOigwvaAc0XDOlRfjZZ9Gp9hPTKgZodruaNACqSMDgpjxZ96Jr7
-         2s+QdPvpOjbrIDpG6bMROeqfdMPuRDYLJDo8F9gWKb97VJe+zyD/9lavvS7GFXuYUm0v
-         uwYjRWAG8rSBrT702dz9UCtxUtctglM3nUqE1M+Sk6C0YC46uPlUT5noWVgeJfE2mX3L
-         YC3Q==
-X-Gm-Message-State: AOAM530knRvkPItQBkDZ0TH6g4zVIrYeBYBYz+1FWKluyjCa3anScbta
-        qSdYbS5csCGEuN+6civ9G1IReK+cjRiGqmREZzuAig==
-X-Google-Smtp-Source: ABdhPJwtCc03Ww3ywaAqzoU92hBs1onakLTktmy+A5i4c4DmLDlGm2KKz1byL4yamBvY1Ggn2mnktBVK6SECvhrWldU=
-X-Received: by 2002:a17:906:241b:: with SMTP id z27mr4382398eja.418.1604101101947;
- Fri, 30 Oct 2020 16:38:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <BL0PR12MB25321C8689BAFDF8678E5C69BD170@BL0PR12MB2532.namprd12.prod.outlook.com>
- <CAPcyv4jWFf0=VoA2EiXPaQphA-5z9JFO8h0Agy0dO0w6nDyorw@mail.gmail.com> <20201030205956.GO27442@casper.infradead.org>
-In-Reply-To: <20201030205956.GO27442@casper.infradead.org>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 30 Oct 2020 16:38:06 -0700
-Message-ID: <CAPcyv4iNeTGrLLN6XLOc+c9CRUODfw9bi0GpjpJuYywniP6dXg@mail.gmail.com>
+        id S1726708AbgJaKVg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 31 Oct 2020 06:21:36 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:56685 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726623AbgJaKVf (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 31 Oct 2020 06:21:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1604139693;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dGSnhPkl0I7vSPYzYjDBbctn/wTQ7qKaQlUwoPQ5d7Q=;
+        b=YD8/d0bwyJb+VyFUg2DOjQz6bSHKrIrnTFVvgxcIrHSHCkxqMi54/+nHu8FTkrFumgawMT
+        b7zd9IBk6r1oY90xywy5k47bIETXDERBP/Tqra7DxD/hi6USFdZxy12aReM4qCos5E1FW0
+        DKkDUIOY0C5CfNFuEuADd+rDFldnBhI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-340-r2J-ZnybPsGTt8b1mWtArg-1; Sat, 31 Oct 2020 06:21:31 -0400
+X-MC-Unique: r2J-ZnybPsGTt8b1mWtArg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7AE0E805F08;
+        Sat, 31 Oct 2020 10:21:29 +0000 (UTC)
+Received: from [10.36.112.45] (ovpn-112-45.ams2.redhat.com [10.36.112.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 182FB19482;
+        Sat, 31 Oct 2020 10:21:26 +0000 (UTC)
 Subject: Re: Onlining CXL Type2 device coherent memory
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Vikram Sethi <vsethi@nvidia.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Vikram Sethi <vsethi@nvidia.com>
+Cc:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
         "Natu, Mahesh" <mahesh.natu@intel.com>,
         "Rudoff, Andy" <andy.rudoff@intel.com>,
         Jeff Smith <JSMITH@nvidia.com>,
         Mark Hairgrove <mhairgrove@nvidia.com>,
         "jglisse@redhat.com" <jglisse@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
         Linux MM <linux-mm@kvack.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+References: <BL0PR12MB25321C8689BAFDF8678E5C69BD170@BL0PR12MB2532.namprd12.prod.outlook.com>
+ <CAPcyv4jWFf0=VoA2EiXPaQphA-5z9JFO8h0Agy0dO0w6nDyorw@mail.gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <451b2571-c3e8-97d8-bfd0-f8054a1b75c5@redhat.com>
+Date:   Sat, 31 Oct 2020 11:21:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <CAPcyv4jWFf0=VoA2EiXPaQphA-5z9JFO8h0Agy0dO0w6nDyorw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Oct 30, 2020 at 2:00 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Fri, Oct 30, 2020 at 01:37:18PM -0700, Dan Williams wrote:
-> > On Wed, Oct 28, 2020 at 4:06 PM Vikram Sethi <vsethi@nvidia.com> wrote:
-[..]
->
-> i don't know what you're talking about but you must both work for
-> hardware manufacturers!
+On 30.10.20 21:37, Dan Williams wrote:
+> On Wed, Oct 28, 2020 at 4:06 PM Vikram Sethi <vsethi@nvidia.com> wrote:
+>>
+>> Hello,
+>>
+>> I wanted to kick off a discussion on how Linux onlining of CXL [1] type 2 device
+>> Coherent memory aka Host managed device memory (HDM) will work for type 2 CXL
+>> devices which are available/plugged in at boot. A type 2 CXL device can be simply
+>> thought of as an accelerator with coherent device memory, that also has a
+>> CXL.cache to cache system memory.
+>>
+>> One could envision that BIOS/UEFI could expose the HDM in EFI memory map
+>> as conventional memory as well as in ACPI SRAT/SLIT/HMAT. However, at least
+>> on some architectures (arm64) EFI conventional memory available at kernel boot
+>> memory cannot be offlined, so this may not be suitable on all architectures.
+> 
+> That seems an odd restriction. Add David, linux-mm, and linux-acpi as
+> they might be interested / have comments on this restriction as well.
+> 
 
-If only there was some software project that could comprehend these
-details and synthesize an interface for applications to use. Even
-better if this project had mailing lists with experts that could parse
-the acronym soup into code patches.
+I am missing some important details.
+
+a) What happens after offlining? Will the memory be remove_memory()'ed? 
+Will the device get physically unplugged?
+
+b) What's the general purpose of the memory and its intended usage when 
+*not* exposed as system RAM? What's the main point of treating it like 
+ordinary system RAM as default?
+
+Also, can you be sure that you can offline that memory? If it's 
+ZONE_NORMAL (as usually all system RAM in the initial map), there are no 
+such guarantees, especially once the system ran for long enough, but 
+also in other cases (e.g., shuffling), or if allocation policies change 
+in the future.
+
+So I *guess* you would already have to use kernel cmdline hacks like 
+"movablecore" to make it work. In that case, you can directly specify 
+what you *actually* want (which I am not sure yet I completely 
+understood) - e.g., something like "memmap=16G!16G" ... or something 
+similar.
+
+I consider offlining+removing *boot* memory to not physically unplug it 
+(e.g., a DIMM getting unplugged) abusing the memory hotunplug 
+infrastructure. It's a different thing when manually adding memory like 
+dax_kmem does via add_memory_driver_managed().
+
+
+Now, back to your original question: arm64 does not support physically 
+unplugging DIMMs that were part of the initial map. If you'd reboot 
+after unplugging a DIMM, your system would crash. We achieve that by 
+disallowing to offline boot memory - we could also try to handle it in 
+ACPI code. But again, most uses of offlining+removing boot memory are 
+abusing the memory hotunplug infrastructure and should rather be solved 
+cleanly via a different mechanism (firmware, kernel cmdline, ...).
+
+Just recently discussed in
+
+https://lkml.kernel.org/r/de8388df2fbc5a6a33aab95831ba7db4@codeaurora.org
+
+>> Further, the device driver associated with the type 2 device/accelerator may
+>> want to save off a chunk of HDM for driver private use.
+>> So it seems the more appropriate model may be something like dev dax model
+>> where the device driver probe/open calls add_memory_driver_managed, and
+>> the driver could choose how much of the HDM it wants to reserve and how
+>> much to make generally available for application mmap/malloc.
+> 
+> Sure, it can always be driver managed. The trick will be getting the
+> platform firmware to agree to not map it by default, but I suspect
+> you'll have a hard time convincing platform-firmware to take that
+> stance. The BIOS does not know, and should not care what OS is booting
+> when it produces the memory map. So I think CXL memory unplug after
+> the fact is more realistic than trying to get the BIOS not to map it.
+> So, to me it looks like arm64 needs to reconsider its unplug stance.
+
+My personal opinion is, if memory isn't just "ordinary system RAM", then 
+let the system know early that memory is special (as we do with 
+soft-reserved).
+
+Ideally, you could configure the firmware (e.g., via BIOS setup) on what 
+to do, that's the cleanest solution, but I can understand that's rather 
+hard to achieve.
+
+-- 
+Thanks,
+
+David / dhildenb
+
