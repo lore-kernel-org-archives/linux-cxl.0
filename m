@@ -2,69 +2,34 @@ Return-Path: <SRS0=FIBN=EI=vger.kernel.org=linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F24C2D0A3
-	for <linux-cxl@archiver.kernel.org>; Mon,  2 Nov 2020 18:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4A0C00A89
+	for <linux-cxl@archiver.kernel.org>; Mon,  2 Nov 2020 18:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5C2A22226
-	for <linux-cxl@archiver.kernel.org>; Mon,  2 Nov 2020 18:03:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="e3280KJR"
+	by mail.kernel.org (Postfix) with ESMTP id 8E66A2225E
+	for <linux-cxl@archiver.kernel.org>; Mon,  2 Nov 2020 18:36:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725941AbgKBSDa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 2 Nov 2020 13:03:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgKBSDa (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Nov 2020 13:03:30 -0500
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E182EC061A04
-        for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2020 10:03:29 -0800 (PST)
-Received: by mail-ej1-x643.google.com with SMTP id k3so20079033ejj.10
-        for <linux-cxl@vger.kernel.org>; Mon, 02 Nov 2020 10:03:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=nmufHlN7PEujC/sOqa9SNa26JVNl51LU7nJggN5+u5I=;
-        b=e3280KJR0jxfgMu0wD9WOKNR0rIAFMrLrVk6sPhZhxV/4ZVNzNmHKspxecd5l+V1ah
-         Qt0WEGkMFYD4YhAr+tAFpUonbH+ld3DqGyJ1VKcxGUTLOrpoc7WSGF/zXSLYHUgOTZB4
-         cppyjc2e9yDHzttGQV2BEg7w3eomVu7+tvKatvpMNuDkQViTX6Q6A5nomVOhIgTxcfdF
-         1RAyOPJg/Nrd9EY91TeuV3xc7VnXvz036UUFugrx3aEley/j+PCxTU7EDdkFK6CuGFcE
-         dVEzUuzwMX3j3ZbD3pT75KqSaiZVFLXspKZgtp4f4E42IZTxe6xqzHmk9VRxpXZrzLWx
-         mlAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nmufHlN7PEujC/sOqa9SNa26JVNl51LU7nJggN5+u5I=;
-        b=U8E0yuHmnW+LwH4IhGzayx9xcAciKkituzs2uLd0Y+noRzzJt+Azi8w1IYs2o6rruV
-         Z0CsVB3zJlcUclkychdGPKmregVzdJhjOgbxBz0EaYsUgmhghix73lKTmoiE/Ke7zjpi
-         INsAu5pw2rLwI+PrcsK/2iouPTCt6wHgheTkMKvUM0/zbzEWcHfOjSkYEBjoBMj7dwFs
-         WJlnVg6UXFj9vmHdftHo7XDHfHQWPrCzPv309SNHS5jfeGr8DNKE3MqvsnXsgReZlTO5
-         ykIjUzTRYE6p1cZPrkNbQ/CGq7wqv8dOAOrfSNCNhzTgwCwuKwCs/5YUgVFIQqhe+9es
-         ckIA==
-X-Gm-Message-State: AOAM533UduLvIj6kZfczWQSaqPlb9KrlU2Iv49a+TllL+VZkOYW/JaOO
-        7b57XAeeUOOB+Kjj2Z1seHNauhdxUOVjx4KCjCjARA==
-X-Google-Smtp-Source: ABdhPJx84KmXGYY1qSAAmTqWyWTY7uzYVX9PJp29vAKJJ+OmvdQnWhirb250MJnNQiDindqjU6p2UCetER7HakL35rI=
-X-Received: by 2002:a17:906:280a:: with SMTP id r10mr16327458ejc.45.1604340208573;
- Mon, 02 Nov 2020 10:03:28 -0800 (PST)
-MIME-Version: 1.0
-References: <BL0PR12MB25321C8689BAFDF8678E5C69BD170@BL0PR12MB2532.namprd12.prod.outlook.com>
- <CAPcyv4jWFf0=VoA2EiXPaQphA-5z9JFO8h0Agy0dO0w6nDyorw@mail.gmail.com>
- <451b2571-c3e8-97d8-bfd0-f8054a1b75c5@redhat.com> <CAPcyv4jX1tedjuU-vCSKgvhQeNFukyq9d0ddmsk7jAjWMX+iBQ@mail.gmail.com>
- <958912b2-1436-378f-43d7-cbc5c8955ffd@redhat.com> <BL0PR12MB2532D78BF9E62E141AED5EADBD100@BL0PR12MB2532.namprd12.prod.outlook.com>
- <2f9fa312-e080-d995-eb82-1ac9e6128a33@redhat.com>
-In-Reply-To: <2f9fa312-e080-d995-eb82-1ac9e6128a33@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 2 Nov 2020 10:03:16 -0800
-Message-ID: <CAPcyv4jvndnm986vjQLHOw=q0+rN8JDuJd4z-Bv3Wz06Wz4gug@mail.gmail.com>
-Subject: Re: Onlining CXL Type2 device coherent memory
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Vikram Sethi <vsethi@nvidia.com>,
+        id S1725817AbgKBSgf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 2 Nov 2020 13:36:35 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:3022 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725809AbgKBSgf (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 2 Nov 2020 13:36:35 -0500
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 5DA34F0A6D15097B8BB5;
+        Mon,  2 Nov 2020 18:36:31 +0000 (GMT)
+Received: from localhost (10.52.120.98) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 2 Nov 2020
+ 18:36:30 +0000
+Date:   Mon, 2 Nov 2020 18:34:28 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     David Hildenbrand <david@redhat.com>,
+        Vikram Sethi <vsethi@nvidia.com>,
         "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
         "Natu, Mahesh" <mahesh.natu@intel.com>,
         "Rudoff, Andy" <andy.rudoff@intel.com>,
@@ -73,104 +38,132 @@ Cc:     Vikram Sethi <vsethi@nvidia.com>,
         "jglisse@redhat.com" <jglisse@redhat.com>,
         Linux MM <linux-mm@kvack.org>,
         Linux ACPI <linux-acpi@vger.kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        Samer El-Haj-Mahmoud <Samer.El-Haj-Mahmoud@arm.com>,
-        Shanker Donthineni <sdonthineni@nvidia.com>,
-        Joao Martins <joao.m.martins@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: Onlining CXL Type2 device coherent memory
+Message-ID: <20201102183428.00005f4f@Huawei.com>
+In-Reply-To: <CAPcyv4jX1tedjuU-vCSKgvhQeNFukyq9d0ddmsk7jAjWMX+iBQ@mail.gmail.com>
+References: <BL0PR12MB25321C8689BAFDF8678E5C69BD170@BL0PR12MB2532.namprd12.prod.outlook.com>
+        <CAPcyv4jWFf0=VoA2EiXPaQphA-5z9JFO8h0Agy0dO0w6nDyorw@mail.gmail.com>
+        <451b2571-c3e8-97d8-bfd0-f8054a1b75c5@redhat.com>
+        <CAPcyv4jX1tedjuU-vCSKgvhQeNFukyq9d0ddmsk7jAjWMX+iBQ@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.120.98]
+X-ClientProxiedBy: lhreml734-chm.china.huawei.com (10.201.108.85) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Nov 2, 2020 at 9:53 AM David Hildenbrand <david@redhat.com> wrote:
->
-> On 02.11.20 17:17, Vikram Sethi wrote:
-> > Hi David,
-> >> From: David Hildenbrand <david@redhat.com>
-> >> On 31.10.20 17:51, Dan Williams wrote:
-> >>> On Sat, Oct 31, 2020 at 3:21 AM David Hildenbrand <david@redhat.com> =
-wrote:
-> >>>>
-> >>>> On 30.10.20 21:37, Dan Williams wrote:
-> >>>>> On Wed, Oct 28, 2020 at 4:06 PM Vikram Sethi <vsethi@nvidia.com> wr=
-ote:
-> >>>>>>
-> >>>>>> Hello,
-> >>>>>>
-> >>>>>> I wanted to kick off a discussion on how Linux onlining of CXL [1]=
- type 2
-> >> device
-> >>>>>> Coherent memory aka Host managed device memory (HDM) will work for
-> >> type 2 CXL
-> >>>>>> devices which are available/plugged in at boot. A type 2 CXL devic=
-e can be
-> >> simply
-> >>>>>> thought of as an accelerator with coherent device memory, that als=
-o has a
-> >>>>>> CXL.cache to cache system memory.
-> >>>>>>
-> >>>>>> One could envision that BIOS/UEFI could expose the HDM in EFI memo=
-ry map
-> >>>>>> as conventional memory as well as in ACPI SRAT/SLIT/HMAT. However,=
- at
-> >> least
-> >>>>>> on some architectures (arm64) EFI conventional memory available at=
- kernel
-> >> boot
-> >>>>>> memory cannot be offlined, so this may not be suitable on all arch=
-itectures.
-> >>>>>
-> >>>>> That seems an odd restriction. Add David, linux-mm, and linux-acpi =
-as
-> >>>>> they might be interested / have comments on this restriction as wel=
-l.
-> >>>>>
-> >>>>
-> >>>> I am missing some important details.
-> >>>>
-> >>>> a) What happens after offlining? Will the memory be remove_memory()'=
-ed?
-> >>>> Will the device get physically unplugged?
-> >>>>
-> > Not always IMO. If the device was getting reset, the HDM memory is goin=
-g to be
-> > unavailable while device is reset. Offlining the memory around the rese=
-t would
->
-> Ouch, that speaks IMHO completely against exposing it as System RAM as
-> default.
->
-> > be sufficient, but depending if driver had done the add_memory in probe=
-,
-> > it perhaps would be onerous to have to remove_memory as well before res=
-et,
-> > and then add it back after reset. I realize you=E2=80=99re saying such =
-a procedure
-> > would be abusing hotplug framework, and we could perhaps require that m=
-emory
-> > be removed prior to reset, but not clear to me that it *must* be remove=
-d for
-> > correctness.
-> >
-> > Another usecase of offlining without removing HDM could be around
-> > Virtualization/passing entire device with its memory to a VM. If device=
- was
-> > being used in the host kernel, and is then unbound, and bound to vfio-p=
-ci
-> > (vfio-cxl?), would we expect vfio-pci to add_memory_driver_managed?
->
-> At least for passing through memory to VMs (via KVM), you don't actually
-> need struct pages / memory exposed to the buddy via
-> add_memory_driver_managed(). Actually, doing that sounds like the wrong
-> approach.
->
-> E.g., you would "allocate" the memory via devdax/dax_hmat and directly
-> map the resulting device into guest address space. At least that's what
-> some people are doing with
+On Sat, 31 Oct 2020 09:51:23 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-...and Joao is working to see if the host kernel can skip allocating
-'struct page' or do it on demand if the guest ever requests host
-kernel services on its memory. Typically it does not so host 'struct
-page' space for devdax memory ranges goes wasted.
+> On Sat, Oct 31, 2020 at 3:21 AM David Hildenbrand <david@redhat.com> wrote:
+> >
+> > On 30.10.20 21:37, Dan Williams wrote:  
+> > > On Wed, Oct 28, 2020 at 4:06 PM Vikram Sethi <vsethi@nvidia.com> wrote:  
+> > >>
+> > >> Hello,
+> > >>
+> > >> I wanted to kick off a discussion on how Linux onlining of CXL [1] type 2 device
+> > >> Coherent memory aka Host managed device memory (HDM) will work for type 2 CXL
+> > >> devices which are available/plugged in at boot. A type 2 CXL device can be simply
+> > >> thought of as an accelerator with coherent device memory, that also has a
+> > >> CXL.cache to cache system memory.
+> > >>
+> > >> One could envision that BIOS/UEFI could expose the HDM in EFI memory map
+> > >> as conventional memory as well as in ACPI SRAT/SLIT/HMAT. However, at least
+> > >> on some architectures (arm64) EFI conventional memory available at kernel boot
+> > >> memory cannot be offlined, so this may not be suitable on all architectures.  
+> > >
+> > > That seems an odd restriction. Add David, linux-mm, and linux-acpi as
+> > > they might be interested / have comments on this restriction as well.
+> > >  
+> >
+> > I am missing some important details.
+> >
+> > a) What happens after offlining? Will the memory be remove_memory()'ed?
+> > Will the device get physically unplugged?
+> >
+> > b) What's the general purpose of the memory and its intended usage when
+> > *not* exposed as system RAM? What's the main point of treating it like
+> > ordinary system RAM as default?
+> >
+> > Also, can you be sure that you can offline that memory? If it's
+> > ZONE_NORMAL (as usually all system RAM in the initial map), there are no
+> > such guarantees, especially once the system ran for long enough, but
+> > also in other cases (e.g., shuffling), or if allocation policies change
+> > in the future.
+> >
+> > So I *guess* you would already have to use kernel cmdline hacks like
+> > "movablecore" to make it work. In that case, you can directly specify
+> > what you *actually* want (which I am not sure yet I completely
+> > understood) - e.g., something like "memmap=16G!16G" ... or something
+> > similar.
+> >
+> > I consider offlining+removing *boot* memory to not physically unplug it
+> > (e.g., a DIMM getting unplugged) abusing the memory hotunplug
+> > infrastructure. It's a different thing when manually adding memory like
+> > dax_kmem does via add_memory_driver_managed().
+> >
+> >
+> > Now, back to your original question: arm64 does not support physically
+> > unplugging DIMMs that were part of the initial map. If you'd reboot
+> > after unplugging a DIMM, your system would crash. We achieve that by
+> > disallowing to offline boot memory - we could also try to handle it in
+> > ACPI code. But again, most uses of offlining+removing boot memory are
+> > abusing the memory hotunplug infrastructure and should rather be solved
+> > cleanly via a different mechanism (firmware, kernel cmdline, ...).
+> >
+> > Just recently discussed in
+> >
+> > https://lkml.kernel.org/r/de8388df2fbc5a6a33aab95831ba7db4@codeaurora.org
+> >  
+> > >> Further, the device driver associated with the type 2 device/accelerator may
+> > >> want to save off a chunk of HDM for driver private use.
+> > >> So it seems the more appropriate model may be something like dev dax model
+> > >> where the device driver probe/open calls add_memory_driver_managed, and
+> > >> the driver could choose how much of the HDM it wants to reserve and how
+> > >> much to make generally available for application mmap/malloc.  
+> > >
+> > > Sure, it can always be driver managed. The trick will be getting the
+> > > platform firmware to agree to not map it by default, but I suspect
+> > > you'll have a hard time convincing platform-firmware to take that
+> > > stance. The BIOS does not know, and should not care what OS is booting
+> > > when it produces the memory map. So I think CXL memory unplug after
+> > > the fact is more realistic than trying to get the BIOS not to map it.
+> > > So, to me it looks like arm64 needs to reconsider its unplug stance.  
+> >
+> > My personal opinion is, if memory isn't just "ordinary system RAM", then
+> > let the system know early that memory is special (as we do with
+> > soft-reserved).
+> >
+> > Ideally, you could configure the firmware (e.g., via BIOS setup) on what
+> > to do, that's the cleanest solution, but I can understand that's rather
+> > hard to achieve.  
+> 
+> Yes, my hope, which is about the most influence I can have on
+> platform-firmware implementations, is that it marks CXL attached
+> memory as soft-reserved by default and allow OS policy decide where it
+> goes. Barring that, for the configuration that Vikram mentioned, the
+> only other way to get this differentiated / not-ordinary system-ram
+> back to being driver managed would be to unplug it. The soft-reserved
+> path is cleaner.
+> 
+
+The whole reason that was introduced into UEFI the first place was to handle
+this case.  SPM is still in the EFI_MEMORY_MAP but should not be used
+for non moveable general purpose allocations.  It was intended for RAM
+that you 'could' use for normal purpose if it wasn't being used for what
+it was put there for (i.e. your GPU or similar isn't using it).
+
+So agreed, soft-reserved / SPM.  
+
+Jonathan
+
+
+
