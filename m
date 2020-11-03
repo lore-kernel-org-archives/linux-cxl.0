@@ -1,71 +1,35 @@
-Return-Path: <SRS0=FIBN=EI=vger.kernel.org=linux-cxl-owner@kernel.org>
+Return-Path: <SRS0=Fnv8=EJ=vger.kernel.org=linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F34EAC00A89
-	for <linux-cxl@archiver.kernel.org>; Mon,  2 Nov 2020 19:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BC4C55178
+	for <linux-cxl@archiver.kernel.org>; Tue,  3 Nov 2020 03:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85FBF20731
-	for <linux-cxl@archiver.kernel.org>; Mon,  2 Nov 2020 19:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B96223AB
+	for <linux-cxl@archiver.kernel.org>; Tue,  3 Nov 2020 03:56:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="SaEFxDNL"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mhDbKBRz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726088AbgKBTrB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 2 Nov 2020 14:47:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbgKBTqJ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Nov 2020 14:46:09 -0500
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC5BBC061A04
-        for <linux-cxl@vger.kernel.org>; Mon,  2 Nov 2020 11:46:08 -0800 (PST)
-Received: by mail-ej1-x644.google.com with SMTP id i19so9494926ejx.9
-        for <linux-cxl@vger.kernel.org>; Mon, 02 Nov 2020 11:46:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9S7vWYZqXm3PqYUWfzNRmMs/AaRtdM//LcdO3k++WwE=;
-        b=SaEFxDNLdalp+GldG72yakmXkFbPbvhYxzUPN6V+nHaJHQC2qvu41yf5eyB/QcvIXx
-         fnyL4DvxD35TO/GGvlfiXuDMtgtT477/tYOW13bVtx/OrLfSQ2t415bP2SHkjLL/O8mJ
-         AcwcCG+YwCDYOmn97Av9Te4pGZgyijcm5ClJbwvmjt3zc5RTZiF91Bs2s0gL3oQB2GB+
-         ARpsn11XbZVHljA+/UnLfDpb8EBTXxpHgcXRJNr3gf+joX3g5/xDr/C7sjj+V5qYdXj/
-         wgzPh+YKW1OvL3e4zUCCLAolj2fD2CNU9Ha6NeCI7xlO0U/CzEs2YoC5HjL0OOqx8G4u
-         IByQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9S7vWYZqXm3PqYUWfzNRmMs/AaRtdM//LcdO3k++WwE=;
-        b=KpIx1DdG4zGMpLbNg2uPv914O5D50K16E8iPbzi2Zjgl8MXs/22fiLd2RzEHL/+2ha
-         TzowMk/Vv+bGT4DLZstN0Fuq5ubCdCfhDSEd8oxujAwnmQ8HTrhjNXiREF6WjZNWVRVu
-         OcDtdQUODhgdlbEK0SeFYSJfl34+/pjJPy++d7KzmyCT27XiWRVtc3KsHrGz2FbxAixj
-         QeAFwN7+pTboc9Rtj5q8ayXph20zXFqEcXjCf4Pi3xmLQ7IDblVcK2oL50UXp4hVGV4k
-         oz0Zdt/K69gJu/HBJvfGgA6l9Hcn2ltK5/GfGl9ivtAsKs++lRb+c0IBqRmj1XInR2C6
-         HZSA==
-X-Gm-Message-State: AOAM530EV3iCgdkyH5Bqc+xudMR5ThvU0uf+t5z6zIfCdq8bwJp1USuL
-        PmT09B32DVUTHQl6K2dX5fRBGMc4at69QLg/CRnxeQ==
-X-Google-Smtp-Source: ABdhPJxlB0VuTyd5PdBaybjL8K53mwvkGZB+YeHljHV/lmgT9JUksEsp6iUPlVknSl5PRxkdzwTfMN+/Mocq2Slc5vA=
-X-Received: by 2002:a17:906:c20f:: with SMTP id d15mr16418068ejz.341.1604346367393;
- Mon, 02 Nov 2020 11:46:07 -0800 (PST)
-MIME-Version: 1.0
-References: <BL0PR12MB25321C8689BAFDF8678E5C69BD170@BL0PR12MB2532.namprd12.prod.outlook.com>
- <CAPcyv4jWFf0=VoA2EiXPaQphA-5z9JFO8h0Agy0dO0w6nDyorw@mail.gmail.com>
- <451b2571-c3e8-97d8-bfd0-f8054a1b75c5@redhat.com> <CAPcyv4jX1tedjuU-vCSKgvhQeNFukyq9d0ddmsk7jAjWMX+iBQ@mail.gmail.com>
- <958912b2-1436-378f-43d7-cbc5c8955ffd@redhat.com> <BL0PR12MB2532D78BF9E62E141AED5EADBD100@BL0PR12MB2532.namprd12.prod.outlook.com>
- <2f9fa312-e080-d995-eb82-1ac9e6128a33@redhat.com> <CAPcyv4jvndnm986vjQLHOw=q0+rN8JDuJd4z-Bv3Wz06Wz4gug@mail.gmail.com>
- <BL0PR12MB2532F7D105A1DC2E41B13DF2BD100@BL0PR12MB2532.namprd12.prod.outlook.com>
-In-Reply-To: <BL0PR12MB2532F7D105A1DC2E41B13DF2BD100@BL0PR12MB2532.namprd12.prod.outlook.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 2 Nov 2020 11:45:55 -0800
-Message-ID: <CAPcyv4jkm9MtkG5RPLJDM_PU9nLBXPOGRDZ8tRZX_cgGbf9p9g@mail.gmail.com>
-Subject: Re: Onlining CXL Type2 device coherent memory
+        id S1727480AbgKCD4e (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 2 Nov 2020 22:56:34 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3263 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727431AbgKCD4e (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Nov 2020 22:56:34 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5fa0d4f40001>; Mon, 02 Nov 2020 19:56:36 -0800
+Received: from nvdebian.localnet (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Nov
+ 2020 03:56:22 +0000
+From:   Alistair Popple <apopple@nvidia.com>
 To:     Vikram Sethi <vsethi@nvidia.com>
-Cc:     David Hildenbrand <david@redhat.com>,
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
         "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
         "Natu, Mahesh" <mahesh.natu@intel.com>,
         "Rudoff, Andy" <andy.rudoff@intel.com>,
@@ -74,50 +38,123 @@ Cc:     David Hildenbrand <david@redhat.com>,
         "jglisse@redhat.com" <jglisse@redhat.com>,
         Linux MM <linux-mm@kvack.org>,
         Linux ACPI <linux-acpi@vger.kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
+        "Anshuman Khandual" <anshuman.khandual@arm.com>,
         "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
         Samer El-Haj-Mahmoud <Samer.El-Haj-Mahmoud@arm.com>,
         Shanker Donthineni <sdonthineni@nvidia.com>,
         Joao Martins <joao.m.martins@oracle.com>
+Subject: Re: Onlining CXL Type2 device coherent memory
+Date:   Tue, 3 Nov 2020 14:56:20 +1100
+Message-ID: <6645807.zUfqAqQW0h@nvdebian>
+In-Reply-To: <BL0PR12MB2532F7D105A1DC2E41B13DF2BD100@BL0PR12MB2532.namprd12.prod.outlook.com>
+References: <BL0PR12MB25321C8689BAFDF8678E5C69BD170@BL0PR12MB2532.namprd12.prod.outlook.com> <CAPcyv4jvndnm986vjQLHOw=q0+rN8JDuJd4z-Bv3Wz06Wz4gug@mail.gmail.com> <BL0PR12MB2532F7D105A1DC2E41B13DF2BD100@BL0PR12MB2532.namprd12.prod.outlook.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="UTF-8"
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1604375796; bh=OTgDZIJKUAwFv/o/43m23Omi0oMh92bGj2BwjaK1VMg=;
+        h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+         MIME-Version:Content-Transfer-Encoding:Content-Type:
+         X-Originating-IP:X-ClientProxiedBy;
+        b=mhDbKBRzCPjj3TI4rqSRrlHzuHdguUlyTlcCR4Q1DAsspbs90rPjxTmhfJFaB3E6/
+         SMQLjxwdgVqO/St6VTrnvuPtT0s972Md3TXkAdKyKLzWBF0wWxOoQNpDZ85eGAGYOr
+         Dp+M2sKxATR/MkZdxknCLdZ+CP2EfVoI/OJgYEsj4uSnwB/K/vXVcSB22f9O+Xpyp3
+         cbijtVjQF5PzUq4G57vgYBpco3g54QdjyRrX2VkyNlnfiq+bSSl0zXIZHLwY/68wAZ
+         1FPLPnXxEjvfTo2veQRM8sFTUn3cLlc1XrIelGzKB/2v+PTMSC8yYSs5r4X6b5WRaT
+         sskP8tvTmAvyA==
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Nov 2, 2020 at 11:25 AM Vikram Sethi <vsethi@nvidia.com> wrote:
-[..]
-> > > At least for passing through memory to VMs (via KVM), you don't actually
+On Tuesday, 3 November 2020 6:25:23 AM AEDT Vikram Sethi wrote:
+> > > > be sufficient, but depending if driver had done the add_memory in=20
+probe,
+> > > > it perhaps would be onerous to have to remove_memory as well before=
+=20
+reset,
+> > > > and then add it back after reset. I realize you=E2=80=99re saying s=
+uch a=20
+procedure
+> > > > would be abusing hotplug framework, and we could perhaps require th=
+at
+> > memory
+> > > > be removed prior to reset, but not clear to me that it *must* be=20
+removed for
+> > > > correctness.
+
+I'm not sure exactly what you meant by "unavailable", but on some platforms=
+=20
+(eg. PowerPC) it must be removed for correctness if hardware access to the=
+=20
+memory is going away for any period of time. remove_memory() is what makes =
+it=20
+safe to physically remove the memory as it triggers things like cache=20
+flushing. Without this PPC would see memory failure machine checks if it ev=
+er=20
+tried to writeback any dirty cache lines to the now inaccessible memory.
+
+> > > > Another usecase of offlining without removing HDM could be around
+> > > > Virtualization/passing entire device with its memory to a VM. If=20
+device was
+> > > > being used in the host kernel, and is then unbound, and bound to vf=
+io-
+pci
+> > > > (vfio-cxl?), would we expect vfio-pci to add_memory_driver_managed?
+> > >
+> > > At least for passing through memory to VMs (via KVM), you don't actua=
+lly
 > > > need struct pages / memory exposed to the buddy via
-> > > add_memory_driver_managed(). Actually, doing that sounds like the wrong
+> > > add_memory_driver_managed(). Actually, doing that sounds like the wro=
+ng
 > > > approach.
 > > >
 > > > E.g., you would "allocate" the memory via devdax/dax_hmat and directly
-> > > map the resulting device into guest address space. At least that's what
+> > > map the resulting device into guest address space. At least that's wh=
+at
 > > > some people are doing with
->
+>=20
 > How does memory_failure forwarding to guest work in that case?
-> IIUC it doesn't without a struct page in the host.
+> IIUC it doesn't without a struct page in the host.=20
 > For normal memory, when VM consumes poison, host kernel signals
-> Userspace with SIGBUS and si-code that says Action Required, which
+> Userspace with SIGBUS and si-code that says Action Required, which=20
 > QEMU injects to the guest.
 > IBM had done something like you suggest with coherent GPU memory and IIUC
 > memory_failure forwarding to guest VM does not work there.
->
-> kernel https://lkml.org/lkml/2018/12/20/103
+>=20
+> kernel https://lkml.org/lkml/2018/12/20/103=20
 > QEMU: https://patchwork.kernel.org/patch/10831455/
-> I would think we *do want* memory errors to be sent to a VM.
-> >
+
+The above patches simply allow the coherent GPU physical memory ranges to g=
+et=20
+mapped into a guest VM in a similar way to an MMIO range (ie. without a str=
+uct=20
+page in the host). So you are correct in that they do not deal with forward=
+ing=20
+failures to a guest VM.
+
+Any GPU memory failure on PPC would currently get sent to the host in the s=
+ame=20
+way as a normal system memory failure (ie. machine check). So in theory=20
+notification to a guest would work the same as a normal system memory failu=
+re.=20
+I say in theory because when I last looked at this some time back a guest=20
+kernel on PPC is not notified of memory errors.
+
+ - Alistair
+
+> I would think we *do want* memory errors to be sent to a VM.=20
+>
+> >=20
 > > ...and Joao is working to see if the host kernel can skip allocating
 > > 'struct page' or do it on demand if the guest ever requests host
 > > kernel services on its memory. Typically it does not so host 'struct
 > > page' space for devdax memory ranges goes wasted.
 > Is memory_failure forwarded to and handled by guest?
+>=20
 
-This dovetails with one of the DAX enabling backlog items to remove
-dependencies on page->mapping and page->index for the memory-failure
-path because that also gets in the way of reflink. For devdax it's
-easy to drop the page->mapping dependency. For fsdax we still need
-something to redirect the lookup into the proper filesystem code.
 
-Certainly memory-failure support will not regress, it just means we're
-stuck with 'struct page' in this path in the meantime.
+
+
