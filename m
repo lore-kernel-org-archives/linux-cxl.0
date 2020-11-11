@@ -2,64 +2,157 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDE5C5517A
-	for <linux-cxl@archiver.kernel.org>; Wed, 11 Nov 2020 22:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4BEC388F9
+	for <linux-cxl@archiver.kernel.org>; Wed, 11 Nov 2020 22:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3252D208CA
-	for <linux-cxl@archiver.kernel.org>; Wed, 11 Nov 2020 22:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 075692100A
+	for <linux-cxl@archiver.kernel.org>; Wed, 11 Nov 2020 22:43:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="rTT49Ank"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgKKWG2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 11 Nov 2020 17:06:28 -0500
-Received: from mga12.intel.com ([192.55.52.136]:8979 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727010AbgKKWG1 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Wed, 11 Nov 2020 17:06:27 -0500
-IronPort-SDR: llxxzmw2uFArtAUgDvjHIshI58402TE5588t1fpcB77JsKry8IZuJ4ltvTxCPoMRx8edIRGhE3
- eH3lX94fxP+w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9802"; a="149498458"
-X-IronPort-AV: E=Sophos;i="5.77,470,1596524400"; 
-   d="scan'208";a="149498458"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 14:06:26 -0800
-IronPort-SDR: ac8RWsvq4E5LnlUMwOfsStZxjDxiRyEm3835faeb4v0xM7LBnH068ix2ZlsM0qM9Prri5rlKQY
- kPINUensokMQ==
-X-IronPort-AV: E=Sophos;i="5.77,470,1596524400"; 
-   d="scan'208";a="366390856"
-Received: from fitchbe-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.129.43])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 14:06:26 -0800
-Date:   Wed, 11 Nov 2020 14:06:24 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
+        id S1726459AbgKKWnL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 11 Nov 2020 17:43:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726419AbgKKWlE (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 11 Nov 2020 17:41:04 -0500
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D31C0401C5
+        for <linux-cxl@vger.kernel.org>; Wed, 11 Nov 2020 14:41:04 -0800 (PST)
+Received: by mail-ej1-x642.google.com with SMTP id oq3so4944817ejb.7
+        for <linux-cxl@vger.kernel.org>; Wed, 11 Nov 2020 14:41:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ALVcAvrDAuBZ3IPCrkjPwHAX8+DNa5pqM0afUjn5X6s=;
+        b=rTT49AnkhNr487K9n5NKwYO9WMUE3MNY/UrxCB1TueO1d+BsQebe1bVAjto6CnRmk/
+         RDpD3FTxsnpbumIEQX0xW8WRxu+N8dbL7+UlwJuliNYW4tOrjIHEsijjBDMt5SiFkT7W
+         qIC8M6dcNADqftbsDDTwdltE4fVgS48XJPqta990E5jyRjX44U9fYqfo3bpsnhM2g0J7
+         eynDKGo1p6EV/6yF+gGpA1ZpwHDZOUAKO9aCvylNPSLobnovjeE+6vOb7pc4GrNqOJdL
+         VpWgI5+VW1m4VWGcBZwG83xjGz4jrrCYOWJBRZrRhJgpclGLGZV4RXEKWrc44rurwU4I
+         eK6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ALVcAvrDAuBZ3IPCrkjPwHAX8+DNa5pqM0afUjn5X6s=;
+        b=TWNWSWEY7HXArutkAK5TCR9VNlVifBI9JMk0tZX5jzhjz9a8OAPfKtbu01jJ4UBAWM
+         KQa1ooFqDy7XA6DlDNxf6HYS6bkdqy/u98xycvUh/EdBAJOfHCIUq4sxBcU9uegPhjZ8
+         nWOmG3WkXGpra1pzYS9PkOdR5qBGQ5AF0Y5tNLeNJszoMpe4f+Ee9CxrKj8sfyEjM7jo
+         jLEY6YknC6g2QndFVA9Cabj9FftzqvKb0wf5AW7Ura0NKriIrHf7THoFg9v53jLvFQkm
+         wNDpOk1ncYb99T9b30lCevEDZATxnIAcT0Z8sIojvaVRr9wu6t54XyVQOsSXwi/oilnt
+         xTxg==
+X-Gm-Message-State: AOAM530PWWzW+wzHDXBgtTo+5Km6t/cboMfGUG3fkWOeacXJ3oZaNxO9
+        RVW/AegCKdaZI37bt412oz4dFz/5WhBl1Zr7A3xcmw==
+X-Google-Smtp-Source: ABdhPJxZkk2CPz2+JgnqesQh/6Q2toSIuomPC2gF0BhYxxkrw/FgNoCUwNXohjnwegJoJqNJZnPv//TQH98s+vGiwVw=
+X-Received: by 2002:a17:906:ad8e:: with SMTP id la14mr25980011ejb.264.1605134462866;
+ Wed, 11 Nov 2020 14:41:02 -0800 (PST)
+MIME-Version: 1.0
+References: <20201111054356.793390-1-ben.widawsky@intel.com>
+ <20201111054356.793390-4-ben.widawsky@intel.com> <20201111071231.GC7829@infradead.org>
+ <CAPcyv4iA_hNc=xdcbR-eb57W9o4br1BognSr5Sj4pAO3uMm69g@mail.gmail.com> <4a8b5a64-7ba0-a275-744f-6642f98e2213@infradead.org>
+In-Reply-To: <4a8b5a64-7ba0-a275-744f-6642f98e2213@infradead.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 11 Nov 2020 14:40:52 -0800
+Message-ID: <CAPcyv4gPwNj+aaRs++hxSxJke8H476hhppcn84t3KUBr0Ff2og@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/9] cxl/mem: Add a driver for the type-3 mailbox
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-cxl@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         "Kelley, Sean V" <sean.v.kelley@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [RFC PATCH 0/9] CXL 2.0 Support
-Message-ID: <20201111220624.gpzykl4k26vylfyy@intel.com>
-References: <20201111054356.793390-1-ben.widawsky@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201111054356.793390-1-ben.widawsky@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Adding a cross reference to the QEMU work since I sent those patches after this:
+On Wed, Nov 11, 2020 at 1:42 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 11/11/20 9:17 AM, Dan Williams wrote:
+> > On Tue, Nov 10, 2020 at 11:12 PM Christoph Hellwig <hch@infradead.org> wrote:
+> >>
+> >> On Tue, Nov 10, 2020 at 09:43:50PM -0800, Ben Widawsky wrote:
+> >>> +config CXL_MEM
+> >>> +        tristate "CXL.mem Device Support"
+> >>> +        depends on PCI && CXL_BUS_PROVIDER != n
+> >>
+> >> depend on PCI && CXL_BUS_PROVIDER
+> >>
+> >>> +        default m if CXL_BUS_PROVIDER
+> >>
+> >> Please don't set weird defaults for new code.  Especially not default
+> >> to module crap like this.
+> >
+> > This goes back to what people like Dave C. asked for LIBNVDIMM / DAX,
+> > a way to blanket turn on a subsystem without needing to go hunt down
+> > individual configs. All of CXL is "default n", but if someone turns on
+> > a piece of it they get all of it by default. The user can then opt-out
+> > on pieces after that first opt-in. If there's a better way to turn on
+> > suggested configs I'm open to switch to that style. As for the
+> > "default m" I was worried that it would be "default y" without the
+> > specificity, but I did not test that... will check. There have been
+> > times when I wished that distros defaulted bleeding edge new enabling
+> > to 'm' and putting that default in the Kconfig maybe saves me from
+> > needing to file individual config changes to distros after the fact.
+>
+> What we as developers put into mainline kernel Kconfig files has nothing
+> to do with what distros use in their distro config files.
+> Or at least it shouldn't.  Maybe your experience has been different.
 
-https://gitlab.com/bwidawsk/qemu/-/tree/cxl-2.0
-https://lists.nongnu.org/archive/html/qemu-devel/2020-11/msg02886.html
+I agree with that sentiment, but walk it back through the requirement
+I mentioned above... *if* we want a top-level CXL option (default n)
+that goes and enables many CXL sub-options the default for those
+sub-options is something that needs to be listed in the Kconfig. 'm'
+is more flexible than 'y', so if a user wants CXL at all, and doesn't
+care about how, I'd prefer it's 'm' rather than 'y'.
 
-[snip]
+I have had to go submit distro config fixes when Kconfig defaulted to
+'y' when 'm' was available, and the reasoning for why it was 'y' was
+"oh, that was the Kconfig default when I flipped this other option".
 
+
+> >>> +// Copyright(c) 2020 Intel Corporation. All rights reserved.
+> >>
+> >> Please don't use '//' for anything but the SPDX header.
+> >
+> > Ok, I find // following by /* */ a bit ugly, but I don't care enough to fight.
+> >
+>
+> Hm, it's not in coding-style AFAICT but Linus has OK-ed C99 style comments:
+> http://lkml.iu.edu/hypermail/linux/kernel/1607.1/00627.html
+>
+>
+> >>> +MODULE_AUTHOR("Intel Corporation");
+> >>
+> >> A module author is not a company.
+> >
+> > At least I don't have a copyright assignment clause, I don't agree
+> > with the vanity of listing multiple people here especially when
+> > MAINTAINERS has the contact info, and I don't want to maintain a list
+> > as people do drive-by contributions and we need to figure out at what
+> > level of contribution mandates a new MODULE_AUTHOR line. Now, that
+> > said I would be ok to duplicate the MAINTAINERS as MODULE_AUTHOR
+> > lines, but I otherwise expect MAINTAINERS is the central source for
+> > module contact info.
+>
+> Sure, MAINTAINERS is fine, but the MODULE_AUTHOR() above provides
+> no useful information.
+> Even saying (made up) linux-devel@linux.intel.com would be slightly better,
+> but some kind of contact info would be great. Otherwise just delete that line.
+
+True, if the goal is to allow random end users to email support
+questions about this module I'd rather not put my email there.
+Instead, if it's someone that has kernel development questions then
+they should be able to use MAINTAINERS for that contact.
