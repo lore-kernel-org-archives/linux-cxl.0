@@ -2,66 +2,45 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD72C56202
-	for <linux-cxl@archiver.kernel.org>; Sun, 15 Nov 2020 00:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A34AFC6369E
+	for <linux-cxl@archiver.kernel.org>; Mon, 16 Nov 2020 16:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6CF72415A
-	for <linux-cxl@archiver.kernel.org>; Sun, 15 Nov 2020 00:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635A02076E
+	for <linux-cxl@archiver.kernel.org>; Mon, 16 Nov 2020 16:56:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="zc3rdizN"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kHsGrYZx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgKOAXP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 14 Nov 2020 19:23:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33762 "EHLO
+        id S1731135AbgKPQ4Z (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 16 Nov 2020 11:56:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgKOAXO (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 14 Nov 2020 19:23:14 -0500
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7689AC0617A7
-        for <linux-cxl@vger.kernel.org>; Sat, 14 Nov 2020 16:23:14 -0800 (PST)
-Received: by mail-ej1-x644.google.com with SMTP id o21so19280690ejb.3
-        for <linux-cxl@vger.kernel.org>; Sat, 14 Nov 2020 16:23:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lDh65djbL3+0Re90HpQ5uGMlQP39/tC1wlxppwwaGTY=;
-        b=zc3rdizNfrZHTpuFBKiOHjqOwj6YqI2lGQqq1CIM1svWbGLkuj/ogSOyy17y75VwVd
-         L6cc3S/XVvEFZqqX4pdVY/cGrRQ+flMvXHh7oynk2Ie8/VBSbHKRG+ThVDKyqbaANL0k
-         FQfx0sfijJHCliwLeja2xC/HTr8wnJi8CEeGZ1JLSnHpY5Z++1yiEZDbJoCKCQSQ6c37
-         VWein7kr8k8BWh8IKbOK1OQs1YRg027F2crWu1EA/LCdCZWqd70sOZ0A+3Byul3gFs/E
-         3jefRbgfwN/hymenfNMTypRKITs4C+ZP2tilUmsar59vknU4dfx7XK82wThhMsaLKtet
-         gONQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lDh65djbL3+0Re90HpQ5uGMlQP39/tC1wlxppwwaGTY=;
-        b=T47hEPxF0kCIvo0wuBm4fiS8VCDBOKyA+tSG+g726+7V88yTLhmc7k7cYi0v/Z3ei4
-         6wVlPU1PMSenqTDHaDeGLhuFlZvHYk4UgEdEpOlmSq2dza/cLsm0APA7gwrI/W5nrH8n
-         6QGGO+8pRxVLCs5OGDHQvUZduSnwET5Hf9bViGT4+Lum/DW24ICBkGVTZKPoYvmnUj8t
-         5aYfBUHAq4hdUWRMtiiTZqCvS+mRm5xz+3QpiVtRifcfdBFaFIx2z7lOtyQm68WMays2
-         8RY9D2jeA+6DZrC1OARh4DpNDnWItyA4j6YCWtnibfkTwJ0R0UHCT42zjmmDPJSfHEBd
-         SETA==
-X-Gm-Message-State: AOAM533enuwmfeKjN00ZvkwaHg5kU7Gf6TqKIk9gV72Rf755uC6Viw/t
-        QvlaYxgDrufkkujq8jlSgasYSWjnECSdAudU3OwATQ==
-X-Google-Smtp-Source: ABdhPJxu7z1ds+uPMjji3l7IMz1L0jCGl0EvxBCAcYszfLVIk8E4wu3dHa0UYb/r0y+qQAQvl39SnBZ7N8XVf4izdPU=
-X-Received: by 2002:a17:906:d92c:: with SMTP id rn12mr8596908ejb.472.1605399792950;
- Sat, 14 Nov 2020 16:23:12 -0800 (PST)
-MIME-Version: 1.0
-References: <20201111054356.793390-4-ben.widawsky@intel.com>
- <20201113181728.GA1119310@bjorn-Precision-5520> <20201114010857.t77h4h3ff7ythnml@intel.com>
-In-Reply-To: <20201114010857.t77h4h3ff7ythnml@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sat, 14 Nov 2020 16:23:04 -0800
-Message-ID: <CAPcyv4g+27K-Amk_PhBvSx9+NnWTTP=yDHLdukK1AmK63X8Abw@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/9] cxl/mem: Add a driver for the type-3 mailbox
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-cxl@vger.kernel.org,
+        with ESMTP id S1729841AbgKPQ4Y (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 16 Nov 2020 11:56:24 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8CB8C0613CF;
+        Mon, 16 Nov 2020 08:56:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ez/r2/t/kaF/FI46SV1LmO29yACb2u0s7Czy4NzcvE4=; b=kHsGrYZx3pXNKiKe3+8BlasjBW
+        /ZgYNui94kDLwShlww2me1+1fA4ohcU1nTMG85WRNbyMRPoOQPx+S9zKAlfQuvxKVwd+6GuqrZCl7
+        NTIQc7+ZTB6ssHPk8RT7yF3ufRM0rOvmKByQ6wBPZcypkiNt6+eBX73VqR2BLS9eoYFCvQcVPfDIb
+        rDlGRMSQ6n91vNZ38kfhhWPquKS9z/Q+pnuCzdDgzMQrCtNXPBNMeZ39vH4tKWiH6N9GFZh5Zi+Gi
+        ok7Prt96LS1TzyORkJiN/vVnb7x+BtXvQKO6pPfQb0bj0RUITHw2K84UVxvdKTG2xR1Cq0q0gnyOb
+        oCpYy1Dw==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kehnj-0006G5-3G; Mon, 16 Nov 2020 16:56:23 +0000
+Date:   Mon, 16 Nov 2020 16:56:23 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-cxl@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linux PCI <linux-pci@vger.kernel.org>,
         Linux ACPI <linux-acpi@vger.kernel.org>,
@@ -70,170 +49,58 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-cxl@vger.kernel.org,
         "Kelley, Sean V" <sean.v.kelley@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [RFC PATCH 3/9] cxl/mem: Add a driver for the type-3 mailbox
+Message-ID: <20201116165623.GA23268@infradead.org>
+References: <20201111054356.793390-1-ben.widawsky@intel.com>
+ <20201111054356.793390-4-ben.widawsky@intel.com>
+ <20201111071231.GC7829@infradead.org>
+ <CAPcyv4iA_hNc=xdcbR-eb57W9o4br1BognSr5Sj4pAO3uMm69g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4iA_hNc=xdcbR-eb57W9o4br1BognSr5Sj4pAO3uMm69g@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Nov 13, 2020 at 5:09 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
-[..]
-> > Unused, maybe move it to the patch that adds the use?
+On Wed, Nov 11, 2020 at 09:17:37AM -0800, Dan Williams wrote:
+> > > +config CXL_MEM
+> > > +        tristate "CXL.mem Device Support"
+> > > +        depends on PCI && CXL_BUS_PROVIDER != n
 > >
->
-> This is a remnant from when Dan gave me the basis to do the mmio work. I agree
-> it can be removed now.
-
-Yes.
-
-> > > +static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
-> > > +{
-> > > +   int pos;
-> > > +
-> > > +   pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DVSEC);
-> > > +   if (!pos)
-> > > +           return 0;
-> > > +
-> > > +   while (pos) {
-> > > +           u16 vendor, id;
-> > > +
-> > > +           pci_read_config_word(pdev, pos + PCI_DVSEC_VENDOR_OFFSET, &vendor);
-> > > +           pci_read_config_word(pdev, pos + PCI_DVSEC_ID_OFFSET, &id);
-> > > +           if (vendor == PCI_DVSEC_VENDOR_CXL && dvsec == id)
-> > > +                   return pos;
-> > > +
-> > > +           pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC);
-> > > +   }
-> > > +
-> > > +   return 0;
-> > > +}
+> > depend on PCI && CXL_BUS_PROVIDER
 > >
-> > I assume we'll refactor and move this into the PCI core after we
-> > resolve the several places this is needed.  When we do that, the
-> > vendor would be passed in, so maybe we should do that here to make it
-> > simpler to move this to the PCI core.
+> > > +        default m if CXL_BUS_PROVIDER
 > >
->
-> I think we'll need to keep this in order to try to keep the dream alive of
-> loading a CXL kernel module on an older kernel. However, PCI code would benefit
-> from having it (in an ideal world, it'd only be there).
+> > Please don't set weird defaults for new code.  Especially not default
+> > to module crap like this.
+> 
+> This goes back to what people like Dave C. asked for LIBNVDIMM / DAX,
+> a way to blanket turn on a subsystem without needing to go hunt down
+> individual configs.
 
-So I think this is fine / expected to move standalone common code like
-this to the PCI core. What I'm aiming to avoid with "the dream" Ben
-references is unnecessary dependencies on core changes. CXL is large
-enough that it will generate more backport pressure than ACPI NFIT /
-LIBNVDIMM ever did. From a self interest perspective maximizing how
-much of CXL can be enabled without core dependencies is a goal just to
-lighten my own backport load. The internals of cxl_mem_dvsec() are
-simple enough to backport.
+Then at least do a
 
->
-> > > +static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> > > +{
-> > > +   struct device *dev = &pdev->dev;
-> > > +   struct cxl_mem *cxlm;
-> > > +   int rc, regloc;
-> > > +
-> > > +   rc = cxl_bus_prepared(pdev);
-> > > +   if (rc != 0) {
-> > > +           dev_err(dev, "failed to acquire interface\n");
-> >
-> > Interesting naming: apparently when cxl_bus_prepared() returns a
-> > non-zero ("true") value, it is actually *not* prepared?
-> >
->
-> This looks like a rebase fail to me, but I'll let Dan answer.
+   default CXL_BUS_PROVIDER
 
-Yeah, I originally envisioned this as a ternary result with
--EPROBE_DEFER as a possible return value, but now that we've found a
-way to handle CXL _OSC without colliding with legacy PCIE _OSC this
-can indeed move to a boolean result.
+but we really don't do this elsewhere.  E.g. we don't default the scsi
+disk driver on if there is some host adapter selected.
 
-Will fix up.
 
->
-> > > +           return rc;
-> > > +   }
-> > > +
-> > > +   regloc = cxl_mem_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC);
-> > > +   if (!regloc) {
-> > > +           dev_err(dev, "register location dvsec not found\n");
-> > > +           return -ENXIO;
-> > > +   }
-> > > +
-> > > +   cxlm = devm_kzalloc(dev, sizeof(*cxlm), GFP_KERNEL);
-> > > +   if (!cxlm)
-> > > +           return -ENOMEM;
-> >
-> > Unused.  And [4/9] removes it before it's *ever* used :)
-> >
->
-> Same as a few above, I think Dan was providing this for me to implement the
-> reset. It could go away...
-
-Yes, a collaboration artifact that we can clean up.
-
->
-> > > +   return 0;
-> > > +}
-> > > +
-> > > +static void cxl_mem_remove(struct pci_dev *pdev)
-> > > +{
-> > > +}
-> > > +
-> > > +static const struct pci_device_id cxl_mem_pci_tbl[] = {
-> > > +   /* PCI class code for CXL.mem Type-3 Devices */
-> > > +   { PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
-> > > +     PCI_CLASS_MEMORY_CXL, 0xffffff, 0 },
-> > > +   { /* terminate list */ },
-> > > +};
-> > > +MODULE_DEVICE_TABLE(pci, cxl_mem_pci_tbl);
-> > > +
-> > > +static struct pci_driver cxl_mem_driver = {
-> > > +   .name                   = KBUILD_MODNAME,
-> > > +   .id_table               = cxl_mem_pci_tbl,
-> > > +   .probe                  = cxl_mem_probe,
-> > > +   .remove                 = cxl_mem_remove,
-> > > +};
-> > > +
-> > > +MODULE_LICENSE("GPL v2");
 > > > +MODULE_AUTHOR("Intel Corporation");
-> > > +module_pci_driver(cxl_mem_driver);
-> > > +MODULE_IMPORT_NS(CXL);
-> > > diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
-> > > new file mode 100644
-> > > index 000000000000..beb03921e6da
-> > > --- /dev/null
 > >
-> > > +++ b/drivers/cxl/pci.h
-> > > @@ -0,0 +1,15 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +// Copyright(c) 2020 Intel Corporation. All rights reserved.
-> >
-> > /* SPDX-... */
-> > /* Copyright ...*/
-> >
-> > The SPDX rules are a bit arcane and annoyingly hard to grep for, but
-> > I found them in Documentation/process/license-rules.rst
+> > A module author is not a company.
+> 
+> At least I don't have a copyright assignment clause, I don't agree
+> with the vanity of listing multiple people here especially when
+> MAINTAINERS has the contact info, and I don't want to maintain a list
+> as people do drive-by contributions and we need to figure out at what
+> level of contribution mandates a new MODULE_AUTHOR line. Now, that
+> said I would be ok to duplicate the MAINTAINERS as MODULE_AUTHOR
+> lines, but I otherwise expect MAINTAINERS is the central source for
+> module contact info.
 
-Yes, I did not realize the header vs source /* */ vs // SPDX style.
-
-> >
-> > > +#ifndef __CXL_PCI_H__
-> > > +#define __CXL_PCI_H__
-> > > +
-> > > +#define PCI_CLASS_MEMORY_CXL       0x050210
-> > > +
-> > > +#define PCI_EXT_CAP_ID_DVSEC       0x23
-> > > +#define PCI_DVSEC_VENDOR_CXL       0x1E98
-> > > +#define PCI_DVSEC_VENDOR_OFFSET    0x4
-> > > +#define PCI_DVSEC_ID_OFFSET        0x8
-> > > +#define PCI_DVSEC_ID_CXL   0x0
-> > > +#define PCI_DVSEC_ID_CXL_REGLOC    0x8
-> >
-> > I assume these will go in include/linux/pci_ids.h (PCI_CLASS_...) and
-> > include/uapi/linux/pci_regs.h (the rest) eventually, after we get the
-> > merge issues sorted out.  But if they're only used in cxl/mem.c, I'd
-> > put them there for now.
-
-Yes, I assume they'll move eventually. I'm cheating a standalone
-backport driver organization in the meantime.
+IMHO MODULE_AUTHOR is completely pointless.  I haven't used for ~15
+years.  Especially as the concept that a module has a single author
+is a rather strange one.
