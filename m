@@ -2,71 +2,69 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC374C2D0E4
-	for <linux-cxl@archiver.kernel.org>; Tue, 17 Nov 2020 18:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97858C63697
+	for <linux-cxl@archiver.kernel.org>; Tue, 17 Nov 2020 21:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 845902222C
-	for <linux-cxl@archiver.kernel.org>; Tue, 17 Nov 2020 18:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 336392465E
+	for <linux-cxl@archiver.kernel.org>; Tue, 17 Nov 2020 21:45:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="HPUWe+ME"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="FBb5z0wF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731456AbgKQSi3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 17 Nov 2020 13:38:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52338 "EHLO
+        id S1728330AbgKQVpd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 17 Nov 2020 16:45:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726995AbgKQSi2 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 17 Nov 2020 13:38:28 -0500
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85B82C0613CF
-        for <linux-cxl@vger.kernel.org>; Tue, 17 Nov 2020 10:38:28 -0800 (PST)
-Received: by mail-ed1-x543.google.com with SMTP id cq7so23537950edb.4
-        for <linux-cxl@vger.kernel.org>; Tue, 17 Nov 2020 10:38:28 -0800 (PST)
+        with ESMTP id S1727943AbgKQVpd (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 17 Nov 2020 16:45:33 -0500
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9309BC0617A7
+        for <linux-cxl@vger.kernel.org>; Tue, 17 Nov 2020 13:45:32 -0800 (PST)
+Received: by mail-ed1-x541.google.com with SMTP id q16so8893284edv.10
+        for <linux-cxl@vger.kernel.org>; Tue, 17 Nov 2020 13:45:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=c3LgJ1btHwr+UlowB5dcekxQptEcC5LkMAcIQycCj/s=;
-        b=HPUWe+MEmh4/ZGZhS/NOZCJ/FcMIxqkdI1j6yjJn0rS8dL8H7TA6ft97CtJHcQhfDE
-         yswJwYsO3BFqjZa1LX3WsLbKQLmPGwdx6hE+5AHWVSx+SAYOv40Q6rJykNC8KgfQidwW
-         LPA3JNaUV09LZX522K+ZYhBQ4PudnNpPP+gdFTUbCYLlX1Bj8oFOPvHK2dBSblFnNJQb
-         KYHJcIC4UlSR0OBgy71IGxCFAfxpx0uf9B96ghNPDSW+GPmGm37x1QKBaWLT/Zb2SywC
-         gs7Om2GvQm1HTzlhJa7czIUXY0Eay0asC90kQNyTg6L2MqrXQHlVFaGqoOSyl1rnRdoO
-         F1kw==
+        bh=5lBVBDWK8SCqKzaHy0L/+mLoij0OAwknWiLnXgPeJSM=;
+        b=FBb5z0wFGOiQbc45dE0niLuV0rybunP/wEU/0k6b783EPVbzDuRuejCVpDauBALHfc
+         +lc+d6XRbgwNlOlzPZ80uZOVCFXlW1F2ThVz/PgWXDMr5Qk2qXUzVeV/mkMEpA6NGBWJ
+         /r6IhOXal5Ashs5MZqCi+/Cclekpk1N7Hu9Viof3LXHIYVpqGBDN2fBwVFtEcO1Bg3xL
+         tzN0ffs5tPZJKxTNR/PuvOabZJbNfgH+ytvBghZkwTb90HvxcpdUGn1dX3oNF3/DPg4V
+         t49QQpzkPhLWrGwW9cDwq4Kw7uQG5EcgkdpwrzO/HDHONv+D/N6z78dNpCEiwy/lcNpB
+         TB3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=c3LgJ1btHwr+UlowB5dcekxQptEcC5LkMAcIQycCj/s=;
-        b=IpQmz4dbwbBXs0RUNDVX2t2PhZADOf4+AxiSRB2auS9XJScAIC6CffqeyrHOs9XflC
-         ZrWCHEbA6slgFGuOhYaW3PsiKDzEPusbDKbg9HpUUmYOr+WnrnrSJBQNUSRgi2PO6sCG
-         UxLhneO3Gl9aUBAN4dFshCB/IalDx4CWF8/ibwoOJs7IzuX1yDZGJRFTod9Ns0bK0GOS
-         2VbE+C32xlXg5N2ue77qm7qz58q93J3eAEemnhIK3lrwqoFUik+JaBstmUK63i/MOT/5
-         M20Kx+Z1RNChcRMwGy+Vf9OKafEeIeO+7zZU23eE8JOHlYgcnELlxoAWtRMsEjV7MOTG
-         Jtxw==
-X-Gm-Message-State: AOAM531cBOGdseLmZSeGRqbTUvsU/DeT3axD6tYBLdVxP1AjxDYRcubp
-        aRh9n+iNbblFhC2qI+dzSVn1PCKWofceK7pr0QwgNg==
-X-Google-Smtp-Source: ABdhPJzRbZ3GE9o2Fhnn1yExUl8l8zyNLuAMhobgMHPT7mpHWPmtL56Ye4MixpEyGH0MpV4BKUOrZSS5oTVRqdyBXvA=
-X-Received: by 2002:a05:6402:31b6:: with SMTP id dj22mr22956236edb.348.1605638307225;
- Tue, 17 Nov 2020 10:38:27 -0800 (PST)
+        bh=5lBVBDWK8SCqKzaHy0L/+mLoij0OAwknWiLnXgPeJSM=;
+        b=tpKaQFdz1ORGOpRYlO+D8zmTRP23cHUy/QuO1KHVZjgGlfvnxBCDlq8VW9O/9zEyHF
+         TRaub8jaSBnV5bqyMsBDh89Py2JGqcbZKSia9GgiZZXgeAQBdauhvgSQrvHoMVldE4x7
+         UPMsoM1F5ipagp5asgV2/GEq4fqQLu/SK4YDfw7foR7u4ZsKctcelQ/GvnhXfViI5rWK
+         T4DuXwUc7+EEZgZ05kfi2A3MVLIuqluYQKZByLSg6JcB0bf9c+T2OZ5hTcWVivQ1c/l7
+         nHzQpRdrmBfe9AyUoL2htAzn3qnjA5uYvKhnXw+/F/eH324OoiyCRXAnGWgdrbiliO3t
+         928Q==
+X-Gm-Message-State: AOAM530bztQ7cwnP3SqfLUDT5CaHFfZdLtZdtCYJHbw2d7Gm5qzmjtAl
+        M/AuqRB9Wjz2/r5ZqsXs8pfqi5m1Rcgma1NRqNFnKg==
+X-Google-Smtp-Source: ABdhPJyqTIqMdYQYBJBwXDLjTJrIAYOVAjbbvPmUH0FRy9zTiej41mBWzaPPONfsn2ZvoadeWtEkbQOTbaDmxU63dbg=
+X-Received: by 2002:a05:6402:b35:: with SMTP id bo21mr24193805edb.52.1605649531304;
+ Tue, 17 Nov 2020 13:45:31 -0800 (PST)
 MIME-Version: 1.0
 References: <20201111054356.793390-1-ben.widawsky@intel.com>
- <20201111054356.793390-8-ben.widawsky@intel.com> <20201117153122.00001a5a@Huawei.com>
- <20201117163438.co63em73mmil5xm5@intel.com> <20201117180638.00003703@Huawei.com>
-In-Reply-To: <20201117180638.00003703@Huawei.com>
+ <20201111054356.793390-2-ben.widawsky@intel.com> <CAJZ5v0i7fcoBe5o-J7q5fYW_1nUYJ-QdshWOBV5fFf85rD_sDA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0i7fcoBe5o-J7q5fYW_1nUYJ-QdshWOBV5fFf85rD_sDA@mail.gmail.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 17 Nov 2020 10:38:15 -0800
-Message-ID: <CAPcyv4jyXR99bEUTiT8HFsb0cTLA3XBfuNrHosUR2GQOWAA_5Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 7/9] cxl/mem: Implement polled mode mailbox
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Date:   Tue, 17 Nov 2020 13:45:20 -0800
+Message-ID: <CAPcyv4i6MCu6RmLCyE+K-j3bbtrYeA+hJXL4+Zy_Tfhmwv2ErA@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/9] cxl/acpi: Add an acpi_cxl module for the CXL interconnect
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
 Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         "Kelley, Sean V" <sean.v.kelley@intel.com>,
@@ -77,124 +75,18 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Nov 17, 2020 at 10:07 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
+On Tue, Nov 17, 2020 at 6:33 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+[..]
+> > +static struct acpi_driver acpi_cxl_driver = {
 >
-> On Tue, 17 Nov 2020 08:34:38 -0800
-> Ben Widawsky <ben.widawsky@intel.com> wrote:
+> First of all, no new acpi_driver instances, pretty please!
 >
-> > On 20-11-17 15:31:22, Jonathan Cameron wrote:
-> > > On Tue, 10 Nov 2020 21:43:54 -0800
-> > > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > >
-> > > > Create a function to handle sending a command, optionally with a
-> > > > payload, to the memory device, polling on a result, and then optionally
-> > > > copying out the payload. The algorithm for doing this come straight out
-> > > > of the CXL 2.0 specification.
-> > > >
-> > > > Primary mailboxes are capable of generating an interrupt when submitting
-> > > > a command in the background. That implementation is saved for a later
-> > > > time.
-> > > >
-> > > > Secondary mailboxes aren't implemented at this time.
-> > > >
-> > > > WARNING: This is untested with actual timeouts occurring.
-> > > >
-> > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > >
-> > > Question inline for why the preempt / local timer dance is worth bothering with.
-> > > What am I missing?
-> > >
-> > > Thanks,
-> > >
-> > > Jonathan
-> > >
-> > > > ---
-> > > >  drivers/cxl/cxl.h |  16 +++++++
-> > > >  drivers/cxl/mem.c | 107 ++++++++++++++++++++++++++++++++++++++++++++++
-> > > >  2 files changed, 123 insertions(+)
-> > > >
-> > > > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > > > index 482fc9cdc890..f49ab80f68bd 100644
-> > > > --- a/drivers/cxl/cxl.h
-> > > > +++ b/drivers/cxl/cxl.h
-> > > > @@ -21,8 +21,12 @@
-> > > >  #define CXLDEV_MB_CTRL 0x04
-> > > >  #define   CXLDEV_MB_CTRL_DOORBELL BIT(0)
-> > > >  #define CXLDEV_MB_CMD 0x08
-> > > > +#define   CXLDEV_MB_CMD_PAYLOAD_LENGTH_SHIFT 16
-> > > >  #define CXLDEV_MB_STATUS 0x10
-> > > > +#define   CXLDEV_MB_STATUS_RET_CODE_SHIFT 32
-> > > > +#define   CXLDEV_MB_STATUS_RET_CODE_MASK 0xffff
-> > > >  #define CXLDEV_MB_BG_CMD_STATUS 0x18
-> > > > +#define CXLDEV_MB_PAYLOAD 0x20
-> > > >
-> > > >  /* Memory Device */
-> > > >  #define CXLMDEV_STATUS 0
-> > > > @@ -114,4 +118,16 @@ static inline u64 __cxl_raw_read_reg64(struct cxl_mem *cxlm, u32 reg)
-> > > >
-> > > >   return readq(reg_addr + reg);
-> > > >  }
-> > > > +
-> > > > +static inline void cxl_mbox_payload_fill(struct cxl_mem *cxlm, u8 *input,
-> > > > +                                     unsigned int length)
-> > > > +{
-> > > > + memcpy_toio(cxlm->mbox.regs + CXLDEV_MB_PAYLOAD, input, length);
-> > > > +}
-> > > > +
-> > > > +static inline void cxl_mbox_payload_drain(struct cxl_mem *cxlm,
-> > > > +                                      u8 *output, unsigned int length)
-> > > > +{
-> > > > + memcpy_fromio(output, cxlm->mbox.regs + CXLDEV_MB_PAYLOAD, length);
-> > > > +}
-> > > >  #endif /* __CXL_H__ */
-> > > > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > > > index 9fd2d1daa534..08913360d500 100644
-> > > > --- a/drivers/cxl/mem.c
-> > > > +++ b/drivers/cxl/mem.c
-> > > > @@ -1,5 +1,6 @@
-> > > >  // SPDX-License-Identifier: GPL-2.0-only
-> > > >  // Copyright(c) 2020 Intel Corporation. All rights reserved.
-> > > > +#include <linux/sched/clock.h>
-> > > >  #include <linux/module.h>
-> > > >  #include <linux/pci.h>
-> > > >  #include <linux/io.h>
-> > > > @@ -7,6 +8,112 @@
-> > > >  #include "pci.h"
-> > > >  #include "cxl.h"
-> > > >
-> > > > +struct mbox_cmd {
-> > > > + u16 cmd;
-> > > > + u8 *payload;
-> > > > + size_t payload_size;
-> > > > + u16 return_code;
-> > > > +};
-> > > > +
-> > > > +static int cxldev_wait_for_doorbell(struct cxl_mem *cxlm)
-> > > > +{
-> > > > + u64 start, now;
-> > > > + int cpu, ret, timeout = 2000000000;
-> > > > +
-> > > > + start = local_clock();
-> > > > + preempt_disable();
-> > > > + cpu = smp_processor_id();
-> > > > + for (;;) {
-> > > > +         now = local_clock();
-> > > > +         preempt_enable();
-> > >
-> > > What do we ever do with this mailbox that is particularly
-> > > performance critical? I'd like to understand why we care enough
-> > > to mess around with the preemption changes and local clock etc.
-> > >
-> >
-> > It is quite obviously a premature optimization at this point (since we only
-> > support a single command in QEMU). However, the polling can be anywhere from
-> > instant to 2 seconds. QEMU implementation aside again, some devices may never
-> > support interrupts on completion, and so I thought providing a poll function now
-> > that is capable of working for most [all?] cases was wise.
+> acpi_default_enumeration() should create a platform device with the
+> ACPI0017 ID for you.  Can't you provide a driver for this one?
 >
-> Definitely seems premature.  I'd want to see real numbers on hardware
-> to justify this sort of complexity.  Maybe others disagree though.
 
-The polling is definitely needed, but I think it can be a simple
-jiffies based loop and avoid this sched_clock() complexity.
+Ah, yes, I recall we had this discussion around the time the ACPI0012
+NFIT driver was developed. IIRC the reason ACPI0012 remaining an
+acpi_driver was due to a need to handle ACPI notifications, is that
+the deciding factor? ACPI0017 does not have any notifications so it
+seems like platform driver is the way to go.
