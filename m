@@ -2,160 +2,104 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB1CC56202
-	for <linux-cxl@archiver.kernel.org>; Tue, 24 Nov 2020 00:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 229F8C63777
+	for <linux-cxl@archiver.kernel.org>; Thu, 26 Nov 2020 06:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCCD020781
-	for <linux-cxl@archiver.kernel.org>; Tue, 24 Nov 2020 00:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC6C520DD4
+	for <linux-cxl@archiver.kernel.org>; Thu, 26 Nov 2020 06:06:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=jonmasters-org.20150623.gappssmtp.com header.i=@jonmasters-org.20150623.gappssmtp.com header.b="fODQbTzl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbgKXAR6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 23 Nov 2020 19:17:58 -0500
-Received: from mga07.intel.com ([134.134.136.100]:22729 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726745AbgKXAR6 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 23 Nov 2020 19:17:58 -0500
-IronPort-SDR: h/P8m5SANIsheky63hBHV2HCKKlCQg6Xo5qxkC2nXcmfYR8EmXlGxmx89R02SJA2fWG4h9C0lA
- CkFGkI8caFZw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9814"; a="236005070"
-X-IronPort-AV: E=Sophos;i="5.78,364,1599548400"; 
-   d="scan'208";a="236005070"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2020 16:17:56 -0800
-IronPort-SDR: qbW+WwGzLA8+eSg5GGNT6me0DMfLWg1G8/paGswTGz2dXhdExFobeq/Qb6sf6WTrtqCA5F8SfF
- k+MwQe1cGyhw==
-X-IronPort-AV: E=Sophos;i="5.78,364,1599548400"; 
-   d="scan'208";a="546615424"
-Received: from laloy-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.133.93])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2020 16:17:56 -0800
-Date:   Mon, 23 Nov 2020 16:17:54 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        id S2387904AbgKZGGC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 26 Nov 2020 01:06:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732397AbgKZGGC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 26 Nov 2020 01:06:02 -0500
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3DA9C0613D4
+        for <linux-cxl@vger.kernel.org>; Wed, 25 Nov 2020 22:06:00 -0800 (PST)
+Received: by mail-io1-xd42.google.com with SMTP id o8so736470ioh.0
+        for <linux-cxl@vger.kernel.org>; Wed, 25 Nov 2020 22:06:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jonmasters-org.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oEy5q2En1SJI6u34J14mPbz3ymhjWNLu2ImEmUAs9Ws=;
+        b=fODQbTzlog4xbJsMW2izr9T6xV3uC+lc03b1qJ1qSawbRoENnx1Br2TPMmRNY6FXY4
+         ozf90S+p14K47ND2crcJTtExuHJ8j6Mt8bza5gS/hxyN2GTaVHahBV6A1qInS4vXwlaJ
+         81eY/junYJYx/Vcf856DH3Cr64N7ZU+cwY5VtTc+zMWwF6Gq0mZDmDOe50yNYYTWh6Ip
+         jHM+22whCE31Y3BcnmQ8X24tSHUX3wrQjR60Ftzfhqz2HvEr8bG0XTZ0osF0LAr2RnDj
+         MFu4B+QaX/B6Kv1Jqj7k+MhrL15GlxJq+d6WmVs45l8wsfvnf4REBe3jxfZKDGcMFhR8
+         +1kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=oEy5q2En1SJI6u34J14mPbz3ymhjWNLu2ImEmUAs9Ws=;
+        b=TFydHj4Muv2Gfo5snxm5KEKTsy3M4YjTxHDjXGbDnm8UNmsVOzhOt0/p8tq7gm6QUa
+         Udr9AMb3t+ZgcSFbn1BCNU036ZJm4h54awns4kbaetGcXdvcbowQIAPOrwXaeq0K/CK4
+         Ztdrct3PZeJyXxdnS/MJ1wSJv3ixh1xb4xvTSADuNuHxNuWBpGqIoeYXJl3jrHpHV7Yz
+         f1t+URK0czEHhyjxseVzdt5Hdypw6fHkrBd+vgvLSE38C52z1Dvu4UcUWVqYOAfRscoI
+         JI9/mq/93DxxxMIHduzvh6xMPWC1d4+o+uZYO3NtrBml8ZTzmN3OsloQQGPDpU3xwNN5
+         oPDQ==
+X-Gm-Message-State: AOAM531FMI5fxJF+JckCtPLewVMNZvD3enFljrm3QjOfKQfSzTsXAaE0
+        eAr+wTSk7roiPwOK6AMII+TEHA==
+X-Google-Smtp-Source: ABdhPJwFDDEDdU/s/zYaPx0ggHOsOr62MbBrECZawSaq4PlqyTZscFc4nlCfmRS2OLqWEFdp3N4DEA==
+X-Received: by 2002:a02:4c8:: with SMTP id 191mr1865300jab.70.1606370760006;
+        Wed, 25 Nov 2020 22:06:00 -0800 (PST)
+Received: from independence.bos.jonmasters.org (Boston.jonmasters.org. [50.195.43.97])
+        by smtp.gmail.com with ESMTPSA id e18sm2531397ilc.52.2020.11.25.22.05.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Nov 2020 22:05:59 -0800 (PST)
+Subject: Re: [RFC PATCH 5/9] cxl/mem: Find device capabilities
+To:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
         Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         "Kelley, Sean V" <sean.v.kelley@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [RFC PATCH 5/9] cxl/mem: Find device capabilities
-Message-ID: <20201124001754.465xfzv5r2q4l52o@intel.com>
 References: <20201111054356.793390-1-ben.widawsky@intel.com>
  <20201111054356.793390-6-ben.widawsky@intel.com>
- <20201117151519.000069d2@Huawei.com>
+From:   Jon Masters <jcm@jonmasters.org>
+Organization: World Organi{s,z}ation of Broken Dreams
+Message-ID: <8d332852-9c54-95e0-58c7-72939f347aa6@jonmasters.org>
+Date:   Thu, 26 Nov 2020 01:05:56 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201117151519.000069d2@Huawei.com>
+In-Reply-To: <20201111054356.793390-6-ben.widawsky@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 20-11-17 15:15:19, Jonathan Cameron wrote:
-> On Tue, 10 Nov 2020 21:43:52 -0800
-> Ben Widawsky <ben.widawsky@intel.com> wrote:
-> 
-> > CXL devices contain an array of capabilities that describe the
-> > interactions software can interact with the device, or firmware running
-> > on the device. A CXL compliant device must implement the device status
-> > and the mailbox capability. A CXL compliant memory device must implement
-> > the memory device capability.
-> > 
-> > Each of the capabilities can [will] provide an offset within the MMIO
-> > region for interacting with the CXL device.
-> > 
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> 
-> A few really minor things in this one.
-> 
-> Jonathan
-> 
-> > ---
-> >  drivers/cxl/cxl.h | 89 +++++++++++++++++++++++++++++++++++++++++++++++
-> >  drivers/cxl/mem.c | 58 +++++++++++++++++++++++++++---
-> >  2 files changed, 143 insertions(+), 4 deletions(-)
-> >  create mode 100644 drivers/cxl/cxl.h
-> > 
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > new file mode 100644
-> > index 000000000000..02858ae63d6d
-> > --- /dev/null
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -0,0 +1,89 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +// Copyright(c) 2020 Intel Corporation. All rights reserved.
-> > +
-> > +#ifndef __CXL_H__
-> > +#define __CXL_H__
-> > +
-> > +/* Device */
-> > +#define CXLDEV_CAP_ARRAY_REG 0x0
-> > +#define CXLDEV_CAP_ARRAY_CAP_ID 0
-> > +#define CXLDEV_CAP_ARRAY_ID(x) ((x) & 0xffff)
-> > +#define CXLDEV_CAP_ARRAY_COUNT(x) (((x) >> 32) & 0xffff)
-> > +
-> > +#define CXL_CAPABILITIES_CAP_ID_DEVICE_STATUS 1
-> 
-> I'm not sure what you can do about consistent naming, but
-> perhaps this really does need to be 
-> CXLDEV_CAP_CAP_ID_x  however silly that looks.
-> 
-> It's a funny exercise I've only seen done once in a spec, but
-> I wish everyone would try working out what their fully expanded
-> field names will end up as and make sure the long form naming shortens
-> to something sensible.  It definitely helps with clarity!
-> 
-> > +#define CXL_CAPABILITIES_CAP_ID_PRIMARY_MAILBOX 2
-> > +#define CXL_CAPABILITIES_CAP_ID_SECONDARY_MAILBOX 3
-> > +#define CXL_CAPABILITIES_CAP_ID_MEMDEV 0x4000
-> > +
-> > +/* Mailbox */
-> > +#define CXLDEV_MB_CAPS 0x00
-> 
-> Elsewhere you've used _OFFSET postfix. That's useful so I'd do it here
-> as well.  Cross references to the spec section always appreciated as well!
-> 
-> > +#define   CXLDEV_MB_CAP_PAYLOAD_SIZE(cap) ((cap) & 0x1F)
-> > +#define CXLDEV_MB_CTRL 0x04
-> > +#define CXLDEV_MB_CMD 0x08
-> > +#define CXLDEV_MB_STATUS 0x10
-> > +#define CXLDEV_MB_BG_CMD_STATUS 0x18
-> > +
-> > +struct cxl_mem {
-> > +	struct pci_dev *pdev;
-> > +	void __iomem *regs;
-> > +
-> > +	/* Cap 0000h */
-> 
-> What are the numbers here?  These capabilities have too
-> many indexes associated with them in different ways for it
-> to be obvious, so perhaps more detail in the comments?
+On 11/11/20 12:43 AM, Ben Widawsky wrote:
 
-This comment was a bug. The cap is 0001h actually. I've added the hash define
-for its cap id as part of the comment.
+> +		case CXL_CAPABILITIES_CAP_ID_SECONDARY_MAILBOX:
+> +			dev_dbg(&cxlm->pdev->dev,
+> +				   "found UNSUPPORTED Secondary Mailbox capability\n");
 
-Everything else is accepted.
+Per spec, the secondary mailbox is intended for use by platform 
+firmware, so Linux should never be using it anyway. Maybe that message 
+is slightly misleading?
 
-> 
-> > +	struct {
-> > +		void __iomem *regs;
-> > +	} status;
-> > +
-> > +	/* Cap 0002h */
-> > +	struct {
-> > +		void __iomem *regs;
-> > +		size_t payload_size;
-> > +	} mbox;
-> > +
-> > +	/* Cap 0040h */
-> > +	struct {
-> > +		void __iomem *regs;
-> > +	} mem;
-> > +};
+Jon.
+
+P.S. Related - I've severe doubts about the mailbox approach being 
+proposed by CXL and have begun to push back through the spec org.
+
+-- 
+Computer Architect
