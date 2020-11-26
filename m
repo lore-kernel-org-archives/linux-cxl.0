@@ -2,104 +2,83 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 229F8C63777
-	for <linux-cxl@archiver.kernel.org>; Thu, 26 Nov 2020 06:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 413C3C56202
+	for <linux-cxl@archiver.kernel.org>; Thu, 26 Nov 2020 18:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC6C520DD4
-	for <linux-cxl@archiver.kernel.org>; Thu, 26 Nov 2020 06:06:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=jonmasters-org.20150623.gappssmtp.com header.i=@jonmasters-org.20150623.gappssmtp.com header.b="fODQbTzl"
+	by mail.kernel.org (Postfix) with ESMTP id F13F821D7F
+	for <linux-cxl@archiver.kernel.org>; Thu, 26 Nov 2020 18:19:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387904AbgKZGGC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 26 Nov 2020 01:06:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44424 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732397AbgKZGGC (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 26 Nov 2020 01:06:02 -0500
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3DA9C0613D4
-        for <linux-cxl@vger.kernel.org>; Wed, 25 Nov 2020 22:06:00 -0800 (PST)
-Received: by mail-io1-xd42.google.com with SMTP id o8so736470ioh.0
-        for <linux-cxl@vger.kernel.org>; Wed, 25 Nov 2020 22:06:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jonmasters-org.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oEy5q2En1SJI6u34J14mPbz3ymhjWNLu2ImEmUAs9Ws=;
-        b=fODQbTzlog4xbJsMW2izr9T6xV3uC+lc03b1qJ1qSawbRoENnx1Br2TPMmRNY6FXY4
-         ozf90S+p14K47ND2crcJTtExuHJ8j6Mt8bza5gS/hxyN2GTaVHahBV6A1qInS4vXwlaJ
-         81eY/junYJYx/Vcf856DH3Cr64N7ZU+cwY5VtTc+zMWwF6Gq0mZDmDOe50yNYYTWh6Ip
-         jHM+22whCE31Y3BcnmQ8X24tSHUX3wrQjR60Ftzfhqz2HvEr8bG0XTZ0osF0LAr2RnDj
-         MFu4B+QaX/B6Kv1Jqj7k+MhrL15GlxJq+d6WmVs45l8wsfvnf4REBe3jxfZKDGcMFhR8
-         +1kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=oEy5q2En1SJI6u34J14mPbz3ymhjWNLu2ImEmUAs9Ws=;
-        b=TFydHj4Muv2Gfo5snxm5KEKTsy3M4YjTxHDjXGbDnm8UNmsVOzhOt0/p8tq7gm6QUa
-         Udr9AMb3t+ZgcSFbn1BCNU036ZJm4h54awns4kbaetGcXdvcbowQIAPOrwXaeq0K/CK4
-         Ztdrct3PZeJyXxdnS/MJ1wSJv3ixh1xb4xvTSADuNuHxNuWBpGqIoeYXJl3jrHpHV7Yz
-         f1t+URK0czEHhyjxseVzdt5Hdypw6fHkrBd+vgvLSE38C52z1Dvu4UcUWVqYOAfRscoI
-         JI9/mq/93DxxxMIHduzvh6xMPWC1d4+o+uZYO3NtrBml8ZTzmN3OsloQQGPDpU3xwNN5
-         oPDQ==
-X-Gm-Message-State: AOAM531FMI5fxJF+JckCtPLewVMNZvD3enFljrm3QjOfKQfSzTsXAaE0
-        eAr+wTSk7roiPwOK6AMII+TEHA==
-X-Google-Smtp-Source: ABdhPJwFDDEDdU/s/zYaPx0ggHOsOr62MbBrECZawSaq4PlqyTZscFc4nlCfmRS2OLqWEFdp3N4DEA==
-X-Received: by 2002:a02:4c8:: with SMTP id 191mr1865300jab.70.1606370760006;
-        Wed, 25 Nov 2020 22:06:00 -0800 (PST)
-Received: from independence.bos.jonmasters.org (Boston.jonmasters.org. [50.195.43.97])
-        by smtp.gmail.com with ESMTPSA id e18sm2531397ilc.52.2020.11.25.22.05.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Nov 2020 22:05:59 -0800 (PST)
-Subject: Re: [RFC PATCH 5/9] cxl/mem: Find device capabilities
-To:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
+        id S2404524AbgKZSSg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 26 Nov 2020 13:18:36 -0500
+Received: from mga07.intel.com ([134.134.136.100]:47796 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404410AbgKZSSg (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 26 Nov 2020 13:18:36 -0500
+IronPort-SDR: GvCSfZUpbSkDVTEhTXL3sHh9aAtD7KX7pxVcoZLW86b3MasG52AGELz48z6G5L0MM0KTcppNWg
+ AYRaz1FxlF9A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9817"; a="236444183"
+X-IronPort-AV: E=Sophos;i="5.78,372,1599548400"; 
+   d="scan'208";a="236444183"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2020 10:18:32 -0800
+IronPort-SDR: vdQ1+pws1U/kQy6TK9565q+kQyvWDS9RVechhAiifqXPwZXH5wH40M4m8TnJHPwj/jb1y9d7zF
+ As4zxj88a1Ng==
+X-IronPort-AV: E=Sophos;i="5.78,372,1599548400"; 
+   d="scan'208";a="371353169"
+Received: from tsundar1-t480s.amr.corp.intel.com (HELO intel.com) ([10.252.131.217])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2020 10:18:31 -0800
+Date:   Thu, 26 Nov 2020 10:18:29 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Jon Masters <jcm@jonmasters.org>
+Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
         Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         "Kelley, Sean V" <sean.v.kelley@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [RFC PATCH 5/9] cxl/mem: Find device capabilities
+Message-ID: <20201126181829.vy3was5c42ixtwxm@intel.com>
 References: <20201111054356.793390-1-ben.widawsky@intel.com>
  <20201111054356.793390-6-ben.widawsky@intel.com>
-From:   Jon Masters <jcm@jonmasters.org>
-Organization: World Organi{s,z}ation of Broken Dreams
-Message-ID: <8d332852-9c54-95e0-58c7-72939f347aa6@jonmasters.org>
-Date:   Thu, 26 Nov 2020 01:05:56 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ <8d332852-9c54-95e0-58c7-72939f347aa6@jonmasters.org>
 MIME-Version: 1.0
-In-Reply-To: <20201111054356.793390-6-ben.widawsky@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8d332852-9c54-95e0-58c7-72939f347aa6@jonmasters.org>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 11/11/20 12:43 AM, Ben Widawsky wrote:
+On 20-11-26 01:05:56, Jon Masters wrote:
+> On 11/11/20 12:43 AM, Ben Widawsky wrote:
+> 
+> > +		case CXL_CAPABILITIES_CAP_ID_SECONDARY_MAILBOX:
+> > +			dev_dbg(&cxlm->pdev->dev,
+> > +				   "found UNSUPPORTED Secondary Mailbox capability\n");
+> 
+> Per spec, the secondary mailbox is intended for use by platform firmware, so
+> Linux should never be using it anyway. Maybe that message is slightly
+> misleading?
 
-> +		case CXL_CAPABILITIES_CAP_ID_SECONDARY_MAILBOX:
-> +			dev_dbg(&cxlm->pdev->dev,
-> +				   "found UNSUPPORTED Secondary Mailbox capability\n");
+Yeah, I think the message could be reworded, but it is dev_dbg, so I wasn't too
+worried about the wording in the first place. I think it is a mistake in this
+case for the spec to describe the intended purpose. If the expectation is for
+platform firmware to use it, but there is no negotiation mechanism in place,
+it's essentially useless.
 
-Per spec, the secondary mailbox is intended for use by platform 
-firmware, so Linux should never be using it anyway. Maybe that message 
-is slightly misleading?
+> 
+> Jon.
+> 
+> P.S. Related - I've severe doubts about the mailbox approach being proposed
+> by CXL and have begun to push back through the spec org.
 
-Jon.
-
-P.S. Related - I've severe doubts about the mailbox approach being 
-proposed by CXL and have begun to push back through the spec org.
-
--- 
-Computer Architect
+Any reason not to articulate that here? Now that the spec is public, I don't see
+any reason not to disclose that publicly.
