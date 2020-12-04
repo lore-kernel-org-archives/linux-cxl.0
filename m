@@ -2,64 +2,64 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EF3C4361A
-	for <linux-cxl@archiver.kernel.org>; Fri,  4 Dec 2020 07:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDD4C433FE
+	for <linux-cxl@archiver.kernel.org>; Fri,  4 Dec 2020 07:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 237EC22571
-	for <linux-cxl@archiver.kernel.org>; Fri,  4 Dec 2020 07:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D45A2255F
+	for <linux-cxl@archiver.kernel.org>; Fri,  4 Dec 2020 07:42:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgLDHgg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 4 Dec 2020 02:36:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58266 "EHLO
+        id S1727831AbgLDHmC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 4 Dec 2020 02:42:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbgLDHgg (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 4 Dec 2020 02:36:36 -0500
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDEC8C061A51
-        for <linux-cxl@vger.kernel.org>; Thu,  3 Dec 2020 23:35:55 -0800 (PST)
-Received: by mail-ed1-x541.google.com with SMTP id cm17so4836044edb.4
-        for <linux-cxl@vger.kernel.org>; Thu, 03 Dec 2020 23:35:55 -0800 (PST)
+        with ESMTP id S1727518AbgLDHmC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 4 Dec 2020 02:42:02 -0500
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADD39C061A53
+        for <linux-cxl@vger.kernel.org>; Thu,  3 Dec 2020 23:41:21 -0800 (PST)
+Received: by mail-ej1-x641.google.com with SMTP id ce23so3521560ejb.8
+        for <linux-cxl@vger.kernel.org>; Thu, 03 Dec 2020 23:41:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Ib4z7ovnO/Is9x9bv4eZdlrrRMtAOfboZBD7JQtUG5M=;
-        b=MlznnxVBeS9Jeb9K6pxCGMSisJ5di5vo8rnZgccJEokQkubT+b5ELOaP/qYZPZYens
-         LTQTZ5qK5+rN7i7TrBiUt/aTlSX5Si22lwK89sloMRq0lkL5fRELUsL6cmnUB3ewrYzQ
-         1C9XmpiDtksVcCp4aPdPDUu7mqzrhfTMil4Ii3r3Z+W4Rch+qHSCIy5nHqdZZHzjfuFC
-         CouE9HwiB531iUdh3GBA/XBU2A5lxBYq8LwhDwqMK/fdnMIEGn+ShaX5yrUWSLlOXrdb
-         pcuY+emGUnm4SuFF1EGQYrkKyVUfjNb/nVosCF9na3545V2UELil7agJD0NNoLsVMpuy
-         +qqg==
+        bh=vFrjH1pebtHRVLO1ux9EWFCYu/RwreoyJELqX0+IPnc=;
+        b=LARuI+TBPzO3Ga5vWARBohOjAhz9a8rtPxXGdu+uM/SIeQvEVkcmNETd82GJUvt3rP
+         UrtJqgbdW6ofj9JvePmTccqxWbwXhQKehCAFsBRtyd4AmPM23y9oqmCA/52F8duQuhE9
+         ugSYrm/Zt5Lf4gDKJkuNEru5WvX3EZKFZdrLk9Q9otKCm7bUFzMYZMQHekDZ1Sn/h6/H
+         K176ykrgZ8Xv0bBj1DwoXSePkoBIoGAVtP5YtdqRamNk3LtaNfXoTvscrNM+Vtw5e4GX
+         FI0ye2UTvhzyvRyCFU9frlG1XfC2dulBc8lj5YuXVKCkSDsPgtt48/x/5Bsnf46cRHZV
+         wUfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Ib4z7ovnO/Is9x9bv4eZdlrrRMtAOfboZBD7JQtUG5M=;
-        b=XHR0OXbhkd64Tl3nQrpRg2DiEAkl8C9FSgceUZK1EBYEeumxANxvL9HwK54h7JJIdc
-         vYV/C23XTPQgU8KxMv88CZnPeVjaqXhOStM6R9cG8TzzsmYg25Ryu8ghRKT8HXPDZt3W
-         BvCi0Ea0HVE07Xfv+c3H6xjKNYI56ipagtTIMnCqZTGvR/7P0nBuR8HczH1K3+Bilx4o
-         AvvopImSNoohqhGeWWPlcX7KH0UTt19xMN44d8KtQVKO7v0c+HVfrHouS2OywRMLdlUa
-         hed6NXPU2bPV0SxDvXMfG4dg18KDkgbcsSnrD7ijUwfOHbz95kKlJXED47TpZ3y9c67L
-         zlQg==
-X-Gm-Message-State: AOAM532Ce21vFzvs2Gmv+mDcrxtJb73v3Q8lT9Ruy7lWqaDfPT7EfZUt
-        Bs0QhhrEruLLD6nXjjEsIE5ZoynI3YHhgV++r1UlSA==
-X-Google-Smtp-Source: ABdhPJxnSZOAJkjodNrzG83gLmg0TXLoPO+mgtRWWPBjvZDtvRpGbpYSdnh6boOt1ZZAav86Y2rNmJuHLlFwPeiDAfk=
-X-Received: by 2002:a50:e00f:: with SMTP id e15mr6641049edl.210.1607067354664;
- Thu, 03 Dec 2020 23:35:54 -0800 (PST)
+        bh=vFrjH1pebtHRVLO1ux9EWFCYu/RwreoyJELqX0+IPnc=;
+        b=XEd8/BggxP7zCVjp0bSm21V3R8BuTb2kGGL6Suy+hQlIJAkdyFZDO9TPkhRUkR/V2b
+         3kRqCuLzEIFdv637KqaNja0fSWwsUdemVWjaJxdsiW1DRDBP2BfXC/89LrXujjDdO5Ch
+         htTWLzUe2mS8e/6lAFlwAHa4lHKACm9VlRdYbgqEeN9hdLSSGEreP+givx8dTcIlwpA1
+         /42pczRPwjlOKV4tk4jZuGrHtWLiWvLLEMP4yugtftEfYeK/45IyvcL4r/KvNAvsvp3d
+         iN7F7cAQJG0Nznwt8OHk72z+qYdKLW1lJ9cOEjKZpRTsnSxGCvCRIb+EPLq5JONE4xXG
+         AvrA==
+X-Gm-Message-State: AOAM530CMRohTCjP8YPWt5JZa4wEkHTOQzc4gkeJs2LiX3OUNL0u9PI+
+        Ak9ZcJjUQ6Mc0JeYqmuhLjbd7U0uP0ggF2RR/QYoYA==
+X-Google-Smtp-Source: ABdhPJzSsebV9eSwHiYkUbp1imTyDqj15HLUPCpdjs4KFLddINcAGKE19CPMZmHmEIqLI6eGZ5b3wsVn8kXTD1lBfD0=
+X-Received: by 2002:a17:906:c20f:: with SMTP id d15mr5897853ejz.341.1607067680341;
+ Thu, 03 Dec 2020 23:41:20 -0800 (PST)
 MIME-Version: 1.0
-References: <20201111054356.793390-1-ben.widawsky@intel.com>
- <20201111054356.793390-6-ben.widawsky@intel.com> <8d332852-9c54-95e0-58c7-72939f347aa6@jonmasters.org>
-In-Reply-To: <8d332852-9c54-95e0-58c7-72939f347aa6@jonmasters.org>
+References: <20201111054356.793390-1-ben.widawsky@intel.com> <20201111054356.793390-6-ben.widawsky@intel.com>
+In-Reply-To: <20201111054356.793390-6-ben.widawsky@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 3 Dec 2020 23:35:51 -0800
-Message-ID: <CAPcyv4hYR8Ty2vq6kfG6_h6XRQPv2=-x4S0DgyzAykgx0TWzog@mail.gmail.com>
+Date:   Thu, 3 Dec 2020 23:41:16 -0800
+Message-ID: <CAPcyv4g-hO5yz1bod6X+ZrL_8-6CRBvf==pB3sbuBzZmsT7Kng@mail.gmail.com>
 Subject: Re: [RFC PATCH 5/9] cxl/mem: Find device capabilities
-To:     Jon Masters <jcm@jonmasters.org>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linux PCI <linux-pci@vger.kernel.org>,
         Linux ACPI <linux-acpi@vger.kernel.org>,
@@ -73,25 +73,36 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Nov 25, 2020 at 10:06 PM Jon Masters <jcm@jonmasters.org> wrote:
+On Tue, Nov 10, 2020 at 9:44 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> On 11/11/20 12:43 AM, Ben Widawsky wrote:
+> CXL devices contain an array of capabilities that describe the
+> interactions software can interact with the device, or firmware running
+> on the device. A CXL compliant device must implement the device status
+> and the mailbox capability. A CXL compliant memory device must implement
+> the memory device capability.
 >
-> > +             case CXL_CAPABILITIES_CAP_ID_SECONDARY_MAILBOX:
-> > +                     dev_dbg(&cxlm->pdev->dev,
-> > +                                "found UNSUPPORTED Secondary Mailbox capability\n");
+> Each of the capabilities can [will] provide an offset within the MMIO
+> region for interacting with the CXL device.
 >
-> Per spec, the secondary mailbox is intended for use by platform
-> firmware, so Linux should never be using it anyway. Maybe that message
-> is slightly misleading?
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> ---
+>  drivers/cxl/cxl.h | 89 +++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/mem.c | 58 +++++++++++++++++++++++++++---
+>  2 files changed, 143 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/cxl/cxl.h
 >
-> Jon.
->
-> P.S. Related - I've severe doubts about the mailbox approach being
-> proposed by CXL and have begun to push back through the spec org.
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> new file mode 100644
+> index 000000000000..02858ae63d6d
+> --- /dev/null
+> +++ b/drivers/cxl/cxl.h
+[..]
+> +static inline u32 __cxl_raw_read_reg32(struct cxl_mem *cxlm, u32 reg)
 
-The more Linux software voices the better. At the same time the spec
-is released so we're into xkcd territory [1] of what the driver will
-be expected to support for any future improvements.
+Going through my reworks and the "raw" jumped out at me. My typical
+interpretation of "raw" in respect to register access macros is the
+difference between readl() and __raw_readl()  which means "don't do
+bus endian swizzling, and don't do a memory clobber barrier". Any
+heartburn to drop the "raw"?
 
-[1]: https://xkcd.com/927/
+...is it only me that reacts that way?
