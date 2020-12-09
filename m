@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA6CC2BB48
-	for <linux-cxl@archiver.kernel.org>; Wed,  9 Dec 2020 00:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FA7C4361B
+	for <linux-cxl@archiver.kernel.org>; Wed,  9 Dec 2020 00:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56B93239D1
-	for <linux-cxl@archiver.kernel.org>; Wed,  9 Dec 2020 00:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28BEA239D1
+	for <linux-cxl@archiver.kernel.org>; Wed,  9 Dec 2020 00:30:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731840AbgLIAZa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 8 Dec 2020 19:25:30 -0500
+        id S1731792AbgLIAZK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 8 Dec 2020 19:25:10 -0500
 Received: from mga09.intel.com ([134.134.136.24]:16961 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731834AbgLIAZZ (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 8 Dec 2020 19:25:25 -0500
-IronPort-SDR: Tegadp7vdsah8iCfdOUvuvGKO56camTa6Ub5J3fn7dL2MhNSrBp8CdyTrrOEa1oihFUoGc9JZY
- x80AAlw4oyOQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9829"; a="174142077"
+        id S1731086AbgLIAZF (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Tue, 8 Dec 2020 19:25:05 -0500
+IronPort-SDR: 26Qi0f4gu8a9/J1a986elRP7bFSmB0MdtuUW/30s7mbAQj1pEMGEZBuvoeysaSlc9mhtYdg5+1
+ updSOduzp32w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9829"; a="174142069"
 X-IronPort-AV: E=Sophos;i="5.78,404,1599548400"; 
-   d="scan'208";a="174142077"
+   d="scan'208";a="174142069"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 16:24:24 -0800
-IronPort-SDR: BSjSoKlyJM51MRGT03+jN23Kil7U9esUHdRvd+4XDf8sa1+81QGbiL+pwXiz3+HF/yr5KjPnfv
- eJiiL71kU1Hg==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 16:24:22 -0800
+IronPort-SDR: rBdxiJT2OoIYRbpi+yvuiAVoE3F5D6z1RthqMBeBh8j8L+QfGu7a3Ln6y9LXhq3Tz8LKdsjZC/
+ fsxiyg1uiNdw==
 X-IronPort-AV: E=Sophos;i="5.78,404,1599548400"; 
-   d="scan'208";a="407838478"
+   d="scan'208";a="407838459"
 Received: from mlubyani-mobl2.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.137.9])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 16:24:24 -0800
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 16:24:21 -0800
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+Cc:     Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-acpi@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
         "Kelley, Sean V" <sean.v.kelley@intel.com>,
         Rafael Wysocki <rafael.j.wysocki@intel.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
@@ -47,9 +47,9 @@ Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Chris Browy <cbrowy@avery-design.com>,
         Randy Dunlap <rdunlap@infradead.org>,
         Christoph Hellwig <hch@infradead.org>
-Subject: [RFC PATCH v2 05/14] cxl/mem: Map memory device registers
-Date:   Tue,  8 Dec 2020 16:24:09 -0800
-Message-Id: <20201209002418.1976362-6-ben.widawsky@intel.com>
+Subject: [RFC PATCH v2 02/14] cxl/acpi: Add an acpi_cxl module for the CXL interconnect
+Date:   Tue,  8 Dec 2020 16:24:06 -0800
+Message-Id: <20201209002418.1976362-3-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201209002418.1976362-1-ben.widawsky@intel.com>
 References: <20201209002418.1976362-1-ben.widawsky@intel.com>
@@ -59,182 +59,308 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-All the necessary bits are initialized in order to find and map the
-register space for CXL Memory Devices. This is accomplished by using the
-Register Locator DVSEC (CXL 2.0 - 8.1.9.1) to determine which PCI BAR to
-use, and how much of an offset from that BAR should be added.
+From: Vishal Verma <vishal.l.verma@intel.com>
 
-If the memory device registers are found and mapped a new internal data
-structure tracking device state is allocated.
+Add an acpi_cxl module to coordinate the ACPI portions of the CXL
+(Compute eXpress Link) interconnect. This driver binds to ACPI0017
+objects in the ACPI tree, and coordinates access to the resources
+provided by the ACPI CEDT (CXL Early Discovery Table).
 
+It also coordinates operations of the root port _OSC object to notify
+platform firmware that the OS has native support for the CXL
+capabilities of endpoints.
+
+Note: the actbl1.h changes are speculative. The expectation is that they
+will arrive through the ACPICA tree in due time.
+
+Cc: Ben Widawsky <ben.widawsky@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- drivers/cxl/cxl.h | 17 ++++++++++
- drivers/cxl/mem.c | 83 +++++++++++++++++++++++++++++++++++++++++++++--
- drivers/cxl/pci.h | 14 ++++++++
- 3 files changed, 112 insertions(+), 2 deletions(-)
- create mode 100644 drivers/cxl/cxl.h
+ drivers/Kconfig       |  1 +
+ drivers/Makefile      |  1 +
+ drivers/cxl/Kconfig   | 36 ++++++++++++++++
+ drivers/cxl/Makefile  |  5 +++
+ drivers/cxl/acpi.c    | 97 +++++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/acpi.h    | 15 +++++++
+ include/acpi/actbl1.h | 51 +++++++++++++++++++++++
+ 7 files changed, 206 insertions(+)
+ create mode 100644 drivers/cxl/Kconfig
+ create mode 100644 drivers/cxl/Makefile
+ create mode 100644 drivers/cxl/acpi.c
+ create mode 100644 drivers/cxl/acpi.h
 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+diff --git a/drivers/Kconfig b/drivers/Kconfig
+index dcecc9f6e33f..62c753a73651 100644
+--- a/drivers/Kconfig
++++ b/drivers/Kconfig
+@@ -6,6 +6,7 @@ menu "Device Drivers"
+ source "drivers/amba/Kconfig"
+ source "drivers/eisa/Kconfig"
+ source "drivers/pci/Kconfig"
++source "drivers/cxl/Kconfig"
+ source "drivers/pcmcia/Kconfig"
+ source "drivers/rapidio/Kconfig"
+ 
+diff --git a/drivers/Makefile b/drivers/Makefile
+index c0cd1b9075e3..5dad349de73b 100644
+--- a/drivers/Makefile
++++ b/drivers/Makefile
+@@ -73,6 +73,7 @@ obj-$(CONFIG_NVM)		+= lightnvm/
+ obj-y				+= base/ block/ misc/ mfd/ nfc/
+ obj-$(CONFIG_LIBNVDIMM)		+= nvdimm/
+ obj-$(CONFIG_DAX)		+= dax/
++obj-$(CONFIG_CXL_BUS)		+= cxl/
+ obj-$(CONFIG_DMA_SHARED_BUFFER) += dma-buf/
+ obj-$(CONFIG_NUBUS)		+= nubus/
+ obj-y				+= macintosh/
+diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
 new file mode 100644
-index 000000000000..d81d0ba4617c
+index 000000000000..68da926ba5b1
 --- /dev/null
-+++ b/drivers/cxl/cxl.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Copyright(c) 2020 Intel Corporation. */
++++ b/drivers/cxl/Kconfig
+@@ -0,0 +1,36 @@
++# SPDX-License-Identifier: GPL-2.0-only
++menuconfig CXL_BUS
++	tristate "CXL (Compute Express Link) Devices Support"
++	help
++	  CXL is a bus that is electrically compatible with PCI-E, but layers
++	  three protocols on that signalling (CXL.io, CXL.cache, and CXL.mem).
++	  The CXL.cache protocol allows devices to hold cachelines locally, the
++	  CXL.mem protocol allows devices to be fully coherent memory targets,
++	  the CXL.io protocol is equivalent to PCI-E. Say 'y' to enable support
++	  for the configuration and management of devices supporting these
++	  protocols.
 +
-+#ifndef __CXL_H__
-+#define __CXL_H__
++if CXL_BUS
 +
-+/**
-+ * struct cxl_mem - A CXL memory device
-+ * @pdev: The PCI device associated with this CXL device.
-+ * @regs: IO mappings to the device's MMIO
++config CXL_BUS_PROVIDER
++	tristate
++
++config CXL_ACPI
++	tristate "CXL ACPI: Platform Support"
++	depends on ACPI
++	default CXL_BUS
++	select CXL_BUS_PROVIDER
++	help
++	  Say 'y/m' to enable a driver (named "cxl_acpi.ko" when built
++	  as a module) that will enable support for CXL.mem endpoint
++	  devices. In general, CXL Platform Support is a prerequisite
++	  for any CXL device driver that wants to claim ownership of a
++	  component register space. By default platform firmware assumes
++	  Linux is unaware of CXL capabilities and requires explicit
++	  opt-in. This platform component also mediates resources
++	  described by the CEDT (CXL Early Discovery Table).  See
++	  Chapter 9.14.1 CXL Early Discovery Table (CEDT) in the CXL 2.0
++	  specification.
++
++	  If unsure say 'm'
++endif
+diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+new file mode 100644
+index 000000000000..d38cd34a2582
+--- /dev/null
++++ b/drivers/cxl/Makefile
+@@ -0,0 +1,5 @@
++# SPDX-License-Identifier: GPL-2.0
++obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
++
++ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
++cxl_acpi-y := acpi.o
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+new file mode 100644
+index 000000000000..0f1ba9b3f1ed
+--- /dev/null
++++ b/drivers/cxl/acpi.c
+@@ -0,0 +1,97 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright(c) 2020 Intel Corporation. All rights reserved. */
++#include <linux/platform_device.h>
++#include <linux/list_sort.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/sysfs.h>
++#include <linux/list.h>
++#include <linux/acpi.h>
++#include <linux/sort.h>
++#include <linux/pci.h>
++#include "acpi.h"
++
++/*
++ * If/when CXL support is defined by other platform firmware the kernel
++ * will need a mechanism to select between the platform specific version
++ * of this routine, until then, hard-code ACPI assumptions
 + */
-+struct cxl_mem {
-+	struct pci_dev *pdev;
-+	void __iomem *regs;
-+};
-+
-+#endif
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 005404888942..06113d306cd2 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -5,6 +5,58 @@
- #include <linux/io.h>
- #include "acpi.h"
- #include "pci.h"
-+#include "cxl.h"
-+
-+/**
-+ * cxl_mem_create() - Create a new &struct cxl_mem.
-+ * @pdev: The pci device associated with the new &struct cxl_mem.
-+ * @reg_lo: Lower 32b of the register locator
-+ * @reg_hi: Upper 32b of the register locator.
-+ *
-+ * Return: The new &struct cxl_mem on success, NULL on failure.
-+ *
-+ * Map the BAR for a CXL memory device. This BAR has the memory devices
-+ * registers for the device as specified in CXL specification.
-+ */
-+static struct cxl_mem *cxl_mem_create(struct pci_dev *pdev, u32 reg_lo,
-+				      u32 reg_hi)
++int cxl_bus_acquire(struct pci_dev *pdev)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct cxl_mem *cxlm;
-+	void __iomem *regs;
-+	u64 offset;
-+	u8 bar;
++	struct acpi_device *adev;
++	struct pci_dev *root_port;
++	struct device *root;
++
++	root_port = pcie_find_root_port(pdev);
++	if (!root_port)
++		return -ENXIO;
++
++	root = root_port->dev.parent;
++	if (!root)
++		return -ENXIO;
++
++	adev = ACPI_COMPANION(root);
++	if (!adev)
++		return -ENXIO;
++
++	/* TODO: OSC enabling */
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(cxl_bus_acquire);
++
++static void acpi_cedt_put_table(void *table)
++{
++	acpi_put_table(table);
++}
++
++static int cxl_acpi_probe(struct platform_device *pdev)
++{
++	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
++	struct cxl_acpi_desc *acpi_desc;
++	struct device *dev = &adev->dev;
++	struct acpi_table_header *tbl;
++	acpi_status status;
++	acpi_size sz;
 +	int rc;
 +
-+	offset = ((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
-+	bar = (reg_lo >> CXL_REGLOC_BIR_SHIFT) & CXL_REGLOC_BIR_MASK;
-+
-+	/* Basic sanity check that BAR is big enough */
-+	if (pci_resource_len(pdev, bar) < offset) {
-+		dev_err(dev, "BAR%d: %pr: too small (offset: %#llx)\n", bar,
-+			&pdev->resource[bar], (unsigned long long)offset);
-+		return NULL;
++	status = acpi_get_table(ACPI_SIG_CEDT, 0, &tbl);
++	if (ACPI_FAILURE(status)) {
++		dev_err(dev, "failed to find CEDT at startup\n");
++		return 0;
 +	}
 +
-+	rc = pcim_iomap_regions(pdev, 1 << bar, pci_name(pdev));
-+	if (rc != 0) {
-+		dev_err(dev, "failed to map registers\n");
-+		return NULL;
-+	}
-+
-+	cxlm = devm_kzalloc(&pdev->dev, sizeof(*cxlm), GFP_KERNEL);
-+	if (!cxlm) {
-+		dev_err(dev, "No memory available\n");
-+		return NULL;
-+	}
-+
-+	regs = pcim_iomap_table(pdev)[bar];
-+	cxlm->pdev = pdev;
-+	cxlm->regs = regs + offset;
-+
-+	dev_dbg(dev, "Mapped CXL Memory Device resource\n");
-+	return cxlm;
-+}
- 
- static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
- {
-@@ -33,7 +85,8 @@ static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
- static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	struct device *dev = &pdev->dev;
--	int rc, regloc;
-+	struct cxl_mem *cxlm;
-+	int rc, regloc, i;
- 
- 	rc = cxl_bus_acquire(pdev);
- 	if (rc != 0) {
-@@ -41,13 +94,39 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 		return rc;
- 	}
- 
-+	rc = pcim_enable_device(pdev);
++	rc = devm_add_action_or_reset(dev, acpi_cedt_put_table, tbl);
 +	if (rc)
 +		return rc;
 +
- 	regloc = cxl_mem_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC);
- 	if (!regloc) {
- 		dev_err(dev, "register location dvsec not found\n");
- 		return -ENXIO;
- 	}
-+	regloc += 0xc; /* Skip DVSEC + reserved fields */
++	sz = tbl->length;
++	dev_info(dev, "found CEDT at startup: %lld bytes\n", sz);
++
++	acpi_desc = devm_kzalloc(dev, sizeof(*acpi_desc), GFP_KERNEL);
++	if (!acpi_desc)
++		return -ENOMEM;
++
++	dev_set_drvdata(&adev->dev, acpi_desc);
++	acpi_desc->dev = &adev->dev;
++	acpi_desc->acpi_header = *tbl;
++
++	return 0;
++}
++
++static const struct acpi_device_id cxl_acpi_ids[] = {
++	{ "ACPI0017", 0 },
++	{ "", 0 },
++};
++MODULE_DEVICE_TABLE(acpi, cxl_acpi_ids);
++
++static struct platform_driver cxl_acpi_driver = {
++	.probe = cxl_acpi_probe,
++	.driver = {
++		.name = KBUILD_MODNAME,
++		.acpi_match_table = cxl_acpi_ids,
++	},
++};
++
++module_platform_driver(cxl_acpi_driver);
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/cxl/acpi.h b/drivers/cxl/acpi.h
+new file mode 100644
+index 000000000000..d638f8886ab7
+--- /dev/null
++++ b/drivers/cxl/acpi.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/* Copyright(c) 2020 Intel Corporation. All rights reserved. */
++
++#ifndef __CXL_ACPI_H__
++#define __CXL_ACPI_H__
++#include <linux/acpi.h>
++
++struct cxl_acpi_desc {
++	struct acpi_table_header acpi_header;
++	struct device *dev;
++};
++
++int cxl_bus_acquire(struct pci_dev *pci_dev);
++
++#endif	/* __CXL_ACPI_H__ */
+diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
+index 43549547ed3e..aa22c648ce95 100644
+--- a/include/acpi/actbl1.h
++++ b/include/acpi/actbl1.h
+@@ -28,6 +28,7 @@
+ #define ACPI_SIG_BERT           "BERT"	/* Boot Error Record Table */
+ #define ACPI_SIG_BGRT           "BGRT"	/* Boot Graphics Resource Table */
+ #define ACPI_SIG_BOOT           "BOOT"	/* Simple Boot Flag Table */
++#define ACPI_SIG_CEDT           "CEDT"	/* CXL Early Discovery Table */
+ #define ACPI_SIG_CPEP           "CPEP"	/* Corrected Platform Error Polling table */
+ #define ACPI_SIG_CSRT           "CSRT"	/* Core System Resource Table */
+ #define ACPI_SIG_DBG2           "DBG2"	/* Debug Port table type 2 */
+@@ -1624,6 +1625,56 @@ struct acpi_ibft_target {
+ 	u16 reverse_chap_secret_offset;
+ };
  
--	return 0;
-+	rc = -ENXIO;
-+	for (i = regloc; i < regloc + 0x24; i += 8) {
-+		u32 reg_lo, reg_hi;
-+		u8 reg_type;
++/*******************************************************************************
++ *
++ * CEDT - CXL Early Discovery Table (ACPI 6.4)
++ *        Version 1
++ *
++ ******************************************************************************/
 +
-+		/* "register low and high" contain other bits */
-+		pci_read_config_dword(pdev, i, &reg_lo);
-+		pci_read_config_dword(pdev, i + 4, &reg_hi);
++struct acpi_table_cedt {
++	struct acpi_table_header header;	/* Common ACPI table header */
++	u32 reserved;
++};
 +
-+		reg_type =
-+			(reg_lo >> CXL_REGLOC_RBI_SHIFT) & CXL_REGLOC_RBI_MASK;
++/* Values for CEDT structure types */
 +
-+		if (reg_type == CXL_REGLOC_RBI_MEMDEV) {
-+			rc = 0;
-+			cxlm = cxl_mem_create(pdev, reg_lo, reg_hi);
-+			if (!cxlm)
-+				rc = -ENODEV;
-+			break;
-+		}
-+	}
++enum acpi_cedt_type {
++	ACPI_CEDT_TYPE_HOST_BRIDGE = 0, /* CHBS - CXL Host Bridge Structure */
++};
 +
-+	return rc;
- }
++struct acpi_cedt_structure {
++	u8 type;
++	u8 reserved;
++	u16 length;
++};
++
++/*
++ * CEDT Structures, correspond to Type in struct acpi_cedt_structure
++ */
++
++/* 0: CXL Host Bridge Structure */
++
++struct acpi_cedt_chbs {
++	struct acpi_cedt_structure header;
++	u32 uid;
++	u32 version;
++	u32 reserved1;
++	u64 base;
++	u32 length;
++	u32 reserved2;
++};
++
++/* Values for version field above */
++
++#define ACPI_CEDT_CHBS_VERSION_CXL11    (0)
++#define ACPI_CEDT_CHBS_VERSION_CXL20    (1)
++
++/* Values for length field above */
++
++#define ACPI_CEDT_CHBS_LENGTH_CXL11     (0x2000)
++#define ACPI_CEDT_CHBS_LENGTH_CXL20     (0x10000)
++
+ /* Reset to default packing */
  
- static const struct pci_device_id cxl_mem_pci_tbl[] = {
-diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
-index a8a9935fa90b..df222edb6ac3 100644
---- a/drivers/cxl/pci.h
-+++ b/drivers/cxl/pci.h
-@@ -17,4 +17,18 @@
- 
- #define PCI_DVSEC_ID_CXL_REGLOC		0x8
- 
-+/* BAR Indicator Register (BIR) */
-+#define CXL_REGLOC_BIR_SHIFT 0
-+#define CXL_REGLOC_BIR_MASK 0x7
-+
-+/* Register Block Identifier (RBI) */
-+#define CXL_REGLOC_RBI_SHIFT 8
-+#define CXL_REGLOC_RBI_MASK 0xff
-+#define CXL_REGLOC_RBI_EMPTY 0
-+#define CXL_REGLOC_RBI_COMPONENT 1
-+#define CXL_REGLOC_RBI_VIRT 2
-+#define CXL_REGLOC_RBI_MEMDEV 3
-+
-+#define CXL_REGLOC_ADDR_MASK 0xffff0000
-+
- #endif /* __CXL_PCI_H__ */
+ #pragma pack()
 -- 
 2.29.2
 
