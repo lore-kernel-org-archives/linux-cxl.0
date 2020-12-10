@@ -2,175 +2,78 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9789EC2BB48
-	for <linux-cxl@archiver.kernel.org>; Thu, 10 Dec 2020 00:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3D3C433FE
+	for <linux-cxl@archiver.kernel.org>; Thu, 10 Dec 2020 03:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A410235F7
-	for <linux-cxl@archiver.kernel.org>; Thu, 10 Dec 2020 00:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF751238EB
+	for <linux-cxl@archiver.kernel.org>; Thu, 10 Dec 2020 03:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730329AbgLJAn1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 9 Dec 2020 19:43:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46622 "EHLO
+        id S1729550AbgLJDdZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 9 Dec 2020 22:33:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730292AbgLJAnK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Dec 2020 19:43:10 -0500
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15D77C061793
-        for <linux-cxl@vger.kernel.org>; Wed,  9 Dec 2020 16:42:30 -0800 (PST)
-Received: by mail-ed1-x544.google.com with SMTP id v22so3640606edt.9
-        for <linux-cxl@vger.kernel.org>; Wed, 09 Dec 2020 16:42:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vNvEsgxEU6uZTR1Us7I6r4YjbSGdWuf43XtWg1h/ZjQ=;
-        b=kj91qDjjmmSRx9Y9wZ28xrM4ILAD7D+wZc32csdO3Abd86CcS8AIaktID/pLpeWAy9
-         Lg4z817plMRMoe59ZWqcK/04+BfENFz0xADon2k4MolNMPPs+lkzHdmDTFXNLFDXK3Q8
-         YqyJGSCuhZpYUehX2ELEtQVWjQ59/V+8xNz60ZcxdhYRDK2i/r6c+aP372zYUKxjHx0V
-         05JeQeIAdF6IAVr+UwxZD6mt9PXXBE0DddWLQZ/IY1T6dR5DjDPHmDTKa7zlnffIZlTU
-         3kTU8HPQQb0S9ei8mEk9AessjYqLRVZhdteyNoISDjfhJUaFIUaTYj6um7CWEJw45/Jk
-         OQJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vNvEsgxEU6uZTR1Us7I6r4YjbSGdWuf43XtWg1h/ZjQ=;
-        b=RrGJ0kAU0JcZ4d+qT2G5qKke88M2XscOiP/XmA7P720nYJpZzh3ROdxHygRxcqozC3
-         Uj1SV6kXUaHzF7/UQ00iQo5RrcDZbwZYox+VRdSK+zgwaZoLyPMDCSMZsQZdF3/Qc07E
-         YjV0lZEMWlhIOhJ2WZBmUR0nRskHmZ8rqxyf5opR9YY+2iGVuxpUqxF+PujkGTE8/ON3
-         gDKwK0qcUpoxi6YwN2QbqwJWwYlKhm50nxiFMp8ECdTbeAHs7+YWOS56/SRgp1Yl/fpm
-         wj8SBFlpQaM7tYbMmX+fWEikKGIrIxS9UsONyutGPaPP2VRoL5i9wy69ILltuH8jkU2F
-         fSVA==
-X-Gm-Message-State: AOAM532WTNVA7eCZ7nHKqr55NVyOwTdidfNXIhgew+IRsLujx/qf1Cog
-        ZYA/6OAHhHHY+kFxKpZEpecpMj8Jmo/CS/d1M1AAeQ==
-X-Google-Smtp-Source: ABdhPJxkEYy1l4Dzzh42MlB1DBuPbdpyEYWjS7i+HtHHCrX01UWMKJujV74kKgE5AM/PYa95sJsQEEPdm4fu6DF/EhY=
-X-Received: by 2002:a50:8a44:: with SMTP id i62mr4336434edi.97.1607560948709;
- Wed, 09 Dec 2020 16:42:28 -0800 (PST)
-MIME-Version: 1.0
-References: <20201209002418.1976362-1-ben.widawsky@intel.com> <20201209002418.1976362-15-ben.widawsky@intel.com>
-In-Reply-To: <20201209002418.1976362-15-ben.widawsky@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 9 Dec 2020 16:42:26 -0800
-Message-ID: <CAPcyv4hTP+AQ_h7SfeJPjMORqArTWp-6KWPA3Eu=-dmpo1B0AA@mail.gmail.com>
-Subject: Re: [RFC PATCH 14/14] WIP/cxl/mem: Add get firmware for testing
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
+        with ESMTP id S1729219AbgLJDdZ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Dec 2020 22:33:25 -0500
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9FCDC061794;
+        Wed,  9 Dec 2020 19:32:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=CKPr5ETGh0oX0SSyAT6dUE8iQrUELXNO4VBll75Ml7Y=; b=i2MYcBir69LopxN+00abwoTCcM
+        GNmEjZLTP+bV+8H/zlqsloRLM0Szh/wlda8pRkiHniDXIQhDpgZU8bZujvCeg+zjTjllWz15QkLuP
+        BUo2d9/rtI3YDPw760gDZAvlbImoLbaKxhpRYN3DIBDmQcqvcADm8avNOAYVA54UcjioWkKhU9mDG
+        S//wLXtcaBoKLiT9IGNPHjQSc3bu7wQ9ncx6ydeoj7cqCBqPFpLkPZDjCRYmlCcE/XSszo1h0Xddz
+        lu37hKK1iEty7QCnhv2m5esXAF2vMQo4HZG7tEfdBrcV9aXA2tnIwzTQmk/j5hckpL5DiFgOtvzM1
+        WA60VriQ==;
+Received: from [2601:1c0:6280:3f0::1494]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1knCgs-0003lL-Ec; Thu, 10 Dec 2020 03:32:26 +0000
+Subject: Re: [RFC PATCH 09/14] cxl/mem: Add basic IOCTL interface
+To:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         "Kelley, Sean V" <sean.v.kelley@intel.com>,
         Rafael Wysocki <rafael.j.wysocki@intel.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Jon Masters <jcm@jonmasters.org>,
         Chris Browy <cbrowy@avery-design.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
         Christoph Hellwig <hch@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <20201209002418.1976362-1-ben.widawsky@intel.com>
+ <20201209002418.1976362-10-ben.widawsky@intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <8a252085-9dd9-6cf0-afad-a3ff63cf00d8@infradead.org>
+Date:   Wed, 9 Dec 2020 19:32:19 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
+MIME-Version: 1.0
+In-Reply-To: <20201209002418.1976362-10-ben.widawsky@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Dec 8, 2020 at 4:25 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> This also serves as an example how to add a new command
->
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> ---
->  drivers/cxl/mem.c            | 22 ++++++++++++++++++++++
->  include/uapi/linux/cxl_mem.h |  3 ++-
->  2 files changed, 24 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index 6b2f8d3776b5..76aa1e6e4117 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -116,6 +116,7 @@ struct cxl_mem_command {
->  static struct cxl_mem_command mem_commands[] = {
->         CXL_CMD(INVALID, NONE, 0, 0, "Reserved", false, 0),
->         CXL_CMD(RAW, TAINT, ~0, ~0, "Raw", true, 0),
-> +       CXL_CMD(GET_FW_INFO, NONE, 0, 0x50, "Get FW Info", false, 0x0200),
-
-I think CXL_CMD() arguments can be put on a diet if the
-mem-command-id-to-name was moved to its own table, and the opcode was
-defined as something like:
-
-#define CXL_MBOX_OP_GET_FW_INFO 0x200
-
-...so that CXL_CMD can just do:
-
-    .opcode = CXL_MBOX_OP_##_id
-
-That @_enable arg wants a flag #define like CMD_ENABLE which reads
-better than 'true'. I would then add CMD_KERNEL_EXCL alongside that
-flag to indicate the commands that may be exclusive to the kernel when
-the device is active in a PMEM memory region, or ones that have an
-alternate ABI wrapped around them like the keys subsystem for security
-or the firwmare activation sysfs interface.
-
->  };
->
->  static int cxl_mem_wait_for_doorbell(struct cxl_mem *cxlm)
-> @@ -827,6 +828,23 @@ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
->         return cxl_register(dev);
->  }
->
-> +static int cxl_mem_enable_commands(struct cxl_mem *cxlm)
-> +{
-> +       struct cxl_mem_command *c;
+On 12/8/20 4:24 PM, Ben Widawsky wrote:
 > +
-> +       /*
-> +        * For now we pretend Get FW info is supported.
-> +        *
-> +        * FIXME: Invoke GET LOG to get the Command Effect Logs (CEL).
-> +        */
-> +       c = cxl_mem_find_command(0x200);
-> +       if (!c)
-> +               return -ENOENT;
-> +
-> +       c->enable = true;
-> +       return 0;
-> +}
-> +
->  /**
->   * cxl_mem_identify() - Send the IDENTIFY command to the device.
->   * @cxlm: The device to identify.
-> @@ -936,6 +954,10 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->         if (rc)
->                 return rc;
->
-> +       rc = cxl_mem_enable_commands(cxlm);
-> +       if (rc)
-> +               return rc;
-> +
->         rc = cxl_mem_identify(cxlm);
->         if (rc)
->                 return rc;
-> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-> index f2fbb0dcda06..3ac39acf8fa7 100644
-> --- a/include/uapi/linux/cxl_mem.h
-> +++ b/include/uapi/linux/cxl_mem.h
-> @@ -50,7 +50,8 @@ struct cxl_command_info {
->         __u32 id;
->  #define CXL_MEM_COMMAND_ID_INVALID 0
->  #define CXL_MEM_COMMAND_ID_RAW 1
-> -#define CXL_MEM_COMMAND_ID_MAX (CXL_MEM_COMMAND_ID_RAW + 1)
-> +#define CXL_MEM_COMMAND_ID_GET_FW_INFO 2
-> +#define CXL_MEM_COMMAND_ID_MAX (CXL_MEM_COMMAND_ID_GET_FW_INFO + 1)
+> +#define CXL_MEM_QUERY_COMMANDS _IOR('C', 1, struct cxl_mem_query_commands)
 
-Seems like CXL_MEM_COMMAND_ID definitions want to be an enum so that
-CXL_MEM_COMMAND_ID_MAX does not need to be touched every time.
+Hi,
+I could have missed it, but IOCTL major "numbers" (like 'C') should be
+listed in Documentation/userspace-api/ioctl/ioctl-number.rst.
 
->
->         __u32 flags;
->  #define CXL_MEM_COMMAND_FLAG_NONE 0
-> --
-> 2.29.2
->
+
+thanks.
+-- 
+~Randy
+
