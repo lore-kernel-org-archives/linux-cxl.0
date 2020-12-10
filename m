@@ -2,62 +2,62 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CD5C2BB48
-	for <linux-cxl@archiver.kernel.org>; Wed,  9 Dec 2020 22:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9789EC2BB48
+	for <linux-cxl@archiver.kernel.org>; Thu, 10 Dec 2020 00:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9448F23D20
-	for <linux-cxl@archiver.kernel.org>; Wed,  9 Dec 2020 22:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A410235F7
+	for <linux-cxl@archiver.kernel.org>; Thu, 10 Dec 2020 00:48:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388582AbgLIWkg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 9 Dec 2020 17:40:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55728 "EHLO
+        id S1730329AbgLJAn1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 9 Dec 2020 19:43:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388722AbgLIWjd (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Dec 2020 17:39:33 -0500
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AED9C0613CF
-        for <linux-cxl@vger.kernel.org>; Wed,  9 Dec 2020 14:38:53 -0800 (PST)
-Received: by mail-ed1-x541.google.com with SMTP id cm17so3395377edb.4
-        for <linux-cxl@vger.kernel.org>; Wed, 09 Dec 2020 14:38:53 -0800 (PST)
+        with ESMTP id S1730292AbgLJAnK (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Dec 2020 19:43:10 -0500
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15D77C061793
+        for <linux-cxl@vger.kernel.org>; Wed,  9 Dec 2020 16:42:30 -0800 (PST)
+Received: by mail-ed1-x544.google.com with SMTP id v22so3640606edt.9
+        for <linux-cxl@vger.kernel.org>; Wed, 09 Dec 2020 16:42:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pIQL03/zPKLYNtedDsrbaZi2weGw3ezzccqUR9STUu4=;
-        b=l2Ft/LcFTKYXO8IPePZ2BYv+uOHAjdrRbZntfnElLBHe0ZXC/kvJFcPyKVcvQ7D6OC
-         Ue0zE1ERVHPYKqttcjjlWhTf2s0uaI5dGJX558cBCfmdBjJ1YhR2q9I4hcqFMIhCBYy3
-         f92ybU4JscstvCIPyOrP6FDwNOMpHmExMR79vy/Pj4pPSKHqUT3P0bs8gtHYCzBIqPXn
-         Fy4Z9nV18PfB+jKufBdaYSEikISgiHZEhse+SqEI80SzefwRNMqhuD6qnXj77wM3zLRv
-         x0eFWyAqda4DUVZB8Kibs4DJcmJymY00M84nFgWTcUnME/v7ZzJHl5gekjJF+o7j1PCB
-         TvVQ==
+        bh=vNvEsgxEU6uZTR1Us7I6r4YjbSGdWuf43XtWg1h/ZjQ=;
+        b=kj91qDjjmmSRx9Y9wZ28xrM4ILAD7D+wZc32csdO3Abd86CcS8AIaktID/pLpeWAy9
+         Lg4z817plMRMoe59ZWqcK/04+BfENFz0xADon2k4MolNMPPs+lkzHdmDTFXNLFDXK3Q8
+         YqyJGSCuhZpYUehX2ELEtQVWjQ59/V+8xNz60ZcxdhYRDK2i/r6c+aP372zYUKxjHx0V
+         05JeQeIAdF6IAVr+UwxZD6mt9PXXBE0DddWLQZ/IY1T6dR5DjDPHmDTKa7zlnffIZlTU
+         3kTU8HPQQb0S9ei8mEk9AessjYqLRVZhdteyNoISDjfhJUaFIUaTYj6um7CWEJw45/Jk
+         OQJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pIQL03/zPKLYNtedDsrbaZi2weGw3ezzccqUR9STUu4=;
-        b=e4MLKMn5AF/aI0GlPICIvO7kqOJWJSFG+wKzQrqej6gOtxpPHqLURHqJGPgy3ncqI9
-         bg6Yw5txKSCTSHhqELFZGhAcYBXh0DYW310KhmHI9OB16UXMexDoce0e1au2UDCtkn3k
-         zQ0ZujxZvbHNfLkxHQ+rog11WnCWbupoquQffo744sjcfGBDAhCVccwEBTyRIz7vGwgR
-         XM6gvG6OqYht55+Rzv02o+du3b1SqzRsOklMIH5ZDmlE9LZxnqu5UaDrr0NsaSU4iqnk
-         216nB34sh4UC5SkEbu2SQv/tAY6SL24Egm54aHGk8NLmexY+rm9J1xX++kA2Q20DKSwS
-         uS5Q==
-X-Gm-Message-State: AOAM5314xZg1ibIW0BZvTWup6nAiu5rCJGvHHph0Yus6msFdUsoSRTkz
-        fWEafnrA9WZVVIVO8uxkl8Oposvk+jNTTLA7SgtcAA==
-X-Google-Smtp-Source: ABdhPJzvDmJdBGoIr2bpKyfdZskmwNIku+gIOLs9wv4Je7JCUxMR5i7LKYt13r8VyhBfLKCIGVO74IGD7Ytc27nWDtM=
-X-Received: by 2002:aa7:cdc3:: with SMTP id h3mr4022893edw.52.1607553531849;
- Wed, 09 Dec 2020 14:38:51 -0800 (PST)
+        bh=vNvEsgxEU6uZTR1Us7I6r4YjbSGdWuf43XtWg1h/ZjQ=;
+        b=RrGJ0kAU0JcZ4d+qT2G5qKke88M2XscOiP/XmA7P720nYJpZzh3ROdxHygRxcqozC3
+         Uj1SV6kXUaHzF7/UQ00iQo5RrcDZbwZYox+VRdSK+zgwaZoLyPMDCSMZsQZdF3/Qc07E
+         YjV0lZEMWlhIOhJ2WZBmUR0nRskHmZ8rqxyf5opR9YY+2iGVuxpUqxF+PujkGTE8/ON3
+         gDKwK0qcUpoxi6YwN2QbqwJWwYlKhm50nxiFMp8ECdTbeAHs7+YWOS56/SRgp1Yl/fpm
+         wj8SBFlpQaM7tYbMmX+fWEikKGIrIxS9UsONyutGPaPP2VRoL5i9wy69ILltuH8jkU2F
+         fSVA==
+X-Gm-Message-State: AOAM532WTNVA7eCZ7nHKqr55NVyOwTdidfNXIhgew+IRsLujx/qf1Cog
+        ZYA/6OAHhHHY+kFxKpZEpecpMj8Jmo/CS/d1M1AAeQ==
+X-Google-Smtp-Source: ABdhPJxkEYy1l4Dzzh42MlB1DBuPbdpyEYWjS7i+HtHHCrX01UWMKJujV74kKgE5AM/PYa95sJsQEEPdm4fu6DF/EhY=
+X-Received: by 2002:a50:8a44:: with SMTP id i62mr4336434edi.97.1607560948709;
+ Wed, 09 Dec 2020 16:42:28 -0800 (PST)
 MIME-Version: 1.0
-References: <20201209002418.1976362-1-ben.widawsky@intel.com> <20201209002418.1976362-12-ben.widawsky@intel.com>
-In-Reply-To: <20201209002418.1976362-12-ben.widawsky@intel.com>
+References: <20201209002418.1976362-1-ben.widawsky@intel.com> <20201209002418.1976362-15-ben.widawsky@intel.com>
+In-Reply-To: <20201209002418.1976362-15-ben.widawsky@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 9 Dec 2020 14:38:49 -0800
-Message-ID: <CAPcyv4hRJRP+55QHxQYsAoE7V601+YMWgtEvzLimKRO8b4Jrjg@mail.gmail.com>
-Subject: Re: [RFC PATCH 11/14] cxl/mem: Add a "RAW" send command
+Date:   Wed, 9 Dec 2020 16:42:26 -0800
+Message-ID: <CAPcyv4hTP+AQ_h7SfeJPjMORqArTWp-6KWPA3Eu=-dmpo1B0AA@mail.gmail.com>
+Subject: Re: [RFC PATCH 14/14] WIP/cxl/mem: Add get firmware for testing
 To:     Ben Widawsky <ben.widawsky@intel.com>
 Cc:     linux-cxl@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -78,92 +78,99 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Dec 8, 2020 at 4:24 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Tue, Dec 8, 2020 at 4:25 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> The CXL memory device send interface will have a number of supported
-> commands. The raw command is not such a command. Raw commands allow
-> userspace to send a specified opcode to the underlying hardware and
-> bypass all driver checks on the command. This is useful for a couple of
-> usecases, mainly:
-> 1. Undocumented vendor specific hardware commands
-> 2. Prototyping new hardware commands not yet supported by the driver
->
-> While this all sounds very powerful it comes with a couple of caveats:
-> 1. Bug reports using raw commands will not get the same level of
->    attention as bug reports using supported commands (via taint).
-> 2. Supported commands will be rejected by the RAW command.
+> This also serves as an example how to add a new command
 >
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 > ---
->  drivers/cxl/mem.c            | 32 ++++++++++++++++++++++++++++++++
->  include/uapi/linux/cxl_mem.h | 14 ++++++++++++--
->  2 files changed, 44 insertions(+), 2 deletions(-)
+>  drivers/cxl/mem.c            | 22 ++++++++++++++++++++++
+>  include/uapi/linux/cxl_mem.h |  3 ++-
+>  2 files changed, 24 insertions(+), 1 deletion(-)
 >
 > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index 0bf03afc0c80..a2cea7ac7cc6 100644
+> index 6b2f8d3776b5..76aa1e6e4117 100644
 > --- a/drivers/cxl/mem.c
 > +++ b/drivers/cxl/mem.c
-> @@ -115,6 +115,7 @@ struct cxl_mem_command {
->
+> @@ -116,6 +116,7 @@ struct cxl_mem_command {
 >  static struct cxl_mem_command mem_commands[] = {
 >         CXL_CMD(INVALID, NONE, 0, 0, "Reserved", false, 0),
-> +       CXL_CMD(RAW, TAINT, ~0, ~0, "Raw", true, 0),
+>         CXL_CMD(RAW, TAINT, ~0, ~0, "Raw", true, 0),
+> +       CXL_CMD(GET_FW_INFO, NONE, 0, 0x50, "Get FW Info", false, 0x0200),
 
-Why is the taint indication in the ABI? It seems like it only needs to
-be documented.
+I think CXL_CMD() arguments can be put on a diet if the
+mem-command-id-to-name was moved to its own table, and the opcode was
+defined as something like:
+
+#define CXL_MBOX_OP_GET_FW_INFO 0x200
+
+...so that CXL_CMD can just do:
+
+    .opcode = CXL_MBOX_OP_##_id
+
+That @_enable arg wants a flag #define like CMD_ENABLE which reads
+better than 'true'. I would then add CMD_KERNEL_EXCL alongside that
+flag to indicate the commands that may be exclusive to the kernel when
+the device is active in a PMEM memory region, or ones that have an
+alternate ABI wrapped around them like the keys subsystem for security
+or the firwmare activation sysfs interface.
 
 >  };
 >
 >  static int cxl_mem_wait_for_doorbell(struct cxl_mem *cxlm)
-> @@ -326,6 +327,20 @@ static int cxl_mem_count_commands(void)
->         return n;
->  };
+> @@ -827,6 +828,23 @@ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
+>         return cxl_register(dev);
+>  }
 >
-> +static struct cxl_mem_command *cxl_mem_find_command(u16 opcode)
+> +static int cxl_mem_enable_commands(struct cxl_mem *cxlm)
 > +{
-> +       int i;
+> +       struct cxl_mem_command *c;
 > +
-> +       for (i = 0; i < ARRAY_SIZE(mem_commands); i++) {
-> +               struct cxl_mem_command *c = &mem_commands[i];
+> +       /*
+> +        * For now we pretend Get FW info is supported.
+> +        *
+> +        * FIXME: Invoke GET LOG to get the Command Effect Logs (CEL).
+> +        */
+> +       c = cxl_mem_find_command(0x200);
+> +       if (!c)
+> +               return -ENOENT;
 > +
-> +               if (c->opcode == opcode)
-> +                       return c;
-> +       }
-> +
-> +       return NULL;
-> +};
+> +       c->enable = true;
+> +       return 0;
+> +}
 > +
 >  /**
->   * handle_mailbox_cmd_from_user() - Dispatch a mailbox command.
->   * @cxlmd: The CXL memory device to communicate with.
-> @@ -421,6 +436,23 @@ static int cxl_validate_cmd_from_user(struct cxl_send_command __user *user_cmd,
->         c = &mem_commands[cmd.id];
->         info = &c->info;
+>   * cxl_mem_identify() - Send the IDENTIFY command to the device.
+>   * @cxlm: The device to identify.
+> @@ -936,6 +954,10 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>         if (rc)
+>                 return rc;
 >
-> +       /* Checks are bypassed for raw commands but along comes the taint! */
-> +       if (cmd.id == CXL_MEM_COMMAND_ID_RAW) {
-> +               struct cxl_mem_command temp =
-> +                       CXL_CMD(RAW, NONE, cmd.size_in, cmd.size_out, "Raw",
-> +                               true, cmd.raw.opcode);
-
-Oh, I thought CXL_CMD() was only used to populate the mem_commands
-array. Feels out of place to use it here when all it is doing is
-updating the size_{in,out} and opcode fields. Mainly I'm interested in
-CXL_CMD() enforcing that the command-id is the mem_commands index.
-
+> +       rc = cxl_mem_enable_commands(cxlm);
+> +       if (rc)
+> +               return rc;
 > +
-> +               if (cmd.raw.rsvd)
-> +                       return -EINVAL;
-> +
-> +               if (cxl_mem_find_command(cmd.raw.opcode))
-> +                       return -EPERM;
-> +
-> +               add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
+>         rc = cxl_mem_identify(cxlm);
+>         if (rc)
+>                 return rc;
+> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+> index f2fbb0dcda06..3ac39acf8fa7 100644
+> --- a/include/uapi/linux/cxl_mem.h
+> +++ b/include/uapi/linux/cxl_mem.h
+> @@ -50,7 +50,8 @@ struct cxl_command_info {
+>         __u32 id;
+>  #define CXL_MEM_COMMAND_ID_INVALID 0
+>  #define CXL_MEM_COMMAND_ID_RAW 1
+> -#define CXL_MEM_COMMAND_ID_MAX (CXL_MEM_COMMAND_ID_RAW + 1)
+> +#define CXL_MEM_COMMAND_ID_GET_FW_INFO 2
+> +#define CXL_MEM_COMMAND_ID_MAX (CXL_MEM_COMMAND_ID_GET_FW_INFO + 1)
 
-TAINT_WARN seems the wrong value, especially since no WARN has
-occurred. I feel that this is more in the spirit of
-TAINT_PROPRIETARY_MODULE, TAINT_OVERRIDDEN_ACPI_TABLE, and
-TAINT_OOT_MODULE. How about a new TAINT_RAW_PASSTHROUGH? I could use
-this for the acpi/nfit driver as well to disclaim responsibility for
-system errors that can result from not using the nominal
-kernel-provided commands.
+Seems like CXL_MEM_COMMAND_ID definitions want to be an enum so that
+CXL_MEM_COMMAND_ID_MAX does not need to be touched every time.
+
+>
+>         __u32 flags;
+>  #define CXL_MEM_COMMAND_FLAG_NONE 0
+> --
+> 2.29.2
+>
