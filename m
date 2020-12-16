@@ -2,36 +2,37 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D63DC4361B
-	for <linux-cxl@archiver.kernel.org>; Tue, 15 Dec 2020 22:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0102C2BBCD
+	for <linux-cxl@archiver.kernel.org>; Wed, 16 Dec 2020 20:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F8D92246B
-	for <linux-cxl@archiver.kernel.org>; Tue, 15 Dec 2020 22:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 794EC233FD
+	for <linux-cxl@archiver.kernel.org>; Wed, 16 Dec 2020 20:42:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725272AbgLOWSc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 15 Dec 2020 17:18:32 -0500
-Received: from mga03.intel.com ([134.134.136.65]:64384 "EHLO mga03.intel.com"
+        id S1727512AbgLPUmt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 16 Dec 2020 15:42:49 -0500
+Received: from mga03.intel.com ([134.134.136.65]:26387 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727013AbgLOWSZ (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 15 Dec 2020 17:18:25 -0500
-IronPort-SDR: t9AOls5jrXdUHSdkffikHQt9/KE+/6jwqMdVXJWyElARu30EGyE+irgJrVcy8z3jCwIXzDpSfR
- QiUQQTj6hJaQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9836"; a="175068859"
-X-IronPort-AV: E=Sophos;i="5.78,422,1599548400"; 
-   d="scan'208";a="175068859"
+        id S1726979AbgLPUmt (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Wed, 16 Dec 2020 15:42:49 -0500
+IronPort-SDR: QPD30WIQKrfJgosEkOHLaew8PMjHkRNoZplib9QY9/+37fhU+cChhY+8YCfQETsAN3dgIwHgPN
+ PeF5ZlcnQbCQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9837"; a="175237331"
+X-IronPort-AV: E=Sophos;i="5.78,425,1599548400"; 
+   d="scan'208";a="175237331"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2020 14:17:42 -0800
-IronPort-SDR: s47Gj518tXjp/XKmRwfnCnnocO60ttL60VYcDxbsYVm/p/3taO/bn59paytwD3kMyvdFDF6ujy
- LRicAmSHWHhA==
-X-IronPort-AV: E=Sophos;i="5.78,422,1599548400"; 
-   d="scan'208";a="368490733"
-Received: from sagarbas-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.135.43])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2020 14:17:41 -0800
-Date:   Tue, 15 Dec 2020 14:17:40 -0800
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2020 12:42:07 -0800
+IronPort-SDR: a1N5veaUEZSYSkyI6dbDQnr7U8r0v/vdWeIKvhMygGCuxuuB0VtYyvISwgHNU1GfpkxDG1wwGo
+ jLHB4ak/king==
+X-IronPort-AV: E=Sophos;i="5.78,425,1599548400"; 
+   d="scan'208";a="369339256"
+Received: from ticela-or-085.amr.corp.intel.com (HELO intel.com) ([10.252.135.213])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2020 12:42:06 -0800
+Date:   Wed, 16 Dec 2020 12:42:05 -0800
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>
 Cc:     linux-cxl@vger.kernel.org,
@@ -48,199 +49,114 @@ Cc:     linux-cxl@vger.kernel.org,
         Chris Browy <cbrowy@avery-design.com>,
         Randy Dunlap <rdunlap@infradead.org>,
         Christoph Hellwig <hch@infradead.org>
-Subject: Re: [RFC PATCH 10/14] cxl/mem: Add send command
-Message-ID: <20201215221740.symlsmzi3r6ojl6c@intel.com>
+Subject: Re: [RFC PATCH 11/14] cxl/mem: Add a "RAW" send command
+Message-ID: <20201216204205.acum2sf652aspah3@intel.com>
 References: <20201209002418.1976362-1-ben.widawsky@intel.com>
- <20201209002418.1976362-11-ben.widawsky@intel.com>
- <CAPcyv4j+ixVgEo5q2OhV4kdkBZbnohZj3KDovReQJjPBsREugw@mail.gmail.com>
- <20201215214351.jvxk32gfa44buvcy@intel.com>
- <CAPcyv4hVnz14rHLfA9f1Y0V=U96dYJ8i9+Z+ht=+kNG5aCrgeg@mail.gmail.com>
+ <20201209002418.1976362-12-ben.widawsky@intel.com>
+ <CAPcyv4hRJRP+55QHxQYsAoE7V601+YMWgtEvzLimKRO8b4Jrjg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4hVnz14rHLfA9f1Y0V=U96dYJ8i9+Z+ht=+kNG5aCrgeg@mail.gmail.com>
+In-Reply-To: <CAPcyv4hRJRP+55QHxQYsAoE7V601+YMWgtEvzLimKRO8b4Jrjg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 20-12-15 14:03:00, Dan Williams wrote:
-> On Tue, Dec 15, 2020 at 1:44 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> [..]
-> > > > +static int handle_mailbox_cmd_from_user(struct cxl_memdev *cxlmd,
-> > > > +                                       const struct cxl_mem_command *cmd,
-> > > > +                                       struct cxl_send_command __user *u)
-> > > > +{
-> > > > +       struct mbox_cmd mbox_cmd;
-> > > > +       ssize_t payload_size;
-> > > > +       void *payload;
-> > > > +       u32 size_out;
-> > > > +       int rc;
-> > > > +
-> > > > +       if (get_user(size_out, &u->size_out))
-> > > > +               return -EFAULT;
-> > > > +
-> > > > +       payload_size = max_t(ssize_t, cmd->info.size_in, size_out);
-> > > > +       if (payload_size) {
-> > > > +               payload =
-> > > > +                       memdup_user(u64_to_user_ptr(u->payload), payload_size);
-> > >
-> > > Me thinks this should be vmemdup_user() for payloads that exceed the
-> > > kmalloc() max, and I think it would be worthwhile to clamp @size_out
-> > > to some maximum and not let userspace ask for gigantic payloads.
-> > > Return EINVAL for payloads greater than... 4MB? At least 4MB is the
-> > > arbitrary max that libnvdimm picked.
-> > >
+On 20-12-09 14:38:49, Dan Williams wrote:
+> On Tue, Dec 8, 2020 at 4:24 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
 > >
-> > This is handled in cxl_validate_cmd_from_user() currently. The current API
-> > allows the user to specify as large as they like with @size_out but the kernel
-> > only writes out as much as the hardware returns.... More on this below [1].
-> [..]
-> > > > + *  * %-EPERM  - Protected command used by the RAW interface.
-> > > > + *  * %-ENOMEM - Input or output buffer wasn't large enough.
-> > > > + *
-> > > > + */
-> > > > +static int cxl_validate_cmd_from_user(struct cxl_send_command __user *user_cmd,
-> > > > +                                     struct cxl_mem_command *out_cmd)
-> > > > +{
-> > > > +       const struct cxl_command_info *info;
-> > > > +       struct cxl_send_command cmd;
-> > > > +       struct cxl_mem_command *c;
-> > > > +
-> > > > +       if (copy_from_user(&cmd, user_cmd, sizeof(cmd)))
-> > > > +               return -EFAULT;
-> > > > +
-> > > > +       if (cmd.id == 0 || cmd.id >= CXL_MEM_COMMAND_ID_MAX)
-> > > > +               return -EINVAL;
-> > >
-> > > I wonder if the "cmd.id >= CXL_MEM_COMMAND_ID_MAX" case should return
-> > > -ENOTTY. The command might be perfectly valid, just the kernel does
-> > > not have that command specified which would be the case with older
-> > > kernel with newer userspace.
-> > >
+> > The CXL memory device send interface will have a number of supported
+> > commands. The raw command is not such a command. Raw commands allow
+> > userspace to send a specified opcode to the underlying hardware and
+> > bypass all driver checks on the command. This is useful for a couple of
+> > usecases, mainly:
+> > 1. Undocumented vendor specific hardware commands
+> > 2. Prototyping new hardware commands not yet supported by the driver
 > >
-> > I think ENOTTY could be a bit confusing here as it could be confused for the
-> > SEND ioctl not being present.
+> > While this all sounds very powerful it comes with a couple of caveats:
+> > 1. Bug reports using raw commands will not get the same level of
+> >    attention as bug reports using supported commands (via taint).
+> > 2. Supported commands will be rejected by the RAW command.
 > >
-> > What about ENOENT, or something else?
+> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > ---
+> >  drivers/cxl/mem.c            | 32 ++++++++++++++++++++++++++++++++
+> >  include/uapi/linux/cxl_mem.h | 14 ++++++++++++--
+> >  2 files changed, 44 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> > index 0bf03afc0c80..a2cea7ac7cc6 100644
+> > --- a/drivers/cxl/mem.c
+> > +++ b/drivers/cxl/mem.c
+> > @@ -115,6 +115,7 @@ struct cxl_mem_command {
+> >
+> >  static struct cxl_mem_command mem_commands[] = {
+> >         CXL_CMD(INVALID, NONE, 0, 0, "Reserved", false, 0),
+> > +       CXL_CMD(RAW, TAINT, ~0, ~0, "Raw", true, 0),
 > 
-> "No such file or directory" seems more confusing to me than
-> "Inappropriate I/O control operation". What version of this driver,
-> once it's upstream, will not support the SEND ioctl? I think it is
-> safe to assume that the mere fact that the driver is attached means
-> SEND is present.
+> Why is the taint indication in the ABI? It seems like it only needs to
+> be documented.
 > 
 
-No version. I had been thinking it gets confusing with a new IOCTL, but you're
-correct that it should be trivial to determine ENOTTY from Send is different
-than ENOTTY from another IOCTL.
+It's removed per the previous patch discussion.
 
-I'll change it.
-
-> > > > +
-> > > > +       c = &mem_commands[cmd.id];
-> > > > +       info = &c->info;
-> > > > +
-> > > > +       if (cmd.flags & CXL_MEM_COMMAND_FLAG_MASK)
-> > > > +               return -EINVAL;
-> > > > +
-> > > > +       if (cmd.rsvd)
-> > > > +               return -EINVAL;
-> > > > +
-> > > > +       /* Check the input buffer is the expected size */
-> > > > +       if (info->size_in >= 0 && info->size_in != cmd.size_in)
-> > > > +               return -ENOMEM;
-> > > > +
-> > > > +       /* Check the output buffer is at least large enough */
-> > > > +       if (info->size_out >= 0 && cmd.size_out < info->size_out)
-> > > > +               return -ENOMEM;
-> > > > +
-> > > > +       memcpy(out_cmd, c, sizeof(*c));
-> > >
-> > > Why not do the copy_from_user() directly into out_cmd to save a copy operation?
-> > >
+> >  };
 > >
-> > [1]
-> > cxl_validate_cmd_from_user() essentially translates a user's command into the
-> > internal kernel representation of the command via the lookup into the array.
-> > This will do things like adjust the output size or flags, to prevent userspace
-> > from doing nefarious things. An actual command, especially now that you had me
-> > remove the name[32] will be relatively small and I see the extra copy as being
-> > well worth being able to isolate this command sanitization.
+> >  static int cxl_mem_wait_for_doorbell(struct cxl_mem *cxlm)
+> > @@ -326,6 +327,20 @@ static int cxl_mem_count_commands(void)
+> >         return n;
+> >  };
+> >
+> > +static struct cxl_mem_command *cxl_mem_find_command(u16 opcode)
+> > +{
+> > +       int i;
+> > +
+> > +       for (i = 0; i < ARRAY_SIZE(mem_commands); i++) {
+> > +               struct cxl_mem_command *c = &mem_commands[i];
+> > +
+> > +               if (c->opcode == opcode)
+> > +                       return c;
+> > +       }
+> > +
+> > +       return NULL;
+> > +};
+> > +
+> >  /**
+> >   * handle_mailbox_cmd_from_user() - Dispatch a mailbox command.
+> >   * @cxlmd: The CXL memory device to communicate with.
+> > @@ -421,6 +436,23 @@ static int cxl_validate_cmd_from_user(struct cxl_send_command __user *user_cmd,
+> >         c = &mem_commands[cmd.id];
+> >         info = &c->info;
+> >
+> > +       /* Checks are bypassed for raw commands but along comes the taint! */
+> > +       if (cmd.id == CXL_MEM_COMMAND_ID_RAW) {
+> > +               struct cxl_mem_command temp =
+> > +                       CXL_CMD(RAW, NONE, cmd.size_in, cmd.size_out, "Raw",
+> > +                               true, cmd.raw.opcode);
 > 
-> I can buy that, but it does not answer my other question above about
-> cases where a valid command has size_{in,out} larger than the kmalloc
-> max. vmemdup_user() lets you support arbitrary command payload sizes
-> larger than KMALLOC_MAX_SIZE. For example, I might want to overwrite
-> the entire label area at once in a single write.
+> Oh, I thought CXL_CMD() was only used to populate the mem_commands
+> array. Feels out of place to use it here when all it is doing is
+> updating the size_{in,out} and opcode fields. Mainly I'm interested in
+> CXL_CMD() enforcing that the command-id is the mem_commands index.
 > 
 
-It does need to switch to vmemdup_user(), I didn't mean to disagree there.
+Agreed and removed.
 
-For posterity btw, I'll point out CXL 2.0 max is 2M for payload.
-
-> >
-> > > > +
-> > > > +       return 0;
-> > > >  }
-> > > >
-> > > >  static long cxl_mem_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-> > > > @@ -357,6 +471,19 @@ static long cxl_mem_ioctl(struct file *file, unsigned int cmd, unsigned long arg
-> > > >
-> > > >                         j++;
-> > > >                 }
-> > > > +
-> > > > +               return 0;
-> > > > +       } else if (cmd == CXL_MEM_SEND_COMMAND) {
-> > > > +               struct cxl_send_command __user *u = (void __user *)arg;
-> > > > +               struct cxl_memdev *cxlmd = file->private_data;
-> > > > +               struct cxl_mem_command c;
-> > > > +               int rc;
-> > > > +
-> > > > +               rc = cxl_validate_cmd_from_user(u, &c);
-> > > > +               if (rc)
-> > > > +                       return rc;
-> > > > +
-> > > > +               return handle_mailbox_cmd_from_user(cxlmd, &c, u);
-> > > >         }
-> > > >
-> > > >         return -ENOTTY;
-> > > > diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-> > > > index 1d1e143f98ec..189d86a13637 100644
-> > > > --- a/include/uapi/linux/cxl_mem.h
-> > > > +++ b/include/uapi/linux/cxl_mem.h
-> > > > @@ -19,6 +19,7 @@ extern "C" {
-> > > >   */
-> > > >
-> > > >  #define CXL_MEM_QUERY_COMMANDS _IOR('C', 1, struct cxl_mem_query_commands)
-> > > > +#define CXL_MEM_SEND_COMMAND _IOWR('C', 2, struct cxl_send_command)
-> > > >
-> > > >  #define CXL_MEM_COMMAND_NAME_LENGTH 32
-> > > >
-> > > > @@ -48,10 +49,12 @@ extern "C" {
-> > > >  struct cxl_command_info {
-> > > >         __u32 id;
-> > > >  #define CXL_MEM_COMMAND_ID_INVALID 0
-> > > > +#define CXL_MEM_COMMAND_ID_MAX (CXL_MEM_COMMAND_ID_INVALID + 1)
-> > > >
-> > > >         __u32 flags;
-> > > >  #define CXL_MEM_COMMAND_FLAG_NONE 0
-> > > >  #define CXL_MEM_COMMAND_FLAG_TAINT BIT(0)
-> > >
-> > > I guess I missed this in the last patch, why would userspace specify a
-> > > taint flag? @flags is an output parameter?
-> > >
-> >
-> > The flag is from the kernel to userspace to let them know that using the command
-> > would taint the kernel.
+> > +
+> > +               if (cmd.raw.rsvd)
+> > +                       return -EINVAL;
+> > +
+> > +               if (cxl_mem_find_command(cmd.raw.opcode))
+> > +                       return -EPERM;
+> > +
+> > +               add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
 > 
-> ...but they should know that by the fact that they are using the RAW
-> send. I.e. document it once rather than include it in the ABI. I think
-> a more useful flag would be to identify which commands may be blocked
-> because they are exclusively owned by the kernel.
+> TAINT_WARN seems the wrong value, especially since no WARN has
+> occurred. I feel that this is more in the spirit of
+> TAINT_PROPRIETARY_MODULE, TAINT_OVERRIDDEN_ACPI_TABLE, and
+> TAINT_OOT_MODULE. How about a new TAINT_RAW_PASSTHROUGH? I could use
+> this for the acpi/nfit driver as well to disclaim responsibility for
+> system errors that can result from not using the nominal
+> kernel-provided commands.
 
-I think taint is something that could change between driver versions, and even
-based on the underlying device. However, since Raw command will always taint, we
-can save that for another day and I will drop it from this patch.
-
-As an example, perhaps we know device X's active firmware update is flaky - we
-can make that a tainted command just for that device.
+I like it.
