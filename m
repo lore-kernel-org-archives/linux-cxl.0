@@ -2,90 +2,66 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F53BC4332D
-	for <linux-cxl@archiver.kernel.org>; Tue, 12 Jan 2021 01:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE03C433E6
+	for <linux-cxl@archiver.kernel.org>; Tue, 12 Jan 2021 03:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 249C622DCC
-	for <linux-cxl@archiver.kernel.org>; Tue, 12 Jan 2021 01:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06FFF22EBD
+	for <linux-cxl@archiver.kernel.org>; Tue, 12 Jan 2021 03:32:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729637AbhALBXk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 11 Jan 2021 20:23:40 -0500
-Received: from smtprelay0209.hostedemail.com ([216.40.44.209]:44264 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729606AbhALBXk (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 11 Jan 2021 20:23:40 -0500
-X-Greylist: delayed 645 seconds by postgrey-1.27 at vger.kernel.org; Mon, 11 Jan 2021 20:23:39 EST
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave01.hostedemail.com (Postfix) with ESMTP id 88383180260DA
-        for <linux-cxl@vger.kernel.org>; Tue, 12 Jan 2021 01:12:55 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 03133181D330D;
-        Tue, 12 Jan 2021 01:12:14 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: teeth14_590d64827511
-X-Filterd-Recvd-Size: 2120
-Received: from [192.168.1.159] (unknown [47.151.137.21])
-        (Authenticated sender: joe@perches.com)
-        by omf03.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 12 Jan 2021 01:12:11 +0000 (UTC)
-Message-ID: <284e3f48184af93e6826e53d8ec32b569a291c2c.camel@perches.com>
-Subject: Re: [RFC PATCH v3 16/16] MAINTAINERS: Add maintainers of the CXL
- driver
-From:   Joe Perches <joe@perches.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org
-Cc:     Dan Williams <dan.j.williams@intel.com>,
+        id S1726860AbhALDcM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 11 Jan 2021 22:32:12 -0500
+Received: from mga05.intel.com ([192.55.52.43]:25398 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726742AbhALDcM (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 11 Jan 2021 22:32:12 -0500
+IronPort-SDR: kJ/CeFQV9TnED1cjbzsW8NwbMr5nBjrWwZ4DIjX7ClmjbXsJtXWaPk5mmy5Pluc7tb+augN23G
+ 1xU+yayWLjsQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9861"; a="262758611"
+X-IronPort-AV: E=Sophos;i="5.79,340,1602572400"; 
+   d="scan'208";a="262758611"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2021 19:31:31 -0800
+IronPort-SDR: RCBCz8539Sab7D01jwpz0cfCEOoZ/ZUBrnE17Qy1v2i8Fu0hTpjjQbCW7mi3w0uW2yRbAGiz9Q
+ uB2URQ/V5gYA==
+X-IronPort-AV: E=Sophos;i="5.79,340,1602572400"; 
+   d="scan'208";a="352854933"
+Received: from yyang31-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.142.71])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2021 19:31:31 -0800
+Date:   Mon, 11 Jan 2021 19:31:29 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        "linux-acpi@vger.kernel.org, Ira Weiny" <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org,
         "Kelley, Sean V" <sean.v.kelley@intel.com>,
         Rafael Wysocki <rafael.j.wysocki@intel.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Jon Masters <jcm@jonmasters.org>,
         Chris Browy <cbrowy@avery-design.com>,
         Randy Dunlap <rdunlap@infradead.org>,
         Christoph Hellwig <hch@infradead.org>,
         daniel.lll@alibaba-inc.com
-Date:   Mon, 11 Jan 2021 17:12:10 -0800
-In-Reply-To: <20210111225121.820014-18-ben.widawsky@intel.com>
+Subject: Re: [RFC PATCH v3 11/16] taint: add taint for unfettered hardware
+ access
+Message-ID: <20210112033129.hrzqivwwg7u3tgqg@intel.com>
 References: <20210111225121.820014-1-ben.widawsky@intel.com>
-         <20210111225121.820014-18-ben.widawsky@intel.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.38.1-1 
+ <20210111225121.820014-13-ben.widawsky@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210111225121.820014-13-ben.widawsky@intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 2021-01-11 at 14:51 -0800, Ben Widawsky wrote:
-> diff --git a/MAINTAINERS b/MAINTAINERS
-[]
-> @@ -4459,6 +4459,16 @@ F:	fs/configfs/
->  F:	include/linux/configfs.h
->  F:	samples/configfs/
->  
-> +COMPUTE EXPRESS LINK (CXL)
-> +M:	Vishal Verma <vishal.l.verma@intel.com>
-> +M:	Ira Weiny <ira.weiny@intel.com>
-> +M:	Ben Widawsky <ben.widawsky@intel.com>
-> +M:	Dan Williams <dan.j.williams@intel.com>
-> +L:	linux-cxl@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/cxl/
-> +F:	include/uapi/linux/cxl_mem.h
-> +
->  CONSOLE SUBSYSTEM
->  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->  S:	Supported
+Sending this patch was a mistake. Please see the other 11/16 instead.
 
-Keep the MAINTAINERS entries in alphabetic order please.
-Move this section between:
-
-COMPILER ATTRIBUTES
-CONEXANT ACCESSRUNNER USB DRIVER
+Thanks.
+Ben
 
