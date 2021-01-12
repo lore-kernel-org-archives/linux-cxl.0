@@ -2,66 +2,116 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE03C433E6
-	for <linux-cxl@archiver.kernel.org>; Tue, 12 Jan 2021 03:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EF7C433E0
+	for <linux-cxl@archiver.kernel.org>; Tue, 12 Jan 2021 07:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06FFF22EBD
-	for <linux-cxl@archiver.kernel.org>; Tue, 12 Jan 2021 03:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E81522CA2
+	for <linux-cxl@archiver.kernel.org>; Tue, 12 Jan 2021 07:10:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbhALDcM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 11 Jan 2021 22:32:12 -0500
-Received: from mga05.intel.com ([192.55.52.43]:25398 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726742AbhALDcM (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 11 Jan 2021 22:32:12 -0500
-IronPort-SDR: kJ/CeFQV9TnED1cjbzsW8NwbMr5nBjrWwZ4DIjX7ClmjbXsJtXWaPk5mmy5Pluc7tb+augN23G
- 1xU+yayWLjsQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9861"; a="262758611"
-X-IronPort-AV: E=Sophos;i="5.79,340,1602572400"; 
-   d="scan'208";a="262758611"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2021 19:31:31 -0800
-IronPort-SDR: RCBCz8539Sab7D01jwpz0cfCEOoZ/ZUBrnE17Qy1v2i8Fu0hTpjjQbCW7mi3w0uW2yRbAGiz9Q
- uB2URQ/V5gYA==
-X-IronPort-AV: E=Sophos;i="5.79,340,1602572400"; 
-   d="scan'208";a="352854933"
-Received: from yyang31-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.142.71])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2021 19:31:31 -0800
-Date:   Mon, 11 Jan 2021 19:31:29 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        "linux-acpi@vger.kernel.org, Ira Weiny" <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+        id S2391835AbhALHJ5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 12 Jan 2021 02:09:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391833AbhALHJ4 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 12 Jan 2021 02:09:56 -0500
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4677FC061786;
+        Mon, 11 Jan 2021 23:09:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:Subject:From:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=CYhz2Ww/JXYKS7gTcI5CvohnDk+EDidThWUqwG2Ttlk=; b=pYHgNYbZ4/WygPHbzSXMWCqjHU
+        1EtyDbg3RO8A5KqFZMlr/KrvQ+1EOg8B5lrKvxHpb8636SaifgqV2MM4z+4brPmz4mvt4RAJdK2dg
+        VDArwdpyAr5ZXxZIe7/6JjSA7/ZDBOXxB8FygyiRE1m5C9ozWu4aYH0BmP4Fh+jv2nIMmMKKa2H0C
+        HtVlrNrFednhCJrtkSqcbWhbt7zEZtqdhn+zigsFDa5x54/eFyQ0/4arJgXO8KKKAgozCcyeEqHt5
+        uktkarKQ+A14/BzmYM/V4pS20btBhfEuEhllEAWaoLRvII6mx0K/3DnU0de4i7gaYLCp5Tg0KwdSr
+        1G6rbqdw==;
+Received: from [2601:1c0:6280:3f0::79df]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kzDnQ-0003IY-1q; Tue, 12 Jan 2021 07:08:52 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [RFC PATCH v3 04/16] cxl/mem: Introduce a driver for
+ CXL-2.0-Type-3 endpoints
+To:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         "Kelley, Sean V" <sean.v.kelley@intel.com>,
         Rafael Wysocki <rafael.j.wysocki@intel.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Jon Masters <jcm@jonmasters.org>,
         Chris Browy <cbrowy@avery-design.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
         Christoph Hellwig <hch@infradead.org>,
         daniel.lll@alibaba-inc.com
-Subject: Re: [RFC PATCH v3 11/16] taint: add taint for unfettered hardware
- access
-Message-ID: <20210112033129.hrzqivwwg7u3tgqg@intel.com>
 References: <20210111225121.820014-1-ben.widawsky@intel.com>
- <20210111225121.820014-13-ben.widawsky@intel.com>
+ <20210111225121.820014-5-ben.widawsky@intel.com>
+Message-ID: <be6456ce-cc57-49fb-1637-00feda6a550c@infradead.org>
+Date:   Mon, 11 Jan 2021 23:08:43 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210111225121.820014-13-ben.widawsky@intel.com>
+In-Reply-To: <20210111225121.820014-5-ben.widawsky@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Sending this patch was a mistake. Please see the other 11/16 instead.
+On 1/11/21 2:51 PM, Ben Widawsky wrote:
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index 68da926ba5b1..0ac5080cd6e0 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -33,4 +33,26 @@ config CXL_ACPI
+>  	  specification.
+>  
+>  	  If unsure say 'm'
+> +
+> +config CXL_MEM
+> +        tristate "CXL.mem: Endpoint Support"
+> +        depends on PCI && CXL_BUS_PROVIDER
+> +        default CXL_BUS_PROVIDER
+> +        help
+> +          The CXL.mem protocol allows a device to act as a provider of
+> +          "System RAM" and/or "Persistent Memory" that is fully coherent
+> +          as if the memory was attached to the typical CPU memory
+> +          controller.
 
-Thanks.
-Ben
+All of those indented lines should use one tab (tristate, depends, default,
+and help). The help text should be indented with one tab + 2 spaces,
+like the lines below are.
+
+> +
+> +	  Say 'y/m' to enable a driver (named "cxl_mem.ko" when built as
+> +	  a module) that will attach to CXL.mem devices for
+> +	  configuration, provisioning, and health monitoring. This
+> +	  driver is required for dynamic provisioning of CXL.mem
+> +	  attached memory which is a pre-requisite for persistent memory
+
+patch 2 spells this as:              prerequisite
+which is preferred IMO.
+
+> +	  support. Typically volatile memory is mapped by platform
+> +	  firmware and included in the platform memory map, but in some
+> +	  cases the OS is responsible for mapping that memory. See
+> +	  Chapter 2.3 Type 3 CXL Device in the CXL 2.0 specification.
+> +
+> +          If unsure say 'm'.
+
+That last line needs one tab + 2 spaces for indentation.
+
+>  endif
+
+
+-- 
+~Randy
 
