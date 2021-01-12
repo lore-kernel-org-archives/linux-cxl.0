@@ -7,64 +7,66 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A219C433DB
-	for <linux-cxl@archiver.kernel.org>; Tue, 12 Jan 2021 21:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 332E4C4332B
+	for <linux-cxl@archiver.kernel.org>; Tue, 12 Jan 2021 21:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F259123122
-	for <linux-cxl@archiver.kernel.org>; Tue, 12 Jan 2021 21:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA29723122
+	for <linux-cxl@archiver.kernel.org>; Tue, 12 Jan 2021 21:46:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436668AbhALVhM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 12 Jan 2021 16:37:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53724 "EHLO
+        id S2436909AbhALVhN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 12 Jan 2021 16:37:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436661AbhALUHV (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 12 Jan 2021 15:07:21 -0500
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B43E7C061794
-        for <linux-cxl@vger.kernel.org>; Tue, 12 Jan 2021 12:06:40 -0800 (PST)
-Received: by mail-ej1-x62b.google.com with SMTP id g12so3099709ejf.8
-        for <linux-cxl@vger.kernel.org>; Tue, 12 Jan 2021 12:06:40 -0800 (PST)
+        with ESMTP id S2437010AbhALUl0 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 12 Jan 2021 15:41:26 -0500
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 461DAC061795
+        for <linux-cxl@vger.kernel.org>; Tue, 12 Jan 2021 12:40:46 -0800 (PST)
+Received: by mail-ej1-x62c.google.com with SMTP id g12so3222214ejf.8
+        for <linux-cxl@vger.kernel.org>; Tue, 12 Jan 2021 12:40:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8/Bid2Bzf98jE1/ALAKGTMu2+XIpeX//lGOiyhOAPLE=;
-        b=vhrrzDmitO32JAO3cpPHjbqdMSMUZDuwupYPaErRNdmyLCV9CGhPdYK6oTrgJG74+m
-         I9dA7oEIptk1EhB30sBwuzhsn5ped+8hrj1SEpOIehrqgvt9hLGZusi5QYNsLyb0Ojr7
-         B5CZvlBXkQak1yX5cCoTDYZjpURO/BDj90CBV2xV11nCqustJMw6QGBur7B+HWFMThJz
-         1UOpx1uPYSC7PIQzDXmNwWVBl2xqVAawLUUMn5pIwD3C/PuDUKVuv9cePx/NSJz7tGiC
-         JaIZx/W2kwjLwrF97+S1fQrkm406AotYB5qwe5dQ+9CSge06C4wEogikQR+XPc1DtPae
-         9wSw==
+        bh=Ct93Q3jRetKhaczI+6WcmnjHIFRP3Fo82VEGV+KynCk=;
+        b=T1cZ3JpkSXggl/Jkc5Ldu1myuVwPhCGRR6lqhbhAHv3xS6v+mjC6VwXUiCcBHC25JI
+         sb9pXAcR2De4/gHbvIQK58ATkuAIMTf8m0ZgZE26P2jThxM+b/ywIX6Gu2z+FyH0wWqI
+         8DFVg8H/XJthxJXuQvnTjakrBLaohUIK39TJ9dp1Wu2Tev0vDanE1M6tvq6gbTsrMYZi
+         fRb5OXVvMxBBACwBd5AVcfcv78E2i85gV9iyy6Vtoj0CfpbmHYeTroe17RJ5ajvbGH6H
+         k6CV8KJlnlEiKHnr/nVg+5HGrZtBNr0EowWx6PE5j9SDR6LkSOrpI1J1zsWPXsZ8PQed
+         7L0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8/Bid2Bzf98jE1/ALAKGTMu2+XIpeX//lGOiyhOAPLE=;
-        b=AfyJwplU0OXduFrUwu+pKKuoxvEIcL0p6hqnT8uTpdeE1/HlSlzbkZexsdDAlJHA7r
-         38fTNZJ/Gb9VH9HPrCyp/s32UjPk09o24dXN0Uy1niKBw1ilbsq0Fj/4vQIwrpp+nV0T
-         T6HEzWmSYqOY4T3R14lQMOgqYf7UKmFvBWiJKcoVLxdUSynHLBPhlI/vy8eXVw7qL4jB
-         ObvU9wNF906AZS+r12gHTW1G9OXoz/RdkDuZPqtbwtTP8sww9epdbuPeBuyqWnznvMVb
-         8uktVEfdlWV89Ywj/ZAJNPMKYKJYzrqSV/ud0iFl883PEyxRSKqpEO7b4l8ckINeJgbd
-         PVbw==
-X-Gm-Message-State: AOAM533I6ma12/gM/sZR3AJV/EVpNRVS0tHt9uXTAhSh4LfeQ9kWSL6w
-        VhbMaYzgtr92FHj0vka0KM5FwGJiZs5vj36uDp4abA==
-X-Google-Smtp-Source: ABdhPJyfN4mVkZqUgmpVifgODbiKiUV7zPHfN/mvTykoOz6wGwySd2pfuLRTAFzoWqiTJ14Yjd/67QsQSjvEqEh7UX8=
-X-Received: by 2002:a17:906:2707:: with SMTP id z7mr357027ejc.418.1610481999273;
- Tue, 12 Jan 2021 12:06:39 -0800 (PST)
+        bh=Ct93Q3jRetKhaczI+6WcmnjHIFRP3Fo82VEGV+KynCk=;
+        b=f8jkAL+hvg+1erT6sviaYatuMtJXAdzw6k6cuk5pB0nZkE5vHZJWrsZ8+5jAUmBCN5
+         cjWUnOolrk6VDVfaAXyg9+b5DRuUijXT0sPaaL0ucfT+G04hlw3btuu5ms/qLD721RQo
+         /H2jdxWRx0G21iBZ3FL3XLxl7ozGVTMiJMHUzhJTHbdBBlmG5hlekAhq46iV2IPqzSXI
+         A1XmPum9FQnQNJ7MF4xwiWmPKAiLIhEhe8Br8rO/Xm5V1FUg38kaFZeN/JuIhFIIWejP
+         Mc0+MLoxc+BCdoYIEmNqfxNcQpr5FYuYSsxa0nFCVfg/vgj5pi8/dig0wCfJv7SWf3+4
+         nrCA==
+X-Gm-Message-State: AOAM533HpOrHSoiRlCEKa9Dqd66nksKWP5X0pbFn5XxUG7aqiuX7TS9P
+        2G6zx/VLAnb7kQhRI76aaMOGGsyDXoAjJ0CkhwwGUQ==
+X-Google-Smtp-Source: ABdhPJzHdcTzIjQRpyGIEfN0AC0DGdj1ibAM+dEAeusNPr+hYVUdYuvlpZNheWMWFHBf12PCInMSBiFgFRDLAzCahKY=
+X-Received: by 2002:a17:907:d8e:: with SMTP id go14mr439401ejc.472.1610484044797;
+ Tue, 12 Jan 2021 12:40:44 -0800 (PST)
 MIME-Version: 1.0
 References: <20210111225121.820014-1-ben.widawsky@intel.com>
- <20210111225121.820014-5-ben.widawsky@intel.com> <20210112190103.00004644@Huawei.com>
-In-Reply-To: <20210112190103.00004644@Huawei.com>
+ <20210111225121.820014-6-ben.widawsky@intel.com> <20210112191342.00006aad@Huawei.com>
+ <20210112192115.vhxjz3cr5vwjshwf@intel.com>
+In-Reply-To: <20210112192115.vhxjz3cr5vwjshwf@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 12 Jan 2021 12:06:30 -0800
-Message-ID: <CAPcyv4iGVPgu_c0GOYTuAQyFJgfMuU5S45Ukd968+DV--Y6miw@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 04/16] cxl/mem: Introduce a driver for
- CXL-2.0-Type-3 endpoints
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
+Date:   Tue, 12 Jan 2021 12:40:35 -0800
+Message-ID: <CAPcyv4iDoFdBn7UkvRpAunLY=TM7vWnH77P3nGKStBfJ9YdwKA@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 05/16] cxl/mem: Map memory device registers
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-cxl@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linux PCI <linux-pci@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org, Ira Weiny" <ira.weiny@intel.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         "Kelley, Sean V" <sean.v.kelley@intel.com>,
         Rafael Wysocki <rafael.j.wysocki@intel.com>,
@@ -79,59 +81,210 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Jan 12, 2021 at 11:03 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
+On Tue, Jan 12, 2021 at 11:21 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> On Mon, 11 Jan 2021 14:51:08 -0800
-> Ben Widawsky <ben.widawsky@intel.com> wrote:
+> On 21-01-12 19:13:42, Jonathan Cameron wrote:
+> > On Mon, 11 Jan 2021 14:51:09 -0800
+> > Ben Widawsky <ben.widawsky@intel.com> wrote:
+> >
+> > > All the necessary bits are initialized in order to find and map the
+> > > register space for CXL Memory Devices. This is accomplished by using the
+> > > Register Locator DVSEC (CXL 2.0 - 8.1.9.1) to determine which PCI BAR to
+> > > use, and how much of an offset from that BAR should be added.
+> > >
+> > > If the memory device registers are found and mapped a new internal data
+> > > structure tracking device state is allocated.
+> > >
+> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> >
+> > Some issues with managed allocations being manually freed in remove.
+> > It shouldn't be necessary to do that.
+> >
+> > > ---
+> > >  drivers/cxl/cxl.h |  17 ++++++++
+> > >  drivers/cxl/mem.c | 100 +++++++++++++++++++++++++++++++++++++++++++++-
+> > >  drivers/cxl/pci.h |  14 +++++++
+> > >  3 files changed, 130 insertions(+), 1 deletion(-)
+> > >  create mode 100644 drivers/cxl/cxl.h
+> > >
+> > > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> > > new file mode 100644
+> > > index 000000000000..d81d0ba4617c
+> > > --- /dev/null
+> > > +++ b/drivers/cxl/cxl.h
+> > > @@ -0,0 +1,17 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > > +/* Copyright(c) 2020 Intel Corporation. */
+> > > +
+> > > +#ifndef __CXL_H__
+> > > +#define __CXL_H__
+> > > +
+> > > +/**
+> > > + * struct cxl_mem - A CXL memory device
+> > > + * @pdev: The PCI device associated with this CXL device.
+> > > + * @regs: IO mappings to the device's MMIO
+> > > + */
+> > > +struct cxl_mem {
+> > > +   struct pci_dev *pdev;
+> > > +   void __iomem *regs;
+> > > +};
+> > > +
+> > > +#endif
+> > > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> > > index 005404888942..8301db34d2ff 100644
+> > > --- a/drivers/cxl/mem.c
+> > > +++ b/drivers/cxl/mem.c
+> > > @@ -5,6 +5,58 @@
+> > >  #include <linux/io.h>
+> > >  #include "acpi.h"
+> > >  #include "pci.h"
+> > > +#include "cxl.h"
+> > > +
+> > > +/**
+> > > + * cxl_mem_create() - Create a new &struct cxl_mem.
+> > > + * @pdev: The pci device associated with the new &struct cxl_mem.
+> > > + * @reg_lo: Lower 32b of the register locator
+> > > + * @reg_hi: Upper 32b of the register locator.
+> > > + *
+> > > + * Return: The new &struct cxl_mem on success, NULL on failure.
+> > > + *
+> > > + * Map the BAR for a CXL memory device. This BAR has the memory device's
+> > > + * registers for the device as specified in CXL specification.
+> > > + */
+> > > +static struct cxl_mem *cxl_mem_create(struct pci_dev *pdev, u32 reg_lo,
+> > > +                                 u32 reg_hi)
+> > > +{
+> > > +   struct device *dev = &pdev->dev;
+> > > +   struct cxl_mem *cxlm;
+> > > +   void __iomem *regs;
+> > > +   u64 offset;
+> > > +   u8 bar;
+> > > +   int rc;
+> > > +
+> > > +   offset = ((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
+> > > +   bar = (reg_lo >> CXL_REGLOC_BIR_SHIFT) & CXL_REGLOC_BIR_MASK;
+> > > +
+> > > +   /* Basic sanity check that BAR is big enough */
+> > > +   if (pci_resource_len(pdev, bar) < offset) {
+> > > +           dev_err(dev, "BAR%d: %pr: too small (offset: %#llx)\n", bar,
+> > > +                   &pdev->resource[bar], (unsigned long long)offset);
+> > > +           return NULL;
+> > > +   }
+> > > +
+> > > +   rc = pcim_iomap_regions(pdev, BIT(bar), pci_name(pdev));
+> > > +   if (rc != 0) {
+> > > +           dev_err(dev, "failed to map registers\n");
+> > > +           return NULL;
+> > > +   }
+> > > +
+> > > +   cxlm = devm_kzalloc(&pdev->dev, sizeof(*cxlm), GFP_KERNEL);
+> > > +   if (!cxlm) {
+> > > +           dev_err(dev, "No memory available\n");
+> > > +           return NULL;
+> > > +   }
+> > > +
+> > > +   regs = pcim_iomap_table(pdev)[bar];
+> > > +   cxlm->pdev = pdev;
+> > > +   cxlm->regs = regs + offset;
+> > > +
+> > > +   dev_dbg(dev, "Mapped CXL Memory Device resource\n");
+> > > +   return cxlm;
+> > > +}
+> > >
+> > >  static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
+> > >  {
+> > > @@ -33,7 +85,8 @@ static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
+> > >  static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> > >  {
+> > >     struct device *dev = &pdev->dev;
+> > > -   int rc, regloc;
+> > > +   struct cxl_mem *cxlm;
+> > > +   int rc, regloc, i;
+> > >
+> > >     rc = cxl_bus_acquire(pdev);
+> > >     if (rc != 0) {
+> > > @@ -41,15 +94,59 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> > >             return rc;
+> > >     }
+> > >
+> > > +   rc = pcim_enable_device(pdev);
+> > > +   if (rc)
+> > > +           return rc;
+> > > +
+> > >     regloc = cxl_mem_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC);
+> > >     if (!regloc) {
+> > >             dev_err(dev, "register location dvsec not found\n");
+> > >             return -ENXIO;
+> > >     }
+> > > +   regloc += 0xc; /* Skip DVSEC + reserved fields */
+> > > +
+> > > +   rc = -ENXIO;
+> > > +   for (i = regloc; i < regloc + 0x24; i += 8) {
+> > > +           u32 reg_lo, reg_hi;
+> > > +           u8 reg_type;
+> > > +
+> > > +           /* "register low and high" contain other bits */
+> > > +           pci_read_config_dword(pdev, i, &reg_lo);
+> > > +           pci_read_config_dword(pdev, i + 4, &reg_hi);
+> > > +
+> > > +           reg_type =
+> > > +                   (reg_lo >> CXL_REGLOC_RBI_SHIFT) & CXL_REGLOC_RBI_MASK;
+> > > +
+> > > +           if (reg_type == CXL_REGLOC_RBI_MEMDEV) {
+> > > +                   rc = 0;
+> > > +                   cxlm = cxl_mem_create(pdev, reg_lo, reg_hi);
+> > > +                   if (!cxlm)
+> > > +                           rc = -ENODEV;
+> > > +                   break;
+> > > +           }
+> > > +   }
+> > > +
+> > > +   if (rc)
+> > > +           return rc;
+> > >
+> > > +   pci_set_drvdata(pdev, cxlm);
+> > After below cleanup, not needed yet..
+> >
+> > >     return 0;
+> > >  }
+> > >
+> > > +static void cxl_mem_remove(struct pci_dev *pdev)
+> > > +{
+> > > +   struct cxl_mem *cxlm;
+> > > +
+> > > +   cxlm = pci_get_drvdata(pdev);
+> > > +   if (!cxlm)
+> > > +           return;
+> > > +
+> > > +   kfree(cxlm);
+> >
+> > There is bunch of unwinding here that I'd expect to see in error paths
+> > for probe but it's not there...  Which made me wonder.
+> > So pcim_iounmap_regions is a managed interface, why are call it by
+> > hand?  Same is true of the allocation of cxlm above.  So currently this
+> > remove isn't doing anything useful.
+> >
+> > > +
+> > > +   pcim_iounmap_regions(pdev, ~0);
+> > > +   pci_set_drvdata(pdev, NULL);
+> >
+> > This hasn't been needed for a long time. Example of removal of similar...
+> > http://patchwork.ozlabs.org/project/netdev/patch/005801ceaec1$6b8d3320$42a79960$%25han@samsung.com/
+> >
 >
-> > From: Dan Williams <dan.j.williams@intel.com>
-> >
-> > The CXL.mem protocol allows a device to act as a provider of "System
-> > RAM" and/or "Persistent Memory" that is fully coherent as if the memory
-> > was attached to the typical CPU memory controller.
-> >
-> > With the CXL-2.0 specification a PCI endpoint can implement a "Type-3"
-> > device interface and give the operating system control over "Host
-> > Managed Device Memory". See section 2.3 Type 3 CXL Device.
-> >
-> > The memory range exported by the device may optionally be described by
-> > the platform firmware memory map, or by infrastructure like LIBNVDIMM to
-> > provision persistent memory capacity from one, or more, CXL.mem devices.
-> >
-> > A pre-requisite for Linux-managed memory-capacity provisioning is this
-> > cxl_mem driver that can speak the mailbox protocol defined in section
-> > 8.2.8.4 Mailbox Registers.
-> >
-> > For now just land the driver boiler-plate and fill it in with
-> > functionality in subsequent commits.
-> >
-> > Link: https://www.computeexpresslink.org/download-the-specification
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> Thanks. I copy pasted it from a driver that obviously hasn't been updated yet
+> :-)
 >
-> Just one passing comment inline.
+> The kfree is still necessary though, right? Earlier in development, I just freed
+> it immediately after creation (this patch is obviously not super useful
+> functionally, but serves nicely for review).
 >
-> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > new file mode 100644
-> > index 000000000000..005404888942
-> > --- /dev/null
-> > +++ b/drivers/cxl/mem.c
-> > @@ -0,0 +1,69 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/* Copyright(c) 2020 Intel Corporation. All rights reserved. */
-> > +#include <linux/module.h>
-> > +#include <linux/pci.h>
-> > +#include <linux/io.h>
-> > +#include "acpi.h"
-> > +#include "pci.h"
-> > +
-> > +static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
->
-> Is it worth pulling this out to a utility library now as we are going
-> to keep needing this for CXL devices?
-> Arguably, with a vendor_id parameter it might make sense to have
-> it as a utility function for pci rather than CXL alone.
+> So we can remove the actual allocation from this patch and move it to later if
+> you think it makes a big difference. My preference is to just leave it doing the
+> kfree and call it good.
 
-Sure, cxl_mem_dvsec() can move to a central location, but I'd wait for
-the first incremental user to split it out.
+devm obviates the need for a cxl_mem_remove() to undo cxl_mem_probe()
+actions. This was all devm clean in v2. The other allocation done in
+the probe path is cxl_memdev() allocation, but that is undone by a
+devm_add_action_or_reset() to unregister the device along with typical
+device reference count rules.
