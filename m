@@ -2,273 +2,194 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1DDC433E9
-	for <linux-cxl@archiver.kernel.org>; Thu, 14 Jan 2021 19:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA8FC433DB
+	for <linux-cxl@archiver.kernel.org>; Fri, 15 Jan 2021 03:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4426223B3E
-	for <linux-cxl@archiver.kernel.org>; Thu, 14 Jan 2021 19:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B3D423AF8
+	for <linux-cxl@archiver.kernel.org>; Fri, 15 Jan 2021 03:19:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbhANTZ0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 14 Jan 2021 14:25:26 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:2353 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbhANTZZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 14 Jan 2021 14:25:25 -0500
-Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DGvJM1mK0z67bdr;
-        Fri, 15 Jan 2021 03:19:31 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
+        id S1732436AbhAODSh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 14 Jan 2021 22:18:37 -0500
+Received: from mga12.intel.com ([192.55.52.136]:59605 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732439AbhAODSg (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 14 Jan 2021 22:18:36 -0500
+IronPort-SDR: HnOOzriK6NNV5RJtCqdVnuwVaeSV+qFsmGF0ohOkOSpJ+bnEFJysfBOrTqEgB7dm0XkE6BhARZ
+ UsL+9MMLQGfA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9864"; a="157668826"
+X-IronPort-AV: E=Sophos;i="5.79,348,1602572400"; 
+   d="scan'208";a="157668826"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2021 19:17:55 -0800
+IronPort-SDR: CDK0awQXDARpbMWyDRm/A19oc+K5HPMkBGFAbC5TO9ZFLdY7gToQ/MspXYemAOjsR2NeaauRH5
+ CdZCJt328gyQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.79,348,1602572400"; 
+   d="scan'208";a="398248889"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Jan 2021 19:17:55 -0800
+Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Thu, 14 Jan 2021 20:24:43 +0100
-Received: from localhost (10.47.30.252) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2106.2; Thu, 14 Jan
- 2021 19:24:42 +0000
-Date:   Thu, 14 Jan 2021 19:24:02 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        "Bjorn Helgaas" <helgaas@kernel.org>,
-        Jon Masters <jcm@jonmasters.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        <daniel.lll@alibaba-inc.com>
-Subject: Re: [RFC PATCH v3 14/16] cxl/mem: Use CEL for enabling commands
-Message-ID: <20210114192402.000019e9@Huawei.com>
-In-Reply-To: <20210114190425.rxupmrjm3jfjorj4@intel.com>
-References: <20210111225121.820014-1-ben.widawsky@intel.com>
-        <20210111225121.820014-16-ben.widawsky@intel.com>
-        <20210114180211.00007852@Huawei.com>
-        <20210114181340.fgybdchzfxiiqwhr@intel.com>
-        <20210114183217.0000154c@Huawei.com>
-        <20210114190425.rxupmrjm3jfjorj4@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+ 15.1.1713.5; Thu, 14 Jan 2021 19:17:55 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 14 Jan 2021 19:17:55 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.1713.5; Thu, 14 Jan 2021 19:17:55 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G9kmBss9N8KjpR8LdeHQZCijId3I6B4vorOyhqnxKABtkkjRt9geTYNQ3s81NLLh3sBSLh39IGZY4hORFOR8mZ1wWzWoQ449jkw/hiFLXWrJz6etU39JpIhLEq7XznS1R+7TomkF03GNJQMa2b1jCIzgTVoZqxDtjm2RSNrcJNTbMyDdmkIvHiWY0dGuCKExixjuiF246xgN8UwemuxlXb+XwAuqGNWE3FLqgIgKTs6/C9dT9ist7zFN0uGXOFcxKB0JQKoRhkfv+P2Z34FjGiydr8hsTRzHcqMaL7QHdAuyZN4LdIXRtaetY+C5FN5EaTfQU3djwEyJZ9pgv1iSjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n3YqeHsparnziMq6jZRmPgAfd1Fc125hyXJcz0L5OA8=;
+ b=GV0yijKW+xjYxuXNoovYbsH2M3F7w1/U+8WQZ3ySbwNMdUXVjxTc9KwteOE4EoAHv9Cxe6Z+snIDUS7ZZRKwtoi/O90wxDXXfD/9dlYy6865ucDxeP+txakmJ+lCg1bvItBqRe479HMfMCWHpEf4KRxUYlSG+0j81e1gc6Ic4dcWHqX+JkjYtOAF+SNVFuHqRrUjPeCBJSpYGPPC6WiaBXRIO5UmzqtBKRjGjdqS/2C+oU0xCcSQ35wnkTOiOETB9ekZKKNdhpCeuVsKfcryCUjCSQy6IS2GsJPmUL9+a8wDr1pusKkcqYHTAh1Z9GmGEyuRCXySFqbAtj2NvYW/pA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n3YqeHsparnziMq6jZRmPgAfd1Fc125hyXJcz0L5OA8=;
+ b=d5yeZ2eZdlO3mRDj2W1xGgtaMOat+SIXEyh7t8sMQoop2NyjScTa4RQkp7AqUE+lPDKE0Cq6GvZelZOZMJyw7RvyjF/EWAGSCC8T6waBbA+vfuTKMmzYc4P8dAn06JbQFCRDk8GptHht04BURR3zlKJKStUfXyeVneXdDXd8yME=
+Received: from BYAPR11MB3448.namprd11.prod.outlook.com (2603:10b6:a03:76::21)
+ by BYAPR11MB3557.namprd11.prod.outlook.com (2603:10b6:a03:b4::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.10; Fri, 15 Jan
+ 2021 03:17:52 +0000
+Received: from BYAPR11MB3448.namprd11.prod.outlook.com
+ ([fe80::8004:3bed:cc13:e8ae]) by BYAPR11MB3448.namprd11.prod.outlook.com
+ ([fe80::8004:3bed:cc13:e8ae%7]) with mapi id 15.20.3742.012; Fri, 15 Jan 2021
+ 03:17:52 +0000
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Widawsky, Ben" <ben.widawsky@intel.com>,
+        "Douglas, Chet R" <chet.r.douglas@intel.com>
+Subject: Re: ACPI Working Group Code First ECR for a new CXL Root Object
+Thread-Topic: ACPI Working Group Code First ECR for a new CXL Root Object
+Thread-Index: AQHWybClBaIPKwEtiUmr0E2A2oaIeaooRqKA
+Date:   Fri, 15 Jan 2021 03:17:52 +0000
+Message-ID: <ab06ae5c27a222ec261195e291ecadf655aedeb2.camel@intel.com>
+References: <ecfd911dc8b9a5bac89d1de68047400d15525232.camel@intel.com>
+In-Reply-To: <ecfd911dc8b9a5bac89d1de68047400d15525232.camel@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.38.2 (3.38.2-1.fc33) 
+authentication-results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [134.134.139.72]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6eff04e7-fcec-48b5-3835-08d8b904250c
+x-ms-traffictypediagnostic: BYAPR11MB3557:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR11MB3557CA6354D1071CD0EE9F00C7A70@BYAPR11MB3557.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: bMceuDi5BrtDA2ZIzT7mYtbatUcoK1W5DMwFcWkRjh/iNwh7m+msoT0XGg1JiaSIZogtGJ1nm5AxT35wcDQDJMxjDMOf2iFYbE4Nz92C2wiwtNPJ5bpoFNY+/I+gEb9KCUWNIXonN1P3814zXAxHXr8J6LyojbXijrgTP7n6XqffkegXbMHjZMmSNsCWV98KI/YUYuNGbUAiVVx08SmCmpTLoqvu7+ZW6LmaXjv6ao8R4Nywwi998da58khBjSnRJipGe8mPVtOHKfVwLMIEHarMEBiBCo6u5qDA6351JkUlD3qJ2qMKLE44/V7eHWSMZqAuDub1YRv4iu8x7VzGlDye6viCojHiR08KhVlBlMx+DEtJp2ljiDlfv6HZ5JYJDfIwcllpmo3jcI9lPGJgGhgExdpmaMxdNxTSp0w+ZauRG1n2En7vk0JOsp0+i40X2/1FTdDz9tgYHXDS20kb/A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3448.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(136003)(396003)(366004)(346002)(39860400002)(478600001)(2616005)(966005)(2906002)(6486002)(66476007)(66556008)(91956017)(86362001)(5660300002)(71200400001)(54906003)(6512007)(8676002)(76116006)(186003)(26005)(6506007)(36756003)(66946007)(316002)(8936002)(66446008)(64756008)(4326008)(110136005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?M0dxanhabGU2cXZ3a2VuOXc4djNxTUJOTUJQenRWWmZFQW8rN2R4M1NXc1kx?=
+ =?utf-8?B?b1pGRHA5bElkMmpRcjJkWG5Uay9Jc1hXQ0dxT1U1b0dSeGpEMVoxRjBEZWZE?=
+ =?utf-8?B?R3Q5NWxXQlNVNm9xd3p2eGJlOTRIVER2OGYzend2MTZKdjU2SXd5Q05YYnpy?=
+ =?utf-8?B?c0I2VXpod3Uwb3JTT1dlQU9ENVAxR3B2eTlWN2ZPZHdTUTJvME9NWllYTmhR?=
+ =?utf-8?B?S3UrdVBYdndqY3Fld0NSSTdWbWVEaGk2SDkxS0IxZ1M1NndPeU5IQThLSmdm?=
+ =?utf-8?B?dW0zV0JIMFgyVzZsemFtMCtBZGQrcHJpRnhDTVdvdEl0TFdQbDFyaTRkY1Ax?=
+ =?utf-8?B?Y21VbFIwZUl5QTZXZUdFblludHFwcXpQN3hmZE96Nk1pN1ZlVGxYMjA0Zzli?=
+ =?utf-8?B?d05icE1nbGlJTUcwUS9oajhwQzlseDREWE14RUdSNXF0WEFmSy9kYU5rUnI5?=
+ =?utf-8?B?eEJ0VjRCZWlnNloxLzFWUTUrT1liRCtXZEtFSHlwT0g3LzVKOWNpc0VzZ0lF?=
+ =?utf-8?B?SXU0akJTRXV2S2MyelRsYkVENENPVVlDVXp6YWJ6RmF3VVBPTTE3aUpmeWxT?=
+ =?utf-8?B?Nk1MclBpT1RkMTF0RmFLbEU3YjRWOUlWeW5rL0FKaVNHV2FHN3RvMXB0bXZN?=
+ =?utf-8?B?WWg3bE5MR2pCUEgxVmtVMHZLTkcreTNrQUk4QWVkMVRneVh3dnNIMVgyRmF3?=
+ =?utf-8?B?Q2h0YmplZ1VtUkp3RUZ0Zi82TGV4eGE3Q05vWUNQU09iRGxzWTBUNVo2bEh2?=
+ =?utf-8?B?N3pUcUhlbnAvVUN3UFI0TXRtK2lJUU0xdFZ0dmp1Sm53Wno3RzR1ZHR0azFP?=
+ =?utf-8?B?NG8zRjFmUWd4NzZXUTVBVWhsMU1Teks3cWwwWFFOdGIyMXBtS2piUWk2Y1pI?=
+ =?utf-8?B?R1haakttSUxtVjBJTElHTmdNbVdjcFFOMUs3YTNxdkxrNmlTcDQxWUVQY3RO?=
+ =?utf-8?B?Umt1bkJKMUVPTWZ2aWRWTUxNdWhLNjBJdkE5dnRMdDRUMFVUeDFGdlV4UExU?=
+ =?utf-8?B?cFlBa1ozeGg0TjV6eXZ6RkhWMGV2aXQ0czNta3FHMC81dVg3N21jSVBxamV1?=
+ =?utf-8?B?aDRhQmVMbHlURlNTLzZJblkwblR0U3lnbjlsZE8yekhub1FDcmRBOFR1bEtm?=
+ =?utf-8?B?M1I5STFRS0k2czZQUnJKdTFjdWNuRUhFMmVBV1FRZFB4RlVGU2pDNnd5aVly?=
+ =?utf-8?B?STVjc2hvcS9Odm1FY2Y2VVh2ZWxKeTFCd2IyUmd4ejFmelI2SGJTNXltRVdE?=
+ =?utf-8?B?NGJrSVU5UjVtK2hrU3FTSG9YRmJ1UEMrbGZpNWJ4V2I4OHVOMXpGcUNpSlRZ?=
+ =?utf-8?Q?R+tD7Cr8jZyCqzPX9sLTD4yBsh2dOqlEl2?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <00B3DCFDAB44DE438CAD5986C28C7947@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.30.252]
-X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3448.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6eff04e7-fcec-48b5-3835-08d8b904250c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2021 03:17:52.3801
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zaoD3+ZQZzRUsKB+wbXSS/AW8q+ps1AhkyT65aT/DnPUbjsiZTnSS/edVvUTmB7gvtYEb45d8VjtZiIWCqOmt8NIuwmrNibsOctwdKhMNWw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3557
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 14 Jan 2021 11:04:25 -0800
-Ben Widawsky <ben.widawsky@intel.com> wrote:
-
-> On 21-01-14 18:32:17, Jonathan Cameron wrote:
-> > On Thu, 14 Jan 2021 10:13:40 -0800
-> > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> >   
-> > > On 21-01-14 18:02:11, Jonathan Cameron wrote:  
-> > > > On Mon, 11 Jan 2021 14:51:19 -0800
-> > > > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > >     
-> > > > > The Command Effects Log (CEL) is specified in the CXL 2.0 specification.
-> > > > > The CEL is one of two types of logs, the other being vendor specific.
-> > > > > They are distinguished in hardware/spec via UUID. The CEL is immediately
-> > > > > useful for 2 things:
-> > > > > 1. Determine which optional commands are supported by the CXL device.
-> > > > > 2. Enumerate any vendor specific commands
-> > > > > 
-> > > > > The CEL can be used by the driver to determine which commands are
-> > > > > available in the hardware (though it isn't, yet). That set of commands
-> > > > > might itself be a subset of commands which are available to be used via
-> > > > > CXL_MEM_SEND_COMMAND IOCTL.
-> > > > > 
-> > > > > Prior to this, all commands that the driver exposed were explicitly
-> > > > > enabled. After this, only those commands that are found in the CEL are
-> > > > > enabled.
-> > > > > 
-> > > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>    
-> > > > 
-> > > > This patch made me wonder if the model for the command in quite right.
-> > > > I think it would end up simpler with a pair of payload pointers for send
-> > > > and receive (that can be equal when it makes sense).
-> > > > 
-> > > > A few other things inline.
-> > > > 
-> > > > Jonathan    
-> > > 
-> > > I'll address the others separately, but could you elaborate on this? I'm not
-> > > sure I follow your meaning.  
-> > 
-> > Further down in the review..
-> > "
-> > The fact that you end up bypassing the payload transfer stuff in mbox_cmd
-> > rather suggests it's not a particularly good model.  + it keeps confusing
-> > me.
-> > 
-> > While the hardware uses a single region for the payload, there is nothing
-> > saying the code has to work that way.   Why not have separate payload_in and
-> > payload_out pointers?  Occasionally you might set them to the same buffer, but
-> > elsewhere you could avoid the direct memcpy()s you are doing around the
-> > send_cmd(). 
-> > 
-> > "
-> > 
-> > Jonathan
-> > 
-> >   
-> 
-> Ah I was confused if that was a separate statement.
-> 
-> Can you specify the function prototype you're hoping for (or modification to the
-> structure)?
-> 
-> I really like the lowest level function to simply model the hardware. I get to
-> write the 8 steps out and clearly implement them.
-> 
-> I personally don't think it's so awkward, but again, give me something more
-> specific and I'll consider it.
-
-Looking at the case in this patch as an example
-
-Something like (completely untested)...
-Note only real change here is having an extra pointer in mbox_cmd so we can 
-have in and out buffers provided.  Doesn't change the flow at all means we can
-use the internal memcpy_from_io memcpy_to_io in more cases.
-Zero copy is still fine if we are in a case where it makes sense.
-
-struct mbox_cmd {
-	u16 opcode;
-//separate in and out pointers.
-	void *payload_in;
-	void *payload_out;
-	size_t size_in;
-	size_t size_out;
-	u16 return_code;
-};
-
-static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
-				 struct mbox_cmd *mbox_cmd)
-{
-	u64 cmd_reg, status_reg;
-	size_t out_len;
-	int rc;
-
-	lockdep_assert_held(&cxlm->mbox.mutex);
-
-	/*
-	 * Here are the steps from 8.2.8.4 of the CXL 2.0 spec.
-	 *   1. Caller reads MB Control Register to verify doorbell is clear
-	 *   2. Caller writes Command Register
-	 *   3. Caller writes Command Payload Registers if input payload is non-empty
-	 *   4. Caller writes MB Control Register to set doorbell
-	 *   5. Caller either polls for doorbell to be clear or waits for interrupt if configured
-	 *   6. Caller reads MB Status Register to fetch Return code
-	 *   7. If command successful, Caller reads Command Register to get Payload Length
-	 *   8. If output payload is non-empty, host reads Command Payload Registers
-	 */
-
-	/* #1 */
-	WARN_ON(cxl_doorbell_busy(cxlm));
-
-	cmd_reg = CXL_SET_FIELD(mbox_cmd->opcode, CXLDEV_MB_CMD_COMMAND_OPCODE);
-	if (mbox_cmd->size_in) {
-		cmd_reg |= CXL_SET_FIELD(mbox_cmd->size_in,
-					 CXLDEV_MB_CMD_PAYLOAD_LENGTH);
-		//leave this here for your userspace zero copy path...
-		if (mbox_cmd->payload_in)
-			memcpy_toio(cxl_payload_regs(cxlm), mbox_cmd->payload_in,
-				    mbox_cmd->size_in);
-	}
-
-	/* #2, #3 */
-	cxl_write_mbox_reg64(cxlm, CXLDEV_MB_CMD_OFFSET, cmd_reg);
-
-	/* #4 */
-+	dev_dbg(&cxlm->pdev->dev, "Sending command\n");
-	cxl_write_mbox_reg32(cxlm, CXLDEV_MB_CTRL_OFFSET,
-			     CXLDEV_MB_CTRL_DOORBELL);
-
-	/* #5 */
-	rc = cxl_mem_wait_for_doorbell(cxlm);
-	if (rc == -ETIMEDOUT) {
-		cxl_mem_mbox_timeout(cxlm, mbox_cmd);
-		return rc;
-	}
-
-	/* #6 */
-	status_reg = cxl_read_mbox_reg64(cxlm, CXLDEV_MB_STATUS_OFFSET);
-	mbox_cmd->return_code =
-		CXL_GET_FIELD(status_reg, CXLDEV_MB_STATUS_RET_CODE);
-
-	if (mbox_cmd->return_code != 0) {
-		dev_dbg(&cxlm->pdev->dev, "Mailbox operation had an error\n");
-		return 0;
-	}
-
-	/* #7 */
-	cmd_reg = cxl_read_mbox_reg64(cxlm, CXLDEV_MB_CMD_OFFSET);
-	out_len = CXL_GET_FIELD(cmd_reg, CXLDEV_MB_CMD_PAYLOAD_LENGTH);
-	
-	/* #8 */
-	if (out_len && mbox_cmd->payload_out)
-		memcpy_fromio(mbox_cmd->payload_out, cxl_payload_regs(cxlm),
-			      min(mbox_cmd->size_out, out_len));
-
-//move this down here - because they the output buffer might theory not
-//bit big enough.
-	mbox_cmd->size_out = out_len;
-
-	return 0;
-}
-
-
-
-....
-
-
-static int cxl_xfer_log(struct cxl_mem *cxlm, uuid_t *uuid, u32 size,
-			u8 *out)
-{
-	u32 remaining = size;
-	u32 offset = 0;
-
-	while (remaining) {
-		u32 xfer_size = min_t(u32, remaining, cxlm->mbox.payload_size);
-		struct mbox_cmd mbox_cmd;
-		int rc;
-		struct cxl_mbox_get_log log = {
-			.uuid = *uuid,
-			.offset = cpu_to_le32(offset),
-			.length = cpu_to_le32(xfer_size),
-		};
-
-		mbox_cmd = (struct mbox_cmd) {
-			.opcode = CXL_MBOX_OP_GET_LOG,
-			.payload_in = &log,
-			.size_in = sizeof(log),
-			.payload_out = out,
-			.size_out = min(xfer_size, remaining),
-		};
-
-		rc = cxl_mem_mbox_send_cmd(cxlm, &mbox_cmd);
-		if (rc)
-			return rc;
-
-		WARN_ON(mbox_cmd.size_out != xfer_size);
-
-		out += xfer_size;
-		remaining -= xfer_size;
-		offset += xfer_size;
-	}
-
-	return 0;
-}
+T24gVGh1LCAyMDIwLTEyLTAzIGF0IDIwOjEyICswMDAwLCBWZXJtYSwgVmlzaGFsIEwgd3JvdGU6
+DQo+IFRoaXMgaXMgYSBwdWJsaWMgUkZDIG9mIGFuIEFDUEkgcHJvcG9zYWwgdG8gYWRkIGEgbmV3
+IENYTCBSb290IE9iamVjdA0KPiB0aGF0IGluZGljYXRlcyB0aGUgcHJlc2VuY2Ugb2YgYSBDWEwg
+aGllcmFyY2h5LiBUaGUgcHJvcG9zYWwgaXMgYmVpbmcNCj4gbWFkZSBpbiB0aGUgbmV3ICdDb2Rl
+IEZpcnN0JyB3b3JrZmxvdyBvZiB0aGUgQUNQSSBTcGVjIFdvcmtpbmcgR3JvdXAuDQo+IFRoZSBz
+dWJqZWN0IG1hdHRlciBoZXJlIGhhcyBiZWVuIGV4cGxvcmVkIGluIHByZXZpb3VzbHkgcG9zdGVk
+IHBhdGNoZXMNCj4gdG8gUUVNVVsxXSBhcyB3ZWxsIGFzIExpbnV4WzJdLiBUaGVzZSBwYXRjaGVz
+IGhhdmUgc2VydmVkIGFzIGEgcHJvb2Ytb2YtDQo+IGNvbmNlcHQgdGVzdCB2ZWhpY2xlIHRvIGhl
+bHAgZW5zdXJlIHRoYXQgdGhlIHByb3Bvc2FsIHdvcmtzIGluIHByYWN0aWNlLg0KPiBUaGUgY292
+ZXIgbGV0dGVyIGluIHNlcmllcyBbMl0gZ29lcyBpbnRvIGFkZGl0aW9uYWwgZGV0YWlsIChzZWN0
+aW9uDQo+IHRpdGxlZCAnQUNQSTAwMTcnKSBmb3IgdGhlIHJlYXNvbmluZyBiZWhpbmQgdGhlIHBy
+b3Bvc2FsLCBhbmQgd2hhdCBpcw0KPiBuZWVkZWQgYmV5b25kIHdoYXQncyBkZXNjcmliZWQgaW4g
+dGhlIENYTCAyLjAgc3BlYy4NCj4gDQo+IFRoZSBjaGFuZ2UgcHJvcG9zYWwgdGhhdCBmb2xsb3dz
+IGlzIGluIG1hcmtkb3duIGZvcm1hdC4NCj4gDQo+IFsxXTogaHR0cHM6Ly9sb3JlLmtlcm5lbC5v
+cmcvcWVtdS1kZXZlbC8yMDIwMTExMTA1NDcyNC43OTQ4ODgtMS1iZW4ud2lkYXdza3lAaW50ZWwu
+Y29tLw0KPiBbMl06IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LWN4bC8yMDIwMTExMTA1
+NDM1Ni43OTMzOTAtMS1iZW4ud2lkYXdza3lAaW50ZWwuY29tLw0KPiANCj4gLS0tLQ0KPiANCj4g
+IyBUaXRsZTogQWRkIENYTCBSb290IE9iamVjdCBfSElEDQo+IA0KPiAjIFN0YXR1czogRHJhZnQN
+Cg0KVGhpcyBFQ1Igd2FzIGFwcHJvdmVkIGluIHRoZSBBU1dHIHRvZGF5IHdpdGhvdXQgYW55IG1v
+ZGlmaWNhdGlvbnMsIGFuZA0KdGhpcyBjb250ZW50IGNhbiBiZSBleHBlY3RlZCB0byBiZSBwcmVz
+ZW50IGluIHRoZSBuZXh0IHJlbGVhc2Ugb2YgdGhlDQpzcGVjaWZpY2F0aW9uLg0KDQo+IA0KPiAj
+IERvY3VtZW50OiBBQ1BJIFNwZWNpZmljYXRpb24gNi40DQo+IA0KPiAjIExpY2Vuc2UNCj4gU1BE
+WC1MaWNlbnNlIElkZW50aWZpZXI6IENDLUJZLTQuMA0KPiANCj4gIyBTdWJtaXR0ZXI6DQo+ICog
+U3BvbnNvcjogVmlzaGFsIFZlcm1hLCBJbnRlbA0KPiAqIENyZWF0b3JzL0NvbnRyaWJ1dG9yczoN
+Cj4gwqDCoMKgwqAqIENoZXQgRG91Z2xhcywgSW50ZWwNCj4gwqDCoMKgwqAqIEJlbiBXaWRhd3Nr
+eSwgSW50ZWwNCj4gwqDCoMKgwqAqIERhbiBXaWxsaWFtcywgSW50ZWwNCj4gwqDCoMKgwqAqIFZp
+c2hhbCBWZXJtYSwgSW50ZWwNCj4gDQo+ICMgU3VtbWFyeSBvZiB0aGUgQ2hhbmdlDQo+IEFkZCDi
+gJxDb21wdXRlIEV4cHJlc3MgTGluayBSb290IE9iamVjdOKAnSBlbnVtZXJhdGlvbiB2YWx1ZSB0
+byB0aGUgQUNQSQ0KPiBEZXZpY2UgSURzIFRhYmxlICg1LjE2MCkuDQo+IA0KPiAjIEJlbmVmaXRz
+IG9mIHRoZSBDaGFuZ2UNCj4gQ29tcHV0ZSBFeHByZXNzIExpbmsgKENYTCkgaXMgYSBuZXcgaGln
+aC1zcGVlZCBDUFUtdG8tRGV2aWNlIGFuZCBDUFUtdG8tDQo+IE1lbW9yeSBpbnRlcmNvbm5lY3Qu
+IFRoZSBuZXcgQUNQSSBEZXZpY2UgSUQgcmVwcmVzZW50cyBhIHNpbmdsZXRvbg0KPiBkZXZpY2Ug
+dGhhdCBhbGxvd3MgdGhlIE9TUE0gdG8gdHJpZ2dlciB0aGUgZW51bWVyYXRpb24gb2YgdGhlIENY
+TC5tZW0NCj4gYWRkcmVzcyBzcGFjZSwgYW5kIGluZGljYXRlcyB0aGUgcHJlc2VuY2Ugb2YgY3Jv
+c3MgSG9zdCBCcmlkZ2UNCj4gKEFDUEkwMDE2KSBpbnRlcmxlYXZlZCBDWEwubWVtIHJlc291cmNl
+cy4NCj4gDQo+ICMgSW1wYWN0IG9mIHRoZSBDaGFuZ2UNCj4gT25lIG5ldyByb3cgYWRkZWQgdG8g
+dGhlIEFDUEkgRGV2aWNlIElEcyB0YWJsZSAoNS4xNjApLg0KPiANCj4gIyBSZWZlcmVuY2VzDQo+
+ICogQ29tcHV0ZSBFeHByZXNzIExpbmsgU3BlY2lmaWNhdGlvbiB2Mi4wLA0KPiA8aHR0cHM6Ly93
+d3cuY29tcHV0ZWV4cHJlc3NsaW5rLm9yZy8+DQo+IA0KPiAjIERldGFpbGVkIERlc2NyaXB0aW9u
+IG9mIHRoZSBDaGFuZ2UNCj4gDQo+IEFkZCDigJxDb21wdXRlIEV4cHJlc3MgTGluayBSb290IE9i
+amVjdOKAnSBlbnVtZXJhdGlvbiBkZXZpY2UNCj4gDQo+ICMjIyA1LjYuNyBEZXZpY2UgQ2xhc3Mt
+U3BlY2lmaWMgT2JqZWN0cw0KPiANCj4gTW9zdCBkZXZpY2Ugb2JqZWN0cyBhcmUgY29udHJvbGxl
+ZCB0aHJvdWdoIGdlbmVyaWMgb2JqZWN0cyBhbmQgIC4uLg0KPiANCj4gVGFibGUgNS4xNjAgQUNQ
+SSBEZXZpY2UgSURzDQo+IA0KPiA+IFZhbHVlIHwgRGVzY3JpcHRpb24gfA0KPiA+IDotLS0gfCA6
+LS0tOiB8IDotLS06IHwgOi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSB8DQo+ID4gLi4gfCAu
+LiB8DQo+ID4gQUNQSTAwMTcgfCAqKkNvbXB1dGUgRXhwcmVzcyBMaW5rIFJvb3QgT2JqZWN0Oioq
+IFRoaXMgZGV2aWNlDQo+IHJlcHJlc2VudHMgdGhlIHJvb3Qgb2YgYSBDWEwgY2FwYWJsZSBkZXZp
+Y2UgaGllcmFyY2h5LiBJdCBzaGFsbCBiZQ0KPiBwcmVzZW50IHdoZW5ldmVyIHRoZSBwbGF0Zm9y
+bSBhbGxvd3MgT1NQTSB0byBkeW5hbWljYWxseSBhc3NpZ24gQ1hMDQo+IGVuZHBvaW50cyB0byBh
+IHBsYXRmb3JtIGFkZHJlc3Mgc3BhY2UuIHwNCj4gDQo+ICMjIFNwZWNpYWwgSW5zdHJ1Y3Rpb25z
+DQoNCg==
