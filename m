@@ -2,138 +2,212 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47740C433DB
-	for <linux-cxl@archiver.kernel.org>; Sat, 30 Jan 2021 10:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FB6C433E9
+	for <linux-cxl@archiver.kernel.org>; Sat, 30 Jan 2021 10:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19A5764E04
-	for <linux-cxl@archiver.kernel.org>; Sat, 30 Jan 2021 10:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAB3464E05
+	for <linux-cxl@archiver.kernel.org>; Sat, 30 Jan 2021 10:21:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229990AbhA3KUM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 30 Jan 2021 05:20:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232862AbhA3AcG (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Jan 2021 19:32:06 -0500
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D989AC0613D6
-        for <linux-cxl@vger.kernel.org>; Fri, 29 Jan 2021 16:31:18 -0800 (PST)
-Received: by mail-ej1-x62d.google.com with SMTP id l9so15484412ejx.3
-        for <linux-cxl@vger.kernel.org>; Fri, 29 Jan 2021 16:31:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IHqwNfHmdWEcZfyYPR4+sBaYZ3Bn6Age7W/ZhgBDEQU=;
-        b=NB6BRSIj0GzX1o6kI9lGeXRyRJGr6RAcJQ+EhSWJ0BC3oc/SvPN8mDWEfixyZfopvl
-         BANLs4tolXi9xalwI4vJzTF5OSuXUJsridXoHgYjPKbJiQKeVk5vaBH6mcLY0H4BZRiq
-         wfaYlKezDkRFMIrzC/4N3H4PPq5oJdHXV6Q01Q/n5KcCs6Ew+/ZecSW/Ta6Irop56k7U
-         Z/DLPpfhWC0iKLTezq/K3cXp9ZKO27xjK0zn3Bqqqi6Zq8pzsnpj7my50SQHQOHfdaJ2
-         MbkYoSMosvq8kWvBha1+L8Yc6pwMpH0ki+Tt+yxj6akZwZ5ZXx0qjp88CJKo9ExxxZaR
-         IoOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IHqwNfHmdWEcZfyYPR4+sBaYZ3Bn6Age7W/ZhgBDEQU=;
-        b=YWPT/JvGYrnMz/kTROa6BTIziIsDagLvvjMxGom5mh3bqVMiEP+n52MgIDmGsTLoSD
-         FSe0RYHHpZmb0abaPc7YSIR2E6CROr/hguy/sPOmN+/H+UU1XyydRyWuK9M3N/8QjLlf
-         KXLTAXFMDsVwgTT91ihS6V5maeZpw762yOKM5w5Dz0WoPQY9wnPzj8PhRZTzWUJwtUEb
-         HwYbnoz8bcNznNebcABITE3IRaVpcvG56HZvDMtfmK60KDRNyQ7hYNkzPpX5vhFWwoYG
-         KQma1fWO9l0KhJxOgoWOe2dutzULwrgongMM+WwMN9MhtcNbAbm5bMW6HUj5rsU95vuo
-         p4vQ==
-X-Gm-Message-State: AOAM530vSML/BUGeW3scejT9BMqIvluHXOdmuMFRPacttz9NWem/Cb7M
-        qBa65xfKicVWRJiW4fsZ/QXSUnYix2K0HZ1DtrfU1A==
-X-Google-Smtp-Source: ABdhPJxWORcLeJpILlCiBMkcM8hzzExkJ43LngkFSAc8o5W/IdsfFI1WUl5QRvX2O9IoWQ8K1Y0+8F2KdET67DExNU0=
-X-Received: by 2002:a17:906:191b:: with SMTP id a27mr7103895eje.472.1611966677063;
- Fri, 29 Jan 2021 16:31:17 -0800 (PST)
-MIME-Version: 1.0
-References: <20210130002438.1872527-1-ben.widawsky@intel.com> <20210130002438.1872527-6-ben.widawsky@intel.com>
-In-Reply-To: <20210130002438.1872527-6-ben.widawsky@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 29 Jan 2021 16:31:15 -0800
-Message-ID: <CAPcyv4gZvxJxPQr3XwC3=yh8opkz5ThDjy4E-AWzL7ysFeC0Mg@mail.gmail.com>
-Subject: Re: [PATCH 05/14] cxl/mem: Register CXL memX devices
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
+        id S232190AbhA3KUd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 30 Jan 2021 05:20:33 -0500
+Received: from mga01.intel.com ([192.55.52.88]:38334 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232706AbhA3A3X (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Fri, 29 Jan 2021 19:29:23 -0500
+IronPort-SDR: xWMoN6Al8GMFv0RRXrPfcHT213hCA4kPbertb8kkNAkEqvmScOae/FKeUZpXbVUXDKhtKDKKXx
+ 7on8vleMhobw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9879"; a="199350693"
+X-IronPort-AV: E=Sophos;i="5.79,387,1602572400"; 
+   d="scan'208";a="199350693"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2021 16:24:50 -0800
+IronPort-SDR: PTVsJjzGJIhPmNWHZWpgsjtpCH+DjMG8Prae3+QWsFBb/v0MOBpY55rwhf13oNO3rkWts8okzc
+ gLbIWiaS3/Qg==
+X-IronPort-AV: E=Sophos;i="5.79,387,1602572400"; 
+   d="scan'208";a="370591692"
+Received: from jambrizm-mobl1.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.133.15])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2021 16:24:50 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
         Chris Browy <cbrowy@avery-design.com>,
         Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jon Masters <jcm@jonmasters.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Rafael Wysocki <rafael.j.wysocki@intel.com>,
         Randy Dunlap <rdunlap@infradead.org>,
         Vishal Verma <vishal.l.verma@intel.com>,
         daniel.lll@alibaba-inc.com,
         "John Groves (jgroves)" <jgroves@micron.com>,
         "Kelley, Sean V" <sean.v.kelley@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH 10/14] cxl/mem: Create concept of enabled commands
+Date:   Fri, 29 Jan 2021 16:24:34 -0800
+Message-Id: <20210130002438.1872527-11-ben.widawsky@intel.com>
+X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20210130002438.1872527-1-ben.widawsky@intel.com>
+References: <20210130002438.1872527-1-ben.widawsky@intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Jan 29, 2021 at 4:25 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> From: Dan Williams <dan.j.williams@intel.com>
->
-> Create the /sys/bus/cxl hierarchy to enumerate:
->
-> * Memory Devices (per-endpoint control devices)
->
-> * Memory Address Space Devices (platform address ranges with
->   interleaving, performance, and persistence attributes)
->
-> * Memory Regions (active provisioned memory from an address space device
->   that is in use as System RAM or delegated to libnvdimm as Persistent
->   Memory regions).
->
-> For now, only the per-endpoint control devices are registered on the
-> 'cxl' bus. However, going forward it will provide a mechanism to
-> coordinate cross-device interleave.
->
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-cxl       |  26 ++
->  .../driver-api/cxl/memory-devices.rst         |  17 +
->  drivers/base/core.c                           |  14 +
->  drivers/cxl/Makefile                          |   3 +
->  drivers/cxl/bus.c                             |  29 ++
->  drivers/cxl/cxl.h                             |   4 +
->  drivers/cxl/mem.c                             | 308 +++++++++++++++++-
->  include/linux/device.h                        |   1 +
->  8 files changed, 400 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-cxl
->  create mode 100644 drivers/cxl/bus.c
-[..]
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 25e08e5f40bd..33432a4cbe23 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -3179,6 +3179,20 @@ struct device *get_device(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(get_device);
->
-> +/**
-> + * get_live_device() - increment reference count for device iff !dead
-> + * @dev: device.
-> + *
-> + * Forward the call to get_device() if the device is still alive. If
-> + * this is called with the device_lock() held then the device is
-> + * guaranteed to not die until the device_lock() is dropped.
-> + */
-> +struct device *get_live_device(struct device *dev)
-> +{
-> +       return dev && !dev->p->dead ? get_device(dev) : NULL;
-> +}
-> +EXPORT_SYMBOL_GPL(get_live_device);
+CXL devices must implement the Device Command Interface (described in
+8.2.9 of the CXL 2.0 spec). While the driver already maintains a list of
+commands it supports, there is still a need to be able to distinguish
+between commands that the driver knows about from commands that may not
+be supported by the hardware. No such commands currently are defined in
+the driver.
 
-Disregard this hunk, it's an abandoned idea that I failed to cleanup.
+The implementation leaves the statically defined table of commands and
+supplements it with a bitmap to determine commands that are enabled.
+
+There are multiple approaches that can be taken, but this is nice for a
+few reasons.
+
+Here are some of the other solutions:
+
+Create a per instance table with only the supported commands.
+1. Having a fixed command id -> command mapping is much easier to manage
+   for development and debugging.
+2. Dealing with dynamic memory allocation for the table adds unnecessary
+   complexity.
+3. Most tables for device types are likely to be quite similar.
+4. Makes it difficult to implement helper macros like cxl_for_each_cmd()
+
+If the per instance table did preserve ids, #1 above can be addressed.
+However, as "enable" is currently the only mutable state for the
+commands, it would yield a lot of overhead for not much gain.
+Additionally, the other issues remain.
+
+If "enable" remains the only mutable state, I believe this to be the
+best solution. Once the number of mutable elements in a command grows,
+it probably makes sense to move to per device instance state with a
+fixed command ID mapping.
+
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+---
+ drivers/cxl/cxl.h |  4 ++++
+ drivers/cxl/mem.c | 40 +++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 43 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index b042eee7ee25..2d2f25065b81 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -17,6 +17,9 @@
+ 
+ #define CXL_GET_FIELD(word, field) FIELD_GET(field##_MASK, word)
+ 
++/* XXX: Arbitrary max */
++#define CXL_MAX_COMMANDS 32
++
+ /* Device Capabilities (CXL 2.0 - 8.2.8.1) */
+ #define CXLDEV_CAP_ARRAY_OFFSET 0x0
+ #define   CXLDEV_CAP_ARRAY_CAP_ID 0
+@@ -83,6 +86,7 @@ struct cxl_mem {
+ 	} ram;
+ 
+ 	char firmware_version[0x10];
++	DECLARE_BITMAP(enabled_cmds, CXL_MAX_COMMANDS);
+ 
+ 	/* Cap 0001h - CXL_CAP_CAP_ID_DEVICE_STATUS */
+ 	struct {
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index 2942730dc967..d01c6ee32a6b 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -111,6 +111,8 @@ static bool raw_allow_all;
+  *    would typically be used for deprecated commands.
+  *  * %CXL_CMD_FLAG_MANDATORY: Hardware must support this command. This flag is
+  *    only used internally by the driver for sanity checking.
++ *  * %CXL_CMD_INTERNAL_FLAG_PSEUDO: This is a pseudo command which doesn't have
++ *    a direct mapping to hardware. They are implicitly always enabled.
+  *
+  * The cxl_mem_command is the driver's internal representation of commands that
+  * are supported by the driver. Some of these commands may not be supported by
+@@ -126,6 +128,7 @@ struct cxl_mem_command {
+ #define CXL_CMD_INTERNAL_FLAG_NONE 0
+ #define CXL_CMD_INTERNAL_FLAG_HIDDEN BIT(0)
+ #define CXL_CMD_INTERNAL_FLAG_MANDATORY BIT(1)
++#define CXL_CMD_INTERNAL_FLAG_PSEUDO BIT(2)
+ };
+ 
+ #define CXL_CMD(_id, _flags, sin, sout, f)                                     \
+@@ -149,7 +152,7 @@ struct cxl_mem_command {
+ static struct cxl_mem_command mem_commands[] = {
+ 	CXL_CMD(INVALID, KERNEL, 0, 0, HIDDEN),
+ 	CXL_CMD(IDENTIFY, NONE, 0, 0x43, MANDATORY),
+-	CXL_CMD(RAW, NONE, ~0, ~0, MANDATORY),
++	CXL_CMD(RAW, NONE, ~0, ~0, PSEUDO),
+ };
+ 
+ /*
+@@ -683,6 +686,10 @@ static int cxl_validate_cmd_from_user(struct cxl_mem *cxlm,
+ 	c = &mem_commands[send_cmd->id];
+ 	info = &c->info;
+ 
++	/* Check that the command is enabled for hardware */
++	if (!test_bit(info->id, cxlm->enabled_cmds))
++		return -ENOTTY;
++
+ 	if (info->flags & CXL_MEM_COMMAND_FLAG_KERNEL)
+ 		return -EPERM;
+ 
+@@ -1161,6 +1168,33 @@ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
+ 	return rc;
+ }
+ 
++/**
++ * cxl_mem_enumerate_cmds() - Enumerate commands for a device.
++ * @cxlm: The device.
++ *
++ * Returns 0 if enumerate completed successfully.
++ *
++ * CXL devices have optional support for certain commands. This function will
++ * determine the set of supported commands for the hardware and update the
++ * enabled_cmds bitmap in the @cxlm.
++ */
++static int cxl_mem_enumerate_cmds(struct cxl_mem *cxlm)
++{
++	struct cxl_mem_command *c;
++
++	BUILD_BUG_ON(ARRAY_SIZE(mem_commands) >= CXL_MAX_COMMANDS);
++
++	/* All commands are considered enabled for now (except INVALID). */
++	cxl_for_each_cmd(c) {
++		if (c->flags & CXL_CMD_INTERNAL_FLAG_HIDDEN)
++			continue;
++
++		set_bit(c->info.id, cxlm->enabled_cmds);
++	}
++
++	return 0;
++}
++
+ /**
+  * cxl_mem_identify() - Send the IDENTIFY command to the device.
+  * @cxlm: The device to identify.
+@@ -1280,6 +1314,10 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (rc)
+ 		return rc;
+ 
++	rc = cxl_mem_enumerate_cmds(cxlm);
++	if (rc)
++		return rc;
++
+ 	rc = cxl_mem_identify(cxlm);
+ 	if (rc)
+ 		return rc;
+-- 
+2.30.0
+
