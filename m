@@ -2,197 +2,138 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 659ADC433DB
-	for <linux-cxl@archiver.kernel.org>; Sat, 30 Jan 2021 10:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47740C433DB
+	for <linux-cxl@archiver.kernel.org>; Sat, 30 Jan 2021 10:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8D564E04
-	for <linux-cxl@archiver.kernel.org>; Sat, 30 Jan 2021 10:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A5764E04
+	for <linux-cxl@archiver.kernel.org>; Sat, 30 Jan 2021 10:20:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231705AbhA3AeR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 29 Jan 2021 19:34:17 -0500
-Received: from mga01.intel.com ([192.55.52.88]:38338 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232648AbhA3AcG (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 29 Jan 2021 19:32:06 -0500
-IronPort-SDR: SR5doI+Ls5zH4HxZr4iCX1ucFGIVjnS106zN2RDbEOQ5Si48vSxFEpEt57Gl1hFY7jM5ww6BqZ
- 6DO3yZY+wPPg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9879"; a="199350697"
-X-IronPort-AV: E=Sophos;i="5.79,387,1602572400"; 
-   d="scan'208";a="199350697"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2021 16:24:53 -0800
-IronPort-SDR: 6xlzRUjn7lUxS+wZo8rZMUlw9vLMCOjoZl0Qgd+c58UVWhMpK7qZKfh4IK1VeJPmgaKS6Ny4DC
- NbF13wTlEOwg==
-X-IronPort-AV: E=Sophos;i="5.79,387,1602572400"; 
-   d="scan'208";a="370591712"
-Received: from jambrizm-mobl1.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.133.15])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2021 16:24:52 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        id S229990AbhA3KUM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 30 Jan 2021 05:20:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232862AbhA3AcG (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Jan 2021 19:32:06 -0500
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D989AC0613D6
+        for <linux-cxl@vger.kernel.org>; Fri, 29 Jan 2021 16:31:18 -0800 (PST)
+Received: by mail-ej1-x62d.google.com with SMTP id l9so15484412ejx.3
+        for <linux-cxl@vger.kernel.org>; Fri, 29 Jan 2021 16:31:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IHqwNfHmdWEcZfyYPR4+sBaYZ3Bn6Age7W/ZhgBDEQU=;
+        b=NB6BRSIj0GzX1o6kI9lGeXRyRJGr6RAcJQ+EhSWJ0BC3oc/SvPN8mDWEfixyZfopvl
+         BANLs4tolXi9xalwI4vJzTF5OSuXUJsridXoHgYjPKbJiQKeVk5vaBH6mcLY0H4BZRiq
+         wfaYlKezDkRFMIrzC/4N3H4PPq5oJdHXV6Q01Q/n5KcCs6Ew+/ZecSW/Ta6Irop56k7U
+         Z/DLPpfhWC0iKLTezq/K3cXp9ZKO27xjK0zn3Bqqqi6Zq8pzsnpj7my50SQHQOHfdaJ2
+         MbkYoSMosvq8kWvBha1+L8Yc6pwMpH0ki+Tt+yxj6akZwZ5ZXx0qjp88CJKo9ExxxZaR
+         IoOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IHqwNfHmdWEcZfyYPR4+sBaYZ3Bn6Age7W/ZhgBDEQU=;
+        b=YWPT/JvGYrnMz/kTROa6BTIziIsDagLvvjMxGom5mh3bqVMiEP+n52MgIDmGsTLoSD
+         FSe0RYHHpZmb0abaPc7YSIR2E6CROr/hguy/sPOmN+/H+UU1XyydRyWuK9M3N/8QjLlf
+         KXLTAXFMDsVwgTT91ihS6V5maeZpw762yOKM5w5Dz0WoPQY9wnPzj8PhRZTzWUJwtUEb
+         HwYbnoz8bcNznNebcABITE3IRaVpcvG56HZvDMtfmK60KDRNyQ7hYNkzPpX5vhFWwoYG
+         KQma1fWO9l0KhJxOgoWOe2dutzULwrgongMM+WwMN9MhtcNbAbm5bMW6HUj5rsU95vuo
+         p4vQ==
+X-Gm-Message-State: AOAM530vSML/BUGeW3scejT9BMqIvluHXOdmuMFRPacttz9NWem/Cb7M
+        qBa65xfKicVWRJiW4fsZ/QXSUnYix2K0HZ1DtrfU1A==
+X-Google-Smtp-Source: ABdhPJxWORcLeJpILlCiBMkcM8hzzExkJ43LngkFSAc8o5W/IdsfFI1WUl5QRvX2O9IoWQ8K1Y0+8F2KdET67DExNU0=
+X-Received: by 2002:a17:906:191b:: with SMTP id a27mr7103895eje.472.1611966677063;
+ Fri, 29 Jan 2021 16:31:17 -0800 (PST)
+MIME-Version: 1.0
+References: <20210130002438.1872527-1-ben.widawsky@intel.com> <20210130002438.1872527-6-ben.widawsky@intel.com>
+In-Reply-To: <20210130002438.1872527-6-ben.widawsky@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 29 Jan 2021 16:31:15 -0800
+Message-ID: <CAPcyv4gZvxJxPQr3XwC3=yh8opkz5ThDjy4E-AWzL7ysFeC0Mg@mail.gmail.com>
+Subject: Re: [PATCH 05/14] cxl/mem: Register CXL memX devices
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
         Chris Browy <cbrowy@avery-design.com>,
         Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jon Masters <jcm@jonmasters.org>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Rafael Wysocki <rafael.j.wysocki@intel.com>,
         Randy Dunlap <rdunlap@infradead.org>,
         Vishal Verma <vishal.l.verma@intel.com>,
         daniel.lll@alibaba-inc.com,
         "John Groves (jgroves)" <jgroves@micron.com>,
         "Kelley, Sean V" <sean.v.kelley@intel.com>
-Subject: [PATCH 13/14] cxl/mem: Add limited Get Log command (0401h)
-Date:   Fri, 29 Jan 2021 16:24:37 -0800
-Message-Id: <20210130002438.1872527-14-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20210130002438.1872527-1-ben.widawsky@intel.com>
-References: <20210130002438.1872527-1-ben.widawsky@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The Get Log command returns the actual log entries that are advertised
-via the Get Supported Logs command (0400h). CXL device logs are selected
-by UUID which is part of the CXL spec. Because the driver tries to
-sanitize what is sent to hardware, there becomes a need to restrict the
-types of logs which can be accessed by userspace. For example, the
-vendor specific log might only be consumable by proprietary, or offline
-applications, and therefore a good candidate for userspace.
+On Fri, Jan 29, 2021 at 4:25 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> From: Dan Williams <dan.j.williams@intel.com>
+>
+> Create the /sys/bus/cxl hierarchy to enumerate:
+>
+> * Memory Devices (per-endpoint control devices)
+>
+> * Memory Address Space Devices (platform address ranges with
+>   interleaving, performance, and persistence attributes)
+>
+> * Memory Regions (active provisioned memory from an address space device
+>   that is in use as System RAM or delegated to libnvdimm as Persistent
+>   Memory regions).
+>
+> For now, only the per-endpoint control devices are registered on the
+> 'cxl' bus. However, going forward it will provide a mechanism to
+> coordinate cross-device interleave.
+>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> ---
+>  Documentation/ABI/testing/sysfs-bus-cxl       |  26 ++
+>  .../driver-api/cxl/memory-devices.rst         |  17 +
+>  drivers/base/core.c                           |  14 +
+>  drivers/cxl/Makefile                          |   3 +
+>  drivers/cxl/bus.c                             |  29 ++
+>  drivers/cxl/cxl.h                             |   4 +
+>  drivers/cxl/mem.c                             | 308 +++++++++++++++++-
+>  include/linux/device.h                        |   1 +
+>  8 files changed, 400 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-cxl
+>  create mode 100644 drivers/cxl/bus.c
+[..]
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 25e08e5f40bd..33432a4cbe23 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -3179,6 +3179,20 @@ struct device *get_device(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(get_device);
+>
+> +/**
+> + * get_live_device() - increment reference count for device iff !dead
+> + * @dev: device.
+> + *
+> + * Forward the call to get_device() if the device is still alive. If
+> + * this is called with the device_lock() held then the device is
+> + * guaranteed to not die until the device_lock() is dropped.
+> + */
+> +struct device *get_live_device(struct device *dev)
+> +{
+> +       return dev && !dev->p->dead ? get_device(dev) : NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(get_live_device);
 
-The current driver infrastructure does allow basic validation for all
-commands, but doesn't inspect any of the payload data. Along with Get
-Log support comes new infrastructure to add a hook for payload
-validation. This infrastructure is used to filter out the CEL UUID,
-which the userspace driver doesn't have business knowing, and taints on
-invalid UUIDs being sent to hardware.
-
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
----
- drivers/cxl/mem.c            | 42 +++++++++++++++++++++++++++++++++++-
- include/uapi/linux/cxl_mem.h |  1 +
- 2 files changed, 42 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index b8ca6dff37b5..086268f1dd6c 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -119,6 +119,8 @@ static const uuid_t log_uuid[] = {
- 				 0x07, 0x19, 0x40, 0x3d, 0x86)
- };
- 
-+static int validate_log_uuid(void __user *payload, size_t size);
-+
- /**
-  * struct cxl_mem_command - Driver representation of a memory device command
-  * @info: Command information as it exists for the UAPI
-@@ -132,6 +134,10 @@ static const uuid_t log_uuid[] = {
-  *  * %CXL_CMD_INTERNAL_FLAG_PSEUDO: This is a pseudo command which doesn't have
-  *    a direct mapping to hardware. They are implicitly always enabled.
-  *
-+ * @validate_payload: A function called after the command is validated but
-+ * before it's sent to the hardware. The primary purpose is to validate, or
-+ * fixup the actual payload.
-+ *
-  * The cxl_mem_command is the driver's internal representation of commands that
-  * are supported by the driver. Some of these commands may not be supported by
-  * the hardware. The driver will use @info to validate the fields passed in by
-@@ -147,9 +153,11 @@ struct cxl_mem_command {
- #define CXL_CMD_INTERNAL_FLAG_HIDDEN BIT(0)
- #define CXL_CMD_INTERNAL_FLAG_MANDATORY BIT(1)
- #define CXL_CMD_INTERNAL_FLAG_PSEUDO BIT(2)
-+
-+	int (*validate_payload)(void __user *payload, size_t size);
- };
- 
--#define CXL_CMD(_id, _flags, sin, sout, f)                                     \
-+#define CXL_CMD_VALIDATE(_id, _flags, sin, sout, f, v)                         \
- 	[CXL_MEM_COMMAND_ID_##_id] = {                                         \
- 	.info =	{                                                              \
- 			.id = CXL_MEM_COMMAND_ID_##_id,                        \
-@@ -159,8 +167,12 @@ struct cxl_mem_command {
- 		},                                                             \
- 	.flags = CXL_CMD_INTERNAL_FLAG_##f,                                    \
- 	.opcode = CXL_MBOX_OP_##_id,                                           \
-+	.validate_payload = v,                                                 \
- 	}
- 
-+#define CXL_CMD(_id, _flags, sin, sout, f)                                     \
-+	CXL_CMD_VALIDATE(_id, _flags, sin, sout, f, NULL)
-+
- /*
-  * This table defines the supported mailbox commands for the driver. This table
-  * is made up of a UAPI structure. Non-negative values as parameters in the
-@@ -176,6 +188,8 @@ static struct cxl_mem_command mem_commands[] = {
- 	CXL_CMD(GET_PARTITION_INFO, NONE, 0, 0x20, NONE),
- 	CXL_CMD(GET_LSA, NONE, 0x8, ~0, MANDATORY),
- 	CXL_CMD(GET_HEALTH_INFO, NONE, 0, 0x12, MANDATORY),
-+	CXL_CMD_VALIDATE(GET_LOG, MUTEX, 0x18, ~0, MANDATORY,
-+			 validate_log_uuid),
- };
- 
- /*
-@@ -563,6 +577,13 @@ static int handle_mailbox_cmd_from_user(struct cxl_memdev *cxlmd,
- 			kvzalloc(cxlm->mbox.payload_size, GFP_KERNEL);
- 
- 	if (cmd->info.size_in) {
-+		if (cmd->validate_payload) {
-+			rc = cmd->validate_payload(u64_to_user_ptr(in_payload),
-+						   cmd->info.size_in);
-+			if (rc)
-+				goto out;
-+		}
-+
- 		mbox_cmd.payload_in = kvzalloc(cmd->info.size_in, GFP_KERNEL);
- 		if (!mbox_cmd.payload_in) {
- 			rc = -ENOMEM;
-@@ -1205,6 +1226,25 @@ struct cxl_mbox_get_log {
- 	__le32 length;
- } __packed;
- 
-+static int validate_log_uuid(void __user *input, size_t size)
-+{
-+	struct cxl_mbox_get_log __user *get_log = input;
-+	uuid_t payload_uuid;
-+
-+	if (copy_from_user(&payload_uuid, &get_log->uuid, sizeof(uuid_t)))
-+		return -EFAULT;
-+
-+	/* All unspec'd logs shall taint */
-+	if (uuid_equal(&payload_uuid, &log_uuid[CEL_UUID]))
-+		return 0;
-+	if (uuid_equal(&payload_uuid, &log_uuid[DEBUG_UUID]))
-+		return 0;
-+
-+	add_taint(TAINT_RAW_PASSTHROUGH, LOCKDEP_STILL_OK);
-+
-+	return 0;
-+}
-+
- static int cxl_xfer_log(struct cxl_mem *cxlm, uuid_t *uuid, u32 size, u8 *out)
- {
- 	u32 remaining = size;
-diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-index 766c231d6150..7cdc7f7ce7ec 100644
---- a/include/uapi/linux/cxl_mem.h
-+++ b/include/uapi/linux/cxl_mem.h
-@@ -39,6 +39,7 @@ extern "C" {
- 	___C(GET_PARTITION_INFO, "Get Partition Information"),            \
- 	___C(GET_LSA, "Get Label Storage Area"),                          \
- 	___C(GET_HEALTH_INFO, "Get Health Info"),                         \
-+	___C(GET_LOG, "Get Log"),                                         \
- 	___C(MAX, "Last command")
- 
- #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
--- 
-2.30.0
-
+Disregard this hunk, it's an abandoned idea that I failed to cleanup.
