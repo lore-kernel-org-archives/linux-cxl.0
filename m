@@ -2,65 +2,69 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F28C433E0
-	for <linux-cxl@archiver.kernel.org>; Mon,  1 Feb 2021 21:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 732BCC433E0
+	for <linux-cxl@archiver.kernel.org>; Mon,  1 Feb 2021 21:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E277E64E2A
-	for <linux-cxl@archiver.kernel.org>; Mon,  1 Feb 2021 21:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4276B64DB1
+	for <linux-cxl@archiver.kernel.org>; Mon,  1 Feb 2021 21:56:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229524AbhBAVxs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 1 Feb 2021 16:53:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39796 "EHLO
+        id S229777AbhBAV4G (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 1 Feb 2021 16:56:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229606AbhBAVxq (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 1 Feb 2021 16:53:46 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1EF2C061573
-        for <linux-cxl@vger.kernel.org>; Mon,  1 Feb 2021 13:53:06 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id s24so441806pjp.5
-        for <linux-cxl@vger.kernel.org>; Mon, 01 Feb 2021 13:53:06 -0800 (PST)
+        with ESMTP id S229546AbhBAV4E (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 1 Feb 2021 16:56:04 -0500
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ABF7C061756
+        for <linux-cxl@vger.kernel.org>; Mon,  1 Feb 2021 13:55:24 -0800 (PST)
+Received: by mail-ej1-x630.google.com with SMTP id r12so26744147ejb.9
+        for <linux-cxl@vger.kernel.org>; Mon, 01 Feb 2021 13:55:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :mime-version;
-        bh=N6tU/hkqNUMYsHM0IUqTnCXIZDB8nb2QJ5YhEZMP+tE=;
-        b=WZi+UCs9TIbCUorANOZIg1lacKJyrLAcxNgjqYv2hNfd0YCcWVUr7BGsWFb1LJIeln
-         UelOikGZSyHtnr85jilxjPtGr9ZrM138I2fxLqj7VzG8BUYH/s6nx67rVjthtycndIQX
-         L3fGAZD1a7UEf5TUkzE8WDjRzAznsbPZomOWfxve4P0qqnIX7Kb2xvvbK6O5gtVEHUqw
-         vBxXHHfsMMe0vFxzNCHdspQP6sYm6XDirkDgPU/KcOLz+prvZoNhzG2Py/aSLNALyU/E
-         3RqDEnEBvUa0+i2+s4SRsa3p3nhYWglPsFE5vBFTZtM/lOExGpoLoTxaNVZstQlDpviD
-         6EFQ==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RZDofSxjQfRvCD9og+/lS0h09No2LY/OIRXR8uXND+Y=;
+        b=n/z8H83/8L7uutAMt7vBH/0PM6mOT4y6pk0N26xWUl6K+PVgCDp+YXxmyzAL/MNeYh
+         FhyEJ+t3PDTgPqvNYAwrmu/2KJ3RSWWl25QxaeD/NM47uE2zcoMu8RcyoSL8izErXY6l
+         E3EJtJY7XxeoodByW/FBN5conQMjdj+7X+ZWMb1sp1jVzYgjowklKOspBFlhffuWjaUF
+         k1lqgo0WuzZ8ko2jjsDPMOV1KCcBrq7Nvugt5PiU7GKEa+IweAe0Eyy2Ee1Y28XzLmQf
+         LczqNPRsAkEeW5JyJaL57yMfWD/dMourQswAGFX+THDobxnkQn4fgT0unLYSJSgoQfCN
+         Owbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:mime-version;
-        bh=N6tU/hkqNUMYsHM0IUqTnCXIZDB8nb2QJ5YhEZMP+tE=;
-        b=LvByoGJ4S9gw2SvTG1jRDJDqCFDDAfUoj0rY8zx2Lz8I333xldUtik3LE2AGens8fk
-         CKNSSDdEammAEK1Iq+Qk0fAIjfxnlK/ZdhpFLA75XLLDH0QuTTK+iOiYbk14OdmxaxUK
-         xg8OTukxZeHDw1ZBjoJ8I4D2SSHvEZ6O1oWP3jNQUDHqvX2m0KwQ3EkSDzhNCw/CTd+L
-         FW6X4JWAK1155ogGo7+Tu65Gw5EIu0iDstG9BboK8Kh+tMFzqBl45tzn2SrpFJB2VWiL
-         5UKZJtCiRBBuLXy35XkzTnF4YeQTxuHdsiPjmlzkDChuhPOoQH3OBhehpKk6y/nksBZp
-         Df8Q==
-X-Gm-Message-State: AOAM531OttNqN+8d0/PiCikj2rv31zin6eMN/pb9SSo7cKLDiiQjKihs
-        cEjvq6FXvubwBhaOsgqe8AAU2Q==
-X-Google-Smtp-Source: ABdhPJycALujIbA4WvZUkZggYo0Ocv7rTw3rYtZTgJzBXpeooffmD1f4WnTwFRQBCWLZpToH49e2uA==
-X-Received: by 2002:a17:902:c106:b029:de:af88:80ed with SMTP id 6-20020a170902c106b02900deaf8880edmr19001691pli.35.1612216386313;
-        Mon, 01 Feb 2021 13:53:06 -0800 (PST)
-Received: from [2620:15c:17:3:4a0f:cfff:fe51:6667] ([2620:15c:17:3:4a0f:cfff:fe51:6667])
-        by smtp.gmail.com with ESMTPSA id k128sm18715106pfd.137.2021.02.01.13.53.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Feb 2021 13:53:05 -0800 (PST)
-Date:   Mon, 1 Feb 2021 13:53:03 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>
-cc:     linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RZDofSxjQfRvCD9og+/lS0h09No2LY/OIRXR8uXND+Y=;
+        b=AlTKh7U7fZ8hZXw+UoQ4J3n4KEhhvb5ZU5FIsEERUaAOsh8bmPoHGiuVv4ZJWTxM7l
+         P+5WM0LZF5Y8G4k0OCGyjvmdxd6/NR+LsCbJIs5Zsvt9aikvb4zfsp+2D8CmzYgNBDNC
+         RzLPf8Ydc4cKqZ/tLdaXl/qUMZz1CuJSyYrgtHG14FoBly+UhKFF3NggVgeQ2ZiAhMb+
+         q81KjJAeTm9dkkyy34f7Yg5zcJc34NFtvt9e5TBICDriuZdvg/cESVFvl0FIlrX6KygT
+         tR94pHSyorqoSyA+rYp7SNMbqJDJay8PQ8MoQbDSWpUlNrfWA6yXMpyduy5UikjSWuun
+         Kr2w==
+X-Gm-Message-State: AOAM532kovko4//MGPTyKGTEHKCT5cooUDxKF+lrtxjlZMIGkrFQqPZn
+        spEBGDlOlxteX9HHKAy0pliUeiI0gtr7VX7bxz5smw==
+X-Google-Smtp-Source: ABdhPJyxAL1XKv5D2YhZQKaxNMuYpOLaoo1o74ufOqhfWO37NIhZqqr71tGZugmaHwjESA7U8g36q/2EI+yerB5qhlw=
+X-Received: by 2002:a17:906:f919:: with SMTP id lc25mr20233700ejb.323.1612216523281;
+ Mon, 01 Feb 2021 13:55:23 -0800 (PST)
+MIME-Version: 1.0
+References: <20210130002438.1872527-1-ben.widawsky@intel.com>
+ <20210130002438.1872527-6-ben.widawsky@intel.com> <ecd93422-b272-2b76-1ec-cf6af744ae@google.com>
+ <20210201171051.m3cbr3udczxwghqh@intel.com> <4d62a125-91e1-d32-66d3-1216d751f9b8@google.com>
+In-Reply-To: <4d62a125-91e1-d32-66d3-1216d751f9b8@google.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 1 Feb 2021 13:55:20 -0800
+Message-ID: <CAPcyv4jCsv-5TpOFtc6zNG5y4ZSRBnXOuurMx-hkm7AhYZ2b+g@mail.gmail.com>
+Subject: Re: [PATCH 05/14] cxl/mem: Register CXL memX devices
+To:     David Rientjes <rientjes@google.com>
+Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
         Bjorn Helgaas <helgaas@kernel.org>,
         Chris Browy <cbrowy@avery-design.com>,
         Christoph Hellwig <hch@infradead.org>,
@@ -73,57 +77,56 @@ cc:     linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
         daniel.lll@alibaba-inc.com,
         "John Groves (jgroves)" <jgroves@micron.com>,
         "Kelley, Sean V" <sean.v.kelley@intel.com>
-Subject: Re: [PATCH 05/14] cxl/mem: Register CXL memX devices
-In-Reply-To: <20210201171051.m3cbr3udczxwghqh@intel.com>
-Message-ID: <4d62a125-91e1-d32-66d3-1216d751f9b8@google.com>
-References: <20210130002438.1872527-1-ben.widawsky@intel.com> <20210130002438.1872527-6-ben.widawsky@intel.com> <ecd93422-b272-2b76-1ec-cf6af744ae@google.com> <20210201171051.m3cbr3udczxwghqh@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 1 Feb 2021, Ben Widawsky wrote:
+On Mon, Feb 1, 2021 at 1:53 PM David Rientjes <rientjes@google.com> wrote:
+>
+> On Mon, 1 Feb 2021, Ben Widawsky wrote:
+>
+> > > > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> > > > new file mode 100644
+> > > > index 000000000000..fe7b87eba988
+> > > > --- /dev/null
+> > > > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> > > > @@ -0,0 +1,26 @@
+> > > > +What:            /sys/bus/cxl/devices/memX/firmware_version
+> > > > +Date:            December, 2020
+> > > > +KernelVersion:   v5.12
+> > > > +Contact: linux-cxl@vger.kernel.org
+> > > > +Description:
+> > > > +         (RO) "FW Revision" string as reported by the Identify
+> > > > +         Memory Device Output Payload in the CXL-2.0
+> > > > +         specification.
+> > > > +
+> > > > +What:            /sys/bus/cxl/devices/memX/ram/size
+> > > > +Date:            December, 2020
+> > > > +KernelVersion:   v5.12
+> > > > +Contact: linux-cxl@vger.kernel.org
+> > > > +Description:
+> > > > +         (RO) "Volatile Only Capacity" as reported by the
+> > > > +         Identify Memory Device Output Payload in the CXL-2.0
+> > > > +         specification.
+> > > > +
+> > > > +What:            /sys/bus/cxl/devices/memX/pmem/size
+> > > > +Date:            December, 2020
+> > > > +KernelVersion:   v5.12
+> > > > +Contact: linux-cxl@vger.kernel.org
+> > > > +Description:
+> > > > +         (RO) "Persistent Only Capacity" as reported by the
+> > > > +         Identify Memory Device Output Payload in the CXL-2.0
+> > > > +         specification.
+> > >
+> > > Aren't volatile and persistent capacities expressed in multiples of 256MB?
+> >
+> > As of the spec today, volatile and persistent capacities are required to be
+> > in multiples of 256MB, however, future specs may not have such a requirement and
+> > I think keeping sysfs ABI easily forward portable makes sense.
+> >
+>
+> Makes sense, can we add that these are expressed in bytes or is that
+> already implied?
 
-> > > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> > > new file mode 100644
-> > > index 000000000000..fe7b87eba988
-> > > --- /dev/null
-> > > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> > > @@ -0,0 +1,26 @@
-> > > +What:		/sys/bus/cxl/devices/memX/firmware_version
-> > > +Date:		December, 2020
-> > > +KernelVersion:	v5.12
-> > > +Contact:	linux-cxl@vger.kernel.org
-> > > +Description:
-> > > +		(RO) "FW Revision" string as reported by the Identify
-> > > +		Memory Device Output Payload in the CXL-2.0
-> > > +		specification.
-> > > +
-> > > +What:		/sys/bus/cxl/devices/memX/ram/size
-> > > +Date:		December, 2020
-> > > +KernelVersion:	v5.12
-> > > +Contact:	linux-cxl@vger.kernel.org
-> > > +Description:
-> > > +		(RO) "Volatile Only Capacity" as reported by the
-> > > +		Identify Memory Device Output Payload in the CXL-2.0
-> > > +		specification.
-> > > +
-> > > +What:		/sys/bus/cxl/devices/memX/pmem/size
-> > > +Date:		December, 2020
-> > > +KernelVersion:	v5.12
-> > > +Contact:	linux-cxl@vger.kernel.org
-> > > +Description:
-> > > +		(RO) "Persistent Only Capacity" as reported by the
-> > > +		Identify Memory Device Output Payload in the CXL-2.0
-> > > +		specification.
-> > 
-> > Aren't volatile and persistent capacities expressed in multiples of 256MB?
-> 
-> As of the spec today, volatile and persistent capacities are required to be
-> in multiples of 256MB, however, future specs may not have such a requirement and
-> I think keeping sysfs ABI easily forward portable makes sense.
-> 
-
-Makes sense, can we add that these are expressed in bytes or is that 
-already implied?
+Makes sense to declare units here.
