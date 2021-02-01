@@ -2,63 +2,39 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44907C433E0
-	for <linux-cxl@archiver.kernel.org>; Mon,  1 Feb 2021 23:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43F5C433E0
+	for <linux-cxl@archiver.kernel.org>; Mon,  1 Feb 2021 23:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F82264EC6
-	for <linux-cxl@archiver.kernel.org>; Mon,  1 Feb 2021 23:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 916DC64EB8
+	for <linux-cxl@archiver.kernel.org>; Mon,  1 Feb 2021 23:18:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229542AbhBAXK5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 1 Feb 2021 18:10:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229530AbhBAXKt (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 1 Feb 2021 18:10:49 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4BEFC061786
-        for <linux-cxl@vger.kernel.org>; Mon,  1 Feb 2021 15:09:47 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id l18so730952pji.3
-        for <linux-cxl@vger.kernel.org>; Mon, 01 Feb 2021 15:09:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :mime-version;
-        bh=3HKABxm2JWW8yXh6Ffuihg4FZgaqjfZi+45jOX+PQQI=;
-        b=CcU5cvGUtNpEhVt6Zcu4H5EeWpk+/H7fNLUyevjipbJe31ZbS4kC70stdBy+qRxQuX
-         bQGTv/PsDN4g+kKCAXTRJfbaPcAtLtu2g2G7PO0ZEND64tDUuXyPxUHFrUWJ66sQXEKP
-         y3nKIvO2CMT9m1Olk6z3pOtYMHnAFGKkus3f9QjH3SfZp3FRkqDGNKcVfBUjYt90JoV5
-         PdCs3Zv1/l93Y4WGYJkTJfGuv2R5x64VDgt169TQMxHy81iven1IoQp9Pa1PwE/KPrFi
-         owifCbIqzF5y9eiPUjgAXKU14kbZ4PlsribJAgzQV9UBoTMLxogxbFT1vqrRtcyn+Nxm
-         BmMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:mime-version;
-        bh=3HKABxm2JWW8yXh6Ffuihg4FZgaqjfZi+45jOX+PQQI=;
-        b=KwsOPwKMNlm095SBszBV4R1ril47r9vFKfXCZCOsZBEH45Qw9UZIgmW60yLhzGCZ8m
-         vtJITgfP45XvyDfYPNtfLC09eT23eboFfHz/3G4sDMV952XocAIUMTy0bfo2ZjAaI6U/
-         IgSnBI35KfDFYoUFcd/qtVgmExApv799dO/eCAKRXCalIsfHR/5bwkfe7v6iLLRZiq0h
-         c3N5lI6Olt+LhZBxhRWdO5Qcqkf3lhsgavroKPYCRI4JDexh4AfGxVZ57aGC9mSpIZO0
-         XnBIsavNcmWMaAqdezWGJGZlcX8IsK0rb6nsBBp5c5ZX9LuBchYKbUi2SDySA5RUQwrw
-         Qyrw==
-X-Gm-Message-State: AOAM532QhDu3/If8kpuM67aB7TVaRS4rTabLqdDamRNpli2h+9DaSSdx
-        IbL4frhsOXQPslhVUTNL63bKnQ==
-X-Google-Smtp-Source: ABdhPJyDaMvGR69SgB9QhG+gcyPBnwjWdXTx/YCd/XS+/X4S/yx5a3E3r1Y0cpZQ0HRKfgAXvzW+NQ==
-X-Received: by 2002:a17:902:70c6:b029:df:d62a:8c69 with SMTP id l6-20020a17090270c6b02900dfd62a8c69mr19315852plt.20.1612220986962;
-        Mon, 01 Feb 2021 15:09:46 -0800 (PST)
-Received: from [2620:15c:17:3:4a0f:cfff:fe51:6667] ([2620:15c:17:3:4a0f:cfff:fe51:6667])
-        by smtp.gmail.com with ESMTPSA id j4sm13872905pfa.131.2021.02.01.15.09.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Feb 2021 15:09:46 -0800 (PST)
-Date:   Mon, 1 Feb 2021 15:09:45 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>
-cc:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+        id S231145AbhBAXSC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 1 Feb 2021 18:18:02 -0500
+Received: from mga14.intel.com ([192.55.52.115]:63595 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230054AbhBAXSB (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 1 Feb 2021 18:18:01 -0500
+IronPort-SDR: XxpHcgwfhLO72dOaNzOwNxHGnF8CEeyJnZ9Y+xdpaJ7l62FezQorP9ZVfrLBi0CHQuj960+P88
+ GO2TtFqmv2mw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9882"; a="179991041"
+X-IronPort-AV: E=Sophos;i="5.79,393,1602572400"; 
+   d="scan'208";a="179991041"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 15:17:20 -0800
+IronPort-SDR: 8bdJnMFA0kHmvh7DoPbPCnHbnphnf3MPu4bPVWxPwJfsCqN+WEedY9p8s+2FeZLVcRrs3sUus2
+ AQqkT0yDaSbg==
+X-IronPort-AV: E=Sophos;i="5.79,393,1602572400"; 
+   d="scan'208";a="575281971"
+Received: from jambrizm-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.133.15])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 15:17:20 -0800
+Date:   Mon, 1 Feb 2021 15:17:18 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     David Rientjes <rientjes@google.com>
+Cc:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
         linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
         Chris Browy <cbrowy@avery-design.com>,
@@ -74,46 +50,62 @@ cc:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
         "John Groves (jgroves)" <jgroves@micron.com>,
         "Kelley, Sean V" <sean.v.kelley@intel.com>
 Subject: Re: [PATCH 03/14] cxl/mem: Find device capabilities
-In-Reply-To: <20210201225052.vrrvuxrsgmddjzbb@intel.com>
-Message-ID: <79b98f60-151b-6c80-65c3-91a37699d121@google.com>
-References: <20210130002438.1872527-1-ben.widawsky@intel.com> <20210130002438.1872527-4-ben.widawsky@intel.com> <234711bf-c03f-9aca-e0b5-ca677add3ea@google.com> <20210201165352.wi7tzpnd4ymxlms4@intel.com> <32f33dd-97a-8b1c-d488-e5198a3d7748@google.com>
- <20210201215857.ud5cpg7hbxj2j5bx@intel.com> <b46ed01-3f1-6643-d371-7764c3bde4f8@google.com> <20210201222859.lzw3gvxuqebukvr6@intel.com> <20210201223314.qh24uxd7ajdppgfl@intel.com> <f86149f8-3aea-9d8c-caa9-62771bf22cb5@google.com>
+Message-ID: <20210201231718.2hwaqgn2f7kc7usw@intel.com>
+References: <234711bf-c03f-9aca-e0b5-ca677add3ea@google.com>
+ <20210201165352.wi7tzpnd4ymxlms4@intel.com>
+ <32f33dd-97a-8b1c-d488-e5198a3d7748@google.com>
+ <20210201215857.ud5cpg7hbxj2j5bx@intel.com>
+ <b46ed01-3f1-6643-d371-7764c3bde4f8@google.com>
+ <20210201222859.lzw3gvxuqebukvr6@intel.com>
+ <20210201223314.qh24uxd7ajdppgfl@intel.com>
+ <f86149f8-3aea-9d8c-caa9-62771bf22cb5@google.com>
  <20210201225052.vrrvuxrsgmddjzbb@intel.com>
+ <79b98f60-151b-6c80-65c3-91a37699d121@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <79b98f60-151b-6c80-65c3-91a37699d121@google.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 1 Feb 2021, Ben Widawsky wrote:
-
-> > I think that's what 8.2.8.4.3 says, no?  And then 8.2.8.4.5 says you 
-> > can use up to Payload Size.  That's why my recommendation was to enforce 
-> > this in cxl_mem_setup_mailbox() up front.
+On 21-02-01 15:09:45, David Rientjes wrote:
+> On Mon, 1 Feb 2021, Ben Widawsky wrote:
 > 
-> Yeah. I asked our spec people to update 8.2.8.4.5 to make it clearer. I'd argue
-> the intent is how you describe it, but the implementation isn't.
+> > > I think that's what 8.2.8.4.3 says, no?  And then 8.2.8.4.5 says you 
+> > > can use up to Payload Size.  That's why my recommendation was to enforce 
+> > > this in cxl_mem_setup_mailbox() up front.
+> > 
+> > Yeah. I asked our spec people to update 8.2.8.4.5 to make it clearer. I'd argue
+> > the intent is how you describe it, but the implementation isn't.
+> > 
+> > My argument was silly anyway because if you specify greater than 1M as your
+> > payload, you will get EINVAL at the ioctl.
+> > 
+> > The value of how it works today is the driver will at least bind and allow you
+> > to interact with it.
+> > 
+> > How strongly do you feel about this?
+> > 
 > 
-> My argument was silly anyway because if you specify greater than 1M as your
-> payload, you will get EINVAL at the ioctl.
+> I haven't seen the update to 8.2.8.4.5 to know yet :)
 > 
-> The value of how it works today is the driver will at least bind and allow you
-> to interact with it.
+> You make a good point of at least being able to interact with the driver.  
+> I think you could argue that if the driver binds, then the payload size is 
+> accepted, in which case it would be strange to get an EINVAL when using 
+> the ioctl with anything >1MB.
 > 
-> How strongly do you feel about this?
+> Concern was that if we mask off the reserved bits from the command 
+> register that we could be masking part of the payload size that is being 
+> passed if the accepted max is >1MB.  Idea was to avoid any possibility of 
+> this inconsistency.  If this is being checked for ioctl, seems like it's 
+> checking reserved bits.
 > 
+> But maybe I should just wait for the spec update.
 
-I haven't seen the update to 8.2.8.4.5 to know yet :)
+Well, I wouldn't hold your breath (it would be an errata in this case anyway).
+My preference would be to just allow allow mailbox payload size to be 2^31 and
+not deal with this.
 
-You make a good point of at least being able to interact with the driver.  
-I think you could argue that if the driver binds, then the payload size is 
-accepted, in which case it would be strange to get an EINVAL when using 
-the ioctl with anything >1MB.
-
-Concern was that if we mask off the reserved bits from the command 
-register that we could be masking part of the payload size that is being 
-passed if the accepted max is >1MB.  Idea was to avoid any possibility of 
-this inconsistency.  If this is being checked for ioctl, seems like it's 
-checking reserved bits.
-
-But maybe I should just wait for the spec update.
+My question was how strongly do you feel it's an error that should prevent
+binding.
