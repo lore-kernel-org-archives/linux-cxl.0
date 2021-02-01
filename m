@@ -2,68 +2,68 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-18.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB3BC433DB
-	for <linux-cxl@archiver.kernel.org>; Mon,  1 Feb 2021 21:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F28C433E0
+	for <linux-cxl@archiver.kernel.org>; Mon,  1 Feb 2021 21:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8967664E2A
-	for <linux-cxl@archiver.kernel.org>; Mon,  1 Feb 2021 21:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E277E64E2A
+	for <linux-cxl@archiver.kernel.org>; Mon,  1 Feb 2021 21:53:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229753AbhBAVv7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 1 Feb 2021 16:51:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39406 "EHLO
+        id S229524AbhBAVxs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 1 Feb 2021 16:53:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229736AbhBAVv7 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 1 Feb 2021 16:51:59 -0500
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14606C061756
-        for <linux-cxl@vger.kernel.org>; Mon,  1 Feb 2021 13:51:19 -0800 (PST)
-Received: by mail-pg1-x52e.google.com with SMTP id c132so13037911pga.3
-        for <linux-cxl@vger.kernel.org>; Mon, 01 Feb 2021 13:51:19 -0800 (PST)
+        with ESMTP id S229606AbhBAVxq (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 1 Feb 2021 16:53:46 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1EF2C061573
+        for <linux-cxl@vger.kernel.org>; Mon,  1 Feb 2021 13:53:06 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id s24so441806pjp.5
+        for <linux-cxl@vger.kernel.org>; Mon, 01 Feb 2021 13:53:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:from:to:cc:subject:in-reply-to:message-id:references
          :mime-version;
-        bh=X0Q/ZUQ4hKoawWN2B+locX1+Bltm6iYAtS5TX76PGV0=;
-        b=JcEV6HVaeDaOOL0h5jY3uy6ve5Oys0MQOJ9U4nasE04exuRtFZbJpOIHVfWoYfle1J
-         beI2sJhpCMqlNBKLZqSCeIYmtH728isIhOBGfVtCVebDEkV58CsHbbdI/9BFXOpwyhgi
-         sPhuhxrbexd8U7yQKn0cHEHOHWqmMJ6kjMVmVst139NVTTYL8tb2UsrBxT/gZPOJhQTR
-         bK3XnLbP8oRFa2gAPWEvZAP1vvQ7NrTtztwvuzEw5LaDNbCmxSFGSwPCx7byOdJRUt9C
-         YTDIaUOkG8VOT/SQRV6U7po3pLvDqhE6/hv92a8C2KiIxOr0CrEWaO67fDJMNiOEuu4f
-         93zg==
+        bh=N6tU/hkqNUMYsHM0IUqTnCXIZDB8nb2QJ5YhEZMP+tE=;
+        b=WZi+UCs9TIbCUorANOZIg1lacKJyrLAcxNgjqYv2hNfd0YCcWVUr7BGsWFb1LJIeln
+         UelOikGZSyHtnr85jilxjPtGr9ZrM138I2fxLqj7VzG8BUYH/s6nx67rVjthtycndIQX
+         L3fGAZD1a7UEf5TUkzE8WDjRzAznsbPZomOWfxve4P0qqnIX7Kb2xvvbK6O5gtVEHUqw
+         vBxXHHfsMMe0vFxzNCHdspQP6sYm6XDirkDgPU/KcOLz+prvZoNhzG2Py/aSLNALyU/E
+         3RqDEnEBvUa0+i2+s4SRsa3p3nhYWglPsFE5vBFTZtM/lOExGpoLoTxaNVZstQlDpviD
+         6EFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
          :references:mime-version;
-        bh=X0Q/ZUQ4hKoawWN2B+locX1+Bltm6iYAtS5TX76PGV0=;
-        b=eHhVW8KeaWFGZ1toNU04JtSVtpiwSUskX3zEy5nYXDK1VaVU9M6O/uA8lMRdIo7dqu
-         CN2tJL9IS2brdXBzIciN5GgM9zfFuKgPIRpzh3lRzZYPVioSfiSfdK8zFi/K8W1eyqrR
-         /eiLNHY68cwOGKT5GmuE7dwjOmYYGzCK8EikC05Lio5kOe9l5VdpNIppn5U5/BIvM5VZ
-         ukCRL/ho7UVSEZyGiYc4VUwCbJRFFHma5j2T42yC8XBhJrdfgvPpv6XaZFGEdx3fM8Yj
-         DMIC0XqhT6QVI81sNZg80NzEPq5tlugmxgJ9+WuuPzH/PWN8TZj3XYY6Ag4WoyeKKoAO
-         ZFKw==
-X-Gm-Message-State: AOAM531q+ms2NZTNtJa4Q0SXYMICE9ojLMzaco0XgtYxfQy2TFaIXwdH
-        q14V7oEcWzcaGSUgh8avfUcY7A==
-X-Google-Smtp-Source: ABdhPJy0F0JZ9njhCDrVgT94zzxXJpyJDDqlsbZrnmv0MJhPc/jsWvO86HbtsOo2O3onCME70FZzTQ==
-X-Received: by 2002:aa7:808b:0:b029:1ce:8a32:f5e8 with SMTP id v11-20020aa7808b0000b02901ce8a32f5e8mr3097800pff.34.1612216278371;
-        Mon, 01 Feb 2021 13:51:18 -0800 (PST)
+        bh=N6tU/hkqNUMYsHM0IUqTnCXIZDB8nb2QJ5YhEZMP+tE=;
+        b=LvByoGJ4S9gw2SvTG1jRDJDqCFDDAfUoj0rY8zx2Lz8I333xldUtik3LE2AGens8fk
+         CKNSSDdEammAEK1Iq+Qk0fAIjfxnlK/ZdhpFLA75XLLDH0QuTTK+iOiYbk14OdmxaxUK
+         xg8OTukxZeHDw1ZBjoJ8I4D2SSHvEZ6O1oWP3jNQUDHqvX2m0KwQ3EkSDzhNCw/CTd+L
+         FW6X4JWAK1155ogGo7+Tu65Gw5EIu0iDstG9BboK8Kh+tMFzqBl45tzn2SrpFJB2VWiL
+         5UKZJtCiRBBuLXy35XkzTnF4YeQTxuHdsiPjmlzkDChuhPOoQH3OBhehpKk6y/nksBZp
+         Df8Q==
+X-Gm-Message-State: AOAM531OttNqN+8d0/PiCikj2rv31zin6eMN/pb9SSo7cKLDiiQjKihs
+        cEjvq6FXvubwBhaOsgqe8AAU2Q==
+X-Google-Smtp-Source: ABdhPJycALujIbA4WvZUkZggYo0Ocv7rTw3rYtZTgJzBXpeooffmD1f4WnTwFRQBCWLZpToH49e2uA==
+X-Received: by 2002:a17:902:c106:b029:de:af88:80ed with SMTP id 6-20020a170902c106b02900deaf8880edmr19001691pli.35.1612216386313;
+        Mon, 01 Feb 2021 13:53:06 -0800 (PST)
 Received: from [2620:15c:17:3:4a0f:cfff:fe51:6667] ([2620:15c:17:3:4a0f:cfff:fe51:6667])
-        by smtp.gmail.com with ESMTPSA id a72sm20075000pfa.126.2021.02.01.13.51.16
+        by smtp.gmail.com with ESMTPSA id k128sm18715106pfd.137.2021.02.01.13.53.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Feb 2021 13:51:17 -0800 (PST)
-Date:   Mon, 1 Feb 2021 13:51:16 -0800 (PST)
+        Mon, 01 Feb 2021 13:53:05 -0800 (PST)
+Date:   Mon, 1 Feb 2021 13:53:03 -0800 (PST)
 From:   David Rientjes <rientjes@google.com>
 To:     Ben Widawsky <ben.widawsky@intel.com>
-cc:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+cc:     linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
         Chris Browy <cbrowy@avery-design.com>,
         Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jon Masters <jcm@jonmasters.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
@@ -73,10 +73,10 @@ cc:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
         daniel.lll@alibaba-inc.com,
         "John Groves (jgroves)" <jgroves@micron.com>,
         "Kelley, Sean V" <sean.v.kelley@intel.com>
-Subject: Re: [PATCH 03/14] cxl/mem: Find device capabilities
-In-Reply-To: <20210201165352.wi7tzpnd4ymxlms4@intel.com>
-Message-ID: <32f33dd-97a-8b1c-d488-e5198a3d7748@google.com>
-References: <20210130002438.1872527-1-ben.widawsky@intel.com> <20210130002438.1872527-4-ben.widawsky@intel.com> <234711bf-c03f-9aca-e0b5-ca677add3ea@google.com> <20210201165352.wi7tzpnd4ymxlms4@intel.com>
+Subject: Re: [PATCH 05/14] cxl/mem: Register CXL memX devices
+In-Reply-To: <20210201171051.m3cbr3udczxwghqh@intel.com>
+Message-ID: <4d62a125-91e1-d32-66d3-1216d751f9b8@google.com>
+References: <20210130002438.1872527-1-ben.widawsky@intel.com> <20210130002438.1872527-6-ben.widawsky@intel.com> <ecd93422-b272-2b76-1ec-cf6af744ae@google.com> <20210201171051.m3cbr3udczxwghqh@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
@@ -85,28 +85,45 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 On Mon, 1 Feb 2021, Ben Widawsky wrote:
 
-> On 21-01-30 15:51:49, David Rientjes wrote:
-> > On Fri, 29 Jan 2021, Ben Widawsky wrote:
-> > 
-> > > +static int cxl_mem_setup_mailbox(struct cxl_mem *cxlm)
-> > > +{
-> > > +	const int cap = cxl_read_mbox_reg32(cxlm, CXLDEV_MB_CAPS_OFFSET);
+> > > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> > > new file mode 100644
+> > > index 000000000000..fe7b87eba988
+> > > --- /dev/null
+> > > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> > > @@ -0,0 +1,26 @@
+> > > +What:		/sys/bus/cxl/devices/memX/firmware_version
+> > > +Date:		December, 2020
+> > > +KernelVersion:	v5.12
+> > > +Contact:	linux-cxl@vger.kernel.org
+> > > +Description:
+> > > +		(RO) "FW Revision" string as reported by the Identify
+> > > +		Memory Device Output Payload in the CXL-2.0
+> > > +		specification.
 > > > +
-> > > +	cxlm->mbox.payload_size =
-> > > +		1 << CXL_GET_FIELD(cap, CXLDEV_MB_CAP_PAYLOAD_SIZE);
+> > > +What:		/sys/bus/cxl/devices/memX/ram/size
+> > > +Date:		December, 2020
+> > > +KernelVersion:	v5.12
+> > > +Contact:	linux-cxl@vger.kernel.org
+> > > +Description:
+> > > +		(RO) "Volatile Only Capacity" as reported by the
+> > > +		Identify Memory Device Output Payload in the CXL-2.0
+> > > +		specification.
 > > > +
-> > > +	/* 8.2.8.4.3 */
-> > > +	if (cxlm->mbox.payload_size < 256) {
-> > > +		dev_err(&cxlm->pdev->dev, "Mailbox is too small (%zub)",
-> > > +			cxlm->mbox.payload_size);
-> > > +		return -ENXIO;
-> > > +	}
+> > > +What:		/sys/bus/cxl/devices/memX/pmem/size
+> > > +Date:		December, 2020
+> > > +KernelVersion:	v5.12
+> > > +Contact:	linux-cxl@vger.kernel.org
+> > > +Description:
+> > > +		(RO) "Persistent Only Capacity" as reported by the
+> > > +		Identify Memory Device Output Payload in the CXL-2.0
+> > > +		specification.
 > > 
-> > Any reason not to check cxlm->mbox.payload_size > (1 << 20) as well and 
-> > return ENXIO if true?
+> > Aren't volatile and persistent capacities expressed in multiples of 256MB?
 > 
-> If some crazy vendor wanted to ship a mailbox larger than 1M, why should the
-> driver not allow it?
+> As of the spec today, volatile and persistent capacities are required to be
+> in multiples of 256MB, however, future specs may not have such a requirement and
+> I think keeping sysfs ABI easily forward portable makes sense.
 > 
 
-Because the spec disallows it :)
+Makes sense, can we add that these are expressed in bytes or is that 
+already implied?
