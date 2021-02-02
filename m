@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B6EC433DB
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 15:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC874C433DB
+	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 15:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B42964F55
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 15:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C0764F61
+	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 15:05:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234507AbhBBPAp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 2 Feb 2021 10:00:45 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:2481 "EHLO
+        id S234916AbhBBPFL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 2 Feb 2021 10:05:11 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2482 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234754AbhBBPAB (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 2 Feb 2021 10:00:01 -0500
-Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DVSV95Y0gz67k8M;
-        Tue,  2 Feb 2021 22:53:05 +0800 (CST)
+        with ESMTP id S230091AbhBBPC0 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 2 Feb 2021 10:02:26 -0500
+Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DVSZm1p9wz67jY0;
+        Tue,  2 Feb 2021 22:57:04 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
+ fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Tue, 2 Feb 2021 15:59:16 +0100
+ 15.1.2106.2; Tue, 2 Feb 2021 16:01:42 +0100
 Received: from localhost (10.47.79.68) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Tue, 2 Feb 2021
- 14:59:15 +0000
-Date:   Tue, 2 Feb 2021 14:58:30 +0000
+ 15:01:41 +0000
+Date:   Tue, 2 Feb 2021 15:00:56 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Ben Widawsky <ben.widawsky@intel.com>
 CC:     <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
@@ -45,12 +45,11 @@ CC:     <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
         <f4bug@amsat.org>, Vishal Verma <vishal.l.verma@intel.com>,
         "John Groves (jgroves)" <jgroves@micron.com>,
         "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [RFC PATCH v3 05/31] hw/cxl/device: Implement basic mailbox
- (8.2.8.4)
-Message-ID: <20210202145830.00000e21@Huawei.com>
-In-Reply-To: <20210202005948.241655-6-ben.widawsky@intel.com>
+Subject: Re: [RFC PATCH v3 16/31] hw/pci: Plumb _UID through host bridges
+Message-ID: <20210202150056.00003bec@Huawei.com>
+In-Reply-To: <20210202005948.241655-17-ben.widawsky@intel.com>
 References: <20210202005948.241655-1-ben.widawsky@intel.com>
-        <20210202005948.241655-6-ben.widawsky@intel.com>
+        <20210202005948.241655-17-ben.widawsky@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -64,516 +63,185 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 1 Feb 2021 16:59:22 -0800
+On Mon, 1 Feb 2021 16:59:33 -0800
 Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-> This is the beginning of implementing mailbox support for CXL 2.0
-> devices. The implementation recognizes when the doorbell is rung,
-> handles the command/payload, clears the doorbell while returning error
-> codes and data.
+> Currently, QEMU makes _UID equivalent to the bus number (_BBN). While
+> there is nothing wrong with doing it this way, CXL spec has a heavy
+> reliance on _UID to identify host bridges and there is no link to the
+> bus number. Having a distinct UID solves two problems. The first is it
+> gets us around the limitation of 256 (current max bus number). The
+> second is it allows us to replicate hardware configurations where bus
+> number and uid aren't equivalent. The latter has benefits for our
+> development and debugging using QEMU.
 > 
-> Generally the mailbox mechanism is designed to permit communication
-> between the host OS and the firmware running on the device. For our
-> purposes, we emulate both the firmware, implemented primarily in
-> cxl-mailbox-utils.c, and the hardware.
+> The other way to do this would be to implement the expanded bus
+> numbering, but having an explicit uid makes more sense when trying to
+> replicate real hardware configurations.
 > 
-> No commands are implemented yet.
+> The QEMU commandline to utilize this would be:
+>   -device pxb-cxl,id=cxl.0,bus="pcie.0",bus_nr=1,uid=x
 > 
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> ---
->  hw/cxl/cxl-device-utils.c   | 125 ++++++++++++++++++++++-
->  hw/cxl/cxl-mailbox-utils.c  | 197 ++++++++++++++++++++++++++++++++++++
->  hw/cxl/meson.build          |   1 +
->  include/hw/cxl/cxl.h        |   3 +
->  include/hw/cxl/cxl_device.h |  28 ++++-
->  5 files changed, 349 insertions(+), 5 deletions(-)
->  create mode 100644 hw/cxl/cxl-mailbox-utils.c
 > 
-> diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
-> index bb15ad9a0f..6602606f3d 100644
-> --- a/hw/cxl/cxl-device-utils.c
-> +++ b/hw/cxl/cxl-device-utils.c
-> @@ -40,6 +40,111 @@ static uint64_t dev_reg_read(void *opaque, hwaddr offset, unsigned size)
->      return 0;
+> --
+> 
+> I'm guessing this patch will be somewhat controversial. For early CXL
+> work, this can be dropped without too much heartache.
+
+Whilst I'm not personally against, this maybe best to drop for now as you
+say.
+
+> ---
+>  hw/i386/acpi-build.c                |  3 ++-
+>  hw/pci-bridge/pci_expander_bridge.c | 19 +++++++++++++++++++
+>  hw/pci/pci.c                        | 11 +++++++++++
+>  include/hw/pci/pci.h                |  1 +
+>  include/hw/pci/pci_bus.h            |  1 +
+>  5 files changed, 34 insertions(+), 1 deletion(-)
+> 
+> diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
+> index cf6eb54c22..145a503e92 100644
+> --- a/hw/i386/acpi-build.c
+> +++ b/hw/i386/acpi-build.c
+> @@ -1343,6 +1343,7 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
+>          QLIST_FOREACH(bus, &bus->child, sibling) {
+>              uint8_t bus_num = pci_bus_num(bus);
+>              uint8_t numa_node = pci_bus_numa_node(bus);
+> +            int32_t uid = pci_bus_uid(bus);
+>  
+>              /* look only for expander root buses */
+>              if (!pci_bus_is_root(bus)) {
+> @@ -1356,7 +1357,7 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
+>              scope = aml_scope("\\_SB");
+>              dev = aml_device("PC%.02X", bus_num);
+>              aml_append(dev, aml_name_decl("_BBN", aml_int(bus_num)));
+> -            init_pci_acpi(dev, bus_num, pci_bus_is_express(bus) ? PCIE : PCI);
+> +            init_pci_acpi(dev, uid, pci_bus_is_express(bus) ? PCIE : PCI);
+>  
+>              if (numa_node != NUMA_NODE_UNASSIGNED) {
+>                  aml_append(dev, aml_name_decl("_PXM", aml_int(numa_node)));
+> diff --git a/hw/pci-bridge/pci_expander_bridge.c b/hw/pci-bridge/pci_expander_bridge.c
+> index b42592e1ff..5021b60435 100644
+> --- a/hw/pci-bridge/pci_expander_bridge.c
+> +++ b/hw/pci-bridge/pci_expander_bridge.c
+> @@ -67,6 +67,7 @@ struct PXBDev {
+>  
+>      uint8_t bus_nr;
+>      uint16_t numa_node;
+> +    int32_t uid;
+>  };
+>  
+>  static PXBDev *convert_to_pxb(PCIDevice *dev)
+> @@ -98,12 +99,20 @@ static uint16_t pxb_bus_numa_node(PCIBus *bus)
+>      return pxb->numa_node;
 >  }
 >  
-> +static uint64_t mailbox_reg_read(void *opaque, hwaddr offset, unsigned size)
+> +static int32_t pxb_bus_uid(PCIBus *bus)
 > +{
-> +    CXLDeviceState *cxl_dstate = opaque;
+> +    PXBDev *pxb = convert_to_pxb(bus->parent_dev);
 > +
-> +    switch (size) {
-> +    case 8:
-> +        return cxl_dstate->mbox_reg_state64[offset / 8];
-> +    case 4:
-> +        return cxl_dstate->mbox_reg_state32[offset / 4];
-
-Numeric order seems more natural and I can't see a reason not to do it.
-+ you do them in that order below.
-
-> +    default:
-> +        g_assert_not_reached();
-> +    }
+> +    return pxb->uid;
 > +}
 > +
-> +static void mailbox_mem_writel(uint32_t *reg_state, hwaddr offset,
-> +                               uint64_t value)
-> +{
-> +    switch (offset) {
-> +    case A_CXL_DEV_MAILBOX_CTRL:
-> +        /* fallthrough */
-> +    case A_CXL_DEV_MAILBOX_CAP:
-> +        /* RO register */
-> +        break;
-> +    default:
-> +        qemu_log_mask(LOG_UNIMP,
-> +                      "%s Unexpected 32-bit access to 0x%" PRIx64 " (WI)\n",
-> +                      __func__, offset);
-> +        break;
-> +    }
-> +
-> +    reg_state[offset / 4] = value;
-> +}
-> +
-> +static void mailbox_mem_writeq(uint64_t *reg_state, hwaddr offset,
-> +                               uint64_t value)
-> +{
-> +    switch (offset) {
-> +    case A_CXL_DEV_MAILBOX_CMD:
-> +        break;
-> +    case A_CXL_DEV_BG_CMD_STS:
-> +        /* BG not supported */
-> +        /* fallthrough */
-> +    case A_CXL_DEV_MAILBOX_STS:
-> +        /* Read only register, will get updated by the state machine */
-> +        return;
-> +    default:
-> +        qemu_log_mask(LOG_UNIMP,
-> +                      "%s Unexpected 64-bit access to 0x%" PRIx64 " (WI)\n",
-> +                      __func__, offset);
-> +        return;
-> +    }
-> +
-> +
-> +    reg_state[offset / 8] = value;
-> +}
-> +
-> +static void mailbox_reg_write(void *opaque, hwaddr offset, uint64_t value,
-> +                              unsigned size)
-> +{
-> +    CXLDeviceState *cxl_dstate = opaque;
-> +
-> +    if (offset >= A_CXL_DEV_CMD_PAYLOAD) {
-> +        memcpy(cxl_dstate->mbox_reg_state + offset, &value, size);
-> +        return;
-> +    }
-> +
-> +    /*
-> +     * Lock is needed to prevent concurrent writes as well as to prevent writes
-> +     * coming in while the firmware is processing. Without background commands
-> +     * or the second mailbox implemented, this serves no purpose since the
-> +     * memory access is synchronized at a higher level (per memory region).
-> +     */
-> +    RCU_READ_LOCK_GUARD();
-> +
-> +    switch (size) {
-> +    case 4:
-> +        mailbox_mem_writel(cxl_dstate->mbox_reg_state32, offset, value);
-> +        break;
-> +    case 8:
-> +        mailbox_mem_writeq(cxl_dstate->mbox_reg_state64, offset, value);
-> +        break;
-> +    default:
-> +        g_assert_not_reached();
-> +    }
-> +
-> +    if (ARRAY_FIELD_EX32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CTRL,
-> +                         DOORBELL))
-> +        cxl_process_mailbox(cxl_dstate);
-> +}
-> +
-> +static const MemoryRegionOps mailbox_ops = {
-> +    .read = mailbox_reg_read,
-> +    .write = mailbox_reg_write,
-> +    .endianness = DEVICE_LITTLE_ENDIAN,
-> +    .valid = {
-> +        .min_access_size = 1,
-> +        .max_access_size = 8,
-> +        .unaligned = false,
-> +    },
-> +    .impl = {
-> +        .min_access_size = 4,
-> +        .max_access_size = 8,
-> +    },
-> +};
-> +
->  static const MemoryRegionOps dev_ops = {
->      .read = dev_reg_read,
->      .write = NULL, /* status register is read only */
-> @@ -80,20 +185,33 @@ void cxl_device_register_block_init(Object *obj, CXLDeviceState *cxl_dstate)
->                            "cap-array", CXL_DEVICE_REGISTERS_OFFSET - 0);
->      memory_region_init_io(&cxl_dstate->device, obj, &dev_ops, cxl_dstate,
->                            "device-status", CXL_DEVICE_REGISTERS_LENGTH);
-> +    memory_region_init_io(&cxl_dstate->mailbox, obj, &mailbox_ops, cxl_dstate,
-> +                          "mailbox", CXL_MAILBOX_REGISTERS_LENGTH);
->  
->      memory_region_add_subregion(&cxl_dstate->device_registers, 0,
->                                  &cxl_dstate->caps);
->      memory_region_add_subregion(&cxl_dstate->device_registers,
->                                  CXL_DEVICE_REGISTERS_OFFSET,
->                                  &cxl_dstate->device);
-> +    memory_region_add_subregion(&cxl_dstate->device_registers,
-> +                                CXL_MAILBOX_REGISTERS_OFFSET,
-> +                                &cxl_dstate->mailbox);
->  }
->  
->  static void device_reg_init_common(CXLDeviceState *cxl_dstate) { }
->  
-> +static void mailbox_reg_init_common(CXLDeviceState *cxl_dstate)
-> +{
-> +    /* 2048 payload size, with no interrupt or background support */
-> +    ARRAY_FIELD_DP32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CAP,
-> +                     PAYLOAD_SIZE, CXL_MAILBOX_PAYLOAD_SHIFT);
-> +    cxl_dstate->payload_size = CXL_MAILBOX_MAX_PAYLOAD_SIZE;
-> +}
-> +
->  void cxl_device_register_init_common(CXLDeviceState *cxl_dstate)
+>  static void pxb_bus_class_init(ObjectClass *class, void *data)
 >  {
->      uint32_t *cap_hdrs = cxl_dstate->caps_reg_state32;
-> -    const int cap_count = 1;
-> +    const int cap_count = 2;
+>      PCIBusClass *pbc = PCI_BUS_CLASS(class);
 >  
->      /* CXL Device Capabilities Array Register */
->      ARRAY_FIELD_DP32(cap_hdrs, CXL_DEV_CAP_ARRAY, CAP_ID, 0);
-> @@ -102,4 +220,9 @@ void cxl_device_register_init_common(CXLDeviceState *cxl_dstate)
->  
->      cxl_device_cap_init(cxl_dstate, DEVICE, 1);
->      device_reg_init_common(cxl_dstate);
-> +
-> +    cxl_device_cap_init(cxl_dstate, MAILBOX, 2);
-> +    mailbox_reg_init_common(cxl_dstate);
-> +
-> +    assert(cxl_initialize_mailbox(cxl_dstate) == 0);
+>      pbc->bus_num = pxb_bus_num;
+>      pbc->numa_node = pxb_bus_numa_node;
+> +    pbc->uid = pxb_bus_uid;
 >  }
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> new file mode 100644
-> index 0000000000..466055b01a
-> --- /dev/null
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -0,0 +1,197 @@
-> +/*
-> + * CXL Utility library for mailbox interface
-> + *
-> + * Copyright(C) 2020 Intel Corporation.
-> + *
-> + * This work is licensed under the terms of the GNU GPL, version 2. See the
-> + * COPYING file in the top-level directory.
-> + */
+>  
+>  static const TypeInfo pxb_bus_info = {
+> @@ -329,6 +338,7 @@ static Property pxb_dev_properties[] = {
+>      /* Note: 0 is not a legal PXB bus number. */
+>      DEFINE_PROP_UINT8("bus_nr", PXBDev, bus_nr, 0),
+>      DEFINE_PROP_UINT16("numa_node", PXBDev, numa_node, NUMA_NODE_UNASSIGNED),
+> +    DEFINE_PROP_INT32("uid", PXBDev, uid, -1),
+>      DEFINE_PROP_END_OF_LIST(),
+>  };
+>  
+> @@ -400,12 +410,21 @@ static const TypeInfo pxb_pcie_dev_info = {
+>  
+>  static void pxb_cxl_dev_realize(PCIDevice *dev, Error **errp)
+>  {
+> +    PXBDev *pxb = convert_to_pxb(dev);
 > +
-> +#include "qemu/osdep.h"
-> +#include "hw/cxl/cxl.h"
-> +#include "hw/pci/pci.h"
-> +#include "qemu/log.h"
-> +#include "qemu/uuid.h"
-> +
-> +/*
-> + * How to add a new command, example. The command set FOO, with cmd BAR.
-> + *  1. Add the command set and cmd to the enum.
-> + *     FOO    = 0x7f,
-> + *          #define BAR 0
-> + *  2. Forward declare the handler.
-> + *     declare_mailbox_handler(FOO_BAR);
-> + *  3. Add the command to the cxl_cmd_set[][]
-> + *     CXL_CMD(FOO, BAR, 0, 0),
-> + *  4. Implement your handler
-> + *     define_mailbox_handler(FOO_BAR) { ... return CXL_MBOX_SUCCESS; }
-> + *
-> + *
-> + *  Writing the handler:
-> + *    The handler will provide the &struct cxl_cmd, the &CXLDeviceState, and the
-> + *    in/out length of the payload. The handler is responsible for consuming the
-> + *    payload from cmd->payload and operating upon it as necessary. It must then
-> + *    fill the output data into cmd->payload (overwriting what was there),
-> + *    setting the length, and returning a valid return code.
-> + *
-> + *  XXX: The handler need not worry about endianess. The payload is read out of
-> + *  a register interface that already deals with it.
-> + */
-> +
-> +/* 8.2.8.4.5.1 Command Return Codes */
-> +typedef enum {
-> +    CXL_MBOX_SUCCESS = 0x0,
-> +    CXL_MBOX_BG_STARTED = 0x1,
-> +    CXL_MBOX_INVALID_INPUT = 0x2,
-> +    CXL_MBOX_UNSUPPORTED = 0x3,
-> +    CXL_MBOX_INTERNAL_ERROR = 0x4,
-> +    CXL_MBOX_RETRY_REQUIRED = 0x5,
-> +    CXL_MBOX_BUSY = 0x6,
-> +    CXL_MBOX_MEDIA_DISABLED = 0x7,
-> +    CXL_MBOX_FW_XFER_IN_PROGRESS = 0x8,
-> +    CXL_MBOX_FW_XFER_OUT_OF_ORDER = 0x9,
-> +    CXL_MBOX_FW_AUTH_FAILED = 0xa,
-> +    CXL_MBOX_FW_INVALID_SLOT = 0xb,
-> +    CXL_MBOX_FW_ROLLEDBACK = 0xc,
-> +    CXL_MBOX_FW_REST_REQD = 0xd,
-> +    CXL_MBOX_INVALID_HANDLE = 0xe,
-> +    CXL_MBOX_INVALID_PA = 0xf,
-> +    CXL_MBOX_INJECT_POISON_LIMIT = 0x10,
-> +    CXL_MBOX_PERMANENT_MEDIA_FAILURE = 0x11,
-> +    CXL_MBOX_ABORTED = 0x12,
-> +    CXL_MBOX_INVALID_SECURITY_STATE = 0x13,
-> +    CXL_MBOX_INCORRECT_PASSPHRASE = 0x14,
-> +    CXL_MBOX_UNSUPPORTED_MAILBOX = 0x15,
-> +    CXL_MBOX_INVALID_PAYLOAD_LENGTH = 0x16,
-> +    CXL_MBOX_MAX = 0x17
-> +} ret_code;
-> +
-> +struct cxl_cmd;
-> +typedef ret_code (*opcode_handler)(struct cxl_cmd *cmd,
-> +                                   CXLDeviceState *cxl_dstate, uint16_t *len);
-> +struct cxl_cmd {
-> +    const char *name;
-> +    opcode_handler handler;
-> +    ssize_t in;
-> +    uint16_t effect; /* Reported in CEL */
-> +    uint8_t *payload;
-
-This payload pointer feels somewhat out of place. Perhaps it should be a parameter
-passed to the opcode_handler()?  The address of the payload doesn't feel like
-part of the command as such so you are justing using it as somewhere to stash
-the address when passing to the handler.
-
-
-> +};
-> +
-> +#define define_mailbox_handler(name)                \
-> +    static ret_code cmd_##name(struct cxl_cmd *cmd, \
-> +                               CXLDeviceState *cxl_dstate, uint16_t *len)
-> +#define declare_mailbox_handler(name) define_mailbox_handler(name)
-> +
-> +#define define_mailbox_handler_zeroed(name, size)                         \
-> +    uint16_t __zero##name = size;                                         \
-> +    static ret_code cmd_##name(struct cxl_cmd *cmd,                       \
-> +                               CXLDeviceState *cxl_dstate, uint16_t *len) \
-> +    {                                                                     \
-> +        *len = __zero##name;                                              \
-> +        memset(cmd->payload, 0, *len);                                    \
-> +        return CXL_MBOX_SUCCESS;                                          \
-> +    }
-> +#define define_mailbox_handler_const(name, data)                          \
-> +    static ret_code cmd_##name(struct cxl_cmd *cmd,                       \
-> +                               CXLDeviceState *cxl_dstate, uint16_t *len) \
-> +    {                                                                     \
-> +        *len = sizeof(data);                                              \
-> +        memcpy(cmd->payload, data, *len);                                 \
-> +        return CXL_MBOX_SUCCESS;                                          \
-> +    }
-> +#define define_mailbox_handler_nop(name)                                  \
-> +    static ret_code cmd_##name(struct cxl_cmd *cmd,                       \
-> +                               CXLDeviceState *cxl_dstate, uint16_t *len) \
-> +    {                                                                     \
-> +        return CXL_MBOX_SUCCESS;                                          \
-> +    }
-> +
-> +#define CXL_CMD(s, c, in, cel_effect) \
-> +    [s][c] = { stringify(s##_##c), cmd_##s##_##c, in, cel_effect }
-> +
-> +static struct cxl_cmd cxl_cmd_set[256][256] = {};
-> +
-> +#undef CXL_CMD
-> +
-> +QemuUUID cel_uuid;
-> +
-> +void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
-> +{
-> +    uint16_t ret = CXL_MBOX_SUCCESS;
-> +    struct cxl_cmd *cxl_cmd;
-> +    uint64_t status_reg;
-> +    opcode_handler h;
-> +
-> +    /*
-> +     * current state of mailbox interface
-> +     *  mbox_cap_reg = cxl_dstate->reg_state32[R_CXL_DEV_MAILBOX_CAP];
-> +     *  mbox_ctrl_reg = cxl_dstate->reg_state32[R_CXL_DEV_MAILBOX_CTRL];
-> +     *  status_reg = *(uint64_t *)&cxl_dstate->reg_state[A_CXL_DEV_MAILBOX_STS];
-> +     */
-> +    uint64_t command_reg =
-> +        *(uint64_t *)&cxl_dstate->mbox_reg_state[A_CXL_DEV_MAILBOX_CMD];
-> +
-> +    /* Check if we have to do anything */
-> +    if (!ARRAY_FIELD_EX32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CTRL,
-> +                          DOORBELL)) {
-> +        qemu_log_mask(LOG_UNIMP, "Corrupt internal state for firmware\n");
+>      /* A CXL PXB's parent bus is still PCIe */
+>      if (!pci_bus_is_express(pci_get_bus(dev))) {
+>          error_setg(errp, "pxb-cxl devices cannot reside on a PCI bus");
+>          return;
+>      }
+>  
+> +    if (pxb->uid < 0) {
+> +        error_setg(errp, "pxb-cxl devices must have a valid uid (0-2147483647)");
 > +        return;
 > +    }
 > +
-> +    uint8_t set = FIELD_EX64(command_reg, CXL_DEV_MAILBOX_CMD, COMMAND_SET);
-> +    uint8_t cmd = FIELD_EX64(command_reg, CXL_DEV_MAILBOX_CMD, COMMAND);
-> +    uint16_t len = FIELD_EX64(command_reg, CXL_DEV_MAILBOX_CMD, LENGTH);
-> +    cxl_cmd = &cxl_cmd_set[set][cmd];
-> +    h = cxl_cmd->handler;
-> +    if (!h) {
-
-This path seems to not convey information it perhaps should.  Maybe some feedback that
-a command was requested that isn't registered?
-
-> +        goto handled;
-> +    }
+> +    /* FIXME: Check that uid doesn't collide with UIDs of other host bridges */
 > +
-> +    if (len != cxl_cmd->in) {
-> +        ret = CXL_MBOX_INVALID_PAYLOAD_LENGTH;
-> +    }
-> +
-> +    cxl_cmd->payload = cxl_dstate->mbox_reg_state + A_CXL_DEV_CMD_PAYLOAD;
-> +    ret = (*h)(cxl_cmd, cxl_dstate, &len);
-> +    assert(len <= cxl_dstate->payload_size);
-> +
-> +handled:
-> +    /*
-> +     * Set the return code
-> +     * XXX: it's a 64b register, but we're not setting the vendor, so we can get
-> +     * away with this
-> +     */
-> +    status_reg = FIELD_DP64(0, CXL_DEV_MAILBOX_STS, ERRNO, ret);
-> +
-> +    /*
-> +     * Set the return length
-> +     */
-> +    command_reg = FIELD_DP64(command_reg, CXL_DEV_MAILBOX_CMD, COMMAND_SET, 0);
-> +    command_reg = FIELD_DP64(command_reg, CXL_DEV_MAILBOX_CMD, COMMAND, 0);
-> +    command_reg = FIELD_DP64(command_reg, CXL_DEV_MAILBOX_CMD, LENGTH, len);
-> +
-> +    cxl_dstate->mbox_reg_state64[A_CXL_DEV_MAILBOX_CMD / 8] = command_reg;
-> +    cxl_dstate->mbox_reg_state64[A_CXL_DEV_MAILBOX_STS / 8] = status_reg;
-> +
-> +    /* Tell the host we're done */
-> +    ARRAY_FIELD_DP32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CTRL,
-> +                     DOORBELL, 0);
-> +}
-> +
-> +int cxl_initialize_mailbox(CXLDeviceState *cxl_dstate)
+>      pxb_dev_realize_common(dev, CXL, errp);
+>  }
+>  
+> diff --git a/hw/pci/pci.c b/hw/pci/pci.c
+> index adbe8aa260..bf019d91a0 100644
+> --- a/hw/pci/pci.c
+> +++ b/hw/pci/pci.c
+> @@ -170,6 +170,11 @@ static uint16_t pcibus_numa_node(PCIBus *bus)
+>      return NUMA_NODE_UNASSIGNED;
+>  }
+>  
+> +static int32_t pcibus_uid(PCIBus *bus)
 > +{
-> +    const char *cel_uuidstr = "0da9c0b5-bf41-4b78-8f79-96b1623b3f17";
-> +
-> +    for (int i = 0; i < 256; i++) {
-
-Instead of indexing with i and j, perhaps this would be more consistent using
-the naming you have above cmd and set?
-
-
-> +        for (int j = 0; j < 256; j++) {
-> +            if (cxl_cmd_set[i][j].handler) {
-> +                struct cxl_cmd *c = &cxl_cmd_set[i][j];
-> +
-> +                cxl_dstate->cel_log[cxl_dstate->cel_size].opcode = (i << 8) | j;
-> +                cxl_dstate->cel_log[cxl_dstate->cel_size].effect = c->effect;
-> +                cxl_dstate->cel_size++;
-> +            }
-> +        }
-> +    }
-> +
-> +    return qemu_uuid_parse(cel_uuidstr, &cel_uuid);
+> +    return -1;
 > +}
-> diff --git a/hw/cxl/meson.build b/hw/cxl/meson.build
-> index 47154d6850..0eca715d10 100644
-> --- a/hw/cxl/meson.build
-> +++ b/hw/cxl/meson.build
-> @@ -1,4 +1,5 @@
->  softmmu_ss.add(when: 'CONFIG_CXL', if_true: files(
->    'cxl-component-utils.c',
->    'cxl-device-utils.c',
-> +  'cxl-mailbox-utils.c',
->  ))
-> diff --git a/include/hw/cxl/cxl.h b/include/hw/cxl/cxl.h
-> index 23f52c4cf9..362cda40de 100644
-> --- a/include/hw/cxl/cxl.h
-> +++ b/include/hw/cxl/cxl.h
-> @@ -14,5 +14,8 @@
->  #include "cxl_component.h"
->  #include "cxl_device.h"
->  
-> +#define COMPONENT_REG_BAR_IDX 0
-> +#define DEVICE_REG_BAR_IDX 2
-
-I'd argue for prefixing all defines
-
-CXL_COMPONENT_REG_BAR_IDX etc
-
-Will make it clear they are generic CXL related things.
-
 > +
->  #endif
+>  static void pci_bus_class_init(ObjectClass *klass, void *data)
+>  {
+>      BusClass *k = BUS_CLASS(klass);
+> @@ -184,6 +189,7 @@ static void pci_bus_class_init(ObjectClass *klass, void *data)
 >  
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index f3bcf19410..af91bec10c 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
-> @@ -80,16 +80,27 @@ typedef struct cxl_device_state {
->      MemoryRegion device_registers;
+>      pbc->bus_num = pcibus_num;
+>      pbc->numa_node = pcibus_numa_node;
+> +    pbc->uid = pcibus_uid;
+>  }
 >  
->      /* mmio for device capabilities array - 8.2.8.2 */
-> +    MemoryRegion device;
->      struct {
->          MemoryRegion caps;
->          uint32_t caps_reg_state32[CXL_CAPS_SIZE / 4];
->      };
+>  static const TypeInfo pci_bus_info = {
+> @@ -530,6 +536,11 @@ int pci_bus_numa_node(PCIBus *bus)
+>      return PCI_BUS_GET_CLASS(bus)->numa_node(bus);
+>  }
 >  
-> -    /* mmio for the device status registers 8.2.8.3 */
-> -    MemoryRegion device;
-> -
-
-Move this block back to where it was originally introduced rather than
-introduce it then move it later?
-
->      /* mmio for the mailbox registers 8.2.8.4 */
-> -    MemoryRegion mailbox;
-> +    struct {
-> +        MemoryRegion mailbox;
-> +        uint16_t payload_size;
-> +        union {
-> +            uint8_t mbox_reg_state[CXL_MAILBOX_REGISTERS_LENGTH];
-> +            uint32_t mbox_reg_state32[CXL_MAILBOX_REGISTERS_LENGTH / 4];
-> +            uint64_t mbox_reg_state64[CXL_MAILBOX_REGISTERS_LENGTH / 8];
-> +        };
-> +        struct {
-> +            uint16_t opcode;
-> +            uint16_t effect;
-> +        } cel_log[1 << 16];
-> +        size_t cel_size;
-> +    };
-
-If the structure is unnamed, chances of a naming clash seem rather high
-if you don't prefix all the elements with mbx_ or something like that.
-
->  
->      /* memory region for persistent memory, HDM */
->      MemoryRegion *pmem;
-> @@ -135,6 +146,9 @@ CXL_DEVICE_CAPABILITY_HEADER_REGISTER(DEVICE, CXL_DEVICE_CAP_HDR1_OFFSET)
->  CXL_DEVICE_CAPABILITY_HEADER_REGISTER(MAILBOX, CXL_DEVICE_CAP_HDR1_OFFSET + \
->                                                 CXL_DEVICE_CAP_REG_SIZE)
->  
-> +int cxl_initialize_mailbox(CXLDeviceState *cxl_dstate);
-> +void cxl_process_mailbox(CXLDeviceState *cxl_dstate);
+> +int pci_bus_uid(PCIBus *bus)
+> +{
+> +    return PCI_BUS_GET_CLASS(bus)->uid(bus);
+> +}
 > +
->  #define cxl_device_cap_init(dstate, reg, cap_id)                                   \
->      do {                                                                           \
->          uint32_t *cap_hdrs = dstate->caps_reg_state32;                             \
-> @@ -162,6 +176,12 @@ REG32(CXL_DEV_MAILBOX_CTRL, 4)
->      FIELD(CXL_DEV_MAILBOX_CTRL, INT_EN, 1, 1)
->      FIELD(CXL_DEV_MAILBOX_CTRL, BG_INT_EN, 2, 1)
+>  static int get_pci_config_device(QEMUFile *f, void *pv, size_t size,
+>                                   const VMStateField *field)
+>  {
+> diff --git a/include/hw/pci/pci.h b/include/hw/pci/pci.h
+> index bde3697bee..a46de48ccd 100644
+> --- a/include/hw/pci/pci.h
+> +++ b/include/hw/pci/pci.h
+> @@ -463,6 +463,7 @@ static inline int pci_dev_bus_num(const PCIDevice *dev)
+>  }
 >  
-> +/* XXX: actually a 64b register */
-> +REG32(CXL_DEV_MAILBOX_CMD, 8)
-> +    FIELD(CXL_DEV_MAILBOX_CMD, COMMAND, 0, 8)
-> +    FIELD(CXL_DEV_MAILBOX_CMD, COMMAND_SET, 8, 8)
-> +    FIELD(CXL_DEV_MAILBOX_CMD, LENGTH, 16, 20)
-> +
-
-Ah. this is where this definition went.  Perhaps pull it back into patch 3?
-That patch defines plenty of other things that aren't used until later patches
-I think, so one more won't hurt and will save me asking why you skipped it:)
-
-
->  /* XXX: actually a 64b register */
->  REG32(CXL_DEV_MAILBOX_STS, 0x10)
->      FIELD(CXL_DEV_MAILBOX_STS, BG_OP, 0, 1)
+>  int pci_bus_numa_node(PCIBus *bus);
+> +int pci_bus_uid(PCIBus *bus);
+>  void pci_for_each_device(PCIBus *bus, int bus_num,
+>                           void (*fn)(PCIBus *bus, PCIDevice *d, void *opaque),
+>                           void *opaque);
+> diff --git a/include/hw/pci/pci_bus.h b/include/hw/pci/pci_bus.h
+> index eb94e7e85c..3c9fbc55bb 100644
+> --- a/include/hw/pci/pci_bus.h
+> +++ b/include/hw/pci/pci_bus.h
+> @@ -17,6 +17,7 @@ struct PCIBusClass {
+>  
+>      int (*bus_num)(PCIBus *bus);
+>      uint16_t (*numa_node)(PCIBus *bus);
+> +    int32_t (*uid)(PCIBus *bus);
+>  };
+>  
+>  enum PCIBusFlags {
 
