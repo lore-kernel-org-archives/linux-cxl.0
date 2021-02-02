@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DF4C433DB
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 01:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E270C433E6
+	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 01:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0F164E93
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 01:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC38A64E31
+	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 01:01:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229543AbhBBBBY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 1 Feb 2021 20:01:24 -0500
-Received: from mga06.intel.com ([134.134.136.31]:21898 "EHLO mga06.intel.com"
+        id S229612AbhBBBBZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 1 Feb 2021 20:01:25 -0500
+Received: from mga06.intel.com ([134.134.136.31]:21901 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229530AbhBBBBX (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 1 Feb 2021 20:01:23 -0500
-IronPort-SDR: ITKAjgF8YwHD/D7i6sjTZpEdctGGI2NxlVbU8k3po2EDmeLYukCayjDX8HYbEYcpqgrTsJKQP5
- QYbL+WKbCZrQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9882"; a="242294621"
+        id S229530AbhBBBBY (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 1 Feb 2021 20:01:24 -0500
+IronPort-SDR: LCA1txOeqVpH1pRH8UwHObHuBe8aVJkcywMzQQzpKIQFtcEgFZn/pxW5LBgHPmBtl8GqePajTy
+ uzc+uDwqCmIQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9882"; a="242294625"
 X-IronPort-AV: E=Sophos;i="5.79,393,1602572400"; 
-   d="scan'208";a="242294621"
+   d="scan'208";a="242294625"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 17:00:06 -0800
-IronPort-SDR: l9L5TIpmJ8N/dTns9tmOOJI4gFPP88XDOt1C5OGpSnSD5qz9SnCNBmzS9cYuw9Cx/UwRnlzi7q
- 8OynpU/y6VeA==
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 17:00:07 -0800
+IronPort-SDR: 55TZ0ovYLRe5Qef1wyRQSM8qlunqtTzUIbMUttc0SZJ0amwZRlJdbHAJCl36WcG2WDZ4Dqs+TK
+ Up1ujQQ1yXfw==
 X-IronPort-AV: E=Sophos;i="5.79,393,1602572400"; 
-   d="scan'208";a="581764159"
+   d="scan'208";a="581764166"
 Received: from jambrizm-mobl1.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.133.15])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 17:00:05 -0800
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 17:00:06 -0800
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     qemu-devel@nongnu.org
 Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
@@ -47,9 +47,9 @@ Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
         Vishal Verma <vishal.l.verma@intel.com>,
         "John Groves (jgroves)" <jgroves@micron.com>,
         "Michael S. Tsirkin" <mst@redhat.com>
-Subject: [RFC PATCH v3 13/31] qtest: allow DSDT acpi table changes
-Date:   Mon,  1 Feb 2021 16:59:30 -0800
-Message-Id: <20210202005948.241655-14-ben.widawsky@intel.com>
+Subject: [RFC PATCH v3 14/31] acpi/pci: Consolidate host bridge setup
+Date:   Mon,  1 Feb 2021 16:59:31 -0800
+Message-Id: <20210202005948.241655-15-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20210202005948.241655-1-ben.widawsky@intel.com>
 References: <20210202005948.241655-1-ben.widawsky@intel.com>
@@ -59,38 +59,79 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+This cleanup will make it easier to add support for CXL to the mix.
+
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- tests/qtest/bios-tables-test-allowed-diff.h | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ hw/i386/acpi-build.c | 31 +++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
-index dfb8523c8b..5c695cdf37 100644
---- a/tests/qtest/bios-tables-test-allowed-diff.h
-+++ b/tests/qtest/bios-tables-test-allowed-diff.h
-@@ -1 +1,22 @@
- /* List of comma-separated changed AML files to ignore */
-+"tests/data/acpi/pc/DSDT",
-+"tests/data/acpi/pc/DSDT.acpihmat",
-+"tests/data/acpi/pc/DSDT.bridge",
-+"tests/data/acpi/pc/DSDT.cphp",
-+"tests/data/acpi/pc/DSDT.dimmpxm",
-+"tests/data/acpi/pc/DSDT.hpbridge",
-+"tests/data/acpi/pc/DSDT.hpbrroot",
-+"tests/data/acpi/pc/DSDT.ipmikcs",
-+"tests/data/acpi/pc/DSDT.memhp",
-+"tests/data/acpi/pc/DSDT.numamem",
-+"tests/data/acpi/pc/DSDT.roothp",
-+"tests/data/acpi/q35/DSDT",
-+"tests/data/acpi/q35/DSDT.acpihmat",
-+"tests/data/acpi/q35/DSDT.bridge",
-+"tests/data/acpi/q35/DSDT.cphp",
-+"tests/data/acpi/q35/DSDT.dimmpxm",
-+"tests/data/acpi/q35/DSDT.ipmibt",
-+"tests/data/acpi/q35/DSDT.memhp",
-+"tests/data/acpi/q35/DSDT.mmio64",
-+"tests/data/acpi/q35/DSDT.numamem",
-+"tests/data/acpi/q35/DSDT.tis",
+diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
+index f56d699c7f..cf6eb54c22 100644
+--- a/hw/i386/acpi-build.c
++++ b/hw/i386/acpi-build.c
+@@ -1194,6 +1194,20 @@ static void build_smb0(Aml *table, I2CBus *smbus, int devnr, int func)
+     aml_append(table, scope);
+ }
+ 
++enum { PCI, PCIE };
++static void init_pci_acpi(Aml *dev, int uid, int type)
++{
++    if (type == PCI) {
++        aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A03")));
++        aml_append(dev, aml_name_decl("_UID", aml_int(uid)));
++    } else {
++        aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A08")));
++        aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A03")));
++        aml_append(dev, aml_name_decl("_UID", aml_int(uid)));
++        aml_append(dev, build_q35_osc_method());
++    }
++}
++
+ static void
+ build_dsdt(GArray *table_data, BIOSLinker *linker,
+            AcpiPmInfo *pm, AcpiMiscInfo *misc,
+@@ -1222,9 +1236,8 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
+     if (misc->is_piix4) {
+         sb_scope = aml_scope("_SB");
+         dev = aml_device("PCI0");
+-        aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A03")));
++        init_pci_acpi(dev, 0, PCI);
+         aml_append(dev, aml_name_decl("_ADR", aml_int(0)));
+-        aml_append(dev, aml_name_decl("_UID", aml_int(0)));
+         aml_append(sb_scope, dev);
+         aml_append(dsdt, sb_scope);
+ 
+@@ -1238,11 +1251,8 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
+     } else {
+         sb_scope = aml_scope("_SB");
+         dev = aml_device("PCI0");
+-        aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A08")));
+-        aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A03")));
++        init_pci_acpi(dev, 0, PCIE);
+         aml_append(dev, aml_name_decl("_ADR", aml_int(0)));
+-        aml_append(dev, aml_name_decl("_UID", aml_int(0)));
+-        aml_append(dev, build_q35_osc_method());
+         aml_append(sb_scope, dev);
+ 
+         if (pm->smi_on_cpuhp) {
+@@ -1345,15 +1355,8 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
+ 
+             scope = aml_scope("\\_SB");
+             dev = aml_device("PC%.02X", bus_num);
+-            aml_append(dev, aml_name_decl("_UID", aml_int(bus_num)));
+             aml_append(dev, aml_name_decl("_BBN", aml_int(bus_num)));
+-            if (pci_bus_is_express(bus)) {
+-                aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A08")));
+-                aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A03")));
+-                aml_append(dev, build_q35_osc_method());
+-            } else {
+-                aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A03")));
+-            }
++            init_pci_acpi(dev, bus_num, pci_bus_is_express(bus) ? PCIE : PCI);
+ 
+             if (numa_node != NUMA_NODE_UNASSIGNED) {
+                 aml_append(dev, aml_name_decl("_PXM", aml_int(numa_node)));
 -- 
 2.30.0
 
