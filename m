@@ -2,148 +2,119 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9241C433E6
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 14:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D70AC433E6
+	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 14:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE3C64EC5
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 14:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FA6961481
+	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 14:29:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233587AbhBBOAG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 2 Feb 2021 09:00:06 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:2480 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233489AbhBBN6G (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 2 Feb 2021 08:58:06 -0500
-Received: from fraeml706-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DVR6m5zQMz67h9N;
-        Tue,  2 Feb 2021 21:51:12 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2106.2; Tue, 2 Feb 2021 14:57:23 +0100
-Received: from localhost (10.47.79.68) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Tue, 2 Feb 2021
- 13:57:20 +0000
-Date:   Tue, 2 Feb 2021 13:56:34 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>
-CC:     <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "David Hildenbrand" <david@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        "Ira Weiny" <ira.weiny@intel.com>,
-        Marcel Apfelbaum <marcel.apfelbaum@gmail.com>,
-        Markus Armbruster <armbru@redhat.com>,
-        Philippe =?ISO-8859-1?Q?Mathieu-Da?= =?ISO-8859-1?Q?ud=E9?= 
-        <f4bug@amsat.org>, Vishal Verma <vishal.l.verma@intel.com>,
+        id S234528AbhBBO25 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 2 Feb 2021 09:28:57 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42268 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234457AbhBBO1z (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 2 Feb 2021 09:27:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1612275988;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Nz1AHwjucO+44OER5CPS10byVA2GsstgeF5fA/2ib94=;
+        b=Hzjp5gGwa2GH22Pd4sdKU96FGGcNHx8M/U29Ayh2SADIBOjCaU8MJTJ8+saaLKsHArRb+3
+        VhjrIGoyk/5QmxfmUxBWhYJTUvqUIjISbl1ck/sXyYqoZ932iQHkjeD2WxmbW+eu9/VL4v
+        /kYe5zFjbmSxFK4MrfFo3AlMwrY/AhA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-533-i_ZUW0uyPbKV9fpihGPpzQ-1; Tue, 02 Feb 2021 09:26:24 -0500
+X-MC-Unique: i_ZUW0uyPbKV9fpihGPpzQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9814D107ACE3;
+        Tue,  2 Feb 2021 14:26:22 +0000 (UTC)
+Received: from [10.3.112.103] (ovpn-112-103.phx2.redhat.com [10.3.112.103])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 54A49722C8;
+        Tue,  2 Feb 2021 14:26:15 +0000 (UTC)
+Subject: Re: [RFC PATCH v3 21/31] hw/cxl/device: Add a memory device (8.2.8.5)
+To:     Ben Widawsky <ben.widawsky@intel.com>, qemu-devel@nongnu.org
+Cc:     David Hildenbrand <david@redhat.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
         "John Groves (jgroves)" <jgroves@micron.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [RFC PATCH v3 14/31] acpi/pci: Consolidate host bridge setup
-Message-ID: <20210202135634.0000325d@Huawei.com>
-In-Reply-To: <20210202005948.241655-15-ben.widawsky@intel.com>
+        Chris Browy <cbrowy@avery-design.com>,
+        Markus Armbruster <armbru@redhat.com>,
+        linux-cxl@vger.kernel.org,
+        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>
 References: <20210202005948.241655-1-ben.widawsky@intel.com>
-        <20210202005948.241655-15-ben.widawsky@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+ <20210202005948.241655-22-ben.widawsky@intel.com>
+From:   Eric Blake <eblake@redhat.com>
+Organization: Red Hat, Inc.
+Message-ID: <ec610f0d-4719-43fd-9293-e5a18e00a7d3@redhat.com>
+Date:   Tue, 2 Feb 2021 08:26:14 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+In-Reply-To: <20210202005948.241655-22-ben.widawsky@intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=eblake@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.79.68]
-X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 1 Feb 2021 16:59:31 -0800
-Ben Widawsky <ben.widawsky@intel.com> wrote:
-
-> This cleanup will make it easier to add support for CXL to the mix.
+On 2/1/21 6:59 PM, Ben Widawsky wrote:
+> A CXL memory device (AKA Type 3) is a CXL component that contains some
+> combination of volatile and persistent memory. It also implements the
+> previously defined mailbox interface as well as the memory device
+> firmware interface.
+> 
+> Although the memory device is configured like a normal PCIe device, the
+> memory traffic is on an entirely separate bus conceptually (using the
+> same physical wires as PCIe, but different protocol).
+> 
+> The guest physical address for the memory device is part of a larger
+> window which is owned by the platform. Currently, this is hardcoded as
+> an object property on host bridge (PXB) creation, but that will need to
+> change for interleaving.
+> 
+> The following example will create a 256M device in a 512M window:
+> -object "memory-backend-file,id=cxl-mem1,share,mem-path=cxl-type3,size=512M"
+> -device "cxl-type3,bus=rp0,memdev=cxl-mem1,id=cxl-pmem0,size=256M"
 > 
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-One trivial but up to you on whether you think it's worth changing.
-
-
 > ---
->  hw/i386/acpi-build.c | 31 +++++++++++++++++--------------
->  1 file changed, 17 insertions(+), 14 deletions(-)
-> 
-> diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
-> index f56d699c7f..cf6eb54c22 100644
-> --- a/hw/i386/acpi-build.c
-> +++ b/hw/i386/acpi-build.c
-> @@ -1194,6 +1194,20 @@ static void build_smb0(Aml *table, I2CBus *smbus, int devnr, int func)
->      aml_append(table, scope);
->  }
->  
-> +enum { PCI, PCIE };
-> +static void init_pci_acpi(Aml *dev, int uid, int type)
-> +{
-> +    if (type == PCI) {
-> +        aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A03")));
-> +        aml_append(dev, aml_name_decl("_UID", aml_int(uid)));
-> +    } else {
-> +        aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A08")));
-> +        aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A03")));
-> +        aml_append(dev, aml_name_decl("_UID", aml_int(uid)));
-> +        aml_append(dev, build_q35_osc_method());
-> +    }
 
-Gut feeling would be this will end up nicer as a switch. I suspect this isn't
-the last time this will get extended!
+> +++ b/qapi/machine.json
+> @@ -1394,6 +1394,7 @@
+>  { 'union': 'MemoryDeviceInfo',
+>    'data': { 'dimm': 'PCDIMMDeviceInfo',
+>              'nvdimm': 'PCDIMMDeviceInfo',
+> +            'cxl': 'PCDIMMDeviceInfo',
+>              'virtio-pmem': 'VirtioPMEMDeviceInfo',
+>              'virtio-mem': 'VirtioMEMDeviceInfo'
+>            }
 
-> +}
-> +
->  static void
->  build_dsdt(GArray *table_data, BIOSLinker *linker,
->             AcpiPmInfo *pm, AcpiMiscInfo *misc,
-> @@ -1222,9 +1236,8 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
->      if (misc->is_piix4) {
->          sb_scope = aml_scope("_SB");
->          dev = aml_device("PCI0");
-> -        aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A03")));
-> +        init_pci_acpi(dev, 0, PCI);
->          aml_append(dev, aml_name_decl("_ADR", aml_int(0)));
-> -        aml_append(dev, aml_name_decl("_UID", aml_int(0)));
->          aml_append(sb_scope, dev);
->          aml_append(dsdt, sb_scope);
->  
-> @@ -1238,11 +1251,8 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
->      } else {
->          sb_scope = aml_scope("_SB");
->          dev = aml_device("PCI0");
-> -        aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A08")));
-> -        aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A03")));
-> +        init_pci_acpi(dev, 0, PCIE);
->          aml_append(dev, aml_name_decl("_ADR", aml_int(0)));
-> -        aml_append(dev, aml_name_decl("_UID", aml_int(0)));
-> -        aml_append(dev, build_q35_osc_method());
->          aml_append(sb_scope, dev);
->  
->          if (pm->smi_on_cpuhp) {
-> @@ -1345,15 +1355,8 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
->  
->              scope = aml_scope("\\_SB");
->              dev = aml_device("PC%.02X", bus_num);
-> -            aml_append(dev, aml_name_decl("_UID", aml_int(bus_num)));
->              aml_append(dev, aml_name_decl("_BBN", aml_int(bus_num)));
-> -            if (pci_bus_is_express(bus)) {
-> -                aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A08")));
-> -                aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A03")));
-> -                aml_append(dev, build_q35_osc_method());
-> -            } else {
-> -                aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A03")));
-> -            }
-> +            init_pci_acpi(dev, bus_num, pci_bus_is_express(bus) ? PCIE : PCI);
->  
->              if (numa_node != NUMA_NODE_UNASSIGNED) {
->                  aml_append(dev, aml_name_decl("_PXM", aml_int(numa_node)));
+Missing documentation that 'cxl' was introduced in 6.0.  Also, is it
+worth keeping the branches of this union in lexicographic order?
+
+-- 
+Eric Blake, Principal Software Engineer
+Red Hat, Inc.           +1-919-301-3226
+Virtualization:  qemu.org | libvirt.org
 
