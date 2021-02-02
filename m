@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39248C433E6
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 01:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D6CC433DB
+	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 01:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12F9764EDA
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 01:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63BB64EE9
+	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 01:02:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229810AbhBBBB7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 1 Feb 2021 20:01:59 -0500
+        id S229834AbhBBBCO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 1 Feb 2021 20:02:14 -0500
 Received: from mga06.intel.com ([134.134.136.31]:21915 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229786AbhBBBB7 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 1 Feb 2021 20:01:59 -0500
-IronPort-SDR: 64owz2tDLXdB/peMOn73vrBVrCiGNRT0XOCylSlbbEzQkuejSXYwdhwLyhic6hNQ2X1SnihVoD
- 859u9pnIFuYw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9882"; a="242294658"
+        id S229832AbhBBBCO (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 1 Feb 2021 20:02:14 -0500
+IronPort-SDR: 4SWv9UwP8TliOnjeF8vV9rQ/8vnsC5pwvRGqLBAtM5zGsRg5W9Z1+de8j/FhQEjFRyAuDae0S8
+ hhuplF0t8UYQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9882"; a="242294675"
 X-IronPort-AV: E=Sophos;i="5.79,393,1602572400"; 
-   d="scan'208";a="242294658"
+   d="scan'208";a="242294675"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 17:00:19 -0800
-IronPort-SDR: NgEq2Mwl/JcOSGg864CBT/HUUoL6e4npNZM+RZu8acCb3VhepGbNBRPNaCCl1PvOgoxY+jtdIP
- 9hadoR1T4+Gw==
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 17:00:25 -0800
+IronPort-SDR: gaLajS1KKfepojaxXY1K+YOXX8MADJ1ZoGGUwHtf/ghOeEx57GILnkCQG9RuYGUgOnmczUNVsm
+ TRCA2X7hVlwA==
 X-IronPort-AV: E=Sophos;i="5.79,393,1602572400"; 
-   d="scan'208";a="581764257"
+   d="scan'208";a="581764293"
 Received: from jambrizm-mobl1.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.133.15])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 17:00:18 -0800
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 17:00:23 -0800
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     qemu-devel@nongnu.org
 Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
@@ -47,9 +47,9 @@ Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
         Vishal Verma <vishal.l.verma@intel.com>,
         "John Groves (jgroves)" <jgroves@micron.com>,
         "Michael S. Tsirkin" <mst@redhat.com>
-Subject: [RFC PATCH v3 25/31] acpi/cxl: Create the CEDT (9.14.1)
-Date:   Mon,  1 Feb 2021 16:59:42 -0800
-Message-Id: <20210202005948.241655-26-ben.widawsky@intel.com>
+Subject: [RFC PATCH v3 30/31] qtest/cxl: Add very basic sanity tests
+Date:   Mon,  1 Feb 2021 16:59:47 -0800
+Message-Id: <20210202005948.241655-31-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20210202005948.241655-1-ben.widawsky@intel.com>
 References: <20210202005948.241655-1-ben.widawsky@intel.com>
@@ -59,313 +59,134 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The CXL Early Discovery Table is defined in the CXL 2.0 specification as
-a way for the OS to get CXL specific information from the system
-firmware.
-
-CXL 2.0 specification adds an _HID, ACPI0016, for CXL capable host
-bridges, with a _CID of PNP0A08 (PCIe host bridge). CXL aware software
-is able to use this initiate the proper _OSC method, and get the _UID
-which is referenced by the CEDT. Therefore the existence of an ACPI0016
-device allows a CXL aware driver perform the necessary actions. For a
-CXL capable OS, this works. For a CXL unaware OS, this works.
-
-CEDT awaremess requires more. The motivation for ACPI0017 is to provide
-the possibility of having a Linux CXL module that can work on a legacy
-Linux kernel. Linux core PCI/ACPI which won't be built as a module,
-will see the _CID of PNP0A08 and bind a driver to it. If we later loaded
-a driver for ACPI0016, Linux won't be able to bind it to the hardware
-because it has already bound the PNP0A08 driver. The ACPI0017 device is
-an opportunity to have an object to bind a driver will be used by a
-Linux driver to walk the CXL topology and do everything that we would
-have preferred to do with ACPI0016.
-
-There is another motivation for an ACPI0017 device which isn't
-implemented here. An operating system needs an attach point for a
-non-volatile region provider that understands cross-hostbridge
-interleaving. Since QEMU emulation doesn't support interleaving yet,
-this is more important on the OS side, for now.
-
-As of CXL 2.0 spec, only 1 sub structure is defined, the CXL Host Bridge
-Structure (CHBS) which is primarily useful for telling the OS exactly
-where the MMIO for the host bridge is.
-
-v2: Update CHBS to spec released definition
-v3: squash ACPI0017 in now that it's ratified.
-
-Link: https://lore.kernel.org/linux-cxl/20210115034911.nkgpzc756d6qmjpl@intel.com/T/#t
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- hw/acpi/cxl.c                       | 69 +++++++++++++++++++++++++++++
- hw/i386/acpi-build.c                | 25 ++++++++++-
- hw/pci-bridge/pci_expander_bridge.c | 21 +--------
- include/hw/acpi/cxl.h               |  4 ++
- include/hw/pci/pci_bridge.h         | 25 +++++++++++
- 5 files changed, 123 insertions(+), 21 deletions(-)
+ tests/qtest/cxl-test.c  | 93 +++++++++++++++++++++++++++++++++++++++++
+ tests/qtest/meson.build |  4 ++
+ 2 files changed, 97 insertions(+)
+ create mode 100644 tests/qtest/cxl-test.c
 
-diff --git a/hw/acpi/cxl.c b/hw/acpi/cxl.c
-index 7124d5a1a3..68db0fe3a8 100644
---- a/hw/acpi/cxl.c
-+++ b/hw/acpi/cxl.c
-@@ -18,14 +18,83 @@
-  */
- 
- #include "qemu/osdep.h"
-+#include "hw/sysbus.h"
-+#include "hw/pci/pci_bridge.h"
-+#include "hw/pci/pci_host.h"
- #include "hw/cxl/cxl.h"
-+#include "hw/mem/memory-device.h"
- #include "hw/acpi/acpi.h"
- #include "hw/acpi/aml-build.h"
- #include "hw/acpi/bios-linker-loader.h"
- #include "hw/acpi/cxl.h"
-+#include "hw/acpi/cxl.h"
- #include "qapi/error.h"
- #include "qemu/uuid.h"
- 
-+static void cedt_build_chbs(GArray *table_data, PXBDev *cxl)
+diff --git a/tests/qtest/cxl-test.c b/tests/qtest/cxl-test.c
+new file mode 100644
+index 0000000000..00eca14faa
+--- /dev/null
++++ b/tests/qtest/cxl-test.c
+@@ -0,0 +1,93 @@
++/*
++ * QTest testcase for CXL
++ *
++ * This work is licensed under the terms of the GNU GPL, version 2 or later.
++ * See the COPYING file in the top-level directory.
++ */
++
++#include "qemu/osdep.h"
++#include "libqtest-single.h"
++
++#define QEMU_PXB_CMD "-machine q35 -object memory-backend-file,id=cxl-mem1," \
++                     "share,mem-path=%s,size=512M "                          \
++                     "-device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52,uid=0,"  \
++                     "len-window-base=1,window-base[0]=0x4c0000000,memdev[0]=cxl-mem1"
++#define QEMU_RP "-device cxl-rp,id=rp0,bus=cxl.0,addr=0.0,chassis=0,slot=0"
++
++#define QEMU_T3D "-device cxl-type3,bus=rp0,memdev=cxl-mem1,id=cxl-pmem0,size=256M"
++
++static void cxl_basic_hb(void)
 +{
-+    SysBusDevice *sbd = SYS_BUS_DEVICE(cxl->cxl.cxl_host_bridge);
-+    struct MemoryRegion *mr = sbd->mmio[0].memory;
-+
-+    /* Type */
-+    build_append_int_noprefix(table_data, 0, 1);
-+
-+    /* Reserved */
-+    build_append_int_noprefix(table_data, 0, 1);
-+
-+    /* Record Length */
-+    build_append_int_noprefix(table_data, 32, 2);
-+
-+    /* UID */
-+    build_append_int_noprefix(table_data, cxl->uid, 4);
-+
-+    /* Version */
-+    build_append_int_noprefix(table_data, 1, 4);
-+
-+    /* Reserved */
-+    build_append_int_noprefix(table_data, 0, 4);
-+
-+    /* Base */
-+    build_append_int_noprefix(table_data, mr->addr, 8);
-+
-+    /* Length */
-+    build_append_int_noprefix(table_data, memory_region_size(mr), 8);
++    qtest_start("-machine q35,cxl");
++    qtest_end();
 +}
 +
-+static int cxl_foreach_pxb_hb(Object *obj, void *opaque)
++static void cxl_basic_pxb(void)
 +{
-+    Aml *cedt = opaque;
-+
-+    if (object_dynamic_cast(obj, TYPE_PXB_CXL_DEVICE)) {
-+        PXBDev *pxb = PXB_CXL_DEV(obj);
-+
-+        cedt_build_chbs(cedt->buf, pxb);
-+    }
-+
-+    return 0;
++    qtest_start("-machine q35 -device pxb-cxl,bus=pcie.0,uid=0");
++    qtest_end();
 +}
 +
-+void cxl_build_cedt(GArray *table_offsets, GArray *table_data,
-+                    BIOSLinker *linker)
++static void cxl_pxb_with_window(void)
 +{
-+    const int cedt_start = table_data->len;
-+    Aml *cedt;
++    GString *cmdline;
++    char template[] = "/tmp/cxl-test-XXXXXX";
++    const char *tmpfs;
 +
-+    cedt = init_aml_allocator();
++    tmpfs = mkdtemp(template);
 +
-+    /* reserve space for CEDT header */
-+    acpi_add_table(table_offsets, table_data);
-+    acpi_data_push(cedt->buf, sizeof(AcpiTableHeader));
++    cmdline = g_string_new(NULL);
++    g_string_printf(cmdline, QEMU_PXB_CMD, tmpfs);
 +
-+    object_child_foreach_recursive(object_get_root(), cxl_foreach_pxb_hb, cedt);
++    qtest_start(cmdline->str);
++    qtest_end();
 +
-+    /* copy AML table into ACPI tables blob and patch header there */
-+    g_array_append_vals(table_data, cedt->buf->data, cedt->buf->len);
-+    build_header(linker, table_data, (void *)(table_data->data + cedt_start),
-+                 "CEDT", table_data->len - cedt_start, 1, NULL, NULL);
-+    free_aml_allocator();
++    g_string_free(cmdline, TRUE);
 +}
 +
- static Aml *__build_cxl_osc_method(void)
- {
-     Aml *method, *if_uuid, *else_uuid, *if_arg1_not_1, *if_cxl, *if_caps_masked;
-diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
-index 2c2293b55f..7706856c49 100644
---- a/hw/i386/acpi-build.c
-+++ b/hw/i386/acpi-build.c
-@@ -75,6 +75,8 @@
- #include "hw/acpi/ipmi.h"
- #include "hw/acpi/hmat.h"
- 
-+#include "hw/acpi/cxl.h"
-+
- /* These are used to size the ACPI tables for -M pc-i440fx-1.7 and
-  * -M pc-i440fx-2.0.  Even if the actual amount of AML generated grows
-  * a little bit, there should be plenty of free space since the DSDT
-@@ -1219,6 +1221,19 @@ static void init_pci_acpi(Aml *dev, int uid, int type)
-     }
- }
- 
-+static void build_acpi0017(Aml *table)
++static void cxl_root_port(void)
 +{
-+    Aml *dev;
-+    Aml *scope;
++    GString *cmdline;
++    char template[] = "/tmp/cxl-test-XXXXXX";
++    const char *tmpfs;
 +
-+    scope =  aml_scope("_SB");
-+    dev = aml_device("CXLM");
-+    aml_append(dev, aml_name_decl("_HID", aml_string("ACPI0017")));
++    tmpfs = mkdtemp(template);
 +
-+    aml_append(scope, dev);
-+    aml_append(table, scope);
++    cmdline = g_string_new(NULL);
++    g_string_printf(cmdline, QEMU_PXB_CMD " %s", tmpfs, QEMU_RP);
++
++    qtest_start(cmdline->str);
++    qtest_end();
++
++    g_string_free(cmdline, TRUE);
 +}
 +
- static void
- build_dsdt(GArray *table_data, BIOSLinker *linker,
-            AcpiPmInfo *pm, AcpiMiscInfo *misc,
-@@ -1235,6 +1250,7 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
-     int root_bus_limit = 0xFF;
-     PCIBus *bus = NULL;
-     TPMIf *tpm = tpm_find();
-+    bool cxl_present = false;
-     int i;
-     VMBusBridge *vmbus_bridge = vmbus_bridge_find();
- 
-@@ -1371,7 +1387,7 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
- 
-             scope = aml_scope("\\_SB");
-             if (type == CXL) {
--                dev = aml_device("CXL%.01X", pci_bus_uid(bus));
-+                dev = aml_device("CXL%.01X", uid);
-             } else {
-                 dev = aml_device("PC%.02X", bus_num);
-             }
-@@ -1391,6 +1407,7 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
- 
-             /* Handle the ranges for the PXB expanders */
-             if (type == CXL) {
-+                cxl_present = true;
-                 uint64_t base = CXL_HOST_BASE + uid * 0x10000;
-                 crs_range_insert(crs_range_set.mem_ranges, base,
-                                  base + 0x10000 - 1);
-@@ -1398,6 +1415,10 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
-         }
-     }
- 
-+    if (cxl_present) {
-+        build_acpi0017(dsdt);
-+    }
++static void cxl_t3d(void)
++{
++    GString *cmdline;
++    char template[] = "/tmp/cxl-test-XXXXXX";
++    const char *tmpfs;
 +
-     /*
-      * At this point crs_range_set has all the ranges used by pci
-      * busses *other* than PCI0.  These ranges will be excluded from
-@@ -2278,6 +2299,8 @@ void acpi_build(AcpiBuildTables *tables, MachineState *machine)
-                           machine->nvdimms_state, machine->ram_slots);
-     }
- 
-+    cxl_build_cedt(table_offsets, tables_blob, tables->linker);
++    tmpfs = mkdtemp(template);
 +
-     acpi_add_table(table_offsets, tables_blob);
-     build_waet(tables_blob, tables->linker);
- 
-diff --git a/hw/pci-bridge/pci_expander_bridge.c b/hw/pci-bridge/pci_expander_bridge.c
-index af1450c69d..6458d5b76e 100644
---- a/hw/pci-bridge/pci_expander_bridge.c
-+++ b/hw/pci-bridge/pci_expander_bridge.c
-@@ -57,26 +57,6 @@ DECLARE_INSTANCE_CHECKER(PXBDev, PXB_DEV,
- DECLARE_INSTANCE_CHECKER(PXBDev, PXB_PCIE_DEV,
-                          TYPE_PXB_PCIE_DEVICE)
- 
--#define TYPE_PXB_CXL_DEVICE "pxb-cxl"
--DECLARE_INSTANCE_CHECKER(PXBDev, PXB_CXL_DEV,
--                         TYPE_PXB_CXL_DEVICE)
--
--struct PXBDev {
--    /*< private >*/
--    PCIDevice parent_obj;
--    /*< public >*/
--
--    uint8_t bus_nr;
--    uint16_t numa_node;
--    int32_t uid;
--    struct cxl_dev {
--        HostMemoryBackend *memory_window[CXL_WINDOW_MAX];
--
--        uint32_t num_windows;
--        hwaddr *window_base[CXL_WINDOW_MAX];
--    } cxl;
--};
--
- typedef struct CXLHost {
-     PCIHostState parent_obj;
- 
-@@ -351,6 +331,7 @@ static void pxb_dev_realize_common(PCIDevice *dev, enum BusType type,
-         bus = pci_root_bus_new(ds, dev_name, NULL, NULL, 0, TYPE_PXB_CXL_BUS);
-         bus->flags |= PCI_BUS_CXL;
-         PXB_CXL_HOST(ds)->dev = PXB_CXL_DEV(dev);
-+        PXB_CXL_DEV(dev)->cxl.cxl_host_bridge = ds;
-     } else {
-         bus = pci_root_bus_new(ds, "pxb-internal", NULL, NULL, 0, TYPE_PXB_BUS);
-         bds = qdev_new("pci-bridge");
-diff --git a/include/hw/acpi/cxl.h b/include/hw/acpi/cxl.h
-index 7b8f3b8a2e..db2063f8c9 100644
---- a/include/hw/acpi/cxl.h
-+++ b/include/hw/acpi/cxl.h
-@@ -18,6 +18,10 @@
- #ifndef HW_ACPI_CXL_H
- #define HW_ACPI_CXL_H
- 
-+#include "hw/acpi/bios-linker-loader.h"
++    cmdline = g_string_new(NULL);
++    g_string_printf(cmdline, QEMU_PXB_CMD " %s %s", tmpfs, QEMU_RP, QEMU_T3D);
 +
-+void cxl_build_cedt(GArray *table_offsets, GArray *table_data,
-+                    BIOSLinker *linker);
- void build_cxl_osc_method(Aml *dev);
++    qtest_start(cmdline->str);
++    qtest_end();
++
++    g_string_free(cmdline, TRUE);
++}
++
++int main(int argc, char **argv)
++{
++    g_test_init(&argc, &argv, NULL);
++
++    qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
++    qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
++    qtest_add_func("/pci/cxl/pxb_with_window", cxl_pxb_with_window);
++    qtest_add_func("/pci/cxl/root_port", cxl_root_port);
++    qtest_add_func("/pci/cxl/type3_device", cxl_t3d);
++
++    return g_test_run();
++}
+diff --git a/tests/qtest/meson.build b/tests/qtest/meson.build
+index c83bc211b6..554152b7c5 100644
+--- a/tests/qtest/meson.build
++++ b/tests/qtest/meson.build
+@@ -22,6 +22,9 @@ qtests_pci = \
+   (config_all_devices.has_key('CONFIG_VGA') ? ['display-vga-test'] : []) +                  \
+   (config_all_devices.has_key('CONFIG_IVSHMEM_DEVICE') ? ['ivshmem-test'] : [])
  
- #endif
-diff --git a/include/hw/pci/pci_bridge.h b/include/hw/pci/pci_bridge.h
-index a94d350034..50dd7fdf33 100644
---- a/include/hw/pci/pci_bridge.h
-+++ b/include/hw/pci/pci_bridge.h
-@@ -28,6 +28,7 @@
- 
- #include "hw/pci/pci.h"
- #include "hw/pci/pci_bus.h"
-+#include "hw/cxl/cxl.h"
- #include "qom/object.h"
- 
- typedef struct PCIBridgeWindows PCIBridgeWindows;
-@@ -81,6 +82,30 @@ struct PCIBridge {
- #define PCI_BRIDGE_DEV_PROP_MSI        "msi"
- #define PCI_BRIDGE_DEV_PROP_SHPC       "shpc"
- 
-+struct PXBDev {
-+    /*< private >*/
-+    PCIDevice parent_obj;
-+    /*< public >*/
++qtests_cxl = \
++  (config_all_devices.has_key('CONFIG_CXL') ? ['cxl-test'] : [])
 +
-+    uint8_t bus_nr;
-+    uint16_t numa_node;
-+    int32_t uid;
-+
-+    struct cxl_dev {
-+        HostMemoryBackend *memory_window[CXL_WINDOW_MAX];
-+
-+        uint32_t num_windows;
-+        hwaddr *window_base[CXL_WINDOW_MAX];
-+
-+        void *cxl_host_bridge; /* Pointer to a CXLHost */
-+    } cxl;
-+};
-+
-+typedef struct PXBDev PXBDev;
-+#define TYPE_PXB_CXL_DEVICE "pxb-cxl"
-+DECLARE_INSTANCE_CHECKER(PXBDev, PXB_CXL_DEV,
-+                         TYPE_PXB_CXL_DEVICE)
-+
- int pci_bridge_ssvid_init(PCIDevice *dev, uint8_t offset,
-                           uint16_t svid, uint16_t ssid,
-                           Error **errp);
+ qtests_i386 = \
+   (slirp.found() ? ['pxe-test', 'test-netfilter'] : []) +             \
+   (config_host.has_key('CONFIG_POSIX') ? ['test-filter-mirror'] : []) +                     \
+@@ -48,6 +51,7 @@ qtests_i386 = \
+   (config_all_devices.has_key('CONFIG_TPM_TIS_ISA') ? ['tpm-tis-swtpm-test'] : []) +        \
+   (config_all_devices.has_key('CONFIG_RTL8139_PCI') ? ['rtl8139-test'] : []) +              \
+   qtests_pci +                                                                              \
++  qtests_cxl +                                                                              \
+   ['fdc-test',
+    'ide-test',
+    'hd-geo-test',
 -- 
 2.30.0
 
