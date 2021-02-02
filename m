@@ -2,349 +2,233 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE5EC433E0
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 16:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC67C43381
+	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 17:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC03564F70
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 16:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A2E64F99
+	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 17:50:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236325AbhBBQXn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 2 Feb 2021 11:23:43 -0500
-Received: from mga11.intel.com ([192.55.52.93]:53010 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234266AbhBBQVh (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 2 Feb 2021 11:21:37 -0500
-IronPort-SDR: 07VH9I//2Xwr5SMRfBL+KraMbhSetj895sow3vPm8BfUsukqwj7G7QIc5bCroFR1e0+fGrRTsv
- aWAledDQ4ZCA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9883"; a="177372607"
-X-IronPort-AV: E=Sophos;i="5.79,395,1602572400"; 
-   d="scan'208";a="177372607"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2021 08:20:53 -0800
-IronPort-SDR: FSWs9uCL2w32tPW7+1Z6rmAn7nKrnRcclUGnSTf6Y0nkO30BPL4922eHdivN/YQnYt4Ub4YRxD
- uTfuSv9C0JHQ==
-X-IronPort-AV: E=Sophos;i="5.79,395,1602572400"; 
-   d="scan'208";a="372014869"
-Received: from joship1x-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.131.202])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2021 08:20:52 -0800
-Date:   Tue, 2 Feb 2021 08:20:49 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
-        Chris Browy <cbrowy@avery-design.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Marcel Apfelbaum <marcel.apfelbaum@gmail.com>,
-        Markus Armbruster <armbru@redhat.com>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "John Groves (jgroves)" <jgroves@micron.com>
-Subject: Re: [RFC PATCH v3 16/31] hw/pci: Plumb _UID through host bridges
-Message-ID: <20210202162049.jage4z5xkrawjyce@intel.com>
-References: <20210202005948.241655-1-ben.widawsky@intel.com>
- <20210202005948.241655-17-ben.widawsky@intel.com>
- <20210202150056.00003bec@Huawei.com>
- <20210202101504-mutt-send-email-mst@kernel.org>
- <20210202154257.zepdz74logmi52wn@intel.com>
- <20210202104540-mutt-send-email-mst@kernel.org>
+        id S236794AbhBBRuK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 2 Feb 2021 12:50:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237752AbhBBRrJ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 2 Feb 2021 12:47:09 -0500
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44528C061786
+        for <linux-cxl@vger.kernel.org>; Tue,  2 Feb 2021 09:46:27 -0800 (PST)
+Received: by mail-ej1-x633.google.com with SMTP id i8so14838399ejc.7
+        for <linux-cxl@vger.kernel.org>; Tue, 02 Feb 2021 09:46:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wUurNA9VhndOPP6gfhXBN1JbTKtpFDXXD0/WIc6R26Q=;
+        b=Q+gyF53uYybQ7VU8537+gYM+aGyprhjPmxAfLGnXP6OwT0GUtgTrUly1i2fwhFGjtq
+         p8whi96zlLUuqYC2XLni6OtAlLqCFkUCNoE29gm7ZNiukEuBRSs16ly47hZcjG6mcf6W
+         YYvDPxx/KBKbT4jC9DYrUXZosFGn5i6Xf3mWMFX+1Qr7C65VszwwhvahhMB2NecwsZzI
+         e3RqPl7eS6e+HVxxdVcQDLle6L5RSDpa1rJm+u/OFMeLblLfAyT40bK/SRA5AhfI1W1U
+         CrxE+ACZJOsvAUYzBKsXKBmEsSRk8P5lses045BxA80LjvV+151v8gAD+DbIAjYVFUu2
+         jitQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wUurNA9VhndOPP6gfhXBN1JbTKtpFDXXD0/WIc6R26Q=;
+        b=ZGu2uuXoVYkT6DTf7Y5Ld9MuybtvoQIA/7PRWJpyaUj7DkeMw9oZIe7cCrMBzkHGW0
+         VZ7gKidgmhR76Yf89j4dnB9N0FXlEUtK3nU9uf60QRFEjxqnHuGzlGLKhpsW/6TCWqG2
+         jPbBfajx5dmYLrW3PevHMYarESlHdor8k2L9Wbtc3gQrY5Kib1JUg4U5DHQboazTx1T9
+         q9NM/5l+ngFBmqo64viQ2qV58bqhj+u5B9q2LRORrwMlGneOmRoNtdKaf0ZVfmVyGEFR
+         bdGk2jcBpO8u/TlIj2BFOOxDOoyadGo9OYMwQ1N0BrfLhvqMB9P7baq1tS2EJCBEaMHa
+         j6+Q==
+X-Gm-Message-State: AOAM530qriu11ngZIzJAjOPaIVToInYQtqlTZV9TqdUktWlkYVObWYcl
+        UfhJbhKJ52BdxWCNub1Wa4Z6ORm9+IDnyQBgn1x+Ow==
+X-Google-Smtp-Source: ABdhPJxJMQPeK8rJWCApObIytFXRIQO5rlc1bINukN6cy207HKpFiuo3Yrd9r7/axKlxQdWCDqWdakZUfI9gkorugGA=
+X-Received: by 2002:a17:906:8252:: with SMTP id f18mr2377108ejx.418.1612287985906;
+ Tue, 02 Feb 2021 09:46:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210202104540-mutt-send-email-mst@kernel.org>
+References: <20210130002438.1872527-1-ben.widawsky@intel.com>
+ <20210130002438.1872527-9-ben.widawsky@intel.com> <20210201181845.GJ197521@fedora>
+ <20210201183455.3dndfwyswwvs2dlm@intel.com> <CAPcyv4iBbA+PCnTg-hFALuDJNqcJrwwXN_gMEe6z9LZvSfC5hw@mail.gmail.com>
+ <YBi9nkiu3DvMZhrs@Konrads-MacBook-Pro.local>
+In-Reply-To: <YBi9nkiu3DvMZhrs@Konrads-MacBook-Pro.local>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 2 Feb 2021 09:46:23 -0800
+Message-ID: <CAPcyv4j7xHcz+0+e35k3ed0O3muynMu3HzhXCNFpHreP1jAyHA@mail.gmail.com>
+Subject: Re: [PATCH 08/14] taint: add taint for direct hardware access
+To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jon Masters <jcm@jonmasters.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        daniel.lll@alibaba-inc.com,
+        "John Groves (jgroves)" <jgroves@micron.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21-02-02 10:51:55, Michael S. Tsirkin wrote:
-> On Tue, Feb 02, 2021 at 07:42:57AM -0800, Ben Widawsky wrote:
-> > Thanks for looking! Mixing comments to Jonathan and Michael..
-> > 
-> > On 21-02-02 10:24:43, Michael S. Tsirkin wrote:
-> > > On Tue, Feb 02, 2021 at 03:00:56PM +0000, Jonathan Cameron wrote:
-> > > > On Mon, 1 Feb 2021 16:59:33 -0800
-> > > > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > > 
-> > > > > Currently, QEMU makes _UID equivalent to the bus number (_BBN). While
-> > > > > there is nothing wrong with doing it this way, CXL spec has a heavy
-> > > > > reliance on _UID to identify host bridges and there is no link to the
-> > > > > bus number. Having a distinct UID solves two problems. The first is it
-> > > > > gets us around the limitation of 256 (current max bus number).
-> > > 
-> > > Not sure I understand. You want more than 256 host bridges?
-> > > 
-> > 
-> > I don't want more than 256 host bridges, but I want the ability to disaggregate
-> > _UID and bus (_BBN). The reasoning is just to align with the spec where _UID is
-> > used to identify a CXL host bridge which is unrelated (perhaps) to the bus
-> > number.
-> 
-> Which spec is that?
-> 
+On Mon, Feb 1, 2021 at 6:50 PM Konrad Rzeszutek Wilk
+<konrad.wilk@oracle.com> wrote:
+>
+> On Mon, Feb 01, 2021 at 11:01:11AM -0800, Dan Williams wrote:
+> > On Mon, Feb 1, 2021 at 10:35 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > >
+> > > On 21-02-01 13:18:45, Konrad Rzeszutek Wilk wrote:
+> > > > On Fri, Jan 29, 2021 at 04:24:32PM -0800, Ben Widawsky wrote:
+> > > > > For drivers that moderate access to the underlying hardware it is
+> > > > > sometimes desirable to allow userspace to bypass restrictions. Once
+> > > > > userspace has done this, the driver can no longer guarantee the sanctity
+> > > > > of either the OS or the hardware. When in this state, it is helpful for
+> > > > > kernel developers to be made aware (via this taint flag) of this fact
+> > > > > for subsequent bug reports.
+> > > > >
+> > > > > Example usage:
+> > > > > - Hardware xyzzy accepts 2 commands, waldo and fred.
+> > > > > - The xyzzy driver provides an interface for using waldo, but not fred.
+> > > > > - quux is convinced they really need the fred command.
+> > > > > - xyzzy driver allows quux to frob hardware to initiate fred.
+> > > >
+> > > > Would it not be easier to _not_ frob the hardware for fred-operation?
+> > > > Aka not implement it or just disallow in the first place?
+> > >
+> > > Yeah. So the idea is you either are in a transient phase of the command and some
+> > > future kernel will have real support for fred - or a vendor is being short
+> > > sighted and not adding support for fred.
+> > >
+> > > >
+> > > >
+> > > > >   - kernel gets tainted.
+> > > > > - turns out fred command is borked, and scribbles over memory.
+> > > > > - developers laugh while closing quux's subsequent bug report.
+> > > >
+> > > > Yeah good luck with that theory in-the-field. The customer won't
+> > > > care about this and will demand a solution for doing fred-operation.
+> > > >
+> > > > Just easier to not do fred-operation in the first place,no?
+> > >
+> > > The short answer is, in an ideal world you are correct. See nvdimm as an example
+> > > of the real world.
+> > >
+> > > The longer answer. Unless we want to wait until we have all the hardware we're
+> > > ever going to see, it's impossible to have a fully baked, and validated
+> > > interface. The RAW interface is my admission that I make no guarantees about
+> > > being able to provide the perfect interface and giving the power back to the
+> > > hardware vendors and their driver writers.
+> > >
+> > > As an example, suppose a vendor shipped a device with their special vendor
+> > > opcode. They can enable their customers to use that opcode on any driver
+> > > version. That seems pretty powerful and worthwhile to me.
+> > >
+> >
+> > Powerful, frightening, and questionably worthwhile when there are
+> > already examples of commands that need extra coordination for whatever
+> > reason. However, I still think the decision tilts towards allowing
+> > this given ongoing spec work.
+> >
+> > NVDIMM ended up allowing unfettered vendor passthrough given the lack
+> > of an organizing body to unify vendors. CXL on the other hand appears
+> > to have more gravity to keep vendors honest. A WARN splat with a
+> > taint, and a debugfs knob for the truly problematic commands seems
+> > sufficient protection of system integrity while still following the
+> > Linux ethos of giving system owners enough rope to make their own
+> > decisions.
+> >
+> > > Or a more realistic example, we ship a driver that adds a command which is
+> > > totally broken. Customers can utilize the RAW interface until it gets fixed in a
+> > > subsequent release which might be quite a ways out.
+> > >
+> > > I'll say the RAW interface isn't an encouraged usage, but it's one that I expect
+> > > to be needed, and if it's not we can always try to kill it later. If nobody is
+> > > actually using it, nobody will complain, right :D
+> >
+> > It might be worthwhile to make RAW support a compile time decision so
+> > that Linux distros can only ship support for the commands the CXL
+> > driver-dev community has blessed, but I'll leave it to a distro
+> > developer to second that approach.
+>
+> Couple of thoughts here:
 
-CXL spec
-https://www.computeexpresslink.org/download-the-specification
+I am compelled to challenge these assertions because this set is
+*more* conservative than the current libnvdimm situation which is
+silent by default about the vendor pasthrough. How can this be worse
+when the same scope of possible damage is now loudly reported rather
+than silent?
 
-The spec introduces a new ACPI table which links information about a host bridge
-based on the _UID. The _UID is 4 bytes.
+>
+>  - As distro developer (well, actually middle manager of distro
+>    developers) this approach of raw interface is a headache.
 
-"In an ACPI compliant system, there shall be one instance of CXL Host Bridge
-Device object in ACPI namespace (HID=”ACPI0016”) for every CHBS entry. The _UID
-object under a CXL Host Bridge object, when evaluated, shall match the UID field
-in the associated CHBS entry."
+You've convinced me that this needs a compile time disable, is that
+not sufficient?
 
-"CXL Host Bridge Unique ID. Used to associate a CHBS instance with CXL Host
-Bridge instance. The value of this field shall match the output of _UID under
-the associated CXL Host Bridge in ACPI namespace"
+>
+>    Customers will pick it
 
+Why will they pick it when the kernel screams bloody murder at them
+when it gets used?
 
-> > > > The
-> > > > > second is it allows us to replicate hardware configurations where bus
-> > > > > number and uid aren't equivalent.
-> > > 
-> > > A bit more data on when this needs to be the case?
-> > > 
-> > 
-> > Doesn't *need* to be the case. I was making a concerted effort to allow full
-> > spec flexibility, but I don't believe it to be necessary unless we want to
-> > accurately emulate a real platform.
-> > 
-> > > > The latter has benefits for our
-> > > > > development and debugging using QEMU.
-> > > > > 
-> > > > > The other way to do this would be to implement the expanded bus
-> > > > > numbering, but having an explicit uid makes more sense when trying to
-> > > > > replicate real hardware configurations.
-> > > > > 
-> > > > > The QEMU commandline to utilize this would be:
-> > > > >   -device pxb-cxl,id=cxl.0,bus="pcie.0",bus_nr=1,uid=x
-> > > > > 
-> > > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > 
-> > > However, if doing this how do we ensure UID is still unique?
-> > > What do we do for cases where UID was not specified?
-> > > One idea is to generate a string UID and just stick the bus #
-> > > in there.
-> > 
-> > This is totally mishandled in the code currently. I like your idea though.
-> > 
-> > > 
-> > > 
-> > > > > --
-> > > > > 
-> > > > > I'm guessing this patch will be somewhat controversial. For early CXL
-> > > > > work, this can be dropped without too much heartache.
-> > > > 
-> > > > Whilst I'm not personally against, this maybe best to drop for now as you
-> > > > say.
-> > > > 
-> > 
-> > I think it'd be good to understand from the PCIe experts if CXL matches in this
-> > regard. If PCIe generally allows (and does in practice) _UID not matching _BBN,
-> > perhaps this is an overall improvement to the code.
-> 
-> Well
-> 
-> 6.1.12 _UID (Unique ID)
-> 	This object provides OSPM with a logical device ID that does not change across reboots. This object
-> 	is optional, but is required when the device has no other way to report a persistent unique device ID.
-> 	The _UID must be unique across all devices with either a common _HID or _CID. This is because a
-> 	device needs to be uniquely identified to the OSPM, which may match on either a _HID or a _CID to
-> 	identify the device. The uniqueness match must be true regardless of whether the OSPM uses the
-> 	_HID or the _CID. OSPM typically uses the unique device ID to ensure that the device-specific
-> 	information, such as network protocol binding information, is remembered for the device even if its
-> 	relative location changes. For most integrated devices, this object contains a unique identifier.
-> 	A _UID object evaluates to either a numeric value or a string.
-> 
-> 
-> IOW _UID is there so guest can tell devices with identical HID/CID apart.
-> 
+> and use it since it is there and the poor
+>    support folks will have to go through layers of different devices
 
-Right, so it's pretty much the same thing. There's ancillary data about the CXL
-host bridge that is identified by the _UID.
+What layers willl support folks need to dig through when the WARN
+splat is clearly present in the log and the taint flag is visible in
+any future crash?
 
-> 
-> 
-> 
-> > > > > ---
-> > > > >  hw/i386/acpi-build.c                |  3 ++-
-> > > > >  hw/pci-bridge/pci_expander_bridge.c | 19 +++++++++++++++++++
-> > > > >  hw/pci/pci.c                        | 11 +++++++++++
-> > > > >  include/hw/pci/pci.h                |  1 +
-> > > > >  include/hw/pci/pci_bus.h            |  1 +
-> > > > >  5 files changed, 34 insertions(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
-> > > > > index cf6eb54c22..145a503e92 100644
-> > > > > --- a/hw/i386/acpi-build.c
-> > > > > +++ b/hw/i386/acpi-build.c
-> > > > > @@ -1343,6 +1343,7 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
-> > > > >          QLIST_FOREACH(bus, &bus->child, sibling) {
-> > > > >              uint8_t bus_num = pci_bus_num(bus);
-> > > > >              uint8_t numa_node = pci_bus_numa_node(bus);
-> > > > > +            int32_t uid = pci_bus_uid(bus);
-> > > > >  
-> > > > >              /* look only for expander root buses */
-> > > > >              if (!pci_bus_is_root(bus)) {
-> > > > > @@ -1356,7 +1357,7 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
-> > > > >              scope = aml_scope("\\_SB");
-> > > > >              dev = aml_device("PC%.02X", bus_num);
-> > > > >              aml_append(dev, aml_name_decl("_BBN", aml_int(bus_num)));
-> > > > > -            init_pci_acpi(dev, bus_num, pci_bus_is_express(bus) ? PCIE : PCI);
-> > > > > +            init_pci_acpi(dev, uid, pci_bus_is_express(bus) ? PCIE : PCI);
-> > > > >  
-> > > > >              if (numa_node != NUMA_NODE_UNASSIGNED) {
-> > > > >                  aml_append(dev, aml_name_decl("_PXM", aml_int(numa_node)));
-> > > > > diff --git a/hw/pci-bridge/pci_expander_bridge.c b/hw/pci-bridge/pci_expander_bridge.c
-> > > > > index b42592e1ff..5021b60435 100644
-> > > > > --- a/hw/pci-bridge/pci_expander_bridge.c
-> > > > > +++ b/hw/pci-bridge/pci_expander_bridge.c
-> > > > > @@ -67,6 +67,7 @@ struct PXBDev {
-> > > > >  
-> > > > >      uint8_t bus_nr;
-> > > > >      uint16_t numa_node;
-> > > > > +    int32_t uid;
-> > > > >  };
-> > > > >  
-> > > > >  static PXBDev *convert_to_pxb(PCIDevice *dev)
-> > > 
-> > > As long as we are doing this, do we want to support a string uid too?
-> > > How about a 64 bit uid? Why not?
-> > 
-> > If generally the idea of the patch is welcome, I am happy to change it.
-> 
-> I am still not sure, let's figure out the motivation.
-> 
-> For example, grep for UID and you will find more cases
-> like this. E.g. hw/pci-host/gpex-acpi.c
-> 
-> Do we care?
+>    say (for example) to finally find out that some OEM firmware opcode
+>    X is a debug facility for inserting corrupted data, while for another vendor
+>    the same X opcode makes it go super-fast.
 
-For my purposes, I do not.
+None of these commands are in the fast path.
 
-> 
-> 
-> 
-> > > 
-> > > 
-> > > > > @@ -98,12 +99,20 @@ static uint16_t pxb_bus_numa_node(PCIBus *bus)
-> > > > >      return pxb->numa_node;
-> > > > >  }
-> > > > >  
-> > > > > +static int32_t pxb_bus_uid(PCIBus *bus)
-> > > > > +{
-> > > > > +    PXBDev *pxb = convert_to_pxb(bus->parent_dev);
-> > > > > +
-> > > > > +    return pxb->uid;
-> > > > > +}
-> > > > > +
-> > > > >  static void pxb_bus_class_init(ObjectClass *class, void *data)
-> > > > >  {
-> > > > >      PCIBusClass *pbc = PCI_BUS_CLASS(class);
-> > > > >  
-> > > > >      pbc->bus_num = pxb_bus_num;
-> > > > >      pbc->numa_node = pxb_bus_numa_node;
-> > > > > +    pbc->uid = pxb_bus_uid;
-> > > > >  }
-> > > > >  
-> > > > >  static const TypeInfo pxb_bus_info = {
-> > > > > @@ -329,6 +338,7 @@ static Property pxb_dev_properties[] = {
-> > > > >      /* Note: 0 is not a legal PXB bus number. */
-> > > > >      DEFINE_PROP_UINT8("bus_nr", PXBDev, bus_nr, 0),
-> > > > >      DEFINE_PROP_UINT16("numa_node", PXBDev, numa_node, NUMA_NODE_UNASSIGNED),
-> > > > > +    DEFINE_PROP_INT32("uid", PXBDev, uid, -1),
-> > > > >      DEFINE_PROP_END_OF_LIST(),
-> > > > >  };
-> > > > >  
-> > > > > @@ -400,12 +410,21 @@ static const TypeInfo pxb_pcie_dev_info = {
-> > > > >  
-> > > > >  static void pxb_cxl_dev_realize(PCIDevice *dev, Error **errp)
-> > > > >  {
-> > > > > +    PXBDev *pxb = convert_to_pxb(dev);
-> > > > > +
-> > > > >      /* A CXL PXB's parent bus is still PCIe */
-> > > > >      if (!pci_bus_is_express(pci_get_bus(dev))) {
-> > > > >          error_setg(errp, "pxb-cxl devices cannot reside on a PCI bus");
-> > > > >          return;
-> > > > >      }
-> > > > >  
-> > > > > +    if (pxb->uid < 0) {
-> > > > > +        error_setg(errp, "pxb-cxl devices must have a valid uid (0-2147483647)");
-> > > > > +        return;
-> > > > > +    }
-> > > > > +
-> > > > > +    /* FIXME: Check that uid doesn't collide with UIDs of other host bridges */
-> > > > > +
-> > > > >      pxb_dev_realize_common(dev, CXL, errp);
-> > > > >  }
-> > > > >  
-> > > > > diff --git a/hw/pci/pci.c b/hw/pci/pci.c
-> > > > > index adbe8aa260..bf019d91a0 100644
-> > > > > --- a/hw/pci/pci.c
-> > > > > +++ b/hw/pci/pci.c
-> > > > > @@ -170,6 +170,11 @@ static uint16_t pcibus_numa_node(PCIBus *bus)
-> > > > >      return NUMA_NODE_UNASSIGNED;
-> > > > >  }
-> > > > >  
-> > > > > +static int32_t pcibus_uid(PCIBus *bus)
-> > > > > +{
-> > > > > +    return -1;
-> > > > > +}
-> > > > > +
-> > > > >  static void pci_bus_class_init(ObjectClass *klass, void *data)
-> > > > >  {
-> > > > >      BusClass *k = BUS_CLASS(klass);
-> > > > > @@ -184,6 +189,7 @@ static void pci_bus_class_init(ObjectClass *klass, void *data)
-> > > > >  
-> > > > >      pbc->bus_num = pcibus_num;
-> > > > >      pbc->numa_node = pcibus_numa_node;
-> > > > > +    pbc->uid = pcibus_uid;
-> > > > >  }
-> > > > >  
-> > > > >  static const TypeInfo pci_bus_info = {
-> > > > > @@ -530,6 +536,11 @@ int pci_bus_numa_node(PCIBus *bus)
-> > > > >      return PCI_BUS_GET_CLASS(bus)->numa_node(bus);
-> > > > >  }
-> > > > >  
-> > > > > +int pci_bus_uid(PCIBus *bus)
-> > > > > +{
-> > > > > +    return PCI_BUS_GET_CLASS(bus)->uid(bus);
-> > > > > +}
-> > > > > +
-> > > > >  static int get_pci_config_device(QEMUFile *f, void *pv, size_t size,
-> > > > >                                   const VMStateField *field)
-> > > > >  {
-> > > > > diff --git a/include/hw/pci/pci.h b/include/hw/pci/pci.h
-> > > > > index bde3697bee..a46de48ccd 100644
-> > > > > --- a/include/hw/pci/pci.h
-> > > > > +++ b/include/hw/pci/pci.h
-> > > > > @@ -463,6 +463,7 @@ static inline int pci_dev_bus_num(const PCIDevice *dev)
-> > > > >  }
-> > > > >  
-> > > > >  int pci_bus_numa_node(PCIBus *bus);
-> > > > > +int pci_bus_uid(PCIBus *bus);
-> > > > >  void pci_for_each_device(PCIBus *bus, int bus_num,
-> > > > >                           void (*fn)(PCIBus *bus, PCIDevice *d, void *opaque),
-> > > > >                           void *opaque);
-> > > > > diff --git a/include/hw/pci/pci_bus.h b/include/hw/pci/pci_bus.h
-> > > > > index eb94e7e85c..3c9fbc55bb 100644
-> > > > > --- a/include/hw/pci/pci_bus.h
-> > > > > +++ b/include/hw/pci/pci_bus.h
-> > > > > @@ -17,6 +17,7 @@ struct PCIBusClass {
-> > > > >  
-> > > > >      int (*bus_num)(PCIBus *bus);
-> > > > >      uint16_t (*numa_node)(PCIBus *bus);
-> > > > > +    int32_t (*uid)(PCIBus *bus);
-> > > > >  };
-> > > > >  
-> > > > >  enum PCIBusFlags {
-> > > 
-> 
+>
+>    Not that anybody would do that, right? Ha!
+
+We can look to libnvdimm + ndctl to see the trend. I have not
+encountered new competing manageability tool efforts, and the existing
+collisions between ndctl and ipmctl are resolving to defeature ipmctl
+where ndctl and the standard / native command path can do the job.
+
+>
+>  - I will imagine that some of the more vocal folks in the community
+>    will make it difficult to integrate these patches with these two
+>    (especially this taint one). This will make the acceptance of these
+>    patches more difficult than it should be. If you really want them,
+>    perhaps make them part of another patchset, or a follow up ones.
+
+The patches are out now and no such pushback from others has arisen. I
+believe your proposal for compile-time disable is reasonable and would
+satisfy those concerns.
+
+>
+>  - I still don't get why as a brand new community hacks are coming up
+>    (even when the hardware is not yet there) instead of pushing back at
+>    the vendors to have a clean up interface. I get in say two or three
+>    years these things .. but from the start? I get your point about
+>    flexibility, but it seems to me that the right way is not give open
+>    RAW interface (big barndoor) but rather maintain the driver and grow
+>    it (properly constructed doors) as more functionality comes about
+>    and then adding it in the driver.
+>
+
+Again, WARN_TAINT and now the threat of vendor tools not being
+generally distributable across distro kernels that turn this off, is a
+more strict stance than libnvdimm where the worst fears have yet to
+come to fruition. In the meantime this enabling is useful for a
+validation test bench kernel for new hardware bringup while the
+upstream api formalization work continues.
