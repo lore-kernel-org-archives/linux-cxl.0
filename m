@@ -2,265 +2,813 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 736AAC433DB
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 02:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99258C433E6
+	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 11:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C28D64DB1
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 02:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B54864E9A
+	for <linux-cxl@archiver.kernel.org>; Tue,  2 Feb 2021 11:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229621AbhBBCv2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 1 Feb 2021 21:51:28 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:39476 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229557AbhBBCv1 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 1 Feb 2021 21:51:27 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1122hcYt174064;
-        Tue, 2 Feb 2021 02:49:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2020-01-29;
- bh=yd3mYrRFNOCGtysxD/WTTDlFEyjgkWwzlPpu1kV4ves=;
- b=BUi629LH6QEBrSdiChrBL+4YCu4Zg4VwufndAGuOZ49R20JTIa3B54MPc0tu8+Xg/arT
- 2r8Zn9/8bKhPQgU+CGZ+3KWvpHdBKLtwquhEeLQ+yvT/hVRvJXsQl5Hsu5BDv6GgC6fb
- sRWIzoJwNer2Se/pOsPOpYxsOvgpxfllpillLz2pQkFZMWrtJsFDKnhom33IA7YuG/YZ
- cyLUTnONE3qWVuPYqNMxLLHzGh3QvYlZd267DeXIfbAGRne/0veqY1a6c2TlWmqCflps
- dDhuBmDhO0A8pGTkvYmED7iu3K4eBGO7xICkoseAeET58XWwTiHnyclzK12w/w9GAn38 gQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 36cvyarp0w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Feb 2021 02:49:15 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1122kAf1167714;
-        Tue, 2 Feb 2021 02:49:15 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2109.outbound.protection.outlook.com [104.47.55.109])
-        by userp3020.oracle.com with ESMTP id 36dh7qqpr0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Feb 2021 02:49:14 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=InmEED6mZjNb86JD/YrKdD3Wu0n7R+tv5rM/eGUCdNNkvWe4wIc3E1yLzL1isMa3tQZgKlbWWhCBO3HOCrhbSko8V3EKKMEBuRiqIG3LAc8/vs7dFZTQZDqPZDJVQTTZj9is+j+hy3qxBedleSbb3yF3CPBlUt5mLYYKmritPKuYh1YQOp6u5vEqKGbKlx6agxk1+fVt6ZUvdxZzb8T2eW28ecCRaQOBMMxgjf42xSOZyI42NYkWhcinr73cWlu0emxOiZnKFcdqcL8bb48rPeEOf/hekPNjMKY9hdc+Rk4DjosLPYOKgyE5BbZ8vtyNjD2xqqhBngidbox2w/jpmQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yd3mYrRFNOCGtysxD/WTTDlFEyjgkWwzlPpu1kV4ves=;
- b=lK3GWFqq1UzPAzuPAVqnEEqwDlqpbmUJFv4OFSlGbDffbLnmj3MrtFH/gFaj3a2iZQgVRhw8UY8mHb+S8qfOUVNvQaBX5mDp1VZTcKMlCtmuTaQakiSfyPCd9nPfM5ndwz0N4qd0jYZrZ4M/YCiKQoLHPSEusVs/6InfKTE7OFg6yfs/46QyNtVvb1e3jA0OpHYaQf5xShJtk4t/7DXiTiPmBe6VhhR/RE/JU98tuOtH7kexNF7rrMFlW5uDiWloUFX/9RnROWRXK6aZmzwg10zAKwU7JOMNRk8kqCorh2C2xAsWwiXLw1IIRX3r/TsrBeGwmMMbm5CnLc9Ub+2E9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yd3mYrRFNOCGtysxD/WTTDlFEyjgkWwzlPpu1kV4ves=;
- b=hO2U8mwWfxz/ZmZ/OMzgJ7IdqptL/i5GQVVN0PTSqMWX+f7vPmEW4qRQnDO7d6ghWt0xgkkIbhU6y2bhl/mgb8nEtidZbj1VgddR3EIUZmpN7uhOIMYWQrD20ywaD0ZqG4XvAT0HaxY0rLykU9U/2O1bAZIs90vjrArxsz7W9Ic=
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=oracle.com;
-Received: from BYAPR10MB2999.namprd10.prod.outlook.com (2603:10b6:a03:85::27)
- by BYAPR10MB3590.namprd10.prod.outlook.com (2603:10b6:a03:11a::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3805.24; Tue, 2 Feb
- 2021 02:49:12 +0000
-Received: from BYAPR10MB2999.namprd10.prod.outlook.com
- ([fe80::e180:1ba2:d87:456]) by BYAPR10MB2999.namprd10.prod.outlook.com
- ([fe80::e180:1ba2:d87:456%4]) with mapi id 15.20.3784.019; Tue, 2 Feb 2021
- 02:49:12 +0000
-Date:   Mon, 1 Feb 2021 21:49:02 -0500
-From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
+        id S230073AbhBBLt4 convert rfc822-to-8bit (ORCPT
+        <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 2 Feb 2021 06:49:56 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2474 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231157AbhBBLtr (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 2 Feb 2021 06:49:47 -0500
+Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DVNGf4q57z67blR;
+        Tue,  2 Feb 2021 19:42:50 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2106.2; Tue, 2 Feb 2021 12:49:00 +0100
+Received: from localhost (10.47.79.68) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Tue, 2 Feb 2021
+ 11:49:00 +0000
+Date:   Tue, 2 Feb 2021 11:48:15 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+CC:     <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
         Chris Browy <cbrowy@avery-design.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jon Masters <jcm@jonmasters.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        daniel.lll@alibaba-inc.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        "David Hildenbrand" <david@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        "Ira Weiny" <ira.weiny@intel.com>,
+        Marcel Apfelbaum <marcel.apfelbaum@gmail.com>,
+        Markus Armbruster <armbru@redhat.com>,
+        Philippe =?ISO-8859-1?Q?Mathieu-Da?= =?ISO-8859-1?Q?ud=E9?= 
+        <f4bug@amsat.org>, Vishal Verma <vishal.l.verma@intel.com>,
         "John Groves (jgroves)" <jgroves@micron.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>
-Subject: Re: [PATCH 08/14] taint: add taint for direct hardware access
-Message-ID: <YBi9nkiu3DvMZhrs@Konrads-MacBook-Pro.local>
-References: <20210130002438.1872527-1-ben.widawsky@intel.com>
- <20210130002438.1872527-9-ben.widawsky@intel.com>
- <20210201181845.GJ197521@fedora>
- <20210201183455.3dndfwyswwvs2dlm@intel.com>
- <CAPcyv4iBbA+PCnTg-hFALuDJNqcJrwwXN_gMEe6z9LZvSfC5hw@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4iBbA+PCnTg-hFALuDJNqcJrwwXN_gMEe6z9LZvSfC5hw@mail.gmail.com>
-X-Originating-IP: [138.3.200.7]
-X-ClientProxiedBy: CH2PR10CA0030.namprd10.prod.outlook.com
- (2603:10b6:610:4c::40) To BYAPR10MB2999.namprd10.prod.outlook.com
- (2603:10b6:a03:85::27)
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: [RFC PATCH v3 02/31] hw/cxl/component: Introduce CXL components
+ (8.1.x, 8.2.5)
+Message-ID: <20210202114815.000000e4@Huawei.com>
+In-Reply-To: <20210202005948.241655-3-ben.widawsky@intel.com>
+References: <20210202005948.241655-1-ben.widawsky@intel.com>
+        <20210202005948.241655-3-ben.widawsky@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from Konrads-MacBook-Pro.local (138.3.200.7) by CH2PR10CA0030.namprd10.prod.outlook.com (2603:10b6:610:4c::40) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3805.16 via Frontend Transport; Tue, 2 Feb 2021 02:49:06 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 33830b42-6c08-4c37-a485-08d8c7251eed
-X-MS-TrafficTypeDiagnostic: BYAPR10MB3590:
-X-Microsoft-Antispam-PRVS: <BYAPR10MB35903CC2DC84B123D66FBBA089B59@BYAPR10MB3590.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1186;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1+of07iCReb3ca20U6qstk99VN92on16oPxpQcnYK9cTFphyqXbsDO1RLWWWYt/o05eXsxpJrB+W4Rf80eBIpSjLXcrVg0iTlGiKjcTWlD9ZnTlso4EI4CKTkPFkihBeHINArh4aS2KX/i5FayLi0fy+OH4peSJH4QQQp2ldnlJ+cviNTwSd1cRVs9KE0oGCPNyn9SaAdkKD6noDLncXIvGsR1Czz/mXU00/ka63hAZg1MPi60OIjvzQUczvpzp1kWn0u3sqtdQxVRvUnQSuRm/bfXLdftZ/H0/JtWUkGE2oqnq0pdmy/LCz2vnlh3AHGEx2eAyzggtSy+xZALqV7VGPZrjz2WbytGqS2kHx8gpTc4qvhoQwzypRh+7PUH7Zqb32K4YYiw6i8JacfeAsGODW7eGZLfW6rL4p+KmGA75Wh16lbas34PnxOfIDa1TVK9eKt/CoG7GysFxnC/vWMsZrVqXQnflAwePKXviRRavR3Lby7I6y4qYC8zSgqPVplwjoimmb+Sjhk1ZiggUUIA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB2999.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(376002)(396003)(136003)(366004)(39860400002)(478600001)(6666004)(316002)(6916009)(8676002)(83380400001)(54906003)(7416002)(86362001)(66476007)(53546011)(956004)(66556008)(4326008)(66946007)(16526019)(6506007)(2906002)(5660300002)(55016002)(52116002)(7696005)(9686003)(186003)(26005)(8936002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?Ub5nvcR+oYpv+m5Z32MgUp3ZVuMeT+c6Wv3hd2AybroJ+MT7JEhbtITWsnAh?=
- =?us-ascii?Q?Tres+1uueVOcTj3/lk1IwG+gbHFrsYbw5pdrH2lasILjjImWhLD8sX6W26sL?=
- =?us-ascii?Q?1SMcgZgGxW6HoiJVUzxa1um+esCupHE0v50veDJ9JlApQi04oDtQjIF6++if?=
- =?us-ascii?Q?OM665zmCreIujNba2d9vW4y1l7iwEhP+xSM42FlOhI+ryqn9LqAu2GJvts7P?=
- =?us-ascii?Q?8XLe7Pi3XWOMheluvp/pq/Boc+4SNo9DM/djNBmKML5aCj5yXcHHaCkHA/Dn?=
- =?us-ascii?Q?eWfGnLo+vNmWcvXegnqz6eVj7GIDcF98fQm5hGB4uPTNP9s/UjRsw9vUnHGX?=
- =?us-ascii?Q?etPqiR2Q/tR8iwu2pZ2SH7qCqPm4j6XmCTK0nChLhbH1BTzcN1rt5FzQu1a1?=
- =?us-ascii?Q?bBw670Bd+wX7tn+OTfRM5sboCQiMfWY/hQjRxDw2lkzzggAtcFkW8azyk3NC?=
- =?us-ascii?Q?0dFBRGmSsubFAn/AhcwUNtffHfpj69WdDiKfHha1uEN3CPIKq7jQHaUmLNkO?=
- =?us-ascii?Q?Ls49F9NWh3/SuS1OCzuS82vMu3j+HWg5BMlSB5lCCLHBOaNUiEiNkp7NWi+J?=
- =?us-ascii?Q?14m84pCyCMNisH2ijJoltwSKqNjC4LVdVRO/iMSDJhXh1TLPxVVPBveGcH4B?=
- =?us-ascii?Q?wKmcsfiQdwUNkso+QZiO/9X6OxvxNNLs+iGGILD4svr/13967fXLxnVcrxOy?=
- =?us-ascii?Q?TkpwRWPSiXnlJkl7DUfQKZIxn8wVc4Jg1PlqjF9MzYUal2dQsW2moraehxUm?=
- =?us-ascii?Q?jfqRgcvEgvbiSVWUQuUu7YCBfJyobQ9Q9L+Zw5/tCzZKZv/A9W/gOsy6N4sU?=
- =?us-ascii?Q?FFNxBZ4LNVNpZYbLz8mkzoeFbPpTMUehLcc27u9ZdveUHmBzTfJIsbhNA40l?=
- =?us-ascii?Q?OlyXTSL2xc0tRVHBe3Ce3xByx141Z4TOZnI+IF/iTSxUm7oqG9F/BMbda+Ne?=
- =?us-ascii?Q?sEEx6/Og0RwNXcwDYJD2wyU3ptzonQOSq88/YBVeDJbfHsFz2SnLv9/s3rm0?=
- =?us-ascii?Q?0eh4xR5d4nW/gC9AnInxefS9HVV0s1x2/eTl4d/E8B1t1C0ChxmKr9zI99O2?=
- =?us-ascii?Q?iqYsgvjn?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 33830b42-6c08-4c37-a485-08d8c7251eed
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB2999.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2021 02:49:12.1482
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PIAZNqJETkKVx00YJNCIpn3BlUP2ko0AsvzFPzI29/gqXfIn481G0NyKCr0AMQRhxU4uKp0Z9KC6ieXqZ1IvjA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3590
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9882 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- suspectscore=0 spamscore=0 mlxlogscore=999 phishscore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2102020019
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9882 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 impostorscore=0
- mlxscore=0 spamscore=0 bulkscore=0 priorityscore=1501 adultscore=0
- lowpriorityscore=0 malwarescore=0 phishscore=0 mlxlogscore=999
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2102020019
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.47.79.68]
+X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Feb 01, 2021 at 11:01:11AM -0800, Dan Williams wrote:
-> On Mon, Feb 1, 2021 at 10:35 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> >
-> > On 21-02-01 13:18:45, Konrad Rzeszutek Wilk wrote:
-> > > On Fri, Jan 29, 2021 at 04:24:32PM -0800, Ben Widawsky wrote:
-> > > > For drivers that moderate access to the underlying hardware it is
-> > > > sometimes desirable to allow userspace to bypass restrictions. Once
-> > > > userspace has done this, the driver can no longer guarantee the sanctity
-> > > > of either the OS or the hardware. When in this state, it is helpful for
-> > > > kernel developers to be made aware (via this taint flag) of this fact
-> > > > for subsequent bug reports.
-> > > >
-> > > > Example usage:
-> > > > - Hardware xyzzy accepts 2 commands, waldo and fred.
-> > > > - The xyzzy driver provides an interface for using waldo, but not fred.
-> > > > - quux is convinced they really need the fred command.
-> > > > - xyzzy driver allows quux to frob hardware to initiate fred.
-> > >
-> > > Would it not be easier to _not_ frob the hardware for fred-operation?
-> > > Aka not implement it or just disallow in the first place?
-> >
-> > Yeah. So the idea is you either are in a transient phase of the command and some
-> > future kernel will have real support for fred - or a vendor is being short
-> > sighted and not adding support for fred.
-> >
-> > >
-> > >
-> > > >   - kernel gets tainted.
-> > > > - turns out fred command is borked, and scribbles over memory.
-> > > > - developers laugh while closing quux's subsequent bug report.
-> > >
-> > > Yeah good luck with that theory in-the-field. The customer won't
-> > > care about this and will demand a solution for doing fred-operation.
-> > >
-> > > Just easier to not do fred-operation in the first place,no?
-> >
-> > The short answer is, in an ideal world you are correct. See nvdimm as an example
-> > of the real world.
-> >
-> > The longer answer. Unless we want to wait until we have all the hardware we're
-> > ever going to see, it's impossible to have a fully baked, and validated
-> > interface. The RAW interface is my admission that I make no guarantees about
-> > being able to provide the perfect interface and giving the power back to the
-> > hardware vendors and their driver writers.
-> >
-> > As an example, suppose a vendor shipped a device with their special vendor
-> > opcode. They can enable their customers to use that opcode on any driver
-> > version. That seems pretty powerful and worthwhile to me.
-> >
+On Mon, 1 Feb 2021 16:59:19 -0800
+Ben Widawsky <ben.widawsky@intel.com> wrote:
+
+> A CXL 2.0 component is any entity in the CXL topology. All components
+> have a analogous function in PCIe. Except for the CXL host bridge, all
+> have a PCIe config space that is accessible via the common PCIe
+> mechanisms. CXL components are enumerated via DVSEC fields in the
+> extended PCIe header space. CXL components will minimally implement some
+> subset of CXL.mem and CXL.cache registers defined in 8.2.5 of the CXL
+> 2.0 specification. Two headers and a utility library are introduced to
+> support the minimum functionality needed to enumerate components.
 > 
-> Powerful, frightening, and questionably worthwhile when there are
-> already examples of commands that need extra coordination for whatever
-> reason. However, I still think the decision tilts towards allowing
-> this given ongoing spec work.
+> The cxl_pci header manages bits associated with PCI, specifically the
+> DVSEC and related fields. The cxl_component.h variant has data
+> structures and APIs that are useful for drivers implementing any of the
+> CXL 2.0 components. The library takes care of making use of the DVSEC
+> bits and the CXL.[mem|cache] registers. Per spec, the registers are
+> little endian.
 > 
-> NVDIMM ended up allowing unfettered vendor passthrough given the lack
-> of an organizing body to unify vendors. CXL on the other hand appears
-> to have more gravity to keep vendors honest. A WARN splat with a
-> taint, and a debugfs knob for the truly problematic commands seems
-> sufficient protection of system integrity while still following the
-> Linux ethos of giving system owners enough rope to make their own
-> decisions.
+> None of the mechanisms required to enumerate a CXL capable hostbridge
+> are introduced at this point.
 > 
-> > Or a more realistic example, we ship a driver that adds a command which is
-> > totally broken. Customers can utilize the RAW interface until it gets fixed in a
-> > subsequent release which might be quite a ways out.
-> >
-> > I'll say the RAW interface isn't an encouraged usage, but it's one that I expect
-> > to be needed, and if it's not we can always try to kill it later. If nobody is
-> > actually using it, nobody will complain, right :D
+> Note that the CXL.mem and CXL.cache registers used are always 4B wide.
+> It's possible in the future that this constraint will not hold.
 > 
-> It might be worthwhile to make RAW support a compile time decision so
-> that Linux distros can only ship support for the commands the CXL
-> driver-dev community has blessed, but I'll leave it to a distro
-> developer to second that approach.
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 
-Couple of thoughts here:
+A few minor discrepancies from the spec, + naming suggestions.
 
- - As distro developer (well, actually middle manager of distro
-   developers) this approach of raw interface is a headache.
+Otherwise LGTM.
 
-   Customers will pick it and use it since it is there and the poor
-   support folks will have to go through layers of different devices to
-   say (for example) to finally find out that some OEM firmware opcode
-   X is a debug facility for inserting corrupted data, while for another vendor
-   the same X opcode makes it go super-fast.
+> ---
+>  MAINTAINERS                    |   6 +
+>  hw/Kconfig                     |   1 +
+>  hw/cxl/Kconfig                 |   3 +
+>  hw/cxl/cxl-component-utils.c   | 208 +++++++++++++++++++++++++++++++++
+>  hw/cxl/meson.build             |   3 +
+>  hw/meson.build                 |   1 +
+>  include/hw/cxl/cxl.h           |  17 +++
+>  include/hw/cxl/cxl_component.h | 187 +++++++++++++++++++++++++++++
+>  include/hw/cxl/cxl_pci.h       | 138 ++++++++++++++++++++++
+>  9 files changed, 564 insertions(+)
+>  create mode 100644 hw/cxl/Kconfig
+>  create mode 100644 hw/cxl/cxl-component-utils.c
+>  create mode 100644 hw/cxl/meson.build
+>  create mode 100644 include/hw/cxl/cxl.h
+>  create mode 100644 include/hw/cxl/cxl_component.h
+>  create mode 100644 include/hw/cxl/cxl_pci.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index bcd88668bc..981dc92e25 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2234,6 +2234,12 @@ F: qapi/block*.json
+>  F: qapi/transaction.json
+>  T: git https://repo.or.cz/qemu/armbru.git block-next
+>  
+> +Compute Express Link
+> +M: Ben Widawsky <ben.widawsky@intel.com>
+> +S: Supported
+> +F: hw/cxl/
+> +F: include/hw/cxl/
+> +
+>  Dirty Bitmaps
+>  M: Eric Blake <eblake@redhat.com>
+>  M: Vladimir Sementsov-Ogievskiy <vsementsov@virtuozzo.com>
+> diff --git a/hw/Kconfig b/hw/Kconfig
+> index 5ad3c6b5a4..c03650c5ed 100644
+> --- a/hw/Kconfig
+> +++ b/hw/Kconfig
+> @@ -6,6 +6,7 @@ source audio/Kconfig
+>  source block/Kconfig
+>  source char/Kconfig
+>  source core/Kconfig
+> +source cxl/Kconfig
+>  source display/Kconfig
+>  source dma/Kconfig
+>  source gpio/Kconfig
+> diff --git a/hw/cxl/Kconfig b/hw/cxl/Kconfig
+> new file mode 100644
+> index 0000000000..8e67519b16
+> --- /dev/null
+> +++ b/hw/cxl/Kconfig
+> @@ -0,0 +1,3 @@
+> +config CXL
+> +    bool
+> +    default y if PCI_EXPRESS
+> diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
+> new file mode 100644
+> index 0000000000..8d56ad5c7d
+> --- /dev/null
+> +++ b/hw/cxl/cxl-component-utils.c
+> @@ -0,0 +1,208 @@
+> +/*
+> + * CXL Utility library for components
+> + *
+> + * Copyright(C) 2020 Intel Corporation.
+> + *
+> + * This work is licensed under the terms of the GNU GPL, version 2. See the
+> + * COPYING file in the top-level directory.
+> + */
+> +
+> +#include "qemu/osdep.h"
+> +#include "qemu/log.h"
+> +#include "hw/pci/pci.h"
+> +#include "hw/cxl/cxl.h"
+> +
+> +static uint64_t cxl_cache_mem_read_reg(void *opaque, hwaddr offset,
+> +                                       unsigned size)
+> +{
+> +    CXLComponentState *cxl_cstate = opaque;
+> +    ComponentRegisters *cregs = &cxl_cstate->crb;
+> +
+> +    assert(size == 4);
+> +
+> +    if (cregs->special_ops && cregs->special_ops->read) {
+> +        return cregs->special_ops->read(cxl_cstate, offset, size);
+> +    } else {
+> +        return cregs->cache_mem_registers[offset / 4];
+> +    }
+> +}
+> +
+> +static void cxl_cache_mem_write_reg(void *opaque, hwaddr offset, uint64_t value,
+> +                                    unsigned size)
+> +{
+> +    CXLComponentState *cxl_cstate = opaque;
+> +    ComponentRegisters *cregs = &cxl_cstate->crb;
+> +
+> +    assert(size == 4);
+> +
+> +    if (cregs->special_ops && cregs->special_ops->write) {
+> +        cregs->special_ops->write(cxl_cstate, offset, value, size);
+> +    } else {
+> +        cregs->cache_mem_registers[offset / 4] = value;
+> +    }
+> +}
+> +
+> +/*
+> + * 8.2.3
+> + *   The access restrictions specified in Section 8.2.2 also apply to CXL 2.0
+> + *   Component Registers.
+> + *
+> + * 8.2.2
+> + *   • A 32 bit register shall be accessed as a 4 Bytes quantity. Partial
+> + *   reads are not permitted.
+> + *   • A 64 bit register shall be accessed as a 8 Bytes quantity. Partial
+> + *   reads are not permitted.
+> + *
+> + * As of the spec defined today, only 4 byte registers exist.
+> + */
+> +static const MemoryRegionOps cache_mem_ops = {
+> +    .read = cxl_cache_mem_read_reg,
+> +    .write = cxl_cache_mem_write_reg,
+> +    .endianness = DEVICE_LITTLE_ENDIAN,
+> +    .valid = {
+> +        .min_access_size = 4,
+> +        .max_access_size = 4,
+> +        .unaligned = false,
+> +    },
+> +    .impl = {
+> +        .min_access_size = 4,
+> +        .max_access_size = 4,
+> +    },
+> +};
+> +
+> +void cxl_component_register_block_init(Object *obj,
+> +                                       CXLComponentState *cxl_cstate,
+> +                                       const char *type)
+> +{
+> +    ComponentRegisters *cregs = &cxl_cstate->crb;
+> +
+> +    memory_region_init(&cregs->component_registers, obj, type,
+> +                       CXL2_COMPONENT_BLOCK_SIZE);
+> +
+> +    /* io registers controls link which we don't care about in QEMU */
+> +    memory_region_init_io(&cregs->io, obj, NULL, cregs, ".io",
+> +                          CXL2_COMPONENT_IO_REGION_SIZE);
+> +    memory_region_init_io(&cregs->cache_mem, obj, &cache_mem_ops, cregs,
+> +                          ".cache_mem", CXL2_COMPONENT_CM_REGION_SIZE);
+> +
+> +    memory_region_add_subregion(&cregs->component_registers, 0, &cregs->io);
+> +    memory_region_add_subregion(&cregs->component_registers,
+> +                                CXL2_COMPONENT_IO_REGION_SIZE,
+> +                                &cregs->cache_mem);
+> +}
+> +
+> +static void ras_init_common(uint32_t *reg_state)
+> +{
+> +    reg_state[R_CXL_RAS_UNC_ERR_STATUS] = 0;
+> +    reg_state[R_CXL_RAS_UNC_ERR_MASK] = 0x1efff;  
+This should be everything up to bit 11 then bits 14-16 I believe.
+0x1cfff 
 
-   Not that anybody would do that, right? Ha!
+> +    reg_state[R_CXL_RAS_UNC_ERR_SEVERITY] = 0x1efff;
+0x1cfff as well
 
- - I will imagine that some of the more vocal folks in the community
-   will make it difficult to integrate these patches with these two
-   (especially this taint one). This will make the acceptance of these
-   patches more difficult than it should be. If you really want them,
-   perhaps make them part of another patchset, or a follow up ones.
+> +    reg_state[R_CXL_RAS_COR_ERR_STATUS] = 0;
+> +    reg_state[R_CXL_RAS_COR_ERR_MASK] = 0x3f;
+> +    reg_state[R_CXL_RAS_ERR_CAP_CTRL] = 0; /* CXL switches and devices must set */
+> +}
+> +
+> +static void hdm_init_common(uint32_t *reg_state)
+> +{
+> +    ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, DECODER_COUNT, 0);
+> +    ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_GLOBAL_CONTROL, HDM_DECODER_ENABLE, 0);
+> +}
+> +
+> +void cxl_component_register_init_common(uint32_t *reg_state, enum reg_type type)
+> +{
+> +    int caps = 0;
+> +    switch (type) {
+> +    case CXL2_DOWNSTREAM_PORT:
+> +    case CXL2_DEVICE:
+> +        /* CAP, RAS, Link */
+> +        caps = 2;
+> +        break;
+> +    case CXL2_UPSTREAM_PORT:
+> +    case CXL2_TYPE3_DEVICE:
+> +    case CXL2_LOGICAL_DEVICE:
+> +        /* + HDM */
+> +        caps = 3;
+> +        break;
+> +    case CXL2_ROOT_PORT:
+> +        /* + Extended Security, + Snoop */
+> +        caps = 5;
+> +        break;
+> +    default:
+> +        abort();
+> +    }
+> +
+> +    memset(reg_state, 0, 0x1000);
 
- - I still don't get why as a brand new community hacks are coming up
-   (even when the hardware is not yet there) instead of pushing back at
-   the vendors to have a clean up interface. I get in say two or three
-   years these things .. but from the start? I get your point about
-   flexibility, but it seems to me that the right way is not give open
-   RAW interface (big barndoor) but rather maintain the driver and grow
-   it (properly constructed doors) as more functionality comes about
-   and then adding it in the driver.
+Better to pass the size in so it's apparent where that came from?
 
+> +
+> +    /* CXL Capability Header Register */
+> +    ARRAY_FIELD_DP32(reg_state, CXL_CAPABILITY_HEADER, ID, 1);
+> +    ARRAY_FIELD_DP32(reg_state, CXL_CAPABILITY_HEADER, VERSION, 1);
+> +    ARRAY_FIELD_DP32(reg_state, CXL_CAPABILITY_HEADER, CACHE_MEM_VERSION, 1);
+> +    ARRAY_FIELD_DP32(reg_state, CXL_CAPABILITY_HEADER, ARRAY_SIZE, caps);
+> +
+> +
+> +#define init_cap_reg(reg, id, version)                                        \
+> +    _Static_assert(CXL_##reg##_REGISTERS_OFFSET != 0, "Invalid cap offset\n");\
+> +    do {                                                                      \
+> +        int which = R_CXL_##reg##_CAPABILITY_HEADER;                          \
+> +        reg_state[which] = FIELD_DP32(reg_state[which],                       \
+> +                                      CXL_##reg##_CAPABILITY_HEADER, ID, id); \
+> +        reg_state[which] =                                                    \
+> +            FIELD_DP32(reg_state[which], CXL_##reg##_CAPABILITY_HEADER,       \
+> +                       VERSION, version);                                     \
+> +        reg_state[which] =                                                    \
+> +            FIELD_DP32(reg_state[which], CXL_##reg##_CAPABILITY_HEADER, PTR,  \
+> +                       CXL_##reg##_REGISTERS_OFFSET);                         \
+> +    } while (0)
+> +
+> +    init_cap_reg(RAS, 2, 1);
+> +    ras_init_common(reg_state);
+> +
+> +    init_cap_reg(LINK, 4, 2);
+> +
+> +    if (caps < 3) {
+
+It strikes me that this approach of basing it purely on number of caps is
+not particularly flexible or maintainable but I guess it will do for until we need
+something more sophisticated. (i.e. when they aren't a series of expanding inclusive
+sets of entries)
+
+> +        return;
+> +    }
+> +
+> +    init_cap_reg(HDM, 5, 1);
+> +    hdm_init_common(reg_state);
+> +
+> +    if (caps < 5) {
+> +        return;
+> +    }
+> +
+> +    init_cap_reg(EXTSEC, 6, 1);
+> +    init_cap_reg(SNOOP, 8, 1);
+> +
+> +#undef init_cap_reg
+> +}
+> +
+> +/*
+> + * Helper to creates a DVSEC header for a CXL entity. The caller is responsible
+> + * for tracking the valid offset.
+> + *
+> + * This function will build the DVSEC header on behalf of the caller and then
+> + * copy in the remaining data for the vendor specific bits.
+> + */
+> +void cxl_component_create_dvsec(CXLComponentState *cxl, uint16_t length,
+> +                                uint16_t type, uint8_t rev, uint8_t *body)
+> +{
+> +    PCIDevice *pdev = cxl->pdev;
+> +    uint16_t offset = cxl->dvsec_offset;
+> +
+> +    assert(offset >= PCI_CFG_SPACE_SIZE &&
+> +           ((offset + length) < PCI_CFG_SPACE_EXP_SIZE));
+> +    assert((length & 0xf000) == 0);
+> +    assert((rev & ~0xf) == 0);
+> +
+> +    /* Create the DVSEC in the MCFG space */
+> +    pcie_add_capability(pdev, PCI_EXT_CAP_ID_DVSEC, 1, offset, length);
+> +    pci_set_long(pdev->config + offset + PCIE_DVSEC_HEADER1_OFFSET,
+> +                 (length << 20) | (rev << 16) | CXL_VENDOR_ID);
+> +    pci_set_word(pdev->config + offset + PCIE_DVSEC_ID_OFFSET, type);
+> +    memcpy(pdev->config + offset + sizeof(struct dvsec_header),
+> +           body + sizeof(struct dvsec_header),
+> +           length - sizeof(struct dvsec_header));
+> +
+> +    /* Update state for future DVSEC additions */
+> +    range_init_nofail(&cxl->dvsecs[type], cxl->dvsec_offset, length);
+> +    cxl->dvsec_offset += length;
+> +}
+> diff --git a/hw/cxl/meson.build b/hw/cxl/meson.build
+> new file mode 100644
+> index 0000000000..00c3876a0f
+> --- /dev/null
+> +++ b/hw/cxl/meson.build
+> @@ -0,0 +1,3 @@
+> +softmmu_ss.add(when: 'CONFIG_CXL', if_true: files(
+> +  'cxl-component-utils.c',
+> +))
+> diff --git a/hw/meson.build b/hw/meson.build
+> index 010de7219c..3e440c341a 100644
+> --- a/hw/meson.build
+> +++ b/hw/meson.build
+> @@ -6,6 +6,7 @@ subdir('block')
+>  subdir('char')
+>  subdir('core')
+>  subdir('cpu')
+> +subdir('cxl')
+>  subdir('display')
+>  subdir('dma')
+>  subdir('gpio')
+> diff --git a/include/hw/cxl/cxl.h b/include/hw/cxl/cxl.h
+> new file mode 100644
+> index 0000000000..55f6cc30a5
+> --- /dev/null
+> +++ b/include/hw/cxl/cxl.h
+> @@ -0,0 +1,17 @@
+> +/*
+> + * QEMU CXL Support
+> + *
+> + * Copyright (c) 2020 Intel
+> + *
+> + * This work is licensed under the terms of the GNU GPL, version 2. See the
+> + * COPYING file in the top-level directory.
+> + */
+> +
+> +#ifndef CXL_H
+> +#define CXL_H
+> +
+> +#include "cxl_pci.h"
+> +#include "cxl_component.h"
+> +
+> +#endif
+> +
+> diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
+> new file mode 100644
+> index 0000000000..762feb54da
+> --- /dev/null
+> +++ b/include/hw/cxl/cxl_component.h
+> @@ -0,0 +1,187 @@
+> +/*
+> + * QEMU CXL Component
+> + *
+> + * Copyright (c) 2020 Intel
+> + *
+> + * This work is licensed under the terms of the GNU GPL, version 2. See the
+> + * COPYING file in the top-level directory.
+> + */
+> +
+> +#ifndef CXL_COMPONENT_H
+> +#define CXL_COMPONENT_H
+> +
+> +/* CXL 2.0 - 8.2.4 */
+> +#define CXL2_COMPONENT_IO_REGION_SIZE 0x1000
+> +#define CXL2_COMPONENT_CM_REGION_SIZE 0x1000
+> +#define CXL2_COMPONENT_BLOCK_SIZE 0x10000
+> +
+> +#include "qemu/range.h"
+> +#include "qemu/typedefs.h"
+> +#include "hw/register.h"
+> +
+> +enum reg_type {
+> +    CXL2_DEVICE,
+> +    CXL2_TYPE3_DEVICE,
+> +    CXL2_LOGICAL_DEVICE,
+> +    CXL2_ROOT_PORT,
+> +    CXL2_UPSTREAM_PORT,
+> +    CXL2_DOWNSTREAM_PORT
+> +};
+> +
+> +/*
+> + * Capability registers are defined at the top of the CXL.cache/mem region and
+> + * are packed. For our purposes we will always define the caps in the same
+> + * order.
+> + * CXL 2.0 - 8.2.5 Table 142 for details.
+> + */
+> +
+> +/* CXL 2.0 - 8.2.5.1 */
+> +REG32(CXL_CAPABILITY_HEADER, 0)
+> +    FIELD(CXL_CAPABILITY_HEADER, ID, 0, 16)
+> +    FIELD(CXL_CAPABILITY_HEADER, VERSION, 16, 4)
+> +    FIELD(CXL_CAPABILITY_HEADER, CACHE_MEM_VERSION, 20, 4)
+> +    FIELD(CXL_CAPABILITY_HEADER, ARRAY_SIZE, 24, 8)
+> +
+> +#define CXLx_CAPABILITY_HEADER(type, offset)                  \
+> +    REG32(CXL_##type##_CAPABILITY_HEADER, offset)             \
+> +        FIELD(CXL_##type##_CAPABILITY_HEADER, ID, 0, 16)      \
+> +        FIELD(CXL_##type##_CAPABILITY_HEADER, VERSION, 16, 4) \
+> +        FIELD(CXL_##type##_CAPABILITY_HEADER, PTR, 20, 12)
+> +CXLx_CAPABILITY_HEADER(RAS, 0x4)
+> +CXLx_CAPABILITY_HEADER(LINK, 0x8)
+> +CXLx_CAPABILITY_HEADER(HDM, 0xc)
+> +CXLx_CAPABILITY_HEADER(EXTSEC, 0x10)
+> +CXLx_CAPABILITY_HEADER(SNOOP, 0x14)
+> +
+> +/*
+> + * Capability structures contain the actual registers that the CXL component
+> + * implements. Some of these are specific to certain types of components, but
+> + * this implementation leaves enough space regardless.
+> + */
+> +/* 8.2.5.9 - CXL RAS Capability Structure */
+> +#define CXL_RAS_REGISTERS_OFFSET 0x80 /* Give ample space for caps before this */
+> +#define CXL_RAS_REGISTERS_SIZE   0x58
+> +REG32(CXL_RAS_UNC_ERR_STATUS, CXL_RAS_REGISTERS_OFFSET)
+> +REG32(CXL_RAS_UNC_ERR_MASK, CXL_RAS_REGISTERS_OFFSET + 0x4)
+> +REG32(CXL_RAS_UNC_ERR_SEVERITY, CXL_RAS_REGISTERS_OFFSET + 0x8)
+> +REG32(CXL_RAS_COR_ERR_STATUS, CXL_RAS_REGISTERS_OFFSET + 0xc)
+> +REG32(CXL_RAS_COR_ERR_MASK, CXL_RAS_REGISTERS_OFFSET + 0x10)
+> +REG32(CXL_RAS_ERR_CAP_CTRL, CXL_RAS_REGISTERS_OFFSET + 0x14)
+> +/* Offset 0x18 - 0x58 reserved for RAS logs */
+> +
+> +/* 8.2.5.10 - CXL Security Capability Structure */
+> +#define CXL_SEC_REGISTERS_OFFSET (CXL_RAS_REGISTERS_OFFSET + CXL_RAS_REGISTERS_SIZE)
+> +#define CXL_SEC_REGISTERS_SIZE   0 /* We don't implement 1.1 downstream ports */
+> +
+> +/* 8.2.5.11 - CXL Link Capability Structure */
+> +#define CXL_LINK_REGISTERS_OFFSET (CXL_SEC_REGISTERS_OFFSET + CXL_SEC_REGISTERS_SIZE)
+> +#define CXL_LINK_REGISTERS_SIZE   0x38
+> +
+> +/* 8.2.5.12 - CXL HDM Decoder Capability Structure */
+> +#define HDM_DECODE_MAX 10 /* 8.2.5.12.1 */
+> +#define CXL_HDM_REGISTERS_OFFSET \
+> +    (CXL_LINK_REGISTERS_OFFSET + CXL_LINK_REGISTERS_SIZE) /* 8.2.5.12 */
+
+The positioning of this isn't really defined by 8.2.5.12 that I can see. So I'd drop
+that trailing comment.
+
+> +#define CXL_HDM_REGISTERS_SIZE (0x20 + HDM_DECODE_MAX * 10)
+
+This doesn't look quite right.  0x10 + HDM_DECODE_MAX * 0x20 I think.
+Offset to decoder 0 + number of HDM decoders * size of each decode description.
+
+
+> +#define HDM_DECODER_INIT(n)                                                    \
+> +  REG32(CXL_HDM_DECODER##n##_BASE_LO,                                          \
+> +        CXL_HDM_REGISTERS_OFFSET + (0x20 * n) + 0x10)                          \
+this might be easier to read if you define something like
+CXL_HDM_REGS_DECODER0_OFFSET  CXL_HDM_REGISTERS_OFFSET + 0x10
+then use that for the base.
+
+> +            FIELD(CXL_HDM_DECODER##n##_BASE_LO, L, 28, 4)                      \
+> +  REG32(CXL_HDM_DECODER##n##_BASE_HI,                                          \
+> +        CXL_HDM_REGISTERS_OFFSET + (0x20 * n) + 0x14)                          \
+> +  REG32(CXL_HDM_DECODER##n##_SIZE_LO,                                          \
+> +        CXL_HDM_REGISTERS_OFFSET + (0x20 * n) + 0x18)                          \
+> +  REG32(CXL_HDM_DECODER##n##_SIZE_HI,                                          \
+> +        CXL_HDM_REGISTERS_OFFSET + (0x20 * n) + 0x1C)                          \
+> +  REG32(CXL_HDM_DECODER##n##_CTRL,                                             \
+> +        CXL_HDM_REGISTERS_OFFSET + (0x20 * n) + 0x20)                          \
+> +            FIELD(CXL_HDM_DECODER##n##_CTRL, IG, 0, 4)                         \
+> +            FIELD(CXL_HDM_DECODER##n##_CTRL, IW, 4, 4)                         \
+> +            FIELD(CXL_HDM_DECODER##n##_CTRL, LOCK_ON_COMMIT, 8, 1)             \
+> +            FIELD(CXL_HDM_DECODER##n##_CTRL, COMMIT, 9, 1)                     \
+> +            FIELD(CXL_HDM_DECODER##n##_CTRL, COMMITTED, 10, 1)                 \
+> +            FIELD(CXL_HDM_DECODER##n##_CTRL, ERROR, 11, 1)                     \
+> +            FIELD(CXL_HDM_DECODER##n##_CTRL, TYPE, 12, 1)                      \
+> +  REG32(CXL_HDM_DECODER##n##_TARGET_LIST_LO, 0x24)                             \
+Offset should I think be per 'n'.
+
+> +  REG32(CXL_HDM_DECODER##n##_TARGET_LIST_HI, 0x28)
+
+Hmm. There is a hole here in the spec.  Probably needs a reserved 4 bytes
+at CXL_HDM_REGISTERS_OFFSET + (0x20 * n) + 0x2c given next entry is at 0x30
+
+Should be added to 8.2.5.12 table
+
+> +
+> +REG32(CXL_HDM_DECODER_CAPABILITY, CXL_HDM_REGISTERS_OFFSET)
+> +    FIELD(CXL_HDM_DECODER_CAPABILITY, DECODER_COUNT, 0, 4)
+> +    FIELD(CXL_HDM_DECODER_CAPABILITY, TARGET_COUNT, 4, 4)
+> +    FIELD(CXL_HDM_DECODER_CAPABILITY, INTERLEAVE_256B, 8, 1)
+> +    FIELD(CXL_HDM_DECODER_CAPABILITY, INTELEAVE_4K, 9, 1)
+> +    FIELD(CXL_HDM_DECODER_CAPABILITY, POISON_ON_ERR_CAP, 10, 1)
+> +REG32(CXL_HDM_DECODER_GLOBAL_CONTROL, CXL_HDM_REGISTERS_OFFSET + 4) 
+
+I'd be consistent on using hex for all offsets (even when it clearly makes no
+difference like here!)
+
+> +    FIELD(CXL_HDM_DECODER_GLOBAL_CONTROL, POISON_ON_ERR_EN, 0, 1)
+> +    FIELD(CXL_HDM_DECODER_GLOBAL_CONTROL, HDM_DECODER_ENABLE, 1, 1)
+> +
+> +HDM_DECODER_INIT(0);
+> +
+> +/* 8.2.5.13 - CXL Extended Security Capability Structure (Root complex only) */
+> +#define EXTSEC_ENTRY_MAX        256
+> +#define CXL_EXTSEC_REGISTERS_OFFSET (CXL_HDM_REGISTERS_OFFSET + CXL_HDM_REGISTERS_SIZE)
+> +#define CXL_EXTSEC_REGISTERS_SIZE   (8 * EXTSEC_ENTRY_MAX + 4)
+> +
+> +/* 8.2.5.14 - CXL IDE Capability Structure */
+> +#define CXL_IDE_REGISTERS_OFFSET (CXL_EXTSEC_REGISTERS_OFFSET + CXL_EXTSEC_REGISTERS_SIZE)
+> +#define CXL_IDE_REGISTERS_SIZE   0
+
+0x20 (given we seem to be sizing other things we aren't using yet)
+
+> +
+> +/* 8.2.5.15 - CXL Snoop Filter Capability Structure */
+> +#define CXL_SNOOP_REGISTERS_OFFSET (CXL_IDE_REGISTERS_OFFSET + CXL_IDE_REGISTERS_SIZE)
+> +#define CXL_SNOOP_REGISTERS_SIZE   0x8
+> +
+> +_Static_assert((CXL_SNOOP_REGISTERS_OFFSET + CXL_SNOOP_REGISTERS_SIZE) < 0x1000,
+> +               "No space for registers");
+> +
+> +typedef struct component_registers {
+> +    /*
+> +     * Main memory region to be registered with QEMU core.
+> +     */
+> +    MemoryRegion component_registers;
+> +
+> +    /*
+> +     * 8.2.4 Table 141:
+> +     *   0x0000 - 0x0fff CXL.io registers
+> +     *   0x1000 - 0x1fff CXL.cache and CXL.mem
+> +     *   0x2000 - 0xdfff Implementation specific
+> +     *   0xe000 - 0xe3ff CXL ARB/MUX registers
+> +     *   0xe400 - 0xffff RSVD
+> +     */
+> +    uint32_t io_registers[CXL2_COMPONENT_IO_REGION_SIZE >> 2];
+> +    MemoryRegion io;
+> +
+> +    uint32_t cache_mem_registers[CXL2_COMPONENT_CM_REGION_SIZE >> 2];
+> +    MemoryRegion cache_mem;
+> +
+> +    MemoryRegion impl_specific;
+> +    MemoryRegion arb_mux;
+> +    MemoryRegion rsvd;
+> +
+> +    /* special_ops is used for any component that needs any specific handling */
+> +    MemoryRegionOps *special_ops;
+> +} ComponentRegisters;
+> +
+> +/*
+> + * A CXL component represents all entities in a CXL hierarchy. This includes,
+> + * host bridges, root ports, upstream/downstream switch ports, and devices
+> + */
+> +typedef struct cxl_component {
+> +    ComponentRegisters crb;
+> +    union {
+> +        struct {
+> +            Range dvsecs[CXL20_MAX_DVSEC];
+> +            uint16_t dvsec_offset;
+> +            struct PCIDevice *pdev;
+> +        };
+> +    };
+> +} CXLComponentState;
+> +
+> +void cxl_component_register_block_init(Object *obj,
+> +                                       CXLComponentState *cxl_cstate,
+> +                                       const char *type);
+> +void cxl_component_register_init_common(uint32_t *reg_state,
+> +                                        enum reg_type type);
+> +
+> +void cxl_component_create_dvsec(CXLComponentState *cxl_cstate, uint16_t length,
+> +                                uint16_t type, uint8_t rev, uint8_t *body);
+> +
+> +#endif
+> diff --git a/include/hw/cxl/cxl_pci.h b/include/hw/cxl/cxl_pci.h
+> new file mode 100644
+> index 0000000000..a53c2e5ae7
+> --- /dev/null
+> +++ b/include/hw/cxl/cxl_pci.h
+> @@ -0,0 +1,138 @@
+> +/*
+> + * QEMU CXL PCI interfaces
+> + *
+> + * Copyright (c) 2020 Intel
+> + *
+> + * This work is licensed under the terms of the GNU GPL, version 2. See the
+> + * COPYING file in the top-level directory.
+> + */
+> +
+> +#ifndef CXL_PCI_H
+> +#define CXL_PCI_H
+> +
+> +#include "hw/pci/pci.h"
+> +#include "hw/pci/pcie.h"
+> +
+> +#define CXL_VENDOR_ID 0x1e98
+> +
+> +#define PCIE_DVSEC_HEADER1_OFFSET 0x4 /* Offset from start of extend cap */
+> +#define PCIE_DVSEC_ID_OFFSET 0x8
+> +
+> +#define PCIE_CXL_DEVICE_DVSEC_LENGTH 0x38
+> +#define PCIE_CXL1_DEVICE_DVSEC_REVID 0
+> +#define PCIE_CXL2_DEVICE_DVSEC_REVID 1
+> +
+> +#define EXTENSIONS_PORT_DVSEC_LENGTH 0x28
+> +#define EXTENSIONS_PORT_DVSEC_REVID 0
+> +
+> +#define GPF_PORT_DVSEC_LENGTH 0x10
+> +#define GPF_PORT_DVSEC_REVID  0
+> +
+> +#define PCIE_FLEXBUS_PORT_DVSEC_LENGTH_2_0 0x14
+> +#define PCIE_FLEXBUS_PORT_DVSEC_REVID_2_0  1
+> +
+> +#define REG_LOC_DVSEC_LENGTH 0x24
+> +#define REG_LOC_DVSEC_REVID  0
+> +
+> +enum {
+> +    PCIE_CXL_DEVICE_DVSEC      = 0,
+> +    NON_CXL_FUNCTION_MAP_DVSEC = 2,
+> +    EXTENSIONS_PORT_DVSEC      = 3,
+> +    GPF_PORT_DVSEC             = 4,
+> +    GPF_DEVICE_DVSEC           = 5,
+> +    PCIE_FLEXBUS_PORT_DVSEC    = 7,
+> +    REG_LOC_DVSEC              = 8,
+> +    MLD_DVSEC                  = 9,
+> +    CXL20_MAX_DVSEC
+> +};
+> +
+> +struct dvsec_header {
+> +    uint32_t cap_hdr;
+> +    uint32_t dv_hdr1;
+> +    uint16_t dv_hdr2;
+> +} __attribute__((__packed__));
+> +_Static_assert(sizeof(struct dvsec_header) == 10,
+
+Be consistent on decimal or hex for these checks. I don't really
+care which but odd to mix and match.
+
+> +               "dvsec header size incorrect");
+> +
+> +/*
+> + * CXL 2.0 devices must implement certain DVSEC IDs, and can [optionally]
+> + * implement others.
+> + *
+> + * CXL 2.0 Device: 0, [2], 5, 8
+> + * CXL 2.0 RP: 3, 4, 7, 8
+> + * CXL 2.0 Upstream Port: [2], 7, 8
+> + * CXL 2.0 Downstream Port: 3, 4, 7, 8
+> + */
+> +
+> +/* CXL 2.0 - 8.1.5 (ID 0003) */
+> +struct extensions_dvsec_port {
+Probably want consistent naming (as can be done anyway) so
+cxl_dvsec_port_extensions maybe?
+
+> +    struct dvsec_header hdr;
+> +    uint16_t status;
+> +    uint16_t control;
+> +    uint8_t alt_bus_base;
+> +    uint8_t alt_bus_limit;
+> +    uint16_t alt_memory_base;
+> +    uint16_t alt_memory_limit;
+> +    uint16_t alt_prefetch_base;
+> +    uint16_t alt_prefetch_limit;
+> +    uint32_t alt_prefetch_base_high;
+> +    uint32_t alt_prefetch_base_low;
+> +    uint32_t rcrb_base;
+> +    uint32_t rcrb_base_high;
+> +};
+> +_Static_assert(sizeof(struct extensions_dvsec_port) == 0x28,
+> +               "extensions dvsec port size incorrect");
+> +#define PORT_CONTROL_OVERRIDE_OFFSET 0xc
+
+What's this one?  Looks to just be the PORT_CONTROL_OFFSET
+though admittedly the spec does refer to this as OVERRIDE_OFFSET in
+one place.
+
+> +#define PORT_CONTROL_UNMASK_SBR      1
+> +#define PORT_CONTROL_ALT_MEMID_EN    4
+> +
+> +/* CXL 2.0 - 8.1.6 GPF DVSEC (ID 0004) */
+> +struct dvsec_port_gpf {
+> +    struct dvsec_header hdr;
+> +    uint16_t rsvd;
+> +    uint16_t phase1_ctrl;
+> +    uint16_t phase2_ctrl;
+> +};
+> +_Static_assert(sizeof(struct dvsec_port_gpf) == 0x10,
+> +               "dvsec port GPF size incorrect");
+> +
+> +/* CXL 2.0 - 8.1.8/8.2.1.3 Flexbus DVSEC (ID 0007) */
+> +struct dvsec_port_flexbus {
+> +    struct dvsec_header hdr;
+> +    uint16_t cap;
+> +    uint16_t ctrl;
+> +    uint16_t status;
+> +    uint32_t rcvd_mod_ts_data;
+
+Whilst it is wordy, I'd keep the full naming of that field.
+rcvd_mod_ts_data_phase_1; 
+
+> +};
+> +_Static_assert(sizeof(struct dvsec_port_flexbus) == 0x14,
+> +               "dvsec port flexbus size incorrect");
+> +
+> +/* CXL 2.0 - 8.1.9 Register Locator DVSEC (ID 0008) */
+> +struct dvsec_register_locator {
+
+I'd prefix these structures with cxl_ for all the normal
+namespacing collision reasons.
+Same for #defines
+
+
+> +    struct dvsec_header hdr;
+> +    uint16_t rsvd;
+> +    uint32_t reg0_base_lo;
+> +    uint32_t reg0_base_hi;
+> +    uint32_t reg1_base_lo;
+> +    uint32_t reg1_base_hi;
+> +    uint32_t reg2_base_lo;
+> +    uint32_t reg2_base_hi;
+> +};
+> +_Static_assert(sizeof(struct dvsec_register_locator) == 0x24,
+> +               "dvsec register locator size incorrect");
+> +
+> +/* BAR Equivalence Indicator */
+> +#define BEI_BAR_10H 0
+> +#define BEI_BAR_14H 1
+> +#define BEI_BAR_18H 2
+> +#define BEI_BAR_1cH 3
+> +#define BEI_BAR_20H 4
+> +#define BEI_BAR_24H 5
+> +
+> +/* Register Block Identifier */
+> +#define RBI_EMPTY          0
+> +#define RBI_COMPONENT_REG  (1 << 8)
+> +#define RBI_BAR_VIRT_ACL   (2 << 8)
+> +#define RBI_CXL_DEVICE_REG (3 << 8)
+> +
+> +#endif
 
