@@ -2,47 +2,46 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6344DC433E6
-	for <linux-cxl@archiver.kernel.org>; Wed,  3 Feb 2021 00:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15265C433DB
+	for <linux-cxl@archiver.kernel.org>; Wed,  3 Feb 2021 17:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E6B564F7C
-	for <linux-cxl@archiver.kernel.org>; Wed,  3 Feb 2021 00:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADB8664F84
+	for <linux-cxl@archiver.kernel.org>; Wed,  3 Feb 2021 17:13:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231269AbhBCAz2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 2 Feb 2021 19:55:28 -0500
-Received: from mga18.intel.com ([134.134.136.126]:24811 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230437AbhBCAz0 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 2 Feb 2021 19:55:26 -0500
-IronPort-SDR: EljF6gcuh9T3Q2QeC+Xn9GnuCXdj9R41xBh8Tl+uWJDAz0niRmjL7P+EtwQXQQ/vbbukfIWuas
- U1DNyz5jjp6A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9883"; a="168639743"
-X-IronPort-AV: E=Sophos;i="5.79,396,1602572400"; 
-   d="scan'208";a="168639743"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2021 16:54:44 -0800
-IronPort-SDR: T/OKYfRyJECY92tbmhe95trHnlElgkP/dg1d1yQ7hUQWoAcmWXv06c4utLZaKcN9E5eW0I+84+
- WVBgh83fvJ6A==
-X-IronPort-AV: E=Sophos;i="5.79,396,1602572400"; 
-   d="scan'208";a="371036464"
-Received: from rebbutt-mobl3.amr.corp.intel.com (HELO intel.com) ([10.252.133.20])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2021 16:54:43 -0800
-Date:   Tue, 2 Feb 2021 16:54:40 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     David Rientjes <rientjes@google.com>, linux-cxl@vger.kernel.org,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
+        id S229997AbhBCRNO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 3 Feb 2021 12:13:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34186 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229902AbhBCRNM (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 3 Feb 2021 12:13:12 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EAD6C061573;
+        Wed,  3 Feb 2021 09:12:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=TOHrz9rJRmT1MZjmRcdSp7+GuY9P+OtZtUJvbJgCulo=; b=QlTPVhm61sGQuTcf3P0iNWT8ED
+        Bi2gkvv6DDeJQwV2HZj+zq53XZjee6QmF+jgW/E4anVOGeBwLE0OhGlE/INHWoFljCKhZx4kLuKFi
+        vBpPlOiPaIYrUSdcPkchYs5y8EocLYDkgBQi5zK2utgiNqo1gFusaNMlddnGX4lCKct1oIiIfQN0x
+        4FZFsAcm9c0hrwdS+WY55lmm+xjte1BQs5jszrftBaCW8zuTfPkpbQPL1wxnyHoTRZuCOgTwdKSQC
+        PmSjukh2Zy50HgX10fdq7MOFixROv7xKlGJkbVoqgE9rz6+csO3TxasqOuAu242s0FMgsIu5s/vvZ
+        pnxR5IZg==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1l7LhT-00HEZu-Qm; Wed, 03 Feb 2021 17:12:20 +0000
+Date:   Wed, 3 Feb 2021 17:12:19 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     Christoph Hellwig <hch@infradead.org>, linux-cxl@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
         Bjorn Helgaas <helgaas@kernel.org>,
         Chris Browy <cbrowy@avery-design.com>,
-        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jon Masters <jcm@jonmasters.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
@@ -52,302 +51,41 @@ Cc:     David Rientjes <rientjes@google.com>, linux-cxl@vger.kernel.org,
         daniel.lll@alibaba-inc.com,
         "John Groves (jgroves)" <jgroves@micron.com>,
         "Kelley, Sean V" <sean.v.kelley@intel.com>
-Subject: Re: [PATCH 04/14] cxl/mem: Implement polled mode mailbox
-Message-ID: <20210203005440.yyyphe4yigf3fvkc@intel.com>
+Subject: Re: [PATCH 02/14] cxl/mem: Map memory device registers
+Message-ID: <20210203171219.GA4104698@infradead.org>
 References: <20210130002438.1872527-1-ben.widawsky@intel.com>
- <20210130002438.1872527-5-ben.widawsky@intel.com>
- <5986abe5-1248-30b2-5f53-fa7013baafad@google.com>
- <CAPcyv4g_yUpwoBJsLeVwCZAkZGGrfSgrCk2+GXVXBcouktZNSQ@mail.gmail.com>
- <20210202225733.miq5sl3mqit2zuhg@intel.com>
- <CAPcyv4gPbN74wOzPH5-qC6a1V5ZwXUVedtr0ZJmfP8DA13YWnA@mail.gmail.com>
+ <20210130002438.1872527-3-ben.widawsky@intel.com>
+ <20210202180441.GC3708021@infradead.org>
+ <20210202183151.7kwruvip7nshqsc4@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4gPbN74wOzPH5-qC6a1V5ZwXUVedtr0ZJmfP8DA13YWnA@mail.gmail.com>
+In-Reply-To: <20210202183151.7kwruvip7nshqsc4@intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21-02-02 15:54:03, Dan Williams wrote:
-> On Tue, Feb 2, 2021 at 2:57 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> >
-> > On 21-02-01 12:00:18, Dan Williams wrote:
-> > > On Sat, Jan 30, 2021 at 3:52 PM David Rientjes <rientjes@google.com> wrote:
-> > > >
-> > > > On Fri, 29 Jan 2021, Ben Widawsky wrote:
-> > > >
-> > > > > Provide enough functionality to utilize the mailbox of a memory device.
-> > > > > The mailbox is used to interact with the firmware running on the memory
-> > > > > device.
-> > > > >
-> > > > > The CXL specification defines separate capabilities for the mailbox and
-> > > > > the memory device. The mailbox interface has a doorbell to indicate
-> > > > > ready to accept commands and the memory device has a capability register
-> > > > > that indicates the mailbox interface is ready. The expectation is that
-> > > > > the doorbell-ready is always later than the memory-device-indication
-> > > > > that the mailbox is ready.
-> > > > >
-> > > > > Create a function to handle sending a command, optionally with a
-> > > > > payload, to the memory device, polling on a result, and then optionally
-> > > > > copying out the payload. The algorithm for doing this comes straight out
-> > > > > of the CXL 2.0 specification.
-> > > > >
-> > > > > Primary mailboxes are capable of generating an interrupt when submitting
-> > > > > a command in the background. That implementation is saved for a later
-> > > > > time.
-> > > > >
-> > > > > Secondary mailboxes aren't implemented at this time.
-> > > > >
-> > > > > The flow is proven with one implemented command, "identify". Because the
-> > > > > class code has already told the driver this is a memory device and the
-> > > > > identify command is mandatory.
-> > > > >
-> > > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > > > ---
-> > > > >  drivers/cxl/Kconfig |  14 ++
-> > > > >  drivers/cxl/cxl.h   |  39 +++++
-> > > > >  drivers/cxl/mem.c   | 342 +++++++++++++++++++++++++++++++++++++++++++-
-> > > > >  3 files changed, 394 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> > > > > index 3b66b46af8a0..fe591f74af96 100644
-> > > > > --- a/drivers/cxl/Kconfig
-> > > > > +++ b/drivers/cxl/Kconfig
-> > > > > @@ -32,4 +32,18 @@ config CXL_MEM
-> > > > >         Chapter 2.3 Type 3 CXL Device in the CXL 2.0 specification.
-> > > > >
-> > > > >         If unsure say 'm'.
-> > > > > +
-> > > > > +config CXL_MEM_INSECURE_DEBUG
-> > > > > +     bool "CXL.mem debugging"
-> > > > > +     depends on CXL_MEM
-> > > > > +     help
-> > > > > +       Enable debug of all CXL command payloads.
-> > > > > +
-> > > > > +       Some CXL devices and controllers support encryption and other
-> > > > > +       security features. The payloads for the commands that enable
-> > > > > +       those features may contain sensitive clear-text security
-> > > > > +       material. Disable debug of those command payloads by default.
-> > > > > +       If you are a kernel developer actively working on CXL
-> > > > > +       security enabling say Y, otherwise say N.
-> > > >
-> > > > Not specific to this patch, but the reference to encryption made me
-> > > > curious about integrity: are all CXL.mem devices compatible with DIMP?
-> > > > Some?  None?
-> > >
-> > > The encryption here is "device passphrase" similar to the NVDIMM
-> > > Security Management described here:
-> > >
-> > > https://pmem.io/documents/IntelOptanePMem_DSM_Interface-V2.0.pdf
-> > >
-> > > The LIBNVDIMM enabling wrapped this support with the Linux keys
-> > > interface which among other things enforces wrapping the clear text
-> > > passphrase with a Linux "trusted/encrypted" key.
-> > >
-> > > Additionally, the CXL.io interface optionally supports PCI IDE:
-> > >
-> > > https://www.intel.com/content/dam/www/public/us/en/documents/reference-guides/pcie-device-security-enhancements.pdf
-> > >
-> > > I'm otherwise not familiar with the DIMP acronym?
-> > >
-> > > > > +
-> > > > >  endif
-> > > > > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > > > > index a3da7f8050c4..df3d97154b63 100644
-> > > > > --- a/drivers/cxl/cxl.h
-> > > > > +++ b/drivers/cxl/cxl.h
-> > > > > @@ -31,9 +31,36 @@
-> > > > >  #define CXLDEV_MB_CAPS_OFFSET 0x00
-> > > > >  #define   CXLDEV_MB_CAP_PAYLOAD_SIZE_MASK GENMASK(4, 0)
-> > > > >  #define CXLDEV_MB_CTRL_OFFSET 0x04
-> > > > > +#define   CXLDEV_MB_CTRL_DOORBELL BIT(0)
-> > > > >  #define CXLDEV_MB_CMD_OFFSET 0x08
-> > > > > +#define   CXLDEV_MB_CMD_COMMAND_OPCODE_MASK GENMASK(15, 0)
-> > > > > +#define   CXLDEV_MB_CMD_PAYLOAD_LENGTH_MASK GENMASK(36, 16)
-> > > > >  #define CXLDEV_MB_STATUS_OFFSET 0x10
-> > > > > +#define   CXLDEV_MB_STATUS_RET_CODE_MASK GENMASK(47, 32)
-> > > > >  #define CXLDEV_MB_BG_CMD_STATUS_OFFSET 0x18
-> > > > > +#define CXLDEV_MB_PAYLOAD_OFFSET 0x20
-> > > > > +
-> > > > > +/* Memory Device (CXL 2.0 - 8.2.8.5.1.1) */
-> > > > > +#define CXLMDEV_STATUS_OFFSET 0x0
-> > > > > +#define   CXLMDEV_DEV_FATAL BIT(0)
-> > > > > +#define   CXLMDEV_FW_HALT BIT(1)
-> > > > > +#define   CXLMDEV_STATUS_MEDIA_STATUS_MASK GENMASK(3, 2)
-> > > > > +#define     CXLMDEV_MS_NOT_READY 0
-> > > > > +#define     CXLMDEV_MS_READY 1
-> > > > > +#define     CXLMDEV_MS_ERROR 2
-> > > > > +#define     CXLMDEV_MS_DISABLED 3
-> > > > > +#define   CXLMDEV_READY(status) \
-> > > > > +             (CXL_GET_FIELD(status, CXLMDEV_STATUS_MEDIA_STATUS) == CXLMDEV_MS_READY)
-> > > > > +#define   CXLMDEV_MBOX_IF_READY BIT(4)
-> > > > > +#define   CXLMDEV_RESET_NEEDED_SHIFT 5
-> > > > > +#define   CXLMDEV_RESET_NEEDED_MASK GENMASK(7, 5)
-> > > > > +#define     CXLMDEV_RESET_NEEDED_NOT 0
-> > > > > +#define     CXLMDEV_RESET_NEEDED_COLD 1
-> > > > > +#define     CXLMDEV_RESET_NEEDED_WARM 2
-> > > > > +#define     CXLMDEV_RESET_NEEDED_HOT 3
-> > > > > +#define     CXLMDEV_RESET_NEEDED_CXL 4
-> > > > > +#define   CXLMDEV_RESET_NEEDED(status) \
-> > > > > +             (CXL_GET_FIELD(status, CXLMDEV_RESET_NEEDED) != CXLMDEV_RESET_NEEDED_NOT)
-> > > > >
-> > > > >  /**
-> > > > >   * struct cxl_mem - A CXL memory device
-> > > > > @@ -44,6 +71,16 @@ struct cxl_mem {
-> > > > >       struct pci_dev *pdev;
-> > > > >       void __iomem *regs;
-> > > > >
-> > > > > +     struct {
-> > > > > +             struct range range;
-> > > > > +     } pmem;
-> > > > > +
-> > > > > +     struct {
-> > > > > +             struct range range;
-> > > > > +     } ram;
-> > > > > +
-> > > > > +     char firmware_version[0x10];
-> > > > > +
-> > > > >       /* Cap 0001h - CXL_CAP_CAP_ID_DEVICE_STATUS */
-> > > > >       struct {
-> > > > >               void __iomem *regs;
-> > > > > @@ -51,6 +88,7 @@ struct cxl_mem {
-> > > > >
-> > > > >       /* Cap 0002h - CXL_CAP_CAP_ID_PRIMARY_MAILBOX */
-> > > > >       struct {
-> > > > > +             struct mutex mutex; /* Protects device mailbox and firmware */
-> > > > >               void __iomem *regs;
-> > > > >               size_t payload_size;
-> > > > >       } mbox;
-> > > > > @@ -89,5 +127,6 @@ struct cxl_mem {
-> > > > >
-> > > > >  cxl_reg(status);
-> > > > >  cxl_reg(mbox);
-> > > > > +cxl_reg(mem);
-> > > > >
-> > > > >  #endif /* __CXL_H__ */
-> > > > > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > > > > index fa14d51243ee..69ed15bfa5d4 100644
-> > > > > --- a/drivers/cxl/mem.c
-> > > > > +++ b/drivers/cxl/mem.c
-> > > > > @@ -6,6 +6,270 @@
-> > > > >  #include "pci.h"
-> > > > >  #include "cxl.h"
-> > > > >
-> > > > > +#define cxl_doorbell_busy(cxlm)                                                \
-> > > > > +     (cxl_read_mbox_reg32(cxlm, CXLDEV_MB_CTRL_OFFSET) &                    \
-> > > > > +      CXLDEV_MB_CTRL_DOORBELL)
-> > > > > +
-> > > > > +#define CXL_MAILBOX_TIMEOUT_US 2000
-> > > >
-> > > > This should be _MS?
-> > > >
-> > > > > +
-> > > > > +enum opcode {
-> > > > > +     CXL_MBOX_OP_IDENTIFY            = 0x4000,
-> > > > > +     CXL_MBOX_OP_MAX                 = 0x10000
-> > > > > +};
-> > > > > +
-> > > > > +/**
-> > > > > + * struct mbox_cmd - A command to be submitted to hardware.
-> > > > > + * @opcode: (input) The command set and command submitted to hardware.
-> > > > > + * @payload_in: (input) Pointer to the input payload.
-> > > > > + * @payload_out: (output) Pointer to the output payload. Must be allocated by
-> > > > > + *            the caller.
-> > > > > + * @size_in: (input) Number of bytes to load from @payload.
-> > > > > + * @size_out: (output) Number of bytes loaded into @payload.
-> > > > > + * @return_code: (output) Error code returned from hardware.
-> > > > > + *
-> > > > > + * This is the primary mechanism used to send commands to the hardware.
-> > > > > + * All the fields except @payload_* correspond exactly to the fields described in
-> > > > > + * Command Register section of the CXL 2.0 spec (8.2.8.4.5). @payload_in and
-> > > > > + * @payload_out are written to, and read from the Command Payload Registers
-> > > > > + * defined in (8.2.8.4.8).
-> > > > > + */
-> > > > > +struct mbox_cmd {
-> > > > > +     u16 opcode;
-> > > > > +     void *payload_in;
-> > > > > +     void *payload_out;
-> > > > > +     size_t size_in;
-> > > > > +     size_t size_out;
-> > > > > +     u16 return_code;
-> > > > > +#define CXL_MBOX_SUCCESS 0
-> > > > > +};
-> > > > > +
-> > > > > +static int cxl_mem_wait_for_doorbell(struct cxl_mem *cxlm)
-> > > > > +{
-> > > > > +     const int timeout = msecs_to_jiffies(CXL_MAILBOX_TIMEOUT_US);
-> > > > > +     const unsigned long start = jiffies;
-> > > > > +     unsigned long end = start;
-> > > > > +
-> > > > > +     while (cxl_doorbell_busy(cxlm)) {
-> > > > > +             end = jiffies;
-> > > > > +
-> > > > > +             if (time_after(end, start + timeout)) {
-> > > > > +                     /* Check again in case preempted before timeout test */
-> > > > > +                     if (!cxl_doorbell_busy(cxlm))
-> > > > > +                             break;
-> > > > > +                     return -ETIMEDOUT;
-> > > > > +             }
-> > > > > +             cpu_relax();
-> > > > > +     }
-> > > > > +
-> > > > > +     dev_dbg(&cxlm->pdev->dev, "Doorbell wait took %dms",
-> > > > > +             jiffies_to_msecs(end) - jiffies_to_msecs(start));
-> > > > > +     return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
-> > > > > +                              struct mbox_cmd *mbox_cmd)
-> > > > > +{
-> > > > > +     dev_warn(&cxlm->pdev->dev, "Mailbox command timed out\n");
-> > > > > +     dev_info(&cxlm->pdev->dev,
-> > > > > +              "\topcode: 0x%04x\n"
-> > > > > +              "\tpayload size: %zub\n",
-> > > > > +              mbox_cmd->opcode, mbox_cmd->size_in);
-> > > > > +
-> > > > > +     if (IS_ENABLED(CONFIG_CXL_MEM_INSECURE_DEBUG)) {
-> > > > > +             print_hex_dump_debug("Payload ", DUMP_PREFIX_OFFSET, 16, 1,
-> > > > > +                                  mbox_cmd->payload_in, mbox_cmd->size_in,
-> > > > > +                                  true);
-> > > > > +     }
-> > > > > +
-> > > > > +     /* Here's a good place to figure out if a device reset is needed */
-> > > >
-> > > > What are the implications if we don't do a reset, as this implementation
-> > > > does not?  IOW, does a timeout require a device to be recovered through a
-> > > > reset before it can receive additional commands, or is it safe to simply
-> > > > drop the command that timed out on the floor and proceed?
-> > >
-> > > Not a satisfying answer, but "it depends". It's also complicated by
-> > > the fact that a reset may need to be coordinated with other devices in
-> > > the interleave-set as the HDM decoders may bounce.
-> > >
-> > > For comparison, to date there have been no problems with the "drop on
-> > > the floor" policy of LIBNVDIMM command timeouts. At the same time
-> > > there simply was not a software visible reset mechanism for those
-> > > devices so this problem never came out. This mailbox isn't a fast
-> > > path, so the device is likely completely dead if this timeout is ever
-> > > violated, and the firmware reporting a timeout might as well assume
-> > > that the OS gives up on the device.
-> > >
-> > > I'll let Ben chime in on the rest...
-> >
-> > Reset handling is next on the TODO list for the driver. I had two main reasons
-> > for not even taking a stab at it.
-> > 1. I have no good way to test it. We are working on adding some test conditions
-> >    to QEMU for it.
-> > 2. The main difficulty in my mind with reset is you can't pull the memory out
-> >    from under the OS here. While the driver doesn't yet handle persistent memory
-> >    capacities, it may have volatile capacity configured by the BIOS. So the goal
-> >    was, get the bits of the driver in that would at least allow developers,
-> >    hardware vendors, and folks contributing to the spec a way to have basic
-> >    interaction with a CXL type 3 device.
+On Tue, Feb 02, 2021 at 10:31:51AM -0800, Ben Widawsky wrote:
+> > > +		if (reg_type == CXL_REGLOC_RBI_MEMDEV) {
+> > > +			rc = 0;
+> > > +			cxlm = cxl_mem_create(pdev, reg_lo, reg_hi);
+> > > +			if (!cxlm)
+> > > +				rc = -ENODEV;
+> > > +			break;
+> > 
+> > And given that we're going to grow more types eventually, why not start
+> > out with a switch here?  Also why return the structure when nothing
+> > uses it?
 > 
-> Honestly I think in most cases if the firmware decides to return a
-> "reset required" status the Linux response will be "lol, no" because
-> the firmware has no concept of the violence that would impose on the
-> rest of the system.
+>  We've (Intel) already started working on the libnvdimm integration which does
+>  change this around a bit. In order to go with what's best tested though, I've
+>  chosen to use this as is for merge. Many different people not just in Intel
+>  have tested these codepaths. The resulting code moves the check on register
+>  type out of this function entirely.
+> 
+>  If you'd like me to make it a switch, I can, but it's going to be extracted
+>  later anyway.
 
-How about UAPI to initiate a reset? I think a sysfs bool would do the trick.
-Maybe sysfs file to display current error status, and one to reset?
-
+This was just a suggestion.  No hard feelings, it's just that the code
+looks a little odd to me.
