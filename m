@@ -2,288 +2,233 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B20C433DB
-	for <linux-cxl@archiver.kernel.org>; Wed,  3 Feb 2021 17:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 118DDC433E0
+	for <linux-cxl@archiver.kernel.org>; Wed,  3 Feb 2021 18:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0439564E43
-	for <linux-cxl@archiver.kernel.org>; Wed,  3 Feb 2021 17:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A728564F7C
+	for <linux-cxl@archiver.kernel.org>; Wed,  3 Feb 2021 18:17:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230070AbhBCRnM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 3 Feb 2021 12:43:12 -0500
-Received: from zangief.bwidawsk.net ([107.170.211.233]:55442 "EHLO
-        mail.bwidawsk.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229731AbhBCRnL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 3 Feb 2021 12:43:11 -0500
-Received: by mail.bwidawsk.net (Postfix, from userid 5001)
-        id B4D1612343A; Wed,  3 Feb 2021 09:42:30 -0800 (PST)
-Received: from mail.bwidawsk.net (c-73-37-61-164.hsd1.or.comcast.net [73.37.61.164])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by mail.bwidawsk.net (Postfix) with ESMTPSA id CF00B122C69;
-        Wed,  3 Feb 2021 09:42:17 -0800 (PST)
-Date:   Wed, 3 Feb 2021 09:42:16 -0800
-From:   Ben Widawsky <ben@bwidawsk.net>
-To:     qemu-devel@nongnu.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "John Groves (jgroves)" <jgroves@micron.com>,
+        id S231648AbhBCSRF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 3 Feb 2021 13:17:05 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:48782 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233016AbhBCSQ6 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 3 Feb 2021 13:16:58 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 113IALCl121866;
+        Wed, 3 Feb 2021 18:15:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2020-01-29;
+ bh=g1beYCRtHQ+7eyet6gw/AH4AqA2dBKOVEjc/R55Ly5I=;
+ b=eV9ZKkhP/yV/MF/dRqr508suYDMFQEQeyM4zcBcl/rp/tjVgIogrzsPHeCH2nnbGiiiC
+ ZYqSzgx0fnm7lKMO9HdEvE26xlbCYB2CsSq6DRdFjLHi7H/ad6VssIoTwQSf5kc75wZM
+ TxvMc4IeUfpZSBVEvp5nQboNs4JQ/Rs2O15OezVTFYXIlnFnAAN0QInOockx5qTrRmmR
+ jYU87xLHZyFpJL4o+dGBj80EL84eDbw87C05JyTzeOt2Pk0KV2Dpt8LtAWx5LJrBw9bn
+ 5QIKZB4+v9bCCCDnZguXSSdbTxUPBuMxFHp4K9k5Qtdcl76BDTXOuGsXUmT4R7StPdpE GA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 36cxvr47na-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 03 Feb 2021 18:15:06 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 113IF2nG143446;
+        Wed, 3 Feb 2021 18:15:05 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2105.outbound.protection.outlook.com [104.47.55.105])
+        by aserp3020.oracle.com with ESMTP id 36dhc1gwu3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 03 Feb 2021 18:15:05 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P8LcgC33KTF6m3RCogoNKlJOiUcYZiDzudHIIUMFQM/IyFXJ1X7mw1samfpymXJKaXve3Bt7YnyWOy0NL/GDG6eXaZjWxsQguYRvb7hN45TaKSWh4YmVtyBmW4/0vAHarn0nbaTzA4ckLwv+57VR7uAJm3WGFWIGFFaqAqxyaON1gpK7hSPk6qB884OGA4sn4Ay6z5RO9TM8u1nPYUY2h4ox7cqk7vOzjABti51vabYUFOmMSo3RBoXy7vecVOFS2/P+yh0NYsYLu/UC7ee3Es6RTpfZjSxZFhMVT7zAIwws5/FDnprXlsbUtJI/0DppDNb6bu5G5WQ8QEIIu8SttA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g1beYCRtHQ+7eyet6gw/AH4AqA2dBKOVEjc/R55Ly5I=;
+ b=FpUcoM4lcKJH7dlAAjTEMflsMwDE6c+/jgfUu8x27bRrN+VWRbcmD4shFBJp6mMvwOkmjU3eNSrIDEKOQlDHY56uThL5zoWDYlDxRQczrlAWA95nLz++jgilxJARGr1e6x9TvCAlgRVipGFdz6etxZe6QomV1SFzaVhDEu9FR7PfpUUnpz9uilJDeG6+8+ArcV6rjyh5OF8kMGAQetI391gTvDWk1VKv36rlZp9oH+tzGmU3Cw/4nJfrj1aTIA7sbB38uMfqJ2ygsSysVu13ao9TndOxNQKBfikKMpqmJSzDlsYLFWMbG7SzuuknxIPCMwi9HCm3CH9xkux4zqy74g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g1beYCRtHQ+7eyet6gw/AH4AqA2dBKOVEjc/R55Ly5I=;
+ b=Nc56UhndAdCMa48kPj6ijlkdJFGud5Pd636oGV/TexDVdXXSD1NwpbjL975DpyAz1aFxW5M+8llgmyoV4toICpV9WMzv9I+aBNxA01Ak/jew4R2RoYcyS1ofus8SJhYX4zl4dZY7gK6WcYq2IlK9G2Osdis30TezVnbARbVsKK4=
+Authentication-Results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=oracle.com;
+Received: from BYAPR10MB2999.namprd10.prod.outlook.com (2603:10b6:a03:85::27)
+ by BYAPR10MB3445.namprd10.prod.outlook.com (2603:10b6:a03:81::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.20; Wed, 3 Feb
+ 2021 18:14:59 +0000
+Received: from BYAPR10MB2999.namprd10.prod.outlook.com
+ ([fe80::e180:1ba2:d87:456]) by BYAPR10MB2999.namprd10.prod.outlook.com
+ ([fe80::e180:1ba2:d87:456%4]) with mapi id 15.20.3825.019; Wed, 3 Feb 2021
+ 18:14:59 +0000
+Date:   Wed, 3 Feb 2021 13:14:50 -0500
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
         Chris Browy <cbrowy@avery-design.com>,
-        Markus Armbruster <armbru@redhat.com>,
-        linux-cxl@vger.kernel.org,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jon Masters <jcm@jonmasters.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [RFC PATCH v3 00/31] CXL 2.0 Support
-Message-ID: <20210203174216.ko2fqgsvsnp2hjxx@mail.bwidawsk.net>
-References: <20210202005948.241655-1-ben.widawsky@intel.com>
-MIME-Version: 1.0
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        daniel.lll@alibaba-inc.com,
+        "John Groves (jgroves)" <jgroves@micron.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>
+Subject: Re: [PATCH 13/14] cxl/mem: Add limited Get Log command (0401h)
+Message-ID: <YBroGrVd76p+BF0v@Konrads-MacBook-Pro.local>
+References: <20210130002438.1872527-1-ben.widawsky@intel.com>
+ <20210130002438.1872527-14-ben.widawsky@intel.com>
+ <20210201182848.GL197521@fedora>
+ <20210202235103.v36v3znh5tsi4g5x@intel.com>
+ <CAPcyv4i3MMY=WExfvcPFYiJkHoM_UeZ63ORZqi0Vbm76JapS8A@mail.gmail.com>
+ <20210203171610.2y2x4krijol5dvkk@intel.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210202005948.241655-1-ben.widawsky@intel.com>
+In-Reply-To: <20210203171610.2y2x4krijol5dvkk@intel.com>
+X-Originating-IP: [138.3.200.57]
+X-ClientProxiedBy: CH2PR07CA0009.namprd07.prod.outlook.com
+ (2603:10b6:610:20::22) To BYAPR10MB2999.namprd10.prod.outlook.com
+ (2603:10b6:a03:85::27)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from Konrads-MacBook-Pro.local (138.3.200.57) by CH2PR07CA0009.namprd07.prod.outlook.com (2603:10b6:610:20::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.17 via Frontend Transport; Wed, 3 Feb 2021 18:14:54 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c6a8d3d7-aee9-48ce-6df2-08d8c86f9e11
+X-MS-TrafficTypeDiagnostic: BYAPR10MB3445:
+X-Microsoft-Antispam-PRVS: <BYAPR10MB344535FA43FBD61E277C2C9489B49@BYAPR10MB3445.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6QNx7EYGPFre2pyyIitD1VXx/8C4Ooc7rgqKUrno/+nbpgi4WzRGpsyPQdrtRM4R3a3UbcXBjAHxkbHXkjzb98r6cqaSvf/RkQ0G4pgvKcNWFkv7yUD1i6ZZYC5t7eAR4vBz2Yy0UsQryWdFraHJeZeg9oMsG08b36dG2/ecN23PrrYp1MXvfl00/PDxXBpcxcW3S61amJWKWUXqtO48XTCDYdfl+bDPyxF+Z1z4wFWrrdbLy6Ix0SWrJvVTWmXTpGulf2Y5anhEFoZiLT/hlyuCzBIWI5dGyNbCOq8o8eEz/LxUYsX2+QFWrs8xAgiDpFG1t7DYMjDz7dOTtPIzi9QlSnQk2Xi9E3/ui63fsIYcFIEMJWWzSp5hwT3FxJPE7OJMRgMEugfQEeHHd2x/Le61cLlt3MslI0W6UljkSMf1p/MMndqmHZ/IGvEKghJ4qLcRYPQrw4uPB8G/+Y0XdPIzUNdMn36EV47N7c/Oazp1WpKq403P6daNQC4wHpgn8MGSp7W1x+awf9ErziK9yiaistMHYdKuLjXDrNte79Ooh+Lp6JUOmdYoSP8oyLFa
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB2999.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(39860400002)(346002)(376002)(366004)(396003)(6666004)(54906003)(55016002)(956004)(316002)(7696005)(52116002)(6506007)(7416002)(26005)(86362001)(66946007)(66476007)(8936002)(8676002)(186003)(16526019)(5660300002)(6916009)(2906002)(66556008)(83380400001)(4326008)(53546011)(9686003)(478600001)(67856001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?LbNa5+82uIdTO2xZJcLFbYGxcGebDkNJlRXe3Og7AIPFRKL9EaCNOXBiahRN?=
+ =?us-ascii?Q?BcPenfV6al/j+GVjFuB7ldjZDCBjJPF9+ZvyJ4XeU/P2vQBAVDRo7pXvI6Z3?=
+ =?us-ascii?Q?g3UVl6t1Yn/GvCZoi08i8ydN6M8Phe2xzVAu/Gq1YHnzlTGlBTe8Nzl6xPOG?=
+ =?us-ascii?Q?nL78JlaZnfSki7Xv6kyjK/6+TH6paymTmyAfCavcpC2t/w4HTeft18kDPfv1?=
+ =?us-ascii?Q?KTJaV4B4SCTWfLhsc2TnMIny6ZJeXaya/I1x2yDZh/N1SzAR1RC+GycI820M?=
+ =?us-ascii?Q?T39xcYXwtUpgZIW6yH335HcTg1bXZ6k5RJ7H+yahO2XJMq2tviNH8UUMSjl1?=
+ =?us-ascii?Q?KZfdDXp+wKmX5HJR9LY0QZ6ae550yklvFrykPIo80tIqA+DgxURNmCwVNZhV?=
+ =?us-ascii?Q?lJQZYqySSXDco5YKFM75xFBYPRbngKe8SmSzI0Shu/WbkmmnF1r1jLO9qlkk?=
+ =?us-ascii?Q?DcwOkDOKom3tjmBHy49MTirb54LoXSk/gFjpdHPEYnkEUXe12JXPsOw1F07A?=
+ =?us-ascii?Q?Ksvu0Rj0D7YZA2vtk+7Txk19I1VukwFWU33IH81SG93Sj0iRjvTuN63FJvTG?=
+ =?us-ascii?Q?K8rUnrbhtciqTBxq/K1dTFDUVFFlM6HXblAQGM4ayMNJQzu3WC4JHq6M828m?=
+ =?us-ascii?Q?pO2X1BWjrHTyvVMzc4JUIxhGebmHbbZIMzLhqg23B470WdQ3chgVh0FH5/QN?=
+ =?us-ascii?Q?BDYRsa3oX2jxqiD2FpIqzmcPXCsUxr6DW5jILfIsSSvTuWavv33X+yvnCIE+?=
+ =?us-ascii?Q?jQFqqigSTIUmp6Yq5Qts5/LHe9ARhAxLM+qZDdQvR9hGEvni3EmPrG36ygiZ?=
+ =?us-ascii?Q?Z1y1d6Xv0bWB+tfd4xuRkjOafHncqXg9HL8UBoaUhnh+XotHPCVFgS0HtJo+?=
+ =?us-ascii?Q?HjxM8B5Z1vV8NrFF7GFaaaS0150JUJbDE7Lg+eRbcXTyvUJRAy9J6vaAv/2w?=
+ =?us-ascii?Q?u2YvSJtT6HEr/k7+MCg0fu/Si0I7WHwLsJlB/a8wA3kKHds1rGfEFKXFbPt9?=
+ =?us-ascii?Q?MByT7JinJ3aTPiYdOw5kBJKs+L2N6f8yr36fLIhApYf4H48nPoS5m1M+pX0A?=
+ =?us-ascii?Q?XKPIeSli?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6a8d3d7-aee9-48ce-6df2-08d8c86f9e11
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB2999.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2021 18:14:59.4051
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dTlK/NzN127osddV6eaOvBemrej7AiBA8zzaWPxBQuvQkOSnGhuzOyFMEHeZ8egotfRJsdcl1h4rFjAT35t/bQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3445
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9884 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
+ spamscore=0 mlxscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2102030108
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9884 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+ mlxscore=0 priorityscore=1501 spamscore=0 impostorscore=0 clxscore=1015
+ suspectscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2102030107
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-I've started a barebones project plan:
-https://gitlab.com/bwidawsk/qemu/-/snippets/2070304
-
-Jonathan, if you have a moment, perhaps you can send a MR summarizing CDAT/DOE
-work from you and Chris?
-
-If folks feel priorities are drastically off, we can discuss it in the snippet
-comments.
-
-As for wider acceptance, if I'm looking at this from the QEMU community
-perspective, better test cases are really needed. If your fingers are itching
-for some typing, might I suggest starting with that.
-
-I've opted not to use issue tracker for this because I am hopeful this won't be
-a long living gitlab project.
-
-On 21-02-01 16:59:17, Ben Widawsky wrote:
-> Major changes since v2 [1]:
->  * Removed all register endian/alignment/size checking. Using core functionality
->    instead. This untested on big endian hosts, but Should Work(tm).
->  * Fix component capability header generation (off by 1).
->  * Fixed HDM programming (multiple issues).
->  * Fixed timestamp command implementations.
->  * Added commands: GET_FIRMWARE_UPDATE_INFO, GET_PARTITION_INFO, GET_LSA, SET_LSA
+On Wed, Feb 03, 2021 at 09:16:10AM -0800, Ben Widawsky wrote:
+> On 21-02-02 15:57:03, Dan Williams wrote:
+> > On Tue, Feb 2, 2021 at 3:51 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > >
+> > > On 21-02-01 13:28:48, Konrad Rzeszutek Wilk wrote:
+> > > > On Fri, Jan 29, 2021 at 04:24:37PM -0800, Ben Widawsky wrote:
+> > > > > The Get Log command returns the actual log entries that are advertised
+> > > > > via the Get Supported Logs command (0400h). CXL device logs are selected
+> > > > > by UUID which is part of the CXL spec. Because the driver tries to
+> > > > > sanitize what is sent to hardware, there becomes a need to restrict the
+> > > > > types of logs which can be accessed by userspace. For example, the
+> > > > > vendor specific log might only be consumable by proprietary, or offline
+> > > > > applications, and therefore a good candidate for userspace.
+> > > > >
+> > > > > The current driver infrastructure does allow basic validation for all
+> > > > > commands, but doesn't inspect any of the payload data. Along with Get
+> > > > > Log support comes new infrastructure to add a hook for payload
+> > > > > validation. This infrastructure is used to filter out the CEL UUID,
+> > > > > which the userspace driver doesn't have business knowing, and taints on
+> > > > > invalid UUIDs being sent to hardware.
+> > > >
+> > > > Perhaps a better option is to reject invalid UUIDs?
+> > > >
+> > > > And if you really really want to use invalid UUIDs then:
+> > > >
+> > > > 1) Make that code wrapped in CONFIG_CXL_DEBUG_THIS_IS_GOING_TO..?
+> > > >
+> > > > 2) Wrap it with lockdown code so that you can't do this at all
+> > > >    when in LOCKDOWN_INTEGRITY or such?
+> > > >
+> > >
+> > > The commit message needs update btw as CEL is allowed in the latest rev of the
+> > > patches.
+> > >
+> > > We could potentially combine this with the now added (in a branch) CONFIG_RAW
+> > > config option. Indeed I think that makes sense. Dan, thoughts?
+> > 
+> > Yeah, unknown UUIDs blocking is the same risk as raw commands as a
+> > vendor can trigger any behavior they want. A "CONFIG_RAW depends on
+> > !CONFIG_INTEGRITY" policy sounds reasonable as well.
 > 
-> Things have remained fairly stable since since v2. The biggest change here is
-> definitely the HDM programming which has received limited (but not 0) testing in
-> the Linux driver.
+> What about LOCKDOWN_NONE though? I think we need something runtime for this.
 > 
-> Jonathan Cameron has gotten this patch series working on ARM [2], and added some
-> much sought after functionality [3].
+> Can we summarize the CONFIG options here?
+> 
+> CXL_MEM_INSECURE_DEBUG // no change
+> CXL_MEM_RAW_COMMANDS // if !security_locked_down(LOCKDOWN_NONE)
+> 
+> bool cxl_unsafe()
+
+Would it be better if this inverted? Aka cxl_safe()..
+?
+> {
+> #ifndef CXL_MEM_RAW_COMMANDS
+> 	return false;
+> #else
+> 	return !security_locked_down(LOCKDOWN_NONE);
+
+:thumbsup:
+
+(Naturally this would inverted if this was cxl_safe()).
+
+
+> #endif
+> }
 > 
 > ---
 > 
-> I've started #cxl on OFTC IRC for discussion. Please feel free to use that
-> channel for questions or suggestions in addition to #qemu.
-> 
-> ---
-> 
-> Introduce emulation of Compute Express Link 2.0
-> (https://www.computeexpresslink.org/). Specifically, add support for Type 3
-> memory expanders with persistent memory.
-> 
-> The emulation has been critical to get the Linux enabling started [4], it would
-> be an ideal place to land regression tests for different topology handling, and
-> there may be applications for this emulation as a way for a guest to manipulate
-> its address space relative to different performance memories.
-> 
-> Three of the five CXL component types are emulated with some level of
-> functionality: host bridge, root port, and memory device. All components and
-> devices implement basic MMIO. Devices/memory devices implement the mailbo
-> interface. Basic ACPI support is also included. Upstream ports and downstream
-> ports aren't implemented (the two components needed to make up a switch).
-> 
-> CXL 2.0 is built on top of PCIe (see spec for details). As a result, much of the
-> implementation utilizes existing PCI paradigms. To implement the host bridge,
-> I've chosen to use PXB (PCI Expander Bridge). It seemed to be the most natural
-> fit even though it doesn't directly map to how hardware will work. For
-> persistent capacity of the memory device, I utilized the memory subsystem
-> (hw/mem).
-> 
-> We have 3 reasons why this work is valuable:
-> 1. Linux driver feature development benefits from emulation both due to a lack
->    of initial hardware availability, but also, as is seen with NVDIMM/PMEM
->    emulation, there is value in being able to share topologies with
->    system-software developers even after hardware is available.
-> 
-> 2. The Linux kernel's unit test suite for NVDIMM/PMEM ended up injecting fake
->    resources via custom modules (nfit_test). In retrospect a QEMU emulation of
->    nfit_test capabilities would have made the test environment more portable,
->    and allowed for easier community contributions of example configurations.
-> 
-> 3. This is still being fleshed out, but in short it provides a standardized
->    mechanism for the guest to provide feedback to the host about size and
->    placement needs of the memory. After the host gives the guest a physical
->    window mapping to the CXL device, the emulated HDM decoders allow the guest a
->    way to tell the host how much it wants and where. There are likely simpler
->    ways to do this, but they'd require inventing a new interface and you'd need
->    to have diverging driver code in the guest programming of the HDM decoder vs.
->    the host. Since we've already done this work, why not use it?
-> 
-> There is quite a long list of work to do for full spec compliance, but I don't
-> believe that any of it precludes merging. Off the top of my head:
-> - Main host bridge support (WIP)
-> - Interleaving
-> - Better Tests
-> - Hot plug support
-> - Emulating volatile capacity
-> - CDAT emulation [3]
-> 
-> The flow of the patches in general is to define all the data structures and
-> registers associated with the various components in a top down manner. Host
-> bridge, component, ports, devices. Then, the actual implementation is done in
-> the same order.
-> 
-> The summary is:
-> 1-5: Infrastructure for component and device emulation
-> 6-9: Basic mailbox command implementations
-> 10-19: Implement CXL host bridges as PXB devices
-> 20: Implement a root port
-> 21-22: Implement a memory device
-> 23-26: ACPI bits
-> 27-29: Add some more advanced mailbox command implementations
-> 30: Start working on enabling the main host bridge
-> 31: Basic test case
-> 
-> ---
-> 
-> [1]: https://lore.kernel.org/qemu-devel/20210105165323.783725-1-ben.widawsky@intel.com/
-> [2]: https://lore.kernel.org/qemu-devel/20210201152655.31027-1-Jonathan.Cameron@huawei.com/
-> [3]: https://lore.kernel.org/qemu-devel/20210201151629.29656-1-Jonathan.Cameron@huawei.com/
-> [4]: https://lore.kernel.org/linux-cxl/20210130002438.1872527-1-ben.widawsky@intel.com/
-> 
-> ---
-> 
-> Ben Widawsky (31):
->   hw/pci/cxl: Add a CXL component type (interface)
->   hw/cxl/component: Introduce CXL components (8.1.x, 8.2.5)
->   hw/cxl/device: Introduce a CXL device (8.2.8)
->   hw/cxl/device: Implement the CAP array (8.2.8.1-2)
->   hw/cxl/device: Implement basic mailbox (8.2.8.4)
->   hw/cxl/device: Add memory device utilities
->   hw/cxl/device: Add cheap EVENTS implementation (8.2.9.1)
->   hw/cxl/device: Timestamp implementation (8.2.9.3)
->   hw/cxl/device: Add log commands (8.2.9.4) + CEL
->   hw/pxb: Use a type for realizing expanders
->   hw/pci/cxl: Create a CXL bus type
->   hw/pxb: Allow creation of a CXL PXB (host bridge)
->   qtest: allow DSDT acpi table changes
->   acpi/pci: Consolidate host bridge setup
->   tests/acpi: remove stale allowed tables
->   hw/pci: Plumb _UID through host bridges
->   hw/cxl/component: Implement host bridge MMIO (8.2.5, table 142)
->   acpi/pxb/cxl: Reserve host bridge MMIO
->   hw/pxb/cxl: Add "windows" for host bridges
->   hw/cxl/rp: Add a root port
->   hw/cxl/device: Add a memory device (8.2.8.5)
->   hw/cxl/device: Implement MMIO HDM decoding (8.2.5.12)
->   acpi/cxl: Add _OSC implementation (9.14.2)
->   tests/acpi: allow CEDT table addition
->   acpi/cxl: Create the CEDT (9.14.1)
->   tests/acpi: Add new CEDT files
->   hw/cxl/device: Add some trivial commands
->   hw/cxl/device: Plumb real LSA sizing
->   hw/cxl/device: Implement get/set LSA
->   qtest/cxl: Add very basic sanity tests
->   WIP: i386/cxl: Initialize a host bridge
-> 
->  MAINTAINERS                         |   6 +
->  hw/Kconfig                          |   1 +
->  hw/acpi/Kconfig                     |   5 +
->  hw/acpi/cxl.c                       | 173 ++++++++++
->  hw/acpi/meson.build                 |   1 +
->  hw/arm/virt.c                       |   1 +
->  hw/core/machine.c                   |  26 ++
->  hw/core/numa.c                      |   3 +
->  hw/cxl/Kconfig                      |   3 +
->  hw/cxl/cxl-component-utils.c        | 208 ++++++++++++
->  hw/cxl/cxl-device-utils.c           | 264 +++++++++++++++
->  hw/cxl/cxl-mailbox-utils.c          | 498 ++++++++++++++++++++++++++++
->  hw/cxl/meson.build                  |   5 +
->  hw/i386/acpi-build.c                |  87 ++++-
->  hw/i386/microvm.c                   |   1 +
->  hw/i386/pc.c                        |   2 +
->  hw/mem/Kconfig                      |   5 +
->  hw/mem/cxl_type3.c                  | 405 ++++++++++++++++++++++
->  hw/mem/meson.build                  |   1 +
->  hw/meson.build                      |   1 +
->  hw/pci-bridge/Kconfig               |   5 +
->  hw/pci-bridge/cxl_root_port.c       | 231 +++++++++++++
->  hw/pci-bridge/meson.build           |   1 +
->  hw/pci-bridge/pci_expander_bridge.c | 209 +++++++++++-
->  hw/pci-bridge/pcie_root_port.c      |   6 +-
->  hw/pci/pci.c                        |  32 +-
->  hw/pci/pcie.c                       |  30 ++
->  hw/ppc/spapr.c                      |   2 +
->  include/hw/acpi/cxl.h               |  27 ++
->  include/hw/boards.h                 |   2 +
->  include/hw/cxl/cxl.h                |  29 ++
->  include/hw/cxl/cxl_component.h      | 187 +++++++++++
->  include/hw/cxl/cxl_device.h         | 255 ++++++++++++++
->  include/hw/cxl/cxl_pci.h            | 160 +++++++++
->  include/hw/pci/pci.h                |  15 +
->  include/hw/pci/pci_bridge.h         |  25 ++
->  include/hw/pci/pci_bus.h            |   8 +
->  include/hw/pci/pci_ids.h            |   1 +
->  monitor/hmp-cmds.c                  |  15 +
->  qapi/machine.json                   |   1 +
->  tests/data/acpi/pc/CEDT             | Bin 0 -> 36 bytes
->  tests/data/acpi/pc/DSDT             | Bin 5065 -> 5065 bytes
->  tests/data/acpi/pc/DSDT.acpihmat    | Bin 6390 -> 6390 bytes
->  tests/data/acpi/pc/DSDT.bridge      | Bin 6924 -> 6924 bytes
->  tests/data/acpi/pc/DSDT.cphp        | Bin 5529 -> 5529 bytes
->  tests/data/acpi/pc/DSDT.dimmpxm     | Bin 6719 -> 6719 bytes
->  tests/data/acpi/pc/DSDT.hpbridge    | Bin 5026 -> 5026 bytes
->  tests/data/acpi/pc/DSDT.hpbrroot    | Bin 3084 -> 3084 bytes
->  tests/data/acpi/pc/DSDT.ipmikcs     | Bin 5137 -> 5137 bytes
->  tests/data/acpi/pc/DSDT.memhp       | Bin 6424 -> 6424 bytes
->  tests/data/acpi/pc/DSDT.numamem     | Bin 5071 -> 5071 bytes
->  tests/data/acpi/pc/DSDT.roothp      | Bin 5261 -> 5261 bytes
->  tests/data/acpi/q35/CEDT            | Bin 0 -> 36 bytes
->  tests/data/acpi/q35/DSDT            | Bin 7801 -> 7801 bytes
->  tests/data/acpi/q35/DSDT.acpihmat   | Bin 9126 -> 9126 bytes
->  tests/data/acpi/q35/DSDT.bridge     | Bin 7819 -> 7819 bytes
->  tests/data/acpi/q35/DSDT.cphp       | Bin 8265 -> 8265 bytes
->  tests/data/acpi/q35/DSDT.dimmpxm    | Bin 9455 -> 9455 bytes
->  tests/data/acpi/q35/DSDT.ipmibt     | Bin 7876 -> 7876 bytes
->  tests/data/acpi/q35/DSDT.memhp      | Bin 9160 -> 9160 bytes
->  tests/data/acpi/q35/DSDT.mmio64     | Bin 8932 -> 8932 bytes
->  tests/data/acpi/q35/DSDT.numamem    | Bin 7807 -> 7807 bytes
->  tests/qtest/cxl-test.c              |  93 ++++++
->  tests/qtest/meson.build             |   4 +
->  64 files changed, 3004 insertions(+), 30 deletions(-)
->  create mode 100644 hw/acpi/cxl.c
->  create mode 100644 hw/cxl/Kconfig
->  create mode 100644 hw/cxl/cxl-component-utils.c
->  create mode 100644 hw/cxl/cxl-device-utils.c
->  create mode 100644 hw/cxl/cxl-mailbox-utils.c
->  create mode 100644 hw/cxl/meson.build
->  create mode 100644 hw/mem/cxl_type3.c
->  create mode 100644 hw/pci-bridge/cxl_root_port.c
->  create mode 100644 include/hw/acpi/cxl.h
->  create mode 100644 include/hw/cxl/cxl.h
->  create mode 100644 include/hw/cxl/cxl_component.h
->  create mode 100644 include/hw/cxl/cxl_device.h
->  create mode 100644 include/hw/cxl/cxl_pci.h
->  create mode 100644 tests/data/acpi/pc/CEDT
->  create mode 100644 tests/data/acpi/q35/CEDT
->  create mode 100644 tests/qtest/cxl-test.c
-> 
-> -- 
-> 2.30.0
-> 
-> 
+> Did I get that right?
+
+:nods:
+
