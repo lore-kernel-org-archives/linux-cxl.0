@@ -6,58 +6,58 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA09C433E6
-	for <linux-cxl@archiver.kernel.org>; Mon,  8 Feb 2021 23:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15855C433E6
+	for <linux-cxl@archiver.kernel.org>; Tue,  9 Feb 2021 01:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D03D64E7E
-	for <linux-cxl@archiver.kernel.org>; Mon,  8 Feb 2021 23:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDA4864E9C
+	for <linux-cxl@archiver.kernel.org>; Tue,  9 Feb 2021 01:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229720AbhBHXhj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 8 Feb 2021 18:37:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47634 "EHLO
+        id S229822AbhBIBEn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 8 Feb 2021 20:04:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231269AbhBHXh3 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 8 Feb 2021 18:37:29 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C956C06178C
-        for <linux-cxl@vger.kernel.org>; Mon,  8 Feb 2021 15:36:49 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id z22so21231610edb.9
-        for <linux-cxl@vger.kernel.org>; Mon, 08 Feb 2021 15:36:49 -0800 (PST)
+        with ESMTP id S229784AbhBIBEb (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 8 Feb 2021 20:04:31 -0500
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3513CC061794
+        for <linux-cxl@vger.kernel.org>; Mon,  8 Feb 2021 17:03:39 -0800 (PST)
+Received: by mail-ed1-x529.google.com with SMTP id s5so21495444edw.8
+        for <linux-cxl@vger.kernel.org>; Mon, 08 Feb 2021 17:03:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=eGGcKAyTzmY7XmHqKjg37Fb2afx54tMCqzIlqIxaU7M=;
-        b=E5dDhWELy3490cipw2qXqX2bxpHoPiVzQRaR2X4dSFiRqOjLee56yC4S848SYQ7DHE
-         TdW2iX6wSAayi8M7TQ5MMi4LhfUPROW4AZ6ZZOqjJFTYTE5q5E4sV/GibnBSH8lySu0y
-         Uyvf6SQAxXS7uRrtKj3agOmXXQYr2c5xv+HgO5WxwAvRmw/+0NiQSSyWhVntPGknaeyA
-         2q042JtRZZZYrxE5qrQYldeSgOlG0x2U0IaHs3AwcLCd7L5nOVh3ATxC4Zkpls71QW8X
-         iF7cHXO4b5hDGaLJSd8+KCt2uoywgyj2XpoqdNsGqaqAxuWIKViVqb100OOjUtUyje0Z
-         k2DQ==
+        bh=fHdIpxdCQ1PLtC8RCv6m44jQdcXIE1TuMoRRkTZi7uE=;
+        b=qwv0t5E5aZrjpce35wVglshp4JBxu39PIdgj4xdUOlLAEakgzg4b3FJbfq2HN/qqou
+         9LQfGzniImvjDNMBkBJnrX1ntP72ogrewjQ2gKYoCh1o/le4FRKVGjaJxv3rSN7ZZBGU
+         ND29aEvm0jt1j7a3IPInOsXrIfqP/YDjyAHvbHVpAfIfge/RjtSbj3EMVgUml+GLtD8A
+         s4+rSINdnXAV0Xh58nVxnqiimSO2mDtGL34UGKW0uyWIrbcD0eh7LweXk4UOOBJfHn1d
+         k46kyxjQC6/FOxYghxGOEZpmpCQBxx/22/B4ofVC4Hm3q5GScDOeGmVhJc6rCD4ZEY91
+         XuRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=eGGcKAyTzmY7XmHqKjg37Fb2afx54tMCqzIlqIxaU7M=;
-        b=Lfc+hPpU3qfI9kNLEdWrqOSj1hnv7o0yfdFt0iG5TN6kpqhzVgPt5L6HOfIbU+gGTl
-         bRg27ZV+TiCApDSI0lsjZuMxFqu4SmiAZmnVYcRGua02ptzYz8iuUk//Pq8PvfTbRpzG
-         ZNkKlC4KH4B2nMhhACc/Kx6XZAwWuj3/xuz5b+hXyjm/Fyqk9IwQVjP+a717JlasdlGY
-         WEbcua29e0o0zQIqjChcz5CoWBlLEJxHraHJQMdcu4YBkA4jfE0SzHNqTQLMG00SVptz
-         SjQGyVA6C8K9zhG2/7xq2yPhHUvY76kGehqcEHrEypviX00/WfGPAc2WwtqROFfbP120
-         4TiA==
-X-Gm-Message-State: AOAM5329bMB/Nj287MqtDk5GcrWEQBEmtfEzwdRMN33gAGnqqnOBisBe
-        DKTHPzDII6JQO1Shsa2UmDepaP4SWpn78GBkiuqdKw==
-X-Google-Smtp-Source: ABdhPJy9ZjJZRXDvIzBmNSGdGKMoO79oPi5SonIYHgHcEcFwYmkhh/wOyEJYChGVMiInUvinect2p135EQFvnomUZL4=
-X-Received: by 2002:aa7:cd87:: with SMTP id x7mr20441251edv.210.1612827408336;
- Mon, 08 Feb 2021 15:36:48 -0800 (PST)
+        bh=fHdIpxdCQ1PLtC8RCv6m44jQdcXIE1TuMoRRkTZi7uE=;
+        b=lsahnZTn7Z6caws6SrNhfHfx8tnQp1dh2HSxf78W3eiekjuYLiHXcpWoDBf7HMEy/8
+         OAwj+xycrwe301n7jlr0NfnAEYvntNWNDaEmP+Lk4+9+1CemS0ZdUaPTfs76AZ06oFuB
+         pErkvhYXZRAr88JCxJx60RgUXJzbesw7joj2o7lXaA1Xijc6fjQlLa588ki9EKckDdxJ
+         2s58bvbohIhWefbKVQsJr8TVKxa9xttEBqy8zOQxcYUpN6vWvRn4nNEWQy8AtAXYCLG1
+         UtV9CadEPgc09BzF8bJguGjMXIv5GNwiuDTqF8uFHu+jThcrpRjMS7mwBqwfsRXYUoko
+         cNfw==
+X-Gm-Message-State: AOAM531r7FineBXK8GhiVRbaI7E2FvapTOJn0Gfaz4r+GnVS/p1tvZMR
+        qHkt/Tud7LgTNQ4oWpp7TfkcfV4tv5Shz6j+wEU0Kw==
+X-Google-Smtp-Source: ABdhPJyHAry8BiQtZNtaMNiR4K/N57s8fu6tcUa4c1BcfO8uaRfbbIzg0j3uT3lLVTnBuEac7Ul2LjuJW6ltpn+onC0=
+X-Received: by 2002:aa7:ca13:: with SMTP id y19mr20091433eds.300.1612832617860;
+ Mon, 08 Feb 2021 17:03:37 -0800 (PST)
 MIME-Version: 1.0
 References: <20210130002438.1872527-1-ben.widawsky@intel.com>
  <20210130002438.1872527-9-ben.widawsky@intel.com> <CAPcyv4iPXqO5FL4_bmMQaSvmUm9FVrPv9yPJr3Q4DQWYf4t5hQ@mail.gmail.com>
- <202102081406.CDE33FB8@keescook>
-In-Reply-To: <202102081406.CDE33FB8@keescook>
+ <202102081406.CDE33FB8@keescook> <CAPcyv4ix=zmQdb5sFKN-9wOZFnitHN0sSwHZJgQeaEM+=6+W1w@mail.gmail.com>
+In-Reply-To: <CAPcyv4ix=zmQdb5sFKN-9wOZFnitHN0sSwHZJgQeaEM+=6+W1w@mail.gmail.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 8 Feb 2021 15:36:35 -0800
-Message-ID: <CAPcyv4ix=zmQdb5sFKN-9wOZFnitHN0sSwHZJgQeaEM+=6+W1w@mail.gmail.com>
+Date:   Mon, 8 Feb 2021 17:03:25 -0800
+Message-ID: <CAPcyv4hFLnY4b8a7z+rWVeayHka4BLZyXse_ExSeRWuBRxjCwA@mail.gmail.com>
 Subject: Re: [PATCH 08/14] taint: add taint for direct hardware access
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Jonathan Corbet <corbet@lwn.net>, linux-cxl@vger.kernel.org,
@@ -82,71 +82,78 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Feb 8, 2021 at 2:09 PM Kees Cook <keescook@chromium.org> wrote:
+On Mon, Feb 8, 2021 at 3:36 PM Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> On Mon, Feb 08, 2021 at 02:00:33PM -0800, Dan Williams wrote:
-> > [ add Jon Corbet as I'd expect him to be Cc'd on anything that
-> > generically touches Documentation/ like this, and add Kees as the last
-> > person who added a taint (tag you're it) ]
+> On Mon, Feb 8, 2021 at 2:09 PM Kees Cook <keescook@chromium.org> wrote:
 > >
-> > Jon, Kees, are either of you willing to ack this concept?
-> >
-> > Top-posting to add more context for the below:
-> >
-> > This taint is proposed because it has implications for
-> > CONFIG_LOCK_DOWN_KERNEL among other things. These CXL devices
-> > implement memory like DDR would, but unlike DDR there are
-> > administrative / configuration commands that demand kernel
-> > coordination before they can be sent. The posture taken with this
-> > taint is "guilty until proven innocent" for commands that have yet to
-> > be explicitly allowed by the driver. This is different than NVME for
-> > example where an errant vendor-defined command could destroy data on
-> > the device, but there is no wider threat to system integrity. The
-> > taint allows a pressure release valve for any and all commands to be
-> > sent, but flagged with WARN_TAINT_ONCE if the driver has not
-> > explicitly enabled it on an allowed list of known-good / kernel
-> > coordinated commands.
-> >
-> > On Fri, Jan 29, 2021 at 4:25 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > On Mon, Feb 08, 2021 at 02:00:33PM -0800, Dan Williams wrote:
+> > > [ add Jon Corbet as I'd expect him to be Cc'd on anything that
+> > > generically touches Documentation/ like this, and add Kees as the last
+> > > person who added a taint (tag you're it) ]
 > > >
-> > > For drivers that moderate access to the underlying hardware it is
-> > > sometimes desirable to allow userspace to bypass restrictions. Once
-> > > userspace has done this, the driver can no longer guarantee the sanctity
-> > > of either the OS or the hardware. When in this state, it is helpful for
-> > > kernel developers to be made aware (via this taint flag) of this fact
-> > > for subsequent bug reports.
+> > > Jon, Kees, are either of you willing to ack this concept?
 > > >
-> > > Example usage:
-> > > - Hardware xyzzy accepts 2 commands, waldo and fred.
-> > > - The xyzzy driver provides an interface for using waldo, but not fred.
-> > > - quux is convinced they really need the fred command.
-> > > - xyzzy driver allows quux to frob hardware to initiate fred.
-> > >   - kernel gets tainted.
-> > > - turns out fred command is borked, and scribbles over memory.
-> > > - developers laugh while closing quux's subsequent bug report.
+> > > Top-posting to add more context for the below:
+> > >
+> > > This taint is proposed because it has implications for
+> > > CONFIG_LOCK_DOWN_KERNEL among other things. These CXL devices
+> > > implement memory like DDR would, but unlike DDR there are
+> > > administrative / configuration commands that demand kernel
+> > > coordination before they can be sent. The posture taken with this
+> > > taint is "guilty until proven innocent" for commands that have yet to
+> > > be explicitly allowed by the driver. This is different than NVME for
+> > > example where an errant vendor-defined command could destroy data on
+> > > the device, but there is no wider threat to system integrity. The
+> > > taint allows a pressure release valve for any and all commands to be
+> > > sent, but flagged with WARN_TAINT_ONCE if the driver has not
+> > > explicitly enabled it on an allowed list of known-good / kernel
+> > > coordinated commands.
+> > >
+> > > On Fri, Jan 29, 2021 at 4:25 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > > >
+> > > > For drivers that moderate access to the underlying hardware it is
+> > > > sometimes desirable to allow userspace to bypass restrictions. Once
+> > > > userspace has done this, the driver can no longer guarantee the sanctity
+> > > > of either the OS or the hardware. When in this state, it is helpful for
+> > > > kernel developers to be made aware (via this taint flag) of this fact
+> > > > for subsequent bug reports.
+> > > >
+> > > > Example usage:
+> > > > - Hardware xyzzy accepts 2 commands, waldo and fred.
+> > > > - The xyzzy driver provides an interface for using waldo, but not fred.
+> > > > - quux is convinced they really need the fred command.
+> > > > - xyzzy driver allows quux to frob hardware to initiate fred.
+> > > >   - kernel gets tainted.
+> > > > - turns out fred command is borked, and scribbles over memory.
+> > > > - developers laugh while closing quux's subsequent bug report.
+> >
+> > But a taint flag only lasts for the current boot. If this is a drive, it
+> > could still be compromised after reboot. It sounds like this taint is
+> > really only for ephemeral things? "vendor shenanigans" is a pretty giant
+> > scope ...
+> >
 >
-> But a taint flag only lasts for the current boot. If this is a drive, it
-> could still be compromised after reboot. It sounds like this taint is
-> really only for ephemeral things? "vendor shenanigans" is a pretty giant
-> scope ...
+> That is true. This is more about preventing an ecosystem / cottage
+> industry of tooling built around bypassing the kernel. So the kernel
+> complains loudly and hopefully prevents vendor tooling from
+> propagating and instead directs that development effort back to the
+> native tooling. However for the rare "I know what I'm doing" cases,
+> this tainted kernel bypass lets some experimentation and debug happen,
+> but the kernel is transparent that when the capability ships in
+> production it needs to be a native implementation.
 >
+> So it's less, "the system integrity is compromised" and more like
+> "you're bypassing the development process that ensures sanity for CXL
+> implementations that may take down a system if implemented
+> incorrectly". For example, NVME reset is a non-invent, CXL reset can
+> be like surprise removing DDR DIMM.
+>
+> Should this be more tightly scoped to CXL? I had hoped to use this in
+> other places in LIBNVDIMM, but I'm ok to lose some generality for the
+> specific concerns that make CXL devices different than other PCI
+> endpoints.
 
-That is true. This is more about preventing an ecosystem / cottage
-industry of tooling built around bypassing the kernel. So the kernel
-complains loudly and hopefully prevents vendor tooling from
-propagating and instead directs that development effort back to the
-native tooling. However for the rare "I know what I'm doing" cases,
-this tainted kernel bypass lets some experimentation and debug happen,
-but the kernel is transparent that when the capability ships in
-production it needs to be a native implementation.
+As I type this out it strikes me that plain WARN already does
+TAINT_WARN and meets the spirit of what is trying to be achieved.
 
-So it's less, "the system integrity is compromised" and more like
-"you're bypassing the development process that ensures sanity for CXL
-implementations that may take down a system if implemented
-incorrectly". For example, NVME reset is a non-invent, CXL reset can
-be like surprise removing DDR DIMM.
-
-Should this be more tightly scoped to CXL? I had hoped to use this in
-other places in LIBNVDIMM, but I'm ok to lose some generality for the
-specific concerns that make CXL devices different than other PCI
-endpoints.
+Appreciate the skeptical eye Kees, we'll drop this one.
