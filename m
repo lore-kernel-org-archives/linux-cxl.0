@@ -2,191 +2,238 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	PDS_BAD_THREAD_QP_64,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F449C433DB
-	for <linux-cxl@archiver.kernel.org>; Wed, 10 Feb 2021 15:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F58C433DB
+	for <linux-cxl@archiver.kernel.org>; Wed, 10 Feb 2021 16:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E3B564E45
-	for <linux-cxl@archiver.kernel.org>; Wed, 10 Feb 2021 15:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9179A64E2A
+	for <linux-cxl@archiver.kernel.org>; Wed, 10 Feb 2021 16:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231878AbhBJP2G (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 10 Feb 2021 10:28:06 -0500
-Received: from esa.microchip.iphmx.com ([68.232.153.233]:42214 "EHLO
-        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229878AbhBJP2C (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 10 Feb 2021 10:28:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1612970880; x=1644506880;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=xGVzJquCzyjQYa4LIIypMWK2VAvY2VtOhqrB42TBKao=;
-  b=bIShQNFzDHVNVmK8H7lZPyR4MhOyh/K9R30r6viLzrDiyHYJmw0j/odX
-   trlRYwC0BPvOIrny/983/xCKXBk7ZuFSXmUy5hGjQNpXg4/bwYYMsbgG4
-   I+gCZ3y0LJtnNEO5YbWjsUp6l9DIvmuZ9d8KVQf/zDS/7xFen4n2veIKM
-   l3M09eeAGZBFsLPbEdCJVdNk370QRDgxP3v6avA7ja3FEctwSZBBCdMiD
-   Zn+0+Ftv9nalruErOCVZssk2yuUrvCuT9EByLyOCZRH2TMlrI2R9i2g5n
-   zWKINlCmnHutsl8INaMz1jsEF9K5Lylc5ycFx0fBttZ71/mWXMxFC42qs
-   Q==;
-IronPort-SDR: vwCVGxVJThETRAbcUmdJWtiNNgPYabBmPfEgW9aa8If73sgNVKvG/URQc3sb1vupu/7Pe/hrXM
- GD9jEyAaxiuf+V7Dy9no3LfsuE/VVEoWKYIINn5dvCkENuDx9aYEZwzjUoqwy2lSHajOPZOlPR
- P/5zIDsU6Lhf5BIlRaE7TmR42ycm+ZVbWWnxeQ9G6NxEZAUL1k14+WFaHKT18wKswEay+V3RW+
- w2F1SpBRTeLYhxw4EhuO+shNDxRqrE060NUUwfLLpwZ6alVyLDiUTSklrYHAe7Q8QnEO3vqmzR
- +aU=
-X-IronPort-AV: E=Sophos;i="5.81,168,1610434800"; 
-   d="scan'208";a="108719237"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Feb 2021 08:26:44 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+        id S231922AbhBJQEn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 10 Feb 2021 11:04:43 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2534 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231925AbhBJQEh (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 10 Feb 2021 11:04:37 -0500
+Received: from fraeml742-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DbPbw3NzSz67bth;
+        Thu, 11 Feb 2021 00:00:12 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml742-chm.china.huawei.com (10.206.15.223) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 10 Feb 2021 08:26:40 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Wed, 10 Feb 2021 08:26:40 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UaxLrcc88/V8g86xpqjGEaOcDuWGtpUbUObx3IYsbPoBxodHcgnQstwZJPsyPt3xcA15BZ1GRtS6sHcOEBLNuAtLVywcFCzcihSZdQRD9EAD2JtjAeTvyEC/xCjz5vRyl1GWr5HaKcVqKROlXt7NenAxLBaEVxqzjr5TNbRULhOtIrJjpfl/ptwHFiJhMtPJsQgbYf8U3oc1Bt/0d+hXSVBEZ38WcPEpFu+8pBArbwXU0aGfFtC+UR/XcJAUBjP93Pu0n8ujkah3V4bqJIxNePxj7Z7yfOmWt367y8CGqmGiw4QnwOSbzEjCi1L4r7xIBh8JmbhbL93IFUsXiCsiBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rteu7Jctq28lgwb8XznjyCN7S2VISSfAMObiYy0AGfI=;
- b=NfGFRWDYBLjZ8tIow3nc2j64MCkywN1qjQroetzCDE5gxVgL0bUF7G25v4AsZnnoW8Zq5N8qHBV+IQ9dibK+yUFShKHIktDS7HTNf5RiOsfY/IEo9OKzOFN4DPFW1MNDIijxuDc7dltLK7ZRxgHA6CyVjzPR7pgWQd5AQ59QGAiN6l1JTJ84/P6HNU7/KsNTeo+oKYdGBAhSmakoZdgwMD2Pxcp3hd9cxuxWQm3SZZZbTRAMR7PEdtc/da1RpoDkCNwlTauqUr442IXvxT0tP8GhmOFKRBb9/rOM0MZRQcChIu5KOGpbH7Wh1uo7BwpbKS3jfcq6eZo3va63T/x6hA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rteu7Jctq28lgwb8XznjyCN7S2VISSfAMObiYy0AGfI=;
- b=jmUrznCyUi1nmjgcD9fNilkjubIGHD0rCUTYqqC1Nrx1tcrDwlQeLTZJ1//dhyMdIX22JHrGbPaeStRw+neqt/4EpBIHMgsDZrT24HZBU8XDFlEm7Mdf10/6rx9I6mrtQdodxMQYKS8v93xzE8eqyqPl3+KzlrmPQUQf6J7drKI=
-Received: from MN2PR11MB3645.namprd11.prod.outlook.com (2603:10b6:208:f8::13)
- by MN2PR11MB3648.namprd11.prod.outlook.com (2603:10b6:208:f0::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.30; Wed, 10 Feb
- 2021 15:26:27 +0000
-Received: from MN2PR11MB3645.namprd11.prod.outlook.com
- ([fe80::51c7:31cf:308f:4c30]) by MN2PR11MB3645.namprd11.prod.outlook.com
- ([fe80::51c7:31cf:308f:4c30%5]) with mapi id 15.20.3825.030; Wed, 10 Feb 2021
- 15:26:27 +0000
-From:   <Ariel.Sibley@microchip.com>
-To:     <ben.widawsky@intel.com>, <linux-cxl@vger.kernel.org>
-CC:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-nvdimm@lists.01.org>, <linux-pci@vger.kernel.org>,
-        <helgaas@kernel.org>, <cbrowy@avery-design.com>,
-        <hch@infradead.org>, <dan.j.williams@intel.com>,
-        <david@redhat.com>, <rientjes@google.com>, <ira.weiny@intel.com>,
-        <jcm@jonmasters.org>, <Jonathan.Cameron@Huawei.com>,
-        <rafael.j.wysocki@intel.com>, <rdunlap@infradead.org>,
-        <vishal.l.verma@intel.com>, <jgroves@micron.com>,
-        <sean.v.kelley@intel.com>
-Subject: RE: [PATCH v2 5/8] cxl/mem: Add a "RAW" send command
-Thread-Topic: [PATCH v2 5/8] cxl/mem: Add a "RAW" send command
-Thread-Index: AQHW/0AqZCOVul459UanKz+acVTCvapRfUwQ
-Date:   Wed, 10 Feb 2021 15:26:27 +0000
-Message-ID: <MN2PR11MB36455574E25237635D3F9CC0888D9@MN2PR11MB3645.namprd11.prod.outlook.com>
-References: <20210210000259.635748-1-ben.widawsky@intel.com>
- <20210210000259.635748-6-ben.widawsky@intel.com>
-In-Reply-To: <20210210000259.635748-6-ben.widawsky@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=microchip.com;
-x-originating-ip: [142.134.145.175]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0d30efc6-6810-469d-115c-08d8cdd83bc3
-x-ms-traffictypediagnostic: MN2PR11MB3648:
-x-microsoft-antispam-prvs: <MN2PR11MB3648B7F3EF4F10333189B652888D9@MN2PR11MB3648.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4OBqMZ8ipHipRogcYq7jSyeW+7sOEgcxf7S3rKauMKT3/u3a0/VpQ1EraPbYOfV0Q9KZKUYjCdwh21kfmALpTSbA4cpF6Oqg5Jb6ey1kSQqk6lWIPGhkecy19snxPTDJL3Arravrl7/MBnl+BL8sx+xlE4fqr/E7KfDhbGFhZ/KVGgr8WHPtr5l/nsw0gSxCgNPnmMLewqZXxzbiBCK+TVfbRw1d566lMUs5VTb79XrrPi/JW5X5yEamxWJQLa54IFPdqPmaIe6TvT9AM1L1aKt5qyOXIa0WIPkhBgMylNvbq7u3Tg4hnJEnRuY2yi9LxWMAt/8UVD/SsoZIdMeyUsYyFVL0XUtqHQdRyIJGq/WgogJ3SZjHhiFYHJ1NJsUUBeDhistFmVSzhlR/OCO/tUUc7CPDO6L4IRrWtGoZzSmikReRJylbGbbOsPW55IbJJu95SASqNkUrrVEHQjmcsOY6ZaxoGxHkbozNGsY3BnIaui3gmgflil2UG5hk9zh4mXfH22WlQgr2FEFJyekMfw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB3645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(376002)(366004)(39860400002)(136003)(396003)(71200400001)(4326008)(8676002)(2906002)(66446008)(64756008)(66556008)(54906003)(66476007)(52536014)(6506007)(110136005)(33656002)(83380400001)(76116006)(478600001)(7696005)(5660300002)(26005)(86362001)(8936002)(9686003)(66946007)(316002)(55016002)(186003)(7416002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?gOymMf+WEY4yG+Xfrdz5PI1KH7Mqb6Ki7EQTiXcThj+wrXrftv/WW3mgb9j0?=
- =?us-ascii?Q?CDer+rAjFY//ITpZJXxFK2Q79snOpvQmIzPTfuLmtTzVsX40kMqk5lv2O5Dd?=
- =?us-ascii?Q?+OBb/j+MCt94bOmpCWxv2iqUbcM/xMnmeGuyKNQCzuWYJZAIAT8xg9Ia60A+?=
- =?us-ascii?Q?n/oGPlqxG2JZ3l7sCPLdqORw30ksRGpxe6og+/olIEmds4GUJdNpo3sKthq2?=
- =?us-ascii?Q?68C9XNPWIpp+Db9u6XWlZUaEbC908+knBdwORLxdZt45GlaE6Bx2AHnQgkVz?=
- =?us-ascii?Q?GfPdiA4pSUvPwo0zjZoBs1vaDU1ej3qFCrKJu2XD9scBA8rk/3w5nGZhpUQh?=
- =?us-ascii?Q?ecIubz/6nbkq7BimTdOX5A91+9QYwZ+2aGEIHZSdrbmGLKRmsp4OS8CrQuBs?=
- =?us-ascii?Q?tAmT/OxpmXXaC/yQoPukqGmG3aAeDmFh00g/CNO5HtUJNGhqv5UHrUgR6h61?=
- =?us-ascii?Q?PfzUWU6rN+w6GXcsAPh6cWb7ZNKvQv+FOTvGts1vumrYyfu1vv11KQsWrmxo?=
- =?us-ascii?Q?neFAicn2aZFU+YmpU9YU+GKMytPpmKKhGEQSkXMYazag+ZX0tYGjstEaYxfs?=
- =?us-ascii?Q?7LPj06Eh1rQooo6rSOYe9UM7MlNI2jofQGROoZBisqXWxRfSNIwrkpb8/uE5?=
- =?us-ascii?Q?kaldtbbwr2M8MAgNcWZih+4OaNSgIPZhrhp23N5pIFaS30wRpulBpTqF8Hfw?=
- =?us-ascii?Q?632fRhP+DtIf4fdkwRHerZ5VWyD7XpNey8Hgv2ephI5mu1LNIV+1FlyK/zTQ?=
- =?us-ascii?Q?0DugoaWgRRN5p83bf1gJMB03mXJ+zuDLKA2TY3XusogoeFhz+2B8WmxWUI7h?=
- =?us-ascii?Q?T7m6RqvWPAryKBK5qgFWm2qgynBNa5zdThzdltih8SUK5Be+QtgX47OGUkBy?=
- =?us-ascii?Q?Zhlh9sGTIVAdT4CEMG4LSZBsm2xBF70qjw/ilFKZ/C59jowXqUbhqASpGrK1?=
- =?us-ascii?Q?cXGAGC043YlAoYgLBLsjBnW/IJszg6WEGAZer7FQU6Mi8QHRq3hopDS6OOUo?=
- =?us-ascii?Q?NwHih2pzFtdYDoCpfhMXAtEasqUhmGjfjq66T6iADbjAz4bh97oSlveN7xN2?=
- =?us-ascii?Q?yxvw2vPGyCpvp3eODy1fFOmkRYmxJzhoFNzbzl+GC1IgaNjYBWU1MCqulyk+?=
- =?us-ascii?Q?4rSWLFu8lZyzZgQSATjs8q1NhM8FzFBRhFYvo3/Bllh4pNJrEsDSoICjm2l1?=
- =?us-ascii?Q?9PTn2UVFkMTLadWCWw8/3v7T8DxqKvEc0Syeef55Y8gW4f63u18y0egMBrRz?=
- =?us-ascii?Q?pQ4e2/hkK0fBw4rkdB9E1ujx+labqs6KCNfh/3PGvauESMZfBwA1CknEoVpX?=
- =?us-ascii?Q?W7mCacEqvCHLxIzK4dmhIjiq?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ 15.1.2106.2; Wed, 10 Feb 2021 17:03:53 +0100
+Received: from localhost (10.47.67.2) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Wed, 10 Feb
+ 2021 16:03:52 +0000
+Date:   Wed, 10 Feb 2021 16:02:52 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     "Natu, Mahesh" <mahesh.natu@intel.com>
+CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        "Douglas, Chet R" <chet.r.douglas@intel.com>,
+        "Widawsky, Ben" <ben.widawsky@intel.com>,
+        "Verma, Vishal L" <vishal.l.verma@intel.com>
+Subject: Re: [RFC] ACPI Code First ECR: Generic Target
+Message-ID: <20210210160252.00003a31@Huawei.com>
+In-Reply-To: <BN6PR11MB17324DD5B5E3B96BD022D8BBF58D9@BN6PR11MB1732.namprd11.prod.outlook.com>
+References: <CAPcyv4gmd_cygXK0PpGkXmJLC3_ctEpRvpi5P-QcuXusFX5oNQ@mail.gmail.com>
+        <20210210112330.00003e74@Huawei.com>
+        <BN6PR11MB17324DD5B5E3B96BD022D8BBF58D9@BN6PR11MB1732.namprd11.prod.outlook.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR11MB3645.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d30efc6-6810-469d-115c-08d8cdd83bc3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Feb 2021 15:26:27.0855
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CRpiWRDXuRW2qDUVWJkzMWVf937tDgKisduj8eD6xY4BRGymyE/2M9xAbB/hg8jviBbKraw4k4g4EqrU3vkjGL+ZiRad9xjZWQAuiIE81Fs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3648
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.67.2]
+X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index c4ba3aa0a05d..08eaa8e52083 100644
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -33,6 +33,24 @@ config CXL_MEM
->=20
->           If unsure say 'm'.
->=20
-> +config CXL_MEM_RAW_COMMANDS
-> +       bool "RAW Command Interface for Memory Devices"
-> +       depends on CXL_MEM
-> +       help
-> +         Enable CXL RAW command interface.
-> +
-> +         The CXL driver ioctl interface may assign a kernel ioctl comman=
-d
-> +         number for each specification defined opcode. At any given poin=
-t in
-> +         time the number of opcodes that the specification defines and a=
- device
-> +         may implement may exceed the kernel's set of associated ioctl f=
-unction
-> +         numbers. The mismatch is either by omission, specification is t=
-oo new,
-> +         or by design. When prototyping new hardware, or developing /
-> debugging
-> +         the driver it is useful to be able to submit any possible comma=
-nd to
-> +         the hardware, even commands that may crash the kernel due to th=
-eir
-> +         potential impact to memory currently in use by the kernel.
-> +
-> +         If developing CXL hardware or the driver say Y, otherwise say N=
-.
+On Wed, 10 Feb 2021 15:18:38 +0000
+"Natu, Mahesh" <mahesh.natu@intel.com> wrote:
 
-Blocking RAW commands by default will prevent vendors from developing user =
-space tools that utilize vendor specific commands. Vendors of CXL.mem devic=
-es should take ownership of ensuring any vendor defined commands that could=
- cause user data to be exposed or corrupted are disabled at the device leve=
-l for shipping configurations.
+> Hi Jonathan,
+Hi Mahesh,
+
+> 
+> First of all, it is a two-way problem because of the possibility of peer to peer traffic between root ports.
+
+Good point.  So in that case it seems we need to be able to report characteristics between pairs
+of CXL ports (in generic terms 'boundaries' of the system where stuff might be connected later.)
+As such they need to be represented in topology as something that can be both
+a target and initiator (or a bridge to targets and initiators anyway).
+
+> 
+> CDAT works very well for enumerable components with clean boundaries. It was not designed to handle Root complex objects. For example, it would have to account for CPU vendor specific coherent links between CPUs and at that point it starts looking like "HMAT".
+
+Agreed.  Clear distinction between what 'could' be done and what makes sense
+to do in CDAT.  It's definitely feels like the wrong solution here.
+
+Jonathan
+
+> 
+> Thank you,
+> Mahesh Natu
+> Datacenter Platform Architect
+> Intel Corporation
+> 
+> -----Original Message-----
+> From: Jonathan Cameron <Jonathan.Cameron@Huawei.com> 
+> Sent: Wednesday, February 10, 2021 3:24 AM
+> To: Williams, Dan J <dan.j.williams@intel.com>
+> Cc: linux-cxl@vger.kernel.org; Linux ACPI <linux-acpi@vger.kernel.org>; Natu, Mahesh <mahesh.natu@intel.com>; Douglas, Chet R <chet.r.douglas@intel.com>; Widawsky, Ben <ben.widawsky@intel.com>; Verma, Vishal L <vishal.l.verma@intel.com>
+> Subject: Re: [RFC] ACPI Code First ECR: Generic Target
+> 
+> On Tue, 9 Feb 2021 19:55:05 -0800
+> Dan Williams <dan.j.williams@intel.com> wrote:
+> 
+> > While the platform BIOS is able to describe the performance 
+> > characteristics of CXL memory that is present at boot, it is unable to 
+> > statically enumerate the performance of CXL memory hot inserted 
+> > post-boot. The OS can enumerate most of the characteristics from link 
+> > registers and CDAT, but the performance from the CPU to the host 
+> > bridge, for example, is not enumerated by PCIE or CXL. Introduce an 
+> > ACPI mechanism for this purpose. Critically this is achieved with a 
+> > small tweak to how the existing Generic Initiator proximity domain is 
+> > utilized in the HMAT.  
+> 
+> Hi Dan,
+> 
+> Agree there is a hole here, but I think the proposed solution has some issues for backwards compatibility.
+> 
+> Just to clarify, I believe CDAT from root ports is sufficient for the other direction (GI on CXL, memory in host).  I wondered initially if this was a two way issue, but after a reread, I think that is fine with the root port providing CDAT or potentially treating the root port as a GI (though that runs into the same naming / representation issue as below and I think would need some clarifying text in UEFI GI description)
+> 
+> http://uefi.org/sites/default/files/resources/Coherent%20Device%20Attribute%20Table_1.01.pdf
+> 
+> For the case you are dealing with here potentially we 'could' add something to CDAT as alternative to changing SRAT, but it would be more complex so your approach here makes more sense to me.
+> 
+> > 
+> > ---
+> > 
+> > # Title: Introduce a Generic Target for CXL
+> > 
+> > # Status: Draft
+> > 
+> > # Document: ACPI Specification 6.4
+> > 
+> > # License
+> > SPDX-License Identifier: CC-BY-4.0
+> > 
+> > # Submitter:
+> > * Sponsor: Dan Williams, Intel
+> > * Creators/Contributors:
+> >     * Mahesh Natu, Intel
+> >     * Chet Douglas, Intel
+> >     * Deepak Shivakumar, Intel
+> > 
+> > # Summary of the Change
+> > Introduce a "Generic Target" concept to the SRAT to describe the root 
+> > performance parameters in the path to dynamically discovered (outside 
+> > of ACPI enumeration) CXL memory target endpoints.
+> > 
+> > # Benefits of the Change
+> > Consider the case of a system with a set of CXL host bridges 
+> > (ACPI0016),  
+> 
+> Superficially feels like this new SRAT entry might reference the CXL 2.0 Root ports or the host bridge.
+> 
+> > and no devices attached at initial system power-on. In this scenario 
+> > platform firmware is unable to perform the end-to-end enumeration 
+> > necessary to populate SRAT and HMAT for the endpoints that may be 
+> > hot-inserted behind those bridges post power-on. The address-range is 
+> > unknown so SRAT can not be pre-populated, the performance is unknown 
+> > (no CDAT nor interleave configuration) so HMAT can not be pre-populated.
+> > 
+> > However, what is known to platform firmware that generates the SRAT 
+> > and HMAT is the performance characteristics of the path between CPU 
+> > and Generic Initiators to the CXL host bridge target. With either 
+> > CPU-to-Generic-Target, or Generic-Initiator-to-Generic-Target entries 
+> > in the HMAT the OS CXL subsystem can enumerate the remaining details 
+> > (PCIE link status, device CDAT, interleave configuration) to calculate 
+> > the bandwidth and latency of a dynamically discovered CXL memory target.  
+> 
+> I'm wondering if the term "generic target" is a good name.
+> Would something like "generic target bridge" be clearer?
+> The point being this isn't an actual target but a point along the way.
+> Mind you this is close to bike shedding.
+> 
+> As mentioned above, maybe "generic bridge" that can give us a node to hang data off for both, a) GI on CXL to host memory, and b) Initiator in host to CXL memory and hence give cleaner representation.
+> 
+> > 
+> > # Impact of the Change
+> > The existing Generic Initiator Affinity Structure (ACPI 6.4 Section
+> > 5.2.16.6) already contains all the fields necessary to enumerate a 
+> > generic target proximity domain. All that is missing is the 
+> > interpretation of that proximity domain optionally as a target 
+> > identifier in the HMAT.
+> > 
+> > Given that the OS still needs to dynamically enumerate and instantiate 
+> > the memory ranges behind the host bridge. The assumption is that 
+> > operating systems that do not support native CXL enumeration will 
+> > ignore this data in the HMAT, while CXL native enumeration aware 
+> > environments will use this fragment of the performance path to 
+> > calculate the performance characteristics.  
+> 
+> I don't think it is true that OS not supporting native CXL will ignore the data.
+> 
+> Linux will create a small amount of infrastructure to reflect them (more or less the same as a memoryless node) and also they will appear in places like access0 as a possible initiator of transactions.  It's small stuff, but I'd rather the impact on legacy was zero.
+> 
+> So my gut feeling here is we shouldn't reuse the generic initiator, but should invent something new.  Would look similar to GI, but with a different ID - to ensure legacy OS ignores it.
+> 
+> Unfortunately we can't just add a flag because backwards compatibility with old OS would mean it was ignored.  Hence I think this needs to be a new type.
+> 
+> If we define a new node type rather than extend GI, we need to be careful around the same issue with _PXM that we had when introducing Generic Initiators (not sure the protections on that made it back to stable) so might need to modify DSDT _PXM responses based on appropriate _OSC.
+> May well be fine but I'm not convinced yet.  Perhaps we need to say that using _PXM to place anything in a node defined only via this new means is not valid.
+> 
+> Jonathan
+> 
+> > 
+> > # References
+> > * Compute Express Link Specification v2.0, 
+> > <https://www.computeexpresslink.org/>
+> > 
+> > # Detailed Description of the Change
+> > 
+> > * Replace "Generic Initiator" with "Generic Initiator / Target" in all 
+> > locations except where an "initiator" or "target" is implied.
+> > Specifically 5.2.27.3 "Memory Proximity Domain Attributes Structure"
+> > need not replace occurrences of "generic initiator" in field: 
+> > "Proximity Domain for Attached Initiator". Additionally field: 
+> > "Proximity Domain for the Memory" must be renamed to "Proximity Domain 
+> > for the Memory / Generic Target" with a new description "Integer that 
+> > represents the memory / generic target proximity domain to which this memory belongs."
+> > 
+> > * Revise "5.2.16.6 Generic Initiator Affinity Structure" to make it
+> >   consistent with being referenced as either a target or initiator.
+> > 
+> >         * Description: (replace all text)
+> >   
+> >         > The Generic Initiator / Target Affinity Structure provides the
+> >         > association between a Generic Initiator and a Memory Proximity
+> >         > Domain, or another Generic Target Proximity Domain. The
+> >         > distinction as to whether this structure represents an
+> >         > Initiator, a Target, or both depends on how it is referenced
+> >         > in the HMAT. See Section 5.2.27.3 for details.    
+> >   
+> >         > Support of Generic Initiator / Target Affinity Structures by
+> >         > OSPM is optional, and the platform may query whether the OS
+> >         > supports it via the _OSC method. See Section 6.2.11.2.    
+> > 
+> >         * Architectural transactions: (append after current text)
+> >   
+> >         > If this proximity domain is referenced as a target then it
+> >         > supports all the transaction types inferred above.    
+> > 
+> >         * Other updates are simple Initiator => Initiator / Target
+> >           replacements.  
+> 
+> 
+
