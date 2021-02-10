@@ -2,564 +2,259 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B886EC433E0
-	for <linux-cxl@archiver.kernel.org>; Wed, 10 Feb 2021 17:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D47ADC43331
+	for <linux-cxl@archiver.kernel.org>; Wed, 10 Feb 2021 18:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7324964ECF
-	for <linux-cxl@archiver.kernel.org>; Wed, 10 Feb 2021 17:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5FE164DB1
+	for <linux-cxl@archiver.kernel.org>; Wed, 10 Feb 2021 18:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232775AbhBJRnT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 10 Feb 2021 12:43:19 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:2538 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232936AbhBJRmw (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 10 Feb 2021 12:42:52 -0500
-Received: from fraeml703-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DbRjv1YlDz67mTF;
-        Thu, 11 Feb 2021 01:35:31 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2106.2; Wed, 10 Feb 2021 18:42:06 +0100
-Received: from localhost (10.47.67.2) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Wed, 10 Feb
- 2021 17:42:05 +0000
-Date:   Wed, 10 Feb 2021 17:41:04 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>
+        id S233768AbhBJSHd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 10 Feb 2021 13:07:33 -0500
+Received: from esa.microchip.iphmx.com ([68.232.154.123]:35508 "EHLO
+        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233701AbhBJSFH (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 10 Feb 2021 13:05:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1612980306; x=1644516306;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=DJ+9Kkc1J5DopGIRKe4YqGARUu/skXfsV21LdBZrulw=;
+  b=Zc+drFLZjIWCHA1/93XSzFJhzrqtOM75Q0lEnkabfUe9oaAhpSlTdbbv
+   EdMnKxPnE8zC1j1pfF5luL65XjFdJZFdJ8ZCdhDAZgWLOYyQMI3QPuENF
+   JBOQEWxCgXfpHkn2I1717l1zSDn32gVXSulkhgyee5WE7ItFCpdzoCMY0
+   x4Z0vTAzebJrvhEDeNYClwLuQg72vbHrIS2X7Wl/0SQu4Z8siwg9cshXn
+   FcBRWqGUnLefln0DLP+DBxHeQk1J+yg/Yu0NsPHqKMNxdond5pKW50ZH5
+   IWuXMRVqlJ4SIUfsHmy+6uBvTus6Wyu42ywpcE2cy608yXAAU8deXShe4
+   Q==;
+IronPort-SDR: LlMoBaDMnFdhuozyciwETT3M9F4J+vgS5Dc+7A9WSBoBsrIW+WTX8nTQ4UWKKb0eazVgOMfiA3
+ lcARfWZayqoRqiAAB/i7lq0ONRh9ftxb8C3T/HQIrIWFsGXyeqIpZ6XULrulf805S+G/cnOI6+
+ DqoCnKyzlQdPaOsvvBfo2V9da0kZhUR/hEoPVVCkjsIkjXasXmVzuzN1CQbdGUqVzPVyKL+V/9
+ pcnOahgrC37EjpKvX9/hmCeBsxV25+3SnuPRDL/jxFbdfhg8LaRK9bRhgmU+VOYsnuC1GcoiyJ
+ VV4=
+X-IronPort-AV: E=Sophos;i="5.81,168,1610434800"; 
+   d="scan'208";a="106153187"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Feb 2021 11:03:42 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 10 Feb 2021 11:03:42 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3 via Frontend
+ Transport; Wed, 10 Feb 2021 11:03:42 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SeCiLASgnJanIyDlABuFRmZr5MkSCPFShf0dZrY+JStXUcZXvZQVkTR2Qwxt82cM4lfqh06JHhksguWF67aMYVsU+O3x/eMBGk856mmWwHuIqhCmeHr0PZtNFtV3vu79BpZVb7q1CER9bB/YUBpZr9i77Bm+6bz/4/Tu/s9qVxd+ugZ8MZnRzznWR8oaXvjnQAXxIZ0UcnDq9BV+PmwQ46Lxtk4/cPdNxrzyk/c8W7TrbjVkBwvlJDOr286JljqagMCyP+grbJc7BJnGLoFbHer1vWCVWN8zHl3nhqwhYUZusD67qXa2n7bH2pzu01i+CfavLaZxJ74h4zzQxNVcoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DJ+9Kkc1J5DopGIRKe4YqGARUu/skXfsV21LdBZrulw=;
+ b=SPO8TT8IX3mVK7fx4c8NblZrthNsuGWCoIgtrSTei3VXYyVoFkHGJv0WsdbXgXeBhne0/2YYUfbnhx+R8HG6deDAamsg+fdE4WE2ZcSp1WKwc3aWkf8BYUYSJm1AzqAV6EkPwSG116NdV4NI4s6NTYPvBi6zVUHpU57QEt6CfiF8PUGlNi125CsaIeDaMKTnLzu29Qb+mzhQAj71cZWs8fgsG4Abiv5rf91r4bWC0alBspyAF88daknkIXJIW8q09V3M8YtA8+WOLpJrWxb98/0n/jY9DoUZY+AKuVOkbRTHvSsU2u1R6iwPWvq19S5FhKu0AebkWWpVjXH8S5ED9w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DJ+9Kkc1J5DopGIRKe4YqGARUu/skXfsV21LdBZrulw=;
+ b=DbcWfPYEjgcCjBFDe7oi26ugKtvCCI7MUEqCUZI8TIKVyIuNgzRrSpDmi7lxRAttl6wtRNvTI+1TaXkqqx2dUfiBn4Yf8aSbv5T7INGUvBgEYLW8Ni18N6vWsRwCGf41GLFUqndA0anaxe2BNKpyW5OSfs0SOheS/T8pNjk0fP8=
+Received: from MN2PR11MB3645.namprd11.prod.outlook.com (2603:10b6:208:f8::13)
+ by MN2PR11MB3856.namprd11.prod.outlook.com (2603:10b6:208:ef::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.27; Wed, 10 Feb
+ 2021 18:03:36 +0000
+Received: from MN2PR11MB3645.namprd11.prod.outlook.com
+ ([fe80::51c7:31cf:308f:4c30]) by MN2PR11MB3645.namprd11.prod.outlook.com
+ ([fe80::51c7:31cf:308f:4c30%5]) with mapi id 15.20.3825.030; Wed, 10 Feb 2021
+ 18:03:36 +0000
+From:   <Ariel.Sibley@microchip.com>
+To:     <ben.widawsky@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-nvdimm@lists.01.org>,
-        <linux-pci@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-        "Chris Browy" <cbrowy@avery-design.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Jon Masters" <jcm@jonmasters.org>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "John Groves (jgroves)" <jgroves@micron.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>
-Subject: Re: [PATCH v2 2/8] cxl/mem: Find device capabilities
-Message-ID: <20210210174104.0000710a@Huawei.com>
-In-Reply-To: <20210210000259.635748-3-ben.widawsky@intel.com>
+        <linux-pci@vger.kernel.org>, <helgaas@kernel.org>,
+        <cbrowy@avery-design.com>, <hch@infradead.org>,
+        <dan.j.williams@intel.com>, <david@redhat.com>,
+        <rientjes@google.com>, <ira.weiny@intel.com>, <jcm@jonmasters.org>,
+        <Jonathan.Cameron@huawei.com>, <rafael.j.wysocki@intel.com>,
+        <rdunlap@infradead.org>, <vishal.l.verma@intel.com>,
+        <jgroves@micron.com>, <sean.v.kelley@intel.com>,
+        <Ahmad.Danesh@microchip.com>, <Varada.Dighe@microchip.com>,
+        <Kirthi.Shenoy@microchip.com>, <Sanjay.Goyal@microchip.com>
+Subject: RE: [PATCH v2 5/8] cxl/mem: Add a "RAW" send command
+Thread-Topic: [PATCH v2 5/8] cxl/mem: Add a "RAW" send command
+Thread-Index: AQHW/0AqZCOVul459UanKz+acVTCvapRfUwQgAAdewCAAAx2IA==
+Date:   Wed, 10 Feb 2021 18:03:35 +0000
+Message-ID: <MN2PR11MB36450EFC1729D9A4CDB2FB27888D9@MN2PR11MB3645.namprd11.prod.outlook.com>
 References: <20210210000259.635748-1-ben.widawsky@intel.com>
-        <20210210000259.635748-3-ben.widawsky@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+ <20210210000259.635748-6-ben.widawsky@intel.com>
+ <MN2PR11MB36455574E25237635D3F9CC0888D9@MN2PR11MB3645.namprd11.prod.outlook.com>
+ <20210210164904.lfhtfvlyeypfpjhe@intel.com>
+In-Reply-To: <20210210164904.lfhtfvlyeypfpjhe@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=microchip.com;
+x-originating-ip: [142.134.145.175]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1be68f97-d6dd-421d-dcb6-08d8cdee2fe3
+x-ms-traffictypediagnostic: MN2PR11MB3856:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR11MB385637DA454C5F0B17DD800E888D9@MN2PR11MB3856.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: VGw5lSVDsEA26xJgkcrh4HeKvKdBjMhFt+K32htYVJVHtlzN1FBdgpmVMku8D12eRlm1hqT1m3Kp8WcmF7hx5kMtjIbVHaUWCgaOu4KIrzqZpUtu+AxdMm5T1G0FtM4Ni/1t6uh4Otud9iwMSVHebC2ox1QWUyKmw6Vf7oY8gliNdCcqFiq2mxaxZDWtVdMtoLPsBb4OskQTPLwL3fkN32C9cECVPB1BdAuRRH1giWYVIK28Ip/hPzCzllN1HIdoeWNARVSTFTpRy/IIBvJTSQcnhYx/7AvWrQtaZjARn5bIvHDrLgG8JE/MIm0riRtkR7X1Qgr3YfQu6RYCpnIqsC1ZFBMFb0+vmqF47BHYvBlfMk/UjE0Svv/1qYel5AKPYhXy5wvMXlug5xcf/PgX9+i57Uq1dDW5veSYRbnSiIFzPuRXuTawtXMu+1cpMbPqTYUq1j9TIfS21mu1RFrQjYQPXccDlubH258EN7SuhMo2bVY+s5pHu112D4pTvGZCJ4FR4UQ8kmQb9oDpWRSqbQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB3645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(136003)(376002)(396003)(346002)(39860400002)(33656002)(9686003)(6506007)(478600001)(8936002)(55016002)(54906003)(7416002)(316002)(8676002)(71200400001)(66446008)(66556008)(66476007)(66946007)(76116006)(64756008)(86362001)(26005)(2906002)(7696005)(186003)(4326008)(83380400001)(6916009)(52536014)(5660300002)(107886003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?d25HNHhUbkxmWUN4STR6d0NTVHhlTnVqNWtRb3JhOEdDWms3TG5sWWNCd0hI?=
+ =?utf-8?B?c1JOdDJGcVdsa1dxMS8wS3JWU3U5c0YyS2dlWk5DbGM0d2Vzd1RXTEVRQ045?=
+ =?utf-8?B?NDhrYUIxbWovWGtxY0M1cGpOR2dlZ1JFcjFYcU5YYStIajhmU3hxNUNDbUR6?=
+ =?utf-8?B?cjZ0SGNmOW52ZThSVmRlYXRZQzRaRmYwckZPQ0UzSStLVWQxN2J3clBNelM1?=
+ =?utf-8?B?VThzbFd2V1BFNDRETEp6L0U2aHg4ZUR0c05Lbm1xeGRoYmIzTEVKVTVlTGlm?=
+ =?utf-8?B?Qmw5cGh3b3NtKzJxQjNXZXZ6Sy9EZHF3NWEwVmlOTUU4anRzUm12djVPeWY1?=
+ =?utf-8?B?aXQyZTdwVzJEWG4zZThZelp2M1F4Y0xPdUc4Mk90Si9RWnBQL2NJVVJ1N0RP?=
+ =?utf-8?B?czVQTmsvakpQQk9wODJFcUZlUGhtZE9CSFJ4UC9hVTRhUGpGaU9mS2VUblFn?=
+ =?utf-8?B?OEtUQmdWT213WGFFQUpiRlNRQ0VjaFQ3Zm1ENlMxVGptdWVqUlBRTzk5eUhw?=
+ =?utf-8?B?d0FnV3RCMEEvNXlxdE1TNnVuZnlkSGxvZklQeE5NRExaYW1PRVFlUkhGa0FZ?=
+ =?utf-8?B?dkhVZThPV2N5VmljQ0c5d2ZWTkxoengrWFpaZlJqa3lqQytkZ0J4VWFqTUVI?=
+ =?utf-8?B?bnhsQkd0aUlQdU03cFVrUDJtbEV4TG50dHFOR0FaZWRBKzkxTmczcEFFZ3I3?=
+ =?utf-8?B?MC9vYXRtUzNMbXIvMytCdnMxZnJ0NUVDbFJHWFJRczlORGpoRVVmbWIxYWxl?=
+ =?utf-8?B?QkVVQVcvVmxaRi8vVGdldFlLakhrRSsxcDBYY0NVQndtSk1jQW50a1RJYTBJ?=
+ =?utf-8?B?Q3hGdW9oZERsdXV1d0wwd000ZXd0NHN6T1NHaGVpUUxtMjdvei9HSEdqVmxI?=
+ =?utf-8?B?MWlsbUFBeGNPejY5emhKRjlod016dzVTVmhvUWZvYjlQNXZyT1hFZ1RINkRM?=
+ =?utf-8?B?ZDZpU3FvMzFXWkxxcXJQN3BOOGdzLzF3S3lFaDJoK096RjN0am5MZGhpWjJU?=
+ =?utf-8?B?eHlxYTVDZEE1NzlPZzN0Sk1zUXhYSmNRRmVzeWFldFBGbDFWaU90cm43bVd2?=
+ =?utf-8?B?M3B0TENQUmRHbzFVSW92OWUzRlRKRG1DNlpjK2pwaWNZV3YxcTdPM1hUSVVC?=
+ =?utf-8?B?d1ZWQWh3d1RVVVVtb0I3SEV5VnljQUdhdXZlWkovN25RSzN3LytXYVNIRnVY?=
+ =?utf-8?B?UDVsb1lIWFhDblFPMTRBeUNyOTVhMmp5Zi81RVJVVjk4S2RSa1NBRXJWTFJx?=
+ =?utf-8?B?RTFsWEt4b0s5cThRaCtJYXB5dmVFK0hqR3o1V3Q3czZhYzJJT3VRSjh4ZE5C?=
+ =?utf-8?B?WFI4enFIdkdlMTBpZkMxSWNYcXZjL2orOXJaTDg3anFXV3NncHdaUDVqSTZI?=
+ =?utf-8?B?NnBMUmdMN3gwSjA0S3QweTFadHZYSXJSQzNDVWlXTVNzSW43cC9ITjRkdUt4?=
+ =?utf-8?B?dU5tNXkyWDRsOGdGT1ROWGMraytLMVk4WlFVb1hJMmQ5UTBJaGhJcmZJbm9M?=
+ =?utf-8?B?M0VWM3EzNjl4KzdrdUtOUEhHbDNoL3NGR0dZWTNxcEZzbFZ3ckZYRDVPeFJ0?=
+ =?utf-8?B?QldQcEtXREdIcG8rSGhWY2tkUG5tblQ3eXZHaUd2eDlCcUZJN2UrbzErelFP?=
+ =?utf-8?B?OTkyZmNPZFJnQWdvYzBsSnlkN0N1eDl0TjAxd1lLUFpJK2d6OGJsUzN0eWs0?=
+ =?utf-8?B?Umx1dEhCT3RTNExmeFpSczBTdGJhVWo0a2dubXhaUXRYVkJvd3JlY2hwWjBZ?=
+ =?utf-8?Q?06A+2RcRBfZxGBYVjJE4xf45yBph+wqvmaM7ga9?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.67.2]
-X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR11MB3645.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1be68f97-d6dd-421d-dcb6-08d8cdee2fe3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Feb 2021 18:03:35.9599
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zu1rEbW7cHnnKLjEh6ri4r0xUbti1DgOO+SIyiDf2gBThJLk7DcIF8A8claAAIPeivUE8DStZX1m4ipS7ibzZ4nFkuOboeB89tfd6hfZ+Qw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3856
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 9 Feb 2021 16:02:53 -0800
-Ben Widawsky <ben.widawsky@intel.com> wrote:
-
-> Provide enough functionality to utilize the mailbox of a memory device.
-> The mailbox is used to interact with the firmware running on the memory
-> device. The flow is proven with one implemented command, "identify".
-> Because the class code has already told the driver this is a memory
-> device and the identify command is mandatory.
-> 
-> CXL devices contain an array of capabilities that describe the
-> interactions software can have with the device or firmware running on
-> the device. A CXL compliant device must implement the device status and
-> the mailbox capability. Additionally, a CXL compliant memory device must
-> implement the memory device capability. Each of the capabilities can
-> [will] provide an offset within the MMIO region for interacting with the
-> CXL device.
-> 
-> The capabilities tell the driver how to find and map the register space
-> for CXL Memory Devices. The registers are required to utilize the CXL
-> spec defined mailbox interface. The spec outlines two mailboxes, primary
-> and secondary. The secondary mailbox is earmarked for system firmware,
-> and not handled in this driver.
-> 
-> Primary mailboxes are capable of generating an interrupt when submitting
-> a background command. That implementation is saved for a later time.
-> 
-> Link: https://www.computeexpresslink.org/download-the-specification
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-
-A few more comments inline (proper review whereas my other reply was a
-bug chase).
-
-Jonathan
-
-> ---
->  drivers/cxl/Kconfig           |  14 +
->  drivers/cxl/cxl.h             |  93 +++++++
->  drivers/cxl/mem.c             | 511 +++++++++++++++++++++++++++++++++-
->  drivers/cxl/pci.h             |  13 +
->  include/uapi/linux/pci_regs.h |   1 +
->  5 files changed, 630 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/cxl/cxl.h
-> 
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index 9e80b311e928..c4ba3aa0a05d 100644
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -32,4 +32,18 @@ config CXL_MEM
->  	  Chapter 2.3 Type 3 CXL Device in the CXL 2.0 specification.
->  
->  	  If unsure say 'm'.
-> +
-> +config CXL_MEM_INSECURE_DEBUG
-> +	bool "CXL.mem debugging"
-
-As mentioned below, this makes me a tiny bit uncomfortable.
-
-> +	depends on CXL_MEM
-> +	help
-> +	  Enable debug of all CXL command payloads.
-> +
-> +	  Some CXL devices and controllers support encryption and other
-> +	  security features. The payloads for the commands that enable
-> +	  those features may contain sensitive clear-text security
-> +	  material. Disable debug of those command payloads by default.
-> +	  If you are a kernel developer actively working on CXL
-> +	  security enabling say Y, otherwise say N.
-> +
->  endif
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> new file mode 100644
-> index 000000000000..745f5e0bfce3
-> --- /dev/null
-> +++ b/drivers/cxl/cxl.h
-> @@ -0,0 +1,93 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/* Copyright(c) 2020 Intel Corporation. */
-> +
-> +#ifndef __CXL_H__
-> +#define __CXL_H__
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/bitops.h>
-> +#include <linux/io.h>
-> +
-> +/* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
-> +#define CXLDEV_CAP_ARRAY_OFFSET 0x0
-> +#define   CXLDEV_CAP_ARRAY_CAP_ID 0
-> +#define   CXLDEV_CAP_ARRAY_ID_MASK GENMASK(15, 0)
-> +#define   CXLDEV_CAP_ARRAY_COUNT_MASK GENMASK(47, 32)
-> +/* CXL 2.0 8.2.8.2.1 CXL Device Capabilities */
-> +#define CXLDEV_CAP_CAP_ID_DEVICE_STATUS 0x1
-> +#define CXLDEV_CAP_CAP_ID_PRIMARY_MAILBOX 0x2
-> +#define CXLDEV_CAP_CAP_ID_SECONDARY_MAILBOX 0x3
-> +#define CXLDEV_CAP_CAP_ID_MEMDEV 0x4000
-> +
-> +/* CXL 2.0 8.2.8.4 Mailbox Registers */
-> +#define CXLDEV_MBOX_CAPS_OFFSET 0x00
-> +#define   CXLDEV_MBOX_CAP_PAYLOAD_SIZE_MASK GENMASK(4, 0)
-> +#define CXLDEV_MBOX_CTRL_OFFSET 0x04
-> +#define   CXLDEV_MBOX_CTRL_DOORBELL BIT(0)
-> +#define CXLDEV_MBOX_CMD_OFFSET 0x08
-> +#define   CXLDEV_MBOX_CMD_COMMAND_OPCODE_MASK GENMASK(15, 0)
-> +#define   CXLDEV_MBOX_CMD_PAYLOAD_LENGTH_MASK GENMASK(36, 16)
-> +#define CXLDEV_MBOX_STATUS_OFFSET 0x10
-> +#define   CXLDEV_MBOX_STATUS_RET_CODE_MASK GENMASK(47, 32)
-> +#define CXLDEV_MBOX_BG_CMD_STATUS_OFFSET 0x18
-> +#define CXLDEV_MBOX_PAYLOAD_OFFSET 0x20
-> +
-> +/* CXL 2.0 8.2.8.5.1.1 Memory Device Status Register */
-> +#define CXLMDEV_STATUS_OFFSET 0x0
-> +#define   CXLMDEV_DEV_FATAL BIT(0)
-> +#define   CXLMDEV_FW_HALT BIT(1)
-> +#define   CXLMDEV_STATUS_MEDIA_STATUS_MASK GENMASK(3, 2)
-> +#define     CXLMDEV_MS_NOT_READY 0
-> +#define     CXLMDEV_MS_READY 1
-> +#define     CXLMDEV_MS_ERROR 2
-> +#define     CXLMDEV_MS_DISABLED 3
-> +#define CXLMDEV_READY(status)                                                  \
-> +	(FIELD_GET(CXLMDEV_STATUS_MEDIA_STATUS_MASK, status) ==                \
-> +	 CXLMDEV_MS_READY)
-> +#define   CXLMDEV_MBOX_IF_READY BIT(4)
-> +#define   CXLMDEV_RESET_NEEDED_MASK GENMASK(7, 5)
-> +#define     CXLMDEV_RESET_NEEDED_NOT 0
-> +#define     CXLMDEV_RESET_NEEDED_COLD 1
-> +#define     CXLMDEV_RESET_NEEDED_WARM 2
-> +#define     CXLMDEV_RESET_NEEDED_HOT 3
-> +#define     CXLMDEV_RESET_NEEDED_CXL 4
-> +#define CXLMDEV_RESET_NEEDED(status)                                           \
-> +	(FIELD_GET(CXLMDEV_RESET_NEEDED_MASK, status) !=                       \
-> +	 CXLMDEV_RESET_NEEDED_NOT)
-> +
-> +/**
-> + * struct cxl_mem - A CXL memory device
-> + * @pdev: The PCI device associated with this CXL device.
-> + * @regs: IO mappings to the device's MMIO
-> + * @status_regs: CXL 2.0 8.2.8.3 Device Status Registers
-> + * @mbox_regs: CXL 2.0 8.2.8.4 Mailbox Registers
-> + * @memdev_regs: CXL 2.0 8.2.8.5 Memory Device Registers
-> + * @payload_size: Size of space for payload
-> + *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
-> + * @mbox_mutex: Mutex to synchronize mailbox access.
-> + * @firmware_version: Firmware version for the memory device.
-> + * @pmem: Persistent memory capacity information.
-> + * @ram: Volatile memory capacity information.
-> + */
-> +struct cxl_mem {
-> +	struct pci_dev *pdev;
-> +	void __iomem *regs;
-> +
-> +	void __iomem *status_regs;
-> +	void __iomem *mbox_regs;
-> +	void __iomem *memdev_regs;
-> +
-> +	size_t payload_size;
-> +	struct mutex mbox_mutex; /* Protects device mailbox and firmware */
-> +	char firmware_version[0x10];
-> +
-> +	struct {
-> +		struct range range;
-> +	} pmem;
-
-Christoph raised this in v1, and I agree with him that his would me more compact
-and readable as
-
-	struct range pmem_range;
-	struct range ram_range;
-
-The discussion seemed to get lost without getting resolved that I can see.
-
-> +
-> +	struct {
-> +		struct range range;
-> +	} ram;
-
-> +};
-> +
-> +#endif /* __CXL_H__ */
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index 99a6571508df..0a868a15badc 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-
-
-...
-
-> +static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
-> +				 struct mbox_cmd *mbox_cmd)
-> +{
-> +	struct device *dev = &cxlm->pdev->dev;
-> +
-> +	dev_dbg(dev, "Mailbox command (opcode: %#x size: %zub) timed out\n",
-> +		mbox_cmd->opcode, mbox_cmd->size_in);
-> +
-> +	if (IS_ENABLED(CONFIG_CXL_MEM_INSECURE_DEBUG)) {
-
-Hmm.  Whilst I can see the advantage of this for debug, I'm not sure we want
-it upstream even under a rather evil looking CONFIG variable.
-
-Is there a bigger lock we can use to avoid chance of accidental enablement?
-
-
-> +		print_hex_dump_debug("Payload ", DUMP_PREFIX_OFFSET, 16, 1,
-> +				     mbox_cmd->payload_in, mbox_cmd->size_in,
-> +				     true);
-> +	}
-> +}
-> +
-> +/**
-> + * cxl_mem_mbox_send_cmd() - Send a mailbox command to a memory device.
-> + * @cxlm: The CXL memory device to communicate with.
-> + * @mbox_cmd: Command to send to the memory device.
-> + *
-> + * Context: Any context. Expects mbox_lock to be held.
-> + * Return: -ETIMEDOUT if timeout occurred waiting for completion. 0 on success.
-> + *         Caller should check the return code in @mbox_cmd to make sure it
-> + *         succeeded.
-> + *
-> + * This is a generic form of the CXL mailbox send command, thus the only I/O
-> + * operations used are cxl_read_mbox_reg(). Memory devices, and perhaps other
-> + * types of CXL devices may have further information available upon error
-> + * conditions.
-> + *
-> + * The CXL spec allows for up to two mailboxes. The intention is for the primary
-> + * mailbox to be OS controlled and the secondary mailbox to be used by system
-> + * firmware. This allows the OS and firmware to communicate with the device and
-> + * not need to coordinate with each other. The driver only uses the primary
-> + * mailbox.
-> + */
-> +static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
-> +				 struct mbox_cmd *mbox_cmd)
-> +{
-> +	void __iomem *payload = cxlm->mbox_regs + CXLDEV_MBOX_PAYLOAD_OFFSET;
-> +	u64 cmd_reg, status_reg;
-> +	size_t out_len;
-> +	int rc;
-> +
-> +	lockdep_assert_held(&cxlm->mbox_mutex);
-> +
-> +	/*
-> +	 * Here are the steps from 8.2.8.4 of the CXL 2.0 spec.
-> +	 *   1. Caller reads MB Control Register to verify doorbell is clear
-> +	 *   2. Caller writes Command Register
-> +	 *   3. Caller writes Command Payload Registers if input payload is non-empty
-> +	 *   4. Caller writes MB Control Register to set doorbell
-> +	 *   5. Caller either polls for doorbell to be clear or waits for interrupt if configured
-> +	 *   6. Caller reads MB Status Register to fetch Return code
-> +	 *   7. If command successful, Caller reads Command Register to get Payload Length
-> +	 *   8. If output payload is non-empty, host reads Command Payload Registers
-> +	 *
-> +	 * Hardware is free to do whatever it wants before the doorbell is rung,
-> +	 * and isn't allowed to change anything after it clears the doorbell. As
-> +	 * such, steps 2 and 3 can happen in any order, and steps 6, 7, 8 can
-> +	 * also happen in any order (though some orders might not make sense).
-> +	 */
-> +
-> +	/* #1 */
-> +	if (cxl_doorbell_busy(cxlm)) {
-> +		dev_err_ratelimited(&cxlm->pdev->dev,
-> +				    "Mailbox re-busy after acquiring\n");
-> +		return -EBUSY;
-> +	}
-> +
-> +	cmd_reg = FIELD_PREP(CXLDEV_MBOX_CMD_COMMAND_OPCODE_MASK,
-> +			     mbox_cmd->opcode);
-> +	if (mbox_cmd->size_in) {
-> +		if (WARN_ON(!mbox_cmd->payload_in))
-> +			return -EINVAL;
-> +
-> +		cmd_reg |= FIELD_PREP(CXLDEV_MBOX_CMD_PAYLOAD_LENGTH_MASK,
-> +				      mbox_cmd->size_in);
-> +		memcpy_toio(payload, mbox_cmd->payload_in, mbox_cmd->size_in);
-> +	}
-> +
-> +	/* #2, #3 */
-> +	writeq(cmd_reg, cxlm->mbox_regs + CXLDEV_MBOX_CMD_OFFSET);
-> +
-> +	/* #4 */
-> +	dev_dbg(&cxlm->pdev->dev, "Sending command\n");
-> +	writel(CXLDEV_MBOX_CTRL_DOORBELL,
-> +	       cxlm->mbox_regs + CXLDEV_MBOX_CTRL_OFFSET);
-> +
-> +	/* #5 */
-> +	rc = cxl_mem_wait_for_doorbell(cxlm);
-> +	if (rc == -ETIMEDOUT) {
-> +		cxl_mem_mbox_timeout(cxlm, mbox_cmd);
-> +		return rc;
-> +	}
-> +
-> +	/* #6 */
-> +	status_reg = readq(cxlm->mbox_regs + CXLDEV_MBOX_STATUS_OFFSET);
-> +	mbox_cmd->return_code =
-> +		FIELD_GET(CXLDEV_MBOX_STATUS_RET_CODE_MASK, status_reg);
-> +
-> +	if (mbox_cmd->return_code != 0) {
-> +		dev_dbg(&cxlm->pdev->dev, "Mailbox operation had an error\n");
-> +		return 0;
-
-See earlier diversion whilst I was chasing my bug (another branch of this
-thread)
-
-> +	}
-> +
-> +	/* #7 */
-> +	cmd_reg = readq(cxlm->mbox_regs + CXLDEV_MBOX_CMD_OFFSET);
-> +	out_len = FIELD_GET(CXLDEV_MBOX_CMD_PAYLOAD_LENGTH_MASK, cmd_reg);
-> +
-> +	/* #8 */
-> +	if (out_len && mbox_cmd->payload_out)
-> +		memcpy_fromio(mbox_cmd->payload_out, payload, out_len);
-> +
-> +	mbox_cmd->size_out = out_len;
-> +
-> +	return 0;
-> +}
-> +
-
-
-...
-
-> +static struct cxl_mem *cxl_mem_create(struct pci_dev *pdev, u32 reg_lo,
-> +				      u32 reg_hi)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct cxl_mem *cxlm;
-> +	void __iomem *regs;
-> +	u64 offset;
-> +	u8 bar;
-> +	int rc;
-> +
-> +	cxlm = devm_kzalloc(&pdev->dev, sizeof(*cxlm), GFP_KERNEL);
-> +	if (!cxlm) {
-> +		dev_err(dev, "No memory available\n");
-> +		return NULL;
-> +	}
-> +
-> +	offset = ((u64)reg_hi << 32) | FIELD_GET(CXL_REGLOC_ADDR_MASK, reg_lo);
-> +	bar = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
-> +
-> +	/* Basic sanity check that BAR is big enough */
-> +	if (pci_resource_len(pdev, bar) < offset) {
-> +		dev_err(dev, "BAR%d: %pr: too small (offset: %#llx)\n", bar,
-> +			&pdev->resource[bar], (unsigned long long)offset);
-> +		return NULL;
-> +	}
-> +
-> +	rc = pcim_iomap_regions(pdev, BIT(bar), pci_name(pdev));
-> +	if (rc != 0) {
-
-if (rc) 
-
-> +		dev_err(dev, "failed to map registers\n");
-> +		return NULL;
-> +	}
-> +	regs = pcim_iomap_table(pdev)[bar];
-> +
-> +	mutex_init(&cxlm->mbox_mutex);
-> +	cxlm->pdev = pdev;
-> +	cxlm->regs = regs + offset;
-> +
-> +	dev_dbg(dev, "Mapped CXL Memory Device resource\n");
-> +	return cxlm;
-> +}
->  
-
-...
-
->  static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  {
->  	struct device *dev = &pdev->dev;
-> -	int regloc;
-> +	struct cxl_mem *cxlm;
-> +	int rc, regloc, i;
-> +	u32 regloc_size;
-> +
-> +	rc = pcim_enable_device(pdev);
-> +	if (rc)
-> +		return rc;
->  
->  	regloc = cxl_mem_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC_OFFSET);
->  	if (!regloc) {
-> @@ -39,7 +509,44 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  		return -ENXIO;
->  	}
->  
-> -	return 0;
-> +	/* Get the size of the Register Locator DVSEC */
-> +	pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
-> +	regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
-> +
-> +	regloc += PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET;
-> +
-> +	rc = -ENXIO;
-> +	for (i = regloc; i < regloc + regloc_size; i += 8) {
-> +		u32 reg_lo, reg_hi;
-> +		u8 reg_type;
-> +
-> +		/* "register low and high" contain other bits */
-
-high doesn't contain any other bits so that's a tiny bit misleading.
-
-> +		pci_read_config_dword(pdev, i, &reg_lo);
-> +		pci_read_config_dword(pdev, i + 4, &reg_hi);
-> +
-> +		reg_type = FIELD_GET(CXL_REGLOC_RBI_MASK, reg_lo);
-> +
-> +		if (reg_type == CXL_REGLOC_RBI_MEMDEV) {
-> +			rc = 0;
-
-I sort of assumed this unusual structure was to allow for some future
-change, but checked end result and it still looks like this.
-So, drop the rc assignment here and...
-
-> +			cxlm = cxl_mem_create(pdev, reg_lo, reg_hi);
-> +			if (!cxlm)
-> +				rc = -ENODEV;
-
-return -ENODEV;
-
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (rc)
-> +		return rc;
-
-With above direct return, only get here if rc = -ENXIO.
-Could just as easily check if i >= regloc + regloc_size then it's
-obvious this is kind of canonical form of 'not found'.
-
-
-Alternative would be to treat the above as a 'find' loop then
-have the clxm = cxl_mem_create() outside of the loop.
-
-
-> +
-> +	rc = cxl_mem_setup_regs(cxlm);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = cxl_mem_setup_mailbox(cxlm);
-> +	if (rc)
-> +		return rc;
-> +
-> +	return cxl_mem_identify(cxlm);
->  }
->  
->  static const struct pci_device_id cxl_mem_pci_tbl[] = {
-> diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
-> index f135b9f7bb21..ffcbc13d7b5b 100644
-> --- a/drivers/cxl/pci.h
-> +++ b/drivers/cxl/pci.h
-> @@ -14,5 +14,18 @@
->  #define PCI_DVSEC_ID_CXL		0x0
->  
->  #define PCI_DVSEC_ID_CXL_REGLOC_OFFSET		0x8
-> +#define PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET	0xC
-> +
-> +/* BAR Indicator Register (BIR) */
-> +#define CXL_REGLOC_BIR_MASK GENMASK(2, 0)
-> +
-> +/* Register Block Identifier (RBI) */
-> +#define CXL_REGLOC_RBI_MASK GENMASK(15, 8)
-> +#define CXL_REGLOC_RBI_EMPTY 0
-> +#define CXL_REGLOC_RBI_COMPONENT 1
-> +#define CXL_REGLOC_RBI_VIRT 2
-> +#define CXL_REGLOC_RBI_MEMDEV 3
-> +
-> +#define CXL_REGLOC_ADDR_MASK GENMASK(31, 16)
-
-CXL_REGLOCL_ADDR_LOW_MASK perhaps for clarity?
-
->  
->  #endif /* __CXL_PCI_H__ */
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index e709ae8235e7..6267ca9ae683 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -1080,6 +1080,7 @@
->  
->  /* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
->  #define PCI_DVSEC_HEADER1		0x4 /* Designated Vendor-Specific Header1 */
-> +#define PCI_DVSEC_HEADER1_LENGTH_MASK	0xFFF00000
-
-Seems sensible to add the revision mask as well.
-The vendor id currently read using a word read rather than dword, but perhaps
-neater to add that as well for completeness?
-
-Having said that, given Bjorn's comment on clashes and the fact he'd rather see
-this stuff defined in drivers and combined later (see review patch 1 and follow
-the link) perhaps this series should not touch this header at all.
- 
->  #define PCI_DVSEC_HEADER2		0x8 /* Designated Vendor-Specific Header2 */
->  
->  /* Data Link Feature */
-
+PiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY3hsL0tjb25maWcgYi9kcml2ZXJzL2N4bC9LY29u
+ZmlnDQo+ID4gPiBpbmRleCBjNGJhM2FhMGEwNWQuLjA4ZWFhOGU1MjA4MyAxMDA2NDQNCj4gPiA+
+IC0tLSBhL2RyaXZlcnMvY3hsL0tjb25maWcNCj4gPiA+ICsrKyBiL2RyaXZlcnMvY3hsL0tjb25m
+aWcNCj4gPiA+IEBAIC0zMyw2ICszMywyNCBAQCBjb25maWcgQ1hMX01FTQ0KPiA+ID4NCj4gPiA+
+ICAgICAgICAgICBJZiB1bnN1cmUgc2F5ICdtJy4NCj4gPiA+DQo+ID4gPiArY29uZmlnIENYTF9N
+RU1fUkFXX0NPTU1BTkRTDQo+ID4gPiArICAgICAgIGJvb2wgIlJBVyBDb21tYW5kIEludGVyZmFj
+ZSBmb3IgTWVtb3J5IERldmljZXMiDQo+ID4gPiArICAgICAgIGRlcGVuZHMgb24gQ1hMX01FTQ0K
+PiA+ID4gKyAgICAgICBoZWxwDQo+ID4gPiArICAgICAgICAgRW5hYmxlIENYTCBSQVcgY29tbWFu
+ZCBpbnRlcmZhY2UuDQo+ID4gPiArDQo+ID4gPiArICAgICAgICAgVGhlIENYTCBkcml2ZXIgaW9j
+dGwgaW50ZXJmYWNlIG1heSBhc3NpZ24gYSBrZXJuZWwgaW9jdGwgY29tbWFuZA0KPiA+ID4gKyAg
+ICAgICAgIG51bWJlciBmb3IgZWFjaCBzcGVjaWZpY2F0aW9uIGRlZmluZWQgb3Bjb2RlLiBBdCBh
+bnkgZ2l2ZW4gcG9pbnQgaW4NCj4gPiA+ICsgICAgICAgICB0aW1lIHRoZSBudW1iZXIgb2Ygb3Bj
+b2RlcyB0aGF0IHRoZSBzcGVjaWZpY2F0aW9uIGRlZmluZXMgYW5kIGEgZGV2aWNlDQo+ID4gPiAr
+ICAgICAgICAgbWF5IGltcGxlbWVudCBtYXkgZXhjZWVkIHRoZSBrZXJuZWwncyBzZXQgb2YgYXNz
+b2NpYXRlZCBpb2N0bCBmdW5jdGlvbg0KPiA+ID4gKyAgICAgICAgIG51bWJlcnMuIFRoZSBtaXNt
+YXRjaCBpcyBlaXRoZXIgYnkgb21pc3Npb24sIHNwZWNpZmljYXRpb24gaXMgdG9vIG5ldywNCj4g
+PiA+ICsgICAgICAgICBvciBieSBkZXNpZ24uIFdoZW4gcHJvdG90eXBpbmcgbmV3IGhhcmR3YXJl
+LCBvciBkZXZlbG9waW5nIC8NCj4gPiA+IGRlYnVnZ2luZw0KPiA+ID4gKyAgICAgICAgIHRoZSBk
+cml2ZXIgaXQgaXMgdXNlZnVsIHRvIGJlIGFibGUgdG8gc3VibWl0IGFueSBwb3NzaWJsZSBjb21t
+YW5kIHRvDQo+ID4gPiArICAgICAgICAgdGhlIGhhcmR3YXJlLCBldmVuIGNvbW1hbmRzIHRoYXQg
+bWF5IGNyYXNoIHRoZSBrZXJuZWwgZHVlIHRvIHRoZWlyDQo+ID4gPiArICAgICAgICAgcG90ZW50
+aWFsIGltcGFjdCB0byBtZW1vcnkgY3VycmVudGx5IGluIHVzZSBieSB0aGUga2VybmVsLg0KPiA+
+ID4gKw0KPiA+ID4gKyAgICAgICAgIElmIGRldmVsb3BpbmcgQ1hMIGhhcmR3YXJlIG9yIHRoZSBk
+cml2ZXIgc2F5IFksIG90aGVyd2lzZSBzYXkgTi4NCj4gPg0KPiA+IEJsb2NraW5nIFJBVyBjb21t
+YW5kcyBieSBkZWZhdWx0IHdpbGwgcHJldmVudCB2ZW5kb3JzIGZyb20gZGV2ZWxvcGluZyB1c2Vy
+DQo+ID4gc3BhY2UgdG9vbHMgdGhhdCB1dGlsaXplIHZlbmRvciBzcGVjaWZpYyBjb21tYW5kcy4g
+VmVuZG9ycyBvZiBDWEwubWVtIGRldmljZXMNCj4gPiBzaG91bGQgdGFrZSBvd25lcnNoaXAgb2Yg
+ZW5zdXJpbmcgYW55IHZlbmRvciBkZWZpbmVkIGNvbW1hbmRzIHRoYXQgY291bGQgY2F1c2UNCj4g
+PiB1c2VyIGRhdGEgdG8gYmUgZXhwb3NlZCBvciBjb3JydXB0ZWQgYXJlIGRpc2FibGVkIGF0IHRo
+ZSBkZXZpY2UgbGV2ZWwgZm9yDQo+ID4gc2hpcHBpbmcgY29uZmlndXJhdGlvbnMuDQo+IA0KPiBU
+aGFua3MgZm9yIGJyaW5pbmcgdGhpcyB1cCBBcmllbC4gSWYgdGhlcmUgaXMgYSByZWNvbW1lbmRh
+dGlvbiBvbiBob3cgdG8gY29kaWZ5DQo+IHRoaXMsIEkgd291bGQgY2VydGFpbmx5IGxpa2UgdG8g
+a25vdyBiZWNhdXNlIHRoZSBleHBsYW5hdGlvbiB3aWxsIGJlIGxvbmcuDQo+IA0KPiAtLS0NCj4g
+DQo+IFRoZSBiYWNrZ3JvdW5kOg0KPiANCj4gVGhlIGVuYWJsaW5nL2Rpc2FibGluZyBvZiB0aGUg
+S2NvbmZpZyBvcHRpb24gaXMgZHJpdmVuIGJ5IHRoZSBkaXN0cmlidXRpb24NCj4gYW5kL29yIHN5
+c3RlbSBpbnRlZ3JhdG9yLiBFdmVuIGlmIHdlIG1hZGUgdGhlIGRlZmF1bHQgJ3knLCBub3RoaW5n
+IHN0b3BzIHRoZW0NCj4gZnJvbSBjaGFuZ2luZyB0aGF0LiBpZiB5b3UgYXJlIHVzaW5nIHRoaXMg
+ZHJpdmVyIGluIHByb2R1Y3Rpb24gYW5kIGluc2lzdCBvbg0KPiB1c2luZyBSQVcgY29tbWFuZHMs
+IHlvdSBhcmUgZnJlZSB0byBjYXJyeSBhcm91bmQgYSBzbWFsbCBwYXRjaCB0byBnZXQgcmlkIG9m
+IHRoZQ0KPiBXQVJOIChpdCBpcyBhIG9uZS1saW5lcikuDQo+IA0KPiBUbyByZWNhcCB3aHkgdGhp
+cyBpcyBpbiBwbGFjZSAtIHRoZSBkcml2ZXIgb3ducyB0aGUgc2FuY3RpdHkgb2YgdGhlIGRldmlj
+ZSBhbmQNCj4gdGhlcmVmb3JlIGEgW2xhcmdlXSBwYXJ0IG9mIHRoZSB3aG9sZSBzeXN0ZW0uIFdo
+YXQgd2UgY2FuIGRvIGFzIGRyaXZlciB3cml0ZXJzDQo+IGlzIGZpZ3VyZSBvdXQgdGhlIHNldCBv
+ZiBjb21tYW5kcyB0aGF0IGFyZSAic2FmZSIgYW5kIGFsbG93IHRob3NlLiBBc2lkZSBmcm9tDQo+
+IGJlaW5nIGFibGUgdG8gdmFsaWRhdGUgdGhlbSwgd2UncmUgYWJsZSB0byBtZWRpYXRlIHRoZW0g
+d2l0aCBvdGhlciBwYXJhbGxlbA0KPiBvcGVyYXRpb25zIHRoYXQgbWlnaHQgY29uZmxpY3QuIFdl
+IGdhaW4gdGhlIGFiaWxpdHkgdG8gc3F1aW50IGV4dHJhIGhhcmQgYXQgYnVnDQo+IHJlcG9ydHMu
+IFdlIHByb3ZpZGUgYSByZWFzb24gdG8gdHJ5IHRvIHVzZSBhIHdlbGwgZGVmaW5lZCBwYXJ0IG9m
+IHRoZSBzcGVjLg0KPiBSZWFsaXppbmcgdGhhdCBvbmx5IGFsbG93aW5nIHRoYXQgc21hbGwgc2V0
+IG9mIGNvbW1hbmRzIGluIGEgcmFwaWRseSBncm93aW5nDQo+IGVjb3N5c3RlbSBpcyBub3QgYSB3
+ZWxjb21pbmcgQVBJOyB3ZSBkZWNpZGVkIG9uIFJBVy4NCj4gDQo+IFZlbmRvciBjb21tYW5kcyBj
+YW4gYmUgb25lIG9mIHR3byB0eXBlczoNCj4gMS4gU29tZSBmdW5jdGlvbmFsaXR5IHByb2JhYmx5
+IG1vc3QgdmVuZG9ycyB3YW50Lg0KPiAyLiBGdW5jdGlvbmFsaXR5IHRoYXQgaXMgcmVhbGx5IHNp
+bmdsZSB2ZW5kb3Igc3BlY2lmaWMuDQo+IA0KPiBIb3BlZnVsbHkgd2UgY2FuIGFncmVlIHRoYXQg
+dGhlIHBhdGggZm9yIGNhc2UgIzEgaXMgdG8gd29yayB3aXRoIHRoZSBjb25zb3J0aXVtDQo+IHRv
+IHN0YW5kYXJkaXplIGEgY29tbWFuZCB0aGF0IGRvZXMgd2hhdCBpcyBuZWVkZWQgYW5kIHRoYXQg
+Y2FuIGV2ZW50dWFsbHkgYmVjb21lDQo+IHBhcnQgb2YgVUFQSS4gVGhlIHNpdHVhdGlvbiBpcyB1
+bmZvcnR1bmF0ZSwgYnV0IHRlbXBvcmFyeS4gSWYgeW91IHdvbid0IGJlIGFibGUNCj4gdG8gdXBn
+cmFkZSB5b3VyIGtlcm5lbCwgcGF0Y2ggb3V0IHRoZSBXQVJOIGFzIGFib3ZlLg0KPiANCj4gVGhl
+IHNlY29uZCBzaXR1YXRpb24gaXMgaW50ZXJlc3RpbmcgYW5kIGRvZXMgbmVlZCBzb21lIG1vcmUg
+dGhvdWdodCBhbmQNCj4gZGlzY3Vzc2lvbi4NCj4gDQo+IC0tLQ0KPiANCj4gSSBzZWUgMyByZWFs
+aXN0aWMgb3B0aW9ucyBmb3IgdHJ1bHkgdmVuZG9yIHNwZWNpZmljIGNvbW1hbmRzLg0KPiAxLiBU
+b3VnaCBub29naWVzLiBWZW5kb3JzIGFyZW4ndCBzcGVjaWFsIGFuZCB0aGV5IHNob3VsZG4ndCBk
+byB0aGF0Lg0KPiAyLiBtb2RwYXJhbSB0byBkaXNhYmxlIHRoZSBXQVJOIGZvciBzcGVjaWZpYyBk
+ZXZpY2VzIChsZXQgdGhlIHN5c2FkbWluIGRlY2lkZSkNCj4gMy4gVHJ5IHRvIG1ha2UgdGhlbSBw
+YXJ0IG9mIFVBUEkuDQo+IA0KPiBUaGUgcmlnaHQgYW5zd2VyIHRvIG1lIGlzICMxLCBidXQgSSBh
+bHNvIHJlYWxpemUgSSBsaXZlIGluIHRoZSByZWFsIHdvcmxkLg0KPiANCj4gIzIgcHJvdmlkZXMg
+dG9vIG11Y2ggZmxleGliaWxpdHkuIFZlbmRvcnMgd2lsbCBqdXN0IGRvIHdoYXQgdGhleSBwbGVh
+c2UgYW5kDQo+IGRpc3Ryb3MgYW5kL29yIGludGVncmF0b3JzIHdpbGwgYmUgc2VlbiBhcyBob3N0
+aWxlIGlmIHRoZXkgZG9uJ3QgYWNjb21tb2RhdGUuDQo+IA0KPiBJIGxpa2UgIzMsIGJ1dCBJIGhh
+dmUgYSBmZWVsaW5nIG5vdCBldmVyeW9uZSB3aWxsIGFncmVlLiBNeSBwcm9wb3NhbCBmb3IgdmVu
+ZG9yDQo+IHNwZWNpZmljIGNvbW1hbmRzIGlzLCBpZiBpdCdzIGNsZWFyIGl0J3MgdHJ1bHkgYSB1
+bmlxdWUgY29tbWFuZCwgYWxsb3cgYWRkaW5nIGl0DQo+IGFzIHBhcnQgb2YgVUFQSSAobW92aW5n
+IGl0IG91dCBvZiBSQVcpLiBJIGV4cGVjdCBsaWtlIDUgb2YgdGhlc2UsIGV2ZXIuIElmIHdlDQo+
+IHN0YXJ0IGdldHRpbmcgbXVsdGlwbGUgcGVyIHZlbmRvciwgd2UndmUgZmFpbGVkLiBUaGUgaW5m
+cmFzdHJ1Y3R1cmUgaXMgYWxyZWFkeQ0KPiBpbiBwbGFjZSB0byBhbGxvdyBkb2luZyB0aGlzIHBy
+ZXR0eSBlYXNpbHkuIEkgdGhpbmsgd2UnZCBoYXZlIHRvIGRyYXcgdXAgc29tZQ0KPiBndWlkZWxp
+bmVzIChsaWtlIGFkZGluZyB0ZXN0IGNhc2VzIGZvciB0aGUgY29tbWFuZCkgdG8gYWxsb3cgdGhl
+c2UgdG8gY29tZSBpbi4NCj4gQW55dGhpbmcgd2l0aCBjb21tYW5kIGVmZmVjdHMgaXMgZ29pbmcg
+dG8gbmVlZCBleHRyYSBzY3J1dGlueS4NCg0KVGhpcyB3b3VsZCBuZWNlc3NpdGF0ZSBhZGRpbmcg
+c3BlY2lmaWMgb3Bjb2RlIHZhbHVlcyBpbiB0aGUgcmFuZ2UgQzAwMGgtRkZGRmggdG8gVUFQSSwg
+YW5kIHRob3NlIHdvdWxkIHRoZW4gYmUgYWxsb3dlZCBmb3IgYWxsIENYTC5tZW0gZGV2aWNlcywg
+Y29ycmVjdD8gIElmIHNvLCBJIGRvIG5vdCB0aGluayB0aGlzIGlzIHRoZSByaWdodCBhcHByb2Fj
+aCwgYXMgb3Bjb2RlcyBpbiB0aGlzIHJhbmdlIGFyZSBieSBkZWZpbml0aW9uIHZlbmRvciBkZWZp
+bmVkLiAgQSBnaXZlbiBvcGNvZGUgdmFsdWUgd2lsbCBoYXZlIHRvdGFsbHkgZGlmZmVyZW50IGVm
+ZmVjdHMgZGVwZW5kaW5nIG9uIHRoZSB2ZW5kb3IuDQoNCkkgdGhpbmsgeW91IG1heSBiZSBvbiB0
+byBzb21ldGhpbmcgd2l0aCB0aGUgY29tbWFuZCBlZmZlY3RzLiAgQnV0IHJhdGhlciB0aGFuICJl
+eHRyYSBzY3J1dGlueSIgZm9yIG9wY29kZXMgdGhhdCBoYXZlIGNvbW1hbmQgZWZmZWN0cywgd291
+bGQgaXQgbWFrZSBzZW5zZSB0byBhbGxvdyB2ZW5kb3IgZGVmaW5lZCBvcGNvZGVzIHRoYXQgaGF2
+ZSBCaXRbNTowXSBpbiB0aGUgQ29tbWFuZCBFZmZlY3QgZmllbGQgb2YgdGhlIENFTCBFbnRyeSBT
+dHJ1Y3R1cmUgKFRhYmxlIDE3Mykgc2V0IHRvIDA/ICBJbiBjb25qdW5jdGlvbiwgdGhvc2UgYml0
+cyByZXByZXNlbnQgYW55IGNoYW5nZSB0byB0aGUgY29uZmlndXJhdGlvbiBvciBkYXRhIHdpdGhp
+biB0aGUgZGV2aWNlLiAgRm9yIGNvbW1hbmRzIHRoYXQgaGF2ZSBubyBzdWNoIGVmZmVjdHMsIGlz
+IHRoZXJlIGhhcm0gdG8gYWxsb3dpbmcgdGhlbT8gIE9mIGNvdXJzZSwgdGhpcyBhcHByb2FjaCBy
+ZWxpZXMgb24gdGhlIHZlbmRvciB0byBub3QgbWlzcmVwcmVzZW50IHRoZSBjb21tYW5kIGVmZmVj
+dHMuDQoNCj4gDQo+IEluIG15IG9waW5pb24sIGFzIG1haW50YWluZXJzIG9mIHRoZSBkcml2ZXIs
+IHdlIGRvIG93ZSB0aGUgY29tbXVuaXR5IGFuIGFuc3dlcg0KPiBhcyB0byBvdXIgZGlyZWN0aW9u
+IGZvciB0aGlzLiBEYW4sIHdoYXQgaXMgeW91ciB0aG91Z2h0Pw0K
