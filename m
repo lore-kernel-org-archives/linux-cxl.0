@@ -2,246 +2,322 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C68C433DB
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 Feb 2021 17:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E0EC433E0
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 Feb 2021 17:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5873C64E15
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 Feb 2021 17:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2305E64E15
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 Feb 2021 17:13:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231481AbhBKRJi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 11 Feb 2021 12:09:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232193AbhBKRHo (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 11 Feb 2021 12:07:44 -0500
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C31C2C0613D6
-        for <linux-cxl@vger.kernel.org>; Thu, 11 Feb 2021 09:07:03 -0800 (PST)
-Received: by mail-ed1-x52f.google.com with SMTP id y18so7667873edw.13
-        for <linux-cxl@vger.kernel.org>; Thu, 11 Feb 2021 09:07:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GDAVKBBEPoGx3mqNW0L1W8kc0VtHeqiCwMuQ5W92m8o=;
-        b=ifg24T/zyjJNS9lnC2EQ6ttv7KeipFmMRRoHHzemh0OSquUXP+h5b7p45jfDusYp1P
-         2Yz/MuQSVeoJEB7eEKh/EnXFL2TAji1xQtYYJ8MlwJx7bVSvy8Ap9do8JSEjbRqp32qY
-         HctT9c71U3Q3sJAS7J9kFEjvZRHH0onrw81Vcu23lckUDY/xVUAcUODtHoUhs82+8TOb
-         AQ9DbkpWr4BGQJIC1GKsu4XsmKjNjVoin7GJjgUVeUbvUp85TLL3ZZWhLAov9tM6iDlk
-         /AijLSZtKgN2+vLkKz+XZs5zHdSv1t+D+4Ua0oDiquGa8Wsi0uNLLED9S4HQhEQ+UTe/
-         GHeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GDAVKBBEPoGx3mqNW0L1W8kc0VtHeqiCwMuQ5W92m8o=;
-        b=YF9gOv7sVGfH+LVapSJlq0Os+/18Tur0wRLlvs8hcYWsX3AZ81JKqiD4SU7ZzhO4H/
-         6g0wsl9j90uiE9UJSKiDdlSiEQ6BWqdA5tpo/7v4QMT5lZDCz4d/A4jFjgIwA4upIem+
-         kdD/aC2Ettd57nSVZcnCz6eduqGOjnv4BfRG0Fgv5dTUUHi8UVd7uN2Pi+0aQFKtmfW0
-         6DC+m+KniRXVAn2xSHN0lABo7bR7N51qYRD68sD2pgRr1TmCw+Y3HWWmKVmUZljNizs0
-         O2mVrOHt8KUBO7X3nn/N9B8XNtb2WnzJCo97+1DInfMHYqjx2BTLMSAQb5TyChmQeAmA
-         JGiQ==
-X-Gm-Message-State: AOAM530xM+rxqAzOmQDW6IaOJPw9RWSwyWKm681hjQRNjcLjjc9RoM07
-        eM9WxV7kVWOwxhSKoA/TL9w6poLSLuz5b4dp3Z1L8A==
-X-Google-Smtp-Source: ABdhPJyVMcdNRntyopl3GwkH1PP+iTQdxUbydzSyGMnewIQ1I3ksda9s6GWLweq1+WNIxGb5ts/Jn9i1mOWE03pHooU=
-X-Received: by 2002:a05:6402:1152:: with SMTP id g18mr9388920edw.18.1613063222411;
- Thu, 11 Feb 2021 09:07:02 -0800 (PST)
+        id S232148AbhBKRMl convert rfc822-to-8bit (ORCPT
+        <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 11 Feb 2021 12:12:41 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2551 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232171AbhBKRKb (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 11 Feb 2021 12:10:31 -0500
+Received: from fraeml739-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Dc2y43pbmz67lsC;
+        Fri, 12 Feb 2021 01:03:08 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml739-chm.china.huawei.com (10.206.15.220) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Thu, 11 Feb 2021 18:09:47 +0100
+Received: from localhost (10.47.31.44) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2106.2; Thu, 11 Feb
+ 2021 17:09:46 +0000
+Date:   Thu, 11 Feb 2021 17:08:45 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+CC:     <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "David Hildenbrand" <david@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        "Ira Weiny" <ira.weiny@intel.com>,
+        Marcel Apfelbaum <marcel.apfelbaum@gmail.com>,
+        Markus Armbruster <armbru@redhat.com>,
+        Philippe =?ISO-8859-1?Q?Mathieu-Da?= =?ISO-8859-1?Q?ud=E9?= 
+        <f4bug@amsat.org>, Vishal Verma <vishal.l.verma@intel.com>,
+        "John Groves (jgroves)" <jgroves@micron.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: [RFC PATCH v3 02/31] hw/cxl/component: Introduce CXL components
+ (8.1.x, 8.2.5)
+Message-ID: <20210211170845.0000451d@Huawei.com>
+In-Reply-To: <20210202005948.241655-3-ben.widawsky@intel.com>
+References: <20210202005948.241655-1-ben.widawsky@intel.com>
+        <20210202005948.241655-3-ben.widawsky@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <CAPcyv4gmd_cygXK0PpGkXmJLC3_ctEpRvpi5P-QcuXusFX5oNQ@mail.gmail.com>
- <20210210112330.00003e74@Huawei.com> <CAPcyv4gOyPjVcBa_m6pvpVP+vamJ38G7ePos-2LP273y3ivJqg@mail.gmail.com>
- <20210211094222.000048ae@Huawei.com>
-In-Reply-To: <20210211094222.000048ae@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 11 Feb 2021 09:06:51 -0800
-Message-ID: <CAPcyv4j0Wce-76OfgqTSkveukgDXB_p2VZZpgM8XjDFd+Q-0Ww@mail.gmail.com>
-Subject: Re: [RFC] ACPI Code First ECR: Generic Target
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Natu, Mahesh" <mahesh.natu@intel.com>,
-        Chet R Douglas <chet.r.douglas@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.47.31.44]
+X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Feb 11, 2021 at 1:44 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Wed, 10 Feb 2021 08:24:51 -0800
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > On Wed, Feb 10, 2021 at 3:24 AM Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com> wrote:
-> > >
-> > > On Tue, 9 Feb 2021 19:55:05 -0800
-> > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > > While the platform BIOS is able to describe the performance
-> > > > characteristics of CXL memory that is present at boot, it is unable to
-> > > > statically enumerate the performance of CXL memory hot inserted
-> > > > post-boot. The OS can enumerate most of the characteristics from link
-> > > > registers and CDAT, but the performance from the CPU to the host
-> > > > bridge, for example, is not enumerated by PCIE or CXL. Introduce an
-> > > > ACPI mechanism for this purpose. Critically this is achieved with a
-> > > > small tweak to how the existing Generic Initiator proximity domain is
-> > > > utilized in the HMAT.
-> > >
-> > > Hi Dan,
-> > >
-> > > Agree there is a hole here, but I think the proposed solution has some
-> > > issues for backwards compatibility.
-> > >
-> > > Just to clarify, I believe CDAT from root ports is sufficient for the
-> > > other direction (GI on CXL, memory in host).  I wondered initially if
-> > > this was a two way issue, but after a reread, I think that is fine
-> > > with the root port providing CDAT or potentially treating the root
-> > > port as a GI (though that runs into the same naming / representation issue
-> > > as below and I think would need some clarifying text in UEFI GI description)
-> > >
-> > > http://uefi.org/sites/default/files/resources/Coherent%20Device%20Attribute%20Table_1.01.pdf
-> > >
-> > > For the case you are dealing with here potentially we 'could' add something
-> > > to CDAT as alternative to changing SRAT, but it would be more complex
-> > > so your approach here makes more sense to me.
-> >
-> > CDAT seems the wrong mechanism because it identifies target
-> > performance once you're at the front door of the device, not
-> > performance relative to a given initiator.
->
-> I'd argue you could make CDAT a more symmetric representation, but it would
-> end up replicating a lot of info already in HMAT.  Didn't say it was a good
-> idea!
+On Mon, 1 Feb 2021 16:59:19 -0800
+Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-CDAT describes points, HMAT describes edges on the performance graph,
-it would be confusing if CDAT tried to supplant HMAT.
+> A CXL 2.0 component is any entity in the CXL topology. All components
+> have a analogous function in PCIe. Except for the CXL host bridge, all
+> have a PCIe config space that is accessible via the common PCIe
+> mechanisms. CXL components are enumerated via DVSEC fields in the
+> extended PCIe header space. CXL components will minimally implement some
+> subset of CXL.mem and CXL.cache registers defined in 8.2.5 of the CXL
+> 2.0 specification. Two headers and a utility library are introduced to
+> support the minimum functionality needed to enumerate components.
+> 
+> The cxl_pci header manages bits associated with PCI, specifically the
+> DVSEC and related fields. The cxl_component.h variant has data
+> structures and APIs that are useful for drivers implementing any of the
+> CXL 2.0 components. The library takes care of making use of the DVSEC
+> bits and the CXL.[mem|cache] registers. Per spec, the registers are
+> little endian.
+> 
+> None of the mechanisms required to enumerate a CXL capable hostbridge
+> are introduced at this point.
+> 
+> Note that the CXL.mem and CXL.cache registers used are always 4B wide.
+> It's possible in the future that this constraint will not hold.
+> 
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+A few additions to previous comments.
 
->
-> That's an odd situation that it sort of 'half' manages it in the BIOS.
-> We probably need some supplementary additional docs around this topic
-> as the OS would need to be aware of that possibility and explicitly check
-> for it before doing its normal build based on CDAT + what you are proposing
-> here.  Maybe code is enough but given this is cross OS stuff I'd argue
-> it probably isn't.
->
-> I guess could revisit this draft Uefi white paper perhaps and add a bunch
-> of examples around this usecase https://github.com/hisilicon/acpi-numa-whitepaper
+> ---
+>  MAINTAINERS                    |   6 +
+>  hw/Kconfig                     |   1 +
+>  hw/cxl/Kconfig                 |   3 +
+>  hw/cxl/cxl-component-utils.c   | 208 +++++++++++++++++++++++++++++++++
+>  hw/cxl/meson.build             |   3 +
+>  hw/meson.build                 |   1 +
+>  include/hw/cxl/cxl.h           |  17 +++
+>  include/hw/cxl/cxl_component.h | 187 +++++++++++++++++++++++++++++
+>  include/hw/cxl/cxl_pci.h       | 138 ++++++++++++++++++++++
+>  9 files changed, 564 insertions(+)
+>  create mode 100644 hw/cxl/Kconfig
+>  create mode 100644 hw/cxl/cxl-component-utils.c
+>  create mode 100644 hw/cxl/meson.build
+>  create mode 100644 include/hw/cxl/cxl.h
+>  create mode 100644 include/hw/cxl/cxl_component.h
+>  create mode 100644 include/hw/cxl/cxl_pci.h
+> 
 
-Thanks for the reference, I'll take a look.
 
->
-> >
-> > >
-> > > >
-> > > > # Impact of the Change
-> > > > The existing Generic Initiator Affinity Structure (ACPI 6.4 Section
-> > > > 5.2.16.6) already contains all the fields necessary to enumerate a
-> > > > generic target proximity domain. All that is missing is the
-> > > > interpretation of that proximity domain optionally as a target
-> > > > identifier in the HMAT.
-> > > >
-> > > > Given that the OS still needs to dynamically enumerate and instantiate
-> > > > the memory ranges behind the host bridge. The assumption is that
-> > > > operating systems that do not support native CXL enumeration will ignore
-> > > > this data in the HMAT, while CXL native enumeration aware environments
-> > > > will use this fragment of the performance path to calculate the
-> > > > performance characteristics.
-> > >
-> > > I don't think it is true that OS not supporting native CXL will ignore the
-> > > data.
-> >
-> > True, I should have chosen more careful words like s/ignore/not
-> > regress upon seeing/
->
-> It's a sticky corner and I suspect likely to come up at in ACPI WG - what is
-> being proposed here isn't backwards compatible
+> diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
+> new file mode 100644
+> index 0000000000..8d56ad5c7d
+> --- /dev/null
+> +++ b/hw/cxl/cxl-component-utils.c
+> @@ -0,0 +1,208 @@
+> +/*
+> + * CXL Utility library for components
+> + *
+> + * Copyright(C) 2020 Intel Corporation.
+> + *
+> + * This work is licensed under the terms of the GNU GPL, version 2. See the
+> + * COPYING file in the top-level directory.
+> + */
+> +
+> +#include "qemu/osdep.h"
+> +#include "qemu/log.h"
+> +#include "hw/pci/pci.h"
+> +#include "hw/cxl/cxl.h"
+> +
+> +static uint64_t cxl_cache_mem_read_reg(void *opaque, hwaddr offset,
+> +                                       unsigned size)
+> +{
+> +    CXLComponentState *cxl_cstate = opaque;
+> +    ComponentRegisters *cregs = &cxl_cstate->crb;
+> +
+> +    assert(size == 4);
+> +
+> +    if (cregs->special_ops && cregs->special_ops->read) {
+> +        return cregs->special_ops->read(cxl_cstate, offset, size);
+> +    } else {
+> +        return cregs->cache_mem_registers[offset / 4];
+> +    }
+> +}
+> +
+> +static void cxl_cache_mem_write_reg(void *opaque, hwaddr offset, uint64_t value,
+> +                                    unsigned size)
+> +{
+> +    CXLComponentState *cxl_cstate = opaque;
+> +    ComponentRegisters *cregs = &cxl_cstate->crb;
+> +
+> +    assert(size == 4);
+> +
+> +    if (cregs->special_ops && cregs->special_ops->write) {
+> +        cregs->special_ops->write(cxl_cstate, offset, value, size);
+> +    } else {
+> +        cregs->cache_mem_registers[offset / 4] = value;
+> +    }
+> +}
+> +
+> +/*
+> + * 8.2.3
+> + *   The access restrictions specified in Section 8.2.2 also apply to CXL 2.0
+> + *   Component Registers.
+> + *
+> + * 8.2.2
+> + *   • A 32 bit register shall be accessed as a 4 Bytes quantity. Partial
+> + *   reads are not permitted.
+> + *   • A 64 bit register shall be accessed as a 8 Bytes quantity. Partial
+> + *   reads are not permitted.
+> + *
+> + * As of the spec defined today, only 4 byte registers exist.
 
-It seems our definitions of backwards compatible are divergent. Please
-correct me if I'm wrong, but I understand your position to be "any
-perceptible OS behavior change breaks backwards compatibility",
-whereas I'm advocating that backwards compatibility is relative
-regressing real world use cases. That said, I do need to go mock this
-up in QEMU and verify how much disturbance it causes.
+The exciting exception to this is the RAS header log which is
+defined as 512 bits.  Will seek clarification but I think the spec should
+probably say that is a set of 32 bit registers.
 
-> even if the impacts in Linux are small.
+A bunch of the other elements that we probably want to block in plausible
+values for also seem to use 64 bit registers.
 
-I'd note the kernel would grind to a halt if the criteria for
-"backwards compatible" was zero perceptible behavior change.
+> + */
+> +static const MemoryRegionOps cache_mem_ops = {
+> +    .read = cxl_cache_mem_read_reg,
+> +    .write = cxl_cache_mem_write_reg,
+> +    .endianness = DEVICE_LITTLE_ENDIAN,
+> +    .valid = {
+> +        .min_access_size = 4,
+> +        .max_access_size = 4,
+> +        .unaligned = false,
+> +    },
+> +    .impl = {
+> +        .min_access_size = 4,
+> +        .max_access_size = 4,
+> +    },
+> +};
+> +
 
-> Mostly it's infrastructure bring up that won't get used
-> (fallback lists and similar for a node which will never be specified in
-> allocations) and some confusing userspace ABI (which is more than a little
-> confusing already).
+..
+> +
+> +void cxl_component_register_init_common(uint32_t *reg_state, enum reg_type type)
+> +{
+> +    int caps = 0;
+> +    switch (type) {
+> +    case CXL2_DOWNSTREAM_PORT:
+> +    case CXL2_DEVICE:
+> +        /* CAP, RAS, Link */
+> +        caps = 2;
+> +        break;
+> +    case CXL2_UPSTREAM_PORT:
+> +    case CXL2_TYPE3_DEVICE:
+> +    case CXL2_LOGICAL_DEVICE:
+> +        /* + HDM */
+> +        caps = 3;
+> +        break;
+> +    case CXL2_ROOT_PORT:
+> +        /* + Extended Security, + Snoop */
+> +        caps = 5;
+> +        break;
+> +    default:
+> +        abort();
+> +    }
+> +
+> +    memset(reg_state, 0, 0x1000);
+> +
+> +    /* CXL Capability Header Register */
+> +    ARRAY_FIELD_DP32(reg_state, CXL_CAPABILITY_HEADER, ID, 1);
+> +    ARRAY_FIELD_DP32(reg_state, CXL_CAPABILITY_HEADER, VERSION, 1);
+> +    ARRAY_FIELD_DP32(reg_state, CXL_CAPABILITY_HEADER, CACHE_MEM_VERSION, 1);
+> +    ARRAY_FIELD_DP32(reg_state, CXL_CAPABILITY_HEADER, ARRAY_SIZE, caps);
+> +
+> +
+> +#define init_cap_reg(reg, id, version)                                        \
+> +    _Static_assert(CXL_##reg##_REGISTERS_OFFSET != 0, "Invalid cap offset\n");\
+> +    do {                                                                      \
+> +        int which = R_CXL_##reg##_CAPABILITY_HEADER;                          \
+> +        reg_state[which] = FIELD_DP32(reg_state[which],                       \
+> +                                      CXL_##reg##_CAPABILITY_HEADER, ID, id); \
+> +        reg_state[which] =                                                    \
+> +            FIELD_DP32(reg_state[which], CXL_##reg##_CAPABILITY_HEADER,       \
+> +                       VERSION, version);                                     \
+> +        reg_state[which] =                                                    \
+> +            FIELD_DP32(reg_state[which], CXL_##reg##_CAPABILITY_HEADER, PTR,  \
+> +                       CXL_##reg##_REGISTERS_OFFSET);                         \
+> +    } while (0)
 
-Fallback lists are established relative to online nodes. These generic
-targets are not onlined as memory.
+Seems like this would be cleaner using ARRAY_FIELD_DP32 as you did for the header.
 
-> > > Linux will create a small amount of infrastructure to reflect them (more or
-> > > less the same as a memoryless node) and also they will appear in places
-> > > like access0 as a possible initiator of transactions.  It's small stuff,
-> > > but I'd rather the impact on legacy was zero.
-> >
-> > I'm failing to see that small collision as fatal to the proposal. The
-> > HMAT parsing had a significant bug for multiple kernel releases and no
-> > one noticed. This quirk is minor in comparison.
->
-> True, there is a lag in HMAT adoption - though for ACPI tables, not that long
-> (only a couple of years :)
->
-> >
-> > >
-> > > So my gut feeling here is we shouldn't reuse the generic initiator, but
-> > > should invent something new.  Would look similar to GI, but with a different
-> > > ID - to ensure legacy OS ignores it.
-> >
-> > A new id introduces more problems than it solves. Set aside the ACPICA
-> > thrash, it does not allow a clean identity mapping of a point in a
-> > system topology being both initiator and target. The SRAT does not
-> > need more data structures to convey this information. At most I would
-> > advocate for an OSC bit for the OS to opt into allowing this new usage
-> > in the HMAT, but that still feels like overkill absent a clear
-> > regression in legacy environments.
->
-> OSC for this case doesn't work. You can't necessarily evaluate it
-> early enough in the boot - in Linux the node setup is before AML parsing
-> comes up.  HMAT is evaluated a lot later, but SRAT is too early.  + in theory
-> another OS is allowed to evaluate HMAT before OSC is available.
+    #define init_cap_reg(reg, id, version)                                        \
+        _Static_assert(CXL_##reg##_REGISTERS_OFFSET != 0, "Invalid cap offset\n");\
+        do {                                                                    \
+            ARRAY_FIELD_DP32(reg_state, CXL_##reg##_CAPABILITY_HEADER, ID, id); \
+            ARRAY_FIELD_DP32(reg_state, CXL_##reg##_CAPABILITY_HEADER,          \
+                             VERSION, version);                                 \
+            ARRAY_FIELD_DP32(reg_state, CXL_##reg##_CAPABILITY_HEADER,          \
+                             PTR, CXL_##reg##_REGISTRS_OFFSET);                 \
+	} while (0)
+I think gives the same result.
 
-The Linux node setup for online memory is before OSC parsing, but
-there's nothing to "online" with a GI/GT entry. Also, if this was a
-problem, it would already be impacting the OS today because this
-proposal only changes HMAT, not SRAT. Lastly there *is* an OSC bit for
-GI, so either that's vestigial and needs to be removed, or OSC is
-relevant for this case.
+> +
+> +    init_cap_reg(RAS, 2, 1);
+> +    ras_init_common(reg_state);
+> +
+> +    init_cap_reg(LINK, 4, 2);
 
->
-> > The fact that hardly anyone is
-> > using HMAT (as indicated by the bug I mentioned) gives me confidence
-> > that perfection is more "enemy of the good" than required here.
->
-> How about taking this another way
->
-> 1) Assume that the costs of 'false' GI nodes on legacy system as a result
->    of this is minor - so just live with it.  (probably true, but as ever
->    need to confirm with other OS)
->
-> 2) Try to remove the cost of pointless infrastructure on 'aware' kernels.
->    Add a flag to the GI entry to say it's a bridge and not expected to,
->    in of itself, represent an initiator or a target.
->    In Linux we then don't create the node intrastructure etc or assign
->    any devices to have the non existent NUMA node.
->
-> The information is still there to combine with device info (CDAT) etc
-> and build what we eventually want in the way of a representation of
-> the topology that Linux can use.
->
-> Now we just have the 'small' problem of figuring out how actually implement
-> hotplugging of NUMA nodes.
+Feels like we'll want to block some values for the rest of these to at least
+ensure whatever is read isn't crazy.
 
-I think it's tiny. Just pad the "possible" nodes past what SRAT enumerates.
+> +
+> +    if (caps < 3) {
+> +        return;
+> +    }
+> +
+> +    init_cap_reg(HDM, 5, 1);
+> +    hdm_init_common(reg_state);
+> +
+> +    if (caps < 5) {
+> +        return;
+> +    }
+> +
+> +    init_cap_reg(EXTSEC, 6, 1);
+> +    init_cap_reg(SNOOP, 8, 1);
+> +
+> +#undef init_cap_reg
+> +}
+> +
+> +/*
+> + * Helper to creates a DVSEC header for a CXL entity. The caller is responsible
+> + * for tracking the valid offset.
+> + *
+> + * This function will build the DVSEC header on behalf of the caller and then
+> + * copy in the remaining data for the vendor specific bits.
+> + */
+> +void cxl_component_create_dvsec(CXLComponentState *cxl, uint16_t length,
+> +                                uint16_t type, uint8_t rev, uint8_t *body)
+> +{
+> +    PCIDevice *pdev = cxl->pdev;
+> +    uint16_t offset = cxl->dvsec_offset;
+> +
+> +    assert(offset >= PCI_CFG_SPACE_SIZE &&
+> +           ((offset + length) < PCI_CFG_SPACE_EXP_SIZE));
+> +    assert((length & 0xf000) == 0);
+> +    assert((rev & ~0xf) == 0);
+> +
+> +    /* Create the DVSEC in the MCFG space */
+> +    pcie_add_capability(pdev, PCI_EXT_CAP_ID_DVSEC, 1, offset, length);
+> +    pci_set_long(pdev->config + offset + PCIE_DVSEC_HEADER1_OFFSET,
+> +                 (length << 20) | (rev << 16) | CXL_VENDOR_ID);
+> +    pci_set_word(pdev->config + offset + PCIE_DVSEC_ID_OFFSET, type);
+> +    memcpy(pdev->config + offset + sizeof(struct dvsec_header),
+> +           body + sizeof(struct dvsec_header),
+> +           length - sizeof(struct dvsec_header));
+> +
+> +    /* Update state for future DVSEC additions */
+> +    range_init_nofail(&cxl->dvsecs[type], cxl->dvsec_offset, length);
+> +    cxl->dvsec_offset += length;
+> +}
+...
+
