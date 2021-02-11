@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2726C433DB
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 Feb 2021 18:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AB5C433E0
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 Feb 2021 18:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FCDA64D5D
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 Feb 2021 18:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C67564E5F
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 Feb 2021 18:24:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231474AbhBKSDk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 11 Feb 2021 13:03:40 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:2553 "EHLO
+        id S231474AbhBKSNu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 11 Feb 2021 13:13:50 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2554 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232193AbhBKSBq (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 11 Feb 2021 13:01:46 -0500
-Received: from fraeml737-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Dc44n72fSz67n8d;
-        Fri, 12 Feb 2021 01:54:01 +0800 (CST)
+        with ESMTP id S232272AbhBKSLd (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 11 Feb 2021 13:11:33 -0500
+Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Dc4LG52WLz67hjG;
+        Fri, 12 Feb 2021 02:05:42 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml737-chm.china.huawei.com (10.206.15.218) with Microsoft SMTP Server
+ fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Thu, 11 Feb 2021 19:00:41 +0100
+ 15.1.2106.2; Thu, 11 Feb 2021 19:10:40 +0100
 Received: from localhost (10.47.31.44) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2106.2; Thu, 11 Feb
- 2021 18:00:40 +0000
-Date:   Thu, 11 Feb 2021 17:59:39 +0000
+ 2021 18:10:40 +0000
+Date:   Thu, 11 Feb 2021 18:09:39 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Ben Widawsky <ben.widawsky@intel.com>
 CC:     <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
@@ -45,12 +45,12 @@ CC:     <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
         <f4bug@amsat.org>, Vishal Verma <vishal.l.verma@intel.com>,
         "John Groves (jgroves)" <jgroves@micron.com>,
         "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [RFC PATCH v3 07/31] hw/cxl/device: Add cheap EVENTS
- implementation (8.2.9.1)
-Message-ID: <20210211175939.000079f3@Huawei.com>
-In-Reply-To: <20210202005948.241655-8-ben.widawsky@intel.com>
+Subject: Re: [RFC PATCH v3 05/31] hw/cxl/device: Implement basic mailbox
+ (8.2.8.4)
+Message-ID: <20210211180939.00004e65@Huawei.com>
+In-Reply-To: <20210202005948.241655-6-ben.widawsky@intel.com>
 References: <20210202005948.241655-1-ben.widawsky@intel.com>
-        <20210202005948.241655-8-ben.widawsky@intel.com>
+        <20210202005948.241655-6-ben.widawsky@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -64,63 +64,74 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 1 Feb 2021 16:59:24 -0800
+On Mon, 1 Feb 2021 16:59:22 -0800
 Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-> Using the previously implemented stubbed helpers, it is now possible to
-> easily add the missing, required commands to the implementation.
+> This is the beginning of implementing mailbox support for CXL 2.0
+> devices. The implementation recognizes when the doorbell is rung,
+> handles the command/payload, clears the doorbell while returning error
+> codes and data.
+> 
+> Generally the mailbox mechanism is designed to permit communication
+> between the host OS and the firmware running on the device. For our
+> purposes, we emulate both the firmware, implemented primarily in
+> cxl-mailbox-utils.c, and the hardware.
+> 
+> No commands are implemented yet.
 > 
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+
+Sorry review is a little incoherent. It's a lot of patches
+so I've ended up looking at your tree then trying to figure out
+which patch a given comment belongs alongside.
+
 > ---
->  hw/cxl/cxl-mailbox-utils.c | 23 ++++++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
+>  hw/cxl/cxl-device-utils.c   | 125 ++++++++++++++++++++++-
+>  hw/cxl/cxl-mailbox-utils.c  | 197 ++++++++++++++++++++++++++++++++++++
+>  hw/cxl/meson.build          |   1 +
+>  include/hw/cxl/cxl.h        |   3 +
+>  include/hw/cxl/cxl_device.h |  28 ++++-
+>  5 files changed, 349 insertions(+), 5 deletions(-)
+>  create mode 100644 hw/cxl/cxl-mailbox-utils.c
 > 
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 466055b01a..7c939a1851 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -37,6 +37,14 @@
->   *  a register interface that already deals with it.
->   */
+> diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
+> index bb15ad9a0f..6602606f3d 100644
+> --- a/hw/cxl/cxl-device-utils.c
+> +++ b/hw/cxl/cxl-device-utils.c
+> @@ -40,6 +40,111 @@ static uint64_t dev_reg_read(void *opaque, hwaddr offset, unsigned size)
+>      return 0;
+>  }
 >  
-> +enum {
-> +    EVENTS      = 0x01,
-> +        #define GET_RECORDS   0x0
-> +        #define CLEAR_RECORDS   0x1
-> +        #define GET_INTERRUPT_POLICY   0x2
-> +        #define SET_INTERRUPT_POLICY   0x3
-> +};
-> +
->  /* 8.2.8.4.5.1 Command Return Codes */
->  typedef enum {
->      CXL_MBOX_SUCCESS = 0x0,
-> @@ -105,10 +113,23 @@ struct cxl_cmd {
->          return CXL_MBOX_SUCCESS;                                          \
->      }
->  
-> +define_mailbox_handler_zeroed(EVENTS_GET_RECORDS, 0x20);
-> +define_mailbox_handler_nop(EVENTS_CLEAR_RECORDS);
-> +define_mailbox_handler_zeroed(EVENTS_GET_INTERRUPT_POLICY, 4);
-> +define_mailbox_handler_nop(EVENTS_SET_INTERRUPT_POLICY);
-> +
-> +#define IMMEDIATE_CONFIG_CHANGE (1 << 1)
-> +#define IMMEDIATE_LOG_CHANGE (1 << 4)
-> +
->  #define CXL_CMD(s, c, in, cel_effect) \
->      [s][c] = { stringify(s##_##c), cmd_##s##_##c, in, cel_effect }
->  
-> -static struct cxl_cmd cxl_cmd_set[256][256] = {};
-> +static struct cxl_cmd cxl_cmd_set[256][256] = {
-> +    CXL_CMD(EVENTS, GET_RECORDS, 1, 0),
-> +    CXL_CMD(EVENTS, CLEAR_RECORDS, ~0, IMMEDIATE_LOG_CHANGE),
-> +    CXL_CMD(EVENTS, GET_INTERRUPT_POLICY, 0, 0),
-> +    CXL_CMD(EVENTS, SET_INTERRUPT_POLICY, 4, IMMEDIATE_CONFIG_CHANGE),
 
-CXL 2.0 spec says IMMEDIATE_POLICY_CHANGE for this rather than
-IMMEDIATE_CONFIG_CHANGE.
 
-> +};
->  
->  #undef CXL_CMD
->  
+> +
+> +#define define_mailbox_handler_zeroed(name, size)                         \
+> +    uint16_t __zero##name = size;                                         \
+> +    static ret_code cmd_##name(struct cxl_cmd *cmd,                       \
+> +                               CXLDeviceState *cxl_dstate, uint16_t *len) \
+> +    {                                                                     \
+> +        *len = __zero##name;                                              \
+
+Why not just use the value of size here?
+
+__zero##name isn't used anywhere else.
+
+> +        memset(cmd->payload, 0, *len);                                    \
+> +        return CXL_MBOX_SUCCESS;                                          \
+> +    }
+> +#define define_mailbox_handler_const(name, data)                          \
+> +    static ret_code cmd_##name(struct cxl_cmd *cmd,                       \
+> +                               CXLDeviceState *cxl_dstate, uint16_t *len) \
+> +    {                                                                     \
+> +        *len = sizeof(data);                                              \
+> +        memcpy(cmd->payload, data, *len);                                 \
+> +        return CXL_MBOX_SUCCESS;                                          \
+> +    }
+> +#define define_mailbox_handler_nop(name)                                  \
+> +    static ret_code cmd_##name(struct cxl_cmd *cmd,                       \
+> +                               CXLDeviceState *cxl_dstate, uint16_t *len) \
+> +    {                                                                     \
+> +        return CXL_MBOX_SUCCESS;                                          \
+> +    }
+> +
 
