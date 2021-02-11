@@ -2,49 +2,61 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72580C433E0
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 Feb 2021 09:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0283C433E0
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 Feb 2021 10:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20B3064E8A
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 Feb 2021 09:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E9D764E9A
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 Feb 2021 10:00:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229714AbhBKJsi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 11 Feb 2021 04:48:38 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:2541 "EHLO
+        id S230028AbhBKJ7u (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 11 Feb 2021 04:59:50 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2542 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230365AbhBKJoP (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 11 Feb 2021 04:44:15 -0500
-Received: from fraeml745-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Dbs4y2tvTz67mWv;
-        Thu, 11 Feb 2021 17:38:26 +0800 (CST)
+        with ESMTP id S230209AbhBKJ5m (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 11 Feb 2021 04:57:42 -0500
+Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DbsNS1HYxz67m9C;
+        Thu, 11 Feb 2021 17:51:52 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml745-chm.china.huawei.com (10.206.15.226) with Microsoft SMTP Server
+ fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Thu, 11 Feb 2021 10:43:23 +0100
+ 15.1.2106.2; Thu, 11 Feb 2021 10:56:49 +0100
 Received: from localhost (10.47.31.44) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2106.2; Thu, 11 Feb
- 2021 09:43:23 +0000
-Date:   Thu, 11 Feb 2021 09:42:22 +0000
+ 2021 09:56:48 +0000
+Date:   Thu, 11 Feb 2021 09:55:48 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Natu, Mahesh" <mahesh.natu@intel.com>,
-        Chet R Douglas <chet.r.douglas@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        "Vishal L Verma" <vishal.l.verma@intel.com>
-Subject: Re: [RFC] ACPI Code First ECR: Generic Target
-Message-ID: <20210211094222.000048ae@Huawei.com>
-In-Reply-To: <CAPcyv4gOyPjVcBa_m6pvpVP+vamJ38G7ePos-2LP273y3ivJqg@mail.gmail.com>
-References: <CAPcyv4gmd_cygXK0PpGkXmJLC3_ctEpRvpi5P-QcuXusFX5oNQ@mail.gmail.com>
-        <20210210112330.00003e74@Huawei.com>
-        <CAPcyv4gOyPjVcBa_m6pvpVP+vamJ38G7ePos-2LP273y3ivJqg@mail.gmail.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-nvdimm@lists.01.org>,
+        <linux-pci@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+        "Chris Browy" <cbrowy@avery-design.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Jon Masters" <jcm@jonmasters.org>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "John Groves (jgroves)" <jgroves@micron.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>
+Subject: Re: [PATCH v2 2/8] cxl/mem: Find device capabilities
+Message-ID: <20210211095548.00000da7@Huawei.com>
+In-Reply-To: <20210210181605.ecbl3m5ep4rszpqs@intel.com>
+References: <20210210000259.635748-1-ben.widawsky@intel.com>
+        <20210210000259.635748-3-ben.widawsky@intel.com>
+        <20210210133252.000047af@Huawei.com>
+        <20210210150759.00005684@Huawei.com>
+        <20210210165557.7fuqbyr7e7zjoxaa@intel.com>
+        <20210210181605.ecbl3m5ep4rszpqs@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -58,265 +70,221 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 10 Feb 2021 08:24:51 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Wed, 10 Feb 2021 10:16:05 -0800
+Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-> On Wed, Feb 10, 2021 at 3:24 AM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > On Tue, 9 Feb 2021 19:55:05 -0800
-> > Dan Williams <dan.j.williams@intel.com> wrote:
-> >  
-> > > While the platform BIOS is able to describe the performance
-> > > characteristics of CXL memory that is present at boot, it is unable to
-> > > statically enumerate the performance of CXL memory hot inserted
-> > > post-boot. The OS can enumerate most of the characteristics from link
-> > > registers and CDAT, but the performance from the CPU to the host
-> > > bridge, for example, is not enumerated by PCIE or CXL. Introduce an
-> > > ACPI mechanism for this purpose. Critically this is achieved with a
-> > > small tweak to how the existing Generic Initiator proximity domain is
-> > > utilized in the HMAT.  
-> >
-> > Hi Dan,
-> >
-> > Agree there is a hole here, but I think the proposed solution has some
-> > issues for backwards compatibility.
-> >
-> > Just to clarify, I believe CDAT from root ports is sufficient for the
-> > other direction (GI on CXL, memory in host).  I wondered initially if
-> > this was a two way issue, but after a reread, I think that is fine
-> > with the root port providing CDAT or potentially treating the root
-> > port as a GI (though that runs into the same naming / representation issue
-> > as below and I think would need some clarifying text in UEFI GI description)
-> >
-> > http://uefi.org/sites/default/files/resources/Coherent%20Device%20Attribute%20Table_1.01.pdf
-> >
-> > For the case you are dealing with here potentially we 'could' add something
-> > to CDAT as alternative to changing SRAT, but it would be more complex
-> > so your approach here makes more sense to me.  
+> On 21-02-10 08:55:57, Ben Widawsky wrote:
+> > On 21-02-10 15:07:59, Jonathan Cameron wrote:  
+> > > On Wed, 10 Feb 2021 13:32:52 +0000
+> > > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> > >   
+> > > > On Tue, 9 Feb 2021 16:02:53 -0800
+> > > > Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > > >   
+> > > > > Provide enough functionality to utilize the mailbox of a memory device.
+> > > > > The mailbox is used to interact with the firmware running on the memory
+> > > > > device. The flow is proven with one implemented command, "identify".
+> > > > > Because the class code has already told the driver this is a memory
+> > > > > device and the identify command is mandatory.
+> > > > > 
+> > > > > CXL devices contain an array of capabilities that describe the
+> > > > > interactions software can have with the device or firmware running on
+> > > > > the device. A CXL compliant device must implement the device status and
+> > > > > the mailbox capability. Additionally, a CXL compliant memory device must
+> > > > > implement the memory device capability. Each of the capabilities can
+> > > > > [will] provide an offset within the MMIO region for interacting with the
+> > > > > CXL device.
+> > > > > 
+> > > > > The capabilities tell the driver how to find and map the register space
+> > > > > for CXL Memory Devices. The registers are required to utilize the CXL
+> > > > > spec defined mailbox interface. The spec outlines two mailboxes, primary
+> > > > > and secondary. The secondary mailbox is earmarked for system firmware,
+> > > > > and not handled in this driver.
+> > > > > 
+> > > > > Primary mailboxes are capable of generating an interrupt when submitting
+> > > > > a background command. That implementation is saved for a later time.
+> > > > > 
+> > > > > Link: https://www.computeexpresslink.org/download-the-specification
+> > > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > > > > Reviewed-by: Dan Williams <dan.j.williams@intel.com>    
+> > > > 
+> > > > Hi Ben,
+> > > > 
+> > > >   
+> > > > > +/**
+> > > > > + * cxl_mem_mbox_send_cmd() - Send a mailbox command to a memory device.
+> > > > > + * @cxlm: The CXL memory device to communicate with.
+> > > > > + * @mbox_cmd: Command to send to the memory device.
+> > > > > + *
+> > > > > + * Context: Any context. Expects mbox_lock to be held.
+> > > > > + * Return: -ETIMEDOUT if timeout occurred waiting for completion. 0 on success.
+> > > > > + *         Caller should check the return code in @mbox_cmd to make sure it
+> > > > > + *         succeeded.    
+> > > > 
+> > > > cxl_xfer_log() doesn't check mbox_cmd->return_code and for my test it currently
+> > > > enters an infinite loop as a result.  
+> > 
+> > I meant to fix that.
+> >   
+> > > > 
+> > > > I haven't checked other paths, but to my mind it is not a good idea to require
+> > > > two levels of error checking - the example here proves how easy it is to forget
+> > > > one.  
+> > 
+> > Demonstrably, you're correct. I think it would be good to have a kernel only
+> > mbox command that does the error checking though. Let me type something up and
+> > see how it looks.  
 > 
-> CDAT seems the wrong mechanism because it identifies target
-> performance once you're at the front door of the device, not
-> performance relative to a given initiator.
+> Hi Jonathan. What do you think of this? The bit I'm on the fence about is if I
+> should validate output size too. I like the simplicity as it is, but it requires
+> every caller to possibly check output size, which is kind of the same problem
+> you're originally pointing out.
 
-I'd argue you could make CDAT a more symmetric representation, but it would
-end up replicating a lot of info already in HMAT.  Didn't say it was a good
-idea!
+The simplicity is good and this is pretty much what I expected you would end up with
+(always reassuring)
 
-> 
-> >  
-> > >
-> > > ---
-> > >
-> > > # Title: Introduce a Generic Target for CXL
-> > >
-> > > # Status: Draft
-> > >
-> > > # Document: ACPI Specification 6.4
-> > >
-> > > # License
-> > > SPDX-License Identifier: CC-BY-4.0
-> > >
-> > > # Submitter:
-> > > * Sponsor: Dan Williams, Intel
-> > > * Creators/Contributors:
-> > >     * Mahesh Natu, Intel
-> > >     * Chet Douglas, Intel
-> > >     * Deepak Shivakumar, Intel
-> > >
-> > > # Summary of the Change
-> > > Introduce a "Generic Target" concept to the SRAT to describe the root
-> > > performance parameters in the path to dynamically discovered (outside of
-> > > ACPI enumeration) CXL memory target endpoints.
-> > >
-> > > # Benefits of the Change
-> > > Consider the case of a system with a set of CXL host bridges (ACPI0016),  
-> >
-> > Superficially feels like this new SRAT entry might reference the CXL 2.0 Root
-> > ports or the host bridge.
-> >  
-> > > and no devices attached at initial system power-on. In this scenario
-> > > platform firmware is unable to perform the end-to-end enumeration
-> > > necessary to populate SRAT and HMAT for the endpoints that may be
-> > > hot-inserted behind those bridges post power-on. The address-range is
-> > > unknown so SRAT can not be pre-populated, the performance is unknown (no
-> > > CDAT nor interleave configuration) so HMAT can not be pre-populated.
-> > >
-> > > However, what is known to platform firmware that generates the SRAT and
-> > > HMAT is the performance characteristics of the path between CPU and
-> > > Generic Initiators to the CXL host bridge target. With either
-> > > CPU-to-Generic-Target, or Generic-Initiator-to-Generic-Target entries in
-> > > the HMAT the OS CXL subsystem can enumerate the remaining details (PCIE
-> > > link status, device CDAT, interleave configuration) to calculate the
-> > > bandwidth and latency of a dynamically discovered CXL memory target.  
-> >
-> > I'm wondering if the term "generic target" is a good name.
-> > Would something like "generic target bridge" be clearer?
-> > The point being this isn't an actual target but a point along the way.
-> > Mind you this is close to bike shedding.
-> >
-> > As mentioned above, maybe "generic bridge" that can give us a node to hang
-> > data off for both, a) GI on CXL to host memory, and b) Initiator in host to CXL memory
-> > and hence give cleaner representation.  
-> 
-> "Target" in the sense of its role in the HMAT. This is conceptually
-> not limited to bridges. Imagine a CXL endpoint that the BIOS lets the
-> OS map into the memory address space, but describes the performance in
-> HMAT.
+For the output, perhaps just add another parameter to the wrapper for minimum
+output length expected?
 
-That's an odd situation that it sort of 'half' manages it in the BIOS.
-We probably need some supplementary additional docs around this topic
-as the OS would need to be aware of that possibility and explicitly check
-for it before doing its normal build based on CDAT + what you are proposing
-here.  Maybe code is enough but given this is cross OS stuff I'd argue
-it probably isn't.
-
-I guess could revisit this draft Uefi white paper perhaps and add a bunch
-of examples around this usecase https://github.com/hisilicon/acpi-numa-whitepaper
-
-> 
-> >  
-> > >
-> > > # Impact of the Change
-> > > The existing Generic Initiator Affinity Structure (ACPI 6.4 Section
-> > > 5.2.16.6) already contains all the fields necessary to enumerate a
-> > > generic target proximity domain. All that is missing is the
-> > > interpretation of that proximity domain optionally as a target
-> > > identifier in the HMAT.
-> > >
-> > > Given that the OS still needs to dynamically enumerate and instantiate
-> > > the memory ranges behind the host bridge. The assumption is that
-> > > operating systems that do not support native CXL enumeration will ignore
-> > > this data in the HMAT, while CXL native enumeration aware environments
-> > > will use this fragment of the performance path to calculate the
-> > > performance characteristics.  
-> >
-> > I don't think it is true that OS not supporting native CXL will ignore the
-> > data.  
-> 
-> True, I should have chosen more careful words like s/ignore/not
-> regress upon seeing/
-
-It's a sticky corner and I suspect likely to come up at in ACPI WG - what is
-being proposed here isn't backwards compatible, even if the impacts in Linux
-are small.  Mostly it's infrastructure bring up that won't get used
-(fallback lists and similar for a node which will never be specified in
-allocations) and some confusing userspace ABI (which is more than a little
-confusing already). 
-
-> 
-> >
-> > Linux will create a small amount of infrastructure to reflect them (more or
-> > less the same as a memoryless node) and also they will appear in places
-> > like access0 as a possible initiator of transactions.  It's small stuff,
-> > but I'd rather the impact on legacy was zero.  
-> 
-> I'm failing to see that small collision as fatal to the proposal. The
-> HMAT parsing had a significant bug for multiple kernel releases and no
-> one noticed. This quirk is minor in comparison.
-
-True, there is a lag in HMAT adoption - though for ACPI tables, not that long
-(only a couple of years :)
-
-> 
-> >
-> > So my gut feeling here is we shouldn't reuse the generic initiator, but
-> > should invent something new.  Would look similar to GI, but with a different
-> > ID - to ensure legacy OS ignores it.  
-> 
-> A new id introduces more problems than it solves. Set aside the ACPICA
-> thrash, it does not allow a clean identity mapping of a point in a
-> system topology being both initiator and target. The SRAT does not
-> need more data structures to convey this information. At most I would
-> advocate for an OSC bit for the OS to opt into allowing this new usage
-> in the HMAT, but that still feels like overkill absent a clear
-> regression in legacy environments.
-
-OSC for this case doesn't work. You can't necessarily evaluate it
-early enough in the boot - in Linux the node setup is before AML parsing
-comes up.  HMAT is evaluated a lot later, but SRAT is too early.  + in theory
-another OS is allowed to evaluate HMAT before OSC is available.
- 
-> The fact that hardly anyone is
-> using HMAT (as indicated by the bug I mentioned) gives me confidence
-> that perfection is more "enemy of the good" than required here.
-
-How about taking this another way
-
-1) Assume that the costs of 'false' GI nodes on legacy system as a result
-   of this is minor - so just live with it.  (probably true, but as ever
-   need to confirm with other OS)
-
-2) Try to remove the cost of pointless infrastructure on 'aware' kernels.
-   Add a flag to the GI entry to say it's a bridge and not expected to,
-   in of itself, represent an initiator or a target.
-   In Linux we then don't create the node intrastructure etc or assign
-   any devices to have the non existent NUMA node.
-
-The information is still there to combine with device info (CDAT) etc
-and build what we eventually want in the way of a representation of
-the topology that Linux can use.
-
-Now we just have the 'small' problem of figuring out how actually implement
-hotplugging of NUMA nodes.
+Now you mention the length question.  It does rather feel like there should also
+be some protection on memcpy_fromio() copying too much data if the hardware
+happens to return an unexpectedly long length.  Should never happen, but
+the hardening is worth adding anyway given it's easy to do.
 
 Jonathan
 
+
 > 
-> >
-> > Unfortunately we can't just add a flag because backwards compatibility
-> > with old OS would mean it was ignored.  Hence I think this needs to be
-> > a new type.
-> >
-> > If we define a new node type rather than extend GI, we need to be careful
-> > around the same issue with _PXM that we had when introducing Generic
-> > Initiators (not sure the protections on that made it back to stable)
-> > so might need to modify DSDT _PXM responses based on appropriate _OSC.
-> > May well be fine but I'm not convinced yet.  Perhaps we need to say
-> > that using _PXM to place anything in a node defined only via this new means
-> > is not valid.
-> >
-> > Jonathan
-> >  
-> > >
-> > > # References
-> > > * Compute Express Link Specification v2.0,
-> > > <https://www.computeexpresslink.org/>
-> > >
-> > > # Detailed Description of the Change
-> > >
-> > > * Replace "Generic Initiator" with "Generic Initiator / Target" in all
-> > > locations except where an "initiator" or "target" is implied.
-> > > Specifically 5.2.27.3 "Memory Proximity Domain Attributes Structure"
-> > > need not replace occurrences of "generic initiator" in field: "Proximity
-> > > Domain for Attached Initiator". Additionally field: "Proximity Domain
-> > > for the Memory" must be renamed to "Proximity Domain for the Memory /
-> > > Generic Target" with a new description "Integer that represents the
-> > > memory / generic target proximity domain to which this memory belongs."
-> > >
-> > > * Revise "5.2.16.6 Generic Initiator Affinity Structure" to make it
-> > >   consistent with being referenced as either a target or initiator.
-> > >
-> > >         * Description: (replace all text)
-> > >  
-> > >         > The Generic Initiator / Target Affinity Structure provides the
-> > >         > association between a Generic Initiator and a Memory Proximity
-> > >         > Domain, or another Generic Target Proximity Domain. The
-> > >         > distinction as to whether this structure represents an
-> > >         > Initiator, a Target, or both depends on how it is referenced
-> > >         > in the HMAT. See Section 5.2.27.3 for details.  
-> > >  
-> > >         > Support of Generic Initiator / Target Affinity Structures by
-> > >         > OSPM is optional, and the platform may query whether the OS
-> > >         > supports it via the _OSC method. See Section 6.2.11.2.  
-> > >
-> > >         * Architectural transactions: (append after current text)
-> > >  
-> > >         > If this proximity domain is referenced as a target then it
-> > >         > supports all the transaction types inferred above.  
-> > >
-> > >         * Other updates are simple Initiator => Initiator / Target
-> > >           replacements.  
-> >
-> >  
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index 55c5f5a6023f..ad7b2077ab28 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -284,7 +284,7 @@ static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
+>  }
+>  
+>  /**
+> - * cxl_mem_mbox_send_cmd() - Send a mailbox command to a memory device.
+> + * __cxl_mem_mbox_send_cmd() - Execute a mailbox command
+>   * @cxlm: The CXL memory device to communicate with.
+>   * @mbox_cmd: Command to send to the memory device.
+>   *
+> @@ -296,7 +296,8 @@ static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
+>   * This is a generic form of the CXL mailbox send command, thus the only I/O
+>   * operations used are cxl_read_mbox_reg(). Memory devices, and perhaps other
+>   * types of CXL devices may have further information available upon error
+> - * conditions.
+> + * conditions. Driver facilities wishing to send mailbox commands should use the
+> + * wrapper command.
+>   *
+>   * The CXL spec allows for up to two mailboxes. The intention is for the primary
+>   * mailbox to be OS controlled and the secondary mailbox to be used by system
+> @@ -304,8 +305,8 @@ static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
+>   * not need to coordinate with each other. The driver only uses the primary
+>   * mailbox.
+>   */
+> -static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
+> -				 struct mbox_cmd *mbox_cmd)
+> +static int __cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
+> +				   struct mbox_cmd *mbox_cmd)
+>  {
+>  	void __iomem *payload = cxlm->mbox_regs + CXLDEV_MBOX_PAYLOAD_OFFSET;
+>  	u64 cmd_reg, status_reg;
+> @@ -469,6 +470,54 @@ static void cxl_mem_mbox_put(struct cxl_mem *cxlm)
+>  	mutex_unlock(&cxlm->mbox_mutex);
+>  }
+>  
+> +/**
+> + * cxl_mem_mbox_send_cmd() - Send a mailbox command to a memory device.
+> + * @cxlm: The CXL memory device to communicate with.
+> + * @opcode: Opcode for the mailbox command.
+> + * @in: The input payload for the mailbox command.
+> + * @in_size: The length of the input payload
+> + * @out: Caller allocated buffer for the output.
+> + *
+> + * Context: Any context. Will acquire and release mbox_mutex.
+> + * Return:
+> + *  * %>=0	- Number of bytes returned in @out.
+> + *  * %-EBUSY	- Couldn't acquire exclusive mailbox access.
+> + *  * %-EFAULT	- Hardware error occurred.
+> + *  * %-ENXIO	- Command completed, but device reported an error.
+> + *
+> + * Mailbox commands may execute successfully yet the device itself reported an
+> + * error. While this distinction can be useful for commands from userspace, the
+> + * kernel will often only care when both are successful.
+> + *
+> + * See __cxl_mem_mbox_send_cmd()
+> + */
+> +static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm, u16 opcode, u8 *in,
+> +				 size_t in_size, u8 *out)
+> +{
+> +	struct mbox_cmd mbox_cmd = {
+> +		.opcode = opcode,
+> +		.payload_in = in,
+> +		.size_in = in_size,
+> +		.payload_out = out,
+> +	};
+> +	int rc;
+> +
+> +	rc = cxl_mem_mbox_get(cxlm);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = __cxl_mem_mbox_send_cmd(cxlm, &mbox_cmd);
+> +	cxl_mem_mbox_put(cxlm);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/* TODO: Map return code to proper kernel style errno */
+> +	if (mbox_cmd.return_code != CXL_MBOX_SUCCESS)
+> +		return -ENXIO;
+> +
+> +	return mbox_cmd.size_out;
+> +}
+> +
+>  /**
+>   * handle_mailbox_cmd_from_user() - Dispatch a mailbox command.
+>   * @cxlmd: The CXL memory device to communicate with.
+> @@ -1380,33 +1429,18 @@ static int cxl_mem_identify(struct cxl_mem *cxlm)
+>  		u8 poison_caps;
+>  		u8 qos_telemetry_caps;
+>  	} __packed id;
+> -	struct mbox_cmd mbox_cmd = {
+> -		.opcode = CXL_MBOX_OP_IDENTIFY,
+> -		.payload_out = &id,
+> -		.size_in = 0,
+> -	};
+>  	int rc;
+>  
+> -	/* Retrieve initial device memory map */
+> -	rc = cxl_mem_mbox_get(cxlm);
+> -	if (rc)
+> -		return rc;
+> -
+> -	rc = cxl_mem_mbox_send_cmd(cxlm, &mbox_cmd);
+> -	cxl_mem_mbox_put(cxlm);
+> -	if (rc)
+> +	rc = cxl_mem_mbox_send_cmd(cxlm, CXL_MBOX_OP_IDENTIFY, NULL, 0,
+> +				   (u8 *)&id);
+> +	if (rc < 0)
+>  		return rc;
+>  
+> -	/* TODO: Handle retry or reset responses from firmware. */
+> -	if (mbox_cmd.return_code != CXL_MBOX_SUCCESS) {
+> -		dev_err(&cxlm->pdev->dev, "Mailbox command failed (%d)\n",
+> -			mbox_cmd.return_code);
+> +	if (rc < sizeof(id)) {
+> +		dev_err(&cxlm->pdev->dev, "Short identify data\n",
+>  		return -ENXIO;
+>  	}
+>  
+> -	if (mbox_cmd.size_out != sizeof(id))
+> -		return -ENXIO;
+> -
+>  	/*
+>  	 * TODO: enumerate DPA map, as 'ram' and 'pmem' do not alias.
+>  	 * For now, only the capacity is exported in sysfs
+> 
+> 
+> [snip]
+> 
 
