@@ -2,438 +2,822 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0481C433E6
-	for <linux-cxl@archiver.kernel.org>; Fri, 12 Feb 2021 22:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D515C433E9
+	for <linux-cxl@archiver.kernel.org>; Fri, 12 Feb 2021 22:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE04D64E95
-	for <linux-cxl@archiver.kernel.org>; Fri, 12 Feb 2021 22:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 230EF64E92
+	for <linux-cxl@archiver.kernel.org>; Fri, 12 Feb 2021 22:30:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231663AbhBLW2c (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 12 Feb 2021 17:28:32 -0500
-Received: from mga03.intel.com ([134.134.136.65]:60541 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231352AbhBLW2N (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 12 Feb 2021 17:28:13 -0500
-IronPort-SDR: w4VeyMZ85Z3T/NP+OZ0N9p8VReTraeXyn4HXj78Oo/hMaH2Ham/AzW3gYEUzFwiObbyCOIqFNT
- IsVXeN8as5ig==
-X-IronPort-AV: E=McAfee;i="6000,8403,9893"; a="182555591"
-X-IronPort-AV: E=Sophos;i="5.81,174,1610438400"; 
-   d="scan'208";a="182555591"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2021 14:25:54 -0800
-IronPort-SDR: q2oWrq6rjysRFRiSvXr8OtVhm7bJKSpnAfzkL0IeoKrpmzgzswyYdB2Oa5fQutSLQ1T2kykQG7
- U9bflAH2CATA==
-X-IronPort-AV: E=Sophos;i="5.81,174,1610438400"; 
-   d="scan'208";a="587605381"
-Received: from smandal1-mobl2.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.133.121])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2021 14:25:53 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jon Masters <jcm@jonmasters.org>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "John Groves (jgroves)" <jgroves@micron.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>
-Subject: [PATCH v3 6/9] cxl/mem: Enable commands via CEL
-Date:   Fri, 12 Feb 2021 14:25:38 -0800
-Message-Id: <20210212222541.2123505-7-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20210212222541.2123505-1-ben.widawsky@intel.com>
-References: <20210212222541.2123505-1-ben.widawsky@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S229602AbhBLWaJ convert rfc822-to-8bit (ORCPT
+        <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 12 Feb 2021 17:30:09 -0500
+Received: from server.avery-design.com ([198.57.169.184]:36408 "EHLO
+        server.avery-design.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232216AbhBLW3K (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 12 Feb 2021 17:29:10 -0500
+Received: from ool-944ab965.dyn.optonline.net ([148.74.185.101]:58264 helo=[192.168.1.180])
+        by server.avery-design.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <cbrowy@avery-design.com>)
+        id 1lAgmi-0002OT-Ra; Fri, 12 Feb 2021 22:19:33 +0000
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
+Subject: Re: [RFC v2 2/2] Basic CXL DOE for CDAT and Compliance Mode
+From:   Chris Browy <cbrowy@avery-design.com>
+In-Reply-To: <20210212172317.00003c1d@Huawei.com>
+Date:   Fri, 12 Feb 2021 17:26:50 -0500
+Cc:     armbru@redhat.com, Ben Widawsky <ben.widawsky@intel.com>,
+        dan.j.williams@intel.com, david@redhat.com, f4bug@amsat.org,
+        imammedo@redhat.com, ira.weiny@intel.com, jgroves@micron.com,
+        linux-cxl@vger.kernel.org, mst@redhat.com, qemu-devel@nongnu.org,
+        vishal.l.verma@intel.com
+Reply-To: "20210212172317.00003c1d@huawei.com" 
+          <20210212172317.00003c1d@Huawei.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <F892C4DB-320F-440C-BB36-0B5A9473B753@avery-design.com>
+References: <1612900760-7361-1-git-send-email-cbrowy@avery-design.com>
+ <1612902963-10071-1-git-send-email-cbrowy@avery-design.com>
+ <20210212172317.00003c1d@Huawei.com>
+To:     Jonathan Cameron <jonathan.cameron@huawei.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.avery-design.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - avery-design.com
+X-Get-Message-Sender-Via: server.avery-design.com: authenticated_id: cbrowy@avery-design.com
+X-Authenticated-Sender: server.avery-design.com: cbrowy@avery-design.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-CXL devices identified by the memory-device class code must implement
-the Device Command Interface (described in 8.2.9 of the CXL 2.0 spec).
-While the driver already maintains a list of commands it supports, there
-is still a need to be able to distinguish between commands that the
-driver knows about from commands that are optionally supported by the
-hardware.
 
-The Command Effects Log (CEL) is specified in the CXL 2.0 specification.
-The CEL is one of two types of logs, the other being vendor specific.
-They are distinguished in hardware/spec via UUID. The CEL is useful for
-2 things:
-1. Determine which optional commands are supported by the CXL device.
-2. Enumerate any vendor specific commands
 
-The CEL is used by the driver to determine which commands are available
-in the hardware and therefore which commands userspace is allowed to
-execute. The set of enabled commands might be a subset of commands which
-are advertised in UAPI via CXL_MEM_SEND_COMMAND IOCTL.
+> On Feb 12, 2021, at 12:23 PM, Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
+> 
+> On Tue, 9 Feb 2021 15:36:03 -0500
+> Chris Browy <cbrowy@avery-design.com> wrote:
+> 
+> Split this into two patches for v3.  CDAT in one, compliance mode in the other.
+> 
 
-With the CEL enabling comes a internal flag to indicate a base set of
-commands that are enabled regardless of CEL. Such commands are required
-for basic interaction with the hardware and thus can be useful in debug
-cases, for example if the CEL is corrupted.
+Compliance mode is an optional feature.  We’ll split it out.
 
-The implementation leaves the statically defined table of commands and
-supplements it with a bitmap to determine commands that are enabled.
-This organization was chosen for the following reasons:
-- Smaller memory footprint. Doesn't need a table per device.
-- Reduce memory allocation complexity.
-- Fixed command IDs to opcode mapping for all devices makes development
-  and debugging easier.
-- Certain helpers are easily achievable, like cxl_for_each_cmd().
+> I'd also move the actual elements out into the cxl components so that we
+> can register only what makes sense for a given device.   My guess
+> is that for now that will be static const anyway.
+> 
+> Coming together fine. Hopefully I'll start poking at the linux side of things
+> next week.  First job being simply providing a file to allow us to dump
+> the whole CDAT table.  Let me know if you get this loading an .aml file
+> in the meantime as that'll make it easier to test (if not I'll hack it
+> on top of these patches)
 
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/cxl/cxl.h            |   2 +
- drivers/cxl/mem.c            | 224 ++++++++++++++++++++++++++++++++++-
- include/uapi/linux/cxl_mem.h |   1 +
- 3 files changed, 224 insertions(+), 3 deletions(-)
+We can get the .aml loading by Thurs next week.  Holiday next few days for 
+some of our folks.
 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 63d7f7e01b83..a1aa9f787a2a 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -67,6 +67,7 @@ struct cxl_memdev;
-  *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
-  * @mbox_mutex: Mutex to synchronize mailbox access.
-  * @firmware_version: Firmware version for the memory device.
-+ * @enabled_commands: Hardware commands found enabled in CEL.
-  * @pmem: Persistent memory capacity information.
-  * @ram: Volatile memory capacity information.
-  */
-@@ -82,6 +83,7 @@ struct cxl_mem {
- 	size_t payload_size;
- 	struct mutex mbox_mutex; /* Protects device mailbox and firmware */
- 	char firmware_version[0x10];
-+	unsigned long *enabled_cmds;
- 
- 	struct range pmem_range;
- 	struct range ram_range;
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index a819f090ffe2..b026c1167bda 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -45,6 +45,8 @@ enum opcode {
- 	CXL_MBOX_OP_INVALID		= 0x0000,
- 	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
- 	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
-+	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
-+	CXL_MBOX_OP_GET_LOG		= 0x0401,
- 	CXL_MBOX_OP_IDENTIFY		= 0x4000,
- 	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
- 	CXL_MBOX_OP_SET_LSA		= 0x4103,
-@@ -103,10 +105,28 @@ static DEFINE_IDA(cxl_memdev_ida);
- static struct dentry *cxl_debugfs;
- static bool cxl_raw_allow_all;
- 
-+enum {
-+	CEL_UUID,
-+	VENDOR_DEBUG_UUID,
-+};
-+
-+/* See CXL 2.0 Table 170. Get Log Input Payload */
-+static const uuid_t log_uuid[] = {
-+	[CEL_UUID] = UUID_INIT(0xda9c0b5, 0xbf41, 0x4b78, 0x8f, 0x79, 0x96,
-+			       0xb1, 0x62, 0x3b, 0x3f, 0x17),
-+	[VENDOR_DEBUG_UUID] = UUID_INIT(0xe1819d9, 0x11a9, 0x400c, 0x81, 0x1f,
-+					0xd6, 0x07, 0x19, 0x40, 0x3d, 0x86),
-+};
-+
- /**
-  * struct cxl_mem_command - Driver representation of a memory device command
-  * @info: Command information as it exists for the UAPI
-  * @opcode: The actual bits used for the mailbox protocol
-+ * @flags: Set of flags effecting driver behavior.
-+ *
-+ *  * %CXL_CMD_FLAG_FORCE_ENABLE: In cases of error, commands with this flag
-+ *    will be enabled by the driver regardless of what hardware may have
-+ *    advertised.
-  *
-  * The cxl_mem_command is the driver's internal representation of commands that
-  * are supported by the driver. Some of these commands may not be supported by
-@@ -118,9 +138,12 @@ static bool cxl_raw_allow_all;
- struct cxl_mem_command {
- 	struct cxl_command_info info;
- 	enum opcode opcode;
-+	u32 flags;
-+#define CXL_CMD_FLAG_NONE 0
-+#define CXL_CMD_FLAG_FORCE_ENABLE BIT(0)
- };
- 
--#define CXL_CMD(_id, sin, sout)                                                \
-+#define CXL_CMD(_id, sin, sout, _flags)                                        \
- 	[CXL_MEM_COMMAND_ID_##_id] = {                                         \
- 	.info =	{                                                              \
- 			.id = CXL_MEM_COMMAND_ID_##_id,                        \
-@@ -128,6 +151,7 @@ struct cxl_mem_command {
- 			.size_out = sout,                                      \
- 		},                                                             \
- 	.opcode = CXL_MBOX_OP_##_id,                                           \
-+	.flags = _flags,                                                       \
- 	}
- 
- /*
-@@ -137,10 +161,11 @@ struct cxl_mem_command {
-  * 0, and the user passed in 1, it is an error.
-  */
- static struct cxl_mem_command mem_commands[] = {
--	CXL_CMD(IDENTIFY, 0, 0x43),
-+	CXL_CMD(IDENTIFY, 0, 0x43, CXL_CMD_FLAG_FORCE_ENABLE),
- #ifdef CONFIG_CXL_MEM_RAW_COMMANDS
--	CXL_CMD(RAW, ~0, ~0),
-+	CXL_CMD(RAW, ~0, ~0, 0),
- #endif
-+	CXL_CMD(GET_SUPPORTED_LOGS, 0, ~0, CXL_CMD_FLAG_FORCE_ENABLE),
- };
- 
- /*
-@@ -619,6 +644,10 @@ static int cxl_validate_cmd_from_user(struct cxl_mem *cxlm,
- 	c = &mem_commands[send_cmd->id];
- 	info = &c->info;
- 
-+	/* Check that the command is enabled for hardware */
-+	if (!test_bit(info->id, cxlm->enabled_cmds))
-+		return -ENOTTY;
-+
- 	/* Check the input buffer is the expected size */
- 	if (info->size_in >= 0 && info->size_in != send_cmd->in.size)
- 		return -ENOMEM;
-@@ -915,6 +944,14 @@ static struct cxl_mem *cxl_mem_create(struct pci_dev *pdev, u32 reg_lo,
- 	mutex_init(&cxlm->mbox_mutex);
- 	cxlm->pdev = pdev;
- 	cxlm->regs = regs + offset;
-+	cxlm->enabled_cmds =
-+		devm_kmalloc_array(dev, BITS_TO_LONGS(cxl_cmd_count),
-+				   sizeof(unsigned long),
-+				   GFP_KERNEL | __GFP_ZERO);
-+	if (!cxlm->enabled_cmds) {
-+		dev_err(dev, "No memory available for bitmap\n");
-+		return NULL;
-+	}
- 
- 	dev_dbg(dev, "Mapped CXL Memory Device resource\n");
- 	return cxlm;
-@@ -1134,6 +1171,183 @@ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
- 	return rc;
- }
- 
-+static int cxl_xfer_log(struct cxl_mem *cxlm, uuid_t *uuid, u32 size, u8 *out)
-+{
-+	u32 remaining = size;
-+	u32 offset = 0;
-+
-+	while (remaining) {
-+		u32 xfer_size = min_t(u32, remaining, cxlm->payload_size);
-+		struct cxl_mbox_get_log {
-+			uuid_t uuid;
-+			__le32 offset;
-+			__le32 length;
-+		} __packed log = {
-+			.uuid = *uuid,
-+			.offset = cpu_to_le32(offset),
-+			.length = cpu_to_le32(xfer_size)
-+		};
-+		int rc;
-+
-+		rc = cxl_mem_mbox_send_cmd(cxlm, CXL_MBOX_OP_GET_LOG,
-+					   (u8 *)&log, sizeof(log), out,
-+					   xfer_size);
-+		if (rc < 0)
-+			return rc;
-+
-+		out += xfer_size;
-+		remaining -= xfer_size;
-+		offset += xfer_size;
-+	}
-+
-+	return 0;
-+}
-+
-+static inline struct cxl_mem_command *cxl_mem_find_command(u16 opcode)
-+{
-+	struct cxl_mem_command *c;
-+
-+	cxl_for_each_cmd(c)
-+		if (c->opcode == opcode)
-+			return c;
-+
-+	return NULL;
-+}
-+
-+/**
-+ * cxl_walk_cel() - Walk through the Command Effects Log.
-+ * @cxlm: Device.
-+ * @size: Length of the Command Effects Log.
-+ * @cel: CEL
-+ *
-+ * Iterate over each entry in the CEL and determine if the driver supports the
-+ * command. If so, the command is enabled for the device and can be used later.
-+ */
-+static void cxl_walk_cel(struct cxl_mem *cxlm, size_t size, u8 *cel)
-+{
-+	struct cel_entry {
-+		__le16 opcode;
-+		__le16 effect;
-+	} __packed * cel_entry;
-+	const int cel_entries = size / sizeof(*cel_entry);
-+	int i;
-+
-+	cel_entry = (struct cel_entry *)cel;
-+
-+	for (i = 0; i < cel_entries; i++) {
-+		u16 opcode = le16_to_cpu(cel_entry[i].opcode);
-+		struct cxl_mem_command *cmd = cxl_mem_find_command(opcode);
-+
-+		if (!cmd) {
-+			dev_dbg(&cxlm->pdev->dev,
-+				"Opcode 0x%04x unsupported by driver", opcode);
-+			continue;
-+		}
-+
-+		set_bit(cmd->info.id, cxlm->enabled_cmds);
-+	}
-+}
-+
-+struct cxl_mbox_get_supported_logs {
-+	__le16 entries;
-+	u8 rsvd[6];
-+	struct gsl_entry {
-+		uuid_t uuid;
-+		__le32 size;
-+	} __packed entry[];
-+} __packed;
-+
-+static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_mem *cxlm)
-+{
-+	struct cxl_mbox_get_supported_logs temp, *ret;
-+	struct device *dev = &cxlm->pdev->dev;
-+	int rc;
-+
-+	rc = cxl_mem_mbox_send_cmd(cxlm, CXL_MBOX_OP_GET_SUPPORTED_LOGS, NULL,
-+				   0, (u8 *)&temp, sizeof(temp));
-+	if (rc < 0)
-+		return ERR_PTR(rc);
-+
-+	if (rc < sizeof(temp) + (le16_to_cpu(temp.entries) * sizeof(struct gsl_entry))) {
-+		dev_err(dev, "Incongruent log size\n");
-+		return ERR_PTR(-ENXIO);
-+	}
-+
-+	ret = kvmalloc(rc, GFP_KERNEL);
-+	if (!ret)
-+		return ERR_PTR(-ENOMEM);
-+
-+	rc = cxl_mem_mbox_send_cmd(cxlm, CXL_MBOX_OP_GET_SUPPORTED_LOGS, NULL,
-+				   0, (u8 *)ret, rc);
-+	if (rc < 0) {
-+		kvfree(ret);
-+		return ERR_PTR(rc);
-+	}
-+
-+	return ret;
-+}
-+
-+/**
-+ * cxl_mem_enumerate_cmds() - Enumerate commands for a device.
-+ * @cxlm: The device.
-+ *
-+ * Returns 0 if enumerate completed successfully.
-+ *
-+ * CXL devices have optional support for certain commands. This function will
-+ * determine the set of supported commands for the hardware and update the
-+ * enabled_cmds bitmap in the @cxlm.
-+ */
-+static int cxl_mem_enumerate_cmds(struct cxl_mem *cxlm)
-+{
-+	struct cxl_mbox_get_supported_logs *gsl;
-+	struct device *dev = &cxlm->pdev->dev;
-+	struct cxl_mem_command *cmd;
-+	int i, rc;
-+
-+	gsl = cxl_get_gsl(cxlm);
-+	if (IS_ERR(gsl))
-+		return PTR_ERR(gsl);
-+
-+	rc = -ENOENT;
-+	for (i = 0; i < le16_to_cpu(gsl->entries); i++) {
-+		u32 size = le32_to_cpu(gsl->entry[i].size);
-+		uuid_t uuid = gsl->entry[i].uuid;
-+		u8 *log;
-+
-+		dev_dbg(dev, "Found LOG type %pU of size %d", &uuid, size);
-+
-+		if (!uuid_equal(&uuid, &log_uuid[CEL_UUID]))
-+			continue;
-+
-+		log = kvmalloc(size, GFP_KERNEL);
-+		if (!log) {
-+			rc = -ENOMEM;
-+			goto out;
-+		}
-+
-+		rc = cxl_xfer_log(cxlm, &uuid, size, log);
-+		if (rc) {
-+			kvfree(log);
-+			goto out;
-+		}
-+
-+		cxl_walk_cel(cxlm, size, log);
-+		kvfree(log);
-+
-+		/* In case CEL was bogus, enable some default commands. */
-+		cxl_for_each_cmd(cmd)
-+			if (cmd->flags & CXL_CMD_FLAG_FORCE_ENABLE)
-+				set_bit(cmd->info.id, cxlm->enabled_cmds);
-+
-+		/* Found the required CEL */
-+		rc = 0;
-+	}
-+
-+out:
-+	kvfree(gsl);
-+	return rc;
-+}
-+
- /**
-  * cxl_mem_identify() - Send the IDENTIFY command to the device.
-  * @cxlm: The device to identify.
-@@ -1233,6 +1447,10 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
- 
-+	rc = cxl_mem_enumerate_cmds(cxlm);
-+	if (rc)
-+		return rc;
-+
- 	rc = cxl_mem_identify(cxlm);
- 	if (rc)
- 		return rc;
-diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-index 8eb669150ecb..3b5bf4b58fb4 100644
---- a/include/uapi/linux/cxl_mem.h
-+++ b/include/uapi/linux/cxl_mem.h
-@@ -23,6 +23,7 @@
- 	___C(INVALID, "Invalid Command"),                                 \
- 	___C(IDENTIFY, "Identify Command"),                               \
- 	___C(RAW, "Raw device command"),                                  \
-+	___C(GET_SUPPORTED_LOGS, "Get Supported Logs"),                   \
- 	___C(MAX, "invalid / last command")
- 
- #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
--- 
-2.30.0
+> 
+> If needed I'll add it to iASL as well (may well be already in hand!)
+> 
+> I think my version of this stuff did a useful job in improving my understanding
+> of what we were trying to do, but that done I'm assuming we'll just abandon it
+> as the disposable prototype it was :)
+> 
+
+Thanks for focusing in on the area and uncovering problems with both our versions!
+
+Still lots of pieces need to come together and get working to be able to fully enumerate 
+and configure the device!
+
+> Jonathan
+> 
+> 
+>> ---
+>> hw/cxl/cxl-component-utils.c   | 132 +++++++++++++++++++
+>> hw/mem/cxl_type3.c             | 172 ++++++++++++++++++++++++
+>> include/hw/cxl/cxl_cdat.h      | 120 +++++++++++++++++
+>> include/hw/cxl/cxl_compl.h     | 289 +++++++++++++++++++++++++++++++++++++++++
+>> include/hw/cxl/cxl_component.h | 126 ++++++++++++++++++
+>> include/hw/cxl/cxl_device.h    |   3 +
+>> include/hw/cxl/cxl_pci.h       |   4 +
+>> 7 files changed, 846 insertions(+)
+>> create mode 100644 include/hw/cxl/cxl_cdat.h
+>> create mode 100644 include/hw/cxl/cxl_compl.h
+>> 
+>> diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
+>> index e1bcee5..fc6c538 100644
+>> --- a/hw/cxl/cxl-component-utils.c
+>> +++ b/hw/cxl/cxl-component-utils.c
+>> @@ -195,3 +195,135 @@ void cxl_component_create_dvsec(CXLComponentState *cxl, uint16_t length,
+>>     range_init_nofail(&cxl->dvsecs[type], cxl->dvsec_offset, length);
+>>     cxl->dvsec_offset += length;
+>> }
+>> +
+>> +/* Return the sum of bytes */
+>> +static void cdat_ent_init(CDATStruct *cs, void *base, uint32_t len)
+>> +{
+>> +    cs->base = base;
+>> +    cs->length = len;
+>> +}
+>> +
+>> +void cxl_doe_cdat_init(CXLComponentState *cxl_cstate)
+>> +{
+>> +    uint8_t sum = 0;
+>> +    uint32_t len = 0;
+>> +    int i, j;
+>> +
+>> +    cxl_cstate->cdat_ent_len = 7;
+>> +    cxl_cstate->cdat_ent =
+>> +        g_malloc0(sizeof(CDATStruct) * cxl_cstate->cdat_ent_len);
+>> +
+>> +    cdat_ent_init(&cxl_cstate->cdat_ent[0],
+>> +                  &cxl_cstate->cdat_header, sizeof(cxl_cstate->cdat_header));
+>> +    cdat_ent_init(&cxl_cstate->cdat_ent[1],
+>> +                  &cxl_cstate->dsmas, sizeof(cxl_cstate->dsmas));
+>> +    cdat_ent_init(&cxl_cstate->cdat_ent[2],
+>> +                  &cxl_cstate->dslbis, sizeof(cxl_cstate->dslbis));
+>> +    cdat_ent_init(&cxl_cstate->cdat_ent[3],
+>> +                  &cxl_cstate->dsmscis, sizeof(cxl_cstate->dsmscis));
+>> +    cdat_ent_init(&cxl_cstate->cdat_ent[4],
+>> +                  &cxl_cstate->dsis, sizeof(cxl_cstate->dsis));
+>> +    cdat_ent_init(&cxl_cstate->cdat_ent[5],
+>> +                  &cxl_cstate->dsemts, sizeof(cxl_cstate->dsemts));
+>> +    cdat_ent_init(&cxl_cstate->cdat_ent[6],
+>> +                  &cxl_cstate->sslbis, sizeof(cxl_cstate->sslbis));
+>> +
+>> +    /* Set the DSMAS entry, ent = 1 */
+>> +    cxl_cstate->dsmas.header.type = CDAT_TYPE_DSMAS;
+>> +    cxl_cstate->dsmas.header.reserved = 0x0;
+>> +    cxl_cstate->dsmas.header.length = sizeof(cxl_cstate->dsmas);
+>> +    cxl_cstate->dsmas.DSMADhandle = 0x0;
+>> +    cxl_cstate->dsmas.flags = 0x0;
+>> +    cxl_cstate->dsmas.reserved2 = 0x0;
+>> +    cxl_cstate->dsmas.DPA_base = 0x0;
+>> +    cxl_cstate->dsmas.DPA_length = 0x40000;
+> 
+> Look to move the instances of these down into the memory device and expose
+> cdat_ent_init() to there.
+> 
+> That way, we can add whatever elements make sense for each type
+> of component.
+>  
+
+> Also have a cdat_ents_finalize() or similar to call at the end
+> which calculates overall length + checksum.
+
+OK
+
+> 
+> Should also be easy enough to add a simple bit of code to call
+> cdat_ent_init() for each element of a passed in CDAT.aml file.
+> 
+
+We’ll address all the above when we add the CDAT.aml file support 
+which may only pass a subset of structures. 
+
+>> +
+>> +    /* Set the DSLBIS entry, ent = 2 */
+>> +    cxl_cstate->dslbis.header.type = CDAT_TYPE_DSLBIS;
+>> +    cxl_cstate->dslbis.header.reserved = 0;
+>> +    cxl_cstate->dslbis.header.length = sizeof(cxl_cstate->dslbis);
+>> +    cxl_cstate->dslbis.handle = 0;
+>> +    cxl_cstate->dslbis.flags = 0;
+>> +    cxl_cstate->dslbis.data_type = 0;
+>> +    cxl_cstate->dslbis.reserved2 = 0;
+>> +    cxl_cstate->dslbis.entry_base_unit = 0;
+>> +    cxl_cstate->dslbis.entry[0] = 0;
+>> +    cxl_cstate->dslbis.entry[1] = 0;
+>> +    cxl_cstate->dslbis.entry[2] = 0;
+>> +    cxl_cstate->dslbis.reserved3 = 0;
+>> +
+>> +    /* Set the DSMSCIS entry, ent = 3 */
+>> +    cxl_cstate->dsmscis.header.type = CDAT_TYPE_DSMSCIS;
+>> +    cxl_cstate->dsmscis.header.reserved = 0;
+>> +    cxl_cstate->dsmscis.header.length = sizeof(cxl_cstate->dsmscis);
+>> +    cxl_cstate->dsmscis.DSMASH_handle = 0;
+>> +    cxl_cstate->dsmscis.reserved2[0] = 0;
+>> +    cxl_cstate->dsmscis.reserved2[1] = 0;
+>> +    cxl_cstate->dsmscis.reserved2[2] = 0;
+>> +    cxl_cstate->dsmscis.memory_side_cache_size = 0;
+>> +    cxl_cstate->dsmscis.cache_attributes = 0;
+>> +
+>> +    /* Set the DSIS entry, ent = 4 */
+>> +    cxl_cstate->dsis.header.type = CDAT_TYPE_DSIS;
+>> +    cxl_cstate->dsis.header.reserved = 0;
+>> +    cxl_cstate->dsis.header.length = sizeof(cxl_cstate->dsis);
+>> +    cxl_cstate->dsis.flags = 0;
+>> +    cxl_cstate->dsis.handle = 0;
+>> +    cxl_cstate->dsis.reserved2 = 0;
+>> +
+>> +    /* Set the DSEMTS entry, ent = 5 */
+>> +    cxl_cstate->dsemts.header.type = CDAT_TYPE_DSEMTS;
+>> +    cxl_cstate->dsemts.header.reserved = 0;
+>> +    cxl_cstate->dsemts.header.length = sizeof(cxl_cstate->dsemts);
+>> +    cxl_cstate->dsemts.DSMAS_handle = 0;
+>> +    cxl_cstate->dsemts.EFI_memory_type_attr = 0;
+>> +    cxl_cstate->dsemts.reserved2 = 0;
+>> +    cxl_cstate->dsemts.DPA_offset = 0;
+>> +    cxl_cstate->dsemts.DPA_length = 0;
+>> +
+>> +    /* Set the SSLBIS entry, ent = 6 */
+>> +    cxl_cstate->sslbis.sslbis_h.header.type = CDAT_TYPE_SSLBIS;
+>> +    cxl_cstate->sslbis.sslbis_h.header.reserved = 0;
+>> +    cxl_cstate->sslbis.sslbis_h.header.length = sizeof(cxl_cstate->sslbis);
+>> +    cxl_cstate->sslbis.sslbis_h.data_type = 0;
+>> +    cxl_cstate->sslbis.sslbis_h.reserved2[0] = 0;
+>> +    cxl_cstate->sslbis.sslbis_h.reserved2[1] = 0;
+>> +    cxl_cstate->sslbis.sslbis_h.reserved2[2] = 0;
+>> +    /* Set the SSLBE entry */
+>> +    cxl_cstate->sslbis.sslbe[0].port_x_id = 0;
+>> +    cxl_cstate->sslbis.sslbe[0].port_y_id = 0;
+>> +    cxl_cstate->sslbis.sslbe[0].latency_bandwidth = 0;
+>> +    cxl_cstate->sslbis.sslbe[0].reserved = 0;
+>> +    /* Set the SSLBE entry */
+>> +    cxl_cstate->sslbis.sslbe[1].port_x_id = 1;
+>> +    cxl_cstate->sslbis.sslbe[1].port_y_id = 1;
+>> +    cxl_cstate->sslbis.sslbe[1].latency_bandwidth = 0;
+>> +    cxl_cstate->sslbis.sslbe[1].reserved = 0;
+>> +    /* Set the SSLBE entry */
+>> +    cxl_cstate->sslbis.sslbe[2].port_x_id = 2;
+>> +    cxl_cstate->sslbis.sslbe[2].port_y_id = 2;
+>> +    cxl_cstate->sslbis.sslbe[2].latency_bandwidth = 0;
+>> +    cxl_cstate->sslbis.sslbe[2].reserved = 0;
+>> +
+>> +    /* Set CDAT header, ent = 0 */
+>> +    cxl_cstate->cdat_header.revision = CXL_CDAT_REV;
+>> +    cxl_cstate->cdat_header.reserved[0] = 0;
+>> +    cxl_cstate->cdat_header.reserved[1] = 0;
+>> +    cxl_cstate->cdat_header.reserved[2] = 0;
+>> +    cxl_cstate->cdat_header.reserved[3] = 0;
+>> +    cxl_cstate->cdat_header.reserved[4] = 0;
+>> +    cxl_cstate->cdat_header.reserved[5] = 0;
+>> +    cxl_cstate->cdat_header.sequence = 0;
+>> +
+>> +    for (i = cxl_cstate->cdat_ent_len - 1; i >= 0; i--) {
+>> +        /* Add length of each CDAT struct to total length */
+>> +        len = cxl_cstate->cdat_ent[i].length;
+>> +        cxl_cstate->cdat_header.length += len;
+>> +
+>> +        /* Calculate checksum of each CDAT struct */
+>> +        for (j = 0; j < len; j++) {
+>> +            sum += *(uint8_t *)(cxl_cstate->cdat_ent[i].base + j);
+>> +        }
+>> +    }
+>> +    cxl_cstate->cdat_header.checksum = ~sum + 1;
+>> +}
+>> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+>> index d091e64..86c762f 100644
+>> --- a/hw/mem/cxl_type3.c
+>> +++ b/hw/mem/cxl_type3.c
+>> @@ -13,6 +13,150 @@
+>> #include "qemu/rcu.h"
+>> #include "sysemu/hostmem.h"
+>> #include "hw/cxl/cxl.h"
+>> +#include "hw/pci/msi.h"
+>> +#include "hw/pci/msix.h"
+>> +
+>> +uint32_t cxl_doe_compliance_init(DOECap *doe_cap)
+> local to file, static and remove from header.
+>> +{
+>> +    CXLComponentState *cxl_cstate = &CT3(doe_cap->doe->pdev)->cxl_cstate;
+>> +    uint32_t req;
+>> +    uint32_t byte_cnt = 0;
+>> +
+>> +    DOE_DBG(">> %s\n",  __func__);
+>> +
+>> +    req = ((struct cxl_compliance_mode_cap *)pcie_doe_get_req(doe_cap))
+>> +        ->req_code;
+>> +    switch (req) {
+>> +    case CXL_COMP_MODE_CAP:
+>> +        byte_cnt = sizeof(struct cxl_compliance_mode_cap_rsp);
+> 
+> Use a local variable to cap_rsp or assign it via a structure here.
+> Basically get rid of the repitition of
+> cxl_cstate->doe_resp.cap_rsp
+> in the interests of readability.
+> 
+> 
+>> +        cxl_cstate->doe_resp.cap_rsp.header.vendor_id = CXL_VENDOR_ID;
+>> +        cxl_cstate->doe_resp.cap_rsp.header.doe_type = CXL_DOE_COMPLIANCE;
+>> +        cxl_cstate->doe_resp.cap_rsp.header.reserved = 0x0;
+>> +        cxl_cstate->doe_resp.cap_rsp.header.length =
+>> +            dwsizeof(struct cxl_compliance_mode_cap_rsp);
+>> +        cxl_cstate->doe_resp.cap_rsp.rsp_code = 0x0;
+>> +        cxl_cstate->doe_resp.cap_rsp.version = 0x1;
+>> +        cxl_cstate->doe_resp.cap_rsp.length = 0x1c;
+>> +        cxl_cstate->doe_resp.cap_rsp.status = 0x0;
+>> +        cxl_cstate->doe_resp.cap_rsp.available_cap_bitmask = 0x3;
+>> +        cxl_cstate->doe_resp.cap_rsp.enabled_cap_bitmask = 0x3;
+>> +        break;
+>> +    case CXL_COMP_MODE_STATUS:
+>> +        byte_cnt = sizeof(struct cxl_compliance_mode_status_rsp);
+>> +        cxl_cstate->doe_resp.status_rsp.header.vendor_id = CXL_VENDOR_ID;
+>> +        cxl_cstate->doe_resp.status_rsp.header.doe_type = CXL_DOE_COMPLIANCE;
+>> +        cxl_cstate->doe_resp.status_rsp.header.reserved = 0x0;
+>> +        cxl_cstate->doe_resp.status_rsp.header.length =
+>> +            dwsizeof(struct cxl_compliance_mode_status_rsp);
+>> +        cxl_cstate->doe_resp.status_rsp.rsp_code = 0x1;
+>> +        cxl_cstate->doe_resp.status_rsp.version = 0x1;
+>> +        cxl_cstate->doe_resp.status_rsp.length = 0x14;
+>> +        cxl_cstate->doe_resp.status_rsp.cap_bitfield = 0x3;
+>> +        cxl_cstate->doe_resp.status_rsp.cache_size = 0;
+>> +        cxl_cstate->doe_resp.status_rsp.cache_size_units = 0;
+>> +        break;
+>> +    default:
+> 
+> I guess the intent at somepoint is to actually hook some of these up?
+> 
+>> +        break;
+>> +    }
+>> +
+>> +    DOE_DBG("  REQ=%x, RSP BYTE_CNT=%d\n", req, byte_cnt);
+>> +    DOE_DBG("<< %s\n",  __func__);
+>> +    return byte_cnt;
+>> +}
+>> +
+>> +
+>> +bool cxl_doe_compliance_rsp(DOECap *doe_cap)
+> 
+> Currently this is local to this file, so drop it form the header and
+> mark it static.  
+> 
+>> +{
+>> +    CXLComponentState *cxl_cstate = &CT3(doe_cap->doe->pdev)->cxl_cstate;
+>> +    uint32_t byte_cnt;
+>> +    uint32_t dw_cnt;
+>> +
+>> +    DOE_DBG(">> %s\n",  __func__);
+>> +
+>> +    byte_cnt = cxl_doe_compliance_init(doe_cap);
+>> +    dw_cnt = byte_cnt / 4;
+>> +    memcpy(doe_cap->read_mbox,
+>> +           cxl_cstate->doe_resp.data_byte, byte_cnt);
+>> +
+>> +    doe_cap->read_mbox_len += dw_cnt;
+>> +
+>> +    DOE_DBG("  LEN=%x, RD MBOX[%d]=%x\n", dw_cnt - 1,
+>> +            doe_cap->read_mbox_len,
+>> +            *(doe_cap->read_mbox + dw_cnt - 1));
+>> +
+>> +    DOE_DBG("<< %s\n",  __func__);
+>> +
+>> +    return DOE_SUCCESS;
+>> +}
+>> +
+>> +bool cxl_doe_cdat_rsp(DOECap *doe_cap)
+> Local to this file I think so drop it from header and mark it static.
+> 
+>> +{
+>> +    CXLComponentState *cxl_cstate = &CT3(doe_cap->doe->pdev)->cxl_cstate;
+>> +    uint16_t ent;
+>> +    void *base;
+>> +    uint32_t len;
+>> +    struct cxl_cdat *req = pcie_doe_get_req(doe_cap);
+>> +
+>> +    ent = req->entry_handle;
+>> +    base = cxl_cstate->cdat_ent[ent].base;
+>> +    len = cxl_cstate->cdat_ent[ent].length;
+>> +
+>> +    struct cxl_cdat_rsp rsp = {
+>> +        .header = {
+>> +            .vendor_id = CXL_VENDOR_ID,
+>> +            .doe_type = CXL_DOE_TABLE_ACCESS,
+>> +            .reserved = 0x0,
+>> +            .length = (sizeof(struct cxl_cdat_rsp) + len) / 4,
+>> +        },
+>> +        .req_code = CXL_DOE_TAB_RSP,
+>> +        .table_type = CXL_DOE_TAB_TYPE_CDAT,
+>> +        .entry_handle = (++ent < cxl_cstate->cdat_ent_len) ? ent : CXL_DOE_TAB_ENT_MAX,
+>> +    };
+>> +
+>> +    memcpy(doe_cap->read_mbox, &rsp, sizeof(rsp));
+>> +    memcpy(doe_cap->read_mbox + sizeof(rsp) / 4, base, len);
+>> +
+>> +    doe_cap->read_mbox_len += rsp.header.length;
+>> +    DOE_DBG("  read_mbox_len=%x\n", doe_cap->read_mbox_len);
+>> +
+>> +    for (int i = 0; i < doe_cap->read_mbox_len; i++) {
+>> +        DOE_DBG("  RD MBOX[%d]=%08x\n", i, doe_cap->read_mbox[i]);
+>> +    }
+>> +
+>> +    return DOE_SUCCESS;
+>> +}
+>> +
+>> +static uint32_t ct3d_config_read(PCIDevice *pci_dev,
+>> +                            uint32_t addr, int size)
+>> +{
+>> +    CXLType3Dev *ct3d = CT3(pci_dev);
+>> +    PCIEDOE *doe = &ct3d->doe;
+>> +    DOECap *doe_cap;
+>> +
+>> +    doe_cap = pcie_doe_covers_addr(doe, addr);
+>> +    if (doe_cap) {
+>> +        DOE_DBG(">> %s addr=%x, size=%x\n", __func__, addr, size);
+>> +        return pcie_doe_read_config(doe_cap, addr, size);
+>> +    } else {
+>> +        return pci_default_read_config(pci_dev, addr, size);
+>> +    }
+>> +}
+>> +
+>> +static void ct3d_config_write(PCIDevice *pci_dev,
+>> +                            uint32_t addr, uint32_t val, int size)
+>> +{
+>> +    CXLType3Dev *ct3d = CT3(pci_dev);
+>> +    PCIEDOE *doe = &ct3d->doe;
+>> +    DOECap *doe_cap;
+>> +
+>> +    doe_cap = pcie_doe_covers_addr(doe, addr);
+>> +    if (doe_cap) {
+>> +        DOE_DBG(">> %s addr=%x, val=%x, size=%x\n", __func__, addr, val, size);
+>> +        pcie_doe_write_config(doe_cap, addr, val, size);
+>> +    } else {
+>> +        pci_default_write_config(pci_dev, addr, val, size);
+>> +    }
+>> +}
+>> 
+>> static void build_dvsecs(CXLType3Dev *ct3d)
+>> {
+>> @@ -210,6 +354,9 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>>     ComponentRegisters *regs = &cxl_cstate->crb;
+>>     MemoryRegion *mr = &regs->component_registers;
+>>     uint8_t *pci_conf = pci_dev->config;
+>> +    unsigned short msix_num = 2;
+>> +    int rc;
+>> +    int i;
+>> 
+>>     if (!ct3d->cxl_dstate.pmem) {
+>>         cxl_setup_memory(ct3d, errp);
+>> @@ -239,6 +386,28 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>>                      PCI_BASE_ADDRESS_SPACE_MEMORY |
+>>                          PCI_BASE_ADDRESS_MEM_TYPE_64,
+>>                      &ct3d->cxl_dstate.device_registers);
+>> +
+>> +    msix_init_exclusive_bar(pci_dev, msix_num, 4, NULL);
+>> +    for (i = 0; i < msix_num; i++) {
+>> +        msix_vector_use(pci_dev, i);
+>> +    }
+>> +
+>> +    /* msi_init(pci_dev, 0x60, 16, true, false, NULL); */
+> 
+> Tidy this up or parameterize it.
+> 
+>> +
+>> +    pcie_doe_init(pci_dev, &ct3d->doe);
+>> +    rc = pcie_cap_doe_add(&ct3d->doe, 0x160, true, 0);
+> 
+> check rc here.
+> 
+>> +    rc = pcie_cap_doe_add(&ct3d->doe, 0x190, true, 1);
+>> +    if (rc) {
+>> +        error_setg(errp, "fail to add DOE cap");
+>> +        return;
+>> +    }
+>> +
+>> +    pcie_doe_register_protocol(&ct3d->doe, CXL_VENDOR_ID, CXL_DOE_COMPLIANCE,
+>> +                               cxl_doe_compliance_rsp);
+>> +    pcie_doe_register_protocol(&ct3d->doe, CXL_VENDOR_ID, CXL_DOE_TABLE_ACCESS,
+>> +                               cxl_doe_cdat_rsp);
+>> +
+>> +    cxl_doe_cdat_init(cxl_cstate);
+>> }
+>> 
+>> static uint64_t cxl_md_get_addr(const MemoryDeviceState *md)
+>> @@ -357,6 +526,9 @@ static void ct3_class_init(ObjectClass *oc, void *data)
+>>     DeviceClass *dc = DEVICE_CLASS(oc);
+>>     PCIDeviceClass *pc = PCI_DEVICE_CLASS(oc);
+>>     MemoryDeviceClass *mdc = MEMORY_DEVICE_CLASS(oc);
+>> +
+>> +    pc->config_write = ct3d_config_write;
+>> +    pc->config_read = ct3d_config_read;
+>>     CXLType3Class *cvc = CXL_TYPE3_DEV_CLASS(oc);
+>> 
+>>     pc->realize = ct3_realize;
+>> diff --git a/include/hw/cxl/cxl_cdat.h b/include/hw/cxl/cxl_cdat.h
+>> new file mode 100644
+>> index 0000000..fbbd494
+>> --- /dev/null
+>> +++ b/include/hw/cxl/cxl_cdat.h
+>> @@ -0,0 +1,120 @@
+>> +#include "hw/cxl/cxl_pci.h"
+>> +
+>> +
+>> +enum {
+>> +    CXL_DOE_COMPLIANCE             = 0,
+>> +    CXL_DOE_TABLE_ACCESS           = 2,
+>> +    CXL_DOE_MAX_PROTOCOL
+>> +};
+>> +
+>> +#define CXL_DOE_PROTOCOL_COMPLIANCE ((CXL_DOE_COMPLIANCE << 16) | CXL_VENDOR_ID)
+>> +#define CXL_DOE_PROTOCOL_CDAT     ((CXL_DOE_TABLE_ACCESS << 16) | CXL_VENDOR_ID)
+>> +
+>> +/*
+>> + * DOE CDAT Table Protocol (CXL Spec)
+>> + */
+>> +#define CXL_DOE_TAB_REQ 0
+>> +#define CXL_DOE_TAB_RSP 0
+>> +#define CXL_DOE_TAB_TYPE_CDAT 0
+>> +#define CXL_DOE_TAB_ENT_MAX 0xFFFF
+>> +
+>> +/* Read Entry Request, 8.1.11.1 Table 134 */
+>> +struct cxl_cdat {
+>> +    DOEHeader header;
+>> +    uint8_t req_code;
+>> +    uint8_t table_type;
+>> +    uint16_t entry_handle;
+>> +} QEMU_PACKED;
+>> +
+>> +/* Read Entry Response, 8.1.11.1 Table 135 */
+>> +#define cxl_cdat_rsp    cxl_cdat    /* Same as request */
+>> +
+> ... Note I'm just snipping out these big defines as I check them
+> against the spec :) Hence the gap.
+> ...
+> 
+>> +struct cdat_dsmscis {
+>> +    struct cdat_sub_header header;
+>> +    uint8_t DSMASH_handle;
+> 
+> DMSAS_handle;
+> 
+>> +    uint8_t reserved2[3];
+>> +    uint64_t memory_side_cache_size;
+>> +    uint32_t cache_attributes;
+>> +} QEMU_PACKED;
+>> +
+> 
+> 
+>> +
+>> +struct cdat_sslbis_header {
+>> +    struct cdat_sub_header header;
+>> +    uint8_t data_type;
+>> +    uint8_t reserved2[3];
+>> +    uint64_t entry_base_unit;
+>> +} QEMU_PACKED;
+>> diff --git a/include/hw/cxl/cxl_compl.h b/include/hw/cxl/cxl_compl.h
+>> new file mode 100644
+>> index 0000000..ebbe488
+>> --- /dev/null
+>> +++ b/include/hw/cxl/cxl_compl.h
+>> @@ -0,0 +1,289 @@
+>> +/*
+>> + * CXL Compliance Mode Protocol
+> 
+> Needs license etc I think
+> 
+>> + */
+> 
+> A bunch of the responses below are all of this form, perhaps we
+> could just have one cxl_compliance_mode_generic_status_rsp ?
+> if you really want to then define the others perhaps use
+> #define to do it rather than lots of identical structures
+> each specified fully.
+
+
+Got it.   Should have simplified it after cutting and pasting so many times.
+> 
+> 
+>> +struct cxl_compliance_mode_inject_mac_delay_rsp {
+>> +    DOEHeader header;
+>> +    uint8_t rsp_code;
+>> +    uint8_t version;
+>> +    uint8_t length;
+>> +    uint8_t status;
+>> +} QEMU_PACKED;
+>> +
+> 
+> 
+> 
+>> +struct cxl_compliance_mode_ignore_bit_error {
+>> +    DOEHeader header;
+>> +    uint8_t req_code;
+>> +    uint8_t version;
+>> +    uint16_t reserved;
+>> +    uint8_t opcode;
+>> +} QEMU_PACKED;
+>> +
+> This last one doesn't seem to line up with the CXL 2.0 spec.
+
+Good catch!
+
+> 
+>> +struct cxl_compliance_mode_ignore_bit_error_rsp {
+>> +    DOEHeader header;
+>> +    uint8_t rsp_code;
+>> +    uint8_t version;
+>> +    uint8_t reserved[6];
+>> +} QEMU_PACKED;
+> 
+> 
+>> diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
+>> index 762feb5..23923df 100644
+>> --- a/include/hw/cxl/cxl_component.h
+>> +++ b/include/hw/cxl/cxl_component.h
+>> @@ -132,6 +132,23 @@ HDM_DECODER_INIT(0);
+>> _Static_assert((CXL_SNOOP_REGISTERS_OFFSET + CXL_SNOOP_REGISTERS_SIZE) < 0x1000,
+>>                "No space for registers");
+> 
+> ...
+> 
+>> typedef struct component_registers {
+>>     /*
+>>      * Main memory region to be registered with QEMU core.
+>> @@ -160,6 +177,10 @@ typedef struct component_registers {
+>>     MemoryRegionOps *special_ops;
+>> } ComponentRegisters;
+>> 
+>> +typedef struct cdat_struct {
+>> +    void *base;
+>> +    uint32_t length;
+>> +} CDATStruct;
+>> /*
+>>  * A CXL component represents all entities in a CXL hierarchy. This includes,
+>>  * host bridges, root ports, upstream/downstream switch ports, and devices
+>> @@ -173,6 +194,104 @@ typedef struct cxl_component {
+>>             struct PCIDevice *pdev;
+>>         };
+>>     };
+>> +
+>> +    /*
+>> +     * SW write write mailbox and GO on last DW
+>> +     * device sets READY of offset DW in DO types to copy
+>> +     * to read mailbox register on subsequent cfg_read
+>> +     * of read mailbox register and then on cfg_write to
+>> +     * denote success read increments offset to next DW
+>> +     */
+>> +
+>> +    union doe_request_u {
+>> +        /* Compliance DOE Data Objects Type=0*/
+>> +        struct cxl_compliance_mode_cap
+>> +            mode_cap;
+> 
+> I'd only add line breaks for the longer ones of these.
+> 
+>> +        struct cxl_compliance_mode_status
+>> +            mode_status;
+>> +        struct cxl_compliance_mode_halt
+>> +            mode_halt;
+>> +        struct cxl_compliance_mode_multiple_write_streaming
+>> +            multiple_write_streaming;
+>> +        struct cxl_compliance_mode_producer_consumer
+>> +            producer_consumer;
+>> +        struct cxl_compliance_mode_inject_bogus_writes
+>> +            inject_bogus_writes;
+>> +        struct cxl_compliance_mode_inject_poison
+>> +            inject_poison;
+>> +        struct cxl_compliance_mode_inject_crc
+>> +            inject_crc;
+>> +        struct cxl_compliance_mode_inject_flow_control
+>> +            inject_flow_control;
+>> +        struct cxl_compliance_mode_toggle_cache_flush
+>> +            toggle_cache_flush;
+>> +        struct cxl_compliance_mode_inject_mac_delay
+>> +            inject_mac_delay;
+>> +        struct cxl_compliance_mode_insert_unexp_mac
+>> +            insert_unexp_mac;
+>> +        struct cxl_compliance_mode_inject_viral
+>> +            inject_viral;
+>> +        struct cxl_compliance_mode_inject_almp
+>> +            inject_almp;
+>> +        struct cxl_compliance_mode_ignore_almp
+>> +            ignore_almp;
+>> +        struct cxl_compliance_mode_ignore_bit_error
+>> +            ignore_bit_error;
+>> +        char data_byte[128];
+>> +    } doe_request;
+>> +
+>> +    union doe_resp_u {
+>> +        /* Compliance DOE Data Objects Type=0*/
+>> +        struct cxl_compliance_mode_cap_rsp
+>> +            cap_rsp;
+>> +        struct cxl_compliance_mode_status_rsp
+>> +            status_rsp;
+>> +        struct cxl_compliance_mode_halt_rsp
+>> +            halt_rsp;
+>> +        struct cxl_compliance_mode_multiple_write_streaming_rsp
+>> +            multiple_write_streaming_rsp;
+>> +        struct cxl_compliance_mode_producer_consumer_rsp
+>> +            producer_consumer_rsp;
+>> +        struct cxl_compliance_mode_inject_bogus_writes_rsp
+>> +            inject_bogus_writes_rsp;
+>> +        struct cxl_compliance_mode_inject_poison_rsp
+>> +            inject_poison_rsp;
+>> +        struct cxl_compliance_mode_inject_crc_rsp
+>> +            inject_crc_rsp;
+>> +        struct cxl_compliance_mode_inject_flow_control_rsp
+>> +            inject_flow_control_rsp;
+>> +        struct cxl_compliance_mode_toggle_cache_flush_rsp
+>> +            toggle_cache_flush_rsp;
+>> +        struct cxl_compliance_mode_inject_mac_delay_rsp
+>> +            inject_mac_delay_rsp;
+>> +        struct cxl_compliance_mode_insert_unexp_mac_rsp
+>> +            insert_unexp_mac_rsp;
+>> +        struct cxl_compliance_mode_inject_viral
+>> +            inject_viral_rsp;
+>> +        struct cxl_compliance_mode_inject_almp_rsp
+>> +            inject_almp_rsp;
+>> +        struct cxl_compliance_mode_ignore_almp_rsp
+>> +            ignore_almp_rsp;
+>> +        struct cxl_compliance_mode_ignore_bit_error_rsp
+>> +            ignore_bit_error_rsp;
+>> +        char data_byte[520 * 4];
+>> +        uint32_t data_dword[520];
+>> +    } doe_resp;
+>> +
+>> +    /* Table entry types */
+> Hmm. Not sure all CXL components will have CDAT.  Root ports for
+> example?
+> 
+>> +    struct cdat_table_header cdat_header;
+>> +    struct cdat_dsmas dsmas;
+>> +    struct cdat_dslbis dslbis;
+> 
+> As I said in v1, some of these will need to be multiples so this
+> flat structure just doesn't work.
+> 
+>> +    struct cdat_dsmscis dsmscis;
+>> +    struct cdat_dsis dsis;
+>> +    struct cdat_dsemts dsemts;
+>> +    struct {
+>> +        struct cdat_sslbis_header sslbis_h;
+>> +        struct cdat_sslbe sslbe[3];
+> 
+> I'm curious.  Why 3?  This is between pairs of ports so 1USP 2DSP switch?
+> 
+>> +    } sslbis;
+> 
+> 
+>> +
+>> +    CDATStruct *cdat_ent;
+>> +    int cdat_ent_len;
+>> } CXLComponentState;
+>> 
+>> void cxl_component_register_block_init(Object *obj,
+>> @@ -184,4 +303,11 @@ void cxl_component_register_init_common(uint32_t *reg_state,
+>> void cxl_component_create_dvsec(CXLComponentState *cxl_cstate, uint16_t length,
+>>                                 uint16_t type, uint8_t rev, uint8_t *body);
+>> 
+>> +void cxl_component_create_doe(CXLComponentState *cxl_cstate,
+>> +                              uint16_t offset, unsigned vec);
+> 
+> Doesn't seem to exist.
+> 
+> Some of the following are local to one file so shouldn't be here iether.
+> 
+>> +uint32_t cxl_doe_compliance_init(DOECap *doe_cap);
+>> +bool cxl_doe_compliance_rsp(DOECap *doe_cap);
+>> +void cxl_doe_cdat_init(CXLComponentState *cxl_cstate);
+>> +bool cxl_doe_cdat_rsp(DOECap *doe_cap);
+>> +uint32_t cdat_zero_checksum(uint32_t *mbox, uint32_t dw_cnt);
+> 
+> Doesn't seem to exist.
+> 
+>> #endif
+>> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+>> index c608ced..08bf646 100644
+>> --- a/include/hw/cxl/cxl_device.h
+>> +++ b/include/hw/cxl/cxl_device.h
+>> @@ -223,6 +223,9 @@ typedef struct cxl_type3_dev {
+>>     /* State */
+>>     CXLComponentState cxl_cstate;
+>>     CXLDeviceState cxl_dstate;
+>> +
+>> +    /* DOE */
+>> +    PCIEDOE doe;
+>> } CXLType3Dev;
+>> 
+>> #ifndef TYPE_CXL_TYPE3_DEV
+>> diff --git a/include/hw/cxl/cxl_pci.h b/include/hw/cxl/cxl_pci.h
+>> index 9ec28c9..5cab197 100644
+>> --- a/include/hw/cxl/cxl_pci.h
+>> +++ b/include/hw/cxl/cxl_pci.h
+>> @@ -12,6 +12,8 @@
+>> 
+>> #include "hw/pci/pci.h"
+>> #include "hw/pci/pcie.h"
+>> +#include "hw/cxl/cxl_cdat.h"
+>> +#include "hw/cxl/cxl_compl.h"
+>> 
+>> #define CXL_VENDOR_ID 0x1e98
+>> 
+>> @@ -54,6 +56,8 @@ struct dvsec_header {
+>> _Static_assert(sizeof(struct dvsec_header) == 10,
+>>                "dvsec header size incorrect");
+>> 
+>> +/* CXL 2.0 - 8.1.11 */
+>> +
+> 
+> Clean this out next time - doesn't belong in this patch.
+> 
+>> /*
+>>  * CXL 2.0 devices must implement certain DVSEC IDs, and can [optionally]
+>>  * implement others.
+> 
 
