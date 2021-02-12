@@ -2,288 +2,322 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62702C433E0
-	for <linux-cxl@archiver.kernel.org>; Fri, 12 Feb 2021 00:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DECAC433E0
+	for <linux-cxl@archiver.kernel.org>; Fri, 12 Feb 2021 12:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 190FC64E4A
-	for <linux-cxl@archiver.kernel.org>; Fri, 12 Feb 2021 00:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CF4E64E30
+	for <linux-cxl@archiver.kernel.org>; Fri, 12 Feb 2021 12:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229872AbhBLAOv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 11 Feb 2021 19:14:51 -0500
-Received: from mga02.intel.com ([134.134.136.20]:34646 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229623AbhBLAOt (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 11 Feb 2021 19:14:49 -0500
-IronPort-SDR: IEaxQQOM1sXiP3LQsx2qSMFwUXahqMh0Mu6VYc44QdRHz95+jRv3tsQY+G8Ol3y/1u2tUQZ5U3
- pHBhKkofJj0A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9892"; a="169468895"
-X-IronPort-AV: E=Sophos;i="5.81,172,1610438400"; 
-   d="scan'208";a="169468895"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2021 16:14:07 -0800
-IronPort-SDR: NMM7V7fjPKGAEAPwVBjiktAX37OOvBSEPbEZDv/1KYRzsne05zPdyXUBnmRyi2gQT8AOW4RYJe
- VQQO9nL872vA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,172,1610438400"; 
-   d="scan'208";a="589083290"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga005.fm.intel.com with ESMTP; 11 Feb 2021 16:14:07 -0800
-Received: from orsmsx609.amr.corp.intel.com (10.22.229.22) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Thu, 11 Feb 2021 16:14:06 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx609.amr.corp.intel.com (10.22.229.22) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2
- via Frontend Transport; Thu, 11 Feb 2021 16:14:06 -0800
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (104.47.38.58) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2106.2; Thu, 11 Feb 2021 16:14:05 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZAbhnfhhqqkNIXuBnsICmqzN2aQSFoNzM87nLB6+OrcN0LGdk9tS8ycckt1TD0v7zQ64f3jZl/FI88LH3ghi7MQzPkrb0g+/kF7H2VXLJc2HLVg5KcyIuonrN6hja2jS9qL6/d6dSgWIaOMFzKbYIgRZbngYIGgFMr2lE790s+tzR9GPvFLXH8F3aLhZDYvxHSlrhHKDwKRoz1hvGhddixNv8ew5ta02soMsCk4+vrN/ujAEe9eA1RTk9deanpj9yMLH+9PXVhYpUwBtF4O5nY/1ThosarG0JQjYl1JK0NVJ+waHNA1VGmH3XWrkzuDSlA/MwTxGVSFCSpvCcKCIpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NtXfGl2MNBsLba1tKbD99UkTy5YjshCNVvLQblh6P78=;
- b=XZAUIIcN3EvIi8C17rCC6NGiGkkqd/uoYWCnKCx3Yv/YeeplLRJbc21UxTLkISW5OUvTS4Ytz82/eIHJXQw4E6xITxmBnDq7xxmBqWydhT2I1nF7Jw4m+72iFMEBgawEulnsEf5lHF+mXW8jb2xhkx/aU0Bqw6/lSiqwYhebsfXxja3fCQ5pUVhagQvP33qDMMmU5RcZ8mZO2L3ep5lSX/uoRe4M+WO9QpDuQzpQ96e1E+z4sDPYpDffGM5HKiDXm7SLkiStjajbqoWAbheVQWIi/3peLhY14HnV/2fp/kG1o6LrCuBOxZLn7VuVGUeugVYvDhUwVdiWW1w7hfLuvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NtXfGl2MNBsLba1tKbD99UkTy5YjshCNVvLQblh6P78=;
- b=u+LlVQPxLRLFrfypQ7TKPTlTnc+mmIeeuMDFUe8bvKqtF5nCRdKDaQEypLLR8q+xHpppITPh7n4jKh2cZwrYCVKOM8ONC0+FA2ierwCsi/AfN5oBrn3idynjfclL93xBHLiZfhjormZpQE4DiXaoNVXDq02Y3oMW6U3ykqxzlm0=
-Received: from BN6PR11MB1732.namprd11.prod.outlook.com (2603:10b6:404:102::7)
- by BN6PR1101MB2177.namprd11.prod.outlook.com (2603:10b6:405:50::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.29; Fri, 12 Feb
- 2021 00:13:47 +0000
-Received: from BN6PR11MB1732.namprd11.prod.outlook.com
- ([fe80::b4a5:ccc6:a02d:ff93]) by BN6PR11MB1732.namprd11.prod.outlook.com
- ([fe80::b4a5:ccc6:a02d:ff93%8]) with mapi id 15.20.3846.026; Fri, 12 Feb 2021
- 00:13:47 +0000
-From:   "Natu, Mahesh" <mahesh.natu@intel.com>
-To:     Vikram Sethi <vsethi@nvidia.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>
-CC:     "Douglas, Chet R" <chet.r.douglas@intel.com>,
-        "Widawsky, Ben" <ben.widawsky@intel.com>,
-        "Verma, Vishal L" <vishal.l.verma@intel.com>
-Subject: RE: [RFC] ACPI Code First ECR: Generic Target
-Thread-Topic: [RFC] ACPI Code First ECR: Generic Target
-Thread-Index: AQHW/2CV8MYxCHenmEqoc630sTuQ+6pRnkGAgAIIeRA=
-Date:   Fri, 12 Feb 2021 00:13:47 +0000
-Message-ID: <BN6PR11MB17327A31146FCCC9503C3633F58B9@BN6PR11MB1732.namprd11.prod.outlook.com>
+        id S229832AbhBLM1y (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 12 Feb 2021 07:27:54 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2558 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231157AbhBLM0d (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 12 Feb 2021 07:26:33 -0500
+Received: from fraeml702-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DcXdh5VPxz67kw9;
+        Fri, 12 Feb 2021 20:20:40 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml702-chm.china.huawei.com (10.206.15.51) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2106.2; Fri, 12 Feb 2021 13:25:40 +0100
+Received: from localhost (10.47.28.230) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Fri, 12 Feb
+ 2021 12:25:39 +0000
+Date:   Fri, 12 Feb 2021 12:24:38 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        "Natu, Mahesh" <mahesh.natu@intel.com>,
+        Chet R Douglas <chet.r.douglas@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        "Vishal L Verma" <vishal.l.verma@intel.com>
+Subject: Re: [RFC] ACPI Code First ECR: Generic Target
+Message-ID: <20210212122438.00003621@Huawei.com>
+In-Reply-To: <CAPcyv4j0Wce-76OfgqTSkveukgDXB_p2VZZpgM8XjDFd+Q-0Ww@mail.gmail.com>
 References: <CAPcyv4gmd_cygXK0PpGkXmJLC3_ctEpRvpi5P-QcuXusFX5oNQ@mail.gmail.com>
- <BL0PR12MB2532C769A507F8AB5B40D2BEBD8D9@BL0PR12MB2532.namprd12.prod.outlook.com>
-In-Reply-To: <BL0PR12MB2532C769A507F8AB5B40D2BEBD8D9@BL0PR12MB2532.namprd12.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Enabled=True;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SiteId=43083d15-7273-40c1-b7db-39efd9ccc17a;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Owner=vsethi@nvidia.com;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SetDate=2021-02-10T17:02:23.5410193Z;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Name=Unrestricted;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_ActionId=e737b242-5b9e-410d-ab82-b76c3b9e5625;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Extended_MSFT_Method=Automatic
-dlp-version: 11.5.1.3
-dlp-product: dlpe-windows
-dlp-reaction: request-justification,no-action
-authentication-results: nvidia.com; dkim=none (message not signed)
- header.d=none;nvidia.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [12.215.39.18]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a3da1f31-b78c-43e9-2288-08d8ceeb114f
-x-ms-traffictypediagnostic: BN6PR1101MB2177:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN6PR1101MB21776ED675B50C3A269769E4F58B9@BN6PR1101MB2177.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: snhQTTUee5n6qJGDrqb1Y7GzaTIvWtLJBU5hh/ezNQBP0QhsBRNxn3epaegy23sOECPjYYe9RpwwwWG7+gZWjnxFPlLJyt4497kajjGyvDcMcRQllQ/lfzU2LANCGqIshKtJ8Q33rrqQUuWfB5hs4vxWwA1QQRkl4on00mr3jt3EqQ8k5zMd/RaOl0bfx8oBsrjjGN5yn1m6DJvgTZQbrNlfE/yuUhtBPbRGV8HrdmwffqMtPhDpYsquiTfGJeZ5NzDa+KbMyPykMfgoxZAupIdMCucRuWkdlTJMurMcS/qTkspl6XabsvpmRPQJmqewzMP4sQ9yqi1Sp5Lc4poA3LpzDPi6bJiMWedUu82yb5NkjiKU9dRmX128xYp2kloBtdXW69X5kMdkyQD7WhksPS4SzRQXLKqyArELx2nuY4MwriW/yKly7KCOlDRZSSbiRGsHU0cbCGgL8gt63Td3nKYsuPjH9WaYX6yPzyQoL2lUn+4MGOp1Pup0paBXGT7FViVYKuih0QfxEOYYmiiSKpsiLWitoMZIG65Q0jU4z3JP/O99ysKQTWKP4gtMA8YJaWnKJZCKurxarIVenOCuSfykYS6L5tVGBmbev98XvR8s2HRipFZ8Vf5GhmBc/CDqvAIQVcKXaZTFU/28azgnAA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR11MB1732.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(136003)(376002)(396003)(39860400002)(366004)(110136005)(66556008)(2906002)(4326008)(186003)(71200400001)(8676002)(7696005)(6506007)(52536014)(33656002)(8936002)(478600001)(53546011)(86362001)(316002)(9686003)(66946007)(5660300002)(26005)(66476007)(54906003)(66446008)(55016002)(76116006)(64756008)(83380400001)(41533002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?OXBzZkZQWEdyZVMreFhwakh5VDVjcVdGVno2YmNiODQyejM1cjJhb0FaMzZy?=
- =?utf-8?B?ajBQZDVmcWVJU0xEWVZDOGt6K1VSeXBHU2ZQY05saFoyVVBmTU1seGFjekhp?=
- =?utf-8?B?ZnhCYTFOWTB3aE9RR3JUNThLRDlWVjFzd3FLeko2TDBuR0htSEsybE9KMTBk?=
- =?utf-8?B?SW1RMFJBa0tscnFQbHg4T1BUWDYrWWI2bktTQ0hUcXFtK1VxaCsrQnB0Ui9Z?=
- =?utf-8?B?Z3JxbkVGNzRycDYzUWsxSnBJNkVwNXcrWWducTJWSHcya3JJK1VmWjBsSk1T?=
- =?utf-8?B?SUpVNVgwbkdRSlJyeHA1M1J6NUZLWHFPWU5Yb2h0R3Z1NitrcExMZUVzK0lQ?=
- =?utf-8?B?ZTFvZzVvbFg0OXF0UlBPQjQ4U21zaUxJd3IrNVB0YkhBV3d6QkJ2TFRabWRR?=
- =?utf-8?B?c21qVVA1dXFzaGFXRnArQ3FYQ1A2V3MxTHMvQ2FsZDk4Y3VJMmpBYjRYeXpn?=
- =?utf-8?B?dUp1ZFVUcy85NHNjdGNPWi9HVDRxVG1wR1kxdktkTmNQcE85cG5KUnNyRm1y?=
- =?utf-8?B?bGN2TXR5a2t2Vk8wZlc1dHVwcThIQXg3eVNMdnpUdDJhZ1o3MGdlL1lsZ0sx?=
- =?utf-8?B?eUNtUEZ6dTNwc0pUeC8xd2xTYWp0RVQzc0dTYWsyYlFYZDdvbHpHVnlDNFZ6?=
- =?utf-8?B?ZWcxTEQrVFNUT01mekR3MXhHWDc0WHQrb3FvQU16a25Wc3R0MlBkTnFVb3Iv?=
- =?utf-8?B?OFpGNHI5TmduTHJGeWsyVHdKNDI1USttMEErYkU0R3J3czJCQXpJbVdUazEy?=
- =?utf-8?B?WkFBSG44TWVJTERoRlBqVnlzR3NKdkxJMGRWaVZqcTRxVTJ3Vm9LVWlmaXZN?=
- =?utf-8?B?UCt4bUpYenFJRnpoT1JtVDFjL3d0bElNQWd0bno2M0lQdjh2R0FLZ2Z3T1Z3?=
- =?utf-8?B?QU5MWkJvODlLSzdpWnZhbi9CbkFLLy95dDNQMW02eG82NXorNjB1VG5BUnBO?=
- =?utf-8?B?bDNtRGphZnNoWXdBR1pncW82aE9SRW9EWU9MV2ljMGhIQXQ0ZzY4ZVlRY2E0?=
- =?utf-8?B?QVh0b0JHVVBoaExoV2FNRmtabGZ0RHl6NmJaTUlidzl6MnVub0Y5ZXdGb1Js?=
- =?utf-8?B?S3p0Um10cmRzVU5kdS9QMlpQbjgvN1JTSU9kKzM0N0RYU0lJcUZWZTJDTkNV?=
- =?utf-8?B?WmFRbE5EUHNEYnRjSExLQ0w0eEtyUGl4WGVMaUtKN05XNFM1eDRTTzEzby9L?=
- =?utf-8?B?ZXBVM0huM3cvU2Z0aERRTTREWjFRTUx6blJjTUtrZ2JwQmFOdlVNdEF3bDRj?=
- =?utf-8?B?WG5KbWQ2amM2d0xEUlo4ZU50d0ZtbFpBUEFER1ArS2pRSDNsMmRRdnJyOGlG?=
- =?utf-8?B?dk5oeUUzUTREZEIyU0hneFkrNEF4VVdFdUJlRzdZVG5LdGJYZ1hyUFp0eFNB?=
- =?utf-8?B?RTVoU3F3Zi92NkZxdDdvanVraUlOUjhWOTlnSlV0c2orbUxRUkxDNUJXblRz?=
- =?utf-8?B?MVY3dDNoL0xLeXQwc0RxemRWVkdXZkpneFo1QzQwWFY0MDRuVTljb0kwdW1y?=
- =?utf-8?B?MG1NSU5uQ0NHQ3ZrbXNpVkgrVW1ZRlZWRXA2emtucWJkZWNwa1VRUEIyWkQ0?=
- =?utf-8?B?RDROTElFVzJZTk1rZEVaUW85N3dlV2szcEJ1eURaRWVGMUd6L01PemF1U1ho?=
- =?utf-8?B?OSt3ZXh4eG1Sb09QN2p5ZVp3eGJrT0NZSThzUTJ3RlkydmZxUENqalVoMlRp?=
- =?utf-8?B?WG9oKzhtZlNVWmd0dFlwTW1nR2sxczFWTXp6dHhjMTRmdldMakRteXgyRlUw?=
- =?utf-8?Q?KwpzexMWAPBsLVyFnQ=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        <20210210112330.00003e74@Huawei.com>
+        <CAPcyv4gOyPjVcBa_m6pvpVP+vamJ38G7ePos-2LP273y3ivJqg@mail.gmail.com>
+        <20210211094222.000048ae@Huawei.com>
+        <CAPcyv4j0Wce-76OfgqTSkveukgDXB_p2VZZpgM8XjDFd+Q-0Ww@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN6PR11MB1732.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3da1f31-b78c-43e9-2288-08d8ceeb114f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Feb 2021 00:13:47.4451
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: r5HOc9N7ltZR2tWjDNhqBWCajuUR6r9O1RA+6CnRbFmCU/n7f41da8k39UzttpZ2ioQEbhhpGQAK/CZ9nB9a9Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1101MB2177
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.28.230]
+X-ClientProxiedBy: lhreml721-chm.china.huawei.com (10.201.108.72) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-V2hhdCBpZiB0aGVyZSBpcyBhIENYTCBzd2l0Y2ggd2l0aCBhIEdlbmVyaWMgSW5pdGlhdG9yIGFu
-ZCBDWEwgdHlwZSAzIG1lbW9yeSB3aGljaCBjb3VsZCBiZSBob3RwbHVnZ2VkIGluLiANCkkgZm9y
-Z2V0IGlmIHRoZSBHSSB0byB0eXBlIDMgbWVtb3J5IHBhdGggaXMgT05MWSB0aHJvdWdoIHRoZSBo
-b3N0IGJyaWRnZSB0b2RheSBpbiAyLjAgb3IgYWxzbyBhbGxvd2VkIHRocm91Z2ggdGhlIHN3aXRj
-aC4gSW4gZnV0dXJlIHdlIHdvdWxkIHdhbnQgaXQgYWxsb3dlZCB0aHJvdWdoIHRoZSBzd2l0Y2gg
-Zm9yIHN1cmUsIGp1c3QgbGlrZSBQQ0llIHAycC4gDQpTbyBob3cgd291bGQgdGhlIHN3aXRjaCBy
-b3V0ZSBsYXRlbmN5L0JXIGJlIGRpc2NvdmVyZWQ/DQoNCg0KSW4gdGhlIGN1cnJlbnQgQ0RBVCBz
-cGVjLCBhIGNvaGVyZW50IHN3aXRjaCBpcyBtb2RlbGxlZCBhcyBoYXZpbmcgdHdvIG9yIG1vcmUg
-YmlkaXJlY3Rpb25hbCBwb3J0cyB0aGF0IGNhcnJ5IHRyYWZmaWMgYmV0d2VlbiBob3N0IENQVXMs
-IGNvaGVyZW50IGFjY2VsZXJhdG9ycywgYW5kIGNvaGVyZW50IG1lbW9yeSBkZXZpY2VzLiBTd2l0
-Y2ggQ0RBVCByZXR1cm5zIGxhdGVuY3kgYW5kIEJXIGJldHdlZW4gdmFyaW91cyBwb3J0IHBhaXJz
-IGFuZCBjYW4gZGVzY3JpYmUgd2hhdCB5b3UgYXJlIGxvb2tpbmcgZm9yLg0KDQoNCg0KVGhhbmsg
-eW91LA0KTWFoZXNoIE5hdHUNCkRhdGFjZW50ZXIgUGxhdGZvcm0gQXJjaGl0ZWN0DQpJbnRlbCBD
-b3Jwb3JhdGlvbg0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogVmlrcmFtIFNl
-dGhpIDx2c2V0aGlAbnZpZGlhLmNvbT4gDQpTZW50OiBXZWRuZXNkYXksIEZlYnJ1YXJ5IDEwLCAy
-MDIxIDk6MDIgQU0NClRvOiBXaWxsaWFtcywgRGFuIEogPGRhbi5qLndpbGxpYW1zQGludGVsLmNv
-bT47IGxpbnV4LWN4bEB2Z2VyLmtlcm5lbC5vcmc7IExpbnV4IEFDUEkgPGxpbnV4LWFjcGlAdmdl
-ci5rZXJuZWwub3JnPg0KQ2M6IE5hdHUsIE1haGVzaCA8bWFoZXNoLm5hdHVAaW50ZWwuY29tPjsg
-RG91Z2xhcywgQ2hldCBSIDxjaGV0LnIuZG91Z2xhc0BpbnRlbC5jb20+OyBXaWRhd3NreSwgQmVu
-IDxiZW4ud2lkYXdza3lAaW50ZWwuY29tPjsgVmVybWEsIFZpc2hhbCBMIDx2aXNoYWwubC52ZXJt
-YUBpbnRlbC5jb20+DQpTdWJqZWN0OiBSRTogW1JGQ10gQUNQSSBDb2RlIEZpcnN0IEVDUjogR2Vu
-ZXJpYyBUYXJnZXQNCg0KSGkgRGFuLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+
-IEZyb206IERhbiBXaWxsaWFtcyA8ZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tPg0KPiBTZW50OiBU
-dWVzZGF5LCBGZWJydWFyeSA5LCAyMDIxIDk6NTUgUE0NCj4gVG86IGxpbnV4LWN4bEB2Z2VyLmtl
-cm5lbC5vcmc7IExpbnV4IEFDUEkgPGxpbnV4LWFjcGlAdmdlci5rZXJuZWwub3JnPg0KPiBDYzog
-TmF0dSwgTWFoZXNoIDxtYWhlc2gubmF0dUBpbnRlbC5jb20+OyBDaGV0IFIgRG91Z2xhcyANCj4g
-PGNoZXQuci5kb3VnbGFzQGludGVsLmNvbT47IEJlbiBXaWRhd3NreSA8YmVuLndpZGF3c2t5QGlu
-dGVsLmNvbT47IA0KPiBWaXNoYWwgTCBWZXJtYSA8dmlzaGFsLmwudmVybWFAaW50ZWwuY29tPg0K
-PiBTdWJqZWN0OiBbUkZDXSBBQ1BJIENvZGUgRmlyc3QgRUNSOiBHZW5lcmljIFRhcmdldA0KPiAN
-Cj4gRXh0ZXJuYWwgZW1haWw6IFVzZSBjYXV0aW9uIG9wZW5pbmcgbGlua3Mgb3IgYXR0YWNobWVu
-dHMNCj4gDQo+IA0KPiBXaGlsZSB0aGUgcGxhdGZvcm0gQklPUyBpcyBhYmxlIHRvIGRlc2NyaWJl
-IHRoZSBwZXJmb3JtYW5jZSANCj4gY2hhcmFjdGVyaXN0aWNzIG9mIENYTCBtZW1vcnkgdGhhdCBp
-cyBwcmVzZW50IGF0IGJvb3QsIGl0IGlzIHVuYWJsZSB0byANCj4gc3RhdGljYWxseSBlbnVtZXJh
-dGUgdGhlIHBlcmZvcm1hbmNlIG9mIENYTCBtZW1vcnkgaG90IGluc2VydGVkIA0KPiBwb3N0LWJv
-b3QuIFRoZSBPUyBjYW4gZW51bWVyYXRlIG1vc3Qgb2YgdGhlIGNoYXJhY3RlcmlzdGljcyBmcm9t
-IGxpbmsgDQo+IHJlZ2lzdGVycyBhbmQgQ0RBVCwgYnV0IHRoZSBwZXJmb3JtYW5jZSBmcm9tIHRo
-ZSBDUFUgdG8gdGhlIGhvc3QgDQo+IGJyaWRnZSwgZm9yIGV4YW1wbGUsIGlzIG5vdCBlbnVtZXJh
-dGVkIGJ5IFBDSUUgb3IgQ1hMLiBJbnRyb2R1Y2UgYW4gDQo+IEFDUEkgbWVjaGFuaXNtIGZvciB0
-aGlzIHB1cnBvc2UuIENyaXRpY2FsbHkgdGhpcyBpcyBhY2hpZXZlZCB3aXRoIGEgDQo+IHNtYWxs
-IHR3ZWFrIHRvIGhvdyB0aGUgZXhpc3RpbmcgR2VuZXJpYyBJbml0aWF0b3IgcHJveGltaXR5IGRv
-bWFpbiBpcyANCj4gdXRpbGl6ZWQgaW4gdGhlIEhNQVQuDQo+IA0KPiAtLS0NCj4gDQo+ICMgVGl0
-bGU6IEludHJvZHVjZSBhIEdlbmVyaWMgVGFyZ2V0IGZvciBDWEwNCj4gDQo+ICMgU3RhdHVzOiBE
-cmFmdA0KPiANCj4gIyBEb2N1bWVudDogQUNQSSBTcGVjaWZpY2F0aW9uIDYuNA0KPiANCj4gIyBM
-aWNlbnNlDQo+IFNQRFgtTGljZW5zZSBJZGVudGlmaWVyOiBDQy1CWS00LjANCj4gDQo+ICMgU3Vi
-bWl0dGVyOg0KPiAqIFNwb25zb3I6IERhbiBXaWxsaWFtcywgSW50ZWwNCj4gKiBDcmVhdG9ycy9D
-b250cmlidXRvcnM6DQo+ICAgICAqIE1haGVzaCBOYXR1LCBJbnRlbA0KPiAgICAgKiBDaGV0IERv
-dWdsYXMsIEludGVsDQo+ICAgICAqIERlZXBhayBTaGl2YWt1bWFyLCBJbnRlbA0KPiANCj4gIyBT
-dW1tYXJ5IG9mIHRoZSBDaGFuZ2UNCj4gSW50cm9kdWNlIGEgIkdlbmVyaWMgVGFyZ2V0IiBjb25j
-ZXB0IHRvIHRoZSBTUkFUIHRvIGRlc2NyaWJlIHRoZSByb290IA0KPiBwZXJmb3JtYW5jZSBwYXJh
-bWV0ZXJzIGluIHRoZSBwYXRoIHRvIGR5bmFtaWNhbGx5IGRpc2NvdmVyZWQgKG91dHNpZGUgDQo+
-IG9mIEFDUEkgZW51bWVyYXRpb24pIENYTCBtZW1vcnkgdGFyZ2V0IGVuZHBvaW50cy4NCj4gDQo+
-ICMgQmVuZWZpdHMgb2YgdGhlIENoYW5nZQ0KPiBDb25zaWRlciB0aGUgY2FzZSBvZiBhIHN5c3Rl
-bSB3aXRoIGEgc2V0IG9mIENYTCBob3N0IGJyaWRnZXMgDQo+IChBQ1BJMDAxNiksIGFuZCBubyBk
-ZXZpY2VzIGF0dGFjaGVkIGF0IGluaXRpYWwgc3lzdGVtIHBvd2VyLW9uLiBJbiANCj4gdGhpcyBz
-Y2VuYXJpbyBwbGF0Zm9ybSBmaXJtd2FyZSBpcyB1bmFibGUgdG8gcGVyZm9ybSB0aGUgZW5kLXRv
-LWVuZCANCj4gZW51bWVyYXRpb24gbmVjZXNzYXJ5IHRvIHBvcHVsYXRlIFNSQVQgYW5kIEhNQVQg
-Zm9yIHRoZSBlbmRwb2ludHMgdGhhdCANCj4gbWF5IGJlIGhvdC1pbnNlcnRlZCBiZWhpbmQgdGhv
-c2UgYnJpZGdlcyBwb3N0IHBvd2VyLW9uLiBUaGUgDQo+IGFkZHJlc3MtcmFuZ2UgaXMgdW5rbm93
-biBzbyBTUkFUIGNhbiBub3QgYmUgcHJlLXBvcHVsYXRlZCwgdGhlIA0KPiBwZXJmb3JtYW5jZSBp
-cyB1bmtub3duIChubyBDREFUIG5vciBpbnRlcmxlYXZlIGNvbmZpZ3VyYXRpb24pIHNvIEhNQVQg
-Y2FuIG5vdCBiZSBwcmUtcG9wdWxhdGVkLg0KPiANCj4gSG93ZXZlciwgd2hhdCBpcyBrbm93biB0
-byBwbGF0Zm9ybSBmaXJtd2FyZSB0aGF0IGdlbmVyYXRlcyB0aGUgU1JBVCANCj4gYW5kIEhNQVQg
-aXMgdGhlIHBlcmZvcm1hbmNlIGNoYXJhY3RlcmlzdGljcyBvZiB0aGUgcGF0aCBiZXR3ZWVuIENQ
-VSANCj4gYW5kIEdlbmVyaWMgSW5pdGlhdG9ycyB0byB0aGUgQ1hMIGhvc3QgYnJpZGdlIHRhcmdl
-dC4gV2l0aCBlaXRoZXIgDQo+IENQVS10by1HZW5lcmljLVRhcmdldCwgb3IgR2VuZXJpYy1Jbml0
-aWF0b3ItdG8tR2VuZXJpYy1UYXJnZXQgZW50cmllcyANCj4gaW4gdGhlIEhNQVQgdGhlIE9TIENY
-TCBzdWJzeXN0ZW0gY2FuIGVudW1lcmF0ZSB0aGUgcmVtYWluaW5nIGRldGFpbHMgDQo+IChQQ0lF
-IGxpbmsgc3RhdHVzLCBkZXZpY2UgQ0RBVCwgaW50ZXJsZWF2ZSBjb25maWd1cmF0aW9uKSB0byBj
-YWxjdWxhdGUgDQo+IHRoZSBiYW5kd2lkdGggYW5kIGxhdGVuY3kgb2YgYSBkeW5hbWljYWxseSBk
-aXNjb3ZlcmVkIENYTCBtZW1vcnkgdGFyZ2V0Lg0KPiANCldoYXQgaWYgdGhlcmUgaXMgYSBDWEwg
-c3dpdGNoIHdpdGggYSBHZW5lcmljIEluaXRpYXRvciBhbmQgQ1hMIHR5cGUgMyBtZW1vcnkgd2hp
-Y2ggY291bGQgYmUgaG90cGx1Z2dlZCBpbi4gDQpJIGZvcmdldCBpZiB0aGUgR0kgdG8gdHlwZSAz
-IG1lbW9yeSBwYXRoIGlzIE9OTFkgdGhyb3VnaCB0aGUgaG9zdCBicmlkZ2UgdG9kYXkgaW4gMi4w
-IG9yIGFsc28gYWxsb3dlZCB0aHJvdWdoIHRoZSBzd2l0Y2guIEluIGZ1dHVyZSB3ZSB3b3VsZCB3
-YW50IGl0IGFsbG93ZWQgdGhyb3VnaCB0aGUgc3dpdGNoIGZvciBzdXJlLCBqdXN0IGxpa2UgUENJ
-ZSBwMnAuIA0KU28gaG93IHdvdWxkIHRoZSBzd2l0Y2ggcm91dGUgbGF0ZW5jeS9CVyBiZSBkaXNj
-b3ZlcmVkPw0KQWxzbywgYW4gZXhhbXBsZSB3aXRoIG51bWJlcnMgb2Ygd2hhdCB3b3VsZCBiZSBp
-biBITUFUIG1heSBoZWxwIHVuZGVyc3RhbmQgdGhlIGNhc2Ugd2hlcmUgZXZlcnl0aGluZyBpcyBv
-bmx5IGNvbm5lY3RlZCB2aWEgaG9zdCBicmlkZ2UgYWxzby4gDQoNCj4gIyBJbXBhY3Qgb2YgdGhl
-IENoYW5nZQ0KPiBUaGUgZXhpc3RpbmcgR2VuZXJpYyBJbml0aWF0b3IgQWZmaW5pdHkgU3RydWN0
-dXJlIChBQ1BJIDYuNCBTZWN0aW9uDQo+IDUuMi4xNi42KSBhbHJlYWR5IGNvbnRhaW5zIGFsbCB0
-aGUgZmllbGRzIG5lY2Vzc2FyeSB0byBlbnVtZXJhdGUgYSANCj4gZ2VuZXJpYyB0YXJnZXQgcHJv
-eGltaXR5IGRvbWFpbi4gQWxsIHRoYXQgaXMgbWlzc2luZyBpcyB0aGUgDQo+IGludGVycHJldGF0
-aW9uIG9mIHRoYXQgcHJveGltaXR5IGRvbWFpbiBvcHRpb25hbGx5IGFzIGEgdGFyZ2V0IA0KPiBp
-ZGVudGlmaWVyIGluIHRoZSBITUFULg0KPiANCj4gR2l2ZW4gdGhhdCB0aGUgT1Mgc3RpbGwgbmVl
-ZHMgdG8gZHluYW1pY2FsbHkgZW51bWVyYXRlIGFuZCBpbnN0YW50aWF0ZSANCj4gdGhlIG1lbW9y
-eSByYW5nZXMgYmVoaW5kIHRoZSBob3N0IGJyaWRnZS4gVGhlIGFzc3VtcHRpb24gaXMgdGhhdCAN
-Cj4gb3BlcmF0aW5nIHN5c3RlbXMgdGhhdCBkbyBub3Qgc3VwcG9ydCBuYXRpdmUgQ1hMIGVudW1l
-cmF0aW9uIHdpbGwgDQo+IGlnbm9yZSB0aGlzIGRhdGEgaW4gdGhlIEhNQVQsIHdoaWxlIENYTCBu
-YXRpdmUgZW51bWVyYXRpb24gYXdhcmUgDQo+IGVudmlyb25tZW50cyB3aWxsIHVzZSB0aGlzIGZy
-YWdtZW50IG9mIHRoZSBwZXJmb3JtYW5jZSBwYXRoIHRvIA0KPiBjYWxjdWxhdGUgdGhlIHBlcmZv
-cm1hbmNlIGNoYXJhY3RlcmlzdGljcy4NCj4gDQo+ICMgUmVmZXJlbmNlcw0KPiAqIENvbXB1dGUg
-RXhwcmVzcyBMaW5rIFNwZWNpZmljYXRpb24gdjIuMCwgDQo+IDxodHRwczovL3d3dy5jb21wdXRl
-ZXhwcmVzc2xpbmsub3JnLz4NCj4gDQo+ICMgRGV0YWlsZWQgRGVzY3JpcHRpb24gb2YgdGhlIENo
-YW5nZQ0KPiANCj4gKiBSZXBsYWNlICJHZW5lcmljIEluaXRpYXRvciIgd2l0aCAiR2VuZXJpYyBJ
-bml0aWF0b3IgLyBUYXJnZXQiIGluIGFsbCANCj4gbG9jYXRpb25zIGV4Y2VwdCB3aGVyZSBhbiAi
-aW5pdGlhdG9yIiBvciAidGFyZ2V0IiBpcyBpbXBsaWVkLg0KPiBTcGVjaWZpY2FsbHkgNS4yLjI3
-LjMgIk1lbW9yeSBQcm94aW1pdHkgRG9tYWluIEF0dHJpYnV0ZXMgU3RydWN0dXJlIg0KPiBuZWVk
-IG5vdCByZXBsYWNlIG9jY3VycmVuY2VzIG9mICJnZW5lcmljIGluaXRpYXRvciIgaW4gZmllbGQ6
-IA0KPiAiUHJveGltaXR5IERvbWFpbiBmb3IgQXR0YWNoZWQgSW5pdGlhdG9yIi4gQWRkaXRpb25h
-bGx5IGZpZWxkOiANCj4gIlByb3hpbWl0eSBEb21haW4gZm9yIHRoZSBNZW1vcnkiIG11c3QgYmUg
-cmVuYW1lZCB0byAiUHJveGltaXR5IERvbWFpbiANCj4gZm9yIHRoZSBNZW1vcnkgLyBHZW5lcmlj
-IFRhcmdldCIgd2l0aCBhIG5ldyBkZXNjcmlwdGlvbiAiSW50ZWdlciB0aGF0IA0KPiByZXByZXNl
-bnRzIHRoZSBtZW1vcnkgLyBnZW5lcmljIHRhcmdldCBwcm94aW1pdHkgZG9tYWluIHRvIHdoaWNo
-IHRoaXMgbWVtb3J5IGJlbG9uZ3MuIg0KPiANCj4gKiBSZXZpc2UgIjUuMi4xNi42IEdlbmVyaWMg
-SW5pdGlhdG9yIEFmZmluaXR5IFN0cnVjdHVyZSIgdG8gbWFrZSBpdA0KPiAgIGNvbnNpc3RlbnQg
-d2l0aCBiZWluZyByZWZlcmVuY2VkIGFzIGVpdGhlciBhIHRhcmdldCBvciBpbml0aWF0b3IuDQo+
-IA0KPiAgICAgICAgICogRGVzY3JpcHRpb246IChyZXBsYWNlIGFsbCB0ZXh0KQ0KPiANCj4gICAg
-ICAgICA+IFRoZSBHZW5lcmljIEluaXRpYXRvciAvIFRhcmdldCBBZmZpbml0eSBTdHJ1Y3R1cmUg
-cHJvdmlkZXMgdGhlDQo+ICAgICAgICAgPiBhc3NvY2lhdGlvbiBiZXR3ZWVuIGEgR2VuZXJpYyBJ
-bml0aWF0b3IgYW5kIGEgTWVtb3J5IFByb3hpbWl0eQ0KPiAgICAgICAgID4gRG9tYWluLCBvciBh
-bm90aGVyIEdlbmVyaWMgVGFyZ2V0IFByb3hpbWl0eSBEb21haW4uIFRoZQ0KPiAgICAgICAgID4g
-ZGlzdGluY3Rpb24gYXMgdG8gd2hldGhlciB0aGlzIHN0cnVjdHVyZSByZXByZXNlbnRzIGFuDQo+
-ICAgICAgICAgPiBJbml0aWF0b3IsIGEgVGFyZ2V0LCBvciBib3RoIGRlcGVuZHMgb24gaG93IGl0
-IGlzIHJlZmVyZW5jZWQNCj4gICAgICAgICA+IGluIHRoZSBITUFULiBTZWUgU2VjdGlvbiA1LjIu
-MjcuMyBmb3IgZGV0YWlscy4NCj4gDQo+ICAgICAgICAgPiBTdXBwb3J0IG9mIEdlbmVyaWMgSW5p
-dGlhdG9yIC8gVGFyZ2V0IEFmZmluaXR5IFN0cnVjdHVyZXMgYnkNCj4gICAgICAgICA+IE9TUE0g
-aXMgb3B0aW9uYWwsIGFuZCB0aGUgcGxhdGZvcm0gbWF5IHF1ZXJ5IHdoZXRoZXIgdGhlIE9TDQo+
-ICAgICAgICAgPiBzdXBwb3J0cyBpdCB2aWEgdGhlIF9PU0MgbWV0aG9kLiBTZWUgU2VjdGlvbiA2
-LjIuMTEuMi4NCj4gDQo+ICAgICAgICAgKiBBcmNoaXRlY3R1cmFsIHRyYW5zYWN0aW9uczogKGFw
-cGVuZCBhZnRlciBjdXJyZW50IHRleHQpDQo+IA0KPiAgICAgICAgID4gSWYgdGhpcyBwcm94aW1p
-dHkgZG9tYWluIGlzIHJlZmVyZW5jZWQgYXMgYSB0YXJnZXQgdGhlbiBpdA0KPiAgICAgICAgID4g
-c3VwcG9ydHMgYWxsIHRoZSB0cmFuc2FjdGlvbiB0eXBlcyBpbmZlcnJlZCBhYm92ZS4NCj4gDQo+
-ICAgICAgICAgKiBPdGhlciB1cGRhdGVzIGFyZSBzaW1wbGUgSW5pdGlhdG9yID0+IEluaXRpYXRv
-ciAvIFRhcmdldA0KPiAgICAgICAgICAgcmVwbGFjZW1lbnRzLg0K
+On Thu, 11 Feb 2021 09:06:51 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
+
+> On Thu, Feb 11, 2021 at 1:44 AM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
+> >
+> > On Wed, 10 Feb 2021 08:24:51 -0800
+> > Dan Williams <dan.j.williams@intel.com> wrote:
+> >  
+> > > On Wed, Feb 10, 2021 at 3:24 AM Jonathan Cameron
+> > > <Jonathan.Cameron@huawei.com> wrote:  
+> > > >
+> > > > On Tue, 9 Feb 2021 19:55:05 -0800
+> > > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > > >  
+> > > > > While the platform BIOS is able to describe the performance
+> > > > > characteristics of CXL memory that is present at boot, it is unable to
+> > > > > statically enumerate the performance of CXL memory hot inserted
+> > > > > post-boot. The OS can enumerate most of the characteristics from link
+> > > > > registers and CDAT, but the performance from the CPU to the host
+> > > > > bridge, for example, is not enumerated by PCIE or CXL. Introduce an
+> > > > > ACPI mechanism for this purpose. Critically this is achieved with a
+> > > > > small tweak to how the existing Generic Initiator proximity domain is
+> > > > > utilized in the HMAT.  
+> > > >
+> > > > Hi Dan,
+> > > >
+> > > > Agree there is a hole here, but I think the proposed solution has some
+> > > > issues for backwards compatibility.
+> > > >
+> > > > Just to clarify, I believe CDAT from root ports is sufficient for the
+> > > > other direction (GI on CXL, memory in host).  I wondered initially if
+> > > > this was a two way issue, but after a reread, I think that is fine
+> > > > with the root port providing CDAT or potentially treating the root
+> > > > port as a GI (though that runs into the same naming / representation issue
+> > > > as below and I think would need some clarifying text in UEFI GI description)
+> > > >
+> > > > http://uefi.org/sites/default/files/resources/Coherent%20Device%20Attribute%20Table_1.01.pdf
+> > > >
+> > > > For the case you are dealing with here potentially we 'could' add something
+> > > > to CDAT as alternative to changing SRAT, but it would be more complex
+> > > > so your approach here makes more sense to me.  
+> > >
+> > > CDAT seems the wrong mechanism because it identifies target
+> > > performance once you're at the front door of the device, not
+> > > performance relative to a given initiator.  
+> >
+> > I'd argue you could make CDAT a more symmetric representation, but it would
+> > end up replicating a lot of info already in HMAT.  Didn't say it was a good
+> > idea!  
+> 
+> CDAT describes points, HMAT describes edges on the performance graph,
+> it would be confusing if CDAT tried to supplant HMAT.
+
+Entirely agreed.  Note I'm not disagreeing with approach here at all, simply
+trying to point out where I think you'll get questions taking this to ACPI.
+
+> 
+> >
+> > That's an odd situation that it sort of 'half' manages it in the BIOS.
+> > We probably need some supplementary additional docs around this topic
+> > as the OS would need to be aware of that possibility and explicitly check
+> > for it before doing its normal build based on CDAT + what you are proposing
+> > here.  Maybe code is enough but given this is cross OS stuff I'd argue
+> > it probably isn't.
+> >
+> > I guess could revisit this draft Uefi white paper perhaps and add a bunch
+> > of examples around this usecase https://github.com/hisilicon/acpi-numa-whitepaper  
+> 
+> Thanks for the reference, I'll take a look.
+> 
+> >  
+> > >  
+> > > >  
+> > > > >
+> > > > > # Impact of the Change
+> > > > > The existing Generic Initiator Affinity Structure (ACPI 6.4 Section
+> > > > > 5.2.16.6) already contains all the fields necessary to enumerate a
+> > > > > generic target proximity domain. All that is missing is the
+> > > > > interpretation of that proximity domain optionally as a target
+> > > > > identifier in the HMAT.
+> > > > >
+> > > > > Given that the OS still needs to dynamically enumerate and instantiate
+> > > > > the memory ranges behind the host bridge. The assumption is that
+> > > > > operating systems that do not support native CXL enumeration will ignore
+> > > > > this data in the HMAT, while CXL native enumeration aware environments
+> > > > > will use this fragment of the performance path to calculate the
+> > > > > performance characteristics.  
+> > > >
+> > > > I don't think it is true that OS not supporting native CXL will ignore the
+> > > > data.  
+> > >
+> > > True, I should have chosen more careful words like s/ignore/not
+> > > regress upon seeing/  
+> >
+> > It's a sticky corner and I suspect likely to come up at in ACPI WG - what is
+> > being proposed here isn't backwards compatible  
+> 
+> It seems our definitions of backwards compatible are divergent. Please
+> correct me if I'm wrong, but I understand your position to be "any
+> perceptible OS behavior change breaks backwards compatibility",
+> whereas I'm advocating that backwards compatibility is relative
+> regressing real world use cases. That said, I do need to go mock this
+> up in QEMU and verify how much disturbance it causes.
+> 
+> > even if the impacts in Linux are small.  
+> 
+> I'd note the kernel would grind to a halt if the criteria for
+> "backwards compatible" was zero perceptible behavior change.
+
+Key thing here is the difference between Linux backwards compatibility and
+ACPI backwards compatibility.  Linux impacts are easily understood because
+we can go look.  ACPI change impacts in general are rather trickier to
+define.
+
+Note currently I'm fine with this change, though think perhaps it could
+be improved - simply raising that others may not be.
+
+> 
+> > Mostly it's infrastructure bring up that won't get used
+> > (fallback lists and similar for a node which will never be specified in
+> > allocations) and some confusing userspace ABI (which is more than a little
+> > confusing already).  
+> 
+> Fallback lists are established relative to online nodes. These generic
+> targets are not onlined as memory.
+
+This doesn't really matter beyond the point that there is stuff done for
+a GI only node currently that doesn't make any sense for this new usecase.
+
+Still, you got me digging...
+
+I may have the  wrong term there, but GI nodes have a zone list
+generated that reflects where an allocation will go if an allocation
+happens that is requested on the the GI node.
+
+devm_kzalloc() for example for a device in one of these nodes has to know
+where to allocate memory from.  Similar true for other resources that don't
+exist in the GI node.
+ 
+Check this worked as expected led me down a rabbit hole.  I knew the end
+to end test did what I expected but wasn't certainly why...
+
+Anyhow, at least for my test case on x86 doing an 8k devm_kzalloc() it works
+as follows. 
+
+Some way down the nest of calls we get a call to
+__alloc_pages_nodemask()
+-> prepare_alloc_pages() // this finds the zonelist
+   -> node_listlist(gi_node, ...)
+      -> NODE_DATA(gi_node)->node_zonelists + gfp_zonelist(flags)
+	 node_data[gi_node]->node_zonelists + gfp_zonelist(flags)
+
+The node_data entry for the gi_node has it's own zonelist which is used in this
+path.  The first entry of which is an appropriate zone on the nearest node which
+actually has some memory.
+
+The build is referenced by a comment in x86/mm/numa.c under init_memory_less_node()
+"All zonelists will be built later in start_kernel() after per cpu areas are initialized"
+
+build_zonelists() does the expected building based on SLIT distances.
+
+
+> 
+> > > > Linux will create a small amount of infrastructure to reflect them (more or
+> > > > less the same as a memoryless node) and also they will appear in places
+> > > > like access0 as a possible initiator of transactions.  It's small stuff,
+> > > > but I'd rather the impact on legacy was zero.  
+> > >
+> > > I'm failing to see that small collision as fatal to the proposal. The
+> > > HMAT parsing had a significant bug for multiple kernel releases and no
+> > > one noticed. This quirk is minor in comparison.  
+> >
+> > True, there is a lag in HMAT adoption - though for ACPI tables, not that long
+> > (only a couple of years :)
+> >  
+> > >  
+> > > >
+> > > > So my gut feeling here is we shouldn't reuse the generic initiator, but
+> > > > should invent something new.  Would look similar to GI, but with a different
+> > > > ID - to ensure legacy OS ignores it.  
+> > >
+> > > A new id introduces more problems than it solves. Set aside the ACPICA
+> > > thrash, it does not allow a clean identity mapping of a point in a
+> > > system topology being both initiator and target. The SRAT does not
+> > > need more data structures to convey this information. At most I would
+> > > advocate for an OSC bit for the OS to opt into allowing this new usage
+> > > in the HMAT, but that still feels like overkill absent a clear
+> > > regression in legacy environments.  
+> >
+> > OSC for this case doesn't work. You can't necessarily evaluate it
+> > early enough in the boot - in Linux the node setup is before AML parsing
+> > comes up.  HMAT is evaluated a lot later, but SRAT is too early.  + in theory
+> > another OS is allowed to evaluate HMAT before OSC is available.  
+> 
+> The Linux node setup for online memory is before OSC parsing, but
+> there's nothing to "online" with a GI/GT entry. Also, if this was a
+> problem, it would already be impacting the OS today because this
+> proposal only changes HMAT, not SRAT.
+
+It is not just changing HMAT - you've just redefined the meaning of a GI
+which is an entry in SRAT.  So there may be impacts in early boot..
+None of them are fatal as far as I can see, but they are undesirable
+(in the sense that they are pointless for this new use).
+ 
+> Lastly there *is* an OSC bit for
+> GI, so either that's vestigial and needs to be removed, or OSC is
+> relevant for this case.
+
+No. The GI OSC bit has a very specific purpose and is absolutely necessary.
+
+It's not about presenting GI in SRAT.  We can always present GI in SRAT
+irrespective of whether the OS has a clue what it is because an OS is guaranteed
+to not take any notice of entries it doesn't understand. (anything else is
+just a bug). Note that in this proposal the issue is the OS 'thinks' it understands
+the node, but is wrong...
+
+The GI OSC is to allow DSDT _PXM entries to be modified (which are AML obviously
+so can be modified based on _OSC).  Thus if we don't support GI we can move
+the apparent location of the initiator to the best node of a type we do support.
+(it also worked around Linux crashing if you supplied a _PXM for a proximity
+ domain it didn't now about).
+
+Similar case doesn't apply here because what we'd need to modify if the OS
+didn't understand this new usecase would be static tables, not AML.
+
+> 
+> >  
+> > > The fact that hardly anyone is
+> > > using HMAT (as indicated by the bug I mentioned) gives me confidence
+> > > that perfection is more "enemy of the good" than required here.  
+> >
+> > How about taking this another way
+> >
+> > 1) Assume that the costs of 'false' GI nodes on legacy system as a result
+> >    of this is minor - so just live with it.  (probably true, but as ever
+> >    need to confirm with other OS)
+> >
+> > 2) Try to remove the cost of pointless infrastructure on 'aware' kernels.
+> >    Add a flag to the GI entry to say it's a bridge and not expected to,
+> >    in of itself, represent an initiator or a target.
+> >    In Linux we then don't create the node intrastructure etc or assign
+> >    any devices to have the non existent NUMA node.
+> >
+> > The information is still there to combine with device info (CDAT) etc
+> > and build what we eventually want in the way of a representation of
+> > the topology that Linux can use.
+> >
+> > Now we just have the 'small' problem of figuring out how actually implement
+> > hotplugging of NUMA nodes.  
+> 
+> I think it's tiny. Just pad the "possible" nodes past what SRAT enumerates.
+
+Maybe, not tried it yet.  Neither _HMA nor _SLI have ever been implemented
+in Linux (as far as I know) which are the ACPI equivalents of the updates
+we need to make on such a hotplug.  Might not be too bad, but needs some prototyping
+fun once we get the emulation up and running to provide all the info needed
++ changes like you have here to fill in the gaps.
+
+Jonathan
+
