@@ -2,124 +2,983 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9542C433E0
-	for <linux-cxl@archiver.kernel.org>; Fri, 12 Feb 2021 22:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F27EC433DB
+	for <linux-cxl@archiver.kernel.org>; Fri, 12 Feb 2021 23:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEE0964DF2
-	for <linux-cxl@archiver.kernel.org>; Fri, 12 Feb 2021 22:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3474764E16
+	for <linux-cxl@archiver.kernel.org>; Fri, 12 Feb 2021 23:00:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232228AbhBLWds (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 12 Feb 2021 17:33:48 -0500
-Received: from mga03.intel.com ([134.134.136.65]:60252 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232297AbhBLWbs (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 12 Feb 2021 17:31:48 -0500
-IronPort-SDR: O1IcydUjBTRwTsjYuKdMfk+thdguKAS6ws8K5VhP7pufzA2IBwGXfmyE5qLrDdxktOgo4zyBQB
- /a8O9PealkjA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9893"; a="182555605"
-X-IronPort-AV: E=Sophos;i="5.81,174,1610438400"; 
-   d="scan'208";a="182555605"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2021 14:25:58 -0800
-IronPort-SDR: r6YZYqlYIvTty3eB86Tikw6LVEBlc0F4Xyl9ql4Ojc9awVKYH45lxFwkZ9J4lMXXmvybRrHcyb
- VJiJekJ3ko7A==
-X-IronPort-AV: E=Sophos;i="5.81,174,1610438400"; 
-   d="scan'208";a="587605404"
-Received: from smandal1-mobl2.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.133.121])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2021 14:25:57 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jon Masters <jcm@jonmasters.org>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "John Groves (jgroves)" <jgroves@micron.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>
-Subject: [RFC PATCH 9/9] cxl/mem: Add payload dumping for debug
-Date:   Fri, 12 Feb 2021 14:25:41 -0800
-Message-Id: <20210212222541.2123505-10-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20210212222541.2123505-1-ben.widawsky@intel.com>
-References: <20210212222541.2123505-1-ben.widawsky@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S229497AbhBLXAN convert rfc822-to-8bit (ORCPT
+        <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 12 Feb 2021 18:00:13 -0500
+Received: from server.avery-design.com ([198.57.169.184]:36754 "EHLO
+        server.avery-design.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229903AbhBLXAM (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 12 Feb 2021 18:00:12 -0500
+Received: from ool-944ab965.dyn.optonline.net ([148.74.185.101]:56405 helo=[192.168.1.180])
+        by server.avery-design.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <cbrowy@avery-design.com>)
+        id 1lAgL9-0001sU-JD; Fri, 12 Feb 2021 21:51:03 +0000
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
+Subject: Re: [RFC PATCH v2 1/2] Basic PCIe DOE support
+From:   Chris Browy <cbrowy@avery-design.com>
+In-Reply-To: <20210212162442.00007c1d@Huawei.com>
+Date:   Fri, 12 Feb 2021 16:58:21 -0500
+Cc:     armbru@redhat.com, Ben Widawsky <ben.widawsky@intel.com>,
+        dan.j.williams@intel.com, david@redhat.com, f4bug@amsat.org,
+        imammedo@redhat.com, ira.weiny@intel.com, jgroves@micron.com,
+        linux-cxl@vger.kernel.org, mst@redhat.com, qemu-devel@nongnu.org,
+        vishal.l.verma@intel.com
+Reply-To: "20210212162442.00007c1d@huawei.com" 
+          <20210212162442.00007c1d@Huawei.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <8A5C244A-DF9A-4EB5-8C24-568A606E75B0@avery-design.com>
+References: <1612900760-7361-1-git-send-email-cbrowy@avery-design.com>
+ <1612902949-9992-1-git-send-email-cbrowy@avery-design.com>
+ <20210212162442.00007c1d@Huawei.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.avery-design.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - avery-design.com
+X-Get-Message-Sender-Via: server.avery-design.com: authenticated_id: cbrowy@avery-design.com
+X-Authenticated-Sender: server.avery-design.com: cbrowy@avery-design.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-It's often useful in debug scenarios to see what the hardware has dumped
-out. As it stands today, any device error will result in the payload not
-being copied out, so there is no way to triage commands which weren't
-expected to fail (and sometimes the payload may have that information).
 
-The functionality is protected by normal kernel security mechanisms as
-well as a CONFIG option in the CXL driver.
 
-This was extracted from the original version of the CXL enabling patch
-series.
+> On Feb 12, 2021, at 11:24 AM, Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> 
+> On Tue, 9 Feb 2021 15:35:49 -0500
+> Chris Browy <cbrowy@avery-design.com> wrote:
+> 
+> Run ./scripts/checkpatch.pl over the patches and fix all the warnings before
+> posting.  It will save time by clearing out most of the minor formatting issues
+> and similar that inevitably sneak in during development.
+> 
+Excellent suggestion.  We’re still newbies!
 
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
----
- drivers/cxl/Kconfig | 13 +++++++++++++
- drivers/cxl/mem.c   |  8 ++++++++
- 2 files changed, 21 insertions(+)
+> The biggest issue I'm seeing in here is that the abstraction of
+> multiple DOE capabiltiies accessing same protocols doesn't make sense.
+> 
+> Each DOE ecap region and hence mailbox can have it's own set of
+> (possibly  overlapping) protocols.
+> 
+> From the ECN:
+> "It is permitted for a protocol using data object exchanges to require
+> that a Function implement a unique instance of DOE for that specific
+> protocol, and/or to allow sharing of a DOE instance to only a specific
+> set of protocols using data object exchange, and/or to allow a Function
+> to implement multiple instances of DOE supporting the specific protocol."
+> 
+> Tightly couple the ECAP and DOE.  If we are in the multiple instances
+> of DOE supporting a specific protocol case, then register it separately
+> for each one.  The individual device emulation then needs to deal with
+> any possible clashes etc.
 
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index 97dc4d751651..3eec9276e586 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -50,4 +50,17 @@ config CXL_MEM_RAW_COMMANDS
- 	  potential impact to memory currently in use by the kernel.
- 
- 	  If developing CXL hardware or the driver say Y, otherwise say N.
-+
-+config CXL_MEM_INSECURE_DEBUG
-+	bool "CXL.mem debugging"
-+	depends on CXL_MEM
-+	help
-+	  Enable debug of all CXL command payloads.
-+
-+	  Some CXL devices and controllers support encryption and other
-+	  security features. The payloads for the commands that enable
-+	  those features may contain sensitive clear-text security
-+	  material. Disable debug of those command payloads by default.
-+	  If you are a kernel developer actively working on CXL
-+	  security enabling say Y, otherwise say N.
- endif
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 3bca8451348a..09c11935b824 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -341,6 +341,14 @@ static int __cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
- 
- 	/* #5 */
- 	rc = cxl_mem_wait_for_doorbell(cxlm);
-+
-+	if (!cxl_is_security_command(mbox_cmd->opcode) ||
-+	    IS_ENABLED(CONFIG_CXL_MEM_INSECURE_DEBUG)) {
-+		print_hex_dump_debug("Payload ", DUMP_PREFIX_OFFSET, 16, 1,
-+				     mbox_cmd->payload_in, mbox_cmd->size_in,
-+				     true);
-+	}
-+
- 	if (rc == -ETIMEDOUT) {
- 		cxl_mem_mbox_timeout(cxlm, mbox_cmd);
- 		return rc;
--- 
-2.30.0
+Not sure how configurable we want to make the device.  It is a simple type 3
+device after all. 
+
+The DOE spec does leave it pretty arbitrary regarding N DOE instances (DOE 
+Extended Cap entry points) for M protocols, including where N>1 and M=1.  
+Currently we implement N=2 DOE caps (instances), one for CDAT, one for 
+Compliance Mode.
+
+Maybe a more complex MLD device might have one or more DOE instances 
+for the CDAT protocol alone to define each HDM but currently we only have 
+one pmem (SLD) so we can’t really do much more than what’s supported.
+
+Open to further suggestion though.  Based on answer to above we’ll follow 
+the suggestion lower in the code review regarding 
+
+
+> 
+> Various comments inline, but mostly small stuff.
+> 
+> Jonathan
+> 
+> 
+>> ---
+>> MAINTAINERS                               |   7 +
+>> hw/pci/meson.build                        |   1 +
+>> hw/pci/pcie.c                             |   2 +-
+>> hw/pci/pcie_doe.c                         | 414 ++++++++++++++++++++++++++++++
+>> include/hw/pci/pci_ids.h                  |   2 +
+>> include/hw/pci/pcie.h                     |   1 +
+>> include/hw/pci/pcie_doe.h                 | 166 ++++++++++++
+>> include/hw/pci/pcie_regs.h                |   4 +
+>> include/standard-headers/linux/pci_regs.h |   3 +-
+>> 9 files changed, 598 insertions(+), 2 deletions(-)
+>> create mode 100644 hw/pci/pcie_doe.c
+>> create mode 100644 include/hw/pci/pcie_doe.h
+>> 
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 981dc92..4fb865e 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -1655,6 +1655,13 @@ F: docs/pci*
+>> F: docs/specs/*pci*
+>> F: default-configs/pci.mak
+>> 
+>> +PCIE DOE
+>> +M: Huai-Cheng Kuo <hchkuo@avery-design.com.tw>
+>> +M: Chris Browy <cbrowy@avery-design.com>
+>> +S: Supported
+>> +F: include/hw/pci/pcie_doe.h
+>> +F: hw/pci/pcie_doe.c
+>> +
+>> ACPI/SMBIOS
+>> M: Michael S. Tsirkin <mst@redhat.com>
+>> M: Igor Mammedov <imammedo@redhat.com>
+>> diff --git a/hw/pci/meson.build b/hw/pci/meson.build
+>> index 5c4bbac..115e502 100644
+>> --- a/hw/pci/meson.build
+>> +++ b/hw/pci/meson.build
+>> @@ -12,6 +12,7 @@ pci_ss.add(files(
+>> # allow plugging PCIe devices into PCI buses, include them even if
+>> # CONFIG_PCI_EXPRESS=n.
+>> pci_ss.add(files('pcie.c', 'pcie_aer.c'))
+>> +pci_ss.add(files('pcie_doe.c'))
+>> softmmu_ss.add(when: 'CONFIG_PCI_EXPRESS', if_true: files('pcie_port.c', 'pcie_host.c'))
+>> softmmu_ss.add_all(when: 'CONFIG_PCI', if_true: pci_ss)
+>> 
+> 
+> ...
+> 
+>> diff --git a/hw/pci/pcie_doe.c b/hw/pci/pcie_doe.c
+>> new file mode 100644
+>> index 0000000..df8e92e
+>> --- /dev/null
+>> +++ b/hw/pci/pcie_doe.c
+>> @@ -0,0 +1,414 @@
+> 
+> Add a copyright header / license etc before v3.
+> 
+>> +#include "qemu/osdep.h"
+>> +#include "qemu/log.h"
+>> +#include "qemu/error-report.h"
+>> +#include "qapi/error.h"
+>> +#include "qemu/range.h"
+>> +#include "hw/pci/pci.h"
+>> +#include "hw/pci/pcie.h"
+>> +#include "hw/pci/pcie_doe.h"
+>> +#include "hw/pci/msi.h"
+>> +#include "hw/pci/msix.h"
+>> +
+>> +/*
+>> + * DOE Default Protocols (Discovery, CMA)
+>> + */
+>> +/* Discovery Request Object */
+>> +struct doe_discovery {
+>> +    DOEHeader header;
+>> +    uint8_t index;
+>> +    uint8_t reserved[3];
+>> +} QEMU_PACKED;
+>> +
+>> +/* Discovery Response Object */
+>> +struct doe_discovery_rsp {
+>> +    DOEHeader header;
+>> +    uint16_t vendor_id;
+>> +    uint8_t doe_type;
+>> +    uint8_t next_index;
+>> +} QEMU_PACKED;
+>> +
+>> +/* Callback for Discovery */
+>> +static bool pcie_doe_discovery_rsp(DOECap *doe_cap)
+>> +{
+>> +    PCIEDOE *doe = doe_cap->doe;
+>> +    struct doe_discovery *req = pcie_doe_get_req(doe_cap);
+>> +    uint8_t index = req->index;
+>> +    DOEProtocol *prot = NULL;
+>> +
+>> +    /* Request length mismatch, discard */
+>> +    if (req->header.length < dwsizeof(struct doe_discovery)) {
+>> +        return DOE_DISCARD;
+> 
+> 	return false;  Or better yet a meaningful error code to make debugging
+> easier.
+
+OK
+
+> 
+>> +    }
+>> +
+>> +    /* Point to the requested protocol */
+>> +    if (index < doe->protocol_num) {
+>> +        prot = &doe->protocols[index];
+>> +    }
+>> +
+>> +    struct doe_discovery_rsp rsp = {
+>> +        .header = {
+>> +            .vendor_id = PCI_VENDOR_ID_PCI_SIG,
+>> +            .doe_type = PCI_SIG_DOE_DISCOVERY,
+>> +            .reserved = 0x0,
+> 
+> Nice thing about c99 based structure assignment is that unspecified
+> elements are set to 0 automatically.  So you can drop this particular
+> element safely and end up with slightly cleaner code.
+
+OK
+
+> 
+>> +            .length = dwsizeof(struct doe_discovery_rsp),
+>> +        },
+>> +        .vendor_id = (prot) ? prot->vendor_id : 0xFFFF,
+>> +        .doe_type = (prot) ? prot->doe_type : 0xFF,
+>> +        .next_index = (index + 1) < doe->protocol_num ?
+>> +                      (index + 1) : 0,
+>> +    };
+>> +
+>> +    pcie_doe_set_rsp(doe_cap, &rsp);
+>> +
+>> +    return DOE_SUCCESS;
+>> +}
+>> +
+>> +/* Callback for CMA */
+>> +static bool pcie_doe_cma_rsp(DOECap *doe_cap)
+> 
+> I've not checked CMA, but I'd expect this to be a separate
+> patch as not part of core DOE support (or same ECN for that
+> matter).
+
+We’ll back out CMA.  Currently it’s an incomplete solution.  We support it in 
+discovery process but the response is that of being disabled.  So not the best
+way to handle it.
+
+> 
+>> +{
+>> +    doe_cap->status.error = 1;
+>> +
+>> +    memset(doe_cap->read_mbox, 0,
+>> +           PCI_DOE_MAX_DW_SIZE * sizeof(uint32_t));
+>> +
+>> +    doe_cap->write_mbox_len = 0;
+>> +
+>> +    return DOE_DISCARD;
+>> +}
+>> +
+>> +/*
+>> + * DOE Utilities
+>> + */
+>> +static void pcie_doe_reset_mbox(DOECap *st)
+>> +{
+>> +    st->read_mbox_idx = 0;
+>> +
+>> +    st->read_mbox_len = 0;
+>> +    st->write_mbox_len = 0;
+>> +
+>> +    memset(st->read_mbox, 0, PCI_DOE_MAX_DW_SIZE * sizeof(uint32_t));
+>> +    memset(st->write_mbox, 0, PCI_DOE_MAX_DW_SIZE * sizeof(uint32_t));
+>> +}
+>> +
+>> +/*
+>> + * Initialize the list and protocol for a device.
+>> + * This function won't add the DOE capabitity to your PCIe device.
+>> + */
+>> +void pcie_doe_init(PCIDevice *dev, PCIEDOE *doe)
+>> +{
+>> +    doe->pdev = dev;
+>> +    doe->head = NULL;
+>> +    doe->protocol_num = 0;
+> 
+> No need to set things to zero as I assume you allocate it zero filled.
+> At least no point for things where zero is the obvious default.
+> 
+>> +
+>> +    /* Register two default protocol */
+>> +    //TODO : LINK LIST
+> 
+> Agreed :)
+> 
+>> +    pcie_doe_register_protocol(doe, PCI_VENDOR_ID_PCI_SIG,
+>> +            PCI_SIG_DOE_DISCOVERY, pcie_doe_discovery_rsp);
+>> +    pcie_doe_register_protocol(doe, PCI_VENDOR_ID_PCI_SIG,
+>> +            PCI_SIG_DOE_CMA, pcie_doe_cma_rsp);
+>> +}
+>> +
+>> +int pcie_cap_doe_add(PCIEDOE *doe, uint16_t offset, bool intr, uint16_t vec) {
+> 
+> Bracket on this line.
+> 
+>> +    DOECap *new_cap, **ptr;
+>> +    PCIDevice *dev = doe->pdev;
+>> +
+>> +    pcie_add_capability(dev, PCI_EXT_CAP_ID_DOE, PCI_DOE_VER, offset,
+>> +                        PCI_DOE_SIZEOF);
+>> +
+>> +    ptr = &doe->head;
+>> +    /* Insert the new DOE at the end of linked list */
+> 
+> As below, not sure this abstraction makes sense.
+> 
+>> +    while (*ptr) {
+>> +        if (range_covers_byte((*ptr)->offset, PCI_DOE_SIZEOF, offset) ||
+>> +            (*ptr)->cap.vec == vec) {
+>> +            return -EINVAL;
+>> +        }
+>> +
+>> +        ptr = &(*ptr)->next;
+>> +    }
+>> +    new_cap = g_malloc0(sizeof(DOECap));
+>> +    *ptr = new_cap;
+>> +
+>> +    new_cap->doe = doe;
+>> +    new_cap->offset = offset;
+>> +    new_cap->next = NULL;
+>> +
+>> +    /* Configure MSI/MSI-X */
+>> +    if (intr && (msi_present(dev) || msix_present(dev))) {
+>> +        new_cap->cap.intr = intr;
+>> +        new_cap->cap.vec = vec;
+>> +    }
+>> +
+>> +    /* Set up W/R Mailbox buffer */
+>> +    new_cap->write_mbox = g_malloc0(PCI_DOE_MAX_DW_SIZE * sizeof(uint32_t));
+>> +    new_cap->read_mbox = g_malloc0(PCI_DOE_MAX_DW_SIZE * sizeof(uint32_t));
+>> +
+>> +    pcie_doe_reset_mbox(new_cap);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +void pcie_doe_uninit(PCIEDOE *doe) {
+>> +    PCIDevice *dev = doe->pdev;
+>> +    DOECap *cap;
+>> +
+>> +    pci_del_capability(dev, PCI_EXT_CAP_ID_DOE, PCI_DOE_SIZEOF);
+>> +
+>> +    cap = doe->head;
+>> +    while (cap) {
+>> +        doe->head = doe->head->next;
+>> +
+>> +        g_free(cap->read_mbox);
+>> +        g_free(cap->write_mbox);
+>> +        cap->read_mbox = NULL;
+>> +        cap->write_mbox = NULL;
+> 
+> I'd avoid setting things to NULL that you are throwing away.  It
+> implies that they will be reused or that it matters in somewhat which
+> isn't the case here.
+
+OK
+
+> 
+>> +        g_free(cap);
+>> +        cap = doe->head;
+>> +    }
+>> +}
+>> +
+>> +void pcie_doe_register_protocol(PCIEDOE *doe, uint16_t vendor_id,
+>> +        uint8_t doe_type, bool (*set_rsp)(DOECap *))
+>> +{
+>> +    /* Protocol num should not exceed 256 */
+>> +    assert(doe->protocol_num < PCI_DOE_PROTOCOL_MAX);
+>> +
+>> +    doe->protocols[doe->protocol_num].vendor_id = vendor_id;
+>> +    doe->protocols[doe->protocol_num].doe_type = doe_type;
+>> +    doe->protocols[doe->protocol_num].set_rsp = set_rsp;
+>> +
+>> +    doe->protocol_num++;
+>> +}
+>> +
+>> +uint32_t pcie_doe_build_protocol(DOEProtocol *p)
+>> +{
+>> +    return DATA_OBJ_BUILD_HEADER1(p->vendor_id, p->doe_type);
+>> +}
+>> +
+>> +/* Return the pointer of DOE request in write mailbox buffer */
+>> +void *pcie_doe_get_req(DOECap *doe_cap)
+>> +{
+>> +    return doe_cap->write_mbox;
+>> +}
+>> +
+>> +/* Copy the response to read mailbox buffer */
+>> +void pcie_doe_set_rsp(DOECap *doe_cap, void *rsp)
+>> +{
+>> +    uint32_t len = pcie_doe_object_len(rsp);
+>> +
+>> +    memcpy(doe_cap->read_mbox + doe_cap->read_mbox_len,
+>> +           rsp, len * sizeof(uint32_t));
+>> +    doe_cap->read_mbox_len += len;
+>> +}
+>> +
+>> +/* Get Data Object length */
+>> +uint32_t pcie_doe_object_len(void *obj)
+>> +{
+>> +    return (obj)? ((DOEHeader *)obj)->length : 0;
+>> +}
+>> +
+>> +static void pcie_doe_write_mbox(DOECap *doe_cap, uint32_t val)
+>> +{
+>> +    memcpy(doe_cap->write_mbox + doe_cap->write_mbox_len, &val, sizeof(uint32_t));
+>> +
+>> +    if (doe_cap->write_mbox_len == 1) {
+>> +        DOE_DBG("  Capture DOE request DO length = %d\n", val & 0x0003ffff);
+>> +    }
+>> +
+>> +    doe_cap->write_mbox_len++;
+> 
+> We probably need to check that the mailbox write was full dword as the spec
+> requires.  No idea what we do if it isn't as spec doesn't seem to say...
+> I've queried one of our PCI experts.
+
+Let us know their response.  If not being able to rely on full DW config access will
+require a bunch of changes to accommodate.
+
+> 
+> 
+>> +}
+>> +
+>> +static void pcie_doe_irq_assert(DOECap *doe_cap)
+>> +{
+>> +    PCIDevice *dev = doe_cap->doe->pdev;
+>> +
+>> +    if (doe_cap->cap.intr && doe_cap->ctrl.intr) {
+>> +        /* Interrupt notify */
+>> +        if (msix_enabled(dev)) {
+>> +            msix_notify(dev, doe_cap->cap.vec);
+>> +        } else if (msi_enabled(dev)) {
+>> +            msi_notify(dev, doe_cap->cap.vec);
+>> +        }
+>> +        /* Not support legacy IRQ */
+>> +    }
+>> +}
+>> +
+>> +static void pcie_doe_set_ready(DOECap *doe_cap, bool rdy)
+>> +{
+>> +    doe_cap->status.ready = rdy;
+>> +
+>> +    if (rdy) {
+>> +        pcie_doe_irq_assert(doe_cap);
+>> +    }
+>> +}
+>> +
+>> +static void pcie_doe_set_error(DOECap *doe_cap, bool err)
+>> +{
+>> +    doe_cap->status.error = err;
+>> +
+>> +    if (err) {
+>> +        pcie_doe_irq_assert(doe_cap);
+>> +    }
+>> +}
+>> +
+>> +DOECap *pcie_doe_covers_addr(PCIEDOE *doe, uint32_t addr)
+>> +{
+>> +    DOECap *ptr = doe->head;
+>> +
+>> +    /* If overlaps DOE range. PCIe Capability Header won't be included. */
+>> +    while (ptr && 
+>> +           !range_covers_byte(ptr->offset + PCI_EXP_DOE_CAP, PCI_DOE_SIZEOF - 4, addr)) {
+>> +        ptr = ptr->next;
+>> +    }
+>> +    
+>> +    return ptr;
+>> +}
+>> +
+>> +uint32_t pcie_doe_read_config(DOECap *doe_cap,
+>> +                              uint32_t addr, int size)
+>> +{
+>> +    uint32_t ret = 0, shift, mask = 0xFFFFFFFF;
+>> +    uint16_t doe_offset = doe_cap->offset;
+>> +
+>> +    /* If overlaps DOE range. PCIe Capability Header won't be included. */
+>> +    if (range_covers_byte(doe_offset + PCI_EXP_DOE_CAP, PCI_DOE_SIZEOF - 4, addr)) {
+> 
+> I'd flip this around to reduce indentation + no need to be careful with alignment etc
+> if we aren't returning anything.
+> 
+>       if (!range_cover_byte(doe_offset + PCI_EXP_DOE_CAP, PCI_DOE_SIZEOF - 4, addr)
+> 		return 0;
+> 
+> 
+>> +        addr -= doe_offset;
+>> +
+>> +        if (range_covers_byte(PCI_EXP_DOE_CAP, sizeof(uint32_t), addr)) {
+>> +            ret = FIELD_DP32(ret, PCI_DOE_CAP_REG, INTR_SUPP,
+>> +                             doe_cap->cap.intr);
+>> +            ret = FIELD_DP32(ret, PCI_DOE_CAP_REG, DOE_INTR_MSG_NUM,
+>> +                             doe_cap->cap.vec);
+>> +        } else if (range_covers_byte(PCI_EXP_DOE_CTRL, sizeof(uint32_t), addr)) {
+>> +            /* Must return ABORT=0 and GO=0 */
+>> +            ret = FIELD_DP32(ret, PCI_DOE_CAP_CONTROL, DOE_INTR_EN,
+>> +                             doe_cap->ctrl.intr);
+>> +            DOE_DBG("  CONTROL REG=%x\n", ret);
+>> +        } else if (range_covers_byte(PCI_EXP_DOE_STATUS, sizeof(uint32_t), addr)) {
+>> +            ret = FIELD_DP32(ret, PCI_DOE_CAP_STATUS, DOE_BUSY,
+>> +                             doe_cap->status.busy);
+>> +            ret = FIELD_DP32(ret, PCI_DOE_CAP_STATUS, DOE_INTR_STATUS,
+>> +                             doe_cap->status.intr);
+>> +            ret = FIELD_DP32(ret, PCI_DOE_CAP_STATUS, DOE_ERROR,
+>> +                             doe_cap->status.error);
+>> +            ret = FIELD_DP32(ret, PCI_DOE_CAP_STATUS, DATA_OBJ_RDY,
+>> +                             doe_cap->status.ready);
+>> +        } else if (range_covers_byte(PCI_EXP_DOE_RD_DATA_MBOX, sizeof(uint32_t), addr)) {
+>> +            /* Check that READY is set */
+> 
+> I'd clean out any comment that is obvious from the code.
+> Comments get out of sync over time so there is a maintenance burden in having them such
+> that we only bother if they add information.
+> 
+>> +            if (!doe_cap->status.ready) {
+>> +                /* Return 0 if not ready */
+>> +                DOE_DBG("  RD MBOX RETURN=%x\n", ret);
+>> +            } else {
+>> +                /* Deposit next DO DW into read mbox */
+> 
+> This comment is missleading.  It might not be the 'next' one. If you read
+> the register twice for instance.  Much better not to have the comment
+> at all on basis code is fairly obvious anyway!
+> 
+> As mentioned below, a read of this when nothing there is an underflow and spec
+> suggests that is an error condition.
+> 
+>> +                DOE_DBG("  RD MBOX, DATA OBJECT READY,"
+>> +                        " CURRENT DO DW OFFSET=%x\n",
+>> +                        doe_cap->read_mbox_idx);
+>> +
+>> +                ret = doe_cap->read_mbox[doe_cap->read_mbox_idx];
+>> +
+>> +                DOE_DBG("  RD MBOX DW=%x\n", ret);
+>> +                DOE_DBG("  RD MBOX DW OFFSET=%d, RD MBOX LENGTH=%d\n",
+>> +                        doe_cap->read_mbox_idx, doe_cap->read_mbox_len);
+>> +            }
+>> +        } else if (range_covers_byte(PCI_EXP_DOE_WR_DATA_MBOX, sizeof(uint32_t), addr)) {
+>> +            DOE_DBG("  WR MBOX, local_val =%x\n", ret);
+>> +        }
+>> +    }
+>> +
+>> +    /* Alignment */
+>> +    shift = addr % sizeof(uint32_t);
+>> +    if (shift) {
+>> +        ret >>= shift * 8;
+>> +    }
+>> +    mask >>= (sizeof(uint32_t) - size) * 8;
+>> +
+>> +    return ret & mask;
+>> +}
+>> +
+>> +void pcie_doe_write_config(DOECap *doe_cap,
+>> +                           uint32_t addr, uint32_t val, int size)
+>> +{
+>> +    PCIEDOE *doe = doe_cap->doe;
+>> +    uint16_t doe_offset = doe_cap->offset;
+>> +    int p;
+>> +    bool discard;
+>> +    uint32_t shift;
+>> +
+>> +    DOE_DBG("  addr=%x, val=%x, size=%x\n", addr, val, size);
+>> +
+>> +    /* If overlaps DOE range. PCIe Capability Header won't be included. */
+>> +    if (range_covers_byte(doe_offset + PCI_EXP_DOE_CAP, PCI_DOE_SIZEOF - 4, addr)) {
+> 
+> As below, invert this condition and return early as it will simplify below and reduce
+> indentation.
+> 
+>     if (!range_covers_byte(doe_offset + PCI_EXP_DOE_CAP, PCI_DOE_SIZEOF - 4, addr)) {
+>          return;
+>    }
+> 
+>> +        /* Alignment */
+>> +        shift = addr % sizeof(uint32_t);
+>> +        addr -= (doe_offset - shift);
+>> +        val <<= shift * 8;
+>> +
+>> +        switch (addr) {
+>> +        case PCI_EXP_DOE_CTRL:
+>> +            DOE_DBG("  CONTROL=%x\n", val);
+>> +            if (FIELD_EX32(val, PCI_DOE_CAP_CONTROL, DOE_ABORT)) {
+>> +                /* If ABORT, clear status reg DOE Error and DOE Ready */
+>> +                DOE_DBG("  Setting ABORT\n");
+>> +                pcie_doe_set_ready(doe_cap, 0);
+>> +                pcie_doe_set_error(doe_cap, 0);
+>> +                pcie_doe_reset_mbox(doe_cap);
+>> +            } else if (FIELD_EX32(val, PCI_DOE_CAP_CONTROL, DOE_GO)) {
+>> +                DOE_DBG("  CONTROL GO=%x\n", val);
+> 
+> This case is complex enough I'd factor it out as it's own function.
+
+OK
+
+> 
+>> +                /*
+>> +                 * Check protocol the incoming request in write_mbox and
+>> +                 * memcpy the corresponding response to read_mbox.
+>> +                 *
+>> +                 * "discard" should be set up if the response callback
+>> +                 * function could not deal with request (e.g. length
+>> +                 * mismatch) or the protocol of request was not found.
+>> +                 */
+>> +                discard = DOE_DISCARD;
+>> +                for (p = 0; p < doe->protocol_num; p++) {
+>> +                    if (doe_cap->write_mbox[0] ==
+>> +                        pcie_doe_build_protocol(&doe->protocols[p])) {
+>> +                        /* Found */
+>> +                        DOE_DBG("  DOE PROTOCOL=%x\n", doe_cap->write_mbox[0]);
+>> +                        /*
+>> +                         * Spec:
+>> +                         * If the number of DW transferred does not match the
+>> +                         * indicated Length for a data object, then the
+>> +                         * data object must be silently discarded.
+>> +                         */
+>> +                        if (doe_cap->write_mbox_len ==
+>> +                            pcie_doe_object_len(pcie_doe_get_req(doe_cap)))
+>> +                            discard = doe->protocols[p].set_rsp(doe_cap);
+>> +                        break;
+>> +                    }
+>> +                }
+>> +
+>> +                /* Set DOE Ready */
+>> +                if (!discard) {
+>> +                    pcie_doe_set_ready(doe_cap, 1);
+>> +                } else {
+>> +                    pcie_doe_reset_mbox(doe_cap);
+>> +                }
+>> +            } else if (FIELD_EX32(val, PCI_DOE_CAP_CONTROL, DOE_INTR_EN)) {
+> 
+> Spec reference needed to say why you can't write this at same time as GO.
+> It may be odd thing to do, but I can't see anything saying you couldn't do this,
+> for example on your very first command.
+> 
+>> +                doe_cap->ctrl.intr = 1;
+>> +            }
+>> +            break;
+>> +        case PCI_EXP_DOE_RD_DATA_MBOX:
+>> +            /* Read MBOX */
+>> +            DOE_DBG("  INCR RD MBOX DO DW OFFSET=%d\n", doe_cap->read_mbox_idx);
+>> +            doe_cap->read_mbox_idx += 1;
+>> +            /* Last DW */
+>> +            if (doe_cap->read_mbox_idx >= doe_cap->read_mbox_len) {
+>> +                pcie_doe_reset_mbox(doe_cap);
+>> +                pcie_doe_set_ready(doe_cap, 0);
+>> +            }
+> 
+> A write of this when there is nothing there is an underflow. As is a read of this
+> after the last write.  I would guess both should be error conditions.
+
+We’ll double check and fix accordingly
+
+> 
+>> +            break;
+>> +        case PCI_EXP_DOE_WR_DATA_MBOX:
+>> +            /* Write MBOX */
+>> +            DOE_DBG("  WR MBOX=%x, DW OFFSET = %d\n", val, doe_cap->write_mbox_len);
+>> +            pcie_doe_write_mbox(doe_cap, val);
+>> +            break;
+>> +        case PCI_EXP_DOE_STATUS:
+>> +        case PCI_EXP_DOE_CAP:
+>> +        default:
+>> +            break;
+>> +        }
+>> +    }
+>> +}
+>> diff --git a/include/hw/pci/pci_ids.h b/include/hw/pci/pci_ids.h
+>> index 76bf3ed..636b2e8 100644
+>> --- a/include/hw/pci/pci_ids.h
+>> +++ b/include/hw/pci/pci_ids.h
+>> @@ -157,6 +157,8 @@
+>> 
+>> /* Vendors and devices.  Sort key: vendor first, device next. */
+>> 
+>> +#define PCI_VENDOR_ID_PCI_SIG            0x0001
+>> +
+>> #define PCI_VENDOR_ID_LSI_LOGIC          0x1000
+>> #define PCI_DEVICE_ID_LSI_53C810         0x0001
+>> #define PCI_DEVICE_ID_LSI_53C895A        0x0012
+>> diff --git a/include/hw/pci/pcie.h b/include/hw/pci/pcie.h
+>> index 14c58eb..47d6f66 100644
+>> --- a/include/hw/pci/pcie.h
+>> +++ b/include/hw/pci/pcie.h
+>> @@ -25,6 +25,7 @@
+>> #include "hw/pci/pcie_regs.h"
+>> #include "hw/pci/pcie_aer.h"
+>> #include "hw/hotplug.h"
+>> +#include "hw/pci/pcie_doe.h"
+>> 
+>> typedef enum {
+>>     /* for attention and power indicator */
+>> diff --git a/include/hw/pci/pcie_doe.h b/include/hw/pci/pcie_doe.h
+>> new file mode 100644
+>> index 0000000..f497075
+>> --- /dev/null
+>> +++ b/include/hw/pci/pcie_doe.h
+>> @@ -0,0 +1,166 @@
+>> +#ifndef PCIE_DOE_H
+>> +#define PCIE_DOE_H
+>> +
+>> +#include "qemu/range.h"
+>> +#include "qemu/typedefs.h"
+>> +#include "hw/register.h"
+>> +
+>> +/* 
+>> + * PCI DOE register defines 7.9.xx 
+>> + */
+>> +/* DOE Capabilities Register */
+>> +#define PCI_EXP_DOE_CAP             0x04
+>> +REG32(PCI_DOE_CAP_REG, 0)
+>> +    FIELD(PCI_DOE_CAP_REG, INTR_SUPP, 0, 1)
+>> +    FIELD(PCI_DOE_CAP_REG, DOE_INTR_MSG_NUM, 1, 11)
+>> +
+>> +/* DOE Control Register */
+>> +#define PCI_EXP_DOE_CTRL            0x08
+>> +REG32(PCI_DOE_CAP_CONTROL, 0)
+>> +    FIELD(PCI_DOE_CAP_CONTROL, DOE_ABORT, 0, 1)
+>> +    FIELD(PCI_DOE_CAP_CONTROL, DOE_INTR_EN, 1, 1)
+>> +    FIELD(PCI_DOE_CAP_CONTROL, DOE_GO, 31, 1)
+>> +
+>> +/* DOE Status Register  */
+>> +#define PCI_EXP_DOE_STATUS          0x0c
+>> +REG32(PCI_DOE_CAP_STATUS, 0)
+>> +    FIELD(PCI_DOE_CAP_STATUS, DOE_BUSY, 0, 1)
+>> +    FIELD(PCI_DOE_CAP_STATUS, DOE_INTR_STATUS, 1, 1)
+>> +    FIELD(PCI_DOE_CAP_STATUS, DOE_ERROR, 2, 1)
+>> +    FIELD(PCI_DOE_CAP_STATUS, DATA_OBJ_RDY, 31, 1)
+>> +
+>> +/* DOE Write Data Mailbox Register  */
+>> +#define PCI_EXP_DOE_WR_DATA_MBOX    0x10
+>> +
+>> +/* DOE Read Data Mailbox Register  */
+>> +#define PCI_EXP_DOE_RD_DATA_MBOX    0x14
+>> +
+>> +/* 
+>> + * PCI DOE register defines 7.9.xx 
+>> + */
+>> +/* Table 7-x2 */
+>> +#define PCI_SIG_DOE_DISCOVERY       0x00
+>> +#define PCI_SIG_DOE_CMA             0x01
+>> +
+>> +#define DATA_OBJ_BUILD_HEADER1(v, p)  ((p << 16) | v)
+>> +
+>> +/* Figure 6-x1 */
+>> +#define DATA_OBJECT_HEADER1_OFFSET  0
+>> +#define DATA_OBJECT_HEADER2_OFFSET  1
+>> +#define DATA_OBJECT_CONTENT_OFFSET  2
+>> +
+>> +#define PCI_DOE_MAX_DW_SIZE (1 << 18)
+>> +#define PCI_DOE_PROTOCOL_MAX 256
+>> +
+>> +/*
+>> + * Self-defined Marco
+>> + */
+>> +/* Request/Response State */
+>> +#define DOE_SUCCESS 0
+>> +#define DOE_DISCARD 1
+> Drop these. As mentioned in previous review.  These are just
+> obvious bools.
+> 
+>> +
+>> +/* An invalid vector number for MSI/MSI-x */
+>> +#define DOE_NO_INTR (~0)
+>> +
+>> +/*
+>> + * DOE Protocol - Data Object
+>> + */
+>> +typedef struct DOEHeader DOEHeader;
+>> +typedef struct DOEProtocol DOEProtocol;
+>> +typedef struct PCIEDOE PCIEDOE;
+>> +typedef struct DOECap DOECap;
+>> +
+>> +struct DOEHeader {
+>> +    uint16_t vendor_id;
+>> +    uint8_t doe_type;
+>> +    uint8_t reserved;
+>> +    struct {
+>> +        uint32_t length:18;
+>> +        uint32_t reserved2:14;
+> 
+> As before, bitfields are not a good idea in this sort of code in general due to lack
+> of standard handling in the C spec.
+> 
+>> +    };
+>> +} QEMU_PACKED;
+>> +
+>> +/* Protocol infos and rsp function callback */
+>> +struct DOEProtocol {
+>> +    uint16_t vendor_id;
+>> +    uint8_t doe_type;
+>> +
+>> +    bool (*set_rsp)(DOECap *);
+>> +};
+>> +
+>> +struct PCIEDOE {
+>> +    PCIDevice *pdev;
+> 
+> Having the PCIDevice in here only allows you to drop a parameter in read and write
+> calls. I'd not bother given the nest of pointers you have as a result.
+> Just pass both the PCIDOE and the PCIDevice into those two functions.
+> 
+>> +    DOECap *head;
+> 
+> I can sort of get what you are doing with this list of DOEs but to mind it's the wrong
+> abstraction as it doesn't fit how I think these will be used.
+> 
+> It's not a case that there will be N DOE mailboxes each of which supports
+> all the same protocols.  I suspect quite the opposite.
+> 
+> Each DOE may support multiple protocols but the most obvious reason you'd
+> do multiple DOEs is because they support different protocols.
+
+Agree
+
+> 
+> If we want to support the same protocol on mulitple DOE instances then we'd
+> register it for each of them.
+> 
+> Thus I'd drop the list handling and instead  have for example
+> 
+> struct cxl_type3_dev {
+> 
+> ...
+> 
+>    PCIDOE doe_ima;
+>    PCIDOE doe_cdat;
+> };
+> 
+> In the read and write calls then just call pcie_doe_xxxx_config() twice.
+> You do have to handle the miss vs hit stuff though (similar problem that
+> lead to ugly code in my version).
+
+OK we’ll handle it better in next patch.
+
+> 
+> 
+>> +
+>> +    /* Protocols and its callback response */
+>> +    DOEProtocol protocols[PCI_DOE_PROTOCOL_MAX];
+>> +    uint32_t protocol_num;
+>> +};
+>> +
+>> +struct DOECap {
+>> +    PCIEDOE *doe;
+> 
+> Following suggestion to get rid of the list, you should also then combine
+> PCIEDOE and the DOECap as they match 1 to 1.
+> 
+>> +
+>> +    /* Capability offset */
+>> +    uint16_t offset;
+>> +
+>> +    /* Next DOE capability */
+>> +    DOECap *next;
+>> +
+>> +    /* Capability */
+>> +    struct {
+>> +        bool intr;
+>> +        uint16_t vec;
+>> +    } cap;
+>> +
+>> +    /* Control */
+>> +    struct {
+>> +        bool abort;
+>> +        bool intr;
+>> +        bool go;
+>> +    } ctrl;
+>> +
+>> +    /* Status */
+>> +    struct {
+>> +        bool busy;
+>> +        bool intr;
+>> +        bool error;
+>> +        bool ready;
+>> +    } status;
+>> +
+>> +    /* Mailbox buffer for device */
+>> +    uint32_t *write_mbox;
+>> +    uint32_t *read_mbox;
+>> +
+>> +    /* Mailbox position indicator */
+>> +    uint32_t read_mbox_idx;
+>> +    uint32_t read_mbox_len;
+>> +    uint32_t write_mbox_len;
+>> +};
+>> +
+>> +void pcie_doe_init(PCIDevice *dev, PCIEDOE *doe);
+>> +int pcie_cap_doe_add(PCIEDOE *doe, uint16_t offset, bool intr, uint16_t vec);
+>> +void pcie_doe_uninit(PCIEDOE *doe);
+>> +void pcie_doe_register_protocol(PCIEDOE *doe, uint16_t vendor_id,
+>> +                                uint8_t doe_type,
+>> +                                bool (*set_rsp)(DOECap *));
+>> +uint32_t pcie_doe_build_protocol(DOEProtocol *p);
+>> +DOECap *pcie_doe_covers_addr(PCIEDOE *doe, uint32_t addr);
+>> +uint32_t pcie_doe_read_config(DOECap *doe_cap, uint32_t addr, int size);
+>> +void pcie_doe_write_config(DOECap *doe_cap, uint32_t addr,
+>> +                           uint32_t val, int size);
+>> +
+>> +/* Utility functions for set_rsp in DOEProtocol */
+>> +void *pcie_doe_get_req(DOECap *doe_cap);
+>> +void pcie_doe_set_rsp(DOECap *doe_cap, void *rsp);
+>> +uint32_t pcie_doe_object_len(void *obj);
+>> +
+>> +#define DOE_DEBUG
+>> +#ifdef DOE_DEBUG
+>> +#define DOE_DBG(...) printf(__VA_ARGS__)
+>> +#else
+>> +#define DOE_DBG(...) {}
+>> +#endif
+> 
+> Tidy this stuff up (i.e. get rid of it) for next version.  It's fine when
+> you are doing early debug, but we don't want it in the version for review.
+
+Got it!
+
+> 
+>> +
+>> +#define dwsizeof(s) ((sizeof(s) + 4 - 1) / 4)
+> 
+> Not used in this patch.  Move it down towards code that uses it or at very 
+> least only introduce it when used.
+> 
+>> +
+>> +#endif /* PCIE_DOE_H */
+>> diff --git a/include/hw/pci/pcie_regs.h b/include/hw/pci/pcie_regs.h
+>> index 1db86b0..963dc2e 100644
+>> --- a/include/hw/pci/pcie_regs.h
+>> +++ b/include/hw/pci/pcie_regs.h
+>> @@ -179,4 +179,8 @@ typedef enum PCIExpLinkWidth {
+>> #define PCI_ACS_VER                     0x1
+>> #define PCI_ACS_SIZEOF                  8
+>> 
+>> +/* DOE Capability Register Fields */
+>> +#define PCI_DOE_VER                     0x1
+>> +#define PCI_DOE_SIZEOF                  24
+>> +
+>> #endif /* QEMU_PCIE_REGS_H */
+>> diff --git a/include/standard-headers/linux/pci_regs.h b/include/standard-headers/linux/pci_regs.h
+>> index e709ae8..4a7b7a4 100644
+>> --- a/include/standard-headers/linux/pci_regs.h
+>> +++ b/include/standard-headers/linux/pci_regs.h
+> 
+> Pull this change out as a separate patch.  This header gets fetched via a script
+> so we will only find this here if we update the source file in the kernel.
+
+Got it!
+
+> 
+> That should happen soon anyway as we add the support to read this.
+> 
+> 
+>> @@ -730,7 +730,8 @@
+>> #define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-Specific */
+>> #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
+>> #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
+>> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL_16GT
+>> +#define PCI_EXT_CAP_ID_DOE      0x2E    /* Data Object Exchange */
+>> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_DOE
+>> 
+>> #define PCI_EXT_CAP_DSN_SIZEOF	12
+>> #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
+> 
 
