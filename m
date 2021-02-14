@@ -2,260 +2,80 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C002C433E0
-	for <linux-cxl@archiver.kernel.org>; Fri, 12 Feb 2021 23:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E17F2C433E0
+	for <linux-cxl@archiver.kernel.org>; Sun, 14 Feb 2021 16:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B0BA64E25
-	for <linux-cxl@archiver.kernel.org>; Fri, 12 Feb 2021 23:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D58964DB1
+	for <linux-cxl@archiver.kernel.org>; Sun, 14 Feb 2021 16:53:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230270AbhBLXwk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 12 Feb 2021 18:52:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45444 "EHLO
+        id S229789AbhBNQxk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 14 Feb 2021 11:53:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229650AbhBLXwf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 12 Feb 2021 18:52:35 -0500
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A9CDC061574
-        for <linux-cxl@vger.kernel.org>; Fri, 12 Feb 2021 15:51:55 -0800 (PST)
-Received: by mail-ej1-x634.google.com with SMTP id f14so1960740ejc.8
-        for <linux-cxl@vger.kernel.org>; Fri, 12 Feb 2021 15:51:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7K3BZFdb7iE8T1v7NcC1uvFDHsP1mg7JvZIfnpdkCCc=;
-        b=pKkeepTNJkXoIRYdoO1nNJJWS2Ygf9ylUb0TVncxwsX8gyAfm0zw2GIc8egaAEa6tY
-         TGnFKI5PANlKWpXpFW+ItbNigxHwhl2q+blkXEsUit05ZpW8Fx3JWe4wJ8fNZopp7IwZ
-         V8bWLpl2iniZEaRKmGjO9DlkfFM5Vi1SRdLUBj3Tlj1PRMhXJHOB2OBVQu/Rk/lMXGJv
-         qi/ZKGRBAN46t4p0273i1/ofe/J9UffHtnDVCdUJKrEjpKlazo+cVl4NQnkxPFrFVbOu
-         TdCzySIpua2tapX+OOvw+Ewj8przAfmsIE3ynoxIMsaOmuE95RHBznT3CxbSO4M7lcBT
-         cdIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7K3BZFdb7iE8T1v7NcC1uvFDHsP1mg7JvZIfnpdkCCc=;
-        b=ULMNQJfxqAGKv1R5S+7RBRNMXtaCcIMq0fdZpSMtJy04Ax+FvRjkwcMv4sIIU9n/Q0
-         1TGSD329yyDgEQIf34kbVULMAPXVYRi2v2QgVQEJSg4tQbyMtt6bCxzErd+UQYOTWHv4
-         5y375Rx5Aa/CKXnDtdN0nvTspstlgG9AiThB0pr+u0fD6KEu8ZFGShHzybaadWhOMJD5
-         3m3HCxvaVpOEHausR4z3uJgZw+SCRQgv+23s/MfihGApILitb3QyebhL8N9SMBwCEGjl
-         lePGspuX8TRTgvgosPGpcKnVdsGa/ZUKJyyxEd9VYjRjG/H/2rtKlCc0l9Bxv+qMwCMz
-         PYLQ==
-X-Gm-Message-State: AOAM530TBVCs02M/eRbB+Gyfcq9e2rAjtBntk6N/Gvud9fblljAfaaoG
-        vAyPar8Mi6EB+lvJjRsc7BH8bIiUH4ntxPkqiPFNfPxYUZcKLA==
-X-Google-Smtp-Source: ABdhPJxLQSGON6NWOqFK+PRDdig0ZUQskNi6wqWwnPDESg6AOe8yfBibbDdMNTqgeX53DriJkN1vCBJscnLlE+HZKHU=
-X-Received: by 2002:a17:906:af6b:: with SMTP id os11mr5358519ejb.472.1613173913997;
- Fri, 12 Feb 2021 15:51:53 -0800 (PST)
+        with ESMTP id S229773AbhBNQxj (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sun, 14 Feb 2021 11:53:39 -0500
+X-Greylist: delayed 1351 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 14 Feb 2021 08:53:00 PST
+Received: from zeniv-ca.linux.org.uk (zeniv-ca.linux.org.uk [IPv6:2607:5300:60:148a::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C30C061574;
+        Sun, 14 Feb 2021 08:53:00 -0800 (PST)
+Received: from viro by zeniv-ca.linux.org.uk with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1lBKHh-00DvRy-5S; Sun, 14 Feb 2021 16:30:09 +0000
+Date:   Sun, 14 Feb 2021 16:30:09 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jon Masters <jcm@jonmasters.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "John Groves (jgroves)" <jgroves@micron.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        kernel test robot <lkp@intel.com>,
+        Dan Williams <dan.j.willams@intel.com>
+Subject: Re: [PATCH v2 4/8] cxl/mem: Add basic IOCTL interface
+Message-ID: <YClQEefYBR+YKBUv@zeniv-ca.linux.org.uk>
+References: <20210210000259.635748-1-ben.widawsky@intel.com>
+ <20210210000259.635748-5-ben.widawsky@intel.com>
 MIME-Version: 1.0
-References: <CAPcyv4gmd_cygXK0PpGkXmJLC3_ctEpRvpi5P-QcuXusFX5oNQ@mail.gmail.com>
- <20210210112330.00003e74@Huawei.com> <CAPcyv4gOyPjVcBa_m6pvpVP+vamJ38G7ePos-2LP273y3ivJqg@mail.gmail.com>
- <20210211094222.000048ae@Huawei.com> <CAPcyv4j0Wce-76OfgqTSkveukgDXB_p2VZZpgM8XjDFd+Q-0Ww@mail.gmail.com>
- <20210212122438.00003621@Huawei.com>
-In-Reply-To: <20210212122438.00003621@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 12 Feb 2021 15:51:42 -0800
-Message-ID: <CAPcyv4j1axBsy4GdRxj4JhxRXtrK-U+ikxQ3xYKCa-z-a84XPQ@mail.gmail.com>
-Subject: Re: [RFC] ACPI Code First ECR: Generic Target
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Natu, Mahesh" <mahesh.natu@intel.com>,
-        Chet R Douglas <chet.r.douglas@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210210000259.635748-5-ben.widawsky@intel.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Feb 12, 2021 at 4:26 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Thu, 11 Feb 2021 09:06:51 -0800
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > On Thu, Feb 11, 2021 at 1:44 AM Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com> wrote:
-> > >
-> > > On Wed, 10 Feb 2021 08:24:51 -0800
-> > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > > On Wed, Feb 10, 2021 at 3:24 AM Jonathan Cameron
-> > > > <Jonathan.Cameron@huawei.com> wrote:
-> > > > >
-> > > > > On Tue, 9 Feb 2021 19:55:05 -0800
-> > > > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > > > >
-> > > > > > While the platform BIOS is able to describe the performance
-> > > > > > characteristics of CXL memory that is present at boot, it is unable to
-> > > > > > statically enumerate the performance of CXL memory hot inserted
-> > > > > > post-boot. The OS can enumerate most of the characteristics from link
-> > > > > > registers and CDAT, but the performance from the CPU to the host
-> > > > > > bridge, for example, is not enumerated by PCIE or CXL. Introduce an
-> > > > > > ACPI mechanism for this purpose. Critically this is achieved with a
-> > > > > > small tweak to how the existing Generic Initiator proximity domain is
-> > > > > > utilized in the HMAT.
-> > > > >
-> > > > > Hi Dan,
-> > > > >
-> > > > > Agree there is a hole here, but I think the proposed solution has some
-> > > > > issues for backwards compatibility.
-> > > > >
-> > > > > Just to clarify, I believe CDAT from root ports is sufficient for the
-> > > > > other direction (GI on CXL, memory in host).  I wondered initially if
-> > > > > this was a two way issue, but after a reread, I think that is fine
-> > > > > with the root port providing CDAT or potentially treating the root
-> > > > > port as a GI (though that runs into the same naming / representation issue
-> > > > > as below and I think would need some clarifying text in UEFI GI description)
-> > > > >
-> > > > > http://uefi.org/sites/default/files/resources/Coherent%20Device%20Attribute%20Table_1.01.pdf
-> > > > >
-> > > > > For the case you are dealing with here potentially we 'could' add something
-> > > > > to CDAT as alternative to changing SRAT, but it would be more complex
-> > > > > so your approach here makes more sense to me.
-> > > >
-> > > > CDAT seems the wrong mechanism because it identifies target
-> > > > performance once you're at the front door of the device, not
-> > > > performance relative to a given initiator.
-> > >
-> > > I'd argue you could make CDAT a more symmetric representation, but it would
-> > > end up replicating a lot of info already in HMAT.  Didn't say it was a good
-> > > idea!
-> >
-> > CDAT describes points, HMAT describes edges on the performance graph,
-> > it would be confusing if CDAT tried to supplant HMAT.
->
-> Entirely agreed.  Note I'm not disagreeing with approach here at all, simply
-> trying to point out where I think you'll get questions taking this to ACPI.
+On Tue, Feb 09, 2021 at 04:02:55PM -0800, Ben Widawsky wrote:
 
-Understood.
+> +static int handle_mailbox_cmd_from_user(struct cxl_memdev *cxlmd,
+> +					const struct cxl_mem_command *cmd,
+> +					u64 in_payload, u64 out_payload,
+> +					struct cxl_send_command __user *s)
+> +{
+> +	struct cxl_mem *cxlm = cxlmd->cxlm;
+> +	struct device *dev = &cxlmd->dev;
+> +	struct mbox_cmd mbox_cmd = {
+> +		.opcode = cmd->opcode,
+> +		.size_in = cmd->info.size_in,
+> +	};
+> +	s32 user_size_out;
+> +	int rc;
+> +
+> +	if (get_user(user_size_out, &s->out.size))
+> +		return -EFAULT;
 
->
-> >
-> > >
-> > > That's an odd situation that it sort of 'half' manages it in the BIOS.
-> > > We probably need some supplementary additional docs around this topic
-> > > as the OS would need to be aware of that possibility and explicitly check
-> > > for it before doing its normal build based on CDAT + what you are proposing
-> > > here.  Maybe code is enough but given this is cross OS stuff I'd argue
-> > > it probably isn't.
-> > >
-> > > I guess could revisit this draft Uefi white paper perhaps and add a bunch
-> > > of examples around this usecase https://github.com/hisilicon/acpi-numa-whitepaper
-> >
-> > Thanks for the reference, I'll take a look.
-> >
-> > >
-> > > >
-> > > > >
-> > > > > >
-> > > > > > # Impact of the Change
-> > > > > > The existing Generic Initiator Affinity Structure (ACPI 6.4 Section
-> > > > > > 5.2.16.6) already contains all the fields necessary to enumerate a
-> > > > > > generic target proximity domain. All that is missing is the
-> > > > > > interpretation of that proximity domain optionally as a target
-> > > > > > identifier in the HMAT.
-> > > > > >
-> > > > > > Given that the OS still needs to dynamically enumerate and instantiate
-> > > > > > the memory ranges behind the host bridge. The assumption is that
-> > > > > > operating systems that do not support native CXL enumeration will ignore
-> > > > > > this data in the HMAT, while CXL native enumeration aware environments
-> > > > > > will use this fragment of the performance path to calculate the
-> > > > > > performance characteristics.
-> > > > >
-> > > > > I don't think it is true that OS not supporting native CXL will ignore the
-> > > > > data.
-> > > >
-> > > > True, I should have chosen more careful words like s/ignore/not
-> > > > regress upon seeing/
-> > >
-> > > It's a sticky corner and I suspect likely to come up at in ACPI WG - what is
-> > > being proposed here isn't backwards compatible
-> >
-> > It seems our definitions of backwards compatible are divergent. Please
-> > correct me if I'm wrong, but I understand your position to be "any
-> > perceptible OS behavior change breaks backwards compatibility",
-> > whereas I'm advocating that backwards compatibility is relative
-> > regressing real world use cases. That said, I do need to go mock this
-> > up in QEMU and verify how much disturbance it causes.
-> >
-> > > even if the impacts in Linux are small.
-> >
-> > I'd note the kernel would grind to a halt if the criteria for
-> > "backwards compatible" was zero perceptible behavior change.
->
-> Key thing here is the difference between Linux backwards compatibility and
-> ACPI backwards compatibility.  Linux impacts are easily understood because
-> we can go look.  ACPI change impacts in general are rather trickier to
-> define.
->
-> Note currently I'm fine with this change, though think perhaps it could
-> be improved - simply raising that others may not be.
-
-I appreciate that, and as the originator of GI I hold your feedback in
-high regard.
-
-Yes, the criteria that it needs to be a functional regression vs a
-behavior change may be difficult argument to carry with others.
-
->
-> >
-> > > Mostly it's infrastructure bring up that won't get used
-> > > (fallback lists and similar for a node which will never be specified in
-> > > allocations) and some confusing userspace ABI (which is more than a little
-> > > confusing already).
-> >
-> > Fallback lists are established relative to online nodes. These generic
-> > targets are not onlined as memory.
->
-> This doesn't really matter beyond the point that there is stuff done for
-> a GI only node currently that doesn't make any sense for this new usecase.
->
-> Still, you got me digging...
->
-> I may have the  wrong term there, but GI nodes have a zone list
-> generated that reflects where an allocation will go if an allocation
-> happens that is requested on the the GI node.
->
-> devm_kzalloc() for example for a device in one of these nodes has to know
-> where to allocate memory from.  Similar true for other resources that don't
-> exist in the GI node.
->
-> Check this worked as expected led me down a rabbit hole.  I knew the end
-> to end test did what I expected but wasn't certainly why...
->
-> Anyhow, at least for my test case on x86 doing an 8k devm_kzalloc() it works
-> as follows.
->
-> Some way down the nest of calls we get a call to
-> __alloc_pages_nodemask()
-> -> prepare_alloc_pages() // this finds the zonelist
->    -> node_listlist(gi_node, ...)
->       -> NODE_DATA(gi_node)->node_zonelists + gfp_zonelist(flags)
->          node_data[gi_node]->node_zonelists + gfp_zonelist(flags)
->
-> The node_data entry for the gi_node has it's own zonelist which is used in this
-> path.  The first entry of which is an appropriate zone on the nearest node which
-> actually has some memory.
->
-> The build is referenced by a comment in x86/mm/numa.c under init_memory_less_node()
-> "All zonelists will be built later in start_kernel() after per cpu areas are initialized"
->
-> build_zonelists() does the expected building based on SLIT distances.
-
-Ugh, I had been holding onto the mental model  that GI support was
-limited to the HMAT sysfs representation. What is the use case for
-init_gi_nodes()? I would expect GI information is only useful for
-performance calculations and that can be done without touching the
-node infrastructure.
-
-At first glance that metadata manipulation looks like a mistake to me,
-I wish I had paid more attention as that went in... regardless this
-does indeed change my thoughts of Generic Target being a minor impact.
-
-Why does GI need anything more than acpi_map_pxm_to_node() to have a
-node number assigned?
+You have already copied it in.  Never reread stuff from userland - it *can*
+change under you.
