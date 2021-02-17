@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A356C433DB
-	for <linux-cxl@archiver.kernel.org>; Wed, 17 Feb 2021 12:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 910B9C433E0
+	for <linux-cxl@archiver.kernel.org>; Wed, 17 Feb 2021 14:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66AF964E0F
-	for <linux-cxl@archiver.kernel.org>; Wed, 17 Feb 2021 12:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D77164DDA
+	for <linux-cxl@archiver.kernel.org>; Wed, 17 Feb 2021 14:18:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232198AbhBQMYo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 17 Feb 2021 07:24:44 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:2580 "EHLO
+        id S233306AbhBQOSw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 17 Feb 2021 09:18:52 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2581 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231808AbhBQMYn (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 17 Feb 2021 07:24:43 -0500
-Received: from fraeml709-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DgcMF4f0Yz67q1Q;
-        Wed, 17 Feb 2021 20:18:49 +0800 (CST)
+        with ESMTP id S232371AbhBQOSv (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 17 Feb 2021 09:18:51 -0500
+Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DgfwT1hRjz67qL6;
+        Wed, 17 Feb 2021 22:14:17 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
+ fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Wed, 17 Feb 2021 13:24:00 +0100
+ 15.1.2106.2; Wed, 17 Feb 2021 15:18:08 +0100
 Received: from localhost (10.47.29.73) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2106.2; Wed, 17 Feb
- 2021 12:23:59 +0000
-Date:   Wed, 17 Feb 2021 12:22:53 +0000
+ 2021 14:18:06 +0000
+Date:   Wed, 17 Feb 2021 14:16:59 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Ben Widawsky <ben.widawsky@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
@@ -48,13 +48,14 @@ CC:     <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
         Vishal Verma <vishal.l.verma@intel.com>,
         "John Groves (jgroves)" <jgroves@micron.com>,
         "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v5 2/9] cxl/mem: Find device capabilities
-Message-ID: <20210217122253.00007bc2@Huawei.com>
-In-Reply-To: <20210217040958.1354670-3-ben.widawsky@intel.com>
+        kernel test robot <lkp@intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v5 4/9] cxl/mem: Add basic IOCTL interface
+Message-ID: <20210217141659.000064ec@Huawei.com>
+In-Reply-To: <20210217040958.1354670-5-ben.widawsky@intel.com>
 References: <20210217040958.1354670-1-ben.widawsky@intel.com>
-        <20210217040958.1354670-3-ben.widawsky@intel.com>
+        <20210217040958.1354670-5-ben.widawsky@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -68,39 +69,31 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 16 Feb 2021 20:09:51 -0800
+On Tue, 16 Feb 2021 20:09:53 -0800
 Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-> Provide enough functionality to utilize the mailbox of a memory device.
-> The mailbox is used to interact with the firmware running on the memory
-> device. The flow is proven with one implemented command, "identify".
-> Because the class code has already told the driver this is a memory
-> device and the identify command is mandatory.
+> Add a straightforward IOCTL that provides a mechanism for userspace to
+> query the supported memory device commands. CXL commands as they appear
+> to userspace are described as part of the UAPI kerneldoc. The command
+> list returned via this IOCTL will contain the full set of commands that
+> the driver supports, however, some of those commands may not be
+> available for use by userspace.
 > 
-> CXL devices contain an array of capabilities that describe the
-> interactions software can have with the device or firmware running on
-> the device. A CXL compliant device must implement the device status and
-> the mailbox capability. Additionally, a CXL compliant memory device must
-> implement the memory device capability. Each of the capabilities can
-> [will] provide an offset within the MMIO region for interacting with the
-> CXL device.
+> Memory device commands first appear in the CXL 2.0 specification. They
+> are submitted through a mailbox mechanism specified in the CXL 2.0
+> specification.
 > 
-> The capabilities tell the driver how to find and map the register space
-> for CXL Memory Devices. The registers are required to utilize the CXL
-> spec defined mailbox interface. The spec outlines two mailboxes, primary
-> and secondary. The secondary mailbox is earmarked for system firmware,
-> and not handled in this driver.
+> The send command allows userspace to issue mailbox commands directly to
+> the hardware. The list of available commands to send are the output of
+> the query command. The driver verifies basic properties of the command
+> and possibly inspect the input (or output) payload to determine whether
+> or not the command is allowed (or might taint the kernel).
 > 
-> Primary mailboxes are capable of generating an interrupt when submitting
-> a background command. That implementation is saved for a later time.
-> 
-> Reported-by: Colin Ian King <colin.king@canonical.com> (coverity)
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com> (smatch)
-> Link: https://www.computeexpresslink.org/download-the-specification
+> Reported-by: kernel test robot <lkp@intel.com> # bug in earlier revision
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 > Reviewed-by: Dan Williams <dan.j.williams@intel.com> (v2)
-
-Looks good to me. 
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
