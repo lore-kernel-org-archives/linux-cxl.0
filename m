@@ -7,29 +7,29 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C800C433E6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83512C433E9
 	for <linux-cxl@archiver.kernel.org>; Fri, 19 Feb 2021 02:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64F5464EDA
+	by mail.kernel.org (Postfix) with ESMTP id 48F2964ED7
 	for <linux-cxl@archiver.kernel.org>; Fri, 19 Feb 2021 02:05:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229700AbhBSCFU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 18 Feb 2021 21:05:20 -0500
-Received: from mga12.intel.com ([192.55.52.136]:50640 "EHLO mga12.intel.com"
+        id S229691AbhBSCFT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 18 Feb 2021 21:05:19 -0500
+Received: from mga12.intel.com ([192.55.52.136]:50642 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229474AbhBSCFU (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 18 Feb 2021 21:05:20 -0500
-IronPort-SDR: fWAbqilkfsoUfraUhML8d/YWAL8ewrSlx48U9KE6CiWtT7US6qRaZ1CzRER6XlR3bpFaDVx9u4
- 21LFRdvhwH9g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9899"; a="162854724"
+        id S229474AbhBSCFT (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 18 Feb 2021 21:05:19 -0500
+IronPort-SDR: GxqEb22uhMUpOrUforuNY+9SNrPX1jmQFMq0HoqGk0dexpGQ8rtcsTxWCWhBC6Z/NTUXfcxU0z
+ 9VHO2vNP1fCg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9899"; a="162854722"
 X-IronPort-AV: E=Sophos;i="5.81,187,1610438400"; 
-   d="scan'208";a="162854724"
+   d="scan'208";a="162854722"
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2021 18:03:55 -0800
-IronPort-SDR: CACyJKUsYqJyJa2GbfO5zIR0aDiQrkQa+UTEsxeZqjhTAQGTpZ0Ynp7ck3T22GoFFIZRlDktUP
- NQ545vFokTHw==
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2021 18:03:54 -0800
+IronPort-SDR: kOoOP2zpdvVO3aqK0kJkDaT8nMMiPB6BLsgKEHSTYT0iHMmb5J1Sy+7/vvZZ28Qyo+qxFoBjmB
+ 3odPTbUeKcNw==
 X-IronPort-AV: E=Sophos;i="5.81,187,1610438400"; 
-   d="scan'208";a="513509678"
+   d="scan'208";a="513509672"
 Received: from jnavar1-mobl4.amr.corp.intel.com (HELO omniknight.intel.com) ([10.213.167.18])
   by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2021 18:03:54 -0800
 From:   Vishal Verma <vishal.l.verma@intel.com>
@@ -37,9 +37,9 @@ To:     <linux-cxl@vger.kernel.org>
 Cc:     <linux-nvdimm@lists.01.org>, Ben Widawsky <ben.widawsky@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [ndctl PATCH v2 10/13] util/hexdump: Add a util helper to print a buffer in hex
-Date:   Thu, 18 Feb 2021 19:03:28 -0700
-Message-Id: <20210219020331.725687-11-vishal.l.verma@intel.com>
+Subject: [ndctl PATCH v2 09/13] libcxl: add support for the 'GET_LSA' command
+Date:   Thu, 18 Feb 2021 19:03:27 -0700
+Message-Id: <20210219020331.725687-10-vishal.l.verma@intel.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210219020331.725687-1-vishal.l.verma@intel.com>
 References: <20210219020331.725687-1-vishal.l.verma@intel.com>
@@ -49,90 +49,100 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-In preparation for tests that may need to set, retrieve, and display
-opaque data, add a hexdump function in util.
+Add a command allocator and accessor APIs for the 'GET_LSA' mailbox
+command.
 
 Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
- util/hexdump.h |  8 ++++++++
- util/hexdump.c | 53 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 61 insertions(+)
- create mode 100644 util/hexdump.h
- create mode 100644 util/hexdump.c
+ cxl/lib/private.h  |  5 +++++
+ cxl/lib/libcxl.c   | 31 +++++++++++++++++++++++++++++++
+ cxl/libcxl.h       |  3 +++
+ cxl/lib/libcxl.sym |  2 ++
+ 4 files changed, 41 insertions(+)
 
-diff --git a/util/hexdump.h b/util/hexdump.h
-new file mode 100644
-index 0000000..d322b6a
---- /dev/null
-+++ b/util/hexdump.h
-@@ -0,0 +1,8 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (C) 2021 Intel Corporation. All rights reserved. */
-+#ifndef _UTIL_HEXDUMP_H_
-+#define _UTIL_HEXDUMP_H_
+diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+index 2232f4c..fb1dd8e 100644
+--- a/cxl/lib/private.h
++++ b/cxl/lib/private.h
+@@ -73,6 +73,11 @@ struct cxl_cmd_identify {
+ 	u8 qos_telemetry_caps;
+ } __attribute__((packed));
+ 
++struct cxl_cmd_get_lsa_in {
++	le32 offset;
++	le32 length;
++} __attribute__((packed));
 +
-+void hex_dump_buf(unsigned char *buf, int size);
-+
-+#endif /* _UTIL_HEXDUMP_H_*/
-diff --git a/util/hexdump.c b/util/hexdump.c
-new file mode 100644
-index 0000000..1ab0118
---- /dev/null
-+++ b/util/hexdump.c
-@@ -0,0 +1,53 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (C) 2015-2021 Intel Corporation. All rights reserved. */
-+#include <stdio.h>
-+#include <util/hexdump.h>
-+
-+static void print_separator(int len)
+ struct cxl_cmd_get_health_info {
+ 	u8 health_status;
+ 	u8 media_status;
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index d595d36..2edb79e 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -804,6 +804,37 @@ CXL_EXPORT struct cxl_cmd *cxl_cmd_new_raw(struct cxl_memdev *memdev,
+ 	return cmd;
+ }
+ 
++CXL_EXPORT struct cxl_cmd *cxl_cmd_new_get_lsa(struct cxl_memdev *memdev,
++		unsigned int offset, unsigned int length)
 +{
-+	int i;
++	struct cxl_cmd_get_lsa_in *get_lsa;
++	struct cxl_cmd *cmd;
 +
-+	for (i = 0; i < len; i++)
-+		fprintf(stderr, "-");
-+	fprintf(stderr, "\n");
++	cmd = cxl_cmd_new_generic(memdev, CXL_MEM_COMMAND_ID_GET_LSA);
++	if (!cmd)
++		return NULL;
++
++	get_lsa = (void *)cmd->send_cmd->in.payload;
++	get_lsa->offset = cpu_to_le32(offset);
++	get_lsa->length = cpu_to_le32(length);
++	return cmd;
 +}
 +
-+void hex_dump_buf(unsigned char *buf, int size)
++#define cmd_get_void(cmd, N) \
++do { \
++	void *p = (void *)cmd->send_cmd->out.payload; \
++	if (cmd->send_cmd->id != CXL_MEM_COMMAND_ID_##N) \
++		return NULL; \
++	if (cmd->status < 0) \
++		return NULL; \
++	return p; \
++} while(0);
++
++CXL_EXPORT void *cxl_cmd_get_lsa_get_payload(struct cxl_cmd *cmd)
 +{
-+	int i;
-+	const int grp = 4;  /* Number of bytes in a group */
-+	const int wid = 16; /* Bytes per line. Should be a multiple of grp */
-+	char ascii[wid + 1];
-+
-+	/* Generate header */
-+	print_separator((wid * 4) + (wid / grp) + 12);
-+
-+	fprintf(stderr, "Offset    ");
-+	for (i = 0; i < wid; i++) {
-+		if (i % grp == 0) fprintf(stderr, " ");
-+		fprintf(stderr, "%02x ", i);
-+	}
-+	fprintf(stderr, "  Ascii\n");
-+
-+	print_separator((wid * 4) + (wid / grp) + 12);
-+
-+	/* Generate hex dump */
-+	for (i = 0; i < size; i++) {
-+		if (i % wid == 0) fprintf(stderr, "%08x  ", i);
-+		ascii[i % wid] =
-+		    ((buf[i] >= ' ') && (buf[i] <= '~')) ? buf[i] : '.';
-+		if (i % grp == 0) fprintf(stderr, " ");
-+		fprintf(stderr, "%02x ", buf[i]);
-+		if ((i == size - 1) && (size % wid != 0)) {
-+			int j;
-+			int done = size % wid;
-+			int grps_done = (done / grp) + ((done % grp) ? 1 : 0);
-+			int spaces = wid / grp - grps_done + ((wid - done) * 3);
-+
-+			for (j = 0; j < spaces; j++) fprintf(stderr, " ");
-+		}
-+		if ((i % wid == wid - 1) || (i == size - 1))
-+			fprintf(stderr, "  %.*s\n", (i % wid) + 1, ascii);
-+	}
-+	print_separator((wid * 4) + (wid / grp) + 12);
++	cmd_get_void(cmd, GET_LSA);
 +}
++
+ CXL_EXPORT int cxl_cmd_submit(struct cxl_cmd *cmd)
+ {
+ 	struct cxl_memdev *memdev = cmd->memdev;
+diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+index 56ae4af..6edbd8d 100644
+--- a/cxl/libcxl.h
++++ b/cxl/libcxl.h
+@@ -71,6 +71,9 @@ int cxl_cmd_get_health_info_get_temperature(struct cxl_cmd *cmd);
+ int cxl_cmd_get_health_info_get_dirty_shutdowns(struct cxl_cmd *cmd);
+ int cxl_cmd_get_health_info_get_volatile_errors(struct cxl_cmd *cmd);
+ int cxl_cmd_get_health_info_get_pmem_errors(struct cxl_cmd *cmd);
++struct cxl_cmd *cxl_cmd_new_get_lsa(struct cxl_memdev *memdev,
++		unsigned int offset, unsigned int length);
++void *cxl_cmd_get_lsa_get_payload(struct cxl_cmd *cmd);
+ 
+ #ifdef __cplusplus
+ } /* extern "C" */
+diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+index e00443d..2c6193b 100644
+--- a/cxl/lib/libcxl.sym
++++ b/cxl/lib/libcxl.sym
+@@ -52,4 +52,6 @@ global:
+ 	cxl_cmd_get_health_info_get_dirty_shutdowns;
+ 	cxl_cmd_get_health_info_get_volatile_errors;
+ 	cxl_cmd_get_health_info_get_pmem_errors;
++	cxl_cmd_new_get_lsa;
++	cxl_cmd_get_lsa_get_payload;
+ } LIBCXL_2;
 -- 
 2.29.2
 
