@@ -2,290 +2,107 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49170C433E0
-	for <linux-cxl@archiver.kernel.org>; Fri, 19 Feb 2021 02:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F77AC433E0
+	for <linux-cxl@archiver.kernel.org>; Fri, 19 Feb 2021 09:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A89D64ED2
-	for <linux-cxl@archiver.kernel.org>; Fri, 19 Feb 2021 02:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C516B64E92
+	for <linux-cxl@archiver.kernel.org>; Fri, 19 Feb 2021 09:56:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229720AbhBSCFf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 18 Feb 2021 21:05:35 -0500
-Received: from mga12.intel.com ([192.55.52.136]:50642 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229474AbhBSCFf (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 18 Feb 2021 21:05:35 -0500
-IronPort-SDR: CG5XPrXNaGh+u4lDWg4UcQJon7EVLaVOAuPdzRDN19CFilGvr91Ux57LH5WupNB5hQVsfIj6cl
- 82sthrpPizOw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9899"; a="162854728"
-X-IronPort-AV: E=Sophos;i="5.81,187,1610438400"; 
-   d="scan'208";a="162854728"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2021 18:03:56 -0800
-IronPort-SDR: QoIZ0i4ySHXLoUw8caSh8y6/4quGuLGeZUmWf0dCN7BiOYzK0Uk6h2v9Yow6zmPJAJ1FakqF4w
- /EFsCvloJ7Fg==
-X-IronPort-AV: E=Sophos;i="5.81,187,1610438400"; 
-   d="scan'208";a="513509687"
-Received: from jnavar1-mobl4.amr.corp.intel.com (HELO omniknight.intel.com) ([10.213.167.18])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2021 18:03:55 -0800
-From:   Vishal Verma <vishal.l.verma@intel.com>
-To:     <linux-cxl@vger.kernel.org>
-Cc:     <linux-nvdimm@lists.01.org>, Ben Widawsky <ben.widawsky@intel.com>,
+        id S230087AbhBSJ41 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 19 Feb 2021 04:56:27 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:54680 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230223AbhBSJzk (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 19 Feb 2021 04:55:40 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11J9suD7069315;
+        Fri, 19 Feb 2021 09:54:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=zFeZlCMv0GcrrKfoJN2RHKvkvjn5aO1djUUFAyQbRH0=;
+ b=MgyCFFnBes08tvnLwmSXGhoGVFVw3qoiWVcd2xTWgWnc2/yzOFKunVEaOBVJsQafmT5z
+ dG6PukapGDdTsJrS85e/8tKxB3yT1zux8OlB/uyNaZrMJYsejGsNLe7A83aUF70nd044
+ Y3COTZf+VaEAPCS5wwFpO+hKc1n1eyTlRPUAxAQlNOiGLvVz3/LUUn4h1keNZLfO4CAb
+ KHmn55qNJYcpvAFiYSocNGXW96cPiNvMGL6ueZIlyFnL35SiEK/hZRXXH+Pmu86tTITc
+ j8D5wL/OHfYeImj0L2/wxRbWM+33FBk9EZm0hrncR0U1d76sx3xXGq2a3Q3dMWfkT86w ng== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 36p49bh2n3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Feb 2021 09:54:56 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11J9oCRj180246;
+        Fri, 19 Feb 2021 09:54:54 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 36prq1q8fa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Feb 2021 09:54:54 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 11J9srff003650;
+        Fri, 19 Feb 2021 09:54:53 GMT
+Received: from mwanda (/102.36.221.92)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 19 Feb 2021 01:54:52 -0800
+Date:   Fri, 19 Feb 2021 12:54:38 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Alison Schofield <alison.schofield@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>
+Cc:     Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: [ndctl PATCH v2 12/13] Documentation/cxl: add library API documentation
-Date:   Thu, 18 Feb 2021 19:03:30 -0700
-Message-Id: <20210219020331.725687-13-vishal.l.verma@intel.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210219020331.725687-1-vishal.l.verma@intel.com>
-References: <20210219020331.725687-1-vishal.l.verma@intel.com>
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] cxl/mem: return -EFAULT if copy_to_user() fails
+Message-ID: <YC+K3kgzqm20zCWY@mwanda>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-IMR: 1
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9899 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
+ phishscore=0 adultscore=0 mlxscore=0 suspectscore=0 malwarescore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2102190076
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9899 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 impostorscore=0 mlxlogscore=999
+ adultscore=0 malwarescore=0 phishscore=0 clxscore=1015 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2102190076
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add library API documentation for libcxl(3) using the existing
-asciidoc(tor) build system. Add a section 3 man page for 'libcxl' that
-provides an overview of the library and its usage, and a man page for
-the 'cxl_new()' API.
+The copy_to_user() function returns the number of bytes remaining to be
+copied, but we want to return -EFAULT if the copy doesn't complete.
 
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+Fixes: b754ffbbc0ee ("cxl/mem: Add basic IOCTL interface")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 ---
- Documentation/cxl/lib/cxl_new.txt | 43 +++++++++++++++++++++++
- Documentation/cxl/lib/libcxl.txt  | 56 +++++++++++++++++++++++++++++
- configure.ac                      |  1 +
- Makefile.am                       |  1 +
- .gitignore                        |  3 ++
- Documentation/cxl/lib/Makefile.am | 58 +++++++++++++++++++++++++++++++
- 6 files changed, 162 insertions(+)
- create mode 100644 Documentation/cxl/lib/cxl_new.txt
- create mode 100644 Documentation/cxl/lib/libcxl.txt
- create mode 100644 Documentation/cxl/lib/Makefile.am
+ drivers/cxl/mem.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/cxl/lib/cxl_new.txt b/Documentation/cxl/lib/cxl_new.txt
-new file mode 100644
-index 0000000..d4d5bcb
---- /dev/null
-+++ b/Documentation/cxl/lib/cxl_new.txt
-@@ -0,0 +1,43 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+cxl_new(3)
-+==========
-+
-+NAME
-+----
-+cxl_new - Create a new library context object that acts as a handle for all
-+library operations
-+
-+SYNOPSIS
-+--------
-+[verse]
-+----
-+#include <cxl/libcxl.h>
-+
-+int cxl_new(struct cxl_ctx **ctx);
-+----
-+
-+DESCRIPTION
-+-----------
-+Instantiates a new library context, and stores an opaque pointer in ctx. The
-+context is freed by linklibcxl:cxl_unref[3], i.e. cxl_new(3) implies an
-+internal linklibcxl:cxl_ref[3].
-+
-+
-+RETURN VALUE
-+------------
-+Returns 0 on success, and a negative errno on failure.
-+Possible error codes are:
-+
-+ * -ENOMEM
-+ * -ENXIO
-+
-+EXAMPLE
-+-------
-+See example usage in test/libcxl.c
-+
-+include::../../copyright.txt[]
-+
-+SEE ALSO
-+--------
-+linklibcxl:cxl_ref[3], linklibcxl:cxl_unref[3]
-diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
-new file mode 100644
-index 0000000..47f4cc3
---- /dev/null
-+++ b/Documentation/cxl/lib/libcxl.txt
-@@ -0,0 +1,56 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+libcxl(3)
-+=========
-+
-+NAME
-+----
-+libcxl - A library to interact with CXL devices through sysfs(5)
-+and ioctl(2) interfaces
-+
-+SYNOPSIS
-+--------
-+[verse]
-+#include <cxl/libcxl.h>
-+cc ... -lcxl
-+
-+DESCRIPTION
-+-----------
-+libcxl provides interfaces to interact with CXL devices in Linux, using sysfs
-+interfaces for most kernel interactions, and the ioctl() interface for command
-+submission.
-+
-+The starting point for all library interfaces is a 'cxl_ctx' object, returned
-+by linklibcxl:cxl_new[3]. CXL 'Type 3' memory devices are children of the
-+cxl_ctx object, and can be iterated through using an iterator API.
-+
-+Library level interfaces that are agnostic to any device, or a specific
-+subclass of operations have the prefix 'cxl_'
-+
-+The object representing a CXL Type 3 device is 'cxl_memdev'. Library interfaces
-+related to these devices have the prefix 'cxl_memdev_'. These interfaces are
-+mostly associated with sysfs interactions (unless otherwise noted in their
-+respective documentation pages). They are typically used to retrieve data
-+published by the kernel, or to send data or trigger kernel operations for a
-+given device.
-+
-+A 'cxl_cmd' is a reference counted object which is used to perform 'Mailbox'
-+commands as described in the CXL Specification. A 'cxl_cmd' object is tied to a
-+'cxl_memdev'. Associated library interfaces have the prefix 'cxl_cmd_'. Within
-+this sub-class of interfaces, there are:
-+
-+ * 'cxl_cmd_new_*' interfaces that allocate a new cxl_cmd object for a given
-+   command type.
-+
-+ * 'cxl_cmd_submit' which submits the command via ioctl()
-+
-+ * 'cxl_cmd_<name>_get_<field>' interfaces that get specific fields out of the
-+   command response
-+
-+ * 'cxl_cmd_get_*' interfaces to get general command related information.
-+
-+include::../../copyright.txt[]
-+
-+SEE ALSO
-+--------
-+linklibcxl:cxl[1]
-diff --git a/configure.ac b/configure.ac
-index 7f5e6f0..a357042 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -231,6 +231,7 @@ AC_CONFIG_FILES([
-         Documentation/ndctl/Makefile
-         Documentation/daxctl/Makefile
-         Documentation/cxl/Makefile
-+        Documentation/cxl/lib/Makefile
- ])
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index 8331a2fc7667..d73ab363ad71 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -745,7 +745,10 @@ static int cxl_send_cmd(struct cxl_memdev *cxlmd,
+ 	if (rc)
+ 		return rc;
  
- AC_OUTPUT
-diff --git a/Makefile.am b/Makefile.am
-index 4904ee7..e2f6bef 100644
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -4,6 +4,7 @@ ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
- SUBDIRS = . cxl/lib daxctl/lib ndctl/lib cxl ndctl daxctl
- if ENABLE_DOCS
- SUBDIRS += Documentation/ndctl Documentation/daxctl Documentation/cxl
-+SUBDIRS += Documentation/cxl/lib
- endif
- SUBDIRS += test
+-	return copy_to_user(s, &send, sizeof(send));
++	if (copy_to_user(s, &send, sizeof(send)))
++		return -EFAULT;
++
++	return 0;
+ }
  
-diff --git a/.gitignore b/.gitignore
-index de43823..b0f93dc 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -13,12 +13,15 @@ Makefile.in
- /libtool
- /stamp-h1
- *.1
-+*.3
- Documentation/daxctl/asciidoc.conf
- Documentation/ndctl/asciidoc.conf
- Documentation/cxl/asciidoc.conf
-+Documentation/cxl/lib/asciidoc.conf
- Documentation/daxctl/asciidoctor-extensions.rb
- Documentation/ndctl/asciidoctor-extensions.rb
- Documentation/cxl/asciidoctor-extensions.rb
-+Documentation/cxl/lib/asciidoctor-extensions.rb
- .dirstamp
- daxctl/config.h
- daxctl/daxctl
-diff --git a/Documentation/cxl/lib/Makefile.am b/Documentation/cxl/lib/Makefile.am
-new file mode 100644
-index 0000000..41e3a5f
---- /dev/null
-+++ b/Documentation/cxl/lib/Makefile.am
-@@ -0,0 +1,58 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2020-2021 Intel Corporation. All rights reserved.
-+
-+if USE_ASCIIDOCTOR
-+
-+do_subst = sed -e 's,@Utility@,Libcxl,g' -e's,@utility@,libcxl,g'
-+CONFFILE = asciidoctor-extensions.rb
-+asciidoctor-extensions.rb: ../../asciidoctor-extensions.rb.in
-+	$(AM_V_GEN) $(do_subst) < $< > $@
-+
-+else
-+
-+do_subst = sed -e 's,UTILITY,libcxl,g'
-+CONFFILE = asciidoc.conf
-+asciidoc.conf: ../../asciidoc.conf.in
-+	$(AM_V_GEN) $(do_subst) < $< > $@
-+
-+endif
-+
-+man3_MANS = \
-+	libcxl.3 \
-+	cxl_new.3
-+
-+EXTRA_DIST = $(man3_MANS)
-+
-+CLEANFILES = $(man3_MANS)
-+
-+XML_DEPS = \
-+	../../../version.m4 \
-+	../../copyright.txt \
-+	Makefile \
-+	$(CONFFILE)
-+
-+RM ?= rm -f
-+
-+if USE_ASCIIDOCTOR
-+
-+%.3: %.txt $(XML_DEPS)
-+	$(AM_V_GEN)$(RM) $@+ $@ && \
-+		$(ASCIIDOC) -b manpage -d manpage -acompat-mode \
-+		-I. -rasciidoctor-extensions \
-+		-amansource=libcxl -amanmanual="libcxl Manual" \
-+		-andctl_version=$(VERSION) -o $@+ $< && \
-+		mv $@+ $@
-+
-+else
-+
-+%.xml: %.txt $(XML_DEPS)
-+	$(AM_V_GEN)$(RM) $@+ $@ && \
-+		$(ASCIIDOC) -b docbook -d manpage -f asciidoc.conf \
-+		--unsafe -alibcxl_version=$(VERSION) -o $@+ $< && \
-+		mv $@+ $@
-+
-+%.3: %.xml $(XML_DEPS)
-+	$(AM_V_GEN)$(RM) $@ && \
-+		$(XMLTO) -o . -m ../../manpage-normal.xsl man $<
-+
-+endif
+ static long __cxl_memdev_ioctl(struct cxl_memdev *cxlmd, unsigned int cmd,
 -- 
-2.29.2
+2.30.0
 
