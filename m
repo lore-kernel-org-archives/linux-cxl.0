@@ -2,44 +2,45 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83512C433E9
-	for <linux-cxl@archiver.kernel.org>; Fri, 19 Feb 2021 02:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E618C433DB
+	for <linux-cxl@archiver.kernel.org>; Fri, 19 Feb 2021 02:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48F2964ED7
-	for <linux-cxl@archiver.kernel.org>; Fri, 19 Feb 2021 02:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBB6364ECA
+	for <linux-cxl@archiver.kernel.org>; Fri, 19 Feb 2021 02:05:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229691AbhBSCFT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 18 Feb 2021 21:05:19 -0500
-Received: from mga12.intel.com ([192.55.52.136]:50642 "EHLO mga12.intel.com"
+        id S229708AbhBSCFX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 18 Feb 2021 21:05:23 -0500
+Received: from mga12.intel.com ([192.55.52.136]:50646 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229474AbhBSCFT (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 18 Feb 2021 21:05:19 -0500
-IronPort-SDR: GxqEb22uhMUpOrUforuNY+9SNrPX1jmQFMq0HoqGk0dexpGQ8rtcsTxWCWhBC6Z/NTUXfcxU0z
- 9VHO2vNP1fCg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9899"; a="162854722"
+        id S229474AbhBSCFW (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 18 Feb 2021 21:05:22 -0500
+IronPort-SDR: UE4rU1mIn944JhhF/IoLByelVNbiHLpyb13ZSlDaVclFZ363z6Eig2K4/97GHK0YkX8XJYQUkJ
+ pC798N5eGzfA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9899"; a="162854726"
 X-IronPort-AV: E=Sophos;i="5.81,187,1610438400"; 
-   d="scan'208";a="162854722"
+   d="scan'208";a="162854726"
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2021 18:03:54 -0800
-IronPort-SDR: kOoOP2zpdvVO3aqK0kJkDaT8nMMiPB6BLsgKEHSTYT0iHMmb5J1Sy+7/vvZZ28Qyo+qxFoBjmB
- 3odPTbUeKcNw==
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2021 18:03:55 -0800
+IronPort-SDR: xwJI56I8B/aJ5n3quHngE1ZyRVy4rNIukVK3C/ywXl9KU/PEIAP7p8zb5ahTXANircS4OJe7/2
+ S52lQN5+tdlQ==
 X-IronPort-AV: E=Sophos;i="5.81,187,1610438400"; 
-   d="scan'208";a="513509672"
+   d="scan'208";a="513509682"
 Received: from jnavar1-mobl4.amr.corp.intel.com (HELO omniknight.intel.com) ([10.213.167.18])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2021 18:03:54 -0800
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2021 18:03:55 -0800
 From:   Vishal Verma <vishal.l.verma@intel.com>
 To:     <linux-cxl@vger.kernel.org>
 Cc:     <linux-nvdimm@lists.01.org>, Ben Widawsky <ben.widawsky@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [ndctl PATCH v2 09/13] libcxl: add support for the 'GET_LSA' command
-Date:   Thu, 18 Feb 2021 19:03:27 -0700
-Message-Id: <20210219020331.725687-10-vishal.l.verma@intel.com>
+Subject: [ndctl PATCH v2 11/13] test/libcxl: add a test for {set, get}_lsa commands
+Date:   Thu, 18 Feb 2021 19:03:29 -0700
+Message-Id: <20210219020331.725687-12-vishal.l.verma@intel.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210219020331.725687-1-vishal.l.verma@intel.com>
 References: <20210219020331.725687-1-vishal.l.verma@intel.com>
@@ -49,100 +50,189 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add a command allocator and accessor APIs for the 'GET_LSA' mailbox
-command.
+Add a test to store a static string in the label storage area using the
+SET_LSA mailbox command, and retrieve it using the GET_LSA command.
+Compare the strings sent and received and ensure they match.
 
 Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
- cxl/lib/private.h  |  5 +++++
- cxl/lib/libcxl.c   | 31 +++++++++++++++++++++++++++++++
- cxl/libcxl.h       |  3 +++
- cxl/lib/libcxl.sym |  2 ++
- 4 files changed, 41 insertions(+)
+ test/libcxl.c    | 134 +++++++++++++++++++++++++++++++++++++++++++++++
+ test/Makefile.am |   3 +-
+ 2 files changed, 136 insertions(+), 1 deletion(-)
 
-diff --git a/cxl/lib/private.h b/cxl/lib/private.h
-index 2232f4c..fb1dd8e 100644
---- a/cxl/lib/private.h
-+++ b/cxl/lib/private.h
-@@ -73,6 +73,11 @@ struct cxl_cmd_identify {
- 	u8 qos_telemetry_caps;
- } __attribute__((packed));
+diff --git a/test/libcxl.c b/test/libcxl.c
+index 9662f34..1cff32c 100644
+--- a/test/libcxl.c
++++ b/test/libcxl.c
+@@ -19,6 +19,7 @@
+ #include <linux/version.h>
  
-+struct cxl_cmd_get_lsa_in {
-+	le32 offset;
-+	le32 length;
-+} __attribute__((packed));
-+
- struct cxl_cmd_get_health_info {
- 	u8 health_status;
- 	u8 media_status;
-diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index d595d36..2edb79e 100644
---- a/cxl/lib/libcxl.c
-+++ b/cxl/lib/libcxl.c
-@@ -804,6 +804,37 @@ CXL_EXPORT struct cxl_cmd *cxl_cmd_new_raw(struct cxl_memdev *memdev,
- 	return cmd;
+ #include <util/size.h>
++#include <util/hexdump.h>
+ #include <ccan/short_types/short_types.h>
+ #include <ccan/array_size/array_size.h>
+ #include <ccan/endian/endian.h>
+@@ -209,6 +210,138 @@ out_fail:
+ 	return rc;
  }
  
-+CXL_EXPORT struct cxl_cmd *cxl_cmd_new_get_lsa(struct cxl_memdev *memdev,
-+		unsigned int offset, unsigned int length)
++static int debugfs_write_raw_flag(char *str)
 +{
-+	struct cxl_cmd_get_lsa_in *get_lsa;
++	char *path = "/sys/kernel/debug/cxl/mbox/raw_allow_all";
++	int fd = open(path, O_WRONLY|O_CLOEXEC);
++	int n, len = strlen(str) + 1, rc;
++
++	if (fd < 0)
++		return -errno;
++
++	n = write(fd, str, len);
++	rc = -errno;
++	close(fd);
++	if (n < len) {
++		fprintf(stderr, "failed to write %s to %s: %s\n", str, path,
++					strerror(errno));
++		return rc;
++	}
++	return 0;
++}
++
++static char *test_lsa_data = "LIBCXL_TEST LSA DATA 01";
++static int lsa_size = EXPECT_CMD_IDENTIFY_LSA_SIZE;
++
++static int test_set_lsa(struct cxl_memdev *memdev)
++{
++	int data_size = strlen(test_lsa_data) + 1;
 +	struct cxl_cmd *cmd;
++	struct {
++		le32 offset;
++		le32 rsvd;
++		unsigned char data[lsa_size];
++	} __attribute__((packed)) set_lsa;
++	int rc;
 +
-+	cmd = cxl_cmd_new_generic(memdev, CXL_MEM_COMMAND_ID_GET_LSA);
++	set_lsa.offset = cpu_to_le32(0);
++	set_lsa.rsvd = cpu_to_le32(0);
++	memcpy(set_lsa.data, test_lsa_data, data_size);
++
++	cmd = cxl_cmd_new_raw(memdev, 0x4103);
 +	if (!cmd)
-+		return NULL;
++		return -ENOMEM;
 +
-+	get_lsa = (void *)cmd->send_cmd->in.payload;
-+	get_lsa->offset = cpu_to_le32(offset);
-+	get_lsa->length = cpu_to_le32(length);
-+	return cmd;
++	rc = cxl_cmd_set_input_payload(cmd, &set_lsa, sizeof(set_lsa));
++	if (rc) {
++		fprintf(stderr, "%s: %s: cmd setup failed: %s\n",
++			__func__, cxl_memdev_get_devname(memdev),
++			strerror(-rc));
++		goto out_fail;
++	}
++
++	rc = debugfs_write_raw_flag("Y");
++	if (rc < 0)
++		return rc;
++
++	rc = cxl_cmd_submit(cmd);
++	if (rc < 0)
++		fprintf(stderr, "%s: %s: cmd submission failed: %s\n",
++			__func__, cxl_memdev_get_devname(memdev),
++			strerror(-rc));
++
++	rc = cxl_cmd_get_mbox_status(cmd);
++	if (rc != 0) {
++		fprintf(stderr, "%s: %s: firmware status: %d\n",
++			__func__, cxl_memdev_get_devname(memdev), rc);
++		return -ENXIO;
++	}
++
++	if(debugfs_write_raw_flag("N") < 0)
++		fprintf(stderr, "%s: %s: failed to restore raw flag\n",
++			__func__, cxl_memdev_get_devname(memdev));
++
++out_fail:
++	cxl_cmd_unref(cmd);
++	return rc;
 +}
 +
-+#define cmd_get_void(cmd, N) \
-+do { \
-+	void *p = (void *)cmd->send_cmd->out.payload; \
-+	if (cmd->send_cmd->id != CXL_MEM_COMMAND_ID_##N) \
-+		return NULL; \
-+	if (cmd->status < 0) \
-+		return NULL; \
-+	return p; \
-+} while(0);
-+
-+CXL_EXPORT void *cxl_cmd_get_lsa_get_payload(struct cxl_cmd *cmd)
++static int test_cxl_cmd_lsa(struct cxl_ctx *ctx)
 +{
-+	cmd_get_void(cmd, GET_LSA);
++	int data_size = strlen(test_lsa_data) + 1;
++	struct cxl_memdev *memdev;
++	struct cxl_cmd *cmd;
++	unsigned char *buf;
++	int rc;
++
++	cxl_memdev_foreach(ctx, memdev) {
++		rc = test_set_lsa(memdev);
++		if (rc)
++			return rc;
++
++		cmd = cxl_cmd_new_get_lsa(memdev, 0, lsa_size);
++		if (!cmd)
++			return -ENOMEM;
++		rc = cxl_cmd_set_output_payload(cmd, NULL, lsa_size);
++		if (rc) {
++			fprintf(stderr, "%s: output buffer allocation: %s\n",
++				__func__, strerror(-rc));
++			return rc;
++		}
++		rc = cxl_cmd_submit(cmd);
++		if (rc < 0) {
++			fprintf(stderr, "%s: %s: cmd submission failed: %s\n",
++				__func__, cxl_memdev_get_devname(memdev),
++				strerror(-rc));
++			goto out_fail;
++		}
++
++		rc = cxl_cmd_get_mbox_status(cmd);
++		if (rc != 0) {
++			fprintf(stderr, "%s: %s: firmware status: %d\n",
++				__func__, cxl_memdev_get_devname(memdev), rc);
++			return -ENXIO;
++		}
++
++		buf = cxl_cmd_get_lsa_get_payload(cmd);
++		if (rc < 0)
++			goto out_fail;
++
++		if (memcmp(buf, test_lsa_data, data_size) != 0) {
++			fprintf(stderr, "%s: LSA data mismatch.\n", __func__);
++			hex_dump_buf(buf, data_size);
++			rc = -EIO;
++			goto out_fail;
++		}
++		cxl_cmd_unref(cmd);
++	}
++	return 0;
++
++out_fail:
++	cxl_cmd_unref(cmd);
++	return rc;
 +}
 +
- CXL_EXPORT int cxl_cmd_submit(struct cxl_cmd *cmd)
- {
- 	struct cxl_memdev *memdev = cmd->memdev;
-diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index 56ae4af..6edbd8d 100644
---- a/cxl/libcxl.h
-+++ b/cxl/libcxl.h
-@@ -71,6 +71,9 @@ int cxl_cmd_get_health_info_get_temperature(struct cxl_cmd *cmd);
- int cxl_cmd_get_health_info_get_dirty_shutdowns(struct cxl_cmd *cmd);
- int cxl_cmd_get_health_info_get_volatile_errors(struct cxl_cmd *cmd);
- int cxl_cmd_get_health_info_get_pmem_errors(struct cxl_cmd *cmd);
-+struct cxl_cmd *cxl_cmd_new_get_lsa(struct cxl_memdev *memdev,
-+		unsigned int offset, unsigned int length);
-+void *cxl_cmd_get_lsa_get_payload(struct cxl_cmd *cmd);
+ typedef int (*do_test_fn)(struct cxl_ctx *ctx);
  
- #ifdef __cplusplus
- } /* extern "C" */
-diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index e00443d..2c6193b 100644
---- a/cxl/lib/libcxl.sym
-+++ b/cxl/lib/libcxl.sym
-@@ -52,4 +52,6 @@ global:
- 	cxl_cmd_get_health_info_get_dirty_shutdowns;
- 	cxl_cmd_get_health_info_get_volatile_errors;
- 	cxl_cmd_get_health_info_get_pmem_errors;
-+	cxl_cmd_new_get_lsa;
-+	cxl_cmd_get_lsa_get_payload;
- } LIBCXL_2;
+ static do_test_fn do_test[] = {
+@@ -216,6 +349,7 @@ static do_test_fn do_test[] = {
+ 	test_cxl_presence,
+ 	test_cxl_emulation_env,
+ 	test_cxl_cmd_identify,
++	test_cxl_cmd_lsa,
+ };
+ 
+ static int test_libcxl(int loglevel, struct test_ctx *test, struct cxl_ctx *ctx)
+diff --git a/test/Makefile.am b/test/Makefile.am
+index ce492a4..23f4860 100644
+--- a/test/Makefile.am
++++ b/test/Makefile.am
+@@ -86,7 +86,8 @@ LIBNDCTL_LIB =\
+ testcore =\
+ 	core.c \
+ 	../util/log.c \
+-	../util/sysfs.c
++	../util/sysfs.c \
++	../util/hexdump.c
+ 
+ libndctl_SOURCES = libndctl.c $(testcore)
+ libndctl_LDADD = $(LIBNDCTL_LIB) $(UUID_LIBS) $(KMOD_LIBS)
 -- 
 2.29.2
 
