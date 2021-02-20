@@ -2,126 +2,115 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F23E0C433E0
-	for <linux-cxl@archiver.kernel.org>; Sat, 20 Feb 2021 17:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6A3C433E0
+	for <linux-cxl@archiver.kernel.org>; Sat, 20 Feb 2021 21:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C38D764ECA
-	for <linux-cxl@archiver.kernel.org>; Sat, 20 Feb 2021 17:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B0F364ECA
+	for <linux-cxl@archiver.kernel.org>; Sat, 20 Feb 2021 21:57:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229918AbhBTRtN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 20 Feb 2021 12:49:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229784AbhBTRtM (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 20 Feb 2021 12:49:12 -0500
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 717D0C061574
-        for <linux-cxl@vger.kernel.org>; Sat, 20 Feb 2021 09:48:31 -0800 (PST)
-Received: by mail-ej1-x634.google.com with SMTP id u20so21271538ejb.7
-        for <linux-cxl@vger.kernel.org>; Sat, 20 Feb 2021 09:48:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=niF1k3dVyqWcVFhX7Jys8F/FWOuqyr/3JpoSyGWUad4=;
-        b=SJiJGOm92EOLuEmD8ZxINHCPgWL9FHxOSQ3VIYWX9zoyH2E9wOjXIS9rFt4qflATpv
-         hSN/bjk3gMWmOoic96yidZvVl7/B4XMCsqfh0PkuMvTvPzxsbnnAAzqFwvJBX/EHx6Jq
-         lEXEZ04J4mAMFF3qpTPsBe+t1d1hZCpoZ1tHexVfyV6BEj3IJZ6FxOnS5w7SFjV4xaQB
-         bzdJovpxJgMpQMBdOPWU4kOe8uTftngZHfL80X3V4NBKw6dQvwl3+V0eAaAFtkaj7Nyw
-         q6pWkVkKDyqb9Tw8d5bxJN+VZ9kPSu7gfMjLM+uXAWL9W050qu1qq3zAwkiaymsFO0Qm
-         BLwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=niF1k3dVyqWcVFhX7Jys8F/FWOuqyr/3JpoSyGWUad4=;
-        b=Yk6yP3sQB4IlMKyMgm7qcn1sD+gtGKCEHKb7usF7E0pFSjG/2zizGaoma56kNzJiZX
-         DEq54+JaPuZKEzhWcGoFwl7OS5/lJ/7xK+AfIP2xK6Hff3ZRR1Snq+T7G+cVdBZ3diSZ
-         o6NVvp1KkXzPJnyzgeV1rGdhuf5DKBa1hKKftYpjFcd4+Me6PLF2xXtmWnKBli7MI1zh
-         MOhHXvFXOsaSV4sEVMtKylNluf4R3CVYWjdEKx8bnNwLDvP8n/mYOlfyic0tTs85Ad2F
-         zn1DkZuz8ho2J7B3Frq7ieCkpHpO7RTwB5tV4zijxcHJal6/1uJLkCFGWBaFE/hwMICz
-         TE9A==
-X-Gm-Message-State: AOAM533cOudPZVGPrHLRhGBKdTq7P4bx0vCq4xo5n4mWjQ/MnG2vTPEG
-        g4J++H1oMrJ+RMC0RH31qeblOfFkDJCOw+e14l27Zw==
-X-Google-Smtp-Source: ABdhPJzMFtM3V/tSlVTUOFi/gy4tLf3ErLDeRmJYFtXE81s7f90uq338SYuA8goZna9AO+QqkY89+APsjw6TJdTe694=
-X-Received: by 2002:a17:907:373:: with SMTP id rs19mr1248541ejb.341.1613843310167;
- Sat, 20 Feb 2021 09:48:30 -0800 (PST)
-MIME-Version: 1.0
-References: <20210217040958.1354670-1-ben.widawsky@intel.com>
- <20210217040958.1354670-5-ben.widawsky@intel.com> <YDBkOB3K8UqVakFf@Konrads-MacBook-Pro.local>
- <20210220163344.csczmkyxkpu4fxah@intel.com>
-In-Reply-To: <20210220163344.csczmkyxkpu4fxah@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sat, 20 Feb 2021 09:48:22 -0800
-Message-ID: <CAPcyv4jWnW_i=jaGP_nXRuGgwmngObw_V8AOPY3k_YMHkL-8Eg@mail.gmail.com>
-Subject: Re: [PATCH v5 4/9] cxl/mem: Add basic IOCTL interface
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        linux-cxl@vger.kernel.org, Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jon Masters <jcm@jonmasters.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
+        id S229809AbhBTV5h (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 20 Feb 2021 16:57:37 -0500
+Received: from mga07.intel.com ([134.134.136.100]:37143 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229804AbhBTV5h (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Sat, 20 Feb 2021 16:57:37 -0500
+IronPort-SDR: htzOEaZeRpgZj8bXDuJq+lVcL0d1SNsb9t0956pZDwj0qPC67K8KM7Yv4E4I1v8VVQD212/1FJ
+ iBacw6ZZdXsw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9901"; a="248196601"
+X-IronPort-AV: E=Sophos;i="5.81,193,1610438400"; 
+   d="scan'208";a="248196601"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2021 13:56:56 -0800
+IronPort-SDR: ikalQYO+NUG6LwPKxGUsVz2zehEYdZR8tpl7eBur99Bat7zOpmrK1Nv8jo4zm7iE2GYSTCnpYi
+ Y1RHgj88+DOg==
+X-IronPort-AV: E=Sophos;i="5.81,193,1610438400"; 
+   d="scan'208";a="379397680"
+Received: from aevangel-mobl.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.134.76])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2021 13:56:56 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+        linux-nvdimm@lists.01.org
+Cc:     Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        "John Groves (jgroves)" <jgroves@micron.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        kernel test robot <lkp@intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH] cxl/mem: Fixes to IOCTL interface
+Date:   Sat, 20 Feb 2021 13:56:41 -0800
+Message-Id: <20210220215641.604535-1-ben.widawsky@intel.com>
+X-Mailer: git-send-email 2.30.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sat, Feb 20, 2021 at 8:33 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> On 21-02-19 20:22:00, Konrad Rzeszutek Wilk wrote:
-> > ..snip..
-> > > +static int handle_mailbox_cmd_from_user(struct cxl_mem *cxlm,
-> > > +                                   const struct cxl_mem_command *cmd,
-> > > +                                   u64 in_payload, u64 out_payload,
-> > > +                                   s32 *size_out, u32 *retval)
-> > > +{
-> > > +   struct device *dev = &cxlm->pdev->dev;
-> > > +   struct mbox_cmd mbox_cmd = {
-> > > +           .opcode = cmd->opcode,
-> > > +           .size_in = cmd->info.size_in,
-> > > +           .size_out = cmd->info.size_out,
-> > > +   };
-> > > +   int rc;
-> > > +
-> > > +   if (cmd->info.size_out) {
-> > > +           mbox_cmd.payload_out = kvzalloc(cmd->info.size_out, GFP_KERNEL);
-> > > +           if (!mbox_cmd.payload_out)
-> > > +                   return -ENOMEM;
-> > > +   }
-> > > +
-> > > +   if (cmd->info.size_in) {
-> > > +           mbox_cmd.payload_in = vmemdup_user(u64_to_user_ptr(in_payload),
-> > > +                                              cmd->info.size_in);
-> > > +           if (IS_ERR(mbox_cmd.payload_in))
-> > > +                   return PTR_ERR(mbox_cmd.payload_in);
-> >
-> > Not that this should happen, but what if info.size_out was set? Should
-> > you also free mbox_cmd.payload_out?
-> >
->
-> Thanks Konrad.
->
-> Dan, do you want me to send a fixup patch? This bug was introduced from v4->v5.
+When submitting a command for userspace, input and output payload bounce
+buffers are allocated. For a given command, both input and output
+buffers may exist and so when allocation of the input buffer fails, the
+output buffer must be freed. As far as I can tell, userspace can't
+easily exploit the leak to OOM a machine unless the machine was already
+near OOM state.
 
-Yes, please, incremental to libnvdimm-for-next which I'm planning to
-send to Linus on Tuesday.
+This bug was introduced in v5 of the patch and did not exist in prior
+revisions.
+
+While here, adjust the variable 'j' found in patch review by Konrad.
+
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Reported-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com> (v2)
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/cxl/mem.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index df895bcca63a..626fd7066f4f 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -514,8 +514,10 @@ static int handle_mailbox_cmd_from_user(struct cxl_mem *cxlm,
+ 	if (cmd->info.size_in) {
+ 		mbox_cmd.payload_in = vmemdup_user(u64_to_user_ptr(in_payload),
+ 						   cmd->info.size_in);
+-		if (IS_ERR(mbox_cmd.payload_in))
++		if (IS_ERR(mbox_cmd.payload_in)) {
++			kvfree(mbox_cmd.payload_out);
+ 			return PTR_ERR(mbox_cmd.payload_in);
++		}
+ 	}
+ 
+ 	rc = cxl_mem_mbox_get(cxlm);
+@@ -696,7 +698,7 @@ static int cxl_query_cmd(struct cxl_memdev *cxlmd,
+ 	struct device *dev = &cxlmd->dev;
+ 	struct cxl_mem_command *cmd;
+ 	u32 n_commands;
+-	int j = 0;
++	int cmds = 0;
+ 
+ 	dev_dbg(dev, "Query IOCTL\n");
+ 
+@@ -714,10 +716,10 @@ static int cxl_query_cmd(struct cxl_memdev *cxlmd,
+ 	cxl_for_each_cmd(cmd) {
+ 		const struct cxl_command_info *info = &cmd->info;
+ 
+-		if (copy_to_user(&q->commands[j++], info, sizeof(*info)))
++		if (copy_to_user(&q->commands[cmds++], info, sizeof(*info)))
+ 			return -EFAULT;
+ 
+-		if (j == n_commands)
++		if (cmds == n_commands)
+ 			break;
+ 	}
+ 
+-- 
+2.30.1
+
