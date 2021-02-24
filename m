@@ -7,53 +7,57 @@ X-Spam-Status: No, score=-23.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EA1C433E6
-	for <linux-cxl@archiver.kernel.org>; Wed, 24 Feb 2021 04:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC80C433E6
+	for <linux-cxl@archiver.kernel.org>; Wed, 24 Feb 2021 04:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0488D64E6F
-	for <linux-cxl@archiver.kernel.org>; Wed, 24 Feb 2021 04:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 606CC64E7A
+	for <linux-cxl@archiver.kernel.org>; Wed, 24 Feb 2021 04:11:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232343AbhBXEG7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 23 Feb 2021 23:06:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35082 "EHLO
+        id S233230AbhBXELG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 23 Feb 2021 23:11:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232365AbhBXEGp (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 23 Feb 2021 23:06:45 -0500
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22B68C061794
-        for <linux-cxl@vger.kernel.org>; Tue, 23 Feb 2021 20:05:42 -0800 (PST)
-Received: by mail-ed1-x52f.google.com with SMTP id h25so835826eds.4
-        for <linux-cxl@vger.kernel.org>; Tue, 23 Feb 2021 20:05:42 -0800 (PST)
+        with ESMTP id S232866AbhBXELE (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 23 Feb 2021 23:11:04 -0500
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1016DC06174A
+        for <linux-cxl@vger.kernel.org>; Tue, 23 Feb 2021 20:10:23 -0800 (PST)
+Received: by mail-ej1-x629.google.com with SMTP id k13so770696ejs.10
+        for <linux-cxl@vger.kernel.org>; Tue, 23 Feb 2021 20:10:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=hmwsW/hf6/2eNzJ4EGL8BqxVfyFIYIQmZsJ1d9wI35s=;
-        b=V2OwGNpjZM3cH+Ci1gP9V+sU0EEQLoI8bMChDK6jv/XeY+2prCQEhzVTk3OiOcpO4X
-         FG6fepE7DKhQWWNJQB4PN5nzUd8Z4f+3g6WpAGoTHev0uGpt4LGdZXrmOecbK/IkZIyX
-         fBuRmeRZbdHp7EXBsfJOUrWvVt5H44gLttBjCFMm7G4237ZsmZCrWSceYgt3K0FOZTtN
-         fL52IdG+ooqOL/TiDnhKsXn/VHZIQYACBKkC1IiE0QTl4+fNgmyquSLbAzM+LSilIshg
-         UVrEHp8AvmFt5kNYZE1SZ4VhZTwxVmgcZW2/FY/YY2mbjMzNOnuSOQCvdVr24a6rd7w0
-         Ug2w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r0/3ywDnAOQsjA4thisasGEmCGYC07XpqLCZIebqfNw=;
+        b=tCz/1aerhGbC2OIOScvpy/jeAp6NooTZ19XXPr4uuVgGRolbLZJx9RW7RLnAMplFZM
+         tV/rtPtFj8NkrjKNHoIkdXr0pBCHkPMZot536PLRF2E0v5uzXWteUUm+ug38AP5Y4Tfu
+         CFe9VXj0SKJaRmWpejqefdZnUyJKQCoezS67a397L3YsaMlFqsH9cg95kDVFcUxr0GQY
+         bMrR2GIozSJIPKKZglc6KVyK2QEdh4N+ywq2nbMh19LhRdYzgF+VG6UrfgfTt1dJzycz
+         M8aT9jhHDlRKuZDUmWdwjydWcbNgbRXL/2ePxjSXKXRqw3QObhgxIWT/MhAoEK37WAuE
+         kXsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=hmwsW/hf6/2eNzJ4EGL8BqxVfyFIYIQmZsJ1d9wI35s=;
-        b=Mn2VQIdeYkOtPEnMKF2VeFm/4PSPXo6Avdp7Q0FJybx3vZro9B5e+Ok992Zif8VscK
-         ppdmx5+NtcUVf1G8Y51Or5DP0Q+Wu4z3IlOywqGYgrzEKWLHt8y4EQjd5nOYIOZkvUI1
-         Y/Ejeny9IqoKfylkv04TVnemG33cDS8Vg9iG6XvxdQLSKIfaRIqNNI6+9/J4Jn0feeOG
-         S/zzO1WoO0nzBoXP2Jutf9pf1Af2O8ZkBANz8d3qCwblaGDOLIdtRfXt5E6CdTQEghNI
-         FCP+WuojFqB+4hzTpl34qAzj+Y/UrBjkdN/xIllvCjQ9oxGT3J4KKNanUnMldGB8OvNS
-         RVnw==
-X-Gm-Message-State: AOAM5309H1RUVumModXGxR7zP5arLt1TJe9aO5fqTfR1CBDDjaP1fgz1
-        +DuqmzmsfQMGG7OBfbPsfrDnAATmkjMFTlkr3642Yw==
-X-Google-Smtp-Source: ABdhPJyyMXiElO804i+nVnIKVghScSNY8WXhEcoxqmt+bxh74dj5khIOevOokzp6nvoTt0Vm4in3WgBzIM7gGBXJHZE=
-X-Received: by 2002:aa7:d315:: with SMTP id p21mr29659333edq.300.1614139540770;
- Tue, 23 Feb 2021 20:05:40 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r0/3ywDnAOQsjA4thisasGEmCGYC07XpqLCZIebqfNw=;
+        b=jU+tVm0xonUTwK//2qEvQW609gEoc2E73Zszkymid6hiIQ7q66G4EzxDqiPloiRNWn
+         iZHpIlVNEcnYDK2mYoYscWn/jGgA0CUM9kxqoNJffPKq2Oqrgo2jtn7PUiK+0kBx6oJT
+         J78Nn0M4Dh1yHmERx7KFFakdWOR5iZBh1GIMe4aExv8GOwyKmKtmNWHzuBHHZZgj/Lbx
+         oJZ7eLmyEbKclshMvrxm/bkbRCJaSimdz/79SIdZBP+RqPwjYS+YDx1N702X8Q7IvWtV
+         3k9Rd2i40Vccz9/ymaTx+Bshp+H3876rL9owUmFYf8EjZZeAA3+rrobDNeNfk32w7Qaa
+         5P/g==
+X-Gm-Message-State: AOAM531vBXxVKQVczr5DeQiZUds5r0Ic0Nn6Omrcksu9mkfK/f8nQ2vN
+        TE738Nx7cNcx++IkExBAxb2YkER6OSifrS0q8tUenQ==
+X-Google-Smtp-Source: ABdhPJxZ+n/CL570MXr/0CV7mjfLT6eo6BlYzfvM8j4Qn59L5vWSJUidV1w2V6VvcrdjSxwjx2l1swbyvGPHOB17Hbg=
+X-Received: by 2002:a17:906:2818:: with SMTP id r24mr22949127ejc.472.1614139821753;
+ Tue, 23 Feb 2021 20:10:21 -0800 (PST)
 MIME-Version: 1.0
+References: <CAPcyv4gsXbi6Cc71wW5hob8mGuupXKkL5tHLRaZkdLZ1oAuK8Q@mail.gmail.com>
+In-Reply-To: <CAPcyv4gsXbi6Cc71wW5hob8mGuupXKkL5tHLRaZkdLZ1oAuK8Q@mail.gmail.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 23 Feb 2021 20:05:36 -0800
-Message-ID: <CAPcyv4gsXbi6Cc71wW5hob8mGuupXKkL5tHLRaZkdLZ1oAuK8Q@mail.gmail.com>
-Subject: [GIT PULL] Compute Express Linux (CXL) for v5.12-rc1
+Date:   Tue, 23 Feb 2021 20:10:17 -0800
+Message-ID: <CAPcyv4gBoCWNDtkKRiwwBBHVEvP57mOGBJ6hmhH=oFKjEpDd9Q@mail.gmail.com>
+Subject: Re: [GIT PULL] Compute Express Linux (CXL) for v5.12-rc1
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -64,139 +68,144 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Linus, please pull from:
+As much as I'd love to be working on "Compute Express Linux" the
+subject should have read "Compute Express Link".
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm tags/cxl-for-5.12
-
-...to receive an initial driver for CXL 2.0 Memory Devices. Technical
-details are in the tag message and Documentation/. I am taking this
-through nvdimm.git this first cycle until the cxl.git repository and
-maintainer team can be set up on git.kernel.org.
-
-In terms of why merge this initial driver now, it establishes just
-enough functionality to enumerate these devices and issue all
-administrative commands. It sets a v5.12 baseline to develop the more
-complicated higher order functionality like memory device
-interleaving, persistent memory support, and hotplug which entangle
-with ACPI, LIBNVDIMM, and PCI.
-
-The focus of this release is establishing the ioctl UAPI for the
-management commands. Similar to NVME there are a set of standard
-commands as well as the possibility for vendor specific commands.
-Unlike the NVME driver the CXL driver does not enable vendor specific
-command functionality by default. This conservatism is out of concern
-for the fact that CXL interleaves memory across devices and implements
-host memory. The system integrity implications of some commands are
-more severe than NVME and vendor specific functionality is mostly
-unauditable. This will be an ongoing topic of discussion with the
-wider CXL community for next few months.
-
-The driver has been developed in the open since November against a
-work-in-progress QEMU emulation of the CXL device model. That QEMU
-effort has recently attracted contributions from multiple hardware
-vendors.
-
-The driver has appeared in -next. It collected some initial static
-analysis fixes and build-robot reports, but all quiet in -next for the
-past week.
-
-A list of review tags that arrived after the branch for -next was cut
-is appended to the tag message below.
-
----
-
-The following changes since commit 1048ba83fb1c00cd24172e23e8263972f6b5d9ac:
-
-  Linux 5.11-rc6 (2021-01-31 13:50:09 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm tags/cxl-for-5.12
-
-for you to fetch changes up to 88ff5d466c0250259818f3153dbdc4af1f8615dd:
-
-  cxl/mem: Fix potential memory leak (2021-02-22 14:44:39 -0800)
-
-----------------------------------------------------------------
-cxl for 5.12
-
-Introduce an initial driver for CXL 2.0 Type-3 Memory Devices. CXL is
-Compute Express Link which released the 2.0 specification in November.
-The Linux relevant changes in CXL 2.0 are support for an OS to
-dynamically assign address space to memory devices, support for
-switches, persistent memory, and hotplug. A Type-3 Memory Device is a
-PCI enumerated device presenting the CXL Memory Device Class Code and
-implementing the CXL.mem protocol. CXL.mem allows device to advertise
-CPU and I/O coherent memory to the system, i.e. typical "System RAM" and
-"Persistent Memory" in Linux /proc/iomem terms.
-
-In addition to the CXL.mem fast path there is an administrative command
-hardware mailbox interface for maintenance and provisioning. It is this
-command interface that is the focus of the initial driver. With this
-driver a CXL device that is mapped by the BIOS can be administered by
-Linux. Linux support for CXL PMEM and dynamic CXL address space
-management are to be implemented post v5.12.
-
-4cdadfd5e0a7 cxl/mem: Introduce a driver for CXL-2.0-Type-3 endpoints
-Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-
-8adaf747c9f0 cxl/mem: Find device capabilities
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-b39cb1052a5c cxl/mem: Register CXL memX devices
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-13237183c735 cxl/mem: Add a "RAW" send command
-Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-
-472b1ce6e9d6 cxl/mem: Enable commands via CEL
-Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-
-57ee605b976c cxl/mem: Add set of informational commands
-Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-
-----------------------------------------------------------------
-Ben Widawsky (7):
-      cxl/mem: Find device capabilities
-      cxl/mem: Add basic IOCTL interface
-      cxl/mem: Add a "RAW" send command
-      cxl/mem: Enable commands via CEL
-      cxl/mem: Add set of informational commands
-      MAINTAINERS: Add maintainers of the CXL driver
-      cxl/mem: Fix potential memory leak
-
-Dan Carpenter (1):
-      cxl/mem: Return -EFAULT if copy_to_user() fails
-
-Dan Williams (2):
-      cxl/mem: Introduce a driver for CXL-2.0-Type-3 endpoints
-      cxl/mem: Register CXL memX devices
-
- .clang-format                                      |    1 +
- Documentation/ABI/testing/sysfs-bus-cxl            |   26 +
- Documentation/driver-api/cxl/index.rst             |   12 +
- Documentation/driver-api/cxl/memory-devices.rst    |   46 +
- Documentation/driver-api/index.rst                 |    1 +
- Documentation/userspace-api/ioctl/ioctl-number.rst |    1 +
- MAINTAINERS                                        |   11 +
- drivers/Kconfig                                    |    1 +
- drivers/Makefile                                   |    1 +
- drivers/cxl/Kconfig                                |   53 +
- drivers/cxl/Makefile                               |    7 +
- drivers/cxl/bus.c                                  |   29 +
- drivers/cxl/cxl.h                                  |   95 ++
- drivers/cxl/mem.c                                  | 1552 ++++++++++++++++++++
- drivers/cxl/pci.h                                  |   31 +
- include/linux/pci_ids.h                            |    1 +
- include/uapi/linux/cxl_mem.h                       |  172 +++
- 17 files changed, 2040 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-cxl
- create mode 100644 Documentation/driver-api/cxl/index.rst
- create mode 100644 Documentation/driver-api/cxl/memory-devices.rst
- create mode 100644 drivers/cxl/Kconfig
- create mode 100644 drivers/cxl/Makefile
- create mode 100644 drivers/cxl/bus.c
- create mode 100644 drivers/cxl/cxl.h
- create mode 100644 drivers/cxl/mem.c
- create mode 100644 drivers/cxl/pci.h
- create mode 100644 include/uapi/linux/cxl_mem.h
+On Tue, Feb 23, 2021 at 8:05 PM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> Hi Linus, please pull from:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm tags/cxl-for-5.12
+>
+> ...to receive an initial driver for CXL 2.0 Memory Devices. Technical
+> details are in the tag message and Documentation/. I am taking this
+> through nvdimm.git this first cycle until the cxl.git repository and
+> maintainer team can be set up on git.kernel.org.
+>
+> In terms of why merge this initial driver now, it establishes just
+> enough functionality to enumerate these devices and issue all
+> administrative commands. It sets a v5.12 baseline to develop the more
+> complicated higher order functionality like memory device
+> interleaving, persistent memory support, and hotplug which entangle
+> with ACPI, LIBNVDIMM, and PCI.
+>
+> The focus of this release is establishing the ioctl UAPI for the
+> management commands. Similar to NVME there are a set of standard
+> commands as well as the possibility for vendor specific commands.
+> Unlike the NVME driver the CXL driver does not enable vendor specific
+> command functionality by default. This conservatism is out of concern
+> for the fact that CXL interleaves memory across devices and implements
+> host memory. The system integrity implications of some commands are
+> more severe than NVME and vendor specific functionality is mostly
+> unauditable. This will be an ongoing topic of discussion with the
+> wider CXL community for next few months.
+>
+> The driver has been developed in the open since November against a
+> work-in-progress QEMU emulation of the CXL device model. That QEMU
+> effort has recently attracted contributions from multiple hardware
+> vendors.
+>
+> The driver has appeared in -next. It collected some initial static
+> analysis fixes and build-robot reports, but all quiet in -next for the
+> past week.
+>
+> A list of review tags that arrived after the branch for -next was cut
+> is appended to the tag message below.
+>
+> ---
+>
+> The following changes since commit 1048ba83fb1c00cd24172e23e8263972f6b5d9ac:
+>
+>   Linux 5.11-rc6 (2021-01-31 13:50:09 -0800)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm tags/cxl-for-5.12
+>
+> for you to fetch changes up to 88ff5d466c0250259818f3153dbdc4af1f8615dd:
+>
+>   cxl/mem: Fix potential memory leak (2021-02-22 14:44:39 -0800)
+>
+> ----------------------------------------------------------------
+> cxl for 5.12
+>
+> Introduce an initial driver for CXL 2.0 Type-3 Memory Devices. CXL is
+> Compute Express Link which released the 2.0 specification in November.
+> The Linux relevant changes in CXL 2.0 are support for an OS to
+> dynamically assign address space to memory devices, support for
+> switches, persistent memory, and hotplug. A Type-3 Memory Device is a
+> PCI enumerated device presenting the CXL Memory Device Class Code and
+> implementing the CXL.mem protocol. CXL.mem allows device to advertise
+> CPU and I/O coherent memory to the system, i.e. typical "System RAM" and
+> "Persistent Memory" in Linux /proc/iomem terms.
+>
+> In addition to the CXL.mem fast path there is an administrative command
+> hardware mailbox interface for maintenance and provisioning. It is this
+> command interface that is the focus of the initial driver. With this
+> driver a CXL device that is mapped by the BIOS can be administered by
+> Linux. Linux support for CXL PMEM and dynamic CXL address space
+> management are to be implemented post v5.12.
+>
+> 4cdadfd5e0a7 cxl/mem: Introduce a driver for CXL-2.0-Type-3 endpoints
+> Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+>
+> 8adaf747c9f0 cxl/mem: Find device capabilities
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>
+> b39cb1052a5c cxl/mem: Register CXL memX devices
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>
+> 13237183c735 cxl/mem: Add a "RAW" send command
+> Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+>
+> 472b1ce6e9d6 cxl/mem: Enable commands via CEL
+> Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+>
+> 57ee605b976c cxl/mem: Add set of informational commands
+> Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+>
+> ----------------------------------------------------------------
+> Ben Widawsky (7):
+>       cxl/mem: Find device capabilities
+>       cxl/mem: Add basic IOCTL interface
+>       cxl/mem: Add a "RAW" send command
+>       cxl/mem: Enable commands via CEL
+>       cxl/mem: Add set of informational commands
+>       MAINTAINERS: Add maintainers of the CXL driver
+>       cxl/mem: Fix potential memory leak
+>
+> Dan Carpenter (1):
+>       cxl/mem: Return -EFAULT if copy_to_user() fails
+>
+> Dan Williams (2):
+>       cxl/mem: Introduce a driver for CXL-2.0-Type-3 endpoints
+>       cxl/mem: Register CXL memX devices
+>
+>  .clang-format                                      |    1 +
+>  Documentation/ABI/testing/sysfs-bus-cxl            |   26 +
+>  Documentation/driver-api/cxl/index.rst             |   12 +
+>  Documentation/driver-api/cxl/memory-devices.rst    |   46 +
+>  Documentation/driver-api/index.rst                 |    1 +
+>  Documentation/userspace-api/ioctl/ioctl-number.rst |    1 +
+>  MAINTAINERS                                        |   11 +
+>  drivers/Kconfig                                    |    1 +
+>  drivers/Makefile                                   |    1 +
+>  drivers/cxl/Kconfig                                |   53 +
+>  drivers/cxl/Makefile                               |    7 +
+>  drivers/cxl/bus.c                                  |   29 +
+>  drivers/cxl/cxl.h                                  |   95 ++
+>  drivers/cxl/mem.c                                  | 1552 ++++++++++++++++++++
+>  drivers/cxl/pci.h                                  |   31 +
+>  include/linux/pci_ids.h                            |    1 +
+>  include/uapi/linux/cxl_mem.h                       |  172 +++
+>  17 files changed, 2040 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-cxl
+>  create mode 100644 Documentation/driver-api/cxl/index.rst
+>  create mode 100644 Documentation/driver-api/cxl/memory-devices.rst
+>  create mode 100644 drivers/cxl/Kconfig
+>  create mode 100644 drivers/cxl/Makefile
+>  create mode 100644 drivers/cxl/bus.c
+>  create mode 100644 drivers/cxl/cxl.h
+>  create mode 100644 drivers/cxl/mem.c
+>  create mode 100644 drivers/cxl/pci.h
+>  create mode 100644 include/uapi/linux/cxl_mem.h
