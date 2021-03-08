@@ -2,106 +2,91 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FBBC433E0
-	for <linux-cxl@archiver.kernel.org>; Thu,  4 Mar 2021 19:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092CFC433E0
+	for <linux-cxl@archiver.kernel.org>; Mon,  8 Mar 2021 23:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7942664F65
-	for <linux-cxl@archiver.kernel.org>; Thu,  4 Mar 2021 19:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C03ED64F96
+	for <linux-cxl@archiver.kernel.org>; Mon,  8 Mar 2021 23:35:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235365AbhCDTxX convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 4 Mar 2021 14:53:23 -0500
-Received: from server.avery-design.com ([198.57.169.184]:49984 "EHLO
-        server.avery-design.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231616AbhCDTwy (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 4 Mar 2021 14:52:54 -0500
-Received: from ool-44c0a99c.dyn.optonline.net ([68.192.169.156]:52191 helo=[192.168.1.180])
-        by server.avery-design.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <cbrowy@avery-design.com>)
-        id 1lHtzD-00008B-PE; Thu, 04 Mar 2021 19:50:15 +0000
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [RFC PATCH v2 1/2] Basic PCIe DOE support
-From:   Chris Browy <cbrowy@avery-design.com>
-In-Reply-To: <20210304192158.00004296@Huawei.com>
-Date:   Thu, 4 Mar 2021 14:50:14 -0500
-Cc:     armbru@redhat.com, Ben Widawsky <ben.widawsky@intel.com>,
-        dan.j.williams@intel.com, david@redhat.com, f4bug@amsat.org,
-        imammedo@redhat.com, ira.weiny@intel.com, jgroves@micron.com,
-        linux-cxl@vger.kernel.org, mst@redhat.com, qemu-devel@nongnu.org,
-        vishal.l.verma@intel.com, Huai-Cheng <hchkuo@avery-design.com.tw>
-Reply-To: "20210304192158.00004296@huawei.com" 
-          <20210304192158.00004296@Huawei.com>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <E4FC0C46-FAED-4F9B-BC7B-B770DA517F6F@avery-design.com>
-References: <1612900760-7361-1-git-send-email-cbrowy@avery-design.com>
- <1612902949-9992-1-git-send-email-cbrowy@avery-design.com>
- <20210304192158.00004296@Huawei.com>
-To:     Jonathan Cameron <jonathan.cameron@huawei.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.avery-design.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - avery-design.com
-X-Get-Message-Sender-Via: server.avery-design.com: authenticated_id: cbrowy@avery-design.com
-X-Authenticated-Sender: server.avery-design.com: cbrowy@avery-design.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+        id S229627AbhCHXef (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 8 Mar 2021 18:34:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34236 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229471AbhCHXeC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 8 Mar 2021 18:34:02 -0500
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D60EAC06174A
+        for <linux-cxl@vger.kernel.org>; Mon,  8 Mar 2021 15:34:01 -0800 (PST)
+Received: by mail-lj1-x233.google.com with SMTP id u4so18323574ljh.6
+        for <linux-cxl@vger.kernel.org>; Mon, 08 Mar 2021 15:34:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=HV6Te7r9KJLF3Mw9pM7Q2p+3SeWjKjbOa4UDkSedz3c=;
+        b=I1cvvKAdX0LNZcaqKxAwIHdpsm11rq+hfnpzNefeEilU01QWoxgsFWGUStrCuA0Fs8
+         tB+GR2bWixZZJdEBiSlfUiSgz7IGbgzE4KulYLZTKvCPsuIPHpgvqhd2m8OzylvEcB0h
+         Lu5oncesaSCWmrvrSWXpoCmObepBofg8eaaepIGx4Ttfl3xjJxnEYL+rZmD5pha8kRes
+         zzh44H/Ur3dAHEsaL6vbxGxtOjBv9G4IBsATA4DFrQNCzrp2lKa9+uwj/1vfbywpNrj5
+         REstezva/9/pTeSLCUeyBBak1y1z8QS6kf8nuZdVLBwngTsObczk7fKG0GEVNN25MJkh
+         jboA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=HV6Te7r9KJLF3Mw9pM7Q2p+3SeWjKjbOa4UDkSedz3c=;
+        b=h60CjVRj97W7e9w2cOBJPj5gVdaFxxtJ7uNpa+N6gZx/TSH41EGdgTgmc6b57pr6HA
+         k63aX2TF0CZKxhPgZz5qRGlIDxlayUxQicFkUw3GdJZpOqbX67oFVTjrcO+DN8tE0xTt
+         ReF8Oj654TS/8nelGVSEdPFraYSlDX65xyL6I3MyrrO4mer+UEZiOUo8Mnea0clZGVYH
+         3uE9LGTyQmvQ1JQXw2zGTnjammD5/jh+0E4/R4vdoML43ZuAwGtDbpQcQbY1RTcKXIXa
+         f+tBrLvRsK0XLt3LhTI2M9i/3LipFAUkRJwi7XNjg0zxbOuH2O/OHwUbBDPasoEPohRV
+         maDA==
+X-Gm-Message-State: AOAM533CX0+ItYkcpnr56H1YzVsopHmcQ2syAofL0BUIEQX/eVJke+Jb
+        xjx4Lns0NKp5GmjBTSglex1ZF15A1WVtesv2kMZX/SWn53s=
+X-Google-Smtp-Source: ABdhPJzep/K3CXWm4dFXQ8qTwplsGLy83pcyLxbVaJbV4KUsiQ60Tpx7K6W5tpuwO+H9Wq9Tkj+DVN9pwbmI94Lt6Ic=
+X-Received: by 2002:a2e:9e8e:: with SMTP id f14mr15629169ljk.140.1615246440322;
+ Mon, 08 Mar 2021 15:34:00 -0800 (PST)
+MIME-Version: 1.0
+From:   Raj Vishwanathan <raj.vishwanathan@gmail.com>
+Date:   Mon, 8 Mar 2021 15:33:49 -0800
+Message-ID: <CA+-5cKfDiDDG6zpnDSg12a=JPD8-FTypi9qA9qdr_CRnkrFuHg@mail.gmail.com>
+Subject: Testing CXl with qemu and Linux
+To:     linux-cxl@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+Raj Vishwanathan <raj.vishwanathan@gmail.com>
+1:55 PM (1 hour ago)
+to linux-cxl
 
+I am trying to setup and take a look at an system with CXL enabled
 
-> On Mar 4, 2021, at 2:21 PM, Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
-> 
-> On Tue, 9 Feb 2021 15:35:49 -0500
-> Chris Browy <cbrowy@avery-design.com> wrote:
-> 
-> Hi Chris,
-> 
-> One more thing hit whilst debugging linux side of this.
-> 
->> +static void pcie_doe_irq_assert(DOECap *doe_cap)
->> +{
->> +    PCIDevice *dev = doe_cap->doe->pdev;
->> +
->> +    if (doe_cap->cap.intr && doe_cap->ctrl.intr) {
-> 
-> 
-> need something like
-> 
-> doe_cap->status.intr = 1;
-> 
-> I think or anyone checking the status register is going to think
-> this interrupt is spurious.
+1. I downloaded and installed linux.5.11 + CXL patches on a regular qemu system
+2. I built qemu using Ben Widawsky's CXL-2.0 branch ( I see that there
+is a 2.0v4 tree)
+3. I also built ndactl  from 2.0v2 branch
 
-You’re absolutely right, good catch!
+From what I understand, I use the ndactl to create a  memory namespace
+and I use this in the qemu command line to start. Given this and the
+Linux having CXL support  I should be able to see the CXL.mem device
+with lspci. Correct me if I am completely messed up.
 
-> 
-> Otherwise all seems to work. I need to do a bit of tidying up on
-> kernel code but should be able to send out early next week.
-> 
+I am not able to create the memory namespace with ndctl
 
-We’re putting out the v3 by end of this week.  We’re spent a bit longer
-tidying up on our end but sounds like coming together real soon in 5.12 
-release!
+I tried with
 
->> +        /* Interrupt notify */
->> +        if (msix_enabled(dev)) {
->> +            msix_notify(dev, doe_cap->cap.vec);
->> +        } else if (msi_enabled(dev)) {
->> +            msi_notify(dev, doe_cap->cap.vec);
->> +        }
->> +        /* Not support legacy IRQ */
->> +    }
->> +}
+"./ndctl  create-namespace -t pmem -m raw -n mem0 -v -s 268435456" and
+it fails with
 
+"failed to create namespace: No such device or address"
+
+Is there a step by step direction of how to test CXL on Linux? I can
+document this process if someone can describe where am I making a
+mistake
+
+Raj
