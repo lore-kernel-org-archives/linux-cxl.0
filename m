@@ -2,153 +2,163 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D16C433E6
-	for <linux-cxl@archiver.kernel.org>; Wed, 17 Mar 2021 01:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0FDC433DB
+	for <linux-cxl@archiver.kernel.org>; Wed, 17 Mar 2021 01:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AA2064F9B
-	for <linux-cxl@archiver.kernel.org>; Wed, 17 Mar 2021 01:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DDD164F92
+	for <linux-cxl@archiver.kernel.org>; Wed, 17 Mar 2021 01:50:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229896AbhCQBnT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 16 Mar 2021 21:43:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57920 "EHLO
+        id S229550AbhCQBuP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 16 Mar 2021 21:50:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230015AbhCQBms (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 16 Mar 2021 21:42:48 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2EC5C061762
-        for <linux-cxl@vger.kernel.org>; Tue, 16 Mar 2021 18:42:47 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id bm21so1945ejb.4
-        for <linux-cxl@vger.kernel.org>; Tue, 16 Mar 2021 18:42:47 -0700 (PDT)
+        with ESMTP id S229505AbhCQBtn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 16 Mar 2021 21:49:43 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C545C06174A
+        for <linux-cxl@vger.kernel.org>; Tue, 16 Mar 2021 18:49:43 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id f26so1203137ljp.8
+        for <linux-cxl@vger.kernel.org>; Tue, 16 Mar 2021 18:49:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=M7/LGJ21YJO+iFucD9rDYt4XctUqizzW3vd6M6Od5hY=;
-        b=mBd6zM+h30VvBCVo7YKbshWuCmLQwP6+CkVoCaF6k1Q+mjVxuDq2Lpr56oYu5tNvQv
-         QENLsiIq88DdP8PnL8A9eKOxVDbxhzHuRaP7PZIXVuf7tBIMjSeGAx+DeYXq5LYEF1t9
-         p2bz6YPuvwtBRo/2YUG2zl3DBV7oCIRmXPwpFBxR8T7RcyTo3uU6O0HRmXsuFwznXiUq
-         hBsuImbVPkRNG9kBchYa3qrfYk3hSuIndbnLVyxMnzz91PC9PUnGW6SD0XXTzDnrvr0n
-         F9KxlR8CSgrIs1ZI1n0FND7MX1AtaV2yFQGkpIDw9z9CMkrEoyzQ8vPyzEbhXbgm2Jdf
-         RO4A==
+        bh=nDrbrwxOjGWa9otVMYsB35cBGdQWV4+Rz7O3JtLSYbA=;
+        b=EXRqFb3MQufgpPp7NUQ+TOeI6DCesO7AceK5q2zwfb5TNABK+BCOBK7V7kw7KS2Hjd
+         8ujkmRfpJLYJmrToMLGkDGm7SdE4vIYhmfXep+MCnH7K70OyHry9ainYC3qOo51cYMVo
+         JRde++mrzr/Rc0gbDeJpNh+2FCRj7cHAeE/GgNWSeXLumprStTP4VeJarEaFJoNALfIA
+         AGL2h58uIQXxezwl6fOI87AJy2e7hQTv5xuG94htzrdmBbrGSOXlDD9Or+UsuLjC1CCT
+         h6Vny+QcbbNFMtLP6anDtr1kF0CEa4zQJv9N83lc6zJDGwE8euZmGLXhRqYI+LbyFZN3
+         1l5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=M7/LGJ21YJO+iFucD9rDYt4XctUqizzW3vd6M6Od5hY=;
-        b=X/PLH7VIIgT5jVQbxcTHBU8HdYMSYzWkLzvjvrOhW5fs1zPUwuNbqLfA9SmO46qjah
-         hLzpofee84PjYY2wQ1G4higlka6xi4j2j/uoDDAxD8ppO9vFRkP05IYe2jgwmWGiWf9M
-         Ro+512b1s7dLrlbLWL9M794BIFypqClLP2lx8OvZkl5AyxfjqXNZpU1HdIoRoiXeYPJy
-         LAcGrql+1mJ3CuKe9WYd8f0dMATKfNtnTUhXuQ/EtNmVT4Dx2ymAOfAb5jGtyAown5mV
-         zrU7lyTUgSyzWfvgs6nwbJ44qO+JXGhCnuaXq/WXW74eaxA2ESa6gmgddoRPFXNT/+x6
-         Op9Q==
-X-Gm-Message-State: AOAM533DtOQlsw5gnsh3Qq6JeT47YYqqGJUgI3c3pPlDi4R98uC0zUu5
-        O8Gu68C8Uer6W4l5jio2xP/ybGAnPkFlNZQd9gF/ww==
-X-Google-Smtp-Source: ABdhPJzTz0Uox7DT2yEbQA5bjykjK5xvAEvf2V4VMxTqqm73jeFUZzjd5CyhqUNVsWi968pRxJhDI9eXhY4kVUUROP4=
-X-Received: by 2002:a17:906:2ac1:: with SMTP id m1mr22939142eje.472.1615945366315;
- Tue, 16 Mar 2021 18:42:46 -0700 (PDT)
+        bh=nDrbrwxOjGWa9otVMYsB35cBGdQWV4+Rz7O3JtLSYbA=;
+        b=ciCMkUrvtOH5M8ACb3OOoFmYuyMsqu0/NdFQZSH2HLDODgOhH8BuxnB4+7jfma+kVd
+         oyR5pKCe/vQ9PfnQoSWHw2Q2jmb2LCnyP4Qei230TMtT2H1c3bAo1fVz0Tq7JFmvuzkc
+         QQJ7cuJbdpVC71msOMDNiTPBuMsjQAkTAsA/TsQtTD7hqvMaqctZ+sHDWiT0dPC1I9eB
+         KLFXEXtLCg5Ruh6b0tAaRR1LSmMoXgQSsb1h6G76liZfQWpjE4bwJaUSbcYhuu6TdnYQ
+         qSl26azytF2AzKj8fm7S7k0z+hmYfYdIs1G582XwedHZ15oDEym7EO++Z8vSIv0Ri1pE
+         5Adg==
+X-Gm-Message-State: AOAM532H9irpYhAptcF4Xt1zhVlPPJHbAFh17Q/CBupr9qylK8yytfo7
+        ZKOYg+4kTjF4w7UiV2QjV22S/JF55fzRyy+LY4xTykfL
+X-Google-Smtp-Source: ABdhPJx7r/5JS7jMMRDM3Ej92j68CbRx21wBwRp1jzg0ETNAULnTWuGRCXHiVK7jby6TeLTfApQyswVBjjH5qiwzR04=
+X-Received: by 2002:a2e:b894:: with SMTP id r20mr935174ljp.222.1615945781420;
+ Tue, 16 Mar 2021 18:49:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210310180306.1588376-1-Jonathan.Cameron@huawei.com>
- <20210310180306.1588376-3-Jonathan.Cameron@huawei.com> <20210310181459.000005c7@huawei.com>
- <CAPcyv4jq-KovQcEqesA=kCdzdDNtQ9y8g2aBCSXqQv7cvmABtg@mail.gmail.com> <20210316103647.00002f4b@Huawei.com>
-In-Reply-To: <20210316103647.00002f4b@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 16 Mar 2021 18:42:38 -0700
-Message-ID: <CAPcyv4ikiWau7J-uc7yj85VCfPrc2ivnJ81fSnkEN0SXciDUyg@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/2] cxl/mem: Add CDAT table reading from DOE
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
+References: <CA+-5cKfDiDDG6zpnDSg12a=JPD8-FTypi9qA9qdr_CRnkrFuHg@mail.gmail.com>
+ <20210312004449.akcgmidgyupzqbyn@intel.com> <7f5066f5ec2587229258bf33da84f1275e0d044a.camel@intel.com>
+ <CA+-5cKeZKUONViHiQbGJ=sjA43iHHQRxsrsqzT-nG3X6Wo89sQ@mail.gmail.com>
+ <947272c24b860ef9ac9609134a6f481874c71219.camel@intel.com> <CA+-5cKcYsD_g=YDpAfqpEAnVdq_zScLDXDumxygT6Xvw-CHUYg@mail.gmail.com>
+In-Reply-To: <CA+-5cKcYsD_g=YDpAfqpEAnVdq_zScLDXDumxygT6Xvw-CHUYg@mail.gmail.com>
+From:   Raj Vishwanathan <raj.vishwanathan@gmail.com>
+Date:   Tue, 16 Mar 2021 18:49:30 -0700
+Message-ID: <CA+-5cKdaaK3nA6aiEXp4WrH3g936rw8rfLCjXOu0-YYdrQeTTQ@mail.gmail.com>
+Subject: Re: Testing CXl with qemu and Linux
+To:     "Verma, Vishal L" <vishal.l.verma@intel.com>
+Cc:     "Widawsky, Ben" <ben.widawsky@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Mar 16, 2021 at 3:38 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Mon, 15 Mar 2021 15:00:08 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > On Wed, Mar 10, 2021 at 10:15 AM Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com> wrote:
-> > >
-> > > On Thu, 11 Mar 2021 02:03:06 +0800
-> > > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-> > >
-> > > > This patch simply provides some debug print outs of the entries
-> > > > at probe time + a sysfs binary attribute to allow dumping of the
-> > > > whole table.
-> > > >
-> > > > Binary dumping is modelled on /sys/firmware/ACPI/tables/
-> > > >
-> > > > The ability to dump this table will be very useful for emulation of
-> > > > real devices once they become available as QEMU CXL type 3 device
-> > > > emulation will be able to load this file in.
-> > > >
-> > > > Open questions:
-> > > > * No support here for table updates. Worth including these from the
-> > > >   start, or leave that complexity for later?
-> > > > * Worth logging the reported info for debug, or is the binary attribute
-> > > >   sufficient?  Larger open question of whether to expose this info to
-> > > >   userspace or not left for another day!
-> > > > * Where to put the CDAT file?  Is it worth a subdirectory?
-> > > > * What is maximum size of the SSLBIS entry - I haven't quite managed
-> > > >   to figure that out and this is the record with largest size.
-> > > >   We could support dynamic allocation of the record size, but it
-> > > >   would add complexity that seems unnecessary.
-> > > >   It would not be compliant with the specification for a type 3 memory
-> > > >   device to report this record anyway so I'm not that worried about this
-> > > >   for now.  It will become relevant once we have support for reading
-> > > >   CDAT from CXL switches.
-> > > > * cdat.h is formatted in a similar style to pci_regs.h on basis that
-> > > >   it may well be helpful to share this header with userspace tools.
-> > > > * Move the generic parts of this out to driver/cxl/cdat.c or leave that
-> > > >   until we have other CXL drivers wishing to use this?
-> > >
-> > > Naturally I remembered another open question within 10 seconds of sending :(
-> > >
-> > >   * Do we want to add any sort of header to the RAW dump of CDAT to aid
-> > >     tooling?  Whilst it looks a little like an ACPI table it doesn't have
-> > >     a signature.
-> > >
-> > > My gut feeling is no, because the CDAT specification doesn't define one but
-> > > I can see that it might be very convenient to have something that identified
-> > > the data once it was put in a file.
-> >
-> > I'm not yet convinced raw dumping is worth it for the same reason that
-> > command payload logging was eliminated from the v5.12-rc1 submission.
-> > There's not much userspace can do with the information besides debug
-> > the kernel behavior. If the kernel assigns a numa node to target a
-> > given CXL memory range with NUMA apis then HMEM_REPORTING should
-> > enumerate the properties. In other words, don't expand the userspace
-> > ABI problem, funnel users to the canonical source for such data.
->
-> As someone who finds raw dumping of ACPI tables extremely helpful in every
-> day use for debugging of some of our 'interesting' hardware, I know I'm going
-> to end up carrying that element locally anyway.  I don't have a particular
-> problem doing so if we decide to not to upstream it.
->
-> Much like the ACPI table dumping, it's not an interface you expect userspace
-> to ever use and I fully agree that we should expose things properly as you
-> describe.
->
-> Short term my interest here is to get the DOE code upstream as step 1 of
-> moving to a full solution.  The printing and dumping is really just PoC element
-> to prove out the interface.  Any issue with putting the prints under _dbg()?
+Vishal, Ben
 
-debugfs_create_blob()? Although debugfs makes it annoying to support
-per device blobs. I could get on board with a root-only sysfs
-attribute, but using a static DEVICE_ATTR_ADMIN_RO()... more comments
-incoming in a review of the patch.
+I got it working. I can see the cxl mem devices using lspci.
+
+Thanks for your pointers
+
+Raj
+
+On Fri, Mar 12, 2021 at 9:11 PM Raj Vishwanathan
+<raj.vishwanathan@gmail.com> wrote:
+>
+> Thanks, I'll check it out.
+>
+> On Fri, Mar 12, 2021 at 4:29 PM Verma, Vishal L
+> <vishal.l.verma@intel.com> wrote:
+> >
+> > On Fri, 2021-03-12 at 08:55 -0800, Raj Vishwanathan wrote:
+> > > Vishal, Ben
+> > >
+> > > Thanks for replying.
+> > >
+> > > I am trying to understand who exposes these CXL devices. If I
+> > > understood correctly,  qemu, with the host OS support, will create and
+> > > expose a CXL.mem endpoint that will be discovered by the CXL root
+> > > complex driver on Linux ( thanks to the CXL patches)
+> >
+> > The qemu branch you're using creates and exposes CXL devices when called
+> > with the right cli arguments. The Linux kernel enabling then is able to
+> > comprehend these devices, show them in sysfs, and is able to send down
+> > mailbox commands.
+> >
+> > >
+> > > What I am not able to do is to expose the CXL endpoint using Qemu.
+> >
+> > You might take a look at this set of scripts that help create a working
+> > environment for CXL development using qemu:
+> > https://github.com/pmem/run_qemu
+> >
+> > >
+> > > Raj
+> > >
+> > > On Thu, Mar 11, 2021 at 5:51 PM Verma, Vishal L
+> > > <vishal.l.verma@intel.com> wrote:
+> > > >
+> > > > On Thu, 2021-03-11 at 16:44 -0800, Ben Widawsky wrote:
+> > > > > On 21-03-08 15:33:49, Raj Vishwanathan wrote:
+> > > > > > Raj Vishwanathan <raj.vishwanathan@gmail.com>
+> > > > > > 1:55 PM (1 hour ago)
+> > > > > > to linux-cxl
+> > > > > >
+> > > > > > I am trying to setup and take a look at an system with CXL enabled
+> > > > > >
+> > > > > > 1. I downloaded and installed linux.5.11 + CXL patches on a regular qemu system
+> > > > > > 2. I built qemu using Ben Widawsky's CXL-2.0 branch ( I see that there
+> > > > > > is a 2.0v4 tree)
+> > > > > > 3. I also built ndactl  from 2.0v2 branch
+> > > > > >
+> > > > > > From what I understand, I use the ndactl to create a  memory namespace
+> > > > > > and I use this in the qemu command line to start. Given this and the
+> > > > > > Linux having CXL support  I should be able to see the CXL.mem device
+> > > > > > with lspci. Correct me if I am completely messed up.
+> > > > > >
+> > > > > > I am not able to create the memory namespace with ndctl
+> > > > > >
+> > > > > > I tried with
+> > > > > >
+> > > > > > "./ndctl  create-namespace -t pmem -m raw -n mem0 -v -s 268435456" and
+> > > > > > it fails with
+> > > > > >
+> > > > > > "failed to create namespace: No such device or address"
+> > > > > >
+> > > > > > Is there a step by step direction of how to test CXL on Linux? I can
+> > > > > > document this process if someone can describe where am I making a
+> > > > > > mistake
+> > > > > >
+> > > > > > Raj
+> > > > >
+> > > > > Aside from command errors, for which I'm not the expert...
+> > > > >
+> > > > > The cxl command will be used to control CXL devices, not ndctl. Nothing other
+> > > > > than sending commands to the CXL device are actually hooked in in any of the:
+> > > > > application, kernel. QEMU has minimal support which may need more and I will be
+> > > > > looking into that.
+> > > >
+> > > > In addition to what Ben said, the things that are added in the ndctl
+> > > > branch you built are 'libcxl', and 'cxl-cli'. You can run 'cxl list' to
+> > > > enumerate the cxl devices found, and libcxl has APIs to create and send
+> > > > a partial subset of mailbox commands.
+> > > >
+> > > > Eventually 'ndctl create-namespace' will be able to use a region coming
+> > > > from a CXL device, but that functionality is still some time away.
+> > > >
+> >
