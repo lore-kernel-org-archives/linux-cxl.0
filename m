@@ -7,40 +7,39 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C66EBC433DB
-	for <linux-cxl@archiver.kernel.org>; Wed, 24 Mar 2021 21:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765EAC433E0
+	for <linux-cxl@archiver.kernel.org>; Wed, 24 Mar 2021 21:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D6D161A1F
-	for <linux-cxl@archiver.kernel.org>; Wed, 24 Mar 2021 21:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4985261A1E
+	for <linux-cxl@archiver.kernel.org>; Wed, 24 Mar 2021 21:02:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238197AbhCXVCK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S238295AbhCXVCK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Wed, 24 Mar 2021 17:02:10 -0400
-Received: from mga18.intel.com ([134.134.136.126]:30382 "EHLO mga18.intel.com"
+Received: from mga09.intel.com ([134.134.136.24]:28460 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238211AbhCXVBw (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Wed, 24 Mar 2021 17:01:52 -0400
-IronPort-SDR: DqWSWnr3O4E05rBcm4l5E41h659Q43kQ9HDRpJZrWslCWbUvDu6XKqRvGJU/hJObsXOsHEeHYN
- xi+3l6S12/KQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9933"; a="178339680"
+        id S238222AbhCXVB5 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Wed, 24 Mar 2021 17:01:57 -0400
+IronPort-SDR: PuCpZ5tfQdLH8j//B7Yw2R7JcZLIOwo008bggVCGSL86Xk5/VA/45wUqC8gXoVmyrYGkE8T9yr
+ unUWwL6J1+1g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9933"; a="190880557"
 X-IronPort-AV: E=Sophos;i="5.81,275,1610438400"; 
-   d="scan'208";a="178339680"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2021 14:01:51 -0700
-IronPort-SDR: +h+Qkwic+CIAtKQUJDKNTnT/xM+JK0uS140eNzAFR+lbYjtFgT+m82jaHIwXDWvlZKjXVhtj7p
- ZRulJxBPkWNg==
+   d="scan'208";a="190880557"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2021 14:01:56 -0700
+IronPort-SDR: ScMrBpVrY5kPX+Il3Tf25SnLBHZQfFRT0dKgKkbsq8zxAs5AN5y21IuVwAOJAteBUntmqHSOG+
+ zzzJT5EflWlA==
 X-IronPort-AV: E=Sophos;i="5.81,275,1610438400"; 
-   d="scan'208";a="409024171"
+   d="scan'208";a="452748654"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2021 14:01:51 -0700
-Subject: [PATCH 1/4] cxl/mem: Use sysfs_emit() for attribute show routines
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2021 14:01:56 -0700
+Subject: [PATCH 2/4] cxl/mem: Fix cdev_device_add() error handling
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>, ira.weiny@intel.com,
+Cc:     Jason Gunthorpe <jgg@nvidia.com>, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
         linux-kernel@vger.kernel.org
-Date:   Wed, 24 Mar 2021 14:01:51 -0700
-Message-ID: <161661971101.1721612.16412318662284948582.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Wed, 24 Mar 2021 14:01:56 -0700
+Message-ID: <161661971651.1721612.7457823773061754064.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <161661970558.1721612.10441826898835759137.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <161661970558.1721612.10441826898835759137.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -51,55 +50,69 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-While none the CXL sysfs attributes are threatening to overrun a
-PAGE_SIZE of output, it is good form to use the recommended helpers.
+If cdev_device_add() fails then the allocation performed by
+dev_set_name() is leaked. Use put_device(), not open coded release, for
+device_add() failures.
+
+The comment is obsolete because direct err_id failures need not worry
+about the device being live.
+
+The release method expects the percpu_ref is already dead, so
+percpu_ref_kill() is needed before put_device(). However, given that the
+cdev was partially live wait_for_completion() also belongs in the
+release method.
 
 Fixes: b39cb1052a5c ("cxl/mem: Register CXL memX devices")
-Reviewed-by: Ben Widawsky <ben.widawsky@intel.com>
 Reported-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/mem.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/cxl/mem.c |   16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index ecfc9ccdba8d..30bf4f0f3c17 100644
+index 30bf4f0f3c17..e53d573ae4ab 100644
 --- a/drivers/cxl/mem.c
 +++ b/drivers/cxl/mem.c
-@@ -1066,7 +1066,7 @@ static ssize_t firmware_version_show(struct device *dev,
+@@ -1049,6 +1049,7 @@ static void cxl_memdev_release(struct device *dev)
+ {
  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
- 	struct cxl_mem *cxlm = cxlmd->cxlm;
  
--	return sprintf(buf, "%.16s\n", cxlm->firmware_version);
-+	return sysfs_emit(buf, "%.16s\n", cxlm->firmware_version);
++	wait_for_completion(&cxlmd->ops_dead);
+ 	percpu_ref_exit(&cxlmd->ops_active);
+ 	ida_free(&cxl_memdev_ida, cxlmd->id);
+ 	kfree(cxlmd);
+@@ -1157,7 +1158,6 @@ static void cxlmdev_unregister(void *_cxlmd)
+ 
+ 	percpu_ref_kill(&cxlmd->ops_active);
+ 	cdev_device_del(&cxlmd->cdev, dev);
+-	wait_for_completion(&cxlmd->ops_dead);
+ 	cxlmd->cxlm = NULL;
+ 	put_device(dev);
  }
- static DEVICE_ATTR_RO(firmware_version);
+@@ -1210,20 +1210,16 @@ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
+ 	cdev_init(cdev, &cxl_memdev_fops);
  
-@@ -1076,7 +1076,7 @@ static ssize_t payload_max_show(struct device *dev,
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
- 	struct cxl_mem *cxlm = cxlmd->cxlm;
+ 	rc = cdev_device_add(cdev, dev);
+-	if (rc)
+-		goto err_add;
++	if (rc) {
++		percpu_ref_kill(&cxlmd->ops_active);
++		put_device(dev);
++		return rc;
++	}
  
--	return sprintf(buf, "%zu\n", cxlm->payload_size);
-+	return sysfs_emit(buf, "%zu\n", cxlm->payload_size);
- }
- static DEVICE_ATTR_RO(payload_max);
+ 	return devm_add_action_or_reset(dev->parent, cxlmdev_unregister, cxlmd);
  
-@@ -1087,7 +1087,7 @@ static ssize_t ram_size_show(struct device *dev, struct device_attribute *attr,
- 	struct cxl_mem *cxlm = cxlmd->cxlm;
- 	unsigned long long len = range_len(&cxlm->ram_range);
- 
--	return sprintf(buf, "%#llx\n", len);
-+	return sysfs_emit(buf, "%#llx\n", len);
- }
- 
- static struct device_attribute dev_attr_ram_size =
-@@ -1100,7 +1100,7 @@ static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
- 	struct cxl_mem *cxlm = cxlmd->cxlm;
- 	unsigned long long len = range_len(&cxlm->pmem_range);
- 
--	return sprintf(buf, "%#llx\n", len);
-+	return sysfs_emit(buf, "%#llx\n", len);
- }
- 
- static struct device_attribute dev_attr_pmem_size =
+-err_add:
+-	ida_free(&cxl_memdev_ida, cxlmd->id);
+ err_id:
+-	/*
+-	 * Theoretically userspace could have already entered the fops,
+-	 * so flush ops_active.
+-	 */
+ 	percpu_ref_kill(&cxlmd->ops_active);
+-	wait_for_completion(&cxlmd->ops_dead);
+ 	percpu_ref_exit(&cxlmd->ops_active);
+ err_ref:
+ 	kfree(cxlmd);
 
