@@ -2,145 +2,70 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=BAYES_40,DKIM_INVALID,
+	DKIM_SIGNED,MAILING_LIST_MULTI,SPF_HELO_NONE autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D8FC433C1
-	for <linux-cxl@archiver.kernel.org>; Tue, 23 Mar 2021 18:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C18C433C1
+	for <linux-cxl@archiver.kernel.org>; Wed, 24 Mar 2021 06:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51001619C7
-	for <linux-cxl@archiver.kernel.org>; Tue, 23 Mar 2021 18:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48BC1619E5
+	for <linux-cxl@archiver.kernel.org>; Wed, 24 Mar 2021 06:52:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232478AbhCWS5i (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 23 Mar 2021 14:57:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50868 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232256AbhCWS5P (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 23 Mar 2021 14:57:15 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4A7CC061574
-        for <linux-cxl@vger.kernel.org>; Tue, 23 Mar 2021 11:57:11 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id hq27so28855606ejc.9
-        for <linux-cxl@vger.kernel.org>; Tue, 23 Mar 2021 11:57:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4ccyIWasdb6wjk9qd/GSKNuMErweE5kq6UtIF6wJrA0=;
-        b=P55DV6kmPIjcTS2Mbm3kpmOPX6ArVTJIS7PT8ctxbXxxBpvCXA115nToQjURSt0gFE
-         sZQYX1u2GUmrcU86ou11FUJBnCgpvCStFQGivJEvPU2d5HbW4EnRGFwCJSAU+D/lebqw
-         rERZltSCprJiUKU3VulndADNMmVVQzPqBMM/ImBRObRk+79VZfwGuR5KqQzUr3S1nwBw
-         wnYAfNBT6j/FIiNd8kzaZOyFWCkW3Z0cU50FFhdcjlciWsjbpizICBTAi7v2nGkhOuSN
-         rQdHi0ncoFuNKOAG3oCjE2wfE/79jYya0UPtTo4G0mxlIu4T4tkLnu+ecYLYTvZdfHlR
-         VO+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4ccyIWasdb6wjk9qd/GSKNuMErweE5kq6UtIF6wJrA0=;
-        b=kN2Z5N7FfKMexrdGgDexhUv1MT9t+/S5pGXgBziZQdlKQqHTxVeQfcOtCJ1jxlMh9/
-         OVgWz0AiigLu8h5IcMLNWssx7SnHa2Cq7Be7eem52iN+Ox0x0Gi68usz/7Y2h3ZKE383
-         2pR37SeRhNEvtakWxiXgVxxytvecHe+EznXNw7myf4sGI1s9epjNQNEFciRqSD624CUC
-         ZmOUN6sskXpTOmvNvZsZ7zbHqF963ire6nLS7E9KPqN/B8bwXGFps9TE+b36xVPVIwEq
-         Pxk/uhYa+dZzwC4oiNbBGdTVonAYVPBgre0u4BXRj0KfHeWwrPs2Fv0k9EvGQPWtND8z
-         vFhg==
-X-Gm-Message-State: AOAM531TIYZldcURtd5QSe2hF0kAo/5bGLp97I5kEGFL1td401Uvz0Sh
-        QBAHdvuEKdMUnrayOuBZhvvj19Qo5/SWgDH3YlhWVw==
-X-Google-Smtp-Source: ABdhPJwFAwxmGEHwKJvDYkbMkBlF5M5tkaZfVkQfvXBD9yItRSvGGNgfsv+ZJa/TEXJzcDBXb8Qce5lHjWwn6rttCN0=
-X-Received: by 2002:a17:906:8447:: with SMTP id e7mr6385132ejy.523.1616525830395;
- Tue, 23 Mar 2021 11:57:10 -0700 (PDT)
+        id S231789AbhCXGwT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 24 Mar 2021 02:52:19 -0400
+Received: from shmail.montage-tech.com ([180.167.85.125]:62532 "EHLO
+        shmail.montage-tech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231663AbhCXGwD (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Mar 2021 02:52:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=montage-tech.com;
+        s=MDaemon; t=1616568721; x=1617173521;
+        i=david.dai@montage-tech.com; q=dns/txt; h=From:To:Subject:Date:
+        Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Thread-Index:Content-Language; bh=r4BegxRWaLuAlC0jMEwWpKzmBc9Kgn
+        oQzEhK2w/C3kw=; b=ErKdSKfHrd66pbrLGLtuNO1Awrf2h3t1wAktPWaP3GqMnT
+        7jyr1lgnFNp1K/7QURGSzaqNR9nNZZraWdOsne//mtS873yqqTteRfUW470syk8w
+        SNBw5CNxaM45WvViiWXYSTooSVtIfnVw2g/EH+yRVYA+2+51raY3zrit5C+K8=
+X-MDAV-Result: clean
+X-MDAV-Processed: shmail.montage-tech.com, Wed, 24 Mar 2021 14:52:01 +0800
+Received: from cn021pc868 by shmail.montage-tech.com with ESMTPSA id pp5001016533749.msg; 
+        Wed, 24 Mar 2021 14:51:59 +0800
+X-MDArrival-Date: Wed, 24 Mar 2021 14:51:59 +0800
+X-Authenticated-Sender: david.dai@montage-tech.com
+X-Return-Path: prvs=1717d22d3a=david.dai@montage-tech.com
+X-Envelope-From: david.dai@montage-tech.com
+X-MDaemon-Deliver-To: linux-cxl@vger.kernel.org
+From:   "Dai WeiBin \(David Dai\)" <david.dai@montage-tech.com>
+To:     <linux-cxl@vger.kernel.org>
+Subject: CXL CDAT
+Date:   Wed, 24 Mar 2021 14:49:11 +0800
+Message-ID: <00b901d72079$cbe9fc80$63bdf580$@montage-tech.com>
 MIME-Version: 1.0
-References: <20210310180306.1588376-1-Jonathan.Cameron@huawei.com>
- <20210310180306.1588376-2-Jonathan.Cameron@huawei.com> <CAPcyv4gG-==Vj9w3d7=gRRSPaoD5eZHZZ2hAA0h3c07eMT_x1A@mail.gmail.com>
- <20210316162952.00001ab7@Huawei.com> <CAPcyv4h6hHCuO=0vHbPz2m4qw6-0=wW9swBrWimBsz6_GJu4Aw@mail.gmail.com>
- <20210323182218.000049cf@Huawei.com>
-In-Reply-To: <20210323182218.000049cf@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 23 Mar 2021 11:57:01 -0700
-Message-ID: <CAPcyv4j2gSKr2dPnk3Z9PeHDsJJjLVcWRkYbNpXy-R-6Az5KzA@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] PCI/doe: Initial support PCI Data Object Exchange
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: Adcgeb6lkeju7R0ASF6cPip7P/UYVw==
+Content-Language: zh-cn
+X-MDCFSigsAdded: montage-tech.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Mar 23, 2021 at 11:25 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
-[..]
-> > I was thinking something like 'struct pcie_doe_object' pointers rather
-> > than u32 arrays.
->
-> Possibly... I'm not convinced that it doesn't end up being
-> struct pcie_doe_object doe_obj;
-> DOE_OBJ_INIT(&doe_obj, vid, type, request_pl, request_pl_sz,
->              response_pl, response_pl_sz)
->
-> ret = pcie_doe_exchange(doe, &doe_obj);
->
-> If that's the pattern we see, why split it?
-> We might well have a struct pcie_doe_object internally but it doesn't
-> seem like a sensible external interface to me simply because we'd
-> just be filling it in and immediately passing it to a 'send' function.
+Hi,
+Could anybody help to explain when cxl-2.0 CDAT must be ready? For =
+example, a type3 device has a big memory which might spend hundreds of =
+seconds for booting up, that means:
+1. when this device has completed boot and can provide exact CDAT, but =
+host BIOS might have miss the CDAT.
+2. If shutdown PCIE/CXL link until device ready, host BIOS will be =
+unable to find this device.
 
-I don't think there are going to be so many DOE users that would
-justify DOE_OBJ_INIT(). I am thinking of a model where the payload
-construction is open coded and typesafe similar to how
-intel_bus_fwa_activate() [1] builds its mailbox payload.
-
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/acpi/nfit/intel.c#n546
+If this is true, is there any good way to solve it?
 
 
-> > > The disadvantage is that at least some of the specs just have the
-> > > header as their first few DW.  So there isn't a clear distinction
-> > > between header and payload. May lead to people getting offsets wrong
-> > > in a way they wouldn't do if driver was responsible for building the
-> > > whole message.
-> >
-> > Aren't they more likely to get offsets wrong with u32 arrays rather
-> > than data structures?
->
-> I'm not sure what level you mean this at.  The CDAT patch review you
-> followed this with suggested just breaking out vid and type which is
-> fine because those are always packed the same and we can do appropriate
-> special handling.
->
-> If you meant the whole object as packed structure, then it is a whole
-> different matter.
->
-> Easy one to point is that u64 values are going to end up with their
-> top and bottom halves swapped.  Things get even messier if we break
-> up below the u32 level.
->
-> We can do this at a higher level by having wrappers that deal with
-> each protocol and do a serialize / deserialize for the protocol.
-> I'm not sure if that will make sense or not yet though.
+Thanks,
+David
 
-Again, I think the protocols to support are limited (CDAT and IDE/SPDM
-are the only ones on the horizon), so not much value to having a rich
-set of wrappers and macros to obfuscate payload generation.
 
->
-> One thing I don't understand is why you proposed a delayed work queue
-> above?  I'm not seeing that model in the libsas SMP for example.  As far
-> as I can tell that just processes work items asap.
->
-> Can you point to a more specific example if you thinks that we should
-> use one?
 
-For polling on a timeout a delayed workqueue can poll at an interval
-without need for any explicit sleep calls. There are several examples
-of queue_delayed_work() in drivers/ being used to advance a state
-machine after a protocol relative timeout.
