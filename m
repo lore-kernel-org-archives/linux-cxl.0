@@ -2,91 +2,104 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E55DC433DB
-	for <linux-cxl@archiver.kernel.org>; Wed, 24 Mar 2021 19:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C66EBC433DB
+	for <linux-cxl@archiver.kernel.org>; Wed, 24 Mar 2021 21:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB3F961A16
-	for <linux-cxl@archiver.kernel.org>; Wed, 24 Mar 2021 19:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D6D161A1F
+	for <linux-cxl@archiver.kernel.org>; Wed, 24 Mar 2021 21:02:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237597AbhCXTIh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 24 Mar 2021 15:08:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237776AbhCXTIc (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Mar 2021 15:08:32 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77530C061763
-        for <linux-cxl@vger.kernel.org>; Wed, 24 Mar 2021 12:08:32 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id w3so34708284ejc.4
-        for <linux-cxl@vger.kernel.org>; Wed, 24 Mar 2021 12:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eqthZoZ24hBKip/rpytb3Jw5ErL/sxzA8WMYUKwyAfg=;
-        b=uPYi4SzDipjalS815p3jLLVPTQE5hGgWicR3QBBRxyKplVZiA81He7VrpFCy7sIE5n
-         85kmUU3Af3xU689pmoJGzXSvl7aybl6vw8WvgCeTHoPVUN5wQB46+llWYB9Ek/O+zqlq
-         YWlG1eMjw5j/CWTSEn2ZnfMgAED7N59RO4OnV2o17EgmcVUkFXKnNf9WC+X0JNlx+Ffw
-         ip53beNMgDyCFnAdTQdGjo22pWPpTcbuCpcYETFdsUjTjeWh3/yOWzyKyv1vMwZ0EmpQ
-         lFztkPRLKq4E2VTgYlMxP0025WvafUkbUPZoAGVwVyYfAUAPhOnSDJThBU82PpO3nUdI
-         GBMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eqthZoZ24hBKip/rpytb3Jw5ErL/sxzA8WMYUKwyAfg=;
-        b=nd1w6l/GMyUKGrxFzyBPn6dQOGnndKnqdgHhtmDgmzb0z4pc5iCq8AuFM9cAJthgFg
-         U5Asj3+vtw2nAEd14uAU340IO7SUaua5Kb+/cioGoQsyL2IYpn1Dp3Axj3T14YBaPcnT
-         OCP5ADDJOsLLdFPMjQLLOkNI3I1vlWWstSz18DidKXbo1oXPM/lv21mubIS4YHniC8lK
-         FZZdzR2ionuzErrQeM7LqxeKyKkX8xgJ+ICVMlix7jn8UaZViWiaQ4OBrA3TIoZFL5Ri
-         WpT4muJYi7cx0lvH0qi22uMsagVUeZyNTP77sOOW1lYaLX7ZcsQ8/2Oxu/cCV/ioY8R7
-         qV+w==
-X-Gm-Message-State: AOAM531lZZCfmOY+/ut3RX8F7UNMe3oOIWYa2Q27psCjvbxEJMjcUFGE
-        UfxZb8BMvrGA3NJecIIIont1MW/XMXtPc0LQUD4AYhcfRcDk8g==
-X-Google-Smtp-Source: ABdhPJwLaZcOmB8Yla1Xr4tCyTq80RomQZM0ap0Otgk6RtHaE3ue8wlnH2Dno8OBfAXEhtzM0znVhi5j65z4fk7OxS8=
-X-Received: by 2002:a17:906:2ac1:: with SMTP id m1mr5403301eje.472.1616612911208;
- Wed, 24 Mar 2021 12:08:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210324141635.22335-1-rrichter@amd.com> <20210324184257.GV3014244@iweiny-DESK2.sc.intel.com>
-In-Reply-To: <20210324184257.GV3014244@iweiny-DESK2.sc.intel.com>
+        id S238197AbhCXVCK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 24 Mar 2021 17:02:10 -0400
+Received: from mga18.intel.com ([134.134.136.126]:30382 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238211AbhCXVBw (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Wed, 24 Mar 2021 17:01:52 -0400
+IronPort-SDR: DqWSWnr3O4E05rBcm4l5E41h659Q43kQ9HDRpJZrWslCWbUvDu6XKqRvGJU/hJObsXOsHEeHYN
+ xi+3l6S12/KQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9933"; a="178339680"
+X-IronPort-AV: E=Sophos;i="5.81,275,1610438400"; 
+   d="scan'208";a="178339680"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2021 14:01:51 -0700
+IronPort-SDR: +h+Qkwic+CIAtKQUJDKNTnT/xM+JK0uS140eNzAFR+lbYjtFgT+m82jaHIwXDWvlZKjXVhtj7p
+ ZRulJxBPkWNg==
+X-IronPort-AV: E=Sophos;i="5.81,275,1610438400"; 
+   d="scan'208";a="409024171"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2021 14:01:51 -0700
+Subject: [PATCH 1/4] cxl/mem: Use sysfs_emit() for attribute show routines
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 24 Mar 2021 12:08:20 -0700
-Message-ID: <CAPcyv4gNvnMEL3kOjTYJjYG=7-N=jUUg-5+EqVszEHgSvF+XOw@mail.gmail.com>
-Subject: Re: [PATCH] cxl/mem: Force array size of mem_commands[] to CXL_MEM_COMMAND_ID_MAX
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Robert Richter <rrichter@amd.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-cxl@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     linux-cxl@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 24 Mar 2021 14:01:51 -0700
+Message-ID: <161661971101.1721612.16412318662284948582.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <161661970558.1721612.10441826898835759137.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <161661970558.1721612.10441826898835759137.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Mar 24, 2021 at 11:43 AM Ira Weiny <ira.weiny@intel.com> wrote:
->
-> On Wed, Mar 24, 2021 at 03:16:35PM +0100, Robert Richter wrote:
-> > Typically the mem_commands[] array is in sync with 'enum { CXL_CMDS }'.
-> > Current code works well.
-> >
-> > However, the array size of mem_commands[] may not strictly be the same
-> > as CXL_MEM_COMMAND_ID_MAX. E.g. if a new CXL_CMD() is added that is
-> > guarded by #ifdefs, the array could be shorter. This could lead then
-> > further to an out-of-bounds array access in cxl_validate_cmd_from_user().
-> >
-> > Fix this by forcing the array size to CXL_MEM_COMMAND_ID_MAX. This
-> > also adds range checks for array items in mem_commands[] at compile
-> > time.
->
-> Can't we use ARRAY_SIZE?
+While none the CXL sysfs attributes are threatening to overrun a
+PAGE_SIZE of output, it is good form to use the recommended helpers.
 
-An ARRAY_SIZE() check in cxl_validate_cmd_from_user() would work too,
-but it wouldn't give the compiler protection that Robert mentions for
-going the other way where mem_commands tries to add an entry that is
-out of bounds relative to CXL_CMDS.
+Fixes: b39cb1052a5c ("cxl/mem: Register CXL memX devices")
+Reviewed-by: Ben Widawsky <ben.widawsky@intel.com>
+Reported-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ drivers/cxl/mem.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index ecfc9ccdba8d..30bf4f0f3c17 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -1066,7 +1066,7 @@ static ssize_t firmware_version_show(struct device *dev,
+ 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+ 	struct cxl_mem *cxlm = cxlmd->cxlm;
+ 
+-	return sprintf(buf, "%.16s\n", cxlm->firmware_version);
++	return sysfs_emit(buf, "%.16s\n", cxlm->firmware_version);
+ }
+ static DEVICE_ATTR_RO(firmware_version);
+ 
+@@ -1076,7 +1076,7 @@ static ssize_t payload_max_show(struct device *dev,
+ 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+ 	struct cxl_mem *cxlm = cxlmd->cxlm;
+ 
+-	return sprintf(buf, "%zu\n", cxlm->payload_size);
++	return sysfs_emit(buf, "%zu\n", cxlm->payload_size);
+ }
+ static DEVICE_ATTR_RO(payload_max);
+ 
+@@ -1087,7 +1087,7 @@ static ssize_t ram_size_show(struct device *dev, struct device_attribute *attr,
+ 	struct cxl_mem *cxlm = cxlmd->cxlm;
+ 	unsigned long long len = range_len(&cxlm->ram_range);
+ 
+-	return sprintf(buf, "%#llx\n", len);
++	return sysfs_emit(buf, "%#llx\n", len);
+ }
+ 
+ static struct device_attribute dev_attr_ram_size =
+@@ -1100,7 +1100,7 @@ static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
+ 	struct cxl_mem *cxlm = cxlmd->cxlm;
+ 	unsigned long long len = range_len(&cxlm->pmem_range);
+ 
+-	return sprintf(buf, "%#llx\n", len);
++	return sysfs_emit(buf, "%#llx\n", len);
+ }
+ 
+ static struct device_attribute dev_attr_pmem_size =
+
