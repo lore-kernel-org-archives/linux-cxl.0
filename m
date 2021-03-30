@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E1DC433DB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B23C433C1
 	for <linux-cxl@archiver.kernel.org>; Tue, 30 Mar 2021 02:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A11EB619C1
+	by mail.kernel.org (Postfix) with ESMTP id 9080261920
 	for <linux-cxl@archiver.kernel.org>; Tue, 30 Mar 2021 02:48:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229911AbhC3CsV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 29 Mar 2021 22:48:21 -0400
-Received: from mga09.intel.com ([134.134.136.24]:41700 "EHLO mga09.intel.com"
+        id S231285AbhC3CsW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 29 Mar 2021 22:48:22 -0400
+Received: from mga06.intel.com ([134.134.136.31]:49576 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230506AbhC3Cru (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 29 Mar 2021 22:47:50 -0400
-IronPort-SDR: OktDNNihDnMiC/D9JJGKyUXk/jFpNxB7AMXj6VUTHHLo7FGtMFhvejkZYD71NfACzD1a/dOHMW
- 0BtY5gPxnQEA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9938"; a="191770679"
+        id S231192AbhC3Crz (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 29 Mar 2021 22:47:55 -0400
+IronPort-SDR: xmO7S7AdqNFqv2OhtBpQ5P4GfgnKOl5MASOGgPhnobac5syQ+gO1/TJc+LJ1Vabnqt+SufLUsZ
+ X8NhoKn0LVNg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9938"; a="253015185"
 X-IronPort-AV: E=Sophos;i="5.81,289,1610438400"; 
-   d="scan'208";a="191770679"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 19:47:50 -0700
-IronPort-SDR: LT6Riyh3WxMBkTcK0pZPPykgNfVuCa8TxElLqTGgXvWXa6cJ4mQb5uYyshKO5kAcqf3sVo2eFj
- yM448i7eJUDw==
+   d="scan'208";a="253015185"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 19:47:55 -0700
+IronPort-SDR: W4Y9kZatkgOf6cVmzrcEWpExF8VT/Ft7zcgMfM88mzZwCJzaAsYCjuGQQn8SZiZCkhxIaZa/G7
+ ivoda3/6o2lA==
 X-IronPort-AV: E=Sophos;i="5.81,289,1610438400"; 
-   d="scan'208";a="444887209"
+   d="scan'208";a="527160395"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 19:47:49 -0700
-Subject: [PATCH v2 2/4] cxl/mem: Fix synchronization mechanism for device
- removal vs ioctl operations
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 19:47:55 -0700
+Subject: [PATCH v2 3/4] cxl/mem: Do not rely on device_add() side effects
+ for dev_set_name() failures
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     Jason Gunthorpe <jgg@nvidia.com>, linux-kernel@vger.kernel.org,
         vishal.l.verma@intel.com, ira.weiny@intel.com,
         alison.schofield@intel.com
-Date:   Mon, 29 Mar 2021 19:47:49 -0700
-Message-ID: <161707246948.2072157.2116502455691653472.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Mon, 29 Mar 2021 19:47:55 -0700
+Message-ID: <161707247499.2072157.6441916308192404328.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <161707245893.2072157.6743322596719518693.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <161707245893.2072157.6743322596719518693.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -51,190 +51,108 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The percpu_ref to gate whether cxl_memdev_ioctl() is free to use the
-driver context (@cxlm) to issue I/O is overkill, implemented incorrectly
-(missing a device reference before accessing the percpu_ref), and the
-complexities of shutting down a percpu_ref contributed to a bug in the
-error unwind in cxl_mem_add_memdev() (missing put_device() to be fixed
-separately).
+While device_add() will happen to catch dev_set_name() failures it is a
+broken pattern to follow given that the core may try to fall back to a
+different name.
 
-Use srcu + device_is_registered() to achieve the same effect and add the
-missing reference counting for cxlmd in cxl_memdev_open() and
-cxl_memdev_release_file().
+Add explicit checking for dev_set_name() failures to be cleaned up by
+put_device(). Skip cdev_device_add() and proceed directly to
+put_device() if the name set fails.
+
+This type of bug is easier to see if 'alloc' is split from 'add'
+operations that require put_device() on failure. So cxl_memdev_alloc()
+is split out as a result.
 
 Fixes: b39cb1052a5c ("cxl/mem: Register CXL memX devices")
 Reported-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/mem.c |   83 +++++++++++++++++++++++++++--------------------------
- 1 file changed, 43 insertions(+), 40 deletions(-)
+ drivers/cxl/mem.c |   39 +++++++++++++++++++++++++++++----------
+ 1 file changed, 29 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 30bf4f0f3c17..548d696f1f54 100644
+index 548d696f1f54..508f0dc483f2 100644
 --- a/drivers/cxl/mem.c
 +++ b/drivers/cxl/mem.c
-@@ -96,21 +96,18 @@ struct mbox_cmd {
-  * @dev: driver core device object
-  * @cdev: char dev core object for ioctl operations
-  * @cxlm: pointer to the parent device driver data
-- * @ops_active: active user of @cxlm in ops handlers
-- * @ops_dead: completion when all @cxlm ops users have exited
-  * @id: id number of this memdev instance.
-  */
- struct cxl_memdev {
- 	struct device dev;
- 	struct cdev cdev;
- 	struct cxl_mem *cxlm;
--	struct percpu_ref ops_active;
--	struct completion ops_dead;
- 	int id;
- };
- 
- static int cxl_mem_major;
- static DEFINE_IDA(cxl_memdev_ida);
-+DEFINE_STATIC_SRCU(cxl_memdev_srcu);
- static struct dentry *cxl_debugfs;
- static bool cxl_raw_allow_all;
- 
-@@ -763,6 +760,14 @@ static int cxl_send_cmd(struct cxl_memdev *cxlmd,
- static long __cxl_memdev_ioctl(struct cxl_memdev *cxlmd, unsigned int cmd,
- 			       unsigned long arg)
- {
-+	/*
-+	 * Stop servicing ioctls once the device has been unregistered
-+	 * which indicates it has been disconnected from its cxlm driver
-+	 * context
-+	 */
-+	if (!device_is_registered(&cxlmd->dev))
-+		return -ENXIO;
-+
- 	switch (cmd) {
- 	case CXL_MEM_QUERY_COMMANDS:
- 		return cxl_query_cmd(cxlmd, (void __user *)arg);
-@@ -776,26 +781,42 @@ static long __cxl_memdev_ioctl(struct cxl_memdev *cxlmd, unsigned int cmd,
- static long cxl_memdev_ioctl(struct file *file, unsigned int cmd,
- 			     unsigned long arg)
- {
--	struct cxl_memdev *cxlmd;
--	struct inode *inode;
--	int rc = -ENOTTY;
-+	struct cxl_memdev *cxlmd = file->private_data;
-+	int rc, idx;
- 
--	inode = file_inode(file);
--	cxlmd = container_of(inode->i_cdev, typeof(*cxlmd), cdev);
-+	idx = srcu_read_lock(&cxl_memdev_srcu);
-+	rc = __cxl_memdev_ioctl(cxlmd, cmd, arg);
-+	srcu_read_unlock(&cxl_memdev_srcu, idx);
- 
--	if (!percpu_ref_tryget_live(&cxlmd->ops_active))
--		return -ENXIO;
-+	return rc;
-+}
- 
--	rc = __cxl_memdev_ioctl(cxlmd, cmd, arg);
-+static int cxl_memdev_open(struct inode *inode, struct file *file)
-+{
-+	struct cxl_memdev *cxlmd =
-+		container_of(inode->i_cdev, typeof(*cxlmd), cdev);
- 
--	percpu_ref_put(&cxlmd->ops_active);
-+	get_device(&cxlmd->dev);
-+	file->private_data = cxlmd;
- 
--	return rc;
-+	return 0;
-+}
-+
-+static int cxl_memdev_release_file(struct inode *inode, struct file *file)
-+{
-+	struct cxl_memdev *cxlmd =
-+		container_of(inode->i_cdev, typeof(*cxlmd), cdev);
-+
-+	put_device(&cxlmd->dev);
-+
-+	return 0;
- }
- 
- static const struct file_operations cxl_memdev_fops = {
- 	.owner = THIS_MODULE,
- 	.unlocked_ioctl = cxl_memdev_ioctl,
-+	.open = cxl_memdev_open,
-+	.release = cxl_memdev_release_file,
- 	.compat_ioctl = compat_ptr_ioctl,
- 	.llseek = noop_llseek,
- };
-@@ -1049,7 +1070,6 @@ static void cxl_memdev_release(struct device *dev)
- {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
- 
--	percpu_ref_exit(&cxlmd->ops_active);
- 	ida_free(&cxl_memdev_ida, cxlmd->id);
- 	kfree(cxlmd);
- }
-@@ -1155,21 +1175,12 @@ static void cxlmdev_unregister(void *_cxlmd)
- 	struct cxl_memdev *cxlmd = _cxlmd;
- 	struct device *dev = &cxlmd->dev;
- 
--	percpu_ref_kill(&cxlmd->ops_active);
- 	cdev_device_del(&cxlmd->cdev, dev);
--	wait_for_completion(&cxlmd->ops_dead);
-+	synchronize_srcu(&cxl_memdev_srcu);
- 	cxlmd->cxlm = NULL;
+@@ -1181,7 +1181,7 @@ static void cxlmdev_unregister(void *_cxlmd)
  	put_device(dev);
  }
  
--static void cxlmdev_ops_active_release(struct percpu_ref *ref)
--{
--	struct cxl_memdev *cxlmd =
--		container_of(ref, typeof(*cxlmd), ops_active);
--
--	complete(&cxlmd->ops_dead);
--}
--
- static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
+-static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
++static struct cxl_memdev *cxl_memdev_alloc(struct cxl_mem *cxlm)
  {
  	struct pci_dev *pdev = cxlm->pdev;
-@@ -1181,17 +1192,12 @@ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
+ 	struct cxl_memdev *cxlmd;
+@@ -1191,7 +1191,7 @@ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
+ 
  	cxlmd = kzalloc(sizeof(*cxlmd), GFP_KERNEL);
  	if (!cxlmd)
- 		return -ENOMEM;
--	init_completion(&cxlmd->ops_dead);
+-		return -ENOMEM;
++		return ERR_PTR(-ENOMEM);
  
  	/*
--	 * @cxlm is deallocated when the driver unbinds so operations
--	 * that are using it need to hold a live reference.
-+	 * @cxlm is released when the driver unbinds so srcu and
-+	 * device_is_registered() protect usage of this through @cxlmd.
- 	 */
- 	cxlmd->cxlm = cxlm;
--	rc = percpu_ref_init(&cxlmd->ops_active, cxlmdev_ops_active_release, 0,
--			     GFP_KERNEL);
--	if (rc)
--		goto err_ref;
+ 	 * @cxlm is released when the driver unbinds so srcu and
+@@ -1201,7 +1201,7 @@ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
  
  	rc = ida_alloc_range(&cxl_memdev_ida, 0, CXL_MEM_MAX_DEVS, GFP_KERNEL);
  	if (rc < 0)
-@@ -1216,16 +1222,13 @@ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
+-		goto err_id;
++		goto err;
+ 	cxlmd->id = rc;
+ 
+ 	dev = &cxlmd->dev;
+@@ -1210,27 +1210,46 @@ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
+ 	dev->bus = &cxl_bus_type;
+ 	dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
+ 	dev->type = &cxl_memdev_type;
+-	dev_set_name(dev, "mem%d", cxlmd->id);
+ 
+ 	cdev = &cxlmd->cdev;
+ 	cdev_init(cdev, &cxl_memdev_fops);
++	return cxlmd;
++
++err:
++	kfree(cxlmd);
++	return ERR_PTR(rc);
++}
++
++static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
++{
++	struct cxl_memdev *cxlmd;
++	struct device *dev;
++	struct cdev *cdev;
++	int rc;
++
++	cxlmd = cxl_memdev_alloc(cxlm);
++	if (IS_ERR(cxlmd))
++		return PTR_ERR(cxlmd);
++
++	dev = &cxlmd->dev;
++	rc = dev_set_name(dev, "mem%d", cxlmd->id);
++	if (rc)
++		goto err;
+ 
++	cdev = &cxlmd->cdev;
+ 	rc = cdev_device_add(cdev, dev);
+ 	if (rc)
+-		goto err_add;
++		goto err;
+ 
  	return devm_add_action_or_reset(dev->parent, cxlmdev_unregister, cxlmd);
  
- err_add:
+-err_add:
++err:
+ 	/*
+ 	 * The cdev was briefly live, flush any ioctl operations that
+ 	 * saw that state.
+ 	 */
+ 	synchronize_srcu(&cxl_memdev_srcu);
 -	ida_free(&cxl_memdev_ida, cxlmd->id);
 -err_id:
- 	/*
--	 * Theoretically userspace could have already entered the fops,
--	 * so flush ops_active.
-+	 * The cdev was briefly live, flush any ioctl operations that
-+	 * saw that state.
- 	 */
--	percpu_ref_kill(&cxlmd->ops_active);
--	wait_for_completion(&cxlmd->ops_dead);
--	percpu_ref_exit(&cxlmd->ops_active);
--err_ref:
-+	synchronize_srcu(&cxl_memdev_srcu);
-+	ida_free(&cxl_memdev_ida, cxlmd->id);
-+err_id:
- 	kfree(cxlmd);
- 
+-	kfree(cxlmd);
+-
++	put_device(dev);
  	return rc;
+ }
+ 
 
