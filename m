@@ -4,63 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26435C433ED
-	for <linux-cxl@archiver.kernel.org>; Wed, 31 Mar 2021 15:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AF3C433ED
+	for <linux-cxl@archiver.kernel.org>; Wed, 31 Mar 2021 16:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D11246101D
-	for <linux-cxl@archiver.kernel.org>; Wed, 31 Mar 2021 15:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A40661029
+	for <linux-cxl@archiver.kernel.org>; Wed, 31 Mar 2021 16:05:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235499AbhCaPqD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 31 Mar 2021 11:46:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34064 "EHLO
+        id S229486AbhCaQFD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 31 Mar 2021 12:05:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235711AbhCaPpe (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 Mar 2021 11:45:34 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA0CC061574
-        for <linux-cxl@vger.kernel.org>; Wed, 31 Mar 2021 08:45:33 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id ce10so30780868ejb.6
-        for <linux-cxl@vger.kernel.org>; Wed, 31 Mar 2021 08:45:33 -0700 (PDT)
+        with ESMTP id S232301AbhCaQEm (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 Mar 2021 12:04:42 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F26CC061574
+        for <linux-cxl@vger.kernel.org>; Wed, 31 Mar 2021 09:04:42 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id jy13so30893380ejc.2
+        for <linux-cxl@vger.kernel.org>; Wed, 31 Mar 2021 09:04:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vZvTeEIjG7hTC60MU99hsLQZS7LHfA5UNSzOvxjACt8=;
-        b=fXH/mAvHacC9Z8pz246d+YnXXN5MWHNHjElL48QIg54VEmSuiNzgDYSUizBO7MY4ab
-         uAVfw9BR3DLIdY0xMpeZyPXKfjxY+7MrXrvnal/hh7RoaJq1zWdGA1lgR1Uzuf0I6HUF
-         ZMyzcQV6/xnE8tJvobv6MKdjTHyHeebl91rQCJeimSqlGr0bRBOtccpStf1zFACueNzt
-         8XeyZVyqhM5VDYt8zeIXg/2fQhdrlrJharVAJzSiSH13/YHZB1oOrwsZf7ttSj+CD1Bz
-         2GzvFkf8t+JuHGBhrPxELoqiyuVamJ8j+Z37OO2rbLkR8ZfGdBvtJIV+9VBZpJvPFf2n
-         dRhw==
+        bh=/K8jhwDcWdtQO8TgpjZZoFEiAtw8FI9cBvy1a1rTDN8=;
+        b=n98YQxI+8gd6h3kZzKYrEF739lerNLf9t8oyCoS2TJyNMaNFL6UJhBu/UuusrT4qiF
+         4IiTkSg4USBePHxB+IYW/b9H74TqaoiTSLaPyMsY58DnwNmx1m2p2nInVBop5vaFoFqF
+         1gTDhuJ2bUKv3YWP0erWmiFTAGXG7WuKr01VIR8J6Mn3aR9e3BW4qHcpjTLr/2rJ1hOy
+         /SaZ0obFL7QqVEpsM0+l+1cNkCBrcElevYRJokNDUp0KeLWBDXbm2uBLsx7+M6U6K9Ar
+         IJMgFpN0v9+iBI3vNt5IqaYv+CspHhLfbmjIrqkJzx+nLicb0UeJ3uECqj3eL39YZV+a
+         2PNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vZvTeEIjG7hTC60MU99hsLQZS7LHfA5UNSzOvxjACt8=;
-        b=GnW0LdZEh5LwJi4j4jSuPVHbH/9MVeJWicMsG3K6QKdjQk98/mQ0G39khCjYKR/3Vw
-         TKUvlBD/OiLqSJ4969x/bpP7lNkhKN62PswS9P5WJoOyBHs8HbYxzwpyMuA2Q/ggu6H4
-         1HubRsdNxZv4LVrTfioLlmZ+gwsqUgrla8R/5rGW8cuVnpJHW4P2fDOEJqSIMu9kGfos
-         ZNgEnxtPfiSF2qpH/k4ZtC9aOt8VsZVKSD+wz14fCMPo5HOXlbdgDpkkYZ7NkyFD11vA
-         EE/HfZlrJwMEAvD+cZ3Ms4EKlV70W77JJwbTlY9evSBqIzFR3mU+H3p67ggr00ULliFP
-         2cgQ==
-X-Gm-Message-State: AOAM531tM8MDJObe1tWwl0i28Tu9lIfvx4ELKKzP0Z4fkh0EK7an4GO9
-        7uMLELL0ULFS/txzd2oc36rwGNZUSeQrvDsXcomVDA==
-X-Google-Smtp-Source: ABdhPJw1YouJGVVEEuAelWJYwoGubYOmgwmigz+nnYb7sSU7Yqz3tCAoDuaId7uScLRM/fMDHiCUSusnuCZE97Yzcs0=
-X-Received: by 2002:a17:906:8447:: with SMTP id e7mr4225482ejy.523.1617205532398;
- Wed, 31 Mar 2021 08:45:32 -0700 (PDT)
+        bh=/K8jhwDcWdtQO8TgpjZZoFEiAtw8FI9cBvy1a1rTDN8=;
+        b=H82gwqqN01k6ll1Pk1+lI3Akk12grg1YkMfa7kMxG7wKRuFOeUq+Gi4bPLcUbVfgM2
+         GNy58Sh+DeI3TEMmEIYr+0NpiFb1od2DzDnj+NNoyZkam3UzLKAnUZEjwC4Op1ecN+pY
+         8WGSj+U4B30vApvRvlhC06Oc1SdmC4r56JyMEw/q1qf1W/zHFmLq8R7D5U/GwMm0oLOA
+         NHfQ37FubKjcbIruLTVkGfDeskHoTPXCK/BKIenXuRCxfX46+FQURe1fQ90kcSQJ1hfl
+         +cOOcuafXqyXsZt4EJnMF4pAai1+q8mZ4pQz7+lhCZcNmzviaMxRl5uorzsiiJs87n/B
+         bj/Q==
+X-Gm-Message-State: AOAM533m3W1BtxKagzBsaHPoEVmUJvdgxBRMqfthCFDCYIqnhfNaAF1n
+        Ej8zR6DQg7hxTiw5+zWtjjFuwthjFRX/ETpiKllPwg==
+X-Google-Smtp-Source: ABdhPJx2vS46/Y5jbwBa9EENsyxfekhK0CyN/G/O6mqN+sRR/ycmUklyCtiEkx+kxNfBjLDHmIy1v6PK0IqgLLQq6+4=
+X-Received: by 2002:a17:906:ae88:: with SMTP id md8mr4161716ejb.264.1617206681177;
+ Wed, 31 Mar 2021 09:04:41 -0700 (PDT)
 MIME-Version: 1.0
 References: <161714738634.2168142.10860201861152789544.stgit@dwillia2-desk3.amr.corp.intel.com>
- <161714739718.2168142.17960000558666300914.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20210331130720.GF1463678@nvidia.com>
-In-Reply-To: <20210331130720.GF1463678@nvidia.com>
+ <161714740233.2168142.11116065966198937093.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20210331130953.GG1463678@nvidia.com>
+In-Reply-To: <20210331130953.GG1463678@nvidia.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 31 Mar 2021 08:45:23 -0700
-Message-ID: <CAPcyv4gv3rk+NhdhN=QcJMDwRSziqeDKhYtrnZFa6yOZe-_caQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] cxl/mem: Fix synchronization mechanism for device
- removal vs ioctl operations
+Date:   Wed, 31 Mar 2021 09:04:32 -0700
+Message-ID: <CAPcyv4inZaSRk-eiyeRLfUOrwyD=YVLW6bdUVJ239X099n1S=Q@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] cxl/mem: Do not rely on device_add() side effects
+ for dev_set_name() failures
 To:     Jason Gunthorpe <jgg@nvidia.com>
 Cc:     linux-cxl@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -72,50 +72,67 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Mar 31, 2021 at 6:07 AM Jason Gunthorpe <jgg@nvidia.com> wrote:
+On Wed, Mar 31, 2021 at 6:10 AM Jason Gunthorpe <jgg@nvidia.com> wrote:
 >
-> On Tue, Mar 30, 2021 at 04:36:37PM -0700, Dan Williams wrote:
-> > -static void cxlmdev_unregister(void *_cxlmd)
-> > +static void cxl_memdev_activate(struct cxl_memdev *cxlmd, struct cxl_mem *cxlm)
-> >  {
-> > -     struct cxl_memdev *cxlmd = _cxlmd;
-> > -     struct device *dev = &cxlmd->dev;
-> > +     cxlmd->cxlm = cxlm;
-> > +     down_write(&cxl_memdev_rwsem);
-> > +     up_write(&cxl_memdev_rwsem);
-> > +}
+> On Tue, Mar 30, 2021 at 04:36:42PM -0700, Dan Williams wrote:
+> > +static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
+> > +{
+> > +     struct cxl_memdev *cxlmd;
+> > +     struct device *dev;
+> > +     struct cdev *cdev;
+> > +     int rc;
+> > +
+> > +     cxlmd = cxl_memdev_alloc(cxlm);
+> > +     if (IS_ERR(cxlmd))
+> > +             return PTR_ERR(cxlmd);
+> > +
+> > +     dev = &cxlmd->dev;
+> > +     rc = dev_set_name(dev, "mem%d", cxlmd->id);
+> > +     if (rc)
+> > +             goto err;
+> >
+> > +     cdev = &cxlmd->cdev;
+> >       cxl_memdev_activate(cxlmd, cxlm);
+> >       rc = cdev_device_add(cdev, dev);
+> >       if (rc)
+> > -             goto err_add;
+> > +             goto err;
 >
-> No reason not to put the assignment inside the lock. Though using the
-> lock at all is overkill as the pointer hasn't left the local stack
-> frame at this point.
+> It might read nicer to have the error unwind here just call cxl_memdev_unregister()
 
-Right, I was considering just leaving it as a bare pointer assignment,
-in fact that must be sufficient as publishing the cdev needs to depend
-on all cdev init having completed. So if this write somehow leaks into
-cdev_device_add() there are much larger problems afoot.
+Perhaps, but I don't think cdev_del() and device_del() are prepared to
+deal with an object that was not successfully added.
 
 >
-> >  err_add:
-> > -     ida_free(&cxl_memdev_ida, cxlmd->id);
-> > -err_id:
+> > -     return devm_add_action_or_reset(&pdev->dev, cxl_memdev_unregister,
+> > +     return devm_add_action_or_reset(dev->parent, cxl_memdev_unregister,
+> >                                       cxlmd);
+>
+> Since that is what the error unwind does at this point.
+
+Right, but at this point the code knows that cdev_del() and
+device_del() will receive an object in the appropriate state.
+
+>
+> >
+> > -err_add:
+> > +err:
 > >       /*
-> > -      * Theoretically userspace could have already entered the fops,
-> > -      * so flush ops_active.
-> > +      * The cdev was briefly live, shutdown any ioctl operations that
-> > +      * saw that state.
+> >        * The cdev was briefly live, shutdown any ioctl operations that
+> >        * saw that state.
 > >        */
+> >       cxl_memdev_shutdown(cxlmd);
 >
-> Wow it is really subtle that cdev_device_add has this tiny hole where
-> it can fail but have already allowed open() :<
-
-Yes, this was something I wanted to address in the cdev api proposal
-integrating the debugfs fops proxy / reference counting aproach. I
-want a cdev api that does not allow open until after the associated
-device has registered and fired the KOBJ_ADD event.
-
+> Then this doesn't need to be a function
 >
-> Other than the lock it looks OK
+> But it is OK as is
+
+Unless I'm missing something I think it's required to use only
+put_device() to cleanup after cdev_device_add() failure, but yes I
+don't like that cxl_memdev_shutdown() needs to be open coded like
+this.
+
 >
 > Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-Thanks, Jason.
+Appreciate it.
