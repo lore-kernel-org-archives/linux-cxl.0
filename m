@@ -2,46 +2,47 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CB9C4361A
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Apr 2021 17:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69AA8C43460
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Apr 2021 17:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFABE61285
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Apr 2021 17:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 495616112E
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Apr 2021 17:57:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236613AbhDARqE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Apr 2021 13:46:04 -0400
-Received: from mga01.intel.com ([192.55.52.88]:46971 "EHLO mga01.intel.com"
+        id S236012AbhDAR5Q (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Apr 2021 13:57:16 -0400
+Received: from mga03.intel.com ([134.134.136.65]:59501 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234761AbhDARjo (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 1 Apr 2021 13:39:44 -0400
-IronPort-SDR: 7RTzpmziWccGAnCuDmgMRMGKpfjVRF1vhG2Q9Rb808fCxHHkDNAvC8r6Ab3PgB05Mq7IVJhn5m
- PgZKwB2StV7Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9941"; a="212512494"
+        id S234689AbhDARxU (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 1 Apr 2021 13:53:20 -0400
+IronPort-SDR: QhMk7rmB6M7QhkjQDTSg84pBVcPHCeXsuxV+1qhM2b3stsjNS0prO/73Z4iCuI6LDS73gCVHlA
+ vC0kb8zu3hUg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9941"; a="192283762"
 X-IronPort-AV: E=Sophos;i="5.81,296,1610438400"; 
-   d="scan'208";a="212512494"
+   d="scan'208";a="192283762"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 07:33:30 -0700
-IronPort-SDR: 04Ncoca1nJRoDSwGnjJvN7BCpzNHO0S7x0sWmRT0TdpBTzGvhADArG5s6DkpoYVFnx/X0tIu3E
- C/4RRmJIocog==
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 07:30:48 -0700
+IronPort-SDR: Y/P+p4OdurAT4/nQHyI5nhK2IZcizLW0ti5iynA23DJ8T7jehsJfgc5hk0L9EWeXVijUDGiZWO
+ XOrnpVv1S0jw==
 X-IronPort-AV: E=Sophos;i="5.81,296,1610438400"; 
-   d="scan'208";a="439236058"
+   d="scan'208";a="439235132"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 07:33:30 -0700
-Subject: [PATCH v4 4/4] cxl/mem: Disable cxl device power management
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 07:30:48 -0700
+Subject: [PATCH v2 1/8] cxl/mem: Move some definitions to mem.h
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        linux-kernel@vger.kernel.org, vishal.l.verma@intel.com,
-        ira.weiny@intel.com, alison.schofield@intel.com
-Date:   Thu, 01 Apr 2021 07:33:30 -0700
-Message-ID: <161728761025.2474381.808344500111924819.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <161728758895.2474381.12683589190335430004.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <161728758895.2474381.12683589190335430004.stgit@dwillia2-desk3.amr.corp.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com, ben.widawsky@intel.com,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 01 Apr 2021 07:30:47 -0700
+Message-ID: <161728744762.2474040.11009693084215696415.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <161728744224.2474040.12854720917440712854.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <161728744224.2474040.12854720917440712854.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -50,27 +51,224 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-There is no power management of cxl virtual devices, disable
-device-power-management and runtime-power-management to prevent
-userspace from growing expectations of those attributes appearing. They
-can be added back in the future if needed.
+In preparation for sharing cxl.h with other generic CXL consumers,
+move / consolidate some of the memory device specifics to mem.h.
 
 Reviewed-by: Ben Widawsky <ben.widawsky@intel.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/mem.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/cxl/cxl.h |   57 ------------------------------------
+ drivers/cxl/mem.c |   25 +---------------
+ drivers/cxl/mem.h |   85 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 86 insertions(+), 81 deletions(-)
+ create mode 100644 drivers/cxl/mem.h
 
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 6f14838c2d25..2e3bdacb32e7 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -34,62 +34,5 @@
+ #define CXLDEV_MBOX_BG_CMD_STATUS_OFFSET 0x18
+ #define CXLDEV_MBOX_PAYLOAD_OFFSET 0x20
+ 
+-/* CXL 2.0 8.2.8.5.1.1 Memory Device Status Register */
+-#define CXLMDEV_STATUS_OFFSET 0x0
+-#define   CXLMDEV_DEV_FATAL BIT(0)
+-#define   CXLMDEV_FW_HALT BIT(1)
+-#define   CXLMDEV_STATUS_MEDIA_STATUS_MASK GENMASK(3, 2)
+-#define     CXLMDEV_MS_NOT_READY 0
+-#define     CXLMDEV_MS_READY 1
+-#define     CXLMDEV_MS_ERROR 2
+-#define     CXLMDEV_MS_DISABLED 3
+-#define CXLMDEV_READY(status)                                                  \
+-	(FIELD_GET(CXLMDEV_STATUS_MEDIA_STATUS_MASK, status) ==                \
+-	 CXLMDEV_MS_READY)
+-#define   CXLMDEV_MBOX_IF_READY BIT(4)
+-#define   CXLMDEV_RESET_NEEDED_MASK GENMASK(7, 5)
+-#define     CXLMDEV_RESET_NEEDED_NOT 0
+-#define     CXLMDEV_RESET_NEEDED_COLD 1
+-#define     CXLMDEV_RESET_NEEDED_WARM 2
+-#define     CXLMDEV_RESET_NEEDED_HOT 3
+-#define     CXLMDEV_RESET_NEEDED_CXL 4
+-#define CXLMDEV_RESET_NEEDED(status)                                           \
+-	(FIELD_GET(CXLMDEV_RESET_NEEDED_MASK, status) !=                       \
+-	 CXLMDEV_RESET_NEEDED_NOT)
+-
+-struct cxl_memdev;
+-/**
+- * struct cxl_mem - A CXL memory device
+- * @pdev: The PCI device associated with this CXL device.
+- * @regs: IO mappings to the device's MMIO
+- * @status_regs: CXL 2.0 8.2.8.3 Device Status Registers
+- * @mbox_regs: CXL 2.0 8.2.8.4 Mailbox Registers
+- * @memdev_regs: CXL 2.0 8.2.8.5 Memory Device Registers
+- * @payload_size: Size of space for payload
+- *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
+- * @mbox_mutex: Mutex to synchronize mailbox access.
+- * @firmware_version: Firmware version for the memory device.
+- * @enabled_commands: Hardware commands found enabled in CEL.
+- * @pmem_range: Persistent memory capacity information.
+- * @ram_range: Volatile memory capacity information.
+- */
+-struct cxl_mem {
+-	struct pci_dev *pdev;
+-	void __iomem *regs;
+-	struct cxl_memdev *cxlmd;
+-
+-	void __iomem *status_regs;
+-	void __iomem *mbox_regs;
+-	void __iomem *memdev_regs;
+-
+-	size_t payload_size;
+-	struct mutex mbox_mutex; /* Protects device mailbox and firmware */
+-	char firmware_version[0x10];
+-	unsigned long *enabled_cmds;
+-
+-	struct range pmem_range;
+-	struct range ram_range;
+-};
+-
+ extern struct bus_type cxl_bus_type;
+ #endif /* __CXL_H__ */
 diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index e59b373694d3..e3003f49b329 100644
+index 244cb7d89678..45871ef65152 100644
 --- a/drivers/cxl/mem.c
 +++ b/drivers/cxl/mem.c
-@@ -1203,6 +1203,7 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_mem *cxlm)
- 	dev->bus = &cxl_bus_type;
- 	dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
- 	dev->type = &cxl_memdev_type;
-+	device_set_pm_not_required(dev);
+@@ -12,6 +12,7 @@
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ #include "pci.h"
+ #include "cxl.h"
++#include "mem.h"
  
- 	cdev = &cxlmd->cdev;
- 	cdev_init(cdev, &cxl_memdev_fops);
+ /**
+  * DOC: cxl mem
+@@ -29,12 +30,6 @@
+  *  - Handle and manage error conditions.
+  */
+ 
+-/*
+- * An entire PCI topology full of devices should be enough for any
+- * config
+- */
+-#define CXL_MEM_MAX_DEVS 65536
+-
+ #define cxl_doorbell_busy(cxlm)                                                \
+ 	(readl((cxlm)->mbox_regs + CXLDEV_MBOX_CTRL_OFFSET) &                  \
+ 	 CXLDEV_MBOX_CTRL_DOORBELL)
+@@ -91,24 +86,6 @@ struct mbox_cmd {
+ #define CXL_MBOX_SUCCESS 0
+ };
+ 
+-/**
+- * struct cxl_memdev - CXL bus object representing a Type-3 Memory Device
+- * @dev: driver core device object
+- * @cdev: char dev core object for ioctl operations
+- * @cxlm: pointer to the parent device driver data
+- * @ops_active: active user of @cxlm in ops handlers
+- * @ops_dead: completion when all @cxlm ops users have exited
+- * @id: id number of this memdev instance.
+- */
+-struct cxl_memdev {
+-	struct device dev;
+-	struct cdev cdev;
+-	struct cxl_mem *cxlm;
+-	struct percpu_ref ops_active;
+-	struct completion ops_dead;
+-	int id;
+-};
+-
+ static int cxl_mem_major;
+ static DEFINE_IDA(cxl_memdev_ida);
+ static struct dentry *cxl_debugfs;
+diff --git a/drivers/cxl/mem.h b/drivers/cxl/mem.h
+new file mode 100644
+index 000000000000..daa9aba0e218
+--- /dev/null
++++ b/drivers/cxl/mem.h
+@@ -0,0 +1,85 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/* Copyright(c) 2020-2021 Intel Corporation. */
++#ifndef __CXL_MEM_H__
++#define __CXL_MEM_H__
++
++/* CXL 2.0 8.2.8.5.1.1 Memory Device Status Register */
++#define CXLMDEV_STATUS_OFFSET 0x0
++#define   CXLMDEV_DEV_FATAL BIT(0)
++#define   CXLMDEV_FW_HALT BIT(1)
++#define   CXLMDEV_STATUS_MEDIA_STATUS_MASK GENMASK(3, 2)
++#define     CXLMDEV_MS_NOT_READY 0
++#define     CXLMDEV_MS_READY 1
++#define     CXLMDEV_MS_ERROR 2
++#define     CXLMDEV_MS_DISABLED 3
++#define CXLMDEV_READY(status)                                                  \
++	(FIELD_GET(CXLMDEV_STATUS_MEDIA_STATUS_MASK, status) ==                \
++	 CXLMDEV_MS_READY)
++#define   CXLMDEV_MBOX_IF_READY BIT(4)
++#define   CXLMDEV_RESET_NEEDED_MASK GENMASK(7, 5)
++#define     CXLMDEV_RESET_NEEDED_NOT 0
++#define     CXLMDEV_RESET_NEEDED_COLD 1
++#define     CXLMDEV_RESET_NEEDED_WARM 2
++#define     CXLMDEV_RESET_NEEDED_HOT 3
++#define     CXLMDEV_RESET_NEEDED_CXL 4
++#define CXLMDEV_RESET_NEEDED(status)                                           \
++	(FIELD_GET(CXLMDEV_RESET_NEEDED_MASK, status) !=                       \
++	 CXLMDEV_RESET_NEEDED_NOT)
++
++/*
++ * An entire PCI topology full of devices should be enough for any
++ * config
++ */
++#define CXL_MEM_MAX_DEVS 65536
++
++/**
++ * struct cxl_memdev - CXL bus object representing a Type-3 Memory Device
++ * @dev: driver core device object
++ * @cdev: char dev core object for ioctl operations
++ * @cxlm: pointer to the parent device driver data
++ * @ops_active: active user of @cxlm in ops handlers
++ * @ops_dead: completion when all @cxlm ops users have exited
++ * @id: id number of this memdev instance.
++ */
++struct cxl_memdev {
++	struct device dev;
++	struct cdev cdev;
++	struct cxl_mem *cxlm;
++	struct percpu_ref ops_active;
++	struct completion ops_dead;
++	int id;
++};
++
++/**
++ * struct cxl_mem - A CXL memory device
++ * @pdev: The PCI device associated with this CXL device.
++ * @regs: IO mappings to the device's MMIO
++ * @status_regs: CXL 2.0 8.2.8.3 Device Status Registers
++ * @mbox_regs: CXL 2.0 8.2.8.4 Mailbox Registers
++ * @memdev_regs: CXL 2.0 8.2.8.5 Memory Device Registers
++ * @payload_size: Size of space for payload
++ *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
++ * @mbox_mutex: Mutex to synchronize mailbox access.
++ * @firmware_version: Firmware version for the memory device.
++ * @enabled_commands: Hardware commands found enabled in CEL.
++ * @pmem_range: Persistent memory capacity information.
++ * @ram_range: Volatile memory capacity information.
++ */
++struct cxl_mem {
++	struct pci_dev *pdev;
++	void __iomem *regs;
++	struct cxl_memdev *cxlmd;
++
++	void __iomem *status_regs;
++	void __iomem *mbox_regs;
++	void __iomem *memdev_regs;
++
++	size_t payload_size;
++	struct mutex mbox_mutex; /* Protects device mailbox and firmware */
++	char firmware_version[0x10];
++	unsigned long *enabled_cmds;
++
++	struct range pmem_range;
++	struct range ram_range;
++};
++#endif /* __CXL_MEM_H__ */
 
