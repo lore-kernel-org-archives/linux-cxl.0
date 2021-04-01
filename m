@@ -2,126 +2,219 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A06C43461
-	for <linux-cxl@archiver.kernel.org>; Wed, 31 Mar 2021 16:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1234AC04FD1
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Apr 2021 17:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDC5C61008
-	for <linux-cxl@archiver.kernel.org>; Wed, 31 Mar 2021 16:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D813613C6
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Apr 2021 17:46:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233837AbhCaQc4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 31 Mar 2021 12:32:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234255AbhCaQci (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 Mar 2021 12:32:38 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEB65C061574
-        for <linux-cxl@vger.kernel.org>; Wed, 31 Mar 2021 09:32:37 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id h10so23028347edt.13
-        for <linux-cxl@vger.kernel.org>; Wed, 31 Mar 2021 09:32:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CHPIYKHoPm42PJqRafvNC/a4AmdvyTkfRdJZanKsttc=;
-        b=Ze09H/ipxnE52y77onOvZNVnO1ZeGvC0Yi9b4ae0sab0pUNI+jokYDzSPOaXTa9YDT
-         dDXxL0tcbaXqYlhkCdvYDOedPKdEQxMfuexxU7as+Swq4liGpxbAH/tSS6Dl7rCl2at9
-         UjqOScOuWmtgvOTp3uP6oQdkOgzmOhBitMhIYaKlA3iGDC3Vzu9PmGg1PKYKJvlbExL1
-         gqMV+LGeXOB3C8S0h99TW3x2w1U10Dt+pkZ1SLbopu5tGTjHz3bdSpw/eOCjuU4f1Vzx
-         Avb9/a/OBXDmsZmaN6gIwzGt/YDyUCo4JUBo27pIoTOhdDixfatv1LqfFCbNsV1BVeb5
-         j7Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CHPIYKHoPm42PJqRafvNC/a4AmdvyTkfRdJZanKsttc=;
-        b=dxq7Rm0kP+UerQwWkzCuoc8me4cob200nMwPdvzmTxrKRhJiYmZ3YRt7tr9T8XaNo2
-         h63QlFZyHcliB7em8J+m+j0YTCUuwH0RUlcHzpTH2ClboSxVpkvnoeI6e79OkoJBUEkF
-         Ome8ForaWiA4kYRdyadCU1+FosL5oHt6KArnCFRAQe1WRIBYRsRAMCJVUqLuAFzkysN2
-         Q19tO5uKUXueBxTs695PWCmV5o+yYar+1TR9n8UBZgfZRVsDP/N8gMiP8YkV/lqs0w+Y
-         LlUffqroJ5EoLf0Z0QwxUHABI4/mNPJVRBZsC8bs5occCzvCEdCSAbOtE+DzfAVe6wE7
-         3gWA==
-X-Gm-Message-State: AOAM532OP2WDPqqzjrCAjwVa2RJX70I8Su1+nhEP5vJf1ZA/sTMeSWbN
-        Kc3S7Swiq8HNsJe8hgsOvlB6B+SJlmKCS8MRvrWjBA==
-X-Google-Smtp-Source: ABdhPJyBprJbezpGENvbhxRA2rM1vf5H+tyMGJVzBEGN7CJQywUpCe81M/bE+CulTOb+hMN8uqePj6nL3QDudP1BwUE=
-X-Received: by 2002:a05:6402:4301:: with SMTP id m1mr4975928edc.210.1617208356600;
- Wed, 31 Mar 2021 09:32:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <161714738634.2168142.10860201861152789544.stgit@dwillia2-desk3.amr.corp.intel.com>
- <161714740233.2168142.11116065966198937093.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20210331130953.GG1463678@nvidia.com> <CAPcyv4inZaSRk-eiyeRLfUOrwyD=YVLW6bdUVJ239X099n1S=Q@mail.gmail.com>
- <20210331161759.GL1463678@nvidia.com>
-In-Reply-To: <20210331161759.GL1463678@nvidia.com>
+        id S236598AbhDARqC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Apr 2021 13:46:02 -0400
+Received: from mga01.intel.com ([192.55.52.88]:46951 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234759AbhDARjo (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 1 Apr 2021 13:39:44 -0400
+IronPort-SDR: +LmthehJ1PLZRvDXjJyW8F8GO6VjqneIUKxIXwZ2ueD4sPW0DJ9MqAtRIgximA6k+IHBfbWCG1
+ lw3hRpaltkbw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9941"; a="212511861"
+X-IronPort-AV: E=Sophos;i="5.81,296,1610438400"; 
+   d="scan'208";a="212511861"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 07:31:04 -0700
+IronPort-SDR: rBUmT0zYTZoXy45GsDdBfMPzKc/L60oJswgxrTXJX4YVzRDMUnwFaW1LhZp4wcQC5hjtZnfHgy
+ A6pu1u1ZYGfw==
+X-IronPort-AV: E=Sophos;i="5.81,296,1610438400"; 
+   d="scan'208";a="384864735"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 07:31:03 -0700
+Subject: [PATCH v2 4/8] cxl/core: Refactor CXL register lookup for bridge
+ reuse
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 31 Mar 2021 09:32:28 -0700
-Message-ID: <CAPcyv4ifsy+e2j6EPRgy2+cBpm_8ggvaT_GPnwEQKqto+x5YYQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] cxl/mem: Do not rely on device_add() side effects
- for dev_set_name() failures
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+To:     linux-cxl@vger.kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com, ben.widawsky@intel.com,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 01 Apr 2021 07:31:03 -0700
+Message-ID: <161728746354.2474040.14531317270409827157.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <161728744224.2474040.12854720917440712854.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <161728744224.2474040.12854720917440712854.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Mar 31, 2021 at 9:18 AM Jason Gunthorpe <jgg@nvidia.com> wrote:
->
-> On Wed, Mar 31, 2021 at 09:04:32AM -0700, Dan Williams wrote:
-> > On Wed, Mar 31, 2021 at 6:10 AM Jason Gunthorpe <jgg@nvidia.com> wrote:
-> > >
-> > > On Tue, Mar 30, 2021 at 04:36:42PM -0700, Dan Williams wrote:
-> > > > +static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
-> > > > +{
-> > > > +     struct cxl_memdev *cxlmd;
-> > > > +     struct device *dev;
-> > > > +     struct cdev *cdev;
-> > > > +     int rc;
-> > > > +
-> > > > +     cxlmd = cxl_memdev_alloc(cxlm);
-> > > > +     if (IS_ERR(cxlmd))
-> > > > +             return PTR_ERR(cxlmd);
-> > > > +
-> > > > +     dev = &cxlmd->dev;
-> > > > +     rc = dev_set_name(dev, "mem%d", cxlmd->id);
-> > > > +     if (rc)
-> > > > +             goto err;
-> > > >
-> > > > +     cdev = &cxlmd->cdev;
-> > > >       cxl_memdev_activate(cxlmd, cxlm);
-> > > >       rc = cdev_device_add(cdev, dev);
-> > > >       if (rc)
-> > > > -             goto err_add;
-> > > > +             goto err;
-> > >
-> > > It might read nicer to have the error unwind here just call cxl_memdev_unregister()
-> >
-> > Perhaps, but I don't think cdev_del() and device_del() are prepared to
-> > deal with an object that was not successfully added.
->
-> Oh, probably not, yuk yuk yuk.
->
-> Ideally cdev_device_add should not fail in a way that allows an open,
-> I think that is just an artifact of it being composed of smaller
-> functions..
->
-> For instance if we replace the kobj_map with xarray then we can
-> use xa_reserve and xa_store to avoid this condition.
->
-> This actually looks like a good fit because the dev_t has pretty
-> "lumpy" allocations and this isn't really performance sensitive.
->
-> A clever person could then make the dev_t self allocating and solve
-> another pain point with this interface. Hum..
->
+While CXL Memory Device endpoints locate the CXL MMIO registers in a PCI
+BAR, CXL root bridges have their MMIO base address described by platform
+firmware. Refactor the existing register lookup into a generic facility
+for endpoints and bridges to share.
 
-...not a bad idea.
+Reviewed-by: Ben Widawsky <ben.widawsky@intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ drivers/cxl/core.c |   57 +++++++++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/cxl/cxl.h  |    3 +++
+ drivers/cxl/mem.c  |   50 +++++-----------------------------------------
+ 3 files changed, 65 insertions(+), 45 deletions(-)
 
-/me bookmarks this thread for future consideration.
+diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
+index 7f8d2034038a..2ab467ef9909 100644
+--- a/drivers/cxl/core.c
++++ b/drivers/cxl/core.c
+@@ -1,7 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+-/* Copyright(c) 2020 Intel Corporation. All rights reserved. */
++/* Copyright(c) 2020-2021 Intel Corporation. All rights reserved. */
+ #include <linux/device.h>
+ #include <linux/module.h>
++#include "cxl.h"
+ 
+ /**
+  * DOC: cxl core
+@@ -10,6 +11,60 @@
+  * point for cross-device interleave coordination through cxl ports.
+  */
+ 
++/*
++ * cxl_setup_device_regs() - Detect CXL Device register blocks
++ * @dev: Host device of the @base mapping
++ * @base: mapping of CXL 2.0 8.2.8 CXL Device Register Interface
++ */
++void cxl_setup_device_regs(struct device *dev, void __iomem *base,
++			   struct cxl_device_regs *regs)
++{
++	int cap, cap_count;
++	u64 cap_array;
++
++	*regs = (struct cxl_device_regs) { 0 };
++
++	cap_array = readq(base + CXLDEV_CAP_ARRAY_OFFSET);
++	if (FIELD_GET(CXLDEV_CAP_ARRAY_ID_MASK, cap_array) !=
++	    CXLDEV_CAP_ARRAY_CAP_ID)
++		return;
++
++	cap_count = FIELD_GET(CXLDEV_CAP_ARRAY_COUNT_MASK, cap_array);
++
++	for (cap = 1; cap <= cap_count; cap++) {
++		void __iomem *register_block;
++		u32 offset;
++		u16 cap_id;
++
++		cap_id = FIELD_GET(CXLDEV_CAP_HDR_CAP_ID_MASK,
++				   readl(base + cap * 0x10));
++		offset = readl(base + cap * 0x10 + 0x4);
++		register_block = base + offset;
++
++		switch (cap_id) {
++		case CXLDEV_CAP_CAP_ID_DEVICE_STATUS:
++			dev_dbg(dev, "found Status capability (0x%x)\n", offset);
++			regs->status = register_block;
++			break;
++		case CXLDEV_CAP_CAP_ID_PRIMARY_MAILBOX:
++			dev_dbg(dev, "found Mailbox capability (0x%x)\n", offset);
++			regs->mbox = register_block;
++			break;
++		case CXLDEV_CAP_CAP_ID_SECONDARY_MAILBOX:
++			dev_dbg(dev, "found Secondary Mailbox capability (0x%x)\n", offset);
++			break;
++		case CXLDEV_CAP_CAP_ID_MEMDEV:
++			dev_dbg(dev, "found Memory Device capability (0x%x)\n", offset);
++			regs->memdev = register_block;
++			break;
++		default:
++			dev_dbg(dev, "Unknown cap ID: %d (0x%x)\n", cap_id, offset);
++			break;
++		}
++	}
++}
++EXPORT_SYMBOL_GPL(cxl_setup_device_regs);
++
+ struct bus_type cxl_bus_type = {
+ 	.name = "cxl",
+ };
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 37325e504fb7..cbd29650c4e2 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -67,5 +67,8 @@ struct cxl_regs {
+ 	};
+ };
+ 
++void cxl_setup_device_regs(struct device *dev, void __iomem *base,
++			   struct cxl_device_regs *regs);
++
+ extern struct bus_type cxl_bus_type;
+ #endif /* __CXL_H__ */
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index 6951243d128e..ee55abfa147e 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -865,53 +865,15 @@ static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm, u16 opcode,
+ static int cxl_mem_setup_regs(struct cxl_mem *cxlm)
+ {
+ 	struct device *dev = &cxlm->pdev->dev;
+-	int cap, cap_count;
+-	u64 cap_array;
++	struct cxl_regs *regs = &cxlm->regs;
+ 
+-	cap_array = readq(cxlm->base + CXLDEV_CAP_ARRAY_OFFSET);
+-	if (FIELD_GET(CXLDEV_CAP_ARRAY_ID_MASK, cap_array) !=
+-	    CXLDEV_CAP_ARRAY_CAP_ID)
+-		return -ENODEV;
+-
+-	cap_count = FIELD_GET(CXLDEV_CAP_ARRAY_COUNT_MASK, cap_array);
+-
+-	for (cap = 1; cap <= cap_count; cap++) {
+-		void __iomem *register_block;
+-		u32 offset;
+-		u16 cap_id;
+-
+-		cap_id = FIELD_GET(CXLDEV_CAP_HDR_CAP_ID_MASK,
+-				   readl(cxlm->base + cap * 0x10));
+-		offset = readl(cxlm->base + cap * 0x10 + 0x4);
+-		register_block = cxlm->base + offset;
+-
+-		switch (cap_id) {
+-		case CXLDEV_CAP_CAP_ID_DEVICE_STATUS:
+-			dev_dbg(dev, "found Status capability (0x%x)\n", offset);
+-			cxlm->regs.status = register_block;
+-			break;
+-		case CXLDEV_CAP_CAP_ID_PRIMARY_MAILBOX:
+-			dev_dbg(dev, "found Mailbox capability (0x%x)\n", offset);
+-			cxlm->regs.mbox = register_block;
+-			break;
+-		case CXLDEV_CAP_CAP_ID_SECONDARY_MAILBOX:
+-			dev_dbg(dev, "found Secondary Mailbox capability (0x%x)\n", offset);
+-			break;
+-		case CXLDEV_CAP_CAP_ID_MEMDEV:
+-			dev_dbg(dev, "found Memory Device capability (0x%x)\n", offset);
+-			cxlm->regs.memdev = register_block;
+-			break;
+-		default:
+-			dev_dbg(dev, "Unknown cap ID: %d (0x%x)\n", cap_id, offset);
+-			break;
+-		}
+-	}
++	cxl_setup_device_regs(dev, cxlm->base, &regs->device_regs);
+ 
+-	if (!cxlm->regs.status || !cxlm->regs.mbox || !cxlm->regs.memdev) {
++	if (!regs->status || !regs->mbox || !regs->memdev) {
+ 		dev_err(dev, "registers not found: %s%s%s\n",
+-			!cxlm->regs.status ? "status " : "",
+-			!cxlm->regs.mbox ? "mbox " : "",
+-			!cxlm->regs.memdev ? "memdev" : "");
++			!regs->status ? "status " : "",
++			!regs->mbox ? "mbox " : "",
++			!regs->memdev ? "memdev" : "");
+ 		return -ENXIO;
+ 	}
+ 
+
