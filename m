@@ -2,276 +2,277 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA103C433ED
-	for <linux-cxl@archiver.kernel.org>; Sat, 10 Apr 2021 05:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6904FC433B4
+	for <linux-cxl@archiver.kernel.org>; Mon, 12 Apr 2021 13:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F88161185
-	for <linux-cxl@archiver.kernel.org>; Sat, 10 Apr 2021 05:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39A9961354
+	for <linux-cxl@archiver.kernel.org>; Mon, 12 Apr 2021 13:34:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229537AbhDJFe4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 10 Apr 2021 01:34:56 -0400
-Received: from mga06.intel.com ([134.134.136.31]:37241 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229464AbhDJFeq (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Sat, 10 Apr 2021 01:34:46 -0400
-IronPort-SDR: QDqLO1QayQYS7nuYbipgM28yFX36l7mpKaPsMU9+eZvjCBT9oxHb/x0Fu8W5RD9z2eAKAgx5AU
- eQ5OlkuFUQKg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9949"; a="255220168"
-X-IronPort-AV: E=Sophos;i="5.82,210,1613462400"; 
-   d="scan'208";a="255220168"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2021 22:34:31 -0700
-IronPort-SDR: yeWt3tUbml/fL1ckbOPMsSXH7mTKFd9stG2q/EG3/uNxr0HP5efczNqYmJGw0HKZSvq0X9Tn/P
- xlWih9NV1jVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.82,210,1613462400"; 
-   d="scan'208";a="459472074"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orsmga001.jf.intel.com with ESMTP; 09 Apr 2021 22:34:31 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+        id S240457AbhDLNee (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 12 Apr 2021 09:34:34 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2837 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237558AbhDLNee (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 12 Apr 2021 09:34:34 -0400
+Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4FJqMC039Mz689Lf;
+        Mon, 12 Apr 2021 21:28:55 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Fri, 9 Apr 2021 22:34:31 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2
- via Frontend Transport; Fri, 9 Apr 2021 22:34:31 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.170)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2106.2; Fri, 9 Apr 2021 22:34:30 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S2tvyQTRWEgrJ8ih4DWlNaKQA1J0GTbyO3lv+cpz+wxMxSGF0mPlmYe8lqy7jMiT5vxMuns5AM0ZLknEWExYc1uYpP7K0iq751ylpTpJyg7boDWFM3sxtdxyalXChz18MA6udLuU+qEhJH19iGNvt8s6OR8Nk9SjsryF8m4FZNSHh3DY1TBf8JWzFX5N5brE/7C4aO0yT8mu7R6FVhTNV4B3yb/bcuzQzVcx0y5n/cOsqHkpZT/nv0cP9VQTd4AXnOl9OIM9K5BJdHPxnsmCnNDHtf7SlHJ4XriIZ3fraAQ7pT6Kt8KRFkyGrqOny4nhowGyzpdTQOEX/d8vAx0NGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gv6cFfdqqk2W9Fg13djr97dzjIZcCG8TTgHoH3z4agU=;
- b=VUXs1reIdepDyREDlJ1Ou61Hn5ZRg527xrqjledhzTV+L+vGfVnl0hbjZLULLWHKpGiFxdu2yC52jexvoivpULI0DzBRLPVc7gOlmVGLgBT0ptN/P+XAwrABvhOeyJ+jZhdp+nM8g8D5f73pESLCyePMhpnWOkuAA/3TTdgLjCc9bjRVxuWx3kcKWp4FaVYoPDN3euTT++Ua6CFFGF4vW+J80Yspc+b7xc4R2Xj6WpbhIuXUyYKJCytG1LeEvVBevGigS1L8/4c8VB6+oyCTXNI06xHd/NNrT8Am/0y6FxkVBOE51m7wrKAIgqCFszJZE1RNUkbBm446DBew5aOYTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gv6cFfdqqk2W9Fg13djr97dzjIZcCG8TTgHoH3z4agU=;
- b=V/EKAJhm9uqlK2L7afbBNadrkQ6nO0Prr5y9/jaZKuIUZ7Twtdn1orGyydAkxX+qWXavlkydwOW35LSK4KBkBp7A8qyXzIthkwx0Kle8bDpHmHog/TZavbzb08HW+v10q0QrjcNSAt+GPbzJ9XQY2D5HnmWX1BQ1uAoSuIjLO9E=
-Received: from SJ0PR11MB5150.namprd11.prod.outlook.com (2603:10b6:a03:2d4::18)
- by BYAPR11MB2886.namprd11.prod.outlook.com (2603:10b6:a03:8f::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4020.17; Sat, 10 Apr
- 2021 05:34:29 +0000
-Received: from SJ0PR11MB5150.namprd11.prod.outlook.com
- ([fe80::153d:3860:6b4a:d839]) by SJ0PR11MB5150.namprd11.prod.outlook.com
- ([fe80::153d:3860:6b4a:d839%4]) with mapi id 15.20.4020.021; Sat, 10 Apr 2021
- 05:34:29 +0000
-From:   "Williams, Dan J" <dan.j.williams@intel.com>
-To:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-CC:     "Natu, Mahesh" <mahesh.natu@intel.com>,
-        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+ 15.1.2106.2; Mon, 12 Apr 2021 15:34:08 +0200
+Received: from localhost (10.47.93.73) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Mon, 12 Apr
+ 2021 14:34:08 +0100
+Date:   Mon, 12 Apr 2021 14:32:41 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     "Williams, Dan J" <dan.j.williams@intel.com>
+CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "Natu, Mahesh" <mahesh.natu@intel.com>,
         "Douglas, Chet R" <chet.r.douglas@intel.com>,
         "Verma, Vishal L" <vishal.l.verma@intel.com>,
         "Widawsky, Ben" <ben.widawsky@intel.com>
-Subject: [ACPI Code First ECN v2]: Generic Port, performace data for hotplug
- memory
-Thread-Topic: [ACPI Code First ECN v2]: Generic Port, performace data for
+Subject: Re: [ACPI Code First ECN v2]: Generic Port, performace data for
  hotplug memory
-Thread-Index: AQHXLcst0OqV1gbZbka3uZ3UykiE8w==
-Date:   Sat, 10 Apr 2021 05:34:29 +0000
-Message-ID: <e1a52da9aec90766da5de51b1b839fd95d63a5af.camel@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.36.5 (3.36.5-2.fc32) 
-authentication-results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [134.134.136.219]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 383bbeec-317e-4d03-a539-08d8fbe24fea
-x-ms-traffictypediagnostic: BYAPR11MB2886:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR11MB2886464FD179AFE35567101FC6729@BYAPR11MB2886.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: lWmPNB4QZ9zqP50w8CVRnmUp6mYKWZtWHCckqANOQ0f1Lq9Gf3fgNdxW0FfWd//pmoZDYq7duFUP/hNT4Pz3QhEjbIMJ+ZQUaxX6AB2zH/oBN6Y1vzgTkxLN6S2VOuvmut7uT6u3+zSZ61hmyi1Vv540gx8Lfqnvg9Ljltbp2/yzapvIy42rzOcWuKLYIN3n2G4L3WZxt4KSs09UKnPJ1Yb7j3SQ5t2YoLbo7Dvh/ezwbye6r+mJrz138FRFQs0NadSMmoCp5sdFm+r87dfQd33mExauRIt4TwOY7OykSzRgEFSNe6Mk8YKZZAqGMaYxArm8BrpBh/CSyrDAKt9zIAGO9PbtooT4YWQqBEFmKx74jwcAZcqtTtLfJ3q7WUcy8BWW0+osSE89U4dOX5eGRYM8jeWYkDSn37jifpS/15n0OtCjMHyPV5QsjPpJI9RAfVj2mtndPMS4spKGoZhe/ZFT4xMUFJtXOdIN3Ihyk1x1JEF38hxg3gtzGu2+TdVye5rgy5oZ2xcFKksp6u/lpbmw7hBOJOiuhQw0OumVaUmMBJg9dAjzHqbAlV4T4Ax5UTeHdCPx0JLMd/Z4mbRif0fupqodFjarc6m54uBNSxu9c3AMK/hp0Ki9SiumVKNMG8rmzCduPz91P+DWe8Dsh2lXtGMUVOMQjzx5iHOzM8jzE4v1J+gkYPx/V1Ww3/41bwsOYWIt9fTDr1SX+SW6y/IUWE//m308fs58LfZeMTs=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR11MB5150.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(366004)(346002)(136003)(396003)(39860400002)(5660300002)(6486002)(83380400001)(71200400001)(26005)(107886003)(8936002)(64756008)(66476007)(186003)(66556008)(66446008)(38100700002)(86362001)(54906003)(316002)(36756003)(76116006)(66946007)(6512007)(2906002)(478600001)(110136005)(2616005)(6506007)(4326008)(8676002)(966005)(41533002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?YWJWQ1BidUs3NjQzejdFRmJ3YmI2b2VNZDcveUIzYlUydlM0TnRaSGo4dmVN?=
- =?utf-8?B?eHpOU1VxQVBFUHk0NW9CWmgyaUp2MG9QMFBrVW9yaGhoeEJKYlJuREg0TjNw?=
- =?utf-8?B?aTVtb1lVNkJEUEFpMWh4NGx6dTl5dVZtQStTVURXVnNyRWdzVVltTDVZWkRS?=
- =?utf-8?B?cVFsZkc2SUZFdndQRDB5c2tvU05YZU81b3pBRjJGSWVqOE9BMnA2bWpEL2FY?=
- =?utf-8?B?V256bFVVb0QzcDhpSG5VdGt4czZlL0xXb0tlQ0V0dVUxRmh6RUF1UUVad3RC?=
- =?utf-8?B?Rk5QS2EzY1ZVV2gybmJxeXNqUmtkRFJtZjh2aFBlbHVYZHhJRFEwQ2s2K0hW?=
- =?utf-8?B?djJpdHJ5VlpIR21qRjJjVGRDWThMWWUvVXc2Ry9hUVhBZjlOSWdFOExxM0h2?=
- =?utf-8?B?enljMk5LcW1TWUlIK3Fib1lrTEQrc1Y5ZHNVM2N0emp4K1E5dExkazBMVkha?=
- =?utf-8?B?RXNpbkFWa0lrVU0waWRzSXRCOG1TRTFWR3lxUmNza01CQU03TUhnMlB6ME5U?=
- =?utf-8?B?SXRiZmdxZUl4dlZVYk1Jb1VLL01Dc0NobWpUS2NBWER1anZzaStGb0JFcnU1?=
- =?utf-8?B?ZjQzTDVqK0VpLzdYSmp0MmZzUWR5MW1pdDZNWnZQVDVQOUpNa042eGpBS0Zt?=
- =?utf-8?B?Zy9TNkVxNW0zdTlyamJNYXJ6NEhQd080c3hQYXVpZG1NVG5kRVFNdWt1UFBP?=
- =?utf-8?B?N3FYMm5rak1SUEluQkl2TXZrckhrUnMwTGVPclRGM3Q4WGlZM0lvaUNadTJh?=
- =?utf-8?B?ajRXYVNMMXNuK08yNEl6TGVVVElnU3pSRm9EbXBBcy9qSmh3MVU5TVlxUWdV?=
- =?utf-8?B?NjEwQWUxZTd1Zk1ZL3dkU0wwL2tMVDNkbjBIRjFKOTFEVG8wb2VZS0ZKdDBP?=
- =?utf-8?B?U2h1bEszSkhvblNHREdvL0I5d1kxV0Z1cWJZa3NBM21TN1VzMXNqZWVBcFhl?=
- =?utf-8?B?QUQ0bDFMV0hkaEV1S1k0TnRFVlFBWks5STlKRGFBSmc3QWpVVmVONHE1OGg4?=
- =?utf-8?B?UlRXcEY5MDVQTVJLZ25DaWdlRTRwdEFOa3NLZ3hScTNwY1k0U0h4bml5RGw2?=
- =?utf-8?B?d0hrSGNxYVpXT1dRbGxpZnlwZ0t0U0JCRDBuTXFVc0YvV3ZLNklBaS9EYmN6?=
- =?utf-8?B?aTg5SHg0OE55c1VhMVBPdTZLOUI2cnArZlppY0dISDFwMVREK3Z4WmhFMzgy?=
- =?utf-8?B?VjhUbllYb2IxOXZXRmtvTGU0ODJ4U1lLNFZhWkplbkoxUFRLbGk1SUJiRjR3?=
- =?utf-8?B?N0N5bERrWmRlOUROai83NElEQVYwYmxGcnl0TzlPaUMzN3NRZVBLU1d5ei96?=
- =?utf-8?B?elBPZUhPamhnRlY4RXFyZUFoVExjc3BCNVpTMnk1aFZ6L05wMzU5V1VuRHY5?=
- =?utf-8?B?dVg1MEdza3ZrR1BJNS9EYXJtclptRjNvZTlZaDhGNHNRMTZNOVNydkxqZ1gy?=
- =?utf-8?B?Zk9TT0RiU3U0SkFNdXFWdnVsZjZsbDRpS1VmL25yV0dCbWE0WHBSRks4NkVM?=
- =?utf-8?B?RkpLY1VHOGlWNDZDNmduOFlPVWg1K2pMSExqelIvWnJFS0ttNTNMcGJrSDFT?=
- =?utf-8?B?bVhyVnhZeUlZeldHM24vbHg0ZWN0cGtLa1JTWjlKdTlvejZuYk92UkorWVIr?=
- =?utf-8?B?cmRHWVVoQjBnbk5rZHZNd0o3RStqUWNXamx2THB1eGhpMDFwb3BmeEVHVDQ3?=
- =?utf-8?B?MDdQbG5mVlpuWWg5SFNEenFqN0tCQlV3UUtydEhIdkwyT2tFNk81YmZTaUZj?=
- =?utf-8?B?RTJLdTFxT2tDMTdKWlcyVzJjVkxybDlSQlMzM1NTY05GS0ZqNEthczc3MFls?=
- =?utf-8?B?VFI3a3FFT1c3TkMvcnArdz09?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4EFCF891587A144DB224E5F6CC9F637A@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Message-ID: <20210412143241.00005521@Huawei.com>
+In-Reply-To: <e1a52da9aec90766da5de51b1b839fd95d63a5af.camel@intel.com>
+References: <e1a52da9aec90766da5de51b1b839fd95d63a5af.camel@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR11MB5150.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 383bbeec-317e-4d03-a539-08d8fbe24fea
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2021 05:34:29.3151
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KULVb8ql2NLsW6ywOtf9t4eY/1rkG+BZ84b1CBcHYA1tRzMiSmcpc+2O0ZtZ7naE5d7PPX10QlE7RPZTzS8EnTNuSGRHl6/0dNQkg6I8HCA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2886
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.93.73]
+X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Q2hhbmdlcyBzaW5jZSB2MSBbMV06DQogICogUmVuYW1lIEdlbmVyaWMgVGFyZ2V0IHRvIEdlbmVy
-aWMgUG9ydCBhbmQgbWFrZSBhIG5ldyBkaXN0aW5jdCBTUkFUDQogICAgdHlwZSBpbmRlcGVuZGVu
-dCBvZiBHZW5lcmljIEluaXRpYXRvciAoSm9uYXRoYW4pDQogICogQ2xhcmlmeSB0aGF0IHRoaXMg
-bmV3ICJQb3J0IiBjb25jZXB0IGlzIG5vdCBsaW1pdGVkIHRvIENYTC4gSXQgaXMgYQ0KICAgIGdl
-bmVyaWMgd2F5IHRvIGRlc2NyaWJlIHRoZSBwZXJmb3JtYW5jZSBvZiBzdGF0aWMgcGF0aHMgdG8N
-CiAgICBkeW5hbWljYWxseSBhZGRlZCBzeXN0ZW0gbWVtb3J5IChNYWhlc2gpDQogICogRml4ZXMg
-YW5kIGNsZWFudXBzIChDaGV0KQ0KDQpbMV06IA0KaHR0cDovL2xvcmUua2VybmVsLm9yZy9yL0NB
-UGN5djRnbWRfY3lnWEswUHBHa1htSkxDM19jdEVwUnZwaTVQLVFjdVh1c0ZYNW9OUUBtYWlsLmdt
-YWlsLmNvbQ0KDQotLS0NCg0KV2hpbGUgdGhlIHBsYXRmb3JtIEJJT1MgaXMgYWJsZSB0byBkZXNj
-cmliZSB0aGUgcGVyZm9ybWFuY2UNCmNoYXJhY3RlcmlzdGljcyBvZiBDWEwgbWVtb3J5IHRoYXQg
-aXMgcHJlc2VudCBhdCBib290LCBpdCBpcyB1bmFibGUgdG8NCnN0YXRpY2FsbHkgZW51bWVyYXRl
-IHRoZSBwZXJmb3JtYW5jZSBvZiBDWEwgbWVtb3J5IGhvdCBpbnNlcnRlZA0KcG9zdC1ib290LiBU
-aGUgT1MgY2FuIGVudW1lcmF0ZSBtb3N0IG9mIHRoZSBjaGFyYWN0ZXJpc3RpY3MgZnJvbSBsaW5r
-DQpyZWdpc3RlcnMgYW5kIENEQVQsIGJ1dCB0aGUgcGVyZm9ybWFuY2UgZnJvbSB0aGUgQ1BVIHRv
-IHRoZSBob3N0DQpicmlkZ2UsIGZvciBleGFtcGxlLCBpcyBub3QgZW51bWVyYXRlZCBieSBQQ0lF
-IG9yIENYTC4gSW50cm9kdWNlIGFuDQpBQ1BJIG1lY2hhbmlzbSBmb3IgdGhpcyBwdXJwb3NlLg0K
-DQotLS0NCg0KIyBUaXRsZTogSW50cm9kdWNlIGEgR2VuZXJpYyBQb3J0IGZvciBob3RwbHVnIG1l
-bW9yeSBidXNlcyBsaWtlIENYTA0KDQojIFN0YXR1czogRHJhZnQgdjINCg0KIyBEb2N1bWVudDog
-QUNQSSBTcGVjaWZpY2F0aW9uIDYuNA0KDQojIExpY2Vuc2UNClNQRFgtTGljZW5zZSBJZGVudGlm
-aWVyOiBDQy1CWS00LjANCg0KIyBTdWJtaXR0ZXI6DQoqIFNwb25zb3I6IERhbiBXaWxsaWFtcywg
-SW50ZWwNCiogQ3JlYXRvcnMvQ29udHJpYnV0b3JzOg0KICAgICogTWFoZXNoIE5hdHUsIEludGVs
-DQogICAgKiBDaGV0IERvdWdsYXMsIEludGVsDQogICAgKiBEZWVwYWsgU2hpdmFrdW1hciwgSW50
-ZWwNCiAgICAqIEpvbmF0aGFuIENhbWVyb24sIEh1YXdlaQ0KDQojIENoYW5nZXMgc2luY2UgdjEN
-CiAgKiBSZW5hbWUgR2VuZXJpYyBUYXJnZXQgdG8gR2VuZXJpYyBQb3J0IGFuZCBtYWtlIGEgbmV3
-IGRpc3RpbmN0IFNSQVQNCiAgICB0eXBlIGluZGVwZW5kZW50IG9mIEdlbmVyaWMgSW5pdGlhdG9y
-IChKb25hdGhhbikNCiAgKiBDbGFyaWZ5IHRoYXQgdGhpcyBuZXcgIlBvcnQiIGNvbmNlcHQgaXMg
-bm90IGxpbWl0ZWQgdG8gQ1hMLiBJdCBpcyBhDQogICAgZ2VuZXJpYyB3YXkgdG8gZGVzY3JpYmUg
-dGhlIHBlcmZvcm1hbmNlIG9mIHN0YXRpYyBwYXRocyB0bw0KICAgIGR5bmFtaWNhbGx5IGFkZGVk
-IHN5c3RlbSBtZW1vcnkgKE1haGVzaCkNCg0KIyBTdW1tYXJ5IG9mIHRoZSBDaGFuZ2UNCkludHJv
-ZHVjZSBhIG5ldyAiR2VuZXJpYyBQb3J0IiB0eXBlIHRvIHRoZSBTUkFUIHRvIGRlc2NyaWJlIHRo
-ZQ0KcGVyZm9ybWFuY2UgZnJvbSBDUFUgYW5kIG90aGVyIGluaXRpYXRvciBkb21haW5zIHRvIHRo
-ZSByb290IG9mIGEgQ1hMDQp0b3BvbG9neSwgb3IgYW55IG90aGVyIHRvcG9sb2d5IHRoYXQgbWln
-aHQgZHluYW1pY2FsbHkgYWRkIHN5c3RlbSBtZW1vcnkNCmJlaGluZCB0aGUgIlBvcnQiLiBUaGlz
-IGlzIGluIHN1cHBvcnQgb2YsIGJ1dCBub3QgbGltaXRlZCB0bywgdGhlIE9TDQpiZWluZyBhYmxl
-IHRvIGVudW1lcmF0ZSB0aGUgcGVyZm9ybWFuY2UgdG9wb2xvZ3kgZm9yIGR5bmFtaWNhbGx5IGFk
-ZGVkIC8NCmRpc2NvdmVyZWQgQ1hMIE1lbW9yeSBEZXZpY2UgZW5kcG9pbnRzLg0KDQojIEJlbmVm
-aXRzIG9mIHRoZSBDaGFuZ2UNCkNvbnNpZGVyIHRoZSBjYXNlIG9mIGEgc3lzdGVtIHdpdGggYSBz
-ZXQgb2YgQ1hMIEhvc3QgQnJpZGdlcyAoQUNQSTAwMTYpLA0KYW5kIHNvbWUgZW5kcG9pbnRzIGF0
-dGFjaGVkIGF0IGJvb3QuIEluIHRoYXQgc2NlbmFyaW8gdGhlIHBsYXRmb3JtDQpmaXJtd2FyZSBp
-cyBhYmxlIHRvIGVudW1lcmF0ZSB0aG9zZSBkZXZpY2VzLCBlbnVtZXJhdGUgYW5kIG1hcCBDWEwN
-Cm1lbW9yeSBpbnRvIHRoZSBzeXN0ZW0gcGh5c2ljYWwgbWVtb3J5IGFkZHJlc3Mgc3BhY2UsIGFu
-ZCBnZW5lcmF0ZSB0aGUNCnR5cGljYWwgc3RhdGljIFNSQVQvU0xJVC9ITUFUIHNldCBvZiB0YWJs
-ZXMgZGVzY3JpYmluZyBDWEwgYXR0YWNoZWQNCm1lbW9yeS4gTm93LCBjb25zaWRlciB0aGUgY2Fz
-ZSB3aGVyZSBkZXZpY2VzIGFyZSBkeW5hbWljYWxseSBhZGRlZCBhbmQNCmVudW1lcmF0ZWQgcG9z
-dCBib290LCBpLmUuIHBvc3QgZ2VuZXJhdGlvbiBvZiB0aGUgc3RhdGljIG1lbW9yeSB0YWJsZXMu
-DQpJbiB0aGlzIHNjZW5hcmlvIHBsYXRmb3JtIGZpcm13YXJlIGlzIHVuYWJsZSB0byBwZXJmb3Jt
-IHRoZSBlbmQtdG8tZW5kDQplbnVtZXJhdGlvbiBuZWNlc3NhcnkgdG8gcG9wdWxhdGUgU1JBVCBh
-bmQgSE1BVCBmb3IgdGhlIGVuZHBvaW50cyB0aGF0DQptYXkgYmUgaG90LWluc2VydGVkIGJlaGlu
-ZCB0aG9zZSBicmlkZ2VzIHBvc3QgcG93ZXItb24uIFRoZQ0KYWRkcmVzcy1yYW5nZSBpcyB1bmtu
-b3duIHNvIFNSQVQgY2FuIG5vdCBiZSBwcmUtcG9wdWxhdGVkIGluIHRoZSB0eXBpY2FsDQp3YXkg
-dGhhdCBob3RwbHVnIHN5c3RlbSBtZW1vcnkgaXMgZW51bWVyYXRlZC4gRXZlbiBpZiBhIHN0YXRp
-YyBhZGRyZXNzDQpyYW5nZSB3YXMgc2V0IGFzaWRlIGZvciBmdXR1cmUgaG90cGx1ZyB0aGUgcGVy
-Zm9ybWFuY2UgaXMgdW5rbm93biAobm8NCkNEQVQgbm9yIGludGVybGVhdmUgY29uZmlndXJhdGlv
-bikgc28gSE1BVCBjYW4gbm90IGJlIHByZS1wb3B1bGF0ZWQuDQoNCkhvd2V2ZXIsIHdoYXQgaXMg
-a25vd24gdG8gcGxhdGZvcm0gZmlybXdhcmUgdGhhdCBnZW5lcmF0ZXMgdGhlDQpTUkFUL1NMSVQv
-SE1BVCBhbmQgaXMgdGhlIHBlcmZvcm1hbmNlIGNoYXJhY3RlcmlzdGljcyBvZiB0aGUgcGF0aA0K
-YmV0d2VlbiBDUFUgYW5kIEdlbmVyaWMgSW5pdGlhdG9ycyB0byB0aGUgR2VuZXJpYyBQb3J0IChl
-LmcuIENYTCBIb3N0DQpCcmlkZ2UpLiBXaXRoIHRoZSBhZGRpdGlvbiBvZiBhIEdlbmVyaWMgUG9y
-dCBwcm94aW1pdHkgZG9tYWluIHRvIHRoZQ0KU1JBVCB0aGVuIHRoZSBTTElUIGFuZCBITUFUIGNh
-biBlbnVtZXJhdGUgdGhlIHBsYXRmb3JtLXN0YXRpYyBjb21wb25lbnQNCm9mIGEgZ2l2ZW4gZWRn
-ZSBpbiB0aGUgcGxhdGZvcm0tcGVyZm9ybWFuY2UgdG9wb2xvZ3kgZ3JhcGguIEl0IGVuYWJsZXMN
-CnRoZSBPUyB0byBidWlsZCBvdXQgYSBwZXJmb3JtYW5jZSBtYXBwaW5nIGZvciBzeXN0ZW0gbWVt
-b3J5IGFkZHJlc3MNCnJhbmdlcyBkeW5hbWljYWxseSBkaXNjb3ZlcmVkLCBvciBwcm92aXNpb25l
-ZCwgYmVoaW5kIGEgR2VuZXJpYyBQb3J0Lg0KVGhlIE9TIG1hcHBpbmcgdGFrZXMgaW50byBhY2Nv
-dW50IHRoZSBHZW5lcmljIFBvcnQgcGVyZm9ybWFuY2UgKGFzDQplaXRoZXIgYW4gaW5pdGlhdG9y
-IG9yIGEgdGFyZ2V0KSwgdGhlIGludGVybGVhdmUgY29uZmlndXJhdGlvbiwgYW5kIHRoZQ0KYnVz
-IGVudW1lcmFibGUgcGVyZm9ybWFuY2UgY2hhcmFjdGVyaXN0aWNzIChsaW5rIGxhdGVuY3ksIGJh
-bmR3aWR0aCwNCnN3aXRjaCB0cmF2ZXJzYWxzKSB0byBzdXBwbGVtZW50IHRoZSBzdGF0aWMgSE1B
-VCBkYXRhIGVudW1lcmF0ZWQgYXQNCmJvb3QuDQoNCiMgSW1wYWN0IG9mIHRoZSBDaGFuZ2UNCkEg
-bmV3IFNSQVQgdHlwZSByZXF1aXJlcyBub24tY29uZm9ybWluZyBzeXN0ZW0gc29mdHdhcmUgdG8g
-aWdub3JlIHRoZQ0KbmV3IHR5cGUgaW4gdGhlIFNSQVQsIGlnbm9yZSBhbnkgY29vcmRpbmF0ZSBp
-biB0aGUgU0xJVCB0aGF0IGluY2x1ZGVzDQp0aGUgYXNzb2NpYXRlZCBwb3J0J3MgcHJveGltaXR5
-IGRvbWFpbiwgYW5kIGlnbm9yZSBhbnkgY29vcmRpbmF0ZSBpbiB0aGUNCkhNQVQgdGhhdCBpbmNs
-dWRlcyB0aGUgcG9ydCdzIHByb3hpbWl0eSBkb21haW4gYXMgZWl0aGVyIGFuIGluaXRpYXRvciBv
-cg0KYSB0YXJnZXQuDQoNCkluIGNvbnRyYXN0LCBjb25mb3JtaW5nIHN5c3RlbSBzb2Z0d2FyZSBu
-ZWVkIG9ubHkgY29uc3VsdCB0aGUgR2VuZXJpYw0KUG9ydCBkYXRhIHRvIG9wdGlvbmFsbHkgZXh0
-ZW5kIHRoZSBlbnVtZXJhdGlvbiBhbmQgZGlzdGluZ3Vpc2ggUG9ydA0KYXR0YWNoZWQgaW5pdGlh
-dG9ycyBhbmQgbWVtb3J5IHRhcmdldHMgZnJvbSB0aGUgZXhpc3Rpbmcgc2V0IG9mDQplbnVtZXJh
-dGVkIHByb3hpbWl0eSBkb21haW5zLg0KDQpBIGNvbmZvcm1pbmcgaW1wbGVtZW50YXRpb24gYWxz
-byBoYXMgdGhlIG9wdGlvbiB0byBpZ25vcmUgdGhlIEdlbmVyaWMgUG9ydA0KY29udHJpYnV0aW9u
-IHRvIHRoZSBwZXJmb3JtYW5jZSwNCg0KaW4gZWl0aGVyIGEgcm93LCBvciBjb2wgIHRvIGJlIGNv
-bnNpZGVyZWQgYnkgc3lzdGVtIHNvZnR3YXJlIHRoYXQgcGFyc2VzDQpTUkFULCBTTElULCBhbmQg
-SE1BVC4gR2l2ZW4gdGhhdCB0aGUgT1Mgc3RpbGwgbmVlZHMgdG8gZHluYW1pY2FsbHkNCmVudW1l
-cmF0ZSBhbmQgaW5zdGFudGlhdGUgdGhlIG1lbW9yeSByYW5nZXMgYW5kIGluaXRpYXRvcnMgYmVo
-aW5kIHRoZQ0KR2VuZXJpYyBQb3J0LiBUaGUgYXNzdW1wdGlvbiBpcyB0aGF0IG9wZXJhdGluZyBz
-eXN0ZW1zIHRoYXQgZG8gbm90DQpzdXBwb3J0IG5hdGl2ZSBDWEwgZW51bWVyYXRpb24gd2lsbCBp
-Z25vcmUgdGhpcyBkYXRhIGluIHRoZSBITUFULCB3aGlsZQ0KQ1hMIG5hdGl2ZSBlbnVtZXJhdGlv
-biBhd2FyZSBlbnZpcm9ubWVudHMgd2lsbCB1c2UgdGhpcyBmcmFnbWVudCBvZiB0aGUNCnBlcmZv
-cm1hbmNlIHBhdGggdG8gY2FsY3VsYXRlIHRoZSBwZXJmb3JtYW5jZSBjaGFyYWN0ZXJpc3RpY3Mu
-DQoNCiMgUmVmZXJlbmNlcw0KKiBDb21wdXRlIEV4cHJlc3MgTGluayBTcGVjaWZpY2F0aW9uIHYy
-LjAsDQo8aHR0cHM6Ly93d3cuY29tcHV0ZWV4cHJlc3NsaW5rLm9yZy8+DQoNCiMgRGV0YWlsZWQg
-RGVzY3JpcHRpb24gb2YgdGhlIENoYW5nZQ0KDQoqIFNlY3Rpb24gNS4yLjE2IFN5c3RlbSBSZXNv
-dXJjZSBBZmZpbml0eSBUYWJsZSAoU1JBVCkgYWRkIGFub3RoZXINCiAgYnVsbGV0IGZvciBHZW5l
-cmljIFBvcnRzOg0KDQoJKiBnZW5lcmljIHBvcnRzIChlLmcuIGhvc3QgYnJpZGdlcyB0aGF0IGNh
-biBkeW5hbWljYWxseSBkaXNjb3Zlcg0KCSAgbmV3IGluaXRpYXRvcnMgYW5kIGluc3RhbnRpYXRl
-IG5ldyBtZW1vcnkgcmFuZ2UgdGFyZ2V0cykNCg0KKiBBZGQgbmV3IHNlY3Rpb24gNS4yLjE2Ljcg
-R2VuZXJpYyBQb3J0IEFmZmluaXR5IFN0cnVjdHVyZToNCiAgVGhlIEdlbmVyaWMgUG9ydCBBZmZp
-bml0eSBTdHJ1Y3R1cmUgcHJvdmlkZXMgYW4gYXNzb2NpYXRpb24gYmV0d2VlbiBhDQogIHByb3hp
-bWl0eSBkb21haW4gbnVtYmVyIGFuZCBhIGRldmljZSBoYW5kbGUgcmVwcmVzZW50aW5nIGEgR2Vu
-ZXJpYw0KICBQb3J0IChlLmcuIENYTCBIb3N0IEJyaWRnZSwgb3Igc2ltaWxhciBkZXZpY2UgdGhh
-dCBob3N0cyBhIGR5bmFtaWMNCiAgdG9wb2xvZ3kgb2YgbWVtb3J5IHJhbmdlcyBhbmQvb3IgaW5p
-dGlhdG9ycykuDQoNCiAgU3VwcG9ydCBvZiBHZW5lcmljIFBvcnQgQWZmaW5pdHkgU3RydWN0dXJl
-cyBieSBhbiBPU1BNIGlzIG9wdGlvbmFsLg0KDQoqIEFkZCBhIHRhYmxlIGRlc2NyaWJpbmcgdGhl
-IEdlbmVyaWMgUG9ydCBBZmZpbml0eSBTdHJ1Y3R1cmUgKFRhYmxlDQogIDUueHgpOg0KDQoNCnwg
-RmllbGQgIHwgQnl0ZSBMZW5ndGggfCBCeXRlIE9mZnNldCB8IERlc2NyaXB0aW9uICAgICAgICAg
-ICAgICAgICAgfA0KfCA6LS0tLS0gfCA6LS0tICAgICAgICB8IDotLS0gICAgICAgIHwgOi0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLSB8DQp8IFR5cGUgICB8IDEgICAgICAgICAgIHwgMCAgICAg
-ICAgICAgfCA2IEdlbmVyaWMgUG9ydCBTdHJ1Y3R1cmUgICAgIHwNCnwgTGVuZ3RoIHwgMSAgICAg
-ICAgICAgfCAxICAgICAgICAgICB8IDMyICAgICAgICAgICAgICAgICAgICAgICAgICAgfA0KfCBS
-ZXNlcnZlZCB8IDEgICAgICAgICB8IDIgICAgICAgICAgIHwgUmVzZXJ2ZWQgYW5kIG11c3QgYmUg
-emVybyAgICB8DQp8IERldmljZSBIYW5kbGUgVHlwZSB8IDEgfCAzIHwgRGV2aWNlIEhhbmRsZSBU
-eXBlOiBTZWUgNS4yLjE2LjYgR2VuZXJpYyBJbml0aWF0b3IgQWZmaW5pdHkgU3RydWN0dXJlIGZv
-ciB0aGUgcG9zc2libGUgZGV2aWNlIGhhbmRsZSB0eXBlcyBhbmQgdGhlaXIgZm9ybWF0LiB8DQp8
-IFByb3hpbWl0eSBEb21haW4gfCA0IHwgNCB8IFRoZSBwcm94aW1pdHkgZG9tYWluIHRvIGlkZW50
-aWZ5IHRoZSBwZXJmb3JtYW5jZSBvZiB0aGlzIHBvcnQgaW4gdGhlIEhNQVQuIHwNCnwgRGV2aWNl
-IEhhbmRsZSB8IDE2ICAgfCA4ICAgICAgICAgICB8IERldmljZSBIYW5kbGUgb2YgdGhlIEdlbmVy
-aWMgUG9ydCwgc2VlIFRhYmxlIDUuNTcgYW5kIDUuNTggZm9yIGEgZGVzY3JpcHRpb24gb2YgdGhp
-cyBmaWVsZC4gfA0KfCBGbGFncyAgfCA0ICAgICAgICAgICB8IDI0ICAgICAgICAgIHwgU2VlIHRh
-YmxlIDUuNTkgZm9yIGEgZGVzY3JpcHRpb24gb2YgdGhpcyBmaWVsZC4gfA0KfCBSZXNlcnZlZCB8
-IDQgICAgICAgICB8IDI4ICAgICAgICAgIHwgUmVzZXJ2ZWQgYW5kIG11c3QgYmUgemVyby4gICB8
-DQoNCiogUmVwbGFjZSBhbGwgaW5zdGFuY2VzIG9mICJJbml0aWF0b3IiIHdpdGggIkluaXRpYXRv
-ciAvIFBvcnQiIGluICJUYWJsZQ0KICA1LjU5IEZsYWdzIC0gR2VuZXJpYyBJbml0aWF0b3IgQWZm
-aW5pdHkgU3RydWN0dXJlIiwgaW5jbHVkaW5nIHRoZQ0KICB0YWJsZSBuYW1lLg0K
+On Sat, 10 Apr 2021 05:34:29 +0000
+"Williams, Dan J" <dan.j.williams@intel.com> wrote:
+
+> Changes since v1 [1]:
+>   * Rename Generic Target to Generic Port and make a new distinct SRAT
+>     type independent of Generic Initiator (Jonathan)
+>   * Clarify that this new "Port" concept is not limited to CXL. It is a
+>     generic way to describe the performance of static paths to
+>     dynamically added system memory (Mahesh)
+>   * Fixes and cleanups (Chet)
+> 
+> [1]: 
+> http://lore.kernel.org/r/CAPcyv4gmd_cygXK0PpGkXmJLC3_ctEpRvpi5P-QcuXusFX5oNQ@mail.gmail.com
+
+Hi Dan,
+
+I'm fine with the actual changes.  A few editorial suggestions inline.
+
+Description wise, it rightly focuses on the case of memory on CXL.
+I'm a little worried people might miss the fact it enables the other
+direction, e.g. GI on CXL accessing system memory. Perhaps that needs
+calling out a little more in the intro?
+
+> 
+> ---
+> 
+> While the platform BIOS is able to describe the performance
+> characteristics of CXL memory that is present at boot, it is unable to
+> statically enumerate the performance of CXL memory hot inserted
+> post-boot. The OS can enumerate most of the characteristics from link
+> registers and CDAT, but the performance from the CPU to the host
+> bridge, for example, is not enumerated by PCIE or CXL. Introduce an
+> ACPI mechanism for this purpose.
+> 
+> ---
+> 
+> # Title: Introduce a Generic Port for hotplug memory buses like CXL
+> 
+> # Status: Draft v2
+> 
+> # Document: ACPI Specification 6.4
+> 
+> # License
+> SPDX-License Identifier: CC-BY-4.0
+> 
+> # Submitter:
+> * Sponsor: Dan Williams, Intel
+> * Creators/Contributors:
+>     * Mahesh Natu, Intel
+>     * Chet Douglas, Intel
+>     * Deepak Shivakumar, Intel
+>     * Jonathan Cameron, Huawei
+> 
+> # Changes since v1
+>   * Rename Generic Target to Generic Port and make a new distinct SRAT
+>     type independent of Generic Initiator (Jonathan)
+>   * Clarify that this new "Port" concept is not limited to CXL. It is a
+>     generic way to describe the performance of static paths to
+>     dynamically added system memory (Mahesh)
+> 
+> # Summary of the Change
+> Introduce a new "Generic Port" type to the SRAT to describe the
+> performance from CPU and other initiator domains to the root of a CXL
+> topology, or any other topology that might dynamically add system memory
+> behind the "Port". This is in support of, but not limited to, the OS
+> being able to enumerate the performance topology for dynamically added /
+> discovered CXL Memory Device endpoints.
+> 
+> # Benefits of the Change
+> Consider the case of a system with a set of CXL Host Bridges (ACPI0016),
+> and some endpoints attached at boot. In that scenario the platform
+> firmware is able to enumerate those devices, enumerate and map CXL
+> memory into the system physical memory address space, and generate the
+> typical static SRAT/SLIT/HMAT set of tables describing CXL attached
+> memory. Now, consider the case where devices are dynamically added and
+> enumerated post boot, i.e. post generation of the static memory tables.
+> In this scenario platform firmware is unable to perform the end-to-end
+> enumeration necessary to populate SRAT and HMAT for the endpoints that
+> may be hot-inserted behind those bridges post power-on. The
+> address-range is unknown so SRAT can not be pre-populated in the typical
+> way that hotplug system memory is enumerated. Even if a static address
+> range was set aside for future hotplug the performance is unknown (no
+> CDAT nor interleave configuration) so HMAT can not be pre-populated.
+> 
+> However, what is known to platform firmware that generates the
+> SRAT/SLIT/HMAT and is the performance characteristics of the path
+
+HMAT is (drop the and)
+
+> between CPU and Generic Initiators to the Generic Port (e.g. CXL Host
+> Bridge). With the addition of a Generic Port proximity domain to the
+
+Generic Port Affinity Structure
+
+> SRAT then the SLIT and HMAT can enumerate the platform-static component
+> of a given edge in the platform-performance topology graph. It enables
+> the OS to build out a performance mapping for system memory address
+> ranges dynamically discovered, or provisioned, behind a Generic Port.
+> The OS mapping takes into account the Generic Port performance (as
+> either an initiator or a target), the interleave configuration, and the
+> bus enumerable performance characteristics (link latency, bandwidth,
+> switch traversals) to supplement the static HMAT data enumerated at
+> boot.
+> 
+> # Impact of the Change
+> A new SRAT type requires non-conforming system software to ignore the
+> new type in the SRAT, ignore any coordinate in the SLIT that includes
+> the associated port's proximity domain, and ignore any coordinate in the
+> HMAT that includes the port's proximity domain as either an initiator or
+> a target.
+
+Rereading the following comments after writing them, I think we are probably best
+just ignoring the corners it refers to, but have left it here in case it comes up in
+discussions.
+
+Initially I wondered if we needed a note here to explain that we don't
+need an explicit (i.e. _OSC) way to discover support for Generic Ports
+because we don't expect to run into the issue with _PXM results in DSDT
+needing to be modified based on that support (as we don't expect _PXM
+to ever refer to a proximity domain containing only a Generic Port).
+
+Perhaps that is somewhat of a backwards argument.  Does it
+make sense to add the constraint that a proximity domain when it only
+contains a Generic Port should not be used in _PXM?
+"
+6.2.14 _PXM (Proximity)
+This optional object is used to describe proximity domain associations
+within a machine. _PXM evaluates to an integer that identifies a device
+as belonging to a Proximity Domain defined in the System Resource
+Affinity Table (SRAT).
+"
+
+Now it's already possible to use Affinity structures in SRAT to define
+domains that will result in craziness.  E.g. an ITS that is in a domain
+on it's own.  So perhaps this isn't the time to make that more explicit.
+
+> 
+> In contrast, conforming system software need only consult the Generic
+> Port data to optionally extend the enumeration and distinguish Port
+> attached initiators and memory targets from the existing set of
+> enumerated proximity domains.
+> 
+> A conforming implementation also has the option to ignore the Generic Port
+> contribution to the performance,
+> 
+> in either a row, or col  to be considered by system software that parses
+
+Odd line break above and sentence doesn't parse.  Editing issue perhaps?
+
+> SRAT, SLIT, and HMAT. Given that the OS still needs to dynamically
+> enumerate and instantiate the memory ranges and initiators behind the
+> Generic Port.
+
+"Given" suggests something as a result of, or perhaps the intent here
+"Given that, the OS..."
+
+> The assumption is that operating systems that do not
+> support native CXL enumeration will ignore this data in the HMAT, while
+> CXL native enumeration aware environments will use this fragment of the
+> performance path to calculate the performance characteristics.
+> 
+> # References
+> * Compute Express Link Specification v2.0,
+> <https://www.computeexpresslink.org/>
+> 
+> # Detailed Description of the Change
+> 
+> * Section 5.2.16 System Resource Affinity Table (SRAT) add another
+>   bullet for Generic Ports:
+> 
+> 	* generic ports (e.g. host bridges that can dynamically discover
+> 	  new initiators and instantiate new memory range targets)
+
+That implies the host bridge is responsible for the work of discovering
+the initiators and memory range targets.  Perhaps reword along the lines of
+
+e.g. host bridges beyond which new initiators and memory range targets
+may be dynamically discovered.
+
+> 
+> * Add new section 5.2.16.7 Generic Port Affinity Structure:
+>   The Generic Port Affinity Structure provides an association between a
+>   proximity domain number and a device handle representing a Generic
+>   Port (e.g. CXL Host Bridge, or similar device that hosts a dynamic
+>   topology of memory ranges and/or initiators).
+> 
+>   Support of Generic Port Affinity Structures by an OSPM is optional.
+> 
+> * Add a table describing the Generic Port Affinity Structure (Table
+>   5.xx):
+> 
+> 
+> | Field  | Byte Length | Byte Offset | Description                  |
+> | :----- | :---        | :---        | :--------------------------- |
+> | Type   | 1           | 0           | 6 Generic Port Structure     |
+> | Length | 1           | 1           | 32                           |
+> | Reserved | 1         | 2           | Reserved and must be zero    |
+> | Device Handle Type | 1 | 3 | Device Handle Type: See 5.2.16.6 Generic Initiator Affinity Structure for the possible device handle types and their format. |
+> | Proximity Domain | 4 | 4 | The proximity domain to identify the performance of this port in the HMAT. |
+
+Perhaps make that vague to allow for SLIT as well?  I'd imagine any sane
+OS will rely on HMAT being available but that constraint doesn't exist yet
+in the ACPI spec (I wish it did!)
+
+> | Device Handle | 16   | 8           | Device Handle of the Generic Port, see Table 5.57 and 5.58 for a description of this field. |
+> | Flags  | 4           | 24          | See table 5.59 for a description of this field. |
+> | Reserved | 4         | 28          | Reserved and must be zero.   |
+> 
+> * Replace all instances of "Initiator" with "Initiator / Port" in "Table
+>   5.59 Flags - Generic Initiator Affinity Structure", including the
+>   table name.
+
+Looks to me like all the text around HMAT and SLIT is 'broad' enough that we don't
+need to modify anything there which definitely makes this a cleaner change than
+I expected.
+
+Good stuff,
+
+Jonathan
+
