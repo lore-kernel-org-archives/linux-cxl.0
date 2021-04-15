@@ -2,273 +2,355 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66590C43460
-	for <linux-cxl@archiver.kernel.org>; Thu, 15 Apr 2021 05:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A61C433ED
+	for <linux-cxl@archiver.kernel.org>; Thu, 15 Apr 2021 15:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2588C61074
-	for <linux-cxl@archiver.kernel.org>; Thu, 15 Apr 2021 05:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0521613B0
+	for <linux-cxl@archiver.kernel.org>; Thu, 15 Apr 2021 15:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229881AbhDOFVz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 15 Apr 2021 01:21:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58908 "EHLO
+        id S234313AbhDOPD3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 15 Apr 2021 11:03:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229912AbhDOFVw (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 15 Apr 2021 01:21:52 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F90AC061760
-        for <linux-cxl@vger.kernel.org>; Wed, 14 Apr 2021 22:21:27 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id w3so34938201ejc.4
-        for <linux-cxl@vger.kernel.org>; Wed, 14 Apr 2021 22:21:27 -0700 (PDT)
+        with ESMTP id S235400AbhDOPBM (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 15 Apr 2021 11:01:12 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E202C061761
+        for <linux-cxl@vger.kernel.org>; Thu, 15 Apr 2021 08:00:45 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id v6so36042487ejo.6
+        for <linux-cxl@vger.kernel.org>; Thu, 15 Apr 2021 08:00:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yfHpVPgTxoCb2Y8HlsquPo4Y9DrlaYo1kZmF94VXk9g=;
-        b=LXXLMqN91EHunpLCu7HVsmlVUG/34MyNVDrXjCBRS9736Y2tjgx8x5winXvUs+zXj3
-         rwJ2uqJvK+Ob9ZnzAq6SV8qDx560IxhxYHiKKDTjSCc3HhCjcN06qslXMvmQviI9D39N
-         gzmgaCj3t58bChjcG6ShEnLdx9HdOE7gzP8smWqB08wTMDb1tokv7X41knp4J6lxAD1q
-         lTsSC2ry2mqH679hBxf+j+QML696u6DHJQvTYAP5DUsW4HeR7hBbdPePcYsnw9SJn8CU
-         Fd3XWLdEtnwU8nuPNXFOlApKcKsPG2hhNPfLIqc3yJXU/guySXKE4vlF7vRSJ1aR18Jz
-         M8cA==
+        bh=eXenppMlRDUQ3XdUE6tp7seWuh83v/wLWPDlePTYdvs=;
+        b=zFqtXN64INKdW9Wp27smv397vK6c+sxT6p8RXlfTxilSGWMk0lFvnhiU26e07+pIUB
+         hcc1oQGLMYDGMv2uqKc5a4h+LCVInU16GWEYmM0UB/DYOorY+Gr6w1zhW0UyYG/F5tIL
+         FMumVsOyrYxS39j5JsTUwnTakDG/Oh4Oqo2cx49z19e6BfVkXAoPY2vngcWVnZ8xfg9c
+         A6ULc0sYXeyw7eT1Lebnm657vKjuivkZnGf7k/hpnqCjcQDEK8EpkFSdnWYD8RMYvnjI
+         ZcRBMijcslm925/ak9wkfidh5qTzaJcyGTrFYEXKq2C7AE1WxmWN5XlGQ4TrSUgtIEHa
+         0OrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yfHpVPgTxoCb2Y8HlsquPo4Y9DrlaYo1kZmF94VXk9g=;
-        b=X4AL55f5Wc/5D6I2LB+dNKvJpXMz0Y80W37LGXe0Ao57DqUvkaukMu4kTifFE7qLiF
-         cFOdzLfO72WKNXA2zgdDpdUU1R5uVTQ5K1g+nHumAJQcBIG4KavFxHv82TIFm1ASuVIV
-         KHt30M0roFJ/2EmL4cP9rATrTbMIWWcqD5x2MjHETZ51xwddiVt43smvb6zMwuU4KztN
-         Ih85uqTPQZMrQz5jl/oQTFT9ZaUvPpa+1PdOLD+e4vRM4NKG18Z8hU5qwoZyOU7sqNr/
-         HInGrEsZFqZUjvVeUAR73bawQNIj7SsWkC/fmxFRapzLUKfqnrXSDY9jnEWyge5ilEFE
-         2Pdw==
-X-Gm-Message-State: AOAM533itYi/1vxUMfyWIl0c6CLljd8T0VpV39/yo58Qz0+6S0OJa/Ic
-        wib3qLqwMQLaHd4QXAJMiQelSNOX1kXa0X3fmYpDMw==
-X-Google-Smtp-Source: ABdhPJwBKg5W4y/Mf5LNN3YaLgfsq6e9XlkPVLczLmK+QZIR3hWfVS2xvwGTnxXu7rmqfj/yjLTszCzhcNe5KyBvip4=
-X-Received: by 2002:a17:906:ef2:: with SMTP id x18mr1581794eji.323.1618464085912;
- Wed, 14 Apr 2021 22:21:25 -0700 (PDT)
+        bh=eXenppMlRDUQ3XdUE6tp7seWuh83v/wLWPDlePTYdvs=;
+        b=KacOsboXQDY2jdYmQJ8OwcIFTW+d41HfwrX0KnYbiKY8L/QgLvOEW1WMwQC5Dl9d0l
+         Y8aeamSQszZB0DH2Pdmz19J3zokqdrIEutQuObcDqGG0k4pox32oRhe1sLmpj4AN8xLY
+         WQvR9EqcrBdlm3eeXpl6anrlo79rA8R3yRmlv75Meqssi/55Qf+YnN5In89EQgvLos0R
+         Ao+Cid1ks6r9MbdO9zvHY4w53WYm7LOl9HEi0tN5L0gNsFs7rLpf62XS4QtjRY4IKgI0
+         KhK8YU4aJG+AmI9H4wQnZ8txBg3EkEW6yvCH6VLqVWren+s98+nrDhJWGiRX1wkeSei6
+         nAjQ==
+X-Gm-Message-State: AOAM531RoJstLQflqwRJsWCvdgaARCyqhMP2jmv9yPgA2PdfVYIVtaB5
+        gkL7VprP6HkLYDhjtLqkiUYWFyNuAzVcL8r6TLfgiA==
+X-Google-Smtp-Source: ABdhPJwKcD6cFbBQ45jvvBX/yt9qT0Adavqea2M2F5q+zROXwVwkprD4+BjXKKV4lspmITb/ruX30pXWP4W6s0zYNI4=
+X-Received: by 2002:a17:906:4fcd:: with SMTP id i13mr3830424ejw.341.1618498843483;
+ Thu, 15 Apr 2021 08:00:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAPcyv4hAc=DERr1z8kr=V01+NSi74f-kSfMAdeArLmVb112_Dw@mail.gmail.com>
- <20210414011448.GA2266325@bjorn-Precision-5520>
-In-Reply-To: <20210414011448.GA2266325@bjorn-Precision-5520>
+References: <161728744224.2474040.12854720917440712854.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <161728746928.2474040.8309331256371634167.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20210406183232.00003189@Huawei.com>
+In-Reply-To: <20210406183232.00003189@Huawei.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 14 Apr 2021 22:21:14 -0700
-Message-ID: <CAPcyv4iu8D-hJoujLXw8a4myS7trOE1FcUhESLB_imGMECVfrg@mail.gmail.com>
-Subject: Re: [PATCH v2 7/8] cxl/port: Introduce cxl_port objects
-To:     Bjorn Helgaas <helgaas@kernel.org>
+Date:   Thu, 15 Apr 2021 08:00:00 -0700
+Message-ID: <CAPcyv4jvhc6wgne4r_zgJzB3PgSHgMtHrnsRCvx=F8JxPKfBCw@mail.gmail.com>
+Subject: Re: [PATCH v2 5/8] cxl/acpi: Introduce ACPI0017 driver and cxl_root
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
         Linux ACPI <linux-acpi@vger.kernel.org>,
         "Weiny, Ira" <ira.weiny@intel.com>,
         Vishal L Verma <vishal.l.verma@intel.com>,
         "Schofield, Alison" <alison.schofield@intel.com>,
         Ben Widawsky <ben.widawsky@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Matthew Wilcox <willy@infradead.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Apr 13, 2021 at 6:15 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Tue, Apr 6, 2021 at 10:47 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
 >
-> On Thu, Apr 08, 2021 at 07:13:38PM -0700, Dan Williams wrote:
-> > Hi Bjorn, thanks for taking a look.
+> On Thu, 1 Apr 2021 07:31:09 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> > While CXL builds upon the PCI software model for dynamic enumeration and
+> > control, a static platform component is required to bootstrap the CXL
+> > memory layout. In addition to identifying the host bridges ACPI is
+> > responsible for enumerating the CXL memory space that can be addressed
+> > by decoders. This is similar to the requirement for ACPI to publish
+> > resources reported by _CRS for PCI host bridges.
 > >
-> > On Thu, Apr 8, 2021 at 3:42 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >
-> > > [+cc Greg, Rafael, Matthew: device model questions]
-> > >
-> > > Hi Dan,
-> > >
-> > > On Thu, Apr 01, 2021 at 07:31:20AM -0700, Dan Williams wrote:
-> > > > Once the cxl_root is established then other ports in the hierarchy can
-> > > > be attached. The cxl_port object, unlike cxl_root that is associated
-> > > > with host bridges, is associated with PCIE Root Ports or PCIE Switch
-> > > > Ports. Add cxl_port instances for all PCIE Root Ports in an ACPI0016
-> > > > host bridge.
->
-> Incidentally, "PCIe" is the abbreviation used in the PCIe specs, so I
-> try to use that instead of "PCIE" in drivers/pci/.
-
-Noted.
-
->
-> > > I'm not a device model expert, but I'm not sure about adding a new
-> > > /sys/bus/cxl/devices hierarchy.  I'm under the impression that CXL
-> > > devices will be enumerated by the PCI core as PCIe devices.
+> > Introduce the cxl_root object as an abstract "port" into the CXL.mem
+> > address space described by HDM decoders identified by the ACPI
+> > CEDT.CHBS.
 > >
-> > Yes, PCIe is involved, but mostly only for the CXL.io slow path
-> > (configuration and provisioning via mailbox) when we're talking about
-> > memory expander devices (CXL calls these Type-3). So-called "Type-3"
-> > support is the primary driver of this infrastructure.
+> > For now just establish the initial boilerplate and sysfs attributes, to
+> > be followed by enumeration of the ports within the host bridge.
 > >
-> > You might be thinking of CXL accelerator devices that will look like
-> > plain PCIe devices that happen to participate in the CPU cache
-> > hierarchy (CXL calls these Type-1). There will also be accelerator
-> > devices that want to share coherent memory with the system (CXL calls
-> > these Type-2).
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 >
-> IIUC all these CXL devices will be enumerated by the PCI core.  They
-> seem to have regular PCI BARs (separate from the HDM stuff), so the
-> PCI core will presumably manage address allocation for them.  It looks
-> like Function Level Reset and hotplug are supposed to use the regular
-> PCIe code.  I guess this will all be visible via lspci just like
-> regular PCI devices, right?
-
-Yes. the CXL.io protocol is synonymous with PCIe. Hotplug is native
-PCIe hotplug to negotiate getting the card online and offline.
-Although, for offline an additional constraint is to deny removal
-whenever the card has active pages in the page allocator. Similar to
-what happens today for ACPI memory hotplug where the OS can say "nope,
-there's still active pages in the range you asked to eject".
-
-FLR has no effect on CXL.cache or CXL.mem state, only CXL.io.
-
-> > The infrastructure being proposed here is primarily for the memory
-> > expander (Type-3) device case where the PCI sysfs hierarchy is wholly
-> > unsuited for modeling it. A single CXL memory region device may span
-> > multiple endpoints, switches, and host bridges. It poses similar
-> > stress to an OS device model as RAID where there is a driver for the
-> > component contributors to an upper level device / driver that exposes
-> > the RAID Volume (CXL memory region interleave set). The CXL memory
-> > decode space (HDM: Host Managed Device Memory) is independent of the
-> > PCIe MMIO BAR space.
+> A few minor comments inline.
 >
-> It looks like you add a cxl_port for each ACPI0016 device and every
-> PCIe Root Port below it.  So I guess the upper level spanning is at a
-> higher level than cxl_port?
-
-A memory interleave can span any level of the hierarchy. It can be
-across host bridges at the top level, but also incorporate a leaf
-device at the bottom of a CXL switch hierarchy. There will be a
-cxl_port instance for each side of each link.
-
-> > That's where the /sys/bus/cxl hierarchy is needed, to manage the HDM
-> > space across the CXL topology in a way that is foreign to PCIE (HDM
-> > Decoder hierarchy).
->
-> When we do FLR on the PCIe device, what happens to these CXL clients?
-> Do they care?  Are they notified?  Do they need to do anything before
-> or after the FLR?
-
-Per CXL Spec:
-
-"FLR has no effect on the CXL.cache and CXL.mem protocol. Any
-CXL.cache and CXL.mem related control registers including CXL DVSEC
-structures and state held by the CXL device are not affected by FLR.
-The memory controller hosting the HDM is not reset by FLR."
-
-> What about hotplug?  Spec says it leverages PCIe hotplug, but it looks
-> like maybe this all requires ACPI hotplug (acpiphp) for adding
-> ACPI0017 devices and notifying of hot remove requests?  If it uses
-> PCIe native hotplug (pciehp), what connects the CXL side to the PCI
-> side?
-
-No ACPI hotplug is not involved. ACPI0017 is essentially just a dummy
-anchor device to hang the interleave set coordination. The connect
-from native hotplug to CXL is the cxl_mem driver. When that it detects
-a new device it walks the cxl_port hierarchy to see if one is a parent
-of this endpoint. Then it registers its HDM decoders with the CXL core
-and the CXL core can online it as a standalone interneleave set or
-consolidate it with others to make a wider set. For persistent memory
-there is on-device metadata to recall whether this device was part of
-a set previously. For volatile-only devices it would need to rely on
-some policy to decide if devices are immediately onlined standalone,
-or wait for an administrator to configure them.
-
-> I guess the HDM address space management is entirely outside the scope
-> of PCI -- the address space is not described by the CXL host bridge
-> _CRS and not described by CXL endpoint BARs?
-
-Correct.
-
-> Where *is* it described
-> and who manages and allocates it?
-
-ACPI0017 will communicate a set of address spaces that the CXL core
-can allocate interleave sets.
-
->  I guess any transaction routing
-> through the CXL fabric for HDM space is also completely outside the
-> scope of PCI -- we don't need to worry about managing PCI-to-PCI
-> bridge windows, for instance?
-
-Correct. For example a PCIe switch could disable all I/O space and
-Memory (MMIO) space, but still decode Host-managed Device Memory (HDM)
-space.
-
-> Is there a cxl_register_driver() or something?  I assume there will be
-> drivers that need to manage CXL devices?  Or will they use
-> pci_register_driver() and search for a CXL capability?
-
-A bit of both. The cxl_mem driver does pci_register_driver(), but for
-ports there will be a driver on the CXL bus for that component
-capability. Both endpoints and switches will produce cxl_port
-instances to be connected / driven by a core driver and coordinated
-with a root level driver for address space and interleave management.
-
-> > > Doesn't that mean we will have one struct device in the pci_dev,
-> > > and another one in the cxl_port?
+> > ---
+> >  drivers/cxl/Kconfig  |   14 ++
+> >  drivers/cxl/Makefile |    2
+> >  drivers/cxl/acpi.c   |   39 ++++++
+> >  drivers/cxl/core.c   |  349 ++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  drivers/cxl/cxl.h    |   64 +++++++++
+> >  5 files changed, 468 insertions(+)
+> >  create mode 100644 drivers/cxl/acpi.c
 > >
-> > Yes, that is the proposal.
+> > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> > index 97dc4d751651..fb282af84afd 100644
+> > --- a/drivers/cxl/Kconfig
+> > +++ b/drivers/cxl/Kconfig
+> > @@ -50,4 +50,18 @@ config CXL_MEM_RAW_COMMANDS
+> >         potential impact to memory currently in use by the kernel.
+> >
+> >         If developing CXL hardware or the driver say Y, otherwise say N.
+> > +
+> > +config CXL_ACPI
+> > +     tristate "CXL ACPI: Platform Support"
+> > +     depends on ACPI
+> > +     help
+> > +       Enable support for host managed device memory (HDM) resources
+> > +       published by a platform's ACPI CXL memory layout description.
+> > +       See Chapter 9.14.1 CXL Early Discovery Table (CEDT) in the CXL
+> > +       2.0 specification. The CXL core consumes these resource to
+> > +       publish port and address_space objects used to map regions
+> > +       that represent System RAM, or Persistent Memory regions to be
+> > +       managed by LIBNVDIMM.
+> > +
+> > +       If unsure say 'm'.
+> >  endif
+> > diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+> > index 3808e39dd31f..f429ca6b59d9 100644
+> > --- a/drivers/cxl/Makefile
+> > +++ b/drivers/cxl/Makefile
+> > @@ -1,7 +1,9 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> >  obj-$(CONFIG_CXL_BUS) += cxl_core.o
+> >  obj-$(CONFIG_CXL_MEM) += cxl_mem.o
+> > +obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+> >
+> >  ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
+> >  cxl_core-y := core.o
+> >  cxl_mem-y := mem.o
+> > +cxl_acpi-y := acpi.o
+> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > new file mode 100644
+> > index 000000000000..d54c2d5de730
+> > --- /dev/null
+> > +++ b/drivers/cxl/acpi.c
+> > @@ -0,0 +1,39 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/* Copyright(c) 2021 Intel Corporation. All rights reserved. */
+> > +#include <linux/platform_device.h>
+> > +#include <linux/module.h>
+> > +#include <linux/device.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/acpi.h>
 >
-> > The superfluous power/ issue can be cleaned up with
-> > device_set_pm_not_required().
+> swap acpi.h that for mod_devicetable.h unless this is going to
+> need acpi.h later for something else.
+
+It will need it after patch7, so I'll just leave it as is for now.
+
+[..]
+> > +static struct cxl_root *cxl_root_alloc(struct device *parent,
+> > +                                    struct cxl_address_space *cxl_space,
+> > +                                    int nr_spaces)
+> > +{
+> > +     struct cxl_root *cxl_root;
+> > +     struct cxl_port *port;
+> > +     struct device *dev;
+> > +     int rc;
+> > +
+> > +     cxl_root = kzalloc(struct_size(cxl_root, address_space, nr_spaces),
+> > +                        GFP_KERNEL);
+> > +     if (!cxl_root)
+> > +             return ERR_PTR(-ENOMEM);
+> > +
+> > +     memcpy(cxl_root->address_space, cxl_space,
+> > +            flex_array_size(cxl_root, address_space, nr_spaces));
+> > +     cxl_root->nr_spaces = nr_spaces;
+> > +
+> > +     rc = ida_alloc(&cxl_port_ida, GFP_KERNEL);
+> > +     if (rc < 0)
+> > +             goto err;
+> > +     port = &cxl_root->port;
+> > +     port->id = rc;
+> > +
+> > +     /*
+> > +      * Root does not have a cxl_port as its parent and it does not
+> > +      * have any corresponding component registers it is only a
 >
-> Thanks, we might be able to use that for portdrv.  I added it to my
-> list to investigate.
+> have any corresponding component registers; it is only a
+> .. or you could use two sentences
+
+Sure.
+
 >
-> > What are the other problems this poses, because in other areas this
-> > ability to subdivide a device's functionality into sub-drivers is a
-> > useful organization principle?
+> > +      * logical anchor to the first level of actual ports that decode
+> > +      * the root address spaces.
+> > +      */
+> > +     port->port_host = parent;
+> > +     port->target_id = -1;
+> > +     port->component_regs_phys = -1;
+> > +
+> > +     dev = &port->dev;
+> > +     device_initialize(dev);
+> > +     device_set_pm_not_required(dev);
+> > +     dev->parent = parent;
+> > +     dev->bus = &cxl_bus_type;
+> > +     dev->type = &cxl_root_type;
+> > +
+> > +     return cxl_root;
+> > +
+> > +err:
+> > +     kfree(cxl_root);
+> > +     return ERR_PTR(rc);
+> > +}
+> > +
+> > +static struct cxl_address_space_dev *
+> > +cxl_address_space_dev_alloc(struct device *parent,
+> > +                         struct cxl_address_space *space)
+> > +{
+> > +     struct cxl_address_space_dev *cxl_asd;
+> > +     struct resource *res;
+> > +     struct device *dev;
+> > +     int rc;
+> > +
+> > +     cxl_asd = kzalloc(sizeof(*cxl_asd), GFP_KERNEL);
+> > +     if (!cxl_asd)
+> > +             return ERR_PTR(-ENOMEM);
+> > +
+> > +     res = &cxl_asd->res;
+> > +     res->name = "CXL Address Space";
+> > +     res->start = space->range.start;
+> > +     res->end = space->range.end;
+> > +     res->flags = IORESOURCE_MEM;
+> > +
+> > +     rc = insert_resource(&iomem_resource, res);
+> > +     if (rc)
+> > +             goto err;
+> > +
+> > +     cxl_asd->address_space = space;
+> > +     dev = &cxl_asd->dev;
+> > +     device_initialize(dev);
+> > +     device_set_pm_not_required(dev);
+> > +     dev->parent = parent;
+> > +     dev->type = &cxl_address_space_type;
+> > +
+> > +     return cxl_asd;
+> > +
+> > +err:
+> > +     kfree(cxl_asd);
+> > +     return ERR_PTR(rc);
+> > +}
+> > +
+> > +static int cxl_address_space_dev_add(struct device *host,
+> > +                                  struct cxl_address_space_dev *cxl_asd,
+> > +                                  int id)
+> > +{
+> > +     struct device *dev = &cxl_asd->dev;
+> > +     int rc;
+> > +
+> > +     rc = dev_set_name(dev, "address_space%d", id);
+> > +     if (rc)
+> > +             goto err;
+> > +
+> > +     rc = device_add(dev);
+> > +     if (rc)
+> > +             goto err;
+> > +
+> > +     dev_dbg(host, "%s: register %s\n", dev_name(dev->parent),
+> > +             dev_name(dev));
+> > +
+> > +     return devm_add_action_or_reset(host, unregister_dev, dev);
+> > +
+> > +err:
+> > +     put_device(dev);
+> This is unusual. The error handling is undoing something this function
+> wasn't responsible for.  See below for suggested resolution.
 >
-> Well, I'm thinking about things like enumeration, hotplug, reset,
-> resource management (BARs, bridge windows, etc), interrupts, power
-> management (suspend, resume, etc), and error reporting.  These are all
-> things that PCIe defines on a per-Function basis and seem kind of hard
-> to cleanly subdivide.
-
-Right, I'm hoping like FLR there is little need to coordinate PCI /
-CXL.io operations with CXL.mem operations, or that once a PCI driver
-registers some CXL capabilities it never needs to look back. The only
-hook that violates this so far is NAKing device removal when CXL.mem
-for that device is busy.
-
-> > So much so that several device writer teams came together to create
-> > the auxiliary-bus for the purpose of allowing sub-drivers to be
-> > carved off for independent functionality similar to the portdrv
-> > organization.
+> > +     return rc;
+> > +}
+> > +
+> > +struct cxl_root *devm_cxl_add_root(struct device *host,
+> > +                                struct cxl_address_space *cxl_space,
+> > +                                int nr_spaces)
+> > +{
+> > +     struct cxl_root *cxl_root;
+> > +     struct cxl_port *port;
+> > +     struct device *dev;
+> > +     int i, rc;
+> > +
+> > +     cxl_root = cxl_root_alloc(host, cxl_space, nr_spaces);
+> > +     if (IS_ERR(cxl_root))
+> > +             return cxl_root;
+> > +
+> > +     port = &cxl_root->port;
+> > +     dev = &port->dev;
+> > +     rc = dev_set_name(dev, "root%d", port->id);
+> > +     if (rc)
+> > +             goto err;
+> > +
+> > +     rc = device_add(dev);
+> > +     if (rc)
+> > +             goto err;
+> > +
+> > +     rc = devm_add_action_or_reset(host, unregister_dev, dev);
+> > +     if (rc)
+> > +             return ERR_PTR(rc);
+> > +
+> > +     for (i = 0; i < nr_spaces; i++) {
+> > +             struct cxl_address_space *space = &cxl_root->address_space[i];
+> > +             struct cxl_address_space_dev *cxl_asd;
+> > +
+> > +             if (!range_len(&space->range))
+> > +                     continue;
+> > +
+> > +             cxl_asd = cxl_address_space_dev_alloc(dev, space);
+> > +             if (IS_ERR(cxl_asd))
+> > +                     return ERR_CAST(cxl_asd);
+> > +
 >
-> Is "auxiliary-bus" a specific thing?  I'm not familiar with it but
-> again I'd like to read up on it in case it has ideas we could
-> leverage.
+> Nothing is done between the dev_alloc() and the dev_add()
+> and this is currently in the odd position of doing put_device() in the
+> error path of *dev_add() when it wasn't responsible for getting the
+> reference it is putting, dev_alloc() did that.
 
-auxiliary-bus is not a specific thing, it's a generic way for any
-driver to register a custom device for a sub-driver to drive. One of
-the primary examples are PCI Ethernet drivers exporting RDMA device
-interfaces for common RDMA functionality. So you could have multiple
-generations of Ethernet devices all producing a common RDMA interface
-and rather than have an equivalent RDMA driver per generation just
-create a shared common one that attaches to all the different baseline
-Ethernet implementations.
+No, you missed the back and forth that Jason and I had about proper
+device initialization flows:
 
-See:
+https://lore.kernel.org/linux-cxl/161714738634.2168142.10860201861152789544.stgit@dwillia2-desk3.amr.corp.intel.com/
 
-Documentation/driver-api/auxiliary_bus.rst
+The put_device() is not undoing the dev_alloc(), it is undoing the
+dev_alloc() + follow on allocations. Specifically it undoes the
+dev_set_name() allocation. That is why the alloc and the add are split
+into explicit code paths where the recovery shifts from alloc-unwind
+to put_device().
 
-That document is still a bit too generic, and I have an item on my
-backlog to flesh it out with more practical guidelines.
+> That suggests to me that we can clean up the oddity by just combining
+> cxl_address_space_dev_alloc() and cxl_adress_space_dev_add() into one
+>
+> alloc_and_add() function (with a better name)
 
-> Sub-drivers *is* an issue for PCI in general, although mostly I think
-> it tends to be historical devices where people made the design mistake
-> of putting several unrelated pieces of functionality in the same PCI
-> function, so I don't think PCI has good infrastructure for doing that.
+It's not an oddity and alloc_and_add() is an anti-pattern that leads to bugs.
 
-Auxiliary-bus might help especially if those unrelated pieces have
-been duplicated across multiple different device implementations.
-Aux-bus might clean up the driver model for those pieces.
+>
+> > +             rc = cxl_address_space_dev_add(host, cxl_asd, i);
+>
+> Lifetime management here seems overly complex.   Why not use host for both
+> the alloc and add() devm calls?  I guess there is a good reason
+> though so good to have a comment here saying what it is.
+
+I'll add a kernel-doc to cxl_address_space_dev_add() to clarify what
+is happening here.
