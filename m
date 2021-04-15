@@ -2,125 +2,82 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F279C433B4
-	for <linux-cxl@archiver.kernel.org>; Thu, 15 Apr 2021 20:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 779F4C43460
+	for <linux-cxl@archiver.kernel.org>; Thu, 15 Apr 2021 22:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80BA761166
-	for <linux-cxl@archiver.kernel.org>; Thu, 15 Apr 2021 20:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 471E66008E
+	for <linux-cxl@archiver.kernel.org>; Thu, 15 Apr 2021 22:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235305AbhDOUyW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 15 Apr 2021 16:54:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38144 "EHLO
+        id S237080AbhDOWyk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 15 Apr 2021 18:54:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235063AbhDOUyV (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 15 Apr 2021 16:54:21 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33824C06175F
-        for <linux-cxl@vger.kernel.org>; Thu, 15 Apr 2021 13:53:58 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id j12so4685436edy.3
-        for <linux-cxl@vger.kernel.org>; Thu, 15 Apr 2021 13:53:58 -0700 (PDT)
+        with ESMTP id S236155AbhDOWyi (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 15 Apr 2021 18:54:38 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DB93C061760
+        for <linux-cxl@vger.kernel.org>; Thu, 15 Apr 2021 15:54:14 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id g17so29284365edm.6
+        for <linux-cxl@vger.kernel.org>; Thu, 15 Apr 2021 15:54:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Caxsq6e5w5hQHzn1UKSM5N/N92XMDfAKUSIuBiGg3co=;
-        b=jfaruwTDBJhPEKQ+qT+r2RQ5DZYvXkNdItYaLCzE+XzuI8fDE/3egCvAmxAQkQTiOw
-         sAnxvqxSejrXWgvGuJEUrtowr3zeumlHpYbymconBrIDs3iMy2OCDXX5CmgfhI5tkUGo
-         a1hFFpnj0UxHeaQBM57ny7f+AEJq7JmrLYtxxPlhCO7OhC+t8iy69UlGgQhVHwx6FYgz
-         FksTuAQW5dxKrKxOAQhRX3PKSOYbISq/OpQ1catH5/zpedXM2WEZ2aRrwSEhXsTRbYXM
-         8fDUp+3DPqm9ap4ufqtakMIIduXVGDM8ns9Ydf2YXQFlFp7scc6yzcg68wKm58YIY1G3
-         J7jw==
+        bh=LZPmXSJHlNJkGabrxCzQ+1bNVgcNhlvvFPZsThC87BQ=;
+        b=0/Bv9AMjps8ZT69MpMit11F2p9twNVTVYb+XVv9QK0JxYFc5DvplRTa70eF1YbSfMu
+         IBkP1v8RHWg08P2iK/miye29yig2XeDlud0R4CkYnz0EAOTuVpy+cX7jEx6dcHmdnzsC
+         6DhGckcXW/uRc2ecX2R+QDWHPUPGMN2b7OZhI25TlWuDwO7+Y7BtCCGo+z1tHYpWubGh
+         W6IOmdyWPbvgjU9ZxMQ2zo0MnTE+QTrwXHN2bNY/B/wuPeBSD8viT2PIlL34ggRpAtYF
+         RFPmZfJFEWz3M/cDojI6+EXjosI04PgHYSlkQH/mCcaVIhycSv9J0ikMzMpmmbuP7qgb
+         PPAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Caxsq6e5w5hQHzn1UKSM5N/N92XMDfAKUSIuBiGg3co=;
-        b=ZEyuYjuGohVxhzI1VFBlrB3z0/nGfS2GeZhCTdf+NSJbMZi5wVlOvgUyzfIfc07deH
-         FUjWWEBV+kSlpY5nfVsNx0v/Q1+k+H/iV8RdV7/65/Mou4zJTmF0cJJradmVdHkLk80u
-         A0p8Zv/3jeBzcgLZAQpfCzEbg0tt0evz9/8RxlfQZLr6BKeyO5U1F3dNuylgvo/V3b/6
-         cRuK8RMdrtVVb8Y3VmREb3InCMgf4pKsZAPuW7wctoVhadzn4namAWaIG9bjRpMlHs/y
-         OqH/6/IvwVJbStbX4l38hNFmjCvhXQXbLhBfbAtnl4MHBlkYuWHREucNCX7w8uzjal1m
-         z5jw==
-X-Gm-Message-State: AOAM5325x3lSao07Y2emdIoB5E1JU61wBfG+YxjjnS/mqbK2Jf756YNE
-        dmXPzPYCZvcdy6VqBE7dT1WZPZO5nfp2Z6aI/ZV7Og==
-X-Google-Smtp-Source: ABdhPJwGTnM9gKHfSenuZUu2QdmiM+hPocsH6E5LwiEukrwmUz1IvJmjkAvwkbTmOJyECBXmisr84jGxDwbChsANS1k=
-X-Received: by 2002:aa7:cd7b:: with SMTP id ca27mr6607714edb.354.1618520036847;
- Thu, 15 Apr 2021 13:53:56 -0700 (PDT)
+        bh=LZPmXSJHlNJkGabrxCzQ+1bNVgcNhlvvFPZsThC87BQ=;
+        b=D9mHsYgn5OtTXtfiLd40cSFbk7K0BM9GcrrVQN5/vIj+AVQLomBbMKd2uxQfhuwjPX
+         rJAfr7YPt1cBCWvWIryc+OLSQvkuSlAj3g7+kocACLBMWvOOZH/bjvG8EqmeFc6D0xiJ
+         mkIceOQtH8khJQkdJVaVF8qbeubBwOUcD/XYBIr/FFDtnLjhgNcMXw5SleG6O3mIjmaL
+         FtLmYUhB0MlCjc7yzno7IWkWcSYs4ybaE0OMP7Ox2+mRZJu2ddCX7FsGW9PKFxhGgEqU
+         mz35rBZtFHhUctJF2bjbPevBl7C+rqDHxw5ESWMzVmWffZETZqY12WkSmk/ODZXA8t/N
+         OPtA==
+X-Gm-Message-State: AOAM530RbEk72Z9AjHbdrrESthF/KPZN1edv2sj7w/9SCxhavOGcVBNr
+        Z5uEo4VW2EcSzG60Qp3y6/VuJQBUuDcGdzcoCB1Anw==
+X-Google-Smtp-Source: ABdhPJz2afjkEzncwyQD1rDlPyo0Ht+aLitlIBNnnevfCO5TgZ+sU9A5sYUKn48QokZdzy1MDkhkJuwtfpo7kv0FJJg=
+X-Received: by 2002:a50:e607:: with SMTP id y7mr7076665edm.18.1618527252572;
+ Thu, 15 Apr 2021 15:54:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <161728744224.2474040.12854720917440712854.stgit@dwillia2-desk3.amr.corp.intel.com>
- <161728746354.2474040.14531317270409827157.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20210406180017.00000875@Huawei.com>
-In-Reply-To: <20210406180017.00000875@Huawei.com>
+References: <20210407222625.320177-1-ben.widawsky@intel.com> <20210407222625.320177-7-ben.widawsky@intel.com>
+In-Reply-To: <20210407222625.320177-7-ben.widawsky@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 15 Apr 2021 13:53:45 -0700
-Message-ID: <CAPcyv4hmtHscAW14gu_avwXo-TWr2KeGPRubu0eE72UrQrj7pw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/8] cxl/core: Refactor CXL register lookup for bridge reuse
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Date:   Thu, 15 Apr 2021 15:54:00 -0700
+Message-ID: <CAPcyv4huxaVj=Czk7KgbwfS=6_Dc_N3MmoN-=faB_hSuSt7u8w@mail.gmail.com>
+Subject: Re: [PATCH 6/7] cxl/mem: Create a helper to setup device regs
+To:     Ben Widawsky <ben.widawsky@intel.com>
 Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
         Linux ACPI <linux-acpi@vger.kernel.org>,
         "Weiny, Ira" <ira.weiny@intel.com>,
         Vishal L Verma <vishal.l.verma@intel.com>,
         "Schofield, Alison" <alison.schofield@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Apr 6, 2021 at 10:47 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
+On Wed, Apr 7, 2021 at 3:26 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> On Thu, 1 Apr 2021 07:31:03 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > While CXL Memory Device endpoints locate the CXL MMIO registers in a PCI
-> > BAR, CXL root bridges have their MMIO base address described by platform
-> > firmware. Refactor the existing register lookup into a generic facility
-> > for endpoints and bridges to share.
-> >
-> > Reviewed-by: Ben Widawsky <ben.widawsky@intel.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->
-> Nice to make the docs kernel-doc, but otherwise this is simple and makes sense
->
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->
-> > ---
-> >  drivers/cxl/core.c |   57 +++++++++++++++++++++++++++++++++++++++++++++++++++-
-> >  drivers/cxl/cxl.h  |    3 +++
-> >  drivers/cxl/mem.c  |   50 +++++-----------------------------------------
-> >  3 files changed, 65 insertions(+), 45 deletions(-)
-> >
-> > diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
-> > index 7f8d2034038a..2ab467ef9909 100644
-> > --- a/drivers/cxl/core.c
-> > +++ b/drivers/cxl/core.c
-> > @@ -1,7 +1,8 @@
-> >  // SPDX-License-Identifier: GPL-2.0-only
-> > -/* Copyright(c) 2020 Intel Corporation. All rights reserved. */
-> > +/* Copyright(c) 2020-2021 Intel Corporation. All rights reserved. */
-> >  #include <linux/device.h>
-> >  #include <linux/module.h>
-> > +#include "cxl.h"
-> >
-> >  /**
-> >   * DOC: cxl core
-> > @@ -10,6 +11,60 @@
-> >   * point for cross-device interleave coordination through cxl ports.
-> >   */
-> >
-> > +/*
-> > + * cxl_setup_device_regs() - Detect CXL Device register blocks
-> > + * @dev: Host device of the @base mapping
-> > + * @base: mapping of CXL 2.0 8.2.8 CXL Device Register Interface
->
-> Not much to add to make this kernel-doc. Just the one missing parameter
-> and mark it /**  Given it's exported, it would be nice to tidy that up.
+> Memory devices have a list of required register regions within the
+> register block, but this isn't required of all CXL components or
+> devices. To make things more tidy, and allow for easily setting up other
+> block types in this loop, the helper is introduced.
 
-Will do, thanks.
+I don't understand the point of this or the organization choice.
+cxl_setup_device_regs() *is* the core implementation so there
+shouldn't be a "__" prefixed version wrapping it. I agree that some
+users will not care that some of the device registers are not found,
+but that won't be cxl_mem_setup_regs() making that call.
