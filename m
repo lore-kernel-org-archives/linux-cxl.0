@@ -2,75 +2,94 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E990C433ED
-	for <linux-cxl@archiver.kernel.org>; Fri, 16 Apr 2021 01:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04293C433ED
+	for <linux-cxl@archiver.kernel.org>; Fri, 16 Apr 2021 02:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 598246101E
-	for <linux-cxl@archiver.kernel.org>; Fri, 16 Apr 2021 01:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B92AC61166
+	for <linux-cxl@archiver.kernel.org>; Fri, 16 Apr 2021 02:09:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236513AbhDPBxa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 15 Apr 2021 21:53:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236309AbhDPBxa (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 15 Apr 2021 21:53:30 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F88DC061574
-        for <linux-cxl@vger.kernel.org>; Thu, 15 Apr 2021 18:53:06 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id n2so39723681ejy.7
-        for <linux-cxl@vger.kernel.org>; Thu, 15 Apr 2021 18:53:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=LP27OnqeI918q6Pd6DACqeTjD0c0CLUkc5Dyft78Fgc=;
-        b=wD2ZksK6yf1FtGCCFI4Y7NxAy1aXdt1fQxGKfdnmokJSL0oRENrPj+sOn2bittiV1Q
-         7qrKqLHLNkyh/aZ/8ngTsR+Ad0dZ3QkKaOEUmPpcHZkC+dv6CFgjcGVEArs1Jdflos0h
-         04IxD/0FxqpAQ0SPRbsaQgf80X+J6bxQxJPImlTqsFQBRNXrHlSEJzrb/0rEasQlB6BH
-         9E27V+nS9WVQhlbPV2nD1gQsIuXbYNpAW4Xa9zlQFON5fTBetvTQtElS2XPBqqiUfdfH
-         65Vc0ehsF5bwGuvd1EAp8n1Q9t4FtNhfPM7EUznO3SUSLyq3WMm/uMFaJTCBoZMAqR9o
-         ZX1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=LP27OnqeI918q6Pd6DACqeTjD0c0CLUkc5Dyft78Fgc=;
-        b=BGd3mRqbut2RFcWvbSsGFyxVVC8xA1NcOW6+ri4us/OtjnYu9FV1LONsW0bOyddHQi
-         QpJzuRgKKMzjBZh3HyP6EYY+5RslwYqPM9aznhpkU5B46xtAhjdDZ+c/No/aeE31J5mu
-         0EcjzjVoluySt3Vt5i+aLWLoYqqaskrLGpJXU4/VMcdTLktqC3vCj9cOpwsWdm6Xzb3b
-         Alx8PthRV63Ys2Sp8CzqrVkvUOd7KoHi0qfDuU6cEQVU9H95ZNrsOlJrQM1kzpWp4sRx
-         AzPhXvqFCujJW9ZVIQmmeXbLb5JfOTSeJS73+1FjA7BPi1Rq2Fxgx77/sM7Lxblqhf3M
-         n21Q==
-X-Gm-Message-State: AOAM530tSp7LMe69IPwdBEihrgfDBMeZrK6DTRcPLqhFYJ+tNgItVbfv
-        5I2GQD1oR4az8BZ+1pQYqJn58VXedIbG00oBkt8no6SjNxJcCg==
-X-Google-Smtp-Source: ABdhPJwou5AeQcuJy+kCt4z16Wbq0Mg3Jcb62ewEoNoWI2dMqF32uyhjCcIc5rr4DQRR1GQBcqdzu9jHmQ/jpkPjOlU=
-X-Received: by 2002:a17:906:8407:: with SMTP id n7mr6053232ejx.264.1618537984788;
- Thu, 15 Apr 2021 18:53:04 -0700 (PDT)
-MIME-Version: 1.0
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 15 Apr 2021 18:52:53 -0700
-Message-ID: <CAPcyv4gseedV78W72ERtdGozW_V3aTpPDw5-Py3X4HWRFYRbSw@mail.gmail.com>
-Subject: CXL Trees for linux-next
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
+        id S238074AbhDPCJh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 15 Apr 2021 22:09:37 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:44987 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235058AbhDPCJf (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 15 Apr 2021 22:09:35 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4FM051594Jz9sWQ;
+        Fri, 16 Apr 2021 12:09:09 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1618538949;
+        bh=plBSy/aCn9Br3iyOhupmMwv9+fP+G0XZ0ThaItbhNGM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Wkhy/s0eUcLvy/B47wdWx5fYre85CPbta7/fe8+cKMmJJrH9X0e09kgmPK7uO16Dt
+         PuX9LD7vb/iRfuFoyDbMSUNVDUdkMDEwu16H8hqr6agc3XqD5b/G/xNEIIfVYSZvKv
+         sEruw6Im8Qg/EHdcsGHZDEFi/Zs2eoqsgSjhFWGncQnADnfmHehrEliVT5W7/G8bLv
+         CiJd5A+E+EYOmBYweWgF0n49tVPBE7SC3WEQJmZWWX2flOxi2xAllJ3PQgqvD3QPf5
+         tYqpS6r1UV08wocU20I/mJwsNvmpG9kzsOEJtVuz56crT5aLHwYtgJz44niJgvHMQT
+         /EExjC9bfD8qQ==
+Date:   Fri, 16 Apr 2021 12:09:05 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dan Williams <dan.j.williams@intel.com>
 Cc:     linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: CXL Trees for linux-next
+Message-ID: <20210416120905.19211c7c@canb.auug.org.au>
+In-Reply-To: <CAPcyv4gseedV78W72ERtdGozW_V3aTpPDw5-Py3X4HWRFYRbSw@mail.gmail.com>
+References: <CAPcyv4gseedV78W72ERtdGozW_V3aTpPDw5-Py3X4HWRFYRbSw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/SBQpPuDHOm4WD_LqC0f9jdd";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Stephen,
+--Sig_/SBQpPuDHOm4WD_LqC0f9jdd
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-CXL development has established a cxl.git repo on git.kernel.org. Please add:
+Hi Dan,
 
-git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git fixes
+On Thu, 15 Apr 2021 18:52:53 -0700 Dan Williams <dan.j.williams@intel.com> =
+wrote:
+>
+> CXL development has established a cxl.git repo on git.kernel.org. Please =
+add:
+>=20
+> git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git fixes
+>=20
+> ...for fixes targeting the current rc cycle, and:
+>=20
+> git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+>=20
+> ...for new development targeting the merge window.
 
-...for fixes targeting the current rc cycle, and:
+Will this be merged directly to Linus, or via another tree?
 
-git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+--=20
+Cheers,
+Stephen Rothwell
 
-...for new development targeting the merge window.
+--Sig_/SBQpPuDHOm4WD_LqC0f9jdd
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Thanks for the help.
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmB48cEACgkQAVBC80lX
+0GwngAf/Wdj2sGqVxHk1//sOxxlZV1R8HqMICKPnPbsbh1XewHiLDJGakVYa2FFS
+CDYH89rwMch/QeuX8ZGiZ2Qn7wcOdrTuEFXH3pjEG5lR4a1kX8I6MJnueANP1hAe
+zbivYveKJAClgQLbTdsn9ssjA+/Rihr3EcV6/q8HBbwbNWS1fyNcwVco9D3stoAn
+tLy3Uq32XznBBHJHG2kg0++e99WMHqiB2+HjMxDnkk9u19HcuompGIlUmr1TGBgf
+fd/KVTmxGgpqqfnSdZ+goKoiHR89jNSrjZIRbm7RfLa8mvmBFGaaBTwYjJOkrhgX
+1av+MkFBLj3eh1dUPb00BK0WDel24w==
+=aDyX
+-----END PGP SIGNATURE-----
+
+--Sig_/SBQpPuDHOm4WD_LqC0f9jdd--
