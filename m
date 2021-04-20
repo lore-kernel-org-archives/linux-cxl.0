@@ -2,173 +2,157 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4821CC433ED
-	for <linux-cxl@archiver.kernel.org>; Tue, 20 Apr 2021 05:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF96C433B4
+	for <linux-cxl@archiver.kernel.org>; Tue, 20 Apr 2021 09:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0437861057
-	for <linux-cxl@archiver.kernel.org>; Tue, 20 Apr 2021 05:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4B0F6127C
+	for <linux-cxl@archiver.kernel.org>; Tue, 20 Apr 2021 09:06:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229593AbhDTFJX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 20 Apr 2021 01:09:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229531AbhDTFJW (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 20 Apr 2021 01:09:22 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E8BAC06174A
-        for <linux-cxl@vger.kernel.org>; Mon, 19 Apr 2021 22:08:50 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id w23so40499923ejb.9
-        for <linux-cxl@vger.kernel.org>; Mon, 19 Apr 2021 22:08:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IPJmTnk2cLrGBhNWEvbEbMW+tMyWDkXrDdyhBYO5k3I=;
-        b=bLOQxDqfe2LQcS6WpJYWB468/cesOS31iyCovCg6/hKDEDnupB34iv0vxEbDyuxRUD
-         fVJjO8XX06cLuYsB2LYerZRDr+/oBBYa8jJ38OgtsXWKPxy4AwOYF0iQU7K/MASiSBNj
-         XivK0e76i05vLY2srJJid/9nymDq4jCLellH/wnwTbxQh49prQWm9q9Vr1MlUoxmPc6k
-         IDAC41vt/rYbkdKiCxMnEsayHNtK2mEi/2Harg44zCC5RZFR0QWp51koxZ299hK8s+Kt
-         Gn3KVq0y5W9N8qg5gXdGgC6hA03rlOhe7t9uaXXBQWhPpzpE1VIsP5cqn1k/atDTCLH5
-         UihA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IPJmTnk2cLrGBhNWEvbEbMW+tMyWDkXrDdyhBYO5k3I=;
-        b=e6iGDoHuasp3PyczXwiv8Zi3sagYBkVGdr8JiPmX2EZC7yvlDu2yy/AYgv9hejpwDT
-         Dczo5lvOqWCxA8XkVSBtVtCmErNnyTg/2NCrYwf4t7RWX6p1P299jgwXF3IuDaFldo0v
-         l3AAMYWwbtieYaHyV0TH6wmY1EKElNIvx7QB0/J3M/4P+gdraUnYwNMv752jPGYaMkV9
-         C13tYfZkdOqOSNXQwrbY4rvdZnVC+fhaUoV394qq4V8mdISYkPXBsiGuNZ2orBwKxOTc
-         1RtIhReh8Ni7+zK0zrhaTa1Hf9qO6R7n5vdo4xwTT6tqJuonF2H8V2RBugJxsO9xVEFB
-         fstg==
-X-Gm-Message-State: AOAM5309jPmoswhMqtGxHQdjdwd/MSBJyFYvjROiav8Ixixr+k4X8ruv
-        3YqXK1aAOqHpS1AJiLMwdvoKXilySWWAn5xRazugmA==
-X-Google-Smtp-Source: ABdhPJyFBoDf2edo02/s/lwEbYP0dtP5IMWlVu1arYZQxmMZfNJdIpzkXDQsIXIGYs2L53f+j4hfir65ieI3KI91s/Q=
-X-Received: by 2002:a17:906:18e1:: with SMTP id e1mr9073273ejf.341.1618895328741;
- Mon, 19 Apr 2021 22:08:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <e1a52da9aec90766da5de51b1b839fd95d63a5af.camel@intel.com>
- <BL0PR12MB25321D18363AD50ACC7A2643BD499@BL0PR12MB2532.namprd12.prod.outlook.com>
- <CAPcyv4jztOGShTF+pVSMAtGeK4giHvC3mGNa5bC0pXz=2ZcrJw@mail.gmail.com> <BL0PR12MB2532D6AD41E6CF4F3252EE59BD489@BL0PR12MB2532.namprd12.prod.outlook.com>
-In-Reply-To: <BL0PR12MB2532D6AD41E6CF4F3252EE59BD489@BL0PR12MB2532.namprd12.prod.outlook.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 19 Apr 2021 22:08:39 -0700
-Message-ID: <CAPcyv4jMQbHYQssaDDDQFEbOR1v14VUnejcSwOP9VGUnZSsCKw@mail.gmail.com>
-Subject: Re: [ACPI Code First ECN v2]: Generic Port, performace data for
- hotplug memory
-To:     Vikram Sethi <vsethi@nvidia.com>
-Cc:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        id S231183AbhDTJGs convert rfc822-to-8bit (ORCPT
+        <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 20 Apr 2021 05:06:48 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2888 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231287AbhDTJFo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 20 Apr 2021 05:05:44 -0400
+Received: from fraeml745-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4FPd0y21dmz70gMr;
+        Tue, 20 Apr 2021 16:59:46 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml745-chm.china.huawei.com (10.206.15.226) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Tue, 20 Apr 2021 11:05:11 +0200
+Received: from localhost (10.52.127.46) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Tue, 20 Apr
+ 2021 10:05:10 +0100
+Date:   Tue, 20 Apr 2021 10:03:42 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Vikram Sethi <vsethi@nvidia.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
         "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
         "Natu, Mahesh" <mahesh.natu@intel.com>,
-        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
         "Douglas, Chet R" <chet.r.douglas@intel.com>,
         "Verma, Vishal L" <vishal.l.verma@intel.com>,
         "Widawsky, Ben" <ben.widawsky@intel.com>,
-        Samer El-Haj-Mahmoud <Samer.El-Haj-Mahmoud@arm.com>,
+        "Samer El-Haj-Mahmoud" <Samer.El-Haj-Mahmoud@arm.com>,
         Thanu Rangarajan <Thanu.Rangarajan@arm.com>
+Subject: Re: [ACPI Code First ECN v2]: Generic Port, performace data for
+ hotplug memory
+Message-ID: <20210420100342.00000253@Huawei.com>
+In-Reply-To: <CAPcyv4jMQbHYQssaDDDQFEbOR1v14VUnejcSwOP9VGUnZSsCKw@mail.gmail.com>
+References: <e1a52da9aec90766da5de51b1b839fd95d63a5af.camel@intel.com>
+        <BL0PR12MB25321D18363AD50ACC7A2643BD499@BL0PR12MB2532.namprd12.prod.outlook.com>
+        <CAPcyv4jztOGShTF+pVSMAtGeK4giHvC3mGNa5bC0pXz=2ZcrJw@mail.gmail.com>
+        <BL0PR12MB2532D6AD41E6CF4F3252EE59BD489@BL0PR12MB2532.namprd12.prod.outlook.com>
+        <CAPcyv4jMQbHYQssaDDDQFEbOR1v14VUnejcSwOP9VGUnZSsCKw@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.52.127.46]
+X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Apr 19, 2021 at 9:22 PM Vikram Sethi <vsethi@nvidia.com> wrote:
->
-> > From: Dan Williams <dan.j.williams@intel.com>
-> > On Mon, Apr 19, 2021 at 3:56 PM Vikram Sethi <vsethi@nvidia.com> wrote:
-> > [..]
-> > > > * Replace all instances of "Initiator" with "Initiator / Port" in "=
-Table
-> > > >   5.59 Flags - Generic Initiator Affinity Structure", including the
-> > > >   table name.
-> > >
-> > > I wanted to discuss the implications of a CXL host bridge implementat=
-ion that
-> > > does not set the "Architectural Transactions" bit/flag in the aforeme=
-ntioned
-> > > Flags in Table 5.59.
-> > >
-> > > Since the kernel would be expecting all "System RAM" to have equivale=
-nt
-> > > Functional properties, if HDM cannot have all the same functionality,=
- then in
-> > > the absence of ISA specific ACPI tables clarifying what architectural=
- feature isn't
-> > > supported, the kernel may be forced to not online the HDM memory as s=
-ystem
-> > > RAM. If there is more granular expression of what features are lackin=
-g in a ISA
-> > > Specific table (eg Memory Tagging/Memory Protection keys not supporte=
-d),
-> > > the kernel could choose to not enable that feature in all of system R=
-AM (if
-> > > discrepancy discovered at boot), but still online the HDM as System R=
-AM.
-> > >
-> > > To that end, it may be useful to clarify this to host vendors by way =
-of an
-> > > Implementation note (ideally in the CXL specification). Something lik=
-e:
-> > > "CXL hosts are encouraged to support all architectural features in HD=
-M
-> > > as they do in CPU attached memory to avoid either the memory from
-> > > being onlined as System RAM, or the architectural feature being disab=
-led.
-> > > Hosts must indicate architectural parity for HDM in ACPI SRAT
-> > > =E2=80=9CGeneric Port=E2=80=9D flags =E2=80=9CArchitectural transacti=
-ons=E2=80=9D bit by setting it to 1.
-> > > A port that sets this bit to 0 will need ISA specific ways/ACPI table=
-s to
-> > > describe which specific ISA features would not work in HDM, so an OS
-> > > could disable that memory or that feature."
-> > >
-> > > Thoughts?
-> >
-> > The problem, as you know, is that those features are already defined
-> > without those "ISA specific ways / ACPI tables". I think it simply
-> > must be the case that the only agent in the system that is aware of
-> > the intersection of capabilities between ISA and CXL (platform
-> > firmware) must mitigate the conflict. I.e. so that the CXL
-> > infrastructure need not worry about ISA feature capability and vice
-> > versa. To me, this looks like a platform firmware pre-boot
-> > configuration menu / switch that turns off CXL (declines to publish
-> > ACPI0016 devices) if incompatible ISA feature "X" is enabled, or the
-> > reverse turns off ISA feature "X" if CXL is enabled. In other words,
-> > the conflict needs to be resolved before the OS boots, setting this
-> > bit to 0 is not a viable option for mitigating the conflict because
-> > there is no requirement for the OS to even look at this flag.
->
-> Leaving it to Firmware is easier for the OS, but could be a couple
-> of issues with that:
-> Platform firmware may not have a way of disabling ISA feature
-> if it is directly visible to the OS via CPU ID registers, and the
-> registers can't be trapped to some FW and values adjusted
-> on access
-> Platform Firmware may not know if the OS supports a specific
-> Feature (code may not exist or not default option etc) so it
-> may be premature/suboptimal to disable CXL hostbridge
-> altogether. Although I suppose a UEFI variable type knob
-> could be adjusted in this case and take effect on reboot.
->
-> Also, for some *future* ISA features where it may be possible and
-> practical to define ISA feature support discovery per NUMA
-> node/address range w/ ACPI (prior to userspace ABI being set),
-> the platform would want to enable the CXL host bridge and leave
-> selective enablement of the feature to the OS. Yes, this is messy
-> and best avoided, but it may make sense depending on ISA
-> feature and how messy it makes user space. I'm personally
-> not in favor of this latter option, but I'm told this was discussed
-> in other Coherent interconnect forums and chosen as a path
-> forward.
+On Mon, 19 Apr 2021 22:08:39 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-I think it's reasonable for new stuff to define _OSC or other opt-in
-requirements to allow the OS to manage ISA vs CXL conflict policy. For
-existing conflicts the only reliable mechanism is decline to publish
-ACPI0016 if platform firmware can enumerate an ISA feature that it is
-not supported on CXL. So I think the proposal here is a recommendation
-for platform firmware implementations that they are responsible for
-this conflict resolution unless / until other mechanisms arrive.
+> On Mon, Apr 19, 2021 at 9:22 PM Vikram Sethi <vsethi@nvidia.com> wrote:
+> >  
+> > > From: Dan Williams <dan.j.williams@intel.com>
+> > > On Mon, Apr 19, 2021 at 3:56 PM Vikram Sethi <vsethi@nvidia.com> wrote:
+> > > [..]  
+> > > > > * Replace all instances of "Initiator" with "Initiator / Port" in "Table
+> > > > >   5.59 Flags - Generic Initiator Affinity Structure", including the
+> > > > >   table name.  
+> > > >
+> > > > I wanted to discuss the implications of a CXL host bridge implementation that
+> > > > does not set the "Architectural Transactions" bit/flag in the aforementioned
+> > > > Flags in Table 5.59.
+> > > >
+> > > > Since the kernel would be expecting all "System RAM" to have equivalent
+> > > > Functional properties, if HDM cannot have all the same functionality, then in
+> > > > the absence of ISA specific ACPI tables clarifying what architectural feature isn't
+> > > > supported, the kernel may be forced to not online the HDM memory as system
+> > > > RAM. If there is more granular expression of what features are lacking in a ISA
+> > > > Specific table (eg Memory Tagging/Memory Protection keys not supported),
+> > > > the kernel could choose to not enable that feature in all of system RAM (if
+> > > > discrepancy discovered at boot), but still online the HDM as System RAM.
+> > > >
+> > > > To that end, it may be useful to clarify this to host vendors by way of an
+> > > > Implementation note (ideally in the CXL specification). Something like:
+> > > > "CXL hosts are encouraged to support all architectural features in HDM
+> > > > as they do in CPU attached memory to avoid either the memory from
+> > > > being onlined as System RAM, or the architectural feature being disabled.
+> > > > Hosts must indicate architectural parity for HDM in ACPI SRAT
+> > > > “Generic Port” flags “Architectural transactions” bit by setting it to 1.
+> > > > A port that sets this bit to 0 will need ISA specific ways/ACPI tables to
+> > > > describe which specific ISA features would not work in HDM, so an OS
+> > > > could disable that memory or that feature."
+> > > >
+> > > > Thoughts?  
+> > >
+> > > The problem, as you know, is that those features are already defined
+> > > without those "ISA specific ways / ACPI tables". I think it simply
+> > > must be the case that the only agent in the system that is aware of
+> > > the intersection of capabilities between ISA and CXL (platform
+> > > firmware) must mitigate the conflict. I.e. so that the CXL
+> > > infrastructure need not worry about ISA feature capability and vice
+> > > versa. To me, this looks like a platform firmware pre-boot
+> > > configuration menu / switch that turns off CXL (declines to publish
+> > > ACPI0016 devices) if incompatible ISA feature "X" is enabled, or the
+> > > reverse turns off ISA feature "X" if CXL is enabled. In other words,
+> > > the conflict needs to be resolved before the OS boots, setting this
+> > > bit to 0 is not a viable option for mitigating the conflict because
+> > > there is no requirement for the OS to even look at this flag.  
+> >
+> > Leaving it to Firmware is easier for the OS, but could be a couple
+> > of issues with that:
+> > Platform firmware may not have a way of disabling ISA feature
+> > if it is directly visible to the OS via CPU ID registers, and the
+> > registers can't be trapped to some FW and values adjusted
+> > on access
+> > Platform Firmware may not know if the OS supports a specific
+> > Feature (code may not exist or not default option etc) so it
+> > may be premature/suboptimal to disable CXL hostbridge
+> > altogether. Although I suppose a UEFI variable type knob
+> > could be adjusted in this case and take effect on reboot.
+> >
+> > Also, for some *future* ISA features where it may be possible and
+> > practical to define ISA feature support discovery per NUMA
+> > node/address range w/ ACPI (prior to userspace ABI being set),
+> > the platform would want to enable the CXL host bridge and leave
+> > selective enablement of the feature to the OS. Yes, this is messy
+> > and best avoided, but it may make sense depending on ISA
+> > feature and how messy it makes user space. I'm personally
+> > not in favor of this latter option, but I'm told this was discussed
+> > in other Coherent interconnect forums and chosen as a path
+> > forward.  
+> 
+> I think it's reasonable for new stuff to define _OSC or other opt-in
+> requirements to allow the OS to manage ISA vs CXL conflict policy. For
+> existing conflicts the only reliable mechanism is decline to publish
+> ACPI0016 if platform firmware can enumerate an ISA feature that it is
+> not supported on CXL. So I think the proposal here is a recommendation
+> for platform firmware implementations that they are responsible for
+> this conflict resolution unless / until other mechanisms arrive.
+
+Agreed with one addition.  It should be possible to retrofit negotiation
+for existing features as well. Default policy should be that it's firmware's
+problem but if the OS uses _OSC to negotiate something else then it may
+be possible to be more flexible. As long as the default is safe, relaxing
+that can happen once mechanisms are defined.  The actual decision on
+whether to enable ACPI0016 can for example be pushed into AML code.
+
+
+
