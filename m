@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D20EDC433ED
-	for <linux-cxl@archiver.kernel.org>; Wed, 28 Apr 2021 13:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 730CEC433B4
+	for <linux-cxl@archiver.kernel.org>; Wed, 28 Apr 2021 13:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98A64613CE
-	for <linux-cxl@archiver.kernel.org>; Wed, 28 Apr 2021 13:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F40461411
+	for <linux-cxl@archiver.kernel.org>; Wed, 28 Apr 2021 13:31:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239808AbhD1N1X (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 28 Apr 2021 09:27:23 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:2936 "EHLO
+        id S239802AbhD1Nbo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 28 Apr 2021 09:31:44 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2937 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239770AbhD1N1X (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 28 Apr 2021 09:27:23 -0400
-Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4FVfJw5SDrz72f5N;
-        Wed, 28 Apr 2021 21:16:00 +0800 (CST)
+        with ESMTP id S231166AbhD1Nbm (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 28 Apr 2021 09:31:42 -0400
+Received: from fraeml742-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4FVfPw163pz72f5K;
+        Wed, 28 Apr 2021 21:20:20 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
+ fraeml742-chm.china.huawei.com (10.206.15.223) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Wed, 28 Apr 2021 15:26:36 +0200
+ 15.1.2176.2; Wed, 28 Apr 2021 15:30:55 +0200
 Received: from localhost (10.52.123.69) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Wed, 28 Apr
- 2021 14:26:35 +0100
-Date:   Wed, 28 Apr 2021 14:25:01 +0100
+ 2021 14:30:54 +0100
+Date:   Wed, 28 Apr 2021 14:29:20 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Chris Browy <cbrowy@avery-design.com>
-CC:     <mst@redhat.com>, <ben.widawsky@intel.com>, <david@redhat.com>,
-        <qemu-devel@nongnu.org>, <vishal.l.verma@intel.com>,
-        <jgroves@micron.com>, <armbru@redhat.com>,
-        <linux-cxl@vger.kernel.org>, <f4bug@amsat.org>,
-        <hchkuo@avery-design.com.tw>, <tyshao@avery-design.com.tw>,
-        <imammedo@redhat.com>, <dan.j.williams@intel.com>,
-        <ira.weiny@intel.com>
-Subject: Re: [PATCH v5 cxl2.0-v3-doe 3/6] hw/pci: PCIe Data Object Exchange
- implementation
-Message-ID: <20210428142501.00002825@Huawei.com>
-In-Reply-To: <1619458099-13734-1-git-send-email-cbrowy@avery-design.com>
+CC:     <mst@redhat.com>, <armbru@redhat.com>, <ben.widawsky@intel.com>,
+        <dan.j.williams@intel.com>, <david@redhat.com>, <f4bug@amsat.org>,
+        <hchkuo@avery-design.com.tw>, <imammedo@redhat.com>,
+        <ira.weiny@intel.com>, <jgroves@micron.com>,
+        <linux-cxl@vger.kernel.org>, <qemu-devel@nongnu.org>,
+        <tyshao@avery-design.com.tw>, <vishal.l.verma@intel.com>
+Subject: Re: [PATCH v5 cxl2.0-v3-doe 4/6] cxl/compliance: CXL Compliance
+ Data Object Exchange implementation
+Message-ID: <20210428142920.0000098d@Huawei.com>
+In-Reply-To: <1619458388-14167-1-git-send-email-cbrowy@avery-design.com>
 References: <1619454964-10190-1-git-send-email-cbrowy@avery-design.com>
-        <1619458099-13734-1-git-send-email-cbrowy@avery-design.com>
+        <1619458388-14167-1-git-send-email-cbrowy@avery-design.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -59,487 +58,237 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 26 Apr 2021 13:28:19 -0400
+On Mon, 26 Apr 2021 13:33:08 -0400
 Chris Browy <cbrowy@avery-design.com> wrote:
 
 > From: hchkuo <hchkuo@avery-design.com.tw>
 > 
-> PCIe Data Object Exchange (DOE) implementation for QEMU referring to
-> "PCIe Data Object Exchange ECN, March 12, 2020".
+> The Data Object Exchange implementation of CXL Compliance Mode is
+> referring to "Compute Express Link (CXL) Specification, Rev. 2.0, Oct.
+> 2020".
 > 
-> The patch supports multiple DOE capabilities for a single PCIe device in
-> QEMU. For each capability, a static array of DOEProtocol should be
-> passed to pcie_doe_init(). The protocols in that array will be
-> registered under the DOE capability structure. For each protocol, vendor
-> ID, type, and corresponding callback function (handle_request()) should
-> be implemented. This callback function represents how the DOE request
-> for corresponding protocol will be handled.
+> The data structure of CXL compliance request and response is added to
+> the header. Due to the scope limitation of QEMU, most of the compliance
+> response is limited to returning corresponding length.
 > 
-> pcie_doe_{read/write}_config() must be appended to corresponding PCI
-> device's config_read/write() handler to enable DOE access. In
-> pcie_doe_read_config(), false will be returned if pci_config_read()
-> offset is not within DOE capability range. In pcie_doe_write_config(),
-> the function will be early returned if not within the related DOE range.
+> A DOE capability of CXL Compliance is added to hw/mem/cxl_type3.c with
+> capability offset 0x160. The config read/write to this capability range
+> can be generated in the OS to request the Compliance info.
 > 
 > Signed-off-by: Chris Browy <cbrowy@avery-design.com>
 
-You probably also want Huai-Cheng Kuo's sign-off to match the From on this
-series - otherwise the DCO chain is a little unclear.
+Same issue of From vs Sign off.
 
-Subject to a few things I've commented on inline...
+Only thin I've noticed in here is that due to refactoring we have
+fields called reserved2 where they are the only one.
+Other than looking a bit odd it doesn't matter so I'll leave it up to you
+on whether you want to fix it.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 > ---
->  MAINTAINERS               |   7 +
->  hw/pci/meson.build        |   1 +
->  hw/pci/pcie_doe.c         | 374 ++++++++++++++++++++++++++++++++++++++
->  include/hw/pci/pcie.h     |   1 +
->  include/hw/pci/pcie_doe.h | 123 +++++++++++++
->  5 files changed, 506 insertions(+)
->  create mode 100644 hw/pci/pcie_doe.c
->  create mode 100644 include/hw/pci/pcie_doe.h
+>  hw/mem/cxl_type3.c              | 147 ++++++++++++++++
+>  include/hw/cxl/cxl_compliance.h | 293 ++++++++++++++++++++++++++++++++
+>  include/hw/cxl/cxl_component.h  |   3 +
+>  include/hw/cxl/cxl_device.h     |   3 +
+>  include/hw/cxl/cxl_pci.h        |   1 +
+>  5 files changed, 447 insertions(+)
+>  create mode 100644 include/hw/cxl/cxl_compliance.h
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f9097ed9e7..e77e9892e3 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1681,6 +1681,13 @@ F: docs/pci*
->  F: docs/specs/*pci*
->  F: default-configs/pci.mak
->  
-> +PCIE DOE
-> +M: Huai-Cheng Kuo <hchkuo@avery-design.com.tw>
-> +M: Chris Browy <cbrowy@avery-design.com>
-> +S: Supported
-> +F: include/hw/pci/pcie_doe.h
-> +F: hw/pci/pcie_doe.c
-> +
->  ACPI/SMBIOS
->  M: Michael S. Tsirkin <mst@redhat.com>
->  M: Igor Mammedov <imammedo@redhat.com>
-> diff --git a/hw/pci/meson.build b/hw/pci/meson.build
-> index 5c4bbac817..115e50222f 100644
-> --- a/hw/pci/meson.build
-> +++ b/hw/pci/meson.build
-> @@ -12,6 +12,7 @@ pci_ss.add(files(
->  # allow plugging PCIe devices into PCI buses, include them even if
->  # CONFIG_PCI_EXPRESS=n.
->  pci_ss.add(files('pcie.c', 'pcie_aer.c'))
-> +pci_ss.add(files('pcie_doe.c'))
->  softmmu_ss.add(when: 'CONFIG_PCI_EXPRESS', if_true: files('pcie_port.c', 'pcie_host.c'))
->  softmmu_ss.add_all(when: 'CONFIG_PCI', if_true: pci_ss)
->  
-> diff --git a/hw/pci/pcie_doe.c b/hw/pci/pcie_doe.c
-> new file mode 100644
-> index 0000000000..b2affff933
-> --- /dev/null
-> +++ b/hw/pci/pcie_doe.c
-> @@ -0,0 +1,374 @@
-> +/*
-> + * PCIe Data Object Exchange
-> + *
-> + * Copyright (C) 2021 Avery Design Systems, Inc.
-> + *
-> + * This work is licensed under the terms of the GNU GPL, version 2 or later.
-> + * See the COPYING file in the top-level directory.
-> + */
-> +
-> +#include "qemu/osdep.h"
-> +#include "qemu/log.h"
-> +#include "qemu/error-report.h"
-> +#include "qapi/error.h"
-> +#include "qemu/range.h"
-> +#include "hw/pci/pci.h"
-> +#include "hw/pci/pcie.h"
-> +#include "hw/pci/pcie_doe.h"
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index bf33ddb915..569872eb36 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -13,6 +13,134 @@
+>  #include "qemu/rcu.h"
+>  #include "sysemu/hostmem.h"
+>  #include "hw/cxl/cxl.h"
 > +#include "hw/pci/msi.h"
 > +#include "hw/pci/msix.h"
 > +
 > +#define DWORD_BYTE 4
-> +#define BYTE_LSHIFT(b, pos) (b << ((pos) * 8))
-> +#define BYTE_RSHIFT(b, pos) (b >> ((pos) * 8))
 > +
-> +struct doe_discovery_req {
-> +    DOEHeader header;
-> +    uint8_t index;
-> +    uint8_t reserved[3];
-> +} QEMU_PACKED;
-> +
-> +struct doe_discovery_rsp {
-> +    DOEHeader header;
-> +    uint16_t vendor_id;
-> +    uint8_t data_obj_type;
-> +    uint8_t next_index;
-> +} QEMU_PACKED;
-> +
-> +static bool pcie_doe_discovery(DOECap *doe_cap)
+> +bool cxl_doe_compliance_rsp(DOECap *doe_cap)
 > +{
-> +    struct doe_discovery_req *req = pcie_doe_get_write_mbox_ptr(doe_cap);
-> +    struct doe_discovery_rsp rsp;
-> +    uint8_t index = req->index;
-> +    DOEProtocol *prot;
+> +    CompRsp *rsp = &CT3(doe_cap->pdev)->cxl_cstate.compliance.response;
+> +    struct compliance_req_header *req = pcie_doe_get_write_mbox_ptr(doe_cap);
+> +    uint32_t type, req_len = 0, rsp_len = 0;
 > +
-> +    /* Discard request if length does not match doe_discovery */
-> +    if (pcie_doe_get_obj_len(req) <
-> +        DIV_ROUND_UP(sizeof(struct doe_discovery_req), DWORD_BYTE)) {
-
-I'm a bit in two minds here, but maybe sizeof(*req) is better in this
-case.  It looks a bit odd if you do though as querying the length of
-itself to compare with actual length.
-
-> +        return false;
-> +    }
+> +    type = req->req_code;
 > +
-> +    rsp.header = (DOEHeader) {
-> +        .vendor_id = PCI_VENDOR_ID_PCI_SIG,
-> +        .data_obj_type = PCI_SIG_DOE_DISCOVERY,
-> +        .length = DIV_ROUND_UP(sizeof(struct doe_discovery_rsp), DWORD_BYTE),
-> +    };
-> +
-> +    /* Point to the requested protocol, index 0 must be Discovery */
-> +    if (index == 0) {
-> +        rsp.vendor_id = PCI_VENDOR_ID_PCI_SIG;
-> +        rsp.data_obj_type = PCI_SIG_DOE_DISCOVERY;
-> +    } else {
-> +        if (index < doe_cap->protocol_num) {
-> +            prot = &doe_cap->protocols[index - 1];
-> +            rsp.vendor_id = prot->vendor_id;
-> +            rsp.data_obj_type = prot->data_obj_type;
-> +        } else {
-> +            rsp.vendor_id = 0xFFFF;
-> +            rsp.data_obj_type = 0xFF;
-> +        }
-> +    }
-> +
-> +    if (index + 1 == doe_cap->protocol_num) {
-> +        rsp.next_index = 0;
-> +    } else {
-> +        rsp.next_index = index + 1;
-> +    }
-> +
-> +    pcie_doe_set_rsp(doe_cap, &rsp);
-> +
-> +    return true;
-> +}
-> +
-> +static void pcie_doe_reset_mbox(DOECap *st)
-> +{
-> +    st->read_mbox_idx = 0;
-> +    st->read_mbox_len = 0;
-> +    st->write_mbox_len = 0;
-> +
-> +    memset(st->read_mbox, 0, PCI_DOE_DW_SIZE_MAX * DWORD_BYTE);
-> +    memset(st->write_mbox, 0, PCI_DOE_DW_SIZE_MAX * DWORD_BYTE);
-> +}
-> +
-> +void pcie_doe_init(PCIDevice *dev, DOECap *doe_cap, uint16_t offset,
-> +                   DOEProtocol *protocols, bool intr, uint16_t vec)
-> +{
-> +    pcie_add_capability(dev, PCI_EXT_CAP_ID_DOE, 0x1, offset,
-> +                        PCI_DOE_SIZEOF);
-> +
-> +    doe_cap->pdev = dev;
-> +    doe_cap->offset = offset;
-> +
-> +    /* Configure MSI/MSI-X */
-> +    if (intr && (msi_present(dev) || msix_present(dev))) {
-> +        doe_cap->cap.intr = intr;
-> +        doe_cap->cap.vec = vec;
-> +    }
-> +
-> +    doe_cap->write_mbox = g_malloc0(PCI_DOE_DW_SIZE_MAX * DWORD_BYTE);
-> +    doe_cap->read_mbox = g_malloc0(PCI_DOE_DW_SIZE_MAX * DWORD_BYTE);
-> +
-> +    pcie_doe_reset_mbox(doe_cap);
-> +
-> +    /* Register self-defined protocols */
-> +    doe_cap->protocols = protocols;
-> +    for (; protocols->vendor_id; protocols++) {
-> +        doe_cap->protocol_num++;
-> +    }
-> +    assert(doe_cap->protocol_num < PCI_DOE_PROTOCOL_NUM_MAX);
-> +
-> +    /* Increment discovery protocol */
-> +    doe_cap->protocol_num++;
-> +}
-> +
-> +void pcie_doe_fini(DOECap *doe_cap)
-> +{
-> +    g_free(doe_cap->read_mbox);
-> +    g_free(doe_cap->write_mbox);
-> +    g_free(doe_cap);
-> +}
-> +
-> +uint32_t pcie_doe_build_protocol(DOEProtocol *p)
-> +{
-> +    return DATA_OBJ_BUILD_HEADER1(p->vendor_id, p->data_obj_type);
-> +}
-> +
-> +void *pcie_doe_get_write_mbox_ptr(DOECap *doe_cap)
-> +{
-> +    return doe_cap->write_mbox;
-> +}
-> +
-> +/*
-> + * Copy the response to read mailbox buffer
-> + * This might be called in self-defined handle_request() if a DOE response is
-> + * required in the corresponding protocol
-> + */
-> +void pcie_doe_set_rsp(DOECap *doe_cap, void *rsp)
-> +{
-> +    uint32_t len = pcie_doe_get_obj_len(rsp);
-> +
-> +    memcpy(doe_cap->read_mbox + doe_cap->read_mbox_len, rsp, len * DWORD_BYTE);
-> +    doe_cap->read_mbox_len += len;
-> +}
-> +
-> +uint32_t pcie_doe_get_obj_len(void *obj)
-> +{
-> +    uint32_t len;
-> +
-> +    if (!obj) {
-> +        return 0;
-> +    }
-> +
-> +    /* Only lower 18 bits are valid */
-> +    len = DATA_OBJ_LEN_MASK(((DOEHeader *)obj)->length);
-> +
-> +    /* DOE ECN Table 7-x1b: a value of 00000h indicates 2^18 DW */
-> +    return (len) ? len : PCI_DOE_DW_SIZE_MAX;
-> +}
-> +
-> +static void pcie_doe_irq_assert(DOECap *doe_cap)
-> +{
-> +    PCIDevice *dev = doe_cap->pdev;
-> +
-> +    if (doe_cap->cap.intr && doe_cap->ctrl.intr) {
-> +        if (doe_cap->status.intr) {
-> +            return;
-> +        }
-> +        doe_cap->status.intr = 1;
-> +
-> +        /* Notifies interrupt, legacy IRQ is not supported */
-> +        if (msix_enabled(dev)) {
-> +            msix_notify(dev, doe_cap->cap.vec);
-> +        } else if (msi_enabled(dev)) {
-> +            msi_notify(dev, doe_cap->cap.vec);
-> +        }
-> +    }
-> +}
-> +
-> +static void pcie_doe_set_ready(DOECap *doe_cap, bool rdy)
-> +{
-> +    doe_cap->status.ready = rdy;
-> +
-> +    if (rdy) {
-> +        pcie_doe_irq_assert(doe_cap);
-> +    }
-> +}
-> +
-> +static void pcie_doe_set_error(DOECap *doe_cap, bool err)
-> +{
-> +    doe_cap->status.error = err;
-> +
-> +    if (err) {
-> +        pcie_doe_irq_assert(doe_cap);
-> +    }
-> +}
-> +
-> +/*
-> + * Check incoming request in write_mbox for protocol format
-> + */
-> +static void pcie_doe_prepare_rsp(DOECap *doe_cap)
-> +{
-> +    bool success = false;
-> +    int p;
-> +    bool (*handle_request)(DOECap *) = NULL;
-> +
-> +    if (doe_cap->status.error) {
-> +        return;
-> +    }
-> +
-> +    if (doe_cap->write_mbox[0] ==
-> +        DATA_OBJ_BUILD_HEADER1(PCI_VENDOR_ID_PCI_SIG, PCI_SIG_DOE_DISCOVERY)) {
-> +        handle_request = pcie_doe_discovery;
-> +    } else {
-> +        for (p = 0; p < doe_cap->protocol_num - 1; p++) {
-> +            if (doe_cap->write_mbox[0] ==
-> +                pcie_doe_build_protocol(&doe_cap->protocols[p])) {
-> +                handle_request = doe_cap->protocols[p].handle_request;
-> +                break;
-> +            }
-> +        }
-> +    }
-> +
-> +    /*
-> +     * DOE ECN 6.xx.1:
-> +     * If the number of DW transferred does not match the
-> +     * indicated Length for a data object, then the
-> +     * data object must be silently discarded.
-> +     */
-> +    if (doe_cap->write_mbox_len ==
-> +        pcie_doe_get_obj_len(pcie_doe_get_write_mbox_ptr(doe_cap))) {
-> +        success = handle_request(doe_cap);
-
-Superficially looks like there is no protection on handle_request == NULL.
-Whilst it might not be possible, that's not locally apparent so perhaps
-add a sanity check here.
-
-> +    }
-> +
-> +    if (success) {
-> +        pcie_doe_set_ready(doe_cap, 1);
-> +    } else {
-> +        pcie_doe_reset_mbox(doe_cap);
-> +    }
-> +}
-> +
-> +/*
-> + * Read from DOE config space.
-> + * Return false if the address not within DOE_CAP range.
-> + */
-> +bool pcie_doe_read_config(DOECap *doe_cap, uint32_t addr, int size,
-> +                          uint32_t *buf)
-> +{
-> +    uint32_t shift, mask = 0xFFFFFFFF;
-> +    uint16_t doe_offset = doe_cap->offset;
-> +
-> +    if (!range_covers_byte(doe_offset + PCI_EXP_DOE_CAP,
-> +                           PCI_DOE_SIZEOF - 4, addr)) {
-> +        return false;
-> +    }
-> +
-> +    addr -= doe_offset;
-> +    *buf = 0;
-> +
-> +    if (range_covers_byte(PCI_EXP_DOE_CAP, DWORD_BYTE, addr)) {
-> +        *buf = FIELD_DP32(*buf, PCI_DOE_CAP_REG, INTR_SUPP,
-> +                          doe_cap->cap.intr);
-> +        *buf = FIELD_DP32(*buf, PCI_DOE_CAP_REG, DOE_INTR_MSG_NUM,
-> +                          doe_cap->cap.vec);
-> +    } else if (range_covers_byte(PCI_EXP_DOE_CTRL, DWORD_BYTE, addr)) {
-> +        /* Must return ABORT=0 and GO=0 */
-> +        *buf = FIELD_DP32(*buf, PCI_DOE_CAP_CONTROL, DOE_INTR_EN,
-> +                          doe_cap->ctrl.intr);
-> +    } else if (range_covers_byte(PCI_EXP_DOE_STATUS, DWORD_BYTE, addr)) {
-> +        *buf = FIELD_DP32(*buf, PCI_DOE_CAP_STATUS, DOE_BUSY,
-> +                          doe_cap->status.busy);
-> +        *buf = FIELD_DP32(*buf, PCI_DOE_CAP_STATUS, DOE_INTR_STATUS,
-> +                          doe_cap->status.intr);
-> +        *buf = FIELD_DP32(*buf, PCI_DOE_CAP_STATUS, DOE_ERROR,
-> +                          doe_cap->status.error);
-> +        *buf = FIELD_DP32(*buf, PCI_DOE_CAP_STATUS, DATA_OBJ_RDY,
-> +                          doe_cap->status.ready);
-> +    /* Mailbox should be DW accessed */
-> +    } else if (addr == PCI_EXP_DOE_RD_DATA_MBOX && size == DWORD_BYTE) {
-> +        if (doe_cap->status.ready && !doe_cap->status.error) {
-> +            *buf = doe_cap->read_mbox[doe_cap->read_mbox_idx];
-> +        }
-> +    }
-> +
-> +    /* Process Alignment */
-> +    shift = addr % DWORD_BYTE;
-> +    *buf = BYTE_RSHIFT(*buf, shift);
-> +    mask = BYTE_RSHIFT(mask, DWORD_BYTE - size);
-> +    *buf &= mask;
-> +
-> +    return true;
-> +}
-> +
-> +/*
-> + * Write to DOE config space.
-> + * Return if the address not within DOE_CAP range or receives an abort
-> + */
-> +void pcie_doe_write_config(DOECap *doe_cap,
-> +                           uint32_t addr, uint32_t val, int size)
-> +{
-> +    uint16_t doe_offset = doe_cap->offset;
-> +    uint32_t shift;
-> +
-> +    if (!range_covers_byte(doe_offset + PCI_EXP_DOE_CAP,
-> +                           PCI_DOE_SIZEOF - 4, addr)) {
-> +        return;
-> +    }
-> +
-> +    /* Process Alignment */
-> +    shift = addr % DWORD_BYTE;
-> +    addr -= (doe_offset + shift);
-> +    val = BYTE_LSHIFT(val, shift);
-> +
-> +    switch (addr) {
-> +    case PCI_EXP_DOE_CTRL:
-> +        if (FIELD_EX32(val, PCI_DOE_CAP_CONTROL, DOE_ABORT)) {
-> +            pcie_doe_set_ready(doe_cap, 0);
-> +            pcie_doe_set_error(doe_cap, 0);
-> +            pcie_doe_reset_mbox(doe_cap);
-> +            return;
-> +        }
-> +
-> +        if (FIELD_EX32(val, PCI_DOE_CAP_CONTROL, DOE_GO)) {
-> +            pcie_doe_prepare_rsp(doe_cap);
-> +        }
-> +
-> +        if (FIELD_EX32(val, PCI_DOE_CAP_CONTROL, DOE_INTR_EN)) {
-> +            doe_cap->ctrl.intr = 1;
-> +        /* Clear interrupt bit located within the first byte */
-> +        } else if (shift == 0) {
-> +            doe_cap->ctrl.intr = 0;
-> +        }
+> +    switch (type) {
+> +    case CXL_COMP_MODE_CAP:
+> +        req_len = sizeof(struct cxl_compliance_cap_req);
+> +        rsp_len = sizeof(struct cxl_compliance_cap_rsp);
+> +        rsp->cap_rsp.status = 0x0;
+> +        rsp->cap_rsp.available_cap_bitmask = 0;
+> +        rsp->cap_rsp.enabled_cap_bitmask = 0;
 > +        break;
-> +    case PCI_EXP_DOE_STATUS:
-> +        if (FIELD_EX32(val, PCI_DOE_CAP_STATUS, DOE_INTR_STATUS)) {
-> +            doe_cap->status.intr = 0;
-> +        }
+> +    case CXL_COMP_MODE_STATUS:
+> +        req_len = sizeof(struct cxl_compliance_status_req);
+> +        rsp_len = sizeof(struct cxl_compliance_status_rsp);
+> +        rsp->status_rsp.cap_bitfield = 0;
+> +        rsp->status_rsp.cache_size = 0;
+> +        rsp->status_rsp.cache_size_units = 0;
 > +        break;
-> +    case PCI_EXP_DOE_RD_DATA_MBOX:
-> +        /* Mailbox should be DW accessed */
-> +        if (size != DWORD_BYTE) {
-> +            return;
-> +        }
-> +        doe_cap->read_mbox_idx++;
-> +        if (doe_cap->read_mbox_idx == doe_cap->read_mbox_len) {
-> +            pcie_doe_reset_mbox(doe_cap);
-> +            pcie_doe_set_ready(doe_cap, 0);
-> +        } else if (doe_cap->read_mbox_idx > doe_cap->read_mbox_len) {
-> +            /* Underflow */
-> +            pcie_doe_set_error(doe_cap, 1);
-> +        }
+> +    case CXL_COMP_MODE_HALT:
+> +        req_len = sizeof(struct cxl_compliance_halt_req);
+> +        rsp_len = sizeof(struct cxl_compliance_halt_rsp);
 > +        break;
-> +    case PCI_EXP_DOE_WR_DATA_MBOX:
-> +        /* Mailbox should be DW accessed */
-> +        if (size != DWORD_BYTE) {
-> +            return;
-> +        }
-> +        doe_cap->write_mbox[doe_cap->write_mbox_len] = val;
-> +        doe_cap->write_mbox_len++;
+> +    case CXL_COMP_MODE_MULT_WR_STREAM:
+> +        req_len = sizeof(struct cxl_compliance_multi_write_streaming_req);
+> +        rsp_len = sizeof(struct cxl_compliance_multi_write_streaming_rsp);
 > +        break;
-> +    case PCI_EXP_DOE_CAP:
-> +        /* fallthrough */
+> +    case CXL_COMP_MODE_PRO_CON:
+> +        req_len = sizeof(struct cxl_compliance_producer_consumer_req);
+> +        rsp_len = sizeof(struct cxl_compliance_producer_consumer_rsp);
+> +        break;
+> +    case CXL_COMP_MODE_BOGUS:
+> +        req_len = sizeof(struct cxl_compliance_bogus_writes_req);
+> +        rsp_len = sizeof(struct cxl_compliance_bogus_writes_rsp);
+> +        break;
+> +    case CXL_COMP_MODE_INJ_POISON:
+> +        req_len = sizeof(struct cxl_compliance_inject_poison_req);
+> +        rsp_len = sizeof(struct cxl_compliance_inject_poison_rsp);
+> +        break;
+> +    case CXL_COMP_MODE_INJ_CRC:
+> +        req_len = sizeof(struct cxl_compliance_inject_crc_req);
+> +        rsp_len = sizeof(struct cxl_compliance_inject_crc_rsp);
+> +        break;
+> +    case CXL_COMP_MODE_INJ_FC:
+> +        req_len = sizeof(struct cxl_compliance_inject_flow_ctrl_req);
+> +        rsp_len = sizeof(struct cxl_compliance_inject_flow_ctrl_rsp);
+> +        break;
+> +    case CXL_COMP_MODE_TOGGLE_CACHE:
+> +        req_len = sizeof(struct cxl_compliance_toggle_cache_flush_req);
+> +        rsp_len = sizeof(struct cxl_compliance_toggle_cache_flush_rsp);
+> +        break;
+> +    case CXL_COMP_MODE_INJ_MAC:
+> +        req_len = sizeof(struct cxl_compliance_inject_mac_delay_req);
+> +        rsp_len = sizeof(struct cxl_compliance_inject_mac_delay_rsp);
+> +        break;
+> +    case CXL_COMP_MODE_INS_UNEXP_MAC:
+> +        req_len = sizeof(struct cxl_compliance_insert_unexp_mac_req);
+> +        rsp_len = sizeof(struct cxl_compliance_insert_unexp_mac_rsp);
+> +        break;
+> +    case CXL_COMP_MODE_INJ_VIRAL:
+> +        req_len = sizeof(struct cxl_compliance_inject_viral_req);
+> +        rsp_len = sizeof(struct cxl_compliance_inject_viral_rsp);
+> +        break;
+> +    case CXL_COMP_MODE_INJ_ALMP:
+> +        req_len = sizeof(struct cxl_compliance_inject_almp_req);
+> +        rsp_len = sizeof(struct cxl_compliance_inject_almp_rsp);
+> +        break;
+> +    case CXL_COMP_MODE_IGN_ALMP:
+> +        req_len = sizeof(struct cxl_compliance_ignore_almp_req);
+> +        rsp_len = sizeof(struct cxl_compliance_ignore_almp_rsp);
+> +        break;
+> +    case CXL_COMP_MODE_INJ_BIT_ERR:
+> +        req_len = sizeof(struct cxl_compliance_inject_bit_err_in_flit_req);
+> +        rsp_len = sizeof(struct cxl_compliance_inject_bit_err_in_flit_rsp);
+> +        break;
 > +    default:
 > +        break;
 > +    }
+> +
+> +    /* Discard if request length mismatched */
+> +    if (pcie_doe_get_obj_len(req) < DIV_ROUND_UP(req_len, DWORD_BYTE)) {
+> +        return false;
+> +    }
+> +
+> +    /* Common fields for each compliance type */
+> +    rsp->header.doe_header.vendor_id = CXL_VENDOR_ID;
+> +    rsp->header.doe_header.data_obj_type = CXL_DOE_COMPLIANCE;
+> +    rsp->header.doe_header.length = DIV_ROUND_UP(rsp_len, DWORD_BYTE);
+> +    rsp->header.rsp_code = type;
+> +    rsp->header.version = 0x1;
+> +    rsp->header.length = rsp_len;
+> +
+> +    memcpy(doe_cap->read_mbox, rsp, rsp_len);
+> +
+> +    doe_cap->read_mbox_len += rsp->header.doe_header.length;
+> +
+> +    return true;
 > +}
-> diff --git a/include/hw/pci/pcie.h b/include/hw/pci/pcie.h
-> index 14c58ebdb6..47d6f66e52 100644
-> --- a/include/hw/pci/pcie.h
-> +++ b/include/hw/pci/pcie.h
-> @@ -25,6 +25,7 @@
->  #include "hw/pci/pcie_regs.h"
->  #include "hw/pci/pcie_aer.h"
->  #include "hw/hotplug.h"
-> +#include "hw/pci/pcie_doe.h"
+> +
+> +static uint32_t ct3d_config_read(PCIDevice *pci_dev, uint32_t addr, int size)
+> +{
+> +    CXLType3Dev *ct3d = CT3(pci_dev);
+> +    uint32_t val;
+> +
+> +    if (pcie_doe_read_config(&ct3d->doe_comp, addr, size, &val)) {
+> +        return val;
+> +    }
+> +
+> +    return pci_default_read_config(pci_dev, addr, size);
+> +}
+> +
+> +static void ct3d_config_write(PCIDevice *pci_dev, uint32_t addr, uint32_t val,
+> +                              int size)
+> +{
+> +    CXLType3Dev *ct3d = CT3(pci_dev);
+> +
+> +    pcie_doe_write_config(&ct3d->doe_comp, addr, val, size);
+> +    pci_default_write_config(pci_dev, addr, val, size);
+> +}
 >  
->  typedef enum {
->      /* for attention and power indicator */
-> diff --git a/include/hw/pci/pcie_doe.h b/include/hw/pci/pcie_doe.h
+>  static void build_dvsecs(CXLType3Dev *ct3d)
+>  {
+> @@ -203,6 +331,11 @@ static MemoryRegion *cxl_md_get_memory_region(MemoryDeviceState *md,
+>      return ct3d->cxl_dstate.pmem;
+>  }
+>  
+> +static DOEProtocol doe_comp_prot[] = {
+> +    {CXL_VENDOR_ID, CXL_DOE_COMPLIANCE, cxl_doe_compliance_rsp},
+> +    {},
+> +};
+> +
+>  static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>  {
+>      CXLType3Dev *ct3d = CT3(pci_dev);
+> @@ -210,6 +343,8 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>      ComponentRegisters *regs = &cxl_cstate->crb;
+>      MemoryRegion *mr = &regs->component_registers;
+>      uint8_t *pci_conf = pci_dev->config;
+> +    unsigned short msix_num = 1;
+> +    int i;
+>  
+>      if (!ct3d->cxl_dstate.pmem) {
+>          cxl_setup_memory(ct3d, errp);
+> @@ -239,6 +374,15 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>                       PCI_BASE_ADDRESS_SPACE_MEMORY |
+>                           PCI_BASE_ADDRESS_MEM_TYPE_64,
+>                       &ct3d->cxl_dstate.device_registers);
+> +
+> +    /* MSI(-X) Initailization */
+> +    msix_init_exclusive_bar(pci_dev, msix_num, 4, NULL);
+> +    for (i = 0; i < msix_num; i++) {
+> +        msix_vector_use(pci_dev, i);
+> +    }
+> +
+> +    /* DOE Initailization */
+> +    pcie_doe_init(pci_dev, &ct3d->doe_comp, 0x160, doe_comp_prot, true, 0);
+>  }
+>  
+>  static uint64_t cxl_md_get_addr(const MemoryDeviceState *md)
+> @@ -357,6 +501,9 @@ static void ct3_class_init(ObjectClass *oc, void *data)
+>      DeviceClass *dc = DEVICE_CLASS(oc);
+>      PCIDeviceClass *pc = PCI_DEVICE_CLASS(oc);
+>      MemoryDeviceClass *mdc = MEMORY_DEVICE_CLASS(oc);
+> +
+> +    pc->config_write = ct3d_config_write;
+> +    pc->config_read = ct3d_config_read;
+>      CXLType3Class *cvc = CXL_TYPE3_DEV_CLASS(oc);
+>  
+>      pc->realize = ct3_realize;
+> diff --git a/include/hw/cxl/cxl_compliance.h b/include/hw/cxl/cxl_compliance.h
 > new file mode 100644
-> index 0000000000..dc2c872f4d
+> index 0000000000..efa3e052d3
 > --- /dev/null
-> +++ b/include/hw/pci/pcie_doe.h
-> @@ -0,0 +1,123 @@
+> +++ b/include/hw/cxl/cxl_compliance.h
+> @@ -0,0 +1,293 @@
 > +/*
-> + * PCIe Data Object Exchange
+> + * CXL Compliance Structure
 > + *
 > + * Copyright (C) 2021 Avery Design Systems, Inc.
 > + *
@@ -547,128 +296,336 @@ add a sanity check here.
 > + * See the COPYING file in the top-level directory.
 > + */
 > +
-> +#ifndef PCIE_DOE_H
-> +#define PCIE_DOE_H
+> +#ifndef CXL_COMPL_H
+> +#define CXL_COMPL_H
 > +
-> +#include "qemu/range.h"
-> +#include "qemu/typedefs.h"
-> +#include "hw/register.h"
+> +#include "hw/cxl/cxl_pci.h"
 > +
 > +/*
-> + * Referene:
-> + * PCIe Data Object Exchange (DOE) ECN, March 12, 2020
+> + * Reference:
+> + *   Compute Express Link (CXL) Specification, Rev. 2.0, Oct. 2020
 > + */
-> +/* Capabilities Register - 7.9.xx.2 */
-> +#define PCI_EXP_DOE_CAP             0x04
-> +REG32(PCI_DOE_CAP_REG, 0)
-> +    FIELD(PCI_DOE_CAP_REG, INTR_SUPP, 0, 1)
-> +    FIELD(PCI_DOE_CAP_REG, DOE_INTR_MSG_NUM, 1, 11)
+> +/* Compliance Mode Data Object Header - 14.16.4 Table 275 */
+> +#define CXL_DOE_COMPLIANCE        0
+> +#define CXL_DOE_PROTOCOL_COMPLIANCE ((CXL_DOE_COMPLIANCE << 16) | CXL_VENDOR_ID)
 > +
-> +/* Control Register - 7.9.xx.3 */
-> +#define PCI_EXP_DOE_CTRL            0x08
-> +REG32(PCI_DOE_CAP_CONTROL, 0)
-> +    FIELD(PCI_DOE_CAP_CONTROL, DOE_ABORT, 0, 1)
-> +    FIELD(PCI_DOE_CAP_CONTROL, DOE_INTR_EN, 1, 1)
-> +    FIELD(PCI_DOE_CAP_CONTROL, DOE_GO, 31, 1)
+> +/* Compliance Mode Return Values - 14.16.4 Table 276 */
+> +enum comp_status {
+> +    CXL_COMP_MODE_RET_SUCC,
+> +    CXL_COMP_MODE_RET_NOT_AUTH,
+> +    CXL_COMP_MODE_RET_UNKNOWN_FAIL,
+> +    CXL_COMP_MODE_RET_UNSUP_INJ_FUNC,
+> +    CXL_COMP_MODE_RET_INTERNAL_ERR,
+> +    CXL_COMP_MODE_RET_BUSY,
+> +    CXL_COMP_MODE_RET_NOT_INIT,
+> +};
 > +
-> +/* Status Register - 7.9.xx.4 */
-> +#define PCI_EXP_DOE_STATUS          0x0c
-> +REG32(PCI_DOE_CAP_STATUS, 0)
-> +    FIELD(PCI_DOE_CAP_STATUS, DOE_BUSY, 0, 1)
-> +    FIELD(PCI_DOE_CAP_STATUS, DOE_INTR_STATUS, 1, 1)
-> +    FIELD(PCI_DOE_CAP_STATUS, DOE_ERROR, 2, 1)
-> +    FIELD(PCI_DOE_CAP_STATUS, DATA_OBJ_RDY, 31, 1)
+> +/* Compliance Mode Types - 14.16.4 */
+> +enum comp_type {
+> +    CXL_COMP_MODE_CAP,
+> +    CXL_COMP_MODE_STATUS,
+> +    CXL_COMP_MODE_HALT,
+> +    CXL_COMP_MODE_MULT_WR_STREAM,
+> +    CXL_COMP_MODE_PRO_CON,
+> +    CXL_COMP_MODE_BOGUS,
+> +    CXL_COMP_MODE_INJ_POISON,
+> +    CXL_COMP_MODE_INJ_CRC,
+> +    CXL_COMP_MODE_INJ_FC,
+> +    CXL_COMP_MODE_TOGGLE_CACHE,
+> +    CXL_COMP_MODE_INJ_MAC,
+> +    CXL_COMP_MODE_INS_UNEXP_MAC,
+> +    CXL_COMP_MODE_INJ_VIRAL,
+> +    CXL_COMP_MODE_INJ_ALMP,
+> +    CXL_COMP_MODE_IGN_ALMP,
+> +    CXL_COMP_MODE_INJ_BIT_ERR,
+> +};
 > +
-> +/* Write Data Mailbox Register - 7.9.xx.5 */
-> +#define PCI_EXP_DOE_WR_DATA_MBOX    0x10
+> +typedef struct compliance_req_header CompReqHeader;
+> +typedef struct compliance_rsp_header CompRspHeader;
 > +
-> +/* Read Data Mailbox Register - 7.9.xx.6 */
-> +#define PCI_EXP_DOE_RD_DATA_MBOX    0x14
-> +
-> +/* PCI-SIG defined Data Object Types - Table 7-x2 */
-> +#define PCI_SIG_DOE_DISCOVERY       0x00
-> +
-> +#define PCI_DOE_DW_SIZE_MAX         (1 << 18)
-> +#define PCI_DOE_PROTOCOL_NUM_MAX    256
-> +
-> +#define DATA_OBJ_BUILD_HEADER1(v, p)    ((p << 16) | v)
-> +#define DATA_OBJ_LEN_MASK(l)        (l & (PCI_DOE_DW_SIZE_MAX - 1))
-
-in Macros, parameters passed in should have () around them to avoid running
-into unexpected precedence issues.  Eg DATA_OBJ_LEN_MASK((1 << 32) + 4) is not
-going to do what you'd expect.
-
-#define DATA_OBJ_LEN_MASK(l)	((l) & (PCI_DOE_DW_SIZE_MASK - 1);
-
-l is also a nasty character to use, so maybe len is more appropriate so the
-eye can't parse it as 1.
-
-> +
-> +typedef struct DOEHeader DOEHeader;
-> +typedef struct DOEProtocol DOEProtocol;
-> +typedef struct DOECap DOECap;
-> +
-> +struct DOEHeader {
-> +    uint16_t vendor_id;
-> +    uint8_t data_obj_type;
-> +    uint8_t reserved;
-> +    uint32_t length;
+> +struct compliance_req_header {
+> +    DOEHeader doe_header;
+> +    uint8_t req_code;
+> +    uint8_t version;
+> +    uint16_t reserved;
 > +} QEMU_PACKED;
 > +
-> +/* Protocol infos and rsp function callback */
-> +struct DOEProtocol {
-> +    uint16_t vendor_id;
-> +    uint8_t data_obj_type;
-> +    bool (*handle_request)(DOECap *);
-> +};
+> +struct compliance_rsp_header {
+> +    DOEHeader doe_header;
+> +    uint8_t rsp_code;
+> +    uint8_t version;
+> +    uint8_t length;
+> +} QEMU_PACKED;
 > +
-> +struct DOECap {
-> +    /* Owner */
-> +    PCIDevice *pdev;
+> +/* Special Patterns of response */
+> +struct status_rsp {
+> +    CompRspHeader header;
+> +    uint8_t status;
+> +} QEMU_PACKED;
 > +
-> +    uint16_t offset;
+> +struct len_rsvd_rsp {
+> +    /* The length field in header is reserved. */
+> +    CompRspHeader header;
+> +    uint8_t reserved[5];
+> +} QEMU_PACKED;
 > +
-> +    struct {
-> +        bool intr;
-> +        uint16_t vec;
-> +    } cap;
+> +/* 14.16.4.1 Table 277 */
+> +struct cxl_compliance_cap_req {
+> +    CompReqHeader header;
+> +} QEMU_PACKED;
 > +
-> +    struct {
-> +        bool abort;
-> +        bool intr;
-> +        bool go;
-> +    } ctrl;
+> +/* 14.16.4.1 Table 278 */
+> +struct cxl_compliance_cap_rsp {
+> +    CompRspHeader header;
+> +    uint8_t status;
+> +    uint64_t available_cap_bitmask;
+> +    uint64_t enabled_cap_bitmask;
+> +} QEMU_PACKED;
 > +
-> +    struct {
-> +        bool busy;
-> +        bool intr;
-> +        bool error;
-> +        bool ready;
-> +    } status;
+> +/* 14.16.4.2 Table 279 */
+> +struct cxl_compliance_status_req {
+> +    CompReqHeader header;
+> +} QEMU_PACKED;
 > +
-> +    uint32_t *write_mbox;
-> +    uint32_t *read_mbox;
+> +/* 14.16.4.2 Table 280 */
+> +struct cxl_compliance_status_rsp {
+> +    CompRspHeader header;
+> +    uint32_t cap_bitfield;
+> +    uint16_t cache_size;
+> +    uint8_t cache_size_units;
+> +} QEMU_PACKED;
 > +
-> +    /* Mailbox position indicator */
-> +    uint32_t read_mbox_idx;
-> +    uint32_t read_mbox_len;
-> +    uint32_t write_mbox_len;
+> +/* 14.16.4.3 Table 281 */
+> +struct cxl_compliance_halt_req {
+> +    CompReqHeader header;
+> +} QEMU_PACKED;
 > +
-> +    /* Protocols and its callback response */
-> +    DOEProtocol *protocols;
-> +    uint16_t protocol_num;
-> +};
+> +/* 14.16.4.3 Table 282 */
+> +#define cxl_compliance_halt_rsp status_rsp
 > +
-> +void pcie_doe_init(PCIDevice *pdev, DOECap *doe_cap, uint16_t offset,
-> +                   DOEProtocol *protocols, bool intr, uint16_t vec);
-> +void pcie_doe_fini(DOECap *doe_cap);
-> +bool pcie_doe_read_config(DOECap *doe_cap, uint32_t addr, int size,
-> +                          uint32_t *buf);
-> +void pcie_doe_write_config(DOECap *doe_cap, uint32_t addr,
-> +                           uint32_t val, int size);
-> +uint32_t pcie_doe_build_protocol(DOEProtocol *p);
-> +void *pcie_doe_get_write_mbox_ptr(DOECap *doe_cap);
-> +void pcie_doe_set_rsp(DOECap *doe_cap, void *rsp);
-> +uint32_t pcie_doe_get_obj_len(void *obj);
-> +#endif /* PCIE_DOE_H */
+> +/* 14.16.4.4 Table 283 */
+> +struct cxl_compliance_multi_write_streaming_req {
+> +    CompReqHeader header;
+> +    uint8_t protocol;
+> +    uint8_t virtual_addr;
+> +    uint8_t self_checking;
+> +    uint8_t verify_read_semantics;
+> +    uint8_t num_inc;
+> +    uint8_t num_sets;
+> +    uint8_t num_loops;
+> +    uint8_t reserved2;
+> +    uint64_t start_addr;
+> +    uint64_t write_addr;
+> +    uint64_t writeback_addr;
+> +    uint64_t byte_mask;
+> +    uint32_t addr_incr;
+> +    uint32_t set_offset;
+> +    uint32_t pattern_p;
+> +    uint32_t inc_pattern_b;
+> +} QEMU_PACKED;
+> +
+> +/* 14.16.4.4 Table 284 */
+> +#define cxl_compliance_multi_write_streaming_rsp status_rsp
+> +
+> +/* 14.16.4.5 Table 285 */
+> +struct cxl_compliance_producer_consumer_req {
+> +    CompReqHeader header;
+> +    uint8_t protocol;
+> +    uint8_t num_inc;
+> +    uint8_t num_sets;
+> +    uint8_t num_loops;
+> +    uint8_t write_semantics;
+> +    uint8_t reserved2[3];
+
+Trivial but odd to have reserved2 without reserved.
+
+> +    uint64_t start_addr;
+> +    uint64_t byte_mask;
+> +    uint32_t addr_incr;
+> +    uint32_t set_offset;
+> +    uint32_t pattern;
+> +} QEMU_PACKED;
+> +
+> +/* 14.16.4.5 Table 286 */
+> +#define cxl_compliance_producer_consumer_rsp status_rsp
+> +
+> +/* 14.16.4.6 Table 287 */
+> +struct cxl_compliance_bogus_writes_req {
+> +    CompReqHeader header;
+> +    uint8_t count;
+> +    uint8_t reserved;
+> +    uint32_t pattern;
+> +} QEMU_PACKED;
+> +
+> +/* 14.16.4.6 Table 288 */
+> +#define cxl_compliance_bogus_writes_rsp status_rsp
+> +
+> +/* 14.16.4.7 Table 289 */
+> +struct cxl_compliance_inject_poison_req {
+> +    CompReqHeader header;
+> +    uint8_t protocol;
+> +} QEMU_PACKED;
+> +
+> +/* 14.16.4.7 Table 290 */
+> +#define cxl_compliance_inject_poison_rsp status_rsp
+> +
+> +/* 14.16.4.8 Table 291 */
+> +struct cxl_compliance_inject_crc_req {
+> +    CompReqHeader header;
+> +    uint8_t num_bits_flip;
+> +    uint8_t num_flits_inj;
+> +} QEMU_PACKED;
+> +
+> +/* 14.16.4.8 Table 292 */
+> +#define cxl_compliance_inject_crc_rsp status_rsp
+> +
+> +/* 14.16.4.9 Table 293 */
+> +struct cxl_compliance_inject_flow_ctrl_req {
+> +    CompReqHeader header;
+> +    uint8_t inj_flow_control;
+> +} QEMU_PACKED;
+> +
+> +/* 14.16.4.9 Table 294 */
+> +#define cxl_compliance_inject_flow_ctrl_rsp status_rsp
+> +
+> +/* 14.16.4.10 Table 295 */
+> +struct cxl_compliance_toggle_cache_flush_req {
+> +    CompReqHeader header;
+> +    uint8_t cache_flush_control;
+> +} QEMU_PACKED;
+> +
+> +/* 14.16.4.10 Table 296 */
+> +#define cxl_compliance_toggle_cache_flush_rsp status_rsp
+> +
+> +/* 14.16.4.11 Table 297 */
+> +struct cxl_compliance_inject_mac_delay_req {
+> +    CompReqHeader header;
+> +    uint8_t enable;
+> +    uint8_t mode;
+> +    uint8_t delay;
+> +} QEMU_PACKED;
+> +
+> +/* 14.16.4.11 Table 298 */
+> +#define cxl_compliance_inject_mac_delay_rsp status_rsp
+> +
+> +/* 14.16.4.12 Table 299 */
+> +struct cxl_compliance_insert_unexp_mac_req {
+> +    CompReqHeader header;
+> +    uint8_t opcode;
+> +    uint8_t mode;
+> +} QEMU_PACKED;
+> +
+> +/* 14.16.4.12 Table 300 */
+> +#define cxl_compliance_insert_unexp_mac_rsp status_rsp
+> +
+> +/* 14.16.4.13 Table 301 */
+> +struct cxl_compliance_inject_viral_req {
+> +    CompReqHeader header;
+> +    uint8_t protocol;
+> +} QEMU_PACKED;
+> +
+> +/* 14.16.4.13 Table 302 */
+> +#define cxl_compliance_inject_viral_rsp status_rsp
+> +
+> +/* 14.16.4.14 Table 303 */
+> +struct cxl_compliance_inject_almp_req {
+> +    CompReqHeader header;
+> +    uint8_t opcode;
+> +    uint8_t reserved2[3];
+> +} QEMU_PACKED;
+> +
+> +/* 14.16.4.14 Table 304 */
+> +#define cxl_compliance_inject_almp_rsp len_rsvd_rsp
+> +
+> +/* 14.16.4.15 Table 305 */
+> +struct cxl_compliance_ignore_almp_req {
+> +    CompReqHeader header;
+> +    uint8_t opcode;
+> +    uint8_t reserved2[3];
+> +} QEMU_PACKED;
+> +
+> +/* 14.16.4.15 Table 306 */
+> +#define cxl_compliance_ignore_almp_rsp len_rsvd_rsp
+> +
+> +/* 14.16.4.16 Table 307 */
+> +struct cxl_compliance_inject_bit_err_in_flit_req {
+> +    CompReqHeader header;
+> +    uint8_t opcode;
+> +} QEMU_PACKED;
+> +
+> +/* 14.16.4.16 Table 308 */
+> +#define cxl_compliance_inject_bit_err_in_flit_rsp len_rsvd_rsp
+> +
+> +typedef struct ComplianceObject ComplianceObject;
+> +
+> +typedef union doe_rsp_u {
+> +    CompRspHeader header;
+> +
+> +    struct cxl_compliance_cap_rsp cap_rsp;
+> +    struct cxl_compliance_status_rsp status_rsp;
+> +    struct cxl_compliance_halt_rsp halt_rsp;
+> +    struct cxl_compliance_multi_write_streaming_rsp multi_write_streaming_rsp;
+> +    struct cxl_compliance_producer_consumer_rsp producer_consumer_rsp;
+> +    struct cxl_compliance_bogus_writes_rsp bogus_writes_rsp;
+> +    struct cxl_compliance_inject_poison_rsp inject_poison_rsp;
+> +    struct cxl_compliance_inject_crc_rsp inject_crc_rsp;
+> +    struct cxl_compliance_inject_flow_ctrl_rsp inject_flow_ctrl_rsp;
+> +    struct cxl_compliance_toggle_cache_flush_rsp toggle_cache_flush_rsp;
+> +    struct cxl_compliance_inject_mac_delay_rsp inject_mac_delay_rsp;
+> +    struct cxl_compliance_insert_unexp_mac_rsp insert_unexp_mac_rsp;
+> +    struct cxl_compliance_inject_viral_rsp inject_viral_rsp;
+> +    struct cxl_compliance_inject_almp_rsp inject_almp_rsp;
+> +    struct cxl_compliance_ignore_almp_rsp ignore_almp_rsp;
+> +    struct cxl_compliance_inject_bit_err_in_flit_rsp inject_bit_err_in_flit_rsp;
+> +} CompRsp;
+> +
+> +struct ComplianceObject {
+> +    CompRsp response;
+> +} QEMU_PACKED;
+> +#endif /* CXL_COMPL_H */
+> diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
+> index acc0730d96..d299c77ae3 100644
+> --- a/include/hw/cxl/cxl_component.h
+> +++ b/include/hw/cxl/cxl_component.h
+> @@ -173,6 +173,8 @@ typedef struct cxl_component {
+>              struct PCIDevice *pdev;
+>          };
+>      };
+> +
+> +    ComplianceObject compliance;
+>  } CXLComponentState;
+>  
+>  void cxl_component_register_block_init(Object *obj,
+> @@ -184,4 +186,5 @@ void cxl_component_register_init_common(uint32_t *reg_state,
+>  void cxl_component_create_dvsec(CXLComponentState *cxl_cstate, uint16_t length,
+>                                  uint16_t type, uint8_t rev, uint8_t *body);
+>  
+> +bool cxl_doe_compliance_rsp(DOECap *doe_cap);
+>  #endif
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index 057c5b85c6..f0cb7de795 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -236,6 +236,9 @@ typedef struct cxl_type3_dev {
+>      /* State */
+>      CXLComponentState cxl_cstate;
+>      CXLDeviceState cxl_dstate;
+> +
+> +    /* DOE */
+> +    DOECap doe_comp;
+>  } CXLType3Dev;
+>  
+>  #ifndef TYPE_CXL_TYPE3_DEV
+> diff --git a/include/hw/cxl/cxl_pci.h b/include/hw/cxl/cxl_pci.h
+> index e8235b10cc..129bdf3238 100644
+> --- a/include/hw/cxl/cxl_pci.h
+> +++ b/include/hw/cxl/cxl_pci.h
+> @@ -12,6 +12,7 @@
+>  
+>  #include "hw/pci/pci.h"
+>  #include "hw/pci/pcie.h"
+> +#include "hw/cxl/cxl_compliance.h"
+>  
+>  #define CXL_VENDOR_ID 0x1e98
+>  
 
