@@ -1,86 +1,180 @@
 Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.0 required=3.0 tests=BAYES_50,DKIMWL_BL,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647F4C433B4
-	for <linux-cxl@archiver.kernel.org>; Sat,  1 May 2021 11:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73209C43470
+	for <linux-cxl@archiver.kernel.org>; Tue,  4 May 2021 18:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB85613DC
-	for <linux-cxl@archiver.kernel.org>; Sat,  1 May 2021 11:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55938613C0
+	for <linux-cxl@archiver.kernel.org>; Tue,  4 May 2021 18:57:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231938AbhEAL5X (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 1 May 2021 07:57:23 -0400
-Received: from secuseverss.xyz ([62.173.138.159]:55754 "EHLO
-        host.secuseverss.xyz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231882AbhEAL5W (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 1 May 2021 07:57:22 -0400
-Received: from secuseverss.xyz (ec2-3-138-114-224.us-east-2.compute.amazonaws.com [3.138.114.224])
-        by host.secuseverss.xyz (Postfix) with ESMTPA id 93DBE1D35D9
-        for <linux-cxl@vger.kernel.org>; Sat,  1 May 2021 12:22:00 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 host.secuseverss.xyz 93DBE1D35D9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=secuseverss.xyz;
-        s=default; t=1619860922;
-        bh=qnFsBms4d2N776kWxN0JyD7wWyyDjNJ9M8FqOPjWkvU=;
-        h=Reply-To:From:To:Subject:Date:From;
-        b=H4RfC0UgFL+9XeE1yp+vKSoR9BKlLbyMbKyOV76pND/a8Q7Lg5keUcH08SDqrlcQT
-         t/yhNhZGo8o4M7L+j7998cHbkmHakKmUp61h/Vpc+bFKrQqEsHKULY/yT9kmjeSG+L
-         QQiLXP1o1qN+sFTP2GebVKF6TBcBiynzg0rHiG7w=
-DKIM-Filter: OpenDKIM Filter v2.11.0 host.secuseverss.xyz 93DBE1D35D9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=secuseverss.xyz;
-        s=default; t=1619860921;
-        bh=qnFsBms4d2N776kWxN0JyD7wWyyDjNJ9M8FqOPjWkvU=;
-        h=Reply-To:From:To:Subject:Date:From;
-        b=Sp8QguFndhzOA0f2QR3wTSuozvYgNfaZhUR2xJjVbAblAVhB1LNAlCyJ3dbjBzUwP
-         gbBPFeTb8L0LhJFmcV6LjhgTNgWzxMtjzoXSLTJw+NHYZ2DzJnIqd3a7ZCiuGp8FWK
-         H9hDyuJSaiFyARmwYwCI9x65eLHXnkoV87tTzT1w=
-Reply-To: mmushokoro18@secsuremail.com
-From:   Madudu <mmushokoro18@secuseverss.xyz>
+        id S231694AbhEDS6y (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 4 May 2021 14:58:54 -0400
+Received: from mga11.intel.com ([192.55.52.93]:34796 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231274AbhEDS6x (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Tue, 4 May 2021 14:58:53 -0400
+IronPort-SDR: oYtBTgKOZA57U6EcMx+x5YEh34mns9vHJV7yJlnB7/d5tO3tdb66ro/AZ/tJ1quE3Cq63Gcsr5
+ hDqi72ld2drA==
+X-IronPort-AV: E=McAfee;i="6200,9189,9974"; a="194916572"
+X-IronPort-AV: E=Sophos;i="5.82,272,1613462400"; 
+   d="scan'208";a="194916572"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2021 11:57:58 -0700
+IronPort-SDR: BtAmOe8TGl4GLcJ8ZihorMM82E4tHFfr4xq+0gMIhYyMfVkHUkOXVII9xiy+l1Q8htaFshAjRU
+ QNL6JJ+xLCbw==
+X-IronPort-AV: E=Sophos;i="5.82,272,1613462400"; 
+   d="scan'208";a="468634426"
+Received: from scwoody-mobl1.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.140.171])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2021 11:57:57 -0700
+From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org
-Subject: Get back To Me
-Date:   01 May 2021 09:22:00 +0000
-Message-ID: <20210501092200.0166A9B733CEE845@secuseverss.xyz>
-Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-pci@vger.kernel.org,
+        Alison Schofield <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: [PATCH] cxl: Rename mem to pci
+Date:   Tue,  4 May 2021 11:57:31 -0700
+Message-Id: <20210504185731.1058813-1-ben.widawsky@intel.com>
+X-Mailer: git-send-email 2.31.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Good day to you. My name is Madudu Mushokoro. from Democratic=20
-Republic of the Congo (DRC) Africa, may you permit me to inform=20
-you of my desire to go into a business relationship with you=20
-personally or with your company, for a lucrative offshore=20
-investment partnership. We have available huge sum of fund made=20
-through Diamonds trade in my country.
+In preparation for introducing a new driver for the CXL.mem / HDM
+decoder (Host-managed Device Memory) capabilities of a CXL memory
+expander, rename mem.c to pci.c so that mem.c is available for this new
+driver.
 
-I will like you to front to invest the huge fund into an offshore=20
-investment project that is viable and I would like you to co-
-ordinate this investment project on our behalf, we are looking=20
-towards offshore investment due to political and economic=20
-instability in our region (Central Africa). The fund available=20
-for investment is in cash.
+CXL capabilities exist in a parallel domain to PCIe. CXL devices are
+enumerable and controllable via "legacy" PCIe mechanisms; however, their
+CXL capabilities are a superset of PCIe. For example, a CXL device may
+be connected to a non-CXL capable PCIe root port, and therefore will not
+be able to participate in CXL.mem or CXL.cache operations, but can still
+be accessed through PCIe mechanisms for CXL.io operations.
 
-Your position in this arrangement will be as follows:
-{1} To front and accommodate the cash into your nominated bank=20
-account.
-{2} To travel for the process of lodging the cash into your=20
-nominated bank account.
-{3} To decide on lucrative projects in your country for the=20
-investment and co-ordinate the investments project.
-{4} The compensation (percentage of the fund ) for accommodating=20
-the fund into your account is negotiable before the remaining=20
-percentage is invested.
+To date, all existing drivers/cxl/ functionality is in support of the
+PCIe-only based mechanisms, and due to the aforementioned distinction it
+makes sense to move to a new file.
 
-If the proposal meets your consideration and approval, you are=20
-hereby required to make a proper arrangement by sending me a=20
-letter of Acknowledgement to facilitate a successful business
-relationship.
+The result of the change is that a systems administrator may load only
+the cxl_pci module and gain access to such operations as, firmware
+update, offline provisioning of devices, and error collection. In
+addition to freeing up the file name for another purpose, there are two
+primary reasons this is useful,
+    1. Acting upon devices which don't have full CXL capabilities. This
+       may happen for instance if the CXL device is connected in a CXL
+       unaware part of the platform topology.
+    2. Userspace-first provisioning for devices without kernel driver
+       interference. This may be useful when provisioning a new device
+       in a specific manner that might otherwise be blocked or prevented
+       by the real CXL mem driver.
 
-Warm Regards,
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+---
+ Documentation/driver-api/cxl/memory-devices.rst |  6 +++---
+ drivers/cxl/Kconfig                             | 13 ++++---------
+ drivers/cxl/Makefile                            |  4 ++--
+ drivers/cxl/{mem.c => pci.c}                    |  9 ++++-----
+ 4 files changed, 13 insertions(+), 19 deletions(-)
+ rename drivers/cxl/{mem.c => pci.c} (99%)
 
-Madudu.
+diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
+index 1bad466f9167..3876ee5fea53 100644
+--- a/Documentation/driver-api/cxl/memory-devices.rst
++++ b/Documentation/driver-api/cxl/memory-devices.rst
+@@ -22,10 +22,10 @@ This section covers the driver infrastructure for a CXL memory device.
+ CXL Memory Device
+ -----------------
+ 
+-.. kernel-doc:: drivers/cxl/mem.c
+-   :doc: cxl mem
++.. kernel-doc:: drivers/cxl/pci.c
++   :doc: cxl pci
+ 
+-.. kernel-doc:: drivers/cxl/mem.c
++.. kernel-doc:: drivers/cxl/pci.c
+    :internal:
+ 
+ CXL Bus
+diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+index 97dc4d751651..5483ba92b6da 100644
+--- a/drivers/cxl/Kconfig
++++ b/drivers/cxl/Kconfig
+@@ -21,15 +21,10 @@ config CXL_MEM
+ 	  as if the memory was attached to the typical CPU memory
+ 	  controller.
+ 
+-	  Say 'y/m' to enable a driver (named "cxl_mem.ko" when built as
+-	  a module) that will attach to CXL.mem devices for
+-	  configuration, provisioning, and health monitoring. This
+-	  driver is required for dynamic provisioning of CXL.mem
+-	  attached memory which is a prerequisite for persistent memory
+-	  support. Typically volatile memory is mapped by platform
+-	  firmware and included in the platform memory map, but in some
+-	  cases the OS is responsible for mapping that memory. See
+-	  Chapter 2.3 Type 3 CXL Device in the CXL 2.0 specification.
++	  Say 'y/m' to enable a driver that will attach to CXL.mem devices for
++	  configuration and management primarily via the mailbox interface. See
++	  Chapter 2.3 Type 3 CXL Device in the CXL 2.0 specification for more
++	  details.
+ 
+ 	  If unsure say 'm'.
+ 
+diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+index a314a1891f4d..22a0ca59ab1b 100644
+--- a/drivers/cxl/Makefile
++++ b/drivers/cxl/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_CXL_BUS) += cxl_bus.o
+-obj-$(CONFIG_CXL_MEM) += cxl_mem.o
++obj-$(CONFIG_CXL_MEM) += cxl_pci.o
+ 
+ ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
+ cxl_bus-y := bus.o
+-cxl_mem-y := mem.o
++cxl_pci-y := pci.o
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/pci.c
+similarity index 99%
+rename from drivers/cxl/mem.c
+rename to drivers/cxl/pci.c
+index 2acc6173da36..48fb3f56fc8f 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/pci.c
+@@ -15,10 +15,11 @@
+ #include "cxl.h"
+ 
+ /**
+- * DOC: cxl mem
++ * DOC: cxl pci
+  *
+- * This implements a CXL memory device ("type-3") as it is defined by the
+- * Compute Express Link specification.
++ * This implements the PCI exclusive functionality for a CXL device as it is
++ * defined by the Compute Express Link specification. CXL devices may surface
++ * certain functionality even if it isn't CXL enabled.
+  *
+  * The driver has several responsibilities, mainly:
+  *  - Create the memX device and register on the CXL bus.
+@@ -26,8 +27,6 @@
+  *  - Probe the device attributes to establish sysfs interface.
+  *  - Provide an IOCTL interface to userspace to communicate with the device for
+  *    things like firmware update.
+- *  - Support management of interleave sets.
+- *  - Handle and manage error conditions.
+  */
+ 
+ /*
+-- 
+2.31.1
+
