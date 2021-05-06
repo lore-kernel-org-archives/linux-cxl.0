@@ -2,179 +2,270 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73209C43470
-	for <linux-cxl@archiver.kernel.org>; Tue,  4 May 2021 18:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F51C433ED
+	for <linux-cxl@archiver.kernel.org>; Thu,  6 May 2021 21:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55938613C0
-	for <linux-cxl@archiver.kernel.org>; Tue,  4 May 2021 18:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65D5F61164
+	for <linux-cxl@archiver.kernel.org>; Thu,  6 May 2021 21:59:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231694AbhEDS6y (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 4 May 2021 14:58:54 -0400
-Received: from mga11.intel.com ([192.55.52.93]:34796 "EHLO mga11.intel.com"
+        id S230149AbhEFWAe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 6 May 2021 18:00:34 -0400
+Received: from mga01.intel.com ([192.55.52.88]:54248 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231274AbhEDS6x (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 4 May 2021 14:58:53 -0400
-IronPort-SDR: oYtBTgKOZA57U6EcMx+x5YEh34mns9vHJV7yJlnB7/d5tO3tdb66ro/AZ/tJ1quE3Cq63Gcsr5
- hDqi72ld2drA==
-X-IronPort-AV: E=McAfee;i="6200,9189,9974"; a="194916572"
-X-IronPort-AV: E=Sophos;i="5.82,272,1613462400"; 
-   d="scan'208";a="194916572"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2021 11:57:58 -0700
-IronPort-SDR: BtAmOe8TGl4GLcJ8ZihorMM82E4tHFfr4xq+0gMIhYyMfVkHUkOXVII9xiy+l1Q8htaFshAjRU
- QNL6JJ+xLCbw==
-X-IronPort-AV: E=Sophos;i="5.82,272,1613462400"; 
-   d="scan'208";a="468634426"
-Received: from scwoody-mobl1.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.140.171])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2021 11:57:57 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-pci@vger.kernel.org,
-        Alison Schofield <alison.schofield@intel.com>,
+        id S229894AbhEFWAd (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 6 May 2021 18:00:33 -0400
+IronPort-SDR: dWO6Edr+qrmtgvEybk2Pm74c8JiJr3NopPUwZAvpWjHdLrYABL6YUVcEaRdqvF1+SGGxBT595L
+ hSxgee0bcXjQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,9976"; a="219478071"
+X-IronPort-AV: E=Sophos;i="5.82,279,1613462400"; 
+   d="scan'208";a="219478071"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2021 14:59:34 -0700
+IronPort-SDR: 8YyvleQwpQmBmS5PbD+A1+kfPx3sWCxKlrBGBXuua/6KQvOSjTpnMiLE364l2QxvaMz9Bsjf2l
+ rZzPeMJW792A==
+X-IronPort-AV: E=Sophos;i="5.82,279,1613462400"; 
+   d="scan'208";a="434594966"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2021 14:59:34 -0700
+Date:   Thu, 6 May 2021 14:59:34 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
         Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH] cxl: Rename mem to pci
-Date:   Tue,  4 May 2021 11:57:31 -0700
-Message-Id: <20210504185731.1058813-1-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.31.1
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Chris Browy <cbrowy@avery-design.com>,
+        linux-acpi@vger.kernel.org, alison.schofield@intel.com,
+        vishal.l.verma@intel.com, linuxarm@huawei.com,
+        Fangjian <f.fangjian@huawei.com>
+Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
+Message-ID: <20210506215934.GJ1904484@iweiny-DESK2.sc.intel.com>
+References: <20210419165451.2176200-1-Jonathan.Cameron@huawei.com>
+ <20210419165451.2176200-3-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210419165451.2176200-3-Jonathan.Cameron@huawei.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-In preparation for introducing a new driver for the CXL.mem / HDM
-decoder (Host-managed Device Memory) capabilities of a CXL memory
-expander, rename mem.c to pci.c so that mem.c is available for this new
-driver.
+On Tue, Apr 20, 2021 at 12:54:49AM +0800, Jonathan Cameron wrote:
+> +
+> +static int pci_doe_send_req(struct pci_doe *doe, struct pci_doe_exchange *ex)
+> +{
+> +	struct pci_dev *pdev = doe->pdev;
+> +	u32 val;
+> +	int i;
+> +
+> +	/*
+> +	 * Check the DOE busy bit is not set. If it is set, this could indicate
+> +	 * someone other than Linux (e.g. firmware) is using the mailbox. Note
+> +	 * it is expected that firmware and OS will negotiate access rights via
+> +	 * an, as yet to be defined method.
+> +	 */
+> +	pci_read_config_dword(pdev, doe->cap + PCI_DOE_STATUS, &val);
+> +	if (FIELD_GET(PCI_DOE_STATUS_BUSY, val))
+> +		return -EBUSY;
 
-CXL capabilities exist in a parallel domain to PCIe. CXL devices are
-enumerable and controllable via "legacy" PCIe mechanisms; however, their
-CXL capabilities are a superset of PCIe. For example, a CXL device may
-be connected to a non-CXL capable PCIe root port, and therefore will not
-be able to participate in CXL.mem or CXL.cache operations, but can still
-be accessed through PCIe mechanisms for CXL.io operations.
+In discussion with Dan we believe that user space could also be issuing
+commands and would potentially cause us to be locked out.
 
-To date, all existing drivers/cxl/ functionality is in support of the
-PCIe-only based mechanisms, and due to the aforementioned distinction it
-makes sense to move to a new file.
+We agree that firmware should be out of the way here and if it is blocking
+the OS there is not much we can do about it.
 
-The result of the change is that a systems administrator may load only
-the cxl_pci module and gain access to such operations as, firmware
-update, offline provisioning of devices, and error collection. In
-addition to freeing up the file name for another purpose, there are two
-primary reasons this is useful,
-    1. Acting upon devices which don't have full CXL capabilities. This
-       may happen for instance if the CXL device is connected in a CXL
-       unaware part of the platform topology.
-    2. Userspace-first provisioning for devices without kernel driver
-       interference. This may be useful when provisioning a new device
-       in a specific manner that might otherwise be blocked or prevented
-       by the real CXL mem driver.
+However, if user space is using the mailbox we need to synchronize with them
+via pci_cfg_access_[try]lock().  This should avoid this EBUSY condition.
 
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
----
- Documentation/driver-api/cxl/memory-devices.rst |  6 +++---
- drivers/cxl/Kconfig                             | 13 ++++---------
- drivers/cxl/Makefile                            |  4 ++--
- drivers/cxl/{mem.c => pci.c}                    |  9 ++++-----
- 4 files changed, 13 insertions(+), 19 deletions(-)
- rename drivers/cxl/{mem.c => pci.c} (99%)
+[snip]
 
-diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
-index 1bad466f9167..3876ee5fea53 100644
---- a/Documentation/driver-api/cxl/memory-devices.rst
-+++ b/Documentation/driver-api/cxl/memory-devices.rst
-@@ -22,10 +22,10 @@ This section covers the driver infrastructure for a CXL memory device.
- CXL Memory Device
- -----------------
- 
--.. kernel-doc:: drivers/cxl/mem.c
--   :doc: cxl mem
-+.. kernel-doc:: drivers/cxl/pci.c
-+   :doc: cxl pci
- 
--.. kernel-doc:: drivers/cxl/mem.c
-+.. kernel-doc:: drivers/cxl/pci.c
-    :internal:
- 
- CXL Bus
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index 97dc4d751651..5483ba92b6da 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -21,15 +21,10 @@ config CXL_MEM
- 	  as if the memory was attached to the typical CPU memory
- 	  controller.
- 
--	  Say 'y/m' to enable a driver (named "cxl_mem.ko" when built as
--	  a module) that will attach to CXL.mem devices for
--	  configuration, provisioning, and health monitoring. This
--	  driver is required for dynamic provisioning of CXL.mem
--	  attached memory which is a prerequisite for persistent memory
--	  support. Typically volatile memory is mapped by platform
--	  firmware and included in the platform memory map, but in some
--	  cases the OS is responsible for mapping that memory. See
--	  Chapter 2.3 Type 3 CXL Device in the CXL 2.0 specification.
-+	  Say 'y/m' to enable a driver that will attach to CXL.mem devices for
-+	  configuration and management primarily via the mailbox interface. See
-+	  Chapter 2.3 Type 3 CXL Device in the CXL 2.0 specification for more
-+	  details.
- 
- 	  If unsure say 'm'.
- 
-diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-index a314a1891f4d..22a0ca59ab1b 100644
---- a/drivers/cxl/Makefile
-+++ b/drivers/cxl/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_CXL_BUS) += cxl_bus.o
--obj-$(CONFIG_CXL_MEM) += cxl_mem.o
-+obj-$(CONFIG_CXL_MEM) += cxl_pci.o
- 
- ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
- cxl_bus-y := bus.o
--cxl_mem-y := mem.o
-+cxl_pci-y := pci.o
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/pci.c
-similarity index 99%
-rename from drivers/cxl/mem.c
-rename to drivers/cxl/pci.c
-index 2acc6173da36..48fb3f56fc8f 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/pci.c
-@@ -15,10 +15,11 @@
- #include "cxl.h"
- 
- /**
-- * DOC: cxl mem
-+ * DOC: cxl pci
-  *
-- * This implements a CXL memory device ("type-3") as it is defined by the
-- * Compute Express Link specification.
-+ * This implements the PCI exclusive functionality for a CXL device as it is
-+ * defined by the Compute Express Link specification. CXL devices may surface
-+ * certain functionality even if it isn't CXL enabled.
-  *
-  * The driver has several responsibilities, mainly:
-  *  - Create the memX device and register on the CXL bus.
-@@ -26,8 +27,6 @@
-  *  - Probe the device attributes to establish sysfs interface.
-  *  - Provide an IOCTL interface to userspace to communicate with the device for
-  *    things like firmware update.
-- *  - Support management of interleave sets.
-- *  - Handle and manage error conditions.
-  */
- 
- /*
--- 
-2.31.1
+> +
+> +static int pci_doe_recv_resp(struct pci_doe *doe, struct pci_doe_exchange *ex)
+> +{
+> +	struct pci_dev *pdev = doe->pdev;
+> +	size_t length;
+> +	u32 val;
+> +	int i;
+> +
+> +	/* Read the first two dwords to get the length and protocol */
+> +	pci_read_config_dword(pdev, doe->cap + PCI_DOE_READ, &val);
+> +	if ((FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val) != ex->vid) ||
+> +	    (FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val) != ex->protocol)) {
+> +		pci_err(pdev,
+> +			"Expected [VID, Protocol] = [%x, %x], got [%x, %x]\n",
+> +			ex->vid, ex->protocol,
+> +			FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val),
+> +			FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val));
+> +		return -EIO;
+> +	}
+> +
+> +	pci_write_config_dword(pdev, doe->cap + PCI_DOE_READ, 0);
+
+I'm quite unfamiliar with the spec here: but it seems like this needs to be
+done before the above if statement indicate we got the value?
+
+[snip]
+
+> +
+> +static void doe_statemachine_work(struct work_struct *work)
+> +{
+> +	struct delayed_work *w = to_delayed_work(work);
+> +	struct pci_doe *doe = container_of(w, struct pci_doe, statemachine);
+> +	struct pci_dev *pdev = doe->pdev;
+> +	struct pci_doe_task *task;
+> +	bool abort;
+> +	u32 val;
+> +	int rc;
+> +
+> +	mutex_lock(&doe->tasks_lock);
+> +	task = list_first_entry_or_null(&doe->tasks, struct pci_doe_task, h);
+> +	abort = doe->abort;
+> +	doe->abort = false;
+> +	mutex_unlock(&doe->tasks_lock);
+> +
+> +	if (abort) {
+> +		/*
+> +		 * Currently only used during init - care needed if we want to
+> +		 * generally expose pci_doe_abort() as it would impact queries
+> +		 * in flight.
+> +		 */
+> +		WARN_ON(task);
+> +		doe->state = DOE_WAIT_ABORT;
+> +		pci_doe_abort_start(doe);
+> +		return;
+> +	}
+> +
+> +	switch (doe->state) {
+> +	case DOE_IDLE:
+> +		if (task == NULL)
+> +			return;
+> +
+> +		/* Nothing currently in flight so queue a task */
+> +		rc = pci_doe_send_req(doe, task->ex);
+> +		/*
+> +		 * The specification does not provide any guidance on how long
+> +		 * some other entity could keep the DOE busy, so try for 1
+> +		 * second then fail. Busy handling is best effort only, because
+> +		 * there is no way of avoiding racing against another user of
+> +		 * the DOE.
+> +		 */
+> +		if (rc == -EBUSY) {
+> +			doe->busy_retries++;
+> +			if (doe->busy_retries == PCI_DOE_BUSY_MAX_RETRIES) {
+> +				/* Long enough, fail this request */
+> +				doe->busy_retries = 0;
+> +				goto err_busy;
+
+With the addition of pci_cfg_access_[try]lock():
+
+Should we have some sort of WARN_ON() here to indicate that the system is
+behaving badly?
+
+[snip]
+
+> +	case DOE_WAIT_ABORT:
+> +	case DOE_WAIT_ABORT_ON_ERR:
+> +		pci_read_config_dword(pdev, doe->cap + PCI_DOE_STATUS, &val);
+> +
+> +		if (!FIELD_GET(PCI_DOE_STATUS_ERROR, val) &&
+> +		    !FIELD_GET(PCI_DOE_STATUS_BUSY, val)) {
+> +			/* Back to normal state - carry on */
+> +			mutex_lock(&doe->tasks_lock);
+> +			if (!list_empty(&doe->tasks))
+> +				schedule_delayed_work(w, 0);
+> +			mutex_unlock(&doe->tasks_lock);
+> +
+> +			/*
+> +			 * For deliberately triggered abort, someone is
+> +			 * waiting.
+> +			 */
+> +			if (doe->state == DOE_WAIT_ABORT)
+> +				complete(&doe->abort_c);
+> +			doe->state = DOE_IDLE;
+> +
+> +			return;
+> +		}
+> +		if (time_after(jiffies, doe->timeout_jiffies)) {
+> +			struct pci_doe_task *t, *n;
+> +
+> +			/* We are dead - abort all queued tasks */
+> +			pci_err(pdev, "DOE ABORT timed out\n");
+> +			mutex_lock(&doe->tasks_lock);
+> +			doe->dead = true;
+> +			list_for_each_entry_safe(t, n, &doe->tasks, h) {
+> +				t->rv = -EIO;
+> +				t->cb(t->private);
+> +				list_del(&t->h);
+> +			}
+> +
+> +			mutex_unlock(&doe->tasks_lock);
+> +			if (doe->state == DOE_WAIT_ABORT)
+> +				complete(&doe->abort_c);
+> +		}
+> +		return;
+> +	}
+> +
+> +err_abort:
+> +	pci_doe_abort_start(doe);
+> +	doe->state = DOE_WAIT_ABORT_ON_ERR;
+
+Should this be before pci_doe_abort_start() to ensure that state is set when
+the statemachine runs?
+
+[snip]
+
+> +
+> +/**
+> + * struct pci_doe - State to support use of DOE mailbox
+> + * @cap: Config space offset to base of DOE capability.
+> + * @pdev: PCI device that hosts this DOE.
+> + * @abort_c: Completion used for initial abort handling.
+> + * @irq: Interrupt used for signaling DOE ready or abort.
+> + * @prots: Cache of identifiers for protocols supported.
+> + * @num_prots: Size of prots cache.
+> + * @h: Used for DOE instance lifetime management.
+> + * @wq: Workqueue used to handle state machine and polling / timeouts.
+> + * @tasks: List of task in flight + pending.
+> + * @tasks_lock: Protect the tasks list.
+
+This protects more than just the task list.  It appears to protect abort and
+dead as well.  I'm not sure if it is worth mentioning but...
+
+> + * @statemachine: Work item for the DOE state machine.
+> + * @state: Current state of this DOE.
+> + * @timeout_jiffies: 1 second after GO set.
+> + * @busy_retries: Count of retry attempts.
+> + * @abort: Request a manual abort (e.g. on init).
+> + * @dead: Used to mark a DOE for which an ABORT has timed out. Further messages
+> + *        will immediately be aborted with error.
+> + */
+> +struct pci_doe {
+> +	int cap;
+> +	struct pci_dev *pdev;
+> +	struct completion abort_c;
+> +	int irq;
+> +	struct pci_doe_prot *prots;
+> +	int num_prots;
+> +	struct list_head h;
+> +
+> +	struct workqueue_struct *wq;
+> +	struct list_head tasks;
+> +	struct mutex tasks_lock;
+> +	struct delayed_work statemachine;
+> +	enum pci_doe_state state;
+> +	unsigned long timeout_jiffies;
+> +	unsigned int busy_retries;
+> +	unsigned int abort:1;
+> +	unsigned int dead:1;
+> +};
+
+[snip]
+
+Ira
 
