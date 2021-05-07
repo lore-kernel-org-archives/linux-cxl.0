@@ -2,76 +2,152 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=BAYES_05,DKIM_INVALID,
-	DKIM_SIGNED,MAILING_LIST_MULTI,SPF_HELO_NONE autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCC5C433B4
-	for <linux-cxl@archiver.kernel.org>; Fri,  7 May 2021 01:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D69C433B4
+	for <linux-cxl@archiver.kernel.org>; Fri,  7 May 2021 09:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8C1A6105A
-	for <linux-cxl@archiver.kernel.org>; Fri,  7 May 2021 01:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EEFC61460
+	for <linux-cxl@archiver.kernel.org>; Fri,  7 May 2021 09:38:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234057AbhEGBsd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 6 May 2021 21:48:33 -0400
-Received: from usmail.montage-tech.com ([12.176.92.53]:59569 "EHLO
-        usmail.montage-tech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234033AbhEGBsd (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 6 May 2021 21:48:33 -0400
-X-MDAV-Result: clean
-X-MDAV-Processed: usmail.montage-tech.com, Thu, 06 May 2021 18:47:33 -0700
-Received: from shmail.montage-tech.com by usmail.montage-tech.com with ESMTP id md5001005625861.msg; 
-        Thu, 06 May 2021 18:47:33 -0700
-X-MDArrival-Date: Thu, 06 May 2021 18:47:33 -0700
-X-Return-Path: prvs=17616916e5=david.dai@montage-tech.com
-X-Envelope-From: david.dai@montage-tech.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=montage-tech.com;
-        s=MDaemon; t=1620352046; x=1620956846;
-        i=david.dai@montage-tech.com; q=dns/txt; h=From:To:Cc:Subject:
-        Date:Message-ID:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Thread-Index:Content-Language; bh=L3Un
-        rB+anJNjNP/B1rxssibRE0awsbP+NwB9L6IFo2k=; b=gbvXeSxwzs54aZW3uBQ/
-        JNOb1fDWUk6O5mSQpneTaPvtJL4JUXT2vZ8wWjbh4JHruIrbkDfJI0OBRlQKvsL7
-        3Oov8AKnKm5H8iC7fK26zhCAfdM6N/ty8AXuYsDpSDSPeh+HvO5GFsie0qyupm6+
-        0nwFEiw+i9cQuQx0bbBZ97g=
-X-MDAV-Result: clean
-X-MDAV-Processed: shmail.montage-tech.com, Fri, 07 May 2021 09:47:26 +0800
-Received: from cn021pc868 by shmail.montage-tech.com with ESMTPSA id pp5001016722846.msg; 
-        Fri, 07 May 2021 09:47:25 +0800
-From:   "Dai WeiBin \(David Dai\)" <david.dai@montage-tech.com>
-To:     "'Ben Widawsky'" <ben.widawsky@intel.com>
-Cc:     <linux-cxl@vger.kernel.org>,
-        "'Linux ACPI'" <linux-acpi@vger.kernel.org>,
-        "'Dan Williams'" <dan.j.williams@intel.com>
-Subject: CXL HDM alignment
-Date:   Fri, 7 May 2021 09:43:47 +0800
-Message-ID: <003501d742e2$6c331c50$449954f0$@montage-tech.com>
+        id S234536AbhEGJjZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 7 May 2021 05:39:25 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3038 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236764AbhEGJjZ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 7 May 2021 05:39:25 -0400
+Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Fc4wv0h6Lz6rn00;
+        Fri,  7 May 2021 17:32:31 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Fri, 7 May 2021 11:38:22 +0200
+Received: from localhost (10.52.124.175) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Fri, 7 May 2021
+ 10:38:21 +0100
+Date:   Fri, 7 May 2021 10:36:38 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>
+CC:     Ben Widawsky <ben.widawsky@intel.com>,
+        Chris Browy <cbrowy@avery-design.com>,
+        <linux-acpi@vger.kernel.org>, <alison.schofield@intel.com>,
+        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+        <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
+Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
+Message-ID: <20210507103638.00006c89@Huawei.com>
+In-Reply-To: <20210419165451.2176200-3-Jonathan.Cameron@huawei.com>
+References: <20210419165451.2176200-1-Jonathan.Cameron@huawei.com>
+        <20210419165451.2176200-3-Jonathan.Cameron@huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AddC3+pLppO5NLuURmKWLV+pdj+tUw==
-Content-Language: zh-cn
-X-MDCFSigsAdded: montage-tech.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.124.175]
+X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Ben,
+On Tue, 20 Apr 2021 00:54:49 +0800
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-I am sorry to disturb you for consulting you a question, my question is =
-how I can make CXL HDM 1G-size alignment, CXL specification defines HDM =
-is 256M alignment.
-From my understanding, BIOS will allocate HPA and build ACPI SRAT for =
-CXL HDM, do we have any method to tell OS or BIOS to align HDM with 1G =
-size?
+> Introduced in a PCI ECN [1], DOE provides a config space
+> based mailbox with standard protocol discovery.  Each mailbox
+> is accessed through a DOE Extended Capability.
+> 
+> A device may have 1 or more DOE mailboxes, each of which is allowed
+> to support any number of protocols (some DOE protocol
+> specifications apply additional restrictions).  A given protocol
+> may be supported on more than one DOE mailbox on a given function.
+> 
+> If a driver wishes to access any number of DOE instances / protocols
+> it makes a single call to pcie_doe_register_all() which will find
+> available DOEs, create the required infrastructure and cache the
+> protocols they support.  pcie_doe_find() can then retrieve a
+> pointer to an appropriate DOE instance.
+> 
+> A synchronous interface is provided in pcie_doe_exchange_sync() to
+> perform a single query / response exchange.
+> 
+> Testing conducted against QEMU using:
+> 
+> https://lore.kernel.org/qemu-devel/1612900760-7361-1-git-send-email-cbrowy@avery-design.com/
+> + fix for interrupt flag mentioned in that thread and a whole load
+> of hacks to exercise error paths etc.
+> 
+> [1] https://members.pcisig.com/wg/PCI-SIG/document/14143
+>     Data Object Exchange (DOE) - Approved 12 March 2020
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
 
-I don't sure whether we can configure BIOS address allocation, but hope =
-any your suggestion and help!
+...
 
-Thanks,
-David
+> +static int pci_doe_recv_resp(struct pci_doe *doe, struct pci_doe_exchange *ex)
+> +{
+> +	struct pci_dev *pdev = doe->pdev;
+> +	size_t length;
+> +	u32 val;
+> +	int i;
+> +
+> +	/* Read the first two dwords to get the length and protocol */
+> +	pci_read_config_dword(pdev, doe->cap + PCI_DOE_READ, &val);
+> +	if ((FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val) != ex->vid) ||
+> +	    (FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val) != ex->protocol)) {
+> +		pci_err(pdev,
+> +			"Expected [VID, Protocol] = [%x, %x], got [%x, %x]\n",
+> +			ex->vid, ex->protocol,
+> +			FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val),
+> +			FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val));
+> +		return -EIO;
+> +	}
+> +
+> +	pci_write_config_dword(pdev, doe->cap + PCI_DOE_READ, 0);
+> +	pci_read_config_dword(pdev, doe->cap + PCI_DOE_READ, &val);
+> +	pci_write_config_dword(pdev, doe->cap + PCI_DOE_READ, 0);
+> +
+> +	length = FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH, val);
+> +	if (length > SZ_1M)
+> +		return -EIO;
+> +
+> +	/* Read the rest of the response payload */
+> +	for (i = 0; i < min(length, ex->response_pl_sz / sizeof(u32)); i++) {
 
+Note for anyone testing these that there is a bug here which leads to
+a buffer underflow triggered reset with the latest QEMU patches
+(I've not figured out yet why this didn't trigger a problem with the earlier
+QEMU patch versions).
 
+This needs to take into account that length includes the two header DW, but
+the response_pl_sz does not.
+ 
 
+> +		pci_read_config_dword(pdev, doe->cap + PCI_DOE_READ,
+> +				      &ex->response_pl[i]);
+> +		pci_write_config_dword(pdev, doe->cap + PCI_DOE_READ, 0);
+> +	}
+> +
+> +	/* Flush excess length */
+> +	for (; i < length; i++) {
+> +		pci_read_config_dword(pdev, doe->cap + PCI_DOE_READ, &val);
+> +		pci_write_config_dword(pdev, doe->cap + PCI_DOE_READ, 0);
+> +	}
+> +	/* Final error check to pick up on any since Data Object Ready */
+> +	pci_read_config_dword(pdev, doe->cap + PCI_DOE_STATUS, &val);
+> +	if (FIELD_GET(PCI_DOE_STATUS_ERROR, val))
+> +		return -EIO;
+> +
+> +	return min(length, ex->response_pl_sz / sizeof(u32)) * sizeof(u32);
+> +}
+> +
