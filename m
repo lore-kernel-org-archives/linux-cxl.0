@@ -2,152 +2,180 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D69C433B4
-	for <linux-cxl@archiver.kernel.org>; Fri,  7 May 2021 09:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 858EBC433B4
+	for <linux-cxl@archiver.kernel.org>; Fri,  7 May 2021 22:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EEFC61460
-	for <linux-cxl@archiver.kernel.org>; Fri,  7 May 2021 09:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5010460FF2
+	for <linux-cxl@archiver.kernel.org>; Fri,  7 May 2021 22:51:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234536AbhEGJjZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 7 May 2021 05:39:25 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3038 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236764AbhEGJjZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 7 May 2021 05:39:25 -0400
-Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Fc4wv0h6Lz6rn00;
-        Fri,  7 May 2021 17:32:31 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Fri, 7 May 2021 11:38:22 +0200
-Received: from localhost (10.52.124.175) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Fri, 7 May 2021
- 10:38:21 +0100
-Date:   Fri, 7 May 2021 10:36:38 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>
-CC:     Ben Widawsky <ben.widawsky@intel.com>,
-        Chris Browy <cbrowy@avery-design.com>,
-        <linux-acpi@vger.kernel.org>, <alison.schofield@intel.com>,
-        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-        <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
-Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
-Message-ID: <20210507103638.00006c89@Huawei.com>
-In-Reply-To: <20210419165451.2176200-3-Jonathan.Cameron@huawei.com>
-References: <20210419165451.2176200-1-Jonathan.Cameron@huawei.com>
-        <20210419165451.2176200-3-Jonathan.Cameron@huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+        id S229713AbhEGWwQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 7 May 2021 18:52:16 -0400
+Received: from mga12.intel.com ([192.55.52.136]:16509 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229470AbhEGWwP (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Fri, 7 May 2021 18:52:15 -0400
+IronPort-SDR: /MFOtNCyBPYgjR2ceYfEGsVy7KEGMYcalLszX2/TutjV8Eh5PU+8YB7Lq2g7BTtdwIzmo9ZZ6h
+ WpTsJmVzFxoA==
+X-IronPort-AV: E=McAfee;i="6200,9189,9977"; a="178392082"
+X-IronPort-AV: E=Sophos;i="5.82,282,1613462400"; 
+   d="scan'208";a="178392082"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2021 15:51:15 -0700
+IronPort-SDR: n9ep2vMEGRmC5LbsCg5dQlQxozStu1spNE2X1sd6RdH4CfjVCYGH7I69mPn8JgsSD62xFs5ltI
+ oogMEn5EAJ9A==
+X-IronPort-AV: E=Sophos;i="5.82,282,1613462400"; 
+   d="scan'208";a="620367064"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2021 15:51:15 -0700
+Subject: [PATCH v3 0/8] CXL Port Enumeration and Plans for v5.14
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Date:   Fri, 07 May 2021 15:51:14 -0700
+Message-ID: <162042787450.1202325.5718541949681409566.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.124.175]
-X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 20 Apr 2021 00:54:49 +0800
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+Changes since v2 [1]:
+- Add some rationale for moving definitions out of mem.c into mem.h
+  (Jonathan)
 
-> Introduced in a PCI ECN [1], DOE provides a config space
-> based mailbox with standard protocol discovery.  Each mailbox
-> is accessed through a DOE Extended Capability.
-> 
-> A device may have 1 or more DOE mailboxes, each of which is allowed
-> to support any number of protocols (some DOE protocol
-> specifications apply additional restrictions).  A given protocol
-> may be supported on more than one DOE mailbox on a given function.
-> 
-> If a driver wishes to access any number of DOE instances / protocols
-> it makes a single call to pcie_doe_register_all() which will find
-> available DOEs, create the required infrastructure and cache the
-> protocols they support.  pcie_doe_find() can then retrieve a
-> pointer to an appropriate DOE instance.
-> 
-> A synchronous interface is provided in pcie_doe_exchange_sync() to
-> perform a single query / response exchange.
-> 
-> Testing conducted against QEMU using:
-> 
-> https://lore.kernel.org/qemu-devel/1612900760-7361-1-git-send-email-cbrowy@avery-design.com/
-> + fix for interrupt flag mentioned in that thread and a whole load
-> of hacks to exercise error paths etc.
-> 
-> [1] https://members.pcisig.com/wg/PCI-SIG/document/14143
->     Data Object Exchange (DOE) - Approved 12 March 2020
-> 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
+- Fixup CXL_DEVICE_REGS kernel doc and declare the fixup for the
+  struct cxl_mem kernel-doc in the changelog (Jonathan)
 
-...
+- Fixup cxl_setup_device_regs() kernel-doc (Jonathan)
 
-> +static int pci_doe_recv_resp(struct pci_doe *doe, struct pci_doe_exchange *ex)
-> +{
-> +	struct pci_dev *pdev = doe->pdev;
-> +	size_t length;
-> +	u32 val;
-> +	int i;
-> +
-> +	/* Read the first two dwords to get the length and protocol */
-> +	pci_read_config_dword(pdev, doe->cap + PCI_DOE_READ, &val);
-> +	if ((FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val) != ex->vid) ||
-> +	    (FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val) != ex->protocol)) {
-> +		pci_err(pdev,
-> +			"Expected [VID, Protocol] = [%x, %x], got [%x, %x]\n",
-> +			ex->vid, ex->protocol,
-> +			FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val),
-> +			FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val));
-> +		return -EIO;
-> +	}
-> +
-> +	pci_write_config_dword(pdev, doe->cap + PCI_DOE_READ, 0);
-> +	pci_read_config_dword(pdev, doe->cap + PCI_DOE_READ, &val);
-> +	pci_write_config_dword(pdev, doe->cap + PCI_DOE_READ, 0);
-> +
-> +	length = FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH, val);
-> +	if (length > SZ_1M)
-> +		return -EIO;
-> +
-> +	/* Read the rest of the response payload */
-> +	for (i = 0; i < min(length, ex->response_pl_sz / sizeof(u32)); i++) {
+- Cleanup comment in cxl_root_alloc() (Jonathan)
 
-Note for anyone testing these that there is a bug here which leads to
-a buffer underflow triggered reset with the latest QEMU patches
-(I've not figured out yet why this didn't trigger a problem with the earlier
-QEMU patch versions).
+- [not changed] refactor device creation into alloc_and_add()
+  anti-pattern.
 
-This needs to take into account that length includes the two header DW, but
-the response_pl_sz does not.
- 
+- Add kernel doc to cxl_address_space_dev_add() to clarify why @host is
+  needed as an arg. (Jonathan)
 
-> +		pci_read_config_dword(pdev, doe->cap + PCI_DOE_READ,
-> +				      &ex->response_pl[i]);
-> +		pci_write_config_dword(pdev, doe->cap + PCI_DOE_READ, 0);
-> +	}
-> +
-> +	/* Flush excess length */
-> +	for (; i < length; i++) {
-> +		pci_read_config_dword(pdev, doe->cap + PCI_DOE_READ, &val);
-> +		pci_write_config_dword(pdev, doe->cap + PCI_DOE_READ, 0);
-> +	}
-> +	/* Final error check to pick up on any since Data Object Ready */
-> +	pci_read_config_dword(pdev, doe->cap + PCI_DOE_STATUS, &val);
-> +	if (FIELD_GET(PCI_DOE_STATUS_ERROR, val))
-> +		return -EIO;
-> +
-> +	return min(length, ex->response_pl_sz / sizeof(u32)) * sizeof(u32);
-> +}
-> +
+- Describe what the port devices are representing in "cxl/port:
+  Introduce cxl_port objects" (Jonathan)
+
+- Explain the rationale for /sys/bus/cxl (Bjorn)
+
+[1]: http://lore.kernel.org/r/161728744224.2474040.12854720917440712854.stgit@dwillia2-desk3.amr.corp.intel.com
+
+---
+
+Plans for v5.14:
+
+This series is a starting point for the persistent memory and dynamic
+HDM decoder manipulation support targeting the v5.14 kernel. Among the
+tasks to complete in that timeframe are:
+
+- Region creation including CXL label support
+- LIBNVDIMM integration for surfacing /dev/pmemX and /dev/daxX.Y devices
+  on CXL resources
+- HDM decoder enumeration and programming for setting up PMEM mappings
+  alongside any "System RAM" mappings established by platform firmware
+- CDAT-DOE support in support of dynamically created NUMA nodes
+- CXL PMEM Shutdown semantics (global persistence flush coordination)
+
+Contributions to cxl.git targeting the next merge window require a
+non-author Reviewed-by. A patch with a Reviewed-by, no outstanding
+objections, and a 3-5 day quiet period on the list is subject to be
+applied to a non-rebasing cxl.git branch and merged into cxl.git/next.
+Contributions targeting a current -rc (fixes) may go in on an expedited
+schedule with only an Acked-by.
+
+---
+
+CXL Port Topology:
+
+The enumeration starts with the ACPI0017 driver registering a 'struct
+cxl_root' object to establish the top of a cxl_port topology. It then
+scans the ACPI bus looking for ACPI0016 instances. The cxl_root object
+is a singleton* anchor to hang "address-space" objects and be a parent
+device for the downstream 'struct cxl_port' instances. An address-space
+has a 1:1 relationship with a platform defined memory resource range,
+like _CRS for PCIE Host Bridges. Use module parameters to model a
+root-level HDM decoder that all downstream ports further decode, to be
+replaced with a Code First ECN to do the same.
+
+Each address space is modeled as a sysfs object that also shows up in
+/proc/iomem as "CXL Address Space". That iomem resource is functionally
+equivalent to the root-level 'PCI Bus' resources for PCIE.mmio while
+'CXL Address Space' indicates space for CXL.mem to be mapped. "System
+RAM" and "Persistent Memory", when mapped by HDM decoders, will appear
+as child CXL.mem resources.
+
+Once a 'struct cxl_root' is established the host bridge is modeled as 1
+upstream 'struct cxl_port' and N downstream 'struct cxl_port' instances
+(one per Root Port), just like a PCIE switch. The host-bridge upstream
+port optionally has the HDM decoder registers from the CHBCR if the
+host-bridge has multiple PCIE/CXL root ports. Single-ported host bridges
+will not have HDM decoders in the CHBCR space (see CHBCR note in
+8.2.5.12 CXL HDM Decoder Capability Structure), but the 'struct
+cxl_port' object is still needed to represent other CXL capabilities and
+access port-specific component registers outside of HDM decoders.
+
+Each 'struct cxl_port' has a 'target_id' attribute that answers the
+question "what port am I in my upstream port's HDM decoder target
+list?". For the host-bridge struct cxl_port, the first tier of ports
+below cxl_root.port, the id is derived from the ordinal mapping of the
+ACPI0016 id (instance id, _UID, or other handle TBD), for all other
+ports the id is the PCIE Root Port ID from the Link Capabilities
+register [1]. The mapping of ordinal port identifiers relative to their
+parent may change once libcxl and cxl-cli prove out region creation, or
+a better option is found to establish a static device path / persistent
+naming scheme. System software must not assume that 'struct cxl_port'
+device names will be static from one boot to the next.
+
+See patch7 for a tree(1) topology picture of what QEMU is producing
+today with this enabling.
+
+* cxl_root is singleton only by convention. A given cxl_root could
+  represent 1 to N address spaces, this patch set chooses to implement 1
+  cxl_root for all address spaces.
+
+[1]: CXL 2.0 8.2.5.12.8 CXL HDM Decoder 0 Target List Low Register
+     (Offset 24h) ...The Target Port Identifier for a given Downstream Port
+     is reported via Port Number field in Link Capabilities Register. (See
+     PCI Express Base Specification).
+
+---
+
+Dan Williams (8):
+      cxl/mem: Move some definitions to mem.h
+      cxl/mem: Introduce 'struct cxl_regs' for "composable" CXL devices
+      cxl/core: Rename bus.c to core.c
+      cxl/core: Refactor CXL register lookup for bridge reuse
+      cxl/acpi: Introduce ACPI0017 driver and cxl_root
+      cxl/Kconfig: Default drivers to CONFIG_CXL_BUS
+      cxl/port: Introduce cxl_port objects
+      cxl/acpi: Add module parameters to stand in for ACPI tables
+
+
+ Documentation/driver-api/cxl/memory-devices.rst |    6 
+ drivers/cxl/Kconfig                             |   16 +
+ drivers/cxl/Makefile                            |    6 
+ drivers/cxl/acpi.c                              |  215 +++++++++
+ drivers/cxl/bus.c                               |   29 -
+ drivers/cxl/core.c                              |  561 +++++++++++++++++++++++
+ drivers/cxl/cxl.h                               |  148 ++++--
+ drivers/cxl/mem.c                               |   97 +---
+ drivers/cxl/mem.h                               |   82 +++
+ 9 files changed, 999 insertions(+), 161 deletions(-)
+ create mode 100644 drivers/cxl/acpi.c
+ delete mode 100644 drivers/cxl/bus.c
+ create mode 100644 drivers/cxl/core.c
+ create mode 100644 drivers/cxl/mem.h
+
+base-commit: a38fd8748464831584a19438cbb3082b5a2dab15
