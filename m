@@ -2,362 +2,99 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0032BC433ED
-	for <linux-cxl@archiver.kernel.org>; Tue, 11 May 2021 16:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C64C43460
+	for <linux-cxl@archiver.kernel.org>; Wed, 12 May 2021 06:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C820B61432
-	for <linux-cxl@archiver.kernel.org>; Tue, 11 May 2021 16:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC689617C9
+	for <linux-cxl@archiver.kernel.org>; Wed, 12 May 2021 06:20:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231379AbhEKQw6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 11 May 2021 12:52:58 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3063 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230315AbhEKQw6 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 11 May 2021 12:52:58 -0400
-Received: from fraeml736-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4FfkM40Bf1z6wlMD;
-        Wed, 12 May 2021 00:45:52 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml736-chm.china.huawei.com (10.206.15.217) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Tue, 11 May 2021 18:51:49 +0200
-Received: from localhost (10.52.125.126) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Tue, 11 May
- 2021 17:51:49 +0100
-Date:   Tue, 11 May 2021 17:50:06 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Chris Browy <cbrowy@avery-design.com>,
-        <linux-acpi@vger.kernel.org>, <alison.schofield@intel.com>,
-        <vishal.l.verma@intel.com>, <linuxarm@huawei.com>,
-        Fangjian <f.fangjian@huawei.com>
-Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
-Message-ID: <20210511175006.00007861@Huawei.com>
-In-Reply-To: <20210506215934.GJ1904484@iweiny-DESK2.sc.intel.com>
-References: <20210419165451.2176200-1-Jonathan.Cameron@huawei.com>
-        <20210419165451.2176200-3-Jonathan.Cameron@huawei.com>
-        <20210506215934.GJ1904484@iweiny-DESK2.sc.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+        id S230154AbhELGV5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 12 May 2021 02:21:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230111AbhELGV5 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 May 2021 02:21:57 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07BC5C06175F
+        for <linux-cxl@vger.kernel.org>; Tue, 11 May 2021 23:20:49 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id w3so33275649ejc.4
+        for <linux-cxl@vger.kernel.org>; Tue, 11 May 2021 23:20:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rWe3f2KaV4ucuKOqi1OHFmAX7yggC4XTJ0UGVoiI1EA=;
+        b=CBjeWCzb2XWiL/RONCz+Smmcur/f8QhwEMNI9JuhGdO/GTfaD4T62RuWifH2dF1+2K
+         xn8sK92KR8/pdrUVKy+kLKPkGNk9WIkPV9DxVGiE04IEMQuFFAgQi3DWED4S8NifAcAb
+         ljvsECmzQKOhazeXoN4p68WwntXlVwPjpaojDB5JIsi8SFL48lrAYNtIqKOrfAwqZtz7
+         wJNxN0YUYoIb0Tz34COxJdZjlNWmcpDH5oI/TbguU3MUrnIa4G40i8HDOKIgQQW+5KL/
+         k98LmOfYw9nvf/rE0TBr8RlDcPtOw5di9HQwH6jobl6aqJQzsws72O5l2m0GE81JFXdz
+         U0qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rWe3f2KaV4ucuKOqi1OHFmAX7yggC4XTJ0UGVoiI1EA=;
+        b=ja+wy61ft5l2zQ1mds1VUsb+4ZhMN4Q2MRMVvEUk58xApwau6XoyPNhzmjY+dGXHyg
+         8zM+/e+ruzTpVsB5DYHcq30sLhWwAPs7z9Y2K3ugQRj996W4jZKbX/rQalUVXYY4wFoE
+         PEqnxgVTO5kihJcntbxWMnMNvYxiph3MDcixyp8a0cP7kdF8pTNFepSMk1GPp/5+Qz+n
+         36UfUfeGAEOEi6wn3oFPADsROBG45c/OEeH/IWsOvNescv9prkhxqz5WJ3TPuocGm1Al
+         eIcaoWlox1t88gLWF5pVVkwCw3BSCCV1Z6xQPvTplE+3Jeo8UiWYW8R76m+miV1s2AjB
+         d4Lw==
+X-Gm-Message-State: AOAM531jRa0MHlSwFDiaINJHi7IToRhGXg9oRqFqcwM0fikF+iNSux7p
+        ce/kXueJSXd5JPCPxAhwCU+iAYgnEd4QGbsJc/343g==
+X-Google-Smtp-Source: ABdhPJzHDt830feXpHIVuJaRosIuWG1d6sjohvjzNdcEKTsuepWpH89I1cUi0er6PwgqXKy8un1eWBrvcJc35eB6b+E=
+X-Received: by 2002:a17:907:1183:: with SMTP id uz3mr34984199ejb.264.1620800447812;
+ Tue, 11 May 2021 23:20:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.125.126]
-X-ClientProxiedBy: lhreml730-chm.china.huawei.com (10.201.108.81) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <162042787450.1202325.5718541949681409566.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <162042788015.1202325.6094533661799093199.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20210510161458.00006ac4@Huawei.com>
+In-Reply-To: <20210510161458.00006ac4@Huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 11 May 2021 23:20:37 -0700
+Message-ID: <CAPcyv4gC1QqgAVnsjWdBp=BYGvSf4HAY+2oAPWbb+k88jR0y0g@mail.gmail.com>
+Subject: Re: [PATCH 1/8] cxl/mem: Move some definitions to mem.h
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 6 May 2021 14:59:34 -0700
-Ira Weiny <ira.weiny@intel.com> wrote:
+On Mon, May 10, 2021 at 8:17 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Fri, 7 May 2021 15:51:20 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> > In preparation for sharing cxl.h with other generic CXL consumers,
+> > move / consolidate some of the memory device specifics to mem.h.
+> >
+> > The motivation for moving out of cxl.h is to maintain least privilege
+> > access to memory-device details since cxl.h is used in multiple files.
+> > The motivation for moving definitions into a new mem.h header is for
+> > code readability and organization. I.e. minimize implementation details
+> > when reading data structures and other definitions.
+> >
+> > Reviewed-by: Ben Widawsky <ben.widawsky@intel.com>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> I'll do these one by one as not sure if you use automated scripts to pick up
+> (which get confused by any time people do "for patches 1-4 + 7")
+> Basically I'm fine with all but patch 5...
 
-> On Tue, Apr 20, 2021 at 12:54:49AM +0800, Jonathan Cameron wrote:
-> > +
-> > +static int pci_doe_send_req(struct pci_doe *doe, struct pci_doe_exchange *ex)
-> > +{
-> > +	struct pci_dev *pdev = doe->pdev;
-> > +	u32 val;
-> > +	int i;
-> > +
-> > +	/*
-> > +	 * Check the DOE busy bit is not set. If it is set, this could indicate
-> > +	 * someone other than Linux (e.g. firmware) is using the mailbox. Note
-> > +	 * it is expected that firmware and OS will negotiate access rights via
-> > +	 * an, as yet to be defined method.
-> > +	 */
-> > +	pci_read_config_dword(pdev, doe->cap + PCI_DOE_STATUS, &val);
-> > +	if (FIELD_GET(PCI_DOE_STATUS_BUSY, val))
-> > +		return -EBUSY;  
-> 
-> In discussion with Dan we believe that user space could also be issuing
-> commands and would potentially cause us to be locked out.
-> 
-> We agree that firmware should be out of the way here and if it is blocking
-> the OS there is not much we can do about it.
-> 
-> However, if user space is using the mailbox we need to synchronize with them
-> via pci_cfg_access_[try]lock().  This should avoid this EBUSY condition.
+Sounds good. I do use b4 which has the "--apply-cover-trailers"
+option. So in the future if you do want to apply reviewed-by to the
+whole series it's sufficient to just reply to the cover letter.
 
-Hi Ira, thanks for taking a look.
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-So the question here is whether we can ever safely work with a
-userspace that is accessing the DOE.  I think the answer is no we can't.
-
-We'd have no way of knowing that userspace left the DOE in a clean state
-without resetting every time we want to use it (which can take 1 second)
-or doing significant sanity checking (can we tell if something is
-in flight?).  Note that if userspace and kernel were talking different
-protocols nothing sensible could be done to prevent them receiving each
-other's answers (unless you can rely on userspace holding the lock until
-it is done - which you can't as who trusts userspace?) You could do
-something horrible like back off after peeking at the protocol to see
-if it might be yours, but even that only works assuming the two are
-trying to talk different protocols (talking the same protocol isn't allowed
-but no way to enforce that using just pci_cfg_access_lock()).
-
-I can't see a way to tell that the DOE might not have responded to an
-earlier request.  DOE busy indicates the write mailbox register cannot
-receive data at the moment.  If it's set then there is a message in
-flight, but if it is not set there might still be a message in flight.
-Busy only indicates if the write mailbox register can sink a request
-which doesn't in general tell us anything about the underlying state.
-
-So if userspace sent a request then quit.  Kernel driver would have
-no way of knowing if the next response was due to the request it sent
-or some earlier one (other than matching IDs)  Note you aren't allowed
-to have multiple requests for a single protocol in flight at the same
-time.  With just a lock you would have no way of preventing this.
-
-So we are back to every request the kernel sent having to be proceeded
-by an abort and potentially a 1 second delay whilst some chunk of the
-device firmware reboots.
-
-This came up in dicussion when Dan proposed the patch
-[PATCH] PCI: Allow drivers to claim exclusive access to config regions
-https://lore.kernel.org/linux-pci/161663543465.1867664.5674061943008380442.stgit@dwillia2-desk3.amr.corp.intel.com/
-Summarizing outcome of that thread.
-
-1) Reads of DOE registers are always safe, so we shouldn't stop lspci
-and similar accessing config space.
-2) You are on your own if any userspace writes to pci config space.
-There are loads of ways it can break the system so it doesn't make much
-sense to protect against one more.
-
-If there is a reason to provide a userspace interface to a DOE for a
-device with a driver attached, then I would agree with Dan's suggestion
-to use a proper driver for it.
-
-Dan briefly mentioned that temporary blocking might be needed. I'm guessing
-that was to try and let userspace safely use the DOE.
-
-The driver would work fine ignoring busy entirely and would perhaps be
-less confusing as a result.  We reset the DOE at startup anyway and that
-would clear existing busy.  Any future times busy is set would have no
-impact on the flow.
-
-> 
-> [snip]
-> 
-> > +
-> > +static int pci_doe_recv_resp(struct pci_doe *doe, struct pci_doe_exchange *ex)
-> > +{
-> > +	struct pci_dev *pdev = doe->pdev;
-> > +	size_t length;
-> > +	u32 val;
-> > +	int i;
-> > +
-> > +	/* Read the first two dwords to get the length and protocol */
-> > +	pci_read_config_dword(pdev, doe->cap + PCI_DOE_READ, &val);
-> > +	if ((FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val) != ex->vid) ||
-> > +	    (FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val) != ex->protocol)) {
-> > +		pci_err(pdev,
-> > +			"Expected [VID, Protocol] = [%x, %x], got [%x, %x]\n",
-> > +			ex->vid, ex->protocol,
-> > +			FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val),
-> > +			FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val));
-> > +		return -EIO;
-> > +	}
-> > +
-> > +	pci_write_config_dword(pdev, doe->cap + PCI_DOE_READ, 0);  
-> 
-> I'm quite unfamiliar with the spec here: but it seems like this needs to be
-> done before the above if statement indicate we got the value?
-
-Perhaps it's the comment that caused confusion here. It covered
-the next few lines as well. You need to read the first DW to get protocol
-(and write it to be able to read the next one back)
-The second dw is then need to get to the length which follows this.
-
-I'll split the comment into two parts so that it's clearer what it is referring
-to.
-
-On any error here, we end up calling a abort anyway so state on error paths of
-the DOE doesn't matter.
-
-> 
-> [snip]
-> 
-> > +
-> > +static void doe_statemachine_work(struct work_struct *work)
-> > +{
-> > +	struct delayed_work *w = to_delayed_work(work);
-> > +	struct pci_doe *doe = container_of(w, struct pci_doe, statemachine);
-> > +	struct pci_dev *pdev = doe->pdev;
-> > +	struct pci_doe_task *task;
-> > +	bool abort;
-> > +	u32 val;
-> > +	int rc;
-> > +
-> > +	mutex_lock(&doe->tasks_lock);
-> > +	task = list_first_entry_or_null(&doe->tasks, struct pci_doe_task, h);
-> > +	abort = doe->abort;
-> > +	doe->abort = false;
-> > +	mutex_unlock(&doe->tasks_lock);
-> > +
-> > +	if (abort) {
-> > +		/*
-> > +		 * Currently only used during init - care needed if we want to
-> > +		 * generally expose pci_doe_abort() as it would impact queries
-> > +		 * in flight.
-> > +		 */
-> > +		WARN_ON(task);
-> > +		doe->state = DOE_WAIT_ABORT;
-> > +		pci_doe_abort_start(doe);
-> > +		return;
-> > +	}
-> > +
-> > +	switch (doe->state) {
-> > +	case DOE_IDLE:
-> > +		if (task == NULL)
-> > +			return;
-> > +
-> > +		/* Nothing currently in flight so queue a task */
-> > +		rc = pci_doe_send_req(doe, task->ex);
-> > +		/*
-> > +		 * The specification does not provide any guidance on how long
-> > +		 * some other entity could keep the DOE busy, so try for 1
-> > +		 * second then fail. Busy handling is best effort only, because
-> > +		 * there is no way of avoiding racing against another user of
-> > +		 * the DOE.
-> > +		 */
-> > +		if (rc == -EBUSY) {
-> > +			doe->busy_retries++;
-> > +			if (doe->busy_retries == PCI_DOE_BUSY_MAX_RETRIES) {
-> > +				/* Long enough, fail this request */
-> > +				doe->busy_retries = 0;
-> > +				goto err_busy;  
-> 
-> With the addition of pci_cfg_access_[try]lock():
-> 
-> Should we have some sort of WARN_ON() here to indicate that the system is
-> behaving badly?
-
-Makes sense. I'll add a pci_WARN() here
-
-> 
-> [snip]
-> 
-> > +	case DOE_WAIT_ABORT:
-> > +	case DOE_WAIT_ABORT_ON_ERR:
-> > +		pci_read_config_dword(pdev, doe->cap + PCI_DOE_STATUS, &val);
-> > +
-> > +		if (!FIELD_GET(PCI_DOE_STATUS_ERROR, val) &&
-> > +		    !FIELD_GET(PCI_DOE_STATUS_BUSY, val)) {
-> > +			/* Back to normal state - carry on */
-> > +			mutex_lock(&doe->tasks_lock);
-> > +			if (!list_empty(&doe->tasks))
-> > +				schedule_delayed_work(w, 0);
-> > +			mutex_unlock(&doe->tasks_lock);
-> > +
-> > +			/*
-> > +			 * For deliberately triggered abort, someone is
-> > +			 * waiting.
-> > +			 */
-> > +			if (doe->state == DOE_WAIT_ABORT)
-> > +				complete(&doe->abort_c);
-> > +			doe->state = DOE_IDLE;
-> > +
-> > +			return;
-> > +		}
-> > +		if (time_after(jiffies, doe->timeout_jiffies)) {
-> > +			struct pci_doe_task *t, *n;
-> > +
-> > +			/* We are dead - abort all queued tasks */
-> > +			pci_err(pdev, "DOE ABORT timed out\n");
-> > +			mutex_lock(&doe->tasks_lock);
-> > +			doe->dead = true;
-> > +			list_for_each_entry_safe(t, n, &doe->tasks, h) {
-> > +				t->rv = -EIO;
-> > +				t->cb(t->private);
-> > +				list_del(&t->h);
-> > +			}
-> > +
-> > +			mutex_unlock(&doe->tasks_lock);
-> > +			if (doe->state == DOE_WAIT_ABORT)
-> > +				complete(&doe->abort_c);
-> > +		}
-> > +		return;
-> > +	}
-> > +
-> > +err_abort:
-> > +	pci_doe_abort_start(doe);
-> > +	doe->state = DOE_WAIT_ABORT_ON_ERR;  
-> 
-> Should this be before pci_doe_abort_start() to ensure that state is set when
-> the statemachine runs?
-
-Don't think it's a bug (single work item) but it's definitely
-clearer the other way around.
-
-> 
-> [snip]
-> 
-> > +
-> > +/**
-> > + * struct pci_doe - State to support use of DOE mailbox
-> > + * @cap: Config space offset to base of DOE capability.
-> > + * @pdev: PCI device that hosts this DOE.
-> > + * @abort_c: Completion used for initial abort handling.
-> > + * @irq: Interrupt used for signaling DOE ready or abort.
-> > + * @prots: Cache of identifiers for protocols supported.
-> > + * @num_prots: Size of prots cache.
-> > + * @h: Used for DOE instance lifetime management.
-> > + * @wq: Workqueue used to handle state machine and polling / timeouts.
-> > + * @tasks: List of task in flight + pending.
-> > + * @tasks_lock: Protect the tasks list.  
-> 
-> This protects more than just the task list.  It appears to protect abort and
-> dead as well.  I'm not sure if it is worth mentioning but...
-
-Added 'abort state' to that comment.
-
-> 
-> > + * @statemachine: Work item for the DOE state machine.
-> > + * @state: Current state of this DOE.
-> > + * @timeout_jiffies: 1 second after GO set.
-> > + * @busy_retries: Count of retry attempts.
-> > + * @abort: Request a manual abort (e.g. on init).
-> > + * @dead: Used to mark a DOE for which an ABORT has timed out. Further messages
-> > + *        will immediately be aborted with error.
-> > + */
-> > +struct pci_doe {
-> > +	int cap;
-> > +	struct pci_dev *pdev;
-> > +	struct completion abort_c;
-> > +	int irq;
-> > +	struct pci_doe_prot *prots;
-> > +	int num_prots;
-> > +	struct list_head h;
-> > +
-> > +	struct workqueue_struct *wq;
-> > +	struct list_head tasks;
-> > +	struct mutex tasks_lock;
-> > +	struct delayed_work statemachine;
-> > +	enum pci_doe_state state;
-> > +	unsigned long timeout_jiffies;
-> > +	unsigned int busy_retries;
-> > +	unsigned int abort:1;
-> > +	unsigned int dead:1;
-> > +};  
-> 
-> [snip]
-> 
-> Ira
-> 
-Thanks!
-
-Jonathan
-
-
+Thanks, Jonathan.
