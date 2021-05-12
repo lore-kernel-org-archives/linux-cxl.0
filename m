@@ -2,168 +2,103 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4D1C433ED
-	for <linux-cxl@archiver.kernel.org>; Wed, 12 May 2021 06:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36502C433ED
+	for <linux-cxl@archiver.kernel.org>; Wed, 12 May 2021 12:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DEB160FD9
-	for <linux-cxl@archiver.kernel.org>; Wed, 12 May 2021 06:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBEB3613EE
+	for <linux-cxl@archiver.kernel.org>; Wed, 12 May 2021 12:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230109AbhELGhg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 12 May 2021 02:37:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229654AbhELGhf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 May 2021 02:37:35 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62D8FC06174A
-        for <linux-cxl@vger.kernel.org>; Tue, 11 May 2021 23:36:27 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id n2so33298599ejy.7
-        for <linux-cxl@vger.kernel.org>; Tue, 11 May 2021 23:36:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=nevGWaMjb5PeAfV1/F7svJNtl2lKO/LKnPavtCONiAI=;
-        b=HPpOr4WJvmIPXKYS68buFhoAp5Li17j7jKX7/p4MM8Jdc8zp3Afy+9QrHlxyMLkqIl
-         W0fRFCLAdUeZBL3gi7PbgBPQ2F0hcFhKcEsEbfTfQvBERFdKM/18nGInFsl/X0bSoMrR
-         nR9pIlJU1StFIq8JAetJztmRo3A6V63sHQnOOaWpliocMXgE0ELlocl9ycD4j9pn7JFr
-         3n0uEjA7UdCX+6oI3KKWzREefFEM0X5ZRtOwXAlMHKHKa1Cb2PUkuaNhhHeMUmQctqYU
-         ZdY5BRWrjlO0ZlELbBdtQu9YnCkrzUMTOZOQtTedilA/k5K62kSLy1DVIUepVg5shp51
-         ItYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nevGWaMjb5PeAfV1/F7svJNtl2lKO/LKnPavtCONiAI=;
-        b=pCvCzBD0jMUNcPhODrW8X87YsLC2E2bjPI0P2N+0QrwPiGQzcJnhw25jhEtgBa+qvz
-         LU7TeK39iiOq+g+XDwvP9L92pUXZ0JH67tFhUNCJQFbFneiImxaNCb5iNvdogCmtwEoI
-         TTnAfcsjTGlwV0LGCTsXn02VLRMNjHMi0+IwKhw1eX7euk0sJIEkdv3Xj+i/vwyMN5BW
-         /8GPSqnhNijg94kEzPY/2I5g6KpnS7sj07oOUFqaJDwqSaDaHgNX/PcH5sbHB5izHc/w
-         DKBhFQ0dcslhDihZNXAujxGhUEHwehT60/OUUQtQp2I+yzdt1ud4f3KRMYzHF6gcbN8b
-         UHqw==
-X-Gm-Message-State: AOAM533QlGqIzOxbb4hho1XvDzUhn1YKleqwGJMAIARlmBLsnUVgZKD4
-        QoUzqrsfUoRxgKM3JVTvvCEYx1WnX0zpCJeO6FCA7Djs4YM=
-X-Google-Smtp-Source: ABdhPJxCxoEotHYSk6jU/Ap34pv984lwVWKfA4gMFHe/bD7fPEXF/C3Wo4s41aCcPA/bHiQZsSq+DtoYOWuPDgIL8kQ=
-X-Received: by 2002:a17:906:bc8e:: with SMTP id lv14mr35741607ejb.418.1620801386118;
- Tue, 11 May 2021 23:36:26 -0700 (PDT)
+        id S233300AbhELMrq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 12 May 2021 08:47:46 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3066 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233299AbhELMrp (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 May 2021 08:47:45 -0400
+Received: from fraeml736-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4FgDsc0fVPz6cvjj;
+        Wed, 12 May 2021 20:40:36 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml736-chm.china.huawei.com (10.206.15.217) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Wed, 12 May 2021 14:46:35 +0200
+Received: from localhost (10.52.125.138) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Wed, 12 May
+ 2021 13:46:34 +0100
+Date:   Wed, 12 May 2021 13:44:51 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Chris Browy <cbrowy@avery-design.com>,
+        <linux-acpi@vger.kernel.org>, <alison.schofield@intel.com>,
+        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+        <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
+Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
+Message-ID: <20210512134451.000070c5@Huawei.com>
+In-Reply-To: <20210507231013.GA1548806@bjorn-Precision-5520>
+References: <20210419165451.2176200-3-Jonathan.Cameron@huawei.com>
+        <20210507231013.GA1548806@bjorn-Precision-5520>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <162042787450.1202325.5718541949681409566.stgit@dwillia2-desk3.amr.corp.intel.com>
- <162042791852.1202325.8197739881935753009.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20210510162121.000042be@Huawei.com>
-In-Reply-To: <20210510162121.000042be@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 11 May 2021 23:36:15 -0700
-Message-ID: <CAPcyv4jyGDYbwz1h3z3N-vEVXyYOu7Cbf+hnzWDQk+dOWHgZmQ@mail.gmail.com>
-Subject: Re: [PATCH 7/8] cxl/port: Introduce cxl_port objects
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.125.138]
+X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, May 10, 2021 at 8:23 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Fri, 7 May 2021 15:51:58 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > Once the cxl_root is established then other ports in the hierarchy can
-> > be attached. The cxl_port object, unlike cxl_root that is associated
-> > with host bridges, is associated with PCIe Root Ports or PCIe Switch
-> > Ports. Add cxl_port instances for all PCIe Root Ports in an ACPI0016
-> > host bridge. The cxl_port instances for PCIe Switch Ports are not
-> > included here as those are to be modeled as another service device
-> > registered on the pcie_port_bus_type.
-> >
-> > A sample sysfs topology for a single-host-bridge with
-> > single-PCIe/CXL-port follows:
-> >
-> > /sys/bus/cxl/devices/root0
-> > =E2=94=9C=E2=94=80=E2=94=80 address_space0
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 devtype
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 end
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 start
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 supports_ram
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 supports_type2
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 supports_type3
-> > =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 uevent
-> > =E2=94=9C=E2=94=80=E2=94=80 address_space1
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 devtype
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 end
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 start
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 supports_pmem
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 supports_type2
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 supports_type3
-> > =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 uevent
-> > =E2=94=9C=E2=94=80=E2=94=80 devtype
-> > =E2=94=9C=E2=94=80=E2=94=80 port1
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 devtype
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 host -> ../../../../LNXSYSTM:00=
-/LNXSYBUS:00/ACPI0016:00
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 port2
-> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 devtype
-> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 host -> ../../../..=
-/../pci0000:34/0000:34:00.0
-> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 subsystem -> ../../=
-../../../../bus/cxl
-> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 target_id
-> > =E2=94=82   =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 uevent
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 subsystem -> ../../../../../bus=
-/cxl
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 target_id
-> > =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 uevent
-> > =E2=94=9C=E2=94=80=E2=94=80 subsystem -> ../../../../bus/cxl
-> > =E2=94=9C=E2=94=80=E2=94=80 target_id
-> > =E2=94=94=E2=94=80=E2=94=80 uevent
-> >
-> > In this listing the system-wide-singleton root0 has 2 address spaces, 1
-> > PMEM and 1 RAM. Those address spaces are accessed through port1 which
-> > represents the upstream port of an ACPI0016 host-bridge. A
-> > multi-host-bridge system would have other ports as peers to port1 to
-> > additionally decode root level address spaces. Port2 in this diagram
-> > represents the single downstream port of the host-bridge. Were it to be
-> > a multi-ported-host-bridge there would be peers / siblings of port2 wit=
-h
-> > port1 as their common ancestor.
->
-> I guess it would be a pain to emulate a system that actually had
-> multiple ports at the last level. Pity as would have made your
-> explanation here a little easier to follow.
->
+On Fri, 7 May 2021 18:10:13 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-A pain in QEMU, but maybe not with a mocked implementation similar to
-what gets injected for the nvdimm "nfit_test". I'll take a look.
+Thanks. All updates as per your comments.
 
-> > The rationale for this port hierarchy is to be able to walk the HDM
-> > decoder register sets that each port implements. Additionally it
-> > provides a representation of host-bridge interleave which will be
-> > necessary for follow-on work that adds CXL region devices.
-> >
-> > The details in the /sys/bus/cxl hierarchy that are not suitable to be
-> > represented in the /sys/bus/pci hierarchy are:
-> > - memory address spaces that are interleaved across host bridges
-> > - common sub-device functionality represented by CXL component + device
-> >   registers (enumerated via DVSEC or platform firmware (ACPI CEDT)).
->
-> I'm sold :)
+> > +static int pci_doe_register(struct pci_doe *doe)
+> > +{
+> > +	struct pci_dev *pdev = doe->pdev;
+> > +	bool poll = !pci_dev_msi_enabled(pdev);
+> > +	int rc, irq;
+> > +	u32 val;
+> > +
+> > +	pci_read_config_dword(pdev, doe->cap + PCI_DOE_CAP, &val);
+> > +
+> > +	if (!poll && FIELD_GET(PCI_DOE_CAP_INT, val)) {
+> > +		irq = pci_irq_vector(pdev, FIELD_GET(PCI_DOE_CAP_IRQ, val));
+> > +		if (irq < 0)
+> > +			return irq;
+> > +
+> > +		rc = request_irq(irq, pci_doe_irq, 0, "DOE", doe);  
+> 
+> I expect there may be many devices with DOE.  Do you want some
+> device identification here?  E.g., on my system I see things like this
+> in /proc/interrupts:
+> 
+>   dmar0
+>   nvme0q0
+>   snd_hda_intel:card0
+>   ahci[0000:00:17.0]
 
-Thanks for the vote of confidence. It sounded like Bjorn was sold too
-at the end of our last thread... I'll Cc him on this patch directly in
-the resend.
+Good point.  For this I've currently gone with
 
->
-> >
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+DOE[0000:00:81.0]_160
+DOE[0000:00:81.0]_190
 
-Thanks for the review Jonathan, appreciate it.
+etc as a single function can have multiple DOE instances
+and the easiest way to distinguish them is the offset at
+which the capability is found in config space of the device.
+
+I'm open to other suggestions.
+
+Jonathan
+
+
