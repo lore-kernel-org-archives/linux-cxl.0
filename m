@@ -2,198 +2,173 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A26BEC433ED
-	for <linux-cxl@archiver.kernel.org>; Thu, 13 May 2021 21:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A31FC433B4
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 May 2021 05:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58913613F2
-	for <linux-cxl@archiver.kernel.org>; Thu, 13 May 2021 21:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 644CD61028
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 May 2021 05:21:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233426AbhEMVV6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 13 May 2021 17:21:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233389AbhEMVV6 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 13 May 2021 17:21:58 -0400
-Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06216C061756
-        for <linux-cxl@vger.kernel.org>; Thu, 13 May 2021 14:20:48 -0700 (PDT)
-Received: by mail-qk1-x734.google.com with SMTP id a22so26375117qkl.10
-        for <linux-cxl@vger.kernel.org>; Thu, 13 May 2021 14:20:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wZOK6jXFL4VfBbxRN3Gyol/GRGXYnH9ZqWZPQUCK/vU=;
-        b=ERkTalcomV8g7CELNOWW17v3v60GnywD0RuQQ8oBJ6B7gDiopk5H0G7jw0Ttr+7Nr+
-         q2FV6BSS8CZlnfI6q6/TE1a8E1ODsZyZlr/V2M9wPQNqX3nlwCrXbIWPeQy2FGERWMyO
-         OCZFuG1ljrenAXOfMgETMJt49ucnmzm5g/Tol4E0y9JTvPZlQWkyxq60WbhVwUAO5Eod
-         OZvID5vf4fBVZuGxwFM759PMwRIhL873+8P/lFfq9cbDMbd3LD4apn/dxbNdgvEy5gGW
-         QEk6P5QmmjpEd4XuChtTtG9enk0GiPSZxdv9Q320cVodCmU+cNzncKLw7Gyux7o9O/Do
-         8WAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wZOK6jXFL4VfBbxRN3Gyol/GRGXYnH9ZqWZPQUCK/vU=;
-        b=WWRJoOcu71QmqSPzqmP26NHRAdPjF8FEzkIxo5iMlW8PvXdceNoAT/9p4ayVVjeJtC
-         H40GxmA769M1AreguXzrDRzicXDDQUmLaTgeebFpqhEPhNGSnNKjlHn2EHQtqtp5rLKG
-         AL3WGPH0gswng67r5ktUdvTr9WyIiqlo9woYbzBx9Tu9ksZg/noWiBZgU2WwKWOnG5og
-         e11Ye5mGGCVtrh0xumTvCPnxaKE79OpXQkWFC/Hqpv7rHtXg4HjNitSjpNhc4+3HZ0Xt
-         ARsklhE3KEArb4xvnHUj9B5iHxcR6YU4GTmYGW7c8WrVPzWdwXD5OfzKmFeUSF2GnTCK
-         qL1A==
-X-Gm-Message-State: AOAM531EZM1Ify68ezIO3iOIWbdp34XhvnXOSgnZS1+RRvKxn+JnIYv6
-        KRSDvUE+RWhQfAbbcWks7t6ZVEBFKUkhvYut0b/Lmw==
-X-Google-Smtp-Source: ABdhPJwkbwB6YVFBA0WjvHiJYl4N52PwXiqS9Yp4AlhIHVu3P1oMq6b0rAsfiy2G+Z/T0mvYFOZVEoSlj+ZZ2dnU7rc=
-X-Received: by 2002:a37:7d41:: with SMTP id y62mr40748866qkc.8.1620940847158;
- Thu, 13 May 2021 14:20:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210419165451.2176200-1-Jonathan.Cameron@huawei.com>
- <20210419165451.2176200-3-Jonathan.Cameron@huawei.com> <20210506215934.GJ1904484@iweiny-DESK2.sc.intel.com>
- <20210511175006.00007861@Huawei.com>
-In-Reply-To: <20210511175006.00007861@Huawei.com>
+        id S231179AbhENFW4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 May 2021 01:22:56 -0400
+Received: from mga07.intel.com ([134.134.136.100]:33955 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229477AbhENFW4 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Fri, 14 May 2021 01:22:56 -0400
+IronPort-SDR: NtRuEKUFppOSMwQAtyF4PCcIfGNFZ1Mvwoa5ueZEFVFIFAqtrLH7EwpeiSozSA6TZDI7TcdNfe
+ YepCIbA+G4KQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,9983"; a="264039909"
+X-IronPort-AV: E=Sophos;i="5.82,299,1613462400"; 
+   d="scan'208";a="264039909"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2021 22:21:44 -0700
+IronPort-SDR: f7Fxsio2P7V0Ar0lhxMBwmcsZ/Ixp2Eb3Vy+anagkjsAXzowoC8vkJr3+8VitvtA1hsl3h0eZb
+ /m6ykdOphP9Q==
+X-IronPort-AV: E=Sophos;i="5.82,299,1613462400"; 
+   d="scan'208";a="456984554"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2021 22:21:43 -0700
+Subject: [PATCH v4 0/8] CXL Port Enumeration and Plans for v5.14
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 13 May 2021 14:20:38 -0700
-Message-ID: <CAPcyv4j=uww+85b4AbWmoPNPry_+JLEpEnuywpdC8PonXmRmEg@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
-        Linux PCI <linux-pci@vger.kernel.org>,
+To:     linux-cxl@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+        Christoph Hellwig <hch@lst.de>,
+        kernel test robot <lkp@intel.com>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 13 May 2021 22:21:43 -0700
+Message-ID: <162096970332.1865304.10280028741091576940.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, May 11, 2021 at 9:52 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Thu, 6 May 2021 14:59:34 -0700
-> Ira Weiny <ira.weiny@intel.com> wrote:
->
-> > On Tue, Apr 20, 2021 at 12:54:49AM +0800, Jonathan Cameron wrote:
-> > > +
-> > > +static int pci_doe_send_req(struct pci_doe *doe, struct pci_doe_exchange *ex)
-> > > +{
-> > > +   struct pci_dev *pdev = doe->pdev;
-> > > +   u32 val;
-> > > +   int i;
-> > > +
-> > > +   /*
-> > > +    * Check the DOE busy bit is not set. If it is set, this could indicate
-> > > +    * someone other than Linux (e.g. firmware) is using the mailbox. Note
-> > > +    * it is expected that firmware and OS will negotiate access rights via
-> > > +    * an, as yet to be defined method.
-> > > +    */
-> > > +   pci_read_config_dword(pdev, doe->cap + PCI_DOE_STATUS, &val);
-> > > +   if (FIELD_GET(PCI_DOE_STATUS_BUSY, val))
-> > > +           return -EBUSY;
-> >
-> > In discussion with Dan we believe that user space could also be issuing
-> > commands and would potentially cause us to be locked out.
-> >
-> > We agree that firmware should be out of the way here and if it is blocking
-> > the OS there is not much we can do about it.
-> >
-> > However, if user space is using the mailbox we need to synchronize with them
-> > via pci_cfg_access_[try]lock().  This should avoid this EBUSY condition.
->
-> Hi Ira, thanks for taking a look.
->
-> So the question here is whether we can ever safely work with a
-> userspace that is accessing the DOE.  I think the answer is no we can't.
->
-> We'd have no way of knowing that userspace left the DOE in a clean state
-> without resetting every time we want to use it (which can take 1 second)
-> or doing significant sanity checking (can we tell if something is
-> in flight?).  Note that if userspace and kernel were talking different
-> protocols nothing sensible could be done to prevent them receiving each
-> other's answers (unless you can rely on userspace holding the lock until
-> it is done - which you can't as who trusts userspace?)
+Changes since v3 [1]:
+- Rebase to v5.13-rc1
 
-There is no ability for userpsace to lock out the kernel, only kernel
-locking out userspace.
+- Fix some compile warnings (0day robot)
 
-> You could do
-> something horrible like back off after peeking at the protocol to see
-> if it might be yours, but even that only works assuming the two are
-> trying to talk different protocols (talking the same protocol isn't allowed
-> but no way to enforce that using just pci_cfg_access_lock()).
+- Clarify that the address_spaceX/support* attributes either return
+  "0\n" on read when not supported, or the attribute is not published /
+  visible to indicate the same. (Jonathan)
 
-Wait why isn't pci_cfg_access_lock() sufficient? The userspace DOE
-transfer is halted, the kernel validates the state of DOE, does it's
-work and releases the lock.
+- Add ABI documentation for address_spaceX and portX objects (Jonathan)
 
-> I can't see a way to tell that the DOE might not have responded to an
-> earlier request.  DOE busy indicates the write mailbox register cannot
-> receive data at the moment.  If it's set then there is a message in
-> flight, but if it is not set there might still be a message in flight.
-> Busy only indicates if the write mailbox register can sink a request
-> which doesn't in general tell us anything about the underlying state.
->
-> So if userspace sent a request then quit.  Kernel driver would have
-> no way of knowing if the next response was due to the request it sent
-> or some earlier one (other than matching IDs)  Note you aren't allowed
-> to have multiple requests for a single protocol in flight at the same
-> time.  With just a lock you would have no way of preventing this.
->
-> So we are back to every request the kernel sent having to be proceeded
-> by an abort and potentially a 1 second delay whilst some chunk of the
-> device firmware reboots.
->
-> This came up in dicussion when Dan proposed the patch
-> [PATCH] PCI: Allow drivers to claim exclusive access to config regions
-> https://lore.kernel.org/linux-pci/161663543465.1867664.5674061943008380442.stgit@dwillia2-desk3.amr.corp.intel.com/
-> Summarizing outcome of that thread.
->
-> 1) Reads of DOE registers are always safe, so we shouldn't stop lspci
-> and similar accessing config space.
-> 2) You are on your own if any userspace writes to pci config space.
-> There are loads of ways it can break the system so it doesn't make much
-> sense to protect against one more.
+- Collect some reviewed-by tags, thanks Jonathan!
 
-I'm not quite as enthusiastic about Greg's assertion that "we're
-already broken why not allow more breakage" as he was also the one
-supportive of /dev/mem restrictions in the face of obvious collisions.
-I'll circle back and say as much to Greg. My mistake was not realizing
-the write dependency in the protocol, so the pushback was warranted
-that the kernel does not need to block out all access.
+---
 
-Given that /dev/mem is optionally disabled for userspace access
-outside of kernel-lockdown scenarios, I think it is reasonable to have
-the kernel disable config writes to a register block and the request
-of a driver.
+Plans for v5.14:
 
-Consider that userspace can certainly trash the system by writing to
-the BAR registers, for example, but a non-malicious userspace has no
-reason to do that. Unfortunately DOE has some utility for a
-non-malicious userspace to access so there is a rationale to figure
-out a cooperation scheme.
+This series is a starting point for the persistent memory and dynamic
+HDM decoder manipulation support targeting the v5.14 kernel. Among the
+tasks to complete in that timeframe are:
 
->
-> If there is a reason to provide a userspace interface to a DOE for a
-> device with a driver attached, then I would agree with Dan's suggestion
-> to use a proper driver for it.
->
-> Dan briefly mentioned that temporary blocking might be needed. I'm guessing
-> that was to try and let userspace safely use the DOE.
->
-> The driver would work fine ignoring busy entirely and would perhaps be
-> less confusing as a result.  We reset the DOE at startup anyway and that
-> would clear existing busy.  Any future times busy is set would have no
-> impact on the flow.
+- Region creation including CXL label support
+- LIBNVDIMM integration for surfacing /dev/pmemX and /dev/daxX.Y devices
+  on CXL resources
+- HDM decoder enumeration and programming for setting up PMEM mappings
+  alongside any "System RAM" mappings established by platform firmware
+- CDAT-DOE support in support of dynamically created NUMA nodes
+- CXL PMEM Shutdown semantics (global persistence flush coordination)
 
-If it simplifies the kernel implementation to assume single
-kernel-initiator then I think that's more than enough reason to block
-out userspace, and/or provide userspace a method to get into the
-kernel's queue for service.
+Contributions to cxl.git targeting the next merge window require a
+non-author Reviewed-by. A patch with a Reviewed-by, no outstanding
+objections, and a 3-5 day quiet period on the list is subject to be
+applied to a non-rebasing cxl.git branch and merged into cxl.git/next.
+Contributions targeting a current -rc (fixes) may go in on an expedited
+schedule with only an Acked-by.
+
+---
+
+CXL Port Topology:
+
+The enumeration starts with the ACPI0017 driver registering a 'struct
+cxl_root' object to establish the top of a cxl_port topology. It then
+scans the ACPI bus looking for ACPI0016 instances. The cxl_root object
+is a singleton* anchor to hang "address-space" objects and be a parent
+device for the downstream 'struct cxl_port' instances. An address-space
+has a 1:1 relationship with a platform defined memory resource range,
+like _CRS for PCIE Host Bridges. Use module parameters to model a
+root-level HDM decoder that all downstream ports further decode, to be
+replaced with a Code First ECN to do the same.
+
+Each address space is modeled as a sysfs object that also shows up in
+/proc/iomem as "CXL Address Space". That iomem resource is functionally
+equivalent to the root-level 'PCI Bus' resources for PCIE.mmio while
+'CXL Address Space' indicates space for CXL.mem to be mapped. "System
+RAM" and "Persistent Memory", when mapped by HDM decoders, will appear
+as child CXL.mem resources.
+
+Once a 'struct cxl_root' is established the host bridge is modeled as 1
+upstream 'struct cxl_port' and N downstream 'struct cxl_port' instances
+(one per Root Port), just like a PCIE switch. The host-bridge upstream
+port optionally has the HDM decoder registers from the CHBCR if the
+host-bridge has multiple PCIE/CXL root ports. Single-ported host bridges
+will not have HDM decoders in the CHBCR space (see CHBCR note in
+8.2.5.12 CXL HDM Decoder Capability Structure), but the 'struct
+cxl_port' object is still needed to represent other CXL capabilities and
+access port-specific component registers outside of HDM decoders.
+
+Each 'struct cxl_port' has a 'target_id' attribute that answers the
+question "what port am I in my upstream port's HDM decoder target
+list?". For the host-bridge struct cxl_port, the first tier of ports
+below cxl_root.port, the id is derived from the ordinal mapping of the
+ACPI0016 id (instance id, _UID, or other handle TBD), for all other
+ports the id is the PCIE Root Port ID from the Link Capabilities
+register [1]. The mapping of ordinal port identifiers relative to their
+parent may change once libcxl and cxl-cli prove out region creation, or
+a better option is found to establish a static device path / persistent
+naming scheme. System software must not assume that 'struct cxl_port'
+device names will be static from one boot to the next.
+
+See patch7 for a tree(1) topology picture of what QEMU is producing
+today with this enabling.
+
+* cxl_root is singleton only by convention. A given cxl_root could
+  represent 1 to N address spaces, this patch set chooses to implement 1
+  cxl_root for all address spaces.
+
+[1]: CXL 2.0 8.2.5.12.8 CXL HDM Decoder 0 Target List Low Register
+     (Offset 24h) ...The Target Port Identifier for a given Downstream Port
+     is reported via Port Number field in Link Capabilities Register. (See
+     PCI Express Base Specification).
+
+---
+
+Dan Williams (8):
+      cxl/mem: Move some definitions to mem.h
+      cxl/mem: Introduce 'struct cxl_regs' for "composable" CXL devices
+      cxl/core: Rename bus.c to core.c
+      cxl/core: Refactor CXL register lookup for bridge reuse
+      cxl/acpi: Introduce ACPI0017 driver and cxl_root
+      cxl/Kconfig: Default drivers to CONFIG_CXL_BUS
+      cxl/port: Introduce cxl_port objects
+      cxl/acpi: Add module parameters to stand in for ACPI tables
+
+
+ Documentation/ABI/testing/sysfs-bus-cxl         |   89 ++++
+ Documentation/driver-api/cxl/memory-devices.rst |    6
+ drivers/cxl/Kconfig                             |   16 +
+ drivers/cxl/Makefile                            |    6
+ drivers/cxl/acpi.c                              |  215 +++++++++
+ drivers/cxl/bus.c                               |   29 -
+ drivers/cxl/core.c                              |  566 +++++++++++++++++++++++
+ drivers/cxl/cxl.h                               |  148 ++++--
+ drivers/cxl/mem.c                               |   93 +---
+ drivers/cxl/mem.h                               |   78 +++
+ 10 files changed, 1089 insertions(+), 157 deletions(-)
+ create mode 100644 drivers/cxl/acpi.c
+ delete mode 100644 drivers/cxl/bus.c
+ create mode 100644 drivers/cxl/core.c
+ create mode 100644 drivers/cxl/mem.h
+
+base-commit: 6efb943b8616ec53a5e444193dccf1af9ad627b5
