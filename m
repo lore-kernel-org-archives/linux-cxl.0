@@ -2,106 +2,176 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 119AEC433ED
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 May 2021 18:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFEFC433ED
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 May 2021 20:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9DB261444
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 May 2021 18:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB0F261415
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 May 2021 20:29:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230259AbhENSih (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 14 May 2021 14:38:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51668 "EHLO
+        id S229524AbhENUa5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 May 2021 16:30:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230034AbhENSig (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 May 2021 14:38:36 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B21DBC06174A
-        for <linux-cxl@vger.kernel.org>; Fri, 14 May 2021 11:37:24 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id t15so8056782edr.11
-        for <linux-cxl@vger.kernel.org>; Fri, 14 May 2021 11:37:24 -0700 (PDT)
+        with ESMTP id S230384AbhENUa4 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 May 2021 16:30:56 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF730C061756
+        for <linux-cxl@vger.kernel.org>; Fri, 14 May 2021 13:29:44 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id t15so8360338edr.11
+        for <linux-cxl@vger.kernel.org>; Fri, 14 May 2021 13:29:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=02LxdjsgVQUzSiAH2KRvI2SnT3V/EPoHS2xbtXtqU2g=;
-        b=Nq4AIGmDxvCN38wn3yZRBD67IcSVsSt7TWWB1P+liR27OwjbgoNhOrIPmOghWAyPIW
-         QpL9JNaYyc7DE/Xjw/pKb6909dUYUvrjXLGLc4kEBQPdoihaaZbpxBLEZcfKmQZtIivA
-         DrU0GVGlHtS/byT8pa8wmHMFRuwCWEOWGfHtB2u0vmBB2jwa8f/jzshVRNYD6PJPoISC
-         zvgx38/qoY6SVync+Te4uR2jYgeF3CnSLLpq1nN+CYyXQeb6BQiJOs+085Ks9pUa3qFJ
-         qVxyxFm3jX1IXk2JcCS7CsInTPVgN4CnRD2z2rQPhdToCCxYQ8qD+FvUnp9WOgYrDpOf
-         mnJA==
+        bh=5yLL40jnp/JyochnQZGNB1kpm63b4ANhjiGt5dp8TwM=;
+        b=EgFraUSBIbTQFFJbEIeB6T/26SFYGJlZBeS4e/DmQRBg6Jw2BQ37gymJBPeVX1ynng
+         gLsbaKnm39XSGjgjcsOBrClWV9P2towyHWblzwNVlQ5dSUJxsf/jrcHUhk9MXKI9aUnP
+         JOOFtbsCLXmzDvH70ekrNT7i7O87hx19FvLtC/dcHBQ4UON2Po//U6OZQha99KSVmVys
+         Bs4ECRfRkRaYYKC/8sjpwUGc6BxWndaakM2RlpCKAkf12+Kms37etfKiOLo1r5Rv08Rn
+         DeKNSXZj3Px380vwYPhSzVfDA0eI75tyQygSFJHLeyGRqV0WVM8ygu1y5XhhD22agMYF
+         J05w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=02LxdjsgVQUzSiAH2KRvI2SnT3V/EPoHS2xbtXtqU2g=;
-        b=X+SHc3Z+DUve2nRhBszhoKpWubsZH0KShTh9W5eFoZEhpKgKIXPwCxrf6BAX/C+CWA
-         XixzRm3Jeb+KY0DupUoEYgjfeapiYvhY1w5mHJGGqjP/aEMf1l+WTltaLyicit8awK3m
-         qE7nu2bktUxPdhTPeuJG6bBZS9u+1O4kBHuH0wrXCiNtG8fdbSxLJ6FEYaWN4i+YLvzD
-         zZRhMqqq7tuL1t6z5hYhCl39I8D9zOs2ycCHB3s9HvLXyEfDubvt8Pig1EcG9kZiBYYj
-         j6Llx5LC41r1rjMF9o+54qSK5Owby7ZyAfRotbyV2+ptwwTmM0+NdU15yU3+xltHrmQV
-         FMfQ==
-X-Gm-Message-State: AOAM532W+LAchLOylgvYMInnFpzStaeGqUMmqg2CUaEmIlvIZYXIk1WH
-        nwPcBsqzgiTrHiI4WbbAtq2RJpGHAsWAexe/IxN2wQ==
-X-Google-Smtp-Source: ABdhPJz8vCIzsAYA1fh7/O9J0MXCNdSlpbUWm6Al/0crTgIeWRfdboiI2YKdirtbIUuWaRdWfeKglSMA8J5lJq0OmmA=
-X-Received: by 2002:a05:6402:13c3:: with SMTP id a3mr21131702edx.18.1621017443439;
- Fri, 14 May 2021 11:37:23 -0700 (PDT)
+        bh=5yLL40jnp/JyochnQZGNB1kpm63b4ANhjiGt5dp8TwM=;
+        b=Wb3CiR2jz38wCqnhXR9Tst3YAnmdiR4LH9/KAX9ITisRwodvbNwlvrh7yagA0sqES0
+         k6XUGz4HzZZQ38yQTQihx6x6e3qpfOolBuuiJltMHtJTj+y4okYHq05DyaoitIaVEe+w
+         VtE3jXKOEtsc/a2MEdeD/Htpw7lSf4q2bprj3Xm+S/pWZdcRHZiNfDdtoApNcZirZ2rN
+         ae4sCJLt9q6eWJERcUB8Hrn5GGtFdXCJ1zWdC6TB2jQypGZ0E1ejqWpQkxIUBHPYByql
+         DcA/kiJ/0FqGpaJr07icQAKE9xsLLVBnTZoqVUan5VPNOm2IDK6gSfjZ8Pwcxb9cMcwk
+         6vqg==
+X-Gm-Message-State: AOAM531lD3PN0g9X1Zrlr/xJGPeqkf8lLAY1lhOsxCcz/WZL0ZE9yzJF
+        zwGmjtwvVDrojWZ4NqrdU8Soi2Qh1bV97R/V+gId3Q==
+X-Google-Smtp-Source: ABdhPJwjzR90EU3j4VM/TAeOVfah6Sp56DGhezKrSqeaGKYeBzA45aUC74juyu0klKi5Wj1G+W3dP6rGWk4obKEa6RE=
+X-Received: by 2002:a05:6402:128f:: with SMTP id w15mr12334574edv.354.1621024183325;
+ Fri, 14 May 2021 13:29:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210419165451.2176200-1-Jonathan.Cameron@huawei.com>
- <20210419165451.2176200-3-Jonathan.Cameron@huawei.com> <20210506215934.GJ1904484@iweiny-DESK2.sc.intel.com>
- <20210511175006.00007861@Huawei.com> <CAPcyv4j=uww+85b4AbWmoPNPry_+JLEpEnuywpdC8PonXmRmEg@mail.gmail.com>
- <20210514094755.00002081@Huawei.com>
-In-Reply-To: <20210514094755.00002081@Huawei.com>
+References: <162096970332.1865304.10280028741091576940.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <162096973052.1865304.12885652112595883151.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20210514101700.00004fbc@Huawei.com>
+In-Reply-To: <20210514101700.00004fbc@Huawei.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 14 May 2021 11:37:12 -0700
-Message-ID: <CAPcyv4h_qSZq+sTAOTKDNsO3xPmq=65j8oO1iw0WdVFj8+XrOA@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
+Date:   Fri, 14 May 2021 13:29:32 -0700
+Message-ID: <CAPcyv4jodAKZjAPQf6Q87o3JQ2sSJLmCTS1PdQ_oKyCRuVJqEg@mail.gmail.com>
+Subject: Re: [PATCH v4 5/8] cxl/acpi: Introduce ACPI0017 driver and cxl_root
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Chris Browy <cbrowy@avery-design.com>,
+Cc:     linux-cxl@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, May 14, 2021 at 1:50 AM Jonathan Cameron
+On Fri, May 14, 2021 at 2:19 AM Jonathan Cameron
 <Jonathan.Cameron@huawei.com> wrote:
-[..]
-> > If it simplifies the kernel implementation to assume single
-> > kernel-initiator then I think that's more than enough reason to block
-> > out userspace, and/or provide userspace a method to get into the
-> > kernel's queue for service.
 >
-> This last suggestion makes sense to me. Let's provide a 'right' way
-> to access the DOE from user space. I like the idea if it being possible
-> to run CXL compliance tests from userspace whilst the driver is loaded.
+> On Thu, 13 May 2021 22:22:10 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> > While CXL builds upon the PCI software model for dynamic enumeration and
+> > control, a static platform component is required to bootstrap the CXL
+> > memory layout. In addition to identifying the host bridges ACPI is
+> > responsible for enumerating the CXL memory space that can be addressed
+> > by decoders. This is similar to the requirement for ACPI to publish
+> > resources reported by _CRS for PCI host bridges.
+> >
+> > Introduce the cxl_root object as an abstract "port" into the CXL.mem
+> > address space described by HDM decoders identified by the ACPI
+> > CEDT.CHBS.
+> >
+> > For now just establish the initial boilerplate and sysfs attributes, to
+> > be followed by enumeration of the ports within the host bridge.
+> >
+> > Note the allocation of CXL core device objects is split into separate
+> > alloc and add steps in order to separate the alloc error path (kfree())
+> > from the device add error path (put_device()).
+> >
+> > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>
+> A few really minor editorial things in the docs that need tidying up.
 
-Ah, and I like your observation that once the kernel provides a
-"right" way to access DOE then userspace direct-access of DOE is
-indeed a "you get to keep the pieces" event like any other unwanted
-userspace config-write.
+Sure, I'm going to see if b4 can follow a v5 reply to just this one
+patch, or otherwise hack it to support that flow so I don't need to
+resend the full series.
 
-> Bjorn, given this would be a generic PCI thing, any preference for what
-> this interface might look like?   /dev/pcidoe[xxxxxx].i with ioctls similar
-> to those for the BAR based CXL mailboxes?
+> With that done
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>
+> I'll make the bold assumption that this is going to get applied
+> before the DOE series and base that on top of this one.
 
-(warning, anti-ioctl bias incoming...)
+Yes, the plan is to make the 'next' branch of:
 
-Hmm, DOE has an enumeration capability, could the DOE driver use a
-scheme to have a sysfs bin_attr per discovered object type? This would
-make it simliar to the pci-vpd sysfs interface.
+git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git
 
-Then the kernel could cache objects like CDAT that don't change
-outside of some invalidation event.
+...the stable non-rebasing development branch for contributions. bf gntcbttttt
+
+>
+> Thanks,
+>
+> Jonathan
+>
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-cxl |   78 +++++++
+> >  drivers/cxl/Kconfig                     |   14 +
+> >  drivers/cxl/Makefile                    |    2
+> >  drivers/cxl/acpi.c                      |   39 +++
+> >  drivers/cxl/core.c                      |  360 +++++++++++++++++++++++++++++++
+> >  drivers/cxl/cxl.h                       |   65 ++++++
+> >  6 files changed, 558 insertions(+)
+> >  create mode 100644 drivers/cxl/acpi.c
+> >
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> > index 2fe7490ad6a8..d21469e2bf8b 100644
+> > --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> > @@ -24,3 +24,81 @@ Description:
+> >               (RO) "Persistent Only Capacity" as bytes. Represents the
+> >               identically named field in the Identify Memory Device Output
+> >               Payload in the CXL-2.0 specification.
+> > +
+> > +What:           /sys/bus/cxl/devices/address_spaceX/start
+> > +Date:           May, 2021
+> > +KernelVersion:  v5.14
+> > +Contact:        linux-cxl@vger.kernel.org
+> > +Description:
+>
+> I'm not that fussy about this, but others may comment on wrapping lines around 70 chars
+> whereas can at least go to 80 for docs.
+
+Sure I can reflow.
+
+>
+> > +             (RO) System-physical base address for an address range
+> > +             that supports CXL.mem targets. A CXL address space can
+> > +             be optionally populated with endpoints that decode that
+> > +             range, similar to how devices behind a PCI bridge can
+> > +             decode a portion of the bridge's secondary bus address
+> > +             space.
+> > +
+> > +What:           /sys/bus/cxl/devices/address_spaceX/end
+> > +Date:           May, 2021
+> > +KernelVersion:  v5.14
+> > +Contact:        linux-cxl@vger.kernel.org
+> > +Description:
+> > +             (RO) System-physical end address for an address range
+> > +             that supports CXL.mem targets. A CXL address space can
+> > +             be optionally populated with endpoints that decode that
+> > +             range, similar to how devices behind a PCI bridge can
+> > +             decode a portion of the bridge's secondary bus address
+> > +             space.
+> > +
+> > +What:                /sys/bus/cxl/devices/address_spaceX/supports_ram
+>
+> Inconsistent tabs vs spaces.
+
+ok.
