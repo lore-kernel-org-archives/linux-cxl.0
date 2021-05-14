@@ -2,175 +2,226 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7A4C433B4
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 May 2021 05:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CD7C433ED
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 May 2021 08:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC6866144A
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 May 2021 05:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF6A61442
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 May 2021 08:50:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232585AbhENFXu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 14 May 2021 01:23:50 -0400
-Received: from mga17.intel.com ([192.55.52.151]:44646 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232426AbhENFXi (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 14 May 2021 01:23:38 -0400
-IronPort-SDR: EEo/tBLWb+U2Me35l4omuxJ73hWzKMGmKcQzOe1hHnJg7qUSCYoY4w1SO73VbuL/fVXqoPB8tI
- rosdB6AuqFPQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,9983"; a="180389390"
-X-IronPort-AV: E=Sophos;i="5.82,299,1613462400"; 
-   d="scan'208";a="180389390"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2021 22:22:27 -0700
-IronPort-SDR: QTuJmix3lyxLCKy4Y4acRyR/9SC1VAORHHdgZ54nJMjoPCf/OsdK5K9rBSkL5qL4D0fYGruseL
- Zw/uif9gx0Uw==
-X-IronPort-AV: E=Sophos;i="5.82,299,1613462400"; 
-   d="scan'208";a="626678341"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2021 22:22:27 -0700
-Subject: [PATCH v4 8/8] cxl/acpi: Add module parameters to stand in for ACPI
- tables
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     hch@lst.de, linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 13 May 2021 22:22:27 -0700
-Message-ID: <162096974698.1865304.8318651377224773262.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <162096970332.1865304.10280028741091576940.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <162096970332.1865304.10280028741091576940.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        id S233756AbhENIvO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 May 2021 04:51:14 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3687 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231174AbhENIvB (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 May 2021 04:51:01 -0400
+Received: from dggems706-chm.china.huawei.com (unknown [172.30.72.60])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4FhMbF3HJsz1BMPj;
+        Fri, 14 May 2021 16:47:05 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ dggems706-chm.china.huawei.com (10.3.19.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Fri, 14 May 2021 16:49:45 +0800
+Received: from localhost (10.52.120.239) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2176.2; Fri, 14 May
+ 2021 09:49:42 +0100
+Date:   Fri, 14 May 2021 09:47:55 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Ira Weiny <ira.weiny@intel.com>, <linux-cxl@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
+Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
+Message-ID: <20210514094755.00002081@Huawei.com>
+In-Reply-To: <CAPcyv4j=uww+85b4AbWmoPNPry_+JLEpEnuywpdC8PonXmRmEg@mail.gmail.com>
+References: <20210419165451.2176200-1-Jonathan.Cameron@huawei.com>
+        <20210419165451.2176200-3-Jonathan.Cameron@huawei.com>
+        <20210506215934.GJ1904484@iweiny-DESK2.sc.intel.com>
+        <20210511175006.00007861@Huawei.com>
+        <CAPcyv4j=uww+85b4AbWmoPNPry_+JLEpEnuywpdC8PonXmRmEg@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.120.239]
+X-ClientProxiedBy: lhreml706-chm.china.huawei.com (10.201.108.55) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-[debug / to-be-replaced / not-for-upstream]
+On Thu, 13 May 2021 14:20:38 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Given ACPICA support is needed before drivers can integrate ACPI
-functionality add some module parameters as proxies.
----
- drivers/cxl/acpi.c |   81 +++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 79 insertions(+), 2 deletions(-)
+> On Tue, May 11, 2021 at 9:52 AM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
+> >
+> > On Thu, 6 May 2021 14:59:34 -0700
+> > Ira Weiny <ira.weiny@intel.com> wrote:
+> >  
+> > > On Tue, Apr 20, 2021 at 12:54:49AM +0800, Jonathan Cameron wrote:  
+> > > > +
+> > > > +static int pci_doe_send_req(struct pci_doe *doe, struct pci_doe_exchange *ex)
+> > > > +{
+> > > > +   struct pci_dev *pdev = doe->pdev;
+> > > > +   u32 val;
+> > > > +   int i;
+> > > > +
+> > > > +   /*
+> > > > +    * Check the DOE busy bit is not set. If it is set, this could indicate
+> > > > +    * someone other than Linux (e.g. firmware) is using the mailbox. Note
+> > > > +    * it is expected that firmware and OS will negotiate access rights via
+> > > > +    * an, as yet to be defined method.
+> > > > +    */
+> > > > +   pci_read_config_dword(pdev, doe->cap + PCI_DOE_STATUS, &val);
+> > > > +   if (FIELD_GET(PCI_DOE_STATUS_BUSY, val))
+> > > > +           return -EBUSY;  
+> > >
+> > > In discussion with Dan we believe that user space could also be issuing
+> > > commands and would potentially cause us to be locked out.
+> > >
+> > > We agree that firmware should be out of the way here and if it is blocking
+> > > the OS there is not much we can do about it.
+> > >
+> > > However, if user space is using the mailbox we need to synchronize with them
+> > > via pci_cfg_access_[try]lock().  This should avoid this EBUSY condition.  
+> >
+> > Hi Ira, thanks for taking a look.
+> >
+> > So the question here is whether we can ever safely work with a
+> > userspace that is accessing the DOE.  I think the answer is no we can't.
+> >
+> > We'd have no way of knowing that userspace left the DOE in a clean state
+> > without resetting every time we want to use it (which can take 1 second)
+> > or doing significant sanity checking (can we tell if something is
+> > in flight?).  Note that if userspace and kernel were talking different
+> > protocols nothing sensible could be done to prevent them receiving each
+> > other's answers (unless you can rely on userspace holding the lock until
+> > it is done - which you can't as who trusts userspace?)  
+> 
+> There is no ability for userpsace to lock out the kernel, only kernel
+> locking out userspace.
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index c33641eef032..706500666064 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -4,10 +4,84 @@
- #include <linux/module.h>
- #include <linux/device.h>
- #include <linux/kernel.h>
-+#include <linux/range.h>
- #include <linux/acpi.h>
- #include <linux/pci.h>
- #include "cxl.h"
- 
-+/*
-+ * TODO: Replace all of the below module parameters with ACPI CXL
-+ * resource descriptions once ACPICA makes them available.
-+ */
-+static unsigned long chbcr[4];
-+module_param_named(chbcr0, chbcr[0], ulong, 0400);
-+module_param_named(chbcr1, chbcr[1], ulong, 0400);
-+module_param_named(chbcr2, chbcr[2], ulong, 0400);
-+module_param_named(chbcr3, chbcr[3], ulong, 0400);
-+
-+/* TODO: cross-bridge interleave */
-+static struct cxl_address_space cxl_space[] = {
-+	[0] = { .range = { 0, -1 }, .targets = 0x1, },
-+	[1] = { .range = { 0, -1 }, .targets = 0x1, },
-+	[2] = { .range = { 0, -1 }, .targets = 0x1, },
-+	[3] = { .range = { 0, -1 }, .targets = 0x1, },
-+};
-+
-+static int set_range(const char *val, const struct kernel_param *kp)
-+{
-+	unsigned long long size, base;
-+	struct cxl_address_space *space;
-+	unsigned long flags;
-+	char *p;
-+	int rc;
-+
-+	size = memparse(val, &p);
-+	if (*p != '@')
-+		return -EINVAL;
-+
-+	base = memparse(p + 1, &p);
-+	if (*p != ':')
-+		return -EINVAL;
-+
-+	rc = kstrtoul(p + 1, 0, &flags);
-+	if (rc)
-+		return rc;
-+	if (!flags || flags > CXL_ADDRSPACE_MASK)
-+		return rc;
-+
-+	space = kp->arg;
-+	*space = (struct cxl_address_space) {
-+		.range = {
-+			.start = base,
-+			.end = base + size - 1,
-+		},
-+		.flags = flags,
-+	};
-+
-+	return 0;
-+}
-+
-+static int get_range(char *buf, const struct kernel_param *kp)
-+{
-+	struct cxl_address_space *space = kp->arg;
-+
-+	if (!range_len(&space->range))
-+		return -EINVAL;
-+
-+	return sysfs_emit(buf, "%#llx@%#llx :%s%s%s%s\n",
-+			  (unsigned long long)range_len(&space->range),
-+			  (unsigned long long)space->range.start,
-+			  space->flags & CXL_ADDRSPACE_RAM ? " ram" : "",
-+			  space->flags & CXL_ADDRSPACE_PMEM ? " pmem" : "",
-+			  space->flags & CXL_ADDRSPACE_TYPE2 ? " type2" : "",
-+			  space->flags & CXL_ADDRSPACE_TYPE3 ? " type3" : "");
-+}
-+
-+module_param_call(range0, set_range, get_range, &cxl_space[0], 0400);
-+module_param_call(range1, set_range, get_range, &cxl_space[1], 0400);
-+module_param_call(range2, set_range, get_range, &cxl_space[2], 0400);
-+module_param_call(range3, set_range, get_range, &cxl_space[3], 0400);
-+
- static int match_ACPI0016(struct device *dev, const void *host)
- {
- 	struct acpi_device *adev = to_acpi_device(dev);
-@@ -67,13 +141,16 @@ static int cxl_acpi_register_ports(struct device *dev, struct acpi_device *root,
- 				   struct cxl_port *port, int idx)
- {
- 	struct acpi_pci_root *pci_root = acpi_pci_find_root(root->handle);
-+	resource_size_t chbcr_base = ~0;
- 	struct cxl_walk_context ctx;
- 
- 	if (!pci_root)
- 		return -ENXIO;
- 
- 	/* TODO: fold in CEDT.CHBS retrieval */
--	port = devm_cxl_add_port(dev, port, &root->dev, idx, ~0);
-+	if (idx < ARRAY_SIZE(chbcr))
-+		chbcr_base = chbcr[idx];
-+	port = devm_cxl_add_port(dev, port, &root->dev, idx, chbcr_base);
- 	if (IS_ERR(port))
- 		return PTR_ERR(port);
- 	dev_dbg(dev, "%s: register: %s\n", dev_name(&root->dev),
-@@ -99,7 +176,7 @@ static int cxl_acpi_probe(struct platform_device *pdev)
- 	struct cxl_root *cxl_root;
- 	int rc, i = 0;
- 
--	cxl_root = devm_cxl_add_root(dev, NULL, 0);
-+	cxl_root = devm_cxl_add_root(dev, cxl_space, ARRAY_SIZE(cxl_space));
- 	if (IS_ERR(cxl_root))
- 		return PTR_ERR(cxl_root);
- 	dev_dbg(dev, "register: %s\n", dev_name(&cxl_root->port.dev));
+Hi Dan,
+
+Got it. Writing userspace to code with arbitrary kernel
+breakage of exchanges userspace initialized is going to be nasty. 
+
+> 
+> > You could do
+> > something horrible like back off after peeking at the protocol to see
+> > if it might be yours, but even that only works assuming the two are
+> > trying to talk different protocols (talking the same protocol isn't allowed
+> > but no way to enforce that using just pci_cfg_access_lock()).  
+> 
+> Wait why isn't pci_cfg_access_lock() sufficient? The userspace DOE
+> transfer is halted, the kernel validates the state of DOE, does it's
+> work and releases the lock.
+
+It's that 'validate the state of the DOE' which is the problem.  I 'think'
+the only way to do that is to issue an abort every time and I'm really
+not liking the fact that adds a potential 1 second sleep to every
+DOE access from the kernel.  There is no other way of knowing there is
+no exchange already in flight that might come back and bite you even
+after you think you have a clean state + I think you might be able to
+construct cases where even inspecting the data isn't enough to tell.
+If we are safe with today's protocols, there is no guarantee we will be
+in future. If the DOE design had incorporated such a flag or counter of
+exchanges in flight, then this might have been a workable approach. 
+
+> 
+> > I can't see a way to tell that the DOE might not have responded to an
+> > earlier request.  DOE busy indicates the write mailbox register cannot
+> > receive data at the moment.  If it's set then there is a message in
+> > flight, but if it is not set there might still be a message in flight.
+> > Busy only indicates if the write mailbox register can sink a request
+> > which doesn't in general tell us anything about the underlying state.
+> >
+> > So if userspace sent a request then quit.  Kernel driver would have
+> > no way of knowing if the next response was due to the request it sent
+> > or some earlier one (other than matching IDs)  Note you aren't allowed
+> > to have multiple requests for a single protocol in flight at the same
+> > time.  With just a lock you would have no way of preventing this.
+> >
+> > So we are back to every request the kernel sent having to be proceeded
+> > by an abort and potentially a 1 second delay whilst some chunk of the
+> > device firmware reboots.
+> >
+> > This came up in dicussion when Dan proposed the patch
+> > [PATCH] PCI: Allow drivers to claim exclusive access to config regions
+> > https://lore.kernel.org/linux-pci/161663543465.1867664.5674061943008380442.stgit@dwillia2-desk3.amr.corp.intel.com/
+> > Summarizing outcome of that thread.
+> >
+> > 1) Reads of DOE registers are always safe, so we shouldn't stop lspci
+> > and similar accessing config space.
+> > 2) You are on your own if any userspace writes to pci config space.
+> > There are loads of ways it can break the system so it doesn't make much
+> > sense to protect against one more.  
+> 
+> I'm not quite as enthusiastic about Greg's assertion that "we're
+> already broken why not allow more breakage" as he was also the one
+> supportive of /dev/mem restrictions in the face of obvious collisions.
+> I'll circle back and say as much to Greg. My mistake was not realizing
+> the write dependency in the protocol, so the pushback was warranted
+> that the kernel does not need to block out all access.
+> 
+> Given that /dev/mem is optionally disabled for userspace access
+> outside of kernel-lockdown scenarios, I think it is reasonable to have
+> the kernel disable config writes to a register block and the request
+> of a driver.
+> 
+> Consider that userspace can certainly trash the system by writing to
+> the BAR registers, for example, but a non-malicious userspace has no
+> reason to do that. Unfortunately DOE has some utility for a
+> non-malicious userspace to access so there is a rationale to figure
+> out a cooperation scheme.
+
+I agree with a cooperation scheme, but I think that should take the
+form of a proper interface rather than a one sided lock out.
+It may well make sense to tighten access to PCI config space anyway but
+I think that's a discussion that should be separate from this feature.
+
+> 
+> >
+> > If there is a reason to provide a userspace interface to a DOE for a
+> > device with a driver attached, then I would agree with Dan's suggestion
+> > to use a proper driver for it.
+> >
+> > Dan briefly mentioned that temporary blocking might be needed. I'm guessing
+> > that was to try and let userspace safely use the DOE.
+> >
+> > The driver would work fine ignoring busy entirely and would perhaps be
+> > less confusing as a result.  We reset the DOE at startup anyway and that
+> > would clear existing busy.  Any future times busy is set would have no
+> > impact on the flow.  
+> 
+> If it simplifies the kernel implementation to assume single
+> kernel-initiator then I think that's more than enough reason to block
+> out userspace, and/or provide userspace a method to get into the
+> kernel's queue for service.
+
+This last suggestion makes sense to me. Let's provide a 'right' way
+to access the DOE from user space. I like the idea if it being possible
+to run CXL compliance tests from userspace whilst the driver is loaded.
+
+Bjorn, given this would be a generic PCI thing, any preference for what
+this interface might look like?   /dev/pcidoe[xxxxxx].i with ioctls similar
+to those for the BAR based CXL mailboxes?
+
+Thanks,
+
+Jonathan
 
