@@ -2,166 +2,76 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=BAYES_05,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEB6C433B4
-	for <linux-cxl@archiver.kernel.org>; Mon, 17 May 2021 17:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8565C433B4
+	for <linux-cxl@archiver.kernel.org>; Mon, 17 May 2021 18:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FDD86128A
-	for <linux-cxl@archiver.kernel.org>; Mon, 17 May 2021 17:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4EA61002
+	for <linux-cxl@archiver.kernel.org>; Mon, 17 May 2021 18:51:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242838AbhEQRWn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 17 May 2021 13:22:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51326 "EHLO
+        id S237313AbhEQSwu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 17 May 2021 14:52:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242720AbhEQRWn (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 17 May 2021 13:22:43 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 710F4C06175F
-        for <linux-cxl@vger.kernel.org>; Mon, 17 May 2021 10:21:26 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id p24so9097854ejb.1
-        for <linux-cxl@vger.kernel.org>; Mon, 17 May 2021 10:21:26 -0700 (PDT)
+        with ESMTP id S234049AbhEQSwt (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 17 May 2021 14:52:49 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B171C061573
+        for <linux-cxl@vger.kernel.org>; Mon, 17 May 2021 11:51:32 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id o127so4115940wmo.4
+        for <linux-cxl@vger.kernel.org>; Mon, 17 May 2021 11:51:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KSak/9y8LWCPIDO3G6CswSdOFb8LMwY6kG8ALECOcQ4=;
-        b=FAoQU13gvykSeVPaT8SD0dcXsm4yCutPyV3HXGbrkMqJURqJJ1TpCC2N9Sby2v9Quu
-         SxEDs9LDJrwAQ7+xPzYiZmHAFww2P6PNBPs5s2nkSPuZp+MTzuMyyZ5beiPs+5UfN2mT
-         xGKwFWY4bNQ2WSd4YF6rlGmI5eoa++Lymx2PKTFoCA2kXd33AOOPsMGvM+KJzM90Skwn
-         5DNpXxhL0Iras7qtd/gCMDz9CGnp2/wSFPpmt4GoEVGvWKxYmlsaSE1cjNQSje8OFsiE
-         ++BQ+plVjguBvcA0RzBTh+3tH0tiGrNYLkZ2uh0afF6wM6z2X+T9p0fmruHcfs/C/ekM
-         EYiQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=SNhJ9v68Yd6CovqAzSkr8gnH/9xi6E2wSyGQTwBHBgg=;
+        b=WYx8m5r0K4ZpwoHWhHGQUtgAEYcBYGOrTmAgmlGUnwvzeQ3zECDxqwI5IvV7DkKV3o
+         gjmYmsHoZo3kVUxH4EVbgwj59wQjOhZEzIdUbD1ExTEGyms5evzuIFK7POie1ogJ444T
+         CeZcnLfChjbJBr7vAQ75/Z8HDpI3nbKVD3IY+GiJ/RjNREQlg+TMUfi0Dg3xMFYtKb3S
+         T+tPh5Fg5HtAc6ORy0ZdZjr8zEv7IkAzwX3adDjOnxzTBbWg4YZCKyt5pjoZ5JTVE0o1
+         z2r3acAvjQjboYHOU+FUzcOq4jZvsRC6iTkNvAqVKXOwHtSbCGXhVAur+A8T1ndUraaP
+         AdnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KSak/9y8LWCPIDO3G6CswSdOFb8LMwY6kG8ALECOcQ4=;
-        b=h5mLMBVnefIYeG81a8qrPmO6CvUzluDybOe/wOoAIr0VJatcNI65eItvJQtqBG8/JB
-         okd0m3bkC/0dDu2EG0bC6bCuiu0sjKQnX8MRcxd34S9rEVGF9UXrixKHX0qYjL/shTF5
-         asleggNWWz3PQq/A1TXcyBp4nVMCJGDBV/uugW85z0oMqU5f0GGMbEScbrdp4jzt6pix
-         J0AYImO4Pue7xeXpsrbUYa5MUB6WPkW0/ZQrZnGqYgCeCykIDqjFulfRpNaxUke6Vwmq
-         zaH8EgRbRiw8c1x51J2dGpUseU39C/6nQYkdhVYfrSq09oVw9uEIq+3ww+1hsPiH6YzL
-         h60Q==
-X-Gm-Message-State: AOAM5323zUXHCDfEcCbpqUVL8dZDmpagPwvKX4TiJqSpa6nEqTqeH0w6
-        po4uw6Tc01BDOqhgM4WLPaREH3cjUSStvqCOIoC7/Q==
-X-Google-Smtp-Source: ABdhPJwDSuY1Ew65cNeQBqF/NU4BCq0/RPemhz48ePAYjbpwvuGcrf2z9Kf9uaXqxeWBtzA0bGQ4GodiWR5b72do9Cs=
-X-Received: by 2002:a17:907:3e28:: with SMTP id hp40mr1001966ejc.523.1621272085131;
- Mon, 17 May 2021 10:21:25 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=SNhJ9v68Yd6CovqAzSkr8gnH/9xi6E2wSyGQTwBHBgg=;
+        b=aI/+2/GKgjHOTbzouVy5IxEw5VgVt+5r3Fj2fu6nTg46I5DL8/wSqHaSStyy7kwzFT
+         BweK2VYoj/NZt1xXQ7ix/V1wuyoZP5yinUHY7b41W2n5ApHUlSM4qTyJ+TVfC5DAA9e8
+         w3hBDnD//M6l9Ce2eoDBMjwmyGlvpgpeRvtzZbGxG9fafC/HSW3IXFQ9FH+6k6acBTvV
+         xQCQANEcEJxtEHXcBbn7KnI8Mhq2OLP75jrhRR1ViDbmRzgONKBk9EI+hO05An4DpU0P
+         mWLA494vBqg4Xg5Kn2Oo01A940S5gG084oyw96GS504UaLl34YrsaMxmYyxEBk+4H0uv
+         Ervw==
+X-Gm-Message-State: AOAM530X/qS36X2AnVkbNybLvLc0qmFp9ekRab/i3PyJ3X4JLfzSdBBk
+        Gt8LHwdqsJV+r4Vt9VIV2ciINadqEeWzeuPfUnl5OAtX3C8=
+X-Google-Smtp-Source: ABdhPJwFfq+S576I1+JEGocNHg3fauWQmmX+rFPUCoNZbDk5cQmhFu8759g7H2JjHazafYQ7MqcRf3+F52iSydwiEPk=
+X-Received: by 2002:a05:600c:214f:: with SMTP id v15mr503977wml.146.1621277490986;
+ Mon, 17 May 2021 11:51:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210419165451.2176200-1-Jonathan.Cameron@huawei.com>
- <20210419165451.2176200-3-Jonathan.Cameron@huawei.com> <20210506215934.GJ1904484@iweiny-DESK2.sc.intel.com>
- <20210511175006.00007861@Huawei.com> <CAPcyv4j=uww+85b4AbWmoPNPry_+JLEpEnuywpdC8PonXmRmEg@mail.gmail.com>
- <20210514094755.00002081@Huawei.com> <CAPcyv4h_qSZq+sTAOTKDNsO3xPmq=65j8oO1iw0WdVFj8+XrOA@mail.gmail.com>
- <20210517094045.00004d58@Huawei.com>
-In-Reply-To: <20210517094045.00004d58@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 17 May 2021 10:21:14 -0700
-Message-ID: <CAPcyv4iQcV_U1qmQhXKM0RG9v-sAEPwtTxnv=P86yJrCH25k+w@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>,
-        Greg KH <gregkh@linuxfoundation.org>
+From:   Dengcheng Zhu <dengcheng.zhu@gmail.com>
+Date:   Mon, 17 May 2021 11:51:20 -0700
+Message-ID: <CAOfQC9_aEmNKO2AmmX7JKwpZcj-HtMdoJBv+bH8qvbw0siTGOA@mail.gmail.com>
+Subject: Access to CXL memory
+To:     ben.widawsky@intel.com, dan.j.williams@intel.com
+Cc:     linux-cxl@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, May 17, 2021 at 1:42 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Fri, 14 May 2021 11:37:12 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > On Fri, May 14, 2021 at 1:50 AM Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com> wrote:
-> > [..]
-> > > > If it simplifies the kernel implementation to assume single
-> > > > kernel-initiator then I think that's more than enough reason to block
-> > > > out userspace, and/or provide userspace a method to get into the
-> > > > kernel's queue for service.
-> > >
-> > > This last suggestion makes sense to me. Let's provide a 'right' way
-> > > to access the DOE from user space. I like the idea if it being possible
-> > > to run CXL compliance tests from userspace whilst the driver is loaded.
-> >
-> > Ah, and I like your observation that once the kernel provides a
-> > "right" way to access DOE then userspace direct-access of DOE is
-> > indeed a "you get to keep the pieces" event like any other unwanted
-> > userspace config-write.
-> >
-> > > Bjorn, given this would be a generic PCI thing, any preference for what
-> > > this interface might look like?   /dev/pcidoe[xxxxxx].i with ioctls similar
-> > > to those for the BAR based CXL mailboxes?
-> >
-> > (warning, anti-ioctl bias incoming...)
->
-> I feel very similar about ioctls - my immediate thought was to shove this in
-> debugfs, but that feels the wrong choice if we are trying to persuade people
-> to use it instead of writing code that directly accesses the config space.
->
-> >
-> > Hmm, DOE has an enumeration capability, could the DOE driver use a
-> > scheme to have a sysfs bin_attr per discovered object type? This would
-> > make it simliar to the pci-vpd sysfs interface.
->
-> We can discover the protocols, but anything beyond that is protocol
-> specific.  I don't think there is a enough info available by any standards
-> defined method. Also part of the reason to allow a safe userspace interface
-> would be to provide a generic interface for vendor protocols and things like
-> CXL compliance tests where we will almost certainly never provide a more
-> specific kernel interface.
->
-> Whilst sysfs would work for CDAT, some protocols are challenge response rather
-> than simple read back and that really doesn't fit well for sysfs model.
-> If we get other protocols that are simple data read back, then I would
-> advocate giving them a simple sysfs interface much like proposed for CDAT
-> as it will always be simpler to use + self describing.
->
-> On a lesser note it might be helpful to provide sysfs attrs for
-> what protocols are supported.  The alternative is to let userspace run
-> the discovery protocol. Perhaps we can do this as a later phase.
->
-> >
-> > Then the kernel could cache objects like CDAT that don't change
-> > outside of some invalidation event.
->
-> It's been a while since I last saw any conversation on sysfs bin_attrs
-> but mostly I thought the feeling was pretty strongly against them for anything
-> but a few niche usecases.
->
-> Feels to me like it would break most of the usual rules in a way vpd does
-> not (IIRC VPD is supposed to be a simple in the sense that if you write a value
-> to a writable part, you will read back the same value).
->
-> +CC Greg who is a fount of knowledge in this area (and regularly + correctly
-> screams at the ways I try to abuse sysfs :)  Note I don't think Dan was
-> suggesting implementing response / request directly, but I think that is
-> all we could do given DOE protocols can be vendor specific and the standard
-> discovery protocol doesn't let us know the fine grained support (what commands
-> within a given protocol).
+Hi,
 
-I'm not all that interested in supporting vendor defined DOE
-shenanigans. There's more than enough published DOE protocols that the
-kernel could limit its support to the known set. This is similar to
-how ACPI DSMs are not generically supported, but when they appear in a
-published specification the kernel may then grow the support. The
-supported protocols could be limited to: CDAT, PCIe IDE, CXL
-Compliance, etc...
+I learned that CXL memory could be exposed to the system as a NUMA
+node as well as an mmap()able device.
 
-Vendor specific DOE is in the same class as unfettered /dev/mem
-access, first you need to disable the kernel's integrity and
-confidentiality protections, and then you can do whatever you want. If
-a vendor wants a DOE protocol supported in the "trusted" set they can
-simply publish the specification and send the proper support patches.
+Two questions are:
+
+- Can these 2 forms coexist at the same time?
+- If yes, how does memory management work between these 2 interfaces?
+
+Please shed some light upon this issue.
+
+Thanks,
+Dengcheng
