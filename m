@@ -2,262 +2,253 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7CBC433B4
-	for <linux-cxl@archiver.kernel.org>; Wed, 19 May 2021 16:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BA1C433ED
+	for <linux-cxl@archiver.kernel.org>; Wed, 19 May 2021 16:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 301D5610E9
-	for <linux-cxl@archiver.kernel.org>; Wed, 19 May 2021 16:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A5426135C
+	for <linux-cxl@archiver.kernel.org>; Wed, 19 May 2021 16:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355390AbhESQrW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 19 May 2021 12:47:22 -0400
-Received: from esa.microchip.iphmx.com ([68.232.153.233]:37630 "EHLO
-        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231124AbhESQrW (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 19 May 2021 12:47:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1621442762; x=1652978762;
-  h=from:to:cc:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=6ReTqdHYlyh1KnQln95bkCOKK4lTlBJgStzWxUV4bIY=;
-  b=C66k2YxLOOVXHTL/H4U09VSVdDAX5q4e4hgG+Yh7adaYTHLmZ3D56Tr8
-   cIueE27DvZ4xQYMEH0zNt0nu+UUqbtME5owOeBrDbg7KZdCynrX7sgzl9
-   Okrmz6D7vnBrrsjzLo+P73JMtm+MqNNq/0qKeTwZtaCe15XtTXnvHdAgJ
-   AfjUj0D0OWTqCnLpCXn5NYTZjwIN+U34Frr1Go5MX9/TaDQK0KVs25sdW
-   5o+AJSCEhahkjBImAUjILIAzfT2ii8ynPaegUoA/KBWJjN1GDvB/p0i8O
-   Chrs13oms74tN+mgR3H2bjaUpcrJG7B+yULN7C9kf4SJbnFYuJwR/61/T
-   g==;
-IronPort-SDR: rd2h2XIp/I9GhSzoZb4+sQp+VVgTLzBAARzNiw4m4Qq4D5pLzuZQjudRvv9NIvQbiaWFqUwYap
- KnWTKwg8HuNKReZlzy+gDuLpzPPkwmTtY4qUNQtHAKMtWtfKg96T9X9Sr2MTnlavmj1QR7pNYv
- IOAUhcMqQsVYOXQoXoduCliyAHY4vD+J2xS2UKHV6Es+r8Xnw9GrBc3+qtDPhYgwBHtnfmvaOA
- 9WHFz3UyQ2Eysd3X+5yl/5BUqlgmqVHYhFIOmdzpENCgIe/ikZAuTpTmVVVPgHoZUYtoCT13t6
- RmM=
-X-IronPort-AV: E=Sophos;i="5.82,313,1613458800"; 
-   d="scan'208";a="122230553"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 May 2021 09:46:01 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Wed, 19 May 2021 09:46:01 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2
- via Frontend Transport; Wed, 19 May 2021 09:46:01 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gfjYzcbot64yYkrZqgCRJOuIx2npuDV9tr7n3GXWA4Q0wnrrNInr31+6CAEJUssRwcseibFs0g90q6KlU0h9m9qbOWTeI613YJSaWX3o+bEjq0muBuApiHyVCqQLivewvLnOazvF+HM/+1HP+uCfc8mN98SwUVg5E1j/i98DfOybzBa7cu/1ACstUywhH23zMjUQ4ubITMvVNw0OUPDO56ZUqq5rrRtgntenXlKg9zid3cLgxHTOCI9Xn0KcAK/E1b1oyq8zOccW07Ne4xTSujGTr+VSucHTEE3PvYHPxW/6/3MpN4fSNKMjh/XAQNaGw8XhELFNiKR6eULTM67kQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6ReTqdHYlyh1KnQln95bkCOKK4lTlBJgStzWxUV4bIY=;
- b=Kpiaxnbcv61w/5eI7fYJr2o+ip0HMMF7+n0gKTgzQOG26ynsu2v1RYVbC6Z+4oYTEe2EVCYm6c620xhvy8Q3N/qYmV88z6F2hBJkZx5d+uVZTCIUsaP9JRaFvIVU50Hrj/B7XyAqHJlRxEWr/FpZkhLIDnjmwQl49za4sXC9yMnJXfHevbUBi+fuzH/L9dx8NnJS+WrmYdlBADDagcIycvTSgGmJEDV9kE7isFkRC2gKlYJq1+SS7rh/kilT5iCXmMbXXUjbGjZNg59nQzr+nZqmCrdNiLyifaWEUIuFX7ajHOLHib8eVEcbq4Ata1wwDdGDd2dyZICLLRlOfB3YEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        id S1355450AbhESQzG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 19 May 2021 12:55:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1355439AbhESQzF (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 19 May 2021 12:55:05 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89AFAC061761
+        for <linux-cxl@vger.kernel.org>; Wed, 19 May 2021 09:53:45 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id s22so20751686ejv.12
+        for <linux-cxl@vger.kernel.org>; Wed, 19 May 2021 09:53:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6ReTqdHYlyh1KnQln95bkCOKK4lTlBJgStzWxUV4bIY=;
- b=YRUjbJ3li4tLuxHYBA2Mmd2Nfc13lF5rFRkHP/z54bLJ9DNY83LDc2qf1otSCEB3QMv1vwS8knkG8qAuLQDqI63lTnevL/BFIZHEAIMgPeyudQHphum1PZ47JgHCxmte9n4x25cbA8D4SjsP5f1rN8SkIqm6+qfh900SDZhI4Xk=
-Received: from MN2PR11MB3645.namprd11.prod.outlook.com (2603:10b6:208:f8::13)
- by MN2PR11MB3662.namprd11.prod.outlook.com (2603:10b6:208:ee::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4129.28; Wed, 19 May
- 2021 16:45:59 +0000
-Received: from MN2PR11MB3645.namprd11.prod.outlook.com
- ([fe80::5c3a:4fee:564f:feda]) by MN2PR11MB3645.namprd11.prod.outlook.com
- ([fe80::5c3a:4fee:564f:feda%7]) with mapi id 15.20.4129.033; Wed, 19 May 2021
- 16:45:59 +0000
-From:   <Ariel.Sibley@microchip.com>
-To:     <linux-cxl@vger.kernel.org>
-CC:     <Ahmad.Danesh@microchip.com>, <cpetersen@fb.com>,
-        <mahesh.natu@intel.com>, <dan.j.williams@intel.com>,
-        <Vincent.Hache@microchip.com>, <Ariel.Sibley@microchip.com>,
-        <Sanjay.Goyal@microchip.com>, <scolee@microsoft.com>,
-        <jhinkle@lenovo.com>, <guru.anbalagane@microsoft.com>,
-        <kevin.marks@dell.com>, <bhirano@micron.com>,
-        <chet.r.douglas@intel.com>, <dcaracci@micron.com>,
-        <jgroves@micron.com>, <andy.rudoff@intel.com>
-Subject: CXL Vendor Specific Capabilities
-Thread-Topic: CXL Vendor Specific Capabilities
-Thread-Index: AddMzmouHMJcDmirRxSkUzaFgoYHKw==
-Date:   Wed, 19 May 2021 16:45:58 +0000
-Message-ID: <MN2PR11MB36459D88FEB3BB66E5844DE7882B9@MN2PR11MB3645.namprd11.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=microchip.com;
-x-originating-ip: [159.2.3.90]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bca4abac-66b3-4a90-df1d-08d91ae5947c
-x-ms-traffictypediagnostic: MN2PR11MB3662:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB36627ACBCA45DEDBCEEF0D0A882B9@MN2PR11MB3662.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Yw0m7AOH0bORHjVl9GjI6fOzaRWcErmdFVHDrSUAcBmCr4vjx27zu+WKo9qhCljIlWlqy5MJsBdDXJ2Pnqh9tFZMR7RlwrnMQGc2pqEekziL27NMHhKKyXFq62kWQK1Pw/e8h6tIDmnBOTFoOfT2tzQ0ZO9slc7rL4SZLstazdC993vBP9dZWuWi/Bj0AFf+N3VK9qAt5Gs84IPbtWENeKZYB6Tf60O/8pKJIF61By7oQx1uSHVW7690Kz6okqGQeBEjwVhl4HrRYJC75A77S4m2FgpdCrMOQ7kY69s6qosWI36kmiCcLxH69E3rKIyP2z48vZDpwPzvZd92YVzS7GneT5La38ahMCRTd4OHcB0plzixwcOsfZZj44TFYUCknS+Yvkt9QSNYqC+3V3QEX1SnDMC73oc+ym9v0+poyb75qm9DMIapSRXbqunkPVgcNtckzKh1ARMAgFrNc3S25dEs22Qd++wsDfcBttd3DNzQf/3uUTMqfvFdMrcQ9VUTphnraYjJxV6DLAye14qQbP3tiV4cna1cf+MUaCRdslXom5UfQH+QI0+Z9PfhuBccVChh00EMlgG2VPAnpyZLYhao9dKwPcJKA+gnOVz9MLk=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB3645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(376002)(136003)(396003)(39860400002)(366004)(7696005)(9686003)(6506007)(38100700002)(122000001)(54906003)(71200400001)(7416002)(83380400001)(5660300002)(8936002)(316002)(8676002)(55016002)(52536014)(2906002)(76116006)(66556008)(478600001)(66476007)(64756008)(186003)(3480700007)(6916009)(66446008)(66946007)(4326008)(33656002)(26005)(86362001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?ZVZoOGFsQmx6YndDeFFhYWZoaGozekRaem1TTnpScEZhZERPcDhTRW1PWW90?=
- =?utf-8?B?b0kxemsrbCtLd254dW5qVlhqM2lIZHlGcWhRZW0wYnVrMjU0WDVDekJPTFZV?=
- =?utf-8?B?ODBxSC9YYmpIWDJBSlBFUEpRemdydUVoZjV3aU5wRThHWGJqcGNpamZvQmI3?=
- =?utf-8?B?MFFoa3pUUkxLbVlkRnRNcjNaMVBQaWNpUXlXREZBWXMrY1VXNTEzajVoZGkz?=
- =?utf-8?B?YVNyVCtXWG5SM2M1Mlp0UWdQbE9VYUlEbUR1Z01RVVBoRXd3Vm5MWlZtUmM1?=
- =?utf-8?B?UEl1NkgvSHpDTkRXMmpuVVo0UXlLaGxQb004R2hxalJES0Q3ZVlaNFp5ajd6?=
- =?utf-8?B?eWNjRkM5YXRYT3VBd0h3M3RsTi9zTEs1SmZOeVUzM1VGeVplbVpibDVBa25H?=
- =?utf-8?B?TXh4UnRsb2wvQzd5K1pVZG80bUlpeCs3MjlmRUlSV1o0MlkvL0FOT1FzNVpP?=
- =?utf-8?B?Zm8yd2haUmZNM1lPcW93WE96bmZOTUwrcnlpZGtFdHY0M0dlRWJUV2Zjd3Yz?=
- =?utf-8?B?NEQ1QWEraERnYktpWEFwN2x2emZ1dWNSbUFiRmVMRng4WTVVZ1loWmtGZ2gv?=
- =?utf-8?B?WFdGNmdCRjlHSEx5UFdzYkY1OCtmOE9tMjFRY0p5a0phRllVQURHN3NCb25W?=
- =?utf-8?B?UUhVY0dXL21nRXRqalBZVzIvWFE5QWhiVmhsL3dRZEUwVzYrU1lVV3BlYmpv?=
- =?utf-8?B?a1RJSHA4Z05ObXIxZExKUVI0cUJnYjdQR0RwOTFsbzJORUpwdjVldFhsdEU3?=
- =?utf-8?B?SndPRnRQenZKMjdFeEFJMXNaSmtNdlF3WlVZMFVSTXlxMHZVUC90d0YxVGdT?=
- =?utf-8?B?NHFkaS9GU29sTmJSSlE4Qi84RWRkdmY3R213VlIvaFpzRE9nK005dnljaW5V?=
- =?utf-8?B?T3RLeWRlZWRPZHMxQVdmQWgwZ2tEdlVpNE9qWEs0QTFrVkNLRXVXSmRLRFJB?=
- =?utf-8?B?Q2gyV2t1aWc1eHNxeCtMVFpwVGk3L1RZQnhvTUFsUXl1ME91c0lnYXg4dmVi?=
- =?utf-8?B?MzZvNVFWc3RIWk5XaWY3YXB0MFpnUjdmbTBhSGNCMUVUaFlvN1p5OVpRWFFD?=
- =?utf-8?B?SWVpcXJCNVo2QXVkU1hQLzlKYjJYS2dMb0E0bEk4SDdxVEkrRzZ3U0pxN1lM?=
- =?utf-8?B?UW9qRU5zdGFVZHJnTXh5TzFVdzBoeVVnejlLTFV2UjRqd0xjSFh1dzd2SDVD?=
- =?utf-8?B?ZGpLSkE5dDdaVjN5SGVoNVRLNFNtTXZTaTgwU0VBUUx1L1o0alN1TmxiREZv?=
- =?utf-8?B?RlB2MDRrNFVJdSszM1k2REQvVVJFdzI5d1hYZEhrdGdqRGxBT0xuVldvMDVD?=
- =?utf-8?B?R08xbys3UFUxWHpTR0EyVTUvMW5sN2lkd2VudEk0SkNNZ3JoUUJwTmpwVnZ1?=
- =?utf-8?B?bEZUdWNmU0o1Q3crQzZvdHRVa3NQdGtaUDVrclIwVDkyK3BaMFBTWXNwYTRL?=
- =?utf-8?B?bVJzcGRnRHNtdzA2L2c2eGdOSVdnUmI0MStCRElDcnlhb3l0RGtMM0gxMTRo?=
- =?utf-8?B?QjlodWQwTEwySVhGeHAvRzFTUHJxUnlTd3ZQaHhLY3I1czFkSm1mUk1CcHNY?=
- =?utf-8?B?Q1h0aFNGUHNQQVZGc1BlVnIzaElBWXhITmhwVVl1RVlXV2RhWFRYSiswYk5W?=
- =?utf-8?B?dy93aWd6cktQWnlhRFRDTDdmYmwySGpjaGVhYlYyWEcxTVpiRi90ZmJOdlBU?=
- =?utf-8?B?NDgwekMzMjhuaEp4cjg5NU8wc285TGlSYUJlOU1NTWF4LzdoWXNVNXgvbUxL?=
- =?utf-8?Q?4WU7Ok/xEatCLxak+8=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=04vBsvgzwJmNWrKLQOH5nqEeWnOvYgjO6FGm4pBn+uo=;
+        b=VyeHwMDvuK2etG/NWBM3NDFl4nv+9jy8nsu15UP6NxXw7o2xEGwyRGawIys+EpQBnK
+         QGhozrGOymmPpR/cYpf8T1yl8aH0IvUnm+wAMEuzFev4V0jD+zycQhfKsDhgZKxNfoSY
+         FBvfvlWxOxammqjQbbIN2wXzgXDtGlx4rFsgRPqsFxovQowgh6h7X0/ZT+FJzjVLc8p1
+         H/8RDVPzrG6q+l9ltYKonTTQcPAeEhS4h5Ad0u7LK7xtVwFHMKNN7nr7sEEuiHRaDslo
+         6TK3mEFM4UiU0S614a3tfzeeFKdE9mLWO/84KbqxXhsmcUXAhYbCGvA2SHuyY3RlJek5
+         K+ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=04vBsvgzwJmNWrKLQOH5nqEeWnOvYgjO6FGm4pBn+uo=;
+        b=SsC4R5kPFEGPSzah5JtpvVfGdxR4UDrQUIKyOnwRjaihCoQpARqkq8yn99L0SUuWbD
+         9fIrqLRSy/F5rf7newQwTAzqus+vHQKqC6R3B27+m/mM0IVwT9g3ig7HHDZr5mlvw7kY
+         vWoTkonY8aMLQENtkLhljlbJqHPA7NYV1TGxKe4S8hV8NNb0G+tj/dfUfBHXG7yz9Yfb
+         wFolUuae4/q/lHL4rJMyWh60ADZwPflnr6gMu1hFE5sWVprrKdvF5YoUUy6ROHLWUcwm
+         UC0OAmMcOnpckx36dFXLYUpFJLxoRtOE+4lWt+9h7Mm84G9ubzaguT22cbKBV5SoU6RC
+         PGPA==
+X-Gm-Message-State: AOAM531QrDKmrd2NlU6dQidwu8NREi5lw8JuM17J3aFM6xomTlIa8xLN
+        x1DgXArzJhmEpxbc6TPvU+43ayjtv/ixtHaKNV6IdA==
+X-Google-Smtp-Source: ABdhPJyxn++r2kWJKKA3mp7cPqmfc0yLb9InKilGvqhwl3CU88R8VsaLnYO+iZRlZx1sa80vJg95tsiFTWXYo9RcuvA=
+X-Received: by 2002:a17:906:fb89:: with SMTP id lr9mr63740ejb.523.1621443223969;
+ Wed, 19 May 2021 09:53:43 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR11MB3645.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bca4abac-66b3-4a90-df1d-08d91ae5947c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 May 2021 16:45:59.0110
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IzNKBVhR3aNdM+TjKX/8L/qIN0aHszWpMK2QM6d4RmwGrKrX84zFt7PmPPoDIGUzMBmJhhdiYEIQuI4BRumgsOsfIOOA+WDtLKbnwr0ZYBE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3662
+References: <20210419165451.2176200-1-Jonathan.Cameron@huawei.com>
+ <20210419165451.2176200-3-Jonathan.Cameron@huawei.com> <20210506215934.GJ1904484@iweiny-DESK2.sc.intel.com>
+ <20210511175006.00007861@Huawei.com> <CAPcyv4j=uww+85b4AbWmoPNPry_+JLEpEnuywpdC8PonXmRmEg@mail.gmail.com>
+ <20210514094755.00002081@Huawei.com> <CAPcyv4h_qSZq+sTAOTKDNsO3xPmq=65j8oO1iw0WdVFj8+XrOA@mail.gmail.com>
+ <20210517094045.00004d58@Huawei.com> <CAPcyv4iQcV_U1qmQhXKM0RG9v-sAEPwtTxnv=P86yJrCH25k+w@mail.gmail.com>
+ <20210518110403.000013e6@Huawei.com> <CAPcyv4g3JPtAHzemKdQiM44ZkZ_0u+U-UJ5mfeU3fKzRWuaDyQ@mail.gmail.com>
+ <20210519161156.00003bf9@Huawei.com> <CAPcyv4j_oEWG1NG1wYryVt3-Gx8q2WwzP7_xhchsDARDR0zBEA@mail.gmail.com>
+ <20210519172052.00002124@Huawei.com> <20210519173352.000026fe@Huawei.com>
+In-Reply-To: <20210519173352.000026fe@Huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 19 May 2021 09:53:33 -0700
+Message-ID: <CAPcyv4gUy0nNh-3y2wWVwM4AtO4F8OOJCtWz_ZH7Eu0H=oymuw@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-UmUtb3BlbmluZyBkaXNjdXNzaW9uIG9uIHZlbmRvci1zcGVjaWZpYyBjYXBhYmlsaXRpZXMgb24g
-bGludXgtY3hsIG1haWxpbmcgbGlzdC4NCg0KQmFja2dyb3VuZDoNCj09PT09PT09PT09DQoNClRo
-ZSBkZWZhdWx0L3JlY29tbWVuZGVkIHZhbHVlIG9mIHRoZSBDT05GSUdfQ1hMX01FTV9SQVdfQ09N
-TUFORFMgS2NvbmZpZyBrbm9iIHdpbGwgYmxvY2sgcGFzc3Rocm91Z2ggb2YgdmVuZG9yIGRlZmlu
-ZWQgbWFpbGJveCBjb21tYW5kcy4gIElmIHRoaXMgS2NvbmZpZyBrbm9iIGlzIGVuYWJsZWQsIHBh
-c3N0aHJvdWdoIG9mIHZlbmRvciBkZWZpbmVkIGNvbW1hbmRzIHdpbGwgc3RpbGwgdGFpbnQgdGhl
-IGtlcm5lbC4NCg0KVGhlcmUgaXMgYSBjb25zZW5zdXMgYW1vbmcgZGV2aWNlIGFuZCBzeXN0ZW0g
-bWFudWZhY3R1cmVycyB0aGF0IHZlbmRvci1zcGVjaWZpYyBjYXBhYmlsaXRpZXMgYXJlIGEgbmVj
-ZXNzYXJ5IGNvbXBvbmVudCBvZiBzcGVjaWZpY2F0aW9ucyBhbmQgd2UgbmVlZCBhIHNvbHV0aW9u
-IHRvIHN1cHBvcnQgdGhlc2UgY2FwYWJpbGl0aWVzLiBXaXRoaW4gcmVhc29uLCB0aGVzZSBjYXBh
-YmlsaXRpZXMgbmVlZCB0byBiZSBlbmFibGVkIHdpdGhvdXQgdGFpbnRpbmcgdGhlIGtlcm5lbC4N
-Cg0KS2V5IHBvaW50cyB0byBjb25zaWRlciByZWdhcmRpbmcgaGFuZGxpbmcgb2YgdmVuZG9yLXNw
-ZWNpZmljIGNhcGFiaWxpdGllczoNCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQoNCiogVGFpbnRpbmcgdGhl
-IGtlcm5lbCBkdXJpbmcgaGFybWxlc3Mgb3BlcmF0aW9ucyBpcyBub3QgZGVzaXJhYmxlLiBXaGls
-ZSBzb21lIHVzZXJzIGhhdmUgZnVsbCBjb250cm9sIG92ZXIgdGhlIGtlcm5lbCBhbmQgY291bGQg
-cGF0Y2ggdGhpcyBiZWhhdmlvciwgdGhvc2UgdXNlcnMgd291bGQgcHJlZmVyIHRvIHVzZSB1cHN0
-cmVhbWVkIGtlcm5lbCB2cy4gY2FycnlpbmcgcGF0Y2hlcy4NCg0KKiBUaGVyZSBpcyBhZ3JlZW1l
-bnQgdGhhdCBzb21lIGNhcGFiaWxpdGllcyBhcmUgY2FuZGlkYXRlcyBmb3Igc3RhbmRhcmRpemF0
-aW9uLCBidXQgYSBwYXRoIGZvciBlbmFibGluZyB0aGF0IGNsYXNzIG9mIGZ1bmN0aW9uYWxpdHkg
-dW50aWwgaXQgbWFrZXMgaXRzIHdheSBpbnRvIHRoZSBzcGVjIGlzIG5lZWRlZC4gIEl0IHRha2Vz
-IGEgbG9uZyB0aW1lIHRvIGdldCBhbnl0aGluZyB0aHJvdWdoIHRoZSBmdWxsIHByb2Nlc3Mgb2Yg
-YWNjZXB0YW5jZSBpbnRvIHRoZSBzcGVjIGFuZCB1cHN0cmVhbWVkLiBUaGlzIHdpbGwgc2xvdyBh
-ZG9wdGlvbiBhbmQgc3RpZmxlIGlubm92YXRpb24uDQoNCiogVGhlIHJlYWxpdHkgaXMgdGhhdCB3
-ZSBjYW7igJl0IHB1dCBldmVyeXRoaW5nIGludG8gdGhlIHNwZWMuIFRoZSBwcmltYXJ5IGNhc2Vz
-IGFyZSB2ZW5kb3Itc3BlY2lmaWMgaW1wbGVtZW50YXRpb25zIHdoaWNoIGFyZSBub3Qgc3VpdGVk
-IGZvciBzdGFuZGFyZGl6YXRpb24sIGFuZCBwcm9wcmlldGFyeS9kaWZmZXJlbnRpYXRpbmcgZmVh
-dHVyZXMuDQoNCiogTGltaXRpbmcgdGhlIHVzZWZ1bG5lc3Mgb2YgdGhlIHBhdGggZm9yIHZlbmRv
-ciBjYXBhYmlsaXRpZXMgdGhyb3VnaCB0aGUgZHJpdmVyIHdpbGwgbGlrZWx5IHJlc3VsdCBpbiB1
-bmRlc2lyYWJsZSBzaWRlLWVmZmVjdHMgYXMgc3VwcGxpZXJzIGFuZCBvdGhlcnMgd29u4oCZdCBh
-Y2NlcHQgdGhpcywgZm9yY2luZyB2ZW5kb3JzIHRvIGRldmVsb3Agd29ya2Fyb3VuZHMgdGhhdCBi
-eXBhc3MgdGhlIGRyaXZlci4gSWYgdGhlIGRyaXZlciBwcm92aWRlcyBhIHVzYWJsZSBwYXRod2F5
-IHRoYXQgZG9lcyBub3QgdGFpbnQgdGhlIGtlcm5lbCwgdmVuZG9ycyBhcmUgbGVzcyBsaWtlbHkg
-dG8gaW1wbGVtZW50IHN1Y2ggYXBwcm9hY2hlcy4gVGhlIGRyaXZlciB3aWxsIHRoZW4gYmUgYWJs
-ZSB0byBwZXJmb3JtIHNvbWUgcG9saWNpbmcsIGZvciBpbnN0YW5jZSBiYXNlZCBvbiBDRUwgY29u
-dGVudHMsIGFuZCBDWEwgZGV2aWNlIHByb3ZpZGVycyBjYW4gYmUgY29uc2lkZXJlZCBnb29kIGNp
-dGl6ZW5zIG9mIHRoZSBMaW51eCBjb21tdW5pdHkuDQoNClJlY29tbWVuZGF0aW9uOg0KPT09PT09
-PT09PT09PT09DQoNCkFsbG93IHJvb3QgdG8gaXNzdWUgdmVuZG9yIGRlZmluZWQgcGFzc3Rocm91
-Z2ggY29tbWFuZHMgYnkgZGVmYXVsdCBhbmQgdXNlIHRoZSBDRUwgdG8gZGV0ZXJtaW5lIHdoZXRo
-ZXIgYSBnaXZlbiBjb21tYW5kIHNob3VsZCB0YWludCB0aGUga2VybmVsLiAgQ29tbWFuZHMgdGhh
-dCBoYXZlIG5vIGVmZmVjdHMsIG9yIGhhcm1sZXNzIGVmZmVjdHMsIHNob3VsZCBub3QgdGFpbnQg
-dGhlIGtlcm5lbC4gIENvbW1hbmRzIHRoYXQgaGF2ZSBwb3RlbnRpYWxseSBoYXJtZnVsIGVmZmVj
-dHMgc2hvdWxkIHRhaW50IHRoZSBrZXJuZWwuDQoNCkV4YW1wbGVzOg0KPT09PT09PT09DQoNCkNh
-c2UgMTogVmVuZG9yIGRlZmluZWQgaXMgbmVlZGVkLCBhbmQgdGhlIG9wZXJhdGlvbnMgZG8gbm90
-IGltcGFjdCB0aGUgbm9ybWFsIG9wZXJhdGlvbiBvZiB0aGUgZGV2aWNlLiBUaGUgQ0VMIGNvbnRl
-bnRzIGNvdWxkIGJlIHVzZWQgdG8gZGV0ZXJtaW5lIHRoZXJlIGlzIG5vIGltcGFjdCBhbmQgdGhl
-cmVieSBwZXJtaXQgdGhlc2UgY29tbWFuZHMgd2l0aG91dCB0YWludGluZyB0aGUga2VybmVsLg0K
-DQoqIEV4YW1wbGUgMS4xOiBJbnRlcmZhY2luZyB3aXRoIGNvbW1vbiBkaWFnbm9zdGljIGZlYXR1
-cmVzIHdoaWNoIG1heSBoYXZlIHdpZGUtcmFuZ2luZyBpbXBsZW1lbnRhdGlvbnMgYW5kIGNhcGFi
-aWxpdGllcyBhY3Jvc3MgZGlmZmVyZW50IHZlbmRvcnMuIEUuZy4gU2lnbmFsIGludGVncml0eSBk
-aWFnbm9zdGljcywgZGVidWcgY291bnRlcnMuDQoNCiogRXhhbXBsZSAxLjI6IFJldHJpZXZlIGRp
-YWdub3N0aWNzIGRhdGEgZnJvbSBwcm9wcmlldGFyeSB2YWx1ZS1hZGQgZmVhdHVyZXMuDQoNCkNh
-c2UgMjogVmVuZG9yIGRlZmluZWQgaXMgbmVlZGVkLCBidXQgdGhlIG9wZXJhdGlvbnMgaW1wYWN0
-IHRoZSBub3JtYWwgb3BlcmF0aW9uIG9mIHRoZSBkZXZpY2UuIENFTCBjb250ZW50cyBjYW4gYmUg
-dXNlZCB0byBkZXRlcm1pbmUgdGhlIGltcGFjdCBhbmQgdGFpbnQgdGhlIGtlcm5lbC4NCg0KKiBF
-eGFtcGxlIDIuMTogVmVuZG9yLXNwZWNpZmljIGRpYWdub3N0aWNzIGZlYXR1cmVzIHRoYXQgYXJl
-IGludGVuZGVkIHRvIHN0cmVzcyB0aGUgZGV2aWNlIG9yIG1lbW9yeSBmb3IgcXVhbGlmaWNhdGlv
-biBhbmQgdmFsaWRhdGlvbiBwdXJwb3Nlcy4gDQoNClEgJiBBOg0KPT09PT09DQoNClE6IFdoeSBp
-cyBpdCBhIHByb2JsZW0gdG8gaGF2ZSBDT05GSUdfQ1hMX01FTV9SQVdfQ09NTUFORFMgZGlzYWJs
-ZWQgYnkgZGVmYXVsdD8NCkE6IFRoaXMgcHVzaGVzIHRoZSBwcm9ibGVtIHRvIHRoZSBkaXN0cm9z
-LiBEaXN0cm9zIGFyZSBsaWtlbHkgdG8gZm9sbG93IHRoZSBLY29uZmlnIHJlY29tbWVuZGF0aW9u
-IGJ5IGRlZmF1bHQsIHNvIGluZHVzdHJ5IHdpbGwgbmVlZCB0byBoYXZlIHRoaXMgZGlzY3Vzc2lv
-biB3aXRoIGVhY2ggbWFqb3IgZGlzdHJvIG1haW50YWluZXIuIElmIHdlIGNhbiByZWFjaCBhIGNv
-bnNlbnN1cyBpbiB0aGlzIGZvcnVtIHRoYXQgd2UgY2FuIGRlZmF1bHQgdGhpcyBrbm9iIHRvIGVu
-YWJsZWQsIGRpc3Ryb3MgYXJlIG1vcmUgbGlrZWx5IHRvIGFsc28gZW5hYmxlIHRoZSBmdW5jdGlv
-bmFsaXR5Lg0KDQpROiBXaHkgaXMgaXQgYSBwcm9ibGVtIHRvIHRhaW50IHRoZSBrZXJuZWwgZm9y
-IGFsbCBwYXNzdGhyb3VnaCBjb21tYW5kcyB3aGVuIENPTkZJR19DWExfTUVNX1JBV19DT01NQU5E
-UyBpcyBlbmFibGVkPw0KQTogU29tZSBmdW5jdGlvbmFsaXR5IGlzIGhhcm1sZXNzLiBJZiB0aGUg
-a2VybmVsIGlzIHRhaW50ZWQgd2hlbiBleGVjdXRpbmcgYmFzaWMgcmVhZC1vbmx5IGRpYWdub3N0
-aWNzLCBpdCBtYXkgYmUgaGFyZGVyIHRvIGdldCBzdXBwb3J0IGZvciByZWFsIGlzc3VlcyBhcyB0
-aGUgc3RhdGUgb2YgdGhlIHN5c3RlbSB3aWxsIGJlIHN1c3BlY3QuIFRoZSBkcml2ZXIgc2hvdWxk
-IGJlIGFibGUgdG8gdXNlIHRoZSBDRUwgdG8gZGV0ZXJtaW5lIHdoZW4gdG8gdGFpbnQuDQoNClE6
-IFdoeSBjYW4ndCB3ZSB1c2UgVmVuZG9yIExvZyBmb3IgdGhpcz8NCkE6IFNldmVyYWwgcmVhc29u
-czoNCiogVGhlcmUgaXMgbm8gYWJpbGl0eSB0byBjb250cm9sIGZ1bmN0aW9uYWxpdHkuIE1hbnkg
-ZGlhZ25vc3RpYyBmZWF0dXJlcyByZXF1aXJlIGlucHV0IHRvIGNvbmZpZ3VyZSB3aGF0IGlzIGJl
-aW5nIHJlYWQuDQoqIFRoZSBkZXZpY2UgbWF5IHJlcXVpcmUgdGltZSB0byBjb2xsZWN0IHRoZSBk
-aWFnbm9zdGljIGluZm9ybWF0aW9uLCBidXQgbXVzdCByZXNwb25kIHRvIEdldCBMb2cgaW4gdW5k
-ZXIgMiBzZWNvbmRzIChwcmVmZXJhYmx5IG11Y2ggZmFzdGVyKS4NCiogSXQgaXMgYSBzaW5nbGUg
-YmxvYiwgd2hpY2ggY2FuIGJlIGFjY2Vzc2VkIGF0IGFyYml0cmFyeSBvZmZzZXRzLiBUaGUgbGlt
-aXRlZCBzZXQgb2YgdXNlIGNhc2VzIHRoYXQgY291bGQgYmUgY292ZXJlZCBieSB0aGlzIG1vZGVs
-IHdvdWxkIHJlcXVpcmUgZHJpdmVyIGNoYW5nZXMgdG8gZW5hYmxlIHRoZSBWZW5kb3IgTG9nIHRv
-IGJlIGR1bXBlZCB3aXRoIGZpbmVyIGdyYW51bGFyaXR5LiBCdXQgZXZlbiB0aGVuLCB0aGUgZmFj
-dCB0aGF0IHRoZSBob3N0IGNvdWxkIHBvdGVudGlhbGx5IHJlYWQgYW55d2hlcmUgaW4gdGhlIFZl
-bmRvciBMb2cgYXQgYW55IHRpbWUgbWFrZXMgcm9idXN0bHkgZW5jb2RpbmcgYSBzZXQgb2YgZGVi
-dWcgZm9yZW5zaWNzIHRoYXQgYXJlIHBvcHVsYXRlZCBvbiBkZW1hbmQgKGluIHJlc3BvbnNlIHRv
-IEdldCBMb2cpIGZyb20gdW5kZXJseWluZyBoYXJkd2FyZSBpbnRvIHZlbmRvciBkZWZpbmVkIG9m
-ZnNldHMgaW4gdGhlIFZlbmRvciBMb2cgZGlmZmljdWx0Lg0KDQpROiBXaGF0IGFib3V0IHNlY3Vy
-aXR5Pw0KQTogV2hpbGUgdmVuZG9yIGNvbW1hbmRzIGhhdmUgdGhlIHBvdGVudGlhbCB0byBiZSBh
-IHNlY3VyaXR5IHJpc2ssIGl0IHNob3VsZCBub3QgYmUgdGhlIGRyaXZlcuKAmXMgcmVzcG9uc2li
-aWxpdHkgdG8gc29sdmUgdGhhdCBwcm9ibGVtLiBUaGUgaW4tYmFuZCBwYXRoIHRocm91Z2ggdGhl
-IGRyaXZlciBpcyBqdXN0IG9uZSBwYXRoIGludG8gdGhlIGRldmljZS4gRm9yIGEgZGV2aWNlIHRv
-IGJlIHNlY3VyZSwgdmVuZG9ycyBhbmQgdGhlaXIgcGFydG5lciBjdXN0b21lcnMgbmVlZCB0byBs
-b2NrIG91dCBhbnl0aGluZyB0aGF0IGlzIGEgc2VjdXJpdHkgcmlzayBhdCB0aGUgZGV2aWNlIGxl
-dmVsIGZvciBwcm9kdWN0aW9uLiBHaXZlbiB0aGF0IHRoaXMgZGV2aWNlIGxldmVsIGxvY2tvdXQg
-aXMgbmVjZXNzYXJ5LCB0aGUgY2F0Y2ggYWxsIGxvY2tvdXQgYXQgdGhlIGRyaXZlciBsZXZlbCBp
-cyByZWR1bmRhbnQgZnJvbSBhIGRldmljZSBzZWN1cml0eSBwb2ludCBvZiB2aWV3Lg0KDQpROiBI
-b3cgYWJvdXQgd2UgYWRkIGNvbW1hbmRzIHRvIFVBUEkgaW5zdGVhZD8NCkE6IFZlbmRvcnMgc2hv
-dWxkIG5vdCBiZSBhZGRpbmcgaG9va3MgaW50byBhIGNsYXNzIGRyaXZlciB3aGljaCBpcyBzdXBw
-b3NlZCB0byBiZSBnZW5lcmljLiBUaGUgZGV0YWlscyBvZiBhbnl0aGluZyB0aGF0IGdvZXMgaW4g
-VUFQSSB3b3VsZCBuZWVkIHRvIGJlIGZ1bGx5IHB1YmxpYy4gQW55IHByb3Bvc2VkIGFkZGl0aW9u
-cyB3b3VsZCBuZWVkIHRvIGJlIGZ1bGx5IGV4cGxhaW5lZCBhcyB0byB3aHkgdGhleSBhcmUgbm90
-IGFibGUgdG8gYmUgYWRkZWQgdG8gdGhlIHNwZWMuIFRoaXMgbGltaXRzIHRoZSB2aWFiaWxpdHkg
-b2YgVUFQSSBhcyBhIG1ldGhvZCBmb3IgdW5sb2NraW5nIHZhbHVlLWFkZCBmdW5jdGlvbmFsaXR5
-Lg0KDQpDb25jbHVzaW9uOg0KPT09PT09PT09PT0NCg0KSSBsb29rIGZvcndhcmQgdG8gYSBoZWFs
-dGh5IGRpc2N1c3Npb24gb24gaG93IHdlIGNhbiBtb3ZlIHRoaXMgZm9yd2FyZCwgYW5kIGhvcGUg
-dGhhdCB3ZSBjYW4gcmVhY2ggYW4gYW5zd2VyIHRoYXQgaXMgYWNjZXB0YWJsZSBmb3IgdGhlIGtl
-cm5lbCBtYWludGFpbmVycywgQ1hMIGRldmljZSB2ZW5kb3JzLCBhbmQgZW5kIHVzZXJzLg0KDQpS
-ZWdhcmRzLA0KQXJpZWwNCg==
+On Wed, May 19, 2021 at 9:35 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Wed, 19 May 2021 17:20:52 +0100
+> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+>
+> > On Wed, 19 May 2021 08:29:58 -0700
+> > Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > > On Wed, May 19, 2021 at 8:14 AM Jonathan Cameron
+> > > <Jonathan.Cameron@huawei.com> wrote:
+> > > >
+> > > > On Wed, 19 May 2021 07:18:28 -0700
+> > > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > > >
+> > > > > On Tue, May 18, 2021 at 3:06 AM Jonathan Cameron
+> > > > > <Jonathan.Cameron@huawei.com> wrote:
+> > > > > >
+> > > > > > On Mon, 17 May 2021 10:21:14 -0700
+> > > > > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > > >
+> > > > > > > On Mon, May 17, 2021 at 1:42 AM Jonathan Cameron
+> > > > > > > <Jonathan.Cameron@huawei.com> wrote:
+> > > > > > > >
+> > > > > > > > On Fri, 14 May 2021 11:37:12 -0700
+> > > > > > > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > > > > >
+> > > > > > > > > On Fri, May 14, 2021 at 1:50 AM Jonathan Cameron
+> > > > > > > > > <Jonathan.Cameron@huawei.com> wrote:
+> > > > > > > > > [..]
+> > > > > > > > > > > If it simplifies the kernel implementation to assume single
+> > > > > > > > > > > kernel-initiator then I think that's more than enough reason to block
+> > > > > > > > > > > out userspace, and/or provide userspace a method to get into the
+> > > > > > > > > > > kernel's queue for service.
+> > > > > > > > > >
+> > > > > > > > > > This last suggestion makes sense to me. Let's provide a 'right' way
+> > > > > > > > > > to access the DOE from user space. I like the idea if it being possible
+> > > > > > > > > > to run CXL compliance tests from userspace whilst the driver is loaded.
+> > > > > > > > >
+> > > > > > > > > Ah, and I like your observation that once the kernel provides a
+> > > > > > > > > "right" way to access DOE then userspace direct-access of DOE is
+> > > > > > > > > indeed a "you get to keep the pieces" event like any other unwanted
+> > > > > > > > > userspace config-write.
+> > > > > > > > >
+> > > > > > > > > > Bjorn, given this would be a generic PCI thing, any preference for what
+> > > > > > > > > > this interface might look like?   /dev/pcidoe[xxxxxx].i with ioctls similar
+> > > > > > > > > > to those for the BAR based CXL mailboxes?
+> > > > > > > > >
+> > > > > > > > > (warning, anti-ioctl bias incoming...)
+> > > > > > > >
+> > > > > > > > I feel very similar about ioctls - my immediate thought was to shove this in
+> > > > > > > > debugfs, but that feels the wrong choice if we are trying to persuade people
+> > > > > > > > to use it instead of writing code that directly accesses the config space.
+> > > > > > > >
+> > > > > > > > >
+> > > > > > > > > Hmm, DOE has an enumeration capability, could the DOE driver use a
+> > > > > > > > > scheme to have a sysfs bin_attr per discovered object type? This would
+> > > > > > > > > make it simliar to the pci-vpd sysfs interface.
+> > > > > > > >
+> > > > > > > > We can discover the protocols, but anything beyond that is protocol
+> > > > > > > > specific.  I don't think there is a enough info available by any standards
+> > > > > > > > defined method. Also part of the reason to allow a safe userspace interface
+> > > > > > > > would be to provide a generic interface for vendor protocols and things like
+> > > > > > > > CXL compliance tests where we will almost certainly never provide a more
+> > > > > > > > specific kernel interface.
+> > > > > > > >
+> > > > > > > > Whilst sysfs would work for CDAT, some protocols are challenge response rather
+> > > > > > > > than simple read back and that really doesn't fit well for sysfs model.
+> > > > > > > > If we get other protocols that are simple data read back, then I would
+> > > > > > > > advocate giving them a simple sysfs interface much like proposed for CDAT
+> > > > > > > > as it will always be simpler to use + self describing.
+> > > > > > > >
+> > > > > > > > On a lesser note it might be helpful to provide sysfs attrs for
+> > > > > > > > what protocols are supported.  The alternative is to let userspace run
+> > > > > > > > the discovery protocol. Perhaps we can do this as a later phase.
+> > > > > > > >
+> > > > > > > > >
+> > > > > > > > > Then the kernel could cache objects like CDAT that don't change
+> > > > > > > > > outside of some invalidation event.
+> > > > > > > >
+> > > > > > > > It's been a while since I last saw any conversation on sysfs bin_attrs
+> > > > > > > > but mostly I thought the feeling was pretty strongly against them for anything
+> > > > > > > > but a few niche usecases.
+> > > > > > > >
+> > > > > > > > Feels to me like it would break most of the usual rules in a way vpd does
+> > > > > > > > not (IIRC VPD is supposed to be a simple in the sense that if you write a value
+> > > > > > > > to a writable part, you will read back the same value).
+> > > > > > > >
+> > > > > > > > +CC Greg who is a fount of knowledge in this area (and regularly + correctly
+> > > > > > > > screams at the ways I try to abuse sysfs :)  Note I don't think Dan was
+> > > > > > > > suggesting implementing response / request directly, but I think that is
+> > > > > > > > all we could do given DOE protocols can be vendor specific and the standard
+> > > > > > > > discovery protocol doesn't let us know the fine grained support (what commands
+> > > > > > > > within a given protocol).
+> > > > > > >
+> > > > > > > I'm not all that interested in supporting vendor defined DOE
+> > > > > > > shenanigans. There's more than enough published DOE protocols that the
+> > > > > > > kernel could limit its support to the known set. This is similar to
+> > > > > > > how ACPI DSMs are not generically supported, but when they appear in a
+> > > > > > > published specification the kernel may then grow the support. The
+> > > > > > > supported protocols could be limited to: CDAT, PCIe IDE, CXL
+> > > > > > > Compliance, etc...
+> > > > > > >
+> > > > > > > Vendor specific DOE is in the same class as unfettered /dev/mem
+> > > > > > > access, first you need to disable the kernel's integrity and
+> > > > > > > confidentiality protections, and then you can do whatever you want. If
+> > > > > > > a vendor wants a DOE protocol supported in the "trusted" set they can
+> > > > > > > simply publish the specification and send the proper support patches.
+> > > > > >
+> > > > > > Fair enough, though the interface should be root only, so a vendor shooting
+> > > > > > themselves in the foot this way would be no different to using pcitools
+> > > > > > to access the device directly (we are just providing safety from concurrency
+> > > > > > point of view).
+> > > > > >
+> > > > > > Anyway, I can see two options for how to do this.
+> > > > > >
+> > > > > > 1) Per protocol interface. Would not be generic, as these work in entirely
+> > > > > >    different ways (some are simple read back of tables, some require complex
+> > > > > >    cycles of operations in the right order with data flowing in both directions)
+> > > > > > 2) White list those protocols we are going to let through a generic interface
+> > > > > >    Not including CXL compliance for instance as that has nasty side effects!
+> > > > > >
+> > > > > > If we want to enable userspace DOE access, I prefer option 2.
+> > > > > >
+> > > > > > Note that I wasn't that keen on a userspace interface in the first place as
+> > > > > > in my view these should all be handled in kernel.
+> > > > > > Ultimately we should have case 1 if userspace access make sense.
+> > > > > > However, if we do this we shouldn't pretend we are providing userspace
+> > > > > > access to the DOE at all.  We are providing interfaces to things that just
+> > > > > > happen to be implemented using DOE under the hood.
+> > > > > >
+> > > > > > I have a prototype of a trivial ioctl based interface. I'll send it out
+> > > > > > as an RFC later this week.  Might add a white list, depending on where
+> > > > > > this discussion goes.
+> > > > > >
+> > > > >
+> > > > > I'd say let's do this in typical Linux fashion and not solve future
+> > > > > problems before they need to be solved. I.e. start small and build
+> > > > > incrementally. To me that looks like a sysfs interface to convey a
+> > > > > cached copy of a CDAT with an internal interface for a driver to
+> > > > > trigger invalidations and re-reads on the next access. This would
+> > > > > assume that userspace may have left the DOE in an indeterminate state
+> > > > > and an abort cycle may be needed. A 1 second delay for the rare case
+> > > > > where a collision is detected seems reasonable for just CDAT
+> > > > > retrieval.
+> > > >
+> > > > The problem is you can not detect a collision.
+> > >
+> > > This discussion started because Ira questioned the handling of the
+> > > busy status. If the DOE is busy and the kernel did not make it busy
+> > > then there was a collision, no?
+> >
+> > True, but not complete. Not having busy set does not mean there
+> > wasn't a collision. Busy is an indication that the EP can't recieve
+> > a new request (no space in buffer or similar), not that there is a response
+> > still to be sent back.  We have no way to tell if there is a response
+> > going to come back in the future. There is no 'exchange in flight' flag.
+>
+> Perhaps useful to add a quote from the DOE ECN here.
+> This is in an implementation note on Page 6.
+>
+> "The DOE Busy bit can be used to indicate that the DOE responder is
+>  temporarily unable to accept a data object. It is necessary for a
+>  DOE requester to ensure that individual data object transfers are
+>  completed, and that a request/response contract is completed, for
+>  example using a mutex mechanism to block other conflicting traffic
+>  for cases where such conflicts are possible."
+
+I read that as the specification mandating my proposal to disallow
+multi-initiator access. My only mistake was making the exclusion apply
+to reads and not limiting it to the minimum of config write exclusion.
