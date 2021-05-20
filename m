@@ -2,156 +2,208 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03287C433ED
-	for <linux-cxl@archiver.kernel.org>; Thu, 20 May 2021 01:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCAFC433ED
+	for <linux-cxl@archiver.kernel.org>; Thu, 20 May 2021 08:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D13E86112F
-	for <linux-cxl@archiver.kernel.org>; Thu, 20 May 2021 01:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 701D7610A2
+	for <linux-cxl@archiver.kernel.org>; Thu, 20 May 2021 08:23:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229598AbhETBCX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 19 May 2021 21:02:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43826 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbhETBCX (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 19 May 2021 21:02:23 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCB4FC06175F
-        for <linux-cxl@vger.kernel.org>; Wed, 19 May 2021 18:01:02 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id s22so22396416ejv.12
-        for <linux-cxl@vger.kernel.org>; Wed, 19 May 2021 18:01:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PV93lQCglOhbMGVMfJuGtexcibz93Be8FcNhBRCyYy0=;
-        b=0fuJ485GdotQotosDlB7w8ZsyIW7lXvt6u5gXJL0+f4VdHJTL/zW0IZBFksc3Rd/OE
-         lO/rDEXFXwGylfro3ffeLx9mrxQGY2Zxa/ba3yz7+TFIfpXk5fmtclz7uWzIN0C/jXOr
-         WcnV612JXZOHC9kkbcSN42WyS5XLrTp/yTLIvDObuB80PeKq3znZ0ufQKg+FCvvh9ETv
-         gFUHJ1G3ZOzeKXD0lqu1wH+C6zdfQw1LR/z7H6NnrQrIWl72kUsSlwpvbdrQwUQu9+Cp
-         HCFpOJpmjfXsm6Yd2Nvjq3e1ftsk1gpClygpra1G7XRqTssvN04/h9idzkTsdSKqHk3B
-         mtLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PV93lQCglOhbMGVMfJuGtexcibz93Be8FcNhBRCyYy0=;
-        b=g2hCefXAyJmQR2LNhG1yMSmd+Iig0qyKeSdAOftUzKRtaYuhYrKFlzIZ5QLKSfyFpB
-         2QjLLtyS5xnd+GpwCKgq3Mx88tWoYQ0hrHiLz4nL7PI2INPWB7Ps9MZplfo7nhxjOQ/X
-         nO70kNCe6DmlotHW/ABdWgvJNvX+goSPNkwNGv6iv1Dle79aNwNm2JPMo9GdrQ1iteop
-         uoHRsJoWevd7zOyhUhX8SeZCCBLzL0kWmhV9ycWmKIzSWDlH4IJp2ZIHxrFUCvdwrbQK
-         fCkWSPaQQcNBHzkQ7RoiJZnXptktYZEBiUX4p7CaymrQBXbcl1LUtuK04HgufyGqZ3UT
-         ArNg==
-X-Gm-Message-State: AOAM533XX0Oz4ucDWsr+uM/l95t+TWonLG5fiUtDbN5xwcMGVsY1mbSk
-        hLO2y1hhcUTsdwQjYm2nKtVld2pECVOld7aTB7ZCbQ==
-X-Google-Smtp-Source: ABdhPJyETbYYVte2ikhLlYPAxcbuZKTTPSS3w05FELgDFPBeHQdzaOWTSiibIqTRXuxuSv5Z383WA+LZCv2bbWtco7U=
-X-Received: by 2002:a17:906:e210:: with SMTP id gf16mr2003631ejb.472.1621472461276;
- Wed, 19 May 2021 18:01:01 -0700 (PDT)
+        id S230383AbhETIZR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 20 May 2021 04:25:17 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4696 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229536AbhETIZR (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 20 May 2021 04:25:17 -0400
+Received: from dggems705-chm.china.huawei.com (unknown [172.30.72.60])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Fm2kW6mLpz16QST;
+        Thu, 20 May 2021 16:21:07 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ dggems705-chm.china.huawei.com (10.3.19.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Thu, 20 May 2021 16:23:54 +0800
+Received: from localhost (10.52.127.139) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Thu, 20 May
+ 2021 09:23:51 +0100
+Date:   Thu, 20 May 2021 09:22:05 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Ira Weiny <ira.weiny@intel.com>, <linux-cxl@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
+Message-ID: <20210520092205.000044ee@Huawei.com>
+In-Reply-To: <CAPcyv4hCCqEPzGKh4hyjHEBE3jDn9iTA_WUOZMFptHKrX-2J_A@mail.gmail.com>
+References: <20210419165451.2176200-1-Jonathan.Cameron@huawei.com>
+        <20210511175006.00007861@Huawei.com>
+        <CAPcyv4j=uww+85b4AbWmoPNPry_+JLEpEnuywpdC8PonXmRmEg@mail.gmail.com>
+        <20210514094755.00002081@Huawei.com>
+        <CAPcyv4h_qSZq+sTAOTKDNsO3xPmq=65j8oO1iw0WdVFj8+XrOA@mail.gmail.com>
+        <20210517094045.00004d58@Huawei.com>
+        <CAPcyv4iQcV_U1qmQhXKM0RG9v-sAEPwtTxnv=P86yJrCH25k+w@mail.gmail.com>
+        <20210518110403.000013e6@Huawei.com>
+        <CAPcyv4g3JPtAHzemKdQiM44ZkZ_0u+U-UJ5mfeU3fKzRWuaDyQ@mail.gmail.com>
+        <20210519161156.00003bf9@Huawei.com>
+        <CAPcyv4j_oEWG1NG1wYryVt3-Gx8q2WwzP7_xhchsDARDR0zBEA@mail.gmail.com>
+        <20210519172052.00002124@Huawei.com>
+        <20210519173352.000026fe@Huawei.com>
+        <CAPcyv4gUy0nNh-3y2wWVwM4AtO4F8OOJCtWz_ZH7Eu0H=oymuw@mail.gmail.com>
+        <20210519180057.00002ac3@Huawei.com>
+        <CAPcyv4ii3KC6MBBxJrnCUCm_JGS7ugL+JTFUu9QTBnPUhQFtfQ@mail.gmail.com>
+        <20210519211818.00002acf@Huawei.com>
+        <CAPcyv4hCCqEPzGKh4hyjHEBE3jDn9iTA_WUOZMFptHKrX-2J_A@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <20210506223654.1310516-1-ira.weiny@intel.com> <20210506223654.1310516-3-ira.weiny@intel.com>
-In-Reply-To: <20210506223654.1310516-3-ira.weiny@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 19 May 2021 18:00:51 -0700
-Message-ID: <CAPcyv4i3V2AYqoSzA=V265aUx5VpZbMXu0zFw0nk_f3FdCr-Yw@mail.gmail.com>
-Subject: Re: [PATCH 2/4] cxl/mem: Reserve all device regions at once
-To:     "Weiny, Ira" <ira.weiny@intel.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-cxl@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.127.139]
+X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, May 6, 2021 at 3:37 PM <ira.weiny@intel.com> wrote:
->
-> From: Ira Weiny <ira.weiny@intel.com>
->
-> In order to remap individual register sets each bar region must be
-> reserved prior to mapping.  Because the details of individual register
-> sets are contained within the BARs themselves, the bar must be mapped 2
-> times, once to extract this information and a second time for each
-> register set.
->
-> Rather than attempt to reserve each BAR individually and track if that
-> bar has been reserved.  Open code pcim_iomap_regions() by first
-> reserving all memory regions on the device and then mapping the bars
-> individually as needed.
->
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ---
->  drivers/cxl/pci.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 191603b4e10b..40016709b310 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -926,9 +926,9 @@ static void __iomem *cxl_mem_map_regblock(struct cxl_mem *cxlm, u32 reg_lo, u32
->  {
->         struct pci_dev *pdev = cxlm->pdev;
->         struct device *dev = &pdev->dev;
-> +       void __iomem *rc;
->         u64 offset;
->         u8 bar;
-> -       int rc;
->
->         offset = ((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
->         bar = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
-> @@ -940,13 +940,14 @@ static void __iomem *cxl_mem_map_regblock(struct cxl_mem *cxlm, u32 reg_lo, u32
->                 return (void __iomem *)ERR_PTR(-ENXIO);
->         }
->
-> -       rc = pcim_iomap_regions(pdev, BIT(bar), pci_name(pdev));
-> -       if (rc) {
-> +       rc = pcim_iomap(pdev, bar, 0);
+On Wed, 19 May 2021 16:51:36 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-It is odd that the temporary region pinning uses non-pcim, but the
-temporary mapping using pcim.
+> On Wed, May 19, 2021 at 1:20 PM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
+> >
+> > On Wed, 19 May 2021 12:20:17 -0700
+> > Dan Williams <dan.j.williams@intel.com> wrote:
+> >  
+> > > On Wed, May 19, 2021 at 10:03 AM Jonathan Cameron
+> > > <Jonathan.Cameron@huawei.com> wrote:
+> > > [..]  
+> > > > > > "The DOE Busy bit can be used to indicate that the DOE responder is
+> > > > > >  temporarily unable to accept a data object. It is necessary for a
+> > > > > >  DOE requester to ensure that individual data object transfers are
+> > > > > >  completed, and that a request/response contract is completed, for
+> > > > > >  example using a mutex mechanism to block other conflicting traffic
+> > > > > >  for cases where such conflicts are possible."  
+> > > > >
+> > > > > I read that as the specification mandating my proposal to disallow
+> > > > > multi-initiator access. My only mistake was making the exclusion apply
+> > > > > to reads and not limiting it to the minimum of config write exclusion.  
+> > > >
+> > > > Key thing is even that isn't enough.   The mutex isn't about stopping
+> > > > temporary access, it's about ensuring "request/response contract is completed".
+> > > > So you would need userspace to be able to take a lock to stop the kernel
+> > > > from using the DOE whilst it completes it's request/response pair and
+> > > > userspace to guarantee it doesn't do anything stupid.  
+> > >
+> > > A userspace lockout of the kernel is not needed if userspace is
+> > > outright forbidden from corrupting the kernel's state machine. I.e.
+> > > kernel enforced full disable of user initiated config-write to DOE
+> > > registers, not the ephemeral pci_cfg_access_lock() proposal.  
+> >
+> > That would work but I thought was ruled out as an approach.
+> > @Bjorn would this be acceptable?
+> >  
+> 
+> It sounded like Bjorn needed more convincing:
+> 
+>     "I don't know how hard we should work to protect against that."
+> 
+> ...and I'm advocating that yes, DOE config-writes are in a different
+> class than other critical register writes, and that class is analogous
+> to what Linux does for driver managed MMIO exclusion.
 
-> +       if (!rc) {
->                 dev_err(dev, "failed to map registers\n");
-> -               return (void __iomem *)ERR_PTR(rc);
-> +               return (void __iomem *)ERR_PTR(-ENOMEM);
+I'm not convinced they are special, though I can see an argument for write
+protecting a bunch of registers in config space, including them, with
+some form of disable for those debug type cases that Bjorn referred to.
 
-I think since this support is a bug/compatibility fix it should
-probably be rebased to current cxl.git#next. If you still end up
-needing to return an __iomem ERR_PTR() then use IOMEM_ERR_PTR.
+> 
+> > >  
+> > > > Easiest way to do that is provide proper interfaces that allows the
+> > > > kernel to fully mediate the access + don't support direct userspace access
+> > > > for normal operation. (treat it the same as an other config space write)  
+> > >
+> > > Again, it's the parenthetical at issue. I struggle to see this as just
+> > > another errant / unwanted config-write when there is legitimate reason
+> > > for userspace to expect that touching the DOE is not destructive to
+> > > device operation as opposed to writes to other critical registers.  
+> >
+> > True for specific protocols (CDAT). I'm fairly sure, with IDE you can take down
+> > the link encryption to the device, potentially (worst case?) resulting a memory
+> > access failure and a machine reboot or corruption of persistent memory.  
+> 
+> No, that does not sound right. My reading of the PCI IDE spec
+> highlights a few exclusions that apply here:
+> 
+> 1/ A DOE instance that implements the CMA/SPDM protocol will support
+> "no other data object protocol(s)".
+> 
+> 2/ An SPDM session once established arranges for "requests that are
+> received through a different secure [SPDM] session must be discarded
+> by the Responder, and must not result in a response"
 
->         }
->
-> -       dev_dbg(dev, "Mapped CXL Memory Device resource\n");
-> +       dev_dbg(dev, "Mapped CXL Memory Device resource bar %u @ 0x%llx\n",
+Fair enough.  I've not looked at that one in a while and clearly
+need to give it another read.
+CXL compliance though can definitely cause things to be exciting
+for the host.
 
-s/0x%llx/%#llx/
+> 
+> >  
+> > > Where the kernel's legitimate-access and userspace's legitimate-access
+> > > to a resource collide, the kernel provides a mediation interface that
+> > > precludes conflicts. Otherwise, I don't understand why the kernel is
+> > > going through the trouble of /dev/mem and pci-mmap restrictions if it
+> > > is not supposed to be concerned about userspace corrupting driver
+> > > state.  
+> >
+> > The short answer is that lock requirement, in the above note, rules
+> > out safe direct userspace use of the DOE (unless we can tell the kernel
+> > is not going to ever use it).  
+> 
+> Linux has the mitigation for that situation defined already. It's the
+> mechanism for /dev/mem and pci-mmap exclusion: disable the driver to
+> enable unfettered userspace access (modulo kernel-lockdown is
+> disabled).
+> 
+> > Mediation must be done. Even if we safely
+> > protect the kernel side via aborts, userspace transactions can be
+> > interrupted in a fashion that is invisible to userspace (beyond maybe
+> > a timeout if the userspace code is hardened against this).  
+> 
+> Right, ephemeral per-transaction lockout is more complicated to handle
+> than coarse lockout bounded to driver attach lifetime.
+> 
+> > So there is no
+> > legitimate use that is not fully mediated by the kernel. So ioctl
+> > or defined per protocol interfaces are the way forwards.  
+> 
+> Agree, and Linux has historically tried to wrap specific protocols
+> around capabilities like this rather than defining raw passthroughs.
+> I.e. I'm equating DOE enabling policy to ACPI DSM enabling policy. So
+> per-protocol enabling is my expectation regardless of sysfs or ioctl.
+> In fact. for SPDM and IDE key establishment that is probably neither
+> ioctl nor sysfs, but instead a cooperation with the Linux keys api.
 
-> +               bar, offset);
->
->         return pcim_iomap_table(pdev)[bar] + offset;
->  }
-> @@ -999,6 +1000,9 @@ static int cxl_mem_setup_regs(struct cxl_mem *cxlm)
->                 return -ENXIO;
->         }
->
-> +       if (pci_request_mem_regions(pdev, pci_name(pdev)))
+Agreed.  On that basis I'll do a very limited polish of the generic
+ioctl approach simply as an enabling tool and put some warnings
+on the patch that we don't currently intend it to be merged etc.
 
-This tells me this patch is too fine grained and can't stand alone
-because it is missing the corresponding call to
-pci_release_mem_regions(). Ideally this would be kept in the same
-scope as the temporary io mapping.
+Great - that lets be me lazy with testing lifetime management which
+is always irritating to do ;)
 
-> +               return -ENODEV;
-> +
->         /* Get the size of the Register Locator DVSEC */
->         pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
->         regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
-> --
-> 2.28.0.rc0.12.gb6a658bd00c9
->
+> 
+> > Perhaps that's putting it rather strongly :)  
+> 
+> No major disagreement on the big picture... just quibbling with
+> details at this point.
+
