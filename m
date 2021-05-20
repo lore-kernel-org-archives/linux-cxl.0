@@ -2,148 +2,191 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE82C433ED
-	for <linux-cxl@archiver.kernel.org>; Thu, 20 May 2021 17:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C5DC433B4
+	for <linux-cxl@archiver.kernel.org>; Thu, 20 May 2021 18:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2F9C6105A
-	for <linux-cxl@archiver.kernel.org>; Thu, 20 May 2021 17:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2205561246
+	for <linux-cxl@archiver.kernel.org>; Thu, 20 May 2021 18:41:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235053AbhETRoI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 20 May 2021 13:44:08 -0400
-Received: from mga11.intel.com ([192.55.52.93]:24888 "EHLO mga11.intel.com"
+        id S235664AbhETSnH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 20 May 2021 14:43:07 -0400
+Received: from mga06.intel.com ([134.134.136.31]:28903 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231752AbhETRoG (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 20 May 2021 13:44:06 -0400
-IronPort-SDR: S/OPJ86AZO2lbF5TsvDZb9VAyh2+S9ILg1lNSRY8deXsg57Ihs88nU95dl1+nzmROwLgdgpL2k
- nxwp524Z1qyQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,9990"; a="198203329"
+        id S232681AbhETSnH (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 20 May 2021 14:43:07 -0400
+IronPort-SDR: lLM11IPu6anYqSPY8KL8MjK2XOE/aJAtYYndAoaJrH6F0zeBdbGsIGAAmbnmI/MavvoQIfqPRf
+ iSRTcMallJ3A==
+X-IronPort-AV: E=McAfee;i="6200,9189,9990"; a="262528476"
 X-IronPort-AV: E=Sophos;i="5.82,313,1613462400"; 
-   d="scan'208";a="198203329"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 10:42:44 -0700
-IronPort-SDR: gw1dT1YGXSyJqiXemMXFCkgirIiONYPZhGPCwMaIc8hKRuMDKMjycdp26Yn+pY4/cM9ITae7rb
- fLT/sFHxVbwQ==
+   d="scan'208";a="262528476"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 11:41:44 -0700
+IronPort-SDR: NL3PMamPdW6oe5VdjbL0DQYjD0CdhQQsJfjHBbyOdjwMxl669F34qEY8C8WZYnY0ps4XkR/AnA
+ jTi/fnDevWyw==
 X-IronPort-AV: E=Sophos;i="5.82,313,1613462400"; 
-   d="scan'208";a="543682823"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 10:42:44 -0700
-Date:   Thu, 20 May 2021 10:42:44 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+   d="scan'208";a="440574579"
+Received: from santoshi-mobl1.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.133.11])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 11:41:43 -0700
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Alison Schofield <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-cxl@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/4] cxl/mem: Fully decode device capability header
-Message-ID: <20210520174244.GC1837122@iweiny-DESK2.sc.intel.com>
-References: <20210506223654.1310516-1-ira.weiny@intel.com>
- <20210506223654.1310516-2-ira.weiny@intel.com>
- <CAPcyv4iV-Xq7eGBHavETiKW=kfucxDnua3a4j6MKtswz=n4gRA@mail.gmail.com>
+        Ben Widawsky <ben.widawsky@intel.com>
+Subject: [PATCH v2] cxl: Rename mem to pci
+Date:   Thu, 20 May 2021 11:41:38 -0700
+Message-Id: <20210520184138.996337-1-ben.widawsky@intel.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210510182952.00006e49@Huawei.com>
+References: <20210510182952.00006e49@Huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4iV-Xq7eGBHavETiKW=kfucxDnua3a4j6MKtswz=n4gRA@mail.gmail.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, May 19, 2021 at 05:50:44PM -0700, Dan Williams wrote:
-> On Thu, May 6, 2021 at 3:37 PM <ira.weiny@intel.com> wrote:
-> >
-> > From: Ira Weiny <ira.weiny@intel.com>
-> >
-> > Previously only the capability ID and offset were decoded.
-> >
-> > Create a version MASK and decode the additional version and length
-> > fields of the header.
-> >
-> 
-> I'm not seeing a justification for why Linux would want this patch?
-> 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > ---
-> >  drivers/cxl/core.c | 15 ++++++++++++---
-> >  drivers/cxl/cxl.h  |  1 +
-> >  2 files changed, 13 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
-> > index b3c3532b53f7..21553386e218 100644
-> > --- a/drivers/cxl/core.c
-> > +++ b/drivers/cxl/core.c
-> > @@ -501,12 +501,21 @@ void cxl_setup_device_regs(struct device *dev, void __iomem *base,
-> >
-> >         for (cap = 1; cap <= cap_count; cap++) {
-> >                 void __iomem *register_block;
-> > -               u32 offset;
-> > +               u32 hdr, offset, __maybe_unused length;
-> 
-> What's the point of reading the length and not using it?
+As the driver has undergone development, it's become clear that the
+majority [entirety?] of the current functionality in mem.c is actually a
+layer encapsulating functionality exposed through PCI based
+interactions. This layer can be used either in isolation or to provide
+functionality for higher level functionality.
 
-Then length is needed in a future patch and it seemed easier to split by saying
-we are just going to decode the entire header as a patch.
+CXL capabilities exist in a parallel domain to PCIe. CXL devices are
+enumerable and controllable via "legacy" PCIe mechanisms; however, their
+CXL capabilities are a superset of PCIe. For example, a CXL device may
+be connected to a non-CXL capable PCIe root port, and therefore will not
+be able to participate in CXL.mem or CXL.cache operations, but can still
+be accessed through PCIe mechanisms for CXL.io operations.
 
-Ben caught this too because sparse found the unused variable...
+To properly represent the PCI nature of this driver, and in preparation for
+introducing a new driver for the CXL.mem / HDM decoder (Host-managed Device
+Memory) capabilities of a CXL memory expander, rename mem.c to pci.c so that
+mem.c is available for this new driver.
 
-Let me see about squashing this into the future patch.
+The result of the change is that there is a clear layering distinction
+in the driver, and a systems administrator may load only the cxl_pci
+module and gain access to such operations as, firmware update, offline
+provisioning of devices, and error collection. In addition to freeing up
+the file name for another purpose, there are two primary reasons this is
+useful,
+    1. Acting upon devices which don't have full CXL capabilities. This
+       may happen for instance if the CXL device is connected in a CXL
+       unaware part of the platform topology.
+    2. Userspace-first provisioning for devices without kernel driver
+       interference. This may be useful when provisioning a new device
+       in a specific manner that might otherwise be blocked or prevented
+       by the real CXL mem driver.
 
-> If this is
-> used in a future patch then wait until then to add it.
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+---
+v2: Makes it clear that the main motivation for this patch is for proper
+layering and that administrative PCI-only activities is a secondary benefit.
 
-ok.
+I'm proposing we take the hit now and merge this as our next patch for cxl/next.
 
-> 
-> >                 u16 cap_id;
-> > +               u8 version;
-> > +
-> > +               hdr = readl(base + cap * 0x10);
-> > +
-> > +               cap_id = FIELD_GET(CXLDEV_CAP_HDR_CAP_ID_MASK, hdr);
-> > +               version = FIELD_GET(CXLDEV_CAP_HDR_VERSION_MASK, hdr);
-> > +               if (version != 1)
-> > +                       dev_err(dev, "Vendor cap ID: %x incorrect version (0x%x)\n",
-> > +                               cap_id, version);
-> 
-> It's not an error. Any future version needs to be backwards
-> compatible. All this is doing is ensuring that when hardware is
-> updated old kernels will start spamming the log.
+---
+ Documentation/driver-api/cxl/memory-devices.rst |  6 +++---
+ drivers/cxl/Kconfig                             | 13 ++++---------
+ drivers/cxl/Makefile                            |  5 +++--
+ drivers/cxl/{mem.c => pci.c}                    |  9 ++++-----
+ 4 files changed, 14 insertions(+), 19 deletions(-)
+ rename drivers/cxl/{mem.c => pci.c} (99%)
 
-Yep...
+diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
+index 71495ed77069..a927169db984 100644
+--- a/Documentation/driver-api/cxl/memory-devices.rst
++++ b/Documentation/driver-api/cxl/memory-devices.rst
+@@ -22,10 +22,10 @@ This section covers the driver infrastructure for a CXL memory device.
+ CXL Memory Device
+ -----------------
+ 
+-.. kernel-doc:: drivers/cxl/mem.c
+-   :doc: cxl mem
++.. kernel-doc:: drivers/cxl/pci.c
++   :doc: cxl pci
+ 
+-.. kernel-doc:: drivers/cxl/mem.c
++.. kernel-doc:: drivers/cxl/pci.c
+    :internal:
+ 
+ CXL Core
+diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+index 97dc4d751651..5483ba92b6da 100644
+--- a/drivers/cxl/Kconfig
++++ b/drivers/cxl/Kconfig
+@@ -21,15 +21,10 @@ config CXL_MEM
+ 	  as if the memory was attached to the typical CPU memory
+ 	  controller.
+ 
+-	  Say 'y/m' to enable a driver (named "cxl_mem.ko" when built as
+-	  a module) that will attach to CXL.mem devices for
+-	  configuration, provisioning, and health monitoring. This
+-	  driver is required for dynamic provisioning of CXL.mem
+-	  attached memory which is a prerequisite for persistent memory
+-	  support. Typically volatile memory is mapped by platform
+-	  firmware and included in the platform memory map, but in some
+-	  cases the OS is responsible for mapping that memory. See
+-	  Chapter 2.3 Type 3 CXL Device in the CXL 2.0 specification.
++	  Say 'y/m' to enable a driver that will attach to CXL.mem devices for
++	  configuration and management primarily via the mailbox interface. See
++	  Chapter 2.3 Type 3 CXL Device in the CXL 2.0 specification for more
++	  details.
+ 
+ 	  If unsure say 'm'.
+ 
+diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+index 3808e39dd31f..10b204025d3b 100644
+--- a/drivers/cxl/Makefile
++++ b/drivers/cxl/Makefile
+@@ -1,7 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_CXL_BUS) += cxl_core.o
+-obj-$(CONFIG_CXL_MEM) += cxl_mem.o
++obj-$(CONFIG_CXL_MEM) += cxl_pci.o
+ 
+ ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
+ cxl_core-y := core.o
+-cxl_mem-y := mem.o
++cxl_pci-y := pci.o
++cxl_acpi-y := acpi.o
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/pci.c
+similarity index 99%
+rename from drivers/cxl/mem.c
+rename to drivers/cxl/pci.c
+index c5fdf2c57181..c7996c2a2054 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/pci.c
+@@ -16,10 +16,11 @@
+ #include "mem.h"
+ 
+ /**
+- * DOC: cxl mem
++ * DOC: cxl pci
+  *
+- * This implements a CXL memory device ("type-3") as it is defined by the
+- * Compute Express Link specification.
++ * This implements the PCI exclusive functionality for a CXL device as it is
++ * defined by the Compute Express Link specification. CXL devices may surface
++ * certain functionality even if it isn't CXL enabled.
+  *
+  * The driver has several responsibilities, mainly:
+  *  - Create the memX device and register on the CXL bus.
+@@ -27,8 +28,6 @@
+  *  - Probe the device attributes to establish sysfs interface.
+  *  - Provide an IOCTL interface to userspace to communicate with the device for
+  *    things like firmware update.
+- *  - Support management of interleave sets.
+- *  - Handle and manage error conditions.
+  */
+ 
+ #define cxl_doorbell_busy(cxlm)                                                \
+-- 
+2.31.1
 
-After deleting this I think I should just 'forward squash' the length into the
-patch where I need it.
-
-Ira
-
-> 
-> >
-> > -               cap_id = FIELD_GET(CXLDEV_CAP_HDR_CAP_ID_MASK,
-> > -                                  readl(base + cap * 0x10));
-> >                 offset = readl(base + cap * 0x10 + 0x4);
-> > +               length = readl(base + cap * 0x10 + 0x8);
-> > +
-> >                 register_block = base + offset;
-> >
-> >                 switch (cap_id) {
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > index 0211f44c95a2..9b315c069557 100644
-> > --- a/drivers/cxl/cxl.h
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -15,6 +15,7 @@
-> >  #define   CXLDEV_CAP_ARRAY_COUNT_MASK GENMASK_ULL(47, 32)
-> >  /* CXL 2.0 8.2.8.2 CXL Device Capability Header Register */
-> >  #define CXLDEV_CAP_HDR_CAP_ID_MASK GENMASK(15, 0)
-> > +#define CXLDEV_CAP_HDR_VERSION_MASK GENMASK(23, 16)
-> >  /* CXL 2.0 8.2.8.2.1 CXL Device Capabilities */
-> >  #define CXLDEV_CAP_CAP_ID_DEVICE_STATUS 0x1
-> >  #define CXLDEV_CAP_CAP_ID_PRIMARY_MAILBOX 0x2
-> > --
-> > 2.28.0.rc0.12.gb6a658bd00c9
-> >
