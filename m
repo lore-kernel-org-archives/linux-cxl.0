@@ -2,170 +2,128 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A58EC433ED
-	for <linux-cxl@archiver.kernel.org>; Thu, 20 May 2021 19:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F00F9C433B4
+	for <linux-cxl@archiver.kernel.org>; Thu, 20 May 2021 19:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D7D6611AD
-	for <linux-cxl@archiver.kernel.org>; Thu, 20 May 2021 19:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D380F61353
+	for <linux-cxl@archiver.kernel.org>; Thu, 20 May 2021 19:47:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235148AbhETTp4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 20 May 2021 15:45:56 -0400
-Received: from mga02.intel.com ([134.134.136.20]:52833 "EHLO mga02.intel.com"
+        id S239914AbhETTtN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 20 May 2021 15:49:13 -0400
+Received: from mga18.intel.com ([134.134.136.126]:54753 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234247AbhETTpz (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 20 May 2021 15:45:55 -0400
-IronPort-SDR: vWr0uf08aEfwBEq4RQV+ZdBfVtgWYWrYmVV6GWA7BsjttSq8rbGjUptaIyUkqN83kbpjko3h4w
- kwltlVgBB1VA==
-X-IronPort-AV: E=McAfee;i="6200,9189,9990"; a="188448412"
+        id S239913AbhETTtN (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 20 May 2021 15:49:13 -0400
+IronPort-SDR: VMLvQOg7g/0UH7bPHjdIyE0EulLHZC/LlCST5MXcdWhZg8zNgu7n1avwnJue5RsulAzLgYR6+7
+ V7yt/wdMbdxg==
+X-IronPort-AV: E=McAfee;i="6200,9189,9990"; a="188722211"
 X-IronPort-AV: E=Sophos;i="5.82,313,1613462400"; 
-   d="scan'208";a="188448412"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 12:44:33 -0700
-IronPort-SDR: oUt8a1H+dYA8PGvXDDlAlab9GX0FaOj8dFkKWoNuHQhSQhXL7WNmkH1FnVXV8wRKZf9jfbXoOE
- aGBPONjXhN/A==
+   d="scan'208";a="188722211"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 12:47:49 -0700
+IronPort-SDR: xgrA2qX7QxnKNzemwSEzi2UHlckVX2+aViPN912zdIfJudMLxW+J7ju7WA0IUY7qGKaOIbJyPQ
+ co5MVo3PBQ2A==
 X-IronPort-AV: E=Sophos;i="5.82,313,1613462400"; 
-   d="scan'208";a="440592705"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 12:44:33 -0700
-Date:   Thu, 20 May 2021 12:44:32 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-cxl@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/4] cxl/mem: Reserve all device regions at once
-Message-ID: <20210520194432.GD1837122@iweiny-DESK2.sc.intel.com>
-References: <20210506223654.1310516-1-ira.weiny@intel.com>
- <20210506223654.1310516-3-ira.weiny@intel.com>
- <CAPcyv4i3V2AYqoSzA=V265aUx5VpZbMXu0zFw0nk_f3FdCr-Yw@mail.gmail.com>
+   d="scan'208";a="468148740"
+Received: from rtiwar1x-mobl1.gar.corp.intel.com (HELO vverma7-desk.amr.corp.intel.com) ([10.254.33.53])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 12:47:49 -0700
+From:   Vishal Verma <vishal.l.verma@intel.com>
+To:     <linux-cxl@vger.kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: [PATCH] cxl/pci.c: Add a 'label_storage_size' attribute to the memdev
+Date:   Thu, 20 May 2021 13:47:45 -0600
+Message-Id: <20210520194745.1095517-1-vishal.l.verma@intel.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4i3V2AYqoSzA=V265aUx5VpZbMXu0zFw0nk_f3FdCr-Yw@mail.gmail.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, May 19, 2021 at 06:00:51PM -0700, Dan Williams wrote:
-> On Thu, May 6, 2021 at 3:37 PM <ira.weiny@intel.com> wrote:
-> >
-> > From: Ira Weiny <ira.weiny@intel.com>
-> >
-> > In order to remap individual register sets each bar region must be
-> > reserved prior to mapping.  Because the details of individual register
-> > sets are contained within the BARs themselves, the bar must be mapped 2
-> > times, once to extract this information and a second time for each
-> > register set.
-> >
-> > Rather than attempt to reserve each BAR individually and track if that
-> > bar has been reserved.  Open code pcim_iomap_regions() by first
-> > reserving all memory regions on the device and then mapping the bars
-> > individually as needed.
-> >
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > ---
-> >  drivers/cxl/pci.c | 14 +++++++++-----
-> >  1 file changed, 9 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index 191603b4e10b..40016709b310 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
-> > @@ -926,9 +926,9 @@ static void __iomem *cxl_mem_map_regblock(struct cxl_mem *cxlm, u32 reg_lo, u32
-> >  {
-> >         struct pci_dev *pdev = cxlm->pdev;
-> >         struct device *dev = &pdev->dev;
-> > +       void __iomem *rc;
-> >         u64 offset;
-> >         u8 bar;
-> > -       int rc;
-> >
-> >         offset = ((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
-> >         bar = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
-> > @@ -940,13 +940,14 @@ static void __iomem *cxl_mem_map_regblock(struct cxl_mem *cxlm, u32 reg_lo, u32
-> >                 return (void __iomem *)ERR_PTR(-ENXIO);
-> >         }
-> >
-> > -       rc = pcim_iomap_regions(pdev, BIT(bar), pci_name(pdev));
-> > -       if (rc) {
-> > +       rc = pcim_iomap(pdev, bar, 0);
-> 
-> It is odd that the temporary region pinning uses non-pcim, but the
-> temporary mapping using pcim.
+The 'Identify Device' mailbox command returns an 'lsa_size', which is
+the size of the label storage area on the device. Export it as a sysfs
+attribute so that userspace tooling to read/write the LSA can determine
+the size without having to run an 'Identify Device' on their own.
 
-The idea of this series was to have only the final mappings be managed. But
-this particular patch does not make that change.  Therefore I continue
-using pcim_iomap() for this patch.
+Cc: Ben Widawsky <ben.widawsky@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+---
 
-> 
-> > +       if (!rc) {
-> >                 dev_err(dev, "failed to map registers\n");
-> > -               return (void __iomem *)ERR_PTR(rc);
-> > +               return (void __iomem *)ERR_PTR(-ENOMEM);
-> 
-> I think since this support is a bug/compatibility fix it should
-> probably be rebased to current cxl.git#next. If you still end up
-> needing to return an __iomem ERR_PTR() then use IOMEM_ERR_PTR.
+Depends on "[PATCH v2] cxl: Rename mem to pci"
 
-Actually the type of rc has changed and I think it is best to just 'return rc;'
-here.
+ drivers/cxl/mem.h |  3 +++
+ drivers/cxl/pci.c | 12 ++++++++++++
+ 2 files changed, 15 insertions(+)
 
-Also, in a side conversation with Dan it seems the name would be more clear.
-So I will change it.
+diff --git a/drivers/cxl/mem.h b/drivers/cxl/mem.h
+index 0a3f70316872..23fc40dde27e 100644
+--- a/drivers/cxl/mem.h
++++ b/drivers/cxl/mem.h
+@@ -54,6 +54,8 @@ struct cxl_memdev {
+  * @regs: Parsed register blocks
+  * @payload_size: Size of space for payload
+  *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
++ * @lsa_size: Size of Label Storage Area
++ *                (CXL 2.0 8.2.9.5.1.1 Identify Memory Device)
+  * @mbox_mutex: Mutex to synchronize mailbox access.
+  * @firmware_version: Firmware version for the memory device.
+  * @enabled_cmds: Hardware commands found enabled in CEL.
+@@ -68,6 +70,7 @@ struct cxl_mem {
+ 	struct cxl_regs regs;
+ 
+ 	size_t payload_size;
++	size_t lsa_size;
+ 	struct mutex mbox_mutex; /* Protects device mailbox and firmware */
+ 	char firmware_version[0x10];
+ 	unsigned long *enabled_cmds;
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index c7996c2a2054..606c88ca902b 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -1036,6 +1036,16 @@ static ssize_t payload_max_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RO(payload_max);
+ 
++static ssize_t label_storage_size_show(struct device *dev,
++				struct device_attribute *attr, char *buf)
++{
++	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
++	struct cxl_mem *cxlm = cxlmd->cxlm;
++
++	return sysfs_emit(buf, "%zu\n", cxlm->lsa_size);
++}
++static DEVICE_ATTR_RO(label_storage_size);
++
+ static ssize_t ram_size_show(struct device *dev, struct device_attribute *attr,
+ 			     char *buf)
+ {
+@@ -1065,6 +1075,7 @@ static struct device_attribute dev_attr_pmem_size =
+ static struct attribute *cxl_memdev_attributes[] = {
+ 	&dev_attr_firmware_version.attr,
+ 	&dev_attr_payload_max.attr,
++	&dev_attr_label_storage_size.attr,
+ 	NULL,
+ };
+ 
+@@ -1397,6 +1408,7 @@ static int cxl_mem_identify(struct cxl_mem *cxlm)
+ 	cxlm->pmem_range.end =
+ 		le64_to_cpu(id.persistent_capacity) * SZ_256M - 1;
+ 
++	cxlm->lsa_size = le32_to_cpu(id.lsa_size);
+ 	memcpy(cxlm->firmware_version, id.fw_revision, sizeof(id.fw_revision));
+ 
+ 	return 0;
 
-> 
-> >         }
-> >
-> > -       dev_dbg(dev, "Mapped CXL Memory Device resource\n");
-> > +       dev_dbg(dev, "Mapped CXL Memory Device resource bar %u @ 0x%llx\n",
-> 
-> s/0x%llx/%#llx/
+base-commit: 399d34ebc2483c6091a587e5905c6ed34116fb05
+prerequisite-patch-id: 2e73e8a6279ced23f8002424c5d3b623cc5abb3c
+-- 
+2.31.1
 
-ok
-
-> 
-> > +               bar, offset);
-> >
-> >         return pcim_iomap_table(pdev)[bar] + offset;
-> >  }
-> > @@ -999,6 +1000,9 @@ static int cxl_mem_setup_regs(struct cxl_mem *cxlm)
-> >                 return -ENXIO;
-> >         }
-> >
-> > +       if (pci_request_mem_regions(pdev, pci_name(pdev)))
-> 
-> This tells me this patch is too fine grained and can't stand alone
-> because it is missing the corresponding call to
-> pci_release_mem_regions(). Ideally this would be kept in the same
-> scope as the temporary io mapping.
-
-Ok, I was a bit confused why I did not need this but I don't.
-
-Dan and I discussed this offline and because pcim_enable_device() is called all
-pci functions are automatically managed.
-
-So the core will call pci_release_mem_regions() automatically for me.  It took
-a bit of time for us to understand where the release call was.
-
-I'll add a comment to this to make this more clear.
-
-Ira
-
-> 
-> > +               return -ENODEV;
-> > +
-> >         /* Get the size of the Register Locator DVSEC */
-> >         pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
-> >         regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
-> > --
-> > 2.28.0.rc0.12.gb6a658bd00c9
-> >
