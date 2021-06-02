@@ -4,68 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 519D8C4708D
-	for <linux-cxl@archiver.kernel.org>; Fri, 28 May 2021 11:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A71C47083
+	for <linux-cxl@archiver.kernel.org>; Wed,  2 Jun 2021 22:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F700613C9
-	for <linux-cxl@archiver.kernel.org>; Fri, 28 May 2021 11:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4DF2613DE
+	for <linux-cxl@archiver.kernel.org>; Wed,  2 Jun 2021 22:23:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229740AbhE1LOY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 28 May 2021 07:14:24 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3106 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230044AbhE1LOY (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 28 May 2021 07:14:24 -0400
-Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Fs1yf32qlz6L5Pd;
-        Fri, 28 May 2021 19:03:54 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Fri, 28 May 2021 13:12:47 +0200
-Received: from localhost (10.52.127.252) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Fri, 28 May
- 2021 12:12:47 +0100
-Date:   Fri, 28 May 2021 12:10:56 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+        id S229587AbhFBWY5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 2 Jun 2021 18:24:57 -0400
+Received: from mga06.intel.com ([134.134.136.31]:60823 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229541AbhFBWY4 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Wed, 2 Jun 2021 18:24:56 -0400
+IronPort-SDR: 3d3pBldNt1Z5E3d0a2VxoQn+DQVpFQwxR0OnA/Z+Uqf8o0ULy9iH/09z7EVtxuyv29TofCIYrP
+ qaBsFN4Uyphg==
+X-IronPort-AV: E=McAfee;i="6200,9189,10003"; a="265087486"
+X-IronPort-AV: E=Sophos;i="5.83,244,1616482800"; 
+   d="scan'208";a="265087486"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2021 15:23:12 -0700
+IronPort-SDR: YLXsJF+FUlngUa3xak4+24uuo2DPSwBUy2mokmjGNeZC+ohhOEs7IS5l0EJXO8WJYvGLJ1kv1E
+ 5ryg5zt4vaZQ==
+X-IronPort-AV: E=Sophos;i="5.83,244,1616482800"; 
+   d="scan'208";a="447591519"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2021 15:23:11 -0700
+Date:   Wed, 2 Jun 2021 15:23:12 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-cxl@vger.kernel.org
 Subject: Re: [PATCH] cxl/pci: Fixup devm_cxl_iomap_block() to take a 'struct
  device *'
-Message-ID: <20210528121056.00001eaf@Huawei.com>
-In-Reply-To: <162216592374.3833641.13281743585064451514.stgit@dwillia2-desk3.amr.corp.intel.com>
+Message-ID: <20210602222312.GG3697498@iweiny-DESK2.sc.intel.com>
 References: <162216592374.3833641.13281743585064451514.stgit@dwillia2-desk3.amr.corp.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.127.252]
-X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <162216592374.3833641.13281743585064451514.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 27 May 2021 18:39:11 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
-
+On Thu, May 27, 2021 at 06:39:11PM -0700, Dan Williams wrote:
 > The expectation is that devm functions take 'struct device *' and pci
 > functions take 'struct pci_dev *'. Swap out the @pdev argument for @dev
 > and fixup related helpers.
 > 
 > Cc: Ira Weiny <ira.weiny@intel.com>
+
+LGTM, thanks!
+
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-Agreed, this fits better with expectations.
-
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
 > ---
 > 
 > base-commit: 6630d31c912ed2dfbc035caf0f54709b50ce779e
@@ -148,4 +143,3 @@ Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 >  			return -ENOMEM;
 >  	}
 > 
-
