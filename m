@@ -2,105 +2,162 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3617C47082
-	for <linux-cxl@archiver.kernel.org>; Sun,  6 Jun 2021 00:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68248C47096
+	for <linux-cxl@archiver.kernel.org>; Sun,  6 Jun 2021 06:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A480F61244
-	for <linux-cxl@archiver.kernel.org>; Sun,  6 Jun 2021 00:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4062B61408
+	for <linux-cxl@archiver.kernel.org>; Sun,  6 Jun 2021 06:04:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230085AbhFFAda (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 5 Jun 2021 20:33:30 -0400
-Received: from mail-pg1-f177.google.com ([209.85.215.177]:37886 "EHLO
-        mail-pg1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230025AbhFFAda (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 5 Jun 2021 20:33:30 -0400
-Received: by mail-pg1-f177.google.com with SMTP id t9so10960075pgn.4
-        for <linux-cxl@vger.kernel.org>; Sat, 05 Jun 2021 17:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6VDXTVjj0+nDYDx9MzuRgoWOTGmLXmo7MLzx3SNS5KE=;
-        b=aF4K2RxbGJ0PQBQ7D3cYri2KfdGuuo5AdXRx8xAhRX4yF2qckKVdHSiXbRLjJUhBNt
-         6Att/2kYuIt/fywVjHIL1rt1CG6AOKwaOC9p66n8Rb8dRAqp3ViFB9JhrEFf+FMB3YUN
-         gWN5ixiTZQl3lqZz1E3iceKF0lq8eID6gweu7jj7+yyIQeppa5DHP87FwCMwa8r3rfDG
-         HqONyrgApjzC9o6bNDVSXdEJVdXxS28TpawC7OiXRJ4+vJKpvnBIBFsIE+O9KvxcsQTF
-         S3CbQ7UOzjxzAd2cYl9NXEenXB3xlv4kdt/20CUARiJ/j0/XddQzOgIA/XGKc9tI17tR
-         FTOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6VDXTVjj0+nDYDx9MzuRgoWOTGmLXmo7MLzx3SNS5KE=;
-        b=GidsYh/6m60nncFj41tXkElznHWgjxWWv2+5VZRVCXt7jn6MREU+ZqmksMglPY16Ty
-         ahkkz2LDLoiD6SvoJLEEk6uQPuTzKqBDRMTw2a4PTszTB3eN/MOSNG0xvKq/lYZ4GODP
-         Qv4RWWd1xIftzVGXEyRrkTPwexkGMmXJdC/TrsXSoazYy9pIY6VPgYw/R+3EL8oHGACj
-         1P6eqb6Ng6Gk2+QAKQtb8xKmcnUpnXOmDIOsgkJrZ66GfcZrmoumlNKznWqa+RCwLpCk
-         O9GxkOU6plf4qKfnPxhENYJL+5JNvJKPcys4uzXbti6oOdNOb3qxtrTXeii5prlN4NBT
-         61hw==
-X-Gm-Message-State: AOAM530RM1ldk/MD4/x66gWhuR9qGMQakbDCFr6xiIWvEZ9v4hT7fQ3Z
-        5rbVNnqw+1o7seWaA0cuNDchKp80N89q4O2UooTQyw==
-X-Google-Smtp-Source: ABdhPJzfiCeY9tqkKmkSLOuJ3+obh7ppS3Yk4qcjz4CnNdglKlz/qX//z+ULFPvbFtaPxMN7nenRtAVDZzVBLsNhccI=
-X-Received: by 2002:a63:4653:: with SMTP id v19mr11479580pgk.240.1622939441444;
- Sat, 05 Jun 2021 17:30:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210528004922.3980613-4-ira.weiny@intel.com> <20210604005036.4187184-1-ira.weiny@intel.com>
-In-Reply-To: <20210604005036.4187184-1-ira.weiny@intel.com>
+        id S229508AbhFFGGp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 6 Jun 2021 02:06:45 -0400
+Received: from mga17.intel.com ([192.55.52.151]:45974 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229504AbhFFGGo (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Sun, 6 Jun 2021 02:06:44 -0400
+IronPort-SDR: 3o66JognwwV769u8l1aKT2bXSqOtzSYzs7es0G5ohSkdMdb6+RGnDapGbo7E1565OjkI9eYKc7
+ ZaFF1foQl7zQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,10006"; a="184852986"
+X-IronPort-AV: E=Sophos;i="5.83,252,1616482800"; 
+   d="scan'208";a="184852986"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2021 23:04:55 -0700
+IronPort-SDR: 1LN/NvijEUDEsEzvi/DxSTtqgRrjVRYfKr0VuUkRWmLPWcfE0KcR5LEDYTSKYcO2g4mP/Pm9yO
+ NbqDZxOcPH3A==
+X-IronPort-AV: E=Sophos;i="5.83,252,1616482800"; 
+   d="scan'208";a="439664652"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2021 23:04:53 -0700
+Subject: [PATCH v5 0/6] CXL port and decoder enumeration
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sat, 5 Jun 2021 17:30:30 -0700
-Message-ID: <CAPcyv4jrdGAtaoArXEQAH5XPrGQxCraiMD54UR_HfHmu3Z1iYw@mail.gmail.com>
-Subject: Re: [PATCH V3.1] cxl/mem: Map registers based on capabilities
-To:     "Weiny, Ira" <ira.weiny@intel.com>
+To:     linux-cxl@vger.kernel.org
 Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        linux-cxl@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Date:   Sat, 05 Jun 2021 23:04:53 -0700
+Message-ID: <162295949351.1109360.10329014558746500142.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Jun 3, 2021 at 5:51 PM <ira.weiny@intel.com> wrote:
->
-> From: Ira Weiny <ira.weiny@intel.com>
->
-> The information required to map registers based on capabilities is
-> contained within the bars themselves.  This means the bar must be mapped
-> to read the information needed and then unmapped to map the individual
-> parts of the BAR based on capabilities.
->
-> Change cxl_setup_device_regs() to return a new cxl_register_map, change
-> the name to cxl_probe_device_regs().  Allocate and place
-> cxl_register_maps on a list while processing all of the specified
-> register blocks.
->
-> After probing all the register blocks go back and map smaller registers
-> blocks based on their capabilities and dispose of the cxl_register_maps.
->
-> NOTE: pci_iomap() is not managed automatically via pcim_enable_device()
-> so be careful to call pci_iounmap() correctly.
->
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> Link: https://lore.kernel.org/r/20210528004922.3980613-4-ira.weiny@intel.com
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->
-> ---
-> Changes for V3.1
->         Fix 0-day
->
-> >> drivers/cxl/core.c:40:17: warning: variable 'register_block' set but not used [-Wunused-but-set-variable]
->       40 |   void __iomem *register_block;
+Changes since v4 [1]:
+- Rework the object model to better account for downstream ports and
+  enumerate decode capabilities.
+- Include the definition of CFMWS
+- Reference CFMWS in the changelogs and implementation
+- Drop mention of pcie_portdriver for CXL switch enumeration. This will
+  be handled by CXL path validation when an endpoint wants to contribute
+  to a memory region.
 
-Just a note for next time if you want to be friendly to "b4 am" using
-maintainers. Roll the version and include the patch number in the
-resend, i.e.: in this case: "[PATCH v4 3/5] cxl/mem: Map registers
-based on capabilities". I was able to manually create a bundle in the
-proper order on patchwork for the two "3.1" updates.
+[1]: http://lore.kernel.org/r/162096970332.1865304.10280028741091576940.stgit@dwillia2-desk3.amr.corp.intel.com
+
+---
+
+The recently published CXL Fixed Memory Window Structure (CFMWS)
+extension to the CXL Early Discovery Table (CEDT) provides a platform
+firmware mechanism to enumerate CXL memory resources. The table data
+indicates which CXL memory ranges were configured by platform BIOS, and
+which address ranges are available to support hot plug and dynamic
+provisioning of CXL memory regions.
+
+CXL Port Topology:
+
+The enumeration starts with the ACPI0017 driver registering a 'struct
+cxl_port' object to establish the top of a port topology. It then
+scans the ACPI bus looking for CXL Host Bridges (ACPI0016 instances). A
+cxl_port represents one or more decoder resources between a 'uport'
+(upstream port) and one or more 'dport' (downstream port) instances.
+System software must not assume that 'struct cxl_port' device names will
+be static from one boot to the next. It will generally be the case that
+the root cxl_port starts at id '0' and the host bridges are enumerated
+in the same order starting at id '1', but that is not guaranteed.
+
+A 'uport' is a device that implements a decode. It can either be a
+platform firmware device like ACPI0017 where the decode is described by
+an ACPI data-structure, or a PCIe switch where the upstream port of the
+switch implements a CXL DVSEC pointing to component registers with the
+HDM decoder capability (see CXL 2.0 section 8.2.5.12 CXL HDM Decoder
+Capability Structure).
+
+Once a uport and its corresponding dport instances are collected into a
+cxl_port the actual decode resources are then modeled as cxl_decode
+objects that are children of their parent cxl_port. The 'decode' object
+has a 1:1 relationship with ether CFMWS entries at the root level, or
+hardware HDM decoder register instances in a PCIe device's CXL component
+register space at any level of a CXL switch hierarchy. In addition to
+the interleave geometry and address range a decode object conveys the
+target list (targeted dports) in interleave order. The dport id in a
+target list is either its ACPI _UID for Host Bridge targets, or the
+"port number" field from the link capabilities register in the PCIe
+"Express" capability [2].
+
+Here is a tree(1) topology of QEMU emulating a single-ported
+host-bridge:
+
+    /sys/bus/cxl/devices/root0
+    ├── devtype
+    ├── dport0 -> ../LNXSYSTM:00/LNXSYBUS:00/ACPI0016:00
+    ├── port1
+    │   ├── decoder1.0
+    │   │   ├── devtype
+    │   │   ├── end
+    │   │   ├── locked
+    │   │   ├── start
+    │   │   ├── subsystem -> ../../../../bus/cxl
+    │   │   ├── target_list
+    │   │   ├── target_type
+    │   │   └── uevent
+    │   ├── devtype
+    │   ├── dport0 -> ../../pci0000:34/0000:34:00.0
+    │   ├── subsystem -> ../../../bus/cxl
+    │   ├── uevent
+    │   └── uport -> ../../LNXSYSTM:00/LNXSYBUS:00/ACPI0016:00
+    ├── subsystem -> ../../bus/cxl
+    ├── uevent
+    └── uport -> ../platform/ACPI0017:00
+
+
+* The root port is singleton only by convention. A given uport device
+  like ACPI0017 could create a root level port per CFMWS entry. This
+  patch set chooses to implement 1 port at the root level and list all
+  CFMWS decode entries under that port regardless of which dport host
+  bridges are targeted.
+
+[2]: CXL 2.0 8.2.5.12.8 CXL HDM Decoder 0 Target List Low Register
+     (Offset 24h) ...The Target Port Identifier for a given Downstream Port
+     is reported via Port Number field in Link Capabilities Register. (See
+     PCI Express Base Specification).
+
+---
+
+Dan Williams (6):
+      cxl/acpi: Local definition of ACPICA infrastructure
+      cxl/acpi: Introduce cxl_root, the root of a cxl_port topology
+      cxl/Kconfig: Default drivers to CONFIG_CXL_BUS
+      cxl/acpi: Add downstream port data to cxl_port instances
+      cxl/acpi: Enumerate host bridge root ports
+      cxl/acpi: Introduce cxl_decoder objects
+
+
+ Documentation/ABI/testing/sysfs-bus-cxl |   94 ++++++
+ drivers/cxl/Kconfig                     |   17 +
+ drivers/cxl/Makefile                    |    2 
+ drivers/cxl/acpi.c                      |  193 ++++++++++++
+ drivers/cxl/acpi.h                      |   48 +++
+ drivers/cxl/core.c                      |  514 +++++++++++++++++++++++++++++++
+ drivers/cxl/cxl.h                       |   92 ++++++
+ 7 files changed, 960 insertions(+)
+ create mode 100644 drivers/cxl/acpi.c
+ create mode 100644 drivers/cxl/acpi.h
+
+base-commit: 605a5e41db7d8c930fb80115686991c4c1d08ee4
