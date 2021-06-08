@@ -2,56 +2,62 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D3DC47082
-	for <linux-cxl@archiver.kernel.org>; Mon,  7 Jun 2021 22:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79304C47082
+	for <linux-cxl@archiver.kernel.org>; Tue,  8 Jun 2021 11:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C73561185
-	for <linux-cxl@archiver.kernel.org>; Mon,  7 Jun 2021 22:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A9506128D
+	for <linux-cxl@archiver.kernel.org>; Tue,  8 Jun 2021 11:28:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230209AbhFGWUz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 7 Jun 2021 18:20:55 -0400
-Received: from mga09.intel.com ([134.134.136.24]:59382 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230264AbhFGWUy (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 7 Jun 2021 18:20:54 -0400
-IronPort-SDR: Lhu5o94uSQjtlN1G05UlW2VOntux40WsMomwNE0OpjS9lyz7LVYbQ5jIFUsRyoNhJ6FZWMa2Kq
- E8Rf8we3hzYQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,10008"; a="204691784"
-X-IronPort-AV: E=Sophos;i="5.83,256,1616482800"; 
-   d="scan'208";a="204691784"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2021 15:19:01 -0700
-IronPort-SDR: m4W8zrrz8pTn947MSKeYMT7KB8TVqAHKNFK8zKcmAnZG9mhbNB3U+prpfv/yUpWO7rOshyh8Ed
- SXW7P6XS2a8A==
-X-IronPort-AV: E=Sophos;i="5.83,256,1616482800"; 
-   d="scan'208";a="449269882"
-Received: from smaleki-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.140.190])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2021 15:19:00 -0700
-Date:   Mon, 7 Jun 2021 15:18:58 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
+        id S231849AbhFHLaf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 8 Jun 2021 07:30:35 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3166 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231689AbhFHLad (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 8 Jun 2021 07:30:33 -0400
+Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4FznnP2Cvwz6G86p;
+        Tue,  8 Jun 2021 19:19:21 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Tue, 8 Jun 2021 13:28:38 +0200
+Received: from localhost (10.52.125.197) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Tue, 8 Jun 2021
+ 12:28:38 +0100
+Date:   Tue, 8 Jun 2021 12:28:36 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org,
+CC:     <linux-cxl@vger.kernel.org>,
         Alison Schofield <alison.schofield@intel.com>,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
+        <linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>
 Subject: Re: [PATCH v5 2/6] cxl/acpi: Introduce cxl_root, the root of a
  cxl_port topology
-Message-ID: <20210607221858.nubv2nnwxv7t2pq2@intel.com>
-References: <162295949351.1109360.10329014558746500142.stgit@dwillia2-desk3.amr.corp.intel.com>
- <162295950449.1109360.5228772194963187441.stgit@dwillia2-desk3.amr.corp.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Message-ID: <20210608122836.000018fc@Huawei.com>
 In-Reply-To: <162295950449.1109360.5228772194963187441.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <162295949351.1109360.10329014558746500142.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <162295950449.1109360.5228772194963187441.stgit@dwillia2-desk3.amr.corp.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.125.197]
+X-ClientProxiedBy: lhreml722-chm.china.huawei.com (10.201.108.73) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21-06-05 23:05:04, Dan Williams wrote:
+On Sat, 5 Jun 2021 23:05:04 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
+
 > While CXL builds upon the PCI software model for enumeration and
 > endpoint control, a static platform component is required to bootstrap
 > the CXL memory layout. Similar to how ACPI identifies root-level PCI
@@ -74,6 +80,11 @@ On 21-06-05 23:05:04, Dan Williams wrote:
 > Co-developed-by: Alison Schofield <alison.schofield@intel.com>
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+
+Two trivial comments inline.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
 > ---
 >  Documentation/ABI/testing/sysfs-bus-cxl |   11 ++
 >  drivers/cxl/Kconfig                     |   15 +++
@@ -103,6 +114,13 @@ On 21-06-05 23:05:04, Dan Williams wrote:
 > +		CXL component registers. The 'uport' symlink connects the CXL
 > +		portX object to the device that published the CXL port
 > +		capability.
+
+Is this a complete list of ABI added? Looks like we also add devtype
+attribute in this series.
+
+Mind you I just realized I didn't document the proposed CDAT file either yet.
+
+
 > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
 > index 5483ba92b6da..d2573f6aef91 100644
 > --- a/drivers/cxl/Kconfig
@@ -209,6 +227,10 @@ On 21-06-05 23:05:04, Dan Williams wrote:
 > +			    char *buf)
 > +{
 > +	return sysfs_emit(buf, "%s\n", dev->type->name);
+
+I guess it's really small so doesn't matter that much, but not so nice
+that we are gaining multiple instances of this same function.
+
 > +}
 > +static DEVICE_ATTR_RO(devtype);
 > +
@@ -390,11 +412,6 @@ On 21-06-05 23:05:04, Dan Williams wrote:
 > +	resource_size_t component_reg_phys;
 > +};
 > +
-
-I think the new kernel doc info needs to be added in the
-Documentation/driver-api/cxl/ somewhere. We haven't yet told sphinx about this
-file.
-
 > +struct cxl_port *to_cxl_port(struct device *dev);
 > +struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
 > +				   resource_size_t component_reg_phys,
