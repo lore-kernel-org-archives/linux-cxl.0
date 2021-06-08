@@ -7,258 +7,281 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB079C47082
-	for <linux-cxl@archiver.kernel.org>; Tue,  8 Jun 2021 20:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A8EC4743F
+	for <linux-cxl@archiver.kernel.org>; Tue,  8 Jun 2021 23:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA10B613BD
-	for <linux-cxl@archiver.kernel.org>; Tue,  8 Jun 2021 20:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C79161278
+	for <linux-cxl@archiver.kernel.org>; Tue,  8 Jun 2021 23:49:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234171AbhFHUGk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 8 Jun 2021 16:06:40 -0400
-Received: from mail-pj1-f53.google.com ([209.85.216.53]:53810 "EHLO
-        mail-pj1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234071AbhFHUGj (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 8 Jun 2021 16:06:39 -0400
-Received: by mail-pj1-f53.google.com with SMTP id ei4so15456pjb.3
-        for <linux-cxl@vger.kernel.org>; Tue, 08 Jun 2021 13:04:46 -0700 (PDT)
+        id S230434AbhFHXvI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 8 Jun 2021 19:51:08 -0400
+Received: from mail-pf1-f175.google.com ([209.85.210.175]:33562 "EHLO
+        mail-pf1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229937AbhFHXvG (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 8 Jun 2021 19:51:06 -0400
+Received: by mail-pf1-f175.google.com with SMTP id p13so7408204pfw.0
+        for <linux-cxl@vger.kernel.org>; Tue, 08 Jun 2021 16:49:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nhI0uZdD+bqC6HZkMksTTcPTgmv+oAlfDoNIYsPwNHQ=;
-        b=JMNPFpGGS5lh/0K8ov8txZDzpZm+eKmL3lxLGosvfpE/O6MkoZ6FcjeMZnzhdxqTJ5
-         yklstTPDnA/gjDJg5+2AtiQxhNsUF/YsbmgKqRO65xaqvxAw7rGv5m7p1tDkB4T7fi07
-         HHoaruGFdVR7uFuX7pAgrLBxePNy4CVWFNPzGIZ8aSLmFgJGuYKrBYJgYHP8TcBLl7hy
-         2rKxLz31QknjybMuV53BdOy0+z9CDO3xXtiIKOO2ZsUR1h7U0j37R9U3barg8Sgsh6Ii
-         Hcvnsja6vN/uz6rfuDbCNVGGgJNBKx4C6873XxqefJNIvcSW1GFV6QeojWLsX6FgVnaz
-         VKLg==
+         :cc:content-transfer-encoding;
+        bh=Sap44HZUeMl7nx9za1mZOMogIkd9R62xvnkQFKrxIkI=;
+        b=O5TmFV1KAdvN1D+AcTNDCooaSYRBMSacr/BZI0dJKrXFv26uFzf0BUAhUTHSPGamM0
+         yVLHKBorRkwDZBvuA3vIspehTxmki2oOsN5O9OZzcocfqZiZqOCmykT17gkeAyRNEcE5
+         atyZ/SzGsfWelzMUq9EuInKkO4pEeBilb+IvrODPS971VZQdfZ9Uo0PLIACOTG8V/17f
+         kH13SDHGy8UEAB3ri9KPeBJJ1FZxva2m9CMRnkJCP2qhrNTqNM6nSftjmXkxqD7HeuLA
+         IQbQvYYUTByGm1S2IiSiK3hw1OW7PUeqyyCruS25BmqofBN9vKQPWvlj5Im/sPb5EWjm
+         oSEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nhI0uZdD+bqC6HZkMksTTcPTgmv+oAlfDoNIYsPwNHQ=;
-        b=D+FOdWZ+OCbMAazPpDZFDm/T0cwPWLydRqQIVnOVyZ6R9jpbVu4IKLcLdq3V0aw+Dz
-         zLKUlPXXGkatz3XI1ORwLJwMFZ2+OIf8XNZ01e3rojSzFBbW5rGCbKelZMuj5IrOpYs5
-         t4sBV3dpu9jDVfAK+USnqNm6e1b5Pu47DrtavHPYX/YKjGfbMEhaS1Buw5I79uWWjFxb
-         2ywlOGrTVQS9od2Ii/BFbSfQ6LLnc9BmJdlJ8yJMXLRgQN08d2xRAT0X3/lwLWDc2M1w
-         vTbHIMZ4spM7JP/I+sdv/CD/qOosgRXQDfeL0ulz8RLx9G8cAjJQ2mJ8YqFgw9vSj0Ph
-         Gb4A==
-X-Gm-Message-State: AOAM531e6yyjEuLMY7uVR8xs4T+kGI+JAKi21JH+toycOyksKHbFMW3I
-        4enTHnxz6fHgkR10I5p8xQunALIla5HDcUCRvhZC20ukADWu9Q==
-X-Google-Smtp-Source: ABdhPJzPDn7AoKen5PiDE/efuS/RFGNeIk19LM9QLlTquxcqqZoV1WpmhMPseVBYhHaQYA6G6aRuVOlcBz5lQgwLpVw=
-X-Received: by 2002:a17:90a:fc88:: with SMTP id ci8mr6734466pjb.13.1623182625985;
- Tue, 08 Jun 2021 13:03:45 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Sap44HZUeMl7nx9za1mZOMogIkd9R62xvnkQFKrxIkI=;
+        b=pnbJOmrLfDWwklmOJa0pYFpur4gdFTD7GoZg2k19FJK1BpQouOXPAvEOMbwVhPRrlh
+         Ot8BUN0E5/fhfnr/sASvhLEnYowgu6iqqChBEpmvPnETt/MEW9EOcfyFOEWBLx4zyCXy
+         kUr2vagcqVC2PVRuhT2Cb69EL/uRw1EF+FyHR3XT3KMwakxvXFbsI5paA3cOxLu3Ob0/
+         2mHPJbY0WNmdo21C8lHBygOtUrEt9n0w1zApMzCc6UcDGpf6XAbphNY/cpaM81wglG9i
+         mxEJXmFnOsyQ+JranW4ZNyUQleeARRf0MXl9L81DhcTY+viV5/qPW7rBGvvOWmDIGFle
+         wUCA==
+X-Gm-Message-State: AOAM5317y1BnEXyyRTa/E4OswP8MmbacMvhTwhJTzcLOGJH7wVSA/fzW
+        TCQmrvfaSbPTOm7+86bx+5mwmzDP+GEnL8lECX2Vfg==
+X-Google-Smtp-Source: ABdhPJyRXDadjIRcbEA1ewvrO1tynnhcz0NyuPDRX/2VUt6h8SZwLOi28NHvvbNDeuZkUK4V02BnJNVgPSDfWxePbfo=
+X-Received: by 2002:a63:195b:: with SMTP id 27mr784144pgz.450.1623196093214;
+ Tue, 08 Jun 2021 16:48:13 -0700 (PDT)
 MIME-Version: 1.0
 References: <162295949351.1109360.10329014558746500142.stgit@dwillia2-desk3.amr.corp.intel.com>
- <162295950449.1109360.5228772194963187441.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20210608122836.000018fc@Huawei.com>
-In-Reply-To: <20210608122836.000018fc@Huawei.com>
+ <162295952770.1109360.877553895768113895.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20210608140602.00004f0f@Huawei.com>
+In-Reply-To: <20210608140602.00004f0f@Huawei.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 8 Jun 2021 13:03:34 -0700
-Message-ID: <CAPcyv4h27dkh4FudzhXMQv8FGwY0b1qm1eDf-vDY6aH1kNZsag@mail.gmail.com>
-Subject: Re: [PATCH v5 2/6] cxl/acpi: Introduce cxl_root, the root of a
- cxl_port topology
+Date:   Tue, 8 Jun 2021 16:48:02 -0700
+Message-ID: <CAPcyv4ipuqcLPaMa+Md5HvpWi8nrExsKn1jg0TaKkHhMz5V0Pw@mail.gmail.com>
+Subject: Re: [PATCH v5 6/6] cxl/acpi: Introduce cxl_decoder objects
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Alison Schofield <alison.schofield@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
         Linux ACPI <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Jun 8, 2021 at 4:28 AM Jonathan Cameron
+On Tue, Jun 8, 2021 at 6:06 AM Jonathan Cameron
 <Jonathan.Cameron@huawei.com> wrote:
 >
-> On Sat, 5 Jun 2021 23:05:04 -0700
+> On Sat, 5 Jun 2021 23:05:27 -0700
 > Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> > While CXL builds upon the PCI software model for enumeration and
-> > endpoint control, a static platform component is required to bootstrap
-> > the CXL memory layout. Similar to how ACPI identifies root-level PCI
-> > memory resources the ACPI identifies the address space and interleave
-> > configuration for CXL Memory.
+> > A cxl_decoder is a child of a cxl_port. It represents a hardware
+> > decoder configuration of an upstream port to one or more of its
+> > downstream ports. The decoder is either represented in standard HDM
+> > decoder registers (see CXL 2.0 section 8.2.5.12 CXL HDM Decoder
+> > Capability Structure), or it is a static decode configuration
+> > communicated by platform firmware (see the CXL Early Discovery Table:
+> > Fixed Memory Window Structure).
 > >
-> > In addition to identifying the host bridges, ACPI is responsible for
-> > enumerating the CXL memory space that can be addressed by downstream
-> > decoders. This is similar to the requirement for ACPI to publish
-> > resources reported by _CRS for PCI host bridges. Specifically ACPI
-> > publishes a table, CXL Early Discovery Table (CEDT), which includes a
-> > list of CXL Memory resource, CXL Fixed Memory Window Structures (CFMWS).
+> > The firmware described and hardware described decoders differ slightly
+> > leading to 2 different sub-types of decoders, cxl_decoder_root and
+> > cxl_decoder_switch. At the root level the decode capabilities restrict
+> > what can be mapped beneath them. Mid-level switch decoders are
+> > configured for either acclerator (type-2) or memory-expander (type-3)
+> > operation, but they are otherwise agnostic to the type of memory
+> > (volatile vs persistent) being mapped.
 > >
-> > For now introduce the core infrastructure for a cxl_port hierarchy
-> > starting with a root level anchor represented by the ACPI0017 device.
+> > Here is an example topology from a single-ported host-bridge environmen=
+t
+> > without CFMWS decodes enumerated.
 > >
-> > Follow on changes model support for the configurable decode capabilities
-> > of cxl_port instances.
+> > /sys/bus/cxl/devices/root0
+> > =E2=94=9C=E2=94=80=E2=94=80 devtype
+> > =E2=94=9C=E2=94=80=E2=94=80 dport0 -> ../LNXSYSTM:00/LNXSYBUS:00/ACPI00=
+16:00
+> > =E2=94=9C=E2=94=80=E2=94=80 port1
+> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 decoder1.0
+> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 devtype
+> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 end
+> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 locked
+> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 start
+> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 subsystem -> ../../=
+../../bus/cxl
+> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 target_list
+> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 target_type
+> > =E2=94=82   =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 uevent
+> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 devtype
+> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 dport0 -> ../../pci0000:34/0000=
+:34:00.0
+> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 subsystem -> ../../../bus/cxl
+> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 uevent
+> > =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 uport -> ../../LNXSYSTM:00/LNXS=
+YBUS:00/ACPI0016:00
+> > =E2=94=9C=E2=94=80=E2=94=80 subsystem -> ../../bus/cxl
+> > =E2=94=9C=E2=94=80=E2=94=80 uevent
+> > =E2=94=94=E2=94=80=E2=94=80 uport -> ../platform/ACPI0017:00
 > >
-> > Co-developed-by: Alison Schofield <alison.schofield@intel.com>
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 >
-> Two trivial comments inline.
+> One trivial docs issue and a suggestion that -2 is a bit too magic.
+> Otherwise looks good to me.
 >
 > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 >
-
-Thanks, as always, for taking a look.
-
 > > ---
-> >  Documentation/ABI/testing/sysfs-bus-cxl |   11 ++
-> >  drivers/cxl/Kconfig                     |   15 +++
-> >  drivers/cxl/Makefile                    |    2
-> >  drivers/cxl/acpi.c                      |   39 ++++++++
-> >  drivers/cxl/core.c                      |  160 +++++++++++++++++++++++++++++++
-> >  drivers/cxl/cxl.h                       |   23 ++++
-> >  6 files changed, 250 insertions(+)
-> >  create mode 100644 drivers/cxl/acpi.c
+> >  Documentation/ABI/testing/sysfs-bus-cxl |   70 ++++++++
+> >  drivers/cxl/acpi.c                      |   21 ++
+> >  drivers/cxl/core.c                      |  265 +++++++++++++++++++++++=
+++++++++
+> >  drivers/cxl/cxl.h                       |   48 ++++++
+> >  4 files changed, 403 insertions(+), 1 deletion(-)
 > >
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> > index 2fe7490ad6a8..fb996ced7629 100644
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/AB=
+I/testing/sysfs-bus-cxl
+> > index 0cb31b7ad17b..f16f18e77578 100644
 > > --- a/Documentation/ABI/testing/sysfs-bus-cxl
 > > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> > @@ -24,3 +24,14 @@ Description:
-> >               (RO) "Persistent Only Capacity" as bytes. Represents the
-> >               identically named field in the Identify Memory Device Output
-> >               Payload in the CXL-2.0 specification.
+> > @@ -48,3 +48,73 @@ Description:
+> >               decode of CXL memory resources.  The 'Y' integer reflects=
+ the
+> >               hardware port unique-id used in the hardware decoder targ=
+et
+> >               list.
 > > +
-> > +What:                /sys/bus/cxl/devices/portX/uport
-> > +Date:                May, 2021
+> > +What:                /sys/bus/cxl/devices/decoderX.Y
+> > +Date:                June, 2021
 > > +KernelVersion:       v5.14
 > > +Contact:     linux-cxl@vger.kernel.org
 > > +Description:
-> > +             CXL port objects are enumerated from either a platform firmware
-> > +             device (ACPI0017 and ACPI0016) or PCIe switch upstream port with
-> > +             CXL component registers. The 'uport' symlink connects the CXL
-> > +             portX object to the device that published the CXL port
-> > +             capability.
+> > +             CXL decoder objects are enumerated from either a platform
+> > +             firmware description, or a CXL HDM decoder register set i=
+n a
+> > +             PCIe device (see CXL 2.0 section 8.2.5.12 CXL HDM Decoder
+> > +             Capability Structure). The 'X' in decoderX.Y represents t=
+he
+> > +             cxl_port container of this decoder, and 'Y' represents th=
+e
+> > +             instance id of a given decoder resource.
+> > +
+> > +What:                /sys/bus/cxl/devices/decoderX.Y/{start,end}
+> > +Date:                June, 2021
+> > +KernelVersion:       v5.14
+> > +Contact:     linux-cxl@vger.kernel.org
+> > +Description:
+> > +             The 'start' and 'end' attributes together convey the phys=
+ical
+> > +             address base and last addressable byte of the decoder's d=
+ecode
+> > +             window. For decoders of devtype "cxl_decoder_root" the ad=
+dress
+> > +             range is fixed. For decoders of devtype "cxl_decoder_swit=
+ch" the
+> > +             address is bounded by the decode range of the cxl_port an=
+cestor
+> > +             of the decoder's cxl_port, and dynamically updates based =
+on the
+> > +             active memory regions in that address space.
+> > +
+> > +What:                /sys/bus/cxl/devices/decoderX.Y/locked
+> > +Date:                June, 2021
+> > +KernelVersion:       v5.14
+> > +Contact:     linux-cxl@vger.kernel.org
+> > +Description:
+> > +             CXL HDM decoders have the capability to lock the configur=
+ation
+> > +             until the next device reset. For decoders of devtype
+> > +             "cxl_decoder_root" there is no standard facility to unloc=
+k them.
+> > +             For decoders of devtype "cxl_decoder_switch" a secondary =
+bus
+> > +             reset, of the PCIe bridge that provides the bus for this
+> > +             decoders uport, unlocks / resets the decoder.
+> > +
+> > +What:                /sys/bus/cxl/devices/decoderX.Y/target_list
+> > +Date:                June, 2021
+> > +KernelVersion:       v5.14
+> > +Contact:     linux-cxl@vger.kernel.org
+> > +Description:
+> > +             Display a comma separated list of the current decoder tar=
+get
+> > +             configuration. The list is ordered by the current configu=
+red
+> > +             interleave order of the decoder's dport instances. Each e=
+ntry in
+> > +             the list is a dport id.
+> > +
+> > +What:                /sys/bus/cxl/devices/decoderX.Y/cap_{pmem,ram,typ=
+e2,type3}
+> > +Date:                June, 2021
+> > +KernelVersion:       v5.14
+> > +Contact:     linux-cxl@vger.kernel.org
+> > +Description:
+> > +             When a CXL decoder is of devtype "cxl_decoder_root", it
+> > +             represents a fixed memory window identified by platform
+> > +             firmware. A fixed window may only support a subset of mem=
+ory
+> > +             types. The 'cap_*' attributes indicate whether persistent
+> > +             memory, volatile memory, accelerator memory, and / or exp=
+ander
+> > +             memory may be mapped behind this decoder's memory window.
+> > +
+> > +What:                /sys/bus/cxl/devices/decoderX.Y/target_type
+> > +Date:                June, 2021
+> > +KernelVersion:       v5.14
+> > +Contact:     linux-cxl@vger.kernel.org
+> > +Description:
+> > +             When a CXL decoder is of devtype "cxl_decoder_switch", it=
+ can
+> > +             optionally decode either accelerator memory (type-2) or e=
+xpander
+> > +             memory (type-3). The 'target_type' attribute indicates th=
+e
+> > +             current setting which may dynamically change based on wha=
+t
+> > +             memory regions are activated in this decode hierarchy.
 >
-> Is this a complete list of ABI added? Looks like we also add devtype
-> attribute in this series.
-
-devtype is the only missing one, I'll add it.
-
-> Mind you I just realized I didn't document the proposed CDAT file either yet.
-
-Hey, we all need prompts to add documentation. I only remembered to
-add these here because you commented on it last time.
-
-> > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> > index 5483ba92b6da..d2573f6aef91 100644
-> > --- a/drivers/cxl/Kconfig
-> > +++ b/drivers/cxl/Kconfig
-> > @@ -45,4 +45,19 @@ config CXL_MEM_RAW_COMMANDS
-> >         potential impact to memory currently in use by the kernel.
-> >
-> >         If developing CXL hardware or the driver say Y, otherwise say N.
-> > +
-> > +config CXL_ACPI
-> > +     tristate "CXL ACPI: Platform Support"
-> > +     depends on ACPI
-> > +     help
-> > +       Enable support for host managed device memory (HDM) resources
-> > +       published by a platform's ACPI CXL memory layout description.  See
-> > +       Chapter 9.14.1 CXL Early Discovery Table (CEDT) in the CXL 2.0
-> > +       specification, and CXL Fixed Memory Window Structures (CEDT.CFMWS)
-> > +       (https://www.computeexpresslink.org/spec-landing). The CXL core
-> > +       consumes these resource to publish the root of a cxl_port decode
-> > +       hierarchy to map regions that represent System RAM, or Persistent
-> > +       Memory regions to be managed by LIBNVDIMM.
-> > +
-> > +       If unsure say 'm'.
-> >  endif
-> > diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-> > index d9d282dc15be..a29efb3e8ad2 100644
-> > --- a/drivers/cxl/Makefile
-> > +++ b/drivers/cxl/Makefile
-> > @@ -1,7 +1,9 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  obj-$(CONFIG_CXL_BUS) += cxl_core.o
-> >  obj-$(CONFIG_CXL_MEM) += cxl_pci.o
-> > +obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
-> >
-> >  ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
-> >  cxl_core-y := core.o
-> >  cxl_pci-y := pci.o
-> > +cxl_acpi-y := acpi.o
+> Nice docs.
+>
 > > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> > new file mode 100644
-> > index 000000000000..556d25ab6966
-> > --- /dev/null
+> > index ec324bf063b8..6f203ba7fc1d 100644
+> > --- a/drivers/cxl/acpi.c
 > > +++ b/drivers/cxl/acpi.c
-> > @@ -0,0 +1,39 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/* Copyright(c) 2021 Intel Corporation. All rights reserved. */
-> > +#include <linux/platform_device.h>
-> > +#include <linux/module.h>
-> > +#include <linux/device.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/acpi.h>
-> > +#include "cxl.h"
-> > +
-> > +static int cxl_acpi_probe(struct platform_device *pdev)
-> > +{
-> > +     struct cxl_port *root_port;
-> > +     struct device *host = &pdev->dev;
-> > +
-> > +     root_port = devm_cxl_add_port(host, host, CXL_RESOURCE_NONE, NULL);
-> > +     if (IS_ERR(root_port))
-> > +             return PTR_ERR(root_port);
-> > +     dev_dbg(host, "add: %s\n", dev_name(&root_port->dev));
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct acpi_device_id cxl_acpi_ids[] = {
-> > +     { "ACPI0017", 0 },
-> > +     { "", 0 },
-> > +};
-> > +MODULE_DEVICE_TABLE(acpi, cxl_acpi_ids);
-> > +
-> > +static struct platform_driver cxl_acpi_driver = {
-> > +     .probe = cxl_acpi_probe,
-> > +     .driver = {
-> > +             .name = KBUILD_MODNAME,
-> > +             .acpi_match_table = cxl_acpi_ids,
-> > +     },
-> > +};
-> > +
-> > +module_platform_driver(cxl_acpi_driver);
-> > +MODULE_LICENSE("GPL v2");
-> > +MODULE_IMPORT_NS(CXL);
-> > diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
-> > index 853666d8a9f5..dbbb34618d7d 100644
-> > --- a/drivers/cxl/core.c
-> > +++ b/drivers/cxl/core.c
-> > @@ -4,6 +4,8 @@
-> >  #include <linux/device.h>
-> >  #include <linux/module.h>
-> >  #include <linux/pci.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/idr.h>
-> >  #include "cxl.h"
+> > @@ -70,6 +70,7 @@ static int add_host_bridge_uport(struct device *match=
+, void *arg)
+> >       struct device *host =3D root_port->dev.parent;
+> >       struct acpi_pci_root *pci_root;
+> >       struct cxl_walk_context ctx;
+> > +     struct cxl_decoder *cxld;
+> >       struct cxl_port *port;
 > >
-> >  /**
-> > @@ -13,6 +15,164 @@
-> >   * point for cross-device interleave coordination through cxl ports.
-> >   */
+> >       if (!bridge)
+> > @@ -94,7 +95,25 @@ static int add_host_bridge_uport(struct device *matc=
+h, void *arg)
 > >
-> > +static DEFINE_IDA(cxl_port_ida);
+> >       if (ctx.count =3D=3D 0)
+> >               return -ENODEV;
+> > -     return ctx.error;
+> > +     if (ctx.error)
+> > +             return ctx.error;
 > > +
-> > +static ssize_t devtype_show(struct device *dev, struct device_attribute *attr,
-> > +                         char *buf)
-> > +{
-> > +     return sysfs_emit(buf, "%s\n", dev->type->name);
+> > +     /* TODO: Scan CHBCR for HDM Decoder resources */
+> > +
+> > +     /*
+> > +      * In the single-port host-bridge case there are no HDM decoders
+> > +      * in the CHBCR and a 1:1 passthrough decode is implied.
+> > +      */
+> > +     if (ctx.count =3D=3D 1) {
+> > +             cxld =3D devm_cxl_add_decoder(host, port, 1, 0, -2, 1, 0,
 >
-> I guess it's really small so doesn't matter that much, but not so nice
-> that we are gaining multiple instances of this same function.
->
+> -2?  I'm guessing that has some special meaning and perhaps warrants
+> a nice define to let us know what that is.
 
-This is only the second one unless I'm missing something. I do think
-it might be worth placing a common definition in the driver-core.
-Although it might be the case that I'm the only one that thinks having
-devtype as both an attribute and a uevent variable (DEVTYPE) is
-worthwhile. All the other variables in a dev_uevent() appear somewhere
-in sysfs, so that's a decent argument in my opinion to make devtype a
-core attribute.
+Um, yes, I think I went back and forth on whether this should be a
+zero-length range starting at zero or a zero-length range starting at
+UINT64_MAX, and I ended up botching it with a range of 0 to UINT64_MAX
+- 1. I'll fix this up to provide a "passthrough" version of
+devm_cxl_add_decoder() for the cases like this where a port does not
+adjust the decode from the parent port down to the next level.
+
+>
+> Given this interface is a bit long perhaps even wroth a comment here on
+> why the values are what they are?
+
+The passthrough helper will address this.
