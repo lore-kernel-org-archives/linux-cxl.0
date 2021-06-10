@@ -2,106 +2,127 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A410C47094
-	for <linux-cxl@archiver.kernel.org>; Thu, 10 Jun 2021 15:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B54CFC48BDF
+	for <linux-cxl@archiver.kernel.org>; Thu, 10 Jun 2021 17:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC7E613BC
-	for <linux-cxl@archiver.kernel.org>; Thu, 10 Jun 2021 15:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E100613F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 10 Jun 2021 17:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231640AbhFJPTf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 10 Jun 2021 11:19:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231633AbhFJPTc (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Jun 2021 11:19:32 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18DA9C061574
-        for <linux-cxl@vger.kernel.org>; Thu, 10 Jun 2021 08:17:35 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id p13so1919947pfw.0
-        for <linux-cxl@vger.kernel.org>; Thu, 10 Jun 2021 08:17:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mS2MKuQ1MIt5zD53BiXmwH5v3s+3aSWZOMRcLFPuyQQ=;
-        b=aQo9cpvxebrDYW33Evapw/yzHiQs2RxOy61K7n6IgoUxXfISlrgVfdnJDR4OZgqovP
-         yYwwBdVs3foftayF4m2A9wfEOAncKKn2BRzh1HtIvcmSvLMtsw/HHxtzrcY1+psDLHsc
-         40TLCaGdp6NniC1rGVV5GIPP6vudH01wEdeJmKMaXJ95lJq3OLJDIqsTRGzNTM4OJrpa
-         DwZpfxIW+A4Mqvse8uOyl2SMZ8N6V+1Oi9kbUwhek03aEk400N9J9eKocfp3NckjiLen
-         FCAX3l3f1J1Ln8lqWl6H4IoUj9GnbnYM3FT3hXAZR6WPQh4m/nDjCW4F0zDww18ZIQEC
-         WcRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mS2MKuQ1MIt5zD53BiXmwH5v3s+3aSWZOMRcLFPuyQQ=;
-        b=UsiT67xleCK8MuTQQw/Mqt4NqEjRZ53f/OuthukZjwUNy0zVXt6K+Q5aYCAt3zT/c5
-         qZH3L0DwnKKdSZ83T8aA/+3C5pMU4i6H9Kvr3q0qtI5riqVo3Rp3Ro0ss56V+kMYW0GO
-         hMwxS4Lp7lFHfge0G9KFAs1Rfu738CJ4VmXkNfuCjboRoD8Dxcd9fNoX7Xfv8cc3VXMv
-         ibETasr0SBo/AVoZ9P9FTgsq8xL6CJsv1DpuW3rQ2U2zAoffqynvHh5O1RzWLGL4ekZd
-         tjywzVbZD0x+7Iin4HpPhiqNlH8I0C3ryr4mrcXaZFAyhzlR9NkWAvqHT/xH0kT8k5JL
-         KxMA==
-X-Gm-Message-State: AOAM5317EM+Jblerz7rp1qN5NKmjwZzz7QdePF6IRYakyFi/mfb7MUyR
-        xoTnXkgVy/9rX5aUhaDRyUWPy/m+LW+T6xa3QuAOMg==
-X-Google-Smtp-Source: ABdhPJwEZL6AolcfQZhCtpeWi9L4JRznxZSkG0jfVSTQeMveEIT9vlfwlPBapoWue5ubB3fyFFQoiZkPFIhMAYJAY0g=
-X-Received: by 2002:a62:8287:0:b029:2ec:9b1f:9c0a with SMTP id
- w129-20020a6282870000b02902ec9b1f9c0amr3541997pfd.31.1623338254593; Thu, 10
- Jun 2021 08:17:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210524133938.2815206-1-Jonathan.Cameron@huawei.com> <20210524133938.2815206-2-Jonathan.Cameron@huawei.com>
-In-Reply-To: <20210524133938.2815206-2-Jonathan.Cameron@huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 10 Jun 2021 08:17:23 -0700
-Message-ID: <CAPcyv4i5-d6HrhQwUmjx7HqKA+pr8aQjPGHJ=7Sh3eTgJ1UKyg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/5] PCI: Add vendor ID for the PCI SIG
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>, linux-cxl@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
+        id S230376AbhFJRl1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 10 Jun 2021 13:41:27 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3205 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229823AbhFJRl0 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Jun 2021 13:41:26 -0400
+Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4G19wF3NYqz6H6sV;
+        Fri, 11 Jun 2021 01:30:05 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Thu, 10 Jun 2021 19:39:28 +0200
+Received: from localhost (10.52.126.112) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Thu, 10 Jun
+ 2021 18:39:27 +0100
+Date:   Thu, 10 Jun 2021 18:39:24 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Linux PCI <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        "Bjorn Helgaas" <helgaas@kernel.org>,
         "Weiny, Ira" <ira.weiny@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
         Ben Widawsky <ben.widawsky@intel.com>,
         Chris Browy <cbrowy@avery-design.com>,
         Linux ACPI <linux-acpi@vger.kernel.org>,
         "Schofield, Alison" <alison.schofield@intel.com>,
         Vishal L Verma <vishal.l.verma@intel.com>,
         Fangjian <f.fangjian@huawei.com>, Linuxarm <linuxarm@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v4 1/5] PCI: Add vendor ID for the PCI SIG
+Message-ID: <20210610183924.0000491d@Huawei.com>
+In-Reply-To: <CAPcyv4i5-d6HrhQwUmjx7HqKA+pr8aQjPGHJ=7Sh3eTgJ1UKyg@mail.gmail.com>
+References: <20210524133938.2815206-1-Jonathan.Cameron@huawei.com>
+        <20210524133938.2815206-2-Jonathan.Cameron@huawei.com>
+        <CAPcyv4i5-d6HrhQwUmjx7HqKA+pr8aQjPGHJ=7Sh3eTgJ1UKyg@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.126.112]
+X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, May 24, 2021 at 6:41 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> This ID is used in DOE headers to identify protocols that are defined
-> within the PCI Express Base Specification.
->
-> Specified in Table 7-x2 of the Data Object Exchange ECN (approved 12 March
-> 2020) available from https://members.pcisig.com/wg/PCI-SIG/document/14143
->
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  include/linux/pci_ids.h | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 4c3fa5293d76..dcc8b4b14198 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -149,6 +149,7 @@
->  #define PCI_CLASS_OTHERS               0xff
->
->  /* Vendors and devices.  Sort key: vendor first, device next. */
-> +#define PCI_VENDOR_ID_PCI_SIG          0x0001
+On Thu, 10 Jun 2021 08:17:23 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Should this not be:
+> On Mon, May 24, 2021 at 6:41 AM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
+> >
+> > This ID is used in DOE headers to identify protocols that are defined
+> > within the PCI Express Base Specification.
+> >
+> > Specified in Table 7-x2 of the Data Object Exchange ECN (approved 12 March
+> > 2020) available from https://members.pcisig.com/wg/PCI-SIG/document/14143
+> >
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> >  include/linux/pci_ids.h | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> > index 4c3fa5293d76..dcc8b4b14198 100644
+> > --- a/include/linux/pci_ids.h
+> > +++ b/include/linux/pci_ids.h
+> > @@ -149,6 +149,7 @@
+> >  #define PCI_CLASS_OTHERS               0xff
+> >
+> >  /* Vendors and devices.  Sort key: vendor first, device next. */
+> > +#define PCI_VENDOR_ID_PCI_SIG          0x0001  
+> 
+> Should this not be:
+> 
+> PCI_DOE_VENDOR_ID_PCI_SIG?
+> 
+> ...because I don't think this value will ever show up at the typical
+> config-offset 0 vendor-id, will it?
 
-PCI_DOE_VENDOR_ID_PCI_SIG?
+Good question.
 
-...because I don't think this value will ever show up at the typical
-config-offset 0 vendor-id, will it?
+Whilst I agree it is unlikely to turn up as a conventional vendor-id
+(though I've not found any text ruling it out) it already turns up
+in locations other than DOE.
+
+Many of them aren't software visible, but potentially places
+like SPDM are in which you would have a registry ID of 0x3 (PCI-SIG)
+followed by the PCI vendor ID (this one).  Those are used in SPDM
+vendor defined requests / responses.
+
+That SPDM feature is then used in IDE establishment.
+The IDE ECN (via pcisig.com) has the following:
+"The VendorID field of the VENDOR_DEFINED_REQUEST/
+ VENDOR_DEFINED_RESPONSE must contain the value 0001h, which is assigned to
+ the PCI-SIG."
+
+Which to my reading, isn't quite the same as saying it's a vendor ID,
+but nearly so.
+
+Now, I argued the *_DVSEC_* naming in the CXL one based on the spec saying
+that was all it could be used for but I may well have been wrong longer
+term.
+
+I'm fine with renaming it to the PCI_DOE_* version then dropping the DOE
+when it gets used for something else though if that works for people.
+
+At least this time naming isn't made awkward by legalese.
+
+Jonathan
