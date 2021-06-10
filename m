@@ -2,127 +2,106 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54CFC48BDF
-	for <linux-cxl@archiver.kernel.org>; Thu, 10 Jun 2021 17:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A85C48BDF
+	for <linux-cxl@archiver.kernel.org>; Thu, 10 Jun 2021 18:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E100613F5
-	for <linux-cxl@archiver.kernel.org>; Thu, 10 Jun 2021 17:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E242D613F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 10 Jun 2021 18:57:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230376AbhFJRl1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 10 Jun 2021 13:41:27 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3205 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229823AbhFJRl0 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Jun 2021 13:41:26 -0400
-Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4G19wF3NYqz6H6sV;
-        Fri, 11 Jun 2021 01:30:05 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Thu, 10 Jun 2021 19:39:28 +0200
-Received: from localhost (10.52.126.112) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Thu, 10 Jun
- 2021 18:39:27 +0100
-Date:   Thu, 10 Jun 2021 18:39:24 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Linux PCI <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        "Bjorn Helgaas" <helgaas@kernel.org>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Fangjian <f.fangjian@huawei.com>, Linuxarm <linuxarm@huawei.com>
-Subject: Re: [PATCH v4 1/5] PCI: Add vendor ID for the PCI SIG
-Message-ID: <20210610183924.0000491d@Huawei.com>
-In-Reply-To: <CAPcyv4i5-d6HrhQwUmjx7HqKA+pr8aQjPGHJ=7Sh3eTgJ1UKyg@mail.gmail.com>
-References: <20210524133938.2815206-1-Jonathan.Cameron@huawei.com>
-        <20210524133938.2815206-2-Jonathan.Cameron@huawei.com>
-        <CAPcyv4i5-d6HrhQwUmjx7HqKA+pr8aQjPGHJ=7Sh3eTgJ1UKyg@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+        id S230361AbhFJS7e (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 10 Jun 2021 14:59:34 -0400
+Received: from mga06.intel.com ([134.134.136.31]:35899 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230265AbhFJS7e (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 10 Jun 2021 14:59:34 -0400
+IronPort-SDR: GqOjwPqR4VojBqaMgRDBRfeEotVTOw0Lp8GeG5Hkvm+SQ5H6o7tVaHAHhx0ad6OzZGRbY55fvf
+ jAarIcHvSJdA==
+X-IronPort-AV: E=McAfee;i="6200,9189,10011"; a="266527350"
+X-IronPort-AV: E=Sophos;i="5.83,264,1616482800"; 
+   d="scan'208";a="266527350"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2021 11:57:37 -0700
+IronPort-SDR: gxv9jIHB7K/Gxg59D0UyGo6ecrV2Bbty0KmIhVlbIcMCEgxY8azBqx35THejsfD8oLKpZGGiko
+ VunA2qbHWaXw==
+X-IronPort-AV: E=Sophos;i="5.83,264,1616482800"; 
+   d="scan'208";a="482963767"
+Received: from millers-mobl.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.140.70])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2021 11:57:37 -0700
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: [RFC PATCH 0/4] Region Creation
+Date:   Thu, 10 Jun 2021 11:57:21 -0700
+Message-Id: <20210610185725.897541-1-ben.widawsky@intel.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.126.112]
-X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 10 Jun 2021 08:17:23 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+CXL interleave sets and non-interleave sets are described via regions. A region
+is specified in the CXL 2.0 specification and the purpose is to create a
+standardized way to preserve the region across reboots.
 
-> On Mon, May 24, 2021 at 6:41 AM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > This ID is used in DOE headers to identify protocols that are defined
-> > within the PCI Express Base Specification.
-> >
-> > Specified in Table 7-x2 of the Data Object Exchange ECN (approved 12 March
-> > 2020) available from https://members.pcisig.com/wg/PCI-SIG/document/14143
-> >
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > ---
-> >  include/linux/pci_ids.h | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> > index 4c3fa5293d76..dcc8b4b14198 100644
-> > --- a/include/linux/pci_ids.h
-> > +++ b/include/linux/pci_ids.h
-> > @@ -149,6 +149,7 @@
-> >  #define PCI_CLASS_OTHERS               0xff
-> >
-> >  /* Vendors and devices.  Sort key: vendor first, device next. */
-> > +#define PCI_VENDOR_ID_PCI_SIG          0x0001  
-> 
-> Should this not be:
-> 
-> PCI_DOE_VENDOR_ID_PCI_SIG?
-> 
-> ...because I don't think this value will ever show up at the typical
-> config-offset 0 vendor-id, will it?
+Introduced here is the basic mechanism to create and configure and delete a CXL
+region. Configuring a region simply means giving it a size, offset within the
+CFMWS window, UUID, and a target list. Enabling/activating a region, which
+ultimately means programming the HDM decoders in the chain, is left for later
+work.
 
-Good question.
+The patches are only minimally tested so far in QEMU emulation and so x1
+interleave is all that's supported.
 
-Whilst I agree it is unlikely to turn up as a conventional vendor-id
-(though I've not found any text ruling it out) it already turns up
-in locations other than DOE.
+Here is a sample topology (also in patch #4)
 
-Many of them aren't software visible, but potentially places
-like SPDM are in which you would have a registry ID of 0x3 (PCI-SIG)
-followed by the PCI vendor ID (this one).  Those are used in SPDM
-vendor defined requests / responses.
+    decoder1.0
+    ├── create_region
+    ├── delete_region
+    ├── devtype
+    ├── locked
+    ├── region1.0:0
+    │   ├── offset
+    │   ├── size
+    │   ├── subsystem -> ../../../../../../../bus/cxl
+    │   ├── target0
+    │   ├── uevent
+    │   ├── uuid
+    │   └── verify
+    ├── size
+    ├── start
+    ├── subsystem -> ../../../../../../bus/cxl
+    ├── target_list
+    ├── target_type
+    └── uevent
 
-That SPDM feature is then used in IDE establishment.
-The IDE ECN (via pcisig.com) has the following:
-"The VendorID field of the VENDOR_DEFINED_REQUEST/
- VENDOR_DEFINED_RESPONSE must contain the value 0001h, which is assigned to
- the PCI-SIG."
+Ben Widawsky (4):
+  cxl/region: Add region creation ABI
+  cxl/region: Create attribute structure / verify
+  cxl: Move cxl_memdev conversion helper to mem.h
+  cxl/region: Introduce concept of region configuration
 
-Which to my reading, isn't quite the same as saying it's a vendor ID,
-but nearly so.
+ Documentation/ABI/testing/sysfs-bus-cxl       |  59 +++
+ .../driver-api/cxl/memory-devices.rst         |   8 +
+ drivers/cxl/Makefile                          |   2 +-
+ drivers/cxl/core.c                            |  71 ++++
+ drivers/cxl/cxl.h                             |  11 +
+ drivers/cxl/mem.h                             |  26 ++
+ drivers/cxl/pci.c                             |   5 -
+ drivers/cxl/region.c                          | 400 ++++++++++++++++++
+ 8 files changed, 576 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/cxl/region.c
 
-Now, I argued the *_DVSEC_* naming in the CXL one based on the spec saying
-that was all it could be used for but I may well have been wrong longer
-term.
+-- 
+2.32.0
 
-I'm fine with renaming it to the PCI_DOE_* version then dropping the DOE
-when it gets used for something else though if that works for people.
-
-At least this time naming isn't made awkward by legalese.
-
-Jonathan
