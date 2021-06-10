@@ -2,115 +2,111 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BD7C48BD1
-	for <linux-cxl@archiver.kernel.org>; Thu, 10 Jun 2021 22:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A64C48BDF
+	for <linux-cxl@archiver.kernel.org>; Thu, 10 Jun 2021 22:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9894613F1
-	for <linux-cxl@archiver.kernel.org>; Thu, 10 Jun 2021 22:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E7D3613F1
+	for <linux-cxl@archiver.kernel.org>; Thu, 10 Jun 2021 22:26:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230211AbhFJWCe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 10 Jun 2021 18:02:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229941AbhFJWCb (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Jun 2021 18:02:31 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2ECAC061574
-        for <linux-cxl@vger.kernel.org>; Thu, 10 Jun 2021 15:00:32 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id o17-20020a17090a9f91b029015cef5b3c50so4590311pjp.4
-        for <linux-cxl@vger.kernel.org>; Thu, 10 Jun 2021 15:00:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=i5w+LRv6C8SHjmj16D4ue7TAWg9exUnPtZjWQ04w/cA=;
-        b=XXNdlZtbAsV7LCrXkc4W3Ko58O7p92xlAH9a9WQ4Adb1wYUZREH7bJwqfaW3Z66bbx
-         SfeuRR0X54V3plmBBPsFkvPgspDE57iEfWfo2K0la7Oy/tA/EnzRiqBovK+IXbQalUnJ
-         QuW/BAA//TfOJ63dor+lJgISWamia4aVpOPZC3F7CfBCFK5f2Zu3ncESGorhgStFYhvJ
-         N02kJshrpPt1xAkG1h4eS/C8zhCiKvLqHkARVqNhw3cJR6zuijbRuezmq4/+LNEuxGfY
-         sLngvSqMEGcJlbEulz1zWzCimN6UsA0Px5PTMW6moQShjlClEcbK44BSY/bN1bk+jm20
-         Dfqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=i5w+LRv6C8SHjmj16D4ue7TAWg9exUnPtZjWQ04w/cA=;
-        b=FFyNx7xxgSGcp/1XUK12sTpwd9tS5+/BGWsYeXg9dENnuqizzK9qsKdNH5dVvfs3cW
-         nlP7C/CZL2GvXm6/LWyQk/rPtRdaOlYTOKSN93HHDNc8AvzRU2C/KAroDaVFQHKF6XRe
-         6b8ImJq+oG2MC/E7ljPhcWJnG1iaJBlygh9vC+5SD7HwemeZTvfgabA9oIxOQZUwQ+31
-         c6s+XgffPEdYSnLat/MbipvATm8rAabncJ7kscTjORzHi9mCyxCuEwZ6YIiD361obR4j
-         rWk67/cu9zI4xH/GO+4IgCmWJJEdjgButb/0LueXoPRN3A4Qs5RzqZ4AD8BzgkqZkHN5
-         0lTQ==
-X-Gm-Message-State: AOAM531cp1dY2DUciHLMOQ1I5OZbLJpyFtxBXMd3I3rS11SefwxmHMeE
-        M2myYfm/ErqB/NSPuR1zRL+K3wDJjpLSbVTSmhRQ1Q==
-X-Google-Smtp-Source: ABdhPJwoYWvfjBstUPn0izkY0VT4nggS7379pES3iqk9k9Koj5zAIuKefmFFSscy3pXMt/XGbnYr8ogKvYGIVaThB8M=
-X-Received: by 2002:a17:90a:ea8c:: with SMTP id h12mr5355987pjz.149.1623362432259;
- Thu, 10 Jun 2021 15:00:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210610215332.991905-1-ben.widawsky@intel.com>
-In-Reply-To: <20210610215332.991905-1-ben.widawsky@intel.com>
+        id S230363AbhFJW14 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 10 Jun 2021 18:27:56 -0400
+Received: from mga05.intel.com ([192.55.52.43]:26504 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230358AbhFJW14 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 10 Jun 2021 18:27:56 -0400
+IronPort-SDR: M+2dIhfdn7I45hJXO7jmYYtCsIRkfdUlsxO8kk9lJ+y/xcRs+T58S5K5k4CeOXKwWSedjjx3ye
+ PFJ2l4I15KYA==
+X-IronPort-AV: E=McAfee;i="6200,9189,10011"; a="291048367"
+X-IronPort-AV: E=Sophos;i="5.83,264,1616482800"; 
+   d="scan'208";a="291048367"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2021 15:25:58 -0700
+IronPort-SDR: PkThYScbSj0g+5RZ2lwhwHWG6CyiPwTzjjYWDBkyFHpE4UcFRW9gMWcKNrkpeuYERq9uDYSwFm
+ qMmEqcl19v8g==
+X-IronPort-AV: E=Sophos;i="5.83,264,1616482800"; 
+   d="scan'208";a="486361110"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2021 15:25:58 -0700
+Subject: [PATCH 0/5] cxl/pmem: Add core infrastructure for PMEM support
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 10 Jun 2021 15:00:21 -0700
-Message-ID: <CAPcyv4je4BZqpvRw92PNOKpxhp59ZLbydNBbkKLD-UQBj725sg@mail.gmail.com>
-Subject: Re: [PATCH] cxl/hdm: Fix decoder count calculation
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Ira Weiny <ira.weiny@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To:     linux-cxl@vger.kernel.org
+Cc:     nvdimm@lists.linux.dev, ben.widawsky@intel.com,
+        alison.schofield@intel.com, vishal.l.verma@intel.com,
+        ira.weiny@intel.com, linux-kernel@vger.kernel.org
+Date:   Thu, 10 Jun 2021 15:25:57 -0700
+Message-ID: <162336395765.2462439.11368504490069925374.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Jun 10, 2021 at 2:53 PM Ben Widawsky <ben.widawsky@intel.com> wrote=
-:
->
-> The decoder count in the HDM decoder capability structure is an encoded
-> field. As defined in the spec:
->
-> Decoder Count: Reports the number of memory address decoders implemented
-> by the component.
-> 0 =E2=80=93 1 Decoder
-> 1 =E2=80=93 2 Decoders
-> 2 =E2=80=93 4 Decoders
-> 3 =E2=80=93 6 Decoders
-> 4 =E2=80=93 8 Decoders
-> 5 =E2=80=93 10 DecodersAll other values are reserved
->
-> Nothing is actually fixed by this as nothing actually used this mapping
-> yet.
->
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> ---
->  drivers/cxl/core.c | 3 ++-
->  drivers/cxl/cxl.h  | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
-> index cda09a9cd98e..92db02fe7aa8 100644
-> --- a/drivers/cxl/core.c
-> +++ b/drivers/cxl/core.c
-> @@ -666,7 +666,8 @@ void cxl_probe_component_regs(struct device *dev, voi=
-d __iomem *base,
->
->                         hdr =3D readl(register_block);
->
-> -                       decoder_cnt =3D FIELD_GET(CXL_HDM_DECODER_COUNT_M=
-ASK, hdr);
-> +                       decoder_cnt =3D
-> +                               cxl_hdm_decoder_count(FIELD_GET(CXL_HDM_D=
-ECODER_COUNT_MASK, hdr));
+CXL Memory Expander devices (CXL 2.0 Type-3) support persistent memory
+in addition to volatile memory expansion. The most significant changes
+this requires of the existing LIBNVDIMM infrastructure, compared to what
+was needed to support ACPI NFIT defined PMEM, is the ability to
+dynamically provision regions in addition to namespaces, and a formal
+model for hotplug.
 
-How about make it a static inline helper that takes @hdr and move the
-FIELD_GET inside there to save some indentation?
+Before region provisioning can be added the CXL enabling needs to
+enumerate "nvdimm" devices on a CXL nvdimm-bus. This is modeled as a
+CXL-nvdimm-bridge device (bridging CXL to nvdimm) and an associated
+driver to activate and deactivate that bus-bridge. Once the bridge is
+registered it scans for CXL nvdimm devices registered by endpoints.  The
+CXL core bus is used as a rendezvous for nvdimm bridges and endpoints
+allowing them to be registered and enabled in any order.
 
-I still think it warrants a Fixes: tag, the commit ids in cxl.git/next
-are stable.
+At the end of this series the ndctl utility can see CXL nvdimm resources
+just like any other nvdimm bus.
+
+    # ndctl list -BDiu -b CXL
+    {
+      "provider":"CXL",
+      "dev":"ndbus1",
+      "dimms":[
+        { 
+          "dev":"nmem1",
+          "state":"disabled"
+        },
+        { 
+          "dev":"nmem0",
+          "state":"disabled"
+        }
+      ]
+    }
+
+Follow-on patches extend the nvdimm core label support for CXL region
+and namespace labels. For now just add the machinery to register the
+bus and nvdimm base objects.
+
+---
+
+Dan Williams (5):
+      cxl/core: Add cxl-bus driver infrastructure
+      cxl/pmem: Add initial infrastructure for pmem support
+      libnvdimm: Export nvdimm shutdown helper, nvdimm_delete()
+      libnvdimm: Drop unused device power management support
+      cxl/pmem: Register 'pmem' / cxl_nvdimm  devices
+
+
+ drivers/cxl/Kconfig        |   13 ++
+ drivers/cxl/Makefile       |    2 
+ drivers/cxl/acpi.c         |   37 +++++-
+ drivers/cxl/core.c         |  281 ++++++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxl.h          |   57 +++++++++
+ drivers/cxl/mem.h          |    2 
+ drivers/cxl/pci.c          |   23 +++-
+ drivers/cxl/pmem.c         |  230 ++++++++++++++++++++++++++++++++++++
+ drivers/nvdimm/bus.c       |   64 ++++++----
+ drivers/nvdimm/dimm_devs.c |   18 +++
+ include/linux/libnvdimm.h  |    1 
+ 11 files changed, 697 insertions(+), 31 deletions(-)
+ create mode 100644 drivers/cxl/pmem.c
+
+base-commit: 40ba17afdfabb01688c61565dbe02a916241bc05
