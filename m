@@ -2,36 +2,35 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8F8C48BD1
-	for <linux-cxl@archiver.kernel.org>; Fri, 11 Jun 2021 13:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2685AC48BE0
+	for <linux-cxl@archiver.kernel.org>; Fri, 11 Jun 2021 13:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A548613FA
-	for <linux-cxl@archiver.kernel.org>; Fri, 11 Jun 2021 13:52:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD7D7613FA
+	for <linux-cxl@archiver.kernel.org>; Fri, 11 Jun 2021 13:53:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230129AbhFKNyM convert rfc822-to-8bit (ORCPT
+        id S229824AbhFKNzq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 11 Jun 2021 09:54:12 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3224 "EHLO
+        Fri, 11 Jun 2021 09:55:46 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3225 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230460AbhFKNyM (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 11 Jun 2021 09:54:12 -0400
-Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4G1hlW0v2zz6J9jR;
-        Fri, 11 Jun 2021 21:39:19 +0800 (CST)
+        with ESMTP id S229722AbhFKNzq (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 11 Jun 2021 09:55:46 -0400
+Received: from fraeml735-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4G1hwN1n5Rz6L4wD;
+        Fri, 11 Jun 2021 21:47:00 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
+ fraeml735-chm.china.huawei.com (10.206.15.216) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Fri, 11 Jun 2021 15:52:12 +0200
-Received: from localhost (10.52.120.251) by lhreml710-chm.china.huawei.com
+ 15.1.2176.2; Fri, 11 Jun 2021 15:53:46 +0200
+Received: from localhost (10.52.127.35) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Fri, 11 Jun
- 2021 14:52:10 +0100
-Date:   Fri, 11 Jun 2021 14:52:06 +0100
+ 2021 14:53:44 +0100
+Date:   Fri, 11 Jun 2021 14:53:31 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Ben Widawsky <ben.widawsky@intel.com>
 CC:     <linux-cxl@vger.kernel.org>,
@@ -39,417 +38,99 @@ CC:     <linux-cxl@vger.kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         "Ira Weiny" <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [RFC PATCH 4/4] cxl/region: Introduce concept of region
- configuration
-Message-ID: <20210611145206.00003c50@Huawei.com>
-In-Reply-To: <20210610185725.897541-5-ben.widawsky@intel.com>
+Subject: Re: [RFC PATCH 0/4] Region Creation
+Message-ID: <20210611145331.0000366e@Huawei.com>
+In-Reply-To: <20210611141136.000013ab@Huawei.com>
 References: <20210610185725.897541-1-ben.widawsky@intel.com>
-        <20210610185725.897541-5-ben.widawsky@intel.com>
+        <20210611141136.000013ab@Huawei.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.52.120.251]
-X-ClientProxiedBy: lhreml742-chm.china.huawei.com (10.201.108.192) To
+X-Originating-IP: [10.52.127.35]
+X-ClientProxiedBy: lhreml750-chm.china.huawei.com (10.201.108.200) To
  lhreml710-chm.china.huawei.com (10.201.108.61)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 10 Jun 2021 11:57:25 -0700
-Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Fri, 11 Jun 2021 14:11:36 +0100
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-> The region creation APIs leave a region unconfigured. Configuring the
-> region will work in the same way as similar subsystems such as devdax.
-> Sysfs attrs will be provided to allow userspace to configure the region.
-> Finally once all configuration is complete, userspace may "commit" the
-> config. What the kernel decides to do after a config is committed is out
-> of scope at this point.
+> On Thu, 10 Jun 2021 11:57:21 -0700
+> Ben Widawsky <ben.widawsky@intel.com> wrote:
 > 
-> Introduced here are the most basic attributes needed to configure a
-> region.
+> > CXL interleave sets and non-interleave sets are described via regions. A region
+> > is specified in the CXL 2.0 specification and the purpose is to create a
+> > standardized way to preserve the region across reboots.  
 > 
-> A x1 interleave example is provided below:
+> A specific section reference would be helpful.
 > 
-> decoder1.0
-> ├── create_region
-> ├── delete_region
-> ├── devtype
-> ├── locked
-> ├── region1.0:0
-> │   ├── offset
-> │   ├── size
-> │   ├── subsystem -> ../../../../../../../bus/cxl
-> │   ├── target0
-> │   ├── uevent
-> │   ├── uuid
-> │   └── verify
-> ├── size
-> ├── start
-> ├── subsystem -> ../../../../../../bus/cxl
-> ├── target_list
-> ├── target_type
-> └── uevent
+> > 
+> > Introduced here is the basic mechanism to create and configure and delete a CXL
+> > region. Configuring a region simply means giving it a size, offset within the
+> > CFMWS window, UUID, and a target list. Enabling/activating a region, which
+> > ultimately means programming the HDM decoders in the chain, is left for later
+> > work.
+> > 
+> > The patches are only minimally tested so far in QEMU emulation and so x1
+> > interleave is all that's supported.  
 > 
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-cxl |  27 +++
->  drivers/cxl/mem.h                       |   2 +
->  drivers/cxl/region.c                    | 227 +++++++++++++++++++++++-
->  3 files changed, 255 insertions(+), 1 deletion(-)
+> I'm guessing this is why it's an RFC rather than a final submission?
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> index 699c8514fd7b..d7174a84f70d 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> @@ -159,3 +159,30 @@ Description:
->  		integer is returned describing the first error found in the
->  		configuration. A verified region can still fail binding due to
->  		lack of resources.
-> +
-> +What:		/sys/bus/cxl/devices/decoderX.Y/regionX.Y:Z/{offset,size}
+> If you can call out the RFC reasons in a cover letter it is helpful
+> as saves people wondering what specifically you want comments on.
 
-I missed this before, but why do we need X.Y in the region naming given it's
-always inside decoderX.Y.  Seems like RegionZ would work.
+Hi Ben,
 
-> +Date:		June, 2021
-> +KernelVersion:	v5.14
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		A region resides within an address space that is claimed by a
-> +		decoder. The region will be of some size within the address
-> +		space and at some offset that must also reside within the
-> +		address space. The size and position of the region is specified
-> +		by these attributes.
-Could perhaps reword this.  Something like.
+Having read through them all, I think this needs more thought than
+I feel up to on a Friday afternoon.  Will get back to you on v2
+perhaps.
 
-		The region defined by size and offset must be fully contained
-		within the address space.
-> +
-> +What:		/sys/bus/cxl/devices/decoderX.Y/regionX.Y:Z/uuid
-> +Date:		June, 2021
-> +KernelVersion:	v5.14
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		The unique identifier for the region.
-> +
-> +What:		/sys/bus/cxl/devices/decoderX.Y/regionX.Y:Z/target[0-15]
-> +Date:		June, 2021
-> +KernelVersion:	v5.14
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		Memory devices are the backing storage for a region. Each target
-> +		must be populated with a memdev in order for the region to be
-> +		eligible to be activated.
+Jonathan
 
-How do you do that?  What is written to this file?
-
-> diff --git a/drivers/cxl/mem.h b/drivers/cxl/mem.h
-> index 9795aa924035..059fbf084fa1 100644
-> --- a/drivers/cxl/mem.h
-> +++ b/drivers/cxl/mem.h
-> @@ -58,6 +58,7 @@ static inline struct cxl_memdev *to_cxl_memdev(struct device *dev)
->   * @dev: This region's device.
->   * @id: This regions id. Id is globally unique across all regions.
->   * @res: Address space consumed by this region.
-> + * @uuid: The UUID for this region.
->   * @list: Node in decoders region list.
->   * @targets: The memory devices comprising the region.
->   */
-> @@ -65,6 +66,7 @@ struct cxl_region {
->  	struct device dev;
->  	int id;
->  	struct resource res;
-> +	uuid_t uuid;
->  	struct list_head list;
->  	struct cxl_memdev *targets[];
->  };
-> diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
-> index ea1ac848c713..a69ee00514cb 100644
-> --- a/drivers/cxl/region.c
-> +++ b/drivers/cxl/region.c
-> @@ -3,7 +3,9 @@
->  #include <linux/io-64-nonatomic-lo-hi.h>
->  #include <linux/device.h>
->  #include <linux/module.h>
-> +#include <linux/sizes.h>
->  #include <linux/slab.h>
-> +#include <linux/uuid.h>
->  #include <linux/idr.h>
->  #include "cxl.h"
->  #include "mem.h"
-> @@ -20,15 +22,130 @@
->   * relationship between decoder and region when the region is interleaved.
->   */
->  
-> +static struct cxl_region *to_cxl_region(struct device *dev);
-> +
-> +#define cxl_region_ways(region)                                                \
-> +	to_cxl_decoder((region)->dev.parent)->interleave_ways
-> +
->  static ssize_t verify_show(struct device *dev, struct device_attribute *attr, char *buf)
->  {
-> +	struct cxl_decoder *cxld = to_cxl_decoder(dev->parent);
-> +	struct cxl_region *region = to_cxl_region(dev);
-> +	struct resource decode_res;
-> +	int i;
-> +
-> +	decode_res = (struct resource)DEFINE_RES_MEM(cxld->range.start,
-> +						     range_len(&cxld->range));
-> +
-> +	/* Invalid region size */
-> +	if (!resource_contains(&decode_res, &region->res))
-> +		return sysfs_emit(buf, "size");
-
-Perhaps "outside region"?  Size might be fine, but not the offset.
-Also, docs say a negative integer is returned for this attribute.
-Those docs need to call out the full list of things that might be returned
-so that userspace can know what to expect.
-
-> +
-> +	if (resource_size(&region->res) % (SZ_256M * cxld->interleave_ways))
-> +		return sysfs_emit(buf, "alignment");
-> +
-> +	/* Missing target memory device */
-> +	for (i = 0; i < cxld->interleave_ways; i++)
-> +		if (!region->targets[i])
-> +			return sysfs_emit(buf, "memdev");
-> +
->  	return sysfs_emit(buf, "0");
->  }
->  
->  static DEVICE_ATTR_RO(verify);
->  
-> +static bool is_region_active(struct cxl_region *region)
-> +{
-> +	/* TODO: Regions can't be activated yet. */
-> +	return false;
-> +}
-> +
-> +static ssize_t offset_show(struct device *dev, struct device_attribute *attr,
-> +			   char *buf)
-> +{
-> +	struct cxl_region *region = to_cxl_region(dev);
-> +
-> +	return sysfs_emit(buf, "%#llx\n", region->res.start);
-> +}
-> +
-> +static ssize_t offset_store(struct device *dev, struct device_attribute *attr,
-> +			    const char *buf, size_t len)
-> +{
-> +	struct cxl_region *region = to_cxl_region(dev);
-> +	unsigned long long val;
-> +	ssize_t rc;
-> +
-> +	rc = kstrtoull(buf, 0, &val);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (is_region_active(region)) {
-> +		/* TODO: */
-> +	} else {
-> +		region->res.start = val;
-> +	}
-> +
-> +	return len;
-> +}
-> +
-> +static DEVICE_ATTR_RW(offset);
-> +
-> +static ssize_t size_show(struct device *dev, struct device_attribute *attr,
-> +			 char *buf)
-> +{
-> +	struct cxl_region *region = to_cxl_region(dev);
-> +
-> +	return sysfs_emit(buf, "%llu\n", resource_size(&region->res));
-> +}
-> +
-> +static ssize_t size_store(struct device *dev, struct device_attribute *attr,
-> +			  const char *buf, size_t len)
-> +{
-> +	struct cxl_region *region = to_cxl_region(dev);
-> +	unsigned long long val;
-> +	ssize_t rc;
-> +
-> +	rc = kstrtoull(buf, 0, &val);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (is_region_active(region)) {
-> +		/* TODO: */
-> +	} else {
-> +		region->res.end = region->res.start + val - 1;
-> +	}
-> +
-> +	return len;
-> +}
-> +static DEVICE_ATTR_RW(size);
-> +
-> +static ssize_t uuid_show(struct device *dev, struct device_attribute *attr,
-> +			 char *buf)
-> +{
-> +	struct cxl_region *region = to_cxl_region(dev);
-> +
-> +	return sysfs_emit(buf, "%pUb\n", &region->uuid);
-> +}
-> +static ssize_t uuid_store(struct device *dev, struct device_attribute *attr,
-> +			  const char *buf, size_t len)
-> +{
-> +	struct cxl_region *region = to_cxl_region(dev);
-> +	ssize_t rc;
-> +
-> +	if (len != UUID_STRING_LEN + 1)
-> +		return -EINVAL;
-> +
-> +	rc = uuid_parse(buf, &region->uuid);
-> +
-> +	return rc ? rc : len;
-> +}
-> +static DEVICE_ATTR_RW(uuid);
-> +
->  static struct attribute *region_attrs[] = {
->  	&dev_attr_verify.attr,
-> +	&dev_attr_offset.attr,
-> +	&dev_attr_size.attr,
-> +	&dev_attr_uuid.attr,
->  	NULL,
->  };
->  
-> @@ -36,8 +153,111 @@ static const struct attribute_group region_group = {
->  	.attrs = region_attrs,
->  };
->  
-> +static size_t show_targetN(struct cxl_region *region, char *buf, int n)
-> +{
-> +	if (region->targets[n])
-> +		return sysfs_emit(buf, "%s\n", dev_name(&region->targets[n]->dev));
-> +	else
-> +		return sysfs_emit(buf, "nil\n");
-
-This needs documenting in the ABI docs. I'd I guessed it would return an empty
-string.
-
-> +}
-> +
-> +static size_t set_targetN(struct cxl_region *region, const char *buf, int n, size_t len)
-> +{
-> +	struct device *memdev_dev;
-> +	struct cxl_memdev *cxlmd;
-> +	ssize_t rc;
-> +	int val;
-> +
-> +	rc = kstrtoint(buf, 0, &val);
-> +	if (!rc && val == 0) {
-> +		cxlmd = region->targets[n] = cxlmd;
-> +		if (cxlmd)
-> +			put_device(&cxlmd->dev);
-> +		region->targets[n] = NULL;
-> +		return len;
-> +	}
-> +
-> +	memdev_dev = bus_find_device_by_name(&cxl_bus_type, NULL, buf);
-> +	if (!memdev_dev)
-> +		return -ENOENT;
-> +
-> +	cxlmd = to_cxl_memdev(memdev_dev);
-> +	get_device(&cxlmd->dev);
-> +	region->targets[n] = cxlmd;
-> +
-> +	return len;
-> +}
-> +
-> +#define TARGET_ATTR_RW(n)                                                      \
-> +	static ssize_t target##n##_show(                                       \
-> +		struct device *dev, struct device_attribute *attr, char *buf)  \
-> +	{                                                                      \
-> +		return show_targetN(to_cxl_region(dev), buf, n);               \
-> +	}                                                                      \
-> +	static ssize_t target##n##_store(struct device *dev,                   \
-> +					 struct device_attribute *attr,        \
-> +					 const char *buf, size_t len)          \
-> +	{                                                                      \
-> +		return set_targetN(to_cxl_region(dev), buf, n, len);           \
-> +	}                                                                      \
-> +	static DEVICE_ATTR_RW(target##n)
-> +
-> +TARGET_ATTR_RW(0);
-> +TARGET_ATTR_RW(1);
-> +TARGET_ATTR_RW(2);
-> +TARGET_ATTR_RW(3);
-> +TARGET_ATTR_RW(4);
-> +TARGET_ATTR_RW(5);
-> +TARGET_ATTR_RW(6);
-> +TARGET_ATTR_RW(7);
-> +TARGET_ATTR_RW(8);
-> +TARGET_ATTR_RW(9);
-> +TARGET_ATTR_RW(10);
-> +TARGET_ATTR_RW(11);
-> +TARGET_ATTR_RW(12);
-> +TARGET_ATTR_RW(13);
-> +TARGET_ATTR_RW(14);
-> +TARGET_ATTR_RW(15);
-> +
-> +static struct attribute *interleave_attrs[] = {
-> +	&dev_attr_target0.attr,
-> +	&dev_attr_target1.attr,
-> +	&dev_attr_target2.attr,
-> +	&dev_attr_target3.attr,
-> +	&dev_attr_target4.attr,
-> +	&dev_attr_target5.attr,
-> +	&dev_attr_target6.attr,
-> +	&dev_attr_target7.attr,
-> +	&dev_attr_target8.attr,
-> +	&dev_attr_target9.attr,
-> +	&dev_attr_target10.attr,
-> +	&dev_attr_target11.attr,
-> +	&dev_attr_target12.attr,
-> +	&dev_attr_target13.attr,
-> +	&dev_attr_target14.attr,
-> +	&dev_attr_target15.attr,
-> +	NULL,
-> +};
-> +
-> +static umode_t visible_targets(struct kobject *kobj, struct attribute *a, int n)
-> +{
-> +	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct cxl_region *region = to_cxl_region(dev);
-> +
-> +	if (n < cxl_region_ways(region))
-> +		return a->mode;
-> +	return 0;
-> +}
-> +
-> +static const struct attribute_group region_interleave_group = {
-> +	.attrs = interleave_attrs,
-> +	.is_visible = visible_targets,
-> +};
-> +
->  static const struct attribute_group *region_groups[] = {
->  	&region_group,
-> +	&region_interleave_group,
-> +	NULL,
->  };
->  
->  static void cxl_region_release(struct device *dev);
-> @@ -58,8 +278,13 @@ static struct cxl_region *to_cxl_region(struct device *dev)
->  
->  void cxl_free_region(struct cxl_decoder *cxld, struct cxl_region *region)
->  {
-> +	int i;
-> +
->  	ida_free(&cxld->region_ida, region->id);
-> -	kfree(region->targets);
-
-This line looks like a bug in earlier patch as targets is allocated
-as part of the allocation of region.
-
-> +	for (i = 0; i < cxld->interleave_ways; i++) {
-> +		if (region->targets[i])
-> +			put_device(&region->targets[i]->dev);
-> +	}
->  	kfree(region);
->  }
->  
+> 
+> > 
+> > Here is a sample topology (also in patch #4)
+> > 
+> >     decoder1.0
+> >     ├── create_region
+> >     ├── delete_region
+> >     ├── devtype
+> >     ├── locked
+> >     ├── region1.0:0
+> >     │   ├── offset
+> >     │   ├── size
+> >     │   ├── subsystem -> ../../../../../../../bus/cxl
+> >     │   ├── target0
+> >     │   ├── uevent
+> >     │   ├── uuid
+> >     │   └── verify
+> >     ├── size
+> >     ├── start
+> >     ├── subsystem -> ../../../../../../bus/cxl
+> >     ├── target_list
+> >     ├── target_type
+> >     └── uevent
+> > 
+> > Ben Widawsky (4):
+> >   cxl/region: Add region creation ABI
+> >   cxl/region: Create attribute structure / verify
+> >   cxl: Move cxl_memdev conversion helper to mem.h
+> >   cxl/region: Introduce concept of region configuration
+> > 
+> >  Documentation/ABI/testing/sysfs-bus-cxl       |  59 +++
+> >  .../driver-api/cxl/memory-devices.rst         |   8 +
+> >  drivers/cxl/Makefile                          |   2 +-
+> >  drivers/cxl/core.c                            |  71 ++++
+> >  drivers/cxl/cxl.h                             |  11 +
+> >  drivers/cxl/mem.h                             |  26 ++
+> >  drivers/cxl/pci.c                             |   5 -
+> >  drivers/cxl/region.c                          | 400 ++++++++++++++++++
+> >  8 files changed, 576 insertions(+), 6 deletions(-)
+> >  create mode 100644 drivers/cxl/region.c
+> >   
+> 
 
