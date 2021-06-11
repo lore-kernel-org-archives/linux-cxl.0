@@ -2,156 +2,100 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D635AC48BE0
-	for <linux-cxl@archiver.kernel.org>; Fri, 11 Jun 2021 19:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D041FC48BE0
+	for <linux-cxl@archiver.kernel.org>; Fri, 11 Jun 2021 19:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B82A3613CC
-	for <linux-cxl@archiver.kernel.org>; Fri, 11 Jun 2021 19:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E1160E0C
+	for <linux-cxl@archiver.kernel.org>; Fri, 11 Jun 2021 19:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230410AbhFKTaa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 11 Jun 2021 15:30:30 -0400
-Received: from mga17.intel.com ([192.55.52.151]:42609 "EHLO mga17.intel.com"
+        id S229548AbhFKUAY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 11 Jun 2021 16:00:24 -0400
+Received: from mga07.intel.com ([134.134.136.100]:32805 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229633AbhFKTaa (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 11 Jun 2021 15:30:30 -0400
-IronPort-SDR: rSb+6Ma4R9q1CrPBQH0X3b8+wgESAig5J9rss4MuvXjOLRLAYT7LHFxEaXFniB/KN2J3zAOrbE
- /cVcIyTtNaRg==
-X-IronPort-AV: E=McAfee;i="6200,9189,10012"; a="185969241"
+        id S229517AbhFKUAY (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Fri, 11 Jun 2021 16:00:24 -0400
+IronPort-SDR: ncghmrRAP0SGri4StIlW4FgFYbrezRSZcH/tMNybjtgC6gLEg9bpVAlHFqHdNDwg+sD2V/9oHM
+ dxYXym1qGEmA==
+X-IronPort-AV: E=McAfee;i="6200,9189,10012"; a="269449157"
 X-IronPort-AV: E=Sophos;i="5.83,267,1616482800"; 
-   d="scan'208";a="185969241"
+   d="scan'208";a="269449157"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2021 12:28:31 -0700
-IronPort-SDR: XUCaJtT5tJX6zzsOnpujw9apdxCvWYuDKwylKPWMaowYV3+tRG0cr3Um58QKUZKzqgUQ0Hd/Bi
- JKDl0p0emNTA==
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2021 12:58:24 -0700
+IronPort-SDR: cU9sY6tX1Mc5GAUL7QBgOOtMAp1eCqZUJNJ1SieMhQnF2u7jyFSpkFBxfDUJMg84U580f5h9JT
+ t9P2P/RpGW0w==
 X-IronPort-AV: E=Sophos;i="5.83,267,1616482800"; 
-   d="scan'208";a="483371383"
-Received: from chtanaka-mobl2.amr.corp.intel.com (HELO intel.com) ([10.252.138.239])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2021 12:28:30 -0700
-Date:   Fri, 11 Jun 2021 12:28:29 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Linux NVDIMM <nvdimm@lists.linux.dev>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/5] cxl/core: Add cxl-bus driver infrastructure
-Message-ID: <20210611192829.bwdj322uwlsbdrjs@intel.com>
-References: <162336395765.2462439.11368504490069925374.stgit@dwillia2-desk3.amr.corp.intel.com>
- <162336396329.2462439.16556923116284874437.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20210611174736.ttzpk5uniyoyd4vw@intel.com>
- <CAPcyv4i7_RhfiYMX=QP2Ts4ye1Q2e0=_aBCP4rsuopo=0HWKVw@mail.gmail.com>
+   d="scan'208";a="483378562"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2021 12:58:24 -0700
+Date:   Fri, 11 Jun 2021 12:58:24 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 1/3] cxl/pci: Store memory capacity values
+Message-ID: <20210611195824.GB1600546@iweiny-DESK2.sc.intel.com>
+References: <20210611002224.1594913-1-ira.weiny@intel.com>
+ <20210611002224.1594913-2-ira.weiny@intel.com>
+ <CAPcyv4hpDFZj8zr47SLAx7Qy2UMz4c_E648e-ahGyu5nhzjcow@mail.gmail.com>
+ <20210611175030.gytdt3fu5fppy4kp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4i7_RhfiYMX=QP2Ts4ye1Q2e0=_aBCP4rsuopo=0HWKVw@mail.gmail.com>
+In-Reply-To: <20210611175030.gytdt3fu5fppy4kp@intel.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21-06-11 11:55:39, Dan Williams wrote:
-> On Fri, Jun 11, 2021 at 10:47 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> >
-> > On 21-06-10 15:26:03, Dan Williams wrote:
-> > > Enable devices on the 'cxl' bus to be attached to drivers. The initial
-> > > user of this functionality is a driver for an 'nvdimm-bridge' device
-> > > that anchors a libnvdimm hierarchy attached to CXL persistent memory
-> > > resources. Other device types that will leverage this include:
+On Fri, Jun 11, 2021 at 10:50:30AM -0700, Widawsky, Ben wrote:
+> On 21-06-11 10:26:34, Dan Williams wrote:
+> > On Thu, Jun 10, 2021 at 5:22 PM <ira.weiny@intel.com> wrote:
 > > >
-> > > cxl_port: map and use component register functionality (HDM Decoders)
-> >
-> > Since I'm looking at this now, perhaps I can open the discussion here. Have you
-> > thought about how this works yet? Right now I'm thinking there are two "drivers":
-> > cxl_port: Switches (and ACPI0016)
-> > cxl_mem: The memory device's HDM decoders
-> >
-> > For port, probe() will figure out that the thing is an upstream port, call
-> > cxl_probe_component_regs and then call devm_cxl_add_port(). I think that's
-> > straight forward.
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > >
+> > > The Identify Memory Device command returns information about the
+> > > volatile and persistent memory capacities.  Store those values in the
+> > > cxl_mem structure for later use.  While at it, reuse the calculation of
+> > > the volatile and persistent memory byte values to calculate the ram and
+> > > pmem ranges.
+> > >
+> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > > ---
+> > >  drivers/cxl/mem.h |  4 ++++
+> > >  drivers/cxl/pci.c | 36 +++++++++++++++++++++++++++++++++---
+> > >  2 files changed, 37 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/cxl/mem.h b/drivers/cxl/mem.h
+> > > index 13868ff7cadf..8bd0d0506b97 100644
+> > > --- a/drivers/cxl/mem.h
+> > > +++ b/drivers/cxl/mem.h
+> > > @@ -75,5 +75,9 @@ struct cxl_mem {
+> > >
+> > >         struct range pmem_range;
+> > >         struct range ram_range;
+> > > +       u64 total_cap_bytes;
+> > > +       u64 volatile_cap_bytes;
+> > > +       u64 persistent_cap_bytes;
+> > 
+> > Hmm, why these fields?
+> > 
+> > I would expect pmem_range and ram_range can already represent these
+> > values and range_len(pmem_range) + range_len(ram_range) == total
+> > capacity.
 > 
-> I was expecting cxl_port_driver.probe() comes *after* port discovery.
-> Think of it like PCI discovery. Some agent does the hardware topology
-> scan to add devices, in this case devm_cxl_add_port(), and that
-> triggers cxl_port_driver to load. So the initial enumeration done by
-> the cxl_acpi driver will populate the first two levels of the port
-> hierarchy with port objects and populate their component register
-> physical base addresses. For any other port deeper in the hierarchy I
-> was expecting that to be scanned after the discovery of a cxl_memdev
-> that is not attached to the current hierarchy. So, for example imagine
-> a config like:
-> 
-> Platform --> Host Bridge --> Switch --> Endpoint
-> 
-> ...where in sysfs that's modeled as:
-> 
-> root0 --> port1 --> port2 --> port3
-> 
-> Where port3 is assuming that the CXL core models the device's
-> connection to the topology as yet another cxl_port. At the beginning
-> of time after cxl_acpi has loaded but before cxl_pci has discovered
-> the endpoint the topology is:
-> 
-> root0 --> port1
-> 
-> Upon the detection of the endpoint the CXL core can assume that all
-> intermediary switches between the root and this device have been
-> registered as PCI devices. So, it follows that endpoint device arrival
-> triggers "cxl_bus_rescan()" that goes and enumerates all the CXL
-> resources in the topology to produce:
-> 
-> root0 --> port1 --> port2 --> port3
-> 
+> So the way Ira described it (AIUI), pmem_range will be the total partitioned
+> amount, while persistent_cap_bytes is min(info.persistent capacity, pmem_range)
+> (same for volatile). But perhaps I misunderstood.
 
-Ah, I had written about scan/rescan in an earlier version of my email but
-dropped it. I was actually going to suggest it being a sysfs attr, but I'm fine
-with it being implicit so long as...
+Yes persistent is 'persistent only'...  so s/cap/only/ is probably better name.
 
-How do we assert that cxl_pci doesn't run before cxl_acpi has done anything? I
-like the idea that the endpoint device can simply ask cxl_acpi to rescan, I just
-don't see how it works. I suppose we can queue up the requests to rescan in
-cxl_acpi if the ordering can't be guaranteed.
+pmem_range.len() may == persistent_cap_bytes.  But does not need to.
 
-> > For the memory device we've already probed the thing via class code so there is
-> > no need to use this driver registration, however, I think it would be nice to do
-> > so. Is there a clean way to do that?
-> 
-> The PCI device associated with the endpoint is already probed, but the
-> cxl_memdev itself can have a driver on the CXL bus. So I think the
-> cxl_memdev driver should try to register a cxl_port after telling
-> cxl_acpi to rescan. If a check like "is_cxl_dport(pdev->dev.parent)"
-> for the endpoint returns false it means that the cxl_bus_rescan()
-> failed to enumerate the CXL topology to this endpoint and this
-> endpoint is limited to only CXL.io operation.
-
-What is going to invoke the memdev driver's probe? That is where we're talking
-about putting that is_cxl_dport(...) right? That is the part that tripped me up
-and inspired the original email FWIW.
-
-> 
-> > Also, I'd like to make sure we're on the same page about struct cxl_decoder.
-> > Right now they are only created for active HDM decoders.
-> 
-> No, I was expecting they are also created for inactive ones. I am
-> thinking that all decoders ultimately belong to the cxl_acpi driver,
-> or whatever driver is acting as the root on a non-ACPI system. All
-> decoder programming is driven by region activation stimulus that asks
-> the root driver to try to establish a decode chain through the
-> hieararchy per a given region.
-> 
-> > Going forward, we can
-> > either maintain a count of unused decoders on the given CXL component, or we can
-> > instantiate a struct cxl_decoder that isn't active, ie. no interleave ways
-> > granularit, base, etc. What's your thinking there?
-> 
-> All resources are enumerated, just like PCI. Decode setup belongs to
-> the core, just like PCI MMIO resource setup. The difference is that
-> port drivers are needed to map component registers and service
-> requests from cxl_acpi to reconfigure, but other than that
-> cxl_decoders themselves don't have drivers and just reflect the
-> current state of what cxl_acpi / cxl_core have established.
-
-Okay.
+Ira
