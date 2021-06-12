@@ -2,62 +2,62 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEFEC48BE6
-	for <linux-cxl@archiver.kernel.org>; Sat, 12 Jun 2021 00:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4D7C48BE6
+	for <linux-cxl@archiver.kernel.org>; Sat, 12 Jun 2021 00:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46DEC613D9
-	for <linux-cxl@archiver.kernel.org>; Sat, 12 Jun 2021 00:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C0F613CC
+	for <linux-cxl@archiver.kernel.org>; Sat, 12 Jun 2021 00:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230103AbhFLAKm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 11 Jun 2021 20:10:42 -0400
-Received: from mail-pj1-f54.google.com ([209.85.216.54]:39556 "EHLO
-        mail-pj1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230051AbhFLAKm (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 11 Jun 2021 20:10:42 -0400
-Received: by mail-pj1-f54.google.com with SMTP id w14-20020a17090aea0eb029016e9e0e7983so211433pjy.4
-        for <linux-cxl@vger.kernel.org>; Fri, 11 Jun 2021 17:08:44 -0700 (PDT)
+        id S229985AbhFLAUF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 11 Jun 2021 20:20:05 -0400
+Received: from mail-pg1-f169.google.com ([209.85.215.169]:45811 "EHLO
+        mail-pg1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229584AbhFLAUE (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 11 Jun 2021 20:20:04 -0400
+Received: by mail-pg1-f169.google.com with SMTP id q15so3694767pgg.12
+        for <linux-cxl@vger.kernel.org>; Fri, 11 Jun 2021 17:18:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hGLFyLESMIgo99vWAnXA3J0lKjK1kQXAD/JyJ1aKsZk=;
-        b=QbII9VgB8n74k5K/jFnXpmVK+M1t2h2uYfthcmYVLcLX21+gOXDCMUJ2OEvFRQtZth
-         uYhUA0p47+XXAKEXbdlxQeeCpaHRpGsQLd0w/hiz3Me5wpQZD4jiucHL7pUZwj8HbRau
-         C2164UGRNBNojotFntcaX1wN4KWUYUNLo5063jEvJy5RFX8h7v6pQPCXLnULVzu2ZTVw
-         sqK9AUWZC9WC5ee6tXU84/HUR+5gT1d29ArWcOOss6OZMY2MfFuvU6JyZ5H+aiAK8LZu
-         3KF4/t9qw/CgrlcHEqkct40QF2AdfABFL6/vqUCj1/55MuZ/zEEG9RNNAiozR75RgmXL
-         CTqQ==
+        bh=82VEF0jU1aJg9IivNM3m8n8dgHxa1D7N8oMOze7zYHk=;
+        b=f50m71z8fzdIGfE7Y1k4CF+fILypd/f+RSCP+5hsPzlV2yOkbMSY1Exh8cX28+6nPv
+         y1v0NCmCAh5Jav98nPF4m/swPoYLRACuydpXqKNnJU34gmhBj8AA70sYv0+wn0N3BBSy
+         /Cjda73UeW/5QwZoypoj4TDloXzEYjVYcFQilHT2AuW3I9Sgd6xngdQbBRO2WJkc7NdI
+         PYtc31+vH4vS5c2rtuQEV7Ugz2InitN+YsxbdQrZ6WTMZLkiFw0OVaCmFSRbdwKNCDli
+         299HZ+aqoHoiuoDXHT2lGGh+QsYi1BjnPa5lFWv5QCfULYiOdCfTOLh/DCE7lXRcPaCi
+         KmGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hGLFyLESMIgo99vWAnXA3J0lKjK1kQXAD/JyJ1aKsZk=;
-        b=YcT3CSmndcOIfhTnsPR3Nb2XLM3RzzWUBnD0epFNhOCAc71KlNdOhhkVuI6OQkLMgx
-         Ddsn3J7y5WvVWIsdJ5jt1m1/z56e8ZFiMu/Yqhz8S6cxG+OAz0amPJkP3xRqnU3xNE5O
-         PkzkSP2LphayqmwIdwEcrFHxyehyl4fX/iDnvpFhtLiI8IaYJxnOxOVB6/xkE+c1I2/3
-         uAp6IE+LBdoN4UXVW29CnpU1oItowyz59p9v24oMXadrlx9x2ROY6h8DK67uC2BxEvDu
-         EDVmX8/FIziQEfPgjGX/+q6zx48+wkkbNjyrOdSwC0fmKemwVSa/J0PmsIr7ZQlx0YfH
-         lFZQ==
-X-Gm-Message-State: AOAM5311LzJchbSf5D3tv31M/Y8SNrYf+6o6alvkkalRe2bhPvoma3yw
-        Lwgr/WgitE6lEX9U5LMP86+gHj4w8TdEOPlRgSh0HA==
-X-Google-Smtp-Source: ABdhPJzWnHWBBuelObRnLJjV0cwtOackeAz3RyD+CKkcuWLFAmuidh4v8+rcKDkgjSaaI097BNGGhzQAwSEoie+Ek/A=
-X-Received: by 2002:a17:902:f1cb:b029:10c:5c6d:88b with SMTP id
- e11-20020a170902f1cbb029010c5c6d088bmr6253794plc.52.1623456463807; Fri, 11
- Jun 2021 17:07:43 -0700 (PDT)
+        bh=82VEF0jU1aJg9IivNM3m8n8dgHxa1D7N8oMOze7zYHk=;
+        b=CkbhFDw7LQTz0O128zC9yhKpVFfmE/Q0F0vRh3/Pv+RM7sTs1NlYmfRPGIggSQ5Bqa
+         +74Z5inTqykrmoJHL3w4+YNu/w+O3eQJUgzjCDnbcIga4NfDveYowifQHcA0gjFxWAre
+         b7yG6zIEJuO6kW7iyShfMqoiouIu/XYYQ4CrUEPbY0eNl8bdyauX3afsWhr+EahrO35i
+         3s+PxJF+foCmcGhh8WsFhpnNZkEOBPjZCa8rVeYM/wavYTnHfmLJt+ojLJDfXhazNJ5a
+         1jaShWuFNpgUtI4cRPcGmPHIR2PACUNaBat9qA5YcsQTCZ3W0f7h/x6b2mmCzfuRKTyb
+         +NUg==
+X-Gm-Message-State: AOAM531q8Nd4iVQ0W+AYWjtkptygQD7zFicOpUxAfPo45X40FGo4xD+p
+        wrG79OoXfPIZztcl6E4ncVyy3dRyXnXVWPXCPhNQxw==
+X-Google-Smtp-Source: ABdhPJyOAEteNdyg6O8Dbz88K+bj8bLFU6PbLJJ0CFXNCtRPQWcQl42nzP4m6yawNlLjvphveb+OHCg5pp83hphY18s=
+X-Received: by 2002:a62:8647:0:b029:2c4:b8d6:843 with SMTP id
+ x68-20020a6286470000b02902c4b8d60843mr4616917pfd.71.1623457026192; Fri, 11
+ Jun 2021 17:17:06 -0700 (PDT)
 MIME-Version: 1.0
 References: <162336395765.2462439.11368504490069925374.stgit@dwillia2-desk3.amr.corp.intel.com>
- <162336396844.2462439.1234951573910835450.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20210611123953.000054df@Huawei.com>
-In-Reply-To: <20210611123953.000054df@Huawei.com>
+ <162336397948.2462439.5230237265829121099.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20210611124703.000033af@Huawei.com>
+In-Reply-To: <20210611124703.000033af@Huawei.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 11 Jun 2021 17:07:32 -0700
-Message-ID: <CAPcyv4hU-b1=5eAn=Fs65AwYMQj58txMj_D3Y_Ynq72QO-qJrQ@mail.gmail.com>
-Subject: Re: [PATCH 2/5] cxl/pmem: Add initial infrastructure for pmem support
+Date:   Fri, 11 Jun 2021 17:16:55 -0700
+Message-ID: <CAPcyv4gjA-AmYkUphLBmmnM1GFWcJ4WJHNobyw833DVp3XPwqw@mail.gmail.com>
+Subject: Re: [PATCH 4/5] libnvdimm: Drop unused device power management support
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc:     linux-cxl@vger.kernel.org, Linux NVDIMM <nvdimm@lists.linux.dev>,
         Ben Widawsky <ben.widawsky@intel.com>,
@@ -70,74 +70,41 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Jun 11, 2021 at 4:40 AM Jonathan Cameron
+On Fri, Jun 11, 2021 at 4:47 AM Jonathan Cameron
 <Jonathan.Cameron@huawei.com> wrote:
 >
-> On Thu, 10 Jun 2021 15:26:08 -0700
+> On Thu, 10 Jun 2021 15:26:19 -0700
 > Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> > Register an 'nvdimm-bridge' device to act as an anchor for a libnvdimm
-> > bus hierarchy. Also, flesh out the cxl_bus definition to allow a
-> > cxl_nvdimm_bridge_driver to attach to the bridge and trigger the
-> > nvdimm-bus registration.
-> >
-> > The creation of the bridge is gated on the detection of a PMEM capable
-> > address space registered to the root. The bridge indirection allows the
-> > libnvdimm module to remain unloaded on platforms without PMEM support.
-> >
-> > Given that the probing of ACPI0017 is asynchronous to CXL endpoint
-> > devices, and the expectation that CXL endpoint devices register other
-> > PMEM resources on the 'CXL' nvdimm bus, a workqueue is added. The
-> > workqueue is needed to run bus_rescan_devices() outside of the
-> > device_lock() of the nvdimm-bridge device to rendezvous nvdimm resources
-> > as they arrive. For now only the bus is taken online/offline in the
-> > workqueue.
+> > LIBNVDIMM device objects register sysfs power attributes despite nothing
+> > requiring that support. Clean up sysfs remove the power/ attribute
+> > group. This requires a device_create() and a device_register() usage to
+> > be converted to the device_initialize() + device_add() pattern.
 > >
 > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Trivial comment below. Looks good.
 >
-> I'm not that familiar with nvdimm side of things, so this is mostly
-> superficial review of the patch itself.
+> > ---
+> >  drivers/nvdimm/bus.c |   45 +++++++++++++++++++++++++++++++++++++--------
+> >  1 file changed, 37 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
+> > index a11821df83b5..e6aa87043a95 100644
+> > --- a/drivers/nvdimm/bus.c
+> > +++ b/drivers/nvdimm/bus.c
+> > @@ -363,8 +363,13 @@ struct nvdimm_bus *nvdimm_bus_register(struct device *parent,
+> >       nvdimm_bus->dev.groups = nd_desc->attr_groups;
+> >       nvdimm_bus->dev.bus = &nvdimm_bus_type;
+> >       nvdimm_bus->dev.of_node = nd_desc->of_node;
+> > -     dev_set_name(&nvdimm_bus->dev, "ndbus%d", nvdimm_bus->id);
+> > -     rc = device_register(&nvdimm_bus->dev);
+> > +     device_initialize(&nvdimm_bus->dev);
+> > +     device_set_pm_not_required(&nvdimm_bus->dev);
+> > +     rc = dev_set_name(&nvdimm_bus->dev, "ndbus%d", nvdimm_bus->id);
+> > +     if (rc)
+> > +             goto err;
 >
-> A few really minor comments inline, but otherwise looks good to me.
->
-> Jonathan
->
-[..]
-> > +static void unregister_nvb(void *_cxl_nvb)
-> > +{
-> > +     struct cxl_nvdimm_bridge *cxl_nvb = _cxl_nvb;
-> > +     bool flush = false;
-> > +
-> > +     /*
-> > +      * If the bridge was ever activated then there might be in-flight state
-> > +      * work to flush. Once the state has been changed to 'dead' then no new
-> > +      * work can be queued by user-triggered bind.
-> > +      */
-> > +     device_lock(&cxl_nvb->dev);
-> > +     if (cxl_nvb->state != CXL_NVB_NEW)
-> > +             flush = true;
->
-> flush = clx_nvb->state != CXL_NVB_NEW;
->
-> perhaps?
+> Maybe mention in patch description that you also now handle errors in
+> dev_set_name()?
 
-Oh, yeah, that's nicer.
-
-[..]
-> > +static void cxl_nvb_update_state(struct work_struct *work)
-> > +{
-> > +     struct cxl_nvdimm_bridge *cxl_nvb =
-> > +             container_of(work, typeof(*cxl_nvb), state_work);
-> > +     bool release = false;
-> > +
-> > +     device_lock(&cxl_nvb->dev);
-> > +     switch (cxl_nvb->state) {
-> > +     case CXL_NVB_ONLINE:
-> > +             online_nvdimm_bus(cxl_nvb);
-> > +             if (!cxl_nvb->nvdimm_bus) {
->
-> I'd slightly prefer a simple return code from online_nvdimm_bus()
-> so the reviewer doesn't have to look up above to find out that
-> this condition corresponds to failure.
-
-Yeah, not sure why I made that so obscure.
+Yeah, that's a philosophy change from when this code was first written.
