@@ -6,54 +6,57 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F73C48BE5
-	for <linux-cxl@archiver.kernel.org>; Sat, 12 Jun 2021 00:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B04C48BE6
+	for <linux-cxl@archiver.kernel.org>; Sat, 12 Jun 2021 00:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA417613DF
-	for <linux-cxl@archiver.kernel.org>; Sat, 12 Jun 2021 00:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E19961374
+	for <linux-cxl@archiver.kernel.org>; Sat, 12 Jun 2021 00:59:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229976AbhFLArM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 11 Jun 2021 20:47:12 -0400
-Received: from mail-pj1-f50.google.com ([209.85.216.50]:42687 "EHLO
-        mail-pj1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229584AbhFLArM (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 11 Jun 2021 20:47:12 -0400
-Received: by mail-pj1-f50.google.com with SMTP id md2-20020a17090b23c2b029016de4440381so6920968pjb.1
-        for <linux-cxl@vger.kernel.org>; Fri, 11 Jun 2021 17:45:13 -0700 (PDT)
+        id S230060AbhFLBB0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 11 Jun 2021 21:01:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229942AbhFLBB0 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 11 Jun 2021 21:01:26 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1E6FC061574
+        for <linux-cxl@vger.kernel.org>; Fri, 11 Jun 2021 17:59:26 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id 22-20020a17090a0c16b0290164a5354ad0so6795952pjs.2
+        for <linux-cxl@vger.kernel.org>; Fri, 11 Jun 2021 17:59:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XvwZamYBZ+pg9i1h6luyaCPXgSIWvxPmp47+/F+VErY=;
-        b=t/f4BzhagdTZzCVUgi/NFbH0WsfL4l3JJzSlFlhh1dsK4zBuRSUE9bpPa5DAOUXOqB
-         XN1tE8MhLjEHig9Rb90AC8b4ZoaregLtYVsYRdxHBNBhAwNovnHNdMfaXxBXFP+3W2gH
-         KgWI39VEudR+/o2c3id//IWnPTtX/xgLkbxCeRAFmzK+3GRd5o7SrUkT3X/z5OJA43wg
-         uZ9/I08gjdJ/devL9Fct3/Lxyk4kkiq1Ql9d4CvNYnRHFriL87Oh9qMTtYAIOsJ0WiaC
-         EXTbKIAyevGn87J1YdCXorHdhknCMI2ceEJEUCdankTUbmMd4zEAxeFAgkzcWiZKgTBZ
-         Tt2A==
+         :cc;
+        bh=alKWtRf3ItBX1cFlUtmADgfZ9EVycRgYerLOrkJRXx0=;
+        b=Htuos/iB//vMWzgZYbDBBCRU0c4kW6QOoC2RL4Yla2GuQInvtS47oVxFOJuef0Gjuz
+         fu+IY3smWb5wOkrcZoT0taRnEQLokCHYgjQo+7j0PH0WZ2mNFACHTVe9d5F3d+327zJH
+         Ir74uPmJTVGmf6p+FaFEGAr04l30TLizurAY3paQK4TMU+RhG8yB8buWrCODz/37Ltve
+         g73tE7IOb3YJVjvqN9fsPu8UhKgI2ySnTKlflU/GoO581v8QNbU6qw1PVC3xGeRavP49
+         UrqyYmpaJw/a/PGF9+9OkQYh5cqsJjavwXKB3qn1KtqY4MeG0S/08kGd1fYV/KwPY3SR
+         k1nA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XvwZamYBZ+pg9i1h6luyaCPXgSIWvxPmp47+/F+VErY=;
-        b=bB+UfaUXa97PPE7URBBpJERMqkpjYmlymJFedvZGc55SxRtXqMU/evBStcXxaM3X0w
-         mDFRuWoDp0ViG7QQhPFkRl4orgQhmLX8Ui+D0aDCnpptby9Hanewf85uS88pSkDyXtn7
-         Bsq8VmP6b6cxMJ9k7twGhv5c/6fay8UngJzXAEtM8XcafyBqrl8EDCfJFkI24MFi3Hz6
-         rGfaJqsGcK/nU2ItWISMHKFXGiSNVzKKytc3JAlkhFJFO45Ajc1FOStrkoNm3FXVkWoD
-         XdaER5QFeJe6xcGOpig7NLiDDLKK1f9CM/ierJIJbcvDQSmqjrf0KLEHE9aJ2vP0Th1U
-         lfyw==
-X-Gm-Message-State: AOAM532hedgnYVIGs7h+y3OX4rL4cs2j/i5gSHssU+KXhVxVPxkDXLEY
-        J2Aos09Q0nT4WuUTmM0X1tSRxt+y4wg6lu2btNhVr6a028A=
-X-Google-Smtp-Source: ABdhPJxfD1IDTQu22FJ6rWRoHfdULDiZ5H7Y03jYNm9yBTx6cfFE02EBMqQuDyiEXpswjidlegpE8v/Otlo4hVn7mAU=
-X-Received: by 2002:a17:90a:ea8c:: with SMTP id h12mr11240746pjz.149.1623458653652;
- Fri, 11 Jun 2021 17:44:13 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=alKWtRf3ItBX1cFlUtmADgfZ9EVycRgYerLOrkJRXx0=;
+        b=ecdiNIhQ3UDMbcg9hZG654NgLqF55k+KQtoDGHfFUGj2XqAGe6zrLAN78ZHlzuYPlR
+         nxOGEAVvVegMJUOhzRDTVrIXyh8dWyUAK8m8EHkO4/vxY752O7YaYgkgMHpzNGHtmST3
+         QWf6JMbjQ9LhAuwHFRhdEI1tgRudBb9WfCZ/aL/XQUJobi5TULHid5cSLtNLWtfpJC+t
+         bznqVj05EPdSKnq35MJHrx1gkcq+WF2Ik3Sg0EorfpZOnczcFFchavoGjogD95sXGncA
+         P5VVYFaXHFgwYqEQCRmJgQjPej8I/fE8mMQmAYHVQ1gMP9ymZJ7DTZi2FdQSL1JrlTR4
+         ffTw==
+X-Gm-Message-State: AOAM530/+oMC1zw4xJXuQOrkMstnahHYM52LGbmzNmuOjOODeBscq/RU
+        ex253KIpZb7IfUXYKUkk5Aie3jzgtmptK5j2YM0A1Q==
+X-Google-Smtp-Source: ABdhPJwntfX9HK0rNpSLv0FA2PIDOfraJdWNEzPME87aHlsI1YigoMHkBY9zfWIZ4zkZlZTrMVgCLVKEjIQ3uwuqYpA=
+X-Received: by 2002:a17:90a:fc88:: with SMTP id ci8mr11850938pjb.13.1623459566104;
+ Fri, 11 Jun 2021 17:59:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210610185725.897541-1-ben.widawsky@intel.com>
-In-Reply-To: <20210610185725.897541-1-ben.widawsky@intel.com>
+References: <20210610185725.897541-1-ben.widawsky@intel.com> <20210610185725.897541-3-ben.widawsky@intel.com>
+In-Reply-To: <20210610185725.897541-3-ben.widawsky@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 11 Jun 2021 17:44:02 -0700
-Message-ID: <CAPcyv4j=cFikFD_jrPwMfGuMbFZ+1DPUyQjYq7SqTYYauMxLOA@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/4] Region Creation
+Date:   Fri, 11 Jun 2021 17:59:15 -0700
+Message-ID: <CAPcyv4hpxbnvGVQAc15RwGyu1XH8JyiBs8prBG8Rx2wkL3=MpQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/4] cxl/region: Create attribute structure / verify
 To:     Ben Widawsky <ben.widawsky@intel.com>
 Cc:     linux-cxl@vger.kernel.org,
         Alison Schofield <alison.schofield@intel.com>,
@@ -61,69 +64,24 @@ Cc:     linux-cxl@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Jun 10, 2021 at 11:58 AM Ben Widawsky <ben.widawsky@intel.com> wrot=
-e:
+On Thu, Jun 10, 2021 at 11:57 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> CXL interleave sets and non-interleave sets are described via regions. A =
-region
-> is specified in the CXL 2.0 specification and the purpose is to create a
-> standardized way to preserve the region across reboots.
->
-> Introduced here is the basic mechanism to create and configure and delete=
- a CXL
-> region. Configuring a region simply means giving it a size, offset within=
- the
-> CFMWS window, UUID, and a target list. Enabling/activating a region, whic=
-h
-> ultimately means programming the HDM decoders in the chain, is left for l=
-ater
-> work.
->
-> The patches are only minimally tested so far in QEMU emulation and so x1
-> interleave is all that's supported.
->
-> Here is a sample topology (also in patch #4)
+> Introduce a verification mechanism for a region. Regions have complex
+> configuration requirements and it is beneficial to provide a way to
+> verify the constraints are met before trying to bind. Primarily it adds
+> ABI to inform userspace of more detailed information about what failed
+> rather than the limited choices of errno at bind time.
 
-I'm just going to react to the attributes before looking at the
-implementation to make sure we're level set.
+If you want to give userspace more data about an internal process
+that's a TRACE_EVENT().
 
->
->     decoder1.0
->     =E2=94=9C=E2=94=80=E2=94=80 create_region
->     =E2=94=9C=E2=94=80=E2=94=80 delete_region
->     =E2=94=9C=E2=94=80=E2=94=80 devtype
->     =E2=94=9C=E2=94=80=E2=94=80 locked
->     =E2=94=9C=E2=94=80=E2=94=80 region1.0:0
->     =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 offset
+> It's important to point out that a verified region can still fail to
+> bind, but the first step in binding will be to run the same verification
+> algorithm.
 
-Is this the region's offset relative to the next available free space
-in the parent decoder range? If this is output only I think it's ok,
-but I think the address space allocation decision belongs to the
-region driver at activation time. I.e. userspace does not have much of
-a chance at specifying this relative all the other dynamic operations
-that can be happening in the decoder.
-
->     =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 size
->     =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 subsystem -> ../../../../../.=
-./../bus/cxl
->     =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 target0
->     =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 uevent
->     =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 uuid
->     =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 verify
-
-I don't understand the role of a standalone @verify attribute, there
-is verification that can happen per attribute write, and there is
-final verification that can happen at region bind time. Either way
-anything verify would check is duplicated somewhere else, and the
-verification per attribute update is more precise. For example writes
-to @size can check for free space in parent decoder and fail if
-unavailable. Writes to targetX can fail if the memdev is not connected
-to this decoder's port topology, or the memdev is out of decoder
-resources. The final region bind will fail if mid-level switches are
-lacking decoder resources, or would require changing a decoder
-configuration that is pinned active.
+I don't see this point of giving userspace a racy / less accurate
+answer than the bind result.
