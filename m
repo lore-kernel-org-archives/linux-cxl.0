@@ -3,170 +3,166 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2608DC2B9F4
-	for <linux-cxl@archiver.kernel.org>; Mon, 14 Jun 2021 21:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FAEC2B9F4
+	for <linux-cxl@archiver.kernel.org>; Mon, 14 Jun 2021 21:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB75361209
-	for <linux-cxl@archiver.kernel.org>; Mon, 14 Jun 2021 21:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB88261209
+	for <linux-cxl@archiver.kernel.org>; Mon, 14 Jun 2021 21:54:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232052AbhFNVmg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 14 Jun 2021 17:42:36 -0400
-Received: from mga09.intel.com ([134.134.136.24]:12218 "EHLO mga09.intel.com"
+        id S229836AbhFNV4w (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 14 Jun 2021 17:56:52 -0400
+Received: from mga11.intel.com ([192.55.52.93]:58470 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229613AbhFNVmd (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 14 Jun 2021 17:42:33 -0400
-IronPort-SDR: y2qR0dVv8pHszRh1I5J8hoH1/wXJ1RlENBwAMPjJv0+kuDUN3Q9JT0sA9LmDXUnzdq9VLRpEcI
- OqTpDo5nVDGQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,10015"; a="205842252"
+        id S229734AbhFNV4v (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 14 Jun 2021 17:56:51 -0400
+IronPort-SDR: fnabyfdd/ptNrdTpVJmJ/OdhFDppmTukpiU8qV484FRhFQaG1rGtGCe9/oqaDqzmqrvv56F0pJ
+ rQ03ohnhbl4A==
+X-IronPort-AV: E=McAfee;i="6200,9189,10015"; a="202860332"
 X-IronPort-AV: E=Sophos;i="5.83,273,1616482800"; 
-   d="scan'208";a="205842252"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2021 14:40:30 -0700
-IronPort-SDR: TDuw5AqFWVR0OV4f0sLfsrZpTqQJ5qfJAmELlMtTDw2pwt3mumeKcim3AimxYEXCNKepo+hPyr
- Zxc0Bw7zIEbA==
+   d="scan'208";a="202860332"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2021 14:54:05 -0700
+IronPort-SDR: ybaGFAH0EOUaTEtqzddXqJMMYYi/rChdBO1Oljr/v7BXr/r5djph9a7yFg51cgm9uIubgO/qoG
+ 43NNfXs5InyQ==
 X-IronPort-AV: E=Sophos;i="5.83,273,1616482800"; 
-   d="scan'208";a="484220411"
+   d="scan'208";a="636923886"
 Received: from smothe-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.143.124])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2021 14:40:29 -0700
-Date:   Mon, 14 Jun 2021 14:40:28 -0700
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2021 14:54:04 -0700
+Date:   Mon, 14 Jun 2021 14:54:02 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Linux NVDIMM <nvdimm@lists.linux.dev>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/5] cxl/core: Add cxl-bus driver infrastructure
-Message-ID: <20210614214028.5ts7qvox2rmqrvrz@intel.com>
-References: <162336395765.2462439.11368504490069925374.stgit@dwillia2-desk3.amr.corp.intel.com>
- <162336396329.2462439.16556923116284874437.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20210611174736.ttzpk5uniyoyd4vw@intel.com>
- <CAPcyv4i7_RhfiYMX=QP2Ts4ye1Q2e0=_aBCP4rsuopo=0HWKVw@mail.gmail.com>
- <20210611192829.bwdj322uwlsbdrjs@intel.com>
- <CAPcyv4gwUiQLfPGe9kKi7JJdbSk-aaSywo29x=kFKdeEROdMcQ@mail.gmail.com>
+Cc:     linux-cxl@vger.kernel.org,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: Re: [RFC PATCH 0/4] Region Creation
+Message-ID: <20210614215402.mxcwdv4wno6krm7w@intel.com>
+References: <20210610185725.897541-1-ben.widawsky@intel.com>
+ <CAPcyv4j=cFikFD_jrPwMfGuMbFZ+1DPUyQjYq7SqTYYauMxLOA@mail.gmail.com>
+ <20210614161159.cqq64nbm5whzpud7@intel.com>
+ <CAPcyv4gaxWDC9eN965VkbDv0W5QgBBP7Cg0RU74uE08OKSZVow@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4gwUiQLfPGe9kKi7JJdbSk-aaSywo29x=kFKdeEROdMcQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPcyv4gaxWDC9eN965VkbDv0W5QgBBP7Cg0RU74uE08OKSZVow@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21-06-11 16:25:05, Dan Williams wrote:
-> On Fri, Jun 11, 2021 at 12:28 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On 21-06-14 14:04:32, Dan Williams wrote:
+> On Mon, Jun 14, 2021 at 9:12 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
 > >
-> > On 21-06-11 11:55:39, Dan Williams wrote:
-> > > On Fri, Jun 11, 2021 at 10:47 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > On 21-06-11 17:44:02, Dan Williams wrote:
+> > > On Thu, Jun 10, 2021 at 11:58 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
 > > > >
-> > > > On 21-06-10 15:26:03, Dan Williams wrote:
-> > > > > Enable devices on the 'cxl' bus to be attached to drivers. The initial
-> > > > > user of this functionality is a driver for an 'nvdimm-bridge' device
-> > > > > that anchors a libnvdimm hierarchy attached to CXL persistent memory
-> > > > > resources. Other device types that will leverage this include:
-> > > > >
-> > > > > cxl_port: map and use component register functionality (HDM Decoders)
+> > > > CXL interleave sets and non-interleave sets are described via regions. A region
+> > > > is specified in the CXL 2.0 specification and the purpose is to create a
+> > > > standardized way to preserve the region across reboots.
 > > > >
-> > > > Since I'm looking at this now, perhaps I can open the discussion here. Have you
-> > > > thought about how this works yet? Right now I'm thinking there are two "drivers":
-> > > > cxl_port: Switches (and ACPI0016)
-> > > > cxl_mem: The memory device's HDM decoders
+> > > > Introduced here is the basic mechanism to create and configure and delete a CXL
+> > > > region. Configuring a region simply means giving it a size, offset within the
+> > > > CFMWS window, UUID, and a target list. Enabling/activating a region, which
+> > > > ultimately means programming the HDM decoders in the chain, is left for later
+> > > > work.
 > > > >
-> > > > For port, probe() will figure out that the thing is an upstream port, call
-> > > > cxl_probe_component_regs and then call devm_cxl_add_port(). I think that's
-> > > > straight forward.
+> > > > The patches are only minimally tested so far in QEMU emulation and so x1
+> > > > interleave is all that's supported.
+> > > >
+> > > > Here is a sample topology (also in patch #4)
 > > >
-> > > I was expecting cxl_port_driver.probe() comes *after* port discovery.
-> > > Think of it like PCI discovery. Some agent does the hardware topology
-> > > scan to add devices, in this case devm_cxl_add_port(), and that
-> > > triggers cxl_port_driver to load. So the initial enumeration done by
-> > > the cxl_acpi driver will populate the first two levels of the port
-> > > hierarchy with port objects and populate their component register
-> > > physical base addresses. For any other port deeper in the hierarchy I
-> > > was expecting that to be scanned after the discovery of a cxl_memdev
-> > > that is not attached to the current hierarchy. So, for example imagine
-> > > a config like:
+> > > I'm just going to react to the attributes before looking at the
+> > > implementation to make sure we're level set.
 > > >
-> > > Platform --> Host Bridge --> Switch --> Endpoint
+> > > >
+> > > >     decoder1.0
+> > > >     ├── create_region
+> > > >     ├── delete_region
+> > > >     ├── devtype
+> > > >     ├── locked
+> > > >     ├── region1.0:0
+> > > >     │   ├── offset
 > > >
-> > > ...where in sysfs that's modeled as:
-> > >
-> > > root0 --> port1 --> port2 --> port3
-> > >
-> > > Where port3 is assuming that the CXL core models the device's
-> > > connection to the topology as yet another cxl_port. At the beginning
-> > > of time after cxl_acpi has loaded but before cxl_pci has discovered
-> > > the endpoint the topology is:
-> > >
-> > > root0 --> port1
-> > >
-> > > Upon the detection of the endpoint the CXL core can assume that all
-> > > intermediary switches between the root and this device have been
-> > > registered as PCI devices. So, it follows that endpoint device arrival
-> > > triggers "cxl_bus_rescan()" that goes and enumerates all the CXL
-> > > resources in the topology to produce:
-> > >
-> > > root0 --> port1 --> port2 --> port3
+> > > Is this the region's offset relative to the next available free space
+> > > in the parent decoder range? If this is output only I think it's ok,
+> > > but I think the address space allocation decision belongs to the
+> > > region driver at activation time. I.e. userspace does not have much of
+> > > a chance at specifying this relative all the other dynamic operations
+> > > that can be happening in the decoder.
 > > >
 > >
-> > Ah, I had written about scan/rescan in an earlier version of my email but
-> > dropped it. I was actually going to suggest it being a sysfs attr, but I'm fine
-> > with it being implicit so long as...
+> > This was my mistake. Offset will be determined by the driver and I intend for
+> > this to be read-only.
 > >
-> > How do we assert that cxl_pci doesn't run before cxl_acpi has done anything?
-> 
-> I don't think we need to, or it's broken if the driver load order
-> matters. The nvdimm enabling code is an example of how to handle this.
-> The cxl_nvdimm object can be registered before the cxl_nvdimm_bridge,
-> or after, does not matter. If the cxl_nvdimm comes first it will
-> trigger the cxl_nvdimm_driver to load. The cxl_nvdimm_driver.probe()
-> routine finds no bridge present and probe() returns with a failure.
-> When the bridge arrives it does a rescan  of the cxl_bus_type device
-> list and if it finds a cxl_nvdimm it re-triggers
-> cxl_nvdimm_driver.probe(). This time through cxl_nvdimm_driver.probe()
-> finds the bridge and registers the real nvdimm on the nvdimm_bus.
-> 
-> > I
-> > like the idea that the endpoint device can simply ask cxl_acpi to rescan, I just
-> > don't see how it works. I suppose we can queue up the requests to rescan in
-> > cxl_acpi if the ordering can't be guaranteed.
-> 
-> I think this means that the devm_cxl_add_port() would be triggered by
-> cxl_memdev_driver.probe() if and only if the parent pci_device of the
-> CXL endpoint is listed as a dport. If the cxl_memdev is registered
-> first the search it will search for the CXL root port on the
-> cxl_bus_type device list. If that fails then cxl_memdev_driver.probe()
-> fails. If that succeeds it asks the root to scan to the CXL endpoint
-> parent pci_device and return the confirmation that it is registered as
-> a dport. If that fails then the device is plugged into a pure PCIe
-> slot.
-> 
-> When cxl_acpi loads it retriggers all cxl_memdev_driver.probe() to
-> reconsider all cxl_memdev instances that failed to probe previously.
-> 
-> >
-> > > > For the memory device we've already probed the thing via class code so there is
-> > > > no need to use this driver registration, however, I think it would be nice to do
-> > > > so. Is there a clean way to do that?
+> > > >     │   ├── size
+> > > >     │   ├── subsystem -> ../../../../../../../bus/cxl
+> > > >     │   ├── target0
+> > > >     │   ├── uevent
+> > > >     │   ├── uuid
+> > > >     │   └── verify
 > > >
-> > > The PCI device associated with the endpoint is already probed, but the
-> > > cxl_memdev itself can have a driver on the CXL bus. So I think the
-> > > cxl_memdev driver should try to register a cxl_port after telling
-> > > cxl_acpi to rescan. If a check like "is_cxl_dport(pdev->dev.parent)"
-> > > for the endpoint returns false it means that the cxl_bus_rescan()
-> > > failed to enumerate the CXL topology to this endpoint and this
-> > > endpoint is limited to only CXL.io operation.
+> > > I don't understand the role of a standalone @verify attribute, there
+> > > is verification that can happen per attribute write, and there is
+> > > final verification that can happen at region bind time. Either way
+> > > anything verify would check is duplicated somewhere else, and the
+> > > verification per attribute update is more precise. For example writes
+> > > to @size can check for free space in parent decoder and fail if
+> > > unavailable. Writes to targetX can fail if the memdev is not connected
+> > > to this decoder's port topology, or the memdev is out of decoder
+> > > resources. The final region bind will fail if mid-level switches are
+> > > lacking decoder resources, or would require changing a decoder
+> > > configuration that is pinned active.
 > >
-> > What is going to invoke the memdev driver's probe? That is where we're talking
-> > about putting that is_cxl_dport(...) right? That is the part that tripped me up
-> > and inspired the original email FWIW.
+> > I strongly believe verification per attribute write will get too fragile. I'm
+> > afraid it's going to require writing attributes in a specific order so that we
+> > can do said verification in a sane way. We can skip that and just check it all
+> > on bind. Most of that logic is what would be contained in verify(), so why not
+> > expose it for userspace that may want to test out various configs without
+> > actually trying to bind?
 > 
-> I *think* I worked that out above, but yes please do poke at it to see
-> if it holds up.
+> Because there's no harm in actually trying to bind. A verify attribute
+> is at best redundant, or I am otherwise not understanding the proposed
+> use case?
+> 
 
-I think it works. I have some concerns around synchronization of memdev probing
-and cxl_acpi enumerating, but I believe it's workable.
+That's the use case. Though I don't consider it redundant. All bind() can return
+is errnos + what you mention below (and following LWN link).
 
-Thanks for the thought.
+> > Also, I like having ABI that helps userspace get details on the configuration
+> > failure reason. You mention in the other reply, TRACE_EVENT. I suppose userspace
+> > could use tracepoints, or scrape dmesg for this same info. Maybe it's 6 one way,
+> > a half dozen the other. I'd be interested to know if there are other examples of
+> > tracepoints being used by userspace in a way like this and what the experience
+> > is like.
+> >
+> > To summarize, I think we need an atomic way to do verification (which obviously
+> > happens at bind()), and I think we need UAPI to get the configuration error.
+> 
+> I expect higher order configuration error reporting and non-atomic
+> pre-verification to come from user tooling.
+
+But isn't that just duplicating code that we have to have in the kernel anyway?
+
+> As for what the kernel can do at runtime in the absence of user tooling, or in
+> the development of more aware tooling has been debated in the past [1]. In
+> this case the entire decoder resource topology is visible in userspace, an3d
+> while userspace can't atomically predict what will happen, it also does not
+> need to because the admin should not be racing resource querying and resource
+> consumption if they want to get a reliable answer. The reason I recommended
+> TRACE_EVENT() rather than dev_dbg() is due to being able to filter event
+> messages by cpu, pid, tid, uid... etc. Another approach I have seen upstream
+> is to emit extra variables with a KOBJ_CHANGE event, but that is more about
+> event reporting than extra information about provisioning failure.
+
+Interesting. Thanks for the link, it looks like it never landed. I think trace
+makes a good deal of sense considering all the options. I'm not convinced the
+interface is "at best redundant". I'll just drop verify(). I have no further
+arguments in favor and you don't sound convinced of the original ones.
+
+> 
+
+> [1]: https://lwn.net/Articles/657341/
