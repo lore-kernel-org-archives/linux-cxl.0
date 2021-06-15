@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D3BC48BDF
-	for <linux-cxl@archiver.kernel.org>; Tue, 15 Jun 2021 23:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2553C48BE5
+	for <linux-cxl@archiver.kernel.org>; Tue, 15 Jun 2021 23:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4790261369
-	for <linux-cxl@archiver.kernel.org>; Tue, 15 Jun 2021 23:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B70461245
+	for <linux-cxl@archiver.kernel.org>; Tue, 15 Jun 2021 23:18:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231365AbhFOXU3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 15 Jun 2021 19:20:29 -0400
-Received: from mga03.intel.com ([134.134.136.65]:9191 "EHLO mga03.intel.com"
+        id S231164AbhFOXUd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 15 Jun 2021 19:20:33 -0400
+Received: from mga12.intel.com ([192.55.52.136]:51237 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231164AbhFOXU2 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 15 Jun 2021 19:20:28 -0400
-IronPort-SDR: aVymtgh+X2nlRVnsq0IXpsBp46EsEGVWzM8rENBo3jVXo0ILwhzBSO+mHMDid34lRcjonFCOwH
- mdmOnhgwVv8Q==
-X-IronPort-AV: E=McAfee;i="6200,9189,10016"; a="206120273"
+        id S231420AbhFOXUd (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Tue, 15 Jun 2021 19:20:33 -0400
+IronPort-SDR: JZZ1KWuP0V+KguAymJEvbl4qreeEV+KEvzAKyJkCDDUBQVemsClqPYaCtcHbd+Kdx8EwEkQZIf
+ +A6tRhy51z6A==
+X-IronPort-AV: E=McAfee;i="6200,9189,10016"; a="185776159"
 X-IronPort-AV: E=Sophos;i="5.83,276,1616482800"; 
-   d="scan'208";a="206120273"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2021 16:18:22 -0700
-IronPort-SDR: r748HdJYtg+sBq0nJ7tGTL1LmktZtEHFcZ6HpbK8dr5Zu8qUaDeoZzOVxBxSO27gPWGvoGnTur
- UhZ76JkPMWFg==
+   d="scan'208";a="185776159"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2021 16:18:28 -0700
+IronPort-SDR: FPel43yAGe7C6TXE6cpYEMs/5YBQvb4RH0W11fkuSIaQbkdQ52xUpyFAaRP7272S7KnJYu7FOI
+ HiPnqL+ENJ1A==
 X-IronPort-AV: E=Sophos;i="5.83,276,1616482800"; 
-   d="scan'208";a="421280523"
+   d="scan'208";a="487940036"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2021 16:18:22 -0700
-Subject: [PATCH v2 3/5] libnvdimm: Export nvdimm shutdown helper,
- nvdimm_delete()
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2021 16:18:28 -0700
+Subject: [PATCH v2 4/5] libnvdimm: Drop unused device power management
+ support
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev
-Date:   Tue, 15 Jun 2021 16:18:22 -0700
-Message-ID: <162379910271.2993820.2955889139842401250.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Tue, 15 Jun 2021 16:18:28 -0700
+Message-ID: <162379910795.2993820.10130417680551632288.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <162379908663.2993820.16543025953842049041.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <162379908663.2993820.16543025953842049041.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -50,89 +50,92 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-CXL is a hotplug bus and arranges for nvdimm devices to be dynamically
-discovered and removed. The libnvdimm core manages shutdown of nvdimm
-security operations when the device is unregistered. That functionality
-is moved to nvdimm_delete() and invoked by the CXL-to-nvdimm glue code.
+LIBNVDIMM device objects register sysfs power attributes despite nothing
+requiring that support. Clean up sysfs remove the power/ attribute
+group. This requires a device_create() and a device_register() usage to
+be converted to the device_initialize() + device_add() pattern.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Link: https://lore.kernel.org/r/162336397425.2462439.17244700627659096367.stgit@dwillia2-desk3.amr.corp.intel.com
+Link: https://lore.kernel.org/r/162336397948.2462439.5230237265829121099.stgit@dwillia2-desk3.amr.corp.intel.com
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/nvdimm/bus.c       |   19 ++++---------------
- drivers/nvdimm/dimm_devs.c |   18 ++++++++++++++++++
- include/linux/libnvdimm.h  |    1 +
- 3 files changed, 23 insertions(+), 15 deletions(-)
+ drivers/nvdimm/bus.c |   45 +++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 37 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
-index 3a777d0073b7..a11821df83b5 100644
+index a11821df83b5..e6aa87043a95 100644
 --- a/drivers/nvdimm/bus.c
 +++ b/drivers/nvdimm/bus.c
-@@ -396,21 +396,10 @@ static int child_unregister(struct device *dev, void *data)
- 	if (dev->class)
- 		return 0;
+@@ -363,8 +363,13 @@ struct nvdimm_bus *nvdimm_bus_register(struct device *parent,
+ 	nvdimm_bus->dev.groups = nd_desc->attr_groups;
+ 	nvdimm_bus->dev.bus = &nvdimm_bus_type;
+ 	nvdimm_bus->dev.of_node = nd_desc->of_node;
+-	dev_set_name(&nvdimm_bus->dev, "ndbus%d", nvdimm_bus->id);
+-	rc = device_register(&nvdimm_bus->dev);
++	device_initialize(&nvdimm_bus->dev);
++	device_set_pm_not_required(&nvdimm_bus->dev);
++	rc = dev_set_name(&nvdimm_bus->dev, "ndbus%d", nvdimm_bus->id);
++	if (rc)
++		goto err;
++
++	rc = device_add(&nvdimm_bus->dev);
+ 	if (rc) {
+ 		dev_dbg(&nvdimm_bus->dev, "registration failed: %d\n", rc);
+ 		goto err;
+@@ -525,6 +530,7 @@ void __nd_device_register(struct device *dev)
+ 		set_dev_node(dev, to_nd_region(dev)->numa_node);
  
--	if (is_nvdimm(dev)) {
--		struct nvdimm *nvdimm = to_nvdimm(dev);
--		bool dev_put = false;
--
--		/* We are shutting down. Make state frozen artificially. */
--		nvdimm_bus_lock(dev);
--		set_bit(NVDIMM_SECURITY_FROZEN, &nvdimm->sec.flags);
--		if (test_and_clear_bit(NDD_WORK_PENDING, &nvdimm->flags))
--			dev_put = true;
--		nvdimm_bus_unlock(dev);
--		cancel_delayed_work_sync(&nvdimm->dwork);
--		if (dev_put)
--			put_device(dev);
--	}
--	nd_device_unregister(dev, ND_SYNC);
-+	if (is_nvdimm(dev))
-+		nvdimm_delete(to_nvdimm(dev));
-+	else
-+		nd_device_unregister(dev, ND_SYNC);
+ 	dev->bus = &nvdimm_bus_type;
++	device_set_pm_not_required(dev);
+ 	if (dev->parent) {
+ 		get_device(dev->parent);
+ 		if (dev_to_node(dev) == NUMA_NO_NODE)
+@@ -717,18 +723,41 @@ const struct attribute_group nd_numa_attribute_group = {
+ 	.is_visible = nd_numa_attr_visible,
+ };
  
- 	return 0;
- }
-diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
-index 9d208570d059..dc7449a40003 100644
---- a/drivers/nvdimm/dimm_devs.c
-+++ b/drivers/nvdimm/dimm_devs.c
-@@ -642,6 +642,24 @@ struct nvdimm *__nvdimm_create(struct nvdimm_bus *nvdimm_bus,
- }
- EXPORT_SYMBOL_GPL(__nvdimm_create);
- 
-+void nvdimm_delete(struct nvdimm *nvdimm)
++static void ndctl_release(struct device *dev)
 +{
-+	struct device *dev = &nvdimm->dev;
-+	bool dev_put = false;
-+
-+	/* We are shutting down. Make state frozen artificially. */
-+	nvdimm_bus_lock(dev);
-+	set_bit(NVDIMM_SECURITY_FROZEN, &nvdimm->sec.flags);
-+	if (test_and_clear_bit(NDD_WORK_PENDING, &nvdimm->flags))
-+		dev_put = true;
-+	nvdimm_bus_unlock(dev);
-+	cancel_delayed_work_sync(&nvdimm->dwork);
-+	if (dev_put)
-+		put_device(dev);
-+	nd_device_unregister(dev, ND_SYNC);
++	kfree(dev);
 +}
-+EXPORT_SYMBOL_GPL(nvdimm_delete);
 +
- static void shutdown_security_notify(void *data)
+ int nvdimm_bus_create_ndctl(struct nvdimm_bus *nvdimm_bus)
  {
- 	struct nvdimm *nvdimm = data;
-diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-index 89b69e645ac7..7074aa9af525 100644
---- a/include/linux/libnvdimm.h
-+++ b/include/linux/libnvdimm.h
-@@ -278,6 +278,7 @@ static inline struct nvdimm *nvdimm_create(struct nvdimm_bus *nvdimm_bus,
- 	return __nvdimm_create(nvdimm_bus, provider_data, groups, flags,
- 			cmd_mask, num_flush, flush_wpq, NULL, NULL, NULL);
- }
-+void nvdimm_delete(struct nvdimm *nvdimm);
+ 	dev_t devt = MKDEV(nvdimm_bus_major, nvdimm_bus->id);
+ 	struct device *dev;
++	int rc;
  
- const struct nd_cmd_desc *nd_cmd_dimm_desc(int cmd);
- const struct nd_cmd_desc *nd_cmd_bus_desc(int cmd);
+-	dev = device_create(nd_class, &nvdimm_bus->dev, devt, nvdimm_bus,
+-			"ndctl%d", nvdimm_bus->id);
++	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
++	if (!dev)
++		return -ENOMEM;
++	device_initialize(dev);
++	device_set_pm_not_required(dev);
++	dev->class = nd_class;
++	dev->parent = &nvdimm_bus->dev;
++	dev->devt = devt;
++	dev->release = ndctl_release;
++	rc = dev_set_name(dev, "ndctl%d", nvdimm_bus->id);
++	if (rc)
++		goto err;
+ 
+-	if (IS_ERR(dev))
+-		dev_dbg(&nvdimm_bus->dev, "failed to register ndctl%d: %ld\n",
+-				nvdimm_bus->id, PTR_ERR(dev));
+-	return PTR_ERR_OR_ZERO(dev);
++	rc = device_add(dev);
++	if (rc) {
++		dev_dbg(&nvdimm_bus->dev, "failed to register ndctl%d: %d\n",
++				nvdimm_bus->id, rc);
++		goto err;
++	}
++	return 0;
++
++err:
++	put_device(dev);
++	return rc;
+ }
+ 
+ void nvdimm_bus_destroy_ndctl(struct nvdimm_bus *nvdimm_bus)
 
