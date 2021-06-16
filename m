@@ -2,506 +2,159 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A40F3C48BDF
-	for <linux-cxl@archiver.kernel.org>; Tue, 15 Jun 2021 23:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD23C48BE5
+	for <linux-cxl@archiver.kernel.org>; Wed, 16 Jun 2021 00:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 862DE613B1
-	for <linux-cxl@archiver.kernel.org>; Tue, 15 Jun 2021 23:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CBE1613B1
+	for <linux-cxl@archiver.kernel.org>; Wed, 16 Jun 2021 00:05:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230039AbhFOXig (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 15 Jun 2021 19:38:36 -0400
-Received: from mga02.intel.com ([134.134.136.20]:42913 "EHLO mga02.intel.com"
+        id S229966AbhFPAHo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 15 Jun 2021 20:07:44 -0400
+Received: from mga04.intel.com ([192.55.52.120]:36266 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229966AbhFOXig (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 15 Jun 2021 19:38:36 -0400
-IronPort-SDR: nlXT/1uTTEJBtyvaUcNkK0bxWJeULQMgp1k00oSPvYIFLFNaGrQbj75EfYBT8AWrZXLj4sAEbF
- IH0+km7oxtVg==
-X-IronPort-AV: E=McAfee;i="6200,9189,10016"; a="193205339"
+        id S229811AbhFPAHo (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Tue, 15 Jun 2021 20:07:44 -0400
+IronPort-SDR: hf4S2uovZeXw2cn4Bx41emCSDXqffMrutKfxUddfnYHHZ9DvWvJrE+IBqCA3fEs5OuSVwMnODf
+ 6I27X0C6AR3w==
+X-IronPort-AV: E=McAfee;i="6200,9189,10016"; a="204259375"
 X-IronPort-AV: E=Sophos;i="5.83,276,1616482800"; 
-   d="scan'208";a="193205339"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2021 16:36:31 -0700
-IronPort-SDR: 8AGwfTIS5eHnuCRHcmCTLhjBEdmpLZSa6eoD8G3/h5qrMrkwStnarYGFFAKl79GqoMqb20dN51
- gAQP8OKn+xOg==
+   d="scan'208";a="204259375"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2021 17:05:39 -0700
+IronPort-SDR: ywOH5o7yatpSr79y6YjYml2p0nnSnpreYa0jvlJR9+rHcj8nV1uI5ya35favoSXdokE0TWmfee
+ nrbKApEHWY4A==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.83,276,1616482800"; 
-   d="scan'208";a="421285734"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2021 16:36:31 -0700
-Subject: [PATCH v3 5/5] cxl/pmem: Register 'pmem' / cxl_nvdimm devices
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev
-Date:   Tue, 15 Jun 2021 16:36:31 -0700
-Message-ID: <162380012696.3039556.4293801691038740850.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <162379911364.2993820.5684144324426888810.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <162379911364.2993820.5684144324426888810.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+   d="scan'208";a="554619307"
+Received: from alison-desk.jf.intel.com ([10.54.74.53])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Jun 2021 17:05:38 -0700
+Date:   Tue, 15 Jun 2021 17:01:26 -0700
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        linux-cxl@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH 2/2] cxl/acpi: Use the ACPI CFMWS to create static
+ decoder objects
+Message-ID: <20210616000126.GA22435@alison-desk.jf.intel.com>
+References: <cover.1623705308.git.alison.schofield@intel.com>
+ <0246fe923945ba2b8d885f45279d7d3956c46950.1623705308.git.alison.schofield@intel.com>
+ <CAPcyv4houyD9PGG4PKiO7OiHkKEZD81=tVSzr_PTShHBzx956A@mail.gmail.com>
+ <20210615210518.GA22172@alison-desk.jf.intel.com>
+ <CAPcyv4jeaJwgOMWyCjQy_32gPhSq2T-7JfwRPAmDCg5qMEB+kg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4jeaJwgOMWyCjQy_32gPhSq2T-7JfwRPAmDCg5qMEB+kg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-While a memX device on /sys/bus/cxl represents a CXL memory expander
-control interface, a pmemX device represents the persistent memory
-sub-functionality. It bridges the CXL subystem to the libnvdimm nmemX
-control interface.
+On Tue, Jun 15, 2021 at 03:01:06PM -0700, Dan Williams wrote:
+> On Tue, Jun 15, 2021 at 2:09 PM Alison Schofield
+> <alison.schofield@intel.com> wrote:
+> >
+> > Thanks for the review Dan...
+> >
+> > On Tue, Jun 15, 2021 at 11:48:43AM -0700, Dan Williams wrote:
+> > > [ add linu-acpi for variable length array question below ]
+> > >
+> > >
+> > > On Mon, Jun 14, 2021 at 3:57 PM Alison Schofield
+> > > <alison.schofield@intel.com> wrote:
+> > > >
+> > > > The ACPI CXL Early Discovery Table (CEDT) includes a list of CXL memory
+> > > > resources in CXL Fixed Memory Window Structures (CFMWS). Retrieve each
+> > > > CFMWS in the CEDT and add a cxl_decoder object to the root port (root0)
+> > > > for each memory resource.
+> > > >
+> > > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> > > > ---
+> > > >  drivers/cxl/acpi.c | 106 +++++++++++++++++++++++++++++++++++++++++++++
+> > > >  1 file changed, 106 insertions(+)
+> > > >
+> > > > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > > > index 16f60bc6801f..ac4b3e37e294 100644
+> > > > --- a/drivers/cxl/acpi.c
+> > > > +++ b/drivers/cxl/acpi.c
+> > > > @@ -8,8 +8,112 @@
+> > > >  #include <linux/pci.h>
+> > > >  #include "cxl.h"
+> > > >
+> > > > +/* Encode defined in CXL 2.0 8.2.5.12.7 HDM Decoder Control Register */
+> > > > +#define CFMWS_INTERLEAVE_WAYS(x)       (1 << (x)->interleave_ways)
+> > > > +#define CFMWS_INTERLEAVE_GRANULARITY(x)        ((x)->granularity + 8)
+> > > > +
+> > > > +/*
+> > > > + * CFMWS Restrictions mapped to CXL Decoder Flags
+> > > > + * Restrictions defined in CXL 2.0 ECN CEDT CFMWS
+> > > > + * Decoder Flags defined in CXL 2.0 8.2.5.12.7 HDM Decoder Control Register
+> > > > + */
+> > > > +#define CFMWS_TO_DECODE_TYPE2(x) ((x & ACPI_CEDT_CFMWS_RESTRICT_TYPE2) << 2)
+> > > > +#define CFMWS_TO_DECODE_TYPE3(x) ((x & ACPI_CEDT_CFMWS_RESTRICT_TYPE3) << 2)
+> > > > +#define CFMWS_TO_DECODE_RAM(x)   ((x & ACPI_CEDT_CFMWS_RESTRICT_VOLATILE) >> 2)
+> > > > +#define CFMWS_TO_DECODE_PMEM(x)         ((x & ACPI_CEDT_CFMWS_RESTRICT_PMEM) >> 2)
+> > > > +#define CFMWS_TO_DECODE_FIXED(x) (x & ACPI_CEDT_CFMWS_RESTRICT_FIXED)
+> > > > +
+> > > > +#define CFMWS_TO_DECODER_FLAGS(x) (CFMWS_TO_DECODE_TYPE2(x) | \
+> > > > +                                  CFMWS_TO_DECODE_TYPE3(x) | \
+> > > > +                                  CFMWS_TO_DECODE_RAM(x)   | \
+> > > > +                                  CFMWS_TO_DECODE_PMEM(x)  | \
+> > > > +                                  CFMWS_TO_DECODE_FIXED(x))
+> > >
+> > > I don't understand the approach taken above. It seems to assume that
+> > > the CXL_DECODER_F_* values are fixed. Those flag values are arbitrary
+> > > and mutable. There is no guarantee that today's CXL_DECODER_F_* values
+> > > match tomorrow's so I'd rather not have 2 places to check when / if
+> > > that happens.
+> > >
+> >
+> > Here's my next take - making the handling resilient.
+> > Not so sure on gracefulness. Open for suggestions.
+> >
+> > -#define CFMWS_TO_DECODE_TYPE2(x) ((x & ACPI_CEDT_CFMWS_RESTRICT_TYPE2) << 2)
+> > -#define CFMWS_TO_DECODE_TYPE3(x) ((x & ACPI_CEDT_CFMWS_RESTRICT_TYPE3) << 2)
+> > -#define CFMWS_TO_DECODE_RAM(x)   ((x & ACPI_CEDT_CFMWS_RESTRICT_VOLATILE) >> 2)
+> > -#define CFMWS_TO_DECODE_PMEM(x)         ((x & ACPI_CEDT_CFMWS_RESTRICT_PMEM) >> 2)
+> > -#define CFMWS_TO_DECODE_FIXED(x) (x & ACPI_CEDT_CFMWS_RESTRICT_FIXED)
+> > -
+> > -#define CFMWS_TO_DECODER_FLAGS(x) (CFMWS_TO_DECODE_TYPE2(x) | \
+> > -                                  CFMWS_TO_DECODE_TYPE3(x) | \
+> > -                                  CFMWS_TO_DECODE_RAM(x)   | \
+> > -                                  CFMWS_TO_DECODE_PMEM(x)  | \
+> > -                                  CFMWS_TO_DECODE_FIXED(x))
+> > +#define FLAG_TYPE2(x) \
+> > +       ((x & ACPI_CEDT_CFMWS_RESTRICT_TYPE2) ? CXL_DECODER_F_TYPE2 : 0)
+> > +#define FLAG_TYPE3(x) \
+> > +       ((x & ACPI_CEDT_CFMWS_RESTRICT_TYPE3) ? CXL_DECODER_F_TYPE3 : 0)
+> > +#define FLAG_RAM(x) \
+> > +       ((x & ACPI_CEDT_CFMWS_RESTRICT_VOLATILE) ? CXL_DECODER_F_RAM : 0)
+> > +#define FLAG_PMEM(x) \
+> > +       ((x & ACPI_CEDT_CFMWS_RESTRICT_PMEM) ? CXL_DECODER_F_PMEM : 0)
+> > +#define FLAG_FIXED(x) \
+> > +       ((x & ACPI_CEDT_CFMWS_RESTRICT_FIXED) ? CXL_DECODER_F_LOCK : 0)
+> > +
+> > +#define CFMWS_TO_DECODER_FLAGS(x) (FLAG_TYPE2(x) | FLAG_TYPE3(x) | \
+> > +                                  FLAG_RAM(x) | FLAG_PMEM(x)| FLAG_FIXED(x))
+> 
+> Hmm, why the macros? Just make CFMWS_TO_DECODER_FLAGS a proper function.
+> 
+> if (cfmws->restrictions & ACPI_CEDT_CFMWS_RESTRICT_TYPE2)
+>     flags |= CXL_DECODER_F_TYPE2;
+> 
+> ...etc
+> 
+> Unless you foresee where macros were going to be reused somewhere else
+> I would just as soon open code them like above.
 
-With this skeleton ndctl can now see persistent memory devices on a
-"CXL" bus. Later patches add support for translating libnvdimm native
-commands to CXL commands.
-
-# ndctl list -BDiu -b CXL
-{
-  "provider":"CXL",
-  "dev":"ndbus1",
-  "dimms":[
-    {
-      "dev":"nmem1",
-      "state":"disabled"
-    },
-    {
-      "dev":"nmem0",
-      "state":"disabled"
-    }
-  ]
-}
-
-Given nvdimm_bus_unregister() removes all devices on an ndbus0 the
-cxl_pmem infrastructure needs to arrange ->remove() to be triggered on
-cxl_nvdimm devices to keep their enabled state synchronized with the
-registration state of their corresponding device on the nvdimm_bus. In
-other words, always arrange for cxl_nvdimm_driver.remove() to unregister
-nvdimms from an nvdimm_bus ahead of the bus being unregistered.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Link: https://lore.kernel.org/r/162336398605.2462439.17422037666825492593.stgit@dwillia2-desk3.amr.corp.intel.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
-Changes in v3:
-
-A bit too aggressive on the header removal. cdev.h is now needed in
-mem.h.
-
- drivers/cxl/core.c |   86 +++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h  |   12 +++++-
- drivers/cxl/mem.h  |    2 +
- drivers/cxl/pci.c  |   23 ++++++++---
- drivers/cxl/pmem.c |  108 ++++++++++++++++++++++++++++++++++++++++++++++++----
- 5 files changed, 215 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
-index aaffb390d168..a2e4d54fc7bc 100644
---- a/drivers/cxl/core.c
-+++ b/drivers/cxl/core.c
-@@ -7,6 +7,7 @@
- #include <linux/slab.h>
- #include <linux/idr.h>
- #include "cxl.h"
-+#include "mem.h"
- 
- /**
-  * DOC: cxl core
-@@ -730,6 +731,89 @@ struct cxl_nvdimm_bridge *devm_cxl_add_nvdimm_bridge(struct device *host,
- }
- EXPORT_SYMBOL_GPL(devm_cxl_add_nvdimm_bridge);
- 
-+static void cxl_nvdimm_release(struct device *dev)
-+{
-+	struct cxl_nvdimm *cxl_nvd = to_cxl_nvdimm(dev);
-+
-+	kfree(cxl_nvd);
-+}
-+
-+static const struct attribute_group *cxl_nvdimm_attribute_groups[] = {
-+	&cxl_base_attribute_group,
-+	NULL,
-+};
-+
-+static const struct device_type cxl_nvdimm_type = {
-+	.name = "cxl_nvdimm",
-+	.release = cxl_nvdimm_release,
-+	.groups = cxl_nvdimm_attribute_groups,
-+};
-+
-+bool is_cxl_nvdimm(struct device *dev)
-+{
-+	return dev->type == &cxl_nvdimm_type;
-+}
-+EXPORT_SYMBOL_GPL(is_cxl_nvdimm);
-+
-+struct cxl_nvdimm *to_cxl_nvdimm(struct device *dev)
-+{
-+	if (dev_WARN_ONCE(dev, !is_cxl_nvdimm(dev),
-+			  "not a cxl_nvdimm device\n"))
-+		return NULL;
-+	return container_of(dev, struct cxl_nvdimm, dev);
-+}
-+EXPORT_SYMBOL_GPL(to_cxl_nvdimm);
-+
-+static struct cxl_nvdimm *cxl_nvdimm_alloc(struct cxl_memdev *cxlmd)
-+{
-+	struct cxl_nvdimm *cxl_nvd;
-+	struct device *dev;
-+
-+	cxl_nvd = kzalloc(sizeof(*cxl_nvd), GFP_KERNEL);
-+	if (!cxl_nvd)
-+		return ERR_PTR(-ENOMEM);
-+
-+	dev = &cxl_nvd->dev;
-+	cxl_nvd->cxlmd = cxlmd;
-+	device_initialize(dev);
-+	device_set_pm_not_required(dev);
-+	dev->parent = &cxlmd->dev;
-+	dev->bus = &cxl_bus_type;
-+	dev->type = &cxl_nvdimm_type;
-+
-+	return cxl_nvd;
-+}
-+
-+int devm_cxl_add_nvdimm(struct device *host, struct cxl_memdev *cxlmd)
-+{
-+	struct cxl_nvdimm *cxl_nvd;
-+	struct device *dev;
-+	int rc;
-+
-+	cxl_nvd = cxl_nvdimm_alloc(cxlmd);
-+	if (IS_ERR(cxl_nvd))
-+		return PTR_ERR(cxl_nvd);
-+
-+	dev = &cxl_nvd->dev;
-+	rc = dev_set_name(dev, "pmem%d", cxlmd->id);
-+	if (rc)
-+		goto err;
-+
-+	rc = device_add(dev);
-+	if (rc)
-+		goto err;
-+
-+	dev_dbg(host, "%s: register %s\n", dev_name(dev->parent),
-+		dev_name(dev));
-+
-+	return devm_add_action_or_reset(host, unregister_dev, dev);
-+
-+err:
-+	put_device(dev);
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(devm_cxl_add_nvdimm);
-+
- /**
-  * cxl_probe_device_regs() - Detect CXL Device register blocks
-  * @dev: Host device of the @base mapping
-@@ -929,6 +1013,8 @@ static int cxl_device_id(struct device *dev)
- {
- 	if (dev->type == &cxl_nvdimm_bridge_type)
- 		return CXL_DEVICE_NVDIMM_BRIDGE;
-+	if (dev->type == &cxl_nvdimm_type)
-+		return CXL_DEVICE_NVDIMM;
- 	return 0;
- }
- 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 5da2163ca45f..b6bda39a59e3 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -220,6 +220,12 @@ struct cxl_nvdimm_bridge {
- 	enum cxl_nvdimm_brige_state state;
- };
- 
-+struct cxl_nvdimm {
-+	struct device dev;
-+	struct cxl_memdev *cxlmd;
-+	struct nvdimm *nvdimm;
-+};
-+
- /**
-  * struct cxl_port - logical collection of upstream port devices and
-  *		     downstream port devices to construct a CXL memory
-@@ -306,7 +312,8 @@ int __cxl_driver_register(struct cxl_driver *cxl_drv, struct module *owner,
- #define cxl_driver_register(x) __cxl_driver_register(x, THIS_MODULE, KBUILD_MODNAME)
- void cxl_driver_unregister(struct cxl_driver *cxl_drv);
- 
--#define CXL_DEVICE_NVDIMM_BRIDGE 1
-+#define CXL_DEVICE_NVDIMM_BRIDGE	1
-+#define CXL_DEVICE_NVDIMM		2
- 
- #define MODULE_ALIAS_CXL(type) MODULE_ALIAS("cxl:t" __stringify(type) "*")
- #define CXL_MODALIAS_FMT "cxl:t%d"
-@@ -314,4 +321,7 @@ void cxl_driver_unregister(struct cxl_driver *cxl_drv);
- struct cxl_nvdimm_bridge *to_cxl_nvdimm_bridge(struct device *dev);
- struct cxl_nvdimm_bridge *devm_cxl_add_nvdimm_bridge(struct device *host,
- 						     struct cxl_port *port);
-+struct cxl_nvdimm *to_cxl_nvdimm(struct device *dev);
-+bool is_cxl_nvdimm(struct device *dev);
-+int devm_cxl_add_nvdimm(struct device *host, struct cxl_memdev *cxlmd);
- #endif /* __CXL_H__ */
-diff --git a/drivers/cxl/mem.h b/drivers/cxl/mem.h
-index 13868ff7cadf..8f02d02b26b4 100644
---- a/drivers/cxl/mem.h
-+++ b/drivers/cxl/mem.h
-@@ -2,6 +2,8 @@
- /* Copyright(c) 2020-2021 Intel Corporation. */
- #ifndef __CXL_MEM_H__
- #define __CXL_MEM_H__
-+#include <linux/cdev.h>
-+#include "cxl.h"
- 
- /* CXL 2.0 8.2.8.5.1.1 Memory Device Status Register */
- #define CXLMDEV_STATUS_OFFSET 0x0
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index a8f29ce35c2a..f8408e5f0754 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -1332,7 +1332,8 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_mem *cxlm)
- 	return ERR_PTR(rc);
- }
- 
--static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
-+static struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
-+					      struct cxl_mem *cxlm)
- {
- 	struct cxl_memdev *cxlmd;
- 	struct device *dev;
-@@ -1341,7 +1342,7 @@ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
- 
- 	cxlmd = cxl_memdev_alloc(cxlm);
- 	if (IS_ERR(cxlmd))
--		return PTR_ERR(cxlmd);
-+		return cxlmd;
- 
- 	dev = &cxlmd->dev;
- 	rc = dev_set_name(dev, "mem%d", cxlmd->id);
-@@ -1359,8 +1360,10 @@ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
- 	if (rc)
- 		goto err;
- 
--	return devm_add_action_or_reset(dev->parent, cxl_memdev_unregister,
--					cxlmd);
-+	rc = devm_add_action_or_reset(host, cxl_memdev_unregister, cxlmd);
-+	if (rc)
-+		return ERR_PTR(rc);
-+	return cxlmd;
- 
- err:
- 	/*
-@@ -1369,7 +1372,7 @@ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
- 	 */
- 	cxl_memdev_shutdown(cxlmd);
- 	put_device(dev);
--	return rc;
-+	return ERR_PTR(rc);
- }
- 
- static int cxl_xfer_log(struct cxl_mem *cxlm, uuid_t *uuid, u32 size, u8 *out)
-@@ -1580,6 +1583,7 @@ static int cxl_mem_identify(struct cxl_mem *cxlm)
- 
- static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
-+	struct cxl_memdev *cxlmd;
- 	struct cxl_mem *cxlm;
- 	int rc;
- 
-@@ -1607,7 +1611,14 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
- 
--	return cxl_mem_add_memdev(cxlm);
-+	cxlmd = devm_cxl_add_memdev(&pdev->dev, cxlm);
-+	if (IS_ERR(cxlmd))
-+		return PTR_ERR(cxlmd);
-+
-+	if (range_len(&cxlm->pmem_range) && IS_ENABLED(CONFIG_CXL_PMEM))
-+		rc = devm_cxl_add_nvdimm(&pdev->dev, cxlmd);
-+
-+	return rc;
- }
- 
- static const struct pci_device_id cxl_mem_pci_tbl[] = {
-diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-index 8365839856dc..0088e41dd2f3 100644
---- a/drivers/cxl/pmem.c
-+++ b/drivers/cxl/pmem.c
-@@ -3,7 +3,10 @@
- #include <linux/libnvdimm.h>
- #include <linux/device.h>
- #include <linux/module.h>
-+#include <linux/ndctl.h>
-+#include <linux/async.h>
- #include <linux/slab.h>
-+#include "mem.h"
- #include "cxl.h"
- 
- /*
-@@ -13,6 +16,62 @@
-  */
- static struct workqueue_struct *cxl_pmem_wq;
- 
-+static void unregister_nvdimm(void *nvdimm)
-+{
-+	nvdimm_delete(nvdimm);
-+}
-+
-+static int match_nvdimm_bridge(struct device *dev, const void *data)
-+{
-+	return strcmp(dev_name(dev), "nvdimm-bridge") == 0;
-+}
-+
-+static struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(void)
-+{
-+	struct device *dev;
-+
-+	dev = bus_find_device(&cxl_bus_type, NULL, NULL, match_nvdimm_bridge);
-+	if (!dev)
-+		return NULL;
-+	return to_cxl_nvdimm_bridge(dev);
-+}
-+
-+static int cxl_nvdimm_probe(struct device *dev)
-+{
-+	struct cxl_nvdimm *cxl_nvd = to_cxl_nvdimm(dev);
-+	struct cxl_nvdimm_bridge *cxl_nvb;
-+	unsigned long flags = 0;
-+	struct nvdimm *nvdimm;
-+	int rc = -ENXIO;
-+
-+	cxl_nvb = cxl_find_nvdimm_bridge();
-+	if (!cxl_nvb)
-+		return -ENXIO;
-+
-+	device_lock(&cxl_nvb->dev);
-+	if (!cxl_nvb->nvdimm_bus)
-+		goto out;
-+
-+	set_bit(NDD_LABELING, &flags);
-+	nvdimm = nvdimm_create(cxl_nvb->nvdimm_bus, cxl_nvd, NULL, flags, 0, 0,
-+			       NULL);
-+	if (!nvdimm)
-+		goto out;
-+
-+	rc = devm_add_action_or_reset(dev, unregister_nvdimm, nvdimm);
-+out:
-+	device_unlock(&cxl_nvb->dev);
-+	put_device(&cxl_nvb->dev);
-+
-+	return rc;
-+}
-+
-+static struct cxl_driver cxl_nvdimm_driver = {
-+	.name = "cxl_nvdimm",
-+	.probe = cxl_nvdimm_probe,
-+	.id = CXL_DEVICE_NVDIMM,
-+};
-+
- static int cxl_pmem_ctl(struct nvdimm_bus_descriptor *nd_desc,
- 			struct nvdimm *nvdimm, unsigned int cmd, void *buf,
- 			unsigned int buf_len, int *cmd_rc)
-@@ -29,19 +88,34 @@ static bool online_nvdimm_bus(struct cxl_nvdimm_bridge *cxl_nvb)
- 	return cxl_nvb->nvdimm_bus != NULL;
- }
- 
--static void offline_nvdimm_bus(struct cxl_nvdimm_bridge *cxl_nvb)
-+static int cxl_nvdimm_release_driver(struct device *dev, void *data)
- {
--	if (!cxl_nvb->nvdimm_bus)
-+	if (!is_cxl_nvdimm(dev))
-+		return 0;
-+	device_release_driver(dev);
-+	return 0;
-+}
-+
-+static void offline_nvdimm_bus(struct nvdimm_bus *nvdimm_bus)
-+{
-+	if (!nvdimm_bus)
- 		return;
--	nvdimm_bus_unregister(cxl_nvb->nvdimm_bus);
--	cxl_nvb->nvdimm_bus = NULL;
-+
-+	/*
-+	 * Set the state of cxl_nvdimm devices to unbound / idle before
-+	 * nvdimm_bus_unregister() rips the nvdimm objects out from
-+	 * underneath them.
-+	 */
-+	bus_for_each_dev(&cxl_bus_type, NULL, NULL, cxl_nvdimm_release_driver);
-+	nvdimm_bus_unregister(nvdimm_bus);
- }
- 
- static void cxl_nvb_update_state(struct work_struct *work)
- {
- 	struct cxl_nvdimm_bridge *cxl_nvb =
- 		container_of(work, typeof(*cxl_nvb), state_work);
--	bool release = false;
-+	struct nvdimm_bus *victim_bus = NULL;
-+	bool release = false, rescan = false;
- 
- 	device_lock(&cxl_nvb->dev);
- 	switch (cxl_nvb->state) {
-@@ -50,11 +124,13 @@ static void cxl_nvb_update_state(struct work_struct *work)
- 			dev_err(&cxl_nvb->dev,
- 				"failed to establish nvdimm bus\n");
- 			release = true;
--		}
-+		} else
-+			rescan = true;
- 		break;
- 	case CXL_NVB_OFFLINE:
- 	case CXL_NVB_DEAD:
--		offline_nvdimm_bus(cxl_nvb);
-+		victim_bus = cxl_nvb->nvdimm_bus;
-+		cxl_nvb->nvdimm_bus = NULL;
- 		break;
- 	default:
- 		break;
-@@ -63,6 +139,12 @@ static void cxl_nvb_update_state(struct work_struct *work)
- 
- 	if (release)
- 		device_release_driver(&cxl_nvb->dev);
-+	if (rescan) {
-+		int rc = bus_rescan_devices(&cxl_bus_type);
-+
-+		dev_dbg(&cxl_nvb->dev, "rescan: %d\n", rc);
-+	}
-+	offline_nvdimm_bus(victim_bus);
- 
- 	put_device(&cxl_nvb->dev);
- }
-@@ -118,17 +200,24 @@ static __init int cxl_pmem_init(void)
- 
- 	rc = cxl_driver_register(&cxl_nvdimm_bridge_driver);
- 	if (rc)
--		goto err;
-+		goto err_bridge;
-+
-+	rc = cxl_driver_register(&cxl_nvdimm_driver);
-+	if (rc)
-+		goto err_nvdimm;
- 
- 	return 0;
- 
--err:
-+err_nvdimm:
-+	cxl_driver_unregister(&cxl_nvdimm_bridge_driver);
-+err_bridge:
- 	destroy_workqueue(cxl_pmem_wq);
- 	return rc;
- }
- 
- static __exit void cxl_pmem_exit(void)
- {
-+	cxl_driver_unregister(&cxl_nvdimm_driver);
- 	cxl_driver_unregister(&cxl_nvdimm_bridge_driver);
- 	destroy_workqueue(cxl_pmem_wq);
- }
-@@ -138,3 +227,4 @@ module_init(cxl_pmem_init);
- module_exit(cxl_pmem_exit);
- MODULE_IMPORT_NS(CXL);
- MODULE_ALIAS_CXL(CXL_DEVICE_NVDIMM_BRIDGE);
-+MODULE_ALIAS_CXL(CXL_DEVICE_NVDIMM);
-
+Open code it is!
+Thanks
