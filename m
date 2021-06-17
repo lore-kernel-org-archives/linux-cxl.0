@@ -2,365 +2,72 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F56DC2B9F4
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Jun 2021 21:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B74C2B9F4
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Jun 2021 22:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F1D2613C1
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Jun 2021 21:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D55361375
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Jun 2021 22:16:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231697AbhFQVPm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Jun 2021 17:15:42 -0400
-Received: from mga02.intel.com ([134.134.136.20]:31721 "EHLO mga02.intel.com"
+        id S231992AbhFQWSr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Jun 2021 18:18:47 -0400
+Received: from mga12.intel.com ([192.55.52.136]:38815 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231679AbhFQVPl (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 17 Jun 2021 17:15:41 -0400
-IronPort-SDR: 3csR9Y75UqtM73jyYLg5AWZZeid4w7LOpcTw6ztY0Ow8aywmoAj4GSPlWgJzXkul0JP3vm4u3c
- nA8135KjYJKA==
-X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="193581499"
+        id S231985AbhFQWSq (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 17 Jun 2021 18:18:46 -0400
+IronPort-SDR: jnHTVNkVzSOJBsibj770TEc5KQZWytzy7DZZvrsNLzIbwkir3rZa+azQV0BhnWHHInVHF5zfX3
+ H43qwxl+ohlg==
+X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="186151367"
 X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
-   d="scan'208";a="193581499"
+   d="scan'208";a="186151367"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 14:13:33 -0700
-IronPort-SDR: gJr8lTX4auKTbAR/x9G1L/4KMCwpQpgpy3bEdDWrRQCZUkldBRMJsWHDMwHUUBqLyI4t0Z4GR1
- 5ivl5t+JfB1w==
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 15:16:38 -0700
+IronPort-SDR: nkcQT5dBkYf8rfMZZB4yFXuvIA8HEyqjgLQDET3vSRiyafqo9Ip2WTMgru2SsFA+e0abZj7PQ+
+ okjGL4qk5VLA==
 X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
-   d="scan'208";a="622168282"
-Received: from mkalyani-mobl.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.138.30])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 14:13:32 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+   d="scan'208";a="622182863"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 15:16:37 -0700
+From:   ira.weiny@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH v2 4/6] cxl/region: Introduce a cxl_region driver
-Date:   Thu, 17 Jun 2021 14:13:29 -0700
-Message-Id: <20210617211329.626507-1-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210617173655.430424-5-ben.widawsky@intel.com>
-References: <20210617173655.430424-5-ben.widawsky@intel.com>
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-cxl@vger.kernel.org
+Subject: [PATCH V2 0/3] Query and use Partition Info
+Date:   Thu, 17 Jun 2021 15:16:17 -0700
+Message-Id: <20210617221620.1904031-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.28.0.rc0.12.gb6a658bd00c9
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The cxl_region driver is responsible for managing the HDM decoder
-programming in the CXL topology. Once a region is created it must be
-configured and bound to the driver in order to activate it.
+From: Ira Weiny <ira.weiny@intel.com>
 
-The following is a sample of how such controls might work:
+Three small patches which query and use Partition Info.  Specifically this
+correctly accounts for partitionable space should a device support it.
 
-echo 1 > /sys/bus/cxl/devices/decoder0.0/create_region
-echo $((256<<20)) > /sys/bus/cxl/devices/decoder0.0/region0.0:0/size
-echo mem0 > /sys/bus/cxl/devices/decoder0.0/region0.0:0/target0
-echo region0.0:0 > /sys/bus/cxl/drivers/cxl_region/bind
+Changes for V2:
+	Feed back from Ben, Dan, and Jonathan
+	Remove sysfs patch in favor of using ndctl to query values in the
+	future.
+	Add patch to create the correct ram/pmem range entries per the spec.
 
-In order to handle the eventual rise in failure modes of binding a
-region, a new trace event is created to help track these failures for
-debug and reconfiguration paths in userspace.
+Ira Weiny (3):
+  cxl/pci: Store memory capacity values
+  cxl/mem: Account for partitionable space in ram/pmem ranges
+  cxl/mem: Adjust ram/pmem range to represent DPA ranges
 
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
----
+ drivers/cxl/mem.h |   9 ++++
+ drivers/cxl/pci.c | 134 ++++++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 134 insertions(+), 9 deletions(-)
 
-v2 Is updated to take into account the static region_type.
-
----
- drivers/cxl/Makefile |   2 +-
- drivers/cxl/core.c   |  15 +++++-
- drivers/cxl/cxl.h    |   1 +
- drivers/cxl/mem.h    |   1 +
- drivers/cxl/region.c | 109 ++++++++++++++++++++++++++++++++++++++-----
- drivers/cxl/region.h |  11 +++++
- drivers/cxl/trace.h  |  33 +++++++++++++
- 7 files changed, 158 insertions(+), 14 deletions(-)
- create mode 100644 drivers/cxl/trace.h
-
-diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-index c3151198c041..f35077c073b8 100644
---- a/drivers/cxl/Makefile
-+++ b/drivers/cxl/Makefile
-@@ -4,7 +4,7 @@ obj-$(CONFIG_CXL_MEM) += cxl_pci.o cxl_region.o
- obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
- obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
- 
--ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
-+ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL -I$(src)
- cxl_core-y := core.o
- cxl_pci-y := pci.o
- cxl_acpi-y := acpi.o
-diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
-index d8d7ca85e110..be65a1a1493e 100644
---- a/drivers/cxl/core.c
-+++ b/drivers/cxl/core.c
-@@ -1086,6 +1086,8 @@ static int cxl_device_id(struct device *dev)
- 		return CXL_DEVICE_NVDIMM_BRIDGE;
- 	if (dev->type == &cxl_nvdimm_type)
- 		return CXL_DEVICE_NVDIMM;
-+	if (is_cxl_region(dev))
-+		return CXL_DEVICE_REGION;
- 	return 0;
- }
- 
-@@ -1102,7 +1104,18 @@ static int cxl_bus_match(struct device *dev, struct device_driver *drv)
- 
- static int cxl_bus_probe(struct device *dev)
- {
--	return to_cxl_drv(dev->driver)->probe(dev);
-+	int id = cxl_device_id(dev);
-+
-+	if (id == CXL_DEVICE_REGION) {
-+		struct cxl_region *region = to_cxl_region(dev);
-+
-+		if (cxl_is_region_configured(region))
-+			return to_cxl_drv(dev->driver)->probe(dev);
-+	} else {
-+		return to_cxl_drv(dev->driver)->probe(dev);
-+	}
-+
-+	return -ENODEV;
- }
- 
- static int cxl_bus_remove(struct device *dev)
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 8b27a07d7d0f..90107b21125b 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -325,6 +325,7 @@ void cxl_driver_unregister(struct cxl_driver *cxl_drv);
- 
- #define CXL_DEVICE_NVDIMM_BRIDGE	1
- #define CXL_DEVICE_NVDIMM		2
-+#define CXL_DEVICE_REGION		3
- 
- #define MODULE_ALIAS_CXL(type) MODULE_ALIAS("cxl:t" __stringify(type) "*")
- #define CXL_MODALIAS_FMT "cxl:t%d"
-diff --git a/drivers/cxl/mem.h b/drivers/cxl/mem.h
-index fe12ef3c3dde..ff1f9c57e089 100644
---- a/drivers/cxl/mem.h
-+++ b/drivers/cxl/mem.h
-@@ -83,4 +83,5 @@ struct cxl_mem {
- 	struct range pmem_range;
- 	struct range ram_range;
- };
-+
- #endif /* __CXL_MEM_H__ */
-diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
-index 41299bd6da53..74d6f6c06608 100644
---- a/drivers/cxl/region.c
-+++ b/drivers/cxl/region.c
-@@ -11,6 +11,9 @@
- #include "cxl.h"
- #include "mem.h"
- 
-+#define CREATE_TRACE_POINTS
-+#include "trace.h"
-+
- /**
-  * DOC: cxl region
-  *
-@@ -27,8 +30,24 @@ static struct cxl_region *to_cxl_region(struct device *dev);
- 
- static bool is_region_active(struct cxl_region *region)
- {
--	/* TODO: Regions can't be activated yet. */
--	return false;
-+	return region->active;
-+}
-+
-+/*
-+ * Most sanity checking is left up to region binding. This does the most basic
-+ * check to determine whether or not the core should try probing the driver.
-+ */
-+bool cxl_is_region_configured(struct cxl_region *region)
-+{
-+	/* zero sized regions aren't a thing. */
-+	if (region->requested_size <= 0)
-+		return false;
-+
-+	/* all regions have at least 1 target */
-+	if (region->targets[0])
-+		return false;
-+
-+	return true;
- }
- 
- static ssize_t offset_show(struct device *dev, struct device_attribute *attr,
-@@ -249,16 +268,6 @@ bool is_cxl_region(struct device *dev)
- 	return dev->type == &cxl_region_type;
- }
- 
--static struct cxl_region *to_cxl_region(struct device *dev)
--{
--	if (dev_WARN_ONCE(dev, dev->type != &cxl_region_type,
--			  "not a cxl_region device\n"))
--		return NULL;
--
--	return container_of(dev, struct cxl_region, dev);
--}
--
--
- void cxl_free_region(struct cxl_decoder *cxld, struct cxl_region *region)
- {
- 	int i;
-@@ -383,3 +392,79 @@ int cxl_delete_region(struct cxl_decoder *cxld, const char *region_name)
- 
- 	return 0;
- }
-+
-+static int bind_region(struct cxl_region *region)
-+{
-+	int i;
-+
-+	if (dev_WARN_ONCE(&region->dev, !cxl_is_region_configured(region),
-+			  "unconfigured regions can't be probed (race?)\n")) {
-+		return -ENXIO;
-+	}
-+
-+	if (region->requested_size % (SZ_256M * region->eniw)) {
-+		trace_cxl_region_bind(region, "Invalid size. Must be multiple of NIW");
-+		return -ENXIO;
-+	}
-+
-+	for (i = 0; i < region->eniw; i++)
-+		if (!region->targets[i]) {
-+			trace_cxl_region_bind(region, "Missing memory device target");
-+			return -ENXIO;
-+		}
-+
-+	/* TODO: Allocate from decoder's address space */
-+
-+	/* TODO: program HDM decoders */
-+
-+	if (uuid_is_null(&region->uuid))
-+		uuid_gen(&region->uuid);
-+
-+	trace_cxl_region_bind(region, "Region binding succeeded.");
-+	return 0;
-+}
-+
-+static int cxl_region_probe(struct device *dev)
-+{
-+	struct cxl_region *region = to_cxl_region(dev);
-+	int ret;
-+
-+	if (region->active)
-+		return -EBUSY;
-+
-+	device_lock(&region->dev);
-+	ret = bind_region(region);
-+	if (!ret)
-+		region->active = true;
-+	device_unlock(&region->dev);
-+
-+	return ret;
-+}
-+
-+static void cxl_region_remove(struct device *dev)
-+{
-+	/* Remove region from the decoder's address space */
-+}
-+
-+static struct cxl_driver cxl_region_driver = {
-+	.name = "cxl_region",
-+	.probe = cxl_region_probe,
-+	.remove = cxl_region_remove,
-+	.id = CXL_DEVICE_REGION,
-+};
-+
-+static __init int cxl_region_init(void)
-+{
-+	return cxl_driver_register(&cxl_region_driver);
-+}
-+
-+static __exit void cxl_region_exit(void)
-+{
-+	cxl_driver_unregister(&cxl_region_driver);
-+}
-+
-+MODULE_LICENSE("GPL v2");
-+module_init(cxl_region_init);
-+module_exit(cxl_region_exit);
-+MODULE_IMPORT_NS(CXL);
-+MODULE_ALIAS_CXL(CXL_REGION);
-diff --git a/drivers/cxl/region.h b/drivers/cxl/region.h
-index f2c37a6f1192..7f7331d9029b 100644
---- a/drivers/cxl/region.h
-+++ b/drivers/cxl/region.h
-@@ -14,6 +14,7 @@
-  * @uuid: The UUID for this region.
-  * @list: Node in decoders region list.
-  * @eniw: Number of interleave ways this region is configured for.
-+ * @active: If the region has been activated.
-  * @targets: The memory devices comprising the region.
-  */
- struct cxl_region {
-@@ -24,10 +25,20 @@ struct cxl_region {
- 	uuid_t uuid;
- 	struct list_head list;
- 	int eniw;
-+	bool active;
- 	struct cxl_memdev *targets[];
- };
- 
- bool is_cxl_region(struct device *dev);
- bool cxl_is_region_configured(struct cxl_region *region);
- 
-+static inline struct cxl_region *to_cxl_region(struct device *dev)
-+{
-+	if (dev_WARN_ONCE(dev, !is_cxl_region(dev),
-+			  "not a cxl_region device\n"))
-+		return NULL;
-+
-+	return container_of(dev, struct cxl_region, dev);
-+}
-+
- #endif
-diff --git a/drivers/cxl/trace.h b/drivers/cxl/trace.h
-new file mode 100644
-index 000000000000..fe9576ec2cde
---- /dev/null
-+++ b/drivers/cxl/trace.h
-@@ -0,0 +1,33 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM cxl
-+
-+#if !defined (__CXL_TRACE_H__) || defined(TRACE_HEADER_MULTI_READ)
-+#define __CXL_TRACE_H__
-+
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(cxl_region_bind,
-+	TP_PROTO(struct cxl_region *region, char *status),
-+	TP_ARGS(region, status),
-+	TP_STRUCT__entry(
-+		__field(struct cxl_region *, region)
-+		__string(status, status)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->region = region;
-+		__assign_str(status, status);
-+	),
-+
-+	TP_printk("%s failed to bind (%s)", dev_name(&__entry->region->dev), __get_str(status))
-+);
-+
-+#endif /* if !defined (__CXL_TRACE_H__) || defined(TRACE_HEADER_MULTI_READ) */
-+
-+/* This part must be outside protection */
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH .
-+#define TRACE_INCLUDE_FILE trace
-+#include <trace/define_trace.h>
 -- 
-2.32.0
+2.28.0.rc0.12.gb6a658bd00c9
 
