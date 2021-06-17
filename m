@@ -2,187 +2,510 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8795CC2B9F4
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Jun 2021 20:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7382AC2B9F4
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Jun 2021 21:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52801613EE
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Jun 2021 20:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37520613BF
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Jun 2021 21:12:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231848AbhFQUXG convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Jun 2021 16:23:06 -0400
-Received: from server.avery-design.com ([198.57.169.184]:46710 "EHLO
-        server.avery-design.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231570AbhFQUXG (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Jun 2021 16:23:06 -0400
-X-Greylist: delayed 1881 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Jun 2021 16:23:06 EDT
-Received: from 50-201-210-206-static.hfc.comcastbusiness.net ([50.201.210.206]:55417 helo=smtpclient.apple)
-        by server.avery-design.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <cbrowy@avery-design.com>)
-        id 1lty0E-0005GH-R0; Thu, 17 Jun 2021 19:48:38 +0000
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.100.0.2.22\))
-Subject: Re: [RFC PATCH 1/2] PCI/doe: Initial support PCI Data Object Exchange
-From:   Chris Browy <cbrowy@avery-design.com>
-In-Reply-To: <20210617181225.0000105b@Huawei.com>
-Date:   Thu, 17 Jun 2021 15:48:28 -0400
-Cc:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
-Reply-To: "20210617181225.0000105b@huawei.com" 
-          <20210617181225.0000105b@Huawei.com>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <1BC68362-057C-4AB4-BC7C-731CFC3DBED7@avery-design.com>
-References: <20210310180306.1588376-1-Jonathan.Cameron@huawei.com>
- <20210310180306.1588376-2-Jonathan.Cameron@huawei.com>
- <CAPcyv4gG-==Vj9w3d7=gRRSPaoD5eZHZZ2hAA0h3c07eMT_x1A@mail.gmail.com>
- <20210316162952.00001ab7@Huawei.com>
- <CAPcyv4h6hHCuO=0vHbPz2m4qw6-0=wW9swBrWimBsz6_GJu4Aw@mail.gmail.com>
- <6F0B8DDD-E661-40C8-839B-1B77998EFF23@avery-design.com>
- <CAPcyv4hJG08RaksW3jH_Q5ASqpzX5MtfNFcLqMxAH5jwTidk=w@mail.gmail.com>
- <20210318142529.00001507@Huawei.com> <20210617181225.0000105b@Huawei.com>
-To:     Jonathan Cameron <jonathan.cameron@huawei.com>
-X-Mailer: Apple Mail (2.3654.100.0.2.22)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.avery-design.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - avery-design.com
-X-Get-Message-Sender-Via: server.avery-design.com: authenticated_id: cbrowy@avery-design.com
-X-Authenticated-Sender: server.avery-design.com: cbrowy@avery-design.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+        id S232318AbhFQVOO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Jun 2021 17:14:14 -0400
+Received: from mga01.intel.com ([192.55.52.88]:8339 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231679AbhFQVOO (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 17 Jun 2021 17:14:14 -0400
+IronPort-SDR: qs3REBAweOg/Cvt2EtWImXhE/gNenEQJiJhd30yQ9S9XBMmgJDM+eZpOXNI4IMp+vSjy8vKl+2
+ wiBFxbzF5tSw==
+X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="227972356"
+X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
+   d="scan'208";a="227972356"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 14:12:06 -0700
+IronPort-SDR: TE8B6NWHP5HaRY4YDdF1gks2gSIbLXXNUOma5IT8mFCoBeMBTmjKMXA5LRar/rvfCM0pIXhpVQ
+ y2FCqjHWCJmw==
+X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
+   d="scan'208";a="421998723"
+Received: from mkalyani-mobl.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.138.30])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 14:12:05 -0700
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: [PATCH v2 1/6] cxl/region: Add region creation ABI
+Date:   Thu, 17 Jun 2021 14:11:59 -0700
+Message-Id: <20210617211159.626059-1-ben.widawsky@intel.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20210617173655.430424-2-ben.widawsky@intel.com>
+References: <20210617173655.430424-2-ben.widawsky@intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+Regions are created as a child of the decoder that encompasses an
+address space with constraints. Regions only exist for persistent
+capacities.
 
+When regions are created, the number of desired interleave ways must be
+known. To enable this, the sysfs attribute will take the desired ways as
+input. This interface intentionally allows creation of
+impossible-to-enable regions based on interleave constraints in the
+topology. The reasoning is to create new regions through the kernel
+interfaces which may become possible on reboot under a variety of
+circumstances.
 
-> On Jun 17, 2021, at 1:12 PM, Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
-> 
-> On Thu, 18 Mar 2021 14:25:29 +0000
-> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> 
->> On Wed, 17 Mar 2021 18:30:26 -0700
->> Dan Williams <dan.j.williams@intel.com> wrote:
->> 
->>> Btw your mailer does something odd with the "In-Reply-To:" field, I
->>> need to fix it up manually to include your address.
->>> 
->>> On Tue, Mar 16, 2021 at 4:28 PM Chris Browy <cbrowy@avery-design.com> wrote:  
->>>> 
->>>> Please address and clarify 2 queries below...
->>>> 
->>>> 
->>>>> On Mar 16, 2021, at 2:14 PM, Dan Williams <dan.j.williams@intel.com> wrote:
->>>>> 
->>>>> On Tue, Mar 16, 2021 at 9:31 AM Jonathan Cameron
->>>>> <Jonathan.Cameron@huawei.com> wrote:    
->>>>>> 
->>>>>> On Mon, 15 Mar 2021 12:45:49 -0700
->>>>>> Dan Williams <dan.j.williams@intel.com> wrote:
->>>>>> 
->>>>>>> Hey Jonathan, happy to see this, some comments below...    
->>>>>> 
->>>>>> Hi Dan,
->>>>>> 
->>>>>> Thanks for taking a look!
->>>>>> 
->>>>>>> 
->>>>>>> On Wed, Mar 10, 2021 at 10:08 AM Jonathan Cameron
->>>>>>> <Jonathan.Cameron@huawei.com> wrote:    
->>>>>>>> 
->>>>>>>> Introduced in an ECN to the PCI 5.0, DOE provides a config space
->>>>>>>> based mailbox with standard protocol discovery.  Each mailbox
->>>>>>>> is accessed through a DOE PCIE Extended Capability.
->>>>>>>> 
->>>>>>>> A device may have 1 or more DOE mailboxes, each of which is allowed
->>>>>>>> to support any number of protocols (some DOE protocols
->>>>>>>> specifications apply additional restrictions).  A given protocol
->>>>>>>> may be supported on more than one DOE mailbox on a given function.    
->>>>>>> 
->>>>>>> Are all those protocol instances shared?
->>>>>>> I'm trying to mental model
->>>>>>> whether, for example, an auxiliary driver instance could be loaded per
->>>>>>> DOE mailbox, or if there would need to be coordination of a given
->>>>>>> protocol no matter how many DOE mailboxes on that device implemented
->>>>>>> that protocol.    
->>>>>> 
->>>>>> Just to check I've understood corectly, you mean multiple instances of same
->>>>>> protocol across different DOE mailboxes on a given device?
->>>>>> 
->>>>> 
->>>>> Right.    
->>>> 
->>>> Could you confirm this case for clarity?  A CXL device may have multiple VF/PF.
->>>> For example, PF=0 could have one or more DOE instances for CDAT protocol.
->>>> The driver will scan PF=0 for all DOE instances and finding one or more of CDAT
->>>> protocol will combine/manage them.  I had not considered multiple CDAT tables
->>>> for single PF.  For CXL devices with multiple PF’s the same process would be
->>>> carried out on PF=1-N.    
->>> 
->>> This patch has nothing to do with CXL. This is a general discussion of
->>> how a PCIE device implements a DOE mailbox or set of mailboxes. The
->>> DOE definition is PF-only afaics from the DOE specification.
->>> 
->>> The CXL specification only says that a device can implement a CDAT per
->>> DOE capability instance, so the CXL spec does not limit the number of
->>> DOE instances to 1, but I can't think of a practical reason to support
->>> more than one.
->>> 
->>> [..]  
->>>>>>> https://cfp.osfc.io/media/osfc2020/submissions/ECQ88N/resources/An_open_source_SPDM_implementation_for_secure_devi_kmIgAQe.pdf    
->>>>>> 
->>>>>> Nice!  Looking at CMA / IDE emulation was on my todo list and that looks like
->>>>>> it might make that job a lot easier.    
->>>> 
->>>> Would it be useful to integrate the openspdm’s SpdmResponderEmu.c onto the QEMU’s CXL Type3 Device’s
->>>> DOE backend for CMA/IDE testing?  Doesn’t look hard to do.    
->>> 
->>> Yes, I do think it would be useful.  
->> 
->> Agreed.  Very useful indeed.
->> 
->> Jonathan
->> 
-> 
-> Hi Chris,
-> 
-> Just wondering if this qemu/openspdm integration was something your team have
-> had time to look at?  I'd like to ideally get a second DOE usecase
-> implemented on the Linux side to prove out the implementation.
-> 
-> If it's fallen off your near term todo list I might see if I can hack
-> something together in the meantime.
+As an example, creating a x1 region with:
+echo 1 > /sys/bus/cxl/devices/decoder1.0/create_region
 
-We have been working on this.  The plan was 
-1) implement modified version of openspdm requester running as QEMU app to pass DOE via CXL 
-    driver IOCTL’s to do DOE (DONE)
-2) enhance cxl_type3.c to call openspdm responder to implement device side SPDM (NOT DONE)
-3) enhance the Avery CXL Type 3 device SystemVerilog model to call opensldm 
-   responder to implement device side SPDM (DONE)
+Will yield /sys/bus/cxl/devices/decoder1.0/region1.0:0
 
-Currently we run 1) and 3) using our QEMU co-sim environment.
+That region may then be deleted with:
+echo region1.0:0 > /sys/bus/cxl/devices/decoder1.0/delete_region
 
-Huai-Cheng can probably finish 2) next week so we can run entirely in QEMU stand-alone environment.
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+---
+v2 keeps the region type static 
+---
+ Documentation/ABI/testing/sysfs-bus-cxl       |  21 +++
+ .../driver-api/cxl/memory-devices.rst         |  11 ++
+ drivers/cxl/Makefile                          |   3 +-
+ drivers/cxl/core.c                            |  71 ++++++++
+ drivers/cxl/cxl.h                             |  11 ++
+ drivers/cxl/region.c                          | 162 ++++++++++++++++++
+ drivers/cxl/region.h                          |  33 ++++
+ 7 files changed, 311 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/cxl/region.c
+ create mode 100644 drivers/cxl/region.h
 
+diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+index 0b6a2e6e8fbb..115a25d2899d 100644
+--- a/Documentation/ABI/testing/sysfs-bus-cxl
++++ b/Documentation/ABI/testing/sysfs-bus-cxl
+@@ -127,3 +127,24 @@ Description:
+ 		memory (type-3). The 'target_type' attribute indicates the
+ 		current setting which may dynamically change based on what
+ 		memory regions are activated in this decode hierarchy.
++
++What:		/sys/bus/cxl/devices/decoderX.Y/create_region
++Date:		June, 2021
++KernelVersion:	v5.14
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		Creates a new CXL region of N interleaved ways. Writing a value
++		of '2' will create a new uninitialized region with 2x interleave
++		that will be mapped by the CXL decoderX.Y. Reading from this
++		node will return the last created region. Regions must be
++		subsequently configured and bound to a region driver before they
++		can be used.
++
++What:		/sys/bus/cxl/devices/decoderX.Y/delete_region
++Date:		June, 2021
++KernelVersion:	v5.14
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		Deletes the named region. A region must be unbound from the
++		region driver before being deleted. The attributes expects a
++		region in the form "regionX.Y:Z".
+diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
+index 487ce4f41d77..c7f59a8c94db 100644
+--- a/Documentation/driver-api/cxl/memory-devices.rst
++++ b/Documentation/driver-api/cxl/memory-devices.rst
+@@ -39,6 +39,17 @@ CXL Core
+ .. kernel-doc:: drivers/cxl/core.c
+    :doc: cxl core
+ 
++CXL Regions
++-----------
++.. kernel-doc:: drivers/cxl/region.c
++   :doc: cxl region
++
++.. kernel-doc:: drivers/cxl/region.h
++   :identifiers:
++
++.. kernel-doc:: drivers/cxl/region.c
++   :identifiers:
++
+ External Interfaces
+ ===================
+ 
+diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+index 32954059b37b..c3151198c041 100644
+--- a/drivers/cxl/Makefile
++++ b/drivers/cxl/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_CXL_BUS) += cxl_core.o
 
-> 
-> Thanks,
-> 
-> Jonathan
+-obj-$(CONFIG_CXL_MEM) += cxl_pci.o
++obj-$(CONFIG_CXL_MEM) += cxl_pci.o cxl_region.o
+ obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+ obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
+ 
+@@ -9,3 +9,4 @@ cxl_core-y := core.o
+ cxl_pci-y := pci.o
+ cxl_acpi-y := acpi.o
+ cxl_pmem-y := pmem.o
++cxl_region-y := region.o
+diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
+index a2e4d54fc7bc..d8d7ca85e110 100644
+--- a/drivers/cxl/core.c
++++ b/drivers/cxl/core.c
+@@ -6,6 +6,7 @@
+ #include <linux/pci.h>
+ #include <linux/slab.h>
+ #include <linux/idr.h>
++#include "region.h"
+ #include "cxl.h"
+ #include "mem.h"
+ 
+@@ -120,7 +121,68 @@ static ssize_t target_list_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RO(target_list);
+ 
++static ssize_t create_region_show(struct device *dev,
++				  struct device_attribute *attr, char *buf)
++{
++	struct cxl_decoder *cxld = to_cxl_decoder(dev);
++	int rc;
++
++	device_lock(dev);
++	rc = sprintf(buf, "%s\n",
++		     cxld->youngest ? dev_name(&cxld->youngest->dev) : "");
++	device_unlock(dev);
++
++	return rc;
++}
++
++static ssize_t create_region_store(struct device *dev,
++				   struct device_attribute *attr,
++				   const char *buf, size_t len)
++{
++	struct cxl_decoder *cxld = to_cxl_decoder(dev);
++	struct cxl_region *region;
++	ssize_t rc;
++	int val;
++
++	rc = kstrtoint(buf, 0, &val);
++	if (rc)
++		return rc;
++	if (val < 0 || val > 16)
++		return -EINVAL;
++
++	region = cxl_alloc_region(cxld, val);
++	if (IS_ERR(region))
++		return PTR_ERR(region);
++
++	rc = cxl_add_region(cxld, region);
++	if (rc) {
++		cxl_free_region(cxld, region);
++		return rc;
++	}
++
++	cxld->youngest = region;
++	return len;
++}
++static DEVICE_ATTR_RW(create_region);
++
++static ssize_t delete_region_store(struct device *dev,
++				   struct device_attribute *attr,
++				   const char *buf, size_t len)
++{
++	struct cxl_decoder *cxld = to_cxl_decoder(dev);
++	int rc;
++
++	rc = cxl_delete_region(cxld, buf);
++	if (rc)
++		return rc;
++
++	return len;
++}
++static DEVICE_ATTR_WO(delete_region);
++
+ static struct attribute *cxl_decoder_base_attrs[] = {
++	&dev_attr_create_region.attr,
++	&dev_attr_delete_region.attr,
+ 	&dev_attr_start.attr,
+ 	&dev_attr_size.attr,
+ 	&dev_attr_locked.attr,
+@@ -171,7 +233,13 @@ static void cxl_decoder_release(struct device *dev)
+ {
+ 	struct cxl_decoder *cxld = to_cxl_decoder(dev);
+ 	struct cxl_port *port = to_cxl_port(dev->parent);
++	struct cxl_region *region;
+ 
++	list_for_each_entry(region, &cxld->regions, list)
++		cxl_delete_region(cxld, dev_name(&region->dev));
++
++	dev_WARN_ONCE(dev, !ida_is_empty(&cxld->region_ida),
++		      "Lost track of a region");
+ 	ida_free(&port->decoder_ida, cxld->id);
+ 	kfree(cxld);
+ }
+@@ -483,8 +551,11 @@ cxl_decoder_alloc(struct cxl_port *port, int nr_targets, resource_size_t base,
+ 		.interleave_ways = interleave_ways,
+ 		.interleave_granularity = interleave_granularity,
+ 		.target_type = type,
++		.regions = LIST_HEAD_INIT(cxld->regions),
+ 	};
+ 
++	ida_init(&cxld->region_ida);
++
+ 	/* handle implied target_list */
+ 	if (interleave_ways == 1)
+ 		cxld->target[0] =
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index b6bda39a59e3..8b27a07d7d0f 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -190,6 +190,9 @@ enum cxl_decoder_type {
+  * @interleave_granularity: data stride per dport
+  * @target_type: accelerator vs expander (type2 vs type3) selector
+  * @flags: memory type capabilities and locking
++ * @region_ida: allocator for region ids.
++ * @regions: List of regions mapped (may be disabled) by this decoder.
++ * @youngest: Last region created for this decoder.
+  * @target: active ordered target list in current decoder configuration
+  */
+ struct cxl_decoder {
+@@ -200,6 +203,9 @@ struct cxl_decoder {
+ 	int interleave_granularity;
+ 	enum cxl_decoder_type target_type;
+ 	unsigned long flags;
++	struct ida region_ida;
++	struct list_head regions;
++	struct cxl_region *youngest;
+ 	struct cxl_dport *target[];
+ };
+ 
+@@ -262,6 +268,11 @@ struct cxl_dport {
+ 	struct list_head list;
+ };
+ 
++struct cxl_region *cxl_alloc_region(struct cxl_decoder *cxld,
++				    int interleave_ways);
++void cxl_free_region(struct cxl_decoder *cxld, struct cxl_region *region);
++int cxl_add_region(struct cxl_decoder *cxld, struct cxl_region *region);
++int cxl_delete_region(struct cxl_decoder *cxld, const char *region);
+ struct cxl_port *to_cxl_port(struct device *dev);
+ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
+ 				   resource_size_t component_reg_phys,
+diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
+new file mode 100644
+index 000000000000..7475dc6ba84b
+--- /dev/null
++++ b/drivers/cxl/region.c
+@@ -0,0 +1,162 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright(c) 2021 Intel Corporation. All rights reserved. */
++#include <linux/io-64-nonatomic-lo-hi.h>
++#include <linux/device.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/idr.h>
++#include "region.h"
++#include "cxl.h"
++#include "mem.h"
++
++/**
++ * DOC: cxl region
++ *
++ * A CXL region encompasses a chunk of host physical address space that may be
++ * consumed by a single device (x1 interleave aka linear) or across multiple
++ * devices (xN interleaved). A region is a child device of a &struct
++ * cxl_decoder. There may be multiple active regions under a single &struct
++ * cxl_decoder. The common case for multiple regions would be several linear,
++ * contiguous regions under a single decoder. Generally, there will be a 1:1
++ * relationship between decoder and region when the region is interleaved.
++ */
++
++static void cxl_region_release(struct device *dev);
++
++static const struct device_type cxl_region_type = {
++	.name = "cxl_region",
++	.release = cxl_region_release,
++};
++
++bool is_cxl_region(struct device *dev)
++{
++	return dev->type == &cxl_region_type;
++}
++
++static struct cxl_region *to_cxl_region(struct device *dev)
++{
++	if (dev_WARN_ONCE(dev, dev->type != &cxl_region_type,
++			  "not a cxl_region device\n"))
++		return NULL;
++
++	return container_of(dev, struct cxl_region, dev);
++}
++
++
++void cxl_free_region(struct cxl_decoder *cxld, struct cxl_region *region)
++{
++	ida_free(&cxld->region_ida, region->id);
++	kfree(region);
++}
++
++static void cxl_region_release(struct device *dev)
++{
++	struct cxl_decoder *cxld = to_cxl_decoder(dev->parent);
++	struct cxl_region *region = to_cxl_region(dev);
++
++	cxl_free_region(cxld, region);
++}
++
++struct cxl_region *cxl_alloc_region(struct cxl_decoder *cxld,
++				    int interleave_ways)
++{
++	struct cxl_region *region;
++	int rc;
++
++	region = kzalloc(struct_size(region, targets, interleave_ways),
++			 GFP_KERNEL);
++	if (!region)
++		return ERR_PTR(-ENOMEM);
++
++	region->eniw = interleave_ways;
++
++	rc = ida_alloc(&cxld->region_ida, GFP_KERNEL);
++	if (rc < 0) {
++		dev_err(&cxld->dev, "Couldn't get a new id\n");
++		kfree(region);
++		return ERR_PTR(rc);
++	}
++	region->id = rc;
++
++	return region;
++}
++
++/**
++ * cxl_add_region - Adds a region to a decoder
++ * @cxld: Parent decoder.
++ * @region: Region to be added to the decoder.
++ *
++ * This is the second step of region initialization. Regions exist within an
++ * address space which is mapped by a @cxld, and that @cxld enforces constraints
++ * upon the region as it is configured. Regions may be added to a @cxld but not
++ * activated and therefore it is possible to have more regions in a @cxld than
++ * there are interleave ways in the @cxld. Regions exist only for persistent
++ * capacities.
++ *
++ * Return: zero if the region was added to the @cxld, else returns negative
++ * error code.
++ */
++int cxl_add_region(struct cxl_decoder *cxld, struct cxl_region *region)
++{
++	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
++	struct device *dev = &region->dev;
++	int rc;
++
++	device_initialize(dev);
++	dev->parent = &cxld->dev;
++	device_set_pm_not_required(dev);
++	dev->bus = &cxl_bus_type;
++	dev->type = &cxl_region_type;
++	rc = dev_set_name(dev, "region%d.%d:%d", port->id, cxld->id, region->id);
++	if (rc)
++		goto err;
++
++	rc = device_add(dev);
++	if (rc)
++		goto err;
++
++	dev_dbg(dev, "Added %s to %s\n", dev_name(dev), dev_name(&cxld->dev));
++
++	return 0;
++
++err:
++	put_device(dev);
++	return rc;
++}
++
++static struct cxl_region *
++cxl_find_region_by_name(struct cxl_decoder *cxld, const char *name)
++{
++	struct device *region_dev;
++
++	region_dev = device_find_child_by_name(&cxld->dev, name);
++	if (!region_dev)
++		return ERR_PTR(-ENOENT);
++
++	return to_cxl_region(region_dev);
++}
++
++int cxl_delete_region(struct cxl_decoder *cxld, const char *region_name)
++{
++	struct cxl_region *region;
++
++	device_lock(&cxld->dev);
++
++	region = cxl_find_region_by_name(cxld, region_name);
++	if (IS_ERR(region)) {
++		device_unlock(&cxld->dev);
++		return PTR_ERR(region);
++	}
++
++	dev_dbg(&cxld->dev, "Requested removal of %s from %s\n",
++		dev_name(&region->dev), dev_name(&cxld->dev));
++
++	cmpxchg(&cxld->youngest, region, NULL);
++
++	device_unregister(&region->dev);
++	device_unlock(&cxld->dev);
++
++	put_device(&region->dev);
++
++	return 0;
++}
+diff --git a/drivers/cxl/region.h b/drivers/cxl/region.h
+new file mode 100644
+index 000000000000..f2c37a6f1192
+--- /dev/null
++++ b/drivers/cxl/region.h
+@@ -0,0 +1,33 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/* Copyright(c) 2021 Intel Corporation. */
++#ifndef __CXL_REGION_H__
++#define __CXL_REGION_H__
++
++#include <linux/uuid.h>
++
++/**
++ * struct cxl_region - CXL region
++ * @dev: This region's device.
++ * @id: This regions id. Id is globally unique across all regions.
++ * @res: Address space consumed by this region.
++ * @requested_size: Size of the region determined from LSA or userspace.
++ * @uuid: The UUID for this region.
++ * @list: Node in decoders region list.
++ * @eniw: Number of interleave ways this region is configured for.
++ * @targets: The memory devices comprising the region.
++ */
++struct cxl_region {
++	struct device dev;
++	int id;
++	struct resource *res;
++	u64 requested_size;
++	uuid_t uuid;
++	struct list_head list;
++	int eniw;
++	struct cxl_memdev *targets[];
++};
++
++bool is_cxl_region(struct device *dev);
++bool cxl_is_region_configured(struct cxl_region *region);
++
++#endif
+-- 
+2.32.0
 
