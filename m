@@ -4,230 +4,244 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,USER_AGENT_GIT autolearn=ham
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9A0C49EA2
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Jun 2021 22:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D076C2B9F4
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Jun 2021 23:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4361661375
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Jun 2021 22:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E333F61059
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Jun 2021 23:16:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232031AbhFQWSx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Jun 2021 18:18:53 -0400
-Received: from mga06.intel.com ([134.134.136.31]:58453 "EHLO mga06.intel.com"
+        id S232881AbhFQXSs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Jun 2021 19:18:48 -0400
+Received: from mga11.intel.com ([192.55.52.93]:24399 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232003AbhFQWSw (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 17 Jun 2021 18:18:52 -0400
-IronPort-SDR: qL815tCm2nfhETa8fqzaW4ju+5rDxUTm6wPz+lX/HSRmg7clVmKBfc/zc9/ksnC/vxMWW4mKEj
- 2hQtpCQeAbXw==
-X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="267604722"
+        id S231523AbhFQXSr (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 17 Jun 2021 19:18:47 -0400
+IronPort-SDR: aBKI0uMnj1LxLGXGVIotNci4D6SSY39WEOYtM2hplM/heVAiDnsCk35jAX1MOQAYEIyO0Hc6v1
+ dwHkSCR0FVZQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="203441868"
 X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
-   d="scan'208";a="267604722"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 15:16:44 -0700
-IronPort-SDR: LTGN9zfJVpCmplTAr1mwR+dGo22jerWaDqzMwQVdoZU5vQQGZKE+PnlYMWjHZeEOiuclLuYGyo
- pGoFxjgRYIyQ==
+   d="scan'208";a="203441868"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 16:16:39 -0700
+IronPort-SDR: Xn+BEA2PzMy5NcJ8Stv5UKk1zppmcxm4C0NIbEiaI9jX2CbXH5vVeTyWPtaeBAju3CYY8axUbe
+ tt55nrBG7eMA==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
-   d="scan'208";a="479609139"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 15:16:44 -0700
-From:   ira.weiny@intel.com
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
+   d="scan'208";a="488832475"
+Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.53])
+  by fmsmga002.fm.intel.com with ESMTP; 17 Jun 2021 16:16:38 -0700
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-cxl@vger.kernel.org
-Subject: [PATCH V2 2/3] cxl/mem: Account for partitionable space in ram/pmem ranges
-Date:   Thu, 17 Jun 2021 15:16:19 -0700
-Message-Id: <20210617221620.1904031-3-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.28.0.rc0.12.gb6a658bd00c9
-In-Reply-To: <20210617221620.1904031-1-ira.weiny@intel.com>
-References: <20210617221620.1904031-1-ira.weiny@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH v5 1/2] cxl/acpi: Add the Host Bridge base address to CXL port objects
+Date:   Thu, 17 Jun 2021 16:12:15 -0700
+Message-Id: <a475ce137b899bc7ae5ba9550b5f198cb29ccbfd.1623968958.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1623968958.git.alison.schofield@intel.com>
+References: <cover.1623968958.git.alison.schofield@intel.com>
+In-Reply-To: <cover.1623968958.git.alison.schofield@intel.com>
+References: <cover.1623968958.git.alison.schofield@intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+The base address for the Host Bridge port component registers is located
+in the CXL Host Bridge Structure (CHBS) of the ACPI CXL Early Discovery
+Table (CEDT). Retrieve the CHBS for each Host Bridge (ACPI0016 device)
+and include that base address in the port object.
 
-Memory devices may specify volatile only, persistent only, and
-partitionable space which when added together result in a total capacity.
-
-If Identify Memory Device.Partition Alignment != 0 the device supports
-partitionable space.  This partitionable space can be split between
-volatile and persistent space.  The total volatile and persistent sizes
-are reported in Get Partition Info.  ie
-
-	active volatile memory = volatile only + partitionable volatile
-	active persistent memory = persistent only + partitionable persistent
-
-Define cxl_mem_get_partition(), check for partitionable support, and use
-cxl_mem_get_partition() if applicable.
-
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
+Co-developed-by: Vishal Verma <vishal.l.verma@intel.com>
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
-Changes for V2:
-	Jonathan
-		Account for Get Partition Info being optional
-		Fix documentation
-	Dan
-		Store the active capacities in struct cxl_mem
-		Make cxl_mem_get_partition() static until there is a
-		need to export it.
----
- drivers/cxl/mem.h |  5 +++
- drivers/cxl/pci.c | 98 ++++++++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 98 insertions(+), 5 deletions(-)
+ drivers/cxl/acpi.c | 100 ++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 95 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/cxl/mem.h b/drivers/cxl/mem.h
-index 9dc34418db36..8d7bd966a298 100644
---- a/drivers/cxl/mem.h
-+++ b/drivers/cxl/mem.h
-@@ -79,5 +79,10 @@ struct cxl_mem {
- 	u64 volatile_only_bytes;
- 	u64 persistent_only_bytes;
- 	u64 partition_align_bytes;
-+
-+	u64 active_volatile_bytes;
-+	u64 active_persistent_bytes;
-+	u64 next_volatile_bytes;
-+	u64 next_persistent_bytes;
- };
- #endif /* __CXL_MEM_H__ */
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 94b7ee08ef67..341885345b53 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -1455,6 +1455,55 @@ static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_mem *cxlm)
- 	return ret;
- }
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index 8a723f7f3f73..3afdee8f334a 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -8,6 +8,60 @@
+ #include <linux/pci.h>
+ #include "cxl.h"
  
-+/**
-+ * cxl_mem_get_partition_info - Get partition info
-+ * @cxlm: The device to act on
-+ * @active_volatile_bytes: returned active volatile capacity; in bytes
-+ * @active_persistent_bytes: returned active persistent capacity; in bytes
-+ * @next_volatile_bytes: return next volatile capacity; in bytes
-+ * @next_persistent_bytes: return next persistent capacity; in bytes
-+ *
-+ * Retrieve the current partition info for the device specified.  The active
-+ * values are the current capacity in bytes.  If not 0, the 'next' values are
-+ * the pending values, in bytes, which take affect on next cold reset.
-+ *
-+ * Return: 0 if no error: or the result of the mailbox command.
-+ *
-+ * See CXL @8.2.9.5.2.1 Get Partition Info
-+ */
-+static int cxl_mem_get_partition_info(struct cxl_mem *cxlm,
-+				      u64 *active_volatile_bytes,
-+				      u64 *active_persistent_bytes,
-+				      u64 *next_volatile_bytes,
-+				      u64 *next_persistent_bytes)
++static struct acpi_table_header *acpi_cedt;
++
++static struct acpi_cedt_chbs *cxl_acpi_match_chbs(struct device *dev, u32 uid)
 +{
-+	struct cxl_mbox_get_partition_info {
-+		u64 active_volatile_cap;
-+		u64 active_persistent_cap;
-+		u64 next_volatile_cap;
-+		u64 next_persistent_cap;
-+	} __packed pi;
-+	int rc;
++	struct acpi_cedt_chbs *chbs, *chbs_match = NULL;
++	acpi_size len, cur = 0;
++	void *cedt_subtable;
 +
-+	rc = cxl_mem_mbox_send_cmd(cxlm, CXL_MBOX_OP_GET_PARTITION_INFO,
-+				   NULL, 0, &pi, sizeof(pi));
++	len = acpi_cedt->length - sizeof(*acpi_cedt);
++	cedt_subtable = acpi_cedt + 1;
 +
-+	if (rc)
-+		return rc;
++	while (cur < len) {
++		struct acpi_cedt_header *c = cedt_subtable + cur;
 +
-+	*active_volatile_bytes = le64_to_cpu(pi.active_volatile_cap);
-+	*active_persistent_bytes = le64_to_cpu(pi.active_persistent_cap);
-+	*next_volatile_bytes = le64_to_cpu(pi.next_volatile_cap);
-+	*next_persistent_bytes = le64_to_cpu(pi.next_volatile_cap);
++		if (c->type != ACPI_CEDT_TYPE_CHBS) {
++			cur += c->length;
++			continue;
++		}
 +
-+	*active_volatile_bytes *= CXL_CAPACITY_MULTIPLIER;
-+	*active_persistent_bytes *= CXL_CAPACITY_MULTIPLIER;
-+	*next_volatile_bytes *= CXL_CAPACITY_MULTIPLIER;
-+	*next_persistent_bytes *= CXL_CAPACITY_MULTIPLIER;
++		chbs = cedt_subtable + cur;
 +
-+	return 0;
-+}
++		if (chbs->header.length < sizeof(*chbs)) {
++			dev_warn_once(dev,
++				      "CHBS entry skipped: invalid length:%u\n",
++				      chbs->header.length);
++			cur += c->length;
++			continue;
++		}
 +
- /**
-  * cxl_mem_enumerate_cmds() - Enumerate commands for a device.
-  * @cxlm: The device.
-@@ -1573,18 +1622,53 @@ static int cxl_mem_identify(struct cxl_mem *cxlm)
- 			cxlm->persistent_only_bytes,
- 			cxlm->partition_align_bytes);
- 
-+	cxlm->lsa_size = le32_to_cpu(id.lsa_size);
-+	memcpy(cxlm->firmware_version, id.fw_revision, sizeof(id.fw_revision));
++		if (chbs->uid != uid) {
++			cur += c->length;
++			continue;
++		}
 +
-+	return 0;
-+}
++		if (chbs_match) {
++			dev_warn_once(dev,
++				      "CHBS entry skipped: duplicate UID:%u\n",
++				      uid);
++			cur += c->length;
++			continue;
++		}
 +
-+static int cxl_mem_create_range_info(struct cxl_mem *cxlm)
-+{
-+	int rc;
-+
-+	if (cxlm->partition_align_bytes == 0) {
-+		cxlm->ram_range.start = 0;
-+		cxlm->ram_range.end = cxlm->volatile_only_bytes - 1;
-+		cxlm->pmem_range.start = 0;
-+		cxlm->pmem_range.end = cxlm->persistent_only_bytes - 1;
-+		return 0;
++		chbs_match = chbs;
++		cur += c->length;
 +	}
 +
-+	rc = cxl_mem_get_partition_info(cxlm,
-+					&cxlm->active_volatile_bytes,
-+					&cxlm->active_persistent_bytes,
-+					&cxlm->next_volatile_bytes,
-+					&cxlm->next_persistent_bytes);
-+	if (rc < 0) {
-+		dev_err(&cxlm->pdev->dev, "Failed to query partition information\n");
-+		return rc;
-+	}
++	return chbs_match ? chbs_match : ERR_PTR(-ENODEV);
++}
 +
-+	dev_dbg(&cxlm->pdev->dev, "Get Partition Info\n"
-+		"     active_volatile_bytes = %#llx\n"
-+		"     active_persistent_bytes = %#llx\n"
-+		"     next_volatile_bytes = %#llx\n"
-+		"     next_persistent_bytes = %#llx\n",
-+			cxlm->active_volatile_bytes,
-+			cxlm->active_persistent_bytes,
-+			cxlm->next_volatile_bytes,
-+			cxlm->next_persistent_bytes);
++static resource_size_t get_chbcr(struct acpi_cedt_chbs *chbs)
++{
++	return IS_ERR(chbs) ? CXL_RESOURCE_NONE : chbs->base;
++}
 +
- 	/*
- 	 * TODO: enumerate DPA map, as 'ram' and 'pmem' do not alias.
- 	 * For now, only the capacity is exported in sysfs
- 	 */
- 	cxlm->ram_range.start = 0;
--	cxlm->ram_range.end = cxlm->volatile_only_bytes - 1;
-+	cxlm->ram_range.end = cxlm->active_volatile_bytes - 1;
- 
- 	cxlm->pmem_range.start = 0;
--	cxlm->pmem_range.end = cxlm->persistent_only_bytes - 1;
--
--	cxlm->lsa_size = le32_to_cpu(id.lsa_size);
--	memcpy(cxlm->firmware_version, id.fw_revision, sizeof(id.fw_revision));
-+	cxlm->pmem_range.end = cxlm->active_persistent_bytes - 1;
- 
+ struct cxl_walk_context {
+ 	struct device *dev;
+ 	struct pci_bus *root;
+@@ -50,6 +104,21 @@ static int match_add_root_ports(struct pci_dev *pdev, void *data)
  	return 0;
  }
-@@ -1618,6 +1702,10 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
  
-+	rc = cxl_mem_create_range_info(cxlm);
-+	if (rc)
-+		return rc;
++static struct cxl_dport *find_dport_by_dev(struct cxl_port *port, struct device *dev)
++{
++	struct cxl_dport *dport;
 +
- 	return cxl_mem_add_memdev(cxlm);
- }
++	device_lock(&port->dev);
++	list_for_each_entry(dport, &port->dports, list)
++		if (dport->dport == dev) {
++			device_unlock(&port->dev);
++			return dport;
++		}
++
++	device_unlock(&port->dev);
++	return NULL;
++}
++
+ static struct acpi_device *to_cxl_host_bridge(struct device *dev)
+ {
+ 	struct acpi_device *adev = to_acpi_device(dev);
+@@ -71,6 +140,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+ 	struct acpi_pci_root *pci_root;
+ 	struct cxl_walk_context ctx;
+ 	struct cxl_decoder *cxld;
++	struct cxl_dport *dport;
+ 	struct cxl_port *port;
  
+ 	if (!bridge)
+@@ -80,8 +150,14 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+ 	if (!pci_root)
+ 		return -ENXIO;
+ 
+-	/* TODO: fold in CEDT.CHBS retrieval */
+-	port = devm_cxl_add_port(host, match, CXL_RESOURCE_NONE, root_port);
++	dport = find_dport_by_dev(root_port, match);
++	if (!dport) {
++		dev_dbg(host, "host bridge expected and not found\n");
++		return -ENODEV;
++	}
++
++	port = devm_cxl_add_port(host, match, dport->component_reg_phys,
++				 root_port);
+ 	if (IS_ERR(port))
+ 		return PTR_ERR(port);
+ 	dev_dbg(host, "%s: add: %s\n", dev_name(match), dev_name(&port->dev));
+@@ -120,6 +196,7 @@ static int add_host_bridge_dport(struct device *match, void *arg)
+ 	int rc;
+ 	acpi_status status;
+ 	unsigned long long uid;
++	struct acpi_cedt_chbs *chbs;
+ 	struct cxl_port *root_port = arg;
+ 	struct device *host = root_port->dev.parent;
+ 	struct acpi_device *bridge = to_cxl_host_bridge(match);
+@@ -135,7 +212,12 @@ static int add_host_bridge_dport(struct device *match, void *arg)
+ 		return -ENODEV;
+ 	}
+ 
+-	rc = cxl_add_dport(root_port, match, uid, CXL_RESOURCE_NONE);
++	chbs = cxl_acpi_match_chbs(host, uid);
++	if (IS_ERR(chbs))
++		dev_dbg(host, "No CHBS found for Host Bridge: %s\n",
++			dev_name(match));
++
++	rc = cxl_add_dport(root_port, match, uid, get_chbcr(chbs));
+ 	if (rc) {
+ 		dev_err(host, "failed to add downstream port: %s\n",
+ 			dev_name(match));
+@@ -172,6 +254,7 @@ static int add_root_nvdimm_bridge(struct device *match, void *data)
+ static int cxl_acpi_probe(struct platform_device *pdev)
+ {
+ 	int rc;
++	acpi_status status;
+ 	struct cxl_port *root_port;
+ 	struct device *host = &pdev->dev;
+ 	struct acpi_device *adev = ACPI_COMPANION(host);
+@@ -181,10 +264,14 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+ 		return PTR_ERR(root_port);
+ 	dev_dbg(host, "add: %s\n", dev_name(&root_port->dev));
+ 
++	status = acpi_get_table(ACPI_SIG_CEDT, 0, &acpi_cedt);
++	if (ACPI_FAILURE(status))
++		return -ENXIO;
++
+ 	rc = bus_for_each_dev(adev->dev.bus, NULL, root_port,
+ 			      add_host_bridge_dport);
+ 	if (rc)
+-		return rc;
++		goto out;
+ 
+ 	/*
+ 	 * Root level scanned with host-bridge as dports, now scan host-bridges
+@@ -193,11 +280,14 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+ 	rc = bus_for_each_dev(adev->dev.bus, NULL, root_port,
+ 			      add_host_bridge_uport);
+ 	if (rc)
+-		return rc;
++		goto out;
+ 
+ 	if (IS_ENABLED(CONFIG_CXL_PMEM))
+ 		rc = device_for_each_child(&root_port->dev, root_port,
+ 					   add_root_nvdimm_bridge);
++
++out:
++	acpi_put_table(acpi_cedt);
+ 	if (rc < 0)
+ 		return rc;
+ 	return 0;
 -- 
-2.28.0.rc0.12.gb6a658bd00c9
+2.26.2
 
