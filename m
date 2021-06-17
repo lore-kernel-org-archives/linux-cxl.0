@@ -2,117 +2,244 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A65A2C2B9F4
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Jun 2021 17:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E05C2B9F4
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Jun 2021 18:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC59613CA
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Jun 2021 17:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 489E0613AA
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Jun 2021 18:26:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231502AbhFQRku (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Jun 2021 13:40:50 -0400
-Received: from mga18.intel.com ([134.134.136.126]:2462 "EHLO mga18.intel.com"
+        id S233076AbhFQS2q (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Jun 2021 14:28:46 -0400
+Received: from mga03.intel.com ([134.134.136.65]:54628 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232604AbhFQRjM (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 17 Jun 2021 13:39:12 -0400
-IronPort-SDR: /pa9FfS6Kdd2yb+IhOQSNFBTwNyDLIi0UOFE6vz+gK72scLRQcgaHzMxcQ/g2qPU8zonPOIRfe
- pxSsOHsRSn/Q==
-X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="193732187"
+        id S232184AbhFQS2N (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 17 Jun 2021 14:28:13 -0400
+IronPort-SDR: 857oeECqapaDIDe1BVmWt+3cvf4OO84jkl802HaKpPsLzVVNcnsbJCTyWWt3RMaARp/WnzxTil
+ ZoAab6PjNwPQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="206465036"
 X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
-   d="scan'208";a="193732187"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 10:37:03 -0700
-IronPort-SDR: SL7X9UZMXA/S5FJv/Oj0931ZnO7p2yz5xchYrj15vbKng0UP89hTCPfer5UGUl0fg4bqJF1vOq
- gBB4hicCS/TA==
+   d="scan'208";a="206465036"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 11:25:59 -0700
+IronPort-SDR: fi0r6L2RTlNatMzHASyCwqad/HxLJKCUzCP71SWys0JYsaS6qSbMXc6GwJhrNLzIBXXQMJcNEw
+ SkJcFvst1AZQ==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
-   d="scan'208";a="421944096"
-Received: from mkalyani-mobl.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.138.30])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 10:37:03 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
+   d="scan'208";a="555282555"
+Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.53])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Jun 2021 11:25:58 -0700
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH 0/6] Region creation
-Date:   Thu, 17 Jun 2021 10:36:49 -0700
-Message-Id: <20210617173655.430424-1-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.32.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH v4 1/2] cxl/acpi: Add the Host Bridge base address to CXL port objects
+Date:   Thu, 17 Jun 2021 11:21:37 -0700
+Message-Id: <e8e7dfaffb230d72aaeb951dfab418292de038c2.1623950781.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1623950781.git.alison.schofield@intel.com>
+References: <cover.1623950781.git.alison.schofield@intel.com>
+In-Reply-To: <cover.1623950781.git.alison.schofield@intel.com>
+References: <cover.1623950781.git.alison.schofield@intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-CXL interleave sets and non-interleave sets are described via regions. A region
-is specified in the CXL 2.0 specification and the purpose is to create a
-standardized way to preserve the region across reboots.
+The base address for the Host Bridge port component registers is located
+in the CXL Host Bridge Structure (CHBS) of the ACPI CXL Early Discovery
+Table (CEDT). Retrieve the CHBS for each Host Bridge (ACPI0016 device)
+and include that base address in the port object.
 
-Introduced here is the basic mechanism to create configure and delete a CXL
-region. Configuring a region simply means giving it a size, UUID, and a target
-list. Enabling/activating a region is comprised of three parts:
-1. Validate and find space for the region in the CFMWS (included here)
-2. Program the HDM decoders (WIP)
-3. Adding the region label to the LSA (Dan WIP)
+Co-developed-by: Vishal Verma <vishal.l.verma@intel.com>
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Ben Widawsky <ben.widawsky@intel.com>
+---
+ drivers/cxl/acpi.c | 98 +++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 93 insertions(+), 5 deletions(-)
 
-Here is a sample topology
-
-    decoder1.0
-    ├── create_region
-    ├── delete_region
-    ├── devtype
-    ├── locked
-    ├── region1.0:0
-    │   ├── offset
-    │   ├── size
-    │   ├── subsystem -> ../../../../../../../bus/cxl
-    │   ├── target0
-    │   ├── uevent
-    │   ├── uuid
-    │   └── verify
-    ├── size
-    ├── start
-    ├── subsystem -> ../../../../../../bus/cxl
-    ├── target_list
-    ├── target_type
-    └── uevent
-
-Next Steps.
-Next task is to create a CXL memory driver which will enumerate CXL capable
-endpoints. A CXL capable endpoint is similar to the existing cxl_mem structure
-except that it's known that there exists a path from a hostbridge down to the
-endpoint that is CXL.mem capable. Once that path is established, the HDM decoder
-programming can be determined from top of the hierarchy down.
-
-Ben Widawsky (6):
-  cxl/region: Add region creation ABI
-  cxl: Move cxl_memdev conversion helper to mem.h
-  cxl/region: Introduce concept of region configuration
-  cxl/region: Introduce a cxl_region driver
-  cxl/core: Convert decoder range to resource
-  cxl/region: Handle region's address space allocation
-
- Documentation/ABI/testing/sysfs-bus-cxl       |  53 ++
- .../driver-api/cxl/memory-devices.rst         |  11 +
- drivers/cxl/Makefile                          |   5 +-
- drivers/cxl/core.c                            | 108 +++-
- drivers/cxl/cxl.h                             |  18 +-
- drivers/cxl/mem.h                             |   6 +
- drivers/cxl/pci.c                             |   5 -
- drivers/cxl/region.c                          | 492 ++++++++++++++++++
- drivers/cxl/region.h                          |  45 ++
- drivers/cxl/trace.h                           |  33 ++
- 10 files changed, 760 insertions(+), 16 deletions(-)
- create mode 100644 drivers/cxl/region.c
- create mode 100644 drivers/cxl/region.h
- create mode 100644 drivers/cxl/trace.h
-
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index 8a723f7f3f73..852b5c270464 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -8,6 +8,58 @@
+ #include <linux/pci.h>
+ #include "cxl.h"
+ 
++static struct acpi_table_header *acpi_cedt;
++
++static struct acpi_cedt_chbs *cxl_acpi_match_chbs(struct device *dev, u32 uid)
++{
++	struct acpi_cedt_chbs *chbs, *chbs_match = NULL;
++	acpi_size len, cur = 0;
++	void *cedt_subtable;
++
++	len = acpi_cedt->length - sizeof(*acpi_cedt);
++	cedt_subtable = acpi_cedt + 1;
++
++	while (cur < len) {
++		struct acpi_cedt_header *c = cedt_subtable + cur;
++
++		if (c->type != ACPI_CEDT_TYPE_CHBS) {
++			cur += c->length;
++			continue;
++		}
++
++		chbs = cedt_subtable + cur;
++
++		if (dev_WARN_ONCE(dev, chbs->header.length < sizeof(*chbs),
++				  "CHBS entry skipped: invalid length:%u\n",
++				  chbs->header.length)) {
++			cur += c->length;
++			continue;
++		}
++
++		if (chbs->uid != uid) {
++			cur += c->length;
++			continue;
++		}
++
++		if (dev_WARN_ONCE(dev, chbs_match,
++				  "CHBS entry skipped: duplicate UID:%u\n",
++				  uid)) {
++			cur += c->length;
++			continue;
++		}
++
++		chbs_match = chbs;
++		cur += c->length;
++	}
++
++	return chbs_match ? chbs_match : ERR_PTR(-ENODEV);
++}
++
++static resource_size_t get_chbcr(struct acpi_cedt_chbs *chbs)
++{
++	return IS_ERR(chbs) ? CXL_RESOURCE_NONE : chbs->base;
++}
++
+ struct cxl_walk_context {
+ 	struct device *dev;
+ 	struct pci_bus *root;
+@@ -50,6 +102,21 @@ static int match_add_root_ports(struct pci_dev *pdev, void *data)
+ 	return 0;
+ }
+ 
++static struct cxl_dport *find_dport_by_dev(struct cxl_port *port, struct device *dev)
++{
++	struct cxl_dport *dport;
++
++	device_lock(&port->dev);
++	list_for_each_entry(dport, &port->dports, list)
++		if (dport->dport == dev) {
++			device_unlock(&port->dev);
++			return dport;
++		}
++
++	device_unlock(&port->dev);
++	return NULL;
++}
++
+ static struct acpi_device *to_cxl_host_bridge(struct device *dev)
+ {
+ 	struct acpi_device *adev = to_acpi_device(dev);
+@@ -71,6 +138,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+ 	struct acpi_pci_root *pci_root;
+ 	struct cxl_walk_context ctx;
+ 	struct cxl_decoder *cxld;
++	struct cxl_dport *dport;
+ 	struct cxl_port *port;
+ 
+ 	if (!bridge)
+@@ -80,8 +148,14 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+ 	if (!pci_root)
+ 		return -ENXIO;
+ 
+-	/* TODO: fold in CEDT.CHBS retrieval */
+-	port = devm_cxl_add_port(host, match, CXL_RESOURCE_NONE, root_port);
++	dport = find_dport_by_dev(root_port, match);
++	if (!dport) {
++		dev_dbg(host, "host bridge expected and not found\n");
++		return -ENODEV;
++	}
++
++	port = devm_cxl_add_port(host, match, dport->component_reg_phys,
++				 root_port);
+ 	if (IS_ERR(port))
+ 		return PTR_ERR(port);
+ 	dev_dbg(host, "%s: add: %s\n", dev_name(match), dev_name(&port->dev));
+@@ -120,6 +194,7 @@ static int add_host_bridge_dport(struct device *match, void *arg)
+ 	int rc;
+ 	acpi_status status;
+ 	unsigned long long uid;
++	struct acpi_cedt_chbs *chbs;
+ 	struct cxl_port *root_port = arg;
+ 	struct device *host = root_port->dev.parent;
+ 	struct acpi_device *bridge = to_cxl_host_bridge(match);
+@@ -135,7 +210,12 @@ static int add_host_bridge_dport(struct device *match, void *arg)
+ 		return -ENODEV;
+ 	}
+ 
+-	rc = cxl_add_dport(root_port, match, uid, CXL_RESOURCE_NONE);
++	chbs = cxl_acpi_match_chbs(host, uid);
++	if (IS_ERR(chbs))
++		dev_dbg(host, "No CHBS found for Host Bridge: %s\n",
++			dev_name(match));
++
++	rc = cxl_add_dport(root_port, match, uid, get_chbcr(chbs));
+ 	if (rc) {
+ 		dev_err(host, "failed to add downstream port: %s\n",
+ 			dev_name(match));
+@@ -172,6 +252,7 @@ static int add_root_nvdimm_bridge(struct device *match, void *data)
+ static int cxl_acpi_probe(struct platform_device *pdev)
+ {
+ 	int rc;
++	acpi_status status;
+ 	struct cxl_port *root_port;
+ 	struct device *host = &pdev->dev;
+ 	struct acpi_device *adev = ACPI_COMPANION(host);
+@@ -181,10 +262,14 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+ 		return PTR_ERR(root_port);
+ 	dev_dbg(host, "add: %s\n", dev_name(&root_port->dev));
+ 
++	status = acpi_get_table(ACPI_SIG_CEDT, 0, &acpi_cedt);
++	if (ACPI_FAILURE(status))
++		return -ENXIO;
++
+ 	rc = bus_for_each_dev(adev->dev.bus, NULL, root_port,
+ 			      add_host_bridge_dport);
+ 	if (rc)
+-		return rc;
++		goto out;
+ 
+ 	/*
+ 	 * Root level scanned with host-bridge as dports, now scan host-bridges
+@@ -193,11 +278,14 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+ 	rc = bus_for_each_dev(adev->dev.bus, NULL, root_port,
+ 			      add_host_bridge_uport);
+ 	if (rc)
+-		return rc;
++		goto out;
+ 
+ 	if (IS_ENABLED(CONFIG_CXL_PMEM))
+ 		rc = device_for_each_child(&root_port->dev, root_port,
+ 					   add_root_nvdimm_bridge);
++
++out:
++	acpi_put_table(acpi_cedt);
+ 	if (rc < 0)
+ 		return rc;
+ 	return 0;
 -- 
-2.32.0
+2.26.2
 
