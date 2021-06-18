@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDC2C49361
-	for <linux-cxl@archiver.kernel.org>; Fri, 18 Jun 2021 11:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E69DC48BDF
+	for <linux-cxl@archiver.kernel.org>; Fri, 18 Jun 2021 13:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C976613F7
-	for <linux-cxl@archiver.kernel.org>; Fri, 18 Jun 2021 11:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11F3561261
+	for <linux-cxl@archiver.kernel.org>; Fri, 18 Jun 2021 13:35:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234200AbhFRLyg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 18 Jun 2021 07:54:36 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3278 "EHLO
+        id S233273AbhFRNhc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 18 Jun 2021 09:37:32 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3279 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231849AbhFRLyf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Jun 2021 07:54:35 -0400
-Received: from fraeml709-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4G5xth6xFDz6G7d3;
-        Fri, 18 Jun 2021 19:45:16 +0800 (CST)
+        with ESMTP id S232253AbhFRNha (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Jun 2021 09:37:30 -0400
+Received: from fraeml703-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4G609Q4bW1z6H6j1;
+        Fri, 18 Jun 2021 21:28:10 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Fri, 18 Jun 2021 13:52:25 +0200
+ fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Fri, 18 Jun 2021 15:35:18 +0200
 Received: from localhost (10.52.125.28) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Fri, 18 Jun
- 2021 12:52:24 +0100
-Date:   Fri, 18 Jun 2021 12:52:15 +0100
+ 2021 14:35:18 +0100
+Date:   Fri, 18 Jun 2021 14:35:08 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Ben Widawsky <ben.widawsky@intel.com>
 CC:     <linux-cxl@vger.kernel.org>,
@@ -38,11 +38,12 @@ CC:     <linux-cxl@vger.kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         "Ira Weiny" <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 5/6] cxl/core: Convert decoder range to resource
-Message-ID: <20210618125215.00000cd9@Huawei.com>
-In-Reply-To: <20210617173655.430424-6-ben.widawsky@intel.com>
+Subject: Re: [PATCH 6/6] cxl/region: Handle region's address space
+ allocation
+Message-ID: <20210618143508.000036f0@Huawei.com>
+In-Reply-To: <20210617173655.430424-7-ben.widawsky@intel.com>
 References: <20210617173655.430424-1-ben.widawsky@intel.com>
-        <20210617173655.430424-6-ben.widawsky@intel.com>
+        <20210617173655.430424-7-ben.widawsky@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -56,91 +57,150 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 17 Jun 2021 10:36:54 -0700
+On Thu, 17 Jun 2021 10:36:55 -0700
 Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-> Regions will use the resource API in order to help manage allocated
-> space. As regions are children of the decoder, it makes sense that the
-> parent host the main resource to be suballocated by the region.
+> Regions are carved out of an addresses space which is claimed by top
+> level decoders, and subsequently their children decoders. Regions are
+> created with a size and therefore must fit, with proper alignment, in
+> that address space. The support for doing this fitting is handled by the
+> driver automatically.
+> 
+> As an example, a platform might configure a top level decoder to claim
+> 1TB of address space @ 0x800000000 -> 0x10800000000; it would be
+> possible to create M regions with appropriate alignment to occupy that
+> address space. Each of those regions would have a host physical address
+> somewhere in the range between 32G and 1.3TB, and the location will be
+> determined by the logic added here.
+> 
+> The request_region() usage is not strictly mandatory at this point as
+> the actual handling of the address space is done with genpools. It is
+> highly likely however that the resource/region APIs will become useful
+> in the not too distant future.
 > 
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-Seems reasonable.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+This feels like something that will be much more obvious once the rest
+of the missing bits you mention in the cover letter are in place.
+
+Until then it looks fine to me, but I'm not sure I understand how it is
+going to get used.  Guess I'll wait and see ;)
+
+Jonathan
 
 > ---
->  drivers/cxl/core.c   | 9 +++------
->  drivers/cxl/cxl.h    | 4 ++--
->  drivers/cxl/region.c | 2 +-
->  3 files changed, 6 insertions(+), 9 deletions(-)
+>  drivers/cxl/core.c   | 13 +++++++++++++
+>  drivers/cxl/cxl.h    |  2 ++
+>  drivers/cxl/region.c | 31 +++++++++++++++++++++++++++++--
+>  3 files changed, 44 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
-> index 44f982f4f247..0e598a18e95f 100644
+> index 0e598a18e95f..b57ee627bc6a 100644
 > --- a/drivers/cxl/core.c
 > +++ b/drivers/cxl/core.c
-> @@ -40,7 +40,7 @@ static ssize_t start_show(struct device *dev, struct device_attribute *attr,
->  {
->  	struct cxl_decoder *cxld = to_cxl_decoder(dev);
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+>  #include <linux/io-64-nonatomic-lo-hi.h>
+> +#include <linux/genalloc.h>
+>  #include <linux/device.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> @@ -607,6 +608,18 @@ devm_cxl_add_decoder(struct device *host, struct cxl_port *port, int nr_targets,
+>  	rc = devm_add_action_or_reset(host, unregister_dev, dev);
+>  	if (rc)
+>  		return ERR_PTR(rc);
+> +
+> +	cxld->address_space =
+> +		devm_gen_pool_create(dev, ilog2(SZ_256M * cxld->interleave_ways),
+> +				     NUMA_NO_NODE, dev_name(dev));
+> +	if (IS_ERR(cxld->address_space))
+> +		return ERR_CAST(cxld->address_space);
+> +
+> +	rc = gen_pool_add(cxld->address_space, cxld->res.start,
+> +			  resource_size(&cxld->res), NUMA_NO_NODE);
+> +	if (rc)
+> +		return ERR_PTR(rc);
+> +
+>  	return cxld;
 >  
-> -	return sysfs_emit(buf, "%#llx\n", cxld->range.start);
-> +	return sysfs_emit(buf, "%#llx\n", cxld->res.start);
->  }
->  static DEVICE_ATTR_RO(start);
->  
-> @@ -49,7 +49,7 @@ static ssize_t size_show(struct device *dev, struct device_attribute *attr,
->  {
->  	struct cxl_decoder *cxld = to_cxl_decoder(dev);
->  
-> -	return sysfs_emit(buf, "%#llx\n", range_len(&cxld->range));
-> +	return sysfs_emit(buf, "%#llx\n", resource_size(&cxld->res));
->  }
->  static DEVICE_ATTR_RO(size);
->  
-> @@ -543,10 +543,7 @@ cxl_decoder_alloc(struct cxl_port *port, int nr_targets, resource_size_t base,
->  
->  	*cxld = (struct cxl_decoder) {
->  		.id = rc,
-> -		.range = {
-> -			.start = base,
-> -			.end = base + len - 1,
-> -		},
-> +		.res = DEFINE_RES_MEM_NAMED(base, len, "cxl-decoder"),
->  		.flags = flags,
->  		.interleave_ways = interleave_ways,
->  		.interleave_granularity = interleave_granularity,
+>  err:
 > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 90107b21125b..b08f0969abeb 100644
+> index b08f0969abeb..b5b728155d86 100644
 > --- a/drivers/cxl/cxl.h
 > +++ b/drivers/cxl/cxl.h
-> @@ -185,7 +185,7 @@ enum cxl_decoder_type {
->   * struct cxl_decoder - CXL address range decode configuration
->   * @dev: this decoder's device
->   * @id: kernel device name id
-> - * @range: address range considered by this decoder
-> + * @res: address space resources considered by this decoder
->   * @interleave_ways: number of cxl_dports in this decode
->   * @interleave_granularity: data stride per dport
->   * @target_type: accelerator vs expander (type2 vs type3) selector
-> @@ -198,7 +198,7 @@ enum cxl_decoder_type {
+> @@ -193,6 +193,7 @@ enum cxl_decoder_type {
+>   * @region_ida: allocator for region ids.
+>   * @regions: List of regions mapped (may be disabled) by this decoder.
+>   * @youngest: Last region created for this decoder.
+> + * @address_space: Used/free address space for regions.
+>   * @target: active ordered target list in current decoder configuration
+>   */
 >  struct cxl_decoder {
->  	struct device dev;
->  	int id;
-> -	struct range range;
-> +	struct resource res;
->  	int interleave_ways;
->  	int interleave_granularity;
->  	enum cxl_decoder_type target_type;
+> @@ -206,6 +207,7 @@ struct cxl_decoder {
+>  	struct ida region_ida;
+>  	struct list_head regions;
+>  	struct cxl_region *youngest;
+> +	struct gen_pool *address_space;
+>  	struct cxl_dport *target[];
+>  };
+>  
 > diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
-> index 616b47903d69..62bca8b30349 100644
+> index 62bca8b30349..0554f3fff7ac 100644
 > --- a/drivers/cxl/region.c
 > +++ b/drivers/cxl/region.c
-> @@ -59,7 +59,7 @@ static ssize_t offset_show(struct device *dev, struct device_attribute *attr,
->  	if (!region->res)
->  		return sysfs_emit(buf, "\n");
->  
-> -	return sysfs_emit(buf, "%#llx\n", cxld->range.start - region->res->start);
-> +	return sysfs_emit(buf, "%#llx\n", cxld->res.start - region->res->start);
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /* Copyright(c) 2021 Intel Corporation. All rights reserved. */
+>  #include <linux/io-64-nonatomic-lo-hi.h>
+> +#include <linux/genalloc.h>
+>  #include <linux/device.h>
+>  #include <linux/module.h>
+>  #include <linux/sizes.h>
+> @@ -388,9 +389,33 @@ int cxl_delete_region(struct cxl_decoder *cxld, const char *region_name)
+>  	return 0;
 >  }
->  static DEVICE_ATTR_RO(offset);
+>  
+> +static int allocate_region_addr(struct cxl_region *region)
+> +{
+> +	struct cxl_decoder *cxld = to_cxl_decoder(region->dev.parent);
+> +	unsigned long start;
+> +
+> +	start = gen_pool_alloc(cxld->address_space, region->requested_size);
+> +	if (!start) {
+> +		trace_cxl_region_bind(region, "Couldn't allocate address space");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	region->res =
+> +		__request_region(&cxld->res, start, region->requested_size,
+> +				 dev_name(&region->dev), IORESOURCE_EXCLUSIVE);
+> +	if (IS_ERR(region->res)) {
+> +		trace_cxl_region_bind(region, "Couldn't obtain region");
+> +		gen_pool_free(cxld->address_space, start,
+> +			      region->requested_size);
+> +		return PTR_ERR(region->res);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int bind_region(struct cxl_region *region)
+>  {
+> -	int i;
+> +	int i, rc;
+>  
+>  	if (dev_WARN_ONCE(&region->dev, !cxl_is_region_configured(region),
+>  			  "unconfigured regions can't be probed (race?)\n")) {
+> @@ -408,7 +433,9 @@ static int bind_region(struct cxl_region *region)
+>  			return -ENXIO;
+>  		}
+>  
+> -	/* TODO: Allocate from decoder's address space */
+> +	rc = allocate_region_addr(region);
+> +	if (rc)
+> +		return rc;
+>  
+>  	/* TODO: program HDM decoders */
 >  
 
