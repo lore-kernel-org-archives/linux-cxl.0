@@ -4,355 +4,270 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE35C48BDF
-	for <linux-cxl@archiver.kernel.org>; Fri, 18 Jun 2021 15:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0498FC48BDF
+	for <linux-cxl@archiver.kernel.org>; Fri, 18 Jun 2021 16:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6E7261351
-	for <linux-cxl@archiver.kernel.org>; Fri, 18 Jun 2021 15:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3AB9613D1
+	for <linux-cxl@archiver.kernel.org>; Fri, 18 Jun 2021 16:30:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234073AbhFRPqq convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 18 Jun 2021 11:46:46 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3288 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230334AbhFRPqq (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Jun 2021 11:46:46 -0400
-Received: from fraeml710-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4G632Z1CY1z6H6pM;
-        Fri, 18 Jun 2021 23:37:26 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml710-chm.china.huawei.com (10.206.15.59) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Fri, 18 Jun 2021 17:44:34 +0200
-Received: from localhost (10.52.125.28) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Fri, 18 Jun
- 2021 16:44:34 +0100
-Date:   Fri, 18 Jun 2021 16:44:24 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>
-CC:     <linux-cxl@vger.kernel.org>,
+        id S234407AbhFRQc6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 18 Jun 2021 12:32:58 -0400
+Received: from mga18.intel.com ([134.134.136.126]:5771 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231203AbhFRQcx (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Fri, 18 Jun 2021 12:32:53 -0400
+IronPort-SDR: LcNLSZXch7qjaggdF+6N4MC0vR24ryYmJOQS7BJnjsHgzpw++FWk9uvse5FpUQ6S2wY+xzGaTt
+ SXh7NSGXkJ1g==
+X-IronPort-AV: E=McAfee;i="6200,9189,10019"; a="193895764"
+X-IronPort-AV: E=Sophos;i="5.83,284,1616482800"; 
+   d="scan'208";a="193895764"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2021 09:30:35 -0700
+IronPort-SDR: YT7zks3NBV3mdC4Reb7PxUoeqy8dFuRMDhLuLXpx1TIWO02ACJNUni4j4R7mKTbk3gNab1v4LS
+ 3FmeF/QqcVsw==
+X-IronPort-AV: E=Sophos;i="5.83,284,1616482800"; 
+   d="scan'208";a="451447696"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2021 09:30:35 -0700
+Date:   Fri, 18 Jun 2021 09:30:35 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Ira Weiny" <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 3/6] cxl/region: Introduce concept of region
- configuration
-Message-ID: <20210618164424.00001d73@Huawei.com>
-In-Reply-To: <20210618152551.azp7tnelqzarsg4k@intel.com>
-References: <20210617173655.430424-1-ben.widawsky@intel.com>
-        <20210617173655.430424-4-ben.widawsky@intel.com>
-        <20210618122237.00005e7f@Huawei.com>
-        <20210618152551.azp7tnelqzarsg4k@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-cxl@vger.kernel.org
+Subject: Re: [PATCH V2 2/3] cxl/mem: Account for partitionable space in
+ ram/pmem ranges
+Message-ID: <20210618163035.GB1905674@iweiny-DESK2.sc.intel.com>
+References: <20210617221620.1904031-1-ira.weiny@intel.com>
+ <20210617221620.1904031-3-ira.weiny@intel.com>
+ <20210618145902.00001dbe@Huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.52.125.28]
-X-ClientProxiedBy: lhreml748-chm.china.huawei.com (10.201.108.198) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210618145902.00001dbe@Huawei.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 18 Jun 2021 08:25:51 -0700
-Ben Widawsky <ben.widawsky@intel.com> wrote:
-
-> On 21-06-18 12:22:37, Jonathan Cameron wrote:
-> > On Thu, 17 Jun 2021 10:36:52 -0700
-> > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> >   
-> > > The region creation APIs leave a region unconfigured. Configuring the
-> > > region will work in the same way as similar subsystems such as devdax.
-> > > Sysfs attrs will be provided to allow userspace to configure the region.
-> > > Finally once all configuration is complete, userspace may "commit" the
-> > > config. What the kernel decides to do after a config is committed is out
-> > > of scope at this point.
-> > > 
-> > > Introduced here are the most basic attributes needed to configure a
-> > > region.
-> > > 
-> > > A x1 interleave example is provided below:
-> > > 
-> > > decoder1.0
-> > > ├── create_region
-> > > ├── delete_region
-> > > ├── devtype
-> > > ├── locked
-> > > ├── region1.0:0
-> > > │   ├── offset
-> > > │   ├── size
-> > > │   ├── subsystem -> ../../../../../../../bus/cxl
-> > > │   ├── target0
-> > > │   ├── uevent
-> > > │   ├── uuid
-> > > │   └── verify
-
-Does that exist any more?
-
-> > > ├── size
-> > > ├── start
-> > > ├── subsystem -> ../../../../../../bus/cxl
-> > > ├── target_list
-> > > ├── target_type
-> > > └── uevent
-> > > 
-> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>  
-> > 
-> > Hi Ben,
-> > 
-> > I think some of the sysfs interface needs more detailed docs
-> > and consideration about consistency.
-> > 
-> > If an interface isn't fairly obvious without reading the docs
-> > (but understanding what it is trying to do) then it's normally
-> > a bad sign...
-> > 
-> > Jonathan
-> >   
+On Fri, Jun 18, 2021 at 02:59:02PM +0100, Jonathan Cameron wrote:
+> On Thu, 17 Jun 2021 15:16:19 -0700
+> <ira.weiny@intel.com> wrote:
 > 
-> My measuring stick has been: the interface should be fairly obvious if you're
-> fairly familiar with the spec. I think we've satisfied that here, but often
-> times the creator of something can be blind to effects of the creation.
-> 
-> I can certainly add more descriptive text to the ABI doc, but if you have
-> suggestions on how to make the sysfs attrs more descriptive, that'd be great.
-
-In this patch, mainly the whole 0 / nil etc.
-Empty string make sense to me when clearing as that reflects what is returned
-when it wasn't set in the first place.
-
-Attr names are fine for this one.
-> 
-> > > ---
-> > >  Documentation/ABI/testing/sysfs-bus-cxl |  32 ++++
-> > >  drivers/cxl/region.c                    | 223 ++++++++++++++++++++++++
-> > >  2 files changed, 255 insertions(+)
-> > > 
-> > > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> > > index 115a25d2899d..70f9d09385a4 100644
-> > > --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> > > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> > > @@ -148,3 +148,35 @@ Description:
-> > >  		Deletes the named region. A region must be unbound from the
-> > >  		region driver before being deleted. The attributes expects a
-> > >  		region in the form "regionX.Y:Z".
-> > > +
-> > > +What:		/sys/bus/cxl/devices/decoderX.Y/regionX.Y:Z/offset
-> > > +Date:		June, 2021
-> > > +KernelVersion:	v5.14
-> > > +Contact:	linux-cxl@vger.kernel.org
-> > > +Description:
-> > > +		(RO) A region resides within an address space that is claimed by
-> > > +		a decoder. Region space allocation is handled by the driver, but
-> > > +		the offset may be read by userspace tooling in order to
-> > > +		determine fragmentation, and available size for new regions.  
+> > From: Ira Weiny <ira.weiny@intel.com>
 > > 
-> > Side note rather than abotu this patch.  Feels to me like the format definition
-> > of these docs should include something on permissions.  The (RO) bit is fine
-> > but makes the docs less machine readable.    
+> > Memory devices may specify volatile only, persistent only, and
+> > partitionable space which when added together result in a total capacity.
+> > 
+> > If Identify Memory Device.Partition Alignment != 0 the device supports
+> > partitionable space.  This partitionable space can be split between
+> > volatile and persistent space.  The total volatile and persistent sizes
+> > are reported in Get Partition Info.  ie
+> > 
+> > 	active volatile memory = volatile only + partitionable volatile
+> > 	active persistent memory = persistent only + partitionable persistent
+> > 
+> > Define cxl_mem_get_partition(), check for partitionable support, and use
+> > cxl_mem_get_partition() if applicable.
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > 
-> Any examples of something you consider ideal?
+> Trivial editorial stuff inline.
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Nope :)  Mauro is doing some work on automated check of this documentation.
-If that works gets anywhere near RO vs RW we can figure out how to improve
-the docs then to support it!
+Thanks!
 
 > 
-> >   
-> > > +
-> > > +What:
-> > > +/sys/bus/cxl/devices/decoderX.Y/regionX.Y:Z/{size,uuid,target[0-15]}
-> > > +Date:		June, 2021
-> > > +KernelVersion:	v5.14
-> > > +Contact:	linux-cxl@vger.kernel.org
-> > > +Description:
-> > > +		(RW) Configuring regions requires a minimal set of parameters in
-> > > +		order for the subsequent bind operation to succeed. The
-> > > +		following parameters are defined:
-> > > +
-> > > +		==	========================================================
-> > > +		size	Manadatory. Phsyical address space the region will  
 > > 
-> > Spell check.
-> >   
-> > > +			consume.
-> > > +		uuid	Optional. A unique identifier for the region. If none is
-> > > +			selected, the kernel will create one.
-> > > +		target  Mandatory. Memory devices are the backing storage for a
-> > > +			region. There will be N targets based on the number of
-> > > +			interleave ways that the top level decoder is configured
-> > > +			for. Each target must be set with a memdev device ie.
-> > > +			'mem1'.  
+> > ---
+> > Changes for V2:
+> > 	Jonathan
+> > 		Account for Get Partition Info being optional
+> > 		Fix documentation
+> > 	Dan
+> > 		Store the active capacities in struct cxl_mem
+> > 		Make cxl_mem_get_partition() static until there is a
+> > 		need to export it.
+> > ---
+> >  drivers/cxl/mem.h |  5 +++
+> >  drivers/cxl/pci.c | 98 ++++++++++++++++++++++++++++++++++++++++++++---
+> >  2 files changed, 98 insertions(+), 5 deletions(-)
 > > 
-> > Document what happens if not set.  'nil' is not obvious.
-> >   
-> > > +		==	========================================================  
-> > 
-> > The automation looking at these files is increasing, so I wonder if that will
-> > cause some issues with having these all documented in one block.
-> > 
-> > I don't see a huge disadvantage in breaking this into 3 entries.  Alternatively
-> > wait for someone to scream and refactor it then.  
+> > diff --git a/drivers/cxl/mem.h b/drivers/cxl/mem.h
+> > index 9dc34418db36..8d7bd966a298 100644
+> > --- a/drivers/cxl/mem.h
+> > +++ b/drivers/cxl/mem.h
+> > @@ -79,5 +79,10 @@ struct cxl_mem {
+> >  	u64 volatile_only_bytes;
+> >  	u64 persistent_only_bytes;
+> >  	u64 partition_align_bytes;
+> > +
+> > +	u64 active_volatile_bytes;
+> > +	u64 active_persistent_bytes;
+> > +	u64 next_volatile_bytes;
+> > +	u64 next_persistent_bytes;
+> >  };
+> >  #endif /* __CXL_MEM_H__ */
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > index 94b7ee08ef67..341885345b53 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> > @@ -1455,6 +1455,55 @@ static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_mem *cxlm)
+> >  	return ret;
+> >  }
+> >  
+> > +/**
+> > + * cxl_mem_get_partition_info - Get partition info
+> > + * @cxlm: The device to act on
+> > + * @active_volatile_bytes: returned active volatile capacity; in bytes
 > 
-> Okay.
-> 
-> >   
-> > > diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
-> > > index 391467e864a2..cf7fd3027419 100644
-> > > --- a/drivers/cxl/region.c
-> > > +++ b/drivers/cxl/region.c
-> > > @@ -3,7 +3,9 @@
-> > >  #include <linux/io-64-nonatomic-lo-hi.h>
-> > >  #include <linux/device.h>
-> > >  #include <linux/module.h>
-> > > +#include <linux/sizes.h>
-> > >  #include <linux/slab.h>
-> > > +#include <linux/uuid.h>
-> > >  #include <linux/idr.h>
-> > >  #include "region.h"
-> > >  #include "cxl.h"
-> > > @@ -21,16 +23,237 @@
-> > >   * relationship between decoder and region when the region is interleaved.
-> > >   */
-> > >  
-> > > +static struct cxl_region *to_cxl_region(struct device *dev);
-> > > +
-> > > +static bool is_region_active(struct cxl_region *region)
-> > > +{
-> > > +	/* TODO: Regions can't be activated yet. */
-> > > +	return false;
-> > > +}
-> > > +
-> > > +static ssize_t offset_show(struct device *dev, struct device_attribute *attr,
-> > > +			   char *buf)
-> > > +{
-> > > +	struct cxl_region *region = to_cxl_region(dev);
-> > > +	struct cxl_decoder *cxld = to_cxl_decoder(dev->parent);
-> > > +
-> > > +	if (!region->res)
-> > > +		return sysfs_emit(buf, "\n");
-> > > +
-> > > +	return sysfs_emit(buf, "%#llx\n", cxld->range.start - region->res->start);
-> > > +}
-> > > +static DEVICE_ATTR_RO(offset);
-> > > +
-> > > +static ssize_t size_show(struct device *dev, struct device_attribute *attr,
-> > > +			 char *buf)
-> > > +{
-> > > +	struct cxl_region *region = to_cxl_region(dev);
-> > > +
-> > > +	if (!region->res)
-> > > +		return sysfs_emit(buf, "*%llu\n", region->requested_size);
-> > > +
-> > > +	return sysfs_emit(buf, "%llu\n", resource_size(region->res));
-> > > +}
-> > > +
-> > > +static ssize_t size_store(struct device *dev, struct device_attribute *attr,
-> > > +			  const char *buf, size_t len)
-> > > +{
-> > > +	struct cxl_region *region = to_cxl_region(dev);
-> > > +	unsigned long long val;
-> > > +	ssize_t rc;
-> > > +
-> > > +	rc = kstrtoull(buf, 0, &val);
-> > > +	if (rc)
-> > > +		return rc;
-> > > +
-> > > +	device_lock(&region->dev);
-> > > +	if (is_region_active(region)) {
-> > > +		rc = -EBUSY;
-> > > +	} else {
-> > > +		region->requested_size = val;
-> > > +	}
-> > > +	device_unlock(&region->dev);
-> > > +
-> > > +	return len;
-> > > +}
-> > > +static DEVICE_ATTR_RW(size);
-> > > +
-> > > +static ssize_t uuid_show(struct device *dev, struct device_attribute *attr,
-> > > +			 char *buf)
-> > > +{
-> > > +	struct cxl_region *region = to_cxl_region(dev);
-> > > +
-> > > +	return sysfs_emit(buf, "%pUb\n", &region->uuid);
-> > > +}
-> > > +static ssize_t uuid_store(struct device *dev, struct device_attribute *attr,
-> > > +			  const char *buf, size_t len)
-> > > +{
-> > > +	struct cxl_region *region = to_cxl_region(dev);
-> > > +	ssize_t rc;
-> > > +
-> > > +	if (len != UUID_STRING_LEN + 1)
-> > > +		return -EINVAL;
-> > > +
-> > > +	device_lock(&region->dev);
-> > > +	if (is_region_active(region)) {
-> > > +		rc = -EBUSY;
-> > > +	} else {
-> > > +		rc = uuid_parse(buf, &region->uuid);
-> > > +	}
-> > > +	device_unlock(&region->dev);
-> > > +
-> > > +	return rc ? rc : len;
-> > > +}
-> > > +static DEVICE_ATTR_RW(uuid);
-> > > +
-> > > +static struct attribute *region_attrs[] = {
-> > > +	&dev_attr_offset.attr,
-> > > +	&dev_attr_size.attr,
-> > > +	&dev_attr_uuid.attr,
-> > > +	NULL,
-> > > +};
-> > > +
-> > > +static const struct attribute_group region_group = {
-> > > +	.attrs = region_attrs,
-> > > +};
-> > > +
-> > > +static size_t show_targetN(struct cxl_region *region, char *buf, int n)
-> > > +{
-> > > +	int ret;
-> > > +
-> > > +	device_lock(&region->dev);
-> > > +	if (!region->targets[n])
-> > > +		ret = sysfs_emit(buf, "%s\n", dev_name(&region->targets[n]->dev));
-> > > +	else
-> > > +		ret = sysfs_emit(buf, "nil\n");
-> > > +	device_unlock(&region->dev);
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +static size_t set_targetN(struct cxl_region *region, const char *buf, int n, size_t len)
-> > > +{
-> > > +	struct device *memdev_dev;
-> > > +	struct cxl_memdev *cxlmd;
-> > > +	ssize_t rc;
-> > > +	int val;
-> > > +
-> > > +	device_lock(&region->dev);
-> > > +
-> > > +	rc = kstrtoint(buf, 0, &val);
-> > > +	/* Special 'remote' target operation */  
-> > 
-> > remote?
-> >   
-> 
-> remove
-> 
-> > > +	if (!rc && val == 0) {  
-> > 
-> > I'm not sure on logic here.  This seems to be if the value is valid and 0
-> > we do something different?  Why is 0 special? It's not documented as such
-> > and the thing returns nil, not 0.  
-> 
-> I changed it from the RFC to return empty string (or I meant to at least). I
-> should make it take the empty string as well.
+> Perhaps over documented?  Would be very very odd if _bytes attribute wasn't
+> in bytes so maybe don't need to state it in the comment?
 
-That works better.
+Ok...  I keep saying this to myself because all the table values are in 256MB
+increments so I just kept typing it!!!  :-D
+
+I'll remove the redundancies...
+
+> 
+> > + * @active_persistent_bytes: returned active persistent capacity; in bytes
+> > + * @next_volatile_bytes: return next volatile capacity; in bytes
+> > + * @next_persistent_bytes: return next persistent capacity; in bytes
+> > + *
+> > + * Retrieve the current partition info for the device specified.  The active
+> > + * values are the current capacity in bytes.  If not 0, the 'next' values are
+> 
+> Definitely don't need to say they are in bytes again.
+
+Sure...
+
+> 
+> > + * the pending values, in bytes, which take affect on next cold reset.
+> > + *
+> > + * Return: 0 if no error: or the result of the mailbox command.
+> > + *
+> > + * See CXL @8.2.9.5.2.1 Get Partition Info
+> > + */
+> > +static int cxl_mem_get_partition_info(struct cxl_mem *cxlm,
+> > +				      u64 *active_volatile_bytes,
+> > +				      u64 *active_persistent_bytes,
+> > +				      u64 *next_volatile_bytes,
+> > +				      u64 *next_persistent_bytes)
+> > +{
+> > +	struct cxl_mbox_get_partition_info {
+> > +		u64 active_volatile_cap;
+> > +		u64 active_persistent_cap;
+> > +		u64 next_volatile_cap;
+> > +		u64 next_persistent_cap;
+> > +	} __packed pi;
+> > +	int rc;
+> > +
+> > +	rc = cxl_mem_mbox_send_cmd(cxlm, CXL_MBOX_OP_GET_PARTITION_INFO,
+> > +				   NULL, 0, &pi, sizeof(pi));
+> > +
+> 
+> In my view, slightly better to not have a blank line between statement
+> and error handling.
+
+Fair enough.  I go back and forth depending on how the code looks.
+
+All changed, v3 comming,
+Ira
+
+> 
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	*active_volatile_bytes = le64_to_cpu(pi.active_volatile_cap);
+> > +	*active_persistent_bytes = le64_to_cpu(pi.active_persistent_cap);
+> > +	*next_volatile_bytes = le64_to_cpu(pi.next_volatile_cap);
+> > +	*next_persistent_bytes = le64_to_cpu(pi.next_volatile_cap);
+> > +
+> > +	*active_volatile_bytes *= CXL_CAPACITY_MULTIPLIER;
+> > +	*active_persistent_bytes *= CXL_CAPACITY_MULTIPLIER;
+> > +	*next_volatile_bytes *= CXL_CAPACITY_MULTIPLIER;
+> > +	*next_persistent_bytes *= CXL_CAPACITY_MULTIPLIER;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  /**
+> >   * cxl_mem_enumerate_cmds() - Enumerate commands for a device.
+> >   * @cxlm: The device.
+> > @@ -1573,18 +1622,53 @@ static int cxl_mem_identify(struct cxl_mem *cxlm)
+> >  			cxlm->persistent_only_bytes,
+> >  			cxlm->partition_align_bytes);
+> >  
+> > +	cxlm->lsa_size = le32_to_cpu(id.lsa_size);
+> > +	memcpy(cxlm->firmware_version, id.fw_revision, sizeof(id.fw_revision));
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int cxl_mem_create_range_info(struct cxl_mem *cxlm)
+> > +{
+> > +	int rc;
+> > +
+> > +	if (cxlm->partition_align_bytes == 0) {
+> > +		cxlm->ram_range.start = 0;
+> > +		cxlm->ram_range.end = cxlm->volatile_only_bytes - 1;
+> > +		cxlm->pmem_range.start = 0;
+> > +		cxlm->pmem_range.end = cxlm->persistent_only_bytes - 1;
+> > +		return 0;
+> > +	}
+> > +
+> > +	rc = cxl_mem_get_partition_info(cxlm,
+> > +					&cxlm->active_volatile_bytes,
+> > +					&cxlm->active_persistent_bytes,
+> > +					&cxlm->next_volatile_bytes,
+> > +					&cxlm->next_persistent_bytes);
+> > +	if (rc < 0) {
+> > +		dev_err(&cxlm->pdev->dev, "Failed to query partition information\n");
+> > +		return rc;
+> > +	}
+> > +
+> > +	dev_dbg(&cxlm->pdev->dev, "Get Partition Info\n"
+> > +		"     active_volatile_bytes = %#llx\n"
+> > +		"     active_persistent_bytes = %#llx\n"
+> > +		"     next_volatile_bytes = %#llx\n"
+> > +		"     next_persistent_bytes = %#llx\n",
+> > +			cxlm->active_volatile_bytes,
+> > +			cxlm->active_persistent_bytes,
+> > +			cxlm->next_volatile_bytes,
+> > +			cxlm->next_persistent_bytes);
+> > +
+> >  	/*
+> >  	 * TODO: enumerate DPA map, as 'ram' and 'pmem' do not alias.
+> >  	 * For now, only the capacity is exported in sysfs
+> >  	 */
+> >  	cxlm->ram_range.start = 0;
+> > -	cxlm->ram_range.end = cxlm->volatile_only_bytes - 1;
+> > +	cxlm->ram_range.end = cxlm->active_volatile_bytes - 1;
+> >  
+> >  	cxlm->pmem_range.start = 0;
+> > -	cxlm->pmem_range.end = cxlm->persistent_only_bytes - 1;
+> > -
+> > -	cxlm->lsa_size = le32_to_cpu(id.lsa_size);
+> > -	memcpy(cxlm->firmware_version, id.fw_revision, sizeof(id.fw_revision));
+> > +	cxlm->pmem_range.end = cxlm->active_persistent_bytes - 1;
+> >  
+> >  	return 0;
+> >  }
+> > @@ -1618,6 +1702,10 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >  	if (rc)
+> >  		return rc;
+> >  
+> > +	rc = cxl_mem_create_range_info(cxlm);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> >  	return cxl_mem_add_memdev(cxlm);
+> >  }
+> >  
+> 
