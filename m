@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E31DC2B9F4
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DD4C49EA4
 	for <linux-cxl@archiver.kernel.org>; Fri, 18 Jun 2021 00:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52D03613BD
+	by mail.kernel.org (Postfix) with ESMTP id 9C37C61209
 	for <linux-cxl@archiver.kernel.org>; Fri, 18 Jun 2021 00:52:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232889AbhFRAyR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S233270AbhFRAyR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Thu, 17 Jun 2021 20:54:17 -0400
-Received: from mga05.intel.com ([192.55.52.43]:2055 "EHLO mga05.intel.com"
+Received: from mga05.intel.com ([192.55.52.43]:2051 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233270AbhFRAyQ (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        id S232959AbhFRAyQ (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
         Thu, 17 Jun 2021 20:54:16 -0400
-IronPort-SDR: NdKkNJJFoW7jYWwPqKRbud02vTeT3g23Gu0whPJQHRhx43VDLg+I9j+E14vL1f9PlYTrzMOeE9
- tKdLqqGSookw==
-X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="292105422"
+IronPort-SDR: i6urxZZtJumNY/2VnjAQjTJ/N3YD9Qr0N0TjRvXDA1uhKKNMITLKJdqyaa5mt51zkZ+9je4peL
+ uJydRMyj0+Og==
+X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="292105420"
 X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
-   d="scan'208";a="292105422"
+   d="scan'208";a="292105420"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
   by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 17:52:07 -0700
-IronPort-SDR: 8424V+xkcdHipxZgc4JNLOscn/XD1fREMBxT3hVU+p9GbbmGBnnCYIuoByhFP2ttBTpFbMmMut
- 7BXxE2y44nnw==
+IronPort-SDR: 5DGK/nR6/3K8bBQ6S5en1nWGt+slLsslx/gvQWUcBVfe+OaGn81EFK6flgyLdq7JQ7tFH0yhCg
+ 4890aLwpPjEQ==
 X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
-   d="scan'208";a="622223132"
+   d="scan'208";a="622223128"
 Received: from mkalyani-mobl.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.138.30])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 17:52:07 -0700
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 17:52:06 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     Ben Widawsky <ben.widawsky@intel.com>,
@@ -40,9 +40,9 @@ Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [RFC PATCH 5/5] cxl/mem: Check that the device is CXL.mem capable
-Date:   Thu, 17 Jun 2021 17:52:00 -0700
-Message-Id: <20210618005200.997804-6-ben.widawsky@intel.com>
+Subject: [RFC PATCH 4/5] cxl/pci: Export CXL DVSEC functionality
+Date:   Thu, 17 Jun 2021 17:51:59 -0700
+Message-Id: <20210618005200.997804-5-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210618005200.997804-1-ben.widawsky@intel.com>
 References: <20210618005200.997804-1-ben.widawsky@intel.com>
@@ -54,70 +54,34 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- drivers/cxl/mem.c | 18 ++++++++++++++++++
- drivers/cxl/pci.h |  5 ++++-
- 2 files changed, 22 insertions(+), 1 deletion(-)
+ drivers/cxl/pci.c | 2 +-
+ drivers/cxl/pci.h | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index cbf18df24109..7f26937c7151 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -4,6 +4,7 @@
- #include <linux/module.h>
- #include <linux/pci.h>
- #include "mem.h"
-+#include "pci.h"
- 
- /**
-  * DOC: cxl mem
-@@ -41,14 +42,31 @@ static int cxl_memdev_probe(struct device *dev)
- {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
- 	struct cxl_mem *cxlm = cxlmd->cxlm;
-+	struct pci_dev *pdev = cxlm->pdev;
- 	struct device *pdev_parent = cxlm->pdev->dev.parent;
- 	struct device *port_dev;
-+	int pcie_dvsec;
-+	u16 dvsec_ctrl;
- 
- 	port_dev =
- 		bus_find_device(&cxl_bus_type, NULL, pdev_parent, port_match);
- 	if (!port_dev)
- 		return -ENODEV;
- 
-+	pcie_dvsec = cxl_mem_dvsec(pdev, PCI_DVSEC_ID_PCIE_DVSEC_CXL_DVSEC_ID);
-+	if (!pcie_dvsec) {
-+		dev_err(dev, "Unable to determine CXL protocol support");
-+		return -ENODEV;
-+	}
-+
-+	pci_read_config_word(pdev,
-+			     pcie_dvsec + PCI_DVSEC_ID_CXL_PCIE_CTRL_OFFSET,
-+			     &dvsec_ctrl);
-+	if (!(dvsec_ctrl & CXL_PCIE_MEM_ENABLE)) {
-+		dev_err(dev, "CXL.cache protocol not supported on device");
-+		return -ENODEV;
-+	}
-+
- 	return 0;
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index f9c0eaf3ff4e..b1a5a18dba92 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -973,7 +973,7 @@ static void cxl_mem_unmap_regblock(struct cxl_mem *cxlm, void __iomem *base)
+ 	pci_iounmap(cxlm->pdev, base);
  }
  
+-static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
++int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
+ {
+ 	int pos;
+ 
 diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
-index 0d6f50f725bc..ee26bc8c2ec8 100644
+index dad7a831f65f..0d6f50f725bc 100644
 --- a/drivers/cxl/pci.h
 +++ b/drivers/cxl/pci.h
-@@ -11,7 +11,10 @@
-  */
- #define PCI_DVSEC_HEADER1_LENGTH_MASK	GENMASK(31, 20)
- #define PCI_DVSEC_VENDOR_ID_CXL		0x1E98
--#define PCI_DVSEC_ID_CXL		0x0
-+
-+#define PCI_DVSEC_ID_PCIE_DVSEC_CXL_DVSEC_ID	0x0
-+#define PCI_DVSEC_ID_CXL_PCIE_CTRL_OFFSET	0xC
-+#define   CXL_PCIE_MEM_ENABLE			BIT(2)
+@@ -28,4 +28,6 @@
  
- #define PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID	0x8
- #define PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET	0xC
+ #define CXL_REGLOC_ADDR_MASK GENMASK(31, 16)
+ 
++int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec);
++
+ #endif /* __CXL_PCI_H__ */
 -- 
 2.32.0
 
