@@ -2,130 +2,116 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8478C49EA2
-	for <linux-cxl@archiver.kernel.org>; Mon, 21 Jun 2021 08:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6610DC4743C
+	for <linux-cxl@archiver.kernel.org>; Mon, 21 Jun 2021 19:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B791960FDA
-	for <linux-cxl@archiver.kernel.org>; Mon, 21 Jun 2021 08:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4715B610EA
+	for <linux-cxl@archiver.kernel.org>; Mon, 21 Jun 2021 19:54:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230296AbhFUIrk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 21 Jun 2021 04:47:40 -0400
-Received: from mailout1.secunet.com ([62.96.220.44]:57870 "EHLO
-        mailout1.secunet.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229946AbhFUIrk (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 21 Jun 2021 04:47:40 -0400
-X-Greylist: delayed 582 seconds by postgrey-1.27 at vger.kernel.org; Mon, 21 Jun 2021 04:47:37 EDT
-Received: from cas-essen-01.secunet.de (unknown [10.53.40.201])
-        by mailout1.secunet.com (Postfix) with ESMTP id BAFED80004E;
-        Mon, 21 Jun 2021 10:35:39 +0200 (CEST)
-Received: from mbx-essen-01.secunet.de (10.53.40.197) by
- cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Mon, 21 Jun 2021 10:35:39 +0200
-Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-01.secunet.de
- (10.53.40.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Mon, 21 Jun
- 2021 10:35:39 +0200
-Received: by gauss2.secunet.de (Postfix, from userid 1000)
-        id 249D031803E8; Mon, 21 Jun 2021 10:35:39 +0200 (CEST)
-Date:   Mon, 21 Jun 2021 10:35:39 +0200
-From:   Steffen Klassert <steffen.klassert@secunet.com>
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-CC:     <linux-security-module@vger.kernel.org>,
-        James Morris <jmorris@namei.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Herbert Xu" <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        <selinux@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <x86@kernel.org>, <linux-acpi@vger.kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linux-efi@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Subject: Re: [PATCH v3] lockdown,selinux: fix wrong subject in some SELinux
- lockdown checks
-Message-ID: <20210621083539.GY40979@gauss3.secunet.de>
-References: <20210616085118.1141101-1-omosnace@redhat.com>
+        id S231490AbhFUT40 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 21 Jun 2021 15:56:26 -0400
+Received: from mga09.intel.com ([134.134.136.24]:1064 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231416AbhFUT4Z (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 21 Jun 2021 15:56:25 -0400
+IronPort-SDR: dDbPxQdE829k9oHRlqTTIV2n/IEX0sCt80e0VAJuzN2Xv5H19cq3Tqgiuq/X8wWqaGHsTqH+tD
+ nskfP7k+grQQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,10022"; a="206866127"
+X-IronPort-AV: E=Sophos;i="5.83,289,1616482800"; 
+   d="scan'208";a="206866127"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2021 12:54:08 -0700
+IronPort-SDR: 14Q6YW3UoGj91aU/mKvRulwZACplM7f8B5fc8hjeLGDVcbqZHjt3gdsp4aZnL+uWlgEIalsvYn
+ bK4xOopJStqw==
+X-IronPort-AV: E=Sophos;i="5.83,289,1616482800"; 
+   d="scan'208";a="641426529"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2021 12:54:08 -0700
+From:   ira.weiny@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-cxl@vger.kernel.org
+Subject: [PATCH V3] cxl/mem: Adjust ram/pmem range to represent DPA ranges
+Date:   Mon, 21 Jun 2021 12:54:06 -0700
+Message-Id: <20210621195406.2061505-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.28.0.rc0.12.gb6a658bd00c9
+In-Reply-To: <20210617221620.1904031-4-ira.weiny@intel.com>
+References: <20210617221620.1904031-4-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20210616085118.1141101-1-omosnace@redhat.com>
-X-ClientProxiedBy: cas-essen-01.secunet.de (10.53.40.201) To
- mbx-essen-01.secunet.de (10.53.40.197)
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Jun 16, 2021 at 10:51:18AM +0200, Ondrej Mosnacek wrote:
-> Commit 59438b46471a ("security,lockdown,selinux: implement SELinux
-> lockdown") added an implementation of the locked_down LSM hook to
-> SELinux, with the aim to restrict which domains are allowed to perform
-> operations that would breach lockdown.
-> 
-> However, in several places the security_locked_down() hook is called in
-> situations where the current task isn't doing any action that would
-> directly breach lockdown, leading to SELinux checks that are basically
-> bogus.
-> 
-> To fix this, add an explicit struct cred pointer argument to
-> security_lockdown() and define NULL as a special value to pass instead
-> of current_cred() in such situations. LSMs that take the subject
-> credentials into account can then fall back to some default or ignore
-> such calls altogether. In the SELinux lockdown hook implementation, use
-> SECINITSID_KERNEL in case the cred argument is NULL.
-> 
-> Most of the callers are updated to pass current_cred() as the cred
-> pointer, thus maintaining the same behavior. The following callers are
-> modified to pass NULL as the cred pointer instead:
-> 1. arch/powerpc/xmon/xmon.c
->      Seems to be some interactive debugging facility. It appears that
->      the lockdown hook is called from interrupt context here, so it
->      should be more appropriate to request a global lockdown decision.
-> 2. fs/tracefs/inode.c:tracefs_create_file()
->      Here the call is used to prevent creating new tracefs entries when
->      the kernel is locked down. Assumes that locking down is one-way -
->      i.e. if the hook returns non-zero once, it will never return zero
->      again, thus no point in creating these files. Also, the hook is
->      often called by a module's init function when it is loaded by
->      userspace, where it doesn't make much sense to do a check against
->      the current task's creds, since the task itself doesn't actually
->      use the tracing functionality (i.e. doesn't breach lockdown), just
->      indirectly makes some new tracepoints available to whoever is
->      authorized to use them.
-> 3. net/xfrm/xfrm_user.c:copy_to_user_*()
->      Here a cryptographic secret is redacted based on the value returned
->      from the hook. There are two possible actions that may lead here:
->      a) A netlink message XFRM_MSG_GETSA with NLM_F_DUMP set - here the
->         task context is relevant, since the dumped data is sent back to
->         the current task.
->      b) When adding/deleting/updating an SA via XFRM_MSG_xxxSA, the
->         dumped SA is broadcasted to tasks subscribed to XFRM events -
->         here the current task context is not relevant as it doesn't
->         represent the tasks that could potentially see the secret.
->      It doesn't seem worth it to try to keep using the current task's
->      context in the a) case, since the eventual data leak can be
->      circumvented anyway via b), plus there is no way for the task to
->      indicate that it doesn't care about the actual key value, so the
->      check could generate a lot of "false alert" denials with SELinux.
->      Thus, let's pass NULL instead of current_cred() here faute de
->      mieux.
-> 
-> Improvements-suggested-by: Casey Schaufler <casey@schaufler-ca.com>
-> Improvements-suggested-by: Paul Moore <paul@paul-moore.com>
-> Fixes: 59438b46471a ("security,lockdown,selinux: implement SELinux lockdown")
-> Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+From: Ira Weiny <ira.weiny@intel.com>
 
-For the xfrm part:
+Table 176 of the CXL spec defines the volatile DPA range to be 0 to
+Volatile memory size.  It further defines the persistent DPA range to
+follow directly after the end of the Volatile DPA through the persistent
+memory size.  Essentially
 
-Acked-by: Steffen Klassert <steffen.klassert@secunet.com>
+Volatile DPA range   = [0, Volatile size)
+Persistent DPA range = [Volatile size, Volatile size + Persistent size)
+
+Adjust the pmem_range start to reflect this and remove the TODO.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+---
+For some reason I fixed this but failed to send it out...
+
+Changes for V3
+	Jonathan -- Clean up commit message
+
+---
+ drivers/cxl/pci.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 3c8b7aa8c273..592374baa005 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -1633,8 +1633,9 @@ static int cxl_mem_create_range_info(struct cxl_mem *cxlm)
+ 	if (cxlm->partition_align_bytes == 0) {
+ 		cxlm->ram_range.start = 0;
+ 		cxlm->ram_range.end = cxlm->volatile_only_bytes - 1;
+-		cxlm->pmem_range.start = 0;
+-		cxlm->pmem_range.end = cxlm->persistent_only_bytes - 1;
++		cxlm->pmem_range.start = cxlm->volatile_only_bytes;
++		cxlm->pmem_range.end = cxlm->volatile_only_bytes +
++					cxlm->persistent_only_bytes - 1;
+ 		return 0;
+ 	}
+ 
+@@ -1658,15 +1659,12 @@ static int cxl_mem_create_range_info(struct cxl_mem *cxlm)
+ 			cxlm->next_volatile_bytes,
+ 			cxlm->next_persistent_bytes);
+ 
+-	/*
+-	 * TODO: enumerate DPA map, as 'ram' and 'pmem' do not alias.
+-	 * For now, only the capacity is exported in sysfs
+-	 */
+ 	cxlm->ram_range.start = 0;
+ 	cxlm->ram_range.end = cxlm->active_volatile_bytes - 1;
+ 
+-	cxlm->pmem_range.start = 0;
+-	cxlm->pmem_range.end = cxlm->active_persistent_bytes - 1;
++	cxlm->pmem_range.start = cxlm->active_volatile_bytes;
++	cxlm->pmem_range.end = cxlm->active_volatile_bytes +
++				cxlm->active_persistent_bytes - 1;
+ 
+ 	return 0;
+ }
+-- 
+2.28.0.rc0.12.gb6a658bd00c9
 
