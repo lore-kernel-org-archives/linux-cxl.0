@@ -2,116 +2,74 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,MAILING_LIST_MULTI,SPF_HELO_NONE autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6610DC4743C
-	for <linux-cxl@archiver.kernel.org>; Mon, 21 Jun 2021 19:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C37C4743C
+	for <linux-cxl@archiver.kernel.org>; Tue, 22 Jun 2021 01:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4715B610EA
-	for <linux-cxl@archiver.kernel.org>; Mon, 21 Jun 2021 19:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88FF6102A
+	for <linux-cxl@archiver.kernel.org>; Tue, 22 Jun 2021 01:45:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231490AbhFUT40 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 21 Jun 2021 15:56:26 -0400
-Received: from mga09.intel.com ([134.134.136.24]:1064 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231416AbhFUT4Z (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 21 Jun 2021 15:56:25 -0400
-IronPort-SDR: dDbPxQdE829k9oHRlqTTIV2n/IEX0sCt80e0VAJuzN2Xv5H19cq3Tqgiuq/X8wWqaGHsTqH+tD
- nskfP7k+grQQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,10022"; a="206866127"
-X-IronPort-AV: E=Sophos;i="5.83,289,1616482800"; 
-   d="scan'208";a="206866127"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2021 12:54:08 -0700
-IronPort-SDR: 14Q6YW3UoGj91aU/mKvRulwZACplM7f8B5fc8hjeLGDVcbqZHjt3gdsp4aZnL+uWlgEIalsvYn
- bK4xOopJStqw==
-X-IronPort-AV: E=Sophos;i="5.83,289,1616482800"; 
-   d="scan'208";a="641426529"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2021 12:54:08 -0700
-From:   ira.weiny@intel.com
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-cxl@vger.kernel.org
-Subject: [PATCH V3] cxl/mem: Adjust ram/pmem range to represent DPA ranges
-Date:   Mon, 21 Jun 2021 12:54:06 -0700
-Message-Id: <20210621195406.2061505-1-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.28.0.rc0.12.gb6a658bd00c9
-In-Reply-To: <20210617221620.1904031-4-ira.weiny@intel.com>
-References: <20210617221620.1904031-4-ira.weiny@intel.com>
+        id S230338AbhFVBrW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 21 Jun 2021 21:47:22 -0400
+Received: from usmail.montage-tech.com ([12.176.92.53]:56656 "EHLO
+        usmail.montage-tech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229663AbhFVBrV (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 21 Jun 2021 21:47:21 -0400
+X-MDAV-Result: clean
+X-MDAV-Processed: usmail.montage-tech.com, Mon, 21 Jun 2021 18:45:06 -0700
+Received: from shmail.montage-tech.com by usmail.montage-tech.com with ESMTP id md5001005684222.msg; 
+        Mon, 21 Jun 2021 18:45:06 -0700
+X-MDArrival-Date: Mon, 21 Jun 2021 18:45:06 -0700
+X-Return-Path: prvs=1807fcb8d6=david.dai@montage-tech.com
+X-Envelope-From: david.dai@montage-tech.com
+X-MDaemon-Deliver-To: linux-cxl@vger.kernel.org
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=montage-tech.com;
+        s=MDaemon; t=1624326303; x=1624931103;
+        i=david.dai@montage-tech.com; q=dns/txt; h=From:To:Subject:Date:
+        Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        thread-index:Content-Language; bh=6TGH+5JwkYiCchkyOp9GwYZCtDiy64
+        99TMIQoh0cyKE=; b=dgyDimP3FLc/+pQQAx+lXzhAo+EZWDb2LTd3+ynEC9zMjr
+        ftejFgnDSAHSc/r0Ms9W1zjqtFRUtAHY92Fdm5g0n5SYEBpF2r28NqptBuD3sfiV
+        r29gCozT99NOML0Xdkd5nAgALcUGLpjcL5sgCbdbzNicaXCnBrQvH9p9wBLsM=
+X-MDAV-Result: clean
+X-MDAV-Processed: shmail.montage-tech.com, Tue, 22 Jun 2021 09:45:03 +0800
+Received: from cn021pc868 by shmail.montage-tech.com with ESMTPSA id pp5001016941499.msg; 
+        Tue, 22 Jun 2021 09:45:02 +0800
+From:   "Dai WeiBin \(David Dai\)" <david.dai@montage-tech.com>
+To:     <linux-cxl@vger.kernel.org>
+Subject: CXL_ECN_MailboxReadyTime
+Date:   Tue, 22 Jun 2021 09:41:12 +0800
+Message-ID: <044101d76707$aec58050$0c5080f0$@montage-tech.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 14.0
+thread-index: AddnBpil1WZ8QZH0SC+gJ3W3NwsjFg==
+Content-Language: zh-cn
+X-MDCFSigsAdded: montage-tech.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+Hi,
 
-Table 176 of the CXL spec defines the volatile DPA range to be 0 to
-Volatile memory size.  It further defines the persistent DPA range to
-follow directly after the end of the Volatile DPA through the persistent
-memory size.  Essentially
+When I think of CXL mailbox interface ready and timeout, an issue is =
+troubling me:
+From CXL_ECN_MailboxReadyTime_v5.pdf, Mailbox Ready Time could be at =
+most 3 minutes, Host BIOS maybe not be able to endure such big timeout =
+duration, so CXL device enumeration maybe fail during BIOS stage. CXL =
+device maybe have huge memory which needs a lot of time for training, =
+thus device boot-up will take a long period, for this case, a big delay =
+maybe exist before mailbox ready. I think if mailbox function doesn't =
+ready, BIOS should not refuse CXL device if other functions work well.
 
-Volatile DPA range   = [0, Volatile size)
-Persistent DPA range = [Volatile size, Volatile size + Persistent size)
+Thanks,
+David
 
-Adjust the pmem_range start to reflect this and remove the TODO.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
----
-For some reason I fixed this but failed to send it out...
-
-Changes for V3
-	Jonathan -- Clean up commit message
-
----
- drivers/cxl/pci.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 3c8b7aa8c273..592374baa005 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -1633,8 +1633,9 @@ static int cxl_mem_create_range_info(struct cxl_mem *cxlm)
- 	if (cxlm->partition_align_bytes == 0) {
- 		cxlm->ram_range.start = 0;
- 		cxlm->ram_range.end = cxlm->volatile_only_bytes - 1;
--		cxlm->pmem_range.start = 0;
--		cxlm->pmem_range.end = cxlm->persistent_only_bytes - 1;
-+		cxlm->pmem_range.start = cxlm->volatile_only_bytes;
-+		cxlm->pmem_range.end = cxlm->volatile_only_bytes +
-+					cxlm->persistent_only_bytes - 1;
- 		return 0;
- 	}
- 
-@@ -1658,15 +1659,12 @@ static int cxl_mem_create_range_info(struct cxl_mem *cxlm)
- 			cxlm->next_volatile_bytes,
- 			cxlm->next_persistent_bytes);
- 
--	/*
--	 * TODO: enumerate DPA map, as 'ram' and 'pmem' do not alias.
--	 * For now, only the capacity is exported in sysfs
--	 */
- 	cxlm->ram_range.start = 0;
- 	cxlm->ram_range.end = cxlm->active_volatile_bytes - 1;
- 
--	cxlm->pmem_range.start = 0;
--	cxlm->pmem_range.end = cxlm->active_persistent_bytes - 1;
-+	cxlm->pmem_range.start = cxlm->active_volatile_bytes;
-+	cxlm->pmem_range.end = cxlm->active_volatile_bytes +
-+				cxlm->active_persistent_bytes - 1;
- 
- 	return 0;
- }
--- 
-2.28.0.rc0.12.gb6a658bd00c9
 
