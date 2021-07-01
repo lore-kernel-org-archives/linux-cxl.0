@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A457EC11F6E
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jul 2021 20:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97953C11F6A
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jul 2021 20:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92F0361413
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jul 2021 20:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82EF361416
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jul 2021 20:10:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233904AbhGAUMy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S233909AbhGAUMy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Thu, 1 Jul 2021 16:12:54 -0400
-Received: from mga03.intel.com ([134.134.136.65]:63963 "EHLO mga03.intel.com"
+Received: from mga03.intel.com ([134.134.136.65]:63968 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233860AbhGAUMx (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 1 Jul 2021 16:12:53 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10032"; a="208653226"
+        id S233913AbhGAUMy (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 1 Jul 2021 16:12:54 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10032"; a="208653247"
 X-IronPort-AV: E=Sophos;i="5.83,315,1616482800"; 
-   d="scan'208";a="208653226"
+   d="scan'208";a="208653247"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2021 13:10:19 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2021 13:10:21 -0700
 X-IronPort-AV: E=Sophos;i="5.83,315,1616482800"; 
-   d="scan'208";a="409271345"
+   d="scan'208";a="409271375"
 Received: from anandvig-mobl.amr.corp.intel.com (HELO vverma7-desk.amr.corp.intel.com) ([10.254.38.85])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2021 13:10:18 -0700
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2021 13:10:20 -0700
 From:   Vishal Verma <vishal.l.verma@intel.com>
 To:     <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
@@ -35,9 +35,9 @@ Cc:     Dan Williams <dan.j.williams@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [ndctl PATCH v3 09/21] libcxl: add GET_HEALTH_INFO mailbox command and accessors
-Date:   Thu,  1 Jul 2021 14:09:53 -0600
-Message-Id: <20210701201005.3065299-10-vishal.l.verma@intel.com>
+Subject: [ndctl PATCH v3 13/21] test/libcxl: introduce a command size fuzzing test
+Date:   Thu,  1 Jul 2021 14:09:57 -0600
+Message-Id: <20210701201005.3065299-14-vishal.l.verma@intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210701201005.3065299-1-vishal.l.verma@intel.com>
 References: <20210701201005.3065299-1-vishal.l.verma@intel.com>
@@ -47,152 +47,152 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add libcxl APIs to create a new GET_HEALTH_INFO mailbox command, the
-command output data structure (privately), and accessor APIs to return
-the different fields in the health info output.
+Add a new test within test/libcxl which tries different combinations of
+valid and invalid payload sizes, and ensures that the kernel responds as
+expected by either succeeding, returning errors from the ioctl, adjusting
+the out.size in the response, etc.
+
+The fuzz set is a statically defined array which contains the different
+combinations to test. Adding a new combination only needs appending to
+this array.
 
 Cc: Ben Widawsky <ben.widawsky@intel.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
- cxl/lib/private.h  | 11 +++++++++
- cxl/lib/libcxl.c   | 61 ++++++++++++++++++++++++++++++++++++++++++++++
- cxl/libcxl.h       |  9 +++++++
- cxl/lib/libcxl.sym |  9 +++++++
- 4 files changed, 90 insertions(+)
+ test/libcxl.c | 112 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 112 insertions(+)
 
-diff --git a/cxl/lib/private.h b/cxl/lib/private.h
-index 3273f21..2232f4c 100644
---- a/cxl/lib/private.h
-+++ b/cxl/lib/private.h
-@@ -73,6 +73,17 @@ struct cxl_cmd_identify {
- 	u8 qos_telemetry_caps;
- } __attribute__((packed));
- 
-+struct cxl_cmd_get_health_info {
-+	u8 health_status;
-+	u8 media_status;
-+	u8 ext_status;
-+	u8 life_used;
-+	le16 temperature;
-+	le32 dirty_shutdowns;
-+	le32 volatile_errors;
-+	le32 pmem_errors;
-+} __attribute__((packed));
-+
- static inline int check_kmod(struct kmod_ctx *kmod_ctx)
- {
- 	return kmod_ctx ? 0 : -ENXIO;
-diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index 06a6c20..2e33c5e 100644
---- a/cxl/lib/libcxl.c
-+++ b/cxl/lib/libcxl.c
-@@ -673,6 +673,67 @@ CXL_EXPORT const char *cxl_cmd_get_devname(struct cxl_cmd *cmd)
- 	return cxl_memdev_get_devname(cmd->memdev);
+diff --git a/test/libcxl.c b/test/libcxl.c
+index 437b1ba..10f96f2 100644
+--- a/test/libcxl.c
++++ b/test/libcxl.c
+@@ -211,6 +211,117 @@ out_fail:
+ 	return rc;
  }
  
-+#define cmd_get_int(cmd, n, N, field) \
-+do { \
-+	struct cxl_cmd_##n *c = (void *)cmd->send_cmd->out.payload; \
-+	if (cmd->send_cmd->id != CXL_MEM_COMMAND_ID_##N) \
-+		return EINVAL; \
-+	if (cmd->status < 0) \
-+		return cmd->status; \
-+	return le32_to_cpu(c->field); \
-+} while(0);
++struct cmd_fuzzer {
++	struct cxl_cmd *(*new_fn)(struct cxl_memdev *memdev);
++	int in;		/* in size to set in cmd (INT_MAX = don't change) */
++	int out;	/* out size to set in cmd (INT_MAX = don't change) */
++	int e_out;	/* expected out size returned (INT_MAX = don't check) */
++	int e_rc;	/* expected ioctl return (INT_MAX = don't check) */
++	int e_hwrc;	/* expected 'mbox_status' (INT_MAX = don't check) */
++} fuzz_set[] = {
++	{ cxl_cmd_new_identify, INT_MAX, INT_MAX, 67, 0, 0 },
++	{ cxl_cmd_new_identify, 64, INT_MAX, INT_MAX, -ENOMEM, INT_MAX },
++	{ cxl_cmd_new_identify, INT_MAX, 1024, 67, 0, INT_MAX },
++	{ cxl_cmd_new_identify, INT_MAX, 16, INT_MAX, -ENOMEM, INT_MAX },
++};
 +
-+CXL_EXPORT struct cxl_cmd *cxl_cmd_new_get_health_info(
-+		struct cxl_memdev *memdev)
++static int do_one_cmd_size_test(struct cxl_memdev *memdev,
++		struct cmd_fuzzer *test)
 +{
-+	return cxl_cmd_new_generic(memdev, CXL_MEM_COMMAND_ID_GET_HEALTH_INFO);
++	const char *devname = cxl_memdev_get_devname(memdev);
++	struct cxl_cmd *cmd;
++	int rc;
++
++	cmd = test->new_fn(memdev);
++	if (!cmd)
++		return -ENOMEM;
++
++	if (test->in != INT_MAX) {
++		rc = cxl_cmd_set_input_payload(cmd, NULL, test->in);
++		if (rc) {
++			fprintf(stderr,
++				"%s: %s: failed to set in.size (%d): %s\n",
++				__func__, devname, test->in, strerror(-rc));
++			goto out_fail;
++		}
++	}
++	if (test->out != INT_MAX) {
++		rc = cxl_cmd_set_output_payload(cmd, NULL, test->out);
++		if (rc) {
++			fprintf(stderr,
++				"%s: %s: failed to set out.size (%d): %s\n",
++				__func__, devname, test->out, strerror(-rc));
++			goto out_fail;
++		}
++	}
++
++	rc = cxl_cmd_submit(cmd);
++	if (test->e_rc != INT_MAX && rc != test->e_rc) {
++		fprintf(stderr, "%s: %s: expected cmd rc %d, got %d\n",
++			__func__, devname, test->e_rc, rc);
++		rc = -ENXIO;
++		goto out_fail;
++	}
++
++	rc = cxl_cmd_get_out_size(cmd);
++	if (test->e_out != INT_MAX && rc != test->e_out) {
++		fprintf(stderr, "%s: %s: expected response out.size %d, got %d\n",
++			__func__, devname, test->e_out, rc);
++		rc = -ENXIO;
++		goto out_fail;
++	}
++
++	rc = cxl_cmd_get_mbox_status(cmd);
++	if (test->e_hwrc != INT_MAX && rc != test->e_hwrc) {
++		fprintf(stderr, "%s: %s: expected firmware status %d, got %d\n",
++			__func__, devname, test->e_hwrc, rc);
++		rc = -ENXIO;
++		goto out_fail;
++	}
++	return 0;
++
++out_fail:
++	cxl_cmd_unref(cmd);
++	return rc;
++
 +}
 +
-+#define cmd_health_get_int(c, f) \
-+do { \
-+	cmd_get_int(c, get_health_info, GET_HEALTH_INFO, f); \
-+} while (0);
-+
-+CXL_EXPORT int cxl_cmd_get_health_info_get_health_status(struct cxl_cmd *cmd)
++static void print_fuzz_test_status(struct cmd_fuzzer *t, const char *devname,
++		unsigned long idx, const char *msg)
 +{
-+	cmd_health_get_int(cmd, health_status);
++	fprintf(stderr,
++		"%s: fuzz_set[%lu]: in: %d, out %d, e_out: %d, e_rc: %d, e_hwrc: %d, result: %s\n",
++		devname, idx,
++		(t->in == INT_MAX) ? -1 : t->in,
++		(t->out == INT_MAX) ? -1 : t->out,
++		(t->e_out == INT_MAX) ? -1 : t->e_out,
++		(t->e_rc == INT_MAX) ? -1 : t->e_rc,
++		(t->e_hwrc == INT_MAX) ? -1 : t->e_hwrc,
++		msg);
 +}
 +
-+CXL_EXPORT int cxl_cmd_get_health_info_get_media_status(struct cxl_cmd *cmd)
++static int test_cxl_cmd_fuzz_sizes(struct cxl_ctx *ctx)
 +{
-+	cmd_health_get_int(cmd, media_status);
++	struct cxl_memdev *memdev;
++	unsigned long i;
++	int rc;
++
++	cxl_memdev_foreach(ctx, memdev) {
++		const char *devname = cxl_memdev_get_devname(memdev);
++
++		for (i = 0; i < ARRAY_SIZE(fuzz_set); i++) {
++			rc = do_one_cmd_size_test(memdev, &fuzz_set[i]);
++			if (rc) {
++				print_fuzz_test_status(&fuzz_set[i], devname,
++					i, "FAIL");
++				return rc;
++			}
++			print_fuzz_test_status(&fuzz_set[i], devname, i, "OK");
++		}
++	}
++	return 0;
 +}
 +
-+CXL_EXPORT int cxl_cmd_get_health_info_get_ext_status(struct cxl_cmd *cmd)
-+{
-+	cmd_health_get_int(cmd, ext_status);
-+}
-+
-+CXL_EXPORT int cxl_cmd_get_health_info_get_life_used(struct cxl_cmd *cmd)
-+{
-+	cmd_health_get_int(cmd, life_used);
-+}
-+
-+CXL_EXPORT int cxl_cmd_get_health_info_get_temperature(struct cxl_cmd *cmd)
-+{
-+	cmd_health_get_int(cmd, temperature);
-+}
-+
-+CXL_EXPORT int cxl_cmd_get_health_info_get_dirty_shutdowns(struct cxl_cmd *cmd)
-+{
-+	cmd_health_get_int(cmd, dirty_shutdowns);
-+}
-+
-+CXL_EXPORT int cxl_cmd_get_health_info_get_volatile_errors(struct cxl_cmd *cmd)
-+{
-+	cmd_health_get_int(cmd, volatile_errors);
-+}
-+
-+CXL_EXPORT int cxl_cmd_get_health_info_get_pmem_errors(struct cxl_cmd *cmd)
-+{
-+	cmd_health_get_int(cmd, pmem_errors);
-+}
-+
- CXL_EXPORT struct cxl_cmd *cxl_cmd_new_identify(struct cxl_memdev *memdev)
+ static int debugfs_write_raw_flag(char *str)
  {
- 	return cxl_cmd_new_generic(memdev, CXL_MEM_COMMAND_ID_IDENTIFY);
-diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index 9ed8c83..56ae4af 100644
---- a/cxl/libcxl.h
-+++ b/cxl/libcxl.h
-@@ -62,6 +62,15 @@ struct cxl_cmd *cxl_cmd_new_identify(struct cxl_memdev *memdev);
- int cxl_cmd_identify_get_fw_rev(struct cxl_cmd *cmd, char *fw_rev, int fw_len);
- unsigned long long cxl_cmd_identify_get_partition_align(struct cxl_cmd *cmd);
- unsigned int cxl_cmd_identify_get_lsa_size(struct cxl_cmd *cmd);
-+struct cxl_cmd *cxl_cmd_new_get_health_info(struct cxl_memdev *memdev);
-+int cxl_cmd_get_health_info_get_health_status(struct cxl_cmd *cmd);
-+int cxl_cmd_get_health_info_get_media_status(struct cxl_cmd *cmd);
-+int cxl_cmd_get_health_info_get_ext_status(struct cxl_cmd *cmd);
-+int cxl_cmd_get_health_info_get_life_used(struct cxl_cmd *cmd);
-+int cxl_cmd_get_health_info_get_temperature(struct cxl_cmd *cmd);
-+int cxl_cmd_get_health_info_get_dirty_shutdowns(struct cxl_cmd *cmd);
-+int cxl_cmd_get_health_info_get_volatile_errors(struct cxl_cmd *cmd);
-+int cxl_cmd_get_health_info_get_pmem_errors(struct cxl_cmd *cmd);
+ 	char *path = "/sys/kernel/debug/cxl/mbox/raw_allow_all";
+@@ -351,6 +462,7 @@ static do_test_fn do_test[] = {
+ 	test_cxl_emulation_env,
+ 	test_cxl_cmd_identify,
+ 	test_cxl_cmd_lsa,
++	test_cxl_cmd_fuzz_sizes,
+ };
  
- #ifdef __cplusplus
- } /* extern "C" */
-diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index d6aa0b2..e00443d 100644
---- a/cxl/lib/libcxl.sym
-+++ b/cxl/lib/libcxl.sym
-@@ -43,4 +43,13 @@ global:
- 	cxl_cmd_identify_get_fw_rev;
- 	cxl_cmd_identify_get_partition_align;
- 	cxl_cmd_identify_get_lsa_size;
-+	cxl_cmd_new_get_health_info;
-+	cxl_cmd_get_health_info_get_health_status;
-+	cxl_cmd_get_health_info_get_media_status;
-+	cxl_cmd_get_health_info_get_ext_status;
-+	cxl_cmd_get_health_info_get_life_used;
-+	cxl_cmd_get_health_info_get_temperature;
-+	cxl_cmd_get_health_info_get_dirty_shutdowns;
-+	cxl_cmd_get_health_info_get_volatile_errors;
-+	cxl_cmd_get_health_info_get_pmem_errors;
- } LIBCXL_2;
+ static int test_libcxl(int loglevel, struct test_ctx *test, struct cxl_ctx *ctx)
 -- 
 2.31.1
 
