@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF83C11F69
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jul 2021 20:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF9CC11F75
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jul 2021 20:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF6036141A
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jul 2021 20:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA5126141E
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jul 2021 20:10:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233913AbhGAUMz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Jul 2021 16:12:55 -0400
-Received: from mga03.intel.com ([134.134.136.65]:63963 "EHLO mga03.intel.com"
+        id S233842AbhGAUM5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Jul 2021 16:12:57 -0400
+Received: from mga03.intel.com ([134.134.136.65]:63971 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233894AbhGAUMy (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 1 Jul 2021 16:12:54 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10032"; a="208653241"
+        id S233930AbhGAUM4 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 1 Jul 2021 16:12:56 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10032"; a="208653273"
 X-IronPort-AV: E=Sophos;i="5.83,315,1616482800"; 
-   d="scan'208";a="208653241"
+   d="scan'208";a="208653273"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2021 13:10:20 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2021 13:10:24 -0700
 X-IronPort-AV: E=Sophos;i="5.83,315,1616482800"; 
-   d="scan'208";a="409271369"
+   d="scan'208";a="409271416"
 Received: from anandvig-mobl.amr.corp.intel.com (HELO vverma7-desk.amr.corp.intel.com) ([10.254.38.85])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2021 13:10:20 -0700
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2021 13:10:23 -0700
 From:   Vishal Verma <vishal.l.verma@intel.com>
 To:     <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
@@ -35,9 +35,9 @@ Cc:     Dan Williams <dan.j.williams@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [ndctl PATCH v3 12/21] test/libcxl: add a test for {set, get}_lsa commands
-Date:   Thu,  1 Jul 2021 14:09:56 -0600
-Message-Id: <20210701201005.3065299-13-vishal.l.verma@intel.com>
+Subject: [ndctl PATCH v3 17/21] test/libcxl: add a test for cxl_memdev_{get,set}_lsa
+Date:   Thu,  1 Jul 2021 14:10:01 -0600
+Message-Id: <20210701201005.3065299-18-vishal.l.verma@intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210701201005.3065299-1-vishal.l.verma@intel.com>
 References: <20210701201005.3065299-1-vishal.l.verma@intel.com>
@@ -47,191 +47,69 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add a test to store a static string in the label storage area using the
-SET_LSA mailbox command, and retrieve it using the GET_LSA command.
-Compare the strings sent and received and ensure they match.
+Add a unit test to test the new get/set LSA APIs in libcxl.
 
-Cc: Ben Widawsky <ben.widawsky@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
- test/libcxl.c    | 134 +++++++++++++++++++++++++++++++++++++++++++++++
- test/Makefile.am |   3 +-
- 2 files changed, 136 insertions(+), 1 deletion(-)
+ test/libcxl.c | 38 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
 diff --git a/test/libcxl.c b/test/libcxl.c
-index 241a4bb..437b1ba 100644
+index 10f96f2..e3da19c 100644
 --- a/test/libcxl.c
 +++ b/test/libcxl.c
-@@ -19,6 +19,7 @@
- #include <linux/version.h>
- 
- #include <util/size.h>
-+#include <util/hexdump.h>
- #include <ccan/short_types/short_types.h>
- #include <ccan/array_size/array_size.h>
- #include <ccan/endian/endian.h>
-@@ -210,6 +211,138 @@ out_fail:
+@@ -454,6 +454,43 @@ out_fail:
  	return rc;
  }
  
-+static int debugfs_write_raw_flag(char *str)
++static char *test_lsa_api_data = "LIBCXL_TEST READ/WRITE LSA DATA 2";
++static int test_cxl_read_write_lsa(struct cxl_ctx *ctx)
 +{
-+	char *path = "/sys/kernel/debug/cxl/mbox/raw_allow_all";
-+	int fd = open(path, O_WRONLY|O_CLOEXEC);
-+	int n, len = strlen(str) + 1, rc;
++	int data_size = strlen(test_lsa_api_data) + 1;
++	struct cxl_memdev *memdev;
++	unsigned char *buf;
++	int rc = 0;
 +
-+	if (fd < 0)
-+		return -errno;
-+
-+	n = write(fd, str, len);
-+	rc = -errno;
-+	close(fd);
-+	if (n < len) {
-+		fprintf(stderr, "failed to write %s to %s: %s\n", str, path,
-+					strerror(errno));
-+		return rc;
-+	}
-+	return 0;
-+}
-+
-+static char *test_lsa_data = "LIBCXL_TEST LSA DATA 01";
-+static int lsa_size = EXPECT_CMD_IDENTIFY_LSA_SIZE;
-+
-+static int test_set_lsa(struct cxl_memdev *memdev)
-+{
-+	int data_size = strlen(test_lsa_data) + 1;
-+	struct cxl_cmd *cmd;
-+	struct {
-+		le32 offset;
-+		le32 rsvd;
-+		unsigned char data[lsa_size];
-+	} __attribute__((packed)) set_lsa;
-+	int rc;
-+
-+	set_lsa.offset = cpu_to_le32(0);
-+	set_lsa.rsvd = cpu_to_le32(0);
-+	memcpy(set_lsa.data, test_lsa_data, data_size);
-+
-+	cmd = cxl_cmd_new_raw(memdev, 0x4103);
-+	if (!cmd)
++	buf = calloc(1, data_size);
++	if (!buf)
 +		return -ENOMEM;
 +
-+	rc = cxl_cmd_set_input_payload(cmd, &set_lsa, sizeof(set_lsa));
-+	if (rc) {
-+		fprintf(stderr, "%s: %s: cmd setup failed: %s\n",
-+			__func__, cxl_memdev_get_devname(memdev),
-+			strerror(-rc));
-+		goto out_fail;
-+	}
-+
-+	rc = debugfs_write_raw_flag("Y");
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = cxl_cmd_submit(cmd);
-+	if (rc < 0)
-+		fprintf(stderr, "%s: %s: cmd submission failed: %s\n",
-+			__func__, cxl_memdev_get_devname(memdev),
-+			strerror(-rc));
-+
-+	rc = cxl_cmd_get_mbox_status(cmd);
-+	if (rc != 0) {
-+		fprintf(stderr, "%s: %s: firmware status: %d\n",
-+			__func__, cxl_memdev_get_devname(memdev), rc);
-+		return -ENXIO;
-+	}
-+
-+	if(debugfs_write_raw_flag("N") < 0)
-+		fprintf(stderr, "%s: %s: failed to restore raw flag\n",
-+			__func__, cxl_memdev_get_devname(memdev));
-+
-+out_fail:
-+	cxl_cmd_unref(cmd);
-+	return rc;
-+}
-+
-+static int test_cxl_cmd_lsa(struct cxl_ctx *ctx)
-+{
-+	int data_size = strlen(test_lsa_data) + 1;
-+	struct cxl_memdev *memdev;
-+	struct cxl_cmd *cmd;
-+	unsigned char *buf;
-+	int rc;
-+
 +	cxl_memdev_foreach(ctx, memdev) {
-+		rc = test_set_lsa(memdev);
++		rc = cxl_memdev_set_lsa(memdev, test_lsa_api_data, data_size, 0);
 +		if (rc)
-+			return rc;
-+
-+		cmd = cxl_cmd_new_get_lsa(memdev, 0, lsa_size);
-+		if (!cmd)
-+			return -ENOMEM;
-+		rc = cxl_cmd_set_output_payload(cmd, NULL, lsa_size);
-+		if (rc) {
-+			fprintf(stderr, "%s: output buffer allocation: %s\n",
-+				__func__, strerror(-rc));
-+			return rc;
-+		}
-+		rc = cxl_cmd_submit(cmd);
-+		if (rc < 0) {
-+			fprintf(stderr, "%s: %s: cmd submission failed: %s\n",
-+				__func__, cxl_memdev_get_devname(memdev),
-+				strerror(-rc));
 +			goto out_fail;
-+		}
 +
-+		rc = cxl_cmd_get_mbox_status(cmd);
-+		if (rc != 0) {
-+			fprintf(stderr, "%s: %s: firmware status: %d\n",
-+				__func__, cxl_memdev_get_devname(memdev), rc);
-+			return -ENXIO;
-+		}
-+
-+		buf = cxl_cmd_get_lsa_get_payload(cmd);
++		rc = cxl_memdev_get_lsa(memdev, buf, data_size, 0);
 +		if (rc < 0)
 +			goto out_fail;
 +
-+		if (memcmp(buf, test_lsa_data, data_size) != 0) {
++		if (memcmp(buf, test_lsa_api_data, data_size) != 0) {
 +			fprintf(stderr, "%s: LSA data mismatch.\n", __func__);
++			fprintf(stderr, "%s: Get LSA returned:\n", __func__);
 +			hex_dump_buf(buf, data_size);
++			fprintf(stderr, "%s: Set LSA had set:\n", __func__);
++			hex_dump_buf((unsigned char *)test_lsa_api_data, data_size);
 +			rc = -EIO;
 +			goto out_fail;
 +		}
-+		cxl_cmd_unref(cmd);
 +	}
-+	return 0;
 +
 +out_fail:
-+	cxl_cmd_unref(cmd);
++	free(buf);
 +	return rc;
 +}
 +
  typedef int (*do_test_fn)(struct cxl_ctx *ctx);
  
  static do_test_fn do_test[] = {
-@@ -217,6 +350,7 @@ static do_test_fn do_test[] = {
- 	test_cxl_presence,
- 	test_cxl_emulation_env,
+@@ -463,6 +500,7 @@ static do_test_fn do_test[] = {
  	test_cxl_cmd_identify,
-+	test_cxl_cmd_lsa,
+ 	test_cxl_cmd_lsa,
+ 	test_cxl_cmd_fuzz_sizes,
++	test_cxl_read_write_lsa,
  };
  
  static int test_libcxl(int loglevel, struct test_ctx *test, struct cxl_ctx *ctx)
-diff --git a/test/Makefile.am b/test/Makefile.am
-index ce492a4..23f4860 100644
---- a/test/Makefile.am
-+++ b/test/Makefile.am
-@@ -86,7 +86,8 @@ LIBNDCTL_LIB =\
- testcore =\
- 	core.c \
- 	../util/log.c \
--	../util/sysfs.c
-+	../util/sysfs.c \
-+	../util/hexdump.c
- 
- libndctl_SOURCES = libndctl.c $(testcore)
- libndctl_LDADD = $(LIBNDCTL_LIB) $(UUID_LIBS) $(KMOD_LIBS)
 -- 
 2.31.1
 
