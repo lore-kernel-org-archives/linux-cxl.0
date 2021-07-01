@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D8AC11F64
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jul 2021 20:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2061EC11F6B
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jul 2021 20:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A44A61413
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jul 2021 20:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 060E86141E
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jul 2021 20:10:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232637AbhGAUMt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Jul 2021 16:12:49 -0400
+        id S233360AbhGAUMw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Jul 2021 16:12:52 -0400
 Received: from mga03.intel.com ([134.134.136.65]:63945 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230149AbhGAUMt (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 1 Jul 2021 16:12:49 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10032"; a="208653171"
+        id S233860AbhGAUMv (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 1 Jul 2021 16:12:51 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10032"; a="208653196"
 X-IronPort-AV: E=Sophos;i="5.83,315,1616482800"; 
-   d="scan'208";a="208653171"
+   d="scan'208";a="208653196"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2021 13:10:13 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2021 13:10:16 -0700
 X-IronPort-AV: E=Sophos;i="5.83,315,1616482800"; 
-   d="scan'208";a="409271277"
+   d="scan'208";a="409271321"
 Received: from anandvig-mobl.amr.corp.intel.com (HELO vverma7-desk.amr.corp.intel.com) ([10.254.38.85])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2021 13:10:12 -0700
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2021 13:10:15 -0700
 From:   Vishal Verma <vishal.l.verma@intel.com>
 To:     <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
@@ -35,176 +35,161 @@ Cc:     Dan Williams <dan.j.williams@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [ndctl PATCH v3 00/21] Initial CXL support
-Date:   Thu,  1 Jul 2021 14:09:44 -0600
-Message-Id: <20210701201005.3065299-1-vishal.l.verma@intel.com>
+Subject: [ndctl PATCH v3 05/21] libcxl: add support for the 'Identify Device' command
+Date:   Thu,  1 Jul 2021 14:09:49 -0600
+Message-Id: <20210701201005.3065299-6-vishal.l.verma@intel.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210701201005.3065299-1-vishal.l.verma@intel.com>
+References: <20210701201005.3065299-1-vishal.l.verma@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Changes since v2[1]:
+Add APIs to allocate and send an 'Identify Device' command, and
+accessors to retrieve some of the fields from the resulting data.
 
-- Some minor cleanups and formatting (Ben)
-- Update cxl_mem.h to the latest kernel version (Ben)
-- Add .clang-format (Ben)
-- Add label commands to cxl-clu - {read,write,zero}-labels
-- Add libcxl and cxl-cli to the RPM spec
-- Add bash-completion for cxl-cli
-- 
+Only add a handful accessor functions; more can be added as the need
+arises. The fields added are fw_revision, partition_align, and
+lsa_size.
 
-[1]: https://lore.kernel.org/linux-cxl/20210219020331.725687-1-vishal.l.verma@intel.com/
-
+Cc: Ben Widawsky <ben.widawsky@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
+ cxl/lib/private.h  | 19 ++++++++++++++++++
+ cxl/lib/libcxl.c   | 49 ++++++++++++++++++++++++++++++++++++++++++++++
+ cxl/libcxl.h       |  4 ++++
+ cxl/lib/libcxl.sym |  4 ++++
+ 4 files changed, 76 insertions(+)
 
-These patches add a new utility and library to support CXL devices.
-This comprehends the kernel's sysfs layout for CXL devices, and
-implements a command submission harness for CXL mailbox commands via
-ioctl()s definied by the cxl_mem driver. 
-
-These patches include:
-- libcxl representation of cxl_mem devices
-- A command submission harness through libcxl
-- A 'cxl-list' command which displays information about a device
-- cxl-{read,write,zero}-labels commands for Label Storage Area
-  manipulation
-- Unit tests to exercise several libcxl APIs and perform mailbox
-  commands.
-
-Patch 15 is an RFC - maybe this should just be dropped entirely for now
-until there is a concept of active/disabled memdevs. It is useful as a
-placeholder as it allows for a way to pre-insert checks in places
-we expect the device to be active or disabled.
-
-An ndctl branch with these patches is also available at [2]
-
-[2]: https://github.com/pmem/ndctl/tree/cxl-2.0v2
-
-Ira Weiny (1):
-  ndctl: Add CXL packages to the RPM spec
-
-Vishal Verma (20):
-  ndctl: add .clang-format
-  cxl: add a cxl utility and libcxl library
-  cxl: add a local copy of the cxl_mem UAPI header
-  libcxl: add support for command query and submission
-  libcxl: add support for the 'Identify Device' command
-  test: rename 'ndctl_test' to 'test_ctx'
-  test: rename 'ndctl_test_*' helpers to 'test_*'
-  test: introduce a libcxl unit test
-  libcxl: add GET_HEALTH_INFO mailbox command and accessors
-  libcxl: add support for the 'GET_LSA' command
-  util/hexdump: Add a util helper to print a buffer in hex
-  test/libcxl: add a test for {set, get}_lsa commands
-  test/libcxl: introduce a command size fuzzing test
-  libcxl: add lsa_size to cxl_memdev, and an API to retrieve it
-  libcxl: PLACEHOLDER: add an interface to determine whether a memdev is
-    active
-  libcxl: add interfaces for label operations
-  test/libcxl: add a test for cxl_memdev_{get,set}_lsa
-  cxl: add commands to read, write, and zero labels
-  Documentation/cxl: add library API documentation
-  cxl-cli: add bash completion
-
- Documentation/cxl/cxl-list.txt           |   64 ++
- Documentation/cxl/cxl-read-labels.txt    |   33 +
- Documentation/cxl/cxl-write-labels.txt   |   32 +
- Documentation/cxl/cxl-zero-labels.txt    |   29 +
- Documentation/cxl/cxl.txt                |   34 +
- Documentation/cxl/human-option.txt       |    8 +
- Documentation/cxl/labels-description.txt |    8 +
- Documentation/cxl/labels-options.txt     |   17 +
- Documentation/cxl/lib/cxl_new.txt        |   43 +
- Documentation/cxl/lib/libcxl.txt         |   56 ++
- Documentation/cxl/memdev-option.txt      |    4 +
- Documentation/cxl/verbose-option.txt     |    5 +
- configure.ac                             |    4 +
- Makefile.am                              |   14 +-
- Makefile.am.in                           |    5 +
- cxl/lib/private.h                        |  104 +++
- cxl/lib/libcxl.c                         | 1026 ++++++++++++++++++++++
- cxl/builtin.h                            |   13 +
- cxl/cxl_mem.h                            |  189 ++++
- cxl/libcxl.h                             |   91 ++
- test.h                                   |   40 +-
- test/libcxl-expect.h                     |   13 +
- util/filter.h                            |    2 +
- util/hexdump.h                           |    8 +
- util/json.h                              |    3 +
- util/main.h                              |    3 +
- cxl/cxl.c                                |   99 +++
- cxl/list.c                               |  113 +++
- cxl/memdev.c                             |  314 +++++++
- ndctl/bat.c                              |    8 +-
- ndctl/test.c                             |    8 +-
- test/ack-shutdown-count-set.c            |   16 +-
- test/blk_namespaces.c                    |   14 +-
- test/core.c                              |   32 +-
- test/dax-dev.c                           |   10 +-
- test/dax-pmd.c                           |   13 +-
- test/dax-poison.c                        |    6 +-
- test/daxdev-errors.c                     |    2 +-
- test/device-dax.c                        |   26 +-
- test/dpa-alloc.c                         |   14 +-
- test/dsm-fail.c                          |   14 +-
- test/libcxl.c                            |  553 ++++++++++++
- test/libndctl.c                          |   84 +-
- test/multi-pmem.c                        |   23 +-
- test/parent-uuid.c                       |   13 +-
- test/pmem_namespaces.c                   |   14 +-
- test/revoke-devmem.c                     |   12 +-
- util/filter.c                            |   20 +
- util/hexdump.c                           |   53 ++
- util/json.c                              |   26 +
- .clang-format                            |  162 ++++
- .gitignore                               |    7 +-
- Documentation/cxl/Makefile.am            |   61 ++
- Documentation/cxl/lib/Makefile.am        |   58 ++
- README.md                                |    2 +-
- contrib/ndctl                            |  109 +++
- cxl/Makefile.am                          |   22 +
- cxl/lib/Makefile.am                      |   32 +
- cxl/lib/libcxl.pc.in                     |   11 +
- cxl/lib/libcxl.sym                       |   67 ++
- ndctl.spec.in                            |   49 ++
- test/Makefile.am                         |   15 +-
- 62 files changed, 3749 insertions(+), 181 deletions(-)
- create mode 100644 Documentation/cxl/cxl-list.txt
- create mode 100644 Documentation/cxl/cxl-read-labels.txt
- create mode 100644 Documentation/cxl/cxl-write-labels.txt
- create mode 100644 Documentation/cxl/cxl-zero-labels.txt
- create mode 100644 Documentation/cxl/cxl.txt
- create mode 100644 Documentation/cxl/human-option.txt
- create mode 100644 Documentation/cxl/labels-description.txt
- create mode 100644 Documentation/cxl/labels-options.txt
- create mode 100644 Documentation/cxl/lib/cxl_new.txt
- create mode 100644 Documentation/cxl/lib/libcxl.txt
- create mode 100644 Documentation/cxl/memdev-option.txt
- create mode 100644 Documentation/cxl/verbose-option.txt
- create mode 100644 cxl/lib/private.h
- create mode 100644 cxl/lib/libcxl.c
- create mode 100644 cxl/builtin.h
- create mode 100644 cxl/cxl_mem.h
- create mode 100644 cxl/libcxl.h
- create mode 100644 test/libcxl-expect.h
- create mode 100644 util/hexdump.h
- create mode 100644 cxl/cxl.c
- create mode 100644 cxl/list.c
- create mode 100644 cxl/memdev.c
- create mode 100644 test/libcxl.c
- create mode 100644 util/hexdump.c
- create mode 100644 .clang-format
- create mode 100644 Documentation/cxl/Makefile.am
- create mode 100644 Documentation/cxl/lib/Makefile.am
- create mode 100644 cxl/Makefile.am
- create mode 100644 cxl/lib/Makefile.am
- create mode 100644 cxl/lib/libcxl.pc.in
- create mode 100644 cxl/lib/libcxl.sym
-
-
-base-commit: 4e646fa490ba4b782afa188dd8818b94c419924e
+diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+index 87ca17e..3273f21 100644
+--- a/cxl/lib/private.h
++++ b/cxl/lib/private.h
+@@ -54,6 +54,25 @@ struct cxl_cmd {
+ 	int status;
+ };
+ 
++#define CXL_CMD_IDENTIFY_FW_REV_LENGTH 0x10
++
++struct cxl_cmd_identify {
++	char fw_revision[CXL_CMD_IDENTIFY_FW_REV_LENGTH];
++	le64 total_capacity;
++	le64 volatile_capacity;
++	le64 persistent_capacity;
++	le64 partition_align;
++	le16 info_event_log_size;
++	le16 warning_event_log_size;
++	le16 failure_event_log_size;
++	le16 fatal_event_log_size;
++	le32 lsa_size;
++	u8 poison_list_max_mer[3];
++	le16 inject_poison_limit;
++	u8 poison_caps;
++	u8 qos_telemetry_caps;
++} __attribute__((packed));
++
+ static inline int check_kmod(struct kmod_ctx *kmod_ctx)
+ {
+ 	return kmod_ctx ? 0 : -ENXIO;
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index 3be4f3d..06a6c20 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -13,7 +13,10 @@
+ #include <sys/sysmacros.h>
+ #include <uuid/uuid.h>
+ #include <ccan/list/list.h>
++#include <ccan/endian/endian.h>
++#include <ccan/minmax/minmax.h>
+ #include <ccan/array_size/array_size.h>
++#include <ccan/short_types/short_types.h>
+ 
+ #include <util/log.h>
+ #include <util/sysfs.h>
+@@ -670,6 +673,52 @@ CXL_EXPORT const char *cxl_cmd_get_devname(struct cxl_cmd *cmd)
+ 	return cxl_memdev_get_devname(cmd->memdev);
+ }
+ 
++CXL_EXPORT struct cxl_cmd *cxl_cmd_new_identify(struct cxl_memdev *memdev)
++{
++	return cxl_cmd_new_generic(memdev, CXL_MEM_COMMAND_ID_IDENTIFY);
++}
++
++CXL_EXPORT int cxl_cmd_identify_get_fw_rev(struct cxl_cmd *cmd, char *fw_rev,
++		int fw_len)
++{
++	struct cxl_cmd_identify *id = (void *)cmd->send_cmd->out.payload;
++
++	if (cmd->send_cmd->id != CXL_MEM_COMMAND_ID_IDENTIFY)
++		return -EINVAL;
++	if (cmd->status < 0)
++		return cmd->status;
++
++	if (fw_len > 0)
++		memcpy(fw_rev, id->fw_revision,
++			min(fw_len, CXL_CMD_IDENTIFY_FW_REV_LENGTH));
++	return 0;
++}
++
++CXL_EXPORT unsigned long long cxl_cmd_identify_get_partition_align(
++		struct cxl_cmd *cmd)
++{
++	struct cxl_cmd_identify *id = (void *)cmd->send_cmd->out.payload;
++
++	if (cmd->send_cmd->id != CXL_MEM_COMMAND_ID_IDENTIFY)
++		return -EINVAL;
++	if (cmd->status < 0)
++		return cmd->status;
++
++	return le64_to_cpu(id->partition_align);
++}
++
++CXL_EXPORT unsigned int cxl_cmd_identify_get_lsa_size(struct cxl_cmd *cmd)
++{
++	struct cxl_cmd_identify *id = (void *)cmd->send_cmd->out.payload;
++
++	if (cmd->send_cmd->id != CXL_MEM_COMMAND_ID_IDENTIFY)
++		return -EINVAL;
++	if (cmd->status < 0)
++		return cmd->status;
++
++	return le32_to_cpu(id->lsa_size);
++}
++
+ CXL_EXPORT struct cxl_cmd *cxl_cmd_new_raw(struct cxl_memdev *memdev,
+ 		int opcode)
+ {
+diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+index 6e87b80..9ed8c83 100644
+--- a/cxl/libcxl.h
++++ b/cxl/libcxl.h
+@@ -58,6 +58,10 @@ void cxl_cmd_unref(struct cxl_cmd *cmd);
+ int cxl_cmd_submit(struct cxl_cmd *cmd);
+ int cxl_cmd_get_mbox_status(struct cxl_cmd *cmd);
+ int cxl_cmd_get_out_size(struct cxl_cmd *cmd);
++struct cxl_cmd *cxl_cmd_new_identify(struct cxl_memdev *memdev);
++int cxl_cmd_identify_get_fw_rev(struct cxl_cmd *cmd, char *fw_rev, int fw_len);
++unsigned long long cxl_cmd_identify_get_partition_align(struct cxl_cmd *cmd);
++unsigned int cxl_cmd_identify_get_lsa_size(struct cxl_cmd *cmd);
+ 
+ #ifdef __cplusplus
+ } /* extern "C" */
+diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+index 493429c..d6aa0b2 100644
+--- a/cxl/lib/libcxl.sym
++++ b/cxl/lib/libcxl.sym
+@@ -39,4 +39,8 @@ global:
+ 	cxl_cmd_submit;
+ 	cxl_cmd_get_mbox_status;
+ 	cxl_cmd_get_out_size;
++	cxl_cmd_new_identify;
++	cxl_cmd_identify_get_fw_rev;
++	cxl_cmd_identify_get_partition_align;
++	cxl_cmd_identify_get_lsa_size;
+ } LIBCXL_2;
 -- 
 2.31.1
 
