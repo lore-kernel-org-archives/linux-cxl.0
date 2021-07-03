@@ -2,239 +2,195 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7279C11F68
-	for <linux-cxl@archiver.kernel.org>; Fri,  2 Jul 2021 04:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D60C07E97
+	for <linux-cxl@archiver.kernel.org>; Sat,  3 Jul 2021 15:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D48A613DC
-	for <linux-cxl@archiver.kernel.org>; Fri,  2 Jul 2021 04:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1A2461928
+	for <linux-cxl@archiver.kernel.org>; Sat,  3 Jul 2021 15:08:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229685AbhGBECv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 2 Jul 2021 00:02:51 -0400
-Received: from mga06.intel.com ([134.134.136.31]:34836 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229499AbhGBECt (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 2 Jul 2021 00:02:49 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10032"; a="269796964"
-X-IronPort-AV: E=Sophos;i="5.83,316,1616482800"; 
-   d="scan'208";a="269796964"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2021 21:00:17 -0700
-X-IronPort-AV: E=Sophos;i="5.83,316,1616482800"; 
-   d="scan'208";a="626612129"
-Received: from rlaw-mobl.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.131.215])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2021 21:00:16 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH] cxl: Enable an endpoint decoder type
-Date:   Thu,  1 Jul 2021 21:00:09 -0700
-Message-Id: <20210702040009.68794-1-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.32.0
+        id S229787AbhGCPLO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 3 Jul 2021 11:11:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229700AbhGCPLN (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 3 Jul 2021 11:11:13 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9681C061765
+        for <linux-cxl@vger.kernel.org>; Sat,  3 Jul 2021 08:08:39 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id a2so13002872pgi.6
+        for <linux-cxl@vger.kernel.org>; Sat, 03 Jul 2021 08:08:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=AQbbf2RGKiyGMgVgSD04t3IAjg5pazcXA5ZylcTtDAs=;
+        b=lZlsYYdVrFJhStYN9NB1Ujjd09m4N3akhoTQPZXEqZZabLevXrE/q9cEbf8aPgY2so
+         lwCQsNyX0MyFbq9LmEZZ6trNOm72MBNPc6nyYxzw7CE6Y2TN7xRAWdpgFD6J0Faxbetr
+         QuXgzdP222zRH5sezXz3WN5yuYgh6ENNXc4WlHq7u3fwUoDj0osHwwMmUSC0kRV5jmm7
+         V75LPVlcZD5aHngJnUNwhlLgE1SMpAR2l2vvXh7zR8Ew75gOA4vaShhfaRPht9XMGDrI
+         eAHdtSHnbNq1trv0+UaSKUBQY0mCDt1P4XNl1DgzZDzQyt2xJLp7iB3LminZj8/hLWgi
+         5Zeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=AQbbf2RGKiyGMgVgSD04t3IAjg5pazcXA5ZylcTtDAs=;
+        b=EQpsL9zfOaWq5QORQVlGZ6cAB91E/PDMiGBwlhV2SZh6hzi8MBpnoJryXVeCn0i32b
+         J54IcZRV9bFzlHBd5DDceEy2JF/SotRKAZGdTjlB9usv+H3BieHt/VzdZ4B5j5Djg/Bl
+         ogDYVlsBN+6em3ozuliM0XWWPnQmrayQc/AlC9iUqO804JwDV/SYbEpkVBT7pxeA6JOv
+         tFcyip10B8yPLscdIeSopECerEx/UXxLumyUKfqW8hEkgjSnJv4E39B5kthHktWAy+dC
+         BYeeWSPRmDzQqE4T5t++pqVNYjUT4nQjyYkA6WUALFi35aYlO8L38IUcUC1D7k1mIR7k
+         zpCw==
+X-Gm-Message-State: AOAM53379YlEjWwODgGai3/ZjJTWORV9KUVmR36w+MKZ6N+ro8YOEwiV
+        Nk5/RC6dXEAA0MB2IoBWpDyiMi+NSeMTYagorfL6Sw==
+X-Google-Smtp-Source: ABdhPJwQze6TSTvDkgVEt9LlRIIJk9HNWrAOVf4x2epaG1/v9U+n4k6Glvi+ELRuBd3xk1p1GrxNqxTB2D2pxVXFkGs=
+X-Received: by 2002:a63:195b:: with SMTP id 27mr5686983pgz.450.1625324919360;
+ Sat, 03 Jul 2021 08:08:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sat, 3 Jul 2021 08:08:28 -0700
+Message-ID: <CAPcyv4haJdFPBdUJDwVwMvR4Ezij7Osn-+H0JApF=9fM2AM5wA@mail.gmail.com>
+Subject: [GIT PULL] Compute Express Link (CXL) update for v5.14
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-cxl@vger.kernel.org, Linux NVDIMM <nvdimm@lists.linux.dev>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-CXL memory devices support HDM decoders. Currently, when a decoder is
-instantiated there is no knowledge of the type of decoder; only the
-underlying endpoint type is specified. In order to have the memory
-devices reuse the existing decoder creation infrastructure it is
-convenient to pass along the type of decoder on creation.
+Hi Linus, please pull from:
 
-The primary difference for an endpoint decoder is that it doesn't have
-dports, nor targets. The target is just the underlying media (with
-offset).
+  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-5.14
 
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+...to receive the CXL update for v5.14. This subsystem is still in the
+build-out phase as the bulk of the update is improvements to
+enumeration and fleshing out the device model. In terms of new
+features, more mailbox commands have been added to the allowed-list in
+support of persistent memory provisioning support targeting v5.15. The
+critical update from an enumeration perspective is support for the CXL
+Fixed Memory Window Structure that indicates to Linux which system
+physical address ranges decode to the CXL Host Bridges in the system.
+This allows the driver to detect which address ranges have been mapped
+by firmware and what address ranges are available for future hotplug.
+
+So, again, mostly skeleton this round, with more meat targeting v5.15.
+
+The bulk of this has been in -next with no reported issues. The top 3
+commits were promoted from the cxl 'pending' to 'next' branch recently
+and -next has not had a chance to pick those up yet, but the kbuild
+robot has chewed on that pending branch for a couple weeks.
+
+Please pull, thanks.
+
 ---
 
-The consumer of this is the region, memory device, and decoder drivers which are
-being worked on. The memory device driver on probe will query the HDM decoder
-registers to determine how many decoders are present and instantiate a
-cxl_decoder for each one. This patch enables that to work.
+The following changes since commit 4a2c1dcfaf59be4b357400d893c3f5daff6cab6c:
 
----
- drivers/cxl/acpi.c |  2 +-
- drivers/cxl/core.c | 43 ++++++++++++++++++++++++++++++++-----------
- drivers/cxl/cxl.h  | 29 +++++++++++++++++++++++++----
- 3 files changed, 58 insertions(+), 16 deletions(-)
+  ACPICA: Add the CFMWS structure definition to the CEDT table
+(2021-06-07 14:04:43 +0200)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 8ae89273f58e..5215845e0f89 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -114,7 +114,7 @@ static void cxl_add_cfmws_decoders(struct device *dev,
- 					    cfmws->base_hpa, cfmws->window_size,
- 					    CFMWS_INTERLEAVE_WAYS(cfmws),
- 					    CFMWS_INTERLEAVE_GRANULARITY(cfmws),
--					    CXL_DECODER_EXPANDER,
-+					    CXL_DECODER_PLATFORM,
- 					    flags);
- 
- 		if (IS_ERR(cxld)) {
-diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
-index a2e4d54fc7bc..196f260e2580 100644
---- a/drivers/cxl/core.c
-+++ b/drivers/cxl/core.c
-@@ -75,9 +75,9 @@ static ssize_t target_type_show(struct device *dev,
- 	struct cxl_decoder *cxld = to_cxl_decoder(dev);
- 
- 	switch (cxld->target_type) {
--	case CXL_DECODER_ACCELERATOR:
-+	case CXL_DEVICE_ACCELERATOR:
- 		return sysfs_emit(buf, "accelerator\n");
--	case CXL_DECODER_EXPANDER:
-+	case CXL_DEVICE_EXPANDER:
- 		return sysfs_emit(buf, "expander\n");
- 	}
- 	return -ENXIO;
-@@ -167,6 +167,12 @@ static const struct attribute_group *cxl_decoder_switch_attribute_groups[] = {
- 	NULL,
- };
- 
-+static const struct attribute_group *cxl_decoder_endpoint_attribute_groups[] = {
-+	&cxl_decoder_base_attribute_group,
-+	&cxl_base_attribute_group,
-+	NULL,
-+};
-+
- static void cxl_decoder_release(struct device *dev)
- {
- 	struct cxl_decoder *cxld = to_cxl_decoder(dev);
-@@ -176,6 +182,12 @@ static void cxl_decoder_release(struct device *dev)
- 	kfree(cxld);
- }
- 
-+static const struct device_type cxl_decoder_endpoint_type = {
-+	.name = "cxl_decoder_endpoint",
-+	.release = cxl_decoder_release,
-+	.groups = cxl_decoder_endpoint_attribute_groups,
-+};
-+
- static const struct device_type cxl_decoder_switch_type = {
- 	.name = "cxl_decoder_switch",
- 	.release = cxl_decoder_release,
-@@ -458,12 +470,14 @@ cxl_decoder_alloc(struct cxl_port *port, int nr_targets, resource_size_t base,
- 	if (interleave_ways < 1)
- 		return ERR_PTR(-EINVAL);
- 
--	device_lock(&port->dev);
--	if (list_empty(&port->dports))
--		rc = -EINVAL;
--	device_unlock(&port->dev);
--	if (rc)
--		return ERR_PTR(rc);
-+	if (type != CXL_DECODER_ENDPOINT) {
-+		device_lock(&port->dev);
-+		if (list_empty(&port->dports))
-+			rc = -EINVAL;
-+		device_unlock(&port->dev);
-+		if (rc)
-+			return ERR_PTR(rc);
-+	}
- 
- 	cxld = kzalloc(struct_size(cxld, target, nr_targets), GFP_KERNEL);
- 	if (!cxld)
-@@ -496,10 +510,17 @@ cxl_decoder_alloc(struct cxl_port *port, int nr_targets, resource_size_t base,
- 	dev->bus = &cxl_bus_type;
- 
- 	/* root ports do not have a cxl_port_type parent */
--	if (port->dev.parent->type == &cxl_port_type)
--		dev->type = &cxl_decoder_switch_type;
--	else
-+	switch (type) {
-+	case CXL_DECODER_PLATFORM:
- 		dev->type = &cxl_decoder_root_type;
-+		break;
-+	case CXL_DECODER_SWITCH:
-+		dev->type = &cxl_decoder_switch_type;
-+		break;
-+	case CXL_DECODER_ENDPOINT:
-+		dev->type = &cxl_decoder_endpoint_type;
-+		break;
-+	}
- 
- 	return cxld;
- err:
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index b6bda39a59e3..8fe58404ebb5 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -164,6 +164,11 @@ int cxl_map_device_regs(struct pci_dev *pdev,
- #define CXL_RESOURCE_NONE ((resource_size_t) -1)
- #define CXL_TARGET_STRLEN 20
- 
-+enum cxl_device_type {
-+       CXL_DEVICE_ACCELERATOR = 2,
-+       CXL_DEVICE_EXPANDER = 3,
-+};
-+
- /*
-  * cxl_decoder flags that define the type of memory / devices this
-  * decoder supports as well as configuration lock status See "CXL 2.0
-@@ -177,8 +182,9 @@ int cxl_map_device_regs(struct pci_dev *pdev,
- #define CXL_DECODER_F_MASK  GENMASK(4, 0)
- 
- enum cxl_decoder_type {
--       CXL_DECODER_ACCELERATOR = 2,
--       CXL_DECODER_EXPANDER = 3,
-+       CXL_DECODER_PLATFORM,
-+       CXL_DECODER_SWITCH,
-+       CXL_DECODER_ENDPOINT,
- };
- 
- /**
-@@ -191,6 +197,21 @@ enum cxl_decoder_type {
-  * @target_type: accelerator vs expander (type2 vs type3) selector
-  * @flags: memory type capabilities and locking
-  * @target: active ordered target list in current decoder configuration
-+ *
-+ * Abstractly, a CXL decoder represents one of 3 possible decoders:
-+ * 1. Platform specific routing - opaque rules for the memory controller that
-+ *    may be communicated via ACPI or devicetree. This decoding has implied
-+ *    interleave parameters as well as physical address ranges that are directed
-+ *    to the downstream ports of this decoder.
-+ * 2. HDM decoder for a switch. Similar to the platform specific routing in that
-+ *    it contains a set of downstream ports which receive and send traffic in an
-+ *    interleave fashion, the main difference is that the interleave and address
-+ *    ranges are controlled by the HDM decoder registers defined in the CXL 2.0
-+ *    specification.
-+ * 3. HDM decoder for an endpoint. Like the decoder in a switch, this decoder's
-+ *    configuration is entirely programmable and defined in CXL spec. Unlike the
-+ *    switch's decoder, there is not a set of downstream ports, only the
-+ *    underlying media.
-  */
- struct cxl_decoder {
- 	struct device dev;
-@@ -198,7 +219,7 @@ struct cxl_decoder {
- 	struct range range;
- 	int interleave_ways;
- 	int interleave_granularity;
--	enum cxl_decoder_type target_type;
-+	enum cxl_device_type target_type;
- 	unsigned long flags;
- 	struct cxl_dport *target[];
- };
-@@ -289,7 +310,7 @@ static inline struct cxl_decoder *
- devm_cxl_add_passthrough_decoder(struct device *host, struct cxl_port *port)
- {
- 	return devm_cxl_add_decoder(host, port, 1, 0, 0, 1, PAGE_SIZE,
--				    CXL_DECODER_EXPANDER, 0);
-+				    CXL_DECODER_PLATFORM, 0);
- }
- 
- extern struct bus_type cxl_bus_type;
--- 
-2.32.0
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-5.14
+
+for you to fetch changes up to 4ad6181e4b216ed0cb52f45d3c6d2c70c8ae9243:
+
+  cxl/pci: Rename CXL REGLOC ID (2021-06-17 17:37:18 -0700)
+
+----------------------------------------------------------------
+cxl for 5.14
+
+- Add support for the CXL Fixed Memory Window Structure, a recent
+  extension of the ACPI CEDT (CXL Early Discovery Table)
+
+- Add infrastructure for component registers
+
+- Add HDM (Host-managed device memory) decoder definitions
+
+- Define a device model for an HDM decoder tree
+
+- Bridge CXL persistent memory capabilities to an NVDIMM bus /
+  device-model
+
+- Switch to fine grained mapping of CXL MMIO registers to allow
+  different drivers / system software to own individual register blocks
+
+- Enable media provisioning commands, and publish the label storage area
+  size in sysfs
+
+- Miscellaneous cleanups and fixes
+
+----------------------------------------------------------------
+Alison Schofield (2):
+      cxl/acpi: Add the Host Bridge base address to CXL port objects
+      cxl/acpi: Use the ACPI CFMWS to create static decoder objects
+
+Ben Widawsky (11):
+      cxl: Rename mem to pci
+      cxl/mem: Demarcate vendor specific capability IDs
+      cxl/mem: Use dev instead of pdev->dev
+      cxl/mem: Split creation from mapping in probe
+      cxl/mem: Move register locator logic into reg setup
+      cxl/mem: Get rid of @cxlm.base
+      cxl/pci: Add HDM decoder capabilities
+      cxl/hdm: Fix decoder count calculation
+      cxl/component_regs: Fix offset
+      cxl/pci: Add media provisioning required commands
+      cxl/pci: Rename CXL REGLOC ID
+
+Dan Williams (17):
+      cxl/mem: Move some definitions to mem.h
+      cxl/mem: Introduce 'struct cxl_regs' for "composable" CXL devices
+      cxl/core: Rename bus.c to core.c
+      cxl/core: Refactor CXL register lookup for bridge reuse
+      cxl/docs: Fix "Title underline too short" warning
+      cxl/pci: Fixup devm_cxl_iomap_block() to take a 'struct device *'
+      Merge branch 'rafael/acpica/cfmws' into for-5.14/cxl
+      cxl/acpi: Introduce the root of a cxl_port topology
+      cxl/Kconfig: Default drivers to CONFIG_CXL_BUS
+      cxl/acpi: Add downstream port data to cxl_port instances
+      cxl/acpi: Enumerate host bridge root ports
+      cxl/acpi: Introduce cxl_decoder objects
+      cxl/core: Add cxl-bus driver infrastructure
+      cxl/pmem: Add initial infrastructure for pmem support
+      libnvdimm: Export nvdimm shutdown helper, nvdimm_delete()
+      libnvdimm: Drop unused device power management support
+      cxl/pmem: Register 'pmem' / cxl_nvdimm devices
+
+Ira Weiny (4):
+      cxl/pci: Introduce cxl_decode_register_block()
+      cxl/pci: Reserve all device regions at once
+      cxl/pci: Map registers based on capabilities
+      cxl/pci: Reserve individual register block regions
+
+Vishal Verma (1):
+      cxl/pci.c: Add a 'label_storage_size' attribute to the memdev
+
+ Documentation/ABI/testing/sysfs-bus-cxl         |  103 +++
+ Documentation/driver-api/cxl/memory-devices.rst |   20 +-
+ drivers/cxl/Kconfig                             |   43 +-
+ drivers/cxl/Makefile                            |   12 +-
+ drivers/cxl/acpi.c                              |  434 +++++++++
+ drivers/cxl/bus.c                               |   29 -
+ drivers/cxl/core.c                              | 1067 +++++++++++++++++++++++
+ drivers/cxl/cxl.h                               |  332 +++++--
+ drivers/cxl/mem.h                               |   81 ++
+ drivers/cxl/{mem.c => pci.c}                    |  439 ++++++----
+ drivers/cxl/pci.h                               |    2 +-
+ drivers/cxl/pmem.c                              |  230 +++++
+ drivers/nvdimm/bus.c                            |   64 +-
+ drivers/nvdimm/dimm_devs.c                      |   18 +
+ include/linux/libnvdimm.h                       |    1 +
+ include/uapi/linux/cxl_mem.h                    |   12 +
+ 16 files changed, 2596 insertions(+), 291 deletions(-)
+ create mode 100644 drivers/cxl/acpi.c
+ delete mode 100644 drivers/cxl/bus.c
+ create mode 100644 drivers/cxl/core.c
+ create mode 100644 drivers/cxl/mem.h
+ rename drivers/cxl/{mem.c => pci.c} (86%)
+ create mode 100644 drivers/cxl/pmem.c
