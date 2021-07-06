@@ -2,276 +2,244 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A273C07E96
-	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jul 2021 16:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 380ACC11F6C
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jul 2021 16:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D84E861A13
-	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jul 2021 16:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 247E261C1A
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jul 2021 16:09:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229938AbhGFQEJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 6 Jul 2021 12:04:09 -0400
-Received: from mga11.intel.com ([192.55.52.93]:55408 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229753AbhGFQDx (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 6 Jul 2021 12:03:53 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10037"; a="206133223"
-X-IronPort-AV: E=Sophos;i="5.83,328,1616482800"; 
-   d="scan'208";a="206133223"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2021 09:00:58 -0700
-X-IronPort-AV: E=Sophos;i="5.83,328,1616482800"; 
-   d="scan'208";a="627721327"
-Received: from bsyntia-mobl2.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.129.32])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2021 09:00:57 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        id S230037AbhGFQMX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 6 Jul 2021 12:12:23 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:59916 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229992AbhGFQMU (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Jul 2021 12:12:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1625587781;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5risqcJR3SRZugYRxSjL/FvvM4+olXr1vxcAoe7tQ/0=;
+        b=a2Fp2s0RNmEfhOiWtVlAxnwporE8Iec5f9NIyahKVrzYHnh6fhPpnX4ZwINyUJw0wEh3PI
+        5NQ0wg4SC/rIaHvouVrje36CnZ5FjJBDVvQ98lGR6TwWYCbTsW/WwXWM9zeyY5KC1M+kNc
+        U2iNFU1hUfBVabsmDJ+GBo7xSi8o23Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-262-wG174s7LNJSaKuUJtfBTMg-1; Tue, 06 Jul 2021 12:09:39 -0400
+X-MC-Unique: wG174s7LNJSaKuUJtfBTMg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 96B165074C;
+        Tue,  6 Jul 2021 16:09:34 +0000 (UTC)
+Received: from localhost (ovpn-113-13.ams2.redhat.com [10.36.113.13])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A281B16D28;
+        Tue,  6 Jul 2021 16:09:18 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Geoff Levand <geoff@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        =?utf-8?Q?Rafa=C5=82_Mi=C5=82eck?= =?utf-8?Q?i?= 
+        <zajec5@gmail.com>, Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
         Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH v2] cxl: Enable an endpoint decoder type
-Date:   Tue,  6 Jul 2021 09:00:50 -0700
-Message-Id: <20210706160050.527553-1-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210702040009.68794-1-ben.widawsky@intel.com>
-References: <20210702040009.68794-1-ben.widawsky@intel.com>
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
+        Moritz Fischer <mdf@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
+        Jens Taprogge <jens.taprogge@taprogge.org>,
+        Johannes Thumshirn <morbidrsa@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        Alex Dubov <oakad@yahoo.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84sk?= =?utf-8?Q?i?= 
+        <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Thorsten Scherer <t.scherer@eckelmann.de>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, Michael Buesch <m@bues.ch>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Martyn Welch <martyn@welchs.me.uk>,
+        Manohar Vanga <manohar.vanga@gmail.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Marc Zyngier <maz@kernel.org>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Qinglang Miao <miaoqinglang@huawei.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Joey Pabalan <jpabalanb@gmail.com>,
+        Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Frank Li <lznuaa@gmail.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        Bodo Stroesser <bostroesser@gmail.com>,
+        Hannes Reinecke <hare@suse.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        SeongJae Park <sjpark@amazon.de>,
+        Julien Grall <jgrall@amazon.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-acpi@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-sunxi@lists.linux.dev, linux-cxl@vger.kernel.org,
+        nvdimm@lists.linux.dev, dmaengine@vger.kernel.org,
+        linux1394-devel@lists.sourceforge.net, linux-fpga@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-i3c@lists.infradead.org,
+        industrypack-devel@lists.sourceforge.net,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
+        greybus-dev@lists.linaro.org, target-devel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Johannes Thumshirn <jth@kernel.org>
+Subject: Re: [PATCH v2 4/4] bus: Make remove callback return void
+In-Reply-To: <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
+Organization: Red Hat GmbH
+References: <20210706154803.1631813-1-u.kleine-koenig@pengutronix.de>
+ <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
+User-Agent: Notmuch/0.32.1 (https://notmuchmail.org)
+Date:   Tue, 06 Jul 2021 18:09:17 +0200
+Message-ID: <87r1gbfmqa.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-CXL memory devices support HDM decoders. Currently, when a decoder is
-instantiated there is no knowledge of the type of decoder; only the
-underlying endpoint type is specified. In order to have the memory
-devices reuse the existing decoder creation infrastructure it is
-convenient to pass along the type of decoder on creation.
+On Tue, Jul 06 2021, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>=
+ wrote:
 
-The primary difference for an endpoint decoder is that it doesn't have
-dports, nor targets. The target is just the underlying media (with
-offset).
+> The driver core ignores the return value of this callback because there
+> is only little it can do when a device disappears.
+>
+> This is the final bit of a long lasting cleanup quest where several
+> buses were converted to also return void from their remove callback.
+> Additionally some resource leaks were fixed that were caused by drivers
+> returning an error code in the expectation that the driver won't go
+> away.
+>
+> With struct bus_type::remove returning void it's prevented that newly
+> implemented buses return an ignored error code and so don't anticipate
+> wrong expectations for driver authors.
+>
+> Acked-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk> (For ARM, Am=
+ba and related parts)
+> Acked-by: Mark Brown <broonie@kernel.org>
+> Acked-by: Chen-Yu Tsai <wens@csie.org> (for drivers/bus/sunxi-rsb.c)
+> Acked-by: Pali Roh=C3=A1r <pali@kernel.org>
+> Acked-by: Mauro Carvalho Chehab <mchehab@kernel.org> (for drivers/media)
+> Acked-by: Hans de Goede <hdegoede@redhat.com> (For drivers/platform)
+> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Acked-By: Vinod Koul <vkoul@kernel.org>
+> Acked-by: Juergen Gross <jgross@suse.com> (For Xen)
+> Acked-by: Lee Jones <lee.jones@linaro.org> (For drivers/mfd)
+> Acked-by: Johannes Thumshirn <jth@kernel.org> (For drivers/mcb)
+> Acked-by: Johan Hovold <johan@kernel.org>
+> Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org> (For drive=
+rs/slimbus)
+> Acked-by: Kirti Wankhede <kwankhede@nvidia.com> (For drivers/vfio)
+> Acked-by: Maximilian Luz <luzmaximilian@gmail.com>
+> Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com> (For ulpi and=
+ typec)
+> Acked-by: Samuel Iglesias Gons=C3=A1lvez <siglesias@igalia.com> (For ipac=
+k)
+> Reviewed-by: Tom Rix <trix@redhat.com> (For fpga)
+> Acked-by: Geoff Levand <geoff@infradead.org> (For ps3)
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> ---
+>
+>  drivers/s390/cio/ccwgroup.c               | 4 +---
+>  drivers/s390/cio/css.c                    | 4 +---
+>  drivers/s390/cio/device.c                 | 4 +---
+>  drivers/s390/cio/scm.c                    | 4 +---
+>  drivers/s390/crypto/ap_bus.c              | 4 +---
+>  drivers/vfio/mdev/mdev_driver.c           | 4 +---
 
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
----
+For drivers/s390 and drivers/vfio:
 
-v2 Fixes target_type and stores the decoder type on instantiation
-
-diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
-index 196f260e2580..69acdd230f54 100644
---- a/drivers/cxl/core.c
-+++ b/drivers/cxl/core.c
-@@ -493,10 +493,11 @@ cxl_decoder_alloc(struct cxl_port *port, int nr_targets, resource_size_t base,
-                        .start = base,
-                        .end = base + len - 1,
-                },
-+               .type = type,
-                .flags = flags,
-                .interleave_ways = interleave_ways,
-                .interleave_granularity = interleave_granularity,
--               .target_type = type,
-+               .target_type = CXL_DEVICE_EXPANDER,
-        };
-
-        /* handle implied target_list */
-
----
- drivers/cxl/acpi.c |  2 +-
- drivers/cxl/core.c | 46 ++++++++++++++++++++++++++++++++++------------
- drivers/cxl/cxl.h  | 31 +++++++++++++++++++++++++++----
- 3 files changed, 62 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 8ae89273f58e..5215845e0f89 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -114,7 +114,7 @@ static void cxl_add_cfmws_decoders(struct device *dev,
- 					    cfmws->base_hpa, cfmws->window_size,
- 					    CFMWS_INTERLEAVE_WAYS(cfmws),
- 					    CFMWS_INTERLEAVE_GRANULARITY(cfmws),
--					    CXL_DECODER_EXPANDER,
-+					    CXL_DECODER_PLATFORM,
- 					    flags);
- 
- 		if (IS_ERR(cxld)) {
-diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
-index a2e4d54fc7bc..69acdd230f54 100644
---- a/drivers/cxl/core.c
-+++ b/drivers/cxl/core.c
-@@ -75,9 +75,9 @@ static ssize_t target_type_show(struct device *dev,
- 	struct cxl_decoder *cxld = to_cxl_decoder(dev);
- 
- 	switch (cxld->target_type) {
--	case CXL_DECODER_ACCELERATOR:
-+	case CXL_DEVICE_ACCELERATOR:
- 		return sysfs_emit(buf, "accelerator\n");
--	case CXL_DECODER_EXPANDER:
-+	case CXL_DEVICE_EXPANDER:
- 		return sysfs_emit(buf, "expander\n");
- 	}
- 	return -ENXIO;
-@@ -167,6 +167,12 @@ static const struct attribute_group *cxl_decoder_switch_attribute_groups[] = {
- 	NULL,
- };
- 
-+static const struct attribute_group *cxl_decoder_endpoint_attribute_groups[] = {
-+	&cxl_decoder_base_attribute_group,
-+	&cxl_base_attribute_group,
-+	NULL,
-+};
-+
- static void cxl_decoder_release(struct device *dev)
- {
- 	struct cxl_decoder *cxld = to_cxl_decoder(dev);
-@@ -176,6 +182,12 @@ static void cxl_decoder_release(struct device *dev)
- 	kfree(cxld);
- }
- 
-+static const struct device_type cxl_decoder_endpoint_type = {
-+	.name = "cxl_decoder_endpoint",
-+	.release = cxl_decoder_release,
-+	.groups = cxl_decoder_endpoint_attribute_groups,
-+};
-+
- static const struct device_type cxl_decoder_switch_type = {
- 	.name = "cxl_decoder_switch",
- 	.release = cxl_decoder_release,
-@@ -458,12 +470,14 @@ cxl_decoder_alloc(struct cxl_port *port, int nr_targets, resource_size_t base,
- 	if (interleave_ways < 1)
- 		return ERR_PTR(-EINVAL);
- 
--	device_lock(&port->dev);
--	if (list_empty(&port->dports))
--		rc = -EINVAL;
--	device_unlock(&port->dev);
--	if (rc)
--		return ERR_PTR(rc);
-+	if (type != CXL_DECODER_ENDPOINT) {
-+		device_lock(&port->dev);
-+		if (list_empty(&port->dports))
-+			rc = -EINVAL;
-+		device_unlock(&port->dev);
-+		if (rc)
-+			return ERR_PTR(rc);
-+	}
- 
- 	cxld = kzalloc(struct_size(cxld, target, nr_targets), GFP_KERNEL);
- 	if (!cxld)
-@@ -479,10 +493,11 @@ cxl_decoder_alloc(struct cxl_port *port, int nr_targets, resource_size_t base,
- 			.start = base,
- 			.end = base + len - 1,
- 		},
-+		.type = type,
- 		.flags = flags,
- 		.interleave_ways = interleave_ways,
- 		.interleave_granularity = interleave_granularity,
--		.target_type = type,
-+		.target_type = CXL_DEVICE_EXPANDER,
- 	};
- 
- 	/* handle implied target_list */
-@@ -496,10 +511,17 @@ cxl_decoder_alloc(struct cxl_port *port, int nr_targets, resource_size_t base,
- 	dev->bus = &cxl_bus_type;
- 
- 	/* root ports do not have a cxl_port_type parent */
--	if (port->dev.parent->type == &cxl_port_type)
--		dev->type = &cxl_decoder_switch_type;
--	else
-+	switch (type) {
-+	case CXL_DECODER_PLATFORM:
- 		dev->type = &cxl_decoder_root_type;
-+		break;
-+	case CXL_DECODER_SWITCH:
-+		dev->type = &cxl_decoder_switch_type;
-+		break;
-+	case CXL_DECODER_ENDPOINT:
-+		dev->type = &cxl_decoder_endpoint_type;
-+		break;
-+	}
- 
- 	return cxld;
- err:
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index b6bda39a59e3..02e0af4c147c 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -164,6 +164,11 @@ int cxl_map_device_regs(struct pci_dev *pdev,
- #define CXL_RESOURCE_NONE ((resource_size_t) -1)
- #define CXL_TARGET_STRLEN 20
- 
-+enum cxl_device_type {
-+       CXL_DEVICE_ACCELERATOR = 2,
-+       CXL_DEVICE_EXPANDER = 3,
-+};
-+
- /*
-  * cxl_decoder flags that define the type of memory / devices this
-  * decoder supports as well as configuration lock status See "CXL 2.0
-@@ -177,8 +182,9 @@ int cxl_map_device_regs(struct pci_dev *pdev,
- #define CXL_DECODER_F_MASK  GENMASK(4, 0)
- 
- enum cxl_decoder_type {
--       CXL_DECODER_ACCELERATOR = 2,
--       CXL_DECODER_EXPANDER = 3,
-+       CXL_DECODER_PLATFORM,
-+       CXL_DECODER_SWITCH,
-+       CXL_DECODER_ENDPOINT,
- };
- 
- /**
-@@ -186,19 +192,36 @@ enum cxl_decoder_type {
-  * @dev: this decoder's device
-  * @id: kernel device name id
-  * @range: address range considered by this decoder
-+ * @type: the type of this CXL decoder (platform, switch, endpoint)
-  * @interleave_ways: number of cxl_dports in this decode
-  * @interleave_granularity: data stride per dport
-  * @target_type: accelerator vs expander (type2 vs type3) selector
-  * @flags: memory type capabilities and locking
-  * @target: active ordered target list in current decoder configuration
-+ *
-+ * Abstractly, a CXL decoder represents one of 3 possible decoders:
-+ * 1. Platform specific routing - opaque rules for the memory controller that
-+ *    may be communicated via ACPI or devicetree. This decoding has implied
-+ *    interleave parameters as well as physical address ranges that are directed
-+ *    to the downstream ports of this decoder.
-+ * 2. HDM decoder for a switch. Similar to the platform specific routing in that
-+ *    it contains a set of downstream ports which receive and send traffic in an
-+ *    interleave fashion, the main difference is that the interleave and address
-+ *    ranges are controlled by the HDM decoder registers defined in the CXL 2.0
-+ *    specification.
-+ * 3. HDM decoder for an endpoint. Like the decoder in a switch, this decoder's
-+ *    configuration is entirely programmable and defined in CXL spec. Unlike the
-+ *    switch's decoder, there is not a set of downstream ports, only the
-+ *    underlying media.
-  */
- struct cxl_decoder {
- 	struct device dev;
- 	int id;
- 	struct range range;
-+	enum cxl_decoder_type type;
- 	int interleave_ways;
- 	int interleave_granularity;
--	enum cxl_decoder_type target_type;
-+	enum cxl_device_type target_type;
- 	unsigned long flags;
- 	struct cxl_dport *target[];
- };
-@@ -289,7 +312,7 @@ static inline struct cxl_decoder *
- devm_cxl_add_passthrough_decoder(struct device *host, struct cxl_port *port)
- {
- 	return devm_cxl_add_decoder(host, port, 1, 0, 0, 1, PAGE_SIZE,
--				    CXL_DECODER_EXPANDER, 0);
-+				    CXL_DECODER_PLATFORM, 0);
- }
- 
- extern struct bus_type cxl_bus_type;
--- 
-2.32.0
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
