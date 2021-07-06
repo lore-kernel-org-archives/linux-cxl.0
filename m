@@ -2,120 +2,196 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D57C07E96
-	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jul 2021 18:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC04C07E96
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jul 2021 18:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA4A61C5B
-	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jul 2021 18:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77DAD61C6B
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jul 2021 18:43:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231231AbhGFSkv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 6 Jul 2021 14:40:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59712 "EHLO
+        id S231500AbhGFSqf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 6 Jul 2021 14:46:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231208AbhGFSku (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Jul 2021 14:40:50 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BE20C061574
-        for <linux-cxl@vger.kernel.org>; Tue,  6 Jul 2021 11:38:12 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id 17so20075633pfz.4
-        for <linux-cxl@vger.kernel.org>; Tue, 06 Jul 2021 11:38:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kmi8lhOEMufwxPa7pRw1X1bSmsLZOQu/JsgtEnQzI5s=;
-        b=UmIf6oOeCrYzepwb4HgkBpO2g4EPsU6EXBBzwznOBQV4yqY766fvqkr+JFyH/r4MJb
-         t60Da3uE8hBThoW1BqUxyOC1fDAMDl5W1FX7NRqlSPs/3xTrvtXS4A4NrHKeySvBK0FH
-         dHO7yhWaji1srssW/25m0fSgRSYl9+5y4tB6Zdyhd9lk2uRicnkRkCS9jQzkKXChppLQ
-         3CesBH6zv1iHoB9qdaKGdMjEvffzSMEQA951hoTKw6TwP6umvExhr2TPuOiY81cCXqYn
-         6835cTscX08jgcELviC8Ei27boA6HFCcb6r+Gk4q/FBXcntduGfwr6v1/RS8qlCWGxCZ
-         FFGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kmi8lhOEMufwxPa7pRw1X1bSmsLZOQu/JsgtEnQzI5s=;
-        b=aroI6rwYadJ0PDAY87I3DBnqQ8XwShHoYTF0oOMWLIpk5FrPJ2UKR2t3v8RltoIoxm
-         IMDCL56KAGlfQ8ZCME8D9YZtuTiTtqahtkgL45f8KGWsZT0BH17LnZoPs12iCeV4x7v/
-         x4enoBrA/eKo8UB/TwGV2LK+Zkx5JSosSo9adV7HwfWiItaGqSmRNf8JDdlJq5eCOTHM
-         MAhAX8y5Py26fQawzBBNROPa/Hl9n+ekFEEtTe7tAmoGRVXLXaYpR5iuAUHJxgMHotsS
-         q6hgeG9U89G1v4VsgxZIDYpI/ceSV1jzKYfphaJwZrIuJ3CxrrAPyQHuf08nelVda56Z
-         cFyg==
-X-Gm-Message-State: AOAM531QQ+r3HyU5niWFXigxT/laUaX63X7bUF9BAmMtisYl/SFVyfY3
-        H/jY0LLsNIHeQXjOAW76TOp5JSCAYAol85bd3tE60w==
-X-Google-Smtp-Source: ABdhPJz+rSAUwID0+4dpUd6NdqhGejKi6IIORAJeAA5+iuuWRel0mCS/6XqKitfVKr4f2cytN3KFkZ1xamnbH/Hnbew=
-X-Received: by 2002:a63:4c3:: with SMTP id 186mr11971788pge.240.1625596691564;
- Tue, 06 Jul 2021 11:38:11 -0700 (PDT)
+        with ESMTP id S231543AbhGFSqf (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Jul 2021 14:46:35 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70A7FC06175F
+        for <linux-cxl@vger.kernel.org>; Tue,  6 Jul 2021 11:43:56 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m0q2W-0000ek-Kp; Tue, 06 Jul 2021 20:43:24 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m0q2V-00021e-8f; Tue, 06 Jul 2021 20:43:23 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m0q2V-0004QV-6e; Tue, 06 Jul 2021 20:43:23 +0200
+Date:   Tue, 6 Jul 2021 20:43:23 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     nvdimm@lists.linux.dev, linux-hyperv@vger.kernel.org,
+        kvm@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-fpga@vger.kernel.org, linux-pci@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-cxl@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-i3c@lists.infradead.org,
+        linux1394-devel@lists.sourceforge.net, linux-scsi@vger.kernel.org,
+        linux-staging@lists.linux.dev, linux-acpi@vger.kernel.org,
+        industrypack-devel@lists.sourceforge.net,
+        linux-input@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-sunxi@lists.linux.dev, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, greybus-dev@lists.linaro.org,
+        virtualization@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-spi@vger.kernel.org, kernel@pengutronix.de,
+        dmaengine@vger.kernel.org, linux-ntb@googlegroups.com,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2 4/4] bus: Make remove callback return void
+Message-ID: <20210706184323.fudcbsiu4i34dojs@pengutronix.de>
+References: <20210706154803.1631813-1-u.kleine-koenig@pengutronix.de>
+ <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
+ <YOSb1+yeVeLxiSRc@yoga>
 MIME-Version: 1.0
-References: <20210706165914.575990-1-ben.widawsky@intel.com>
-In-Reply-To: <20210706165914.575990-1-ben.widawsky@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 6 Jul 2021 11:38:00 -0700
-Message-ID: <CAPcyv4hyc+JwbM02msaTSx730F-kCyAGMGc1QSYT7SW2vcr=kQ@mail.gmail.com>
-Subject: Re: [PATCH] cxl: Convert driver id to an enum
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2fjaqpmq47gf4tbn"
+Content-Disposition: inline
+In-Reply-To: <YOSb1+yeVeLxiSRc@yoga>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-cxl@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Jul 6, 2021 at 9:59 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> CXL drivers can be of only one type. As such, an enum is the most
-> logical way to represent that singleton nature. By converting to an
-> enum, it's easy and obvious how to add new driver types.
->
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> ---
->  drivers/cxl/cxl.h | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index ec90b32d4bd8..dd005a5e296b 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -328,12 +328,17 @@ devm_cxl_add_passthrough_decoder(struct device *host, struct cxl_port *port)
->
->  extern struct bus_type cxl_bus_type;
->
-> +enum cxl_driver_id {
-> +       CXL_DEVICE_NVDIMM_BRIDGE,
-> +       CXL_DEVICE_NVDIMM,
-> +};
-> +
->  struct cxl_driver {
->         const char *name;
->         int (*probe)(struct device *dev);
->         void (*remove)(struct device *dev);
->         struct device_driver drv;
-> -       int id;
-> +       enum cxl_driver_id id;
->  };
->
->  static inline struct cxl_driver *to_cxl_drv(struct device_driver *drv)
-> @@ -346,9 +351,6 @@ int __cxl_driver_register(struct cxl_driver *cxl_drv, struct module *owner,
->  #define cxl_driver_register(x) __cxl_driver_register(x, THIS_MODULE, KBUILD_MODNAME)
->  void cxl_driver_unregister(struct cxl_driver *cxl_drv);
->
-> -#define CXL_DEVICE_NVDIMM_BRIDGE       1
-> -#define CXL_DEVICE_NVDIMM              2
-> -
->  #define MODULE_ALIAS_CXL(type) MODULE_ALIAS("cxl:t" __stringify(type) "*")
->  #define CXL_MODALIAS_FMT "cxl:t%d"
 
-Doesn't this break module aliasing? I.e. __stringfy(CXL_DEVICE_NVDIMM)
-changes from:
+--2fjaqpmq47gf4tbn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-"2" to "CXL_DEVICE_NVDIMM"
+Hello Bjorn,
 
-?
+On Tue, Jul 06, 2021 at 01:08:18PM -0500, Bjorn Andersson wrote:
+> On Tue 06 Jul 10:48 CDT 2021, Uwe Kleine-K?nig wrote:
+> > diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+> > index c1404d3dae2c..7f6fac618ab2 100644
+> > --- a/drivers/rpmsg/rpmsg_core.c
+> > +++ b/drivers/rpmsg/rpmsg_core.c
+> > @@ -530,7 +530,7 @@ static int rpmsg_dev_probe(struct device *dev)
+> >  	return err;
+> >  }
+> > =20
+> > -static int rpmsg_dev_remove(struct device *dev)
+> > +static void rpmsg_dev_remove(struct device *dev)
+> >  {
+> >  	struct rpmsg_device *rpdev =3D to_rpmsg_device(dev);
+> >  	struct rpmsg_driver *rpdrv =3D to_rpmsg_driver(rpdev->dev.driver);
+> > @@ -546,8 +546,6 @@ static int rpmsg_dev_remove(struct device *dev)
+> > =20
+> >  	if (rpdev->ept)
+> >  		rpmsg_destroy_ept(rpdev->ept);
+> > -
+> > -	return err;
+>=20
+> This leaves err assigned but never used, but I don't mind following up
+> with a patch cleaning that up after this has landed.
+
+Ah, good catch. If I send out a v3 I will fold the following into this
+patch:
+
+diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+index 7f6fac618ab2..9151836190ce 100644
+--- a/drivers/rpmsg/rpmsg_core.c
++++ b/drivers/rpmsg/rpmsg_core.c
+@@ -534,10 +534,9 @@ static void rpmsg_dev_remove(struct device *dev)
+ {
+ 	struct rpmsg_device *rpdev =3D to_rpmsg_device(dev);
+ 	struct rpmsg_driver *rpdrv =3D to_rpmsg_driver(rpdev->dev.driver);
+-	int err =3D 0;
+=20
+ 	if (rpdev->ops->announce_destroy)
+-		err =3D rpdev->ops->announce_destroy(rpdev);
++		rpdev->ops->announce_destroy(rpdev);
+=20
+ 	if (rpdrv->remove)
+ 		rpdrv->remove(rpdev);
+
+Maybe .announce_destroy() should then be changed to return void, too?
+Something like:
+
+diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
+index a76c344253bf..d5204756714c 100644
+--- a/drivers/rpmsg/rpmsg_internal.h
++++ b/drivers/rpmsg/rpmsg_internal.h
+@@ -40,7 +40,7 @@ struct rpmsg_device_ops {
+ 					    struct rpmsg_channel_info chinfo);
+=20
+ 	int (*announce_create)(struct rpmsg_device *ept);
+-	int (*announce_destroy)(struct rpmsg_device *ept);
++	void (*announce_destroy)(struct rpmsg_device *ept);
+ };
+=20
+ /**
+diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_=
+bus.c
+index 8e49a3bacfc7..4e05994634f8 100644
+--- a/drivers/rpmsg/virtio_rpmsg_bus.c
++++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+@@ -340,7 +340,7 @@ static int virtio_rpmsg_announce_create(struct rpmsg_de=
+vice *rpdev)
+ 	return err;
+ }
+=20
+-static int virtio_rpmsg_announce_destroy(struct rpmsg_device *rpdev)
++static void virtio_rpmsg_announce_destroy(struct rpmsg_device *rpdev)
+ {
+ 	struct virtio_rpmsg_channel *vch =3D to_virtio_rpmsg_channel(rpdev);
+ 	struct virtproc_info *vrp =3D vch->vrp;
+@@ -360,8 +360,6 @@ static int virtio_rpmsg_announce_destroy(struct rpmsg_d=
+evice *rpdev)
+ 		if (err)
+ 			dev_err(dev, "failed to announce service %d\n", err);
+ 	}
+-
+-	return err;
+ }
+=20
+ static const struct rpmsg_device_ops virtio_rpmsg_ops =3D {
+
+though it's not obvious for me that the last hunk is sensible. (OTOH the
+return code is ignored anyhow as rpmsg_dev_remove() is the only caller.
+
+Best regards and thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--2fjaqpmq47gf4tbn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmDkpEcACgkQwfwUeK3K
+7Ak4/gf+JPjwmTdMOBhuMe8ecxXY1LASOPn6raBvtbwdOTQTpuggYaNCNlkaVJAE
+HyLf68h68hyvV9vpIoID8AOmf9uXGwFBXlOzR/nHgHqauU/8HnbE2GH+wOywoCi8
+Tkzj2jT35NSYD0Cmtorpd0wmKVjEQuPqiv8px5gEqAMvtwp93P9dQwyKm7IPhUSf
+Ly8NwR3EsI/ng6nNulL+Z6d0tGg+RRvUj5mWp8YcIYePISvHdibi/lFHA6vTaWE7
+ZqLwQsajLZaY5r33EPGYZOxBPk809iKwh4Q5mfww37TTXySNeps2tFT7S6r4d6To
+OAUYwloDQSOqtVvuLc4PfxSTkToueQ==
+=o1F8
+-----END PGP SIGNATURE-----
+
+--2fjaqpmq47gf4tbn--
