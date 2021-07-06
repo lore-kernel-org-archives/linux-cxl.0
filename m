@@ -2,91 +2,141 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98157C07E96
-	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jul 2021 16:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 419AEC07E96
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jul 2021 18:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7790561C40
-	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jul 2021 16:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12DBE61076
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jul 2021 18:08:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230193AbhGFRCJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 6 Jul 2021 13:02:09 -0400
-Received: from mga01.intel.com ([192.55.52.88]:53397 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229873AbhGFRCJ (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 6 Jul 2021 13:02:09 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10037"; a="230885997"
-X-IronPort-AV: E=Sophos;i="5.83,328,1616482800"; 
-   d="scan'208";a="230885997"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2021 09:59:30 -0700
-X-IronPort-AV: E=Sophos;i="5.83,328,1616482800"; 
-   d="scan'208";a="427650704"
-Received: from bsyntia-mobl2.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.129.32])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2021 09:59:30 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH] cxl: Convert driver id to an enum
-Date:   Tue,  6 Jul 2021 09:59:14 -0700
-Message-Id: <20210706165914.575990-1-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.32.0
+        id S231172AbhGFSLC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 6 Jul 2021 14:11:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230091AbhGFSLB (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Jul 2021 14:11:01 -0400
+Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0877AC061764
+        for <linux-cxl@vger.kernel.org>; Tue,  6 Jul 2021 11:08:23 -0700 (PDT)
+Received: by mail-ot1-x335.google.com with SMTP id 59-20020a9d0ac10000b0290462f0ab0800so22427194otq.11
+        for <linux-cxl@vger.kernel.org>; Tue, 06 Jul 2021 11:08:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rFh4HQBpaw9ewOD7eKuJ7KI9YAzHhN8tlxJ6LopMKHs=;
+        b=Sz6rE6fIxKghlltcLCE+UXPsQefAUgPvTMscjeRzq2kl6NTGV49umux5xM0XcDuF3f
+         KuSKKfkZ8nSISGEXHz3w1v+CP9bxuRJkim+LBmkXAMBhskBSVWy4R8UYC7L1pwY+g7hz
+         Zg3WKG3mRVhsusU5VFmdXh5UPocqhZf4lahEU95r9tDGNbsVfHF1Q4HkA+YZfm/i81fd
+         v0xNi9dJEaEvf856OdG6fjSc31APYItT+IUiPzbg0w9QbfcYoXqLRo58SwLlUHuXr/Qb
+         gjgu5RAVRwk/bKL57rYJjqGIxVt7qPeDusZUEamQ36NdV7/ZYwdc/uo7wSJkJLcpf0tD
+         jOXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rFh4HQBpaw9ewOD7eKuJ7KI9YAzHhN8tlxJ6LopMKHs=;
+        b=Q2vi2eXUuU3kfW34mzEmg79m8yz2CjW37Nz0hBO2mYssymwdGn8JJHGb7M/S4iWVix
+         MwnVgaL+zrtFNM9AR2IMxfG1OpTiPoKN6tuTISL8VqpNs0EHqTBCi4YqfkoTnfZYG47X
+         Y1UetYT6F7yNp2Jq6XgdpVL4E2Ij96Z0i/0myd3jbjs/gjg2rqYMgoD+a2wMCN9iK2rA
+         61A93hxJKeeVpgfBu0SN0otma9bcE1ubGyxrS5ajwaZ7Fx+kikcxbIVURJCaJssh6U2I
+         kN541zzrhRlpOcxBId6El2e2m/9rXtMnSDH0sIZ/WV6P40Wzi6jIt+NhHAygC7LV1yxm
+         8xfg==
+X-Gm-Message-State: AOAM530F3YOLI66UisfKmYkp7dpy89tPP6rCJMxOUvw4hXMNjzPoTPvA
+        yXQjQlVf2oqD3yOxLuIsbplrAQ==
+X-Google-Smtp-Source: ABdhPJwwC8pa+wbm0v5SSaX+DFJoQ7jJmXTjdD3iH0933Y2rw8Y2+zYlxp2w0qjcBNkHXGnjSvRJ6w==
+X-Received: by 2002:a9d:3d3:: with SMTP id f77mr16276146otf.43.1625594902170;
+        Tue, 06 Jul 2021 11:08:22 -0700 (PDT)
+Received: from yoga (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id 68sm497113otd.74.2021.07.06.11.08.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Jul 2021 11:08:21 -0700 (PDT)
+Date:   Tue, 6 Jul 2021 13:08:18 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>
+Cc:     kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-sunxi@lists.linux.dev,
+        linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+        dmaengine@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
+        linux-fpga@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-i3c@lists.infradead.org,
+        industrypack-devel@lists.sourceforge.net,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
+        greybus-dev@lists.linaro.org, target-devel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v2 4/4] bus: Make remove callback return void
+Message-ID: <YOSb1+yeVeLxiSRc@yoga>
+References: <20210706154803.1631813-1-u.kleine-koenig@pengutronix.de>
+ <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-CXL drivers can be of only one type. As such, an enum is the most
-logical way to represent that singleton nature. By converting to an
-enum, it's easy and obvious how to add new driver types.
+On Tue 06 Jul 10:48 CDT 2021, Uwe Kleine-K?nig wrote:
 
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
----
- drivers/cxl/cxl.h | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+> The driver core ignores the return value of this callback because there
+> is only little it can do when a device disappears.
+> 
+> This is the final bit of a long lasting cleanup quest where several
+> buses were converted to also return void from their remove callback.
+> Additionally some resource leaks were fixed that were caused by drivers
+> returning an error code in the expectation that the driver won't go
+> away.
+> 
+> With struct bus_type::remove returning void it's prevented that newly
+> implemented buses return an ignored error code and so don't anticipate
+> wrong expectations for driver authors.
+> 
 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index ec90b32d4bd8..dd005a5e296b 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -328,12 +328,17 @@ devm_cxl_add_passthrough_decoder(struct device *host, struct cxl_port *port)
- 
- extern struct bus_type cxl_bus_type;
- 
-+enum cxl_driver_id {
-+	CXL_DEVICE_NVDIMM_BRIDGE,
-+	CXL_DEVICE_NVDIMM,
-+};
-+
- struct cxl_driver {
- 	const char *name;
- 	int (*probe)(struct device *dev);
- 	void (*remove)(struct device *dev);
- 	struct device_driver drv;
--	int id;
-+	enum cxl_driver_id id;
- };
- 
- static inline struct cxl_driver *to_cxl_drv(struct device_driver *drv)
-@@ -346,9 +351,6 @@ int __cxl_driver_register(struct cxl_driver *cxl_drv, struct module *owner,
- #define cxl_driver_register(x) __cxl_driver_register(x, THIS_MODULE, KBUILD_MODNAME)
- void cxl_driver_unregister(struct cxl_driver *cxl_drv);
- 
--#define CXL_DEVICE_NVDIMM_BRIDGE	1
--#define CXL_DEVICE_NVDIMM		2
--
- #define MODULE_ALIAS_CXL(type) MODULE_ALIAS("cxl:t" __stringify(type) "*")
- #define CXL_MODALIAS_FMT "cxl:t%d"
- 
--- 
-2.32.0
+Thanks for doing this!
 
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org> (rpmsg and apr)
+
+[..]
+> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+> index c1404d3dae2c..7f6fac618ab2 100644
+> --- a/drivers/rpmsg/rpmsg_core.c
+> +++ b/drivers/rpmsg/rpmsg_core.c
+> @@ -530,7 +530,7 @@ static int rpmsg_dev_probe(struct device *dev)
+>  	return err;
+>  }
+>  
+> -static int rpmsg_dev_remove(struct device *dev)
+> +static void rpmsg_dev_remove(struct device *dev)
+>  {
+>  	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
+>  	struct rpmsg_driver *rpdrv = to_rpmsg_driver(rpdev->dev.driver);
+> @@ -546,8 +546,6 @@ static int rpmsg_dev_remove(struct device *dev)
+>  
+>  	if (rpdev->ept)
+>  		rpmsg_destroy_ept(rpdev->ept);
+> -
+> -	return err;
+
+This leaves err assigned but never used, but I don't mind following up
+with a patch cleaning that up after this has landed.
+
+>  }
+>  
+>  static struct bus_type rpmsg_bus = {
+
+Regards,
+Bjorn
