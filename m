@@ -2,260 +2,120 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A892FC07E96
-	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jul 2021 18:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D57C07E96
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jul 2021 18:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93B6161C53
-	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jul 2021 18:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CA4A61C5B
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jul 2021 18:38:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231458AbhGFSfK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 6 Jul 2021 14:35:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58412 "EHLO
+        id S231231AbhGFSkv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 6 Jul 2021 14:40:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231438AbhGFSfG (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Jul 2021 14:35:06 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D31BBC06175F
-        for <linux-cxl@vger.kernel.org>; Tue,  6 Jul 2021 11:32:27 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1m0prl-0007tU-Bf; Tue, 06 Jul 2021 20:32:17 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1m0prk-0001yr-79; Tue, 06 Jul 2021 20:32:16 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1m0prk-0004ND-2r; Tue, 06 Jul 2021 20:32:16 +0200
-Date:   Tue, 6 Jul 2021 20:32:15 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     nvdimm@lists.linux.dev, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
-        Jens Taprogge <jens.taprogge@taprogge.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Julien Grall <jgrall@amazon.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alex Elder <elder@kernel.org>, linux-parisc@vger.kernel.org,
-        Geoff Levand <geoff@infradead.org>, linux-fpga@vger.kernel.org,
-        linux-usb@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Thorsten Scherer <t.scherer@eckelmann.de>,
-        kernel@pengutronix.de, Jon Mason <jdmason@kudzu.us>,
-        linux-ntb@googlegroups.com, Wu Hao <hao.wu@intel.com>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Manohar Vanga <manohar.vanga@gmail.com>,
-        linux-wireless@vger.kernel.org,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        virtualization@lists.linux-foundation.org,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        target-devel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-i2c@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Ira Weiny <ira.weiny@intel.com>, Helge Deller <deller@gmx.de>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        industrypack-devel@lists.sourceforge.net,
-        linux-mips@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
-        linux-media@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
-        Johan Hovold <johan@kernel.org>, greybus-dev@lists.linaro.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Johannes Thumshirn <morbidrsa@gmail.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Joey Pabalan <jpabalanb@gmail.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        Bodo Stroesser <bostroesser@gmail.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Tom Rix <trix@redhat.com>, Jason Wang <jasowang@redhat.com>,
-        SeongJae Park <sjpark@amazon.de>, linux-hyperv@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, Frank Li <lznuaa@gmail.com>,
-        netdev@vger.kernel.org, Qinglang Miao <miaoqinglang@huawei.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        linux-staging@lists.linux.dev, Dexuan Cui <decui@microsoft.com>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Allen Hubbe <allenbh@gmail.com>, Alex Dubov <oakad@yahoo.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Moritz Fischer <mdf@kernel.org>, linux-cxl@vger.kernel.org,
-        Michael Buesch <m@bues.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Martyn Welch <martyn@welchs.me.uk>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-mmc@vger.kernel.org, linux-sunxi@lists.linux.dev,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sven Van Asbroeck <TheSven73@gmail.com>, kvm@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        linux-remoteproc@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        linux-i3c@lists.infradead.org,
-        linux1394-devel@lists.sourceforge.net,
-        Lee Jones <lee.jones@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-scsi@vger.kernel.org,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andy Gross <agross@kernel.org>, linux-serial@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>,
-        Michael Jamet <michael.jamet@intel.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Juergen Gross <jgross@suse.com>, linuxppc-dev@lists.ozlabs.org,
-        Takashi Iwai <tiwai@suse.com>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Marc Zyngier <maz@kernel.org>, dmaengine@vger.kernel.org,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Subject: Re: [PATCH v2 4/4] bus: Make remove callback return void
-Message-ID: <20210706183215.tcd7i4pwz2gxtxtb@pengutronix.de>
-References: <20210706154803.1631813-1-u.kleine-koenig@pengutronix.de>
- <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S231208AbhGFSku (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Jul 2021 14:40:50 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BE20C061574
+        for <linux-cxl@vger.kernel.org>; Tue,  6 Jul 2021 11:38:12 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id 17so20075633pfz.4
+        for <linux-cxl@vger.kernel.org>; Tue, 06 Jul 2021 11:38:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kmi8lhOEMufwxPa7pRw1X1bSmsLZOQu/JsgtEnQzI5s=;
+        b=UmIf6oOeCrYzepwb4HgkBpO2g4EPsU6EXBBzwznOBQV4yqY766fvqkr+JFyH/r4MJb
+         t60Da3uE8hBThoW1BqUxyOC1fDAMDl5W1FX7NRqlSPs/3xTrvtXS4A4NrHKeySvBK0FH
+         dHO7yhWaji1srssW/25m0fSgRSYl9+5y4tB6Zdyhd9lk2uRicnkRkCS9jQzkKXChppLQ
+         3CesBH6zv1iHoB9qdaKGdMjEvffzSMEQA951hoTKw6TwP6umvExhr2TPuOiY81cCXqYn
+         6835cTscX08jgcELviC8Ei27boA6HFCcb6r+Gk4q/FBXcntduGfwr6v1/RS8qlCWGxCZ
+         FFGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kmi8lhOEMufwxPa7pRw1X1bSmsLZOQu/JsgtEnQzI5s=;
+        b=aroI6rwYadJ0PDAY87I3DBnqQ8XwShHoYTF0oOMWLIpk5FrPJ2UKR2t3v8RltoIoxm
+         IMDCL56KAGlfQ8ZCME8D9YZtuTiTtqahtkgL45f8KGWsZT0BH17LnZoPs12iCeV4x7v/
+         x4enoBrA/eKo8UB/TwGV2LK+Zkx5JSosSo9adV7HwfWiItaGqSmRNf8JDdlJq5eCOTHM
+         MAhAX8y5Py26fQawzBBNROPa/Hl9n+ekFEEtTe7tAmoGRVXLXaYpR5iuAUHJxgMHotsS
+         q6hgeG9U89G1v4VsgxZIDYpI/ceSV1jzKYfphaJwZrIuJ3CxrrAPyQHuf08nelVda56Z
+         cFyg==
+X-Gm-Message-State: AOAM531QQ+r3HyU5niWFXigxT/laUaX63X7bUF9BAmMtisYl/SFVyfY3
+        H/jY0LLsNIHeQXjOAW76TOp5JSCAYAol85bd3tE60w==
+X-Google-Smtp-Source: ABdhPJz+rSAUwID0+4dpUd6NdqhGejKi6IIORAJeAA5+iuuWRel0mCS/6XqKitfVKr4f2cytN3KFkZ1xamnbH/Hnbew=
+X-Received: by 2002:a63:4c3:: with SMTP id 186mr11971788pge.240.1625596691564;
+ Tue, 06 Jul 2021 11:38:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="q2vlxiybuwkj6z7s"
-Content-Disposition: inline
-In-Reply-To: <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-cxl@vger.kernel.org
+References: <20210706165914.575990-1-ben.widawsky@intel.com>
+In-Reply-To: <20210706165914.575990-1-ben.widawsky@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 6 Jul 2021 11:38:00 -0700
+Message-ID: <CAPcyv4hyc+JwbM02msaTSx730F-kCyAGMGc1QSYT7SW2vcr=kQ@mail.gmail.com>
+Subject: Re: [PATCH] cxl: Convert driver id to an enum
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Tue, Jul 6, 2021 at 9:59 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> CXL drivers can be of only one type. As such, an enum is the most
+> logical way to represent that singleton nature. By converting to an
+> enum, it's easy and obvious how to add new driver types.
+>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> ---
+>  drivers/cxl/cxl.h | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index ec90b32d4bd8..dd005a5e296b 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -328,12 +328,17 @@ devm_cxl_add_passthrough_decoder(struct device *host, struct cxl_port *port)
+>
+>  extern struct bus_type cxl_bus_type;
+>
+> +enum cxl_driver_id {
+> +       CXL_DEVICE_NVDIMM_BRIDGE,
+> +       CXL_DEVICE_NVDIMM,
+> +};
+> +
+>  struct cxl_driver {
+>         const char *name;
+>         int (*probe)(struct device *dev);
+>         void (*remove)(struct device *dev);
+>         struct device_driver drv;
+> -       int id;
+> +       enum cxl_driver_id id;
+>  };
+>
+>  static inline struct cxl_driver *to_cxl_drv(struct device_driver *drv)
+> @@ -346,9 +351,6 @@ int __cxl_driver_register(struct cxl_driver *cxl_drv, struct module *owner,
+>  #define cxl_driver_register(x) __cxl_driver_register(x, THIS_MODULE, KBUILD_MODNAME)
+>  void cxl_driver_unregister(struct cxl_driver *cxl_drv);
+>
+> -#define CXL_DEVICE_NVDIMM_BRIDGE       1
+> -#define CXL_DEVICE_NVDIMM              2
+> -
+>  #define MODULE_ALIAS_CXL(type) MODULE_ALIAS("cxl:t" __stringify(type) "*")
+>  #define CXL_MODALIAS_FMT "cxl:t%d"
 
---q2vlxiybuwkj6z7s
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Doesn't this break module aliasing? I.e. __stringfy(CXL_DEVICE_NVDIMM)
+changes from:
 
-Hello,
+"2" to "CXL_DEVICE_NVDIMM"
 
-v1 was acked by some more after I stopped looking in my mailbox while
-preparing v2:
-
-On Tue, Jul 06, 2021 at 05:48:03PM +0200, Uwe Kleine-K=F6nig wrote:
-> The driver core ignores the return value of this callback because there
-> is only little it can do when a device disappears.
->=20
-> This is the final bit of a long lasting cleanup quest where several
-> buses were converted to also return void from their remove callback.
-> Additionally some resource leaks were fixed that were caused by drivers
-> returning an error code in the expectation that the driver won't go
-> away.
->=20
-> With struct bus_type::remove returning void it's prevented that newly
-> implemented buses return an ignored error code and so don't anticipate
-> wrong expectations for driver authors.
->=20
-> Acked-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk> (For ARM, Am=
-ba and related parts)
-> Acked-by: Mark Brown <broonie@kernel.org>
-> Acked-by: Chen-Yu Tsai <wens@csie.org> (for drivers/bus/sunxi-rsb.c)
-> Acked-by: Pali Roh=E1r <pali@kernel.org>
-> Acked-by: Mauro Carvalho Chehab <mchehab@kernel.org> (for drivers/media)
-> Acked-by: Hans de Goede <hdegoede@redhat.com> (For drivers/platform)
-> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Acked-By: Vinod Koul <vkoul@kernel.org>
-> Acked-by: Juergen Gross <jgross@suse.com> (For Xen)
-> Acked-by: Lee Jones <lee.jones@linaro.org> (For drivers/mfd)
-> Acked-by: Johannes Thumshirn <jth@kernel.org> (For drivers/mcb)
-> Acked-by: Johan Hovold <johan@kernel.org>
-> Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org> (For drive=
-rs/slimbus)
-> Acked-by: Kirti Wankhede <kwankhede@nvidia.com> (For drivers/vfio)
-> Acked-by: Maximilian Luz <luzmaximilian@gmail.com>
-> Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com> (For ulpi and=
- typec)
-> Acked-by: Samuel Iglesias Gons=E1lvez <siglesias@igalia.com> (For ipack)
-> Reviewed-by: Tom Rix <trix@redhat.com> (For fpga)
-> Acked-by: Geoff Levand <geoff@infradead.org> (For ps3)
-
-Acked-by: Yehezkel Bernat <YehezkelShB@gmail.com> (For thunderbolt)
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Acked-by: Alexander Shishkin <alexander.shishkin@linux.intel.com> (For inte=
-l_th)
-Acked-by: Dominik Brodowski <linux@dominikbrodowski.net> (For pcmcia)
-
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---q2vlxiybuwkj6z7s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmDkoawACgkQwfwUeK3K
-7AkRFgf/Qj+Sw4DQa5XQzuIke1atkI5Z9SH6bby9lfgLCjU/9fFWokjZXUFUlHEd
-p6KCgzwG5JD4RoIVKyntr/S7rR3FlCH5aMtgDi4xzKWybmOwAdP5XCSzU6ois1Cd
-G76Gg954N8CBAyFE6c0p18Fu1R1fscGQQDIF6yrUJ6p9WbpckBTw8xuX/AOicKcu
-r9s0okuUVqJmb0eM1Io+LGgjIvSLaUPl2lFnllwI6ztli3Wwo3NhHhy0iFZN9q1n
-IAXVYkylaIeq6hoC+Fo0NN0/ZNZRsV+s2qlzlaQkj8zQmyYqfN369rEDpTajwdlU
-JoOxFMsceOjeYMAEfCEfUeEBRom3lw==
-=mbzo
------END PGP SIGNATURE-----
-
---q2vlxiybuwkj6z7s--
+?
