@@ -2,287 +2,150 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A33C11F6F
-	for <linux-cxl@archiver.kernel.org>; Wed,  7 Jul 2021 14:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6049CC07E9B
+	for <linux-cxl@archiver.kernel.org>; Wed,  7 Jul 2021 19:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42F3F61CC3
-	for <linux-cxl@archiver.kernel.org>; Wed,  7 Jul 2021 14:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42EA661CCC
+	for <linux-cxl@archiver.kernel.org>; Wed,  7 Jul 2021 19:54:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232008AbhGGO2N (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 7 Jul 2021 10:28:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:53297 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232004AbhGGO2J (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 7 Jul 2021 10:28:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1625667928;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=R1b1MmqRg+JjTb9SqE3N1oUES1jMyS6VpEEII2IWGuk=;
-        b=Iwo14BH06W//MgUJ/Dx5+0ggoObpPt3GMxyyQBWF8d1IHUVhouEMvKgsOvmGIh2+GywzJi
-        +s4nM2c/4yUcqqIk/5/D8RDL/iiZIxBG4fJxpGSUR0LCGQna8mc/ItGR3dWtwxL87y5tK5
-        gUfjwMS7Yp9iKOYkVjxwYcPjJSPj38k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-248-3QQwLlOoP9Ouo1dOX0QIzg-1; Wed, 07 Jul 2021 10:25:27 -0400
-X-MC-Unique: 3QQwLlOoP9Ouo1dOX0QIzg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E5AAE9F93C;
-        Wed,  7 Jul 2021 14:25:20 +0000 (UTC)
-Received: from [10.36.112.61] (ovpn-112-61.ams2.redhat.com [10.36.112.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E4E3919C66;
-        Wed,  7 Jul 2021 14:24:39 +0000 (UTC)
-Subject: Re: [PATCH v2 4/4] bus: Make remove callback return void
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     kernel@pengutronix.de, Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Geoff Levand <geoff@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
-        Moritz Fischer <mdf@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
-        Jens Taprogge <jens.taprogge@taprogge.org>,
-        Johannes Thumshirn <morbidrsa@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        Alex Dubov <oakad@yahoo.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Thorsten Scherer <t.scherer@eckelmann.de>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, Michael Buesch <m@bues.ch>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Martyn Welch <martyn@welchs.me.uk>,
-        Manohar Vanga <manohar.vanga@gmail.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Marc Zyngier <maz@kernel.org>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Qinglang Miao <miaoqinglang@huawei.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Joey Pabalan <jpabalanb@gmail.com>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Frank Li <lznuaa@gmail.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        Bodo Stroesser <bostroesser@gmail.com>,
-        Hannes Reinecke <hare@suse.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        SeongJae Park <sjpark@amazon.de>,
-        Julien Grall <jgrall@amazon.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-acpi@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-sunxi@lists.linux.dev, linux-cxl@vger.kernel.org,
-        nvdimm@lists.linux.dev, dmaengine@vger.kernel.org,
-        linux1394-devel@lists.sourceforge.net, linux-fpga@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-i3c@lists.infradead.org,
-        industrypack-devel@lists.sourceforge.net,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
-        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
-        greybus-dev@lists.linaro.org, target-devel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Johannes Thumshirn <jth@kernel.org>
-References: <20210706154803.1631813-1-u.kleine-koenig@pengutronix.de>
- <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Message-ID: <5d3bf56e-285f-ecc1-ec64-384409645353@redhat.com>
-Date:   Wed, 7 Jul 2021 16:24:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        id S233056AbhGGT50 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 7 Jul 2021 15:57:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230236AbhGGT5Z (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 7 Jul 2021 15:57:25 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E335EC061574
+        for <linux-cxl@vger.kernel.org>; Wed,  7 Jul 2021 12:54:44 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id 145so3267565pfv.0
+        for <linux-cxl@vger.kernel.org>; Wed, 07 Jul 2021 12:54:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=acPssYyJkYRZ5l6K/T6/hcBt/2q8D6RkPE04ZGYzuUs=;
+        b=E5uy5MslTE41zWq6b5S2KbnVkxqxiaRwbVF4Vy6cpWM/YP4CxEXr5+dFMSpf/nqQ8+
+         7nK+mfPmqq0FRZqP0IjDi5E56EgyI2oyk/VuP9yQgMws58c9pnBMdtC3M01f/Yf6cP/Z
+         LEAL78R7f+JVMagUa6Oqrjn6ljWzmJE2+fHB4wlH+l0tgb2fsreT4/BV+LXm/XtyLGJD
+         xVucTlF6O7w33mDWvlW1tHJq5UryBhg3bu3vCjOCZKvVo6K9ggqsFt06GX1Yc8kqS5MG
+         99ZURqYbLy0iVLPnTREYqXLZUpsL7rz3ccXucqone4gxs0W62diAHI5Wsm+vrTV4VDl5
+         hY4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=acPssYyJkYRZ5l6K/T6/hcBt/2q8D6RkPE04ZGYzuUs=;
+        b=NVvHFUsYINNHSBh4E685lFuITwA4Hyfzt694ICUreY/o4tXtkchS3GbUrRebza7Iy6
+         LxiI0E0yBZfwFSKRZ8poYvn0N5QOLWgkExm5uF2J0iavBYEAPX+lQdncrB7aDYnwQy5z
+         t6uS/L9WUFIXXACYRDBxcub0Dj+g/fb/NBEUmws/X43effwMJ0Fv7LAyZHAUOHtSpv3u
+         CkWD+IASdXh4GxmfUeaEvIZglMT8JG8nBuoZO5BQye7p15WP5M1ZaFN37+SxPJj7/RoO
+         0v8erm5MceeHb0EwA8EUAUV+FhGYBd/b7A3VU2Icbx0TGKCpck28o1YzyqlLdLxjR7fP
+         2Hjw==
+X-Gm-Message-State: AOAM531gs/P2+dOH0j5snnGHv4iXYI46kLNLit9V0FXOrNFJnZ9jt+WM
+        gFsM6MghZyxcNhq/lwxqOP6mvaN2wFKecytfCTMX3g==
+X-Google-Smtp-Source: ABdhPJy6wVdiTqOKpkwIGhiqcJLqxxH0ie3iTWCcfS4GubAN/QU35K0OENF/vZ5XDM3fEl8JhCyxYnN9lZqmW6yhuAg=
+X-Received: by 2002:a65:6248:: with SMTP id q8mr28290636pgv.279.1625687684305;
+ Wed, 07 Jul 2021 12:54:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <20210524133938.2815206-1-Jonathan.Cameron@huawei.com>
+ <20210524133938.2815206-3-Jonathan.Cameron@huawei.com> <CAPcyv4gBORHzouArX-Fsnhew+ZYur8pp9ySJQGwrOBrGuv+-ZQ@mail.gmail.com>
+In-Reply-To: <CAPcyv4gBORHzouArX-Fsnhew+ZYur8pp9ySJQGwrOBrGuv+-ZQ@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 7 Jul 2021 12:54:33 -0700
+Message-ID: <CAPcyv4i2ukD4ZQ_KfTaKXLyMakpSk=Y3_QJGV2P_PLHHVkPwFw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] PCI/DOE: Add Data Object Exchange support
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>, linux-cxl@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Fangjian <f.fangjian@huawei.com>, Linuxarm <linuxarm@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 7/6/21 5:48 PM, Uwe Kleine-König wrote:
-> The driver core ignores the return value of this callback because there
-> is only little it can do when a device disappears.
-> 
-> This is the final bit of a long lasting cleanup quest where several
-> buses were converted to also return void from their remove callback.
-> Additionally some resource leaks were fixed that were caused by drivers
-> returning an error code in the expectation that the driver won't go
-> away.
-> 
-> With struct bus_type::remove returning void it's prevented that newly
-> implemented buses return an ignored error code and so don't anticipate
-> wrong expectations for driver authors.
-> 
-> Acked-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk> (For ARM, Amba and related parts)
-> Acked-by: Mark Brown <broonie@kernel.org>
-> Acked-by: Chen-Yu Tsai <wens@csie.org> (for drivers/bus/sunxi-rsb.c)
-> Acked-by: Pali Rohár <pali@kernel.org>
-> Acked-by: Mauro Carvalho Chehab <mchehab@kernel.org> (for drivers/media)
-> Acked-by: Hans de Goede <hdegoede@redhat.com> (For drivers/platform)
-> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Acked-By: Vinod Koul <vkoul@kernel.org>
-> Acked-by: Juergen Gross <jgross@suse.com> (For Xen)
-> Acked-by: Lee Jones <lee.jones@linaro.org> (For drivers/mfd)
-> Acked-by: Johannes Thumshirn <jth@kernel.org> (For drivers/mcb)
-> Acked-by: Johan Hovold <johan@kernel.org>
-> Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org> (For drivers/slimbus)
-> Acked-by: Kirti Wankhede <kwankhede@nvidia.com> (For drivers/vfio)
-> Acked-by: Maximilian Luz <luzmaximilian@gmail.com>
-> Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com> (For ulpi and typec)
-> Acked-by: Samuel Iglesias Gonsálvez <siglesias@igalia.com> (For ipack)
-> Reviewed-by: Tom Rix <trix@redhat.com> (For fpga)
-> Acked-by: Geoff Levand <geoff@infradead.org> (For ps3)
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
-> 
+On Thu, Jun 10, 2021 at 1:06 PM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Mon, May 24, 2021 at 6:41 AM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
+> >
+> > Introduced in a PCI ECN [1], DOE provides a config space based mailbox with
+> > standard protocol discovery.  Each mailbox is accessed through a DOE
+> > Extended Capability.
+> >
+> > A device may have 1 or more DOE mailboxes, each of which is allowed to
+> > support any number of protocols (some DOE protocol specifications apply
+> > additional restrictions).  A given protocol may be supported on more than
+> > one DOE mailbox on a given function.
+> >
+> > If a driver wishes to access any number of DOE instances / protocols it
+> > makes a single call to pci_doe_register_all() which will find available
+> > DOEs, create the required infrastructure and cache the protocols they
+> > support.  pci_doe_find() can then retrieve a pointer to an appropriate DOE
+> > instance.
+> >
+> > A synchronous interface is provided in pci_doe_exchange_sync() to perform a
+> > single query / response exchange.
+> >
+> > Testing conducted against QEMU using:
+> >
+> > https://lore.kernel.org/qemu-devel/1619454964-10190-1-git-send-email-cbrowy@avery-design.com/
+>
+> Nice.
+>
+> I was hoping that by now QEMU upstream would have given us some
+> indication that this useful work that has a chance of being merged. I
+> fear it's only us CXL practitioner's that care. Perhaps the PCI IDE
+> support will get them to move on at least the DOE patches?
+>
+> >
+> > [1] https://members.pcisig.com/wg/PCI-SIG/document/14143
+> >     Data Object Exchange (DOE) - Approved 12 March 2020
+> >
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>
+> The core logic of this looks good to me. The interfaces for other code
+> to make use of this I feel can lean heavier on existing mechanics. A
+> few points come to mind:
+>
+> - Does this need to support anything more than queue depth 1? I know
+> the specification seems to allow for some overlapping and queueing,
+> but I don't think there are any use cases that are precluded if the
+> max number of tasks in flight for a given DOE is one.
+>
+> - Once its queue depth 1 then the list of tasks can be replaced with a
+> wait_queue_head_t where submitters wait for the previous task to
+> finish.
+>
+> - This appears to be the prototypical scenario for deploying the new
+> auxiliary bus facility. Rather than custom code device-like facilities
+> (lists and parents etc) in 'struct pci_doe' just make pci_doe a device
+> directly (auxiliary-device) and separate the infrastructure that
+> drives that device to a driver (auxiliary-driver). That makes the
+> lifetime management more idiomatic, allows for user space to have
+> typical driver-binding controls to manage kernel-user DOE conflicts,
+> and it allows for typical driver services like devm.
 
-[...]
+Hi Jonathan,
 
->   drivers/hid/hid-core.c                    | 4 +---
->   drivers/hid/intel-ish-hid/ishtp/bus.c     | 4 +---
+Are you waiting on me to take a shot at refactoring the DOE driver
+into this proposed auxiliary device/driver organization? I am happy to
+do that if you've moved on to looking at the kernel-side SPDM
+implementation [1].
 
-[...]
+I would expect DOE,  SPDM, and IDE would be a useful topic to discuss
+at the the Plumbers PCI Microconference assuming we do not solve all
+the open issues before September.
 
-> diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-> index 7db332139f7d..dbed2524fd47 100644
-> --- a/drivers/hid/hid-core.c
-> +++ b/drivers/hid/hid-core.c
-> @@ -2302,7 +2302,7 @@ static int hid_device_probe(struct device *dev)
->   	return ret;
->   }
->   
-> -static int hid_device_remove(struct device *dev)
-> +static void hid_device_remove(struct device *dev)
->   {
->   	struct hid_device *hdev = to_hid_device(dev);
->   	struct hid_driver *hdrv;
-> @@ -2322,8 +2322,6 @@ static int hid_device_remove(struct device *dev)
->   
->   	if (!hdev->io_started)
->   		up(&hdev->driver_input_lock);
-> -
-> -	return 0;
->   }
->   
->   static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
-> diff --git a/drivers/hid/intel-ish-hid/ishtp/bus.c b/drivers/hid/intel-ish-hid/ishtp/bus.c
-> index f0802b047ed8..8a51bd9cd093 100644
-> --- a/drivers/hid/intel-ish-hid/ishtp/bus.c
-> +++ b/drivers/hid/intel-ish-hid/ishtp/bus.c
-> @@ -255,7 +255,7 @@ static int ishtp_cl_bus_match(struct device *dev, struct device_driver *drv)
->    *
->    * Return: Return value from driver remove() call.
->    */
-> -static int ishtp_cl_device_remove(struct device *dev)
-> +static void ishtp_cl_device_remove(struct device *dev)
->   {
->   	struct ishtp_cl_device *device = to_ishtp_cl_device(dev);
->   	struct ishtp_cl_driver *driver = to_ishtp_cl_driver(dev->driver);
-> @@ -267,8 +267,6 @@ static int ishtp_cl_device_remove(struct device *dev)
->   
->   	if (driver->remove)
->   		driver->remove(device);
-> -
-> -	return 0;
->   }
->   
->   /**
-
-For the HID part:
-
-Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-
-Cheers,
-Benjamin
-
+[1]: https://lore.kernel.org/r/20210629132520.00000d1f@Huawei.com
