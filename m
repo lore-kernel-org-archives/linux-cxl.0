@@ -2,1439 +2,363 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8A1C07E99
-	for <linux-cxl@archiver.kernel.org>; Fri,  9 Jul 2021 19:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABACC07E99
+	for <linux-cxl@archiver.kernel.org>; Fri,  9 Jul 2021 23:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32E1E613D6
-	for <linux-cxl@archiver.kernel.org>; Fri,  9 Jul 2021 19:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D847613BE
+	for <linux-cxl@archiver.kernel.org>; Fri,  9 Jul 2021 23:57:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229506AbhGIT4A (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 9 Jul 2021 15:56:00 -0400
-Received: from mga18.intel.com ([134.134.136.126]:55945 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229459AbhGIT4A (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 9 Jul 2021 15:56:00 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10040"; a="197038272"
-X-IronPort-AV: E=Sophos;i="5.84,227,1620716400"; 
-   d="scan'208";a="197038272"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2021 12:53:15 -0700
-X-IronPort-AV: E=Sophos;i="5.84,227,1620716400"; 
-   d="scan'208";a="483848005"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2021 12:53:14 -0700
-Subject: [ndctl PATCH 6/6] build: Add meson build infrastructure
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     nvdimm@lists.linux.dev
-Cc:     linux-cxl@vger.kernel.org
-Date:   Fri, 09 Jul 2021 12:53:13 -0700
-Message-ID: <162586039351.1431180.555930928249704255.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <162586035908.1431180.14991721381432827647.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <162586035908.1431180.14991721381432827647.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        id S230168AbhGIX7o (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 9 Jul 2021 19:59:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229854AbhGIX7o (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 9 Jul 2021 19:59:44 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DF4AC0613DD
+        for <linux-cxl@vger.kernel.org>; Fri,  9 Jul 2021 16:57:00 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id oj10-20020a17090b4d8ab0290172f77377ebso6981892pjb.0
+        for <linux-cxl@vger.kernel.org>; Fri, 09 Jul 2021 16:57:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ALsFKmAY0enPHR9GjizD42Pv6lj/DVgPh6b4HTxMKc8=;
+        b=fPdIfQxDrjxNbOGvta+3YSzqu0nhc4962/MFvdVu/v6KB2Ut/6UttlqCSdnbFdGrjb
+         vfd9YVm5fBG3l1JaUBVpuuBXDkbTs9ks+f6UtHeQY40dGiCfq8EvQ/lNXGNdImwtROwg
+         C/1Gk8B0HjQZp2z4yEp/Eh/YpWz1Uvyy1C7bhzoEQ053qN2w14PQVXmY3DAdQuWzb9Pw
+         YeqtkP+xXJdmyzzqovUW8yGmhjeHdhRPapUt1EEXvHBKwocnTTpU+Bknu51a5ePen0yj
+         85i8i1O9FEfTmHntioJ7SIdRj6+D1fabzCPK03NY76UwA70hSr95BmVUsnDCuAyRAgva
+         FsMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ALsFKmAY0enPHR9GjizD42Pv6lj/DVgPh6b4HTxMKc8=;
+        b=IVYa942+nBXEL6lzEh/r69LmGY2qqsT14VMMAjBsCpHQAhm7wNdqOd4nEVSnBUUwHP
+         OlmeLP1HJR1honmruD0i8aCuCzIk1RESIknr3BeT0QgsRKK4F289G9aeTOz+W8iOoXg9
+         V3KS3bFs54K6HGiWREGx5OuHGieugQykmXxAYAB3TCPbWwd+LsYqJbSM0FB2Uqr+EqfG
+         pnrd/+0Xg+3hiMvw9rtuZKYhgGX0kef+UNqE5EunFEk7gbFDQDVmHuRwOmH3WA9KV/gM
+         B55QXemSISoM4MQVmY2nPkJ4bLjN5QH3Qn5VNRTQ6riJ3aZj6I9VP3Zt9g8fTxJ7875n
+         9gkA==
+X-Gm-Message-State: AOAM530sBLqZzyd+zFAisVi0hpl6ieSMgJ370D0YQ7HRIA1lOYHRw7/E
+        /zWR27UmmEyTKTLcl+fXhZ67F3fCJYyidczTJYX5VQ==
+X-Google-Smtp-Source: ABdhPJysZAFb2r5fy2xoQdPf+KNPJbm4Jjkj/13m5K82UM2/1mbVp2uWrljXTbXRpSXUBI9vqNMSD5pmXjmJs7wANBE=
+X-Received: by 2002:a17:90a:ae0c:: with SMTP id t12mr1298476pjq.149.1625875019814;
+ Fri, 09 Jul 2021 16:56:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20210702040009.68794-1-ben.widawsky@intel.com> <20210706160050.527553-1-ben.widawsky@intel.com>
+In-Reply-To: <20210706160050.527553-1-ben.widawsky@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 9 Jul 2021 16:56:48 -0700
+Message-ID: <CAPcyv4g8XqzbwtSP3Hdww5nUvB9Hz--QL9Z_h56XfxTQMdMxmw@mail.gmail.com>
+Subject: Re: [PATCH v2] cxl: Enable an endpoint decoder type
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Build times improve from 10s of seconds to sub-second builds especially
-when ccache gets involved and the only change is a git version bump. Recall
-that every time the version changes with autotools it does a reconfigure.
-With meson only the objects that depend on the version string are rebuilt.
-So the primary motivation is to make the ndctl project more enjoyable to
-develop.
+On Tue, Jul 6, 2021 at 9:01 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> CXL memory devices support HDM decoders. Currently, when a decoder is
+> instantiated there is no knowledge of the type of decoder; only the
+> underlying endpoint type is specified. In order to have the memory
+> devices reuse the existing decoder creation infrastructure it is
+> convenient to pass along the type of decoder on creation.
+>
+> The primary difference for an endpoint decoder is that it doesn't have
+> dports, nor targets. The target is just the underlying media (with
+> offset).
+>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> ---
+>
+> v2 Fixes target_type and stores the decoder type on instantiation
 
-Tools, libraries, documentation, and tests all seem to be working. The
-remaining work is to redo the rpm build infrastructure, and validate that
-installation is working as expected.
+This depends on the memdev driver series? It's not applying for me on
+top of cxl.git#next.
 
-Given the long standing momentum on the old build system it is still kept
-functional for now. The only compatibility hack when moving from an
-autotools build to a meson build is to delete the config.h files generated
-by the old system in favor of the unified configuration header build from
-the config.h.meson template.
+>
+> diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
+> index 196f260e2580..69acdd230f54 100644
+> --- a/drivers/cxl/core.c
+> +++ b/drivers/cxl/core.c
+> @@ -493,10 +493,11 @@ cxl_decoder_alloc(struct cxl_port *port, int nr_targets, resource_size_t base,
+>                         .start = base,
+>                         .end = base + len - 1,
+>                 },
+> +               .type = type,
 
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- .gitignore                       |    5 +
- Documentation/cxl/meson.build    |   82 ++++++++++++
- Documentation/daxctl/meson.build |   88 +++++++++++++
- Documentation/ndctl/meson.build  |  124 ++++++++++++++++++
- clean_config.sh                  |    2 
- config.h.meson                   |  149 +++++++++++++++++++++
- cxl/lib/meson.build              |   24 +++
- cxl/meson.build                  |   23 +++
- daxctl/lib/meson.build           |   32 +++++
- daxctl/meson.build               |   25 ++++
- meson.build                      |  237 ++++++++++++++++++++++++++++++++++
- meson_options.txt                |   17 ++
- ndctl/lib/meson.build            |   38 +++++
- ndctl/meson.build                |   70 ++++++++++
- test/meson.build                 |  267 ++++++++++++++++++++++++++++++++++++++
- tools/meson-vcs-tag.sh           |   17 ++
- util/meson.build                 |   15 ++
- version.h.in                     |    2 
- 18 files changed, 1216 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/cxl/meson.build
- create mode 100644 Documentation/daxctl/meson.build
- create mode 100644 Documentation/ndctl/meson.build
- create mode 100755 clean_config.sh
- create mode 100644 config.h.meson
- create mode 100644 cxl/lib/meson.build
- create mode 100644 cxl/meson.build
- create mode 100644 daxctl/lib/meson.build
- create mode 100644 daxctl/meson.build
- create mode 100644 meson.build
- create mode 100644 meson_options.txt
- create mode 100644 ndctl/lib/meson.build
- create mode 100644 ndctl/meson.build
- create mode 100644 test/meson.build
- create mode 100755 tools/meson-vcs-tag.sh
- create mode 100644 util/meson.build
- create mode 100644 version.h.in
+...but there's already the dev->type?
 
-diff --git a/.gitignore b/.gitignore
-index 6468c7a91f06..4cb232519e72 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -9,7 +9,9 @@ Makefile.in
- /aclocal.m4
- /autom4te.cache
- /build-aux
--/config.*
-+/config.h
-+/config.log
-+/config.status
- /configure
- /libtool
- /stamp-h1
-@@ -25,6 +27,7 @@ Documentation/cxl/asciidoctor-extensions.rb
- Documentation/cxl/lib/asciidoctor-extensions.rb
- Documentation/ndctl/attrs.adoc
- .dirstamp
-+build/
- daxctl/config.h
- daxctl/daxctl
- daxctl/lib/libdaxctl.la
-diff --git a/Documentation/cxl/meson.build b/Documentation/cxl/meson.build
-new file mode 100644
-index 000000000000..bf8e86ffe9ca
---- /dev/null
-+++ b/Documentation/cxl/meson.build
-@@ -0,0 +1,82 @@
-+if get_option('asciidoctor').enabled()
-+  asciidoc_conf = custom_target('asciidoctor-extensions.rb',
-+    command : [
-+      'sed', '-e', 's,@Utility@,Daxctl,g', '-e', 's,@utility@,cxl,g', '@INPUT@'
-+    ],
-+    input : '../asciidoctor-extensions.rb.in',
-+    output : 'asciidoctor-extensions.rb',
-+    capture : true,
-+  )
-+else
-+  asciidoc_conf = custom_target('asciidoc.conf',
-+    command : [
-+      'sed', '-e', 's,UTILITY,cxl,g',
-+    ],
-+    input : '../asciidoc.conf.in',
-+    output : 'asciidoc.conf',
-+    capture : true,
-+  )
-+endif
-+
-+filedeps = [
-+        '../copyright.txt',
-+]
-+
-+cxl_manpages = [
-+  'cxl.txt',
-+  'cxl-list.txt',
-+  'cxl-read-labels.txt',
-+  'cxl-write-labels.txt',
-+  'cxl-zero-labels.txt',
-+]
-+
-+foreach man : cxl_manpages
-+  name = man.split('.')[0]
-+  output = name + '.1'
-+  output_xml = name + '.xml'
-+  if get_option('asciidoctor').enabled()
-+    custom_target(name,
-+      command : [
-+        asciidoc,
-+        '-b', 'manpage', '-d', 'manpage', '-acompat-mode', '-I', '@OUTDIR@',
-+        '-rasciidoctor-extensions', '-amansource=cxl',
-+        '-amanmanual=cxl Manual',
-+        '-andctl_version=@0@'.format(meson.project_version()),
-+        '-o', '@OUTPUT@', '@INPUT@'
-+      ],
-+      input : man,
-+      output : output,
-+      depend_files : filedeps,
-+      depends : asciidoc_conf,
-+      install : get_option('docs').enabled(),
-+      install_dir : join_paths(get_option('mandir'), 'man1'),
-+    )
-+  else
-+    xml = custom_target(output_xml,
-+      command : [
-+        asciidoc,
-+	'-b', 'docbook', '-d', 'manpage', '-f', asciidoc_conf, '--unsafe',
-+	'-andctl_version=@0@'.format(meson.project_version()),
-+	'-o', '@OUTPUT@', '@INPUT@',
-+      ],
-+      input : man,
-+      output : output_xml,
-+      depend_files : filedeps,
-+      depends : asciidoc_conf,
-+    )
-+
-+    xsl = files('../manpage-normal.xsl')
-+
-+    custom_target(name,
-+      command : [
-+        xmlto, '-o', '@OUTDIR@', '-m', xsl, 'man', '@INPUT@'
-+      ],
-+      depends : xml,
-+      depend_files : xsl,
-+      input : xml,
-+      output : output,
-+      install : get_option('docs').enabled(),
-+      install_dir : join_paths(get_option('mandir'), 'man1'),
-+    )
-+  endif
-+endforeach
-diff --git a/Documentation/daxctl/meson.build b/Documentation/daxctl/meson.build
-new file mode 100644
-index 000000000000..4a80ecb98a9f
---- /dev/null
-+++ b/Documentation/daxctl/meson.build
-@@ -0,0 +1,88 @@
-+if get_option('asciidoctor').enabled()
-+  asciidoc_conf = custom_target('asciidoctor-extensions.rb',
-+    command : [
-+      'sed', '-e', 's,@Utility@,Daxctl,g', '-e', 's,@utility@,daxctl,g', '@INPUT@'
-+    ],
-+    input : '../asciidoctor-extensions.rb.in',
-+    output : 'asciidoctor-extensions.rb',
-+    capture : true,
-+  )
-+else
-+  asciidoc_conf = custom_target('asciidoc.conf',
-+    command : [
-+      'sed', '-e', 's,UTILITY,daxctl,g',
-+    ],
-+    input : '../asciidoc.conf.in',
-+    output : 'asciidoc.conf',
-+    capture : true,
-+  )
-+endif
-+
-+filedeps = [
-+	'human-option.txt',
-+        '../copyright.txt',
-+]
-+
-+daxctl_manpages = [
-+  'daxctl.txt',
-+  'daxctl-list.txt',
-+  'daxctl-migrate-device-model.txt',
-+  'daxctl-reconfigure-device.txt',
-+  'daxctl-online-memory.txt',
-+  'daxctl-offline-memory.txt',
-+  'daxctl-disable-device.txt',
-+  'daxctl-enable-device.txt',
-+  'daxctl-create-device.txt',
-+  'daxctl-destroy-device.txt',
-+]
-+
-+foreach man : daxctl_manpages
-+  name = man.split('.')[0]
-+  output = name + '.1'
-+  output_xml = name + '.xml'
-+  if get_option('asciidoctor').enabled()
-+    custom_target(name,
-+      command : [
-+        asciidoc,
-+        '-b', 'manpage', '-d', 'manpage', '-acompat-mode', '-I', '@OUTDIR@',
-+        '-rasciidoctor-extensions', '-amansource=daxctl',
-+        '-amanmanual=daxctl Manual',
-+        '-andctl_version=@0@'.format(meson.project_version()),
-+        '-o', '@OUTPUT@', '@INPUT@'
-+      ],
-+      input : man,
-+      output : output,
-+      depend_files : filedeps,
-+      depends : asciidoc_conf,
-+      install : get_option('docs').enabled(),
-+      install_dir : join_paths(get_option('mandir'), 'man1'),
-+    )
-+  else
-+    xml = custom_target(output_xml,
-+      command : [
-+        asciidoc,
-+	'-b', 'docbook', '-d', 'manpage', '-f', asciidoc_conf, '--unsafe',
-+	'-andctl_version=@0@'.format(meson.project_version()),
-+	'-o', '@OUTPUT@', '@INPUT@',
-+      ],
-+      input : man,
-+      output : output_xml,
-+      depend_files : filedeps,
-+      depends : asciidoc_conf,
-+    )
-+
-+    xsl = files('../manpage-normal.xsl')
-+
-+    custom_target(name,
-+      command : [
-+        xmlto, '-o', '@OUTDIR@', '-m', xsl, 'man', '@INPUT@'
-+      ],
-+      depends : xml,
-+      depend_files : xsl,
-+      input : xml,
-+      output : output,
-+      install : get_option('docs').enabled(),
-+      install_dir : join_paths(get_option('mandir'), 'man1'),
-+    )
-+  endif
-+endforeach
-diff --git a/Documentation/ndctl/meson.build b/Documentation/ndctl/meson.build
-new file mode 100644
-index 000000000000..9e16eb399fa3
---- /dev/null
-+++ b/Documentation/ndctl/meson.build
-@@ -0,0 +1,124 @@
-+if get_option('asciidoctor').enabled()
-+  asciidoc_conf = custom_target('asciidoctor-extensions.rb',
-+    command : [
-+      'sed', '-e', 's,@Utility@,Ndctl,g', '-e', 's,@utility@,ndctl,g', '@INPUT@'
-+    ],
-+    input : '../asciidoctor-extensions.rb.in',
-+    output : 'asciidoctor-extensions.rb',
-+    capture : true,
-+  )
-+else
-+  asciidoc_conf = custom_target('asciidoc.conf',
-+    command : [
-+      'sed', '-e', 's,UTILITY,ndctl,g',
-+    ],
-+    input : '../asciidoc.conf.in',
-+    output : 'asciidoc.conf',
-+    capture : true,
-+  )
-+endif
-+
-+filedeps = [
-+        '../copyright.txt',
-+        'region-description.txt',
-+        'xable-region-options.txt',
-+        'dimm-description.txt',
-+        'xable-dimm-options.txt',
-+        'xable-namespace-options.txt',
-+        'ars-description.txt',
-+        'labels-description.txt',
-+        'labels-options.txt',
-+]
-+
-+ndctl_manpages = [
-+  'ndctl.txt',
-+  'ndctl-wait-scrub.txt',
-+  'ndctl-start-scrub.txt',
-+  'ndctl-zero-labels.txt',
-+  'ndctl-read-labels.txt',
-+  'ndctl-write-labels.txt',
-+  'ndctl-init-labels.txt',
-+  'ndctl-check-labels.txt',
-+  'ndctl-enable-region.txt',
-+  'ndctl-disable-region.txt',
-+  'ndctl-enable-dimm.txt',
-+  'ndctl-disable-dimm.txt',
-+  'ndctl-enable-namespace.txt',
-+  'ndctl-disable-namespace.txt',
-+  'ndctl-create-namespace.txt',
-+  'ndctl-destroy-namespace.txt',
-+  'ndctl-check-namespace.txt',
-+  'ndctl-clear-errors.txt',
-+  'ndctl-inject-error.txt',
-+  'ndctl-inject-smart.txt',
-+  'ndctl-update-firmware.txt',
-+  'ndctl-list.txt',
-+  'ndctl-monitor.txt',
-+  'ndctl-setup-passphrase.txt',
-+  'ndctl-update-passphrase.txt',
-+  'ndctl-remove-passphrase.txt',
-+  'ndctl-freeze-security.txt',
-+  'ndctl-sanitize-dimm.txt',
-+  'ndctl-load-keys.txt',
-+  'ndctl-wait-overwrite.txt',
-+  'ndctl-read-infoblock.txt',
-+  'ndctl-write-infoblock.txt',
-+  'ndctl-activate-firmware.txt',
-+]
-+
-+foreach man : ndctl_manpages
-+  name = man.split('.')[0]
-+  output = name + '.1'
-+  output_xml = name + '.xml'
-+  if get_option('asciidoctor').enabled()
-+    custom_target(name,
-+      command : [
-+        asciidoc,
-+        '-b', 'manpage', '-d', 'manpage', '-acompat-mode', '-I', '@OUTDIR@',
-+        '-rasciidoctor-extensions', '-amansource=ndctl',
-+        '-amanmanual=ndctl Manual',
-+	'-andctl_monitorconfdir=@0@'.format(ndctlconf_dir),
-+	'-andctl_monitorconf=@0@'.format(ndctlconf),
-+	'-andctl_keysdir=@0@'.format(ndctlkeys_dir),
-+        '-andctl_version=@0@'.format(meson.project_version()),
-+        '-o', '@OUTPUT@', '@INPUT@'
-+      ],
-+      input : man,
-+      output : output,
-+      depend_files : filedeps,
-+      depends : asciidoc_conf,
-+      install : get_option('docs').enabled(),
-+      install_dir : join_paths(get_option('mandir'), 'man1'),
-+    )
-+  else
-+    xml = custom_target(output_xml,
-+      command : [
-+        asciidoc,
-+	'-b', 'docbook', '-d', 'manpage', '-f', asciidoc_conf, '--unsafe',
-+	'-andctl_version=@0@'.format(meson.project_version()),
-+	'-andctl_monitorconfdir=@0@'.format(ndctlconf_dir),
-+	'-andctl_monitorconf=@0@'.format(ndctlconf),
-+	'-andctl_keysdir=@0@'.format(ndctlkeys_dir),
-+	'-o', '@OUTPUT@', '@INPUT@',
-+      ],
-+      input : man,
-+      output : output_xml,
-+      depend_files : filedeps,
-+      depends : asciidoc_conf,
-+    )
-+
-+    xsl = files('../manpage-normal.xsl')
-+
-+    custom_target(name,
-+      command : [
-+        xmlto, '-o', '@OUTDIR@', '-m', xsl, 'man', '@INPUT@'
-+      ],
-+      depends : xml,
-+      depend_files : xsl,
-+      input : xml,
-+      output : output,
-+      install : get_option('docs').enabled(),
-+      install_dir : join_paths(get_option('mandir'), 'man1'),
-+    )
-+  endif
-+endforeach
-diff --git a/clean_config.sh b/clean_config.sh
-new file mode 100755
-index 000000000000..03ec04c5554b
---- /dev/null
-+++ b/clean_config.sh
-@@ -0,0 +1,2 @@
-+#!/bin/bash
-+git ls-files -o --exclude build | grep config.h\$ | xargs rm
-diff --git a/config.h.meson b/config.h.meson
-new file mode 100644
-index 000000000000..4796ea67b0db
---- /dev/null
-+++ b/config.h.meson
-@@ -0,0 +1,149 @@
-+/* Debug messages. */
-+#mesondefine ENABLE_DEBUG
-+
-+/* destructive functional tests support */
-+#mesondefine ENABLE_DESTRUCTIVE
-+
-+/* Documentation / man pages. */
-+#mesondefine ENABLE_DOCS
-+
-+/* Enable keyutils support */
-+#mesondefine ENABLE_KEYUTILS
-+
-+/* System logging. */
-+#mesondefine ENABLE_LOGGING
-+
-+/* ndctl test poison support */
-+#mesondefine ENABLE_POISON
-+
-+/* ndctl test support */
-+#mesondefine ENABLE_TEST
-+
-+/* Define to 1 if big-endian-arch */
-+#mesondefine HAVE_BIG_ENDIAN
-+
-+/* Define to 1 if you have the declaration of `BUS_MCEERR_AR', and to 0 if you
-+   don't. */
-+#mesondefine HAVE_DECL_BUS_MCEERR_AR
-+
-+/* Define to 1 if you have the declaration of `MAP_SHARED_VALIDATE', and to 0
-+   if you don't. */
-+#mesondefine HAVE_DECL_MAP_SHARED_VALIDATE
-+
-+/* Define to 1 if you have the declaration of `MAP_SYNC', and to 0 if you
-+   don't. */
-+#mesondefine HAVE_DECL_MAP_SYNC
-+
-+/* Define to 1 if you have the <dlfcn.h> header file. */
-+#mesondefine HAVE_DLFCN_H
-+
-+/* Define to 1 if you have the <inttypes.h> header file. */
-+#mesondefine HAVE_INTTYPES_H
-+
-+/* Define to 1 if you have the <keyutils.h> header file. */
-+#mesondefine HAVE_KEYUTILS_H
-+
-+/* Define to 1 if you have the <linux/version.h> header file. */
-+#mesondefine HAVE_LINUX_VERSION_H
-+
-+/* Define to 1 if little-endian-arch */
-+#mesondefine HAVE_LITTLE_ENDIAN
-+
-+/* Define to 1 if you have the <memory.h> header file. */
-+#mesondefine HAVE_MEMORY_H
-+
-+/* Define to 1 if you have the `secure_getenv' function. */
-+#mesondefine HAVE_SECURE_GETENV
-+
-+/* Define to 1 if you have statement expressions. */
-+#mesondefine HAVE_STATEMENT_EXPR
-+
-+/* Define to 1 if you have the <stdint.h> header file. */
-+#mesondefine HAVE_STDINT_H
-+
-+/* Define to 1 if you have the <stdlib.h> header file. */
-+#mesondefine HAVE_STDLIB_H
-+
-+/* Define to 1 if you have the <strings.h> header file. */
-+#mesondefine HAVE_STRINGS_H
-+
-+/* Define to 1 if you have the <string.h> header file. */
-+#mesondefine HAVE_STRING_H
-+
-+/* Define to 1 if you have the <sys/stat.h> header file. */
-+#mesondefine HAVE_SYS_STAT_H
-+
-+/* Define to 1 if you have the <sys/types.h> header file. */
-+#mesondefine HAVE_SYS_TYPES_H
-+
-+/* Define to 1 if typeof works with your compiler. */
-+#mesondefine HAVE_TYPEOF
-+
-+/* Define to 1 if you have the <unistd.h> header file. */
-+#mesondefine HAVE_UNISTD_H
-+
-+/* Define to 1 if using libuuid */
-+#mesondefine HAVE_UUID
-+
-+/* Define to 1 if you have the `__secure_getenv' function. */
-+#mesondefine HAVE___SECURE_GETENV
-+
-+/* Define to the sub-directory where libtool stores uninstalled libraries. */
-+#mesondefine LT_OBJDIR
-+
-+/* Name of package */
-+#mesondefine PACKAGE
-+
-+/* Define to the address where bug reports for this package should be sent. */
-+#mesondefine PACKAGE_BUGREPORT
-+
-+/* Define to the full name of this package. */
-+#mesondefine PACKAGE_NAME
-+
-+/* Define to the full name and version of this package. */
-+#mesondefine PACKAGE_STRING
-+
-+/* Define to the one symbol short name of this package. */
-+#mesondefine PACKAGE_TARNAME
-+
-+/* Define to the home page for this package. */
-+#mesondefine PACKAGE_URL
-+
-+/* Define to the version of this package. */
-+#mesondefine PACKAGE_VERSION
-+
-+/* Define to 1 if you have the ANSI C header files. */
-+#mesondefine STDC_HEADERS
-+
-+/* Version number of package */
-+#mesondefine VERSION
-+
-+/* Number of bits in a file offset, on hosts where this is settable. */
-+#mesondefine _FILE_OFFSET_BITS
-+
-+/* Define for large files, on AIX-style hosts. */
-+#mesondefine _LARGE_FILES
-+
-+/* Define to 1 if on MINIX. */
-+#mesondefine _MINIX
-+
-+/* Define to 2 if the system does not provide POSIX.1 features except with
-+   this defined. */
-+#mesondefine _POSIX_1_SOURCE
-+
-+/* Define to 1 if you need to in order for `stat' and other things to work. */
-+#mesondefine _POSIX_SOURCE
-+
-+/* Define to __typeof__ if your compiler spells it that way. */
-+#mesondefine typeof
-+
-+/* Define to enable GNU Source Extensions */
-+#mesondefine _GNU_SOURCE
-+
-+/* Locations to install configuration files, key config, man pages, etc.. */
-+#mesondefine NDCTL_CONF_FILE
-+#mesondefine NDCTL_KEYS_DIR
-+#mesondefine NDCTL_MAN_PATH
-+#mesondefine DAXCTL_MODPROBE_DATA
-+#mesondefine DAXCTL_MODPROBE_INSTALL
-+#mesondefine PREFIX
-diff --git a/cxl/lib/meson.build b/cxl/lib/meson.build
-new file mode 100644
-index 000000000000..aa60ec45b545
---- /dev/null
-+++ b/cxl/lib/meson.build
-@@ -0,0 +1,24 @@
-+libcxl_version = '@0@.@1@.@2@'.format(
-+  LIBCXL_CURRENT - LIBCXL_AGE,
-+  LIBCXL_REVISION,
-+  LIBCXL_AGE)
-+
-+mapfile = files('libcxl.sym')
-+vflag = '-Wl,--version-script,@0@/@1@'.format(project_source_root, mapfile[0])
-+
-+cxl = library('cxl',
-+  '../../util/sysfs.c',
-+  '../../util/log.c',
-+  '../../util/log.h',
-+  'libcxl.c',
-+  include_directories : root_inc,
-+  dependencies : [
-+    uuid,
-+    kmod,
-+  ],
-+  install : true,
-+  install_dir : rootlibdir,
-+  link_args : vflag,
-+  link_depends : mapfile,
-+)
-+cxl_dep = declare_dependency(link_with : cxl)
-diff --git a/cxl/meson.build b/cxl/meson.build
-new file mode 100644
-index 000000000000..e43f145f15f9
---- /dev/null
-+++ b/cxl/meson.build
-@@ -0,0 +1,23 @@
-+cxl_src = [
-+  'cxl.c',
-+  'list.c',
-+  'memdev.c',
-+  '../util/json.c',
-+  'json.c',
-+  'filter.c',
-+]
-+
-+cxl_tool = executable('cxl',
-+  cxl_src,
-+  include_directories : root_inc,
-+  dependencies : [
-+    versiondep,
-+    cxl_dep,
-+    util_dep,
-+    uuid,
-+    kmod,
-+    json,
-+  ],
-+  install : true,
-+  install_dir : rootbindir,
-+)
-diff --git a/daxctl/lib/meson.build b/daxctl/lib/meson.build
-new file mode 100644
-index 000000000000..bd5e6ebe1e77
---- /dev/null
-+++ b/daxctl/lib/meson.build
-@@ -0,0 +1,32 @@
-+libdaxctl_version = '@0@.@1@.@2@'.format(
-+  LIBDAXCTL_CURRENT - LIBDAXCTL_AGE,
-+  LIBDAXCTL_REVISION,
-+  LIBDAXCTL_AGE,
-+)
-+
-+mapfile = files('libdaxctl.sym')
-+vflag = '-Wl,--version-script,@0@/@1@'.format(project_source_root, mapfile[0])
-+
-+libdaxctl_src = [
-+  '../../util/iomem.c',
-+  '../../util/sysfs.c',
-+  '../../util/log.c',
-+  'libdaxctl.c',
-+]
-+
-+daxctl = library(
-+ 'daxctl',
-+  libdaxctl_src,
-+  version : libdaxctl_version,
-+  include_directories : root_inc,
-+  dependencies : [
-+    uuid,
-+    kmod,
-+  ],
-+  install : true,
-+  install_dir : rootlibdir,
-+  link_args : vflag,
-+  link_depends : mapfile,
-+)
-+
-+daxctl_dep = declare_dependency(link_with : daxctl)
-diff --git a/daxctl/meson.build b/daxctl/meson.build
-new file mode 100644
-index 000000000000..813283e3a33d
---- /dev/null
-+++ b/daxctl/meson.build
-@@ -0,0 +1,25 @@
-+daxctl_src = [
-+  'daxctl.c',
-+  'acpi.c',
-+  'list.c',
-+  'migrate.c',
-+  'device.c',
-+  '../util/json.c',
-+  'json.c',
-+  'filter.c',
-+]
-+
-+daxctl_tool = executable('daxctl',
-+  daxctl_src,
-+  include_directories : root_inc,
-+  dependencies : [
-+    versiondep,
-+    daxctl_dep,
-+    util_dep,
-+    uuid,
-+    kmod,
-+    json,
-+  ],
-+  install : true,
-+  install_dir : rootbindir,
-+)
-diff --git a/meson.build b/meson.build
-new file mode 100644
-index 000000000000..734f7d4d3cb9
---- /dev/null
-+++ b/meson.build
-@@ -0,0 +1,237 @@
-+project('ndctl', 'c',
-+  version : '71',
-+  license : [
-+    'GPL-2.0',
-+    'LGPL-2.1',
-+    'CC0-1.0',
-+    'MIT',
-+  ],
-+  default_options : [
-+    'c_std=gnu99',
-+    'prefix=/usr',
-+    'sysconfdir=/etc',
-+    'localstatedir=/var',
-+  ],
-+)
-+
-+# rootprefixdir and rootlibdir setup copied from systemd:
-+rootprefixdir = get_option('rootprefix')
-+rootprefix_default = '/usr'
-+if rootprefixdir == ''
-+        rootprefixdir = rootprefix_default
-+endif
-+rootbindir = join_paths(rootprefixdir, 'bin')
-+
-+# join_paths ignores the preceding arguments if an absolute component is
-+# encountered, so this should canonicalize various paths when they are
-+# absolute or relative.
-+prefixdir = get_option('prefix')
-+if not prefixdir.startswith('/')
-+        error('Prefix is not absolute: "@0@"'.format(prefixdir))
-+endif
-+if prefixdir != rootprefixdir and rootprefixdir != '/' and not prefixdir.strip('/').startswith(rootprefixdir.strip('/') + '/')
-+  error('Prefix is not below root prefix (now rootprefix=@0@ prefix=@1@)'.format(
-+	rootprefixdir, prefixdir))
-+endif
-+
-+libdir = join_paths(prefixdir, get_option('libdir'))
-+rootlibdir = get_option('rootlibdir')
-+if rootlibdir == ''
-+  rootlibdir = join_paths(rootprefixdir, libdir.split('/')[-1])
-+endif
-+
-+cc_flags = [
-+  '-Wall',
-+  '-Wchar-subscripts',
-+  '-Wformat-security',
-+  '-Wmissing-declarations',
-+  '-Wmissing-prototypes',
-+  '-Wnested-externs ',
-+  '-Wshadow',
-+  '-Wsign-compare',
-+  '-Wstrict-prototypes',
-+  '-Wtype-limits',
-+  '-Wmaybe-uninitialized',
-+  '-Wdeclaration-after-statement',
-+  '-Wunused-result',
-+  '-D_FORTIFY_SOURCE=2',
-+  '-O2',
-+]
-+cc = meson.get_compiler('c')
-+add_project_arguments(cc.get_supported_arguments(cc_flags), language : 'c')
-+
-+project_source_root = meson.current_source_dir()
-+
-+# Remove this after the conversion to meson has been completed
-+# Cleanup the leftover config.h files to avoid conflicts with the meson
-+# generated config.h
-+git = find_program('git', required : false)
-+if git.found()
-+  run_command('clean_config.sh',
-+    env : 'GIT_DIR=@0@/.git'.format(project_source_root),
-+  )
-+endif
-+
-+vcs_tagger = [
-+  project_source_root + '/tools/meson-vcs-tag.sh',
-+  project_source_root,
-+  meson.project_version()
-+]
-+
-+version_h = vcs_tag(
-+    input : 'version.h.in',
-+    output : 'version.h',
-+    command: vcs_tagger
-+)
-+
-+versiondep = declare_dependency(sources: version_h)
-+
-+kmod = dependency('libkmod')
-+udev = dependency('libudev')
-+uuid = dependency('uuid')
-+json = dependency('json-c')
-+systemd = dependency('systemd', required : get_option('systemd'))
-+if get_option('docs').enabled()
-+  if get_option('asciidoctor').enabled()
-+    asciidoc = find_program('asciidoctor', required : true)
-+  else
-+    asciidoc = find_program('asciidoc', required : true)
-+    xmlto = find_program('xmlto', required : true)
-+  endif
-+endif
-+
-+cc = meson.get_compiler('c')
-+
-+# keyutils lacks pkgconfig
-+keyutils = cc.find_library('keyutils', required : get_option('keyutils'))
-+
-+conf = configuration_data()
-+check_headers = [
-+  ['HAVE_DLFCN_H', 'dlfcn.h'],
-+  ['HAVE_INTTYPES_H', 'inttypes.h'],
-+  ['HAVE_KEYUTILS_H', 'keyutils.h'],
-+  ['HAVE_LINUX_VERSION_H', 'linux/version.h'],
-+  ['HAVE_MEMORY_H', 'memory.h'],
-+  ['HAVE_STDINT_H', 'stdint.h'],
-+  ['HAVE_STDLIB_H', 'stdlib.h'],
-+  ['HAVE_STRINGS_H', 'strings.h'],
-+  ['HAVE_STRING_H', 'string.h'],
-+  ['HAVE_SYS_STAT_H', 'sys/stat.h'],
-+  ['HAVE_SYS_TYPES_H', 'sys/types.h'],
-+  ['HAVE_UNISTD_H', 'unistd.h'],
-+]
-+
-+foreach h : check_headers
-+  if cc.has_header(h.get(1))
-+    conf.set(h.get(0), 1)
-+  endif
-+endforeach
-+
-+map_sync_symbols = [
-+  [ 'signal.h', 'BUS_MCEERR_AR' ],
-+  [ 'linux/mman.h', 'MAP_SHARED_VALIDATE' ],
-+  [ 'linux/mman.h', 'MAP_SYNC' ],
-+]
-+
-+count = 0
-+foreach symbol : map_sync_symbols
-+  if cc.has_header_symbol(symbol[0], symbol[1])
-+    conf.set('HAVE_DECL_@0@'.format(symbol[1].to_upper()), 1)
-+    count = count + 1
-+  endif
-+endforeach
-+
-+poison_enabled = false
-+if get_option('poison').enabled() and count == 3
-+  poison_enabled = true
-+endif
-+
-+conf.set('ENABLE_POISON', poison_enabled)
-+conf.set('ENABLE_KEYUTILS', get_option('keyutils').enabled())
-+conf.set('ENABLE_TEST', get_option('test').enabled())
-+conf.set('ENABLE_DESTRUCTIVE', get_option('destructive').enabled())
-+conf.set('ENABLE_LOGGING', get_option('logging').enabled())
-+
-+typeof = cc.run('''
-+  int main() {
-+    struct {
-+      char a[16];
-+    } x;
-+    typeof(x) y;
-+
-+    return sizeof(x) == sizeof(y);
-+  }
-+  '''
-+)
-+
-+if typeof.compiled() and typeof.returncode() == 1
-+  conf.set('HAVE_TYPEOF', 1)
-+  conf.set('HAVE_STATEMENT_EXPR', 1)
-+endif
-+
-+if target_machine.endian() == 'big'
-+  conf.set('HAVE_BIG_ENDIAN', 1)
-+else
-+  conf.set('HAVE_LITTLE_ENDIAN', 1)
-+endif
-+
-+conf.set('_GNU_SOURCE', true)
-+conf.set_quoted('PREFIX', get_option('prefix'))
-+conf.set_quoted('NDCTL_MAN_PATH', get_option('mandir'))
-+
-+foreach ident : ['secure_getenv', '__secure_getenv']
-+  conf.set10('HAVE_' + ident.to_upper(), cc.has_function(ident))
-+endforeach
-+
-+ndctlconf_dir = get_option('sysconfdir') + '/ndctl/'
-+ndctlconf = ndctlconf_dir + 'monitor.conf'
-+conf.set_quoted('NDCTL_CONF_FILE', ndctlconf)
-+
-+ndctlkeys_dir = get_option('sysconfdir') + '/ndctl/'
-+ndctlkeys = ndctlkeys_dir + 'keys'
-+conf.set_quoted('NDCTL_KEYS_DIR', ndctlkeys)
-+
-+conf.set_quoted('DAXCTL_MODPROBE_DATA', get_option('datadir') +
-+  '/daxctl/daxctl.conf')
-+conf.set_quoted('DAXCTL_MODPROBE_INSTALL', get_option('sysconfdir') +
-+  '/modprobe.d/daxctl/daxctl.conf')
-+
-+config_h = configure_file(
-+  input : 'config.h.meson',
-+  output : 'config.h',
-+  configuration : conf
-+)
-+add_project_arguments('-include', 'config.h', language : 'c')
-+
-+LIBNDCTL_CURRENT=25
-+LIBNDCTL_REVISION=1
-+LIBNDCTL_AGE=19
-+
-+LIBDAXCTL_CURRENT=6
-+LIBDAXCTL_REVISION=0
-+LIBDAXCTL_AGE=5
-+
-+LIBCXL_CURRENT=1
-+LIBCXL_REVISION=0
-+LIBCXL_AGE=0
-+
-+root_inc = include_directories(['.', 'ndctl', ])
-+
-+ccan = static_library('ccan',
-+  [ 'ccan/str/str.c', 'ccan/list/list.c' ],
-+)
-+ccan_dep = declare_dependency(link_with : ccan)
-+
-+subdir('daxctl/lib')
-+subdir('ndctl/lib')
-+subdir('cxl/lib')
-+subdir('util')
-+subdir('ndctl')
-+subdir('daxctl')
-+subdir('cxl')
-+if get_option('docs').enabled()
-+  subdir('Documentation/ndctl')
-+  subdir('Documentation/daxctl')
-+  subdir('Documentation/cxl')
-+endif
-+subdir('test')
-diff --git a/meson_options.txt b/meson_options.txt
-new file mode 100644
-index 000000000000..9d797abb919d
---- /dev/null
-+++ b/meson_options.txt
-@@ -0,0 +1,17 @@
-+option('docs', type : 'feature', value : 'enabled')
-+option('asciidoctor', type : 'feature', value : 'disabled')
-+option('systemd', type : 'feature', value : 'enabled')
-+option('keyutils', type : 'feature', value : 'enabled',
-+  description : 'enable nvdimm device passphrase management')
-+option('test', type : 'feature', value : 'disabled',
-+  description : 'enable shipping tests in ndctl')
-+option('destructive', type : 'feature', value : 'disabled',
-+  description : 'enable tests that may clobber live system resources')
-+option('poison', type : 'feature', value : 'enabled',
-+  description : 'enable tests that inject poison / memory-failure')
-+option('logging', type : 'feature', value : 'enabled',
-+  description : 'enable log infrastructure')
-+option('rootprefix', type : 'string',
-+       description : '''override the root prefix [default '/' if split-usr and '/usr' otherwise]''')
-+option('rootlibdir', type : 'string',
-+       description : '''[/usr]/lib/x86_64-linux-gnu or such''')
-diff --git a/ndctl/lib/meson.build b/ndctl/lib/meson.build
-new file mode 100644
-index 000000000000..d88b3a348e52
---- /dev/null
-+++ b/ndctl/lib/meson.build
-@@ -0,0 +1,38 @@
-+libndctl_version = '@0@.@1@.@2@'.format(
-+  LIBNDCTL_CURRENT - LIBNDCTL_AGE,
-+  LIBNDCTL_REVISION,
-+  LIBNDCTL_AGE)
-+
-+mapfile = files('libndctl.sym')
-+vflag = '-Wl,--version-script,@0@/@1@'.format(project_source_root, mapfile[0])
-+
-+ndctl = library(
-+ 'ndctl',
-+  '../../util/log.c',
-+  '../../util/sysfs.c',
-+  'dimm.c',
-+  'inject.c',
-+  'nfit.c',
-+  'smart.c',
-+  'intel.c',
-+  'hpe1.c',
-+  'msft.c',
-+  'hyperv.c',
-+  'papr.c',
-+  'ars.c',
-+  'firmware.c',
-+  'libndctl.c',
-+  dependencies : [
-+    daxctl_dep,
-+    udev,
-+    uuid,
-+    kmod,
-+  ],
-+  include_directories : root_inc,
-+  version : libndctl_version,
-+  install : true,
-+  install_dir : rootlibdir,
-+  link_args : vflag,
-+  link_depends : mapfile,
-+)
-+ndctl_dep = declare_dependency(link_with : ndctl)
-diff --git a/ndctl/meson.build b/ndctl/meson.build
-new file mode 100644
-index 000000000000..db333ec824c4
---- /dev/null
-+++ b/ndctl/meson.build
-@@ -0,0 +1,70 @@
-+ndctl_src = [
-+  'ndctl.c',
-+  'bus.c',
-+  'create-nfit.c',
-+  'namespace.c',
-+  'check.c',
-+  'region.c',
-+  'dimm.c',
-+  '../util/log.c',
-+  '../daxctl/filter.c',
-+  'filter.c',
-+  'list.c',
-+  '../util/json.c',
-+  '../daxctl/json.c',
-+  'json.c',
-+  'json-smart.c',
-+  'inject-error.c',
-+  'inject-smart.c',
-+  'monitor.c',
-+]
-+
-+deps = [
-+  versiondep,
-+  util_dep,
-+  ndctl_dep,
-+  daxctl_dep,
-+  cxl_dep,
-+  uuid,
-+  kmod,
-+  json,
-+]
-+
-+if get_option('keyutils').enabled()
-+  ndctl_src += [
-+    'keys.c',
-+    'load-keys.c',
-+  ]
-+  deps += keyutils
-+endif
-+
-+if get_option('test').enabled()
-+  ndctl_src += [
-+  '../test/libndctl.c',
-+  '../test/dsm-fail.c',
-+  '../util/sysfs.c',
-+  '../test/dpa-alloc.c',
-+  '../test/parent-uuid.c',
-+  '../test/multi-pmem.c',
-+  '../test/core.c',
-+  'test.c',
-+]
-+endif
-+
-+if get_option('destructive').enabled()
-+  if get_option('test').disabled()
-+    error('destrive option requires -Dtest=enabled')
-+  endif
-+  ndctl_src += [
-+    '../test/blk_namespaces.c',
-+    '../test/pmem_namespaces.c',
-+    'bat.c',
-+  ]
-+endif
-+
-+ndctl_tool = executable('ndctl', ndctl_src,
-+  dependencies : deps,
-+  install : true,
-+  install_dir : rootbindir,
-+  include_directories : root_inc,
-+)
-diff --git a/test/meson.build b/test/meson.build
-new file mode 100644
-index 000000000000..636ef92f701c
---- /dev/null
-+++ b/test/meson.build
-@@ -0,0 +1,267 @@
-+testcore = [
-+  'core.c',
-+  '../util/log.c',
-+  '../util/sysfs.c',
-+  '../util/hexdump.c',
-+]
-+
-+libndctl_deps = [
-+  ndctl_dep,
-+  daxctl_dep,
-+  uuid,
-+  kmod,
-+]
-+
-+ndctl_deps = libndctl_deps + [
-+  json,
-+  util_dep,
-+]
-+
-+libndctl = executable('libndctl', testcore + [ 'libndctl.c'],
-+  dependencies : libndctl_deps,
-+  include_directories : root_inc,
-+)
-+
-+namespace_core = [
-+  '../ndctl/namespace.c',
-+  '../ndctl/filter.c',
-+  '../ndctl/check.c',
-+  '../util/json.c',
-+  '../ndctl/json.c',
-+  '../daxctl/filter.c',
-+  '../daxctl/json.c',
-+]
-+
-+dsm_fail = executable('dsm-fail', testcore + namespace_core + [ 'dsm-fail.c' ],
-+  dependencies : ndctl_deps,
-+  include_directories : root_inc,
-+)
-+
-+dpa_alloc = executable('dpa-alloc', testcore + [ 'dpa-alloc.c' ],
-+  dependencies : libndctl_deps,
-+  include_directories : root_inc,
-+)
-+
-+parent_uuid = executable('parent-uuid', testcore + [ 'parent-uuid.c' ],
-+  dependencies : libndctl_deps,
-+  include_directories : root_inc,
-+)
-+
-+multi_pmem = executable('multi-pmem', testcore + namespace_core
-+    + [ 'multi-pmem.c' ],
-+  dependencies : ndctl_deps,
-+  include_directories : root_inc,
-+)
-+
-+hugetlb_src = testcore + [ 'hugetlb.c', 'dax-pmd.c' ]
-+if poison_enabled
-+  hugetlb_src += [ 'dax-poison.c' ]
-+endif
-+hugetlb = executable('hugetlb', hugetlb_src,
-+  dependencies : libndctl_deps,
-+  include_directories : root_inc,
-+)
-+
-+ack_shutdown_count = executable('ack-shutdown-count-set',
-+  testcore + [ 'ack-shutdown-count-set.c' ],
-+  dependencies : libndctl_deps,
-+  include_directories : root_inc,
-+)
-+
-+dax_errors = executable('dax-errors', 'dax-errors.c')
-+
-+smart_notify = executable('smart-notify', 'smart-notify.c',
-+  dependencies : libndctl_deps,
-+  include_directories : root_inc,
-+)
-+
-+smart_listen = executable('smart-listen', 'smart-listen.c',
-+  dependencies : libndctl_deps,
-+  include_directories : root_inc,
-+)
-+
-+daxdev_errors = executable('daxdev-errors', [
-+    'daxdev-errors.c',
-+    '../util/log.c',
-+    '../util/sysfs.c',
-+  ],
-+  dependencies : libndctl_deps,
-+  include_directories : root_inc,
-+)
-+
-+list_smart_dimm = executable('list-smart-dimm', [
-+    'list-smart-dimm.c',
-+    '../ndctl/filter.c',
-+    '../util/json.c',
-+    '../ndctl/json.c',
-+    '../daxctl/json.c',
-+    '../daxctl/filter.c',
-+  ],
-+  dependencies : ndctl_deps,
-+  include_directories : root_inc,
-+)
-+
-+libcxl = executable('libcxl', testcore + [ 'libcxl.c' ],
-+  dependencies : libndctl_deps + [ cxl_dep ],
-+  include_directories : root_inc,
-+)
-+
-+blk_ns = executable('blk-ns', testcore + [ 'blk_namespaces.c' ],
-+  dependencies : libndctl_deps,
-+  include_directories : root_inc,
-+)
-+
-+pmem_ns = executable('pmem-ns', testcore + [ 'pmem_namespaces.c' ],
-+  dependencies : libndctl_deps,
-+  include_directories : root_inc,
-+)
-+
-+dax_dev = executable('dax-dev', testcore + [ 'dax-dev.c' ],
-+  dependencies : libndctl_deps,
-+  include_directories : root_inc,
-+)
-+
-+dax_pmd_src = testcore + [ 'dax-pmd.c' ]
-+if poison_enabled
-+  dax_pmd_src += [ 'dax-poison.c' ]
-+endif
-+
-+dax_pmd = executable('dax-pmd', dax_pmd_src,
-+  dependencies : libndctl_deps,
-+  include_directories : root_inc,
-+)
-+
-+device_dax_src = testcore + namespace_core + [
-+  'device-dax.c',
-+  'dax-dev.c',
-+  'dax-pmd.c',
-+]
-+
-+if poison_enabled
-+  device_dax_src += 'dax-poison.c'
-+endif
-+
-+device_dax = executable('device-dax', device_dax_src,
-+  dependencies : ndctl_deps,
-+  include_directories : root_inc,
-+)
-+
-+revoke_devmem = executable('revoke_devmem', testcore + [
-+    'revoke-devmem.c',
-+    'dax-dev.c',
-+  ],
-+  dependencies : libndctl_deps,
-+  include_directories : root_inc,
-+)
-+
-+mmap = executable('mmap', 'mmap.c')
-+
-+create = find_program('create.sh')
-+clear = find_program('clear.sh')
-+pmem_errors = find_program('pmem-errors.sh')
-+daxdev_errors_sh = find_program('daxdev-errors.sh')
-+multi_dax = find_program('multi-dax.sh')
-+btt_check = find_program('btt-check.sh')
-+label_compat = find_program('label-compat.sh')
-+blk_exhaust = find_program('blk-exhaust.sh')
-+sector_mode = find_program('sector-mode.sh')
-+inject_error = find_program('inject-error.sh')
-+btt_errors = find_program('btt-errors.sh')
-+btt_pad_compat = find_program('btt-pad-compat.sh')
-+firmware_update = find_program('firmware-update.sh')
-+rescan_partitions = find_program('rescan-partitions.sh')
-+inject_smart = find_program('inject-smart.sh')
-+monitor = find_program('monitor.sh')
-+max_extent = find_program('max_available_extent_ns.sh')
-+pfn_meta_errors = find_program('pfn-meta-errors.sh')
-+track_uuid = find_program('track-uuid.sh')
-+
-+tests = [
-+  [ 'libndctl',               libndctl ],
-+  [ 'dsm-fail',               dsm_fail ],
-+  [ 'dpa-alloc',              dpa_alloc ],
-+  [ 'parent-uuid',            parent_uuid ],
-+  [ 'multi-pmem',             multi_pmem ],
-+  [ 'create.sh',              create ],
-+  [ 'clear.sh',               clear ],
-+  [ 'pmem-errors.sh',         pmem_errors ],
-+  [ 'daxdev-errors.sh',       daxdev_errors_sh ],
-+  [ 'multi-dax.sh',           multi_dax ],
-+  [ 'btt-check.sh',           btt_check ],
-+  [ 'label-compat.sh',        label_compat ],
-+  [ 'blk-exhaust.sh',         blk_exhaust ],
-+  [ 'sector-mode.sh',         sector_mode ],
-+  [ 'inject-error.sh',        inject_error ],
-+  [ 'btt-errors.sh',          btt_errors ],
-+  [ 'hugetlb',                hugetlb ],
-+  [ 'btt-pad-compat.sh',      btt_pad_compat ],
-+  [ 'firmware-update.sh',     firmware_update ],
-+  [ 'ack-shutdown-count-set', ack_shutdown_count ],
-+  [ 'rescan-partitions.sh',   rescan_partitions ],
-+  [ 'inject-smart.sh',        inject_smart ],
-+  [ 'monitor.sh',             monitor ],
-+  [ 'max_extent_ns',          max_extent ],
-+  [ 'pfn-meta-errors.sh',     pfn_meta_errors ],
-+  [ 'track-uuid.sh',          track_uuid ],
-+]
-+
-+if get_option('destructive').enabled()
-+  sub_section = find_program('sub-section.sh')
-+  dax_ext4 = find_program('dax-ext4.sh')
-+  dax_xfs = find_program('dax-xfs.sh')
-+  align = find_program('align.sh')
-+  device_dax_fio = find_program('device-dax-fio.sh')
-+  daxctl_devices = find_program('daxctl-devices.sh')
-+  daxctl_create = find_program('daxctl-create.sh')
-+  dm = find_program('dm.sh')
-+  mmap_test = find_program('mmap.sh')
-+
-+  tests += [
-+    [ 'blk-ns',            blk_ns ],
-+    [ 'pmem-ns',           pmem_ns ],
-+    [ 'sub-section.sh',    sub_section ],
-+    [ 'dax-dev',           dax_dev ],
-+    [ 'dax-ext4.sh',       dax_ext4 ],
-+    [ 'dax-xfs.sh',        dax_xfs ],
-+    [ 'align.sh',          align ],
-+    [ 'device-dax',        device_dax ],
-+    [ 'revoke-devmem',     revoke_devmem ],
-+    [ 'device-dax-fio.sh', device_dax_fio ],
-+    [ 'daxctl-devices.sh', daxctl_devices ],
-+    [ 'daxctl-create.sh',  daxctl_create ],
-+    [ 'dm.sh',             dm ],
-+    [ 'mmap.sh',           mmap_test ],
-+    [ 'libcxl',            libcxl ],
-+  ]
-+endif
-+
-+if get_option('keyutils').enabled()
-+  security = find_program('security.sh')
-+  tests += [
-+    [ 'security.sh', security ]
-+  ]
-+endif
-+
-+foreach t : tests
-+  test(t[0], t[1],
-+    is_parallel : false,
-+    depends : [
-+      ndctl_tool,
-+      daxctl_tool,
-+      cxl_tool,
-+      smart_notify,
-+      list_smart_dimm,
-+      dax_pmd,
-+      dax_errors,
-+      daxdev_errors,
-+      dax_dev,
-+    ],
-+    timeout : 0,
-+    env : [
-+      'NDCTL=@0@'.format(ndctl_tool.full_path()),
-+      'DAXCTL=@0@'.format(daxctl_tool.full_path()),
-+      'TEST_PATH=@0@'.format(meson.current_build_dir()),
-+      'DATA_PATH=@0@'.format(meson.current_source_dir()),
-+    ],
-+  )
-+endforeach
-diff --git a/tools/meson-vcs-tag.sh b/tools/meson-vcs-tag.sh
-new file mode 100755
-index 000000000000..8ce692498ada
---- /dev/null
-+++ b/tools/meson-vcs-tag.sh
-@@ -0,0 +1,17 @@
-+#!/usr/bin/env bash
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+
-+set -eu
-+set -o pipefail
-+
-+dir="${1:?}"
-+fallback="${2:?}"
-+
-+# Apparently git describe has a bug where it always considers the work-tree
-+# dirty when invoked with --git-dir (even though 'git status' is happy). Work
-+# around this issue by cd-ing to the source directory.
-+cd "$dir"
-+# Check that we have either .git/ (a normal clone) or a .git file (a work-tree)
-+# and that we don't get confused if a tarball is extracted in a higher-level
-+# git repository.
-+[ -e .git ] && git describe --abbrev=7 --dirty=+ 2>/dev/null | sed 's/^v//' || echo "$fallback"
-diff --git a/util/meson.build b/util/meson.build
-new file mode 100644
-index 000000000000..15726bb1e6f5
---- /dev/null
-+++ b/util/meson.build
-@@ -0,0 +1,15 @@
-+util = static_library('util', [
-+  'parse-options.c',
-+  'usage.c',
-+  'size.c',
-+  'main.c',
-+  'help.c',
-+  'strbuf.c',
-+  'wrapper.c',
-+  'bitmap.c',
-+  'abspath.c',
-+  'iomem.c',
-+  ],
-+  include_directories : root_inc,
-+)
-+util_dep = declare_dependency(link_with : util)
-diff --git a/version.h.in b/version.h.in
-new file mode 100644
-index 000000000000..dedbaf95caf7
---- /dev/null
-+++ b/version.h.in
-@@ -0,0 +1,2 @@
-+/* SPDX-License-Identifier: LGPL-2.1 */
-+#define VERSION "@VCS_TAG@"
+>                 .flags = flags,
+>                 .interleave_ways = interleave_ways,
+>                 .interleave_granularity = interleave_granularity,
+> -               .target_type = type,
+> +               .target_type = CXL_DEVICE_EXPANDER,
 
+In the cxl-switch case how to indicate that only type-2 targets are supported?
+
+I do think I misnamed the cxl_decoder_type. I also did not make it
+clear that root decoders don't have a target type, they have a set of
+flags indicating their restrictions, and unlike switch level decoders
+they can support targeting both accelerators and expanders in the same
+windows. I think the decoder can still be just the dev->type, but
+there needs to be separate helpers for the 3 cases you have
+identified. Something like the following where devm_cxl_add_decoder()
+because private to the core:
+
+devm_cxl_add_platform_decoder(struct device *host, int nr_targets,
+                              resource_size_t base, resource_size_t len,
+                              int interleave_ways, int interleave_granularity,
+                              unsigned long flags)
+{
+        return devm_cxl_add_decoder(host, NULL, nr_targets, base, len,
+                                    interleave_ways, interleave_granularity,
+                                    0, flags);
+}
+
+devm_cxl_add_switch_decoder(struct device *host, struct cxl_port *port,
+                            enum cxl_decoder_type type)
+{
+        return devm_cxl_add_decoder(host, port, 0, 0, 0, 0, 0,
+                                    CXL_DECODER_UNKNOWN, 0);
+}
+
+devm_cxl_add_endpoint_decoder(struct device *host, struct cxl_port *port,
+                              enum cxl_decoder_type type)
+{
+        return devm_cxl_add_decoder(host, port, 0, 0, 0, 0, 0, type,
+                                    CXL_DECODER_F_ENDPOINT);
+}
+
+...where 0 values are filled in by the decoder driver init or N/A.
+Presumably the memdev driver calling devm_cxl_add_endpoint_decoder()
+will know whether it is an expander or an accelerator. Although given
+there are no CXL accelerator drivers on the horizon, maybe even that
+degree of freedom can be hidden for now.
+
+Then the dev->type determination is:
+
+platform => no parent cxl_port
+switch => parent cxl_port and flags does not have CXL_DECODER_F_ENDPOINT
+endpoint =>  parent cxl_port and flags has CXL_DECODER_F_ENDPOINT
+
+...and probably s/cxl_decoder_type/cxl_target_type/ to make it clear
+that it's not related to the cxl_decoder_X_type dev->type value.
+
+>         };
+>
+>         /* handle implied target_list */
+>
+> ---
+>  drivers/cxl/acpi.c |  2 +-
+>  drivers/cxl/core.c | 46 ++++++++++++++++++++++++++++++++++------------
+>  drivers/cxl/cxl.h  | 31 +++++++++++++++++++++++++++----
+>  3 files changed, 62 insertions(+), 17 deletions(-)
+>
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index 8ae89273f58e..5215845e0f89 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -114,7 +114,7 @@ static void cxl_add_cfmws_decoders(struct device *dev,
+>                                             cfmws->base_hpa, cfmws->window_size,
+>                                             CFMWS_INTERLEAVE_WAYS(cfmws),
+>                                             CFMWS_INTERLEAVE_GRANULARITY(cfmws),
+> -                                           CXL_DECODER_EXPANDER,
+> +                                           CXL_DECODER_PLATFORM,
+>                                             flags);
+>
+>                 if (IS_ERR(cxld)) {
+> diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
+> index a2e4d54fc7bc..69acdd230f54 100644
+> --- a/drivers/cxl/core.c
+> +++ b/drivers/cxl/core.c
+> @@ -75,9 +75,9 @@ static ssize_t target_type_show(struct device *dev,
+>         struct cxl_decoder *cxld = to_cxl_decoder(dev);
+>
+>         switch (cxld->target_type) {
+> -       case CXL_DECODER_ACCELERATOR:
+> +       case CXL_DEVICE_ACCELERATOR:
+>                 return sysfs_emit(buf, "accelerator\n");
+> -       case CXL_DECODER_EXPANDER:
+> +       case CXL_DEVICE_EXPANDER:
+>                 return sysfs_emit(buf, "expander\n");
+>         }
+>         return -ENXIO;
+> @@ -167,6 +167,12 @@ static const struct attribute_group *cxl_decoder_switch_attribute_groups[] = {
+>         NULL,
+>  };
+>
+> +static const struct attribute_group *cxl_decoder_endpoint_attribute_groups[] = {
+> +       &cxl_decoder_base_attribute_group,
+> +       &cxl_base_attribute_group,
+> +       NULL,
+> +};
+> +
+>  static void cxl_decoder_release(struct device *dev)
+>  {
+>         struct cxl_decoder *cxld = to_cxl_decoder(dev);
+> @@ -176,6 +182,12 @@ static void cxl_decoder_release(struct device *dev)
+>         kfree(cxld);
+>  }
+>
+> +static const struct device_type cxl_decoder_endpoint_type = {
+> +       .name = "cxl_decoder_endpoint",
+> +       .release = cxl_decoder_release,
+> +       .groups = cxl_decoder_endpoint_attribute_groups,
+> +};
+> +
+>  static const struct device_type cxl_decoder_switch_type = {
+>         .name = "cxl_decoder_switch",
+>         .release = cxl_decoder_release,
+> @@ -458,12 +470,14 @@ cxl_decoder_alloc(struct cxl_port *port, int nr_targets, resource_size_t base,
+>         if (interleave_ways < 1)
+>                 return ERR_PTR(-EINVAL);
+>
+> -       device_lock(&port->dev);
+> -       if (list_empty(&port->dports))
+> -               rc = -EINVAL;
+> -       device_unlock(&port->dev);
+> -       if (rc)
+> -               return ERR_PTR(rc);
+> +       if (type != CXL_DECODER_ENDPOINT) {
+> +               device_lock(&port->dev);
+> +               if (list_empty(&port->dports))
+> +                       rc = -EINVAL;
+> +               device_unlock(&port->dev);
+> +               if (rc)
+> +                       return ERR_PTR(rc);
+> +       }
+>
+>         cxld = kzalloc(struct_size(cxld, target, nr_targets), GFP_KERNEL);
+>         if (!cxld)
+> @@ -479,10 +493,11 @@ cxl_decoder_alloc(struct cxl_port *port, int nr_targets, resource_size_t base,
+>                         .start = base,
+>                         .end = base + len - 1,
+>                 },
+> +               .type = type,
+>                 .flags = flags,
+>                 .interleave_ways = interleave_ways,
+>                 .interleave_granularity = interleave_granularity,
+> -               .target_type = type,
+> +               .target_type = CXL_DEVICE_EXPANDER,
+>         };
+>
+>         /* handle implied target_list */
+> @@ -496,10 +511,17 @@ cxl_decoder_alloc(struct cxl_port *port, int nr_targets, resource_size_t base,
+>         dev->bus = &cxl_bus_type;
+>
+>         /* root ports do not have a cxl_port_type parent */
+> -       if (port->dev.parent->type == &cxl_port_type)
+> -               dev->type = &cxl_decoder_switch_type;
+> -       else
+> +       switch (type) {
+> +       case CXL_DECODER_PLATFORM:
+>                 dev->type = &cxl_decoder_root_type;
+> +               break;
+> +       case CXL_DECODER_SWITCH:
+> +               dev->type = &cxl_decoder_switch_type;
+> +               break;
+> +       case CXL_DECODER_ENDPOINT:
+> +               dev->type = &cxl_decoder_endpoint_type;
+> +               break;
+> +       }
+>
+>         return cxld;
+>  err:
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index b6bda39a59e3..02e0af4c147c 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -164,6 +164,11 @@ int cxl_map_device_regs(struct pci_dev *pdev,
+>  #define CXL_RESOURCE_NONE ((resource_size_t) -1)
+>  #define CXL_TARGET_STRLEN 20
+>
+> +enum cxl_device_type {
+> +       CXL_DEVICE_ACCELERATOR = 2,
+> +       CXL_DEVICE_EXPANDER = 3,
+> +};
+> +
+>  /*
+>   * cxl_decoder flags that define the type of memory / devices this
+>   * decoder supports as well as configuration lock status See "CXL 2.0
+> @@ -177,8 +182,9 @@ int cxl_map_device_regs(struct pci_dev *pdev,
+>  #define CXL_DECODER_F_MASK  GENMASK(4, 0)
+>
+>  enum cxl_decoder_type {
+> -       CXL_DECODER_ACCELERATOR = 2,
+> -       CXL_DECODER_EXPANDER = 3,
+> +       CXL_DECODER_PLATFORM,
+> +       CXL_DECODER_SWITCH,
+> +       CXL_DECODER_ENDPOINT,
+>  };
+>
+>  /**
+> @@ -186,19 +192,36 @@ enum cxl_decoder_type {
+>   * @dev: this decoder's device
+>   * @id: kernel device name id
+>   * @range: address range considered by this decoder
+> + * @type: the type of this CXL decoder (platform, switch, endpoint)
+>   * @interleave_ways: number of cxl_dports in this decode
+>   * @interleave_granularity: data stride per dport
+>   * @target_type: accelerator vs expander (type2 vs type3) selector
+>   * @flags: memory type capabilities and locking
+>   * @target: active ordered target list in current decoder configuration
+> + *
+> + * Abstractly, a CXL decoder represents one of 3 possible decoders:
+
+s/Abstractly, a/A/
+
+Outside of that I like this documentation for describing the
+cxl_decoder_X_type options.
+
+> + * 1. Platform specific routing - opaque rules for the memory controller that
+> + *    may be communicated via ACPI or devicetree. This decoding has implied
+> + *    interleave parameters as well as physical address ranges that are directed
+> + *    to the downstream ports of this decoder.
+> + * 2. HDM decoder for a switch. Similar to the platform specific routing in that
+> + *    it contains a set of downstream ports which receive and send traffic in an
+> + *    interleave fashion, the main difference is that the interleave and address
+> + *    ranges are controlled by the HDM decoder registers defined in the CXL 2.0
+> + *    specification.
+> + * 3. HDM decoder for an endpoint. Like the decoder in a switch, this decoder's
+> + *    configuration is entirely programmable and defined in CXL spec. Unlike the
+> + *    switch's decoder, there is not a set of downstream ports, only the
+> + *    underlying media.
+>   */
+>  struct cxl_decoder {
+>         struct device dev;
+>         int id;
+>         struct range range;
+> +       enum cxl_decoder_type type;
+>         int interleave_ways;
+>         int interleave_granularity;
+> -       enum cxl_decoder_type target_type;
+> +       enum cxl_device_type target_type;
+>         unsigned long flags;
+>         struct cxl_dport *target[];
+>  };
+> @@ -289,7 +312,7 @@ static inline struct cxl_decoder *
+>  devm_cxl_add_passthrough_decoder(struct device *host, struct cxl_port *port)
+>  {
+>         return devm_cxl_add_decoder(host, port, 1, 0, 0, 1, PAGE_SIZE,
+> -                                   CXL_DECODER_EXPANDER, 0);
+> +                                   CXL_DECODER_PLATFORM, 0);
+>  }
+>
+>  extern struct bus_type cxl_bus_type;
+> --
+> 2.32.0
+>
