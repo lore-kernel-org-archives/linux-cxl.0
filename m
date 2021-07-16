@@ -2,186 +2,108 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A8EC636C8
-	for <linux-cxl@archiver.kernel.org>; Fri, 16 Jul 2021 02:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68186C12002
+	for <linux-cxl@archiver.kernel.org>; Fri, 16 Jul 2021 23:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0760613E0
-	for <linux-cxl@archiver.kernel.org>; Fri, 16 Jul 2021 02:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46DE96128B
+	for <linux-cxl@archiver.kernel.org>; Fri, 16 Jul 2021 23:16:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233135AbhGPC1y (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 15 Jul 2021 22:27:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231700AbhGPC1y (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 15 Jul 2021 22:27:54 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35098C06175F
-        for <linux-cxl@vger.kernel.org>; Thu, 15 Jul 2021 19:25:00 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id u14so8516570pga.11
-        for <linux-cxl@vger.kernel.org>; Thu, 15 Jul 2021 19:25:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dsmWR57B5qjYPe7/nAaUcKvyZqjUJoqo/cc9p2STRaY=;
-        b=Is96pXiL9IoaDtEeJ38AuI8HCzID2Z4Zvazhm4W/79LKGtJSqulMHXf9+3aG5PYZyI
-         ikcZ5eQUr7gh/e36Nw2rexN3Z4NISBqA1EmoXdlw7yn+UyxjYbvBJLmOU9aHkokLKLoz
-         rSivMlICP64ziRi2amFuUM7YVPi3bAh/OMysoz+dVCwso0ZLDkZnD2Iq2i8NLcyA///g
-         JELpf0Sbz/K2dgNXyLDLRbB2RmbyE/DB9hhbcJ5dwgTauTddMStPfWKG5+3hFI2bNntN
-         at+xLP7O5PLzsfvy8kh0RDQKampyTbw2xdvx1jYNA4ZZ9gYnbYrDPGekbVjgqNU0OTsR
-         UNIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dsmWR57B5qjYPe7/nAaUcKvyZqjUJoqo/cc9p2STRaY=;
-        b=PejWatvwTiPK8/ryo9+E8VQzAKIxzKqRVI6ZFimJQBS+VuHaoioQ190BpKgOW4yYP/
-         +XlDhFLDwmK3KTsk4RHZGSF08dJbSKD4ZxDWV2O7doW/hNqacS9MXpeXeqvrugMu9Nse
-         FMK17jHO3zY637EkyuHYH2ywchj6/fwjvK3MYKVzH8vDo9viyeBfTYOdazVBVdgQwO7N
-         azDIuiFdNgaZoGgu9IQBZnwvXDTh+3cLGlYhCXGg9qJZKh6kKYB88FJwRi0kR17H9kaF
-         ZrtUQC1SIjILdGw25X/3cdCjzomd5d2knWzUsiAmiWJ0/qZeYMHr5MGqZ+ebKMsyUIZm
-         RiGA==
-X-Gm-Message-State: AOAM530qKHEaki7xWDi/XPWD1sNf6lKWLXTGzqnQZhA3dcvQRW/EOaOj
-        AIDnqshb21d5jT73+tynTcsouee1nupqPT9N+v34ew==
-X-Google-Smtp-Source: ABdhPJxq2jVmpjYdU+IiAup4Wc7fmZv0IV3TmNlL2CLi8S9voqqoAfcrul6yrd6QJUxGsN/vq6+ZjyD2qBpDwsbCMFY=
-X-Received: by 2002:a63:d54b:: with SMTP id v11mr7521289pgi.450.1626402299646;
- Thu, 15 Jul 2021 19:24:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210701201005.3065299-1-vishal.l.verma@intel.com> <20210701201005.3065299-11-vishal.l.verma@intel.com>
-In-Reply-To: <20210701201005.3065299-11-vishal.l.verma@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 15 Jul 2021 19:24:48 -0700
-Message-ID: <CAPcyv4j_raDF131vGmsX-p=rPj4tMUcv0Eo7cRygFCVsSYyq7Q@mail.gmail.com>
-Subject: Re: [ndctl PATCH v3 10/21] libcxl: add support for the 'GET_LSA' command
-To:     Vishal Verma <vishal.l.verma@intel.com>
-Cc:     Linux NVDIMM <nvdimm@lists.linux.dev>, linux-cxl@vger.kernel.org,
-        Ben Widawsky <ben.widawsky@intel.com>,
+        id S237770AbhGPXS5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 16 Jul 2021 19:18:57 -0400
+Received: from mga12.intel.com ([192.55.52.136]:65193 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231293AbhGPXS4 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Fri, 16 Jul 2021 19:18:56 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10047"; a="190479028"
+X-IronPort-AV: E=Sophos;i="5.84,246,1620716400"; 
+   d="scan'208";a="190479028"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2021 16:16:00 -0700
+X-IronPort-AV: E=Sophos;i="5.84,246,1620716400"; 
+   d="scan'208";a="431362196"
+Received: from jhiga-mobl.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.135.195])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2021 16:16:00 -0700
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: [PATCH 3/3] cxl/pci: Retain map information in cxl_mem_probe
+Date:   Fri, 16 Jul 2021 16:15:48 -0700
+Message-Id: <20210716231548.174778-4-ben.widawsky@intel.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20210716231548.174778-1-ben.widawsky@intel.com>
+References: <20210716231548.174778-1-ben.widawsky@intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Jul 1, 2021 at 1:10 PM Vishal Verma <vishal.l.verma@intel.com> wrote:
->
-> Add a command allocator and accessor APIs for the 'GET_LSA' mailbox
-> command.
->
-> Cc: Ben Widawsky <ben.widawsky@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-> ---
->  cxl/lib/private.h  |  5 +++++
->  cxl/lib/libcxl.c   | 31 +++++++++++++++++++++++++++++++
->  cxl/libcxl.h       |  3 +++
->  cxl/lib/libcxl.sym |  2 ++
->  4 files changed, 41 insertions(+)
->
-> diff --git a/cxl/lib/private.h b/cxl/lib/private.h
-> index 2232f4c..fb1dd8e 100644
-> --- a/cxl/lib/private.h
-> +++ b/cxl/lib/private.h
-> @@ -73,6 +73,11 @@ struct cxl_cmd_identify {
->         u8 qos_telemetry_caps;
->  } __attribute__((packed));
->
-> +struct cxl_cmd_get_lsa_in {
-> +       le32 offset;
-> +       le32 length;
-> +} __attribute__((packed));
-> +
->  struct cxl_cmd_get_health_info {
->         u8 health_status;
->         u8 media_status;
-> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-> index 2e33c5e..d2c38c9 100644
-> --- a/cxl/lib/libcxl.c
-> +++ b/cxl/lib/libcxl.c
-> @@ -799,6 +799,37 @@ CXL_EXPORT struct cxl_cmd *cxl_cmd_new_raw(struct cxl_memdev *memdev,
->         return cmd;
->  }
->
-> +CXL_EXPORT struct cxl_cmd *cxl_cmd_new_get_lsa(struct cxl_memdev *memdev,
-> +               unsigned int offset, unsigned int length)
+In order for a memdev to participate in cxl_core's port APIs, the
+physical address of the memdev's component registers is needed. This is
+accomplished by allocating the array of maps in probe so they can be
+used after the memdev is created.
 
-What about a rename here to cxl_cmd_new_read_label? Because, like
-before, 'get' is overloaded in lib{cxl,ndctl,daxctl} land, and 'lsa'
-is a spec acronym that we don't need to be matchy-matchy with if
-there's a better name for libcxl users.
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+---
+ drivers/cxl/pci.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-That said, that's only a mild preference if you like the symmetry with the spec.
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 8be18daa1420..f924a8c5a831 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -1066,21 +1066,22 @@ static void cxl_decode_register_block(u32 reg_lo, u32 reg_hi,
+ /**
+  * cxl_mem_setup_regs() - Setup necessary MMIO.
+  * @cxlm: The CXL memory device to communicate with.
++ * @maps: Array of maps populated by this function.
+  *
+- * Return: 0 if all necessary registers mapped.
++ * Return: 0 if all necessary registers mapped. The results are stored in @maps.
+  *
+  * A memory device is required by spec to implement a certain set of MMIO
+  * regions. The purpose of this function is to enumerate and map those
+  * registers.
+  */
+-static int cxl_mem_setup_regs(struct cxl_mem *cxlm)
++static int cxl_mem_setup_regs(struct cxl_mem *cxlm, struct cxl_register_map maps[])
+ {
+ 	struct pci_dev *pdev = cxlm->pdev;
+ 	struct device *dev = &pdev->dev;
+ 	u32 regloc_size, regblocks;
+ 	void __iomem *base;
+ 	int regloc, i, n_maps;
+-	struct cxl_register_map *map, maps[CXL_REGLOC_RBI_TYPES];
++	struct cxl_register_map *map;
+ 	int ret = 0;
+ 
+ 	regloc = cxl_mem_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID);
+@@ -1364,6 +1365,7 @@ static void cxl_memdev_shutdown(struct cxl_memdev *cxlmd)
+ 
+ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ {
++	struct cxl_register_map maps[CXL_REGLOC_RBI_TYPES];
+ 	struct cxl_memdev *cxlmd;
+ 	struct cxl_mem *cxlm;
+ 	int rc;
+@@ -1376,7 +1378,7 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (IS_ERR(cxlm))
+ 		return PTR_ERR(cxlm);
+ 
+-	rc = cxl_mem_setup_regs(cxlm);
++	rc = cxl_mem_setup_regs(cxlm, maps);
+ 	if (rc)
+ 		return rc;
+ 
+-- 
+2.32.0
 
-> +{
-> +       struct cxl_cmd_get_lsa_in *get_lsa;
-> +       struct cxl_cmd *cmd;
-> +
-> +       cmd = cxl_cmd_new_generic(memdev, CXL_MEM_COMMAND_ID_GET_LSA);
-> +       if (!cmd)
-> +               return NULL;
-> +
-> +       get_lsa = (void *)cmd->send_cmd->in.payload;
-> +       get_lsa->offset = cpu_to_le32(offset);
-> +       get_lsa->length = cpu_to_le32(length);
-> +       return cmd;
-> +}
-> +
-> +#define cmd_get_void(cmd, N) \
-> +do { \
-> +       void *p = (void *)cmd->send_cmd->out.payload; \
-> +       if (cmd->send_cmd->id != CXL_MEM_COMMAND_ID_##N) \
-> +               return NULL; \
-> +       if (cmd->status < 0) \
-> +               return NULL; \
-> +       return p; \
-> +} while(0);
-> +
-> +CXL_EXPORT void *cxl_cmd_get_lsa_get_payload(struct cxl_cmd *cmd)
-
-Here's another get_X_get that might be better as cxl_cmd_read_label_get_payload.
-
-I also liked the ndctl behavior where it was made difficult to do out
-of bounds access to this buffer because the user had to go through
-ndctl_cmd_cfg_read_get_data() which did error checking if they tried
-to access more of the payload than was initially requested.
-
-> +{
-> +       cmd_get_void(cmd, GET_LSA);
-> +}
-> +
->  CXL_EXPORT int cxl_cmd_submit(struct cxl_cmd *cmd)
->  {
->         struct cxl_memdev *memdev = cmd->memdev;
-> diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-> index 56ae4af..6edbd8d 100644
-> --- a/cxl/libcxl.h
-> +++ b/cxl/libcxl.h
-> @@ -71,6 +71,9 @@ int cxl_cmd_get_health_info_get_temperature(struct cxl_cmd *cmd);
->  int cxl_cmd_get_health_info_get_dirty_shutdowns(struct cxl_cmd *cmd);
->  int cxl_cmd_get_health_info_get_volatile_errors(struct cxl_cmd *cmd);
->  int cxl_cmd_get_health_info_get_pmem_errors(struct cxl_cmd *cmd);
-> +struct cxl_cmd *cxl_cmd_new_get_lsa(struct cxl_memdev *memdev,
-> +               unsigned int offset, unsigned int length);
-> +void *cxl_cmd_get_lsa_get_payload(struct cxl_cmd *cmd);
->
->  #ifdef __cplusplus
->  } /* extern "C" */
-> diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-> index e00443d..2c6193b 100644
-> --- a/cxl/lib/libcxl.sym
-> +++ b/cxl/lib/libcxl.sym
-> @@ -52,4 +52,6 @@ global:
->         cxl_cmd_get_health_info_get_dirty_shutdowns;
->         cxl_cmd_get_health_info_get_volatile_errors;
->         cxl_cmd_get_health_info_get_pmem_errors;
-> +       cxl_cmd_new_get_lsa;
-> +       cxl_cmd_get_lsa_get_payload;
->  } LIBCXL_2;
-> --
-> 2.31.1
->
