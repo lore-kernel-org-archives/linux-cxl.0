@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE59CC43214
-	for <linux-cxl@archiver.kernel.org>; Fri, 23 Jul 2021 21:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7038DC4338F
+	for <linux-cxl@archiver.kernel.org>; Fri, 23 Jul 2021 21:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B08A860F23
-	for <linux-cxl@archiver.kernel.org>; Fri, 23 Jul 2021 21:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 508D360F36
+	for <linux-cxl@archiver.kernel.org>; Fri, 23 Jul 2021 21:06:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231350AbhGWU0E (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S231383AbhGWU0E (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Fri, 23 Jul 2021 16:26:04 -0400
-Received: from mga14.intel.com ([192.55.52.115]:34284 "EHLO mga14.intel.com"
+Received: from mga14.intel.com ([192.55.52.115]:34287 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231383AbhGWU0D (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 23 Jul 2021 16:26:03 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10054"; a="211671187"
+        id S231600AbhGWU0E (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Fri, 23 Jul 2021 16:26:04 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10054"; a="211671189"
 X-IronPort-AV: E=Sophos;i="5.84,265,1620716400"; 
-   d="scan'208";a="211671187"
+   d="scan'208";a="211671189"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2021 14:06:36 -0700
 X-IronPort-AV: E=Sophos;i="5.84,265,1620716400"; 
-   d="scan'208";a="497436124"
+   d="scan'208";a="497436129"
 Received: from rfrederi-mobl.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.136.168])
   by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2021 14:06:36 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
@@ -36,9 +36,9 @@ Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH 06/23] cxl/core: Move memdev management to core
-Date:   Fri, 23 Jul 2021 14:06:06 -0700
-Message-Id: <20210723210623.114073-7-ben.widawsky@intel.com>
+Subject: [PATCH 07/23] cxl/pci: Ignore unknown register block types
+Date:   Fri, 23 Jul 2021 14:06:07 -0700
+Message-Id: <20210723210623.114073-8-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210723210623.114073-1-ben.widawsky@intel.com>
 References: <20210723210623.114073-1-ben.widawsky@intel.com>
@@ -48,545 +48,54 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The CXL core must own memdev management so that CXL drivers may register
-for services. At present, only cxl_pci cares about this functionality,
-which is why the functionality was implemented there. The immediate need
-for this is a memdev driver which will be needed to manage CXL regions.
-Potentially, drivers for other types of devices may desire this
-functionality as well - an accelerator wishing to present itself as a
-memory device for example.
+In an effort to explicit avoid supporting vendor specific register
+blocks (which can happily be mapped from userspace), entirely skip
+probing unknown types. The secondary benefit of this will be revealed
+in the future with code simplification.
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- drivers/cxl/Makefile      |   1 -
- drivers/cxl/core/Makefile |   2 +-
- drivers/cxl/core/memdev.c | 224 +++++++++++++++++++++++++++++++++++++
- drivers/cxl/mem.h         |   5 +
- drivers/cxl/pci.c         | 228 ++------------------------------------
- 5 files changed, 237 insertions(+), 223 deletions(-)
- create mode 100644 drivers/cxl/core/memdev.c
+ drivers/cxl/pci.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-index febb2c3f5fc6..d1aaabc940f3 100644
---- a/drivers/cxl/Makefile
-+++ b/drivers/cxl/Makefile
-@@ -4,7 +4,6 @@ obj-$(CONFIG_CXL_MEM) += cxl_pci.o
- obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
- obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
- 
--ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
- cxl_pci-y := pci.o
- cxl_acpi-y := acpi.o
- cxl_pmem-y := pmem.o
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 289e8c8deebb..1503d8bf5e9a 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -2,4 +2,4 @@
- obj-$(CONFIG_CXL_BUS) += cxl_core.o
- 
- ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL -I./drivers/cxl
--cxl_core-y := bus.o pmem.o regs.o
-+cxl_core-y := bus.o memdev.o pmem.o regs.o
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-new file mode 100644
-index 000000000000..dce43e03a05b
---- /dev/null
-+++ b/drivers/cxl/core/memdev.c
-@@ -0,0 +1,224 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2020 Intel Corporation. */
-+
-+#include <linux/device.h>
-+#include <linux/slab.h>
-+#include <linux/idr.h>
-+#include <linux/pci.h>
-+#include "core.h"
-+
-+static DEFINE_IDA(cxl_memdev_ida);
-+
-+static struct cxl_memdev *to_cxl_memdev(struct device *dev)
-+{
-+	return container_of(dev, struct cxl_memdev, dev);
-+}
-+
-+static void cxl_memdev_release(struct device *dev)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+
-+	ida_free(&cxl_memdev_ida, cxlmd->id);
-+	kfree(cxlmd);
-+}
-+
-+static char *cxl_memdev_devnode(struct device *dev, umode_t *mode, kuid_t *uid,
-+				kgid_t *gid)
-+{
-+	return kasprintf(GFP_KERNEL, "cxl/%s", dev_name(dev));
-+}
-+
-+static ssize_t firmware_version_show(struct device *dev,
-+				     struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_mem *cxlm = cxlmd->cxlm;
-+
-+	return sysfs_emit(buf, "%.16s\n", cxlm->firmware_version);
-+}
-+static DEVICE_ATTR_RO(firmware_version);
-+
-+static ssize_t payload_max_show(struct device *dev,
-+				struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_mem *cxlm = cxlmd->cxlm;
-+
-+	return sysfs_emit(buf, "%zu\n", cxlm->payload_size);
-+}
-+static DEVICE_ATTR_RO(payload_max);
-+
-+static ssize_t label_storage_size_show(struct device *dev,
-+				       struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_mem *cxlm = cxlmd->cxlm;
-+
-+	return sysfs_emit(buf, "%zu\n", cxlm->lsa_size);
-+}
-+static DEVICE_ATTR_RO(label_storage_size);
-+
-+static ssize_t ram_size_show(struct device *dev, struct device_attribute *attr,
-+			     char *buf)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_mem *cxlm = cxlmd->cxlm;
-+	unsigned long long len = range_len(&cxlm->ram_range);
-+
-+	return sysfs_emit(buf, "%#llx\n", len);
-+}
-+
-+static struct device_attribute dev_attr_ram_size =
-+	__ATTR(size, 0444, ram_size_show, NULL);
-+
-+static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
-+			      char *buf)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_mem *cxlm = cxlmd->cxlm;
-+	unsigned long long len = range_len(&cxlm->pmem_range);
-+
-+	return sysfs_emit(buf, "%#llx\n", len);
-+}
-+
-+static struct device_attribute dev_attr_pmem_size =
-+	__ATTR(size, 0444, pmem_size_show, NULL);
-+
-+static struct attribute *cxl_memdev_attributes[] = {
-+	&dev_attr_firmware_version.attr,
-+	&dev_attr_payload_max.attr,
-+	&dev_attr_label_storage_size.attr,
-+	NULL,
-+};
-+
-+static struct attribute *cxl_memdev_pmem_attributes[] = {
-+	&dev_attr_pmem_size.attr,
-+	NULL,
-+};
-+
-+static struct attribute *cxl_memdev_ram_attributes[] = {
-+	&dev_attr_ram_size.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group cxl_memdev_attribute_group = {
-+	.attrs = cxl_memdev_attributes,
-+};
-+
-+static struct attribute_group cxl_memdev_ram_attribute_group = {
-+	.name = "ram",
-+	.attrs = cxl_memdev_ram_attributes,
-+};
-+
-+static struct attribute_group cxl_memdev_pmem_attribute_group = {
-+	.name = "pmem",
-+	.attrs = cxl_memdev_pmem_attributes,
-+};
-+
-+static const struct attribute_group *cxl_memdev_attribute_groups[] = {
-+	&cxl_memdev_attribute_group,
-+	&cxl_memdev_ram_attribute_group,
-+	&cxl_memdev_pmem_attribute_group,
-+	NULL,
-+};
-+
-+static const struct device_type cxl_memdev_type = {
-+	.name = "cxl_memdev",
-+	.release = cxl_memdev_release,
-+	.devnode = cxl_memdev_devnode,
-+	.groups = cxl_memdev_attribute_groups,
-+};
-+
-+static void cxl_memdev_unregister(void *_cxlmd)
-+{
-+	struct cxl_memdev *cxlmd = _cxlmd;
-+	struct device *dev = &cxlmd->dev;
-+
-+	cdev_device_del(&cxlmd->cdev, dev);
-+	if (cxlmd->shutdown)
-+		cxlmd->shutdown(cxlmd);
-+	put_device(dev);
-+}
-+
-+static struct cxl_memdev *cxl_memdev_alloc(struct cxl_mem *cxlm,
-+					   const struct file_operations *fops)
-+{
-+	struct pci_dev *pdev = cxlm->pdev;
-+	struct cxl_memdev *cxlmd;
-+	struct device *dev;
-+	struct cdev *cdev;
-+	int rc;
-+
-+	cxlmd = kzalloc(sizeof(*cxlmd), GFP_KERNEL);
-+	if (!cxlmd)
-+		return ERR_PTR(-ENOMEM);
-+
-+	rc = ida_alloc_range(&cxl_memdev_ida, 0, CXL_MEM_MAX_DEVS, GFP_KERNEL);
-+	if (rc < 0)
-+		goto err;
-+	cxlmd->id = rc;
-+
-+	dev = &cxlmd->dev;
-+	device_initialize(dev);
-+	dev->parent = &pdev->dev;
-+	dev->bus = &cxl_bus_type;
-+	dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
-+	dev->type = &cxl_memdev_type;
-+	device_set_pm_not_required(dev);
-+
-+	cdev = &cxlmd->cdev;
-+	cdev_init(cdev, fops);
-+	return cxlmd;
-+
-+err:
-+	kfree(cxlmd);
-+	return ERR_PTR(rc);
-+}
-+
-+struct cxl_memdev *
-+devm_cxl_add_memdev(struct device *host, struct cxl_mem *cxlm,
-+		    const struct file_operations *fops,
-+		    void (*shutdown)(struct cxl_memdev *cxlmd))
-+{
-+	struct cxl_memdev *cxlmd;
-+	struct device *dev;
-+	struct cdev *cdev;
-+	int rc;
-+
-+	cxlmd = cxl_memdev_alloc(cxlm, fops);
-+	if (IS_ERR(cxlmd))
-+		return cxlmd;
-+
-+	dev = &cxlmd->dev;
-+	rc = dev_set_name(dev, "mem%d", cxlmd->id);
-+	if (rc)
-+		goto err;
-+
-+	/*
-+	 * Activate ioctl operations, no cxl_memdev_rwsem manipulation
-+	 * needed as this is ordered with cdev_add() publishing the device.
-+	 */
-+	cxlmd->cxlm = cxlm;
-+
-+	cdev = &cxlmd->cdev;
-+	rc = cdev_device_add(cdev, dev);
-+	if (rc)
-+		goto err;
-+
-+	rc = devm_add_action_or_reset(host, cxl_memdev_unregister, cxlmd);
-+	if (rc)
-+		return ERR_PTR(rc);
-+	cxlmd->shutdown = shutdown;
-+	return cxlmd;
-+
-+err:
-+	/*
-+	 * The cdev was briefly live, shutdown any ioctl operations that
-+	 * saw that state.
-+	 */
-+	if (shutdown)
-+		shutdown(cxlmd);
-+	put_device(dev);
-+	return ERR_PTR(rc);
-+}
-+EXPORT_SYMBOL_GPL(devm_cxl_add_memdev);
-diff --git a/drivers/cxl/mem.h b/drivers/cxl/mem.h
-index 2b7481376621..3730e3509ab6 100644
---- a/drivers/cxl/mem.h
-+++ b/drivers/cxl/mem.h
-@@ -52,6 +52,11 @@ struct cxl_memdev {
- 	void (*shutdown)(struct cxl_memdev *cxlmd);
- };
- 
-+struct cxl_memdev *
-+devm_cxl_add_memdev(struct device *host, struct cxl_mem *cxlm,
-+		    const struct file_operations *fops,
-+		    void (*shutdown)(struct cxl_memdev *cxlmd));
-+
- /**
-  * struct cxl_mem - A CXL memory device
-  * @pdev: The PCI device associated with this CXL device.
 diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index e90b8fb6dc08..d7da18ebba81 100644
+index d7da18ebba81..dd0ac89fbdf4 100644
 --- a/drivers/cxl/pci.c
 +++ b/drivers/cxl/pci.c
-@@ -94,7 +94,6 @@ struct mbox_cmd {
- #define CXL_MBOX_SUCCESS 0
- };
+@@ -1106,14 +1106,6 @@ static int cxl_mem_setup_regs(struct cxl_mem *cxlm)
+ 		u64 offset;
+ 		u8 bar;
  
--static DEFINE_IDA(cxl_memdev_ida);
- static DECLARE_RWSEM(cxl_memdev_rwsem);
- static struct dentry *cxl_debugfs;
- static bool cxl_raw_allow_all;
-@@ -1160,226 +1159,6 @@ static int cxl_mem_setup_regs(struct cxl_mem *cxlm)
- 	return ret;
- }
+-		map = kzalloc(sizeof(*map), GFP_KERNEL);
+-		if (!map) {
+-			ret = -ENOMEM;
+-			goto free_maps;
+-		}
+-
+-		list_add(&map->list, &register_maps);
+-
+ 		pci_read_config_dword(pdev, regloc, &reg_lo);
+ 		pci_read_config_dword(pdev, regloc + 4, &reg_hi);
  
--static struct cxl_memdev *to_cxl_memdev(struct device *dev)
--{
--	return container_of(dev, struct cxl_memdev, dev);
--}
--
--static void cxl_memdev_release(struct device *dev)
--{
--	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
--
--	ida_free(&cxl_memdev_ida, cxlmd->id);
--	kfree(cxlmd);
--}
--
--static char *cxl_memdev_devnode(struct device *dev, umode_t *mode, kuid_t *uid,
--				kgid_t *gid)
--{
--	return kasprintf(GFP_KERNEL, "cxl/%s", dev_name(dev));
--}
--
--static ssize_t firmware_version_show(struct device *dev,
--				     struct device_attribute *attr, char *buf)
--{
--	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
--	struct cxl_mem *cxlm = cxlmd->cxlm;
--
--	return sysfs_emit(buf, "%.16s\n", cxlm->firmware_version);
--}
--static DEVICE_ATTR_RO(firmware_version);
--
--static ssize_t payload_max_show(struct device *dev,
--				struct device_attribute *attr, char *buf)
--{
--	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
--	struct cxl_mem *cxlm = cxlmd->cxlm;
--
--	return sysfs_emit(buf, "%zu\n", cxlm->payload_size);
--}
--static DEVICE_ATTR_RO(payload_max);
--
--static ssize_t label_storage_size_show(struct device *dev,
--				struct device_attribute *attr, char *buf)
--{
--	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
--	struct cxl_mem *cxlm = cxlmd->cxlm;
--
--	return sysfs_emit(buf, "%zu\n", cxlm->lsa_size);
--}
--static DEVICE_ATTR_RO(label_storage_size);
--
--static ssize_t ram_size_show(struct device *dev, struct device_attribute *attr,
--			     char *buf)
--{
--	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
--	struct cxl_mem *cxlm = cxlmd->cxlm;
--	unsigned long long len = range_len(&cxlm->ram_range);
--
--	return sysfs_emit(buf, "%#llx\n", len);
--}
--
--static struct device_attribute dev_attr_ram_size =
--	__ATTR(size, 0444, ram_size_show, NULL);
--
--static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
--			      char *buf)
--{
--	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
--	struct cxl_mem *cxlm = cxlmd->cxlm;
--	unsigned long long len = range_len(&cxlm->pmem_range);
--
--	return sysfs_emit(buf, "%#llx\n", len);
--}
--
--static struct device_attribute dev_attr_pmem_size =
--	__ATTR(size, 0444, pmem_size_show, NULL);
--
--static struct attribute *cxl_memdev_attributes[] = {
--	&dev_attr_firmware_version.attr,
--	&dev_attr_payload_max.attr,
--	&dev_attr_label_storage_size.attr,
--	NULL,
--};
--
--static struct attribute *cxl_memdev_pmem_attributes[] = {
--	&dev_attr_pmem_size.attr,
--	NULL,
--};
--
--static struct attribute *cxl_memdev_ram_attributes[] = {
--	&dev_attr_ram_size.attr,
--	NULL,
--};
--
--static struct attribute_group cxl_memdev_attribute_group = {
--	.attrs = cxl_memdev_attributes,
--};
--
--static struct attribute_group cxl_memdev_ram_attribute_group = {
--	.name = "ram",
--	.attrs = cxl_memdev_ram_attributes,
--};
--
--static struct attribute_group cxl_memdev_pmem_attribute_group = {
--	.name = "pmem",
--	.attrs = cxl_memdev_pmem_attributes,
--};
--
--static const struct attribute_group *cxl_memdev_attribute_groups[] = {
--	&cxl_memdev_attribute_group,
--	&cxl_memdev_ram_attribute_group,
--	&cxl_memdev_pmem_attribute_group,
--	NULL,
--};
--
--static const struct device_type cxl_memdev_type = {
--	.name = "cxl_memdev",
--	.release = cxl_memdev_release,
--	.devnode = cxl_memdev_devnode,
--	.groups = cxl_memdev_attribute_groups,
--};
--
--static void cxl_memdev_shutdown(struct cxl_memdev *cxlmd)
--{
--	down_write(&cxl_memdev_rwsem);
--	cxlmd->cxlm = NULL;
--	up_write(&cxl_memdev_rwsem);
--}
--
--static void cxl_memdev_unregister(void *_cxlmd)
--{
--	struct cxl_memdev *cxlmd = _cxlmd;
--	struct device *dev = &cxlmd->dev;
--
--	cdev_device_del(&cxlmd->cdev, dev);
--	if (cxlmd->shutdown)
--		cxlmd->shutdown(cxlmd);
--	put_device(dev);
--}
--
--static struct cxl_memdev *cxl_memdev_alloc(struct cxl_mem *cxlm,
--					   const struct file_operations *fops)
--{
--	struct pci_dev *pdev = cxlm->pdev;
--	struct cxl_memdev *cxlmd;
--	struct device *dev;
--	struct cdev *cdev;
--	int rc;
--
--	cxlmd = kzalloc(sizeof(*cxlmd), GFP_KERNEL);
--	if (!cxlmd)
--		return ERR_PTR(-ENOMEM);
--
--	rc = ida_alloc_range(&cxl_memdev_ida, 0, CXL_MEM_MAX_DEVS, GFP_KERNEL);
--	if (rc < 0)
--		goto err;
--	cxlmd->id = rc;
--
--	dev = &cxlmd->dev;
--	device_initialize(dev);
--	dev->parent = &pdev->dev;
--	dev->bus = &cxl_bus_type;
--	dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
--	dev->type = &cxl_memdev_type;
--	device_set_pm_not_required(dev);
--
--	cdev = &cxlmd->cdev;
--	cdev_init(cdev, fops);
--	return cxlmd;
--
--err:
--	kfree(cxlmd);
--	return ERR_PTR(rc);
--}
--
--static struct cxl_memdev *
--devm_cxl_add_memdev(struct device *host, struct cxl_mem *cxlm,
--		    const struct file_operations *fops,
--		    void (*shutdown)(struct cxl_memdev *cxlmd))
--{
--	struct cxl_memdev *cxlmd;
--	struct device *dev;
--	struct cdev *cdev;
--	int rc;
--
--	cxlmd = cxl_memdev_alloc(cxlm, fops);
--	if (IS_ERR(cxlmd))
--		return cxlmd;
--
--	dev = &cxlmd->dev;
--	rc = dev_set_name(dev, "mem%d", cxlmd->id);
--	if (rc)
--		goto err;
--
--	/*
--	 * Activate ioctl operations, no cxl_memdev_rwsem manipulation
--	 * needed as this is ordered with cdev_add() publishing the device.
--	 */
--	cxlmd->cxlm = cxlm;
--
--	cdev = &cxlmd->cdev;
--	rc = cdev_device_add(cdev, dev);
--	if (rc)
--		goto err;
--
--	rc = devm_add_action_or_reset(host, cxl_memdev_unregister, cxlmd);
--	if (rc)
--		return ERR_PTR(rc);
--	cxlmd->shutdown = shutdown;
--	return cxlmd;
--
--err:
--	/*
--	 * The cdev was briefly live, shutdown any ioctl operations that
--	 * saw that state.
--	 */
--	if (shutdown)
--		shutdown(cxlmd);
--	put_device(dev);
--	return ERR_PTR(rc);
--}
--
- static int cxl_xfer_log(struct cxl_mem *cxlm, uuid_t *uuid, u32 size, u8 *out)
- {
- 	u32 remaining = size;
-@@ -1586,6 +1365,13 @@ static int cxl_mem_identify(struct cxl_mem *cxlm)
- 	return 0;
- }
+@@ -1123,6 +1115,18 @@ static int cxl_mem_setup_regs(struct cxl_mem *cxlm)
+ 		dev_dbg(dev, "Found register block in bar %u @ 0x%llx of type %u\n",
+ 			bar, offset, reg_type);
  
-+static void cxl_memdev_shutdown(struct cxl_memdev *cxlmd)
-+{
-+	down_write(&cxl_memdev_rwsem);
-+	cxlmd->cxlm = NULL;
-+	up_write(&cxl_memdev_rwsem);
-+}
++		/* Ignore unknown register block types */
++		if (reg_type > CXL_REGLOC_RBI_MEMDEV)
++			continue;
 +
- static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	struct cxl_memdev *cxlmd;
++		map = kzalloc(sizeof(*map), GFP_KERNEL);
++		if (!map) {
++			ret = -ENOMEM;
++			goto free_maps;
++		}
++
++		list_add(&map->list, &register_maps);
++
+ 		base = cxl_mem_map_regblock(cxlm, bar, offset);
+ 		if (!base) {
+ 			ret = -ENOMEM;
 -- 
 2.32.0
 
