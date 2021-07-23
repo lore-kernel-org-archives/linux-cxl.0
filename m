@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B030C19F34
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D29B0C432BE
 	for <linux-cxl@archiver.kernel.org>; Fri, 23 Jul 2021 21:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD1760EBC
+	by mail.kernel.org (Postfix) with ESMTP id B8D2060F36
 	for <linux-cxl@archiver.kernel.org>; Fri, 23 Jul 2021 21:06:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231839AbhGWU0L (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 23 Jul 2021 16:26:11 -0400
-Received: from mga14.intel.com ([192.55.52.115]:34290 "EHLO mga14.intel.com"
+        id S231534AbhGWU0M (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 23 Jul 2021 16:26:12 -0400
+Received: from mga14.intel.com ([192.55.52.115]:34287 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231534AbhGWU0J (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        id S231684AbhGWU0J (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
         Fri, 23 Jul 2021 16:26:09 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10054"; a="211671219"
+X-IronPort-AV: E=McAfee;i="6200,9189,10054"; a="211671221"
 X-IronPort-AV: E=Sophos;i="5.84,265,1620716400"; 
-   d="scan'208";a="211671219"
+   d="scan'208";a="211671221"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2021 14:06:39 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2021 14:06:40 -0700
 X-IronPort-AV: E=Sophos;i="5.84,265,1620716400"; 
-   d="scan'208";a="497436187"
+   d="scan'208";a="497436195"
 Received: from rfrederi-mobl.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.136.168])
   by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2021 14:06:39 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
@@ -36,9 +36,9 @@ Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH 21/23] cxl/mem: Check that the device is CXL.mem capable
-Date:   Fri, 23 Jul 2021 14:06:21 -0700
-Message-Id: <20210723210623.114073-22-ben.widawsky@intel.com>
+Subject: [PATCH 23/23] cxl/core: Map component registers for ports
+Date:   Fri, 23 Jul 2021 14:06:23 -0700
+Message-Id: <20210723210623.114073-24-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210723210623.114073-1-ben.widawsky@intel.com>
 References: <20210723210623.114073-1-ben.widawsky@intel.com>
@@ -48,164 +48,171 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-CXL.mem capability is required to participate in an interleave set.
-
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- drivers/cxl/core/bus.c  | 24 ++++++++++++++++++++++++
- drivers/cxl/core/core.h |  1 +
- drivers/cxl/mem.c       | 18 ++++++++++++++++++
- drivers/cxl/pci.c       | 23 -----------------------
- drivers/cxl/pci.h       |  7 ++++++-
- 5 files changed, 49 insertions(+), 24 deletions(-)
+ drivers/cxl/core/bus.c  | 37 +++++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/regs.c |  6 +++---
+ drivers/cxl/cxl.h       |  2 ++
+ drivers/cxl/mem.c       |  2 +-
+ drivers/cxl/mem.h       |  1 +
+ drivers/cxl/pci.c       | 13 ++++++++++++-
+ 6 files changed, 56 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-index c8c51718f3c7..75f49fbb8c00 100644
+index 4b58b3f1ec99..f3ac899815e8 100644
 --- a/drivers/cxl/core/bus.c
 +++ b/drivers/cxl/core/bus.c
-@@ -716,6 +716,30 @@ struct cxl_decoder *devm_cxl_add_endpoint_decoder(struct device *host,
+@@ -379,6 +379,38 @@ static int devm_cxl_link_uport(struct device *host, struct cxl_port *port)
+ 	return devm_add_action_or_reset(host, cxl_unlink_uport, port);
  }
- EXPORT_SYMBOL_GPL(devm_cxl_add_endpoint_decoder);
  
-+int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
++static int cxl_port_map_component_registers(struct cxl_port *port,
++					    struct cxl_component_regs *regs)
 +{
-+	int pos;
++	struct cxl_register_map map;
++	struct cxl_component_reg_map *comp_map = &map.component_map;
++	void __iomem *crb;
 +
-+	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DVSEC);
-+	if (!pos)
++	if (port->component_reg_phys == CXL_RESOURCE_NONE)
 +		return 0;
 +
-+	while (pos) {
-+		u16 vendor, id;
++	crb = devm_cxl_iomap_block(&port->dev,
++				   port->component_reg_phys,
++				   /* CXL_COMPONENT_REG_BLOCK_SIZE */ SZ_64K);
++	if (IS_ERR(crb))
++		return PTR_ERR(crb);
 +
-+		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER1, &vendor);
-+		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER2, &id);
-+		if (vendor == PCI_DVSEC_VENDOR_ID_CXL && dvsec == id)
-+			return pos;
-+
-+		pos = pci_find_next_ext_capability(pdev, pos,
-+						   PCI_EXT_CAP_ID_DVSEC);
++	if (!crb) {
++		dev_err(&port->dev, "No component registers mapped\n");
++		return -ENXIO;
 +	}
++
++	cxl_probe_component_regs(&port->dev, crb, comp_map);
++	if (!comp_map->hdm_decoder.valid) {
++		dev_err(&port->dev, "HDM decoder registers invalid\n");
++		return -ENXIO;
++	}
++
++	regs->hdm_decoder = crb + comp_map->hdm_decoder.offset;
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(cxl_mem_dvsec);
 +
- /**
-  * __cxl_driver_register - register a driver for the cxl bus
-  * @cxl_drv: cxl driver structure to attach
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index eb1a17103e5d..eab6e6461549 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -6,6 +6,7 @@
+ static struct cxl_port *cxl_port_alloc(struct device *uport,
+ 				       resource_size_t component_reg_phys,
+ 				       struct cxl_port *parent_port)
+@@ -436,6 +468,7 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
+ 				   resource_size_t component_reg_phys,
+ 				   struct cxl_port *parent_port)
+ {
++	struct cxl_component_regs crb;
+ 	struct cxl_port *port;
+ 	struct device *dev;
+ 	int rc;
+@@ -467,6 +500,10 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
+ 	if (rc)
+ 		return ERR_PTR(rc);
  
- #include <cxl.h>
- #include <mem.h>
-+#include <pci.h>
- #include <region.h>
++	rc = cxl_port_map_component_registers(port, &crb);
++	if (rc)
++		return ERR_PTR(rc);
++
+ 	return port;
  
- extern const struct device_type cxl_nvdimm_bridge_type;
+ err:
+diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+index d05946a6bf53..6f5baf784d23 100644
+--- a/drivers/cxl/core/regs.c
++++ b/drivers/cxl/core/regs.c
+@@ -144,9 +144,8 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
+ }
+ EXPORT_SYMBOL_GPL(cxl_probe_device_regs);
+ 
+-static void __iomem *devm_cxl_iomap_block(struct device *dev,
+-					  resource_size_t addr,
+-					  resource_size_t length)
++void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
++				   resource_size_t length)
+ {
+ 	void __iomem *ret_val;
+ 	struct resource *res;
+@@ -165,6 +164,7 @@ static void __iomem *devm_cxl_iomap_block(struct device *dev,
+ 
+ 	return ret_val;
+ }
++EXPORT_SYMBOL_GPL(devm_cxl_iomap_block);
+ 
+ int cxl_map_component_regs(struct pci_dev *pdev,
+ 			   struct cxl_component_regs *regs,
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 8020af021494..87fea255a573 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -149,6 +149,8 @@ struct cxl_register_map {
+ 	};
+ };
+ 
++void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
++				   resource_size_t length);
+ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+ 			      struct cxl_component_reg_map *map);
+ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
 diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index ae2024de7912..40281dcc0f3e 100644
+index 4656636acb8a..622042b13d24 100644
 --- a/drivers/cxl/mem.c
 +++ b/drivers/cxl/mem.c
-@@ -4,6 +4,7 @@
- #include <linux/module.h>
- #include <linux/pci.h>
- #include "mem.h"
-+#include "pci.h"
+@@ -59,7 +59,7 @@ static int cxl_memdev_probe(struct device *dev)
+ 	}
  
- /**
-  * DOC: cxl mem
-@@ -33,13 +34,30 @@ static int cxl_memdev_probe(struct device *dev)
- {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
- 	struct cxl_mem *cxlm = cxlmd->cxlm;
-+	struct pci_dev *pdev = cxlm->pdev;
- 	struct device *pdev_parent = cxlm->pdev->dev.parent;
- 	struct device *port_dev;
-+	int pcie_dvsec;
-+	u16 dvsec_ctrl;
+ 	rc = PTR_ERR_OR_ZERO(devm_cxl_add_port(&cxlmd->dev, &cxlmd->dev,
+-					       CXL_RESOURCE_NONE,
++					       cxlmd->component_reg_phys,
+ 					       to_cxl_port(port_dev)));
+ 	if (rc)
+ 		dev_err(dev, "Unable to add devices upstream port");
+diff --git a/drivers/cxl/mem.h b/drivers/cxl/mem.h
+index 7da1bb48d409..b784123ef35d 100644
+--- a/drivers/cxl/mem.h
++++ b/drivers/cxl/mem.h
+@@ -50,6 +50,7 @@ struct cxl_memdev {
+ 	struct cxl_mem *cxlm;
+ 	int id;
+ 	void (*shutdown)(struct cxl_memdev *cxlmd);
++	unsigned long component_reg_phys;
+ };
  
- 	port_dev = bus_find_device(&cxl_bus_type, NULL, pdev_parent, port_match);
- 	if (!port_dev)
- 		return -ENODEV;
- 
-+	pcie_dvsec = cxl_mem_dvsec(pdev, PCI_DVSEC_ID_PCIE_DVSEC_CXL_DVSEC_ID);
-+	if (!pcie_dvsec) {
-+		dev_err(dev, "Unable to determine CXL protocol support");
-+		return -ENODEV;
-+	}
-+
-+	pci_read_config_word(pdev,
-+			     pcie_dvsec + PCI_DVSEC_ID_CXL_PCIE_CTRL_OFFSET,
-+			     &dvsec_ctrl);
-+	if (!(dvsec_ctrl & CXL_PCIE_MEM_ENABLE)) {
-+		dev_err(dev, "CXL.cache protocol not supported on device");
-+		return -ENODEV;
-+	}
-+
- 	return 0;
- }
- 
+ struct cxl_memdev *
 diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index f924a8c5a831..96837412914d 100644
+index 96837412914d..a557676f509e 100644
 --- a/drivers/cxl/pci.c
 +++ b/drivers/cxl/pci.c
-@@ -971,29 +971,6 @@ static void cxl_mem_unmap_regblock(struct cxl_mem *cxlm, void __iomem *base)
- 	pci_iounmap(cxlm->pdev, base);
- }
+@@ -1345,7 +1345,7 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	struct cxl_register_map maps[CXL_REGLOC_RBI_TYPES];
+ 	struct cxl_memdev *cxlmd;
+ 	struct cxl_mem *cxlm;
+-	int rc;
++	int rc, i;
  
--static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
--{
--	int pos;
--
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DVSEC);
--	if (!pos)
--		return 0;
--
--	while (pos) {
--		u16 vendor, id;
--
--		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER1, &vendor);
--		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER2, &id);
--		if (vendor == PCI_DVSEC_VENDOR_ID_CXL && dvsec == id)
--			return pos;
--
--		pos = pci_find_next_ext_capability(pdev, pos,
--						   PCI_EXT_CAP_ID_DVSEC);
--	}
--
--	return 0;
--}
--
- static int cxl_probe_regs(struct cxl_mem *cxlm, void __iomem *base,
- 			  struct cxl_register_map *map)
- {
-diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
-index 8c1a58813816..c5a4d51b7561 100644
---- a/drivers/cxl/pci.h
-+++ b/drivers/cxl/pci.h
-@@ -11,7 +11,10 @@
-  */
- #define PCI_DVSEC_HEADER1_LENGTH_MASK	GENMASK(31, 20)
- #define PCI_DVSEC_VENDOR_ID_CXL		0x1E98
--#define PCI_DVSEC_ID_CXL		0x0
+ 	rc = pcim_enable_device(pdev);
+ 	if (rc)
+@@ -1376,6 +1376,17 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (IS_ERR(cxlmd))
+ 		return PTR_ERR(cxlmd);
+ 
++	for (i = 0; i < ARRAY_SIZE(maps); i++) {
++		struct cxl_register_map *map = &maps[i];
 +
-+#define PCI_DVSEC_ID_PCIE_DVSEC_CXL_DVSEC_ID	0x0
-+#define PCI_DVSEC_ID_CXL_PCIE_CTRL_OFFSET	0xC
-+#define   CXL_PCIE_MEM_ENABLE			BIT(2)
- 
- #define PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID	0x8
- #define PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET	0xC
-@@ -29,4 +32,6 @@
- 
- #define CXL_REGLOC_ADDR_MASK GENMASK(31, 16)
- 
-+int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec);
++		if (map->reg_type != CXL_REGLOC_RBI_COMPONENT)
++			continue;
 +
- #endif /* __CXL_PCI_H__ */
++		cxlmd->component_reg_phys =
++			pci_resource_start(pdev, map->barno) +
++			map->block_offset;
++	}
++
+ 	if (range_len(&cxlm->pmem_range) && IS_ENABLED(CONFIG_CXL_PMEM))
+ 		rc = devm_cxl_add_nvdimm(&pdev->dev, cxlmd);
+ 
 -- 
 2.32.0
 
