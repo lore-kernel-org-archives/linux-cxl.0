@@ -2,217 +2,142 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D29B0C432BE
-	for <linux-cxl@archiver.kernel.org>; Fri, 23 Jul 2021 21:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D19C432BE
+	for <linux-cxl@archiver.kernel.org>; Mon, 26 Jul 2021 18:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8D2060F36
-	for <linux-cxl@archiver.kernel.org>; Fri, 23 Jul 2021 21:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81C5060F90
+	for <linux-cxl@archiver.kernel.org>; Mon, 26 Jul 2021 18:12:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231534AbhGWU0M (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 23 Jul 2021 16:26:12 -0400
-Received: from mga14.intel.com ([192.55.52.115]:34287 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231684AbhGWU0J (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 23 Jul 2021 16:26:09 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10054"; a="211671221"
-X-IronPort-AV: E=Sophos;i="5.84,265,1620716400"; 
-   d="scan'208";a="211671221"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2021 14:06:40 -0700
-X-IronPort-AV: E=Sophos;i="5.84,265,1620716400"; 
-   d="scan'208";a="497436195"
-Received: from rfrederi-mobl.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.136.168])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2021 14:06:39 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH 23/23] cxl/core: Map component registers for ports
-Date:   Fri, 23 Jul 2021 14:06:23 -0700
-Message-Id: <20210723210623.114073-24-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210723210623.114073-1-ben.widawsky@intel.com>
-References: <20210723210623.114073-1-ben.widawsky@intel.com>
+        id S232364AbhGZRcI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 26 Jul 2021 13:32:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53856 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231844AbhGZRcI (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 26 Jul 2021 13:32:08 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EE05C061757
+        for <linux-cxl@vger.kernel.org>; Mon, 26 Jul 2021 11:12:36 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id a20so12888641plm.0
+        for <linux-cxl@vger.kernel.org>; Mon, 26 Jul 2021 11:12:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Is+oJKGYPogfWvFZwdYYCcoT9K1XBMrcjlf/DkpZH/E=;
+        b=SBoRhGWQCq3eEDgd91yc6ADhSEjR/yadrM0vCz81C2RTZDnLXZFmsm2OqRC++Vjwvx
+         pPA6m1aLsANWdJPs1nMEppouQUZae6du+9kXo6vVjcckr3NxXjORLmPNJPcdLS7Kq9Co
+         CYzZb918Yn6sjp/qNbRFeZHVTdYvZjndZjf718+CMKr/XNl1r6Kh5bvxpdFUjzy161e4
+         GHyVK9DsRvie4hyBXqDuOuNfiYvPTB/PDNePRPdewToLpNiqxMM2CfR167NHuR4xkVkV
+         076eytd9bxKuxK29EtGI9VzrGvxyrHJ8om7RYQIsndOLQcXYnRprymbEce8GgKPHjfcl
+         Wbmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Is+oJKGYPogfWvFZwdYYCcoT9K1XBMrcjlf/DkpZH/E=;
+        b=r1J7yWi+PBj/JrolHvg+Xly86T0wMx/GWVih+5pjDRbIq4Uy5xaUfMPx7Ck08WDlml
+         LRsRz0q+W0TPhPO4JK+ibdMn6DBzvSzCjHNDb3g8YuDP4TGhic92FkkNg3jvflx1j2Kf
+         MBmRlhmxjn1omKgj9ahSSbMiE1zlDJX+JOUdMMhZNf2Ab/Kv4ExWODaAeqUPzh15KxrQ
+         VDKSb7tPp8Dk2yrou2fMWwnOTBv+qL8ZElb7AvzAq/otOYKrdDE3kFVwGg2I3znW5VRR
+         HwcYBJHaOxveLojfVtWTaM9D1GsFKmoAaIICsAGZtfKKJ4k/FNm21E6acPTY+zjmHx6G
+         cebA==
+X-Gm-Message-State: AOAM531SyBAPY7IvRDKnNURUsIqRjiaQU/yQCzzUa80Y/PYcwPm3bYEh
+        xToCxObITJd0wdiL/fKKW8dphnuEUcbvMSFJtqnN0A==
+X-Google-Smtp-Source: ABdhPJx5NqlOopCpzWLC2vibWWgD3XZcKkajAVM53ofepmQxyWlKDODoW+h05xfkA8DyckzoPpIhILOh0dWAtKmEOfY=
+X-Received: by 2002:a17:90a:708c:: with SMTP id g12mr243492pjk.13.1627323156220;
+ Mon, 26 Jul 2021 11:12:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210702040009.68794-1-ben.widawsky@intel.com>
+ <20210706160050.527553-1-ben.widawsky@intel.com> <CAPcyv4g8XqzbwtSP3Hdww5nUvB9Hz--QL9Z_h56XfxTQMdMxmw@mail.gmail.com>
+ <20210720234307.qacrosxfaogn5app@intel.com>
+In-Reply-To: <20210720234307.qacrosxfaogn5app@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 26 Jul 2021 11:12:25 -0700
+Message-ID: <CAPcyv4jDua9e66e-h2fsEmAwQ_4vDyWbuKRSCU9RfAwECP5xUQ@mail.gmail.com>
+Subject: Re: [PATCH v2] cxl: Enable an endpoint decoder type
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
----
- drivers/cxl/core/bus.c  | 37 +++++++++++++++++++++++++++++++++++++
- drivers/cxl/core/regs.c |  6 +++---
- drivers/cxl/cxl.h       |  2 ++
- drivers/cxl/mem.c       |  2 +-
- drivers/cxl/mem.h       |  1 +
- drivers/cxl/pci.c       | 13 ++++++++++++-
- 6 files changed, 56 insertions(+), 5 deletions(-)
+On Tue, Jul 20, 2021 at 4:43 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> On 21-07-09 16:56:48, Dan Williams wrote:
+> > On Tue, Jul 6, 2021 at 9:01 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > >
+> > > CXL memory devices support HDM decoders. Currently, when a decoder is
+> > > instantiated there is no knowledge of the type of decoder; only the
+> > > underlying endpoint type is specified. In order to have the memory
+> > > devices reuse the existing decoder creation infrastructure it is
+> > > convenient to pass along the type of decoder on creation.
+> > >
+> > > The primary difference for an endpoint decoder is that it doesn't have
+> > > dports, nor targets. The target is just the underlying media (with
+> > > offset).
+> > >
+> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > > ---
+> > >
+> > > v2 Fixes target_type and stores the decoder type on instantiation
+> >
+> > This depends on the memdev driver series? It's not applying for me on
+> > top of cxl.git#next.
+> >
+> > >
+> > > diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
+> > > index 196f260e2580..69acdd230f54 100644
+> > > --- a/drivers/cxl/core.c
+> > > +++ b/drivers/cxl/core.c
+> > > @@ -493,10 +493,11 @@ cxl_decoder_alloc(struct cxl_port *port, int nr_targets, resource_size_t base,
+> > >                         .start = base,
+> > >                         .end = base + len - 1,
+> > >                 },
+> > > +               .type = type,
+> >
+> > ...but there's already the dev->type?
+> >
+> > >                 .flags = flags,
+> > >                 .interleave_ways = interleave_ways,
+> > >                 .interleave_granularity = interleave_granularity,
+> > > -               .target_type = type,
+> > > +               .target_type = CXL_DEVICE_EXPANDER,
+> >
+> > In the cxl-switch case how to indicate that only type-2 targets are supported?
+> >
+> > I do think I misnamed the cxl_decoder_type. I also did not make it
+> > clear that root decoders don't have a target type, they have a set of
+> > flags indicating their restrictions, and unlike switch level decoders
+> > they can support targeting both accelerators and expanders in the same
+> > windows. I think the decoder can still be just the dev->type, but
+> > there needs to be separate helpers for the 3 cases you have
+> > identified. Something like the following where devm_cxl_add_decoder()
+> > because private to the core:
+> >
+> > devm_cxl_add_platform_decoder(struct device *host, int nr_targets,
+> >                               resource_size_t base, resource_size_t len,
+> >                               int interleave_ways, int interleave_granularity,
+> >                               unsigned long flags)
+> > {
+> >         return devm_cxl_add_decoder(host, NULL, nr_targets, base, len,
+> >                                     interleave_ways, interleave_granularity,
+> >                                     0, flags);
+> > }
+>
+> How do you want me to handle the existing parent (ACPI0017) and child (ACPI0016)
+> relationships? I see no reason to preserve this, but perhaps you know something
+> I don't.
 
-diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-index 4b58b3f1ec99..f3ac899815e8 100644
---- a/drivers/cxl/core/bus.c
-+++ b/drivers/cxl/core/bus.c
-@@ -379,6 +379,38 @@ static int devm_cxl_link_uport(struct device *host, struct cxl_port *port)
- 	return devm_add_action_or_reset(host, cxl_unlink_uport, port);
- }
- 
-+static int cxl_port_map_component_registers(struct cxl_port *port,
-+					    struct cxl_component_regs *regs)
-+{
-+	struct cxl_register_map map;
-+	struct cxl_component_reg_map *comp_map = &map.component_map;
-+	void __iomem *crb;
-+
-+	if (port->component_reg_phys == CXL_RESOURCE_NONE)
-+		return 0;
-+
-+	crb = devm_cxl_iomap_block(&port->dev,
-+				   port->component_reg_phys,
-+				   /* CXL_COMPONENT_REG_BLOCK_SIZE */ SZ_64K);
-+	if (IS_ERR(crb))
-+		return PTR_ERR(crb);
-+
-+	if (!crb) {
-+		dev_err(&port->dev, "No component registers mapped\n");
-+		return -ENXIO;
-+	}
-+
-+	cxl_probe_component_regs(&port->dev, crb, comp_map);
-+	if (!comp_map->hdm_decoder.valid) {
-+		dev_err(&port->dev, "HDM decoder registers invalid\n");
-+		return -ENXIO;
-+	}
-+
-+	regs->hdm_decoder = crb + comp_map->hdm_decoder.offset;
-+
-+	return 0;
-+}
-+
- static struct cxl_port *cxl_port_alloc(struct device *uport,
- 				       resource_size_t component_reg_phys,
- 				       struct cxl_port *parent_port)
-@@ -436,6 +468,7 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
- 				   resource_size_t component_reg_phys,
- 				   struct cxl_port *parent_port)
- {
-+	struct cxl_component_regs crb;
- 	struct cxl_port *port;
- 	struct device *dev;
- 	int rc;
-@@ -467,6 +500,10 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
- 	if (rc)
- 		return ERR_PTR(rc);
- 
-+	rc = cxl_port_map_component_registers(port, &crb);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
- 	return port;
- 
- err:
-diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-index d05946a6bf53..6f5baf784d23 100644
---- a/drivers/cxl/core/regs.c
-+++ b/drivers/cxl/core/regs.c
-@@ -144,9 +144,8 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
- }
- EXPORT_SYMBOL_GPL(cxl_probe_device_regs);
- 
--static void __iomem *devm_cxl_iomap_block(struct device *dev,
--					  resource_size_t addr,
--					  resource_size_t length)
-+void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
-+				   resource_size_t length)
- {
- 	void __iomem *ret_val;
- 	struct resource *res;
-@@ -165,6 +164,7 @@ static void __iomem *devm_cxl_iomap_block(struct device *dev,
- 
- 	return ret_val;
- }
-+EXPORT_SYMBOL_GPL(devm_cxl_iomap_block);
- 
- int cxl_map_component_regs(struct pci_dev *pdev,
- 			   struct cxl_component_regs *regs,
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 8020af021494..87fea255a573 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -149,6 +149,8 @@ struct cxl_register_map {
- 	};
- };
- 
-+void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
-+				   resource_size_t length);
- void cxl_probe_component_regs(struct device *dev, void __iomem *base,
- 			      struct cxl_component_reg_map *map);
- void cxl_probe_device_regs(struct device *dev, void __iomem *base,
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 4656636acb8a..622042b13d24 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -59,7 +59,7 @@ static int cxl_memdev_probe(struct device *dev)
- 	}
- 
- 	rc = PTR_ERR_OR_ZERO(devm_cxl_add_port(&cxlmd->dev, &cxlmd->dev,
--					       CXL_RESOURCE_NONE,
-+					       cxlmd->component_reg_phys,
- 					       to_cxl_port(port_dev)));
- 	if (rc)
- 		dev_err(dev, "Unable to add devices upstream port");
-diff --git a/drivers/cxl/mem.h b/drivers/cxl/mem.h
-index 7da1bb48d409..b784123ef35d 100644
---- a/drivers/cxl/mem.h
-+++ b/drivers/cxl/mem.h
-@@ -50,6 +50,7 @@ struct cxl_memdev {
- 	struct cxl_mem *cxlm;
- 	int id;
- 	void (*shutdown)(struct cxl_memdev *cxlmd);
-+	unsigned long component_reg_phys;
- };
- 
- struct cxl_memdev *
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 96837412914d..a557676f509e 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -1345,7 +1345,7 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	struct cxl_register_map maps[CXL_REGLOC_RBI_TYPES];
- 	struct cxl_memdev *cxlmd;
- 	struct cxl_mem *cxlm;
--	int rc;
-+	int rc, i;
- 
- 	rc = pcim_enable_device(pdev);
- 	if (rc)
-@@ -1376,6 +1376,17 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (IS_ERR(cxlmd))
- 		return PTR_ERR(cxlmd);
- 
-+	for (i = 0; i < ARRAY_SIZE(maps); i++) {
-+		struct cxl_register_map *map = &maps[i];
-+
-+		if (map->reg_type != CXL_REGLOC_RBI_COMPONENT)
-+			continue;
-+
-+		cxlmd->component_reg_phys =
-+			pci_resource_start(pdev, map->barno) +
-+			map->block_offset;
-+	}
-+
- 	if (range_len(&cxlm->pmem_range) && IS_ENABLED(CONFIG_CXL_PMEM))
- 		rc = devm_cxl_add_nvdimm(&pdev->dev, cxlmd);
- 
--- 
-2.32.0
-
+I'm not understanding the concern? ACPI0016 is already not a child of
+ACPI0017. The decoder is a child of a port. ACPI0016 is a dport in a
+platform decoder, and the uport for the CXL switch in the host-bridge.
