@@ -2,38 +2,41 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6536C4338F
-	for <linux-cxl@archiver.kernel.org>; Fri, 30 Jul 2021 20:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC836C4338F
+	for <linux-cxl@archiver.kernel.org>; Fri, 30 Jul 2021 20:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92B5660F42
-	for <linux-cxl@archiver.kernel.org>; Fri, 30 Jul 2021 20:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B37DB604D7
+	for <linux-cxl@archiver.kernel.org>; Fri, 30 Jul 2021 20:07:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230310AbhG3UHC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 30 Jul 2021 16:07:02 -0400
-Received: from mga09.intel.com ([134.134.136.24]:15355 "EHLO mga09.intel.com"
+        id S230316AbhG3UHS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 30 Jul 2021 16:07:18 -0400
+Received: from mga05.intel.com ([192.55.52.43]:12570 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230217AbhG3UHB (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 30 Jul 2021 16:07:01 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10061"; a="213149793"
+        id S230217AbhG3UHS (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Fri, 30 Jul 2021 16:07:18 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10061"; a="298750268"
 X-IronPort-AV: E=Sophos;i="5.84,282,1620716400"; 
-   d="scan'208";a="213149793"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2021 13:06:55 -0700
+   d="scan'208";a="298750268"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2021 13:07:12 -0700
 X-IronPort-AV: E=Sophos;i="5.84,282,1620716400"; 
-   d="scan'208";a="439152809"
+   d="scan'208";a="667423628"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2021 13:06:55 -0700
-Subject: [PATCH v3 0/6] CXL core reorganization
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2021 13:07:11 -0700
+Subject: [PATCH v3 3/6] cxl/core: Move pmem functionality
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     Ben Widawsky <ben.widawsky@intel.com>, Jonathan.Cameron@huawei.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com
-Date:   Fri, 30 Jul 2021 13:06:55 -0700
-Message-ID: <162767561501.3322476.716972045397140827.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Fri, 30 Jul 2021 13:07:11 -0700
+Message-ID: <162767563157.3322476.9789321428113315999.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <162767561501.3322476.716972045397140827.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <162767561501.3322476.716972045397140827.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -42,74 +45,521 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Changes since v2 [1]:
-- Rebase on top of the Makefile changes
-- Split register and pmem moving into 2 independent patches
-- Drop inclusion of mem.h and cxl.h from core.h. I.e. require all
-  compilation units to directly include only the headers they need.
-- Squash / rewrite "cxl/mem: Move character device region creation" to
-  move the char-dev infrastructure to drivers/cxl/core/memdev.c
-- Rewrite the justification in some of the changelogs
-- Rewrite "cxl: Pass fops and shutdown to memdev creation" to introduce
-  cdevm_file_operations.
+Refactor the pmem / nvdimm-bridge functionality from core/bus.c to
+core/pmem.c. Introduce drivers/core/core.h to communicate data
+structures and helpers between the core bus and other functionality that
+registers devices on the bus.
 
-[1]: https://lore.kernel.org/linux-cxl/20210720180742.89992-1-ben.widawsky@intel.com/
-
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
-
-Given Ben is out for a bit I have folded my review comments into the set
-directly.
-
-Original Cover from Ben:
-
-The main motivation of the patch series is to establish the cxl_core driver in
-its own directory and modularize it. Specifically, the patch series aims to
-achieve three things:
-1. Move existing core functionality to a new directory.
-2. Split existing core functionality into multiple files.
-3. Migrate memdev functionality into core.
-
-#1 is trivially accomplished with git mv. The file itself is renamed back to
-bus.c since the goal is to break up core functionality into multiple files, and
-so the name core.c doesn't make sense in that context.
-
-#2 is also trivially accomplished via cut/paste.
-
-#3 is slightly invasive in that it has certain functional changes to improve the
-existing interfaces and make them more generic. The rest of the change is
-cut/paste. This is also the only part of the series which has runtime functional
-change in that some interfaces are removed from cxl_pci, moved into cxl_core,
-and exported for other drivers to use.
-
----
-
-Ben Widawsky (3):
-      cxl: Move cxl_core to new directory
-      cxl/core: Improve CXL core kernel docs
-      cxl/core: Move memdev management to core
-
-Dan Williams (3):
-      cxl/core: Move pmem functionality
-      cxl/core: Move register mapping infrastructure
-      cxl/pci: Introduce cdevm_file_operations
-
-
- Documentation/driver-api/cxl/memory-devices.rst |    8 
- drivers/cxl/Makefile                            |    4 
- drivers/cxl/core/Makefile                       |    8 
- drivers/cxl/core/bus.c                          |  463 +----------------------
- drivers/cxl/core/core.h                         |   20 +
- drivers/cxl/core/memdev.c                       |  245 ++++++++++++
- drivers/cxl/core/pmem.c                         |  204 ++++++++++
- drivers/cxl/core/regs.c                         |  235 ++++++++++++
- drivers/cxl/mem.h                               |   26 +
- drivers/cxl/pci.c                               |  257 +------------
- 10 files changed, 791 insertions(+), 679 deletions(-)
- create mode 100644 drivers/cxl/core/Makefile
- rename drivers/cxl/{core.c => core/bus.c} (58%)
+ Documentation/driver-api/cxl/memory-devices.rst |    3 
+ drivers/cxl/core/Makefile                       |    1 
+ drivers/cxl/core/bus.c                          |  205 -----------------------
+ drivers/cxl/core/core.h                         |   17 ++
+ drivers/cxl/core/pmem.c                         |  204 +++++++++++++++++++++++
+ 5 files changed, 228 insertions(+), 202 deletions(-)
  create mode 100644 drivers/cxl/core/core.h
- create mode 100644 drivers/cxl/core/memdev.c
  create mode 100644 drivers/cxl/core/pmem.c
- create mode 100644 drivers/cxl/core/regs.c
 
-base-commit: ff1176468d368232b684f75e82563369208bc371
+diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
+index a86e2c7c551a..e65c0ba82229 100644
+--- a/Documentation/driver-api/cxl/memory-devices.rst
++++ b/Documentation/driver-api/cxl/memory-devices.rst
+@@ -39,6 +39,9 @@ CXL Core
+ .. kernel-doc:: drivers/cxl/core/bus.c
+    :doc: cxl core
+ 
++.. kernel-doc:: drivers/cxl/core/pmem.c
++   :internal:
++
+ External Interfaces
+ ===================
+ 
+diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+index c65e9f61abe9..3be8ef61fda3 100644
+--- a/drivers/cxl/core/Makefile
++++ b/drivers/cxl/core/Makefile
+@@ -3,3 +3,4 @@ obj-$(CONFIG_CXL_BUS) += cxl_core.o
+ 
+ ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL -I./drivers/cxl
+ cxl_core-y := bus.o
++cxl_core-y += pmem.o
+diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
+index 647b8a00ab36..d25fe6c235f5 100644
+--- a/drivers/cxl/core/bus.c
++++ b/drivers/cxl/core/bus.c
+@@ -8,6 +8,7 @@
+ #include <linux/idr.h>
+ #include <cxl.h>
+ #include <mem.h>
++#include "core.h"
+ 
+ /**
+  * DOC: cxl core
+@@ -37,7 +38,7 @@ static struct attribute *cxl_base_attributes[] = {
+ 	NULL,
+ };
+ 
+-static struct attribute_group cxl_base_attribute_group = {
++struct attribute_group cxl_base_attribute_group = {
+ 	.attrs = cxl_base_attributes,
+ };
+ 
+@@ -514,11 +515,6 @@ cxl_decoder_alloc(struct cxl_port *port, int nr_targets, resource_size_t base,
+ 	return ERR_PTR(rc);
+ }
+ 
+-static void unregister_dev(void *dev)
+-{
+-	device_unregister(dev);
+-}
+-
+ struct cxl_decoder *
+ devm_cxl_add_decoder(struct device *host, struct cxl_port *port, int nr_targets,
+ 		     resource_size_t base, resource_size_t len,
+@@ -543,7 +539,7 @@ devm_cxl_add_decoder(struct device *host, struct cxl_port *port, int nr_targets,
+ 	if (rc)
+ 		goto err;
+ 
+-	rc = devm_add_action_or_reset(host, unregister_dev, dev);
++	rc = devm_add_action_or_reset(host, unregister_cxl_dev, dev);
+ 	if (rc)
+ 		return ERR_PTR(rc);
+ 	return cxld;
+@@ -626,201 +622,6 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+ }
+ EXPORT_SYMBOL_GPL(cxl_probe_component_regs);
+ 
+-static void cxl_nvdimm_bridge_release(struct device *dev)
+-{
+-	struct cxl_nvdimm_bridge *cxl_nvb = to_cxl_nvdimm_bridge(dev);
+-
+-	kfree(cxl_nvb);
+-}
+-
+-static const struct attribute_group *cxl_nvdimm_bridge_attribute_groups[] = {
+-	&cxl_base_attribute_group,
+-	NULL,
+-};
+-
+-static const struct device_type cxl_nvdimm_bridge_type = {
+-	.name = "cxl_nvdimm_bridge",
+-	.release = cxl_nvdimm_bridge_release,
+-	.groups = cxl_nvdimm_bridge_attribute_groups,
+-};
+-
+-struct cxl_nvdimm_bridge *to_cxl_nvdimm_bridge(struct device *dev)
+-{
+-	if (dev_WARN_ONCE(dev, dev->type != &cxl_nvdimm_bridge_type,
+-			  "not a cxl_nvdimm_bridge device\n"))
+-		return NULL;
+-	return container_of(dev, struct cxl_nvdimm_bridge, dev);
+-}
+-EXPORT_SYMBOL_GPL(to_cxl_nvdimm_bridge);
+-
+-static struct cxl_nvdimm_bridge *
+-cxl_nvdimm_bridge_alloc(struct cxl_port *port)
+-{
+-	struct cxl_nvdimm_bridge *cxl_nvb;
+-	struct device *dev;
+-
+-	cxl_nvb = kzalloc(sizeof(*cxl_nvb), GFP_KERNEL);
+-	if (!cxl_nvb)
+-		return ERR_PTR(-ENOMEM);
+-
+-	dev = &cxl_nvb->dev;
+-	cxl_nvb->port = port;
+-	cxl_nvb->state = CXL_NVB_NEW;
+-	device_initialize(dev);
+-	device_set_pm_not_required(dev);
+-	dev->parent = &port->dev;
+-	dev->bus = &cxl_bus_type;
+-	dev->type = &cxl_nvdimm_bridge_type;
+-
+-	return cxl_nvb;
+-}
+-
+-static void unregister_nvb(void *_cxl_nvb)
+-{
+-	struct cxl_nvdimm_bridge *cxl_nvb = _cxl_nvb;
+-	bool flush;
+-
+-	/*
+-	 * If the bridge was ever activated then there might be in-flight state
+-	 * work to flush. Once the state has been changed to 'dead' then no new
+-	 * work can be queued by user-triggered bind.
+-	 */
+-	device_lock(&cxl_nvb->dev);
+-	flush = cxl_nvb->state != CXL_NVB_NEW;
+-	cxl_nvb->state = CXL_NVB_DEAD;
+-	device_unlock(&cxl_nvb->dev);
+-
+-	/*
+-	 * Even though the device core will trigger device_release_driver()
+-	 * before the unregister, it does not know about the fact that
+-	 * cxl_nvdimm_bridge_driver defers ->remove() work. So, do the driver
+-	 * release not and flush it before tearing down the nvdimm device
+-	 * hierarchy.
+-	 */
+-	device_release_driver(&cxl_nvb->dev);
+-	if (flush)
+-		flush_work(&cxl_nvb->state_work);
+-	device_unregister(&cxl_nvb->dev);
+-}
+-
+-struct cxl_nvdimm_bridge *devm_cxl_add_nvdimm_bridge(struct device *host,
+-						     struct cxl_port *port)
+-{
+-	struct cxl_nvdimm_bridge *cxl_nvb;
+-	struct device *dev;
+-	int rc;
+-
+-	if (!IS_ENABLED(CONFIG_CXL_PMEM))
+-		return ERR_PTR(-ENXIO);
+-
+-	cxl_nvb = cxl_nvdimm_bridge_alloc(port);
+-	if (IS_ERR(cxl_nvb))
+-		return cxl_nvb;
+-
+-	dev = &cxl_nvb->dev;
+-	rc = dev_set_name(dev, "nvdimm-bridge");
+-	if (rc)
+-		goto err;
+-
+-	rc = device_add(dev);
+-	if (rc)
+-		goto err;
+-
+-	rc = devm_add_action_or_reset(host, unregister_nvb, cxl_nvb);
+-	if (rc)
+-		return ERR_PTR(rc);
+-
+-	return cxl_nvb;
+-
+-err:
+-	put_device(dev);
+-	return ERR_PTR(rc);
+-}
+-EXPORT_SYMBOL_GPL(devm_cxl_add_nvdimm_bridge);
+-
+-static void cxl_nvdimm_release(struct device *dev)
+-{
+-	struct cxl_nvdimm *cxl_nvd = to_cxl_nvdimm(dev);
+-
+-	kfree(cxl_nvd);
+-}
+-
+-static const struct attribute_group *cxl_nvdimm_attribute_groups[] = {
+-	&cxl_base_attribute_group,
+-	NULL,
+-};
+-
+-static const struct device_type cxl_nvdimm_type = {
+-	.name = "cxl_nvdimm",
+-	.release = cxl_nvdimm_release,
+-	.groups = cxl_nvdimm_attribute_groups,
+-};
+-
+-bool is_cxl_nvdimm(struct device *dev)
+-{
+-	return dev->type == &cxl_nvdimm_type;
+-}
+-EXPORT_SYMBOL_GPL(is_cxl_nvdimm);
+-
+-struct cxl_nvdimm *to_cxl_nvdimm(struct device *dev)
+-{
+-	if (dev_WARN_ONCE(dev, !is_cxl_nvdimm(dev),
+-			  "not a cxl_nvdimm device\n"))
+-		return NULL;
+-	return container_of(dev, struct cxl_nvdimm, dev);
+-}
+-EXPORT_SYMBOL_GPL(to_cxl_nvdimm);
+-
+-static struct cxl_nvdimm *cxl_nvdimm_alloc(struct cxl_memdev *cxlmd)
+-{
+-	struct cxl_nvdimm *cxl_nvd;
+-	struct device *dev;
+-
+-	cxl_nvd = kzalloc(sizeof(*cxl_nvd), GFP_KERNEL);
+-	if (!cxl_nvd)
+-		return ERR_PTR(-ENOMEM);
+-
+-	dev = &cxl_nvd->dev;
+-	cxl_nvd->cxlmd = cxlmd;
+-	device_initialize(dev);
+-	device_set_pm_not_required(dev);
+-	dev->parent = &cxlmd->dev;
+-	dev->bus = &cxl_bus_type;
+-	dev->type = &cxl_nvdimm_type;
+-
+-	return cxl_nvd;
+-}
+-
+-int devm_cxl_add_nvdimm(struct device *host, struct cxl_memdev *cxlmd)
+-{
+-	struct cxl_nvdimm *cxl_nvd;
+-	struct device *dev;
+-	int rc;
+-
+-	cxl_nvd = cxl_nvdimm_alloc(cxlmd);
+-	if (IS_ERR(cxl_nvd))
+-		return PTR_ERR(cxl_nvd);
+-
+-	dev = &cxl_nvd->dev;
+-	rc = dev_set_name(dev, "pmem%d", cxlmd->id);
+-	if (rc)
+-		goto err;
+-
+-	rc = device_add(dev);
+-	if (rc)
+-		goto err;
+-
+-	dev_dbg(host, "%s: register %s\n", dev_name(dev->parent),
+-		dev_name(dev));
+-
+-	return devm_add_action_or_reset(host, unregister_dev, dev);
+-
+-err:
+-	put_device(dev);
+-	return rc;
+-}
+-EXPORT_SYMBOL_GPL(devm_cxl_add_nvdimm);
+-
+ /**
+  * cxl_probe_device_regs() - Detect CXL Device register blocks
+  * @dev: Host device of the @base mapping
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+new file mode 100644
+index 000000000000..49045daf8bd7
+--- /dev/null
++++ b/drivers/cxl/core/core.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/* Copyright(c) 2020 Intel Corporation. */
++
++#ifndef __CXL_CORE_H__
++#define __CXL_CORE_H__
++
++extern const struct device_type cxl_nvdimm_bridge_type;
++extern const struct device_type cxl_nvdimm_type;
++
++extern struct attribute_group cxl_base_attribute_group;
++
++static inline void unregister_cxl_dev(void *dev)
++{
++	device_unregister(dev);
++}
++
++#endif /* __CXL_CORE_H__ */
+diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
+new file mode 100644
+index 000000000000..bb3ef0cdd74d
+--- /dev/null
++++ b/drivers/cxl/core/pmem.c
+@@ -0,0 +1,204 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright(c) 2020 Intel Corporation. */
++
++#include <linux/device.h>
++#include <linux/slab.h>
++#include <cxl.h>
++#include <mem.h>
++
++#include "core.h"
++
++static void cxl_nvdimm_bridge_release(struct device *dev)
++{
++	struct cxl_nvdimm_bridge *cxl_nvb = to_cxl_nvdimm_bridge(dev);
++
++	kfree(cxl_nvb);
++}
++
++static const struct attribute_group *cxl_nvdimm_bridge_attribute_groups[] = {
++	&cxl_base_attribute_group,
++	NULL,
++};
++
++const struct device_type cxl_nvdimm_bridge_type = {
++	.name = "cxl_nvdimm_bridge",
++	.release = cxl_nvdimm_bridge_release,
++	.groups = cxl_nvdimm_bridge_attribute_groups,
++};
++
++struct cxl_nvdimm_bridge *to_cxl_nvdimm_bridge(struct device *dev)
++{
++	if (dev_WARN_ONCE(dev, dev->type != &cxl_nvdimm_bridge_type,
++			  "not a cxl_nvdimm_bridge device\n"))
++		return NULL;
++	return container_of(dev, struct cxl_nvdimm_bridge, dev);
++}
++EXPORT_SYMBOL_GPL(to_cxl_nvdimm_bridge);
++
++static struct cxl_nvdimm_bridge *
++cxl_nvdimm_bridge_alloc(struct cxl_port *port)
++{
++	struct cxl_nvdimm_bridge *cxl_nvb;
++	struct device *dev;
++
++	cxl_nvb = kzalloc(sizeof(*cxl_nvb), GFP_KERNEL);
++	if (!cxl_nvb)
++		return ERR_PTR(-ENOMEM);
++
++	dev = &cxl_nvb->dev;
++	cxl_nvb->port = port;
++	cxl_nvb->state = CXL_NVB_NEW;
++	device_initialize(dev);
++	device_set_pm_not_required(dev);
++	dev->parent = &port->dev;
++	dev->bus = &cxl_bus_type;
++	dev->type = &cxl_nvdimm_bridge_type;
++
++	return cxl_nvb;
++}
++
++static void unregister_nvb(void *_cxl_nvb)
++{
++	struct cxl_nvdimm_bridge *cxl_nvb = _cxl_nvb;
++	bool flush;
++
++	/*
++	 * If the bridge was ever activated then there might be in-flight state
++	 * work to flush. Once the state has been changed to 'dead' then no new
++	 * work can be queued by user-triggered bind.
++	 */
++	device_lock(&cxl_nvb->dev);
++	flush = cxl_nvb->state != CXL_NVB_NEW;
++	cxl_nvb->state = CXL_NVB_DEAD;
++	device_unlock(&cxl_nvb->dev);
++
++	/*
++	 * Even though the device core will trigger device_release_driver()
++	 * before the unregister, it does not know about the fact that
++	 * cxl_nvdimm_bridge_driver defers ->remove() work. So, do the driver
++	 * release not and flush it before tearing down the nvdimm device
++	 * hierarchy.
++	 */
++	device_release_driver(&cxl_nvb->dev);
++	if (flush)
++		flush_work(&cxl_nvb->state_work);
++	device_unregister(&cxl_nvb->dev);
++}
++
++struct cxl_nvdimm_bridge *devm_cxl_add_nvdimm_bridge(struct device *host,
++						     struct cxl_port *port)
++{
++	struct cxl_nvdimm_bridge *cxl_nvb;
++	struct device *dev;
++	int rc;
++
++	if (!IS_ENABLED(CONFIG_CXL_PMEM))
++		return ERR_PTR(-ENXIO);
++
++	cxl_nvb = cxl_nvdimm_bridge_alloc(port);
++	if (IS_ERR(cxl_nvb))
++		return cxl_nvb;
++
++	dev = &cxl_nvb->dev;
++	rc = dev_set_name(dev, "nvdimm-bridge");
++	if (rc)
++		goto err;
++
++	rc = device_add(dev);
++	if (rc)
++		goto err;
++
++	rc = devm_add_action_or_reset(host, unregister_nvb, cxl_nvb);
++	if (rc)
++		return ERR_PTR(rc);
++
++	return cxl_nvb;
++
++err:
++	put_device(dev);
++	return ERR_PTR(rc);
++}
++EXPORT_SYMBOL_GPL(devm_cxl_add_nvdimm_bridge);
++
++static void cxl_nvdimm_release(struct device *dev)
++{
++	struct cxl_nvdimm *cxl_nvd = to_cxl_nvdimm(dev);
++
++	kfree(cxl_nvd);
++}
++
++static const struct attribute_group *cxl_nvdimm_attribute_groups[] = {
++	&cxl_base_attribute_group,
++	NULL,
++};
++
++const struct device_type cxl_nvdimm_type = {
++	.name = "cxl_nvdimm",
++	.release = cxl_nvdimm_release,
++	.groups = cxl_nvdimm_attribute_groups,
++};
++
++bool is_cxl_nvdimm(struct device *dev)
++{
++	return dev->type == &cxl_nvdimm_type;
++}
++EXPORT_SYMBOL_GPL(is_cxl_nvdimm);
++
++struct cxl_nvdimm *to_cxl_nvdimm(struct device *dev)
++{
++	if (dev_WARN_ONCE(dev, !is_cxl_nvdimm(dev),
++			  "not a cxl_nvdimm device\n"))
++		return NULL;
++	return container_of(dev, struct cxl_nvdimm, dev);
++}
++EXPORT_SYMBOL_GPL(to_cxl_nvdimm);
++
++static struct cxl_nvdimm *cxl_nvdimm_alloc(struct cxl_memdev *cxlmd)
++{
++	struct cxl_nvdimm *cxl_nvd;
++	struct device *dev;
++
++	cxl_nvd = kzalloc(sizeof(*cxl_nvd), GFP_KERNEL);
++	if (!cxl_nvd)
++		return ERR_PTR(-ENOMEM);
++
++	dev = &cxl_nvd->dev;
++	cxl_nvd->cxlmd = cxlmd;
++	device_initialize(dev);
++	device_set_pm_not_required(dev);
++	dev->parent = &cxlmd->dev;
++	dev->bus = &cxl_bus_type;
++	dev->type = &cxl_nvdimm_type;
++
++	return cxl_nvd;
++}
++
++int devm_cxl_add_nvdimm(struct device *host, struct cxl_memdev *cxlmd)
++{
++	struct cxl_nvdimm *cxl_nvd;
++	struct device *dev;
++	int rc;
++
++	cxl_nvd = cxl_nvdimm_alloc(cxlmd);
++	if (IS_ERR(cxl_nvd))
++		return PTR_ERR(cxl_nvd);
++
++	dev = &cxl_nvd->dev;
++	rc = dev_set_name(dev, "pmem%d", cxlmd->id);
++	if (rc)
++		goto err;
++
++	rc = device_add(dev);
++	if (rc)
++		goto err;
++
++	dev_dbg(host, "%s: register %s\n", dev_name(dev->parent),
++		dev_name(dev));
++
++	return devm_add_action_or_reset(host, unregister_cxl_dev, dev);
++
++err:
++	put_device(dev);
++	return rc;
++}
++EXPORT_SYMBOL_GPL(devm_cxl_add_nvdimm);
+
