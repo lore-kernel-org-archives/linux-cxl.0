@@ -2,181 +2,117 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC1CC4338F
-	for <linux-cxl@archiver.kernel.org>; Mon,  2 Aug 2021 17:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DE4C4338F
+	for <linux-cxl@archiver.kernel.org>; Mon,  2 Aug 2021 17:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FD4961103
-	for <linux-cxl@archiver.kernel.org>; Mon,  2 Aug 2021 17:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F41561104
+	for <linux-cxl@archiver.kernel.org>; Mon,  2 Aug 2021 17:29:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229809AbhHBRKG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 2 Aug 2021 13:10:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229805AbhHBRKG (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 2 Aug 2021 13:10:06 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEA39C06175F
-        for <linux-cxl@vger.kernel.org>; Mon,  2 Aug 2021 10:09:56 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id c16so20369010plh.7
-        for <linux-cxl@vger.kernel.org>; Mon, 02 Aug 2021 10:09:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DvH792RmUFAkW/PYz6fMlYgVhPReNimJtryAQdkV08Y=;
-        b=GEG3L/axD+/N1558Fuzoo1TkNW0d8Twm5YgOntyHPW+JhNYUpG7s+LP/BMRtgrdxNX
-         Q9XrDhNYKQsRYZMoynCrO8q7ZzvhnJYC0pXg8Tn+MPgr5Vgh+nvlGPRGc07U+Cs8QeP/
-         XXwmpHCfAH04gnRuWhuyCdTMdtnGieaclpj6RjRl+0qimGncBTSsB40gOShCgEMc/Caw
-         2omVoLSgZhocUYgOXNZGITroihUhYT0SifC9MpyiQnYoXsN+GspQg1J6NssOBefWjZUk
-         cFSzeY++bDB2eEbFjdnyxvDQnwBuX54hEaUfO9nKn6CRbZWQE4BNXDVLrPXvy0RJEDKW
-         v2lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DvH792RmUFAkW/PYz6fMlYgVhPReNimJtryAQdkV08Y=;
-        b=kfgXCgFAzCO/H+ejCWWIVcn3Mc2bLMnM1OjdiMXsHNp1RFdiWqSy6uiKR4cS0XCBYz
-         CTEKAtBH5mzTxlhRWwjrZFfrZ+DZ+q/r7d0sGdTifm7X+6ISkLoaalYtB7ESi5lSglJM
-         j3Oz6U1Sn/4bfZ6mZPiTSe37+79O82BORCX4+p48e8cwimtFy4ejkTL0gSKnsBU354ES
-         YcFZIj4FviWDp4ak7F9Q3VCf5ck01AYryTFT2MnOI1dXvy8M5Po74nTsUNqWjXYQ/b3Y
-         jRT9xCkINIj2E1w+W8Mf/i+stgD2htrpiDRBBlWbwgkalwa0qosci0gTOTN1btPe8E2n
-         q3dw==
-X-Gm-Message-State: AOAM532ZuTa1COdWm12h5Y7a6GOb74y6MbMHG0nD6VSWUdXls2PSB5Pq
-        GYEd4seTSyNGfGaMDZsazjFOpTL4ToHjDsOPs0WzfA==
-X-Google-Smtp-Source: ABdhPJygnPCVkkKtw6U9dx0wmcwlwI5Qr2Zkl7sHGhfRIEIORsHIvuwm27FeHikRlIEkUS0glT1tgWz2BipOxz8w12Q=
-X-Received: by 2002:a62:3342:0:b029:3b7:6395:a93 with SMTP id
- z63-20020a6233420000b02903b763950a93mr10310901pfz.71.1627924196450; Mon, 02
- Aug 2021 10:09:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210716231548.174778-1-ben.widawsky@intel.com>
- <20210716231548.174778-4-ben.widawsky@intel.com> <20210802165656.000036f0@Huawei.com>
- <CAPcyv4jQ=jSOzcyt=0JCn_sSBQEo+23taG4O-QPU9xwTjUKw5w@mail.gmail.com>
-In-Reply-To: <CAPcyv4jQ=jSOzcyt=0JCn_sSBQEo+23taG4O-QPU9xwTjUKw5w@mail.gmail.com>
+        id S229622AbhHBR3q (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 2 Aug 2021 13:29:46 -0400
+Received: from mga06.intel.com ([134.134.136.31]:55738 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229729AbhHBR3q (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 2 Aug 2021 13:29:46 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10064"; a="274563298"
+X-IronPort-AV: E=Sophos;i="5.84,289,1620716400"; 
+   d="scan'208";a="274563298"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2021 10:29:33 -0700
+X-IronPort-AV: E=Sophos;i="5.84,289,1620716400"; 
+   d="scan'208";a="478938411"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2021 10:29:33 -0700
+Subject: [PATCH v5 0/6] CXL core reorganization
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 2 Aug 2021 10:09:45 -0700
-Message-ID: <CAPcyv4iWmZtcGPDNsFebL=kZNQ+GvSEAqfR77gM9Z5bojTEqDQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] cxl/pci: Retain map information in cxl_mem_probe
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
-        Ira Weiny <ira.weiny@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+To:     linux-cxl@vger.kernel.org
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        kernel test robot <lkp@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Jonathan.Cameron@huawei.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com
+Date:   Mon, 02 Aug 2021 10:29:33 -0700
+Message-ID: <162792537312.368511.15862521152871631343.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Aug 2, 2021 at 9:10 AM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Mon, Aug 2, 2021 at 8:57 AM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > On Fri, 16 Jul 2021 16:15:48 -0700
-> > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> >
-> > > In order for a memdev to participate in cxl_core's port APIs, the
-> > > physical address of the memdev's component registers is needed. This is
-> > > accomplished by allocating the array of maps in probe so they can be
-> > > used after the memdev is created.
-> > >
-> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> >
-> > Hmm. I don't entirely like the the passing of an array of
-> > unknown size into cxl_mem_setup_regs.  It is perhaps paranoid
-> > but I'd separately pass in the size and error out should we
-> > overflow with a suitable message to highlight the bug.
->
-> Agree.
+Changes since v4 [1]:
+- Fix ARCH=um compile errors reported by 0day caused by header
+  filename collisions with "mem.h", moved to "cxlmem.h"
 
-Here's the incremental diff I came up with:
+- Improve kdoc note for @fops attribute of 'struct
+  cdevm_file_operations' (Jonathan)
 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index c370ab2e48bc..ff72286142e7 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -1086,7 +1086,8 @@ static void cxl_decode_register_block(u32
-reg_lo, u32 reg_hi,
-  * regions. The purpose of this function is to enumerate and map those
-  * registers.
-  */
--static int cxl_mem_setup_regs(struct cxl_mem *cxlm, struct
-cxl_register_map maps[])
-+static int cxl_mem_setup_regs(struct cxl_mem *cxlm,
-+                             struct cxl_register_maps *maps)
- {
-        struct pci_dev *pdev = cxlm->pdev;
-        struct device *dev = &pdev->dev;
-@@ -1135,7 +1136,9 @@ static int cxl_mem_setup_regs(struct cxl_mem
-*cxlm, struct cxl_register_map maps
-                if (!base)
-                        return -ENOMEM;
+- Include core.h in memdev.c to fix "no prior declaration" warnings
+  (kbuild robot)
 
--               map = &maps[n_maps];
-+               if (n_maps > ARRAY_SIZE(maps->map))
-+                       return -ENXIO;
-+               map = &maps->map[n_maps++];
-                map->barno = bar;
-                map->block_offset = offset;
-                map->reg_type = reg_type;
-@@ -1147,14 +1150,12 @@ static int cxl_mem_setup_regs(struct cxl_mem
-*cxlm, struct cxl_register_map maps
+- Collect reviewed-by's from Jonathan
 
-                if (ret)
-                        return ret;
--
--               n_maps++;
-        }
+[1]: https://lore.kernel.org/r/162774927110.4094313.9743731504096769799.stgit@dwillia2-desk3.amr.corp.intel.com
 
-        pci_release_mem_regions(pdev);
+---
 
-        for (i = 0; i < n_maps; i++) {
--               ret = cxl_map_regs(cxlm, &maps[i]);
-+               ret = cxl_map_regs(cxlm, &maps->map[i]);
-                if (ret)
-                        break;
-        }
-@@ -1370,7 +1371,7 @@ static int cxl_mem_identify(struct cxl_mem *cxlm)
+Original Cover from Ben:
 
- static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
--       struct cxl_register_map maps[CXL_REGLOC_RBI_TYPES];
-+       struct cxl_register_maps maps;
-        struct cxl_memdev *cxlmd;
-        struct cxl_mem *cxlm;
-        int rc;
-@@ -1383,7 +1384,7 @@ static int cxl_mem_probe(struct pci_dev *pdev,
-const struct pci_device_id *id)
-        if (IS_ERR(cxlm))
-                return PTR_ERR(cxlm);
+The main motivation of the patch series is to establish the cxl_core driver in
+its own directory and modularize it. Specifically, the patch series aims to
+achieve three things:
+1. Move existing core functionality to a new directory.
+2. Split existing core functionality into multiple files.
+3. Migrate memdev functionality into core.
 
--       rc = cxl_mem_setup_regs(cxlm, maps);
-+       rc = cxl_mem_setup_regs(cxlm, &maps);
-        if (rc)
-                return rc;
+#1 is trivially accomplished with git mv. The file itself is renamed back to
+bus.c since the goal is to break up core functionality into multiple files, and
+so the name core.c doesn't make sense in that context.
 
-diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
-index 8c1a58813816..5b7828003b76 100644
---- a/drivers/cxl/pci.h
-+++ b/drivers/cxl/pci.h
-@@ -2,6 +2,7 @@
- /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
- #ifndef __CXL_PCI_H__
- #define __CXL_PCI_H__
-+#include "cxlmem.h"
+#2 is also trivially accomplished via cut/paste.
 
- #define CXL_MEMORY_PROGIF      0x10
+#3 is slightly invasive in that it has certain functional changes to improve the
+existing interfaces and make them more generic. The rest of the change is
+cut/paste. This is also the only part of the series which has runtime functional
+change in that some interfaces are removed from cxl_pci, moved into cxl_core,
+and exported for other drivers to use.
 
-@@ -29,4 +30,8 @@
+---
 
- #define CXL_REGLOC_ADDR_MASK GENMASK(31, 16)
+Ben Widawsky (3):
+      cxl: Move cxl_core to new directory
+      cxl/core: Improve CXL core kernel docs
+      cxl/core: Move memdev management to core
 
-+struct cxl_register_maps {
-+       struct cxl_register_map map[CXL_REGLOC_RBI_TYPES];
-+};
-+
- #endif /* __CXL_PCI_H__ */
+Dan Williams (3):
+      cxl/core: Move pmem functionality
+      cxl/core: Move register mapping infrastructure
+      cxl/pci: Introduce cdevm_file_operations
+
+
+ Documentation/driver-api/cxl/memory-devices.rst |    8 
+ drivers/cxl/Makefile                            |    4 
+ drivers/cxl/core/Makefile                       |    8 
+ drivers/cxl/core/bus.c                          |  464 +----------------------
+ drivers/cxl/core/core.h                         |   20 +
+ drivers/cxl/core/memdev.c                       |  246 ++++++++++++
+ drivers/cxl/core/pmem.c                         |  204 ++++++++++
+ drivers/cxl/core/regs.c                         |  235 ++++++++++++
+ drivers/cxl/cxlmem.h                            |   26 +
+ drivers/cxl/pci.c                               |  259 +------------
+ drivers/cxl/pmem.c                              |    2 
+ 11 files changed, 795 insertions(+), 681 deletions(-)
+ create mode 100644 drivers/cxl/core/Makefile
+ rename drivers/cxl/{core.c => core/bus.c} (58%)
+ create mode 100644 drivers/cxl/core/core.h
+ create mode 100644 drivers/cxl/core/memdev.c
+ create mode 100644 drivers/cxl/core/pmem.c
+ create mode 100644 drivers/cxl/core/regs.c
+ rename drivers/cxl/{mem.h => cxlmem.h} (76%)
+
+base-commit: ff1176468d368232b684f75e82563369208bc371
