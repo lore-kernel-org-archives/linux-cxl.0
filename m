@@ -2,41 +2,44 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DE4C4338F
-	for <linux-cxl@archiver.kernel.org>; Mon,  2 Aug 2021 17:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DBAC4338F
+	for <linux-cxl@archiver.kernel.org>; Mon,  2 Aug 2021 17:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F41561104
-	for <linux-cxl@archiver.kernel.org>; Mon,  2 Aug 2021 17:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C8161102
+	for <linux-cxl@archiver.kernel.org>; Mon,  2 Aug 2021 17:29:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229622AbhHBR3q (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 2 Aug 2021 13:29:46 -0400
-Received: from mga06.intel.com ([134.134.136.31]:55738 "EHLO mga06.intel.com"
+        id S229780AbhHBR3t (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 2 Aug 2021 13:29:49 -0400
+Received: from mga14.intel.com ([192.55.52.115]:29019 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229729AbhHBR3q (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 2 Aug 2021 13:29:46 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10064"; a="274563298"
+        id S229607AbhHBR3t (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 2 Aug 2021 13:29:49 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10064"; a="213229420"
 X-IronPort-AV: E=Sophos;i="5.84,289,1620716400"; 
-   d="scan'208";a="274563298"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2021 10:29:33 -0700
+   d="scan'208";a="213229420"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2021 10:29:39 -0700
 X-IronPort-AV: E=Sophos;i="5.84,289,1620716400"; 
-   d="scan'208";a="478938411"
+   d="scan'208";a="418736736"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2021 10:29:33 -0700
-Subject: [PATCH v5 0/6] CXL core reorganization
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2021 10:29:38 -0700
+Subject: [PATCH v5 1/6] cxl: Move cxl_core to new directory
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        kernel test robot <lkp@intel.com>,
+Cc:     kernel test robot <lkp@intel.com>,
         Ben Widawsky <ben.widawsky@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Jonathan.Cameron@huawei.com, vishal.l.verma@intel.com,
         alison.schofield@intel.com
-Date:   Mon, 02 Aug 2021 10:29:33 -0700
-Message-ID: <162792537312.368511.15862521152871631343.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Mon, 02 Aug 2021 10:29:38 -0700
+Message-ID: <162792537866.368511.8915631504621088321.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <162792537312.368511.15862521152871631343.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <162792537312.368511.15862521152871631343.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -45,74 +48,122 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Changes since v4 [1]:
-- Fix ARCH=um compile errors reported by 0day caused by header
-  filename collisions with "mem.h", moved to "cxlmem.h"
+From: Ben Widawsky <ben.widawsky@intel.com>
 
-- Improve kdoc note for @fops attribute of 'struct
-  cdevm_file_operations' (Jonathan)
+CXL core is growing, and it's already arguably unmanageable. To support
+future growth, move core functionality to a new directory and rename the
+file to represent just bus support. Future work will remove non-bus
+functionality.
 
-- Include core.h in memdev.c to fix "no prior declaration" warnings
-  (kbuild robot)
+Note that mem.h is renamed to cxlmem.h to avoid a namespace collision
+with the global ARCH=um mem.h header.
 
-- Collect reviewed-by's from Jonathan
-
-[1]: https://lore.kernel.org/r/162774927110.4094313.9743731504096769799.stgit@dwillia2-desk3.amr.corp.intel.com
-
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
-
-Original Cover from Ben:
-
-The main motivation of the patch series is to establish the cxl_core driver in
-its own directory and modularize it. Specifically, the patch series aims to
-achieve three things:
-1. Move existing core functionality to a new directory.
-2. Split existing core functionality into multiple files.
-3. Migrate memdev functionality into core.
-
-#1 is trivially accomplished with git mv. The file itself is renamed back to
-bus.c since the goal is to break up core functionality into multiple files, and
-so the name core.c doesn't make sense in that context.
-
-#2 is also trivially accomplished via cut/paste.
-
-#3 is slightly invasive in that it has certain functional changes to improve the
-existing interfaces and make them more generic. The rest of the change is
-cut/paste. This is also the only part of the series which has runtime functional
-change in that some interfaces are removed from cxl_pci, moved into cxl_core,
-and exported for other drivers to use.
-
----
-
-Ben Widawsky (3):
-      cxl: Move cxl_core to new directory
-      cxl/core: Improve CXL core kernel docs
-      cxl/core: Move memdev management to core
-
-Dan Williams (3):
-      cxl/core: Move pmem functionality
-      cxl/core: Move register mapping infrastructure
-      cxl/pci: Introduce cdevm_file_operations
-
-
- Documentation/driver-api/cxl/memory-devices.rst |    8 
- drivers/cxl/Makefile                            |    4 
- drivers/cxl/core/Makefile                       |    8 
- drivers/cxl/core/bus.c                          |  464 +----------------------
- drivers/cxl/core/core.h                         |   20 +
- drivers/cxl/core/memdev.c                       |  246 ++++++++++++
- drivers/cxl/core/pmem.c                         |  204 ++++++++++
- drivers/cxl/core/regs.c                         |  235 ++++++++++++
- drivers/cxl/cxlmem.h                            |   26 +
- drivers/cxl/pci.c                               |  259 +------------
- drivers/cxl/pmem.c                              |    2 
- 11 files changed, 795 insertions(+), 681 deletions(-)
+ Documentation/driver-api/cxl/memory-devices.rst |    2 +-
+ drivers/cxl/Makefile                            |    4 +---
+ drivers/cxl/core/Makefile                       |    5 +++++
+ drivers/cxl/core/bus.c                          |    4 ++--
+ drivers/cxl/cxlmem.h                            |    0 
+ drivers/cxl/pci.c                               |    2 +-
+ drivers/cxl/pmem.c                              |    2 +-
+ 7 files changed, 11 insertions(+), 8 deletions(-)
  create mode 100644 drivers/cxl/core/Makefile
- rename drivers/cxl/{core.c => core/bus.c} (58%)
- create mode 100644 drivers/cxl/core/core.h
- create mode 100644 drivers/cxl/core/memdev.c
- create mode 100644 drivers/cxl/core/pmem.c
- create mode 100644 drivers/cxl/core/regs.c
- rename drivers/cxl/{mem.h => cxlmem.h} (76%)
+ rename drivers/cxl/{core.c => core/bus.c} (99%)
+ rename drivers/cxl/{mem.h => cxlmem.h} (100%)
 
-base-commit: ff1176468d368232b684f75e82563369208bc371
+diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
+index 487ce4f41d77..a86e2c7c551a 100644
+--- a/Documentation/driver-api/cxl/memory-devices.rst
++++ b/Documentation/driver-api/cxl/memory-devices.rst
+@@ -36,7 +36,7 @@ CXL Core
+ .. kernel-doc:: drivers/cxl/cxl.h
+    :internal:
+ 
+-.. kernel-doc:: drivers/cxl/core.c
++.. kernel-doc:: drivers/cxl/core/bus.c
+    :doc: cxl core
+ 
+ External Interfaces
+diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+index 32954059b37b..d1aaabc940f3 100644
+--- a/drivers/cxl/Makefile
++++ b/drivers/cxl/Makefile
+@@ -1,11 +1,9 @@
+ # SPDX-License-Identifier: GPL-2.0
+-obj-$(CONFIG_CXL_BUS) += cxl_core.o
++obj-$(CONFIG_CXL_BUS) += core/
+ obj-$(CONFIG_CXL_MEM) += cxl_pci.o
+ obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+ obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
+ 
+-ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
+-cxl_core-y := core.o
+ cxl_pci-y := pci.o
+ cxl_acpi-y := acpi.o
+ cxl_pmem-y := pmem.o
+diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+new file mode 100644
+index 000000000000..ad137f96e5c8
+--- /dev/null
++++ b/drivers/cxl/core/Makefile
+@@ -0,0 +1,5 @@
++# SPDX-License-Identifier: GPL-2.0
++obj-$(CONFIG_CXL_BUS) += cxl_core.o
++
++ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL -I$(srctree)/drivers/cxl
++cxl_core-y := bus.o
+diff --git a/drivers/cxl/core.c b/drivers/cxl/core/bus.c
+similarity index 99%
+rename from drivers/cxl/core.c
+rename to drivers/cxl/core/bus.c
+index a2e4d54fc7bc..0815eec23944 100644
+--- a/drivers/cxl/core.c
++++ b/drivers/cxl/core/bus.c
+@@ -6,8 +6,8 @@
+ #include <linux/pci.h>
+ #include <linux/slab.h>
+ #include <linux/idr.h>
+-#include "cxl.h"
+-#include "mem.h"
++#include <cxlmem.h>
++#include <cxl.h>
+ 
+ /**
+  * DOC: cxl core
+diff --git a/drivers/cxl/mem.h b/drivers/cxl/cxlmem.h
+similarity index 100%
+rename from drivers/cxl/mem.h
+rename to drivers/cxl/cxlmem.h
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 4cf351a3cf99..a945c5fda292 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -12,9 +12,9 @@
+ #include <linux/pci.h>
+ #include <linux/io.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
++#include "cxlmem.h"
+ #include "pci.h"
+ #include "cxl.h"
+-#include "mem.h"
+ 
+ /**
+  * DOC: cxl pci
+diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+index 0088e41dd2f3..9652c3ee41e7 100644
+--- a/drivers/cxl/pmem.c
++++ b/drivers/cxl/pmem.c
+@@ -6,7 +6,7 @@
+ #include <linux/ndctl.h>
+ #include <linux/async.h>
+ #include <linux/slab.h>
+-#include "mem.h"
++#include "cxlmem.h"
+ #include "cxl.h"
+ 
+ /*
+
