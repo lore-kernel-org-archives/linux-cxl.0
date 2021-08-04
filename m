@@ -2,572 +2,164 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC059C4338F
-	for <linux-cxl@archiver.kernel.org>; Tue,  3 Aug 2021 14:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84252C4320A
+	for <linux-cxl@archiver.kernel.org>; Wed,  4 Aug 2021 16:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA3406103C
-	for <linux-cxl@archiver.kernel.org>; Tue,  3 Aug 2021 14:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A51861004
+	for <linux-cxl@archiver.kernel.org>; Wed,  4 Aug 2021 16:21:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236342AbhHCOZu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 3 Aug 2021 10:25:50 -0400
-Received: from mga14.intel.com ([192.55.52.115]:64137 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236335AbhHCOZt (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 3 Aug 2021 10:25:49 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10064"; a="213429348"
-X-IronPort-AV: E=Sophos;i="5.84,291,1620716400"; 
-   d="scan'208";a="213429348"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2021 07:25:38 -0700
-X-IronPort-AV: E=Sophos;i="5.84,291,1620716400"; 
-   d="scan'208";a="568684808"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2021 07:25:38 -0700
-Subject: [PATCH v6 4/6] cxl/core: Move register mapping infrastructure
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     kernel test robot <lkp@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
+        id S234064AbhHDQWF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 4 Aug 2021 12:22:05 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3577 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236889AbhHDQWF (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 4 Aug 2021 12:22:05 -0400
+Received: from fraeml736-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Gfxnr30Q0z6DJ3x;
+        Thu,  5 Aug 2021 00:21:36 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml736-chm.china.huawei.com (10.206.15.217) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Wed, 4 Aug 2021 18:21:50 +0200
+Received: from localhost.localdomain (10.123.41.22) by
+ lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Wed, 4 Aug 2021 17:21:49 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
+CC:     <keyrings@vger.kernel.org>, <dan.j.williams@intel.com>,
+        Chris Browy <cbrowy@avery-design.com>, <linuxarm@huawei.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Jeremy Kerr <jk@codeconstruct.com.au>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Date:   Tue, 03 Aug 2021 07:25:38 -0700
-Message-ID: <162800068975.665205.12895551621746585289.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <162792539446.368511.17792493927260221882.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <162792539446.368511.17792493927260221882.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+Subject: [RFC PATCH 0/4] PCI/CMA and SPDM library
+Date:   Thu, 5 Aug 2021 00:18:35 +0800
+Message-ID: <20210804161839.3492053-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.123.41.22]
+X-ClientProxiedBy: lhreml754-chm.china.huawei.com (10.201.108.204) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The register mapping infrastructure is large enough to move to its own
-compilation unit. This also cleans up an unnecessary include of <mem.h>
-core/bus.c.
+This is an RFC to start discussions about how we support the Component
+Measurement and Authentication (CMA) ECN (pcisig.com)
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
-Changes since v5:
+CMA provides an adaptation of the data objects and underlying protocol
+defined in the DMTF SPDM specification to be used to authenticate and
+conduct run-time measurements of the state of PCI devices (kind of like
+IMA for devices / firmware). This is done using a Data Object Exchange (DOE)
+protocol described in the ECN.
 
-- Fix missing include of io-64-nonatomic-lo-hi.h
+The CMA ECN is available from the PCI SIG and SPDM can be found at
+https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.1.pdf
 
- Documentation/driver-api/cxl/memory-devices.rst |    3 
- drivers/cxl/core/Makefile                       |    1 
- drivers/cxl/core/bus.c                          |  228 ----------------------
- drivers/cxl/core/regs.c                         |  236 +++++++++++++++++++++++
- 4 files changed, 240 insertions(+), 228 deletions(-)
- create mode 100644 drivers/cxl/core/regs.c
+CMA/SPDM is focused on establishing trust of the device by:
+1) Negotiate algorithms supported.
+2) Retrieve and check the certificate chain from the device against
+   a suitable signing certificate on the host.
+3) Issue a challenge to the device to verify it can sign with the private
+   key associated with the leaf certificate.
+4) (Request a measurement of device state)
+5) (Establish a secure channel for further measurements or other uses)
+6) (Mutual authentication)
 
-diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
-index e65c0ba82229..46847d8c70a0 100644
---- a/Documentation/driver-api/cxl/memory-devices.rst
-+++ b/Documentation/driver-api/cxl/memory-devices.rst
-@@ -42,6 +42,9 @@ CXL Core
- .. kernel-doc:: drivers/cxl/core/pmem.c
-    :internal:
- 
-+.. kernel-doc:: drivers/cxl/core/regs.c
-+   :internal:
-+
- External Interfaces
- ===================
- 
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index e037521fe02b..a3522d2fbf5b 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -4,3 +4,4 @@ obj-$(CONFIG_CXL_BUS) += cxl_core.o
- ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL -I$(srctree)/drivers/cxl
- cxl_core-y := bus.o
- cxl_core-y += pmem.o
-+cxl_core-y += regs.o
-diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-index 408654ad70db..c938d8590c9f 100644
---- a/drivers/cxl/core/bus.c
-+++ b/drivers/cxl/core/bus.c
-@@ -550,234 +550,6 @@ devm_cxl_add_decoder(struct device *host, struct cxl_port *port, int nr_targets,
- }
- EXPORT_SYMBOL_GPL(devm_cxl_add_decoder);
- 
--/**
-- * cxl_probe_component_regs() - Detect CXL Component register blocks
-- * @dev: Host device of the @base mapping
-- * @base: Mapping containing the HDM Decoder Capability Header
-- * @map: Map object describing the register block information found
-- *
-- * See CXL 2.0 8.2.4 Component Register Layout and Definition
-- * See CXL 2.0 8.2.5.5 CXL Device Register Interface
-- *
-- * Probe for component register information and return it in map object.
-- */
--void cxl_probe_component_regs(struct device *dev, void __iomem *base,
--			      struct cxl_component_reg_map *map)
--{
--	int cap, cap_count;
--	u64 cap_array;
--
--	*map = (struct cxl_component_reg_map) { 0 };
--
--	/*
--	 * CXL.cache and CXL.mem registers are at offset 0x1000 as defined in
--	 * CXL 2.0 8.2.4 Table 141.
--	 */
--	base += CXL_CM_OFFSET;
--
--	cap_array = readq(base + CXL_CM_CAP_HDR_OFFSET);
--
--	if (FIELD_GET(CXL_CM_CAP_HDR_ID_MASK, cap_array) != CM_CAP_HDR_CAP_ID) {
--		dev_err(dev,
--			"Couldn't locate the CXL.cache and CXL.mem capability array header./n");
--		return;
--	}
--
--	/* It's assumed that future versions will be backward compatible */
--	cap_count = FIELD_GET(CXL_CM_CAP_HDR_ARRAY_SIZE_MASK, cap_array);
--
--	for (cap = 1; cap <= cap_count; cap++) {
--		void __iomem *register_block;
--		u32 hdr;
--		int decoder_cnt;
--		u16 cap_id, offset;
--		u32 length;
--
--		hdr = readl(base + cap * 0x4);
--
--		cap_id = FIELD_GET(CXL_CM_CAP_HDR_ID_MASK, hdr);
--		offset = FIELD_GET(CXL_CM_CAP_PTR_MASK, hdr);
--		register_block = base + offset;
--
--		switch (cap_id) {
--		case CXL_CM_CAP_CAP_ID_HDM:
--			dev_dbg(dev, "found HDM decoder capability (0x%x)\n",
--				offset);
--
--			hdr = readl(register_block);
--
--			decoder_cnt = cxl_hdm_decoder_count(hdr);
--			length = 0x20 * decoder_cnt + 0x10;
--
--			map->hdm_decoder.valid = true;
--			map->hdm_decoder.offset = CXL_CM_OFFSET + offset;
--			map->hdm_decoder.size = length;
--			break;
--		default:
--			dev_dbg(dev, "Unknown CM cap ID: %d (0x%x)\n", cap_id,
--				offset);
--			break;
--		}
--	}
--}
--EXPORT_SYMBOL_GPL(cxl_probe_component_regs);
--
--/**
-- * cxl_probe_device_regs() - Detect CXL Device register blocks
-- * @dev: Host device of the @base mapping
-- * @base: Mapping of CXL 2.0 8.2.8 CXL Device Register Interface
-- * @map: Map object describing the register block information found
-- *
-- * Probe for device register information and return it in map object.
-- */
--void cxl_probe_device_regs(struct device *dev, void __iomem *base,
--			   struct cxl_device_reg_map *map)
--{
--	int cap, cap_count;
--	u64 cap_array;
--
--	*map = (struct cxl_device_reg_map){ 0 };
--
--	cap_array = readq(base + CXLDEV_CAP_ARRAY_OFFSET);
--	if (FIELD_GET(CXLDEV_CAP_ARRAY_ID_MASK, cap_array) !=
--	    CXLDEV_CAP_ARRAY_CAP_ID)
--		return;
--
--	cap_count = FIELD_GET(CXLDEV_CAP_ARRAY_COUNT_MASK, cap_array);
--
--	for (cap = 1; cap <= cap_count; cap++) {
--		u32 offset, length;
--		u16 cap_id;
--
--		cap_id = FIELD_GET(CXLDEV_CAP_HDR_CAP_ID_MASK,
--				   readl(base + cap * 0x10));
--		offset = readl(base + cap * 0x10 + 0x4);
--		length = readl(base + cap * 0x10 + 0x8);
--
--		switch (cap_id) {
--		case CXLDEV_CAP_CAP_ID_DEVICE_STATUS:
--			dev_dbg(dev, "found Status capability (0x%x)\n", offset);
--
--			map->status.valid = true;
--			map->status.offset = offset;
--			map->status.size = length;
--			break;
--		case CXLDEV_CAP_CAP_ID_PRIMARY_MAILBOX:
--			dev_dbg(dev, "found Mailbox capability (0x%x)\n", offset);
--			map->mbox.valid = true;
--			map->mbox.offset = offset;
--			map->mbox.size = length;
--			break;
--		case CXLDEV_CAP_CAP_ID_SECONDARY_MAILBOX:
--			dev_dbg(dev, "found Secondary Mailbox capability (0x%x)\n", offset);
--			break;
--		case CXLDEV_CAP_CAP_ID_MEMDEV:
--			dev_dbg(dev, "found Memory Device capability (0x%x)\n", offset);
--			map->memdev.valid = true;
--			map->memdev.offset = offset;
--			map->memdev.size = length;
--			break;
--		default:
--			if (cap_id >= 0x8000)
--				dev_dbg(dev, "Vendor cap ID: %#x offset: %#x\n", cap_id, offset);
--			else
--				dev_dbg(dev, "Unknown cap ID: %#x offset: %#x\n", cap_id, offset);
--			break;
--		}
--	}
--}
--EXPORT_SYMBOL_GPL(cxl_probe_device_regs);
--
--static void __iomem *devm_cxl_iomap_block(struct device *dev,
--					  resource_size_t addr,
--					  resource_size_t length)
--{
--	void __iomem *ret_val;
--	struct resource *res;
--
--	res = devm_request_mem_region(dev, addr, length, dev_name(dev));
--	if (!res) {
--		resource_size_t end = addr + length - 1;
--
--		dev_err(dev, "Failed to request region %pa-%pa\n", &addr, &end);
--		return NULL;
--	}
--
--	ret_val = devm_ioremap(dev, addr, length);
--	if (!ret_val)
--		dev_err(dev, "Failed to map region %pr\n", res);
--
--	return ret_val;
--}
--
--int cxl_map_component_regs(struct pci_dev *pdev,
--			   struct cxl_component_regs *regs,
--			   struct cxl_register_map *map)
--{
--	struct device *dev = &pdev->dev;
--	resource_size_t phys_addr;
--	resource_size_t length;
--
--	phys_addr = pci_resource_start(pdev, map->barno);
--	phys_addr += map->block_offset;
--
--	phys_addr += map->component_map.hdm_decoder.offset;
--	length = map->component_map.hdm_decoder.size;
--	regs->hdm_decoder = devm_cxl_iomap_block(dev, phys_addr, length);
--	if (!regs->hdm_decoder)
--		return -ENOMEM;
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(cxl_map_component_regs);
--
--int cxl_map_device_regs(struct pci_dev *pdev,
--			struct cxl_device_regs *regs,
--			struct cxl_register_map *map)
--{
--	struct device *dev = &pdev->dev;
--	resource_size_t phys_addr;
--
--	phys_addr = pci_resource_start(pdev, map->barno);
--	phys_addr += map->block_offset;
--
--	if (map->device_map.status.valid) {
--		resource_size_t addr;
--		resource_size_t length;
--
--		addr = phys_addr + map->device_map.status.offset;
--		length = map->device_map.status.size;
--		regs->status = devm_cxl_iomap_block(dev, addr, length);
--		if (!regs->status)
--			return -ENOMEM;
--	}
--
--	if (map->device_map.mbox.valid) {
--		resource_size_t addr;
--		resource_size_t length;
--
--		addr = phys_addr + map->device_map.mbox.offset;
--		length = map->device_map.mbox.size;
--		regs->mbox = devm_cxl_iomap_block(dev, addr, length);
--		if (!regs->mbox)
--			return -ENOMEM;
--	}
--
--	if (map->device_map.memdev.valid) {
--		resource_size_t addr;
--		resource_size_t length;
--
--		addr = phys_addr + map->device_map.memdev.offset;
--		length = map->device_map.memdev.size;
--		regs->memdev = devm_cxl_iomap_block(dev, addr, length);
--		if (!regs->memdev)
--			return -ENOMEM;
--	}
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(cxl_map_device_regs);
--
- /**
-  * __cxl_driver_register - register a driver for the cxl bus
-  * @cxl_drv: cxl driver structure to attach
-diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-new file mode 100644
-index 000000000000..8535a7b94f28
---- /dev/null
-+++ b/drivers/cxl/core/regs.c
-@@ -0,0 +1,236 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2020 Intel Corporation. */
-+
-+#include <linux/io-64-nonatomic-lo-hi.h>
-+#include <linux/device.h>
-+#include <linux/slab.h>
-+#include <linux/pci.h>
-+#include <cxlmem.h>
-+
-+/**
-+ * cxl_probe_component_regs() - Detect CXL Component register blocks
-+ * @dev: Host device of the @base mapping
-+ * @base: Mapping containing the HDM Decoder Capability Header
-+ * @map: Map object describing the register block information found
-+ *
-+ * See CXL 2.0 8.2.4 Component Register Layout and Definition
-+ * See CXL 2.0 8.2.5.5 CXL Device Register Interface
-+ *
-+ * Probe for component register information and return it in map object.
-+ */
-+void cxl_probe_component_regs(struct device *dev, void __iomem *base,
-+			      struct cxl_component_reg_map *map)
-+{
-+	int cap, cap_count;
-+	u64 cap_array;
-+
-+	*map = (struct cxl_component_reg_map) { 0 };
-+
-+	/*
-+	 * CXL.cache and CXL.mem registers are at offset 0x1000 as defined in
-+	 * CXL 2.0 8.2.4 Table 141.
-+	 */
-+	base += CXL_CM_OFFSET;
-+
-+	cap_array = readq(base + CXL_CM_CAP_HDR_OFFSET);
-+
-+	if (FIELD_GET(CXL_CM_CAP_HDR_ID_MASK, cap_array) != CM_CAP_HDR_CAP_ID) {
-+		dev_err(dev,
-+			"Couldn't locate the CXL.cache and CXL.mem capability array header./n");
-+		return;
-+	}
-+
-+	/* It's assumed that future versions will be backward compatible */
-+	cap_count = FIELD_GET(CXL_CM_CAP_HDR_ARRAY_SIZE_MASK, cap_array);
-+
-+	for (cap = 1; cap <= cap_count; cap++) {
-+		void __iomem *register_block;
-+		u32 hdr;
-+		int decoder_cnt;
-+		u16 cap_id, offset;
-+		u32 length;
-+
-+		hdr = readl(base + cap * 0x4);
-+
-+		cap_id = FIELD_GET(CXL_CM_CAP_HDR_ID_MASK, hdr);
-+		offset = FIELD_GET(CXL_CM_CAP_PTR_MASK, hdr);
-+		register_block = base + offset;
-+
-+		switch (cap_id) {
-+		case CXL_CM_CAP_CAP_ID_HDM:
-+			dev_dbg(dev, "found HDM decoder capability (0x%x)\n",
-+				offset);
-+
-+			hdr = readl(register_block);
-+
-+			decoder_cnt = cxl_hdm_decoder_count(hdr);
-+			length = 0x20 * decoder_cnt + 0x10;
-+
-+			map->hdm_decoder.valid = true;
-+			map->hdm_decoder.offset = CXL_CM_OFFSET + offset;
-+			map->hdm_decoder.size = length;
-+			break;
-+		default:
-+			dev_dbg(dev, "Unknown CM cap ID: %d (0x%x)\n", cap_id,
-+				offset);
-+			break;
-+		}
-+	}
-+}
-+EXPORT_SYMBOL_GPL(cxl_probe_component_regs);
-+
-+/**
-+ * cxl_probe_device_regs() - Detect CXL Device register blocks
-+ * @dev: Host device of the @base mapping
-+ * @base: Mapping of CXL 2.0 8.2.8 CXL Device Register Interface
-+ * @map: Map object describing the register block information found
-+ *
-+ * Probe for device register information and return it in map object.
-+ */
-+void cxl_probe_device_regs(struct device *dev, void __iomem *base,
-+			   struct cxl_device_reg_map *map)
-+{
-+	int cap, cap_count;
-+	u64 cap_array;
-+
-+	*map = (struct cxl_device_reg_map){ 0 };
-+
-+	cap_array = readq(base + CXLDEV_CAP_ARRAY_OFFSET);
-+	if (FIELD_GET(CXLDEV_CAP_ARRAY_ID_MASK, cap_array) !=
-+	    CXLDEV_CAP_ARRAY_CAP_ID)
-+		return;
-+
-+	cap_count = FIELD_GET(CXLDEV_CAP_ARRAY_COUNT_MASK, cap_array);
-+
-+	for (cap = 1; cap <= cap_count; cap++) {
-+		u32 offset, length;
-+		u16 cap_id;
-+
-+		cap_id = FIELD_GET(CXLDEV_CAP_HDR_CAP_ID_MASK,
-+				   readl(base + cap * 0x10));
-+		offset = readl(base + cap * 0x10 + 0x4);
-+		length = readl(base + cap * 0x10 + 0x8);
-+
-+		switch (cap_id) {
-+		case CXLDEV_CAP_CAP_ID_DEVICE_STATUS:
-+			dev_dbg(dev, "found Status capability (0x%x)\n", offset);
-+
-+			map->status.valid = true;
-+			map->status.offset = offset;
-+			map->status.size = length;
-+			break;
-+		case CXLDEV_CAP_CAP_ID_PRIMARY_MAILBOX:
-+			dev_dbg(dev, "found Mailbox capability (0x%x)\n", offset);
-+			map->mbox.valid = true;
-+			map->mbox.offset = offset;
-+			map->mbox.size = length;
-+			break;
-+		case CXLDEV_CAP_CAP_ID_SECONDARY_MAILBOX:
-+			dev_dbg(dev, "found Secondary Mailbox capability (0x%x)\n", offset);
-+			break;
-+		case CXLDEV_CAP_CAP_ID_MEMDEV:
-+			dev_dbg(dev, "found Memory Device capability (0x%x)\n", offset);
-+			map->memdev.valid = true;
-+			map->memdev.offset = offset;
-+			map->memdev.size = length;
-+			break;
-+		default:
-+			if (cap_id >= 0x8000)
-+				dev_dbg(dev, "Vendor cap ID: %#x offset: %#x\n", cap_id, offset);
-+			else
-+				dev_dbg(dev, "Unknown cap ID: %#x offset: %#x\n", cap_id, offset);
-+			break;
-+		}
-+	}
-+}
-+EXPORT_SYMBOL_GPL(cxl_probe_device_regs);
-+
-+static void __iomem *devm_cxl_iomap_block(struct device *dev,
-+					  resource_size_t addr,
-+					  resource_size_t length)
-+{
-+	void __iomem *ret_val;
-+	struct resource *res;
-+
-+	res = devm_request_mem_region(dev, addr, length, dev_name(dev));
-+	if (!res) {
-+		resource_size_t end = addr + length - 1;
-+
-+		dev_err(dev, "Failed to request region %pa-%pa\n", &addr, &end);
-+		return NULL;
-+	}
-+
-+	ret_val = devm_ioremap(dev, addr, length);
-+	if (!ret_val)
-+		dev_err(dev, "Failed to map region %pr\n", res);
-+
-+	return ret_val;
-+}
-+
-+int cxl_map_component_regs(struct pci_dev *pdev,
-+			   struct cxl_component_regs *regs,
-+			   struct cxl_register_map *map)
-+{
-+	struct device *dev = &pdev->dev;
-+	resource_size_t phys_addr;
-+	resource_size_t length;
-+
-+	phys_addr = pci_resource_start(pdev, map->barno);
-+	phys_addr += map->block_offset;
-+
-+	phys_addr += map->component_map.hdm_decoder.offset;
-+	length = map->component_map.hdm_decoder.size;
-+	regs->hdm_decoder = devm_cxl_iomap_block(dev, phys_addr, length);
-+	if (!regs->hdm_decoder)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(cxl_map_component_regs);
-+
-+int cxl_map_device_regs(struct pci_dev *pdev,
-+			struct cxl_device_regs *regs,
-+			struct cxl_register_map *map)
-+{
-+	struct device *dev = &pdev->dev;
-+	resource_size_t phys_addr;
-+
-+	phys_addr = pci_resource_start(pdev, map->barno);
-+	phys_addr += map->block_offset;
-+
-+	if (map->device_map.status.valid) {
-+		resource_size_t addr;
-+		resource_size_t length;
-+
-+		addr = phys_addr + map->device_map.status.offset;
-+		length = map->device_map.status.size;
-+		regs->status = devm_cxl_iomap_block(dev, addr, length);
-+		if (!regs->status)
-+			return -ENOMEM;
-+	}
-+
-+	if (map->device_map.mbox.valid) {
-+		resource_size_t addr;
-+		resource_size_t length;
-+
-+		addr = phys_addr + map->device_map.mbox.offset;
-+		length = map->device_map.mbox.size;
-+		regs->mbox = devm_cxl_iomap_block(dev, addr, length);
-+		if (!regs->mbox)
-+			return -ENOMEM;
-+	}
-+
-+	if (map->device_map.memdev.valid) {
-+		resource_size_t addr;
-+		resource_size_t length;
-+
-+		addr = phys_addr + map->device_map.memdev.offset;
-+		length = map->device_map.memdev.size;
-+		regs->memdev = devm_cxl_iomap_block(dev, addr, length);
-+		if (!regs->memdev)
-+			return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(cxl_map_device_regs);
+This RFC only does steps 1-3
+
+Testing of this patch set has been conducted against QEMU emulation of
+the device backed by openSPDM emulation of the SPDM protocol.
+
+https://lore.kernel.org/qemu-devel/1624665723-5169-1-git-send-email-cbrowy@avery-design.com/
+
+Open questions are called out in the individual patches but the big ones are
+probably:
+
+1) Certificate management.
+   Current code uses a _cma keyring created by the kernel, into which a
+   suitable root certificate can be inserted from userspace.
+
+   A=$(keyctl search %:_cma  keyring _cma)
+   evmctl import ecdsaca.cert.der $A
+
+   Is this an acceptable way to load the root certificates for this purpose?
+
+   The root of the device provided certificate chain is then checked against
+   certificates on this keychain, but is itself (with the other certificates
+   in the chain) loaded into an SPDM instance specific keychain.  Currently
+   there is no safe cleanup of this which will need to be fixed.
+
+   Using the keychain mechanism provides a very convenient way to manage these
+   certificates and to allow userspace to read them for debug purpose etc, but
+   is this the right use model?
+
+   Finally the leaf certificate of this chain is used to check signatures of
+   the rest of the communications with the device.
+
+2) ASNL1 encoder for ECDSA signature
+   It seems from the openSPDM implementation that for these signatures,
+   the format is a simple pair of raw values.  The kernel implementation of
+   ECDSA signature verification assumes ASN1 encoding as seems to be used
+   in x509 certificates.  Currently I work around that by encoding the
+   signatures so that the ECDSA code can un-encode them again and use them.
+   This seems slightly silly, but it is minimum impact on current code.
+   Other suggestions welcome.
+
+3) Interface to present to drivers. Currently I'm providing just one exposed
+   function that wraps up all the exhanges until a challenge authentication
+   response from the device. This is done using one possible sequence.
+   I don't think it makes sense to expose the low level components due to the
+   underlying spdm_state updates and there only being a fixed set of valid
+   orderings.
+
+Future patches will raise questions around management of the measurements, but
+I'll leave those until I have some sort of implementation to shoot at.
+The 'on probe' use in the CXL driver is only one likely time when authentication
+would be needed.
+
+Note I'm new to a bunch of the areas of the kernel this touches, so have
+probably done things that are totally wrong.
+
+CC list is best effort to identify those who 'might' care.  Please share
+with anyone I've missed.
+
+Thanks,
+
+Jonathan
+
+
+Jonathan Cameron (4):
+  lib/asn1_encoder: Add a function to encode many byte integer values.
+  spdm: Introduce a library for DMTF SPDM
+  PCI/CMA: Initial support for Component Measurement and Authentication
+    ECN
+  cxl/pci: Add really basic CMA authentication support.
+
+ drivers/cxl/Kconfig          |    1 +
+ drivers/cxl/mem.h            |    2 +
+ drivers/cxl/pci.c            |   13 +-
+ drivers/pci/Kconfig          |    9 +
+ drivers/pci/Makefile         |    1 +
+ drivers/pci/doe.c            |    2 -
+ include/linux/asn1_encoder.h |    3 +
+ include/linux/pci-doe.h      |    2 +
+ lib/Kconfig                  |    3 +
+ lib/Makefile                 |    2 +
+ lib/asn1_encoder.c           |   54 ++
+ lib/spdm.c                   | 1196 ++++++++++++++++++++++++++++++++++
+ 12 files changed, 1285 insertions(+), 3 deletions(-)
+ create mode 100644 lib/spdm.c
+
+-- 
+2.19.1
 
