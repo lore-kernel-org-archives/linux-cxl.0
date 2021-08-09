@@ -2,182 +2,177 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC4AC432BE
-	for <linux-cxl@archiver.kernel.org>; Thu,  5 Aug 2021 16:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2DEC4338F
+	for <linux-cxl@archiver.kernel.org>; Mon,  9 Aug 2021 22:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE1AA6104F
-	for <linux-cxl@archiver.kernel.org>; Thu,  5 Aug 2021 16:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6E7560EB5
+	for <linux-cxl@archiver.kernel.org>; Mon,  9 Aug 2021 22:27:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233882AbhHEQoH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 5 Aug 2021 12:44:07 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3598 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233551AbhHEQoG (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 5 Aug 2021 12:44:06 -0400
-Received: from fraeml742-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4GgZDd526gz6F8ML;
-        Fri,  6 Aug 2021 00:43:29 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml742-chm.china.huawei.com (10.206.15.223) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Thu, 5 Aug 2021 18:43:48 +0200
-Received: from localhost (10.227.96.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Thu, 5 Aug 2021
- 17:43:47 +0100
-Date:   Thu, 5 Aug 2021 17:43:46 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
-CC:     <keyrings@vger.kernel.org>, <dan.j.williams@intel.com>,
-        Chris Browy <cbrowy@avery-design.com>, <linuxarm@huawei.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Jeremy Kerr <jk@codeconstruct.com.au>
-Subject: Re: [RFC PATCH 0/4] PCI/CMA and SPDM library
-Message-ID: <20210805174346.000047f1@huawei.com>
-In-Reply-To: <20210804161839.3492053-1-Jonathan.Cameron@huawei.com>
-References: <20210804161839.3492053-1-Jonathan.Cameron@huawei.com>
-Organization: Huawei tech. R&D (UK)  Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S234054AbhHIW2J (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 9 Aug 2021 18:28:09 -0400
+Received: from mga17.intel.com ([192.55.52.151]:52952 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233660AbhHIW2J (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 9 Aug 2021 18:28:09 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10070"; a="195062384"
+X-IronPort-AV: E=Sophos;i="5.84,308,1620716400"; 
+   d="scan'208";a="195062384"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2021 15:27:47 -0700
+X-IronPort-AV: E=Sophos;i="5.84,308,1620716400"; 
+   d="scan'208";a="421627000"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2021 15:27:47 -0700
+Subject: [PATCH 00/23] cxl_test: Enable CXL Topology and UAPI regression
+ tests
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        nvdimm@lists.linux.dev, Jonathan.Cameron@huawei.com,
+        ben.widawsky@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com, ira.weiny@intel.com
+Date:   Mon, 09 Aug 2021 15:27:47 -0700
+Message-ID: <162854806653.1980150.3354618413963083778.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.227.96.57]
-X-ClientProxiedBy: lhreml741-chm.china.huawei.com (10.201.108.191) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 5 Aug 2021 00:18:35 +0800
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+As mentioned in patch 20 in this series the response of upstream QEMU
+community to CXL device emulation has been underwhelming to date. Even
+if that picked up it still results in a situation where new driver
+features and new test capabilities for those features are split across
+multiple repositories.
 
-> This is an RFC to start discussions about how we support the Component
-> Measurement and Authentication (CMA) ECN (pcisig.com)
-> 
-> CMA provides an adaptation of the data objects and underlying protocol
-> defined in the DMTF SPDM specification to be used to authenticate and
-> conduct run-time measurements of the state of PCI devices (kind of like
-> IMA for devices / firmware). This is done using a Data Object Exchange (DOE)
-> protocol described in the ECN.
-> 
-> The CMA ECN is available from the PCI SIG and SPDM can be found at
-> https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.1.pdf
-> 
-> CMA/SPDM is focused on establishing trust of the device by:
-> 1) Negotiate algorithms supported.
-> 2) Retrieve and check the certificate chain from the device against
->    a suitable signing certificate on the host.
-> 3) Issue a challenge to the device to verify it can sign with the private
->    key associated with the leaf certificate.
-> 4) (Request a measurement of device state)
-> 5) (Establish a secure channel for further measurements or other uses)
-> 6) (Mutual authentication)
-> 
-> This RFC only does steps 1-3
-> 
-> Testing of this patch set has been conducted against QEMU emulation of
-> the device backed by openSPDM emulation of the SPDM protocol.
+The "nfit_test" approach of mocking up platform resources via an
+external test module continues to yield positive results catching
+regressions early and often. Repeat that success with a "cxl_test"
+module to inject custom crafted topologies and command responses into
+the CXL subsystem's sysfs and ioctl UAPIs.
 
-Note testing also works with libspdm and libspdm-emu from
-https://github.com/DMTF/spdm-emu with no modifications.
+The first target for cxl_test to verify is the integration of CXL with
+LIBNVDIMM and the new support for the CXL namespace label + region-label
+format. The first 11 patches introduce support for the new label format.
 
-The openSPDM modifications Chris and team made were all associated with the host
-end and are not needed for this code (the QEMU part is still needed to provide
-the DOE emulation and forward the traffic to spdm_responder_emu)
+The next 9 patches rework the CXL PCI driver and to move more common
+infrastructure into the core for the unit test environment to reuse. The
+largest change here is disconnecting the mailbox command processing
+infrastructure from the PCI specific transport. The unit test
+environment replaces the PCI transport with a custom backend with mocked
+responses to command requests.
 
-I should also have mentioned this series is on top of the recently posted
-DOE series rebased onto the linux-cxl next git tree.  I'm not really expecting
-anyone to test it at this stage, but if desired I can push a full tree out
-somewhere with this in place.
+Patch 20 introduces just enough mocked functionality for the cxl_acpi
+driver to load against cxl_test resources. Patch 21 fixes the first bug
+discovered by this framework, namely that HDM decoder target list maps
+were not being filled out.
 
-Jonathan
+Finally patches 22 and 23 introduce a cxl_test representation of memory
+expander devices. In this initial implementation these memory expander
+targets implement just enough command support to pass the basic driver
+init sequence and enable label command passthrough to LIBNVDIMM.
 
-> 
-> https://lore.kernel.org/qemu-devel/1624665723-5169-1-git-send-email-cbrowy@avery-design.com/
-> 
-> Open questions are called out in the individual patches but the big ones are
-> probably:
-> 
-> 1) Certificate management.
->    Current code uses a _cma keyring created by the kernel, into which a
->    suitable root certificate can be inserted from userspace.
-> 
->    A=$(keyctl search %:_cma  keyring _cma)
->    evmctl import ecdsaca.cert.der $A
-> 
->    Is this an acceptable way to load the root certificates for this purpose?
-> 
->    The root of the device provided certificate chain is then checked against
->    certificates on this keychain, but is itself (with the other certificates
->    in the chain) loaded into an SPDM instance specific keychain.  Currently
->    there is no safe cleanup of this which will need to be fixed.
-> 
->    Using the keychain mechanism provides a very convenient way to manage these
->    certificates and to allow userspace to read them for debug purpose etc, but
->    is this the right use model?
-> 
->    Finally the leaf certificate of this chain is used to check signatures of
->    the rest of the communications with the device.
-> 
-> 2) ASNL1 encoder for ECDSA signature
->    It seems from the openSPDM implementation that for these signatures,
->    the format is a simple pair of raw values.  The kernel implementation of
->    ECDSA signature verification assumes ASN1 encoding as seems to be used
->    in x509 certificates.  Currently I work around that by encoding the
->    signatures so that the ECDSA code can un-encode them again and use them.
->    This seems slightly silly, but it is minimum impact on current code.
->    Other suggestions welcome.
-> 
-> 3) Interface to present to drivers. Currently I'm providing just one exposed
->    function that wraps up all the exhanges until a challenge authentication
->    response from the device. This is done using one possible sequence.
->    I don't think it makes sense to expose the low level components due to the
->    underlying spdm_state updates and there only being a fixed set of valid
->    orderings.
-> 
-> Future patches will raise questions around management of the measurements, but
-> I'll leave those until I have some sort of implementation to shoot at.
-> The 'on probe' use in the CXL driver is only one likely time when authentication
-> would be needed.
-> 
-> Note I'm new to a bunch of the areas of the kernel this touches, so have
-> probably done things that are totally wrong.
-> 
-> CC list is best effort to identify those who 'might' care.  Please share
-> with anyone I've missed.
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-> 
-> Jonathan Cameron (4):
->   lib/asn1_encoder: Add a function to encode many byte integer values.
->   spdm: Introduce a library for DMTF SPDM
->   PCI/CMA: Initial support for Component Measurement and Authentication
->     ECN
->   cxl/pci: Add really basic CMA authentication support.
-> 
->  drivers/cxl/Kconfig          |    1 +
->  drivers/cxl/mem.h            |    2 +
->  drivers/cxl/pci.c            |   13 +-
->  drivers/pci/Kconfig          |    9 +
->  drivers/pci/Makefile         |    1 +
->  drivers/pci/doe.c            |    2 -
->  include/linux/asn1_encoder.h |    3 +
->  include/linux/pci-doe.h      |    2 +
->  lib/Kconfig                  |    3 +
->  lib/Makefile                 |    2 +
->  lib/asn1_encoder.c           |   54 ++
->  lib/spdm.c                   | 1196 ++++++++++++++++++++++++++++++++++
->  12 files changed, 1285 insertions(+), 3 deletions(-)
->  create mode 100644 lib/spdm.c
-> 
+The topology of cxl_test includes:
+- (4) platform fixed memory windows. One each of a x1-volatile,
+  x4-volatile, x1-persistent, and x4-persistent.
+- (4) Host bridges each with (2) root ports
+- (8) CXL memory expanders, one for each root port
+- Each memory expander device supports the GET_SUPPORTED_LOGS, GET_LOG,
+  IDENTIFY, GET_LSA, and SET_LSA commands.
 
+Going forward the expectation is that where possible new UAPI visible
+subsystem functionality comes with cxl_test emulation of the same.
+
+The build process for cxl_test is:
+
+    make M=tools/testing/cxl
+    make M=tools/testing/cxl modules_install
+
+The implementation methodology of the test module is the same as
+nfit_test where the bulk of the emulation comes from replacing symbols
+that cxl_acpi and the cxl_core import with mocked implementation of
+those symbols. See the "--wrap=" lines in tools/testing/cxl/Kbuild. Some
+symbols need to be replaced, but are local to the modules like
+match_add_root_ports(). In those cases the local symbol is marked __weak
+with a strong implementation coming from tools/testing/cxl/. The goal
+being to be minimally invasive to production code paths.
+
+---
+
+Dan Williams (23):
+      libnvdimm/labels: Introduce getters for namespace label fields
+      libnvdimm/labels: Add isetcookie validation helper
+      libnvdimm/labels: Introduce label setter helpers
+      libnvdimm/labels: Add a checksum calculation helper
+      libnvdimm/labels: Add blk isetcookie set / validation helpers
+      libnvdimm/labels: Add blk special cases for nlabel and position helpers
+      libnvdimm/labels: Add type-guid helpers
+      libnvdimm/labels: Add claim class helpers
+      libnvdimm/labels: Add address-abstraction uuid definitions
+      libnvdimm/labels: Add uuid helpers
+      libnvdimm/labels: Introduce CXL labels
+      cxl/pci: Make 'struct cxl_mem' device type generic
+      cxl/mbox: Introduce the mbox_send operation
+      cxl/mbox: Move mailbox and other non-PCI specific infrastructure to the core
+      cxl/pci: Use module_pci_driver
+      cxl/mbox: Convert 'enabled_cmds' to DECLARE_BITMAP
+      cxl/mbox: Add exclusive kernel command support
+      cxl/pmem: Translate NVDIMM label commands to CXL label commands
+      cxl/pmem: Add support for multiple nvdimm-bridge objects
+      tools/testing/cxl: Introduce a mocked-up CXL port hierarchy
+      cxl/bus: Populate the target list at decoder create
+      cxl/mbox: Move command definitions to common location
+      tools/testing/cxl: Introduce a mock memory device + driver
+
+
+ Documentation/driver-api/cxl/memory-devices.rst |    3 
+ drivers/cxl/acpi.c                              |   65 +
+ drivers/cxl/core/Makefile                       |    1 
+ drivers/cxl/core/bus.c                          |   69 +-
+ drivers/cxl/core/core.h                         |    8 
+ drivers/cxl/core/mbox.c                         |  796 +++++++++++++++++
+ drivers/cxl/core/memdev.c                       |   84 ++
+ drivers/cxl/core/pmem.c                         |   32 +
+ drivers/cxl/cxl.h                               |   35 -
+ drivers/cxl/cxlmem.h                            |  186 ++++
+ drivers/cxl/pci.c                               | 1053 +----------------------
+ drivers/cxl/pmem.c                              |  162 +++-
+ drivers/nvdimm/btt.c                            |   11 
+ drivers/nvdimm/btt.h                            |    4 
+ drivers/nvdimm/btt_devs.c                       |   12 
+ drivers/nvdimm/core.c                           |   40 -
+ drivers/nvdimm/label.c                          |  354 +++++---
+ drivers/nvdimm/label.h                          |   96 +-
+ drivers/nvdimm/namespace_devs.c                 |  194 ++--
+ drivers/nvdimm/nd-core.h                        |    5 
+ drivers/nvdimm/nd.h                             |  263 ++++++
+ drivers/nvdimm/pfn_devs.c                       |    2 
+ include/linux/nd.h                              |    4 
+ tools/testing/cxl/Kbuild                        |   29 +
+ tools/testing/cxl/mock_acpi.c                   |  105 ++
+ tools/testing/cxl/mock_pmem.c                   |   24 +
+ tools/testing/cxl/test/Kbuild                   |   10 
+ tools/testing/cxl/test/cxl.c                    |  587 +++++++++++++
+ tools/testing/cxl/test/mem.c                    |  255 ++++++
+ tools/testing/cxl/test/mock.c                   |  155 +++
+ tools/testing/cxl/test/mock.h                   |   27 +
+ 31 files changed, 3234 insertions(+), 1437 deletions(-)
+ create mode 100644 drivers/cxl/core/mbox.c
+ create mode 100644 tools/testing/cxl/Kbuild
+ create mode 100644 tools/testing/cxl/mock_acpi.c
+ create mode 100644 tools/testing/cxl/mock_pmem.c
+ create mode 100644 tools/testing/cxl/test/Kbuild
+ create mode 100644 tools/testing/cxl/test/cxl.c
+ create mode 100644 tools/testing/cxl/test/mem.c
+ create mode 100644 tools/testing/cxl/test/mock.c
+ create mode 100644 tools/testing/cxl/test/mock.h
+
+base-commit: 427832674f6e2413c21ca2271ec945a720608ff2
+
+(cxl.git#pending as of August 9th, 2021)
