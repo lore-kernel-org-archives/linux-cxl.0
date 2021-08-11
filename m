@@ -2,221 +2,101 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB9CC4338F
-	for <linux-cxl@archiver.kernel.org>; Wed, 11 Aug 2021 01:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C08BFC4338F
+	for <linux-cxl@archiver.kernel.org>; Wed, 11 Aug 2021 02:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3FF760F38
-	for <linux-cxl@archiver.kernel.org>; Wed, 11 Aug 2021 01:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E71160EB5
+	for <linux-cxl@archiver.kernel.org>; Wed, 11 Aug 2021 02:14:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231129AbhHKBuP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 10 Aug 2021 21:50:15 -0400
-Received: from mga11.intel.com ([192.55.52.93]:55095 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230348AbhHKBuO (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 10 Aug 2021 21:50:14 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10072"; a="211925583"
-X-IronPort-AV: E=Sophos;i="5.84,311,1620716400"; 
-   d="scan'208";a="211925583"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2021 18:49:50 -0700
-X-IronPort-AV: E=Sophos;i="5.84,311,1620716400"; 
-   d="scan'208";a="516265943"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2021 18:49:50 -0700
-Subject: [PATCH v4 2/3] cxl/mem: Account for partitionable space in ram/pmem
- ranges
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        kernel test robot <lkp@intel.com>
-Date:   Tue, 10 Aug 2021 18:49:49 -0700
-Message-ID: <162864651861.2108735.9097318382394860963.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <20210618163129.1912453-1-ira.weiny@intel.com>
-References: <20210618163129.1912453-1-ira.weiny@intel.com>
-User-Agent: StGit/0.18-3-g996c
+        id S231594AbhHKCPU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 10 Aug 2021 22:15:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57070 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231533AbhHKCPU (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 10 Aug 2021 22:15:20 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AE01C061765
+        for <linux-cxl@vger.kernel.org>; Tue, 10 Aug 2021 19:14:57 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id oa17so1055651pjb.1
+        for <linux-cxl@vger.kernel.org>; Tue, 10 Aug 2021 19:14:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nWnWHK81cHSSSYNhV/ky18B/eWmiRGBwsPJhNQ9JxJE=;
+        b=Slqkm9exTJPLJIB8INasB6dcy8ztieb/Zvsv0MN53EtTKQFaxdX9F9qkB/vPbdmkIc
+         rslPhVpjQJJzVevKA4HyKSKCVSgSEaXJigY/VM4OwIVsjta3zauY54S/eTOGwxUEkIa6
+         PKYNY6mXwWTKfsOAVHd7GtqeIArMFqPz1tzK3YXBd6G9M87JvhWuYtZj9xdhBBVi/Js4
+         j/urKU31kDGmUKrWzmDH0+2sjVcW1aWDsiJYBfk8fO5tALajOpF7q+hDd3pb4xfuafVl
+         ml7EEw8VEO0Kl5Do57UPwRO6UWmF90cPVcwYe/QbSYYt2qv9y3UrWOeC4L/gWGyGtHij
+         qI5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nWnWHK81cHSSSYNhV/ky18B/eWmiRGBwsPJhNQ9JxJE=;
+        b=hYVRt6Fnc1RGZH8YW6PF9jopen88iRVBT021CB3GN/ga4O6DzPO+rK8fUtetVAx54n
+         iORz6K9Zmt4gBbAWaCSKMwX1GeGbMCnmes3vsC3aJlJSISuOlXTNDBxcwVUReWV9AyFV
+         Qa8yqJZsQd7lMgUhWvYcOkXuoR/GT5tC4auC+Ovr2ItapN+u0YiA7XVLiziWo2e5Ktf6
+         rk0ZfYDvtLScdY1x8VbYwrtr5Frta6AndWp6cgIvMPjzxmBJ2wja5jWKxkqiJQtIrPgO
+         k7ulasrtqgtJawavaKeLNh6DhLDOM59L85e3dielWqCTpoH1LY7g4ZTH7QpwPLVhtyB1
+         4lJQ==
+X-Gm-Message-State: AOAM532Pp6EEKWXBhyPIeGrGsxqXvuyKPJJVJzLGMMqqO3l9zkqUzy88
+        Gh0UMiI85B1SZk3mlOo7h+5lnFUcBelSm4CtqnT/5A==
+X-Google-Smtp-Source: ABdhPJxjI3G1JliiDL5lb4M9JD0cysUnjBy+5+KeQRqMz2HrCacDSU7gc575kfwMcqnqF+Dz8nUUJEQofF8F16s++Es=
+X-Received: by 2002:a62:5f81:0:b029:3c6:abad:345 with SMTP id
+ t123-20020a625f810000b02903c6abad0345mr26549389pfb.31.1628648096952; Tue, 10
+ Aug 2021 19:14:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <162854806653.1980150.3354618413963083778.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <162854815819.1980150.14391324052281496748.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20210810213459.5zpvfrvbo2rztwmc@intel.com> <CAPcyv4iXZpeahdDxyRLd7ACS6vpV+VA3-J3MiLQvvV2Q6asBFg@mail.gmail.com>
+ <20210810220654.nztok7mxvjzaizhk@intel.com> <CAPcyv4iLLPR+yijKNHceEKM4+fKQ4i6r+ZLYH+_b-ao6tznHLQ@mail.gmail.com>
+In-Reply-To: <CAPcyv4iLLPR+yijKNHceEKM4+fKQ4i6r+ZLYH+_b-ao6tznHLQ@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 10 Aug 2021 19:14:45 -0700
+Message-ID: <CAPcyv4jn-1V=nCdgOxFJF3bVJd13YpRxnLvjE_BbacJ7_Qmwhw@mail.gmail.com>
+Subject: Re: [PATCH 17/23] cxl/mbox: Add exclusive kernel command support
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Linux NVDIMM <nvdimm@lists.linux.dev>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+On Tue, Aug 10, 2021 at 6:22 PM Dan Williams <dan.j.williams@intel.com> wrote:
+[..]
+> > > > What's the concurrency this lock is trying to protect against?
+> > >
+> > > I can add a comment. It synchronizes against in-flight ioctl users to
+> > > make sure that any requests have completed before the policy changes.
+> > > I.e. do not allow userspace to race the nvdimm subsystem attaching to
+> > > get a consistent state of the persistent memory configuration.
+> > >
+> >
+> > Ah, so the expectation is that these things will be set not just on
+> > probe/unregister()? I would assume an IOCTL couldn't happen while
+> > probe/unregister is happening.
+>
+> The ioctl is going through the cxl_pci driver. That driver has
+> finished probe and published the ioctl before this lockout can run in
+> cxl_nvdimm_probe(), so it's entirely possible that label writing
+> ioctls are in progress when cxl_nvdimm_probe() eventually fires.
+>
+> The current policy for /sys/bus/nd/devices/nmemX devices are that
+> label writes are allowed as long as the nmemX device is not active in
+> any region. I was thinking the CXL policy is coarser. Label writes via
+> /sys/bus/cxl/devices/memX ioctls are disallowed as long as the bridge
+> for that device into the nvdimm subsystem is active.
 
-Memory devices may specify volatile only, persistent only, and
-partitionable space which when added together result in a total capacity.
-
-If Identify Memory Device.Partition Alignment != 0 the device supports
-partitionable space.  This partitionable space can be split between
-volatile and persistent space.  The total volatile and persistent sizes
-are reported in Get Partition Info.  ie
-
-	active volatile memory = volatile only + partitionable volatile
-	active persistent memory = persistent only + partitionable persistent
-
-Define cxl_mem_get_partition(), check for partitionable support, and use
-cxl_mem_get_partition() if applicable.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
-Changes since v3:
-- Fix "sparse: cast to restricted __le64" warnings, mark the members of
-  struct cxl_mbox_get_partition_info as __le64.
-
- drivers/cxl/cxlmem.h |    5 +++
- drivers/cxl/pci.c    |   96 +++++++++++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 96 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 22344fda8ca5..6c0b1e2ea97c 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -99,5 +99,10 @@ struct cxl_mem {
- 	u64 volatile_only_bytes;
- 	u64 persistent_only_bytes;
- 	u64 partition_align_bytes;
-+
-+	u64 active_volatile_bytes;
-+	u64 active_persistent_bytes;
-+	u64 next_volatile_bytes;
-+	u64 next_persistent_bytes;
- };
- #endif /* __CXL_MEM_H__ */
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index cf4f593f426e..3f5db8960098 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -1263,6 +1263,53 @@ static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_mem *cxlm)
- 	return ret;
- }
- 
-+/**
-+ * cxl_mem_get_partition_info - Get partition info
-+ * @cxlm: The device to act on
-+ * @active_volatile_bytes: returned active volatile capacity
-+ * @active_persistent_bytes: returned active persistent capacity
-+ * @next_volatile_bytes: return next volatile capacity
-+ * @next_persistent_bytes: return next persistent capacity
-+ *
-+ * Retrieve the current partition info for the device specified.  If not 0, the
-+ * 'next' values are pending and take affect on next cold reset.
-+ *
-+ * Return: 0 if no error: or the result of the mailbox command.
-+ *
-+ * See CXL @8.2.9.5.2.1 Get Partition Info
-+ */
-+static int cxl_mem_get_partition_info(struct cxl_mem *cxlm,
-+				      u64 *active_volatile_bytes,
-+				      u64 *active_persistent_bytes,
-+				      u64 *next_volatile_bytes,
-+				      u64 *next_persistent_bytes)
-+{
-+	struct cxl_mbox_get_partition_info {
-+		__le64 active_volatile_cap;
-+		__le64 active_persistent_cap;
-+		__le64 next_volatile_cap;
-+		__le64 next_persistent_cap;
-+	} __packed pi;
-+	int rc;
-+
-+	rc = cxl_mem_mbox_send_cmd(cxlm, CXL_MBOX_OP_GET_PARTITION_INFO,
-+				   NULL, 0, &pi, sizeof(pi));
-+	if (rc)
-+		return rc;
-+
-+	*active_volatile_bytes = le64_to_cpu(pi.active_volatile_cap);
-+	*active_persistent_bytes = le64_to_cpu(pi.active_persistent_cap);
-+	*next_volatile_bytes = le64_to_cpu(pi.next_volatile_cap);
-+	*next_persistent_bytes = le64_to_cpu(pi.next_volatile_cap);
-+
-+	*active_volatile_bytes *= CXL_CAPACITY_MULTIPLIER;
-+	*active_persistent_bytes *= CXL_CAPACITY_MULTIPLIER;
-+	*next_volatile_bytes *= CXL_CAPACITY_MULTIPLIER;
-+	*next_persistent_bytes *= CXL_CAPACITY_MULTIPLIER;
-+
-+	return 0;
-+}
-+
- /**
-  * cxl_mem_enumerate_cmds() - Enumerate commands for a device.
-  * @cxlm: The device.
-@@ -1381,18 +1428,53 @@ static int cxl_mem_identify(struct cxl_mem *cxlm)
- 			cxlm->persistent_only_bytes,
- 			cxlm->partition_align_bytes);
- 
-+	cxlm->lsa_size = le32_to_cpu(id.lsa_size);
-+	memcpy(cxlm->firmware_version, id.fw_revision, sizeof(id.fw_revision));
-+
-+	return 0;
-+}
-+
-+static int cxl_mem_create_range_info(struct cxl_mem *cxlm)
-+{
-+	int rc;
-+
-+	if (cxlm->partition_align_bytes == 0) {
-+		cxlm->ram_range.start = 0;
-+		cxlm->ram_range.end = cxlm->volatile_only_bytes - 1;
-+		cxlm->pmem_range.start = 0;
-+		cxlm->pmem_range.end = cxlm->persistent_only_bytes - 1;
-+		return 0;
-+	}
-+
-+	rc = cxl_mem_get_partition_info(cxlm,
-+					&cxlm->active_volatile_bytes,
-+					&cxlm->active_persistent_bytes,
-+					&cxlm->next_volatile_bytes,
-+					&cxlm->next_persistent_bytes);
-+	if (rc < 0) {
-+		dev_err(&cxlm->pdev->dev, "Failed to query partition information\n");
-+		return rc;
-+	}
-+
-+	dev_dbg(&cxlm->pdev->dev, "Get Partition Info\n"
-+		"     active_volatile_bytes = %#llx\n"
-+		"     active_persistent_bytes = %#llx\n"
-+		"     next_volatile_bytes = %#llx\n"
-+		"     next_persistent_bytes = %#llx\n",
-+			cxlm->active_volatile_bytes,
-+			cxlm->active_persistent_bytes,
-+			cxlm->next_volatile_bytes,
-+			cxlm->next_persistent_bytes);
-+
- 	/*
- 	 * TODO: enumerate DPA map, as 'ram' and 'pmem' do not alias.
- 	 * For now, only the capacity is exported in sysfs
- 	 */
- 	cxlm->ram_range.start = 0;
--	cxlm->ram_range.end = cxlm->volatile_only_bytes - 1;
-+	cxlm->ram_range.end = cxlm->active_volatile_bytes - 1;
- 
- 	cxlm->pmem_range.start = 0;
--	cxlm->pmem_range.end = cxlm->persistent_only_bytes - 1;
--
--	cxlm->lsa_size = le32_to_cpu(id.lsa_size);
--	memcpy(cxlm->firmware_version, id.fw_revision, sizeof(id.fw_revision));
-+	cxlm->pmem_range.end = cxlm->active_persistent_bytes - 1;
- 
- 	return 0;
- }
-@@ -1427,6 +1509,10 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
- 
-+	rc = cxl_mem_create_range_info(cxlm);
-+	if (rc)
-+		return rc;
-+
- 	cxlmd = devm_cxl_add_memdev(&pdev->dev, cxlm, &cxl_memdev_fops);
- 	if (IS_ERR(cxlmd))
- 		return PTR_ERR(cxlmd);
-
+Oh, whoops, the mbox_mutex is not taken until we're deep inside
+mbox_send. So this synchronization needs to move to the cxl_memdev
+rwsem. Thanks for the nudge, I missed that.
