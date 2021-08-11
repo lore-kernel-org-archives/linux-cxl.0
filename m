@@ -2,261 +2,221 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 789EAC4338F
-	for <linux-cxl@archiver.kernel.org>; Wed, 11 Aug 2021 01:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB9CC4338F
+	for <linux-cxl@archiver.kernel.org>; Wed, 11 Aug 2021 01:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50C5B60EFF
-	for <linux-cxl@archiver.kernel.org>; Wed, 11 Aug 2021 01:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3FF760F38
+	for <linux-cxl@archiver.kernel.org>; Wed, 11 Aug 2021 01:49:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230095AbhHKBXK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 10 Aug 2021 21:23:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45510 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230085AbhHKBXK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 10 Aug 2021 21:23:10 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA37EC061765
-        for <linux-cxl@vger.kernel.org>; Tue, 10 Aug 2021 18:22:38 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id j1so849505pjv.3
-        for <linux-cxl@vger.kernel.org>; Tue, 10 Aug 2021 18:22:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4ZyGWWIIGp4ZeuUw+9jMqmcqoBt/aeDCHeXTO92s0/E=;
-        b=fNK+U73QPEYUJnY6Vq5bJjARQRQyctWql7eKvKuEGLpvazbimajco0QQE5WXOrp3CW
-         DTb+SM2ylMXxfkWoFqgKLh7A3Ux0v9AJMatMXcxSurbA+oUySipUkai4i2gNswUx/Ned
-         OmbD1+Vjw/ad3sAaAsnGG9CoAS/GoM1cqHevMJ6V0ha6IvZ5h4daIfROcDtxnxZk9SE2
-         xBT5loBVsHAoAKnenesdv3q1x5AP59GG6hCqgw1MsQbPkwgN0mx7FgCO1OMgGuxvv3SL
-         bTfq52s2qXmfwpk2gXUFkyKeRagFPQiyDOjTdF/W+dhrDLej5H6ts2yT4NBNXXTDFS/Y
-         1PBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4ZyGWWIIGp4ZeuUw+9jMqmcqoBt/aeDCHeXTO92s0/E=;
-        b=YmphRK1EuhLYnqDEifNmDKXlOC8ge+tl/xCVDoHYSXEPgcNNbOegmgF9xLP86HsBvh
-         4Tz+wjuAKKFXcWwnYSwsLi9MD1HhBeDaiXgmH5wSfCQE3n0WcJEGTisMHpVJmSwdIxXO
-         AvixLVssmKB5U5GRc9cm9detzauuxxDf7bJ1CqNr21YC17Mb/9gk7ypuRSFFRJUu1ACR
-         EUsESkRYIuJDRxh+nV9PZeV+doTYfPyUWKqaENgij5zXs9wX7+LJnATYWg1TEW8VDhXL
-         OE6Pnr86d+CVYkMRwrcggRffrLePMkdty1hSw2FsUJWa3OsDVoUT/xlwXtKynpVkNYiv
-         /1VQ==
-X-Gm-Message-State: AOAM532OFxwxfBNGqHXZ1ofG5hLDT6j33QFRf2ccDLvvqUiEPmfCmllY
-        rL8UCXV9xEZBoBj/47bx17XFVSCZUusNxZf730K94A==
-X-Google-Smtp-Source: ABdhPJzTiFtrnCC1j2LlytwivVerTN4cAXmY0Ok34P6lKEygTy2ZloN2aSt1myzAs5168TOjRY00Lij0MYUtDfN2M/s=
-X-Received: by 2002:a17:90b:23d6:: with SMTP id md22mr7632069pjb.149.1628644958285;
- Tue, 10 Aug 2021 18:22:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <162854806653.1980150.3354618413963083778.stgit@dwillia2-desk3.amr.corp.intel.com>
- <162854815819.1980150.14391324052281496748.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20210810213459.5zpvfrvbo2rztwmc@intel.com> <CAPcyv4iXZpeahdDxyRLd7ACS6vpV+VA3-J3MiLQvvV2Q6asBFg@mail.gmail.com>
- <20210810220654.nztok7mxvjzaizhk@intel.com>
-In-Reply-To: <20210810220654.nztok7mxvjzaizhk@intel.com>
+        id S231129AbhHKBuP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 10 Aug 2021 21:50:15 -0400
+Received: from mga11.intel.com ([192.55.52.93]:55095 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230348AbhHKBuO (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Tue, 10 Aug 2021 21:50:14 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10072"; a="211925583"
+X-IronPort-AV: E=Sophos;i="5.84,311,1620716400"; 
+   d="scan'208";a="211925583"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2021 18:49:50 -0700
+X-IronPort-AV: E=Sophos;i="5.84,311,1620716400"; 
+   d="scan'208";a="516265943"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2021 18:49:50 -0700
+Subject: [PATCH v4 2/3] cxl/mem: Account for partitionable space in ram/pmem
+ ranges
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 10 Aug 2021 18:22:27 -0700
-Message-ID: <CAPcyv4iLLPR+yijKNHceEKM4+fKQ4i6r+ZLYH+_b-ao6tznHLQ@mail.gmail.com>
-Subject: Re: [PATCH 17/23] cxl/mbox: Add exclusive kernel command support
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Linux NVDIMM <nvdimm@lists.linux.dev>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+To:     linux-cxl@vger.kernel.org
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        kernel test robot <lkp@intel.com>
+Date:   Tue, 10 Aug 2021 18:49:49 -0700
+Message-ID: <162864651861.2108735.9097318382394860963.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <20210618163129.1912453-1-ira.weiny@intel.com>
+References: <20210618163129.1912453-1-ira.weiny@intel.com>
+User-Agent: StGit/0.18-3-g996c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Aug 10, 2021 at 3:07 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> On 21-08-10 14:52:18, Dan Williams wrote:
-> > On Tue, Aug 10, 2021 at 2:35 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > >
-> > > On 21-08-09 15:29:18, Dan Williams wrote:
-> > > > The CXL_PMEM driver expects exclusive control of the label storage area
-> > > > space. Similar to the LIBNVDIMM expectation that the label storage area
-> > > > is only writable from userspace when the corresponding memory device is
-> > > > not active in any region, the expectation is the native CXL_PCI UAPI
-> > > > path is disabled while the cxl_nvdimm for a given cxl_memdev device is
-> > > > active in LIBNVDIMM.
-> > > >
-> > > > Add the ability to toggle the availability of a given command for the
-> > > > UAPI path. Use that new capability to shutdown changes to partitions and
-> > > > the label storage area while the cxl_nvdimm device is actively proxying
-> > > > commands for LIBNVDIMM.
-> > > >
-> > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > > ---
-> > > >  drivers/cxl/core/mbox.c |    5 +++++
-> > > >  drivers/cxl/cxlmem.h    |    2 ++
-> > > >  drivers/cxl/pmem.c      |   35 +++++++++++++++++++++++++++++------
-> > > >  3 files changed, 36 insertions(+), 6 deletions(-)
-> > > >
-> > > > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> > > > index 23100231e246..f26962d7cb65 100644
-> > > > --- a/drivers/cxl/core/mbox.c
-> > > > +++ b/drivers/cxl/core/mbox.c
-> > > > @@ -409,6 +409,11 @@ static int handle_mailbox_cmd_from_user(struct cxl_mem *cxlm,
-> > > >               }
-> > > >       }
-> > > >
-> > > > +     if (test_bit(cmd->info.id, cxlm->exclusive_cmds)) {
-> > > > +             rc = -EBUSY;
-> > > > +             goto out;
-> > > > +     }
-> > > > +
-> > >
-> > > This breaks our current definition for cxl_raw_allow_all. All the test machinery
-> >
-> > That's deliberate; this exclusion is outside of the raw policy. I
-> > don't think raw_allow_all should override kernel self protection of
-> > data structures, like labels, that it needs to maintain consistency.
-> > If userspace wants to use raw_allow_all to send LSA manipulation
-> > commands it must do so while the device is not active on the nvdimm
-> > side of the house. You'll see that:
-> >
-> > ndctl disable-region all
-> > <mutate labels>
-> > ndctl enable-region all
-> >
-> > ...is a common pattern from custom label update flows.
-> >
->
-> I won't argue about raw_allow_all since we never did document its debugfs
-> meaning (however, my intention was always to let userspace trump the kernel
-> (which was why we tainted)).
+From: Ira Weiny <ira.weiny@intel.com>
 
-Yeah we should document because the taint in my mind was for the
-possibility of passing commands completely unknown to the kernel. If
-someone really wants to subvert the kernel's label area coherency they
-could simply have a vendor specific command that writes the labels.
-Instead, if the kernel knows the opcode it is free to apply policy to
-it as it sees fit, and if the opcode is unknown to the kernel then
-raw_allow_all policy lets it through. We already have security
-commands as another case of opcode that the kernel knows about and
-thinks is a good idea to block. This is a dynamic version of the same.
+Memory devices may specify volatile only, persistent only, and
+partitionable space which when added together result in a total capacity.
 
-> Either way, could you please move the actual check to
-> cxl_validate_cmd_from_user() instead of handle...(). Validate is the main
-> function to determine whether a command is allowed to be sent on behalf of the
-> user.  I think just putting it next to the enabled cmd check would make a lot
-> more sense. And please add the EBUSY meaning to the kdocs.
+If Identify Memory Device.Partition Alignment != 0 the device supports
+partitionable space.  This partitionable space can be split between
+volatile and persistent space.  The total volatile and persistent sizes
+are reported in Get Partition Info.  ie
 
-Sure, sounds good.
+	active volatile memory = volatile only + partitionable volatile
+	active persistent memory = persistent only + partitionable persistent
 
->
-> > > for whether a command can be submitted was supposed to happen in
-> > > cxl_validate_cmd_from_user(). Various versions of the original patches made
-> > > cxl_mem_raw_command_allowed() grow more intelligence (ie. more than just the
-> > > opcode). I think this check belongs there with more intelligence.
-> > >
-> > > I don't love the EBUSY because it already had a meaning for concurrent use of
-> > > the mailbox, but I can't think of a better errno.
-> >
-> > It's the existing errno that happens from nvdimm land when the kernel
-> > owns the label area, so it would be confusing to invent a new one for
-> > the same behavior now:
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/nvdimm/bus.c#n1013
-> >
-> > >
-> > > >       dev_dbg(dev,
-> > > >               "Submitting %s command for user\n"
-> > > >               "\topcode: %x\n"
-> > > > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > > > index df4f3636a999..f6cfe84a064c 100644
-> > > > --- a/drivers/cxl/cxlmem.h
-> > > > +++ b/drivers/cxl/cxlmem.h
-> > > > @@ -102,6 +102,7 @@ struct cxl_mbox_cmd {
-> > > >   * @mbox_mutex: Mutex to synchronize mailbox access.
-> > > >   * @firmware_version: Firmware version for the memory device.
-> > > >   * @enabled_cmds: Hardware commands found enabled in CEL.
-> > > > + * @exclusive_cmds: Commands that are kernel-internal only
-> > > >   * @pmem_range: Persistent memory capacity information.
-> > > >   * @ram_range: Volatile memory capacity information.
-> > > >   * @mbox_send: @dev specific transport for transmitting mailbox commands
-> > > > @@ -117,6 +118,7 @@ struct cxl_mem {
-> > > >       struct mutex mbox_mutex; /* Protects device mailbox and firmware */
-> > > >       char firmware_version[0x10];
-> > > >       DECLARE_BITMAP(enabled_cmds, CXL_MEM_COMMAND_ID_MAX);
-> > > > +     DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
-> > > >
-> > > >       struct range pmem_range;
-> > > >       struct range ram_range;
-> > > > diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-> > > > index 9652c3ee41e7..11410df77444 100644
-> > > > --- a/drivers/cxl/pmem.c
-> > > > +++ b/drivers/cxl/pmem.c
-> > > > @@ -16,9 +16,23 @@
-> > > >   */
-> > > >  static struct workqueue_struct *cxl_pmem_wq;
-> > > >
-> > > > -static void unregister_nvdimm(void *nvdimm)
-> > > > +static void unregister_nvdimm(void *_cxl_nvd)
-> > > >  {
-> > > > -     nvdimm_delete(nvdimm);
-> > > > +     struct cxl_nvdimm *cxl_nvd = _cxl_nvd;
-> > > > +     struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
-> > > > +     struct cxl_mem *cxlm = cxlmd->cxlm;
-> > > > +     struct device *dev = &cxl_nvd->dev;
-> > > > +     struct nvdimm *nvdimm;
-> > > > +
-> > > > +     nvdimm = dev_get_drvdata(dev);
-> > > > +     if (nvdimm)
-> > > > +             nvdimm_delete(nvdimm);
-> > > > +
-> > > > +     mutex_lock(&cxlm->mbox_mutex);
-> > > > +     clear_bit(CXL_MEM_COMMAND_ID_SET_PARTITION_INFO, cxlm->exclusive_cmds);
-> > > > +     clear_bit(CXL_MEM_COMMAND_ID_SET_SHUTDOWN_STATE, cxlm->exclusive_cmds);
-> > > > +     clear_bit(CXL_MEM_COMMAND_ID_SET_LSA, cxlm->exclusive_cmds);
-> > > > +     mutex_unlock(&cxlm->mbox_mutex);
-> > > >  }
-> > > >
-> > > >  static int match_nvdimm_bridge(struct device *dev, const void *data)
-> > > > @@ -39,6 +53,8 @@ static struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(void)
-> > > >  static int cxl_nvdimm_probe(struct device *dev)
-> > > >  {
-> > > >       struct cxl_nvdimm *cxl_nvd = to_cxl_nvdimm(dev);
-> > > > +     struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
-> > > > +     struct cxl_mem *cxlm = cxlmd->cxlm;
-> > > >       struct cxl_nvdimm_bridge *cxl_nvb;
-> > > >       unsigned long flags = 0;
-> > > >       struct nvdimm *nvdimm;
-> > > > @@ -52,17 +68,24 @@ static int cxl_nvdimm_probe(struct device *dev)
-> > > >       if (!cxl_nvb->nvdimm_bus)
-> > > >               goto out;
-> > > >
-> > > > +     mutex_lock(&cxlm->mbox_mutex);
-> > > > +     set_bit(CXL_MEM_COMMAND_ID_SET_PARTITION_INFO, cxlm->exclusive_cmds);
-> > > > +     set_bit(CXL_MEM_COMMAND_ID_SET_SHUTDOWN_STATE, cxlm->exclusive_cmds);
-> > > > +     set_bit(CXL_MEM_COMMAND_ID_SET_LSA, cxlm->exclusive_cmds);
-> > > > +     mutex_unlock(&cxlm->mbox_mutex);
-> > > > +
-> > >
-> > > What's the concurrency this lock is trying to protect against?
-> >
-> > I can add a comment. It synchronizes against in-flight ioctl users to
-> > make sure that any requests have completed before the policy changes.
-> > I.e. do not allow userspace to race the nvdimm subsystem attaching to
-> > get a consistent state of the persistent memory configuration.
-> >
->
-> Ah, so the expectation is that these things will be set not just on
-> probe/unregister()? I would assume an IOCTL couldn't happen while
-> probe/unregister is happening.
+Define cxl_mem_get_partition(), check for partitionable support, and use
+cxl_mem_get_partition() if applicable.
 
-The ioctl is going through the cxl_pci driver. That driver has
-finished probe and published the ioctl before this lockout can run in
-cxl_nvdimm_probe(), so it's entirely possible that label writing
-ioctls are in progress when cxl_nvdimm_probe() eventually fires.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+Changes since v3:
+- Fix "sparse: cast to restricted __le64" warnings, mark the members of
+  struct cxl_mbox_get_partition_info as __le64.
 
-The current policy for /sys/bus/nd/devices/nmemX devices are that
-label writes are allowed as long as the nmemX device is not active in
-any region. I was thinking the CXL policy is coarser. Label writes via
-/sys/bus/cxl/devices/memX ioctls are disallowed as long as the bridge
-for that device into the nvdimm subsystem is active.
+ drivers/cxl/cxlmem.h |    5 +++
+ drivers/cxl/pci.c    |   96 +++++++++++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 96 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 22344fda8ca5..6c0b1e2ea97c 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -99,5 +99,10 @@ struct cxl_mem {
+ 	u64 volatile_only_bytes;
+ 	u64 persistent_only_bytes;
+ 	u64 partition_align_bytes;
++
++	u64 active_volatile_bytes;
++	u64 active_persistent_bytes;
++	u64 next_volatile_bytes;
++	u64 next_persistent_bytes;
+ };
+ #endif /* __CXL_MEM_H__ */
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index cf4f593f426e..3f5db8960098 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -1263,6 +1263,53 @@ static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_mem *cxlm)
+ 	return ret;
+ }
+ 
++/**
++ * cxl_mem_get_partition_info - Get partition info
++ * @cxlm: The device to act on
++ * @active_volatile_bytes: returned active volatile capacity
++ * @active_persistent_bytes: returned active persistent capacity
++ * @next_volatile_bytes: return next volatile capacity
++ * @next_persistent_bytes: return next persistent capacity
++ *
++ * Retrieve the current partition info for the device specified.  If not 0, the
++ * 'next' values are pending and take affect on next cold reset.
++ *
++ * Return: 0 if no error: or the result of the mailbox command.
++ *
++ * See CXL @8.2.9.5.2.1 Get Partition Info
++ */
++static int cxl_mem_get_partition_info(struct cxl_mem *cxlm,
++				      u64 *active_volatile_bytes,
++				      u64 *active_persistent_bytes,
++				      u64 *next_volatile_bytes,
++				      u64 *next_persistent_bytes)
++{
++	struct cxl_mbox_get_partition_info {
++		__le64 active_volatile_cap;
++		__le64 active_persistent_cap;
++		__le64 next_volatile_cap;
++		__le64 next_persistent_cap;
++	} __packed pi;
++	int rc;
++
++	rc = cxl_mem_mbox_send_cmd(cxlm, CXL_MBOX_OP_GET_PARTITION_INFO,
++				   NULL, 0, &pi, sizeof(pi));
++	if (rc)
++		return rc;
++
++	*active_volatile_bytes = le64_to_cpu(pi.active_volatile_cap);
++	*active_persistent_bytes = le64_to_cpu(pi.active_persistent_cap);
++	*next_volatile_bytes = le64_to_cpu(pi.next_volatile_cap);
++	*next_persistent_bytes = le64_to_cpu(pi.next_volatile_cap);
++
++	*active_volatile_bytes *= CXL_CAPACITY_MULTIPLIER;
++	*active_persistent_bytes *= CXL_CAPACITY_MULTIPLIER;
++	*next_volatile_bytes *= CXL_CAPACITY_MULTIPLIER;
++	*next_persistent_bytes *= CXL_CAPACITY_MULTIPLIER;
++
++	return 0;
++}
++
+ /**
+  * cxl_mem_enumerate_cmds() - Enumerate commands for a device.
+  * @cxlm: The device.
+@@ -1381,18 +1428,53 @@ static int cxl_mem_identify(struct cxl_mem *cxlm)
+ 			cxlm->persistent_only_bytes,
+ 			cxlm->partition_align_bytes);
+ 
++	cxlm->lsa_size = le32_to_cpu(id.lsa_size);
++	memcpy(cxlm->firmware_version, id.fw_revision, sizeof(id.fw_revision));
++
++	return 0;
++}
++
++static int cxl_mem_create_range_info(struct cxl_mem *cxlm)
++{
++	int rc;
++
++	if (cxlm->partition_align_bytes == 0) {
++		cxlm->ram_range.start = 0;
++		cxlm->ram_range.end = cxlm->volatile_only_bytes - 1;
++		cxlm->pmem_range.start = 0;
++		cxlm->pmem_range.end = cxlm->persistent_only_bytes - 1;
++		return 0;
++	}
++
++	rc = cxl_mem_get_partition_info(cxlm,
++					&cxlm->active_volatile_bytes,
++					&cxlm->active_persistent_bytes,
++					&cxlm->next_volatile_bytes,
++					&cxlm->next_persistent_bytes);
++	if (rc < 0) {
++		dev_err(&cxlm->pdev->dev, "Failed to query partition information\n");
++		return rc;
++	}
++
++	dev_dbg(&cxlm->pdev->dev, "Get Partition Info\n"
++		"     active_volatile_bytes = %#llx\n"
++		"     active_persistent_bytes = %#llx\n"
++		"     next_volatile_bytes = %#llx\n"
++		"     next_persistent_bytes = %#llx\n",
++			cxlm->active_volatile_bytes,
++			cxlm->active_persistent_bytes,
++			cxlm->next_volatile_bytes,
++			cxlm->next_persistent_bytes);
++
+ 	/*
+ 	 * TODO: enumerate DPA map, as 'ram' and 'pmem' do not alias.
+ 	 * For now, only the capacity is exported in sysfs
+ 	 */
+ 	cxlm->ram_range.start = 0;
+-	cxlm->ram_range.end = cxlm->volatile_only_bytes - 1;
++	cxlm->ram_range.end = cxlm->active_volatile_bytes - 1;
+ 
+ 	cxlm->pmem_range.start = 0;
+-	cxlm->pmem_range.end = cxlm->persistent_only_bytes - 1;
+-
+-	cxlm->lsa_size = le32_to_cpu(id.lsa_size);
+-	memcpy(cxlm->firmware_version, id.fw_revision, sizeof(id.fw_revision));
++	cxlm->pmem_range.end = cxlm->active_persistent_bytes - 1;
+ 
+ 	return 0;
+ }
+@@ -1427,6 +1509,10 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (rc)
+ 		return rc;
+ 
++	rc = cxl_mem_create_range_info(cxlm);
++	if (rc)
++		return rc;
++
+ 	cxlmd = devm_cxl_add_memdev(&pdev->dev, cxlm, &cxl_memdev_fops);
+ 	if (IS_ERR(cxlmd))
+ 		return PTR_ERR(cxlmd);
+
