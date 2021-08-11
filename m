@@ -2,182 +2,127 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2358CC4338F
-	for <linux-cxl@archiver.kernel.org>; Wed, 11 Aug 2021 18:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CDCC4338F
+	for <linux-cxl@archiver.kernel.org>; Wed, 11 Aug 2021 19:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA47C61019
-	for <linux-cxl@archiver.kernel.org>; Wed, 11 Aug 2021 18:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EED5361019
+	for <linux-cxl@archiver.kernel.org>; Wed, 11 Aug 2021 19:18:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230224AbhHKSuC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 11 Aug 2021 14:50:02 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3639 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230000AbhHKSuB (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 11 Aug 2021 14:50:01 -0400
-Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4GlJkh5YtWz6G9JB;
-        Thu, 12 Aug 2021 02:49:00 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Wed, 11 Aug 2021 20:49:36 +0200
-Received: from localhost (10.52.123.85) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Wed, 11 Aug
- 2021 19:49:35 +0100
-Date:   Wed, 11 Aug 2021 19:49:05 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+        id S230391AbhHKTTS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 11 Aug 2021 15:19:18 -0400
+Received: from mga01.intel.com ([192.55.52.88]:35999 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229655AbhHKTTP (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Wed, 11 Aug 2021 15:19:15 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10073"; a="237229294"
+X-IronPort-AV: E=Sophos;i="5.84,313,1620716400"; 
+   d="scan'208";a="237229294"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2021 12:18:51 -0700
+X-IronPort-AV: E=Sophos;i="5.84,313,1620716400"; 
+   d="scan'208";a="673021451"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2021 12:18:49 -0700
+Received: from andy by smile with local (Exim 4.94.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mDtkR-008Lj8-Bq; Wed, 11 Aug 2021 22:18:43 +0300
+Date:   Wed, 11 Aug 2021 22:18:43 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-        <ben.widawsky@intel.com>, <vishal.l.verma@intel.com>,
-        <alison.schofield@intel.com>, <ira.weiny@intel.com>
-Subject: Re: [PATCH 09/23] libnvdimm/labels: Add address-abstraction uuid
- definitions
-Message-ID: <20210811194905.000034f6@Huawei.com>
-In-Reply-To: <162854811511.1980150.3921515741758120378.stgit@dwillia2-desk3.amr.corp.intel.com>
+Cc:     linux-cxl@vger.kernel.org, Linux NVDIMM <nvdimm@lists.linux.dev>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>
+Subject: Re: [PATCH 10/23] libnvdimm/labels: Add uuid helpers
+Message-ID: <YRQik5OnRyYQAm4o@smile.fi.intel.com>
 References: <162854806653.1980150.3354618413963083778.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <162854811511.1980150.3921515741758120378.stgit@dwillia2-desk3.amr.corp.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+ <162854812073.1980150.8157116233571368158.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <YROE48iCZNFaDcSo@smile.fi.intel.com>
+ <YRQB9Yvh3tmT9An4@smile.fi.intel.com>
+ <CAPcyv4jOEfi=RJTeOFTbvkBB+Khfzi5QirrhPxeM4J2bQXRYiQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.123.85]
-X-ClientProxiedBy: lhreml716-chm.china.huawei.com (10.201.108.67) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4jOEfi=RJTeOFTbvkBB+Khfzi5QirrhPxeM4J2bQXRYiQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 9 Aug 2021 15:28:35 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
-
-> The EFI definition of the labels represents the Linux "claim class" with
-> a GUID. The CXL definition of the labels stores the same identifier in
-> UUID byte order. In preparation for adding CXL label support, enable the
-> claim class to optionally handle uuids.
+On Wed, Aug 11, 2021 at 10:11:56AM -0700, Dan Williams wrote:
+> On Wed, Aug 11, 2021 at 9:59 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Wed, Aug 11, 2021 at 11:05:55AM +0300, Andy Shevchenko wrote:
+> > > On Mon, Aug 09, 2021 at 03:28:40PM -0700, Dan Williams wrote:
+> > > > In preparation for CXL labels that move the uuid to a different offset
+> > > > in the label, add nsl_{ref,get,validate}_uuid(). These helpers use the
+> > > > proper uuid_t type. That type definition predated the libnvdimm
+> > > > subsystem, so now is as a good a time as any to convert all the uuid
+> > > > handling in the subsystem to uuid_t to match the helpers.
+> > > >
+> > > > As for the whitespace changes, all new code is clang-format compliant.
+> > >
+> > > Thanks, looks good to me!
+> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >
+> > Sorry, I'm in doubt this Rb stays. See below.
+> >
+> > ...
+> >
+> > > >  struct btt_sb {
+> > > >     u8 signature[BTT_SIG_LEN];
+> > > > -   u8 uuid[16];
+> > > > -   u8 parent_uuid[16];
+> > > > +   uuid_t uuid;
+> > > > +   uuid_t parent_uuid;
+> >
+> > uuid_t type is internal to the kernel. This seems to be an ABI?
 > 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> No, it's not a user ABI, this is an on-disk metadata structure. uuid_t
+> is approprirate.
 
-I've already commented on 10 and 11 so this was backfilling tags
-for the ones I'd looked at earlier but looked good to me.
+So, changing size of the structure is forbidden after this change, right?
+I don't like this. It means we always stuck with this type to be like this and
+no change will be allowed.
 
-I'm not all that familiar with this code yet, so all my checking was off the
-"does it look locally correct?" variety.
-
-Out of time for today, and not sure when I'll get to looking at the remainder.
-
-Jonathan
-
-> ---
->  drivers/nvdimm/label.c |   54 ++++++++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 52 insertions(+), 2 deletions(-)
+> > > >     __le32 flags;
+> > > >     __le16 version_major;
+> > > >     __le16 version_minor;
+> >
+> > ...
+> >
+> > > >  struct nd_namespace_label {
+> > > > -   u8 uuid[NSLABEL_UUID_LEN];
+> > > > +   uuid_t uuid;
+> >
+> > So seems this.
+> >
+> > > >     u8 name[NSLABEL_NAME_LEN];
+> > > >     __le32 flags;
+> > > >     __le16 nlabel;
+> >
+> > ...
+> >
+> > I'm not familiar with FS stuff, but looks to me like unwanted changes.
+> > In such cases you have to use export/import APIs. otherwise you make the type
+> > carved in stone without even knowing that it's part of an ABI or some hardware
+> > / firmware interfaces.
 > 
-> diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
-> index 7f473f9db300..2ba31b883b28 100644
-> --- a/drivers/nvdimm/label.c
-> +++ b/drivers/nvdimm/label.c
-> @@ -17,6 +17,11 @@ static guid_t nvdimm_btt2_guid;
->  static guid_t nvdimm_pfn_guid;
->  static guid_t nvdimm_dax_guid;
->  
-> +static uuid_t nvdimm_btt_uuid;
-> +static uuid_t nvdimm_btt2_uuid;
-> +static uuid_t nvdimm_pfn_uuid;
-> +static uuid_t nvdimm_dax_uuid;
-> +
->  static const char NSINDEX_SIGNATURE[] = "NAMESPACE_INDEX\0";
->  
->  static u32 best_seq(u32 a, u32 b)
-> @@ -724,7 +729,7 @@ static unsigned long nd_label_offset(struct nvdimm_drvdata *ndd,
->  		- (unsigned long) to_namespace_index(ndd, 0);
->  }
->  
-> -static enum nvdimm_claim_class to_nvdimm_cclass(guid_t *guid)
-> +static enum nvdimm_claim_class guid_to_nvdimm_cclass(guid_t *guid)
->  {
->  	if (guid_equal(guid, &nvdimm_btt_guid))
->  		return NVDIMM_CCLASS_BTT;
-> @@ -740,6 +745,23 @@ static enum nvdimm_claim_class to_nvdimm_cclass(guid_t *guid)
->  	return NVDIMM_CCLASS_UNKNOWN;
->  }
->  
-> +/* CXL labels store UUIDs instead of GUIDs for the same data */
-> +enum nvdimm_claim_class uuid_to_nvdimm_cclass(uuid_t *uuid)
-> +{
-> +	if (uuid_equal(uuid, &nvdimm_btt_uuid))
-> +		return NVDIMM_CCLASS_BTT;
-> +	else if (uuid_equal(uuid, &nvdimm_btt2_uuid))
-> +		return NVDIMM_CCLASS_BTT2;
-> +	else if (uuid_equal(uuid, &nvdimm_pfn_uuid))
-> +		return NVDIMM_CCLASS_PFN;
-> +	else if (uuid_equal(uuid, &nvdimm_dax_uuid))
-> +		return NVDIMM_CCLASS_DAX;
-> +	else if (uuid_equal(uuid, &uuid_null))
-> +		return NVDIMM_CCLASS_NONE;
-> +
-> +	return NVDIMM_CCLASS_UNKNOWN;
-> +}
-> +
->  static const guid_t *to_abstraction_guid(enum nvdimm_claim_class claim_class,
->  	guid_t *target)
->  {
-> @@ -761,6 +783,29 @@ static const guid_t *to_abstraction_guid(enum nvdimm_claim_class claim_class,
->  		return &guid_null;
->  }
->  
-> +/* CXL labels store UUIDs instead of GUIDs for the same data */
-> +__maybe_unused
-> +static const uuid_t *to_abstraction_uuid(enum nvdimm_claim_class claim_class,
-> +					 uuid_t *target)
-> +{
-> +	if (claim_class == NVDIMM_CCLASS_BTT)
-> +		return &nvdimm_btt_uuid;
-> +	else if (claim_class == NVDIMM_CCLASS_BTT2)
-> +		return &nvdimm_btt2_uuid;
-> +	else if (claim_class == NVDIMM_CCLASS_PFN)
-> +		return &nvdimm_pfn_uuid;
-> +	else if (claim_class == NVDIMM_CCLASS_DAX)
-> +		return &nvdimm_dax_uuid;
-> +	else if (claim_class == NVDIMM_CCLASS_UNKNOWN) {
-> +		/*
-> +		 * If we're modifying a namespace for which we don't
-> +		 * know the claim_class, don't touch the existing uuid.
-> +		 */
-> +		return target;
-> +	} else
-> +		return &uuid_null;
-> +}
-> +
->  static void reap_victim(struct nd_mapping *nd_mapping,
->  		struct nd_label_ent *victim)
->  {
-> @@ -808,7 +853,7 @@ enum nvdimm_claim_class nsl_get_claim_class(struct nvdimm_drvdata *ndd,
->  {
->  	if (!namespace_label_has(ndd, abstraction_guid))
->  		return NVDIMM_CCLASS_NONE;
-> -	return to_nvdimm_cclass(&nd_label->abstraction_guid);
-> +	return guid_to_nvdimm_cclass(&nd_label->abstraction_guid);
->  }
->  
->  static int __pmem_label_update(struct nd_region *nd_region,
-> @@ -1395,5 +1440,10 @@ int __init nd_label_init(void)
->  	WARN_ON(guid_parse(NVDIMM_PFN_GUID, &nvdimm_pfn_guid));
->  	WARN_ON(guid_parse(NVDIMM_DAX_GUID, &nvdimm_dax_guid));
->  
-> +	WARN_ON(uuid_parse(NVDIMM_BTT_GUID, &nvdimm_btt_uuid));
-> +	WARN_ON(uuid_parse(NVDIMM_BTT2_GUID, &nvdimm_btt2_uuid));
-> +	WARN_ON(uuid_parse(NVDIMM_PFN_GUID, &nvdimm_pfn_uuid));
-> +	WARN_ON(uuid_parse(NVDIMM_DAX_GUID, &nvdimm_dax_uuid));
-> +
->  	return 0;
->  }
-> 
+> Can you clarify the concern? Carving the intent that these 16-bytes
+> are meant to be treated as UUID in stone is deliberate.
+
+It's a bit surprise to me. Do we have any documentation on that?
+How do we handle such types in kernel that covers a lot of code?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
