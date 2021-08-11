@@ -2,64 +2,64 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C9EC4338F
-	for <linux-cxl@archiver.kernel.org>; Wed, 11 Aug 2021 22:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBE3C4320A
+	for <linux-cxl@archiver.kernel.org>; Wed, 11 Aug 2021 23:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E67F6101D
-	for <linux-cxl@archiver.kernel.org>; Wed, 11 Aug 2021 22:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47A0E6104F
+	for <linux-cxl@archiver.kernel.org>; Wed, 11 Aug 2021 23:01:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232470AbhHKWsD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 11 Aug 2021 18:48:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60466 "EHLO
+        id S232674AbhHKXCC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 11 Aug 2021 19:02:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232434AbhHKWsD (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 11 Aug 2021 18:48:03 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 140B6C061765
-        for <linux-cxl@vger.kernel.org>; Wed, 11 Aug 2021 15:47:39 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id l11so4703966plk.6
-        for <linux-cxl@vger.kernel.org>; Wed, 11 Aug 2021 15:47:39 -0700 (PDT)
+        with ESMTP id S232434AbhHKXCB (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 11 Aug 2021 19:02:01 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8491DC061765
+        for <linux-cxl@vger.kernel.org>; Wed, 11 Aug 2021 16:01:37 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id oa17so6113786pjb.1
+        for <linux-cxl@vger.kernel.org>; Wed, 11 Aug 2021 16:01:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OztpKFyFkHWq5WmztlCUxj24iVog+SfKlFUjwOQEcIM=;
-        b=Ee5VvOM4+VyN0yPauYS9IvJ9A6xbJ1FPxuOaat69KAXUI++RH/9oGYOP25DAXvA7ub
-         u2kQW2QMmNNyt8vw2iAeV6dJp19mwcmf0au7qoDzB8vLkFPpSwha1GKZw6ufXzyPKV9C
-         WFCM7Fpr+gVD898Q2Dr+ziDEZe8H7y0XyX/ijFkSeBL6iquo+wLgNjsP3eNbWmeukcL6
-         XB2zUp6erLruYx+oc6ptvw4HXUGo0ek9WmK6KL74voFg2erwcoC3TVr7jlMfrkdNwm3E
-         yTxM+V5ISgNrFkEdpdXwZWZEmpeOpUrQvlgqWPgAmGQPUUrIpS9iedbAJS7cK6Y0MzqB
-         KWdQ==
+        bh=Yxej9o+kAuH8mw1puVow9dkxnPzrO/KbVD0nxt+UR8c=;
+        b=Ukp7AZo+GcRhDxWPQqjX4x5guiaIclboctwL6bL6a6Cx2sOB0t1HM5XskeGCQlfz4Z
+         wyQGwJoSIVhS3jlm/78AQuWneWFhopVMyUHORlK7aBuAwtJdWo6Zng8Rat8sZ6sI9SVg
+         gTUl4Tuw+bvL2+9CJPkHq0c5kWR4yNqkb/S74Kq1OMzrGdWMo/s//t5ZOVwKxyNQNtSh
+         aAaVjhS6/iJg7puBFGgNRhRo9MA6xrgJZbVpAQqa7yom1gJrGvlIv8lop4tsFf62vXFH
+         Gmh9xsBX2v0F7ELvTIy2Futzyv4ZVCvAvVvoq1pB1G8D/YTeqhCwYXF0+KTFNvq86ZfT
+         QKVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OztpKFyFkHWq5WmztlCUxj24iVog+SfKlFUjwOQEcIM=;
-        b=ihCjGIVIayuQ+1pUJTqRK0arX/fgujomxnwkBk7gm8bT9haq42JQs2tBD5YO90Q7vY
-         fnRnPn3/BA5QkDkjpay/GwblNkSFaZmf0dG9NgASvmO1VO53f4PblkF5cwTtIO3ZPM0r
-         LsT6IBXh0tXfr1NskCI4AVEaYfS5BUpJKv3QvXxzpI9Ei8zcPlZgvYysqKOFrOTiaXQM
-         NLS+FHYa1gdhlrCrPofiUVS0qxNn0w9Rs/nM9GDYKo1rAOsbKcRxyoDB4R1u5Xb6MfVZ
-         yEBNVAW4wrEeQgkchPcfTEsj5GgbQaVwAWVHhZ7XsEYQG9pFq9tM9Pa/sXxj5E5ll281
-         6Esg==
-X-Gm-Message-State: AOAM532mlbOsiNfEnwFDQ4N4BrSeq5c680rzm9N6DZfGBVwgPYgHzkui
-        Sij+QHrKezUkUDrKB/yqrYHThJCTw6F+x06UemrqtA==
-X-Google-Smtp-Source: ABdhPJwPiM+NKEtruzRpK/NiP66bEuzTYZ4j9DmM8ubfJBKgrpBiXCa+LC9RkMHZ7UAJFPKXOAuDfLO0UiUHM5H7org=
-X-Received: by 2002:a17:90b:18f:: with SMTP id t15mr12593468pjs.168.1628722058608;
- Wed, 11 Aug 2021 15:47:38 -0700 (PDT)
+        bh=Yxej9o+kAuH8mw1puVow9dkxnPzrO/KbVD0nxt+UR8c=;
+        b=GXXbfYU9tJtXdEnIYN4VvyKJDmcbQGARjJ7/5/jRrBsS0gOWKVx52qX3EjAAnsjVqi
+         96fNB7RkiIFkMLgxD21KvrbB11u3DH9V2RlM2vaBA/oPT5B9AhyOjn1Q0YA4w4VyfIiw
+         q+u1uVlwsceYs5GNywukQZdW9gH709xM4T/xCaDIAyIzU26serBHSaKhwSQPqtYI4dzb
+         4P+G1/BFkmAo6BX3Ux8YTWuc8n+QQWGIbAFYQq+uBvlSzDR/L7lI18pJ0mVfEmLEeGx0
+         /IyHVBruy35ZCQd63hcRvXyrFmH1e9DOpYQmBCVnukpEBY+IrxA4Y+ndQ8D3wbI40jc0
+         tr0Q==
+X-Gm-Message-State: AOAM531ZWrdllG4nLstvjQ5nb+LcMw3OrZZx9ol0XOe3E6ULeWCeTX5j
+        165g/44YXJaOf9jZY6O0SmFsyNqMI5vG/N07ab1upA==
+X-Google-Smtp-Source: ABdhPJy/n2WoVwFLflG267mv2Hg6lRUCGT0lEgyePr7ZBJGDuzEnRcQycD8RH97G0CIC33HpmyIjG/jZyAqYRKidV5Q=
+X-Received: by 2002:a17:90b:23d6:: with SMTP id md22mr12577593pjb.149.1628722897133;
+ Wed, 11 Aug 2021 16:01:37 -0700 (PDT)
 MIME-Version: 1.0
 References: <162854806653.1980150.3354618413963083778.stgit@dwillia2-desk3.amr.corp.intel.com>
- <162854811511.1980150.3921515741758120378.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20210811194905.000034f6@Huawei.com>
-In-Reply-To: <20210811194905.000034f6@Huawei.com>
+ <162854812641.1980150.4928659819619856243.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20210811194130.00006076@Huawei.com>
+In-Reply-To: <20210811194130.00006076@Huawei.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 11 Aug 2021 15:47:27 -0700
-Message-ID: <CAPcyv4gZgkTtoVhMR+YWZHv2P9xeBQ3-a_2nRQ6euSQ-eaY5Jw@mail.gmail.com>
-Subject: Re: [PATCH 09/23] libnvdimm/labels: Add address-abstraction uuid definitions
+Date:   Wed, 11 Aug 2021 16:01:26 -0700
+Message-ID: <CAPcyv4hD16UzKBDHDAbUwmTM01ycXcJCFmS8S11C4JmP1A8d6Q@mail.gmail.com>
+Subject: Re: [PATCH 11/23] libnvdimm/labels: Introduce CXL labels
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc:     linux-cxl@vger.kernel.org, Linux NVDIMM <nvdimm@lists.linux.dev>,
         Ben Widawsky <ben.widawsky@intel.com>,
@@ -71,26 +71,114 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Aug 11, 2021 at 11:49 AM Jonathan Cameron
+On Wed, Aug 11, 2021 at 11:42 AM Jonathan Cameron
 <Jonathan.Cameron@huawei.com> wrote:
 >
-> On Mon, 9 Aug 2021 15:28:35 -0700
+> On Mon, 9 Aug 2021 15:28:46 -0700
 > Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> > The EFI definition of the labels represents the Linux "claim class" with
-> > a GUID. The CXL definition of the labels stores the same identifier in
-> > UUID byte order. In preparation for adding CXL label support, enable the
-> > claim class to optionally handle uuids.
+> > Now that all of use sites of label data have been converted to nsl_*
+> > helpers, introduce the CXL label format. The ->cxl flag in
+> > nvdimm_drvdata indicates the label format the device expects. A
+> > follow-on patch allows a bus provider to select the label style.
 > >
 > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>
+> A few trivial things inline. Nothing that actually 'needs' changing though.
 > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 >
-> I've already commented on 10 and 11 so this was backfilling tags
-> for the ones I'd looked at earlier but looked good to me.
+> > index e6e77691dbec..71ffde56fac0 100644
+> > --- a/drivers/nvdimm/label.h
+> > +++ b/drivers/nvdimm/label.h
+> > @@ -64,40 +64,77 @@ struct nd_namespace_index {
+> >       u8 free[];
+> >  };
+> >
+> > -/**
+> > - * struct nd_namespace_label - namespace superblock
+> > - * @uuid: UUID per RFC 4122
+> > - * @name: optional name (NULL-terminated)
+> > - * @flags: see NSLABEL_FLAG_*
+> > - * @nlabel: num labels to describe this ns
+> > - * @position: labels position in set
+> > - * @isetcookie: interleave set cookie
+> > - * @lbasize: LBA size in bytes or 0 for pmem
+> > - * @dpa: DPA of NVM range on this DIMM
+> > - * @rawsize: size of namespace
+> > - * @slot: slot of this label in label area
+> > - * @unused: must be zero
+> > - */
+> >  struct nd_namespace_label {
+> > +     union {
+> Cross reference might be a nice thing to include?
+> Table 212 I think...
+> > +             struct nvdimm_cxl_label {
+> > +                     uuid_t type;
+> > +                     uuid_t uuid;
+> > +                     u8 name[NSLABEL_NAME_LEN];
+> > +                     __le32 flags;
+> > +                     __le16 nlabel;
 >
-> I'm not all that familiar with this code yet, so all my checking was off the
-> "does it look locally correct?" variety.
->
-> Out of time for today, and not sure when I'll get to looking at the remainder.
+> Perhaps call out nlabel is nrange in the spec?
 
-I appreciate the slog through this legacy nvdimm code!
+Actually, this is a bug, because nlabel in EFI labels is the width of
+the interleave set. In CXL labels that property is moved to the region
+and this field is only for discontiguous namespace support. Good
+indirect catch!
+
+>
+> > +                     __le16 position;
+> > +                     __le64 dpa;
+> > +                     __le64 rawsize;
+> > +                     __le32 slot;
+> > +                     __le32 align;
+> > +                     uuid_t region_uuid;
+> > +                     uuid_t abstraction_uuid;
+> > +                     __le16 lbasize;
+> > +                     u8 reserved[0x56];
+> > +                     __le64 checksum;
+> > +             } cxl;
+> > +             /**
+> > +              * struct nvdimm_efi_label - namespace superblock
+> > +              * @uuid: UUID per RFC 4122
+> > +              * @name: optional name (NULL-terminated)
+> > +              * @flags: see NSLABEL_FLAG_*
+> > +              * @nlabel: num labels to describe this ns
+> > +              * @position: labels position in set
+> > +              * @isetcookie: interleave set cookie
+> > +              * @lbasize: LBA size in bytes or 0 for pmem
+> > +              * @dpa: DPA of NVM range on this DIMM
+> > +              * @rawsize: size of namespace
+> > +              * @slot: slot of this label in label area
+> > +              * @unused: must be zero
+> > +              */
+> > +             struct nvdimm_efi_label {
+> > +                     uuid_t uuid;
+> > +                     u8 name[NSLABEL_NAME_LEN];
+> > +                     __le32 flags;
+> > +                     __le16 nlabel;
+> > +                     __le16 position;
+> > +                     __le64 isetcookie;
+> > +                     __le64 lbasize;
+> > +                     __le64 dpa;
+> > +                     __le64 rawsize;
+> > +                     __le32 slot;
+> > +                     /*
+> > +                      * Accessing fields past this point should be
+> > +                      * gated by a efi_namespace_label_has() check.
+> > +                      */
+> > +                     u8 align;
+> > +                     u8 reserved[3];
+> > +                     guid_t type_guid;
+> > +                     guid_t abstraction_guid;
+> > +                     u8 reserved2[88];
+> > +                     __le64 checksum;
+> > +             } efi;
+> > +     };
+> > +};
+> > +
+> > +struct cxl_region_label {
+>
+> Perhaps separate this out to another patch so the diff ends up less confusing?
+
+I'll take a look.
