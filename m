@@ -6,111 +6,95 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03971C4320A
-	for <linux-cxl@archiver.kernel.org>; Fri, 13 Aug 2021 21:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2D8C4338F
+	for <linux-cxl@archiver.kernel.org>; Sat, 14 Aug 2021 01:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7936610F7
-	for <linux-cxl@archiver.kernel.org>; Fri, 13 Aug 2021 21:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCA0C610FE
+	for <linux-cxl@archiver.kernel.org>; Sat, 14 Aug 2021 01:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234824AbhHMV2S (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 13 Aug 2021 17:28:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49012 "EHLO
+        id S236187AbhHNBLi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 13 Aug 2021 21:11:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234716AbhHMV2S (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 13 Aug 2021 17:28:18 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7358C061756
-        for <linux-cxl@vger.kernel.org>; Fri, 13 Aug 2021 14:27:50 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id fa24-20020a17090af0d8b0290178bfa69d97so17921161pjb.0
-        for <linux-cxl@vger.kernel.org>; Fri, 13 Aug 2021 14:27:50 -0700 (PDT)
+        with ESMTP id S235870AbhHNBLi (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 13 Aug 2021 21:11:38 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C14EC061756
+        for <linux-cxl@vger.kernel.org>; Fri, 13 Aug 2021 18:11:11 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id e19so14193206pla.10
+        for <linux-cxl@vger.kernel.org>; Fri, 13 Aug 2021 18:11:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fIuqP4Yz2mMXyBFDc+vWEGTE5nozItHKoX69RiBlK9c=;
-        b=vJ4OFEkcbG1agdPxGccwQbBc8rAuR9cGgCsYwGAV+KW85F0NTQ9u9u6kv62Sr91ufO
-         h44HljNo1fS7MZN/dn1k7xMIgM/v+ynUOPHCN3PlOMIMj59SBLALsuiRcEMj8/X0uAH3
-         BMCyChW78mKbnoLLz7SfV6ri1HFHLCqS0abdKjAKsoB9yrW8nkL/ci8srOl1+j71MigB
-         r+kNJLMwIQZDVgvZxr4yjbfWqMluBWnLXpTKIYijwcXLwrVHMwcO6cNjGTfT4uI/D8y5
-         RnVKHojA3v1dbA7tAMYV1f/CJdJkR4GJLD3trYzde7/0NJumsKbW2WmC3pI1Cv+6Z4u5
-         MGJg==
+        bh=qnL7T8NMvGG9G3AlH5g9sF9LPriWI0ND5e8BllwSdbk=;
+        b=nrxF3Ui5D04wXCf+vtGZaHKqCngvPLBCaOanX69s3uQlspIXsglaBOx1FUjyEcgDv6
+         Ak/vub5MSwLo+39QnZBXzq20Trh01viFz/9sgzdeECfX30Gek3PM6ohX7scG1p/UZ4Hx
+         Z0s5ZeE3wHis2ih64JNNpIHmHUWcx1vev6PlCAXgW0twU9BrEqF5JczXeHLFFxwOOhiM
+         suo9XyHsQzpQ77NxwlheHQOJ3rhUBkyuCdM0LjryT42S4lN+Kcnl7GmsIMw6xnnQWlyz
+         0ETGMhVvQ9c8tTJRABvzBOULwNgSo4ydWkr+1NXP6qb1ukVpf3OhAuWIrHVgMTm+AHoB
+         C6BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fIuqP4Yz2mMXyBFDc+vWEGTE5nozItHKoX69RiBlK9c=;
-        b=UbjvYg74L4hduUFQoTZEQZgwAHl59kTH1yv8SL+XV7xpYJJrODssroqRjZLwPv7NC0
-         4f46q3gtECz9Ftv1QpNItuL6FeHQGf2q5MwowbsOX9ZVSAIff0dHoBGq+Lrrm9fNRd9S
-         D0TbJF3si9SN/xmjstqIM8p23DdwiwAJFaGK5V4m17d5OPBAHzw8QmVusXptOYiB2hjx
-         M3unYfvhFN7C2+7NSEfnIK8od/URFohEy2SqvIol7O5f8XFBI4BtzoenE5uJ22ie/AI8
-         c3YfMqPWunEax/tLQXmjhxvTcOe1ZPksVYfIrrpP2a5LrOwADSkPB98rVPaT1a09pc+p
-         cAZg==
-X-Gm-Message-State: AOAM5304IQCW3Oprl32fWozVOpglBjaiEc+pgvOYH/rT21wrSWYj0a+5
-        JBRnLeBuotg7UTxPfNzmRcnrKgiioQTzjGkHLVc8TA==
-X-Google-Smtp-Source: ABdhPJyeEo2GV1LHXrjsMojC83k03WtHncas+SnV0s9fpP+5J5WcDDtW7g6EGcAAsdn4yPgsmmawAkdI4/LU2VXVzTQ=
-X-Received: by 2002:a63:311:: with SMTP id 17mr4040003pgd.450.1628890070229;
- Fri, 13 Aug 2021 14:27:50 -0700 (PDT)
+        bh=qnL7T8NMvGG9G3AlH5g9sF9LPriWI0ND5e8BllwSdbk=;
+        b=lIUwblPG0d1FYs4enmsXCSSA2xy9vqWDtH6nJ0wt9gcGzu7gtQGxMpAwoiD+5yeUZW
+         IjxBoV90UNWOp+qAHh3kocwOUNniu0ItsDmsN6KBPyoqr7/LOkBIVcgKZur+Z7JgzoxQ
+         FTKrmH1mckrvHYdXMfCUZSyRg8BZrgjKrTsVMx1xyojkWSi1l51tc/tTM4Q56dQB4X+f
+         JuE/Dj+Cfe5Q8v5T7UHaGuQLlu3ODwa9V3QD0TE/ro7Nu/Ab4PNxsvDO6oovOsfLE4Qw
+         wOdA3cpVAINbFpuXa3TOg92J4QnQ+IZGdtv9BtwiO9ghhiiPOCNk6L7dItx6SHkfCvj9
+         Wndw==
+X-Gm-Message-State: AOAM533aUFzgslzmT/uUdwpM1Nv1nmY+ZE95v9rKTmLl8juWjsHTflU/
+        1otofBrHNi12tOm+giVm/mp0Cqn0aDq7XFekvhvfzxDR85VT2w==
+X-Google-Smtp-Source: ABdhPJy0ikwgCGDKVWUTmrI2YFIpfNqQ9LxOIAtGo22My6IvqpF7YsJ/fqzXWx2sBj1ajOEXiDUuhp4nbeutmurR8RI=
+X-Received: by 2002:a17:902:c10a:b0:12d:97e1:f035 with SMTP id
+ 10-20020a170902c10a00b0012d97e1f035mr3511055pli.52.1628903470611; Fri, 13 Aug
+ 2021 18:11:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <DM5PR12MB2534D383B0226498DD7F2005BDFA9@DM5PR12MB2534.namprd12.prod.outlook.com>
- <20210813171421.GA2593219@bjorn-Precision-5520>
-In-Reply-To: <20210813171421.GA2593219@bjorn-Precision-5520>
+References: <20210702040009.68794-1-ben.widawsky@intel.com>
+In-Reply-To: <20210702040009.68794-1-ben.widawsky@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 13 Aug 2021 14:27:39 -0700
-Message-ID: <CAPcyv4gQz7EBkvPdu_y8hBqQ_S12B5cAz4x42C1mx7dsBXKV9w@mail.gmail.com>
-Subject: Re: CXL Hot and Warm Reset Testing
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Vikram Sethi <vsethi@nvidia.com>,
-        Chris Browy <cbrowy@avery-design.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
+Date:   Fri, 13 Aug 2021 18:10:59 -0700
+Message-ID: <CAPcyv4hcZVKmvpGMwF+QH8aLCWd16Rh5a4BU74=YdmNoC1716A@mail.gmail.com>
+Subject: Re: [PATCH] cxl: Enable an endpoint decoder type
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Shanker Donthineni <sdonthineni@nvidia.com>,
-        Amey Narkhede <ameynarkhede03@gmail.com>,
-        Linux PCI <linux-pci@vger.kernel.org>
+        Vishal Verma <vishal.l.verma@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Aug 13, 2021 at 10:14 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Thu, Jul 1, 2021 at 9:00 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> [+cc Amey (working on PCI resets), linux-pci]
+> CXL memory devices support HDM decoders. Currently, when a decoder is
+> instantiated there is no knowledge of the type of decoder; only the
+> underlying endpoint type is specified. In order to have the memory
+> devices reuse the existing decoder creation infrastructure it is
+> convenient to pass along the type of decoder on creation.
 >
-> On Fri, Aug 13, 2021 at 05:01:32PM +0000, Vikram Sethi wrote:
-> > Hi Dan,
-> >
-> > > -----Original Message-----
-> > > From: Dan Williams <dan.j.williams@intel.com>
-> > >
-> > > On Wed, Aug 11, 2021 at 9:42 AM Chris Browy <cbrowy@avery-design.com>
-> > > wrote:
-> > >
-> > > /sys/bus/pci/devices/$device/reset is a method to trigger PCI
-> > > device reset, but I do not expect that will ever gain CXL specific
-> > > knowledge.
-> > >
-> > CXL reset may need some thought, specially for devices that don't
-> > expose FLR but do expose CXL reset (while former does not affect
-> > CXL.cache/mem, the latter wipes out CXL.cache/mem state in the
-> > device and there is discoverability as to whether or not memory
-> > contents can be cleared as part of CXL reset). We may need a way of
-> > triggering CXL reset from userspace, and if the existing
-> > /sys/bus/pci/devices/$device/reset won't have knowledge of CXL
-> > reset, there still should be a prioritized order in the kernel in
-> > which CXL reset is attempted before more drastic resets like SBR.
-> > IIRC CXL reset can also impact all functions that use CXL.cache/mem,
-> > but not legacy PCIe functions on the device which do not use
-> > CXL.cache/mem (there is discoverability as to which functions are
-> > not impacted by CXL reset).
+> The primary difference for an endpoint decoder is that it doesn't have
+> dports, nor targets. The target is just the underlying media (with
+> offset).
+>
 
-What's the Linux use case for supporting CXL reset for a CXL memory
-expander? PCI reset is useful for device assignment, and CXL reset
-might be useful for similarly assigning an accelerator. CXL.mem on the
-other hand can be directly assigned at a per-page level without also
-needing to assign the device. How could a VM reliably program HDM
-decoders when it cannot perceive the host physical address space? I
-understand the utility of CXL reset for device bring-up and test
-software that knows what it is doing can write config space directly,
-but that software would assume all responsibility.
+It's been a while, can you redo this patch just focusing on how to
+represent an endpoint without redoing the typing for existing
+decoders? It's not clear that cxl_decoder_type needs any updates. An
+endpoint decoder is either accelerator or expander (2 or 3). What
+makes an endpoint is merely that it is terminal in the sysfs decode
+topology. Just like the difference between root decoders and switch
+decoders is that root ones are origins of a decode hierarchy. You
+identify root decoders by the parent port type and endpoints by the
+lack of a target_map.
+
+Yes, target_map is a recent addition, but it seems to naturally fit
+the endpoint decoder definition since the target list is replaced with
+DPA Skip Low on endpoints.
+
+In short I don't think any new type information is needed, it can all
+be inferred inside devm_cxl_add_decoder().
