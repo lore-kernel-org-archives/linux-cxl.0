@@ -2,70 +2,118 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 464C8C4338F
-	for <linux-cxl@archiver.kernel.org>; Sat, 14 Aug 2021 07:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D10C4338F
+	for <linux-cxl@archiver.kernel.org>; Sat, 14 Aug 2021 11:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9F06103A
-	for <linux-cxl@archiver.kernel.org>; Sat, 14 Aug 2021 07:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C2660E93
+	for <linux-cxl@archiver.kernel.org>; Sat, 14 Aug 2021 11:16:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237193AbhHNHfl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 14 Aug 2021 03:35:41 -0400
-Received: from verein.lst.de ([213.95.11.211]:49482 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236519AbhHNHfg (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Sat, 14 Aug 2021 03:35:36 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 645AA67373; Sat, 14 Aug 2021 09:35:06 +0200 (CEST)
-Date:   Sat, 14 Aug 2021 09:35:06 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>, linux-cxl@vger.kernel.org,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
+        id S238195AbhHNLQx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 14 Aug 2021 07:16:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34390 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232881AbhHNLQv (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 14 Aug 2021 07:16:51 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5C96C061764;
+        Sat, 14 Aug 2021 04:16:23 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id a5so15302495plh.5;
+        Sat, 14 Aug 2021 04:16:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Bcd1tVUeLasuXBpBdQYWjgZ2ryyumZppgp2fnNj+U/4=;
+        b=hMoR/uPwhadn4YCgmIoNbqq4p9XnWzRfYPg8buTiAiKPLXYF13XBs2ZYVPQlBvUO5D
+         UZELbWLKcrm2l8zqqMx1l9obEqgTp0gMfSpODZbk00fnEAV8r+nWE4HxMl2nLM4wNCl8
+         LsE0AIT+rWCAKz5pjc6j5G3hyi/XDy/alpz0vbRpOG6xEA8KDqQvlyVAdsrLpDGu16H4
+         /tZQs+RXexsHcR/4qZZcYNzHQjivNtNpvTSpfqw1ImEUZ4+pEPYF2YdXnzlZxsm6JRAh
+         Lxx61PoZRo3kh2TSJHxgo9DWJxyLyrWMw5ouKa226AR5FUjU+zQDMQBS4PRckk7cZ/gZ
+         XXQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Bcd1tVUeLasuXBpBdQYWjgZ2ryyumZppgp2fnNj+U/4=;
+        b=c5HhV6wBumR4DNUGH54qWvPFFDCwmyqQT7odnoJWV4TlDTK3EQ9rtiRQAQRo46UJrl
+         uxAKUXaffDDzP09GmSPcAQ/8y6J+CEN5hm+mZQHaflVN2YIoP1QNmQRumHt5VE36S8hI
+         PTU8j+ev0FZGt51YcFgbkn8pD+9ZylcBrNPiZpi0lKp918sk72h6IKRxt8PmKx/BJuic
+         42haes4OT7ETYQqorecP9ctVlBZ1z6uw4aDjeUVTyAdfJcLzXHMHCX8LZ+h5Dz3tCcpQ
+         v5+tueI6k2kSrjLNIqXDPdhl+Of0HmmzdfLSFI8XPGs8ExoSLA3JlaTgE36qaXArJ/k+
+         BD6w==
+X-Gm-Message-State: AOAM533o6Eeza2OFg+b/k+FHWUGo+RXv8NcTFxPG7XbDhesl2NQrzGHw
+        tPqhOe9CApEVY6aUB0AUzZk=
+X-Google-Smtp-Source: ABdhPJyz313Rg+dCN0G0ai5PmG/7G8W0/K0TfluTIjeTL/kryGIZfY1NNL0Uw+HaaqMheil5mg6/0w==
+X-Received: by 2002:a05:6a00:1a55:b029:3c3:2231:4d16 with SMTP id h21-20020a056a001a55b02903c322314d16mr6692340pfv.18.1628939783260;
+        Sat, 14 Aug 2021 04:16:23 -0700 (PDT)
+Received: from localhost ([139.5.31.161])
+        by smtp.gmail.com with ESMTPSA id p29sm5518833pfw.141.2021.08.14.04.16.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Aug 2021 04:16:22 -0700 (PDT)
+Date:   Sat, 14 Aug 2021 16:46:20 +0530
+From:   Amey Narkhede <ameynarkhede03@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Vikram Sethi <vsethi@nvidia.com>,
+        Chris Browy <cbrowy@avery-design.com>,
+        linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>
-Subject: Re: [PATCH 10/23] libnvdimm/labels: Add uuid helpers
-Message-ID: <20210814073506.GA21463@lst.de>
-References: <162854806653.1980150.3354618413963083778.stgit@dwillia2-desk3.amr.corp.intel.com> <162854812073.1980150.8157116233571368158.stgit@dwillia2-desk3.amr.corp.intel.com> <YROE48iCZNFaDcSo@smile.fi.intel.com> <YRQB9Yvh3tmT9An4@smile.fi.intel.com> <CAPcyv4jOEfi=RJTeOFTbvkBB+Khfzi5QirrhPxeM4J2bQXRYiQ@mail.gmail.com> <YRQik5OnRyYQAm4o@smile.fi.intel.com> <CAPcyv4hY9YL7MhkeSu4GYBNo6hbeMRgqnKf8YuLuQ3khSbhn9A@mail.gmail.com> <YRZGInO3vguWR4IA@smile.fi.intel.com>
+        Alex Williamson <alex.williamson@redhat.com>,
+        Shanker Donthineni <sdonthineni@nvidia.com>,
+        Amey Narkhede <ameynarkhede03@gmail.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: CXL Hot and Warm Reset Testing
+Message-ID: <20210814111620.wn6422g3dbed52ex@archlinux>
+References: <DM5PR12MB2534D383B0226498DD7F2005BDFA9@DM5PR12MB2534.namprd12.prod.outlook.com>
+ <20210813171421.GA2593219@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YRZGInO3vguWR4IA@smile.fi.intel.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20210813171421.GA2593219@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Aug 13, 2021 at 01:14:58PM +0300, Andy Shevchenko wrote:
-> > Andy, does this incremental diff restore your reviewed-by? The awkward
-> > piece of this for me is that it introduces a handful of unnecessary
-> > memory copies. See some of the new nsl_get_uuid() additions and the
-> > extra copy in nsl_uuid_equal()
-> 
-> It does, thanks! As for the deeper discussion I think you need to talk to
-> Christoph. It was his idea to move uuid_t from UAPI to internal kernel type.
-> And I think it made and still makes sense to be that way.
-> 
-> But if we have already users of uuid_t like you are doing here (without this
-> patch) then it will be fine I guess. Not my area to advise or decide.
+On 21/08/13 12:14PM, Bjorn Helgaas wrote:
+> [+cc Amey (working on PCI resets), linux-pci]
+>
+> On Fri, Aug 13, 2021 at 05:01:32PM +0000, Vikram Sethi wrote:
+> > Hi Dan,
+> >
+> > > -----Original Message-----
+> > > From: Dan Williams <dan.j.williams@intel.com>
+> > >
+> > > On Wed, Aug 11, 2021 at 9:42 AM Chris Browy <cbrowy@avery-design.com>
+> > > wrote:
+> > >
+> > > /sys/bus/pci/devices/$device/reset is a method to trigger PCI
+> > > device reset, but I do not expect that will ever gain CXL specific
+> > > knowledge.
+> > >
+> > CXL reset may need some thought, specially for devices that don't
+> > expose FLR but do expose CXL reset (while former does not affect
+> > CXL.cache/mem, the latter wipes out CXL.cache/mem state in the
+> > device and there is discoverability as to whether or not memory
+> > contents can be cleared as part of CXL reset). We may need a way of
+> > triggering CXL reset from userspace, and if the existing
+> > /sys/bus/pci/devices/$device/reset won't have knowledge of CXL
+> > reset, there still should be a prioritized order in the kernel in
+> > which CXL reset is attempted before more drastic resets like SBR.
+> > IIRC CXL reset can also impact all functions that use CXL.cache/mem,
+> > but not legacy PCIe functions on the device which do not use
+> > CXL.cache/mem (there is discoverability as to which functions are
+> > not impacted by CXL reset).
+> >
+> > Thanks,
+> > Vikram
 
-I'm missing a lot of context here.  But that whole uuid/guid thing is
-a little complex:
+We can add new reset method and expose it to userspace via new 'reset_method'
+sysfs attribute introduced in this series
+https://lore.kernel.org/linux-pci/20210805162917.3989-1-ameynarkhede03@gmail.com/
 
- - for userspace APIs and on-disk formats a uuid is nothing but a blob
- - userspace historically has its own library to deal with this (libuuid),
-   which defines a uuid_t itself.
-
-So instead of trying to build abstractions that somehow word in diferent
-software ecosystems I think just treating it as the blob that it is for
-exchange makes life easіer for everyone.  It also really makes definitions
-of on-disk structures more clear when using the raw bytes instead of a
-semi-opaque typedef.
+Thanks,
+Amey
