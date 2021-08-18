@@ -2,178 +2,98 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10436C4320A
-	for <linux-cxl@archiver.kernel.org>; Wed, 18 Aug 2021 06:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E6AC4338F
+	for <linux-cxl@archiver.kernel.org>; Wed, 18 Aug 2021 22:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED2706109E
-	for <linux-cxl@archiver.kernel.org>; Wed, 18 Aug 2021 06:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4586108F
+	for <linux-cxl@archiver.kernel.org>; Wed, 18 Aug 2021 22:36:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238421AbhHRGH3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 18 Aug 2021 02:07:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44312 "EHLO
+        id S234785AbhHRWhK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 18 Aug 2021 18:37:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238226AbhHRGGb (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 18 Aug 2021 02:06:31 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D413DC0613A3
-        for <linux-cxl@vger.kernel.org>; Tue, 17 Aug 2021 23:05:55 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id n13-20020a17090a4e0d00b0017946980d8dso8166851pjh.5
-        for <linux-cxl@vger.kernel.org>; Tue, 17 Aug 2021 23:05:55 -0700 (PDT)
+        with ESMTP id S234752AbhHRWhK (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 18 Aug 2021 18:37:10 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1777C061796
+        for <linux-cxl@vger.kernel.org>; Wed, 18 Aug 2021 15:36:34 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id k19so3665626pfc.11
+        for <linux-cxl@vger.kernel.org>; Wed, 18 Aug 2021 15:36:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=AvplAjAyy7Xo+ijXhvo31OZi4yHKm9FY1a+n2JGpi4g=;
-        b=NeXzORZmOiduwjDAC0+j3ijPK837yd7AOHICtcf8M5fH8xvkQaB+Uf/aJua6kMoa7W
-         1vXTWMRBK40BOeZtiWp1NgAe4zigCd52vkBHJFcstCUi0JREIRyq+cWP2cxIfpt3Py5d
-         YQECpl2DUZNSwXCNLd5C5w9uHmFHklnzQCqEg=
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2sMII5G/YrPb+0dkZspyZPS9+RZRKOtmg2+pJ+lOQh8=;
+        b=zCeTW3J0K5np3tXoG1IVSEAaPhRTsp6E7FG40JMxEKemO8ZOHARazqIQmpKFIcs6Sd
+         N+GcdWyWkTcutczTnN4sOyyVCxvFWCYptMFPsGfhg09eZke8WGMWE7X323gqAUdPsHGt
+         GJI+Q1n5sJHSiu6jvMoqplSND0vhS0iaBcT4D21x/nhiQ6MHkY+ruWt2EXdQpfM96zjC
+         hi5+qOD40TDeOvrQRR206d0ujvibZUy7wKb/uB+gerRXWqa6ZBPhLTAUkWQOL5fPGNzE
+         UiSjQoQgCCbD822O9dBlOBwzl+Vg8GmLowbUkm3Fma27sj5ipvOpNTGfxjNlZImQucyY
+         2hBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=AvplAjAyy7Xo+ijXhvo31OZi4yHKm9FY1a+n2JGpi4g=;
-        b=I5aqqYSY/D7JBcibjohoYtlP5YrcEKk/6D/HG2twLHEhj3YPA85ZHvjIJ910A8pz4W
-         ZNkSXPE6Si1Jc1DKHn4Lk6uQyPfs+X9y+ji0m5fXzBvIV+pbMQ43cVJVvH4NSOFh6NbX
-         g+eAdbvP04hfXfOIsLOo0C2eP6IOqlUVEo+c+CDmE7bCDZ9Od1UftFErep6Bfxbge5fg
-         5eSmrPms8BENhkKdHEfLHtV7haO/vMToi/RbA9R89yVfyaa7cs98H5MozSmwmFpkyoqU
-         IJpG0jVADmWNcu2+0YO48SYS2w8u+jB7j52/zNWDPYT68JK+W7dwNhsQUOMtlCpsYvW5
-         UGig==
-X-Gm-Message-State: AOAM530vAq/41Z9ikWEHA1nhf5KvVhEDhbFbhiBDda7BgtMcjvnIgumw
-        XSd3E1uUpe4eiwvaQsu60Dzz1g==
-X-Google-Smtp-Source: ABdhPJxY62Rs0zD7LqgByaLcYUzxicRfdtBpOOnXndlcdy7gi8jpEy7wbHdOuHGHf2lbmjFtmXZneg==
-X-Received: by 2002:a17:902:e84f:b0:12d:c616:a402 with SMTP id t15-20020a170902e84f00b0012dc616a402mr5833254plg.77.1629266755373;
-        Tue, 17 Aug 2021 23:05:55 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y67sm4550662pfg.218.2021.08.17.23.05.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Aug 2021 23:05:53 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2sMII5G/YrPb+0dkZspyZPS9+RZRKOtmg2+pJ+lOQh8=;
+        b=VD8IvAW9fGd6QUDDDDXWZPBIiyUi2/RQwU6XoKAgL8W7RGwtRG7tMOQfzHbwtMPTe6
+         i/ojzcjnjImJGoI6KqyCuWtVllXrjd2Ej1QRuFbUnxhEdn+BK7QXuEcDgJ98HF8/2F35
+         J177dlel/P7wdI7QI8WcnWui4ffDL2X+uUy6xcxGEdOUl2Ss8dE9ykPtIkK/CaHsGp48
+         MRp+zYuv6Xb32zD+j3EYRsm4KrzDb685ArPZdppnOKmL+4sCdzB4Q6UGrcwuv5jHn3OI
+         tBCtsjzhH4QRLDklC4OqmO72RNlhJABjL6i2GDK7jT1ggfo0tnuxAKrpbbGgQ9l2Rdh+
+         EZhQ==
+X-Gm-Message-State: AOAM530A6+iGN/N9aE8Pl1sD4l2l0q7iSWJAljlu0Y+EOA0fV6BKpel2
+        CsAGKSPjsB8XuFkdBI+OqlrA4DuvvXGAmsDzSPjRkA==
+X-Google-Smtp-Source: ABdhPJx62hXsE0+fSTYrXfKzc8DzxmmvkPKOdI5TBxPP7euaOB9l5vqd5XytOvYvOyAB9vVojNAO4JW+D+jXmEpzsAs=
+X-Received: by 2002:a63:dd0e:: with SMTP id t14mr9405083pgg.279.1629326194463;
+ Wed, 18 Aug 2021 15:36:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210818060533.3569517-1-keescook@chromium.org> <20210818060533.3569517-7-keescook@chromium.org>
+In-Reply-To: <20210818060533.3569517-7-keescook@chromium.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 18 Aug 2021 15:36:23 -0700
+Message-ID: <CAPcyv4hZUOENLxUgqXrzpv0rhHp-TP_EkTaBKjvrsFLjy3-1Vw@mail.gmail.com>
+Subject: Re: [PATCH v2 06/63] cxl/core: Replace unions with struct_group()
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Ben Widawsky <ben.widawsky@intel.com>,
-        linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        linux-cxl@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-staging@lists.linux.dev,
-        linux-block@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
+        Linux Wireless List <linux-wireless@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, linux-staging@lists.linux.dev,
+        linux-block@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2 06/63] cxl/core: Replace unions with struct_group()
-Date:   Tue, 17 Aug 2021 23:04:36 -0700
-Message-Id: <20210818060533.3569517-7-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210818060533.3569517-1-keescook@chromium.org>
-References: <20210818060533.3569517-1-keescook@chromium.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2984; h=from:subject; bh=gH2l7MUrimYDJJHL5/kGu3UEiSd7agDYsUtnIqIDLGg=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMfFeE+SAeXV7TlGs5W5Dan0qJQ1dt63HKDzfHG juo8T9CJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjHwAKCRCJcvTf3G3AJlH/EA CnsBzSF5pyrctJZ6ieH+8X8zUFVzCAy3+BR6FX4EgEQJkJRkPWwnEynE2qGmzAQmsEHsp55I/GrJX4 JR1eEWAvgU7ZjlCsPIcv1hCYd1m27MgsvOjeZZPQo8r02lm4PTiaybJvP6THoSxUoZ7x7i+BLdqnLN CJ2Tai+1QWBg/z5BfgXsolu04ACMdQY4zZdNixxfxbVmz8EfwVyWUFyP3k0U0O43Mhc0n+Pi9sfLdY gqM7Y/4yJ/qOqjNqkAP2FR+u7pDMCwF5q6mugy3ReHQbJ3WUCsx/h6iW6XpvzpLtDmU4PnwCizNbDJ 65jHpkXZBwccb2yWZL3xbfcqAc4M9w9cYxNpLdtt8NZ+rde81+4KjY3RjmaYJ6kbOdG2jTQ2uB7QBR 8IB6Vp3VcelKvfe2D6gT91BL8IxzqodAw+yqwCP18Gg1nRBdVdzBLvr5+AFn9w0jjp98MtTKa6P7ii gkZ2UwvygAIG4rcijtB/7meDfJT0C/h40i2avmZ5bb1UndNmOtfoixIiUnumnomu9UUwzxEUdhNb57 KS5dfN7XmkBAwIOqhTGzOAtYHWmH1VyhVLJnBQ2VfGR39r5zOPfmnkT1aic2J3QdRCTgo2AZbLBI6F DcMPWmOtMJYmAJpqZMcje5nPsclSh7Hq7uJSZSzWOq0scZlLODKdzRVPuALg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Use the newly introduced struct_group_typed() macro to clean up the
-declaration of struct cxl_regs.
+On Tue, Aug 17, 2021 at 11:06 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> Use the newly introduced struct_group_typed() macro to clean up the
+> declaration of struct cxl_regs.
+>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Ben Widawsky <ben.widawsky@intel.com>
+> Cc: linux-cxl@vger.kernel.org
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
 
-Cc: Alison Schofield <alison.schofield@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Ben Widawsky <ben.widawsky@intel.com>
-Cc: linux-cxl@vger.kernel.org
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Link: https://lore.kernel.org/lkml/1d9a2e6df2a9a35b2cdd50a9a68cac5991e7e5f0.camel@intel.com
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/cxl/cxl.h | 61 ++++++++++++++---------------------------------
- 1 file changed, 18 insertions(+), 43 deletions(-)
+Looks good and tests ok here:
 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 53927f9fa77e..9db0c402c9ce 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -75,52 +75,27 @@ static inline int cxl_hdm_decoder_count(u32 cap_hdr)
- #define CXLDEV_MBOX_BG_CMD_STATUS_OFFSET 0x18
- #define CXLDEV_MBOX_PAYLOAD_OFFSET 0x20
- 
--#define CXL_COMPONENT_REGS() \
--	void __iomem *hdm_decoder
--
--#define CXL_DEVICE_REGS() \
--	void __iomem *status; \
--	void __iomem *mbox; \
--	void __iomem *memdev
--
--/* See note for 'struct cxl_regs' for the rationale of this organization */
--/*
-- * CXL_COMPONENT_REGS - Common set of CXL Component register block base pointers
-- * @hdm_decoder: CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure
-- */
--struct cxl_component_regs {
--	CXL_COMPONENT_REGS();
--};
--
--/* See note for 'struct cxl_regs' for the rationale of this organization */
--/*
-- * CXL_DEVICE_REGS - Common set of CXL Device register block base pointers
-- * @status: CXL 2.0 8.2.8.3 Device Status Registers
-- * @mbox: CXL 2.0 8.2.8.4 Mailbox Registers
-- * @memdev: CXL 2.0 8.2.8.5 Memory Device Registers
-- */
--struct cxl_device_regs {
--	CXL_DEVICE_REGS();
--};
--
- /*
-- * Note, the anonymous union organization allows for per
-- * register-block-type helper routines, without requiring block-type
-- * agnostic code to include the prefix.
-+ * Using struct_group() allows for per register-block-type helper routines,
-+ * without requiring block-type agnostic code to include the prefix.
-  */
- struct cxl_regs {
--	union {
--		struct {
--			CXL_COMPONENT_REGS();
--		};
--		struct cxl_component_regs component;
--	};
--	union {
--		struct {
--			CXL_DEVICE_REGS();
--		};
--		struct cxl_device_regs device_regs;
--	};
-+	/*
-+	 * Common set of CXL Component register block base pointers
-+	 * @hdm_decoder: CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure
-+	 */
-+	struct_group_tagged(cxl_component_regs, component,
-+		void __iomem *hdm_decoder;
-+	);
-+	/*
-+	 * Common set of CXL Device register block base pointers
-+	 * @status: CXL 2.0 8.2.8.3 Device Status Registers
-+	 * @mbox: CXL 2.0 8.2.8.4 Mailbox Registers
-+	 * @memdev: CXL 2.0 8.2.8.5 Memory Device Registers
-+	 */
-+	struct_group_tagged(cxl_device_regs, device_regs,
-+		void __iomem *status, *mbox, *memdev;
-+	);
- };
- 
- struct cxl_reg_map {
--- 
-2.30.2
-
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
