@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9FBC4338F
-	for <linux-cxl@archiver.kernel.org>; Tue, 24 Aug 2021 16:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC0CC4338F
+	for <linux-cxl@archiver.kernel.org>; Tue, 24 Aug 2021 16:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2BB461371
-	for <linux-cxl@archiver.kernel.org>; Tue, 24 Aug 2021 16:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DEB36135F
+	for <linux-cxl@archiver.kernel.org>; Tue, 24 Aug 2021 16:08:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229467AbhHXQJV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 24 Aug 2021 12:09:21 -0400
-Received: from mga07.intel.com ([134.134.136.100]:13644 "EHLO mga07.intel.com"
+        id S229699AbhHXQJ2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 24 Aug 2021 12:09:28 -0400
+Received: from mga07.intel.com ([134.134.136.100]:13663 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232622AbhHXQJU (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 24 Aug 2021 12:09:20 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10086"; a="281060138"
+        id S229697AbhHXQJ1 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Tue, 24 Aug 2021 12:09:27 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10086"; a="281060198"
 X-IronPort-AV: E=Sophos;i="5.84,347,1620716400"; 
-   d="scan'208";a="281060138"
+   d="scan'208";a="281060198"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 09:06:36 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 09:06:52 -0700
 X-IronPort-AV: E=Sophos;i="5.84,347,1620716400"; 
-   d="scan'208";a="643232631"
+   d="scan'208";a="643232739"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 09:06:36 -0700
-Subject: [PATCH v3 13/28] libnvdimm/label: Define CXL region labels
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 09:06:52 -0700
+Subject: [PATCH v3 16/28] cxl/mbox: Introduce the mbox_send operation
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        nvdimm@lists.linux.dev, Jonathan.Cameron@huawei.com,
-        ira.weiny@intel.com, ben.widawsky@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com
-Date:   Tue, 24 Aug 2021 09:06:36 -0700
-Message-ID: <162982119604.1124374.8364301519543316156.stgit@dwillia2-desk3.amr.corp.intel.com>
+Cc:     Ben Widawsky <ben.widawsky@intel.com>, vishal.l.verma@intel.com,
+        alison.schofield@intel.com, nvdimm@lists.linux.dev,
+        Jonathan.Cameron@huawei.com, ira.weiny@intel.com,
+        ben.widawsky@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com
+Date:   Tue, 24 Aug 2021 09:06:52 -0700
+Message-ID: <162982121207.1124374.6113172345033386781.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <162982112370.1124374.2020303588105269226.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <162982112370.1124374.2020303588105269226.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -48,55 +48,236 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add a definition of the CXL 2.0 region label format. Note this is done
-as a separate patch to make the next patch that adds namespace label
-support easier to read.
+In preparation for implementing a unit test backend transport for ioctl
+operations, and making the mailbox available to the cxl/pmem
+infrastructure, move the existing PCI specific portion of mailbox handling
+to an "mbox_send" operation.
 
-Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+With this split all the PCI-specific transport details are comprehended
+by a single operation and the rest of the mailbox infrastructure is
+'struct cxl_mem' and 'struct cxl_memdev' generic.
+
+Acked-by: Ben Widawsky <ben.widawsky@intel.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/nvdimm/label.h |   30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ drivers/cxl/cxlmem.h |   42 ++++++++++++++++++++++++++++
+ drivers/cxl/pci.c    |   76 ++++++++++++++------------------------------------
+ 2 files changed, 63 insertions(+), 55 deletions(-)
 
-diff --git a/drivers/nvdimm/label.h b/drivers/nvdimm/label.h
-index 31f94fad7b92..76ecd0347dc2 100644
---- a/drivers/nvdimm/label.h
-+++ b/drivers/nvdimm/label.h
-@@ -65,6 +65,36 @@ struct nd_namespace_index {
- 	u8 free[];
- };
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 8397daea9d9b..a56d8f26a157 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -66,6 +66,45 @@ struct cxl_memdev *
+ devm_cxl_add_memdev(struct device *host, struct cxl_mem *cxlm,
+ 		    const struct cdevm_file_operations *cdevm_fops);
  
 +/**
-+ * struct cxl_region_label - CXL 2.0 Table 211
-+ * @type: uuid identifying this label format (region)
-+ * @uuid: uuid for the region this label describes
-+ * @flags: NSLABEL_FLAG_UPDATING (all other flags reserved)
-+ * @position: this label's position in the set
-+ * @dpa: start address in device-local capacity for this label
-+ * @rawsize: size of this label's contribution to region
-+ * @hpa: mandatory system physical address to map this region
-+ * @slot: slot id of this label in label area
-+ * @ig: interleave granularity (1 << @ig) * 256 bytes
-+ * @align: alignment in SZ_256M blocks
-+ * @checksum: fletcher64 sum of this label
++ * struct mbox_cmd - A command to be submitted to hardware.
++ * @opcode: (input) The command set and command submitted to hardware.
++ * @payload_in: (input) Pointer to the input payload.
++ * @payload_out: (output) Pointer to the output payload. Must be allocated by
++ *		 the caller.
++ * @size_in: (input) Number of bytes to load from @payload_in.
++ * @size_out: (input) Max number of bytes loaded into @payload_out.
++ *            (output) Number of bytes generated by the device. For fixed size
++ *            outputs commands this is always expected to be deterministic. For
++ *            variable sized output commands, it tells the exact number of bytes
++ *            written.
++ * @return_code: (output) Error code returned from hardware.
++ *
++ * This is the primary mechanism used to send commands to the hardware.
++ * All the fields except @payload_* correspond exactly to the fields described in
++ * Command Register section of the CXL 2.0 8.2.8.4.5. @payload_in and
++ * @payload_out are written to, and read from the Command Payload Registers
++ * defined in CXL 2.0 8.2.8.4.8.
 + */
-+struct cxl_region_label {
-+	u8 type[NSLABEL_UUID_LEN];
-+	u8 uuid[NSLABEL_UUID_LEN];
-+	__le32 flags;
-+	__le16 nlabel;
-+	__le16 position;
-+	__le64 dpa;
-+	__le64 rawsize;
-+	__le64 hpa;
-+	__le32 slot;
-+	__le32 ig;
-+	__le32 align;
-+	u8 reserved[0xac];
-+	__le64 checksum;
++struct cxl_mbox_cmd {
++	u16 opcode;
++	void *payload_in;
++	void *payload_out;
++	size_t size_in;
++	size_t size_out;
++	u16 return_code;
++#define CXL_MBOX_SUCCESS 0
 +};
 +
++/*
++ * CXL 2.0 - Memory capacity multiplier
++ * See Section 8.2.9.5
++ *
++ * Volatile, Persistent, and Partition capacities are specified to be in
++ * multiples of 256MB - define a multiplier to convert to/from bytes.
++ */
++#define CXL_CAPACITY_MULTIPLIER SZ_256M
++
  /**
-  * struct nd_namespace_label - namespace superblock
-  * @uuid: UUID per RFC 4122
+  * struct cxl_mem - A CXL memory device
+  * @dev: The device associated with this CXL device.
+@@ -80,6 +119,7 @@ devm_cxl_add_memdev(struct device *host, struct cxl_mem *cxlm,
+  * @enabled_cmds: Hardware commands found enabled in CEL.
+  * @pmem_range: Persistent memory capacity information.
+  * @ram_range: Volatile memory capacity information.
++ * @mbox_send: @dev specific transport for transmitting mailbox commands
+  */
+ struct cxl_mem {
+ 	struct device *dev;
+@@ -104,5 +144,7 @@ struct cxl_mem {
+ 	u64 active_persistent_bytes;
+ 	u64 next_volatile_bytes;
+ 	u64 next_persistent_bytes;
++
++	int (*mbox_send)(struct cxl_mem *cxlm, struct cxl_mbox_cmd *cmd);
+ };
+ #endif /* __CXL_MEM_H__ */
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 24d84b69227a..a211b35af4be 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -64,45 +64,6 @@ enum opcode {
+ 	CXL_MBOX_OP_MAX			= 0x10000
+ };
+ 
+-/*
+- * CXL 2.0 - Memory capacity multiplier
+- * See Section 8.2.9.5
+- *
+- * Volatile, Persistent, and Partition capacities are specified to be in
+- * multiples of 256MB - define a multiplier to convert to/from bytes.
+- */
+-#define CXL_CAPACITY_MULTIPLIER SZ_256M
+-
+-/**
+- * struct mbox_cmd - A command to be submitted to hardware.
+- * @opcode: (input) The command set and command submitted to hardware.
+- * @payload_in: (input) Pointer to the input payload.
+- * @payload_out: (output) Pointer to the output payload. Must be allocated by
+- *		 the caller.
+- * @size_in: (input) Number of bytes to load from @payload_in.
+- * @size_out: (input) Max number of bytes loaded into @payload_out.
+- *            (output) Number of bytes generated by the device. For fixed size
+- *            outputs commands this is always expected to be deterministic. For
+- *            variable sized output commands, it tells the exact number of bytes
+- *            written.
+- * @return_code: (output) Error code returned from hardware.
+- *
+- * This is the primary mechanism used to send commands to the hardware.
+- * All the fields except @payload_* correspond exactly to the fields described in
+- * Command Register section of the CXL 2.0 8.2.8.4.5. @payload_in and
+- * @payload_out are written to, and read from the Command Payload Registers
+- * defined in CXL 2.0 8.2.8.4.8.
+- */
+-struct mbox_cmd {
+-	u16 opcode;
+-	void *payload_in;
+-	void *payload_out;
+-	size_t size_in;
+-	size_t size_out;
+-	u16 return_code;
+-#define CXL_MBOX_SUCCESS 0
+-};
+-
+ static DECLARE_RWSEM(cxl_memdev_rwsem);
+ static struct dentry *cxl_debugfs;
+ static bool cxl_raw_allow_all;
+@@ -266,7 +227,7 @@ static bool cxl_is_security_command(u16 opcode)
+ }
+ 
+ static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
+-				 struct mbox_cmd *mbox_cmd)
++				 struct cxl_mbox_cmd *mbox_cmd)
+ {
+ 	struct device *dev = cxlm->dev;
+ 
+@@ -297,7 +258,7 @@ static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
+  * mailbox.
+  */
+ static int __cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
+-				   struct mbox_cmd *mbox_cmd)
++				   struct cxl_mbox_cmd *mbox_cmd)
+ {
+ 	void __iomem *payload = cxlm->regs.mbox + CXLDEV_MBOX_PAYLOAD_OFFSET;
+ 	struct device *dev = cxlm->dev;
+@@ -472,6 +433,20 @@ static void cxl_mem_mbox_put(struct cxl_mem *cxlm)
+ 	mutex_unlock(&cxlm->mbox_mutex);
+ }
+ 
++static int cxl_pci_mbox_send(struct cxl_mem *cxlm, struct cxl_mbox_cmd *cmd)
++{
++	int rc;
++
++	rc = cxl_mem_mbox_get(cxlm);
++	if (rc)
++		return rc;
++
++	rc = __cxl_mem_mbox_send_cmd(cxlm, cmd);
++	cxl_mem_mbox_put(cxlm);
++
++	return rc;
++}
++
+ /**
+  * handle_mailbox_cmd_from_user() - Dispatch a mailbox command for userspace.
+  * @cxlm: The CXL memory device to communicate with.
+@@ -503,7 +478,7 @@ static int handle_mailbox_cmd_from_user(struct cxl_mem *cxlm,
+ 					s32 *size_out, u32 *retval)
+ {
+ 	struct device *dev = cxlm->dev;
+-	struct mbox_cmd mbox_cmd = {
++	struct cxl_mbox_cmd mbox_cmd = {
+ 		.opcode = cmd->opcode,
+ 		.size_in = cmd->info.size_in,
+ 		.size_out = cmd->info.size_out,
+@@ -525,10 +500,6 @@ static int handle_mailbox_cmd_from_user(struct cxl_mem *cxlm,
+ 		}
+ 	}
+ 
+-	rc = cxl_mem_mbox_get(cxlm);
+-	if (rc)
+-		goto out;
+-
+ 	dev_dbg(dev,
+ 		"Submitting %s command for user\n"
+ 		"\topcode: %x\n"
+@@ -539,8 +510,7 @@ static int handle_mailbox_cmd_from_user(struct cxl_mem *cxlm,
+ 	dev_WARN_ONCE(dev, cmd->info.id == CXL_MEM_COMMAND_ID_RAW,
+ 		      "raw command path used\n");
+ 
+-	rc = __cxl_mem_mbox_send_cmd(cxlm, &mbox_cmd);
+-	cxl_mem_mbox_put(cxlm);
++	rc = cxlm->mbox_send(cxlm, &mbox_cmd);
+ 	if (rc)
+ 		goto out;
+ 
+@@ -874,7 +844,7 @@ static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm, u16 opcode,
+ 				 void *out, size_t out_size)
+ {
+ 	const struct cxl_mem_command *cmd = cxl_mem_find_command(opcode);
+-	struct mbox_cmd mbox_cmd = {
++	struct cxl_mbox_cmd mbox_cmd = {
+ 		.opcode = opcode,
+ 		.payload_in = in,
+ 		.size_in = in_size,
+@@ -886,12 +856,7 @@ static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm, u16 opcode,
+ 	if (out_size > cxlm->payload_size)
+ 		return -E2BIG;
+ 
+-	rc = cxl_mem_mbox_get(cxlm);
+-	if (rc)
+-		return rc;
+-
+-	rc = __cxl_mem_mbox_send_cmd(cxlm, &mbox_cmd);
+-	cxl_mem_mbox_put(cxlm);
++	rc = cxlm->mbox_send(cxlm, &mbox_cmd);
+ 	if (rc)
+ 		return rc;
+ 
+@@ -913,6 +878,7 @@ static int cxl_mem_setup_mailbox(struct cxl_mem *cxlm)
+ {
+ 	const int cap = readl(cxlm->regs.mbox + CXLDEV_MBOX_CAPS_OFFSET);
+ 
++	cxlm->mbox_send = cxl_pci_mbox_send;
+ 	cxlm->payload_size =
+ 		1 << FIELD_GET(CXLDEV_MBOX_CAP_PAYLOAD_SIZE_MASK, cap);
+ 
 
