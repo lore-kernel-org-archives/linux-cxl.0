@@ -7,39 +7,37 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB4DC4338F
-	for <linux-cxl@archiver.kernel.org>; Tue, 24 Aug 2021 16:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC01C4338F
+	for <linux-cxl@archiver.kernel.org>; Tue, 24 Aug 2021 16:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9346135F
-	for <linux-cxl@archiver.kernel.org>; Tue, 24 Aug 2021 16:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E0D561360
+	for <linux-cxl@archiver.kernel.org>; Tue, 24 Aug 2021 16:09:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229558AbhHXQJx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 24 Aug 2021 12:09:53 -0400
-Received: from mga07.intel.com ([134.134.136.100]:13699 "EHLO mga07.intel.com"
+        id S229800AbhHXQJ4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 24 Aug 2021 12:09:56 -0400
+Received: from mga04.intel.com ([192.55.52.120]:32144 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229478AbhHXQJu (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 24 Aug 2021 12:09:50 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10086"; a="281060424"
+        id S229705AbhHXQJz (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Tue, 24 Aug 2021 12:09:55 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10086"; a="215502082"
 X-IronPort-AV: E=Sophos;i="5.84,347,1620716400"; 
-   d="scan'208";a="281060424"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 09:07:53 -0700
+   d="scan'208";a="215502082"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 09:07:14 -0700
 X-IronPort-AV: E=Sophos;i="5.84,347,1620716400"; 
-   d="scan'208";a="684023776"
+   d="scan'208";a="426161962"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 09:07:50 -0700
-Subject: [PATCH v3 27/28] tools/testing/cxl: Introduce a mock memory device
- + driver
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 09:07:13 -0700
+Subject: [PATCH v3 20/28] cxl/mbox: Add exclusive kernel command support
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        kernel test robot <lkp@intel.com>, vishal.l.verma@intel.com,
+Cc:     Ben Widawsky <ben.widawsky@intel.com>, vishal.l.verma@intel.com,
         alison.schofield@intel.com, nvdimm@lists.linux.dev,
         Jonathan.Cameron@huawei.com, ira.weiny@intel.com,
         ben.widawsky@intel.com, vishal.l.verma@intel.com,
         alison.schofield@intel.com
-Date:   Tue, 24 Aug 2021 09:07:49 -0700
-Message-ID: <162982126962.1124374.4032057539749435582.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Tue, 24 Aug 2021 09:07:13 -0700
+Message-ID: <162982123298.1124374.22718002900700392.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <162982112370.1124374.2020303588105269226.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <162982112370.1124374.2020303588105269226.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -50,518 +48,194 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Introduce an emulated device-set plus driver to register CXL memory
-devices, 'struct cxl_memdev' instances, in the mock cxl_test topology.
-This enables the development of HDM Decoder (Host-managed Device Memory
-Decoder) programming flow (region provisioning) in an environment that
-can be updated alongside the kernel as it gains more functionality.
+The CXL_PMEM driver expects exclusive control of the label storage area
+space. Similar to the LIBNVDIMM expectation that the label storage area
+is only writable from userspace when the corresponding memory device is
+not active in any region, the expectation is the native CXL_PCI UAPI
+path is disabled while the cxl_nvdimm for a given cxl_memdev device is
+active in LIBNVDIMM.
 
-Whereas the cxl_pci module looks for CXL memory expanders on the 'pci'
-bus, the cxl_mock_mem module attaches to CXL expanders on the platform
-bus emitted by cxl_test.
+Add the ability to toggle the availability of a given command for the
+UAPI path. Use that new capability to shutdown changes to partitions and
+the label storage area while the cxl_nvdimm device is actively proxying
+commands for LIBNVDIMM.
 
 Acked-by: Ben Widawsky <ben.widawsky@intel.com>
-Reported-by: kernel test robot <lkp@intel.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/pmem.c       |    6 -
- drivers/cxl/cxl.h             |    2 
- drivers/cxl/pmem.c            |    2 
- tools/testing/cxl/Kbuild      |    2 
- tools/testing/cxl/mock_pmem.c |   24 ++++
- tools/testing/cxl/test/Kbuild |    4 +
- tools/testing/cxl/test/cxl.c  |   73 ++++++++++++
- tools/testing/cxl/test/mem.c  |  255 +++++++++++++++++++++++++++++++++++++++++
- 8 files changed, 362 insertions(+), 6 deletions(-)
- create mode 100644 tools/testing/cxl/mock_pmem.c
- create mode 100644 tools/testing/cxl/test/mem.c
+ drivers/cxl/core/mbox.c   |    5 +++++
+ drivers/cxl/core/memdev.c |   31 +++++++++++++++++++++++++++++++
+ drivers/cxl/cxlmem.h      |    4 ++++
+ drivers/cxl/pmem.c        |   35 ++++++++++++++++++++++++++++-------
+ 4 files changed, 68 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
-index ec3e4c642fca..68046b6a22b5 100644
---- a/drivers/cxl/core/pmem.c
-+++ b/drivers/cxl/core/pmem.c
-@@ -39,16 +39,16 @@ struct cxl_nvdimm_bridge *to_cxl_nvdimm_bridge(struct device *dev)
- }
- EXPORT_SYMBOL_GPL(to_cxl_nvdimm_bridge);
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 73107b302224..6a5c4f3679ba 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -230,6 +230,7 @@ static bool cxl_mem_raw_command_allowed(u16 opcode)
+  *  * %-EINVAL	- Reserved fields or invalid values were used.
+  *  * %-ENOMEM	- Input or output buffer wasn't sized properly.
+  *  * %-EPERM	- Attempted to use a protected command.
++ *  * %-EBUSY	- Kernel has claimed exclusive access to this opcode
+  *
+  * The result of this command is a fully validated command in @out_cmd that is
+  * safe to send to the hardware.
+@@ -305,6 +306,10 @@ static int cxl_validate_cmd_from_user(struct cxl_mem *cxlm,
+ 	if (!test_bit(info->id, cxlm->enabled_cmds))
+ 		return -ENOTTY;
  
--static int match_nvdimm_bridge(struct device *dev, const void *data)
-+__mock int match_nvdimm_bridge(struct device *dev, const void *data)
++	/* Check that the command is not claimed for exclusive kernel use */
++	if (test_bit(info->id, cxlm->exclusive_cmds))
++		return -EBUSY;
++
+ 	/* Check the input buffer is the expected size */
+ 	if (info->size_in >= 0 && info->size_in != send_cmd->in.size)
+ 		return -ENOMEM;
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index a2a9691568af..ee61202c7aab 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -134,6 +134,37 @@ static const struct device_type cxl_memdev_type = {
+ 	.groups = cxl_memdev_attribute_groups,
+ };
+ 
++/**
++ * set_exclusive_cxl_commands() - atomically disable user cxl commands
++ * @cxlm: cxl_mem instance to modify
++ * @cmds: bitmap of commands to mark exclusive
++ *
++ * Flush the ioctl path and disable future execution of commands with
++ * the command ids set in @cmds.
++ */
++void set_exclusive_cxl_commands(struct cxl_mem *cxlm, unsigned long *cmds)
++{
++	down_write(&cxl_memdev_rwsem);
++	bitmap_or(cxlm->exclusive_cmds, cxlm->exclusive_cmds, cmds,
++		  CXL_MEM_COMMAND_ID_MAX);
++	up_write(&cxl_memdev_rwsem);
++}
++EXPORT_SYMBOL_GPL(set_exclusive_cxl_commands);
++
++/**
++ * clear_exclusive_cxl_commands() - atomically enable user cxl commands
++ * @cxlm: cxl_mem instance to modify
++ * @cmds: bitmap of commands to mark available for userspace
++ */
++void clear_exclusive_cxl_commands(struct cxl_mem *cxlm, unsigned long *cmds)
++{
++	down_write(&cxl_memdev_rwsem);
++	bitmap_andnot(cxlm->exclusive_cmds, cxlm->exclusive_cmds, cmds,
++		      CXL_MEM_COMMAND_ID_MAX);
++	up_write(&cxl_memdev_rwsem);
++}
++EXPORT_SYMBOL_GPL(clear_exclusive_cxl_commands);
++
+ static void cxl_memdev_shutdown(struct device *dev)
  {
- 	return dev->type == &cxl_nvdimm_bridge_type;
- }
+ 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index df4f3636a999..45d5347b5d61 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -102,6 +102,7 @@ struct cxl_mbox_cmd {
+  * @mbox_mutex: Mutex to synchronize mailbox access.
+  * @firmware_version: Firmware version for the memory device.
+  * @enabled_cmds: Hardware commands found enabled in CEL.
++ * @exclusive_cmds: Commands that are kernel-internal only
+  * @pmem_range: Persistent memory capacity information.
+  * @ram_range: Volatile memory capacity information.
+  * @mbox_send: @dev specific transport for transmitting mailbox commands
+@@ -117,6 +118,7 @@ struct cxl_mem {
+ 	struct mutex mbox_mutex; /* Protects device mailbox and firmware */
+ 	char firmware_version[0x10];
+ 	DECLARE_BITMAP(enabled_cmds, CXL_MEM_COMMAND_ID_MAX);
++	DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
  
--struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(void)
-+struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd)
- {
- 	struct device *dev;
- 
--	dev = bus_find_device(&cxl_bus_type, NULL, NULL, match_nvdimm_bridge);
-+	dev = bus_find_device(&cxl_bus_type, NULL, cxl_nvd, match_nvdimm_bridge);
- 	if (!dev)
- 		return NULL;
- 	return to_cxl_nvdimm_bridge(dev);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 1064427e3eb5..13e02528ddd3 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -327,7 +327,7 @@ struct cxl_nvdimm_bridge *devm_cxl_add_nvdimm_bridge(struct device *host,
- struct cxl_nvdimm *to_cxl_nvdimm(struct device *dev);
- bool is_cxl_nvdimm(struct device *dev);
- int devm_cxl_add_nvdimm(struct device *host, struct cxl_memdev *cxlmd);
--struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(void);
-+struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd);
- 
- /* unit test build overrides this to __weak */
- #ifndef __mock
+ 	struct range pmem_range;
+ 	struct range ram_range;
+@@ -190,4 +192,6 @@ int cxl_mem_identify(struct cxl_mem *cxlm);
+ int cxl_mem_enumerate_cmds(struct cxl_mem *cxlm);
+ int cxl_mem_create_range_info(struct cxl_mem *cxlm);
+ struct cxl_mem *cxl_mem_create(struct device *dev);
++void set_exclusive_cxl_commands(struct cxl_mem *cxlm, unsigned long *cmds);
++void clear_exclusive_cxl_commands(struct cxl_mem *cxlm, unsigned long *cmds);
+ #endif /* __CXL_MEM_H__ */
 diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-index a6be72a68960..5737abe1ff05 100644
+index 9652c3ee41e7..469b984176a2 100644
 --- a/drivers/cxl/pmem.c
 +++ b/drivers/cxl/pmem.c
-@@ -43,7 +43,7 @@ static int cxl_nvdimm_probe(struct device *dev)
- 	struct nvdimm *nvdimm = NULL;
+@@ -16,9 +16,21 @@
+  */
+ static struct workqueue_struct *cxl_pmem_wq;
+ 
+-static void unregister_nvdimm(void *nvdimm)
++static __read_mostly DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
++
++static void unregister_nvdimm(void *_cxl_nvd)
+ {
+-	nvdimm_delete(nvdimm);
++	struct cxl_nvdimm *cxl_nvd = _cxl_nvd;
++	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
++	struct cxl_mem *cxlm = cxlmd->cxlm;
++	struct device *dev = &cxl_nvd->dev;
++	struct nvdimm *nvdimm;
++
++	nvdimm = dev_get_drvdata(dev);
++	if (nvdimm)
++		nvdimm_delete(nvdimm);
++
++	clear_exclusive_cxl_commands(cxlm, exclusive_cmds);
+ }
+ 
+ static int match_nvdimm_bridge(struct device *dev, const void *data)
+@@ -39,9 +51,11 @@ static struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(void)
+ static int cxl_nvdimm_probe(struct device *dev)
+ {
+ 	struct cxl_nvdimm *cxl_nvd = to_cxl_nvdimm(dev);
++	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
++	struct cxl_mem *cxlm = cxlmd->cxlm;
+ 	struct cxl_nvdimm_bridge *cxl_nvb;
++	struct nvdimm *nvdimm = NULL;
+ 	unsigned long flags = 0;
+-	struct nvdimm *nvdimm;
  	int rc = -ENXIO;
  
--	cxl_nvb = cxl_find_nvdimm_bridge();
-+	cxl_nvb = cxl_find_nvdimm_bridge(cxl_nvd);
- 	if (!cxl_nvb)
+ 	cxl_nvb = cxl_find_nvdimm_bridge();
+@@ -52,17 +66,20 @@ static int cxl_nvdimm_probe(struct device *dev)
+ 	if (!cxl_nvb->nvdimm_bus)
+ 		goto out;
+ 
++	set_exclusive_cxl_commands(cxlm, exclusive_cmds);
++
+ 	set_bit(NDD_LABELING, &flags);
+ 	nvdimm = nvdimm_create(cxl_nvb->nvdimm_bus, cxl_nvd, NULL, flags, 0, 0,
+ 			       NULL);
+-	if (!nvdimm)
+-		goto out;
+-
+-	rc = devm_add_action_or_reset(dev, unregister_nvdimm, nvdimm);
++	dev_set_drvdata(dev, nvdimm);
++	rc = devm_add_action_or_reset(dev, unregister_nvdimm, cxl_nvd);
+ out:
+ 	device_unlock(&cxl_nvb->dev);
+ 	put_device(&cxl_nvb->dev);
+ 
++	if (!nvdimm && rc == 0)
++		rc = -ENOMEM;
++
+ 	return rc;
+ }
+ 
+@@ -194,6 +211,10 @@ static __init int cxl_pmem_init(void)
+ {
+ 	int rc;
+ 
++	set_bit(CXL_MEM_COMMAND_ID_SET_PARTITION_INFO, exclusive_cmds);
++	set_bit(CXL_MEM_COMMAND_ID_SET_SHUTDOWN_STATE, exclusive_cmds);
++	set_bit(CXL_MEM_COMMAND_ID_SET_LSA, exclusive_cmds);
++
+ 	cxl_pmem_wq = alloc_ordered_workqueue("cxl_pmem", 0);
+ 	if (!cxl_pmem_wq)
  		return -ENXIO;
- 
-diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index 63a4a07e71c4..86deba8308a1 100644
---- a/tools/testing/cxl/Kbuild
-+++ b/tools/testing/cxl/Kbuild
-@@ -33,4 +33,6 @@ cxl_core-y += $(CXL_CORE_SRC)/memdev.o
- cxl_core-y += $(CXL_CORE_SRC)/mbox.o
- cxl_core-y += config_check.o
- 
-+cxl_core-y += mock_pmem.o
-+
- obj-m += test/
-diff --git a/tools/testing/cxl/mock_pmem.c b/tools/testing/cxl/mock_pmem.c
-new file mode 100644
-index 000000000000..f7315e6f52c0
---- /dev/null
-+++ b/tools/testing/cxl/mock_pmem.c
-@@ -0,0 +1,24 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2021 Intel Corporation. All rights reserved. */
-+#include <cxl.h>
-+#include "test/mock.h"
-+#include <core/core.h>
-+
-+int match_nvdimm_bridge(struct device *dev, const void *data)
-+{
-+	int index, rc = 0;
-+	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
-+	const struct cxl_nvdimm *cxl_nvd = data;
-+
-+	if (ops) {
-+		if (dev->type == &cxl_nvdimm_bridge_type &&
-+		    (ops->is_mock_dev(dev->parent->parent) ==
-+		     ops->is_mock_dev(cxl_nvd->dev.parent->parent)))
-+			rc = 1;
-+	} else
-+		rc = dev->type == &cxl_nvdimm_bridge_type;
-+
-+	put_cxl_mock_ops(index);
-+
-+	return rc;
-+}
-diff --git a/tools/testing/cxl/test/Kbuild b/tools/testing/cxl/test/Kbuild
-index 7de4ddecfd21..4e59e2c911f6 100644
---- a/tools/testing/cxl/test/Kbuild
-+++ b/tools/testing/cxl/test/Kbuild
-@@ -1,6 +1,10 @@
- # SPDX-License-Identifier: GPL-2.0
-+ccflags-y := -I$(srctree)/drivers/cxl/
-+
- obj-m += cxl_test.o
- obj-m += cxl_mock.o
-+obj-m += cxl_mock_mem.o
- 
- cxl_test-y := cxl.o
- cxl_mock-y := mock.o
-+cxl_mock_mem-y := mem.o
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 0710e0062e58..314b09d40333 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -17,6 +17,7 @@ static struct platform_device *cxl_acpi;
- static struct platform_device *cxl_host_bridge[NR_CXL_HOST_BRIDGES];
- static struct platform_device
- 	*cxl_root_port[NR_CXL_HOST_BRIDGES * NR_CXL_ROOT_PORTS];
-+struct platform_device *cxl_mem[NR_CXL_HOST_BRIDGES * NR_CXL_ROOT_PORTS];
- 
- static struct acpi_device acpi0017_mock;
- static struct acpi_device host_bridge[NR_CXL_HOST_BRIDGES] = {
-@@ -36,6 +37,11 @@ static struct acpi_device host_bridge[NR_CXL_HOST_BRIDGES] = {
- 
- static bool is_mock_dev(struct device *dev)
- {
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(cxl_mem); i++)
-+		if (dev == &cxl_mem[i]->dev)
-+			return true;
- 	if (dev == &cxl_acpi->dev)
- 		return true;
- 	return false;
-@@ -403,6 +409,44 @@ static void mock_companion(struct acpi_device *adev, struct device *dev)
- #define SZ_512G (SZ_64G * 8)
- #endif
- 
-+static struct platform_device *alloc_memdev(int id)
-+{
-+	struct resource res[] = {
-+		[0] = {
-+			.flags = IORESOURCE_MEM,
-+		},
-+		[1] = {
-+			.flags = IORESOURCE_MEM,
-+			.desc = IORES_DESC_PERSISTENT_MEMORY,
-+		},
-+	};
-+	struct platform_device *pdev;
-+	int i, rc;
-+
-+	for (i = 0; i < ARRAY_SIZE(res); i++) {
-+		struct cxl_mock_res *r = alloc_mock_res(SZ_256M);
-+
-+		if (!r)
-+			return NULL;
-+		res[i].start = r->range.start;
-+		res[i].end = r->range.end;
-+	}
-+
-+	pdev = platform_device_alloc("cxl_mem", id);
-+	if (!pdev)
-+		return NULL;
-+
-+	rc = platform_device_add_resources(pdev, res, ARRAY_SIZE(res));
-+	if (rc)
-+		goto err;
-+
-+	return pdev;
-+
-+err:
-+	platform_device_put(pdev);
-+	return NULL;
-+}
-+
- static __init int cxl_test_init(void)
- {
- 	int rc, i;
-@@ -458,9 +502,27 @@ static __init int cxl_test_init(void)
- 		cxl_root_port[i] = pdev;
- 	}
- 
-+	BUILD_BUG_ON(ARRAY_SIZE(cxl_mem) != ARRAY_SIZE(cxl_root_port));
-+	for (i = 0; i < ARRAY_SIZE(cxl_mem); i++) {
-+		struct platform_device *port = cxl_root_port[i];
-+		struct platform_device *pdev;
-+
-+		pdev = alloc_memdev(i);
-+		if (!pdev)
-+			goto err_mem;
-+		pdev->dev.parent = &port->dev;
-+
-+		rc = platform_device_add(pdev);
-+		if (rc) {
-+			platform_device_put(pdev);
-+			goto err_mem;
-+		}
-+		cxl_mem[i] = pdev;
-+	}
-+
- 	cxl_acpi = platform_device_alloc("cxl_acpi", 0);
- 	if (!cxl_acpi)
--		goto err_port;
-+		goto err_mem;
- 
- 	mock_companion(&acpi0017_mock, &cxl_acpi->dev);
- 	acpi0017_mock.dev.bus = &platform_bus_type;
-@@ -473,6 +535,11 @@ static __init int cxl_test_init(void)
- 
- err_add:
- 	platform_device_put(cxl_acpi);
-+err_mem:
-+	for (i = ARRAY_SIZE(cxl_mem) - 1; i >= 0; i--) {
-+		platform_device_del(cxl_mem[i]);
-+		platform_device_put(cxl_mem[i]);
-+	}
- err_port:
- 	for (i = ARRAY_SIZE(cxl_root_port) - 1; i >= 0; i--) {
- 		platform_device_del(cxl_root_port[i]);
-@@ -498,6 +565,10 @@ static __exit void cxl_test_exit(void)
- 
- 	platform_device_del(cxl_acpi);
- 	platform_device_put(cxl_acpi);
-+	for (i = ARRAY_SIZE(cxl_mem) - 1; i >= 0; i--) {
-+		platform_device_del(cxl_mem[i]);
-+		platform_device_put(cxl_mem[i]);
-+	}
- 	for (i = ARRAY_SIZE(cxl_root_port) - 1; i >= 0; i--) {
- 		platform_device_del(cxl_root_port[i]);
- 		platform_device_put(cxl_root_port[i]);
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-new file mode 100644
-index 000000000000..3ce02c2783d5
---- /dev/null
-+++ b/tools/testing/cxl/test/mem.c
-@@ -0,0 +1,255 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+// Copyright(c) 2021 Intel Corporation. All rights reserved.
-+
-+#include <linux/platform_device.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/sizes.h>
-+#include <linux/bits.h>
-+#include <cxlmem.h>
-+
-+#define LSA_SIZE SZ_128K
-+#define EFFECT(x) (1U << x)
-+
-+static struct cxl_cel_entry mock_cel[] = {
-+	{
-+		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_SUPPORTED_LOGS),
-+		.effect = cpu_to_le16(0),
-+	},
-+	{
-+		.opcode = cpu_to_le16(CXL_MBOX_OP_IDENTIFY),
-+		.effect = cpu_to_le16(0),
-+	},
-+	{
-+		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_LSA),
-+		.effect = cpu_to_le16(0),
-+	},
-+	{
-+		.opcode = cpu_to_le16(CXL_MBOX_OP_SET_LSA),
-+		.effect = cpu_to_le16(EFFECT(1) | EFFECT(2)),
-+	},
-+};
-+
-+static struct {
-+	struct cxl_mbox_get_supported_logs gsl;
-+	struct cxl_gsl_entry entry;
-+} mock_gsl_payload = {
-+	.gsl = {
-+		.entries = cpu_to_le16(1),
-+	},
-+	.entry = {
-+		.uuid = DEFINE_CXL_CEL_UUID,
-+		.size = cpu_to_le32(sizeof(mock_cel)),
-+	},
-+};
-+
-+static int mock_gsl(struct cxl_mbox_cmd *cmd)
-+{
-+	if (cmd->size_out < sizeof(mock_gsl_payload))
-+		return -EINVAL;
-+
-+	memcpy(cmd->payload_out, &mock_gsl_payload, sizeof(mock_gsl_payload));
-+	cmd->size_out = sizeof(mock_gsl_payload);
-+
-+	return 0;
-+}
-+
-+static int mock_get_log(struct cxl_mem *cxlm, struct cxl_mbox_cmd *cmd)
-+{
-+	struct cxl_mbox_get_log *gl = cmd->payload_in;
-+	u32 offset = le32_to_cpu(gl->offset);
-+	u32 length = le32_to_cpu(gl->length);
-+	uuid_t uuid = DEFINE_CXL_CEL_UUID;
-+	void *data = &mock_cel;
-+
-+	if (cmd->size_in < sizeof(*gl))
-+		return -EINVAL;
-+	if (offset + length >
-+	    (min_t(size_t, cxlm->payload_size, sizeof(mock_cel))))
-+		return -EINVAL;
-+	if (!uuid_equal(&gl->uuid, &uuid))
-+		return -EINVAL;
-+	if (length > cmd->size_out)
-+		return -EINVAL;
-+
-+	memcpy(cmd->payload_out, data + offset, length);
-+
-+	return 0;
-+}
-+
-+static int mock_id(struct cxl_mem *cxlm, struct cxl_mbox_cmd *cmd)
-+{
-+	struct platform_device *pdev = to_platform_device(cxlm->dev);
-+	struct cxl_mbox_identify id = {
-+		.fw_revision = { "mock fw v1 " },
-+		.lsa_size = cpu_to_le32(LSA_SIZE),
-+		/* FIXME: Add partition support */
-+		.partition_align = cpu_to_le64(0),
-+	};
-+	u64 capacity = 0;
-+	int i;
-+
-+	if (cmd->size_out < sizeof(id))
-+		return -EINVAL;
-+
-+	for (i = 0; i < 2; i++) {
-+		struct resource *res;
-+
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
-+		if (!res)
-+			break;
-+
-+		capacity += resource_size(res) / CXL_CAPACITY_MULTIPLIER;
-+
-+		if (le64_to_cpu(id.partition_align))
-+			continue;
-+
-+		if (res->desc == IORES_DESC_PERSISTENT_MEMORY)
-+			id.persistent_capacity = cpu_to_le64(
-+				resource_size(res) / CXL_CAPACITY_MULTIPLIER);
-+		else
-+			id.volatile_capacity = cpu_to_le64(
-+				resource_size(res) / CXL_CAPACITY_MULTIPLIER);
-+	}
-+
-+	id.total_capacity = cpu_to_le64(capacity);
-+
-+	memcpy(cmd->payload_out, &id, sizeof(id));
-+
-+	return 0;
-+}
-+
-+static int mock_get_lsa(struct cxl_mem *cxlm, struct cxl_mbox_cmd *cmd)
-+{
-+	struct cxl_mbox_get_lsa *get_lsa = cmd->payload_in;
-+	void *lsa = dev_get_drvdata(cxlm->dev);
-+	u32 offset, length;
-+
-+	if (sizeof(*get_lsa) > cmd->size_in)
-+		return -EINVAL;
-+	offset = le32_to_cpu(get_lsa->offset);
-+	length = le32_to_cpu(get_lsa->length);
-+	if (offset + length > LSA_SIZE)
-+		return -EINVAL;
-+	if (length > cmd->size_out)
-+		return -EINVAL;
-+
-+	memcpy(cmd->payload_out, lsa + offset, length);
-+	return 0;
-+}
-+
-+static int mock_set_lsa(struct cxl_mem *cxlm, struct cxl_mbox_cmd *cmd)
-+{
-+	struct cxl_mbox_set_lsa *set_lsa = cmd->payload_in;
-+	void *lsa = dev_get_drvdata(cxlm->dev);
-+	u32 offset, length;
-+
-+	if (sizeof(*set_lsa) > cmd->size_in)
-+		return -EINVAL;
-+	offset = le32_to_cpu(set_lsa->offset);
-+	length = cmd->size_in - sizeof(*set_lsa);
-+	if (offset + length > LSA_SIZE)
-+		return -EINVAL;
-+
-+	memcpy(lsa + offset, &set_lsa->data[0], length);
-+	return 0;
-+}
-+
-+static int cxl_mock_mbox_send(struct cxl_mem *cxlm, struct cxl_mbox_cmd *cmd)
-+{
-+	struct device *dev = cxlm->dev;
-+	int rc = -EIO;
-+
-+	switch (cmd->opcode) {
-+	case CXL_MBOX_OP_GET_SUPPORTED_LOGS:
-+		rc = mock_gsl(cmd);
-+		break;
-+	case CXL_MBOX_OP_GET_LOG:
-+		rc = mock_get_log(cxlm, cmd);
-+		break;
-+	case CXL_MBOX_OP_IDENTIFY:
-+		rc = mock_id(cxlm, cmd);
-+		break;
-+	case CXL_MBOX_OP_GET_LSA:
-+		rc = mock_get_lsa(cxlm, cmd);
-+		break;
-+	case CXL_MBOX_OP_SET_LSA:
-+		rc = mock_set_lsa(cxlm, cmd);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	dev_dbg(dev, "opcode: %#x sz_in: %zd sz_out: %zd rc: %d\n", cmd->opcode,
-+		cmd->size_in, cmd->size_out, rc);
-+
-+	return rc;
-+}
-+
-+static void label_area_release(void *lsa)
-+{
-+	vfree(lsa);
-+}
-+
-+static int cxl_mock_mem_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct cxl_memdev *cxlmd;
-+	struct cxl_mem *cxlm;
-+	void *lsa;
-+	int rc;
-+
-+	lsa = vmalloc(LSA_SIZE);
-+	if (!lsa)
-+		return -ENOMEM;
-+	rc = devm_add_action_or_reset(dev, label_area_release, lsa);
-+	if (rc)
-+		return rc;
-+	dev_set_drvdata(dev, lsa);
-+
-+	cxlm = cxl_mem_create(dev);
-+	if (IS_ERR(cxlm))
-+		return PTR_ERR(cxlm);
-+
-+	cxlm->mbox_send = cxl_mock_mbox_send;
-+	cxlm->payload_size = SZ_4K;
-+
-+	rc = cxl_mem_enumerate_cmds(cxlm);
-+	if (rc)
-+		return rc;
-+
-+	rc = cxl_mem_identify(cxlm);
-+	if (rc)
-+		return rc;
-+
-+	rc = cxl_mem_create_range_info(cxlm);
-+	if (rc)
-+		return rc;
-+
-+	cxlmd = devm_cxl_add_memdev(dev, cxlm);
-+	if (IS_ERR(cxlmd))
-+		return PTR_ERR(cxlmd);
-+
-+	if (range_len(&cxlm->pmem_range) && IS_ENABLED(CONFIG_CXL_PMEM))
-+		rc = devm_cxl_add_nvdimm(dev, cxlmd);
-+
-+	return 0;
-+}
-+
-+static const struct platform_device_id cxl_mock_mem_ids[] = {
-+	{ .name = "cxl_mem", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(platform, cxl_mock_mem_ids);
-+
-+static struct platform_driver cxl_mock_mem_driver = {
-+	.probe = cxl_mock_mem_probe,
-+	.id_table = cxl_mock_mem_ids,
-+	.driver = {
-+		.name = KBUILD_MODNAME,
-+	},
-+};
-+
-+module_platform_driver(cxl_mock_mem_driver);
-+MODULE_LICENSE("GPL v2");
-+MODULE_IMPORT_NS(CXL);
 
