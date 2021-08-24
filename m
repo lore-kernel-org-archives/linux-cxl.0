@@ -7,37 +7,36 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0776FC4338F
-	for <linux-cxl@archiver.kernel.org>; Tue, 24 Aug 2021 16:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C620C4338F
+	for <linux-cxl@archiver.kernel.org>; Tue, 24 Aug 2021 16:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA8B261360
-	for <linux-cxl@archiver.kernel.org>; Tue, 24 Aug 2021 16:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DA5661357
+	for <linux-cxl@archiver.kernel.org>; Tue, 24 Aug 2021 16:07:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229705AbhHXQIR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 24 Aug 2021 12:08:17 -0400
-Received: from mga06.intel.com ([134.134.136.31]:10526 "EHLO mga06.intel.com"
+        id S229467AbhHXQIY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 24 Aug 2021 12:08:24 -0400
+Received: from mga06.intel.com ([134.134.136.31]:10539 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229467AbhHXQIR (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 24 Aug 2021 12:08:17 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10086"; a="278355714"
+        id S229800AbhHXQIY (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Tue, 24 Aug 2021 12:08:24 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10086"; a="278355783"
 X-IronPort-AV: E=Sophos;i="5.84,347,1620716400"; 
-   d="scan'208";a="278355714"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 09:06:09 -0700
+   d="scan'208";a="278355783"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 09:06:24 -0700
 X-IronPort-AV: E=Sophos;i="5.84,347,1620716400"; 
-   d="scan'208";a="526678411"
+   d="scan'208";a="426161680"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 09:06:07 -0700
-Subject: [PATCH v3 08/28] libnvdimm/labels: Add claim class helpers
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 09:06:24 -0700
+Subject: [PATCH v3 11/28] libnvdimm/label: Add a helper for nlabel validation
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
+Cc:     vishal.l.verma@intel.com, alison.schofield@intel.com,
         nvdimm@lists.linux.dev, Jonathan.Cameron@huawei.com,
         ira.weiny@intel.com, ben.widawsky@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com
-Date:   Tue, 24 Aug 2021 09:06:07 -0700
-Message-ID: <162982116719.1124374.9917866609080940364.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Tue, 24 Aug 2021 09:06:24 -0700
+Message-ID: <162982118423.1124374.11980785134458815600.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <162982112370.1124374.2020303588105269226.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <162982112370.1124374.2020303588105269226.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -48,144 +47,59 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-In preparation for LIBNVDIMM to manage labels on CXL devices deploy
-helpers that abstract the label type from the implementation. The CXL
-label format is mostly similar to the EFI label format with concepts /
-fields added, like dynamic region creation and label type guids, and
-other concepts removed like BLK-mode and interleave-set-cookie ids.
+In the CXL namespace label there is no need for nlabel since that is
+inferred from the region. Add a helper that moves nsl_get_label() behind
+a helper that validates the number of labels relative to the region.
 
-CXL labels do have the concept of a claim class represented by an
-"abstraction" identifier. It turns out both label implementations use
-the same ids, but EFI encodes them as GUIDs and CXL labels encode them
-as UUIDs. For now abstract out the claim class such that the UUID vs
-GUID distinction can later be hidden in the helper.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/nvdimm/label.c          |   31 ++++++++++++++++++++++---------
- drivers/nvdimm/label.h          |    1 -
- drivers/nvdimm/namespace_devs.c |   13 ++++---------
- drivers/nvdimm/nd.h             |    2 ++
- 4 files changed, 28 insertions(+), 19 deletions(-)
+ drivers/nvdimm/namespace_devs.c |    5 ++---
+ drivers/nvdimm/nd.h             |    7 +++++++
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
-index 294ffc3cb582..7f473f9db300 100644
---- a/drivers/nvdimm/label.c
-+++ b/drivers/nvdimm/label.c
-@@ -724,7 +724,7 @@ static unsigned long nd_label_offset(struct nvdimm_drvdata *ndd,
- 		- (unsigned long) to_namespace_index(ndd, 0);
- }
- 
--enum nvdimm_claim_class to_nvdimm_cclass(guid_t *guid)
-+static enum nvdimm_claim_class to_nvdimm_cclass(guid_t *guid)
- {
- 	if (guid_equal(guid, &nvdimm_btt_guid))
- 		return NVDIMM_CCLASS_BTT;
-@@ -792,6 +792,25 @@ bool nsl_validate_type_guid(struct nvdimm_drvdata *ndd,
- 	return true;
- }
- 
-+static void nsl_set_claim_class(struct nvdimm_drvdata *ndd,
-+				struct nd_namespace_label *nd_label,
-+				enum nvdimm_claim_class claim_class)
-+{
-+	if (!namespace_label_has(ndd, abstraction_guid))
-+		return;
-+	guid_copy(&nd_label->abstraction_guid,
-+		  to_abstraction_guid(claim_class,
-+				      &nd_label->abstraction_guid));
-+}
-+
-+enum nvdimm_claim_class nsl_get_claim_class(struct nvdimm_drvdata *ndd,
-+					    struct nd_namespace_label *nd_label)
-+{
-+	if (!namespace_label_has(ndd, abstraction_guid))
-+		return NVDIMM_CCLASS_NONE;
-+	return to_nvdimm_cclass(&nd_label->abstraction_guid);
-+}
-+
- static int __pmem_label_update(struct nd_region *nd_region,
- 		struct nd_mapping *nd_mapping, struct nd_namespace_pmem *nspm,
- 		int pos, unsigned long flags)
-@@ -843,10 +862,7 @@ static int __pmem_label_update(struct nd_region *nd_region,
- 	nsl_set_dpa(ndd, nd_label, res->start);
- 	nsl_set_slot(ndd, nd_label, slot);
- 	nsl_set_type_guid(ndd, nd_label, &nd_set->type_guid);
--	if (namespace_label_has(ndd, abstraction_guid))
--		guid_copy(&nd_label->abstraction_guid,
--				to_abstraction_guid(ndns->claim_class,
--					&nd_label->abstraction_guid));
-+	nsl_set_claim_class(ndd, nd_label, ndns->claim_class);
- 	nsl_calculate_checksum(ndd, nd_label);
- 	nd_dbg_dpa(nd_region, ndd, res, "\n");
- 
-@@ -1111,10 +1127,7 @@ static int __blk_label_update(struct nd_region *nd_region,
- 		nsl_set_lbasize(ndd, nd_label, nsblk->lbasize);
- 		nsl_set_slot(ndd, nd_label, slot);
- 		nsl_set_type_guid(ndd, nd_label, &nd_set->type_guid);
--		if (namespace_label_has(ndd, abstraction_guid))
--			guid_copy(&nd_label->abstraction_guid,
--					to_abstraction_guid(ndns->claim_class,
--						&nd_label->abstraction_guid));
-+		nsl_set_claim_class(ndd, nd_label, ndns->claim_class);
- 		nsl_calculate_checksum(ndd, nd_label);
- 
- 		/* update label */
-diff --git a/drivers/nvdimm/label.h b/drivers/nvdimm/label.h
-index 956b6d1bd8cc..31f94fad7b92 100644
---- a/drivers/nvdimm/label.h
-+++ b/drivers/nvdimm/label.h
-@@ -135,7 +135,6 @@ struct nd_namespace_label *nd_label_active(struct nvdimm_drvdata *ndd, int n);
- u32 nd_label_alloc_slot(struct nvdimm_drvdata *ndd);
- bool nd_label_free_slot(struct nvdimm_drvdata *ndd, u32 slot);
- u32 nd_label_nfree(struct nvdimm_drvdata *ndd);
--enum nvdimm_claim_class to_nvdimm_cclass(guid_t *guid);
- struct nd_region;
- struct nd_namespace_pmem;
- struct nd_namespace_blk;
 diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
-index af5a31dd3147..58c76d74127a 100644
+index d4959981c7d4..28ed14052e36 100644
 --- a/drivers/nvdimm/namespace_devs.c
 +++ b/drivers/nvdimm/namespace_devs.c
-@@ -2042,10 +2042,8 @@ static struct device *create_namespace_pmem(struct nd_region *nd_region,
- 		nspm->uuid = kmemdup((void __force *) label0->uuid,
- 				NSLABEL_UUID_LEN, GFP_KERNEL);
- 		nspm->lbasize = nsl_get_lbasize(ndd, label0);
--		if (namespace_label_has(ndd, abstraction_guid))
--			nspm->nsio.common.claim_class
--				= to_nvdimm_cclass(&label0->abstraction_guid);
--
-+		nspm->nsio.common.claim_class =
-+			nsl_get_claim_class(ndd, label0);
- 	}
+@@ -1848,12 +1848,11 @@ static bool has_uuid_at_pos(struct nd_region *nd_region, const uuid_t *uuid,
  
- 	if (!nspm->alt_name || !nspm->uuid) {
-@@ -2273,11 +2271,8 @@ static struct device *create_namespace_blk(struct nd_region *nd_region,
- 	dev->parent = &nd_region->dev;
- 	nsblk->id = -1;
- 	nsblk->lbasize = nsl_get_lbasize(ndd, nd_label);
--	nsblk->uuid = kmemdup(nd_label->uuid, NSLABEL_UUID_LEN,
--			GFP_KERNEL);
--	if (namespace_label_has(ndd, abstraction_guid))
--		nsblk->common.claim_class
--			= to_nvdimm_cclass(&nd_label->abstraction_guid);
-+	nsblk->uuid = kmemdup(nd_label->uuid, NSLABEL_UUID_LEN, GFP_KERNEL);
-+	nsblk->common.claim_class = nsl_get_claim_class(ndd, nd_label);
- 	if (!nsblk->uuid)
- 		goto blk_err;
- 	nsl_get_name(ndd, nd_label, name);
+ 		list_for_each_entry(label_ent, &nd_mapping->labels, list) {
+ 			struct nd_namespace_label *nd_label = label_ent->label;
+-			u16 position, nlabel;
++			u16 position;
+ 
+ 			if (!nd_label)
+ 				continue;
+ 			position = nsl_get_position(ndd, nd_label);
+-			nlabel = nsl_get_nlabel(ndd, nd_label);
+ 
+ 			if (!nsl_validate_isetcookie(ndd, nd_label, cookie))
+ 				continue;
+@@ -1870,7 +1869,7 @@ static bool has_uuid_at_pos(struct nd_region *nd_region, const uuid_t *uuid,
+ 				return false;
+ 			}
+ 			found_uuid = true;
+-			if (nlabel != nd_region->ndr_mappings)
++			if (!nsl_validate_nlabel(nd_region, ndd, nd_label))
+ 				continue;
+ 			if (position != pos)
+ 				continue;
 diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
-index a3e215f2d837..5467ebbb4a6b 100644
+index ec3c9aad7f50..036638bdb7e3 100644
 --- a/drivers/nvdimm/nd.h
 +++ b/drivers/nvdimm/nd.h
-@@ -182,6 +182,8 @@ bool nsl_validate_blk_isetcookie(struct nvdimm_drvdata *ndd,
- 				 u64 isetcookie);
- bool nsl_validate_type_guid(struct nvdimm_drvdata *ndd,
- 			    struct nd_namespace_label *nd_label, guid_t *guid);
-+enum nvdimm_claim_class nsl_get_claim_class(struct nvdimm_drvdata *ndd,
-+					    struct nd_namespace_label *nd_label);
+@@ -342,6 +342,13 @@ struct nd_region {
+ 	struct nd_mapping mapping[];
+ };
  
- struct nd_region_data {
- 	int ns_count;
++static inline bool nsl_validate_nlabel(struct nd_region *nd_region,
++				       struct nvdimm_drvdata *ndd,
++				       struct nd_namespace_label *nd_label)
++{
++	return nsl_get_nlabel(ndd, nd_label) == nd_region->ndr_mappings;
++}
++
+ struct nd_blk_region {
+ 	int (*enable)(struct nvdimm_bus *nvdimm_bus, struct device *dev);
+ 	int (*do_io)(struct nd_blk_region *ndbr, resource_size_t dpa,
 
