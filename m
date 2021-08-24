@@ -7,37 +7,39 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DDBC4338F
-	for <linux-cxl@archiver.kernel.org>; Tue, 24 Aug 2021 16:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10463C4320A
+	for <linux-cxl@archiver.kernel.org>; Tue, 24 Aug 2021 16:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3E2261374
-	for <linux-cxl@archiver.kernel.org>; Tue, 24 Aug 2021 16:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB6EC61371
+	for <linux-cxl@archiver.kernel.org>; Tue, 24 Aug 2021 16:08:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232307AbhHXQIr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 24 Aug 2021 12:08:47 -0400
-Received: from mga11.intel.com ([192.55.52.93]:63421 "EHLO mga11.intel.com"
+        id S231891AbhHXQIp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 24 Aug 2021 12:08:45 -0400
+Received: from mga12.intel.com ([192.55.52.136]:29657 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232206AbhHXQIq (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 24 Aug 2021 12:08:46 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10086"; a="214221229"
+        id S232412AbhHXQIo (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Tue, 24 Aug 2021 12:08:44 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10086"; a="196918459"
 X-IronPort-AV: E=Sophos;i="5.84,347,1620716400"; 
-   d="scan'208";a="214221229"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 09:07:56 -0700
+   d="scan'208";a="196918459"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 09:07:34 -0700
 X-IronPort-AV: E=Sophos;i="5.84,347,1620716400"; 
-   d="scan'208";a="575064622"
+   d="scan'208";a="685420228"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 09:07:56 -0700
-Subject: [PATCH v3 28/28] cxl/core: Split decoder setup into alloc + add
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 09:07:33 -0700
+Subject: [PATCH v3 24/28] tools/testing/cxl: Introduce a mocked-up CXL port
+ hierarchy
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     kernel test robot <lkp@intel.com>, vishal.l.verma@intel.com,
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
         alison.schofield@intel.com, nvdimm@lists.linux.dev,
         Jonathan.Cameron@huawei.com, ira.weiny@intel.com,
         ben.widawsky@intel.com, vishal.l.verma@intel.com,
         alison.schofield@intel.com
-Date:   Tue, 24 Aug 2021 09:07:56 -0700
-Message-ID: <162982127644.1124374.2704629829686138331.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Tue, 24 Aug 2021 09:07:33 -0700
+Message-ID: <162982125348.1124374.17808192318402734926.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <162982112370.1124374.2020303588105269226.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <162982112370.1124374.2020303588105269226.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -48,353 +50,1133 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The kbuild robot reports:
+Create an environment for CXL plumbing unit tests. Especially when it
+comes to an algorithm for HDM Decoder (Host-managed Device Memory
+Decoder) programming, the availability of an in-kernel-tree emulation
+environment for CXL configuration complexity and corner cases speeds
+development and deters regressions.
 
-    drivers/cxl/core/bus.c:516:1: warning: stack frame size (1032) exceeds
-    limit (1024) in function 'devm_cxl_add_decoder'
+The approach taken mirrors what was done for tools/testing/nvdimm/. I.e.
+an external module, cxl_test.ko built out of the tools/testing/cxl/
+directory, provides mock implementations of kernel APIs and kernel
+objects to simulate a real world device hierarchy.
 
-It is also the case the devm_cxl_add_decoder() is unwieldy to use for
-all the different decoder types. Fix the stack usage by splitting the
-creation into alloc and add steps. This also allows for context
-specific construction before adding.
+One feedback for the tools/testing/nvdimm/ proposal was "why not do this
+in QEMU?". In fact, the CXL development community has developed a QEMU
+model for CXL [1]. However, there are a few blocking issues that keep
+QEMU from being a tight fit for topology + provisioning unit tests:
 
-Reported-by: kernel test robot <lkp@intel.com>
+1/ The QEMU community has yet to show interest in merging any of this
+   support that has had patches on the list since November 2020. So,
+   testing CXL to date involves building custom QEMU with out-of-tree
+   patches.
+
+2/ CXL mechanisms like cross-host-bridge interleave do not have a clear
+   path to be emulated by QEMU without major infrastructure work. This
+   is easier to achieve with the alloc_mock_res() approach taken in this
+   patch to shortcut-define emulated system physical address ranges with
+   interleave behavior.
+
+The QEMU enabling has been critical to get the driver off the ground,
+and may still move forward, but it does not address the ongoing needs of
+a regression testing environment and test driven development.
+
+This patch adds an ACPI CXL Platform definition with emulated CXL
+multi-ported host-bridges. A follow on patch adds emulated memory
+expander devices.
+
+Acked-by: Ben Widawsky <ben.widawsky@intel.com>
+Reported-by: Vishal Verma <vishal.l.verma@intel.com>
+Link: https://lore.kernel.org/r/20210202005948.241655-1-ben.widawsky@intel.com [1]
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/acpi.c     |   74 ++++++++++++++++++++---------
- drivers/cxl/core/bus.c |  124 +++++++++++++++---------------------------------
- drivers/cxl/cxl.h      |   15 ++----
- 3 files changed, 95 insertions(+), 118 deletions(-)
+ drivers/cxl/acpi.c               |   52 ++--
+ drivers/cxl/cxl.h                |   13 +
+ tools/testing/cxl/Kbuild         |   36 +++
+ tools/testing/cxl/config_check.c |   13 +
+ tools/testing/cxl/mock_acpi.c    |  109 ++++++++
+ tools/testing/cxl/test/Kbuild    |    6 
+ tools/testing/cxl/test/cxl.c     |  516 ++++++++++++++++++++++++++++++++++++++
+ tools/testing/cxl/test/mock.c    |  171 +++++++++++++
+ tools/testing/cxl/test/mock.h    |   27 ++
+ 9 files changed, 922 insertions(+), 21 deletions(-)
+ create mode 100644 tools/testing/cxl/Kbuild
+ create mode 100644 tools/testing/cxl/config_check.c
+ create mode 100644 tools/testing/cxl/mock_acpi.c
+ create mode 100644 tools/testing/cxl/test/Kbuild
+ create mode 100644 tools/testing/cxl/test/cxl.c
+ create mode 100644 tools/testing/cxl/test/mock.c
+ create mode 100644 tools/testing/cxl/test/mock.h
 
 diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 6aea27c8fd4c..0b7c6268bba4 100644
+index 2d8f1ec1abff..3fcb704c647f 100644
 --- a/drivers/cxl/acpi.c
 +++ b/drivers/cxl/acpi.c
-@@ -82,7 +82,6 @@ static void cxl_add_cfmws_decoders(struct device *dev,
- 	struct cxl_decoder *cxld;
- 	acpi_size len, cur = 0;
- 	void *cedt_subtable;
--	unsigned long flags;
- 	int rc;
+@@ -182,15 +182,7 @@ static resource_size_t get_chbcr(struct acpi_cedt_chbs *chbs)
+ 	return IS_ERR(chbs) ? CXL_RESOURCE_NONE : chbs->base;
+ }
  
- 	len = acpi_cedt->length - sizeof(*acpi_cedt);
-@@ -119,24 +118,32 @@ static void cxl_add_cfmws_decoders(struct device *dev,
- 		for (i = 0; i < CFMWS_INTERLEAVE_WAYS(cfmws); i++)
- 			target_map[i] = cfmws->interleave_targets[i];
- 
--		flags = cfmws_to_decoder_flags(cfmws->restrictions);
--		cxld = devm_cxl_add_decoder(dev, root_port,
--					    CFMWS_INTERLEAVE_WAYS(cfmws),
--					    cfmws->base_hpa, cfmws->window_size,
--					    CFMWS_INTERLEAVE_WAYS(cfmws),
--					    CFMWS_INTERLEAVE_GRANULARITY(cfmws),
--					    CXL_DECODER_EXPANDER,
--					    flags, target_map);
+-struct cxl_walk_context {
+-	struct device *dev;
+-	struct pci_bus *root;
+-	struct cxl_port *port;
+-	int error;
+-	int count;
+-};
 -
--		if (IS_ERR(cxld)) {
-+		cxld = cxl_decoder_alloc(root_port,
-+					 CFMWS_INTERLEAVE_WAYS(cfmws));
-+		if (IS_ERR(cxld))
-+			goto next;
-+
-+		cxld->flags = cfmws_to_decoder_flags(cfmws->restrictions);
-+		cxld->target_type = CXL_DECODER_EXPANDER;
-+		cxld->range = (struct range) {
-+			.start = cfmws->base_hpa,
-+			.end = cfmws->base_hpa + cfmws->window_size - 1,
-+		};
-+		cxld->interleave_ways = CFMWS_INTERLEAVE_WAYS(cfmws);
-+		cxld->interleave_granularity =
-+			CFMWS_INTERLEAVE_GRANULARITY(cfmws);
-+
-+		rc = devm_cxl_add_decoder(dev, cxld, target_map);
-+		if (rc) {
- 			dev_err(dev, "Failed to add decoder for %#llx-%#llx\n",
- 				cfmws->base_hpa, cfmws->base_hpa +
- 				cfmws->window_size - 1);
--		} else {
--			dev_dbg(dev, "add: %s range %#llx-%#llx\n",
--				dev_name(&cxld->dev), cfmws->base_hpa,
--				 cfmws->base_hpa + cfmws->window_size - 1);
-+			goto next;
- 		}
-+		dev_dbg(dev, "add: %s range %#llx-%#llx\n",
-+			dev_name(&cxld->dev), cfmws->base_hpa,
-+			cfmws->base_hpa + cfmws->window_size - 1);
-+next:
- 		cur += c->length;
+-static int match_add_root_ports(struct pci_dev *pdev, void *data)
++__mock int match_add_root_ports(struct pci_dev *pdev, void *data)
+ {
+ 	struct cxl_walk_context *ctx = data;
+ 	struct pci_bus *root_bus = ctx->root;
+@@ -214,6 +206,8 @@ static int match_add_root_ports(struct pci_dev *pdev, void *data)
+ 	port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
+ 	rc = cxl_add_dport(port, &pdev->dev, port_num, CXL_RESOURCE_NONE);
+ 	if (rc) {
++		dev_err(dev, "failed to add dport: %s (%d)\n",
++			dev_name(&pdev->dev), rc);
+ 		ctx->error = rc;
+ 		return rc;
  	}
+@@ -239,15 +233,18 @@ static struct cxl_dport *find_dport_by_dev(struct cxl_port *port, struct device
+ 	return NULL;
  }
-@@ -268,6 +275,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
- 	struct cxl_port *port;
- 	struct cxl_dport *dport;
- 	struct cxl_decoder *cxld;
-+	int single_port_map[1], rc;
- 	struct cxl_walk_context ctx;
- 	struct acpi_pci_root *pci_root;
+ 
+-static struct acpi_device *to_cxl_host_bridge(struct device *dev)
++__mock struct acpi_device *to_cxl_host_bridge(struct device *host,
++					      struct device *dev)
+ {
+ 	struct acpi_device *adev = to_acpi_device(dev);
+ 
+ 	if (!acpi_pci_find_root(adev->handle))
+ 		return NULL;
+ 
+-	if (strcmp(acpi_device_hid(adev), "ACPI0016") == 0)
++	if (strcmp(acpi_device_hid(adev), "ACPI0016") == 0) {
++		dev_dbg(host, "found host bridge %s\n", dev_name(&adev->dev));
+ 		return adev;
++	}
+ 	return NULL;
+ }
+ 
+@@ -257,14 +254,14 @@ static struct acpi_device *to_cxl_host_bridge(struct device *dev)
+  */
+ static int add_host_bridge_uport(struct device *match, void *arg)
+ {
+-	struct acpi_device *bridge = to_cxl_host_bridge(match);
++	struct cxl_port *port;
++	struct cxl_dport *dport;
++	struct cxl_decoder *cxld;
++	struct cxl_walk_context ctx;
++	struct acpi_pci_root *pci_root;
  	struct cxl_port *root_port = arg;
-@@ -301,22 +309,42 @@ static int add_host_bridge_uport(struct device *match, void *arg)
- 		return -ENODEV;
- 	if (ctx.error)
- 		return ctx.error;
-+	if (ctx.count > 1)
-+		return 0;
- 
- 	/* TODO: Scan CHBCR for HDM Decoder resources */
- 
- 	/*
--	 * In the single-port host-bridge case there are no HDM decoders
--	 * in the CHBCR and a 1:1 passthrough decode is implied.
-+	 * Per the CXL specification (8.2.5.12 CXL HDM Decoder Capability
-+	 * Structure) single ported host-bridges need not publish a decoder
-+	 * capability when a passthrough decode can be assumed, i.e. all
-+	 * transactions that the uport sees are claimed and passed to the single
-+	 * dport. Default the range a 0-base 0-length until the first CXL region
-+	 * is activated.
- 	 */
--	if (ctx.count == 1) {
--		cxld = devm_cxl_add_passthrough_decoder(host, port);
--		if (IS_ERR(cxld))
--			return PTR_ERR(cxld);
-+	cxld = cxl_decoder_alloc(port, 1);
-+	if (IS_ERR(cxld))
-+		return PTR_ERR(cxld);
-+
-+	cxld->interleave_ways = 1;
-+	cxld->interleave_granularity = PAGE_SIZE;
-+	cxld->target_type = CXL_DECODER_EXPANDER;
-+	cxld->range = (struct range) {
-+		.start = 0,
-+		.end = -1,
-+	};
- 
-+	device_lock(&port->dev);
-+	dport = list_first_entry(&port->dports, typeof(*dport), list);
-+	device_unlock(&port->dev);
-+
-+	single_port_map[0] = dport->port_id;
-+
-+	rc = devm_cxl_add_decoder(host, cxld, single_port_map);
-+	if (rc == 0)
- 		dev_dbg(host, "add: %s\n", dev_name(&cxld->dev));
--	}
- 
--	return 0;
-+	return rc;
- }
- 
- static int add_host_bridge_dport(struct device *match, void *arg)
-diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-index 9a755a37eadf..1320a996220a 100644
---- a/drivers/cxl/core/bus.c
-+++ b/drivers/cxl/core/bus.c
-@@ -453,27 +453,15 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport_dev, int port_id,
- }
- EXPORT_SYMBOL_GPL(cxl_add_dport);
- 
--static struct cxl_decoder *
--cxl_decoder_alloc(struct device *host, struct cxl_port *port, int nr_targets,
--		  resource_size_t base, resource_size_t len,
--		  int interleave_ways, int interleave_granularity,
--		  enum cxl_decoder_type type, unsigned long flags,
--		  int *target_map)
-+struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
- {
- 	struct cxl_decoder *cxld;
- 	struct device *dev;
--	int rc = 0, i;
-+	int rc = 0;
- 
--	if (interleave_ways < 1)
-+	if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets < 1)
- 		return ERR_PTR(-EINVAL);
- 
--	device_lock(&port->dev);
--	if (list_empty(&port->dports))
--		rc = -EINVAL;
--	device_unlock(&port->dev);
--	if (rc)
--		return ERR_PTR(rc);
--
- 	cxld = kzalloc(struct_size(cxld, target, nr_targets), GFP_KERNEL);
- 	if (!cxld)
- 		return ERR_PTR(-ENOMEM);
-@@ -482,31 +470,8 @@ cxl_decoder_alloc(struct device *host, struct cxl_port *port, int nr_targets,
- 	if (rc < 0)
- 		goto err;
- 
--	*cxld = (struct cxl_decoder) {
--		.id = rc,
--		.range = {
--			.start = base,
--			.end = base + len - 1,
--		},
--		.flags = flags,
--		.interleave_ways = interleave_ways,
--		.interleave_granularity = interleave_granularity,
--		.target_type = type,
--	};
--
--	device_lock(&port->dev);
--	for (i = 0; target_map && i < nr_targets; i++) {
--		struct cxl_dport *dport = find_dport(port, target_map[i]);
--
--		if (!dport) {
--			rc = -ENXIO;
--			goto err;
--		}
--		dev_dbg(host, "%s: target: %d\n", dev_name(dport->dport), i);
--		cxld->target[i] = dport;
--	}
--	device_unlock(&port->dev);
--
-+	cxld->id = rc;
-+	cxld->nr_targets = nr_targets;
- 	dev = &cxld->dev;
- 	device_initialize(dev);
- 	device_set_pm_not_required(dev);
-@@ -524,26 +489,43 @@ cxl_decoder_alloc(struct device *host, struct cxl_port *port, int nr_targets,
- 	kfree(cxld);
- 	return ERR_PTR(rc);
- }
-+EXPORT_SYMBOL_GPL(cxl_decoder_alloc);
- 
--struct cxl_decoder *
--devm_cxl_add_decoder(struct device *host, struct cxl_port *port, int nr_targets,
--		     resource_size_t base, resource_size_t len,
--		     int interleave_ways, int interleave_granularity,
--		     enum cxl_decoder_type type, unsigned long flags,
--		     int *target_map)
-+int devm_cxl_add_decoder(struct device *host, struct cxl_decoder *cxld,
-+			 int *target_map)
- {
+ 	struct device *host = root_port->dev.parent;
+-	struct acpi_pci_root *pci_root;
+-	struct cxl_walk_context ctx;
 -	struct cxl_decoder *cxld;
-+	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
- 	struct device *dev;
--	int rc;
-+	int rc = 0, i;
- 
--	if (nr_targets > CXL_DECODER_MAX_INTERLEAVE)
--		return ERR_PTR(-EINVAL);
-+	if (!cxld)
-+		return -EINVAL;
- 
--	cxld = cxl_decoder_alloc(host, port, nr_targets, base, len,
--				 interleave_ways, interleave_granularity, type,
--				 flags, target_map);
- 	if (IS_ERR(cxld))
--		return cxld;
-+		return PTR_ERR(cxld);
-+
-+	if (cxld->interleave_ways < 1) {
-+		rc = -EINVAL;
-+		goto err;
-+	}
-+
-+	device_lock(&port->dev);
-+	if (list_empty(&port->dports))
-+		rc = -EINVAL;
-+
-+	for (i = 0; rc == 0 && target_map && i < cxld->nr_targets; i++) {
-+		struct cxl_dport *dport = find_dport(port, target_map[i]);
-+
-+		if (!dport) {
-+			rc = -ENXIO;
-+			break;
-+		}
-+		dev_dbg(host, "%s: target: %d\n", dev_name(dport->dport), i);
-+		cxld->target[i] = dport;
-+	}
-+	device_unlock(&port->dev);
-+	if (rc)
-+		goto err;
- 
- 	dev = &cxld->dev;
- 	rc = dev_set_name(dev, "decoder%d.%d", port->id, cxld->id);
-@@ -554,43 +536,13 @@ devm_cxl_add_decoder(struct device *host, struct cxl_port *port, int nr_targets,
- 	if (rc)
- 		goto err;
- 
--	rc = devm_add_action_or_reset(host, unregister_cxl_dev, dev);
--	if (rc)
--		return ERR_PTR(rc);
--	return cxld;
--
-+	return devm_add_action_or_reset(host, unregister_cxl_dev, dev);
- err:
- 	put_device(dev);
--	return ERR_PTR(rc);
-+	return rc;
- }
- EXPORT_SYMBOL_GPL(devm_cxl_add_decoder);
- 
--/*
-- * Per the CXL specification (8.2.5.12 CXL HDM Decoder Capability Structure)
-- * single ported host-bridges need not publish a decoder capability when a
-- * passthrough decode can be assumed, i.e. all transactions that the uport sees
-- * are claimed and passed to the single dport. Default the range a 0-base
-- * 0-length until the first CXL region is activated.
-- */
--struct cxl_decoder *devm_cxl_add_passthrough_decoder(struct device *host,
--						     struct cxl_port *port)
--{
 -	struct cxl_dport *dport;
--	int target_map[1];
--
--	device_lock(&port->dev);
--	dport = list_first_entry_or_null(&port->dports, typeof(*dport), list);
--	device_unlock(&port->dev);
--
--	if (!dport)
--		return ERR_PTR(-ENXIO);
--
--	target_map[0] = dport->port_id;
--	return devm_cxl_add_decoder(host, port, 1, 0, 0, 1, PAGE_SIZE,
--				    CXL_DECODER_EXPANDER, 0, target_map);
--}
--EXPORT_SYMBOL_GPL(devm_cxl_add_passthrough_decoder);
--
- /**
-  * __cxl_driver_register - register a driver for the cxl bus
-  * @cxl_drv: cxl driver structure to attach
+-	struct cxl_port *port;
++	struct acpi_device *bridge = to_cxl_host_bridge(host, match);
+ 
+ 	if (!bridge)
+ 		return 0;
+@@ -319,7 +316,7 @@ static int add_host_bridge_dport(struct device *match, void *arg)
+ 	struct acpi_cedt_chbs *chbs;
+ 	struct cxl_port *root_port = arg;
+ 	struct device *host = root_port->dev.parent;
+-	struct acpi_device *bridge = to_cxl_host_bridge(match);
++	struct acpi_device *bridge = to_cxl_host_bridge(host, match);
+ 
+ 	if (!bridge)
+ 		return 0;
+@@ -371,6 +368,17 @@ static int add_root_nvdimm_bridge(struct device *match, void *data)
+ 	return 1;
+ }
+ 
++static u32 cedt_instance(struct platform_device *pdev)
++{
++	const bool *native_acpi0017 = acpi_device_get_match_data(&pdev->dev);
++
++	if (native_acpi0017 && *native_acpi0017)
++		return 0;
++
++	/* for cxl_test request a non-canonical instance */
++	return U32_MAX;
++}
++
+ static int cxl_acpi_probe(struct platform_device *pdev)
+ {
+ 	int rc;
+@@ -384,7 +392,7 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+ 		return PTR_ERR(root_port);
+ 	dev_dbg(host, "add: %s\n", dev_name(&root_port->dev));
+ 
+-	status = acpi_get_table(ACPI_SIG_CEDT, 0, &acpi_cedt);
++	status = acpi_get_table(ACPI_SIG_CEDT, cedt_instance(pdev), &acpi_cedt);
+ 	if (ACPI_FAILURE(status))
+ 		return -ENXIO;
+ 
+@@ -415,9 +423,11 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static bool native_acpi0017 = true;
++
+ static const struct acpi_device_id cxl_acpi_ids[] = {
+-	{ "ACPI0017", 0 },
+-	{ "", 0 },
++	{ "ACPI0017", (unsigned long) &native_acpi0017 },
++	{ },
+ };
+ MODULE_DEVICE_TABLE(acpi, cxl_acpi_ids);
+ 
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 13e02528ddd3..3705b2454b66 100644
+index 1b2e816e061e..a9d4051722bf 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -195,6 +195,7 @@ enum cxl_decoder_type {
-  * @interleave_granularity: data stride per dport
-  * @target_type: accelerator vs expander (type2 vs type3) selector
-  * @flags: memory type capabilities and locking
-+ * @nr_targets: number of elements in @target
-  * @target: active ordered target list in current decoder configuration
-  */
- struct cxl_decoder {
-@@ -205,6 +206,7 @@ struct cxl_decoder {
- 	int interleave_granularity;
- 	enum cxl_decoder_type target_type;
- 	unsigned long flags;
-+	int nr_targets;
- 	struct cxl_dport *target[];
+@@ -226,6 +226,14 @@ struct cxl_nvdimm {
+ 	struct nvdimm *nvdimm;
  };
  
-@@ -286,15 +288,10 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
- 
- struct cxl_decoder *to_cxl_decoder(struct device *dev);
- bool is_root_decoder(struct device *dev);
--struct cxl_decoder *
--devm_cxl_add_decoder(struct device *host, struct cxl_port *port, int nr_targets,
--		     resource_size_t base, resource_size_t len,
--		     int interleave_ways, int interleave_granularity,
--		     enum cxl_decoder_type type, unsigned long flags,
--		     int *target_map);
--
--struct cxl_decoder *devm_cxl_add_passthrough_decoder(struct device *host,
--						     struct cxl_port *port);
-+struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets);
-+int devm_cxl_add_decoder(struct device *host, struct cxl_decoder *cxld,
-+			 int *target_map);
++struct cxl_walk_context {
++	struct device *dev;
++	struct pci_bus *root;
++	struct cxl_port *port;
++	int error;
++	int count;
++};
 +
- extern struct bus_type cxl_bus_type;
- 
- struct cxl_driver {
+ /**
+  * struct cxl_port - logical collection of upstream port devices and
+  *		     downstream port devices to construct a CXL memory
+@@ -325,4 +333,9 @@ struct cxl_nvdimm *to_cxl_nvdimm(struct device *dev);
+ bool is_cxl_nvdimm(struct device *dev);
+ int devm_cxl_add_nvdimm(struct device *host, struct cxl_memdev *cxlmd);
+ struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(void);
++
++/* unit test build overrides this to __weak */
++#ifndef __mock
++#define __mock static
++#endif
+ #endif /* __CXL_H__ */
+diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+new file mode 100644
+index 000000000000..63a4a07e71c4
+--- /dev/null
++++ b/tools/testing/cxl/Kbuild
+@@ -0,0 +1,36 @@
++# SPDX-License-Identifier: GPL-2.0
++ldflags-y += --wrap=is_acpi_device_node
++ldflags-y += --wrap=acpi_get_table
++ldflags-y += --wrap=acpi_put_table
++ldflags-y += --wrap=acpi_evaluate_integer
++ldflags-y += --wrap=acpi_pci_find_root
++ldflags-y += --wrap=pci_walk_bus
++ldflags-y += --wrap=nvdimm_bus_register
++
++DRIVERS := ../../../drivers
++CXL_SRC := $(DRIVERS)/cxl
++CXL_CORE_SRC := $(DRIVERS)/cxl/core
++ccflags-y := -I$(srctree)/drivers/cxl/
++ccflags-y += -D__mock=__weak
++
++obj-m += cxl_acpi.o
++
++cxl_acpi-y := $(CXL_SRC)/acpi.o
++cxl_acpi-y += mock_acpi.o
++cxl_acpi-y += config_check.o
++
++obj-m += cxl_pmem.o
++
++cxl_pmem-y := $(CXL_SRC)/pmem.o
++cxl_pmem-y += config_check.o
++
++obj-m += cxl_core.o
++
++cxl_core-y := $(CXL_CORE_SRC)/bus.o
++cxl_core-y += $(CXL_CORE_SRC)/pmem.o
++cxl_core-y += $(CXL_CORE_SRC)/regs.o
++cxl_core-y += $(CXL_CORE_SRC)/memdev.o
++cxl_core-y += $(CXL_CORE_SRC)/mbox.o
++cxl_core-y += config_check.o
++
++obj-m += test/
+diff --git a/tools/testing/cxl/config_check.c b/tools/testing/cxl/config_check.c
+new file mode 100644
+index 000000000000..de5e5b3652fd
+--- /dev/null
++++ b/tools/testing/cxl/config_check.c
+@@ -0,0 +1,13 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/bug.h>
++
++void check(void)
++{
++	/*
++	 * These kconfig symbols must be set to "m" for cxl_test to load
++	 * and operate.
++	 */
++	BUILD_BUG_ON(!IS_MODULE(CONFIG_CXL_BUS));
++	BUILD_BUG_ON(!IS_MODULE(CONFIG_CXL_ACPI));
++	BUILD_BUG_ON(!IS_MODULE(CONFIG_CXL_PMEM));
++}
+diff --git a/tools/testing/cxl/mock_acpi.c b/tools/testing/cxl/mock_acpi.c
+new file mode 100644
+index 000000000000..4c8a493ace56
+--- /dev/null
++++ b/tools/testing/cxl/mock_acpi.c
+@@ -0,0 +1,109 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright(c) 2021 Intel Corporation. All rights reserved. */
++
++#include <linux/platform_device.h>
++#include <linux/device.h>
++#include <linux/acpi.h>
++#include <linux/pci.h>
++#include <cxl.h>
++#include "test/mock.h"
++
++struct acpi_device *to_cxl_host_bridge(struct device *host, struct device *dev)
++{
++	int index;
++	struct acpi_device *adev, *found = NULL;
++	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
++
++	if (ops && ops->is_mock_bridge(dev)) {
++		found = ACPI_COMPANION(dev);
++		goto out;
++	}
++
++	if (dev->bus == &platform_bus_type)
++		goto out;
++
++	adev = to_acpi_device(dev);
++	if (!acpi_pci_find_root(adev->handle))
++		goto out;
++
++	if (strcmp(acpi_device_hid(adev), "ACPI0016") == 0) {
++		found = adev;
++		dev_dbg(host, "found host bridge %s\n", dev_name(&adev->dev));
++	}
++out:
++	put_cxl_mock_ops(index);
++	return found;
++}
++
++static int match_add_root_port(struct pci_dev *pdev, void *data)
++{
++	struct cxl_walk_context *ctx = data;
++	struct pci_bus *root_bus = ctx->root;
++	struct cxl_port *port = ctx->port;
++	int type = pci_pcie_type(pdev);
++	struct device *dev = ctx->dev;
++	u32 lnkcap, port_num;
++	int rc;
++
++	if (pdev->bus != root_bus)
++		return 0;
++	if (!pci_is_pcie(pdev))
++		return 0;
++	if (type != PCI_EXP_TYPE_ROOT_PORT)
++		return 0;
++	if (pci_read_config_dword(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCAP,
++				  &lnkcap) != PCIBIOS_SUCCESSFUL)
++		return 0;
++
++	/* TODO walk DVSEC to find component register base */
++	port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
++	rc = cxl_add_dport(port, &pdev->dev, port_num, CXL_RESOURCE_NONE);
++	if (rc) {
++		dev_err(dev, "failed to add dport: %s (%d)\n",
++			dev_name(&pdev->dev), rc);
++		ctx->error = rc;
++		return rc;
++	}
++	ctx->count++;
++
++	dev_dbg(dev, "add dport%d: %s\n", port_num, dev_name(&pdev->dev));
++
++	return 0;
++}
++
++static int mock_add_root_port(struct platform_device *pdev, void *data)
++{
++	struct cxl_walk_context *ctx = data;
++	struct cxl_port *port = ctx->port;
++	struct device *dev = ctx->dev;
++	int rc;
++
++	rc = cxl_add_dport(port, &pdev->dev, pdev->id, CXL_RESOURCE_NONE);
++	if (rc) {
++		dev_err(dev, "failed to add dport: %s (%d)\n",
++			dev_name(&pdev->dev), rc);
++		ctx->error = rc;
++		return rc;
++	}
++	ctx->count++;
++
++	dev_dbg(dev, "add dport%d: %s\n", pdev->id, dev_name(&pdev->dev));
++
++	return 0;
++}
++
++int match_add_root_ports(struct pci_dev *dev, void *data)
++{
++	int index, rc;
++	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
++	struct platform_device *pdev = (struct platform_device *) dev;
++
++	if (ops && ops->is_mock_port(pdev))
++		rc = mock_add_root_port(pdev, data);
++	else
++		rc = match_add_root_port(dev, data);
++
++	put_cxl_mock_ops(index);
++
++	return rc;
++}
+diff --git a/tools/testing/cxl/test/Kbuild b/tools/testing/cxl/test/Kbuild
+new file mode 100644
+index 000000000000..7de4ddecfd21
+--- /dev/null
++++ b/tools/testing/cxl/test/Kbuild
+@@ -0,0 +1,6 @@
++# SPDX-License-Identifier: GPL-2.0
++obj-m += cxl_test.o
++obj-m += cxl_mock.o
++
++cxl_test-y := cxl.o
++cxl_mock-y := mock.o
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+new file mode 100644
+index 000000000000..0710e0062e58
+--- /dev/null
++++ b/tools/testing/cxl/test/cxl.c
+@@ -0,0 +1,516 @@
++// SPDX-License-Identifier: GPL-2.0-only
++// Copyright(c) 2021 Intel Corporation. All rights reserved.
++
++#include <linux/platform_device.h>
++#include <linux/genalloc.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/acpi.h>
++#include <linux/pci.h>
++#include <linux/mm.h>
++#include "mock.h"
++
++#define NR_CXL_HOST_BRIDGES 4
++#define NR_CXL_ROOT_PORTS 2
++
++static struct platform_device *cxl_acpi;
++static struct platform_device *cxl_host_bridge[NR_CXL_HOST_BRIDGES];
++static struct platform_device
++	*cxl_root_port[NR_CXL_HOST_BRIDGES * NR_CXL_ROOT_PORTS];
++
++static struct acpi_device acpi0017_mock;
++static struct acpi_device host_bridge[NR_CXL_HOST_BRIDGES] = {
++	[0] = {
++		.handle = &host_bridge[0],
++	},
++	[1] = {
++		.handle = &host_bridge[1],
++	},
++	[2] = {
++		.handle = &host_bridge[2],
++	},
++	[3] = {
++		.handle = &host_bridge[3],
++	},
++};
++
++static bool is_mock_dev(struct device *dev)
++{
++	if (dev == &cxl_acpi->dev)
++		return true;
++	return false;
++}
++
++static bool is_mock_adev(struct acpi_device *adev)
++{
++	int i;
++
++	if (adev == &acpi0017_mock)
++		return true;
++
++	for (i = 0; i < ARRAY_SIZE(host_bridge); i++)
++		if (adev == &host_bridge[i])
++			return true;
++
++	return false;
++}
++
++static struct {
++	struct acpi_table_cedt cedt;
++	struct acpi_cedt_chbs chbs[NR_CXL_HOST_BRIDGES];
++	struct {
++		struct acpi_cedt_cfmws cfmws;
++		u32 target[1];
++	} cfmws0;
++	struct {
++		struct acpi_cedt_cfmws cfmws;
++		u32 target[4];
++	} cfmws1;
++	struct {
++		struct acpi_cedt_cfmws cfmws;
++		u32 target[1];
++	} cfmws2;
++	struct {
++		struct acpi_cedt_cfmws cfmws;
++		u32 target[4];
++	} cfmws3;
++} __packed mock_cedt = {
++	.cedt = {
++		.header = {
++			.signature = "CEDT",
++			.length = sizeof(mock_cedt),
++			.revision = 1,
++		},
++	},
++	.chbs[0] = {
++		.header = {
++			.type = ACPI_CEDT_TYPE_CHBS,
++			.length = sizeof(mock_cedt.chbs[0]),
++		},
++		.uid = 0,
++		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL20,
++	},
++	.chbs[1] = {
++		.header = {
++			.type = ACPI_CEDT_TYPE_CHBS,
++			.length = sizeof(mock_cedt.chbs[0]),
++		},
++		.uid = 1,
++		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL20,
++	},
++	.chbs[2] = {
++		.header = {
++			.type = ACPI_CEDT_TYPE_CHBS,
++			.length = sizeof(mock_cedt.chbs[0]),
++		},
++		.uid = 2,
++		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL20,
++	},
++	.chbs[3] = {
++		.header = {
++			.type = ACPI_CEDT_TYPE_CHBS,
++			.length = sizeof(mock_cedt.chbs[0]),
++		},
++		.uid = 3,
++		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL20,
++	},
++	.cfmws0 = {
++		.cfmws = {
++			.header = {
++				.type = ACPI_CEDT_TYPE_CFMWS,
++				.length = sizeof(mock_cedt.cfmws0),
++			},
++			.interleave_ways = 0,
++			.granularity = 4,
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
++					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
++			.qtg_id = 0,
++		},
++		.target = { 0 },
++	},
++	.cfmws1 = {
++		.cfmws = {
++			.header = {
++				.type = ACPI_CEDT_TYPE_CFMWS,
++				.length = sizeof(mock_cedt.cfmws1),
++			},
++			.interleave_ways = 2,
++			.granularity = 4,
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
++					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
++			.qtg_id = 1,
++		},
++		.target = { 0, 1, 2, 3 },
++	},
++	.cfmws2 = {
++		.cfmws = {
++			.header = {
++				.type = ACPI_CEDT_TYPE_CFMWS,
++				.length = sizeof(mock_cedt.cfmws2),
++			},
++			.interleave_ways = 0,
++			.granularity = 4,
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
++					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
++			.qtg_id = 2,
++		},
++		.target = { 0 },
++	},
++	.cfmws3 = {
++		.cfmws = {
++			.header = {
++				.type = ACPI_CEDT_TYPE_CFMWS,
++				.length = sizeof(mock_cedt.cfmws3),
++			},
++			.interleave_ways = 2,
++			.granularity = 4,
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
++					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
++			.qtg_id = 3,
++		},
++		.target = { 0, 1, 2, 3 },
++	},
++};
++
++struct cxl_mock_res {
++	struct list_head list;
++	struct range range;
++};
++
++static LIST_HEAD(mock_res);
++static DEFINE_MUTEX(mock_res_lock);
++static struct gen_pool *cxl_mock_pool;
++
++static void free_mock_res(void)
++{
++	struct cxl_mock_res *res, *_res;
++
++	mutex_lock(&mock_res_lock);
++	list_for_each_entry_safe(res, _res, &mock_res, list) {
++		gen_pool_free(cxl_mock_pool, res->range.start,
++			      range_len(&res->range));
++		list_del(&res->list);
++		kfree(res);
++	}
++	mutex_unlock(&mock_res_lock);
++}
++
++static struct cxl_mock_res *alloc_mock_res(resource_size_t size)
++{
++	struct cxl_mock_res *res = kzalloc(sizeof(*res), GFP_KERNEL);
++	struct genpool_data_align data = {
++		.align = SZ_256M,
++	};
++	unsigned long phys;
++
++	INIT_LIST_HEAD(&res->list);
++	phys = gen_pool_alloc_algo(cxl_mock_pool, size,
++				   gen_pool_first_fit_align, &data);
++	if (!phys)
++		return NULL;
++
++	res->range = (struct range) {
++		.start = phys,
++		.end = phys + size - 1,
++	};
++	mutex_lock(&mock_res_lock);
++	list_add(&res->list, &mock_res);
++	mutex_unlock(&mock_res_lock);
++
++	return res;
++}
++
++static int populate_cedt(void)
++{
++	struct acpi_cedt_cfmws *cfmws[4] = {
++		[0] = &mock_cedt.cfmws0.cfmws,
++		[1] = &mock_cedt.cfmws1.cfmws,
++		[2] = &mock_cedt.cfmws2.cfmws,
++		[3] = &mock_cedt.cfmws3.cfmws,
++	};
++	struct cxl_mock_res *res;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(mock_cedt.chbs); i++) {
++		struct acpi_cedt_chbs *chbs = &mock_cedt.chbs[i];
++		resource_size_t size;
++
++		if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL20)
++			size = ACPI_CEDT_CHBS_LENGTH_CXL20;
++		else
++			size = ACPI_CEDT_CHBS_LENGTH_CXL11;
++
++		res = alloc_mock_res(size);
++		if (!res)
++			return -ENOMEM;
++		chbs->base = res->range.start;
++		chbs->length = size;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(cfmws); i++) {
++		struct acpi_cedt_cfmws *window = cfmws[i];
++		int ways = 1 << window->interleave_ways;
++
++		res = alloc_mock_res(SZ_256M * ways);
++		if (!res)
++			return -ENOMEM;
++		window->base_hpa = res->range.start;
++		window->window_size = range_len(&res->range);
++	}
++
++	return 0;
++}
++
++static acpi_status mock_acpi_get_table(char *signature, u32 instance,
++				       struct acpi_table_header **out_table)
++{
++	if (instance < U32_MAX || strcmp(signature, ACPI_SIG_CEDT) != 0)
++		return acpi_get_table(signature, instance, out_table);
++
++	*out_table = (struct acpi_table_header *) &mock_cedt;
++	return AE_OK;
++}
++
++static void mock_acpi_put_table(struct acpi_table_header *table)
++{
++	if (table == (struct acpi_table_header *) &mock_cedt)
++		return;
++	acpi_put_table(table);
++}
++
++static bool is_mock_bridge(struct device *dev)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(cxl_host_bridge); i++)
++		if (dev == &cxl_host_bridge[i]->dev)
++			return true;
++
++	return false;
++}
++
++static int host_bridge_index(struct acpi_device *adev)
++{
++	return adev - host_bridge;
++}
++
++static struct acpi_device *find_host_bridge(acpi_handle handle)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(host_bridge); i++)
++		if (handle == host_bridge[i].handle)
++			return &host_bridge[i];
++	return NULL;
++}
++
++static acpi_status
++mock_acpi_evaluate_integer(acpi_handle handle, acpi_string pathname,
++			   struct acpi_object_list *arguments,
++			   unsigned long long *data)
++{
++	struct acpi_device *adev = find_host_bridge(handle);
++
++	if (!adev || strcmp(pathname, METHOD_NAME__UID) != 0)
++		return acpi_evaluate_integer(handle, pathname, arguments, data);
++
++	*data = host_bridge_index(adev);
++	return AE_OK;
++}
++
++static struct pci_bus mock_pci_bus[NR_CXL_HOST_BRIDGES];
++static struct acpi_pci_root mock_pci_root[NR_CXL_HOST_BRIDGES] = {
++	[0] = {
++		.bus = &mock_pci_bus[0],
++	},
++	[1] = {
++		.bus = &mock_pci_bus[1],
++	},
++	[2] = {
++		.bus = &mock_pci_bus[2],
++	},
++	[3] = {
++		.bus = &mock_pci_bus[3],
++	},
++};
++
++static struct platform_device *mock_cxl_root_port(struct pci_bus *bus, int index)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(mock_pci_bus); i++)
++		if (bus == &mock_pci_bus[i])
++			return cxl_root_port[index + i * NR_CXL_ROOT_PORTS];
++	return NULL;
++}
++
++static bool is_mock_port(struct platform_device *pdev)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(cxl_root_port); i++)
++		if (pdev == cxl_root_port[i])
++			return true;
++	return false;
++}
++
++static bool is_mock_bus(struct pci_bus *bus)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(mock_pci_bus); i++)
++		if (bus == &mock_pci_bus[i])
++			return true;
++	return false;
++}
++
++static struct acpi_pci_root *mock_acpi_pci_find_root(acpi_handle handle)
++{
++	struct acpi_device *adev = find_host_bridge(handle);
++
++	if (!adev)
++		return acpi_pci_find_root(handle);
++	return &mock_pci_root[host_bridge_index(adev)];
++}
++
++static struct cxl_mock_ops cxl_mock_ops = {
++	.is_mock_adev = is_mock_adev,
++	.is_mock_bridge = is_mock_bridge,
++	.is_mock_bus = is_mock_bus,
++	.is_mock_port = is_mock_port,
++	.is_mock_dev = is_mock_dev,
++	.mock_port = mock_cxl_root_port,
++	.acpi_get_table = mock_acpi_get_table,
++	.acpi_put_table = mock_acpi_put_table,
++	.acpi_evaluate_integer = mock_acpi_evaluate_integer,
++	.acpi_pci_find_root = mock_acpi_pci_find_root,
++	.list = LIST_HEAD_INIT(cxl_mock_ops.list),
++};
++
++static void mock_companion(struct acpi_device *adev, struct device *dev)
++{
++	device_initialize(&adev->dev);
++	fwnode_init(&adev->fwnode, NULL);
++	dev->fwnode = &adev->fwnode;
++	adev->fwnode.dev = dev;
++}
++
++#ifndef SZ_64G
++#define SZ_64G (SZ_32G * 2)
++#endif
++
++#ifndef SZ_512G
++#define SZ_512G (SZ_64G * 8)
++#endif
++
++static __init int cxl_test_init(void)
++{
++	int rc, i;
++
++	register_cxl_mock_ops(&cxl_mock_ops);
++
++	cxl_mock_pool = gen_pool_create(ilog2(SZ_2M), NUMA_NO_NODE);
++	if (!cxl_mock_pool) {
++		rc = -ENOMEM;
++		goto err_gen_pool_create;
++	}
++
++	rc = gen_pool_add(cxl_mock_pool, SZ_512G, SZ_64G, NUMA_NO_NODE);
++	if (rc)
++		goto err_gen_pool_add;
++
++	rc = populate_cedt();
++	if (rc)
++		goto err_populate;
++
++	for (i = 0; i < ARRAY_SIZE(cxl_host_bridge); i++) {
++		struct acpi_device *adev = &host_bridge[i];
++		struct platform_device *pdev;
++
++		pdev = platform_device_alloc("cxl_host_bridge", i);
++		if (!pdev)
++			goto err_bridge;
++
++		mock_companion(adev, &pdev->dev);
++		rc = platform_device_add(pdev);
++		if (rc) {
++			platform_device_put(pdev);
++			goto err_bridge;
++		}
++		cxl_host_bridge[i] = pdev;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(cxl_root_port); i++) {
++		struct platform_device *bridge =
++			cxl_host_bridge[i / NR_CXL_ROOT_PORTS];
++		struct platform_device *pdev;
++
++		pdev = platform_device_alloc("cxl_root_port", i);
++		if (!pdev)
++			goto err_port;
++		pdev->dev.parent = &bridge->dev;
++
++		rc = platform_device_add(pdev);
++		if (rc) {
++			platform_device_put(pdev);
++			goto err_port;
++		}
++		cxl_root_port[i] = pdev;
++	}
++
++	cxl_acpi = platform_device_alloc("cxl_acpi", 0);
++	if (!cxl_acpi)
++		goto err_port;
++
++	mock_companion(&acpi0017_mock, &cxl_acpi->dev);
++	acpi0017_mock.dev.bus = &platform_bus_type;
++
++	rc = platform_device_add(cxl_acpi);
++	if (rc)
++		goto err_add;
++
++	return 0;
++
++err_add:
++	platform_device_put(cxl_acpi);
++err_port:
++	for (i = ARRAY_SIZE(cxl_root_port) - 1; i >= 0; i--) {
++		platform_device_del(cxl_root_port[i]);
++		platform_device_put(cxl_root_port[i]);
++	}
++err_bridge:
++	for (i = ARRAY_SIZE(cxl_host_bridge) - 1; i >= 0; i--) {
++		platform_device_del(cxl_host_bridge[i]);
++		platform_device_put(cxl_host_bridge[i]);
++	}
++err_populate:
++	free_mock_res();
++err_gen_pool_add:
++	gen_pool_destroy(cxl_mock_pool);
++err_gen_pool_create:
++	unregister_cxl_mock_ops(&cxl_mock_ops);
++	return rc;
++}
++
++static __exit void cxl_test_exit(void)
++{
++	int i;
++
++	platform_device_del(cxl_acpi);
++	platform_device_put(cxl_acpi);
++	for (i = ARRAY_SIZE(cxl_root_port) - 1; i >= 0; i--) {
++		platform_device_del(cxl_root_port[i]);
++		platform_device_put(cxl_root_port[i]);
++	}
++	for (i = ARRAY_SIZE(cxl_host_bridge) - 1; i >= 0; i--) {
++		platform_device_del(cxl_host_bridge[i]);
++		platform_device_put(cxl_host_bridge[i]);
++	}
++	free_mock_res();
++	gen_pool_destroy(cxl_mock_pool);
++	unregister_cxl_mock_ops(&cxl_mock_ops);
++}
++
++module_init(cxl_test_init);
++module_exit(cxl_test_exit);
++MODULE_LICENSE("GPL v2");
+diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
+new file mode 100644
+index 000000000000..b8c108abcf07
+--- /dev/null
++++ b/tools/testing/cxl/test/mock.c
+@@ -0,0 +1,171 @@
++// SPDX-License-Identifier: GPL-2.0-only
++//Copyright(c) 2021 Intel Corporation. All rights reserved.
++
++#include <linux/libnvdimm.h>
++#include <linux/rculist.h>
++#include <linux/device.h>
++#include <linux/export.h>
++#include <linux/acpi.h>
++#include <linux/pci.h>
++#include "mock.h"
++
++static LIST_HEAD(mock);
++
++void register_cxl_mock_ops(struct cxl_mock_ops *ops)
++{
++	list_add_rcu(&ops->list, &mock);
++}
++EXPORT_SYMBOL_GPL(register_cxl_mock_ops);
++
++static DEFINE_SRCU(cxl_mock_srcu);
++
++void unregister_cxl_mock_ops(struct cxl_mock_ops *ops)
++{
++	list_del_rcu(&ops->list);
++	synchronize_srcu(&cxl_mock_srcu);
++}
++EXPORT_SYMBOL_GPL(unregister_cxl_mock_ops);
++
++struct cxl_mock_ops *get_cxl_mock_ops(int *index)
++{
++	*index = srcu_read_lock(&cxl_mock_srcu);
++	return list_first_or_null_rcu(&mock, struct cxl_mock_ops, list);
++}
++EXPORT_SYMBOL_GPL(get_cxl_mock_ops);
++
++void put_cxl_mock_ops(int index)
++{
++	srcu_read_unlock(&cxl_mock_srcu, index);
++}
++EXPORT_SYMBOL_GPL(put_cxl_mock_ops);
++
++bool __wrap_is_acpi_device_node(const struct fwnode_handle *fwnode)
++{
++	struct acpi_device *adev =
++		container_of(fwnode, struct acpi_device, fwnode);
++	int index;
++	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
++	bool retval = false;
++
++	if (ops)
++		retval = ops->is_mock_adev(adev);
++
++	if (!retval)
++		retval = is_acpi_device_node(fwnode);
++
++	put_cxl_mock_ops(index);
++	return retval;
++}
++EXPORT_SYMBOL(__wrap_is_acpi_device_node);
++
++acpi_status __wrap_acpi_get_table(char *signature, u32 instance,
++				  struct acpi_table_header **out_table)
++{
++	int index;
++	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
++	acpi_status status;
++
++	if (ops)
++		status = ops->acpi_get_table(signature, instance, out_table);
++	else
++		status = acpi_get_table(signature, instance, out_table);
++
++	put_cxl_mock_ops(index);
++
++	return status;
++}
++EXPORT_SYMBOL(__wrap_acpi_get_table);
++
++void __wrap_acpi_put_table(struct acpi_table_header *table)
++{
++	int index;
++	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
++
++	if (ops)
++		ops->acpi_put_table(table);
++	else
++		acpi_put_table(table);
++	put_cxl_mock_ops(index);
++}
++EXPORT_SYMBOL(__wrap_acpi_put_table);
++
++acpi_status __wrap_acpi_evaluate_integer(acpi_handle handle,
++					 acpi_string pathname,
++					 struct acpi_object_list *arguments,
++					 unsigned long long *data)
++{
++	int index;
++	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
++	acpi_status status;
++
++	if (ops)
++		status = ops->acpi_evaluate_integer(handle, pathname, arguments,
++						    data);
++	else
++		status = acpi_evaluate_integer(handle, pathname, arguments,
++					       data);
++	put_cxl_mock_ops(index);
++
++	return status;
++}
++EXPORT_SYMBOL(__wrap_acpi_evaluate_integer);
++
++struct acpi_pci_root *__wrap_acpi_pci_find_root(acpi_handle handle)
++{
++	int index;
++	struct acpi_pci_root *root;
++	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
++
++	if (ops)
++		root = ops->acpi_pci_find_root(handle);
++	else
++		root = acpi_pci_find_root(handle);
++
++	put_cxl_mock_ops(index);
++
++	return root;
++}
++EXPORT_SYMBOL_GPL(__wrap_acpi_pci_find_root);
++
++void __wrap_pci_walk_bus(struct pci_bus *bus,
++			 int (*cb)(struct pci_dev *, void *), void *userdata)
++{
++	int index;
++	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
++
++	if (ops && ops->is_mock_bus(bus)) {
++		int rc, i;
++
++		/*
++		 * Simulate 2 root ports per host-bridge and no
++		 * depth recursion.
++		 */
++		for (i = 0; i < 2; i++) {
++			rc = cb((struct pci_dev *) ops->mock_port(bus, i),
++				userdata);
++			if (rc)
++				break;
++		}
++	} else
++		pci_walk_bus(bus, cb, userdata);
++
++	put_cxl_mock_ops(index);
++}
++EXPORT_SYMBOL_GPL(__wrap_pci_walk_bus);
++
++struct nvdimm_bus *
++__wrap_nvdimm_bus_register(struct device *dev,
++			   struct nvdimm_bus_descriptor *nd_desc)
++{
++	int index;
++	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
++
++	if (ops && ops->is_mock_dev(dev->parent->parent))
++		nd_desc->provider_name = "cxl_test";
++	put_cxl_mock_ops(index);
++
++	return nvdimm_bus_register(dev, nd_desc);
++}
++EXPORT_SYMBOL_GPL(__wrap_nvdimm_bus_register);
++
++MODULE_LICENSE("GPL v2");
+diff --git a/tools/testing/cxl/test/mock.h b/tools/testing/cxl/test/mock.h
+new file mode 100644
+index 000000000000..805a94cb3fbe
+--- /dev/null
++++ b/tools/testing/cxl/test/mock.h
+@@ -0,0 +1,27 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#include <linux/list.h>
++#include <linux/acpi.h>
++
++struct cxl_mock_ops {
++	struct list_head list;
++	bool (*is_mock_adev)(struct acpi_device *dev);
++	acpi_status (*acpi_get_table)(char *signature, u32 instance,
++				      struct acpi_table_header **out_table);
++	void (*acpi_put_table)(struct acpi_table_header *table);
++	bool (*is_mock_bridge)(struct device *dev);
++	acpi_status (*acpi_evaluate_integer)(acpi_handle handle,
++					     acpi_string pathname,
++					     struct acpi_object_list *arguments,
++					     unsigned long long *data);
++	struct acpi_pci_root *(*acpi_pci_find_root)(acpi_handle handle);
++	struct platform_device *(*mock_port)(struct pci_bus *bus, int index);
++	bool (*is_mock_bus)(struct pci_bus *bus);
++	bool (*is_mock_port)(struct platform_device *pdev);
++	bool (*is_mock_dev)(struct device *dev);
++};
++
++void register_cxl_mock_ops(struct cxl_mock_ops *ops);
++void unregister_cxl_mock_ops(struct cxl_mock_ops *ops);
++struct cxl_mock_ops *get_cxl_mock_ops(int *index);
++void put_cxl_mock_ops(int index);
 
