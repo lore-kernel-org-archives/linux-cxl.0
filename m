@@ -2,225 +2,97 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01919C4320E
-	for <linux-cxl@archiver.kernel.org>; Tue, 31 Aug 2021 12:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BA7C432BE
+	for <linux-cxl@archiver.kernel.org>; Tue, 31 Aug 2021 13:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D545960FC0
-	for <linux-cxl@archiver.kernel.org>; Tue, 31 Aug 2021 12:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CEC76056B
+	for <linux-cxl@archiver.kernel.org>; Tue, 31 Aug 2021 13:50:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231537AbhHaM4O (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 31 Aug 2021 08:56:14 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3710 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230154AbhHaM4O (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 31 Aug 2021 08:56:14 -0400
-Received: from fraeml742-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4GzRvP04mpz67Zt6;
-        Tue, 31 Aug 2021 20:53:37 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml742-chm.china.huawei.com (10.206.15.223) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Tue, 31 Aug 2021 14:55:15 +0200
-Received: from localhost (10.52.121.53) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Tue, 31 Aug
- 2021 13:55:14 +0100
-Date:   Tue, 31 Aug 2021 13:55:17 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
-CC:     <keyrings@vger.kernel.org>, <dan.j.williams@intel.com>,
-        Chris Browy <cbrowy@avery-design.com>, <linuxarm@huawei.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Jeremy Kerr <jk@codeconstruct.com.au>
-Subject: Re: [RFC PATCH 0/4] PCI/CMA and SPDM library
-Message-ID: <20210831135517.0000716f@Huawei.com>
-In-Reply-To: <20210805174346.000047f1@huawei.com>
-References: <20210804161839.3492053-1-Jonathan.Cameron@huawei.com>
-        <20210805174346.000047f1@huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+        id S237809AbhHaNvQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 31 Aug 2021 09:51:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239133AbhHaNvB (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 31 Aug 2021 09:51:01 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 597E6C0612E7
+        for <linux-cxl@vger.kernel.org>; Tue, 31 Aug 2021 06:50:03 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id n11so26865916edv.11
+        for <linux-cxl@vger.kernel.org>; Tue, 31 Aug 2021 06:50:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zPX1Cx6i1wGAaNv/FyWRibhoHk490fta5weo1iPmB0Q=;
+        b=1dVdeB6E9D4+m134wRVReiHxIto9X5gCIKMBqQuRf87ES60DlT5paBnu3uA0Wer4x2
+         ny9wiMkfWtxR/Jww/CTgv66he1SAsLUUk4ZAaPnUDD7UQXXtjtzbdc+HxNbFcOEoioPZ
+         sWNnXfuuI79IjoTQAcbKSmuJHP3Pa07T+UStcaM7PpYUDsRZ3uWHw5aadzlmR7mU2GZH
+         bnWGy6bUdTewhMMNj8Hj6SXb1IQeqDl6BCCCD4dcaRuCou3iF3gxiKz6qIn1+GeXI9aR
+         espETnz/DEToQCnl5tcSCsCNxkJSLAEYfd4DKxlRK25cwk2hHeKRLRS2xX8IbcrVxPCv
+         7M6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zPX1Cx6i1wGAaNv/FyWRibhoHk490fta5weo1iPmB0Q=;
+        b=F1gKUGr1MIOcyZPAjVSEX5Rbmr3DBije5Whb0uKVAWQT1ow0jfnu98D7rd7ymnRSxr
+         M4PfWhD1lr8AtC42udG+IFsnIUfGr7rK/nYWRSH39MwMkY8aDSF1jEgOi1zT9urrei7f
+         N97SrTf9hsAlit3g7xg/z2/6BC4X96l1I0M8QxVLqbAKDAGR3PY8m3/fIDjZj7BkMYRR
+         FQjuqj4poR5T/tdVPUyMneRKeboL40gqLfFeXC2J3iZDE++wCrgoD8JkjXa3VYB0HQYg
+         IPO+9YtHGfO3fZM9mE8WvspzDM+OQ94k1OBpmRdOKJ1ptFYyFoF5l7J6+x+btRtsxIGh
+         J1IQ==
+X-Gm-Message-State: AOAM5307mcpiQJxZ92RqhsTd4H7cZqrS6eZBs1A08+V7k4BttAEfUO9M
+        mdYXpYC0WT1uSw/KxYyFN0AT2r9rKR/6vAVf8GZy
+X-Google-Smtp-Source: ABdhPJyGDT7sjKnvAaslCh6VU3oeZudwS5qG9rubETPaZxPkqNoONMqbRw1AEONbP0PiecvVT5WPlpdCnWvYhqaPj8Q=
+X-Received: by 2002:a05:6402:4cf:: with SMTP id n15mr30404106edw.269.1630417801745;
+ Tue, 31 Aug 2021 06:50:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.121.53]
-X-ClientProxiedBy: lhreml719-chm.china.huawei.com (10.201.108.70) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <20210616085118.1141101-1-omosnace@redhat.com> <CAHC9VhSr2KpeBXuyoHR3_hs+qczFUaBx0oCSMfBBA5UNYU+0KA@mail.gmail.com>
+ <CAFqZXNvJtMOfLk-SLt2S2qt=+-x8fm9jS3NKxFoT0_5d2=8Ckg@mail.gmail.com>
+In-Reply-To: <CAFqZXNvJtMOfLk-SLt2S2qt=+-x8fm9jS3NKxFoT0_5d2=8Ckg@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 31 Aug 2021 09:49:50 -0400
+Message-ID: <CAHC9VhRdh0uTBur8PHOR4bL38rQozatO7J2fwEzZiLwRXLL7fg@mail.gmail.com>
+Subject: Re: [PATCH v3] lockdown,selinux: fix wrong subject in some SELinux
+ lockdown checks
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        James Morris <jmorris@namei.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        SElinux list <selinux@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
+        linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-efi@vger.kernel.org,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-serial@vger.kernel.org, bpf <bpf@vger.kernel.org>,
+        network dev <netdev@vger.kernel.org>,
+        kexec@lists.infradead.org,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 5 Aug 2021 17:43:46 +0100
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+On Tue, Aug 31, 2021 at 5:08 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> Can we move this forward somehow, please?
 
-> On Thu, 5 Aug 2021 00:18:35 +0800
-> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-> 
-> > This is an RFC to start discussions about how we support the Component
-> > Measurement and Authentication (CMA) ECN (pcisig.com)
-> > 
-> > CMA provides an adaptation of the data objects and underlying protocol
-> > defined in the DMTF SPDM specification to be used to authenticate and
-> > conduct run-time measurements of the state of PCI devices (kind of like
-> > IMA for devices / firmware). This is done using a Data Object Exchange (DOE)
-> > protocol described in the ECN.
-> > 
-> > The CMA ECN is available from the PCI SIG and SPDM can be found at
-> > https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.1.pdf
-> > 
-> > CMA/SPDM is focused on establishing trust of the device by:
-> > 1) Negotiate algorithms supported.
-> > 2) Retrieve and check the certificate chain from the device against
-> >    a suitable signing certificate on the host.
-> > 3) Issue a challenge to the device to verify it can sign with the private
-> >    key associated with the leaf certificate.
-> > 4) (Request a measurement of device state)
-> > 5) (Establish a secure channel for further measurements or other uses)
-> > 6) (Mutual authentication)
-> > 
-> > This RFC only does steps 1-3
-> > 
-> > Testing of this patch set has been conducted against QEMU emulation of
-> > the device backed by openSPDM emulation of the SPDM protocol.  
-> 
-> Note testing also works with libspdm and libspdm-emu from
-> https://github.com/DMTF/spdm-emu with no modifications.
-> 
-> The openSPDM modifications Chris and team made were all associated with the host
-> end and are not needed for this code (the QEMU part is still needed to provide
-> the DOE emulation and forward the traffic to spdm_responder_emu)
-> 
-> I should also have mentioned this series is on top of the recently posted
-> DOE series rebased onto the linux-cxl next git tree.  I'm not really expecting
-> anyone to test it at this stage, but if desired I can push a full tree out
-> somewhere with this in place.
+As mentioned previously, I can merge this via the SELinux tree but I
+need to see some ACKs from the other subsystems first, not to mention
+some resolution to the outstanding questions.
 
-A couple of updates:
-
-1. This topic is on the agenda for the linaro-open-discussions call tomorrow.
-https://linaro.atlassian.net/wiki/spaces/LOD/overview
-It's a public call and anyone interested is welcome to join in. Time is rather
-unfriendly for US based people unfortunately. I'll throw together some sort of
-overview / open questions slide deck which will be posted on that page. Note
-related topics on plumbers microconf agenda later in the month - I'll share details
-of that once known.
-
-2. Related to that I had a request for trees as the base of the various series are not
-obvious (involved a bunch of rebases of various other patch sets)
-
-https://github.com/hisilicon/kernel-dev/tree/doe-spdm-v1 rebased to 5.14-rc7
-https://github.com/hisilicon/qemu/tree/cxl-hacks rebased to qemu/master as of Friday
-
-For qemu side of things you need to be running spdm_responder_emu --trans PCI_DOE 
-from https://github.com/DMTF/spdm-emu first (that will act as server to qemu acting
-as a client). Various parameters allow you to change the algorithms advertised and the
-kernel code should work for all the ones CMA mandates (but nothing beyond that for now).
-
-For the cxl device the snippet of qemu commandline needed is:
--device cxl-type3,bus=root_port13,memdev=cxl-mem1,lsa=cxl-mem1, id=cxl-pmem0,size=2G,spdm=true
-
-Otherwise much the same as https://people.kernel.org/jic23/ (instructions written to enable
-testing of the DOE patches this built on).
-
-Build at least the cxl_pci driver as a module as we need to poke the certificate into the keychain
-before that (find the cert in spdm_emu tree).
-Instructions to do that with keyctl and evmctl are in the cover letter of the patch series.
-
-Hopefully I'll find some time soonish to update that blog post with instructions.
-
-Thanks,
-
-Jonathan
-
-> 
-> Jonathan
-> 
-> > 
-> > https://lore.kernel.org/qemu-devel/1624665723-5169-1-git-send-email-cbrowy@avery-design.com/
-> > 
-> > Open questions are called out in the individual patches but the big ones are
-> > probably:
-> > 
-> > 1) Certificate management.
-> >    Current code uses a _cma keyring created by the kernel, into which a
-> >    suitable root certificate can be inserted from userspace.
-> > 
-> >    A=$(keyctl search %:_cma  keyring _cma)
-> >    evmctl import ecdsaca.cert.der $A
-> > 
-> >    Is this an acceptable way to load the root certificates for this purpose?
-> > 
-> >    The root of the device provided certificate chain is then checked against
-> >    certificates on this keychain, but is itself (with the other certificates
-> >    in the chain) loaded into an SPDM instance specific keychain.  Currently
-> >    there is no safe cleanup of this which will need to be fixed.
-> > 
-> >    Using the keychain mechanism provides a very convenient way to manage these
-> >    certificates and to allow userspace to read them for debug purpose etc, but
-> >    is this the right use model?
-> > 
-> >    Finally the leaf certificate of this chain is used to check signatures of
-> >    the rest of the communications with the device.
-> > 
-> > 2) ASNL1 encoder for ECDSA signature
-> >    It seems from the openSPDM implementation that for these signatures,
-> >    the format is a simple pair of raw values.  The kernel implementation of
-> >    ECDSA signature verification assumes ASN1 encoding as seems to be used
-> >    in x509 certificates.  Currently I work around that by encoding the
-> >    signatures so that the ECDSA code can un-encode them again and use them.
-> >    This seems slightly silly, but it is minimum impact on current code.
-> >    Other suggestions welcome.
-> > 
-> > 3) Interface to present to drivers. Currently I'm providing just one exposed
-> >    function that wraps up all the exhanges until a challenge authentication
-> >    response from the device. This is done using one possible sequence.
-> >    I don't think it makes sense to expose the low level components due to the
-> >    underlying spdm_state updates and there only being a fixed set of valid
-> >    orderings.
-> > 
-> > Future patches will raise questions around management of the measurements, but
-> > I'll leave those until I have some sort of implementation to shoot at.
-> > The 'on probe' use in the CXL driver is only one likely time when authentication
-> > would be needed.
-> > 
-> > Note I'm new to a bunch of the areas of the kernel this touches, so have
-> > probably done things that are totally wrong.
-> > 
-> > CC list is best effort to identify those who 'might' care.  Please share
-> > with anyone I've missed.
-> > 
-> > Thanks,
-> > 
-> > Jonathan
-> > 
-> > 
-> > Jonathan Cameron (4):
-> >   lib/asn1_encoder: Add a function to encode many byte integer values.
-> >   spdm: Introduce a library for DMTF SPDM
-> >   PCI/CMA: Initial support for Component Measurement and Authentication
-> >     ECN
-> >   cxl/pci: Add really basic CMA authentication support.
-> > 
-> >  drivers/cxl/Kconfig          |    1 +
-> >  drivers/cxl/mem.h            |    2 +
-> >  drivers/cxl/pci.c            |   13 +-
-> >  drivers/pci/Kconfig          |    9 +
-> >  drivers/pci/Makefile         |    1 +
-> >  drivers/pci/doe.c            |    2 -
-> >  include/linux/asn1_encoder.h |    3 +
-> >  include/linux/pci-doe.h      |    2 +
-> >  lib/Kconfig                  |    3 +
-> >  lib/Makefile                 |    2 +
-> >  lib/asn1_encoder.c           |   54 ++
-> >  lib/spdm.c                   | 1196 ++++++++++++++++++++++++++++++++++
-> >  12 files changed, 1285 insertions(+), 3 deletions(-)
-> >  create mode 100644 lib/spdm.c
-> >   
-> 
-
+-- 
+paul moore
+www.paul-moore.com
