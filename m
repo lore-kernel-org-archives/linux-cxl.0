@@ -2,81 +2,114 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50212C432BE
-	for <linux-cxl@archiver.kernel.org>; Wed,  1 Sep 2021 19:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC034C83027
+	for <linux-cxl@archiver.kernel.org>; Thu,  2 Sep 2021 16:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EAB761056
-	for <linux-cxl@archiver.kernel.org>; Wed,  1 Sep 2021 19:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B39C560249
+	for <linux-cxl@archiver.kernel.org>; Thu,  2 Sep 2021 16:36:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230232AbhIATUI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 1 Sep 2021 15:20:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41184 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229962AbhIATUH (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Sep 2021 15:20:07 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FE94C061575
-        for <linux-cxl@vger.kernel.org>; Wed,  1 Sep 2021 12:19:10 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id u11-20020a17090adb4b00b00181668a56d6so453384pjx.5
-        for <linux-cxl@vger.kernel.org>; Wed, 01 Sep 2021 12:19:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IspLCg3oFcMgGcuKPjnrYymO26rLmbmjWCQz98/r454=;
-        b=cNV1TUB+eFkZpST0sADZjI0N0vAXSwuAzPyrtDiOpaDWS5wfeW4eiDjR8cZP98rtO6
-         xRmSarzHxZrBAO7DeKU7v3Y8u9o/mUHi/maWpyQ6tnlltvWEkdWfc+WXFCXMWJSJ6vyv
-         IWvF1LGkb+v7XnEvBxG2PyZ1OCeqXRbttaCZTnNgWoxt60yDk7IG0TjOew01BXePLoN2
-         xIOQZHv5jjDnymRiKF0FMFr9sTUtZOBixS377AAbx7++6dTw2qP6zdt8XQKg7Yi3zCjw
-         KbHUfQrLFDutrpQqUZnDWxvjzCnlIf5TQX7nadcyMU7ay6tRbDUKA7CW1JkFycSPkvqt
-         MSfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IspLCg3oFcMgGcuKPjnrYymO26rLmbmjWCQz98/r454=;
-        b=DiSA4vsHHIdkRzyaZBcQRwNNUwe9Kyw2cGuRoNhlbbX04xjSddi9gZdHqFEFtI8/9V
-         e/4TpSeJcjjGETQlVV7bkprOrXwU2LbClwEKgIGIh/grqX8/2MUlSe6uyRzaTlwztBAj
-         srBdi1RUAQu3koN7lsn0+XXXixwtQwEIyXgA0E9K5qQWVrz45yd7CKtCijgOYif68Kur
-         pnyovHXp5NuDZQX8oT48hKBSE6FhN5P7t64Q6chFSwvx/CmB3KihYlFqH2fPS345UP0H
-         VAauoLggRvbTUnCK1H7Pv9J7Vc+IPjV5JRtFZ/IcOGm2JqxqYhodz5jUabcxidNit+xW
-         akpw==
-X-Gm-Message-State: AOAM531c7VAWGTzw5qV3a51zvxNrR7ABLdrJFIOj3IjfdIAgVZShIRPB
-        QSEHv2En7r7EaCR2NpSpThSvPA4rFhDAm8Pz6Ws78g==
-X-Google-Smtp-Source: ABdhPJx4pGp5MW0KOprYmSABiXs8ARJ082/y7YbWIaLoCvBLKj1Fk5PynSRsEYO8J12Xluf66vZp5Y/ye4VNepZFoqk=
-X-Received: by 2002:a17:902:e550:b0:137:734f:1d84 with SMTP id
- n16-20020a170902e55000b00137734f1d84mr980413plf.27.1630523950196; Wed, 01 Sep
- 2021 12:19:10 -0700 (PDT)
+        id S1346340AbhIBQhD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 2 Sep 2021 12:37:03 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3713 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231400AbhIBQhD (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 2 Sep 2021 12:37:03 -0400
+Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4H0mj44192z67kXv;
+        Fri,  3 Sep 2021 00:34:16 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.8; Thu, 2 Sep 2021 18:36:01 +0200
+Received: from localhost (10.52.127.69) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Thu, 2 Sep 2021
+ 17:36:01 +0100
+Date:   Thu, 2 Sep 2021 17:36:02 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <vishal.l.verma@intel.com>,
+        <alison.schofield@intel.com>, <nvdimm@lists.linux.dev>,
+        <ira.weiny@intel.com>, <ben.widawsky@intel.com>
+Subject: Re: [PATCH v3 13/28] libnvdimm/label: Define CXL region labels
+Message-ID: <20210902173602.00000272@Huawei.com>
+In-Reply-To: <162982119604.1124374.8364301519543316156.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <162982112370.1124374.2020303588105269226.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <162982119604.1124374.8364301519543316156.stgit@dwillia2-desk3.amr.corp.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <20210830171726.2342558-1-ben.widawsky@intel.com> <20210830171726.2342558-3-ben.widawsky@intel.com>
-In-Reply-To: <20210830171726.2342558-3-ben.widawsky@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 1 Sep 2021 12:18:59 -0700
-Message-ID: <CAPcyv4iA9CywmxsT9GbOVhNcpdM1Bc4XNe69FuPLFiTuQvL+HQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] cxl/docs: Remove undocumented references
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.127.69]
+X-ClientProxiedBy: lhreml715-chm.china.huawei.com (10.201.108.66) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Aug 30, 2021 at 10:17 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> When the core pmem and regs implementation was added, there were no
-> structured comments added. This change allows docs to be generated
-> without warnings.
->
+On Tue, 24 Aug 2021 09:06:36 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Hmm, might be better to go the other and fix this with patches to add
-documentation. At least devm_cxl_add_nvdimm_bridge() would benefit and
-regs.c has some kernel-doc annotations, just needs the header section
-added.
+> Add a definition of the CXL 2.0 region label format. Note this is done
+> as a separate patch to make the next patch that adds namespace label
+> support easier to read.
+> 
+> Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+FWIW
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> ---
+>  drivers/nvdimm/label.h |   30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/drivers/nvdimm/label.h b/drivers/nvdimm/label.h
+> index 31f94fad7b92..76ecd0347dc2 100644
+> --- a/drivers/nvdimm/label.h
+> +++ b/drivers/nvdimm/label.h
+> @@ -65,6 +65,36 @@ struct nd_namespace_index {
+>  	u8 free[];
+>  };
+>  
+> +/**
+> + * struct cxl_region_label - CXL 2.0 Table 211
+> + * @type: uuid identifying this label format (region)
+> + * @uuid: uuid for the region this label describes
+> + * @flags: NSLABEL_FLAG_UPDATING (all other flags reserved)
+> + * @position: this label's position in the set
+> + * @dpa: start address in device-local capacity for this label
+> + * @rawsize: size of this label's contribution to region
+> + * @hpa: mandatory system physical address to map this region
+> + * @slot: slot id of this label in label area
+> + * @ig: interleave granularity (1 << @ig) * 256 bytes
+> + * @align: alignment in SZ_256M blocks
+> + * @checksum: fletcher64 sum of this label
+> + */
+> +struct cxl_region_label {
+> +	u8 type[NSLABEL_UUID_LEN];
+> +	u8 uuid[NSLABEL_UUID_LEN];
+> +	__le32 flags;
+> +	__le16 nlabel;
+> +	__le16 position;
+> +	__le64 dpa;
+> +	__le64 rawsize;
+> +	__le64 hpa;
+> +	__le32 slot;
+> +	__le32 ig;
+> +	__le32 align;
+> +	u8 reserved[0xac];
+> +	__le64 checksum;
+> +};
+> +
+>  /**
+>   * struct nd_namespace_label - namespace superblock
+>   * @uuid: UUID per RFC 4122
+> 
+
