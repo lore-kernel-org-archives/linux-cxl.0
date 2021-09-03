@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B877C433F5
-	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 14:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DA8C433EF
+	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 15:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0E786101A
-	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 14:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE3D61103
+	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 15:22:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235471AbhICOxv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 3 Sep 2021 10:53:51 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3737 "EHLO
+        id S1349579AbhICPXA convert rfc822-to-8bit (ORCPT
+        <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 3 Sep 2021 11:23:00 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3738 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235369AbhICOxu (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Sep 2021 10:53:50 -0400
-Received: from fraeml742-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4H1LMT74HCz67yqX;
-        Fri,  3 Sep 2021 22:51:01 +0800 (CST)
+        with ESMTP id S235546AbhICPXA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Sep 2021 11:23:00 -0400
+Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4H1M1J09ndz67b23;
+        Fri,  3 Sep 2021 23:20:20 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml742-chm.china.huawei.com (10.206.15.223) with Microsoft SMTP Server
+ fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Fri, 3 Sep 2021 16:52:48 +0200
+ 15.1.2308.8; Fri, 3 Sep 2021 17:21:57 +0200
 Received: from localhost (10.52.121.127) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.8; Fri, 3 Sep 2021
- 15:52:48 +0100
-Date:   Fri, 3 Sep 2021 15:52:49 +0100
+ 16:21:56 +0100
+Date:   Fri, 3 Sep 2021 16:21:57 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Ben Widawsky <ben.widawsky@intel.com>
 CC:     <linux-cxl@vger.kernel.org>,
         Alison Schofield <alison.schofield@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         "Ira Weiny" <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 06/13] cxl/mem: Introduce cxl_mem driver
-Message-ID: <20210903155249.00002b2e@Huawei.com>
-In-Reply-To: <20210902195017.2516472-7-ben.widawsky@intel.com>
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Bjorn Helgaas" <bjorn@helgaas.com>
+Subject: Re: [PATCH 07/13] cxl/memdev: Determine CXL.mem capability
+Message-ID: <20210903162157.00000a43@Huawei.com>
+In-Reply-To: <20210902195017.2516472-8-ben.widawsky@intel.com>
 References: <20210902195017.2516472-1-ben.widawsky@intel.com>
-        <20210902195017.2516472-7-ben.widawsky@intel.com>
+        <20210902195017.2516472-8-ben.widawsky@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 X-Originating-IP: [10.52.121.127]
 X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
  lhreml710-chm.china.huawei.com (10.201.108.61)
@@ -56,169 +58,273 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 2 Sep 2021 12:50:10 -0700
+On Thu, 2 Sep 2021 12:50:11 -0700
 Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-> CXL endpoints that participate in the CXL.mem protocol require extra
-> control to ensure architectural constraints are met for device
-> management. The most straight-forward way to achieve control of these
-> endpoints is with a new driver that can bind to such devices. This
-> driver will also be responsible for enumerating the switches that
-> connect the endpoint to the hostbridge.
+> If the "upstream" port of the endpoint is an enumerated downstream CXL
+> port, and the device itself is CXL capable and enabled, the memdev
+> driver can bind. This binding useful for region configuration/creation
+> because it provides a clean way for the region code to determine if the
+> memdev is actually CXL capable.
 > 
-> cxl_core already understands the concept of a memdev, but the core [by
-> design] does not comprehend all the topological constraints.
+> A memdev/hostbridge probe race is solved with a full CXL bus rescan at
+> the end of ACPI probing (see comment in code for details). Switch
+> enumeration will be done as a follow-on patch. As a result, if a switch
+> is in the topology the memdev driver will not bind to any devices.
+> 
+> CXL.mem capability is checked lazily at the time a region is bound.
+> This is in line with the other configuration parameters.
+> 
+> Below is an example (mem0, and mem1) of CXL memdev devices that now
+> exist on the bus.
+> 
+> /sys/bus/cxl/devices/
+> ├── decoder0.0 -> ../../../devices/platform/ACPI0017:00/root0/decoder0.0
+> ├── mem0 -> ../../../devices/pci0000:34/0000:34:01.0/0000:36:00.0/mem0
+> ├── mem1 -> ../../../devices/pci0000:34/0000:34:00.0/0000:35:00.0/mem1
+> ├── pmem0 -> ../../../devices/pci0000:34/0000:34:01.0/0000:36:00.0/mem0/pmem0
+> ├── pmem1 -> ../../../devices/pci0000:34/0000:34:00.0/0000:35:00.0/mem1/pmem1
+> ├── port1 -> ../../../devices/platform/ACPI0017:00/root0/port1
+> └── root0 -> ../../../devices/platform/ACPI0017:00/root0
 > 
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 
-Looks fairly standard... FWIW
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
++CC Bjorn.  Given we are moving the (nearly) generic DVSEC lookup routine, perhaps now
+is time to move it into PCI core code?
 
 > ---
->  .../driver-api/cxl/memory-devices.rst         |  3 ++
->  drivers/cxl/Makefile                          |  3 +-
->  drivers/cxl/core/bus.c                        |  2 +
->  drivers/cxl/core/core.h                       |  1 +
->  drivers/cxl/core/memdev.c                     |  2 +-
->  drivers/cxl/cxl.h                             |  1 +
->  drivers/cxl/mem.c                             | 49 +++++++++++++++++++
->  7 files changed, 59 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/cxl/mem.c
+>  drivers/cxl/acpi.c        | 27 +++++++-----------
+>  drivers/cxl/core/bus.c    | 60 +++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/memdev.c |  6 ++++
+>  drivers/cxl/cxl.h         |  2 ++
+>  drivers/cxl/cxlmem.h      |  2 ++
+>  drivers/cxl/mem.c         | 55 ++++++++++++++++++++++++++++++++++-
+>  drivers/cxl/pci.c         | 23 ---------------
+>  drivers/cxl/pci.h         |  7 ++++-
+>  8 files changed, 141 insertions(+), 41 deletions(-)
 > 
-> diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
-> index a18175bae7a6..00d141071570 100644
-> --- a/Documentation/driver-api/cxl/memory-devices.rst
-> +++ b/Documentation/driver-api/cxl/memory-devices.rst
-> @@ -28,6 +28,9 @@ CXL Memory Device
->  .. kernel-doc:: drivers/cxl/pci.c
->     :internal:
->  
-> +.. kernel-doc:: drivers/cxl/mem.c
-> +   :doc: cxl mem
-> +
->  CXL Core
->  --------
->  .. kernel-doc:: drivers/cxl/cxl.h
-> diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-> index d1aaabc940f3..d912ac4e3f0c 100644
-> --- a/drivers/cxl/Makefile
-> +++ b/drivers/cxl/Makefile
-> @@ -1,9 +1,10 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_CXL_BUS) += core/
-> -obj-$(CONFIG_CXL_MEM) += cxl_pci.o
-> +obj-$(CONFIG_CXL_MEM) += cxl_mem.o cxl_pci.o
->  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
->  obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
->  
-> +cxl_mem-y := mem.o
->  cxl_pci-y := pci.o
->  cxl_acpi-y := acpi.o
->  cxl_pmem-y := pmem.o
+
+...
+
 > diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-> index 6202ce5a5ac2..256e55dc2a3b 100644
+> index 256e55dc2a3b..56f57302d27b 100644
 > --- a/drivers/cxl/core/bus.c
 > +++ b/drivers/cxl/core/bus.c
-> @@ -641,6 +641,8 @@ static int cxl_device_id(struct device *dev)
->  		return CXL_DEVICE_NVDIMM_BRIDGE;
->  	if (dev->type == &cxl_nvdimm_type)
->  		return CXL_DEVICE_NVDIMM;
-> +	if (dev->type == &cxl_memdev_type)
-> +		return CXL_DEVICE_ENDPOINT;
->  	return 0;
+
+...
+
+> @@ -596,6 +625,37 @@ int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld)
 >  }
+>  EXPORT_SYMBOL_GPL(cxl_decoder_autoremove);
 >  
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index e0c9aacc4e9c..dea246cb7c58 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -6,6 +6,7 @@
->  
->  extern const struct device_type cxl_nvdimm_bridge_type;
->  extern const struct device_type cxl_nvdimm_type;
-> +extern const struct device_type cxl_memdev_type;
->  
->  extern struct attribute_group cxl_base_attribute_group;
->  
+> +/**
+> + * cxl_pci_dvsec - Gets offset for the given DVSEC id
+> + * @pdev: PCI device to search for the DVSEC
+> + * @dvsec: DVSEC id to look for
+> + *
+> + * Return: offset within the PCI header for the given DVSEC id. 0 if not found
+> + */
+> +int cxl_pci_dvsec(struct pci_dev *pdev, int dvsec)
+> +{
+> +	int pos;
+> +
+> +	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DVSEC);
+> +	if (!pos)
+> +		return 0;
+> +
+> +	while (pos) {
+> +		u16 vendor, id;
+> +
+> +		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER1, &vendor);
+> +		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER2, &id);
+> +		if (vendor == PCI_DVSEC_VENDOR_ID_CXL && dvsec == id)
+> +			return pos;
+> +
+> +		pos = pci_find_next_ext_capability(pdev, pos,
+> +						   PCI_EXT_CAP_ID_DVSEC);
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(cxl_mem_dvsec);
+
+That's not going to work. (pci/mem)  + Can we move this to the PCI core now?
+Wasn't done originally because there were several copies in various different
+trees that needed to all come together. Oddly only this one seems to have
+made it in though.  
+
+
+> +
+>  /**
+>   * __cxl_driver_register - register a driver for the cxl bus
+>   * @cxl_drv: cxl driver structure to attach
 > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index ee61202c7aab..c9dd054bd813 100644
+> index c9dd054bd813..0068b5ff5f3e 100644
 > --- a/drivers/cxl/core/memdev.c
 > +++ b/drivers/cxl/core/memdev.c
-> @@ -127,7 +127,7 @@ static const struct attribute_group *cxl_memdev_attribute_groups[] = {
->  	NULL,
->  };
->  
-> -static const struct device_type cxl_memdev_type = {
-> +const struct device_type cxl_memdev_type = {
->  	.name = "cxl_memdev",
->  	.release = cxl_memdev_release,
->  	.devnode = cxl_memdev_devnode,
+> @@ -337,3 +337,9 @@ void cxl_memdev_exit(void)
+>  {
+>  	unregister_chrdev_region(MKDEV(cxl_mem_major, 0), CXL_MEM_MAX_DEVS);
+>  }
+> +
+> +bool is_cxl_mem_capable(struct cxl_memdev *cxlmd)
+> +{
+
+This feels like it needs a comment to say why that's a valid check to use
+to find out if it is mem capable.
+
+> +	return !!cxlmd->dev.driver;
+> +}
+> +EXPORT_SYMBOL_GPL(is_cxl_mem_capable);
 > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 708bfe92b596..b48bdbefd949 100644
+> index b48bdbefd949..a168520d741b 100644
 > --- a/drivers/cxl/cxl.h
 > +++ b/drivers/cxl/cxl.h
-> @@ -315,6 +315,7 @@ void cxl_driver_unregister(struct cxl_driver *cxl_drv);
+> @@ -283,8 +283,10 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
+>  				   resource_size_t component_reg_phys,
+>  				   struct cxl_port *parent_port);
 >  
->  #define CXL_DEVICE_NVDIMM_BRIDGE	1
->  #define CXL_DEVICE_NVDIMM		2
-> +#define CXL_DEVICE_ENDPOINT		3
+> +bool is_cxl_port(struct device *dev);
+>  int cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
+>  		  resource_size_t component_reg_phys);
+> +struct cxl_dport *find_dport_by_dev(struct cxl_port *port, const struct device *dev);
 >  
->  #define MODULE_ALIAS_CXL(type) MODULE_ALIAS("cxl:t" __stringify(type) "*")
->  #define CXL_MODALIAS_FMT "cxl:t%d"
+>  struct cxl_decoder *to_cxl_decoder(struct device *dev);
+>  bool is_root_decoder(struct device *dev);
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 811b24451604..88264204c4b9 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -51,6 +51,8 @@ static inline struct cxl_memdev *to_cxl_memdev(struct device *dev)
+>  struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
+>  				       struct cxl_mem *cxlm);
+>  
+> +bool is_cxl_mem_capable(struct cxl_memdev *cxlmd);
+> +
+>  /**
+>   * struct cxl_mbox_cmd - A command to be submitted to hardware.
+>   * @opcode: (input) The command set and command submitted to hardware.
 > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> new file mode 100644
-> index 000000000000..978a54b0a51a
-> --- /dev/null
+> index 978a54b0a51a..b6dc34d18a86 100644
+> --- a/drivers/cxl/mem.c
 > +++ b/drivers/cxl/mem.c
-> @@ -0,0 +1,49 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Copyright(c) 2021 Intel Corporation. All rights reserved. */
-> +#include <linux/device.h>
-> +#include <linux/module.h>
-> +
-> +#include "cxlmem.h"
-> +
-> +/**
-> + * DOC: cxl mem
-> + *
-> + * CXL memory endpoint devices and switches are CXL capable devices that are
-> + * participating in CXL.mem protocol. Their functionality builds on top of the
-> + * CXL.io protocol that allows enumerating and configuring components via
-> + * standard PCI mechanisms.
-> + *
-> + * The cxl_mem driver implements enumeration and control over these CXL
-> + * components.
-> + */
-> +
-> +static int cxl_mem_probe(struct device *dev)
+> @@ -2,8 +2,10 @@
+>  /* Copyright(c) 2021 Intel Corporation. All rights reserved. */
+>  #include <linux/device.h>
+>  #include <linux/module.h>
+> +#include <linux/pci.h>
+>  
+>  #include "cxlmem.h"
+> +#include "pci.h"
+>  
+>  /**
+>   * DOC: cxl mem
+> @@ -17,9 +19,60 @@
+>   * components.
+>   */
+>  
+> +static int port_match(struct device *dev, const void *data)
 > +{
-> +	return -EOPNOTSUPP;
+> +	struct cxl_port *port;
+> +
+> +	if (!is_cxl_port(dev))
+> +		return 0;
+> +
+> +	port = to_cxl_port(dev);
+> +
+> +	if (find_dport_by_dev(port, (struct device *)data))
+Why the cast?
+
+If this isn't modified in later patches
+
+	return find_dport_by_dev(port, data);
+
+
+> +		return 1;
+> +
+> +	return 0;
 > +}
 > +
-> +static void cxl_mem_remove(struct device *dev)
+> +static bool is_cxl_mem_enabled(struct pci_dev *pdev)
 > +{
+> +	int pcie_dvsec;
+> +	u16 dvsec_ctrl;
+> +
+> +	pcie_dvsec = cxl_pci_dvsec(pdev, PCI_DVSEC_ID_PCIE_DVSEC_CXL_DVSEC_ID);
+> +	if (!pcie_dvsec) {
+> +		dev_info(&pdev->dev, "Unable to determine CXL protocol support");
+> +		return false;
+> +	}
+> +
+> +	pci_read_config_word(pdev,
+> +			     pcie_dvsec + PCI_DVSEC_ID_CXL_PCIE_CTRL_OFFSET,
+> +			     &dvsec_ctrl);
+> +	if (!(dvsec_ctrl & CXL_PCIE_MEM_ENABLE)) {
+> +		dev_info(&pdev->dev, "CXL.mem protocol not supported on device");
+
+In the ctrl field that indicates it's not on, rather than not supported.
+Hence I think the dev_info message is wrong.
+
+> +		return false;
+> +	}
+> +
+> +	return true;
 > +}
 > +
-> +static struct cxl_driver cxl_mem_driver = {
-> +	.name = "cxl_mem",
-> +	.probe = cxl_mem_probe,
-> +	.remove = cxl_mem_remove,
-> +	.id = CXL_DEVICE_ENDPOINT,
-> +};
+>  static int cxl_mem_probe(struct device *dev)
+>  {
+> -	return -EOPNOTSUPP;
+> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> +	struct cxl_mem *cxlm = cxlmd->cxlm;
+> +	struct device *pdev_parent = cxlm->dev->parent;
+> +	struct pci_dev *pdev = to_pci_dev(cxlm->dev);
+> +	struct device *port_dev;
 > +
-> +static __init int cxl_mem_init(void)
-> +{
-> +	return cxl_driver_register(&cxl_mem_driver);
-> +}
+> +	if (!is_cxl_mem_enabled(pdev))
+> +		return -ENODEV;
 > +
-> +static __exit void cxl_mem_exit(void)
-> +{
-> +	cxl_driver_unregister(&cxl_mem_driver);
-> +}
+> +	/* TODO: if parent is a switch, this will fail. */
+> +	port_dev = bus_find_device(&cxl_bus_type, NULL, pdev_parent, port_match);
+> +	if (!port_dev)
+> +		return -ENODEV;
 > +
-> +MODULE_LICENSE("GPL v2");
-> +module_init(cxl_mem_init);
-> +module_exit(cxl_mem_exit);
-> +MODULE_IMPORT_NS(CXL);
+> +	return 0;
+>  }
+>  
+>  static void cxl_mem_remove(struct device *dev)
+
+...
+
+> diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
+> index 8c1a58813816..d6b9978d05b0 100644
+> --- a/drivers/cxl/pci.h
+> +++ b/drivers/cxl/pci.h
+> @@ -11,7 +11,10 @@
+>   */
+>  #define PCI_DVSEC_HEADER1_LENGTH_MASK	GENMASK(31, 20)
+>  #define PCI_DVSEC_VENDOR_ID_CXL		0x1E98
+> -#define PCI_DVSEC_ID_CXL		0x0
+> +
+> +#define PCI_DVSEC_ID_PCIE_DVSEC_CXL_DVSEC_ID	0x0
+
+Why the rename to this?  DVSEC x3???  Can we get away with something like...
+
+> +#define PCI_DVSEC_ID_CXL_PCIE_CTRL_OFFSET	0xC
+> +#define   CXL_PCIE_MEM_ENABLE			BIT(2)
+>  
+>  #define PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID	0x8
+
+Mind you I'm not clear why this one has DVSEC twice either...
+
+>  #define PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET	0xC
+
+This one has nothing to do with DVSEC ID... 
+
+> @@ -29,4 +32,6 @@
+>  
+>  #define CXL_REGLOC_ADDR_MASK GENMASK(31, 16)
+>  
+> +int cxl_pci_dvsec(struct pci_dev *pdev, int dvsec);
+> +
+>  #endif /* __CXL_PCI_H__ */
 
