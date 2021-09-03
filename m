@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F3EC433F5
-	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 14:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B652EC433EF
+	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 14:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3359161058
-	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 14:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94664610A2
+	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 14:35:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349350AbhICO0U (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 3 Sep 2021 10:26:20 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3734 "EHLO
+        id S235393AbhICOgo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 3 Sep 2021 10:36:44 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3735 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233092AbhICO0T (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Sep 2021 10:26:19 -0400
-Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4H1Klk5FBmz67mXD;
-        Fri,  3 Sep 2021 22:23:30 +0800 (CST)
+        with ESMTP id S230332AbhICOgo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Sep 2021 10:36:44 -0400
+Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4H1Kzl024yz67y1k;
+        Fri,  3 Sep 2021 22:33:55 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
+ fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Fri, 3 Sep 2021 16:25:17 +0200
+ 15.1.2308.8; Fri, 3 Sep 2021 16:35:42 +0200
 Received: from localhost (10.52.121.127) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.8; Fri, 3 Sep 2021
- 15:25:16 +0100
-Date:   Fri, 3 Sep 2021 15:25:17 +0100
+ 15:35:41 +0100
+Date:   Fri, 3 Sep 2021 15:35:42 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Ben Widawsky <ben.widawsky@intel.com>
 CC:     <linux-cxl@vger.kernel.org>,
@@ -38,11 +38,11 @@ CC:     <linux-cxl@vger.kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         "Ira Weiny" <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 03/13] cxl/core: Ignore interleave when adding decoders
-Message-ID: <20210903152517.00005399@Huawei.com>
-In-Reply-To: <20210902195017.2516472-4-ben.widawsky@intel.com>
+Subject: Re: [PATCH 04/13] cxl: Introduce endpoint decoders
+Message-ID: <20210903153542.00004518@Huawei.com>
+In-Reply-To: <20210902195017.2516472-5-ben.widawsky@intel.com>
 References: <20210902195017.2516472-1-ben.widawsky@intel.com>
-        <20210902195017.2516472-4-ben.widawsky@intel.com>
+        <20210902195017.2516472-5-ben.widawsky@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -56,44 +56,118 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 2 Sep 2021 12:50:07 -0700
+On Thu, 2 Sep 2021 12:50:08 -0700
 Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-> Decoders will be added to the bus either already active (committed in
-> spec parlance), or inactive. From the driver perspective, the set of
-> devices comprising the former are those which are brought up by system
-> firmware; decoders that implement: volatile regions, persistent regions,
-> or platform specific (ie. CFMWS) constraints. Such devices have a given
-> interleave programming already in place. Inactive decoders on the other
-> hand, do not have any interleave programming in place. The set of
-> devices comprising that are hostbridges, switches, and endpoint devices.
+> Endpoints have decoders too. It is useful to share the same
+> infrastructure from cxl_core. Endpoints do not have dports (downstream
+> targets), only the underlying physical medium. As a result, some special
+> casing is needed.
 > 
-> Allow adding inactive decoders by removing this check.
+> There is no functional change introduced yet as endpoints don't actually
+> enumerate decoders yet.
 > 
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-Makes sense. I assume there is no easy way to modify this check to
-still be applied if the encoder is active?
 
-Otherwise
+Comments inline...
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
- 
 > ---
->  drivers/cxl/core/bus.c | 3 ---
->  1 file changed, 3 deletions(-)
+>  drivers/cxl/core/bus.c | 29 +++++++++++++++++++++++++----
+>  1 file changed, 25 insertions(+), 4 deletions(-)
 > 
 > diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-> index 9d98dd50d424..8d5061b0794d 100644
+> index 8d5061b0794d..6202ce5a5ac2 100644
 > --- a/drivers/cxl/core/bus.c
 > +++ b/drivers/cxl/core/bus.c
-> @@ -532,9 +532,6 @@ int cxl_decoder_add(struct device *host, struct cxl_decoder *cxld,
+> @@ -175,6 +175,12 @@ static const struct attribute_group *cxl_decoder_switch_attribute_groups[] = {
+>  	NULL,
+>  };
+>  
+> +static const struct attribute_group *cxl_decoder_endpoint_attribute_groups[] = {
+> +	&cxl_decoder_base_attribute_group,
+> +	&cxl_base_attribute_group,
+> +	NULL,
+> +};
+> +
+>  static void cxl_decoder_release(struct device *dev)
+>  {
+>  	struct cxl_decoder *cxld = to_cxl_decoder(dev);
+> @@ -184,6 +190,12 @@ static void cxl_decoder_release(struct device *dev)
+>  	kfree(cxld);
+>  }
+>  
+> +static const struct device_type cxl_decoder_endpoint_type = {
+> +	.name = "cxl_decoder_endpoint",
+> +	.release = cxl_decoder_release,
+> +	.groups = cxl_decoder_endpoint_attribute_groups,
+> +};
+> +
+>  static const struct device_type cxl_decoder_switch_type = {
+>  	.name = "cxl_decoder_switch",
+>  	.release = cxl_decoder_release,
+> @@ -196,6 +208,11 @@ static const struct device_type cxl_decoder_root_type = {
+>  	.groups = cxl_decoder_root_attribute_groups,
+>  };
+>  
+> +static bool is_endpoint_decoder(struct device *dev)
+> +{
+> +	return dev->type == &cxl_decoder_endpoint_type;
+> +}
+> +
+>  bool is_root_decoder(struct device *dev)
+>  {
+>  	return dev->type == &cxl_decoder_root_type;
+> @@ -472,7 +489,7 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
+>  	struct device *dev;
+>  	int rc = 0;
+>  
+> -	if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets < 1)
+
+Why do we let nr_targets go negative?  Could make the parameter unsigned perhaps or
+check for that here (even though it makes no sense).
+
+> +	if (nr_targets > CXL_DECODER_MAX_INTERLEAVE)
+>  		return ERR_PTR(-EINVAL);
+>  
+>  	cxld = kzalloc(struct_size(cxld, target, nr_targets), GFP_KERNEL);
+> @@ -491,8 +508,11 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
+>  	dev->parent = &port->dev;
+>  	dev->bus = &cxl_bus_type;
+>  
+> +	/* Endpoints don't have a target list */
+> +	if (nr_targets == 0)
+> +		dev->type = &cxl_decoder_endpoint_type;
+
+Hmm. Whilst the check seems valid, it's a bit inelegant.
+The capability register unhelpfully simply has it defined
+as not applicable rather than 0, so I'd be nervous that might
+end up here (not checked yet).
+
+>  	/* root ports do not have a cxl_port_type parent */
+> -	if (port->dev.parent->type == &cxl_port_type)
+> +	else if (port->dev.parent->type == &cxl_port_type)
+>  		dev->type = &cxl_decoder_switch_type;
+>  	else
+>  		dev->type = &cxl_decoder_root_type;
+> @@ -532,9 +552,11 @@ int cxl_decoder_add(struct device *host, struct cxl_decoder *cxld,
 >  	if (IS_ERR(cxld))
 >  		return PTR_ERR(cxld);
 >  
-> -	if (cxld->interleave_ways < 1)
-> -		return -EINVAL;
-> -
+> +	dev = &cxld->dev;
+> +
 >  	port = to_cxl_port(cxld->dev.parent);
 >  	device_lock(&port->dev);
->  	if (list_empty(&port->dports)) {
+> -	if (list_empty(&port->dports)) {
+> +	if (is_endpoint_decoder(dev) && list_empty(&port->dports)) {
+>  		rc = -EINVAL;
+>  		goto out_unlock;
+>  	}
+> @@ -551,7 +573,6 @@ int cxl_decoder_add(struct device *host, struct cxl_decoder *cxld,
+>  	}
+>  	device_unlock(&port->dev);
+>  
+> -	dev = &cxld->dev;
+>  	rc = dev_set_name(dev, "decoder%d.%d", port->id, cxld->id);
+>  	if (rc)
+>  		return rc;
 
