@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFC7C433EF
-	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 14:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F3EC433F5
+	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 14:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F137C61058
-	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 14:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3359161058
+	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 14:25:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349000AbhICOSm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 3 Sep 2021 10:18:42 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3733 "EHLO
+        id S1349350AbhICO0U (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 3 Sep 2021 10:26:20 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3734 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245211AbhICOSl (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Sep 2021 10:18:41 -0400
-Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4H1KZw6z27z67bBp;
-        Fri,  3 Sep 2021 22:15:52 +0800 (CST)
+        with ESMTP id S233092AbhICO0T (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Sep 2021 10:26:19 -0400
+Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4H1Klk5FBmz67mXD;
+        Fri,  3 Sep 2021 22:23:30 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
+ fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Fri, 3 Sep 2021 16:17:39 +0200
+ 15.1.2308.8; Fri, 3 Sep 2021 16:25:17 +0200
 Received: from localhost (10.52.121.127) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.8; Fri, 3 Sep 2021
- 15:17:39 +0100
-Date:   Fri, 3 Sep 2021 15:17:40 +0100
+ 15:25:16 +0100
+Date:   Fri, 3 Sep 2021 15:25:17 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Ben Widawsky <ben.widawsky@intel.com>
 CC:     <linux-cxl@vger.kernel.org>,
@@ -38,11 +38,11 @@ CC:     <linux-cxl@vger.kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         "Ira Weiny" <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 02/13] cxl/core/bus: Add kernel docs for decoder ops
-Message-ID: <20210903151740.00005fcd@Huawei.com>
-In-Reply-To: <20210902195017.2516472-3-ben.widawsky@intel.com>
+Subject: Re: [PATCH 03/13] cxl/core: Ignore interleave when adding decoders
+Message-ID: <20210903152517.00005399@Huawei.com>
+In-Reply-To: <20210902195017.2516472-4-ben.widawsky@intel.com>
 References: <20210902195017.2516472-1-ben.widawsky@intel.com>
-        <20210902195017.2516472-3-ben.widawsky@intel.com>
+        <20210902195017.2516472-4-ben.widawsky@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -56,84 +56,44 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 2 Sep 2021 12:50:06 -0700
+On Thu, 2 Sep 2021 12:50:07 -0700
 Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-> Since the code to add decoders for switches and endpoints is on the
-> horizon, document the new interfaces that will be consumed by them.
-
-Don't look "new" given they are already there...
-
+> Decoders will be added to the bus either already active (committed in
+> spec parlance), or inactive. From the driver perspective, the set of
+> devices comprising the former are those which are brought up by system
+> firmware; decoders that implement: volatile regions, persistent regions,
+> or platform specific (ie. CFMWS) constraints. Such devices have a given
+> interleave programming already in place. Inactive decoders on the other
+> hand, do not have any interleave programming in place. The set of
+> devices comprising that are hostbridges, switches, and endpoint devices.
+> 
+> Allow adding inactive decoders by removing this check.
 > 
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+Makes sense. I assume there is no easy way to modify this check to
+still be applied if the encoder is active?
+
+Otherwise
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+ 
 > ---
->  drivers/cxl/core/bus.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
+>  drivers/cxl/core/bus.c | 3 ---
+>  1 file changed, 3 deletions(-)
 > 
 > diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-> index 3991ac231c3e..9d98dd50d424 100644
+> index 9d98dd50d424..8d5061b0794d 100644
 > --- a/drivers/cxl/core/bus.c
 > +++ b/drivers/cxl/core/bus.c
-> @@ -453,6 +453,19 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport_dev, int port_id,
->  }
->  EXPORT_SYMBOL_GPL(cxl_add_dport);
+> @@ -532,9 +532,6 @@ int cxl_decoder_add(struct device *host, struct cxl_decoder *cxld,
+>  	if (IS_ERR(cxld))
+>  		return PTR_ERR(cxld);
 >  
-> +/**
-> + * cxl_decoder_alloc - Allocate a new CXL decoder
-> + * @port: owning port of this decoder
-> + * @nr_targets: downstream targets accessible by this decoder
-number of downstream targets accessible by this decoder
-
-perhaps.  Would be an odd name for a bitmap of them for example but the
-help text doesn't rule that out.
-
-> + *
-> + * A port should contain one or more decoders. Each of those decoders enable
-> + * some address space for CXL.mem utilization. Therefore, it is logical to
-> + * allocate decoders while enumerating a port. While >= 1 is defined by the CXL
-> + * specification, due to error conditions it is possible that a port may have 0
-> + * decoders.
-> + *
-> + * Return: A new cxl decoder which wants to be added with cxl_decoder_add()
-
-CXL decoder
-
-Anything else possible?
-
-> + */
->  struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
->  {
->  	struct cxl_decoder *cxld;
-> @@ -491,6 +504,21 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
->  }
->  EXPORT_SYMBOL_GPL(cxl_decoder_alloc);
->  
-> +/**
-> + * cxl_decoder_add - Add a decoder with targets
-> + * @host: The containing struct device. This is typically the PCI device that is
-> + *        CXL capable
-
-I would drop the 'struct' from that statement and just have device otherwise
-it seems to imply something code related rather than physical device related.
-
-> + * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
-
-CXL decoder
-
-> + * @target_map: A list of downstream ports that this decoder can direct memory
-> + *              traffic to. These numbers should correspond with the port number
-> + *              in the PCIe Link Capabilities structure.
-> + *
-> + * Return: 0 if decoder was successfully added.
-
-What else is possible?
-
-> + *
-> + * Certain types of decoders may not have any targets. The main example of this
-> + * is an endpoint device. A more awkward example is a hostbridge whose root
-> + * ports get hot added (technically possible, though unlikely).
-> + */
->  int cxl_decoder_add(struct device *host, struct cxl_decoder *cxld,
->  		    int *target_map)
->  {
+> -	if (cxld->interleave_ways < 1)
+> -		return -EINVAL;
+> -
+>  	port = to_cxl_port(cxld->dev.parent);
+>  	device_lock(&port->dev);
+>  	if (list_empty(&port->dports)) {
 
