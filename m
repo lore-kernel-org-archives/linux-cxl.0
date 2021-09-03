@@ -2,129 +2,213 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 818FDC433F5
-	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 03:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72326C433F5
+	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 11:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 497AE61057
-	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 03:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E1D360FA0
+	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 11:15:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233282AbhICD7d (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 2 Sep 2021 23:59:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36130 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232339AbhICD7d (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 2 Sep 2021 23:59:33 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4C40C061575
-        for <linux-cxl@vger.kernel.org>; Thu,  2 Sep 2021 20:58:33 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id u6so3334932pfi.0
-        for <linux-cxl@vger.kernel.org>; Thu, 02 Sep 2021 20:58:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4wOalAePuAJnThsQpwJBROsDRanxKLhv6aAjQVKpLCk=;
-        b=LS+dmgpAD636OwNI7DMrkDYpAhR1yT1A3WcKYbfo2x+uchmZNT4sEWaqsTJU6AeKVN
-         ouvdDOYe0d+8ohickpONYg2BYV/uv3tckR8eszW9wGyRkr28nYA25Vc4oqXtAQrHMAjD
-         e+tCOxpaHGTbry1srsJH0VR2PMijUHV2KAy5+KsxORGM9kEj6ftr5MVOU7S//QlLUGhr
-         6dPK+K7jtqybJzipkadWrg/t7w2Fnc0LtuGrkmOedIfgmch/6+RaH7kEi/bEKzYG0+Em
-         93vHzlKjrHotec9qCZkCTMcnbTNtBQOZuL7aBkYBJMNU7JHlwoFXNHaoMBVl9sCn+eOd
-         Mz9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4wOalAePuAJnThsQpwJBROsDRanxKLhv6aAjQVKpLCk=;
-        b=T3IrvtMLy3kEd1r+xaSPf4nPpWr5bBBBZyuC++IuxNfFaZKAR5hHBQ1ikrFDBwLFZI
-         YKmSPfIhYrb7eWmwQDY5rYlTZC5IO8u2dMg62tgRol++xy3DyN6g+BXRgsCvWbmjy9iN
-         vN1YkZWxQbLhouaQXqyNudSrl2bhc7FHmg6FyUKoe/1OBB/ZubXr9H/ScIdKK7hE/Nt/
-         xWuGrQcxgrdUGaNBzqGMlj0w7SLR33XtKO5kKYEo1txm23iiq7tlXZGz/n5aBlSADAMn
-         jLxeWFZAUnXbH4TEBiJ6lG+Z5lxKIbksqfy9T9rOKKAK3w23AvYkxMUsKS+i0QhVU/53
-         pyBA==
-X-Gm-Message-State: AOAM531ULBBsdHZcDG2FDPKpl+JtnyWXzlMdYCd0aolnaY5EOy1H0XeS
-        qT0RQSiDCPrnGxVXuMVAlhvzO+x8SNADma2po8a4WQ==
-X-Google-Smtp-Source: ABdhPJzGRoF8cOmILH2aN/M/bwig3fIeWC6Qc+Z0Gjm/st5g5Ld7mmbaGMDL7QVzHdH2bf7VLZvwE3mtAwMVRkYy7j0=
-X-Received: by 2002:a65:47c6:: with SMTP id f6mr1686451pgs.450.1630641512751;
- Thu, 02 Sep 2021 20:58:32 -0700 (PDT)
-MIME-Version: 1.0
+        id S231497AbhICLQG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 3 Sep 2021 07:16:06 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3726 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231486AbhICLQF (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Sep 2021 07:16:05 -0400
+Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4H1FXD13dQz67MLx;
+        Fri,  3 Sep 2021 19:13:16 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.8; Fri, 3 Sep 2021 13:15:03 +0200
+Received: from localhost (10.52.121.127) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.8; Fri, 3 Sep 2021
+ 12:15:03 +0100
+Date:   Fri, 3 Sep 2021 12:15:03 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
+        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+        <nvdimm@lists.linux.dev>, <ira.weiny@intel.com>
+Subject: Re: [PATCH v3 22/28] cxl/pmem: Add support for multiple
+ nvdimm-bridge objects
+Message-ID: <20210903121503.00005e57@Huawei.com>
+In-Reply-To: <162982124325.1124374.4356765162960141442.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <162982112370.1124374.2020303588105269226.stgit@dwillia2-desk3.amr.corp.intel.com>
- <162982119604.1124374.8364301519543316156.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20210902173602.00000272@Huawei.com> <20210902174138.000064a7@Huawei.com>
-In-Reply-To: <20210902174138.000064a7@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 2 Sep 2021 20:58:22 -0700
-Message-ID: <CAPcyv4h8uB3fzQrCLdHa=-=15Km77A3KvoTeGEQpx2AL_zpRNw@mail.gmail.com>
-Subject: Re: [PATCH v3 13/28] libnvdimm/label: Define CXL region labels
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        <162982124325.1124374.4356765162960141442.stgit@dwillia2-desk3.amr.corp.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.121.127]
+X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Sep 2, 2021 at 9:41 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Thu, 2 Sep 2021 17:36:02 +0100
-> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
->
-> > On Tue, 24 Aug 2021 09:06:36 -0700
-> > Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > > Add a definition of the CXL 2.0 region label format. Note this is done
-> > > as a separate patch to make the next patch that adds namespace label
-> > > support easier to read.
-> > >
-> > > Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > FWIW
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Oops. Just noticed something below that needs fixing, so keep
-> that RB with the missing docs fixed.
->
-> >
-> > > ---
-> > >  drivers/nvdimm/label.h |   30 ++++++++++++++++++++++++++++++
-> > >  1 file changed, 30 insertions(+)
-> > >
-> > > diff --git a/drivers/nvdimm/label.h b/drivers/nvdimm/label.h
-> > > index 31f94fad7b92..76ecd0347dc2 100644
-> > > --- a/drivers/nvdimm/label.h
-> > > +++ b/drivers/nvdimm/label.h
-> > > @@ -65,6 +65,36 @@ struct nd_namespace_index {
-> > >     u8 free[];
-> > >  };
-> > >
-> > > +/**
-> > > + * struct cxl_region_label - CXL 2.0 Table 211
-> > > + * @type: uuid identifying this label format (region)
-> > > + * @uuid: uuid for the region this label describes
-> > > + * @flags: NSLABEL_FLAG_UPDATING (all other flags reserved)
->
-> nlabel docs missing here.
->
-> > > + * @position: this label's position in the set
-> > > + * @dpa: start address in device-local capacity for this label
-> > > + * @rawsize: size of this label's contribution to region
-> > > + * @hpa: mandatory system physical address to map this region
-> > > + * @slot: slot id of this label in label area
-> > > + * @ig: interleave granularity (1 << @ig) * 256 bytes
-> > > + * @align: alignment in SZ_256M blocks
->
-> Probably need to add docs for reserved to suppress warnings
-> from the kernel-doc build (unless it's clever about things called reserved?)
+On Tue, 24 Aug 2021 09:07:23 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Nope, it complains about @reserved not being documented.
+> In preparation for a mocked unit test environment for CXL objects, allow
+> for multiple unique nvdimm-bridge objects.
+> 
+> For now, just allow multiple bridges to be registered. Later, when there
+> are multiple present, further updates are needed to
+> cxl_find_nvdimm_bridge() to identify which bridge is associated with
+> which CXL hierarchy for nvdimm registration.
+> 
+> Acked-by: Ben Widawsky <ben.widawsky@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-There's some legacy kernel-doc escapes in this file, so I fix those up
-in a separate patch before this one.
+If being extremely fussy, the change of dev_name is I think going
+to result in userspace ABI changes.  Should call that out even though
+I can't imagine it would break anything yet.
+
+Otherwise this is fine
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> ---
+>  drivers/cxl/core/pmem.c |   32 +++++++++++++++++++++++++++++++-
+>  drivers/cxl/cxl.h       |    2 ++
+>  drivers/cxl/pmem.c      |   15 ---------------
+>  3 files changed, 33 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
+> index 69c97cc0d945..ec3e4c642fca 100644
+> --- a/drivers/cxl/core/pmem.c
+> +++ b/drivers/cxl/core/pmem.c
+> @@ -3,15 +3,19 @@
+>  
+>  #include <linux/device.h>
+>  #include <linux/slab.h>
+> +#include <linux/idr.h>
+>  #include <cxlmem.h>
+>  #include <cxl.h>
+>  
+>  #include "core.h"
+>  
+> +static DEFINE_IDA(cxl_nvdimm_bridge_ida);
+> +
+>  static void cxl_nvdimm_bridge_release(struct device *dev)
+>  {
+>  	struct cxl_nvdimm_bridge *cxl_nvb = to_cxl_nvdimm_bridge(dev);
+>  
+> +	ida_free(&cxl_nvdimm_bridge_ida, cxl_nvb->id);
+>  	kfree(cxl_nvb);
+>  }
+>  
+> @@ -35,16 +39,38 @@ struct cxl_nvdimm_bridge *to_cxl_nvdimm_bridge(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(to_cxl_nvdimm_bridge);
+>  
+> +static int match_nvdimm_bridge(struct device *dev, const void *data)
+> +{
+> +	return dev->type == &cxl_nvdimm_bridge_type;
+> +}
+> +
+> +struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(void)
+> +{
+> +	struct device *dev;
+> +
+> +	dev = bus_find_device(&cxl_bus_type, NULL, NULL, match_nvdimm_bridge);
+> +	if (!dev)
+> +		return NULL;
+> +	return to_cxl_nvdimm_bridge(dev);
+> +}
+> +EXPORT_SYMBOL_GPL(cxl_find_nvdimm_bridge);
+> +
+>  static struct cxl_nvdimm_bridge *
+>  cxl_nvdimm_bridge_alloc(struct cxl_port *port)
+>  {
+>  	struct cxl_nvdimm_bridge *cxl_nvb;
+>  	struct device *dev;
+> +	int rc;
+>  
+>  	cxl_nvb = kzalloc(sizeof(*cxl_nvb), GFP_KERNEL);
+>  	if (!cxl_nvb)
+>  		return ERR_PTR(-ENOMEM);
+>  
+> +	rc = ida_alloc(&cxl_nvdimm_bridge_ida, GFP_KERNEL);
+> +	if (rc < 0)
+> +		goto err;
+> +	cxl_nvb->id = rc;
+> +
+>  	dev = &cxl_nvb->dev;
+>  	cxl_nvb->port = port;
+>  	cxl_nvb->state = CXL_NVB_NEW;
+> @@ -55,6 +81,10 @@ cxl_nvdimm_bridge_alloc(struct cxl_port *port)
+>  	dev->type = &cxl_nvdimm_bridge_type;
+>  
+>  	return cxl_nvb;
+> +
+> +err:
+> +	kfree(cxl_nvb);
+> +	return ERR_PTR(rc);
+>  }
+>  
+>  static void unregister_nvb(void *_cxl_nvb)
+> @@ -100,7 +130,7 @@ struct cxl_nvdimm_bridge *devm_cxl_add_nvdimm_bridge(struct device *host,
+>  		return cxl_nvb;
+>  
+>  	dev = &cxl_nvb->dev;
+> -	rc = dev_set_name(dev, "nvdimm-bridge");
+> +	rc = dev_set_name(dev, "nvdimm-bridge%d", cxl_nvb->id);
+>  	if (rc)
+>  		goto err;
+>  
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 53927f9fa77e..1b2e816e061e 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -211,6 +211,7 @@ enum cxl_nvdimm_brige_state {
+>  };
+>  
+>  struct cxl_nvdimm_bridge {
+> +	int id;
+>  	struct device dev;
+>  	struct cxl_port *port;
+>  	struct nvdimm_bus *nvdimm_bus;
+> @@ -323,4 +324,5 @@ struct cxl_nvdimm_bridge *devm_cxl_add_nvdimm_bridge(struct device *host,
+>  struct cxl_nvdimm *to_cxl_nvdimm(struct device *dev);
+>  bool is_cxl_nvdimm(struct device *dev);
+>  int devm_cxl_add_nvdimm(struct device *host, struct cxl_memdev *cxlmd);
+> +struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(void);
+>  #endif /* __CXL_H__ */
+> diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+> index 6cc76302c8f8..743e2d2fdbb5 100644
+> --- a/drivers/cxl/pmem.c
+> +++ b/drivers/cxl/pmem.c
+> @@ -33,21 +33,6 @@ static void unregister_nvdimm(void *_cxl_nvd)
+>  	clear_exclusive_cxl_commands(cxlm, exclusive_cmds);
+>  }
+>  
+> -static int match_nvdimm_bridge(struct device *dev, const void *data)
+> -{
+> -	return strcmp(dev_name(dev), "nvdimm-bridge") == 0;
+> -}
+> -
+> -static struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(void)
+> -{
+> -	struct device *dev;
+> -
+> -	dev = bus_find_device(&cxl_bus_type, NULL, NULL, match_nvdimm_bridge);
+> -	if (!dev)
+> -		return NULL;
+> -	return to_cxl_nvdimm_bridge(dev);
+> -}
+> -
+>  static int cxl_nvdimm_probe(struct device *dev)
+>  {
+>  	struct cxl_nvdimm *cxl_nvd = to_cxl_nvdimm(dev);
+> 
+
