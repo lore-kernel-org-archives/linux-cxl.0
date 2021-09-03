@@ -2,68 +2,69 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C72A9C433EF
-	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 21:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5ACC433EF
+	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 21:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC90761107
-	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 21:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A710F61051
+	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 21:49:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235936AbhICVLA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 3 Sep 2021 17:11:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46924 "EHLO
+        id S235948AbhICVuq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 3 Sep 2021 17:50:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235926AbhICVLA (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Sep 2021 17:11:00 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C67C6C061575
-        for <linux-cxl@vger.kernel.org>; Fri,  3 Sep 2021 14:09:59 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id q68so283644pga.9
-        for <linux-cxl@vger.kernel.org>; Fri, 03 Sep 2021 14:09:59 -0700 (PDT)
+        with ESMTP id S235691AbhICVuq (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Sep 2021 17:50:46 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9096C061575
+        for <linux-cxl@vger.kernel.org>; Fri,  3 Sep 2021 14:49:45 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id q21so333414plq.3
+        for <linux-cxl@vger.kernel.org>; Fri, 03 Sep 2021 14:49:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=w9zhRLHvyC6GtYT9kRzwbsDJaDIA3L/fwrcrNApvSww=;
-        b=DhYmhEsgDyrlCbagHZp9RTzBIIqkHZgleBBZD8wDlOj6kzd/Y2OhTtZYf6Inn5HeFD
-         PXL86A+FG5fLIqb7kK2Pl9JsmCbGvHGE1NW00RtMYLji2RHu9Mr6A96+of7zBZk13uiX
-         0zIZEPkoJl1zWbBeggU9JbbQSlLJGMy58SndIt4ug5KySfQuiBp1MGlT7QvJL87kg8DL
-         lcM9v5c4uIVF/2/nBsp5QvUO75u6Wi8PhyhnVQcHNpzyJLEDrSMEXOrFv3sSTu9cwcU2
-         kX1cw6UIydEKzrrB0BilQnKtPV4Wk86/Bhtgpal0CoEniktAq+q2cgBNiTl+4gw+ziO/
-         l7IA==
+        bh=r/sAcyTaAhggPgEA41uIJQzUz1VtSf10E7APeYJ5qZM=;
+        b=F+qBhr1Q/q+5b3SCj9HVwwR8w1HV/dJHhCxIyJ4TZfEk6aPvdk1qNiCz3DkJuJaerg
+         S3QbrS4Qd7ijM0xoU8jb2tX8D8PkJkIkAnvfYm7I6+mVqZETtzZDqh9+9I+lfqrQ5xxX
+         nVEz91rEGUA9dgCC2UEyKAhe8379Vjbcat0m91CkGYeKacRaTfCq9NjKM4Q4aSsJ+Dbr
+         dDeyvQKwX0yrjVY6PHH02k5n90rKFmQdxB0nON3Jas3GUHRNOQR20wkZkUGv/Brv3UhR
+         nLuYdSerwDI+dJSTx6QepTC6awK5iOPBuEhpn498y+rjM4H0YBJsw04FD+12nVKuTIcr
+         LdIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=w9zhRLHvyC6GtYT9kRzwbsDJaDIA3L/fwrcrNApvSww=;
-        b=AGex/tmVEjhdueXCtu/nC2O504TaEVXQLiwIzUVf02QbYfsAcTG65iea5ZkSFo6FgT
-         04MAwME9ldauuVRHKNfbdO4zUMsLyvfmxbgw5ZzqXkrdQfOVceJshcqUmuSNYu03rn96
-         kFABkYnFTlM/VbYp0Ssdl5HPGRePzrT3FDALvfp3g6Mibz4bb2WVG/WJT8vKG58HY+41
-         Gdg7llaf4kijdwJWpTxlsbX8Bgu6qZv+YlBSu89XcUhUZ777FL4crJ5W7wc3P3+auO2T
-         dwYTQB0AUvQwUv8Pl4TmPZ85mTqCi/aENDC/T3TwU25jzYowGQKsCB9D1IMNrahBtEYb
-         WTUg==
-X-Gm-Message-State: AOAM530PXA84B+1fcVOw3cR2t2yQVOCBEkrepMd9ycbMxVGnhPSf54DX
-        +DVSsZXIcYDHBpZcqJr5g4mhJkSPB20nsHHxqzAszw==
-X-Google-Smtp-Source: ABdhPJyDXtyYzuS1JOu6AcYN+RB8LxGBHSzwi/F/N8dbtt+LixjocKttgDD91Q+goKN4YFauocg9ZrfwOa3SBbyUadY=
-X-Received: by 2002:a63:3545:: with SMTP id c66mr815057pga.377.1630703399236;
- Fri, 03 Sep 2021 14:09:59 -0700 (PDT)
+        bh=r/sAcyTaAhggPgEA41uIJQzUz1VtSf10E7APeYJ5qZM=;
+        b=b02jTd6Hfa/NbhfTgGnr5Fl+5ELhiIDxRVzmeqPAvN/AOXtIJop6OcW/D45z9wyyt6
+         +gRLX4ywLp1bJPwZKd/bxkb9PRQzYk5zex7BMB8fyzwEZJQrDUdiJI0qY+kGX52hogJf
+         IpD3lP9GSmJ2P+9cOYgwZLj6WXfpYqeFRhP5fF58rvJfk16czjsYaIVM5aR9i21Zhgp2
+         ePoR9Xjgnt/az/WdM2vGBnyTrOwIi/gqv9brgRo+4xavSQEuYN9tPor7XIbTYqMynbMA
+         3MRrzx6IdcRHjZPp7NFBOfjZHI8RtwNDY9N2iLPGFxsuYJfAmCAOvge74LB0ZG8NQQ/+
+         EIhg==
+X-Gm-Message-State: AOAM530liYB8QUlqH4znebZ5HKJIuItYVGE879raWd4GE5xUMg8emRDu
+        GWitxk5yW0q8zZP1ktiIkFJKIJWCF/hel3Gu9UDVgQ==
+X-Google-Smtp-Source: ABdhPJyub3/HHUPuXvqRC1Vegg5TcJ11b7h+DzRdb8aehQb3D9HwDKmyk4xwYrpfRRUXbcotLFciTyl9nus23nh65Bg=
+X-Received: by 2002:a17:902:bd8d:b0:13a:8c8:a2b2 with SMTP id
+ q13-20020a170902bd8d00b0013a08c8a2b2mr791698pls.89.1630705785090; Fri, 03 Sep
+ 2021 14:49:45 -0700 (PDT)
 MIME-Version: 1.0
 References: <162982112370.1124374.2020303588105269226.stgit@dwillia2-desk3.amr.corp.intel.com>
- <162982123813.1124374.3721946437291753388.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20210902192227.00006dc8@Huawei.com>
-In-Reply-To: <20210902192227.00006dc8@Huawei.com>
+ <162982125348.1124374.17808192318402734926.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20210903135243.000064ac@Huawei.com>
+In-Reply-To: <20210903135243.000064ac@Huawei.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 3 Sep 2021 14:09:48 -0700
-Message-ID: <CAPcyv4hq0BgeZc==w+ypC=RJscccf1JQB2Ynb0LkRYE1qr-gCg@mail.gmail.com>
-Subject: Re: [PATCH v3 21/28] cxl/pmem: Translate NVDIMM label commands to CXL
- label commands
+Date:   Fri, 3 Sep 2021 14:49:34 -0700
+Message-ID: <CAPcyv4ik1e4rvys5x66iD1+-M4G_NdsEcs24m2y3MYzhpYsrOA@mail.gmail.com>
+Subject: Re: [PATCH v3 24/28] tools/testing/cxl: Introduce a mocked-up CXL
+ port hierarchy
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
         "Schofield, Alison" <alison.schofield@intel.com>,
         Linux NVDIMM <nvdimm@lists.linux.dev>,
         "Weiny, Ira" <ira.weiny@intel.com>
@@ -72,66 +73,616 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Sep 2, 2021 at 11:22 AM Jonathan Cameron
+On Fri, Sep 3, 2021 at 5:53 AM Jonathan Cameron
 <Jonathan.Cameron@huawei.com> wrote:
 >
-> On Tue, 24 Aug 2021 09:07:18 -0700
+> On Tue, 24 Aug 2021 09:07:33 -0700
 > Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> > The LIBNVDIMM IOCTL UAPI calls back to the nvdimm-bus-provider to
-> > translate the Linux command payload to the device native command format.
-> > The LIBNVDIMM commands get-config-size, get-config-data, and
-> > set-config-data, map to the CXL memory device commands device-identify,
-> > get-lsa, and set-lsa. Recall that the label-storage-area (LSA) on an
-> > NVDIMM device arranges for the provisioning of namespaces. Additionally
-> > for CXL the LSA is used for provisioning regions as well.
+> > Create an environment for CXL plumbing unit tests. Especially when it
+> > comes to an algorithm for HDM Decoder (Host-managed Device Memory
+> > Decoder) programming, the availability of an in-kernel-tree emulation
+> > environment for CXL configuration complexity and corner cases speeds
+> > development and deters regressions.
 > >
-> > The data from device-identify is already cached in the 'struct cxl_mem'
-> > instance associated with @cxl_nvd, so that payload return is simply
-> > crafted and no CXL command is issued. The conversion for get-lsa is
-> > straightforward, but the conversion for set-lsa requires an allocation
-> > to append the set-lsa header in front of the payload.
+> > The approach taken mirrors what was done for tools/testing/nvdimm/. I.e.
+> > an external module, cxl_test.ko built out of the tools/testing/cxl/
+> > directory, provides mock implementations of kernel APIs and kernel
+> > objects to simulate a real world device hierarchy.
+> >
+> > One feedback for the tools/testing/nvdimm/ proposal was "why not do this
+> > in QEMU?". In fact, the CXL development community has developed a QEMU
+> > model for CXL [1]. However, there are a few blocking issues that keep
+> > QEMU from being a tight fit for topology + provisioning unit tests:
+> >
+> > 1/ The QEMU community has yet to show interest in merging any of this
+> >    support that has had patches on the list since November 2020. So,
+> >    testing CXL to date involves building custom QEMU with out-of-tree
+> >    patches.
+>
+> That's a separate discussion I've been meaning to kick off. I'd like
+> to get that moving because there are various things we can do there
+> which can't necessarily be done with this approach or at least are easier
+> done in QEMU. I'll raise it on the qemu list and drag a few people in
+> who might be able to help us get things moving + help find solutions to
+> the bits that we can't currently do.
+>
+> >
+> > 2/ CXL mechanisms like cross-host-bridge interleave do not have a clear
+> >    path to be emulated by QEMU without major infrastructure work. This
+> >    is easier to achieve with the alloc_mock_res() approach taken in this
+> >    patch to shortcut-define emulated system physical address ranges with
+> >    interleave behavior.
+> >
+> > The QEMU enabling has been critical to get the driver off the ground,
+> > and may still move forward, but it does not address the ongoing needs of
+> > a regression testing environment and test driven development.
+>
+> Different purposes, so I would see having both as beneficial
+
+Oh certainly, especially because cxl_test skips all the PCI details.
+This regression environment is mainly for user space ABI regressions
+and the PCI agnostic machinery in the subsystem. I'd love for the QEMU
+work to move forward.
+
+> (in principle - I haven't played with this yet :)
+
+I have wondered if having a version of DOE emulation in tools/testing/
+makes regression testing those protocols easier, but again that's PCI
+details where QEMU is more suitable.
+
+>
+> >
+> > This patch adds an ACPI CXL Platform definition with emulated CXL
+> > multi-ported host-bridges. A follow on patch adds emulated memory
+> > expander devices.
 > >
 > > Acked-by: Ben Widawsky <ben.widawsky@intel.com>
+> > Reported-by: Vishal Verma <vishal.l.verma@intel.com>
+> > Link: https://lore.kernel.org/r/20210202005948.241655-1-ben.widawsky@intel.com [1]
 > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> Minor query inline.
+> > ---
+> >  drivers/cxl/acpi.c               |   52 ++--
+> >  drivers/cxl/cxl.h                |   13 +
+> >  tools/testing/cxl/Kbuild         |   36 +++
+> >  tools/testing/cxl/config_check.c |   13 +
+> >  tools/testing/cxl/mock_acpi.c    |  109 ++++++++
+> >  tools/testing/cxl/test/Kbuild    |    6
+> >  tools/testing/cxl/test/cxl.c     |  516 ++++++++++++++++++++++++++++++++++++++
+> >  tools/testing/cxl/test/mock.c    |  171 +++++++++++++
+> >  tools/testing/cxl/test/mock.h    |   27 ++
+> >  9 files changed, 922 insertions(+), 21 deletions(-)
+> >  create mode 100644 tools/testing/cxl/Kbuild
+> >  create mode 100644 tools/testing/cxl/config_check.c
+> >  create mode 100644 tools/testing/cxl/mock_acpi.c
+> >  create mode 100644 tools/testing/cxl/test/Kbuild
+> >  create mode 100644 tools/testing/cxl/test/cxl.c
+> >  create mode 100644 tools/testing/cxl/test/mock.c
+> >  create mode 100644 tools/testing/cxl/test/mock.h
+> >
+> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > index 2d8f1ec1abff..3fcb704c647f 100644
+> > --- a/drivers/cxl/acpi.c
+> > +++ b/drivers/cxl/acpi.c
+> > @@ -182,15 +182,7 @@ static resource_size_t get_chbcr(struct acpi_cedt_chbs *chbs)
+> >       return IS_ERR(chbs) ? CXL_RESOURCE_NONE : chbs->base;
+> >  }
 >
-[..]
-> > +static int cxl_pmem_set_config_data(struct cxl_mem *cxlm,
-> > +                                 struct nd_cmd_set_config_hdr *cmd,
-> > +                                 unsigned int buf_len, int *cmd_rc)
+> > -static int match_add_root_ports(struct pci_dev *pdev, void *data)
+> > +__mock int match_add_root_ports(struct pci_dev *pdev, void *data)
+> >  {
+> >       struct cxl_walk_context *ctx = data;
+> >       struct pci_bus *root_bus = ctx->root;
+> > @@ -214,6 +206,8 @@ static int match_add_root_ports(struct pci_dev *pdev, void *data)
+> >       port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
+> >       rc = cxl_add_dport(port, &pdev->dev, port_num, CXL_RESOURCE_NONE);
+> >       if (rc) {
+> > +             dev_err(dev, "failed to add dport: %s (%d)\n",
+> > +                     dev_name(&pdev->dev), rc);
+>
+> *grumble*  This extra debug is reasonable but not much to do with the
+> functionality of this patch.  So should have been separate to cut down on noise
+> here.
+
+True, can remove for now.
+
+>
+>
+> >               ctx->error = rc;
+> >               return rc;
+> >       }
+> > @@ -239,15 +233,18 @@ static struct cxl_dport *find_dport_by_dev(struct cxl_port *port, struct device
+> >       return NULL;
+> >  }
+> >
+> > -static struct acpi_device *to_cxl_host_bridge(struct device *dev)
+> > +__mock struct acpi_device *to_cxl_host_bridge(struct device *host,
+> > +                                           struct device *dev)
+> >  {
+> >       struct acpi_device *adev = to_acpi_device(dev);
+> >
+> >       if (!acpi_pci_find_root(adev->handle))
+> >               return NULL;
+> >
+> > -     if (strcmp(acpi_device_hid(adev), "ACPI0016") == 0)
+> > +     if (strcmp(acpi_device_hid(adev), "ACPI0016") == 0) {
+> > +             dev_dbg(host, "found host bridge %s\n", dev_name(&adev->dev));
+> >               return adev;
+> > +     }
+> >       return NULL;
+> >  }
+> >
+> > @@ -257,14 +254,14 @@ static struct acpi_device *to_cxl_host_bridge(struct device *dev)
+> >   */
+> >  static int add_host_bridge_uport(struct device *match, void *arg)
+> >  {
+> > -     struct acpi_device *bridge = to_cxl_host_bridge(match);
+> > +     struct cxl_port *port;
+> > +     struct cxl_dport *dport;
+> > +     struct cxl_decoder *cxld;
+> > +     struct cxl_walk_context ctx;
+> > +     struct acpi_pci_root *pci_root;
+> >       struct cxl_port *root_port = arg;
+> >       struct device *host = root_port->dev.parent;
+> > -     struct acpi_pci_root *pci_root;
+> > -     struct cxl_walk_context ctx;
+> > -     struct cxl_decoder *cxld;
+> > -     struct cxl_dport *dport;
+> > -     struct cxl_port *port;
+>
+> Going from reverse xmas tree (almost) to xmas tree in a patch doing something else?
+
+I can leave it "untreed" for now.
+
+>
+> > +     struct acpi_device *bridge = to_cxl_host_bridge(host, match);
+> >
+> >       if (!bridge)
+> >               return 0;
+> > @@ -319,7 +316,7 @@ static int add_host_bridge_dport(struct device *match, void *arg)
+> >       struct acpi_cedt_chbs *chbs;
+> >       struct cxl_port *root_port = arg;
+> >       struct device *host = root_port->dev.parent;
+> > -     struct acpi_device *bridge = to_cxl_host_bridge(match);
+> > +     struct acpi_device *bridge = to_cxl_host_bridge(host, match);
+> >
+> >       if (!bridge)
+> >               return 0;
+> > @@ -371,6 +368,17 @@ static int add_root_nvdimm_bridge(struct device *match, void *data)
+> >       return 1;
+> >  }
+> >
+> ...
+>
+>
+> > diff --git a/tools/testing/cxl/mock_acpi.c b/tools/testing/cxl/mock_acpi.c
+> > new file mode 100644
+> > index 000000000000..4c8a493ace56
+> > --- /dev/null
+> > +++ b/tools/testing/cxl/mock_acpi.c
+> > @@ -0,0 +1,109 @@
+>
+> > +static int match_add_root_port(struct pci_dev *pdev, void *data)
+>
+> Hmm. Nice not to duplicate this code, but I guess a bit tricky to
+> work around.  Maybe a comment next to the 'main' version so we
+> remember to update this one as well if it is changed?
+
+I'd like to think that the __mock annotation next to the real one is
+the indication that a unit test might need updating. Sufficient?
+
+>
 > > +{
-> > +     struct cxl_mbox_set_lsa {
-> > +             u32 offset;
-> > +             u32 reserved;
-> > +             u8 data[];
-> > +     } *set_lsa;
+> > +     struct cxl_walk_context *ctx = data;
+> > +     struct pci_bus *root_bus = ctx->root;
+> > +     struct cxl_port *port = ctx->port;
+> > +     int type = pci_pcie_type(pdev);
+> > +     struct device *dev = ctx->dev;
+> > +     u32 lnkcap, port_num;
 > > +     int rc;
 > > +
-> > +     if (sizeof(*cmd) > buf_len)
-> > +             return -EINVAL;
+> > +     if (pdev->bus != root_bus)
+> > +             return 0;
+> > +     if (!pci_is_pcie(pdev))
+> > +             return 0;
+> > +     if (type != PCI_EXP_TYPE_ROOT_PORT)
+> > +             return 0;
+> > +     if (pci_read_config_dword(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCAP,
+> > +                               &lnkcap) != PCIBIOS_SUCCESSFUL)
+> > +             return 0;
 > > +
-> > +     /* 4-byte status follows the input data in the payload */
-> > +     if (struct_size(cmd, in_buf, cmd->in_length) + 4 > buf_len)
-> > +             return -EINVAL;
+> > +     /* TODO walk DVSEC to find component register base */
+> > +     port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
+> > +     rc = cxl_add_dport(port, &pdev->dev, port_num, CXL_RESOURCE_NONE);
+> > +     if (rc) {
+> > +             dev_err(dev, "failed to add dport: %s (%d)\n",
+> > +                     dev_name(&pdev->dev), rc);
+> > +             ctx->error = rc;
+> > +             return rc;
+> > +     }
+> > +     ctx->count++;
 > > +
-> > +     set_lsa =
-> > +             kvzalloc(struct_size(set_lsa, data, cmd->in_length), GFP_KERNEL);
-> > +     if (!set_lsa)
-> > +             return -ENOMEM;
+> > +     dev_dbg(dev, "add dport%d: %s\n", port_num, dev_name(&pdev->dev));
 > > +
-> > +     *set_lsa = (struct cxl_mbox_set_lsa) {
-> > +             .offset = cmd->in_offset,
-> > +     };
-> > +     memcpy(set_lsa->data, cmd->in_buf, cmd->in_length);
+> > +     return 0;
+> > +}
 > > +
-> > +     rc = cxl_mem_mbox_send_cmd(cxlm, CXL_MBOX_OP_SET_LSA, set_lsa,
-> > +                                struct_size(set_lsa, data, cmd->in_length),
-> > +                                NULL, 0);
+> > +static int mock_add_root_port(struct platform_device *pdev, void *data)
+> > +{
+> > +     struct cxl_walk_context *ctx = data;
+> > +     struct cxl_port *port = ctx->port;
+> > +     struct device *dev = ctx->dev;
+> > +     int rc;
 > > +
-> > +     /* set "firmware" status */
-> > +     *(u32 *) &cmd->in_buf[cmd->in_length] = 0;
+> > +     rc = cxl_add_dport(port, &pdev->dev, pdev->id, CXL_RESOURCE_NONE);
+> > +     if (rc) {
+> > +             dev_err(dev, "failed to add dport: %s (%d)\n",
+> > +                     dev_name(&pdev->dev), rc);
+> > +             ctx->error = rc;
+> > +             return rc;
+> > +     }
+> > +     ctx->count++;
+> > +
+> > +     dev_dbg(dev, "add dport%d: %s\n", pdev->id, dev_name(&pdev->dev));
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +int match_add_root_ports(struct pci_dev *dev, void *data)
+> > +{
+> > +     int index, rc;
+> > +     struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
+> > +     struct platform_device *pdev = (struct platform_device *) dev;
+> > +
+> > +     if (ops && ops->is_mock_port(pdev))
+> > +             rc = mock_add_root_port(pdev, data);
+> > +     else
+> > +             rc = match_add_root_port(dev, data);
+> > +
+> > +     put_cxl_mock_ops(index);
+> > +
+> > +     return rc;
+> > +}
 >
-> Are we guaranteed this is aligned? Not 'locally' obvious so maybe a comment?
+> ...
+>
+> > diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+> > new file mode 100644
+> > index 000000000000..0710e0062e58
+> > --- /dev/null
+> > +++ b/tools/testing/cxl/test/cxl.c
+> > @@ -0,0 +1,516 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +// Copyright(c) 2021 Intel Corporation. All rights reserved.
+> > +
+> > +#include <linux/platform_device.h>
+> > +#include <linux/genalloc.h>
+> > +#include <linux/module.h>
+> > +#include <linux/mutex.h>
+> > +#include <linux/acpi.h>
+> > +#include <linux/pci.h>
+> > +#include <linux/mm.h>
+> > +#include "mock.h"
+> > +
+> > +#define NR_CXL_HOST_BRIDGES 4
+> > +#define NR_CXL_ROOT_PORTS 2
+> > +
+> > +static struct platform_device *cxl_acpi;
+> > +static struct platform_device *cxl_host_bridge[NR_CXL_HOST_BRIDGES];
+> > +static struct platform_device
+> > +     *cxl_root_port[NR_CXL_HOST_BRIDGES * NR_CXL_ROOT_PORTS];
+> > +
+> > +static struct acpi_device acpi0017_mock;
+> > +static struct acpi_device host_bridge[NR_CXL_HOST_BRIDGES] = {
+> > +     [0] = {
+> > +             .handle = &host_bridge[0],
+> > +     },
+> > +     [1] = {
+> > +             .handle = &host_bridge[1],
+> > +     },
+> > +     [2] = {
+> > +             .handle = &host_bridge[2],
+> > +     },
+> > +     [3] = {
+> > +             .handle = &host_bridge[3],
+> > +     },
+> > +};
+> > +
+> > +static bool is_mock_dev(struct device *dev)
+> > +{
+>
+> You be paranoid and check acxl_acpi here but I guess
+> its always safe...
 
-Good point, let's just go ahead and use a put_unaligned() accessor.
+Yeah, it's always safe because is_mock_dev() won't be called if the
+platform_device_alloc() for cxl_acpi failed.
+
+>
+> > +     if (dev == &cxl_acpi->dev)
+> > +             return true;
+> > +     return false;
+> > +}
+> > +
+>
+> ...
+>
+> > +
+> > +struct cxl_mock_res {
+> > +     struct list_head list;
+> > +     struct range range;
+> > +};
+> > +
+> > +static LIST_HEAD(mock_res);
+> > +static DEFINE_MUTEX(mock_res_lock);
+> > +static struct gen_pool *cxl_mock_pool;
+> > +
+> > +static void free_mock_res(void)
+> Seems like a missmatch in naming.
+> free_mock_res() frees all resouces,
+> alloc_moc_res() allocates one.
+
+Ok, will rename.
+
+>
+>
+> > +{
+> > +     struct cxl_mock_res *res, *_res;
+> > +
+> > +     mutex_lock(&mock_res_lock);
+> > +     list_for_each_entry_safe(res, _res, &mock_res, list) {
+> > +             gen_pool_free(cxl_mock_pool, res->range.start,
+> > +                           range_len(&res->range));
+> > +             list_del(&res->list);
+> > +             kfree(res);
+> > +     }
+> > +     mutex_unlock(&mock_res_lock);
+> > +}
+> > +
+> > +static struct cxl_mock_res *alloc_mock_res(resource_size_t size)
+> > +{
+> > +     struct cxl_mock_res *res = kzalloc(sizeof(*res), GFP_KERNEL);
+> > +     struct genpool_data_align data = {
+> > +             .align = SZ_256M,
+> > +     };
+> > +     unsigned long phys;
+> > +
+> > +     INIT_LIST_HEAD(&res->list);
+> > +     phys = gen_pool_alloc_algo(cxl_mock_pool, size,
+> > +                                gen_pool_first_fit_align, &data);
+> > +     if (!phys)
+> > +             return NULL;
+> > +
+> > +     res->range = (struct range) {
+> > +             .start = phys,
+> > +             .end = phys + size - 1,
+> > +     };
+> > +     mutex_lock(&mock_res_lock);
+> > +     list_add(&res->list, &mock_res);
+> > +     mutex_unlock(&mock_res_lock);
+> > +
+> > +     return res;
+> > +}
+> > +
+> > +static int populate_cedt(void)
+> > +{
+> > +     struct acpi_cedt_cfmws *cfmws[4] = {
+> > +             [0] = &mock_cedt.cfmws0.cfmws,
+> > +             [1] = &mock_cedt.cfmws1.cfmws,
+> > +             [2] = &mock_cedt.cfmws2.cfmws,
+> > +             [3] = &mock_cedt.cfmws3.cfmws,
+> > +     };
+> > +     struct cxl_mock_res *res;
+> > +     int i;
+> > +
+> > +     for (i = 0; i < ARRAY_SIZE(mock_cedt.chbs); i++) {
+> > +             struct acpi_cedt_chbs *chbs = &mock_cedt.chbs[i];
+> > +             resource_size_t size;
+> > +
+> > +             if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL20)
+> > +                     size = ACPI_CEDT_CHBS_LENGTH_CXL20;
+> > +             else
+> > +                     size = ACPI_CEDT_CHBS_LENGTH_CXL11;
+> > +
+> > +             res = alloc_mock_res(size);
+> > +             if (!res)
+> > +                     return -ENOMEM;
+> > +             chbs->base = res->range.start;
+> > +             chbs->length = size;
+> > +     }
+> > +
+> > +     for (i = 0; i < ARRAY_SIZE(cfmws); i++) {
+> > +             struct acpi_cedt_cfmws *window = cfmws[i];
+> > +             int ways = 1 << window->interleave_ways;
+> > +
+> > +             res = alloc_mock_res(SZ_256M * ways);
+>
+> why that size?  Should take window_size into account I think..
+
+This *is* the window size, but you're right if ->interleave_ways is
+populated above and used here ->window_size can also be populated
+there. Then all that is left to do is dynamically populate the
+emulated ->base_hpa.
+
+>
+> > +             if (!res)
+> > +                     return -ENOMEM;
+> > +             window->base_hpa = res->range.start;
+> > +             window->window_size = range_len(&res->range);
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+>
+>
+> ...
+>
+> > +
+> > +static struct cxl_mock_ops cxl_mock_ops = {
+> > +     .is_mock_adev = is_mock_adev,
+> > +     .is_mock_bridge = is_mock_bridge,
+> > +     .is_mock_bus = is_mock_bus,
+> > +     .is_mock_port = is_mock_port,
+> > +     .is_mock_dev = is_mock_dev,
+> > +     .mock_port = mock_cxl_root_port,
+> > +     .acpi_get_table = mock_acpi_get_table,
+> > +     .acpi_put_table = mock_acpi_put_table,
+> > +     .acpi_evaluate_integer = mock_acpi_evaluate_integer,
+> > +     .acpi_pci_find_root = mock_acpi_pci_find_root,
+> > +     .list = LIST_HEAD_INIT(cxl_mock_ops.list),
+> > +};
+>
+> ...
+>
+> > +#ifndef SZ_64G
+> > +#define SZ_64G (SZ_32G * 2)
+> > +#endif
+> > +
+> > +#ifndef SZ_512G
+> > +#define SZ_512G (SZ_64G * 8)
+> > +#endif
+>
+> Why not add to sizes.h?
+
+...because nothing in the main kernel needs these yet.
+
+>
+> > +
+> > +static __init int cxl_test_init(void)
+> > +{
+> > +     int rc, i;
+> > +
+> > +     register_cxl_mock_ops(&cxl_mock_ops);
+> > +
+> > +     cxl_mock_pool = gen_pool_create(ilog2(SZ_2M), NUMA_NO_NODE);
+> > +     if (!cxl_mock_pool) {
+> > +             rc = -ENOMEM;
+> > +             goto err_gen_pool_create;
+> > +     }
+> > +
+> > +     rc = gen_pool_add(cxl_mock_pool, SZ_512G, SZ_64G, NUMA_NO_NODE);
+> > +     if (rc)
+> > +             goto err_gen_pool_add;
+> > +
+> > +     rc = populate_cedt();
+> > +     if (rc)
+> > +             goto err_populate;
+> > +
+> > +     for (i = 0; i < ARRAY_SIZE(cxl_host_bridge); i++) {
+> > +             struct acpi_device *adev = &host_bridge[i];
+> > +             struct platform_device *pdev;
+> > +
+> > +             pdev = platform_device_alloc("cxl_host_bridge", i);
+> > +             if (!pdev)
+> > +                     goto err_bridge;
+> > +
+> > +             mock_companion(adev, &pdev->dev);
+> > +             rc = platform_device_add(pdev);
+> > +             if (rc) {
+> > +                     platform_device_put(pdev);
+> > +                     goto err_bridge;
+> > +             }
+> > +             cxl_host_bridge[i] = pdev;
+> > +     }
+> > +
+> > +     for (i = 0; i < ARRAY_SIZE(cxl_root_port); i++) {
+> > +             struct platform_device *bridge =
+> > +                     cxl_host_bridge[i / NR_CXL_ROOT_PORTS];
+> > +             struct platform_device *pdev;
+> > +
+> > +             pdev = platform_device_alloc("cxl_root_port", i);
+> > +             if (!pdev)
+> > +                     goto err_port;
+> > +             pdev->dev.parent = &bridge->dev;
+> > +
+> > +             rc = platform_device_add(pdev);
+> > +             if (rc) {
+> > +                     platform_device_put(pdev);
+> > +                     goto err_port;
+> > +             }
+> > +             cxl_root_port[i] = pdev;
+> > +     }
+> > +
+> > +     cxl_acpi = platform_device_alloc("cxl_acpi", 0);
+> > +     if (!cxl_acpi)
+> > +             goto err_port;
+> > +
+> > +     mock_companion(&acpi0017_mock, &cxl_acpi->dev);
+> > +     acpi0017_mock.dev.bus = &platform_bus_type;
+> > +
+> > +     rc = platform_device_add(cxl_acpi);
+> > +     if (rc)
+> > +             goto err_add;
+> > +
+> > +     return 0;
+> > +
+> > +err_add:
+> > +     platform_device_put(cxl_acpi);
+> > +err_port:
+> > +     for (i = ARRAY_SIZE(cxl_root_port) - 1; i >= 0; i--) {
+> > +             platform_device_del(cxl_root_port[i]);
+> > +             platform_device_put(cxl_root_port[i]);
+> > +     }
+> > +err_bridge:
+> > +     for (i = ARRAY_SIZE(cxl_host_bridge) - 1; i >= 0; i--) {
+> > +             platform_device_del(cxl_host_bridge[i]);
+> > +             platform_device_put(cxl_host_bridge[i]);
+> > +     }
+> > +err_populate:
+> > +     free_mock_res();
+>
+> Might be worth a function wrapping this that makes it clear this
+> is unwinding what happened in populate_cedt()
+
+I'll just call the function depopulate_all_mock_resources().
+
+>
+> > +err_gen_pool_add:
+> > +     gen_pool_destroy(cxl_mock_pool);
+> > +err_gen_pool_create:
+> > +     unregister_cxl_mock_ops(&cxl_mock_ops);
+> > +     return rc;
+> > +}
+> > +
+> > +static __exit void cxl_test_exit(void)
+> > +{
+> > +     int i;
+> > +
+> > +     platform_device_del(cxl_acpi);
+> > +     platform_device_put(cxl_acpi);
+>
+> Given the evil warning comments about platform_device_del() in platform.c
+> about it only being appropriate to call it in error cases...
+>
+> Perhaps it's better to call platform_device_unregister() even if
+> that looks locally less obvious?  Or maybe we should suggest
+> the warning comments are more refined in what usage to rule out!
+
+I'll switch to platform_device_unregister(). I don't feel like
+charging the hill to change that comment.
+
+>
+> > +     for (i = ARRAY_SIZE(cxl_root_port) - 1; i >= 0; i--) {
+> > +             platform_device_del(cxl_root_port[i]);
+> > +             platform_device_put(cxl_root_port[i]);
+> > +     }
+> > +     for (i = ARRAY_SIZE(cxl_host_bridge) - 1; i >= 0; i--) {
+> > +             platform_device_del(cxl_host_bridge[i]);
+> > +             platform_device_put(cxl_host_bridge[i]);
+> > +     }
+> > +     free_mock_res();
+> > +     gen_pool_destroy(cxl_mock_pool);
+> > +     unregister_cxl_mock_ops(&cxl_mock_ops);
+> > +}
+> > +
+> > +module_init(cxl_test_init);
+> > +module_exit(cxl_test_exit);
+> > +MODULE_LICENSE("GPL v2");
+>
+> ...
+>
+> Thanks,
+>
+> Jonathan
+>
+>
