@@ -2,430 +2,160 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF43C433F5
-	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 23:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E837CC433F5
+	for <linux-cxl@archiver.kernel.org>; Sat,  4 Sep 2021 00:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3914860F9C
-	for <linux-cxl@archiver.kernel.org>; Fri,  3 Sep 2021 23:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C671660F91
+	for <linux-cxl@archiver.kernel.org>; Sat,  4 Sep 2021 00:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230396AbhICXe0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 3 Sep 2021 19:34:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50362 "EHLO
+        id S241508AbhIDA2Y (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 3 Sep 2021 20:28:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230198AbhICXeZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Sep 2021 19:34:25 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A888C061575
-        for <linux-cxl@vger.kernel.org>; Fri,  3 Sep 2021 16:33:23 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id gp20-20020a17090adf1400b00196b761920aso587325pjb.3
-        for <linux-cxl@vger.kernel.org>; Fri, 03 Sep 2021 16:33:23 -0700 (PDT)
+        with ESMTP id S236089AbhIDA2Y (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Sep 2021 20:28:24 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B92FC061575
+        for <linux-cxl@vger.kernel.org>; Fri,  3 Sep 2021 17:27:23 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id z24-20020a17090acb1800b0018e87a24300so682077pjt.0
+        for <linux-cxl@vger.kernel.org>; Fri, 03 Sep 2021 17:27:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=YLoNA2XioqY2IkUUdXIWsacB5/b6aCi62tgod9PwTio=;
-        b=nVb40v1aLtpYvTKU7EM2gjVtcEciM2Rx1QpBUj7JV2rUGJyRBXjiNLaUMngxHvM4Hu
-         7lHasaZfYq2S3+ajz+xtEkQAU5sOIsst6XccJAjOUH3Shxv/UrqROfMveoXcqeCopPnB
-         0A7+JtpPoVDXuCYK1EDXQtIGlQU0LCnnMZS+A3HgEzcuM4000y6cOyqTnLQYp53+YMjU
-         CeffxSf/Ibif1LyUaoo6gIRMXFUXr768Qur9+r1oYDrOjp+H0eij7aOTEKj6cYzwHY2I
-         yjnJrsxp16uxrN1rmSOBvomcKWpReR9z3zC9+bIH4XdCoz2UYpjQ97QcUj0Y3jB/p3s5
-         z3wA==
+        bh=cNqDHc4DeYDGoAd0mq4iZzi3XtF93Dyr7S8yiUymZy4=;
+        b=S9eQD39d/wC1WmPQTiYTbBoL18qPM6NxOwn9akdNmjyqoOL6wDDsiNbPpEbYg8tmIV
+         Hs7+NJHyqFKV5BvwiLYhTVemIhQsCJ9AtKkNmvhhexcHmkWi8r0K7unkHnzou2Q6mrXX
+         4EhNUdjSJKL3FbKNEP4bEBIkup7X/fJsC6AqCSEPuUnIG8YGSCle9vzqV5LYpP0jogIM
+         Eufsn7kwVZT+Ijc6OljG3ChcR8IQC4DiwkztNBuiXosT+wNJXFYZzPur/WH8RVdI1sfM
+         XjERGtEqU2xMPVMREr+pBAFZsx2StTznZXnMwe7VlmVevv9emGEq7XfinN6dDQGFGFHL
+         cmjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=YLoNA2XioqY2IkUUdXIWsacB5/b6aCi62tgod9PwTio=;
-        b=UzyKYA7mqg/azuBTxnaEC4tJFr+2BKPdfnBKrb8WVEUi6pXY7b7XmU4J66vdtsu795
-         i18Jl6Zrpje8MCXvlXIrDrzOt76mzvX228vqz6m4QlDoI+eddI0ra7bfYt9SW92RHgHE
-         zZySeGEl7K8+ULbtD/wLCtykevXZcUCZWsWx4SSjOjCCz5JlRpNx9PQh4yShL04+zxrq
-         diemup7MZhBJ9+UR+DVhmUbWXs0YuXjAWHQY51IX1FuQPCmrDUD9o8yiRPXgPNgGDy3m
-         sNVblgwDHR5CpfIarWecpW/DHVvzLCmbsXyANS3teAFL28m64vcvVAUqiwTSOtHCOTRQ
-         xVmA==
-X-Gm-Message-State: AOAM5339Ozv0tqdcVK/pxC8+MTsrv1v8UK/ZPeR7XbcVVrKZQXa+2wd8
-        Tq2Ss34oc4UBKUBEJLrW8MidzYrzDN9dqtbgjnaAJQ==
-X-Google-Smtp-Source: ABdhPJzuglDWrEqtDlEZT8z32x6/BEWvWxrlYsm5s6hhH5JJMNscnYRFgu2gbokw36ETW++zM+B7RNfr5vOR13cGTpQ=
-X-Received: by 2002:a17:90a:d686:: with SMTP id x6mr1387023pju.8.1630712002352;
- Fri, 03 Sep 2021 16:33:22 -0700 (PDT)
+        bh=cNqDHc4DeYDGoAd0mq4iZzi3XtF93Dyr7S8yiUymZy4=;
+        b=ieoJqv6p8i8hdbHZnS7y90aVO3jD5Lj/3v2fYJJKlX8O04568o6V1H3XfMaa52oPWz
+         zDTJPwEKVpZvp60Zmg0Wxd+ag+aeA5Mzy0QALAS6TJkLEdupAypz8bLiOqyfCIuu4E2Y
+         NtcXldQdIsF3xdxQXtZv9v99uDmNnFG0k2HsLiT286sNKZLGaQgYEl66ikfBPEk32snG
+         YzjlJuQvJgy2WOpm3xRKR+86HubTmbBpSs53LzizXvF+sBQNzyq0nJlCzFOjnZk9cb5E
+         4/+jQq7VALij4Ynl4bJ3qTO5lQpZJiUsGRs2A3cOIz9vey3frjqGYJlneWP6WSvunqMP
+         6Ntg==
+X-Gm-Message-State: AOAM533NJex7gn4hVTqMYUof7CCjmf8zOWlgjixFabwADh8GaOf7S+dX
+        IcuX3++bIX9H/3HuVbN2L036+91lr8f5B8pogPvtkA==
+X-Google-Smtp-Source: ABdhPJy8buIuPi3rlRkUgeB5khkdH2y3gtKF5o9jtPNmZurcJvD0pWMBuZ6mox8x/mfA2SdT0Lx89rlJA0PLhOnKD6I=
+X-Received: by 2002:a17:902:7611:b029:12b:e55e:6ee8 with SMTP id
+ k17-20020a1709027611b029012be55e6ee8mr1218794pll.4.1630715243053; Fri, 03 Sep
+ 2021 17:27:23 -0700 (PDT)
 MIME-Version: 1.0
 References: <162982112370.1124374.2020303588105269226.stgit@dwillia2-desk3.amr.corp.intel.com>
- <162982126962.1124374.4032057539749435582.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20210903142118.00003ef3@Huawei.com>
-In-Reply-To: <20210903142118.00003ef3@Huawei.com>
+ <162982127644.1124374.2704629829686138331.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20210903143345.00006c60@Huawei.com> <CAPcyv4iaff7_YH1OG-yn4vnDbh-QF1DgLdGr8E4LT1bBBvX-yQ@mail.gmail.com>
+ <20210903190133.000003e2@Huawei.com>
+In-Reply-To: <20210903190133.000003e2@Huawei.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 3 Sep 2021 16:33:11 -0700
-Message-ID: <CAPcyv4hjCQ8dNieUTKw52LSe+N-Vrr8q7UDqHWGx8NnB7+g=GQ@mail.gmail.com>
-Subject: Re: [PATCH v3 27/28] tools/testing/cxl: Introduce a mock memory
- device + driver
+Date:   Fri, 3 Sep 2021 17:27:12 -0700
+Message-ID: <CAPcyv4hTHq6BRek_5bMn0jbz2bQ=8Kd6EaBjsc6s2=snY5ws5g@mail.gmail.com>
+Subject: Re: [PATCH v3 28/28] cxl/core: Split decoder setup into alloc + add
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
-        kernel test robot <lkp@intel.com>,
+Cc:     linux-cxl@vger.kernel.org, kernel test robot <lkp@intel.com>,
         Vishal L Verma <vishal.l.verma@intel.com>,
         "Schofield, Alison" <alison.schofield@intel.com>,
         Linux NVDIMM <nvdimm@lists.linux.dev>,
-        "Weiny, Ira" <ira.weiny@intel.com>
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Sep 3, 2021 at 6:21 AM Jonathan Cameron
+On Fri, Sep 3, 2021 at 11:01 AM Jonathan Cameron
 <Jonathan.Cameron@huawei.com> wrote:
 >
-> On Tue, 24 Aug 2021 09:07:49 -0700
+> On Fri, 3 Sep 2021 09:26:09 -0700
 > Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> > Introduce an emulated device-set plus driver to register CXL memory
-> > devices, 'struct cxl_memdev' instances, in the mock cxl_test topology.
-> > This enables the development of HDM Decoder (Host-managed Device Memory
-> > Decoder) programming flow (region provisioning) in an environment that
-> > can be updated alongside the kernel as it gains more functionality.
+> > On Fri, Sep 3, 2021 at 6:34 AM Jonathan Cameron
+> > <Jonathan.Cameron@huawei.com> wrote:
+> > >
+> > > On Tue, 24 Aug 2021 09:07:56 -0700
+> > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > >
+> > > > The kbuild robot reports:
+> > > >
+> > > >     drivers/cxl/core/bus.c:516:1: warning: stack frame size (1032) exceeds
+> > > >     limit (1024) in function 'devm_cxl_add_decoder'
+> > > >
+> > > > It is also the case the devm_cxl_add_decoder() is unwieldy to use for
+> > > > all the different decoder types. Fix the stack usage by splitting the
+> > > > creation into alloc and add steps. This also allows for context
+> > > > specific construction before adding.
+> > > >
+> > > > Reported-by: kernel test robot <lkp@intel.com>
+> > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > >
+> > > Trivial comment inline - otherwise looks like a nice improvement.
+> > >
+> > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > >
-> > Whereas the cxl_pci module looks for CXL memory expanders on the 'pci'
-> > bus, the cxl_mock_mem module attaches to CXL expanders on the platform
-> > bus emitted by cxl_test.
+> > >
+> > > > ---
+> > > >  drivers/cxl/acpi.c     |   74 ++++++++++++++++++++---------
+> > > >  drivers/cxl/core/bus.c |  124 +++++++++++++++---------------------------------
+> > > >  drivers/cxl/cxl.h      |   15 ++----
+> > > >  3 files changed, 95 insertions(+), 118 deletions(-)
+> > > >
+> > >
+> > > > @@ -268,6 +275,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+> > > >       struct cxl_port *port;
+> > > >       struct cxl_dport *dport;
+> > > >       struct cxl_decoder *cxld;
+> > > > +     int single_port_map[1], rc;
+> > > >       struct cxl_walk_context ctx;
+> > > >       struct acpi_pci_root *pci_root;
+> > > >       struct cxl_port *root_port = arg;
+> > > > @@ -301,22 +309,42 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+> > > >               return -ENODEV;
+> > > >       if (ctx.error)
+> > > >               return ctx.error;
+> > > > +     if (ctx.count > 1)
+> > > > +             return 0;
+> > > >
+> > > >       /* TODO: Scan CHBCR for HDM Decoder resources */
+> > > >
+> > > >       /*
+> > > > -      * In the single-port host-bridge case there are no HDM decoders
+> > > > -      * in the CHBCR and a 1:1 passthrough decode is implied.
+> > > > +      * Per the CXL specification (8.2.5.12 CXL HDM Decoder Capability
+> > > > +      * Structure) single ported host-bridges need not publish a decoder
+> > > > +      * capability when a passthrough decode can be assumed, i.e. all
+> > > > +      * transactions that the uport sees are claimed and passed to the single
+> > > > +      * dport. Default the range a 0-base 0-length until the first CXL region
+> > > > +      * is activated.
+> > > >        */
+> > >
+> > > Is comment in right place or should it be up with the ctx.count > 1
 > >
-> > Acked-by: Ben Widawsky <ben.widawsky@intel.com>
-> > Reported-by: kernel test robot <lkp@intel.com>
+> > This comment is specifically about the implicit decoder, right beneath
+> > the comment, that is registered in the ctx.count == 1 case. Perhaps
+> > you were reacting to the spec reference which is generic, but later
+> > sentences make it clear this comment is about an exception noted in
+> > that spec reference?
 >
-> Perhaps say what was reported?
+> More that the conditional is above that leads to us getting here.
+> Probably thrown off by Diff having added the new block that follows this
+> after the removed block rather than before it.
+>
+> I'm fine with how you have it here.
+>
 
-I don't think so. That would be like documenting all patch review
-comments in the changelog. At some point the mailing list archives and
-cover letters are there to recall precise comments on patches.
+Thanks, although I am going to leave your reviewed-by off for now
+because I am going to fold this with this fixup patch that arrived
+later which makes some significant changes:
 
->
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->
-> one query inline, otherwise I think this looks fine.
->
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->
-> > ---
-> >  drivers/cxl/core/pmem.c       |    6 -
-> >  drivers/cxl/cxl.h             |    2
-> >  drivers/cxl/pmem.c            |    2
-> >  tools/testing/cxl/Kbuild      |    2
-> >  tools/testing/cxl/mock_pmem.c |   24 ++++
-> >  tools/testing/cxl/test/Kbuild |    4 +
-> >  tools/testing/cxl/test/cxl.c  |   73 ++++++++++++
-> >  tools/testing/cxl/test/mem.c  |  255 +++++++++++++++++++++++++++++++++++++++++
-> >  8 files changed, 362 insertions(+), 6 deletions(-)
-> >  create mode 100644 tools/testing/cxl/mock_pmem.c
-> >  create mode 100644 tools/testing/cxl/test/mem.c
-> >
-> > diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
-> > index ec3e4c642fca..68046b6a22b5 100644
-> > --- a/drivers/cxl/core/pmem.c
-> > +++ b/drivers/cxl/core/pmem.c
-> > @@ -39,16 +39,16 @@ struct cxl_nvdimm_bridge *to_cxl_nvdimm_bridge(struct device *dev)
-> >  }
-> >  EXPORT_SYMBOL_GPL(to_cxl_nvdimm_bridge);
-> >
-> > -static int match_nvdimm_bridge(struct device *dev, const void *data)
-> > +__mock int match_nvdimm_bridge(struct device *dev, const void *data)
-> >  {
-> >       return dev->type == &cxl_nvdimm_bridge_type;
-> >  }
-> >
-> > -struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(void)
-> > +struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd)
-> >  {
-> >       struct device *dev;
-> >
-> > -     dev = bus_find_device(&cxl_bus_type, NULL, NULL, match_nvdimm_bridge);
-> > +     dev = bus_find_device(&cxl_bus_type, NULL, cxl_nvd, match_nvdimm_bridge);
-> >       if (!dev)
-> >               return NULL;
-> >       return to_cxl_nvdimm_bridge(dev);
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > index 1064427e3eb5..13e02528ddd3 100644
-> > --- a/drivers/cxl/cxl.h
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -327,7 +327,7 @@ struct cxl_nvdimm_bridge *devm_cxl_add_nvdimm_bridge(struct device *host,
-> >  struct cxl_nvdimm *to_cxl_nvdimm(struct device *dev);
-> >  bool is_cxl_nvdimm(struct device *dev);
-> >  int devm_cxl_add_nvdimm(struct device *host, struct cxl_memdev *cxlmd);
-> > -struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(void);
-> > +struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd);
-> >
-> >  /* unit test build overrides this to __weak */
-> >  #ifndef __mock
-> > diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-> > index a6be72a68960..5737abe1ff05 100644
-> > --- a/drivers/cxl/pmem.c
-> > +++ b/drivers/cxl/pmem.c
-> > @@ -43,7 +43,7 @@ static int cxl_nvdimm_probe(struct device *dev)
-> >       struct nvdimm *nvdimm = NULL;
-> >       int rc = -ENXIO;
-> >
-> > -     cxl_nvb = cxl_find_nvdimm_bridge();
-> > +     cxl_nvb = cxl_find_nvdimm_bridge(cxl_nvd);
-> >       if (!cxl_nvb)
-> >               return -ENXIO;
-> >
-> > diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-> > index 63a4a07e71c4..86deba8308a1 100644
-> > --- a/tools/testing/cxl/Kbuild
-> > +++ b/tools/testing/cxl/Kbuild
-> > @@ -33,4 +33,6 @@ cxl_core-y += $(CXL_CORE_SRC)/memdev.o
-> >  cxl_core-y += $(CXL_CORE_SRC)/mbox.o
-> >  cxl_core-y += config_check.o
-> >
-> > +cxl_core-y += mock_pmem.o
-> > +
-> >  obj-m += test/
-> > diff --git a/tools/testing/cxl/mock_pmem.c b/tools/testing/cxl/mock_pmem.c
-> > new file mode 100644
-> > index 000000000000..f7315e6f52c0
-> > --- /dev/null
-> > +++ b/tools/testing/cxl/mock_pmem.c
-> > @@ -0,0 +1,24 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/* Copyright(c) 2021 Intel Corporation. All rights reserved. */
-> > +#include <cxl.h>
-> > +#include "test/mock.h"
-> > +#include <core/core.h>
-> > +
-> > +int match_nvdimm_bridge(struct device *dev, const void *data)
-> > +{
-> > +     int index, rc = 0;
-> > +     struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
-> > +     const struct cxl_nvdimm *cxl_nvd = data;
-> > +
-> > +     if (ops) {
-> > +             if (dev->type == &cxl_nvdimm_bridge_type &&
-> > +                 (ops->is_mock_dev(dev->parent->parent) ==
-> > +                  ops->is_mock_dev(cxl_nvd->dev.parent->parent)))
-> > +                     rc = 1;
-> > +     } else
-> > +             rc = dev->type == &cxl_nvdimm_bridge_type;
-> > +
-> > +     put_cxl_mock_ops(index);
-> > +
-> > +     return rc;
-> > +}
-> > diff --git a/tools/testing/cxl/test/Kbuild b/tools/testing/cxl/test/Kbuild
-> > index 7de4ddecfd21..4e59e2c911f6 100644
-> > --- a/tools/testing/cxl/test/Kbuild
-> > +++ b/tools/testing/cxl/test/Kbuild
-> > @@ -1,6 +1,10 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> > +ccflags-y := -I$(srctree)/drivers/cxl/
-> > +
-> >  obj-m += cxl_test.o
-> >  obj-m += cxl_mock.o
-> > +obj-m += cxl_mock_mem.o
-> >
-> >  cxl_test-y := cxl.o
-> >  cxl_mock-y := mock.o
-> > +cxl_mock_mem-y := mem.o
-> > diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> > index 0710e0062e58..314b09d40333 100644
-> > --- a/tools/testing/cxl/test/cxl.c
-> > +++ b/tools/testing/cxl/test/cxl.c
-> > @@ -17,6 +17,7 @@ static struct platform_device *cxl_acpi;
-> >  static struct platform_device *cxl_host_bridge[NR_CXL_HOST_BRIDGES];
-> >  static struct platform_device
-> >       *cxl_root_port[NR_CXL_HOST_BRIDGES * NR_CXL_ROOT_PORTS];
-> > +struct platform_device *cxl_mem[NR_CXL_HOST_BRIDGES * NR_CXL_ROOT_PORTS];
-> >
-> >  static struct acpi_device acpi0017_mock;
-> >  static struct acpi_device host_bridge[NR_CXL_HOST_BRIDGES] = {
-> > @@ -36,6 +37,11 @@ static struct acpi_device host_bridge[NR_CXL_HOST_BRIDGES] = {
-> >
-> >  static bool is_mock_dev(struct device *dev)
-> >  {
-> > +     int i;
-> > +
-> > +     for (i = 0; i < ARRAY_SIZE(cxl_mem); i++)
-> > +             if (dev == &cxl_mem[i]->dev)
-> > +                     return true;
-> >       if (dev == &cxl_acpi->dev)
-> >               return true;
-> >       return false;
-> > @@ -403,6 +409,44 @@ static void mock_companion(struct acpi_device *adev, struct device *dev)
-> >  #define SZ_512G (SZ_64G * 8)
-> >  #endif
-> >
-> > +static struct platform_device *alloc_memdev(int id)
-> > +{
-> > +     struct resource res[] = {
-> > +             [0] = {
-> > +                     .flags = IORESOURCE_MEM,
-> > +             },
-> > +             [1] = {
-> > +                     .flags = IORESOURCE_MEM,
-> > +                     .desc = IORES_DESC_PERSISTENT_MEMORY,
-> > +             },
-> > +     };
-> > +     struct platform_device *pdev;
-> > +     int i, rc;
-> > +
-> > +     for (i = 0; i < ARRAY_SIZE(res); i++) {
-> > +             struct cxl_mock_res *r = alloc_mock_res(SZ_256M);
-> > +
-> > +             if (!r)
-> > +                     return NULL;
-> > +             res[i].start = r->range.start;
-> > +             res[i].end = r->range.end;
-> > +     }
-> > +
-> > +     pdev = platform_device_alloc("cxl_mem", id);
-> > +     if (!pdev)
-> > +             return NULL;
-> > +
-> > +     rc = platform_device_add_resources(pdev, res, ARRAY_SIZE(res));
-> > +     if (rc)
-> > +             goto err;
-> > +
-> > +     return pdev;
-> > +
-> > +err:
-> > +     platform_device_put(pdev);
-> > +     return NULL;
-> > +}
-> > +
-> >  static __init int cxl_test_init(void)
-> >  {
-> >       int rc, i;
-> > @@ -458,9 +502,27 @@ static __init int cxl_test_init(void)
-> >               cxl_root_port[i] = pdev;
-> >       }
-> >
-> > +     BUILD_BUG_ON(ARRAY_SIZE(cxl_mem) != ARRAY_SIZE(cxl_root_port));
-> > +     for (i = 0; i < ARRAY_SIZE(cxl_mem); i++) {
-> > +             struct platform_device *port = cxl_root_port[i];
-> > +             struct platform_device *pdev;
-> > +
-> > +             pdev = alloc_memdev(i);
-> > +             if (!pdev)
-> > +                     goto err_mem;
-> > +             pdev->dev.parent = &port->dev;
-> > +
-> > +             rc = platform_device_add(pdev);
-> > +             if (rc) {
-> > +                     platform_device_put(pdev);
-> > +                     goto err_mem;
-> > +             }
-> > +             cxl_mem[i] = pdev;
-> > +     }
-> > +
-> >       cxl_acpi = platform_device_alloc("cxl_acpi", 0);
-> >       if (!cxl_acpi)
-> > -             goto err_port;
-> > +             goto err_mem;
-> >
-> >       mock_companion(&acpi0017_mock, &cxl_acpi->dev);
-> >       acpi0017_mock.dev.bus = &platform_bus_type;
-> > @@ -473,6 +535,11 @@ static __init int cxl_test_init(void)
-> >
-> >  err_add:
-> >       platform_device_put(cxl_acpi);
-> > +err_mem:
-> > +     for (i = ARRAY_SIZE(cxl_mem) - 1; i >= 0; i--) {
-> > +             platform_device_del(cxl_mem[i]);
-> > +             platform_device_put(cxl_mem[i]);
-> > +     }
-> >  err_port:
-> >       for (i = ARRAY_SIZE(cxl_root_port) - 1; i >= 0; i--) {
-> >               platform_device_del(cxl_root_port[i]);
-> > @@ -498,6 +565,10 @@ static __exit void cxl_test_exit(void)
-> >
-> >       platform_device_del(cxl_acpi);
-> >       platform_device_put(cxl_acpi);
-> > +     for (i = ARRAY_SIZE(cxl_mem) - 1; i >= 0; i--) {
-> > +             platform_device_del(cxl_mem[i]);
-> > +             platform_device_put(cxl_mem[i]);
-> > +     }
-> >       for (i = ARRAY_SIZE(cxl_root_port) - 1; i >= 0; i--) {
-> >               platform_device_del(cxl_root_port[i]);
-> >               platform_device_put(cxl_root_port[i]);
-> > diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> > new file mode 100644
-> > index 000000000000..3ce02c2783d5
-> > --- /dev/null
-> > +++ b/tools/testing/cxl/test/mem.c
-> > @@ -0,0 +1,255 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +// Copyright(c) 2021 Intel Corporation. All rights reserved.
-> > +
-> > +#include <linux/platform_device.h>
-> > +#include <linux/mod_devicetable.h>
-> > +#include <linux/module.h>
-> > +#include <linux/sizes.h>
-> > +#include <linux/bits.h>
-> > +#include <cxlmem.h>
-> > +
-> > +#define LSA_SIZE SZ_128K
-> > +#define EFFECT(x) (1U << x)
-> > +
-> > +static struct cxl_cel_entry mock_cel[] = {
-> > +     {
-> > +             .opcode = cpu_to_le16(CXL_MBOX_OP_GET_SUPPORTED_LOGS),
-> > +             .effect = cpu_to_le16(0),
-> > +     },
-> > +     {
-> > +             .opcode = cpu_to_le16(CXL_MBOX_OP_IDENTIFY),
-> > +             .effect = cpu_to_le16(0),
-> > +     },
-> > +     {
-> > +             .opcode = cpu_to_le16(CXL_MBOX_OP_GET_LSA),
-> > +             .effect = cpu_to_le16(0),
-> > +     },
-> > +     {
-> > +             .opcode = cpu_to_le16(CXL_MBOX_OP_SET_LSA),
-> > +             .effect = cpu_to_le16(EFFECT(1) | EFFECT(2)),
-> > +     },
-> > +};
-> > +
-> > +static struct {
-> > +     struct cxl_mbox_get_supported_logs gsl;
-> > +     struct cxl_gsl_entry entry;
-> > +} mock_gsl_payload = {
-> > +     .gsl = {
-> > +             .entries = cpu_to_le16(1),
-> > +     },
-> > +     .entry = {
-> > +             .uuid = DEFINE_CXL_CEL_UUID,
-> > +             .size = cpu_to_le32(sizeof(mock_cel)),
-> > +     },
-> > +};
-> > +
-> > +static int mock_gsl(struct cxl_mbox_cmd *cmd)
-> > +{
-> > +     if (cmd->size_out < sizeof(mock_gsl_payload))
-> > +             return -EINVAL;
-> > +
-> > +     memcpy(cmd->payload_out, &mock_gsl_payload, sizeof(mock_gsl_payload));
-> > +     cmd->size_out = sizeof(mock_gsl_payload);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int mock_get_log(struct cxl_mem *cxlm, struct cxl_mbox_cmd *cmd)
-> > +{
-> > +     struct cxl_mbox_get_log *gl = cmd->payload_in;
-> > +     u32 offset = le32_to_cpu(gl->offset);
-> > +     u32 length = le32_to_cpu(gl->length);
-> > +     uuid_t uuid = DEFINE_CXL_CEL_UUID;
-> > +     void *data = &mock_cel;
-> > +
-> > +     if (cmd->size_in < sizeof(*gl))
-> > +             return -EINVAL;
-> > +     if (offset + length >
-> > +         (min_t(size_t, cxlm->payload_size, sizeof(mock_cel))))
->
-> I assume aim here is to check we don't read from beyond end of mock_cel?
-> If so why does the cxlm->payload_size matter? Say read as 4 bytes at 1.5M
-> then that should be fine.
-
-Ah true, CEL can be larger than payload size, will fix.
-
-> Should we have a separate test of (length < cxlm->payload_size)?
-
-Should be ok to request less than a full payload size.
+https://lore.kernel.org/r/163002073312.1700305.17017280228713298614.stgit@dwillia2-desk3.amr.corp.intel.com
