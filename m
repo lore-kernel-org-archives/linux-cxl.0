@@ -2,92 +2,89 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60239C433EF
-	for <linux-cxl@archiver.kernel.org>; Sat,  4 Sep 2021 00:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0C2C433EF
+	for <linux-cxl@archiver.kernel.org>; Sat,  4 Sep 2021 02:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EBD560FE6
-	for <linux-cxl@archiver.kernel.org>; Sat,  4 Sep 2021 00:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B8E261056
+	for <linux-cxl@archiver.kernel.org>; Sat,  4 Sep 2021 02:20:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241741AbhIDAkx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 3 Sep 2021 20:40:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241254AbhIDAkx (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Sep 2021 20:40:53 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C680CC061575
-        for <linux-cxl@vger.kernel.org>; Fri,  3 Sep 2021 17:39:52 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id u11-20020a17090adb4b00b00181668a56d6so649552pjx.5
-        for <linux-cxl@vger.kernel.org>; Fri, 03 Sep 2021 17:39:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YLm3OgZfnMntGO6d3DR3CgMg1gqdmJPY8PeG8k9kipw=;
-        b=APLSW12afNxzi/IDWGK2mj3wVu9zUhScVNjfTj9ntjVDtGTS5fVvnyaFR5Y9mXUGQN
-         ihUa93LL3oUo0iB5dHhG4+M1PFKb4fVY7nfwOTc/THiuz2U2nd7EUZ7g1WUWmcL7V6Oz
-         eEz026Alw/yo/yuMKOiwGkEfkI4Lf9NOlMSqrMFqSs3U+ywShuCnsm60Mo0DdxuKPcC8
-         vqzSxFvbLX6yv8doNo913Vms0EEeK3xTu+cLy7gCQ4ifmoj1xm6zyOQt3RMXvMkzqTBs
-         haS1IDuPRvhIrnwDLvKGDTTgJPF6sUc3vx8PjDiGzE7IaDCxoiNc5/9JIzLMZ8wc9RPQ
-         r3lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YLm3OgZfnMntGO6d3DR3CgMg1gqdmJPY8PeG8k9kipw=;
-        b=qiQKaoeKTmAL525E6fCrzrdKGrc5Z65dSqYPLd+Eo+gd0v0mpKsD81VBlAoy8oHIN6
-         oxBediZp2/old07Q/fGWYGn1i1oIDFVp7bUQJ4bp/Zc6OOUWUlZ0PK5PYk6qN6Myj9T2
-         4hPmsJ31dMCD62e6dV+5v7KvCQi0AhBRx5QyBoOX87tTtBQUyYcLTRRwqrrcd7IktEnt
-         7ucpzs1d/gbYeMyArZQcN3sttwNyFw3Eesf0T7ec75a5KIZH0eeHYdSXX5YCmtlXccmu
-         c0Tts02MxQgz4GmdlqqYfI8ISO1L1yw5S2yxNuAoX6YIgra9n4k5e/ainfQjvc78IYQx
-         wxOw==
-X-Gm-Message-State: AOAM5320+nud8lV8n0/sPDR5T2E0WnNvp0UxpuiSz+QM5JvNv8Gi5yUg
-        quZCIOzVIHPcnpvJZ5wOfORyLNiAtWAalng2Z5zAag==
-X-Google-Smtp-Source: ABdhPJzmKvGLwr4k0ysvrodkza6Pv+RivCkyKiyqvuQ6Bp/3PA2VZFEpJkM8gBbP9eAroOaReouOLxPxt+4DiMEHTNs=
-X-Received: by 2002:a17:902:e811:b0:138:a9a5:bc3a with SMTP id
- u17-20020a170902e81100b00138a9a5bc3amr1318604plg.18.1630715991808; Fri, 03
- Sep 2021 17:39:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210830171726.2342558-1-ben.widawsky@intel.com>
- <20210830171726.2342558-2-ben.widawsky@intel.com> <CAPcyv4gnHKiSehiFh4VJvQUw-xYEC=7dVAVupAPKC3hzGvyA8Q@mail.gmail.com>
-In-Reply-To: <CAPcyv4gnHKiSehiFh4VJvQUw-xYEC=7dVAVupAPKC3hzGvyA8Q@mail.gmail.com>
+        id S236191AbhIDCVf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 3 Sep 2021 22:21:35 -0400
+Received: from mga04.intel.com ([192.55.52.120]:3609 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231389AbhIDCVf (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Fri, 3 Sep 2021 22:21:35 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10096"; a="217703033"
+X-IronPort-AV: E=Sophos;i="5.85,267,1624345200"; 
+   d="scan'208";a="217703033"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2021 19:20:34 -0700
+X-IronPort-AV: E=Sophos;i="5.85,267,1624345200"; 
+   d="scan'208";a="534516983"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2021 19:20:34 -0700
+Subject: [PATCH 0/6] cxl fixes for v5.15-rc1
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 3 Sep 2021 17:39:40 -0700
-Message-ID: <CAPcyv4h8aE0b547sQM1NC15K3ViqtKXwRSdLThWKTp5Vqx+big@mail.gmail.com>
-Subject: Re: [PATCH 2/3] cxl/core/mbox: Remove extra parameter docs
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
+To:     linux-cxl@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        Paul Moore <paul@paul-moore.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "Li Qiang \(Johnny Li\)" <johnny.li@montage-tech.com>,
+        ben.widawsky@intel.com, Jonathan.Cameron@huawei.com
+Date:   Fri, 03 Sep 2021 19:20:33 -0700
+Message-ID: <163072203373.2250120.8373702699578427249.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Sep 1, 2021 at 12:15 PM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Mon, Aug 30, 2021 at 10:17 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> >
-> > Fixed "Excess function parameter" warnings generated by the CHECK stage
-> > of build.
-> >
->
-> I'll add the:
->
-> Fixes: bd0964c858ec ("cxl/mbox: Move mailbox and other non-PCI
-> specific infrastructure to the core")
->
-> ...but otherwise looks good.
+Given the decision to delay cxl_test and some of the related reworks to
+the next merge window, here are the broken out fixes that will be
+appended to the base-commit noted below. Changes from previous posting
+include:
 
-So this collided with Jonathan's wider comment to split out some of
-the changes from the "cxl/mbox: Move mailbox and other non-PCI
-specific infrastructure to the core" into precursor patches. So I
-ended up folding this change into a bigger cleanup of
-cxl_mem_get_partition_info(), but I'll add a Reported-by tag for my
-miss on the doc warning.
+- "cxl/acpi: Do not add DSDT disabled ACPI0016 host bridge ports": Add a
+  comment about when acpi_pci_find_root() is known to not fail
+  (Jonathan)
+
+- Fix lockdown reason in cxl_mem_raw_command_allowed() (Ondrej)
+
+- Pick up, with small change log tweaks, Ben's defined, but not used patch
+
+- Fix some 'make docs' warnings (Ben)
+
+---
+
+Alison Schofield (1):
+      cxl/acpi: Do not add DSDT disabled ACPI0016 host bridge ports
+
+Ben Widawsky (1):
+      cxl/uapi: Fix defined but not used warnings
+
+Dan Williams (3):
+      cxl/pci: Fix lockdown level
+      cxl/pmem: Fix Documentation warning
+      cxl/registers: Fix Documentation warning
+
+Li Qiang (Johnny Li) (1):
+      cxl/pci: Fix debug message in cxl_probe_regs()
+
+
+ Documentation/driver-api/cxl/memory-devices.rst |    4 ++-
+ drivers/cxl/acpi.c                              |   12 ++++++---
+ drivers/cxl/core/pmem.c                         |   30 +++++++++++++++++++++--
+ drivers/cxl/core/regs.c                         |   15 +++++++++++-
+ drivers/cxl/pci.c                               |    6 ++---
+ include/uapi/linux/cxl_mem.h                    |    2 +-
+ 6 files changed, 56 insertions(+), 13 deletions(-)
+
+base-commit: 00ca683e618065e2375b49c91002384735c76d41
