@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB4DC433EF
-	for <linux-cxl@archiver.kernel.org>; Sat,  4 Sep 2021 02:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80123C433EF
+	for <linux-cxl@archiver.kernel.org>; Sat,  4 Sep 2021 02:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE6F860FC0
-	for <linux-cxl@archiver.kernel.org>; Sat,  4 Sep 2021 02:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 693FD60E8B
+	for <linux-cxl@archiver.kernel.org>; Sat,  4 Sep 2021 02:21:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244846AbhIDCWD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 3 Sep 2021 22:22:03 -0400
-Received: from mga01.intel.com ([192.55.52.88]:53401 "EHLO mga01.intel.com"
+        id S1350398AbhIDCWI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 3 Sep 2021 22:22:08 -0400
+Received: from mga18.intel.com ([134.134.136.126]:21563 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240791AbhIDCWC (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 3 Sep 2021 22:22:02 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10096"; a="241848029"
+        id S240791AbhIDCWH (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Fri, 3 Sep 2021 22:22:07 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10096"; a="206678324"
 X-IronPort-AV: E=Sophos;i="5.85,267,1624345200"; 
-   d="scan'208";a="241848029"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2021 19:21:01 -0700
+   d="scan'208";a="206678324"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2021 19:21:06 -0700
 X-IronPort-AV: E=Sophos;i="5.85,267,1624345200"; 
-   d="scan'208";a="578915932"
+   d="scan'208";a="511732558"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2021 19:21:01 -0700
-Subject: [PATCH 5/6] cxl/pmem: Fix Documentation warning
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2021 19:21:06 -0700
+Subject: [PATCH 6/6] cxl/registers: Fix Documentation warning
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     Ben Widawsky <ben.widawsky@intel.com>, alison.schofield@intel.com,
         ben.widawsky@intel.com, Jonathan.Cameron@huawei.com
-Date:   Fri, 03 Sep 2021 19:21:01 -0700
-Message-ID: <163072206163.2250120.11486436976516079516.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Fri, 03 Sep 2021 19:21:06 -0700
+Message-ID: <163072206675.2250120.3527179192933919995.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <163072203373.2250120.8373702699578427249.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <163072203373.2250120.8373702699578427249.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -45,87 +45,58 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Commit 06737cd0d216 ("cxl/core: Move pmem functionality") neglected to
-add a DOC header for the new drivers/cxl/core/pmem.c file.
+Commit 0f06157e0135 ("cxl/core: Move register mapping infrastructure")
+neglected to add a DOC header for the new drivers/core/regs.c file.
 
 Reported-by: Ben Widawsky <ben.widawsky@intel.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
  Documentation/driver-api/cxl/memory-devices.rst |    2 +-
- drivers/cxl/core/pmem.c                         |   30 +++++++++++++++++++++--
- 2 files changed, 29 insertions(+), 3 deletions(-)
+ drivers/cxl/core/regs.c                         |   15 ++++++++++++++-
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
-index 46847d8c70a0..df799cdf1c3f 100644
+index df799cdf1c3f..50ebcda17ad0 100644
 --- a/Documentation/driver-api/cxl/memory-devices.rst
 +++ b/Documentation/driver-api/cxl/memory-devices.rst
-@@ -40,7 +40,7 @@ CXL Core
-    :doc: cxl core
- 
- .. kernel-doc:: drivers/cxl/core/pmem.c
--   :internal:
-+   :doc: cxl pmem
+@@ -43,7 +43,7 @@ CXL Core
+    :doc: cxl pmem
  
  .. kernel-doc:: drivers/cxl/core/regs.c
-    :internal:
-diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
-index 69c97cc0d945..d24570f5b8ba 100644
---- a/drivers/cxl/core/pmem.c
-+++ b/drivers/cxl/core/pmem.c
-@@ -1,13 +1,25 @@
+-   :internal:
++   :doc: cxl registers
+ 
+ External Interfaces
+ ===================
+diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+index 8535a7b94f28..41de4a136ecd 100644
+--- a/drivers/cxl/core/regs.c
++++ b/drivers/cxl/core/regs.c
+@@ -1,12 +1,25 @@
  // SPDX-License-Identifier: GPL-2.0-only
  /* Copyright(c) 2020 Intel Corporation. */
 -
+ #include <linux/io-64-nonatomic-lo-hi.h>
  #include <linux/device.h>
  #include <linux/slab.h>
+ #include <linux/pci.h>
  #include <cxlmem.h>
- #include <cxl.h>
--
- #include "core.h"
  
 +/**
-+ * DOC: cxl pmem
++ * DOC: cxl registers
 + *
-+ * The core CXL PMEM infrastructure supports persistent memory
-+ * provisioning and serves as a bridge to the LIBNVDIMM subsystem. A CXL
-+ * 'bridge' device is added at the root of a CXL device topology if
-+ * platform firmware advertises at least one persistent memory capable
-+ * CXL window. That root-level bridge corresponds to a LIBNVDIMM 'bus'
-+ * device. Then for each cxl_memdev in the CXL device topology a bridge
-+ * device is added to host a LIBNVDIMM dimm object. When these bridges
-+ * are registered native LIBNVDIMM uapis are translated to CXL
-+ * operations, for example, namespace label access commands.
++ * CXL device capabilities are enumerated by PCI DVSEC (Designated
++ * Vendor-specific) and / or descriptors provided by platform firmware.
++ * They can be defined as a set like the device and component registers
++ * mandated by CXL Section 8.1.12.2 Memory Device PCIe Capabilities and
++ * Extended Capabilities, or they can be individual capabilities
++ * appended to bridged and endpoint devices.
++ *
++ * Provide common infrastructure for enumerating and mapping these
++ * discrete capabilities.
 + */
 +
- static void cxl_nvdimm_bridge_release(struct device *dev)
- {
- 	struct cxl_nvdimm_bridge *cxl_nvb = to_cxl_nvdimm_bridge(dev);
-@@ -85,6 +97,13 @@ static void unregister_nvb(void *_cxl_nvb)
- 	device_unregister(&cxl_nvb->dev);
- }
- 
-+/**
-+ * devm_cxl_add_nvdimm_bridge() - add the root of a LIBNVDIMM topology
-+ * @host: platform firmware root device
-+ * @port: CXL port at the root of a CXL topology
-+ *
-+ * Return: bridge device that can host cxl_nvdimm objects
-+ */
- struct cxl_nvdimm_bridge *devm_cxl_add_nvdimm_bridge(struct device *host,
- 						     struct cxl_port *port)
- {
-@@ -173,6 +192,13 @@ static struct cxl_nvdimm *cxl_nvdimm_alloc(struct cxl_memdev *cxlmd)
- 	return cxl_nvd;
- }
- 
-+/**
-+ * devm_cxl_add_nvdimm() - add a bridge between a cxl_memdev and an nvdimm
-+ * @host: same host as @cxlmd
-+ * @cxlmd: cxl_memdev instance that will perform LIBNVDIMM operations
-+ *
-+ * Return: 0 on success negative error code on failure.
-+ */
- int devm_cxl_add_nvdimm(struct device *host, struct cxl_memdev *cxlmd)
- {
- 	struct cxl_nvdimm *cxl_nvd;
+ /**
+  * cxl_probe_component_regs() - Detect CXL Component register blocks
+  * @dev: Host device of the @base mapping
 
