@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B767C433F5
-	for <linux-cxl@archiver.kernel.org>; Mon,  6 Sep 2021 09:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5F7C433F5
+	for <linux-cxl@archiver.kernel.org>; Mon,  6 Sep 2021 09:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CEBD61050
-	for <linux-cxl@archiver.kernel.org>; Mon,  6 Sep 2021 09:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3017160EE6
+	for <linux-cxl@archiver.kernel.org>; Mon,  6 Sep 2021 09:10:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241175AbhIFJJg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 6 Sep 2021 05:09:36 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3750 "EHLO
+        id S234759AbhIFJLb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 6 Sep 2021 05:11:31 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3751 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230284AbhIFJJf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 6 Sep 2021 05:09:35 -0400
-Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4H32Zc4f3Wz67dnT;
-        Mon,  6 Sep 2021 17:06:32 +0800 (CST)
+        with ESMTP id S229499AbhIFJL3 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 6 Sep 2021 05:11:29 -0400
+Received: from fraeml709-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4H32cp3VwXz67cQG;
+        Mon,  6 Sep 2021 17:08:26 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
+ fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Mon, 6 Sep 2021 11:08:29 +0200
+ 15.1.2308.8; Mon, 6 Sep 2021 11:10:23 +0200
 Received: from localhost (10.52.120.86) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Mon, 6 Sep 2021
- 10:08:28 +0100
-Date:   Mon, 6 Sep 2021 10:08:29 +0100
+ 10:10:22 +0100
+Date:   Mon, 6 Sep 2021 10:10:23 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
         <alison.schofield@intel.com>
-Subject: Re: [PATCH 5/6] cxl/pmem: Fix Documentation warning
-Message-ID: <20210906100829.0000132f@Huawei.com>
-In-Reply-To: <163072206163.2250120.11486436976516079516.stgit@dwillia2-desk3.amr.corp.intel.com>
+Subject: Re: [PATCH 6/6] cxl/registers: Fix Documentation warning
+Message-ID: <20210906101023.000072ec@Huawei.com>
+In-Reply-To: <163072206675.2250120.3527179192933919995.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <163072203373.2250120.8373702699578427249.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <163072206163.2250120.11486436976516079516.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <163072206675.2250120.3527179192933919995.stgit@dwillia2-desk3.amr.corp.intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -53,101 +53,70 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 3 Sep 2021 19:21:01 -0700
+On Fri, 3 Sep 2021 19:21:06 -0700
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> Commit 06737cd0d216 ("cxl/core: Move pmem functionality") neglected to
-> add a DOC header for the new drivers/cxl/core/pmem.c file.
+> Commit 0f06157e0135 ("cxl/core: Move register mapping infrastructure")
+> neglected to add a DOC header for the new drivers/core/regs.c file.
 > 
 > Reported-by: Ben Widawsky <ben.widawsky@intel.com>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Trivial comment inline, but otherwise looks fine to me.
+Same grumpy comment applies to this one.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huwei.com>
+Otherwise description is fine.
 
-
-
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
 >  Documentation/driver-api/cxl/memory-devices.rst |    2 +-
->  drivers/cxl/core/pmem.c                         |   30 +++++++++++++++++++++--
->  2 files changed, 29 insertions(+), 3 deletions(-)
+>  drivers/cxl/core/regs.c                         |   15 ++++++++++++++-
+>  2 files changed, 15 insertions(+), 2 deletions(-)
 > 
 > diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
-> index 46847d8c70a0..df799cdf1c3f 100644
+> index df799cdf1c3f..50ebcda17ad0 100644
 > --- a/Documentation/driver-api/cxl/memory-devices.rst
 > +++ b/Documentation/driver-api/cxl/memory-devices.rst
-> @@ -40,7 +40,7 @@ CXL Core
->     :doc: cxl core
->  
->  .. kernel-doc:: drivers/cxl/core/pmem.c
-> -   :internal:
-> +   :doc: cxl pmem
+> @@ -43,7 +43,7 @@ CXL Core
+>     :doc: cxl pmem
 >  
 >  .. kernel-doc:: drivers/cxl/core/regs.c
->     :internal:
-> diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
-> index 69c97cc0d945..d24570f5b8ba 100644
-> --- a/drivers/cxl/core/pmem.c
-> +++ b/drivers/cxl/core/pmem.c
-> @@ -1,13 +1,25 @@
+> -   :internal:
+> +   :doc: cxl registers
+>  
+>  External Interfaces
+>  ===================
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index 8535a7b94f28..41de4a136ecd 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -1,12 +1,25 @@
 >  // SPDX-License-Identifier: GPL-2.0-only
 >  /* Copyright(c) 2020 Intel Corporation. */
 > -
+
+hmm
+
+>  #include <linux/io-64-nonatomic-lo-hi.h>
 >  #include <linux/device.h>
 >  #include <linux/slab.h>
+>  #include <linux/pci.h>
 >  #include <cxlmem.h>
->  #include <cxl.h>
-> -
-
-Grumpy hat:  Unrelated changes, but honestly I don't really care
-given the small size of the patch anyway.
-
->  #include "core.h"
 >  
 > +/**
-> + * DOC: cxl pmem
+> + * DOC: cxl registers
 > + *
-> + * The core CXL PMEM infrastructure supports persistent memory
-> + * provisioning and serves as a bridge to the LIBNVDIMM subsystem. A CXL
-> + * 'bridge' device is added at the root of a CXL device topology if
-> + * platform firmware advertises at least one persistent memory capable
-> + * CXL window. That root-level bridge corresponds to a LIBNVDIMM 'bus'
-> + * device. Then for each cxl_memdev in the CXL device topology a bridge
-> + * device is added to host a LIBNVDIMM dimm object. When these bridges
-> + * are registered native LIBNVDIMM uapis are translated to CXL
-> + * operations, for example, namespace label access commands.
+> + * CXL device capabilities are enumerated by PCI DVSEC (Designated
+> + * Vendor-specific) and / or descriptors provided by platform firmware.
+> + * They can be defined as a set like the device and component registers
+> + * mandated by CXL Section 8.1.12.2 Memory Device PCIe Capabilities and
+> + * Extended Capabilities, or they can be individual capabilities
+> + * appended to bridged and endpoint devices.
+> + *
+> + * Provide common infrastructure for enumerating and mapping these
+> + * discrete capabilities.
 > + */
 > +
->  static void cxl_nvdimm_bridge_release(struct device *dev)
->  {
->  	struct cxl_nvdimm_bridge *cxl_nvb = to_cxl_nvdimm_bridge(dev);
-> @@ -85,6 +97,13 @@ static void unregister_nvb(void *_cxl_nvb)
->  	device_unregister(&cxl_nvb->dev);
->  }
->  
-> +/**
-> + * devm_cxl_add_nvdimm_bridge() - add the root of a LIBNVDIMM topology
-> + * @host: platform firmware root device
-> + * @port: CXL port at the root of a CXL topology
-> + *
-> + * Return: bridge device that can host cxl_nvdimm objects
-> + */
->  struct cxl_nvdimm_bridge *devm_cxl_add_nvdimm_bridge(struct device *host,
->  						     struct cxl_port *port)
->  {
-> @@ -173,6 +192,13 @@ static struct cxl_nvdimm *cxl_nvdimm_alloc(struct cxl_memdev *cxlmd)
->  	return cxl_nvd;
->  }
->  
-> +/**
-> + * devm_cxl_add_nvdimm() - add a bridge between a cxl_memdev and an nvdimm
-> + * @host: same host as @cxlmd
-> + * @cxlmd: cxl_memdev instance that will perform LIBNVDIMM operations
-> + *
-> + * Return: 0 on success negative error code on failure.
-> + */
->  int devm_cxl_add_nvdimm(struct device *host, struct cxl_memdev *cxlmd)
->  {
->  	struct cxl_nvdimm *cxl_nvd;
+>  /**
+>   * cxl_probe_component_regs() - Detect CXL Component register blocks
+>   * @dev: Host device of the @base mapping
 > 
 
