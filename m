@@ -2,155 +2,88 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 092E9C433EF
-	for <linux-cxl@archiver.kernel.org>; Thu,  9 Sep 2021 21:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B32C433F5
+	for <linux-cxl@archiver.kernel.org>; Thu,  9 Sep 2021 21:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9644611B0
-	for <linux-cxl@archiver.kernel.org>; Thu,  9 Sep 2021 21:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E04610C8
+	for <linux-cxl@archiver.kernel.org>; Thu,  9 Sep 2021 21:10:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347686AbhIIVHE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 9 Sep 2021 17:07:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51042 "EHLO
+        id S1345513AbhIIVLz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 9 Sep 2021 17:11:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347899AbhIIVGp (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 9 Sep 2021 17:06:45 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE73BC061574
-        for <linux-cxl@vger.kernel.org>; Thu,  9 Sep 2021 14:05:35 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id t1so3134161pgv.3
-        for <linux-cxl@vger.kernel.org>; Thu, 09 Sep 2021 14:05:35 -0700 (PDT)
+        with ESMTP id S1345073AbhIIVLy (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 9 Sep 2021 17:11:54 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB1ECC061574
+        for <linux-cxl@vger.kernel.org>; Thu,  9 Sep 2021 14:10:44 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id l11so1925153plk.6
+        for <linux-cxl@vger.kernel.org>; Thu, 09 Sep 2021 14:10:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=r9nTFihajPT2Iqk8ZopYtdl8lBrpPnI8ljufyAKr/Pg=;
-        b=WJP/qryO/ykQpdkF715lk6SUgRWDnPXqdE5cUrfLrpAiOTFlGFe6o7ivyT5hFmgFqr
-         jj+cwVygT00VOkUeLdWCbOxfWgz5YybNumnmU6QD1/bMF5UQJgvFiQ2RCfqU2ssunav5
-         drD6mxR3/cVRmAeq1PPY9ivp9Yym/KJGyzDeLk+ZJi5x0aZ+8xDOBiZwcqWpyE2T9DUU
-         GhmNfXuZNsbBSzXVH7HSA7mfbHQnD65db9yGDMv3plNfEzi2YtHFZKmhkY2l28dRkVJW
-         q3JlI+pF6M1FjvHyfuDHcryYlotp0+3bU1cWxp2QdvMKOoV8VXz+Ae34+VKbb9+S9TY8
-         JtKw==
+        bh=VG1c0x+0/lVVOXIHX3HpgQkWwFlp9iGDH9PblGIsiAk=;
+        b=EyRlvOY8RpnBWH5Nbr4sKz/zrlu2CSQocU0YQiaEjF5OoXFMfbxS2pQZMfAXGMXIfv
+         erHLWdHJOOBhDOIqrznjhwBddqBIpjWNM3JvkFcHvRmGPMAv8DK5gzNjP1EypQPnC9hD
+         aRBPLIXAORFW0R8f1YUGsVAxGum/gwB3/a+23ZHLMBVPYS4+9NKvNPCh4gmVjwskmhnS
+         ecq9gnqeAA6cUwiLc11hHD1aFF/VlEqIER/5/fs22oQ4Il4TLxsvCgtT2OE2nGnWspw1
+         Pg8jkIb2tUOyMKqBxG2VNKn7JYI0S4+3+4sjpFw6GJ8u0BtquhuCVLlw9nZwkzwOP4mu
+         W8cA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=r9nTFihajPT2Iqk8ZopYtdl8lBrpPnI8ljufyAKr/Pg=;
-        b=a2Qu4xoSvh16Ek//qumFUA8StJAI9aW2ZmhCY2unm4LSH8hcct0M62+PctRnfi6Xhp
-         KI08rmSzOZJm+zB/exRudE/hyMgw/1q5AibkUIPcxunv7fZqAtGUmaLHpv8fm27Lik41
-         meDKP8BdFdOJgd/NGsOfgjfT0O6KpvHAtNjE00rUaq8w249aWjGcVY2neN5kCDX0bqeg
-         ZMuoeC3y6tsa/+NhYxst0i+qdv2Tu/4ChjUChzUtH53dEXxeA5s/bks5We/eIFMVmmlK
-         gw1DDTAQ2ACBo0hLjrOfMCjK7XaZkRiYbYZk75qcvrVv3v9vSojIe97Bz8q8VMj6UKGU
-         lKnQ==
-X-Gm-Message-State: AOAM533Q4wH9952btsPrqx2OqSzcpXUDcCMKcBkz1j4UznLcEfLcFpLg
-        vgZ1oPsaLqWaUeARNxpXVYqQcPiUNlLck6WZHHDzHA==
-X-Google-Smtp-Source: ABdhPJy5t00AiPBsUbAmSCDIvNoWFWeQLItHqldUuEFfYjgZjINCpyLTrOzu9xzyoVljKWz6lbDFpTMxpZh770ctrdQ=
-X-Received: by 2002:a62:1b92:0:b0:3eb:3f92:724 with SMTP id
- b140-20020a621b92000000b003eb3f920724mr4778204pfb.3.1631221535444; Thu, 09
- Sep 2021 14:05:35 -0700 (PDT)
+        bh=VG1c0x+0/lVVOXIHX3HpgQkWwFlp9iGDH9PblGIsiAk=;
+        b=2y7JmdJXJxr3sRbqpwVzfiz99dRqgstgHze7lCIi/rDfFKdC+o0PxSu35WO+P3+RSM
+         9REkN6LhDNq8a0mNL34zEr2clPbsJ8/Nj8mzd6m8SpaNATdhHaSdme09cuOETmZdXRwh
+         6fBmc+nigjMRUAF2AUOChlA0zaGS9zQGJwmQdrYOvQAVAfmUKriY74nNgh/5hXZiie9r
+         Vwmhw4zZvDcmJXIzDW7eRZ07WuwZlE03kIWXLBfBWLHc4Y8ZBCWQuDhNJ56ZIDpFlzxQ
+         swtlh1goH6ZBOywkNeXKr7d0q5NCCeFm9bjOPTv2k0UIxSDlGvkMm0CN3PblrQd35I4K
+         6A2g==
+X-Gm-Message-State: AOAM530jYi/OOkHzLXJ85P+RKqkM3sQIydgqnwpdRgeF6D80ymiUOJQh
+        viDegvULo1HXolEFBWyqUNHvmPqUYQeSitethUJToA==
+X-Google-Smtp-Source: ABdhPJzlxcCP7Hb984HZFtYsiJ0Isrx0l8Uh6HhNFtFSwIMpAEt6kIRDehsecyRJmVHfOo4UQRQZuLiRxY+agEjLV9U=
+X-Received: by 2002:a17:902:bd8d:b0:13a:8c8:a2b2 with SMTP id
+ q13-20020a170902bd8d00b0013a08c8a2b2mr4427221pls.89.1631221844391; Thu, 09
+ Sep 2021 14:10:44 -0700 (PDT)
 MIME-Version: 1.0
 References: <163116429183.2460985.5040982981112374615.stgit@dwillia2-desk3.amr.corp.intel.com>
- <163116435233.2460985.16197340449713287180.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20210909164125.ttvptq6eiiirvnnp@intel.com> <CAPcyv4hH7=cbnpz9dcKFEByqZkVxJVXpuks4g_63VguisDdPPw@mail.gmail.com>
- <20210909203528.frq547zd26efumpz@intel.com>
-In-Reply-To: <20210909203528.frq547zd26efumpz@intel.com>
+ <163116433533.2460985.14299233004385504131.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20210909162005.ybqjh5xrbhg43wtr@intel.com> <CAPcyv4h3LmmpTt_0Om0OCxWPXo-8jucA-9p3rwhx_j2vCFEj9Q@mail.gmail.com>
+ <20210909210527.eyxreaq2vim3wfps@intel.com>
+In-Reply-To: <20210909210527.eyxreaq2vim3wfps@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 9 Sep 2021 14:05:24 -0700
-Message-ID: <CAPcyv4j+2nPomZg4=PeCbJnFAw7Jj3jR+U=sgb8UmrEHQ10ycQ@mail.gmail.com>
-Subject: Re: [PATCH v4 11/21] cxl/mbox: Move mailbox and other non-PCI
- specific infrastructure to the core
+Date:   Thu, 9 Sep 2021 14:10:33 -0700
+Message-ID: <CAPcyv4jFcEgbZBrBpDZJ+ciyaUz8ev3xj2A3kaDAOcgTCM6V2g@mail.gmail.com>
+Subject: Re: [PATCH v4 08/21] cxl/pci: Clean up cxl_mem_get_partition_info()
 To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, kernel test robot <lkp@intel.com>,
+Cc:     linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
         Vishal L Verma <vishal.l.verma@intel.com>,
         Linux NVDIMM <nvdimm@lists.linux.dev>,
         "Schofield, Alison" <alison.schofield@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Sep 9, 2021 at 1:35 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Thu, Sep 9, 2021 at 2:05 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+[..]
 >
-> On 21-09-09 11:50:01, Dan Williams wrote:
-> > On Thu, Sep 9, 2021 at 9:41 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > >
-> > > On 21-09-08 22:12:32, Dan Williams wrote:
-> > > > Now that the internals of mailbox operations are abstracted from the PCI
-> > > > specifics a bulk of infrastructure can move to the core.
-> > > >
-> > > > The CXL_PMEM driver intends to proxy LIBNVDIMM UAPI and driver requests
-> > > > to the equivalent functionality provided by the CXL hardware mailbox
-> > > > interface. In support of that intent move the mailbox implementation to
-> > > > a shared location for the CXL_PCI driver native IOCTL path and CXL_PMEM
-> > > > nvdimm command proxy path to share.
-> > > >
-> > > > A unit test framework seeks to implement a unit test backend transport
-> > > > for mailbox commands to communicate mocked up payloads. It can reuse all
-> > > > of the mailbox infrastructure minus the PCI specifics, so that also gets
-> > > > moved to the core.
-> > > >
-> > > > Finally with the mailbox infrastructure and ioctl handling being
-> > > > transport generic there is no longer any need to pass file
-> > > > file_operations to devm_cxl_add_memdev(). That allows all the ioctl
-> > > > boilerplate to move into the core for unit test reuse.
-> > > >
-> > > > No functional change intended, just code movement.
-> > >
-> > > At some point, I think some of the comments and kernel docs need updating since
-> > > the target is no longer exclusively memory devices. Perhaps you do this in later
-> > > patches....
-> >
-> > I would wait to rework comments when/if it becomes clear that a
-> > non-memory-device driver wants to reuse the mailbox core. I do not see
-> > any indications that the comments are currently broken, do you?
+> Caching is totally fine, I was just suggesting keeping the side effects out of
+> the innocuous sounding cxl_mem_get_partition_info(). I think I originally
+> authored authored cxl_mem_identify(), so mea culpa. I just realized it after
+> seeing the removal that I liked Ira's functional style.
 >
-> I didn't see anything which is incorrect, no. But to would be non-memory-driver
-> writers, they could be scared off by such comments... I don't mean that it
-> should hold this patch up btw.
+> Perhaps simply renaming these functions is the right solution (ie. save it for a
+> rainy day). Populate is not my favorite verb, but as an example:
+> static int cxl_mem_populate_partition_info
+> static int cxl_mem_populate_indentify
 
-Ok, we can cross that bridge when it comes to it. I don't expect
-someone to reinvent mailbox command infrastructure especially when the
-the changelog for the commit creating drivers/cxl/core/mbox.c
-specifically mentions disconnecting the mailbox core from the cxl_pci
-driver.
-
->
-> >
-> > [..]
-> > > > diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> > > > index 036a3c8106b4..c85b7fbad02d 100644
-> > > > --- a/drivers/cxl/core/core.h
-> > > > +++ b/drivers/cxl/core/core.h
-> > > > @@ -14,7 +14,15 @@ static inline void unregister_cxl_dev(void *dev)
-> > > >       device_unregister(dev);
-> > > >  }
-> > > >
-> > > > +struct cxl_send_command;
-> > > > +struct cxl_mem_query_commands;
-> > > > +int cxl_query_cmd(struct cxl_memdev *cxlmd,
-> > > > +               struct cxl_mem_query_commands __user *q);
-> > > > +int cxl_send_cmd(struct cxl_memdev *cxlmd, struct cxl_send_command __user *s);
-> > > > +
-> > > >  int cxl_memdev_init(void);
-> > > >  void cxl_memdev_exit(void);
-> > > > +void cxl_mbox_init(void);
-> > > > +void cxl_mbox_exit(void);
-> > >
-> > > cxl_mbox_fini()?
-> >
-> > The idiomatic kernel module shutdown function is suffixed _exit().
-> >
-> > [..]
->
-> Got it, I argue that these aren't kernel module init/exit functions though. I
-> will leave it at that.
-
-I would expect a _fini() function to destruct a single object, not a
-void _exit() that is tearing down global static infrastructure related
-to a compilation unit.
+Sure, I would not say "no" to a follow-on cleanup patch along those
+lines that brought these two functions into a coherent style.
