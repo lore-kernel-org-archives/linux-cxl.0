@@ -2,92 +2,239 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AABC433EF
-	for <linux-cxl@archiver.kernel.org>; Thu,  9 Sep 2021 22:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBF3C433F5
+	for <linux-cxl@archiver.kernel.org>; Thu,  9 Sep 2021 22:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7285D61186
-	for <linux-cxl@archiver.kernel.org>; Thu,  9 Sep 2021 22:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 678B56115A
+	for <linux-cxl@archiver.kernel.org>; Thu,  9 Sep 2021 22:08:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235559AbhIIWFH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 9 Sep 2021 18:05:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233941AbhIIWFG (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 9 Sep 2021 18:05:06 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A35BC061574
-        for <linux-cxl@vger.kernel.org>; Thu,  9 Sep 2021 15:03:56 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id s29so10715pfw.5
-        for <linux-cxl@vger.kernel.org>; Thu, 09 Sep 2021 15:03:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tUxwV6XCqqMFLWzFgkmAURBDJPUK/ez7E/Hfrb4Mumg=;
-        b=evxYXoGg4eg8cWiXuzfXe/L4RVHHKvaWSH0l4/IBgGEeaeS1SGWmzqcM5KM7qEOgci
-         gOAF7ndJTA2njgP4/uurVsaxm8HhUAbHfyVJ/YAEjHlJA2tKz2bCt+xUyXk5kHq5vmk2
-         IAC3e2/WnSEjckeKLrfCDNPsbenOxtbina4c3SAExPEyJCDMGiZ7QI5ZzMagwRan5DnB
-         OK4QKr+u/ofqbNBL9o5eHGdJ8Qd208EYIV11Hh4mFh/0z5dy6DhXGMVjPrKuRa0TMLou
-         N0dPiGPcF9gFU/aVHM9k8YsXoWL7o/HJwYEiaIQWtDCEXf/EqDnHaW6gzlQ7D4FKsco9
-         e5IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tUxwV6XCqqMFLWzFgkmAURBDJPUK/ez7E/Hfrb4Mumg=;
-        b=KGmJOMzYrhZfi9iwbCCYC6d95d7JtFeSCtLKCOZK0R1bEdNfKUNG0Sl4i+XDbUR/uc
-         ELTsTyMe1E87mPsJKCFAQH074GdvVF0mQk45nwZkCVMKDAKvTrrYXvyBEjSQ0CBF5wzt
-         hyqKTjScUbhOx989nz08SZbU7Qjvc0Iy1XMqTFMxsEdbTdMC+Uqw9eTEnqhX36mI2m1o
-         3bnoifjqoXDWLrrbGwL5bWWvtutolwUzQSiL/EIa+4Nva/HhoPggAqy5YcbqSfplRogt
-         D7ikijU4Oxy5CJyByDrKE2KKyUHqROPoM2lY+GUCDa7hWVlCJffq719LRTToPBWsYgtN
-         Au6g==
-X-Gm-Message-State: AOAM532NPug/T+zQ1nUGLyT/GVBTGYt2p/xOhtovnV/+Xf6QkHoGV3Zp
-        97QHSf6VmUfqkK8gxYwiYjBL5d6eyqlX+N7AfSdFEs1DtSuSvg==
-X-Google-Smtp-Source: ABdhPJwN4VkDehh5MoaNKQCkMxukEOavBsC4R75tW1GnnbiLuwe6PWvWWw5a5uQ+t10mDLPngeuM4992FD+g/SD/x7g=
-X-Received: by 2002:a62:1b92:0:b0:3eb:3f92:724 with SMTP id
- b140-20020a621b92000000b003eb3f920724mr4971964pfb.3.1631225035680; Thu, 09
- Sep 2021 15:03:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <163116429183.2460985.5040982981112374615.stgit@dwillia2-desk3.amr.corp.intel.com>
- <163116437978.2460985.6298243237502084824.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <163116437978.2460985.6298243237502084824.stgit@dwillia2-desk3.amr.corp.intel.com>
+        id S232075AbhIIWJ2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 9 Sep 2021 18:09:28 -0400
+Received: from mga18.intel.com ([134.134.136.126]:2941 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231819AbhIIWJ2 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 9 Sep 2021 18:09:28 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10102"; a="208032043"
+X-IronPort-AV: E=Sophos;i="5.85,281,1624345200"; 
+   d="scan'208";a="208032043"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2021 15:08:17 -0700
+X-IronPort-AV: E=Sophos;i="5.85,281,1624345200"; 
+   d="scan'208";a="607032958"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2021 15:08:16 -0700
+Subject: [PATCH v5 15/21] cxl/pmem: Translate NVDIMM label commands to CXL
+ label commands
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 9 Sep 2021 15:03:45 -0700
-Message-ID: <CAPcyv4ixJZTZF-d0nmsLv2BQ+X9F-Ph_khG4i5pyksNniY_q_A@mail.gmail.com>
-Subject: Re: [PATCH v4 16/21] cxl/pmem: Add support for multiple nvdimm-bridge objects
 To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     nvdimm@lists.linux.dev, ben.widawsky@intel.com,
+        ira.weiny@intel.com, Jonathan.Cameron@huawei.com,
+        vishal.l.verma@intel.com, ira.weiny@intel.com
+Date:   Thu, 09 Sep 2021 15:08:15 -0700
+Message-ID: <163122524923.2534512.9431316965424264864.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <163116437437.2460985.13509423327603255812.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <163116437437.2460985.13509423327603255812.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Sep 8, 2021 at 10:13 PM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> In preparation for a mocked unit test environment for CXL objects, allow
-> for multiple unique nvdimm-bridge objects.
->
-> For now, just allow multiple bridges to be registered. Later, when there
-> are multiple present, further updates are needed to
-> cxl_find_nvdimm_bridge() to identify which bridge is associated with
-> which CXL hierarchy for nvdimm registration.
->
-> Note that this does change the kernel device-name for the bridge object.
-> User space should not have any attachment to the device name at this
-> point as it is still early days in the CXL driver development.
+The LIBNVDIMM IOCTL UAPI calls back to the nvdimm-bus-provider to
+translate the Linux command payload to the device native command format.
+The LIBNVDIMM commands get-config-size, get-config-data, and
+set-config-data, map to the CXL memory device commands device-identify,
+get-lsa, and set-lsa. Recall that the label-storage-area (LSA) on an
+NVDIMM device arranges for the provisioning of namespaces. Additionally
+for CXL the LSA is used for provisioning regions as well.
 
-Apologies Jonathan, missed your:
+The data from device-identify is already cached in the 'struct cxl_mem'
+instance associated with @cxl_nvd, so that payload return is simply
+crafted and no CXL command is issued. The conversion for get-lsa is
+straightforward, but the conversion for set-lsa requires an allocation
+to append the set-lsa header in front of the payload.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Ben Widawsky <ben.widawsky@intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+Changes since v4:
+- Drop cmd_rc plumbing as it is presently unused (Ben)
 
-here...
+ drivers/cxl/pmem.c |  128 ++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 124 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+index a972af7a6e0b..d349a6cb01df 100644
+--- a/drivers/cxl/pmem.c
++++ b/drivers/cxl/pmem.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /* Copyright(c) 2021 Intel Corporation. All rights reserved. */
+ #include <linux/libnvdimm.h>
++#include <asm/unaligned.h>
+ #include <linux/device.h>
+ #include <linux/module.h>
+ #include <linux/ndctl.h>
+@@ -48,10 +49,10 @@ static int cxl_nvdimm_probe(struct device *dev)
+ {
+ 	struct cxl_nvdimm *cxl_nvd = to_cxl_nvdimm(dev);
+ 	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
++	unsigned long flags = 0, cmd_mask = 0;
+ 	struct cxl_mem *cxlm = cxlmd->cxlm;
+ 	struct cxl_nvdimm_bridge *cxl_nvb;
+ 	struct nvdimm *nvdimm = NULL;
+-	unsigned long flags = 0;
+ 	int rc = -ENXIO;
+ 
+ 	cxl_nvb = cxl_find_nvdimm_bridge();
+@@ -66,8 +67,11 @@ static int cxl_nvdimm_probe(struct device *dev)
+ 
+ 	set_bit(NDD_LABELING, &flags);
+ 	rc = -ENOMEM;
+-	nvdimm = nvdimm_create(cxl_nvb->nvdimm_bus, cxl_nvd, NULL, flags, 0, 0,
+-			       NULL);
++	set_bit(ND_CMD_GET_CONFIG_SIZE, &cmd_mask);
++	set_bit(ND_CMD_GET_CONFIG_DATA, &cmd_mask);
++	set_bit(ND_CMD_SET_CONFIG_DATA, &cmd_mask);
++	nvdimm = nvdimm_create(cxl_nvb->nvdimm_bus, cxl_nvd, NULL, flags,
++			       cmd_mask, 0, NULL);
+ 	dev_set_drvdata(dev, nvdimm);
+ 
+ out_unlock:
+@@ -89,11 +93,127 @@ static struct cxl_driver cxl_nvdimm_driver = {
+ 	.id = CXL_DEVICE_NVDIMM,
+ };
+ 
++static int cxl_pmem_get_config_size(struct cxl_mem *cxlm,
++				    struct nd_cmd_get_config_size *cmd,
++				    unsigned int buf_len)
++{
++	if (sizeof(*cmd) > buf_len)
++		return -EINVAL;
++
++	*cmd = (struct nd_cmd_get_config_size) {
++		 .config_size = cxlm->lsa_size,
++		 .max_xfer = cxlm->payload_size,
++	};
++
++	return 0;
++}
++
++static int cxl_pmem_get_config_data(struct cxl_mem *cxlm,
++				    struct nd_cmd_get_config_data_hdr *cmd,
++				    unsigned int buf_len)
++{
++	struct cxl_mbox_get_lsa {
++		u32 offset;
++		u32 length;
++	} get_lsa;
++	int rc;
++
++	if (sizeof(*cmd) > buf_len)
++		return -EINVAL;
++	if (struct_size(cmd, out_buf, cmd->in_length) > buf_len)
++		return -EINVAL;
++
++	get_lsa = (struct cxl_mbox_get_lsa) {
++		.offset = cmd->in_offset,
++		.length = cmd->in_length,
++	};
++
++	rc = cxl_mem_mbox_send_cmd(cxlm, CXL_MBOX_OP_GET_LSA, &get_lsa,
++				   sizeof(get_lsa), cmd->out_buf,
++				   cmd->in_length);
++	cmd->status = 0;
++
++	return rc;
++}
++
++static int cxl_pmem_set_config_data(struct cxl_mem *cxlm,
++				    struct nd_cmd_set_config_hdr *cmd,
++				    unsigned int buf_len)
++{
++	struct cxl_mbox_set_lsa {
++		u32 offset;
++		u32 reserved;
++		u8 data[];
++	} *set_lsa;
++	int rc;
++
++	if (sizeof(*cmd) > buf_len)
++		return -EINVAL;
++
++	/* 4-byte status follows the input data in the payload */
++	if (struct_size(cmd, in_buf, cmd->in_length) + 4 > buf_len)
++		return -EINVAL;
++
++	set_lsa =
++		kvzalloc(struct_size(set_lsa, data, cmd->in_length), GFP_KERNEL);
++	if (!set_lsa)
++		return -ENOMEM;
++
++	*set_lsa = (struct cxl_mbox_set_lsa) {
++		.offset = cmd->in_offset,
++	};
++	memcpy(set_lsa->data, cmd->in_buf, cmd->in_length);
++
++	rc = cxl_mem_mbox_send_cmd(cxlm, CXL_MBOX_OP_SET_LSA, set_lsa,
++				   struct_size(set_lsa, data, cmd->in_length),
++				   NULL, 0);
++
++	/*
++	 * Set "firmware" status (4-packed bytes at the end of the input
++	 * payload.
++	 */
++	put_unaligned(0, (u32 *) &cmd->in_buf[cmd->in_length]);
++	kvfree(set_lsa);
++
++	return rc;
++}
++
++static int cxl_pmem_nvdimm_ctl(struct nvdimm *nvdimm, unsigned int cmd,
++			       void *buf, unsigned int buf_len)
++{
++	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
++	unsigned long cmd_mask = nvdimm_cmd_mask(nvdimm);
++	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
++	struct cxl_mem *cxlm = cxlmd->cxlm;
++
++	if (!test_bit(cmd, &cmd_mask))
++		return -ENOTTY;
++
++	switch (cmd) {
++	case ND_CMD_GET_CONFIG_SIZE:
++		return cxl_pmem_get_config_size(cxlm, buf, buf_len);
++	case ND_CMD_GET_CONFIG_DATA:
++		return cxl_pmem_get_config_data(cxlm, buf, buf_len);
++	case ND_CMD_SET_CONFIG_DATA:
++		return cxl_pmem_set_config_data(cxlm, buf, buf_len);
++	default:
++		return -ENOTTY;
++	}
++}
++
+ static int cxl_pmem_ctl(struct nvdimm_bus_descriptor *nd_desc,
+ 			struct nvdimm *nvdimm, unsigned int cmd, void *buf,
+ 			unsigned int buf_len, int *cmd_rc)
+ {
+-	return -ENOTTY;
++	/*
++	 * No firmware response to translate, let the transport error
++	 * code take precedence.
++	 */
++	*cmd_rc = 0;
++
++	if (!nvdimm)
++		return -ENOTTY;
++	return cxl_pmem_nvdimm_ctl(nvdimm, cmd, buf, buf_len);
+ }
+ 
+ static bool online_nvdimm_bus(struct cxl_nvdimm_bridge *cxl_nvb)
+
