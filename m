@@ -7,58 +7,57 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFCEC433F5
-	for <linux-cxl@archiver.kernel.org>; Fri, 10 Sep 2021 19:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43A6C433EF
+	for <linux-cxl@archiver.kernel.org>; Fri, 10 Sep 2021 21:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C42A06113E
-	for <linux-cxl@archiver.kernel.org>; Fri, 10 Sep 2021 19:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0E226120A
+	for <linux-cxl@archiver.kernel.org>; Fri, 10 Sep 2021 21:32:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232209AbhIJT2e (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 10 Sep 2021 15:28:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40216 "EHLO
+        id S234331AbhIJVd7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 10 Sep 2021 17:33:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232310AbhIJT2e (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Sep 2021 15:28:34 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0AEDC061574
-        for <linux-cxl@vger.kernel.org>; Fri, 10 Sep 2021 12:27:22 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id i24so2727836pfo.12
-        for <linux-cxl@vger.kernel.org>; Fri, 10 Sep 2021 12:27:22 -0700 (PDT)
+        with ESMTP id S229669AbhIJVd6 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Sep 2021 17:33:58 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC316C061574
+        for <linux-cxl@vger.kernel.org>; Fri, 10 Sep 2021 14:32:46 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id u13-20020a17090abb0db0290177e1d9b3f7so2431085pjr.1
+        for <linux-cxl@vger.kernel.org>; Fri, 10 Sep 2021 14:32:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=H2NuBtqsXlS08TAg5eIBe66aoN1bcVzaf/4YKBKstKQ=;
-        b=QApP7p14QDlbi/7izCqOZDZ16C0mAevDgDaU9GqWq3qh4ScOv8W8HVIMLQFXSV5lq7
-         CdPgCqf7mbMOcWtXlsMsT98olANV4/0WK6o9cBo0D683vpYsUu4imqQfwI5V/mCJXLCa
-         oVlHsIFU8e7pZfDte3fnhE7ILLDma2BQZMuvsb08Q1+ROzHqc014b3GgLS6bN9Bh+bJg
-         xPgpvOpA2jgzP5jidfGw1crzAgv0K6KWfjw36fI5ION1SLELrKHHGsMClatwYPm3CZcB
-         Hg6JBSvOIr8lFPP+NfavERz/fmVk+KK4Z7XrgmAI5IGIRQJpHKfVxb5d/wFDA+ZkGqMx
-         PxBw==
+        bh=bCYgFtulwP8ofE00dhW9GD/hVj9ylQhjxKe8WUvdMQI=;
+        b=QSsdZpFlW8O760hlvhfW70upiwIbv6Dxi3Zwndf4q327GsqSXwzww+/bQV30AKUObv
+         08SBajZu8rXfhHMKYrtqCwWDm2PJm9hGKo7VxqdZwt3qFpwjs5ct2KoD2bvuUFJ76Q03
+         Axd16s62Dl923fA7MbbzHsGup1ZHK9rI2Iyef9HJwijkoJfvtfil8mycAOjji5pug0vw
+         6yD+46F03hMDCgyhktpAqa6lXuB1Ak69wUwxC4mCbLxIkJyqYlz3B4jJF49Z4FxpUiKD
+         qm5GhqEDRjJzhJbXiK7Gck09sWLUY1PHqkUZc9I8PAMvIm/jHXSClG3L+e8iCfGIrk9F
+         B0HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=H2NuBtqsXlS08TAg5eIBe66aoN1bcVzaf/4YKBKstKQ=;
-        b=WzySwqQx0ZtxNEY8cpDtuormF/9sjqu3FAtkFFhd27Gqmi5zU6jHMeSF+3i8iXh0uU
-         TkNdWUP/ch8LMCR4ZyjDCbykHa3MWlS5l0Hk3Jki5grPSu/ewYcRQM0S8fTaTNFBLT0l
-         syVUvqkRTNJSRwwJU0DI0aXtdQNb5Kk7aolAq4ePsmoj/jIok3lYMrA68RrOCnjfulZF
-         V/7uyQjfCFtjPOUtBojAGaG9aqRbnDNKnfk/8gdaKd/1ZrIwndioGfL7aeU2PGlW1UFF
-         tWufj/YNH8L/cSyyoAVZILFg+WSwUej1XHmjyqFSbv6acfq70HGUNZtH1fsN8AJOQphX
-         PYUg==
-X-Gm-Message-State: AOAM5302+ZYqvxUZBoWQnM5NcmEG7PlUHu52GGVr9O6TMzHdzdAZ2+dr
-        3xc7SW4W+uIxQGwEgmCo/uPtuC8SsiPGHhXMVHRkmDx68iQaLg==
-X-Google-Smtp-Source: ABdhPJwXjurz9ySlX4qBXLO047VwjuSLxyksuhciSzH5791joI6taPOvmdCQjRSUOsdf1brqdmBWMZ1MyNk0TQA12dc=
-X-Received: by 2002:a62:6d07:0:b0:40a:33cd:d3ea with SMTP id
- i7-20020a626d07000000b0040a33cdd3eamr9203881pfc.61.1631302042340; Fri, 10 Sep
- 2021 12:27:22 -0700 (PDT)
+        bh=bCYgFtulwP8ofE00dhW9GD/hVj9ylQhjxKe8WUvdMQI=;
+        b=1XQyosa/yRbnLZIPoFAuq8NX9WHvpItbbC0Ct79Pfu6q2+imqIkyyj6l6fbDjjL29c
+         UU48Ut0AjNLYTfm4/3TpwtRQFKU7ZmCqCqBVVTRjIbzObSlFAdEZp1RRVZi/8N6uQt1m
+         D7zRkGX3+Pvlv2CxzUPWfjmyHCz4WBWMfaHbAXuqAn4fPbllx3KWZZPVit+g6Ef9zpaM
+         JukajntM4R43D5d7XE1OLdouUhkMcFLqSkMEkUhkNsbOAPh5SxP1JIgibvc+G5QBuA8l
+         qRBAuthth9+itR/UwDr6ZTScgCvydgJVMfUBR8j4m+E6lK7lJ1cpyH+H2YjtdBiovYVF
+         qTTA==
+X-Gm-Message-State: AOAM532ERvqbGquM8F4Piqd6D3YOCwifq7BpgNZ+4ac5dYzfdEGqag7M
+        VT9cf4DiS/2QxYCIYRBCFTXlEd94JwAsWjoCZ2R1/w==
+X-Google-Smtp-Source: ABdhPJyCHbzLiLnJkTor+coDTOlgEN/AoOYNtTt9DUzeknjIQU1ONF299jnSzhuK9UQWT+r5fwgOpxH4CmsNtDGqsjg=
+X-Received: by 2002:a17:90b:3b84:: with SMTP id pc4mr11742310pjb.220.1631309566067;
+ Fri, 10 Sep 2021 14:32:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210902195017.2516472-1-ben.widawsky@intel.com> <20210902195017.2516472-6-ben.widawsky@intel.com>
-In-Reply-To: <20210902195017.2516472-6-ben.widawsky@intel.com>
+References: <20210902195017.2516472-1-ben.widawsky@intel.com> <20210902195017.2516472-7-ben.widawsky@intel.com>
+In-Reply-To: <20210902195017.2516472-7-ben.widawsky@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 10 Sep 2021 12:27:11 -0700
-Message-ID: <CAPcyv4ivjUqTwd9QiGQ1hHxPwu4Czw0M1Ht5po+cGEiQbvU4ew@mail.gmail.com>
-Subject: Re: [PATCH 05/13] cxl/pci: Disambiguate cxl_pci further from cxl_mem
+Date:   Fri, 10 Sep 2021 14:32:35 -0700
+Message-ID: <CAPcyv4h8hFMWi7Rm7B_L9pk6QzLhLY5-CbrYXN9+qW-a9qCQAw@mail.gmail.com>
+Subject: Re: [PATCH 06/13] cxl/mem: Introduce cxl_mem driver
 To:     Ben Widawsky <ben.widawsky@intel.com>
 Cc:     linux-cxl@vger.kernel.org,
         Alison Schofield <alison.schofield@intel.com>,
@@ -72,63 +71,187 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 On Thu, Sep 2, 2021 at 12:50 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> Commit 21e9f76733a8 ("cxl: Rename mem to pci") introduced the cxl_pci
-> driver which had formerly been named cxl_mem. At the time, the goal was
-> to be as light touch as possible because there were other patches in
-> flight. Since things have settled now, and a new cxl_mem driver will be
-> introduced shortly, spend the LOC now to clean up the existing names.
+> CXL endpoints that participate in the CXL.mem protocol require extra
+> control to ensure architectural constraints are met for device
+> management. The most straight-forward way to achieve control of these
+> endpoints is with a new driver that can bind to such devices. This
+> driver will also be responsible for enumerating the switches that
+> connect the endpoint to the hostbridge.
 >
-> While here, fix the kernel docs to explain the situation better after
-> the core rework that has already landed.
+> cxl_core already understands the concept of a memdev, but the core [by
+> design] does not comprehend all the topological constraints.
 >
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 > ---
->  drivers/cxl/pci.c | 70 +++++++++++++++++++++++------------------------
->  1 file changed, 35 insertions(+), 35 deletions(-)
+>  .../driver-api/cxl/memory-devices.rst         |  3 ++
+>  drivers/cxl/Makefile                          |  3 +-
+>  drivers/cxl/core/bus.c                        |  2 +
+>  drivers/cxl/core/core.h                       |  1 +
+>  drivers/cxl/core/memdev.c                     |  2 +-
+>  drivers/cxl/cxl.h                             |  1 +
+>  drivers/cxl/mem.c                             | 49 +++++++++++++++++++
+>  7 files changed, 59 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/cxl/mem.c
 >
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index b13884275d96..6931885c83ce 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -16,14 +16,14 @@
->   *
->   * This implements the PCI exclusive functionality for a CXL device as it is
->   * defined by the Compute Express Link specification. CXL devices may surface
-> - * certain functionality even if it isn't CXL enabled.
-> + * certain functionality even if it isn't CXL enabled. While this driver is
-> + * focused around the PCI specific aspects of a CXL device, it binds to the
-> + * specific CXL memory device class code, and therefore the implementation of
-> + * cxl_pci is focused around CXL memory devices.
->   *
-> - * The driver has several responsibilities, mainly:
-> + * The driver has two responsibilities:
-
-Perhaps:
-
-s/driver has two responsibilities:/driver's responsibilities include:/
-
->   *  - Create the memX device and register on the CXL bus.
->   *  - Enumerate device's register interface and map them.
-
-..since there are other things to add here:
-
-It also registers an nvdimm bridge device, and you might mention it
-registers the mbox_send mechanism to mailbox core. Later it will also
-be responsible for coordinating the retrieval of the CDAT.
-
-> - *  - Probe the device attributes to establish sysfs interface.
-> - *  - Provide an IOCTL interface to userspace to communicate with the device for
-> - *    things like firmware update.
->   */
+> diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
+> index a18175bae7a6..00d141071570 100644
+> --- a/Documentation/driver-api/cxl/memory-devices.rst
+> +++ b/Documentation/driver-api/cxl/memory-devices.rst
+> @@ -28,6 +28,9 @@ CXL Memory Device
+>  .. kernel-doc:: drivers/cxl/pci.c
+>     :internal:
 >
->  #define cxl_doorbell_busy(cxlm)                                                \
-> @@ -33,7 +33,7 @@
->  /* CXL 2.0 - 8.2.8.4 */
->  #define CXL_MAILBOX_TIMEOUT_MS (2 * HZ)
+> +.. kernel-doc:: drivers/cxl/mem.c
+> +   :doc: cxl mem
+> +
+>  CXL Core
+>  --------
+>  .. kernel-doc:: drivers/cxl/cxl.h
+> diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+> index d1aaabc940f3..d912ac4e3f0c 100644
+> --- a/drivers/cxl/Makefile
+> +++ b/drivers/cxl/Makefile
+> @@ -1,9 +1,10 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-$(CONFIG_CXL_BUS) += core/
+> -obj-$(CONFIG_CXL_MEM) += cxl_pci.o
+> +obj-$(CONFIG_CXL_MEM) += cxl_mem.o cxl_pci.o
+
+I'd rather now have a separate CONFIG_CXL_PCI Kconfig symbol for
+cxl_pci and let CONFIG_CXL_MEM just mean cxl_mem. I.e. maybe there
+will be a non-cxl_pci agent that registers cxl_memdev objects, or
+maybe someone will only want manageability and not CXL.mem operation
+enabled in their kernel.
+
+
+>  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+>  obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
 >
-> -static int cxl_mem_wait_for_doorbell(struct cxl_mem *cxlm)
-> +static int cxl_pci_wait_for_doorbell(struct cxl_mem *cxlm)
+> +cxl_mem-y := mem.o
+>  cxl_pci-y := pci.o
+>  cxl_acpi-y := acpi.o
+>  cxl_pmem-y := pmem.o
+> diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
+> index 6202ce5a5ac2..256e55dc2a3b 100644
+> --- a/drivers/cxl/core/bus.c
+> +++ b/drivers/cxl/core/bus.c
+> @@ -641,6 +641,8 @@ static int cxl_device_id(struct device *dev)
+>                 return CXL_DEVICE_NVDIMM_BRIDGE;
+>         if (dev->type == &cxl_nvdimm_type)
+>                 return CXL_DEVICE_NVDIMM;
+> +       if (dev->type == &cxl_memdev_type)
+> +               return CXL_DEVICE_ENDPOINT;
 
-Should this be cxl_pci_mbox_wait_for_doobell() to match the other helpers?
+Perhaps CXL_DEVICE_MEMORY_{INTERFACE,EXPANDER}? "ENDPOINT" seems too generic.
 
-Other than that, rename looks good to me.
+>         return 0;
+>  }
+>
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index e0c9aacc4e9c..dea246cb7c58 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -6,6 +6,7 @@
+>
+>  extern const struct device_type cxl_nvdimm_bridge_type;
+>  extern const struct device_type cxl_nvdimm_type;
+> +extern const struct device_type cxl_memdev_type;
+>
+>  extern struct attribute_group cxl_base_attribute_group;
+>
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index ee61202c7aab..c9dd054bd813 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -127,7 +127,7 @@ static const struct attribute_group *cxl_memdev_attribute_groups[] = {
+>         NULL,
+>  };
+>
+> -static const struct device_type cxl_memdev_type = {
+> +const struct device_type cxl_memdev_type = {
+>         .name = "cxl_memdev",
+>         .release = cxl_memdev_release,
+>         .devnode = cxl_memdev_devnode,
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 708bfe92b596..b48bdbefd949 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -315,6 +315,7 @@ void cxl_driver_unregister(struct cxl_driver *cxl_drv);
+>
+>  #define CXL_DEVICE_NVDIMM_BRIDGE       1
+>  #define CXL_DEVICE_NVDIMM              2
+> +#define CXL_DEVICE_ENDPOINT            3
+>
+>  #define MODULE_ALIAS_CXL(type) MODULE_ALIAS("cxl:t" __stringify(type) "*")
+>  #define CXL_MODALIAS_FMT "cxl:t%d"
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> new file mode 100644
+> index 000000000000..978a54b0a51a
+> --- /dev/null
+> +++ b/drivers/cxl/mem.c
+> @@ -0,0 +1,49 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright(c) 2021 Intel Corporation. All rights reserved. */
+> +#include <linux/device.h>
+> +#include <linux/module.h>
+> +
+> +#include "cxlmem.h"
+> +
+> +/**
+> + * DOC: cxl mem
+> + *
+> + * CXL memory endpoint devices and switches are CXL capable devices that are
+> + * participating in CXL.mem protocol. Their functionality builds on top of the
+> + * CXL.io protocol that allows enumerating and configuring components via
+> + * standard PCI mechanisms.
+> + *
+> + * The cxl_mem driver implements enumeration and control over these CXL
+> + * components.
+> + */
+> +
+> +static int cxl_mem_probe(struct device *dev)
+> +{
+> +       return -EOPNOTSUPP;
+
+Why not just merge this patch with the one that fills these in? I'm
+otherwise not understanding the value of having this stopping point in
+someone's future bisect run. Even commit 4cdadfd5e0a7 ("cxl/mem:
+Introduce a driver for CXL-2.0-Type-3 endpoints") had a functional
+probe.
+
+> +}
+> +
+> +static void cxl_mem_remove(struct device *dev)
+> +{
+> +}
+> +
+> +static struct cxl_driver cxl_mem_driver = {
+> +       .name = "cxl_mem",
+> +       .probe = cxl_mem_probe,
+> +       .remove = cxl_mem_remove,
+
+Empty ->remove() callbacks don't need to be registered.
+
+> +       .id = CXL_DEVICE_ENDPOINT,
+> +};
+> +
+> +static __init int cxl_mem_init(void)
+> +{
+> +       return cxl_driver_register(&cxl_mem_driver);
+> +}
+> +
+> +static __exit void cxl_mem_exit(void)
+> +{
+> +       cxl_driver_unregister(&cxl_mem_driver);
+> +}
+> +
+> +MODULE_LICENSE("GPL v2");
+> +module_init(cxl_mem_init);
+> +module_exit(cxl_mem_exit);
+
+Perhaps, before this adds more boilerplate, go define a:
+
+#define module_cxl_driver(__cxl_driver) \
+        module_driver(__cxl_driver, cxl_driver_register, cxl_driver_unregister)
+
+...as a lead-in patch?
