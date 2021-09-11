@@ -2,313 +2,401 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CAAC433F5
-	for <linux-cxl@archiver.kernel.org>; Sat, 11 Sep 2021 01:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EDDC433EF
+	for <linux-cxl@archiver.kernel.org>; Sat, 11 Sep 2021 17:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EECD6120A
-	for <linux-cxl@archiver.kernel.org>; Sat, 11 Sep 2021 01:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60AE460F3A
+	for <linux-cxl@archiver.kernel.org>; Sat, 11 Sep 2021 17:15:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232518AbhIKBiu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 10 Sep 2021 21:38:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37700 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231864AbhIKBit (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Sep 2021 21:38:49 -0400
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E73E1C061574
-        for <linux-cxl@vger.kernel.org>; Fri, 10 Sep 2021 18:37:37 -0700 (PDT)
-Received: by mail-pg1-x530.google.com with SMTP id q68so3428477pga.9
-        for <linux-cxl@vger.kernel.org>; Fri, 10 Sep 2021 18:37:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=aaX/O1wBiKgh/WWNMWkbsmad2qBZv0XcTyr8tMaFjuE=;
-        b=TbzmqfDN6LVMN4ElxxTwd75qEokLY9y1+xzfqsMEgdyry494cman4fGLbNSJ9ZqT+n
-         G0JhJCirukfyuEiVr5ZC7murpa4ahc1qZEjI9GqdPbvicg83PK67MA29y/Ew2JVngfps
-         P6e1jdstaPxJ35HwlnYFrmC7TpOVyBJe6EgMV4HJQqFFA6cmdwlImoIBUT00STN0Do73
-         QLAP3G2vxatlZXWMQWGTDP+1ROpE2Ja862E842ZfIoyEFHHaIwb/EULMFWj1UKe60B4/
-         Br2uXx8hYRerkIgTzJOZOESy9/ecIXKOtk4ZHy/uB6Y5Y1Sh7G2SmVGR8JTas7f65SjW
-         kT8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=aaX/O1wBiKgh/WWNMWkbsmad2qBZv0XcTyr8tMaFjuE=;
-        b=OLRI89qD7qFJ3SSbd+9gMutz63z5iJp5PgY0CSN6h6RiTf5zKYnxPki5TVfIcksDiX
-         RBcCtNhts+Ve/9qBh4SjW0qir3EA0ophmdfKR1UVgAm/ovvub/VJ8FrB2J+I8BbZCp1Q
-         ZJ/33EQ7eq6kzQJKWXUn+Evn5cki8w9KlcHfCtXKhHHKTj8DpaP7qExeZBjmOKNIv0Q3
-         RsihxrBkt9PsXEED5thqgMAgON8tuQ7DtMSZ+xDoPkxO0SGX4mrOb6D2ASq1Kha3Q3ys
-         wwM2vqZsBrSvQDWGVZ38EG1ZBR42/WISMgUG3Fpa2Lw+KHSz9s4xXVeP585ENojCpyoi
-         PiMw==
-X-Gm-Message-State: AOAM530YPqdiqIqWvkFbl+cWPW3aHJ2u/MXMIYUtfCexg7NuA3RK+wp2
-        02rgSn76vvqC0v4rlijUIpuEdgVxWnCbHG7gfRDViA==
-X-Google-Smtp-Source: ABdhPJzQbm49jQpzU/NRSBdAy/6Dw44r0seFWd9OHl93JH4rAVkgOzMAWOgvWhA4jgRVXoBxUs/EDYi3C9qZpzAee9c=
-X-Received: by 2002:a62:6d07:0:b0:40a:33cd:d3ea with SMTP id
- i7-20020a626d07000000b0040a33cdd3eamr438500pfc.61.1631324257322; Fri, 10 Sep
- 2021 18:37:37 -0700 (PDT)
+        id S231749AbhIKRQ2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 11 Sep 2021 13:16:28 -0400
+Received: from mga01.intel.com ([192.55.52.88]:61583 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230018AbhIKRQ2 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Sat, 11 Sep 2021 13:16:28 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10104"; a="243647919"
+X-IronPort-AV: E=Sophos;i="5.85,285,1624345200"; 
+   d="scan'208";a="243647919"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2021 10:15:12 -0700
+X-IronPort-AV: E=Sophos;i="5.85,285,1624345200"; 
+   d="scan'208";a="468151218"
+Received: from vksouw-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.129.104])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2021 10:15:11 -0700
+Date:   Sat, 11 Sep 2021 10:15:08 -0700
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-cxl@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>
+Subject: Re: [PATCH v4 21/21] cxl/core: Split decoder setup into alloc + add
+Message-ID: <20210911171500.zok2rsaaxhcaqu62@intel.com>
+References: <163116429183.2460985.5040982981112374615.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <163116440612.2460985.14600637290781306289.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20210910113348.00007360@Huawei.com>
+ <CAPcyv4jFYw6O2OrrDHb5qSCrNQ3jDH7Jmn4cCBCYsC9bW2yCQQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20210902195017.2516472-1-ben.widawsky@intel.com>
- <20210902195017.2516472-13-ben.widawsky@intel.com> <20210903184347.00002b32@Huawei.com>
-In-Reply-To: <20210903184347.00002b32@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 10 Sep 2021 18:37:26 -0700
-Message-ID: <CAPcyv4hOKqXoUBOSJ_-KDtJv4PKtcwKaDyMySFNfqe=1e4OtNw@mail.gmail.com>
-Subject: Re: [PATCH 12/13] cxl/core/bus: Enumerate all HDM decoders
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4jFYw6O2OrrDHb5qSCrNQ3jDH7Jmn4cCBCYsC9bW2yCQQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Sep 3, 2021 at 10:44 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Thu, 2 Sep 2021 12:50:16 -0700
-> Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> > As of the CXL 2.0 specification, every port will have between 1 and 10
-> > HDM decoders available in hardware. These exist in the endpoint, switch=
-,
-> > and top level hostbridges. HDM decoders are required for configuration
-> > CXL regions, and therefore enumerating them is an important first step.
+On 21-09-10 11:36:05, Dan Williams wrote:
+> On Fri, Sep 10, 2021 at 3:34 AM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
 > >
-> > As an example, the below has 4 decoders, a top level CFMWS decoder
-> > (0.0), a single decoder in a single host bridge (1.0), and two devices
-> > each with 1 decoder (2.0 and 3.0)
+> > On Wed, 8 Sep 2021 22:13:26 -0700
+> > Dan Williams <dan.j.williams@intel.com> wrote:
 > >
-> > =E2=94=9C=E2=94=80=E2=94=80 decoder0.0 -> ../../../devices/platform/ACP=
-I0017:00/root0/decoder0.0
-> > =E2=94=9C=E2=94=80=E2=94=80 decoder1.0 -> ../../../devices/platform/ACP=
-I0017:00/root0/port1/decoder1.0
-> > =E2=94=9C=E2=94=80=E2=94=80 decoder2.0 -> ../../../devices/platform/ACP=
-I0017:00/root0/port1/devport2/decoder2.0
-> > =E2=94=9C=E2=94=80=E2=94=80 decoder3.0 -> ../../../devices/platform/ACP=
-I0017:00/root0/port1/devport3/decoder3.0
+> > > The kbuild robot reports:
+> > >
+> > >     drivers/cxl/core/bus.c:516:1: warning: stack frame size (1032) exceeds
+> > >     limit (1024) in function 'devm_cxl_add_decoder'
+> > >
+> > > It is also the case the devm_cxl_add_decoder() is unwieldy to use for
+> > > all the different decoder types. Fix the stack usage by splitting the
+> > > creation into alloc and add steps. This also allows for context
+> > > specific construction before adding.
+> > >
+> > > With the split the caller is responsible for registering a devm callback
+> > > to trigger device_unregister() for the decoder rather than it being
+> > > implicit in the decoder registration. I.e. the routine that calls alloc
+> > > is responsible for calling put_device() if the "add" operation fails.
+> > >
+> > > Reported-by: kernel test robot <lkp@intel.com>
+> > > Reported-by: Nathan Chancellor <nathan@kernel.org>
+> > > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > >
-> > Additionally, attributes are added for a port:
+> > A few minor things inline. This one was definitely a case where diff
+> > wasn't being helpful in how it chose to format things!
 > >
-> > /sys/bus/cxl/devices/port1
-> > =E2=94=9C=E2=94=80=E2=94=80 active_decoders
-> > =E2=94=9C=E2=94=80=E2=94=80 decoder_count
-> > =E2=94=9C=E2=94=80=E2=94=80 decoder_enabled
-> > =E2=94=9C=E2=94=80=E2=94=80 max_target_count
-> > ...
+> > I haven't taken the time to figure out if the device_lock() changes
+> > make complete sense as I don't understand the intent.
+> > I think they should be called out in the patch description as they
+> > seem a little non obvious.
 > >
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
->
-> Documentation/ABI/testing/sysfs-bus-cxl  needs updating.
->
-> Various minor things inline.
->
->
-> > ---
-> >  drivers/cxl/core/bus.c | 161 ++++++++++++++++++++++++++++++++++++++++-
-> >  drivers/cxl/cxl.h      |  54 ++++++++++++--
-> >  2 files changed, 209 insertions(+), 6 deletions(-)
+> > Jonathan
 > >
-> > diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-> > index d056dbd794a4..b75e42965e89 100644
-> > --- a/drivers/cxl/core/bus.c
-> > +++ b/drivers/cxl/core/bus.c
-[..]
-> > +             ctrl =3D readl(hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET=
-(i));
-> > +             cxld->decoder_enabled =3D
-> > +                     !!FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl=
-);
-> > +             /* If the decoder is already active, parse info */
-> > +             if (cxld->decoder_enabled) {
-> > +                     set_bit(i, port->used_decoders);
-> > +                     iw =3D cxl_hdm_decoder_iw(ctrl);
-> > +                     ig =3D cxl_hdm_decoder_ig(ctrl);
-> > +                     if (FIELD_GET(CXL_HDM_DECODER0_CTRL_TYPE, ctrl) =
-=3D=3D 0)
-> > +                             type =3D CXL_DECODER_ACCELERATOR;
-> > +                     res.start =3D readl(hdm_decoder +
-> > +                                       CXL_HDM_DECODER0_BASE_LOW_OFFSE=
-T(i));
-> > +                     res.start |=3D
-> > +                             (u64)readl(hdm_decoder +
-> > +                                        CXL_HDM_DECODER0_BASE_HIGH_OFF=
-SET(i))
-> > +                             << 32;
->
-> Perhaps worth thinking about exposing if the decoder is locked as well?
-> Might be good to let userspace know that..
-
-In fact...
-
-What:           /sys/bus/cxl/devices/decoderX.Y/locked
-Date:           June, 2021
-KernelVersion:  v5.14
-Contact:        linux-cxl@vger.kernel.org
-Description:
-                CXL HDM decoders have the capability to lock the configurat=
-ion
-                until the next device reset. For decoders of devtype
-                "cxl_decoder_root" there is no standard facility to unlock =
-them.
-                For decoders of devtype "cxl_decoder_switch" a secondary bu=
-s
-                reset, of the PCIe bridge that provides the bus for this
-                decoders uport, unlocks / resets the decoder.
-
-
->
-> > +             }
-> > +
-> > +             cxld->target_type =3D type;
-> > +             cxld->res =3D res;
-> > +             cxld->interleave_ways =3D iw;
-> > +             cxld->interleave_granularity =3D ig;
-> > +
-> > +             rc =3D cxl_decoder_add(host, cxld, NULL);
-> > +             if (rc) {
-> > +                     dev_warn(host, "Failed to add decoder (%d)\n", rc=
-);
-> > +                     kfree(cxld);
-> > +                     goto out;
-> > +             }
-> > +     }
-> > +
-> > +     /*
-> > +      * Enable CXL.mem decoding via MMIO for endpoint devices
-> > +      *
-> > +      * TODO: If a memory device was configured to participate in a re=
-gion by
-> > +      * system firmware via DVSEC, this will break that region.
-
-Spec reference please (8.2.5.12.2 CXL HDM Decoder Global Control
-Register) . Also the spec calls this "HDM Base registers in DVSEC ID
-0".
-
->
-> That seems to me like fatal for this patch set until fixed.
-> I'm not sure I understand why it will break a region though as I'd assume=
- it
-> would be already on?
-
-The spec recommends that implementations set the HDM Base registers to
-match the CXL HDM Decoder 0 value. The expectation is that platform
-firmware is locking any HDM decoders for anything that it puts into
-the platform firmware memory map. So I think a reasonable heuristic
-here is decline to touch / support any device with HDM Base registers
-pointing at a live entry in the system memory map as an indication
-that the platform firmware is not prepared to interoperate with a CXL
-2.0+ aware OS. CXL 2.0+ capable platform firmware should always use
-HDM Decoders.
-
-[..]
-> >  /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
-> >  #define CXLDEV_CAP_ARRAY_OFFSET 0x0
-> >  #define   CXLDEV_CAP_ARRAY_CAP_ID 0
-> > @@ -188,6 +210,12 @@ enum cxl_decoder_type {
-> >   */
-> >  #define CXL_DECODER_MAX_INTERLEAVE 16
+> > > ---
+> > >  drivers/cxl/acpi.c      |   84 +++++++++++++++++++++++++----------
+> > >  drivers/cxl/core/bus.c  |  114 ++++++++++++++---------------------------------
+> > >  drivers/cxl/core/core.h |    5 --
+> > >  drivers/cxl/core/pmem.c |    7 ++-
+> > >  drivers/cxl/cxl.h       |   16 +++----
+> > >  5 files changed, 106 insertions(+), 120 deletions(-)
+> > >
+> > > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > > index 9d881eacdae5..654a80547526 100644
+> > > --- a/drivers/cxl/acpi.c
+> > > +++ b/drivers/cxl/acpi.c
+> > > @@ -82,7 +82,6 @@ static void cxl_add_cfmws_decoders(struct device *dev,
+> > >       struct cxl_decoder *cxld;
+> > >       acpi_size len, cur = 0;
+> > >       void *cedt_subtable;
+> > > -     unsigned long flags;
+> > >       int rc;
+> > >
+> > >       len = acpi_cedt->length - sizeof(*acpi_cedt);
+> > > @@ -119,24 +118,36 @@ static void cxl_add_cfmws_decoders(struct device *dev,
+> > >               for (i = 0; i < CFMWS_INTERLEAVE_WAYS(cfmws); i++)
+> > >                       target_map[i] = cfmws->interleave_targets[i];
+> > >
+> > > -             flags = cfmws_to_decoder_flags(cfmws->restrictions);
+> > > -             cxld = devm_cxl_add_decoder(dev, root_port,
+> > > -                                         CFMWS_INTERLEAVE_WAYS(cfmws),
+> > > -                                         cfmws->base_hpa, cfmws->window_size,
+> > > -                                         CFMWS_INTERLEAVE_WAYS(cfmws),
+> > > -                                         CFMWS_INTERLEAVE_GRANULARITY(cfmws),
+> > > -                                         CXL_DECODER_EXPANDER,
+> > > -                                         flags, target_map);
+> > > -
+> > > -             if (IS_ERR(cxld)) {
+> > > +             cxld = cxl_decoder_alloc(root_port,
+> > > +                                      CFMWS_INTERLEAVE_WAYS(cfmws));
+> > > +             if (IS_ERR(cxld))
+> > > +                     goto next;
+> > > +
+> > > +             cxld->flags = cfmws_to_decoder_flags(cfmws->restrictions);
+> > > +             cxld->target_type = CXL_DECODER_EXPANDER;
+> > > +             cxld->range = (struct range) {
+> > > +                     .start = cfmws->base_hpa,
+> > > +                     .end = cfmws->base_hpa + cfmws->window_size - 1,
+> > > +             };
+> > > +             cxld->interleave_ways = CFMWS_INTERLEAVE_WAYS(cfmws);
+> > > +             cxld->interleave_granularity =
+> > > +                     CFMWS_INTERLEAVE_GRANULARITY(cfmws);
+> > > +
+> > > +             rc = cxl_decoder_add(dev, cxld, target_map);
+> > > +             if (rc)
+> > > +                     put_device(&cxld->dev);
+> > > +             else
+> > > +                     rc = cxl_decoder_autoremove(dev, cxld);
+> > > +             if (rc) {
+> > >                       dev_err(dev, "Failed to add decoder for %#llx-%#llx\n",
+> > >                               cfmws->base_hpa, cfmws->base_hpa +
+> > >                               cfmws->window_size - 1);
+> > > -             } else {
+> > > -                     dev_dbg(dev, "add: %s range %#llx-%#llx\n",
+> > > -                             dev_name(&cxld->dev), cfmws->base_hpa,
+> > > -                              cfmws->base_hpa + cfmws->window_size - 1);
+> > > +                     goto next;
+> > >               }
+> > > +             dev_dbg(dev, "add: %s range %#llx-%#llx\n",
+> > > +                     dev_name(&cxld->dev), cfmws->base_hpa,
+> > > +                     cfmws->base_hpa + cfmws->window_size - 1);
+> > > +next:
+> > >               cur += c->length;
+> > >       }
+> > >  }
+> > > @@ -268,6 +279,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+> > >       struct acpi_device *bridge = to_cxl_host_bridge(host, match);
+> > >       struct acpi_pci_root *pci_root;
+> > >       struct cxl_walk_context ctx;
+> > > +     int single_port_map[1], rc;
+> > >       struct cxl_decoder *cxld;
+> > >       struct cxl_dport *dport;
+> > >       struct cxl_port *port;
+> > > @@ -303,22 +315,46 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+> > >               return -ENODEV;
+> > >       if (ctx.error)
+> > >               return ctx.error;
+> > > +     if (ctx.count > 1)
+> > > +             return 0;
+> > >
+> > >       /* TODO: Scan CHBCR for HDM Decoder resources */
+> > >
+> > >       /*
+> > > -      * In the single-port host-bridge case there are no HDM decoders
+> > > -      * in the CHBCR and a 1:1 passthrough decode is implied.
+> > > +      * Per the CXL specification (8.2.5.12 CXL HDM Decoder Capability
+> > > +      * Structure) single ported host-bridges need not publish a decoder
+> > > +      * capability when a passthrough decode can be assumed, i.e. all
+> > > +      * transactions that the uport sees are claimed and passed to the single
+> > > +      * dport. Default the range a 0-base 0-length until the first CXL region
+> > > +      * is activated.
+> > >        */
+> > > -     if (ctx.count == 1) {
+> > > -             cxld = devm_cxl_add_passthrough_decoder(host, port);
+> > > -             if (IS_ERR(cxld))
+> > > -                     return PTR_ERR(cxld);
+> > > +     cxld = cxl_decoder_alloc(port, 1);
+> > > +     if (IS_ERR(cxld))
+> > > +             return PTR_ERR(cxld);
+> > > +
+> > > +     cxld->interleave_ways = 1;
+> > > +     cxld->interleave_granularity = PAGE_SIZE;
+> > > +     cxld->target_type = CXL_DECODER_EXPANDER;
+> > > +     cxld->range = (struct range) {
+> > > +             .start = 0,
+> > > +             .end = -1,
+> > > +     };
+> > >
+> > > -             dev_dbg(host, "add: %s\n", dev_name(&cxld->dev));
+> > > -     }
 > >
-> > +/*
-> > + * Current specification goes up to 10 double that seems a reasonable
-> > + * software max for the foreseeable future
->
-> I'd stick to 10 until we have evidence otherwise... If you happen to
-> have a mysterious strong reason to go with 20 though I'm not that fussed
-> but I suspect others may have equally strong reasons to pick another numb=
-er ;)
-
-That's a good point. This is different from max interleave. More
-decoders significantly increases the operational complexity of
-managing the configuration. If someone thinks they need more than 10,
-I would beg to differ, and it helps that Linux pushes back against
-that decoder creep by default until someone can come up with an
-exceedingly good reason.
-
->
-> > + */
-> > +#define CXL_DECODER_MAX_COUNT 20
-> > +
-> >  /**
-> >   * struct cxl_decoder - CXL address range decode configuration
-> >   * @dev: this decoder's device
-> > @@ -197,6 +225,7 @@ enum cxl_decoder_type {
-> >   * @interleave_granularity: data stride per dport
->
-> Is it currently documented anywhere that ig is in 2**(ig) bytes?
-> Might be worth adding if not.
-
-This structure field would carry the nominal value, not the encoded one, ri=
-ght?
-
->
-> >   * @target_type: accelerator vs expander (type2 vs type3) selector
-> >   * @flags: memory type capabilities and locking
-> > + * @decoder_enabled: Is this decoder currently decoding
-> >   * @nr_targets: number of elements in @target
-> >   * @target: active ordered target list in current decoder configuratio=
-n
-> >   */
-> > @@ -208,6 +237,7 @@ struct cxl_decoder {
-> >       int interleave_granularity;
-> >       enum cxl_decoder_type target_type;
-> >       unsigned long flags;
-> > +     bool decoder_enabled;
-> >       int nr_targets;
-> >       struct cxl_dport *target[];
-> >  };
-> > @@ -255,6 +285,12 @@ struct cxl_walk_context {
-> >   * @decoder_ida: allocator for decoder ids
-> >   * @component_reg_phys: component register capability base address (op=
-tional)
-> >   * @regs: Mapped version of @component_reg_phys
-> > + * @used_decoders: Bitmap of currently active decoders for the port
-> > + * @decoder_cap: Capabilities of all decoders contained by the port
-> > + * @decoder_cap.count: Count of HDM decoders for the port
-> > + * @decoder_cap.target_count: Max number of interleaved downstream por=
-ts
-> > + * @decoder_cap.interleave11_8: Are address bits 11-8 available for in=
-terleave
-> > + * @decoder_cap.interleave14_12: Are address bits 14-12 available for =
-interleave
-> >   */
-> >  struct cxl_port {
-> >       struct device dev;
-> > @@ -264,6 +300,14 @@ struct cxl_port {
-> >       struct ida decoder_ida;
-> >       resource_size_t component_reg_phys;
-> >       struct cxl_component_regs regs;
-> > +
-> > +     unsigned long *used_decoders;
->
-> Given it's not huge use appropriate macro to allocate
-> it directly here with the maximum of 10.
-> DECLARE_BITMAP() in similar fashion to patch 19 in Dan's
-> recent series.
->
-> https://lore.kernel.org/all/162982122744.1124374.6742215706893563515.stgi=
-t@dwillia2-desk3.amr.corp.intel.com/
->
-> (I'm liking lore having "all" now !)
-
-Mmmm.
-
->
-> > +     struct {
-> > +             int count;
-> > +             int target_count;
-> > +             bool interleave11_8;
-> > +             bool interleave14_12;
-> > +     } decoder_cap;
-> >  };
+> > This was previously done without taking the device lock... (see below)
 > >
-> >  /**
->
+> > > +     device_lock(&port->dev);
+> > > +     dport = list_first_entry(&port->dports, typeof(*dport), list);
+> > > +     device_unlock(&port->dev);
+> > >
+> > > -     return 0;
+> > > +     single_port_map[0] = dport->port_id;
+> > > +
+> > > +     rc = cxl_decoder_add(host, cxld, single_port_map);
+> > > +     if (rc)
+> > > +             put_device(&cxld->dev);
+> > > +     else
+> > > +             rc = cxl_decoder_autoremove(host, cxld);
+> > > +
+> > > +     if (rc == 0)
+> > > +             dev_dbg(host, "add: %s\n", dev_name(&cxld->dev));
+> > > +     return rc;
+> > >  }
+> > >
+> > >  static int add_host_bridge_dport(struct device *match, void *arg)
+> > > diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
+> > > index 176bede30c55..be787685b13e 100644
+> > > --- a/drivers/cxl/core/bus.c
+> > > +++ b/drivers/cxl/core/bus.c
+> > > @@ -455,16 +455,18 @@ EXPORT_SYMBOL_GPL(cxl_add_dport);
+> > >
+> > >  static int decoder_populate_targets(struct device *host,
+> > >                                   struct cxl_decoder *cxld,
+> > > -                                 struct cxl_port *port, int *target_map,
+> > > -                                 int nr_targets)
+> > > +                                 struct cxl_port *port, int *target_map)
+> > >  {
+> > >       int rc = 0, i;
+> > >
+> > > +     if (list_empty(&port->dports))
+> > > +             return -EINVAL;
+> > > +
+> >
+> > The code before this patch did this under the device_lock() Perhaps call
+> > out the fact there is no need to do that if we don't need to?
+> 
+> Nope, bug, good catch.
+> 
+
+While you're changing this might I request you make this change so I can drop my
+patch:
+
+commit fe46c7a3e30129c649e17a4c555699e816cf04e7
+Author: Ben Widawsky <ben.widawsky@intel.com>
+Date:   16 hours ago
+
+    core/bus: Don't error for targetless decoders
+
+    Decoders may not have any targets, endpoints are the best example of
+    this. In order to prevent having to special case, it's easiest to just
+    not return an error when no target map is specified as those endpoints
+    also won't have dports.
+
+    Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+
+diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
+index c13b6c4d4135..b98b3e343a3d 100644
+--- a/drivers/cxl/core/bus.c
++++ b/drivers/cxl/core/bus.c
+@@ -547,12 +547,12 @@ static int decoder_populate_targets(struct device *host,
+ {
+        int rc = 0, i;
+
+-       if (list_empty(&port->dports))
+-               return -EINVAL;
+-
+        if (!target_map)
+                return 0;
+
++       if (list_empty(&port->dports))
++               return -EINVAL;
++
+        device_lock(&port->dev);
+        for (i = 0; i < cxld->nr_targets; i++) {
+                struct cxl_dport *dport = find_dport(port, target_map[i]);
+
+> >
+> > >       if (!target_map)
+> > >               return 0;
+> > >
+> > >       device_lock(&port->dev);
+> > > -     for (i = 0; i < nr_targets; i++) {
+> > > +     for (i = 0; i < cxld->nr_targets; i++) {
+> > >               struct cxl_dport *dport = find_dport(port, target_map[i]);
+> > >
+> > >               if (!dport) {
+> > > @@ -479,27 +481,15 @@ static int decoder_populate_targets(struct device *host,
+> > >       return rc;
+> > >  }
+> > >
+> > > -static struct cxl_decoder *
+> > > -cxl_decoder_alloc(struct device *host, struct cxl_port *port, int nr_targets,
+> > > -               resource_size_t base, resource_size_t len,
+> > > -               int interleave_ways, int interleave_granularity,
+> > > -               enum cxl_decoder_type type, unsigned long flags,
+> > > -               int *target_map)
+> > > +struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
+> > >  {
+> > >       struct cxl_decoder *cxld;
+> > >       struct device *dev;
+> > >       int rc = 0;
+> > >
+> > > -     if (interleave_ways < 1)
+> > > +     if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets < 1)
+> > >               return ERR_PTR(-EINVAL);
+> > >
+> > > -     device_lock(&port->dev);
+> > > -     if (list_empty(&port->dports))
+> > > -             rc = -EINVAL;
+> > > -     device_unlock(&port->dev);
+> > > -     if (rc)
+> > > -             return ERR_PTR(rc);
+> > > -
+> > >       cxld = kzalloc(struct_size(cxld, target, nr_targets), GFP_KERNEL);
+> > >       if (!cxld)
+> > >               return ERR_PTR(-ENOMEM);
+> > > @@ -508,22 +498,8 @@ cxl_decoder_alloc(struct device *host, struct cxl_port *port, int nr_targets,
+> > >       if (rc < 0)
+> > >               goto err;
+> > >
+> > > -     *cxld = (struct cxl_decoder) {
+> > > -             .id = rc,
+> > > -             .range = {
+> > > -                     .start = base,
+> > > -                     .end = base + len - 1,
+> > > -             },
+> > > -             .flags = flags,
+> > > -             .interleave_ways = interleave_ways,
+> > > -             .interleave_granularity = interleave_granularity,
+> > > -             .target_type = type,
+> > > -     };
+> > > -
+> > > -     rc = decoder_populate_targets(host, cxld, port, target_map, nr_targets);
+> > > -     if (rc)
+> > > -             goto err;
+> > > -
+> > > +     cxld->id = rc;
+> > > +     cxld->nr_targets = nr_targets;
+> > >       dev = &cxld->dev;
+> > >       device_initialize(dev);
+> > >       device_set_pm_not_required(dev);
+> > > @@ -541,72 +517,48 @@ cxl_decoder_alloc(struct device *host, struct cxl_port *port, int nr_targets,
+> > >       kfree(cxld);
+> > >       return ERR_PTR(rc);
+> > >  }
+> > > +EXPORT_SYMBOL_GPL(cxl_decoder_alloc);
+> > >
+> > > -struct cxl_decoder *
+> > > -devm_cxl_add_decoder(struct device *host, struct cxl_port *port, int nr_targets,
+> > > -                  resource_size_t base, resource_size_t len,
+> > > -                  int interleave_ways, int interleave_granularity,
+> > > -                  enum cxl_decoder_type type, unsigned long flags,
+> > > -                  int *target_map)
+> > > +int cxl_decoder_add(struct device *host, struct cxl_decoder *cxld,
+> > > +                 int *target_map)
+> > >  {
+> > > -     struct cxl_decoder *cxld;
+> > > +     struct cxl_port *port;
+> > >       struct device *dev;
+> > >       int rc;
+> > >
+> > > -     if (nr_targets > CXL_DECODER_MAX_INTERLEAVE)
+> > > -             return ERR_PTR(-EINVAL);
+> > > +     if (!cxld)
+> > > +             return -EINVAL;
+> > >
+> > > -     cxld = cxl_decoder_alloc(host, port, nr_targets, base, len,
+> > > -                              interleave_ways, interleave_granularity, type,
+> > > -                              flags, target_map);
+> > >       if (IS_ERR(cxld))
+> > > -             return cxld;
+> > > +             return PTR_ERR(cxld);
+> >
+> > It feels like the checks here are overly paranoid.
+> > Obviously harmless, but if we get as far as cxl_decoder_add() with either
+> > cxld == NULL or IS_ERR() then something horrible is going on.
+> 
+> True in the current users...
+> 
+> >
+> > I think you could reasonably drop them both.
+> 
+> They could be dropped, but it actually already paid dividends in
+> indicating to static analysis checkers that the input could be NULL.
+> If these were internal static functions I would agree with dropping
+> the extra error checking, but since this is exported and the call
+> sites will grow I'm inclined to keep them.
