@@ -7,246 +7,169 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEDDC433F5
-	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 22:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C93AAC433EF
+	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 22:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF0260FC0
-	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 22:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9697610E6
+	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 22:19:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243170AbhIMWOH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 13 Sep 2021 18:14:07 -0400
-Received: from mga02.intel.com ([134.134.136.20]:48161 "EHLO mga02.intel.com"
+        id S232109AbhIMWVI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 13 Sep 2021 18:21:08 -0400
+Received: from mga12.intel.com ([192.55.52.136]:31637 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242987AbhIMWOG (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 13 Sep 2021 18:14:06 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10106"; a="209035089"
+        id S230042AbhIMWVI (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 13 Sep 2021 18:21:08 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10106"; a="201315531"
 X-IronPort-AV: E=Sophos;i="5.85,290,1624345200"; 
-   d="scan'208";a="209035089"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2021 15:12:50 -0700
+   d="scan'208";a="201315531"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2021 15:19:51 -0700
 X-IronPort-AV: E=Sophos;i="5.85,290,1624345200"; 
-   d="scan'208";a="433411085"
-Received: from lwilson9-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.130.153])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2021 15:12:49 -0700
-Date:   Mon, 13 Sep 2021 15:12:48 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 13/13] cxl/mem: Enumerate switch decoders
-Message-ID: <20210913221248.ghgkrkqhw4mujhpd@intel.com>
-References: <20210902195017.2516472-1-ben.widawsky@intel.com>
- <20210902195017.2516472-14-ben.widawsky@intel.com>
- <20210903185623.00007135@Huawei.com>
+   d="scan'208";a="609257045"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2021 15:19:50 -0700
+Subject: [PATCH v5 08/21] cxl/pci: Clean up cxl_mem_get_partition_info()
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+        nvdimm@lists.linux.dev
+Date:   Mon, 13 Sep 2021 15:19:49 -0700
+Message-ID: <163157154183.2652718.10987214856112022775.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <163116433533.2460985.14299233004385504131.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <163116433533.2460985.14299233004385504131.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210903185623.00007135@Huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21-09-03 18:56:23, Jonathan Cameron wrote:
-> On Thu, 2 Sep 2021 12:50:17 -0700
-> Ben Widawsky <ben.widawsky@intel.com> wrote:
-> 
-> > Switches work much in the same way as hostbridges. The primary
-> > difference is that they are enumerated, and probed via regular PCIe
-> > mechanisms. A switch has 1 upstream port, and n downstream ports.
-> > Ultimately a memory device attached to a switch can determine if it's in
-> > a CXL capable subset of the topology if the switch is CXL capable.
-> > 
-> > The algorithm introduced enables enumerating switches in a CXL topology.
-> > It walks up the topology until it finds a root port (which is enumerated
-> > by the cxl_acpi driver). Once at the top, it walks back down adding all
-> > downstream ports along the way.
-> > 
-> > Note that practically speaking there can be at most 3 levels of switches
-> > with the current 2.0 spec. This is because there is a max interleave of
-> > 8 defined in the spec. If there is a single hostbridge and only 1 root
-> > port was CXL capable, you could have 3 levels of x2 switches, making
-> > the x8 interleave. However, as far as the spec is concerned, there can
-> > be infinite number of switches since a x1 switch is allowed, and
-> > future versions of the spec may allow for a larger total interleave.
-> 
-> Or you could be lazy and rely on the statement in CXL 2.0 that it supports
-> only a single level of switching (search for "single level" in 1.4.1)
-> Lots of other reasons it's far from infinite... (number of busses etc).
-> 
-> I'll not speculate on what might be supported in the future.
+Commit 0b9159d0ff21 ("cxl/pci: Store memory capacity values") missed
+updating the kernel-doc for 'struct cxl_mem' leading to the following
+warnings:
 
-I like lazy, however, there is no statement in the spec that disallows multiple
-levels of switches.
+./scripts/kernel-doc -v drivers/cxl/cxlmem.h 2>&1 | grep warn
+drivers/cxl/cxlmem.h:107: warning: Function parameter or member 'total_bytes' not described in 'cxl_mem'
+drivers/cxl/cxlmem.h:107: warning: Function parameter or member 'volatile_only_bytes' not described in 'cxl_mem'
+drivers/cxl/cxlmem.h:107: warning: Function parameter or member 'persistent_only_bytes' not described in 'cxl_mem'
+drivers/cxl/cxlmem.h:107: warning: Function parameter or member 'partition_align_bytes' not described in 'cxl_mem'
+drivers/cxl/cxlmem.h:107: warning: Function parameter or member 'active_volatile_bytes' not described in 'cxl_mem'
+drivers/cxl/cxlmem.h:107: warning: Function parameter or member 'active_persistent_bytes' not described in 'cxl_mem'
+drivers/cxl/cxlmem.h:107: warning: Function parameter or member 'next_volatile_bytes' not described in 'cxl_mem'
+drivers/cxl/cxlmem.h:107: warning: Function parameter or member 'next_persistent_bytes' not described in 'cxl_mem'
 
-> 
-> A few minor comments below.
-> 
-> Jonathan
-> 
-> > 
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > ---
-> >  drivers/cxl/mem.c | 130 +++++++++++++++++++++++++++++++++++++++++++++-
-> >  drivers/cxl/pci.c |   8 ---
-> >  drivers/cxl/pci.h |   8 +++
-> >  3 files changed, 137 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > index aba9a07d519f..dc8ca43d5bfc 100644
-> > --- a/drivers/cxl/mem.c
-> > +++ b/drivers/cxl/mem.c
-> > @@ -56,6 +56,133 @@ static bool is_cxl_mem_enabled(struct pci_dev *pdev)
-> >  	return true;
-> >  }
-> >  
-> > +/* TODO: dedeuplicate this from drivers/cxl/pci.c? */
-> 
-> That seems like a question with an obvious answer...
-> 
-> > +static unsigned long get_component_regs(struct pci_dev *pdev)
-> > +{
-> > +	unsigned long component_reg_phys = CXL_RESOURCE_NONE;
-> > +	u32 regloc_size, regblocks;
-> > +	int regloc, i;
-> > +
-> > +	regloc = cxl_pci_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID);
-> > +	if (!regloc) {
-> > +		dev_err(&pdev->dev, "register location dvsec not found\n");
-> > +		return component_reg_phys;
-> > +	}
-> > +
-> > +	/* Get the size of the Register Locator DVSEC */
-> > +	pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
-> > +	regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
-> > +
-> > +	regloc += PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET;
-> > +	regblocks = (regloc_size - PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET) / 8;
-> > +
-> > +	for (i = 0; i < regblocks; i++, regloc += 8) {
-> > +		u32 reg_lo, reg_hi;
-> > +		u8 reg_type;
-> > +		u64 offset;
-> > +		u8 bar;
-> > +
-> > +		pci_read_config_dword(pdev, regloc, &reg_lo);
-> > +		pci_read_config_dword(pdev, regloc + 4, &reg_hi);
-> > +
-> > +		cxl_decode_register_block(reg_lo, reg_hi, &bar, &offset,
-> > +					  &reg_type);
-> > +
-> > +		if (reg_type != CXL_REGLOC_RBI_COMPONENT)
-> > +			continue;
-> > +
-> > +		component_reg_phys = pci_resource_start(pdev, bar) + offset;
-> > +	}
-> > +
-> > +	return component_reg_phys;
-> > +}
-> > +
-> > +static void enumerate_uport(struct device *dev)
-> > +{
-> > +	struct pci_dev *pdev = to_pci_dev(dev);
-> > +
-> > +	/*
-> > +	 * Parent's parent should be another uport, since we don't have root
-> > +	 * ports here
-> > +	 */
-> > +	if (dev_WARN_ONCE(dev, !dev->parent->parent, "No grandparent port\n"))
-> > +		return;
-> > +
-> > +	if (!is_cxl_port(dev->parent->parent)) {
-> > +		dev_info(dev, "Parent of uport isn't a CXL port (%s)\n",
-> > +			 dev_name(dev->parent->parent));
-> > +		return;
-> > +	}
-> > +
-> > +	devm_cxl_add_port(dev, dev, get_component_regs(pdev),
-> > +			  to_cxl_port(dev->parent));
-> > +}
-> > +
-> > +static void enumerate_dport(struct device *dev)
-> > +{
-> > +	struct pci_dev *pdev = to_pci_dev(dev);
-> > +	u32 port_num, lnkcap;
-> > +
-> > +	if (dev_WARN_ONCE(dev, !dev->parent, "No parent port\n"))
-> > +		return;
-> > +
-> > +	if (!is_cxl_port(dev->parent)) {
-> > +		dev_info(dev, "Uport isn't a CXL port %s\n",
-> > +			 dev_name(dev->parent));
-> > +		return;
-> > +	}
-> > +
-> > +	/* TODO: deduplicate from drivers/cxl/acpi.c? */
-> > +	if (pci_read_config_dword(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCAP,
-> > +				  &lnkcap) != PCIBIOS_SUCCESSFUL)
-> > +		return;
-> > +	port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
-> > +
-> > +	cxl_add_dport(to_cxl_port(dev->parent), dev, port_num,
-> > +		      get_component_regs(pdev));
-> > +}
-> > +
-> > +/*
-> > + * Walk up the topology until we get to the root port (ie. parent is a
-> > + * cxl port). From there walk back down adding the additional ports. If the
-> > + * parent isn't a PCIe switch (upstream or downstream port), the downstream
-> > + * endpoint(s) cannot be CXL enabled.
-> > + *
-> > + * XXX: It's possible that cxl_acpi hasn't yet enumerated the root ports, and
-> > + * so that will rescan the CXL bus, thus coming back here.
-> > + */
-> > +static void enumerate_switches(struct device *dev)
-> > +{
-> > +	struct pci_dev *pdev;
-> > +	int type;
-> > +
-> > +	if (unlikely(!dev))
-> 
-> Unlikely markings seems unlikely to be necessary. I'm assuming
-> this is far from a hot path!
-> 
-> > +		return;
-> > +
-> > +	if (unlikely(!dev_is_pci(dev)))
-> > +		return;
-> > +
-> > +	pdev = to_pci_dev(dev);
-> > +
-> > +	if (unlikely(!pci_is_pcie(pdev)))
-> > +		return;
-> > +
-> > +	if (!is_cxl_mem_enabled(pdev))
-> > +		return;
-> > +
-> > +	type = pci_pcie_type(pdev);
-> > +
-> > +	if (type != PCI_EXP_TYPE_UPSTREAM && type != PCI_EXP_TYPE_DOWNSTREAM)
-> > +		return;
-> > +
-> > +	enumerate_switches(dev->parent);
-> > +
-> > +	if (type == PCI_EXP_TYPE_UPSTREAM)
-> > +		enumerate_uport(dev);
-> > +	if (type == PCI_EXP_TYPE_DOWNSTREAM)
-> > +		enumerate_dport(dev);
-> > +}
-> > +
-> >  static int cxl_mem_probe(struct device *dev)
-> >  {
-> >  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> > @@ -68,7 +195,8 @@ static int cxl_mem_probe(struct device *dev)
-> >  	if (!is_cxl_mem_enabled(pdev))
-> >  		return -ENODEV;
-> >  
-> > -	/* TODO: if parent is a switch, this will fail. */
-> > +	enumerate_switches(dev->parent);
-> > +
-> >  	port_dev = bus_find_device(&cxl_bus_type, NULL, pdev_parent, port_match);
-> >  	if (!port_dev)
-> >  		return -ENODEV;
-> 
+Also, it is redundant to describe those same parameters in the
+kernel-doc for cxl_mem_get_partition_info(). Given the only user of that
+routine updates the values in @cxlm, just do that implicitly internal to
+the helper.
+
+Cc: Ira Weiny <ira.weiny@intel.com>
+Reported-by: Ben Widawsky <ben.widawsky@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huwei.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+Changes since v4:
+- Update the kdoc for @partition_align_bytes (Ben)
+- Collect Jonathan's reviewed-by pending above update.
+
+ drivers/cxl/cxlmem.h |   15 +++++++++++++--
+ drivers/cxl/pci.c    |   35 +++++++++++------------------------
+ 2 files changed, 24 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index d5334df83fb2..c6fce966084a 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -78,8 +78,19 @@ devm_cxl_add_memdev(struct cxl_mem *cxlm,
+  * @mbox_mutex: Mutex to synchronize mailbox access.
+  * @firmware_version: Firmware version for the memory device.
+  * @enabled_cmds: Hardware commands found enabled in CEL.
+- * @pmem_range: Persistent memory capacity information.
+- * @ram_range: Volatile memory capacity information.
++ * @pmem_range: Active Persistent memory capacity configuration
++ * @ram_range: Active Volatile memory capacity configuration
++ * @total_bytes: sum of all possible capacities
++ * @volatile_only_bytes: hard volatile capacity
++ * @persistent_only_bytes: hard persistent capacity
++ * @partition_align_bytes: soft setting for configurable capacity
++ * @active_volatile_bytes: sum of hard + soft volatile
++ * @active_persistent_bytes: sum of hard + soft persistent
++ * @next_volatile_bytes: volatile capacity change pending device reset
++ * @next_persistent_bytes: persistent capacity change pending device reset
++ *
++ * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
++ * details on capacity parameters.
+  */
+ struct cxl_mem {
+ 	struct device *dev;
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index c1e1d12e24b6..8077d907e7d3 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -1262,11 +1262,7 @@ static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_mem *cxlm)
+ 
+ /**
+  * cxl_mem_get_partition_info - Get partition info
+- * @cxlm: The device to act on
+- * @active_volatile_bytes: returned active volatile capacity
+- * @active_persistent_bytes: returned active persistent capacity
+- * @next_volatile_bytes: return next volatile capacity
+- * @next_persistent_bytes: return next persistent capacity
++ * @cxlm: cxl_mem instance to update partition info
+  *
+  * Retrieve the current partition info for the device specified.  If not 0, the
+  * 'next' values are pending and take affect on next cold reset.
+@@ -1275,11 +1271,7 @@ static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_mem *cxlm)
+  *
+  * See CXL @8.2.9.5.2.1 Get Partition Info
+  */
+-static int cxl_mem_get_partition_info(struct cxl_mem *cxlm,
+-				      u64 *active_volatile_bytes,
+-				      u64 *active_persistent_bytes,
+-				      u64 *next_volatile_bytes,
+-				      u64 *next_persistent_bytes)
++static int cxl_mem_get_partition_info(struct cxl_mem *cxlm)
+ {
+ 	struct cxl_mbox_get_partition_info {
+ 		__le64 active_volatile_cap;
+@@ -1294,15 +1286,14 @@ static int cxl_mem_get_partition_info(struct cxl_mem *cxlm,
+ 	if (rc)
+ 		return rc;
+ 
+-	*active_volatile_bytes = le64_to_cpu(pi.active_volatile_cap);
+-	*active_persistent_bytes = le64_to_cpu(pi.active_persistent_cap);
+-	*next_volatile_bytes = le64_to_cpu(pi.next_volatile_cap);
+-	*next_persistent_bytes = le64_to_cpu(pi.next_volatile_cap);
+-
+-	*active_volatile_bytes *= CXL_CAPACITY_MULTIPLIER;
+-	*active_persistent_bytes *= CXL_CAPACITY_MULTIPLIER;
+-	*next_volatile_bytes *= CXL_CAPACITY_MULTIPLIER;
+-	*next_persistent_bytes *= CXL_CAPACITY_MULTIPLIER;
++	cxlm->active_volatile_bytes =
++		le64_to_cpu(pi.active_volatile_cap) * CXL_CAPACITY_MULTIPLIER;
++	cxlm->active_persistent_bytes =
++		le64_to_cpu(pi.active_persistent_cap) * CXL_CAPACITY_MULTIPLIER;
++	cxlm->next_volatile_bytes =
++		le64_to_cpu(pi.next_volatile_cap) * CXL_CAPACITY_MULTIPLIER;
++	cxlm->next_persistent_bytes =
++		le64_to_cpu(pi.next_volatile_cap) * CXL_CAPACITY_MULTIPLIER;
+ 
+ 	return 0;
+ }
+@@ -1443,11 +1434,7 @@ static int cxl_mem_create_range_info(struct cxl_mem *cxlm)
+ 		return 0;
+ 	}
+ 
+-	rc = cxl_mem_get_partition_info(cxlm,
+-					&cxlm->active_volatile_bytes,
+-					&cxlm->active_persistent_bytes,
+-					&cxlm->next_volatile_bytes,
+-					&cxlm->next_persistent_bytes);
++	rc = cxl_mem_get_partition_info(cxlm);
+ 	if (rc < 0) {
+ 		dev_err(cxlm->dev, "Failed to query partition information\n");
+ 		return rc;
+
