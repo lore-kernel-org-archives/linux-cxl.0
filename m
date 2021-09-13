@@ -2,244 +2,153 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F0DC433FE
-	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 22:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 849A0C28B5B
+	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 23:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85805610FB
-	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 22:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7020A60FDA
+	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 23:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245114AbhIMWfE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 13 Sep 2021 18:35:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50154 "EHLO mail.kernel.org"
+        id S241821AbhIMXVA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 13 Sep 2021 19:21:00 -0400
+Received: from mga17.intel.com ([192.55.52.151]:16266 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S245581AbhIMWfC (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 13 Sep 2021 18:35:02 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1F619610FB;
-        Mon, 13 Sep 2021 22:33:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631572426;
-        bh=Vbu8GoHws7kTSdOjXcFaQxIFUun8efnlHvM7tlmrpf4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rTCTgXeeBM2+kdnSq1STGCHrEC1KGoViqQ/3Gy96KD/g0hyRLp+KvHfYGm397Ka/H
-         VEN9OyWXqi0NHxEGUdRfgdKtQdW3Q+kRhQuu/I4udckLN2by82+dCFinPPfD9uA3Rw
-         lFWtIONMRuqez4EVDjyljhiMBEeOjz9GZ4vz0Rr/jOicMaIQhI90MC0+YRvbX2eHkS
-         sLjMIGO24Tp34v955rseoAu+yPzjBpFMsZv2Cnc0kE1nztzOwfQ2xUEpSx+E6NlUKE
-         laVGYXpK9JSMv01Nm7IHtt2npB6TH5tRfaea65mbixit/MNUS/eTqRwRuRKeI5CjxN
-         btU4mgPAmHbYQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
+        id S245301AbhIMXUl (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 13 Sep 2021 19:20:41 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10106"; a="201992179"
+X-IronPort-AV: E=Sophos;i="5.85,291,1624345200"; 
+   d="scan'208";a="201992179"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2021 16:19:23 -0700
+X-IronPort-AV: E=Sophos;i="5.85,291,1624345200"; 
+   d="scan'208";a="582590158"
+Received: from lwilson9-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.130.153])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2021 16:19:22 -0700
+Date:   Mon, 13 Sep 2021 16:19:21 -0700
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cxl@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.14 04/25] cxl/pci: Introduce cdevm_file_operations
-Date:   Mon, 13 Sep 2021 18:33:18 -0400
-Message-Id: <20210913223339.435347-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210913223339.435347-1-sashal@kernel.org>
-References: <20210913223339.435347-1-sashal@kernel.org>
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: Re: [PATCH 04/13] cxl: Introduce endpoint decoders
+Message-ID: <20210913231921.w2rujefmewgraopi@intel.com>
+References: <20210902195017.2516472-1-ben.widawsky@intel.com>
+ <20210902195017.2516472-5-ben.widawsky@intel.com>
+ <CAPcyv4gbVtZywtzYVFS_KAQ_aHGHDQtke=eeVSv3pdz=CfVOhA@mail.gmail.com>
+ <20210913161149.ggbd5jmro2davaq5@intel.com>
+ <CAPcyv4jpp5cfQnNVa34gY7tOtM4ZNBvzYDOqoBPEmv1-_qk=bQ@mail.gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4jpp5cfQnNVa34gY7tOtM4ZNBvzYDOqoBPEmv1-_qk=bQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
+On 21-09-13 15:07:44, Dan Williams wrote:
+> On Mon, Sep 13, 2021 at 9:11 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> >
+> > On 21-09-10 12:19:24, Dan Williams wrote:
+> > > On Thu, Sep 2, 2021 at 12:50 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > > >
+> > > > Endpoints have decoders too. It is useful to share the same
+> > > > infrastructure from cxl_core. Endpoints do not have dports (downstream
+> > > > targets), only the underlying physical medium. As a result, some special
+> > > > casing is needed.
+> > > >
+> > > > There is no functional change introduced yet as endpoints don't actually
+> > > > enumerate decoders yet.
+> > > >
+> > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > > > ---
+> > > >  drivers/cxl/core/bus.c | 29 +++++++++++++++++++++++++----
+> > > >  1 file changed, 25 insertions(+), 4 deletions(-)
+> > > >
+> > > > diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
+> > > > index 8d5061b0794d..6202ce5a5ac2 100644
+> > > > --- a/drivers/cxl/core/bus.c
+> > > > +++ b/drivers/cxl/core/bus.c
+> > > > @@ -175,6 +175,12 @@ static const struct attribute_group *cxl_decoder_switch_attribute_groups[] = {
+> > > >         NULL,
+> > > >  };
+> > > >
+> > > > +static const struct attribute_group *cxl_decoder_endpoint_attribute_groups[] = {
+> > > > +       &cxl_decoder_base_attribute_group,
+> > > > +       &cxl_base_attribute_group,
+> > > > +       NULL,
+> > > > +};
+> > > > +
+> > > >  static void cxl_decoder_release(struct device *dev)
+> > > >  {
+> > > >         struct cxl_decoder *cxld = to_cxl_decoder(dev);
+> > > > @@ -184,6 +190,12 @@ static void cxl_decoder_release(struct device *dev)
+> > > >         kfree(cxld);
+> > > >  }
+> > > >
+> > > > +static const struct device_type cxl_decoder_endpoint_type = {
+> > > > +       .name = "cxl_decoder_endpoint",
+> > > > +       .release = cxl_decoder_release,
+> > > > +       .groups = cxl_decoder_endpoint_attribute_groups,
+> > > > +};
+> > > > +
+> > > >  static const struct device_type cxl_decoder_switch_type = {
+> > > >         .name = "cxl_decoder_switch",
+> > > >         .release = cxl_decoder_release,
+> > > > @@ -196,6 +208,11 @@ static const struct device_type cxl_decoder_root_type = {
+> > > >         .groups = cxl_decoder_root_attribute_groups,
+> > > >  };
+> > > >
+> > > > +static bool is_endpoint_decoder(struct device *dev)
+> > > > +{
+> > > > +       return dev->type == &cxl_decoder_endpoint_type;
+> > > > +}
+> > > > +
+> > > >  bool is_root_decoder(struct device *dev)
+> > > >  {
+> > > >         return dev->type == &cxl_decoder_root_type;
+> > > > @@ -472,7 +489,7 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
+> > > >         struct device *dev;
+> > > >         int rc = 0;
+> > > >
+> > > > -       if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets < 1)
+> > > > +       if (nr_targets > CXL_DECODER_MAX_INTERLEAVE)
+> > > >                 return ERR_PTR(-EINVAL);
+> > > >
+> > > >         cxld = kzalloc(struct_size(cxld, target, nr_targets), GFP_KERNEL);
+> > > > @@ -491,8 +508,11 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
+> > > >         dev->parent = &port->dev;
+> > > >         dev->bus = &cxl_bus_type;
+> > > >
+> > > > +       /* Endpoints don't have a target list */
+> > > > +       if (nr_targets == 0)
+> > > > +               dev->type = &cxl_decoder_endpoint_type;
+> > >
+> > > Do you also plan to introduce the concept of endpoint ports, and if
+> > > yes should that come before this patch? That would seem to be more
+> > > robust than, for example, allowing a switch port to carry an endpoint
+> > > decoder object as this allows.
+> >
+> > I didn't see a need as of yet to differentiate between endpoint ports and other
+> > ports. I don't entirely understand what you mean by "allowing a switch port to
+> > carry an endpoint decoder" means. Can you please elaborate?
+> 
+> If endpoint ports were an explicit type then this check could make
+> sure that someone did not pass nr_targets set to 0 where the @port
+> argument is referring to a switch where the target_list must be
+> specified.
+> 
+> Either that, or a comment in kernel-doc for this routine about the
+> special meaning of nr_targets == 0 and expected usage.
 
-[ Upstream commit 9cc238c7a526dba9ee8c210fa2828886fc65db66 ]
-
-In preparation for moving cxl_memdev allocation to the core, introduce
-cdevm_file_operations to coordinate file operations shutdown relative to
-driver data release.
-
-The motivation for moving cxl_memdev allocation to the core (beyond
-better file organization of sysfs attributes in core/ and drivers in
-cxl/), is that device lifetime is longer than module lifetime. The cxl_pci
-module should be free to come and go without needing to coordinate with
-devices that need the text associated with cxl_memdev_release() to stay
-resident. The move will fix a use after free bug when looping driver
-load / unload with CONFIG_DEBUG_KOBJECT_RELEASE=y.
-
-Another motivation for passing in file_operations to the core cxl_memdev
-creation flow is to allow for alternate drivers, like unit test code, to
-define their own ioctl backends.
-
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Link: https://lore.kernel.org/r/162792539962.368511.2962268954245340288.stgit@dwillia2-desk3.amr.corp.intel.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/cxl/cxlmem.h | 15 ++++++++++
- drivers/cxl/pci.c    | 65 ++++++++++++++++++++++++++------------------
- 2 files changed, 53 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 8f02d02b26b4..0cd463de1342 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -34,6 +34,21 @@
-  */
- #define CXL_MEM_MAX_DEVS 65536
- 
-+/**
-+ * struct cdevm_file_operations - devm coordinated cdev file operations
-+ * @fops: file operations that are synchronized against @shutdown
-+ * @shutdown: disconnect driver data
-+ *
-+ * @shutdown is invoked in the devres release path to disconnect any
-+ * driver instance data from @dev. It assumes synchronization with any
-+ * fops operation that requires driver data. After @shutdown an
-+ * operation may only reference @device data.
-+ */
-+struct cdevm_file_operations {
-+	struct file_operations fops;
-+	void (*shutdown)(struct device *dev);
-+};
-+
- /**
-  * struct cxl_memdev - CXL bus object representing a Type-3 Memory Device
-  * @dev: driver core device object
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index a945c5fda292..f7a5ad5e1f4a 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -806,13 +806,30 @@ static int cxl_memdev_release_file(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
--static const struct file_operations cxl_memdev_fops = {
--	.owner = THIS_MODULE,
--	.unlocked_ioctl = cxl_memdev_ioctl,
--	.open = cxl_memdev_open,
--	.release = cxl_memdev_release_file,
--	.compat_ioctl = compat_ptr_ioctl,
--	.llseek = noop_llseek,
-+static struct cxl_memdev *to_cxl_memdev(struct device *dev)
-+{
-+	return container_of(dev, struct cxl_memdev, dev);
-+}
-+
-+static void cxl_memdev_shutdown(struct device *dev)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+
-+	down_write(&cxl_memdev_rwsem);
-+	cxlmd->cxlm = NULL;
-+	up_write(&cxl_memdev_rwsem);
-+}
-+
-+static const struct cdevm_file_operations cxl_memdev_fops = {
-+	.fops = {
-+		.owner = THIS_MODULE,
-+		.unlocked_ioctl = cxl_memdev_ioctl,
-+		.open = cxl_memdev_open,
-+		.release = cxl_memdev_release_file,
-+		.compat_ioctl = compat_ptr_ioctl,
-+		.llseek = noop_llseek,
-+	},
-+	.shutdown = cxl_memdev_shutdown,
- };
- 
- static inline struct cxl_mem_command *cxl_mem_find_command(u16 opcode)
-@@ -1161,11 +1178,6 @@ static int cxl_mem_setup_regs(struct cxl_mem *cxlm)
- 	return ret;
- }
- 
--static struct cxl_memdev *to_cxl_memdev(struct device *dev)
--{
--	return container_of(dev, struct cxl_memdev, dev);
--}
--
- static void cxl_memdev_release(struct device *dev)
- {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-@@ -1281,24 +1293,22 @@ static const struct device_type cxl_memdev_type = {
- 	.groups = cxl_memdev_attribute_groups,
- };
- 
--static void cxl_memdev_shutdown(struct cxl_memdev *cxlmd)
--{
--	down_write(&cxl_memdev_rwsem);
--	cxlmd->cxlm = NULL;
--	up_write(&cxl_memdev_rwsem);
--}
--
- static void cxl_memdev_unregister(void *_cxlmd)
- {
- 	struct cxl_memdev *cxlmd = _cxlmd;
- 	struct device *dev = &cxlmd->dev;
-+	struct cdev *cdev = &cxlmd->cdev;
-+	const struct cdevm_file_operations *cdevm_fops;
-+
-+	cdevm_fops = container_of(cdev->ops, typeof(*cdevm_fops), fops);
-+	cdevm_fops->shutdown(dev);
- 
- 	cdev_device_del(&cxlmd->cdev, dev);
--	cxl_memdev_shutdown(cxlmd);
- 	put_device(dev);
- }
- 
--static struct cxl_memdev *cxl_memdev_alloc(struct cxl_mem *cxlm)
-+static struct cxl_memdev *cxl_memdev_alloc(struct cxl_mem *cxlm,
-+					   const struct file_operations *fops)
- {
- 	struct pci_dev *pdev = cxlm->pdev;
- 	struct cxl_memdev *cxlmd;
-@@ -1324,7 +1334,7 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_mem *cxlm)
- 	device_set_pm_not_required(dev);
- 
- 	cdev = &cxlmd->cdev;
--	cdev_init(cdev, &cxl_memdev_fops);
-+	cdev_init(cdev, fops);
- 	return cxlmd;
- 
- err:
-@@ -1332,15 +1342,16 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_mem *cxlm)
- 	return ERR_PTR(rc);
- }
- 
--static struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
--					      struct cxl_mem *cxlm)
-+static struct cxl_memdev *
-+devm_cxl_add_memdev(struct device *host, struct cxl_mem *cxlm,
-+		    const struct cdevm_file_operations *cdevm_fops)
- {
- 	struct cxl_memdev *cxlmd;
- 	struct device *dev;
- 	struct cdev *cdev;
- 	int rc;
- 
--	cxlmd = cxl_memdev_alloc(cxlm);
-+	cxlmd = cxl_memdev_alloc(cxlm, &cdevm_fops->fops);
- 	if (IS_ERR(cxlmd))
- 		return cxlmd;
- 
-@@ -1370,7 +1381,7 @@ static struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
- 	 * The cdev was briefly live, shutdown any ioctl operations that
- 	 * saw that state.
- 	 */
--	cxl_memdev_shutdown(cxlmd);
-+	cdevm_fops->shutdown(dev);
- 	put_device(dev);
- 	return ERR_PTR(rc);
- }
-@@ -1611,7 +1622,7 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
- 
--	cxlmd = devm_cxl_add_memdev(&pdev->dev, cxlm);
-+	cxlmd = devm_cxl_add_memdev(&pdev->dev, cxlm, &cxl_memdev_fops);
- 	if (IS_ERR(cxlmd))
- 		return PTR_ERR(cxlmd);
- 
--- 
-2.30.2
-
+Well, since Jonathan also brought up a concern here perhaps I should entertain
+other ideas. I suppose future versions of the spec could break things, but as it
+stands today the only CXL component that implements decoders that can have a 0
+value for this are endpoint devices (T2 or T3, or LD). I think it's fine to wait
+until we have a second reason to make an endpoint port type and update kdocs for
+now, but maybe it will also be a natural fit with a proper port driver.
