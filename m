@@ -2,174 +2,179 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF70BC433EF
-	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 22:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BC5C433F5
+	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 22:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A939360FC1
-	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 22:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CC78610FB
+	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 22:33:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236839AbhIMWZu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 13 Sep 2021 18:25:50 -0400
-Received: from mga12.intel.com ([192.55.52.136]:31986 "EHLO mga12.intel.com"
+        id S1343617AbhIMWfE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 13 Sep 2021 18:35:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235453AbhIMWZt (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 13 Sep 2021 18:25:49 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10106"; a="201316413"
-X-IronPort-AV: E=Sophos;i="5.85,290,1624345200"; 
-   d="scan'208";a="201316413"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2021 15:24:33 -0700
-X-IronPort-AV: E=Sophos;i="5.85,290,1624345200"; 
-   d="scan'208";a="481525054"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2021 15:24:32 -0700
-Subject: [PATCH v6 08/21] cxl/pci: Clean up cxl_mem_get_partition_info()
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-        nvdimm@lists.linux.dev
-Date:   Mon, 13 Sep 2021 15:24:32 -0700
-Message-ID: <163157174216.2653013.1277706528753990974.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <163116433533.2460985.14299233004385504131.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <163116433533.2460985.14299233004385504131.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        id S245355AbhIMWfB (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 13 Sep 2021 18:35:01 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id AA277610CE;
+        Mon, 13 Sep 2021 22:33:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1631572424;
+        bh=TPisBgC+/AkvYuRI6mVcJsHZlYaY2djoSzgyABiD+hY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=q9xSTxSubTfSDnYrGE7CxOv3izfqaKqDBMisXNsiOvvQknEvw7yhbpvrOrZv7H+mx
+         +soOug156/m0iATJG1dF8XnQ0Jw5KJECEkbukk2lR+HxtaLp7r4wmMm/6lxtR6HcjQ
+         xAN2tg5zTqj6xDYWSgLx1IFxID50lfDD8+vLxQJzbzTzILqqlPL+meeN4jgr9uLm8+
+         8Ju1/gVSXTNnwFwMKj9iclcNhkJU1/5JvjozrlI1E/w9nwbSWAggIgavSmRnhRa/uK
+         0UxQQB4lV9Qf5mRe+zhMNxSJULpu3r97sHT6mv6Gh6KwtK/0eKyrANIHoezVbZ8l9e
+         R/q3l8MNtncoA==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        kernel test robot <lkp@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-doc@vger.kernel.org,
+        linux-cxl@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.14 03/25] cxl: Move cxl_core to new directory
+Date:   Mon, 13 Sep 2021 18:33:17 -0400
+Message-Id: <20210913223339.435347-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210913223339.435347-1-sashal@kernel.org>
+References: <20210913223339.435347-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Commit 0b9159d0ff21 ("cxl/pci: Store memory capacity values") missed
-updating the kernel-doc for 'struct cxl_mem' leading to the following
-warnings:
+From: Ben Widawsky <ben.widawsky@intel.com>
 
-./scripts/kernel-doc -v drivers/cxl/cxlmem.h 2>&1 | grep warn
-drivers/cxl/cxlmem.h:107: warning: Function parameter or member 'total_bytes' not described in 'cxl_mem'
-drivers/cxl/cxlmem.h:107: warning: Function parameter or member 'volatile_only_bytes' not described in 'cxl_mem'
-drivers/cxl/cxlmem.h:107: warning: Function parameter or member 'persistent_only_bytes' not described in 'cxl_mem'
-drivers/cxl/cxlmem.h:107: warning: Function parameter or member 'partition_align_bytes' not described in 'cxl_mem'
-drivers/cxl/cxlmem.h:107: warning: Function parameter or member 'active_volatile_bytes' not described in 'cxl_mem'
-drivers/cxl/cxlmem.h:107: warning: Function parameter or member 'active_persistent_bytes' not described in 'cxl_mem'
-drivers/cxl/cxlmem.h:107: warning: Function parameter or member 'next_volatile_bytes' not described in 'cxl_mem'
-drivers/cxl/cxlmem.h:107: warning: Function parameter or member 'next_persistent_bytes' not described in 'cxl_mem'
+[ Upstream commit 5161a55c069f53d88da49274cbef6e3c74eadea9 ]
 
-Also, it is redundant to describe those same parameters in the
-kernel-doc for cxl_mem_get_partition_info(). Given the only user of that
-routine updates the values in @cxlm, just do that implicitly internal to
-the helper.
+CXL core is growing, and it's already arguably unmanageable. To support
+future growth, move core functionality to a new directory and rename the
+file to represent just bus support. Future work will remove non-bus
+functionality.
 
-Cc: Ira Weiny <ira.weiny@intel.com>
-Reported-by: Ben Widawsky <ben.widawsky@intel.com>
+Note that mem.h is renamed to cxlmem.h to avoid a namespace collision
+with the global ARCH=um mem.h header.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Link: https://lore.kernel.org/r/162792537866.368511.8915631504621088321.stgit@dwillia2-desk3.amr.corp.intel.com
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Changes since v5:
-- Update the kdoc for @partition_align_bytes (Ben) (for real this time)
-- Fix Jonathan's typo in his reviewed-by tag.
+ Documentation/driver-api/cxl/memory-devices.rst | 2 +-
+ drivers/cxl/Makefile                            | 4 +---
+ drivers/cxl/core/Makefile                       | 5 +++++
+ drivers/cxl/{core.c => core/bus.c}              | 4 ++--
+ drivers/cxl/{mem.h => cxlmem.h}                 | 0
+ drivers/cxl/pci.c                               | 2 +-
+ drivers/cxl/pmem.c                              | 2 +-
+ 7 files changed, 11 insertions(+), 8 deletions(-)
+ create mode 100644 drivers/cxl/core/Makefile
+ rename drivers/cxl/{core.c => core/bus.c} (99%)
+ rename drivers/cxl/{mem.h => cxlmem.h} (100%)
 
- drivers/cxl/cxlmem.h |   15 +++++++++++++--
- drivers/cxl/pci.c    |   35 +++++++++++------------------------
- 2 files changed, 24 insertions(+), 26 deletions(-)
-
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index d5334df83fb2..e14bcd7a1ba1 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -78,8 +78,19 @@ devm_cxl_add_memdev(struct cxl_mem *cxlm,
-  * @mbox_mutex: Mutex to synchronize mailbox access.
-  * @firmware_version: Firmware version for the memory device.
-  * @enabled_cmds: Hardware commands found enabled in CEL.
-- * @pmem_range: Persistent memory capacity information.
-- * @ram_range: Volatile memory capacity information.
-+ * @pmem_range: Active Persistent memory capacity configuration
-+ * @ram_range: Active Volatile memory capacity configuration
-+ * @total_bytes: sum of all possible capacities
-+ * @volatile_only_bytes: hard volatile capacity
-+ * @persistent_only_bytes: hard persistent capacity
-+ * @partition_align_bytes: alignment size for partition-able capacity
-+ * @active_volatile_bytes: sum of hard + soft volatile
-+ * @active_persistent_bytes: sum of hard + soft persistent
-+ * @next_volatile_bytes: volatile capacity change pending device reset
-+ * @next_persistent_bytes: persistent capacity change pending device reset
-+ *
-+ * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
-+ * details on capacity parameters.
-  */
- struct cxl_mem {
- 	struct device *dev;
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index c1e1d12e24b6..8077d907e7d3 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -1262,11 +1262,7 @@ static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_mem *cxlm)
+diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
+index 487ce4f41d77..a86e2c7c551a 100644
+--- a/Documentation/driver-api/cxl/memory-devices.rst
++++ b/Documentation/driver-api/cxl/memory-devices.rst
+@@ -36,7 +36,7 @@ CXL Core
+ .. kernel-doc:: drivers/cxl/cxl.h
+    :internal:
+ 
+-.. kernel-doc:: drivers/cxl/core.c
++.. kernel-doc:: drivers/cxl/core/bus.c
+    :doc: cxl core
+ 
+ External Interfaces
+diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+index 32954059b37b..d1aaabc940f3 100644
+--- a/drivers/cxl/Makefile
++++ b/drivers/cxl/Makefile
+@@ -1,11 +1,9 @@
+ # SPDX-License-Identifier: GPL-2.0
+-obj-$(CONFIG_CXL_BUS) += cxl_core.o
++obj-$(CONFIG_CXL_BUS) += core/
+ obj-$(CONFIG_CXL_MEM) += cxl_pci.o
+ obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+ obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
+ 
+-ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
+-cxl_core-y := core.o
+ cxl_pci-y := pci.o
+ cxl_acpi-y := acpi.o
+ cxl_pmem-y := pmem.o
+diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+new file mode 100644
+index 000000000000..ad137f96e5c8
+--- /dev/null
++++ b/drivers/cxl/core/Makefile
+@@ -0,0 +1,5 @@
++# SPDX-License-Identifier: GPL-2.0
++obj-$(CONFIG_CXL_BUS) += cxl_core.o
++
++ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL -I$(srctree)/drivers/cxl
++cxl_core-y := bus.o
+diff --git a/drivers/cxl/core.c b/drivers/cxl/core/bus.c
+similarity index 99%
+rename from drivers/cxl/core.c
+rename to drivers/cxl/core/bus.c
+index a2e4d54fc7bc..0815eec23944 100644
+--- a/drivers/cxl/core.c
++++ b/drivers/cxl/core/bus.c
+@@ -6,8 +6,8 @@
+ #include <linux/pci.h>
+ #include <linux/slab.h>
+ #include <linux/idr.h>
+-#include "cxl.h"
+-#include "mem.h"
++#include <cxlmem.h>
++#include <cxl.h>
  
  /**
-  * cxl_mem_get_partition_info - Get partition info
-- * @cxlm: The device to act on
-- * @active_volatile_bytes: returned active volatile capacity
-- * @active_persistent_bytes: returned active persistent capacity
-- * @next_volatile_bytes: return next volatile capacity
-- * @next_persistent_bytes: return next persistent capacity
-+ * @cxlm: cxl_mem instance to update partition info
-  *
-  * Retrieve the current partition info for the device specified.  If not 0, the
-  * 'next' values are pending and take affect on next cold reset.
-@@ -1275,11 +1271,7 @@ static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_mem *cxlm)
-  *
-  * See CXL @8.2.9.5.2.1 Get Partition Info
-  */
--static int cxl_mem_get_partition_info(struct cxl_mem *cxlm,
--				      u64 *active_volatile_bytes,
--				      u64 *active_persistent_bytes,
--				      u64 *next_volatile_bytes,
--				      u64 *next_persistent_bytes)
-+static int cxl_mem_get_partition_info(struct cxl_mem *cxlm)
- {
- 	struct cxl_mbox_get_partition_info {
- 		__le64 active_volatile_cap;
-@@ -1294,15 +1286,14 @@ static int cxl_mem_get_partition_info(struct cxl_mem *cxlm,
- 	if (rc)
- 		return rc;
+  * DOC: cxl core
+diff --git a/drivers/cxl/mem.h b/drivers/cxl/cxlmem.h
+similarity index 100%
+rename from drivers/cxl/mem.h
+rename to drivers/cxl/cxlmem.h
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 4cf351a3cf99..a945c5fda292 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -12,9 +12,9 @@
+ #include <linux/pci.h>
+ #include <linux/io.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
++#include "cxlmem.h"
+ #include "pci.h"
+ #include "cxl.h"
+-#include "mem.h"
  
--	*active_volatile_bytes = le64_to_cpu(pi.active_volatile_cap);
--	*active_persistent_bytes = le64_to_cpu(pi.active_persistent_cap);
--	*next_volatile_bytes = le64_to_cpu(pi.next_volatile_cap);
--	*next_persistent_bytes = le64_to_cpu(pi.next_volatile_cap);
--
--	*active_volatile_bytes *= CXL_CAPACITY_MULTIPLIER;
--	*active_persistent_bytes *= CXL_CAPACITY_MULTIPLIER;
--	*next_volatile_bytes *= CXL_CAPACITY_MULTIPLIER;
--	*next_persistent_bytes *= CXL_CAPACITY_MULTIPLIER;
-+	cxlm->active_volatile_bytes =
-+		le64_to_cpu(pi.active_volatile_cap) * CXL_CAPACITY_MULTIPLIER;
-+	cxlm->active_persistent_bytes =
-+		le64_to_cpu(pi.active_persistent_cap) * CXL_CAPACITY_MULTIPLIER;
-+	cxlm->next_volatile_bytes =
-+		le64_to_cpu(pi.next_volatile_cap) * CXL_CAPACITY_MULTIPLIER;
-+	cxlm->next_persistent_bytes =
-+		le64_to_cpu(pi.next_volatile_cap) * CXL_CAPACITY_MULTIPLIER;
+ /**
+  * DOC: cxl pci
+diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+index 0088e41dd2f3..9652c3ee41e7 100644
+--- a/drivers/cxl/pmem.c
++++ b/drivers/cxl/pmem.c
+@@ -6,7 +6,7 @@
+ #include <linux/ndctl.h>
+ #include <linux/async.h>
+ #include <linux/slab.h>
+-#include "mem.h"
++#include "cxlmem.h"
+ #include "cxl.h"
  
- 	return 0;
- }
-@@ -1443,11 +1434,7 @@ static int cxl_mem_create_range_info(struct cxl_mem *cxlm)
- 		return 0;
- 	}
- 
--	rc = cxl_mem_get_partition_info(cxlm,
--					&cxlm->active_volatile_bytes,
--					&cxlm->active_persistent_bytes,
--					&cxlm->next_volatile_bytes,
--					&cxlm->next_persistent_bytes);
-+	rc = cxl_mem_get_partition_info(cxlm);
- 	if (rc < 0) {
- 		dev_err(cxlm->dev, "Failed to query partition information\n");
- 		return rc;
+ /*
+-- 
+2.30.2
 
