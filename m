@@ -2,253 +2,183 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF26C433F5
-	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 19:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C35C433F5
+	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 21:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC2B061106
-	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 19:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A01610CE
+	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 21:05:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240145AbhIMTii (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 13 Sep 2021 15:38:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33022 "EHLO
+        id S1343577AbhIMVGe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 13 Sep 2021 17:06:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234340AbhIMTih (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 13 Sep 2021 15:38:37 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBF17C061574
-        for <linux-cxl@vger.kernel.org>; Mon, 13 Sep 2021 12:37:21 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id j10-20020a17090a94ca00b00181f17b7ef7so269075pjw.2
-        for <linux-cxl@vger.kernel.org>; Mon, 13 Sep 2021 12:37:21 -0700 (PDT)
+        with ESMTP id S1343908AbhIMVGd (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 13 Sep 2021 17:06:33 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E5A1C061766
+        for <linux-cxl@vger.kernel.org>; Mon, 13 Sep 2021 14:05:17 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id j13so16353280edv.13
+        for <linux-cxl@vger.kernel.org>; Mon, 13 Sep 2021 14:05:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=AWNKHcrXqziRNxTg499rEc6v3+Y4TNDX0fEBR/NF7Qw=;
-        b=iSHAWFL1vOneJuQp+WStlqmq7EGTcxjXICD466MmzECuGVMyUCbDx2kh/os642YNXF
-         6rAnEDgnIxcbqm30tBW4jivH+syGZtg860umNxZIPOq0vKDpEJtlMjYMQCdmc5jfanjo
-         fKY208LgN8wIVYrhfs13D6DxNsndpSSqM9lYC659LMB/McmIU4N/2y4cimW4r7WWRltY
-         dr3ZlHxVacAuQnQkieomh8+MyalOKWeUyLENW7vAXEc7qiLos9VwUe86qwk4KWcWFIG4
-         XKqK6q6UR5h49Mv4oempPKUd7PMoZwReVslcOG+NWQfCSEkSNB4XLmNIHRbZET9KhwkA
-         8JoA==
+        bh=373m7inPGNTCDOiEZsbke1WmzoymEFvAttGADuwHDDA=;
+        b=dZApan+/iH4NW1oyIBh56hyWC0xvVWqlTSK28qynQC4TgDjgqY/p3DDGCieGAdnE+I
+         0aAGZTbnqRM5fK3TAuLjdF7NMMeCiV0kCAfGdpzcWIOkp6sGMVlUrfxYCH3SD3gyogJC
+         4YUBZARL2myz4qpAuMZTGYV2rnkRZ9K57xrX/1azGmh55BtgXM4p6fR98t3Lj/TtI5og
+         R/GBhjg5GXvtd+GgOVsER1+uWOFoeaerYmB9DSE925/Yk+BqT4PYFMFnKhDH3tmHZ5eB
+         xUYs9eTg/9uBmvVggoWXp8e0Cnzsirc3guy7n646rKKVwHb6iHMN/jX2KPg7JseQr8+1
+         ToQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AWNKHcrXqziRNxTg499rEc6v3+Y4TNDX0fEBR/NF7Qw=;
-        b=w77fknmHj2KzXvTEJZs1ZpEtcqYcn4129NstYHDR3LkXV6OzNc4LDV+C7pJztREH7/
-         dwq7SLMEDLiJCLBAHrmDrkV6QmFB/Pq/4VYvqIFeua3iXYlwiSHR74z9QbxZh3SE9QN5
-         DmxiQMq9x6h+z91GI25adNYxlbh/1bBea8mSB7HSGIbFrbiHp/L4hRCclJ/BLkgytFbH
-         BHzfKk2ZLtLDhLTSOIWmQ8ljiyzEsmIUILeVCHPlhH8hiD9RKcdIA/Xb40MWBeHAXFUU
-         ID9smAw+HT4IBmcx2KjPRaGmowGYUDEBGLh193cDFF6GI73u+nfdu63wW7jrpStuKs4I
-         rKrg==
-X-Gm-Message-State: AOAM533yXL/DyA6AvuEBzYoBTKepjowGnpP5ptaZVWaRqJ6oXXhsj+OQ
-        xRiq6GBY/A8z/0GPbvE9ZOtcFlEaFZ922Xv6fIKkFg==
-X-Google-Smtp-Source: ABdhPJxmLXJ4G+UT4ZmSRLAYQh1g+IroPkHIn/XI7XNmjrqRPNPJYkBMfXShasZAM20jXoPlCaJtWAAZ/7kHe731AwU=
-X-Received: by 2002:a17:90b:3b84:: with SMTP id pc4mr1185763pjb.220.1631561841299;
- Mon, 13 Sep 2021 12:37:21 -0700 (PDT)
+        bh=373m7inPGNTCDOiEZsbke1WmzoymEFvAttGADuwHDDA=;
+        b=rYmHKTFBYz74myy8LCu7AOG/vORitkyIPcfY1UNtaxSDkhBmaTzqsTnOP15DSqTWhe
+         rlMyEk6jPFaa4MCjHhCG6cQwwOoLs1gOnpSamM97/l3kepMewWFp4xzIRQawfRAAA2mF
+         ibo4W9YqKJmjPBgfOZbVStjrufjdURv2jP9UEPk2xh6NJx2OX9sON1uRCSTbyRPEAo08
+         rqt+APloKv2sRrOBwkbzx7qs1VHGhOw6nWMMixGA28WpSKZ0HwuWoXXNrbFv0cJSue9h
+         KErRoT/FIVLM9QtNpP7DNhxwJDL84VHRnkpnajOrjPKzHy/gRMLvh+wFraf0w42GJQ0/
+         AhAQ==
+X-Gm-Message-State: AOAM531xC3MKheRyn2WVGednrcfRXE+LvMFCQ0vFauyGtFuIzCWURP4B
+        /gC7hlZK8SVgQK2D1VnA6kEN/xSqj3P0n/yaDfEG
+X-Google-Smtp-Source: ABdhPJyhjptYpi0mwh96yMlLzxckfq2tRXqkGTb/ZQJf0dLr8KeUC8PkrIaOITSWhjWsL1Ai+gNDn5oE1rgV2wDOPdI=
+X-Received: by 2002:a05:6402:2810:: with SMTP id h16mr14507917ede.293.1631567115278;
+ Mon, 13 Sep 2021 14:05:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210902195017.2516472-1-ben.widawsky@intel.com>
- <20210902195017.2516472-7-ben.widawsky@intel.com> <CAPcyv4h8hFMWi7Rm7B_L9pk6QzLhLY5-CbrYXN9+qW-a9qCQAw@mail.gmail.com>
- <20210913164653.73u7jrc3movbszw7@intel.com>
-In-Reply-To: <20210913164653.73u7jrc3movbszw7@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 13 Sep 2021 12:37:10 -0700
-Message-ID: <CAPcyv4iDxDhz_5b_fG4S3bgFPSa_HZgeS4QwQM5VqPa8N7Uspw@mail.gmail.com>
-Subject: Re: [PATCH 06/13] cxl/mem: Introduce cxl_mem driver
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
+References: <20210913140229.24797-1-omosnace@redhat.com>
+In-Reply-To: <20210913140229.24797-1-omosnace@redhat.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 13 Sep 2021 17:05:04 -0400
+Message-ID: <CAHC9VhRw-S+zZUFz5QFFLMBATjo+YbPAiR21jX6p7cT0T+MVLA@mail.gmail.com>
+Subject: Re: [PATCH v4] lockdown,selinux: fix wrong subject in some SELinux
+ lockdown checks
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        selinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org, linux-acpi@vger.kernel.org,
+        linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-serial@vger.kernel.org,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Dan Williams <dan.j.williams@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Sep 13, 2021 at 9:47 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Mon, Sep 13, 2021 at 10:02 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
 >
-> On 21-09-10 14:32:35, Dan Williams wrote:
-> > On Thu, Sep 2, 2021 at 12:50 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > >
-> > > CXL endpoints that participate in the CXL.mem protocol require extra
-> > > control to ensure architectural constraints are met for device
-> > > management. The most straight-forward way to achieve control of these
-> > > endpoints is with a new driver that can bind to such devices. This
-> > > driver will also be responsible for enumerating the switches that
-> > > connect the endpoint to the hostbridge.
-> > >
-> > > cxl_core already understands the concept of a memdev, but the core [by
-> > > design] does not comprehend all the topological constraints.
-> > >
-> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > ---
-> > >  .../driver-api/cxl/memory-devices.rst         |  3 ++
-> > >  drivers/cxl/Makefile                          |  3 +-
-> > >  drivers/cxl/core/bus.c                        |  2 +
-> > >  drivers/cxl/core/core.h                       |  1 +
-> > >  drivers/cxl/core/memdev.c                     |  2 +-
-> > >  drivers/cxl/cxl.h                             |  1 +
-> > >  drivers/cxl/mem.c                             | 49 +++++++++++++++++++
-> > >  7 files changed, 59 insertions(+), 2 deletions(-)
-> > >  create mode 100644 drivers/cxl/mem.c
-> > >
-> > > diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
-> > > index a18175bae7a6..00d141071570 100644
-> > > --- a/Documentation/driver-api/cxl/memory-devices.rst
-> > > +++ b/Documentation/driver-api/cxl/memory-devices.rst
-> > > @@ -28,6 +28,9 @@ CXL Memory Device
-> > >  .. kernel-doc:: drivers/cxl/pci.c
-> > >     :internal:
-> > >
-> > > +.. kernel-doc:: drivers/cxl/mem.c
-> > > +   :doc: cxl mem
-> > > +
-> > >  CXL Core
-> > >  --------
-> > >  .. kernel-doc:: drivers/cxl/cxl.h
-> > > diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-> > > index d1aaabc940f3..d912ac4e3f0c 100644
-> > > --- a/drivers/cxl/Makefile
-> > > +++ b/drivers/cxl/Makefile
-> > > @@ -1,9 +1,10 @@
-> > >  # SPDX-License-Identifier: GPL-2.0
-> > >  obj-$(CONFIG_CXL_BUS) += core/
-> > > -obj-$(CONFIG_CXL_MEM) += cxl_pci.o
-> > > +obj-$(CONFIG_CXL_MEM) += cxl_mem.o cxl_pci.o
-> >
-> > I'd rather now have a separate CONFIG_CXL_PCI Kconfig symbol for
-> > cxl_pci and let CONFIG_CXL_MEM just mean cxl_mem. I.e. maybe there
-> > will be a non-cxl_pci agent that registers cxl_memdev objects, or
-> > maybe someone will only want manageability and not CXL.mem operation
-> > enabled in their kernel.
-> >
+> Commit 59438b46471a ("security,lockdown,selinux: implement SELinux
+> lockdown") added an implementation of the locked_down LSM hook to
+> SELinux, with the aim to restrict which domains are allowed to perform
+> operations that would breach lockdown.
 >
-> I would have given an argument you often use and suggest we wait until that
-> usage exists since later patches require both exist so that the pci driver can
-> give the mem driver the component register location. However, reading ahead it
-> sounds like that's going to have to get rewritten.
-
-The PCI driver gives the component information to the device, not the
-driver, so the driver need not be enabled to consume the component
-registers.
-
-Another alternative if you want to avoid the complexity of another
-module in the near term is to move the driver into the core. I.e. make
-the core a multi-driver module. The libnvdimm core uses that scheme so
-it can make assumptions like "driver guaranteed to be attached after
-return from device_add()" as it eliminates the asynchronous module
-lookup and loading. I can see that being a useful property for the
-port driver, but I think the memdev driver is ok to be either
-integrated, or independent. I just don't think it belongs to the same
-config as cxl_pci.
-
+> However, in several places the security_locked_down() hook is called in
+> situations where the current task isn't doing any action that would
+> directly breach lockdown, leading to SELinux checks that are basically
+> bogus.
 >
-> >
-> > >  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
-> > >  obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
-> > >
-> > > +cxl_mem-y := mem.o
-> > >  cxl_pci-y := pci.o
-> > >  cxl_acpi-y := acpi.o
-> > >  cxl_pmem-y := pmem.o
-> > > diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-> > > index 6202ce5a5ac2..256e55dc2a3b 100644
-> > > --- a/drivers/cxl/core/bus.c
-> > > +++ b/drivers/cxl/core/bus.c
-> > > @@ -641,6 +641,8 @@ static int cxl_device_id(struct device *dev)
-> > >                 return CXL_DEVICE_NVDIMM_BRIDGE;
-> > >         if (dev->type == &cxl_nvdimm_type)
-> > >                 return CXL_DEVICE_NVDIMM;
-> > > +       if (dev->type == &cxl_memdev_type)
-> > > +               return CXL_DEVICE_ENDPOINT;
-> >
-> > Perhaps CXL_DEVICE_MEMORY_{INTERFACE,EXPANDER}? "ENDPOINT" seems too generic.
-> >
-> > >         return 0;
-> > >  }
-> > >
-> > > diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> > > index e0c9aacc4e9c..dea246cb7c58 100644
-> > > --- a/drivers/cxl/core/core.h
-> > > +++ b/drivers/cxl/core/core.h
-> > > @@ -6,6 +6,7 @@
-> > >
-> > >  extern const struct device_type cxl_nvdimm_bridge_type;
-> > >  extern const struct device_type cxl_nvdimm_type;
-> > > +extern const struct device_type cxl_memdev_type;
-> > >
-> > >  extern struct attribute_group cxl_base_attribute_group;
-> > >
-> > > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> > > index ee61202c7aab..c9dd054bd813 100644
-> > > --- a/drivers/cxl/core/memdev.c
-> > > +++ b/drivers/cxl/core/memdev.c
-> > > @@ -127,7 +127,7 @@ static const struct attribute_group *cxl_memdev_attribute_groups[] = {
-> > >         NULL,
-> > >  };
-> > >
-> > > -static const struct device_type cxl_memdev_type = {
-> > > +const struct device_type cxl_memdev_type = {
-> > >         .name = "cxl_memdev",
-> > >         .release = cxl_memdev_release,
-> > >         .devnode = cxl_memdev_devnode,
-> > > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > > index 708bfe92b596..b48bdbefd949 100644
-> > > --- a/drivers/cxl/cxl.h
-> > > +++ b/drivers/cxl/cxl.h
-> > > @@ -315,6 +315,7 @@ void cxl_driver_unregister(struct cxl_driver *cxl_drv);
-> > >
-> > >  #define CXL_DEVICE_NVDIMM_BRIDGE       1
-> > >  #define CXL_DEVICE_NVDIMM              2
-> > > +#define CXL_DEVICE_ENDPOINT            3
-> > >
-> > >  #define MODULE_ALIAS_CXL(type) MODULE_ALIAS("cxl:t" __stringify(type) "*")
-> > >  #define CXL_MODALIAS_FMT "cxl:t%d"
-> > > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > > new file mode 100644
-> > > index 000000000000..978a54b0a51a
-> > > --- /dev/null
-> > > +++ b/drivers/cxl/mem.c
-> > > @@ -0,0 +1,49 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +/* Copyright(c) 2021 Intel Corporation. All rights reserved. */
-> > > +#include <linux/device.h>
-> > > +#include <linux/module.h>
-> > > +
-> > > +#include "cxlmem.h"
-> > > +
-> > > +/**
-> > > + * DOC: cxl mem
-> > > + *
-> > > + * CXL memory endpoint devices and switches are CXL capable devices that are
-> > > + * participating in CXL.mem protocol. Their functionality builds on top of the
-> > > + * CXL.io protocol that allows enumerating and configuring components via
-> > > + * standard PCI mechanisms.
-> > > + *
-> > > + * The cxl_mem driver implements enumeration and control over these CXL
-> > > + * components.
-> > > + */
-> > > +
-> > > +static int cxl_mem_probe(struct device *dev)
-> > > +{
-> > > +       return -EOPNOTSUPP;
-> >
-> > Why not just merge this patch with the one that fills these in? I'm
-> > otherwise not understanding the value of having this stopping point in
-> > someone's future bisect run. Even commit 4cdadfd5e0a7 ("cxl/mem:
-> > Introduce a driver for CXL-2.0-Type-3 endpoints") had a functional
-> > probe.
-> >
+> To fix this, add an explicit struct cred pointer argument to
+> security_lockdown() and define NULL as a special value to pass instead
+> of current_cred() in such situations. LSMs that take the subject
+> credentials into account can then fall back to some default or ignore
+> such calls altogether. In the SELinux lockdown hook implementation, use
+> SECINITSID_KERNEL in case the cred argument is NULL.
 >
-> Okay. It serves no purpose for bisection. It was primarily to introduce the
-> drivers kdocs and hookup in core. I don't think this is a new thing for our CXL
-> patches, but I admit I don't pay close attention to these things.
+> Most of the callers are updated to pass current_cred() as the cred
+> pointer, thus maintaining the same behavior. The following callers are
+> modified to pass NULL as the cred pointer instead:
+> 1. arch/powerpc/xmon/xmon.c
+>      Seems to be some interactive debugging facility. It appears that
+>      the lockdown hook is called from interrupt context here, so it
+>      should be more appropriate to request a global lockdown decision.
+> 2. fs/tracefs/inode.c:tracefs_create_file()
+>      Here the call is used to prevent creating new tracefs entries when
+>      the kernel is locked down. Assumes that locking down is one-way -
+>      i.e. if the hook returns non-zero once, it will never return zero
+>      again, thus no point in creating these files. Also, the hook is
+>      often called by a module's init function when it is loaded by
+>      userspace, where it doesn't make much sense to do a check against
+>      the current task's creds, since the task itself doesn't actually
+>      use the tracing functionality (i.e. doesn't breach lockdown), just
+>      indirectly makes some new tracepoints available to whoever is
+>      authorized to use them.
+> 3. net/xfrm/xfrm_user.c:copy_to_user_*()
+>      Here a cryptographic secret is redacted based on the value returned
+>      from the hook. There are two possible actions that may lead here:
+>      a) A netlink message XFRM_MSG_GETSA with NLM_F_DUMP set - here the
+>         task context is relevant, since the dumped data is sent back to
+>         the current task.
+>      b) When adding/deleting/updating an SA via XFRM_MSG_xxxSA, the
+>         dumped SA is broadcasted to tasks subscribed to XFRM events -
+>         here the current task context is not relevant as it doesn't
+>         represent the tasks that could potentially see the secret.
+>      It doesn't seem worth it to try to keep using the current task's
+>      context in the a) case, since the eventual data leak can be
+>      circumvented anyway via b), plus there is no way for the task to
+>      indicate that it doesn't care about the actual key value, so the
+>      check could generate a lot of "false alert" denials with SELinux.
+>      Thus, let's pass NULL instead of current_cred() here faute de
+>      mieux.
+>
+> Improvements-suggested-by: Casey Schaufler <casey@schaufler-ca.com>
+> Improvements-suggested-by: Paul Moore <paul@paul-moore.com>
+> Fixes: 59438b46471a ("security,lockdown,selinux: implement SELinux lockdown")
+> Acked-by: Dan Williams <dan.j.williams@intel.com>         [cxl]
+> Acked-by: Steffen Klassert <steffen.klassert@secunet.com> [xfrm]
+> Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+> ---
+>
+> v4:
+> - rebase on top of TODO
+> - fix rebase conflicts:
+>   * drivers/cxl/pci.c
+>     - trivial: the lockdown reason was corrected in mainline
+>   * kernel/bpf/helpers.c, kernel/trace/bpf_trace.c
+>     - trivial: LOCKDOWN_BPF_READ was renamed to LOCKDOWN_BPF_READ_KERNEL
+>       in mainline
+>   * kernel/power/hibernate.c
+>     - trivial: !secretmem_active() was added to the condition in
+>       hibernation_available()
+> - cover new security_locked_down() call in kernel/bpf/helpers.c
+>   (LOCKDOWN_BPF_WRITE_USER in BPF_FUNC_probe_write_user case)
+>
+> v3: https://lore.kernel.org/lkml/20210616085118.1141101-1-omosnace@redhat.com/
+> - add the cred argument to security_locked_down() and adapt all callers
+> - keep using current_cred() in BPF, as the hook calls have been shifted
+>   to program load time (commit ff40e51043af ("bpf, lockdown, audit: Fix
+>   buggy SELinux lockdown permission checks"))
+> - in SELinux, don't ignore hook calls where cred == NULL, but use
+>   SECINITSID_KERNEL as the subject instead
+> - update explanations in the commit message
+>
+> v2: https://lore.kernel.org/lkml/20210517092006.803332-1-omosnace@redhat.com/
+> - change to a single hook based on suggestions by Casey Schaufler
+>
+> v1: https://lore.kernel.org/lkml/20210507114048.138933-1-omosnace@redhat.com/
 
-It's not a major concern, but it's just an extra error message that
-won't pop up in someone's bisect run.
+The changes between v3 and v4 all seem sane to me, but I'm going to
+let this sit for a few days in hopes that we can collect a few more
+Reviewed-bys and ACKs.  If I don't see any objections I'll merge it
+mid-week(ish) into selinux/stable-5.15 and plan on sending it to Linus
+after it goes through a build/test cycle.
+
+-- 
+paul moore
+www.paul-moore.com
