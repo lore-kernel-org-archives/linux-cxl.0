@@ -2,153 +2,302 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 849A0C28B5B
-	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 23:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F93C433F5
+	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 23:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7020A60FDA
-	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 23:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8041560273
+	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 23:47:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241821AbhIMXVA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 13 Sep 2021 19:21:00 -0400
-Received: from mga17.intel.com ([192.55.52.151]:16266 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S245301AbhIMXUl (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 13 Sep 2021 19:20:41 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10106"; a="201992179"
-X-IronPort-AV: E=Sophos;i="5.85,291,1624345200"; 
-   d="scan'208";a="201992179"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2021 16:19:23 -0700
-X-IronPort-AV: E=Sophos;i="5.85,291,1624345200"; 
-   d="scan'208";a="582590158"
-Received: from lwilson9-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.130.153])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2021 16:19:22 -0700
-Date:   Mon, 13 Sep 2021 16:19:21 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 04/13] cxl: Introduce endpoint decoders
-Message-ID: <20210913231921.w2rujefmewgraopi@intel.com>
-References: <20210902195017.2516472-1-ben.widawsky@intel.com>
- <20210902195017.2516472-5-ben.widawsky@intel.com>
- <CAPcyv4gbVtZywtzYVFS_KAQ_aHGHDQtke=eeVSv3pdz=CfVOhA@mail.gmail.com>
- <20210913161149.ggbd5jmro2davaq5@intel.com>
- <CAPcyv4jpp5cfQnNVa34gY7tOtM4ZNBvzYDOqoBPEmv1-_qk=bQ@mail.gmail.com>
+        id S245203AbhIMXsQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 13 Sep 2021 19:48:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230396AbhIMXsP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 13 Sep 2021 19:48:15 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2883BC061574
+        for <linux-cxl@vger.kernel.org>; Mon, 13 Sep 2021 16:46:59 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id f3-20020a17090a638300b00199097ddf1aso748060pjj.0
+        for <linux-cxl@vger.kernel.org>; Mon, 13 Sep 2021 16:46:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8TwvnoN+pGz8Jz4tiU+XiCifdS6QZ/bX9QO88qy6Wek=;
+        b=BN+ZyvmBBtE3LjudbZ6koqrBvuaCSN5gath3LrWLF6cdLUm+LaPNLipztkbS5Sg64+
+         7DCOTwZ2u7SYaCMg2ZPgN8maJ2+fJrg5mOlYUJ1Dcd6EPIdR2VSaLtjcCtgPnRe1ZWei
+         DO3ZBjGgdF4WdnIBRUOzad3o702vX1RlEFaANhTG2M3bco+IG7FmM2F8SCl8TwuEpDzZ
+         npNCKn47IliylZGLFBDxQPTv1aFVgyALWuOaDylF27VzyB/cV8cTJ0Gx4+Os0wg212Gl
+         pW8XnDUyvn2TenMsYKatqbErmDrSQHbKacopnG/fE01KUDrXx6eJFGUQdATUwpgIy8ln
+         CeAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8TwvnoN+pGz8Jz4tiU+XiCifdS6QZ/bX9QO88qy6Wek=;
+        b=5MzuwTnrvefLRK+2IMaszeD+A3sh/ZmkffRKexjqupSvFyp4eA2dlr5aAiWlgiKEu7
+         dswWXuTU//57SvlrQyyZcFb53n+hVgPMilL8MIkKNjLebUOPQDZJ/OLLqR1lG20v1n/M
+         5O7+LQlcAiClOf6uqUxiKwwkiarhddYpY2wLHJDVibVkzaSJY6t2UR6T9Q6ma6F2fGj9
+         0mx9UdyzRaxed02QTaDb6xGi1GX/FjKB1gV/evUJwfkff9SuKuxEBJ1e+yTEF1wrOH0D
+         S9+UL1+YZrHtLt7OAzZdc35eYo+sCoN/K+GwcO2jfv2zDWsGbRCyCMrVQU7eVXv7RRzS
+         lSOw==
+X-Gm-Message-State: AOAM530hMe8doMTEPuc94sd0JyO7i/4eEbH/XPZvt3c2gVtIvm2evkzl
+        jDbL42QYgptzOHSVh6XAZov1Tp6BRQ/kAsr9TGOQnA==
+X-Google-Smtp-Source: ABdhPJwToQdeP+BcPUZeIxgU+0bGGvuuyhVkfJEMWwY5W6ICCD8SF4+LEoTFb7WED8QU2QNzPojMRyBhi4yoYZ6nswU=
+X-Received: by 2002:a17:90a:d686:: with SMTP id x6mr2342419pju.8.1631576818483;
+ Mon, 13 Sep 2021 16:46:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4jpp5cfQnNVa34gY7tOtM4ZNBvzYDOqoBPEmv1-_qk=bQ@mail.gmail.com>
+References: <163116429183.2460985.5040982981112374615.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <163116436926.2460985.1268688593156766623.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20210910103348.00005b5c@Huawei.com>
+In-Reply-To: <20210910103348.00005b5c@Huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 13 Sep 2021 16:46:47 -0700
+Message-ID: <CAPcyv4i48AHtHOAJVsDKQ+Zg2QqnvQg1Ur8ekb6qR6cRDbkAzQ@mail.gmail.com>
+Subject: Re: [PATCH v4 14/21] cxl/mbox: Add exclusive kernel command support
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21-09-13 15:07:44, Dan Williams wrote:
-> On Mon, Sep 13, 2021 at 9:11 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Fri, Sep 10, 2021 at 2:34 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Wed, 8 Sep 2021 22:12:49 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> > The CXL_PMEM driver expects exclusive control of the label storage area
+> > space. Similar to the LIBNVDIMM expectation that the label storage area
+> > is only writable from userspace when the corresponding memory device is
+> > not active in any region, the expectation is the native CXL_PCI UAPI
+> > path is disabled while the cxl_nvdimm for a given cxl_memdev device is
+> > active in LIBNVDIMM.
 > >
-> > On 21-09-10 12:19:24, Dan Williams wrote:
-> > > On Thu, Sep 2, 2021 at 12:50 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > >
-> > > > Endpoints have decoders too. It is useful to share the same
-> > > > infrastructure from cxl_core. Endpoints do not have dports (downstream
-> > > > targets), only the underlying physical medium. As a result, some special
-> > > > casing is needed.
-> > > >
-> > > > There is no functional change introduced yet as endpoints don't actually
-> > > > enumerate decoders yet.
-> > > >
-> > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > > ---
-> > > >  drivers/cxl/core/bus.c | 29 +++++++++++++++++++++++++----
-> > > >  1 file changed, 25 insertions(+), 4 deletions(-)
-> > > >
-> > > > diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-> > > > index 8d5061b0794d..6202ce5a5ac2 100644
-> > > > --- a/drivers/cxl/core/bus.c
-> > > > +++ b/drivers/cxl/core/bus.c
-> > > > @@ -175,6 +175,12 @@ static const struct attribute_group *cxl_decoder_switch_attribute_groups[] = {
-> > > >         NULL,
-> > > >  };
-> > > >
-> > > > +static const struct attribute_group *cxl_decoder_endpoint_attribute_groups[] = {
-> > > > +       &cxl_decoder_base_attribute_group,
-> > > > +       &cxl_base_attribute_group,
-> > > > +       NULL,
-> > > > +};
-> > > > +
-> > > >  static void cxl_decoder_release(struct device *dev)
-> > > >  {
-> > > >         struct cxl_decoder *cxld = to_cxl_decoder(dev);
-> > > > @@ -184,6 +190,12 @@ static void cxl_decoder_release(struct device *dev)
-> > > >         kfree(cxld);
-> > > >  }
-> > > >
-> > > > +static const struct device_type cxl_decoder_endpoint_type = {
-> > > > +       .name = "cxl_decoder_endpoint",
-> > > > +       .release = cxl_decoder_release,
-> > > > +       .groups = cxl_decoder_endpoint_attribute_groups,
-> > > > +};
-> > > > +
-> > > >  static const struct device_type cxl_decoder_switch_type = {
-> > > >         .name = "cxl_decoder_switch",
-> > > >         .release = cxl_decoder_release,
-> > > > @@ -196,6 +208,11 @@ static const struct device_type cxl_decoder_root_type = {
-> > > >         .groups = cxl_decoder_root_attribute_groups,
-> > > >  };
-> > > >
-> > > > +static bool is_endpoint_decoder(struct device *dev)
-> > > > +{
-> > > > +       return dev->type == &cxl_decoder_endpoint_type;
-> > > > +}
-> > > > +
-> > > >  bool is_root_decoder(struct device *dev)
-> > > >  {
-> > > >         return dev->type == &cxl_decoder_root_type;
-> > > > @@ -472,7 +489,7 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
-> > > >         struct device *dev;
-> > > >         int rc = 0;
-> > > >
-> > > > -       if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets < 1)
-> > > > +       if (nr_targets > CXL_DECODER_MAX_INTERLEAVE)
-> > > >                 return ERR_PTR(-EINVAL);
-> > > >
-> > > >         cxld = kzalloc(struct_size(cxld, target, nr_targets), GFP_KERNEL);
-> > > > @@ -491,8 +508,11 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
-> > > >         dev->parent = &port->dev;
-> > > >         dev->bus = &cxl_bus_type;
-> > > >
-> > > > +       /* Endpoints don't have a target list */
-> > > > +       if (nr_targets == 0)
-> > > > +               dev->type = &cxl_decoder_endpoint_type;
-> > >
-> > > Do you also plan to introduce the concept of endpoint ports, and if
-> > > yes should that come before this patch? That would seem to be more
-> > > robust than, for example, allowing a switch port to carry an endpoint
-> > > decoder object as this allows.
+> > Add the ability to toggle the availability of a given command for the
+> > UAPI path. Use that new capability to shutdown changes to partitions and
+> > the label storage area while the cxl_nvdimm device is actively proxying
+> > commands for LIBNVDIMM.
 > >
-> > I didn't see a need as of yet to differentiate between endpoint ports and other
-> > ports. I don't entirely understand what you mean by "allowing a switch port to
-> > carry an endpoint decoder" means. Can you please elaborate?
-> 
-> If endpoint ports were an explicit type then this check could make
-> sure that someone did not pass nr_targets set to 0 where the @port
-> argument is referring to a switch where the target_list must be
-> specified.
-> 
-> Either that, or a comment in kernel-doc for this routine about the
-> special meaning of nr_targets == 0 and expected usage.
+> > Acked-by: Ben Widawsky <ben.widawsky@intel.com>
+> > Link: https://lore.kernel.org/r/162982123298.1124374.22718002900700392.stgit@dwillia2-desk3.amr.corp.intel.com
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>
+> In the ideal world I'd like to have seen this as a noop patch going from devm
+> to non devm for cleanup followed by new stuff.  meh, the world isn't ideal
+> and all that sort of nice stuff takes time!
 
-Well, since Jonathan also brought up a concern here perhaps I should entertain
-other ideas. I suppose future versions of the spec could break things, but as it
-stands today the only CXL component that implements decoders that can have a 0
-value for this are endpoint devices (T2 or T3, or LD). I think it's fine to wait
-until we have a second reason to make an endpoint port type and update kdocs for
-now, but maybe it will also be a natural fit with a proper port driver.
+It would also require a series resend since I can't use the in-place
+update in a way that b4 will recognize.
+
+> Whilst I'm not that keen on the exact form of the code in probe() it will
+> be easier to read when not a diff so if you prefer to keep it as you have
+> it I won't object - it just took a little more careful reading than I'd like.
+
+I circled back to devm after taking out the cleverness as you noted,
+and that makes the patch more readable.
+
+>
+> Thanks,
+>
+> Jonathan
+>
+>
+> > ---
+> >  drivers/cxl/core/mbox.c   |    5 +++++
+> >  drivers/cxl/core/memdev.c |   31 +++++++++++++++++++++++++++++++
+> >  drivers/cxl/cxlmem.h      |    4 ++++
+> >  drivers/cxl/pmem.c        |   43 ++++++++++++++++++++++++++++++++-----------
+> >  4 files changed, 72 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> > index 422999740649..82e79da195fa 100644
+> > --- a/drivers/cxl/core/mbox.c
+> > +++ b/drivers/cxl/core/mbox.c
+> > @@ -221,6 +221,7 @@ static bool cxl_mem_raw_command_allowed(u16 opcode)
+> >   *  * %-EINVAL       - Reserved fields or invalid values were used.
+> >   *  * %-ENOMEM       - Input or output buffer wasn't sized properly.
+> >   *  * %-EPERM        - Attempted to use a protected command.
+> > + *  * %-EBUSY        - Kernel has claimed exclusive access to this opcode
+> >   *
+> >   * The result of this command is a fully validated command in @out_cmd that is
+> >   * safe to send to the hardware.
+> > @@ -296,6 +297,10 @@ static int cxl_validate_cmd_from_user(struct cxl_mem *cxlm,
+> >       if (!test_bit(info->id, cxlm->enabled_cmds))
+> >               return -ENOTTY;
+> >
+> > +     /* Check that the command is not claimed for exclusive kernel use */
+> > +     if (test_bit(info->id, cxlm->exclusive_cmds))
+> > +             return -EBUSY;
+> > +
+> >       /* Check the input buffer is the expected size */
+> >       if (info->size_in >= 0 && info->size_in != send_cmd->in.size)
+> >               return -ENOMEM;
+> > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> > index df2ba87238c2..d9ade5b92330 100644
+> > --- a/drivers/cxl/core/memdev.c
+> > +++ b/drivers/cxl/core/memdev.c
+> > @@ -134,6 +134,37 @@ static const struct device_type cxl_memdev_type = {
+> >       .groups = cxl_memdev_attribute_groups,
+> >  };
+> >
+> > +/**
+> > + * set_exclusive_cxl_commands() - atomically disable user cxl commands
+> > + * @cxlm: cxl_mem instance to modify
+> > + * @cmds: bitmap of commands to mark exclusive
+> > + *
+> > + * Flush the ioctl path and disable future execution of commands with
+> > + * the command ids set in @cmds.
+>
+> It's not obvious this function is doing that 'flush', Perhaps consider rewording?
+
+Changed it to:
+
+"Grab the cxl_memdev_rwsem in write mode to flush in-flight
+invocations of the ioctl path and then disable future execution of
+commands with the command ids set in @cmds."
+
+>
+> > + */
+> > +void set_exclusive_cxl_commands(struct cxl_mem *cxlm, unsigned long *cmds)
+> > +{
+> > +     down_write(&cxl_memdev_rwsem);
+> > +     bitmap_or(cxlm->exclusive_cmds, cxlm->exclusive_cmds, cmds,
+> > +               CXL_MEM_COMMAND_ID_MAX);
+> > +     up_write(&cxl_memdev_rwsem);
+> > +}
+> > +EXPORT_SYMBOL_GPL(set_exclusive_cxl_commands);
+> > +
+> > +/**
+> > + * clear_exclusive_cxl_commands() - atomically enable user cxl commands
+> > + * @cxlm: cxl_mem instance to modify
+> > + * @cmds: bitmap of commands to mark available for userspace
+> > + */
+> > +void clear_exclusive_cxl_commands(struct cxl_mem *cxlm, unsigned long *cmds)
+> > +{
+> > +     down_write(&cxl_memdev_rwsem);
+> > +     bitmap_andnot(cxlm->exclusive_cmds, cxlm->exclusive_cmds, cmds,
+> > +                   CXL_MEM_COMMAND_ID_MAX);
+> > +     up_write(&cxl_memdev_rwsem);
+> > +}
+> > +EXPORT_SYMBOL_GPL(clear_exclusive_cxl_commands);
+> > +
+> >  static void cxl_memdev_shutdown(struct device *dev)
+> >  {
+> >       struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> > index 16201b7d82d2..468b7b8be207 100644
+> > --- a/drivers/cxl/cxlmem.h
+> > +++ b/drivers/cxl/cxlmem.h
+> > @@ -101,6 +101,7 @@ struct cxl_mbox_cmd {
+> >   * @mbox_mutex: Mutex to synchronize mailbox access.
+> >   * @firmware_version: Firmware version for the memory device.
+> >   * @enabled_cmds: Hardware commands found enabled in CEL.
+> > + * @exclusive_cmds: Commands that are kernel-internal only
+> >   * @pmem_range: Active Persistent memory capacity configuration
+> >   * @ram_range: Active Volatile memory capacity configuration
+> >   * @total_bytes: sum of all possible capacities
+> > @@ -127,6 +128,7 @@ struct cxl_mem {
+> >       struct mutex mbox_mutex; /* Protects device mailbox and firmware */
+> >       char firmware_version[0x10];
+> >       DECLARE_BITMAP(enabled_cmds, CXL_MEM_COMMAND_ID_MAX);
+> > +     DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
+> >
+> >       struct range pmem_range;
+> >       struct range ram_range;
+> > @@ -200,4 +202,6 @@ int cxl_mem_identify(struct cxl_mem *cxlm);
+> >  int cxl_mem_enumerate_cmds(struct cxl_mem *cxlm);
+> >  int cxl_mem_create_range_info(struct cxl_mem *cxlm);
+> >  struct cxl_mem *cxl_mem_create(struct device *dev);
+> > +void set_exclusive_cxl_commands(struct cxl_mem *cxlm, unsigned long *cmds);
+> > +void clear_exclusive_cxl_commands(struct cxl_mem *cxlm, unsigned long *cmds);
+> >  #endif /* __CXL_MEM_H__ */
+> > diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+> > index 9652c3ee41e7..a972af7a6e0b 100644
+> > --- a/drivers/cxl/pmem.c
+> > +++ b/drivers/cxl/pmem.c
+> > @@ -16,10 +16,7 @@
+> >   */
+> >  static struct workqueue_struct *cxl_pmem_wq;
+> >
+> > -static void unregister_nvdimm(void *nvdimm)
+> > -{
+> > -     nvdimm_delete(nvdimm);
+> > -}
+> > +static __read_mostly DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
+> >
+> >  static int match_nvdimm_bridge(struct device *dev, const void *data)
+> >  {
+> > @@ -36,12 +33,25 @@ static struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(void)
+> >       return to_cxl_nvdimm_bridge(dev);
+> >  }
+> >
+> > +static void cxl_nvdimm_remove(struct device *dev)
+> > +{
+> > +     struct cxl_nvdimm *cxl_nvd = to_cxl_nvdimm(dev);
+> > +     struct nvdimm *nvdimm = dev_get_drvdata(dev);
+> > +     struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
+> > +     struct cxl_mem *cxlm = cxlmd->cxlm;
+>
+> Given cxlmd isn't used, perhaps combine the two lines above?
+
+...gone with the return of devm.
+
+>
+> > +
+> > +     nvdimm_delete(nvdimm);
+> > +     clear_exclusive_cxl_commands(cxlm, exclusive_cmds);
+> > +}
+> > +
+> >  static int cxl_nvdimm_probe(struct device *dev)
+> >  {
+> >       struct cxl_nvdimm *cxl_nvd = to_cxl_nvdimm(dev);
+> > +     struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
+> > +     struct cxl_mem *cxlm = cxlmd->cxlm;
+>
+> Again, clxmd not used so could save a line of code
+> without loosing anything (unless it get used in a later patch of
+> course!)
+
+It is used... to grab cxlm, but it's an arbitrary style preference to
+avoid de-reference chains longer than one. However, since I'm only
+doing it once now perhaps you'll grant me this indulgence?
+
+>
+> >       struct cxl_nvdimm_bridge *cxl_nvb;
+> > +     struct nvdimm *nvdimm = NULL;
+> >       unsigned long flags = 0;
+> > -     struct nvdimm *nvdimm;
+> >       int rc = -ENXIO;
+> >
+> >       cxl_nvb = cxl_find_nvdimm_bridge();
+> > @@ -50,25 +60,32 @@ static int cxl_nvdimm_probe(struct device *dev)
+> >
+> >       device_lock(&cxl_nvb->dev);
+> >       if (!cxl_nvb->nvdimm_bus)
+> > -             goto out;
+> > +             goto out_unlock;
+> > +
+> > +     set_exclusive_cxl_commands(cxlm, exclusive_cmds);
+> >
+> >       set_bit(NDD_LABELING, &flags);
+> > +     rc = -ENOMEM;
+>
+> Hmm. Setting rc to an error value even in the good path is a bit
+> unusual.  I'd just add the few lines to set rc = -ENXIO only in the error
+> path above and
+> rc = -ENOMEM here only if nvdimm_create fails.
+>
+> What you have strikes me as a bit too clever :)
+
+Agree, and devm slots in nicely again with that removed.
