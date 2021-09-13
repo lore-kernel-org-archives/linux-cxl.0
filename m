@@ -7,38 +7,39 @@ X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75DEC433FE
-	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 16:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69724C4332F
+	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 16:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADB0A60EFF
-	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 16:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BD9B60F6C
+	for <linux-cxl@archiver.kernel.org>; Mon, 13 Sep 2021 16:33:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237290AbhIMQfL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 13 Sep 2021 12:35:11 -0400
+        id S237748AbhIMQfM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 13 Sep 2021 12:35:12 -0400
 Received: from mga14.intel.com ([192.55.52.115]:17901 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237242AbhIMQfL (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 13 Sep 2021 12:35:11 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10106"; a="221393856"
+        id S237242AbhIMQfM (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 13 Sep 2021 12:35:12 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10106"; a="221393861"
 X-IronPort-AV: E=Sophos;i="5.85,290,1624345200"; 
-   d="scan'208";a="221393856"
+   d="scan'208";a="221393861"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2021 09:33:55 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2021 09:33:56 -0700
 X-IronPort-AV: E=Sophos;i="5.85,290,1624345200"; 
-   d="scan'208";a="469515035"
+   d="scan'208";a="469515040"
 Received: from dvannith-mobl.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.128.229])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2021 09:33:54 -0700
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2021 09:33:55 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH 2/3] cxl/core/bus: Document and tighten up decoder API
-Date:   Mon, 13 Sep 2021 09:33:23 -0700
-Message-Id: <20210913163324.1008564-3-ben.widawsky@intel.com>
+Subject: [PATCH 3/3] cxl/pci: Disambiguate cxl_pci further from cxl_mem
+Date:   Mon, 13 Sep 2021 09:33:24 -0700
+Message-Id: <20210913163324.1008564-4-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20210913163324.1008564-1-ben.widawsky@intel.com>
 References: <20210913163324.1008564-1-ben.widawsky@intel.com>
@@ -48,130 +49,267 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Since the code to add decoders for switches and endpoints is on the
-horizon, document the recently added interfaces that will be consumed by
-them. While doing this it became apparent that after a recent rework,
-the decoder registration routine (cxl_decoder_add) no longer needed the
-host device doing the enumeration.
+Commit 21e9f76733a8 ("cxl: Rename mem to pci") introduced the cxl_pci
+driver which had formerly been named cxl_mem. At the time, the goal was
+to be as light touch as possible because there were other patches in
+flight. Since things have settled now, and a new cxl_mem driver will be
+introduced shortly, spend the LOC now to clean up the existing names.
 
+While here, fix the kernel docs to explain the situation better after
+the core rework that has already landed.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- drivers/cxl/acpi.c     |  4 ++--
- drivers/cxl/core/bus.c | 36 ++++++++++++++++++++++++++++++------
- drivers/cxl/cxl.h      |  3 +--
- 3 files changed, 33 insertions(+), 10 deletions(-)
+ drivers/cxl/pci.c | 68 ++++++++++++++++++++++++-----------------------
+ 1 file changed, 35 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 654a80547526..42879e8806ac 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -133,7 +133,7 @@ static void cxl_add_cfmws_decoders(struct device *dev,
- 		cxld->interleave_granularity =
- 			CFMWS_INTERLEAVE_GRANULARITY(cfmws);
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 27f75b5a2ee2..64180f46c895 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -16,14 +16,16 @@
+  *
+  * This implements the PCI exclusive functionality for a CXL device as it is
+  * defined by the Compute Express Link specification. CXL devices may surface
+- * certain functionality even if it isn't CXL enabled.
++ * certain functionality even if it isn't CXL enabled. While this driver is
++ * focused around the PCI specific aspects of a CXL device, it binds to the
++ * specific CXL memory device class code, and therefore the implementation of
++ * cxl_pci is focused around CXL memory devices.
+  *
+  * The driver has several responsibilities, mainly:
+  *  - Create the memX device and register on the CXL bus.
+  *  - Enumerate device's register interface and map them.
+- *  - Probe the device attributes to establish sysfs interface.
+- *  - Provide an IOCTL interface to userspace to communicate with the device for
+- *    things like firmware update.
++ *  - Registers nvdimm bridge device with cxl_core.
++ *  - Registers a CXL mailbox with cxl_core.
+  */
  
--		rc = cxl_decoder_add(dev, cxld, target_map);
-+		rc = cxl_decoder_add(cxld, target_map);
- 		if (rc)
- 			put_device(&cxld->dev);
- 		else
-@@ -346,7 +346,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+ #define cxl_doorbell_busy(cxlm)                                                \
+@@ -33,7 +35,7 @@
+ /* CXL 2.0 - 8.2.8.4 */
+ #define CXL_MAILBOX_TIMEOUT_MS (2 * HZ)
  
- 	single_port_map[0] = dport->port_id;
- 
--	rc = cxl_decoder_add(host, cxld, single_port_map);
-+	rc = cxl_decoder_add(cxld, single_port_map);
- 	if (rc)
- 		put_device(&cxld->dev);
- 	else
-diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-index be787685b13e..a51a77e725c1 100644
---- a/drivers/cxl/core/bus.c
-+++ b/drivers/cxl/core/bus.c
-@@ -453,8 +453,8 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport_dev, int port_id,
- }
- EXPORT_SYMBOL_GPL(cxl_add_dport);
- 
--static int decoder_populate_targets(struct device *host,
--				    struct cxl_decoder *cxld,
-+
-+static int decoder_populate_targets(struct cxl_decoder *cxld,
- 				    struct cxl_port *port, int *target_map)
+-static int cxl_mem_wait_for_doorbell(struct cxl_mem *cxlm)
++static int cxl_pci_mbox_wait_for_doorbell(struct cxl_mem *cxlm)
  {
- 	int rc = 0, i;
-@@ -473,7 +473,7 @@ static int decoder_populate_targets(struct device *host,
- 			rc = -ENXIO;
- 			break;
- 		}
--		dev_dbg(host, "%s: target: %d\n", dev_name(dport->dport), i);
-+		dev_dbg(&cxld->dev, "%s: target: %d\n", dev_name(dport->dport), i);
- 		cxld->target[i] = dport;
+ 	const unsigned long start = jiffies;
+ 	unsigned long end = start;
+@@ -55,7 +57,7 @@ static int cxl_mem_wait_for_doorbell(struct cxl_mem *cxlm)
+ 	return 0;
+ }
+ 
+-static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
++static void cxl_pci_mbox_timeout(struct cxl_mem *cxlm,
+ 				 struct cxl_mbox_cmd *mbox_cmd)
+ {
+ 	struct device *dev = cxlm->dev;
+@@ -65,7 +67,7 @@ static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
+ }
+ 
+ /**
+- * __cxl_mem_mbox_send_cmd() - Execute a mailbox command
++ * __cxl_pci_mbox_send_cmd() - Execute a mailbox command
+  * @cxlm: The CXL memory device to communicate with.
+  * @mbox_cmd: Command to send to the memory device.
+  *
+@@ -86,7 +88,7 @@ static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
+  * not need to coordinate with each other. The driver only uses the primary
+  * mailbox.
+  */
+-static int __cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
++static int __cxl_pci_mbox_send_cmd(struct cxl_mem *cxlm,
+ 				   struct cxl_mbox_cmd *mbox_cmd)
+ {
+ 	void __iomem *payload = cxlm->regs.mbox + CXLDEV_MBOX_PAYLOAD_OFFSET;
+@@ -140,9 +142,9 @@ static int __cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
+ 	       cxlm->regs.mbox + CXLDEV_MBOX_CTRL_OFFSET);
+ 
+ 	/* #5 */
+-	rc = cxl_mem_wait_for_doorbell(cxlm);
++	rc = cxl_pci_mbox_wait_for_doorbell(cxlm);
+ 	if (rc == -ETIMEDOUT) {
+-		cxl_mem_mbox_timeout(cxlm, mbox_cmd);
++		cxl_pci_mbox_timeout(cxlm, mbox_cmd);
+ 		return rc;
  	}
- 	device_unlock(&port->dev);
-@@ -481,6 +481,18 @@ static int decoder_populate_targets(struct device *host,
- 	return rc;
+ 
+@@ -181,13 +183,13 @@ static int __cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
  }
  
-+/**
-+ * cxl_decoder_alloc - Allocate a new CXL decoder
-+ * @port: owning port of this decoder
-+ * @nr_targets: downstream targets accessible by this decoder. While >= 1 is
-+ *              defined by the CXL specification, due to error conditions it is
-+ *              possible that a port may have 0 decoders.
-+ *
-+ * A port should contain one or more decoders. Each of those decoders enable
-+ * some address space for CXL.mem utilization.
-+ *
-+ * Return: A new cxl decoder to be registered by cxl_decoder_add()
-+ */
- struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
+ /**
+- * cxl_mem_mbox_get() - Acquire exclusive access to the mailbox.
++ * cxl_pci_mbox_get() - Acquire exclusive access to the mailbox.
+  * @cxlm: The memory device to gain access to.
+  *
+  * Context: Any context. Takes the mbox_mutex.
+  * Return: 0 if exclusive access was acquired.
+  */
+-static int cxl_mem_mbox_get(struct cxl_mem *cxlm)
++static int cxl_pci_mbox_get(struct cxl_mem *cxlm)
  {
- 	struct cxl_decoder *cxld;
-@@ -519,8 +531,20 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
+ 	struct device *dev = cxlm->dev;
+ 	u64 md_status;
+@@ -212,7 +214,7 @@ static int cxl_mem_mbox_get(struct cxl_mem *cxlm)
+ 	 *    Mailbox Interface Ready bit. Therefore, waiting for the doorbell
+ 	 *    to be ready is sufficient.
+ 	 */
+-	rc = cxl_mem_wait_for_doorbell(cxlm);
++	rc = cxl_pci_mbox_wait_for_doorbell(cxlm);
+ 	if (rc) {
+ 		dev_warn(dev, "Mailbox interface not ready\n");
+ 		goto out;
+@@ -252,12 +254,12 @@ static int cxl_mem_mbox_get(struct cxl_mem *cxlm)
  }
- EXPORT_SYMBOL_GPL(cxl_decoder_alloc);
  
--int cxl_decoder_add(struct device *host, struct cxl_decoder *cxld,
--		    int *target_map)
-+/**
-+ * cxl_decoder_add - Add a decoder with targets
-+ * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
-+ * @target_map: A list of downstream ports that this decoder can direct memory
-+ *              traffic to. These numbers should correspond with the port number
-+ *              in the PCIe Link Capabilities structure.
-+ *
-+ * Return: 0 if decoder was successfully added.
-+ *
-+ * Certain types of decoders may not have any targets. The main example of this
-+ * is an endpoint device. A more awkward example is a hostbridge whose root
-+ * ports get hot added (technically possible, though unlikely).
-+ */
-+int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+ /**
+- * cxl_mem_mbox_put() - Release exclusive access to the mailbox.
++ * cxl_pci_mbox_put() - Release exclusive access to the mailbox.
+  * @cxlm: The CXL memory device to communicate with.
+  *
+  * Context: Any context. Expects mbox_mutex to be held.
+  */
+-static void cxl_mem_mbox_put(struct cxl_mem *cxlm)
++static void cxl_pci_mbox_put(struct cxl_mem *cxlm)
  {
- 	struct cxl_port *port;
- 	struct device *dev;
-@@ -536,7 +560,7 @@ int cxl_decoder_add(struct device *host, struct cxl_decoder *cxld,
- 		return -EINVAL;
+ 	mutex_unlock(&cxlm->mbox_mutex);
+ }
+@@ -266,17 +268,17 @@ static int cxl_pci_mbox_send(struct cxl_mem *cxlm, struct cxl_mbox_cmd *cmd)
+ {
+ 	int rc;
  
- 	port = to_cxl_port(cxld->dev.parent);
--	rc = decoder_populate_targets(host, cxld, port, target_map);
-+	rc = decoder_populate_targets(cxld, port, target_map);
+-	rc = cxl_mem_mbox_get(cxlm);
++	rc = cxl_pci_mbox_get(cxlm);
  	if (rc)
  		return rc;
  
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 6c7a7e9af0d4..7d6b011dd963 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -289,8 +289,7 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
- struct cxl_decoder *to_cxl_decoder(struct device *dev);
- bool is_root_decoder(struct device *dev);
- struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets);
--int cxl_decoder_add(struct device *host, struct cxl_decoder *cxld,
--		    int *target_map);
-+int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
- int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld);
+-	rc = __cxl_mem_mbox_send_cmd(cxlm, cmd);
+-	cxl_mem_mbox_put(cxlm);
++	rc = __cxl_pci_mbox_send_cmd(cxlm, cmd);
++	cxl_pci_mbox_put(cxlm);
  
- extern struct bus_type cxl_bus_type;
+ 	return rc;
+ }
+ 
+-static int cxl_mem_setup_mailbox(struct cxl_mem *cxlm)
++static int cxl_pci_setup_mailbox(struct cxl_mem *cxlm)
+ {
+ 	const int cap = readl(cxlm->regs.mbox + CXLDEV_MBOX_CAPS_OFFSET);
+ 
+@@ -304,7 +306,7 @@ static int cxl_mem_setup_mailbox(struct cxl_mem *cxlm)
+ 	return 0;
+ }
+ 
+-static void __iomem *cxl_mem_map_regblock(struct cxl_mem *cxlm,
++static void __iomem *cxl_pci_map_regblock(struct cxl_mem *cxlm,
+ 					  u8 bar, u64 offset)
+ {
+ 	void __iomem *addr;
+@@ -330,12 +332,12 @@ static void __iomem *cxl_mem_map_regblock(struct cxl_mem *cxlm,
+ 	return addr;
+ }
+ 
+-static void cxl_mem_unmap_regblock(struct cxl_mem *cxlm, void __iomem *base)
++static void cxl_pci_unmap_regblock(struct cxl_mem *cxlm, void __iomem *base)
+ {
+ 	pci_iounmap(to_pci_dev(cxlm->dev), base);
+ }
+ 
+-static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
++static int cxl_pci_dvsec(struct pci_dev *pdev, int dvsec)
+ {
+ 	int pos;
+ 
+@@ -427,7 +429,7 @@ static void cxl_decode_register_block(u32 reg_lo, u32 reg_hi,
+ }
+ 
+ /**
+- * cxl_mem_setup_regs() - Setup necessary MMIO.
++ * cxl_pci_setup_regs() - Setup necessary MMIO.
+  * @cxlm: The CXL memory device to communicate with.
+  *
+  * Return: 0 if all necessary registers mapped.
+@@ -436,7 +438,7 @@ static void cxl_decode_register_block(u32 reg_lo, u32 reg_hi,
+  * regions. The purpose of this function is to enumerate and map those
+  * registers.
+  */
+-static int cxl_mem_setup_regs(struct cxl_mem *cxlm)
++static int cxl_pci_setup_regs(struct cxl_mem *cxlm)
+ {
+ 	void __iomem *base;
+ 	u32 regloc_size, regblocks;
+@@ -445,7 +447,7 @@ static int cxl_mem_setup_regs(struct cxl_mem *cxlm)
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct cxl_register_map *map, maps[CXL_REGLOC_RBI_TYPES];
+ 
+-	regloc = cxl_mem_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID);
++	regloc = cxl_pci_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID);
+ 	if (!regloc) {
+ 		dev_err(dev, "register location dvsec not found\n");
+ 		return -ENXIO;
+@@ -480,7 +482,7 @@ static int cxl_mem_setup_regs(struct cxl_mem *cxlm)
+ 		if (reg_type > CXL_REGLOC_RBI_MEMDEV)
+ 			continue;
+ 
+-		base = cxl_mem_map_regblock(cxlm, bar, offset);
++		base = cxl_pci_map_regblock(cxlm, bar, offset);
+ 		if (!base)
+ 			return -ENOMEM;
+ 
+@@ -492,7 +494,7 @@ static int cxl_mem_setup_regs(struct cxl_mem *cxlm)
+ 		ret = cxl_probe_regs(cxlm, base + offset, map);
+ 
+ 		/* Always unmap the regblock regardless of probe success */
+-		cxl_mem_unmap_regblock(cxlm, base);
++		cxl_pci_unmap_regblock(cxlm, base);
+ 
+ 		if (ret)
+ 			return ret;
+@@ -511,7 +513,7 @@ static int cxl_mem_setup_regs(struct cxl_mem *cxlm)
+ 	return ret;
+ }
+ 
+-static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
++static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ {
+ 	struct cxl_memdev *cxlmd;
+ 	struct cxl_mem *cxlm;
+@@ -532,11 +534,11 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (IS_ERR(cxlm))
+ 		return PTR_ERR(cxlm);
+ 
+-	rc = cxl_mem_setup_regs(cxlm);
++	rc = cxl_pci_setup_regs(cxlm);
+ 	if (rc)
+ 		return rc;
+ 
+-	rc = cxl_mem_setup_mailbox(cxlm);
++	rc = cxl_pci_setup_mailbox(cxlm);
+ 	if (rc)
+ 		return rc;
+ 
+@@ -569,15 +571,15 @@ static const struct pci_device_id cxl_mem_pci_tbl[] = {
+ };
+ MODULE_DEVICE_TABLE(pci, cxl_mem_pci_tbl);
+ 
+-static struct pci_driver cxl_mem_driver = {
++static struct pci_driver cxl_pci_driver = {
+ 	.name			= KBUILD_MODNAME,
+ 	.id_table		= cxl_mem_pci_tbl,
+-	.probe			= cxl_mem_probe,
++	.probe			= cxl_pci_probe,
+ 	.driver	= {
+ 		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
+ 	},
+ };
+ 
+ MODULE_LICENSE("GPL v2");
+-module_pci_driver(cxl_mem_driver);
++module_pci_driver(cxl_pci_driver);
+ MODULE_IMPORT_NS(CXL);
 -- 
 2.33.0
 
