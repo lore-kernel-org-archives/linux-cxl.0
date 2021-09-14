@@ -2,135 +2,98 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 097B6C433F5
-	for <linux-cxl@archiver.kernel.org>; Tue, 14 Sep 2021 09:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B152AC433EF
+	for <linux-cxl@archiver.kernel.org>; Tue, 14 Sep 2021 12:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E000A61056
-	for <linux-cxl@archiver.kernel.org>; Tue, 14 Sep 2021 09:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E40603E8
+	for <linux-cxl@archiver.kernel.org>; Tue, 14 Sep 2021 12:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229912AbhINJDR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 14 Sep 2021 05:03:17 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3790 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229868AbhINJDQ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 14 Sep 2021 05:03:16 -0400
-Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4H7y2x2Y8Cz67lk7;
-        Tue, 14 Sep 2021 16:59:37 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Tue, 14 Sep 2021 11:01:58 +0200
-Received: from localhost (10.52.120.164) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Tue, 14 Sep
- 2021 10:01:57 +0100
-Date:   Tue, 14 Sep 2021 10:01:54 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+        id S232506AbhINMXd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 14 Sep 2021 08:23:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232341AbhINMXb (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 14 Sep 2021 08:23:31 -0400
+Received: from mail-qv1-xf34.google.com (mail-qv1-xf34.google.com [IPv6:2607:f8b0:4864:20::f34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DF6EC061574
+        for <linux-cxl@vger.kernel.org>; Tue, 14 Sep 2021 05:22:14 -0700 (PDT)
+Received: by mail-qv1-xf34.google.com with SMTP id z12so8249640qvx.5
+        for <linux-cxl@vger.kernel.org>; Tue, 14 Sep 2021 05:22:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4EfrPUEpZjNfYI9C9dwg47FwF8i42QF8x9451dn0m4k=;
+        b=HksAniPk7LVuwk4QXw91xIeDEH63QADXXNCPrzlxfG58hI6T4TKL6ofbJJbK1Cmy31
+         bUNdjy3bmOx7A5P8l51h7wl+w8eCfufrBSh10bRXxZY+Mlj2Z9yW1qJ+AvThPBY0j82d
+         I1CTpm/Z4MNDRo2KQqSkAdeNaCj6bq9dko9H0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4EfrPUEpZjNfYI9C9dwg47FwF8i42QF8x9451dn0m4k=;
+        b=GUlXaTMCULWxmT5dRB8B7H8lPygLrY2U5lS42Z+B4aEBWSP/GbrIRcUgCuIsmvaerz
+         nB8ENoMN6rc06bDEVEHB86GTwKktxD0/2R4CJVeweFDWThfpIV8BGGvXKFKq73v6ITia
+         3lWrVc+jTMrfQrKtUZNkBU2MjnieIJbTKdOCH1qJIBmZB4mDouc6hmeUR/jqZhc5GMHo
+         hGKX3aFCL+uqLbqF6h3jn7UzvS5kQsccPToo0ClFlIQRYxieIucMlbw+PdrBTxtnBpbA
+         jzpdCkMUlnpgCxVUXfvqNHt/qIgxhj+gt1dvxedKUAZOPlvpCFzcX/uCxFFCb6yRjohv
+         LohQ==
+X-Gm-Message-State: AOAM533qeUl64H+hoov3KEIddxwTi+hj2xeqDBxUa+SEDdslDhec2d+X
+        FPF+kRFBQV8a084rKuNRoGGvEw==
+X-Google-Smtp-Source: ABdhPJyvEG2pQ5qGBNdlYnK7urBC3ENhewUIxlVZV2tRwF3c8rp5TYOrYBYYbckZqoPkRVEs7E9ZVQ==
+X-Received: by 2002:ad4:522c:: with SMTP id r12mr4831569qvq.17.1631622133662;
+        Tue, 14 Sep 2021 05:22:13 -0700 (PDT)
+Received: from meerkat.local (bras-base-mtrlpq5031w-grc-32-216-209-220-181.dsl.bell.ca. [216.209.220.181])
+        by smtp.gmail.com with ESMTPSA id a22sm5904669qtd.56.2021.09.14.05.22.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Sep 2021 05:22:13 -0700 (PDT)
+Date:   Tue, 14 Sep 2021 08:22:11 -0400
+From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
 To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
         Vishal L Verma <vishal.l.verma@intel.com>,
         Linux NVDIMM <nvdimm@lists.linux.dev>,
         "Schofield, Alison" <alison.schofield@intel.com>,
         "Weiny, Ira" <ira.weiny@intel.com>
 Subject: Re: [PATCH v4 14/21] cxl/mbox: Add exclusive kernel command support
-Message-ID: <20210914100154.00007425@Huawei.com>
-In-Reply-To: <CAPcyv4i48AHtHOAJVsDKQ+Zg2QqnvQg1Ur8ekb6qR6cRDbkAzQ@mail.gmail.com>
+Message-ID: <20210914122211.5pm6h3gppwfh763t@meerkat.local>
 References: <163116429183.2460985.5040982981112374615.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <163116436926.2460985.1268688593156766623.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <20210910103348.00005b5c@Huawei.com>
-        <CAPcyv4i48AHtHOAJVsDKQ+Zg2QqnvQg1Ur8ekb6qR6cRDbkAzQ@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+ <163116436926.2460985.1268688593156766623.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20210910103348.00005b5c@Huawei.com>
+ <CAPcyv4i48AHtHOAJVsDKQ+Zg2QqnvQg1Ur8ekb6qR6cRDbkAzQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.120.164]
-X-ClientProxiedBy: lhreml726-chm.china.huawei.com (10.201.108.77) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4i48AHtHOAJVsDKQ+Zg2QqnvQg1Ur8ekb6qR6cRDbkAzQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-> > > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> > > index df2ba87238c2..d9ade5b92330 100644
-> > > --- a/drivers/cxl/core/memdev.c
-> > > +++ b/drivers/cxl/core/memdev.c
-> > > @@ -134,6 +134,37 @@ static const struct device_type cxl_memdev_type = {
-> > >       .groups = cxl_memdev_attribute_groups,
-> > >  };
-> > >
-> > > +/**
-> > > + * set_exclusive_cxl_commands() - atomically disable user cxl commands
-> > > + * @cxlm: cxl_mem instance to modify
-> > > + * @cmds: bitmap of commands to mark exclusive
-> > > + *
-> > > + * Flush the ioctl path and disable future execution of commands with
-> > > + * the command ids set in @cmds.  
-> >
-> > It's not obvious this function is doing that 'flush', Perhaps consider rewording?  
+On Mon, Sep 13, 2021 at 04:46:47PM -0700, Dan Williams wrote:
+> > In the ideal world I'd like to have seen this as a noop patch going from devm
+> > to non devm for cleanup followed by new stuff.  meh, the world isn't ideal
+> > and all that sort of nice stuff takes time!
 > 
-> Changed it to:
-> 
-> "Grab the cxl_memdev_rwsem in write mode to flush in-flight
-> invocations of the ioctl path and then disable future execution of
-> commands with the command ids set in @cmds."
+> It would also require a series resend since I can't use the in-place
+> update in a way that b4 will recognize.
 
-Great
+BTW, b4 0.7+ can do partial series rerolls. You can just send a single
+follow-up patch without needing to reroll the whole series, e.g.:
 
-> 
-> >  
-> > > + */
-> > > +void set_exclusive_cxl_commands(struct cxl_mem *cxlm, unsigned long *cmds)
-> > > +{
-> > > +     down_write(&cxl_memdev_rwsem);
-> > > +     bitmap_or(cxlm->exclusive_cmds, cxlm->exclusive_cmds, cmds,
-> > > +               CXL_MEM_COMMAND_ID_MAX);
-> > > +     up_write(&cxl_memdev_rwsem);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(set_exclusive_cxl_commands);
+[PATCH 1/3]
+[PATCH 2/3]
+\- [PATCH v2 2/3]
+[PATCH 3/3]
 
-...
+This is enough for b4 to make a v2 series where only 2/3 is replaced.
 
-> > > diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-> > > index 9652c3ee41e7..a972af7a6e0b 100644
-> > > --- a/drivers/cxl/pmem.c
-> > > +++ b/drivers/cxl/pmem.c
-> > > @@ -16,10 +16,7 @@
-> > >   */
-> > >  static struct workqueue_struct *cxl_pmem_wq;
-> > >
+-K
 
-...
-
-> >  
-> > > +
-> > > +     nvdimm_delete(nvdimm);
-> > > +     clear_exclusive_cxl_commands(cxlm, exclusive_cmds);
-> > > +}
-> > > +
-> > >  static int cxl_nvdimm_probe(struct device *dev)
-> > >  {
-> > >       struct cxl_nvdimm *cxl_nvd = to_cxl_nvdimm(dev);
-> > > +     struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
-> > > +     struct cxl_mem *cxlm = cxlmd->cxlm;  
-> >
-> > Again, clxmd not used so could save a line of code
-> > without loosing anything (unless it get used in a later patch of
-> > course!)  
-> 
-> It is used... to grab cxlm, but it's an arbitrary style preference to
-> avoid de-reference chains longer than one. However, since I'm only
-> doing it once now perhaps you'll grant me this indulgence?
-> 
-
-This one was a 'could'.  Entirely up to you whether you do :)
-
-Jonathan
-
-
+(Yes, I am monitoring all mentions of "b4" on lore.kernel.org/all in a totally
+non-creepy way, I swear.)
