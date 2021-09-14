@@ -2,181 +2,193 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA83C433EF
-	for <linux-cxl@archiver.kernel.org>; Tue, 14 Sep 2021 00:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B92A2C433F5
+	for <linux-cxl@archiver.kernel.org>; Tue, 14 Sep 2021 08:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 727E26112E
-	for <linux-cxl@archiver.kernel.org>; Tue, 14 Sep 2021 00:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E96F61108
+	for <linux-cxl@archiver.kernel.org>; Tue, 14 Sep 2021 08:56:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235651AbhINANG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 13 Sep 2021 20:13:06 -0400
-Received: from mga09.intel.com ([134.134.136.24]:6765 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229482AbhINANF (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 13 Sep 2021 20:13:05 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10106"; a="221865395"
-X-IronPort-AV: E=Sophos;i="5.85,291,1624345200"; 
-   d="scan'208";a="221865395"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2021 17:11:49 -0700
-X-IronPort-AV: E=Sophos;i="5.85,291,1624345200"; 
-   d="scan'208";a="699058194"
-Received: from lwilson9-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.130.153])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2021 17:11:48 -0700
-Date:   Mon, 13 Sep 2021 17:11:46 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Alison Schofield <alison.schofield@intel.com>,
+        id S231182AbhINI5q (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 14 Sep 2021 04:57:46 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3788 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229526AbhINI5q (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 14 Sep 2021 04:57:46 -0400
+Received: from fraeml735-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4H7xwq1S5Mz67Y1y;
+        Tue, 14 Sep 2021 16:54:19 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml735-chm.china.huawei.com (10.206.15.216) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.8; Tue, 14 Sep 2021 10:56:27 +0200
+Received: from localhost (10.52.120.164) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Tue, 14 Sep
+ 2021 09:56:26 +0100
+Date:   Tue, 14 Sep 2021 09:56:23 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Sasha Levin <sashal@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        kernel test robot <lkp@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 2/3] cxl/core/bus: Document and tighten up decoder API
-Message-ID: <20210914001146.3xg4tbogh46m4sz4@intel.com>
-References: <20210913163324.1008564-1-ben.widawsky@intel.com>
- <20210913163324.1008564-3-ben.widawsky@intel.com>
+        <linux-doc@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH AUTOSEL 5.14 03/25] cxl: Move cxl_core to new directory
+Message-ID: <20210914095623.00005306@Huawei.com>
+In-Reply-To: <20210913223339.435347-3-sashal@kernel.org>
+References: <20210913223339.435347-1-sashal@kernel.org>
+        <20210913223339.435347-3-sashal@kernel.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210913163324.1008564-3-ben.widawsky@intel.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.120.164]
+X-ClientProxiedBy: lhreml726-chm.china.huawei.com (10.201.108.77) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21-09-13 09:33:23, Ben Widawsky wrote:
-> Since the code to add decoders for switches and endpoints is on the
-> horizon, document the recently added interfaces that will be consumed by
-> them. While doing this it became apparent that after a recent rework,
-> the decoder registration routine (cxl_decoder_add) no longer needed the
-> host device doing the enumeration.
+On Mon, 13 Sep 2021 18:33:17 -0400
+Sasha Levin <sashal@kernel.org> wrote:
+
+> From: Ben Widawsky <ben.widawsky@intel.com>
 > 
+> [ Upstream commit 5161a55c069f53d88da49274cbef6e3c74eadea9 ]
+> 
+> CXL core is growing, and it's already arguably unmanageable. To support
+> future growth, move core functionality to a new directory and rename the
+> file to represent just bus support. Future work will remove non-bus
+> functionality.
+> 
+> Note that mem.h is renamed to cxlmem.h to avoid a namespace collision
+> with the global ARCH=um mem.h header.
+
+Not a fix...
+
+I'm guessing this got picked up on the basis of the Reported-by: tag?
+I think that was added for a minor tweak as this went through review rather
+than referring to the whole patch.
+
+Jonathan
+
+
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-
-Please hold off on this one. I have reworded it already due to some other
-changes. Thanks.
-
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Link: https://lore.kernel.org/r/162792537866.368511.8915631504621088321.stgit@dwillia2-desk3.amr.corp.intel.com
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 > ---
->  drivers/cxl/acpi.c     |  4 ++--
->  drivers/cxl/core/bus.c | 36 ++++++++++++++++++++++++++++++------
->  drivers/cxl/cxl.h      |  3 +--
->  3 files changed, 33 insertions(+), 10 deletions(-)
+>  Documentation/driver-api/cxl/memory-devices.rst | 2 +-
+>  drivers/cxl/Makefile                            | 4 +---
+>  drivers/cxl/core/Makefile                       | 5 +++++
+>  drivers/cxl/{core.c => core/bus.c}              | 4 ++--
+>  drivers/cxl/{mem.h => cxlmem.h}                 | 0
+>  drivers/cxl/pci.c                               | 2 +-
+>  drivers/cxl/pmem.c                              | 2 +-
+>  7 files changed, 11 insertions(+), 8 deletions(-)
+>  create mode 100644 drivers/cxl/core/Makefile
+>  rename drivers/cxl/{core.c => core/bus.c} (99%)
+>  rename drivers/cxl/{mem.h => cxlmem.h} (100%)
 > 
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index 654a80547526..42879e8806ac 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -133,7 +133,7 @@ static void cxl_add_cfmws_decoders(struct device *dev,
->  		cxld->interleave_granularity =
->  			CFMWS_INTERLEAVE_GRANULARITY(cfmws);
+> diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
+> index 487ce4f41d77..a86e2c7c551a 100644
+> --- a/Documentation/driver-api/cxl/memory-devices.rst
+> +++ b/Documentation/driver-api/cxl/memory-devices.rst
+> @@ -36,7 +36,7 @@ CXL Core
+>  .. kernel-doc:: drivers/cxl/cxl.h
+>     :internal:
 >  
-> -		rc = cxl_decoder_add(dev, cxld, target_map);
-> +		rc = cxl_decoder_add(cxld, target_map);
->  		if (rc)
->  			put_device(&cxld->dev);
->  		else
-> @@ -346,7 +346,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+> -.. kernel-doc:: drivers/cxl/core.c
+> +.. kernel-doc:: drivers/cxl/core/bus.c
+>     :doc: cxl core
 >  
->  	single_port_map[0] = dport->port_id;
+>  External Interfaces
+> diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+> index 32954059b37b..d1aaabc940f3 100644
+> --- a/drivers/cxl/Makefile
+> +++ b/drivers/cxl/Makefile
+> @@ -1,11 +1,9 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -obj-$(CONFIG_CXL_BUS) += cxl_core.o
+> +obj-$(CONFIG_CXL_BUS) += core/
+>  obj-$(CONFIG_CXL_MEM) += cxl_pci.o
+>  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+>  obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
 >  
-> -	rc = cxl_decoder_add(host, cxld, single_port_map);
-> +	rc = cxl_decoder_add(cxld, single_port_map);
->  	if (rc)
->  		put_device(&cxld->dev);
->  	else
-> diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-> index be787685b13e..a51a77e725c1 100644
-> --- a/drivers/cxl/core/bus.c
-> +++ b/drivers/cxl/core/bus.c
-> @@ -453,8 +453,8 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport_dev, int port_id,
->  }
->  EXPORT_SYMBOL_GPL(cxl_add_dport);
->  
-> -static int decoder_populate_targets(struct device *host,
-> -				    struct cxl_decoder *cxld,
+> -ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
+> -cxl_core-y := core.o
+>  cxl_pci-y := pci.o
+>  cxl_acpi-y := acpi.o
+>  cxl_pmem-y := pmem.o
+> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+> new file mode 100644
+> index 000000000000..ad137f96e5c8
+> --- /dev/null
+> +++ b/drivers/cxl/core/Makefile
+> @@ -0,0 +1,5 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +obj-$(CONFIG_CXL_BUS) += cxl_core.o
 > +
-> +static int decoder_populate_targets(struct cxl_decoder *cxld,
->  				    struct cxl_port *port, int *target_map)
->  {
->  	int rc = 0, i;
-> @@ -473,7 +473,7 @@ static int decoder_populate_targets(struct device *host,
->  			rc = -ENXIO;
->  			break;
->  		}
-> -		dev_dbg(host, "%s: target: %d\n", dev_name(dport->dport), i);
-> +		dev_dbg(&cxld->dev, "%s: target: %d\n", dev_name(dport->dport), i);
->  		cxld->target[i] = dport;
->  	}
->  	device_unlock(&port->dev);
-> @@ -481,6 +481,18 @@ static int decoder_populate_targets(struct device *host,
->  	return rc;
->  }
+> +ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL -I$(srctree)/drivers/cxl
+> +cxl_core-y := bus.o
+> diff --git a/drivers/cxl/core.c b/drivers/cxl/core/bus.c
+> similarity index 99%
+> rename from drivers/cxl/core.c
+> rename to drivers/cxl/core/bus.c
+> index a2e4d54fc7bc..0815eec23944 100644
+> --- a/drivers/cxl/core.c
+> +++ b/drivers/cxl/core/bus.c
+> @@ -6,8 +6,8 @@
+>  #include <linux/pci.h>
+>  #include <linux/slab.h>
+>  #include <linux/idr.h>
+> -#include "cxl.h"
+> -#include "mem.h"
+> +#include <cxlmem.h>
+> +#include <cxl.h>
 >  
-> +/**
-> + * cxl_decoder_alloc - Allocate a new CXL decoder
-> + * @port: owning port of this decoder
-> + * @nr_targets: downstream targets accessible by this decoder. While >= 1 is
-> + *              defined by the CXL specification, due to error conditions it is
-> + *              possible that a port may have 0 decoders.
-> + *
-> + * A port should contain one or more decoders. Each of those decoders enable
-> + * some address space for CXL.mem utilization.
-> + *
-> + * Return: A new cxl decoder to be registered by cxl_decoder_add()
-> + */
->  struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
->  {
->  	struct cxl_decoder *cxld;
-> @@ -519,8 +531,20 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
->  }
->  EXPORT_SYMBOL_GPL(cxl_decoder_alloc);
+>  /**
+>   * DOC: cxl core
+> diff --git a/drivers/cxl/mem.h b/drivers/cxl/cxlmem.h
+> similarity index 100%
+> rename from drivers/cxl/mem.h
+> rename to drivers/cxl/cxlmem.h
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 4cf351a3cf99..a945c5fda292 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -12,9 +12,9 @@
+>  #include <linux/pci.h>
+>  #include <linux/io.h>
+>  #include <linux/io-64-nonatomic-lo-hi.h>
+> +#include "cxlmem.h"
+>  #include "pci.h"
+>  #include "cxl.h"
+> -#include "mem.h"
 >  
-> -int cxl_decoder_add(struct device *host, struct cxl_decoder *cxld,
-> -		    int *target_map)
-> +/**
-> + * cxl_decoder_add - Add a decoder with targets
-> + * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
-> + * @target_map: A list of downstream ports that this decoder can direct memory
-> + *              traffic to. These numbers should correspond with the port number
-> + *              in the PCIe Link Capabilities structure.
-> + *
-> + * Return: 0 if decoder was successfully added.
-> + *
-> + * Certain types of decoders may not have any targets. The main example of this
-> + * is an endpoint device. A more awkward example is a hostbridge whose root
-> + * ports get hot added (technically possible, though unlikely).
-> + */
-> +int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
->  {
->  	struct cxl_port *port;
->  	struct device *dev;
-> @@ -536,7 +560,7 @@ int cxl_decoder_add(struct device *host, struct cxl_decoder *cxld,
->  		return -EINVAL;
+>  /**
+>   * DOC: cxl pci
+> diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+> index 0088e41dd2f3..9652c3ee41e7 100644
+> --- a/drivers/cxl/pmem.c
+> +++ b/drivers/cxl/pmem.c
+> @@ -6,7 +6,7 @@
+>  #include <linux/ndctl.h>
+>  #include <linux/async.h>
+>  #include <linux/slab.h>
+> -#include "mem.h"
+> +#include "cxlmem.h"
+>  #include "cxl.h"
 >  
->  	port = to_cxl_port(cxld->dev.parent);
-> -	rc = decoder_populate_targets(host, cxld, port, target_map);
-> +	rc = decoder_populate_targets(cxld, port, target_map);
->  	if (rc)
->  		return rc;
->  
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 6c7a7e9af0d4..7d6b011dd963 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -289,8 +289,7 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
->  struct cxl_decoder *to_cxl_decoder(struct device *dev);
->  bool is_root_decoder(struct device *dev);
->  struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets);
-> -int cxl_decoder_add(struct device *host, struct cxl_decoder *cxld,
-> -		    int *target_map);
-> +int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
->  int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld);
->  
->  extern struct bus_type cxl_bus_type;
-> -- 
-> 2.33.0
-> 
+>  /*
+
