@@ -2,96 +2,116 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CF5C433FE
-	for <linux-cxl@archiver.kernel.org>; Tue, 14 Sep 2021 15:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1336C433F5
+	for <linux-cxl@archiver.kernel.org>; Tue, 14 Sep 2021 15:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACEA86112D
-	for <linux-cxl@archiver.kernel.org>; Tue, 14 Sep 2021 15:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93FE660F11
+	for <linux-cxl@archiver.kernel.org>; Tue, 14 Sep 2021 15:51:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234464AbhINPng (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 14 Sep 2021 11:43:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55510 "EHLO
+        id S235099AbhINPxL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 14 Sep 2021 11:53:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234803AbhINPnd (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 14 Sep 2021 11:43:33 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0175DC061574
-        for <linux-cxl@vger.kernel.org>; Tue, 14 Sep 2021 08:42:16 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id f3-20020a17090a638300b00199097ddf1aso2513648pjj.0
-        for <linux-cxl@vger.kernel.org>; Tue, 14 Sep 2021 08:42:15 -0700 (PDT)
+        with ESMTP id S234989AbhINPxE (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 14 Sep 2021 11:53:04 -0400
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D472C0613E1
+        for <linux-cxl@vger.kernel.org>; Tue, 14 Sep 2021 08:51:45 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id r21so11847199qtw.11
+        for <linux-cxl@vger.kernel.org>; Tue, 14 Sep 2021 08:51:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uqrZf2RpvTXlUmbRyI2QxPTRCT62GWMUqprCb4O9iv0=;
-        b=R68nkCIBgi4tzTf2MsQxydUGK5qmIiOepWBVPDzhpnm4nX8LXu58vXbtjzmF+E8byt
-         8XTqcGe917Vrbpjr71mFbX1tJFns3YkzB9/rGD3J7a5+FdTugj8ONEIiiO6qXJqoBHX9
-         lMoFuKn75vZN3Txje64yeqHoFnlU9Ukbjn3YJ0nvUIaMymTN1Hntmmw4vXFkudk/3fkl
-         lOSrmvIwupDazVsHuXC7BSP/kradpQEU3rS2If8rC/6nrKUQTBunjN3/mwe1kRBUhr+4
-         U9p7my/NY7OVuJXjqhH1E0g+jrvxwSqrNUUTAUKeqD29Tq0n8/de8TeKkBYA+i3hzDwD
-         16yw==
+        d=linuxfoundation.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wpm3EKcVYyz7LQSzWSg/19JHgrxbG8xZ10fGoXa6mFA=;
+        b=DDAhlig91/9XaQ6Ex1B8amqRl4P77Qh6wJzLlL9yX9K0IzUF+p4ztuhhey1yn9bxSZ
+         7JjQg3EEvuUO+l34US04F0v5tdxGBcMDi7JTSD/wJqdOcM3/NQFmZrt8c2A0PFTzxm79
+         QO81/MGIXBZB/AzZaoUx7lhUFUPTvgfjymY68=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uqrZf2RpvTXlUmbRyI2QxPTRCT62GWMUqprCb4O9iv0=;
-        b=4kEyM03bkwaYO8gTRJeVgnUbJd7Oy890Bz9KwQG+OplpQ6XvRG/7ODWYE40PXxiUeH
-         Z0kJ0GuplO2aF+aQJdU1a1GJ1lbUSoctgziX9Ge1C6y+fWd9DhM8qWVQi41/G5BOoYZY
-         SNopxg6qR1IlDPmzg5aMEYl4NSO6zvV9rMrpIWJEGc3pxRP2zKk4SeZWcUlTQITD+l8w
-         hcjhG14Bdq0n3Phyl+szg44hiSCC/+5PWiWHPI/zc9rgxMyEIltz1DfFmDHR+LrO/cpX
-         IGfQIjxJrA7EL/8ANlGAzWRm6jf1tCIfAfAR1KqTPyAHrdt6kqH/yyKGg8RA47MyBkVV
-         0x3g==
-X-Gm-Message-State: AOAM530WWoGom3J4GUVrNqyIOdxn/bjZnTAnYTVToQa0OC0JdO9/xhJj
-        QdTfUTqN0+pMQ6PBelaboNKjvUlLGW63T+SvEO7cHA==
-X-Google-Smtp-Source: ABdhPJwdSVBKoaQKVJDayqeNTdAmPJTaWf0sE3199v0xfH37WlYDE5QvLJk18AFTt9/gOMFZnUXlAkZMmBQ27SCKhmI=
-X-Received: by 2002:a17:902:e80f:b0:13b:721d:f750 with SMTP id
- u15-20020a170902e80f00b0013b721df750mr15580149plg.18.1631634135572; Tue, 14
- Sep 2021 08:42:15 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wpm3EKcVYyz7LQSzWSg/19JHgrxbG8xZ10fGoXa6mFA=;
+        b=HCgfxSezgyBjv7M5nA2+e0YRh3Ayb5Nv1DU0nl8Em9JyTxHtztO2JIpQ1Q4j44MVTd
+         3t3eb0kcHeDwtoQMyA0rP+kUyN6+Eb/Q3sUXpkFHlqokmBby3ykLj9H1iRL9y/Mxm7sI
+         WpgHVH12paASKptomTbqn4ThDRY4BBTXP/ggV6h1PenftSXS1sSoy5GDAB6owQCijkKX
+         q6aSItE0jbsEz0mMyzquGa5Vibrn8Qxq4HZDRgg7eo2+M3wKHw7w5YtworgRYGwjmsbQ
+         akByd/z7vQ505skzIQz7j21YyypwIIMHZqKLTiRE82I9l2rgzeoi6VVnyBT8xCpMscdE
+         8+Ng==
+X-Gm-Message-State: AOAM530xHOgV0xzyZs6o2jq2yZZ/M+7OSb/Hmq/BzqD/D4vC85k0aGMK
+        qHhZnoficA4M1ScysO1VxBteLA==
+X-Google-Smtp-Source: ABdhPJyTkD7AX/OAq0MPZ7v+TkEUDhAIH8BSJ3PJuBuMuksD9qKKq6mx7wPMEQfaGXkmHTzYqcy10g==
+X-Received: by 2002:a05:622a:1792:: with SMTP id s18mr5472991qtk.136.1631634704548;
+        Tue, 14 Sep 2021 08:51:44 -0700 (PDT)
+Received: from meerkat.local (bras-base-mtrlpq5031w-grc-32-216-209-220-181.dsl.bell.ca. [216.209.220.181])
+        by smtp.gmail.com with ESMTPSA id c20sm7582006qkk.121.2021.09.14.08.51.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Sep 2021 08:51:44 -0700 (PDT)
+Date:   Tue, 14 Sep 2021 11:51:42 -0400
+From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>
+Subject: Re: [PATCH v4 14/21] cxl/mbox: Add exclusive kernel command support
+Message-ID: <20210914155142.sshxiqaorrmoxfna@meerkat.local>
+References: <163116429183.2460985.5040982981112374615.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <163116436926.2460985.1268688593156766623.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20210910103348.00005b5c@Huawei.com>
+ <CAPcyv4i48AHtHOAJVsDKQ+Zg2QqnvQg1Ur8ekb6qR6cRDbkAzQ@mail.gmail.com>
+ <20210914122211.5pm6h3gppwfh763t@meerkat.local>
+ <CAPcyv4j5FxmDX0fjgCKs9V4Avn3JD-5JMt4MxNy3_DH_x_tGug@mail.gmail.com>
 MIME-Version: 1.0
-References: <20210913223339.435347-1-sashal@kernel.org> <20210913223339.435347-4-sashal@kernel.org>
-In-Reply-To: <20210913223339.435347-4-sashal@kernel.org>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 14 Sep 2021 08:42:04 -0700
-Message-ID: <CAPcyv4i5OHv2wHTO1Pdjz+qzAAWEha-7HdDdt42VyO_FasLSEA@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.14 04/25] cxl/pci: Introduce cdevm_file_operations
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4j5FxmDX0fjgCKs9V4Avn3JD-5JMt4MxNy3_DH_x_tGug@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Sep 13, 2021 at 3:33 PM Sasha Levin <sashal@kernel.org> wrote:
->
-> From: Dan Williams <dan.j.williams@intel.com>
->
-> [ Upstream commit 9cc238c7a526dba9ee8c210fa2828886fc65db66 ]
->
-> In preparation for moving cxl_memdev allocation to the core, introduce
-> cdevm_file_operations to coordinate file operations shutdown relative to
-> driver data release.
->
-> The motivation for moving cxl_memdev allocation to the core (beyond
-> better file organization of sysfs attributes in core/ and drivers in
-> cxl/), is that device lifetime is longer than module lifetime. The cxl_pci
-> module should be free to come and go without needing to coordinate with
-> devices that need the text associated with cxl_memdev_release() to stay
-> resident. The move will fix a use after free bug when looping driver
-> load / unload with CONFIG_DEBUG_KOBJECT_RELEASE=y.
->
-> Another motivation for passing in file_operations to the core cxl_memdev
-> creation flow is to allow for alternate drivers, like unit test code, to
-> define their own ioctl backends.
+On Tue, Sep 14, 2021 at 07:39:47AM -0700, Dan Williams wrote:
+> > > It would also require a series resend since I can't use the in-place
+> > > update in a way that b4 will recognize.
+> >
+> > BTW, b4 0.7+ can do partial series rerolls. You can just send a single
+> > follow-up patch without needing to reroll the whole series, e.g.:
+> >
+> > [PATCH 1/3]
+> > [PATCH 2/3]
+> > \- [PATCH v2 2/3]
+> > [PATCH 3/3]
+> >
+> > This is enough for b4 to make a v2 series where only 2/3 is replaced.
+> 
+> Oh, yes, I use that liberally, istr asking for it originally. What I
+> was referring to here was feedback that alluded to injecting another
+> patch into the series, ala:
+> 
+> [PATCH 1/3]
+> [PATCH 2/3]
+> \- [PATCH v2 2/4]
+>  \- [PATCH v2 3/4]
+> [PATCH 3/3]   <-- this one would be 4/4
+> 
+> I don't expect b4 to handle that case, and would expect to re-roll the
+> series with the new numbering.
 
-Hi Sasha,
+Oooh, yeah, you're right. One option is to download the mbox file and manually
+edit the patch subject to be [PATCH v2 4/4].
 
-Please drop this. It's not a fix, it's just a reorganization for
-easing the addition of new features and capabilities.
+> > (Yes, I am monitoring all mentions of "b4" on lore.kernel.org/all in a totally
+> > non-creepy way, I swear.)
+> 
+> I still need to do that for my sub-systems.
+
+I'll provide ample docs by the time plumbers rolls around next week.
+
+-K
