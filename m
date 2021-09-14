@@ -2,48 +2,48 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5C0C433F5
-	for <linux-cxl@archiver.kernel.org>; Tue, 14 Sep 2021 08:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 097B6C433F5
+	for <linux-cxl@archiver.kernel.org>; Tue, 14 Sep 2021 09:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59D71610D1
-	for <linux-cxl@archiver.kernel.org>; Tue, 14 Sep 2021 08:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E000A61056
+	for <linux-cxl@archiver.kernel.org>; Tue, 14 Sep 2021 09:02:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229728AbhINI7M (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 14 Sep 2021 04:59:12 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3789 "EHLO
+        id S229912AbhINJDR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 14 Sep 2021 05:03:17 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3790 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229656AbhINI7M (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 14 Sep 2021 04:59:12 -0400
-Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4H7xyD497Yz67p6Q;
-        Tue, 14 Sep 2021 16:55:32 +0800 (CST)
+        with ESMTP id S229868AbhINJDQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 14 Sep 2021 05:03:16 -0400
+Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4H7y2x2Y8Cz67lk7;
+        Tue, 14 Sep 2021 16:59:37 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
+ fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Tue, 14 Sep 2021 10:57:53 +0200
+ 15.1.2308.8; Tue, 14 Sep 2021 11:01:58 +0200
 Received: from localhost (10.52.120.164) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Tue, 14 Sep
- 2021 09:57:52 +0100
-Date:   Tue, 14 Sep 2021 09:57:49 +0100
+ 2021 10:01:57 +0100
+Date:   Tue, 14 Sep 2021 10:01:54 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Sasha Levin <sashal@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        kernel test robot <lkp@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <linux-doc@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH AUTOSEL 5.14 03/25] cxl: Move cxl_core to new directory
-Message-ID: <20210914095749.0000151f@Huawei.com>
-In-Reply-To: <20210914095623.00005306@Huawei.com>
-References: <20210913223339.435347-1-sashal@kernel.org>
-        <20210913223339.435347-3-sashal@kernel.org>
-        <20210914095623.00005306@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>
+Subject: Re: [PATCH v4 14/21] cxl/mbox: Add exclusive kernel command support
+Message-ID: <20210914100154.00007425@Huawei.com>
+In-Reply-To: <CAPcyv4i48AHtHOAJVsDKQ+Zg2QqnvQg1Ur8ekb6qR6cRDbkAzQ@mail.gmail.com>
+References: <163116429183.2460985.5040982981112374615.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <163116436926.2460985.1268688593156766623.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <20210910103348.00005b5c@Huawei.com>
+        <CAPcyv4i48AHtHOAJVsDKQ+Zg2QqnvQg1Ur8ekb6qR6cRDbkAzQ@mail.gmail.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -57,149 +57,80 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 14 Sep 2021 09:56:23 +0100
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> > > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> > > index df2ba87238c2..d9ade5b92330 100644
+> > > --- a/drivers/cxl/core/memdev.c
+> > > +++ b/drivers/cxl/core/memdev.c
+> > > @@ -134,6 +134,37 @@ static const struct device_type cxl_memdev_type = {
+> > >       .groups = cxl_memdev_attribute_groups,
+> > >  };
+> > >
+> > > +/**
+> > > + * set_exclusive_cxl_commands() - atomically disable user cxl commands
+> > > + * @cxlm: cxl_mem instance to modify
+> > > + * @cmds: bitmap of commands to mark exclusive
+> > > + *
+> > > + * Flush the ioctl path and disable future execution of commands with
+> > > + * the command ids set in @cmds.  
+> >
+> > It's not obvious this function is doing that 'flush', Perhaps consider rewording?  
+> 
+> Changed it to:
+> 
+> "Grab the cxl_memdev_rwsem in write mode to flush in-flight
+> invocations of the ioctl path and then disable future execution of
+> commands with the command ids set in @cmds."
 
-> On Mon, 13 Sep 2021 18:33:17 -0400
-> Sasha Levin <sashal@kernel.org> wrote:
-> 
-> > From: Ben Widawsky <ben.widawsky@intel.com>
-> > 
-> > [ Upstream commit 5161a55c069f53d88da49274cbef6e3c74eadea9 ]
-> > 
-> > CXL core is growing, and it's already arguably unmanageable. To support
-> > future growth, move core functionality to a new directory and rename the
-> > file to represent just bus support. Future work will remove non-bus
-> > functionality.
-> > 
-> > Note that mem.h is renamed to cxlmem.h to avoid a namespace collision
-> > with the global ARCH=um mem.h header.  
-> 
-> Not a fix...
-> 
-> I'm guessing this got picked up on the basis of the Reported-by: tag?
-> I think that was added for a minor tweak as this went through review rather
-> than referring to the whole patch.
-Or possibly because it was a precursor to the fix in the next patch.
+Great
 
-Hmm.  Ben, Dan, does it make sense for these two to go into stable?
+> 
+> >  
+> > > + */
+> > > +void set_exclusive_cxl_commands(struct cxl_mem *cxlm, unsigned long *cmds)
+> > > +{
+> > > +     down_write(&cxl_memdev_rwsem);
+> > > +     bitmap_or(cxlm->exclusive_cmds, cxlm->exclusive_cmds, cmds,
+> > > +               CXL_MEM_COMMAND_ID_MAX);
+> > > +     up_write(&cxl_memdev_rwsem);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(set_exclusive_cxl_commands);
+
+...
+
+> > > diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+> > > index 9652c3ee41e7..a972af7a6e0b 100644
+> > > --- a/drivers/cxl/pmem.c
+> > > +++ b/drivers/cxl/pmem.c
+> > > @@ -16,10 +16,7 @@
+> > >   */
+> > >  static struct workqueue_struct *cxl_pmem_wq;
+> > >
+
+...
+
+> >  
+> > > +
+> > > +     nvdimm_delete(nvdimm);
+> > > +     clear_exclusive_cxl_commands(cxlm, exclusive_cmds);
+> > > +}
+> > > +
+> > >  static int cxl_nvdimm_probe(struct device *dev)
+> > >  {
+> > >       struct cxl_nvdimm *cxl_nvd = to_cxl_nvdimm(dev);
+> > > +     struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
+> > > +     struct cxl_mem *cxlm = cxlmd->cxlm;  
+> >
+> > Again, clxmd not used so could save a line of code
+> > without loosing anything (unless it get used in a later patch of
+> > course!)  
+> 
+> It is used... to grab cxlm, but it's an arbitrary style preference to
+> avoid de-reference chains longer than one. However, since I'm only
+> doing it once now perhaps you'll grant me this indulgence?
+> 
+
+This one was a 'could'.  Entirely up to you whether you do :)
 
 Jonathan
 
-> 
-> Jonathan
-> 
-> 
-> > 
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Link: https://lore.kernel.org/r/162792537866.368511.8915631504621088321.stgit@dwillia2-desk3.amr.corp.intel.com
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >  Documentation/driver-api/cxl/memory-devices.rst | 2 +-
-> >  drivers/cxl/Makefile                            | 4 +---
-> >  drivers/cxl/core/Makefile                       | 5 +++++
-> >  drivers/cxl/{core.c => core/bus.c}              | 4 ++--
-> >  drivers/cxl/{mem.h => cxlmem.h}                 | 0
-> >  drivers/cxl/pci.c                               | 2 +-
-> >  drivers/cxl/pmem.c                              | 2 +-
-> >  7 files changed, 11 insertions(+), 8 deletions(-)
-> >  create mode 100644 drivers/cxl/core/Makefile
-> >  rename drivers/cxl/{core.c => core/bus.c} (99%)
-> >  rename drivers/cxl/{mem.h => cxlmem.h} (100%)
-> > 
-> > diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
-> > index 487ce4f41d77..a86e2c7c551a 100644
-> > --- a/Documentation/driver-api/cxl/memory-devices.rst
-> > +++ b/Documentation/driver-api/cxl/memory-devices.rst
-> > @@ -36,7 +36,7 @@ CXL Core
-> >  .. kernel-doc:: drivers/cxl/cxl.h
-> >     :internal:
-> >  
-> > -.. kernel-doc:: drivers/cxl/core.c
-> > +.. kernel-doc:: drivers/cxl/core/bus.c
-> >     :doc: cxl core
-> >  
-> >  External Interfaces
-> > diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-> > index 32954059b37b..d1aaabc940f3 100644
-> > --- a/drivers/cxl/Makefile
-> > +++ b/drivers/cxl/Makefile
-> > @@ -1,11 +1,9 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> > -obj-$(CONFIG_CXL_BUS) += cxl_core.o
-> > +obj-$(CONFIG_CXL_BUS) += core/
-> >  obj-$(CONFIG_CXL_MEM) += cxl_pci.o
-> >  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
-> >  obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
-> >  
-> > -ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
-> > -cxl_core-y := core.o
-> >  cxl_pci-y := pci.o
-> >  cxl_acpi-y := acpi.o
-> >  cxl_pmem-y := pmem.o
-> > diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> > new file mode 100644
-> > index 000000000000..ad137f96e5c8
-> > --- /dev/null
-> > +++ b/drivers/cxl/core/Makefile
-> > @@ -0,0 +1,5 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +obj-$(CONFIG_CXL_BUS) += cxl_core.o
-> > +
-> > +ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL -I$(srctree)/drivers/cxl
-> > +cxl_core-y := bus.o
-> > diff --git a/drivers/cxl/core.c b/drivers/cxl/core/bus.c
-> > similarity index 99%
-> > rename from drivers/cxl/core.c
-> > rename to drivers/cxl/core/bus.c
-> > index a2e4d54fc7bc..0815eec23944 100644
-> > --- a/drivers/cxl/core.c
-> > +++ b/drivers/cxl/core/bus.c
-> > @@ -6,8 +6,8 @@
-> >  #include <linux/pci.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/idr.h>
-> > -#include "cxl.h"
-> > -#include "mem.h"
-> > +#include <cxlmem.h>
-> > +#include <cxl.h>
-> >  
-> >  /**
-> >   * DOC: cxl core
-> > diff --git a/drivers/cxl/mem.h b/drivers/cxl/cxlmem.h
-> > similarity index 100%
-> > rename from drivers/cxl/mem.h
-> > rename to drivers/cxl/cxlmem.h
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index 4cf351a3cf99..a945c5fda292 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
-> > @@ -12,9 +12,9 @@
-> >  #include <linux/pci.h>
-> >  #include <linux/io.h>
-> >  #include <linux/io-64-nonatomic-lo-hi.h>
-> > +#include "cxlmem.h"
-> >  #include "pci.h"
-> >  #include "cxl.h"
-> > -#include "mem.h"
-> >  
-> >  /**
-> >   * DOC: cxl pci
-> > diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-> > index 0088e41dd2f3..9652c3ee41e7 100644
-> > --- a/drivers/cxl/pmem.c
-> > +++ b/drivers/cxl/pmem.c
-> > @@ -6,7 +6,7 @@
-> >  #include <linux/ndctl.h>
-> >  #include <linux/async.h>
-> >  #include <linux/slab.h>
-> > -#include "mem.h"
-> > +#include "cxlmem.h"
-> >  #include "cxl.h"
-> >  
-> >  /*  
-> 
 
