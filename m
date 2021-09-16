@@ -2,148 +2,188 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88860C43219
-	for <linux-cxl@archiver.kernel.org>; Wed, 15 Sep 2021 16:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FE7C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 16 Sep 2021 02:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 736FD61353
-	for <linux-cxl@archiver.kernel.org>; Wed, 15 Sep 2021 16:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77D4761178
+	for <linux-cxl@archiver.kernel.org>; Thu, 16 Sep 2021 02:59:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238453AbhIOQBa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 15 Sep 2021 12:01:30 -0400
-Received: from mga04.intel.com ([192.55.52.120]:5744 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238473AbhIOQB3 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Wed, 15 Sep 2021 12:01:29 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10108"; a="220483985"
-X-IronPort-AV: E=Sophos;i="5.85,295,1624345200"; 
-   d="scan'208";a="220483985"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2021 08:59:55 -0700
-X-IronPort-AV: E=Sophos;i="5.85,295,1624345200"; 
-   d="scan'208";a="583339280"
-Received: from hliu15-mobl2.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.129.141])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2021 08:59:54 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH v2] cxl/core/bus: Document and tighten up decoder APIs
-Date:   Wed, 15 Sep 2021 08:59:46 -0700
-Message-Id: <20210915155946.308339-1-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.33.0
+        id S234107AbhIPDA5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 15 Sep 2021 23:00:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60758 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234030AbhIPDA4 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 15 Sep 2021 23:00:56 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5190C061766
+        for <linux-cxl@vger.kernel.org>; Wed, 15 Sep 2021 19:59:36 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id j13so11069451edv.13
+        for <linux-cxl@vger.kernel.org>; Wed, 15 Sep 2021 19:59:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bK17SO3X70z4YqfpudbGkJpUfQn3wXsVxii6aCrF/hI=;
+        b=EyxUWdCtuNTuayC9lkcXPgWleZ8bHcRF7PdMazQqlX+DjN9DeK/P5kGPXL3QuXc4XW
+         kCgGjVmBNRQnk+BE9t74LsnVFUsl79l/tR744ZWrHrY1q1f8UXZIfqGeNr9nIVh/Q8XZ
+         dWMhuOOQvK/PO5kIKb7pDZQmaBTkjQ3/i/zTAK5Zm+2YJjLZG5lfLuc2ORkyvnY34dye
+         Xj+oZOtcMXWk5RLjnJN9KnknPwThumRU8WZHr0gufgDmlXKMMBoCNzRhyy4O28ek49cR
+         P8hMd3liqmlSRporSijNz40h8Nv8X4Chbv8pQaKssVolCWCDl8dX0L29zoZoTm+1Zjjd
+         Qr2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bK17SO3X70z4YqfpudbGkJpUfQn3wXsVxii6aCrF/hI=;
+        b=asqerBHktMtTs80KkLIP7OSaped4hTcK4NNqmoeG46JmkWNDGY5NVF423OiCp/qz7Q
+         qYhFGGeCnE49nyrD6EzKxj2sDcFPGisxcLzisw+XV1boY+QZjMVbnJbDggiENJlUrv27
+         QQWxpvVE1uyEr1cUI/vOkwFllhbS21zhox8U0RSdjOP40ZB3I53bXNx5HmIvCjPFjO/c
+         4zlGfCr5bZS7vASeI6bSkB/XOhxMLAItIqfgtAIOtJS3blTtHLeSvfW38KCfKDaPmIj4
+         6Ffb0mSS9CU4K45Haeh2azknuepEG49lpDFN1gWwlpfeRns+kwfSLOtbH3hCRMKSJBxN
+         sUXw==
+X-Gm-Message-State: AOAM532jpx3Fm4bE6kesxjWgwYF7O67m3Ag7b0C+IPpJV1gmA5inkgLN
+        G6ViUGC1nq4PRiOfVpLZD7RM+bbmejyhUCx6hxgR
+X-Google-Smtp-Source: ABdhPJxYzI63Wh7B932JufxmCVl5MRmcZoWxKUOX5ts9dsculQ1nMB73xM3IEM0/sD5sdM0oPHDUFMQFvAvBgYyICR4=
+X-Received: by 2002:a17:907:76e7:: with SMTP id kg7mr3719013ejc.344.1631761175250;
+ Wed, 15 Sep 2021 19:59:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210913140229.24797-1-omosnace@redhat.com> <CAHC9VhRw-S+zZUFz5QFFLMBATjo+YbPAiR21jX6p7cT0T+MVLA@mail.gmail.com>
+In-Reply-To: <CAHC9VhRw-S+zZUFz5QFFLMBATjo+YbPAiR21jX6p7cT0T+MVLA@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 15 Sep 2021 22:59:23 -0400
+Message-ID: <CAHC9VhQyejnmLn0NHQiWzikHs8ZdzAUdZ2WqNxgGM6xhJ4mvMQ@mail.gmail.com>
+Subject: Re: [PATCH v4] lockdown,selinux: fix wrong subject in some SELinux
+ lockdown checks
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        selinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org, linux-acpi@vger.kernel.org,
+        linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-serial@vger.kernel.org,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Since the code to add decoders for switches and endpoints is on the
-horizon, document the recently added interfaces that will be consumed by
-them.
+On Mon, Sep 13, 2021 at 5:05 PM Paul Moore <paul@paul-moore.com> wrote:
+>
+> On Mon, Sep 13, 2021 at 10:02 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> >
+> > Commit 59438b46471a ("security,lockdown,selinux: implement SELinux
+> > lockdown") added an implementation of the locked_down LSM hook to
+> > SELinux, with the aim to restrict which domains are allowed to perform
+> > operations that would breach lockdown.
+> >
+> > However, in several places the security_locked_down() hook is called in
+> > situations where the current task isn't doing any action that would
+> > directly breach lockdown, leading to SELinux checks that are basically
+> > bogus.
+> >
+> > To fix this, add an explicit struct cred pointer argument to
+> > security_lockdown() and define NULL as a special value to pass instead
+> > of current_cred() in such situations. LSMs that take the subject
+> > credentials into account can then fall back to some default or ignore
+> > such calls altogether. In the SELinux lockdown hook implementation, use
+> > SECINITSID_KERNEL in case the cred argument is NULL.
+> >
+> > Most of the callers are updated to pass current_cred() as the cred
+> > pointer, thus maintaining the same behavior. The following callers are
+> > modified to pass NULL as the cred pointer instead:
+> > 1. arch/powerpc/xmon/xmon.c
+> >      Seems to be some interactive debugging facility. It appears that
+> >      the lockdown hook is called from interrupt context here, so it
+> >      should be more appropriate to request a global lockdown decision.
+> > 2. fs/tracefs/inode.c:tracefs_create_file()
+> >      Here the call is used to prevent creating new tracefs entries when
+> >      the kernel is locked down. Assumes that locking down is one-way -
+> >      i.e. if the hook returns non-zero once, it will never return zero
+> >      again, thus no point in creating these files. Also, the hook is
+> >      often called by a module's init function when it is loaded by
+> >      userspace, where it doesn't make much sense to do a check against
+> >      the current task's creds, since the task itself doesn't actually
+> >      use the tracing functionality (i.e. doesn't breach lockdown), just
+> >      indirectly makes some new tracepoints available to whoever is
+> >      authorized to use them.
+> > 3. net/xfrm/xfrm_user.c:copy_to_user_*()
+> >      Here a cryptographic secret is redacted based on the value returned
+> >      from the hook. There are two possible actions that may lead here:
+> >      a) A netlink message XFRM_MSG_GETSA with NLM_F_DUMP set - here the
+> >         task context is relevant, since the dumped data is sent back to
+> >         the current task.
+> >      b) When adding/deleting/updating an SA via XFRM_MSG_xxxSA, the
+> >         dumped SA is broadcasted to tasks subscribed to XFRM events -
+> >         here the current task context is not relevant as it doesn't
+> >         represent the tasks that could potentially see the secret.
+> >      It doesn't seem worth it to try to keep using the current task's
+> >      context in the a) case, since the eventual data leak can be
+> >      circumvented anyway via b), plus there is no way for the task to
+> >      indicate that it doesn't care about the actual key value, so the
+> >      check could generate a lot of "false alert" denials with SELinux.
+> >      Thus, let's pass NULL instead of current_cred() here faute de
+> >      mieux.
+> >
+> > Improvements-suggested-by: Casey Schaufler <casey@schaufler-ca.com>
+> > Improvements-suggested-by: Paul Moore <paul@paul-moore.com>
+> > Fixes: 59438b46471a ("security,lockdown,selinux: implement SELinux lockdown")
+> > Acked-by: Dan Williams <dan.j.williams@intel.com>         [cxl]
+> > Acked-by: Steffen Klassert <steffen.klassert@secunet.com> [xfrm]
+> > Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+> > ---
+> >
+> > v4:
+> > - rebase on top of TODO
+> > - fix rebase conflicts:
+> >   * drivers/cxl/pci.c
+> >     - trivial: the lockdown reason was corrected in mainline
+> >   * kernel/bpf/helpers.c, kernel/trace/bpf_trace.c
+> >     - trivial: LOCKDOWN_BPF_READ was renamed to LOCKDOWN_BPF_READ_KERNEL
+> >       in mainline
+> >   * kernel/power/hibernate.c
+> >     - trivial: !secretmem_active() was added to the condition in
+> >       hibernation_available()
+> > - cover new security_locked_down() call in kernel/bpf/helpers.c
+> >   (LOCKDOWN_BPF_WRITE_USER in BPF_FUNC_probe_write_user case)
+> >
+> > v3: https://lore.kernel.org/lkml/20210616085118.1141101-1-omosnace@redhat.com/
+> > - add the cred argument to security_locked_down() and adapt all callers
+> > - keep using current_cred() in BPF, as the hook calls have been shifted
+> >   to program load time (commit ff40e51043af ("bpf, lockdown, audit: Fix
+> >   buggy SELinux lockdown permission checks"))
+> > - in SELinux, don't ignore hook calls where cred == NULL, but use
+> >   SECINITSID_KERNEL as the subject instead
+> > - update explanations in the commit message
+> >
+> > v2: https://lore.kernel.org/lkml/20210517092006.803332-1-omosnace@redhat.com/
+> > - change to a single hook based on suggestions by Casey Schaufler
+> >
+> > v1: https://lore.kernel.org/lkml/20210507114048.138933-1-omosnace@redhat.com/
+>
+> The changes between v3 and v4 all seem sane to me, but I'm going to
+> let this sit for a few days in hopes that we can collect a few more
+> Reviewed-bys and ACKs.  If I don't see any objections I'll merge it
+> mid-week(ish) into selinux/stable-5.15 and plan on sending it to Linus
+> after it goes through a build/test cycle.
 
-Part of the original version of this patch was subsumed by
-f5786a5aedfc ("cxl/core: Split decoder setup into alloc + add")
+Time's up, I just merged this into selinux/stable-5.15 and I'll send
+this to Linus once it passes testing.
 
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
----
-v2:
-- Dropped removal of host from cxl_decoder_add (Ben)
-- Change nr_targets to unsigned int (Jonathan)
-- Move description of 0 special case to param kdoc (Dan, Ben)
-- Reword kdocs to be more accurate (Jonathan, Ben)
-- Add back debug message to decoder_populate_targets (Ben)
----
-
- drivers/cxl/core/bus.c | 34 ++++++++++++++++++++++++++++++++--
- drivers/cxl/cxl.h      |  2 ++
- 2 files changed, 34 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-index 396252749477..d242afe08402 100644
---- a/drivers/cxl/core/bus.c
-+++ b/drivers/cxl/core/bus.c
-@@ -474,6 +474,7 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
- 			rc = -ENXIO;
- 			goto out_unlock;
- 		}
-+		dev_dbg(&cxld->dev, "%s: target: %d\n", dev_name(dport->dport), i);
- 		cxld->target[i] = dport;
- 	}
- 
-@@ -483,13 +484,28 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
- 	return rc;
- }
- 
--struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
-+/**
-+ * cxl_decoder_alloc - Allocate a new CXL decoder
-+ * @port: owning port of this decoder
-+ * @nr_targets: downstream targets accessible by this decoder. All upstream
-+ *		ports and root ports must have at least 1 target. Endpoint
-+ *		devices will have 0 targets. Callers wishing to register an
-+ *		endpoint device should specify 0.
-+ *
-+ * A port should contain one or more decoders. Each of those decoders enable
-+ * some address space for CXL.mem utilization. A decoder is expected to be
-+ * configured by the caller before registering.
-+ *
-+ * Return: A new cxl decoder to be registered by cxl_decoder_add()
-+ */
-+struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
-+				      unsigned int nr_targets)
- {
- 	struct cxl_decoder *cxld;
- 	struct device *dev;
- 	int rc = 0;
- 
--	if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets < 1)
-+	if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets == 0)
- 		return ERR_PTR(-EINVAL);
- 
- 	cxld = kzalloc(struct_size(cxld, target, nr_targets), GFP_KERNEL);
-@@ -521,6 +537,20 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
- }
- EXPORT_SYMBOL_GPL(cxl_decoder_alloc);
- 
-+/**
-+ * cxl_decoder_add - Add a decoder with targets
-+ * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
-+ * @target_map: A list of downstream ports that this decoder can direct memory
-+ *              traffic to. These numbers should correspond with the port number
-+ *              in the PCIe Link Capabilities structure.
-+ *
-+ * Certain types of decoders may not have any targets. The main example of this
-+ * is an endpoint device. A more awkward example is a hostbridge whose root
-+ * ports get hot added (technically possible, though unlikely).
-+ *
-+ * Return: Negative error code if the decoder wasn't properly configured; else
-+ *	   returns 0.
-+ */
- int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
- {
- 	struct cxl_port *port;
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 7d6b011dd963..e632cc8da091 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -289,6 +289,8 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
- struct cxl_decoder *to_cxl_decoder(struct device *dev);
- bool is_root_decoder(struct device *dev);
- struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets);
-+struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
-+				      unsigned int nr_targets);
- int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
- int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld);
- 
 -- 
-2.33.0
-
+paul moore
+www.paul-moore.com
