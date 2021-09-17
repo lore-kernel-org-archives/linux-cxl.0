@@ -2,206 +2,264 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0979EC4332F
-	for <linux-cxl@archiver.kernel.org>; Thu, 16 Sep 2021 06:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C90C0C433FE
+	for <linux-cxl@archiver.kernel.org>; Fri, 17 Sep 2021 16:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E46D461207
-	for <linux-cxl@archiver.kernel.org>; Thu, 16 Sep 2021 06:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B194261212
+	for <linux-cxl@archiver.kernel.org>; Fri, 17 Sep 2021 16:22:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231255AbhIPG6k (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 16 Sep 2021 02:58:40 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22201 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234681AbhIPG6h (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Sep 2021 02:58:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1631775436;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8RB13z4WWFvpQhPAtaErfMzrxHDfvjm55tbgAkFGFds=;
-        b=ZBAJKGHeTQAAls0kn8k6LPMvXMKAHXMry7i+6tnxK7bO8TShzF/vDBg3Pro5mnPDaKfoso
-        2P/voGX3guUEqajPOHXVAaEOZpiXkPe6KJpAyuZy7iVISrGu0cKMJrIdKQA6fUsZz7PZny
-        hcW8Cyp1cns8fuUiUG7QHIfUf9e1W90=
-Received: from mail-yb1-f200.google.com (mail-yb1-f200.google.com
- [209.85.219.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-375-nyAOFD0RPhWxzaJdcY3dsw-1; Thu, 16 Sep 2021 02:57:15 -0400
-X-MC-Unique: nyAOFD0RPhWxzaJdcY3dsw-1
-Received: by mail-yb1-f200.google.com with SMTP id i189-20020a256dc6000000b005a04d42ebf2so11298121ybc.22
-        for <linux-cxl@vger.kernel.org>; Wed, 15 Sep 2021 23:57:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8RB13z4WWFvpQhPAtaErfMzrxHDfvjm55tbgAkFGFds=;
-        b=S34G2jM50TvJmywCnNaZuN5Mw4vCr8xmWMDepiO9Xjc1UjVtylECvBzD/jzeRfsy3f
-         oCnNvw/crEihqh07YgKAIENmtXrfQpz/7BX/NJYLk1P6wXfcC9XUoUGYBUh566SdapHL
-         B1zny+mHq6V8s2ebU0FVC7xYacAxlDFqbI9ciMz/yr/USjz3FTUHX4WcoVGQ5qS4yheb
-         J8dwOJ3fvAzNfBmMAc66/f71tpT1ZOVKvpzmMDc2JqLm9iBDlmDMlSedsOgCcm7TCAw0
-         PgG+et9KEgF7v/c3CMLb3cnFZHpz3OnIEYd+7XUA1+A41oQcdp1+8CKve6MLNK4sDIz5
-         QPow==
-X-Gm-Message-State: AOAM530m8fzS4H4owuaV9rgzPJoZwrZmR4QLIbYqKq8HSUFh6vpq3mkt
-        eLTOZ3Zx4OlGQAXM9lfmlC8/Vke0fofNCvRF1mG69ADxlp5Z7IxOEj5KXcFnmcnBZ6waJjqocIR
-        GOybCP7QkklivR3qz9LWQdJ9J1WC1xejbKmmW
-X-Received: by 2002:a25:bb8b:: with SMTP id y11mr5374075ybg.384.1631775434453;
-        Wed, 15 Sep 2021 23:57:14 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwLucYeWhnPNQkeQVqS3EcyyweAYtvQL9fa++UxRdE70ZRSeCy7mhVRsSSA5lCGz3A636eqomK45lUsdY3V5KU=
-X-Received: by 2002:a25:bb8b:: with SMTP id y11mr5374044ybg.384.1631775434181;
- Wed, 15 Sep 2021 23:57:14 -0700 (PDT)
+        id S241620AbhIQQXc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 17 Sep 2021 12:23:32 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3842 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229979AbhIQQXc (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 17 Sep 2021 12:23:32 -0400
+Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4H9zgV4FD9z67flB;
+        Sat, 18 Sep 2021 00:19:50 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.8; Fri, 17 Sep 2021 18:22:07 +0200
+Received: from localhost (10.227.96.57) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Fri, 17 Sep
+ 2021 17:22:07 +0100
+Date:   Fri, 17 Sep 2021 17:22:05 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
+CC:     <keyrings@vger.kernel.org>, <dan.j.williams@intel.com>,
+        Chris Browy <cbrowy@avery-design.com>, <linuxarm@huawei.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Jeremy Kerr <jk@codeconstruct.com.au>
+Subject: Re: [RFC PATCH 3/4] PCI/CMA: Initial support for Component
+ Measurement and Authentication ECN
+Message-ID: <20210917172205.00000684@huawei.com>
+In-Reply-To: <20210804161839.3492053-4-Jonathan.Cameron@huawei.com>
+References: <20210804161839.3492053-1-Jonathan.Cameron@huawei.com>
+        <20210804161839.3492053-4-Jonathan.Cameron@huawei.com>
+Organization: Huawei tech. R&D (UK)  Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <20210913140229.24797-1-omosnace@redhat.com> <CAHC9VhRw-S+zZUFz5QFFLMBATjo+YbPAiR21jX6p7cT0T+MVLA@mail.gmail.com>
- <CAHC9VhQyejnmLn0NHQiWzikHs8ZdzAUdZ2WqNxgGM6xhJ4mvMQ@mail.gmail.com>
-In-Reply-To: <CAHC9VhQyejnmLn0NHQiWzikHs8ZdzAUdZ2WqNxgGM6xhJ4mvMQ@mail.gmail.com>
-From:   Ondrej Mosnacek <omosnace@redhat.com>
-Date:   Thu, 16 Sep 2021 08:57:02 +0200
-Message-ID: <CAFqZXNsLZE18YugJYDzxUwjY36Gt2iX=KYtuuu-erY_+_mmvqg@mail.gmail.com>
-Subject: Re: [PATCH v4] lockdown,selinux: fix wrong subject in some SELinux
- lockdown checks
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        James Morris <jmorris@namei.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        SElinux list <selinux@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        X86 ML <x86@kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        linux-cxl@vger.kernel.org, linux-efi <linux-efi@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux-pm mailing list <linux-pm@vger.kernel.org>,
-        linux-serial@vger.kernel.org, bpf <bpf@vger.kernel.org>,
-        network dev <netdev@vger.kernel.org>,
-        Kexec Mailing List <kexec@lists.infradead.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=omosnace@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.227.96.57]
+X-ClientProxiedBy: lhreml718-chm.china.huawei.com (10.201.108.69) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Sep 16, 2021 at 4:59 AM Paul Moore <paul@paul-moore.com> wrote:
-> On Mon, Sep 13, 2021 at 5:05 PM Paul Moore <paul@paul-moore.com> wrote:
-> >
-> > On Mon, Sep 13, 2021 at 10:02 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
-> > >
-> > > Commit 59438b46471a ("security,lockdown,selinux: implement SELinux
-> > > lockdown") added an implementation of the locked_down LSM hook to
-> > > SELinux, with the aim to restrict which domains are allowed to perform
-> > > operations that would breach lockdown.
-> > >
-> > > However, in several places the security_locked_down() hook is called in
-> > > situations where the current task isn't doing any action that would
-> > > directly breach lockdown, leading to SELinux checks that are basically
-> > > bogus.
-> > >
-> > > To fix this, add an explicit struct cred pointer argument to
-> > > security_lockdown() and define NULL as a special value to pass instead
-> > > of current_cred() in such situations. LSMs that take the subject
-> > > credentials into account can then fall back to some default or ignore
-> > > such calls altogether. In the SELinux lockdown hook implementation, use
-> > > SECINITSID_KERNEL in case the cred argument is NULL.
-> > >
-> > > Most of the callers are updated to pass current_cred() as the cred
-> > > pointer, thus maintaining the same behavior. The following callers are
-> > > modified to pass NULL as the cred pointer instead:
-> > > 1. arch/powerpc/xmon/xmon.c
-> > >      Seems to be some interactive debugging facility. It appears that
-> > >      the lockdown hook is called from interrupt context here, so it
-> > >      should be more appropriate to request a global lockdown decision.
-> > > 2. fs/tracefs/inode.c:tracefs_create_file()
-> > >      Here the call is used to prevent creating new tracefs entries when
-> > >      the kernel is locked down. Assumes that locking down is one-way -
-> > >      i.e. if the hook returns non-zero once, it will never return zero
-> > >      again, thus no point in creating these files. Also, the hook is
-> > >      often called by a module's init function when it is loaded by
-> > >      userspace, where it doesn't make much sense to do a check against
-> > >      the current task's creds, since the task itself doesn't actually
-> > >      use the tracing functionality (i.e. doesn't breach lockdown), just
-> > >      indirectly makes some new tracepoints available to whoever is
-> > >      authorized to use them.
-> > > 3. net/xfrm/xfrm_user.c:copy_to_user_*()
-> > >      Here a cryptographic secret is redacted based on the value returned
-> > >      from the hook. There are two possible actions that may lead here:
-> > >      a) A netlink message XFRM_MSG_GETSA with NLM_F_DUMP set - here the
-> > >         task context is relevant, since the dumped data is sent back to
-> > >         the current task.
-> > >      b) When adding/deleting/updating an SA via XFRM_MSG_xxxSA, the
-> > >         dumped SA is broadcasted to tasks subscribed to XFRM events -
-> > >         here the current task context is not relevant as it doesn't
-> > >         represent the tasks that could potentially see the secret.
-> > >      It doesn't seem worth it to try to keep using the current task's
-> > >      context in the a) case, since the eventual data leak can be
-> > >      circumvented anyway via b), plus there is no way for the task to
-> > >      indicate that it doesn't care about the actual key value, so the
-> > >      check could generate a lot of "false alert" denials with SELinux.
-> > >      Thus, let's pass NULL instead of current_cred() here faute de
-> > >      mieux.
-> > >
-> > > Improvements-suggested-by: Casey Schaufler <casey@schaufler-ca.com>
-> > > Improvements-suggested-by: Paul Moore <paul@paul-moore.com>
-> > > Fixes: 59438b46471a ("security,lockdown,selinux: implement SELinux lockdown")
-> > > Acked-by: Dan Williams <dan.j.williams@intel.com>         [cxl]
-> > > Acked-by: Steffen Klassert <steffen.klassert@secunet.com> [xfrm]
-> > > Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
-> > > ---
-> > >
-> > > v4:
-> > > - rebase on top of TODO
-> > > - fix rebase conflicts:
-> > >   * drivers/cxl/pci.c
-> > >     - trivial: the lockdown reason was corrected in mainline
-> > >   * kernel/bpf/helpers.c, kernel/trace/bpf_trace.c
-> > >     - trivial: LOCKDOWN_BPF_READ was renamed to LOCKDOWN_BPF_READ_KERNEL
-> > >       in mainline
-> > >   * kernel/power/hibernate.c
-> > >     - trivial: !secretmem_active() was added to the condition in
-> > >       hibernation_available()
-> > > - cover new security_locked_down() call in kernel/bpf/helpers.c
-> > >   (LOCKDOWN_BPF_WRITE_USER in BPF_FUNC_probe_write_user case)
-> > >
-> > > v3: https://lore.kernel.org/lkml/20210616085118.1141101-1-omosnace@redhat.com/
-> > > - add the cred argument to security_locked_down() and adapt all callers
-> > > - keep using current_cred() in BPF, as the hook calls have been shifted
-> > >   to program load time (commit ff40e51043af ("bpf, lockdown, audit: Fix
-> > >   buggy SELinux lockdown permission checks"))
-> > > - in SELinux, don't ignore hook calls where cred == NULL, but use
-> > >   SECINITSID_KERNEL as the subject instead
-> > > - update explanations in the commit message
-> > >
-> > > v2: https://lore.kernel.org/lkml/20210517092006.803332-1-omosnace@redhat.com/
-> > > - change to a single hook based on suggestions by Casey Schaufler
-> > >
-> > > v1: https://lore.kernel.org/lkml/20210507114048.138933-1-omosnace@redhat.com/
-> >
-> > The changes between v3 and v4 all seem sane to me, but I'm going to
-> > let this sit for a few days in hopes that we can collect a few more
-> > Reviewed-bys and ACKs.  If I don't see any objections I'll merge it
-> > mid-week(ish) into selinux/stable-5.15 and plan on sending it to Linus
-> > after it goes through a build/test cycle.
->
-> Time's up, I just merged this into selinux/stable-5.15 and I'll send
-> this to Linus once it passes testing.
+On Thu, 5 Aug 2021 00:18:38 +0800
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-Thanks!
+> This currently very much a PoC.  Currently the SPDM library only provides
+> a single function to allow a challenge / authentication of the PCI EP.
+> 
+> SPDM exchanges must occur in one of a small set of valid squences over
+> which the message digest used in authentication is built up.
+> Placing that complexity in the SPDM library seems like a good way
+> to enforce that logic, without having to do it for each transport.
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
+This is far more likely to work if I actually include the missing drivers/pci/cma.c
+I'll send a v2 next week, but in the meantime it should look like this.
+
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: <jonathan.cameron@huawei.com>
+Subject: [PATCH] pci/cma: Missing file
+Date: Sat, 18 Sep 2021 00:16:00 +0800
+X-Mailer: git-send-email 2.19.1
+
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/pci/cma.c | 102 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
+
+diff --git a/drivers/pci/cma.c b/drivers/pci/cma.c
+new file mode 100644
+index 000000000000..58fef73674fe
+--- /dev/null
++++ b/drivers/pci/cma.c
+@@ -0,0 +1,102 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Component Measurement and Authentication was added as an ECN to the
++ * PCIe r5.0 spec.
++ *
++ * Copyright (C) 2021 Huawei
++ *     Jonathan Cameron <Jonathan.Cameron@huawei.com>
++ */
++
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/pci-cma.h>
++#include <linux/pci-doe.h>
++#include <linux/spdm.h>
++
++/* Keyring that userspace can poke certs into */
++static struct key *cma_keyring;
++
++static int cma_spdm_ex(void *priv, struct spdm_exchange *spdm_ex)
++{
++	size_t request_padded_sz, response_padded_sz;
++	struct pci_doe_exchange ex = {
++		.vid = PCI_VENDOR_ID_PCI_SIG,
++		.protocol = PCI_DOE_PROTOCOL_CMA,
++	};
++	struct pci_doe *doe = priv;
++	int rc;
++
++	/* DOE requires that response and request are padded to a multiple of 4 bytes */
++	request_padded_sz = ALIGN(spdm_ex->request_pl_sz, sizeof(u32));
++	if (request_padded_sz != spdm_ex->request_pl_sz) {
++		ex.request_pl = kzalloc(request_padded_sz, GFP_KERNEL);
++		if (!ex.request_pl)
++			return -ENOMEM;
++		memcpy(ex.request_pl, spdm_ex->request_pl, spdm_ex->request_pl_sz);
++		ex.request_pl_sz = request_padded_sz;
++	} else {
++		ex.request_pl = (u32 *)spdm_ex->request_pl;
++		ex.request_pl_sz = spdm_ex->request_pl_sz;
++	}
++
++	response_padded_sz = ALIGN(spdm_ex->response_pl_sz, sizeof(u32));
++	if (response_padded_sz != spdm_ex->response_pl_sz) {
++		ex.response_pl = kzalloc(response_padded_sz, GFP_KERNEL);
++		if (!ex.response_pl) {
++			rc = -ENOMEM;
++			goto err_free_req;
++		}
++		ex.response_pl_sz = response_padded_sz;
++	} else {
++		ex.response_pl = (u32 *)spdm_ex->response_pl;
++		ex.response_pl_sz = spdm_ex->response_pl_sz;
++	}
++
++	rc = pci_doe_exchange_sync(doe, &ex);
++	if (rc < 0)
++		goto err_free_rsp;
++
++	if (response_padded_sz != spdm_ex->response_pl_sz)
++		memcpy(spdm_ex->response_pl, ex.response_pl, spdm_ex->response_pl_sz);
++
++err_free_rsp:
++	if (response_padded_sz != spdm_ex->response_pl_sz)
++		kfree(ex.response_pl);
++err_free_req:
++	if (request_padded_sz != spdm_ex->request_pl_sz)
++		kfree(ex.request_pl);
++
++	return rc;
++}
++
++void pci_cma_init(struct pci_doe *doe, struct spdm_state *spdm_state)
++{
++	memset(spdm_state, 0, sizeof(*spdm_state));
++	spdm_state->transport_ex = cma_spdm_ex;
++	spdm_state->transport_priv = doe;
++	spdm_state->dev = &doe->pdev->dev;
++	spdm_state->root_keyring = cma_keyring;
++}
++EXPORT_SYMBOL_GPL(pci_cma_init);
++
++int pci_cma_authenticate(struct spdm_state *spdm_state)
++{
++	return spdm_authenticate(spdm_state);
++}
++EXPORT_SYMBOL_GPL(pci_cma_authenticate);
++
++__init static int cma_keyring_init(void)
++{
++	cma_keyring = keyring_alloc("_cma",
++				    KUIDT_INIT(0), KGIDT_INIT(0),
++				    current_cred(),
++				    (KEY_POS_ALL & ~KEY_POS_SETATTR) |
++				    KEY_USR_VIEW | KEY_USR_READ | KEY_USR_WRITE | KEY_USR_SEARCH,
++				    KEY_ALLOC_NOT_IN_QUOTA | KEY_ALLOC_SET_KEEP, NULL, NULL);
++	if (IS_ERR(cma_keyring))
++		pr_err("Could not allocate cma keyring\n");
++
++	return 0;
++}
++device_initcall(cma_keyring_init);
++MODULE_LICENSE("GPL v2");
 -- 
-Ondrej Mosnacek
-Software Engineer, Linux Security - SELinux kernel
-Red Hat, Inc.
+2.19.1
+
+
+
+> ---
+>  drivers/pci/Kconfig     | 9 +++++++++
+>  drivers/pci/Makefile    | 1 +
+>  drivers/pci/doe.c       | 2 --
+>  include/linux/pci-doe.h | 2 ++
+>  4 files changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index a30c59cf5e27..43e3b0d5e8cd 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -198,6 +198,15 @@ config PCI_DOE
+>  	  used by a number of different protocols.
+>  	  DOE is defined in the Data Object Exchange ECN to the PCIe r5.0 spec.
+>  
+> +config PCI_CMA
+> +	tristate
+> +	select PCI_DOE
+> +	select ASN1_ENCODER
+> +	select SPDM
+> +	help
+> +	  This enables library support for the PCI Component Measurement and
+> +	  Authentication ECN. This uses DMTF SPDM 1.1
+> +
+>  choice
+>  	prompt "PCI Express hierarchy optimization setting"
+>  	default PCIE_BUS_DEFAULT
+> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+> index 1b61c1a1c232..3f6b3543d565 100644
+> --- a/drivers/pci/Makefile
+> +++ b/drivers/pci/Makefile
+> @@ -29,6 +29,7 @@ obj-$(CONFIG_PCI_PF_STUB)	+= pci-pf-stub.o
+>  obj-$(CONFIG_PCI_ECAM)		+= ecam.o
+>  obj-$(CONFIG_PCI_P2PDMA)	+= p2pdma.o
+>  obj-$(CONFIG_PCI_DOE)		+= doe.o
+> +obj-$(CONFIG_PCI_CMA)		+= cma.o
+>  obj-$(CONFIG_XEN_PCIDEV_FRONTEND) += xen-pcifront.o
+>  
+>  # Endpoint library must be initialized before its users
+> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+> index 2d20f59e42c6..f6aaeed01010 100644
+> --- a/drivers/pci/doe.c
+> +++ b/drivers/pci/doe.c
+> @@ -20,8 +20,6 @@
+>  /* Maximum number of DOE instances in the system */
+>  #define PCI_DOE_MAX_CNT 65536
+>  
+> -#define PCI_DOE_PROTOCOL_DISCOVERY 0
+> -
+>  #define PCI_DOE_BUSY_MAX_RETRIES 16
+>  #define PCI_DOE_POLL_INTERVAL (HZ / 128)
+>  
+> diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
+> index bdc5f15f14ab..1347c124ed70 100644
+> --- a/include/linux/pci-doe.h
+> +++ b/include/linux/pci-doe.h
+> @@ -19,6 +19,8 @@ struct pci_doe_prot {
+>  	u8 type;
+>  };
+>  
+> +#define PCI_DOE_PROTOCOL_DISCOVERY 0
+> +#define PCI_DOE_PROTOCOL_CMA 1
+>  struct workqueue_struct;
+>  
+>  enum pci_doe_state {
 
