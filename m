@@ -2,203 +2,100 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A630C433F5
-	for <linux-cxl@archiver.kernel.org>; Tue, 21 Sep 2021 21:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B63C433F5
+	for <linux-cxl@archiver.kernel.org>; Tue, 21 Sep 2021 22:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F13F361159
-	for <linux-cxl@archiver.kernel.org>; Tue, 21 Sep 2021 21:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B846115A
+	for <linux-cxl@archiver.kernel.org>; Tue, 21 Sep 2021 22:00:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235814AbhIUWA3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 21 Sep 2021 18:00:29 -0400
-Received: from mga17.intel.com ([192.55.52.151]:42961 "EHLO mga17.intel.com"
+        id S235856AbhIUWBp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 21 Sep 2021 18:01:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235828AbhIUWA3 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 21 Sep 2021 18:00:29 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10114"; a="203628698"
-X-IronPort-AV: E=Sophos;i="5.85,311,1624345200"; 
-   d="scan'208";a="203628698"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2021 14:59:00 -0700
-X-IronPort-AV: E=Sophos;i="5.85,311,1624345200"; 
-   d="scan'208";a="474238807"
-Received: from ksankar-mobl2.amr.corp.intel.com (HELO intel.com) ([10.252.132.1])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2021 14:59:00 -0700
-Date:   Tue, 21 Sep 2021 14:58:58 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
+        id S235766AbhIUWBh (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Tue, 21 Sep 2021 18:01:37 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B256F6115A;
+        Tue, 21 Sep 2021 22:00:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632261609;
+        bh=RBmuJeyGABlAu1Pp67/jivP7of6tCDStM2bE1ePeREc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=r5hzQNM9LAeFVk+d/b+vaIcBnsXXOp66h29LPIWLx044HN/xofMyIS0FLF8eIh82Q
+         OeRez36qr0COWkwdss45JJDYlPpjsJ07594mU2MGxCicyZUNEKmdZ7Emlr3gHJmxwt
+         28jxqwVTjG3CGbD1XAbk6HHP50n6rDSE+obDIOF9DYZfNss76tYhVjSY1feziVhHQh
+         Ler24WxVDXD0AeHWx7hnC4S3OKSF3CPTcUPucRDOa4W3TdTplNofcMfq6rxXeq0bSY
+         +cGr6MKKS/SJStAH+tWZ6hdDKzLxnwPGDbHOHVUQKBrV/5HFpMFyX9U0MTcPPwCACS
+         TyNMkpPl8sSFA==
+Date:   Tue, 21 Sep 2021 17:00:07 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Alison Schofield <alison.schofield@intel.com>,
+Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
         Ira Weiny <ira.weiny@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH v2] cxl/core/bus: Document and tighten up decoder APIs
-Message-ID: <20210921215858.33ll23o52dtpihu7@intel.com>
-References: <20210915155946.308339-1-ben.widawsky@intel.com>
- <CAPcyv4jQN1cbeAVj4BGqz6yAx9TkovoJTqG7_gUeyVx=wUZ5ow@mail.gmail.com>
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] cxl: Move register block enumeration to core
+Message-ID: <20210921220007.GA135188@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4jQN1cbeAVj4BGqz6yAx9TkovoJTqG7_gUeyVx=wUZ5ow@mail.gmail.com>
+In-Reply-To: <CAPcyv4ja65PA5qjKPW4dYsVUCEiEDKD65_5vw15VryYL1h7=QQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21-09-21 14:41:20, Dan Williams wrote:
-> On Wed, Sep 15, 2021 at 9:00 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Tue, Sep 21, 2021 at 07:07:13AM -0700, Dan Williams wrote:
+> On Mon, Sep 20, 2021 at 3:57 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
 > >
-> > Since the code to add decoders for switches and endpoints is on the
-> > horizon, document the recently added interfaces that will be consumed by
-> > them.
+> > CXL drivers or cxl_core itself will require the ability to map component
+> > registers in order to map HDM decoder resources amongst other things.
+> > Much of the register mapping code has already moved into cxl_core. The
+> > code to pull the BAR number and block office remained within cxl_pci
+> > because there was no need to move it. Upcoming work will require this
+> > functionality to be available outside of cxl_pci.
 > >
-> > Part of the original version of this patch was subsumed by
-> > f5786a5aedfc ("cxl/core: Split decoder setup into alloc + add")
+> > There are two intentional functional changes:
+> > 1. cxl_pci: If there is more than 1 component, or device register block,
+> >    only the first one (of each) is checked. Previous logic checked all
+> >    duplicate register blocks and additionally attempted to map unused
+> >    register blocks if present.
+> > 2. cxl_pci: No more dev_dbg for unused register blocks
 > 
-> It's dangerous to quote 'pending' commits. The stable commit id for this is now:
-> 
-> 48667f676189 ("cxl/core: Split decoder setup into alloc + add")
+> Why not break these out into separate patches before moving the code?
+> It makes it easier to review, and it increases the precision of future
+> Fixes: patches if necessary.
 
-Yes, sorry. At the time I thought pending was going to become next but that
-didn't happen and thus the danger.
++1
 
+> > +static int cxl_pci_dvsec(struct pci_dev *pdev, int dvsec)
+> > +{
+> > +       int pos;
+> > +
+> > +       pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DVSEC);
+> > +       if (!pos)
+> > +               return 0;
+> > +
+> > +       while (pos) {
+> > +               u16 vendor, id;
+> > +
+> > +               pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER1, &vendor);
+> > +               pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER2, &id);
+> > +               if (vendor == PCI_DVSEC_VENDOR_ID_CXL && dvsec == id)
+> > +                       return pos;
+> > +
+> > +               pos = pci_find_next_ext_capability(pdev, pos,
+> > +                                                  PCI_EXT_CAP_ID_DVSEC);
+> > +       }
 > 
-> ...I would have just fixed this up on applying, but some notes below.
-> 
-> This overall feels like a patch that should wait to go in with first
-> introduction of endpoint decoders.
+> We punted on refactoring this for the initial driver submission
+> because it was difficult to coordinate. Now that cxl.git is an
+> established tree, instead of moving this it seems time to address that
+> refactor that Bjorn asked about. Bjorn, would you be willing to carry
+> a non-rebasing branch with such a cleanup that CXL could pull from?
 
-It's fine with me to wait for intro of endpoint decoders. I probably should have
-requested you just take the kdoc stuff with your last series, but not worth it
-now.
-
-> 
-> >
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > ---
-> > v2:
-> > - Dropped removal of host from cxl_decoder_add (Ben)
-> > - Change nr_targets to unsigned int (Jonathan)
-> > - Move description of 0 special case to param kdoc (Dan, Ben)
-> > - Reword kdocs to be more accurate (Jonathan, Ben)
-> > - Add back debug message to decoder_populate_targets (Ben)
-> > ---
-> >
-> >  drivers/cxl/core/bus.c | 34 ++++++++++++++++++++++++++++++++--
-> >  drivers/cxl/cxl.h      |  2 ++
-> >  2 files changed, 34 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-> > index 396252749477..d242afe08402 100644
-> > --- a/drivers/cxl/core/bus.c
-> > +++ b/drivers/cxl/core/bus.c
-> > @@ -474,6 +474,7 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
-> >                         rc = -ENXIO;
-> >                         goto out_unlock;
-> >                 }
-> > +               dev_dbg(&cxld->dev, "%s: target: %d\n", dev_name(dport->dport), i);
-> 
-> Seems like this deserves its own patch since it's not related to $subject.
-
-I don't remember why I put this in this patch....
-
-> 
-> >                 cxld->target[i] = dport;
-> >         }
-> >
-> > @@ -483,13 +484,28 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
-> >         return rc;
-> >  }
-> >
-> > -struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
-> > +/**
-> > + * cxl_decoder_alloc - Allocate a new CXL decoder
-> > + * @port: owning port of this decoder
-> > + * @nr_targets: downstream targets accessible by this decoder. All upstream
-> > + *             ports and root ports must have at least 1 target. Endpoint
-> > + *             devices will have 0 targets. Callers wishing to register an
-> > + *             endpoint device should specify 0.
-> > + *
-> > + * A port should contain one or more decoders. Each of those decoders enable
-> > + * some address space for CXL.mem utilization. A decoder is expected to be
-> > + * configured by the caller before registering.
-> > + *
-> > + * Return: A new cxl decoder to be registered by cxl_decoder_add()
-> > + */
-> > +struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
-> > +                                     unsigned int nr_targets)
-> >  {
-> >         struct cxl_decoder *cxld;
-> >         struct device *dev;
-> >         int rc = 0;
-> >
-> > -       if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets < 1)
-> > +       if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets == 0)
-> 
-> This looks broken as the above text says that 0 is now an allowed
-> value. Shouldn't this be:
-> 
-> -    if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets < 1)
-> +    if (nr_targets > CXL_DECODER_MAX_INTERLEAVE)
-> 
-> ...?
-> 
-
-Yes. This got messed up. I actually originally intended this change as part of
-the endpoint decoder series. I'd rather drop this and just change to unsigned
-int.
-
-> >                 return ERR_PTR(-EINVAL);
-> >
-> >         cxld = kzalloc(struct_size(cxld, target, nr_targets), GFP_KERNEL);
-> > @@ -521,6 +537,20 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
-> >  }
-> >  EXPORT_SYMBOL_GPL(cxl_decoder_alloc);
-> >
-> > +/**
-> > + * cxl_decoder_add - Add a decoder with targets
-> > + * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
-> > + * @target_map: A list of downstream ports that this decoder can direct memory
-> > + *              traffic to. These numbers should correspond with the port number
-> > + *              in the PCIe Link Capabilities structure.
-> > + *
-> > + * Certain types of decoders may not have any targets. The main example of this
-> > + * is an endpoint device. A more awkward example is a hostbridge whose root
-> > + * ports get hot added (technically possible, though unlikely).
-> 
-> I don't think this is possible, certainly not worth calling out unless
-> you want to prompt someone to go audit the PCI side for proper
-> operation in this case.
-> 
-> The endpoint note is enough.
-
-I ran it by Chet as to whether or not it's technically possible, which it is
-according to him. I'm fine to drop it though.
-
-> 
-> > + *
-> > + * Return: Negative error code if the decoder wasn't properly configured; else
-> > + *        returns 0.
-> > + */
-> >  int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
-> >  {
-> >         struct cxl_port *port;
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > index 7d6b011dd963..e632cc8da091 100644
-> > --- a/drivers/cxl/cxl.h
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -289,6 +289,8 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
-> >  struct cxl_decoder *to_cxl_decoder(struct device *dev);
-> >  bool is_root_decoder(struct device *dev);
-> >  struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets);
-> > +struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
-> > +                                     unsigned int nr_targets);
-> 
-> Why are there now 2 different cxl_decoder_alloc() function signatures?
-
-This was unintentional.
-
-My apologies for the sloppy patch.
+Sure.  Would be nice to get this cleaned up.
