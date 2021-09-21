@@ -2,402 +2,523 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F79AC433F5
-	for <linux-cxl@archiver.kernel.org>; Tue, 21 Sep 2021 14:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B94C433EF
+	for <linux-cxl@archiver.kernel.org>; Tue, 21 Sep 2021 14:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24CE96058D
-	for <linux-cxl@archiver.kernel.org>; Tue, 21 Sep 2021 14:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 142BA61168
+	for <linux-cxl@archiver.kernel.org>; Tue, 21 Sep 2021 14:27:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233373AbhIUOIy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 21 Sep 2021 10:08:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231781AbhIUOIx (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 21 Sep 2021 10:08:53 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE89FC061574
-        for <linux-cxl@vger.kernel.org>; Tue, 21 Sep 2021 07:07:24 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id 5so13430359plo.5
-        for <linux-cxl@vger.kernel.org>; Tue, 21 Sep 2021 07:07:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5J3J1lC5c2lH9SWnlXApLHsQ8Bxnt/9+N5pqjwWFiOU=;
-        b=k/mES2i3Z4Zk730uXDequ0El+W8OTho8fMpTaI7hfwvUs+CG16aTZtTR9+3ipp0QUG
-         xc6L3ZQHeP+sElONmTpQMDWApbGjHpIDIa7N+g4ddYsTPBIfzw9Mvzx0AxoofqUJh66i
-         8UzVx26uu4QyJlTIRfxSiW0fOTYDpWM4S7MB3HM1MxyDbx0XUfrPdrVRVKosZy1uW0Zu
-         a9RXmjrqDOdvgsVcaxuf8A7dEZE42X3fsf0N9V+W+OKRpj0dRzN4/MjksYUaYMBqalJm
-         X7VY51/4GZcslv23ArGd3VRsx5L5bFixKChlByx9T7YBBdSQB5PZmK3BX3/Tdsmb0y2W
-         iazg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5J3J1lC5c2lH9SWnlXApLHsQ8Bxnt/9+N5pqjwWFiOU=;
-        b=py8wyWuoyXb04H8c/9c7+bk2nwQWw8CAEo5a6vbalJ2b8Nnqa1iNgwQfcUVy6hv5WJ
-         HAkCgFWrPybDlx8BKZgTd007fqvTdCtvVTid9ciZtpeyI8leQvenLG3W03ryCiim0s37
-         YDXcAwdChmbFKBEpDyxgomThSo+O5uVTn2oRzOJrHxUqImwWsYx+E1/lSxaZwpXG3h2K
-         u1FzL5kBp5PKhnVWTAhwHL5mH7gQscw2217VK+myA6OXQA0O4SDavCo5ntU7YEPlojNx
-         zj+IaxXF6rdFkmqKvz2tiAQpN66lQIL9H+Eh7EXlttp6D4f7NXTaRegCDViSxUiFWEHT
-         cyug==
-X-Gm-Message-State: AOAM531gAbuFxcgbsoF3wlsZer5WCgKaN5h5+D0HPm6xdYCAuG6bpbKA
-        9n4GvrVxbqo3rjudcxsMcjFmImNoRWqFa/oqyahsYw==
-X-Google-Smtp-Source: ABdhPJwhLTg13Q9MXnjGUSOh9vA80NDnpQXEJn6oVw47F/0D2fkYMT9vdItI9i2N4Z9kxLdfC7FKlwYglnSxzbS+7is=
-X-Received: by 2002:a17:90a:f18f:: with SMTP id bv15mr5393151pjb.93.1632233244203;
- Tue, 21 Sep 2021 07:07:24 -0700 (PDT)
+        id S229577AbhIUO3D (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 21 Sep 2021 10:29:03 -0400
+Received: from mga03.intel.com ([134.134.136.65]:23752 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233059AbhIUO3D (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Tue, 21 Sep 2021 10:29:03 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10113"; a="223420876"
+X-IronPort-AV: E=Sophos;i="5.85,311,1624345200"; 
+   d="scan'208";a="223420876"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2021 07:24:12 -0700
+X-IronPort-AV: E=Sophos;i="5.85,311,1624345200"; 
+   d="scan'208";a="512334462"
+Received: from ksankar-mobl2.amr.corp.intel.com (HELO intel.com) ([10.252.132.1])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2021 07:24:09 -0700
+Date:   Tue, 21 Sep 2021 07:24:07 -0700
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        nvdimm@lists.linux.dev, Jonathan.Cameron@huawei.com
+Subject: Re: [PATCH v5 21/21] cxl/core: Split decoder setup into alloc + add
+Message-ID: <20210921142407.efq4ttlqngdnaxf2@intel.com>
+References: <163116440612.2460985.14600637290781306289.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <163164780319.2831662.7853294454760344393.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-References: <20210920225638.1729482-1-ben.widawsky@intel.com>
-In-Reply-To: <20210920225638.1729482-1-ben.widawsky@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 21 Sep 2021 07:07:13 -0700
-Message-ID: <CAPcyv4ja65PA5qjKPW4dYsVUCEiEDKD65_5vw15VryYL1h7=QQ@mail.gmail.com>
-Subject: Re: [PATCH] cxl: Move register block enumeration to core
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <163164780319.2831662.7853294454760344393.stgit@dwillia2-desk3.amr.corp.intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Sep 20, 2021 at 3:57 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> CXL drivers or cxl_core itself will require the ability to map component
-> registers in order to map HDM decoder resources amongst other things.
-> Much of the register mapping code has already moved into cxl_core. The
-> code to pull the BAR number and block office remained within cxl_pci
-> because there was no need to move it. Upcoming work will require this
-> functionality to be available outside of cxl_pci.
->
-> There are two intentional functional changes:
-> 1. cxl_pci: If there is more than 1 component, or device register block,
->    only the first one (of each) is checked. Previous logic checked all
->    duplicate register blocks and additionally attempted to map unused
->    register blocks if present.
-> 2. cxl_pci: No more dev_dbg for unused register blocks
+On 21-09-14 12:31:22, Dan Williams wrote:
+> The kbuild robot reports:
+> 
+>     drivers/cxl/core/bus.c:516:1: warning: stack frame size (1032) exceeds
+>     limit (1024) in function 'devm_cxl_add_decoder'
+> 
+> It is also the case the devm_cxl_add_decoder() is unwieldy to use for
+> all the different decoder types. Fix the stack usage by splitting the
+> creation into alloc and add steps. This also allows for context
+> specific construction before adding.
+> 
+> With the split the caller is responsible for registering a devm callback
+> to trigger device_unregister() for the decoder rather than it being
+> implicit in the decoder registration. I.e. the routine that calls alloc
+> is responsible for calling put_device() if the "add" operation fails.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Why not break these out into separate patches before moving the code?
-It makes it easier to review, and it increases the precision of future
-Fixes: patches if necessary.
+I have some comments inline. You can take them or leave them. Hopefully you can
+pull in my patch to document these after too.
 
->
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+Reviewed-by: Ben Widawsky <ben.widawsky@intel.com>
+
 > ---
->  drivers/cxl/core/regs.c |  89 ++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h       |   3 ++
->  drivers/cxl/pci.c       | 104 +++++++---------------------------------
->  drivers/cxl/pci.h       |  14 +++---
->  4 files changed, 116 insertions(+), 94 deletions(-)
->
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index 41de4a136ecd..ef6164ef449f 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -5,6 +5,7 @@
->  #include <linux/slab.h>
->  #include <linux/pci.h>
->  #include <cxlmem.h>
-> +#include <pci.h>
->
->  /**
->   * DOC: cxl registers
-> @@ -247,3 +248,91 @@ int cxl_map_device_regs(struct pci_dev *pdev,
->         return 0;
+> Changes since v4:
+> - hold the device lock over the list_empty(&port->dports) check
+>   (Jonathan)
+> - move the list_empty() check after the check for NULL @target_map in
+>   anticipation of endpoint decoders (Ben)
+> 
+>  drivers/cxl/acpi.c      |   84 +++++++++++++++++++++++---------
+>  drivers/cxl/core/bus.c  |  123 +++++++++++++++--------------------------------
+>  drivers/cxl/core/core.h |    5 --
+>  drivers/cxl/core/pmem.c |    7 ++-
+>  drivers/cxl/cxl.h       |   15 ++----
+>  5 files changed, 110 insertions(+), 124 deletions(-)
+> 
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index d39cc797a64e..2368a8b67698 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -82,7 +82,6 @@ static void cxl_add_cfmws_decoders(struct device *dev,
+>  	struct cxl_decoder *cxld;
+>  	acpi_size len, cur = 0;
+>  	void *cedt_subtable;
+> -	unsigned long flags;
+>  	int rc;
+>  
+>  	len = acpi_cedt->length - sizeof(*acpi_cedt);
+> @@ -119,24 +118,36 @@ static void cxl_add_cfmws_decoders(struct device *dev,
+>  		for (i = 0; i < CFMWS_INTERLEAVE_WAYS(cfmws); i++)
+>  			target_map[i] = cfmws->interleave_targets[i];
+>  
+> -		flags = cfmws_to_decoder_flags(cfmws->restrictions);
+> -		cxld = devm_cxl_add_decoder(dev, root_port,
+> -					    CFMWS_INTERLEAVE_WAYS(cfmws),
+> -					    cfmws->base_hpa, cfmws->window_size,
+> -					    CFMWS_INTERLEAVE_WAYS(cfmws),
+> -					    CFMWS_INTERLEAVE_GRANULARITY(cfmws),
+> -					    CXL_DECODER_EXPANDER,
+> -					    flags, target_map);
+> -
+> -		if (IS_ERR(cxld)) {
+> +		cxld = cxl_decoder_alloc(root_port,
+> +					 CFMWS_INTERLEAVE_WAYS(cfmws));
+> +		if (IS_ERR(cxld))
+> +			goto next;
+> +
+> +		cxld->flags = cfmws_to_decoder_flags(cfmws->restrictions);
+> +		cxld->target_type = CXL_DECODER_EXPANDER;
+> +		cxld->range = (struct range) {
+> +			.start = cfmws->base_hpa,
+> +			.end = cfmws->base_hpa + cfmws->window_size - 1,
+> +		};
+> +		cxld->interleave_ways = CFMWS_INTERLEAVE_WAYS(cfmws);
+> +		cxld->interleave_granularity =
+> +			CFMWS_INTERLEAVE_GRANULARITY(cfmws);
+> +
+> +		rc = cxl_decoder_add(cxld, target_map);
+> +		if (rc)
+> +			put_device(&cxld->dev);
+> +		else
+> +			rc = cxl_decoder_autoremove(dev, cxld);
+
+For posterity, I'll say I don't love this interface overall, but I don't have a
+better suggestion.
+
+alloc()
+open coded configuration
+add()
+open coded autoremove
+
+I understand some of the background on moving the responsibility of the devm
+callback to the actual aller, it just ends up a fairly weird interface now since
+all 4 steps are needed to actually create a decoder for consumption by the
+driver.
+
+I'd request a new function to configure the decoder before adding except I don't
+think it's worth doing that either.
+
+> +		if (rc) {
+>  			dev_err(dev, "Failed to add decoder for %#llx-%#llx\n",
+>  				cfmws->base_hpa, cfmws->base_hpa +
+>  				cfmws->window_size - 1);
+
+Do you think it makes sense to explain to the user what the consequence is of
+this?
+
+> -		} else {
+> -			dev_dbg(dev, "add: %s range %#llx-%#llx\n",
+> -				dev_name(&cxld->dev), cfmws->base_hpa,
+> -				 cfmws->base_hpa + cfmws->window_size - 1);
+> +			goto next;
+>  		}
+> +		dev_dbg(dev, "add: %s range %#llx-%#llx\n",
+> +			dev_name(&cxld->dev), cfmws->base_hpa,
+> +			cfmws->base_hpa + cfmws->window_size - 1);
+> +next:
+>  		cur += c->length;
+>  	}
 >  }
->  EXPORT_SYMBOL_GPL(cxl_map_device_regs);
+> @@ -266,6 +277,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+>  	struct acpi_device *bridge = to_cxl_host_bridge(host, match);
+>  	struct acpi_pci_root *pci_root;
+>  	struct cxl_walk_context ctx;
+> +	int single_port_map[1], rc;
+>  	struct cxl_decoder *cxld;
+>  	struct cxl_dport *dport;
+>  	struct cxl_port *port;
+> @@ -301,22 +313,46 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+>  		return -ENODEV;
+>  	if (ctx.error)
+>  		return ctx.error;
+> +	if (ctx.count > 1)
+> +		return 0;
+>  
+>  	/* TODO: Scan CHBCR for HDM Decoder resources */
+>  
+>  	/*
+> -	 * In the single-port host-bridge case there are no HDM decoders
+> -	 * in the CHBCR and a 1:1 passthrough decode is implied.
+> +	 * Per the CXL specification (8.2.5.12 CXL HDM Decoder Capability
+> +	 * Structure) single ported host-bridges need not publish a decoder
+> +	 * capability when a passthrough decode can be assumed, i.e. all
+> +	 * transactions that the uport sees are claimed and passed to the single
+> +	 * dport. Default the range a 0-base 0-length until the first CXL region
+> +	 * is activated.
+>  	 */
+> -	if (ctx.count == 1) {
+> -		cxld = devm_cxl_add_passthrough_decoder(host, port);
+> -		if (IS_ERR(cxld))
+> -			return PTR_ERR(cxld);
+> +	cxld = cxl_decoder_alloc(port, 1);
+> +	if (IS_ERR(cxld))
+> +		return PTR_ERR(cxld);
 > +
-> +static void cxl_decode_register_block(u32 reg_lo, u32 reg_hi, u8 *bar,
-> +                                     u64 *offset, u8 *reg_type)
+> +	cxld->interleave_ways = 1;
+> +	cxld->interleave_granularity = PAGE_SIZE;
+> +	cxld->target_type = CXL_DECODER_EXPANDER;
+> +	cxld->range = (struct range) {
+> +		.start = 0,
+> +		.end = -1,
+> +	};
+>  
+> -		dev_dbg(host, "add: %s\n", dev_name(&cxld->dev));
+> -	}
+> +	device_lock(&port->dev);
+> +	dport = list_first_entry(&port->dports, typeof(*dport), list);
+> +	device_unlock(&port->dev);
+>  
+> -	return 0;
+> +	single_port_map[0] = dport->port_id;
+> +
+> +	rc = cxl_decoder_add(cxld, single_port_map);
+> +	if (rc)
+> +		put_device(&cxld->dev);
+> +	else
+> +		rc = cxl_decoder_autoremove(host, cxld);
+> +
+> +	if (rc == 0)
+> +		dev_dbg(host, "add: %s\n", dev_name(&cxld->dev));
+> +	return rc;
+>  }
+>  
+>  static int add_host_bridge_dport(struct device *match, void *arg)
+> diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
+> index 6dfdeaf999f0..396252749477 100644
+> --- a/drivers/cxl/core/bus.c
+> +++ b/drivers/cxl/core/bus.c
+> @@ -453,10 +453,8 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport_dev, int port_id,
+>  }
+>  EXPORT_SYMBOL_GPL(cxl_add_dport);
+>  
+> -static int decoder_populate_targets(struct device *host,
+> -				    struct cxl_decoder *cxld,
+> -				    struct cxl_port *port, int *target_map,
+> -				    int nr_targets)
+> +static int decoder_populate_targets(struct cxl_decoder *cxld,
+> +				    struct cxl_port *port, int *target_map)
+>  {
+>  	int rc = 0, i;
+>  
+> @@ -464,42 +462,36 @@ static int decoder_populate_targets(struct device *host,
+>  		return 0;
+>  
+>  	device_lock(&port->dev);
+> -	for (i = 0; i < nr_targets; i++) {
+> +	if (list_empty(&port->dports)) {
+> +		rc = -EINVAL;
+> +		goto out_unlock;
+> +	}
+
+Forewarning, I think I'm still going to need to modify this check for endpoints.
+
+> +
+> +	for (i = 0; i < cxld->nr_targets; i++) {
+>  		struct cxl_dport *dport = find_dport(port, target_map[i]);
+>  
+>  		if (!dport) {
+>  			rc = -ENXIO;
+> -			break;
+> +			goto out_unlock;
+>  		}
+> -		dev_dbg(host, "%s: target: %d\n", dev_name(dport->dport), i);
+>  		cxld->target[i] = dport;
+>  	}
+> +
+> +out_unlock:
+>  	device_unlock(&port->dev);
+>  
+>  	return rc;
+>  }
+>  
+> -static struct cxl_decoder *
+> -cxl_decoder_alloc(struct device *host, struct cxl_port *port, int nr_targets,
+> -		  resource_size_t base, resource_size_t len,
+> -		  int interleave_ways, int interleave_granularity,
+> -		  enum cxl_decoder_type type, unsigned long flags,
+> -		  int *target_map)
+> +struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
+>  {
+>  	struct cxl_decoder *cxld;
+>  	struct device *dev;
+>  	int rc = 0;
+>  
+> -	if (interleave_ways < 1)
+> +	if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets < 1)
+>  		return ERR_PTR(-EINVAL);
+>  
+> -	device_lock(&port->dev);
+> -	if (list_empty(&port->dports))
+> -		rc = -EINVAL;
+> -	device_unlock(&port->dev);
+> -	if (rc)
+> -		return ERR_PTR(rc);
+> -
+>  	cxld = kzalloc(struct_size(cxld, target, nr_targets), GFP_KERNEL);
+>  	if (!cxld)
+>  		return ERR_PTR(-ENOMEM);
+> @@ -508,22 +500,8 @@ cxl_decoder_alloc(struct device *host, struct cxl_port *port, int nr_targets,
+>  	if (rc < 0)
+>  		goto err;
+>  
+> -	*cxld = (struct cxl_decoder) {
+> -		.id = rc,
+> -		.range = {
+> -			.start = base,
+> -			.end = base + len - 1,
+> -		},
+> -		.flags = flags,
+> -		.interleave_ways = interleave_ways,
+> -		.interleave_granularity = interleave_granularity,
+> -		.target_type = type,
+> -	};
+> -
+> -	rc = decoder_populate_targets(host, cxld, port, target_map, nr_targets);
+> -	if (rc)
+> -		goto err;
+> -
+> +	cxld->id = rc;
+> +	cxld->nr_targets = nr_targets;
+
+Would be really nice if cxld->nr_targets could be const...
+
+>  	dev = &cxld->dev;
+>  	device_initialize(dev);
+>  	device_set_pm_not_required(dev);
+> @@ -541,72 +519,47 @@ cxl_decoder_alloc(struct device *host, struct cxl_port *port, int nr_targets,
+>  	kfree(cxld);
+>  	return ERR_PTR(rc);
+>  }
+> +EXPORT_SYMBOL_GPL(cxl_decoder_alloc);
+>  
+> -struct cxl_decoder *
+> -devm_cxl_add_decoder(struct device *host, struct cxl_port *port, int nr_targets,
+> -		     resource_size_t base, resource_size_t len,
+> -		     int interleave_ways, int interleave_granularity,
+> -		     enum cxl_decoder_type type, unsigned long flags,
+> -		     int *target_map)
+> +int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+>  {
+> -	struct cxl_decoder *cxld;
+> +	struct cxl_port *port;
+>  	struct device *dev;
+>  	int rc;
+>  
+> -	if (nr_targets > CXL_DECODER_MAX_INTERLEAVE)
+> -		return ERR_PTR(-EINVAL);
+> +	if (!cxld)
+> +		return -EINVAL;
+
+I don't mind, but I think calling this with !cxld is a driver bug, right?
+Perhaps upgrade to WARN_ONCE?
+
+>  
+> -	cxld = cxl_decoder_alloc(host, port, nr_targets, base, len,
+> -				 interleave_ways, interleave_granularity, type,
+> -				 flags, target_map);
+>  	if (IS_ERR(cxld))
+> -		return cxld;
+> +		return PTR_ERR(cxld);
+
+Same as above.
+
+>  
+> -	dev = &cxld->dev;
+> -	rc = dev_set_name(dev, "decoder%d.%d", port->id, cxld->id);
+> -	if (rc)
+> -		goto err;
+> +	if (cxld->interleave_ways < 1)
+> +		return -EINVAL;
+>  
+> -	rc = device_add(dev);
+> +	port = to_cxl_port(cxld->dev.parent);
+> +	rc = decoder_populate_targets(cxld, port, target_map);
+>  	if (rc)
+> -		goto err;
+> +		return rc;
+>  
+> -	rc = devm_add_action_or_reset(host, unregister_cxl_dev, dev);
+> +	dev = &cxld->dev;
+> +	rc = dev_set_name(dev, "decoder%d.%d", port->id, cxld->id);
+>  	if (rc)
+> -		return ERR_PTR(rc);
+> -	return cxld;
+> +		return rc;
+>  
+> -err:
+> -	put_device(dev);
+> -	return ERR_PTR(rc);
+> +	return device_add(dev);
+>  }
+> -EXPORT_SYMBOL_GPL(devm_cxl_add_decoder);
+> +EXPORT_SYMBOL_GPL(cxl_decoder_add);
+>  
+> -/*
+> - * Per the CXL specification (8.2.5.12 CXL HDM Decoder Capability Structure)
+> - * single ported host-bridges need not publish a decoder capability when a
+> - * passthrough decode can be assumed, i.e. all transactions that the uport sees
+> - * are claimed and passed to the single dport. Default the range a 0-base
+> - * 0-length until the first CXL region is activated.
+> - */
+> -struct cxl_decoder *devm_cxl_add_passthrough_decoder(struct device *host,
+> -						     struct cxl_port *port)
+> +static void cxld_unregister(void *dev)
+>  {
+> -	struct cxl_dport *dport;
+> -	int target_map[1];
+> -
+> -	device_lock(&port->dev);
+> -	dport = list_first_entry_or_null(&port->dports, typeof(*dport), list);
+> -	device_unlock(&port->dev);
+> -
+> -	if (!dport)
+> -		return ERR_PTR(-ENXIO);
+> +	device_unregister(dev);
+> +}
+>  
+> -	target_map[0] = dport->port_id;
+> -	return devm_cxl_add_decoder(host, port, 1, 0, 0, 1, PAGE_SIZE,
+> -				    CXL_DECODER_EXPANDER, 0, target_map);
+> +int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld)
 > +{
-> +       *offset = ((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
-> +       *bar = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
-> +       *reg_type = FIELD_GET(CXL_REGLOC_RBI_MASK, reg_lo);
+> +	return devm_add_action_or_reset(host, cxld_unregister, &cxld->dev);
+>  }
+> -EXPORT_SYMBOL_GPL(devm_cxl_add_passthrough_decoder);
+> +EXPORT_SYMBOL_GPL(cxl_decoder_autoremove);
+>  
+>  /**
+>   * __cxl_driver_register - register a driver for the cxl bus
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index c85b7fbad02d..e0c9aacc4e9c 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -9,11 +9,6 @@ extern const struct device_type cxl_nvdimm_type;
+>  
+>  extern struct attribute_group cxl_base_attribute_group;
+>  
+> -static inline void unregister_cxl_dev(void *dev)
+> -{
+> -	device_unregister(dev);
+> -}
+> -
+>  struct cxl_send_command;
+>  struct cxl_mem_query_commands;
+>  int cxl_query_cmd(struct cxl_memdev *cxlmd,
+> diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
+> index 74be5132df1c..5032f4c1c69d 100644
+> --- a/drivers/cxl/core/pmem.c
+> +++ b/drivers/cxl/core/pmem.c
+> @@ -222,6 +222,11 @@ static struct cxl_nvdimm *cxl_nvdimm_alloc(struct cxl_memdev *cxlmd)
+>  	return cxl_nvd;
+>  }
+>  
+> +static void cxl_nvd_unregister(void *dev)
+> +{
+> +	device_unregister(dev);
 > +}
 > +
-> +static int cxl_pci_dvsec(struct pci_dev *pdev, int dvsec)
-> +{
-> +       int pos;
-> +
-> +       pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DVSEC);
-> +       if (!pos)
-> +               return 0;
-> +
-> +       while (pos) {
-> +               u16 vendor, id;
-> +
-> +               pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER1, &vendor);
-> +               pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER2, &id);
-> +               if (vendor == PCI_DVSEC_VENDOR_ID_CXL && dvsec == id)
-> +                       return pos;
-> +
-> +               pos = pci_find_next_ext_capability(pdev, pos,
-> +                                                  PCI_EXT_CAP_ID_DVSEC);
-> +       }
-
-We punted on refactoring this for the initial driver submission
-because it was difficult to coordinate. Now that cxl.git is an
-established tree, instead of moving this it seems time to address that
-refactor that Bjorn asked about. Bjorn, would you be willing to carry
-a non-rebasing branch with such a cleanup that CXL could pull from?
-
-> +
-> +       return 0;
-> +}
-> +
-> +/**
-> + * cxl_get_register_block() - Find the CXL register block by identifier
-> + * @pdev: The PCI device implementing the registers
-> + * @type: Type of register block to find
-> + * @map: (Output) parameters used to map the regiseter block
-
-s/regiseter/register/
-
-> + *
-> + * If register block is found, 0 is returned and @map is populated; else returns
-> + * negative error code.
-> + */
-> +int cxl_get_register_block(struct pci_dev *pdev, enum cxl_regloc_type type,
-
-Seeing this broken out again it looks like a 'find' operation rather
-than a 'get', but not a big deal.
-
-> +                          struct cxl_register_map *map)
-> +{
-> +       int regloc, i, rc = -ENODEV;
-> +       u32 regloc_size, regblocks;
-> +
-> +       memset(map, 0, sizeof(*map));
-> +
-> +       regloc = cxl_pci_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID);
-> +       if (!regloc)
-> +               return -ENXIO;
-> +
-> +       if (pci_request_mem_regions(pdev, pci_name(pdev)))
-> +               return -ENODEV;
-> +
-> +       pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
-> +       regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
-> +
-> +       regloc += PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET;
-> +       regblocks = (regloc_size - PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET) / 8;
-> +
-> +       for (i = 0; i < regblocks; i++, regloc += 8) {
-> +               u32 reg_lo, reg_hi;
-> +               u8 reg_type, bar;
-> +               u64 offset;
-> +
-> +               pci_read_config_dword(pdev, regloc, &reg_lo);
-> +               pci_read_config_dword(pdev, regloc + 4, &reg_hi);
-> +
-> +               cxl_decode_register_block(reg_lo, reg_hi, &bar, &offset,
-> +                                         &reg_type);
-> +
-> +               if (reg_type == type) {
-> +                       map->barno = bar;
-> +                       map->block_offset = offset;
-> +                       map->reg_type = reg_type;
-> +                       rc = 0;
-> +                       break;
-> +               }
-> +       }
-> +
-> +       pci_release_mem_regions(pdev);
-> +
-> +       return rc;
-> +}
-> +
-> +EXPORT_SYMBOL_GPL(cxl_get_register_block);
+>  /**
+>   * devm_cxl_add_nvdimm() - add a bridge between a cxl_memdev and an nvdimm
+>   * @host: same host as @cxlmd
+> @@ -251,7 +256,7 @@ int devm_cxl_add_nvdimm(struct device *host, struct cxl_memdev *cxlmd)
+>  	dev_dbg(host, "%s: register %s\n", dev_name(dev->parent),
+>  		dev_name(dev));
+>  
+> -	return devm_add_action_or_reset(host, unregister_cxl_dev, dev);
+> +	return devm_add_action_or_reset(host, cxl_nvd_unregister, dev);
+>  
+>  err:
+>  	put_device(dev);
 > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 7d6b011dd963..cff3b68e03e0 100644
+> index 9af5745ba2c0..7d6b011dd963 100644
 > --- a/drivers/cxl/cxl.h
 > +++ b/drivers/cxl/cxl.h
-> @@ -159,6 +159,9 @@ int cxl_map_component_regs(struct pci_dev *pdev,
->  int cxl_map_device_regs(struct pci_dev *pdev,
->                         struct cxl_device_regs *regs,
->                         struct cxl_register_map *map);
-> +enum cxl_regloc_type;
-> +int cxl_get_register_block(struct pci_dev *pdev, enum cxl_regloc_type type,
-> +                          struct cxl_register_map *map);
->
->  #define CXL_RESOURCE_NONE ((resource_size_t) -1)
->  #define CXL_TARGET_STRLEN 20
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 64180f46c895..2d91e20bd088 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -337,29 +337,6 @@ static void cxl_pci_unmap_regblock(struct cxl_mem *cxlm, void __iomem *base)
->         pci_iounmap(to_pci_dev(cxlm->dev), base);
->  }
->
-> -static int cxl_pci_dvsec(struct pci_dev *pdev, int dvsec)
-> -{
-> -       int pos;
-> -
-> -       pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DVSEC);
-> -       if (!pos)
-> -               return 0;
-> -
-> -       while (pos) {
-> -               u16 vendor, id;
-> -
-> -               pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER1, &vendor);
-> -               pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER2, &id);
-> -               if (vendor == PCI_DVSEC_VENDOR_ID_CXL && dvsec == id)
-> -                       return pos;
-> -
-> -               pos = pci_find_next_ext_capability(pdev, pos,
-> -                                                  PCI_EXT_CAP_ID_DVSEC);
-> -       }
-> -
-> -       return 0;
-> -}
-> -
->  static int cxl_probe_regs(struct cxl_mem *cxlm, void __iomem *base,
->                           struct cxl_register_map *map)
->  {
-> @@ -420,14 +397,6 @@ static int cxl_map_regs(struct cxl_mem *cxlm, struct cxl_register_map *map)
->         return 0;
->  }
->
-> -static void cxl_decode_register_block(u32 reg_lo, u32 reg_hi,
-> -                                     u8 *bar, u64 *offset, u8 *reg_type)
-> -{
-> -       *offset = ((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
-> -       *bar = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
-> -       *reg_type = FIELD_GET(CXL_REGLOC_RBI_MASK, reg_lo);
-> -}
-> -
->  /**
->   * cxl_pci_setup_regs() - Setup necessary MMIO.
->   * @cxlm: The CXL memory device to communicate with.
-> @@ -440,72 +409,31 @@ static void cxl_decode_register_block(u32 reg_lo, u32 reg_hi,
+> @@ -195,6 +195,7 @@ enum cxl_decoder_type {
+>   * @interleave_granularity: data stride per dport
+>   * @target_type: accelerator vs expander (type2 vs type3) selector
+>   * @flags: memory type capabilities and locking
+> + * @nr_targets: number of elements in @target
+>   * @target: active ordered target list in current decoder configuration
 >   */
->  static int cxl_pci_setup_regs(struct cxl_mem *cxlm)
->  {
-> -       void __iomem *base;
-> -       u32 regloc_size, regblocks;
-> -       int regloc, i, n_maps, ret = 0;
-> +       int i, ret = 0;
->         struct device *dev = cxlm->dev;
->         struct pci_dev *pdev = to_pci_dev(dev);
-> -       struct cxl_register_map *map, maps[CXL_REGLOC_RBI_TYPES];
+>  struct cxl_decoder {
+> @@ -205,6 +206,7 @@ struct cxl_decoder {
+>  	int interleave_granularity;
+>  	enum cxl_decoder_type target_type;
+>  	unsigned long flags;
+> +	int nr_targets;
+>  	struct cxl_dport *target[];
+>  };
+>  
+> @@ -286,15 +288,10 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
+>  
+>  struct cxl_decoder *to_cxl_decoder(struct device *dev);
+>  bool is_root_decoder(struct device *dev);
+> -struct cxl_decoder *
+> -devm_cxl_add_decoder(struct device *host, struct cxl_port *port, int nr_targets,
+> -		     resource_size_t base, resource_size_t len,
+> -		     int interleave_ways, int interleave_granularity,
+> -		     enum cxl_decoder_type type, unsigned long flags,
+> -		     int *target_map);
 > -
-> -       regloc = cxl_pci_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID);
-> -       if (!regloc) {
-> -               dev_err(dev, "register location dvsec not found\n");
-> -               return -ENXIO;
-> -       }
-> +       enum cxl_regloc_type types[] = {CXL_REGLOC_RBI_MEMDEV, CXL_REGLOC_RBI_COMPONENT};
->
-> -       if (pci_request_mem_regions(pdev, pci_name(pdev)))
-> -               return -ENODEV;
-> +       for (i = 0; i < ARRAY_SIZE(types); i++) {
-> +               struct cxl_register_map map;
-> +               void __iomem *base;
->
-> -       /* Get the size of the Register Locator DVSEC */
-> -       pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
-> -       regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
-> -
-> -       regloc += PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET;
-> -       regblocks = (regloc_size - PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET) / 8;
-> -
-> -       for (i = 0, n_maps = 0; i < regblocks; i++, regloc += 8) {
-> -               u32 reg_lo, reg_hi;
-> -               u8 reg_type;
-> -               u64 offset;
-> -               u8 bar;
-> -
-> -               pci_read_config_dword(pdev, regloc, &reg_lo);
-> -               pci_read_config_dword(pdev, regloc + 4, &reg_hi);
-> -
-> -               cxl_decode_register_block(reg_lo, reg_hi, &bar, &offset,
-> -                                         &reg_type);
-> -
-> -               dev_dbg(dev, "Found register block in bar %u @ 0x%llx of type %u\n",
-> -                       bar, offset, reg_type);
-> -
-> -               /* Ignore unknown register block types */
-> -               if (reg_type > CXL_REGLOC_RBI_MEMDEV)
-> -                       continue;
-> -
-> -               base = cxl_pci_map_regblock(cxlm, bar, offset);
-> -               if (!base)
-> -                       return -ENOMEM;
-> -
-> -               map = &maps[n_maps];
-> -               map->barno = bar;
-> -               map->block_offset = offset;
-> -               map->reg_type = reg_type;
-> +               ret = cxl_get_register_block(pdev, types[i], &map);
-> +               if (ret)
-> +                       break;
->
-> -               ret = cxl_probe_regs(cxlm, base + offset, map);
-> +               base = cxl_pci_map_regblock(cxlm, map.barno, map.block_offset);
-> +               if (!base) {
-> +                       ret = -ENXIO;
-> +                       break;
-> +               }
->
-> -               /* Always unmap the regblock regardless of probe success */
-> +               ret = cxl_probe_regs(cxlm, base + map.block_offset, &map);
->                 cxl_pci_unmap_regblock(cxlm, base);
-> -
->                 if (ret)
-> -                       return ret;
-> -
-> -               n_maps++;
-> -       }
-> -
-> -       pci_release_mem_regions(pdev);
-> +                       break;
->
-> -       for (i = 0; i < n_maps; i++) {
-> -               ret = cxl_map_regs(cxlm, &maps[i]);
-> +               ret = cxl_map_regs(cxlm, &map);
->                 if (ret)
->                         break;
->         }
-> diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
-> index 8c1a58813816..7d3e4bf06b45 100644
-> --- a/drivers/cxl/pci.h
-> +++ b/drivers/cxl/pci.h
-> @@ -20,13 +20,15 @@
->  #define CXL_REGLOC_BIR_MASK GENMASK(2, 0)
->
->  /* Register Block Identifier (RBI) */
-> -#define CXL_REGLOC_RBI_MASK GENMASK(15, 8)
-> -#define CXL_REGLOC_RBI_EMPTY 0
-> -#define CXL_REGLOC_RBI_COMPONENT 1
-> -#define CXL_REGLOC_RBI_VIRT 2
-> -#define CXL_REGLOC_RBI_MEMDEV 3
-> -#define CXL_REGLOC_RBI_TYPES CXL_REGLOC_RBI_MEMDEV + 1
-> +enum cxl_regloc_type {
-> +       CXL_REGLOC_RBI_EMPTY = 0,
-> +       CXL_REGLOC_RBI_COMPONENT,
-> +       CXL_REGLOC_RBI_VIRT,
-> +       CXL_REGLOC_RBI_MEMDEV,
-> +       CXL_REGLOC_RBI_TYPES
-> +};
-
-This looks like another change that can go into its own patch.
-
->
-> +#define CXL_REGLOC_RBI_MASK GENMASK(15, 8)
->  #define CXL_REGLOC_ADDR_MASK GENMASK(31, 16)
->
->  #endif /* __CXL_PCI_H__ */
-> --
-> 2.33.0
->
+> -struct cxl_decoder *devm_cxl_add_passthrough_decoder(struct device *host,
+> -						     struct cxl_port *port);
+> +struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets);
+> +int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
+> +int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld);
+> +
+>  extern struct bus_type cxl_bus_type;
+>  
+>  struct cxl_driver {
+> 
