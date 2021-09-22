@@ -2,120 +2,267 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E3FC433F5
-	for <linux-cxl@archiver.kernel.org>; Wed, 22 Sep 2021 00:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC98C433F5
+	for <linux-cxl@archiver.kernel.org>; Wed, 22 Sep 2021 04:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22569611C9
-	for <linux-cxl@archiver.kernel.org>; Wed, 22 Sep 2021 00:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B83A61166
+	for <linux-cxl@archiver.kernel.org>; Wed, 22 Sep 2021 04:31:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229752AbhIVAqk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 21 Sep 2021 20:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37122 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229480AbhIVAqj (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 21 Sep 2021 20:46:39 -0400
-Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6F99C061574
-        for <linux-cxl@vger.kernel.org>; Tue, 21 Sep 2021 17:45:10 -0700 (PDT)
-Received: by mail-ot1-x32b.google.com with SMTP id c8-20020a9d6c88000000b00517cd06302dso1040847otr.13
-        for <linux-cxl@vger.kernel.org>; Tue, 21 Sep 2021 17:45:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q1iP5KefHqJWJ5qGAUDoYDJOyAD6pRFAZFOdaM0VUL4=;
-        b=jEV6CpbXyr07JLXO1bp0yl7i+yms+T5LIGT6MwHF6pP/qG0RKnqzaXHP3PbaieYwko
-         eiScBzgb/WsN+NvJnLl4t8FPVlcFSgH/ZYjXW0/dbKO8sDVbmqypt0rMXr/wg/O17Tkw
-         VCUIukQzVQgK1p7wiXp5KbANB4eSFvjqbS6OufBZMTspLK6VKofrcLONrnjzcIffavOC
-         sNTa24qsbj2zFf23cxhht8n9gEF7RhZZo41SmCRXkMlwxpqSt58N/iAWCoubiKQXzd6R
-         P/Cfteln8igvgHe402qPDEmVCaUsIYLBxJvVa7PNvlpLnWka4d7kIA4Xvn0Ali7BjTJS
-         KdGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q1iP5KefHqJWJ5qGAUDoYDJOyAD6pRFAZFOdaM0VUL4=;
-        b=tqXviI4IOfN3SS7IHKuhKuLI+8cacwdb0XNaBZ3ICK4zGUfU1Iej+SeaY2JfFCMyBb
-         9Ouhee2Fri8UXe26A9hsu8ezGNY0lRfZEbAYOfLn+EjMvie6HxD9G+rHdp5UPwLTm30K
-         M2jHThW9vCqHdnfAav5tSOg/jOf75s3fbT5kkf+6QdQr7df0C8M/+kqOa31jZvuSgHgU
-         YCII03ArqKfKw4dzqC78iXui7jjvC4Cu5fuvUwH4LnJRMGIMmHdREoF62wUHXblLBHcI
-         nmkf9TYJcHERXuCbvQRdpFHI4ri07VFAy1oUeecH97CpIXtv7lxED09VuDn9LCXxkoJE
-         0dXw==
-X-Gm-Message-State: AOAM5304nKn94OF1bOxMSl0jlCj8c6JroBxtuYciVF/Png3htXJnGeP1
-        I7LqerhjiCxQe5KJdoIrxpvvGIltGHbcP9bpoPkxPA==
-X-Google-Smtp-Source: ABdhPJwmYVkzrdW65h9xNSUrnW1faCzIMwKQt+WpaGKLoqWCC3rgZnXMLk+Dnzi5GMg1Owh3toA9VWsUpQuh0BoWQos=
-X-Received: by 2002:a9d:6359:: with SMTP id y25mr28065477otk.274.1632271510013;
- Tue, 21 Sep 2021 17:45:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210921220459.2437386-1-ben.widawsky@intel.com> <20210921220459.2437386-8-ben.widawsky@intel.com>
-In-Reply-To: <20210921220459.2437386-8-ben.widawsky@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 21 Sep 2021 17:44:58 -0700
-Message-ID: <CAPcyv4h4QHAQF+ogMvOXrkdyR5Jceo8yp7TQNN+836=v0QwdDw@mail.gmail.com>
-Subject: Re: [PATCH 7/7] ocxl: Use pci core's DVSEC functionality
-To:     Ben Widawsky <ben.widawsky@intel.com>
+        id S230476AbhIVEcf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 22 Sep 2021 00:32:35 -0400
+Received: from mga18.intel.com ([134.134.136.126]:4411 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229495AbhIVEcf (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Wed, 22 Sep 2021 00:32:35 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10114"; a="210593183"
+X-IronPort-AV: E=Sophos;i="5.85,312,1624345200"; 
+   d="scan'208";a="210593183"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2021 21:31:05 -0700
+X-IronPort-AV: E=Sophos;i="5.85,312,1624345200"; 
+   d="scan'208";a="703573898"
+Received: from kennetho-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.132.230])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2021 21:31:04 -0700
+Date:   Tue, 21 Sep 2021 21:31:03 -0700
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
 Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH 3/7] cxl/pci: Refactor cxl_pci_setup_regs
+Message-ID: <20210922043103.nso2u2w63tyvgaln@intel.com>
+References: <20210921220459.2437386-1-ben.widawsky@intel.com>
+ <20210921220459.2437386-4-ben.widawsky@intel.com>
+ <CAPcyv4hK6=mxqwEZEyKH1LHBWaQKUaEoOxoAgZvL5aQ-dOswRg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4hK6=mxqwEZEyKH1LHBWaQKUaEoOxoAgZvL5aQ-dOswRg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Sep 21, 2021 at 3:05 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> Reduce maintenance burden of DVSEC query implementation by using the
-> centralized PCI core implementation.
->
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: Frederic Barrat <fbarrat@linux.ibm.com>
-> Cc: Andrew Donnellan <ajd@linux.ibm.com>
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> ---
->  drivers/misc/ocxl/config.c | 13 +------------
->  1 file changed, 1 insertion(+), 12 deletions(-)
->
-> diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
-> index a68738f38252..e401a51596b9 100644
-> --- a/drivers/misc/ocxl/config.c
-> +++ b/drivers/misc/ocxl/config.c
-> @@ -33,18 +33,7 @@
->
->  static int find_dvsec(struct pci_dev *dev, int dvsec_id)
->  {
-> -       int vsec = 0;
-> -       u16 vendor, id;
-> -
-> -       while ((vsec = pci_find_next_ext_capability(dev, vsec,
-> -                                                   OCXL_EXT_CAP_ID_DVSEC))) {
-> -               pci_read_config_word(dev, vsec + OCXL_DVSEC_VENDOR_OFFSET,
-> -                               &vendor);
-> -               pci_read_config_word(dev, vsec + OCXL_DVSEC_ID_OFFSET, &id);
-> -               if (vendor == PCI_VENDOR_ID_IBM && id == dvsec_id)
-> -                       return vsec;
-> -       }
-> -       return 0;
-> +       return pci_find_dvsec_capability(dev, PCI_VENDOR_ID_IBM, dvsec_id);
->  }
+On 21-09-21 16:39:30, Dan Williams wrote:
+> On Tue, Sep 21, 2021 at 3:05 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> >
+> > In preparation for moving parts of register mapping to cxl_core, the
+> > cxl_pci driver is refactored to utilize a new helper to find register
+> > blocks by type.
+> >
+> > cxl_pci scanned through all register blocks and mapping the ones that
+> > the driver will use. This logic is inverted so that the driver
+> > specifically requests the register blocks from a new helper. Under the
+> > hood, the same implementation of scanning through all register locator
+> > DVSEC entries exists.
+> >
+> > There are 2 behavioral changes (#2 is arguable):
+> > 1. A dev_err is introduced if cxl_map_regs fails.
+> > 2. The previous logic would try to map component registers and device
+> >    registers multiple times if there were present and keep the mapping
+> >    of the last one found (furthest offset in the register locator).
+> >    While this is disallowed in the spec, CXL 2.0 8.1.9: "Each register
+> >    block identifier shall only occur once in the Register Locator DVSEC
+> >    structure" it was how the driver would respond to the spec violation.
+> >    The new logic will take the first found register block by type and
+> >    move on.
+> 
+> Yeah, I think it's silly to try to predict how hardware might violate
+> the specification. Just wait until there is a known shipping device
+> with a problem and then add a quirk to the driver.
+> 
+> >
+> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > ---
+> >  drivers/cxl/pci.c | 113 ++++++++++++++++++++++++++--------------------
+> >  1 file changed, 65 insertions(+), 48 deletions(-)
+> >
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > index ccc7c2573ddc..6e5c026f5262 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> > @@ -428,46 +428,28 @@ static void cxl_decode_register_block(u32 reg_lo, u32 reg_hi,
+> >         *reg_type = FIELD_GET(CXL_REGLOC_RBI_MASK, reg_lo);
+> >  }
+> >
+> > -/**
+> > - * cxl_pci_setup_regs() - Setup necessary MMIO.
+> > - * @cxlm: The CXL memory device to communicate with.
+> > - *
+> > - * Return: 0 if all necessary registers mapped.
+> > - *
+> > - * A memory device is required by spec to implement a certain set of MMIO
+> > - * regions. The purpose of this function is to enumerate and map those
+> > - * registers.
+> > - */
+> > -static int cxl_pci_setup_regs(struct cxl_mem *cxlm)
+> > +static int find_register_block(struct pci_dev *pdev, enum cxl_regloc_type type,
+> > +                              struct cxl_register_map *map)
+> >  {
+> > -       void __iomem *base;
+> > +       int regloc, i, rc = -ENODEV;
+> >         u32 regloc_size, regblocks;
+> > -       int regloc, i, n_maps, ret = 0;
+> > -       struct device *dev = cxlm->dev;
+> > -       struct pci_dev *pdev = to_pci_dev(dev);
+> > -       struct cxl_register_map *map, maps[CXL_REGLOC_RBI_TYPES];
+> > +
+> > +       memset(map, 0, sizeof(*map));
+> 
+> Is this necessary? It seems this fills in all fields on success, why
+> does it need to zero-init?
+> 
 
-What about:
+Am earlier version of this patch attempted to determine success based on the
+values in @map. It is no longer necessary.
 
-arch/powerpc/platforms/powernv/ocxl.c::find_dvsec_from_pos()
+> >
+> >         regloc = cxl_pci_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID);
+> > -       if (!regloc) {
+> > -               dev_err(dev, "register location dvsec not found\n");
+> > +       if (!regloc)
+> >                 return -ENXIO;
+> > -       }
+> > -
+> > -       if (pci_request_mem_regions(pdev, pci_name(pdev)))
+> > -               return -ENODEV;
+> >
+> > -       /* Get the size of the Register Locator DVSEC */
+> >         pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
+> >         regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
+> >
+> >         regloc += PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET;
+> >         regblocks = (regloc_size - PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET) / 8;
+> >
+> > -       for (i = 0, n_maps = 0; i < regblocks; i++, regloc += 8) {
+> > +       for (i = 0; i < regblocks; i++, regloc += 8) {
+> >                 u32 reg_lo, reg_hi;
+> > -               u8 reg_type;
+> > +               u8 reg_type, bar;
+> >                 u64 offset;
+> > -               u8 bar;
+> >
+> >                 pci_read_config_dword(pdev, regloc, &reg_lo);
+> >                 pci_read_config_dword(pdev, regloc + 4, &reg_hi);
+> > @@ -475,39 +457,74 @@ static int cxl_pci_setup_regs(struct cxl_mem *cxlm)
+> >                 cxl_decode_register_block(reg_lo, reg_hi, &bar, &offset,
+> >                                           &reg_type);
+> >
+> > -               /* Ignore unknown register block types */
+> > -               if (reg_type > CXL_REGLOC_RBI_MEMDEV)
+> > -                       continue;
+> > +               if (reg_type == type) {
+> > +                       map->barno = bar;
+> > +                       map->block_offset = offset;
+> > +                       map->reg_type = reg_type;
+> > +                       rc = 0;
+> > +                       break;
+> 
+> As this patch is already adding helpers, perhaps rather than a loop
+> break, make the loop a helper so it can just "return 0;" directly:
+> 
+> Something like:
+> 
+> pci_request_mem_regions(...);
+> rc = __find_register_block(...);
+> pci_release_mem_regions(...);
+> 
+> ...although, now that I see it written that way I think the request +
+> release regions should probably just be dropped. It's not like any of
+> the register enumeration would collide with someone else who already
+> has the registers mapped. The collision only comes when the registers
+> are mapped for their final usage, and that will have more precision in
+> the request.
+> 
 
-...?  With that converted the redundant definitions below:
+I think the origin of this was copy-pasta on my part. However, what's the
+idiomatic way to do this? I guess I don't fully understand what kind of
+collisions exist today and how to prevent them. Removing this entirely would
+make easier code and if you assert we can do that, I'm all for it.
 
-OCXL_EXT_CAP_ID_DVSEC
-OCXL_DVSEC_VENDOR_OFFSET
-OCXL_DVSEC_ID_OFFSET
+> > +               }
+> > +       }
+> >
+> > -               base = cxl_pci_map_regblock(cxlm, bar, offset);
+> > -               if (!base)
+> > -                       return -ENOMEM;
+> > +       pci_release_mem_regions(pdev);
+> >
+> > -               map = &maps[n_maps];
+> > -               map->barno = bar;
+> > -               map->block_offset = offset;
+> > -               map->reg_type = reg_type;
+> > +       return rc;
+> > +}
+> >
+> > -               ret = cxl_probe_regs(cxlm, base + offset, map);
+> > +/**
+> > + * cxl_pci_setup_regs() - Setup necessary MMIO.
+> > + * @cxlm: The CXL memory device to communicate with.
+> > + *
+> > + * Return: 0 if all necessary registers mapped.
+> > + *
+> > + * A memory device is required by spec to implement a certain set of MMIO
+> > + * regions. The purpose of this function is to enumerate and map those
+> > + * registers.
+> > + */
+> > +static int cxl_pci_setup_regs(struct cxl_mem *cxlm)
+> > +{
+> > +       int rc, i;
+> > +       struct device *dev = cxlm->dev;
+> > +       struct pci_dev *pdev = to_pci_dev(dev);
+> > +       const enum cxl_regloc_type types[] = { CXL_REGLOC_RBI_MEMDEV,
+> > +                                              CXL_REGLOC_RBI_COMPONENT };
+> >
+> > -               /* Always unmap the regblock regardless of probe success */
+> > -               cxl_pci_unmap_regblock(cxlm, base);
+> > +       if (pci_request_mem_regions(pdev, pci_name(pdev)))
+> > +               return -ENODEV;
+> >
+> > -               if (ret)
+> > -                       return ret;
+> > +       for (i = 0; i < ARRAY_SIZE(types); i++) {
+> > +               struct cxl_register_map map;
+> > +               void __iomem *base;
+> >
+> > -               n_maps++;
+> > -       }
+> > +               rc = find_register_block(pdev, types[i], &map);
+> > +               if (rc) {
+> > +                       dev_err(dev, "Couldn't find %s register block\n",
+> > +                               types[i] == CXL_REGLOC_RBI_MEMDEV ?
+> > +                                             "device" :
+> > +                                             "component");
+> > +                       break;
+> > +               }
+> >
+> > -       pci_release_mem_regions(pdev);
+> > +               base = cxl_pci_map_regblock(cxlm, map.barno, map.block_offset);
+> > +               if (!base) {
+> > +                       rc = -ENOMEM;
+> > +                       break;
+> > +               }
+> >
+> > -       for (i = 0; i < n_maps; i++) {
+> > -               ret = cxl_map_regs(cxlm, &maps[i]);
+> > -               if (ret)
+> > +               rc = cxl_probe_regs(cxlm, base + map.block_offset, &map);
+> 
+> It strikes me as odd @map has everything except a copy of @base. I
+> wonder if this patch becomes easier to read if patch4 comes before
+> this one and all the map_offset usage is dropped because @map can
+> carry the required information directly. I'm not sure this suggestion
+> is a win. I'm struggling to make sense of diff in isolation so will
+> need to circle back when I can apply this and look at the result, for
+> now it's just these edge comments.
 
-...can be cleaned up in favor of the core definitions.
+It's a good point that I've also thought about. I think Ira's original goal was
+to try to keep the iomem base in the API, but if we consider this series a win,
+I think everything might benefit moving into @map. I'm certainly willing to try
+it.
