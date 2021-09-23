@@ -2,194 +2,272 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC4BC433F5
-	for <linux-cxl@archiver.kernel.org>; Thu, 23 Sep 2021 19:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B39C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 23 Sep 2021 21:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 625C861241
-	for <linux-cxl@archiver.kernel.org>; Thu, 23 Sep 2021 19:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022E561019
+	for <linux-cxl@archiver.kernel.org>; Thu, 23 Sep 2021 21:37:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242781AbhIWTJ0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 23 Sep 2021 15:09:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242831AbhIWTJ0 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 23 Sep 2021 15:09:26 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 366D7C061757
-        for <linux-cxl@vger.kernel.org>; Thu, 23 Sep 2021 12:07:54 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id bx4so26805351edb.4
-        for <linux-cxl@vger.kernel.org>; Thu, 23 Sep 2021 12:07:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wPA6Pkqk/8ab9RW5HZw193jEL/3tz5PDXJBPjTVJtdU=;
-        b=t1rPCUcoa8HEEbAcar5GeFzOJfqI7UfROKcFgIGMv00KZqB4bGNj1yz/Io6IQtZ9+Z
-         NusuDSgjdkYMBVPbv2Vf3ap3Dbmry0u8fptJLN2cjl3LD0YJiwSIuBvYwnbH0rpaioQF
-         s88qN4rAhn2A6bjocX70mp+3vXylM59wSuZYYWLOfUKeLAaAxF3Zwk8fzDO06/nV0A9+
-         HsVgP4O9uIzFx80rDBeCkIGHcNp1EPBKoNORwSEOCOnT2lOJA5lLnJNU7gfbyJ+41Gti
-         zD8XRqIUaiJOWJBUAoo8PMoRjsXYVqkGOPgNVTuehmVHE3E5VSK+CrreHU4ugQScViDj
-         7cjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wPA6Pkqk/8ab9RW5HZw193jEL/3tz5PDXJBPjTVJtdU=;
-        b=tKHptDRAAPU51MSGOU3iAXORpCX3yw1cFFD1Tl7hGuGuf2ul1zMSxXNOEDlnjXCaaN
-         4wVLuJmq/X1pz3zrj+sKW7GF2pwkYZrDOqu8f8UGbBY1mrE65I0Popq6SIW++9RGQAyo
-         nKEDVcK9oMuRkhklVVd9zJVaayXNkCQsOqzCNa3r4fxsqmlOhZQL7GrRADWtLEVaIMRe
-         rCowHm5DdldSUE3V+XiIeqSTFsqmvK75D8KmoiYWTKwVu3aRhLRkB3b+FO27HimTvJ+P
-         koENfvfX8ZxYe5yIEb19rf28oD4WCYFx5UvUpS0yOxA8frEuMzbFuJPeduRdeQaEKFbk
-         QwRA==
-X-Gm-Message-State: AOAM532US58T6p8QjDrLRGCZ4TMRo/N2lkkPZhXQJ7RRktq1ckCmeyRA
-        nL3xIIwy4V3ef7qpQgeW3xix8Tsbf62d5L6ygIlr
-X-Google-Smtp-Source: ABdhPJyHqn4EAltoJO7dd9O2Dz9oZ7VSNs98CCkrk2Tu48ZH4l2ycuGj+3CiT1FgWeVjeG1GWQpOD1Ti5aR3sTkLnrk=
-X-Received: by 2002:a50:cf48:: with SMTP id d8mr377146edk.293.1632424072663;
- Thu, 23 Sep 2021 12:07:52 -0700 (PDT)
+        id S243369AbhIWVjB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 23 Sep 2021 17:39:01 -0400
+Received: from mga07.intel.com ([134.134.136.100]:32667 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S243363AbhIWVi7 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 23 Sep 2021 17:38:59 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10116"; a="287616970"
+X-IronPort-AV: E=Sophos;i="5.85,317,1624345200"; 
+   d="scan'208";a="287616970"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2021 14:37:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,317,1624345200"; 
+   d="scan'208";a="514273504"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 23 Sep 2021 14:37:25 -0700
+Received: from [10.212.150.227] (kliang2-MOBL.ccr.corp.intel.com [10.212.150.227])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id BED9D580AD6;
+        Thu, 23 Sep 2021 14:37:23 -0700 (PDT)
+Subject: Re: [PATCH v2 6/9] PCI: Add pci_find_dvsec_capability to find
+ designated VSEC
+To:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org
+Cc:     "David E . Box" <david.e.box@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu@lists.linux-foundation.org
+References: <20210923172647.72738-1-ben.widawsky@intel.com>
+ <20210923172647.72738-7-ben.widawsky@intel.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <8dbea1cb-acf8-d77e-aafd-537331cf0588@linux.intel.com>
+Date:   Thu, 23 Sep 2021 17:37:22 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-References: <20210913140229.24797-1-omosnace@redhat.com> <CAHC9VhRw-S+zZUFz5QFFLMBATjo+YbPAiR21jX6p7cT0T+MVLA@mail.gmail.com>
- <CAHC9VhQyejnmLn0NHQiWzikHs8ZdzAUdZ2WqNxgGM6xhJ4mvMQ@mail.gmail.com>
-In-Reply-To: <CAHC9VhQyejnmLn0NHQiWzikHs8ZdzAUdZ2WqNxgGM6xhJ4mvMQ@mail.gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 23 Sep 2021 15:07:41 -0400
-Message-ID: <CAHC9VhSzh90kFR8wzkmwR-YZNtHGAvYyATc2R1UDaBzZ944OFg@mail.gmail.com>
-Subject: Re: [PATCH v4] lockdown,selinux: fix wrong subject in some SELinux
- lockdown checks
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        selinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        x86@kernel.org, linux-acpi@vger.kernel.org,
-        linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-serial@vger.kernel.org,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210923172647.72738-7-ben.widawsky@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Sep 15, 2021 at 10:59 PM Paul Moore <paul@paul-moore.com> wrote:
->
-> On Mon, Sep 13, 2021 at 5:05 PM Paul Moore <paul@paul-moore.com> wrote:
-> >
-> > On Mon, Sep 13, 2021 at 10:02 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
-> > >
-> > > Commit 59438b46471a ("security,lockdown,selinux: implement SELinux
-> > > lockdown") added an implementation of the locked_down LSM hook to
-> > > SELinux, with the aim to restrict which domains are allowed to perform
-> > > operations that would breach lockdown.
-> > >
-> > > However, in several places the security_locked_down() hook is called in
-> > > situations where the current task isn't doing any action that would
-> > > directly breach lockdown, leading to SELinux checks that are basically
-> > > bogus.
-> > >
-> > > To fix this, add an explicit struct cred pointer argument to
-> > > security_lockdown() and define NULL as a special value to pass instead
-> > > of current_cred() in such situations. LSMs that take the subject
-> > > credentials into account can then fall back to some default or ignore
-> > > such calls altogether. In the SELinux lockdown hook implementation, use
-> > > SECINITSID_KERNEL in case the cred argument is NULL.
-> > >
-> > > Most of the callers are updated to pass current_cred() as the cred
-> > > pointer, thus maintaining the same behavior. The following callers are
-> > > modified to pass NULL as the cred pointer instead:
-> > > 1. arch/powerpc/xmon/xmon.c
-> > >      Seems to be some interactive debugging facility. It appears that
-> > >      the lockdown hook is called from interrupt context here, so it
-> > >      should be more appropriate to request a global lockdown decision.
-> > > 2. fs/tracefs/inode.c:tracefs_create_file()
-> > >      Here the call is used to prevent creating new tracefs entries when
-> > >      the kernel is locked down. Assumes that locking down is one-way -
-> > >      i.e. if the hook returns non-zero once, it will never return zero
-> > >      again, thus no point in creating these files. Also, the hook is
-> > >      often called by a module's init function when it is loaded by
-> > >      userspace, where it doesn't make much sense to do a check against
-> > >      the current task's creds, since the task itself doesn't actually
-> > >      use the tracing functionality (i.e. doesn't breach lockdown), just
-> > >      indirectly makes some new tracepoints available to whoever is
-> > >      authorized to use them.
-> > > 3. net/xfrm/xfrm_user.c:copy_to_user_*()
-> > >      Here a cryptographic secret is redacted based on the value returned
-> > >      from the hook. There are two possible actions that may lead here:
-> > >      a) A netlink message XFRM_MSG_GETSA with NLM_F_DUMP set - here the
-> > >         task context is relevant, since the dumped data is sent back to
-> > >         the current task.
-> > >      b) When adding/deleting/updating an SA via XFRM_MSG_xxxSA, the
-> > >         dumped SA is broadcasted to tasks subscribed to XFRM events -
-> > >         here the current task context is not relevant as it doesn't
-> > >         represent the tasks that could potentially see the secret.
-> > >      It doesn't seem worth it to try to keep using the current task's
-> > >      context in the a) case, since the eventual data leak can be
-> > >      circumvented anyway via b), plus there is no way for the task to
-> > >      indicate that it doesn't care about the actual key value, so the
-> > >      check could generate a lot of "false alert" denials with SELinux.
-> > >      Thus, let's pass NULL instead of current_cred() here faute de
-> > >      mieux.
-> > >
-> > > Improvements-suggested-by: Casey Schaufler <casey@schaufler-ca.com>
-> > > Improvements-suggested-by: Paul Moore <paul@paul-moore.com>
-> > > Fixes: 59438b46471a ("security,lockdown,selinux: implement SELinux lockdown")
-> > > Acked-by: Dan Williams <dan.j.williams@intel.com>         [cxl]
-> > > Acked-by: Steffen Klassert <steffen.klassert@secunet.com> [xfrm]
-> > > Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
-> > > ---
-> > >
-> > > v4:
-> > > - rebase on top of TODO
-> > > - fix rebase conflicts:
-> > >   * drivers/cxl/pci.c
-> > >     - trivial: the lockdown reason was corrected in mainline
-> > >   * kernel/bpf/helpers.c, kernel/trace/bpf_trace.c
-> > >     - trivial: LOCKDOWN_BPF_READ was renamed to LOCKDOWN_BPF_READ_KERNEL
-> > >       in mainline
-> > >   * kernel/power/hibernate.c
-> > >     - trivial: !secretmem_active() was added to the condition in
-> > >       hibernation_available()
-> > > - cover new security_locked_down() call in kernel/bpf/helpers.c
-> > >   (LOCKDOWN_BPF_WRITE_USER in BPF_FUNC_probe_write_user case)
-> > >
-> > > v3: https://lore.kernel.org/lkml/20210616085118.1141101-1-omosnace@redhat.com/
-> > > - add the cred argument to security_locked_down() and adapt all callers
-> > > - keep using current_cred() in BPF, as the hook calls have been shifted
-> > >   to program load time (commit ff40e51043af ("bpf, lockdown, audit: Fix
-> > >   buggy SELinux lockdown permission checks"))
-> > > - in SELinux, don't ignore hook calls where cred == NULL, but use
-> > >   SECINITSID_KERNEL as the subject instead
-> > > - update explanations in the commit message
-> > >
-> > > v2: https://lore.kernel.org/lkml/20210517092006.803332-1-omosnace@redhat.com/
-> > > - change to a single hook based on suggestions by Casey Schaufler
-> > >
-> > > v1: https://lore.kernel.org/lkml/20210507114048.138933-1-omosnace@redhat.com/
-> >
-> > The changes between v3 and v4 all seem sane to me, but I'm going to
-> > let this sit for a few days in hopes that we can collect a few more
-> > Reviewed-bys and ACKs.  If I don't see any objections I'll merge it
-> > mid-week(ish) into selinux/stable-5.15 and plan on sending it to Linus
-> > after it goes through a build/test cycle.
->
-> Time's up, I just merged this into selinux/stable-5.15 and I'll send
-> this to Linus once it passes testing.
 
-... and it's back out of selinux/stable-5.15 in spectacular fashion.
-I'll be following up with another SELinux patch today or tomorrow.
 
+On 9/23/2021 1:26 PM, Ben Widawsky wrote:
+> Add pci_find_dvsec_capability to locate a Designated Vendor-Specific
+> Extended Capability with the specified DVSEC ID.
+> 
+> The Designated Vendor-Specific Extended Capability (DVSEC) allows one or
+> more vendor specific capabilities that aren't tied to the vendor ID of
+> the PCI component.
+> 
+> DVSEC is critical for both the Compute Express Link (CXL) driver as well
+> as the driver for OpenCAPI coherent accelerator (OCXL).
+> 
+> Cc: David E. Box <david.e.box@linux.intel.com>
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: Andrew Donnellan <ajd@linux.ibm.com>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Reviewed-by: Frederic Barrat <fbarrat@linux.ibm.com>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+
+Applied the interface for the perf uncore driver as below. The interface 
+works properly.
+
+Tested-by: Kan Liang <kan.liang@linux.intel.com>
+
+
+ From ebb69ba386dca91fb372522b13af9feb84adcbc0 Mon Sep 17 00:00:00 2001
+From: Kan Liang <kan.liang@linux.intel.com>
+Date: Thu, 23 Sep 2021 13:59:24 -0700
+Subject: [PATCH] perf/x86/intel/uncore: Use pci core's DVSEC functionality
+
+Apply standard interface pci_find_dvsec_capability for perf uncore
+driver and remove unused macros.
+
+Reduce maintenance burden of DVSEC query implementation.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+  arch/x86/events/intel/uncore_discovery.c | 41 
++++++++++++++++-----------------
+  arch/x86/events/intel/uncore_discovery.h |  6 -----
+  2 files changed, 19 insertions(+), 28 deletions(-)
+
+diff --git a/arch/x86/events/intel/uncore_discovery.c 
+b/arch/x86/events/intel/uncore_discovery.c
+index 3049c64..f8ea092 100644
+--- a/arch/x86/events/intel/uncore_discovery.c
++++ b/arch/x86/events/intel/uncore_discovery.c
+@@ -21,7 +21,7 @@ static bool has_generic_discovery_table(void)
+  		return false;
+
+  	/* A discovery table device has the unique capability ID. */
+-	dvsec = pci_find_next_ext_capability(dev, 0, UNCORE_EXT_CAP_ID_DISCOVERY);
++	dvsec = pci_find_next_ext_capability(dev, 0, PCI_EXT_CAP_ID_DVSEC);
+  	pci_dev_put(dev);
+  	if (dvsec)
+  		return true;
+@@ -260,7 +260,7 @@ static int parse_discovery_table(struct pci_dev 
+*dev, int die,
+
+  bool intel_uncore_has_discovery_tables(void)
+  {
+-	u32 device, val, entry_id, bar_offset;
++	u32 device, val, bar_offset;
+  	int die, dvsec = 0, ret = true;
+  	struct pci_dev *dev = NULL;
+  	bool parsed = false;
+@@ -275,27 +275,24 @@ bool intel_uncore_has_discovery_tables(void)
+  	 * the discovery table devices.
+  	 */
+  	while ((dev = pci_get_device(PCI_VENDOR_ID_INTEL, device, dev)) != 
+NULL) {
+-		while ((dvsec = pci_find_next_ext_capability(dev, dvsec, 
+UNCORE_EXT_CAP_ID_DISCOVERY))) {
+-			pci_read_config_dword(dev, dvsec + UNCORE_DISCOVERY_DVSEC_OFFSET, &val);
+-			entry_id = val & UNCORE_DISCOVERY_DVSEC_ID_MASK;
+-			if (entry_id != UNCORE_DISCOVERY_DVSEC_ID_PMON)
+-				continue;
+-
+-			pci_read_config_dword(dev, dvsec + UNCORE_DISCOVERY_DVSEC2_OFFSET, 
+&val);
+-
+-			if (val & ~UNCORE_DISCOVERY_DVSEC2_BIR_MASK) {
+-				ret = false;
+-				goto err;
+-			}
+-			bar_offset = UNCORE_DISCOVERY_BIR_BASE +
+-				     (val & UNCORE_DISCOVERY_DVSEC2_BIR_MASK) * 
+UNCORE_DISCOVERY_BIR_STEP;
+-
+-			die = get_device_die_id(dev);
+-			if (die < 0)
+-				continue;
+-
+-			parse_discovery_table(dev, die, bar_offset, &parsed);
++		dvsec = pci_find_dvsec_capability(dev, PCI_VENDOR_ID_INTEL, 
+UNCORE_DISCOVERY_DVSEC_ID_PMON);
++		if (!dvsec)
++			continue;
++
++		pci_read_config_dword(dev, dvsec + UNCORE_DISCOVERY_DVSEC2_OFFSET, &val);
++
++		if (val & ~UNCORE_DISCOVERY_DVSEC2_BIR_MASK) {
++			ret = false;
++			goto err;
+  		}
++		bar_offset = UNCORE_DISCOVERY_BIR_BASE +
++			     (val & UNCORE_DISCOVERY_DVSEC2_BIR_MASK) * 
+UNCORE_DISCOVERY_BIR_STEP;
++
++		die = get_device_die_id(dev);
++		if (die < 0)
++			continue;
++
++		parse_discovery_table(dev, die, bar_offset, &parsed);
+  	}
+
+  	/* None of the discovery tables are available */
+diff --git a/arch/x86/events/intel/uncore_discovery.h 
+b/arch/x86/events/intel/uncore_discovery.h
+index 6d735611..84d56e5 100644
+--- a/arch/x86/events/intel/uncore_discovery.h
++++ b/arch/x86/events/intel/uncore_discovery.h
+@@ -2,12 +2,6 @@
+
+  /* Generic device ID of a discovery table device */
+  #define UNCORE_DISCOVERY_TABLE_DEVICE		0x09a7
+-/* Capability ID for a discovery table device */
+-#define UNCORE_EXT_CAP_ID_DISCOVERY		0x23
+-/* First DVSEC offset */
+-#define UNCORE_DISCOVERY_DVSEC_OFFSET		0x8
+-/* Mask of the supported discovery entry type */
+-#define UNCORE_DISCOVERY_DVSEC_ID_MASK		0xffff
+  /* PMON discovery entry type ID */
+  #define UNCORE_DISCOVERY_DVSEC_ID_PMON		0x1
+  /* Second DVSEC offset */
 -- 
-paul moore
-www.paul-moore.com
+2.7.4
+
+Thanks,
+Kan
+
+> ---
+>   drivers/pci/pci.c   | 32 ++++++++++++++++++++++++++++++++
+>   include/linux/pci.h |  1 +
+>   2 files changed, 33 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index ce2ab62b64cf..94ac86ff28b0 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -732,6 +732,38 @@ u16 pci_find_vsec_capability(struct pci_dev *dev, u16 vendor, int cap)
+>   }
+>   EXPORT_SYMBOL_GPL(pci_find_vsec_capability);
+>   
+> +/**
+> + * pci_find_dvsec_capability - Find DVSEC for vendor
+> + * @dev: PCI device to query
+> + * @vendor: Vendor ID to match for the DVSEC
+> + * @dvsec: Designated Vendor-specific capability ID
+> + *
+> + * If DVSEC has Vendor ID @vendor and DVSEC ID @dvsec return the capability
+> + * offset in config space; otherwise return 0.
+> + */
+> +u16 pci_find_dvsec_capability(struct pci_dev *dev, u16 vendor, u16 dvsec)
+> +{
+> +	int pos;
+> +
+> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DVSEC);
+> +	if (!pos)
+> +		return 0;
+> +
+> +	while (pos) {
+> +		u16 v, id;
+> +
+> +		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER1, &v);
+> +		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER2, &id);
+> +		if (vendor == v && dvsec == id)
+> +			return pos;
+> +
+> +		pos = pci_find_next_ext_capability(dev, pos, PCI_EXT_CAP_ID_DVSEC);
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_find_dvsec_capability);
+> +
+>   /**
+>    * pci_find_parent_resource - return resource region of parent bus of given
+>    *			      region
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index cd8aa6fce204..c93ccfa4571b 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1130,6 +1130,7 @@ u16 pci_find_ext_capability(struct pci_dev *dev, int cap);
+>   u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 pos, int cap);
+>   struct pci_bus *pci_find_next_bus(const struct pci_bus *from);
+>   u16 pci_find_vsec_capability(struct pci_dev *dev, u16 vendor, int cap);
+> +u16 pci_find_dvsec_capability(struct pci_dev *dev, u16 vendor, u16 dvsec);
+>   
+>   u64 pci_get_dsn(struct pci_dev *dev);
+>   
+> 
