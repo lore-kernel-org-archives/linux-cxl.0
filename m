@@ -2,161 +2,318 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 096ACC433FE
-	for <linux-cxl@archiver.kernel.org>; Wed, 22 Sep 2021 09:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45DEC433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 23 Sep 2021 17:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED98261050
-	for <linux-cxl@archiver.kernel.org>; Wed, 22 Sep 2021 09:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8009F61090
+	for <linux-cxl@archiver.kernel.org>; Thu, 23 Sep 2021 17:26:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234387AbhIVJkU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 22 Sep 2021 05:40:20 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17130 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234409AbhIVJkS (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 22 Sep 2021 05:40:18 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18M7Bpqu003500;
-        Wed, 22 Sep 2021 05:38:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=wBR3iH/pCKboXzxbzFbyLCkG9b8bjRW68MF8REX75WY=;
- b=obcE+IFvfMXDAY1ljlmcRdVDZ6dvkUvUZA4hlPaoloyIVq9WgNGUvqgIvnm3YfUHYMo6
- Ujm7AP+EykvQPKEnPuUet0y8tM2OVGEkmwgCllKpiTcHTvxbPftAEahVEG62iFXUxxjQ
- az0g01Z1Y4UIfyMiQCzRgZ5jUFcl87n3KzDpSSlCi0zsiOjdVUv4f+llpIKySuePrpso
- vO0hPvrRv7O+FVh5kyjSC4SF0RhGeeE3pPqhTfx+Pmr054aL4fFruttUoWwcT4jNfoe5
- 25kcTTkhmE63P8MKyzl3QeAjSO3gEab5M74Yh0GbSwi2h8gjEKoHQdfgBSs0SQNRSjal Fg== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3b7yvn31v5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Sep 2021 05:38:42 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 18M9bs3p000979;
-        Wed, 22 Sep 2021 09:38:40 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma06ams.nl.ibm.com with ESMTP id 3b7q6nmvwn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Sep 2021 09:38:40 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 18M9ccYI53346780
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Sep 2021 09:38:38 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DF5444C040;
-        Wed, 22 Sep 2021 09:38:37 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 62A444C04A;
-        Wed, 22 Sep 2021 09:38:37 +0000 (GMT)
-Received: from [9.145.158.122] (unknown [9.145.158.122])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 22 Sep 2021 09:38:37 +0000 (GMT)
-Message-ID: <d2fd5a57-1b6f-5c96-338b-ac41073b2a4c@linux.ibm.com>
-Date:   Wed, 22 Sep 2021 11:38:37 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.0
-Subject: Re: [PATCH 7/7] ocxl: Use pci core's DVSEC functionality
-Content-Language: en-US
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        id S242487AbhIWR2Z (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 23 Sep 2021 13:28:25 -0400
+Received: from mga02.intel.com ([134.134.136.20]:47619 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233669AbhIWR2Y (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 23 Sep 2021 13:28:24 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10116"; a="211144799"
+X-IronPort-AV: E=Sophos;i="5.85,316,1624345200"; 
+   d="scan'208";a="211144799"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2021 10:26:52 -0700
+X-IronPort-AV: E=Sophos;i="5.85,316,1624345200"; 
+   d="scan'208";a="704832515"
+Received: from unknown (HELO bad-guy.kumite) ([10.252.132.140])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2021 10:26:51 -0700
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Andrew Donnellan <ajd@linux.ibm.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-References: <20210921220459.2437386-1-ben.widawsky@intel.com>
- <20210921220459.2437386-8-ben.widawsky@intel.com>
- <CAPcyv4h4QHAQF+ogMvOXrkdyR5Jceo8yp7TQNN+836=v0QwdDw@mail.gmail.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-In-Reply-To: <CAPcyv4h4QHAQF+ogMvOXrkdyR5Jceo8yp7TQNN+836=v0QwdDw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: E65qROE8wVnv68vGTqwKemREe0_yjpCm
-X-Proofpoint-ORIG-GUID: E65qROE8wVnv68vGTqwKemREe0_yjpCm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
- definitions=2021-09-22_03,2021-09-20_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=999 mlxscore=0 bulkscore=0 lowpriorityscore=0 suspectscore=0
- spamscore=0 phishscore=0 malwarescore=0 adultscore=0 priorityscore=1501
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2109200000 definitions=main-2109220066
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "David E. Box" <david.e.box@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v2 0/9] cxl_pci refactor for reusability
+Date:   Thu, 23 Sep 2021 10:26:38 -0700
+Message-Id: <20210923172647.72738-1-ben.widawsky@intel.com>
+X-Mailer: git-send-email 2.33.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+Changes since v1 [3]:
+- get_max_afu_index() updated to new interface (Dan)
+- siov_find_pci_dvsec updated to new interface (Dan)
+- remove unnecessary pci request/release regions with refactor (Dan)
+- move @base into cxl_register_map (Dan)
+- Expanded the Cc list to include other users of PCIe DVSEC. (Dan)
+
+Three spots are not converted to use the new PCI core DVSEC helper as the
+changes are non-trivial.
+- find_dvsec_afu_ctrl (ocxl)
+- pmt_pci_probe (David)
+- intel_uncore_has_discovery_tables (Kan)
+
+The interdiff is below. A range-diff can be generated against v1[3] if desired.
+Discussion occurred partially offlist between Dan and myself. To summarize, Dan
+contends that patch 4, "cxl/pci: Refactor cxl_pci_setup_regs" should either be
+rewrittn, or have a precursor patch that cxl_pci will still scan all register
+blocks, but only claim the specified types. While the current diff is somewhat
+complex, I contend that this is unneeded churn because we can easily test this
+change in our existing regression testing. It also ultimately results in a
+simpler function in the cxl_port patch series when cxl_pci stops trying to map
+the component register block (loop is removed entirely). A tiebreak here would
+be great :-)
+
+---
+
+Original commit message:
+
+Provide the ability to obtain CXL register blocks as discrete functionality.
+This functionality will become useful for other CXL drivers that need access to
+CXL register blocks. It is also in line with other additions to core which moves
+register mapping functionality.
+
+At the introduction of the CXL driver the only user of CXL MMIO was cxl_pci
+(then known as cxl_mem). As the driver has evolved it is clear that cxl_pci will
+not be the only entity that needs access to CXL MMIO. This series stops short of
+moving the generalized functionality into cxl_core for the sake of getting eyes
+on the important foundational bits sooner rather than later. The ultimate plan
+is to move much of the code into cxl_core.
+
+Via review of two previous patches [1] & [2] it has been suggested that the bits
+which are being used for DVSEC enumeration move into PCI core. As CXL core is
+soon going to require these, let's try to get the ball rolling now on making
+that happen.
+
+---
+
+[1]: https://lore.kernel.org/linux-pci/20210913190131.xiiszmno46qie7v5@intel.com/
+[2]: https://lore.kernel.org/linux-cxl/20210920225638.1729482-1-ben.widawsky@intel.com/
+[3]: https://lore.kernel.org/linux-cxl/20210921220459.2437386-1-ben.widawsky@intel.com/
 
 
-On 22/09/2021 02:44, Dan Williams wrote:
-> On Tue, Sep 21, 2021 at 3:05 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
->>
->> Reduce maintenance burden of DVSEC query implementation by using the
->> centralized PCI core implementation.
->>
->> Cc: linuxppc-dev@lists.ozlabs.org
->> Cc: Frederic Barrat <fbarrat@linux.ibm.com>
->> Cc: Andrew Donnellan <ajd@linux.ibm.com>
->> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
->> ---
->>   drivers/misc/ocxl/config.c | 13 +------------
->>   1 file changed, 1 insertion(+), 12 deletions(-)
->>
->> diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
->> index a68738f38252..e401a51596b9 100644
->> --- a/drivers/misc/ocxl/config.c
->> +++ b/drivers/misc/ocxl/config.c
->> @@ -33,18 +33,7 @@
->>
->>   static int find_dvsec(struct pci_dev *dev, int dvsec_id)
->>   {
->> -       int vsec = 0;
->> -       u16 vendor, id;
->> -
->> -       while ((vsec = pci_find_next_ext_capability(dev, vsec,
->> -                                                   OCXL_EXT_CAP_ID_DVSEC))) {
->> -               pci_read_config_word(dev, vsec + OCXL_DVSEC_VENDOR_OFFSET,
->> -                               &vendor);
->> -               pci_read_config_word(dev, vsec + OCXL_DVSEC_ID_OFFSET, &id);
->> -               if (vendor == PCI_VENDOR_ID_IBM && id == dvsec_id)
->> -                       return vsec;
->> -       }
->> -       return 0;
->> +       return pci_find_dvsec_capability(dev, PCI_VENDOR_ID_IBM, dvsec_id);
->>   }
+Ben Widawsky (9):
+  cxl: Convert "RBI" to enum
+  cxl/pci: Remove dev_dbg for unknown register blocks
+  cxl/pci: Remove pci request/release regions
+  cxl/pci: Refactor cxl_pci_setup_regs
+  cxl/pci: Make more use of cxl_register_map
+  PCI: Add pci_find_dvsec_capability to find designated VSEC
+  cxl/pci: Use pci core's DVSEC functionality
+  ocxl: Use pci core's DVSEC functionality
+  iommu/vt-d: Use pci core's DVSEC functionality
 
+ arch/powerpc/platforms/powernv/ocxl.c |   3 +-
+ drivers/cxl/cxl.h                     |   1 +
+ drivers/cxl/pci.c                     | 176 ++++++++++++--------------
+ drivers/cxl/pci.h                     |  14 +-
+ drivers/iommu/intel/iommu.c           |  15 +--
+ drivers/misc/ocxl/config.c            |  13 +-
+ drivers/pci/pci.c                     |  32 +++++
+ include/linux/pci.h                   |   1 +
+ 8 files changed, 127 insertions(+), 128 deletions(-)
 
-That looks fine, thanks for spotting it. You can add this for the next 
-revision:
-Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+Interdiff against v1:
+diff --git a/arch/powerpc/platforms/powernv/ocxl.c b/arch/powerpc/platforms/powernv/ocxl.c
+index 9105efcf242a..28b009b46464 100644
+--- a/arch/powerpc/platforms/powernv/ocxl.c
++++ b/arch/powerpc/platforms/powernv/ocxl.c
+@@ -107,7 +107,8 @@ static int get_max_afu_index(struct pci_dev *dev, int *afu_idx)
+ 	int pos;
+ 	u32 val;
+ 
+-	pos = find_dvsec_from_pos(dev, OCXL_DVSEC_FUNC_ID, 0);
++	pos = pci_find_dvsec_capability(dev, PCI_VENDOR_ID_IBM,
++					OCXL_DVSEC_FUNC_ID);
+ 	if (!pos)
+ 		return -ESRCH;
+ 
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 7d6b011dd963..3b128ce71564 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -140,6 +140,7 @@ struct cxl_device_reg_map {
+ };
+ 
+ struct cxl_register_map {
++	void __iomem *base;
+ 	u64 block_offset;
+ 	u8 reg_type;
+ 	u8 barno;
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 040379f727ad..79d4d9b16d83 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -306,9 +306,8 @@ static int cxl_pci_setup_mailbox(struct cxl_mem *cxlm)
+ 	return 0;
+ }
+ 
+-static void __iomem *cxl_pci_map_regblock(struct cxl_mem *cxlm, struct cxl_register_map *map)
++static int cxl_pci_map_regblock(struct cxl_mem *cxlm, struct cxl_register_map *map)
+ {
+-	void __iomem *addr;
+ 	int bar = map->barno;
+ 	struct device *dev = cxlm->dev;
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+@@ -318,24 +317,25 @@ static void __iomem *cxl_pci_map_regblock(struct cxl_mem *cxlm, struct cxl_regis
+ 	if (pci_resource_len(pdev, bar) < offset) {
+ 		dev_err(dev, "BAR%d: %pr: too small (offset: %#llx)\n", bar,
+ 			&pdev->resource[bar], (unsigned long long)offset);
+-		return IOMEM_ERR_PTR(-ENXIO);
++		return -ENXIO;
+ 	}
+ 
+-	addr = pci_iomap(pdev, bar, 0);
+-	if (!addr) {
++	map->base = pci_iomap(pdev, bar, 0);
++	if (!map->base) {
+ 		dev_err(dev, "failed to map registers\n");
+-		return addr;
++		return PTR_ERR(map->base);
+ 	}
+ 
+ 	dev_dbg(dev, "Mapped CXL Memory Device resource bar %u @ %#llx\n",
+ 		bar, offset);
+ 
+-	return addr;
++	return 0;
+ }
+ 
+-static void cxl_pci_unmap_regblock(struct cxl_mem *cxlm, void __iomem *base)
++static void cxl_pci_unmap_regblock(struct cxl_mem *cxlm, struct cxl_register_map *map)
+ {
+-	pci_iounmap(to_pci_dev(cxlm->dev), base);
++	pci_iounmap(to_pci_dev(cxlm->dev), map->base);
++	map->base = 0;
+ }
+ 
+ static int cxl_pci_dvsec(struct pci_dev *pdev, int dvsec)
+@@ -343,10 +343,9 @@ static int cxl_pci_dvsec(struct pci_dev *pdev, int dvsec)
+ 	return pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL, dvsec);
+ }
+ 
+-static int cxl_probe_regs(struct cxl_mem *cxlm, void __iomem *base,
+-			  struct cxl_register_map *map)
++static int cxl_probe_regs(struct cxl_mem *cxlm, struct cxl_register_map *map)
+ {
+-	void __iomem *offset = base + map->block_offset;
++	void __iomem *base = map->base + map->block_offset;
+ 	struct cxl_component_reg_map *comp_map;
+ 	struct cxl_device_reg_map *dev_map;
+ 	struct device *dev = cxlm->dev;
+@@ -354,7 +353,7 @@ static int cxl_probe_regs(struct cxl_mem *cxlm, void __iomem *base,
+ 	switch (map->reg_type) {
+ 	case CXL_REGLOC_RBI_COMPONENT:
+ 		comp_map = &map->component_map;
+-		cxl_probe_component_regs(dev, offset, comp_map);
++		cxl_probe_component_regs(dev, base, comp_map);
+ 		if (!comp_map->hdm_decoder.valid) {
+ 			dev_err(dev, "HDM decoder registers not found\n");
+ 			return -ENXIO;
+@@ -364,7 +363,7 @@ static int cxl_probe_regs(struct cxl_mem *cxlm, void __iomem *base,
+ 		break;
+ 	case CXL_REGLOC_RBI_MEMDEV:
+ 		dev_map = &map->device_map;
+-		cxl_probe_device_regs(dev, offset, dev_map);
++		cxl_probe_device_regs(dev, base, dev_map);
+ 		if (!dev_map->status.valid || !dev_map->mbox.valid ||
+ 		    !dev_map->memdev.valid) {
+ 			dev_err(dev, "registers not found: %s%s%s\n",
+@@ -418,8 +417,6 @@ static int find_register_block(struct pci_dev *pdev, enum cxl_regloc_type type,
+ 	int regloc, i, rc = -ENODEV;
+ 	u32 regloc_size, regblocks;
+ 
+-	memset(map, 0, sizeof(*map));
+-
+ 	regloc = cxl_pci_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID);
+ 	if (!regloc)
+ 		return -ENXIO;
+@@ -450,8 +447,6 @@ static int find_register_block(struct pci_dev *pdev, enum cxl_regloc_type type,
+ 		}
+ 	}
+ 
+-	pci_release_mem_regions(pdev);
+-
+ 	return rc;
+ }
+ 
+@@ -473,12 +468,8 @@ static int cxl_pci_setup_regs(struct cxl_mem *cxlm)
+ 	const enum cxl_regloc_type types[] = { CXL_REGLOC_RBI_MEMDEV,
+ 					       CXL_REGLOC_RBI_COMPONENT };
+ 
+-	if (pci_request_mem_regions(pdev, pci_name(pdev)))
+-		return -ENODEV;
+-
+ 	for (i = 0; i < ARRAY_SIZE(types); i++) {
+ 		struct cxl_register_map map;
+-		void __iomem *base;
+ 
+ 		rc = find_register_block(pdev, types[i], &map);
+ 		if (rc) {
+@@ -489,14 +480,12 @@ static int cxl_pci_setup_regs(struct cxl_mem *cxlm)
+ 			break;
+ 		}
+ 
+-		base = cxl_pci_map_regblock(cxlm, &map);
+-		if (!base) {
+-			rc = -ENOMEM;
++		rc = cxl_pci_map_regblock(cxlm, &map);
++		if (rc)
+ 			break;
+-		}
+ 
+-		rc = cxl_probe_regs(cxlm, base, &map);
+-		cxl_pci_unmap_regblock(cxlm, base);
++		rc = cxl_probe_regs(cxlm, &map);
++		cxl_pci_unmap_regblock(cxlm, &map);
+ 		if (rc)
+ 			break;
+ 
+@@ -507,7 +496,6 @@ static int cxl_pci_setup_regs(struct cxl_mem *cxlm)
+ 		}
+ 	}
+ 
+-	pci_release_mem_regions(pdev);
+ 	return rc;
+ }
+ 
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index d75f59ae28e6..30c97181f0ae 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -5398,20 +5398,7 @@ static int intel_iommu_disable_sva(struct device *dev)
+  */
+ static int siov_find_pci_dvsec(struct pci_dev *pdev)
+ {
+-	int pos;
+-	u16 vendor, id;
+-
+-	pos = pci_find_next_ext_capability(pdev, 0, 0x23);
+-	while (pos) {
+-		pci_read_config_word(pdev, pos + 4, &vendor);
+-		pci_read_config_word(pdev, pos + 8, &id);
+-		if (vendor == PCI_VENDOR_ID_INTEL && id == 5)
+-			return pos;
+-
+-		pos = pci_find_next_ext_capability(pdev, pos, 0x23);
+-	}
+-
+-	return 0;
++	return pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_INTEL, 5);
+ }
+ 
+ static bool
 
-
-
-> 
-> What about:
-> 
-> arch/powerpc/platforms/powernv/ocxl.c::find_dvsec_from_pos()
-> 
-> ...?  With that converted the redundant definitions below:
-> 
-> OCXL_EXT_CAP_ID_DVSEC
-> OCXL_DVSEC_VENDOR_OFFSET
-> OCXL_DVSEC_ID_OFFSET
-> 
-> ...can be cleaned up in favor of the core definitions.
-
-
-That would be great. Are you guys willing to do it? If not, I could have 
-a follow-on patch, if I don't forget :-)
-
-Thanks,
-
-   Fred
+base-commit: 18f2a85f5e7db7468530be5048fee5b9cc7a8013
+-- 
+2.33.0
 
