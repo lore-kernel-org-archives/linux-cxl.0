@@ -5,32 +5,33 @@ X-Spam-Level:
 X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38865C433FE
-	for <linux-cxl@archiver.kernel.org>; Thu, 23 Sep 2021 17:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7C4C43219
+	for <linux-cxl@archiver.kernel.org>; Thu, 23 Sep 2021 17:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B80961214
-	for <linux-cxl@archiver.kernel.org>; Thu, 23 Sep 2021 17:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DAFC61279
+	for <linux-cxl@archiver.kernel.org>; Thu, 23 Sep 2021 17:26:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242521AbhIWR2Z (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 23 Sep 2021 13:28:25 -0400
+        id S242506AbhIWR21 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 23 Sep 2021 13:28:27 -0400
 Received: from mga02.intel.com ([134.134.136.20]:47619 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242415AbhIWR2Z (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        id S242513AbhIWR2Z (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
         Thu, 23 Sep 2021 13:28:25 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10116"; a="211144801"
+X-IronPort-AV: E=McAfee;i="6200,9189,10116"; a="211144807"
 X-IronPort-AV: E=Sophos;i="5.85,316,1624345200"; 
-   d="scan'208";a="211144801"
+   d="scan'208";a="211144807"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2021 10:26:52 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2021 10:26:54 -0700
 X-IronPort-AV: E=Sophos;i="5.85,316,1624345200"; 
-   d="scan'208";a="704832519"
+   d="scan'208";a="704832533"
 Received: from unknown (HELO bad-guy.kumite) ([10.252.132.140])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2021 10:26:51 -0700
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2021 10:26:53 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Andrew Donnellan <ajd@linux.ibm.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
         "David E. Box" <david.e.box@linux.intel.com>,
@@ -40,9 +41,9 @@ Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Lu Baolu <baolu.lu@linux.intel.com>,
         iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 1/9] cxl: Convert "RBI" to enum
-Date:   Thu, 23 Sep 2021 10:26:39 -0700
-Message-Id: <20210923172647.72738-2-ben.widawsky@intel.com>
+Subject: [PATCH v2 3/9] cxl/pci: Remove pci request/release regions
+Date:   Thu, 23 Sep 2021 10:26:41 -0700
+Message-Id: <20210923172647.72738-4-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20210923172647.72738-1-ben.widawsky@intel.com>
 References: <20210923172647.72738-1-ben.widawsky@intel.com>
@@ -52,48 +53,41 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-In preparation for passing around the Register Block Indicator (RBI) as
-a parameter, it is desirable to convert the type to an enum so that the
-interface can use a well defined type checked parameter.
+Quoting Dan, "... the request + release regions should probably just be
+dropped. It's not like any of the register enumeration would collide
+with someone else who already has the registers mapped. The collision
+only comes when the registers are mapped for their final usage, and that
+will have more precision in the request."
 
-As a result of this change, should future versions of the spec add
-sparsely defined identifiers, it could become a problem if checking for
-invalid identifiers since the code currently checks for the max
-identifier. This is not an issue with current spec, and the algorithm to
-obtain the register blocks will change before those possible additions
-are made.
-
+Recommended-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- drivers/cxl/pci.h | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/cxl/pci.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
-index 8c1a58813816..7d3e4bf06b45 100644
---- a/drivers/cxl/pci.h
-+++ b/drivers/cxl/pci.h
-@@ -20,13 +20,15 @@
- #define CXL_REGLOC_BIR_MASK GENMASK(2, 0)
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index ccc7c2573ddc..7256c236fdb3 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -453,9 +453,6 @@ static int cxl_pci_setup_regs(struct cxl_mem *cxlm)
+ 		return -ENXIO;
+ 	}
  
- /* Register Block Identifier (RBI) */
--#define CXL_REGLOC_RBI_MASK GENMASK(15, 8)
--#define CXL_REGLOC_RBI_EMPTY 0
--#define CXL_REGLOC_RBI_COMPONENT 1
--#define CXL_REGLOC_RBI_VIRT 2
--#define CXL_REGLOC_RBI_MEMDEV 3
--#define CXL_REGLOC_RBI_TYPES CXL_REGLOC_RBI_MEMDEV + 1
-+enum cxl_regloc_type {
-+	CXL_REGLOC_RBI_EMPTY = 0,
-+	CXL_REGLOC_RBI_COMPONENT,
-+	CXL_REGLOC_RBI_VIRT,
-+	CXL_REGLOC_RBI_MEMDEV,
-+	CXL_REGLOC_RBI_TYPES
-+};
+-	if (pci_request_mem_regions(pdev, pci_name(pdev)))
+-		return -ENODEV;
+-
+ 	/* Get the size of the Register Locator DVSEC */
+ 	pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
+ 	regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
+@@ -499,8 +496,6 @@ static int cxl_pci_setup_regs(struct cxl_mem *cxlm)
+ 		n_maps++;
+ 	}
  
-+#define CXL_REGLOC_RBI_MASK GENMASK(15, 8)
- #define CXL_REGLOC_ADDR_MASK GENMASK(31, 16)
- 
- #endif /* __CXL_PCI_H__ */
+-	pci_release_mem_regions(pdev);
+-
+ 	for (i = 0; i < n_maps; i++) {
+ 		ret = cxl_map_regs(cxlm, &maps[i]);
+ 		if (ret)
 -- 
 2.33.0
 
