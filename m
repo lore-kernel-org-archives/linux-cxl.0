@@ -2,140 +2,151 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D171DC433F5
-	for <linux-cxl@archiver.kernel.org>; Fri, 24 Sep 2021 21:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EB5C433EF
+	for <linux-cxl@archiver.kernel.org>; Mon, 27 Sep 2021 17:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD816105A
-	for <linux-cxl@archiver.kernel.org>; Fri, 24 Sep 2021 21:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA326113D
+	for <linux-cxl@archiver.kernel.org>; Mon, 27 Sep 2021 17:47:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347392AbhIXV34 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 24 Sep 2021 17:29:56 -0400
-Received: from mga01.intel.com ([192.55.52.88]:44987 "EHLO mga01.intel.com"
+        id S236664AbhI0RtM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 27 Sep 2021 13:49:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244748AbhIXV34 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 24 Sep 2021 17:29:56 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10117"; a="246642413"
-X-IronPort-AV: E=Sophos;i="5.85,321,1624345200"; 
-   d="scan'208";a="246642413"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2021 14:28:22 -0700
-X-IronPort-AV: E=Sophos;i="5.85,321,1624345200"; 
-   d="scan'208";a="535866902"
-Received: from jinglu1-mobl.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.134.71])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2021 14:28:21 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>
-Subject: [RFC PATCH] cxl: switch usp to parent cxl_port
-Date:   Fri, 24 Sep 2021 14:28:17 -0700
-Message-Id: <20210924212817.489801-1-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.33.0
+        id S238171AbhI0RsW (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 27 Sep 2021 13:48:22 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D90CF60FBF;
+        Mon, 27 Sep 2021 17:46:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632764804;
+        bh=H8Mj81WyvY+HesKTc7Fr+jbrmn+2nM8SxLPaQtOgGIk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ZittX7dsrCxpUqN8o37oZKbtwhDDRSMGteLP7htIcE97ezSL5hLEWtgtFTfMftD4e
+         CYwr2z84HijxnJHnlx2Vr2XnnnUzJnIHQBlphYKAODAoFWl2WYj56rnXzj1UAcmrvA
+         1jlqXZrF6dDHlMQ2+bXx4Iinc4r6Hy4KkHIBwTcgeRtx+LXtO2yw8W1A3qGL+pMzx6
+         cMEZDA5ncBnXfuv1FmQRVuR7TMh1aiOkPpFQXGM3BmoRWzKuKqw+UVVGa3SQ/ddu5A
+         yBrQyDHe//KBx0FqVPhl76WYY/CsBta3w+VoXlryUBMj4/yxoHSpV15GYjV8aQ/7BF
+         r1L7xhiACVKEQ==
+Date:   Mon, 27 Sep 2021 12:46:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v2 6/9] PCI: Add pci_find_dvsec_capability to find
+ designated VSEC
+Message-ID: <20210927174642.GA661147@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210923172647.72738-7-ben.widawsky@intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Dan.
+s/pci_find_dvsec_capability/pci_find_dvsec_capability()/ in subject
+and commit log.
 
-As discussed in #cxl, I'm trying to do the switch enumeration and not entirely
-sure of the best way to go about it (and no real way to test it). Do you have a
-proposed way to do this better?
+On Thu, Sep 23, 2021 at 10:26:44AM -0700, Ben Widawsky wrote:
+> Add pci_find_dvsec_capability to locate a Designated Vendor-Specific
+> Extended Capability with the specified DVSEC ID.
 
+"specified Vendor ID and Capability ID".
 
----
- drivers/cxl/core/bus.c | 65 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
+> The Designated Vendor-Specific Extended Capability (DVSEC) allows one or
+> more vendor specific capabilities that aren't tied to the vendor ID of
+> the PCI component.
+> 
+> DVSEC is critical for both the Compute Express Link (CXL) driver as well
+> as the driver for OpenCAPI coherent accelerator (OCXL).
 
-diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-index 936b6b5665c3..372d30b4bafd 100644
---- a/drivers/cxl/core/bus.c
-+++ b/drivers/cxl/core/bus.c
-@@ -419,6 +419,71 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
- }
- EXPORT_SYMBOL_GPL(devm_cxl_add_port);
- 
-+static int match_add_switches(struct pci_dev *pdev, void *data)
-+{
-+	struct cxl_walk_context *ctx = data;
-+	struct pci_bus *root_bus = ctx->root;
-+	struct device *dev = &pdev->dev;
-+	int type = pci_pcie_type(pdev);
-+	struct cxl_port *parent_port;
-+	struct cxl_register_map map;
-+	int rc;
-+
-+	if (pdev->bus != root_bus)
-+		return 0;
-+
-+	if (!pci_is_pcie(pdev))
-+		return 0;
-+	if (type != PCI_EXP_TYPE_UPSTREAM)
-+		return 0;
-+
-+	/* Get component registers */
-+	rc = cxl_find_register_block(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
-+	if (rc) {
-+		ctx->error = rc;
-+	}
-+
-+	/* to_pci_dev(dev->parent) == downstream port, or root port */
-+	/* to_pci_dev(dev->parent->parent) == upstream port, or hostbridge */
-+
-+	if (dev_WARN_ONCE(dev, dev->parent->parent == NULL,
-+			  "No valid parent\n")) {
-+		ctx->error = -ENODEV;
-+		parent_port = NULL;
-+	} else {
-+		parent_port = to_cxl_port(dev->parent->parent);
-+	}
-+
-+	devm_cxl_add_port(ctx->dev, dev,
-+			  pci_resource_start(pdev, map.barno) +
-+				  map.block_offset,
-+			  parent_port);
-+
-+	return 0;
-+}
-+
-+int enumerate_ports_from_root_port(struct cxl_port *root_port)
-+{
-+	struct device *d = root_port->uport;
-+	struct cxl_walk_context ctx;
-+	struct pci_dev *pdev;
-+
-+	if (!dev_is_pci(d))
-+		return -ENODEV;
-+
-+	pdev = to_pci_dev(d);
-+	ctx = (struct cxl_walk_context){
-+		.dev = d,
-+		.root = pdev->bus,
-+		.port = root_port,
-+	};
-+
-+	pci_walk_bus(pdev->bus, match_add_switches, &ctx);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(enumerate_ports_from_root_port);
-+
- static struct cxl_dport *find_dport(struct cxl_port *port, int id)
- {
- 	struct cxl_dport *dport;
+Strictly speaking, not really relevant for the commit log.
 
-base-commit: 5c46722547fb375f460dbe293f40fad0ca32ab90
-prerequisite-patch-id: f3e7ffbd5f60cd3f55ad8e174afd9d8c37d546f4
-prerequisite-patch-id: a74a0ce5f4a1e4cec50e68181fcbb92624cb0687
-prerequisite-patch-id: 3e2e86cbc2631b99c1b5c0179f35799d3df31f91
-prerequisite-patch-id: 68cf009af310e296626b7842fc798fc778fcc98e
-prerequisite-patch-id: 4063abbb095774d723ad727cb91bc8576d6a5532
-prerequisite-patch-id: 3f11cc68d4dfc7f578f8c6a440663e9ef4e27466
-prerequisite-patch-id: 5ef0b7ff2acf5896b955dd4f70a06581f42d7904
-prerequisite-patch-id: 8cc6066d94bc859ff094c056d77eb63a967a3657
-prerequisite-patch-id: b4fa2b34c36f3068743c965ebc01462ab016df4d
-prerequisite-patch-id: a8798a409f1ff81979fb35a2c66a991ba6cc69f5
-prerequisite-patch-id: d68e5ca2dbd408f206acb40c54f1ed9e6d981aa0
--- 
-2.33.0
+> Cc: David E. Box <david.e.box@linux.intel.com>
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: Andrew Donnellan <ajd@linux.ibm.com>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Reviewed-by: Frederic Barrat <fbarrat@linux.ibm.com>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 
+If you want to merge this with the series,
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+Or if you want me to merge this on a branch, let me know.
+
+> ---
+>  drivers/pci/pci.c   | 32 ++++++++++++++++++++++++++++++++
+>  include/linux/pci.h |  1 +
+>  2 files changed, 33 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index ce2ab62b64cf..94ac86ff28b0 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -732,6 +732,38 @@ u16 pci_find_vsec_capability(struct pci_dev *dev, u16 vendor, int cap)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_find_vsec_capability);
+>  
+> +/**
+> + * pci_find_dvsec_capability - Find DVSEC for vendor
+> + * @dev: PCI device to query
+> + * @vendor: Vendor ID to match for the DVSEC
+> + * @dvsec: Designated Vendor-specific capability ID
+> + *
+> + * If DVSEC has Vendor ID @vendor and DVSEC ID @dvsec return the capability
+> + * offset in config space; otherwise return 0.
+> + */
+> +u16 pci_find_dvsec_capability(struct pci_dev *dev, u16 vendor, u16 dvsec)
+> +{
+> +	int pos;
+> +
+> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DVSEC);
+> +	if (!pos)
+> +		return 0;
+> +
+> +	while (pos) {
+> +		u16 v, id;
+> +
+> +		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER1, &v);
+> +		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER2, &id);
+> +		if (vendor == v && dvsec == id)
+> +			return pos;
+> +
+> +		pos = pci_find_next_ext_capability(dev, pos, PCI_EXT_CAP_ID_DVSEC);
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_find_dvsec_capability);
+> +
+>  /**
+>   * pci_find_parent_resource - return resource region of parent bus of given
+>   *			      region
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index cd8aa6fce204..c93ccfa4571b 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1130,6 +1130,7 @@ u16 pci_find_ext_capability(struct pci_dev *dev, int cap);
+>  u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 pos, int cap);
+>  struct pci_bus *pci_find_next_bus(const struct pci_bus *from);
+>  u16 pci_find_vsec_capability(struct pci_dev *dev, u16 vendor, int cap);
+> +u16 pci_find_dvsec_capability(struct pci_dev *dev, u16 vendor, u16 dvsec);
+>  
+>  u64 pci_get_dsn(struct pci_dev *dev);
+>  
+> -- 
+> 2.33.0
+> 
