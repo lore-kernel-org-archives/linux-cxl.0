@@ -2,98 +2,131 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AEEC433EF
-	for <linux-cxl@archiver.kernel.org>; Tue, 28 Sep 2021 04:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B88C433EF
+	for <linux-cxl@archiver.kernel.org>; Tue, 28 Sep 2021 05:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B432610E5
-	for <linux-cxl@archiver.kernel.org>; Tue, 28 Sep 2021 04:29:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A8C6113E
+	for <linux-cxl@archiver.kernel.org>; Tue, 28 Sep 2021 05:50:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229607AbhI1EbM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 28 Sep 2021 00:31:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53548 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229493AbhI1EbH (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 28 Sep 2021 00:31:07 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41CBAC061575
-        for <linux-cxl@vger.kernel.org>; Mon, 27 Sep 2021 21:29:29 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id y5so10843065pll.3
-        for <linux-cxl@vger.kernel.org>; Mon, 27 Sep 2021 21:29:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Bux2UC4gmVK8sgqyQaj+pj7DS3MR8lrC8qn375nurio=;
-        b=joB9SBxhvLJx0umhFhgvk7bWN5ROoNGT1Ajtt1JQb3mJiezrtpTH3JiZ1A5fkGv5mY
-         viUnAHZlA+ZspQBVBvpi/CZOJPCIwvlC14NnK1p7MFdp2w1+q0SSqrWw1+24XS+aaRl7
-         KsGKtkvsHu0XokBz3Lz94yUZLP3HWi1uF48/fJyShpvIaw7gQqlvDtGzoV3JPsvMbJEn
-         54X6uXjkhZ7ke2YiJwOYIsy5IK+ZaK8pTTUjHEI9LXMThOgvXy0rbBnrfE5UYG5mCDbC
-         zbNWvpnjXDacROgHoEUzz61qmyMth6OTU46PMbdRceLn1lbBnn/AHKxCv/bAs2/zjIvn
-         sfww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bux2UC4gmVK8sgqyQaj+pj7DS3MR8lrC8qn375nurio=;
-        b=IiVGiSX9Gk4O9v052crLORK4syHwqiFpfU4w1V3AZ10ApqjO9RMXxF1I1lWpnEmxWX
-         AajshtlSviBXu5GKQRyyo9pRIi+QIudRqqXWEVcDbNwVeFEz7G6ECImLaz94wMdJBz3P
-         qYO0NiuyakGv25H/dqWMBtbbAvaEZTOYzr0wOc4JaZlGDvoBybdbxOOKigmRnR0mXDTa
-         4AM0LvnH6vml3IKxn+XJjp0ejNwCQI3by2bV2TU7XR+Gc5ClIuvOKdwmbVQbDXX+RR1y
-         6rz4Ez5Pg0NWXP3khJwwRf9rLZ0MEEx9iCNZA7TEY+HOl71VIOw41KBGgMJMgdAzkNZU
-         7VwQ==
-X-Gm-Message-State: AOAM532La2rvZ7kZnNfho9ncMRPxUGRoz+ZESKazGKZfNV/E+kMvk3qV
-        EvQFOwr29q9dqiCip+1eGOfbHoBxWyHZGgKj0vTpsmBr7z/u3g==
-X-Google-Smtp-Source: ABdhPJwDnD8a/7DyUmXzGG7dnYGxspHpUGt4HiKDHvr/jo0/8cOOKGpgRaLs4cmox+AFtli3DJp6PAgV1jvxkx4ekes=
-X-Received: by 2002:a17:902:bd8d:b0:13a:8c8:a2b2 with SMTP id
- q13-20020a170902bd8d00b0013a08c8a2b2mr3135341pls.89.1632803368538; Mon, 27
- Sep 2021 21:29:28 -0700 (PDT)
+        id S235228AbhI1Fwa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 28 Sep 2021 01:52:30 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10118 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234207AbhI1Fw3 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 28 Sep 2021 01:52:29 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18S25neO015213;
+        Tue, 28 Sep 2021 01:50:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=u/08SgPZUwisKxBCFBopTGT1FXF/KS3DrgTJNKvfsWw=;
+ b=Su1MyId/zfXElDfwKdQFm+aBb51QNJQ0llIlvG0W9oPYZewfCBfzCqB8LF8zgaJbjzGg
+ IFmx2ZTi01oLGM1jc7Yh0pwFaOW+1S/gJPlE2rK93Ud/JEnJ0HxucSL/0Jr3K1y67go0
+ oy61Z556Buw8Yn3W6YnyhdrgKtcF0z9NAhiq3HwFska7do/b6tSi+4Cmz9wh/8yyUpWz
+ kw/L6CgGLCEJEJETCtPB11LXPWtL0F77Y4Tt7jJyNPIq7KDoBp4ETwu2sS5uI3x4VAKM
+ 2IMhPsq6auxqAG0FFP5vu+gk/kOirFim8WibJ+OF66Bbc8gcSGaWj9/4ELhYqRiZ4izv rg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bagubdr29-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Sep 2021 01:50:35 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 18S5RsNX018217;
+        Tue, 28 Sep 2021 01:50:35 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bagubdr1s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Sep 2021 01:50:34 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 18S5RqA7030074;
+        Tue, 28 Sep 2021 05:50:32 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04fra.de.ibm.com with ESMTP id 3b9ud9rt90-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Sep 2021 05:50:32 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 18S5oTUI64356782
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Sep 2021 05:50:29 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8344152063;
+        Tue, 28 Sep 2021 05:50:29 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 2A2EF52052;
+        Tue, 28 Sep 2021 05:50:29 +0000 (GMT)
+Received: from [9.81.209.82] (unknown [9.81.209.82])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id ADAB66013C;
+        Tue, 28 Sep 2021 15:50:27 +1000 (AEST)
+Subject: Re: [PATCH v2 6/9] PCI: Add pci_find_dvsec_capability to find
+ designated VSEC
+To:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org
+Cc:     "David E . Box" <david.e.box@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        iommu@lists.linux-foundation.org
+References: <20210923172647.72738-1-ben.widawsky@intel.com>
+ <20210923172647.72738-7-ben.widawsky@intel.com>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Message-ID: <6009c15f-af28-d7ab-4518-ae34f32626a2@linux.ibm.com>
+Date:   Tue, 28 Sep 2021 15:50:27 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-References: <20210924212817.489801-1-ben.widawsky@intel.com>
- <CAPcyv4gsVCoaqX81q57XZSAOqQmdLbdruGGxBpOk59nNRn+hXg@mail.gmail.com>
- <20210927224522.gvybo3nhbgqhjbwo@intel.com> <CAPcyv4gmsmtOap8jwu7zEC6K1PCeTGSwRwEHKbBGksRERdCUnQ@mail.gmail.com>
- <20210928000605.eh5yiqdkty45z6px@intel.com> <CAPcyv4gAJBV8Z3Xfi+R+DL6x3LXoOtHkcnsewU6Ru8YmH-bfSQ@mail.gmail.com>
- <20210928002124.wgwss44ygjjeaaej@intel.com> <20210928003233.fo2ddlinveg66rm5@intel.com>
- <CAPcyv4hCv9iZjeQPMsbBV1PP2eH04h=mjDXtPbLqo_S+MN8CZw@mail.gmail.com> <20210928032331.a5du2o2gxs54bvd7@intel.com>
-In-Reply-To: <20210928032331.a5du2o2gxs54bvd7@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 27 Sep 2021 21:29:16 -0700
-Message-ID: <CAPcyv4j9EmTYSyz4Ee=K7gvv2rtS4_E=pfqKixUwE9Q56ag+8A@mail.gmail.com>
-Subject: Re: [RFC PATCH] cxl: switch usp to parent cxl_port
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210923172647.72738-7-ben.widawsky@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: dfjx1jSiH5q1BslcZoUIy5Fe623U8B_f
+X-Proofpoint-GUID: qfYn4FdH2rSoMQJWiL29ItmLOGF8Nqca
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
+ definitions=2021-09-28_03,2021-09-24_02,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 clxscore=1011 phishscore=0 bulkscore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 mlxscore=0 mlxlogscore=999
+ malwarescore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2109230001 definitions=main-2109280033
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Sep 27, 2021 at 8:23 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
-[..]
-> > > -int enumerate_ports_from_root_port(struct cxl_port *root_port)
-> > > +int enumerate_ports_from_root_port(struct cxl_dport *root_port)
-> > >  {
-> > > -       struct device *d = root_port->uport;
-> > > +       struct device *d = root_port->dport;
-> > >         struct cxl_walk_context ctx;
-> > >         struct pci_dev *pdev;
-> > >
-> > >         if (!dev_is_pci(d))
-> > >                 return -ENODEV;
-> > >
-> > >         pdev = to_pci_dev(d);
-> > >         ctx = (struct cxl_walk_context){
-> > >                 .dev = d,
-> > >                 .root = pdev->bus,
-> > > -               .port = root_port,
-> > > +               .port = root_port->port,
-> >
-> > Per-above why would match_add_switches() care about this port once it
-> > walks down a level in the tree?
->
-> I thought you wanted the host of every new port to be either the hostbridge or
-> the cfmws root port.
+On 24/9/21 3:26 am, Ben Widawsky wrote:
+> Add pci_find_dvsec_capability to locate a Designated Vendor-Specific
+> Extended Capability with the specified DVSEC ID.
+> 
+> The Designated Vendor-Specific Extended Capability (DVSEC) allows one or
+> more vendor specific capabilities that aren't tied to the vendor ID of
+> the PCI component.
+> 
+> DVSEC is critical for both the Compute Express Link (CXL) driver as well
+> as the driver for OpenCAPI coherent accelerator (OCXL).
+> 
+> Cc: David E. Box <david.e.box@linux.intel.com>
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: Andrew Donnellan <ajd@linux.ibm.com>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Reviewed-by: Frederic Barrat <fbarrat@linux.ibm.com>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 
-The host is the device that owns the devm context. I was thinking the
-natural device for hosting the whole CXL port hierarchy is the device
-that registered the root cxl_port, the ACPI0017 platform device. I
-expect It would just be passed in directly to this 'enumerate' helper.
-Although, it's more 'rescan' than 'enumerate'.
+Looks good to me, it's essentially identical to the existing 
+implementation in ocxl.
+
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
