@@ -2,285 +2,85 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86681C43217
-	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CF7C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7247B61163
-	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 041A1610A5
+	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240695AbhJGIX7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 7 Oct 2021 04:23:59 -0400
-Received: from mga14.intel.com ([192.55.52.115]:1544 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240626AbhJGIX5 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 7 Oct 2021 04:23:57 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10129"; a="226507657"
-X-IronPort-AV: E=Sophos;i="5.85,354,1624345200"; 
-   d="scan'208";a="226507657"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:58 -0700
-X-IronPort-AV: E=Sophos;i="5.85,354,1624345200"; 
-   d="scan'208";a="568555132"
-Received: from abishekh-mobl.amr.corp.intel.com (HELO vverma7-desk.amr.corp.intel.com) ([10.251.133.239])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:57 -0700
-From:   Vishal Verma <vishal.l.verma@intel.com>
-To:     <linux-cxl@vger.kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        <nvdimm@lists.linux.dev>, Vishal Verma <vishal.l.verma@intel.com>
-Subject: [ndctl PATCH v4 14/17] Documentation/cxl: add library API documentation
-Date:   Thu,  7 Oct 2021 02:21:36 -0600
-Message-Id: <20211007082139.3088615-15-vishal.l.verma@intel.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20211007082139.3088615-1-vishal.l.verma@intel.com>
-References: <20211007082139.3088615-1-vishal.l.verma@intel.com>
+        id S240634AbhJGI0F (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 7 Oct 2021 04:26:05 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:41438 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240557AbhJGI0F (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 7 Oct 2021 04:26:05 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id C51E71C0B87; Thu,  7 Oct 2021 10:24:10 +0200 (CEST)
+Date:   Thu, 7 Oct 2021 10:24:10 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     stuart hayes <stuart.w.hayes@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "kw@linux.com" <kw@linux.com>, "lukas@wunner.de" <lukas@wunner.de>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        mariusz.tkaczyk@linux.intel.com
+Subject: Re: [PATCH v3] Add support for PCIe SSD status LED management
+Message-ID: <20211007082410.GA15698@duo.ucw.cz>
+References: <20210813213653.3760-1-stuart.w.hayes@gmail.com>
+ <5d1eb958c13553d70e4bee7a7b342febcf1c02ee.camel@intel.com>
+ <4bb26dc0-9b82-21d6-0257-d50ec206a130@gmail.com>
+ <CAPcyv4iig5rxCNb7GyGV9akhZKLF+OeGhewSbOeAzzA6pKreRA@mail.gmail.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6937; h=from:subject; bh=FyE9DJ1q3qW9qwnNb/T0/T9dBHoee+Piyd1gyB/OmP8=; b=owGbwMvMwCHGf25diOft7jLG02pJDIlx63j31FmFVbktkK51D0vgPe2/Y/HtiPmSe9/r3dif5ZEd vym9o5SFQYyDQVZMkeXvno+Mx+S25/MEJjjCzGFlAhnCwMUpABPxSGNkeMegfnlK5rITLDnPG99WcE bklPh+Vtxh5M6xuV9M/sWqIkaGvmf3NmvecJPd0Weh5eD1If/xRIbTWW1PDvycXWZynLuIFwA=
-X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4iig5rxCNb7GyGV9akhZKLF+OeGhewSbOeAzzA6pKreRA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add library API documentation for libcxl(3) using the existing
-asciidoc(tor) build system. Add a section 3 man page for 'libcxl' that
-provides an overview of the library and its usage, and a man page for
-the 'cxl_new()' API.
 
-Cc: Ben Widawsky <ben.widawsky@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
----
- Documentation/cxl/lib/cxl_new.txt | 43 +++++++++++++++++++++++
- Documentation/cxl/lib/libcxl.txt  | 56 +++++++++++++++++++++++++++++
- configure.ac                      |  1 +
- Makefile.am                       |  1 +
- .gitignore                        |  3 ++
- Documentation/cxl/lib/Makefile.am | 58 +++++++++++++++++++++++++++++++
- 6 files changed, 162 insertions(+)
- create mode 100644 Documentation/cxl/lib/cxl_new.txt
- create mode 100644 Documentation/cxl/lib/libcxl.txt
- create mode 100644 Documentation/cxl/lib/Makefile.am
+--qMm9M+Fa2AknHoGS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/cxl/lib/cxl_new.txt b/Documentation/cxl/lib/cxl_new.txt
-new file mode 100644
-index 0000000..d4d5bcb
---- /dev/null
-+++ b/Documentation/cxl/lib/cxl_new.txt
-@@ -0,0 +1,43 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+cxl_new(3)
-+==========
-+
-+NAME
-+----
-+cxl_new - Create a new library context object that acts as a handle for all
-+library operations
-+
-+SYNOPSIS
-+--------
-+[verse]
-+----
-+#include <cxl/libcxl.h>
-+
-+int cxl_new(struct cxl_ctx **ctx);
-+----
-+
-+DESCRIPTION
-+-----------
-+Instantiates a new library context, and stores an opaque pointer in ctx. The
-+context is freed by linklibcxl:cxl_unref[3], i.e. cxl_new(3) implies an
-+internal linklibcxl:cxl_ref[3].
-+
-+
-+RETURN VALUE
-+------------
-+Returns 0 on success, and a negative errno on failure.
-+Possible error codes are:
-+
-+ * -ENOMEM
-+ * -ENXIO
-+
-+EXAMPLE
-+-------
-+See example usage in test/libcxl.c
-+
-+include::../../copyright.txt[]
-+
-+SEE ALSO
-+--------
-+linklibcxl:cxl_ref[3], linklibcxl:cxl_unref[3]
-diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
-new file mode 100644
-index 0000000..47f4cc3
---- /dev/null
-+++ b/Documentation/cxl/lib/libcxl.txt
-@@ -0,0 +1,56 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+libcxl(3)
-+=========
-+
-+NAME
-+----
-+libcxl - A library to interact with CXL devices through sysfs(5)
-+and ioctl(2) interfaces
-+
-+SYNOPSIS
-+--------
-+[verse]
-+#include <cxl/libcxl.h>
-+cc ... -lcxl
-+
-+DESCRIPTION
-+-----------
-+libcxl provides interfaces to interact with CXL devices in Linux, using sysfs
-+interfaces for most kernel interactions, and the ioctl() interface for command
-+submission.
-+
-+The starting point for all library interfaces is a 'cxl_ctx' object, returned
-+by linklibcxl:cxl_new[3]. CXL 'Type 3' memory devices are children of the
-+cxl_ctx object, and can be iterated through using an iterator API.
-+
-+Library level interfaces that are agnostic to any device, or a specific
-+subclass of operations have the prefix 'cxl_'
-+
-+The object representing a CXL Type 3 device is 'cxl_memdev'. Library interfaces
-+related to these devices have the prefix 'cxl_memdev_'. These interfaces are
-+mostly associated with sysfs interactions (unless otherwise noted in their
-+respective documentation pages). They are typically used to retrieve data
-+published by the kernel, or to send data or trigger kernel operations for a
-+given device.
-+
-+A 'cxl_cmd' is a reference counted object which is used to perform 'Mailbox'
-+commands as described in the CXL Specification. A 'cxl_cmd' object is tied to a
-+'cxl_memdev'. Associated library interfaces have the prefix 'cxl_cmd_'. Within
-+this sub-class of interfaces, there are:
-+
-+ * 'cxl_cmd_new_*' interfaces that allocate a new cxl_cmd object for a given
-+   command type.
-+
-+ * 'cxl_cmd_submit' which submits the command via ioctl()
-+
-+ * 'cxl_cmd_<name>_get_<field>' interfaces that get specific fields out of the
-+   command response
-+
-+ * 'cxl_cmd_get_*' interfaces to get general command related information.
-+
-+include::../../copyright.txt[]
-+
-+SEE ALSO
-+--------
-+linklibcxl:cxl[1]
-diff --git a/configure.ac b/configure.ac
-index dadae0a..00497ae 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -231,6 +231,7 @@ AC_CONFIG_FILES([
-         Documentation/ndctl/Makefile
-         Documentation/daxctl/Makefile
-         Documentation/cxl/Makefile
-+        Documentation/cxl/lib/Makefile
- ])
- 
- AC_OUTPUT
-diff --git a/Makefile.am b/Makefile.am
-index 4904ee7..e2f6bef 100644
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -4,6 +4,7 @@ ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
- SUBDIRS = . cxl/lib daxctl/lib ndctl/lib cxl ndctl daxctl
- if ENABLE_DOCS
- SUBDIRS += Documentation/ndctl Documentation/daxctl Documentation/cxl
-+SUBDIRS += Documentation/cxl/lib
- endif
- SUBDIRS += test
- 
-diff --git a/.gitignore b/.gitignore
-index 6a97b92..6468c7a 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -14,12 +14,15 @@ Makefile.in
- /libtool
- /stamp-h1
- *.1
-+*.3
- Documentation/daxctl/asciidoc.conf
- Documentation/ndctl/asciidoc.conf
- Documentation/cxl/asciidoc.conf
-+Documentation/cxl/lib/asciidoc.conf
- Documentation/daxctl/asciidoctor-extensions.rb
- Documentation/ndctl/asciidoctor-extensions.rb
- Documentation/cxl/asciidoctor-extensions.rb
-+Documentation/cxl/lib/asciidoctor-extensions.rb
- Documentation/ndctl/attrs.adoc
- .dirstamp
- daxctl/config.h
-diff --git a/Documentation/cxl/lib/Makefile.am b/Documentation/cxl/lib/Makefile.am
-new file mode 100644
-index 0000000..41e3a5f
---- /dev/null
-+++ b/Documentation/cxl/lib/Makefile.am
-@@ -0,0 +1,58 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2020-2021 Intel Corporation. All rights reserved.
-+
-+if USE_ASCIIDOCTOR
-+
-+do_subst = sed -e 's,@Utility@,Libcxl,g' -e's,@utility@,libcxl,g'
-+CONFFILE = asciidoctor-extensions.rb
-+asciidoctor-extensions.rb: ../../asciidoctor-extensions.rb.in
-+	$(AM_V_GEN) $(do_subst) < $< > $@
-+
-+else
-+
-+do_subst = sed -e 's,UTILITY,libcxl,g'
-+CONFFILE = asciidoc.conf
-+asciidoc.conf: ../../asciidoc.conf.in
-+	$(AM_V_GEN) $(do_subst) < $< > $@
-+
-+endif
-+
-+man3_MANS = \
-+	libcxl.3 \
-+	cxl_new.3
-+
-+EXTRA_DIST = $(man3_MANS)
-+
-+CLEANFILES = $(man3_MANS)
-+
-+XML_DEPS = \
-+	../../../version.m4 \
-+	../../copyright.txt \
-+	Makefile \
-+	$(CONFFILE)
-+
-+RM ?= rm -f
-+
-+if USE_ASCIIDOCTOR
-+
-+%.3: %.txt $(XML_DEPS)
-+	$(AM_V_GEN)$(RM) $@+ $@ && \
-+		$(ASCIIDOC) -b manpage -d manpage -acompat-mode \
-+		-I. -rasciidoctor-extensions \
-+		-amansource=libcxl -amanmanual="libcxl Manual" \
-+		-andctl_version=$(VERSION) -o $@+ $< && \
-+		mv $@+ $@
-+
-+else
-+
-+%.xml: %.txt $(XML_DEPS)
-+	$(AM_V_GEN)$(RM) $@+ $@ && \
-+		$(ASCIIDOC) -b docbook -d manpage -f asciidoc.conf \
-+		--unsafe -alibcxl_version=$(VERSION) -o $@+ $< && \
-+		mv $@+ $@
-+
-+%.3: %.xml $(XML_DEPS)
-+	$(AM_V_GEN)$(RM) $@ && \
-+		$(XMLTO) -o . -m ../../manpage-normal.xsl man $<
-+
-+endif
--- 
-2.31.1
+Hi!
 
+> > Thank you for the comments, Dan.
+> >
+> > I originally did submit something simple that just added a couple of
+> > sysfs attributes to allow userspace access to the _DSM, but Greg K-H
+> > said (1) that I shouldn't create new driver-specific sysfs files that do
+> > things that existing class drivers do, and that if I'm allowing LEDs to
+> > be controlled by the user, I have to use the LED subsystem, so I went
+> > with that. (See the end of
+> > https://patchwork.ozlabs.org/project/linux-pci/patch/20201110153735.585=
+87-1-stuart.w.hayes@gmail.com/)
+>=20
+> I agree with the general sentiment to adopt and extend existing ABIs
+> wherever possible, it's just not clear to me that the LED class driver
+> is the best fit. The Enclosure class infrastructure, in addition to
+
+LED drivers are not good fit for this. It is unlikely to be accepted.
+
+Best regards,
+								Pavel
+--=20
+http://www.livejournal.com/~pavelmachek
+
+--qMm9M+Fa2AknHoGS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCYV6uqgAKCRAw5/Bqldv6
+8pX/AKCudWgskrUbWQ1QmnLvqNkKxOlaPgCfU6mC54N8D2e/929nAEUBxg53nKw=
+=a4CR
+-----END PGP SIGNATURE-----
+
+--qMm9M+Fa2AknHoGS--
