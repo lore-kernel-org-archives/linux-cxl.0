@@ -2,151 +2,225 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C7AC4321E
-	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3051C433F5
+	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EFE661360
-	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF10261350
+	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240680AbhJGIX4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S240592AbhJGIX4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Thu, 7 Oct 2021 04:23:56 -0400
 Received: from mga14.intel.com ([192.55.52.115]:1544 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240623AbhJGIX4 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 7 Oct 2021 04:23:56 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10129"; a="226507643"
+        id S240522AbhJGIXz (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 7 Oct 2021 04:23:55 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10129"; a="226507639"
 X-IronPort-AV: E=Sophos;i="5.85,354,1624345200"; 
-   d="scan'208";a="226507643"
+   d="scan'208";a="226507639"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:54 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:53 -0700
 X-IronPort-AV: E=Sophos;i="5.85,354,1624345200"; 
-   d="scan'208";a="568555091"
+   d="scan'208";a="568555077"
 Received: from abishekh-mobl.amr.corp.intel.com (HELO vverma7-desk.amr.corp.intel.com) ([10.251.133.239])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:54 -0700
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:53 -0700
 From:   Vishal Verma <vishal.l.verma@intel.com>
 To:     <linux-cxl@vger.kernel.org>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
         Ben Widawsky <ben.widawsky@intel.com>,
         <nvdimm@lists.linux.dev>, Vishal Verma <vishal.l.verma@intel.com>
-Subject: [ndctl PATCH v4 04/17] util: add the struct_size() helper from the kernel
-Date:   Thu,  7 Oct 2021 02:21:26 -0600
-Message-Id: <20211007082139.3088615-5-vishal.l.verma@intel.com>
+Subject: [ndctl PATCH v4 01/17] ndctl: add .clang-format
+Date:   Thu,  7 Oct 2021 02:21:23 -0600
+Message-Id: <20211007082139.3088615-2-vishal.l.verma@intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20211007082139.3088615-1-vishal.l.verma@intel.com>
 References: <20211007082139.3088615-1-vishal.l.verma@intel.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3332; h=from:subject; bh=YkRGTFHHdoX3rdMS+/L06iwNIwujBkZUCLV48B1IXOo=; b=owGbwMvMwCHGf25diOft7jLG02pJDIlx65jlTtg/e5F5+U3R/l2MmT/F9uwosyiKXHY6d47nPnHl mHVSHaUsDGIcDLJiiix/93xkPCa3PZ8nMMERZg4rE8gQBi5OAZhImS4jw87K6+VSHg4BqzUTc56/2T nr0d7JBQyOglWrXiz8prYkWZ6R4ZrR4pe6lh9Xeh08X71nmfrDaQdVVR+cVRPtuCj96F3icWYA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5959; h=from:subject; bh=eQnG2CZ2cqjJlZQBxhUfWIN1YKD/mjY4seu18FDnhHY=; b=owGbwMvMwCHGf25diOft7jLG02pJDIlx6xi4vB4duvmWyVS6f3aPwDEGmROOreXqz3jSBIvuW1wt /iTUUcrCIMbBICumyPJ3z0fGY3Lb83kCExxh5rAygQxh4OIUgInE7WNkOBEZe5k17s2FneLr7jrbSz tOtjV5Nrc49+n+Iqsnqxds3czIsHyiqeTbzdeDLmzKFLwg+fjYWetek23yny3mVS64NS+ylg0A
 X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add struct_size() from include/linux/overflow.h which calculates the
-size of a struct with a trailing variable length array.
+Copy the Linux kernel's .clang-format and modify it for ndctl. Only the
+'ForEachMacros' section has been modified from the original kernel copy.
 
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Reported-by: Ben Widawsky <ben.widawsky@intel.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
- util/size.h | 62 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- util/util.h |  6 ++++++
- 2 files changed, 68 insertions(+)
+ .clang-format | 161 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 161 insertions(+)
+ create mode 100644 .clang-format
 
-diff --git a/util/size.h b/util/size.h
-index 646edae..a0f3593 100644
---- a/util/size.h
-+++ b/util/size.h
-@@ -4,6 +4,8 @@
- #ifndef _NDCTL_SIZE_H_
- #define _NDCTL_SIZE_H_
- #include <stdbool.h>
-+#include <stdint.h>
-+#include <util/util.h>
- 
- #define SZ_1K     0x00000400
- #define SZ_4K     0x00001000
-@@ -30,4 +32,64 @@ static inline bool is_power_of_2(unsigned long long v)
- #define BITS_PER_LONG (sizeof(unsigned long) * 8)
- #define HPAGE_SIZE (2 << 20)
- 
-+/*
-+ * Helpers for struct_size() copied from include/linux/overflow.h (GPL-2.0)
-+ *
-+ * For simplicity and code hygiene, the fallback code below insists on
-+ * a, b and *d having the same type (similar to the min() and max()
-+ * macros), whereas gcc's type-generic overflow checkers accept
-+ * different types. Hence we don't just make check_add_overflow an
-+ * alias for __builtin_add_overflow, but add type checks similar to
-+ * below.
-+ */
-+#define check_add_overflow(a, b, d) (({	\
-+	typeof(a) __a = (a);			\
-+	typeof(b) __b = (b);			\
-+	typeof(d) __d = (d);			\
-+	(void) (&__a == &__b);			\
-+	(void) (&__a == __d);			\
-+	__builtin_add_overflow(__a, __b, __d);	\
-+}))
+diff --git a/.clang-format b/.clang-format
+new file mode 100644
+index 0000000..4e00fff
+--- /dev/null
++++ b/.clang-format
+@@ -0,0 +1,161 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# clang-format configuration file. Intended for clang-format >= 4.
++# Copied from Linux's .clang-format
++#
++# For more information, see:
++#
++#   https://clang.llvm.org/docs/ClangFormat.html
++#   https://clang.llvm.org/docs/ClangFormatStyleOptions.html
++#
++---
++AccessModifierOffset: -4
++AlignAfterOpenBracket: Align
++AlignConsecutiveAssignments: false
++AlignConsecutiveDeclarations: false
++#AlignEscapedNewlines: Left # Unknown to clang-format-4.0
++AlignOperands: true
++AlignTrailingComments: false
++AllowAllParametersOfDeclarationOnNextLine: false
++AllowShortBlocksOnASingleLine: false
++AllowShortCaseLabelsOnASingleLine: false
++AllowShortFunctionsOnASingleLine: None
++AllowShortIfStatementsOnASingleLine: false
++AllowShortLoopsOnASingleLine: false
++AlwaysBreakAfterDefinitionReturnType: None
++AlwaysBreakAfterReturnType: None
++AlwaysBreakBeforeMultilineStrings: false
++AlwaysBreakTemplateDeclarations: false
++BinPackArguments: true
++BinPackParameters: true
++BraceWrapping:
++  AfterClass: false
++  AfterControlStatement: false
++  AfterEnum: false
++  AfterFunction: true
++  AfterNamespace: true
++  AfterObjCDeclaration: false
++  AfterStruct: false
++  AfterUnion: false
++  #AfterExternBlock: false # Unknown to clang-format-5.0
++  BeforeCatch: false
++  BeforeElse: false
++  IndentBraces: false
++  #SplitEmptyFunction: true # Unknown to clang-format-4.0
++  #SplitEmptyRecord: true # Unknown to clang-format-4.0
++  #SplitEmptyNamespace: true # Unknown to clang-format-4.0
++BreakBeforeBinaryOperators: None
++BreakBeforeBraces: Custom
++#BreakBeforeInheritanceComma: false # Unknown to clang-format-4.0
++BreakBeforeTernaryOperators: false
++BreakConstructorInitializersBeforeComma: false
++#BreakConstructorInitializers: BeforeComma # Unknown to clang-format-4.0
++BreakAfterJavaFieldAnnotations: false
++BreakStringLiterals: false
++ColumnLimit: 80
++CommentPragmas: '^ IWYU pragma:'
++#CompactNamespaces: false # Unknown to clang-format-4.0
++ConstructorInitializerAllOnOneLineOrOnePerLine: false
++ConstructorInitializerIndentWidth: 8
++ContinuationIndentWidth: 8
++Cpp11BracedListStyle: false
++DerivePointerAlignment: false
++DisableFormat: false
++ExperimentalAutoDetectBinPacking: false
++#FixNamespaceComments: false # Unknown to clang-format-4.0
 +
-+#define check_mul_overflow(a, b, d) (({	\
-+	typeof(a) __a = (a);			\
-+	typeof(b) __b = (b);			\
-+	typeof(d) __d = (d);			\
-+	(void) (&__a == &__b);			\
-+	(void) (&__a == __d);			\
-+	__builtin_mul_overflow(__a, __b, __d);	\
-+}))
++# Taken from:
++# while read -r sym; do
++# 	printf "  - '%s'\n" "$sym";
++# done < \
++# 	<(cscope -dL6 "foreach|for_each" \
++# 	| awk '{ print $4 $5 }' | grep -E 'foreach|for_each' \
++# 	| sed -e 's/#define//' \
++# 		-e 's/*//' \
++# 		-e 's/://' \
++# 		-e 's/\(.*for_each.*\)(.*/\1/' \
++# 		-e 's/\(.*foreach.*\)(.*/\1/' \
++# 	| sort -u)
++ForEachMacros:
++  - 'daxctl_dev_foreach'
++  - 'daxctl_mapping_foreach'
++  - 'daxctl_region_foreach'
++  - 'kmod_list_foreach'
++  - 'kmod_list_foreach_reverse'
++  - 'list_for_each'
++  - 'list_for_each_off'
++  - 'list_for_each_rev'
++  - 'list_for_each_safe'
++  - 'list_for_each_safe_off'
++  - 'ndctl_btt_foreach'
++  - 'ndctl_btt_foreach_safe'
++  - 'ndctl_bus_foreach'
++  - 'ndctl_dax_foreach'
++  - 'ndctl_dax_foreach_safe'
++  - 'ndctl_dimm_foreach'
++  - 'ndctl_dimm_foreach_in_interleave_set'
++  - 'ndctl_dimm_foreach_in_region'
++  - 'ndctl_interleave_set_foreach'
++  - 'ndctl_mapping_foreach'
++  - 'ndctl_namespace_badblock_foreach'
++  - 'ndctl_namespace_bb_foreach'
++  - 'ndctl_namespace_foreach'
++  - 'ndctl_namespace_foreach_safe'
++  - 'ndctl_pfn_foreach'
++  - 'ndctl_pfn_foreach_safe'
++  - 'ndctl_region_badblock_foreach'
++  - 'ndctl_region_foreach'
++  - 'udev_list_entry_foreach'
 +
-+/*
-+ * Compute a*b+c, returning SIZE_MAX on overflow. Internal helper for
-+ * struct_size() below.
-+ */
-+static inline size_t __ab_c_size(size_t a, size_t b, size_t c)
-+{
-+	size_t bytes;
++#IncludeBlocks: Preserve # Unknown to clang-format-5.0
++IncludeCategories:
++  - Regex: '.*'
++    Priority: 1
++IncludeIsMainRegex: '(Test)?$'
++IndentCaseLabels: false
++#IndentPPDirectives: None # Unknown to clang-format-5.0
++IndentWidth: 8
++IndentWrappedFunctionNames: false
++JavaScriptQuotes: Leave
++JavaScriptWrapImports: true
++KeepEmptyLinesAtTheStartOfBlocks: false
++MacroBlockBegin: ''
++MacroBlockEnd: ''
++MaxEmptyLinesToKeep: 1
++NamespaceIndentation: None
++#ObjCBinPackProtocolList: Auto # Unknown to clang-format-5.0
++ObjCBlockIndentWidth: 8
++ObjCSpaceAfterProperty: true
++ObjCSpaceBeforeProtocolList: true
 +
-+	if (check_mul_overflow(a, b, &bytes))
-+		return SIZE_MAX;
-+	if (check_add_overflow(bytes, c, &bytes))
-+		return SIZE_MAX;
++# Taken from git's rules
++#PenaltyBreakAssignment: 10 # Unknown to clang-format-4.0
++PenaltyBreakBeforeFirstCallParameter: 30
++PenaltyBreakComment: 10
++PenaltyBreakFirstLessLess: 0
++PenaltyBreakString: 10
++PenaltyExcessCharacter: 100
++PenaltyReturnTypeOnItsOwnLine: 60
 +
-+	return bytes;
-+}
-+
-+/**
-+ * struct_size() - Calculate size of structure with trailing array.
-+ * @p: Pointer to the structure.
-+ * @member: Name of the array member.
-+ * @count: Number of elements in the array.
-+ *
-+ * Calculates size of memory needed for structure @p followed by an
-+ * array of @count number of @member elements.
-+ *
-+ * Return: number of bytes needed or SIZE_MAX on overflow.
-+ */
-+#define struct_size(p, member, count)					\
-+	__ab_c_size(count,						\
-+		    sizeof(*(p)->member) + __must_be_array((p)->member),\
-+		    sizeof(*(p)))
-+
- #endif /* _NDCTL_SIZE_H_ */
-diff --git a/util/util.h b/util/util.h
-index ae0e4e1..b2b4ae6 100644
---- a/util/util.h
-+++ b/util/util.h
-@@ -63,6 +63,12 @@
- #define BUILD_BUG_ON_ZERO(e) (sizeof(struct { int:-!!(e); }))
- #define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)]))
- 
-+/* Are two types/vars the same type (ignoring qualifiers)? */
-+#define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
-+
-+/* &a[0] degrades to a pointer: a different type from an array */
-+#define __must_be_array(a)	BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
-+
- enum {
- 	READ, WRITE,
- };
++PointerAlignment: Right
++ReflowComments: false
++SortIncludes: false
++#SortUsingDeclarations: false # Unknown to clang-format-4.0
++SpaceAfterCStyleCast: false
++SpaceAfterTemplateKeyword: true
++SpaceBeforeAssignmentOperators: true
++#SpaceBeforeCtorInitializerColon: true # Unknown to clang-format-5.0
++#SpaceBeforeInheritanceColon: true # Unknown to clang-format-5.0
++SpaceBeforeParens: ControlStatements
++#SpaceBeforeRangeBasedForLoopColon: true # Unknown to clang-format-5.0
++SpaceInEmptyParentheses: false
++SpacesBeforeTrailingComments: 1
++SpacesInAngles: false
++SpacesInContainerLiterals: false
++SpacesInCStyleCastParentheses: false
++SpacesInParentheses: false
++SpacesInSquareBrackets: false
++Standard: Cpp03
++TabWidth: 8
++UseTab: Always
++...
 -- 
 2.31.1
 
