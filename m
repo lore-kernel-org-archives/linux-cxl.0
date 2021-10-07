@@ -2,320 +2,182 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDE9C433EF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D3CC433FE
 	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41D7061246
+	by mail.kernel.org (Postfix) with ESMTP id C554461246
 	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233489AbhJGIXy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 7 Oct 2021 04:23:54 -0400
-Received: from mga07.intel.com ([134.134.136.100]:47368 "EHLO mga07.intel.com"
+        id S240574AbhJGIXz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 7 Oct 2021 04:23:55 -0400
+Received: from mga14.intel.com ([192.55.52.115]:1544 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240522AbhJGIXy (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 7 Oct 2021 04:23:54 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10129"; a="289697340"
+        id S240552AbhJGIXz (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 7 Oct 2021 04:23:55 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10129"; a="226507636"
 X-IronPort-AV: E=Sophos;i="5.85,354,1624345200"; 
-   d="scan'208";a="289697340"
+   d="scan'208";a="226507636"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:59 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:53 -0700
 X-IronPort-AV: E=Sophos;i="5.85,354,1624345200"; 
-   d="scan'208";a="568555143"
+   d="scan'208";a="568555073"
 Received: from abishekh-mobl.amr.corp.intel.com (HELO vverma7-desk.amr.corp.intel.com) ([10.251.133.239])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:58 -0700
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:53 -0700
 From:   Vishal Verma <vishal.l.verma@intel.com>
 To:     <linux-cxl@vger.kernel.org>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
         Ben Widawsky <ben.widawsky@intel.com>,
         <nvdimm@lists.linux.dev>, Vishal Verma <vishal.l.verma@intel.com>
-Subject: [ndctl PATCH v4 17/17] cxl: add health information to cxl-list
-Date:   Thu,  7 Oct 2021 02:21:39 -0600
-Message-Id: <20211007082139.3088615-18-vishal.l.verma@intel.com>
+Subject: [ndctl PATCH v4 00/17] Initial CXL support
+Date:   Thu,  7 Oct 2021 02:21:22 -0600
+Message-Id: <20211007082139.3088615-1-vishal.l.verma@intel.com>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20211007082139.3088615-1-vishal.l.verma@intel.com>
-References: <20211007082139.3088615-1-vishal.l.verma@intel.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8841; h=from:subject; bh=oRAgK7gnW5WWfTVhzDP0F39Kfyy9vxS/jK8r0gby5wA=; b=owGbwMvMwCHGf25diOft7jLG02pJDIlx64SOljhns8/X2t0VN/n7Km7NnDU/npWsMN/ay+scJs6l ZP6mo5SFQYyDQVZMkeXvno+Mx+S25/MEJjjCzGFlAhnCwMUpABPJvcXwz3gGS2+Wlc6qZvmoenWRHW s/fvp4eDPXjD33PnVPipu8WJnhf+SX62nTVU6HckdYhDSLmwR+vbbXannoDTVhL7X1ro3NDAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6502; h=from:subject; bh=of5rUB96XbBWvsbnML3DYWLhtbtCSVQfzrwEb9NRE88=; b=owGbwMvMwCHGf25diOft7jLG02pJDIlxa/+de3B0f95mDXbTE3fXT5kjv7wwL7JoWp+Ynv/hJ5fd vu9/0lHKwiDGwSArpsjyd89HxmNy2/N5AhMcYeawMoEMYeDiFICJKP9kZDiy607jGgbH90p7woKnit ySPHL3+9vk2Wu23JjY/e7Ik73PGRmmKV1rb/2w5CVjDYvf1It7JOLvLGT8v+Pxv8kbzxVz7WnjAQA=
 X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add JSON output for fields from the 'GET_HEALTH_INFO' mailbox command
-to memory device listings.
+Changes since v3[1]:
 
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+- Collect review tags
+- Add the kernel's struct_size() helper for trailing array struct
+  calculations (Dan)
+- Drop test/libcxl - to be re-added after switching to an in-kernel
+  emulation/unit test regime 'cxl_test', similar to 'nfit_test' (Dan)
+- Rename some verb_X_verb instances to drop the double verb (Dan)
+- Rename '{get,set}_lsa' to '{read,write}_labels' in libcxl APIs (Dan)
+- Add accessor APIs for health flags instead of leaking binary
+  representations to library users (Dan)
+- Rename '{get,set,zero}_lsa' APIs to '{read,write,zero}_label' (Dan)
+- Add health info to cxl-list
+- Fix a bug where a newly minted cmd struct didn't have a non-zero status
+  (This allowed a flow like cxl_cmd_new_<foo> followed by
+  cxl_cmd_<foo>_get_<field>() to silently succeed, where the second
+  accessor call should've failed because cxl_cmd_submit was omitted.
+- Change the cxl_cmd_read_label_get_payload() API to refrain from simply
+  returning a void pointer, that is easy to access out of bounds. Instead,
+  expect a buf/len pair that libcxl then copies the payload into (Dan)
+
+[1]: https://lore.kernel.org/linux-cxl/a86b057ccdd8e0a087d300dfc7dc315a3bf32e95.camel@intel.com/
+
 ---
- Documentation/cxl/cxl-list.txt |   4 +
- util/json.h                    |   1 +
- cxl/list.c                     |   5 +
- util/json.c                    | 189 +++++++++++++++++++++++++++++++++
- 4 files changed, 199 insertions(+)
 
-diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
-index bd377b3..dc86651 100644
---- a/Documentation/cxl/cxl-list.txt
-+++ b/Documentation/cxl/cxl-list.txt
-@@ -53,6 +53,10 @@ OPTIONS
- --idle::
- 	Include idle (not enabled / zero-sized) devices in the listing
- 
-+-H::
-+--health::
-+	Include health information in the memdev listing
-+
- include::human-option.txt[]
- 
- include::verbose-option.txt[]
-diff --git a/util/json.h b/util/json.h
-index 91918c8..ce575e6 100644
---- a/util/json.h
-+++ b/util/json.h
-@@ -19,6 +19,7 @@ enum util_json_flags {
- 	UTIL_JSON_CONFIGURED	= (1 << 7),
- 	UTIL_JSON_FIRMWARE	= (1 << 8),
- 	UTIL_JSON_DAX_MAPPINGS	= (1 << 9),
-+	UTIL_JSON_HEALTH	= (1 << 10),
- };
- 
- struct json_object;
-diff --git a/cxl/list.c b/cxl/list.c
-index 3dea73f..2fa155a 100644
---- a/cxl/list.c
-+++ b/cxl/list.c
-@@ -16,6 +16,7 @@ static struct {
- 	bool memdevs;
- 	bool idle;
- 	bool human;
-+	bool health;
- } list;
- 
- static unsigned long listopts_to_flags(void)
-@@ -26,6 +27,8 @@ static unsigned long listopts_to_flags(void)
- 		flags |= UTIL_JSON_IDLE;
- 	if (list.human)
- 		flags |= UTIL_JSON_HUMAN;
-+	if (list.health)
-+		flags |= UTIL_JSON_HEALTH;
- 	return flags;
- }
- 
-@@ -57,6 +60,8 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
- 		OPT_BOOLEAN('i', "idle", &list.idle, "include idle devices"),
- 		OPT_BOOLEAN('u', "human", &list.human,
- 				"use human friendly number formats "),
-+		OPT_BOOLEAN('H', "health", &list.health,
-+				"include memory device health information "),
- 		OPT_END(),
- 	};
- 	const char * const u[] = {
-diff --git a/util/json.c b/util/json.c
-index 3be3a92..dfc7b8e 100644
---- a/util/json.c
-+++ b/util/json.c
-@@ -1442,6 +1442,190 @@ struct json_object *util_badblock_rec_to_json(u64 block, u64 count,
- 	return NULL;
- }
- 
-+static struct json_object *util_cxl_memdev_health_to_json(
-+		struct cxl_memdev *memdev, unsigned long flags)
-+{
-+	const char *devname = cxl_memdev_get_devname(memdev);
-+	struct json_object *jhealth;
-+	struct json_object *jobj;
-+	struct cxl_cmd *cmd;
-+	u32 field;
-+	int rc;
-+
-+	jhealth = json_object_new_object();
-+	if (!jhealth)
-+		return NULL;
-+	if (!memdev)
-+		goto err_jobj;
-+
-+	cmd = cxl_cmd_new_get_health_info(memdev);
-+	if (!cmd)
-+		goto err_jobj;
-+
-+	rc = cxl_cmd_submit(cmd);
-+	/* ENOTTY - command not supported by the memdev */
-+	if (rc == -ENOTTY)
-+		goto err_cmd;
-+	if (rc < 0) {
-+		fprintf(stderr, "%s: cmd submission failed: %s\n", devname,
-+		    strerror(-rc));
-+		goto err_cmd;
-+	}
-+	rc = cxl_cmd_get_mbox_status(cmd);
-+	if (rc != 0) {
-+		fprintf(stderr, "%s: firmware status: %d\n", devname, rc);
-+		rc = -ENXIO;
-+		goto err_cmd;
-+	}
-+
-+	/* health_status fields */
-+	rc = cxl_cmd_health_info_get_maintenance_needed(cmd);
-+	jobj = json_object_new_boolean(rc);
-+	if (jobj)
-+		json_object_object_add(jhealth, "maintenance_needed", jobj);
-+
-+	rc = cxl_cmd_health_info_get_performance_degraded(cmd);
-+	jobj = json_object_new_boolean(rc);
-+	if (jobj)
-+		json_object_object_add(jhealth, "performance_degraded", jobj);
-+
-+	rc = cxl_cmd_health_info_get_hw_replacement_needed(cmd);
-+	jobj = json_object_new_boolean(rc);
-+	if (jobj)
-+		json_object_object_add(jhealth, "hw_replacement_needed", jobj);
-+
-+	/* media_status fields */
-+	rc = cxl_cmd_health_info_get_media_normal(cmd);
-+	jobj = json_object_new_boolean(rc);
-+	if (jobj)
-+		json_object_object_add(jhealth, "media_normal", jobj);
-+
-+	rc = cxl_cmd_health_info_get_media_not_ready(cmd);
-+	jobj = json_object_new_boolean(rc);
-+	if (jobj)
-+		json_object_object_add(jhealth, "media_not_ready", jobj);
-+
-+	rc = cxl_cmd_health_info_get_media_persistence_lost(cmd);
-+	jobj = json_object_new_boolean(rc);
-+	if (jobj)
-+		json_object_object_add(jhealth, "media_persistence_lost", jobj);
-+
-+	rc = cxl_cmd_health_info_get_media_data_lost(cmd);
-+	jobj = json_object_new_boolean(rc);
-+	if (jobj)
-+		json_object_object_add(jhealth, "media_data_lost", jobj);
-+
-+	rc = cxl_cmd_health_info_get_media_powerloss_persistence_loss(cmd);
-+	jobj = json_object_new_boolean(rc);
-+	if (jobj)
-+		json_object_object_add(jhealth, "media_powerloss_persistence_loss", jobj);
-+
-+	rc = cxl_cmd_health_info_get_media_shutdown_persistence_loss(cmd);
-+	jobj = json_object_new_boolean(rc);
-+	if (jobj)
-+		json_object_object_add(jhealth, "media_shutdown_persistence_loss", jobj);
-+
-+	rc = cxl_cmd_health_info_get_media_persistence_loss_imminent(cmd);
-+	jobj = json_object_new_boolean(rc);
-+	if (jobj)
-+		json_object_object_add(jhealth, "media_persistence_loss_imminent", jobj);
-+
-+	rc = cxl_cmd_health_info_get_media_powerloss_data_loss(cmd);
-+	jobj = json_object_new_boolean(rc);
-+	if (jobj)
-+		json_object_object_add(jhealth, "media_powerloss_data_loss", jobj);
-+
-+	rc = cxl_cmd_health_info_get_media_shutdown_data_loss(cmd);
-+	jobj = json_object_new_boolean(rc);
-+	if (jobj)
-+		json_object_object_add(jhealth, "media_shutdown_data_loss", jobj);
-+
-+	rc = cxl_cmd_health_info_get_media_data_loss_imminent(cmd);
-+	jobj = json_object_new_boolean(rc);
-+	if (jobj)
-+		json_object_object_add(jhealth, "media_data_loss_imminent", jobj);
-+
-+	/* ext_status fields */
-+	if (cxl_cmd_health_info_get_ext_life_used_normal(cmd))
-+		jobj = json_object_new_string("normal");
-+	else if (cxl_cmd_health_info_get_ext_life_used_warning(cmd))
-+		jobj = json_object_new_string("warning");
-+	else if (cxl_cmd_health_info_get_ext_life_used_critical(cmd))
-+		jobj = json_object_new_string("critical");
-+	else
-+		jobj = json_object_new_string("unknown");
-+	if (jobj)
-+		json_object_object_add(jhealth, "ext_life_used", jobj);
-+
-+	if (cxl_cmd_health_info_get_ext_temperature_normal(cmd))
-+		jobj = json_object_new_string("normal");
-+	else if (cxl_cmd_health_info_get_ext_temperature_warning(cmd))
-+		jobj = json_object_new_string("warning");
-+	else if (cxl_cmd_health_info_get_ext_temperature_critical(cmd))
-+		jobj = json_object_new_string("critical");
-+	else
-+		jobj = json_object_new_string("unknown");
-+	if (jobj)
-+		json_object_object_add(jhealth, "ext_temperature", jobj);
-+
-+	if (cxl_cmd_health_info_get_ext_corrected_volatile_normal(cmd))
-+		jobj = json_object_new_string("normal");
-+	else if (cxl_cmd_health_info_get_ext_corrected_volatile_warning(cmd))
-+		jobj = json_object_new_string("warning");
-+	else
-+		jobj = json_object_new_string("unknown");
-+	if (jobj)
-+		json_object_object_add(jhealth, "ext_corrected_volatile", jobj);
-+
-+	if (cxl_cmd_health_info_get_ext_corrected_persistent_normal(cmd))
-+		jobj = json_object_new_string("normal");
-+	else if (cxl_cmd_health_info_get_ext_corrected_persistent_warning(cmd))
-+		jobj = json_object_new_string("warning");
-+	else
-+		jobj = json_object_new_string("unknown");
-+	if (jobj)
-+		json_object_object_add(jhealth, "ext_corrected_persistent", jobj);
-+
-+	/* other fields */
-+	field = cxl_cmd_health_info_get_life_used(cmd);
-+	if (field != 0xff) {
-+		jobj = json_object_new_int(field);
-+		if (jobj)
-+			json_object_object_add(jhealth, "life_used_percent", jobj);
-+	}
-+
-+	field = cxl_cmd_health_info_get_temperature(cmd);
-+	if (field != 0xffff) {
-+		jobj = json_object_new_int(field);
-+		if (jobj)
-+			json_object_object_add(jhealth, "temperature", jobj);
-+	}
-+
-+	field = cxl_cmd_health_info_get_dirty_shutdowns(cmd);
-+	jobj = json_object_new_uint64(field);
-+	if (jobj)
-+		json_object_object_add(jhealth, "dirty_shutdowns", jobj);
-+
-+	field = cxl_cmd_health_info_get_volatile_errors(cmd);
-+	jobj = json_object_new_uint64(field);
-+	if (jobj)
-+		json_object_object_add(jhealth, "volatile_errors", jobj);
-+
-+	field = cxl_cmd_health_info_get_pmem_errors(cmd);
-+	jobj = json_object_new_uint64(field);
-+	if (jobj)
-+		json_object_object_add(jhealth, "pmem_errors", jobj);
-+
-+	cxl_cmd_unref(cmd);
-+	return jhealth;
-+
-+err_cmd:
-+	cxl_cmd_unref(cmd);
-+err_jobj:
-+	json_object_put(jhealth);
-+	return NULL;
-+}
-+
- struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
- 		unsigned long flags)
- {
-@@ -1464,5 +1648,10 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
- 	if (jobj)
- 		json_object_object_add(jdev, "ram_size", jobj);
- 
-+	if (flags & UTIL_JSON_HEALTH) {
-+		jobj = util_cxl_memdev_health_to_json(memdev, flags);
-+		if (jobj)
-+			json_object_object_add(jdev, "health", jobj);
-+	}
- 	return jdev;
- }
+These patches add a new utility and library to support CXL devices.
+This comprehends the kernel's sysfs layout for CXL devices, and
+implements a command submission harness for CXL mailbox commands via
+ioctl()s defined by the cxl_mem driver. 
+
+These patches include:
+- libcxl representation of cxl_mem devices
+- A command submission harness through libcxl
+- A 'cxl-list' command which displays information about a device
+- cxl-{read,write,zero}-labels commands for Label Storage Area
+  manipulation
+
+An ndctl branch with these patches is also available at [2]
+
+[2]: https://github.com/pmem/ndctl/tree/cxl-2.0v4
+
+Ira Weiny (1):
+  ndctl: Add CXL packages to the RPM spec
+
+Vishal Verma (16):
+  ndctl: add .clang-format
+  cxl: add a cxl utility and libcxl library
+  cxl: add a local copy of the cxl_mem UAPI header
+  util: add the struct_size() helper from the kernel
+  libcxl: add support for command query and submission
+  libcxl: add support for the 'Identify Device' command
+  libcxl: add GET_HEALTH_INFO mailbox command and accessors
+  libcxl: add support for the 'GET_LSA' command
+  util/hexdump: Add a util helper to print a buffer in hex
+  libcxl: add label_size to cxl_memdev, and an API to retrieve it
+  libcxl: add a stub interface to determine whether a memdev is active
+  libcxl: add interfaces for label operations
+  cxl: add commands to read, write, and zero labels
+  Documentation/cxl: add library API documentation
+  cxl-cli: add bash completion
+  cxl: add health information to cxl-list
+
+ Documentation/cxl/cxl-list.txt           |   68 ++
+ Documentation/cxl/cxl-read-labels.txt    |   33 +
+ Documentation/cxl/cxl-write-labels.txt   |   32 +
+ Documentation/cxl/cxl-zero-labels.txt    |   29 +
+ Documentation/cxl/cxl.txt                |   34 +
+ Documentation/cxl/human-option.txt       |    8 +
+ Documentation/cxl/labels-description.txt |    8 +
+ Documentation/cxl/labels-options.txt     |   17 +
+ Documentation/cxl/lib/cxl_new.txt        |   43 +
+ Documentation/cxl/lib/libcxl.txt         |   56 +
+ Documentation/cxl/memdev-option.txt      |    4 +
+ Documentation/cxl/verbose-option.txt     |    5 +
+ configure.ac                             |    4 +
+ Makefile.am                              |   14 +-
+ Makefile.am.in                           |    5 +
+ cxl/lib/private.h                        |  140 +++
+ cxl/lib/libcxl.c                         | 1265 ++++++++++++++++++++++
+ cxl/builtin.h                            |   13 +
+ cxl/cxl_mem.h                            |  189 ++++
+ cxl/libcxl.h                             |  116 ++
+ util/bitmap.h                            |   23 +
+ util/filter.h                            |    2 +
+ util/hexdump.h                           |    8 +
+ util/json.h                              |    4 +
+ util/main.h                              |    3 +
+ util/size.h                              |   62 ++
+ util/util.h                              |    6 +
+ cxl/cxl.c                                |   99 ++
+ cxl/list.c                               |  118 ++
+ cxl/memdev.c                             |  314 ++++++
+ util/filter.c                            |   20 +
+ util/hexdump.c                           |   53 +
+ util/json.c                              |  215 ++++
+ .clang-format                            |  162 +++
+ .gitignore                               |    7 +-
+ Documentation/cxl/Makefile.am            |   61 ++
+ Documentation/cxl/lib/Makefile.am        |   58 +
+ contrib/ndctl                            |  109 ++
+ cxl/Makefile.am                          |   22 +
+ cxl/lib/Makefile.am                      |   32 +
+ cxl/lib/libcxl.pc.in                     |   11 +
+ cxl/lib/libcxl.sym                       |   87 ++
+ ndctl.spec.in                            |   49 +
+ 43 files changed, 3604 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/cxl/cxl-list.txt
+ create mode 100644 Documentation/cxl/cxl-read-labels.txt
+ create mode 100644 Documentation/cxl/cxl-write-labels.txt
+ create mode 100644 Documentation/cxl/cxl-zero-labels.txt
+ create mode 100644 Documentation/cxl/cxl.txt
+ create mode 100644 Documentation/cxl/human-option.txt
+ create mode 100644 Documentation/cxl/labels-description.txt
+ create mode 100644 Documentation/cxl/labels-options.txt
+ create mode 100644 Documentation/cxl/lib/cxl_new.txt
+ create mode 100644 Documentation/cxl/lib/libcxl.txt
+ create mode 100644 Documentation/cxl/memdev-option.txt
+ create mode 100644 Documentation/cxl/verbose-option.txt
+ create mode 100644 cxl/lib/private.h
+ create mode 100644 cxl/lib/libcxl.c
+ create mode 100644 cxl/builtin.h
+ create mode 100644 cxl/cxl_mem.h
+ create mode 100644 cxl/libcxl.h
+ create mode 100644 util/hexdump.h
+ create mode 100644 cxl/cxl.c
+ create mode 100644 cxl/list.c
+ create mode 100644 cxl/memdev.c
+ create mode 100644 util/hexdump.c
+ create mode 100644 .clang-format
+ create mode 100644 Documentation/cxl/Makefile.am
+ create mode 100644 Documentation/cxl/lib/Makefile.am
+ create mode 100644 cxl/Makefile.am
+ create mode 100644 cxl/lib/Makefile.am
+ create mode 100644 cxl/lib/libcxl.pc.in
+ create mode 100644 cxl/lib/libcxl.sym
+
+
+base-commit: 4e646fa490ba4b782afa188dd8818b94c419924e
 -- 
 2.31.1
 
