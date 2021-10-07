@@ -2,190 +2,132 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E929C433FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D53ADC4167E
 	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02A566138B
-	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDD2861262
+	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240700AbhJGIX5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 7 Oct 2021 04:23:57 -0400
-Received: from mga14.intel.com ([192.55.52.115]:1544 "EHLO mga14.intel.com"
+        id S240659AbhJGIX6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 7 Oct 2021 04:23:58 -0400
+Received: from mga14.intel.com ([192.55.52.115]:1555 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240522AbhJGIX4 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        id S240623AbhJGIX4 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
         Thu, 7 Oct 2021 04:23:56 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10129"; a="226507646"
+X-IronPort-AV: E=McAfee;i="6200,9189,10129"; a="226507649"
 X-IronPort-AV: E=Sophos;i="5.85,354,1624345200"; 
-   d="scan'208";a="226507646"
+   d="scan'208";a="226507649"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:55 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:56 -0700
 X-IronPort-AV: E=Sophos;i="5.85,354,1624345200"; 
-   d="scan'208";a="568555098"
+   d="scan'208";a="568555110"
 Received: from abishekh-mobl.amr.corp.intel.com (HELO vverma7-desk.amr.corp.intel.com) ([10.251.133.239])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:55 -0700
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:56 -0700
 From:   Vishal Verma <vishal.l.verma@intel.com>
 To:     <linux-cxl@vger.kernel.org>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
         Ben Widawsky <ben.widawsky@intel.com>,
         <nvdimm@lists.linux.dev>, Vishal Verma <vishal.l.verma@intel.com>
-Subject: [ndctl PATCH v4 06/17] libcxl: add support for the 'Identify Device' command
-Date:   Thu,  7 Oct 2021 02:21:28 -0600
-Message-Id: <20211007082139.3088615-7-vishal.l.verma@intel.com>
+Subject: [ndctl PATCH v4 09/17] util/hexdump: Add a util helper to print a buffer in hex
+Date:   Thu,  7 Oct 2021 02:21:31 -0600
+Message-Id: <20211007082139.3088615-10-vishal.l.verma@intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20211007082139.3088615-1-vishal.l.verma@intel.com>
 References: <20211007082139.3088615-1-vishal.l.verma@intel.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4490; h=from:subject; bh=CKBDjAWZiWN3N0tdA+H/65v+nloeW1zhaldbio5Dqnw=; b=owGbwMvMwCHGf25diOft7jLG02pJDIlx61hnddz4ebTzCz/LgfiL7IGGBfsWRj9YbH3A9t3rxgu1 OzLaOkpZGMQ4GGTFFFn+7vnIeExuez5PYIIjzBxWJpAhDFycAjARSXZGhtUKxwITJQqtuA3f593+p3 ButsJ13wVtblq3NzO9ZF4o8Yzhr/Cdw7dWPssKmt0nvfyCYpfCX1mWL+UV36+dZE5rfZ72khsA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2591; h=from:subject; bh=UFfhkygRZQ5b+SUkgXgsoSOEW8sH9Qk7pdyP6rLtMe8=; b=owGbwMvMwCHGf25diOft7jLG02pJDIlx6zgcyp8YWx8sWBF5zuK9mPiZ7RmvPllzXIpPnbWhu7Tz g5BkRykLgxgHg6yYIsvfPR8Zj8ltz+cJTHCEmcPKBDKEgYtTACbieJzhD19xfPskzeWvLzH36/0+a9 l6IOqVYrFh9jS7qauP/dpispjhf1Xho7Wba+v1cx4k5lYqHHqyu/2iZPv6q6tF1jbwVif84wAA
 X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add APIs to allocate and send an 'Identify Device' command, and
-accessors to retrieve some of the fields from the resulting data.
-
-Only add a handful accessor functions; more can be added as the need
-arises. The fields added are fw_revision, partition_align, and
-lsa_size.
+In preparation for tests that may need to set, retrieve, and display
+opaque data, add a hexdump function in util/
 
 Cc: Ben Widawsky <ben.widawsky@intel.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
- cxl/lib/private.h  | 19 ++++++++++++++++++
- cxl/lib/libcxl.c   | 49 ++++++++++++++++++++++++++++++++++++++++++++++
- cxl/libcxl.h       |  4 ++++
- cxl/lib/libcxl.sym |  4 ++++
- 4 files changed, 76 insertions(+)
+ util/hexdump.h |  8 ++++++++
+ util/hexdump.c | 53 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
+ create mode 100644 util/hexdump.h
+ create mode 100644 util/hexdump.c
 
-diff --git a/cxl/lib/private.h b/cxl/lib/private.h
-index 87ca17e..3273f21 100644
---- a/cxl/lib/private.h
-+++ b/cxl/lib/private.h
-@@ -54,6 +54,25 @@ struct cxl_cmd {
- 	int status;
- };
- 
-+#define CXL_CMD_IDENTIFY_FW_REV_LENGTH 0x10
+diff --git a/util/hexdump.h b/util/hexdump.h
+new file mode 100644
+index 0000000..d322b6a
+--- /dev/null
++++ b/util/hexdump.h
+@@ -0,0 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright (C) 2021 Intel Corporation. All rights reserved. */
++#ifndef _UTIL_HEXDUMP_H_
++#define _UTIL_HEXDUMP_H_
 +
-+struct cxl_cmd_identify {
-+	char fw_revision[CXL_CMD_IDENTIFY_FW_REV_LENGTH];
-+	le64 total_capacity;
-+	le64 volatile_capacity;
-+	le64 persistent_capacity;
-+	le64 partition_align;
-+	le16 info_event_log_size;
-+	le16 warning_event_log_size;
-+	le16 failure_event_log_size;
-+	le16 fatal_event_log_size;
-+	le32 lsa_size;
-+	u8 poison_list_max_mer[3];
-+	le16 inject_poison_limit;
-+	u8 poison_caps;
-+	u8 qos_telemetry_caps;
-+} __attribute__((packed));
++void hex_dump_buf(unsigned char *buf, int size);
 +
- static inline int check_kmod(struct kmod_ctx *kmod_ctx)
- {
- 	return kmod_ctx ? 0 : -ENXIO;
-diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index ae13795..38fdd89 100644
---- a/cxl/lib/libcxl.c
-+++ b/cxl/lib/libcxl.c
-@@ -13,7 +13,10 @@
- #include <sys/sysmacros.h>
- #include <uuid/uuid.h>
- #include <ccan/list/list.h>
-+#include <ccan/endian/endian.h>
-+#include <ccan/minmax/minmax.h>
- #include <ccan/array_size/array_size.h>
-+#include <ccan/short_types/short_types.h>
- 
- #include <util/log.h>
- #include <util/size.h>
-@@ -674,6 +677,52 @@ CXL_EXPORT const char *cxl_cmd_get_devname(struct cxl_cmd *cmd)
- 	return cxl_memdev_get_devname(cmd->memdev);
- }
- 
-+CXL_EXPORT struct cxl_cmd *cxl_cmd_new_identify(struct cxl_memdev *memdev)
++#endif /* _UTIL_HEXDUMP_H_*/
+diff --git a/util/hexdump.c b/util/hexdump.c
+new file mode 100644
+index 0000000..1ab0118
+--- /dev/null
++++ b/util/hexdump.c
+@@ -0,0 +1,53 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (C) 2015-2021 Intel Corporation. All rights reserved. */
++#include <stdio.h>
++#include <util/hexdump.h>
++
++static void print_separator(int len)
 +{
-+	return cxl_cmd_new_generic(memdev, CXL_MEM_COMMAND_ID_IDENTIFY);
++	int i;
++
++	for (i = 0; i < len; i++)
++		fprintf(stderr, "-");
++	fprintf(stderr, "\n");
 +}
 +
-+CXL_EXPORT int cxl_cmd_identify_get_fw_rev(struct cxl_cmd *cmd, char *fw_rev,
-+		int fw_len)
++void hex_dump_buf(unsigned char *buf, int size)
 +{
-+	struct cxl_cmd_identify *id = (void *)cmd->send_cmd->out.payload;
++	int i;
++	const int grp = 4;  /* Number of bytes in a group */
++	const int wid = 16; /* Bytes per line. Should be a multiple of grp */
++	char ascii[wid + 1];
 +
-+	if (cmd->send_cmd->id != CXL_MEM_COMMAND_ID_IDENTIFY)
-+		return -EINVAL;
-+	if (cmd->status < 0)
-+		return cmd->status;
++	/* Generate header */
++	print_separator((wid * 4) + (wid / grp) + 12);
 +
-+	if (fw_len > 0)
-+		memcpy(fw_rev, id->fw_revision,
-+			min(fw_len, CXL_CMD_IDENTIFY_FW_REV_LENGTH));
-+	return 0;
++	fprintf(stderr, "Offset    ");
++	for (i = 0; i < wid; i++) {
++		if (i % grp == 0) fprintf(stderr, " ");
++		fprintf(stderr, "%02x ", i);
++	}
++	fprintf(stderr, "  Ascii\n");
++
++	print_separator((wid * 4) + (wid / grp) + 12);
++
++	/* Generate hex dump */
++	for (i = 0; i < size; i++) {
++		if (i % wid == 0) fprintf(stderr, "%08x  ", i);
++		ascii[i % wid] =
++		    ((buf[i] >= ' ') && (buf[i] <= '~')) ? buf[i] : '.';
++		if (i % grp == 0) fprintf(stderr, " ");
++		fprintf(stderr, "%02x ", buf[i]);
++		if ((i == size - 1) && (size % wid != 0)) {
++			int j;
++			int done = size % wid;
++			int grps_done = (done / grp) + ((done % grp) ? 1 : 0);
++			int spaces = wid / grp - grps_done + ((wid - done) * 3);
++
++			for (j = 0; j < spaces; j++) fprintf(stderr, " ");
++		}
++		if ((i % wid == wid - 1) || (i == size - 1))
++			fprintf(stderr, "  %.*s\n", (i % wid) + 1, ascii);
++	}
++	print_separator((wid * 4) + (wid / grp) + 12);
 +}
-+
-+CXL_EXPORT unsigned long long cxl_cmd_identify_get_partition_align(
-+		struct cxl_cmd *cmd)
-+{
-+	struct cxl_cmd_identify *id = (void *)cmd->send_cmd->out.payload;
-+
-+	if (cmd->send_cmd->id != CXL_MEM_COMMAND_ID_IDENTIFY)
-+		return -EINVAL;
-+	if (cmd->status < 0)
-+		return cmd->status;
-+
-+	return le64_to_cpu(id->partition_align);
-+}
-+
-+CXL_EXPORT unsigned int cxl_cmd_identify_get_label_size(struct cxl_cmd *cmd)
-+{
-+	struct cxl_cmd_identify *id = (void *)cmd->send_cmd->out.payload;
-+
-+	if (cmd->send_cmd->id != CXL_MEM_COMMAND_ID_IDENTIFY)
-+		return -EINVAL;
-+	if (cmd->status < 0)
-+		return cmd->status;
-+
-+	return le32_to_cpu(id->lsa_size);
-+}
-+
- CXL_EXPORT struct cxl_cmd *cxl_cmd_new_raw(struct cxl_memdev *memdev,
- 		int opcode)
- {
-diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index 6e87b80..0f2d5e9 100644
---- a/cxl/libcxl.h
-+++ b/cxl/libcxl.h
-@@ -58,6 +58,10 @@ void cxl_cmd_unref(struct cxl_cmd *cmd);
- int cxl_cmd_submit(struct cxl_cmd *cmd);
- int cxl_cmd_get_mbox_status(struct cxl_cmd *cmd);
- int cxl_cmd_get_out_size(struct cxl_cmd *cmd);
-+struct cxl_cmd *cxl_cmd_new_identify(struct cxl_memdev *memdev);
-+int cxl_cmd_identify_get_fw_rev(struct cxl_cmd *cmd, char *fw_rev, int fw_len);
-+unsigned long long cxl_cmd_identify_get_partition_align(struct cxl_cmd *cmd);
-+unsigned int cxl_cmd_identify_get_label_size(struct cxl_cmd *cmd);
- 
- #ifdef __cplusplus
- } /* extern "C" */
-diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index 493429c..c083304 100644
---- a/cxl/lib/libcxl.sym
-+++ b/cxl/lib/libcxl.sym
-@@ -39,4 +39,8 @@ global:
- 	cxl_cmd_submit;
- 	cxl_cmd_get_mbox_status;
- 	cxl_cmd_get_out_size;
-+	cxl_cmd_new_identify;
-+	cxl_cmd_identify_get_fw_rev;
-+	cxl_cmd_identify_get_partition_align;
-+	cxl_cmd_identify_get_label_size;
- } LIBCXL_2;
 -- 
 2.31.1
 
