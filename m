@@ -2,365 +2,320 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B99A3C433EF
-	for <linux-cxl@archiver.kernel.org>; Wed,  6 Oct 2021 20:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDE9C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9537B61152
-	for <linux-cxl@archiver.kernel.org>; Wed,  6 Oct 2021 20:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41D7061246
+	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232147AbhJFURG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 6 Oct 2021 16:17:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230223AbhJFURF (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 6 Oct 2021 16:17:05 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41014C061746
-        for <linux-cxl@vger.kernel.org>; Wed,  6 Oct 2021 13:15:13 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id ls14-20020a17090b350e00b001a00e2251c8so3289087pjb.4
-        for <linux-cxl@vger.kernel.org>; Wed, 06 Oct 2021 13:15:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kUt43t1yPQSp6yKRQDKehvuZcdKCNEHHgjdiw55b8yc=;
-        b=cXjWrLc7Rkhyj/MVhz1RFZ5h+ELNvbY1BK6K3LeGUME4hi15Z1TImR6ZOKhMhLBhLM
-         E4t0PFY+CVhEVq3OsmVhJB4+ewKw3aKS0DIWxaJBu7Yo9+cjMFMzFNfkTU0noXnZeSB1
-         o2jgI+YbzOgo2vf/UaOXV+trgJvcoF+5iNnxJf0+ebbh136CpGJ6GxF5qb8axP5ESLFm
-         Yu/NmKqRiAI7106QLEo9qL5Dq48zCC8kArYEyw4aMn3+42xnmZFgnGj8E2fBAP1qUJDe
-         aoF2RzLVS5np7gE1e9Lpn7vtsgFISzCTMDiOVb96axwozhvVSpYHj11lRwh/kb/hPA12
-         y72w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kUt43t1yPQSp6yKRQDKehvuZcdKCNEHHgjdiw55b8yc=;
-        b=sEa8S0BAON7UxLW6+WSC9t6KKwrX++CYHjLqjg4p9gQvoXooXUyH18FRfuc4ALcVkx
-         hMdQqLvU6m6HTetKig2Y27+cwMVYwJGDkJ0ff9L5AyMt5Mv+OHDUMErNtEBHYGN3dJph
-         KFiSHrkCp2E+vCsrh+zIvL9Iozt2rq9yI/J+xYg+V5SLH7j0ePkMLweEfkdX3sCLIxCd
-         JqQjo6zt6jEBG9P5UkfHB/UUjVH4SbbwFUA2glXPHv35xiJhizoXLe5qDGMiGsKcce1b
-         3Y1pxPt4gI73pzT2SZtKcnWVzTsTKPEEXbUkcqm6RMVzhOkrkmUIhTleUBgQ0E5/poPP
-         rHZA==
-X-Gm-Message-State: AOAM533h4R/wFjKgqY81iv/lXxwFFzXwhSKsu6ofNO04WNG8wYDMYZNd
-        0tTFxEMGUq3oJayLcLigGTto1l9O2nck4Y2n/nb6tg==
-X-Google-Smtp-Source: ABdhPJw7+9W6M8JnAg6ylSvm1NfQZYkoMfVdQiaPZ5p1HZnbc0Qebltom0kLeQeaD0GKY8karPCzl14neOP0cZygPTM=
-X-Received: by 2002:a17:90b:350f:: with SMTP id ls15mr191398pjb.220.1633551312423;
- Wed, 06 Oct 2021 13:15:12 -0700 (PDT)
+        id S233489AbhJGIXy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 7 Oct 2021 04:23:54 -0400
+Received: from mga07.intel.com ([134.134.136.100]:47368 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240522AbhJGIXy (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 7 Oct 2021 04:23:54 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10129"; a="289697340"
+X-IronPort-AV: E=Sophos;i="5.85,354,1624345200"; 
+   d="scan'208";a="289697340"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:59 -0700
+X-IronPort-AV: E=Sophos;i="5.85,354,1624345200"; 
+   d="scan'208";a="568555143"
+Received: from abishekh-mobl.amr.corp.intel.com (HELO vverma7-desk.amr.corp.intel.com) ([10.251.133.239])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:58 -0700
+From:   Vishal Verma <vishal.l.verma@intel.com>
+To:     <linux-cxl@vger.kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        <nvdimm@lists.linux.dev>, Vishal Verma <vishal.l.verma@intel.com>
+Subject: [ndctl PATCH v4 17/17] cxl: add health information to cxl-list
+Date:   Thu,  7 Oct 2021 02:21:39 -0600
+Message-Id: <20211007082139.3088615-18-vishal.l.verma@intel.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20211007082139.3088615-1-vishal.l.verma@intel.com>
+References: <20211007082139.3088615-1-vishal.l.verma@intel.com>
 MIME-Version: 1.0
-References: <20210813213653.3760-1-stuart.w.hayes@gmail.com>
- <5d1eb958c13553d70e4bee7a7b342febcf1c02ee.camel@intel.com> <4bb26dc0-9b82-21d6-0257-d50ec206a130@gmail.com>
-In-Reply-To: <4bb26dc0-9b82-21d6-0257-d50ec206a130@gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 6 Oct 2021 13:15:01 -0700
-Message-ID: <CAPcyv4iig5rxCNb7GyGV9akhZKLF+OeGhewSbOeAzzA6pKreRA@mail.gmail.com>
-Subject: Re: [PATCH v3] Add support for PCIe SSD status LED management
-To:     stuart hayes <stuart.w.hayes@gmail.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "kw@linux.com" <kw@linux.com>, "lukas@wunner.de" <lukas@wunner.de>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        mariusz.tkaczyk@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8841; h=from:subject; bh=oRAgK7gnW5WWfTVhzDP0F39Kfyy9vxS/jK8r0gby5wA=; b=owGbwMvMwCHGf25diOft7jLG02pJDIlx64SOljhns8/X2t0VN/n7Km7NnDU/npWsMN/ay+scJs6l ZP6mo5SFQYyDQVZMkeXvno+Mx+S25/MEJjjCzGFlAhnCwMUpABPJvcXwz3gGS2+Wlc6qZvmoenWRHW s/fvp4eDPXjD33PnVPipu8WJnhf+SX62nTVU6HckdYhDSLmwR+vbbXannoDTVhL7X1ro3NDAA=
+X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-[ add Mariusz from ledmon tool: https://github.com/intel/ledmon ]
+Add JSON output for fields from the 'GET_HEALTH_INFO' mailbox command
+to memory device listings.
 
-On Tue, Oct 5, 2021 at 7:43 PM stuart hayes <stuart.w.hayes@gmail.com> wrote:
->
->
-> On 10/5/2021 12:14 AM, Williams, Dan J wrote:
-> > On Fri, 2021-08-13 at 17:36 -0400, Stuart Hayes wrote:
-> >> This patch adds support for the PCIe SSD Status LED Management
-> >> interface, as described in the "_DSM Additions for PCIe SSD Status LED
-> >> Management" ECN to the PCI Firmware Specification revision 3.2.
-> >>
-> >> It will add (led_classdev) LEDs to each PCIe device that has a supported
-> >> _DSM interface (one off/on LED per supported state). Both PCIe storage
-> >> devices, and the ports to which they are connected, can support this
-> >> interface.
-> >
-> > Can you describe why this chose the drivers/leds/led-class.c route
-> > instead of drivers/misc/enclosure.c? Or, something simple / open-coded
-> > like drivers/ata/libata-sata.c? If that was already discussed in a
-> > previous posting just point me over there. My initial take away is that
-> > this is spending effort on gear matching with the led_classdev
-> > interface.
-> >
-> > The comments that follow are just an initial pass based on being
-> > suprised about the led_classdev choice and the desire for NPEM support.
-> >
-> >
->
-> Thank you for the comments, Dan.
->
-> I originally did submit something simple that just added a couple of
-> sysfs attributes to allow userspace access to the _DSM, but Greg K-H
-> said (1) that I shouldn't create new driver-specific sysfs files that do
-> things that existing class drivers do, and that if I'm allowing LEDs to
-> be controlled by the user, I have to use the LED subsystem, so I went
-> with that. (See the end of
-> https://patchwork.ozlabs.org/project/linux-pci/patch/20201110153735.58587-1-stuart.w.hayes@gmail.com/)
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+---
+ Documentation/cxl/cxl-list.txt |   4 +
+ util/json.h                    |   1 +
+ cxl/list.c                     |   5 +
+ util/json.c                    | 189 +++++++++++++++++++++++++++++++++
+ 4 files changed, 199 insertions(+)
 
-I agree with the general sentiment to adopt and extend existing ABIs
-wherever possible, it's just not clear to me that the LED class driver
-is the best fit. The Enclosure class infrastructure, in addition to
-having some concept of industry standard LED signalling patterns, also
-has the concept of linking back to the controller of the storage
-device in question. So my gut feel is that it's a better starting
-point. If it has some gaps or mismatches with NPEM concepts then
-that's a good reason to extend it versus trying to describe the
-storage use case to the generic LED class driver.
+diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
+index bd377b3..dc86651 100644
+--- a/Documentation/cxl/cxl-list.txt
++++ b/Documentation/cxl/cxl-list.txt
+@@ -53,6 +53,10 @@ OPTIONS
+ --idle::
+ 	Include idle (not enabled / zero-sized) devices in the listing
+ 
++-H::
++--health::
++	Include health information in the memdev listing
++
+ include::human-option.txt[]
+ 
+ include::verbose-option.txt[]
+diff --git a/util/json.h b/util/json.h
+index 91918c8..ce575e6 100644
+--- a/util/json.h
++++ b/util/json.h
+@@ -19,6 +19,7 @@ enum util_json_flags {
+ 	UTIL_JSON_CONFIGURED	= (1 << 7),
+ 	UTIL_JSON_FIRMWARE	= (1 << 8),
+ 	UTIL_JSON_DAX_MAPPINGS	= (1 << 9),
++	UTIL_JSON_HEALTH	= (1 << 10),
+ };
+ 
+ struct json_object;
+diff --git a/cxl/list.c b/cxl/list.c
+index 3dea73f..2fa155a 100644
+--- a/cxl/list.c
++++ b/cxl/list.c
+@@ -16,6 +16,7 @@ static struct {
+ 	bool memdevs;
+ 	bool idle;
+ 	bool human;
++	bool health;
+ } list;
+ 
+ static unsigned long listopts_to_flags(void)
+@@ -26,6 +27,8 @@ static unsigned long listopts_to_flags(void)
+ 		flags |= UTIL_JSON_IDLE;
+ 	if (list.human)
+ 		flags |= UTIL_JSON_HUMAN;
++	if (list.health)
++		flags |= UTIL_JSON_HEALTH;
+ 	return flags;
+ }
+ 
+@@ -57,6 +60,8 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
+ 		OPT_BOOLEAN('i', "idle", &list.idle, "include idle devices"),
+ 		OPT_BOOLEAN('u', "human", &list.human,
+ 				"use human friendly number formats "),
++		OPT_BOOLEAN('H', "health", &list.health,
++				"include memory device health information "),
+ 		OPT_END(),
+ 	};
+ 	const char * const u[] = {
+diff --git a/util/json.c b/util/json.c
+index 3be3a92..dfc7b8e 100644
+--- a/util/json.c
++++ b/util/json.c
+@@ -1442,6 +1442,190 @@ struct json_object *util_badblock_rec_to_json(u64 block, u64 count,
+ 	return NULL;
+ }
+ 
++static struct json_object *util_cxl_memdev_health_to_json(
++		struct cxl_memdev *memdev, unsigned long flags)
++{
++	const char *devname = cxl_memdev_get_devname(memdev);
++	struct json_object *jhealth;
++	struct json_object *jobj;
++	struct cxl_cmd *cmd;
++	u32 field;
++	int rc;
++
++	jhealth = json_object_new_object();
++	if (!jhealth)
++		return NULL;
++	if (!memdev)
++		goto err_jobj;
++
++	cmd = cxl_cmd_new_get_health_info(memdev);
++	if (!cmd)
++		goto err_jobj;
++
++	rc = cxl_cmd_submit(cmd);
++	/* ENOTTY - command not supported by the memdev */
++	if (rc == -ENOTTY)
++		goto err_cmd;
++	if (rc < 0) {
++		fprintf(stderr, "%s: cmd submission failed: %s\n", devname,
++		    strerror(-rc));
++		goto err_cmd;
++	}
++	rc = cxl_cmd_get_mbox_status(cmd);
++	if (rc != 0) {
++		fprintf(stderr, "%s: firmware status: %d\n", devname, rc);
++		rc = -ENXIO;
++		goto err_cmd;
++	}
++
++	/* health_status fields */
++	rc = cxl_cmd_health_info_get_maintenance_needed(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "maintenance_needed", jobj);
++
++	rc = cxl_cmd_health_info_get_performance_degraded(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "performance_degraded", jobj);
++
++	rc = cxl_cmd_health_info_get_hw_replacement_needed(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "hw_replacement_needed", jobj);
++
++	/* media_status fields */
++	rc = cxl_cmd_health_info_get_media_normal(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "media_normal", jobj);
++
++	rc = cxl_cmd_health_info_get_media_not_ready(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "media_not_ready", jobj);
++
++	rc = cxl_cmd_health_info_get_media_persistence_lost(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "media_persistence_lost", jobj);
++
++	rc = cxl_cmd_health_info_get_media_data_lost(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "media_data_lost", jobj);
++
++	rc = cxl_cmd_health_info_get_media_powerloss_persistence_loss(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "media_powerloss_persistence_loss", jobj);
++
++	rc = cxl_cmd_health_info_get_media_shutdown_persistence_loss(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "media_shutdown_persistence_loss", jobj);
++
++	rc = cxl_cmd_health_info_get_media_persistence_loss_imminent(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "media_persistence_loss_imminent", jobj);
++
++	rc = cxl_cmd_health_info_get_media_powerloss_data_loss(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "media_powerloss_data_loss", jobj);
++
++	rc = cxl_cmd_health_info_get_media_shutdown_data_loss(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "media_shutdown_data_loss", jobj);
++
++	rc = cxl_cmd_health_info_get_media_data_loss_imminent(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "media_data_loss_imminent", jobj);
++
++	/* ext_status fields */
++	if (cxl_cmd_health_info_get_ext_life_used_normal(cmd))
++		jobj = json_object_new_string("normal");
++	else if (cxl_cmd_health_info_get_ext_life_used_warning(cmd))
++		jobj = json_object_new_string("warning");
++	else if (cxl_cmd_health_info_get_ext_life_used_critical(cmd))
++		jobj = json_object_new_string("critical");
++	else
++		jobj = json_object_new_string("unknown");
++	if (jobj)
++		json_object_object_add(jhealth, "ext_life_used", jobj);
++
++	if (cxl_cmd_health_info_get_ext_temperature_normal(cmd))
++		jobj = json_object_new_string("normal");
++	else if (cxl_cmd_health_info_get_ext_temperature_warning(cmd))
++		jobj = json_object_new_string("warning");
++	else if (cxl_cmd_health_info_get_ext_temperature_critical(cmd))
++		jobj = json_object_new_string("critical");
++	else
++		jobj = json_object_new_string("unknown");
++	if (jobj)
++		json_object_object_add(jhealth, "ext_temperature", jobj);
++
++	if (cxl_cmd_health_info_get_ext_corrected_volatile_normal(cmd))
++		jobj = json_object_new_string("normal");
++	else if (cxl_cmd_health_info_get_ext_corrected_volatile_warning(cmd))
++		jobj = json_object_new_string("warning");
++	else
++		jobj = json_object_new_string("unknown");
++	if (jobj)
++		json_object_object_add(jhealth, "ext_corrected_volatile", jobj);
++
++	if (cxl_cmd_health_info_get_ext_corrected_persistent_normal(cmd))
++		jobj = json_object_new_string("normal");
++	else if (cxl_cmd_health_info_get_ext_corrected_persistent_warning(cmd))
++		jobj = json_object_new_string("warning");
++	else
++		jobj = json_object_new_string("unknown");
++	if (jobj)
++		json_object_object_add(jhealth, "ext_corrected_persistent", jobj);
++
++	/* other fields */
++	field = cxl_cmd_health_info_get_life_used(cmd);
++	if (field != 0xff) {
++		jobj = json_object_new_int(field);
++		if (jobj)
++			json_object_object_add(jhealth, "life_used_percent", jobj);
++	}
++
++	field = cxl_cmd_health_info_get_temperature(cmd);
++	if (field != 0xffff) {
++		jobj = json_object_new_int(field);
++		if (jobj)
++			json_object_object_add(jhealth, "temperature", jobj);
++	}
++
++	field = cxl_cmd_health_info_get_dirty_shutdowns(cmd);
++	jobj = json_object_new_uint64(field);
++	if (jobj)
++		json_object_object_add(jhealth, "dirty_shutdowns", jobj);
++
++	field = cxl_cmd_health_info_get_volatile_errors(cmd);
++	jobj = json_object_new_uint64(field);
++	if (jobj)
++		json_object_object_add(jhealth, "volatile_errors", jobj);
++
++	field = cxl_cmd_health_info_get_pmem_errors(cmd);
++	jobj = json_object_new_uint64(field);
++	if (jobj)
++		json_object_object_add(jhealth, "pmem_errors", jobj);
++
++	cxl_cmd_unref(cmd);
++	return jhealth;
++
++err_cmd:
++	cxl_cmd_unref(cmd);
++err_jobj:
++	json_object_put(jhealth);
++	return NULL;
++}
++
+ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+ 		unsigned long flags)
+ {
+@@ -1464,5 +1648,10 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+ 	if (jobj)
+ 		json_object_object_add(jdev, "ram_size", jobj);
+ 
++	if (flags & UTIL_JSON_HEALTH) {
++		jobj = util_cxl_memdev_health_to_json(memdev, flags);
++		if (jobj)
++			json_object_object_add(jdev, "health", jobj);
++	}
+ 	return jdev;
+ }
+-- 
+2.31.1
 
-> I tried to make my code very similar to drivers/input/input-leds.c,
-> where up to 11 LEDs per input device are registered.  Since NPEM/_DSM
-> allows any of the states to be independently set or cleared, and any of
-> the states may or may not be supported, it seemed very similar to me
-> (except, as Pavel points out, the NPEM/_DSM states probably won't have
-> one LED per state like the keyboard LEDs typically do).
->
-> I will look into drivers/misc/enclosure.c.  I think I didn't go that
-> route initially as it appeared to be quite old and not widely used, and
-> the states don't completely overlap.  More about it below.
-
-The SCSI SES driver takes full advantage of the ENCLOSURE driver-core,
-so I suspect layering NPEM / SSD_LED_DSM on top of ENCLOSURE is a
-better fit than layering those same concepts on top of LED. As for
-usages beyond SES you can see that ledmon avoided the kernel
-altogether for its support via direct userspace configuration cycles,
-but that's incompatible with ACPI DSMs that need a kernel driver, and
-its incompatible with LOCKDOWN_KERNEL where root is disallowed from
-issuing configuration write cycles.
-
->
-> >>
-> >> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> >> ---
-> >> V2:
-> >>          * Simplified interface to a single "states" attribute under the LED
-> >>            classdev using only state names
-> >>          * Reworked driver to separate _DSM specific code, so support for
-> >>            NPEM (or other methods) could be easily be added
-> >>          * Use BIT macro
-> >> V3:
-> >>          * Changed code to use a single LED per supported state
-> >>          * Moved to drivers/pci/pcie
-> >>          * Changed Kconfig dependency to LEDS_CLASS instead of NEW_LEDS
-> >>          * Added PCI device class check before _DSM presence check
-> >>          * Other cleanups that don't affect the function
-> >>
-> >> ---
-> >>   drivers/pci/pcie/Kconfig    |  11 +
-> >>   drivers/pci/pcie/Makefile   |   1 +
-> >>   drivers/pci/pcie/ssd-leds.c | 419 ++++++++++++++++++++++++++++++++++++
-> >>   3 files changed, 431 insertions(+)
-> >>   create mode 100644 drivers/pci/pcie/ssd-leds.c
-> >>
-> >> diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
-> >> index 45a2ef702b45..b738d473209f 100644
-> >> --- a/drivers/pci/pcie/Kconfig
-> >> +++ b/drivers/pci/pcie/Kconfig
-> >> @@ -142,3 +142,14 @@ config PCIE_EDR
-> >>            the PCI Firmware Specification r3.2.  Enable this if you want to
-> >>            support hybrid DPC model which uses both firmware and OS to
-> >>            implement DPC.
-> >> +
-> >> +config PCIE_SSD_LEDS
-> >> +       tristate "PCIe SSD status LED support"
-> >> +       depends on ACPI && LEDS_CLASS
-> >
-> > This "depends on ACPI" is awkward when this grows NPEM support. I feel
-> > like NPEM is the first class citizen and then ACPI optionally overrides
-> > NPEM support if present.
-> >
-> >
->
-> I didn't actually think about NPEM when I originally submitted this...
-> and even now, as I submitted it, it only uses the _DSM method, so it is
-> useless without ACPI.  The ACPI dependency could go if NPEM support was
-> added, for sure.
-
-As far as I can tell from the specification NPEM is the discovery
-mechanism for which PCI device to perform the _DSM. Maybe someone who
-is more familiar with the intent of the specification can clarify, but
-I would expect that the driver for the NPEM for a given storage device
-would check it's local NPEM first and then walk up the hierarchy to
-find the first NPEM instance enabled by platform firmware, then before
-using that instance check if the ACPI _DSM is available for that PCI
-device and use that instead. Otherwise, it's not clear to me how
-software definitely associates a given control interface to a specific
-storage, or memory in the case of CXL, device.
-
->
-> >> +       help
-> >> +         Driver for PCIe SSD status LED management as described in a PCI
-> >> +         Firmware Specification, Revision 3.2 ECN.
-> >
-> > The auxiliary bus [1] was recently added as a way for drivers to carve
-> > off functionality into sub-device / sub-driver pairs. One benefit from
-> > the auxiliary bus organization is that the NPEM driver gets a propoer
-> > alias and auto-loading support. As is this driver appears to need to be
-> > manually loaded.
-> >
-> > [1]: Documentation/driver-api/auxiliary_bus.rst
-> >
->
-> Yes, unfortunately, it would need to be manually loaded.  I flip-flopped
-> multiple times on making this just a library that the nvme driver could
-> call to register the LEDs (if the _DSM was present).  It would be
-> simpler, it wouldn't need a module to be manulaly loaded, it would
-> resulted in better LED names (if the _DSM was on the NVMe PCI device),
-> and it would mean that the driver that owns the PCI device would also
-> own the LEDs.
->
-> The only reason I didn't do that, is that the _DSM can be on the PCIe
-> port that the NVMe device is connected to, rather than on the NVMe drive
-> PCI device.  And I'm not sure how to deal with the latter situation,
-> except maybe change the pcie port bus driver to also call in to the
-> library to register LEDs somehow.  But maybe it would be worth trying to
-> figure that out.
-
-Like I mentioned above, I think it's ok / expected that the client of
-this API will kick off a search that starts with the local PCI device
-and walks the hierarchy if necessary to the first enabled NPEM
-instance.
-
-> I was not aware of the auxiliary bus, thanks for pointing it out.  I
-> glanced over it, and I'm not sure how it would help over just having a
-> library that nvme, pcie port bus driver, CXL, or whatever could call into.
-
-It helps because it registers a typical device that can autoload the
-NPEM driver. So, instead of force loading this module, or adding all
-the logic to be called by NVME directly, the NVME driver can simply
-register an auxiliary device. The CXL driver can load a similar
-auxiliary device. Then the common NPEM driver would be autoloaded in
-response to those events, and typical modprobe policy can be used to
-filter the driver or apply any other policy upon the arrival of
-NPEM-like devices.
-
-> >> +
-> >> +         When enabled, LED interfaces will be created for supported drive
-> >> +         states for each PCIe device that has the ACPI _DSM method described
-> >> +         in the referenced specification.
-> >> diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
-> >> index b2980db88cc0..fbcb8c2d1dc1 100644
-> >> --- a/drivers/pci/pcie/Makefile
-> >> +++ b/drivers/pci/pcie/Makefile
-> >> @@ -13,3 +13,4 @@ obj-$(CONFIG_PCIE_PME)                += pme.o
-> >>   obj-$(CONFIG_PCIE_DPC)         += dpc.o
-> >>   obj-$(CONFIG_PCIE_PTM)         += ptm.o
-> >>   obj-$(CONFIG_PCIE_EDR)         += edr.o
-> >> +obj-$(CONFIG_PCIE_SSD_LEDS)    += ssd-leds.o
-> >> diff --git a/drivers/pci/pcie/ssd-leds.c b/drivers/pci/pcie/ssd-leds.c
-> >> new file mode 100644
-> >> index 000000000000..cacb77e5da2d
-> >> --- /dev/null
-> >> +++ b/drivers/pci/pcie/ssd-leds.c
-> >> @@ -0,0 +1,419 @@
-> >> +// SPDX-License-Identifier: GPL-2.0-only
-> >> +/*
-> >> + * Module to provide LED interfaces for PCIe SSD status LED states, as
-> >> + * defined in the "_DSM additions for PCIe SSD Status LED Management" ECN
-> >> + * to the PCI Firmware Specification Revision 3.2, dated 12 February 2020.
-> >> + *
-> >> + * The "_DSM..." spec is functionally similar to Native PCIe Enclosure
-> >> + * Management, but uses a _DSM ACPI method rather than a PCIe extended
-> >> + * capability.
-> >> + *
-> >> + * Copyright (c) 2021 Dell Inc.
-> >> + *
-> >> + * TODO: Add NPEM support
-> >> + */
-> >> +
-> >> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> >> +
-> >> +#include <linux/acpi.h>
-> >> +#include <linux/leds.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/mutex.h>
-> >> +#include <linux/pci.h>
-> >> +#include <uapi/linux/uleds.h>
-> >> +
-> >> +#define DRIVER_NAME    "pcie-ssd-leds"
-> >> +#define DRIVER_VERSION "v1.0"
-> >> +
-> >> +struct led_state {
-> >> +       char *name;
-> >> +       int bit;
-> >> +};
-> >> +
-> >> +static struct led_state led_states[] = {
-> >> +       { .name = "ok",         .bit = 2 },
-> >> +       { .name = "locate",     .bit = 3 },
-> >> +       { .name = "failed",     .bit = 4 },
-> >> +       { .name = "rebuild",    .bit = 5 },
-> >> +       { .name = "pfa",        .bit = 6 },
-> >> +       { .name = "hotspare",   .bit = 7 },
-> >> +       { .name = "ica",        .bit = 8 },
-> >> +       { .name = "ifa",        .bit = 9 },
-> >> +       { .name = "invalid",    .bit = 10 },
-> >> +       { .name = "disabled",   .bit = 11 },
-> >> +};
-> >
-> > include/linux/enclosure.h has common ABI definitions of industry
-> > standard enclosure LED settings. The above looks to be open coding the
-> > same?
-> >
->
-> The LED states in inluce/linux/enclosure.h aren't exactly the same...
-> there are states defined in NPEM/_DSM that aren't defined in
-> enclosure.h.  In addition, while the enclosure driver allows "locate" to
-> be controlled independently, it looks like it will only allow a single
-> state (unsupported/ok/critical/etc) to be active at a time, while the
-> NPEM/_DSM allow all of the state bits to be independently set or
-> cleared.  Maybe only one of those states would need to be set at a time,
-> I don't know, but that would impose a limitation on what NPEM/_DSM can
-> do.  I'll take a closer look at this as an alternative to using
-> drivers/leds/led-class.c.
-
-Have a look. Maybe Mariusz can weigh in here with his experience with
-ledmon with what capabilities ledmon would need from this driver so we
-can decide what if any extensions need to be made to the enclosure
-infrastructure?
-
-It's been a while for me [2], but I seem to recall that some of the
-enclosure specific functionality can be wrapped by the upper layer
-driver like SES.
-
-[2]: https://lore.kernel.org/all/CAPcyv4iaXfgB1PBv5v+dyRrUvQbzAyyFf1Ozsaao0t8K0w9zwg@mail.gmail.com/
-
-[..]
-> >> +static void initial_scan_for_leds(void)
-> >> +{
-> >> +       struct pci_dev *pdev = NULL;
-> >> +
-> >> +       for_each_pci_dev(pdev)
-> >> +               probe_pdev(pdev);
-> >
-> >
-> > This looks odd to me. Why force enable every occurrence these leds, and
-> > do so indepdendently of the bind state of the driver for the associated
-> > PCI device? I would expect that this support would be a library called
-> > by the NVME driver, or the CXL driver. A library just like the
-> > led_classdev infrastructure.
-> >
->
-> I guess I didn't know of any reason why they shouldn't be enabled even
-> if the nvme driver wasn't bound, if this driver was stand-alone, since
-> the LED function doesn't depend on the nvme driver.  But yes, maybe it
-> would be better to make this a library that the nvme driver (or pcie
-> port bus driver, or CXL driver) calls to register LEDs.
-
-It's just not clear to me what userspace would do with this randomly
-popping up without any clear association to a storage / memory device.
-What reason would userpsace have to blink the lights in that
-disassociated case?
-
-> Thank you for taking a look at this... I'm very glad for any help to get
-> this done.
-
-No worries, thanks for taking this on, happy to help.
