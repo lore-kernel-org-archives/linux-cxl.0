@@ -2,260 +2,176 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D19C07CB1
-	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FE2C4321E
+	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E3556125F
-	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A12E61246
+	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240623AbhJGIX6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 7 Oct 2021 04:23:58 -0400
-Received: from mga14.intel.com ([192.55.52.115]:1544 "EHLO mga14.intel.com"
+        id S240684AbhJGIX7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 7 Oct 2021 04:23:59 -0400
+Received: from mga14.intel.com ([192.55.52.115]:1555 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240684AbhJGIX5 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        id S240699AbhJGIX5 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
         Thu, 7 Oct 2021 04:23:57 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10129"; a="226507653"
+X-IronPort-AV: E=McAfee;i="6200,9189,10129"; a="226507659"
 X-IronPort-AV: E=Sophos;i="5.85,354,1624345200"; 
-   d="scan'208";a="226507653"
+   d="scan'208";a="226507659"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:57 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:58 -0700
 X-IronPort-AV: E=Sophos;i="5.85,354,1624345200"; 
-   d="scan'208";a="568555121"
+   d="scan'208";a="568555139"
 Received: from abishekh-mobl.amr.corp.intel.com (HELO vverma7-desk.amr.corp.intel.com) ([10.251.133.239])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:57 -0700
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:58 -0700
 From:   Vishal Verma <vishal.l.verma@intel.com>
 To:     <linux-cxl@vger.kernel.org>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
         Ben Widawsky <ben.widawsky@intel.com>,
         <nvdimm@lists.linux.dev>, Vishal Verma <vishal.l.verma@intel.com>
-Subject: [ndctl PATCH v4 12/17] libcxl: add interfaces for label operations
-Date:   Thu,  7 Oct 2021 02:21:34 -0600
-Message-Id: <20211007082139.3088615-13-vishal.l.verma@intel.com>
+Subject: [ndctl PATCH v4 16/17] cxl-cli: add bash completion
+Date:   Thu,  7 Oct 2021 02:21:38 -0600
+Message-Id: <20211007082139.3088615-17-vishal.l.verma@intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20211007082139.3088615-1-vishal.l.verma@intel.com>
 References: <20211007082139.3088615-1-vishal.l.verma@intel.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6123; h=from:subject; bh=ewb8qacAV37dYbOaWMqpC393PrjTJPFrPkDYtD+kacU=; b=owGbwMvMwCHGf25diOft7jLG02pJDIlx67iXbLGfz+xqOVfiX8yTqLlvuWOurdgSf9Cq22mOqclW K5/mjlIWBjEOBlkxRZa/ez4yHpPbns8TmOAIM4eVCWQIAxenAEyE6QzD/4rMD37LbIO3V65c3iAsIL XhkKMtU6uxeJrWeZnU6Z+f7mFk+HbJkudoct/yaw9mp+T9u8Jon3NYKTl4manxQ9/X1nsimAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2623; h=from:subject; bh=+FbLuRpfXrnRHXl0HVTGxD/ive9PPC/0oz+jeqb5pn0=; b=owGbwMvMwCHGf25diOft7jLG02pJDIlx6wQ0w/5FF9ow8zwsWf8g1ulZqPaXExXz58+Zpuvd8Vxx 7tSojlIWBjEOBlkxRZa/ez4yHpPbns8TmOAIM4eVCWQIAxenAEyks5Thv7vhg+0nTJ7N33orr+javd +7F7qxLlx9eu2zmPi3E9XEbz5h+CuTaR+UfsfB9th8n+/y795Nlz3vw5Hcauku03P/Q6mtOi8A
 X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add libcxl interfaces to allow performinfg label (LSA) manipulations.
-Add a 'cxl_cmd_new_set_lsa' interface to create a 'Set LSA' mailbox
-command payload, and interfaces to read, write, and zero the LSA area on
-a memdev.
+Add bash completion for the cxl-cli commands implemented so far:
+  cxl-list
+  cxl-read-labels
+  cxl-write-labels
+  cxl-zero-labels
 
-Cc: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
- cxl/lib/private.h  |   6 ++
- cxl/lib/libcxl.c   | 137 +++++++++++++++++++++++++++++++++++++++++++++
- cxl/libcxl.h       |   7 +++
- cxl/lib/libcxl.sym |   4 ++
- 4 files changed, 154 insertions(+)
+ contrib/ndctl | 109 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 109 insertions(+)
 
-diff --git a/cxl/lib/private.h b/cxl/lib/private.h
-index 671f12f..89212df 100644
---- a/cxl/lib/private.h
-+++ b/cxl/lib/private.h
-@@ -79,6 +79,12 @@ struct cxl_cmd_get_lsa_in {
- 	le32 length;
- } __attribute__((packed));
- 
-+struct cxl_cmd_set_lsa {
-+	le32 offset;
-+	le32 rsvd;
-+	unsigned char lsa_data[0];
-+} __attribute__ ((packed));
-+
- struct cxl_cmd_get_health_info {
- 	u8 health_status;
- 	u8 media_status;
-diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index 59d091c..8dd69cf 100644
---- a/cxl/lib/libcxl.c
-+++ b/cxl/lib/libcxl.c
-@@ -1126,3 +1126,140 @@ CXL_EXPORT int cxl_cmd_get_out_size(struct cxl_cmd *cmd)
- {
- 	return cmd->send_cmd->out.size;
+diff --git a/contrib/ndctl b/contrib/ndctl
+index 680fe6a..cae4b1b 100755
+--- a/contrib/ndctl
++++ b/contrib/ndctl
+@@ -647,5 +647,114 @@ _daxctl()
+ 	__daxctl_main
  }
-+
-+CXL_EXPORT struct cxl_cmd *cxl_cmd_new_write_label(struct cxl_memdev *memdev,
-+		void *lsa_buf, unsigned int offset, unsigned int length)
-+{
-+	struct cxl_ctx *ctx = cxl_memdev_get_ctx(memdev);
-+	struct cxl_cmd_set_lsa *set_lsa;
-+	struct cxl_cmd *cmd;
-+	int rc;
-+
-+	cmd = cxl_cmd_new_generic(memdev, CXL_MEM_COMMAND_ID_SET_LSA);
-+	if (!cmd)
-+		return NULL;
-+
-+	/* this will allocate 'in.payload' */
-+	rc = cxl_cmd_set_input_payload(cmd, NULL, sizeof(*set_lsa) + length);
-+	if (rc) {
-+		err(ctx, "%s: cmd setup failed: %s\n",
-+			cxl_memdev_get_devname(memdev), strerror(-rc));
-+		goto out_fail;
-+	}
-+	set_lsa = (void *)cmd->send_cmd->in.payload;
-+	set_lsa->offset = cpu_to_le32(offset);
-+	memcpy(set_lsa->lsa_data, lsa_buf, length);
-+
-+	return cmd;
-+
-+out_fail:
-+	cxl_cmd_unref(cmd);
-+	return NULL;
-+}
-+
-+enum lsa_op {
-+	LSA_OP_GET,
-+	LSA_OP_SET,
-+	LSA_OP_ZERO,
-+};
-+
-+static int lsa_op(struct cxl_memdev *memdev, int op, void **buf,
-+		size_t length, size_t offset)
-+{
-+	const char *devname = cxl_memdev_get_devname(memdev);
-+	struct cxl_ctx *ctx = cxl_memdev_get_ctx(memdev);
-+	struct cxl_cmd *cmd;
-+	void *zero_buf = NULL;
-+	ssize_t ret_len;
-+	int rc = 0;
-+
-+	if (op != LSA_OP_ZERO && (buf == NULL || *buf == NULL)) {
-+		err(ctx, "%s: LSA buffer cannot be NULL\n", devname);
-+		return -EINVAL;
-+	}
-+
-+	/* TODO: handle the case for offset + len > mailbox payload size */
-+	switch (op) {
-+	case LSA_OP_GET:
-+		if (length == 0)
-+			length = memdev->lsa_size;
-+		cmd = cxl_cmd_new_read_label(memdev, offset, length);
-+		if (!cmd)
-+			return -ENOMEM;
-+		rc = cxl_cmd_set_output_payload(cmd, *buf, length);
-+		if (rc) {
-+			err(ctx, "%s: cmd setup failed: %s\n",
-+			    cxl_memdev_get_devname(memdev), strerror(-rc));
-+			goto out;
-+		}
-+		break;
-+	case LSA_OP_ZERO:
-+		if (length == 0)
-+			length = memdev->lsa_size;
-+		zero_buf = calloc(1, length);
-+		if (!zero_buf)
-+			return -ENOMEM;
-+		buf = &zero_buf;
-+		/* fall through */
-+	case LSA_OP_SET:
-+		cmd = cxl_cmd_new_write_label(memdev, *buf, offset, length);
-+		if (!cmd) {
-+			rc = -ENOMEM;
-+			goto out_free;
-+		}
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	rc = cxl_cmd_submit(cmd);
-+	if (rc < 0) {
-+		err(ctx, "%s: cmd submission failed: %s\n",
-+			devname, strerror(-rc));
-+		goto out;
-+	}
-+
-+	rc = cxl_cmd_get_mbox_status(cmd);
-+	if (rc != 0) {
-+		err(ctx, "%s: firmware status: %d\n",
-+			devname, rc);
-+		rc = -ENXIO;
-+		goto out;
-+	}
-+
-+	if (op == LSA_OP_GET) {
-+		ret_len = cxl_cmd_read_label_get_payload(cmd, *buf, length);
-+		if (ret_len < 0) {
-+			rc = ret_len;
-+			goto out;
-+		}
-+	}
-+
-+	/*
-+	 * TODO: If writing, the memdev may need to be disabled/re-enabled to
-+	 * refresh any cached LSA data in the kernel.
-+	 */
-+
-+out:
-+	cxl_cmd_unref(cmd);
-+out_free:
-+	free(zero_buf);
-+	return rc;
-+}
-+
-+CXL_EXPORT int cxl_memdev_zero_label(struct cxl_memdev *memdev)
-+{
-+	return lsa_op(memdev, LSA_OP_ZERO, NULL, 0, 0);
-+}
-+
-+CXL_EXPORT int cxl_memdev_write_label(struct cxl_memdev *memdev, void *buf,
-+		size_t length, size_t offset)
-+{
-+	return lsa_op(memdev, LSA_OP_SET, &buf, length, offset);
-+}
-+
-+CXL_EXPORT int cxl_memdev_read_label(struct cxl_memdev *memdev, void *buf,
-+		size_t length, size_t offset)
-+{
-+	return lsa_op(memdev, LSA_OP_GET, &buf, length, offset);
-+}
-diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index 2e24371..a832806 100644
---- a/cxl/libcxl.h
-+++ b/cxl/libcxl.h
-@@ -44,6 +44,11 @@ unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev);
- const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev);
- size_t cxl_memdev_get_label_size(struct cxl_memdev *memdev);
- int cxl_memdev_is_active(struct cxl_memdev *memdev);
-+int cxl_memdev_zero_label(struct cxl_memdev *memdev);
-+int cxl_memdev_read_label(struct cxl_memdev *memdev, void *buf, size_t length,
-+		size_t offset);
-+int cxl_memdev_write_label(struct cxl_memdev *memdev, void *buf, size_t length,
-+		size_t offset);
  
- #define cxl_memdev_foreach(ctx, memdev) \
-         for (memdev = cxl_memdev_get_first(ctx); \
-@@ -101,6 +106,8 @@ struct cxl_cmd *cxl_cmd_new_read_label(struct cxl_memdev *memdev,
- 		unsigned int offset, unsigned int length);
- ssize_t cxl_cmd_read_label_get_payload(struct cxl_cmd *cmd, void *buf,
- 		unsigned int length);
-+struct cxl_cmd *cxl_cmd_new_write_label(struct cxl_memdev *memdev,
-+		void *buf, unsigned int offset, unsigned int length);
- 
- #ifdef __cplusplus
- } /* extern "C" */
-diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index 0e82030..490d6da 100644
---- a/cxl/lib/libcxl.sym
-+++ b/cxl/lib/libcxl.sym
-@@ -80,4 +80,8 @@ LIBCXL_4 {
- global:
- 	cxl_memdev_get_label_size;
- 	cxl_memdev_is_active;
-+	cxl_cmd_new_write_label;
-+	cxl_memdev_zero_label;
-+	cxl_memdev_write_label;
-+	cxl_memdev_read_label;
- } LIBCXL_3;
++### cxl-cli ###
++
++__cxl_get_devs()
++{
++	local opts=("--memdevs" "$*")
++	cxl list "${opts[@]}" | grep -E "^\s*\"memdev\":" | cut -d'"' -f4
++}
++
++__cxlcomp()
++{
++	local i=0
++
++	COMPREPLY=( $( compgen -W "$1" -- "$2" ) )
++	for cword in "${COMPREPLY[@]}"; do
++		if [[ "$cword" == @(--memdev|--offset|--size|--input|--output) ]]; then
++			COMPREPLY[$i]="${cword}="
++		else
++			COMPREPLY[$i]="${cword} "
++		fi
++		((i++))
++	done
++}
++
++__cxl_comp_options()
++{
++
++	local cur=$1
++	local opts
++
++	if [[ "$cur" == *=* ]]; then
++		local cur_subopt=${cur%%=*}
++		local cur_arg=${cur##*=}
++		case $cur_subopt in
++		--memdev)
++			opts="$(__cxl_get_devs -i)"
++			;;
++		*)
++			return
++			;;
++		esac
++		__cxlcomp "$opts" "$cur_arg"
++	fi
++}
++
++__cxl_comp_non_option_args()
++{
++	local subcmd=$1
++	local cur=$2
++	local opts
++
++	case $subcmd in
++	read-labels)
++		;&
++	write-labels)
++		;&
++	zero-labels)
++		opts="$(__cxl_get_devs -i) all"
++		;;
++	*)
++		return
++		;;
++	esac
++	__cxlcomp "$opts" "$cur"
++}
++
++__cxl_main()
++{
++	local cmd subcmd
++
++	cmd=${words[0]}
++	COMPREPLY=()
++
++	# Skip options backward and find the last cxl command
++	__nd_common_prev_skip_opts
++	subcmd=$prev_skip_opts
++	# List cxl subcommands or long options
++	if [ -z $subcmd ]; then
++		if [[ $cur == --* ]]; then
++			cmds="--version --help --list-cmds"
++		else
++			cmds=$($cmd --list-cmds)
++		fi
++		__cxlcomp "$cmds" "$cur"
++	else
++		# List long option names
++		if [[ $cur == --* ]];  then
++			opts=$($cmd $subcmd --list-opts)
++			__cxlcomp "$opts" "$cur"
++			__cxl_comp_options "$cur"
++		else
++			[ -z "$subcmd" ] && return
++			__cxl_comp_non_option_args "$subcmd" "$cur"
++		fi
++	fi
++}
++
++type cxl &>/dev/null &&
++_cxl()
++{
++	local cur words cword prev
++	if [ $preload_get_comp_words_by_ref = "true" ]; then
++		_get_comp_words_by_ref -n =: cur words cword prev
++	else
++		__nd_common_get_comp_words_by_ref -n =: cur words cword prev
++	fi
++	__cxl_main
++}
++
+ complete -o nospace -F _ndctl ndctl
+ complete -o nospace -F _daxctl daxctl
++complete -o nospace -F _cxl cxl
 -- 
 2.31.1
 
