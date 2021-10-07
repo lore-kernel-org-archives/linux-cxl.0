@@ -2,197 +2,98 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C994C433F5
-	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 21:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3E4C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 22:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 654C4610A5
-	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 21:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33BFA61042
+	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 22:08:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241597AbhJGWBt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 7 Oct 2021 18:01:49 -0400
-Received: from mga11.intel.com ([192.55.52.93]:48622 "EHLO mga11.intel.com"
+        id S233341AbhJGWKe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 7 Oct 2021 18:10:34 -0400
+Received: from mga14.intel.com ([192.55.52.115]:20310 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241225AbhJGWBs (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 7 Oct 2021 18:01:48 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10130"; a="223778878"
+        id S233180AbhJGWKe (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 7 Oct 2021 18:10:34 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10130"; a="226665997"
 X-IronPort-AV: E=Sophos;i="5.85,355,1624345200"; 
-   d="scan'208";a="223778878"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 14:59:53 -0700
+   d="scan'208";a="226665997"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 15:08:38 -0700
 X-IronPort-AV: E=Sophos;i="5.85,355,1624345200"; 
-   d="scan'208";a="489190411"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 14:59:53 -0700
-Subject: [PATCH] daxctl: Add "Soft Reservation" theory of operation
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     vishal.l.verma@intel.com
-Cc:     John Groves <john@jagalactic.com>, nvdimm@lists.linux.dev,
+   d="scan'208";a="657567813"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 15:08:37 -0700
+Date:   Thu, 7 Oct 2021 15:08:37 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     alison.schofield@intel.com
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
         linux-cxl@vger.kernel.org
-Date:   Thu, 07 Oct 2021 14:59:53 -0700
-Message-ID: <163364399303.201290.6835215953983673447.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+Subject: Re: [PATCH] cxl/acpi: Do not fail cxl_acpi_probe() based on a
+ missing CHBS
+Message-ID: <20211007220837.GG3114988@iweiny-DESK2.sc.intel.com>
+References: <20211007213426.392644-1-alison.schofield@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211007213426.392644-1-alison.schofield@intel.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-As systems are starting to ship memory with the EFI "Special Purpose"
-attribute that Linux optionally turns into "Soft Reserved" ranges one of
-the immediate first questions is "where is my special memory, and how do
-access it". Add some documentation to explain the default behaviour of
-"Soft Reserved".
+On Thu, Oct 07, 2021 at 02:34:26PM -0700, Schofield, Alison wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
+> 
+> When an ACPI0016 Host Bridge device is present yet no corresponding
+> CEDT Host Bridge Structure (CHBS) exists, the ACPI probe method
+> fails.
+> 
+> Rather than fail, emit this warning and continue:
+> cxl_acpi ACPI0017:00: No CHBS found for Host Bridge: ACPI0016:02
+> 
+> This error may occur on systems that are not compliant with the
+> ACPI specification. Compliant systems include a CHBS entry for
+> every CXL host bridge that is present at boot.
+> 
+> Suggested-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-Reported-by: John Groves <john@jagalactic.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- Documentation/daxctl/daxctl-reconfigure-device.txt |  127 ++++++++++++++------
- 1 file changed, 88 insertions(+), 39 deletions(-)
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-diff --git a/Documentation/daxctl/daxctl-reconfigure-device.txt b/Documentation/daxctl/daxctl-reconfigure-device.txt
-index f112b3c6120f..132684c193f0 100644
---- a/Documentation/daxctl/daxctl-reconfigure-device.txt
-+++ b/Documentation/daxctl/daxctl-reconfigure-device.txt
-@@ -12,6 +12,94 @@ SYNOPSIS
- [verse]
- 'daxctl reconfigure-device' <dax0.0> [<dax1.0>...<daxY.Z>] [<options>]
- 
-+DESCRIPTION
-+-----------
-+
-+Reconfigure the operational mode of a dax device. This can be used to convert
-+a regular 'devdax' mode device to the 'system-ram' mode which arranges for the
-+dax range to be hot-plugged into the system as regular memory.
-+
-+NOTE: This is a destructive operation. Any data on the dax device *will* be
-+lost.
-+
-+NOTE: Device reconfiguration depends on the dax-bus device model. See
-+linkdaxctl:daxctl-migrate-device-model[1] for more information. If dax-class is
-+in use (via the dax_pmem_compat driver), the reconfiguration will fail with an
-+error such as the following:
-+----
-+# daxctl reconfigure-device --mode=system-ram --region=0 all
-+libdaxctl: daxctl_dev_disable: dax3.0: error: device model is dax-class
-+dax3.0: disable failed: Operation not supported
-+error reconfiguring devices: Operation not supported
-+reconfigured 0 devices
-+----
-+
-+'daxctl-reconfigure-device' nominally expects that it will online new memory
-+blocks as 'movable', so that kernel data doesn't make it into this memory.
-+However, there are other potential agents that may be configured to
-+automatically online new hot-plugged memory as it appears. Most notably,
-+these are the '/sys/devices/system/memory/auto_online_blocks' configuration,
-+or system udev rules. If such an agent races to online memory sections, daxctl
-+checks if the blocks were onlined as 'movable' memory. If this was not the
-+case, and the memory blocks are found to be in a different zone, then a
-+warning is displayed. If it is desired that a different agent control the
-+onlining of memory blocks, and the associated memory zone, then it is
-+recommended to use the --no-online option described below. This will abridge
-+the device reconfiguration operation to just hotplugging the memory, and
-+refrain from then onlining it.
-+
-+In case daxctl detects that there is a kernel policy to auto-online blocks
-+(via /sys/devices/system/memory/auto_online_blocks), then reconfiguring to
-+system-ram will result in a failure. This can be overridden with '--force'.
-+
-+
-+THEORY OF OPERATION
-+-------------------
-+The kernel device-dax subsystem surfaces character devices
-+that provide DAX-access (direct mappings sans page-cache buffering) to a
-+given memory region. The devices are named /dev/daxX.Y where X is a
-+region-id and Y is an instance-id within that region. There are 2
-+mechanisms that trigger device-dax instances to appear:
-+
-+1. Persistent Memory (PMEM) namespace configured in "devdax" mode. See
-+"ndctl create-namspace --help" and
-+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/dax/Kconfig[CONFIG_DEV_DAX_PMEM].
-+In this case the device-dax instance is statically sized to its host
-+memory region which is bounded to the physical address range of the host
-+namespace.
-+
-+2. Soft Reserved memory enumerated by platform firmware. On EFI systems
-+this is communicated via the so called EFI_MEMORY_SP "Special Purpose"
-+attribute. See
-+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/dax/Kconfig[CONFIG_DEV_DAX_HMEM].
-+In this case the device-dax instance(s) associated with the given memory
-+region can be resized and divided into multiple devices.
-+
-+In the Soft Reservation case the expectation for EFI + ACPI based
-+platforms is that in addition to the EFI_MEMORY_SP attribute the
-+firmware also creates distinct ACPI proximity domains for any address
-+range that has different performance characteristics than default
-+"System RAM". So, the SRAT will define the proximity domain, the SLIT
-+communicates relative distance to other proximity domains, and the HMAT
-+is populated with nominal read/write latency and read/write bandwidth
-+data. That HMAT data is emitted to the kernel log on bootup, and also
-+exported to sysfs. See
-+https://www.kernel.org/doc/html/latest/admin-guide/mm/numaperf.html[NUMAPERF],
-+for the runtime representation of CPU to Memory node performance
-+details.
-+
-+Outside of the NUMA performance details linked above the other method to
-+detect the presence of "Soft Reserved" memory is to dump /proc/iomem and
-+look for "Soft Reserved" ranges. If the kernel was not built with
-+CONFIG_EFI_SOFTRESERVE, predates the introduction of
-+CONFIG_EFI_SOFTRESERVE (v5.5), or was booted with the efi=nosoftreserve
-+command line then device-dax will not attach and the expectation is that
-+the memory shows up as a memory-only NUMA node. Otherwise the memory
-+shows up as a device-dax instance and DAXCTL(1) can be used to
-+optionally partition it and assign the memory back to the kernel as
-+"System RAM", or the device can be mapped directly as the back end of a
-+userspace memory allocator like https://pmem.io/vmem/libvmem/[LIBVMEM].
-+
- EXAMPLES
- --------
- 
-@@ -83,45 +171,6 @@ reconfigured 1 device
- reconfigured 1 device
- ----
- 
--DESCRIPTION
-------------
--
--Reconfigure the operational mode of a dax device. This can be used to convert
--a regular 'devdax' mode device to the 'system-ram' mode which arranges for the
--dax range to be hot-plugged into the system as regular memory.
--
--NOTE: This is a destructive operation. Any data on the dax device *will* be
--lost.
--
--NOTE: Device reconfiguration depends on the dax-bus device model. See
--linkdaxctl:daxctl-migrate-device-model[1] for more information. If dax-class is
--in use (via the dax_pmem_compat driver), the reconfiguration will fail with an
--error such as the following:
------
--# daxctl reconfigure-device --mode=system-ram --region=0 all
--libdaxctl: daxctl_dev_disable: dax3.0: error: device model is dax-class
--dax3.0: disable failed: Operation not supported
--error reconfiguring devices: Operation not supported
--reconfigured 0 devices
------
--
--'daxctl-reconfigure-device' nominally expects that it will online new memory
--blocks as 'movable', so that kernel data doesn't make it into this memory.
--However, there are other potential agents that may be configured to
--automatically online new hot-plugged memory as it appears. Most notably,
--these are the '/sys/devices/system/memory/auto_online_blocks' configuration,
--or system udev rules. If such an agent races to online memory sections, daxctl
--checks if the blocks were onlined as 'movable' memory. If this was not the
--case, and the memory blocks are found to be in a different zone, then a
--warning is displayed. If it is desired that a different agent control the
--onlining of memory blocks, and the associated memory zone, then it is
--recommended to use the --no-online option described below. This will abridge
--the device reconfiguration operation to just hotplugging the memory, and
--refrain from then onlining it.
--
--In case daxctl detects that there is a kernel policy to auto-online blocks
--(via /sys/devices/system/memory/auto_online_blocks), then reconfiguring to
--system-ram will result in a failure. This can be overridden with '--force'.
- 
- OPTIONS
- -------
-
+> ---
+>  drivers/cxl/acpi.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index af1c6c1875ac..dadc7f64b9ff 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -288,7 +288,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+>  	dport = find_dport_by_dev(root_port, match);
+>  	if (!dport) {
+>  		dev_dbg(host, "host bridge expected and not found\n");
+> -		return -ENODEV;
+> +		return 0;
+>  	}
+>  
+>  	port = devm_cxl_add_port(host, match, dport->component_reg_phys,
+> @@ -377,9 +377,11 @@ static int add_host_bridge_dport(struct device *match, void *arg)
+>  	}
+>  
+>  	chbs = cxl_acpi_match_chbs(host, uid);
+> -	if (IS_ERR(chbs))
+> -		dev_dbg(host, "No CHBS found for Host Bridge: %s\n",
+> -			dev_name(match));
+> +	if (IS_ERR(chbs)) {
+> +		dev_warn(host, "No CHBS found for Host Bridge: %s\n",
+> +			 dev_name(match));
+> +		return 0;
+> +	}
+>  
+>  	rc = cxl_add_dport(root_port, match, uid, get_chbcr(chbs));
+>  	if (rc) {
+> -- 
+> 2.31.1
+> 
