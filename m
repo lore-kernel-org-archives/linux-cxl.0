@@ -2,294 +2,154 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA36C43217
-	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01933C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39F8B61283
-	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA7126135E
+	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:22:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240621AbhJGIX4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 7 Oct 2021 04:23:56 -0400
-Received: from mga14.intel.com ([192.55.52.115]:1544 "EHLO mga14.intel.com"
+        id S240687AbhJGIX5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 7 Oct 2021 04:23:57 -0400
+Received: from mga14.intel.com ([192.55.52.115]:1555 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240592AbhJGIXz (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 7 Oct 2021 04:23:55 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10129"; a="226507642"
+        id S240626AbhJGIX4 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 7 Oct 2021 04:23:56 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10129"; a="226507648"
 X-IronPort-AV: E=Sophos;i="5.85,354,1624345200"; 
-   d="scan'208";a="226507642"
+   d="scan'208";a="226507648"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:54 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:56 -0700
 X-IronPort-AV: E=Sophos;i="5.85,354,1624345200"; 
-   d="scan'208";a="568555083"
+   d="scan'208";a="568555106"
 Received: from abishekh-mobl.amr.corp.intel.com (HELO vverma7-desk.amr.corp.intel.com) ([10.251.133.239])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:54 -0700
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 01:21:55 -0700
 From:   Vishal Verma <vishal.l.verma@intel.com>
 To:     <linux-cxl@vger.kernel.org>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
         Ben Widawsky <ben.widawsky@intel.com>,
         <nvdimm@lists.linux.dev>, Vishal Verma <vishal.l.verma@intel.com>
-Subject: [ndctl PATCH v4 03/17] cxl: add a local copy of the cxl_mem UAPI header
-Date:   Thu,  7 Oct 2021 02:21:25 -0600
-Message-Id: <20211007082139.3088615-4-vishal.l.verma@intel.com>
+Subject: [ndctl PATCH v4 08/17] libcxl: add support for the 'GET_LSA' command
+Date:   Thu,  7 Oct 2021 02:21:30 -0600
+Message-Id: <20211007082139.3088615-9-vishal.l.verma@intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20211007082139.3088615-1-vishal.l.verma@intel.com>
 References: <20211007082139.3088615-1-vishal.l.verma@intel.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8793; h=from:subject; bh=KxiFIN4RS8jxlyKMgzQu0KMUO0nV9BgVtiYIfXdGDaU=; b=owGbwMvMwCHGf25diOft7jLG02pJDIlx65gmbWwpyt98d5rS+svyHDMu5pjduRJ7T85spc+qrCmG GlY8HaUsDGIcDLJiiix/93xkPCa3PZ8nMMERZg4rE8gQBi5OAZjI5pcM/+v26V64Jbdr55unOdviBV c4VvqeE5v3yCjU+5PEEsbA+gRGhl9mx7M+KnrGtjAssZxx7e3U6C2RUyadCrzktSqnLu/uF04A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3486; h=from:subject; bh=NOjkKSxbO8LZPpUkhr+5X0xQgtDPlNALdDgNMdYJ/nk=; b=owGbwMvMwCHGf25diOft7jLG02pJDIlx69izrMwyVeRcbt08v2DtqeeTY4wuRZSqTtm3p+DBt5nt K29md5SyMIhxMMiKKbL83fOR8Zjc9nyewARHmDmsTCBDGLg4BWAinocZ/nvMdN9by+u/sKybO+CR1L ZVJbsC/kxu+5NRaqY1+2XREm9Ghi8fn3WmZ6sfCr7LKmu9I8vD3vFXUbeIoHjJreqZyrXsPAA=
 X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-While CXL functionality is under development, it is useful to have a
-local copy of the UAPI header for cxl_mem definitions. This allows
-building cxl and libcxl on systems where the appropriate kernel headers
-are not installed in the usual locations.
+Add a command allocator and accessor APIs for the 'GET_LSA' mailbox
+command.
 
 Cc: Ben Widawsky <ben.widawsky@intel.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
- Makefile.am         |   3 +-
- Makefile.am.in      |   1 +
- cxl/cxl_mem.h       | 189 ++++++++++++++++++++++++++++++++++++++++++++
- cxl/lib/Makefile.am |   2 +-
- 4 files changed, 193 insertions(+), 2 deletions(-)
- create mode 100644 cxl/cxl_mem.h
+ cxl/lib/private.h  |  5 +++++
+ cxl/lib/libcxl.c   | 36 ++++++++++++++++++++++++++++++++++++
+ cxl/libcxl.h       |  7 +++----
+ cxl/lib/libcxl.sym |  4 ++--
+ 4 files changed, 46 insertions(+), 6 deletions(-)
 
-diff --git a/Makefile.am b/Makefile.am
-index 428fd40..4904ee7 100644
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -89,4 +89,5 @@ libutil_a_SOURCES = \
+diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+index f76b518..9c6317b 100644
+--- a/cxl/lib/private.h
++++ b/cxl/lib/private.h
+@@ -73,6 +73,11 @@ struct cxl_cmd_identify {
+ 	u8 qos_telemetry_caps;
+ } __attribute__((packed));
  
- nobase_include_HEADERS = \
- 	daxctl/libdaxctl.h \
--	cxl/libcxl.h
-+	cxl/libcxl.h \
-+	cxl/cxl_mem.h
-diff --git a/Makefile.am.in b/Makefile.am.in
-index aaeee53..a748128 100644
---- a/Makefile.am.in
-+++ b/Makefile.am.in
-@@ -11,6 +11,7 @@ AM_CPPFLAGS = \
- 	-DNDCTL_MAN_PATH=\""$(mandir)"\" \
- 	-I${top_srcdir}/ndctl/lib \
- 	-I${top_srcdir}/ndctl \
-+	-I${top_srcdir}/cxl \
- 	-I${top_srcdir}/ \
- 	$(KMOD_CFLAGS) \
- 	$(UDEV_CFLAGS) \
-diff --git a/cxl/cxl_mem.h b/cxl/cxl_mem.h
-new file mode 100644
-index 0000000..d38cc9c
---- /dev/null
-+++ b/cxl/cxl_mem.h
-@@ -0,0 +1,189 @@
-+/* SPDX-License-Identifier: LGPL-2.1 */
-+/* Copyright (C) 2020-2021, Intel Corporation. All rights reserved. */
-+/*
-+ * CXL IOCTLs for Memory Devices
-+ */
++struct cxl_cmd_get_lsa_in {
++	le32 offset;
++	le32 length;
++} __attribute__((packed));
 +
-+#ifndef _UAPI_CXL_MEM_H_
-+#define _UAPI_CXL_MEM_H_
-+
-+#include <linux/types.h>
-+#include <sys/user.h>
-+#include <unistd.h>
-+
-+#define __user
-+
-+/**
-+ * DOC: UAPI
-+ *
-+ * Not all of all commands that the driver supports are always available for use
-+ * by userspace. Userspace must check the results from the QUERY command in
-+ * order to determine the live set of commands.
-+ */
-+
-+#define CXL_MEM_QUERY_COMMANDS _IOR(0xCE, 1, struct cxl_mem_query_commands)
-+#define CXL_MEM_SEND_COMMAND _IOWR(0xCE, 2, struct cxl_send_command)
-+
-+#define CXL_CMDS                                                          \
-+	___C(INVALID, "Invalid Command"),                                 \
-+	___C(IDENTIFY, "Identify Command"),                               \
-+	___C(RAW, "Raw device command"),                                  \
-+	___C(GET_SUPPORTED_LOGS, "Get Supported Logs"),                   \
-+	___C(GET_FW_INFO, "Get FW Info"),                                 \
-+	___C(GET_PARTITION_INFO, "Get Partition Information"),            \
-+	___C(GET_LSA, "Get Label Storage Area"),                          \
-+	___C(GET_HEALTH_INFO, "Get Health Info"),                         \
-+	___C(GET_LOG, "Get Log"),                                         \
-+	___C(SET_PARTITION_INFO, "Set Partition Information"),            \
-+	___C(SET_LSA, "Set Label Storage Area"),                          \
-+	___C(GET_ALERT_CONFIG, "Get Alert Configuration"),                \
-+	___C(SET_ALERT_CONFIG, "Set Alert Configuration"),                \
-+	___C(GET_SHUTDOWN_STATE, "Get Shutdown State"),                   \
-+	___C(SET_SHUTDOWN_STATE, "Set Shutdown State"),                   \
-+	___C(GET_POISON, "Get Poison List"),                              \
-+	___C(INJECT_POISON, "Inject Poison"),                             \
-+	___C(CLEAR_POISON, "Clear Poison"),                               \
-+	___C(GET_SCAN_MEDIA_CAPS, "Get Scan Media Capabilities"),         \
-+	___C(SCAN_MEDIA, "Scan Media"),                                   \
-+	___C(GET_SCAN_MEDIA, "Get Scan Media Results"),                   \
-+	___C(MAX, "invalid / last command")
-+
-+#define ___C(a, b) CXL_MEM_COMMAND_ID_##a
-+enum { CXL_CMDS };
-+
-+#undef ___C
-+#define ___C(a, b) { b }
-+static const struct {
-+	const char *name;
-+} cxl_command_names[] = { CXL_CMDS };
-+
-+/*
-+ * Here's how this actually breaks out:
-+ * cxl_command_names[] = {
-+ *	[CXL_MEM_COMMAND_ID_INVALID] = { "Invalid Command" },
-+ *	[CXL_MEM_COMMAND_ID_IDENTIFY] = { "Identify Command" },
-+ *	...
-+ *	[CXL_MEM_COMMAND_ID_MAX] = { "invalid / last command" },
-+ * };
-+ */
-+
-+#undef ___C
-+
-+/**
-+ * struct cxl_command_info - Command information returned from a query.
-+ * @id: ID number for the command.
-+ * @flags: Flags that specify command behavior.
-+ * @size_in: Expected input size, or -1 if variable length.
-+ * @size_out: Expected output size, or -1 if variable length.
-+ *
-+ * Represents a single command that is supported by both the driver and the
-+ * hardware. This is returned as part of an array from the query ioctl. The
-+ * following would be a command that takes a variable length input and returns 0
-+ * bytes of output.
-+ *
-+ *  - @id = 10
-+ *  - @flags = 0
-+ *  - @size_in = -1
-+ *  - @size_out = 0
-+ *
-+ * See struct cxl_mem_query_commands.
-+ */
-+struct cxl_command_info {
-+	__u32 id;
-+
-+	__u32 flags;
-+#define CXL_MEM_COMMAND_FLAG_MASK GENMASK(0, 0)
-+
-+	__s32 size_in;
-+	__s32 size_out;
-+};
-+
-+/**
-+ * struct cxl_mem_query_commands - Query supported commands.
-+ * @n_commands: In/out parameter. When @n_commands is > 0, the driver will
-+ *		return min(num_support_commands, n_commands). When @n_commands
-+ *		is 0, driver will return the number of total supported commands.
-+ * @rsvd: Reserved for future use.
-+ * @commands: Output array of supported commands. This array must be allocated
-+ *            by userspace to be at least min(num_support_commands, @n_commands)
-+ *
-+ * Allow userspace to query the available commands supported by both the driver,
-+ * and the hardware. Commands that aren't supported by either the driver, or the
-+ * hardware are not returned in the query.
-+ *
-+ * Examples:
-+ *
-+ *  - { .n_commands = 0 } // Get number of supported commands
-+ *  - { .n_commands = 15, .commands = buf } // Return first 15 (or less)
-+ *    supported commands
-+ *
-+ *  See struct cxl_command_info.
-+ */
-+struct cxl_mem_query_commands {
-+	/*
-+	 * Input: Number of commands to return (space allocated by user)
-+	 * Output: Number of commands supported by the driver/hardware
-+	 *
-+	 * If n_commands is 0, kernel will only return number of commands and
-+	 * not try to populate commands[], thus allowing userspace to know how
-+	 * much space to allocate
-+	 */
-+	__u32 n_commands;
-+	__u32 rsvd;
-+
-+	struct cxl_command_info __user commands[]; /* out: supported commands */
-+};
-+
-+/**
-+ * struct cxl_send_command - Send a command to a memory device.
-+ * @id: The command to send to the memory device. This must be one of the
-+ *	commands returned by the query command.
-+ * @flags: Flags for the command (input).
-+ * @raw: Special fields for raw commands
-+ * @raw.opcode: Opcode passed to hardware when using the RAW command.
-+ * @raw.rsvd: Must be zero.
-+ * @rsvd: Must be zero.
-+ * @retval: Return value from the memory device (output).
-+ * @in: Parameters associated with input payload.
-+ * @in.size: Size of the payload to provide to the device (input).
-+ * @in.rsvd: Must be zero.
-+ * @in.payload: Pointer to memory for payload input, payload is little endian.
-+ * @out: Parameters associated with output payload.
-+ * @out.size: Size of the payload received from the device (input/output). This
-+ *	      field is filled in by userspace to let the driver know how much
-+ *	      space was allocated for output. It is populated by the driver to
-+ *	      let userspace know how large the output payload actually was.
-+ * @out.rsvd: Must be zero.
-+ * @out.payload: Pointer to memory for payload output, payload is little endian.
-+ *
-+ * Mechanism for userspace to send a command to the hardware for processing. The
-+ * driver will do basic validation on the command sizes. In some cases even the
-+ * payload may be introspected. Userspace is required to allocate large enough
-+ * buffers for size_out which can be variable length in certain situations.
-+ */
-+struct cxl_send_command {
-+	__u32 id;
-+	__u32 flags;
-+	union {
-+		struct {
-+			__u16 opcode;
-+			__u16 rsvd;
-+		} raw;
-+		__u32 rsvd;
-+	};
-+	__u32 retval;
-+
-+	struct {
-+		__s32 size;
-+		__u32 rsvd;
-+		__u64 payload;
-+	} in;
-+
-+	struct {
-+		__s32 size;
-+		__u32 rsvd;
-+		__u64 payload;
-+	} out;
-+};
-+
-+#endif
-diff --git a/cxl/lib/Makefile.am b/cxl/lib/Makefile.am
-index 277f0cd..72c9ccd 100644
---- a/cxl/lib/Makefile.am
-+++ b/cxl/lib/Makefile.am
-@@ -3,7 +3,7 @@ include $(top_srcdir)/Makefile.am.in
- %.pc: %.pc.in Makefile
- 	$(SED_PROCESS)
+ struct cxl_cmd_get_health_info {
+ 	u8 health_status;
+ 	u8 media_status;
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index 413be9c..33cc462 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -1028,6 +1028,42 @@ CXL_EXPORT struct cxl_cmd *cxl_cmd_new_raw(struct cxl_memdev *memdev,
+ 	return cmd;
+ }
  
--pkginclude_HEADERS = ../libcxl.h
-+pkginclude_HEADERS = ../libcxl.h ../cxl_mem.h
- lib_LTLIBRARIES = libcxl.la
++CXL_EXPORT struct cxl_cmd *cxl_cmd_new_read_label(struct cxl_memdev *memdev,
++		unsigned int offset, unsigned int length)
++{
++	struct cxl_cmd_get_lsa_in *get_lsa;
++	struct cxl_cmd *cmd;
++
++	cmd = cxl_cmd_new_generic(memdev, CXL_MEM_COMMAND_ID_GET_LSA);
++	if (!cmd)
++		return NULL;
++
++	get_lsa = (void *)cmd->send_cmd->in.payload;
++	get_lsa->offset = cpu_to_le32(offset);
++	get_lsa->length = cpu_to_le32(length);
++	return cmd;
++}
++
++CXL_EXPORT ssize_t cxl_cmd_read_label_get_payload(struct cxl_cmd *cmd,
++		void *buf, unsigned int length)
++{
++	struct cxl_cmd_get_lsa_in *get_lsa;
++	void *payload;
++	int rc;
++
++	rc = cxl_cmd_validate_status(cmd, CXL_MEM_COMMAND_ID_GET_LSA);
++	if (rc)
++		return rc;
++
++	get_lsa = (void *)cmd->send_cmd->in.payload;
++	if (length > le32_to_cpu(get_lsa->length))
++		return -EINVAL;
++
++	payload = (void *)cmd->send_cmd->out.payload;
++	memcpy(buf, payload, length);
++	return length;
++}
++
+ CXL_EXPORT int cxl_cmd_submit(struct cxl_cmd *cmd)
+ {
+ 	struct cxl_memdev *memdev = cmd->memdev;
+diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+index 68f5bc2..7408745 100644
+--- a/cxl/libcxl.h
++++ b/cxl/libcxl.h
+@@ -95,11 +95,10 @@ int cxl_cmd_health_info_get_temperature(struct cxl_cmd *cmd);
+ int cxl_cmd_health_info_get_dirty_shutdowns(struct cxl_cmd *cmd);
+ int cxl_cmd_health_info_get_volatile_errors(struct cxl_cmd *cmd);
+ int cxl_cmd_health_info_get_pmem_errors(struct cxl_cmd *cmd);
+-struct cxl_cmd *cxl_cmd_new_get_lsa(struct cxl_memdev *memdev,
++struct cxl_cmd *cxl_cmd_new_read_label(struct cxl_memdev *memdev,
+ 		unsigned int offset, unsigned int length);
+-void *cxl_cmd_get_lsa_get_payload(struct cxl_cmd *cmd);
+-struct cxl_cmd *cxl_cmd_new_set_lsa(struct cxl_memdev *memdev,
+-		void *buf, unsigned int offset, unsigned int length);
++ssize_t cxl_cmd_read_label_get_payload(struct cxl_cmd *cmd, void *buf,
++		unsigned int length);
  
- libcxl_la_SOURCES =\
+ #ifdef __cplusplus
+ } /* extern "C" */
+diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+index b0a3047..1b608d8 100644
+--- a/cxl/lib/libcxl.sym
++++ b/cxl/lib/libcxl.sym
+@@ -72,6 +72,6 @@ global:
+ 	cxl_cmd_health_info_get_dirty_shutdowns;
+ 	cxl_cmd_health_info_get_volatile_errors;
+ 	cxl_cmd_health_info_get_pmem_errors;
+-	cxl_cmd_new_get_lsa;
+-	cxl_cmd_get_lsa_get_payload;
++	cxl_cmd_new_read_label;
++	cxl_cmd_read_label_get_payload;
+ } LIBCXL_2;
 -- 
 2.31.1
 
