@@ -2,109 +2,127 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA28C433F5
-	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 11:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5846DC433FE
+	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 20:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1617361130
-	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 11:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41F0960FDC
+	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 20:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241070AbhJGLez (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 7 Oct 2021 07:34:55 -0400
-Received: from mga04.intel.com ([192.55.52.120]:25522 "EHLO mga04.intel.com"
+        id S232860AbhJGUtx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 7 Oct 2021 16:49:53 -0400
+Received: from mga07.intel.com ([134.134.136.100]:2500 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241054AbhJGLev (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 7 Oct 2021 07:34:51 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10129"; a="224998369"
-X-IronPort-AV: E=Sophos;i="5.85,354,1624345200"; 
-   d="scan'208";a="224998369"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 04:32:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,354,1624345200"; 
-   d="scan'208";a="524627725"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 07 Oct 2021 04:32:44 -0700
-Received: from [10.249.159.36] (mtkaczyk-MOBL1.ger.corp.intel.com [10.249.159.36])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 57BAE5807D3;
-        Thu,  7 Oct 2021 04:32:42 -0700 (PDT)
-Subject: Re: [PATCH v3] Add support for PCIe SSD status LED management
-To:     Dan Williams <dan.j.williams@intel.com>,
-        stuart hayes <stuart.w.hayes@gmail.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "kw@linux.com" <kw@linux.com>, "lukas@wunner.de" <lukas@wunner.de>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-References: <20210813213653.3760-1-stuart.w.hayes@gmail.com>
- <5d1eb958c13553d70e4bee7a7b342febcf1c02ee.camel@intel.com>
- <4bb26dc0-9b82-21d6-0257-d50ec206a130@gmail.com>
- <CAPcyv4iig5rxCNb7GyGV9akhZKLF+OeGhewSbOeAzzA6pKreRA@mail.gmail.com>
-From:   "Tkaczyk, Mariusz" <mariusz.tkaczyk@linux.intel.com>
-Message-ID: <19dcfbea-efcd-b385-4031-23fae5c1c78b@linux.intel.com>
-Date:   Thu, 7 Oct 2021 13:32:39 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S232629AbhJGUtx (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 7 Oct 2021 16:49:53 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10130"; a="289857797"
+X-IronPort-AV: E=Sophos;i="5.85,355,1624345200"; 
+   d="scan'208";a="289857797"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 13:47:58 -0700
+X-IronPort-AV: E=Sophos;i="5.85,355,1624345200"; 
+   d="scan'208";a="489169449"
+Received: from huaxue-mobl3.amr.corp.intel.com (HELO vverma7-desk.amr.corp.intel.com) ([10.255.77.214])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 13:47:58 -0700
+From:   Vishal Verma <vishal.l.verma@intel.com>
+To:     <linux-cxl@vger.kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: [PATCH] tools/testing/cxl: add mock output for the GET_HEALTH_INFO command
+Date:   Thu,  7 Oct 2021 14:47:53 -0600
+Message-Id: <20211007204753.3321681-1-vishal.l.verma@intel.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4iig5rxCNb7GyGV9akhZKLF+OeGhewSbOeAzzA6pKreRA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2589; h=from:subject; bh=UZArohly70dADxupdQaXpbzRHJyBubSzmQQjvdKIWMM=; b=owGbwMvMwCHGf25diOft7jLG02pJDInxMS9P1yTc64lhuRRetoj96wzhF9fWPdk4y/G61omPexV3 Hdmr0VHKwiDGwSArpsjyd89HxmNy2/N5AhMcYeawMoEMYeDiFICJHG1jZLgc0xbK/Udyzvf8i/YVK7 96TE6cdVJlww8/9hLW6nC3LS2MDB/3+19ontsiG/3smx3/xe276yNOenwummCu5/zh38FvK9kA
+X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 06.10.2021 22:15, Dan Williams wrote:
->>>> +static struct led_state led_states[] = {
->>>> +       { .name = "ok",         .bit = 2 },
->>>> +       { .name = "locate",     .bit = 3 },
->>>> +       { .name = "failed",     .bit = 4 },
->>>> +       { .name = "rebuild",    .bit = 5 },
->>>> +       { .name = "pfa",        .bit = 6 },
->>>> +       { .name = "hotspare",   .bit = 7 },
->>>> +       { .name = "ica",        .bit = 8 },
->>>> +       { .name = "ifa",        .bit = 9 },
->>>> +       { .name = "invalid",    .bit = 10 },
->>>> +       { .name = "disabled",   .bit = 11 },
->>>> +};
->>> include/linux/enclosure.h has common ABI definitions of industry
->>> standard enclosure LED settings. The above looks to be open coding the
->>> same?
->>>
->> The LED states in inluce/linux/enclosure.h aren't exactly the same...
->> there are states defined in NPEM/_DSM that aren't defined in
->> enclosure.h.  In addition, while the enclosure driver allows "locate" to
->> be controlled independently, it looks like it will only allow a single
->> state (unsupported/ok/critical/etc) to be active at a time, while the
->> NPEM/_DSM allow all of the state bits to be independently set or
->> cleared.  Maybe only one of those states would need to be set at a time,
->> I don't know, but that would impose a limitation on what NPEM/_DSM can
->> do.  I'll take a closer look at this as an alternative to using
->> drivers/leds/led-class.c.
-> Have a look. Maybe Mariusz can weigh in here with his experience with
-> ledmon with what capabilities ledmon would need from this driver so we
-> can decide what if any extensions need to be made to the enclosure
-> infrastructure?
+Add mocked health information for cxl_test memdevs. This allows
+cxl-cli's 'list' command to display the canned health_info fields.
 
-Hmm... In ledmon we are expecting one state to be set at the time. So,
-I would expected from kernel to work the same.
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+---
+ drivers/cxl/cxlmem.h         | 12 ++++++++++++
+ tools/testing/cxl/test/mem.c | 24 ++++++++++++++++++++++++
+ 2 files changed, 36 insertions(+)
 
-Looking into ledmon code, all capabilities from this list could be
-used[1].
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index c4f450ad434d..c7957cce8e8b 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -228,6 +228,18 @@ struct cxl_mbox_set_lsa {
+ 	u8 data[];
+ } __packed;
+ 
++/* See CXL 2.0 Table 181 Get Health Info Output Payload */
++struct cxl_mbox_health_info {
++	u8 health_status;
++	u8 media_status;
++	u8 ext_status;
++	u8 life_used;
++	__le16 temperature;
++	__le32 dirty_shutdowns;
++	__le32 volatile_errors;
++	__le32 pmem_errors;
++} __packed;
++
+ /**
+  * struct cxl_mem_command - Driver representation of a memory device command
+  * @info: Command information as it exists for the UAPI
+diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+index 12a8437a9ca0..bd707e83a3e9 100644
+--- a/tools/testing/cxl/test/mem.c
++++ b/tools/testing/cxl/test/mem.c
+@@ -28,6 +28,10 @@ static struct cxl_cel_entry mock_cel[] = {
+ 		.opcode = cpu_to_le16(CXL_MBOX_OP_SET_LSA),
+ 		.effect = cpu_to_le16(EFFECT(1) | EFFECT(2)),
+ 	},
++	{
++		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_HEALTH_INFO),
++		.effect = cpu_to_le16(0),
++	},
+ };
+ 
+ static struct {
+@@ -156,6 +160,23 @@ static int mock_set_lsa(struct cxl_mem *cxlm, struct cxl_mbox_cmd *cmd)
+ 	return 0;
+ }
+ 
++static int mock_health_info(struct cxl_mem *cxlm, struct cxl_mbox_cmd *cmd)
++{
++	struct cxl_mbox_health_info health_info = {
++		.health_status = 0x7,
++		.media_status = 0x3,
++		.ext_status = 0x18,
++		.life_used = 15,
++		.temperature = cpu_to_le16(25),
++		.dirty_shutdowns = cpu_to_le16(10),
++		.volatile_errors = cpu_to_le16(20),
++		.pmem_errors = cpu_to_le16(30),
++	};
++
++	memcpy(cmd->payload_out, &health_info, sizeof(health_info));
++	return 0;
++}
++
+ static int cxl_mock_mbox_send(struct cxl_mem *cxlm, struct cxl_mbox_cmd *cmd)
+ {
+ 	struct device *dev = cxlm->dev;
+@@ -177,6 +198,9 @@ static int cxl_mock_mbox_send(struct cxl_mem *cxlm, struct cxl_mbox_cmd *cmd)
+ 	case CXL_MBOX_OP_SET_LSA:
+ 		rc = mock_set_lsa(cxlm, cmd);
+ 		break;
++	case CXL_MBOX_OP_GET_HEALTH_INFO:
++		rc = mock_health_info(cxlm, cmd);
++		break;
+ 	default:
+ 		break;
+ 	}
 
- >>>> +       { .name = "ok",         .bit = 2 },
- >>>> +       { .name = "locate",     .bit = 3 },
- >>>> +       { .name = "failed",     .bit = 4 },
- >>>> +       { .name = "rebuild",    .bit = 5 },
- >>>> +       { .name = "pfa",        .bit = 6 },
- >>>> +       { .name = "hotspare",   .bit = 7 },
- >>>> +       { .name = "ica",        .bit = 8 },
- >>>> +       { .name = "ifa",        .bit = 9 },
+base-commit: ed97afb53365cd03dde266c9644334a558fe5a16
+-- 
+2.31.1
 
-[1]https://github.com/intel/ledmon/blob/master/src/ibpi.h#L60
-
-Thanks,
-Mariusz
