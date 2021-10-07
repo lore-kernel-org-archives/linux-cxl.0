@@ -2,85 +2,109 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CF7C433EF
-	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA28C433F5
+	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 11:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 041A1610A5
-	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 08:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1617361130
+	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 11:33:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240634AbhJGI0F (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 7 Oct 2021 04:26:05 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:41438 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240557AbhJGI0F (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 7 Oct 2021 04:26:05 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id C51E71C0B87; Thu,  7 Oct 2021 10:24:10 +0200 (CEST)
-Date:   Thu, 7 Oct 2021 10:24:10 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     stuart hayes <stuart.w.hayes@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        id S241070AbhJGLez (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 7 Oct 2021 07:34:55 -0400
+Received: from mga04.intel.com ([192.55.52.120]:25522 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S241054AbhJGLev (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 7 Oct 2021 07:34:51 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10129"; a="224998369"
+X-IronPort-AV: E=Sophos;i="5.85,354,1624345200"; 
+   d="scan'208";a="224998369"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 04:32:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,354,1624345200"; 
+   d="scan'208";a="524627725"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 07 Oct 2021 04:32:44 -0700
+Received: from [10.249.159.36] (mtkaczyk-MOBL1.ger.corp.intel.com [10.249.159.36])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 57BAE5807D3;
+        Thu,  7 Oct 2021 04:32:42 -0700 (PDT)
+Subject: Re: [PATCH v3] Add support for PCIe SSD status LED management
+To:     Dan Williams <dan.j.williams@intel.com>,
+        stuart hayes <stuart.w.hayes@gmail.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "helgaas@kernel.org" <helgaas@kernel.org>,
         "kbusch@kernel.org" <kbusch@kernel.org>,
         "kw@linux.com" <kw@linux.com>, "lukas@wunner.de" <lukas@wunner.de>,
         "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        mariusz.tkaczyk@linux.intel.com
-Subject: Re: [PATCH v3] Add support for PCIe SSD status LED management
-Message-ID: <20211007082410.GA15698@duo.ucw.cz>
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
 References: <20210813213653.3760-1-stuart.w.hayes@gmail.com>
  <5d1eb958c13553d70e4bee7a7b342febcf1c02ee.camel@intel.com>
  <4bb26dc0-9b82-21d6-0257-d50ec206a130@gmail.com>
  <CAPcyv4iig5rxCNb7GyGV9akhZKLF+OeGhewSbOeAzzA6pKreRA@mail.gmail.com>
+From:   "Tkaczyk, Mariusz" <mariusz.tkaczyk@linux.intel.com>
+Message-ID: <19dcfbea-efcd-b385-4031-23fae5c1c78b@linux.intel.com>
+Date:   Thu, 7 Oct 2021 13:32:39 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
-Content-Disposition: inline
 In-Reply-To: <CAPcyv4iig5rxCNb7GyGV9akhZKLF+OeGhewSbOeAzzA6pKreRA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On 06.10.2021 22:15, Dan Williams wrote:
+>>>> +static struct led_state led_states[] = {
+>>>> +       { .name = "ok",         .bit = 2 },
+>>>> +       { .name = "locate",     .bit = 3 },
+>>>> +       { .name = "failed",     .bit = 4 },
+>>>> +       { .name = "rebuild",    .bit = 5 },
+>>>> +       { .name = "pfa",        .bit = 6 },
+>>>> +       { .name = "hotspare",   .bit = 7 },
+>>>> +       { .name = "ica",        .bit = 8 },
+>>>> +       { .name = "ifa",        .bit = 9 },
+>>>> +       { .name = "invalid",    .bit = 10 },
+>>>> +       { .name = "disabled",   .bit = 11 },
+>>>> +};
+>>> include/linux/enclosure.h has common ABI definitions of industry
+>>> standard enclosure LED settings. The above looks to be open coding the
+>>> same?
+>>>
+>> The LED states in inluce/linux/enclosure.h aren't exactly the same...
+>> there are states defined in NPEM/_DSM that aren't defined in
+>> enclosure.h.  In addition, while the enclosure driver allows "locate" to
+>> be controlled independently, it looks like it will only allow a single
+>> state (unsupported/ok/critical/etc) to be active at a time, while the
+>> NPEM/_DSM allow all of the state bits to be independently set or
+>> cleared.  Maybe only one of those states would need to be set at a time,
+>> I don't know, but that would impose a limitation on what NPEM/_DSM can
+>> do.  I'll take a closer look at this as an alternative to using
+>> drivers/leds/led-class.c.
+> Have a look. Maybe Mariusz can weigh in here with his experience with
+> ledmon with what capabilities ledmon would need from this driver so we
+> can decide what if any extensions need to be made to the enclosure
+> infrastructure?
 
---qMm9M+Fa2AknHoGS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hmm... In ledmon we are expecting one state to be set at the time. So,
+I would expected from kernel to work the same.
 
-Hi!
+Looking into ledmon code, all capabilities from this list could be
+used[1].
 
-> > Thank you for the comments, Dan.
-> >
-> > I originally did submit something simple that just added a couple of
-> > sysfs attributes to allow userspace access to the _DSM, but Greg K-H
-> > said (1) that I shouldn't create new driver-specific sysfs files that do
-> > things that existing class drivers do, and that if I'm allowing LEDs to
-> > be controlled by the user, I have to use the LED subsystem, so I went
-> > with that. (See the end of
-> > https://patchwork.ozlabs.org/project/linux-pci/patch/20201110153735.585=
-87-1-stuart.w.hayes@gmail.com/)
->=20
-> I agree with the general sentiment to adopt and extend existing ABIs
-> wherever possible, it's just not clear to me that the LED class driver
-> is the best fit. The Enclosure class infrastructure, in addition to
+ >>>> +       { .name = "ok",         .bit = 2 },
+ >>>> +       { .name = "locate",     .bit = 3 },
+ >>>> +       { .name = "failed",     .bit = 4 },
+ >>>> +       { .name = "rebuild",    .bit = 5 },
+ >>>> +       { .name = "pfa",        .bit = 6 },
+ >>>> +       { .name = "hotspare",   .bit = 7 },
+ >>>> +       { .name = "ica",        .bit = 8 },
+ >>>> +       { .name = "ifa",        .bit = 9 },
 
-LED drivers are not good fit for this. It is unlikely to be accepted.
+[1]https://github.com/intel/ledmon/blob/master/src/ibpi.h#L60
 
-Best regards,
-								Pavel
---=20
-http://www.livejournal.com/~pavelmachek
-
---qMm9M+Fa2AknHoGS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCYV6uqgAKCRAw5/Bqldv6
-8pX/AKCudWgskrUbWQ1QmnLvqNkKxOlaPgCfU6mC54N8D2e/929nAEUBxg53nKw=
-=a4CR
------END PGP SIGNATURE-----
-
---qMm9M+Fa2AknHoGS--
+Thanks,
+Mariusz
