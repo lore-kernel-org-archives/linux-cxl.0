@@ -2,181 +2,160 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CC6C433EF
-	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 22:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E722FC433FE
+	for <linux-cxl@archiver.kernel.org>; Fri,  8 Oct 2021 18:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF15B60EB6
-	for <linux-cxl@archiver.kernel.org>; Thu,  7 Oct 2021 22:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D32A061183
+	for <linux-cxl@archiver.kernel.org>; Fri,  8 Oct 2021 18:07:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232166AbhJGWxr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 7 Oct 2021 18:53:47 -0400
-Received: from mga18.intel.com ([134.134.136.126]:42440 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231825AbhJGWxq (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 7 Oct 2021 18:53:46 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10130"; a="213332956"
-X-IronPort-AV: E=Sophos;i="5.85,355,1624345200"; 
-   d="scan'208";a="213332956"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 15:51:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,355,1624345200"; 
-   d="scan'208";a="657579306"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orsmga005.jf.intel.com with ESMTP; 07 Oct 2021 15:51:51 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.12; Thu, 7 Oct 2021 15:51:50 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.12 via Frontend Transport; Thu, 7 Oct 2021 15:51:50 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.170)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2242.12; Thu, 7 Oct 2021 15:51:50 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Zru3mCmINSxv/mjpnjG6htKli3NgHUE3EbmwcjmObsbLobuFD84cdM6hY8VqALEtzwlr44Sj0jjBUA1HQ51D6fFHzCMKjfOBNwOco2yhWplIRXGsGEutILgo8QSibR4KVkTJR8aUzjRHZzDezLU/wOS6h8UcGkXb7+hV/NHM9Ih/9SwLPH9uSyyU5Xz9mIFUTzD5ILTqBONlCK6hfiV1evJLTwZlihHpdYjYsvWgelFP9cbtdpjplHCUSSIDvinRWC5QIbhFdNIVQa4xi7Ztyi7/094azf3iOvdblP86ih9tyG/hnYncdVtA9xncjUVX39y8DO/7ajBDnuC2+Lue+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pxX3KDyhANW5waWknVHN0ZgKCmBsr/Y266p1+IESPe0=;
- b=QsumeLB1z9NoVd37Dxhfb0q1XZaUYnazG8dVw/wCEOO79tQ2lN0hDAWzbqkzLIANM0In8Bscg3RDUJ6oQJ6R4hNgOS5B3eDNwFlGWslbJ44Ajbnsafjl3cWh3JKQYgBbKghwIoSsAeDJUSVI71JIXA9Yo/ni5a3OUnBzYHVxWX8R/5EIppy9uN94MlrmXj2bgK6u8qUlPDVm9ySN02C+o4mL1Xe0xqJbaGl/FaH+oz3MxKnKK5sOHrKTvAiXpfDbdPe9tCdW96q/QDY8E8fTmkSsA+cV9LdQcxSXSvAwkRKjc/nRdxwZcEShAeVah5ZXQITafe0SAxrcC9ac77h1CQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pxX3KDyhANW5waWknVHN0ZgKCmBsr/Y266p1+IESPe0=;
- b=aQn+se5GpHZicljAOH3DWU4rDRjP0yol28XOOKoqkSjJsmcK9K2v49F8ztZOIDyOF6qEzl/zkO+7+AExMCOM7qaJu7aD9QuuW3zN0f1tF0WT/JDaHw/Q0EMUJ1bv4Hi4BzDQQce8aZf57JXETre9et5LgoXFx7KShnfb70Y2d/I=
-Received: from MN2PR11MB3999.namprd11.prod.outlook.com (2603:10b6:208:154::32)
- by MN2PR11MB3869.namprd11.prod.outlook.com (2603:10b6:208:138::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.19; Thu, 7 Oct
- 2021 22:51:49 +0000
-Received: from MN2PR11MB3999.namprd11.prod.outlook.com
- ([fe80::d8a5:47b2:8750:11df]) by MN2PR11MB3999.namprd11.prod.outlook.com
- ([fe80::d8a5:47b2:8750:11df%7]) with mapi id 15.20.4587.020; Thu, 7 Oct 2021
- 22:51:49 +0000
-From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
-To:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        "Widawsky, Ben" <ben.widawsky@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>
-CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH] cxl/acpi: Do not fail cxl_acpi_probe() based on a missing
- CHBS
-Thread-Topic: [PATCH] cxl/acpi: Do not fail cxl_acpi_probe() based on a
- missing CHBS
-Thread-Index: AQHXu8H5oH2Q3wxsQ062IjgCOCfwIqvIJE0A
-Date:   Thu, 7 Oct 2021 22:51:48 +0000
-Message-ID: <7e44a7bd8701a6926fbcb6150dd20ed8557d88c4.camel@intel.com>
-References: <20211007213426.392644-1-alison.schofield@intel.com>
-In-Reply-To: <20211007213426.392644-1-alison.schofield@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.40.4 (3.40.4-1.fc34) 
-authentication-results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4d4b9dc8-aa13-42d9-9dd2-08d989e50bf7
-x-ms-traffictypediagnostic: MN2PR11MB3869:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB3869464C4EC32EB0210CC7DBC7B19@MN2PR11MB3869.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:285;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nl0zr8z6S62yhWOjYwDlwh205kUP0J5rfvpbrFibb7rp8lnaRE+npN6rViADxJd1wBl0rcT+aRoymGChqahbQuKXFAMBeEZ10QQqu0rVXjkkX7/bUoVB9f3QHOhldREQ9URs9CbGLx0/qnGpwQTHevdsRPRFaRzQdCPuY83xRY3+aQSJ12cxC/xaysPmuuywtWPgV2CxFmrMEjlpVRX9NEiJ2NpHBD/iE+z3dMArbm265XzmapAoK98s4ypQO38g6HkOj7YPLJyazcnBwdyR5kqpZwK/Bt6kEJTCPvEJUCTZRGDTAQ4VOXVbxgHGaIHmfsNoN8WHguQLZU+RGMpDLLX4o0G/KHuvIzdQFQ2DLQygeXya79GUHLS8b8w7BrB1UTm4wmn/YKw6k+mhTFBNGRpuOjIMKwVmHMW4tj/8bgjUFFPok+ZoNJrVthhvzxj1fJzJsXWfCpr/A+lkCrz3m30I15A/9WMwHDwQ7SvEdxwjoOFNKQOVVZ0NXJ3iF89hpps7bXcr0NKH3A4I8Bg6V72nA1jZ3iFd4U2ueJsKj0auzIKTF8dj3XW4+9kh7su/ufKMN8WC0HZ5jqnloqDQ8xW9iZR4EDCxKbzetZmAOrri71sHUkZrecIpk5582CbBL96s4UElcAQHTxiIAtNU7vDvLYSntdgTF08UPtfAivNUGx/KWuDSBt/GdXGS7s3C4Qi8YCwBJokkGa4khoXtdQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB3999.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(2906002)(83380400001)(66556008)(64756008)(71200400001)(91956017)(26005)(186003)(6512007)(66476007)(66446008)(6636002)(122000001)(66946007)(76116006)(6486002)(316002)(110136005)(508600001)(4326008)(38100700002)(2616005)(86362001)(38070700005)(8676002)(5660300002)(8936002)(36756003)(6506007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Q3cwOW9tYU92bjRwNnNaamVZSElMTzBrQzdMQyt1cVdrb2l2TFd5RzUxckFy?=
- =?utf-8?B?UWc5b2FaK0hmbGtoZzdOSGgzV21KS0pLekRDbVdzSDdRSkhVbkp4SXFwaDlL?=
- =?utf-8?B?UkZTOHFWZVhSc21qd3FFTkRYaDZoWlM2T3hTQmlFVzBhRTJiRVdESENlcXRi?=
- =?utf-8?B?ZnJGK3hEVG1ucjhSNE9zSjQvVDI3MFF5bHp3ZHFWTzRJZkpPdW1wTG9qWTFa?=
- =?utf-8?B?M0xTV09IZW9KREZIc2RKblQ3VGh0b2ZZRzV5Yjg0VzVNc3IyQW1Wa3VUcGdC?=
- =?utf-8?B?c2JQb3AxTFNOb3grNzRhc3dEaVlqWVlRSVgxWG5keXBrL2JHMHlqNTRXZU92?=
- =?utf-8?B?WE9sUGlVNkN2Rjc3eE1qRmpHMmltNWdzWWJadWx5c3E0eVFHSHpMRS9nYW04?=
- =?utf-8?B?K1pBaG0zYjNBcVVWcXowbXRLSXNwT0p0OXFUNDY4Lys0bTRwa21ETDliZEV3?=
- =?utf-8?B?dEVLOG12cUdnZUhQUjk5V2ZhRVVqZ0lxQ1BuNk1HOHREdGdNUEVhcFc3bUhS?=
- =?utf-8?B?eGFLZlBFUG5kcUUrUkxpZDMzT3ZmSjM1bzZ3UExnb0p6anVZZktuOWpoclVK?=
- =?utf-8?B?WjlwbjVBd1duaXh3ajVVZ1FQK3pOaEJMQ2lKd1RQMWNUdTYvTTYyQldqcHcr?=
- =?utf-8?B?cEJUTktUdW5KNEpWbnRGN1NUZTNvVGNCdVRtbHJ0VlJpNDUrYndPSHp6QzJD?=
- =?utf-8?B?dTlJUVY3RG04bjY2VW5tMjJGekJMNVBacDFWZldGZWpPWEp0aE5TREVJKzlS?=
- =?utf-8?B?RW84Nm5kallKSk9YU2NNQm9MeTFMeFJXTGR3MEc2T0ZleDN1Ukc2MXVsbmNT?=
- =?utf-8?B?STlJWUZoVzdCdHMvZlA2WExhQVNCcGg1OFl0cGd1cW5oY2VPK0FHdmVpZEdx?=
- =?utf-8?B?SVB6V2tTZ05FcTc4RWlVRW12ZW1lL3B1YlVaNEFyM1R5UEdGOFc2aGxGSllJ?=
- =?utf-8?B?SEkvVDgyRmtmbVhvZTlzZmVzZUxCY1YrZ0xYWTUwSHNFNlBQRERISXgvZXVB?=
- =?utf-8?B?MU8rOUpvZ2ZpYnF0LzlNSk5vY082YWFIQ3pHbmhYYUFLUUVQV3d2RHIxcGVp?=
- =?utf-8?B?QUFEa0ZUdWtXTVQ2YjhId1MrTlpITGl6MWJzUW5aOWRnUmVHUkkyemJHU0V3?=
- =?utf-8?B?KzRYOC9pL2t1aGpuR29nb25vL0h6S2dnM3E4d0JsWVdNTjEvWW91Vnd3ZFNt?=
- =?utf-8?B?OXhLNXBTcHZ6QUZZSVhEYTNzQVdxK3RHZ0N4VFh0ZHVTdTBuL3FNWnVqQUE4?=
- =?utf-8?B?TXQrTHZGSy93ek50Z1o5UXN0VExkZTdJeHBNMnhsWVU5T2RHWkpoYXIzZkQ0?=
- =?utf-8?B?cEl1ejJocUJFbWhiT2w5Tk5ldGVYNXE4VGl0Q0FTSVJldEkvUmtpWDd0NkF2?=
- =?utf-8?B?eEpmbUJEcDZEd01aWTY2c0xXTlNRYVo4UTgrcis1L3AxamVBOTlyMlIxRVVt?=
- =?utf-8?B?NXFzNmNzVEN5bWN3TnkwazRBY2FyMjgwc05rQzdCMHV0ZVVxa2x2ZHNQanRa?=
- =?utf-8?B?L2tTamRSSno1NTQ3QXh1UkhxYytyVCtEOCtuYnV2NlVud0o1clBXb0ttekww?=
- =?utf-8?B?dnZRcjR3WjJ0YzA3aStvZFoxZis2NTN4djVPTW1mMEN6UlNIWHFYTzJPeEox?=
- =?utf-8?B?aVYreHpody9heG1NTnhFT3BUdW1qbk9LUGt0MGdqMWlUSEMrbkxMN3RYT3B0?=
- =?utf-8?B?emQ2YjJKZjBwUjBBRkZtRGQwNjNyNFVvU1VyeEJqMU5oQ1Fld1hJN0R0Vy9Z?=
- =?utf-8?B?dU53SkZoZVBWZnZNOXNBKzVsSjVpQUJzRW55b0RsRit2TnEwN1dYQ1dpZG5S?=
- =?utf-8?B?Yk0xTWJiOFI4UTNYUEhwUT09?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <67547E2150E76543A7419536EEC7967F@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR11MB3999.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d4b9dc8-aa13-42d9-9dd2-08d989e50bf7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2021 22:51:48.8800
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fsEcYpaQ2wcg0qyd/xlylwlFcWJXHX8TQFNsIn3EJM85u7lXQ9dxahCgYmAhJCvN42q2FZ4YHX66RmIm4PQJyk/7dvIlL3DInMWtchgZ0uE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3869
-X-OriginatorOrg: intel.com
+        id S241759AbhJHSJP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 8 Oct 2021 14:09:15 -0400
+Received: from a11-129.smtp-out.amazonses.com ([54.240.11.129]:58251 "EHLO
+        a11-129.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S241939AbhJHSIE (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 8 Oct 2021 14:08:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=lg67htegwjqeypdgehj5bz2vdyv4b22f; d=jagalactic.com; t=1633716367;
+        h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References:Message-Id;
+        bh=xSH/pE+c+o8wqnV0XnnqmWMFf2DVzyn41J5t11uz4NE=;
+        b=QHjWOd8OqjG58VnKU+zgtfI4B5yvtO95B6a8vMiO04IIOqTH0LTcSZEVHWOxyNiy
+        N7JZPTFLRBrp7mUprRDfeSVKXqMFKYbxODOcamfzak12UZxfG6htUvLo6WfBcrVLBIj
+        4p50Q+LHrdP6Xr6tIolGaHr0fMNPWqBmPpKoQmZY=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=ug7nbtf4gccmlpwj322ax3p6ow6yfsug; d=amazonses.com; t=1633716367;
+        h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References:Message-Id:Feedback-ID;
+        bh=xSH/pE+c+o8wqnV0XnnqmWMFf2DVzyn41J5t11uz4NE=;
+        b=R7EcSXNo6FKIoY9WVolx6U7wNBvpAPQjIi/KLycyrWWRVuGYPd93CS7+eSMWl2VO
+        LCHMjzqNst1jR0iocUEbmUge66v4E8/+LRR25XOk7VgeXKLS2l/DUM+EZnehUmUk4vn
+        cRYAql2UV50a7iqNy6AJu+Qx66UmDSbod488BG+s=
+Subject: Re: CXL 1.1 Support Plan
+From:   =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
+To:     =?UTF-8?Q?Verma=2C_Vishal_L?= <vishal.l.verma@intel.com>,
+        =?UTF-8?Q?Williams=2C_Dan_J?= <dan.j.williams@intel.com>
+Cc:     =?UTF-8?Q?johnny=2Eli=40montage-tech=2Ecom?= 
+        <johnny.li@montage-tech.com>,
+        =?UTF-8?Q?Widawsky=2C_Ben?= <ben.widawsky@intel.com>,
+        =?UTF-8?Q?linux-cxl=40vger=2Ekernel=2Eorg?= 
+        <linux-cxl@vger.kernel.org>,
+        =?UTF-8?Q?Jonathan=2ECameron=40huawei=2Ecom?= 
+        <Jonathan.Cameron@huawei.com>,
+        =?UTF-8?Q?jgroves=40micron=2Ecom?= <jgroves@micron.com>
+Date:   Fri, 8 Oct 2021 18:06:07 +0000
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <8a9b94becf407e218a544d3d0d9286ec4c698099.camel@intel.com>
+References: <YT9kSHU+P5wrnm2S@BigDog.local> 
+ <CAPcyv4gY7UvT7fkCcvxGwe7-s6r40rFExwLN2oc7xBtMGdRyAw@mail.gmail.com> 
+ <0100017bdf9fcce1-400920ad-2274-4d39-b45e-45410426db50-000000@email.amazonses.com> 
+ <dd56f465-560e-9408-d7e6-9f8de59bc792@jagalactic.com> 
+ <CAPcyv4hjD=1EEAkjx+r3DRxASCGpF45kOyOZVULsMDekyG6TYQ@mail.gmail.com> 
+ <0100017be5e140c0-cedfdc46-26b6-4009-899f-8dfb2268af2e-000000@email.amazonses.com> 
+ <CAPcyv4g-t_kY84TSq6WbWP96hjOupXx1KYtB9XznQ4y2NooXWw@mail.gmail.com> 
+ <2093cae0-ff0b-1d6d-2ff2-ba1bb41510af@jagalactic.com> 
+ <0100017c38c8cbb1-c0632347-44dd-44a4-b6c2-4e33c2ba85e8-000000@email.amazonses.com> 
+ <8a9b94becf407e218a544d3d0d9286ec4c698099.camel@intel.com> 
+ <c55b69bd-45e3-4dec-91af-02ca4eeb054a@jagalactic.com>
+X-Mailer: Amazon WorkMail
+Thread-Index: =?us-ascii?Q?AQHXjeOyDbo/H0Y69E21FQB9XsVm96ts2ugAgDVln4CAAEk?=
+ =?us-ascii?Q?WAIABn6OAgAAG9ICAGUX1gIAK8xOAC6Ld+t0=3D?=
+Thread-Topic: CXL 1.1 Support Plan
+X-Wm-Sent-Timestamp: 1633716366
+Message-ID: <0100017c611571b1-9210602d-93bf-49e9-b1a1-14192037961e-000000@email.amazonses.com>
+Feedback-ID: 1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
+X-SES-Outgoing: 2021.10.08-54.240.11.129
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-T24gVGh1LCAyMDIxLTEwLTA3IGF0IDE0OjM0IC0wNzAwLCBhbGlzb24uc2Nob2ZpZWxkQGludGVs
-LmNvbSB3cm90ZToNCj4gRnJvbTogQWxpc29uIFNjaG9maWVsZCA8YWxpc29uLnNjaG9maWVsZEBp
-bnRlbC5jb20+DQo+IA0KPiBXaGVuIGFuIEFDUEkwMDE2IEhvc3QgQnJpZGdlIGRldmljZSBpcyBw
-cmVzZW50IHlldCBubyBjb3JyZXNwb25kaW5nDQo+IENFRFQgSG9zdCBCcmlkZ2UgU3RydWN0dXJl
-IChDSEJTKSBleGlzdHMsIHRoZSBBQ1BJIHByb2JlIG1ldGhvZA0KPiBmYWlscy4NCj4gDQo+IFJh
-dGhlciB0aGFuIGZhaWwsIGVtaXQgdGhpcyB3YXJuaW5nIGFuZCBjb250aW51ZToNCj4gY3hsX2Fj
-cGkgQUNQSTAwMTc6MDA6IE5vIENIQlMgZm91bmQgZm9yIEhvc3QgQnJpZGdlOiBBQ1BJMDAxNjow
-Mg0KPiANCj4gVGhpcyBlcnJvciBtYXkgb2NjdXIgb24gc3lzdGVtcyB0aGF0IGFyZSBub3QgY29t
-cGxpYW50IHdpdGggdGhlDQo+IEFDUEkgc3BlY2lmaWNhdGlvbi4gQ29tcGxpYW50IHN5c3RlbXMg
-aW5jbHVkZSBhIENIQlMgZW50cnkgZm9yDQo+IGV2ZXJ5IENYTCBob3N0IGJyaWRnZSB0aGF0IGlz
-IHByZXNlbnQgYXQgYm9vdC4NCj4gDQo+IFN1Z2dlc3RlZC1ieTogSXJhIFdlaW55IDxpcmEud2Vp
-bnlAaW50ZWwuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBBbGlzb24gU2Nob2ZpZWxkIDxhbGlzb24u
-c2Nob2ZpZWxkQGludGVsLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2N4bC9hY3BpLmMgfCAxMCAr
-KysrKystLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9u
-cygtKQ0KDQpUZXN0ZWQgd2l0aCBhIG5vbi1jb21wbGlhbnQgc3lzdGVtLCBhbmQgd29ya3MgYXMg
-ZXhwZWN0ZWQgKHJlbWFpbmluZw0Kcm9vdHMgYW5kIGRlY29kZXJzIHN0aWxsIHNob3cgdXApLiBZ
-b3UgY2FuIGFkZDoNCg0KVGVzdGVkLWJ5OiBWaXNoYWwgVmVybWEgPHZpc2hhbC5sLnZlcm1hQGlu
-dGVsLmNvbT4NCg0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY3hsL2FjcGkuYyBiL2RyaXZl
-cnMvY3hsL2FjcGkuYw0KPiBpbmRleCBhZjFjNmMxODc1YWMuLmRhZGM3ZjY0YjlmZiAxMDA2NDQN
-Cj4gLS0tIGEvZHJpdmVycy9jeGwvYWNwaS5jDQo+ICsrKyBiL2RyaXZlcnMvY3hsL2FjcGkuYw0K
-PiBAQCAtMjg4LDcgKzI4OCw3IEBAIHN0YXRpYyBpbnQgYWRkX2hvc3RfYnJpZGdlX3Vwb3J0KHN0
-cnVjdCBkZXZpY2UgKm1hdGNoLCB2b2lkICphcmcpDQo+ICAJZHBvcnQgPSBmaW5kX2Rwb3J0X2J5
-X2Rldihyb290X3BvcnQsIG1hdGNoKTsNCj4gIAlpZiAoIWRwb3J0KSB7DQo+ICAJCWRldl9kYmco
-aG9zdCwgImhvc3QgYnJpZGdlIGV4cGVjdGVkIGFuZCBub3QgZm91bmRcbiIpOw0KPiAtCQlyZXR1
-cm4gLUVOT0RFVjsNCj4gKwkJcmV0dXJuIDA7DQo+ICAJfQ0KPiAgDQo+ICAJcG9ydCA9IGRldm1f
-Y3hsX2FkZF9wb3J0KGhvc3QsIG1hdGNoLCBkcG9ydC0+Y29tcG9uZW50X3JlZ19waHlzLA0KPiBA
-QCAtMzc3LDkgKzM3NywxMSBAQCBzdGF0aWMgaW50IGFkZF9ob3N0X2JyaWRnZV9kcG9ydChzdHJ1
-Y3QgZGV2aWNlICptYXRjaCwgdm9pZCAqYXJnKQ0KPiAgCX0NCj4gIA0KPiAgCWNoYnMgPSBjeGxf
-YWNwaV9tYXRjaF9jaGJzKGhvc3QsIHVpZCk7DQo+IC0JaWYgKElTX0VSUihjaGJzKSkNCj4gLQkJ
-ZGV2X2RiZyhob3N0LCAiTm8gQ0hCUyBmb3VuZCBmb3IgSG9zdCBCcmlkZ2U6ICVzXG4iLA0KPiAt
-CQkJZGV2X25hbWUobWF0Y2gpKTsNCj4gKwlpZiAoSVNfRVJSKGNoYnMpKSB7DQo+ICsJCWRldl93
-YXJuKGhvc3QsICJObyBDSEJTIGZvdW5kIGZvciBIb3N0IEJyaWRnZTogJXNcbiIsDQo+ICsJCQkg
-ZGV2X25hbWUobWF0Y2gpKTsNCj4gKwkJcmV0dXJuIDA7DQo+ICsJfQ0KPiAgDQo+ICAJcmMgPSBj
-eGxfYWRkX2Rwb3J0KHJvb3RfcG9ydCwgbWF0Y2gsIHVpZCwgZ2V0X2NoYmNyKGNoYnMpKTsNCj4g
-IAlpZiAocmMpIHsNCg0K
+On 10/7/21 4:30 PM, Verma, Vishal L wrote:=0D=0A> On Thu, 2021-09-30 at 2=
+2:17 +0000, John Groves wrote:=0D=0A>> I don't see your doc patch yet in =
+the ndctl repo, but I recommend merging it there.=0D=0A>>=0D=0A>> A relat=
+ed question: "daxctl reconfigure-device --mode=3Dsystem-ram ..." works fo=
+r me,=0D=0A>> with --force, but going the other way (--mode=3Ddevdax) fai=
+ls.=C2=A0 But a reboot puts it back=0D=0A>> into devdax mode regardless o=
+f the pre-boot setting (i.e. --mode=3Dsystem-ram reverts=0D=0A>> back to =
+devdax on reboot).=0D=0A> Oh, I'm a bit confused. --force only applies wh=
+en going from system-ram=0D=0A> to devdax -- it offlines the memory for y=
+ou. Without force, you're=0D=0A> responsible for a prior 'daxctl offline-=
+memory daxX.Y' step.=0D=0A>=0D=0A> Going from devdax to system-ram should=
+ not need --force, and I don't=0D=0A> think force actually does anything =
+there.=0D=0A=0D=0AI definitely might be doing something wrong.=C2=A0 Here=
+ is a "typescript".=0D=0A=0D=0A# grep dax /proc/iomem=0D=0A=C2=A0 8800000=
+00-107fffffff : dax0.0=0D=0A=0D=0A# ls -al /dev/dax0.0 crw------- 1 root =
+root 252, 2 Sep 16 11:40 /dev/dax0.0=0D=0A=0D=0A# numastat =C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 node0 numa_hit=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 5493270 numa_mi=
+ss=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0 nu=
+ma_foreign=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0 interleave_h=
+it=C2=A0=C2=A0 14593 local_node=C2=A0=C2=A0=C2=A0=C2=A0 5493269 other_nod=
+e=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=0D=0A=0D=0A=
+=C2=A0=0D=0A=0D=0A# daxctl reconfigure-device --mode=3Dsystem-ram --regio=
+n=3D0 dax0.0 dax0.0: error: kernel policy will auto-online memory, aborti=
+ng error reconfiguring devices: Device or resource busy reconfigured 0 de=
+vices # daxctl reconfigure-device --mode=3Dsystem-ram --region=3D0 --forc=
+e dax0.0 dax0.0: WARNING: detected a race while onlining memory Some memo=
+ry may not be in the expected zone. It is recommended to disable any othe=
+r onlining mechanisms, and retry. If onlining is to be left to other agen=
+ts, use the --no-online option to suppress this warning dax0.0: all memor=
+y sections (256) already online [ =C2=A0 { =C2=A0=C2=A0=C2=A0 "chardev":"=
+dax0.0", =C2=A0=C2=A0=C2=A0 "size":34359738368, =C2=A0=C2=A0=C2=A0 "targe=
+t_node":1, =C2=A0=C2=A0=C2=A0 "align":2097152, =C2=A0=C2=A0=C2=A0 "mode":=
+"system-ram", =C2=A0=C2=A0=C2=A0 "online_memblocks":256, =C2=A0=C2=A0=C2=A0=
+ "total_memblocks":256, =C2=A0=C2=A0=C2=A0 "movable":false =C2=A0 } ] rec=
+onfigured 1 device # numastat =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 node0 node1 num=
+a_hit=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 8080981=C2=A0=C2=A0=C2=A0=
+=C2=A0 0 numa_miss=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=C2=A0=C2=A0 0 numa_foreign=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=C2=A0=C2=A0 0 interlea=
+ve_hit=C2=A0=C2=A0=C2=A0 14593=C2=A0 =C2=A0=C2=A0=C2=A00 local_node=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=0D=0A8080981=C2=A0=C2=A0=C2=A0=C2=A0 0 other_nod=
+e=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=
+=C2=A0=C2=A0=C2=A0 0=0D=0A=0D=0A=C2=A0=0D=0A=0D=0A=0D=0A##=0D=0A=0D=0AI t=
+ried offlining the device and memory before reconfigure-device, but those=
+ failed.=0D=0AAm I doing something wrong or missing a step here=3F=0D=0A=0D=
+=0A=0D=0A>=0D=0A>> Is reconfigure-device capable of remaining in effect a=
+fter a reboot (in which case I'm curious=0D=0A>> how you persist the info=
+ if the device is volatile; I believe it's the LSA on a non-volatile=0D=0A=
+>> device).=0D=0A> The beginnings of this automation are in progress, at =
+least for=0D=0A> converting pmem devices:=0D=0A>=0D=0A>   https://lore.ke=
+rnel.org/nvdimm/20210831090459.2306727-1-vishal.l.verma@intel.com/=0D=0A>=
+=0D=0A> This is yet to be extended to volatile dax devices after figuring=
+ out=0D=0A> what property we can key off of - one idea is the 'target_nod=
+e' from=0D=0A> ACPI.=0D=0A=0D=0AThank you!=0D=0A=0D=0A=0D=0A>=0D=0A>> Bac=
+k to the patch: you mention --mode=3Dsystem-ram, but it might be helpful =
+to add=0D=0A>> a mention of --mode=3Ddevdax, along with a mention of whet=
+her (and how) these=0D=0A>> changes are persisted.=0D=0A> The rest of the=
+ man page talks a little bit about the modes:=0D=0A>=0D=0A>   https://pme=
+m.io/ndctl/daxctl-reconfigure-device.html=0D=0A>=0D=0A> Dan - you haven't=
+ posted the patch you attached to the list yet have=0D=0A> you=3F /me cou=
+ldn't find it on lore - wasn't sure if I'd just missed it.=0D=0A>=0D=0AI'=
+m pretty sure that's where I found --mode=3Ddevdax, though I couldn't fig=
+ure out how to get=0D=0Aconversion back to devdax to work. I'm sure there=
+ is something I'm missing.=0D=0A=0D=0AStarting in the state where I left =
+off above:=0D=0A=0D=0A=0D=0A# daxctl reconfigure-device --mode=3Ddevdax d=
+ax0.0=0D=0A=0D=0Aerror reconfiguring devices: Device or resource busy=0D=0A=
+=0D=0Areconfigured 0 devices=0D=0A=0D=0A=0D=0A# daxctl reconfigure-device=
+ --mode=3Ddevdax --force dax0.0=0D=0A=0D=0Alibdaxctl: offline_one_membloc=
+k: dax0.0: Failed to offline /sys/devices/system/node/node1/memory272/sta=
+te: Device or resource busy=0D=0A=0D=0Adax0.0: failed to offline memory: =
+Device or resource busy=0D=0A=0D=0Aerror reconfiguring devices: Device or=
+ resource busy=0D=0A=0D=0Areconfigured 0 devices=0D=0A=0D=0A=0D=0A# daxct=
+l offline-memory dax0.0=0D=0A=0D=0Adax0.0: 4 memory sections already offl=
+ine=0D=0A=0D=0Alibdaxctl: offline_one_memblock: dax0.0: Failed to offline=
+ /sys/devices/system/node/node1/memory272/state: Device or resource busy=0D=
+=0A=0D=0Adax0.0: failed to offline memory: Device or resource busy=0D=0A=0D=
+=0Aerror offlining memory: Device or resource busy=0D=0A=0D=0Aofflined me=
+mory for 0 devices=0D=0A=0D=0A=0D=0A# daxctl offline-memory --force dax0.=
+0=0D=0A=0D=0A=C2=A0=C2=A0Error: unknown option `force'=0D=0A=0D=0A=C2=A0=0D=
+=0A=0D=0A=C2=A0usage: daxctl offline-memory <device> [<options>]=0D=0A=0D=
+=0A=C2=A0=0D=0A=0D=0A=C2=A0 =C2=A0=C2=A0-r, --region <region-id>=0D=0A=0D=
+=0A=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0=C2=A0filter by region=0D=0A=0D=0A=C2=A0 =C2=A0=C2=A0=
+-u, --human=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=C2=A0use human friend=
+ly number formats=0D=0A=0D=0A=C2=A0 =C2=A0=C2=A0-v, --verbose=C2=A0=C2=A0=
+ =C2=A0 =C2=A0 =C2=A0=C2=A0emit more debug messages=0D=0A=0D=0A=C2=A0=0D=0A=
+=0D=0AI have to reboot to get back to dax memory, though it's very possib=
+le that my=0D=0A[questionable] doc reading skills are at fault.=0D=0A=0D=0A=
+Thanks,=0D=0AJohn=0D=0A=0D=0A=0D=0A=0D=0A=0D=0A
