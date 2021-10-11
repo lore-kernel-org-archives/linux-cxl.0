@@ -2,30 +2,30 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 524D5C433EF
-	for <linux-cxl@archiver.kernel.org>; Mon, 11 Oct 2021 17:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE9BC433EF
+	for <linux-cxl@archiver.kernel.org>; Mon, 11 Oct 2021 21:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33AE460C4B
-	for <linux-cxl@archiver.kernel.org>; Mon, 11 Oct 2021 17:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6AFC60F14
+	for <linux-cxl@archiver.kernel.org>; Mon, 11 Oct 2021 21:52:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233701AbhJKRPR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 11 Oct 2021 13:15:17 -0400
-Received: from mga05.intel.com ([192.55.52.43]:41435 "EHLO mga05.intel.com"
+        id S235381AbhJKVyo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 11 Oct 2021 17:54:44 -0400
+Received: from mga04.intel.com ([192.55.52.120]:16923 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233077AbhJKRPR (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 11 Oct 2021 13:15:17 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10134"; a="313119269"
+        id S235423AbhJKVyn (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 11 Oct 2021 17:54:43 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10134"; a="225750209"
 X-IronPort-AV: E=Sophos;i="5.85,365,1624345200"; 
-   d="scan'208";a="313119269"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2021 10:13:17 -0700
+   d="scan'208";a="225750209"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2021 14:52:43 -0700
 X-IronPort-AV: E=Sophos;i="5.85,365,1624345200"; 
-   d="scan'208";a="460045714"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2021 10:13:16 -0700
-Date:   Mon, 11 Oct 2021 10:13:16 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     alison.schofield@intel.com
+   d="scan'208";a="490649743"
+Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.41])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2021 14:52:42 -0700
+Date:   Mon, 11 Oct 2021 15:00:53 -0700
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Ira Weiny <ira.weiny@intel.com>
 Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
         Len Brown <lenb@kernel.org>,
         Vishal Verma <vishal.l.verma@intel.com>,
@@ -34,148 +34,110 @@ Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
         linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org
 Subject: Re: [PATCH] ACPI: NUMA: Add a node and memblk for each CFMWS not in
  SRAT
-Message-ID: <20211011171315.GL3114988@iweiny-DESK2.sc.intel.com>
+Message-ID: <20211011220053.GA412964@alison-desk>
 References: <20211009015339.400383-1-alison.schofield@intel.com>
+ <20211011171315.GL3114988@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211009015339.400383-1-alison.schofield@intel.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20211011171315.GL3114988@iweiny-DESK2.sc.intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Oct 08, 2021 at 06:53:39PM -0700, Schofield, Alison wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
-> 
-> During NUMA init, CXL memory defined in the SRAT Memory Affinity
-> subtable may be assigned to a NUMA node. Since there is no
-> requirement that the SRAT be comprehensive for CXL memory another
-> mechanism is needed to assign NUMA nodes to CXL memory not identified
-> in the SRAT.
-> 
-> Use the CXL Fixed Memory Window Structure's (CFMWS) of the ACPI CXL
-> Early Discovery Table (CEDT) to find all CXL memory ranges. Create a
-> NUMA node for each range that is not already assigned to a NUMA node.
-> Add a memblk attaching its host physical address range to the node.
-> 
-> Note that these ranges may not actually map any memory at boot time.
-> They may describe persistent capacity or may be present to enable
-> hot-plug.
-> 
-> Consumers can use phys_to_target_node() to discover the NUMA node.
-> 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> ---
->  drivers/acpi/numa/srat.c | 58 ++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/acpi.c       |  8 +++---
->  2 files changed, 63 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-> index b8795fc49097..568e033e6c3f 100644
-> --- a/drivers/acpi/numa/srat.c
-> +++ b/drivers/acpi/numa/srat.c
-> @@ -300,6 +300,61 @@ acpi_numa_memory_affinity_init(struct acpi_srat_mem_affinity *ma)
->  }
->  #endif /* defined(CONFIG_X86) || defined (CONFIG_ARM64) */
->  
-> +/* Add a NUMA node and memblk for each node-less CFMWS */
+Thanks for the review Ira!
 
-IMO this comment does not make sense for a function called 'parse cfmws'.  I
-would just drop it.
-
-> +static int __init acpi_parse_cfmws(struct acpi_table_header *acpi_cedt)
-> +{
-> +	struct acpi_cedt_cfmws *cfmws;
-> +	acpi_size len, cur = 0;
-> +	void *cedt_subtable;
-> +	int i, pxm, node;
-> +	u64 start, end;
-> +
-> +	/* Use fake PXM values starting after the max PXM found in the SRAT */
-> +	for (i = 0; i < MAX_PXM_DOMAINS - 1; i++)
-> +		if (node_to_pxm_map[i] > pxm)
-> +			pxm = node_to_pxm_map[i];
-> +	pxm++;
-> +
-> +	len = acpi_cedt->length - sizeof(*acpi_cedt);
-> +	cedt_subtable = acpi_cedt + 1;
-> +
-> +	while (cur < len) {
-> +		struct acpi_cedt_header *c = cedt_subtable + cur;
-> +
-> +		if (c->type != ACPI_CEDT_TYPE_CFMWS)
-> +			goto next;
-> +
-> +		cfmws = cedt_subtable + cur;
-> +		if (cfmws->header.length < sizeof(*cfmws)) {
-> +			pr_warn_once("CFMWS entry skipped:invalid length:%u\n",
-> +				     cfmws->header.length);
-> +			goto next;
-> +		}
-> +
-> +		start = cfmws->base_hpa;
-> +		end = cfmws->base_hpa + cfmws->window_size;
-> +
-> +		/* Skip if the HPA is already assigned to a NUMA node */
-> +		node = phys_to_target_node(start);
-> +		if (node != NUMA_NO_NODE)
-> +			goto next;
-> +
-> +		node = acpi_map_pxm_to_node(pxm);
-> +		if (node == NUMA_NO_NODE) {
-> +			pr_err("ACPI NUMA: Too many proximity domains.\n");
-> +			return -EINVAL;
-> +		}
-> +		if (numa_add_memblk(node, start, end) < 0) {
-> +			pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
-> +				node, start, end);
-
-Is there anything which could go wrong if the block is not added to the numa
-node?
-
-Ira
-
-> +		}
-> +		pxm++;
-> +next:
-> +		cur += c->length;
-> +	}
-> +	return 0;
-> +}
-> +
->  static int __init acpi_parse_slit(struct acpi_table_header *table)
->  {
->  	struct acpi_table_slit *slit = (struct acpi_table_slit *)table;
-> @@ -478,6 +533,9 @@ int __init acpi_numa_init(void)
->  	/* SLIT: System Locality Information Table */
->  	acpi_table_parse(ACPI_SIG_SLIT, acpi_parse_slit);
->  
-> +	/* CEDT: CXL Early Discovery Table */
-> +	acpi_table_parse(ACPI_SIG_CEDT, acpi_parse_cfmws);
-> +
->  	if (cnt < 0)
->  		return cnt;
->  	else if (!parsed_numa_memblks)
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index dadc7f64b9ff..3798841c3418 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -144,9 +144,11 @@ static void cxl_add_cfmws_decoders(struct device *dev,
->  				cfmws->window_size - 1);
->  			goto next;
->  		}
-> -		dev_dbg(dev, "add: %s range %#llx-%#llx\n",
-> -			dev_name(&cxld->dev), cfmws->base_hpa,
-> -			cfmws->base_hpa + cfmws->window_size - 1);
-> +		dev_dbg(dev, "add:%s node:%d range:%#llx-%#llx restrict:%#x\n",
-> +			dev_name(&cxld->dev),
-> +			phys_to_target_node(cxld->range.start),
-> +			cxld->range.start, cxld->range.end,
-> +			cfmws->restrictions);
->  next:
->  		cur += c->length;
->  	}
-> -- 
-> 2.31.1
+On Mon, Oct 11, 2021 at 10:13:16AM -0700, Ira Weiny wrote:
+> On Fri, Oct 08, 2021 at 06:53:39PM -0700, Schofield, Alison wrote:
+> > From: Alison Schofield <alison.schofield@intel.com>
+> > 
+> > During NUMA init, CXL memory defined in the SRAT Memory Affinity
+> > subtable may be assigned to a NUMA node. Since there is no
+> > requirement that the SRAT be comprehensive for CXL memory another
+> > mechanism is needed to assign NUMA nodes to CXL memory not identified
+> > in the SRAT.
+> > 
+> > Use the CXL Fixed Memory Window Structure's (CFMWS) of the ACPI CXL
+> > Early Discovery Table (CEDT) to find all CXL memory ranges. Create a
+> > NUMA node for each range that is not already assigned to a NUMA node.
+> > Add a memblk attaching its host physical address range to the node.
+> > 
+> > Note that these ranges may not actually map any memory at boot time.
+> > They may describe persistent capacity or may be present to enable
+> > hot-plug.
+> > 
+> > Consumers can use phys_to_target_node() to discover the NUMA node.
+> > 
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> > ---
+> >  drivers/acpi/numa/srat.c | 58 ++++++++++++++++++++++++++++++++++++++++
+> >  drivers/cxl/acpi.c       |  8 +++---
+> >  2 files changed, 63 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> > index b8795fc49097..568e033e6c3f 100644
+> > --- a/drivers/acpi/numa/srat.c
+> > +++ b/drivers/acpi/numa/srat.c
+> > @@ -300,6 +300,61 @@ acpi_numa_memory_affinity_init(struct acpi_srat_mem_affinity *ma)
+> >  }
+> >  #endif /* defined(CONFIG_X86) || defined (CONFIG_ARM64) */
+> >  
+> > +/* Add a NUMA node and memblk for each node-less CFMWS */
 > 
+> IMO this comment does not make sense for a function called 'parse cfmws'.  I
+> would just drop it.
+> 
+
+Agree. Dropping comment. 
+
+You made me stare at this func name more, and it can be better.
+I'll try this: acpi_cxl_cfmws_init()
+to be more like the others in this file, doing similar work.
+
+> > +static int __init acpi_parse_cfmws(struct acpi_table_header *acpi_cedt)
+> > +{
+
+snip
+
+
+> > +		if (numa_add_memblk(node, start, end) < 0) {
+> > +			pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
+> > +				node, start, end);
+> 
+> Is there anything which could go wrong if the block is not added to the numa
+> node?
+> 
+> Ira
+> 
+
+I intended, but failed, to mimic the adding of nodes & memblocks based
+on the SRAT Memory Affinity table. There, a failure from numa_add_memblk()
+causes the entire SRAT parsing to fail, and IIUC entire acpi_numa init fails.
+
+FYI: numa_add_memblk() only completely fails (-EINVAL) if we've used up all
+the NR_NODE_MEMBLKS (which is set to MAX_NUMNODE*2)
+
+My first guess would be to follow the pattern and fail the entire
+acpi_numa init. ie make acpi_numa = -1; I'll pursue that.
+
+Now, back to your specific question: "Is there anything which could
+go wrong if the block is not added to the numa node?"
+
+numa_add_memblk(_to) can actually return success without adding a memblock.
+Like this:
+/* whine about and ignore invalid blks */
+if (start > end || nid < 0 || nid >= MAX_NUMNODES) {
+        pr_warn("Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
+                nid, start, end - 1);
+        return 0;
+}
+
+So, I'm going to make an assumption that it can be handled, and see if
+someone else chimes in here with more knowledge of why we can quietly
+ignore.
+
+Alison
+
+>
+>
+snip
