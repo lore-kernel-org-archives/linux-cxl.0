@@ -2,116 +2,180 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB510C433EF
-	for <linux-cxl@archiver.kernel.org>; Mon, 11 Oct 2021 13:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 524D5C433EF
+	for <linux-cxl@archiver.kernel.org>; Mon, 11 Oct 2021 17:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD51461054
-	for <linux-cxl@archiver.kernel.org>; Mon, 11 Oct 2021 13:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33AE460C4B
+	for <linux-cxl@archiver.kernel.org>; Mon, 11 Oct 2021 17:13:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235799AbhJKNh2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 11 Oct 2021 09:37:28 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3964 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235759AbhJKNh2 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 11 Oct 2021 09:37:28 -0400
-Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HSfpL1VfCz6H7ct;
-        Mon, 11 Oct 2021 21:31:38 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Mon, 11 Oct 2021 15:35:23 +0200
-Received: from localhost (10.52.122.204) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Mon, 11 Oct
- 2021 14:35:22 +0100
-Date:   Mon, 11 Oct 2021 14:35:04 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <hch@lst.de>
-Subject: Re: [PATCH v3 09/10] cxl/pci: Use pci core's DVSEC functionality
-Message-ID: <20211011143504.00003b2d@Huawei.com>
-In-Reply-To: <163379788528.692348.11581080806976608802.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <163379783658.692348.16064992154261275220.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <163379788528.692348.11581080806976608802.stgit@dwillia2-desk3.amr.corp.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+        id S233701AbhJKRPR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 11 Oct 2021 13:15:17 -0400
+Received: from mga05.intel.com ([192.55.52.43]:41435 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233077AbhJKRPR (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 11 Oct 2021 13:15:17 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10134"; a="313119269"
+X-IronPort-AV: E=Sophos;i="5.85,365,1624345200"; 
+   d="scan'208";a="313119269"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2021 10:13:17 -0700
+X-IronPort-AV: E=Sophos;i="5.85,365,1624345200"; 
+   d="scan'208";a="460045714"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2021 10:13:16 -0700
+Date:   Mon, 11 Oct 2021 10:13:16 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     alison.schofield@intel.com
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] ACPI: NUMA: Add a node and memblk for each CFMWS not in
+ SRAT
+Message-ID: <20211011171315.GL3114988@iweiny-DESK2.sc.intel.com>
+References: <20211009015339.400383-1-alison.schofield@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.122.204]
-X-ClientProxiedBy: lhreml723-chm.china.huawei.com (10.201.108.74) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211009015339.400383-1-alison.schofield@intel.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sat, 9 Oct 2021 09:44:45 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
-
-> From: Ben Widawsky <ben.widawsky@intel.com>
+On Fri, Oct 08, 2021 at 06:53:39PM -0700, Schofield, Alison wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> Reduce maintenance burden of DVSEC query implementation by using the
-> centralized PCI core implementation.
+> During NUMA init, CXL memory defined in the SRAT Memory Affinity
+> subtable may be assigned to a NUMA node. Since there is no
+> requirement that the SRAT be comprehensive for CXL memory another
+> mechanism is needed to assign NUMA nodes to CXL memory not identified
+> in the SRAT.
 > 
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> [djbw: kill cxl_pci_dvsec()]
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-Very pleased to see this being cleaned up.  Thanks,
-fwiw
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
+> Use the CXL Fixed Memory Window Structure's (CFMWS) of the ACPI CXL
+> Early Discovery Table (CEDT) to find all CXL memory ranges. Create a
+> NUMA node for each range that is not already assigned to a NUMA node.
+> Add a memblk attaching its host physical address range to the node.
+> 
+> Note that these ranges may not actually map any memory at boot time.
+> They may describe persistent capacity or may be present to enable
+> hot-plug.
+> 
+> Consumers can use phys_to_target_node() to discover the NUMA node.
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 > ---
->  drivers/cxl/pci.c |   26 ++------------------------
->  1 file changed, 2 insertions(+), 24 deletions(-)
+>  drivers/acpi/numa/srat.c | 58 ++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/acpi.c       |  8 +++---
+>  2 files changed, 63 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index b6bc8e5ca028..f2e2a02d1fe6 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -340,29 +340,6 @@ static void cxl_unmap_regblock(struct pci_dev *pdev,
->  	map->base = NULL;
+> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> index b8795fc49097..568e033e6c3f 100644
+> --- a/drivers/acpi/numa/srat.c
+> +++ b/drivers/acpi/numa/srat.c
+> @@ -300,6 +300,61 @@ acpi_numa_memory_affinity_init(struct acpi_srat_mem_affinity *ma)
 >  }
+>  #endif /* defined(CONFIG_X86) || defined (CONFIG_ARM64) */
 >  
-> -static int cxl_pci_dvsec(struct pci_dev *pdev, int dvsec)
-> -{
-> -	int pos;
-> -
-> -	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DVSEC);
-> -	if (!pos)
-> -		return 0;
-> -
-> -	while (pos) {
-> -		u16 vendor, id;
-> -
-> -		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER1, &vendor);
-> -		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER2, &id);
-> -		if (vendor == PCI_DVSEC_VENDOR_ID_CXL && dvsec == id)
-> -			return pos;
-> -
-> -		pos = pci_find_next_ext_capability(pdev, pos,
-> -						   PCI_EXT_CAP_ID_DVSEC);
-> -	}
-> -
-> -	return 0;
-> -}
-> -
->  static int cxl_probe_regs(struct pci_dev *pdev, struct cxl_register_map *map)
->  {
->  	struct cxl_component_reg_map *comp_map;
-> @@ -449,7 +426,8 @@ static int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
->  	u32 regloc_size, regblocks;
->  	int regloc, i;
->  
-> -	regloc = cxl_pci_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID);
-> +	regloc = pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL,
-> +					   PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID);
->  	if (!regloc)
->  		return -ENXIO;
->  
-> 
+> +/* Add a NUMA node and memblk for each node-less CFMWS */
 
+IMO this comment does not make sense for a function called 'parse cfmws'.  I
+would just drop it.
+
+> +static int __init acpi_parse_cfmws(struct acpi_table_header *acpi_cedt)
+> +{
+> +	struct acpi_cedt_cfmws *cfmws;
+> +	acpi_size len, cur = 0;
+> +	void *cedt_subtable;
+> +	int i, pxm, node;
+> +	u64 start, end;
+> +
+> +	/* Use fake PXM values starting after the max PXM found in the SRAT */
+> +	for (i = 0; i < MAX_PXM_DOMAINS - 1; i++)
+> +		if (node_to_pxm_map[i] > pxm)
+> +			pxm = node_to_pxm_map[i];
+> +	pxm++;
+> +
+> +	len = acpi_cedt->length - sizeof(*acpi_cedt);
+> +	cedt_subtable = acpi_cedt + 1;
+> +
+> +	while (cur < len) {
+> +		struct acpi_cedt_header *c = cedt_subtable + cur;
+> +
+> +		if (c->type != ACPI_CEDT_TYPE_CFMWS)
+> +			goto next;
+> +
+> +		cfmws = cedt_subtable + cur;
+> +		if (cfmws->header.length < sizeof(*cfmws)) {
+> +			pr_warn_once("CFMWS entry skipped:invalid length:%u\n",
+> +				     cfmws->header.length);
+> +			goto next;
+> +		}
+> +
+> +		start = cfmws->base_hpa;
+> +		end = cfmws->base_hpa + cfmws->window_size;
+> +
+> +		/* Skip if the HPA is already assigned to a NUMA node */
+> +		node = phys_to_target_node(start);
+> +		if (node != NUMA_NO_NODE)
+> +			goto next;
+> +
+> +		node = acpi_map_pxm_to_node(pxm);
+> +		if (node == NUMA_NO_NODE) {
+> +			pr_err("ACPI NUMA: Too many proximity domains.\n");
+> +			return -EINVAL;
+> +		}
+> +		if (numa_add_memblk(node, start, end) < 0) {
+> +			pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
+> +				node, start, end);
+
+Is there anything which could go wrong if the block is not added to the numa
+node?
+
+Ira
+
+> +		}
+> +		pxm++;
+> +next:
+> +		cur += c->length;
+> +	}
+> +	return 0;
+> +}
+> +
+>  static int __init acpi_parse_slit(struct acpi_table_header *table)
+>  {
+>  	struct acpi_table_slit *slit = (struct acpi_table_slit *)table;
+> @@ -478,6 +533,9 @@ int __init acpi_numa_init(void)
+>  	/* SLIT: System Locality Information Table */
+>  	acpi_table_parse(ACPI_SIG_SLIT, acpi_parse_slit);
+>  
+> +	/* CEDT: CXL Early Discovery Table */
+> +	acpi_table_parse(ACPI_SIG_CEDT, acpi_parse_cfmws);
+> +
+>  	if (cnt < 0)
+>  		return cnt;
+>  	else if (!parsed_numa_memblks)
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index dadc7f64b9ff..3798841c3418 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -144,9 +144,11 @@ static void cxl_add_cfmws_decoders(struct device *dev,
+>  				cfmws->window_size - 1);
+>  			goto next;
+>  		}
+> -		dev_dbg(dev, "add: %s range %#llx-%#llx\n",
+> -			dev_name(&cxld->dev), cfmws->base_hpa,
+> -			cfmws->base_hpa + cfmws->window_size - 1);
+> +		dev_dbg(dev, "add:%s node:%d range:%#llx-%#llx restrict:%#x\n",
+> +			dev_name(&cxld->dev),
+> +			phys_to_target_node(cxld->range.start),
+> +			cxld->range.start, cxld->range.end,
+> +			cfmws->restrictions);
+>  next:
+>  		cur += c->length;
+>  	}
+> -- 
+> 2.31.1
+> 
