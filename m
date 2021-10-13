@@ -2,215 +2,193 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5354FC433F5
-	for <linux-cxl@archiver.kernel.org>; Wed, 13 Oct 2021 23:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A5BC433F5
+	for <linux-cxl@archiver.kernel.org>; Wed, 13 Oct 2021 23:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32610610E5
-	for <linux-cxl@archiver.kernel.org>; Wed, 13 Oct 2021 23:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B4F3610FE
+	for <linux-cxl@archiver.kernel.org>; Wed, 13 Oct 2021 23:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229948AbhJMXVM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 13 Oct 2021 19:21:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229880AbhJMXVJ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Oct 2021 19:21:09 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA018C06174E
-        for <linux-cxl@vger.kernel.org>; Wed, 13 Oct 2021 16:19:05 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id f189so2759139pfg.12
-        for <linux-cxl@vger.kernel.org>; Wed, 13 Oct 2021 16:19:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8F6QacKnx9bKC7ori5ib+tNKgUfJyKI20f72kw96skY=;
-        b=tcqQxhj0A2dap2eUVPJGd1OGFkvxLd73pD6MXUP5JL4InZirOCIZkrnHuJTyJARaoJ
-         JVpPuSRO/+P5fciCKjFDNlCd8lnoHq4nCRzJnado8Q/yFQEZRg2Ud4SUgYITMegipOu3
-         Ic9edbY8m7bejH1ZVtiPB1tUViVTy1wtrs/4qv4m0BoOOxetHJW1nDnsQiTVHDfhh5AM
-         Ys8yhLP6IhmkLYOvo2k/2T9wWiGsdXJ0dBsl3P17VFDJXq29DyoO6Xr4+dxoEOsRYL7o
-         3g5AZArbSRAUYM8AWDWNkzAgBqcVwgBFV3DSGOqciHXgbNaZT9FJav9e0H9oSIehTMHj
-         fgSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8F6QacKnx9bKC7ori5ib+tNKgUfJyKI20f72kw96skY=;
-        b=Mwf+u+PfSiHY7ghH7Lt4n2SwQstQtg0pTB4HzoOwQGaxdP7ZioN5OY6y0tnkeFXjS1
-         zU/WQk7qtfNLOUx35BmWxDSckP2D8DlRNhV319zNzZihoRf9taUaJJwK9S1xCI5xNHSu
-         IyWLoCVMuiqxKw/ZwGaX6MX3YaTY5LjNxdMJOeHeLdkmWrleiSb8ERQ4Wh1vbSKCxJv6
-         nTtiJRFzLQdgGKaIx/q9hRdAvcQPC1bzT6UBbeHXvMkaRNL1st0QKtmc7ufMaYg5bnOo
-         sLfwJeJLs+bfd2+G5BARNX9MhMMP6Y+7lvncK2nb7KuiXGKy4iv3rd1xZZMqk7d9vzuL
-         T5gg==
-X-Gm-Message-State: AOAM5317a0/drzmzqcfMA9DoA5VEqJukQ1ZRq6OZ3BzKksg7WWOjqBFK
-        HTP/2ZgKWBVopK7DjUjcDuQH5ZnkwSuECyVo74mE0g==
-X-Google-Smtp-Source: ABdhPJyWelFX1/3M8Ccpjs57F+/eC2wklDYgrynWuClHTpqRcm4jFu0eaoQOyscKfD1Z2AWLasE5fON4JxoQrPrqpNk=
-X-Received: by 2002:a63:1e0e:: with SMTP id e14mr1614990pge.5.1634167145281;
- Wed, 13 Oct 2021 16:19:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211009015339.400383-1-alison.schofield@intel.com>
-In-Reply-To: <20211009015339.400383-1-alison.schofield@intel.com>
+        id S229677AbhJMXze (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 13 Oct 2021 19:55:34 -0400
+Received: from mga02.intel.com ([134.134.136.20]:42541 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229575AbhJMXzd (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Wed, 13 Oct 2021 19:55:33 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10136"; a="214721456"
+X-IronPort-AV: E=Sophos;i="5.85,371,1624345200"; 
+   d="scan'208";a="214721456"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2021 16:53:29 -0700
+X-IronPort-AV: E=Sophos;i="5.85,371,1624345200"; 
+   d="scan'208";a="442497745"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2021 16:53:29 -0700
+Subject: [PATCH v5 05/10] cxl/pci: Make more use of cxl_register_map
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 13 Oct 2021 16:18:54 -0700
-Message-ID: <CAPcyv4iOxLtX16ZDEwtfYHyK54dOqHNU54qjqvbotfF+5MHV4g@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: NUMA: Add a node and memblk for each CFMWS not in SRAT
-To:     "Schofield, Alison" <alison.schofield@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-cxl@vger.kernel.org, Linux ACPI <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     linux-cxl@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        kernel test robot <lkp@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 13 Oct 2021 16:53:29 -0700
+Message-ID: <163416901172.806743.10056306321247850914.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <163381262522.716926.15040239940531720280.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <163381262522.716926.15040239940531720280.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Oct 8, 2021 at 6:45 PM <alison.schofield@intel.com> wrote:
->
-> From: Alison Schofield <alison.schofield@intel.com>
->
-> During NUMA init, CXL memory defined in the SRAT Memory Affinity
-> subtable may be assigned to a NUMA node. Since there is no
-> requirement that the SRAT be comprehensive for CXL memory another
-> mechanism is needed to assign NUMA nodes to CXL memory not identified
-> in the SRAT.
->
-> Use the CXL Fixed Memory Window Structure's (CFMWS) of the ACPI CXL
-> Early Discovery Table (CEDT) to find all CXL memory ranges. Create a
-> NUMA node for each range that is not already assigned to a NUMA node.
-> Add a memblk attaching its host physical address range to the node.
->
-> Note that these ranges may not actually map any memory at boot time.
-> They may describe persistent capacity or may be present to enable
-> hot-plug.
->
-> Consumers can use phys_to_target_node() to discover the NUMA node.
->
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> ---
->  drivers/acpi/numa/srat.c | 58 ++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/acpi.c       |  8 +++---
->  2 files changed, 63 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-> index b8795fc49097..568e033e6c3f 100644
-> --- a/drivers/acpi/numa/srat.c
-> +++ b/drivers/acpi/numa/srat.c
-> @@ -300,6 +300,61 @@ acpi_numa_memory_affinity_init(struct acpi_srat_mem_affinity *ma)
->  }
->  #endif /* defined(CONFIG_X86) || defined (CONFIG_ARM64) */
->
-> +/* Add a NUMA node and memblk for each node-less CFMWS */
-> +static int __init acpi_parse_cfmws(struct acpi_table_header *acpi_cedt)
-> +{
-> +       struct acpi_cedt_cfmws *cfmws;
-> +       acpi_size len, cur = 0;
-> +       void *cedt_subtable;
-> +       int i, pxm, node;
-> +       u64 start, end;
-> +
-> +       /* Use fake PXM values starting after the max PXM found in the SRAT */
-> +       for (i = 0; i < MAX_PXM_DOMAINS - 1; i++)
-> +               if (node_to_pxm_map[i] > pxm)
-> +                       pxm = node_to_pxm_map[i];
-> +       pxm++;
-> +
-> +       len = acpi_cedt->length - sizeof(*acpi_cedt);
-> +       cedt_subtable = acpi_cedt + 1;
-> +
-> +       while (cur < len) {
-> +               struct acpi_cedt_header *c = cedt_subtable + cur;
-> +
-> +               if (c->type != ACPI_CEDT_TYPE_CFMWS)
-> +                       goto next;
-> +
-> +               cfmws = cedt_subtable + cur;
-> +               if (cfmws->header.length < sizeof(*cfmws)) {
-> +                       pr_warn_once("CFMWS entry skipped:invalid length:%u\n",
-> +                                    cfmws->header.length);
-> +                       goto next;
-> +               }
-> +
-> +               start = cfmws->base_hpa;
-> +               end = cfmws->base_hpa + cfmws->window_size;
-> +
-> +               /* Skip if the HPA is already assigned to a NUMA node */
+From: Ben Widawsky <ben.widawsky@intel.com>
 
-Per below note about SRAT parsing dependency, perhaps change this to:
+The structure exists to pass around information about register mapping.
+Use it for passing @barno and @block_offset, and eliminate duplicate
+local variables.
 
-/* Skip if the SRAT already described the NUMA details for this HPA */
+The helpers that use @map do not care about @cxlm, so just pass them a
+pdev instead.
 
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+[djbw: separate @base conversion]
+[djbw: reorder before cxl_pci_setup_regs() refactor to improver readability]
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+Changes since v4:
+- Collect Ira's reviewed-by, thanks Ira!
+- Fixup the dev_err() in cxl_pci_map_regblock() to use %pa just like the
+  same fixup in v3 of the warning introduced by changing @offset from u64 to
+  resource_size_t. 
 
-> +               node = phys_to_target_node(start);
-> +               if (node != NUMA_NO_NODE)
-> +                       goto next;
-> +
-> +               node = acpi_map_pxm_to_node(pxm);
-> +               if (node == NUMA_NO_NODE) {
-> +                       pr_err("ACPI NUMA: Too many proximity domains.\n");
+ drivers/cxl/pci.c |   59 ++++++++++++++++++++++-------------------------------
+ 1 file changed, 25 insertions(+), 34 deletions(-)
 
-I think this might be too harsh especially for nodes that are only
-there to support potential future CXL hotplug.
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 21dd10a77eb3..eb0c2f1b9e65 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -306,17 +306,18 @@ static int cxl_pci_setup_mailbox(struct cxl_mem *cxlm)
+ 	return 0;
+ }
+ 
+-static void __iomem *cxl_pci_map_regblock(struct cxl_mem *cxlm,
+-					  u8 bar, u64 offset)
++static void __iomem *cxl_pci_map_regblock(struct pci_dev *pdev,
++					  struct cxl_register_map *map)
+ {
+ 	void __iomem *addr;
+-	struct device *dev = cxlm->dev;
+-	struct pci_dev *pdev = to_pci_dev(dev);
++	int bar = map->barno;
++	struct device *dev = &pdev->dev;
++	resource_size_t offset = map->block_offset;
+ 
+ 	/* Basic sanity check that BAR is big enough */
+ 	if (pci_resource_len(pdev, bar) < offset) {
+-		dev_err(dev, "BAR%d: %pr: too small (offset: %#llx)\n", bar,
+-			&pdev->resource[bar], (unsigned long long)offset);
++		dev_err(dev, "BAR%d: %pr: too small (offset: %pa)\n", bar,
++			&pdev->resource[bar], &offset);
+ 		return NULL;
+ 	}
+ 
+@@ -326,15 +327,15 @@ static void __iomem *cxl_pci_map_regblock(struct cxl_mem *cxlm,
+ 		return addr;
+ 	}
+ 
+-	dev_dbg(dev, "Mapped CXL Memory Device resource bar %u @ %#llx\n",
+-		bar, offset);
++	dev_dbg(dev, "Mapped CXL Memory Device resource bar %u @ %pa\n",
++		bar, &offset);
+ 
+ 	return addr;
+ }
+ 
+-static void cxl_pci_unmap_regblock(struct cxl_mem *cxlm, void __iomem *base)
++static void cxl_pci_unmap_regblock(struct pci_dev *pdev, void __iomem *base)
+ {
+-	pci_iounmap(to_pci_dev(cxlm->dev), base);
++	pci_iounmap(pdev, base);
+ }
+ 
+ static int cxl_pci_dvsec(struct pci_dev *pdev, int dvsec)
+@@ -360,12 +361,12 @@ static int cxl_pci_dvsec(struct pci_dev *pdev, int dvsec)
+ 	return 0;
+ }
+ 
+-static int cxl_probe_regs(struct cxl_mem *cxlm, void __iomem *base,
++static int cxl_probe_regs(struct pci_dev *pdev, void __iomem *base,
+ 			  struct cxl_register_map *map)
+ {
+ 	struct cxl_component_reg_map *comp_map;
+ 	struct cxl_device_reg_map *dev_map;
+-	struct device *dev = cxlm->dev;
++	struct device *dev = &pdev->dev;
+ 
+ 	switch (map->reg_type) {
+ 	case CXL_REGLOC_RBI_COMPONENT:
+@@ -420,12 +421,13 @@ static int cxl_map_regs(struct cxl_mem *cxlm, struct cxl_register_map *map)
+ 	return 0;
+ }
+ 
+-static void cxl_decode_register_block(u32 reg_lo, u32 reg_hi,
+-				      u8 *bar, u64 *offset, u8 *reg_type)
++static void cxl_decode_regblock(u32 reg_lo, u32 reg_hi,
++				struct cxl_register_map *map)
+ {
+-	*offset = ((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
+-	*bar = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
+-	*reg_type = FIELD_GET(CXL_REGLOC_RBI_MASK, reg_lo);
++	map->block_offset =
++		((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
++	map->barno = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
++	map->reg_type = FIELD_GET(CXL_REGLOC_RBI_MASK, reg_lo);
+ }
+ 
+ /**
+@@ -462,34 +464,23 @@ static int cxl_pci_setup_regs(struct cxl_mem *cxlm)
+ 
+ 	for (i = 0, n_maps = 0; i < regblocks; i++, regloc += 8) {
+ 		u32 reg_lo, reg_hi;
+-		u8 reg_type;
+-		u64 offset;
+-		u8 bar;
+ 
+ 		pci_read_config_dword(pdev, regloc, &reg_lo);
+ 		pci_read_config_dword(pdev, regloc + 4, &reg_hi);
+ 
+-		cxl_decode_register_block(reg_lo, reg_hi, &bar, &offset,
+-					  &reg_type);
++		map = &maps[n_maps];
++		cxl_decode_regblock(reg_lo, reg_hi, map);
+ 
+ 		/* Ignore unknown register block types */
+-		if (reg_type > CXL_REGLOC_RBI_MEMDEV)
++		if (map->reg_type > CXL_REGLOC_RBI_MEMDEV)
+ 			continue;
+ 
+-		base = cxl_pci_map_regblock(cxlm, bar, offset);
++		base = cxl_pci_map_regblock(pdev, map);
+ 		if (!base)
+ 			return -ENOMEM;
+ 
+-		map = &maps[n_maps];
+-		map->barno = bar;
+-		map->block_offset = offset;
+-		map->reg_type = reg_type;
+-
+-		ret = cxl_probe_regs(cxlm, base + offset, map);
+-
+-		/* Always unmap the regblock regardless of probe success */
+-		cxl_pci_unmap_regblock(cxlm, base);
+-
++		ret = cxl_probe_regs(pdev, base + map->block_offset, map);
++		cxl_pci_unmap_regblock(pdev, base);
+ 		if (ret)
+ 			return ret;
+ 
 
-Let's just report and continue for now because the CXL driver itself
-can decide on a fallback node to hot-add CXL memory that the BIOS did
-not setup.
-
-> +                       return -EINVAL;
-> +               }
-> +               if (numa_add_memblk(node, start, end) < 0) {
-> +                       pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
-> +                               node, start, end);
-
-I think this error message is most likely to trigger in the case that
-MAX_NUMNODES is exhausted, so the address range information should be
-reported in the acpi_map_pxm_to_node() failure case.
-
-> +               }
-> +               pxm++;
-> +next:
-> +               cur += c->length;
-> +       }
-> +       return 0;
-> +}
-> +
->  static int __init acpi_parse_slit(struct acpi_table_header *table)
->  {
->         struct acpi_table_slit *slit = (struct acpi_table_slit *)table;
-> @@ -478,6 +533,9 @@ int __init acpi_numa_init(void)
->         /* SLIT: System Locality Information Table */
->         acpi_table_parse(ACPI_SIG_SLIT, acpi_parse_slit);
->
-> +       /* CEDT: CXL Early Discovery Table */
-
-It might be worth a comment here that this *must* come after SRAT
-parsing so that the CXL ranges that the BIOS already incorporated into
-the system memory map can be skipped.
-
-> +       acpi_table_parse(ACPI_SIG_CEDT, acpi_parse_cfmws);
-> +
->         if (cnt < 0)
->                 return cnt;
->         else if (!parsed_numa_memblks)
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index dadc7f64b9ff..3798841c3418 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -144,9 +144,11 @@ static void cxl_add_cfmws_decoders(struct device *dev,
->                                 cfmws->window_size - 1);
->                         goto next;
->                 }
-> -               dev_dbg(dev, "add: %s range %#llx-%#llx\n",
-> -                       dev_name(&cxld->dev), cfmws->base_hpa,
-> -                       cfmws->base_hpa + cfmws->window_size - 1);
-> +               dev_dbg(dev, "add:%s node:%d range:%#llx-%#llx restrict:%#x\n",
-> +                       dev_name(&cxld->dev),
-> +                       phys_to_target_node(cxld->range.start),
-> +                       cxld->range.start, cxld->range.end,
-> +                       cfmws->restrictions);
->  next:
->                 cur += c->length;
->         }
-> --
-> 2.31.1
->
