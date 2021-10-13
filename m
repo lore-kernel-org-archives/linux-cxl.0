@@ -2,60 +2,61 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DEFC433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 13 Oct 2021 22:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E052EC433EF
+	for <linux-cxl@archiver.kernel.org>; Wed, 13 Oct 2021 22:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D975A61154
-	for <linux-cxl@archiver.kernel.org>; Wed, 13 Oct 2021 22:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8BAE61105
+	for <linux-cxl@archiver.kernel.org>; Wed, 13 Oct 2021 22:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231231AbhJMWvq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 13 Oct 2021 18:51:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53606 "EHLO
+        id S230030AbhJMWzg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 13 Oct 2021 18:55:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231180AbhJMWvp (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Oct 2021 18:51:45 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC7F9C061749
-        for <linux-cxl@vger.kernel.org>; Wed, 13 Oct 2021 15:49:41 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id y1so2810815plk.10
-        for <linux-cxl@vger.kernel.org>; Wed, 13 Oct 2021 15:49:41 -0700 (PDT)
+        with ESMTP id S229692AbhJMWzf (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Oct 2021 18:55:35 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24FCEC061570
+        for <linux-cxl@vger.kernel.org>; Wed, 13 Oct 2021 15:53:32 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id q19so3798667pfl.4
+        for <linux-cxl@vger.kernel.org>; Wed, 13 Oct 2021 15:53:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=IzcJqcZKaeP4N0r2R1aUwTSZHSBWK2JQNN59igSj9bg=;
-        b=vPZXcUwuf1K265GJj8iIKKtmClnf1X3/ENDU22ChBpToG9/0UNfVWmUYKdU7mZHsiu
-         o5qGCbisyw1McngOT+uM7pSOONaLaVwqFpTU0kw30+8GAbq+iM7slO3wJFXIDFjMRpMs
-         3Vky0ze1Q2VS2L5MTCawll1tVB1yanrB/dZX7QIgzIdSAEMi4HPV3jWJPszNSDrqTN4c
-         bm1T4QmKF5lMiJHbXPsTvJxcSq+DhHbBwnnah+ozSRBsOboGfVzOBqAz57EbTlV9Dm9U
-         3d3PWtODSS5XXncAUgxzpAo1QF1rhDlYGlJTaKbR9JX0YiEa8m6BCFHWj9aIxbHmvl/D
-         79kw==
+        bh=mD52ke93bZgMN8C2a9gCtqv/RSz+k+TH8msNFSfXTEI=;
+        b=111IYqB5RWpR47n+J9LBNzUiwKITM04Su9x8IakTob8UD0Fpo6EPKusY5AgXimwuXb
+         377AkSssdJvml0TXvPV9uVNumAo5IC2LMqp7eZ1Xeav/DRvwkTDvkyyTFv+h1tEMp9CC
+         De5w7Hi6Y/tPn8BLywbkiorQH3J85/Kq6POg32i6PB4ok63I4v/qWQw1LfGjTeB9ogvY
+         PB/HqYOIkMHNUwg5m8gb/6YVP/9LI7I2MdiilPE2t17kf4EuQngM7hSWYHbpa0hBiLJs
+         U1rJE4STnZmdmNaj8Wwj6D9PXEQU3peVnr+P/0qnhlMNVYhux01Zo507yBcOgU8hDQb1
+         FiUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IzcJqcZKaeP4N0r2R1aUwTSZHSBWK2JQNN59igSj9bg=;
-        b=avnvmWrvEHx2PlTVY/yXRztTxI9h8IpCKGaaC4lCIu/xW120ygGQobI8PKk0k9GJlU
-         aNP/xCp8F7pilTun4LYczEStlzL/5Jvwe/UQn7N57QKnsAtd/4Ni80D5wdqy0d1LH6Di
-         QydpVPt4XWhFAbjWXzzIC9HMjUc2khPXruI69RTak8Anu3PTM852THj4LGl8f4u0H/42
-         RYUxk5hVzrxwhQTXMIOkXokXfqbRRjLctu2eELURh0FrCEZLHZz4MlkyQ7nFWCP0JuqG
-         vJAL/QXZpQzbOkHs5/9swxT7eW1MaWyBf7dUcZdGgTsBLStAAelKkRGKwqfQSPhdqTvK
-         cDhQ==
-X-Gm-Message-State: AOAM531hqH18mN0429+rTkoaA2uI9VXQfIPCzVokgrW8HimTrA7TYmP4
-        GKzsO2fvS5rrdUNSccH0e81NZ0swM0yo2recKg15Dg==
-X-Google-Smtp-Source: ABdhPJww2lQN3rWRGSl0Xrohz3SxU98D1oyYuUtwtyaSQEfPit3AjHQnFldz1HLlCTkUoxm+2IrROcbWMyTUwh6Oopk=
-X-Received: by 2002:a17:90b:350f:: with SMTP id ls15mr2317067pjb.220.1634165381427;
- Wed, 13 Oct 2021 15:49:41 -0700 (PDT)
+        bh=mD52ke93bZgMN8C2a9gCtqv/RSz+k+TH8msNFSfXTEI=;
+        b=ePfXLHNJ6hMHgnTFQZTkZj0oQz24iiIm/JzBt8GSoeTP2Lif/ThJraFQVke3b4z6QU
+         P8sb/1M5Y4jvfjpMWs2KpYHe1V1VWs/nbq/7yu8lTEAU1nS6YWaKE5AGs5O0PhHDeHIg
+         fb74iPbbIajs0TF58uhYlohqXGYortoOmfTRy5j0dSkiz2EB310gwu4DHilO9CTF5Jd/
+         RiYxWWr0nEhwuKz9fzYzVKjeKb7yJC+LjiAyaRLBGj26xPFE0gV380+FBxp5GvP35xlp
+         SCv24J8eQmXC7I9JUXBQ92EpC5shwrRDcVzURj9PLKT48AraBqxY8C28IO5S13QLbZSp
+         d9GQ==
+X-Gm-Message-State: AOAM531OYCTyfYPGAoD/4Gh68/6vlcBmu5w63+q27KTKPgwopKe+fhRh
+        gs2wYWSUHYh7jj7RA0nYXSTRXHY5m5+Bp+U/qquqbQ==
+X-Google-Smtp-Source: ABdhPJzUs+C9Y/nPSblGHzVkRKNZwUBEduOOiELpNCPsaOpR5gHLldCoGaAsU4ZIsdGNciujcHSWWgt+DEurN/y2eTo=
+X-Received: by 2002:a05:6a00:140e:b0:444:b077:51ef with SMTP id
+ l14-20020a056a00140e00b00444b07751efmr1680391pfu.61.1634165611611; Wed, 13
+ Oct 2021 15:53:31 -0700 (PDT)
 MIME-Version: 1.0
 References: <163379783658.692348.16064992154261275220.stgit@dwillia2-desk3.amr.corp.intel.com>
- <163379787433.692348.2451270397309803556.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20211013224523.rxyt2mg75ebxismi@intel.com>
-In-Reply-To: <20211013224523.rxyt2mg75ebxismi@intel.com>
+ <163379786922.692348.2318044990911111834.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20211010042056.GJ3114988@iweiny-DESK2.sc.intel.com>
+In-Reply-To: <20211010042056.GJ3114988@iweiny-DESK2.sc.intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 13 Oct 2021 15:49:30 -0700
-Message-ID: <CAPcyv4jHxWJQSgGFg4e5tSg8dgDcYVKrzXEN8gtg7TjNRj3h0g@mail.gmail.com>
-Subject: Re: [PATCH v3 07/10] cxl/pci: Split cxl_pci_setup_regs()
-To:     Ben Widawsky <ben.widawsky@intel.com>
+Date:   Wed, 13 Oct 2021 15:53:20 -0700
+Message-ID: <CAPcyv4hP5ohs10-xC+h=QOH7yiUXji55ubwVG1XfMA006tjR8A@mail.gmail.com>
+Subject: Re: [PATCH v3 06/10] cxl/pci: Add @base to cxl_register_map
+To:     Ira Weiny <ira.weiny@intel.com>
 Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Christoph Hellwig <hch@lst.de>
@@ -64,31 +65,87 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Oct 13, 2021 at 3:45 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Sat, Oct 9, 2021 at 9:21 PM Ira Weiny <ira.weiny@intel.com> wrote:
 >
-> On 21-10-09 09:44:34, Dan Williams wrote:
-> > From: Ben Widawsky <ben.widawsky@intel.com>
+> On Sat, Oct 09, 2021 at 09:44:29AM -0700, Dan Williams wrote:
+> > In addition to carrying @barno, @block_offset, and @reg_type, add @base
+> > to keep all map/unmap parameters in one object. The helpers
+> > cxl_{map,unmap}_regblock() handle adjusting @base to the @block_offset
+> > at map and unmap time.
 > >
-> > In preparation for moving parts of register mapping to cxl_core, split
-> > cxl_pci_setup_regs() into a helper that finds register blocks,
-> > (cxl_find_regblock()), and a generic wrapper that probes the precise
-> > register sets within a block (cxl_setup_regs()).
-> >
-> > Move the actual mapping (cxl_map_regs()) of the only register-set that
-> > cxl_pci cares about (memory device registers) up a level from the former
-> > cxl_pci_setup_regs() into cxl_pci_probe().
-> >
-> > With this change the unused component registers are no longer mapped,
-> > but the helpers are primed to move into the core.
-> >
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > [djbw: rebase on the cxl_register_map refactor]
-> > [djbw: drop cxl_map_regs() for component registers]
 > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  drivers/cxl/cxl.h |    1 +
+> >  drivers/cxl/pci.c |   31 ++++++++++++++++---------------
+> >  2 files changed, 17 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> > index a6687e7fd598..7cd16ef144dd 100644
+> > --- a/drivers/cxl/cxl.h
+> > +++ b/drivers/cxl/cxl.h
+> > @@ -140,6 +140,7 @@ struct cxl_device_reg_map {
+> >  };
+> >
+> >  struct cxl_register_map {
+> > +     void __iomem *base;
+> >       u64 block_offset;
+> >       u8 reg_type;
+> >       u8 barno;
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > index 9f006299a0e3..b42407d067ac 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> > @@ -306,8 +306,7 @@ static int cxl_pci_setup_mailbox(struct cxl_mem *cxlm)
+> >       return 0;
+> >  }
+> >
+> > -static void __iomem *cxl_pci_map_regblock(struct pci_dev *pdev,
+> > -                                       struct cxl_register_map *map)
+> > +static int cxl_map_regblock(struct pci_dev *pdev, struct cxl_register_map *map)
+> >  {
+> >       void __iomem *addr;
+> >       int bar = map->barno;
+> > @@ -318,24 +317,27 @@ static void __iomem *cxl_pci_map_regblock(struct pci_dev *pdev,
+> >       if (pci_resource_len(pdev, bar) < offset) {
+> >               dev_err(dev, "BAR%d: %pr: too small (offset: %#llx)\n", bar,
+> >                       &pdev->resource[bar], (unsigned long long)offset);
+> > -             return NULL;
+> > +             return -ENXIO;
+> >       }
+> >
+> >       addr = pci_iomap(pdev, bar, 0);
+> >       if (!addr) {
+> >               dev_err(dev, "failed to map registers\n");
+> > -             return addr;
+> > +             return -ENOMEM;
+> >       }
+> >
+> >       dev_dbg(dev, "Mapped CXL Memory Device resource bar %u @ %#llx\n",
+> >               bar, offset);
+> >
+> > -     return addr;
+> > +     map->base = addr + map->block_offset;
+> > +     return 0;
+> >  }
+> >
+> > -static void cxl_pci_unmap_regblock(struct pci_dev *pdev, void __iomem *base)
+> > +static void cxl_unmap_regblock(struct pci_dev *pdev,
+> > +                            struct cxl_register_map *map)
+> >  {
+> > -     pci_iounmap(pdev, base);
+> > +     pci_iounmap(pdev, map->base - map->block_offset);
 >
-> [snip]
->
-> Did you mean to also drop the component register handling in cxl_probe_regs()
-> and cxl_map_regs()?
+> I know we need to get these in soon.  But I think map->base should be 'base'
+> and map->block_offset should be handled in cxl_probe_regs() rather than
+> subtract it here..
 
-No, because that has a soon to be added user, right?
+But why? The goal of the cxl_register_map cleanups is to reduce the
+open-coding for details that can just be passed around in a @map
+instance. Once cxl_map_regblock() sets up @base there's little reason
+to consider the hardware regblock details.
+
+> Either way this is cleaner than what it was.
+>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+
+Thanks!
