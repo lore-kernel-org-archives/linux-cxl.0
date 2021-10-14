@@ -2,85 +2,179 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4361DC433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 14 Oct 2021 00:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6AEC433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 14 Oct 2021 00:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 292C960BD3
-	for <linux-cxl@archiver.kernel.org>; Thu, 14 Oct 2021 00:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6996603E8
+	for <linux-cxl@archiver.kernel.org>; Thu, 14 Oct 2021 00:42:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229794AbhJNAOm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 13 Oct 2021 20:14:42 -0400
-Received: from mga18.intel.com ([134.134.136.126]:44398 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229590AbhJNAOl (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Wed, 13 Oct 2021 20:14:41 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10136"; a="214509920"
-X-IronPort-AV: E=Sophos;i="5.85,371,1624345200"; 
-   d="scan'208";a="214509920"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2021 17:12:37 -0700
-X-IronPort-AV: E=Sophos;i="5.85,371,1624345200"; 
-   d="scan'208";a="491699393"
-Received: from sjchris1-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.132.156])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2021 17:12:37 -0700
-Date:   Wed, 13 Oct 2021 17:12:36 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v3 07/10] cxl/pci: Split cxl_pci_setup_regs()
-Message-ID: <20211014001236.aohtmzrrvmcq6dpo@intel.com>
-References: <163379783658.692348.16064992154261275220.stgit@dwillia2-desk3.amr.corp.intel.com>
- <163379787433.692348.2451270397309803556.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20211013224523.rxyt2mg75ebxismi@intel.com>
- <CAPcyv4jHxWJQSgGFg4e5tSg8dgDcYVKrzXEN8gtg7TjNRj3h0g@mail.gmail.com>
+        id S229692AbhJNAoS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 13 Oct 2021 20:44:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229660AbhJNAoS (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Oct 2021 20:44:18 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C58AC061570
+        for <linux-cxl@vger.kernel.org>; Wed, 13 Oct 2021 17:42:14 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id a73so3966135pge.0
+        for <linux-cxl@vger.kernel.org>; Wed, 13 Oct 2021 17:42:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NfRQr6k/obvRQOFOLfCvUc1bWyG7SZdHPNEjDYyZAU0=;
+        b=xwczeQaxlMGZ0jWMa9b3KY2JPb5Ofq9AtcxWnu3TT1XfFCYt1yIP09dg5AyqSt8+rx
+         5xxunVtJyHs9UynWDKL9gfsVgKpuKNJvHn4kVbBNoLN2A0O8phbB2S0A/i2RLL/dtcYl
+         CtwITbalr2DB7Uj6/XwmVOM0fQ5T9qIRtPJ9BQP1FbGeUzNOW3+jWC+fjgug9TWyBn4H
+         jaOiFsQwkXbhrpVSHrev2F8PF/NiGQ0KrbN5z9IxqHq+VWEKP1BGot69FpY38iVpPJm2
+         TN+Sy6/lWfPdpIvTwj4mBgS1b5UkAzkyy6S00R8W1IUn2Y0YGPtRj+xudp7K/HEhYmNk
+         m5pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NfRQr6k/obvRQOFOLfCvUc1bWyG7SZdHPNEjDYyZAU0=;
+        b=ctlyAHS1WYWtDsEzNjJ6B7mgGWmuaSClEaV02rLXZS7zcHkvS2UsQeWz91DBySusrt
+         /5+721oWsGz3LZ6r9+ZOF2c6uq0U+tygsSJAKNeJeAdM+QWlNtSuHSLlx+CoMfrBEWEP
+         s21dSmzz0JB0mmLJg0DJhJDjmLYSi/xMyz8THqL6DJ3VfOPBliOKNBMzMpzJYHp6lTlS
+         HTbHKOtxC95Bg8bEzH7Ttu7HtUr23sv3kS7BJys3P2y9YoYYyoo2R5oho2ehxz9DyzHm
+         qwkm+6u4T6DRR7X+Mf+uvCYhzzZJr+0dzrhRAotO8WunuL1Wa+lkZJpXAA6q0COMPIkV
+         myVg==
+X-Gm-Message-State: AOAM530FD+mofbrJftr14UTH6M70NlZUNpmqkaK18dolvMKrqUgxCI49
+        gWI/z4BNwgCciLYh1z6r1CQIqfdXso8RuD4jO4RFCA==
+X-Google-Smtp-Source: ABdhPJxKjYnAd1Fh3LVRDgPct38ouf3VzXJ3ltR5B1gtzdYovpJ5E7HdS/lzy82UdCal1jomrOs6qP6BJ6mo3JfoY7Q=
+X-Received: by 2002:a63:1262:: with SMTP id 34mr1941726pgs.356.1634172134068;
+ Wed, 13 Oct 2021 17:42:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4jHxWJQSgGFg4e5tSg8dgDcYVKrzXEN8gtg7TjNRj3h0g@mail.gmail.com>
+References: <20211009015339.400383-1-alison.schofield@intel.com>
+ <20211011171315.GL3114988@iweiny-DESK2.sc.intel.com> <20211011220053.GA412964@alison-desk>
+In-Reply-To: <20211011220053.GA412964@alison-desk>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 13 Oct 2021 17:42:03 -0700
+Message-ID: <CAPcyv4juNdTn2uVOw1H0-BdVus0XpCwoYShTV2THi5V33Bo_VA@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: NUMA: Add a node and memblk for each CFMWS not in SRAT
+To:     Alison Schofield <alison.schofield@intel.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-cxl@vger.kernel.org, Linux ACPI <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21-10-13 15:49:30, Dan Williams wrote:
-> On Wed, Oct 13, 2021 at 3:45 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Mon, Oct 11, 2021 at 2:52 PM Alison Schofield
+<alison.schofield@intel.com> wrote:
+>
+> Thanks for the review Ira!
+>
+> On Mon, Oct 11, 2021 at 10:13:16AM -0700, Ira Weiny wrote:
+> > On Fri, Oct 08, 2021 at 06:53:39PM -0700, Schofield, Alison wrote:
+> > > From: Alison Schofield <alison.schofield@intel.com>
+> > >
+> > > During NUMA init, CXL memory defined in the SRAT Memory Affinity
+> > > subtable may be assigned to a NUMA node. Since there is no
+> > > requirement that the SRAT be comprehensive for CXL memory another
+> > > mechanism is needed to assign NUMA nodes to CXL memory not identified
+> > > in the SRAT.
+> > >
+> > > Use the CXL Fixed Memory Window Structure's (CFMWS) of the ACPI CXL
+> > > Early Discovery Table (CEDT) to find all CXL memory ranges. Create a
+> > > NUMA node for each range that is not already assigned to a NUMA node.
+> > > Add a memblk attaching its host physical address range to the node.
+> > >
+> > > Note that these ranges may not actually map any memory at boot time.
+> > > They may describe persistent capacity or may be present to enable
+> > > hot-plug.
+> > >
+> > > Consumers can use phys_to_target_node() to discover the NUMA node.
+> > >
+> > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> > > ---
+> > >  drivers/acpi/numa/srat.c | 58 ++++++++++++++++++++++++++++++++++++++++
+> > >  drivers/cxl/acpi.c       |  8 +++---
+> > >  2 files changed, 63 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> > > index b8795fc49097..568e033e6c3f 100644
+> > > --- a/drivers/acpi/numa/srat.c
+> > > +++ b/drivers/acpi/numa/srat.c
+> > > @@ -300,6 +300,61 @@ acpi_numa_memory_affinity_init(struct acpi_srat_mem_affinity *ma)
+> > >  }
+> > >  #endif /* defined(CONFIG_X86) || defined (CONFIG_ARM64) */
+> > >
+> > > +/* Add a NUMA node and memblk for each node-less CFMWS */
 > >
-> > On 21-10-09 09:44:34, Dan Williams wrote:
-> > > From: Ben Widawsky <ben.widawsky@intel.com>
-> > >
-> > > In preparation for moving parts of register mapping to cxl_core, split
-> > > cxl_pci_setup_regs() into a helper that finds register blocks,
-> > > (cxl_find_regblock()), and a generic wrapper that probes the precise
-> > > register sets within a block (cxl_setup_regs()).
-> > >
-> > > Move the actual mapping (cxl_map_regs()) of the only register-set that
-> > > cxl_pci cares about (memory device registers) up a level from the former
-> > > cxl_pci_setup_regs() into cxl_pci_probe().
-> > >
-> > > With this change the unused component registers are no longer mapped,
-> > > but the helpers are primed to move into the core.
-> > >
-> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > [djbw: rebase on the cxl_register_map refactor]
-> > > [djbw: drop cxl_map_regs() for component registers]
-> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > IMO this comment does not make sense for a function called 'parse cfmws'.  I
+> > would just drop it.
 > >
-> > [snip]
+>
+> Agree. Dropping comment.
+>
+> You made me stare at this func name more, and it can be better.
+> I'll try this: acpi_cxl_cfmws_init()
+> to be more like the others in this file, doing similar work.
+>
+> > > +static int __init acpi_parse_cfmws(struct acpi_table_header *acpi_cedt)
+> > > +{
+>
+> snip
+>
+>
+> > > +           if (numa_add_memblk(node, start, end) < 0) {
+> > > +                   pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
+> > > +                           node, start, end);
 > >
-> > Did you mean to also drop the component register handling in cxl_probe_regs()
-> > and cxl_map_regs()?
-> 
-> No, because that has a soon to be added user, right?
+> > Is there anything which could go wrong if the block is not added to the numa
+> > node?
+> >
+> > Ira
+> >
+>
+> I intended, but failed, to mimic the adding of nodes & memblocks based
+> on the SRAT Memory Affinity table. There, a failure from numa_add_memblk()
+> causes the entire SRAT parsing to fail, and IIUC entire acpi_numa init fails.
+>
+> FYI: numa_add_memblk() only completely fails (-EINVAL) if we've used up all
+> the NR_NODE_MEMBLKS (which is set to MAX_NUMNODE*2)
 
-In the current codebase, the port driver gets the offset from cxl_core, not
-through the pci driver. I know you wanted this to be passed from cxl_pci (and
-indeed it was before). Currently however, the functionality is subsumed by
-cxl_find_regblock and is used by cxl_pci (for device registers), cxl_acpi (to
-get the CHBCR) and cxl_core (to get the component register block for switches).
+If you're bumping up against that limit then this would have already
+failed above at the acpi_map_pxm_to_node() call, right?
 
-I have no user in cxl_pci for the component registers, and as we discussed, we
-have no good way to share them across modules.
+> My first guess would be to follow the pattern and fail the entire
+> acpi_numa init. ie make acpi_numa = -1; I'll pursue that.
 
-We can ignore this for now though and discuss it on the list when I post. If
-there is a better way to handle this, I'm open to it.
+I think CFMWS ranges for future hotplug are in a different class than
+memory currently present and marked online by the SRAT. So as long as
+this implementation can determine that the range is for future
+hotplug, which I believe the phys_to_target_node() pre-check handles,
+then I think it is safe to note the failure and continue. With the
+expectation that the CXL driver needs to handle the NUMA_NO_NODE case
+at memory hot-add time.
+
+> Now, back to your specific question: "Is there anything which could
+> go wrong if the block is not added to the numa node?"
+>
+> numa_add_memblk(_to) can actually return success without adding a memblock.
+> Like this:
+> /* whine about and ignore invalid blks */
+> if (start > end || nid < 0 || nid >= MAX_NUMNODES) {
+>         pr_warn("Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
+>                 nid, start, end - 1);
+>         return 0;
+> }
+>
+> So, I'm going to make an assumption that it can be handled, and see if
+> someone else chimes in here with more knowledge of why we can quietly
+> ignore.
+
+I wouldn't say quietly ignore as the failure here means that the
+system cannot accurately place CXL memory for best performance.
+There's already so many other ways that CXL memory dynamic setup can
+go sideways that the lack of a dedicated NUMA node is not necessarily
+fatal... in my opinion. It is a judgment call, but I think Robustness
+Principle nudges it towards: "continue and try to make the best of
+it".
