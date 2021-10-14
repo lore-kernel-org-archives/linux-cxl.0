@@ -2,57 +2,59 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C81C433F5
-	for <linux-cxl@archiver.kernel.org>; Thu, 14 Oct 2021 02:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 965D4C433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 14 Oct 2021 16:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEFF2610D0
-	for <linux-cxl@archiver.kernel.org>; Thu, 14 Oct 2021 02:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE0C6109E
+	for <linux-cxl@archiver.kernel.org>; Thu, 14 Oct 2021 16:01:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229948AbhJNCzt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 13 Oct 2021 22:55:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51194 "EHLO
+        id S231340AbhJNQDh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 14 Oct 2021 12:03:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229896AbhJNCzs (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Oct 2021 22:55:48 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6157C061570
-        for <linux-cxl@vger.kernel.org>; Wed, 13 Oct 2021 19:53:44 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id lk8-20020a17090b33c800b001a0a284fcc2so5886630pjb.2
-        for <linux-cxl@vger.kernel.org>; Wed, 13 Oct 2021 19:53:44 -0700 (PDT)
+        with ESMTP id S231316AbhJNQDh (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 14 Oct 2021 12:03:37 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 508A0C061570
+        for <linux-cxl@vger.kernel.org>; Thu, 14 Oct 2021 09:01:32 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id q12so3040756pgq.11
+        for <linux-cxl@vger.kernel.org>; Thu, 14 Oct 2021 09:01:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pVpsGH9QL+KHRg/uYizyXVbiWTS3IE6Hk8UnQH9kZSc=;
-        b=CBo3Y8VMIuP9F/1zWBhQpin90T5rhk3BznP+I5XT27ni7u6rLMKnOOeX3TFGtSsM3u
-         LJLFipL8pvxMjg/Men7B4yRWaTxBQYv9e0L5OF9OEKGUwqi9Vta39Bw6Q2ZtGFPO0SNu
-         8pzgWgBJ5Olppxw62ugK+iX1GFo3j1ojCgiTxZmKakw7Urkkn05g+d0u3aXVJj/g0Fsa
-         5j0vEUWS7XXNOW0tS5wYTCcDLaIUIk3UEAs5vAjpc9La6DKNj9QKBmNzpYB5tP4wRMyo
-         z60T0zc/at9qo/M4LBW35/7FqdJlKI1xREYximbYZ8ktRXVBmXYCk8ucUYc/md++a5Vu
-         v8Mw==
+        bh=Wc68sjOqyUnrWe0dKVQzk15J1/YhXlYXFkfqftB8FKw=;
+        b=IunGJZOeUPcnFl9iIt+ymXw8JXlmoG/mkFgQmvyA+B8leGlgkdk9A4hPnzcVGKwaXk
+         r4aakIIKTVhMLRvAwvtCW2U6btqVDfuJzy6IrrZLbSlMe6nbcN8Yw62fK/xnJJ88zDxZ
+         z7m6+X67XbyeZLoxRb26g4cU2QoGzj8y9PZRpl6z5KEUzqg3kIgYfPJSZ68xgb1qxleM
+         7VKMWKkk9c+MiyuncjEui2FJwTkw4uVGUlisWJ535RVaAqgmaL4yzHstJgnUx5OPBy6Q
+         E0bMTG8vyNNOuj19/za0sOE0zvoytoevFchfBqiez25Ngb67AVW0qEfy5SOWq3T9FQwW
+         Qu/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pVpsGH9QL+KHRg/uYizyXVbiWTS3IE6Hk8UnQH9kZSc=;
-        b=KbgDxl2BAc9ulYsMSfcx50O36pesUGHhSUT52JhINXvMu+R6nHiXF49dYUUymjMv/s
-         pWl5RZ2T13EfO1e742kN19OmRU0LAVH61sprxJ1/Ow7bPuuIY1fDmLM+sGgbVsaBU2En
-         EULlf6NARlGepcN9bnJE01isj6oNz72flybLGRWspEjEsBc5RBYJ2qNOWuCEye4XmoI/
-         /ZJAxN6lTCQyid7Dt+Bet+2tFJKK5DoJWtHBg6TUWLhatHrVNTJSlurmzQWENZg/uvtv
-         dMwTuzDnVp8NdYt2FdEWflkqj9Yjk5xKo1wGf+23GCMyg0eYXwF1JjKstkUqKGvF1KtN
-         gyCQ==
-X-Gm-Message-State: AOAM530PcbuqVHzgkiTMNmvHbObvwRuIZGLBu1PAn3YELIrWPo3MrjPP
-        86E0TSecc+xElmZVmvNv3fc7QeKZvHw0EUyVm8xpNw==
-X-Google-Smtp-Source: ABdhPJwM2El7xf3YN1ghBPWV4OXD1TwLVjjmUssbvQ/tiDJLj4d5xzC+fmzoJwg0XlyxbzbEQTU7NHV0hyAB+0xHl6w=
-X-Received: by 2002:a17:90a:a085:: with SMTP id r5mr17634635pjp.8.1634180024229;
- Wed, 13 Oct 2021 19:53:44 -0700 (PDT)
+        bh=Wc68sjOqyUnrWe0dKVQzk15J1/YhXlYXFkfqftB8FKw=;
+        b=GblgXk6x8arbxSbVe2oHKs12k732gjNoZacXTyu3Y/TCZlkSj7Ugtz6hi0OOKb0DZr
+         E+jEYoSPQ0pHqpszHI3Q9GABOQdLjHVZYA4WogUwSf8fQLUZBvgimOW4gL/42lsLc+0J
+         V8rD65eyzw+RGKirqA6yBiwto+bf+L7pyl70Aju7b6USQ9kEIqbuI9i22JhnEm+LLPtm
+         ZPx5xOwGgtxBrh8qtMypgcKm51oVj+601YSTt4E2pyDdCxLyAl9QrBf20E4oCnkl+AOI
+         BxSeZiilRMbm85WaLxYBRLsBOtd5eqmuNwHZbf2ibCnD1yO2oOMbHvN/zX2GhReXV/2G
+         Ahfw==
+X-Gm-Message-State: AOAM531lS5ZHZcFuICJJ7Jxtt/ygMgdwsd58KoDXMZ9WrnZrtd1gOTsS
+        LKg0itg2xqcszoACCWN9pHTprOG9Ec9RMlb5eQwDpCWAUT53Dw==
+X-Google-Smtp-Source: ABdhPJzjI+14DGMrdA0XJGBCG+5oMYOW+SvY9qEpfQJTN2YkyJVkBj2Hg4gC3iPudVLxERSp+I/bIo/HoOSKsWUzks0=
+X-Received: by 2002:a05:6a00:1a01:b0:44c:1ec3:364f with SMTP id
+ g1-20020a056a001a0100b0044c1ec3364fmr6364756pfv.86.1634227291751; Thu, 14 Oct
+ 2021 09:01:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211007082139.3088615-1-vishal.l.verma@intel.com> <20211007082139.3088615-6-vishal.l.verma@intel.com>
-In-Reply-To: <20211007082139.3088615-6-vishal.l.verma@intel.com>
+References: <20211007082139.3088615-1-vishal.l.verma@intel.com> <20211007082139.3088615-8-vishal.l.verma@intel.com>
+In-Reply-To: <20211007082139.3088615-8-vishal.l.verma@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 13 Oct 2021 19:53:33 -0700
-Message-ID: <CAPcyv4j2=K15QDN2S6G+R37rSQQOQjO3NQP8RHWca0OnwvSh6g@mail.gmail.com>
-Subject: Re: [ndctl PATCH v4 05/17] libcxl: add support for command query and submission
+Date:   Thu, 14 Oct 2021 09:01:21 -0700
+Message-ID: <CAPcyv4ifss448zuSRphx4d5RAtjZkgiBQirbLPMAJF04NPnZLg@mail.gmail.com>
+Subject: Re: [ndctl PATCH v4 07/17] libcxl: add GET_HEALTH_INFO mailbox
+ command and accessors
 To:     Vishal Verma <vishal.l.verma@intel.com>
 Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
         Linux NVDIMM <nvdimm@lists.linux.dev>
@@ -61,38 +63,87 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+)
+
 On Thu, Oct 7, 2021 at 1:22 AM Vishal Verma <vishal.l.verma@intel.com> wrote:
 >
-> Add a set of APIs around 'cxl_cmd' for querying the kernel for supported
-> commands, allocating and validating command structures against the
-> supported set, and submitting the commands.
->
-> 'Query Commands' and 'Send Command' are implemented as IOCTLs in the
-> kernel. 'Query Commands' returns information about each supported
-> command, such as flags governing its use, or input and output payload
-> sizes. This information is used to validate command support, as well as
-> set up input and output buffers for command submission.
+> Add libcxl APIs to create a new GET_HEALTH_INFO mailbox command, the
+> command output data structure (privately), and accessor APIs to return
+> the different fields in the health info output.
 >
 > Cc: Ben Widawsky <ben.widawsky@intel.com>
 > Cc: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 > ---
-[..]
-> +CXL_EXPORT int cxl_cmd_submit(struct cxl_cmd *cmd)
-> +{
-> +       struct cxl_memdev *memdev = cmd->memdev;
-> +       const char *devname = cxl_memdev_get_devname(memdev);
-> +       struct cxl_ctx *ctx = cxl_memdev_get_ctx(memdev);
-> +       int rc;
+>  cxl/lib/private.h  |  47 ++++++++
+>  cxl/lib/libcxl.c   | 286 +++++++++++++++++++++++++++++++++++++++++++++
+>  cxl/libcxl.h       |  38 ++++++
+>  util/bitmap.h      |  23 ++++
+>  cxl/lib/libcxl.sym |  31 +++++
+>  5 files changed, 425 insertions(+)
+>
+> diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+> index 3273f21..f76b518 100644
+> --- a/cxl/lib/private.h
+> +++ b/cxl/lib/private.h
+> @@ -73,6 +73,53 @@ struct cxl_cmd_identify {
+>         u8 qos_telemetry_caps;
+>  } __attribute__((packed));
+>
+> +struct cxl_cmd_get_health_info {
+> +       u8 health_status;
+> +       u8 media_status;
+> +       u8 ext_status;
+> +       u8 life_used;
+> +       le16 temperature;
+> +       le32 dirty_shutdowns;
+> +       le32 volatile_errors;
+> +       le32 pmem_errors;
+> +} __attribute__((packed));
 > +
-> +       switch (cmd->query_status) {
+> +/* CXL 2.0 8.2.9.5.3 Byte 0 Health Status */
+> +#define CXL_CMD_HEALTH_INFO_STATUS_MAINTENANCE_NEEDED_MASK             BIT(0)
+> +#define CXL_CMD_HEALTH_INFO_STATUS_PERFORMANCE_DEGRADED_MASK           BIT(1)
+> +#define CXL_CMD_HEALTH_INFO_STATUS_HW_REPLACEMENT_NEEDED_MASK          BIT(2)
+> +
+> +/* CXL 2.0 8.2.9.5.3 Byte 1 Media Status */
+> +#define CXL_CMD_HEALTH_INFO_MEDIA_STATUS_NORMAL                                0x0
+> +#define CXL_CMD_HEALTH_INFO_MEDIA_STATUS_NOT_READY                     0x1
+> +#define CXL_CMD_HEALTH_INFO_MEDIA_STATUS_PERSISTENCE_LOST              0x2
+> +#define CXL_CMD_HEALTH_INFO_MEDIA_STATUS_DATA_LOST                     0x3
+> +#define CXL_CMD_HEALTH_INFO_MEDIA_STATUS_POWERLOSS_PERSISTENCE_LOSS    0x4
+> +#define CXL_CMD_HEALTH_INFO_MEDIA_STATUS_SHUTDOWN_PERSISTENCE_LOSS     0x5
+> +#define CXL_CMD_HEALTH_INFO_MEDIA_STATUS_PERSISTENCE_LOSS_IMMINENT     0x6
+> +#define CXL_CMD_HEALTH_INFO_MEDIA_STATUS_POWERLOSS_DATA_LOSS           0x7
+> +#define CXL_CMD_HEALTH_INFO_MEDIA_STATUS_SHUTDOWN_DATA_LOSS            0x8
+> +#define CXL_CMD_HEALTH_INFO_MEDIA_STATUS_DATA_LOSS_IMMINENT            0x9
+> +
+> +/* CXL 2.0 8.2.9.5.3 Byte 2 Additional Status */
+> +#define CXL_CMD_HEALTH_INFO_EXT_LIFE_USED_MASK                         GENMASK(1, 0)
+> +#define CXL_CMD_HEALTH_INFO_EXT_LIFE_USED_NORMAL                       0x0
+> +#define CXL_CMD_HEALTH_INFO_EXT_LIFE_USED_WARNING                      0x1
+> +#define CXL_CMD_HEALTH_INFO_EXT_LIFE_USED_CRITICAL                     0x2
+> +#define CXL_CMD_HEALTH_INFO_EXT_TEMPERATURE_MASK                       GENMASK(3, 2)
+> +#define CXL_CMD_HEALTH_INFO_EXT_TEMPERATURE_NORMAL                     (0x0 << 2)
+> +#define CXL_CMD_HEALTH_INFO_EXT_TEMPERATURE_WARNING                    (0x1 << 2)
+> +#define CXL_CMD_HEALTH_INFO_EXT_TEMPERATURE_CRITICAL                   (0x2 << 2)
 
-Ah, now I see why you proposed having another flag in the
-cxl_query_cmd() payload to indicate hardware support for the command.
-to save having to validate before each command.
+So the kernel style for this would be to have:
 
-I wouldn't mind a TODO here to remind about that... but not critical:
+#define CXL_CMD_HEALTH_INFO_EXT_TEMPERATURE_NORMAL                    (0)
+#define CXL_CMD_HEALTH_INFO_EXT_TEMPERATURE_WARNING                  (1)
+#define CXL_CMD_HEALTH_INFO_EXT_TEMPERATURE_CRITICAL                   (2)
 
-You can add:
+...and then to check the value it would be:
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+FIELD_GET(CXL_CMD_HEALTH_INFO_EXT_TEMPERATURE_MASK, c->ext_status) ==
+CXL_CMD_HEALTH_INFO_EXT_TEMPERATURE_NORMAL
+
+...that way if we ever wanted to copy libcxl bits into the kernel it
+will already be in the matching style to other CXL bitwise
+definitions.
+
+I think FIELD_GET() would also clarify a few of your helpers below,
+but yeah a bit more infrastructure to import.
+
+The rest of this looks ok to me.
