@@ -2,59 +2,59 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136CDC433F5
-	for <linux-cxl@archiver.kernel.org>; Thu, 14 Oct 2021 16:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319F2C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 14 Oct 2021 18:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBD5D61151
-	for <linux-cxl@archiver.kernel.org>; Thu, 14 Oct 2021 16:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 136B5611CA
+	for <linux-cxl@archiver.kernel.org>; Thu, 14 Oct 2021 18:25:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231933AbhJNQuf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 14 Oct 2021 12:50:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44022 "EHLO
+        id S232658AbhJNS1I (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 14 Oct 2021 14:27:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231255AbhJNQuf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 14 Oct 2021 12:50:35 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CA47C061570
-        for <linux-cxl@vger.kernel.org>; Thu, 14 Oct 2021 09:48:30 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id f11so2078472pfc.12
-        for <linux-cxl@vger.kernel.org>; Thu, 14 Oct 2021 09:48:30 -0700 (PDT)
+        with ESMTP id S230023AbhJNS1I (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 14 Oct 2021 14:27:08 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 013FDC061570
+        for <linux-cxl@vger.kernel.org>; Thu, 14 Oct 2021 11:25:03 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id q5so6290851pgr.7
+        for <linux-cxl@vger.kernel.org>; Thu, 14 Oct 2021 11:25:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1RwGIFYqIcTa4h7PEF9eSckj/8EEJrGq1do1E24wPDg=;
-        b=fXs02Ecy0zNBoaQ/S/ON33Glt1oyRADv0YHdmLLBrNF4BM/O5Kz1y5GJTvkXcFyQOe
-         5d8dh8XPCbz12wQFIRx9vHoEJD7nnEkOt9ZuW6hbhxFjL0XuYm0xRUiRus5w1DvPCaVZ
-         452Q0SSgsZmEJhgLVj8BUcfnbuOC5ubumYtXxRtcfFlflVHUT7zJujMTH068yVRBAr8Q
-         SehXk5trabX0x0D43nON8rkTGhFYCz/qUv5mCzMII8RoCrvcStTv/p6ZTnsv4oQpJc3W
-         D/ycj8RlNzcFYZk0vuhMZ+np/r3kYZrKENyqgVy+AjTvRzzeKzcetetmZTKv+1/sMVgj
-         /RlQ==
+        bh=ZrwusMQgn7Kh5ZWmzery+mEysHznYixIAxkraeYDT8I=;
+        b=JlgglDk2moNFtf4OKCiOZgtJWM4sHhKsi1gizW7ywm488nbnm8LGggBhoTDozcIDuK
+         o3oaErlTWwe8AXwwSp+T9zG6au6KofLizn8EGDcpWF2cokP3E6aDyL7NnemOErJeI6T3
+         pVq7yA2MG52TMp2WDBaeDKpVaWEhGPJl39Lgl26xLaRzIU4U0LVc5Ql77xnULeUjqjHY
+         ssXwo5vnvc2iw+en6bf3zYjFspezqN/dz4MtQj80Qj2EmzrJhfQBsOJqaqqkwH7casNZ
+         wba3G6DVVPSp0kFdvaP9fJ5074t4LH3Xs81nH3Qu2Zw9ap4AsZIvokuEAaD4nvvk1xgs
+         Z8pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1RwGIFYqIcTa4h7PEF9eSckj/8EEJrGq1do1E24wPDg=;
-        b=dfqIr0FOxHG+GwcjqHU8jWFMCexSJp7yrUClirNHD40wkOs2NBeK8AvSFZNzNLL8eI
-         P2N5OoBDVxb/UZ/rRU4QLQ/F3KZWK1uTHmvqF+kBiApI+1S7G6XSg61t31myn6XOrEPP
-         E17XN6tEx/HhzMg7Ca3vaZuReqSZOdfIT1Zv9A73Sw168LVAwq+7ylUV9Uaw0siN2fw8
-         C5wxWbPWBvqPBJwo9vrIV9NcP9wwrw/ehPCLSAShbtqNEs+4kKobMTka+XXaLVRZwa6r
-         0pMCUPB9c01rBg0HizXzC0hVWpX443My8bOOUWDvSD+j+rRnZExRCR7SvSyRuk7CeDkE
-         3dhg==
-X-Gm-Message-State: AOAM533AAIcDVbrEiNXW434aQP/TKZN7hdmh/9mpQlZttZDGBDP/vtyO
-        JPJh1jAJkLIlvaSdhBAjnN0CtZOzZlgAa7xT3YDpLuO3mS39iw==
-X-Google-Smtp-Source: ABdhPJzhwOQcDTklJnUiXHmt0mYtwIR5itIrTG7nLK/3IfH20FNjtS9cnabwkC5qSseYoVL15mFmSQquHO03SlT8cb4=
-X-Received: by 2002:a62:1b92:0:b0:3eb:3f92:724 with SMTP id
- b140-20020a621b92000000b003eb3f920724mr6158723pfb.3.1634230109724; Thu, 14
- Oct 2021 09:48:29 -0700 (PDT)
+        bh=ZrwusMQgn7Kh5ZWmzery+mEysHznYixIAxkraeYDT8I=;
+        b=wM/RDWGS9+aSparWt20ojLZm3ggy1hjeMwlYcxFqWjQ3IYeZH88zm6cW7HASGhNR6r
+         zF6QNfj/GRH1va6qCKUii7vRsfynV20yDHCWC1vSIVJvvHmRn+Tp8rs90sCFX6vL7uYr
+         dXKal097nSCDMfJyjdong9Nmv3vyLOJVu2gNzRX9eQsc3Q39R1xQOLuJobeti4L/hErx
+         Dv/sxmfX2OSIf5enOMfptpD96X8/WQZf2uIAIVEc/HrF+AmITUSGdSzphZZyE86AurPJ
+         CJ7nwGKB6qwoleAqQ7T6beLqOXUX3WF45TQchzCtcWexIyD1dL7ZRCHXO5nUtyhlsFxZ
+         pAsg==
+X-Gm-Message-State: AOAM532XgB8uisZNXe1mhBYIQwleje05vZhrDhmml1mCb1GKbOnkCexS
+        oH4YD2jljmVeW/rscrKFdWt01aWScHoyrfXpWxfTRw==
+X-Google-Smtp-Source: ABdhPJztKmJOesXMRk6BKGtvmpjvsfAdSSn0+uARW4b3Fc8fmLRB8vYSVOMFIX/qFzu+IiqYQbW4FG1jMRSX9TvP2q0=
+X-Received: by 2002:a05:6a00:1a01:b0:44c:1ec3:364f with SMTP id
+ g1-20020a056a001a0100b0044c1ec3364fmr7117844pfv.86.1634235902347; Thu, 14 Oct
+ 2021 11:25:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211007082139.3088615-1-vishal.l.verma@intel.com> <20211007082139.3088615-10-vishal.l.verma@intel.com>
-In-Reply-To: <20211007082139.3088615-10-vishal.l.verma@intel.com>
+References: <20211007082139.3088615-1-vishal.l.verma@intel.com> <20211007082139.3088615-11-vishal.l.verma@intel.com>
+In-Reply-To: <20211007082139.3088615-11-vishal.l.verma@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 14 Oct 2021 09:48:19 -0700
-Message-ID: <CAPcyv4gRM_3UxQkKxLg_up-zNecyTjrvG1CAuJyF1Wd+9bwfUA@mail.gmail.com>
-Subject: Re: [ndctl PATCH v4 09/17] util/hexdump: Add a util helper to print a
- buffer in hex
+Date:   Thu, 14 Oct 2021 11:24:52 -0700
+Message-ID: <CAPcyv4h64LkFS1T_YqoRDz-7jDfkycNxBEkSzRxs-eUe4Y=LVg@mail.gmail.com>
+Subject: Re: [ndctl PATCH v4 10/17] libcxl: add label_size to cxl_memdev, and
+ an API to retrieve it
 To:     Vishal Verma <vishal.l.verma@intel.com>
 Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
         Linux NVDIMM <nvdimm@lists.linux.dev>
@@ -65,101 +65,87 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 On Thu, Oct 7, 2021 at 1:22 AM Vishal Verma <vishal.l.verma@intel.com> wrote:
 >
-> In preparation for tests that may need to set, retrieve, and display
-> opaque data, add a hexdump function in util/
+> Size of the Label Storage Area (LSA) is available as a sysfs attribute
+> called 'label_storage_size'. Add that to libcxl's memdev so that it is available
+> for label related commands.
 >
-> Cc: Ben Widawsky <ben.widawsky@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 > ---
->  util/hexdump.h |  8 ++++++++
->  util/hexdump.c | 53 ++++++++++++++++++++++++++++++++++++++++++++++++++
+>  cxl/lib/private.h  |  1 +
+>  cxl/lib/libcxl.c   | 12 ++++++++++++
+>  cxl/libcxl.h       |  1 +
+>  cxl/lib/libcxl.sym |  5 +++++
+>  4 files changed, 19 insertions(+)
+>
+> diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+> index 9c6317b..671f12f 100644
+> --- a/cxl/lib/private.h
+> +++ b/cxl/lib/private.h
+> @@ -21,6 +21,7 @@ struct cxl_memdev {
+>         unsigned long long pmem_size;
+>         unsigned long long ram_size;
+>         int payload_max;
+> +       size_t lsa_size;
+>         struct kmod_module *module;
+>  };
+>
+> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+> index 33cc462..de3a8f7 100644
+> --- a/cxl/lib/libcxl.c
+> +++ b/cxl/lib/libcxl.c
+> @@ -247,6 +247,13 @@ static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
+>         if (memdev->payload_max < 0)
+>                 goto err_read;
+>
+> +       sprintf(path, "%s/label_storage_size", cxlmem_base);
+> +       if (sysfs_read_attr(ctx, path, buf) < 0)
+> +               goto err_read;
+> +       memdev->lsa_size = strtoull(buf, NULL, 0);
+> +       if (memdev->lsa_size == ULLONG_MAX)
+> +               goto err_read;
+> +
+>         memdev->dev_path = strdup(cxlmem_base);
+>         if (!memdev->dev_path)
+>                 goto err_read;
+> @@ -350,6 +357,11 @@ CXL_EXPORT const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev
+>         return memdev->firmware_version;
+>  }
+>
+> +CXL_EXPORT size_t cxl_memdev_get_label_size(struct cxl_memdev *memdev)
+> +{
+> +       return memdev->lsa_size;
+> +}
+> +
+>  CXL_EXPORT void cxl_cmd_unref(struct cxl_cmd *cmd)
+>  {
+>         if (!cmd)
+> diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+> index 7408745..d3b97a1 100644
+> --- a/cxl/libcxl.h
+> +++ b/cxl/libcxl.h
+> @@ -42,6 +42,7 @@ struct cxl_ctx *cxl_memdev_get_ctx(struct cxl_memdev *memdev);
+>  unsigned long long cxl_memdev_get_pmem_size(struct cxl_memdev *memdev);
+>  unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev);
+>  const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev);
+> +size_t cxl_memdev_get_label_size(struct cxl_memdev *memdev);
+>
+>  #define cxl_memdev_foreach(ctx, memdev) \
+>          for (memdev = cxl_memdev_get_first(ctx); \
+> diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+> index 1b608d8..b9feb93 100644
+> --- a/cxl/lib/libcxl.sym
+> +++ b/cxl/lib/libcxl.sym
+> @@ -75,3 +75,8 @@ global:
+>         cxl_cmd_new_read_label;
+>         cxl_cmd_read_label_get_payload;
+>  } LIBCXL_2;
+> +
+> +LIBCXL_4 {
+> +global:
+> +       cxl_memdev_get_label_size;
 
-If this is just for tests shouldn't it go in tests/ with the other
-common test helpers? If it stays in util/ I would kind of expect it to
-use the log infrastructure, no?
+Since we never made a release with the v2 symbols, why do we need a new v3 set?
 
-Other than that looks ok to me:
+Other than that, looks good to me:
 
 Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-
->  2 files changed, 61 insertions(+)
->  create mode 100644 util/hexdump.h
->  create mode 100644 util/hexdump.c
->
-> diff --git a/util/hexdump.h b/util/hexdump.h
-> new file mode 100644
-> index 0000000..d322b6a
-> --- /dev/null
-> +++ b/util/hexdump.h
-> @@ -0,0 +1,8 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/* Copyright (C) 2021 Intel Corporation. All rights reserved. */
-> +#ifndef _UTIL_HEXDUMP_H_
-> +#define _UTIL_HEXDUMP_H_
-> +
-> +void hex_dump_buf(unsigned char *buf, int size);
-> +
-> +#endif /* _UTIL_HEXDUMP_H_*/
-> diff --git a/util/hexdump.c b/util/hexdump.c
-> new file mode 100644
-> index 0000000..1ab0118
-> --- /dev/null
-> +++ b/util/hexdump.c
-> @@ -0,0 +1,53 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (C) 2015-2021 Intel Corporation. All rights reserved. */
-> +#include <stdio.h>
-> +#include <util/hexdump.h>
-> +
-> +static void print_separator(int len)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < len; i++)
-> +               fprintf(stderr, "-");
-> +       fprintf(stderr, "\n");
-> +}
-> +
-> +void hex_dump_buf(unsigned char *buf, int size)
-> +{
-> +       int i;
-> +       const int grp = 4;  /* Number of bytes in a group */
-> +       const int wid = 16; /* Bytes per line. Should be a multiple of grp */
-> +       char ascii[wid + 1];
-> +
-> +       /* Generate header */
-> +       print_separator((wid * 4) + (wid / grp) + 12);
-> +
-> +       fprintf(stderr, "Offset    ");
-> +       for (i = 0; i < wid; i++) {
-> +               if (i % grp == 0) fprintf(stderr, " ");
-> +               fprintf(stderr, "%02x ", i);
-> +       }
-> +       fprintf(stderr, "  Ascii\n");
-> +
-> +       print_separator((wid * 4) + (wid / grp) + 12);
-> +
-> +       /* Generate hex dump */
-> +       for (i = 0; i < size; i++) {
-> +               if (i % wid == 0) fprintf(stderr, "%08x  ", i);
-> +               ascii[i % wid] =
-> +                   ((buf[i] >= ' ') && (buf[i] <= '~')) ? buf[i] : '.';
-> +               if (i % grp == 0) fprintf(stderr, " ");
-> +               fprintf(stderr, "%02x ", buf[i]);
-> +               if ((i == size - 1) && (size % wid != 0)) {
-> +                       int j;
-> +                       int done = size % wid;
-> +                       int grps_done = (done / grp) + ((done % grp) ? 1 : 0);
-> +                       int spaces = wid / grp - grps_done + ((wid - done) * 3);
-> +
-> +                       for (j = 0; j < spaces; j++) fprintf(stderr, " ");
-> +               }
-> +               if ((i % wid == wid - 1) || (i == size - 1))
-> +                       fprintf(stderr, "  %.*s\n", (i % wid) + 1, ascii);
-> +       }
-> +       print_separator((wid * 4) + (wid / grp) + 12);
-> +}
-> --
-> 2.31.1
->
