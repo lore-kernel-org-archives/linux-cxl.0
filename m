@@ -2,211 +2,94 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF887C433F5
-	for <linux-cxl@archiver.kernel.org>; Fri, 15 Oct 2021 16:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6057C433EF
+	for <linux-cxl@archiver.kernel.org>; Fri, 15 Oct 2021 16:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A86560F6F
-	for <linux-cxl@archiver.kernel.org>; Fri, 15 Oct 2021 16:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F67D61181
+	for <linux-cxl@archiver.kernel.org>; Fri, 15 Oct 2021 16:56:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241535AbhJOQrH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 15 Oct 2021 12:47:07 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3987 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241546AbhJOQqn (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 15 Oct 2021 12:46:43 -0400
-Received: from fraeml744-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HWBqj5665z67PhJ;
-        Sat, 16 Oct 2021 00:41:37 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml744-chm.china.huawei.com (10.206.15.225) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Fri, 15 Oct 2021 18:44:35 +0200
-Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Fri, 15 Oct
- 2021 17:44:34 +0100
-Date:   Fri, 15 Oct 2021 17:44:33 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <hch@lst.de>
-Subject: Re: [PATCH v3 07/10] cxl/pci: Split cxl_pci_setup_regs()
-Message-ID: <20211015174433.0000368a@Huawei.com>
-In-Reply-To: <163379787433.692348.2451270397309803556.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <163379783658.692348.16064992154261275220.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <163379787433.692348.2451270397309803556.stgit@dwillia2-desk3.amr.corp.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+        id S241756AbhJOQ6P (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 15 Oct 2021 12:58:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241829AbhJOQ6N (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 15 Oct 2021 12:58:13 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 786CDC061764
+        for <linux-cxl@vger.kernel.org>; Fri, 15 Oct 2021 09:56:06 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id e5-20020a17090a804500b001a116ad95caso2160290pjw.2
+        for <linux-cxl@vger.kernel.org>; Fri, 15 Oct 2021 09:56:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AaNCt4OmVhLvoFGzEVj4sViAisbx0ICeCpQAIecvxqI=;
+        b=hPtUn5xDRLIFQwIqC+vCxBy4ne14xnuKSSFL/3XuvrTqwY+L33IRim9F2QSX1FS3GD
+         eClTIOjeUdFZVfeE+zB1ywC5h1IGnSmSp2ez0scC7FNzaRz4FeN0jr63F3Zj/8YTtXCi
+         nSxnRATEQS8yMwDArMMsqHk2WXiSvivnMRsv8kE0IcV3BRU07VcwAWWY3cqDGTIvNBfF
+         Saxncu/BJD3qtFZs2xGayUjxYicDKj2djElyb2NEL4WpJYZsI/lB9X0RYGWfBeGRplzJ
+         cbowtfklm7xgb2l08imWEz0EaRUVsPxHl2s2rxsglcMGRcaCV6XZ1QDNL6R4A397ZYWQ
+         f0Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AaNCt4OmVhLvoFGzEVj4sViAisbx0ICeCpQAIecvxqI=;
+        b=WPVcf6GkCFZJcq49Zmf7TWhiap2RHZp7XnPLlHhoFOR7uUx+6rajAU/R7skP1GU+D6
+         v+Pa6FOJ+8pGoy88MLlY1oeEtcWxfhNRxxFXvUzrYcAOHjrzJghf4hZ+w933tliyv87K
+         4MH77phHEuQAoGxgpBwymFz2kMNaeT0TV916wE9IFEStzXiroD598SQ0rCilrMvM+vYg
+         9RnSTEhoLBlJdOKsF+QwtFjq8SWotf1eLIlig+hlGEK0N6vjWWT1EBb9WzTP3W23ZNsV
+         EcNgfglLQ6yofKcyOt2h9g55S1cCiDSxTaw776AQDOkaUCk4LaQx4zJLh7ClO1SX/Iml
+         qo/w==
+X-Gm-Message-State: AOAM530qJPLPF5w33lX2w5puRFJXMjmmreas5I2VxcPX/saZ0wmoaNvo
+        W45ySAF6PJAiRLDweBU6Y8boyoSx5Q/R82vZB2UlAA==
+X-Google-Smtp-Source: ABdhPJyOtIyBzAL4O7WPCBfNYHHReQtLzXKDwE0ySONpN92H2FI0Q4u1sLjT3ZL/ZjCgpIvxqAwijeO87SXsPlIQUqc=
+X-Received: by 2002:a17:902:ab50:b0:13f:4c70:9322 with SMTP id
+ ij16-20020a170902ab5000b0013f4c709322mr11958655plb.89.1634316966039; Fri, 15
+ Oct 2021 09:56:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.41]
-X-ClientProxiedBy: lhreml727-chm.china.huawei.com (10.201.108.78) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <163379783658.692348.16064992154261275220.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <163379786922.692348.2318044990911111834.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20211015172732.000012fc@Huawei.com>
+In-Reply-To: <20211015172732.000012fc@Huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 15 Oct 2021 09:55:57 -0700
+Message-ID: <CAPcyv4j9W4NJFTPk8c5_nG_fAUpecnY886jKmhYzZONW4RCf5Q@mail.gmail.com>
+Subject: Re: [PATCH v3 06/10] cxl/pci: Add @base to cxl_register_map
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sat, 9 Oct 2021 09:44:34 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Fri, Oct 15, 2021 at 9:27 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Sat, 9 Oct 2021 09:44:29 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> > In addition to carrying @barno, @block_offset, and @reg_type, add @base
+> > to keep all map/unmap parameters in one object. The helpers
+> > cxl_{map,unmap}_regblock() handle adjusting @base to the @block_offset
+> > at map and unmap time.
+> >
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>
+> I don't really mind them, but why the renames
+> from cxl_pci_* to cxl_* ?
 
-> From: Ben Widawsky <ben.widawsky@intel.com>
-> 
-> In preparation for moving parts of register mapping to cxl_core, split
+Primarily because we had a mix of some functions including the _pci
+and some not, and I steered towards just dropping it. I think the
+"PCI" aspect of the function is clear by its function signature, and
+that was being muddied by passing @cxlm unnecessarily. So instead of:
 
-Ah. Guess this planned move is why the naming change in the earlier patch.
-Fair enough, but perhaps call it out there as well as here.
+cxl_pci_$foo(struct cxl_mem *cxlm...)
 
-No comments to add to this one.
+...I went with:
 
-> cxl_pci_setup_regs() into a helper that finds register blocks,
-> (cxl_find_regblock()), and a generic wrapper that probes the precise
-> register sets within a block (cxl_setup_regs()).
-> 
-> Move the actual mapping (cxl_map_regs()) of the only register-set that
-> cxl_pci cares about (memory device registers) up a level from the former
-> cxl_pci_setup_regs() into cxl_pci_probe().
-> 
-> With this change the unused component registers are no longer mapped,
-> but the helpers are primed to move into the core.
-> 
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> [djbw: rebase on the cxl_register_map refactor]
-> [djbw: drop cxl_map_regs() for component registers]
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+cxl_$foo(struct pci_dev *pdev...)
 
-> ---
->  drivers/cxl/pci.c |   73 +++++++++++++++++++++++++++--------------------------
->  1 file changed, 37 insertions(+), 36 deletions(-)
-> 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index b42407d067ac..b6bc8e5ca028 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -433,72 +433,69 @@ static void cxl_decode_regblock(u32 reg_lo, u32 reg_hi,
->  }
->  
->  /**
-> - * cxl_pci_setup_regs() - Setup necessary MMIO.
-> - * @cxlm: The CXL memory device to communicate with.
-> + * cxl_find_regblock() - Locate register blocks by type
-> + * @pdev: The CXL PCI device to enumerate.
-> + * @type: Register Block Indicator id
-> + * @map: Enumeration output, clobbered on error
->   *
-> - * Return: 0 if all necessary registers mapped.
-> + * Return: 0 if register block enumerated, negative error code otherwise
->   *
-> - * A memory device is required by spec to implement a certain set of MMIO
-> - * regions. The purpose of this function is to enumerate and map those
-> - * registers.
-> + * A CXL DVSEC may additional point one or more register blocks, search
-
-may point to one or more...
-(perhaps - I'm not quite sure of the intended meaning)
-
-> + * for them by @type.
->   */
-> -static int cxl_pci_setup_regs(struct cxl_mem *cxlm)
-> +static int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
-> +			     struct cxl_register_map *map)
->  {
->  	u32 regloc_size, regblocks;
-> -	int regloc, i, n_maps, ret = 0;
-> -	struct device *dev = cxlm->dev;
-> -	struct pci_dev *pdev = to_pci_dev(dev);
-> -	struct cxl_register_map *map, maps[CXL_REGLOC_RBI_TYPES];
-> +	int regloc, i;
->  
->  	regloc = cxl_pci_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID);
-> -	if (!regloc) {
-> -		dev_err(dev, "register location dvsec not found\n");
-> +	if (!regloc)
->  		return -ENXIO;
-> -	}
->  
-> -	/* Get the size of the Register Locator DVSEC */
->  	pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
->  	regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
->  
->  	regloc += PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET;
->  	regblocks = (regloc_size - PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET) / 8;
->  
-> -	for (i = 0, n_maps = 0; i < regblocks; i++, regloc += 8) {
-> +	for (i = 0; i < regblocks; i++, regloc += 8) {
->  		u32 reg_lo, reg_hi;
->  
->  		pci_read_config_dword(pdev, regloc, &reg_lo);
->  		pci_read_config_dword(pdev, regloc + 4, &reg_hi);
->  
-> -		map = &maps[n_maps];
->  		cxl_decode_regblock(reg_lo, reg_hi, map);
->  
-> -		/* Ignore unknown register block types */
-> -		if (map->reg_type > CXL_REGLOC_RBI_MEMDEV)
-> -			continue;
-> +		if (map->reg_type == type)
-> +			return 0;
-> +	}
->  
-> -		ret = cxl_map_regblock(pdev, map);
-> -		if (ret)
-> -			return ret;
-> +	return -ENODEV;
-> +}
->  
-> -		ret = cxl_probe_regs(pdev, map);
-> -		cxl_unmap_regblock(pdev, map);
-> -		if (ret)
-> -			return ret;
-> +static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
-> +			  struct cxl_register_map *map)
-> +{
-> +	int rc;
->  
-> -		n_maps++;
-> -	}
-> +	rc = cxl_find_regblock(pdev, type, map);
-> +	if (rc)
-> +		return rc;
->  
-> -	for (i = 0; i < n_maps; i++) {
-> -		ret = cxl_map_regs(cxlm, &maps[i]);
-> -		if (ret)
-> -			break;
-> -	}
-> +	rc = cxl_map_regblock(pdev, map);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = cxl_probe_regs(pdev, map);
-> +	cxl_unmap_regblock(pdev, map);
->  
-> -	return ret;
-> +	return rc;
->  }
->  
->  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  {
-> +	struct cxl_register_map map;
->  	struct cxl_memdev *cxlmd;
->  	struct cxl_mem *cxlm;
->  	int rc;
-> @@ -518,7 +515,11 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (IS_ERR(cxlm))
->  		return PTR_ERR(cxlm);
->  
-> -	rc = cxl_pci_setup_regs(cxlm);
-> +	rc = cxl_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = cxl_map_regs(cxlm, &map);
->  	if (rc)
->  		return rc;
->  
-> 
-
+...concerns?
