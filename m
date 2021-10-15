@@ -2,133 +2,122 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A03C433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 15 Oct 2021 17:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 060EDC43217
+	for <linux-cxl@archiver.kernel.org>; Fri, 15 Oct 2021 18:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B338F611C1
-	for <linux-cxl@archiver.kernel.org>; Fri, 15 Oct 2021 17:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1C5E60231
+	for <linux-cxl@archiver.kernel.org>; Fri, 15 Oct 2021 18:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241917AbhJORC4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 15 Oct 2021 13:02:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35056 "EHLO
+        id S242023AbhJOTAx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 15 Oct 2021 15:00:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241915AbhJORCz (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 15 Oct 2021 13:02:55 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EE91C061570
-        for <linux-cxl@vger.kernel.org>; Fri, 15 Oct 2021 10:00:49 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id e7so9153432pgk.2
-        for <linux-cxl@vger.kernel.org>; Fri, 15 Oct 2021 10:00:49 -0700 (PDT)
+        with ESMTP id S242014AbhJOTAx (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 15 Oct 2021 15:00:53 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C573C061570
+        for <linux-cxl@vger.kernel.org>; Fri, 15 Oct 2021 11:58:46 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id e65so6981359pgc.5
+        for <linux-cxl@vger.kernel.org>; Fri, 15 Oct 2021 11:58:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jF4jHoYzXRfAp0AFeX4Tm5QMnIONmjbOZG0j/mO6PpA=;
-        b=tHgr7ztCtICyAqlWDKF/9WPJIMWOtDlufRYsILD9zwTCoqMyxTiR7/N/iy7LJqEfLO
-         39MoBsXkJJ1FB2ITk68xUjAV2RELD7Og5kK3VEpQPadTU1JaW/clKUJu4ZY6OOErbtmJ
-         ePvdg49Jb4NFDmKFCUGmV1bkJTbnvv0LjvmkX7CieLlXT9Tc6+cMZ6l9J2CN92e1TR8X
-         QvHcOonuoqqN93XQhpej53e38h5yGBQuI0B92tLfcVvrEJNI8sjjRTqpsDfCFesVU0h4
-         dBVlqD0XGthStZtBBVpfGWNfcGSgycSTKLQ9WlvHhNrCIqk2bLmIaZAYvhfaIhkT4AuC
-         Ofjw==
+        bh=aUVVZl7HmzvGFZyvrbMF+fVZnC7oF0xiadCI0HLlydY=;
+        b=R4/9M8hQjaGMCGtCsssHhqS/9BPEAuCt9ZCHOSil6tdQti+Vu5QhOMVwT/p1Fio+p5
+         1OvAosxtBvGVYs/RUtmRnu6QLzSFX7jEy/dVaSCoEl4fvsEgNEo/J8G5c+lDJz1Id+R7
+         MqAqKwsB1kAiNGiYaJAJf8qzt2Fw8fYc74swudRBbvsv/sED31DzzUUYXfi8/J+4jWVg
+         ug0XcRmmb5nvlW533o3jRBb12xrmdgFOCs9JIYsMKJj3zBzhGYtZw/DeaQwJA4tCWPy3
+         oUXiTzQAxB+e5uX9FzxLsLAms25ACLvdrVPMVPFt6blKBsbphU+9IGHP7SSZ4lmDaybA
+         MxqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jF4jHoYzXRfAp0AFeX4Tm5QMnIONmjbOZG0j/mO6PpA=;
-        b=2HzQPUKRk/Q6vPtWSbe3Jf3De6F2r1pXI4/utDcbZ1JWugrdERpMswPlq/FQnrvw/c
-         L50aG5k4fDLvrvtAjOA4HaLrbZP03WKJ+eHSSY9U9pMyIdTajOcEaKkHwh9Z6U8TBFqi
-         U01zZXBEpqHD3IVKqYUYRpPlakJew9HDAYwlR+5ZVLfdIQTSQDTCnNn9MNbqiFZaekbS
-         F8kePfZNRoR37gMlMOGcD0eUeoA9h+uHPLwQ7EIJ1S7CCpNAqzNvPg8bN6d8Qf9ZNBuT
-         70UEhhm0QInQqHdbUbewDtDyNGFu8q9K2lNEAR8bs8ILVKGlbCDgVNWCx/tgEl+m/jee
-         92lQ==
-X-Gm-Message-State: AOAM530iEg6rPISUnu9Zqmgaeh8H6R+DAEag6jGJ3EtnhiTYVokLD54E
-        FoKacbptEIQ+SqeWTZ4FvC2+J3UApqQA6jL5u0GWzg==
-X-Google-Smtp-Source: ABdhPJxm6XOBVS2DLDFuWRQ3Jj2/R5KOCBDTtJpAU5GbLzbinkgRN+Sb/AR0rE9FfKaKYcvX0c7LbT9DSozPQS+rQHc=
-X-Received: by 2002:a63:6bc2:: with SMTP id g185mr5128723pgc.356.1634317248490;
- Fri, 15 Oct 2021 10:00:48 -0700 (PDT)
+        bh=aUVVZl7HmzvGFZyvrbMF+fVZnC7oF0xiadCI0HLlydY=;
+        b=z4gRThBiWwOLjgPXokaZ7/nK/yCwyXp/UZ2ZSAolSGZhbA/LNTZSM691fQFFjYO0cy
+         /NSOHBXeg0HXhT5ynUoNrxckXZ4t0+Fo+fVKi+mj+usH8qBbqe+XA7nUYoiebYWtwUnq
+         8DzTcXm957IinmhHo2G4POBfLPTChBKMPFQOqXZNN5jPbDUZ++wp08HvxWF8ewWXTl9/
+         11S2/vBTYrcoMu/HEIOE3+WiZzEybfWQxaNuuLZAFJyev4UH+fLsngquxbj6WBPEvOIv
+         aDcwJjzLd+VokZvcRMQlYrJDQRja5aDxJUCyJ3wZCSlXxvmpmv1GlH2GIHlKCQl7HE+T
+         pXbw==
+X-Gm-Message-State: AOAM532HBsM53bbUFUMD5x+p7Wr2P2xLrnA2vEtlbyN92sWoOXa1QgMV
+        KJm0JDUyliZSShbIyEwla3dm97d1blHQamcO7jzDfA==
+X-Google-Smtp-Source: ABdhPJzJQXeWMsEtdpwGfdVFrMVDVzMCw04c5dQ2z4Lmid7fDU2qeRlxGgIOH6yOHvuPxSmsMiOFWMr1nUi325chN0I=
+X-Received: by 2002:a63:6bc2:: with SMTP id g185mr5578333pgc.356.1634324325624;
+ Fri, 15 Oct 2021 11:58:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <163379783658.692348.16064992154261275220.stgit@dwillia2-desk3.amr.corp.intel.com>
- <163379787433.692348.2451270397309803556.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20211015174433.0000368a@Huawei.com>
-In-Reply-To: <20211015174433.0000368a@Huawei.com>
+References: <20211009015339.400383-1-alison.schofield@intel.com> <20211015175943.000070b8@Huawei.com>
+In-Reply-To: <20211015175943.000070b8@Huawei.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 15 Oct 2021 10:00:39 -0700
-Message-ID: <CAPcyv4jro2amDzsgZM6i9Ukh_SuZ0x+Yk1c6JmxxNfoYQO5rOQ@mail.gmail.com>
-Subject: Re: [PATCH v3 07/10] cxl/pci: Split cxl_pci_setup_regs()
+Date:   Fri, 15 Oct 2021 11:58:36 -0700
+Message-ID: <CAPcyv4hziy_+aHz7SSJ0441saDwfHeNyHsB1DMsPjPg7aFHzeg@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: NUMA: Add a node and memblk for each CFMWS not in SRAT
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
+Cc:     "Schofield, Alison" <alison.schofield@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-cxl@vger.kernel.org, Linux ACPI <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Oct 15, 2021 at 9:44 AM Jonathan Cameron
+On Fri, Oct 15, 2021 at 10:00 AM Jonathan Cameron
 <Jonathan.Cameron@huawei.com> wrote:
 >
-> On Sat, 9 Oct 2021 09:44:34 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
+> On Fri, 8 Oct 2021 18:53:39 -0700
+> <alison.schofield@intel.com> wrote:
 >
-> > From: Ben Widawsky <ben.widawsky@intel.com>
+> > From: Alison Schofield <alison.schofield@intel.com>
 > >
-> > In preparation for moving parts of register mapping to cxl_core, split
+> > During NUMA init, CXL memory defined in the SRAT Memory Affinity
+> > subtable may be assigned to a NUMA node. Since there is no
+> > requirement that the SRAT be comprehensive for CXL memory another
+> > mechanism is needed to assign NUMA nodes to CXL memory not identified
+> > in the SRAT.
+> >
+> > Use the CXL Fixed Memory Window Structure's (CFMWS) of the ACPI CXL
+> > Early Discovery Table (CEDT) to find all CXL memory ranges. Create a
+> > NUMA node for each range that is not already assigned to a NUMA node.
+> > Add a memblk attaching its host physical address range to the node.
+> >
+> > Note that these ranges may not actually map any memory at boot time.
+> > They may describe persistent capacity or may be present to enable
+> > hot-plug.
+> >
+> > Consumers can use phys_to_target_node() to discover the NUMA node.
+> >
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> Hi Alison,
 >
-> Ah. Guess this planned move is why the naming change in the earlier patch.
-> Fair enough, but perhaps call it out there as well as here.
+> I'm not sure that a CFMWS entry should map to a single NUMA node...
 >
-> No comments to add to this one.
+> Each entry corresponds to a contiguous HPA range into which CXL devices
+> below a set of ports (if interleaved) or one port should be mapped.
 >
-> > cxl_pci_setup_regs() into a helper that finds register blocks,
-> > (cxl_find_regblock()), and a generic wrapper that probes the precise
-> > register sets within a block (cxl_setup_regs()).
-> >
-> > Move the actual mapping (cxl_map_regs()) of the only register-set that
-> > cxl_pci cares about (memory device registers) up a level from the former
-> > cxl_pci_setup_regs() into cxl_pci_probe().
-> >
-> > With this change the unused component registers are no longer mapped,
-> > but the helpers are primed to move into the core.
-> >
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > [djbw: rebase on the cxl_register_map refactor]
-> > [djbw: drop cxl_map_regs() for component registers]
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> That could be multiple devices, each with it's own performance characteristics,
+> or potentially a mix of persistent and volatile memory on a system with limited
+> qtg groups.
 >
-> > ---
-> >  drivers/cxl/pci.c |   73 +++++++++++++++++++++++++++--------------------------
-> >  1 file changed, 37 insertions(+), 36 deletions(-)
-> >
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index b42407d067ac..b6bc8e5ca028 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
-> > @@ -433,72 +433,69 @@ static void cxl_decode_regblock(u32 reg_lo, u32 reg_hi,
-> >  }
-> >
-> >  /**
-> > - * cxl_pci_setup_regs() - Setup necessary MMIO.
-> > - * @cxlm: The CXL memory device to communicate with.
-> > + * cxl_find_regblock() - Locate register blocks by type
-> > + * @pdev: The CXL PCI device to enumerate.
-> > + * @type: Register Block Indicator id
-> > + * @map: Enumeration output, clobbered on error
-> >   *
-> > - * Return: 0 if all necessary registers mapped.
-> > + * Return: 0 if register block enumerated, negative error code otherwise
-> >   *
-> > - * A memory device is required by spec to implement a certain set of MMIO
-> > - * regions. The purpose of this function is to enumerate and map those
-> > - * registers.
-> > + * A CXL DVSEC may additional point one or more register blocks, search
+> Maybe it's the best we can do though given information available
+> before any devices are present.
 >
-> may point to one or more...
-> (perhaps - I'm not quite sure of the intended meaning)
 
-Yeah, that looks like it should be:
+Regardless of the performance of the individual devices they can only
+map to one of the available CFMWS entries. So the maximum number of
+degrees of freedom is one node per CFMWS. Now if you have only one
+entry to pick from, but have interleave sets with widely different
+performance characteristics to online it becomes a policy decision
+about whether to force map those interleave sets into the same node,
+and that policy can be maintained outside the kernel.
 
-s/may additional point one/may point to one/
-
-I'll clean that up.
+The alternative is to rework NUMA nodes to be something that can be
+declared dynamically as currently there are assumptions throughout the
+kernel that num_possible_nodes() is statically determined early in
+boot. I am not seeing strong evidence that complexity needs to be
+tackled in the near term, and "NUMA-node per CFMWS" should (famous
+last words) serve CXL needs for the foreseeable future.
