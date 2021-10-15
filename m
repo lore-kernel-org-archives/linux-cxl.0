@@ -2,122 +2,95 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 060EDC43217
-	for <linux-cxl@archiver.kernel.org>; Fri, 15 Oct 2021 18:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8463DC433FE
+	for <linux-cxl@archiver.kernel.org>; Fri, 15 Oct 2021 20:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1C5E60231
-	for <linux-cxl@archiver.kernel.org>; Fri, 15 Oct 2021 18:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C9B7611C1
+	for <linux-cxl@archiver.kernel.org>; Fri, 15 Oct 2021 20:16:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242023AbhJOTAx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 15 Oct 2021 15:00:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33950 "EHLO
+        id S242989AbhJOUSy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 15 Oct 2021 16:18:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242014AbhJOTAx (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 15 Oct 2021 15:00:53 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C573C061570
-        for <linux-cxl@vger.kernel.org>; Fri, 15 Oct 2021 11:58:46 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id e65so6981359pgc.5
-        for <linux-cxl@vger.kernel.org>; Fri, 15 Oct 2021 11:58:46 -0700 (PDT)
+        with ESMTP id S242980AbhJOUSx (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 15 Oct 2021 16:18:53 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0258C061768
+        for <linux-cxl@vger.kernel.org>; Fri, 15 Oct 2021 13:16:43 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id np13so7965905pjb.4
+        for <linux-cxl@vger.kernel.org>; Fri, 15 Oct 2021 13:16:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=aUVVZl7HmzvGFZyvrbMF+fVZnC7oF0xiadCI0HLlydY=;
-        b=R4/9M8hQjaGMCGtCsssHhqS/9BPEAuCt9ZCHOSil6tdQti+Vu5QhOMVwT/p1Fio+p5
-         1OvAosxtBvGVYs/RUtmRnu6QLzSFX7jEy/dVaSCoEl4fvsEgNEo/J8G5c+lDJz1Id+R7
-         MqAqKwsB1kAiNGiYaJAJf8qzt2Fw8fYc74swudRBbvsv/sED31DzzUUYXfi8/J+4jWVg
-         ug0XcRmmb5nvlW533o3jRBb12xrmdgFOCs9JIYsMKJj3zBzhGYtZw/DeaQwJA4tCWPy3
-         oUXiTzQAxB+e5uX9FzxLsLAms25ACLvdrVPMVPFt6blKBsbphU+9IGHP7SSZ4lmDaybA
-         MxqA==
+        bh=GLrCUjMS6PpGbtB+8mhXMW1Ydnsrl8bMCJvRUQizels=;
+        b=WVmWXqed83hwr0BldYX/afwa2GbpIGZwQjPSy/t/0JCMx9AA3HwxPAEoNSxpJnB0Yx
+         fik28dWjsco5sZcynW6vCxEOGuDCcJkT3iUqTzko4G0XSQOOqA+QSRlWvgPkUzZ8V9vT
+         4xwMKveUV/iuXskzwET7y/xGFKIkQhDlpaDHWOyGcvlA1O1xIIHo8ciWtrekXQ8bvaal
+         alYpuUsz7ne8h38wf9qOthjsznOmfoClqe3jgW9ABNzMY2OCsxJTyAIrylM7Fevvghsz
+         UpnlHNCPaziwRwsJVKVa9CXVQb/qVr+HtLg3/tKYpQyECxNGKlOz4xssnXiOuRWJeOcA
+         R8ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aUVVZl7HmzvGFZyvrbMF+fVZnC7oF0xiadCI0HLlydY=;
-        b=z4gRThBiWwOLjgPXokaZ7/nK/yCwyXp/UZ2ZSAolSGZhbA/LNTZSM691fQFFjYO0cy
-         /NSOHBXeg0HXhT5ynUoNrxckXZ4t0+Fo+fVKi+mj+usH8qBbqe+XA7nUYoiebYWtwUnq
-         8DzTcXm957IinmhHo2G4POBfLPTChBKMPFQOqXZNN5jPbDUZ++wp08HvxWF8ewWXTl9/
-         11S2/vBTYrcoMu/HEIOE3+WiZzEybfWQxaNuuLZAFJyev4UH+fLsngquxbj6WBPEvOIv
-         aDcwJjzLd+VokZvcRMQlYrJDQRja5aDxJUCyJ3wZCSlXxvmpmv1GlH2GIHlKCQl7HE+T
-         pXbw==
-X-Gm-Message-State: AOAM532HBsM53bbUFUMD5x+p7Wr2P2xLrnA2vEtlbyN92sWoOXa1QgMV
-        KJm0JDUyliZSShbIyEwla3dm97d1blHQamcO7jzDfA==
-X-Google-Smtp-Source: ABdhPJzJQXeWMsEtdpwGfdVFrMVDVzMCw04c5dQ2z4Lmid7fDU2qeRlxGgIOH6yOHvuPxSmsMiOFWMr1nUi325chN0I=
-X-Received: by 2002:a63:6bc2:: with SMTP id g185mr5578333pgc.356.1634324325624;
- Fri, 15 Oct 2021 11:58:45 -0700 (PDT)
+        bh=GLrCUjMS6PpGbtB+8mhXMW1Ydnsrl8bMCJvRUQizels=;
+        b=aPxKJnTlUKX4Ez4WQJ6kusS4EFjcD7RFvyyR0x3ZFbBfFMo8csXk6ebgnAHr2CdDS8
+         lg5A0U/vuOLQXk0aZ8qpHFffuTUM0UXjcQMcCI9Egp4vOYdPHwKzLUAh6GeZGbsImkEK
+         PmwXx8l8rnYA5IGv6GvPxn0mbadmOHh3xTEq6LxrtHf2Tl6/rAZWqovsN92Ql1QNsl/y
+         WJCClHKipGW7pJWRPKkBw+QpoL9OdIpLq35dga5KHcikhApJDCs9RVhS6Q7DtsMRviP4
+         V45Jfyw7aXtY4wQ8u1MUJUy2Nkwe7Hn9pTfOU3EX89ODryeW1sm1qD5QOG6m2WiCyepX
+         X2ng==
+X-Gm-Message-State: AOAM530Xp7khkdlpVULXlmP+gOpQCQuAsILjPDAg60cqk+z3KI0Lyd9J
+        sCotkkvbIAD1crWRziSY/IXqfc+HT6+c0Ed25kR5jg==
+X-Google-Smtp-Source: ABdhPJyqO7cyxR1HWTwbNFXiy3gHcuBypDcdwk0AxuecjBTkJfqydJHqiG8cOEwJT7yATjZpuEurgvMIvodG41/Bexc=
+X-Received: by 2002:a17:90a:a085:: with SMTP id r5mr29951880pjp.8.1634329003303;
+ Fri, 15 Oct 2021 13:16:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211009015339.400383-1-alison.schofield@intel.com> <20211015175943.000070b8@Huawei.com>
-In-Reply-To: <20211015175943.000070b8@Huawei.com>
+References: <163379783658.692348.16064992154261275220.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <163379785305.692348.7804260538462033304.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20211015171507.000010dd@Huawei.com>
+In-Reply-To: <20211015171507.000010dd@Huawei.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 15 Oct 2021 11:58:36 -0700
-Message-ID: <CAPcyv4hziy_+aHz7SSJ0441saDwfHeNyHsB1DMsPjPg7aFHzeg@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: NUMA: Add a node and memblk for each CFMWS not in SRAT
+Date:   Fri, 15 Oct 2021 13:16:34 -0700
+Message-ID: <CAPcyv4hOyXdoDcVUu8+x=xQCTfQQbafWZwA_wqmHq57K5DpEBw@mail.gmail.com>
+Subject: Re: [PATCH v3 03/10] cxl/pci: Fix NULL vs ERR_PTR confusion
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     "Schofield, Alison" <alison.schofield@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
+Cc:     linux-cxl@vger.kernel.org, stable <stable@vger.kernel.org>,
         Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-cxl@vger.kernel.org, Linux ACPI <linux-acpi@vger.kernel.org>
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Oct 15, 2021 at 10:00 AM Jonathan Cameron
+On Fri, Oct 15, 2021 at 9:16 AM Jonathan Cameron
 <Jonathan.Cameron@huawei.com> wrote:
 >
-> On Fri, 8 Oct 2021 18:53:39 -0700
-> <alison.schofield@intel.com> wrote:
+> On Sat, 9 Oct 2021 09:44:13 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> > From: Alison Schofield <alison.schofield@intel.com>
+> > cxl_pci_map_regblock() may return an ERR_PTR(), but cxl_pci_setup_regs()
+> > is only prepared for NULL as the error case.
 > >
-> > During NUMA init, CXL memory defined in the SRAT Memory Affinity
-> > subtable may be assigned to a NUMA node. Since there is no
-> > requirement that the SRAT be comprehensive for CXL memory another
-> > mechanism is needed to assign NUMA nodes to CXL memory not identified
-> > in the SRAT.
-> >
-> > Use the CXL Fixed Memory Window Structure's (CFMWS) of the ACPI CXL
-> > Early Discovery Table (CEDT) to find all CXL memory ranges. Create a
-> > NUMA node for each range that is not already assigned to a NUMA node.
-> > Add a memblk attaching its host physical address range to the node.
-> >
-> > Note that these ranges may not actually map any memory at boot time.
-> > They may describe persistent capacity or may be present to enable
-> > hot-plug.
-> >
-> > Consumers can use phys_to_target_node() to discover the NUMA node.
-> >
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> Hi Alison,
 >
-> I'm not sure that a CFMWS entry should map to a single NUMA node...
->
-> Each entry corresponds to a contiguous HPA range into which CXL devices
-> below a set of ports (if interleaved) or one port should be mapped.
->
-> That could be multiple devices, each with it's own performance characteristics,
-> or potentially a mix of persistent and volatile memory on a system with limited
-> qtg groups.
->
-> Maybe it's the best we can do though given information available
-> before any devices are present.
->
+> What's the logic behind doing this rather than adjusting the call site to
+> check for an error pointer?
 
-Regardless of the performance of the individual devices they can only
-map to one of the available CFMWS entries. So the maximum number of
-degrees of freedom is one node per CFMWS. Now if you have only one
-entry to pick from, but have interleave sets with widely different
-performance characteristics to online it becomes a policy decision
-about whether to force map those interleave sets into the same node,
-and that policy can be maintained outside the kernel.
+Minimize the fix for the stable backport. In the later patches the
+cxl_pci_map_regblock() => cxl_map_regblock() conversion goes from
+returning a pointer to an error code.
 
-The alternative is to rework NUMA nodes to be something that can be
-declared dynamically as currently there are assumptions throughout the
-kernel that num_possible_nodes() is statically determined early in
-boot. I am not seeing strong evidence that complexity needs to be
-tackled in the near term, and "NUMA-node per CFMWS" should (famous
-last words) serve CXL needs for the foreseeable future.
+> Either approach is fine as far as I'm concerned though so this is really
+> just a request for a bit more info in this patch description.
+
+I can include that note above to clarify.
+
+>
+> FWIW
+>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+Thanks.
