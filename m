@@ -2,27 +2,27 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A25C433EF
-	for <linux-cxl@archiver.kernel.org>; Sat, 16 Oct 2021 05:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 486FEC433FE
+	for <linux-cxl@archiver.kernel.org>; Sat, 16 Oct 2021 05:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B086F61108
-	for <linux-cxl@archiver.kernel.org>; Sat, 16 Oct 2021 05:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32FE061108
+	for <linux-cxl@archiver.kernel.org>; Sat, 16 Oct 2021 05:15:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233385AbhJPFRq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 16 Oct 2021 01:17:46 -0400
-Received: from mga11.intel.com ([192.55.52.93]:1732 "EHLO mga11.intel.com"
+        id S243682AbhJPFRr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 16 Oct 2021 01:17:47 -0400
+Received: from mga11.intel.com ([192.55.52.93]:1736 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231891AbhJPFRp (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Sat, 16 Oct 2021 01:17:45 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10138"; a="225489590"
+        id S238136AbhJPFRq (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Sat, 16 Oct 2021 01:17:46 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10138"; a="225489595"
 X-IronPort-AV: E=Sophos;i="5.85,377,1624345200"; 
-   d="scan'208";a="225489590"
+   d="scan'208";a="225489595"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2021 22:15:38 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2021 22:15:39 -0700
 X-IronPort-AV: E=Sophos;i="5.85,377,1624345200"; 
-   d="scan'208";a="442743233"
+   d="scan'208";a="442743252"
 Received: from asimon-mobl1.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.133.4])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2021 22:15:37 -0700
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2021 22:15:39 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>
 Cc:     Ben Widawsky <ben.widawsky@intel.com>,
@@ -31,9 +31,9 @@ Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [RFC PATCH 02/27] cxl: Move register block enumeration to core
-Date:   Fri, 15 Oct 2021 22:15:06 -0700
-Message-Id: <20211016051531.622613-3-ben.widawsky@intel.com>
+Subject: [RFC PATCH 06/27] cxl: Introduce endpoint decoders
+Date:   Fri, 15 Oct 2021 22:15:10 -0700
+Message-Id: <20211016051531.622613-7-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20211016051531.622613-1-ben.widawsky@intel.com>
 References: <20211016051531.622613-1-ben.widawsky@intel.com>
@@ -43,167 +43,129 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-CXL drivers or cxl_core itself will require the ability to map component
-registers in order to map HDM decoder resources amongst other things.
-Much of the register mapping code has already moved into cxl_core. The
-code to pull the BAR number and block office remained within cxl_pci
-because there was no need to move it. Upcoming work will require this
-functionality to be available outside of cxl_pci.
+Endpoints have decoders too. It is useful to share the same
+infrastructure from cxl_core. Endpoints do not have dports (downstream
+targets), only the underlying physical medium. As a result, some special
+casing is needed.
+
+There is no functional change introduced yet as endpoints don't actually
+enumerate decoders yet.
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- drivers/cxl/core/regs.c | 54 +++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h       |  4 +++
- drivers/cxl/pci.c       | 52 ---------------------------------------
- 3 files changed, 58 insertions(+), 52 deletions(-)
+ drivers/cxl/core/bus.c | 40 ++++++++++++++++++++++++++++++++--------
+ drivers/cxl/cxl.h      |  3 ++-
+ 2 files changed, 34 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-index 41de4a136ecd..40598905c080 100644
---- a/drivers/cxl/core/regs.c
-+++ b/drivers/cxl/core/regs.c
-@@ -5,6 +5,7 @@
- #include <linux/slab.h>
- #include <linux/pci.h>
- #include <cxlmem.h>
-+#include <pci.h>
+diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
+index 454d4d846eb2..5564a71773e2 100644
+--- a/drivers/cxl/core/bus.c
++++ b/drivers/cxl/core/bus.c
+@@ -175,6 +175,12 @@ static const struct attribute_group *cxl_decoder_switch_attribute_groups[] = {
+ 	NULL,
+ };
  
- /**
-  * DOC: cxl registers
-@@ -247,3 +248,56 @@ int cxl_map_device_regs(struct pci_dev *pdev,
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(cxl_map_device_regs);
++static const struct attribute_group *cxl_decoder_endpoint_attribute_groups[] = {
++	&cxl_decoder_base_attribute_group,
++	&cxl_base_attribute_group,
++	NULL,
++};
 +
-+static void cxl_decode_regblock(u32 reg_lo, u32 reg_hi,
-+				struct cxl_register_map *map)
+ static void cxl_decoder_release(struct device *dev)
+ {
+ 	struct cxl_decoder *cxld = to_cxl_decoder(dev);
+@@ -184,6 +190,12 @@ static void cxl_decoder_release(struct device *dev)
+ 	kfree(cxld);
+ }
+ 
++static const struct device_type cxl_decoder_endpoint_type = {
++	.name = "cxl_decoder_endpoint",
++	.release = cxl_decoder_release,
++	.groups = cxl_decoder_endpoint_attribute_groups,
++};
++
+ static const struct device_type cxl_decoder_switch_type = {
+ 	.name = "cxl_decoder_switch",
+ 	.release = cxl_decoder_release,
+@@ -196,6 +208,11 @@ static const struct device_type cxl_decoder_root_type = {
+ 	.groups = cxl_decoder_root_attribute_groups,
+ };
+ 
++static bool is_endpoint_decoder(struct device *dev)
 +{
-+	map->block_offset =
-+		((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
-+	map->barno = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
-+	map->reg_type = FIELD_GET(CXL_REGLOC_RBI_MASK, reg_lo);
++	return dev->type == &cxl_decoder_endpoint_type;
 +}
 +
-+/**
-+ * cxl_find_regblock() - Locate register blocks by type
-+ * @pdev: The CXL PCI device to enumerate.
-+ * @type: Register Block Indicator id
-+ * @map: Enumeration output, clobbered on error
-+ *
-+ * Return: 0 if register block enumerated, negative error code otherwise
-+ *
-+ * A CXL DVSEC may additional point one or more register blocks, search
-+ * for them by @type.
-+ */
-+int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
-+		      struct cxl_register_map *map)
-+{
-+	u32 regloc_size, regblocks;
-+	int regloc, i;
+ bool is_root_decoder(struct device *dev)
+ {
+ 	return dev->type == &cxl_decoder_root_type;
+@@ -483,7 +500,8 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
+ 	return rc;
+ }
+ 
+-struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
++struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
++				      unsigned int nr_targets)
+ {
+ 	struct cxl_decoder *cxld, cxld_const_init = {
+ 		.nr_targets = nr_targets,
+@@ -491,7 +509,7 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
+ 	struct device *dev;
+ 	int rc = 0;
+ 
+-	if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets < 1)
++	if (nr_targets > CXL_DECODER_MAX_INTERLEAVE)
+ 		return ERR_PTR(-EINVAL);
+ 
+ 	cxld = kzalloc(struct_size(cxld, target, nr_targets), GFP_KERNEL);
+@@ -510,8 +528,11 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
+ 	dev->parent = &port->dev;
+ 	dev->bus = &cxl_bus_type;
+ 
++	/* Endpoints don't have a target list */
++	if (nr_targets == 0)
++		dev->type = &cxl_decoder_endpoint_type;
+ 	/* root ports do not have a cxl_port_type parent */
+-	if (port->dev.parent->type == &cxl_port_type)
++	else if (port->dev.parent->type == &cxl_port_type)
+ 		dev->type = &cxl_decoder_switch_type;
+ 	else
+ 		dev->type = &cxl_decoder_root_type;
+@@ -538,12 +559,15 @@ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+ 	if (cxld->interleave_ways < 1)
+ 		return -EINVAL;
+ 
+-	port = to_cxl_port(cxld->dev.parent);
+-	rc = decoder_populate_targets(cxld, port, target_map);
+-	if (rc)
+-		return rc;
+-
+ 	dev = &cxld->dev;
 +
-+	regloc = pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL,
-+					   PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID);
-+	if (!regloc)
-+		return -ENXIO;
-+
-+	pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
-+	regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
-+
-+	regloc += PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET;
-+	regblocks = (regloc_size - PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET) / 8;
-+
-+	for (i = 0; i < regblocks; i++, regloc += 8) {
-+		u32 reg_lo, reg_hi;
-+
-+		pci_read_config_dword(pdev, regloc, &reg_lo);
-+		pci_read_config_dword(pdev, regloc + 4, &reg_hi);
-+
-+		cxl_decode_regblock(reg_lo, reg_hi, map);
-+
-+		if (map->reg_type == type)
-+			return 0;
++	port = to_cxl_port(cxld->dev.parent);
++	if (!is_endpoint_decoder(dev)) {
++		rc = decoder_populate_targets(cxld, port, target_map);
++		if (rc)
++			return rc;
 +	}
 +
-+	return -ENODEV;
-+}
-+EXPORT_SYMBOL_GPL(cxl_find_regblock);
+ 	rc = dev_set_name(dev, "decoder%d.%d", port->id, cxld->id);
+ 	if (rc)
+ 		return rc;
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 7cd16ef144dd..f06c596fad71 100644
+index 7f2e2bdc7883..91b8fd54bc93 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -161,6 +161,10 @@ int cxl_map_device_regs(struct pci_dev *pdev,
- 			struct cxl_device_regs *regs,
- 			struct cxl_register_map *map);
+@@ -293,7 +293,8 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
  
-+enum cxl_regloc_type;
-+int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
-+		      struct cxl_register_map *map);
-+
- #define CXL_RESOURCE_NONE ((resource_size_t) -1)
- #define CXL_TARGET_STRLEN 20
+ struct cxl_decoder *to_cxl_decoder(struct device *dev);
+ bool is_root_decoder(struct device *dev);
+-struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets);
++struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
++				      unsigned int nr_targets);
+ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
+ int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld);
  
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index f19a06809079..d1adc759d051 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -400,58 +400,6 @@ static int cxl_map_regs(struct cxl_mem *cxlm, struct cxl_register_map *map)
- 	return 0;
- }
- 
--static void cxl_decode_regblock(u32 reg_lo, u32 reg_hi,
--				struct cxl_register_map *map)
--{
--	map->block_offset =
--		((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
--	map->barno = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
--	map->reg_type = FIELD_GET(CXL_REGLOC_RBI_MASK, reg_lo);
--}
--
--/**
-- * cxl_find_regblock() - Locate register blocks by type
-- * @pdev: The CXL PCI device to enumerate.
-- * @type: Register Block Indicator id
-- * @map: Enumeration output, clobbered on error
-- *
-- * Return: 0 if register block enumerated, negative error code otherwise
-- *
-- * A CXL DVSEC may additional point one or more register blocks, search
-- * for them by @type.
-- */
--static int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
--			     struct cxl_register_map *map)
--{
--	u32 regloc_size, regblocks;
--	int regloc, i;
--
--	regloc = pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL,
--					   PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID);
--	if (!regloc)
--		return -ENXIO;
--
--	pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
--	regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
--
--	regloc += PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET;
--	regblocks = (regloc_size - PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET) / 8;
--
--	for (i = 0; i < regblocks; i++, regloc += 8) {
--		u32 reg_lo, reg_hi;
--
--		pci_read_config_dword(pdev, regloc, &reg_lo);
--		pci_read_config_dword(pdev, regloc + 4, &reg_hi);
--
--		cxl_decode_regblock(reg_lo, reg_hi, map);
--
--		if (map->reg_type == type)
--			return 0;
--	}
--
--	return -ENODEV;
--}
--
- static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
- 			  struct cxl_register_map *map)
- {
 -- 
 2.33.1
 
