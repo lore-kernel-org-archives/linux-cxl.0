@@ -2,27 +2,27 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8D4C4167B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB94C43217
 	for <linux-cxl@archiver.kernel.org>; Sat, 16 Oct 2021 05:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBDD561181
+	by mail.kernel.org (Postfix) with ESMTP id A6D1960D42
 	for <linux-cxl@archiver.kernel.org>; Sat, 16 Oct 2021 05:15:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243689AbhJPFRz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S243686AbhJPFRz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Sat, 16 Oct 2021 01:17:55 -0400
-Received: from mga18.intel.com ([134.134.136.126]:31045 "EHLO mga18.intel.com"
+Received: from mga07.intel.com ([134.134.136.100]:46171 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S243696AbhJPFRx (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Sat, 16 Oct 2021 01:17:53 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10138"; a="214961674"
+        id S243689AbhJPFRw (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Sat, 16 Oct 2021 01:17:52 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10138"; a="291507412"
 X-IronPort-AV: E=Sophos;i="5.85,377,1624345200"; 
-   d="scan'208";a="214961674"
+   d="scan'208";a="291507412"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2021 22:15:45 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2021 22:15:45 -0700
 X-IronPort-AV: E=Sophos;i="5.85,377,1624345200"; 
-   d="scan'208";a="442743341"
+   d="scan'208";a="442743334"
 Received: from asimon-mobl1.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.133.4])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2021 22:15:45 -0700
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2021 22:15:44 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>
 Cc:     Ben Widawsky <ben.widawsky@intel.com>,
@@ -31,9 +31,9 @@ Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [RFC PATCH 24/27] cxl/mem: Store the endpoint's uport
-Date:   Fri, 15 Oct 2021 22:15:28 -0700
-Message-Id: <20211016051531.622613-25-ben.widawsky@intel.com>
+Subject: [RFC PATCH 23/27] cxl/region: Record host bridge target list
+Date:   Fri, 15 Oct 2021 22:15:27 -0700
+Message-Id: <20211016051531.622613-24-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20211016051531.622613-1-ben.widawsky@intel.com>
 References: <20211016051531.622613-1-ben.widawsky@intel.com>
@@ -43,41 +43,159 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Keeping track of an endpoint's port is important when attempting to
-assemble all relevant components in the CXL.mem route from root to
-endpoint. Without this change, the endpoint's port can be obtained
-through walks of the hierarchy.
+Part of host bridge verification in the CXL Type 3 Memory Device
+Software Guide calculates the host bridge interleave target list (6th
+step in the flow chart). With host bridge verification already done, it
+is trivial to store away the configuration information.
+
+TODO: Needs support for switches (7th step in the flow chart).
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- drivers/cxl/cxlmem.h | 1 +
- drivers/cxl/mem.c    | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/cxl/region.c | 41 ++++++++++++++++++++++++++++++-----------
+ drivers/cxl/region.h | 12 ++++++++++++
+ 2 files changed, 42 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index cc5844150ce0..02efb270acac 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -45,6 +45,7 @@ struct cxl_memdev {
- 	int id;
- 	resource_size_t creg_base;
- 	struct cxl_dport *root_port;
-+	struct cxl_port *uport;
+diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
+index 81fed05cad00..d5a326c7e369 100644
+--- a/drivers/cxl/region.c
++++ b/drivers/cxl/region.c
+@@ -294,14 +294,17 @@ static int get_num_root_ports(const struct cxl_region *region)
+  * region_hb_rp_config_valid() - determine root port ordering is correct
+  * @cfmws: CFMWS decoder for this @region
+  * @region: Region to validate
++ * @p: HDM decoder programming state. Populated if non-NULL.
+  *
+  * The algorithm is outlined in 2.13.15 "Verify HB root port configuration
+  * sequence" of the CXL Memory Device SW Guide (Rev1p0).
+  *
+- * Returns true if the configuration is valid.
++ * Returns true if the configuration is valid, the configuration state is
++ * updated for later programming.
+  */
+ static bool region_hb_rp_config_valid(const struct cxl_region *region,
+-				      const struct cxl_decoder *cfmws)
++				      const struct cxl_decoder *cfmws,
++				      struct decoder_programming *p)
+ {
+ 	const int num_root_ports = get_num_root_ports(region);
+ 	struct cxl_port *hbs[CXL_DECODER_MAX_INTERLEAVE];
+@@ -309,18 +312,29 @@ static bool region_hb_rp_config_valid(const struct cxl_region *region,
+ 
+ 	hb_count = get_unique_hostbridges(region, hbs);
+ 
++	if (p)
++		p->hb_count = hb_count;
++
+ 	/*
+ 	 * Are all devices in this region on the same CXL Host Bridge
+ 	 * Root Port?
+ 	 */
+-	if (num_root_ports == 1)
++	if (num_root_ports == 1) {
++		if (p) {
++			p->hbs[0].rp_target_list[0] = region->targets[0]->root_port;
++			p->hbs[0].rp_count = 1;
++		}
+ 		return true;
++	}
+ 
+ 	for (i = 0; i < hb_count; i++) {
++		struct cxl_dport *rp, **targets;
+ 		struct cxl_port *hb = hbs[i];
+-		struct cxl_dport *rp;
+ 		int position_mask;
+-		int idx;
++		int idx, *rp_count;
++
++		targets = &p->hbs[i].rp_target_list[0];
++		rp_count = &p->hbs[i].rp_count;
+ 
+ 		/*
+ 		 * Calculate the position mask: NumRootPorts = 2^PositionMask
+@@ -343,9 +357,12 @@ static bool region_hb_rp_config_valid(const struct cxl_region *region,
+ 				if (ep->root_port != rp)
+ 					continue;
+ 
+-				if (port_grouping == -1) {
++				if (port_grouping == -1)
+ 					port_grouping = idx & position_mask;
+-					continue;
++
++				if (p) {
++					(*rp_count)++;
++					targets[port_grouping] = ep->root_port;
+ 				}
+ 
+ 				/*
+@@ -379,7 +396,8 @@ static bool cfmws_contains(const struct cxl_region *region,
+ }
+ 
+ static bool cfmws_valid(const struct cxl_region *region,
+-			const struct cxl_decoder *cfmws)
++			const struct cxl_decoder *cfmws,
++			struct decoder_programming *p)
+ {
+ 	const struct cxl_memdev *endpoint = region->targets[0];
+ 
+@@ -392,7 +410,7 @@ static bool cfmws_valid(const struct cxl_region *region,
+ 	if (!region_xhb_config_valid(region, cfmws))
+ 		return false;
+ 
+-	if (!region_hb_rp_config_valid(region, cfmws))
++	if (!region_hb_rp_config_valid(region, cfmws, p))
+ 		return false;
+ 
+ 	if (!cfmws_contains(region, cfmws))
+@@ -409,7 +427,7 @@ static int cfmws_match(struct device *dev, void *data)
+ 	if (!is_root_decoder(dev))
+ 		return 0;
+ 
+-	return !!cfmws_valid(region, to_cxl_decoder(dev));
++	return !!cfmws_valid(region, to_cxl_decoder(dev), NULL);
+ }
+ 
+ /*
+@@ -481,7 +499,8 @@ static int cxl_region_probe(struct device *dev)
+ 		return -ENXIO;
+ 
+ 	cfmws = cxld_from_region(region);
+-	if (!cfmws_valid(region, cfmws)) {
++	if (!cfmws_valid(region, cfmws,
++			 (struct decoder_programming *)&region->state)) {
+ 		dev_err(dev, "Picked invalid cfmws\n");
+ 		return -ENXIO;
+ 	}
+diff --git a/drivers/cxl/region.h b/drivers/cxl/region.h
+index 5df417324cab..51f442636364 100644
+--- a/drivers/cxl/region.h
++++ b/drivers/cxl/region.h
+@@ -19,6 +19,10 @@
+  * @eniw: Number of interleave ways this region is configured for.
+  * @ig: Interleave granularity of region
+  * @targets: The memory devices comprising the region.
++ * @state: Configuration state for host bridges, switches, and endpoints.
++ * @state.hbs: Host bridge state. One per hostbridge in the interleave set.
++ * @state.hbs.rp_count: Count of root ports for this region
++ * @state.hbs.rp_target_list: Ordered list of downstream root ports.
+  */
+ struct cxl_region {
+ 	struct device dev;
+@@ -34,6 +38,14 @@ struct cxl_region {
+ 		int ig;
+ 		struct cxl_memdev *targets[CXL_DECODER_MAX_INTERLEAVE];
+ 	};
++
++	struct decoder_programming {
++		int hb_count;
++		struct {
++			int rp_count;
++			struct cxl_dport *rp_target_list[CXL_DECODER_MAX_INTERLEAVE];
++		} hbs[CXL_DECODER_MAX_INTERLEAVE];
++	} state;
  };
  
- static inline struct cxl_memdev *to_cxl_memdev(struct device *dev)
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index fb0b3cb10482..345281e69b6b 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -62,6 +62,7 @@ static int create_endpoint_port(struct device *dev, struct device *host,
- 	endpoint = devm_cxl_add_port(host, dev, cxlmd->creg_base, parent);
- 	if (IS_ERR(endpoint))
- 		return PTR_ERR(endpoint);
-+	cxlmd->uport = endpoint;
- 	dev_dbg(host, "add: %s\n", dev_name(&endpoint->dev));
- 
- 	return 0;
+ bool is_cxl_region_configured(const struct cxl_region *region);
 -- 
 2.33.1
 
