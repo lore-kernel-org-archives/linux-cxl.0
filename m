@@ -2,25 +2,25 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABFDC433F5
-	for <linux-cxl@archiver.kernel.org>; Sat, 16 Oct 2021 05:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C56C4332F
+	for <linux-cxl@archiver.kernel.org>; Sat, 16 Oct 2021 05:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 855E761181
+	by mail.kernel.org (Postfix) with ESMTP id E0E7B61181
 	for <linux-cxl@archiver.kernel.org>; Sat, 16 Oct 2021 05:15:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243692AbhJPFRx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 16 Oct 2021 01:17:53 -0400
-Received: from mga11.intel.com ([192.55.52.93]:1745 "EHLO mga11.intel.com"
+        id S243698AbhJPFRy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 16 Oct 2021 01:17:54 -0400
+Received: from mga11.intel.com ([192.55.52.93]:1750 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S243698AbhJPFRv (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        id S243690AbhJPFRv (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
         Sat, 16 Oct 2021 01:17:51 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10138"; a="225489615"
+X-IronPort-AV: E=McAfee;i="6200,9189,10138"; a="225489616"
 X-IronPort-AV: E=Sophos;i="5.85,377,1624345200"; 
-   d="scan'208";a="225489615"
+   d="scan'208";a="225489616"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2021 22:15:43 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2021 22:15:44 -0700
 X-IronPort-AV: E=Sophos;i="5.85,377,1624345200"; 
-   d="scan'208";a="442743309"
+   d="scan'208";a="442743316"
 Received: from asimon-mobl1.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.133.4])
   by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2021 22:15:43 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
@@ -31,9 +31,9 @@ Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [RFC PATCH 19/27] cxl/acpi: Handle address space allocation
-Date:   Fri, 15 Oct 2021 22:15:23 -0700
-Message-Id: <20211016051531.622613-20-ben.widawsky@intel.com>
+Subject: [RFC PATCH 20/27] cxl/region: Address space allocation
+Date:   Fri, 15 Oct 2021 22:15:24 -0700
+Message-Id: <20211016051531.622613-21-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20211016051531.622613-1-ben.widawsky@intel.com>
 References: <20211016051531.622613-1-ben.widawsky@intel.com>
@@ -43,111 +43,91 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Regions are carved out of an addresses space which is claimed by top
-level decoders, and subsequently their children decoders. Regions are
-created with a size and therefore must fit, with proper alignment, in
-that address space. The support for doing this fitting is handled by the
-driver automatically.
-
-As an example, a platform might configure a top level decoder to claim
-1TB of address space @ 0x800000000 -> 0x10800000000; it would be
-possible to create M regions with appropriate alignment to occupy that
-address space. Each of those regions would have a host physical address
-somewhere in the range between 32G and 1.3TB, and the location will be
-determined by the logic added here.
-
-The request_region() usage is not strictly mandatory at this point as
-the actual handling of the address space is done with genpools. It is
-highly likely however that the resource/region APIs will become useful
-in the not too distant future.
-
-All decoders manage a host physical address space while active. Only the
-root decoder has constraints on location and size. As a result, it makes
-most sense for the root decoder to be responsible for managing the
-entire address space, and mid-level decoders and endpoints can ask the
-root decoder for suballocations.
+When a region is not assigned a host physical address, one is picked by
+the driver. As the address will determine which CFMWS contains the
+region, it's usually a better idea to let the driver make this
+determination.
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- drivers/cxl/acpi.c | 30 ++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h  |  2 ++
- 2 files changed, 32 insertions(+)
+ drivers/cxl/region.c | 35 +++++++++++++++++++++++++++++++++--
+ drivers/cxl/trace.h  |  3 +++
+ 2 files changed, 36 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 273bf9d5648d..fd72b26956cb 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
+diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
+index 610c32107860..cd9d696fdd4a 100644
+--- a/drivers/cxl/region.c
++++ b/drivers/cxl/region.c
 @@ -1,6 +1,7 @@
  // SPDX-License-Identifier: GPL-2.0-only
  /* Copyright(c) 2021 Intel Corporation. All rights reserved. */
  #include <linux/platform_device.h>
 +#include <linux/genalloc.h>
- #include <linux/module.h>
  #include <linux/device.h>
- #include <linux/kernel.h>
-@@ -75,6 +76,27 @@ static int cxl_acpi_cfmws_verify(struct device *dev,
- 	return 0;
+ #include <linux/module.h>
+ #include <linux/pci.h>
+@@ -55,6 +56,17 @@ static struct cxl_port *get_root_decoder(const struct cxl_memdev *endpoint)
+ 	return NULL;
  }
  
-+/*
-+ * Every decoder while active has an address space that it is decoding. However,
-+ * only the root level decoders have fixed host physical address space ranges.
-+ */
-+static int cxl_create_cfmws_address_space(struct cxl_decoder *cxld,
-+					  struct acpi_cedt_cfmws *cfmws)
++static void release_cxl_region(void *r)
 +{
-+	const int order = ilog2(SZ_256M * cxld->interleave_ways);
-+	struct device *dev = &cxld->dev;
-+	struct gen_pool *pool;
++	struct cxl_region *region = (struct cxl_region *)r;
++	struct cxl_decoder *cxld = cxld_from_region(region);
++	struct resource *parent_res = &cxld->res;
++	const struct resource *res = region->res;
 +
-+	pool = devm_gen_pool_create(dev, order, NUMA_NO_NODE, dev_name(dev));
-+	if (IS_ERR(pool))
-+		return PTR_ERR(pool);
-+
-+	cxld->address_space = pool;
-+
-+	return gen_pool_add(cxld->address_space, cfmws->base_hpa,
-+			    cfmws->window_size, NUMA_NO_NODE);
++	gen_pool_free(cxld->address_space, res->start, resource_size(res));
++	__release_region(parent_res, res->start, resource_size(res));
 +}
 +
- static void cxl_add_cfmws_decoders(struct device *dev,
- 				   struct cxl_port *root_port)
- {
-@@ -133,6 +155,14 @@ static void cxl_add_cfmws_decoders(struct device *dev,
- 		cxld->interleave_granularity =
- 			CFMWS_INTERLEAVE_GRANULARITY(cfmws);
- 
-+		rc = cxl_create_cfmws_address_space(cxld, cfmws);
-+		if (rc) {
-+			dev_err(dev,
-+				"Failed to create CFMWS address space for decoder\n");
-+			put_device(&cxld->dev);
-+			goto next;
-+		}
-+
- 		rc = cxl_decoder_add(cxld, target_map);
- 		if (rc)
- 			put_device(&cxld->dev);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 34063c2440c9..f1a13d5fa7d7 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -222,6 +222,7 @@ enum cxl_decoder_type {
-  * @target_type: accelerator vs expander (type2 vs type3) selector
-  * @flags: memory type capabilities and locking
-  * @region_ida: allocator for region ids.
-+ * @address_space: Used/free address space for regions.
-  * @nr_targets: number of elements in @target
-  * @target: active ordered target list in current decoder configuration
+ /**
+  * sanitize_region() - Check is region is reasonably configured
+  * @region: The region to check
+@@ -104,8 +116,27 @@ static int sanitize_region(const struct cxl_region *region)
   */
-@@ -234,6 +235,7 @@ struct cxl_decoder {
- 	enum cxl_decoder_type target_type;
- 	unsigned long flags;
- 	struct ida region_ida;
-+	struct gen_pool *address_space;
- 	const int nr_targets;
- 	struct cxl_dport *target[];
- };
+ static int allocate_address_space(struct cxl_region *region)
+ {
+-	/* TODO */
+-	return 0;
++	struct cxl_decoder *cxld = cxld_from_region(region);
++	unsigned long start;
++
++	start = gen_pool_alloc(cxld->address_space, region->size);
++	if (!start) {
++		trace_allocation_failed(region,
++					"Couldn't allocate address space");
++		return -ENOMEM;
++	}
++	region->res =
++		__request_region(&cxld->res, start, region->size,
++				 dev_name(&region->dev), IORESOURCE_EXCLUSIVE);
++
++	if (IS_ERR(region->res)) {
++		trace_allocation_failed(region, "Couldn't obtain region");
++		gen_pool_free(cxld->address_space, start, region->size);
++		return PTR_ERR(region->res);
++	}
++
++	return devm_add_action_or_reset(&region->dev, release_cxl_region,
++					region);
+ }
+ 
+ /**
+diff --git a/drivers/cxl/trace.h b/drivers/cxl/trace.h
+index 8f7f471e15b8..a53f00ba5d0e 100644
+--- a/drivers/cxl/trace.h
++++ b/drivers/cxl/trace.h
+@@ -35,6 +35,9 @@ DEFINE_EVENT(cxl_region_template, region_activated,
+ DEFINE_EVENT(cxl_region_template, sanitize_failed,
+ 	     TP_PROTO(const struct cxl_region *region, char *status),
+ 	     TP_ARGS(region, status));
++DEFINE_EVENT(cxl_region_template, allocation_failed,
++	     TP_PROTO(const struct cxl_region *region, char *status),
++	     TP_ARGS(region, status));
+ 
+ #endif /* if !defined (__CXL_TRACE_H__) || defined(TRACE_HEADER_MULTI_READ) */
+ 
 -- 
 2.33.1
 
