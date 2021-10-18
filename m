@@ -2,205 +2,138 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC04C433EF
-	for <linux-cxl@archiver.kernel.org>; Mon, 18 Oct 2021 02:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DAAC433F5
+	for <linux-cxl@archiver.kernel.org>; Mon, 18 Oct 2021 05:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 840C361050
-	for <linux-cxl@archiver.kernel.org>; Mon, 18 Oct 2021 02:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A8C06103B
+	for <linux-cxl@archiver.kernel.org>; Mon, 18 Oct 2021 05:13:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229675AbhJRDBu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 17 Oct 2021 23:01:50 -0400
-Received: from mga14.intel.com ([192.55.52.115]:42099 "EHLO mga14.intel.com"
+        id S229534AbhJRFPM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 18 Oct 2021 01:15:12 -0400
+Received: from mga01.intel.com ([192.55.52.88]:41073 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229526AbhJRDBu (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Sun, 17 Oct 2021 23:01:50 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10140"; a="228433468"
+        id S229533AbhJRFPM (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 18 Oct 2021 01:15:12 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10140"; a="251625603"
 X-IronPort-AV: E=Sophos;i="5.85,381,1624345200"; 
-   d="scan'208";a="228433468"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2021 19:59:39 -0700
+   d="scan'208";a="251625603"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2021 22:13:00 -0700
 X-IronPort-AV: E=Sophos;i="5.85,381,1624345200"; 
-   d="scan'208";a="526093884"
-Received: from alison-desk.jf.intel.com (HELO localhost) ([10.54.74.41])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2021 19:59:39 -0700
-From:   alison.schofield@intel.com
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
+   d="scan'208";a="530116042"
+Received: from jrgovind-mobl.amr.corp.intel.com (HELO vverma7-desk.amr.corp.intel.com) ([10.254.45.195])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2021 22:13:00 -0700
+From:   Vishal Verma <vishal.l.verma@intel.com>
+To:     <linux-cxl@vger.kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: [PATCH v2] ACPI: NUMA: Add a node and memblk for each CFMWS not in SRAT
-Date:   Sun, 17 Oct 2021 20:07:36 -0700
-Message-Id: <20211018030736.443752-1-alison.schofield@intel.com>
-X-Mailer: git-send-email 2.25.1
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v3] tools/testing/cxl: add mock output for the GET_HEALTH_INFO command
+Date:   Sun, 17 Oct 2021 23:12:51 -0600
+Message-Id: <20211018051251.2289112-1-vishal.l.verma@intel.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2864; h=from:subject; bh=Ky0Fcjz6rOYWX6pjC+rFlZaJBdximZ2kT3E/nutLcNs=; b=owGbwMvMwCHGf25diOft7jLG02pJDIm5TA4nOy5z7prWWMDhpvjOvsebeVK4bn8kMwP7zLCT3LPU Vrh2lLIwiHEwyIopsvzd85HxmNz2fJ7ABEeYOaxMIEMYuDgFYCLxZgx/RfttrAItTf5r31gR8Gh31Q aRnyuCdk2veRStIZV+m31POMM/c6lMGWeRGZdeT+edsE3qxZ7sBzeFQs7kaD9nXyB4a5E/KwA=
+X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+Add mocked health information for cxl_test memdevs. This allows
+cxl-cli's 'list' command to display the canned health_info fields.
 
-During NUMA init, CXL memory defined in the SRAT Memory Affinity
-subtable may be assigned to a NUMA node. Since there is no
-requirement that the SRAT be comprehensive for CXL memory another
-mechanism is needed to assign NUMA nodes to CXL memory not identified
-in the SRAT.
-
-Use the CXL Fixed Memory Window Structure (CFMWS) of the ACPI CXL
-Early Discovery Table (CEDT) to find all CXL memory ranges.
-Create a NUMA node for each CFMWS that is not already assigned to
-a NUMA node. Add a memblk attaching its host physical address
-range to the node.
-
-Note that these ranges may not actually map any memory at boot time.
-They may describe persistent capacity or may be present to enable
-hot-plug.
-
-Consumers can use phys_to_target_node() to discover the NUMA node.
-
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
+ tools/testing/cxl/test/mem.c | 48 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-Changes in v2:
-- Use MAX_NUMNODES as max value when searching node_to_pxm_map() (0-day)
-- Add braces around single statement for loop (coding style)
-- Rename acpi_parse_cfmws() to acpi_cxl_cfmws_init to be more like other
-  functions in this file doing similar work. 
-- Comments: remove superflous and state importance of the init order,
-  CFMWS after SRAT, (Ira, Dan)
-- Add prototype for numa_add_memblk() (0-day)
+Changes since v2[1]:
+- Fix cpu_to_leXX for 32bit fields (Jonathan)
+- Collect review tags
 
+[1]: https://lore.kernel.org/r/20211011222826.184775-1-vishal.l.verma@intel.com
 
- drivers/acpi/numa/srat.c | 70 ++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/acpi.c       |  8 +++--
- include/linux/acpi.h     |  1 +
- 3 files changed, 76 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-index b8795fc49097..4d26a4208af0 100644
---- a/drivers/acpi/numa/srat.c
-+++ b/drivers/acpi/numa/srat.c
-@@ -300,6 +300,67 @@ acpi_numa_memory_affinity_init(struct acpi_srat_mem_affinity *ma)
- }
- #endif /* defined(CONFIG_X86) || defined (CONFIG_ARM64) */
+diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+index 12a8437a9ca0..ab363e475a32 100644
+--- a/tools/testing/cxl/test/mem.c
++++ b/tools/testing/cxl/test/mem.c
+@@ -28,8 +28,24 @@ static struct cxl_cel_entry mock_cel[] = {
+ 		.opcode = cpu_to_le16(CXL_MBOX_OP_SET_LSA),
+ 		.effect = cpu_to_le16(EFFECT(1) | EFFECT(2)),
+ 	},
++	{
++		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_HEALTH_INFO),
++		.effect = cpu_to_le16(0),
++	},
+ };
  
-+static int __init acpi_cxl_cfmws_init(struct acpi_table_header *acpi_cedt)
++/* See CXL 2.0 Table 181 Get Health Info Output Payload */
++struct cxl_mbox_health_info {
++	u8 health_status;
++	u8 media_status;
++	u8 ext_status;
++	u8 life_used;
++	__le16 temperature;
++	__le32 dirty_shutdowns;
++	__le32 volatile_errors;
++	__le32 pmem_errors;
++} __packed;
++
+ static struct {
+ 	struct cxl_mbox_get_supported_logs gsl;
+ 	struct cxl_gsl_entry entry;
+@@ -156,6 +172,35 @@ static int mock_set_lsa(struct cxl_mem *cxlm, struct cxl_mbox_cmd *cmd)
+ 	return 0;
+ }
+ 
++static int mock_health_info(struct cxl_mem *cxlm, struct cxl_mbox_cmd *cmd)
 +{
-+	struct acpi_cedt_cfmws *cfmws;
-+	acpi_size len, cur = 0;
-+	void *cedt_subtable;
-+	int i, pxm, node;
-+	u64 start, end;
-+
-+	/* Find the max PXM defined in the SRAT */
-+	for (i = 0; i < MAX_NUMNODES - 1; i++) {
-+		if (node_to_pxm_map[i] > pxm)
-+			pxm = node_to_pxm_map[i];
-+	}
-+	/* Start assigning fake PXM values after the SRAT max PXM */
-+	pxm++;
-+
-+	len = acpi_cedt->length - sizeof(*acpi_cedt);
-+	cedt_subtable = acpi_cedt + 1;
-+
-+	while (cur < len) {
-+		struct acpi_cedt_header *c = cedt_subtable + cur;
-+
-+		if (c->type != ACPI_CEDT_TYPE_CFMWS)
-+			goto next;
-+
-+		cfmws = cedt_subtable + cur;
-+		if (cfmws->header.length < sizeof(*cfmws)) {
-+			pr_warn_once("CFMWS entry skipped:invalid length:%u\n",
-+				     cfmws->header.length);
-+			goto next;
-+		}
-+
-+		start = cfmws->base_hpa;
-+		end = cfmws->base_hpa + cfmws->window_size;
-+
++	struct cxl_mbox_health_info health_info = {
++		/* set flags for maint needed, perf degraded, hw replacement */
++		.health_status = 0x7,
++		/* set media status to "All Data Lost" */
++		.media_status = 0x3,
 +		/*
-+		 * Skip if the SRAT already described
-+		 * the NUMA details for this HPA.
++		 * set ext_status flags for:
++		 *  ext_life_used: normal,
++		 *  ext_temperature: critical,
++		 *  ext_corrected_volatile: warning,
++		 *  ext_corrected_persistent: normal,
 +		 */
-+		node = phys_to_target_node(start);
-+		if (node != NUMA_NO_NODE)
-+			goto next;
++		.ext_status = 0x18,
++		.life_used = 15,
++		.temperature = cpu_to_le16(25),
++		.dirty_shutdowns = cpu_to_le32(10),
++		.volatile_errors = cpu_to_le32(20),
++		.pmem_errors = cpu_to_le32(30),
++	};
 +
-+		node = acpi_map_pxm_to_node(pxm);
-+		if (node == NUMA_NO_NODE) {
-+			pr_err("ACPI NUMA: Too many proximity domains.\n");
-+			return -EINVAL;
-+		}
++	if (cmd->size_out < sizeof(health_info))
++		return -EINVAL;
 +
-+		if (numa_add_memblk(node, start, end) < 0) {
-+			/* CXL driver must handle the NUMA_NO_NODE case */
-+			pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
-+				node, start, end);
-+		}
-+		pxm++;
-+next:
-+		cur += c->length;
-+	}
++	memcpy(cmd->payload_out, &health_info, sizeof(health_info));
 +	return 0;
 +}
 +
- static int __init acpi_parse_slit(struct acpi_table_header *table)
+ static int cxl_mock_mbox_send(struct cxl_mem *cxlm, struct cxl_mbox_cmd *cmd)
  {
- 	struct acpi_table_slit *slit = (struct acpi_table_slit *)table;
-@@ -478,6 +539,15 @@ int __init acpi_numa_init(void)
- 	/* SLIT: System Locality Information Table */
- 	acpi_table_parse(ACPI_SIG_SLIT, acpi_parse_slit);
- 
-+	/*
-+	 * CEDT: CXL Fixed Memory Window Structures (CFMWS)
-+	 * must be parsed after the SRAT. It creates NUMA
-+	 * Nodes for CXL memory ranges not already defined
-+	 * in the SRAT and it assigns PXMs after the max PXM
-+	 * defined in the SRAT.
-+	 */
-+	acpi_table_parse(ACPI_SIG_CEDT, acpi_cxl_cfmws_init);
-+
- 	if (cnt < 0)
- 		return cnt;
- 	else if (!parsed_numa_memblks)
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 54e9d4d2cf5f..02f765a494b1 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -122,9 +122,11 @@ static void cxl_add_cfmws_decoders(struct device *dev,
- 				cfmws->base_hpa, cfmws->base_hpa +
- 				cfmws->window_size - 1);
- 		} else {
--			dev_dbg(dev, "add: %s range %#llx-%#llx\n",
--				dev_name(&cxld->dev), cfmws->base_hpa,
--				 cfmws->base_hpa + cfmws->window_size - 1);
-+			dev_dbg(dev, "add: %s node: %d range %#llx-%#llx\n",
-+				dev_name(&cxld->dev),
-+				phys_to_target_node(cxld->range.start),
-+				cfmws->base_hpa,
-+				cfmws->base_hpa + cfmws->window_size - 1);
- 		}
- 		cur += c->length;
+ 	struct device *dev = cxlm->dev;
+@@ -177,6 +222,9 @@ static int cxl_mock_mbox_send(struct cxl_mem *cxlm, struct cxl_mbox_cmd *cmd)
+ 	case CXL_MBOX_OP_SET_LSA:
+ 		rc = mock_set_lsa(cxlm, cmd);
+ 		break;
++	case CXL_MBOX_OP_GET_HEALTH_INFO:
++		rc = mock_health_info(cxlm, cmd);
++		break;
+ 	default:
+ 		break;
  	}
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 974d497a897d..f837fd715440 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -426,6 +426,7 @@ extern bool acpi_osi_is_win8(void);
- #ifdef CONFIG_ACPI_NUMA
- int acpi_map_pxm_to_node(int pxm);
- int acpi_get_node(acpi_handle handle);
-+int __init numa_add_memblk(int nodeid, u64 start, u64 end);
- 
- /**
-  * pxm_to_online_node - Map proximity ID to online node
 
-base-commit: 64570fbc14f8d7cb3fe3995f20e26bc25ce4b2cc
+base-commit: ed97afb53365cd03dde266c9644334a558fe5a16
 -- 
 2.31.1
 
