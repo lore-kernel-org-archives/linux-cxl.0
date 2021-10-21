@@ -2,248 +2,223 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD718C433FE
-	for <linux-cxl@archiver.kernel.org>; Thu, 21 Oct 2021 00:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BCEC433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 21 Oct 2021 14:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5656103D
-	for <linux-cxl@archiver.kernel.org>; Thu, 21 Oct 2021 00:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AF2C6121E
+	for <linux-cxl@archiver.kernel.org>; Thu, 21 Oct 2021 14:29:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230192AbhJUAys (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 20 Oct 2021 20:54:48 -0400
-Received: from mga05.intel.com ([192.55.52.43]:34194 "EHLO mga05.intel.com"
+        id S230072AbhJUOcE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 21 Oct 2021 10:32:04 -0400
+Received: from mga03.intel.com ([134.134.136.65]:3408 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229702AbhJUAyr (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Wed, 20 Oct 2021 20:54:47 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10143"; a="315120390"
-X-IronPort-AV: E=Sophos;i="5.87,168,1631602800"; 
-   d="scan'208";a="315120390"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2021 17:52:32 -0700
-X-IronPort-AV: E=Sophos;i="5.87,168,1631602800"; 
-   d="scan'208";a="444574922"
-Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.41])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2021 17:52:32 -0700
-Date:   Wed, 20 Oct 2021 18:00:23 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Vikram Sethi <vsethi@nvidia.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
+        id S229878AbhJUOcE (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 21 Oct 2021 10:32:04 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10143"; a="228995813"
+X-IronPort-AV: E=Sophos;i="5.87,170,1631602800"; 
+   d="scan'208";a="228995813"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2021 07:29:35 -0700
+X-IronPort-AV: E=Sophos;i="5.87,170,1631602800"; 
+   d="scan'208";a="527506369"
+Received: from pcotting-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.131.150])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2021 07:29:35 -0700
+Date:   Thu, 21 Oct 2021 07:29:33 -0700
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH v3] ACPI: NUMA: Add a node and memblk for each CFMWS not
- in SRAT
-Message-ID: <20211021010023.GA457926@alison-desk>
-References: <20211019050908.449231-1-alison.schofield@intel.com>
- <SN6PR12MB2653CF7BEF1DA0A97B029396BDBE9@SN6PR12MB2653.namprd12.prod.outlook.com>
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: Re: [RFC PATCH 00/27] CXL Region Creation / HDM decoder programming
+Message-ID: <20211021142933.7l6ybmfvjcgrxbad@intel.com>
+References: <20211016051531.622613-1-ben.widawsky@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SN6PR12MB2653CF7BEF1DA0A97B029396BDBE9@SN6PR12MB2653.namprd12.prod.outlook.com>
+In-Reply-To: <20211016051531.622613-1-ben.widawsky@intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Oct 20, 2021 at 10:03:58PM +0000, Vikram Sethi wrote:
-> Hi Alison, 
+Just a heads up for anyone planning to review this soon. I have a v2 coming soon
+with enough changes that I think I'll do a resend. In other words, probably
+worth ignoring this series for now.
+
+Thanks.
+Ben
+
+On 21-10-15 22:15:04, Ben Widawsky wrote:
+> CXL region creation
+> -------------------
+> An interleave set of devices is known in the Compute Express Link [1]
+> specification as a region. In addition to a region being comprised of devices
+> that can be configured in a variety of orders there are other properties that
+> defines a region. This patch series implements both the interfaces to create and
+> configure a region, as well as the algorithm to program the HDM decoders to
+> enable CXL.mem traffic while obeying those configuration parameters. The
+> functionality is realized via a few drivers which are added and described
+> below. In addition to those drivers, cxl_core grows new functionality to support
+> these drivers.
 > 
-> > -----Original Message-----
-> > From: alison.schofield@intel.com <alison.schofield@intel.com>
-> > Sent: Tuesday, October 19, 2021 12:09 AM
-> > To: Rafael J. Wysocki <rafael@kernel.org>; Len Brown <lenb@kernel.org>;
-> > Vishal Verma <vishal.l.verma@intel.com>; Ira Weiny <ira.weiny@intel.com>;
-> > Ben Widawsky <ben.widawsky@intel.com>; Dan Williams
-> > <dan.j.williams@intel.com>
-> > Cc: Alison Schofield <alison.schofield@intel.com>; linux-cxl@vger.kernel.org;
-> > linux-acpi@vger.kernel.org
-> > Subject: [PATCH v3] ACPI: NUMA: Add a node and memblk for each CFMWS
-> > not in SRAT
-> > 
-> > From: Alison Schofield <alison.schofield@intel.com>
-> > 
-> > During NUMA init, CXL memory defined in the SRAT Memory Affinity
-> > subtable may be assigned to a NUMA node. Since there is no requirement
-> > that the SRAT be comprehensive for CXL memory another mechanism is
-> > needed to assign NUMA nodes to CXL memory not identified in the SRAT.
-> > 
-> > Use the CXL Fixed Memory Window Structure (CFMWS) of the ACPI CXL Early
-> > Discovery Table (CEDT) to find all CXL memory ranges.
-> > Create a NUMA node for each CFMWS that is not already assigned to a
-> > NUMA node. Add a memblk attaching its host physical address range to the
-> > node.
-> > 
-> > Note that these ranges may not actually map any memory at boot time.
-> > They may describe persistent capacity or may be present to enable hot-plug.
-> > 
-> > Consumers can use phys_to_target_node() to discover the NUMA node.
+> Some version of this functionality has all be posted previously by me, with the
+> exception of the actual HDM decoder programming. It's probably wise to forget
+> those exist, and take my apology in advance for not addressing feedback you may
+> have already given.
 > 
-> Does this patch work for CXL type 2 memory which is not in SRAT? A type 2 driver 
-> can find its HDM BASE physical address from its CXL registers and figure out 
-> its NUMA node id by calling phys_to_target_node?
-
-Yes. This adds the nodes for the case where the BIOS doesn't fully describe
-everything in CFMWS in the SRAT. And, yes, that is how the NUMA node can be
-discovered.
-
-> Or is type 2 HDM currently being skipped altogether?
-
-Not sure what you mean by 'being skipped altogether'? The BIOS may describe
-(all or none or some) of CXL Memory in the SRAT. In the case where BIOS
-describes it all, NUMA nodes will already exist, and no new nodes will be
-added here.
-
-Alison
-
+> There are two branches I am using as development branches. The branch for
+> port/mem driver [2] is fairly solid. The branch for region creation [3] is less
+> baked.
 > 
-> Thanks
-> > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > ---
-> > Changes in v3:
-> > - Initial variable pxm (Ben)
-> > 
-> > Changes in v2:
-> > - Use MAX_NUMNODES as max value when searching node_to_pxm_map()
-> > (0-day)
-> > - Add braces around single statement for loop (coding style)
-> > - Rename acpi_parse_cfmws() to acpi_cxl_cfmws_init to be more like other
-> >   functions in this file doing similar work.
-> > - Comments: remove superflous and state importance of the init order,
-> >   CFMWS after SRAT, (Ira, Dan)
-> > - Add prototype for numa_add_memblk() (0-day)
-> > 
-> >  drivers/acpi/numa/srat.c | 70
-> > ++++++++++++++++++++++++++++++++++++++++
-> >  drivers/cxl/acpi.c       |  8 +++--
-> >  include/linux/acpi.h     |  1 +
-> >  3 files changed, 76 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c index
-> > b8795fc49097..daaaef58f1e6 100644
-> > --- a/drivers/acpi/numa/srat.c
-> > +++ b/drivers/acpi/numa/srat.c
-> > @@ -300,6 +300,67 @@ acpi_numa_memory_affinity_init(struct
-> > acpi_srat_mem_affinity *ma)  }  #endif /* defined(CONFIG_X86) || defined
-> > (CONFIG_ARM64) */
-> > 
-> > +static int __init acpi_cxl_cfmws_init(struct acpi_table_header
-> > +*acpi_cedt) {
-> > +       struct acpi_cedt_cfmws *cfmws;
-> > +       acpi_size len, cur = 0;
-> > +       int i, node, pxm = 0;
-> > +       void *cedt_subtable;
-> > +       u64 start, end;
-> > +
-> > +       /* Find the max PXM defined in the SRAT */
-> > +       for (i = 0; i < MAX_NUMNODES - 1; i++) {
-> > +               if (node_to_pxm_map[i] > pxm)
-> > +                       pxm = node_to_pxm_map[i];
-> > +       }
-> > +       /* Start assigning fake PXM values after the SRAT max PXM */
-> > +       pxm++;
-> > +
-> > +       len = acpi_cedt->length - sizeof(*acpi_cedt);
-> > +       cedt_subtable = acpi_cedt + 1;
-> > +
-> > +       while (cur < len) {
-> > +               struct acpi_cedt_header *c = cedt_subtable + cur;
-> > +
-> > +               if (c->type != ACPI_CEDT_TYPE_CFMWS)
-> > +                       goto next;
-> > +
-> > +               cfmws = cedt_subtable + cur;
-> > +               if (cfmws->header.length < sizeof(*cfmws)) {
-> > +                       pr_warn_once("CFMWS entry skipped:invalid length:%u\n",
-> > +                                    cfmws->header.length);
-> > +                       goto next;
-> > +               }
-> > +
-> > +               start = cfmws->base_hpa;
-> > +               end = cfmws->base_hpa + cfmws->window_size;
-> > +
-> > +               /*
-> > +                * Skip if the SRAT already described
-> > +                * the NUMA details for this HPA.
-> > +                */
-> > +               node = phys_to_target_node(start);
-> > +               if (node != NUMA_NO_NODE)
-> > +                       goto next;
-> > +
-> > +               node = acpi_map_pxm_to_node(pxm);
-> > +               if (node == NUMA_NO_NODE) {
-> > +                       pr_err("ACPI NUMA: Too many proximity domains.\n");
-> > +                       return -EINVAL;
-> > +               }
-> > +
-> > +               if (numa_add_memblk(node, start, end) < 0) {
-> > +                       /* CXL driver must handle the NUMA_NO_NODE case */
-> > +                       pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node
-> > %d [mem %#llx-%#llx]\n",
-> > +                               node, start, end);
-> > +               }
-> > +               pxm++;
-> > +next:
-> > +               cur += c->length;
-> > +       }
-> > +       return 0;
-> > +}
-> > +
-> >  static int __init acpi_parse_slit(struct acpi_table_header *table)  {
-> >         struct acpi_table_slit *slit = (struct acpi_table_slit *)table; @@ -478,6
-> > +539,15 @@ int __init acpi_numa_init(void)
-> >         /* SLIT: System Locality Information Table */
-> >         acpi_table_parse(ACPI_SIG_SLIT, acpi_parse_slit);
-> > 
-> > +       /*
-> > +        * CEDT: CXL Fixed Memory Window Structures (CFMWS)
-> > +        * must be parsed after the SRAT. It creates NUMA
-> > +        * Nodes for CXL memory ranges not already defined
-> > +        * in the SRAT and it assigns PXMs after the max PXM
-> > +        * defined in the SRAT.
-> > +        */
-> > +       acpi_table_parse(ACPI_SIG_CEDT, acpi_cxl_cfmws_init);
-> > +
-> >         if (cnt < 0)
-> >                 return cnt;
-> >         else if (!parsed_numa_memblks)
-> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c index
-> > 10120e4e0b9f..ccf73f0a59a7 100644
-> > --- a/drivers/cxl/acpi.c
-> > +++ b/drivers/cxl/acpi.c
-> > @@ -122,9 +122,11 @@ static void cxl_add_cfmws_decoders(struct device
-> > *dev,
-> >                                 cfmws->base_hpa, cfmws->base_hpa +
-> >                                 cfmws->window_size - 1);
-> >                 } else {
-> > -                       dev_dbg(dev, "add: %s range %#llx-%#llx\n",
-> > -                               dev_name(&cxld->dev), cfmws->base_hpa,
-> > -                                cfmws->base_hpa + cfmws->window_size - 1);
-> > +                       dev_dbg(dev, "add: %s node: %d range %#llx-%#llx\n",
-> > +                               dev_name(&cxld->dev),
-> > +                               phys_to_target_node(cxld->range.start),
-> > +                               cfmws->base_hpa,
-> > +                               cfmws->base_hpa + cfmws->window_size -
-> > + 1);
-> >                 }
-> >                 cur += c->length;
-> >         }
-> > diff --git a/include/linux/acpi.h b/include/linux/acpi.h index
-> > 974d497a897d..f837fd715440 100644
-> > --- a/include/linux/acpi.h
-> > +++ b/include/linux/acpi.h
-> > @@ -426,6 +426,7 @@ extern bool acpi_osi_is_win8(void);  #ifdef
-> > CONFIG_ACPI_NUMA  int acpi_map_pxm_to_node(int pxm);  int
-> > acpi_get_node(acpi_handle handle);
-> > +int __init numa_add_memblk(int nodeid, u64 start, u64 end);
-> > 
-> >  /**
-> >   * pxm_to_online_node - Map proximity ID to online node
-> > 
-> > base-commit: 64570fbc14f8d7cb3fe3995f20e26bc25ce4b2cc
-> > prerequisite-patch-id: f09c67c6b3801f511521fd29c1cc01f5c5b1e9de
-> > --
-> > 2.31.1
+> cxl_port
+> ========
+> 
+> The cxl_port driver is implemented within the cxl_port module. While loading of
+> this module is optional, the other new drivers depend on it. The port driver is
+> responsible for all activities around HDM decoder enumeration and programming.
+> Introduced earlier, the concept of a port is an abstraction over CXL components
+> with an upstream port, every host bridge, switch, and endpoint.
+> 
+> cxl_mem
+> =======
+> 
+> The cxl_mem driver's main job is to walk up the hierarchy to make the
+> determination if it is CXL.mem routed, meaning, all components above it in the
+> hierarchy are participating in the CXL.mem protocol. It is implemented within
+> the cxl_mem module. As the host bridge ports are added by a platform specific
+> driver, such as cxl_acpi, the scope of the mem driver can be reduced to scan for
+> switches and ask cxl_core to work on enumerating them. With this done, the
+> determination as to whether a device is CXL.mem routed can be done simply by
+> checking if the struct device has a driver bound to it.
+> 
+> cxl_region
+> ==========
+> 
+> Region verification and programming state are owned by the cxl_region driver
+> (implemented in the cxl_region module). It relies on cxl_mem to determine if
+> devices are CXL routed, and cxl_port to actually handle the programming of the
+> HDM decoders. Much of the region driver is an implementation of algorithms
+> described in the CXL Type 3 Memory Device Software Guide [4].
+> 
+> Why RFC?
+> --------
+> The code is pretty raw. I haven't spend much time tidying things up. While I
+> think most of the architecture is sound, I don't believe anyone but other
+> developers should use this branch. Where I'd really like most eyes:
+> - Locking and device lifetimes. As time wore on I definitely took some shortcuts
+>   there.
+> - Region configuration. Should values have a default, should they all be
+>   explicit?
+> - What should/shouldn't be in core. I like how this ended up, but at this point
+>   I'm fairly biased (CXL.cache pun).
+> 
+> What's missing
+> ---------------
+> - CXL 2.0 switch support
+> - Testing on anything but x1 interleave. While QEMU does support multiple host
+>   bridges and root ports, it isn't well tested.
+> - A full topology lock for programming HDM decoders
+> - Check that HDM decoder programming addresses are correct (must program higher
+>   addresses only)
+> - Volatile regions
+> - Connection to libnvdimm/labels (Dan is working on this). This includes many
+>   aspects, not the least of which is saving the region into the Label Storage
+>   Area so that it can be reestablished on reboot.
+> 
+> Here is an example of output when programming a x1 interleave region:
+> [   23.959814][  T645] cxl_core:cxl_add_region:406: cxl region0.0:0: Added region0.0:0 to decoder0.0
+> [   23.962972][  T645] cxl_port:cxl_commit_decoder:248: cxl_port port1: decoder1.0
+> [   23.962972][  T645] 	Base 0x0000004c00000000
+> [   23.962972][  T645] 	Size 268435456
+> [   23.962972][  T645] 	IG 256
+> [   23.962972][  T645] 	IW 1
+> [   23.962972][  T645] 	TargetList: 0 -1 -1 -1 -1 -1 -1 -1
+> [   23.965529][  T645] cxl_port:cxl_commit_decoder:248: cxl_port port3: decoder3.0
+> [   23.965529][  T645] 	Base 0x0000004c00000000
+> [   23.965529][  T645] 	Size 268435456
+> [   23.965529][  T645] 	IG 256
+> [   23.965529][  T645] 	IW 1
+> [   23.965529][  T645] 	TargetList: -1 -1 -1 -1 -1 -1 -1 -1
+> 
+> If you're wondering how I tested this, I've baked it into my cxlctl app [5] and
+> lib [6]. Eventually this will get absorbed by ndctl/cxl-cli/libcxl [7].
+> 
+> To get the detailed errors, trace-cmd can be utilized as such:
+> trace-cmd record -e cxl ./cxlctl create-region -n -a -s $((256<<20)) /sys/bus/cxl/devices/decoder0.0
+> 
+> 
+> [1]: https://www.computeexpresslink.org/download-the-specification
+> [2]: https://gitlab.com/bwidawsk/linux/-/tree/cxl_port-v2
+> [3]: https://gitlab.com/bwidawsk/linux/-/tree/cxl_regions-v3
+> [4]: https://cdrdv2.intel.com/v1/dl/getContent/643805?wapkw=CXL%20memory%20device%20sw%20guide
+> [5]: https://gitlab.com/bwidawsk-cxl/cxlctl
+> [6]: https://gitlab.com/bwidawsk-cxl/cxl_rs
+> [7]: https://lore.kernel.org/linux-cxl/CAPcyv4joKOhTdaRBJVeoOtqhRjBvdtt9902TS=c39=zWTZXvuw@mail.gmail.com/
+> 
+> Ben Widawsky (27):
+>   cxl: Rename CXL_MEM to CXL_PCI
+>   cxl: Move register block enumeration to core
+>   cxl/acpi: Map component registers for Root Ports
+>   cxl: Add helper for new drivers
+>   cxl/core: Convert decoder range to resource
+>   cxl: Introduce endpoint decoders
+>   cxl/port: Introduce a port driver
+>   cxl/acpi: Map single port host bridge component registers
+>   cxl/core: Store global list of root ports
+>   cxl/acpi: Rescan bus at probe completion
+>   cxl/core: Store component register base for memdevs
+>   cxl: Flesh out register names
+>   cxl/core: Introduce API to scan switch ports
+>   cxl: Introduce cxl_mem driver
+>   cxl: Disable switch hierarchies for now
+>   cxl/region: Add region creation ABI
+>   cxl/region: Introduce concept of region configuration
+>   cxl/region: Introduce a cxl_region driver
+>   cxl/acpi: Handle address space allocation
+>   cxl/region: Address space allocation
+>   cxl/region: Implement XHB verification
+>   cxl/region: HB port config verification
+>   cxl/region: Record host bridge target list
+>   cxl/mem: Store the endpoint's uport
+>   cxl/region: Gather HDM decoder resources
+>   cxl: Program decoders for regions
+>   dont-merge: My QEMU CFMWS is wrong
+> 
+>  .clang-format                                 |   3 +
+>  Documentation/ABI/testing/sysfs-bus-cxl       |  63 ++
+>  .../driver-api/cxl/memory-devices.rst         |  28 +
+>  drivers/cxl/Kconfig                           |  28 +-
+>  drivers/cxl/Makefile                          |   8 +-
+>  drivers/cxl/acpi.c                            | 117 +++-
+>  drivers/cxl/core/Makefile                     |   2 +
+>  drivers/cxl/core/bus.c                        | 346 +++++++++-
+>  drivers/cxl/core/core.h                       |   2 +
+>  drivers/cxl/core/memdev.c                     |   7 +-
+>  drivers/cxl/core/pci.c                        |  99 +++
+>  drivers/cxl/core/region.c                     | 453 +++++++++++++
+>  drivers/cxl/core/regs.c                       |  62 +-
+>  drivers/cxl/cxl.h                             |  78 ++-
+>  drivers/cxl/cxlmem.h                          |   8 +-
+>  drivers/cxl/mem.c                             | 161 +++++
+>  drivers/cxl/pci.c                             |  69 +-
+>  drivers/cxl/pci.h                             |  48 +-
+>  drivers/cxl/port.c                            | 490 ++++++++++++++
+>  drivers/cxl/region.c                          | 626 ++++++++++++++++++
+>  drivers/cxl/region.h                          |  57 ++
+>  drivers/cxl/trace.h                           |  54 ++
+>  tools/testing/cxl/Kbuild                      |   2 +
+>  tools/testing/cxl/mock_acpi.c                 |   4 +-
+>  tools/testing/cxl/test/mem.c                  |   3 +-
+>  25 files changed, 2688 insertions(+), 130 deletions(-)
+>  create mode 100644 drivers/cxl/core/pci.c
+>  create mode 100644 drivers/cxl/core/region.c
+>  create mode 100644 drivers/cxl/mem.c
+>  create mode 100644 drivers/cxl/port.c
+>  create mode 100644 drivers/cxl/region.c
+>  create mode 100644 drivers/cxl/region.h
+>  create mode 100644 drivers/cxl/trace.h
+> 
+> -- 
+> 2.33.1
 > 
