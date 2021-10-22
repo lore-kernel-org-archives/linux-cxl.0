@@ -2,329 +2,265 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EC2C18E1A
-	for <linux-cxl@archiver.kernel.org>; Fri, 22 Oct 2021 18:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A13C5C433EF
+	for <linux-cxl@archiver.kernel.org>; Fri, 22 Oct 2021 21:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E240960F50
-	for <linux-cxl@archiver.kernel.org>; Fri, 22 Oct 2021 18:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D42B61056
+	for <linux-cxl@archiver.kernel.org>; Fri, 22 Oct 2021 21:58:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233968AbhJVSjm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 22 Oct 2021 14:39:42 -0400
-Received: from mga02.intel.com ([134.134.136.20]:5590 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233988AbhJVSjj (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 22 Oct 2021 14:39:39 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10145"; a="216528984"
-X-IronPort-AV: E=Sophos;i="5.87,173,1631602800"; 
-   d="scan'208";a="216528984"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2021 11:37:20 -0700
-X-IronPort-AV: E=Sophos;i="5.87,173,1631602800"; 
-   d="scan'208";a="445854749"
-Received: from aagregor-mobl3.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.134.35])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2021 11:37:20 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+        id S231382AbhJVWAd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 22 Oct 2021 18:00:33 -0400
+Received: from mail-bn7nam10on2066.outbound.protection.outlook.com ([40.107.92.66]:39329
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231820AbhJVWAd (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Fri, 22 Oct 2021 18:00:33 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PzLs7iHoLvahK2Wu1EMYh9/djtkNaKkVY1wPQ7QPLwE2sS259ATGvWnevjZR66/KJnlQuqB9XmmSHcQv7iZY5EnPoGlpPzyRpMgJuH3ewyr99npzkHHzsQeJCHhuDwr6cPfxGuqkl6pXr2q5Swz8xxbHhrjSQ7EppfeNqmCPlFHa/U9kyRCbS23xlcnqRMpCNYit5XnbdMDS5RK/AM7u3YhDX2nDm522+kfzYi8x9jqtGl0bMTovLyIBlxpBZUFLvZb1L8TpW5UwLr2cWrqpP63DkeZhfXNDcg3OfbGK8a+ZG2YVyT1N71I1Cc6VBpsHCQjz7CtnDYLyRc39YDRw9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hpLYGXnGxbYdEXVgOqnwHxbdaqlNmvsqtqyXNqKTCuQ=;
+ b=iITJJqx94OsWX6aHIAsu1l9AnFHsy+0baI8MkN+jXGYH9JFZurx8wDLSwPVoCF7QyYAkSnqtyLLi7XBdpK+/rhgYiwHelldLiI6yp+n20agqo8yd86Q2oxIrpwk/snEu0B6niOjMwcBznWfMHaW2lMyWfh+lWwhZGvA0HabRs5UcaO+uu6G0qIhJ2PmmMltzn2waBiqUqWifF1Kd2ezrS16dU1nMeG6Ie9N7USRDfMiAVeQin8ejvlOJ3ls2Zr6pS/uAbrO1KpBGl3+o13KbblJcldGTgVRYk1KGsed82xdEdfCu3vmmNBOtpjKC7fJuuevV49FeCqBsfnG8mhH69A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hpLYGXnGxbYdEXVgOqnwHxbdaqlNmvsqtqyXNqKTCuQ=;
+ b=cqBuZTIedQGB7LA7qXi0VUj3TvVon1aZxhE45muf6Nt4hLMAmsr/Evu5O7W2QdrRuv1IymdCIRK4QeTwuTSX3Zvvd9r+aAwyxsXFcNdQmZTfcQ6sEtnH7kNtaHJ8UyL3yWzL5DMG2Ne8RxFVr8ubtUhkGIgka4EPZHAGb45BKTY6ckP2y1NPnlMEBma+uG81kYoa/dBrJtQ6okwW2TVb//zeMGtV0qsANy26W+2NPdSmVWfGAK5Eo0nWYo5uZCyRyrx0iu55MF958YXG6lduAFQ1PwxlKtdRrYiz/zpQzM5IGKkNMkYktKC//vNrkfYe3ukwvD2JqT6O4vwGEdl8Fw==
+Received: from SN6PR12MB2653.namprd12.prod.outlook.com (2603:10b6:805:6f::18)
+ by SN1PR12MB2480.namprd12.prod.outlook.com (2603:10b6:802:22::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.18; Fri, 22 Oct
+ 2021 21:58:13 +0000
+Received: from SN6PR12MB2653.namprd12.prod.outlook.com
+ ([fe80::40c5:c7eb:1d30:ef68]) by SN6PR12MB2653.namprd12.prod.outlook.com
+ ([fe80::40c5:c7eb:1d30:ef68%4]) with mapi id 15.20.4608.018; Fri, 22 Oct 2021
+ 21:58:13 +0000
+From:   Vikram Sethi <vsethi@nvidia.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Alison Schofield <alison.schofield@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: [RFC PATCH v2 28/28] cxl: Program decoders for regions
-Date:   Fri, 22 Oct 2021 11:37:09 -0700
-Message-Id: <20211022183709.1199701-29-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20211022183709.1199701-1-ben.widawsky@intel.com>
-References: <20211022183709.1199701-1-ben.widawsky@intel.com>
+        Ben Widawsky <ben.widawsky@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Subject: RE: [PATCH v3] ACPI: NUMA: Add a node and memblk for each CFMWS not
+ in SRAT
+Thread-Topic: [PATCH v3] ACPI: NUMA: Add a node and memblk for each CFMWS not
+ in SRAT
+Thread-Index: AQHXxKZe60cPDaefoEWZ2yrjkoK6lqvccmsQgAAyVYCAAPOoEIAAr7GAgAFK3kA=
+Date:   Fri, 22 Oct 2021 21:58:12 +0000
+Message-ID: <SN6PR12MB2653B4B690DEB00B4F506656BD809@SN6PR12MB2653.namprd12.prod.outlook.com>
+References: <20211019050908.449231-1-alison.schofield@intel.com>
+ <SN6PR12MB2653CF7BEF1DA0A97B029396BDBE9@SN6PR12MB2653.namprd12.prod.outlook.com>
+ <20211021010023.GA457926@alison-desk>
+ <SN6PR12MB265309099EDA5C3C1311C6B8BDBF9@SN6PR12MB2653.namprd12.prod.outlook.com>
+ <CAPcyv4itUbyi253=9zw7NvrQnUJzkM9ry3NwW9+ed5aSGgdOLQ@mail.gmail.com>
+In-Reply-To: <CAPcyv4itUbyi253=9zw7NvrQnUJzkM9ry3NwW9+ed5aSGgdOLQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 688a33e9-e3fd-46dd-aa13-08d995a70b3d
+x-ms-traffictypediagnostic: SN1PR12MB2480:
+x-microsoft-antispam-prvs: <SN1PR12MB248065211066F62DAD4D76A4BD809@SN1PR12MB2480.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wZiuGiaVmtxeVkIbi5fWPH9uXfYlW1imKpzdgs3RY/fdCvyQseCZdiIIt3NPZnz5v4dFUd79WA81ZTl9nZPIeiPtcH5oFeNeTJVjl7xMSellLN0TNjqki6nyNA3/Ul4aGLNDXFxsusI6qmd1zLEbMF63qUqJ4ekN4zO7g7c1JIYmmXe4zHOU0fAvBLBTEzO+PK8AISa1/6oChMMsCHX48FEDtPZ+49SZJ6PdvVO+VydMi5aqJki/nWSf6COjactvA/fgQK57Y1CsiGGBG/pxApDF1fCpJiBhW3yxKOhEcSnmt7aDwrw36Q0QAHMj5LLmToPuJBvu8Ajl8gfHOQn+/6Gy2ZYgGNLdgXl7A1KHDuCCw38yLMzLbBkaknwFrQxZZTHeqn7trlLrZpFF0kVA7JVs9jbxLhN3PyI7ppzjhtH4MVxG/diUSeqXI3BpQF9jcSu9GsFE1Hd9MOy/HSNdvD/VnPeeGslsjMqe5fmmwoWWc4hf1RfPh23gX2Cer5HPZt3a6QzDIiAxMTXZX2FsGApr+ifH5wajK0KtFcilgfuNdcx+aRt4rwcgKdQJBFUNZE0cKhgmFEQdL9dQ2XRzrIK/0wNIlvUfEIVq1gUQoN1Tan3Sxom9gyu7dVo1IoMoRyG7tIbud27i26QQtK1oTsxOfkrsudxe87RW9RKBlOv6nJaz3KgVzo/tpWS77bnZLy8tC7xwU6IDBaIxe+dQJw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2653.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(66556008)(6916009)(33656002)(52536014)(122000001)(54906003)(38100700002)(5660300002)(508600001)(2906002)(7696005)(64756008)(66446008)(4326008)(26005)(6506007)(38070700005)(76116006)(186003)(83380400001)(66476007)(8676002)(53546011)(9686003)(66946007)(8936002)(316002)(86362001)(71200400001)(55016002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?QURpaG9WY2lFdGo3bGV6THVqMWQ3RkVnbXplUVZjVDJURGpDRUJZbUtvVzlM?=
+ =?utf-8?B?Zm95bmgzc2tQZXlNbkoxMHRWRU1ibnBGaVVKbzJveWM2bnM0QUNjK0pNemN4?=
+ =?utf-8?B?RjZXY0Rsa216TW95cDB2UStCZ3FyRHZaV3V3K1hQYWdaeTB0eEZkVUptRUJz?=
+ =?utf-8?B?MTE4Tm1ralNtVlA2UHpOSFNaeHhGWDFkd0xVWldyc3I1dXhlWlZmOC8rNTZQ?=
+ =?utf-8?B?SFRCWVI1WGQ0OUR0STdROUlGTTJxWksrS0ZZUEdTWEFBbERPVzZBLzc0dG8y?=
+ =?utf-8?B?RXdHNUJScGVPeTlNU0d1anZId3VTNnpPcVhzVEtFQ0JQVEFFM05kZk1GY0Jl?=
+ =?utf-8?B?N0FHd3k0NWdpSGVkUGVFS3NQb2VZTWNUa0xUd0U4SFArVVJYMGF5ZzVnT0hm?=
+ =?utf-8?B?bnVSWGd5a2lDM3RrRytWUjZZVmVqd1MxQkdjUkxrOTRKZm43MnEybjhQUDE1?=
+ =?utf-8?B?UkRoa21LWlNNU0l2a2pyOTF0YVNBWk43MWRuWnNXWG9nZ2lOWVNPN0Z1Rldk?=
+ =?utf-8?B?RVNBMndtNlZRVTBvejFLMlZiZ0JGQTJSTTZmVHFMcXJXMWpZSmVoTGxlM1Ux?=
+ =?utf-8?B?Y3BuMC9UWWhGUlNheEVOMkFWRmxMZ3JuRDhLWVF5VnlZQk0vbHJKSXFhNnp1?=
+ =?utf-8?B?Y0JrRXBVYUZiLzlTSWo4dnVQbFJxY0UvanBCaEJpYkVRM1lESzFtVTM1TDdW?=
+ =?utf-8?B?T3EwbnBWUlpnbFU4bHJxbll2VTI1L0ZNeGFZU2U5YWdxcmlsdEpIZ1RSeGdt?=
+ =?utf-8?B?NTQxbjBiWDlQd28zWGk4T0FHek85Y3VSYWttbWZqR09mRHUwMjBGclBaVWMw?=
+ =?utf-8?B?OUJBTGg2eEFhWlpQTzZZZTNvcFl1ZVdyQ0JnTjdJemdDUmh4b0hEODM2MzNh?=
+ =?utf-8?B?elA4bG03MEhhQjNHbHZpUktSV09FMmtpS1VBcXdQN2dRMjBVMWQxSU5ScWpN?=
+ =?utf-8?B?VHBJODRYdEplMVBQTVgveklzQlhWMi9razFOYWlYZWZNU0F4amZEZ3dZdVF4?=
+ =?utf-8?B?aU9MMjROdnRPQmhQbVBjTW5DdjZnS1RZSFFMRFB2VzluRVliNk40VnI3TWF5?=
+ =?utf-8?B?WHVuU1BpempLbitWNE1zMk9aUnFNcDg3UVF3RHBVN01zV3BjMXh0UUYxK1BP?=
+ =?utf-8?B?WE5pcGQxSVlycWNSYXR1dU1qYzZQTGVQdUp4SHIzVENIcHNoaWpTaFp0R2My?=
+ =?utf-8?B?MDMxdXkzTVFlaE5pRi9TZGs3eWM1TVU5ZHlxZExVaEVNcHBNZ3o4OUEybFdX?=
+ =?utf-8?B?eE91NmVuZVJiVEwxMlV2MGk1OU9Yd2M0NHQ0NytySjBKRm92VDkzdE5LbmlY?=
+ =?utf-8?B?bVcxM2ZoMVFXL2ZXVTFxbW5VMDkzVFIydzNOL0hkUVNZSEZ1aE1rd1FLRlRv?=
+ =?utf-8?B?MzhFOVNhcUJRMmFOdjZzY2MyUkpTU1lFWExuQ0Q3dC95ZFBXc1lId3M1QXJi?=
+ =?utf-8?B?cjBuT0N4S0JvQUhURC9LNjZudUVoSlFOS2N4RUlNTjEwbEdMOElBTlVsTmNr?=
+ =?utf-8?B?TEJoK3MzSmRxNWFtT2l5azdMWFZLUFY0aEFWaTgyMVhNV2FRK0dMejdxbDNX?=
+ =?utf-8?B?VkdVQ3lTOWhsY3p2U3RlaCttMzdTLytJNUlHWW9qQXNaeGRFUnVzTllEb3JM?=
+ =?utf-8?B?aVFNNVYxUDE2b0lEcG5UeDRxQk1MMVh6VzA0OEhKOFp4d21CK1BKdmJSalhh?=
+ =?utf-8?B?QndzNzg4cUpWZTJHdmdoM0lMMXRGcWlLaVZhbUNQOG14N3ppa0drSk82QWxQ?=
+ =?utf-8?B?bzFWYkV5Y0lWR1I5U3I0YlZkc0dLRGF5azR4TXU2UzhCZVRxdXNCOFRzMXRB?=
+ =?utf-8?B?SHVoc3U0SGEwdjJqUVcrNVdUaE5TZXdyU05iRE56bXh5K1ovakZpZngzaVJs?=
+ =?utf-8?B?Mm5UZHR6OFU5b3RhaFFOR2pWRXd4Y0txdWZKMUVzcjdjSUp4dEFRUURXZFJj?=
+ =?utf-8?Q?ND6sz8KbK/k=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2653.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 688a33e9-e3fd-46dd-aa13-08d995a70b3d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Oct 2021 21:58:12.9204
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vsethi@nvidia.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2480
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Do the HDM decoder programming for all endpoints and host bridges in a
-region. Switches are currently unimplemented.
-
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
----
- drivers/cxl/cxl.h    |   3 +
- drivers/cxl/port.c   | 196 +++++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/region.c |  33 +++++++-
- 3 files changed, 231 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 79d22992fddf..f2ee26ac2398 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -52,6 +52,7 @@
- #define   CXL_HDM_DECODER0_CTRL_IW_MASK GENMASK(7, 4)
- #define   CXL_HDM_DECODER0_CTRL_COMMIT BIT(9)
- #define   CXL_HDM_DECODER0_CTRL_COMMITTED BIT(10)
-+#define   CXL_HDM_DECODER0_CTRL_COMMIT_ERROR BIT(11)
- #define   CXL_HDM_DECODER0_CTRL_TYPE BIT(12)
- #define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
- #define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
-@@ -337,6 +338,8 @@ struct cxl_dport *cxl_find_dport_by_dev(struct cxl_port *port,
- 					struct device *dev);
- struct cxl_decoder *cxl_pop_decoder(struct cxl_port *port);
- void cxl_push_decoder(struct cxl_decoder *cxld);
-+int cxl_commit_decoder(struct cxl_decoder *cxld);
-+void cxl_disable_decoder(struct cxl_decoder *cxld);
- 
- struct cxl_decoder *to_cxl_decoder(struct device *dev);
- bool is_root_decoder(struct device *dev);
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index 5d35ccf2407f..67143c7f59bb 100644
---- a/drivers/cxl/port.c
-+++ b/drivers/cxl/port.c
-@@ -99,6 +99,202 @@ struct cxl_port_data {
- 	} caps;
- };
- 
-+#define COMMIT_TIMEOUT_MS 10
-+static int wait_for_commit(struct cxl_decoder *cxld)
-+{
-+	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-+	const unsigned long start = jiffies;
-+	struct cxl_port_data *cpd;
-+	void __iomem *hdm_decoder;
-+	unsigned long end = start;
-+	u32 ctrl;
-+
-+	cpd = dev_get_drvdata(&port->dev);
-+	hdm_decoder = cpd->regs.hdm_decoder;
-+
-+	do {
-+		end = jiffies;
-+		ctrl = readl(hdm_decoder +
-+			     CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-+		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
-+			break;
-+
-+		if (time_after(end, start + COMMIT_TIMEOUT_MS)) {
-+			dev_err(&cxld->dev, "HDM decoder commit timeout %x\n", ctrl);
-+			return -ETIMEDOUT;
-+		}
-+		if ((ctrl & CXL_HDM_DECODER0_CTRL_COMMIT_ERROR) != 0) {
-+			dev_err(&cxld->dev, "HDM decoder commit error %x\n", ctrl);
-+			return -ENXIO;
-+		}
-+	} while (!!FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl));
-+
-+	return 0;
-+}
-+
-+/**
-+ * cxl_commit_decoder() - Program a configured cxl_decoder
-+ * @cxld: The preconfigured cxl decoder.
-+ *
-+ * A cxl decoder that is to be committed should have been earmarked as enabled.
-+ * This mechanism acts as a soft reservation on the decoder.
-+ *
-+ * Returns 0 if commit was successful, negative error code otherwise.
-+ */
-+int cxl_commit_decoder(struct cxl_decoder *cxld)
-+{
-+	u32 ctrl, tl_lo, tl_hi, base_lo, base_hi, size_lo, size_hi;
-+	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-+	struct cxl_port_data *cpd;
-+	void __iomem *hdm_decoder;
-+	int rc;
-+
-+	/*
-+	 * Decoder flags are entirely software controlled and therefore this
-+	 * case is purely a driver bug.
-+	 */
-+	if (dev_WARN_ONCE(&port->dev, (cxld->flags & CXL_DECODER_F_EN) == 0,
-+			  "Invalid %s enable state\n", dev_name(&cxld->dev)))
-+		return -ENXIO;
-+
-+	cpd = dev_get_drvdata(&port->dev);
-+	hdm_decoder = cpd->regs.hdm_decoder;
-+	ctrl = readl(hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-+
-+	/*
-+	 * A decoder that's currently active cannot be changed without the
-+	 * system being quiesced. While the driver should prevent against this,
-+	 * for a variety of reasons the hardware might not be in sync with the
-+	 * hardware and so, do not splat on error.
-+	 */
-+	size_hi = readl(hdm_decoder +
-+			CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(cxld->id));
-+	size_lo =
-+		readl(hdm_decoder + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(cxld->id));
-+	if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl) &&
-+	    (size_lo + size_hi)) {
-+		dev_err(&port->dev, "Tried to change an active decoder (%s)\n",
-+			dev_name(&cxld->dev));
-+		return -EBUSY;
-+	}
-+
-+	u32p_replace_bits(&ctrl, 8 - ilog2(cxld->interleave_granularity),
-+			  CXL_HDM_DECODER0_CTRL_IG_MASK);
-+	u32p_replace_bits(&ctrl, ilog2(cxld->interleave_ways),
-+			  CXL_HDM_DECODER0_CTRL_IW_MASK);
-+	u32p_replace_bits(&ctrl, 1, CXL_HDM_DECODER0_CTRL_COMMIT);
-+
-+	/* TODO: set based on type */
-+	u32p_replace_bits(&ctrl, 1, CXL_HDM_DECODER0_CTRL_TYPE);
-+
-+	base_lo = FIELD_PREP(GENMASK(31, 28),
-+			     (u32)(cxld->res.start & 0xffffffff));
-+	base_hi = FIELD_PREP(~0, (u32)(cxld->res.start >> 32));
-+
-+	size_lo = (u32)(resource_size(&cxld->res)) & GENMASK(31, 28);
-+	size_hi = (u32)((resource_size(&cxld->res) >> 32));
-+
-+	if (cxld->nr_targets > 0) {
-+		tl_lo |= FIELD_PREP(GENMASK(7, 0), cxld->target[0]->port_id);
-+		if (cxld->interleave_ways > 1)
-+			tl_lo |= FIELD_PREP(GENMASK(15, 8),
-+					    cxld->target[1]->port_id);
-+		if (cxld->interleave_ways > 2)
-+			tl_lo |= FIELD_PREP(GENMASK(23, 16),
-+					    cxld->target[2]->port_id);
-+		if (cxld->interleave_ways > 3)
-+			tl_lo |= FIELD_PREP(GENMASK(31, 24),
-+					    cxld->target[3]->port_id);
-+		if (cxld->interleave_ways > 4)
-+			tl_hi |= FIELD_PREP(GENMASK(7, 0),
-+					    cxld->target[4]->port_id);
-+		if (cxld->interleave_ways > 5)
-+			tl_hi |= FIELD_PREP(GENMASK(15, 8),
-+					    cxld->target[5]->port_id);
-+		if (cxld->interleave_ways > 6)
-+			tl_hi |= FIELD_PREP(GENMASK(23, 16),
-+					    cxld->target[6]->port_id);
-+		if (cxld->interleave_ways > 7)
-+			tl_hi |= FIELD_PREP(GENMASK(31, 24),
-+					    cxld->target[7]->port_id);
-+
-+		writel(tl_hi, hdm_decoder + CXL_HDM_DECODER0_TL_HIGH(cxld->id));
-+		writel(tl_lo, hdm_decoder + CXL_HDM_DECODER0_TL_LOW(cxld->id));
-+	}
-+
-+	writel(size_hi,
-+	       hdm_decoder + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(cxld->id));
-+	writel(size_lo,
-+	       hdm_decoder + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(cxld->id));
-+	writel(base_hi,
-+	       hdm_decoder + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(cxld->id));
-+	writel(base_lo,
-+	       hdm_decoder + CXL_HDM_DECODER0_BASE_LOW_OFFSET(cxld->id));
-+	writel(ctrl, hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-+
-+	rc = wait_for_commit(cxld);
-+	if (rc)
-+		return rc;
-+
-+#define DPORT_TL_STR "%d %d %d %d %d %d %d %d"
-+#define DPORT(i)                                                               \
-+	(cxld->nr_targets && cxld->interleave_ways > (i)) ?                    \
-+		      cxld->target[(i)]->port_id :                                   \
-+		      -1
-+#define DPORT_TL                                                               \
-+	DPORT(0), DPORT(1), DPORT(2), DPORT(3), DPORT(4), DPORT(5), DPORT(6),  \
-+		DPORT(7)
-+
-+	dev_dbg(&port->dev,
-+		"%s\n\tBase %pa\n\tSize %llu\n\tIG %u\n\tIW %u\n\tTargetList: " DPORT_TL_STR,
-+		dev_name(&cxld->dev), &cxld->res.start,
-+		resource_size(&cxld->res), cxld->interleave_granularity,
-+		cxld->interleave_ways, DPORT_TL);
-+#undef DPORT_TL
-+#undef DPORT
-+#undef DPORT_TL_STR
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(cxl_commit_decoder);
-+
-+/**
-+ * cxl_disable_decoder() - Disables a decoder
-+ * @cxld: The active cxl decoder.
-+ *
-+ * CXL decoders (as of 2.0 spec) have no way to deactivate them other than to
-+ * set the size of the HDM to 0. This function will clear all registers, and if
-+ * the decoder is active, commit the 0'd out registers.
-+ */
-+void cxl_disable_decoder(struct cxl_decoder *cxld)
-+{
-+	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-+	struct cxl_port_data *cpd;
-+	void __iomem *hdm_decoder;
-+	u32 ctrl;
-+
-+	cpd = dev_get_drvdata(&port->dev);
-+	hdm_decoder = cpd->regs.hdm_decoder;
-+	ctrl = readl(hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-+
-+	if (dev_WARN_ONCE(&port->dev, (cxld->flags & CXL_DECODER_F_EN) == 0,
-+			  "Invalid decoder enable state\n"))
-+		return;
-+
-+	/* There's no way to "uncommit" a committed decoder, only 0 size it */
-+	writel(0, hdm_decoder + CXL_HDM_DECODER0_TL_HIGH(cxld->id));
-+	writel(0, hdm_decoder + CXL_HDM_DECODER0_TL_LOW(cxld->id));
-+	writel(0, hdm_decoder + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(cxld->id));
-+	writel(0, hdm_decoder + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(cxld->id));
-+	writel(0, hdm_decoder + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(cxld->id));
-+	writel(0, hdm_decoder + CXL_HDM_DECODER0_BASE_LOW_OFFSET(cxld->id));
-+
-+	/* If the device isn't actually active, just zero out all the fields */
-+	if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
-+		writel(CXL_HDM_DECODER0_CTRL_COMMIT,
-+		       hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-+}
-+EXPORT_SYMBOL_GPL(cxl_disable_decoder);
-+
- static inline int cxl_hdm_decoder_ig(u32 ctrl)
- {
- 	int val = FIELD_GET(CXL_HDM_DECODER0_CTRL_IG_MASK, ctrl);
-diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
-index f4d190ede3ee..05e7ca3d0900 100644
---- a/drivers/cxl/region.c
-+++ b/drivers/cxl/region.c
-@@ -526,7 +526,38 @@ static int gather_hdm_decoders(const struct cxl_region *region, struct decoder_p
- 
- static int bind_region(const struct cxl_region *region)
- {
--	/* TODO: */
-+	const struct decoder_programming *p = &region->state;
-+	int i, rc;
-+
-+	for (i = 0; i < p->hb_count; i++) {
-+		struct cxl_decoder *cxld = p->hbs[i].cxld;
-+		int j;
-+
-+		cxld->res = (struct resource)DEFINE_RES_MEM(region->res->start,
-+							    region->size);
-+		cxld->interleave_granularity = region->ig;
-+		cxld->interleave_ways = p->hbs[i].rp_count;
-+		for (j = 0; j < p->hbs[i].rp_count; j++)
-+			cxld->target[j] = p->hbs[i].rp_target_list[j];
-+
-+		rc = cxl_commit_decoder(cxld);
-+		if (rc)
-+			return rc;
-+	}
-+
-+	for (i = 0; i < region_ways(region); i++) {
-+		struct cxl_decoder *cxld = p->ep_cxld[i];
-+
-+		cxld->res = (struct resource)DEFINE_RES_MEM(region->res->start,
-+							    region->size);
-+		cxld->interleave_granularity = region->ig;
-+		cxld->interleave_ways = region_ways(region);
-+
-+		rc = cxl_commit_decoder(cxld);
-+		if (rc)
-+			return rc;
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.33.1
-
+SGkgRGFuLCANClRoYW5rcyBmb3IgdGhlIGRldGFpbGVkIHJlc3BvbnNlLiBTb21lIGNvbW1lbnRz
+L3F1ZXN0aW9ucyBpbmxpbmUuIA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZy
+b206IERhbiBXaWxsaWFtcyA8ZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tPg0KPiBTZW50OiBUaHVy
+c2RheSwgT2N0b2JlciAyMSwgMjAyMSA5OjAxIFBNDQo+IFRvOiBWaWtyYW0gU2V0aGkgPHZzZXRo
+aUBudmlkaWEuY29tPg0KPiBDYzogQWxpc29uIFNjaG9maWVsZCA8YWxpc29uLnNjaG9maWVsZEBp
+bnRlbC5jb20+OyBSYWZhZWwgSi4gV3lzb2NraQ0KPiA8cmFmYWVsQGtlcm5lbC5vcmc+OyBMZW4g
+QnJvd24gPGxlbmJAa2VybmVsLm9yZz47IFZpc2hhbCBWZXJtYQ0KPiA8dmlzaGFsLmwudmVybWFA
+aW50ZWwuY29tPjsgSXJhIFdlaW55IDxpcmEud2VpbnlAaW50ZWwuY29tPjsgQmVuDQo+IFdpZGF3
+c2t5IDxiZW4ud2lkYXdza3lAaW50ZWwuY29tPjsgbGludXgtY3hsQHZnZXIua2VybmVsLm9yZzsg
+bGludXgtDQo+IGFjcGlAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjNd
+IEFDUEk6IE5VTUE6IEFkZCBhIG5vZGUgYW5kIG1lbWJsayBmb3IgZWFjaA0KPiBDRk1XUyBub3Qg
+aW4gU1JBVA0KPiANCj4gT24gVGh1LCBPY3QgMjEsIDIwMjEgYXQgODo1NyBBTSBWaWtyYW0gU2V0
+aGkgPHZzZXRoaUBudmlkaWEuY29tPiB3cm90ZToNCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBN
+ZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IEFsaXNvbiBTY2hvZmllbGQgPGFsaXNvbi5zY2hvZmll
+bGRAaW50ZWwuY29tPg0KPiA+ID4gU2VudDogV2VkbmVzZGF5LCBPY3RvYmVyIDIwLCAyMDIxIDg6
+MDAgUE0NCj4gPiA+IFRvOiBWaWtyYW0gU2V0aGkgPHZzZXRoaUBudmlkaWEuY29tPg0KPiA+ID4g
+Q2M6IFJhZmFlbCBKLiBXeXNvY2tpIDxyYWZhZWxAa2VybmVsLm9yZz47IExlbiBCcm93bg0KPiA+
+ID4gPGxlbmJAa2VybmVsLm9yZz47IFZpc2hhbCBWZXJtYSA8dmlzaGFsLmwudmVybWFAaW50ZWwu
+Y29tPjsgSXJhDQo+ID4gPiBXZWlueSA8aXJhLndlaW55QGludGVsLmNvbT47IEJlbiBXaWRhd3Nr
+eQ0KPiA8YmVuLndpZGF3c2t5QGludGVsLmNvbT47DQo+ID4gPiBEYW4gV2lsbGlhbXMgPGRhbi5q
+LndpbGxpYW1zQGludGVsLmNvbT47IGxpbnV4LWN4bEB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPiBs
+aW51eC0gYWNwaUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjNd
+IEFDUEk6IE5VTUE6IEFkZCBhIG5vZGUgYW5kIG1lbWJsayBmb3IgZWFjaA0KPiA+ID4gQ0ZNV1Mg
+bm90IGluIFNSQVQNCj4gPiA+DQo+ID4gc25pcA0KPiA+DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBD
+b25zdW1lcnMgY2FuIHVzZSBwaHlzX3RvX3RhcmdldF9ub2RlKCkgdG8gZGlzY292ZXIgdGhlIE5V
+TUENCj4gbm9kZS4NCj4gPiA+ID4NCj4gPiA+ID4gRG9lcyB0aGlzIHBhdGNoIHdvcmsgZm9yIENY
+TCB0eXBlIDIgbWVtb3J5IHdoaWNoIGlzIG5vdCBpbiBTUkFUPyBBDQo+ID4gPiA+IHR5cGUgMiBk
+cml2ZXIgY2FuIGZpbmQgaXRzIEhETSBCQVNFIHBoeXNpY2FsIGFkZHJlc3MgZnJvbSBpdHMgQ1hM
+DQo+ID4gPiA+IHJlZ2lzdGVycyBhbmQgZmlndXJlIG91dCBpdHMgTlVNQSBub2RlIGlkIGJ5IGNh
+bGxpbmcNCj4gcGh5c190b190YXJnZXRfbm9kZT8NCj4gPiA+DQo+ID4gPiBZZXMuIFRoaXMgYWRk
+cyB0aGUgbm9kZXMgZm9yIHRoZSBjYXNlIHdoZXJlIHRoZSBCSU9TIGRvZXNuJ3QgZnVsbHkNCj4g
+PiA+IGRlc2NyaWJlIGV2ZXJ5dGhpbmcgaW4gQ0ZNV1MgaW4gdGhlIFNSQVQuIEFuZCwgeWVzLCB0
+aGF0IGlzIGhvdyB0aGUNCj4gPiA+IE5VTUEgbm9kZSBjYW4gYmUgZGlzY292ZXJlZC4NCj4gPiA+
+DQo+ID4gPiA+IE9yIGlzIHR5cGUgMiBIRE0gY3VycmVudGx5IGJlaW5nIHNraXBwZWQgYWx0b2dl
+dGhlcj8NCj4gPiA+DQo+ID4gPiBOb3Qgc3VyZSB3aGF0IHlvdSBtZWFuIGJ5ICdiZWluZyBza2lw
+cGVkIGFsdG9nZXRoZXInPyBUaGUgQklPUyBtYXkNCj4gPiA+IGRlc2NyaWJlIChhbGwgb3Igbm9u
+ZSBvciBzb21lKSBvZiBDWEwgTWVtb3J5IGluIHRoZSBTUkFULiBJbiB0aGUNCj4gPiA+IGNhc2Ug
+d2hlcmUgQklPUyBkZXNjcmliZXMgaXQgYWxsLCBOVU1BIG5vZGVzIHdpbGwgYWxyZWFkeSBleGlz
+dCwgYW5kDQo+ID4gPiBubyBuZXcgbm9kZXMgd2lsbCBiZSBhZGRlZCBoZXJlLg0KPiA+ID4NCj4g
+PiBNeSBxdWVzdGlvbiBhYm91dCBza2lwcGluZyB0eXBlMiB3YXNuJ3QgZGlyZWN0bHkgcmVsYXRl
+ZCB0byB5b3VyDQo+ID4gcGF0Y2gsIGJ1dCBtb3JlIG9mIGEgcXVlc3Rpb24gYWJvdXQgY3VycmVu
+dCB1cHN0cmVhbSBzdXBwb3J0IGZvcg0KPiA+IHByb2JlL2NvbmZpZ3VyYXRpb24gb2YgdHlwZSAy
+IGFjY2VsZXJhdG9yIGRldmljZXMgbWVtb3J5LCBpcnJlc3BlY3RpdmUNCj4gPiBvZiB3aGV0aGVy
+IEZXIHNob3dzIHR5cGUgMiBtZW1vcnkgaW4gU1JBVC4NCj4gDQo+IFNSQVQgb25seSBoYXMgVHlw
+ZS0yIHJhbmdlcyBpZiB0aGUgcGxhdGZvcm0gZmlybXdhcmUgbWFwcyB0aGUgZGV2aWNlJ3MNCj4g
+bWVtb3J5IGludG8gdGhlIEVGSSBtZW1vcnkgbWFwIChpbmNsdWRlcyBBQ1BJIFNSQVQgLyBTTElU
+IC8gSE1BVA0KPiBwb3B1bGF0aW9uKS4gSSBleHBlY3QgdGhhdCBzaXR1YXRpb24gdG8gYmUgbmVn
+b3RpYXRlZCBvbiBhIGNhc2UgYnkgY2FzZSBiYXNpcw0KPiBiZXR3ZWVuIFR5cGUtMiBkZXZpY2Ug
+dmVuZG9ycyBhbmQgcGxhdGZvcm0gZmlybXdhcmUgdmVuZG9ycy4gDQoNCkFncmVlZA0KPiBUaGVy
+ZSBpcyBubyByZXF1aXJlbWVudCB0aGF0IGFueSBDWEwgbWVtb3J5LCB0eXBlLTIgb3IgdHlwZS0z
+LCBpcyBtYXBwZWQgYnkgcGxhdGZvcm0NCj4gZmlybXdhcmUuIFBlciB0aGUgQ0RBVCBzcGVjaWZp
+Y2F0aW9uLCBwbGF0Zm9ybSBmaXJtd2FyZSBpcyBjYXBhYmxlIHRvIG1hcA0KPiBDWEwgaW50byB0
+aGUgRUZJIG1lbW9yeSBtYXAgYXQgYm9vdCwgYnV0IHRoZXJlIGlzIG5vIHJlcXVpcmVtZW50IGZv
+ciBpdCB0byBkbw0KPiBzby4NCj4gDQo+IE15IGV4cGVjdGF0aW9uIGlzIHRoYXQgTGludXggd2ls
+bCBuZWVkIHRvIGhhbmRsZSB0aGUgZnVsbCBnYW11dCBvZiBwb3NzaWJpbGl0aWVzDQo+IGhlcmUs
+IGkuZS4gYWxsIC8gc29tZSAvIG5vbmUgb2YgdGhlIENYTCBUeXBlLTMgZGV2aWNlcyBwcmVzZW50
+IGF0IGJvb3QNCj4gbWFwcGVkIGludG8gdGhlIEVGSSBtZW1vcnkgbWFwLCBhbmQgYWxsIC8gc29t
+ZSAvIG5vbmUgb2YgdGhlIENYTCBUeXBlLTINCj4gZGV2aWNlcyBtYXBwZWQgaW50byB0aGUgRUZJ
+IG1lbW9yeSBtYXAuDQo+IA0KQWdyZWVkLiBJSVVDLCBpZiBGVyBoYXMgaW5pdGlhbGl6ZWQgSERN
+IGJhc2UvZGVjb2RlciBIUEEgaW4gZGV2aWNlLCBzaG93biANCmRldmljZSBIRE0gSFBBIGluIEVG
+SSBNZW1vcnkgTWFwIGFzIHJlc2VydmVkIGJhc2VkIG9uIENEQVQsIGFuZCBzaG93biANClBYTSBm
+b3IgRGV2aWNlIG1lbW9yeSBpbiBTUkFULCBrZXJuZWwgY2FuIHZhbGlkYXRlIG5vIGNvbmZsaWN0
+cyBpbiBGVyBIRE0gSFBBDQphc3NpZ25tZW50cyB2cyBDRk1XUywgYW5kIHRoZW4gbWFwIHRoZSBQ
+WE0gZnJvbSBTUkFUIHRvIGEgbm9kZSBJRC4NClRoZSBDRk1XUyBEU00gc2VlbXMgdW5uZWNlc3Nh
+cnkgZm9yIHRoaXMgY2FzZSB0byBnZXQgdGhlIE5VTUEgYXNzaWdubWVudHMsDQogcmlnaHQ/IFR5
+cGUgMiBEcml2ZXIgY2FsbHMgcGh5c190b190YXJnZXRfbm9kZSgpIGFuZCB0aGVuIGFkZF9tZW1v
+cnlfZHJpdmVyX21hbmFnZWQuDQoNCj4gPiBUaGUgZGVzaXJlZCBvdXRjb21lIGlzIHRoYXQgdGhl
+IGtlcm5lbCBDWEwgZHJpdmVyIHJlY29nbml6ZXMgc3VjaCB0eXBlDQo+ID4gMiBIRE0sIGFuZCBh
+c3NpZ25zIGl0IGEgTlVNQSBub2RlIHN1Y2ggdGhhdCB0aGUgdHlwZSAyIGRyaXZlcg0KPiANCj4g
+Tm90ZSB0aGF0IHRoZXJlJ3Mgbm8gZHJpdmVyIGludm9sdmVkIGF0IHRoaXMgcG9pbnQuIEFsaXNv
+bidzIHBhdGNoIGlzIGp1c3QNCj4gYXVnbWVudGluZyB0aGUgQUNQSSBkZWNsYXJlZCBOVU1BIG5v
+ZGVzIGF0IGJvb3Qgc28gdGhhdCB0aGUgY29yZS1tbSBpcw0KPiBub3Qgc3VycHJpc2VkIGJ5IHVu
+ZGVjbGFyZWQgTlVNQSBub2RlcyBhdA0KPiBhZGRfbWVtb3J5X2RyaXZlcl9tYW5hZ2VkKCkgdGlt
+ZS4NCj4gDQo+ID4gY2FuIGxhdGVyIGFkZC9vbmxpbmUgdGhpcyBtZW1vcnksDQo+ID4gdmlhIGFk
+ZF9tZW1vcnlfZHJpdmVyX21hbmFnZWQgd2hpY2ggcmVxdWlyZXMgYSBOVU1BIG5vZGUgSUQgKHdo
+aWNoDQo+ID4gZHJpdmVyIGNhbiBkaXNjb3ZlciBhZnRlciB5b3VyIHBhdGNoIGJ5IGNhbGxpbmcg
+cGh5c190b190YXJnZXRfbm9kZSkuDQo+IA0KPiBZZXMsIHdpdGggdGhpcyBwYXRjaCB0aGVyZSBh
+cmUgYXQgbGVhc3QgZW5vdWdoIG5vZGVzIGZvcg0KPiBhZGRfbWVtb3J5X2RyaXZlcl9tYW5hZ2Vk
+KCkgdG8gaGF2ZSBhIHJlYXNvbmFibGUgYW5zd2VyIGZvciBhIE5VTUENCj4gbm9kZSBmb3IgVHlw
+ZS0yIG1lbW9yeS4gSG93ZXZlciwgYXMgSm9uYXRoYW4gYW5kIEkgd2VyZSBkaXNjdXNzaW5nLCB0
+aGlzDQo+IG1pbmltdW0gZW5hYmxpbmcgbWF5IHByb3ZlIGluc3VmZmljaWVudCBpZiwgZm9yIGV4
+YW1wbGUsIHlvdSBoYWQgb25lDQo+IENGTVdTIGVudHJ5IGZvciBhbGwgVHlwZS0yIG1lbW9yeSBp
+biB0aGUgc3lzdGVtLCBidXQgbXVsdGlwbGUgZGlzcGFyYXRlDQo+IGFjY2VsZXJhdG9ycyB0aGF0
+IHdhbnQgdG8gZWFjaCBkbyBhZGRfbWVtb3J5X2RyaXZlcl9tYW5hZ2VkKCkuIA0KDQpDRURUIENG
+TVdTIEVDTiBzYXlzICJUaGUgQ0ZNV1Mgc3RydWN0dXJlIGRlc2NyaWJlcyB6ZXJvIG9yIG1vcmUg
+SG9zdCBQaHlzaWNhbCANCkFkZHJlc3MgKEhQQSkgd2luZG93cyBhc3NvY2lhdGVkIHdpdGggKmVh
+Y2ggQ1hMIEhvc3QgQnJpZGdlKiIuIA0KU28gYXJlIHlvdSBjb25jZXJuZWQgYWJvdXQgbXVsdGlw
+bGUgdHlwZSAyIGFjY2VsZXJhdG9ycyB1bmRlciB0aGUgc2FtZSBIb3N0IGJyaWRnZT8gDQpJSVJD
+IENYTCAyLjAgb25seSBhbGxvd3MgMSB0eXBlIDIgZGV2aWNlIHVuZGVyIGEgaG9zdCBicmlkZ2Us
+IGJ1dCBwZXJoYXBzIHRoYXQgd2FzIA0KdW5kZXIgMSAicm9vdCBwb3J0IiwgYW5kIHlvdSBhcmUg
+cG9pbnRpbmcgb3V0IHRoYXQgYSBzeXN0ZW0gdGhhdCBoYXMgbXVsdGlwbGUgDQpyb290IHBvcnRz
+IHVuZGVyIDEgQ1hMIGhvc3QgYnJpZGdlIGNhbiBoYXZlIG11bHRpcGxlIENYTCB0eXBlIDIgYWNj
+ZWxlcmF0b3JzIHVuZGVyIGl0LiANCkZ1dHVyZSByZXZpc2lvbnMgb2YgdGhlIHNwZWMgY291bGQg
+YWx3YXlzIHJlbGF4IGN1cnJlbnQgcmVzdHJpY3Rpb25zIGV2ZW4gdW5kZXIgMSANCnJvb3QgcG9y
+dCwgc28gSSBkbyBzZWUgdGhlIHByb2JsZW0gYWJvdXQgbXVsdGlwbGUgdHlwZSAyIGRldmljZXMg
+dW5kZXIgMSBDRk1XUyANCndpbmRvdyB3YW50aW5nIHRoZWlyIG93biBOVU1BIG5vZGVzLiBBcG9s
+b2dpZXMgaWYgSSdtIG1hbmdsaW5nIHRoZSANCnRlcm1pbm9sb2d5IGZvciBob3N0IGJyaWRnZSB2
+cyByb290IHBvcnQsIGJ1dCB0cnlpbmcgdG8gY29ycmVsYXRlIHdpdGggUENJZSB0ZXJtaW5vbG9n
+eSANCm9mIFJDL1JQLg0KDQo+IEluIHRoYXQgc2NlbmFyaW8gYWxsIG9mIHRob3NlIGFjY2VsZXJh
+dG9ycywgd2hpY2ggbWlnaHQgd2FudCB0byBoYXZlIGEgdGFyZ2V0LW5vZGUNCj4gcGVyIHRhcmdl
+dC1kZXZpY2UsIHdpbGwgYWxsIHNoYXJlIG9uZSB0YXJnZXQtbm9kZS4gVGhhdCBzYWlkLCB1bmxl
+c3MgYW5kIHVudGlsIGl0DQo+IGJlY29tZXMgY2xlYXIgdGhhdCBzeXN0ZW0gYXJjaGl0ZWN0dXJl
+cyByZXF1aXJlIExpbnV4IHRvIGRlZmluZSBtdWx0aXBsZQ0KPiBub2RlcyBwZXIgQ0ZNV1MsIEkg
+YW0gaGFwcHkgdG8ga2ljayB0aGF0IGNhbiBkb3duIHRoZSByb2FkLiBBbHNvLCBwbGF0Zm9ybQ0K
+PiBmaXJtd2FyZSBjYW4gc29sdmUgdGhpcyBwcm9ibGVtIGJ5IHN1YmRpdmlkaW5nDQo+IFR5cGUt
+MiB3aXRoIG11bHRpcGxlIFFURyBpZHMgc28gdGhhdCBtdWx0aXBsZSB0YXJnZXQgZGV2aWNlcyBj
+YW4gZWFjaCBiZQ0KPiBhc3NpZ25lZCB0byBhIGRpZmZlcmVudCBDRk1XUyBlbnRyeSBzYW5kYm94
+LCBpLmUuIHdpdGggbW9yZSBkZWdyZWVzIG9mDQo+IGZyZWVkb20gZGVjbGFyZWQgYnkgcGxhdGZv
+cm0gZmlybXdhcmUgaW4gdGhlIENGTVdTIGl0IHJlbGlldmVzIHByZXNzdXJlIG9uDQo+IHRoZSBP
+UyB0byBuZWVkIGEgZHluYW1pYyBOVU1BIG5vZGUgZGVmaW5pdGlvbiBjYXBhYmlsaXR5Lg0KPiAN
+CkxldCdzIHNheSB0aGVyZSBhcmUgMiB0eXBlIDIgYWNjZWxlcmF0b3JzIHdpdGggdGhlIHNhbWUg
+bGF0ZW5jeS9iYW5kd2lkdGggDQpwcm9wZXJ0aWVzIHVuZGVyIGEgZ2l2ZW4gQ1hMIGhvc3QgYnJp
+ZGdlLiBXaGVuIHRoZSBEU00gaXMgZXhlY3V0ZWQgb24gdGhpcyBob3N0IA0KYnJpZGdlIHdpdGgg
+dGhlIGxhdGVuY3kvQlcgYXMgaW5wdXQsIElJVUMgeW91J3JlIHNheWluZyBGVyBjb3VsZCByZXR1
+cm4gMiBwb3NzaWJsZSANClFURyBJRHMsIGxldCdzIHNheSA0IGFuZCA1PyBBbmQgZm9yIHRoYXQg
+aG9zdCBicmlkZ2UsIEZXIGFsc28gY3JlYXRlIDIgQ0ZNV1MgDQp3aW5kb3dzIG9mIEhQQSBmb3Ig
+dHlwZSAyLCB3aXRoIG9uZSBzaG93aW5nIFFURyBJRCA9NCwgYW5kIHRoZSBvdGhlciBzaG93aW5n
+IA0KUVRHIElEPTUsIHdpdGggZWFjaCBoYXZpbmcgYXQgbGVhc3QgZW5vdWdoIEhQQSBzcGFjZSB0
+byBtYXAgMSBvZiB0aG9zZSBkZXZpY2VzPw0KDQo+ID4gV291bGQgdGhlIGN1cnJlbnQgdXBzdHJl
+YW0gY29kZSBmb3IgSERNIHdvcmsgYXMgZGVzY3JpYmVkIGFib3ZlLA0KPiANCj4gQ3VycmVudCB1
+cHN0cmVhbSBjb2RlIHRoYXQgZW51bWVyYXRlcyBUeXBlLTIgaXMgdGhlIGN4bF9hY3BpIGRyaXZl
+ciB0aGF0DQo+IGVudW1lcmF0ZXMgcGxhdGZvcm0gQ1hMIGNhcGFiaWxpdGllcy4NCj4gDQo+ID4g
+YW5kIGlmIHNvLCBkb2VzIGl0DQo+ID4gcmVseSBvbiBDREFUIERTRU1UUyBzdHJ1Y3R1cmUgc2hv
+d2luZyBhIHNwZWNpZmljIHZhbHVlIGZvciBFRkkgbWVtb3J5DQo+ID4gdHlwZT8gaS5lIHdvdWxk
+IGl0IHdvcmsgaWYgdGhhdCBmaWVsZCBpbiBEU0VNVFMgd2FzIGVpdGhlcg0KPiA+IEVGSV9DT05W
+RU5USU9OQUxfTUVNT1JZIHdpdGggRUZJX01FTU9SWV9TUCwgb3INCj4gRUZJX1JFU0VSVkVEX01F
+TU9SWT8NCj4gDQo+IElmIHBsYXRmb3JtIGZpcm13YXJlIG1hcHMgdGhlIEhETSB0aGUgZXhwZWN0
+YXRpb24gaXMgdGhhdCBpdCB3aWxsIHVzZSB0aGUNCj4gQ0RBVCB0byBkZXRlcm1pbmUgdGhlIEVG
+SSBtZW1vcnkgdHlwZS4gSWYgcGxhdGZvcm0gZmlybXdhcmUgZGVjbGluZXMgdG8NCj4gbWFwIHRo
+ZSBkZXZpY2UgYW5kIGxldHMgTGludXggbWFwIGl0IHRoZW4gdGhhdCdzIGRlLWZhY3RvICJyZXNl
+cnZlZCIgbWVtb3J5DQo+IGFuZCB0aGUgZHJpdmVyIChnZW5lcmljIENYTC1UeXBlLTMgLyBvciB2
+ZW5kb3Igc3BlY2lmaWMgQ1hMLVR5cGUtMikgZ2V0cyB0bw0KPiBkbyBpbnNlcnRfcmVzb3VyY2Uo
+KSB3aXRoIHdoYXRldmVyIExpbnV4IHR5cGUgaXQgZGVlbXMgYXBwcm9wcmlhdGUsIGkuZS4gRUZJ
+DQo+IGlzIG91dCBvZiB0aGUgcGljdHVyZSBpbiB0aGlzIHNjZW5hcmlvLg0K
