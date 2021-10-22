@@ -2,27 +2,27 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA6CC4167B
-	for <linux-cxl@archiver.kernel.org>; Fri, 22 Oct 2021 18:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EC2C18E1A
+	for <linux-cxl@archiver.kernel.org>; Fri, 22 Oct 2021 18:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04FA06054F
-	for <linux-cxl@archiver.kernel.org>; Fri, 22 Oct 2021 18:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E240960F50
+	for <linux-cxl@archiver.kernel.org>; Fri, 22 Oct 2021 18:37:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233944AbhJVSjj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 22 Oct 2021 14:39:39 -0400
-Received: from mga02.intel.com ([134.134.136.20]:5584 "EHLO mga02.intel.com"
+        id S233968AbhJVSjm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 22 Oct 2021 14:39:42 -0400
+Received: from mga02.intel.com ([134.134.136.20]:5590 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233777AbhJVSjg (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 22 Oct 2021 14:39:36 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10145"; a="216528966"
+        id S233988AbhJVSjj (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Fri, 22 Oct 2021 14:39:39 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10145"; a="216528984"
 X-IronPort-AV: E=Sophos;i="5.87,173,1631602800"; 
-   d="scan'208";a="216528966"
+   d="scan'208";a="216528984"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2021 11:37:19 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2021 11:37:20 -0700
 X-IronPort-AV: E=Sophos;i="5.87,173,1631602800"; 
-   d="scan'208";a="445854709"
+   d="scan'208";a="445854749"
 Received: from aagregor-mobl3.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.134.35])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2021 11:37:18 -0700
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2021 11:37:20 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>
 Cc:     Ben Widawsky <ben.widawsky@intel.com>,
@@ -31,9 +31,9 @@ Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [RFC PATCH v2 20/28] cxl/region: Introduce a cxl_region driver
-Date:   Fri, 22 Oct 2021 11:37:01 -0700
-Message-Id: <20211022183709.1199701-21-ben.widawsky@intel.com>
+Subject: [RFC PATCH v2 28/28] cxl: Program decoders for regions
+Date:   Fri, 22 Oct 2021 11:37:09 -0700
+Message-Id: <20211022183709.1199701-29-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20211022183709.1199701-1-ben.widawsky@intel.com>
 References: <20211022183709.1199701-1-ben.widawsky@intel.com>
@@ -43,627 +43,288 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The cxl_region driver is responsible for managing the HDM decoder
-programming in the CXL topology. Once a region is created it must be
-configured and bound to the driver in order to activate it.
-
-The following is a sample of how such controls might work:
-
-region=$(cat /sys/bus/cxl/devices/decoder0.0/create_region)
-echo $region > /sys/bus/cxl/devices/decoder0.0/create_region
-echo 2 > /sys/bus/cxl/devices/decoder0.0/region0.0:0/interleave
-echo $((256<<20)) > /sys/bus/cxl/devices/decoder0.0/region0.0:0/size
-echo mem0 > /sys/bus/cxl/devices/decoder0.0/region0.0:0/target0
-echo region0.0:0 > /sys/bus/cxl/drivers/cxl_region/bind
-
-In order to handle the eventual rise in failure modes of binding a
-region, a new trace event is created to help track these failures for
-debug and reconfiguration paths in userspace.
+Do the HDM decoder programming for all endpoints and host bridges in a
+region. Switches are currently unimplemented.
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- .clang-format                                 |   1 +
- .../driver-api/cxl/memory-devices.rst         |   3 +
- drivers/cxl/Makefile                          |   2 +
- drivers/cxl/core/bus.c                        |  19 +-
- drivers/cxl/core/core.h                       |   1 +
- drivers/cxl/core/region.c                     |  25 +-
- drivers/cxl/cxl.h                             |   5 +
- drivers/cxl/region.c                          | 324 ++++++++++++++++++
- drivers/cxl/region.h                          |   4 +
- drivers/cxl/trace.h                           |  45 +++
- 10 files changed, 425 insertions(+), 4 deletions(-)
- create mode 100644 drivers/cxl/region.c
- create mode 100644 drivers/cxl/trace.h
+ drivers/cxl/cxl.h    |   3 +
+ drivers/cxl/port.c   | 196 +++++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/region.c |  33 +++++++-
+ 3 files changed, 231 insertions(+), 1 deletion(-)
 
-diff --git a/.clang-format b/.clang-format
-index 15d4eaabc6b5..cb7c46371465 100644
---- a/.clang-format
-+++ b/.clang-format
-@@ -169,6 +169,7 @@ ForEachMacros:
-   - 'for_each_cpu_and'
-   - 'for_each_cpu_not'
-   - 'for_each_cpu_wrap'
-+  - 'for_each_cxl_endpoint'
-   - 'for_each_dapm_widgets'
-   - 'for_each_dev_addr'
-   - 'for_each_dev_scope'
-diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
-index 0ed00906acdd..fb5ed0c914b6 100644
---- a/Documentation/driver-api/cxl/memory-devices.rst
-+++ b/Documentation/driver-api/cxl/memory-devices.rst
-@@ -67,6 +67,9 @@ CXL Core
- 
- CXL Regions
- -----------
-+.. kernel-doc:: drivers/cxl/region.c
-+   :doc: cxl region
-+
- .. kernel-doc:: drivers/cxl/region.h
-    :identifiers:
- 
-diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-index 77499a6b40f2..9936568711cd 100644
---- a/drivers/cxl/Makefile
-+++ b/drivers/cxl/Makefile
-@@ -5,9 +5,11 @@ obj-$(CONFIG_CXL_PCI) += cxl_pci.o
- obj-$(CONFIG_CXL_MEM) += cxl_mem.o
- obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
- obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
-+obj-$(CONFIG_CXL_MEM) += cxl_region.o
- 
- cxl_mem-y := mem.o
- cxl_pci-y := pci.o
- cxl_acpi-y := acpi.o
- cxl_pmem-y := pmem.o
- cxl_port-y := port.o
-+cxl_region-y := region.o
-diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-index 7a51a290ed25..3042e6e6f5b3 100644
---- a/drivers/cxl/core/bus.c
-+++ b/drivers/cxl/core/bus.c
-@@ -7,6 +7,7 @@
- #include <linux/slab.h>
- #include <linux/idr.h>
- #include <cxlmem.h>
-+#include <region.h>
- #include <cxl.h>
- #include <pci.h>
- #include "core.h"
-@@ -32,6 +33,8 @@ static DECLARE_RWSEM(root_host_sem);
- 
- static struct device *cxl_root_host;
- 
-+struct cxl_region *to_cxl_region(struct device *dev);
-+
- int cxl_register_root(struct device *host)
- {
- 	down_write(&root_host_sem);
-@@ -962,6 +965,8 @@ static int cxl_device_id(struct device *dev)
- 		return CXL_DEVICE_PORT;
- 	if (dev->type == &cxl_memdev_type)
- 		return CXL_DEVICE_MEMORY_EXPANDER;
-+	if (dev->type == &cxl_region_type)
-+		return CXL_DEVICE_REGION;
- 	return 0;
- }
- 
-@@ -978,7 +983,19 @@ static int cxl_bus_match(struct device *dev, struct device_driver *drv)
- 
- static int cxl_bus_probe(struct device *dev)
- {
--	return to_cxl_drv(dev->driver)->probe(dev);
-+	int id = cxl_device_id(dev);
-+
-+	if (id == CXL_DEVICE_REGION) {
-+		/* Regions cannot bind until parameters are set */
-+		struct cxl_region *region = to_cxl_region(dev);
-+
-+		if (is_cxl_region_configured(region))
-+			return to_cxl_drv(dev->driver)->probe(dev);
-+	} else {
-+		return to_cxl_drv(dev->driver)->probe(dev);
-+	}
-+
-+	return -ENODEV;
- }
- 
- static void cxl_bus_remove(struct device *dev)
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index dea246cb7c58..5bff806a8742 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -7,6 +7,7 @@
- extern const struct device_type cxl_nvdimm_bridge_type;
- extern const struct device_type cxl_nvdimm_type;
- extern const struct device_type cxl_memdev_type;
-+extern const struct device_type cxl_region_type;
- 
- extern struct attribute_group cxl_base_attribute_group;
- 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 3b0d74d4dd6c..f227d339f092 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -11,6 +11,8 @@
- #include <cxlmem.h>
- #include <cxl.h>
- 
-+#include "core.h"
-+
- /**
-  * DOC: cxl core region
-  *
-@@ -25,10 +27,27 @@ static const struct attribute_group region_interleave_group;
- 
- static bool is_region_active(struct cxl_region *region)
- {
--	/* TODO: Regions can't be activated yet. */
--	return false;
-+	return region->active;
- }
- 
-+/*
-+ * Most sanity checking is left up to region binding. This does the most basic
-+ * check to determine whether or not the core should try probing the driver.
-+ */
-+bool is_cxl_region_configured(const struct cxl_region *region)
-+{
-+	/* zero sized regions aren't a thing. */
-+	if (region->size <= 0)
-+		return false;
-+
-+	/* all regions have at least 1 target */
-+	if (!region->targets[0])
-+		return false;
-+
-+	return true;
-+}
-+EXPORT_SYMBOL_GPL(is_cxl_region_configured);
-+
- static void remove_target(struct cxl_region *region, int target)
- {
- 	struct cxl_memdev *cxlmd;
-@@ -310,7 +329,7 @@ static const struct attribute_group *region_groups[] = {
- 
- static void cxl_region_release(struct device *dev);
- 
--static const struct device_type cxl_region_type = {
-+const struct device_type cxl_region_type = {
- 	.name = "cxl_region",
- 	.release = cxl_region_release,
- 	.groups = region_groups
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index bcef2cb4e55b..430de5ab805a 100644
+index 79d22992fddf..f2ee26ac2398 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -200,6 +200,10 @@ void cxl_unregister_root(void);
- #define CXL_DECODER_F_EN    BIT(5)
- #define CXL_DECODER_F_MASK  GENMASK(5, 0)
+@@ -52,6 +52,7 @@
+ #define   CXL_HDM_DECODER0_CTRL_IW_MASK GENMASK(7, 4)
+ #define   CXL_HDM_DECODER0_CTRL_COMMIT BIT(9)
+ #define   CXL_HDM_DECODER0_CTRL_COMMITTED BIT(10)
++#define   CXL_HDM_DECODER0_CTRL_COMMIT_ERROR BIT(11)
+ #define   CXL_HDM_DECODER0_CTRL_TYPE BIT(12)
+ #define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
+ #define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
+@@ -337,6 +338,8 @@ struct cxl_dport *cxl_find_dport_by_dev(struct cxl_port *port,
+ 					struct device *dev);
+ struct cxl_decoder *cxl_pop_decoder(struct cxl_port *port);
+ void cxl_push_decoder(struct cxl_decoder *cxld);
++int cxl_commit_decoder(struct cxl_decoder *cxld);
++void cxl_disable_decoder(struct cxl_decoder *cxld);
  
-+#define cxl_is_pmem_t3(flags)                                                  \
-+	(((flags) & (CXL_DECODER_F_TYPE3 | CXL_DECODER_F_PMEM)) ==             \
-+	 (CXL_DECODER_F_TYPE3 | CXL_DECODER_F_PMEM))
-+
- enum cxl_decoder_type {
-        CXL_DECODER_ACCELERATOR = 2,
-        CXL_DECODER_EXPANDER = 3,
-@@ -362,6 +366,7 @@ void cxl_driver_unregister(struct cxl_driver *cxl_drv);
- #define CXL_DEVICE_NVDIMM		2
- #define CXL_DEVICE_PORT			3
- #define CXL_DEVICE_MEMORY_EXPANDER	4
-+#define CXL_DEVICE_REGION		5
+ struct cxl_decoder *to_cxl_decoder(struct device *dev);
+ bool is_root_decoder(struct device *dev);
+diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+index 5d35ccf2407f..67143c7f59bb 100644
+--- a/drivers/cxl/port.c
++++ b/drivers/cxl/port.c
+@@ -99,6 +99,202 @@ struct cxl_port_data {
+ 	} caps;
+ };
  
- #define MODULE_ALIAS_CXL(type) MODULE_ALIAS("cxl:t" __stringify(type) "*")
- #define CXL_MODALIAS_FMT "cxl:t%d"
-diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
-new file mode 100644
-index 000000000000..da4f91b48743
---- /dev/null
-+++ b/drivers/cxl/region.c
-@@ -0,0 +1,324 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2021 Intel Corporation. All rights reserved. */
-+#include <linux/platform_device.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include "cxlmem.h"
-+#include "region.h"
-+
-+#define CREATE_TRACE_POINTS
-+#include "trace.h"
-+
-+/**
-+ * DOC: cxl region
-+ *
-+ * This module implements a region driver that is capable of programming CXL
-+ * hardware to setup regions.
-+ *
-+ * A CXL region encompasses a chunk of host physical address space that may be
-+ * consumed by a single device (x1 interleave aka linear) or across multiple
-+ * devices (xN interleaved). A region is a child device of a &struct
-+ * cxl_decoder. There may be multiple active regions under a single &struct
-+ * cxl_decoder. The common case for multiple regions would be several linear,
-+ * contiguous regions under a single decoder. Generally, there will be a 1:1
-+ * relationship between decoder and region when the region is interleaved.
-+ */
-+
-+#define for_each_cxl_endpoint(ep, region, idx)                                 \
-+	for (idx = 0, ep = (region)->targets[idx]; idx < region_ways(region);  \
-+	     idx++, ep = (region)->targets[idx])
-+
-+#define region_ways(region) ((region)->eniw)
-+#define region_ig(region) (ilog2((region)->ig))
-+
-+#define cxld_from_region(r) to_cxl_decoder(region->dev.parent)
-+
-+struct cfmws_context {
-+	const struct cxl_region *region;
-+	struct cxl_port *hbs[CXL_DECODER_MAX_INTERLEAVE];
-+	int count;
-+};
-+
-+static struct cxl_port *get_hostbridge(const struct cxl_memdev *endpoint)
++#define COMMIT_TIMEOUT_MS 10
++static int wait_for_commit(struct cxl_decoder *cxld)
 +{
-+	return endpoint->root_port->port;
-+}
++	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
++	const unsigned long start = jiffies;
++	struct cxl_port_data *cpd;
++	void __iomem *hdm_decoder;
++	unsigned long end = start;
++	u32 ctrl;
 +
-+static struct cxl_port *get_root_decoder(const struct cxl_memdev *endpoint)
-+{
-+	struct cxl_port *hostbridge = get_hostbridge(endpoint);
++	cpd = dev_get_drvdata(&port->dev);
++	hdm_decoder = cpd->regs.hdm_decoder;
 +
-+	if (hostbridge)
-+		return to_cxl_port(hostbridge->dev.parent);
++	do {
++		end = jiffies;
++		ctrl = readl(hdm_decoder +
++			     CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
++		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
++			break;
 +
-+	return NULL;
++		if (time_after(end, start + COMMIT_TIMEOUT_MS)) {
++			dev_err(&cxld->dev, "HDM decoder commit timeout %x\n", ctrl);
++			return -ETIMEDOUT;
++		}
++		if ((ctrl & CXL_HDM_DECODER0_CTRL_COMMIT_ERROR) != 0) {
++			dev_err(&cxld->dev, "HDM decoder commit error %x\n", ctrl);
++			return -ENXIO;
++		}
++	} while (!!FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl));
++
++	return 0;
 +}
 +
 +/**
-+ * sanitize_region() - Check is region is reasonably configured
-+ * @region: The region to check
++ * cxl_commit_decoder() - Program a configured cxl_decoder
++ * @cxld: The preconfigured cxl decoder.
 + *
-+ * Determination as to whether or not a region can possibly be configured is
-+ * described in CXL Memory Device SW Guide. In order to implement the algorithms
-+ * described there, certain more basic configuration parameters must first need
-+ * to be validated. That is accomplished by this function.
++ * A cxl decoder that is to be committed should have been earmarked as enabled.
++ * This mechanism acts as a soft reservation on the decoder.
 + *
-+ * Returns 0 if the region is reasonably configured, else returns a negative
-+ * error code.
++ * Returns 0 if commit was successful, negative error code otherwise.
 + */
-+static int sanitize_region(const struct cxl_region *region)
++int cxl_commit_decoder(struct cxl_decoder *cxld)
 +{
-+	int i;
++	u32 ctrl, tl_lo, tl_hi, base_lo, base_hi, size_lo, size_hi;
++	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
++	struct cxl_port_data *cpd;
++	void __iomem *hdm_decoder;
++	int rc;
 +
-+	if (dev_WARN_ONCE(&region->dev, !is_cxl_region_configured(region),
-+			  "unconfigured regions can't be probed (race?)\n")) {
++	/*
++	 * Decoder flags are entirely software controlled and therefore this
++	 * case is purely a driver bug.
++	 */
++	if (dev_WARN_ONCE(&port->dev, (cxld->flags & CXL_DECODER_F_EN) == 0,
++			  "Invalid %s enable state\n", dev_name(&cxld->dev)))
 +		return -ENXIO;
++
++	cpd = dev_get_drvdata(&port->dev);
++	hdm_decoder = cpd->regs.hdm_decoder;
++	ctrl = readl(hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
++
++	/*
++	 * A decoder that's currently active cannot be changed without the
++	 * system being quiesced. While the driver should prevent against this,
++	 * for a variety of reasons the hardware might not be in sync with the
++	 * hardware and so, do not splat on error.
++	 */
++	size_hi = readl(hdm_decoder +
++			CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(cxld->id));
++	size_lo =
++		readl(hdm_decoder + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(cxld->id));
++	if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl) &&
++	    (size_lo + size_hi)) {
++		dev_err(&port->dev, "Tried to change an active decoder (%s)\n",
++			dev_name(&cxld->dev));
++		return -EBUSY;
 +	}
 +
-+	if (region->size % (SZ_256M * region_ways(region))) {
-+		trace_sanitize_failed(region,
-+				      "Invalid size. Must be multiple of NIW");
-+		return -ENXIO;
++	u32p_replace_bits(&ctrl, 8 - ilog2(cxld->interleave_granularity),
++			  CXL_HDM_DECODER0_CTRL_IG_MASK);
++	u32p_replace_bits(&ctrl, ilog2(cxld->interleave_ways),
++			  CXL_HDM_DECODER0_CTRL_IW_MASK);
++	u32p_replace_bits(&ctrl, 1, CXL_HDM_DECODER0_CTRL_COMMIT);
++
++	/* TODO: set based on type */
++	u32p_replace_bits(&ctrl, 1, CXL_HDM_DECODER0_CTRL_TYPE);
++
++	base_lo = FIELD_PREP(GENMASK(31, 28),
++			     (u32)(cxld->res.start & 0xffffffff));
++	base_hi = FIELD_PREP(~0, (u32)(cxld->res.start >> 32));
++
++	size_lo = (u32)(resource_size(&cxld->res)) & GENMASK(31, 28);
++	size_hi = (u32)((resource_size(&cxld->res) >> 32));
++
++	if (cxld->nr_targets > 0) {
++		tl_lo |= FIELD_PREP(GENMASK(7, 0), cxld->target[0]->port_id);
++		if (cxld->interleave_ways > 1)
++			tl_lo |= FIELD_PREP(GENMASK(15, 8),
++					    cxld->target[1]->port_id);
++		if (cxld->interleave_ways > 2)
++			tl_lo |= FIELD_PREP(GENMASK(23, 16),
++					    cxld->target[2]->port_id);
++		if (cxld->interleave_ways > 3)
++			tl_lo |= FIELD_PREP(GENMASK(31, 24),
++					    cxld->target[3]->port_id);
++		if (cxld->interleave_ways > 4)
++			tl_hi |= FIELD_PREP(GENMASK(7, 0),
++					    cxld->target[4]->port_id);
++		if (cxld->interleave_ways > 5)
++			tl_hi |= FIELD_PREP(GENMASK(15, 8),
++					    cxld->target[5]->port_id);
++		if (cxld->interleave_ways > 6)
++			tl_hi |= FIELD_PREP(GENMASK(23, 16),
++					    cxld->target[6]->port_id);
++		if (cxld->interleave_ways > 7)
++			tl_hi |= FIELD_PREP(GENMASK(31, 24),
++					    cxld->target[7]->port_id);
++
++		writel(tl_hi, hdm_decoder + CXL_HDM_DECODER0_TL_HIGH(cxld->id));
++		writel(tl_lo, hdm_decoder + CXL_HDM_DECODER0_TL_LOW(cxld->id));
++	}
++
++	writel(size_hi,
++	       hdm_decoder + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(cxld->id));
++	writel(size_lo,
++	       hdm_decoder + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(cxld->id));
++	writel(base_hi,
++	       hdm_decoder + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(cxld->id));
++	writel(base_lo,
++	       hdm_decoder + CXL_HDM_DECODER0_BASE_LOW_OFFSET(cxld->id));
++	writel(ctrl, hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
++
++	rc = wait_for_commit(cxld);
++	if (rc)
++		return rc;
++
++#define DPORT_TL_STR "%d %d %d %d %d %d %d %d"
++#define DPORT(i)                                                               \
++	(cxld->nr_targets && cxld->interleave_ways > (i)) ?                    \
++		      cxld->target[(i)]->port_id :                                   \
++		      -1
++#define DPORT_TL                                                               \
++	DPORT(0), DPORT(1), DPORT(2), DPORT(3), DPORT(4), DPORT(5), DPORT(6),  \
++		DPORT(7)
++
++	dev_dbg(&port->dev,
++		"%s\n\tBase %pa\n\tSize %llu\n\tIG %u\n\tIW %u\n\tTargetList: " DPORT_TL_STR,
++		dev_name(&cxld->dev), &cxld->res.start,
++		resource_size(&cxld->res), cxld->interleave_granularity,
++		cxld->interleave_ways, DPORT_TL);
++#undef DPORT_TL
++#undef DPORT
++#undef DPORT_TL_STR
++	return 0;
++}
++EXPORT_SYMBOL_GPL(cxl_commit_decoder);
++
++/**
++ * cxl_disable_decoder() - Disables a decoder
++ * @cxld: The active cxl decoder.
++ *
++ * CXL decoders (as of 2.0 spec) have no way to deactivate them other than to
++ * set the size of the HDM to 0. This function will clear all registers, and if
++ * the decoder is active, commit the 0'd out registers.
++ */
++void cxl_disable_decoder(struct cxl_decoder *cxld)
++{
++	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
++	struct cxl_port_data *cpd;
++	void __iomem *hdm_decoder;
++	u32 ctrl;
++
++	cpd = dev_get_drvdata(&port->dev);
++	hdm_decoder = cpd->regs.hdm_decoder;
++	ctrl = readl(hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
++
++	if (dev_WARN_ONCE(&port->dev, (cxld->flags & CXL_DECODER_F_EN) == 0,
++			  "Invalid decoder enable state\n"))
++		return;
++
++	/* There's no way to "uncommit" a committed decoder, only 0 size it */
++	writel(0, hdm_decoder + CXL_HDM_DECODER0_TL_HIGH(cxld->id));
++	writel(0, hdm_decoder + CXL_HDM_DECODER0_TL_LOW(cxld->id));
++	writel(0, hdm_decoder + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(cxld->id));
++	writel(0, hdm_decoder + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(cxld->id));
++	writel(0, hdm_decoder + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(cxld->id));
++	writel(0, hdm_decoder + CXL_HDM_DECODER0_BASE_LOW_OFFSET(cxld->id));
++
++	/* If the device isn't actually active, just zero out all the fields */
++	if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
++		writel(CXL_HDM_DECODER0_CTRL_COMMIT,
++		       hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
++}
++EXPORT_SYMBOL_GPL(cxl_disable_decoder);
++
+ static inline int cxl_hdm_decoder_ig(u32 ctrl)
+ {
+ 	int val = FIELD_GET(CXL_HDM_DECODER0_CTRL_IG_MASK, ctrl);
+diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
+index f4d190ede3ee..05e7ca3d0900 100644
+--- a/drivers/cxl/region.c
++++ b/drivers/cxl/region.c
+@@ -526,7 +526,38 @@ static int gather_hdm_decoders(const struct cxl_region *region, struct decoder_p
+ 
+ static int bind_region(const struct cxl_region *region)
+ {
+-	/* TODO: */
++	const struct decoder_programming *p = &region->state;
++	int i, rc;
++
++	for (i = 0; i < p->hb_count; i++) {
++		struct cxl_decoder *cxld = p->hbs[i].cxld;
++		int j;
++
++		cxld->res = (struct resource)DEFINE_RES_MEM(region->res->start,
++							    region->size);
++		cxld->interleave_granularity = region->ig;
++		cxld->interleave_ways = p->hbs[i].rp_count;
++		for (j = 0; j < p->hbs[i].rp_count; j++)
++			cxld->target[j] = p->hbs[i].rp_target_list[j];
++
++		rc = cxl_commit_decoder(cxld);
++		if (rc)
++			return rc;
 +	}
 +
 +	for (i = 0; i < region_ways(region); i++) {
-+		if (!region->targets[i]) {
-+			trace_sanitize_failed(region,
-+					      "Missing memory device target");
-+			return -ENXIO;
-+		}
-+		if (!region->targets[i]->dev.driver) {
-+			trace_sanitize_failed(region,
-+					      "Target isn't CXL.mem capable");
-+			return -ENODEV;
-+		}
++		struct cxl_decoder *cxld = p->ep_cxld[i];
++
++		cxld->res = (struct resource)DEFINE_RES_MEM(region->res->start,
++							    region->size);
++		cxld->interleave_granularity = region->ig;
++		cxld->interleave_ways = region_ways(region);
++
++		rc = cxl_commit_decoder(cxld);
++		if (rc)
++			return rc;
 +	}
 +
-+	return 0;
-+}
-+
-+/**
-+ * allocate_address_space() - Gets address space for the region.
-+ * @region: The region that will consume the address space
-+ */
-+static int allocate_address_space(struct cxl_region *region)
-+{
-+	/* TODO */
-+	return 0;
-+}
-+
-+/**
-+ * find_cdat_dsmas() - Find a valid DSMAS for the region
-+ * @region: The region
-+ */
-+static bool find_cdat_dsmas(const struct cxl_region *region)
-+{
-+	return true;
-+}
-+
-+/**
-+ * qtg_match() - Does this CFMWS have desirable QTG for the endpoint
-+ * @cfmws: The CFMWS for the region
-+ * @endpoint: Endpoint whose QTG is being compared
-+ *
-+ * Prior to calling this function, the caller should verify that all endpoints
-+ * in the region have the same QTG ID.
-+ *
-+ * Returns true if the QTG ID of the CFMWS matches the endpoint
-+ */
-+static bool qtg_match(const struct cxl_decoder *cfmws,
-+		      const struct cxl_memdev *endpoint)
-+{
-+	/* TODO: */
-+	return true;
-+}
-+
-+/**
-+ * region_xhb_config_valid() - determine cross host bridge validity
-+ * @cfmws: The CFMWS to check against
-+ * @region: The region being programmed
-+ *
-+ * The algorithm is outlined in 2.13.14 "Verify XHB configuration sequence" of
-+ * the CXL Memory Device SW Guide (Rev1p0).
-+ *
-+ * Returns true if the configuration is valid.
-+ */
-+static bool region_xhb_config_valid(const struct cxl_region *region,
-+				    const struct cxl_decoder *cfmws)
-+{
-+	/* TODO: */
-+	return true;
-+}
-+
-+/**
-+ * region_hb_rp_config_valid() - determine root port ordering is correct
-+ * @cfmws: CFMWS decoder for this @region
-+ * @region: Region to validate
-+ *
-+ * The algorithm is outlined in 2.13.15 "Verify HB root port configuration
-+ * sequence" of the CXL Memory Device SW Guide (Rev1p0).
-+ *
-+ * Returns true if the configuration is valid.
-+ */
-+static bool region_hb_rp_config_valid(const struct cxl_region *region,
-+				      const struct cxl_decoder *cfmws)
-+{
-+	/* TODO: */
-+	return true;
-+}
-+
-+/**
-+ * cfmws_contains() - determine if this region can exist in the cfmws
-+ * @cfmws: CFMWS that potentially decodes to this region
-+ * @region: region to be routed by the @cfmws
-+ */
-+static bool cfmws_contains(const struct cxl_region *region,
-+			   const struct cxl_decoder *cfmws)
-+{
-+	/* TODO: */
-+	return true;
-+}
-+
-+static bool cfmws_valid(const struct cxl_region *region,
-+			const struct cxl_decoder *cfmws)
-+{
-+	const struct cxl_memdev *endpoint = region->targets[0];
-+
-+	if (!qtg_match(cfmws, endpoint))
-+		return false;
-+
-+	if (!cxl_is_pmem_t3(cfmws->flags))
-+		return false;
-+
-+	if (!region_xhb_config_valid(region, cfmws))
-+		return false;
-+
-+	if (!region_hb_rp_config_valid(region, cfmws))
-+		return false;
-+
-+	if (!cfmws_contains(region, cfmws))
-+		return false;
-+
-+	return true;
-+}
-+
-+static int cfmws_match(struct device *dev, void *data)
-+{
-+	struct cfmws_context *ctx = (struct cfmws_context *)data;
-+	const struct cxl_region *region = ctx->region;
-+
-+	if (!is_root_decoder(dev))
-+		return 0;
-+
-+	return !!cfmws_valid(region, to_cxl_decoder(dev));
-+}
-+
-+/*
-+ * This is a roughly equivalent implementation to "Figure 45 - High-level
-+ * sequence: Finding CFMWS for region" from the CXL Memory Device SW Guide
-+ * Rev1p0.
-+ */
-+static struct cxl_decoder *find_cfmws(const struct cxl_region *region,
-+				      const struct cxl_port *root)
-+{
-+	struct cfmws_context ctx;
-+	struct device *ret;
-+
-+	ctx.region = region;
-+
-+	ret = device_find_child((struct device *)&root->dev, &ctx, cfmws_match);
-+	if (ret)
-+		return to_cxl_decoder(ret);
-+
-+	return NULL;
-+}
-+
-+/**
-+ * gather_hdm_decoders() - Amass all HDM decoders in the hierarchy
-+ * @region: The region to be programmed
-+ *
-+ * Programming the hardware such that the correct set of devices receive the
-+ * correct memory traffic requires all connected components in the hierarchy to
-+ * have HDM decoders programmed.
-+ *
-+ * Returns 0 if an HDM decoder was obtained for each component, else returns a
-+ * negative error code.
-+ */
-+static int gather_hdm_decoders(const struct cxl_region *region)
-+{
-+	/* TODO: */
-+	return 0;
-+}
-+
-+static int bind_region(const struct cxl_region *region)
-+{
-+	/* TODO: */
-+	return 0;
-+}
-+
-+static int cxl_region_probe(struct device *dev)
-+{
-+	struct cxl_region *region = to_cxl_region(dev);
-+	struct cxl_port *root_decoder;
-+	struct cxl_decoder *cfmws, *ours;
-+	int ret;
-+
-+	device_lock_assert(&region->dev);
-+
-+	if (uuid_is_null(&region->uuid))
-+		uuid_gen(&region->uuid);
-+
-+	if (region->active)
-+		return 0;
-+
-+	/* TODO: What about volatile, and LSA generated regions? */
-+
-+	ret = sanitize_region(region);
-+	if (ret)
-+		return ret;
-+
-+	ret = allocate_address_space(region);
-+	if (ret)
-+		return ret;
-+
-+	if (!find_cdat_dsmas(region))
-+		return -ENXIO;
-+
-+	cfmws = cxld_from_region(region);
-+	if (!cfmws_valid(region, cfmws)) {
-+		dev_err(dev, "Picked invalid cfmws\n");
-+		return -ENXIO;
-+	}
-+
-+	root_decoder = get_root_decoder(region->targets[0]);
-+	ours = find_cfmws(region, root_decoder);
-+	if (ours != cfmws)
-+		dev_warn(dev, "Picked different cfmws %s %s\n",
-+			 dev_name(&cfmws->dev), dev_name(&ours->dev));
-+	if (ours)
-+		put_device(&ours->dev);
-+
-+	ret = gather_hdm_decoders(region);
-+	if (ret)
-+		return ret;
-+
-+	ret = bind_region(region);
-+	if (!ret) {
-+		region->active = true;
-+		trace_region_activated(region, "");
-+	}
-+
-+	return ret;
-+}
-+
-+static struct cxl_driver cxl_region_driver = {
-+	.name = "cxl_region",
-+	.probe = cxl_region_probe,
-+	.id = CXL_DEVICE_REGION,
-+};
-+module_cxl_driver(cxl_region_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_IMPORT_NS(CXL);
-+MODULE_ALIAS_CXL(CXL_DEVICE_REGION);
-diff --git a/drivers/cxl/region.h b/drivers/cxl/region.h
-index d032df438832..5df417324cab 100644
---- a/drivers/cxl/region.h
-+++ b/drivers/cxl/region.h
-@@ -12,6 +12,7 @@
-  * @dev: This region's device.
-  * @id: This regions id. Id is globally unique across all regions.
-  * @list: Node in decoder's region list.
-+ * @active: If the region has been activated.
-  * @res: Address space consumed by this region.
-  * @size: Size of the region determined from LSA or userspace.
-  * @uuid: The UUID for this region.
-@@ -23,6 +24,7 @@ struct cxl_region {
- 	struct device dev;
- 	int id;
- 	struct list_head list;
-+	bool active;
+ 	return 0;
+ }
  
- 	struct {
- 		struct resource *res;
-@@ -34,4 +36,6 @@ struct cxl_region {
- 	};
- };
- 
-+bool is_cxl_region_configured(const struct cxl_region *region);
-+
- #endif
-diff --git a/drivers/cxl/trace.h b/drivers/cxl/trace.h
-new file mode 100644
-index 000000000000..8f7f471e15b8
---- /dev/null
-+++ b/drivers/cxl/trace.h
-@@ -0,0 +1,45 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM cxl
-+
-+#if !defined(__CXL_TRACE_H__) || defined(TRACE_HEADER_MULTI_READ)
-+#define __CXL_TRACE_H__
-+
-+#include <linux/tracepoint.h>
-+
-+DECLARE_EVENT_CLASS(cxl_region_template,
-+
-+	TP_PROTO(const struct cxl_region *region, char *status),
-+
-+	TP_ARGS(region, status),
-+
-+	TP_STRUCT__entry(
-+		__string(dev_name, dev_name(&region->dev))
-+		__field(const struct cxl_region *, region)
-+		__string(status, status)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(dev_name, dev_name(&region->dev));
-+		__entry->region = (const struct cxl_region *)region;
-+		__assign_str(status, status);
-+	),
-+
-+	TP_printk("%s: (%s)\n", __get_str(dev_name), __get_str(status))
-+);
-+
-+DEFINE_EVENT(cxl_region_template, region_activated,
-+	     TP_PROTO(const struct cxl_region *region, char *status),
-+	     TP_ARGS(region, status));
-+DEFINE_EVENT(cxl_region_template, sanitize_failed,
-+	     TP_PROTO(const struct cxl_region *region, char *status),
-+	     TP_ARGS(region, status));
-+
-+#endif /* if !defined (__CXL_TRACE_H__) || defined(TRACE_HEADER_MULTI_READ) */
-+
-+/* This part must be outside protection */
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH ../../../drivers/cxl
-+#define TRACE_INCLUDE_FILE trace
-+#include <trace/define_trace.h>
 -- 
 2.33.1
 
