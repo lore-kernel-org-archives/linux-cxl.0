@@ -2,27 +2,27 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAD4C4167D
-	for <linux-cxl@archiver.kernel.org>; Fri, 22 Oct 2021 18:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9383C43219
+	for <linux-cxl@archiver.kernel.org>; Fri, 22 Oct 2021 18:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D166F61246
-	for <linux-cxl@archiver.kernel.org>; Fri, 22 Oct 2021 18:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C38860E8C
+	for <linux-cxl@archiver.kernel.org>; Fri, 22 Oct 2021 18:37:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233931AbhJVSjf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 22 Oct 2021 14:39:35 -0400
-Received: from mga02.intel.com ([134.134.136.20]:5582 "EHLO mga02.intel.com"
+        id S233985AbhJVSjh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 22 Oct 2021 14:39:37 -0400
+Received: from mga02.intel.com ([134.134.136.20]:5577 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233713AbhJVSje (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 22 Oct 2021 14:39:34 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10145"; a="216528935"
+        id S233968AbhJVSjf (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Fri, 22 Oct 2021 14:39:35 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10145"; a="216528954"
 X-IronPort-AV: E=Sophos;i="5.87,173,1631602800"; 
-   d="scan'208";a="216528935"
+   d="scan'208";a="216528954"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2021 11:37:16 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2021 11:37:17 -0700
 X-IronPort-AV: E=Sophos;i="5.87,173,1631602800"; 
-   d="scan'208";a="445854629"
+   d="scan'208";a="445854665"
 Received: from aagregor-mobl3.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.134.35])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2021 11:37:16 -0700
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2021 11:37:17 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>
 Cc:     Ben Widawsky <ben.widawsky@intel.com>,
@@ -31,9 +31,9 @@ Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [RFC PATCH v2 08/28] cxl/port: Introduce a port driver
-Date:   Fri, 22 Oct 2021 11:36:49 -0700
-Message-Id: <20211022183709.1199701-9-ben.widawsky@intel.com>
+Subject: [RFC PATCH v2 15/28] cxl/core: Introduce API to scan switch ports
+Date:   Fri, 22 Oct 2021 11:36:56 -0700
+Message-Id: <20211022183709.1199701-16-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20211022183709.1199701-1-ben.widawsky@intel.com>
 References: <20211022183709.1199701-1-ben.widawsky@intel.com>
@@ -43,506 +43,388 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The CXL port driver will be responsible for managing the decoder
-resources contained within the port. It will also provide APIs that
-other drivers will consume for managing these resources.
+The CXL drivers encapsulate the components that direct memory traffic in
+an entity known as a cxl_port. Compute Express Link specifies three such
+components: hostbridge (ie. a collection of root ports), switches, and
+endpoints. There are currently drivers that create these ports for the
+hostbridges and the endpoints (cxl_acpi and cxl_mem). The new API
+introduced allows callers to initiate a scan down from the hostbridge
+and create ports for switches in the CXL topology.
 
-Since the port driver is responsible for instantiating new decoders, and
-it does so during probe(), a new API is needed to add decoders for
-callers which already hold the device lock of the port.
-
-This patch has no functional change because no driver is registering new
-ports and the root ports that are already registered should be skipped.
+The intended user of this API is for endpoint devices. An endpoint
+device will need to determine if it is CXL.mem capable, which requires
+all components in the path from hostbridge to the endpoint to be CXL.mem
+capable. Once an endpoint device determines it's connected to a CXL
+capable root port, it can call this API to fill in all the ports in
+between the hostbridge and itself.
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- .../driver-api/cxl/memory-devices.rst         |   5 +
- drivers/cxl/Makefile                          |   2 +
- drivers/cxl/acpi.c                            |   1 +
- drivers/cxl/core/bus.c                        |  44 +++-
- drivers/cxl/core/regs.c                       |   6 +-
- drivers/cxl/cxl.h                             |  31 ++-
- drivers/cxl/port.c                            | 242 ++++++++++++++++++
- 7 files changed, 315 insertions(+), 16 deletions(-)
- create mode 100644 drivers/cxl/port.c
+ .../driver-api/cxl/memory-devices.rst         |   6 +
+ drivers/cxl/core/Makefile                     |   1 +
+ drivers/cxl/core/bus.c                        | 145 ++++++++++++++++++
+ drivers/cxl/core/pci.c                        |  99 ++++++++++++
+ drivers/cxl/cxl.h                             |   2 +
+ drivers/cxl/pci.h                             |   6 +
+ drivers/cxl/port.c                            |   2 +-
+ tools/testing/cxl/Kbuild                      |   1 +
+ 8 files changed, 261 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/cxl/core/pci.c
 
 diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
-index 3b8f41395f6b..fbf0393cdddc 100644
+index fbf0393cdddc..547336c95593 100644
 --- a/Documentation/driver-api/cxl/memory-devices.rst
 +++ b/Documentation/driver-api/cxl/memory-devices.rst
-@@ -28,6 +28,11 @@ CXL Memory Device
- .. kernel-doc:: drivers/cxl/pci.c
-    :internal:
+@@ -47,6 +47,12 @@ CXL Core
+ .. kernel-doc:: drivers/cxl/core/bus.c
+    :identifiers:
  
-+CXL Port
-+--------
-+.. kernel-doc:: drivers/cxl/port.c
-+   :doc: cxl port
++.. kernel-doc:: drivers/cxl/core/pci.c
++   :doc: cxl pci
 +
- CXL Core
- --------
- .. kernel-doc:: drivers/cxl/cxl.h
-diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-index cf07ae6cea17..40b386aaedf7 100644
---- a/drivers/cxl/Makefile
-+++ b/drivers/cxl/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_CXL_BUS) += core/
-+obj-$(CONFIG_CXL_MEM) += cxl_port.o
- obj-$(CONFIG_CXL_PCI) += cxl_pci.o
- obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
- obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
-@@ -7,3 +8,4 @@ obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
- cxl_pci-y := pci.o
- cxl_acpi-y := acpi.o
- cxl_pmem-y := pmem.o
-+cxl_port-y := port.o
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index b972abc9f6ef..d61397055e9f 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -491,3 +491,4 @@ static struct platform_driver cxl_acpi_driver = {
- module_platform_driver(cxl_acpi_driver);
- MODULE_LICENSE("GPL v2");
- MODULE_IMPORT_NS(CXL);
-+MODULE_SOFTDEP("pre: cxl_port");
++.. kernel-doc:: drivers/cxl/core/pci.c
++   :identifiers:
++
+ .. kernel-doc:: drivers/cxl/core/pmem.c
+    :doc: cxl pmem
+ 
+diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+index 07eb8e1fb8a6..9d33d2d5bf09 100644
+--- a/drivers/cxl/core/Makefile
++++ b/drivers/cxl/core/Makefile
+@@ -7,3 +7,4 @@ cxl_core-y += pmem.o
+ cxl_core-y += regs.o
+ cxl_core-y += memdev.o
+ cxl_core-y += mbox.o
++cxl_core-y += pci.o
 diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-index 5f2bde47a5c2..dffbd0ac64af 100644
+index c7e1894d503b..f10e7d5b22a4 100644
 --- a/drivers/cxl/core/bus.c
 +++ b/drivers/cxl/core/bus.c
-@@ -266,6 +266,7 @@ struct cxl_port *to_cxl_port(struct device *dev)
- 		return NULL;
- 	return container_of(dev, struct cxl_port, dev);
+@@ -8,6 +8,7 @@
+ #include <linux/idr.h>
+ #include <cxlmem.h>
+ #include <cxl.h>
++#include <pci.h>
+ #include "core.h"
+ 
+ /**
+@@ -445,6 +446,150 @@ struct cxl_port *devm_cxl_add_port(struct device *uport,
  }
-+EXPORT_SYMBOL_GPL(to_cxl_port);
+ EXPORT_SYMBOL_GPL(devm_cxl_add_port);
  
- static void unregister_port(void *_port)
- {
-@@ -537,11 +538,21 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
- }
- EXPORT_SYMBOL_GPL(cxl_decoder_alloc);
- 
--int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
-+/**
-+ * cxl_decoder_add_locked() - Adds a decoder with port locked.
-+ * @cxld: Decoder to be added
-+ * @target_map: Downstream port array of port ids
-+ *
-+ * The parent port owning the @cxld must have its device mutex locked before
-+ * calling this function.
-+ *
-+ * Returns 0 if successful; otherwise, a negative error code is returned.
-+ */
-+int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map)
- {
- 	struct cxl_port *port;
- 	struct device *dev;
--	int rc = 0;
-+	int rc;
- 
- 	if (WARN_ON_ONCE(!cxld))
- 		return -EINVAL;
-@@ -556,12 +567,11 @@ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
- 
- 	port = to_cxl_port(cxld->dev.parent);
- 
--	device_lock(&port->dev);
--	if (!is_endpoint_decoder(dev))
-+	if (!is_endpoint_decoder(dev)) {
- 		rc = decoder_populate_targets(cxld, port, target_map);
--	device_unlock(&port->dev);
--	if (rc)
--		return rc;
-+		if (rc)
-+			return rc;
++void devm_cxl_remove_port(struct cxl_port *port)
++{
++	down_read(&root_host_sem);
++	if (cxl_root_host) {
++		devm_release_action(cxl_root_host, cxl_unlink_uport, port);
++		devm_release_action(cxl_root_host, unregister_port, port);
 +	}
- 
- 	rc = dev_set_name(dev, "decoder%d.%d", port->id, cxld->id);
- 	if (rc)
-@@ -569,6 +579,24 @@ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
- 
- 	return device_add(dev);
- }
-+EXPORT_SYMBOL_GPL(cxl_decoder_add_locked);
-+
-+int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
-+{
-+	int rc;
-+
-+	if (WARN_ON_ONCE(!cxld))
-+		return -EINVAL;
-+
-+	if (WARN_ON_ONCE(IS_ERR(cxld)))
-+		return PTR_ERR(cxld);
-+
-+	device_lock(&to_cxl_port(cxld->dev.parent)->dev);
-+	rc = cxl_decoder_add_locked(cxld, target_map);
-+	device_unlock(&to_cxl_port(cxld->dev.parent)->dev);
-+
-+	return rc;
++	up_read(&root_host_sem);
 +}
- EXPORT_SYMBOL_GPL(cxl_decoder_add);
- 
- static void cxld_unregister(void *dev)
-@@ -627,6 +655,8 @@ static int cxl_device_id(struct device *dev)
- 		return CXL_DEVICE_NVDIMM_BRIDGE;
- 	if (dev->type == &cxl_nvdimm_type)
- 		return CXL_DEVICE_NVDIMM;
-+	if (dev->type == &cxl_port_type)
-+		return CXL_DEVICE_PORT;
- 	return 0;
- }
- 
-diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-index 40598905c080..c8ab8880b81b 100644
---- a/drivers/cxl/core/regs.c
-+++ b/drivers/cxl/core/regs.c
-@@ -159,9 +159,8 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
- }
- EXPORT_SYMBOL_GPL(cxl_probe_device_regs);
- 
--static void __iomem *devm_cxl_iomap_block(struct device *dev,
--					  resource_size_t addr,
--					  resource_size_t length)
-+void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
-+				   resource_size_t length)
- {
- 	void __iomem *ret_val;
- 	struct resource *res;
-@@ -180,6 +179,7 @@ static void __iomem *devm_cxl_iomap_block(struct device *dev,
- 
- 	return ret_val;
- }
-+EXPORT_SYMBOL_GPL(devm_cxl_iomap_block);
- 
- int cxl_map_component_regs(struct pci_dev *pdev,
- 			   struct cxl_component_regs *regs,
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 91b8fd54bc93..ad22caf9135c 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -17,6 +17,9 @@
-  * (port-driver, region-driver, nvdimm object-drivers... etc).
-  */
- 
-+/* CXL 2.0 8.2.4 CXL Component Register Layout and Definition */
-+#define CXL_COMPONENT_REG_BLOCK_SIZE SZ_64K
++EXPORT_SYMBOL_GPL(devm_cxl_remove_port);
 +
- /* CXL 2.0 8.2.5 CXL.cache and CXL.mem Registers*/
- #define CXL_CM_OFFSET 0x1000
- #define CXL_CM_CAP_HDR_OFFSET 0x0
-@@ -36,11 +39,22 @@
- #define CXL_HDM_DECODER_CAP_OFFSET 0x0
- #define   CXL_HDM_DECODER_COUNT_MASK GENMASK(3, 0)
- #define   CXL_HDM_DECODER_TARGET_COUNT_MASK GENMASK(7, 4)
--#define CXL_HDM_DECODER0_BASE_LOW_OFFSET 0x10
--#define CXL_HDM_DECODER0_BASE_HIGH_OFFSET 0x14
--#define CXL_HDM_DECODER0_SIZE_LOW_OFFSET 0x18
--#define CXL_HDM_DECODER0_SIZE_HIGH_OFFSET 0x1c
--#define CXL_HDM_DECODER0_CTRL_OFFSET 0x20
-+#define   CXL_HDM_DECODER_INTERLEAVE_11_8 BIT(8)
-+#define   CXL_HDM_DECODER_INTERLEAVE_14_12 BIT(9)
-+#define CXL_HDM_DECODER_CTRL_OFFSET 0x4
-+#define   CXL_HDM_DECODER_ENABLE BIT(1)
-+#define CXL_HDM_DECODER0_BASE_LOW_OFFSET(i) (0x20 * (i) + 0x10)
-+#define CXL_HDM_DECODER0_BASE_HIGH_OFFSET(i) (0x20 * (i) + 0x14)
-+#define CXL_HDM_DECODER0_SIZE_LOW_OFFSET(i) (0x20 * (i) + 0x18)
-+#define CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(i) (0x20 * (i) + 0x1c)
-+#define CXL_HDM_DECODER0_CTRL_OFFSET(i) (0x20 * (i) + 0x20)
-+#define   CXL_HDM_DECODER0_CTRL_IG_MASK GENMASK(3, 0)
-+#define   CXL_HDM_DECODER0_CTRL_IW_MASK GENMASK(7, 4)
-+#define   CXL_HDM_DECODER0_CTRL_COMMIT BIT(9)
-+#define   CXL_HDM_DECODER0_CTRL_COMMITTED BIT(10)
-+#define   CXL_HDM_DECODER0_CTRL_TYPE BIT(12)
-+#define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
-+#define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
- 
- static inline int cxl_hdm_decoder_count(u32 cap_hdr)
- {
-@@ -164,6 +178,8 @@ int cxl_map_device_regs(struct pci_dev *pdev,
- enum cxl_regloc_type;
- int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
- 		      struct cxl_register_map *map);
-+void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
-+				   resource_size_t length);
- 
- #define CXL_RESOURCE_NONE ((resource_size_t) -1)
- #define CXL_TARGET_STRLEN 20
-@@ -178,7 +194,8 @@ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
- #define CXL_DECODER_F_TYPE2 BIT(2)
- #define CXL_DECODER_F_TYPE3 BIT(3)
- #define CXL_DECODER_F_LOCK  BIT(4)
--#define CXL_DECODER_F_MASK  GENMASK(4, 0)
-+#define CXL_DECODER_F_EN    BIT(5)
-+#define CXL_DECODER_F_MASK  GENMASK(5, 0)
- 
- enum cxl_decoder_type {
-        CXL_DECODER_ACCELERATOR = 2,
-@@ -295,6 +312,7 @@ struct cxl_decoder *to_cxl_decoder(struct device *dev);
- bool is_root_decoder(struct device *dev);
- struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
- 				      unsigned int nr_targets);
-+int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map);
- int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
- int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld);
- 
-@@ -323,6 +341,7 @@ void cxl_driver_unregister(struct cxl_driver *cxl_drv);
- 
- #define CXL_DEVICE_NVDIMM_BRIDGE	1
- #define CXL_DEVICE_NVDIMM		2
-+#define CXL_DEVICE_PORT			3
- 
- #define MODULE_ALIAS_CXL(type) MODULE_ALIAS("cxl:t" __stringify(type) "*")
- #define CXL_MODALIAS_FMT "cxl:t%d"
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-new file mode 100644
-index 000000000000..ebbfb72ae995
---- /dev/null
-+++ b/drivers/cxl/port.c
-@@ -0,0 +1,242 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2021 Intel Corporation. All rights reserved. */
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+
-+#include "cxlmem.h"
-+
-+/**
-+ * DOC: cxl port
-+ *
-+ * The port driver implements the set of functionality needed to allow full
-+ * decoder enumeration and routing. A CXL port is an abstraction of a CXL
-+ * component that implements some amount of CXL decoding of CXL.mem traffic.
-+ * As of the CXL 2.0 spec, this includes:
-+ *
-+ *	.. list-table:: CXL Components w/ Ports
-+ *		:widths: 25 25 50
-+ *		:header-rows: 1
-+ *
-+ *		* - component
-+ *		  - upstream
-+ *		  - downstream
-+ *		* - Hostbridge
-+ *		  - ACPI0016
-+ *		  - root port
-+ *		* - Switch
-+ *		  - Switch Upstream Port
-+ *		  - Switch Downstream Port
-+ *		* - Endpoint (not yet implemented)
-+ *		  - Endpoint Port
-+ *		  - N/A
-+ *
-+ * The primary service this driver provides is enumerating HDM decoders and
-+ * presenting APIs to other drivers to utilize the decoders.
-+ */
-+
-+struct cxl_port_data {
-+	struct cxl_component_regs regs;
-+
-+	struct port_caps {
-+		unsigned int count;
-+		unsigned int tc;
-+		unsigned int interleave11_8;
-+		unsigned int interleave14_12;
-+	} caps;
-+};
-+
-+static inline int cxl_hdm_decoder_ig(u32 ctrl)
++static int match_port(struct device *dev, const void *data)
 +{
-+	int val = FIELD_GET(CXL_HDM_DECODER0_CTRL_IG_MASK, ctrl);
++	struct pci_dev *pdev = (struct pci_dev *)data;
 +
-+	return 8 + val;
++	if (dev->type != &cxl_port_type)
++		return 0;
++
++	return to_cxl_port(dev)->uport == &pdev->dev;
 +}
 +
-+static inline int cxl_hdm_decoder_iw(u32 ctrl)
++static struct cxl_port *find_cxl_port(struct pci_dev *usp)
 +{
-+	int val = FIELD_GET(CXL_HDM_DECODER0_CTRL_IW_MASK, ctrl);
++	struct device *port_dev;
 +
-+	return 1 << val;
++	if (!pci_is_pcie(usp) || pci_pcie_type(usp) != PCI_EXP_TYPE_UPSTREAM)
++		return NULL;
++
++	port_dev = bus_find_device(&cxl_bus_type, NULL, usp, match_port);
++	if (port_dev)
++		return to_cxl_port(port_dev);
++
++	return NULL;
 +}
 +
-+static void get_caps(struct cxl_port *port, struct cxl_port_data *cpd)
++static int add_upstream_port(struct device *host, struct pci_dev *pdev)
 +{
-+	void __iomem *hdm_decoder = cpd->regs.hdm_decoder;
-+	struct port_caps *caps = &cpd->caps;
-+	u32 hdm_cap;
-+
-+	hdm_cap = readl(hdm_decoder + CXL_HDM_DECODER_CAP_OFFSET);
-+
-+	caps->count = cxl_hdm_decoder_count(hdm_cap);
-+	caps->tc = FIELD_GET(CXL_HDM_DECODER_TARGET_COUNT_MASK, hdm_cap);
-+	caps->interleave11_8 =
-+		FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_11_8, hdm_cap);
-+	caps->interleave14_12 =
-+		FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_14_12, hdm_cap);
-+}
-+
-+static int map_regs(struct cxl_port *port, void __iomem *crb,
-+		    struct cxl_port_data *cpd)
-+{
++	struct device *dev = &pdev->dev;
++	struct cxl_port *parent_port;
 +	struct cxl_register_map map;
-+	struct cxl_component_reg_map *comp_map = &map.component_map;
-+
-+	cxl_probe_component_regs(&port->dev, crb, comp_map);
-+	if (!comp_map->hdm_decoder.valid) {
-+		dev_err(&port->dev, "HDM decoder registers invalid\n");
-+		return -ENXIO;
-+	}
-+
-+	cpd->regs.hdm_decoder = crb + comp_map->hdm_decoder.offset;
-+
-+	return 0;
-+}
-+
-+static u64 get_decoder_size(void __iomem *hdm_decoder, int n)
-+{
-+	u32 ctrl = readl(hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(n));
-+
-+	if (!!FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
-+		return 0;
-+
-+	return ioread64_hi_lo(hdm_decoder +
-+			      CXL_HDM_DECODER0_SIZE_LOW_OFFSET(n));
-+}
-+
-+static bool is_endpoint_port(struct cxl_port *port)
-+{
-+	if (!port->uport->driver)
-+		return false;
-+
-+	return to_cxl_drv(port->uport->driver)->id ==
-+	       CXL_DEVICE_MEMORY_EXPANDER;
-+}
-+
-+static int enumerate_hdm_decoders(struct cxl_port *port,
-+				  struct cxl_port_data *portdata)
-+{
-+	int i = 0;
-+
-+	for (i = 0; i < portdata->caps.count; i++) {
-+		int iw = 1, ig = 0, rc, target_count = portdata->caps.tc;
-+		void __iomem *hdm_decoder = portdata->regs.hdm_decoder;
-+		enum cxl_decoder_type type = CXL_DECODER_EXPANDER;
-+		struct resource res = DEFINE_RES_MEM(0, 0);
-+		struct cxl_decoder *cxld;
-+		int *target_map = NULL;
-+		u64 size;
-+
-+		if (is_endpoint_port(port))
-+			target_count = 0;
-+
-+		cxld = cxl_decoder_alloc(port, target_count);
-+		if (IS_ERR(cxld)) {
-+			dev_warn(&port->dev,
-+				 "Failed to allocate the decoder\n");
-+			return PTR_ERR(cxld);
-+		}
-+
-+		size = get_decoder_size(hdm_decoder, i);
-+		if (size != 0) {
-+			int temp[CXL_DECODER_MAX_INTERLEAVE];
-+			u64 target_list, base;
-+			u32 ctrl;
-+			int j;
-+
-+			target_map = temp;
-+			ctrl = readl(hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(i));
-+			base = ioread64_hi_lo(hdm_decoder + CXL_HDM_DECODER0_BASE_LOW_OFFSET(i));
-+			res = (struct resource)DEFINE_RES_MEM(base, size);
-+
-+			cxld->flags = CXL_DECODER_F_EN;
-+			iw = cxl_hdm_decoder_iw(ctrl);
-+			ig = cxl_hdm_decoder_ig(ctrl);
-+
-+			if (FIELD_GET(CXL_HDM_DECODER0_CTRL_TYPE, ctrl) == 0)
-+				type = CXL_DECODER_ACCELERATOR;
-+
-+			target_list = ioread64_hi_lo(hdm_decoder + CXL_HDM_DECODER0_TL_LOW(i));
-+			for (j = 0; j < iw; j++)
-+				target_map[j] = (target_list >> (j * 8)) & 0xff;
-+		}
-+
-+		cxld->target_type = type;
-+		cxld->res = res;
-+		cxld->interleave_ways = iw;
-+		cxld->interleave_granularity = ig;
-+
-+		rc = cxl_decoder_add_locked(cxld, target_map);
-+		if (rc)
-+			put_device(&cxld->dev);
-+		else
-+			rc = cxl_decoder_autoremove(port->uport->parent, cxld);
-+		if (rc)
-+			dev_err(&port->dev, "Failed to add decoder\n");
-+	}
-+
-+	return 0;
-+}
-+
-+static int cxl_port_probe(struct device *dev)
-+{
-+	struct cxl_port *port = to_cxl_port(dev);
-+	struct cxl_port_data *portdata;
-+	void __iomem *crb;
-+	u32 ctrl;
++	struct cxl_port *port;
 +	int rc;
 +
-+	if (port->component_reg_phys == CXL_RESOURCE_NONE)
-+		return 0;
-+
-+	portdata = devm_kzalloc(dev, sizeof(*portdata), GFP_KERNEL);
-+	if (!portdata)
-+		return -ENOMEM;
-+
-+	crb = devm_cxl_iomap_block(&port->dev, port->component_reg_phys,
-+				   CXL_COMPONENT_REG_BLOCK_SIZE);
-+	if (IS_ERR_OR_NULL(crb)) {
-+		dev_err(&port->dev, "No component registers mapped\n");
++	/*
++	 * Upstream ports must be connected to a downstream port or root port.
++	 * That downstream or root port must have a parent.
++	 */
++	if (!pdev->dev.parent->parent)
 +		return -ENXIO;
-+	}
 +
-+	rc = map_regs(port, crb, portdata);
++	/* A port is useless if there are no component registers */
++	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
 +	if (rc)
 +		return rc;
 +
-+	get_caps(port, portdata);
-+	if (portdata->caps.count == 0) {
-+		dev_err(&port->dev, "Spec violation. Caps invalid\n");
-+		return -ENXIO;
-+	}
++	parent_port = find_cxl_port(to_pci_dev(pdev->dev.parent->parent));
++	if (!parent_port)
++		return -ENODEV;
 +
-+	/*
-+	 * Enable HDM decoders for this port.
-+	 *
-+	 * FIXME: If the component was using DVSEC range registers for decode,
-+	 * this will destroy that.
-+	 */
-+	ctrl = readl(portdata->regs.hdm_decoder + CXL_HDM_DECODER_CTRL_OFFSET);
-+	ctrl |= CXL_HDM_DECODER_ENABLE;
-+	writel(ctrl, portdata->regs.hdm_decoder + CXL_HDM_DECODER_CTRL_OFFSET);
++	port = devm_cxl_add_port(dev, cxl_reg_block(pdev, &map), parent_port);
++	put_device(&parent_port->dev);
++	if (IS_ERR(port))
++		dev_err(dev, "Failed to add upstream port %ld\n",
++			PTR_ERR(port));
++	else
++		dev_dbg(dev, "Added CXL port\n");
 +
-+	rc = enumerate_hdm_decoders(port, portdata);
-+	if (rc) {
-+		dev_err(&port->dev, "Couldn't enumerate decoders (%d)\n", rc);
-+		return rc;
-+	}
-+
-+	dev_set_drvdata(dev, portdata);
-+	return 0;
++	return rc;
 +}
 +
-+static struct cxl_driver cxl_port_driver = {
-+	.name = "cxl_port",
-+	.probe = cxl_port_probe,
-+	.id = CXL_DEVICE_PORT,
-+};
-+module_cxl_driver(cxl_port_driver);
++static int add_downstream_port(struct pci_dev *pdev)
++{
++	resource_size_t creg = CXL_RESOURCE_NONE;
++	struct device *dev = &pdev->dev;
++	struct cxl_port *parent_port;
++	struct cxl_register_map map;
++	u32 lnkcap, port_num;
++	int rc;
 +
-+MODULE_LICENSE("GPL v2");
-+MODULE_IMPORT_NS(CXL);
-+MODULE_ALIAS_CXL(CXL_DEVICE_PORT);
++	/*
++	 * Ports are to be scanned from top down. Therefore, the upstream port
++	 * must already exist.
++	 */
++	parent_port = find_cxl_port(to_pci_dev(pdev->dev.parent));
++	if (!parent_port)
++		return -ENODEV;
++
++	/*
++	 * The spec mandates component registers are present but the
++	 * driver does not.
++	 */
++	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
++	if (!rc)
++		creg = cxl_reg_block(pdev, &map);
++
++	if (pci_read_config_dword(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCAP,
++				  &lnkcap) != PCIBIOS_SUCCESSFUL)
++		return 1;
++	port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
++
++	rc = cxl_add_dport(parent_port, dev, port_num, creg, false);
++	put_device(&parent_port->dev);
++	if (rc)
++		dev_err(dev, "Failed to add downstream port to %s\n",
++			dev_name(&parent_port->dev));
++	else
++		dev_dbg(dev, "Added downstream port to %s\n",
++			dev_name(&parent_port->dev));
++
++	return rc;
++}
++
++static int match_add_ports(struct pci_dev *pdev, void *data)
++{
++	struct device *dev = &pdev->dev;
++	struct device *host = data;
++	int rc;
++
++	/* This port has already been added... */
++	if (find_cxl_port(pdev))
++		return 0;
++
++	if (is_cxl_switch_usp((dev)))
++		rc = add_upstream_port(host, pdev);
++
++	if (is_cxl_switch_dsp((dev)))
++		rc = add_downstream_port(pdev);
++
++	return rc;
++}
++
++/**
++ * cxl_scan_ports() - Adds all ports for the subtree beginning with @dport
++ * @dport: Beginning node of the CXL topology
++ */
++void cxl_scan_ports(struct cxl_dport *dport)
++{
++	struct device *d = dport->dport;
++	struct pci_dev *pdev = to_pci_dev(d);
++
++	pci_walk_bus(pdev->bus, match_add_ports, &dport->port->dev);
++}
++EXPORT_SYMBOL_GPL(cxl_scan_ports);
++
+ static struct cxl_dport *find_dport(struct cxl_port *port, int id)
+ {
+ 	struct cxl_dport *dport;
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+new file mode 100644
+index 000000000000..c0cbe984c778
+--- /dev/null
++++ b/drivers/cxl/core/pci.c
+@@ -0,0 +1,99 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright(c) 2021 Intel Corporation. All rights reserved. */
++#include <linux/device.h>
++#include <linux/pci.h>
++#include <pci.h>
++
++/**
++ * DOC: cxl pci
++ *
++ * Compute Express Link protocols are layered on top of PCIe. CXL core provides
++ * a set of helpers for CXL interactions which occur via PCIe.
++ */
++
++/**
++ * is_cxl_mem_enabled() - Does the device understand CXL.mem protocol
++ * @pdev: The PCI device for which to determine CXL enablement
++ *
++ * This is the most discrete determination as to whether a device supports
++ * CXL.mem protocol. At a minimum, a CXL device must advertise it is capable of
++ * negotiating the CXL.mem protocol while operating in Flex Bus.CXL mode. There
++ * are other determining factors as to whether CXL.mem protocol is supported in
++ * the path from root port to endpoint. Those other factors require a more
++ * comprehensive survey of the CXL topology and would use is_cxl_mem_enabled()
++ * as a cursory check.
++ *
++ * If the PCI device is enabled for CXL.mem protocol return true; otherwise
++ * return false.
++ *
++ * TODO: Is there other architecturally visible state that can be used to infer
++ *       CXL.mem protocol support?
++ */
++bool is_cxl_mem_enabled(struct pci_dev *pdev)
++{
++	int pcie_dvsec;
++	u16 dvsec_ctrl;
++
++	pcie_dvsec = pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL,
++					       CXL_DVSEC_PCIE_DEVICE);
++	if (!pcie_dvsec) {
++		dev_info(&pdev->dev,
++			 "Unable to determine CXL protocol support");
++		return false;
++	}
++
++	pci_read_config_word(pdev,
++			     pcie_dvsec + DVSEC_PCIE_DEVICE_CONTROL_OFFSET,
++			     &dvsec_ctrl);
++	if (!(dvsec_ctrl & DVSEC_PCIE_DEVICE_MEM_ENABLE)) {
++		dev_info(&pdev->dev, "CXL.mem protocol not enabled on device");
++		return false;
++	}
++
++	return true;
++}
++EXPORT_SYMBOL_GPL(is_cxl_mem_enabled);
++
++/**
++ * is_cxl_switch_usp() - Is the device a CXL.mem enabled switch
++ * @dev: Device to query for switch type
++ *
++ * If the device is a CXL.mem capable upstream switch port return true;
++ * otherwise return false.
++ */
++bool is_cxl_switch_usp(struct device *dev)
++{
++	struct pci_dev *pdev;
++
++	if (!dev_is_pci(dev))
++		return false;
++
++	pdev = to_pci_dev(dev);
++
++	return pci_is_pcie(pdev) &&
++	       pci_pcie_type(pdev) == PCI_EXP_TYPE_UPSTREAM &&
++	       is_cxl_mem_enabled(pdev);
++}
++EXPORT_SYMBOL_GPL(is_cxl_switch_usp);
++
++/**
++ * is_cxl_switch_dsp() - Is the device a CXL.mem enabled switch
++ * @dev: Device to query for switch type
++ *
++ * If the device is a CXL.mem capable downstream switch port return true;
++ * otherwise return false.
++ */
++bool is_cxl_switch_dsp(struct device *dev)
++{
++	struct pci_dev *pdev;
++
++	if (!dev_is_pci(dev))
++		return false;
++
++	pdev = to_pci_dev(dev);
++
++	return pci_is_pcie(pdev) &&
++	       pci_pcie_type(pdev) == PCI_EXP_TYPE_DOWNSTREAM &&
++	       is_cxl_mem_enabled(pdev);
++}
++EXPORT_SYMBOL_GPL(is_cxl_switch_dsp);
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 419c2e2db6f0..03b414462416 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -309,6 +309,8 @@ struct cxl_port *to_cxl_port(struct device *dev);
+ struct cxl_port *devm_cxl_add_port(struct device *uport,
+ 				   resource_size_t component_reg_phys,
+ 				   struct cxl_port *parent_port);
++void devm_cxl_remove_port(struct cxl_port *port);
++void cxl_scan_ports(struct cxl_dport *root_port);
+ 
+ int cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
+ 		  resource_size_t component_reg_phys, bool root_port);
+diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
+index fe2898b17736..9d6ca77d3e14 100644
+--- a/drivers/cxl/pci.h
++++ b/drivers/cxl/pci.h
+@@ -15,6 +15,8 @@
+ 
+ /* 8.1.3: PCIe DVSEC for CXL Device */
+ #define CXL_DVSEC_PCIE_DEVICE					0
++#define   DVSEC_PCIE_DEVICE_CONTROL_OFFSET			0xC
++#define     DVSEC_PCIE_DEVICE_MEM_ENABLE			BIT(2)
+ 
+ /* 8.1.4: Non-CXL Function Map DVSEC */
+ #define CXL_DVSEC_FUNCTION_MAP					2
+@@ -57,4 +59,8 @@ enum cxl_regloc_type {
+ 	((resource_size_t)(pci_resource_start(pdev, (map)->barno) +            \
+ 			   (map)->block_offset))
+ 
++bool is_cxl_switch_usp(struct device *dev);
++bool is_cxl_switch_dsp(struct device *dev);
++bool is_cxl_mem_enabled(struct pci_dev *pdev);
++
+ #endif /* __CXL_PCI_H__ */
+diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+index ebbfb72ae995..3ddfd7673a56 100644
+--- a/drivers/cxl/port.c
++++ b/drivers/cxl/port.c
+@@ -170,7 +170,7 @@ static int enumerate_hdm_decoders(struct cxl_port *port,
+ 		if (rc)
+ 			put_device(&cxld->dev);
+ 		else
+-			rc = cxl_decoder_autoremove(port->uport->parent, cxld);
++			rc = cxl_decoder_autoremove(&port->dev, cxld);
+ 		if (rc)
+ 			dev_err(&port->dev, "Failed to add decoder\n");
+ 	}
+diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+index 86deba8308a1..46db4dd345a0 100644
+--- a/tools/testing/cxl/Kbuild
++++ b/tools/testing/cxl/Kbuild
+@@ -31,6 +31,7 @@ cxl_core-y += $(CXL_CORE_SRC)/pmem.o
+ cxl_core-y += $(CXL_CORE_SRC)/regs.o
+ cxl_core-y += $(CXL_CORE_SRC)/memdev.o
+ cxl_core-y += $(CXL_CORE_SRC)/mbox.o
++cxl_core-y += $(CXL_CORE_SRC)/pci.o
+ cxl_core-y += config_check.o
+ 
+ cxl_core-y += mock_pmem.o
 -- 
 2.33.1
 
