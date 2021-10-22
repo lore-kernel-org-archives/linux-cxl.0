@@ -2,25 +2,25 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48755C18E57
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE95C18E7B
 	for <linux-cxl@archiver.kernel.org>; Fri, 22 Oct 2021 18:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C30660F50
+	by mail.kernel.org (Postfix) with ESMTP id 5E0D060F50
 	for <linux-cxl@archiver.kernel.org>; Fri, 22 Oct 2021 18:37:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233975AbhJVSjl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S233982AbhJVSjl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Fri, 22 Oct 2021 14:39:41 -0400
-Received: from mga02.intel.com ([134.134.136.20]:5584 "EHLO mga02.intel.com"
+Received: from mga02.intel.com ([134.134.136.20]:5577 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233981AbhJVSjh (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        id S233962AbhJVSjh (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
         Fri, 22 Oct 2021 14:39:37 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10145"; a="216528974"
+X-IronPort-AV: E=McAfee;i="6200,9189,10145"; a="216528977"
 X-IronPort-AV: E=Sophos;i="5.87,173,1631602800"; 
-   d="scan'208";a="216528974"
+   d="scan'208";a="216528977"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2021 11:37:19 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2021 11:37:20 -0700
 X-IronPort-AV: E=Sophos;i="5.87,173,1631602800"; 
-   d="scan'208";a="445854729"
+   d="scan'208";a="445854732"
 Received: from aagregor-mobl3.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.134.35])
   by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2021 11:37:19 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
@@ -31,9 +31,9 @@ Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [RFC PATCH v2 24/28] cxl/region: HB port config verification
-Date:   Fri, 22 Oct 2021 11:37:05 -0700
-Message-Id: <20211022183709.1199701-25-ben.widawsky@intel.com>
+Subject: [RFC PATCH v2 25/28] cxl/region: Record host bridge target list
+Date:   Fri, 22 Oct 2021 11:37:06 -0700
+Message-Id: <20211022183709.1199701-26-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20211022183709.1199701-1-ben.widawsky@intel.com>
 References: <20211022183709.1199701-1-ben.widawsky@intel.com>
@@ -43,190 +43,159 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Host bridge root port verification determines if the device ordering in
-an interleave set can be programmed through the host bridges and
-switches.
+Part of host bridge verification in the CXL Type 3 Memory Device
+Software Guide calculates the host bridge interleave target list (6th
+step in the flow chart). With host bridge verification already done, it
+is trivial to store away the configuration information.
 
-The algorithm implemented here is based on the CXL Type 3 Memory Device
-Software Guide, chapter 2.13.15
+TODO: Needs support for switches (7th step in the flow chart).
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- .clang-format        |  1 +
- drivers/cxl/cxl.h    |  3 ++
- drivers/cxl/region.c | 90 +++++++++++++++++++++++++++++++++++++++++++-
- drivers/cxl/trace.h  |  3 ++
- 4 files changed, 96 insertions(+), 1 deletion(-)
+ drivers/cxl/region.c | 41 ++++++++++++++++++++++++++++++-----------
+ drivers/cxl/region.h | 12 ++++++++++++
+ 2 files changed, 42 insertions(+), 11 deletions(-)
 
-diff --git a/.clang-format b/.clang-format
-index 55f628f21722..96c282b63e7b 100644
---- a/.clang-format
-+++ b/.clang-format
-@@ -171,6 +171,7 @@ ForEachMacros:
-   - 'for_each_cpu_wrap'
-   - 'for_each_cxl_decoder_target'
-   - 'for_each_cxl_endpoint'
-+  - 'for_each_cxl_endpoint_hb'
-   - 'for_each_dapm_widgets'
-   - 'for_each_dev_addr'
-   - 'for_each_dev_scope'
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 509b20375e0e..63554c9cebf0 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -303,6 +303,7 @@ struct cxl_port {
-  * @port: reference to cxl_port that contains this downstream port
-  * @list: node for a cxl_port's list of cxl_dport instances
-  * @root_port_link: node for global list of root ports
-+ * @verify_link: node used for hb root port verification
-  */
- struct cxl_dport {
- 	struct device *dport;
-@@ -311,6 +312,8 @@ struct cxl_dport {
- 	struct cxl_port *port;
- 	struct list_head list;
- 	struct list_head root_port_link;
-+
-+	struct list_head verify_link;
- };
- 
- bool is_cxl_region(struct device *dev);
 diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
-index 53442de33d11..ecf453fd3257 100644
+index ecf453fd3257..3276c7243c2a 100644
 --- a/drivers/cxl/region.c
 +++ b/drivers/cxl/region.c
-@@ -4,6 +4,7 @@
- #include <linux/genalloc.h>
- #include <linux/device.h>
- #include <linux/module.h>
-+#include <linux/sort.h>
- #include <linux/pci.h>
- #include "cxlmem.h"
- #include "region.h"
-@@ -30,6 +31,11 @@
- 	for (idx = 0, ep = (region)->targets[idx]; idx < region_ways(region);  \
- 	     idx++, ep = (region)->targets[idx])
- 
-+#define for_each_cxl_endpoint_hb(ep, region, hb, idx)                          \
-+	for (idx = 0, (ep) = (region)->targets[idx];                           \
-+	     idx < region_ways(region); idx++, (ep) = (region)->targets[idx])  \
-+		if (get_hostbridge(ep) == (hb))
-+
- #define for_each_cxl_decoder_target(target, decoder, idx)                      \
- 	for (idx = 0, target = (decoder)->target[idx];                         \
- 	     idx < (decoder)->nr_targets;                                      \
-@@ -261,6 +267,29 @@ static bool region_xhb_config_valid(const struct cxl_region *region,
- 	return true;
- }
- 
-+static int get_num_root_ports(const struct cxl_region *region)
-+{
-+	struct cxl_memdev *endpoint;
-+	struct cxl_dport *dport, *tmp;
-+	int num_root_ports = 0;
-+	LIST_HEAD(root_ports);
-+	int idx;
-+
-+	for_each_cxl_endpoint(endpoint, region, idx) {
-+		struct cxl_dport *root_port = endpoint->root_port;
-+
-+		if (list_empty(&root_port->verify_link)) {
-+			list_add_tail(&root_port->verify_link, &root_ports);
-+			num_root_ports++;
-+		}
-+	}
-+
-+	list_for_each_entry_safe(dport, tmp, &root_ports, verify_link)
-+		list_del_init(&dport->verify_link);
-+
-+	return num_root_ports;
-+}
-+
- /**
+@@ -294,14 +294,17 @@ static int get_num_root_ports(const struct cxl_region *region)
   * region_hb_rp_config_valid() - determine root port ordering is correct
   * @cfmws: CFMWS decoder for this @region
-@@ -274,7 +303,66 @@ static bool region_xhb_config_valid(const struct cxl_region *region,
+  * @region: Region to validate
++ * @p: HDM decoder programming state. Populated if non-NULL.
+  *
+  * The algorithm is outlined in 2.13.15 "Verify HB root port configuration
+  * sequence" of the CXL Memory Device SW Guide (Rev1p0).
+  *
+- * Returns true if the configuration is valid.
++ * Returns true if the configuration is valid, the configuration state is
++ * updated for later programming.
+  */
  static bool region_hb_rp_config_valid(const struct cxl_region *region,
- 				      const struct cxl_decoder *cfmws)
+-				      const struct cxl_decoder *cfmws)
++				      const struct cxl_decoder *cfmws,
++				      struct decoder_programming *p)
  {
--	/* TODO: */
-+	const int num_root_ports = get_num_root_ports(region);
-+	struct cxl_port *hbs[CXL_DECODER_MAX_INTERLEAVE];
-+	int hb_count, i;
+ 	const int num_root_ports = get_num_root_ports(region);
+ 	struct cxl_port *hbs[CXL_DECODER_MAX_INTERLEAVE];
+@@ -309,18 +312,29 @@ static bool region_hb_rp_config_valid(const struct cxl_region *region,
+ 
+ 	hb_count = get_unique_hostbridges(region, hbs);
+ 
++	if (p)
++		p->hb_count = hb_count;
 +
-+	hb_count = get_unique_hostbridges(region, hbs);
-+
-+	/*
-+	 * Are all devices in this region on the same CXL Host Bridge
-+	 * Root Port?
-+	 */
-+	if (num_root_ports == 1)
-+		return true;
-+
-+	for (i = 0; i < hb_count; i++) {
-+		struct cxl_port *hb = hbs[i];
-+		struct cxl_dport *rp;
-+		int position_mask;
-+		int idx;
-+
-+		/*
-+		 * Calculate the position mask: NumRootPorts = 2^PositionMask
-+		 * for this region.
-+		 *
-+		 * XXX: pos_mask is actually (1 << PositionMask)  - 1
-+		 */
-+		position_mask = (1 << (ilog2(num_root_ports))) - 1;
-+
-+		/*
-+		 * Calculate the PortGrouping for each device on this CXL Host
-+		 * Bridge Root Port:
-+		 * PortGrouping = RegionLabel.Position & PositionMask
-+		 */
-+		list_for_each_entry(rp, &hb->dports, list) {
-+			struct cxl_memdev *ep;
-+			int port_grouping = -1;
-+
-+			for_each_cxl_endpoint_hb(ep, region, hb, idx) {
-+				if (ep->root_port != rp)
-+					continue;
-+
-+				if (port_grouping == -1) {
-+					port_grouping = idx & position_mask;
-+					continue;
-+				}
-+
-+				/*
-+				 * Do all devices in the region connected to this CXL
-+				 * Host Bridge Root Port have the same PortGrouping?
-+				 */
-+				if ((idx & position_mask) != port_grouping) {
-+					trace_hb_rp_valid(region,
-+							  "One or more devices are not connected to the correct Host Bridge Root Port\n");
-+					return false;
-+				}
-+			}
-+
-+			/* TODO: Check switch programming */
+ 	/*
+ 	 * Are all devices in this region on the same CXL Host Bridge
+ 	 * Root Port?
+ 	 */
+-	if (num_root_ports == 1)
++	if (num_root_ports == 1) {
++		if (p) {
++			p->hbs[0].rp_target_list[0] = region->targets[0]->root_port;
++			p->hbs[0].rp_count = 1;
 +		}
+ 		return true;
 +	}
+ 
+ 	for (i = 0; i < hb_count; i++) {
++		struct cxl_dport *rp, **targets;
+ 		struct cxl_port *hb = hbs[i];
+-		struct cxl_dport *rp;
+ 		int position_mask;
+-		int idx;
++		int idx, *rp_count;
 +
- 	return true;
++		targets = &p->hbs[i].rp_target_list[0];
++		rp_count = &p->hbs[i].rp_count;
+ 
+ 		/*
+ 		 * Calculate the position mask: NumRootPorts = 2^PositionMask
+@@ -343,9 +357,12 @@ static bool region_hb_rp_config_valid(const struct cxl_region *region,
+ 				if (ep->root_port != rp)
+ 					continue;
+ 
+-				if (port_grouping == -1) {
++				if (port_grouping == -1)
+ 					port_grouping = idx & position_mask;
+-					continue;
++
++				if (p) {
++					(*rp_count)++;
++					targets[port_grouping] = ep->root_port;
+ 				}
+ 
+ 				/*
+@@ -379,7 +396,8 @@ static bool cfmws_contains(const struct cxl_region *region,
  }
  
-diff --git a/drivers/cxl/trace.h b/drivers/cxl/trace.h
-index 4de47d1111ac..57fe9342817c 100644
---- a/drivers/cxl/trace.h
-+++ b/drivers/cxl/trace.h
-@@ -41,6 +41,9 @@ DEFINE_EVENT(cxl_region_template, allocation_failed,
- DEFINE_EVENT(cxl_region_template, xhb_valid,
- 	     TP_PROTO(const struct cxl_region *region, char *status),
- 	     TP_ARGS(region, status));
-+DEFINE_EVENT(cxl_region_template, hb_rp_valid,
-+	     TP_PROTO(const struct cxl_region *region, char *status),
-+	     TP_ARGS(region, status));
+ static bool cfmws_valid(const struct cxl_region *region,
+-			const struct cxl_decoder *cfmws)
++			const struct cxl_decoder *cfmws,
++			struct decoder_programming *p)
+ {
+ 	const struct cxl_memdev *endpoint = region->targets[0];
  
- #endif /* if !defined (__CXL_TRACE_H__) || defined(TRACE_HEADER_MULTI_READ) */
+@@ -392,7 +410,7 @@ static bool cfmws_valid(const struct cxl_region *region,
+ 	if (!region_xhb_config_valid(region, cfmws))
+ 		return false;
  
+-	if (!region_hb_rp_config_valid(region, cfmws))
++	if (!region_hb_rp_config_valid(region, cfmws, p))
+ 		return false;
+ 
+ 	if (!cfmws_contains(region, cfmws))
+@@ -409,7 +427,7 @@ static int cfmws_match(struct device *dev, void *data)
+ 	if (!is_root_decoder(dev))
+ 		return 0;
+ 
+-	return !!cfmws_valid(region, to_cxl_decoder(dev));
++	return !!cfmws_valid(region, to_cxl_decoder(dev), NULL);
+ }
+ 
+ /*
+@@ -484,7 +502,8 @@ static int cxl_region_probe(struct device *dev)
+ 		return -ENXIO;
+ 
+ 	cfmws = cxld_from_region(region);
+-	if (!cfmws_valid(region, cfmws)) {
++	if (!cfmws_valid(region, cfmws,
++			 (struct decoder_programming *)&region->state)) {
+ 		dev_err(dev, "Picked invalid cfmws\n");
+ 		return -ENXIO;
+ 	}
+diff --git a/drivers/cxl/region.h b/drivers/cxl/region.h
+index 5df417324cab..51f442636364 100644
+--- a/drivers/cxl/region.h
++++ b/drivers/cxl/region.h
+@@ -19,6 +19,10 @@
+  * @eniw: Number of interleave ways this region is configured for.
+  * @ig: Interleave granularity of region
+  * @targets: The memory devices comprising the region.
++ * @state: Configuration state for host bridges, switches, and endpoints.
++ * @state.hbs: Host bridge state. One per hostbridge in the interleave set.
++ * @state.hbs.rp_count: Count of root ports for this region
++ * @state.hbs.rp_target_list: Ordered list of downstream root ports.
+  */
+ struct cxl_region {
+ 	struct device dev;
+@@ -34,6 +38,14 @@ struct cxl_region {
+ 		int ig;
+ 		struct cxl_memdev *targets[CXL_DECODER_MAX_INTERLEAVE];
+ 	};
++
++	struct decoder_programming {
++		int hb_count;
++		struct {
++			int rp_count;
++			struct cxl_dport *rp_target_list[CXL_DECODER_MAX_INTERLEAVE];
++		} hbs[CXL_DECODER_MAX_INTERLEAVE];
++	} state;
+ };
+ 
+ bool is_cxl_region_configured(const struct cxl_region *region);
 -- 
 2.33.1
 
