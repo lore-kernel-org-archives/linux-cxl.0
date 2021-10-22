@@ -2,25 +2,25 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2F6C18E57
-	for <linux-cxl@archiver.kernel.org>; Fri, 22 Oct 2021 18:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3076BC18E1A
+	for <linux-cxl@archiver.kernel.org>; Fri, 22 Oct 2021 18:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D29D560F22
-	for <linux-cxl@archiver.kernel.org>; Fri, 22 Oct 2021 18:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B9C760F22
+	for <linux-cxl@archiver.kernel.org>; Fri, 22 Oct 2021 18:37:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233978AbhJVSjh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S233955AbhJVSjh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Fri, 22 Oct 2021 14:39:37 -0400
-Received: from mga02.intel.com ([134.134.136.20]:5583 "EHLO mga02.intel.com"
+Received: from mga02.intel.com ([134.134.136.20]:5582 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233955AbhJVSjf (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        id S233922AbhJVSjf (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
         Fri, 22 Oct 2021 14:39:35 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10145"; a="216528944"
+X-IronPort-AV: E=McAfee;i="6200,9189,10145"; a="216528946"
 X-IronPort-AV: E=Sophos;i="5.87,173,1631602800"; 
-   d="scan'208";a="216528944"
+   d="scan'208";a="216528946"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
   by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2021 11:37:17 -0700
 X-IronPort-AV: E=Sophos;i="5.87,173,1631602800"; 
-   d="scan'208";a="445854648"
+   d="scan'208";a="445854655"
 Received: from aagregor-mobl3.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.134.35])
   by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2021 11:37:17 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
@@ -31,9 +31,9 @@ Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [RFC PATCH v2 12/28] cxl/core: Store component register base for memdevs
-Date:   Fri, 22 Oct 2021 11:36:53 -0700
-Message-Id: <20211022183709.1199701-13-ben.widawsky@intel.com>
+Subject: [RFC PATCH v2 13/28] cxl: Flesh out register names
+Date:   Fri, 22 Oct 2021 11:36:54 -0700
+Message-Id: <20211022183709.1199701-14-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20211022183709.1199701-1-ben.widawsky@intel.com>
 References: <20211022183709.1199701-1-ben.widawsky@intel.com>
@@ -43,126 +43,118 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Bake component registers into the memdev creation API in order to be
-able to use them as part of driver probing.
-
-Component register base addresses are obtained through PCI mechanisms.
-As such it makes most sense for the cxl_pci driver to obtain that
-address. In order to reuse the port driver for enumerating decoder
-resources for an endpoint, it is desirable to be able to add the
-endpoint as a port.  Unfortunately, by the time an endpoint driver would
-run, it no longer has any concept of the underlying PCI device (this is
-done intentionally to provide separation between drivers).
+Get a better naming scheme in place for upcoming additions. To solidify
+the schema, add all the DVSEC identifiers to start with.
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
----
- drivers/cxl/core/memdev.c    |  5 +++--
- drivers/cxl/cxlmem.h         |  5 ++++-
- drivers/cxl/pci.c            | 17 ++++++++++++++++-
- tools/testing/cxl/test/mem.c |  3 ++-
- 4 files changed, 25 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index bf1b04d00ff4..15762c16d83f 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -276,8 +276,8 @@ static const struct file_operations cxl_memdev_fops = {
- 	.llseek = noop_llseek,
- };
- 
--struct cxl_memdev *
--devm_cxl_add_memdev(struct cxl_mem *cxlm)
-+struct cxl_memdev *devm_cxl_add_memdev(struct cxl_mem *cxlm,
-+				       resource_size_t component_reg_phys)
+---
+See:
+https://lore.kernel.org/linux-pci/20210913190131.xiiszmno46qie7v5@intel.com/
+---
+ drivers/cxl/core/regs.c | 14 ++++++++------
+ drivers/cxl/pci.h       | 38 ++++++++++++++++++++++++++++++--------
+ 2 files changed, 38 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+index c8ab8880b81b..b837196fbf39 100644
+--- a/drivers/cxl/core/regs.c
++++ b/drivers/cxl/core/regs.c
+@@ -253,9 +253,11 @@ static void cxl_decode_regblock(u32 reg_lo, u32 reg_hi,
+ 				struct cxl_register_map *map)
  {
- 	struct cxl_memdev *cxlmd;
- 	struct device *dev;
-@@ -298,6 +298,7 @@ devm_cxl_add_memdev(struct cxl_mem *cxlm)
- 	 * needed as this is ordered with cdev_add() publishing the device.
- 	 */
- 	cxlmd->cxlm = cxlm;
-+	cxlmd->creg_base = component_reg_phys;
- 
- 	cdev = &cxlmd->cdev;
- 	rc = cdev_device_add(cdev, dev);
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index c4f450ad434d..62fe8e2c59e4 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -35,12 +35,14 @@
-  * @cdev: char dev core object for ioctl operations
-  * @cxlm: pointer to the parent device driver data
-  * @id: id number of this memdev instance.
-+ * @creg_base: register base of component registers
-  */
- struct cxl_memdev {
- 	struct device dev;
- 	struct cdev cdev;
- 	struct cxl_mem *cxlm;
- 	int id;
-+	resource_size_t creg_base;
- };
- 
- static inline struct cxl_memdev *to_cxl_memdev(struct device *dev)
-@@ -48,7 +50,8 @@ static inline struct cxl_memdev *to_cxl_memdev(struct device *dev)
- 	return container_of(dev, struct cxl_memdev, dev);
+ 	map->block_offset =
+-		((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
+-	map->barno = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
+-	map->reg_type = FIELD_GET(CXL_REGLOC_RBI_MASK, reg_lo);
++		((u64)reg_hi << 32) |
++		(reg_lo & DVSEC_REGISTER_LOCATOR_BLOCK_OFFSET_LOW_MASK);
++	map->barno = FIELD_GET(DVSEC_REGISTER_LOCATOR_BIR_MASK, reg_lo);
++	map->reg_type =
++		FIELD_GET(DVSEC_REGISTER_LOCATOR_BLOCK_IDENTIFIER_MASK, reg_lo);
  }
  
--struct cxl_memdev *devm_cxl_add_memdev(struct cxl_mem *cxlm);
-+struct cxl_memdev *devm_cxl_add_memdev(struct cxl_mem *cxlm,
-+				       resource_size_t component_reg_phys);
- 
  /**
-  * struct cxl_mbox_cmd - A command to be submitted to hardware.
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index d1adc759d051..96a312ed8269 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -421,6 +421,7 @@ static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+@@ -276,15 +278,15 @@ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+ 	int regloc, i;
  
- static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
-+	resource_size_t creg = CXL_RESOURCE_NONE;
- 	struct cxl_register_map map;
- 	struct cxl_memdev *cxlmd;
- 	struct cxl_mem *cxlm;
-@@ -465,7 +466,21 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
+ 	regloc = pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL,
+-					   PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID);
++					   CXL_DVSEC_REGISTER_LOCATOR);
+ 	if (!regloc)
+ 		return -ENXIO;
  
--	cxlmd = devm_cxl_add_memdev(cxlm);
-+	/*
-+	 * If the component registers can't be found, the cxl_pci driver may
-+	 * still be useful for management functions so don't return an error.
-+	 *
-+	 * XXX: Creating the device is going to kick of the cxl_mem probing.
-+	 * That probe requires the component registers. Therefore, the register
-+	 * block must always be found first.
-+	 */
-+	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
-+	if (rc)
-+		dev_warn(&cxlmd->dev, "No component registers (%d)\n", rc);
-+	else
-+		creg = cxl_reg_block(pdev, &map);
+ 	pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
+ 	regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
+ 
+-	regloc += PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET;
+-	regblocks = (regloc_size - PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET) / 8;
++	regloc += DVSEC_REGISTER_LOCATOR_BLOCK1_OFFSET;
++	regblocks = (regloc_size - DVSEC_REGISTER_LOCATOR_BLOCK1_OFFSET) / 8;
+ 
+ 	for (i = 0; i < regblocks; i++, regloc += 8) {
+ 		u32 reg_lo, reg_hi;
+diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
+index 12fdcb1b14e5..fe2898b17736 100644
+--- a/drivers/cxl/pci.h
++++ b/drivers/cxl/pci.h
+@@ -7,17 +7,36 @@
+ 
+ /*
+  * See section 8.1 Configuration Space Registers in the CXL 2.0
+- * Specification
++ * Specification. Names are taken straight from the specification with "CXL" and
++ * "DVSEC" redundancies removed.
+  */
+ #define PCI_DVSEC_HEADER1_LENGTH_MASK	GENMASK(31, 20)
+ #define PCI_DVSEC_VENDOR_ID_CXL		0x1E98
+-#define PCI_DVSEC_ID_CXL		0x0
+ 
+-#define PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID	0x8
+-#define PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET	0xC
++/* 8.1.3: PCIe DVSEC for CXL Device */
++#define CXL_DVSEC_PCIE_DEVICE					0
+ 
+-/* BAR Indicator Register (BIR) */
+-#define CXL_REGLOC_BIR_MASK GENMASK(2, 0)
++/* 8.1.4: Non-CXL Function Map DVSEC */
++#define CXL_DVSEC_FUNCTION_MAP					2
 +
-+	cxlmd = devm_cxl_add_memdev(cxlm, creg);
- 	if (IS_ERR(cxlmd))
- 		return PTR_ERR(cxlmd);
++/* 8.1.5: CXL 2.0 Extensions DVSEC for Ports */
++#define CXL_DVSEC_PORT_EXTENSIONS				3
++
++/* 8.1.6: GPF DVSEC for CXL Port */
++#define CXL_DVSEC_PORT_GPF					4
++
++/* 8.1.7: GPF DVSEC for CXL Device */
++#define CXL_DVSEC_DEVICE_GPF					5
++
++/* 8.1.8: PCIe DVSEC for Flex Bus Port */
++#define CXL_DVSEC_PCIE_FLEXBUS_PORT				7
++
++/* 8.1.9: Register Locator DVSEC */
++#define CXL_DVSEC_REGISTER_LOCATOR				8
++#define   DVSEC_REGISTER_LOCATOR_BLOCK1_OFFSET			0xC
++#define     DVSEC_REGISTER_LOCATOR_BIR_MASK			GENMASK(2, 0)
++#define	    DVSEC_REGISTER_LOCATOR_BLOCK_IDENTIFIER_MASK	GENMASK(15, 8)
++#define     DVSEC_REGISTER_LOCATOR_BLOCK_OFFSET_LOW_MASK	GENMASK(31, 16)
  
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 12a8437a9ca0..471fc7fb5418 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -227,7 +227,8 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
- 	if (rc)
- 		return rc;
+ /* Register Block Identifier (RBI) */
+ enum cxl_regloc_type {
+@@ -28,8 +47,11 @@ enum cxl_regloc_type {
+ 	CXL_REGLOC_RBI_TYPES
+ };
  
--	cxlmd = devm_cxl_add_memdev(cxlm);
-+	/* TODO: mock component registers, or... */
-+	cxlmd = devm_cxl_add_memdev(cxlm, CXL_RESOURCE_NONE);
- 	if (IS_ERR(cxlmd))
- 		return PTR_ERR(cxlmd);
+-#define CXL_REGLOC_RBI_MASK GENMASK(15, 8)
+-#define CXL_REGLOC_ADDR_MASK GENMASK(31, 16)
++/* 8.1.10: MLD DVSEC */
++#define CXL_DVSEC_MLD						9
++
++/* 14.16.1 CXL Device Test Capability Advertisement */
++#define CXL_DVSEC_PCIE_TEST_CAPABILITY				10
  
+ #define cxl_reg_block(pdev, map)                                               \
+ 	((resource_size_t)(pci_resource_start(pdev, (map)->barno) +            \
 -- 
 2.33.1
 
