@@ -2,38 +2,38 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FABBC43219
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFC4C433FE
 	for <linux-cxl@archiver.kernel.org>; Fri, 22 Oct 2021 18:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83BCB60F93
+	by mail.kernel.org (Postfix) with ESMTP id 147A16054F
 	for <linux-cxl@archiver.kernel.org>; Fri, 22 Oct 2021 18:37:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233841AbhJVSje (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S233831AbhJVSje (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Fri, 22 Oct 2021 14:39:34 -0400
 Received: from mga02.intel.com ([134.134.136.20]:5577 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233777AbhJVSjd (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        id S233713AbhJVSjd (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
         Fri, 22 Oct 2021 14:39:33 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10145"; a="216528926"
+X-IronPort-AV: E=McAfee;i="6200,9189,10145"; a="216528923"
 X-IronPort-AV: E=Sophos;i="5.87,173,1631602800"; 
-   d="scan'208";a="216528926"
+   d="scan'208";a="216528923"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2021 11:37:15 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2021 11:37:14 -0700
 X-IronPort-AV: E=Sophos;i="5.87,173,1631602800"; 
-   d="scan'208";a="445854602"
+   d="scan'208";a="445854588"
 Received: from aagregor-mobl3.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.134.35])
   by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2021 11:37:14 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>
 Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [RFC PATCH v2 03/28] cxl/acpi: Map component registers for Root Ports
-Date:   Fri, 22 Oct 2021 11:36:44 -0700
-Message-Id: <20211022183709.1199701-4-ben.widawsky@intel.com>
+Subject: [RFC PATCH v2 01/28] cxl: Rename CXL_MEM to CXL_PCI
+Date:   Fri, 22 Oct 2021 11:36:42 -0700
+Message-Id: <20211022183709.1199701-2-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20211022183709.1199701-1-ben.widawsky@intel.com>
 References: <20211022183709.1199701-1-ben.widawsky@intel.com>
@@ -43,72 +43,66 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-With the addition of cxl_find_register_block() in cxl_core, it becomes
-trivial to complete the TODO left for mapping the component registers of
-root ports. None of the CXL drivers currently use component registers of
-downstream ports (which is what a CXL 2.0 Root Port is). As such, there
-should be no functional change.
+With the upcoming introduction of a driver to control the non-PCI
+aspects of CXL.mem, such as interleave set creation and configuration,
+there will be an opportunity to disconnection control over CXL device
+memory and CXL device manageability. CXL device manageability is
+implemented by the cxl_pci driver. Doing this rename allows the CXL
+memory driver to be enabled by a new config option independently of CXL
+device manageability through CXL.io/PCI mechanisms.
 
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- drivers/cxl/acpi.c | 10 ++++++++--
- drivers/cxl/pci.h  |  4 ++++
- 2 files changed, 12 insertions(+), 2 deletions(-)
+ drivers/cxl/Kconfig  | 13 ++++++-------
+ drivers/cxl/Makefile |  2 +-
+ 2 files changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index af1c6c1875ac..7d13e7f0aefc 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -7,6 +7,7 @@
- #include <linux/acpi.h>
- #include <linux/pci.h>
- #include "cxl.h"
-+#include "pci.h"
+diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+index e6de221cc568..23773d0ac896 100644
+--- a/drivers/cxl/Kconfig
++++ b/drivers/cxl/Kconfig
+@@ -13,14 +13,13 @@ menuconfig CXL_BUS
  
- static struct acpi_table_header *acpi_cedt;
+ if CXL_BUS
  
-@@ -206,11 +207,13 @@ static resource_size_t get_chbcr(struct acpi_cedt_chbs *chbs)
+-config CXL_MEM
+-	tristate "CXL.mem: Memory Devices"
++config CXL_PCI
++	tristate "PCI manageability"
+ 	default CXL_BUS
+ 	help
+-	  The CXL.mem protocol allows a device to act as a provider of
+-	  "System RAM" and/or "Persistent Memory" that is fully coherent
+-	  as if the memory was attached to the typical CPU memory
+-	  controller.
++	  The CXL specification defines a set of interfaces which are controlled
++	  through well known PCI configuration mechanisms. Such access is
++	  referred to CXL.io in the specification.
  
- __mock int match_add_root_ports(struct pci_dev *pdev, void *data)
- {
-+	resource_size_t creg = CXL_RESOURCE_NONE;
- 	struct cxl_walk_context *ctx = data;
- 	struct pci_bus *root_bus = ctx->root;
- 	struct cxl_port *port = ctx->port;
- 	int type = pci_pcie_type(pdev);
- 	struct device *dev = ctx->dev;
-+	struct cxl_register_map map;
- 	u32 lnkcap, port_num;
- 	int rc;
+ 	  Say 'y/m' to enable a driver that will attach to CXL.mem devices for
+ 	  configuration and management primarily via the mailbox interface. See
+@@ -31,7 +30,7 @@ config CXL_MEM
  
-@@ -224,9 +227,12 @@ __mock int match_add_root_ports(struct pci_dev *pdev, void *data)
- 				  &lnkcap) != PCIBIOS_SUCCESSFUL)
- 		return 0;
+ config CXL_MEM_RAW_COMMANDS
+ 	bool "RAW Command Interface for Memory Devices"
+-	depends on CXL_MEM
++	depends on CXL_PCI
+ 	help
+ 	  Enable CXL RAW command interface.
  
--	/* TODO walk DVSEC to find component register base */
-+	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
-+	if (!rc)
-+		creg = cxl_reg_block(pdev, &map);
-+
- 	port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
--	rc = cxl_add_dport(port, &pdev->dev, port_num, CXL_RESOURCE_NONE);
-+	rc = cxl_add_dport(port, &pdev->dev, port_num, creg);
- 	if (rc) {
- 		ctx->error = rc;
- 		return rc;
-diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
-index 7d3e4bf06b45..12fdcb1b14e5 100644
---- a/drivers/cxl/pci.h
-+++ b/drivers/cxl/pci.h
-@@ -31,4 +31,8 @@ enum cxl_regloc_type {
- #define CXL_REGLOC_RBI_MASK GENMASK(15, 8)
- #define CXL_REGLOC_ADDR_MASK GENMASK(31, 16)
+diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+index d1aaabc940f3..cf07ae6cea17 100644
+--- a/drivers/cxl/Makefile
++++ b/drivers/cxl/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_CXL_BUS) += core/
+-obj-$(CONFIG_CXL_MEM) += cxl_pci.o
++obj-$(CONFIG_CXL_PCI) += cxl_pci.o
+ obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+ obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
  
-+#define cxl_reg_block(pdev, map)                                               \
-+	((resource_size_t)(pci_resource_start(pdev, (map)->barno) +            \
-+			   (map)->block_offset))
-+
- #endif /* __CXL_PCI_H__ */
 -- 
 2.33.1
 
