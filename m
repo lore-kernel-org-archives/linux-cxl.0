@@ -2,183 +2,90 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DE6C433F5
-	for <linux-cxl@archiver.kernel.org>; Fri, 29 Oct 2021 22:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF67FC433EF
+	for <linux-cxl@archiver.kernel.org>; Fri, 29 Oct 2021 22:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADBCD60187
-	for <linux-cxl@archiver.kernel.org>; Fri, 29 Oct 2021 22:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB49860EB2
+	for <linux-cxl@archiver.kernel.org>; Fri, 29 Oct 2021 22:22:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231391AbhJ2WFa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 29 Oct 2021 18:05:30 -0400
-Received: from mga07.intel.com ([134.134.136.100]:60525 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231173AbhJ2WF3 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 29 Oct 2021 18:05:29 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10152"; a="294222595"
-X-IronPort-AV: E=Sophos;i="5.87,193,1631602800"; 
-   d="scan'208";a="294222595"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2021 15:03:00 -0700
-X-IronPort-AV: E=Sophos;i="5.87,193,1631602800"; 
-   d="scan'208";a="448264898"
-Received: from applebex-mobl2.amr.corp.intel.com (HELO intel.com) ([10.252.137.25])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2021 15:03:00 -0700
-Date:   Fri, 29 Oct 2021 15:02:58 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
+        id S230504AbhJ2WZB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 29 Oct 2021 18:25:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230325AbhJ2WZA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Oct 2021 18:25:00 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB33BC061570
+        for <linux-cxl@vger.kernel.org>; Fri, 29 Oct 2021 15:22:31 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id 75so11156076pga.3
+        for <linux-cxl@vger.kernel.org>; Fri, 29 Oct 2021 15:22:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=G2/oc+pwbfitG9GrYtF9f+oobz21VyLR8dcpa/GWX+c=;
+        b=6MH+vpPa3F288v0BOWfJ9gRYHoVucwuhvCPyEUC28sgNZUAbt1PkAhF52MeollUM30
+         krdjSScaf0V/DBALzRqZgdIdFTrL7t6I+uyGWMey1RCLZ0CzV9KmD+NJeZxZ+ulF/ez8
+         SKqsRy1QvdHhqs+uGzFtBLcVp+1wWVtqu1WKXI81owMxSktkaV7E03OHo1vx9htuazP3
+         6TVmDo3ctMPvp5X/n1rlfunEvcSXhJGIFwefvhY5dsq26Jo65vD7JQWnnsuhATg3lbtR
+         yPSZiBCdyhj4vtzvGhxpG0ZWY36Mhui4xDqn2nIx+itSrrkHi5nIYg9ooR1TdwpUZVwj
+         eIIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G2/oc+pwbfitG9GrYtF9f+oobz21VyLR8dcpa/GWX+c=;
+        b=iklqNDRLTfB85j0szEsMIxVL3a1QCT2pPLhmmesywIAor2EOdaOcR9iy6cfLe2MW5a
+         6FNpadgGbZH+1yOe11TctLI6Mp/qa/XmoCJv4lEdT4bmrqMEfUxlobsil4rKuh2Twu5R
+         eEwiEPhUxHXr0QzD8f3uQ45mz2bly6080Mgqogze8n1thZ435YNSmxv9+u96vW7nP30Z
+         8ltKTZTvnwaLcqSBa3BO4xZ7CkCwrp3dEl9Y0/AZIsuC8dPI3h82MTZGG/pV0rAIUiQU
+         YJn023GhjbJ9bS89i6SNoCTnDyVyqu+LV2spDXdTzN3iTnbVW4fDJ3D0vipoKXfWypo6
+         iIXA==
+X-Gm-Message-State: AOAM5311ejIOO2tnR3BjIGOq+ZqWq5MdhBsy1S/CczC2izRbvdjR17Iw
+        WvR1OuCFMHspnNWRHrMJor7rem6rBfNzn32ylYgs4w==
+X-Google-Smtp-Source: ABdhPJwWGo25N2CqaNcJlDrH72sBQ9OoqPArJ5Xm4iEzHrBYbsjsXZWOhTZ9Zfz7V8c17dnuJv6io8/Q9PsDtUby/Qk=
+X-Received: by 2002:a05:6a00:1348:b0:47c:e8f1:69a3 with SMTP id
+ k8-20020a056a00134800b0047ce8f169a3mr13815748pfu.86.1635546151355; Fri, 29
+ Oct 2021 15:22:31 -0700 (PDT)
+MIME-Version: 1.0
+References: <20211022183709.1199701-1-ben.widawsky@intel.com>
+ <20211022183709.1199701-6-ben.widawsky@intel.com> <CAPcyv4iiR_HT_9ExRvgLixWnQg8y-id1zpmRYurFSfw3OiVaYQ@mail.gmail.com>
+ <20211029212654.cnge45a3tj3abj4s@intel.com>
+In-Reply-To: <20211029212654.cnge45a3tj3abj4s@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 29 Oct 2021 15:22:19 -0700
+Message-ID: <CAPcyv4idbq0+VjHRLPVDjhDF6pH1GtqBJeNNTo-7USPLq+aUBw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 05/28] cxl/core: Convert decoder range to resource
+To:     Ben Widawsky <ben.widawsky@intel.com>
 Cc:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [RFC PATCH v2 06/28] cxl: Introduce endpoint decoders
-Message-ID: <20211029220258.ghqdgnehg6ptjy3e@intel.com>
-References: <20211022183709.1199701-1-ben.widawsky@intel.com>
- <20211022183709.1199701-7-ben.widawsky@intel.com>
- <CAPcyv4iiMFCUEg+8zk6yqSmA_9jXjkjkEpYdj4zVr8n=GbodvA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4iiMFCUEg+8zk6yqSmA_9jXjkjkEpYdj4zVr8n=GbodvA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21-10-29 14:00:21, Dan Williams wrote:
-> On Fri, Oct 22, 2021 at 11:37 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Fri, Oct 29, 2021 at 2:27 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+[..]
+> > Note, this is just how I had it roughly mapped out in my head, I defer
+> > making it a hard recommendation until I get deeper into this set to
+> > see if we diverge.
 > >
-> > Endpoints have decoders too. It is useful to share the same
-> > infrastructure from cxl_core. Endpoints do not have dports (downstream
-> > targets), only the underlying physical medium. As a result, some special
-> > casing is needed.
-> >
-> > There is no functional change introduced yet as endpoints don't actually
-> > enumerate decoders yet.
-> 
-> The nr_targets type change either needs to be commented on here, or
-> moved to its own patch.
+>
+> You're correct.
+>
+> I had changed this already for my v3. I ended up with this:
+> +       union {
+> +               struct resource cfmws_res;
 
-Do you have a preference?
+"cfmws" is something that will only appear on ACPI based CXL systems,
+so if it needs a prefix it should be something that does not preclude
+CXL on other platform firmware architectures. So, "platform_" or
+"root_"?
 
-> 
-> Otherwise, this looks good.
-> 
-> >
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > ---
-> >  drivers/cxl/core/bus.c | 40 ++++++++++++++++++++++++++++++++--------
-> >  drivers/cxl/cxl.h      |  3 ++-
-> >  2 files changed, 34 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-> > index 454d4d846eb2..5564a71773e2 100644
-> > --- a/drivers/cxl/core/bus.c
-> > +++ b/drivers/cxl/core/bus.c
-> > @@ -175,6 +175,12 @@ static const struct attribute_group *cxl_decoder_switch_attribute_groups[] = {
-> >         NULL,
-> >  };
-> >
-> > +static const struct attribute_group *cxl_decoder_endpoint_attribute_groups[] = {
-> > +       &cxl_decoder_base_attribute_group,
-> > +       &cxl_base_attribute_group,
-> > +       NULL,
-> > +};
-> > +
-> >  static void cxl_decoder_release(struct device *dev)
-> >  {
-> >         struct cxl_decoder *cxld = to_cxl_decoder(dev);
-> > @@ -184,6 +190,12 @@ static void cxl_decoder_release(struct device *dev)
-> >         kfree(cxld);
-> >  }
-> >
-> > +static const struct device_type cxl_decoder_endpoint_type = {
-> > +       .name = "cxl_decoder_endpoint",
-> > +       .release = cxl_decoder_release,
-> > +       .groups = cxl_decoder_endpoint_attribute_groups,
-> > +};
-> > +
-> >  static const struct device_type cxl_decoder_switch_type = {
-> >         .name = "cxl_decoder_switch",
-> >         .release = cxl_decoder_release,
-> > @@ -196,6 +208,11 @@ static const struct device_type cxl_decoder_root_type = {
-> >         .groups = cxl_decoder_root_attribute_groups,
-> >  };
-> >
-> > +static bool is_endpoint_decoder(struct device *dev)
-> > +{
-> > +       return dev->type == &cxl_decoder_endpoint_type;
-> > +}
-> > +
-> >  bool is_root_decoder(struct device *dev)
-> >  {
-> >         return dev->type == &cxl_decoder_root_type;
-> > @@ -483,7 +500,8 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
-> >         return rc;
-> >  }
-> >
-> > -struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
-> > +struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
-> > +                                     unsigned int nr_targets)
-> >  {
-> >         struct cxl_decoder *cxld, cxld_const_init = {
-> >                 .nr_targets = nr_targets,
-> > @@ -491,7 +509,7 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
-> >         struct device *dev;
-> >         int rc = 0;
-> >
-> > -       if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets < 1)
-> > +       if (nr_targets > CXL_DECODER_MAX_INTERLEAVE)
-> >                 return ERR_PTR(-EINVAL);
-> >
-> >         cxld = kzalloc(struct_size(cxld, target, nr_targets), GFP_KERNEL);
-> > @@ -510,8 +528,11 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
-> >         dev->parent = &port->dev;
-> >         dev->bus = &cxl_bus_type;
-> >
-> > +       /* Endpoints don't have a target list */
-> > +       if (nr_targets == 0)
-> > +               dev->type = &cxl_decoder_endpoint_type;
-> >         /* root ports do not have a cxl_port_type parent */
-> > -       if (port->dev.parent->type == &cxl_port_type)
-> > +       else if (port->dev.parent->type == &cxl_port_type)
-> >                 dev->type = &cxl_decoder_switch_type;
-> >         else
-> >                 dev->type = &cxl_decoder_root_type;
-> > @@ -538,12 +559,15 @@ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
-> >         if (cxld->interleave_ways < 1)
-> >                 return -EINVAL;
-> >
-> > -       port = to_cxl_port(cxld->dev.parent);
-> > -       rc = decoder_populate_targets(cxld, port, target_map);
-> > -       if (rc)
-> > -               return rc;
-> > -
-> >         dev = &cxld->dev;
-> > +
-> > +       port = to_cxl_port(cxld->dev.parent);
-> > +       if (!is_endpoint_decoder(dev)) {
-> > +               rc = decoder_populate_targets(cxld, port, target_map);
-> > +               if (rc)
-> > +                       return rc;
-> > +       }
-> > +
-> >         rc = dev_set_name(dev, "decoder%d.%d", port->id, cxld->id);
-> >         if (rc)
-> >                 return rc;
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > index 7f2e2bdc7883..91b8fd54bc93 100644
-> > --- a/drivers/cxl/cxl.h
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -293,7 +293,8 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
-> >
-> >  struct cxl_decoder *to_cxl_decoder(struct device *dev);
-> >  bool is_root_decoder(struct device *dev);
-> > -struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets);
-> > +struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
-> > +                                     unsigned int nr_targets);
-> >  int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
-> >  int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld);
-> >
-> > --
-> > 2.33.1
-> >
+> +               struct resource *decoder_res;
+
+So the region device is going to be doing the __request_region() from
+@cfmws_res, not decoders, so why is this a resource and not a range?
