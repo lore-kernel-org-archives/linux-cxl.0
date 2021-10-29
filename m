@@ -2,60 +2,59 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF67FC433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 29 Oct 2021 22:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B3FC433EF
+	for <linux-cxl@archiver.kernel.org>; Fri, 29 Oct 2021 22:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB49860EB2
-	for <linux-cxl@archiver.kernel.org>; Fri, 29 Oct 2021 22:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D58666103E
+	for <linux-cxl@archiver.kernel.org>; Fri, 29 Oct 2021 22:25:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230504AbhJ2WZB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 29 Oct 2021 18:25:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40300 "EHLO
+        id S230325AbhJ2W1o (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 29 Oct 2021 18:27:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230325AbhJ2WZA (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Oct 2021 18:25:00 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB33BC061570
-        for <linux-cxl@vger.kernel.org>; Fri, 29 Oct 2021 15:22:31 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id 75so11156076pga.3
-        for <linux-cxl@vger.kernel.org>; Fri, 29 Oct 2021 15:22:31 -0700 (PDT)
+        with ESMTP id S229546AbhJ2W1n (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Oct 2021 18:27:43 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA334C061570
+        for <linux-cxl@vger.kernel.org>; Fri, 29 Oct 2021 15:25:14 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id gn3so8137794pjb.0
+        for <linux-cxl@vger.kernel.org>; Fri, 29 Oct 2021 15:25:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=G2/oc+pwbfitG9GrYtF9f+oobz21VyLR8dcpa/GWX+c=;
-        b=6MH+vpPa3F288v0BOWfJ9gRYHoVucwuhvCPyEUC28sgNZUAbt1PkAhF52MeollUM30
-         krdjSScaf0V/DBALzRqZgdIdFTrL7t6I+uyGWMey1RCLZ0CzV9KmD+NJeZxZ+ulF/ez8
-         SKqsRy1QvdHhqs+uGzFtBLcVp+1wWVtqu1WKXI81owMxSktkaV7E03OHo1vx9htuazP3
-         6TVmDo3ctMPvp5X/n1rlfunEvcSXhJGIFwefvhY5dsq26Jo65vD7JQWnnsuhATg3lbtR
-         yPSZiBCdyhj4vtzvGhxpG0ZWY36Mhui4xDqn2nIx+itSrrkHi5nIYg9ooR1TdwpUZVwj
-         eIIQ==
+        bh=lWdESddijh/xWpWegkm3EXnbhxITI8x8BfwxjUarsG8=;
+        b=ACq7i7ZaMVNfDeaZGUMI4gTkEJYg55OnnhKe9acRMVjm9PfLb2cL58lo9rQywUqVMD
+         YhU7cwgGVJIQSHVZN2wNGJlhSkazS+EB1J40JRu79KL38lXN5oGHtQ759JBC4yFbjA3D
+         K7+xg0qxAJrrPJ63fIyGz35trbEkIRp+w3mUqYf5OWn+L573TNLLmKmVhmIPcjW+6eoJ
+         7/KGJ8TWrHHoYq3F9JYKu8n3x5lpfAF5fmF2qDlyIoYYhZyO8Uk7suL1VsV0KEfNF/DG
+         UuIEgb8viR9K6Se5tI1MZVAeBuE6cWV6VpKQ0NDM9frAwB3z95k2V3vNOPkBU3H3IVEP
+         v+pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=G2/oc+pwbfitG9GrYtF9f+oobz21VyLR8dcpa/GWX+c=;
-        b=iklqNDRLTfB85j0szEsMIxVL3a1QCT2pPLhmmesywIAor2EOdaOcR9iy6cfLe2MW5a
-         6FNpadgGbZH+1yOe11TctLI6Mp/qa/XmoCJv4lEdT4bmrqMEfUxlobsil4rKuh2Twu5R
-         eEwiEPhUxHXr0QzD8f3uQ45mz2bly6080Mgqogze8n1thZ435YNSmxv9+u96vW7nP30Z
-         8ltKTZTvnwaLcqSBa3BO4xZ7CkCwrp3dEl9Y0/AZIsuC8dPI3h82MTZGG/pV0rAIUiQU
-         YJn023GhjbJ9bS89i6SNoCTnDyVyqu+LV2spDXdTzN3iTnbVW4fDJ3D0vipoKXfWypo6
-         iIXA==
-X-Gm-Message-State: AOAM5311ejIOO2tnR3BjIGOq+ZqWq5MdhBsy1S/CczC2izRbvdjR17Iw
-        WvR1OuCFMHspnNWRHrMJor7rem6rBfNzn32ylYgs4w==
-X-Google-Smtp-Source: ABdhPJwWGo25N2CqaNcJlDrH72sBQ9OoqPArJ5Xm4iEzHrBYbsjsXZWOhTZ9Zfz7V8c17dnuJv6io8/Q9PsDtUby/Qk=
-X-Received: by 2002:a05:6a00:1348:b0:47c:e8f1:69a3 with SMTP id
- k8-20020a056a00134800b0047ce8f169a3mr13815748pfu.86.1635546151355; Fri, 29
- Oct 2021 15:22:31 -0700 (PDT)
+        bh=lWdESddijh/xWpWegkm3EXnbhxITI8x8BfwxjUarsG8=;
+        b=goBKn7UMvpx/o+IwjoRzSSoliiZKZGdgQ2WA5XlwOKpuP2MuLHYHxC2/qJtOKVfsen
+         kDTQ+jIUYQvUiZIBoc0O6Wqu7OAtZesXd8CkxHxAOHXyQ8KrrrMrAwRtyxnhRfHhbkpO
+         4+jU6rGnMfNIRNpvoMNhZyRJbUuiKTHY9FZXPZry2KsT/iaQxTfS70Zp/1Tf3PAkD+26
+         x5jarDJor9fsSSB0stay5OC1DtYrxgMtcyBT/vMg4Cm5gTiFqx/kl2Iux3z/seO6+LiG
+         /hpMq9U1qszhsDYom8kChCbneG+MJgKcJE654NsS27mkwZpjbBtv6xWBLFduwW++aG40
+         gpTw==
+X-Gm-Message-State: AOAM53378K6rmsYpmZ8VOpkcFKvmev6pleQ0n74Oz0wBGnJRitWL7ZWe
+        NULySslF5z2lac8G6nMNtnDUOqD1P4NxZpV955sSyg==
+X-Google-Smtp-Source: ABdhPJyWRlQ8iHqPV3Z9HrnOy+C4rgjAhV7sBw4EerTJlnn1Dnc/XWTbCoEtcjpvkL2b9IQ2IPuvz1v4SVLnGQauvdc=
+X-Received: by 2002:a17:90b:3b88:: with SMTP id pc8mr13941324pjb.93.1635546314503;
+ Fri, 29 Oct 2021 15:25:14 -0700 (PDT)
 MIME-Version: 1.0
 References: <20211022183709.1199701-1-ben.widawsky@intel.com>
- <20211022183709.1199701-6-ben.widawsky@intel.com> <CAPcyv4iiR_HT_9ExRvgLixWnQg8y-id1zpmRYurFSfw3OiVaYQ@mail.gmail.com>
- <20211029212654.cnge45a3tj3abj4s@intel.com>
-In-Reply-To: <20211029212654.cnge45a3tj3abj4s@intel.com>
+ <20211022183709.1199701-7-ben.widawsky@intel.com> <CAPcyv4iiMFCUEg+8zk6yqSmA_9jXjkjkEpYdj4zVr8n=GbodvA@mail.gmail.com>
+ <20211029220258.ghqdgnehg6ptjy3e@intel.com>
+In-Reply-To: <20211029220258.ghqdgnehg6ptjy3e@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 29 Oct 2021 15:22:19 -0700
-Message-ID: <CAPcyv4idbq0+VjHRLPVDjhDF6pH1GtqBJeNNTo-7USPLq+aUBw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 05/28] cxl/core: Convert decoder range to resource
+Date:   Fri, 29 Oct 2021 15:25:02 -0700
+Message-ID: <CAPcyv4i8Sw+aja+XtVDWNzf4S6bEj96dgQYk3+=k=C1NJxYBAQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 06/28] cxl: Introduce endpoint decoders
 To:     Ben Widawsky <ben.widawsky@intel.com>
 Cc:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
@@ -67,25 +66,22 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Oct 29, 2021 at 2:27 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
-[..]
-> > Note, this is just how I had it roughly mapped out in my head, I defer
-> > making it a hard recommendation until I get deeper into this set to
-> > see if we diverge.
+On Fri, Oct 29, 2021 at 3:03 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> On 21-10-29 14:00:21, Dan Williams wrote:
+> > On Fri, Oct 22, 2021 at 11:37 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > >
+> > > Endpoints have decoders too. It is useful to share the same
+> > > infrastructure from cxl_core. Endpoints do not have dports (downstream
+> > > targets), only the underlying physical medium. As a result, some special
+> > > casing is needed.
+> > >
+> > > There is no functional change introduced yet as endpoints don't actually
+> > > enumerate decoders yet.
 > >
+> > The nr_targets type change either needs to be commented on here, or
+> > moved to its own patch.
 >
-> You're correct.
->
-> I had changed this already for my v3. I ended up with this:
-> +       union {
-> +               struct resource cfmws_res;
+> Do you have a preference?
 
-"cfmws" is something that will only appear on ACPI based CXL systems,
-so if it needs a prefix it should be something that does not preclude
-CXL on other platform firmware architectures. So, "platform_" or
-"root_"?
-
-> +               struct resource *decoder_res;
-
-So the region device is going to be doing the __request_region() from
-@cfmws_res, not decoders, so why is this a resource and not a range?
+Slight preference for separate patch.
