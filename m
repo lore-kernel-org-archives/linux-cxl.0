@@ -2,37 +2,34 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D558C433F5
-	for <linux-cxl@archiver.kernel.org>; Fri, 29 Oct 2021 19:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CF6C433F5
+	for <linux-cxl@archiver.kernel.org>; Fri, 29 Oct 2021 19:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 356D960FE3
-	for <linux-cxl@archiver.kernel.org>; Fri, 29 Oct 2021 19:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C573F60FE3
+	for <linux-cxl@archiver.kernel.org>; Fri, 29 Oct 2021 19:52:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229886AbhJ2TyV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 29 Oct 2021 15:54:21 -0400
-Received: from mga02.intel.com ([134.134.136.20]:57954 "EHLO mga02.intel.com"
+        id S230388AbhJ2TyX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 29 Oct 2021 15:54:23 -0400
+Received: from mga01.intel.com ([192.55.52.88]:59702 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230271AbhJ2TyV (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 29 Oct 2021 15:54:21 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10152"; a="217922058"
+        id S230216AbhJ2TyX (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Fri, 29 Oct 2021 15:54:23 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10152"; a="254325385"
 X-IronPort-AV: E=Sophos;i="5.87,193,1631602800"; 
-   d="scan'208";a="217922058"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2021 12:51:43 -0700
+   d="scan'208";a="254325385"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2021 12:51:54 -0700
 X-IronPort-AV: E=Sophos;i="5.87,193,1631602800"; 
-   d="scan'208";a="726277904"
+   d="scan'208";a="574791750"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2021 12:51:42 -0700
-Subject: [PATCH 3/6] ACPI: Add a context argument for table parsing handlers
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2021 12:51:54 -0700
+Subject: [PATCH 5/6] cxl/test: Mock acpi_table_parse_cedt()
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     rafael.j.wysocki@intel.com
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
+Cc:     Alison Schofield <alison.schofield@intel.com>,
         linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org
-Date:   Fri, 29 Oct 2021 12:51:42 -0700
-Message-ID: <163553710257.2509508.14310494417463866020.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Fri, 29 Oct 2021 12:51:53 -0700
+Message-ID: <163553711363.2509508.17428994087868269952.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <163553708697.2509508.16523059414830959692.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <163553708697.2509508.16523059414830959692.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -43,156 +40,236 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-In preparation for drivers reusing the core table parsing
-infrastructure, arrange for handlers to take a context argument. This
-allows driver table parsing to wrap ACPI table entries in
-driver-specific data.
+Now that cxl_acpi has been converted to use the core ACPI CEDT sub-table
+parser, update cxl_test to inject CFMWS and CHBS data directly into
+cxl_acpi's handlers.
 
-The first consumer of this infrastructure is the CEDT parsing that
-happens in the cxl_acpi driver, add a conditional
-(CONFIG_ACPI_TABLE_LIB=y) export of a acpi_table_parse_cedt() helper for
-this case.
-
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Len Brown <lenb@kernel.org>
-Tested-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/acpi/tables.c |   51 ++++++++++++++++++++++++++++++++++++++++++-------
- include/linux/acpi.h  |   11 +++++++++++
- 2 files changed, 55 insertions(+), 7 deletions(-)
+ drivers/cxl/acpi.c            |    2 +
+ tools/testing/cxl/Kbuild      |    3 +-
+ tools/testing/cxl/test/cxl.c  |   68 ++++++++++++++++++++++++++++-------------
+ tools/testing/cxl/test/mock.c |   30 +++++-------------
+ tools/testing/cxl/test/mock.h |    6 ++--
+ 5 files changed, 61 insertions(+), 48 deletions(-)
 
-diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-index b1514fde11bc..0a7be92a4f37 100644
---- a/drivers/acpi/tables.c
-+++ b/drivers/acpi/tables.c
-@@ -276,6 +276,22 @@ acpi_get_subtable_type(char *id)
- 	return ACPI_SUBTABLE_COMMON;
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index 7820082a2746..91e4072e7649 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -283,6 +283,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
  }
  
-+static __init_or_acpilib bool has_handler(struct acpi_subtable_proc *proc)
-+{
-+	return proc->handler || proc->handler_arg;
-+}
-+
-+static __init_or_acpilib int call_handler(struct acpi_subtable_proc *proc,
-+					  union acpi_subtable_headers *hdr,
-+					  unsigned long end)
-+{
-+	if (proc->handler)
-+		return proc->handler(hdr, end);
-+	if (proc->handler_arg)
-+		return proc->handler_arg(hdr, proc->arg, end);
-+	return -EINVAL;
-+}
-+
- /**
-  * acpi_parse_entries_array - for each proc_num find a suitable subtable
-  *
-@@ -326,8 +342,9 @@ static int __init_or_acpilib acpi_parse_entries_array(
- 		for (i = 0; i < proc_num; i++) {
- 			if (acpi_get_entry_type(&entry) != proc[i].id)
- 				continue;
--			if (!proc[i].handler ||
--			     (!errs && proc[i].handler(entry.hdr, table_end))) {
-+			if (!has_handler(&proc[i]) ||
-+			    (!errs &&
-+			     call_handler(&proc[i], entry.hdr, table_end))) {
- 				errs++;
- 				continue;
- 			}
-@@ -393,21 +410,41 @@ int __init_or_acpilib acpi_table_parse_entries_array(
- 	return count;
- }
+ struct cxl_chbs_context {
++	struct device *dev;
+ 	unsigned long long uid;
+ 	resource_size_t chbcr;
+ };
+@@ -327,6 +328,7 @@ static int add_host_bridge_dport(struct device *match, void *arg)
+ 	}
  
--int __init acpi_table_parse_entries(char *id,
--			unsigned long table_size,
--			int entry_id,
--			acpi_tbl_entry_handler handler,
--			unsigned int max_entries)
-+static int __init_or_acpilib __acpi_table_parse_entries(
-+	char *id, unsigned long table_size, int entry_id,
-+	acpi_tbl_entry_handler handler, acpi_tbl_entry_handler_arg handler_arg,
-+	void *arg, unsigned int max_entries)
- {
- 	struct acpi_subtable_proc proc = {
- 		.id		= entry_id,
- 		.handler	= handler,
-+		.handler_arg	= handler_arg,
-+		.arg		= arg,
+ 	ctx = (struct cxl_chbs_context) {
++		.dev = host,
+ 		.uid = uid,
  	};
- 
- 	return acpi_table_parse_entries_array(id, table_size, &proc, 1,
- 						max_entries);
- }
- 
-+int __init_or_acpilib
-+acpi_table_parse_cedt(enum acpi_cedt_type id,
-+		      acpi_tbl_entry_handler_arg handler_arg, void *arg)
-+{
-+	return __acpi_table_parse_entries(ACPI_SIG_CEDT,
-+					  sizeof(struct acpi_table_cedt), id,
-+					  NULL, handler_arg, arg, 0);
-+}
-+EXPORT_SYMBOL_ACPI_LIB(acpi_table_parse_cedt);
-+
-+int __init acpi_table_parse_entries(char *id, unsigned long table_size,
-+				    int entry_id,
-+				    acpi_tbl_entry_handler handler,
-+				    unsigned int max_entries)
-+{
-+	return __acpi_table_parse_entries(id, table_size, entry_id, handler,
-+					  NULL, NULL, max_entries);
-+}
-+
- int __init acpi_table_parse_madt(enum acpi_madt_type id,
- 		      acpi_tbl_entry_handler handler, unsigned int max_entries)
- {
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index cbee050f4b1d..a077bd91ba4a 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -141,6 +141,9 @@ typedef int (*acpi_tbl_table_handler)(struct acpi_table_header *table);
- typedef int (*acpi_tbl_entry_handler)(union acpi_subtable_headers *header,
- 				      const unsigned long end);
- 
-+typedef int (*acpi_tbl_entry_handler_arg)(union acpi_subtable_headers *header,
-+					  void *arg, const unsigned long end);
-+
- /* Debugger support */
- 
- struct acpi_debugger_ops {
-@@ -217,6 +220,8 @@ static inline int acpi_debugger_notify_command_complete(void)
- struct acpi_subtable_proc {
- 	int id;
- 	acpi_tbl_entry_handler handler;
-+	acpi_tbl_entry_handler_arg handler_arg;
-+	void *arg;
- 	int count;
+ 	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CHBS, cxl_get_chbcr, &ctx);
+diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+index 86deba8308a1..1acdf2fc31c5 100644
+--- a/tools/testing/cxl/Kbuild
++++ b/tools/testing/cxl/Kbuild
+@@ -1,7 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
++ldflags-y += --wrap=acpi_table_parse_cedt
+ ldflags-y += --wrap=is_acpi_device_node
+-ldflags-y += --wrap=acpi_get_table
+-ldflags-y += --wrap=acpi_put_table
+ ldflags-y += --wrap=acpi_evaluate_integer
+ ldflags-y += --wrap=acpi_pci_find_root
+ ldflags-y += --wrap=pci_walk_bus
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index cb32f9e27d5d..736d99006fb7 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -182,6 +182,13 @@ static struct {
+ 	},
  };
  
-@@ -235,9 +240,11 @@ void acpi_table_init_complete (void);
- int acpi_table_init (void);
- 
- #ifdef CONFIG_ACPI_TABLE_LIB
-+#define EXPORT_SYMBOL_ACPI_LIB(x) EXPORT_SYMBOL_NS_GPL(x, ACPI)
- #define __init_or_acpilib
- #define __initdata_or_acpilib
- #else
-+#define EXPORT_SYMBOL_ACPI_LIB(x)
- #define __init_or_acpilib __init
- #define __initdata_or_acpilib __initdata
- #endif
-@@ -252,6 +259,10 @@ int __init_or_acpilib acpi_table_parse_entries_array(char *id,
- int acpi_table_parse_madt(enum acpi_madt_type id,
- 			  acpi_tbl_entry_handler handler,
- 			  unsigned int max_entries);
-+int __init_or_acpilib
-+acpi_table_parse_cedt(enum acpi_cedt_type id,
-+		      acpi_tbl_entry_handler_arg handler_arg, void *arg);
++struct acpi_cedt_cfmws *mock_cfmws[4] = {
++	[0] = &mock_cedt.cfmws0.cfmws,
++	[1] = &mock_cedt.cfmws1.cfmws,
++	[2] = &mock_cedt.cfmws2.cfmws,
++	[3] = &mock_cedt.cfmws3.cfmws,
++};
 +
- int acpi_parse_mcfg (struct acpi_table_header *header);
- void acpi_table_print_madt_entry (struct acpi_subtable_header *madt);
+ struct cxl_mock_res {
+ 	struct list_head list;
+ 	struct range range;
+@@ -232,12 +239,6 @@ static struct cxl_mock_res *alloc_mock_res(resource_size_t size)
  
+ static int populate_cedt(void)
+ {
+-	struct acpi_cedt_cfmws *cfmws[4] = {
+-		[0] = &mock_cedt.cfmws0.cfmws,
+-		[1] = &mock_cedt.cfmws1.cfmws,
+-		[2] = &mock_cedt.cfmws2.cfmws,
+-		[3] = &mock_cedt.cfmws3.cfmws,
+-	};
+ 	struct cxl_mock_res *res;
+ 	int i;
+ 
+@@ -257,8 +258,8 @@ static int populate_cedt(void)
+ 		chbs->length = size;
+ 	}
+ 
+-	for (i = 0; i < ARRAY_SIZE(cfmws); i++) {
+-		struct acpi_cedt_cfmws *window = cfmws[i];
++	for (i = 0; i < ARRAY_SIZE(mock_cfmws); i++) {
++		struct acpi_cedt_cfmws *window = mock_cfmws[i];
+ 
+ 		res = alloc_mock_res(window->window_size);
+ 		if (!res)
+@@ -269,21 +270,44 @@ static int populate_cedt(void)
+ 	return 0;
+ }
+ 
+-static acpi_status mock_acpi_get_table(char *signature, u32 instance,
+-				       struct acpi_table_header **out_table)
++/*
++ * WARNING, this hack assumes the format of 'struct
++ * cxl_cfmws_context' and 'struct cxl_chbs_context' share the property that
++ * the first struct member is the device being probed by the cxl_acpi
++ * driver.
++ */
++struct cxl_cedt_context {
++	struct device *dev;
++};
++
++static int mock_acpi_table_parse_cedt(enum acpi_cedt_type id,
++				      acpi_tbl_entry_handler_arg handler_arg,
++				      void *arg)
+ {
+-	if (instance < U32_MAX || strcmp(signature, ACPI_SIG_CEDT) != 0)
+-		return acpi_get_table(signature, instance, out_table);
++	struct cxl_cedt_context *ctx = arg;
++	struct device *dev = ctx->dev;
++	union acpi_subtable_headers *h;
++	unsigned long end;
++	int i;
+ 
+-	*out_table = (struct acpi_table_header *) &mock_cedt;
+-	return AE_OK;
+-}
++	if (dev != &cxl_acpi->dev)
++		return acpi_table_parse_cedt(id, handler_arg, arg);
+ 
+-static void mock_acpi_put_table(struct acpi_table_header *table)
+-{
+-	if (table == (struct acpi_table_header *) &mock_cedt)
+-		return;
+-	acpi_put_table(table);
++	if (id == ACPI_CEDT_TYPE_CHBS)
++		for (i = 0; i < ARRAY_SIZE(mock_cedt.chbs); i++) {
++			h = (union acpi_subtable_headers *)&mock_cedt.chbs[i];
++			end = (unsigned long)&mock_cedt.chbs[i + 1];
++			handler_arg(h, arg, end);
++		}
++
++	if (id == ACPI_CEDT_TYPE_CFMWS)
++		for (i = 0; i < ARRAY_SIZE(mock_cfmws); i++) {
++			h = (union acpi_subtable_headers *) mock_cfmws[i];
++			end = (unsigned long) h + mock_cfmws[i]->header.length;
++			handler_arg(h, arg, end);
++		}
++
++	return 0;
+ }
+ 
+ static bool is_mock_bridge(struct device *dev)
+@@ -388,8 +412,7 @@ static struct cxl_mock_ops cxl_mock_ops = {
+ 	.is_mock_port = is_mock_port,
+ 	.is_mock_dev = is_mock_dev,
+ 	.mock_port = mock_cxl_root_port,
+-	.acpi_get_table = mock_acpi_get_table,
+-	.acpi_put_table = mock_acpi_put_table,
++	.acpi_table_parse_cedt = mock_acpi_table_parse_cedt,
+ 	.acpi_evaluate_integer = mock_acpi_evaluate_integer,
+ 	.acpi_pci_find_root = mock_acpi_pci_find_root,
+ 	.list = LIST_HEAD_INIT(cxl_mock_ops.list),
+@@ -574,3 +597,4 @@ static __exit void cxl_test_exit(void)
+ module_init(cxl_test_init);
+ module_exit(cxl_test_exit);
+ MODULE_LICENSE("GPL v2");
++MODULE_IMPORT_NS(ACPI);
+diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
+index b8c108abcf07..17408f892df4 100644
+--- a/tools/testing/cxl/test/mock.c
++++ b/tools/testing/cxl/test/mock.c
+@@ -58,36 +58,23 @@ bool __wrap_is_acpi_device_node(const struct fwnode_handle *fwnode)
+ }
+ EXPORT_SYMBOL(__wrap_is_acpi_device_node);
+ 
+-acpi_status __wrap_acpi_get_table(char *signature, u32 instance,
+-				  struct acpi_table_header **out_table)
++int __wrap_acpi_table_parse_cedt(enum acpi_cedt_type id,
++				 acpi_tbl_entry_handler_arg handler_arg,
++				 void *arg)
+ {
+-	int index;
++	int index, rc;
+ 	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
+-	acpi_status status;
+ 
+ 	if (ops)
+-		status = ops->acpi_get_table(signature, instance, out_table);
++		rc = ops->acpi_table_parse_cedt(id, handler_arg, arg);
+ 	else
+-		status = acpi_get_table(signature, instance, out_table);
++		rc = acpi_table_parse_cedt(id, handler_arg, arg);
+ 
+ 	put_cxl_mock_ops(index);
+ 
+-	return status;
+-}
+-EXPORT_SYMBOL(__wrap_acpi_get_table);
+-
+-void __wrap_acpi_put_table(struct acpi_table_header *table)
+-{
+-	int index;
+-	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
+-
+-	if (ops)
+-		ops->acpi_put_table(table);
+-	else
+-		acpi_put_table(table);
+-	put_cxl_mock_ops(index);
++	return rc;
+ }
+-EXPORT_SYMBOL(__wrap_acpi_put_table);
++EXPORT_SYMBOL_NS_GPL(__wrap_acpi_table_parse_cedt, ACPI);
+ 
+ acpi_status __wrap_acpi_evaluate_integer(acpi_handle handle,
+ 					 acpi_string pathname,
+@@ -169,3 +156,4 @@ __wrap_nvdimm_bus_register(struct device *dev,
+ EXPORT_SYMBOL_GPL(__wrap_nvdimm_bus_register);
+ 
+ MODULE_LICENSE("GPL v2");
++MODULE_IMPORT_NS(ACPI);
+diff --git a/tools/testing/cxl/test/mock.h b/tools/testing/cxl/test/mock.h
+index 805a94cb3fbe..15ed0fd877e4 100644
+--- a/tools/testing/cxl/test/mock.h
++++ b/tools/testing/cxl/test/mock.h
+@@ -6,9 +6,9 @@
+ struct cxl_mock_ops {
+ 	struct list_head list;
+ 	bool (*is_mock_adev)(struct acpi_device *dev);
+-	acpi_status (*acpi_get_table)(char *signature, u32 instance,
+-				      struct acpi_table_header **out_table);
+-	void (*acpi_put_table)(struct acpi_table_header *table);
++	int (*acpi_table_parse_cedt)(enum acpi_cedt_type id,
++				     acpi_tbl_entry_handler_arg handler_arg,
++				     void *arg);
+ 	bool (*is_mock_bridge)(struct device *dev);
+ 	acpi_status (*acpi_evaluate_integer)(acpi_handle handle,
+ 					     acpi_string pathname,
 
