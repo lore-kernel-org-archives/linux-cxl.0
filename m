@@ -2,181 +2,80 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A11C433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 29 Oct 2021 22:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCB6C433EF
+	for <linux-cxl@archiver.kernel.org>; Fri, 29 Oct 2021 23:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A32E060FE3
-	for <linux-cxl@archiver.kernel.org>; Fri, 29 Oct 2021 22:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0069B60230
+	for <linux-cxl@archiver.kernel.org>; Fri, 29 Oct 2021 23:03:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230325AbhJ2Wol (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 29 Oct 2021 18:44:41 -0400
-Received: from mga14.intel.com ([192.55.52.115]:16865 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229546AbhJ2Wok (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 29 Oct 2021 18:44:40 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10152"; a="231030420"
-X-IronPort-AV: E=Sophos;i="5.87,193,1631602800"; 
-   d="scan'208";a="231030420"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2021 15:41:41 -0700
-X-IronPort-AV: E=Sophos;i="5.87,193,1631602800"; 
-   d="scan'208";a="448273530"
-Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.41])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2021 15:41:41 -0700
-Date:   Fri, 29 Oct 2021 15:49:14 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-cxl@vger.kernel.org, Linux ACPI <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH v3] ACPI: NUMA: Add a node and memblk for each CFMWS not
- in SRAT
-Message-ID: <20211029224914.GA500689@alison-desk>
-References: <20211019050908.449231-1-alison.schofield@intel.com>
- <CAPcyv4hdC4Uj8YdePMZGFkxgP10VSkX1tiY+ApPctyjfURPSOg@mail.gmail.com>
+        id S229546AbhJ2XGQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 29 Oct 2021 19:06:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49350 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229441AbhJ2XGP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Oct 2021 19:06:15 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6349C061570
+        for <linux-cxl@vger.kernel.org>; Fri, 29 Oct 2021 16:03:46 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id n18so7763163plc.2
+        for <linux-cxl@vger.kernel.org>; Fri, 29 Oct 2021 16:03:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kxte/SZFPUmFwF0hQ6pr6fOg32ZSIyD88r/VzMokSDs=;
+        b=o48FHu13v9BpvS6CbzQ65aWQGm7uepWhDHFrGvT51ehxYmqneFYHWflBf7HOKY85mS
+         kKUjSxtsQRX+CPfBwaFQYpcbvitIkwclGtoy1WbYWOGce8Qe4gL2AOeRq4rWcaNRU7o9
+         SA3wSd9J4m0ztudc+EibHKBLB5hdlw4YNG8punaRsD2zGDEZ9uHezIR02UYbVeeNGygK
+         kKZaWZWR6OUmG6PYF8bNWdAmKJwgQIkTj3dHnb+YpcIlMM4OEySUnbCd4+JijnLsglPk
+         4jOXq2F4Wy2FuMOI+qZPBHOz9r0Oa9iLPwpMMtL2zydnizf/o1XixoULcMnfOuWhqB0O
+         P+6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kxte/SZFPUmFwF0hQ6pr6fOg32ZSIyD88r/VzMokSDs=;
+        b=yEY78WXL1JwHQmaTaVUsIYDd4z4rM+1jBM6OyRV997jTDfmOOM49c6V0WIIGxvcpw3
+         ZMPDzdytOIR1DMzBR1LDzEQUhuUCm724AWlZDAt7Y9vPbTdcGqY97JLlRC5PUV/Si5/h
+         ho+zsqfKDAxR+rgRvIlw0Gai+YlI6Hty+vis8Izr9LDiyLPWhLY+FhKZUVZ8KjT2QI51
+         qze0FTyBE/T3Jc4ap7fLuyBe5DgjZgG/hJ05D4Fz3Z0NJzK6OkwZaTbucXoW192yJkvi
+         uZxlPLghBuwocaUugTKu3CUetKZ0OZpnXZDJ3KlZCaiywUsKTA2w6pVWwmGCb/Cx1f+h
+         b3vw==
+X-Gm-Message-State: AOAM532d3Q4UnREh3SlB8x9a5HpxqEuJfU6AYt//jdknGNJxozaQ6Srg
+        tX+k6B7W/9voEou8C4TEZFdcYHb9eFoKVa+lJG99Hg==
+X-Google-Smtp-Source: ABdhPJx7dtGqAti29GJKjC2mHfRVtYkYGWt5JfRdSTAW/IiG4KG+fhDBSlky8HrURz+WoTpOCfsqgeAoNBc/4T4JYX0=
+X-Received: by 2002:a17:90a:a085:: with SMTP id r5mr22743033pjp.8.1635548626134;
+ Fri, 29 Oct 2021 16:03:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4hdC4Uj8YdePMZGFkxgP10VSkX1tiY+ApPctyjfURPSOg@mail.gmail.com>
+References: <20211022183709.1199701-1-ben.widawsky@intel.com> <20211022183709.1199701-8-ben.widawsky@intel.com>
+In-Reply-To: <20211022183709.1199701-8-ben.widawsky@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 29 Oct 2021 16:03:34 -0700
+Message-ID: <CAPcyv4jZhrKR4qEqx8-oWt+LPbmXOHJUc=3pUcG_ZQGqc2U1xw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 07/28] cxl/core: Move target population locking to caller
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Oct 25, 2021 at 07:47:32PM -0700, Dan Williams wrote:
-> On Mon, Oct 18, 2021 at 10:01 PM <alison.schofield@intel.com> wrote:
-> >
-> > From: Alison Schofield <alison.schofield@intel.com>
-> >
-> > During NUMA init, CXL memory defined in the SRAT Memory Affinity
-> > subtable may be assigned to a NUMA node. Since there is no
-> > requirement that the SRAT be comprehensive for CXL memory another
-> > mechanism is needed to assign NUMA nodes to CXL memory not identified
-> > in the SRAT.
-> >
-> > Use the CXL Fixed Memory Window Structure (CFMWS) of the ACPI CXL
-> > Early Discovery Table (CEDT) to find all CXL memory ranges.
-> > Create a NUMA node for each CFMWS that is not already assigned to
-> > a NUMA node. Add a memblk attaching its host physical address
-> > range to the node.
-> >
-> > Note that these ranges may not actually map any memory at boot time.
-> > They may describe persistent capacity or may be present to enable
-> > hot-plug.
-> >
-> > Consumers can use phys_to_target_node() to discover the NUMA node.
-> >
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > ---
+On Fri, Oct 22, 2021 at 11:37 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> A CXL port driver which would be responsible for adding decoders will
+> want to do so during probe.
 
-The next version of this patch is now included in this patchset that
-adds helpers for parsing the CEDT subtables:
-https://lore.kernel.org/linux-cxl/163553711933.2509508.2203471175679990.stgit@dwillia2-desk3.amr.corp.intel.com/T/#mf40d84e1ad4c01f69f794d591b07774255993185
+"In preparation for a port driver that enumerates a descendant port +
+decoder hierarchy, arrange for an unlocked version of
+cxl_decoder_add(). Otherwise a port-driver that adds a child decoder
+will deadlock on the device_lock() in ->probe()."
 
-It addresses Dan's comments below.
+...although when I write it that way I would expect to see
+cxl_decoder_add_locked() in this patch.
 
->> snip
-
-> > +{
-> > +       struct acpi_cedt_cfmws *cfmws;
-> > +       acpi_size len, cur = 0;
-> > +       int i, node, pxm = 0;
-> 
-> Shouldn't this be -1, on the idea that the first numa node to assign
-> if none are set is zero?
-> 
-> I don't think the way you have it is a problem in practice because
-> SRAT should always be there in a NUMA system. However, the first CFMWS
-> pxm should start after the last SRAT entry, or 0 if no SRAT entries.
-> 
-> > +       void *cedt_subtable;
-> > +       u64 start, end;
-> > +
-> > +       /* Find the max PXM defined in the SRAT */
-> > +       for (i = 0; i < MAX_NUMNODES - 1; i++) {
-> 
-> How about:
-> 
->     for (i = 0, pxm = -1; i < MAX_NUMNODES -1; i++)
-> 
-> ...just to keep the initialization close to the use, but that's just a
-> personal style preference.
-
-Done.
-
-> 
-> > +               if (node_to_pxm_map[i] > pxm)
-> > +                       pxm = node_to_pxm_map[i];
-> > +       }
-> > +       /* Start assigning fake PXM values after the SRAT max PXM */
-> > +       pxm++;
-> > +
-> > +       len = acpi_cedt->length - sizeof(*acpi_cedt);
-> > +       cedt_subtable = acpi_cedt + 1;
-> > +
-> > +       while (cur < len) {
-> 
-> Similarly to above I wonder if this would be cleaner as a for loop
-> then you could use typical "continue" statements rather than goto. I
-> took a stab at creating a for_each_cedt() helper which ended up a
-> decent cleanup for drivers/cxl/
-> 
->  drivers/cxl/acpi.c |   48 +++++++++++++++---------------------------------
->  1 file changed, 15 insertions(+), 33 deletions(-)
-> 
-> ...however, I just realized this NUMA code is running at init time, so
-> it can just use the acpi_table_parse_entries_array() helper to walk
-> the CFMWS like the othe subtable walkers in acpi_numa_init(). You
-> would need to update the subtable helpers (acpi_get_subtable_type() et
-> al) to recognize the CEDT case.
-> 
-> [ Side note for the implications of acpi_table_parse_entries_array()
-> for drivers/cxl/acpi.c ]
-> 
-> Rafael, both the NFIT driver and now the CXL ACPI driver have open
-> coded subtable parsing. Any philosophical reason to keep the subtable
-> parsing code as __init? It can still be __init and thrown away if
-> those drivers are not build-time enabled.
-> 
-
-The updated patch (in the greater patchset) now uses the new helpers.
-
-
-> snip
-> > +               node = acpi_map_pxm_to_node(pxm);
-> > +               if (node == NUMA_NO_NODE) {
-> > +                       pr_err("ACPI NUMA: Too many proximity domains.\n");
-> 
-> I would add "while processing CFMWS" to make it clear that the BIOS
-> technically did not declare too many PXMs; it was the Linux heuristic
-> for opportunistically emulating more PXMs.
-> 
-
-Done.
-
-> > snip
-> >         }
-> > diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> > index 974d497a897d..f837fd715440 100644
-> > --- a/include/linux/acpi.h
-> > +++ b/include/linux/acpi.h
-> > @@ -426,6 +426,7 @@ extern bool acpi_osi_is_win8(void);
-> >  #ifdef CONFIG_ACPI_NUMA
-> >  int acpi_map_pxm_to_node(int pxm);
-> >  int acpi_get_node(acpi_handle handle);
-> > +int __init numa_add_memblk(int nodeid, u64 start, u64 end);
-> 
-> This doesn't belong here.
-> 
-> There is already a declaration for this in
-> arch/x86/include/asm/numa.h. I think what you are missing is that your
-> new code needs to be within the same ifdef guards as the other helpers
-> in srat.c that call numa_add_memblk(). See the line that has:
-> 
-> #if defined(CONFIG_X86) || defined(CONFIG_ARM64) || defined(CONFIG_LOONGARCH)
-> 
-> ...above acpi_numa_slit_init()
-
-Done.
+The port driver patch is big enough already, so pulling the API
+addition into this patch would be my preference.
