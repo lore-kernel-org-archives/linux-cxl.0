@@ -2,28 +2,28 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3C0C433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 29 Oct 2021 21:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE83DC433F5
+	for <linux-cxl@archiver.kernel.org>; Fri, 29 Oct 2021 21:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5E0561075
-	for <linux-cxl@archiver.kernel.org>; Fri, 29 Oct 2021 21:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B804B60FED
+	for <linux-cxl@archiver.kernel.org>; Fri, 29 Oct 2021 21:23:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231256AbhJ2VXO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 29 Oct 2021 17:23:14 -0400
-Received: from mga03.intel.com ([134.134.136.65]:61315 "EHLO mga03.intel.com"
+        id S230397AbhJ2V0X (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 29 Oct 2021 17:26:23 -0400
+Received: from mga06.intel.com ([134.134.136.31]:12198 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230257AbhJ2VXN (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 29 Oct 2021 17:23:13 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10152"; a="230706027"
+        id S230168AbhJ2V0X (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Fri, 29 Oct 2021 17:26:23 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10152"; a="291593854"
 X-IronPort-AV: E=Sophos;i="5.87,193,1631602800"; 
-   d="scan'208";a="230706027"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2021 14:20:44 -0700
+   d="scan'208";a="291593854"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2021 14:23:54 -0700
 X-IronPort-AV: E=Sophos;i="5.87,193,1631602800"; 
-   d="scan'208";a="487721027"
+   d="scan'208";a="495852933"
 Received: from applebex-mobl2.amr.corp.intel.com (HELO intel.com) ([10.252.137.25])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2021 14:20:44 -0700
-Date:   Fri, 29 Oct 2021 14:20:42 -0700
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2021 14:23:53 -0700
+Date:   Fri, 29 Oct 2021 14:23:52 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>
 Cc:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>,
@@ -31,124 +31,195 @@ Cc:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [RFC PATCH v2 01/28] cxl: Rename CXL_MEM to CXL_PCI
-Message-ID: <20211029212042.so56mkjju3ja2k54@intel.com>
+Subject: Re: [RFC PATCH v2 02/28] cxl: Move register block enumeration to core
+Message-ID: <20211029212352.mqjo3xx3rt5rh6ya@intel.com>
 References: <20211022183709.1199701-1-ben.widawsky@intel.com>
- <20211022183709.1199701-2-ben.widawsky@intel.com>
- <CAPcyv4i_ZnMkTwOcg=94AO959Gzt1FFkirEO=FL3sjNcMsCAeA@mail.gmail.com>
+ <20211022183709.1199701-3-ben.widawsky@intel.com>
+ <CAPcyv4hPQc_7a4CZ=hQyKzwNWXtiRTEb+FnwmOEC62vQFaAS9A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4i_ZnMkTwOcg=94AO959Gzt1FFkirEO=FL3sjNcMsCAeA@mail.gmail.com>
+In-Reply-To: <CAPcyv4hPQc_7a4CZ=hQyKzwNWXtiRTEb+FnwmOEC62vQFaAS9A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21-10-29 13:15:46, Dan Williams wrote:
+On 21-10-29 13:23:55, Dan Williams wrote:
 > On Fri, Oct 22, 2021 at 11:37 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
 > >
-> > With the upcoming introduction of a driver to control the non-PCI
-> > aspects of CXL.mem, such as interleave set creation and configuration,
-> > there will be an opportunity to disconnection control over CXL device
+> > CXL drivers or cxl_core itself will require the ability to map component
+> > registers in order to map HDM decoder resources amongst other things.
 > 
-> s/disconnection/disconnect/
+> The PCI bits of this are only needed for switch support, right?
+> Everything else already knows how to find the component_reg_phys base
+> before devm_cxl_add_port().
 > 
-> > memory and CXL device manageability. CXL device manageability is
-> > implemented by the cxl_pci driver. Doing this rename allows the CXL
-> > memory driver to be enabled by a new config option independently of CXL
-> > device manageability through CXL.io/PCI mechanisms.
+> It would help if this first sentence was a specific example where the
+> PCI helpers are needed outside of cxl_pci.
 > 
-> That comes across a bit hard to parse to me, how about:
-> 
-> "The cxl_mem module was renamed cxl_pci in commit 21e9f76733a8 ("cxl:
-> Rename mem to pci"). In preparation for adding an ancillary driver for
-> cxl_memdev devices (registered on the cxl bus by cxl_pci), go ahead
-> and rename CONFIG_CXL_MEM to CONFIG_CXL_PCI. Tree up the CXL_MEM name
 
-I assume you meant s/tree/tee - right?
+You've already spotted the other use in the next commit. I can change "CXL
+drivers" to the specific drivers and related components.
 
-> for that new driver to manage generic CXL.mem endpoint operations."
-> 
-> > Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> > Much of the register mapping code has already moved into cxl_core. The
+> > code to pull the BAR number and block office remained within cxl_pci
+> > because there was no need to move it. Upcoming work will require this
+> > functionality to be available outside of cxl_pci.
+> >
 > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 > > ---
-> >  drivers/cxl/Kconfig  | 13 ++++++-------
-> >  drivers/cxl/Makefile |  2 +-
-> >  2 files changed, 7 insertions(+), 8 deletions(-)
+> >  drivers/cxl/core/regs.c | 54 +++++++++++++++++++++++++++++++++++++++++
+> >  drivers/cxl/cxl.h       |  4 +++
+> >  drivers/cxl/pci.c       | 52 ---------------------------------------
+> >  3 files changed, 58 insertions(+), 52 deletions(-)
 > >
-> > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> > index e6de221cc568..23773d0ac896 100644
-> > --- a/drivers/cxl/Kconfig
-> > +++ b/drivers/cxl/Kconfig
-> > @@ -13,14 +13,13 @@ menuconfig CXL_BUS
+> > diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> > index 41de4a136ecd..40598905c080 100644
+> > --- a/drivers/cxl/core/regs.c
+> > +++ b/drivers/cxl/core/regs.c
+> > @@ -5,6 +5,7 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/pci.h>
+> >  #include <cxlmem.h>
+> > +#include <pci.h>
 > >
-> >  if CXL_BUS
+> >  /**
+> >   * DOC: cxl registers
+> > @@ -247,3 +248,56 @@ int cxl_map_device_regs(struct pci_dev *pdev,
+> >         return 0;
+> >  }
+> >  EXPORT_SYMBOL_GPL(cxl_map_device_regs);
+> > +
+> > +static void cxl_decode_regblock(u32 reg_lo, u32 reg_hi,
+> > +                               struct cxl_register_map *map)
+> > +{
+> > +       map->block_offset =
+> > +               ((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
+> > +       map->barno = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
+> > +       map->reg_type = FIELD_GET(CXL_REGLOC_RBI_MASK, reg_lo);
+> > +}
+> > +
+> > +/**
+> > + * cxl_find_regblock() - Locate register blocks by type
+> > + * @pdev: The CXL PCI device to enumerate.
+> > + * @type: Register Block Indicator id
+> > + * @map: Enumeration output, clobbered on error
+> > + *
+> > + * Return: 0 if register block enumerated, negative error code otherwise
+> > + *
+> > + * A CXL DVSEC may additional point one or more register blocks, search
+> > + * for them by @type.
+> > + */
+> > +int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+> > +                     struct cxl_register_map *map)
+> > +{
+> > +       u32 regloc_size, regblocks;
+> > +       int regloc, i;
+> > +
+> > +       regloc = pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL,
+> > +                                          PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID);
+> > +       if (!regloc)
+> > +               return -ENXIO;
+> > +
+> > +       pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
+> > +       regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
+> > +
+> > +       regloc += PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET;
+> > +       regblocks = (regloc_size - PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET) / 8;
+> > +
+> > +       for (i = 0; i < regblocks; i++, regloc += 8) {
+> > +               u32 reg_lo, reg_hi;
+> > +
+> > +               pci_read_config_dword(pdev, regloc, &reg_lo);
+> > +               pci_read_config_dword(pdev, regloc + 4, &reg_hi);
+> > +
+> > +               cxl_decode_regblock(reg_lo, reg_hi, map);
+> > +
+> > +               if (map->reg_type == type)
+> > +                       return 0;
+> > +       }
+> > +
+> > +       return -ENODEV;
+> > +}
+> > +EXPORT_SYMBOL_GPL(cxl_find_regblock);
+> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> > index 7cd16ef144dd..f06c596fad71 100644
+> > --- a/drivers/cxl/cxl.h
+> > +++ b/drivers/cxl/cxl.h
+> > @@ -161,6 +161,10 @@ int cxl_map_device_regs(struct pci_dev *pdev,
+> >                         struct cxl_device_regs *regs,
+> >                         struct cxl_register_map *map);
 > >
-> > -config CXL_MEM
-> > -       tristate "CXL.mem: Memory Devices"
-> > +config CXL_PCI
-> > +       tristate "PCI manageability"
-> 
-> s/PCI manageability/CXL Memory Device: PCI Operations/
-> 
-> ...as I don't think an end user reading "PCI Manageability" would know
-> that it supports basic memory expander enumeration and mailbox
-> operations.
-> 
-> >         default CXL_BUS
-> >         help
-> > -         The CXL.mem protocol allows a device to act as a provider of
-> > -         "System RAM" and/or "Persistent Memory" that is fully coherent
-> > -         as if the memory was attached to the typical CPU memory
-> > -         controller.
-> > +         The CXL specification defines a set of interfaces which are controlled
-> > +         through well known PCI configuration mechanisms. Such access is
-> > +         referred to CXL.io in the specification.
-> 
-> The CXL specification defines a "CXL memory device" sub-class in the
-> PCI "memory controller" base class of devices. Device's identified by
-> this class code provide support for volatile and / or persistent
-> memory to be mapped into the system address map (Host-managed Device
-> Memory (HDM)).
-> 
+> > +enum cxl_regloc_type;
+> > +int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+> > +                     struct cxl_register_map *map);
+> > +
+> >  #define CXL_RESOURCE_NONE ((resource_size_t) -1)
+> >  #define CXL_TARGET_STRLEN 20
 > >
-> >           Say 'y/m' to enable a driver that will attach to CXL.mem devices for
-> 
-> This would need updating too...
-> 
-> s/CXL.mem devices /generic CXL memory expanders identified by the
-> memory device class code/
-> 
-> ...to reduce confusion about this driver for generic type-3 vs vendor
-> specific type-2 devices that also support CXL.mem
-> 
-
-Overall seems like an improvement to me. I'm not too fond of the word "generic"
-though, both here and in the commit message. I think they work equally well just
-deleting that word.
-
-> >           configuration and management primarily via the mailbox interface. See
-> > @@ -31,7 +30,7 @@ config CXL_MEM
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > index f19a06809079..d1adc759d051 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> > @@ -400,58 +400,6 @@ static int cxl_map_regs(struct cxl_mem *cxlm, struct cxl_register_map *map)
+> >         return 0;
+> >  }
 > >
-> >  config CXL_MEM_RAW_COMMANDS
-> >         bool "RAW Command Interface for Memory Devices"
-> > -       depends on CXL_MEM
-> > +       depends on CXL_PCI
-> >         help
-> >           Enable CXL RAW command interface.
-> >
-> > diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-> > index d1aaabc940f3..cf07ae6cea17 100644
-> > --- a/drivers/cxl/Makefile
-> > +++ b/drivers/cxl/Makefile
-> > @@ -1,6 +1,6 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  obj-$(CONFIG_CXL_BUS) += core/
-> > -obj-$(CONFIG_CXL_MEM) += cxl_pci.o
-> > +obj-$(CONFIG_CXL_PCI) += cxl_pci.o
-> >  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
-> >  obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
-> >
+> > -static void cxl_decode_regblock(u32 reg_lo, u32 reg_hi,
+> > -                               struct cxl_register_map *map)
+> > -{
+> > -       map->block_offset =
+> > -               ((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
+> > -       map->barno = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
+> > -       map->reg_type = FIELD_GET(CXL_REGLOC_RBI_MASK, reg_lo);
+> > -}
+> > -
+> > -/**
+> > - * cxl_find_regblock() - Locate register blocks by type
+> > - * @pdev: The CXL PCI device to enumerate.
+> > - * @type: Register Block Indicator id
+> > - * @map: Enumeration output, clobbered on error
+> > - *
+> > - * Return: 0 if register block enumerated, negative error code otherwise
+> > - *
+> > - * A CXL DVSEC may additional point one or more register blocks, search
+> > - * for them by @type.
+> > - */
+> > -static int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+> > -                            struct cxl_register_map *map)
+> > -{
+> > -       u32 regloc_size, regblocks;
+> > -       int regloc, i;
+> > -
+> > -       regloc = pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL,
+> > -                                          PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID);
+> > -       if (!regloc)
+> > -               return -ENXIO;
+> > -
+> > -       pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
+> > -       regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
+> > -
+> > -       regloc += PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET;
+> > -       regblocks = (regloc_size - PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET) / 8;
+> > -
+> > -       for (i = 0; i < regblocks; i++, regloc += 8) {
+> > -               u32 reg_lo, reg_hi;
+> > -
+> > -               pci_read_config_dword(pdev, regloc, &reg_lo);
+> > -               pci_read_config_dword(pdev, regloc + 4, &reg_hi);
+> > -
+> > -               cxl_decode_regblock(reg_lo, reg_hi, map);
+> > -
+> > -               if (map->reg_type == type)
+> > -                       return 0;
+> > -       }
+> > -
+> > -       return -ENODEV;
+> > -}
+> > -
+> >  static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+> >                           struct cxl_register_map *map)
+> >  {
 > > --
 > > 2.33.1
 > >
