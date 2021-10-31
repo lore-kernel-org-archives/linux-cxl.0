@@ -2,217 +2,376 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 376D8C433F5
-	for <linux-cxl@archiver.kernel.org>; Sun, 31 Oct 2021 18:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF37C433F5
+	for <linux-cxl@archiver.kernel.org>; Sun, 31 Oct 2021 18:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05B1060E9B
-	for <linux-cxl@archiver.kernel.org>; Sun, 31 Oct 2021 18:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74ABF60FD9
+	for <linux-cxl@archiver.kernel.org>; Sun, 31 Oct 2021 18:35:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230043AbhJaSf3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 31 Oct 2021 14:35:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46746 "EHLO
+        id S230043AbhJaShy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 31 Oct 2021 14:37:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230041AbhJaSf2 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 31 Oct 2021 14:35:28 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF2CCC061570
-        for <linux-cxl@vger.kernel.org>; Sun, 31 Oct 2021 11:32:56 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id a26so14270432pfr.11
-        for <linux-cxl@vger.kernel.org>; Sun, 31 Oct 2021 11:32:56 -0700 (PDT)
+        with ESMTP id S230041AbhJaShx (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sun, 31 Oct 2021 14:37:53 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04A6FC061570
+        for <linux-cxl@vger.kernel.org>; Sun, 31 Oct 2021 11:35:21 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id nn3-20020a17090b38c300b001a03bb6c4ebso10937644pjb.1
+        for <linux-cxl@vger.kernel.org>; Sun, 31 Oct 2021 11:35:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=iwibPPilAdGXrB12h6zQshKXaCChs7KNmP9VXdi4zu8=;
-        b=x3LP9E4qODOZPhSiyLe/mmCSWrm0oKc0lNXQeGQciUK4JJmdxInkuwGaSSHiXJNumI
-         1pku9ERLdHjD+Fy4MKWa7sY7Yov1PUwpusL7Det1kgw2trGGzaXpKxwCKDmeyteIOS2D
-         YSZFF6sFHXHkhcOYENa08rI/HeC4qGZg4tdL9K0DAhgkMnesSZ7DLWshLTqZN7pbWa3h
-         aWr1JFNGUI2c4ZAqVDMkMxPqX24drBfq/lHOZFBtL08JKb4Om3J2qWJojOHkg0cN594a
-         TnBAiICGCD1f2obLycZ5ap6JNEXHdwVNIpKPtWvo6cok6tq9t+cWxFxU7wU22BKKmHYn
-         qT/g==
+        bh=y6cd+6nw9j+BTx/5/dSwwtZWlxmGv+coPIP0JdZ2nkU=;
+        b=ROhDHssrVOUWH4KTQ/FUbqhTjTU+YT7SnTb87G81wOHbdL91qcYNiqDsFT2oLJDWZX
+         YuPVoFpZHOSNX6uLsvW1eXu7eONUECDd5LDd0oZJpMiAaV51MCfmnLfxfOxpoCFZ2oIy
+         4ZSmQ91iLRQl4LtA3+spPPlypkfCujQK2OH42LpdhbL5VRzlsTQx/AcnIk7xcUk0QI+N
+         +K8/JGpU3fQ1HFkqB0l1jKYys9Q0N9iMlnoaIa19bsnKj+HCkX3V5gx/K9MfUEh9pYZx
+         6WkEid3s2zIBD5vvwiNFJmlBvqeAaxYehRfyzBqpQQaQz4rXBq/Qeu6ofqMj+9Fj21V4
+         DZcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=iwibPPilAdGXrB12h6zQshKXaCChs7KNmP9VXdi4zu8=;
-        b=yDeCP3PmJY5r598KtVCcPgpdI3VemdJVfkiNhavCEFCSu6adIFy/bJZkYstcyec6aJ
-         gX/mF1eBYveEU7d/vAf9qVvff+t/uRIu/m2z3CBHAQBnCQNQuqkipPA0Uy6vPc/LJsZ5
-         4C3S48HSAks2j06kF8SA5B4cL+XslcKYgq0ofKDWW0HCetQ2ZFaoNt5h1ucheIUr7BY4
-         Ut4+sZsrxbf1N9LVLRpB9IT5CuYq7HF/VJMFXgrNSu+WIQIccHjOL1iDbMN5qah6KI9D
-         uWFwXgJ0jI+hXyiCO7P0Wnp85L5J6dWJlL9zWNz8HdpfJgOiA11rql905Ou5+/y8q46x
-         myCA==
-X-Gm-Message-State: AOAM5332xHhymlbs9CPGTQ4K1zS4YqlQV2AvkSdPvOG6Xqa/lnWEAUW9
-        B/EBhn5RhsyQoqkSzzWS+/daxmXQ4VvLZjPQ7a85mfuMtrdLRA==
-X-Google-Smtp-Source: ABdhPJy8PcfTFCTVL3lsqUGLmay1rtVOZV1XbAgJu+HUzkTek6Fnq9k/bt195kiRFygO/+7DmVO+tcJPPo+rbF8vF3U=
-X-Received: by 2002:a05:6a00:140e:b0:444:b077:51ef with SMTP id
- l14-20020a056a00140e00b00444b07751efmr23784028pfu.61.1635705176206; Sun, 31
- Oct 2021 11:32:56 -0700 (PDT)
+        bh=y6cd+6nw9j+BTx/5/dSwwtZWlxmGv+coPIP0JdZ2nkU=;
+        b=husbR/fHf/ocOxvlhH6CwPmXhNXofznGlkD7vyjn1Cq1efL4W2m38tTzDl+8BL6LDl
+         9deig97Qv1jEm5ErJjSGnsrn3qCtqCCwD/4K9q6pKEtjHjgPLVUZPseeqBeDLkoWCORO
+         EG6QtB2yJiplAEbAoPDAX+Ez+TDhiXaySMPKlsX0TCLmMh/z23sY7e+vQuABDdyuhWdU
+         r/FCnHBYEXxZkhvRvv2QchMegTxE715qhDllmlvxbXK8wTBLoLtBONZJwBqkusB69viZ
+         dhW6d8MSa5HWNE8nH/mau46QO8vvmp+tjw1kf4DrJxG0HtV/qrSi7jez7EqhOS3piQQE
+         eiYg==
+X-Gm-Message-State: AOAM532LqX5YmGnsoHNyyB0aPs1Ks70AFRKJwPML/SbpYHo5JTtbFUG4
+        9gwgJprf/noxrNSJBqRWGA9tsCao9q4BXQqoRAyHOqBRFcc=
+X-Google-Smtp-Source: ABdhPJzTxgw/EhwX0FRpPo8bvn4gR5c7xytXEHJcLPOjDgLcWL0oAkUiLBfQG9d8uAVoz2TQLIOQ0poHvaHrQgIewlo=
+X-Received: by 2002:a17:90b:350f:: with SMTP id ls15mr24584300pjb.220.1635705321349;
+ Sun, 31 Oct 2021 11:35:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211022183709.1199701-1-ben.widawsky@intel.com> <20211022183709.1199701-11-ben.widawsky@intel.com>
-In-Reply-To: <20211022183709.1199701-11-ben.widawsky@intel.com>
+References: <163555506776.2553440.17247681249660176777.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20211031183123.m6wors3hizsbm7cd@intel.com>
+In-Reply-To: <20211031183123.m6wors3hizsbm7cd@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sun, 31 Oct 2021 11:32:45 -0700
-Message-ID: <CAPcyv4jqkEVTjqKd1wy468ht3_e8wawiR0sNQKcP9CHnPcgHMA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 10/28] cxl/core: Store global list of root ports
+Date:   Sun, 31 Oct 2021 11:35:11 -0700
+Message-ID: <CAPcyv4i7iakV7drgPwVjBRgB-j4EhahtQn6B0mhGaAx9RKOWpg@mail.gmail.com>
+Subject: Re: [PATCH] cxl/core: Convert to EXPORT_SYMBOL_NS_GPL
 To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
+Cc:     linux-cxl@vger.kernel.org, "Weiny, Ira" <ira.weiny@intel.com>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Oct 22, 2021 at 11:37 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Sun, Oct 31, 2021 at 11:31 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> CXL root ports (the downstream port to a host bridge) are to be
-> enumerated by a platform specific driver. In the case of ACPI compliant
-> systems, this is like the cxl_acpi driver. Root ports are the first
-> CXL spec defined component that can be "found" by that platform specific
-> driver.
+> On 21-10-29 17:51:07, Dan Williams wrote:
+> > It turns out that the usb example of specifying the subsystem namespace
+> > at build time is not preferred. The rationale for that preference has
+> > become more apparent as CXL patches with plain EXPORT_SYMBOL_GPL beg the
+> > question, "why would any code other than CXL care about this symbol?".
+> > Make the namespace explicit.
+> >
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  drivers/cxl/core/Makefile |    2 +-
+> >  drivers/cxl/core/bus.c    |   20 ++++++++++----------
+> >  drivers/cxl/core/mbox.c   |   10 +++++-----
+> >  drivers/cxl/core/memdev.c |    6 +++---
+> >  drivers/cxl/core/pmem.c   |   10 +++++-----
+> >  drivers/cxl/core/regs.c   |    8 ++++----
+> >  6 files changed, 28 insertions(+), 28 deletions(-)
+> >
+> > diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+> > index 07eb8e1fb8a6..40ab50318daf 100644
+> > --- a/drivers/cxl/core/Makefile
+> > +++ b/drivers/cxl/core/Makefile
+> > @@ -1,7 +1,7 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> >  obj-$(CONFIG_CXL_BUS) += cxl_core.o
+> >
+> > -ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL -I$(srctree)/drivers/cxl
+> > +ccflags-y += -I$(srctree)/drivers/cxl
+> >  cxl_core-y := bus.o
+> >  cxl_core-y += pmem.o
+> >  cxl_core-y += regs.o
+> > diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
+> > index ebd061d03950..17a4fff029f8 100644
+> > --- a/drivers/cxl/core/bus.c
+> > +++ b/drivers/cxl/core/bus.c
+> > @@ -200,7 +200,7 @@ bool is_root_decoder(struct device *dev)
+> >  {
+> >       return dev->type == &cxl_decoder_root_type;
+> >  }
+> > -EXPORT_SYMBOL_GPL(is_root_decoder);
+> > +EXPORT_SYMBOL_NS_GPL(is_root_decoder, CXL);
+> >
+> >  struct cxl_decoder *to_cxl_decoder(struct device *dev)
+> >  {
+> > @@ -209,7 +209,7 @@ struct cxl_decoder *to_cxl_decoder(struct device *dev)
+> >               return NULL;
+> >       return container_of(dev, struct cxl_decoder, dev);
+> >  }
+> > -EXPORT_SYMBOL_GPL(to_cxl_decoder);
+> > +EXPORT_SYMBOL_NS_GPL(to_cxl_decoder, CXL);
+> >
+> >  static void cxl_dport_release(struct cxl_dport *dport)
+> >  {
+> > @@ -376,7 +376,7 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
+> >       put_device(dev);
+> >       return ERR_PTR(rc);
+> >  }
+> > -EXPORT_SYMBOL_GPL(devm_cxl_add_port);
+> > +EXPORT_SYMBOL_NS_GPL(devm_cxl_add_port, CXL);
+> >
 >
-> By storing a list of these root ports components in lower levels of the
-> topology (switches and endpoints), have a mechanism to walk up their
-> device hierarchy to find an enumerated root port. This will be necessary
-> for region programming.
->
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> ---
->  drivers/cxl/acpi.c            |  4 ++--
->  drivers/cxl/core/bus.c        | 34 +++++++++++++++++++++++++++++++++-
->  drivers/cxl/cxl.h             |  5 ++++-
->  tools/testing/cxl/mock_acpi.c |  4 ++--
->  4 files changed, 41 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index 8cca0814dfb8..625c5d95b83f 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -231,7 +231,7 @@ __mock int match_add_root_ports(struct pci_dev *pdev, void *data)
->                 creg = cxl_reg_block(pdev, &map);
->
->         port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
-> -       rc = cxl_add_dport(port, &pdev->dev, port_num, creg);
-> +       rc = cxl_add_dport(port, &pdev->dev, port_num, creg, true);
->         if (rc) {
->                 ctx->error = rc;
->                 return rc;
-> @@ -406,7 +406,7 @@ static int add_host_bridge_dport(struct device *match, void *arg)
->                 dev_dbg(host, "No CHBS found for Host Bridge: %s\n",
->                         dev_name(match));
->
-> -       rc = cxl_add_dport(root_port, match, uid, get_chbcr(chbs));
-> +       rc = cxl_add_dport(root_port, match, uid, get_chbcr(chbs), false);
->         if (rc) {
->                 dev_err(host, "failed to add downstream port: %s\n",
->                         dev_name(match));
-> diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-> index dffbd0ac64af..03394a3ae75f 100644
-> --- a/drivers/cxl/core/bus.c
-> +++ b/drivers/cxl/core/bus.c
-> @@ -25,6 +25,8 @@
->   */
->
->  static DEFINE_IDA(cxl_port_ida);
-> +static LIST_HEAD(cxl_root_ports);
-> +static DECLARE_RWSEM(root_port_sem);
+> I think this one should remain EXPORT_SYMBOL_GPL. If a type2 device wanted to
+> register itself, it would use this function to do it.
 
-I don't see a need for this new list and lock...
+No, that driver would be required to do MODULE_IMPORT_NS(CXL).
 
 >
->  static ssize_t devtype_show(struct device *dev, struct device_attribute *attr,
->                             char *buf)
-> @@ -268,12 +270,31 @@ struct cxl_port *to_cxl_port(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(to_cxl_port);
+> >  static struct cxl_dport *find_dport(struct cxl_port *port, int id)
+> >  {
+> > @@ -451,7 +451,7 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport_dev, int port_id,
+> >       cxl_dport_release(dport);
+> >       return rc;
+> >  }
+> > -EXPORT_SYMBOL_GPL(cxl_add_dport);
+> > +EXPORT_SYMBOL_NS_GPL(cxl_add_dport, CXL);
+> >
+> >  static int decoder_populate_targets(struct cxl_decoder *cxld,
+> >                                   struct cxl_port *port, int *target_map)
+> > @@ -521,7 +521,7 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
+> >       kfree(cxld);
+> >       return ERR_PTR(rc);
+> >  }
+> > -EXPORT_SYMBOL_GPL(cxl_decoder_alloc);
+> > +EXPORT_SYMBOL_NS_GPL(cxl_decoder_alloc, CXL);
+> >
+> >  int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+> >  {
+> > @@ -550,7 +550,7 @@ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+> >
+> >       return device_add(dev);
+> >  }
+> > -EXPORT_SYMBOL_GPL(cxl_decoder_add);
+> > +EXPORT_SYMBOL_NS_GPL(cxl_decoder_add, CXL);
+> >
+> >  static void cxld_unregister(void *dev)
+> >  {
+> > @@ -561,7 +561,7 @@ int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld)
+> >  {
+> >       return devm_add_action_or_reset(host, cxld_unregister, &cxld->dev);
+> >  }
+> > -EXPORT_SYMBOL_GPL(cxl_decoder_autoremove);
+> > +EXPORT_SYMBOL_NS_GPL(cxl_decoder_autoremove, CXL);
+> >
+> >  /**
+> >   * __cxl_driver_register - register a driver for the cxl bus
+> > @@ -594,13 +594,13 @@ int __cxl_driver_register(struct cxl_driver *cxl_drv, struct module *owner,
+> >
+> >       return driver_register(&cxl_drv->drv);
+> >  }
+> > -EXPORT_SYMBOL_GPL(__cxl_driver_register);
+> > +EXPORT_SYMBOL_NS_GPL(__cxl_driver_register, CXL);
+> >
+> >  void cxl_driver_unregister(struct cxl_driver *cxl_drv)
+> >  {
+> >       driver_unregister(&cxl_drv->drv);
+> >  }
+> > -EXPORT_SYMBOL_GPL(cxl_driver_unregister);
+> > +EXPORT_SYMBOL_NS_GPL(cxl_driver_unregister, CXL);
 >
-> +struct cxl_dport *cxl_get_root_dport(struct device *dev)
-> +{
-> +       struct cxl_dport *ret = NULL;
-> +       struct cxl_dport *dport;
-> +
-> +       down_read(&root_port_sem);
-> +       list_for_each_entry(dport, &cxl_root_ports, root_port_link) {
-> +               if (dport->dport == dev) {
-> +                       ret = dport;
-> +                       break;
-> +               }
-> +       }
-> +
-> +       up_read(&root_port_sem);
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(cxl_get_root_dport);
+> These two could probably go either way.
 
-This can be done by walking the existing topology:
+No, they're definitely CXL symbols.
 
-struct cxl_dport *cxl_get_root_dport(struct device *dev)
-{
-        struct device *host = get_cxl_topology_host();
-        struct cxl_dport *dport, *found = NULL;
-        struct cxl_port *port;
-        struct device *root;
-
-        if (!host)
-                return NULL;
-
-        root = device_find_child(host, &root, match_cxl_root_port);
-        if (!root)
-                goto out;
-        device_lock(root);
-        port = to_cxl_port(root);
-        list_for_each_entry (dport, &port->dports, list)
-                if (dport->dport == dev) {
-                        found = dport;
-                        break;
-                }
-        device_unlock(root);
-        put_device(root);
-
-out:
-        put_cxl_topology_host(host);
-        return found;
-}
-
-
-It occurs to me after writing this that device_lock() for iterating
-dports can be offloaded to the topology rwsem.
-
-> +
->  static void unregister_port(void *_port)
->  {
->         struct cxl_port *port = _port;
->         struct cxl_dport *dport;
 >
->         device_lock(&port->dev);
-> +       down_read(&root_port_sem);
->         list_for_each_entry(dport, &port->dports, list) {
->                 char link_name[CXL_TARGET_STRLEN];
+> >
+> >  static int cxl_device_id(struct device *dev)
+> >  {
+> > @@ -642,7 +642,7 @@ struct bus_type cxl_bus_type = {
+> >       .probe = cxl_bus_probe,
+> >       .remove = cxl_bus_remove,
+> >  };
+> > -EXPORT_SYMBOL_GPL(cxl_bus_type);
+> > +EXPORT_SYMBOL_NS_GPL(cxl_bus_type, CXL);
+> >
+> >  static __init int cxl_core_init(void)
+> >  {
+> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> > index 576796a5d9f3..c57137fb01c9 100644
+> > --- a/drivers/cxl/core/mbox.c
+> > +++ b/drivers/cxl/core/mbox.c
+> > @@ -184,7 +184,7 @@ int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm, u16 opcode, void *in,
+> >
+> >       return 0;
+> >  }
+> > -EXPORT_SYMBOL_GPL(cxl_mem_mbox_send_cmd);
+> > +EXPORT_SYMBOL_NS_GPL(cxl_mem_mbox_send_cmd, CXL);
+> >
+> >  static bool cxl_mem_raw_command_allowed(u16 opcode)
+> >  {
+> > @@ -626,7 +626,7 @@ int cxl_mem_enumerate_cmds(struct cxl_mem *cxlm)
+> >       kvfree(gsl);
+> >       return rc;
+> >  }
+> > -EXPORT_SYMBOL_GPL(cxl_mem_enumerate_cmds);
+> > +EXPORT_SYMBOL_NS_GPL(cxl_mem_enumerate_cmds, CXL);
+> >
+> >  /**
+> >   * cxl_mem_get_partition_info - Get partition info
+> > @@ -711,7 +711,7 @@ int cxl_mem_identify(struct cxl_mem *cxlm)
+> >
+> >       return 0;
+> >  }
+> > -EXPORT_SYMBOL_GPL(cxl_mem_identify);
+> > +EXPORT_SYMBOL_NS_GPL(cxl_mem_identify, CXL);
+> >
+> >  int cxl_mem_create_range_info(struct cxl_mem *cxlm)
+> >  {
+> > @@ -750,7 +750,7 @@ int cxl_mem_create_range_info(struct cxl_mem *cxlm)
+> >
+> >       return 0;
+> >  }
+> > -EXPORT_SYMBOL_GPL(cxl_mem_create_range_info);
+> > +EXPORT_SYMBOL_NS_GPL(cxl_mem_create_range_info, CXL);
+> >
+> >  struct cxl_mem *cxl_mem_create(struct device *dev)
+> >  {
+> > @@ -767,7 +767,7 @@ struct cxl_mem *cxl_mem_create(struct device *dev)
+> >
+> >       return cxlm;
+> >  }
+> > -EXPORT_SYMBOL_GPL(cxl_mem_create);
+> > +EXPORT_SYMBOL_NS_GPL(cxl_mem_create, CXL);
+> >
+> >  static struct dentry *cxl_debugfs;
+> >
+> > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> > index bf1b04d00ff4..a398f289518c 100644
+> > --- a/drivers/cxl/core/memdev.c
+> > +++ b/drivers/cxl/core/memdev.c
+> > @@ -150,7 +150,7 @@ void set_exclusive_cxl_commands(struct cxl_mem *cxlm, unsigned long *cmds)
+> >                 CXL_MEM_COMMAND_ID_MAX);
+> >       up_write(&cxl_memdev_rwsem);
+> >  }
+> > -EXPORT_SYMBOL_GPL(set_exclusive_cxl_commands);
+> > +EXPORT_SYMBOL_NS_GPL(set_exclusive_cxl_commands, CXL);
+> >
+> >  /**
+> >   * clear_exclusive_cxl_commands() - atomically enable user cxl commands
+> > @@ -164,7 +164,7 @@ void clear_exclusive_cxl_commands(struct cxl_mem *cxlm, unsigned long *cmds)
+> >                     CXL_MEM_COMMAND_ID_MAX);
+> >       up_write(&cxl_memdev_rwsem);
+> >  }
+> > -EXPORT_SYMBOL_GPL(clear_exclusive_cxl_commands);
+> > +EXPORT_SYMBOL_NS_GPL(clear_exclusive_cxl_commands, CXL);
+> >
+> >  static void cxl_memdev_shutdown(struct device *dev)
+> >  {
+> > @@ -318,7 +318,7 @@ devm_cxl_add_memdev(struct cxl_mem *cxlm)
+> >       put_device(dev);
+> >       return ERR_PTR(rc);
+> >  }
+> > -EXPORT_SYMBOL_GPL(devm_cxl_add_memdev);
+> > +EXPORT_SYMBOL_NS_GPL(devm_cxl_add_memdev, CXL);
+> >
+> >  __init int cxl_memdev_init(void)
+> >  {
+> > diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
+> > index 5032f4c1c69d..76a4fa39834c 100644
+> > --- a/drivers/cxl/core/pmem.c
+> > +++ b/drivers/cxl/core/pmem.c
+> > @@ -49,7 +49,7 @@ struct cxl_nvdimm_bridge *to_cxl_nvdimm_bridge(struct device *dev)
+> >               return NULL;
+> >       return container_of(dev, struct cxl_nvdimm_bridge, dev);
+> >  }
+> > -EXPORT_SYMBOL_GPL(to_cxl_nvdimm_bridge);
+> > +EXPORT_SYMBOL_NS_GPL(to_cxl_nvdimm_bridge, CXL);
+> >
+> >  __mock int match_nvdimm_bridge(struct device *dev, const void *data)
+> >  {
+> > @@ -65,7 +65,7 @@ struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd)
+> >               return NULL;
+> >       return to_cxl_nvdimm_bridge(dev);
+> >  }
+> > -EXPORT_SYMBOL_GPL(cxl_find_nvdimm_bridge);
+> > +EXPORT_SYMBOL_NS_GPL(cxl_find_nvdimm_bridge, CXL);
+> >
+> >  static struct cxl_nvdimm_bridge *
+> >  cxl_nvdimm_bridge_alloc(struct cxl_port *port)
+> > @@ -167,7 +167,7 @@ struct cxl_nvdimm_bridge *devm_cxl_add_nvdimm_bridge(struct device *host,
+> >       put_device(dev);
+> >       return ERR_PTR(rc);
+> >  }
+> > -EXPORT_SYMBOL_GPL(devm_cxl_add_nvdimm_bridge);
+> > +EXPORT_SYMBOL_NS_GPL(devm_cxl_add_nvdimm_bridge, CXL);
+> >
+> >  static void cxl_nvdimm_release(struct device *dev)
+> >  {
+> > @@ -191,7 +191,7 @@ bool is_cxl_nvdimm(struct device *dev)
+> >  {
+> >       return dev->type == &cxl_nvdimm_type;
+> >  }
+> > -EXPORT_SYMBOL_GPL(is_cxl_nvdimm);
+> > +EXPORT_SYMBOL_NS_GPL(is_cxl_nvdimm, CXL);
+> >
+> >  struct cxl_nvdimm *to_cxl_nvdimm(struct device *dev)
+> >  {
+> > @@ -200,7 +200,7 @@ struct cxl_nvdimm *to_cxl_nvdimm(struct device *dev)
+> >               return NULL;
+> >       return container_of(dev, struct cxl_nvdimm, dev);
+> >  }
+> > -EXPORT_SYMBOL_GPL(to_cxl_nvdimm);
+> > +EXPORT_SYMBOL_NS_GPL(to_cxl_nvdimm, CXL);
+> >
+> >  static struct cxl_nvdimm *cxl_nvdimm_alloc(struct cxl_memdev *cxlmd)
+> >  {
+> > diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> > index 41de4a136ecd..e37e23bf4355 100644
+> > --- a/drivers/cxl/core/regs.c
+> > +++ b/drivers/cxl/core/regs.c
+> > @@ -90,7 +90,7 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+> >               }
+> >       }
+> >  }
+> > -EXPORT_SYMBOL_GPL(cxl_probe_component_regs);
+> > +EXPORT_SYMBOL_NS_GPL(cxl_probe_component_regs, CXL);
+> >
+> >  /**
+> >   * cxl_probe_device_regs() - Detect CXL Device register blocks
+> > @@ -156,7 +156,7 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
+> >               }
+> >       }
+> >  }
+> > -EXPORT_SYMBOL_GPL(cxl_probe_device_regs);
+> > +EXPORT_SYMBOL_NS_GPL(cxl_probe_device_regs, CXL);
+> >
+> >  static void __iomem *devm_cxl_iomap_block(struct device *dev,
+> >                                         resource_size_t addr,
+> > @@ -199,7 +199,7 @@ int cxl_map_component_regs(struct pci_dev *pdev,
+> >
+> >       return 0;
+> >  }
+> > -EXPORT_SYMBOL_GPL(cxl_map_component_regs);
+> > +EXPORT_SYMBOL_NS_GPL(cxl_map_component_regs, CXL);
+> >
+> >  int cxl_map_device_regs(struct pci_dev *pdev,
+> >                       struct cxl_device_regs *regs,
+> > @@ -246,4 +246,4 @@ int cxl_map_device_regs(struct pci_dev *pdev,
+> >
+> >       return 0;
+> >  }
+> > -EXPORT_SYMBOL_GPL(cxl_map_device_regs);
+> > +EXPORT_SYMBOL_NS_GPL(cxl_map_device_regs, CXL);
+> >
 >
-> @@ -281,7 +302,10 @@ static void unregister_port(void *_port)
->                              dport->port_id) >= CXL_TARGET_STRLEN)
->                         continue;
->                 sysfs_remove_link(&port->dev.kobj, link_name);
-> +
-> +               list_del_init(&dport->root_port_link);
->         }
-> +       up_read(&root_port_sem);
->         device_unlock(&port->dev);
->         device_unregister(&port->dev);
->  }
-> @@ -431,12 +455,13 @@ static int add_dport(struct cxl_port *port, struct cxl_dport *new)
->   * @dport_dev: firmware or PCI device representing the dport
->   * @port_id: identifier for this dport in a decoder's target list
->   * @component_reg_phys: optional location of CXL component registers
-> + * @root_port: is this a root port (hostbridge downstream)
->   *
->   * Note that all allocations and links are undone by cxl_port deletion
->   * and release.
->   */
->  int cxl_add_dport(struct cxl_port *port, struct device *dport_dev, int port_id,
-> -                 resource_size_t component_reg_phys)
-> +                 resource_size_t component_reg_phys, bool root_port)
+> Same with the above mapping functions.
+>
+> If the intention is to switch these all over now and migrate symbols as needed,
+> that's fine, but perhaps put it in the commit message.
 
-With the above implementation there's no need to add this last parameter.
+I can't see any reason to have plain EXPORT_SYMBOL_GPL() for these, we
+*want* other users to declare the CXL namespace.
