@@ -2,58 +2,58 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E1DC433F5
-	for <linux-cxl@archiver.kernel.org>; Sun, 31 Oct 2021 17:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA1FC433F5
+	for <linux-cxl@archiver.kernel.org>; Sun, 31 Oct 2021 18:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BAEB6108C
-	for <linux-cxl@archiver.kernel.org>; Sun, 31 Oct 2021 17:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5219361038
+	for <linux-cxl@archiver.kernel.org>; Sun, 31 Oct 2021 18:03:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229838AbhJaR4F (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 31 Oct 2021 13:56:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38074 "EHLO
+        id S229898AbhJaSGU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 31 Oct 2021 14:06:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229732AbhJaR4F (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 31 Oct 2021 13:56:05 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E791C061570
-        for <linux-cxl@vger.kernel.org>; Sun, 31 Oct 2021 10:53:33 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id t11so10120469plq.11
-        for <linux-cxl@vger.kernel.org>; Sun, 31 Oct 2021 10:53:33 -0700 (PDT)
+        with ESMTP id S229838AbhJaSGU (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sun, 31 Oct 2021 14:06:20 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C1BBC061570
+        for <linux-cxl@vger.kernel.org>; Sun, 31 Oct 2021 11:03:48 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id v20so10133556plo.7
+        for <linux-cxl@vger.kernel.org>; Sun, 31 Oct 2021 11:03:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RILX+yoIcYvGxjGiHlxPt4Yycxsxx7YKOHTuHZIgJRI=;
-        b=i8ciwZDv7OxRW+eKuChsRJZf0OeYb3VCdaeaCODT3ZAYktyaYJpW9g1cmoc/tokqFe
-         kD5FPT19tuq93ylR1NtOhEn740ca1XW1OP+nnRwH0nMPtWab5BcDkyoN+ZeWLpo8GhFi
-         OOwkVC1nNYr/iGV0Kh4H/02606I5W6WtpSEqRWWgGzZvE7j46lfa0jzH8mj4g/gXBSYs
-         W9lWwNDLpR31FcPD0FwnWep3N74qEe0cDdzrWfFmhe/gwliQTS9kv2zbObUpxXT17yRo
-         TZORozkq7KLHcyaX2I5jIFFLDH5SbiqWHi3PN8mJF1+4+rPq/1Blo9lU5sRIMPHKfdhp
-         w8dQ==
+        bh=LFsPYoFUPT5XC7FhK1dPPc22Najk/EMbXk4uLHq/Pos=;
+        b=M6xfOMELd2NAMrYU/0LXvZT/QrQIUUPVpSMowQ+mBaP0EZJAW+rwAQ2pmbWS31Eh/6
+         Se1BME30iOZQlECvPID0UZwOUgV1PIeGbaIfoGmymw595aOLLctretLrACFYxrp1WyZO
+         qj2gFRGHjHPte3U16PLruXH5gqYHscwu2JBCTr1Y+b7sMzIKtBKiVwBB/1nRtRWWwiT6
+         TVjJUzqYi5dSMlkHxkHc9xZrW/77JxztkC1kJt51gQTyuKKsk3STwdQrclKmFOptiJDM
+         S+Yxtxbf5la15PFfmKmrhk/Q2dlMIikoxWtWh1NWTYSFliebEXO9mMU/FIw1ApiLhuqS
+         Gfhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RILX+yoIcYvGxjGiHlxPt4Yycxsxx7YKOHTuHZIgJRI=;
-        b=HQySPICDibFkdhubyQgrYmKpvHewzvm0ugjzbp5392GnRuPyI2wzGseoJOsk44pDW1
-         M8yxUStA0x/UYeUg/DH6NWvCH9WZfT+u05v13g+YBgfaW5uLbb4lttk9LP64dIFskz79
-         cDP2xQkRGscI/lK+Ar7gR1Gcp12N16aVy4Ir2+iCilIvqf8aK42ssMkBOaGKM8E2miqw
-         Yi+r4Esqu3izfLsiCUtChkTX2SAbsmRkDzCfr7Rz5xmjqTNrpOlsH/konVQNPlmZKn2f
-         RdKHe8vh6SfvxsG3IvH5qgsnlA1qmy5gogk8ShBHv5VxI+oxxm8xL33qj7OSxeHNcVwr
-         pLtA==
-X-Gm-Message-State: AOAM531D3Fe57xNalqwI/G2zNJmottw4up6JiV4Nwn013w5aUBhUT02U
-        moCv2oC6KywY5LlrsRPZVCHKZM4MQ3LuTujeJpzcUg==
-X-Google-Smtp-Source: ABdhPJyeg6PCDBUfpaxNDiIsbKXunGSedZyZ0s26d/+IBKfmkVius1YC0ewx5SJcCjddJ/DgNopVM2lFY4C6yc3SmYE=
-X-Received: by 2002:a17:90b:3b88:: with SMTP id pc8mr24025278pjb.93.1635702813049;
- Sun, 31 Oct 2021 10:53:33 -0700 (PDT)
+        bh=LFsPYoFUPT5XC7FhK1dPPc22Najk/EMbXk4uLHq/Pos=;
+        b=JZVTSjEnFdrsGPbj1vyhIyGhvnGlKMNZR4F8Neg+kBVdfsMrVOsacu0K/iuOef/bQZ
+         LHZnwGes6OWirpc/MyyO7vAwt4yPEyfkTvhfGmmgEZwnSeVE3SRwnKJb7zfojDNd0eEU
+         5aaVm2aSLrt7w6GwL7I20DRXBCpGdjh65I8iCWFebCxuJw+FRnnKT7Lg1eUr0EniFfJl
+         1TxMIhKbgf2aGJNm805x9TKHVwYuYLJvzJZ7C4ar8+uRfk9Lecny0Re0fYekLVmkKizQ
+         L0ztuAMsaRQdO/aWddKrMmbbphh35UNG2G9wX9oL5rI+Gph8NDGINJTLk977Buj4k0BD
+         giYg==
+X-Gm-Message-State: AOAM531bGZcYi2iWgQvWDOThDAF8iA2pztEi34zi2G++T/KzTB9m6rpQ
+        VvpN/AHSIf/Rw9lzcIGnJHF2mYFEQ1qujbYXHcDt0g==
+X-Google-Smtp-Source: ABdhPJxiqQjPxSzIEAMuwfd/pFHw9QIFrTtNuiWvZmLReWkhpU55NeCuXTuKP+F2gBtL/VOV+qBE+JCv5fQC8hCxYpg=
+X-Received: by 2002:a17:90b:350f:: with SMTP id ls15mr24458642pjb.220.1635703427722;
+ Sun, 31 Oct 2021 11:03:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211022183709.1199701-1-ben.widawsky@intel.com>
- <20211022183709.1199701-9-ben.widawsky@intel.com> <CAPcyv4g9AUzNihcYJ3AzwZ+UnFquOf1VWX3fZgb-77ZNteFTAA@mail.gmail.com>
-In-Reply-To: <CAPcyv4g9AUzNihcYJ3AzwZ+UnFquOf1VWX3fZgb-77ZNteFTAA@mail.gmail.com>
+References: <20211022183709.1199701-1-ben.widawsky@intel.com> <20211022183709.1199701-10-ben.widawsky@intel.com>
+In-Reply-To: <20211022183709.1199701-10-ben.widawsky@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sun, 31 Oct 2021 10:53:22 -0700
-Message-ID: <CAPcyv4jUDXuV-R8HFzJb1K5HK6xaGMor3JH-4AFKJqPJk9FtdA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 08/28] cxl/port: Introduce a port driver
+Date:   Sun, 31 Oct 2021 11:03:37 -0700
+Message-ID: <CAPcyv4j+mv3+FyJd0OVBe_dUqzzYpS2gkEagiRp-Tqh9t7NMmg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 09/28] cxl/acpi: Map single port host bridge
+ component registers
 To:     Ben Widawsky <ben.widawsky@intel.com>
 Cc:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
@@ -65,71 +65,95 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Oct 29, 2021 at 6:37 PM Dan Williams <dan.j.williams@intel.com> wrote:
-[..]
+On Fri, Oct 22, 2021 at 11:37 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> Proposed infrastructure for a new cxl_port_decoder_autoremove():
+> Now that the port driver exists and is able to do proper decoder
+> enumeration of the component registers, it becomes trivial to use that
+
+This is the second occurrence of "becomes trivial" in this series,
+it's distracting because it immediately sets off alarm bells that the
+changelog is not in:
+
+Background
+Problem
+Solution
+
+...format.
+
+> for host bridge uports. For reasons out of scope, a functional change
+> would be visible if the HDM decoder was programmed by BIOS to values
+> other than the full address range. Similarly if a type2 device was
+> connected to this root port and programmed by BIOS, that can now be
+> acted upon accordingly.
+
+I would reserve discussion of "no functional change" for patches that
+are pure cleanup. In this case this patch will cause the kernel to
+behave differently when other conditions are met.
+
+>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> ---
+>  drivers/cxl/acpi.c | 25 ++++++++++++++++++++++++-
+>  1 file changed, 24 insertions(+), 1 deletion(-)
 >
 > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index 3163167ecc3a..78f8313a1069 100644
+> index d61397055e9f..8cca0814dfb8 100644
 > --- a/drivers/cxl/acpi.c
 > +++ b/drivers/cxl/acpi.c
-> @@ -374,6 +374,11 @@ static int add_root_nvdimm_bridge(struct device
-> *match, void *data)
->         return 1;
->  }
+> @@ -280,12 +280,14 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+>         struct cxl_port *root_port = arg;
+>         struct device *host = root_port->dev.parent;
+>         struct acpi_device *bridge = to_cxl_host_bridge(host, match);
+> +       struct cxl_component_reg_map map;
+>         struct acpi_pci_root *pci_root;
+>         struct cxl_walk_context ctx;
+>         int single_port_map[1], rc;
+>         struct cxl_decoder *cxld;
+>         struct cxl_dport *dport;
+>         struct cxl_port *port;
+> +       void __iomem *crb;
 >
-> +static void clear_cxl_topology_host(void *data)
-> +{
-> +       set_cxl_topology_host(NULL);
-> +}
-> +
->  static int cxl_acpi_probe(struct platform_device *pdev)
->  {
->         int rc;
-> @@ -382,6 +387,11 @@ static int cxl_acpi_probe(struct platform_device *pdev)
->         struct acpi_device *adev = ACPI_COMPANION(host);
->         struct cxl_cfmws_context ctx;
+>         if (!bridge)
+>                 return 0;
+> @@ -318,10 +320,31 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+>                 return -ENODEV;
+>         if (ctx.error)
+>                 return ctx.error;
+> +       /*
+> +        * If the host bridge has more than 1 root port, it must have registers
+> +        * controlling the HDM decoders. Those will be enumerated by the port
+> +        * driver.
+> +        */
+>         if (ctx.count > 1)
+>                 return 0;
 >
-> +       set_cxl_topology_host(host);
-> +       rc = devm_add_action_or_reset(host, clear_cxl_topology_host, host);
-> +       if (rc)
-> +               return rc;
-> +
->         root_port = devm_cxl_add_port(host, host, CXL_RESOURCE_NONE, NULL);
->         if (IS_ERR(root_port))
->                 return PTR_ERR(root_port);
-> diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-> index 17a4fff029f8..3146b6aa0a2f 100644
-> --- a/drivers/cxl/core/bus.c
-> +++ b/drivers/cxl/core/bus.c
-> @@ -3,6 +3,7 @@
->  #include <linux/io-64-nonatomic-lo-hi.h>
->  #include <linux/device.h>
->  #include <linux/module.h>
-> +#include <linux/rwsem.h>
->  #include <linux/pci.h>
->  #include <linux/slab.h>
->  #include <linux/idr.h>
-> @@ -563,6 +564,84 @@ int cxl_decoder_autoremove(struct device *host,
-> struct cxl_decoder *cxld)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_decoder_autoremove, CXL);
+> -       /* TODO: Scan CHBCR for HDM Decoder resources */
+> +       /*
+> +        * If the single ported host bridge has a component register block,
+> +        * simply let the port driver handle the decoder enumeration.
+> +        *
+> +        * Host bridge component registers live in the system's physical address
+> +        * space.
+> +        */
+> +       crb = ioremap(dport->component_reg_phys, CXL_COMPONENT_REG_BLOCK_SIZE);
+
+This looks broken, the driver for the port should be mapping dport
+component registers to offer services to upper layers.
+
+There's also a missing iounmap.
+
+> +       if (crb) {
+> +               cxl_probe_component_regs(&root_port->dev, crb, &map);
+> +               iounmap(crb);
+> +               if (map.hdm_decoder.valid) {
+> +                       dev_dbg(host,
+> +                               "Found single port host bridge with component registers\n");
+> +                       return 0;
+> +               }
+> +       }
 >
-> +void trigger_decoder_autoremove(void *data)
-> +{
-> +       struct cxl_decoder *cxld = data;
-> +       struct device *host = get_cxl_topology_host();
-> +
-> +       /* The topology host driver beat us to the punch */
-> +       if (!host)
-> +               return;
-
-This can be dropped or turned into a WARN_ON() because something is
-wrong if the port removal is being triggered after the topology host
-has already went away.
-
-> +
-> +       devm_remove_action(host, cxld_unregister, &cxld->dev);
-
-Should be devm_release_action().
+>         /*
+>          * Per the CXL specification (8.2.5.12 CXL HDM Decoder Capability
+> --
+> 2.33.1
+>
