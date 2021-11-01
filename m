@@ -2,111 +2,88 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A6CC433F5
-	for <linux-cxl@archiver.kernel.org>; Mon,  1 Nov 2021 12:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 704F5C433F5
+	for <linux-cxl@archiver.kernel.org>; Mon,  1 Nov 2021 14:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 328C8610CA
-	for <linux-cxl@archiver.kernel.org>; Mon,  1 Nov 2021 12:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57A2860EE9
+	for <linux-cxl@archiver.kernel.org>; Mon,  1 Nov 2021 14:33:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231693AbhKAMDd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 1 Nov 2021 08:03:33 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4047 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231673AbhKAMDc (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 1 Nov 2021 08:03:32 -0400
-Received: from fraeml704-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HjWhQ6DhMz6H6rt;
-        Mon,  1 Nov 2021 19:56:06 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.15; Mon, 1 Nov 2021 13:00:57 +0100
-Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Mon, 1 Nov
- 2021 12:00:57 +0000
-Date:   Mon, 1 Nov 2021 12:00:55 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+        id S231889AbhKAOfq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 1 Nov 2021 10:35:46 -0400
+Received: from mga03.intel.com ([134.134.136.65]:10741 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232197AbhKAOfn (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 1 Nov 2021 10:35:43 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10154"; a="230979324"
+X-IronPort-AV: E=Sophos;i="5.87,199,1631602800"; 
+   d="scan'208";a="230979324"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2021 07:33:09 -0700
+X-IronPort-AV: E=Sophos;i="5.87,199,1631602800"; 
+   d="scan'208";a="448970193"
+Received: from ahedgesx-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.133.93])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2021 07:33:09 -0700
+Date:   Mon, 1 Nov 2021 07:33:07 -0700
+From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <rafael.j.wysocki@intel.com>, Len Brown <lenb@kernel.org>,
-        "Alison Schofield" <alison.schofield@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH 0/6] Introduce acpi_table_parse_cedt and extra nodes for
- CXL.mem
-Message-ID: <20211101120055.00007383@Huawei.com>
-In-Reply-To: <163553708697.2509508.16523059414830959692.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <163553708697.2509508.16523059414830959692.stgit@dwillia2-desk3.amr.corp.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+Cc:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: Re: [RFC PATCH v2 05/28] cxl/core: Convert decoder range to resource
+Message-ID: <20211101143307.iqe4gle7gbs3vwcv@intel.com>
+References: <20211022183709.1199701-1-ben.widawsky@intel.com>
+ <20211022183709.1199701-6-ben.widawsky@intel.com>
+ <CAPcyv4iiR_HT_9ExRvgLixWnQg8y-id1zpmRYurFSfw3OiVaYQ@mail.gmail.com>
+ <20211029212654.cnge45a3tj3abj4s@intel.com>
+ <CAPcyv4idbq0+VjHRLPVDjhDF6pH1GtqBJeNNTo-7USPLq+aUBw@mail.gmail.com>
+ <20211029223751.qb7heeezdfqfhnt2@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.41]
-X-ClientProxiedBy: lhreml731-chm.china.huawei.com (10.201.108.82) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211029223751.qb7heeezdfqfhnt2@intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 29 Oct 2021 12:51:27 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+On 21-10-29 15:37:51, Ben Widawsky wrote:
+> On 21-10-29 15:22:19, Dan Williams wrote:
+> > On Fri, Oct 29, 2021 at 2:27 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > [..]
+> > > > Note, this is just how I had it roughly mapped out in my head, I defer
+> > > > making it a hard recommendation until I get deeper into this set to
+> > > > see if we diverge.
+> > > >
+> > >
+> > > You're correct.
+> > >
+> > > I had changed this already for my v3. I ended up with this:
+> > > +       union {
+> > > +               struct resource cfmws_res;
+> > 
+> > "cfmws" is something that will only appear on ACPI based CXL systems,
+> > so if it needs a prefix it should be something that does not preclude
+> > CXL on other platform firmware architectures. So, "platform_" or
+> > "root_"?
+> 
+> Sure. Platform_ is better.
+> 
 
-> Hi Rafael,
-> 
-> While reviewing "[PATCH v3] ACPI: NUMA: Add a node and memblk for each
-> CFMWS not in SRAT" [1]. I noticed that it was open coding CEDT sub-table
-> parsing in a similar fashion as drivers/cxl/acpi.c. The driver open
-> coded the parsing because the ACPI sub-table helpers are marked __init.
-> In order to avoid the ongoing maintenance burden of a split between
-> "early" and "late" ACPI sub-table parsing this series proposes to make
-> those helpers available to drivers.
-> 
-> The savings in drivers/cxl/ are:
-> 
->  drivers/cxl/Kconfig |    1 
->  drivers/cxl/acpi.c  |  234 +++++++++++++++++++--------------------------------
->  2 files changed, 88 insertions(+), 147 deletions(-)
-> 
-> ...and 15 lines new code not added are saved in this new version of
-> "ACPI: NUMA: Add a node and memblk for each CFMWS not in SRAT".
-> 
-> Let me know if this looks ok to you and I can carry it in the CXL tree
-> (i.e. after the merge window, for v5.17 consideration).
-> 
-> [1]: https://lore.kernel.org/r/20211019050908.449231-1-alison.schofield@intel.com
+Coming back to this. While "CFMWS" is indeed defined as part of ACPI, I do think
+it could also be a generic name for what it represents. In other words, I don't
+see any issue with using CFMWS, but, I'll start using "platform" since it seems
+it's your preference (and I prefer that to "root").
 
-Is it worth the complexity of the __init_or_acpilib and export part?
-Seems like a fiddly dance for what looks to be minor savings...
-
-Jonathan
-
+> > 
+> > > +               struct resource *decoder_res;
+> > 
+> > So the region device is going to be doing the __request_region() from
+> > @cfmws_res, not decoders, so why is this a resource and not a range?
 > 
-> ---
+> Well, sort of. Most of v3 was to ultimately go with the decoders doing the
+> __request_region, although thinking about this further that will not work since
+> multiple decoders might want the same ranges of the parent resource.
 > 
-> Alison Schofield (1):
->       ACPI: NUMA: Add a node and memblk for each CFMWS not in SRAT
-> 
-> Dan Williams (5):
->       ACPI: Keep sub-table parsing infrastructure available for modules
->       ACPI: Teach ACPI table parsing about the CEDT header format
->       ACPI: Add a context argument for table parsing handlers
->       cxl/acpi: Convert CFMWS parsing to ACPI sub-table helpers
->       cxl/test: Mock acpi_table_parse_cedt()
-> 
-> 
->  drivers/acpi/Kconfig          |    3 +
->  drivers/acpi/numa/srat.c      |   59 ++++++++++
->  drivers/acpi/tables.c         |   87 +++++++++++----
->  drivers/cxl/Kconfig           |    1 
->  drivers/cxl/acpi.c            |  237 ++++++++++++++++-------------------------
->  include/linux/acpi.h          |   34 +++++-
->  tools/testing/cxl/Kbuild      |    3 -
->  tools/testing/cxl/test/cxl.c  |   68 ++++++++----
->  tools/testing/cxl/test/mock.c |   30 ++---
->  tools/testing/cxl/test/mock.h |    6 +
->  10 files changed, 304 insertions(+), 224 deletions(-)
-> 
-> base-commit: c6d7e1341cc99ba49df1384c8c5b3f534a5463b1
-
+> So I guess it has to be region. I can go back to renaming it res in that case.
+> You're correct that the region device should own doing the __request_region.
