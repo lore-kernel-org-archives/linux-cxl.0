@@ -2,63 +2,61 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EE3C433F5
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Nov 2021 18:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E1CC433F5
+	for <linux-cxl@archiver.kernel.org>; Tue,  2 Nov 2021 20:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C106C60E54
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Nov 2021 18:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 125E061058
+	for <linux-cxl@archiver.kernel.org>; Tue,  2 Nov 2021 20:01:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230333AbhKBSwC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 2 Nov 2021 14:52:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47008 "EHLO
+        id S230043AbhKBUDo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 2 Nov 2021 16:03:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229981AbhKBSwA (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 2 Nov 2021 14:52:00 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22B52C061714
-        for <linux-cxl@vger.kernel.org>; Tue,  2 Nov 2021 11:49:25 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id x64so1977827pfd.6
-        for <linux-cxl@vger.kernel.org>; Tue, 02 Nov 2021 11:49:25 -0700 (PDT)
+        with ESMTP id S229813AbhKBUDo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 2 Nov 2021 16:03:44 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C648EC061714
+        for <linux-cxl@vger.kernel.org>; Tue,  2 Nov 2021 13:01:08 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id k4so518259plx.8
+        for <linux-cxl@vger.kernel.org>; Tue, 02 Nov 2021 13:01:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TwNxytMPVTZG/AeLkzOD4sMqQDlFN6ILnR3zgfU2iu0=;
-        b=QLnfazdvlvcuhCrEeLj6KGc0HmQ2tf1EQwhV3tWzET0C4NdJw96ml35KGzmPttrn21
-         /t34eykY3JMnBO6diCvlteFxUqAPeHYbgBuvLVTLd2jlHdsaOSygfGf98R8EwHMDNOy3
-         uo2QA8YUj6AgBkg0AGyOF5EyArFkFWj13py3cyrzfk2bAtkDUG2z3wl1/C5JPjOHR2Rd
-         ueJjD1P+UFX9t2yHeo14p8JJtLAYCiYNLXDgCVaAnLYL++9QcSBn8CIsb+JsSb9+5RUD
-         gJVUDQcskdA6sFd9rTdkzXTziJiVPbtODMtGtzox3Wae61qsBgWn10SQEE7E3TF9KXlW
-         ic0Q==
+        bh=5LTZhIulrK6UzKgguNONn1xWlAcdNnPWE7xeL7ita0M=;
+        b=21U3CHnkCasBeVtoakYZxTe5wPiKlGujrkz2CC5mkU3X/FSiVXKAwH+a/hWwZcqN9T
+         g7NhUoI6JffxSUtMwa2a81dCmlnupEeEXW19I2ruh5J1m/W/fQDElPtxhf1wxcxngDQ+
+         oz5fJEsL3IWRiL6+PUg5tgYYdP5j9ElYPd/pCYap5NVFidt663R91g003+F6sDK8dDyC
+         DM5CRAkl8zEerRwZpqq4QcDx6aG1ioEpjfa5j9RDwBuZKZFWGybtL1BoqGy7TPNzIDKU
+         38cWUP/oOidEuh0LEWJepQAFk1GMnamEx4+V/R7QpYFS3FIJzFjBvSvB8jWRhOPFxd9a
+         U1VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TwNxytMPVTZG/AeLkzOD4sMqQDlFN6ILnR3zgfU2iu0=;
-        b=1mKdjo3evc7ZGgzoYn3qTgB24xdlmU8sbu05dSHQU2aIiLZTmQY3jOieildTmbdUad
-         0MqdR3WbuNSTfTJ4k8R0xWDG5DHKNL6Exr41OnsKru0kwn9l/7DklXEg9iXT3qdnxfvD
-         J2r752uRBYO4TE+5HssRNKYsF06ngwNby0PAjHbn0qYyzW23ME39puXFYLSxX2Y/l5VT
-         /NC65Q/FWfspNmsTWhzwzYNYYPmClvp9prCbHagnMBBLAtrenMp8KClNxFx1Fz3A5Qvw
-         qNqLxX1pbhZ8nf1oJLI6hLZy8zAovvjirYiPZYahQA7DGNgjqhlYGErRxO2dd/ndj6AH
-         cETA==
-X-Gm-Message-State: AOAM531H1g0RA9FzJY5egwCn2ghaU7wiExkgJyhg/XPvOCDmWFSnI4LG
-        EgzhX03NTDwmo1OLGvRQzKVh3dTw2mHFa+OoT4p9Xg==
-X-Google-Smtp-Source: ABdhPJyybvQJLsq4slyqvd4T60smjuq1Qri8mA3JjFK+W5Fyhb1tVe89hDV/64PtU9LLm4gr8lOBsQN68J/sx5nm660=
-X-Received: by 2002:a63:6bc2:: with SMTP id g185mr28908546pgc.356.1635878964706;
- Tue, 02 Nov 2021 11:49:24 -0700 (PDT)
+        bh=5LTZhIulrK6UzKgguNONn1xWlAcdNnPWE7xeL7ita0M=;
+        b=oS/knKrkmNsNOfx+1icY/GQMo8vOMfN8uXYcJzLARUd/1Bu6Po7EDlgDAW3Ba91WmW
+         RR7EPBBwpavBNBIWw9UmsJOOq4cMd44sIuJVdcIoQp/HfG4/m8DJ0SMnKWSarGkSkY6d
+         svod5dfIPLQa9DlBbCJ0S4EH2Ae4ateUEK8au8wf2po+OBNTIVRA3fO16lYLMI0qvuoj
+         HuOotx0MahL8j8JQVEdCyja453YB0OJnNVFS4b9I5eWIsjDQH3au5a7zzRDwF9/DVpSo
+         nr6aV0bNhoWz/zpz1N7F9ToO+0Vao1dVzZYfxs1mUkTaDCrrsFWDzZmln2RRV+sFS2LF
+         X/qQ==
+X-Gm-Message-State: AOAM531OLvJCBH0NcKLbPdJswKzGj057gcZl+CWyd5MpLl11N49vMPN7
+        ysPhysjWn/zubskBNXGCOZR3DN68EhCRVWewm71fkA==
+X-Google-Smtp-Source: ABdhPJxtCqT60ZbhbFTFLqvR+SRpVZTZk5CP1N9VQ5Zor8Xy+6eqU2gexD70AEVdhs2c/1B2Xns/QDOM+lY+um+kYTU=
+X-Received: by 2002:a17:902:b697:b0:141:c7aa:e10f with SMTP id
+ c23-20020a170902b69700b00141c7aae10fmr20991811pls.18.1635883267011; Tue, 02
+ Nov 2021 13:01:07 -0700 (PDT)
 MIME-Version: 1.0
 References: <20211022183709.1199701-1-ben.widawsky@intel.com>
- <20211022183709.1199701-10-ben.widawsky@intel.com> <CAPcyv4j+mv3+FyJd0OVBe_dUqzzYpS2gkEagiRp-Tqh9t7NMmg@mail.gmail.com>
- <20211101170750.sajcmjxdv5rajffe@intel.com> <CAPcyv4i-8oRjOPywtNwBef3irb8b44PzwBrEUdQ0Bxrzrju5+w@mail.gmail.com>
- <20211102163121.hyfj7yceainmppmk@intel.com> <CAPcyv4iQzHeF8cth4VGGMpAT-3d6T=6knCq5fnt+Yt1ucxbW8Q@mail.gmail.com>
- <20211102175737.k7l4yymx75kdvgwv@intel.com> <CAPcyv4iNaTmJJ-vgPRMtUO9_xbB0TTTVcrm4gm8m1wMzbfK4NQ@mail.gmail.com>
- <20211102182715.p5odqlr2z7z3n6go@intel.com>
-In-Reply-To: <20211102182715.p5odqlr2z7z3n6go@intel.com>
+ <20211022183709.1199701-16-ben.widawsky@intel.com> <CAPcyv4hqHRjDnmkcJpUA1ejMumfP_uX1axg1cdDRKFUFUbp35Q@mail.gmail.com>
+ <20211101225616.35cbr5mugssy35du@intel.com> <CAPcyv4gYiun5mnRbzw_OP_+6Nk+UzwBDHuUazM_QpYcdX7hzKA@mail.gmail.com>
+ <20211102163946.jmygfz3ramiglhtf@intel.com>
+In-Reply-To: <20211102163946.jmygfz3ramiglhtf@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 2 Nov 2021 11:49:14 -0700
-Message-ID: <CAPcyv4j0yi7utGR2UcG99_i0TH4j23QyryiYxOvZ6BosP=WEhQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 09/28] cxl/acpi: Map single port host bridge
- component registers
+Date:   Tue, 2 Nov 2021 13:00:56 -0700
+Message-ID: <CAPcyv4i-BacmZadFJN+kAg2DR1n=vrf0XN6A=1OETzxqw3n9mw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 15/28] cxl/core: Introduce API to scan switch ports
 To:     Ben Widawsky <ben.widawsky@intel.com>
 Cc:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
@@ -70,50 +68,295 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Nov 2, 2021 at 11:27 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Tue, Nov 2, 2021 at 9:39 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> On 21-11-02 11:10:05, Dan Williams wrote:
-> > On Tue, Nov 2, 2021 at 10:57 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> On 21-11-01 18:45:57, Dan Williams wrote:
+> > On Mon, Nov 1, 2021 at 3:56 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
 > > >
-> > > On 21-11-02 10:46:41, Dan Williams wrote:
-> > > > On Tue, Nov 2, 2021 at 9:31 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > > [..]
-> > > > > It seemed like a very simple thing to support given the port driver's existence
-> > > > > so it was added to remove a TODO. However, I will drop it as you request.
+> > > On 21-10-31 22:39:43, Dan Williams wrote:
+> > > > On Fri, Oct 22, 2021 at 11:37 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > > > >
+> > > > > The CXL drivers encapsulate the components that direct memory traffic in
+> > > > > an entity known as a cxl_port. Compute Express Link specifies three such
+> > > > > components: hostbridge (ie. a collection of root ports), switches, and
+> > > > > endpoints. There are currently drivers that create these ports for the
+> > > > > hostbridges and the endpoints (cxl_acpi and cxl_mem). The new API
+> > > > > introduced allows callers to initiate a scan down from the hostbridge
+> > > > > and create ports for switches in the CXL topology.
+> > > > >
+> > > > > The intended user of this API is for endpoint devices. An endpoint
+> > > > > device will need to determine if it is CXL.mem capable, which requires
+> > > > > all components in the path from hostbridge to the endpoint to be CXL.mem
+> > > > > capable. Once an endpoint device determines it's connected to a CXL
+> > > > > capable root port, it can call this API to fill in all the ports in
+> > > > > between the hostbridge and itself.
+> > > > >
+> > > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > > > > ---
+> > > > >  .../driver-api/cxl/memory-devices.rst         |   6 +
+> > > > >  drivers/cxl/core/Makefile                     |   1 +
+> > > > >  drivers/cxl/core/bus.c                        | 145 ++++++++++++++++++
+> > > > >  drivers/cxl/core/pci.c                        |  99 ++++++++++++
+> > > > >  drivers/cxl/cxl.h                             |   2 +
+> > > > >  drivers/cxl/pci.h                             |   6 +
+> > > > >  drivers/cxl/port.c                            |   2 +-
+> > > > >  tools/testing/cxl/Kbuild                      |   1 +
+> > > > >  8 files changed, 261 insertions(+), 1 deletion(-)
+> > > > >  create mode 100644 drivers/cxl/core/pci.c
+> > > > >
+> > > > > diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
+> > > > > index fbf0393cdddc..547336c95593 100644
+> > > > > --- a/Documentation/driver-api/cxl/memory-devices.rst
+> > > > > +++ b/Documentation/driver-api/cxl/memory-devices.rst
+> > > > > @@ -47,6 +47,12 @@ CXL Core
+> > > > >  .. kernel-doc:: drivers/cxl/core/bus.c
+> > > > >     :identifiers:
+> > > > >
+> > > > > +.. kernel-doc:: drivers/cxl/core/pci.c
+> > > > > +   :doc: cxl pci
+> > > > > +
+> > > > > +.. kernel-doc:: drivers/cxl/core/pci.c
+> > > > > +   :identifiers:
+> > > > > +
+> > > > >  .. kernel-doc:: drivers/cxl/core/pmem.c
+> > > > >     :doc: cxl pmem
+> > > > >
+> > > > > diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+> > > > > index 07eb8e1fb8a6..9d33d2d5bf09 100644
+> > > > > --- a/drivers/cxl/core/Makefile
+> > > > > +++ b/drivers/cxl/core/Makefile
+> > > > > @@ -7,3 +7,4 @@ cxl_core-y += pmem.o
+> > > > >  cxl_core-y += regs.o
+> > > > >  cxl_core-y += memdev.o
+> > > > >  cxl_core-y += mbox.o
+> > > > > +cxl_core-y += pci.o
+> > > > > diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
+> > > > > index c7e1894d503b..f10e7d5b22a4 100644
+> > > > > --- a/drivers/cxl/core/bus.c
+> > > > > +++ b/drivers/cxl/core/bus.c
+> > > > > @@ -8,6 +8,7 @@
+> > > > >  #include <linux/idr.h>
+> > > > >  #include <cxlmem.h>
+> > > > >  #include <cxl.h>
+> > > > > +#include <pci.h>
+> > > > >  #include "core.h"
+> > > > >
+> > > > >  /**
+> > > > > @@ -445,6 +446,150 @@ struct cxl_port *devm_cxl_add_port(struct device *uport,
+> > > > >  }
+> > > > >  EXPORT_SYMBOL_GPL(devm_cxl_add_port);
+> > > > >
+> > > > > +void devm_cxl_remove_port(struct cxl_port *port)
+> > > > > +{
+> > > > > +       down_read(&root_host_sem);
+> > > > > +       if (cxl_root_host) {
+> > > > > +               devm_release_action(cxl_root_host, cxl_unlink_uport, port);
+> > > > > +               devm_release_action(cxl_root_host, unregister_port, port);
+> > > > > +       }
+> > > > > +       up_read(&root_host_sem);
+> > > > > +}
+> > > > > +EXPORT_SYMBOL_GPL(devm_cxl_remove_port);
 > > > >
-> > > > I'm honestly asking the question why this is needed and more
-> > > > specifically why this is needed in this location?
+> > > > If the scan establishes the property that all child ports are devm
+> > > > allocated with their cxl_port-parent, and only if the cxl_port-parent
+> > > > is bound to its driver then I think we don't need to play
+> > > > devm_release_action games().
 > > > >
-> > > > In other words, how is this case different than typical component
-> > > > register probing that is done in the port driver itself? I would
-> > > > expect the TODO just gets deleted by the port driver addition.
 > > >
-> > > Without this code, a decoder is added for the full address range regardless if
-> > > there is an existing programmed HDM decoder. With this code when the port driver
-> > > probes this host bridge HDM component registers, everything will be enumerated
-> > > by the normal flow.
-> > >
-> > > This seemed easier than trying to have the port driver determine what cxl_acpi
-> > > driver did and unwind that if there is a programmed decoder.
+> > > We had discussed this previously. I was running into an issue when unloading
+> > > cxl_mem. I needed a way to remove the endpoint port and this was your
+> > > recommendation. Are you suggesting if the chain is set up correctly, I don't
+> > > need to do anything?
 > >
-> > I think this is more an argument to unify all decoder creation in the
-> > port driver. When the port driver sees a single dport with no HDM
-> > decoder registers it can create the passthrough decoder, if it sees
-> > single dport with HDM decoder registers then it can create a
-> > programmable decoder.
+> > I think if the chain is set up correctly then you don't need to do
+> > anything special. The endpoint port would be devm registered by the
+> > cxl_memdev driver to its parent cxl_port provided that port is
+> > actively attached to its driver.
+> >
+> > > I don't remember exactly what was blowing up but I can try again after things
+> > > are properly parented.
+> >
+> > Cool.
+> >
+> > >
+> > > > > +
+> > > > > +static int match_port(struct device *dev, const void *data)
+> > > > > +{
+> > > > > +       struct pci_dev *pdev = (struct pci_dev *)data;
+> > > > > +
+> > > > > +       if (dev->type != &cxl_port_type)
+> > > > > +               return 0;
+> > > > > +
+> > > > > +       return to_cxl_port(dev)->uport == &pdev->dev;
+> > > > > +}
+> > > > > +
+> > > > > +static struct cxl_port *find_cxl_port(struct pci_dev *usp)
+> > > > > +{
+> > > > > +       struct device *port_dev;
+> > > > > +
+> > > > > +       if (!pci_is_pcie(usp) || pci_pcie_type(usp) != PCI_EXP_TYPE_UPSTREAM)
+> > > > > +               return NULL;
+> > > > > +
+> > > > > +       port_dev = bus_find_device(&cxl_bus_type, NULL, usp, match_port);
+> > > > > +       if (port_dev)
+> > > > > +               return to_cxl_port(port_dev);
+> > > > > +
+> > > > > +       return NULL;
+> > > > > +}
+> > > > > +
+> > > > > +static int add_upstream_port(struct device *host, struct pci_dev *pdev)
+> > > > > +{
+> > > > > +       struct device *dev = &pdev->dev;
+> > > > > +       struct cxl_port *parent_port;
+> > > > > +       struct cxl_register_map map;
+> > > > > +       struct cxl_port *port;
+> > > > > +       int rc;
+> > > > > +
+> > > > > +       /*
+> > > > > +        * Upstream ports must be connected to a downstream port or root port.
+> > > > > +        * That downstream or root port must have a parent.
+> > > > > +        */
+> > > > > +       if (!pdev->dev.parent->parent)
+> > > > > +               return -ENXIO;
+> > > > > +
+> > > > > +       /* A port is useless if there are no component registers */
+> > > > > +       rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
+> > > > > +       if (rc)
+> > > > > +               return rc;
+> > > > > +
+> > > > > +       parent_port = find_cxl_port(to_pci_dev(pdev->dev.parent->parent));
+> > > >
+> > > > This deref chain is unreadable. It wants a helper if it stays, but I
+> > > > can't immediately think of a reason to ever need to look at a
+> > > > grandparent in the hierarchy.
+> > >
+> > > The goal is to be able to find the next PCIe port up in the chain.
+> > >
+> > > My understanding was:
+> > > pdev = PCIe upstream switch
+> > > pdev->dev.parent = PCIe downstream switch connected to pdev.
+> > > pdev->dev.parent->parent = PCIe upstream switch connected to pdev->dev.parent
+> > >
+> > > I was unable to find an idiomatic way to do that. I'm open to suggestions.
+> >
+> > Oh ok, I see it now, but I think this can be done in pure CXL terms
+> > and generic devices with the assumption that the parent device of a
+> > cxl_memdev must be a dport. Then this works whether the parent port is
+> > a platform device like ACPI or cxl_test, or a PCIe device.
+> >
+> > static int port_has_dport(struct device *dev, const void *dport_dev)
+> > {
+> >         int found = 0;
+> >         struct cxl_port *port;
+> >         struct cxl_dport *dport;
+> >
+> >         if (dev->type != &cxl_port_type)
+> >                 return 0;
+> >         port = to_cxl_port(dev);
+> >
+> >         device_lock(&port->dev);
+> >         list_for_each_entry (dport, &port->dports, list)
+> >                 if (dport->dport == dport_dev) {
+> >                         found = 1;
+> >                         break;
+> >                 }
+> >         device_unlock(&port->dev);
+> >
+> >         return found;> > }
+> >
+> > struct cxl_port *find_parent_cxl_port(struct cxl_memdev *cxlmd)
+> > {
+> >         return bus_find_device(&cxl_bus_type, NULL, cxlmd->dev.parent,
+> >                                port_has_dport);
+
+Hmm this still needs a grandparent because cxlmd->dev.parent, is the
+device that registered the memdev and that device's parent is the
+dport. I need to see if cxl_test supports this property.
+
+> > }
+> >
 >
-> That too, though I'm not sure how useful that will be for us.
+> Ah, I remember now that I had something like this originally. I thought it may
+> be more desirable to do the grandparent route since you should be able to assert
+> there is a grandparent. I'll change it.
+>
+> > > >
+> > > > > +       if (!parent_port)
+> > > > > +               return -ENODEV;
+> > > > > +
+> > > > > +       port = devm_cxl_add_port(dev, cxl_reg_block(pdev, &map), parent_port);
+> > > >
+> > > > This is broken because the pci device being used here does not have a
+> > > > driver that knows about CXL bus events.
+> > >
+> > > I don't understand this, but I'd like to. Doesn't this make a port device which
+> > > gets probed by the port driver? Why does the PCI device matter?
+> >
+> > I am reacting to the first argument of this call being @dev that came
+> > from the pci_dev that was passed in to be the "host" for the devm
+> > operation. The devm release action triggers at driver unbind of that
+> > host device, but that doesn't make sense because the driver for a
+> > switch has nothing to do with CXL operation.
+> >
+>
+> What's the correct host, parent_port->dev?
 
-?
+Yeah, provided you have the parent locked and that port is attached to
+the port driver. However, I'm concerned about lock ordering... I
+"think" the port driver just needs to make sure that it never takes
+the parent lock in the remove() path since that's the one that will
+recurse from an upper layer port ->remove() event.
 
-This is about the proper place to enumerate decoders. The proposal in
-this patch is to do some part of the enumeration in cxl_acpi and some
-part in cxl_port, I'm saying push it all to cxl_port. I.e. it was a
-layering violation in retrospect to create a default passthrough
-decoder from cxl_acpi.
+>
+> > >
+> > > (I'll mention again, switch code is not tested).
+> > >
+> > > >
+> > > > > +       put_device(&parent_port->dev);
+> > > > > +       if (IS_ERR(port))
+> > > > > +               dev_err(dev, "Failed to add upstream port %ld\n",
+> > > > > +                       PTR_ERR(port));
+> > > > > +       else
+> > > > > +               dev_dbg(dev, "Added CXL port\n");
+> > > > > +
+> > > > > +       return rc;
+> > > > > +}
+> > > > > +
+> > > > > +static int add_downstream_port(struct pci_dev *pdev)
+> > > > > +{
+> > > > > +       resource_size_t creg = CXL_RESOURCE_NONE;
+> > > > > +       struct device *dev = &pdev->dev;
+> > > > > +       struct cxl_port *parent_port;
+> > > > > +       struct cxl_register_map map;
+> > > > > +       u32 lnkcap, port_num;
+> > > > > +       int rc;
+> > > > > +
+> > > > > +       /*
+> > > > > +        * Ports are to be scanned from top down. Therefore, the upstream port
+> > > > > +        * must already exist.
+> > > > > +        */
+> > > > > +       parent_port = find_cxl_port(to_pci_dev(pdev->dev.parent));
+> > > > > +       if (!parent_port)
+> > > > > +               return -ENODEV;
+> > > > > +
+> > > > > +       /*
+> > > > > +        * The spec mandates component registers are present but the
+> > > > > +        * driver does not.
+> > > >
+> > > > What is this trying to convey?
+> > > >
+> > >
+> > > That I'm not validating the hardware, and even though component registers are
+> > > mandatory, the driver will move on even if they're not found. This functionality
+> > > may need to change in the future and so I left the comment there.
+> >
+> > I think that could be conveyed without comment with something like:
+> >
+> >         if (rc)
+> >                 creg = CXL_RESOURCE_NONE;
+> >         else
+> >                 creg = cxl_reg_block(pdev, &map);
+>
+> As you like.
 
-> I think the more
-> likely case is BIOS is trying to hide some device (or switch) address space.
-
-Not sure why that is relevant for the decision about where to place
-component register probing and passthrough decoder creation?
+/me tries to resist urge for Princess Bridge reference...
