@@ -2,59 +2,60 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEA5C433F5
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Nov 2021 01:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9518C433F5
+	for <linux-cxl@archiver.kernel.org>; Tue,  2 Nov 2021 02:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEB4A60724
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Nov 2021 01:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8788160EE3
+	for <linux-cxl@archiver.kernel.org>; Tue,  2 Nov 2021 02:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229902AbhKBB7L (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 1 Nov 2021 21:59:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42072 "EHLO
+        id S229458AbhKBCHK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 1 Nov 2021 22:07:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbhKBB7K (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 1 Nov 2021 21:59:10 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B33E6C061714
-        for <linux-cxl@vger.kernel.org>; Mon,  1 Nov 2021 18:56:36 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id r28so18834081pga.0
-        for <linux-cxl@vger.kernel.org>; Mon, 01 Nov 2021 18:56:36 -0700 (PDT)
+        with ESMTP id S229486AbhKBCHK (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 1 Nov 2021 22:07:10 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77707C061714
+        for <linux-cxl@vger.kernel.org>; Mon,  1 Nov 2021 19:04:36 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id s24so13615942plp.0
+        for <linux-cxl@vger.kernel.org>; Mon, 01 Nov 2021 19:04:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2QRbeVNhDS/gP/mCB4CR8qFExHeNct0pebtAyXtOH48=;
-        b=pWVQkpLY5veh2xka9sB+/4tHYujRYzYkHd8nhPs3djSzh1GiCdcQo81QVG2ChzKToh
-         W4DTwrK+L5B/4kLpybABAvVafigK+pVf3Yct5T2P/2vVPGv3d90ZP/I8ydpFt123M5PT
-         ftR4N53imqIM6oM21zs32jboa0Ado1XuyGvCblwYixQ7779oZD8sepUZfCsU87n/8UNj
-         3hmzBEMFHaSzSBVYioAhke49nJpX4sZ2wgj2+GGnrFetOlIw9uj10w0pLNLnY7VInWkT
-         MWQ7q/6WIU5MsNSnEyhJXrUEQh4vN0gJrjLZMpXLfNnDypzXr1R/Q6PASVXukcp2gtjR
-         zFaQ==
+        bh=0yvD+OCZpDEFgQbmUw96U4kX04ZokBq23ohHueWa7Gw=;
+        b=pMwWyyOvMHwztw2USIpj4/GU0Kfb3wlQiMc2jyCIn3jG7zR2TQYMzs/KqMVAH088A1
+         zIb/EJXS53BY4HZqlog/LvjqDXK1P0WE1S7WUXFnNCqSkFEDtYLtF28o4KSro8I83BDB
+         ACC08vQSaWoWIo2t7W3tNQ7MY4g51tvsjZtgOb41xnwHkUesTDHduj8Wdp3fqWCudqfo
+         dt7xhbIaCMCEf7/UMFKLfSfbS5djyATTjoQy2e9HZk4z17lK/Kg0fS9p3RR5PdgO4iQu
+         pJPw0dz5AfreNh16TRLwDmLT2qdQI88a081xSOwLdK3QaAEvxxR5HlpbqT3cH58Kjx7X
+         zsPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2QRbeVNhDS/gP/mCB4CR8qFExHeNct0pebtAyXtOH48=;
-        b=4u4udTSJsSU+rSu8s9We8JVKqmCL71fhivQALyBzskmK+69fRRoS1NtEKvKqv5lO5x
-         1/pRq/MuKTIww+KqN6T39tY3jnMCq/M3K0ajqxMHTLQ3JLRgZx83YgsAPZbYn7j/Uetu
-         Whfo9bHFQK9jkZWPlyFOmbnpCmfvmKfkxl8v4JpggPnkvR3Wy3I3czgHi1TK/RkBqwU/
-         rXdT+KLZ3PI7jeKi2EJuT/ufnwuAu6hKRDDqZCRShOUKH/3CVT2kUkTBH7g1pzY+/knb
-         BAalc2Lz2Ixi110WvR7//4tv7ocknVNUcsgz0iDsRxYPLlQFBea2/SKxaJRSXkd/V+/U
-         fz1w==
-X-Gm-Message-State: AOAM5302l+67rmZxnFZBoQXyUCEOJS7yWaxHoJDPFNjIrG9ZaYRpe334
-        TMqFYeHZuFrl8x6oGSSVfl+dPC9bFI0LVmealjvqgA==
-X-Google-Smtp-Source: ABdhPJzAdj8NB98HOZ++K0xwgbKCYr7sIafj2XaDGo4GZvvApBwOdJX21YXKeAPaic1zI3GSKB8/b7YtUxFqQC3NbSk=
-X-Received: by 2002:a63:85c6:: with SMTP id u189mr11771893pgd.377.1635818196079;
- Mon, 01 Nov 2021 18:56:36 -0700 (PDT)
+        bh=0yvD+OCZpDEFgQbmUw96U4kX04ZokBq23ohHueWa7Gw=;
+        b=dvpXhm/AMum2Am+QfcunKC7ipdczmM4gVS4nDuAB45tUcGXIWqXiXRrpXKJYsXc/AY
+         ETepJ9tcHMEFF0oq6SvF40waUGJZFbhhJGdxyGShMDgPndH2FgostovAxH9Qd8BlF7Ho
+         TPrY4tMrx0/NPrQ66yHYJrTrWcjnP9NEiqXdz9knc8j+DD8rjxeJlRsqyzporYpLJ2zt
+         vhcbQa7EbfPY2a2SqrLD+o+XfFLoLFNexWdzCd9uoehMMKVlVdPUXe8NOkCD5+fo8+N8
+         xlkuDLmoM18vdsD34XyJsgO3NofG2n2PnTw1a/iOFYqcdWveJuJsSPfX+JmSAz8afvAA
+         oeLg==
+X-Gm-Message-State: AOAM531xVQSvaML/Y0QKCZSSKLSVys/zqR8HHGA/Z9BIPpukTXQeZ29D
+        keXGg7poAU7cIn9ax/j49VdPTxi3l/JvP8tglk0aCw==
+X-Google-Smtp-Source: ABdhPJzLmjLjJSrGWJrwihFJmtv8KMWaOVhhqJK82x3l2mDDZa3HUuyLAZLpReAC8PrazqJ1h5SxUZnrbdH6Mby476s=
+X-Received: by 2002:a17:902:8a97:b0:13e:6e77:af59 with SMTP id
+ p23-20020a1709028a9700b0013e6e77af59mr28369767plo.4.1635818676021; Mon, 01
+ Nov 2021 19:04:36 -0700 (PDT)
 MIME-Version: 1.0
 References: <20211022183709.1199701-1-ben.widawsky@intel.com>
- <20211022183709.1199701-12-ben.widawsky@intel.com> <CAPcyv4jm3Hp_XYkQiNYvwhF-S6-3k4qvs-a=4zS1YKukne1dnQ@mail.gmail.com>
- <20211101185602.apavn3je3nqbasx3@intel.com> <20211101214538.pn2ifizia4vkyeub@intel.com>
-In-Reply-To: <20211101214538.pn2ifizia4vkyeub@intel.com>
+ <20211022183709.1199701-11-ben.widawsky@intel.com> <CAPcyv4jqkEVTjqKd1wy468ht3_e8wawiR0sNQKcP9CHnPcgHMA@mail.gmail.com>
+ <20211101184335.qovsalathds4mxak@intel.com>
+In-Reply-To: <20211101184335.qovsalathds4mxak@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 1 Nov 2021 18:56:25 -0700
-Message-ID: <CAPcyv4jKrtRuU+HK=GrQhpxjJfkh0JTGQ9YSvYzwtYFoVUZXiA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 11/28] cxl/acpi: Rescan bus at probe completion
+Date:   Mon, 1 Nov 2021 19:04:25 -0700
+Message-ID: <CAPcyv4ikVFFqyfH2zLhBVJ28N1_gufGHd2gVbP2h+Rv2cZEpeA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 10/28] cxl/core: Store global list of root ports
 To:     Ben Widawsky <ben.widawsky@intel.com>
 Cc:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
@@ -66,91 +67,129 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Nov 1, 2021 at 2:45 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Mon, Nov 1, 2021 at 11:43 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> On 21-11-01 11:56:02, Ben Widawsky wrote:
-> > On 21-10-31 12:25:32, Dan Williams wrote:
-> > > On Fri, Oct 22, 2021 at 11:37 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > >
-> > > > Ensure that devices being probed before cxl_acpi has completed will get
-> > > > a second chance.
+> On 21-10-31 11:32:45, Dan Williams wrote:
+> > On Fri, Oct 22, 2021 at 11:37 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
 > > >
-> > > I think this is at the wrong level... more below.
-> > > >
-> > > > CXL drivers are brought up through two enumerable, asynchronous
-> > > > mechanism. The leaf nodes in the CXL topology, endpoints, are enumerated
-> > > > via PCI headers. The root node's enumeration is platform specific. The
-> > > > current defacto mechanism for enumerating the root node is through the
-> > > > presence of an ACPI device, ACPI0017.
-> > > >
-> > > > The primary job of a cxl_mem driver is to determine if CXL.mem traffic
-> > > > can be routed to/from the PCIe device that it is being probed. A
-> > > > prerequisite in this determination is that all CXL components in the
-> > > > path from root to leaf are capable of routing CXL.mem traffic. If the
-> > > > cxl_mem driver is probed before cxl_acpi is complete the driver will be
-> > > > unable to make this determination. To address this, cxl_acpi (or in the
-> > > > future, another platform specific driver) will rescan all devices to
-> > > > make sure the ordering is correct.
-> > > >
-> > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > > ---
-> > > >  drivers/cxl/acpi.c | 20 +++++++++++++++++++-
-> > > >  1 file changed, 19 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> > > > index 625c5d95b83f..1cc3a74c16bd 100644
-> > > > --- a/drivers/cxl/acpi.c
-> > > > +++ b/drivers/cxl/acpi.c
-> > > > @@ -451,6 +451,14 @@ static u32 cedt_instance(struct platform_device *pdev)
-> > > >         return U32_MAX;
-> > > >  }
-> > > >
-> > > > +static void bus_rescan(struct work_struct *work)
-> > > > +{
-> > > > +       if (bus_rescan_devices(&cxl_bus_type))
-> > > > +               pr_err("Failed to rescan CXL bus\n");
-> > > > +}
-> > > > +
-> > > > +static DECLARE_WORK(deferred_bus_rescan, bus_rescan);
-> > > > +
-> > > >  static int cxl_acpi_probe(struct platform_device *pdev)
-> > > >  {
-> > > >         int rc;
-> > > > @@ -484,9 +492,19 @@ static int cxl_acpi_probe(struct platform_device *pdev)
-> > > >         if (rc)
-> > > >                 goto out;
-> > > >
-> > > > -       if (IS_ENABLED(CONFIG_CXL_PMEM))
-> > > > +       if (IS_ENABLED(CONFIG_CXL_PMEM)) {
-> > > >                 rc = device_for_each_child(&root_port->dev, root_port,
-> > > >                                            add_root_nvdimm_bridge);
-> > > > +               if (rc)
-> > > > +                       goto out;
-> > > > +       }
-> > > > +
-> > > > +       /*
-> > > > +        * While ACPI is scanning hostbridge ports, switches and memory devices
-> > > > +        * may have been probed. Those devices will need to know whether the
-> > > > +        * hostbridge is CXL capable.
-> > > > +        */
-> > > > +       schedule_work(&deferred_bus_rescan);
+> > > CXL root ports (the downstream port to a host bridge) are to be
+> > > enumerated by a platform specific driver. In the case of ACPI compliant
+> > > systems, this is like the cxl_acpi driver. Root ports are the first
+> > > CXL spec defined component that can be "found" by that platform specific
+> > > driver.
 > > >
-> > > I think this belongs in port driver similar to the one in
-> > > drivers/cxl/pmem.c, because any port online event might mean that a
-> > > downstream port can now attach to the port driver. I prefer a local
-> > > ordered workqueue via queue_work() rather than the global unordered
-> > > workqueue primarily because it can be flushed without getting
-> > > entangled with other random work in the system, but also because the
-> > > ordered property is useful for comprehended hierarchical topology
-> > > events.
+> > > By storing a list of these root ports components in lower levels of the
+> > > topology (switches and endpoints), have a mechanism to walk up their
+> > > device hierarchy to find an enumerated root port. This will be necessary
+> > > for region programming.
+> > >
+> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > > ---
+> > >  drivers/cxl/acpi.c            |  4 ++--
+> > >  drivers/cxl/core/bus.c        | 34 +++++++++++++++++++++++++++++++++-
+> > >  drivers/cxl/cxl.h             |  5 ++++-
+> > >  tools/testing/cxl/mock_acpi.c |  4 ++--
+> > >  4 files changed, 41 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > > index 8cca0814dfb8..625c5d95b83f 100644
+> > > --- a/drivers/cxl/acpi.c
+> > > +++ b/drivers/cxl/acpi.c
+> > > @@ -231,7 +231,7 @@ __mock int match_add_root_ports(struct pci_dev *pdev, void *data)
+> > >                 creg = cxl_reg_block(pdev, &map);
+> > >
+> > >         port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
+> > > -       rc = cxl_add_dport(port, &pdev->dev, port_num, creg);
+> > > +       rc = cxl_add_dport(port, &pdev->dev, port_num, creg, true);
+> > >         if (rc) {
+> > >                 ctx->error = rc;
+> > >                 return rc;
+> > > @@ -406,7 +406,7 @@ static int add_host_bridge_dport(struct device *match, void *arg)
+> > >                 dev_dbg(host, "No CHBS found for Host Bridge: %s\n",
+> > >                         dev_name(match));
+> > >
+> > > -       rc = cxl_add_dport(root_port, match, uid, get_chbcr(chbs));
+> > > +       rc = cxl_add_dport(root_port, match, uid, get_chbcr(chbs), false);
+> > >         if (rc) {
+> > >                 dev_err(host, "failed to add downstream port: %s\n",
+> > >                         dev_name(match));
+> > > diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
+> > > index dffbd0ac64af..03394a3ae75f 100644
+> > > --- a/drivers/cxl/core/bus.c
+> > > +++ b/drivers/cxl/core/bus.c
+> > > @@ -25,6 +25,8 @@
+> > >   */
+> > >
+> > >  static DEFINE_IDA(cxl_port_ida);
+> > > +static LIST_HEAD(cxl_root_ports);
+> > > +static DECLARE_RWSEM(root_port_sem);
 > >
-> > Makes sense. I was trying to limit the number of rescans that took place and I
-> > believe I convinced myself that the current patch does work properly. However,
-> > architecturally it makes more sense for the port driver to own this and
-> > realistically I assume many rescans will coalesce.
+> > I don't see a need for this new list and lock...
+> >
+> > >
+> > >  static ssize_t devtype_show(struct device *dev, struct device_attribute *attr,
+> > >                             char *buf)
+> > > @@ -268,12 +270,31 @@ struct cxl_port *to_cxl_port(struct device *dev)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(to_cxl_port);
+> > >
+> > > +struct cxl_dport *cxl_get_root_dport(struct device *dev)
+> > > +{
+> > > +       struct cxl_dport *ret = NULL;
+> > > +       struct cxl_dport *dport;
+> > > +
+> > > +       down_read(&root_port_sem);
+> > > +       list_for_each_entry(dport, &cxl_root_ports, root_port_link) {
+> > > +               if (dport->dport == dev) {
+> > > +                       ret = dport;
+> > > +                       break;
+> > > +               }
+> > > +       }
+> > > +
+> > > +       up_read(&root_port_sem);
+> > > +       return ret;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(cxl_get_root_dport);
+> >
+> > This can be done by walking the existing topology:
+> >
+> > struct cxl_dport *cxl_get_root_dport(struct device *dev)
+> > {
+> >         struct device *host = get_cxl_topology_host();
+> >         struct cxl_dport *dport, *found = NULL;
+> >         struct cxl_port *port;
+> >         struct device *root;
+> >
+> >         if (!host)
+> >                 return NULL;
+> >
+> >         root = device_find_child(host, &root, match_cxl_root_port);
+> >         if (!root)
+> >                 goto out;
+> >         device_lock(root);
+> >         port = to_cxl_port(root);
+> >         list_for_each_entry (dport, &port->dports, list)
+> >                 if (dport->dport == dev) {
+> >                         found = dport;
+> >                         break;
+> >                 }
+> >         device_unlock(root);
+> >         put_device(root);
+> >
+> > out:
+> >         put_cxl_topology_host(host);
+> >         return found;
+> > }
+> >
+> >
+> > It occurs to me after writing this that device_lock() for iterating
+> > dports can be offloaded to the topology rwsem.
 > >
 >
-> Oh. I assume you want this rolled into (cxl/port: Introduce a port driver),
-> correct?
+> When I originally wrote this function, I didn't have a pointer to the root host.
+> Also, you said previously we'd remove the root host. What would you like me to
+> do?
 
-Yeah, otherwise the port driver is broken, right?
+Root device retrieval is useful for these scans. However, the role of
+overall "devm host" can be removed with careful port-child devm
+registration.
