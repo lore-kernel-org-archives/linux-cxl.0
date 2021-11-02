@@ -2,108 +2,81 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D47C433FE
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Nov 2021 17:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649F1C433EF
+	for <linux-cxl@archiver.kernel.org>; Tue,  2 Nov 2021 17:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 237C36112D
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Nov 2021 17:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 499C261050
+	for <linux-cxl@archiver.kernel.org>; Tue,  2 Nov 2021 17:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234787AbhKBRrB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 2 Nov 2021 13:47:01 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4052 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234734AbhKBRrA (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 2 Nov 2021 13:47:00 -0400
-Received: from fraeml734-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HkHHw2w6Sz67Q4R;
-        Wed,  3 Nov 2021 01:41:00 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml734-chm.china.huawei.com (10.206.15.215) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.15; Tue, 2 Nov 2021 18:44:23 +0100
-Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Tue, 2 Nov
- 2021 17:44:22 +0000
-Date:   Tue, 2 Nov 2021 17:44:21 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Rafael J Wysocki <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        <linux-cxl@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH 0/6] Introduce acpi_table_parse_cedt and extra nodes for
- CXL.mem
-Message-ID: <20211102174421.00002ae4@Huawei.com>
-In-Reply-To: <CAPcyv4g_c1mF6WvsMHC7-US7YybSprk=GX6cFWjoGOVa+yLx9g@mail.gmail.com>
-References: <163553708697.2509508.16523059414830959692.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <20211101120055.00007383@Huawei.com>
-        <CAPcyv4g_c1mF6WvsMHC7-US7YybSprk=GX6cFWjoGOVa+yLx9g@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+        id S234639AbhKBRta (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 2 Nov 2021 13:49:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234817AbhKBRt1 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 2 Nov 2021 13:49:27 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FBA9C06120A
+        for <linux-cxl@vger.kernel.org>; Tue,  2 Nov 2021 10:46:52 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id g11so8852790pfv.7
+        for <linux-cxl@vger.kernel.org>; Tue, 02 Nov 2021 10:46:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K1Rrs0cEbLqPa7Hx2ePPuXhOZ/gRmPRTTNB0leA99WQ=;
+        b=ZVbdpR6kBn4wHfNBznCi+TaMspQd8U2qEY6xrZkqsjutbX2Y6W1wgq86rJrjYEaoeV
+         24fBzisgLLXXUd4Dbjd0b2JNSL7Nl8WMsYCoUnjmnzY8RicvBTXFtgj29Vn4XP5mjRcb
+         mHY0tvJzCUXmzLaRQBMwi12xaP8Uus62PU8mF7Y38+ittb40Dml2GDKs/g1uWfM1Mk3S
+         mcpH74lzl21+Q+zp15xil5p2cJg+pmTL5wYdh6iQOlYHYCyes0vAl36wSDtz9awkW+6K
+         0nDg71HN6PTJSEj3Svx+FUCfDjK4U3ikEx/iyEybaiozNrxfr+hD5jQlsd7JlqE8g1pg
+         cUZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K1Rrs0cEbLqPa7Hx2ePPuXhOZ/gRmPRTTNB0leA99WQ=;
+        b=ZY0Q+Fq4357Ds5Te8vyobn4shFVbyeWq67qRqLoUQntArgz1f5npNAbW8kKQT6vHPO
+         2akFdOJpsKaz9YLloVnWKjfqzbHVERs7wHenBhsi7S0S9QaXVMYx0k/DEHBbi+mshwAb
+         VijPNQnco+AUB0ip61BBqdxlhNyb72BU1bUhi6ANpzjsuDVbH0rQp5pdb5rjV8V1KVIF
+         SOJlLBkLBOpF6jsVUPzSi4RxN5Q3SZBlBkJkW46Sl+Nygh/6yDTZNi1eLtsjZhJDrE2o
+         9dBecYJ8COEsQrynzpFjyCrQZBy+Qkuo99wdnP07R5flG1U9+CT+mtbIQ0fs9E03MdfK
+         vyBg==
+X-Gm-Message-State: AOAM532SeXP6PRmyy/Rup6MGrYLFSoiGbRBRkVUNbpQ81bZyve1Gd93D
+        9YK0Jo6i2DrBz8M0HKGiHTQ6irGOjSk+FivHyD0VpQ==
+X-Google-Smtp-Source: ABdhPJwEnVAbnhl705/SOwx+VT3uJWnXgSzstjkQ8EoAuVFVa9ZwzUCDeTXHToIKO7/01l2eQ22acLdGFRf2JHtcNdA=
+X-Received: by 2002:aa7:8019:0:b0:44d:d761:6f79 with SMTP id
+ j25-20020aa78019000000b0044dd7616f79mr38496361pfi.3.1635875212010; Tue, 02
+ Nov 2021 10:46:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.41]
-X-ClientProxiedBy: lhreml751-chm.china.huawei.com (10.201.108.201) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <20211022183709.1199701-1-ben.widawsky@intel.com>
+ <20211022183709.1199701-10-ben.widawsky@intel.com> <CAPcyv4j+mv3+FyJd0OVBe_dUqzzYpS2gkEagiRp-Tqh9t7NMmg@mail.gmail.com>
+ <20211101170750.sajcmjxdv5rajffe@intel.com> <CAPcyv4i-8oRjOPywtNwBef3irb8b44PzwBrEUdQ0Bxrzrju5+w@mail.gmail.com>
+ <20211102163121.hyfj7yceainmppmk@intel.com>
+In-Reply-To: <20211102163121.hyfj7yceainmppmk@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 2 Nov 2021 10:46:41 -0700
+Message-ID: <CAPcyv4iQzHeF8cth4VGGMpAT-3d6T=6knCq5fnt+Yt1ucxbW8Q@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 09/28] cxl/acpi: Map single port host bridge
+ component registers
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 1 Nov 2021 20:41:34 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Tue, Nov 2, 2021 at 9:31 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+[..]
+> It seemed like a very simple thing to support given the port driver's existence
+> so it was added to remove a TODO. However, I will drop it as you request.
 
-> On Mon, Nov 1, 2021 at 5:01 AM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > On Fri, 29 Oct 2021 12:51:27 -0700
-> > Dan Williams <dan.j.williams@intel.com> wrote:
-> >  
-> > > Hi Rafael,
-> > >
-> > > While reviewing "[PATCH v3] ACPI: NUMA: Add a node and memblk for each
-> > > CFMWS not in SRAT" [1]. I noticed that it was open coding CEDT sub-table
-> > > parsing in a similar fashion as drivers/cxl/acpi.c. The driver open
-> > > coded the parsing because the ACPI sub-table helpers are marked __init.
-> > > In order to avoid the ongoing maintenance burden of a split between
-> > > "early" and "late" ACPI sub-table parsing this series proposes to make
-> > > those helpers available to drivers.
-> > >
-> > > The savings in drivers/cxl/ are:
-> > >
-> > >  drivers/cxl/Kconfig |    1
-> > >  drivers/cxl/acpi.c  |  234 +++++++++++++++++++--------------------------------
-> > >  2 files changed, 88 insertions(+), 147 deletions(-)
-> > >
-> > > ...and 15 lines new code not added are saved in this new version of
-> > > "ACPI: NUMA: Add a node and memblk for each CFMWS not in SRAT".
-> > >
-> > > Let me know if this looks ok to you and I can carry it in the CXL tree
-> > > (i.e. after the merge window, for v5.17 consideration).
-> > >
-> > > [1]: https://lore.kernel.org/r/20211019050908.449231-1-alison.schofield@intel.com  
-> >
-> > Is it worth the complexity of the __init_or_acpilib and export part?
-> > Seems like a fiddly dance for what looks to be minor savings...  
-> 
-> It follows the __initdata_or_meminfo precedent that identifies data
-> that is normally __init unless a specific driver needs it. The lesson
-> from the tinyconfig effort was that image size dies a death of many
-> cuts unless care is taken to preserve minor savings. Yes, it's likely
-> trivial in this case, but it's at least a gesture to avoid bloating
-> the kernel image size unnecessarily when the kernel has gotten by so
-> long with this infrastructure being purely __init.
+I'm honestly asking the question why this is needed and more
+specifically why this is needed in this location?
 
-I'm in favor avoiding bloat, but this is ACPI code so rarely very small machines
-and very like that all distros will turn it on anyway on basis they will want
-to support CXL (hopefully!)
-
-I guess let's see what Rafael's opinion is.  I don't feel that strongly about
-it if general view is that it is worth the small amount of complexity.
-
-Jonathan
-
+In other words, how is this case different than typical component
+register probing that is done in the port driver itself? I would
+expect the TODO just gets deleted by the port driver addition.
