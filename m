@@ -2,361 +2,237 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E1CC433F5
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Nov 2021 20:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BCFC433F5
+	for <linux-cxl@archiver.kernel.org>; Tue,  2 Nov 2021 20:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 125E061058
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Nov 2021 20:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A473260E08
+	for <linux-cxl@archiver.kernel.org>; Tue,  2 Nov 2021 20:22:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230043AbhKBUDo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 2 Nov 2021 16:03:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229813AbhKBUDo (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 2 Nov 2021 16:03:44 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C648EC061714
-        for <linux-cxl@vger.kernel.org>; Tue,  2 Nov 2021 13:01:08 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id k4so518259plx.8
-        for <linux-cxl@vger.kernel.org>; Tue, 02 Nov 2021 13:01:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5LTZhIulrK6UzKgguNONn1xWlAcdNnPWE7xeL7ita0M=;
-        b=21U3CHnkCasBeVtoakYZxTe5wPiKlGujrkz2CC5mkU3X/FSiVXKAwH+a/hWwZcqN9T
-         g7NhUoI6JffxSUtMwa2a81dCmlnupEeEXW19I2ruh5J1m/W/fQDElPtxhf1wxcxngDQ+
-         oz5fJEsL3IWRiL6+PUg5tgYYdP5j9ElYPd/pCYap5NVFidt663R91g003+F6sDK8dDyC
-         DM5CRAkl8zEerRwZpqq4QcDx6aG1ioEpjfa5j9RDwBuZKZFWGybtL1BoqGy7TPNzIDKU
-         38cWUP/oOidEuh0LEWJepQAFk1GMnamEx4+V/R7QpYFS3FIJzFjBvSvB8jWRhOPFxd9a
-         U1VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5LTZhIulrK6UzKgguNONn1xWlAcdNnPWE7xeL7ita0M=;
-        b=oS/knKrkmNsNOfx+1icY/GQMo8vOMfN8uXYcJzLARUd/1Bu6Po7EDlgDAW3Ba91WmW
-         RR7EPBBwpavBNBIWw9UmsJOOq4cMd44sIuJVdcIoQp/HfG4/m8DJ0SMnKWSarGkSkY6d
-         svod5dfIPLQa9DlBbCJ0S4EH2Ae4ateUEK8au8wf2po+OBNTIVRA3fO16lYLMI0qvuoj
-         HuOotx0MahL8j8JQVEdCyja453YB0OJnNVFS4b9I5eWIsjDQH3au5a7zzRDwF9/DVpSo
-         nr6aV0bNhoWz/zpz1N7F9ToO+0Vao1dVzZYfxs1mUkTaDCrrsFWDzZmln2RRV+sFS2LF
-         X/qQ==
-X-Gm-Message-State: AOAM531OLvJCBH0NcKLbPdJswKzGj057gcZl+CWyd5MpLl11N49vMPN7
-        ysPhysjWn/zubskBNXGCOZR3DN68EhCRVWewm71fkA==
-X-Google-Smtp-Source: ABdhPJxtCqT60ZbhbFTFLqvR+SRpVZTZk5CP1N9VQ5Zor8Xy+6eqU2gexD70AEVdhs2c/1B2Xns/QDOM+lY+um+kYTU=
-X-Received: by 2002:a17:902:b697:b0:141:c7aa:e10f with SMTP id
- c23-20020a170902b69700b00141c7aae10fmr20991811pls.18.1635883267011; Tue, 02
- Nov 2021 13:01:07 -0700 (PDT)
+        id S230401AbhKBUZY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 2 Nov 2021 16:25:24 -0400
+Received: from mga06.intel.com ([134.134.136.31]:34882 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230336AbhKBUZX (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Tue, 2 Nov 2021 16:25:23 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10156"; a="292197224"
+X-IronPort-AV: E=Sophos;i="5.87,203,1631602800"; 
+   d="scan'208";a="292197224"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2021 13:22:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,203,1631602800"; 
+   d="scan'208";a="599643015"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orsmga004.jf.intel.com with ESMTP; 02 Nov 2021 13:22:48 -0700
+Received: from orsmsx607.amr.corp.intel.com (10.22.229.20) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.12; Tue, 2 Nov 2021 13:22:47 -0700
+Received: from orsmsx609.amr.corp.intel.com (10.22.229.22) by
+ ORSMSX607.amr.corp.intel.com (10.22.229.20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.12; Tue, 2 Nov 2021 13:22:47 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx609.amr.corp.intel.com (10.22.229.22) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.12 via Frontend Transport; Tue, 2 Nov 2021 13:22:47 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.175)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2242.12; Tue, 2 Nov 2021 13:22:47 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DWR7P3N7/KJe9W/4wR1qxkGo9WKl46kdf4xzKxMBtTUu9OPtRrQ+ld8/ZmxIM9sPpPzDibWVL1Gd4wB0Qyia2oi0TR/PLenzw01574WUHTKyWm/b6KjUrwqF2pRfgUKk+M/NVo6dl7qoeL40hvAD04HH6Biv59VmoOaBiLSC9JIj9DlDZTYWCF5uquy2EZZQqJKVZbsxKUMH+imhiKL4rCWH2P7WhCI09om7931cAzTQYcHLxhB79E9on3iL1DMwjPsRt3xFonZPs/ClVvY7Fm4Xry02hwnWsapBiXEBRJOPS+XPgHzwCzTbxz0ZGORrApBi3lkSObWeXKJQNOqldw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=t/zp4AuCZL1n1PgUiFGmgLe+0NXqDVf3DdJwJ5Z5nUU=;
+ b=XoisEej8jlSm8BPynAHElmDrErLswvb/a+IlQJ/QgRFI4X2E2Vaqr5Xd7Zx+Qj8nOBgCovmuRbpkm8kxNMhj6e7rVJqfzzYkJgrtkkJSmHc+qN/JjsKNKvIoznTO8UMc0IBD0ex7seiWiNQ6eQhFGwAi7EgRQGImqY3YmVVIuQjCF4t1NWVGylod2nAaU5S5dlYOU7KLESIgWEmlmqRh8ML5jEMtZoREF1uYyDXTuEBw4cBoOofb4ao5jWnn2pvE2j0qNKmpBntBRD9DnaHe2CAV+KY4pkexpfLi++mwTQ5DzQP4oc+InLDaZWeq3G6tMau6gS8OGERjQs6yE1bchA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t/zp4AuCZL1n1PgUiFGmgLe+0NXqDVf3DdJwJ5Z5nUU=;
+ b=Y3M/DlCPqUS7GxZoazpqZ+5PZEih0LMFxFPY/M6uL1Q+UT4nPuuyab0N+Mz3mryUCggrWLf0+Ed5UODicsMYtdfkCAL3US/R/L1SPY47P4GvjVzycQR1NIMqbAOp3e0Fn+I4kil3jSkW69wEfCEJbRx5uEsuVf3g7tVZ/epxe7A=
+Received: from MN2PR11MB3999.namprd11.prod.outlook.com (2603:10b6:208:154::32)
+ by MN2PR11MB3582.namprd11.prod.outlook.com (2603:10b6:208:ec::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.15; Tue, 2 Nov
+ 2021 20:22:45 +0000
+Received: from MN2PR11MB3999.namprd11.prod.outlook.com
+ ([fe80::d8a5:47b2:8750:11df]) by MN2PR11MB3999.namprd11.prod.outlook.com
+ ([fe80::d8a5:47b2:8750:11df%7]) with mapi id 15.20.4649.019; Tue, 2 Nov 2021
+ 20:22:45 +0000
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "Williams, Dan J" <dan.j.williams@intel.com>
+CC:     "Widawsky, Ben" <ben.widawsky@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
+Subject: Re: [ndctl PATCH v4 07/17] libcxl: add GET_HEALTH_INFO mailbox
+ command and accessors
+Thread-Topic: [ndctl PATCH v4 07/17] libcxl: add GET_HEALTH_INFO mailbox
+ command and accessors
+Thread-Index: AQHXu1Rol2hun0tLokiAkQpm3BzyS6vSss2AgB4lUwA=
+Date:   Tue, 2 Nov 2021 20:22:45 +0000
+Message-ID: <fc7be48811b489b24f0287764d421e7482219638.camel@intel.com>
+References: <20211007082139.3088615-1-vishal.l.verma@intel.com>
+         <20211007082139.3088615-8-vishal.l.verma@intel.com>
+         <CAPcyv4ifss448zuSRphx4d5RAtjZkgiBQirbLPMAJF04NPnZLg@mail.gmail.com>
+In-Reply-To: <CAPcyv4ifss448zuSRphx4d5RAtjZkgiBQirbLPMAJF04NPnZLg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.40.4 (3.40.4-1.fc34) 
+authentication-results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5d795343-fb8e-4795-36f8-08d99e3e87ca
+x-ms-traffictypediagnostic: MN2PR11MB3582:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
+x-microsoft-antispam-prvs: <MN2PR11MB3582194DC4370CAE9E9AD2D1C78B9@MN2PR11MB3582.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1417;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: saSGEw/I5Wzh7NUJ4rzXX1fJgEYxaLAJv57zdkc5Rs4dHYCvRi2f8YZPFKqFrqs98adcP+hL2wQd1zqgPl9YhY/G09ZF6JVc4ZNUu5EGRHd3m+i0nJmWeIpKSno+B0rPjlqkWR3R/pjtyXkHDsmA8RjPLMESl6HB4RapuV3Oz6uuQXfixsGRY6w3lzq+R70wBXpizwfr7XoyxDgN0+8AbNXRA1Lii49lseaaX9amV/tSLxl4F5/Xm5bqw2wwu7TG+ltjCCVwzfW3agQDME/trLjzQam5BN3Ejpk38xKy5JEtw1MuHxb79e1lpdG2+jgaPgdHwxI8KOyHbPBmBCNagODsNM4F+CisEEuQna8J/5oMA3td1RHvMrk2u5G4qHTwx6uVWWcLSOyFzDKIecsQ6/ppSJNi5a1Ma2k6Ivd4+9yj9eCoGZQ0DgRFn5mbCbujVMdAoWvc8Fzj3SoME6NaOnXSok7AKtb5w7wpvhdnOYJ1bToJCg4lW9vx3dvWa5KEo+7u6ubTZiQ/dQnfAI5MbtRMAerjRTmT6qVSyPGVtey1qdd1qpKZGR/DKjiEzA0V5QhJiEo3OBKPljsGW8SIJawug/YSguPAI0/m0hwjIbPzVsAmGIFWYzE1zQo0Q4SLxD7DdKihStkw8XHxg2tI33qHQUyVSqJGDEYbzoNwZ9hW7hquc1l+dpTkMHMefpMYuRTrJfe71OcNbOJasA0e+A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB3999.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(82960400001)(91956017)(38100700002)(122000001)(36756003)(66446008)(186003)(66946007)(6862004)(66556008)(64756008)(76116006)(66476007)(6512007)(6486002)(2906002)(71200400001)(26005)(2616005)(508600001)(53546011)(86362001)(15650500001)(8676002)(6636002)(54906003)(316002)(38070700005)(5660300002)(83380400001)(6506007)(4326008)(4001150100001)(8936002)(37006003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?QUNmOVRYVXl2VnJwaEVpZ0puZlFkODVzVGRPUnAxNnZibEhnSTBiazlEcG9D?=
+ =?utf-8?B?YmFMZ1lseUYvdE81cUpoNmM2SisvQUVuSzExWmQ0b0J3ZXRndHBHS0F1Sk8r?=
+ =?utf-8?B?WXJQTDhQdndjZHhISVp6WmFwdzV2MmI4KzJyQmh1c0dQUnJqdUpFOEhnMUdK?=
+ =?utf-8?B?T09Ha3gvdE95MVZTbndHbUR0OVdVQlJIbEtlNkRaSTNBV2pjY3dMNjU0aEh2?=
+ =?utf-8?B?VFNObkpmT3ZFZ2FUcDVZSmVKYnpGYzVOa3huWnJNTEZXeVlGcmdwdkFzdnZV?=
+ =?utf-8?B?WTlxUTlScXIyMkNRbnFFNzFHanBKRkI1QlpiaDgyMERxTGNkYytDVmt5RURN?=
+ =?utf-8?B?R0dGdi8wbUduWkpGMmJxQVJsaTBkQlh6d3VWbFVtdEluVktSeHNKdDNSVXJj?=
+ =?utf-8?B?cUVjZ2ZKek5aUTk2Ky9HSnNlWnZrOXdNTVVMcndtSmNKd2hoeXNtNlFNUTVs?=
+ =?utf-8?B?OWZBc2dyOEJmQU9hUnBJZHU2RXRIVWM0bkNWbktVYkxodVJsYlZMb0dMSWli?=
+ =?utf-8?B?LysxL0x4TEhVN1d0bDR0YnNyTnZTSFRNMWpNdmFhUFNkamRjSDBiSWp3VTlI?=
+ =?utf-8?B?M2J5Ry9DVFYzdk5zdXpuWXQ2bXRSSkUwZkM2L1djZjdPeHdKUEhoVmRCa3FZ?=
+ =?utf-8?B?VjZWdjJCSTVlSjEzRk9RZUxoVEpuR1V1OURSTHdraVNmd01GN284ZXJQRVVL?=
+ =?utf-8?B?N21udy9aZzR6WnBMcnNnV05VTXBSSy9zR0htQjBodWlUQ2RFNnorcTQrSlpm?=
+ =?utf-8?B?d2JSWTJvYWVWT0RhQkw5VnlMcm9wZVQ2MkxSNU03YXVya0MyaXV5eUVIZjAv?=
+ =?utf-8?B?bDk3TTBtdU5lQ0xvdk91YnRhN0VScTdKbEhrejdSR1NiUS9JbGxDbXJmUlU1?=
+ =?utf-8?B?aDZHb0RLem16cml4RGYzbno2cFRwU09sZHFOSzJFais2TGhSVmlUb1ROME5s?=
+ =?utf-8?B?V3RXOTBXMXoxTGlyaW5lNXJ6U3hIWkJaUTcyUEFTbmdlUVFzNWk1VnR1RXBZ?=
+ =?utf-8?B?cW4vMmlCMzlYTnFlMVhHMmRmVVB3bnk2WWhEZkpqRHIrVGFRQXlBVDd0SXEv?=
+ =?utf-8?B?a09YYWREeVJyc3ltNUJlZTJCUmcraTJzeUw1LzBUMXFrMDVVVUJaeFJNVVNt?=
+ =?utf-8?B?UDgrOXlybTBVMnZIRk5tcUtKUTRtZzYrcE84Y2Zja09yRWxEN1hNSWFTTSsy?=
+ =?utf-8?B?eW82eVpNTXpaMjBLbDFtVkFDRU9uVmxrc1FOckRkRFdGRG1wUElwajBmQldP?=
+ =?utf-8?B?cEdNQ2R4MVFyRGxyQjgrUnNPcy9oUERudVAwQTA1NHVLdldJUUhxMUZIU3Nw?=
+ =?utf-8?B?ZkRMeTNrbHFCTy9qM0JxTGoxaVg0Zk80WlF5VVhVNUN3NU1YeDg5OW9SMHpx?=
+ =?utf-8?B?RlBEbUp2V0kvb0xrK3F3Z2V6ZDZwOHJjZXE5OE54Y3NMelhQam5tTEEwVHY5?=
+ =?utf-8?B?QUxhLzVwYU93ZGcwNXN5MzNUQlZjUlFEQ2xYWklxNVR6NGRKbC8yV2pIN25r?=
+ =?utf-8?B?RDc5QUpWVmpJRUxMVUZvSGs1ZHVSKzZRN2wzcHdhMGE5c2ljdEZVLy9JcEw3?=
+ =?utf-8?B?Q0I3U2VLMkRPSDhFRTdjTnJ0MkZVYnFWRkJDdjVGV1hXYXRIRkpqN0M5N1Zu?=
+ =?utf-8?B?RkduZUdzdHBUMEFxbkFuNFdqSVhoYTduTlRtcDhrWVc5K1huZERxdHFRTjFT?=
+ =?utf-8?B?ekc1ZnpUNElzOVdJSFZwZWxzUmJJUXlEVUdCa0VRb3h0d05mUUZEc2RTSjlM?=
+ =?utf-8?B?eGFHUzRHRnJ0L3VIOFJlUjlmQTRGOThvMnFJZXdXb2xmSlhSZUlVS3FrRnl3?=
+ =?utf-8?B?VG9XR3c4UHBWdTBjekhaY3UyT3NIQytQbjl0cElML1Ezdkx3YW9odUdURXZz?=
+ =?utf-8?B?ZkhvZnBGU2krRE1UQ0FlQ2s4R05BYzlQYTI5aGVaTlBRa3NKRitVNjN4bkVn?=
+ =?utf-8?B?MnFZODFwZllJRUdHSktKL2ZPN3pXQ1BIb0VNOXJFRndPTGRTRU1Tdmtqb1Ny?=
+ =?utf-8?B?eWxBdCt1WjV4NVBveDNZM011UjE0bkQ4ZmRBOUtZMDZQVW5FWkRiVXhsdnhs?=
+ =?utf-8?B?M2tkVmtBN3lvSTFHa1cvV2JpWXpvVC8yczlYU29SZmpiNFZWZExndXg4azdl?=
+ =?utf-8?B?akNUM3dVU2ZSMzJkY2lMa2U3NW1nWUtadDFJNFo0UStqbU9MNXlOTC8wWVJP?=
+ =?utf-8?B?bkg2WkY5S3l6OWdvZnlSanlrV2pCbFV1TXFPMStCR1VwM1dJOHgwYUZYRGZo?=
+ =?utf-8?Q?jE6lCHa08RA42HkspZ/L30S6t8h7TxN3F1vrF+d060=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4A16691E55C44F4FA2AD7C20AEA58331@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20211022183709.1199701-1-ben.widawsky@intel.com>
- <20211022183709.1199701-16-ben.widawsky@intel.com> <CAPcyv4hqHRjDnmkcJpUA1ejMumfP_uX1axg1cdDRKFUFUbp35Q@mail.gmail.com>
- <20211101225616.35cbr5mugssy35du@intel.com> <CAPcyv4gYiun5mnRbzw_OP_+6Nk+UzwBDHuUazM_QpYcdX7hzKA@mail.gmail.com>
- <20211102163946.jmygfz3ramiglhtf@intel.com>
-In-Reply-To: <20211102163946.jmygfz3ramiglhtf@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 2 Nov 2021 13:00:56 -0700
-Message-ID: <CAPcyv4i-BacmZadFJN+kAg2DR1n=vrf0XN6A=1OETzxqw3n9mw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 15/28] cxl/core: Introduce API to scan switch ports
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR11MB3999.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d795343-fb8e-4795-36f8-08d99e3e87ca
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Nov 2021 20:22:45.1574
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TI64TI3UUWaIXOtmXo1ihIwpQdn2zia8t+C80AEyDLJy2FQsD9BjYdy25C922MuF8B2JECsDRKYqS7GoJuT61KQA4t/0uuBF6wT8bmkdLxs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3582
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Nov 2, 2021 at 9:39 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> On 21-11-01 18:45:57, Dan Williams wrote:
-> > On Mon, Nov 1, 2021 at 3:56 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > >
-> > > On 21-10-31 22:39:43, Dan Williams wrote:
-> > > > On Fri, Oct 22, 2021 at 11:37 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > > >
-> > > > > The CXL drivers encapsulate the components that direct memory traffic in
-> > > > > an entity known as a cxl_port. Compute Express Link specifies three such
-> > > > > components: hostbridge (ie. a collection of root ports), switches, and
-> > > > > endpoints. There are currently drivers that create these ports for the
-> > > > > hostbridges and the endpoints (cxl_acpi and cxl_mem). The new API
-> > > > > introduced allows callers to initiate a scan down from the hostbridge
-> > > > > and create ports for switches in the CXL topology.
-> > > > >
-> > > > > The intended user of this API is for endpoint devices. An endpoint
-> > > > > device will need to determine if it is CXL.mem capable, which requires
-> > > > > all components in the path from hostbridge to the endpoint to be CXL.mem
-> > > > > capable. Once an endpoint device determines it's connected to a CXL
-> > > > > capable root port, it can call this API to fill in all the ports in
-> > > > > between the hostbridge and itself.
-> > > > >
-> > > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > > > ---
-> > > > >  .../driver-api/cxl/memory-devices.rst         |   6 +
-> > > > >  drivers/cxl/core/Makefile                     |   1 +
-> > > > >  drivers/cxl/core/bus.c                        | 145 ++++++++++++++++++
-> > > > >  drivers/cxl/core/pci.c                        |  99 ++++++++++++
-> > > > >  drivers/cxl/cxl.h                             |   2 +
-> > > > >  drivers/cxl/pci.h                             |   6 +
-> > > > >  drivers/cxl/port.c                            |   2 +-
-> > > > >  tools/testing/cxl/Kbuild                      |   1 +
-> > > > >  8 files changed, 261 insertions(+), 1 deletion(-)
-> > > > >  create mode 100644 drivers/cxl/core/pci.c
-> > > > >
-> > > > > diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
-> > > > > index fbf0393cdddc..547336c95593 100644
-> > > > > --- a/Documentation/driver-api/cxl/memory-devices.rst
-> > > > > +++ b/Documentation/driver-api/cxl/memory-devices.rst
-> > > > > @@ -47,6 +47,12 @@ CXL Core
-> > > > >  .. kernel-doc:: drivers/cxl/core/bus.c
-> > > > >     :identifiers:
-> > > > >
-> > > > > +.. kernel-doc:: drivers/cxl/core/pci.c
-> > > > > +   :doc: cxl pci
-> > > > > +
-> > > > > +.. kernel-doc:: drivers/cxl/core/pci.c
-> > > > > +   :identifiers:
-> > > > > +
-> > > > >  .. kernel-doc:: drivers/cxl/core/pmem.c
-> > > > >     :doc: cxl pmem
-> > > > >
-> > > > > diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> > > > > index 07eb8e1fb8a6..9d33d2d5bf09 100644
-> > > > > --- a/drivers/cxl/core/Makefile
-> > > > > +++ b/drivers/cxl/core/Makefile
-> > > > > @@ -7,3 +7,4 @@ cxl_core-y += pmem.o
-> > > > >  cxl_core-y += regs.o
-> > > > >  cxl_core-y += memdev.o
-> > > > >  cxl_core-y += mbox.o
-> > > > > +cxl_core-y += pci.o
-> > > > > diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-> > > > > index c7e1894d503b..f10e7d5b22a4 100644
-> > > > > --- a/drivers/cxl/core/bus.c
-> > > > > +++ b/drivers/cxl/core/bus.c
-> > > > > @@ -8,6 +8,7 @@
-> > > > >  #include <linux/idr.h>
-> > > > >  #include <cxlmem.h>
-> > > > >  #include <cxl.h>
-> > > > > +#include <pci.h>
-> > > > >  #include "core.h"
-> > > > >
-> > > > >  /**
-> > > > > @@ -445,6 +446,150 @@ struct cxl_port *devm_cxl_add_port(struct device *uport,
-> > > > >  }
-> > > > >  EXPORT_SYMBOL_GPL(devm_cxl_add_port);
-> > > > >
-> > > > > +void devm_cxl_remove_port(struct cxl_port *port)
-> > > > > +{
-> > > > > +       down_read(&root_host_sem);
-> > > > > +       if (cxl_root_host) {
-> > > > > +               devm_release_action(cxl_root_host, cxl_unlink_uport, port);
-> > > > > +               devm_release_action(cxl_root_host, unregister_port, port);
-> > > > > +       }
-> > > > > +       up_read(&root_host_sem);
-> > > > > +}
-> > > > > +EXPORT_SYMBOL_GPL(devm_cxl_remove_port);
-> > > >
-> > > > If the scan establishes the property that all child ports are devm
-> > > > allocated with their cxl_port-parent, and only if the cxl_port-parent
-> > > > is bound to its driver then I think we don't need to play
-> > > > devm_release_action games().
-> > > >
-> > >
-> > > We had discussed this previously. I was running into an issue when unloading
-> > > cxl_mem. I needed a way to remove the endpoint port and this was your
-> > > recommendation. Are you suggesting if the chain is set up correctly, I don't
-> > > need to do anything?
-> >
-> > I think if the chain is set up correctly then you don't need to do
-> > anything special. The endpoint port would be devm registered by the
-> > cxl_memdev driver to its parent cxl_port provided that port is
-> > actively attached to its driver.
-> >
-> > > I don't remember exactly what was blowing up but I can try again after things
-> > > are properly parented.
-> >
-> > Cool.
-> >
-> > >
-> > > > > +
-> > > > > +static int match_port(struct device *dev, const void *data)
-> > > > > +{
-> > > > > +       struct pci_dev *pdev = (struct pci_dev *)data;
-> > > > > +
-> > > > > +       if (dev->type != &cxl_port_type)
-> > > > > +               return 0;
-> > > > > +
-> > > > > +       return to_cxl_port(dev)->uport == &pdev->dev;
-> > > > > +}
-> > > > > +
-> > > > > +static struct cxl_port *find_cxl_port(struct pci_dev *usp)
-> > > > > +{
-> > > > > +       struct device *port_dev;
-> > > > > +
-> > > > > +       if (!pci_is_pcie(usp) || pci_pcie_type(usp) != PCI_EXP_TYPE_UPSTREAM)
-> > > > > +               return NULL;
-> > > > > +
-> > > > > +       port_dev = bus_find_device(&cxl_bus_type, NULL, usp, match_port);
-> > > > > +       if (port_dev)
-> > > > > +               return to_cxl_port(port_dev);
-> > > > > +
-> > > > > +       return NULL;
-> > > > > +}
-> > > > > +
-> > > > > +static int add_upstream_port(struct device *host, struct pci_dev *pdev)
-> > > > > +{
-> > > > > +       struct device *dev = &pdev->dev;
-> > > > > +       struct cxl_port *parent_port;
-> > > > > +       struct cxl_register_map map;
-> > > > > +       struct cxl_port *port;
-> > > > > +       int rc;
-> > > > > +
-> > > > > +       /*
-> > > > > +        * Upstream ports must be connected to a downstream port or root port.
-> > > > > +        * That downstream or root port must have a parent.
-> > > > > +        */
-> > > > > +       if (!pdev->dev.parent->parent)
-> > > > > +               return -ENXIO;
-> > > > > +
-> > > > > +       /* A port is useless if there are no component registers */
-> > > > > +       rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
-> > > > > +       if (rc)
-> > > > > +               return rc;
-> > > > > +
-> > > > > +       parent_port = find_cxl_port(to_pci_dev(pdev->dev.parent->parent));
-> > > >
-> > > > This deref chain is unreadable. It wants a helper if it stays, but I
-> > > > can't immediately think of a reason to ever need to look at a
-> > > > grandparent in the hierarchy.
-> > >
-> > > The goal is to be able to find the next PCIe port up in the chain.
-> > >
-> > > My understanding was:
-> > > pdev = PCIe upstream switch
-> > > pdev->dev.parent = PCIe downstream switch connected to pdev.
-> > > pdev->dev.parent->parent = PCIe upstream switch connected to pdev->dev.parent
-> > >
-> > > I was unable to find an idiomatic way to do that. I'm open to suggestions.
-> >
-> > Oh ok, I see it now, but I think this can be done in pure CXL terms
-> > and generic devices with the assumption that the parent device of a
-> > cxl_memdev must be a dport. Then this works whether the parent port is
-> > a platform device like ACPI or cxl_test, or a PCIe device.
-> >
-> > static int port_has_dport(struct device *dev, const void *dport_dev)
-> > {
-> >         int found = 0;
-> >         struct cxl_port *port;
-> >         struct cxl_dport *dport;
-> >
-> >         if (dev->type != &cxl_port_type)
-> >                 return 0;
-> >         port = to_cxl_port(dev);
-> >
-> >         device_lock(&port->dev);
-> >         list_for_each_entry (dport, &port->dports, list)
-> >                 if (dport->dport == dport_dev) {
-> >                         found = 1;
-> >                         break;
-> >                 }
-> >         device_unlock(&port->dev);
-> >
-> >         return found;> > }
-> >
-> > struct cxl_port *find_parent_cxl_port(struct cxl_memdev *cxlmd)
-> > {
-> >         return bus_find_device(&cxl_bus_type, NULL, cxlmd->dev.parent,
-> >                                port_has_dport);
-
-Hmm this still needs a grandparent because cxlmd->dev.parent, is the
-device that registered the memdev and that device's parent is the
-dport. I need to see if cxl_test supports this property.
-
-> > }
-> >
->
-> Ah, I remember now that I had something like this originally. I thought it may
-> be more desirable to do the grandparent route since you should be able to assert
-> there is a grandparent. I'll change it.
->
-> > > >
-> > > > > +       if (!parent_port)
-> > > > > +               return -ENODEV;
-> > > > > +
-> > > > > +       port = devm_cxl_add_port(dev, cxl_reg_block(pdev, &map), parent_port);
-> > > >
-> > > > This is broken because the pci device being used here does not have a
-> > > > driver that knows about CXL bus events.
-> > >
-> > > I don't understand this, but I'd like to. Doesn't this make a port device which
-> > > gets probed by the port driver? Why does the PCI device matter?
-> >
-> > I am reacting to the first argument of this call being @dev that came
-> > from the pci_dev that was passed in to be the "host" for the devm
-> > operation. The devm release action triggers at driver unbind of that
-> > host device, but that doesn't make sense because the driver for a
-> > switch has nothing to do with CXL operation.
-> >
->
-> What's the correct host, parent_port->dev?
-
-Yeah, provided you have the parent locked and that port is attached to
-the port driver. However, I'm concerned about lock ordering... I
-"think" the port driver just needs to make sure that it never takes
-the parent lock in the remove() path since that's the one that will
-recurse from an upper layer port ->remove() event.
-
->
-> > >
-> > > (I'll mention again, switch code is not tested).
-> > >
-> > > >
-> > > > > +       put_device(&parent_port->dev);
-> > > > > +       if (IS_ERR(port))
-> > > > > +               dev_err(dev, "Failed to add upstream port %ld\n",
-> > > > > +                       PTR_ERR(port));
-> > > > > +       else
-> > > > > +               dev_dbg(dev, "Added CXL port\n");
-> > > > > +
-> > > > > +       return rc;
-> > > > > +}
-> > > > > +
-> > > > > +static int add_downstream_port(struct pci_dev *pdev)
-> > > > > +{
-> > > > > +       resource_size_t creg = CXL_RESOURCE_NONE;
-> > > > > +       struct device *dev = &pdev->dev;
-> > > > > +       struct cxl_port *parent_port;
-> > > > > +       struct cxl_register_map map;
-> > > > > +       u32 lnkcap, port_num;
-> > > > > +       int rc;
-> > > > > +
-> > > > > +       /*
-> > > > > +        * Ports are to be scanned from top down. Therefore, the upstream port
-> > > > > +        * must already exist.
-> > > > > +        */
-> > > > > +       parent_port = find_cxl_port(to_pci_dev(pdev->dev.parent));
-> > > > > +       if (!parent_port)
-> > > > > +               return -ENODEV;
-> > > > > +
-> > > > > +       /*
-> > > > > +        * The spec mandates component registers are present but the
-> > > > > +        * driver does not.
-> > > >
-> > > > What is this trying to convey?
-> > > >
-> > >
-> > > That I'm not validating the hardware, and even though component registers are
-> > > mandatory, the driver will move on even if they're not found. This functionality
-> > > may need to change in the future and so I left the comment there.
-> >
-> > I think that could be conveyed without comment with something like:
-> >
-> >         if (rc)
-> >                 creg = CXL_RESOURCE_NONE;
-> >         else
-> >                 creg = cxl_reg_block(pdev, &map);
->
-> As you like.
-
-/me tries to resist urge for Princess Bridge reference...
+T24gVGh1LCAyMDIxLTEwLTE0IGF0IDA5OjAxIC0wNzAwLCBEYW4gV2lsbGlhbXMgd3JvdGU6DQo+
+ICkNCj4gDQo+IE9uIFRodSwgT2N0IDcsIDIwMjEgYXQgMToyMiBBTSBWaXNoYWwgVmVybWEgPHZp
+c2hhbC5sLnZlcm1hQGludGVsLmNvbT4gd3JvdGU6DQo+ID4gDQo+ID4gQWRkIGxpYmN4bCBBUElz
+IHRvIGNyZWF0ZSBhIG5ldyBHRVRfSEVBTFRIX0lORk8gbWFpbGJveCBjb21tYW5kLCB0aGUNCj4g
+PiBjb21tYW5kIG91dHB1dCBkYXRhIHN0cnVjdHVyZSAocHJpdmF0ZWx5KSwgYW5kIGFjY2Vzc29y
+IEFQSXMgdG8gcmV0dXJuDQo+ID4gdGhlIGRpZmZlcmVudCBmaWVsZHMgaW4gdGhlIGhlYWx0aCBp
+bmZvIG91dHB1dC4NCj4gPiANCj4gPiBDYzogQmVuIFdpZGF3c2t5IDxiZW4ud2lkYXdza3lAaW50
+ZWwuY29tPg0KPiA+IENjOiBEYW4gV2lsbGlhbXMgPGRhbi5qLndpbGxpYW1zQGludGVsLmNvbT4N
+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBWaXNoYWwgVmVybWEgPHZpc2hhbC5sLnZlcm1hQGludGVsLmNv
+bT4NCj4gPiAtLS0NCj4gPiAgY3hsL2xpYi9wcml2YXRlLmggIHwgIDQ3ICsrKysrKysrDQo+ID4g
+IGN4bC9saWIvbGliY3hsLmMgICB8IDI4NiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysNCj4gPiAgY3hsL2xpYmN4bC5oICAgICAgIHwgIDM4ICsrKysrKw0KPiA+
+ICB1dGlsL2JpdG1hcC5oICAgICAgfCAgMjMgKysrKw0KPiA+ICBjeGwvbGliL2xpYmN4bC5zeW0g
+fCAgMzEgKysrKysNCj4gPiAgNSBmaWxlcyBjaGFuZ2VkLCA0MjUgaW5zZXJ0aW9ucygrKQ0KPiA+
+IA0KPiA+IGRpZmYgLS1naXQgYS9jeGwvbGliL3ByaXZhdGUuaCBiL2N4bC9saWIvcHJpdmF0ZS5o
+DQo+ID4gaW5kZXggMzI3M2YyMS4uZjc2YjUxOCAxMDA2NDQNCj4gPiAtLS0gYS9jeGwvbGliL3By
+aXZhdGUuaA0KPiA+ICsrKyBiL2N4bC9saWIvcHJpdmF0ZS5oDQo+ID4gQEAgLTczLDYgKzczLDUz
+IEBAIHN0cnVjdCBjeGxfY21kX2lkZW50aWZ5IHsNCj4gPiAgICAgICAgIHU4IHFvc190ZWxlbWV0
+cnlfY2FwczsNCj4gPiAgfSBfX2F0dHJpYnV0ZV9fKChwYWNrZWQpKTsNCj4gPiANCj4gPiArc3Ry
+dWN0IGN4bF9jbWRfZ2V0X2hlYWx0aF9pbmZvIHsNCj4gPiArICAgICAgIHU4IGhlYWx0aF9zdGF0
+dXM7DQo+ID4gKyAgICAgICB1OCBtZWRpYV9zdGF0dXM7DQo+ID4gKyAgICAgICB1OCBleHRfc3Rh
+dHVzOw0KPiA+ICsgICAgICAgdTggbGlmZV91c2VkOw0KPiA+ICsgICAgICAgbGUxNiB0ZW1wZXJh
+dHVyZTsNCj4gPiArICAgICAgIGxlMzIgZGlydHlfc2h1dGRvd25zOw0KPiA+ICsgICAgICAgbGUz
+MiB2b2xhdGlsZV9lcnJvcnM7DQo+ID4gKyAgICAgICBsZTMyIHBtZW1fZXJyb3JzOw0KPiA+ICt9
+IF9fYXR0cmlidXRlX18oKHBhY2tlZCkpOw0KPiA+ICsNCj4gPiArLyogQ1hMIDIuMCA4LjIuOS41
+LjMgQnl0ZSAwIEhlYWx0aCBTdGF0dXMgKi8NCj4gPiArI2RlZmluZSBDWExfQ01EX0hFQUxUSF9J
+TkZPX1NUQVRVU19NQUlOVEVOQU5DRV9ORUVERURfTUFTSyAgICAgICAgICAgICBCSVQoMCkNCj4g
+PiArI2RlZmluZSBDWExfQ01EX0hFQUxUSF9JTkZPX1NUQVRVU19QRVJGT1JNQU5DRV9ERUdSQURF
+RF9NQVNLICAgICAgICAgICBCSVQoMSkNCj4gPiArI2RlZmluZSBDWExfQ01EX0hFQUxUSF9JTkZP
+X1NUQVRVU19IV19SRVBMQUNFTUVOVF9ORUVERURfTUFTSyAgICAgICAgICBCSVQoMikNCj4gPiAr
+DQo+ID4gKy8qIENYTCAyLjAgOC4yLjkuNS4zIEJ5dGUgMSBNZWRpYSBTdGF0dXMgKi8NCj4gPiAr
+I2RlZmluZSBDWExfQ01EX0hFQUxUSF9JTkZPX01FRElBX1NUQVRVU19OT1JNQUwgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIDB4MA0KPiA+ICsjZGVmaW5lIENYTF9DTURfSEVBTFRIX0lO
+Rk9fTUVESUFfU1RBVFVTX05PVF9SRUFEWSAgICAgICAgICAgICAgICAgICAgIDB4MQ0KPiA+ICsj
+ZGVmaW5lIENYTF9DTURfSEVBTFRIX0lORk9fTUVESUFfU1RBVFVTX1BFUlNJU1RFTkNFX0xPU1Qg
+ICAgICAgICAgICAgIDB4Mg0KPiA+ICsjZGVmaW5lIENYTF9DTURfSEVBTFRIX0lORk9fTUVESUFf
+U1RBVFVTX0RBVEFfTE9TVCAgICAgICAgICAgICAgICAgICAgIDB4Mw0KPiA+ICsjZGVmaW5lIENY
+TF9DTURfSEVBTFRIX0lORk9fTUVESUFfU1RBVFVTX1BPV0VSTE9TU19QRVJTSVNURU5DRV9MT1NT
+ICAgIDB4NA0KPiA+ICsjZGVmaW5lIENYTF9DTURfSEVBTFRIX0lORk9fTUVESUFfU1RBVFVTX1NI
+VVRET1dOX1BFUlNJU1RFTkNFX0xPU1MgICAgIDB4NQ0KPiA+ICsjZGVmaW5lIENYTF9DTURfSEVB
+TFRIX0lORk9fTUVESUFfU1RBVFVTX1BFUlNJU1RFTkNFX0xPU1NfSU1NSU5FTlQgICAgIDB4Ng0K
+PiA+ICsjZGVmaW5lIENYTF9DTURfSEVBTFRIX0lORk9fTUVESUFfU1RBVFVTX1BPV0VSTE9TU19E
+QVRBX0xPU1MgICAgICAgICAgIDB4Nw0KPiA+ICsjZGVmaW5lIENYTF9DTURfSEVBTFRIX0lORk9f
+TUVESUFfU1RBVFVTX1NIVVRET1dOX0RBVEFfTE9TUyAgICAgICAgICAgIDB4OA0KPiA+ICsjZGVm
+aW5lIENYTF9DTURfSEVBTFRIX0lORk9fTUVESUFfU1RBVFVTX0RBVEFfTE9TU19JTU1JTkVOVCAg
+ICAgICAgICAgIDB4OQ0KPiA+ICsNCj4gPiArLyogQ1hMIDIuMCA4LjIuOS41LjMgQnl0ZSAyIEFk
+ZGl0aW9uYWwgU3RhdHVzICovDQo+ID4gKyNkZWZpbmUgQ1hMX0NNRF9IRUFMVEhfSU5GT19FWFRf
+TElGRV9VU0VEX01BU0sgICAgICAgICAgICAgICAgICAgICAgICAgR0VOTUFTSygxLCAwKQ0KPiA+
+ICsjZGVmaW5lIENYTF9DTURfSEVBTFRIX0lORk9fRVhUX0xJRkVfVVNFRF9OT1JNQUwgICAgICAg
+ICAgICAgICAgICAgICAgIDB4MA0KPiA+ICsjZGVmaW5lIENYTF9DTURfSEVBTFRIX0lORk9fRVhU
+X0xJRkVfVVNFRF9XQVJOSU5HICAgICAgICAgICAgICAgICAgICAgIDB4MQ0KPiA+ICsjZGVmaW5l
+IENYTF9DTURfSEVBTFRIX0lORk9fRVhUX0xJRkVfVVNFRF9DUklUSUNBTCAgICAgICAgICAgICAg
+ICAgICAgIDB4Mg0KPiA+ICsjZGVmaW5lIENYTF9DTURfSEVBTFRIX0lORk9fRVhUX1RFTVBFUkFU
+VVJFX01BU0sgICAgICAgICAgICAgICAgICAgICAgIEdFTk1BU0soMywgMikNCj4gPiArI2RlZmlu
+ZSBDWExfQ01EX0hFQUxUSF9JTkZPX0VYVF9URU1QRVJBVFVSRV9OT1JNQUwgICAgICAgICAgICAg
+ICAgICAgICAoMHgwIDw8IDIpDQo+ID4gKyNkZWZpbmUgQ1hMX0NNRF9IRUFMVEhfSU5GT19FWFRf
+VEVNUEVSQVRVUkVfV0FSTklORyAgICAgICAgICAgICAgICAgICAgKDB4MSA8PCAyKQ0KPiA+ICsj
+ZGVmaW5lIENYTF9DTURfSEVBTFRIX0lORk9fRVhUX1RFTVBFUkFUVVJFX0NSSVRJQ0FMICAgICAg
+ICAgICAgICAgICAgICgweDIgPDwgMikNCj4gDQo+IFNvIHRoZSBrZXJuZWwgc3R5bGUgZm9yIHRo
+aXMgd291bGQgYmUgdG8gaGF2ZToNCj4gDQo+ICNkZWZpbmUgQ1hMX0NNRF9IRUFMVEhfSU5GT19F
+WFRfVEVNUEVSQVRVUkVfTk9STUFMICAgICAgICAgICAgICAgICAgICAoMCkNCj4gI2RlZmluZSBD
+WExfQ01EX0hFQUxUSF9JTkZPX0VYVF9URU1QRVJBVFVSRV9XQVJOSU5HICAgICAgICAgICAgICAg
+ICAgKDEpDQo+ICNkZWZpbmUgQ1hMX0NNRF9IRUFMVEhfSU5GT19FWFRfVEVNUEVSQVRVUkVfQ1JJ
+VElDQUwgICAgICAgICAgICAgICAgICAgKDIpDQo+IA0KPiAuLi5hbmQgdGhlbiB0byBjaGVjayB0
+aGUgdmFsdWUgaXQgd291bGQgYmU6DQo+IA0KPiBGSUVMRF9HRVQoQ1hMX0NNRF9IRUFMVEhfSU5G
+T19FWFRfVEVNUEVSQVRVUkVfTUFTSywgYy0+ZXh0X3N0YXR1cykgPT0NCj4gQ1hMX0NNRF9IRUFM
+VEhfSU5GT19FWFRfVEVNUEVSQVRVUkVfTk9STUFMDQo+IA0KPiAuLi50aGF0IHdheSBpZiB3ZSBl
+dmVyIHdhbnRlZCB0byBjb3B5IGxpYmN4bCBiaXRzIGludG8gdGhlIGtlcm5lbCBpdA0KPiB3aWxs
+IGFscmVhZHkgYmUgaW4gdGhlIG1hdGNoaW5nIHN0eWxlIHRvIG90aGVyIENYTCBiaXR3aXNlDQo+
+IGRlZmluaXRpb25zLg0KPiANCj4gSSB0aGluayBGSUVMRF9HRVQoKSB3b3VsZCBhbHNvIGNsYXJp
+ZnkgYSBmZXcgb2YgeW91ciBoZWxwZXJzIGJlbG93LA0KPiBidXQgeWVhaCBhIGJpdCBtb3JlIGlu
+ZnJhc3RydWN0dXJlIHRvIGltcG9ydC4NCg0KTG9va2luZyBhdCBwb3J0aW5nIG92ZXIgRklFTERf
+R0VULi4gSXQgd2FudHMgdG8gZG8NCidfX0JGX0ZJRUxEX0NIRUNLKCknLCB3aGljaCBwdWxscyBp
+biBhIGxvdCBvZiB0aGUgY29tcGlsZXRpbWVfYXNzZXJ0DQpzdHVmZiB0byBiZSBhYmxlIHRvIEJV
+SUxEX0JVR19PTiB3aXRoIGEgbWVzc2FnZS4NCg0KQW55IHN1Z2dlc3Rpb25zIG9uIGhvdyBtdWNo
+IHdlIHdhbnQgdG8gYnJpbmcgaW4/ICBJIGNvdWxkIGRyb3AgdGhlDQpfX0JGX0ZJRUxEX0NIRUNL
+IGNoZWNrcywgYW5kIHRoZW4gaXQncyB2ZXJ5IHN0cmFpZ2h0Zm9yd2FyZC4gT3IgYnJpbmcNCmlu
+IHRoZSBjaGVja3MsIGJ1dCB3aXRoIGEgcGxhaW4gQlVJTERfQlVHX09OIGluc3RlYWQgb2YNCkJV
+SUxEX0JVR19PTl9NU0cuLg0KDQo+IA0KPiBUaGUgcmVzdCBvZiB0aGlzIGxvb2tzIG9rIHRvIG1l
+Lg0KDQo=
