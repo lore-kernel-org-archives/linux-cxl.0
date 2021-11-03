@@ -2,110 +2,88 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD75C433F5
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Nov 2021 21:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B099C433F5
+	for <linux-cxl@archiver.kernel.org>; Wed,  3 Nov 2021 00:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EFFD604AC
-	for <linux-cxl@archiver.kernel.org>; Tue,  2 Nov 2021 21:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F7F661050
+	for <linux-cxl@archiver.kernel.org>; Wed,  3 Nov 2021 00:57:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231216AbhKBVtw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 2 Nov 2021 17:49:52 -0400
-Received: from mga18.intel.com ([134.134.136.126]:12102 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230382AbhKBVtw (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 2 Nov 2021 17:49:52 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10156"; a="218283631"
-X-IronPort-AV: E=Sophos;i="5.87,203,1631602800"; 
-   d="scan'208";a="218283631"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2021 14:47:16 -0700
-X-IronPort-AV: E=Sophos;i="5.87,203,1631602800"; 
-   d="scan'208";a="449820012"
-Received: from jpsavari-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.136.198])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2021 14:47:16 -0700
-Date:   Tue, 2 Nov 2021 14:47:15 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [RFC PATCH v2 09/28] cxl/acpi: Map single port host bridge
- component registers
-Message-ID: <20211102214715.wtba7z6sk6ctsvhd@intel.com>
-References: <20211101170750.sajcmjxdv5rajffe@intel.com>
- <CAPcyv4i-8oRjOPywtNwBef3irb8b44PzwBrEUdQ0Bxrzrju5+w@mail.gmail.com>
- <20211102163121.hyfj7yceainmppmk@intel.com>
- <CAPcyv4iQzHeF8cth4VGGMpAT-3d6T=6knCq5fnt+Yt1ucxbW8Q@mail.gmail.com>
- <20211102175737.k7l4yymx75kdvgwv@intel.com>
- <CAPcyv4iNaTmJJ-vgPRMtUO9_xbB0TTTVcrm4gm8m1wMzbfK4NQ@mail.gmail.com>
- <20211102182715.p5odqlr2z7z3n6go@intel.com>
- <CAPcyv4j0yi7utGR2UcG99_i0TH4j23QyryiYxOvZ6BosP=WEhQ@mail.gmail.com>
- <20211102211556.ingfag535md3z37y@intel.com>
- <CAPcyv4iTXJ=Ck2hR=KDBNwHtV+FF7RUFyq0YD+YuwtnhTF55yQ@mail.gmail.com>
+        id S230317AbhKCBAR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 2 Nov 2021 21:00:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45358 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229804AbhKCBAQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 2 Nov 2021 21:00:16 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52182C061714
+        for <linux-cxl@vger.kernel.org>; Tue,  2 Nov 2021 17:57:41 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id g11so654483pfv.7
+        for <linux-cxl@vger.kernel.org>; Tue, 02 Nov 2021 17:57:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Tx5izF5ieiWqUFhVPPAd5fPBgdOsQUNseMGSg8a7ISo=;
+        b=sn3bChFooilv+LsPqraxuV6llHk/lYxpiixCzX4MmloacFCdKLgdUqevI9Oscw61I8
+         oq0nQQ8npxcHu08xiRuvahfxiWnTkFke0IusD5YkHJySX/6AqqO2lTOdfamdNanuqzHl
+         39NFddmWj+a8yK3YQph3yT70Czo47DCnxghcWEPGC6QIb2U6RYSuScEtsOrcBHna3RZn
+         KD3kIB8ntVQl8v1Pu8V/rGed5eK+XRSqB12XJJOuhqEtlkA2Jc/aTLPqkAfkqq9LCyDJ
+         l+wuB2D7N3Zaj1uqKeMDFVoCReIH4ee7jtjnW7+9Y63S0Fa8pxBuhxRqWwiNbmOVtj8u
+         AXLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tx5izF5ieiWqUFhVPPAd5fPBgdOsQUNseMGSg8a7ISo=;
+        b=jTIHyLFQMy54rc8TSSHD/R4JLmBLy+noWE1DeFv+siJAI72Wpwf6wjyPY1/cYhHBS5
+         79vXzt2VfCiZibf+x7FIh9X52nVbnriqd/rE8tbN/wsV7wzUjk1fepnWnYjlVzJxaqGU
+         WhXKpxhBSgJYiykY9dSXtvXqoYV/CjKMMbCV3Cxmd3tSDWTDH2dnkz/S2Myk8UozlkAw
+         wEdV+jwFQq2mURF0O34Tri2X9QcpXK2KknCMXy6siLj6n6WtRD9DfgBCbG+uFhv/kufi
+         +7619gDW62fhdUR6JY7b5p+fOlXVz3061JiCiHs3iv2Pz7e9u9k+Xoon817UByGzz5w8
+         c4Sw==
+X-Gm-Message-State: AOAM5308NvwsDizaB9KSV9BIax2Zxw5ismbSQFIqRvbAFLxWFy3/HHYi
+        vRLtT3dRN/r8m3ZIfdG53ztt8o0l27Y3Rp3eykkrWA==
+X-Google-Smtp-Source: ABdhPJz5R2Su/mHZo9b6SQxOfxThr3KX7+2P9xZl43G1UFW9oDsqafDx3cvV/WhfNzJGrsfoLr4BpE1BQeFCXHA4EZE=
+X-Received: by 2002:a63:6bc2:: with SMTP id g185mr30281347pgc.356.1635901060801;
+ Tue, 02 Nov 2021 17:57:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4iTXJ=Ck2hR=KDBNwHtV+FF7RUFyq0YD+YuwtnhTF55yQ@mail.gmail.com>
+References: <163553734757.2509761.3305231863616785470.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20211101113026.00001d2a@Huawei.com>
+In-Reply-To: <20211101113026.00001d2a@Huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 2 Nov 2021 17:57:30 -0700
+Message-ID: <CAPcyv4hKmQX1C22VXq38coAYSFaCh=FRLo_vOtoZjU4K+e7CGw@mail.gmail.com>
+Subject: Re: [PATCH] cxl/pmem: Fix reference counting for delayed work
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, "Weiny, Ira" <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        "Schofield, Alison" <alison.schofield@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21-11-02 14:34:19, Dan Williams wrote:
-> On Tue, Nov 2, 2021 at 2:16 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Mon, Nov 1, 2021 at 4:30 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Fri, 29 Oct 2021 12:55:47 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> > There is a potential race between queue_work() returning and the
+> > queued-work running that could result in put_device() running before
+> > get_device(). Introduce the cxl_nvdimm_bridge_state_work() helper that
+> > takes the reference unconditionally, but drops it if no new work was
+> > queued, to keep the references balanced.
 > >
-> > On 21-11-02 11:49:14, Dan Williams wrote:
-> > > On Tue, Nov 2, 2021 at 11:27 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > >
-> > > > On 21-11-02 11:10:05, Dan Williams wrote:
-> > > > > On Tue, Nov 2, 2021 at 10:57 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > > > >
-> > > > > > On 21-11-02 10:46:41, Dan Williams wrote:
-> > > > > > > On Tue, Nov 2, 2021 at 9:31 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > > > > > [..]
-> > > > > > > > It seemed like a very simple thing to support given the port driver's existence
-> > > > > > > > so it was added to remove a TODO. However, I will drop it as you request.
-> > > > > > >
-> > > > > > > I'm honestly asking the question why this is needed and more
-> > > > > > > specifically why this is needed in this location?
-> > > > > > >
-> > > > > > > In other words, how is this case different than typical component
-> > > > > > > register probing that is done in the port driver itself? I would
-> > > > > > > expect the TODO just gets deleted by the port driver addition.
-> > > > > >
-> > > > > > Without this code, a decoder is added for the full address range regardless if
-> > > > > > there is an existing programmed HDM decoder. With this code when the port driver
-> > > > > > probes this host bridge HDM component registers, everything will be enumerated
-> > > > > > by the normal flow.
-> > > > > >
-> > > > > > This seemed easier than trying to have the port driver determine what cxl_acpi
-> > > > > > driver did and unwind that if there is a programmed decoder.
-> > > > >
-> > > > > I think this is more an argument to unify all decoder creation in the
-> > > > > port driver. When the port driver sees a single dport with no HDM
-> > > > > decoder registers it can create the passthrough decoder, if it sees
-> > > > > single dport with HDM decoder registers then it can create a
-> > > > > programmable decoder.
-> > > >
-> > > > That too, though I'm not sure how useful that will be for us.
-> > >
-> > > ?
-> > >
-> > > This is about the proper place to enumerate decoders. The proposal in
-> > > this patch is to do some part of the enumeration in cxl_acpi and some
-> > > part in cxl_port, I'm saying push it all to cxl_port. I.e. it was a
-> > > layering violation in retrospect to create a default passthrough
-> > > decoder from cxl_acpi.
-> >
-> > I think it makes sense to have cxl_decoder_add() not called from anything but
-> > the port driver. So long as there's a way to determine it's a CXL 2.0 Root Port,
-> > which, it seems we'll have, it should be straight forward.
-> 
-> Does it need to be root port aware? I expect any single ported switch
-> is treated the same, not that I expect single-ported switches to be a
-> real thing, but I don't expect our port driver would care.
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>
+> Good spot, I'm guessing this was an inspection thing rather than a problem
+> you've managed to trigger, but either way.
 
-You're correct... I thought switch ports required HDM decoder registers even if
-single port, but I just checked and they are the same as the host bridge. So
-indeed the enumeration should only be special cased for the endpoint.
+Correct, it was by inspection. I expect it would be extremely
+difficult to hit this race in practice.
+
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+Thanks!
