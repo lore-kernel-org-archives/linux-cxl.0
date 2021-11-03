@@ -2,108 +2,127 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C7DC433F5
-	for <linux-cxl@archiver.kernel.org>; Wed,  3 Nov 2021 01:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97407C433F5
+	for <linux-cxl@archiver.kernel.org>; Wed,  3 Nov 2021 13:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1039761051
-	for <linux-cxl@archiver.kernel.org>; Wed,  3 Nov 2021 01:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78EAA610FC
+	for <linux-cxl@archiver.kernel.org>; Wed,  3 Nov 2021 13:51:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231272AbhKCB41 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 2 Nov 2021 21:56:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57730 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231219AbhKCB40 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 2 Nov 2021 21:56:26 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B93BC061714
-        for <linux-cxl@vger.kernel.org>; Tue,  2 Nov 2021 18:53:51 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id o6-20020a17090a0a0600b001a64b9a11aeso229565pjo.3
-        for <linux-cxl@vger.kernel.org>; Tue, 02 Nov 2021 18:53:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WS8F9Mm3PeQjtYh6+wOnJgg0wAkGEtxpJ8h3c0TWJ1c=;
-        b=pUap+BjUOXHTKWSn4mrx775hzpnkNzwQHcQDf62Sy3Z4+XV+n6E7+Vq6ZHCAOm+OeJ
-         xKDRCaiJxIyl1ykzMv8cD+Zry6/zJ8JrgPyJYXyUdBeJvgmAVgZgFVbWPoWUOkbqagNW
-         cGqwhbftfC1k+NknOjvjEIV/LwdQNMyLtDKvjgSewaDXWAzACbFrzSbaaCg7YbguDRS5
-         DiHoTmPRD80VvcSkHLwm+KoeE6eONPdNbAQqY9DvBybbfZdhFXlgfs1w28YcPuNB2+mu
-         ISIcxj9jq/yaFmMpl+GK5KxnHmkxCVnuWMRMZBuTsrh56wUvC+4BsO8h/Pd+RwNCKsN5
-         tDGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WS8F9Mm3PeQjtYh6+wOnJgg0wAkGEtxpJ8h3c0TWJ1c=;
-        b=BdYSh1IeuVKw0r8yS1tIsZ4sxtQNiyJeda3hx0vJ/ejmqikyOwR9G5I6KZQhXw3cLE
-         21rJFSnddD2vii+yTmYMSM2xB+udMduoFeNSJ8hR1g4iQ3AEimI/xCtMPQ09sW1FE5jI
-         vliEXi98UwqbYz7APjdzIcLCrnlSRVr2sAcsehb+D1VJIE1gqcjQfCOXJXXgNXbzrIZf
-         5bB91xGB3Ys+xc1XPj4LHHzwsE8tH9jSSBsuint7RMizHXa683gRhDClWFMwqjK2hWiZ
-         /9/W3r1cICF9fjC0f/zgjGFjBMmURnLGoGaPf26E9/wUgx5ZcvgbkmDxOO3c43pz8xdl
-         QS5A==
-X-Gm-Message-State: AOAM531/Qj7/bZEDrijl6sFckQa1Ji0nVKlc1R6Eb4kYjoQxJp8jKloq
-        qs9Cm6TXKWoenpgxOKXs26osBN0xnToW0jaXOtr21A==
-X-Google-Smtp-Source: ABdhPJwuRXTk8BJSxlwrUf1jaK2UsdxSsD7hig10M8l+GDBcmW/wJQjIVruj/nPPmFWJeGVXdoNWPYx5WT42U/WrgxA=
-X-Received: by 2002:a17:90a:a085:: with SMTP id r5mr11083994pjp.8.1635904430927;
- Tue, 02 Nov 2021 18:53:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211102202901.3675568-1-ira.weiny@intel.com> <20211102202901.3675568-3-ira.weiny@intel.com>
-In-Reply-To: <20211102202901.3675568-3-ira.weiny@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 2 Nov 2021 18:53:40 -0700
-Message-ID: <CAPcyv4iJXzGGMs-o2uJ=5zEf_ZAXZy4vN=2rjMS5b=BzPX0pvA@mail.gmail.com>
-Subject: Re: [INTERNAL PATCH 2/2] cxl/cxlmem: Change cxl_mem to a more
- descriptive name
-To:     "Weiny, Ira" <ira.weiny@intel.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        id S231131AbhKCNxo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 3 Nov 2021 09:53:44 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4055 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230213AbhKCNxn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 3 Nov 2021 09:53:43 -0400
+Received: from fraeml706-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Hkp2S15wwz67lD7;
+        Wed,  3 Nov 2021 21:46:08 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.15; Wed, 3 Nov 2021 14:51:05 +0100
+Received: from localhost (10.52.126.31) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Wed, 3 Nov
+ 2021 13:51:04 +0000
+Date:   Wed, 3 Nov 2021 13:51:02 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        <linux-cxl@vger.kernel.org>
+Subject: Re: [INTERNAL PATCH 2/2] cxl/cxlmem: Change cxl_mem to a more
+ descriptive name
+Message-ID: <20211103135102.00001052@Huawei.com>
+In-Reply-To: <20211102202901.3675568-3-ira.weiny@intel.com>
+References: <20211102202901.3675568-1-ira.weiny@intel.com>
+        <20211102202901.3675568-3-ira.weiny@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.126.31]
+X-ClientProxiedBy: lhreml734-chm.china.huawei.com (10.201.108.85) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Nov 2, 2021 at 1:29 PM <ira.weiny@intel.com> wrote:
->
+On Tue, 2 Nov 2021 13:29:01 -0700
+<ira.weiny@intel.com> wrote:
+
 > From: Ira Weiny <ira.weiny@intel.com>
->
+> 
 > The cxl_mem object actually represents the state of a CXL device within the
 > driver.  This is data layered on top of the PCI or other device.  Even though
 > the only device currently represented is a memory device, calling this cxl_mem
 > is confusing because this is not solely a CXL memory device.  Furthermore,
 > cxl_memdev does drive a CXL memory device.  So changing the name helps to
 > distinguish these to structures.
->
+> 
 > Update the structure name, function names, and the kdocs to reflect the
 > real uses of this structure.
->
+> 
 > Acked-by: Ben Widawsky <ben.widawsky@intel.com>
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
->
-> ---
-> Changes:
->         From Ben
->                 s/cxl_mem_mbox_send_cmd/cxl_mbox_send_cmd/
->                 s/cxl_mem_enumerate_cmds/cxl_enumerate_cmds/
->                 leave cxl_mem_create_range_info alone
+> 
+...
+Hi Ira,
 
-Looks good, I fixed up the changelog to the following and rebased on
-top of the register and DVSEC cleanups that are on cxl/next.
+>  /**
+>   * struct cxl_mbox_cmd - A command to be submitted to hardware.
+> @@ -90,8 +90,13 @@ struct cxl_mbox_cmd {
+>  #define CXL_CAPACITY_MULTIPLIER SZ_256M
+>  
+>  /**
+> - * struct cxl_mem - A CXL memory device
+> - * @dev: The device associated with this CXL device.
+> + * struct cxl_dev_state - The driver device state
+> + *
+> + * cxl_dev_state represents the CXL driver/device state.  It provides an
+> + * interface to mailbox commands as well as some cached data about the device.
+> + * Currently only memory devices are represented.
+> + *
+> + * @dev: The device associated with this CXL state
+>   * @cxlmd: Logical memory device chardev / interface
+>   * @regs: Parsed register blocks
+>   * @payload_size: Size of space for payload
+> @@ -117,7 +122,7 @@ struct cxl_mbox_cmd {
+>   * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
+>   * details on capacity parameters.
+>   */
+> -struct cxl_mem {
+> +struct cxl_dev_state {
+>  	struct device *dev;
+>  	struct cxl_memdev *cxlmd;
 
-"""
-cxl/memdev: Change cxl_mem to a more descriptive name
+This patch got me thinking about whether the new name should have some
+reference to it being the dev state for a type 3 device, because of this
+pointer the cxlmd making me think this wasn't generic enough to be called
+just cxl_dev_state.
 
-The 'struct cxl_mem' object actually represents the state of a CXL
-device within the driver. Comments indicating that 'struct cxl_mem' is a
-device itself are incorrect. It is data layered on top of a CXL Memory
-Expander class device. Rename it 'struct cxl_dev_state'. The 'struct'
-cxl_memdev' structure represents a Linux CXL memory device object, and
-it uses services and information provided by 'struct cxl_dev_state'.
+Naturally next step was to wonder what this was used for....
 
-Update the structure name, function names, and the kdocs to reflect the
-real uses of this structure.
+Far as I can tell it isn't set or used.  Can we drop this pointer?
+That would make it more obvious this simply provides services to the cxl_memdev
+as there isn't any path for things to flow the other way.
 
-Some helper functions that were previously prefixed "cxl_mem_" are
-renamed to just "cxl_".
-"""
+At that point, there are still some memory device specific items in here
+but they are all caches of things we have read from the device so they
+don't bother me that much.
+
+Jonathan
+
+>  
+> @@ -142,7 +147,7 @@ struct cxl_mem {
+>  	u64 next_volatile_bytes;
+>  	u64 next_persistent_bytes;
+>  
+> -	int (*mbox_send)(struct cxl_mem *cxlm, struct cxl_mbox_cmd *cmd);
+> +	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
+>  };
+...
