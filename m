@@ -2,30 +2,30 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0C1C433FE
-	for <linux-cxl@archiver.kernel.org>; Wed,  3 Nov 2021 15:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8ACC433F5
+	for <linux-cxl@archiver.kernel.org>; Wed,  3 Nov 2021 15:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03AEB610E5
-	for <linux-cxl@archiver.kernel.org>; Wed,  3 Nov 2021 15:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A0086109F
+	for <linux-cxl@archiver.kernel.org>; Wed,  3 Nov 2021 15:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231314AbhKCPVl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 3 Nov 2021 11:21:41 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4056 "EHLO
+        id S231340AbhKCP4o (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 3 Nov 2021 11:56:44 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4057 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230326AbhKCPVl (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 3 Nov 2021 11:21:41 -0400
-Received: from fraeml744-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Hkqzx2mYCz685Yr;
-        Wed,  3 Nov 2021 23:14:05 +0800 (CST)
+        with ESMTP id S229885AbhKCP4m (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 3 Nov 2021 11:56:42 -0400
+Received: from fraeml739-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Hkrms6F15z67mL5;
+        Wed,  3 Nov 2021 23:49:33 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml744-chm.china.huawei.com (10.206.15.225) with Microsoft SMTP Server
+ fraeml739-chm.china.huawei.com (10.206.15.220) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.15; Wed, 3 Nov 2021 16:19:02 +0100
+ 15.1.2308.15; Wed, 3 Nov 2021 16:54:03 +0100
 Received: from localhost (10.52.126.31) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Wed, 3 Nov
- 2021 15:19:02 +0000
-Date:   Wed, 3 Nov 2021 15:18:59 +0000
+ 2021 15:54:02 +0000
+Date:   Wed, 3 Nov 2021 15:53:59 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Ben Widawsky <ben.widawsky@intel.com>
 CC:     <linux-cxl@vger.kernel.org>,
@@ -34,11 +34,11 @@ CC:     <linux-cxl@vger.kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [RFC PATCH v2 08/28] cxl/port: Introduce a port driver
-Message-ID: <20211103151859.0000493a@Huawei.com>
-In-Reply-To: <20211022183709.1199701-9-ben.widawsky@intel.com>
+Subject: Re: [RFC PATCH v2 13/28] cxl: Flesh out register names
+Message-ID: <20211103155359.0000343d@Huawei.com>
+In-Reply-To: <20211022183709.1199701-14-ben.widawsky@intel.com>
 References: <20211022183709.1199701-1-ben.widawsky@intel.com>
-        <20211022183709.1199701-9-ben.widawsky@intel.com>
+        <20211022183709.1199701-14-ben.widawsky@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -52,244 +52,129 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 22 Oct 2021 11:36:49 -0700
+On Fri, 22 Oct 2021 11:36:54 -0700
 Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-> The CXL port driver will be responsible for managing the decoder
-> resources contained within the port. It will also provide APIs that
-> other drivers will consume for managing these resources.
-> 
-> Since the port driver is responsible for instantiating new decoders, and
-> it does so during probe(), a new API is needed to add decoders for
-> callers which already hold the device lock of the port.
-> 
-> This patch has no functional change because no driver is registering new
-> ports and the root ports that are already registered should be skipped.
+> Get a better naming scheme in place for upcoming additions. To solidify
+> the schema, add all the DVSEC identifiers to start with.
 > 
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-
-Hi Ben, A few fairly generic comments on stuff noticed whilst
-catching up with discussion around this series.
-
-Jonathan
-
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 91b8fd54bc93..ad22caf9135c 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -17,6 +17,9 @@
->   * (port-driver, region-driver, nvdimm object-drivers... etc).
->   */
+> 
+> ---
+> See:
+> https://lore.kernel.org/linux-pci/20210913190131.xiiszmno46qie7v5@intel.com/
+> ---
+>  drivers/cxl/core/regs.c | 14 ++++++++------
+>  drivers/cxl/pci.h       | 38 ++++++++++++++++++++++++++++++--------
+>  2 files changed, 38 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index c8ab8880b81b..b837196fbf39 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -253,9 +253,11 @@ static void cxl_decode_regblock(u32 reg_lo, u32 reg_hi,
+>  				struct cxl_register_map *map)
+>  {
+>  	map->block_offset =
+> -		((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
+> -	map->barno = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
+> -	map->reg_type = FIELD_GET(CXL_REGLOC_RBI_MASK, reg_lo);
+> +		((u64)reg_hi << 32) |
+> +		(reg_lo & DVSEC_REGISTER_LOCATOR_BLOCK_OFFSET_LOW_MASK);
+> +	map->barno = FIELD_GET(DVSEC_REGISTER_LOCATOR_BIR_MASK, reg_lo);
+> +	map->reg_type =
+> +		FIELD_GET(DVSEC_REGISTER_LOCATOR_BLOCK_IDENTIFIER_MASK, reg_lo);
+>  }
 >  
-> +/* CXL 2.0 8.2.4 CXL Component Register Layout and Definition */
-> +#define CXL_COMPONENT_REG_BLOCK_SIZE SZ_64K
+>  /**
+> @@ -276,15 +278,15 @@ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+>  	int regloc, i;
+>  
+>  	regloc = pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL,
+> -					   PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID);
+> +					   CXL_DVSEC_REGISTER_LOCATOR);
+>  	if (!regloc)
+>  		return -ENXIO;
+>  
+>  	pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
+>  	regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
+>  
+> -	regloc += PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET;
+> -	regblocks = (regloc_size - PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET) / 8;
+> +	regloc += DVSEC_REGISTER_LOCATOR_BLOCK1_OFFSET;
+> +	regblocks = (regloc_size - DVSEC_REGISTER_LOCATOR_BLOCK1_OFFSET) / 8;
+>  
+>  	for (i = 0; i < regblocks; i++, regloc += 8) {
+>  		u32 reg_lo, reg_hi;
+> diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
+> index 12fdcb1b14e5..fe2898b17736 100644
+> --- a/drivers/cxl/pci.h
+> +++ b/drivers/cxl/pci.h
+> @@ -7,17 +7,36 @@
+>  
+>  /*
+>   * See section 8.1 Configuration Space Registers in the CXL 2.0
+> - * Specification
+> + * Specification. Names are taken straight from the specification with "CXL" and
+> + * "DVSEC" redundancies removed.
+>   */
+>  #define PCI_DVSEC_HEADER1_LENGTH_MASK	GENMASK(31, 20)
+>  #define PCI_DVSEC_VENDOR_ID_CXL		0x1E98
+> -#define PCI_DVSEC_ID_CXL		0x0
+>  
+> -#define PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID	0x8
+> -#define PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET	0xC
+> +/* 8.1.3: PCIe DVSEC for CXL Device */
+> +#define CXL_DVSEC_PCIE_DEVICE					0
+>  
+> -/* BAR Indicator Register (BIR) */
+> -#define CXL_REGLOC_BIR_MASK GENMASK(2, 0)
+> +/* 8.1.4: Non-CXL Function Map DVSEC */
+> +#define CXL_DVSEC_FUNCTION_MAP					2
 > +
->  /* CXL 2.0 8.2.5 CXL.cache and CXL.mem Registers*/
->  #define CXL_CM_OFFSET 0x1000
->  #define CXL_CM_CAP_HDR_OFFSET 0x0
-> @@ -36,11 +39,22 @@
->  #define CXL_HDM_DECODER_CAP_OFFSET 0x0
->  #define   CXL_HDM_DECODER_COUNT_MASK GENMASK(3, 0)
->  #define   CXL_HDM_DECODER_TARGET_COUNT_MASK GENMASK(7, 4)
-> -#define CXL_HDM_DECODER0_BASE_LOW_OFFSET 0x10
-> -#define CXL_HDM_DECODER0_BASE_HIGH_OFFSET 0x14
-> -#define CXL_HDM_DECODER0_SIZE_LOW_OFFSET 0x18
-> -#define CXL_HDM_DECODER0_SIZE_HIGH_OFFSET 0x1c
-> -#define CXL_HDM_DECODER0_CTRL_OFFSET 0x20
-> +#define   CXL_HDM_DECODER_INTERLEAVE_11_8 BIT(8)
-> +#define   CXL_HDM_DECODER_INTERLEAVE_14_12 BIT(9)
-> +#define CXL_HDM_DECODER_CTRL_OFFSET 0x4
-> +#define   CXL_HDM_DECODER_ENABLE BIT(1)
-> +#define CXL_HDM_DECODER0_BASE_LOW_OFFSET(i) (0x20 * (i) + 0x10)
-> +#define CXL_HDM_DECODER0_BASE_HIGH_OFFSET(i) (0x20 * (i) + 0x14)
-> +#define CXL_HDM_DECODER0_SIZE_LOW_OFFSET(i) (0x20 * (i) + 0x18)
-> +#define CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(i) (0x20 * (i) + 0x1c)
-> +#define CXL_HDM_DECODER0_CTRL_OFFSET(i) (0x20 * (i) + 0x20)
-> +#define   CXL_HDM_DECODER0_CTRL_IG_MASK GENMASK(3, 0)
-> +#define   CXL_HDM_DECODER0_CTRL_IW_MASK GENMASK(7, 4)
-> +#define   CXL_HDM_DECODER0_CTRL_COMMIT BIT(9)
-> +#define   CXL_HDM_DECODER0_CTRL_COMMITTED BIT(10)
-> +#define   CXL_HDM_DECODER0_CTRL_TYPE BIT(12)
-> +#define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
-> +#define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
+> +/* 8.1.5: CXL 2.0 Extensions DVSEC for Ports */
+> +#define CXL_DVSEC_PORT_EXTENSIONS				3
+> +
+> +/* 8.1.6: GPF DVSEC for CXL Port */
+> +#define CXL_DVSEC_PORT_GPF					4
+> +
+> +/* 8.1.7: GPF DVSEC for CXL Device */
+> +#define CXL_DVSEC_DEVICE_GPF					5
+> +
+> +/* 8.1.8: PCIe DVSEC for Flex Bus Port */
+> +#define CXL_DVSEC_PCIE_FLEXBUS_PORT				7
+> +
+> +/* 8.1.9: Register Locator DVSEC */
+> +#define CXL_DVSEC_REGISTER_LOCATOR				8
+> +#define   DVSEC_REGISTER_LOCATOR_BLOCK1_OFFSET			0xC
 
-CXL_HDM_DECODERX_TL_HIGH etc perhaps as no longer just decoder 0?
+Hmm. I'm not particularly keen on not having CXL in the naming for the offset
+and fields.  They get used in places where, to the casual reader, they may look
+like generic PCI_DVSEC_ defintiions....  the do get very long though, but I'm not
+sure that's the right place to abbreviate. 
 
+Agreed with your comment in the thread that it's really hard to
+get a good consistent model for what are near enough free form names
+in a spec (or seem like it when read long after they were defined).
 
-> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> new file mode 100644
-> index 000000000000..ebbfb72ae995
-> --- /dev/null
-> +++ b/drivers/cxl/port.c
-
-...
-
+> +#define     DVSEC_REGISTER_LOCATOR_BIR_MASK			GENMASK(2, 0)
+> +#define	    DVSEC_REGISTER_LOCATOR_BLOCK_IDENTIFIER_MASK	GENMASK(15, 8)
+> +#define     DVSEC_REGISTER_LOCATOR_BLOCK_OFFSET_LOW_MASK	GENMASK(31, 16) 
+>  
+>  /* Register Block Identifier (RBI) */
+>  enum cxl_regloc_type {
+> @@ -28,8 +47,11 @@ enum cxl_regloc_type {
+>  	CXL_REGLOC_RBI_TYPES
+>  };
+>  
+> -#define CXL_REGLOC_RBI_MASK GENMASK(15, 8)
+> -#define CXL_REGLOC_ADDR_MASK GENMASK(31, 16)
+> +/* 8.1.10: MLD DVSEC */
+> +#define CXL_DVSEC_MLD						9
 > +
-> +static u64 get_decoder_size(void __iomem *hdm_decoder, int n)
-> +{
-> +	u32 ctrl = readl(hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(n));
-> +
-> +	if (!!FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
-
-Drop the !! as doesn't do anything useful.
-
-> +		return 0;
-> +
-> +	return ioread64_hi_lo(hdm_decoder +
-> +			      CXL_HDM_DECODER0_SIZE_LOW_OFFSET(n));
-> +}
-> +
-> +static bool is_endpoint_port(struct cxl_port *port)
-> +{
-> +	if (!port->uport->driver)
-> +		return false;
-> +
-> +	return to_cxl_drv(port->uport->driver)->id ==
-> +	       CXL_DEVICE_MEMORY_EXPANDER;
-> +}
-> +
-> +static int enumerate_hdm_decoders(struct cxl_port *port,
-> +				  struct cxl_port_data *portdata)
-> +{
-> +	int i = 0;
-
-Don't init.
-
-> +
-> +	for (i = 0; i < portdata->caps.count; i++) {
-> +		int iw = 1, ig = 0, rc, target_count = portdata->caps.tc;
-
-Use some more lines for this - it'll be easier to read!
-
-> +		void __iomem *hdm_decoder = portdata->regs.hdm_decoder;
-> +		enum cxl_decoder_type type = CXL_DECODER_EXPANDER;
-> +		struct resource res = DEFINE_RES_MEM(0, 0);
-> +		struct cxl_decoder *cxld;
-> +		int *target_map = NULL;
-> +		u64 size;
-> +
-> +		if (is_endpoint_port(port))
-> +			target_count = 0;
-
-I'd rather just see a bool for this instead of using the value not allowed for
-other cases.  Slightly more code, but no need for the comment in the previous
-patch.
-
-> +
-> +		cxld = cxl_decoder_alloc(port, target_count);
-> +		if (IS_ERR(cxld)) {
-> +			dev_warn(&port->dev,
-> +				 "Failed to allocate the decoder\n");
-> +			return PTR_ERR(cxld);
-> +		}
-> +
-> +		size = get_decoder_size(hdm_decoder, i);
-> +		if (size != 0) {
-> +			int temp[CXL_DECODER_MAX_INTERLEAVE];
-> +			u64 target_list, base;
-> +			u32 ctrl;
-> +			int j;
-> +
-> +			target_map = temp;
-> +			ctrl = readl(hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(i));
-> +			base = ioread64_hi_lo(hdm_decoder + CXL_HDM_DECODER0_BASE_LOW_OFFSET(i));
-> +			res = (struct resource)DEFINE_RES_MEM(base, size);
-> +
-> +			cxld->flags = CXL_DECODER_F_EN;
-> +			iw = cxl_hdm_decoder_iw(ctrl);
-> +			ig = cxl_hdm_decoder_ig(ctrl);
-> +
-> +			if (FIELD_GET(CXL_HDM_DECODER0_CTRL_TYPE, ctrl) == 0)
-> +				type = CXL_DECODER_ACCELERATOR;
-> +
-> +			target_list = ioread64_hi_lo(hdm_decoder + CXL_HDM_DECODER0_TL_LOW(i));
-> +			for (j = 0; j < iw; j++)
-> +				target_map[j] = (target_list >> (j * 8)) & 0xff;
-
-temp just went out of scope, and target_map is still in it...
-
-> +		}
-> +
-> +		cxld->target_type = type;
-> +		cxld->res = res;
-> +		cxld->interleave_ways = iw;
-> +		cxld->interleave_granularity = ig;
-> +
-> +		rc = cxl_decoder_add_locked(cxld, target_map);
-> +		if (rc)
-> +			put_device(&cxld->dev);
-> +		else
-> +			rc = cxl_decoder_autoremove(port->uport->parent, cxld);
-> +		if (rc)
-> +			dev_err(&port->dev, "Failed to add decoder\n");
-
-why not return an error?
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_port_probe(struct device *dev)
-> +{
-> +	struct cxl_port *port = to_cxl_port(dev);
-> +	struct cxl_port_data *portdata;
-> +	void __iomem *crb;
-> +	u32 ctrl;
-> +	int rc;
-> +
-> +	if (port->component_reg_phys == CXL_RESOURCE_NONE)
-> +		return 0;
-> +
-> +	portdata = devm_kzalloc(dev, sizeof(*portdata), GFP_KERNEL);
-> +	if (!portdata)
-> +		return -ENOMEM;
-> +
-> +	crb = devm_cxl_iomap_block(&port->dev, port->component_reg_phys,
-> +				   CXL_COMPONENT_REG_BLOCK_SIZE);
-> +	if (IS_ERR_OR_NULL(crb)) {
-> +		dev_err(&port->dev, "No component registers mapped\n");
-> +		return -ENXIO;
-> +	}
-> +
-> +	rc = map_regs(port, crb, portdata);
-> +	if (rc)
-> +		return rc;
-> +
-> +	get_caps(port, portdata);
-> +	if (portdata->caps.count == 0) {
-> +		dev_err(&port->dev, "Spec violation. Caps invalid\n");
-> +		return -ENXIO;
-> +	}
-> +
-> +	/*
-> +	 * Enable HDM decoders for this port.
-> +	 *
-> +	 * FIXME: If the component was using DVSEC range registers for decode,
-> +	 * this will destroy that.
-> +	 */
-> +	ctrl = readl(portdata->regs.hdm_decoder + CXL_HDM_DECODER_CTRL_OFFSET);
-> +	ctrl |= CXL_HDM_DECODER_ENABLE;
-> +	writel(ctrl, portdata->regs.hdm_decoder + CXL_HDM_DECODER_CTRL_OFFSET);
-> +
-> +	rc = enumerate_hdm_decoders(port, portdata);
-> +	if (rc) {
-> +		dev_err(&port->dev, "Couldn't enumerate decoders (%d)\n", rc);
-> +		return rc;
-> +	}
-> +
-> +	dev_set_drvdata(dev, portdata);
-> +	return 0;
-> +}
-> +
-> +static struct cxl_driver cxl_port_driver = {
-> +	.name = "cxl_port",
-> +	.probe = cxl_port_probe,
-> +	.id = CXL_DEVICE_PORT,
-> +};
-> +module_cxl_driver(cxl_port_driver);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_IMPORT_NS(CXL);
-> +MODULE_ALIAS_CXL(CXL_DEVICE_PORT);
+> +/* 14.16.1 CXL Device Test Capability Advertisement */
+> +#define CXL_DVSEC_PCIE_TEST_CAPABILITY				10
+>  
+>  #define cxl_reg_block(pdev, map)                                               \
+>  	((resource_size_t)(pci_resource_start(pdev, (map)->barno) +            \
 
