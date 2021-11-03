@@ -2,88 +2,108 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B099C433F5
-	for <linux-cxl@archiver.kernel.org>; Wed,  3 Nov 2021 00:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C7DC433F5
+	for <linux-cxl@archiver.kernel.org>; Wed,  3 Nov 2021 01:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7F661050
-	for <linux-cxl@archiver.kernel.org>; Wed,  3 Nov 2021 00:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1039761051
+	for <linux-cxl@archiver.kernel.org>; Wed,  3 Nov 2021 01:53:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230317AbhKCBAR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 2 Nov 2021 21:00:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45358 "EHLO
+        id S231272AbhKCB41 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 2 Nov 2021 21:56:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229804AbhKCBAQ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 2 Nov 2021 21:00:16 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52182C061714
-        for <linux-cxl@vger.kernel.org>; Tue,  2 Nov 2021 17:57:41 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id g11so654483pfv.7
-        for <linux-cxl@vger.kernel.org>; Tue, 02 Nov 2021 17:57:41 -0700 (PDT)
+        with ESMTP id S231219AbhKCB40 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 2 Nov 2021 21:56:26 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B93BC061714
+        for <linux-cxl@vger.kernel.org>; Tue,  2 Nov 2021 18:53:51 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id o6-20020a17090a0a0600b001a64b9a11aeso229565pjo.3
+        for <linux-cxl@vger.kernel.org>; Tue, 02 Nov 2021 18:53:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Tx5izF5ieiWqUFhVPPAd5fPBgdOsQUNseMGSg8a7ISo=;
-        b=sn3bChFooilv+LsPqraxuV6llHk/lYxpiixCzX4MmloacFCdKLgdUqevI9Oscw61I8
-         oq0nQQ8npxcHu08xiRuvahfxiWnTkFke0IusD5YkHJySX/6AqqO2lTOdfamdNanuqzHl
-         39NFddmWj+a8yK3YQph3yT70Czo47DCnxghcWEPGC6QIb2U6RYSuScEtsOrcBHna3RZn
-         KD3kIB8ntVQl8v1Pu8V/rGed5eK+XRSqB12XJJOuhqEtlkA2Jc/aTLPqkAfkqq9LCyDJ
-         l+wuB2D7N3Zaj1uqKeMDFVoCReIH4ee7jtjnW7+9Y63S0Fa8pxBuhxRqWwiNbmOVtj8u
-         AXLw==
+        bh=WS8F9Mm3PeQjtYh6+wOnJgg0wAkGEtxpJ8h3c0TWJ1c=;
+        b=pUap+BjUOXHTKWSn4mrx775hzpnkNzwQHcQDf62Sy3Z4+XV+n6E7+Vq6ZHCAOm+OeJ
+         xKDRCaiJxIyl1ykzMv8cD+Zry6/zJ8JrgPyJYXyUdBeJvgmAVgZgFVbWPoWUOkbqagNW
+         cGqwhbftfC1k+NknOjvjEIV/LwdQNMyLtDKvjgSewaDXWAzACbFrzSbaaCg7YbguDRS5
+         DiHoTmPRD80VvcSkHLwm+KoeE6eONPdNbAQqY9DvBybbfZdhFXlgfs1w28YcPuNB2+mu
+         ISIcxj9jq/yaFmMpl+GK5KxnHmkxCVnuWMRMZBuTsrh56wUvC+4BsO8h/Pd+RwNCKsN5
+         tDGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Tx5izF5ieiWqUFhVPPAd5fPBgdOsQUNseMGSg8a7ISo=;
-        b=jTIHyLFQMy54rc8TSSHD/R4JLmBLy+noWE1DeFv+siJAI72Wpwf6wjyPY1/cYhHBS5
-         79vXzt2VfCiZibf+x7FIh9X52nVbnriqd/rE8tbN/wsV7wzUjk1fepnWnYjlVzJxaqGU
-         WhXKpxhBSgJYiykY9dSXtvXqoYV/CjKMMbCV3Cxmd3tSDWTDH2dnkz/S2Myk8UozlkAw
-         wEdV+jwFQq2mURF0O34Tri2X9QcpXK2KknCMXy6siLj6n6WtRD9DfgBCbG+uFhv/kufi
-         +7619gDW62fhdUR6JY7b5p+fOlXVz3061JiCiHs3iv2Pz7e9u9k+Xoon817UByGzz5w8
-         c4Sw==
-X-Gm-Message-State: AOAM5308NvwsDizaB9KSV9BIax2Zxw5ismbSQFIqRvbAFLxWFy3/HHYi
-        vRLtT3dRN/r8m3ZIfdG53ztt8o0l27Y3Rp3eykkrWA==
-X-Google-Smtp-Source: ABdhPJz5R2Su/mHZo9b6SQxOfxThr3KX7+2P9xZl43G1UFW9oDsqafDx3cvV/WhfNzJGrsfoLr4BpE1BQeFCXHA4EZE=
-X-Received: by 2002:a63:6bc2:: with SMTP id g185mr30281347pgc.356.1635901060801;
- Tue, 02 Nov 2021 17:57:40 -0700 (PDT)
+        bh=WS8F9Mm3PeQjtYh6+wOnJgg0wAkGEtxpJ8h3c0TWJ1c=;
+        b=BdYSh1IeuVKw0r8yS1tIsZ4sxtQNiyJeda3hx0vJ/ejmqikyOwR9G5I6KZQhXw3cLE
+         21rJFSnddD2vii+yTmYMSM2xB+udMduoFeNSJ8hR1g4iQ3AEimI/xCtMPQ09sW1FE5jI
+         vliEXi98UwqbYz7APjdzIcLCrnlSRVr2sAcsehb+D1VJIE1gqcjQfCOXJXXgNXbzrIZf
+         5bB91xGB3Ys+xc1XPj4LHHzwsE8tH9jSSBsuint7RMizHXa683gRhDClWFMwqjK2hWiZ
+         /9/W3r1cICF9fjC0f/zgjGFjBMmURnLGoGaPf26E9/wUgx5ZcvgbkmDxOO3c43pz8xdl
+         QS5A==
+X-Gm-Message-State: AOAM531/Qj7/bZEDrijl6sFckQa1Ji0nVKlc1R6Eb4kYjoQxJp8jKloq
+        qs9Cm6TXKWoenpgxOKXs26osBN0xnToW0jaXOtr21A==
+X-Google-Smtp-Source: ABdhPJwuRXTk8BJSxlwrUf1jaK2UsdxSsD7hig10M8l+GDBcmW/wJQjIVruj/nPPmFWJeGVXdoNWPYx5WT42U/WrgxA=
+X-Received: by 2002:a17:90a:a085:: with SMTP id r5mr11083994pjp.8.1635904430927;
+ Tue, 02 Nov 2021 18:53:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <163553734757.2509761.3305231863616785470.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20211101113026.00001d2a@Huawei.com>
-In-Reply-To: <20211101113026.00001d2a@Huawei.com>
+References: <20211102202901.3675568-1-ira.weiny@intel.com> <20211102202901.3675568-3-ira.weiny@intel.com>
+In-Reply-To: <20211102202901.3675568-3-ira.weiny@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 2 Nov 2021 17:57:30 -0700
-Message-ID: <CAPcyv4hKmQX1C22VXq38coAYSFaCh=FRLo_vOtoZjU4K+e7CGw@mail.gmail.com>
-Subject: Re: [PATCH] cxl/pmem: Fix reference counting for delayed work
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, "Weiny, Ira" <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>
+Date:   Tue, 2 Nov 2021 18:53:40 -0700
+Message-ID: <CAPcyv4iJXzGGMs-o2uJ=5zEf_ZAXZy4vN=2rjMS5b=BzPX0pvA@mail.gmail.com>
+Subject: Re: [INTERNAL PATCH 2/2] cxl/cxlmem: Change cxl_mem to a more
+ descriptive name
+To:     "Weiny, Ira" <ira.weiny@intel.com>
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        linux-cxl@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Nov 1, 2021 at 4:30 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
+On Tue, Nov 2, 2021 at 1:29 PM <ira.weiny@intel.com> wrote:
 >
-> On Fri, 29 Oct 2021 12:55:47 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 >
-> > There is a potential race between queue_work() returning and the
-> > queued-work running that could result in put_device() running before
-> > get_device(). Introduce the cxl_nvdimm_bridge_state_work() helper that
-> > takes the reference unconditionally, but drops it if no new work was
-> > queued, to keep the references balanced.
-> >
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> The cxl_mem object actually represents the state of a CXL device within the
+> driver.  This is data layered on top of the PCI or other device.  Even though
+> the only device currently represented is a memory device, calling this cxl_mem
+> is confusing because this is not solely a CXL memory device.  Furthermore,
+> cxl_memdev does drive a CXL memory device.  So changing the name helps to
+> distinguish these to structures.
 >
-> Good spot, I'm guessing this was an inspection thing rather than a problem
-> you've managed to trigger, but either way.
+> Update the structure name, function names, and the kdocs to reflect the
+> real uses of this structure.
+>
+> Acked-by: Ben Widawsky <ben.widawsky@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+>
+> ---
+> Changes:
+>         From Ben
+>                 s/cxl_mem_mbox_send_cmd/cxl_mbox_send_cmd/
+>                 s/cxl_mem_enumerate_cmds/cxl_enumerate_cmds/
+>                 leave cxl_mem_create_range_info alone
 
-Correct, it was by inspection. I expect it would be extremely
-difficult to hit this race in practice.
+Looks good, I fixed up the changelog to the following and rebased on
+top of the register and DVSEC cleanups that are on cxl/next.
 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+"""
+cxl/memdev: Change cxl_mem to a more descriptive name
 
-Thanks!
+The 'struct cxl_mem' object actually represents the state of a CXL
+device within the driver. Comments indicating that 'struct cxl_mem' is a
+device itself are incorrect. It is data layered on top of a CXL Memory
+Expander class device. Rename it 'struct cxl_dev_state'. The 'struct'
+cxl_memdev' structure represents a Linux CXL memory device object, and
+it uses services and information provided by 'struct cxl_dev_state'.
+
+Update the structure name, function names, and the kdocs to reflect the
+real uses of this structure.
+
+Some helper functions that were previously prefixed "cxl_mem_" are
+renamed to just "cxl_".
+"""
