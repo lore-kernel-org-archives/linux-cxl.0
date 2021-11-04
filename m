@@ -2,60 +2,58 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23EF4C433F5
-	for <linux-cxl@archiver.kernel.org>; Thu,  4 Nov 2021 19:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D17C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu,  4 Nov 2021 19:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDE5E611CE
-	for <linux-cxl@archiver.kernel.org>; Thu,  4 Nov 2021 19:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18F9B611EE
+	for <linux-cxl@archiver.kernel.org>; Thu,  4 Nov 2021 19:18:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231823AbhKDTM6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 4 Nov 2021 15:12:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52040 "EHLO
+        id S229850AbhKDTUh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 4 Nov 2021 15:20:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232340AbhKDTM6 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 4 Nov 2021 15:12:58 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15369C061714
-        for <linux-cxl@vger.kernel.org>; Thu,  4 Nov 2021 12:10:20 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id m26so6784709pff.3
-        for <linux-cxl@vger.kernel.org>; Thu, 04 Nov 2021 12:10:20 -0700 (PDT)
+        with ESMTP id S229804AbhKDTUh (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 4 Nov 2021 15:20:37 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12A7AC061714
+        for <linux-cxl@vger.kernel.org>; Thu,  4 Nov 2021 12:17:59 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id v20so8884903plo.7
+        for <linux-cxl@vger.kernel.org>; Thu, 04 Nov 2021 12:17:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sH1H/SSb7145613St9QR+4X9xXT5SuXQ4PmNmNtE4SY=;
-        b=RkQ2Up/010tXpZunvFScYS1oeir9SkeWNgN7vNOqLE5K8VWoaQxeKLcItA3qP3u0Nb
-         Xx1zZ5EDXP+Od3tXRAEXyGhqhQ39UHgMpnOeiC89dNuOQA4lV6Ste473faE6SWbS0oVZ
-         NbZynGdbePUpAcx8y3av/zJobXk2In0ZrL2pY4ZZDL1YcZd9zk5yEfPUilbaZBgLqgWs
-         nL59oz38ItY/lL9ZHnIumVCAKqe8VBv0KoupGKDInbw/LwlZCUW0Cl7fVQSA/RFyhteN
-         NGhoxF4rosCJvTJ3wkoeTW5j6mlSGjurJtUG3me+sLzHXWAYvzbo3bTJty3SxPvBcTcd
-         H0AQ==
+        bh=pPY32UoBpos6npFjOhP52/H4dbl/A2LxyxAlHKHwlpU=;
+        b=S0RuQhHoB7eZobVST2JmlxI47OSd+OuT9Fs6h4nIxxATCnEtitUicvr59/9avb4gLx
+         2MuAEleG667ufF/8v3oJXZOEBzr9f+144GIf+Q6Tnx69saSD3rrOlyCjyC2iImuGLLp9
+         hKavhyGaADQ4rZnpdV+xNFI7vH1qiRqzkrJ2MqTBkF43w+d5sgU6xtRryFVZkcAQ/9zo
+         viBiTM8PzXoTV0F7AfnytCfpRE01rQzK+4MG/5dkaBgXxL7NQSka6Mc7bC+5qdCTZvNp
+         P7csQh4CsZP9VKzsocJUMJNcPCx7Kmt1fv5ugPK0Bv7QyjgdkUBc3Kj9aDnVpiQ+Nhoj
+         KG5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sH1H/SSb7145613St9QR+4X9xXT5SuXQ4PmNmNtE4SY=;
-        b=L9oOeNBXlgsRdFQxnNKawumfHGW4+/F9/GDgDvG2W2GVjuxnfvoJkdJvEw8Qwwkfsu
-         JsuSmZ7yfipmeDkcGd3Xt+0PLu9nA0ycGVgeSp+AWLjaT/svDUXfUnz7DyO1LGkgOoQu
-         VDOWS7sETgrGNK5+A5pnt2UEvnxBZCJPiRdE8paWM1pvnnn2HiSBhnSkT+RpqH0M4mU3
-         CXR8lxa+qYZqpCRljNT42eB4/MmcstjzNpmm7cSb3cxeKWcGUI4Rvy197PSs5c3UG1wj
-         o4FeKobK6K1on/v22uPHQfbtsYdFClMFd8GE6uEHVuq5Pz8Sd3HtKTj9rRXwRb2VpYQM
-         p01A==
-X-Gm-Message-State: AOAM533rF40LxUIQ/80BH8RJ4p68I3h/sYT7Gbc1fDd+ERIxg0DfRuXj
-        670WIB2N/3T3Gg27VKM5LMfnWyl2P7l276Gl8jtWZA==
-X-Google-Smtp-Source: ABdhPJw1ZMHx2dxdoz6TwtXVkAXo3hN4N/9EQRT8mwAdNFVAONMtLYyNH8vjR0t+Pc/AaaXfCZn9ur57A+LxmG0NksM=
-X-Received: by 2002:a05:6a00:1254:b0:481:2730:a52a with SMTP id
- u20-20020a056a00125400b004812730a52amr20821412pfi.86.1636053019607; Thu, 04
- Nov 2021 12:10:19 -0700 (PDT)
+        bh=pPY32UoBpos6npFjOhP52/H4dbl/A2LxyxAlHKHwlpU=;
+        b=gIpkf0BbLUFDQCSq1gXUdWRsCinTviI7jkoc3MO4VH/uk7HmaEfxM7z2Cj1HMF+lOr
+         tC7Tmmcrx/MHDGIKeFTp2vbI1x+ure+ogBUTy+9nkZM2fn2AzuxdGWXKf5BVv15tz99r
+         gh1oapBxQVPzaLkJJu9xGGVOerLOo1PLHI4vLYJA0ON5gzQUKaoiYd5tgw3BiKTf73ny
+         yx+jQk3n8j7xWTnq2DozYBFn62eLNcmboZrrQo17TJ1k4+zerdbpi+eamDzGEWsPWUUW
+         ZuBA3xX+CjOg3FRRSX2C5nCAi0xIoKM5GcKzzH2y9hv2o6TY1TJzlc7F+bp8qIzWGyLH
+         W8PQ==
+X-Gm-Message-State: AOAM532LBsR8E4m9RBXd6mBvOLcKbjHjpwDp9IoENdevFKwnlWVUeNjG
+        EugP9vaaes+vCUosVBnF6VDRhaAbF6jzIRldRe95+g==
+X-Google-Smtp-Source: ABdhPJzZehSDivbS4m4ekYnTOxMiXl0zDQr7tsfLls46KuTEKfESXuj+IKtmUERKriJwiifERHm90togNTToITNkjYQ=
+X-Received: by 2002:a17:90b:1e49:: with SMTP id pi9mr1560146pjb.220.1636053478487;
+ Thu, 04 Nov 2021 12:17:58 -0700 (PDT)
 MIME-Version: 1.0
 References: <20211022183709.1199701-1-ben.widawsky@intel.com>
  <20211022183709.1199701-9-ben.widawsky@intel.com> <CAPcyv4g9AUzNihcYJ3AzwZ+UnFquOf1VWX3fZgb-77ZNteFTAA@mail.gmail.com>
- <20211101175314.lrq3ccqkts725bjt@intel.com> <CAPcyv4hKxUXbmCkuf8Rw1vsOhErKMyZ8ivBjO9YkhxDgiogo-w@mail.gmail.com>
- <20211102165801.6mxobbz3ow55nkzl@intel.com>
-In-Reply-To: <20211102165801.6mxobbz3ow55nkzl@intel.com>
+ <20211104163727.ybgenphhwaruqhff@intel.com>
+In-Reply-To: <20211104163727.ybgenphhwaruqhff@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 4 Nov 2021 12:10:09 -0700
-Message-ID: <CAPcyv4hyEmj+d-81hFqf0gaoOp+ZJJ+Yr=28yAOZCVNjcgsphA@mail.gmail.com>
+Date:   Thu, 4 Nov 2021 12:17:48 -0700
+Message-ID: <CAPcyv4gMx-2WuPz5DUyaYin=GfRcx6XVQr0+-1X6qDb4236deg@mail.gmail.com>
 Subject: Re: [RFC PATCH v2 08/28] cxl/port: Introduce a port driver
 To:     Ben Widawsky <ben.widawsky@intel.com>
 Cc:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>,
@@ -68,45 +66,74 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Nov 2, 2021 at 9:58 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Thu, Nov 4, 2021 at 9:37 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> On 21-11-01 20:31:03, Dan Williams wrote:
-> > On Mon, Nov 1, 2021 at 10:53 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> On 21-10-29 18:37:36, Dan Williams wrote:
+> > On Fri, Oct 22, 2021 at 11:37 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
 > > >
-> > > On 21-10-29 18:37:36, Dan Williams wrote:
-> > > > On Fri, Oct 22, 2021 at 11:37 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > > >
-> > >
-> > > [snip]
-> > >
-> > > > > diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-> > > > > index cf07ae6cea17..40b386aaedf7 100644
-> > > > > --- a/drivers/cxl/Makefile
-> > > > > +++ b/drivers/cxl/Makefile
-> > > > > @@ -1,5 +1,6 @@
-> > > > >  # SPDX-License-Identifier: GPL-2.0
-> > > > >  obj-$(CONFIG_CXL_BUS) += core/
-> > > > > +obj-$(CONFIG_CXL_MEM) += cxl_port.o
-> > > >
-> > > > It feel odd that CONFIG_CXL_MEM builds cxl_port, why not have a
-> > > > CONFIG_CXL_PORT that is simply selected by CONFIG_CXL_MEM, or a
-> > > > CONFIG_CXL_PORT that defaults to the value of CONFIG_CXL_BUS?
-> > > >
-> > >
-> > > Can you help me understand when CONFIG_CXL_MEM is useful when
-> > > #CONFIG_CXL_PORT=n? I was unable to figure out such a case and so I tied the two
-> > > together.
-> >
-> > With a 'select' dependency it's impossible to have the
-> > CONFIG_CXL_PORT=n and CONFIG_CXL_MEM=m combination. The extra config
-> > symbol is for idiomatic (one config-symbol per module .ko) reasons to
-> > reflect the module dependency in the Kconfig.
-> >
 >
-> Should CXL_MEM also select CXL_PCI? I don't see a way CXL_MEM can work without
-> CXL_PCI.
+> [snip]
+>
+> >
+> > +void trigger_decoder_autoremove(void *data)
+> > +{
+> > +       struct cxl_decoder *cxld = data;
+> > +       struct device *host = get_cxl_topology_host();
+> > +
+> > +       /* The topology host driver beat us to the punch */
+> > +       if (!host)
+> > +               return;
+> > +
+> > +       devm_remove_action(host, cxld_unregister, &cxld->dev);
+> > +       put_cxl_topology_host(host);
+> > +}
+> > +
+> > +/**
+> > + * cxl_port_decoder_autoremove - remove decoders discovered by the port driver
+> > + * @cxld: decoder to remove
+> > + *
+> > + * CXL.mem requires an intact port / decoder topology from root level
+> > + * platform decoders to endpoint decoders. Arrange for decoders
+> > + * enumerated by the port driver to be removed when either the root is
+> > + * removed (in which the entire hierarchy is removed), or when an
+> > + * individual port is disabled, in which case only that port's
+> > + * sub-section of the hierarchy is removed.
+> > + */
+> > +int cxl_port_decoder_autoremove(struct cxl_decoder *cxld)
+> > +{
+> > +       struct cxl_port *port = to_cxl_port(cxld->dev.parent);
+> > +       struct device *host = get_cxl_topology_host();
+> > +       int rc;
+> > +
+> > +       if (!host)
+> > +               return -ENODEV;
+> > +
+> > +       if (!port->dev.driver) {
+> > +               rc = -ENXIO;
+> > +               goto out;
+> > +       }
+> > +
+> > +       rc = cxl_decoder_autoremove(host, cxld);
+> > +       if (rc)
+> > +               goto out;
+> > +
+> > +       rc = devm_add_action_or_reset(&port->dev, trigger_decoder_autoremove,
+> > +                                       cxld);
+> > +out:
+> > +       put_cxl_topology_host(host);
+> > +       return rc;
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(cxl_port_decoder_autoremove, CXL);
+>
+> The only port which has decoders that aren't discovered by the port driver would
+> be the "root port" because it's platform specific. However, that port still is
+> treated similarly to the other ports. Therefore I don't see why you need
+> cxl_decoder_autoremove() anymore. Could you please explain? I think the safety
+> check in trigger_decoder_autoremove() makes this work for all cases.
 
-The "select" dependency should be an "I use services from module X"
-relationship. CXL_MEM uses port services and can't operate unless that
-module is present. CXL_MEM does not strictly need CXL_PCI especially
-since drivers/cxl/core/memdev.c abandoned all PCI refernces.
+I don't think it's worth the games to explain why CXL sees fit to
+register (here comes your favorite argument...) non-idiomatic devm
+actions on devices that are not associated with the running device +
+driver. So as long as the port driver auto-unloads its child devices
+then we're golden. Is your concern that you want to have the CFMWS
+decoders registers from cxl_port and not cxl_acpi?
