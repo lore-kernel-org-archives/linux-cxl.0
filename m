@@ -2,97 +2,109 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7339C433F5
-	for <linux-cxl@archiver.kernel.org>; Thu,  4 Nov 2021 09:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7043EC433EF
+	for <linux-cxl@archiver.kernel.org>; Thu,  4 Nov 2021 16:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87A8060E9B
-	for <linux-cxl@archiver.kernel.org>; Thu,  4 Nov 2021 09:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5177E60240
+	for <linux-cxl@archiver.kernel.org>; Thu,  4 Nov 2021 16:37:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230511AbhKDJk2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 4 Nov 2021 05:40:28 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4064 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230335AbhKDJk2 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 4 Nov 2021 05:40:28 -0400
-Received: from fraeml701-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HlJTS0KWVz67yqX;
-        Thu,  4 Nov 2021 17:37:48 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.15; Thu, 4 Nov 2021 10:37:47 +0100
-Received: from localhost (10.52.124.216) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Thu, 4 Nov
- 2021 09:37:47 +0000
-Date:   Thu, 4 Nov 2021 09:37:44 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
+        id S231390AbhKDQkH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 4 Nov 2021 12:40:07 -0400
+Received: from mga11.intel.com ([192.55.52.93]:51460 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230058AbhKDQkH (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 4 Nov 2021 12:40:07 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10157"; a="229202390"
+X-IronPort-AV: E=Sophos;i="5.87,209,1631602800"; 
+   d="scan'208";a="229202390"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2021 09:37:29 -0700
+X-IronPort-AV: E=Sophos;i="5.87,209,1631602800"; 
+   d="scan'208";a="501607010"
+Received: from wangli6-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.138.130])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2021 09:37:28 -0700
+Date:   Thu, 4 Nov 2021 09:37:27 -0700
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Ben Widawsky" <ben.widawsky@intel.com>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH] cxl/memdev: Remove unused cxlmd field
-Message-ID: <20211104093744.000033b2@Huawei.com>
-In-Reply-To: <20211103234857.3689354-1-ira.weiny@intel.com>
-References: <20211103234857.3689354-1-ira.weiny@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: Re: [RFC PATCH v2 08/28] cxl/port: Introduce a port driver
+Message-ID: <20211104163727.ybgenphhwaruqhff@intel.com>
+References: <20211022183709.1199701-1-ben.widawsky@intel.com>
+ <20211022183709.1199701-9-ben.widawsky@intel.com>
+ <CAPcyv4g9AUzNihcYJ3AzwZ+UnFquOf1VWX3fZgb-77ZNteFTAA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.124.216]
-X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4g9AUzNihcYJ3AzwZ+UnFquOf1VWX3fZgb-77ZNteFTAA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 3 Nov 2021 16:48:57 -0700
-<ira.weiny@intel.com> wrote:
+On 21-10-29 18:37:36, Dan Williams wrote:
+> On Fri, Oct 22, 2021 at 11:37 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> >
 
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> This field was left over when the connection between the cxl_memdev and
-> cxl_mem was tighter.  It is no longer set nor used so remove it.[1]
-> 
-> [1] https://lore.kernel.org/linux-cxl/CAPcyv4hcgh2gb8qsS_UXTBSGqYfMPnC6p5kkvNUjm+V6kVKM5g@mail.gmail.com/
-> 
-> Suggested-by: Jonathan.Cameron@huawei.com
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+[snip]
 
 > 
-> ---
-> Changes from V1:
-> 	Change Subject
-> 
-> [v1] https://lore.kernel.org/linux-cxl/20211103223413.n6fmf3gtop56wssz@intel.com/T/#m79c2c7ba4cc897c10e26acdaca890887e1dd487f
-> ---
->  drivers/cxl/cxlmem.h | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index f978a046591b..8d96d009ad90 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -97,7 +97,6 @@ struct cxl_mbox_cmd {
->   * Currently only memory devices are represented.
->   *
->   * @dev: The device associated with this CXL state
-> - * @cxlmd: Logical memory device chardev / interface
->   * @regs: Parsed register blocks
->   * @payload_size: Size of space for payload
->   *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
-> @@ -124,7 +123,6 @@ struct cxl_mbox_cmd {
->   */
->  struct cxl_dev_state {
->  	struct device *dev;
-> -	struct cxl_memdev *cxlmd;
->  
->  	struct cxl_regs regs;
->  
+> +void trigger_decoder_autoremove(void *data)
+> +{
+> +       struct cxl_decoder *cxld = data;
+> +       struct device *host = get_cxl_topology_host();
+> +
+> +       /* The topology host driver beat us to the punch */
+> +       if (!host)
+> +               return;
+> +
+> +       devm_remove_action(host, cxld_unregister, &cxld->dev);
+> +       put_cxl_topology_host(host);
+> +}
+> +
+> +/**
+> + * cxl_port_decoder_autoremove - remove decoders discovered by the port driver
+> + * @cxld: decoder to remove
+> + *
+> + * CXL.mem requires an intact port / decoder topology from root level
+> + * platform decoders to endpoint decoders. Arrange for decoders
+> + * enumerated by the port driver to be removed when either the root is
+> + * removed (in which the entire hierarchy is removed), or when an
+> + * individual port is disabled, in which case only that port's
+> + * sub-section of the hierarchy is removed.
+> + */
+> +int cxl_port_decoder_autoremove(struct cxl_decoder *cxld)
+> +{
+> +       struct cxl_port *port = to_cxl_port(cxld->dev.parent);
+> +       struct device *host = get_cxl_topology_host();
+> +       int rc;
+> +
+> +       if (!host)
+> +               return -ENODEV;
+> +
+> +       if (!port->dev.driver) {
+> +               rc = -ENXIO;
+> +               goto out;
+> +       }
+> +
+> +       rc = cxl_decoder_autoremove(host, cxld);
+> +       if (rc)
+> +               goto out;
+> +
+> +       rc = devm_add_action_or_reset(&port->dev, trigger_decoder_autoremove,
+> +                                       cxld);
+> +out:
+> +       put_cxl_topology_host(host);
+> +       return rc;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_port_decoder_autoremove, CXL);
 
+The only port which has decoders that aren't discovered by the port driver would
+be the "root port" because it's platform specific. However, that port still is
+treated similarly to the other ports. Therefore I don't see why you need
+cxl_decoder_autoremove() anymore. Could you please explain? I think the safety
+check in trigger_decoder_autoremove() makes this work for all cases.
+
+[snip]
