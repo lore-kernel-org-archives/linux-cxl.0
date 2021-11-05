@@ -2,197 +2,116 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E89C433FE
-	for <linux-cxl@archiver.kernel.org>; Fri,  5 Nov 2021 01:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E14C433EF
+	for <linux-cxl@archiver.kernel.org>; Fri,  5 Nov 2021 15:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D91D61266
-	for <linux-cxl@archiver.kernel.org>; Fri,  5 Nov 2021 01:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28CBE603E8
+	for <linux-cxl@archiver.kernel.org>; Fri,  5 Nov 2021 15:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231395AbhKEBXp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 4 Nov 2021 21:23:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229596AbhKEBXo (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 4 Nov 2021 21:23:44 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECBEFC061203
-        for <linux-cxl@vger.kernel.org>; Thu,  4 Nov 2021 18:21:05 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id gn3so2025269pjb.0
-        for <linux-cxl@vger.kernel.org>; Thu, 04 Nov 2021 18:21:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=8BlblZNwkbcKAS2iistnQm3UAf7Ffy7cqWTYNAo60h4=;
-        b=GMrUJl1+msSYfMehtGPnWry7jg7iiXw4HoUmUoMjERxr1CqPy8hJ+6ol5Yg02gffwI
-         PFAhl2+Z0fggHaE3EQ7WERHF7StmMA5KMS13kEBSYcLwg5cXgxdknznk31v3cncJQ1xg
-         DzGQIeh1AeXw5laDFQGCLXCpjpXZklk0+brhz8r4va0fU0bLNgYWWlaLDMhseaZPx6LB
-         JluAtn7I9nwuDBtqKocsPD/mOoPhyoph2zjzr/nmFXv3i9hdSpYpmfWAZtK38OfGZD34
-         tWUeDvXcxqPKPKqkDgaTowTcaKs+OZtd2ZKDzsfAPtkmB5vf2zG2dAUPJRG/bNhW15ZR
-         wrIA==
+        id S233434AbhKEPJx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 5 Nov 2021 11:09:53 -0400
+Received: from mail-oi1-f177.google.com ([209.85.167.177]:40585 "EHLO
+        mail-oi1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233429AbhKEPJx (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 5 Nov 2021 11:09:53 -0400
+Received: by mail-oi1-f177.google.com with SMTP id y11so14972119oih.7;
+        Fri, 05 Nov 2021 08:07:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=8BlblZNwkbcKAS2iistnQm3UAf7Ffy7cqWTYNAo60h4=;
-        b=dGWo0eDa66gDhRsXzUF1VgALI99kouixOYb/6aaZYV8rvfE08Lx9yAaEdPn9O0h3yQ
-         BQndnKR+Ed5wnQ4AONEoAFsauyv8+FSDj20kDKpRZUsZi0+3PTb53ZCM2YMqlPFtqUUZ
-         jV6KFV+46iHaQnyn+X8e3iC/+bhSR+oyS2i3P1aydhIbhVG0gZcCEBq/SONevOPplrOO
-         3ysoGCNCGkZiaAgUh31oRw5mVHKEanZyxvL1R1DHrzZ9PuQ4YFTKec1L7PeqMi5MyWWg
-         XFfxcbFo9DBCgq7oBFfvCA+MbCUdC/8f2WdRtQwPBo+fWOUGgyUoNRbZk7NIVbGWxqHB
-         +56A==
-X-Gm-Message-State: AOAM533QzR6vgE3E7Ieh0Q07qJAAjLnI8b7inb87N6YN/zkAa6pq4EwK
-        OoVwvk6MyOBC7zeNyTqEcdx6LHCVNAWvUn8hBzTduQ==
-X-Google-Smtp-Source: ABdhPJx6X4yCBHZUqPm/q0IetQzSKp48gnHuH7S3KIvG/nzBmYkpBQtyF7YVuNddtgFirDmjXpzu9EoUghp9IMOjhnQ=
-X-Received: by 2002:a17:90b:1e07:: with SMTP id pg7mr5946350pjb.93.1636075265420;
- Thu, 04 Nov 2021 18:21:05 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZvVdVt6Iz/HVU1yKu8B9fwySzZLcp1LPGBp9S6J40qg=;
+        b=S6AbPrv2bvsUbRDIuDCavJDmlSl8EeQiOKvwlkgT9oMXAabV5OL40QL/cPpH+6VTfw
+         2BIyWg9s1s2fmT5dtwHpwJXbnGq9gDSTfb8IMZh2WPEHzDDQjwGfa+OXxE/LdcKwcfa3
+         kM0cIch+jY/biO2CbXE7ypmmvPu5H+WfRud4pfYpua9XXXSmedySoW5J4cklvukLcpwG
+         kPMVYZK2gkkt0nJf8Mwcj5AOXY7R1nVpKV27j9n0o8yC2/F5wvXMH+y2qLiZuibDCovf
+         WqPNUTavfwOv2k/HiXPTa6cdzikmfEGneSCeM/g+fRvTOARbbt5BBmn0FpBSBy7e6Ad2
+         X/Qw==
+X-Gm-Message-State: AOAM532Dq2N17LPHPHDWqC1bprLnf80mLlC/qih4nclTVWJJ3dkBm7dA
+        53/Ts3spvnPKQVC2vjjixcHnm1hzcifhe6WIBws=
+X-Google-Smtp-Source: ABdhPJwkyYu3R6ttJ3AqyUzqpIoAIZUMOGQX2Sxr0+VX/E1g0DM4eu61bup+kE+U8voiN+5jC9G1vAsjGp5f8greXoc=
+X-Received: by 2002:aca:5c5:: with SMTP id 188mr22306423oif.154.1636124832859;
+ Fri, 05 Nov 2021 08:07:12 -0700 (PDT)
 MIME-Version: 1.0
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 4 Nov 2021 18:20:55 -0700
-Message-ID: <CAPcyv4gSGURnUvkvMyfr+SbSZikhBdyCLXVkqn_Sa8PbjtxUXQ@mail.gmail.com>
-Subject: [GIT PULL] Compute Express Link update for v5.16
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-cxl@vger.kernel.org, Linux NVDIMM <nvdimm@lists.linux.dev>,
-        Linux PCI <linux-pci@vger.kernel.org>
+References: <163553708697.2509508.16523059414830959692.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20211101120055.00007383@Huawei.com> <CAPcyv4g_c1mF6WvsMHC7-US7YybSprk=GX6cFWjoGOVa+yLx9g@mail.gmail.com>
+ <20211102174421.00002ae4@Huawei.com>
+In-Reply-To: <20211102174421.00002ae4@Huawei.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 5 Nov 2021 16:07:01 +0100
+Message-ID: <CAJZ5v0jd9ntjmEa=-EyXUOExgJsU_A5fJdB0HirT6c6V802f6Q@mail.gmail.com>
+Subject: Re: [PATCH 0/6] Introduce acpi_table_parse_cedt and extra nodes for CXL.mem
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     Rafael J Wysocki <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-cxl@vger.kernel.org,
+        Linux ACPI <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Linus, please pull from:
+On Tue, Nov 2, 2021 at 6:44 PM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Mon, 1 Nov 2021 20:41:34 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> > On Mon, Nov 1, 2021 at 5:01 AM Jonathan Cameron
+> > <Jonathan.Cameron@huawei.com> wrote:
+> > >
+> > > On Fri, 29 Oct 2021 12:51:27 -0700
+> > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > >
+> > > > Hi Rafael,
+> > > >
+> > > > While reviewing "[PATCH v3] ACPI: NUMA: Add a node and memblk for each
+> > > > CFMWS not in SRAT" [1]. I noticed that it was open coding CEDT sub-table
+> > > > parsing in a similar fashion as drivers/cxl/acpi.c. The driver open
+> > > > coded the parsing because the ACPI sub-table helpers are marked __init.
+> > > > In order to avoid the ongoing maintenance burden of a split between
+> > > > "early" and "late" ACPI sub-table parsing this series proposes to make
+> > > > those helpers available to drivers.
+> > > >
+> > > > The savings in drivers/cxl/ are:
+> > > >
+> > > >  drivers/cxl/Kconfig |    1
+> > > >  drivers/cxl/acpi.c  |  234 +++++++++++++++++++--------------------------------
+> > > >  2 files changed, 88 insertions(+), 147 deletions(-)
+> > > >
+> > > > ...and 15 lines new code not added are saved in this new version of
+> > > > "ACPI: NUMA: Add a node and memblk for each CFMWS not in SRAT".
+> > > >
+> > > > Let me know if this looks ok to you and I can carry it in the CXL tree
+> > > > (i.e. after the merge window, for v5.17 consideration).
+> > > >
+> > > > [1]: https://lore.kernel.org/r/20211019050908.449231-1-alison.schofield@intel.com
+> > >
+> > > Is it worth the complexity of the __init_or_acpilib and export part?
+> > > Seems like a fiddly dance for what looks to be minor savings...
+> >
+> > It follows the __initdata_or_meminfo precedent that identifies data
+> > that is normally __init unless a specific driver needs it. The lesson
+> > from the tinyconfig effort was that image size dies a death of many
+> > cuts unless care is taken to preserve minor savings. Yes, it's likely
+> > trivial in this case, but it's at least a gesture to avoid bloating
+> > the kernel image size unnecessarily when the kernel has gotten by so
+> > long with this infrastructure being purely __init.
+>
+> I'm in favor avoiding bloat, but this is ACPI code so rarely very small machines
+> and very like that all distros will turn it on anyway on basis they will want
+> to support CXL (hopefully!)
+>
+> I guess let's see what Rafael's opinion is.  I don't feel that strongly about
+> it if general view is that it is worth the small amount of complexity.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-5.16
+The general ACPI changes in this series are fine with me, so Dan
+please feel free to add
 
-...to receive more preparation and plumbing work in the CXL subsystem.
-From an end user perspective the highlight here is lighting up the CXL
-Persistent Memory related commands (label read / write) with the
-generic ioctl() front-end in LIBNVDIMM. Otherwise, the ability to
-instantiate new persistent and volatile memory regions is still on
-track for v5.17. More details in the tag message below. This has
-appeared in linux-next with no reported issues.
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
----
+to it.
 
-The following changes since commit e4e737bb5c170df6135a127739a9e6148ee3da82:
-
-  Linux 5.15-rc2 (2021-09-19 17:28:22 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-5.16
-
-for you to fetch changes up to c6d7e1341cc99ba49df1384c8c5b3f534a5463b1:
-
-  ocxl: Use pci core's DVSEC functionality (2021-10-29 11:53:52 -0700)
-
-----------------------------------------------------------------
-cxl for v5.16
-
-- Fix support for platforms that do not enumerate every ACPI0016 (CXL
-  Host Bridge) in the CHBS (ACPI Host Bridge Structure).
-
-- Introduce a common pci_find_dvsec_capability() helper, clean up open
-  coded implementations in various drivers.
-
-- Add 'cxl_test' for regression testing CXL subsystem ABIs. 'cxl_test'
-  is a module built from tools/testing/cxl/ that mocks up a CXL topology
-  to augment the nascent support for emulation of CXL devices in QEMU.
-
-- Convert libnvdimm to use the uuid API.
-
-- Complete the definition of CXL namespace labels in libnvdimm.
-
-- Tunnel libnvdimm label operations from nd_ioctl() back to the CXL
-  mailbox driver. Enable 'ndctl {read,write}-labels' for CXL.
-
-- Continue to sort and refactor functionality into distinct driver and
-  core-infrastructure buckets. For example, mailbox handling is now a
-  generic core capability consumed by the PCI and cxl_test drivers.
-
-----------------------------------------------------------------
-Alison Schofield (1):
-      cxl/acpi: Do not fail cxl_acpi_probe() based on a missing CHBS
-
-Ben Widawsky (10):
-      Documentation/cxl: Add bus internal docs
-      cxl/pci: Disambiguate cxl_pci further from cxl_mem
-      cxl/pci: Convert register block identifiers to an enum
-      cxl/pci: Remove dev_dbg for unknown register blocks
-      cxl/pci: Remove pci request/release regions
-      cxl/pci: Make more use of cxl_register_map
-      cxl/pci: Split cxl_pci_setup_regs()
-      PCI: Add pci_find_dvsec_capability to find designated VSEC
-      cxl/pci: Use pci core's DVSEC functionality
-      ocxl: Use pci core's DVSEC functionality
-
-Dan Williams (23):
-      libnvdimm/labels: Add uuid helpers
-      libnvdimm/label: Add a helper for nlabel validation
-      libnvdimm/labels: Introduce the concept of multi-range namespace labels
-      libnvdimm/labels: Fix kernel-doc for label.h
-      libnvdimm/label: Define CXL region labels
-      libnvdimm/labels: Introduce CXL labels
-      cxl/pci: Make 'struct cxl_mem' device type generic
-      cxl/pci: Clean up cxl_mem_get_partition_info()
-      cxl/mbox: Introduce the mbox_send operation
-      cxl/pci: Drop idr.h
-      cxl/mbox: Move mailbox and other non-PCI specific infrastructure
-to the core
-      cxl/pci: Use module_pci_driver
-      cxl/mbox: Convert 'enabled_cmds' to DECLARE_BITMAP
-      cxl/mbox: Add exclusive kernel command support
-      cxl/pmem: Translate NVDIMM label commands to CXL label commands
-      cxl/pmem: Add support for multiple nvdimm-bridge objects
-      tools/testing/cxl: Introduce a mocked-up CXL port hierarchy
-      cxl/bus: Populate the target list at decoder create
-      cxl/mbox: Move command definitions to common location
-      tools/testing/cxl: Introduce a mock memory device + driver
-      cxl/core: Split decoder setup into alloc + add
-      cxl/pci: Fix NULL vs ERR_PTR confusion
-      cxl/pci: Add @base to cxl_register_map
-
- Documentation/driver-api/cxl/memory-devices.rst |    6 +
- arch/powerpc/platforms/powernv/ocxl.c           |    3 +-
- drivers/cxl/acpi.c                              |  139 ++-
- drivers/cxl/core/Makefile                       |    1 +
- drivers/cxl/core/bus.c                          |  119 ++-
- drivers/cxl/core/core.h                         |   11 +-
- drivers/cxl/core/mbox.c                         |  787 ++++++++++++++
- drivers/cxl/core/memdev.c                       |  118 ++-
- drivers/cxl/core/pmem.c                         |   39 +-
- drivers/cxl/cxl.h                               |   58 +-
- drivers/cxl/cxlmem.h                            |  202 +++-
- drivers/cxl/pci.c                               | 1240 ++---------------------
- drivers/cxl/pci.h                               |   14 +-
- drivers/cxl/pmem.c                              |  163 ++-
- drivers/misc/ocxl/config.c                      |   13 +-
- drivers/nvdimm/btt.c                            |   11 +-
- drivers/nvdimm/btt_devs.c                       |   14 +-
- drivers/nvdimm/core.c                           |   40 +-
- drivers/nvdimm/label.c                          |  139 ++-
- drivers/nvdimm/label.h                          |   94 +-
- drivers/nvdimm/namespace_devs.c                 |   95 +-
- drivers/nvdimm/nd-core.h                        |    5 +-
- drivers/nvdimm/nd.h                             |  185 +++-
- drivers/nvdimm/pfn_devs.c                       |    2 +-
- drivers/pci/pci.c                               |   32 +
- include/linux/nd.h                              |    4 +-
- include/linux/pci.h                             |    1 +
- tools/testing/cxl/Kbuild                        |   38 +
- tools/testing/cxl/config_check.c                |   13 +
- tools/testing/cxl/mock_acpi.c                   |  109 ++
- tools/testing/cxl/mock_pmem.c                   |   24 +
- tools/testing/cxl/test/Kbuild                   |   10 +
- tools/testing/cxl/test/cxl.c                    |  576 +++++++++++
- tools/testing/cxl/test/mem.c                    |  256 +++++
- tools/testing/cxl/test/mock.c                   |  171 ++++
- tools/testing/cxl/test/mock.h                   |   27 +
- 36 files changed, 3269 insertions(+), 1490 deletions(-)
- create mode 100644 drivers/cxl/core/mbox.c
- create mode 100644 tools/testing/cxl/Kbuild
- create mode 100644 tools/testing/cxl/config_check.c
- create mode 100644 tools/testing/cxl/mock_acpi.c
- create mode 100644 tools/testing/cxl/mock_pmem.c
- create mode 100644 tools/testing/cxl/test/Kbuild
- create mode 100644 tools/testing/cxl/test/cxl.c
- create mode 100644 tools/testing/cxl/test/mem.c
- create mode 100644 tools/testing/cxl/test/mock.c
- create mode 100644 tools/testing/cxl/test/mock.h
+Thanks!
