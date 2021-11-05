@@ -2,146 +2,197 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE75C433F5
-	for <linux-cxl@archiver.kernel.org>; Thu,  4 Nov 2021 21:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E89C433FE
+	for <linux-cxl@archiver.kernel.org>; Fri,  5 Nov 2021 01:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBA156124F
-	for <linux-cxl@archiver.kernel.org>; Thu,  4 Nov 2021 21:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D91D61266
+	for <linux-cxl@archiver.kernel.org>; Fri,  5 Nov 2021 01:21:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230271AbhKDV24 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 4 Nov 2021 17:28:56 -0400
-Received: from mga18.intel.com ([134.134.136.126]:36571 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229924AbhKDV2z (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 4 Nov 2021 17:28:55 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10158"; a="218697594"
-X-IronPort-AV: E=Sophos;i="5.87,209,1631602800"; 
-   d="scan'208";a="218697594"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2021 14:26:16 -0700
-X-IronPort-AV: E=Sophos;i="5.87,209,1631602800"; 
-   d="scan'208";a="730274965"
-Received: from wangli6-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.138.130])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2021 14:26:16 -0700
-Date:   Thu, 4 Nov 2021 14:26:14 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Chet Douglas <chet.r.douglas@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [RFC PATCH v2 08/28] cxl/port: Introduce a port driver
-Message-ID: <20211104212614.ojcppcnqywao2a4g@intel.com>
-References: <20211022183709.1199701-1-ben.widawsky@intel.com>
- <20211022183709.1199701-9-ben.widawsky@intel.com>
- <CAPcyv4g9AUzNihcYJ3AzwZ+UnFquOf1VWX3fZgb-77ZNteFTAA@mail.gmail.com>
- <20211104163727.ybgenphhwaruqhff@intel.com>
- <CAPcyv4gMx-2WuPz5DUyaYin=GfRcx6XVQr0+-1X6qDb4236deg@mail.gmail.com>
- <20211104194602.mhgnlbf65ilyul5c@intel.com>
- <CAPcyv4jm6Of-yCvQtYrxMD-2y6wajAXFfzwMpFADGMigApuYiA@mail.gmail.com>
+        id S231395AbhKEBXp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 4 Nov 2021 21:23:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229596AbhKEBXo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 4 Nov 2021 21:23:44 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECBEFC061203
+        for <linux-cxl@vger.kernel.org>; Thu,  4 Nov 2021 18:21:05 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id gn3so2025269pjb.0
+        for <linux-cxl@vger.kernel.org>; Thu, 04 Nov 2021 18:21:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=8BlblZNwkbcKAS2iistnQm3UAf7Ffy7cqWTYNAo60h4=;
+        b=GMrUJl1+msSYfMehtGPnWry7jg7iiXw4HoUmUoMjERxr1CqPy8hJ+6ol5Yg02gffwI
+         PFAhl2+Z0fggHaE3EQ7WERHF7StmMA5KMS13kEBSYcLwg5cXgxdknznk31v3cncJQ1xg
+         DzGQIeh1AeXw5laDFQGCLXCpjpXZklk0+brhz8r4va0fU0bLNgYWWlaLDMhseaZPx6LB
+         JluAtn7I9nwuDBtqKocsPD/mOoPhyoph2zjzr/nmFXv3i9hdSpYpmfWAZtK38OfGZD34
+         tWUeDvXcxqPKPKqkDgaTowTcaKs+OZtd2ZKDzsfAPtkmB5vf2zG2dAUPJRG/bNhW15ZR
+         wrIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=8BlblZNwkbcKAS2iistnQm3UAf7Ffy7cqWTYNAo60h4=;
+        b=dGWo0eDa66gDhRsXzUF1VgALI99kouixOYb/6aaZYV8rvfE08Lx9yAaEdPn9O0h3yQ
+         BQndnKR+Ed5wnQ4AONEoAFsauyv8+FSDj20kDKpRZUsZi0+3PTb53ZCM2YMqlPFtqUUZ
+         jV6KFV+46iHaQnyn+X8e3iC/+bhSR+oyS2i3P1aydhIbhVG0gZcCEBq/SONevOPplrOO
+         3ysoGCNCGkZiaAgUh31oRw5mVHKEanZyxvL1R1DHrzZ9PuQ4YFTKec1L7PeqMi5MyWWg
+         XFfxcbFo9DBCgq7oBFfvCA+MbCUdC/8f2WdRtQwPBo+fWOUGgyUoNRbZk7NIVbGWxqHB
+         +56A==
+X-Gm-Message-State: AOAM533QzR6vgE3E7Ieh0Q07qJAAjLnI8b7inb87N6YN/zkAa6pq4EwK
+        OoVwvk6MyOBC7zeNyTqEcdx6LHCVNAWvUn8hBzTduQ==
+X-Google-Smtp-Source: ABdhPJx6X4yCBHZUqPm/q0IetQzSKp48gnHuH7S3KIvG/nzBmYkpBQtyF7YVuNddtgFirDmjXpzu9EoUghp9IMOjhnQ=
+X-Received: by 2002:a17:90b:1e07:: with SMTP id pg7mr5946350pjb.93.1636075265420;
+ Thu, 04 Nov 2021 18:21:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4jm6Of-yCvQtYrxMD-2y6wajAXFfzwMpFADGMigApuYiA@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 4 Nov 2021 18:20:55 -0700
+Message-ID: <CAPcyv4gSGURnUvkvMyfr+SbSZikhBdyCLXVkqn_Sa8PbjtxUXQ@mail.gmail.com>
+Subject: [GIT PULL] Compute Express Link update for v5.16
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-cxl@vger.kernel.org, Linux NVDIMM <nvdimm@lists.linux.dev>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21-11-04 13:00:35, Dan Williams wrote:
-> On Thu, Nov 4, 2021 at 12:46 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> >
-> > On 21-11-04 12:17:48, Dan Williams wrote:
-> > > On Thu, Nov 4, 2021 at 9:37 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > >
-> > > > On 21-10-29 18:37:36, Dan Williams wrote:
-> > > > > On Fri, Oct 22, 2021 at 11:37 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > > > >
-> > > >
-> > > > [snip]
-> > > >
-> > > > >
-> > > > > +void trigger_decoder_autoremove(void *data)
-> > > > > +{
-> > > > > +       struct cxl_decoder *cxld = data;
-> > > > > +       struct device *host = get_cxl_topology_host();
-> > > > > +
-> > > > > +       /* The topology host driver beat us to the punch */
-> > > > > +       if (!host)
-> > > > > +               return;
-> > > > > +
-> > > > > +       devm_remove_action(host, cxld_unregister, &cxld->dev);
-> > > > > +       put_cxl_topology_host(host);
-> > > > > +}
-> > > > > +
-> > > > > +/**
-> > > > > + * cxl_port_decoder_autoremove - remove decoders discovered by the port driver
-> > > > > + * @cxld: decoder to remove
-> > > > > + *
-> > > > > + * CXL.mem requires an intact port / decoder topology from root level
-> > > > > + * platform decoders to endpoint decoders. Arrange for decoders
-> > > > > + * enumerated by the port driver to be removed when either the root is
-> > > > > + * removed (in which the entire hierarchy is removed), or when an
-> > > > > + * individual port is disabled, in which case only that port's
-> > > > > + * sub-section of the hierarchy is removed.
-> > > > > + */
-> > > > > +int cxl_port_decoder_autoremove(struct cxl_decoder *cxld)
-> > > > > +{
-> > > > > +       struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-> > > > > +       struct device *host = get_cxl_topology_host();
-> > > > > +       int rc;
-> > > > > +
-> > > > > +       if (!host)
-> > > > > +               return -ENODEV;
-> > > > > +
-> > > > > +       if (!port->dev.driver) {
-> > > > > +               rc = -ENXIO;
-> > > > > +               goto out;
-> > > > > +       }
-> > > > > +
-> > > > > +       rc = cxl_decoder_autoremove(host, cxld);
-> > > > > +       if (rc)
-> > > > > +               goto out;
-> > > > > +
-> > > > > +       rc = devm_add_action_or_reset(&port->dev, trigger_decoder_autoremove,
-> > > > > +                                       cxld);
-> > > > > +out:
-> > > > > +       put_cxl_topology_host(host);
-> > > > > +       return rc;
-> > > > > +}
-> > > > > +EXPORT_SYMBOL_NS_GPL(cxl_port_decoder_autoremove, CXL);
-> > > >
-> > > > The only port which has decoders that aren't discovered by the port driver would
-> > > > be the "root port" because it's platform specific. However, that port still is
-> > > > treated similarly to the other ports. Therefore I don't see why you need
-> > > > cxl_decoder_autoremove() anymore. Could you please explain? I think the safety
-> > > > check in trigger_decoder_autoremove() makes this work for all cases.
-> > >
-> > > I don't think it's worth the games to explain why CXL sees fit to
-> > > register (here comes your favorite argument...) non-idiomatic devm
-> > > actions on devices that are not associated with the running device +
-> > > driver. So as long as the port driver auto-unloads its child devices
-> > > then we're golden. Is your concern that you want to have the CFMWS
-> > > decoders registers from cxl_port and not cxl_acpi?
-> >
-> > Hey! I'm all for idioms when it makes sense. To me, one of the coolest things
-> > about working on a new subsystem is you get to define some of your own idioms,
-> > but anyway...
-> >
-> > First, no I think the platform driver (cxl_acpi) should enumerate the platform
-> > decoders. I confused devm_remove_action() with devm_release_action(). I wonder
-> > though, if you made trigger_decoder_autoremove() call devm_release_action, would
-> > that be sufficient and then remove cxl_decoder_autoremove()?
-> 
-> devm_release_action() is not needed if the devm is allowed to fire
-> naturally which was the realization I came to here:
-> 
-> https://lore.kernel.org/r/CAPcyv4gpA=DH0SQvRdmF6dY01mZ1S-gGEWTSDbb+0ajYtyNv0A@mail.gmail.com
-> 
-> I.e. I regret opening that pandora's box of registering "remote" devm
-> actions vs typical local devm actions.
+Hi Linus, please pull from:
 
-I wasn't suggesting release() fixes anything, but it did seem like we could get
-rid of cxl_decoder_autoremove() if we switched it to release(). Must of this
-gets too complex for me too quickly though, so if you think it won't work I'm
-happy to leave it at that.
+  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-5.16
+
+...to receive more preparation and plumbing work in the CXL subsystem.
+From an end user perspective the highlight here is lighting up the CXL
+Persistent Memory related commands (label read / write) with the
+generic ioctl() front-end in LIBNVDIMM. Otherwise, the ability to
+instantiate new persistent and volatile memory regions is still on
+track for v5.17. More details in the tag message below. This has
+appeared in linux-next with no reported issues.
+
+---
+
+The following changes since commit e4e737bb5c170df6135a127739a9e6148ee3da82:
+
+  Linux 5.15-rc2 (2021-09-19 17:28:22 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-5.16
+
+for you to fetch changes up to c6d7e1341cc99ba49df1384c8c5b3f534a5463b1:
+
+  ocxl: Use pci core's DVSEC functionality (2021-10-29 11:53:52 -0700)
+
+----------------------------------------------------------------
+cxl for v5.16
+
+- Fix support for platforms that do not enumerate every ACPI0016 (CXL
+  Host Bridge) in the CHBS (ACPI Host Bridge Structure).
+
+- Introduce a common pci_find_dvsec_capability() helper, clean up open
+  coded implementations in various drivers.
+
+- Add 'cxl_test' for regression testing CXL subsystem ABIs. 'cxl_test'
+  is a module built from tools/testing/cxl/ that mocks up a CXL topology
+  to augment the nascent support for emulation of CXL devices in QEMU.
+
+- Convert libnvdimm to use the uuid API.
+
+- Complete the definition of CXL namespace labels in libnvdimm.
+
+- Tunnel libnvdimm label operations from nd_ioctl() back to the CXL
+  mailbox driver. Enable 'ndctl {read,write}-labels' for CXL.
+
+- Continue to sort and refactor functionality into distinct driver and
+  core-infrastructure buckets. For example, mailbox handling is now a
+  generic core capability consumed by the PCI and cxl_test drivers.
+
+----------------------------------------------------------------
+Alison Schofield (1):
+      cxl/acpi: Do not fail cxl_acpi_probe() based on a missing CHBS
+
+Ben Widawsky (10):
+      Documentation/cxl: Add bus internal docs
+      cxl/pci: Disambiguate cxl_pci further from cxl_mem
+      cxl/pci: Convert register block identifiers to an enum
+      cxl/pci: Remove dev_dbg for unknown register blocks
+      cxl/pci: Remove pci request/release regions
+      cxl/pci: Make more use of cxl_register_map
+      cxl/pci: Split cxl_pci_setup_regs()
+      PCI: Add pci_find_dvsec_capability to find designated VSEC
+      cxl/pci: Use pci core's DVSEC functionality
+      ocxl: Use pci core's DVSEC functionality
+
+Dan Williams (23):
+      libnvdimm/labels: Add uuid helpers
+      libnvdimm/label: Add a helper for nlabel validation
+      libnvdimm/labels: Introduce the concept of multi-range namespace labels
+      libnvdimm/labels: Fix kernel-doc for label.h
+      libnvdimm/label: Define CXL region labels
+      libnvdimm/labels: Introduce CXL labels
+      cxl/pci: Make 'struct cxl_mem' device type generic
+      cxl/pci: Clean up cxl_mem_get_partition_info()
+      cxl/mbox: Introduce the mbox_send operation
+      cxl/pci: Drop idr.h
+      cxl/mbox: Move mailbox and other non-PCI specific infrastructure
+to the core
+      cxl/pci: Use module_pci_driver
+      cxl/mbox: Convert 'enabled_cmds' to DECLARE_BITMAP
+      cxl/mbox: Add exclusive kernel command support
+      cxl/pmem: Translate NVDIMM label commands to CXL label commands
+      cxl/pmem: Add support for multiple nvdimm-bridge objects
+      tools/testing/cxl: Introduce a mocked-up CXL port hierarchy
+      cxl/bus: Populate the target list at decoder create
+      cxl/mbox: Move command definitions to common location
+      tools/testing/cxl: Introduce a mock memory device + driver
+      cxl/core: Split decoder setup into alloc + add
+      cxl/pci: Fix NULL vs ERR_PTR confusion
+      cxl/pci: Add @base to cxl_register_map
+
+ Documentation/driver-api/cxl/memory-devices.rst |    6 +
+ arch/powerpc/platforms/powernv/ocxl.c           |    3 +-
+ drivers/cxl/acpi.c                              |  139 ++-
+ drivers/cxl/core/Makefile                       |    1 +
+ drivers/cxl/core/bus.c                          |  119 ++-
+ drivers/cxl/core/core.h                         |   11 +-
+ drivers/cxl/core/mbox.c                         |  787 ++++++++++++++
+ drivers/cxl/core/memdev.c                       |  118 ++-
+ drivers/cxl/core/pmem.c                         |   39 +-
+ drivers/cxl/cxl.h                               |   58 +-
+ drivers/cxl/cxlmem.h                            |  202 +++-
+ drivers/cxl/pci.c                               | 1240 ++---------------------
+ drivers/cxl/pci.h                               |   14 +-
+ drivers/cxl/pmem.c                              |  163 ++-
+ drivers/misc/ocxl/config.c                      |   13 +-
+ drivers/nvdimm/btt.c                            |   11 +-
+ drivers/nvdimm/btt_devs.c                       |   14 +-
+ drivers/nvdimm/core.c                           |   40 +-
+ drivers/nvdimm/label.c                          |  139 ++-
+ drivers/nvdimm/label.h                          |   94 +-
+ drivers/nvdimm/namespace_devs.c                 |   95 +-
+ drivers/nvdimm/nd-core.h                        |    5 +-
+ drivers/nvdimm/nd.h                             |  185 +++-
+ drivers/nvdimm/pfn_devs.c                       |    2 +-
+ drivers/pci/pci.c                               |   32 +
+ include/linux/nd.h                              |    4 +-
+ include/linux/pci.h                             |    1 +
+ tools/testing/cxl/Kbuild                        |   38 +
+ tools/testing/cxl/config_check.c                |   13 +
+ tools/testing/cxl/mock_acpi.c                   |  109 ++
+ tools/testing/cxl/mock_pmem.c                   |   24 +
+ tools/testing/cxl/test/Kbuild                   |   10 +
+ tools/testing/cxl/test/cxl.c                    |  576 +++++++++++
+ tools/testing/cxl/test/mem.c                    |  256 +++++
+ tools/testing/cxl/test/mock.c                   |  171 ++++
+ tools/testing/cxl/test/mock.h                   |   27 +
+ 36 files changed, 3269 insertions(+), 1490 deletions(-)
+ create mode 100644 drivers/cxl/core/mbox.c
+ create mode 100644 tools/testing/cxl/Kbuild
+ create mode 100644 tools/testing/cxl/config_check.c
+ create mode 100644 tools/testing/cxl/mock_acpi.c
+ create mode 100644 tools/testing/cxl/mock_pmem.c
+ create mode 100644 tools/testing/cxl/test/Kbuild
+ create mode 100644 tools/testing/cxl/test/cxl.c
+ create mode 100644 tools/testing/cxl/test/mem.c
+ create mode 100644 tools/testing/cxl/test/mock.c
+ create mode 100644 tools/testing/cxl/test/mock.h
