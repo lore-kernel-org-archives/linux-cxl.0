@@ -2,107 +2,91 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0A6C433EF
-	for <linux-cxl@archiver.kernel.org>; Fri,  5 Nov 2021 18:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3B9C433F5
+	for <linux-cxl@archiver.kernel.org>; Fri,  5 Nov 2021 23:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4317461216
-	for <linux-cxl@archiver.kernel.org>; Fri,  5 Nov 2021 18:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E2B6120A
+	for <linux-cxl@archiver.kernel.org>; Fri,  5 Nov 2021 23:50:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233145AbhKETBG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 5 Nov 2021 15:01:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60534 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231553AbhKETBE (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 5 Nov 2021 15:01:04 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE36BC061714
-        for <linux-cxl@vger.kernel.org>; Fri,  5 Nov 2021 11:58:24 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id u141so1713547pfc.4
-        for <linux-cxl@vger.kernel.org>; Fri, 05 Nov 2021 11:58:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mW90X9+gr0PIhSZqkuZE/L6VltlPrLZXEb+Nmd3FqjE=;
-        b=Vk9ywDDuUBQjBxz5Bhs82UqvyiI5el74xlzmmTq6IyrpBX075HpWlqo6vczeS+i3Ts
-         rmKXQSfHpwhq51JRUnjkAkvRswQDUhclfzc0tzP72GeCl5dylN0cdCuIzv8u1zmQ6D0V
-         wTNEspIhh/ABEBZLOXT4HN1mcw5/NxSewyfRL3ZBnczRX77Jz1w2Rg4sDvZLWtZrbMUv
-         YS8rMPVlEZ084Dns6saHvYhTeTQTkhP/fuEecw5ghFS5OqG4s64GdNE/jyFccQLWuQhw
-         wPpeHAtTyJPj+hx8joyht7rGaZ1UChCLeXDKrfuYtmOBLDzJvpcVXuqcGFmD0+ttntzb
-         Gt/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mW90X9+gr0PIhSZqkuZE/L6VltlPrLZXEb+Nmd3FqjE=;
-        b=eUFkB1DPW83F0Rp/tQIQGcYtK9fxNE5Mz7YfhsfuGzynkwjg3octcZu9X1tQFdbsXK
-         9Bt7D+4BA+Tv+S2UKoSY7M740LnvtvCxpmM0b0Kg8KkbRtSqhH5Ka72r9kT0TbYlNO8A
-         g/JdtFAq4XUKT2/5nTU2H8B/1AXcojR1KfiOg5ZYhVOAXivsGHMh9Fw50/GvGc5urkp9
-         zOwedBSfhrPE16+40rlJRgJVgC0DT+IottP491V25EQBwytTHW8600j/cB+WDE0mMjo6
-         5xizm/0a9Yuq1pXH7w1Ee3hSYBdm+mECsENS7jt/kFhfPp2lwCWRloGYm3w9jS7VB8p3
-         WEEA==
-X-Gm-Message-State: AOAM533L2wIi13fpohh4aak+VHRBxUxM/Jng8gCwi4e+J62C9r+Z8SxO
-        jkHQAP4PbKmwIdia2CriEttLG0LH9gpzokl1byKFQA==
-X-Google-Smtp-Source: ABdhPJzqoEa6aN6B4mzzs9jiitxAuljmgujGqpHKF7RPAxB503ycvVs+0OUKX60ZCN+BWDbBSATY0DZXgxiYgekQugQ=
-X-Received: by 2002:aa7:8019:0:b0:44d:d761:6f79 with SMTP id
- j25-20020aa78019000000b0044dd7616f79mr61901423pfi.3.1636138704466; Fri, 05
- Nov 2021 11:58:24 -0700 (PDT)
+        id S233035AbhKEXxj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 5 Nov 2021 19:53:39 -0400
+Received: from mga07.intel.com ([134.134.136.100]:39417 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232810AbhKEXxi (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Fri, 5 Nov 2021 19:53:38 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10159"; a="295446280"
+X-IronPort-AV: E=Sophos;i="5.87,212,1631602800"; 
+   d="scan'208";a="295446280"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2021 16:50:58 -0700
+X-IronPort-AV: E=Sophos;i="5.87,212,1631602800"; 
+   d="scan'208";a="502172640"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2021 16:50:58 -0700
+From:   ira.weiny@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH 0/5] CXL: Read CDAT and DSMAS data from the device.
+Date:   Fri,  5 Nov 2021 16:50:51 -0700
+Message-Id: <20211105235056.3711389-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.28.0.rc0.12.gb6a658bd00c9
 MIME-Version: 1.0
-References: <20211007082139.3088615-1-vishal.l.verma@intel.com> <20211007082139.3088615-15-vishal.l.verma@intel.com>
-In-Reply-To: <20211007082139.3088615-15-vishal.l.verma@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 5 Nov 2021 11:58:15 -0700
-Message-ID: <CAPcyv4grwvoGwzhF_bkg_O+uF8bkaODrnwiVhKL=8T8+_ytCdA@mail.gmail.com>
-Subject: Re: [ndctl PATCH v4 14/17] Documentation/cxl: add library API documentation
-To:     Vishal Verma <vishal.l.verma@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Oct 7, 2021 at 1:22 AM Vishal Verma <vishal.l.verma@intel.com> wrote:
->
-> Add library API documentation for libcxl(3) using the existing
-> asciidoc(tor) build system. Add a section 3 man page for 'libcxl' that
-> provides an overview of the library and its usage, and a man page for
-> the 'cxl_new()' API.
->
-> Cc: Ben Widawsky <ben.widawsky@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-> ---
->  Documentation/cxl/lib/cxl_new.txt | 43 +++++++++++++++++++++++
->  Documentation/cxl/lib/libcxl.txt  | 56 +++++++++++++++++++++++++++++
->  configure.ac                      |  1 +
->  Makefile.am                       |  1 +
->  .gitignore                        |  3 ++
->  Documentation/cxl/lib/Makefile.am | 58 +++++++++++++++++++++++++++++++
->  6 files changed, 162 insertions(+)
->  create mode 100644 Documentation/cxl/lib/cxl_new.txt
->  create mode 100644 Documentation/cxl/lib/libcxl.txt
->  create mode 100644 Documentation/cxl/lib/Makefile.am
->
-> diff --git a/Documentation/cxl/lib/cxl_new.txt b/Documentation/cxl/lib/cxl_new.txt
-> new file mode 100644
-> index 0000000..d4d5bcb
-> --- /dev/null
-> +++ b/Documentation/cxl/lib/cxl_new.txt
-[..]
-> +include::../../copyright.txt[]
-[..]
-> diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
-> new file mode 100644
-> index 0000000..47f4cc3
-> --- /dev/null
-> +++ b/Documentation/cxl/lib/libcxl.txt
-[..]
-> +include::../../copyright.txt[]
+From: Ira Weiny <ira.weiny@intel.com>
 
-I just noticed that these two man pages list the GPL license even
-though the library is LGPL. Even though I think the license is with
-respect to the man page I think go ahead and create a LGPL notice for
-the library man pages functions just to reduce potential confusion.
+This work was built on Jonathan's V4 series here[1].  The big change is a
+conversion to an Auxiliary bus infrastructure which allows the DOE code to be
+in a separate driver object which is attached to any DOE devices created by any
+device.
 
-The copyright can also be bumped to 2021 now.
+The series creates a new DOE auxiliary bus driver.  The CXL devices are
+modified to create DOE auxiliary devices to be driven by the new DOE driver.
+
+After the devices are created and the driver attaches, CDAT data is read from
+the device and DSMAS information parsed from that CDAT blob for use later.
+
+This work was tested using qemu with additional patches.[2, 3]
+
+[1] https://lore.kernel.org/linux-cxl/20210524133938.2815206-1-Jonathan.Cameron@huawei.com
+[2] https://lore.kernel.org/qemu-devel/20210202005948.241655-1-ben.widawsky@intel.com/
+[3] https://lore.kernel.org/qemu-devel/1619454964-10190-1-git-send-email-cbrowy@avery-design.com/
+
+Ira Weiny (1):
+  cxl/cdat: Parse out DSMAS data from CDAT table
+
+Jonathan Cameron (4):
+  PCI: Add vendor ID for the PCI SIG
+  PCI/DOE: Add Data Object Exchange Aux Driver
+  cxl/pci: Add DOE Auxiliary Devices
+  cxl/mem: Add CDAT table reading from DOE
+
+ drivers/cxl/Kconfig           |   1 +
+ drivers/cxl/cdat.h            |  81 ++++
+ drivers/cxl/core/memdev.c     | 157 ++++++++
+ drivers/cxl/cxl.h             |  20 +
+ drivers/cxl/cxlmem.h          |  48 +++
+ drivers/cxl/pci.c             | 212 ++++++++++
+ drivers/pci/Kconfig           |  10 +
+ drivers/pci/Makefile          |   3 +
+ drivers/pci/doe.c             | 701 ++++++++++++++++++++++++++++++++++
+ include/linux/pci-doe.h       |  63 +++
+ include/linux/pci_ids.h       |   1 +
+ include/uapi/linux/pci_regs.h |  29 +-
+ 12 files changed, 1325 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/cxl/cdat.h
+ create mode 100644 drivers/pci/doe.c
+ create mode 100644 include/linux/pci-doe.h
+
+-- 
+2.28.0.rc0.12.gb6a658bd00c9
+
