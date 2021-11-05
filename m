@@ -2,116 +2,107 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E14C433EF
-	for <linux-cxl@archiver.kernel.org>; Fri,  5 Nov 2021 15:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0A6C433EF
+	for <linux-cxl@archiver.kernel.org>; Fri,  5 Nov 2021 18:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28CBE603E8
-	for <linux-cxl@archiver.kernel.org>; Fri,  5 Nov 2021 15:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4317461216
+	for <linux-cxl@archiver.kernel.org>; Fri,  5 Nov 2021 18:58:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233434AbhKEPJx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 5 Nov 2021 11:09:53 -0400
-Received: from mail-oi1-f177.google.com ([209.85.167.177]:40585 "EHLO
-        mail-oi1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233429AbhKEPJx (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 5 Nov 2021 11:09:53 -0400
-Received: by mail-oi1-f177.google.com with SMTP id y11so14972119oih.7;
-        Fri, 05 Nov 2021 08:07:13 -0700 (PDT)
+        id S233145AbhKETBG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 5 Nov 2021 15:01:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231553AbhKETBE (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 5 Nov 2021 15:01:04 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE36BC061714
+        for <linux-cxl@vger.kernel.org>; Fri,  5 Nov 2021 11:58:24 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id u141so1713547pfc.4
+        for <linux-cxl@vger.kernel.org>; Fri, 05 Nov 2021 11:58:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mW90X9+gr0PIhSZqkuZE/L6VltlPrLZXEb+Nmd3FqjE=;
+        b=Vk9ywDDuUBQjBxz5Bhs82UqvyiI5el74xlzmmTq6IyrpBX075HpWlqo6vczeS+i3Ts
+         rmKXQSfHpwhq51JRUnjkAkvRswQDUhclfzc0tzP72GeCl5dylN0cdCuIzv8u1zmQ6D0V
+         wTNEspIhh/ABEBZLOXT4HN1mcw5/NxSewyfRL3ZBnczRX77Jz1w2Rg4sDvZLWtZrbMUv
+         YS8rMPVlEZ084Dns6saHvYhTeTQTkhP/fuEecw5ghFS5OqG4s64GdNE/jyFccQLWuQhw
+         wPpeHAtTyJPj+hx8joyht7rGaZ1UChCLeXDKrfuYtmOBLDzJvpcVXuqcGFmD0+ttntzb
+         Gt/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ZvVdVt6Iz/HVU1yKu8B9fwySzZLcp1LPGBp9S6J40qg=;
-        b=S6AbPrv2bvsUbRDIuDCavJDmlSl8EeQiOKvwlkgT9oMXAabV5OL40QL/cPpH+6VTfw
-         2BIyWg9s1s2fmT5dtwHpwJXbnGq9gDSTfb8IMZh2WPEHzDDQjwGfa+OXxE/LdcKwcfa3
-         kM0cIch+jY/biO2CbXE7ypmmvPu5H+WfRud4pfYpua9XXXSmedySoW5J4cklvukLcpwG
-         kPMVYZK2gkkt0nJf8Mwcj5AOXY7R1nVpKV27j9n0o8yC2/F5wvXMH+y2qLiZuibDCovf
-         WqPNUTavfwOv2k/HiXPTa6cdzikmfEGneSCeM/g+fRvTOARbbt5BBmn0FpBSBy7e6Ad2
-         X/Qw==
-X-Gm-Message-State: AOAM532Dq2N17LPHPHDWqC1bprLnf80mLlC/qih4nclTVWJJ3dkBm7dA
-        53/Ts3spvnPKQVC2vjjixcHnm1hzcifhe6WIBws=
-X-Google-Smtp-Source: ABdhPJwkyYu3R6ttJ3AqyUzqpIoAIZUMOGQX2Sxr0+VX/E1g0DM4eu61bup+kE+U8voiN+5jC9G1vAsjGp5f8greXoc=
-X-Received: by 2002:aca:5c5:: with SMTP id 188mr22306423oif.154.1636124832859;
- Fri, 05 Nov 2021 08:07:12 -0700 (PDT)
+        bh=mW90X9+gr0PIhSZqkuZE/L6VltlPrLZXEb+Nmd3FqjE=;
+        b=eUFkB1DPW83F0Rp/tQIQGcYtK9fxNE5Mz7YfhsfuGzynkwjg3octcZu9X1tQFdbsXK
+         9Bt7D+4BA+Tv+S2UKoSY7M740LnvtvCxpmM0b0Kg8KkbRtSqhH5Ka72r9kT0TbYlNO8A
+         g/JdtFAq4XUKT2/5nTU2H8B/1AXcojR1KfiOg5ZYhVOAXivsGHMh9Fw50/GvGc5urkp9
+         zOwedBSfhrPE16+40rlJRgJVgC0DT+IottP491V25EQBwytTHW8600j/cB+WDE0mMjo6
+         5xizm/0a9Yuq1pXH7w1Ee3hSYBdm+mECsENS7jt/kFhfPp2lwCWRloGYm3w9jS7VB8p3
+         WEEA==
+X-Gm-Message-State: AOAM533L2wIi13fpohh4aak+VHRBxUxM/Jng8gCwi4e+J62C9r+Z8SxO
+        jkHQAP4PbKmwIdia2CriEttLG0LH9gpzokl1byKFQA==
+X-Google-Smtp-Source: ABdhPJzqoEa6aN6B4mzzs9jiitxAuljmgujGqpHKF7RPAxB503ycvVs+0OUKX60ZCN+BWDbBSATY0DZXgxiYgekQugQ=
+X-Received: by 2002:aa7:8019:0:b0:44d:d761:6f79 with SMTP id
+ j25-20020aa78019000000b0044dd7616f79mr61901423pfi.3.1636138704466; Fri, 05
+ Nov 2021 11:58:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <163553708697.2509508.16523059414830959692.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20211101120055.00007383@Huawei.com> <CAPcyv4g_c1mF6WvsMHC7-US7YybSprk=GX6cFWjoGOVa+yLx9g@mail.gmail.com>
- <20211102174421.00002ae4@Huawei.com>
-In-Reply-To: <20211102174421.00002ae4@Huawei.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 5 Nov 2021 16:07:01 +0100
-Message-ID: <CAJZ5v0jd9ntjmEa=-EyXUOExgJsU_A5fJdB0HirT6c6V802f6Q@mail.gmail.com>
-Subject: Re: [PATCH 0/6] Introduce acpi_table_parse_cedt and extra nodes for CXL.mem
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     Rafael J Wysocki <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-cxl@vger.kernel.org,
-        Linux ACPI <linux-acpi@vger.kernel.org>
+References: <20211007082139.3088615-1-vishal.l.verma@intel.com> <20211007082139.3088615-15-vishal.l.verma@intel.com>
+In-Reply-To: <20211007082139.3088615-15-vishal.l.verma@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 5 Nov 2021 11:58:15 -0700
+Message-ID: <CAPcyv4grwvoGwzhF_bkg_O+uF8bkaODrnwiVhKL=8T8+_ytCdA@mail.gmail.com>
+Subject: Re: [ndctl PATCH v4 14/17] Documentation/cxl: add library API documentation
+To:     Vishal Verma <vishal.l.verma@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Nov 2, 2021 at 6:44 PM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
+On Thu, Oct 7, 2021 at 1:22 AM Vishal Verma <vishal.l.verma@intel.com> wrote:
 >
-> On Mon, 1 Nov 2021 20:41:34 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
+> Add library API documentation for libcxl(3) using the existing
+> asciidoc(tor) build system. Add a section 3 man page for 'libcxl' that
+> provides an overview of the library and its usage, and a man page for
+> the 'cxl_new()' API.
 >
-> > On Mon, Nov 1, 2021 at 5:01 AM Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com> wrote:
-> > >
-> > > On Fri, 29 Oct 2021 12:51:27 -0700
-> > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > > Hi Rafael,
-> > > >
-> > > > While reviewing "[PATCH v3] ACPI: NUMA: Add a node and memblk for each
-> > > > CFMWS not in SRAT" [1]. I noticed that it was open coding CEDT sub-table
-> > > > parsing in a similar fashion as drivers/cxl/acpi.c. The driver open
-> > > > coded the parsing because the ACPI sub-table helpers are marked __init.
-> > > > In order to avoid the ongoing maintenance burden of a split between
-> > > > "early" and "late" ACPI sub-table parsing this series proposes to make
-> > > > those helpers available to drivers.
-> > > >
-> > > > The savings in drivers/cxl/ are:
-> > > >
-> > > >  drivers/cxl/Kconfig |    1
-> > > >  drivers/cxl/acpi.c  |  234 +++++++++++++++++++--------------------------------
-> > > >  2 files changed, 88 insertions(+), 147 deletions(-)
-> > > >
-> > > > ...and 15 lines new code not added are saved in this new version of
-> > > > "ACPI: NUMA: Add a node and memblk for each CFMWS not in SRAT".
-> > > >
-> > > > Let me know if this looks ok to you and I can carry it in the CXL tree
-> > > > (i.e. after the merge window, for v5.17 consideration).
-> > > >
-> > > > [1]: https://lore.kernel.org/r/20211019050908.449231-1-alison.schofield@intel.com
-> > >
-> > > Is it worth the complexity of the __init_or_acpilib and export part?
-> > > Seems like a fiddly dance for what looks to be minor savings...
-> >
-> > It follows the __initdata_or_meminfo precedent that identifies data
-> > that is normally __init unless a specific driver needs it. The lesson
-> > from the tinyconfig effort was that image size dies a death of many
-> > cuts unless care is taken to preserve minor savings. Yes, it's likely
-> > trivial in this case, but it's at least a gesture to avoid bloating
-> > the kernel image size unnecessarily when the kernel has gotten by so
-> > long with this infrastructure being purely __init.
+> Cc: Ben Widawsky <ben.widawsky@intel.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+> ---
+>  Documentation/cxl/lib/cxl_new.txt | 43 +++++++++++++++++++++++
+>  Documentation/cxl/lib/libcxl.txt  | 56 +++++++++++++++++++++++++++++
+>  configure.ac                      |  1 +
+>  Makefile.am                       |  1 +
+>  .gitignore                        |  3 ++
+>  Documentation/cxl/lib/Makefile.am | 58 +++++++++++++++++++++++++++++++
+>  6 files changed, 162 insertions(+)
+>  create mode 100644 Documentation/cxl/lib/cxl_new.txt
+>  create mode 100644 Documentation/cxl/lib/libcxl.txt
+>  create mode 100644 Documentation/cxl/lib/Makefile.am
 >
-> I'm in favor avoiding bloat, but this is ACPI code so rarely very small machines
-> and very like that all distros will turn it on anyway on basis they will want
-> to support CXL (hopefully!)
->
-> I guess let's see what Rafael's opinion is.  I don't feel that strongly about
-> it if general view is that it is worth the small amount of complexity.
+> diff --git a/Documentation/cxl/lib/cxl_new.txt b/Documentation/cxl/lib/cxl_new.txt
+> new file mode 100644
+> index 0000000..d4d5bcb
+> --- /dev/null
+> +++ b/Documentation/cxl/lib/cxl_new.txt
+[..]
+> +include::../../copyright.txt[]
+[..]
+> diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
+> new file mode 100644
+> index 0000000..47f4cc3
+> --- /dev/null
+> +++ b/Documentation/cxl/lib/libcxl.txt
+[..]
+> +include::../../copyright.txt[]
 
-The general ACPI changes in this series are fine with me, so Dan
-please feel free to add
+I just noticed that these two man pages list the GPL license even
+though the library is LGPL. Even though I think the license is with
+respect to the man page I think go ahead and create a LGPL notice for
+the library man pages functions just to reduce potential confusion.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-to it.
-
-Thanks!
+The copyright can also be bumped to 2021 now.
