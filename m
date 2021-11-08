@@ -2,60 +2,131 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B536FC433F5
-	for <linux-cxl@archiver.kernel.org>; Mon,  8 Nov 2021 20:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119E8C433F5
+	for <linux-cxl@archiver.kernel.org>; Mon,  8 Nov 2021 22:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 911DF61159
-	for <linux-cxl@archiver.kernel.org>; Mon,  8 Nov 2021 20:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB0746162E
+	for <linux-cxl@archiver.kernel.org>; Mon,  8 Nov 2021 22:25:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236642AbhKHUaH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 8 Nov 2021 15:30:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41886 "EHLO mail.kernel.org"
+        id S238230AbhKHW2T (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 8 Nov 2021 17:28:19 -0500
+Received: from mga05.intel.com ([192.55.52.43]:59009 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230243AbhKHUaH (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 8 Nov 2021 15:30:07 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id F28D66105A;
-        Mon,  8 Nov 2021 20:27:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636403242;
-        bh=wiPye9ZW4Cw+QEu4MgNR0oKoJP1XMIm5TW6cm5zIAUw=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=MYZlV4RwGwGXspUSD9APTDPrrJG0YqoHf74ydkZS/+Z7siwNJ0igyJSRhU2MfTOOV
-         uRuoiFc/NNorxkwxDyg1+77Z+mUDCLr4jfEoNcp2Ku0Hp38yGFECwoDRrT61kLBOMG
-         3nFIrtKHyU/4XMz5MeJeaSJF/qPkMXPKqmQfM9q/MC4Z2ozujwIKrdB/qRJYZZo7jK
-         RCv9d4y9zi28aAixf14rkl34+mqOLtYHMlII4QD49p3221HSec/LJHV7kFp2jfrB7Q
-         fReYKQ+Z7Swyq1YofFfvoqcCML2TJNHn+Ewg+GYpDtpgg42l0GyJsDVV7uyFjKOCBf
-         MLkuQqBClRJaQ==
-Subject: Re: [GIT PULL] Compute Express Link update for v5.16
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAPcyv4gSGURnUvkvMyfr+SbSZikhBdyCLXVkqn_Sa8PbjtxUXQ@mail.gmail.com>
-References: <CAPcyv4gSGURnUvkvMyfr+SbSZikhBdyCLXVkqn_Sa8PbjtxUXQ@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-pci.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAPcyv4gSGURnUvkvMyfr+SbSZikhBdyCLXVkqn_Sa8PbjtxUXQ@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-5.16
-X-PR-Tracked-Commit-Id: c6d7e1341cc99ba49df1384c8c5b3f534a5463b1
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: dd72945c43d34bee496b847e021069dc31f7398f
-Message-Id: <163640324185.16718.9269640037737097197.pr-tracker-bot@kernel.org>
-Date:   Mon, 08 Nov 2021 20:27:21 +0000
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-cxl@vger.kernel.org, Linux NVDIMM <nvdimm@lists.linux.dev>,
-        Linux PCI <linux-pci@vger.kernel.org>
+        id S229627AbhKHW2T (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 8 Nov 2021 17:28:19 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10162"; a="318534617"
+X-IronPort-AV: E=Sophos;i="5.87,218,1631602800"; 
+   d="scan'208";a="318534617"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2021 14:25:17 -0800
+X-IronPort-AV: E=Sophos;i="5.87,218,1631602800"; 
+   d="scan'208";a="451645786"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2021 14:25:17 -0800
+Date:   Mon, 8 Nov 2021 14:25:16 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 4/5] cxl/mem: Add CDAT table reading from DOE
+Message-ID: <20211108222516.GE3538886@iweiny-DESK2.sc.intel.com>
+References: <20211105235056.3711389-1-ira.weiny@intel.com>
+ <20211105235056.3711389-5-ira.weiny@intel.com>
+ <20211108150236.00003a6c@Huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211108150236.00003a6c@Huawei.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The pull request you sent on Thu, 4 Nov 2021 18:20:55 -0700:
+On Mon, Nov 08, 2021 at 03:02:36PM +0000, Jonathan Cameron wrote:
+> On Fri, 5 Nov 2021 16:50:55 -0700
+> <ira.weiny@intel.com> wrote:
+> 
+> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > 
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-5.16
+[snip]
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/dd72945c43d34bee496b847e021069dc31f7398f
+> 
+> A few more things came to mind whilst reading the rest of the series. In particular
+> lifetime management for the doe structures.
 
-Thank you!
+Thanks for the review I'm just working through all the comments and so I'm
+somewhat working backwards.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+> 
+> >   * DOC: cxl pci
+> > @@ -575,17 +576,106 @@ static int cxl_setup_doe_devices(struct cxl_dev_state *cxlds)
+> >  		if (rc)
+> >  			return rc;
+> >  
+> > -		if (device_attach(&adev->dev) != 1)
+> > +		if (device_attach(&adev->dev) != 1) {
+> >  			dev_err(&adev->dev,
+> >  				"Failed to attach a driver to DOE device %d\n",
+> >  				adev->id);
+> > +			goto next;
+> > +		}
+> > +
+> > +		if (pci_doe_supports_prot(new_dev, PCI_DVSEC_VENDOR_ID_CXL,
+> > +					  CXL_DOE_PROTOCOL_TABLE_ACCESS))
+> > +			cxlds->cdat_doe = new_dev;
+> 
+> I'm probably missing something, but what prevents new_dev from going away after
+> this assignment?
+> Perhaps a force unbind or driver removal.  Should we get a
+> reference?
+
+I had a get_device() here at one point but took it out...  Because I was
+thinking that new_dev's lifetime was equal to cxlds because cxlds 'owned' the
+DOE devices.  However this is totally not true.  And there is a race between
+the device going away and cxlds going away which could be a problem.
+
+> 
+> Also it's possible we'll have multiple CDAT supporting DOEs so
+> I'd suggest checking if cxlds->cdata_doe is already set before setting it.
+
+Sure.
+
+> 
+> We could break out of the loop early, but I want to bolt the CMA doe detection
+> in there so I'd rather we didn't.  This is all subject to whether we attempt
+> to generalize this support and move it over to the PCI side of things.
+
+I'm not 100% sure about moving it to the PCI side but it does make some sense
+because really the auxiliary devices are only bounded by the PCI device being
+available.  None of the CXL stuff needs to exist for the DOE driver to talk to
+the device but the pdev does need to be there...  :-/
+
+This is all part of what drove the cxl_mem rename because that structure was
+really confusing me.  Dan got me straightened out but I did not revisit this
+series after that.  Now off the top of my head I'm not sure that cxlds needs to
+be involved in the auxiliary device creation.  OTOH I was making it a central
+place for in kernel users to know where/how to get information from DOE
+mailboxes.  Hence caching which of these devices had CDAT capability.[1]
+
+Since you seem to have arrived at this conclusion before me where in the PCI
+code do you think is appropriate for this?
+
+Ira
+
+[1] I'm not really sure what is going to happen if multiple DOE boxes have CDAT
+capability.  This seems like a recipe for confusion.
+
+> 
+> >  
+> > +next:
+> >  		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DOE);
+> >  	}
+> >  
+> >  	return 0;
+> >  }
+> >  
