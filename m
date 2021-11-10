@@ -2,109 +2,94 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A55C433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 10 Nov 2021 21:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA00C433EF
+	for <linux-cxl@archiver.kernel.org>; Wed, 10 Nov 2021 22:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8578461247
-	for <linux-cxl@archiver.kernel.org>; Wed, 10 Nov 2021 21:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D6FE6124C
+	for <linux-cxl@archiver.kernel.org>; Wed, 10 Nov 2021 22:26:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233176AbhKJVGo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 10 Nov 2021 16:06:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47500 "EHLO
+        id S233556AbhKJW3B (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 10 Nov 2021 17:29:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233167AbhKJVGo (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 10 Nov 2021 16:06:44 -0500
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B574C061766
-        for <linux-cxl@vger.kernel.org>; Wed, 10 Nov 2021 13:03:56 -0800 (PST)
-Received: by mail-pl1-x632.google.com with SMTP id t21so4045552plr.6
-        for <linux-cxl@vger.kernel.org>; Wed, 10 Nov 2021 13:03:56 -0800 (PST)
+        with ESMTP id S233552AbhKJW3A (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 10 Nov 2021 17:29:00 -0500
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14267C061766
+        for <linux-cxl@vger.kernel.org>; Wed, 10 Nov 2021 14:26:13 -0800 (PST)
+Received: by mail-pf1-x42b.google.com with SMTP id z6so3876398pfe.7
+        for <linux-cxl@vger.kernel.org>; Wed, 10 Nov 2021 14:26:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4OX0J3wvoqc71Bumf/BBGCto5+/PZE5rBI+nulFr3As=;
-        b=3MC/CzeNYGBiO0+pwhuzXMKzBCsV3ADi0QU8JfsHeZV/3C9xVqzHuXptddOhcEHItS
-         ZUhhRfUozvr6ChxSrDyejNQhughE0nHrPU3orCgpJF/WVLNj69CoZ6FA8X/UATP3OfA7
-         1OpNHkByj1xiiC4Kg5RNCxwxzsoG0Vst+iKOAn4fH9KwLy/guSygZofdtNynb16N8aBs
-         WcqdgdeZeWXkUmPjLACjlewuQbnoVGwgIIrKLFGVyS4MZsyfs2O9X70sb8ep6XiJNyJz
-         Q0tTaPh6hMvQYWzbb7JZQbFcJgvZg3RxKTbXUSEp4PmR6adP2TDNnGILxd396kAZ2xKJ
-         /pxA==
+        bh=hhsPCMX6fZnym+JQb4zpitIqmezgahI1oA1CZhModwU=;
+        b=iAaH0/uXNupuVdI1iTVUnzA8rd2oWO6Rnipr9I5LwUwojYb2bhjwVjM6H85etQkyXE
+         JfKzEpYn7BGhSHzXwIqEKUtJqcvgBSVcAj2LkvMH7FrLSST/s8X7T/LDks+AZTF22g84
+         V/OtiYqxEYuaBj/fLHVyTmbY3eZuXmJSTFKQXKHkTIMj9RmrqkoYakJ6OCDLV0FKyA68
+         r4DUH5Ihkfmo7jnoQeu0qQhkL7/wgtHeO3x2jJ0mRSOeUP2UZWopAr/HAhDV9gpzQi7a
+         QMtzX9QdtX3Eh50TZjkbClQeiEP2PuPEQkws1lZx2XpdNitk2Ws0/VM1KovAXeESIEdR
+         zcyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4OX0J3wvoqc71Bumf/BBGCto5+/PZE5rBI+nulFr3As=;
-        b=WP4INlr5EXxon/u8VXIJqsiuk6Dsle9WAgzYqNeTq49LIZ23bLu1XWXBmScA1eDbuI
-         oP871tQOi6YD/3nuDTE8cqh1HJUCAeXTzScPTAuifiG4+XW8AqYG4rU1wK6brxqxCYZD
-         DYSqiFiVAWYTjpT1gh6/uJMQEiE2FOXdSrxVwJqMswV6zIE3nrvoasyz3p1RunJJum2z
-         XGfeZejvkb6htgHKUMWGcp9tSLPIv/ybsD4s1wyf2WM7Bfdwt2mnV+LbEIVpkXY3DsXA
-         n2zlQgByAAZmGJxMmdSf+4eCPn4KzIh7p6gNp4z0+egPsXvyKds7eAfziGDN0qS6+Tix
-         Js/w==
-X-Gm-Message-State: AOAM5333Yg5t50FfwNwVmwsoHQgmB+SJK5ndAMRxStImbgRU4klgINOL
-        cmhAFaX74HReKLE6ySU2BiF1ecX64B3f4IWcxffSHg==
-X-Google-Smtp-Source: ABdhPJzOiypytkx9XcgEg+7wfg4A7PzzZ1Fod84uTq9tet7s7rpNEyHeamZfHXquQDTH+sG/x7d5+iozZ7nNaq+Vm14=
-X-Received: by 2002:a17:90b:1e07:: with SMTP id pg7mr2151804pjb.93.1636578235580;
- Wed, 10 Nov 2021 13:03:55 -0800 (PST)
+        bh=hhsPCMX6fZnym+JQb4zpitIqmezgahI1oA1CZhModwU=;
+        b=rg6wJAvhpwp7mcpJiQ4h/dpXUyd4SaQF4g2VcBlBM9qVc/4C+csl/0GHVNSCe5tm4u
+         H/ypxLHKCpHA+7bSZnQAsB258DSNyXuBt/uhqQG5F3I/fnUrJO7iJ6p/YJwdTSFzDeTM
+         O1JqxOkro36EhGVPAyDQyNTquenht/8udnIpGn0qUCNt1IFamAh4ep5OgJxmTdEKwLN1
+         SvT1TsSrlbJTbwC97iT/fe1b/rVY3DSCxXdlHx6QLMlGqn02FWS2KqnR2pKEF3RZ7Rpr
+         WmIPNhho3yfOnrW33dyNF+Lq1b8QxI5RjYRM2pRNXRnjU7DcIGrKHyZazcALg7M8nuO6
+         wR5A==
+X-Gm-Message-State: AOAM532BfaEW1X4yji5cB5VJrorKbWb9e+jB8g7hE4wgFhpoP8Siqlde
+        XVa48Qtd1fZKD7XzVZh+fCON5z4Y7a22pG5Tc4TuBw==
+X-Google-Smtp-Source: ABdhPJy8L+1hHYWTkSCjxWeziXGbgTX2IxZFPn5aWixYUvFu/j+HHCZdQnPVZBBHumgEsR6zE0TbCyhsMepcHlFkBb4=
+X-Received: by 2002:a05:6a00:1a51:b0:4a0:3c1:4f45 with SMTP id
+ h17-20020a056a001a5100b004a003c14f45mr2308531pfv.86.1636583172639; Wed, 10
+ Nov 2021 14:26:12 -0800 (PST)
 MIME-Version: 1.0
-References: <20211022183709.1199701-1-ben.widawsky@intel.com>
- <20211022183709.1199701-16-ben.widawsky@intel.com> <20211103160821.0000479e@Huawei.com>
- <20211110174923.5cdbfyyoixbhiqjt@intel.com> <20211110181055.00005779@Huawei.com>
-In-Reply-To: <20211110181055.00005779@Huawei.com>
+References: <20211110191425.3761515-1-ira.weiny@intel.com>
+In-Reply-To: <20211110191425.3761515-1-ira.weiny@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 10 Nov 2021 13:03:44 -0800
-Message-ID: <CAPcyv4goFku6+GD=MTnzFNUy6Y0-L-4nNwO2_26Y+jr2bBqFZQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 15/28] cxl/core: Introduce API to scan switch ports
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
-        Chet Douglas <chet.r.douglas@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
+Date:   Wed, 10 Nov 2021 14:26:01 -0800
+Message-ID: <CAPcyv4hQF=vTcLRRQP3hsMTGTOTMkgVw2Q2AYeJoye+jhBjA6g@mail.gmail.com>
+Subject: Re: [PATCH] cxl/memdev: Clean up the function declaration of cxl_add_memdev()
+To:     "Weiny, Ira" <ira.weiny@intel.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-cxl@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Nov 10, 2021 at 10:11 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
+On Wed, Nov 10, 2021 at 11:14 AM <ira.weiny@intel.com> wrote:
 >
-> On Wed, 10 Nov 2021 09:49:23 -0800
-> Ben Widawsky <ben.widawsky@intel.com> wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 >
-> > On 21-11-03 16:08:21, Jonathan Cameron wrote:
-> > > On Fri, 22 Oct 2021 11:36:56 -0700
-> > > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > >
-> > > > The CXL drivers encapsulate the components that direct memory traffic in
-> > > > an entity known as a cxl_port. Compute Express Link specifies three such
-> > > > components: hostbridge (ie. a collection of root ports), switches, and
-> > > > endpoints. There are currently drivers that create these ports for the
-> > > > hostbridges and the endpoints (cxl_acpi and cxl_mem). The new API
-> > > > introduced allows callers to initiate a scan down from the hostbridge
-> > > > and create ports for switches in the CXL topology.
-> > > >
-> > > > The intended user of this API is for endpoint devices. An endpoint
-> > > > device will need to determine if it is CXL.mem capable, which requires
-> > > > all components in the path from hostbridge to the endpoint to be CXL.mem
-> > > > capable. Once an endpoint device determines it's connected to a CXL
-> > > > capable root port, it can call this API to fill in all the ports in
-> > > > between the hostbridge and itself.
-> > > >
-> > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > >
-> > > This is an unusual enough thing to be doing on PCI that I'd suggest
-> > > making sure to cc linux-pci + Bjorn for next version of this...
-> > > Shall we say, this makes me nervous and more eyes might be good :)
-> > >
-> > > One trivial inline.
-> >
-> > Makes sense, just this patch or the whole series?
+> Function return type and declaration should be on the same line.
 >
-> The nervousness was just this patch IIRC.
+> [1] https://lore.kernel.org/linux-cxl/20211103223413.n6fmf3gtop56wssz@intel.com/T/#m75fee4f12193169da20278cd48e9c655e904c88e
+>
+> Suggested-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ---
+>  drivers/cxl/core/memdev.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 5341b0ba99a7..61029cb7ac62 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -276,8 +276,7 @@ static const struct file_operations cxl_memdev_fops = {
+>         .llseek = noop_llseek,
+>  };
+>
+> -struct cxl_memdev *
+> -devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
+> +struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
 
-I would copy linux-pci on the whole thing. The parallel universe that
-drivers/cxl/ needs and is attaching to PCI objects in the device tree
-should at least be something PCI developers are aware of, especially
-when we come back to talk about Native PCI hotplug interactions with
-CXL.
+I went ahead and just folded this in since this commit has not been
+finalized on cxl/next yet.
