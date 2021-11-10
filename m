@@ -2,132 +2,91 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3742FC433F5
-	for <linux-cxl@archiver.kernel.org>; Wed, 10 Nov 2021 18:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB2BC433F5
+	for <linux-cxl@archiver.kernel.org>; Wed, 10 Nov 2021 19:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14B3D611C9
-	for <linux-cxl@archiver.kernel.org>; Wed, 10 Nov 2021 18:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FED161027
+	for <linux-cxl@archiver.kernel.org>; Wed, 10 Nov 2021 19:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230312AbhKJSNs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 10 Nov 2021 13:13:48 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4082 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229969AbhKJSNr (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 10 Nov 2021 13:13:47 -0500
-Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HqCVf74Q4z67NYQ;
-        Thu, 11 Nov 2021 02:07:22 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.15; Wed, 10 Nov 2021 19:10:57 +0100
-Received: from localhost (10.52.121.123) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Wed, 10 Nov
- 2021 18:10:56 +0000
-Date:   Wed, 10 Nov 2021 18:10:55 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>
-CC:     <linux-cxl@vger.kernel.org>,
-        Chet Douglas <chet.r.douglas@intel.com>,
+        id S232642AbhKJTGL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 10 Nov 2021 14:06:11 -0500
+Received: from mga18.intel.com ([134.134.136.126]:5201 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233062AbhKJTFn (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Wed, 10 Nov 2021 14:05:43 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10164"; a="219636391"
+X-IronPort-AV: E=Sophos;i="5.87,224,1631602800"; 
+   d="scan'208";a="219636391"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2021 11:01:52 -0800
+X-IronPort-AV: E=Sophos;i="5.87,224,1631602800"; 
+   d="scan'208";a="452426593"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2021 11:01:51 -0800
+Date:   Wed, 10 Nov 2021 11:01:51 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [RFC PATCH v2 15/28] cxl/core: Introduce API to scan switch
- ports
-Message-ID: <20211110181055.00005779@Huawei.com>
-In-Reply-To: <20211110174923.5cdbfyyoixbhiqjt@intel.com>
-References: <20211022183709.1199701-1-ben.widawsky@intel.com>
-        <20211022183709.1199701-16-ben.widawsky@intel.com>
-        <20211103160821.0000479e@Huawei.com>
-        <20211110174923.5cdbfyyoixbhiqjt@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+        Vishal Verma <vishal.l.verma@intel.com>,
+        linux-cxl@vger.kernel.org
+Subject: Re: [INTERNAL PATCH 2/2] cxl/cxlmem: Change cxl_mem to a more
+ descriptive name
+Message-ID: <20211110190151.GJ3538886@iweiny-DESK2.sc.intel.com>
+References: <20211102202901.3675568-1-ira.weiny@intel.com>
+ <20211102202901.3675568-3-ira.weiny@intel.com>
+ <20211110174010.000055c2@Huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.121.123]
-X-ClientProxiedBy: lhreml748-chm.china.huawei.com (10.201.108.198) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211110174010.000055c2@Huawei.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 10 Nov 2021 09:49:23 -0800
-Ben Widawsky <ben.widawsky@intel.com> wrote:
-
-> On 21-11-03 16:08:21, Jonathan Cameron wrote:
-> > On Fri, 22 Oct 2021 11:36:56 -0700
-> > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> >   
-> > > The CXL drivers encapsulate the components that direct memory traffic in
-> > > an entity known as a cxl_port. Compute Express Link specifies three such
-> > > components: hostbridge (ie. a collection of root ports), switches, and
-> > > endpoints. There are currently drivers that create these ports for the
-> > > hostbridges and the endpoints (cxl_acpi and cxl_mem). The new API
-> > > introduced allows callers to initiate a scan down from the hostbridge
-> > > and create ports for switches in the CXL topology.
-> > > 
-> > > The intended user of this API is for endpoint devices. An endpoint
-> > > device will need to determine if it is CXL.mem capable, which requires
-> > > all components in the path from hostbridge to the endpoint to be CXL.mem
-> > > capable. Once an endpoint device determines it's connected to a CXL
-> > > capable root port, it can call this API to fill in all the ports in
-> > > between the hostbridge and itself.
-> > > 
-> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>  
-> > 
-> > This is an unusual enough thing to be doing on PCI that I'd suggest
-> > making sure to cc linux-pci + Bjorn for next version of this...
-> > Shall we say, this makes me nervous and more eyes might be good :)
-> > 
-> > One trivial inline.  
+On Wed, Nov 10, 2021 at 05:40:10PM +0000, Jonathan Cameron wrote:
+> On Tue, 2 Nov 2021 13:29:01 -0700
+> <ira.weiny@intel.com> wrote:
 > 
-> Makes sense, just this patch or the whole series?
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > The cxl_mem object actually represents the state of a CXL device within the
+> > driver.  This is data layered on top of the PCI or other device.  Even though
+> > the only device currently represented is a memory device, calling this cxl_mem
+> > is confusing because this is not solely a CXL memory device.  Furthermore,
+> > cxl_memdev does drive a CXL memory device.  So changing the name helps to
+> > distinguish these to structures.
+> > 
+> > Update the structure name, function names, and the kdocs to reflect the
+> > real uses of this structure.
+> > 
+> > Acked-by: Ben Widawsky <ben.widawsky@intel.com>
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > 
+> 
+> ...
+> 
+> >  struct cxl_memdev *
+> > -devm_cxl_add_memdev(struct cxl_mem *cxlm)
+> > +devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
+> Just noticed on a read through (I'm trying to catch up with recent changes)
+> 
+> Combine the above 2 lines into one.  Could do it as a tidy up
+> patch if too late to fold into this patch.
 
-The nervousness was just this patch IIRC.
+Dan has already taken this into pending.  I'll send a clean up.
 
-Jonathan
+Ira
 
 > 
-> > > ---
-> > >  .../driver-api/cxl/memory-devices.rst         |   6 +
-> > >  drivers/cxl/core/Makefile                     |   1 +
-> > >  drivers/cxl/core/bus.c                        | 145 ++++++++++++++++++
-> > >  drivers/cxl/core/pci.c                        |  99 ++++++++++++
-> > >  drivers/cxl/cxl.h                             |   2 +
-> > >  drivers/cxl/pci.h                             |   6 +
-> > >  drivers/cxl/port.c                            |   2 +-
-> > >  tools/testing/cxl/Kbuild                      |   1 +
-> > >  8 files changed, 261 insertions(+), 1 deletion(-)
-> > >  create mode 100644 drivers/cxl/core/pci.c
-> > >   
-> > ...
-> >   
-> > > diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-> > > index c7e1894d503b..f10e7d5b22a4 100644
-> > > --- a/drivers/cxl/core/bus.c
-> > > +++ b/drivers/cxl/core/bus.c  
-> > ...  
-> > > +static struct cxl_port *find_cxl_port(struct pci_dev *usp)
-> > > +{
-> > > +	struct device *port_dev;
-> > > +
-> > > +	if (!pci_is_pcie(usp) || pci_pcie_type(usp) != PCI_EXP_TYPE_UPSTREAM)
-> > > +		return NULL;
-> > > +
-> > > +	port_dev = bus_find_device(&cxl_bus_type, NULL, usp, match_port);
-> > > +	if (port_dev)
-> > > +		return to_cxl_port(port_dev);  
-> > 
-> > Flip this logic to make it more readable.
-> > 	if (!port_dev)
-> > 		return NULL;
-> >   
-> > > +
-> > > +	return NULL;
-> > > +}
-> > > +  
-
+> Thanks,
+> 
+> Jonathan
+> 
+> 
+> >  {
+> >  	struct cxl_memdev *cxlmd;
+> >  	struct device *dev;
+> >  	struct cdev *cdev;
