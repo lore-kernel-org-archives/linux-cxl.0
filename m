@@ -2,88 +2,91 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E008C433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 10 Nov 2021 17:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C36C43219
+	for <linux-cxl@archiver.kernel.org>; Wed, 10 Nov 2021 17:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D49761241
-	for <linux-cxl@archiver.kernel.org>; Wed, 10 Nov 2021 17:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0655611C9
+	for <linux-cxl@archiver.kernel.org>; Wed, 10 Nov 2021 17:40:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231873AbhKJRdb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 10 Nov 2021 12:33:31 -0500
-Received: from mga02.intel.com ([134.134.136.20]:35409 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230230AbhKJRda (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Wed, 10 Nov 2021 12:33:30 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10164"; a="219924230"
-X-IronPort-AV: E=Sophos;i="5.87,224,1631602800"; 
-   d="scan'208";a="219924230"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2021 09:30:42 -0800
-X-IronPort-AV: E=Sophos;i="5.87,224,1631602800"; 
-   d="scan'208";a="732571431"
-Received: from rwmcguir-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.137.122])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2021 09:30:41 -0800
-Date:   Wed, 10 Nov 2021 09:30:40 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
-        Ira Weiny <ira.weiny@intel.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 07/10] cxl/pci: Split cxl_pci_setup_regs()
-Message-ID: <20211110173040.vttuxu2ggkqxfnza@intel.com>
-References: <163379787433.692348.2451270397309803556.stgit@dwillia2-desk3.amr.corp.intel.com>
- <163434053788.914258.18412599112859205220.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20211110171437.00007160@Huawei.com>
+        id S232467AbhKJRnC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 10 Nov 2021 12:43:02 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4080 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230388AbhKJRnC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 10 Nov 2021 12:43:02 -0500
+Received: from fraeml735-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HqBnk5Nldz67xX4;
+        Thu, 11 Nov 2021 01:35:22 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml735-chm.china.huawei.com (10.206.15.216) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Wed, 10 Nov 2021 18:40:12 +0100
+Received: from localhost (10.52.121.123) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Wed, 10 Nov
+ 2021 17:40:12 +0000
+Date:   Wed, 10 Nov 2021 17:40:10 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        <linux-cxl@vger.kernel.org>
+Subject: Re: [INTERNAL PATCH 2/2] cxl/cxlmem: Change cxl_mem to a more
+ descriptive name
+Message-ID: <20211110174010.000055c2@Huawei.com>
+In-Reply-To: <20211102202901.3675568-3-ira.weiny@intel.com>
+References: <20211102202901.3675568-1-ira.weiny@intel.com>
+        <20211102202901.3675568-3-ira.weiny@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211110171437.00007160@Huawei.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.121.123]
+X-ClientProxiedBy: lhreml748-chm.china.huawei.com (10.201.108.198) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21-11-10 17:14:37, Jonathan Cameron wrote:
-> On Fri, 15 Oct 2021 16:30:42 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
-> 
-> > From: Ben Widawsky <ben.widawsky@intel.com>
-> > 
-> > In preparation for moving parts of register mapping to cxl_core, split
-> > cxl_pci_setup_regs() into a helper that finds register blocks,
-> > (cxl_find_regblock()), and a generic wrapper that probes the precise
-> > register sets within a block (cxl_setup_regs()).
-> > 
-> > Move the actual mapping (cxl_map_regs()) of the only register-set that
-> > cxl_pci cares about (memory device registers) up a level from the former
-> > cxl_pci_setup_regs() into cxl_pci_probe().
-> > 
-> > With this change the unused component registers are no longer mapped,
-> > but the helpers are primed to move into the core.
-> > 
-> > [djbw: drop cxl_map_regs() for component registers]
-> > 
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > [djbw: rebase on the cxl_register_map refactor]
-> > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> 
-> Hi Ben / all,
-> 
-> This is probably the best patch to comment on for this
-> (note it is not a comment about this patch, but more the state we end up
-> in after it).
-> 
-> cxl_map_regs() is a generic function, but with the new split approach
-> as a result of this patch, we now always know at the caller which of
-> the types of map we are doing.
-> 
-> I think it would be clearer to embrace that situation and drop cxl_map_regs()
-> in favor of directly calling the relevant specific versions such as
-> cxl_map_device_regs().  I can't immediately see how the generic cxl_map_regs()
-> will be useful to us going forwards.
-> 
-> Jonathan
+On Tue, 2 Nov 2021 13:29:01 -0700
+<ira.weiny@intel.com> wrote:
 
-I completely agree. Long term, something like cxl_map_regs() might be desirable
-for a Type2 device, but we have no such user today. Patches welcome?
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> The cxl_mem object actually represents the state of a CXL device within the
+> driver.  This is data layered on top of the PCI or other device.  Even though
+> the only device currently represented is a memory device, calling this cxl_mem
+> is confusing because this is not solely a CXL memory device.  Furthermore,
+> cxl_memdev does drive a CXL memory device.  So changing the name helps to
+> distinguish these to structures.
+> 
+> Update the structure name, function names, and the kdocs to reflect the
+> real uses of this structure.
+> 
+> Acked-by: Ben Widawsky <ben.widawsky@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+
+...
+
+>  struct cxl_memdev *
+> -devm_cxl_add_memdev(struct cxl_mem *cxlm)
+> +devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
+Just noticed on a read through (I'm trying to catch up with recent changes)
+
+Combine the above 2 lines into one.  Could do it as a tidy up
+patch if too late to fold into this patch.
+
+Thanks,
+
+Jonathan
+
+
+>  {
+>  	struct cxl_memdev *cxlmd;
+>  	struct device *dev;
+>  	struct cdev *cdev;
