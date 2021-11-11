@@ -2,28 +2,28 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA6CC433F5
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 01:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6CAC433FE
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 03:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3404761502
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 01:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CBA161284
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 03:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232723AbhKKBeN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 10 Nov 2021 20:34:13 -0500
-Received: from mga09.intel.com ([134.134.136.24]:18617 "EHLO mga09.intel.com"
+        id S232854AbhKKEBO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 10 Nov 2021 23:01:14 -0500
+Received: from mga05.intel.com ([192.55.52.43]:28361 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232005AbhKKBeL (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Wed, 10 Nov 2021 20:34:11 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10164"; a="232672498"
+        id S230314AbhKKEBN (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Wed, 10 Nov 2021 23:01:13 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10164"; a="319043025"
 X-IronPort-AV: E=Sophos;i="5.87,225,1631602800"; 
-   d="scan'208";a="232672498"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2021 17:31:23 -0800
+   d="scan'208";a="319043025"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2021 19:58:24 -0800
 X-IronPort-AV: E=Sophos;i="5.87,225,1631602800"; 
-   d="scan'208";a="492354953"
+   d="scan'208";a="670107834"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2021 17:31:23 -0800
-Date:   Wed, 10 Nov 2021 17:31:23 -0800
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2021 19:58:24 -0800
+Date:   Wed, 10 Nov 2021 19:58:24 -0800
 From:   Ira Weiny <ira.weiny@intel.com>
 To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
@@ -32,330 +32,217 @@ Cc:     Dan Williams <dan.j.williams@intel.com>,
         Ben Widawsky <ben.widawsky@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>, linux-cxl@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: Re: [PATCH 3/5] cxl/pci: Add DOE Auxiliary Devices
-Message-ID: <20211111013122.GL3538886@iweiny-DESK2.sc.intel.com>
+Subject: Re: [PATCH 5/5] cxl/cdat: Parse out DSMAS data from CDAT table
+Message-ID: <20211111035824.GM3538886@iweiny-DESK2.sc.intel.com>
 References: <20211105235056.3711389-1-ira.weiny@intel.com>
- <20211105235056.3711389-4-ira.weiny@intel.com>
- <20211108130918.00004d76@Huawei.com>
+ <20211105235056.3711389-6-ira.weiny@intel.com>
+ <20211108145239.000010a5@Huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211108130918.00004d76@Huawei.com>
+In-Reply-To: <20211108145239.000010a5@Huawei.com>
 User-Agent: Mutt/1.11.1 (2018-12-01)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Nov 08, 2021 at 01:09:18PM +0000, Jonathan Cameron wrote:
-> On Fri, 5 Nov 2021 16:50:54 -0700
+On Mon, Nov 08, 2021 at 02:52:39PM +0000, Jonathan Cameron wrote:
+> On Fri, 5 Nov 2021 16:50:56 -0700
 > <ira.weiny@intel.com> wrote:
 > 
-> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > From: Ira Weiny <ira.weiny@intel.com>
 > > 
-> > CXL devices have DOE mailboxes.  Create auxiliary devices which can be
-> > driven by the generic DOE auxiliary driver.
-> 
-> I'd like Bjorn's input on the balance here between what is done
-> in cxl/pci.c and what should be in the PCI core code somewhere.
-> 
-> The tricky bit preventing this being done entirely as part of 
-> PCI device instantiation is the interrupts.
-> 
+> > Parse and cache the DSMAS data from the CDAT table.  Store this data in
+> > Unmarshaled data structures for use later.
 > > 
-> > Co-developed-by: Ira Weiny <ira.weiny@intel.com>
 > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > 
-> Mostly new code, so not sure I should really be listed on this
-> one but I don't mind either way.
+> A few minor comments inline.  In particular I think we need to conclude if
+> failure to parse is an error or not.  Right now it's reported as an error
+> but then we carry on anyway.
+
+I report it as an error because if the device supports CDAT I made the
+assumption that it was required for something up the stack.  However, I did not
+want to make that decision at this point because all this code does is cache
+the raw data.
+
+So it may not be a fatal error depending on what the data is used for.  But IMO
+it is still and error.
+
 > 
-> A few comments inline but overall this ended up nice and clean.
+> Jonathan
 > 
 > > 
 > > ---
-> > Changes from V4:
-> > 	Make this an Auxiliary Driver rather than library functions
-> > 	Split this out into it's own patch
-> > 	Base on the new cxl_dev_state structure
-> > 
-> > Changes from Ben
-> > 	s/CXL_DOE_DEV_NAME/DOE_DEV_NAME/
+> > Changes from V4
+> > 	New patch
 > > ---
-> >  drivers/cxl/Kconfig |   1 +
-> >  drivers/cxl/cxl.h   |  13 +++++
-> >  drivers/cxl/pci.c   | 120 ++++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 134 insertions(+)
+> >  drivers/cxl/core/memdev.c | 111 ++++++++++++++++++++++++++++++++++++++
+> >  drivers/cxl/cxlmem.h      |  23 ++++++++
+> >  2 files changed, 134 insertions(+)
 > > 
-> > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> > index 67c91378f2dd..9d53720bea07 100644
-> > --- a/drivers/cxl/Kconfig
-> > +++ b/drivers/cxl/Kconfig
-> > @@ -16,6 +16,7 @@ if CXL_BUS
-> >  config CXL_MEM
-> >  	tristate "CXL.mem: Memory Devices"
-> >  	default CXL_BUS
-> > +	select PCI_DOE_DRIVER
-> >  	help
-> >  	  The CXL.mem protocol allows a device to act as a provider of
-> >  	  "System RAM" and/or "Persistent Memory" that is fully coherent
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > index 5e2e93451928..f1241a7f2b7b 100644
-> > --- a/drivers/cxl/cxl.h
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -75,6 +75,19 @@ static inline int cxl_hdm_decoder_count(u32 cap_hdr)
-> >  #define CXLDEV_MBOX_BG_CMD_STATUS_OFFSET 0x18
-> >  #define CXLDEV_MBOX_PAYLOAD_OFFSET 0x20
-> >  
-> > +/*
-> > + * Address space properties derived from:
-> > + * CXL 2.0 8.2.5.12.7 CXL HDM Decoder 0 Control Register
-> > + */
-> > +#define CXL_ADDRSPACE_RAM   BIT(0)
-> > +#define CXL_ADDRSPACE_PMEM  BIT(1)
-> > +#define CXL_ADDRSPACE_TYPE2 BIT(2)
-> > +#define CXL_ADDRSPACE_TYPE3 BIT(3)
-> > +#define CXL_ADDRSPACE_MASK  GENMASK(3, 0)
-> 
-> Stray.
-
-Not sure what you mean here???
-
-There were a number of defines which were unused but I left them in.
-
-This came right out of your patch 3.
-
-https://lore.kernel.org/linux-cxl/20210524133938.2815206-4-Jonathan.Cameron@huawei.com/
-
-I can remove these defines if you want?
-
-> 
-> > +
-> > +#define CXL_DOE_PROTOCOL_COMPLIANCE 0
-> > +#define CXL_DOE_PROTOCOL_TABLE_ACCESS 2
-> > +
-> >  #define CXL_COMPONENT_REGS() \
-> >  	void __iomem *hdm_decoder
-> >  
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index 8dc91fd3396a..df524b74f1d2 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
+> > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> > index c35de9e8298e..e5a2d30a3491 100644
+> > --- a/drivers/cxl/core/memdev.c
+> > +++ b/drivers/cxl/core/memdev.c
 > > @@ -6,6 +6,7 @@
-> >  #include <linux/mutex.h>
-> >  #include <linux/list.h>
-> >  #include <linux/pci.h>
-> > +#include <linux/pci-doe.h>
-> >  #include <linux/io.h>
-> >  #include "cxlmem.h"
-> >  #include "pci.h"
-> > @@ -471,6 +472,120 @@ static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
-> >  	return rc;
-> >  }
-> >  
-> > +static void cxl_mem_free_irq_vectors(void *data)
+> 
+> ...
+> 
+> > +
+> > +static int parse_dsmas(struct cxl_memdev *cxlmd)
 > > +{
-> > +	pci_free_irq_vectors(data);
-> > +}
+> > +	struct cxl_dsmas *dsmas_ary = NULL;
+> > +	u32 *data = cxlmd->cdat_table;
+> > +	int bytes_left = cxlmd->cdat_length;
+> > +	int nr_dsmas = 0;
+> > +	size_t dsmas_byte_size;
+> > +	int rc = 0;
 > > +
-> > +static void cxl_destroy_doe_device(void *ad)
-> > +{
-> > +	struct auxiliary_device *adev = ad;
-> Local variable doesn't add anything, just pass it directly
-> into the functions as a void *.
+> > +	if (!data || !cdat_hdr_valid(cxlmd))
+> 
+> If that's invalid, right answer might be to run it again as we probably
+> just raced with an update...  Perhaps try it a couple of times before
+> failing hard?
 
-Yea...  Thanks...  :-D
+I find it odd that the mailbox would return invalid data even during an update?
+
+That said perhaps validating the header should be done as part of reading the
+CDAT.
+
+Thoughts?  Should I push this back to the previous patch?
 
 > 
+> > +		return -ENXIO;
 > > +
-> > +	auxiliary_device_delete(adev);
-> > +	auxiliary_device_uninit(adev);
+> > +	/* Skip header */
+> > +	data += CDAT_HEADER_LENGTH_DW;
+> > +	bytes_left -= CDAT_HEADER_LENGTH_BYTES;
+> > +
+> > +	while (bytes_left > 0) {
+> > +		u32 *cur_rec = data;
+> > +		u8 type = FIELD_GET(CDAT_STRUCTURE_DW0_TYPE, cur_rec[0]);
+> > +		u16 length = FIELD_GET(CDAT_STRUCTURE_DW0_LENGTH, cur_rec[0]);
+> > +
+> > +		if (type == CDAT_STRUCTURE_DW0_TYPE_DSMAS) {
+> > +			struct cxl_dsmas *new_ary;
+> > +			u8 flags;
+> > +
+> > +			new_ary = krealloc(dsmas_ary,
+> > +					   sizeof(*dsmas_ary) * (nr_dsmas+1),
 > 
-> Both needed?  These are just wrappers around
-> put_device() and device_del()
+> Spaces around the +
 
-These are both needed per the Auxiliary Device doc.  :-/
+Sure.
 
-> 
-> Normally after device_add() suceeded we only ever call device_del()
-> as per the docs for device_add()
-> https://elixir.bootlin.com/linux/latest/source/drivers/base/core.c#L3277
+> You could do this with devm_krealloc() and then just assign it at the end
+> rather than allocate a new one and copy.
 
-I think you are miss reading that comment.  Here auxiliary_device_add() has
-succeeded.  Therefore both device_del() and put_device() must be called.  In
-the case of auxiliary_device_add() failing we only call
-auxiliary_device_uninit() [put_device()].
-
-So I think this is correct.
-
-The other places I spot checked called device_del() _and_ put_device().
-
-> 
-> > +}
-> > +
-> > +static DEFINE_IDA(cxl_doe_adev_ida);
-> > +static void __doe_dev_release(struct auxiliary_device *adev)
-> > +{
-> > +	struct pci_doe_dev *doe_dev = container_of(adev, struct pci_doe_dev,
-> > +						   adev);
-> > +
-> > +	ida_free(&cxl_doe_adev_ida, adev->id);
-> > +	kfree(doe_dev);
-> > +}
-> > +
-> > +static void cxl_doe_dev_release(struct device *dev)
-> > +{
-> > +	struct auxiliary_device *adev = container_of(dev,
-> > +						struct auxiliary_device,
-> > +						dev);
-> > +	__doe_dev_release(adev);
-> > +}
-> > +
-> > +static int cxl_setup_doe_devices(struct cxl_dev_state *cxlds)
-> 
-> Pass in the struct device, or maybe even the struct pci_dev as
-> nothing in here is using the cxl_dev_state.
-
-Ah yea can I leave this per the next patch?  Or I can change it then change it
-to cxlds in the next patch.  But I would rather leave it.
+I failed to see that call when I wrote this...  yes thanks!
 
 > 
-> > +{
-> > +	struct device *dev = cxlds->dev;
-> > +	struct pci_dev *pdev = to_pci_dev(dev);
-> > +	int irqs, rc;
-> > +	u16 pos = 0;
+> 
+> > +					   GFP_KERNEL);
+> > +			if (!new_ary) {
+> > +				dev_err(&cxlmd->dev,
+> > +					"Failed to allocate memory for DSMAS data\n");
+> > +				rc = -ENOMEM;
+> > +				goto free_dsmas;
+> > +			}
+> > +			dsmas_ary = new_ary;
 > > +
-> > +	/*
-> > +	 * An implementation of a cxl type3 device may support an unknown
-> > +	 * number of interrupts. Assume that number is not that large and
-> > +	 * request them all.
-> > +	 */
-> > +	irqs = pci_msix_vec_count(pdev);
-> > +	rc = pci_alloc_irq_vectors(pdev, irqs, irqs, PCI_IRQ_MSIX);
-> > +	if (rc != irqs) {
-> > +		/* No interrupt available - carry on */
-> > +		dev_dbg(dev, "No interrupts available for DOE\n");
-> > +	} else {
-> > +		/*
-> > +		 * Enabling bus mastering could be done within the DOE
-> > +		 * initialization, but as it potentially has other impacts
-> > +		 * keep it within the driver.
-> > +		 */
-> > +		pci_set_master(pdev);
-> > +		rc = devm_add_action_or_reset(dev,
-> > +					      cxl_mem_free_irq_vectors,
-> > +					      pdev);
-> > +		if (rc)
-> > +			return rc;
+> > +			flags = FIELD_GET(CDAT_DSMAS_DW1_FLAGS, cur_rec[1]);
+> > +
+> > +			dsmas_ary[nr_dsmas].dpa_base = CDAT_DSMAS_DPA_OFFSET(cur_rec);
+> > +			dsmas_ary[nr_dsmas].dpa_length = CDAT_DSMAS_DPA_LEN(cur_rec);
+> > +			dsmas_ary[nr_dsmas].non_volatile = CDAT_DSMAS_NON_VOLATILE(flags);
+> > +
+> > +			dev_dbg(&cxlmd->dev, "DSMAS %d: %llx:%llx %s\n",
+> > +				nr_dsmas,
+> > +				dsmas_ary[nr_dsmas].dpa_base,
+> > +				dsmas_ary[nr_dsmas].dpa_base +
+> > +					dsmas_ary[nr_dsmas].dpa_length,
+> > +				(dsmas_ary[nr_dsmas].non_volatile ?
+> > +					"Persistent" : "Volatile")
+> > +				);
+> > +
+> > +			nr_dsmas++;
+> > +		}
+> > +
+> > +		data += (length/sizeof(u32));
+> 
+> spaces around /
+
+Yep.
+
+> 
+
+> > +		bytes_left -= length;
 > > +	}
 > > +
+> > +	if (nr_dsmas == 0) {
+> > +		rc = -ENXIO;
+> > +		goto free_dsmas;
+> > +	}
+> > +
+> > +	dev_dbg(&cxlmd->dev, "Found %d DSMAS entries\n", nr_dsmas);
+> > +
+> > +	dsmas_byte_size = sizeof(*dsmas_ary) * nr_dsmas;
+> > +	cxlmd->dsmas_ary = devm_kzalloc(&cxlmd->dev, dsmas_byte_size, GFP_KERNEL);
 > 
-> Above here is driver specific...
-> Everything from here is is generic so perhaps move it to the PCI core?
-> Alternatively wait until we have users that aren't CXL.
+> As above, you could have done a devm_krealloc() and then just assigned here.
+> Side effect of that being direct returns should be fine.
 
-I'm still looking for where in the PCI core this would be appropriate to
-place...
+Yep devm_krealloc is much cleaner.
+
+> However, that relies
+> treating an error from this function as an error that will result in failures below.
+> 
+> 
+> > +	if (!cxlmd->dsmas_ary) {
+> > +		rc = -ENOMEM;
+> > +		goto free_dsmas;
+> > +	}
+> > +
+> > +	memcpy(cxlmd->dsmas_ary, dsmas_ary, dsmas_byte_size);
+> > +	cxlmd->nr_dsmas = nr_dsmas;
+> > +
+> > +free_dsmas:
+> > +	kfree(dsmas_ary);
+> > +	return rc;
+> > +}
+> > +
+> >  struct cxl_memdev *
+> >  devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
+> >  {
+> > @@ -339,6 +446,10 @@ devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
+> >  		cxl_mem_cdat_read_table(cxlds, cxlmd->cdat_table, cxlmd->cdat_length);
+> >  	}
+> >  
+> > +	rc = parse_dsmas(cxlmd);
+> > +	if (rc)
+> > +		dev_err(dev, "No DSMAS data found: %d\n", rc);
+> 
+> dev_info() maybe as it's not being treated as an error?
+
+This is an error.  But not a fatal error.
 
 > 
-> > +	pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DOE);
-> > +
-> > +	while (pos > 0) {
-> > +		struct auxiliary_device *adev;
-> > +		struct pci_doe_dev *new_dev;
-> > +		int id;
-> > +
-> > +		new_dev = kzalloc(sizeof(*new_dev), GFP_KERNEL);
-> > +		if (!new_dev)
-> > +			return -ENOMEM;
-> > +
-> > +		new_dev->pdev = pdev;
-> > +		new_dev->cap_offset = pos;
-> > +
-> > +		/* Set up struct auxiliary_device */
-> > +		adev = &new_dev->adev;
-> > +		id = ida_alloc(&cxl_doe_adev_ida, GFP_KERNEL);
-> > +		if (id < 0) {
-> > +			kfree(new_dev);
-> > +			return -ENOMEM;
-> > +		}
-> > +
-> > +		adev->id = id;
-> > +		adev->name = DOE_DEV_NAME;
-> > +		adev->dev.release = cxl_doe_dev_release;
-> > +		adev->dev.parent = dev;
-> > +
-> > +		if (auxiliary_device_init(adev)) {
-> > +			__doe_dev_release(adev);
-> > +			return -EIO;
-> > +		}
-> > +
-> > +		if (auxiliary_device_add(adev)) {
-> > +			auxiliary_device_uninit(adev);
-> > +			return -EIO;
-> > +		}
-> > +
-> > +		rc = devm_add_action_or_reset(dev, cxl_destroy_doe_device, adev);
-> > +		if (rc)
-> > +			return rc;
-> > +
-> > +		if (device_attach(&adev->dev) != 1)
-> > +			dev_err(&adev->dev,
-> > +				"Failed to attach a driver to DOE device %d\n",
-> > +				adev->id);
-> 
-> I wondered about this and how it would happen.
-> Given soft dependency only between the drivers it's possible but error or info?
-> I'd go with dev_info().  It is an error I'd bail out and used deferred probing
-> to try again when it will succeed.
+> However I think it should be treated as an error.  It's a device failure if
+> we can't parse this (and table protocol is available)
 
-I made this dev_err() on purpose.  And I don't know about the deferred probing.
-Maybe deferred probing on the CDAT read but even that I think is going to be a
-pain.
+Shouldn't we let the consumer of this data determine if this is a fatal error and
+bail out at that point?
 
-The sequence I can think of is:
-
-cxl_pci loaded
-	[finds all devices]
-	[soft loads pci_doe]
-	[device_attach works]
-Admin unloads pci_doe
-	[hot-plug new device]
-	[device_attach fails]
-	[cdat will fail until driver is loaded]
-
-I spoke with Dan about this and while this is unfortunate it is what the user
-asked for.  So I prefer dev_err() above to make sure that there is an
-indication of why this device is potentially not going to work.
-
-Thanks for the review,
 Ira
 
 > 
+> If it turns out we need to quirk some devices, then fair enough.
+> 
+> 
+> 
 > > +
-> > +		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DOE);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >  {
-> >  	struct cxl_register_map map;
-> > @@ -517,6 +632,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >  	if (rc)
-> >  		return rc;
-> >  
-> > +	rc = cxl_setup_doe_devices(cxlds);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> >  	cxlmd = devm_cxl_add_memdev(cxlds);
-> >  	if (IS_ERR(cxlmd))
-> >  		return PTR_ERR(cxlmd);
-> > @@ -546,3 +665,4 @@ static struct pci_driver cxl_pci_driver = {
-> >  MODULE_LICENSE("GPL v2");
-> >  module_pci_driver(cxl_pci_driver);
-> >  MODULE_IMPORT_NS(CXL);
-> > +MODULE_SOFTDEP("pre: pci_doe");
+> >  	/*
+> >  	 * Activate ioctl operations, no cxl_memdev_rwsem manipulation
+> >  	 * needed as this is ordered with cdev_add() publishing the device.
 > 
