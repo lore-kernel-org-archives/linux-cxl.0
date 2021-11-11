@@ -2,203 +2,225 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5964DC433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 18:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68ADFC433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 20:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3613961268
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 18:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4982A61264
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 20:44:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234376AbhKKSV7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 11 Nov 2021 13:21:59 -0500
-Received: from mga01.intel.com ([192.55.52.88]:46403 "EHLO mga01.intel.com"
+        id S229785AbhKKUrm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 11 Nov 2021 15:47:42 -0500
+Received: from mga03.intel.com ([134.134.136.65]:41135 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232366AbhKKSV7 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 11 Nov 2021 13:21:59 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10165"; a="256696589"
+        id S232666AbhKKUrl (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 11 Nov 2021 15:47:41 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10165"; a="232953028"
 X-IronPort-AV: E=Sophos;i="5.87,226,1631602800"; 
-   d="scan'208";a="256696589"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 10:19:06 -0800
+   d="scan'208";a="232953028"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 12:44:52 -0800
 X-IronPort-AV: E=Sophos;i="5.87,226,1631602800"; 
-   d="scan'208";a="492642362"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 10:19:05 -0800
-Subject: [PATCH] cxl/pmem: Fix module reload vs workqueue state
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     stable@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
-        ben.widawsky@intel.com, ira.weiny@intel.com,
-        alison.schofield@intel.com, Jonathan.Cameron@huawei.com
-Date:   Thu, 11 Nov 2021 10:19:05 -0800
-Message-ID: <163665474585.3505991.8397182770066720755.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+   d="scan'208";a="504579042"
+Received: from dmamols-mobl1.amr.corp.intel.com (HELO vverma7-desk.amr.corp.intel.com) ([10.255.92.53])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 12:44:51 -0800
+From:   Vishal Verma <vishal.l.verma@intel.com>
+To:     <linux-cxl@vger.kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        <nvdimm@lists.linux.dev>, Vishal Verma <vishal.l.verma@intel.com>
+Subject: [ndctl PATCH v5 01/16] ndctl: add .clang-format
+Date:   Thu, 11 Nov 2021 13:44:21 -0700
+Message-Id: <20211111204436.1560365-2-vishal.l.verma@intel.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20211111204436.1560365-1-vishal.l.verma@intel.com>
+References: <20211111204436.1560365-1-vishal.l.verma@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5959; h=from:subject; bh=eQnG2CZ2cqjJlZQBxhUfWIN1YKD/mjY4seu18FDnhHY=; b=owGbwMvMwCHGf25diOft7jLG02pJDIm9DRu4vB4duvmWyVS6f3aPwDEGmROOreXqz3jSBIvuW1wt /iTUUcrCIMbBICumyPJ3z0fGY3Lb83kCExxh5rAygQxh4OIUgImc62FkWFy2fkbUyeuX9TYHqX67r3 4pr+7S2+yvOjGM7+9ob1J/84rhr9hXFo+eqeFvbjPH/ej3UFwqfXfKrYVXjRxZBdZczog7xQMA
+X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-A test of the form:
+Copy the Linux kernel's .clang-format and modify it for ndctl. Only the
+'ForEachMacros' section has been modified from the original kernel copy.
 
-    while true; do modprobe -r cxl_pmem; modprobe cxl_pmem; done
-
-May lead to a crash signature of the form:
-
-    BUG: unable to handle page fault for address: ffffffffc0660030
-    #PF: supervisor instruction fetch in kernel mode
-    #PF: error_code(0x0010) - not-present page
-    [..]
-    Workqueue: cxl_pmem 0xffffffffc0660030
-    RIP: 0010:0xffffffffc0660030
-    Code: Unable to access opcode bytes at RIP 0xffffffffc0660006.
-    [..]
-    Call Trace:
-     ? process_one_work+0x4ec/0x9c0
-     ? pwq_dec_nr_in_flight+0x100/0x100
-     ? rwlock_bug.part.0+0x60/0x60
-     ? worker_thread+0x2eb/0x700
-
-In that report the 0xffffffffc0660030 address corresponds to the former
-function address of cxl_nvb_update_state() from a previous load of the
-module, not the current address. Fix that by arranging for ->state_work
-in the 'struct cxl_nvdimm_bridge' object to be reinitialized on cxl_pmem
-module reload.
-
-Details:
-
-Recall that CXL subsystem wants to link a CXL memory expander device to
-an NVDIMM sub-hierarchy when both a persistent memory range has been
-registered by the CXL platform driver (cxl_acpi) *and* when that CXL
-memory expander has published persistent memory capacity (Get Partition
-Info). To this end the cxl_nvdimm_bridge driver arranges to rescan the
-CXL bus when either of those conditions change. The helper
-bus_rescan_devices() can not be called underneath the device_lock() for
-any device on that bus, so the cxl_nvdimm_bridge driver uses a workqueue
-for the rescan.
-
-Typically a driver allocates driver data to hold a 'struct work_struct'
-for a driven device, but for a workqueue that may run after ->remove()
-returns, driver data will have been freed. The 'struct
-cxl_nvdimm_bridge' object holds the state and work_struct directly.
-Unfortunately it was only arranging for that infrastructure to be
-initialized once per device creation rather than the necessary once per
-workqueue (cxl_pmem_wq) creation.
-
-Introduce is_cxl_nvdimm_bridge() and cxl_nvdimm_bridge_reset() in
-support of invalidating stale references to a recently destroyed
-cxl_pmem_wq.
-
-Cc: <stable@vger.kernel.org>
-Fixes: 8fdcb1704f61 ("cxl/pmem: Add initial infrastructure for pmem support")
-Reported-by: Vishal Verma <vishal.l.verma@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Reported-by: Ben Widawsky <ben.widawsky@intel.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
- drivers/cxl/core/pmem.c |    8 +++++++-
- drivers/cxl/cxl.h       |    8 ++++++++
- drivers/cxl/pmem.c      |   29 +++++++++++++++++++++++++++--
- 3 files changed, 42 insertions(+), 3 deletions(-)
+ .clang-format | 161 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 161 insertions(+)
+ create mode 100644 .clang-format
 
-diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
-index 76a4fa39834c..cc402cb7a905 100644
---- a/drivers/cxl/core/pmem.c
-+++ b/drivers/cxl/core/pmem.c
-@@ -51,10 +51,16 @@ struct cxl_nvdimm_bridge *to_cxl_nvdimm_bridge(struct device *dev)
- }
- EXPORT_SYMBOL_NS_GPL(to_cxl_nvdimm_bridge, CXL);
- 
--__mock int match_nvdimm_bridge(struct device *dev, const void *data)
-+bool is_cxl_nvdimm_bridge(struct device *dev)
- {
- 	return dev->type == &cxl_nvdimm_bridge_type;
- }
-+EXPORT_SYMBOL_NS_GPL(is_cxl_nvdimm_bridge, CXL);
+diff --git a/.clang-format b/.clang-format
+new file mode 100644
+index 0000000..4e00fff
+--- /dev/null
++++ b/.clang-format
+@@ -0,0 +1,161 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# clang-format configuration file. Intended for clang-format >= 4.
++# Copied from Linux's .clang-format
++#
++# For more information, see:
++#
++#   https://clang.llvm.org/docs/ClangFormat.html
++#   https://clang.llvm.org/docs/ClangFormatStyleOptions.html
++#
++---
++AccessModifierOffset: -4
++AlignAfterOpenBracket: Align
++AlignConsecutiveAssignments: false
++AlignConsecutiveDeclarations: false
++#AlignEscapedNewlines: Left # Unknown to clang-format-4.0
++AlignOperands: true
++AlignTrailingComments: false
++AllowAllParametersOfDeclarationOnNextLine: false
++AllowShortBlocksOnASingleLine: false
++AllowShortCaseLabelsOnASingleLine: false
++AllowShortFunctionsOnASingleLine: None
++AllowShortIfStatementsOnASingleLine: false
++AllowShortLoopsOnASingleLine: false
++AlwaysBreakAfterDefinitionReturnType: None
++AlwaysBreakAfterReturnType: None
++AlwaysBreakBeforeMultilineStrings: false
++AlwaysBreakTemplateDeclarations: false
++BinPackArguments: true
++BinPackParameters: true
++BraceWrapping:
++  AfterClass: false
++  AfterControlStatement: false
++  AfterEnum: false
++  AfterFunction: true
++  AfterNamespace: true
++  AfterObjCDeclaration: false
++  AfterStruct: false
++  AfterUnion: false
++  #AfterExternBlock: false # Unknown to clang-format-5.0
++  BeforeCatch: false
++  BeforeElse: false
++  IndentBraces: false
++  #SplitEmptyFunction: true # Unknown to clang-format-4.0
++  #SplitEmptyRecord: true # Unknown to clang-format-4.0
++  #SplitEmptyNamespace: true # Unknown to clang-format-4.0
++BreakBeforeBinaryOperators: None
++BreakBeforeBraces: Custom
++#BreakBeforeInheritanceComma: false # Unknown to clang-format-4.0
++BreakBeforeTernaryOperators: false
++BreakConstructorInitializersBeforeComma: false
++#BreakConstructorInitializers: BeforeComma # Unknown to clang-format-4.0
++BreakAfterJavaFieldAnnotations: false
++BreakStringLiterals: false
++ColumnLimit: 80
++CommentPragmas: '^ IWYU pragma:'
++#CompactNamespaces: false # Unknown to clang-format-4.0
++ConstructorInitializerAllOnOneLineOrOnePerLine: false
++ConstructorInitializerIndentWidth: 8
++ContinuationIndentWidth: 8
++Cpp11BracedListStyle: false
++DerivePointerAlignment: false
++DisableFormat: false
++ExperimentalAutoDetectBinPacking: false
++#FixNamespaceComments: false # Unknown to clang-format-4.0
 +
-+__mock int match_nvdimm_bridge(struct device *dev, const void *data)
-+{
-+	return is_cxl_nvdimm_bridge(dev);
-+}
- 
- struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd)
- {
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 5e2e93451928..ca979ee11017 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -221,6 +221,13 @@ struct cxl_decoder {
- };
- 
- 
-+/**
-+ * enum cxl_nvdimm_brige_state - state machine for managing bus rescans
-+ * @CXL_NVB_NEW: Set at bridge create and after cxl_pmem_wq is destroyed
-+ * @CXL_NVB_DEAD: Set at brige unregistration to preclude async probing
-+ * @CXL_NVB_ONLINE: Target state after successful ->probe()
-+ * @CXL_NVB_OFFLINE: Target state after ->remove() or failed ->probe()
-+ */
- enum cxl_nvdimm_brige_state {
- 	CXL_NVB_NEW,
- 	CXL_NVB_DEAD,
-@@ -333,6 +340,7 @@ struct cxl_nvdimm_bridge *devm_cxl_add_nvdimm_bridge(struct device *host,
- 						     struct cxl_port *port);
- struct cxl_nvdimm *to_cxl_nvdimm(struct device *dev);
- bool is_cxl_nvdimm(struct device *dev);
-+bool is_cxl_nvdimm_bridge(struct device *dev);
- int devm_cxl_add_nvdimm(struct device *host, struct cxl_memdev *cxlmd);
- struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd);
- 
-diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-index 17e82ae90456..b65a272a2d6d 100644
---- a/drivers/cxl/pmem.c
-+++ b/drivers/cxl/pmem.c
-@@ -315,6 +315,31 @@ static struct cxl_driver cxl_nvdimm_bridge_driver = {
- 	.id = CXL_DEVICE_NVDIMM_BRIDGE,
- };
- 
-+/*
-+ * Return all bridges to the CXL_NVB_NEW state to invalidate any
-+ * ->state_work referring to the now destroyed cxl_pmem_wq.
-+ */
-+static int cxl_nvdimm_bridge_reset(struct device *dev, void *data)
-+{
-+	struct cxl_nvdimm_bridge *cxl_nvb;
++# Taken from:
++# while read -r sym; do
++# 	printf "  - '%s'\n" "$sym";
++# done < \
++# 	<(cscope -dL6 "foreach|for_each" \
++# 	| awk '{ print $4 $5 }' | grep -E 'foreach|for_each' \
++# 	| sed -e 's/#define//' \
++# 		-e 's/*//' \
++# 		-e 's/://' \
++# 		-e 's/\(.*for_each.*\)(.*/\1/' \
++# 		-e 's/\(.*foreach.*\)(.*/\1/' \
++# 	| sort -u)
++ForEachMacros:
++  - 'daxctl_dev_foreach'
++  - 'daxctl_mapping_foreach'
++  - 'daxctl_region_foreach'
++  - 'kmod_list_foreach'
++  - 'kmod_list_foreach_reverse'
++  - 'list_for_each'
++  - 'list_for_each_off'
++  - 'list_for_each_rev'
++  - 'list_for_each_safe'
++  - 'list_for_each_safe_off'
++  - 'ndctl_btt_foreach'
++  - 'ndctl_btt_foreach_safe'
++  - 'ndctl_bus_foreach'
++  - 'ndctl_dax_foreach'
++  - 'ndctl_dax_foreach_safe'
++  - 'ndctl_dimm_foreach'
++  - 'ndctl_dimm_foreach_in_interleave_set'
++  - 'ndctl_dimm_foreach_in_region'
++  - 'ndctl_interleave_set_foreach'
++  - 'ndctl_mapping_foreach'
++  - 'ndctl_namespace_badblock_foreach'
++  - 'ndctl_namespace_bb_foreach'
++  - 'ndctl_namespace_foreach'
++  - 'ndctl_namespace_foreach_safe'
++  - 'ndctl_pfn_foreach'
++  - 'ndctl_pfn_foreach_safe'
++  - 'ndctl_region_badblock_foreach'
++  - 'ndctl_region_foreach'
++  - 'udev_list_entry_foreach'
 +
-+	if (!is_cxl_nvdimm_bridge(dev))
-+		return 0;
++#IncludeBlocks: Preserve # Unknown to clang-format-5.0
++IncludeCategories:
++  - Regex: '.*'
++    Priority: 1
++IncludeIsMainRegex: '(Test)?$'
++IndentCaseLabels: false
++#IndentPPDirectives: None # Unknown to clang-format-5.0
++IndentWidth: 8
++IndentWrappedFunctionNames: false
++JavaScriptQuotes: Leave
++JavaScriptWrapImports: true
++KeepEmptyLinesAtTheStartOfBlocks: false
++MacroBlockBegin: ''
++MacroBlockEnd: ''
++MaxEmptyLinesToKeep: 1
++NamespaceIndentation: None
++#ObjCBinPackProtocolList: Auto # Unknown to clang-format-5.0
++ObjCBlockIndentWidth: 8
++ObjCSpaceAfterProperty: true
++ObjCSpaceBeforeProtocolList: true
 +
-+	cxl_nvb = to_cxl_nvdimm_bridge(dev);
-+	device_lock(dev);
-+	cxl_nvb->state = CXL_NVB_NEW;
-+	device_unlock(dev);
++# Taken from git's rules
++#PenaltyBreakAssignment: 10 # Unknown to clang-format-4.0
++PenaltyBreakBeforeFirstCallParameter: 30
++PenaltyBreakComment: 10
++PenaltyBreakFirstLessLess: 0
++PenaltyBreakString: 10
++PenaltyExcessCharacter: 100
++PenaltyReturnTypeOnItsOwnLine: 60
 +
-+	return 0;
-+}
-+
-+static void destroy_cxl_pmem_wq(void)
-+{
-+	destroy_workqueue(cxl_pmem_wq);
-+	bus_for_each_dev(&cxl_bus_type, NULL, NULL, cxl_nvdimm_bridge_reset);
-+}
-+
- static __init int cxl_pmem_init(void)
- {
- 	int rc;
-@@ -340,7 +365,7 @@ static __init int cxl_pmem_init(void)
- err_nvdimm:
- 	cxl_driver_unregister(&cxl_nvdimm_bridge_driver);
- err_bridge:
--	destroy_workqueue(cxl_pmem_wq);
-+	destroy_cxl_pmem_wq();
- 	return rc;
- }
- 
-@@ -348,7 +373,7 @@ static __exit void cxl_pmem_exit(void)
- {
- 	cxl_driver_unregister(&cxl_nvdimm_driver);
- 	cxl_driver_unregister(&cxl_nvdimm_bridge_driver);
--	destroy_workqueue(cxl_pmem_wq);
-+	destroy_cxl_pmem_wq();
- }
- 
- MODULE_LICENSE("GPL v2");
++PointerAlignment: Right
++ReflowComments: false
++SortIncludes: false
++#SortUsingDeclarations: false # Unknown to clang-format-4.0
++SpaceAfterCStyleCast: false
++SpaceAfterTemplateKeyword: true
++SpaceBeforeAssignmentOperators: true
++#SpaceBeforeCtorInitializerColon: true # Unknown to clang-format-5.0
++#SpaceBeforeInheritanceColon: true # Unknown to clang-format-5.0
++SpaceBeforeParens: ControlStatements
++#SpaceBeforeRangeBasedForLoopColon: true # Unknown to clang-format-5.0
++SpaceInEmptyParentheses: false
++SpacesBeforeTrailingComments: 1
++SpacesInAngles: false
++SpacesInContainerLiterals: false
++SpacesInCStyleCastParentheses: false
++SpacesInParentheses: false
++SpacesInSquareBrackets: false
++Standard: Cpp03
++TabWidth: 8
++UseTab: Always
++...
+-- 
+2.31.1
 
