@@ -2,59 +2,58 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1283CC433F5
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 23:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E8BC433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 23:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E07D861269
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 23:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 171326124C
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 23:59:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233255AbhKKXwX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 11 Nov 2021 18:52:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42074 "EHLO
+        id S234443AbhKLACk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 11 Nov 2021 19:02:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231407AbhKKXwW (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 11 Nov 2021 18:52:22 -0500
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCE40C061766
-        for <linux-cxl@vger.kernel.org>; Thu, 11 Nov 2021 15:49:32 -0800 (PST)
-Received: by mail-pf1-x431.google.com with SMTP id c4so6943890pfj.2
-        for <linux-cxl@vger.kernel.org>; Thu, 11 Nov 2021 15:49:32 -0800 (PST)
+        with ESMTP id S234146AbhKLACj (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 11 Nov 2021 19:02:39 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD848C061766
+        for <linux-cxl@vger.kernel.org>; Thu, 11 Nov 2021 15:59:49 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id v23so5297754pjr.5
+        for <linux-cxl@vger.kernel.org>; Thu, 11 Nov 2021 15:59:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=AQQ2dBHOX1MHYLz00dmBVOpxVUELnFcM/5SIEGNy+Jk=;
-        b=xGQMsNTqvSL/lf1gCmPCjZZpnZSkcEyS3MBDUB2P1G8CQoHta7AcOywMkKEyUfTAeZ
-         fbrNRUgOxevEHK0q8ZRfKgTwDsRsMp+nutMln1KE4CxYdnxmwtyoP4sOfgZjJiGlZ6n+
-         4qKrDRaXNhrdvwcknccPq/Koa1eEsYB2WSTWdGNclgl/6ThTTCSiBZj1CIt0r3Qu6dkN
-         D6G9I7HXEM0f1tDXzfvyNth9i7dW3C+J9RABEsNiDAzKMWNbhiVAeb1neQaoHH0Ybf84
-         TeDN0XK4zRBF9T43PFIAN6hF5nM3PCH1eg/F7I/8MsXeRxXtP6FoOTncQ7QdBpMVl7RZ
-         oyqg==
+        bh=t02UqgZc2QhnaS2krogft7UDzt5BTgan1OGAY6pK/vs=;
+        b=Vie4JoLMrqgeF7o16WIe8gRIzXzPjqIe3wxTea4vBQBEtNfIFptF5eRCjDszp/Ythp
+         yV+Gn5/ewyLPbuf2/+Mw5mMLZWej4/mLWTuY4xf2CsnK/0JC9/XluFe+Z+0Pfo6bW7nD
+         10HS5itjeiKDGQ5t4PnVOZ1KDN0OdbivQStWaAzRc5YF4y8MUIcYR6iEVsgyUjbQ5yU1
+         vgwQeV03meU5AhPpFDhoBY7hr46yMWQ45B5VHbNYARVcZHRSPbcUSuXlriCoSPMc43NR
+         ClM0ww9RP+nJ28+AG+dqftrFpvtI5EstWE3gHmpwUKAlXe9UkMYTemEsJEp4b+TbGSMJ
+         fQSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AQQ2dBHOX1MHYLz00dmBVOpxVUELnFcM/5SIEGNy+Jk=;
-        b=29P2Khymk17lIY4wsVK5kCoeY+GZk3lUJGkfWi2T0mD34lTxG/HgDA2iwuwJCzUJzD
-         e5McX1+tV2iTi4hjGKorFpWdNui+k5BNmyyyLOAHhy+6yjcJdtUYuzia7fDTMfXRZLYl
-         lp5DkLBtH8C3s00UvDQHpe+zxfNOHwfoJepLhcB9ihigxt4wwaorEY9oeWHark52Kb9z
-         Qmqk/1H5JZLP1c3pwDn9YAFPiAKyWIfO+My0PgJajRrJ4c4x0Nf/ItAQJzc5Re916/Jz
-         cGblk5EWGnvFecPjks+WrOOXk/opub6pu006JPuESdTzjqZ1qxoZVaZm/tjiHUYenplj
-         z3UA==
-X-Gm-Message-State: AOAM531xkyNkmfx1gHeprFXjq7irc4XRX5ZVGdMMX6M1MWgH625hoCp3
-        Yu0DO3HBcZC0eKInQ/LNpsMCWAjwLyKCsvkXne4v9vvrsk8=
-X-Google-Smtp-Source: ABdhPJynzx6gt/Z42ncA0aLnhwk+rteMzTq96jMVHhE9sp3K5RukLz0iKil78SG2hfMLibzNskV9rTCuTdSiJbCod7A=
-X-Received: by 2002:aa7:8019:0:b0:44d:d761:6f79 with SMTP id
- j25-20020aa78019000000b0044dd7616f79mr10217362pfi.3.1636674571975; Thu, 11
- Nov 2021 15:49:31 -0800 (PST)
+        bh=t02UqgZc2QhnaS2krogft7UDzt5BTgan1OGAY6pK/vs=;
+        b=12VXvv7b8AzcoSM90xlxMxcvR2YiEz+2BLFX6hXAF3DaU5/tevmyMRPN8vXltsOkor
+         t1pdw2lbH+T8LE6FFQ2H2bghIVfrMWld/tWQccDgKkdySR9FB+v4y5nm9HOwPVxhOSEJ
+         NEmwm/f1sBDFN1t+JdwLtzr1BSDIVzXuBhTLt1s6kS4BtvXfoWZtH2NoLouDnb9Rz1/B
+         /MU0hQwBp5StqnDY5vzFId83ZsNpHhc+YnDFxD7HqE88TNZQHp0GfCdGucoLJ06tAjlr
+         uffPkTDOkbM/nSQiHgdKjjQ1MbwpwO2F8e1VWlMwqlFPN8+OV2zOCyGlEx+FGLm/8gfD
+         Y9aA==
+X-Gm-Message-State: AOAM533DR9Fd5WsvKlr166R9l+hHSfbSUVNw+38+7ysXRvUxeYmLVGAz
+        HMdjLTP440jBc2DaYR375eoz0vi5y+GESZyayG8PAw==
+X-Google-Smtp-Source: ABdhPJxH7ufDXmgS0mxdiiqLRtOa0NuamwCZbHk26u8TebikwoL/r1wMBHOKYV/DV1sRWEpfHZBdrkaho9QLDaU11GA=
+X-Received: by 2002:a17:902:7fcd:b0:142:8ab3:ec0e with SMTP id
+ t13-20020a1709027fcd00b001428ab3ec0emr3462762plb.4.1636675189483; Thu, 11 Nov
+ 2021 15:59:49 -0800 (PST)
 MIME-Version: 1.0
-References: <20211111204436.1560365-1-vishal.l.verma@intel.com> <20211111204436.1560365-11-vishal.l.verma@intel.com>
-In-Reply-To: <20211111204436.1560365-11-vishal.l.verma@intel.com>
+References: <20211111204436.1560365-1-vishal.l.verma@intel.com> <20211111204436.1560365-17-vishal.l.verma@intel.com>
+In-Reply-To: <20211111204436.1560365-17-vishal.l.verma@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 11 Nov 2021 15:49:19 -0800
-Message-ID: <CAPcyv4j760G=RFkBVy5rB_dOOV3Vj1cL+LvdVzwLS1rT81vZ=A@mail.gmail.com>
-Subject: Re: [ndctl PATCH v5 10/16] libcxl: add representation for an nvdimm
- bridge object
+Date:   Thu, 11 Nov 2021 15:59:37 -0800
+Message-ID: <CAPcyv4gLpfF_fahLJSw7BC4AkrU5pN+HeqA2E3Aj1+-iDGPZ-A@mail.gmail.com>
+Subject: Re: [ndctl PATCH v5 16/16] cxl: add health information to cxl-list
 To:     Vishal Verma <vishal.l.verma@intel.com>
 Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
         Linux NVDIMM <nvdimm@lists.linux.dev>
@@ -65,201 +64,61 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 On Thu, Nov 11, 2021 at 12:45 PM Vishal Verma <vishal.l.verma@intel.com> wrote:
 >
-> Add an nvdimm bridge object representation internal to libcxl. A bridge
-> object is ited to its parent memdev object, and this patch adds its
-
-s/ited/tied/
-
-> first interface, which checks whether a bridge is 'active' - i.e.
-> implying the label space on the memdev is owned by the kernel.
-
-Just some minor fixups below and you can add:
-
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-
+> Add JSON output for fields from the 'GET_HEALTH_INFO' mailbox command
+> to memory device listings.
 >
 > Cc: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 > ---
->  cxl/lib/private.h  |  9 ++++++
->  cxl/lib/libcxl.c   | 73 ++++++++++++++++++++++++++++++++++++++++++++++
->  cxl/libcxl.h       |  1 +
->  cxl/lib/libcxl.sym |  1 +
->  4 files changed, 84 insertions(+)
+>  Documentation/cxl/cxl-list.txt |   4 +
+>  util/json.h                    |   1 +
+>  cxl/list.c                     |   5 +
+>  util/json.c                    | 179 +++++++++++++++++++++++++++++++++
+>  4 files changed, 189 insertions(+)
 >
-> diff --git a/cxl/lib/private.h b/cxl/lib/private.h
-> index c4ed741..2f0b6ea 100644
-> --- a/cxl/lib/private.h
-> +++ b/cxl/lib/private.h
-> @@ -10,6 +10,14 @@
+> diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
+> index bd377b3..dc86651 100644
+> --- a/Documentation/cxl/cxl-list.txt
+> +++ b/Documentation/cxl/cxl-list.txt
+> @@ -53,6 +53,10 @@ OPTIONS
+>  --idle::
+>         Include idle (not enabled / zero-sized) devices in the listing
 >
->  #define CXL_EXPORT __attribute__ ((visibility("default")))
->
-> +
-> +struct cxl_nvdimm_br {
+> +-H::
+> +--health::
+> +       Include health information in the memdev listing
 
-Might as well spell out "bridge".
+Let's include a sample listing here in the man page, like the
+following, so that people can get an idea ahead of time about the key
+names and value types in the payload. Other than that you can add:
 
-> +       int id;
-> +       void *dev_buf;
-> +       size_t buf_len;
-> +       char *dev_path;
-> +};
-> +
->  struct cxl_memdev {
->         int id, major, minor;
->         void *dev_buf;
-> @@ -23,6 +31,7 @@ struct cxl_memdev {
->         int payload_max;
->         size_t lsa_size;
->         struct kmod_module *module;
-> +       struct cxl_nvdimm_br *bridge;
->  };
->
->  enum cxl_cmd_query_status {
-> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-> index def3a97..7bc0696 100644
-> --- a/cxl/lib/libcxl.c
-> +++ b/cxl/lib/libcxl.c
-> @@ -45,11 +45,19 @@ struct cxl_ctx {
->         void *private_data;
->  };
->
-> +static void free_bridge(struct cxl_nvdimm_br *bridge)
-> +{
-> +       free(bridge->dev_buf);
-> +       free(bridge->dev_path);
-> +       free(bridge);
-> +}
-> +
->  static void free_memdev(struct cxl_memdev *memdev, struct list_head *head)
->  {
->         if (head)
->                 list_del_from(head, &memdev->list);
->         kmod_module_unref(memdev->module);
-> +       free_bridge(memdev->bridge);
->         free(memdev->firmware_version);
->         free(memdev->dev_buf);
->         free(memdev->dev_path);
-> @@ -205,6 +213,40 @@ CXL_EXPORT void cxl_set_log_priority(struct cxl_ctx *ctx, int priority)
->         ctx->ctx.log_priority = priority;
->  }
->
-> +static void *add_cxl_bridge(void *parent, int id, const char *br_base)
-> +{
-> +       const char *devname = devpath_to_devname(br_base);
-> +       struct cxl_memdev *memdev = parent;
-> +       struct cxl_ctx *ctx = memdev->ctx;
-> +       struct cxl_nvdimm_br *bridge;
-> +
-> +       dbg(ctx, "%s: bridge_base: \'%s\'\n", devname, br_base);
-> +
-> +       bridge = calloc(1, sizeof(*bridge));
-> +       if (!bridge)
-> +               goto err_dev;
-> +       bridge->id = id;
-> +
-> +       bridge->dev_path = strdup(br_base);
-> +       if (!bridge->dev_path)
-> +               goto err_read;
-> +
-> +       bridge->dev_buf = calloc(1, strlen(br_base) + 50);
-> +       if (!bridge->dev_buf)
-> +               goto err_read;
-> +       bridge->buf_len = strlen(br_base) + 50;
-> +
-> +       memdev->bridge = bridge;
-> +       return bridge;
-> +
-> + err_read:
-> +       free(bridge->dev_buf);
-> +       free(bridge->dev_path);
-> +       free(bridge);
-> + err_dev:
-> +       return NULL;
-> +}
-> +
->  static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
->  {
->         const char *devname = devpath_to_devname(cxlmem_base);
-> @@ -271,6 +313,8 @@ static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
->                 goto err_read;
->         memdev->buf_len = strlen(cxlmem_base) + 50;
->
-> +       sysfs_device_parse(ctx, cxlmem_base, "pmem", memdev, add_cxl_bridge);
-> +
->         cxl_memdev_foreach(ctx, memdev_dup)
->                 if (memdev_dup->id == memdev->id) {
->                         free_memdev(memdev, NULL);
-> @@ -362,6 +406,35 @@ CXL_EXPORT size_t cxl_memdev_get_label_size(struct cxl_memdev *memdev)
->         return memdev->lsa_size;
->  }
->
-> +static int is_enabled(const char *drvpath)
-> +{
-> +       struct stat st;
-> +
-> +       if (lstat(drvpath, &st) < 0 || !S_ISLNK(st.st_mode))
-> +               return 0;
-> +       else
-> +               return 1;
-> +}
-> +
-> +CXL_EXPORT int cxl_memdev_nvdimm_bridge_active(struct cxl_memdev *memdev)
-> +{
-> +       struct cxl_ctx *ctx = cxl_memdev_get_ctx(memdev);
-> +       struct cxl_nvdimm_br *bridge = memdev->bridge;
-> +       char *path = memdev->dev_buf;
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 
-Should this be: bridge->dev_buf?
-
-> +       int len = memdev->buf_len;
-
-...and this should bridge->buf_len?
-
-Not strictly a bug, but might as well use the 'bridge' version of
-these attributes, right?
-
-> +
-> +       if (!bridge)
-> +               return 0;
-> +
-> +       if (snprintf(path, len, "%s/driver", bridge->dev_path) >= len) {
-> +               err(ctx, "%s: nvdimm bridge buffer too small!\n",
-> +                               cxl_memdev_get_devname(memdev));
-> +               return 0;
-> +       }
-> +
-> +       return is_enabled(path);
-> +}
-> +
->  CXL_EXPORT void cxl_cmd_unref(struct cxl_cmd *cmd)
->  {
->         if (!cmd)
-> diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-> index d3b97a1..535e349 100644
-> --- a/cxl/libcxl.h
-> +++ b/cxl/libcxl.h
-> @@ -43,6 +43,7 @@ unsigned long long cxl_memdev_get_pmem_size(struct cxl_memdev *memdev);
->  unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev);
->  const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev);
->  size_t cxl_memdev_get_label_size(struct cxl_memdev *memdev);
-> +int cxl_memdev_nvdimm_bridge_active(struct cxl_memdev *memdev);
->
->  #define cxl_memdev_foreach(ctx, memdev) \
->          for (memdev = cxl_memdev_get_first(ctx); \
-> diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-> index 858e953..f3b0c63 100644
-> --- a/cxl/lib/libcxl.sym
-> +++ b/cxl/lib/libcxl.sym
-> @@ -65,6 +65,7 @@ global:
->         cxl_cmd_new_read_label;
->         cxl_cmd_read_label_get_payload;
->         cxl_memdev_get_label_size;
-> +       cxl_memdev_nvdimm_bridge_active;
->  local:
->          *;
->  };
-> --
-> 2.31.1
->
+  {
+    "memdev":"mem7",
+    "pmem_size":268435456,
+    "ram_size":268435456,
+    "health":{
+      "maintenance_needed":true,
+      "performance_degraded":true,
+      "hw_replacement_needed":true,
+      "media_normal":false,
+      "media_not_ready":false,
+      "media_persistence_lost":false,
+      "media_data_lost":true,
+      "media_powerloss_persistence_loss":false,
+      "media_shutdown_persistence_loss":false,
+      "media_persistence_loss_imminent":false,
+      "media_powerloss_data_loss":false,
+      "media_shutdown_data_loss":false,
+      "media_data_loss_imminent":false,
+      "ext_life_used":"normal",
+      "ext_temperature":"critical",
+      "ext_corrected_volatile":"warning",
+      "ext_corrected_persistent":"normal",
+      "life_used_percent":15,
+      "temperature":25,
+      "dirty_shutdowns":10,
+      "volatile_errors":20,
+      "pmem_errors":30
+    }
