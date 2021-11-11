@@ -2,280 +2,203 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB23FC433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 11:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5964DC433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 18:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5D076124C
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 11:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3613961268
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 18:19:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233139AbhKKMBT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 11 Nov 2021 07:01:19 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4084 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233128AbhKKMBS (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 11 Nov 2021 07:01:18 -0500
-Received: from fraeml745-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Hqg8v5zS5z67f6D;
-        Thu, 11 Nov 2021 19:53:35 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml745-chm.china.huawei.com (10.206.15.226) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.15; Thu, 11 Nov 2021 12:58:27 +0100
-Received: from localhost (10.52.121.179) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Thu, 11 Nov
- 2021 11:58:27 +0000
-Date:   Thu, 11 Nov 2021 11:58:25 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Ben Widawsky" <ben.widawsky@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 5/5] cxl/cdat: Parse out DSMAS data from CDAT table
-Message-ID: <20211111115825.00004db5@Huawei.com>
-In-Reply-To: <20211111035824.GM3538886@iweiny-DESK2.sc.intel.com>
-References: <20211105235056.3711389-1-ira.weiny@intel.com>
-        <20211105235056.3711389-6-ira.weiny@intel.com>
-        <20211108145239.000010a5@Huawei.com>
-        <20211111035824.GM3538886@iweiny-DESK2.sc.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        id S234376AbhKKSV7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 11 Nov 2021 13:21:59 -0500
+Received: from mga01.intel.com ([192.55.52.88]:46403 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232366AbhKKSV7 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 11 Nov 2021 13:21:59 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10165"; a="256696589"
+X-IronPort-AV: E=Sophos;i="5.87,226,1631602800"; 
+   d="scan'208";a="256696589"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 10:19:06 -0800
+X-IronPort-AV: E=Sophos;i="5.87,226,1631602800"; 
+   d="scan'208";a="492642362"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 10:19:05 -0800
+Subject: [PATCH] cxl/pmem: Fix module reload vs workqueue state
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     stable@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
+        ben.widawsky@intel.com, ira.weiny@intel.com,
+        alison.schofield@intel.com, Jonathan.Cameron@huawei.com
+Date:   Thu, 11 Nov 2021 10:19:05 -0800
+Message-ID: <163665474585.3505991.8397182770066720755.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.121.179]
-X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 10 Nov 2021 19:58:24 -0800
-Ira Weiny <ira.weiny@intel.com> wrote:
+A test of the form:
 
-> On Mon, Nov 08, 2021 at 02:52:39PM +0000, Jonathan Cameron wrote:
-> > On Fri, 5 Nov 2021 16:50:56 -0700
-> > <ira.weiny@intel.com> wrote:
-> >   
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > Parse and cache the DSMAS data from the CDAT table.  Store this data in
-> > > Unmarshaled data structures for use later.
-> > > 
-> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>  
-> > 
-> > A few minor comments inline.  In particular I think we need to conclude if
-> > failure to parse is an error or not.  Right now it's reported as an error
-> > but then we carry on anyway.  
-> 
-> I report it as an error because if the device supports CDAT I made the
-> assumption that it was required for something up the stack.  However, I did not
-> want to make that decision at this point because all this code does is cache
-> the raw data.
-> 
-> So it may not be a fatal error depending on what the data is used for.  But IMO
-> it is still and error.
-> 
+    while true; do modprobe -r cxl_pmem; modprobe cxl_pmem; done
 
-dev_warn() perhaps is a good middle ground?   Something wrong, but not fatal
-here...
+May lead to a crash signature of the form:
 
+    BUG: unable to handle page fault for address: ffffffffc0660030
+    #PF: supervisor instruction fetch in kernel mode
+    #PF: error_code(0x0010) - not-present page
+    [..]
+    Workqueue: cxl_pmem 0xffffffffc0660030
+    RIP: 0010:0xffffffffc0660030
+    Code: Unable to access opcode bytes at RIP 0xffffffffc0660006.
+    [..]
+    Call Trace:
+     ? process_one_work+0x4ec/0x9c0
+     ? pwq_dec_nr_in_flight+0x100/0x100
+     ? rwlock_bug.part.0+0x60/0x60
+     ? worker_thread+0x2eb/0x700
 
-> > 
-> > Jonathan
-> >   
-> > > 
-> > > ---
-> > > Changes from V4
-> > > 	New patch
-> > > ---
-> > >  drivers/cxl/core/memdev.c | 111 ++++++++++++++++++++++++++++++++++++++
-> > >  drivers/cxl/cxlmem.h      |  23 ++++++++
-> > >  2 files changed, 134 insertions(+)
-> > > 
-> > > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> > > index c35de9e8298e..e5a2d30a3491 100644
-> > > --- a/drivers/cxl/core/memdev.c
-> > > +++ b/drivers/cxl/core/memdev.c
-> > > @@ -6,6 +6,7 @@  
-> > 
-> > ...
-> >   
-> > > +
-> > > +static int parse_dsmas(struct cxl_memdev *cxlmd)
-> > > +{
-> > > +	struct cxl_dsmas *dsmas_ary = NULL;
-> > > +	u32 *data = cxlmd->cdat_table;
-> > > +	int bytes_left = cxlmd->cdat_length;
-> > > +	int nr_dsmas = 0;
-> > > +	size_t dsmas_byte_size;
-> > > +	int rc = 0;
-> > > +
-> > > +	if (!data || !cdat_hdr_valid(cxlmd))  
-> > 
-> > If that's invalid, right answer might be to run it again as we probably
-> > just raced with an update...  Perhaps try it a couple of times before
-> > failing hard?  
-> 
-> I find it odd that the mailbox would return invalid data even during an update?
+In that report the 0xffffffffc0660030 address corresponds to the former
+function address of cxl_nvb_update_state() from a previous load of the
+module, not the current address. Fix that by arranging for ->state_work
+in the 'struct cxl_nvdimm_bridge' object to be reinitialized on cxl_pmem
+module reload.
 
-The read can take multiple exchanges.  It's not invalid as such, we just saw
-parts of different valid states.  The checksum is there to protect against
-such a race.  Lots of other ways it could have been designed, but that was the
-choice made.
+Details:
 
-> 
-> That said perhaps validating the header should be done as part of reading the
-> CDAT.
-> 
-> Thoughts?  Should I push this back to the previous patch?
+Recall that CXL subsystem wants to link a CXL memory expander device to
+an NVDIMM sub-hierarchy when both a persistent memory range has been
+registered by the CXL platform driver (cxl_acpi) *and* when that CXL
+memory expander has published persistent memory capacity (Get Partition
+Info). To this end the cxl_nvdimm_bridge driver arranges to rescan the
+CXL bus when either of those conditions change. The helper
+bus_rescan_devices() can not be called underneath the device_lock() for
+any device on that bus, so the cxl_nvdimm_bridge driver uses a workqueue
+for the rescan.
 
-Agreed, it would make more sense to do it at the read.
+Typically a driver allocates driver data to hold a 'struct work_struct'
+for a driven device, but for a workqueue that may run after ->remove()
+returns, driver data will have been freed. The 'struct
+cxl_nvdimm_bridge' object holds the state and work_struct directly.
+Unfortunately it was only arranging for that infrastructure to be
+initialized once per device creation rather than the necessary once per
+workqueue (cxl_pmem_wq) creation.
 
-> 
-> >   
-> > > +		return -ENXIO;
-> > > +
-> > > +	/* Skip header */
-> > > +	data += CDAT_HEADER_LENGTH_DW;
-> > > +	bytes_left -= CDAT_HEADER_LENGTH_BYTES;
-> > > +
-> > > +	while (bytes_left > 0) {
-> > > +		u32 *cur_rec = data;
-> > > +		u8 type = FIELD_GET(CDAT_STRUCTURE_DW0_TYPE, cur_rec[0]);
-> > > +		u16 length = FIELD_GET(CDAT_STRUCTURE_DW0_LENGTH, cur_rec[0]);
-> > > +
-> > > +		if (type == CDAT_STRUCTURE_DW0_TYPE_DSMAS) {
-> > > +			struct cxl_dsmas *new_ary;
-> > > +			u8 flags;
-> > > +
-> > > +			new_ary = krealloc(dsmas_ary,
-> > > +					   sizeof(*dsmas_ary) * (nr_dsmas+1),  
-> > 
-> > Spaces around the +  
-> 
-> Sure.
-> 
-> > You could do this with devm_krealloc() and then just assign it at the end
-> > rather than allocate a new one and copy.  
-> 
-> I failed to see that call when I wrote this...  yes thanks!
+Introduce is_cxl_nvdimm_bridge() and cxl_nvdimm_bridge_reset() in
+support of invalidating stale references to a recently destroyed
+cxl_pmem_wq.
 
-It's new.
+Cc: <stable@vger.kernel.org>
+Fixes: 8fdcb1704f61 ("cxl/pmem: Add initial infrastructure for pmem support")
+Reported-by: Vishal Verma <vishal.l.verma@intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ drivers/cxl/core/pmem.c |    8 +++++++-
+ drivers/cxl/cxl.h       |    8 ++++++++
+ drivers/cxl/pmem.c      |   29 +++++++++++++++++++++++++++--
+ 3 files changed, 42 insertions(+), 3 deletions(-)
 
-> 
-> > 
-> >   
-> > > +					   GFP_KERNEL);
-> > > +			if (!new_ary) {
-> > > +				dev_err(&cxlmd->dev,
-> > > +					"Failed to allocate memory for DSMAS data\n");
-> > > +				rc = -ENOMEM;
-> > > +				goto free_dsmas;
-> > > +			}
-> > > +			dsmas_ary = new_ary;
-> > > +
-> > > +			flags = FIELD_GET(CDAT_DSMAS_DW1_FLAGS, cur_rec[1]);
-> > > +
-> > > +			dsmas_ary[nr_dsmas].dpa_base = CDAT_DSMAS_DPA_OFFSET(cur_rec);
-> > > +			dsmas_ary[nr_dsmas].dpa_length = CDAT_DSMAS_DPA_LEN(cur_rec);
-> > > +			dsmas_ary[nr_dsmas].non_volatile = CDAT_DSMAS_NON_VOLATILE(flags);
-> > > +
-> > > +			dev_dbg(&cxlmd->dev, "DSMAS %d: %llx:%llx %s\n",
-> > > +				nr_dsmas,
-> > > +				dsmas_ary[nr_dsmas].dpa_base,
-> > > +				dsmas_ary[nr_dsmas].dpa_base +
-> > > +					dsmas_ary[nr_dsmas].dpa_length,
-> > > +				(dsmas_ary[nr_dsmas].non_volatile ?
-> > > +					"Persistent" : "Volatile")
-> > > +				);
-> > > +
-> > > +			nr_dsmas++;
-> > > +		}
-> > > +
-> > > +		data += (length/sizeof(u32));  
-> > 
-> > spaces around /  
-> 
-> Yep.
-> 
-> >   
-> 
-> > > +		bytes_left -= length;
-> > > +	}
-> > > +
-> > > +	if (nr_dsmas == 0) {
-> > > +		rc = -ENXIO;
-> > > +		goto free_dsmas;
-> > > +	}
-> > > +
-> > > +	dev_dbg(&cxlmd->dev, "Found %d DSMAS entries\n", nr_dsmas);
-> > > +
-> > > +	dsmas_byte_size = sizeof(*dsmas_ary) * nr_dsmas;
-> > > +	cxlmd->dsmas_ary = devm_kzalloc(&cxlmd->dev, dsmas_byte_size, GFP_KERNEL);  
-> > 
-> > As above, you could have done a devm_krealloc() and then just assigned here.
-> > Side effect of that being direct returns should be fine.  
-> 
-> Yep devm_krealloc is much cleaner.
-> 
-> > However, that relies
-> > treating an error from this function as an error that will result in failures below.
-> > 
-> >   
-> > > +	if (!cxlmd->dsmas_ary) {
-> > > +		rc = -ENOMEM;
-> > > +		goto free_dsmas;
-> > > +	}
-> > > +
-> > > +	memcpy(cxlmd->dsmas_ary, dsmas_ary, dsmas_byte_size);
-> > > +	cxlmd->nr_dsmas = nr_dsmas;
-> > > +
-> > > +free_dsmas:
-> > > +	kfree(dsmas_ary);
-> > > +	return rc;
-> > > +}
-> > > +
-> > >  struct cxl_memdev *
-> > >  devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
-> > >  {
-> > > @@ -339,6 +446,10 @@ devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
-> > >  		cxl_mem_cdat_read_table(cxlds, cxlmd->cdat_table, cxlmd->cdat_length);
-> > >  	}
-> > >  
-> > > +	rc = parse_dsmas(cxlmd);
-> > > +	if (rc)
-> > > +		dev_err(dev, "No DSMAS data found: %d\n", rc);  
-> > 
-> > dev_info() maybe as it's not being treated as an error?  
-> 
-> This is an error.  But not a fatal error.
-> 
-> > 
-> > However I think it should be treated as an error.  It's a device failure if
-> > we can't parse this (and table protocol is available)  
-> 
-> Shouldn't we let the consumer of this data determine if this is a fatal error and
-> bail out at that point?
-
-As above, dev_warn() seems more appropriate in that case to me.
-
-Jonathan
-> 
-> Ira
-> 
-> > 
-> > If it turns out we need to quirk some devices, then fair enough.
-> > 
-> > 
-> >   
-> > > +
-> > >  	/*
-> > >  	 * Activate ioctl operations, no cxl_memdev_rwsem manipulation
-> > >  	 * needed as this is ordered with cdev_add() publishing the device.  
-> >   
+diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
+index 76a4fa39834c..cc402cb7a905 100644
+--- a/drivers/cxl/core/pmem.c
++++ b/drivers/cxl/core/pmem.c
+@@ -51,10 +51,16 @@ struct cxl_nvdimm_bridge *to_cxl_nvdimm_bridge(struct device *dev)
+ }
+ EXPORT_SYMBOL_NS_GPL(to_cxl_nvdimm_bridge, CXL);
+ 
+-__mock int match_nvdimm_bridge(struct device *dev, const void *data)
++bool is_cxl_nvdimm_bridge(struct device *dev)
+ {
+ 	return dev->type == &cxl_nvdimm_bridge_type;
+ }
++EXPORT_SYMBOL_NS_GPL(is_cxl_nvdimm_bridge, CXL);
++
++__mock int match_nvdimm_bridge(struct device *dev, const void *data)
++{
++	return is_cxl_nvdimm_bridge(dev);
++}
+ 
+ struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd)
+ {
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 5e2e93451928..ca979ee11017 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -221,6 +221,13 @@ struct cxl_decoder {
+ };
+ 
+ 
++/**
++ * enum cxl_nvdimm_brige_state - state machine for managing bus rescans
++ * @CXL_NVB_NEW: Set at bridge create and after cxl_pmem_wq is destroyed
++ * @CXL_NVB_DEAD: Set at brige unregistration to preclude async probing
++ * @CXL_NVB_ONLINE: Target state after successful ->probe()
++ * @CXL_NVB_OFFLINE: Target state after ->remove() or failed ->probe()
++ */
+ enum cxl_nvdimm_brige_state {
+ 	CXL_NVB_NEW,
+ 	CXL_NVB_DEAD,
+@@ -333,6 +340,7 @@ struct cxl_nvdimm_bridge *devm_cxl_add_nvdimm_bridge(struct device *host,
+ 						     struct cxl_port *port);
+ struct cxl_nvdimm *to_cxl_nvdimm(struct device *dev);
+ bool is_cxl_nvdimm(struct device *dev);
++bool is_cxl_nvdimm_bridge(struct device *dev);
+ int devm_cxl_add_nvdimm(struct device *host, struct cxl_memdev *cxlmd);
+ struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd);
+ 
+diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+index 17e82ae90456..b65a272a2d6d 100644
+--- a/drivers/cxl/pmem.c
++++ b/drivers/cxl/pmem.c
+@@ -315,6 +315,31 @@ static struct cxl_driver cxl_nvdimm_bridge_driver = {
+ 	.id = CXL_DEVICE_NVDIMM_BRIDGE,
+ };
+ 
++/*
++ * Return all bridges to the CXL_NVB_NEW state to invalidate any
++ * ->state_work referring to the now destroyed cxl_pmem_wq.
++ */
++static int cxl_nvdimm_bridge_reset(struct device *dev, void *data)
++{
++	struct cxl_nvdimm_bridge *cxl_nvb;
++
++	if (!is_cxl_nvdimm_bridge(dev))
++		return 0;
++
++	cxl_nvb = to_cxl_nvdimm_bridge(dev);
++	device_lock(dev);
++	cxl_nvb->state = CXL_NVB_NEW;
++	device_unlock(dev);
++
++	return 0;
++}
++
++static void destroy_cxl_pmem_wq(void)
++{
++	destroy_workqueue(cxl_pmem_wq);
++	bus_for_each_dev(&cxl_bus_type, NULL, NULL, cxl_nvdimm_bridge_reset);
++}
++
+ static __init int cxl_pmem_init(void)
+ {
+ 	int rc;
+@@ -340,7 +365,7 @@ static __init int cxl_pmem_init(void)
+ err_nvdimm:
+ 	cxl_driver_unregister(&cxl_nvdimm_bridge_driver);
+ err_bridge:
+-	destroy_workqueue(cxl_pmem_wq);
++	destroy_cxl_pmem_wq();
+ 	return rc;
+ }
+ 
+@@ -348,7 +373,7 @@ static __exit void cxl_pmem_exit(void)
+ {
+ 	cxl_driver_unregister(&cxl_nvdimm_driver);
+ 	cxl_driver_unregister(&cxl_nvdimm_bridge_driver);
+-	destroy_workqueue(cxl_pmem_wq);
++	destroy_cxl_pmem_wq();
+ }
+ 
+ MODULE_LICENSE("GPL v2");
 
