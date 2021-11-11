@@ -2,25 +2,25 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB276C43217
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 20:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F384C433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 20:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C64A861212
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 20:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80BFC61207
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 20:44:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233975AbhKKUrq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 11 Nov 2021 15:47:46 -0500
+        id S234010AbhKKUrr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 11 Nov 2021 15:47:47 -0500
 Received: from mga03.intel.com ([134.134.136.65]:41135 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
         id S233940AbhKKUrq (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
         Thu, 11 Nov 2021 15:47:46 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10165"; a="232953041"
+X-IronPort-AV: E=McAfee;i="6200,9189,10165"; a="232953043"
 X-IronPort-AV: E=Sophos;i="5.87,226,1631602800"; 
-   d="scan'208";a="232953041"
+   d="scan'208";a="232953043"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 12:44:56 -0800
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 12:44:57 -0800
 X-IronPort-AV: E=Sophos;i="5.87,226,1631602800"; 
-   d="scan'208";a="504579084"
+   d="scan'208";a="504579090"
 Received: from dmamols-mobl1.amr.corp.intel.com (HELO vverma7-desk.amr.corp.intel.com) ([10.255.92.53])
   by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 12:44:56 -0800
 From:   Vishal Verma <vishal.l.verma@intel.com>
@@ -28,259 +28,260 @@ To:     <linux-cxl@vger.kernel.org>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
         Ben Widawsky <ben.widawsky@intel.com>,
         <nvdimm@lists.linux.dev>, Vishal Verma <vishal.l.verma@intel.com>
-Subject: [ndctl PATCH v5 11/16] libcxl: add interfaces for label operations
-Date:   Thu, 11 Nov 2021 13:44:31 -0700
-Message-Id: <20211111204436.1560365-12-vishal.l.verma@intel.com>
+Subject: [ndctl PATCH v5 13/16] Documentation/cxl: add library API documentation
+Date:   Thu, 11 Nov 2021 13:44:33 -0700
+Message-Id: <20211111204436.1560365-14-vishal.l.verma@intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20211111204436.1560365-1-vishal.l.verma@intel.com>
 References: <20211111204436.1560365-1-vishal.l.verma@intel.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6778; h=from:subject; bh=bJRx/rlaLxFFyEJeobZTGTjwYu8yACPIqaFSiBPKM2g=; b=owGbwMvMwCHGf25diOft7jLG02pJDIm9DZs2v6llMV65lI9p94ovbxjnPP50eGry5b3HbV9PnbWt 0sHjRkcpC4MYB4OsmCLL3z0fGY/Jbc/nCUxwhJnDygQyhIGLUwAmcjuT4Z9hbPet5OzoQKcnpzzu+L 3wLexQX70qOndRU57VzjkCb90YGfr3rDrCaLHj7BS+R+onzr98zJda+5rJ/V2o7+xp5r4M0/gA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6993; h=from:subject; bh=UsJNiu79yIDOp4JCRym1Rdsr+1EcHHvp/S/uRR9BZgI=; b=owGbwMvMwCHGf25diOft7jLG02pJDIm9DZs/KFZ2PlmpcsZnQ6Gte87nig82E0zWzgu+K2J6SSao /uG3jlIWBjEOBlkxRZa/ez4yHpPbns8TmOAIM4eVCWQIAxenAEykooyRYc7y8wufhR+2+XZ/nuWuR9 9ehE+fbT+bv5TnwVuD+8dexP9m+O+z7HlN/4klkQ7HPPxYvh6ZoeHa/vDmX+fUQ2ZpiYfjFzMAAA==
 X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add libcxl interfaces to allow performinfg label (LSA) manipulations.
-Add a 'cxl_cmd_new_set_lsa' interface to create a 'Set LSA' mailbox
-command payload, and interfaces to read, write, and zero the LSA area on
-a memdev.
+Add library API documentation for libcxl(3) using the existing
+asciidoc(tor) build system. Add a section 3 man page for 'libcxl' that
+provides an overview of the library and its usage, and a man page for
+the 'cxl_new()' API.
 
+Cc: Ben Widawsky <ben.widawsky@intel.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
 Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
- cxl/lib/private.h  |   6 ++
- cxl/lib/libcxl.c   | 158 +++++++++++++++++++++++++++++++++++++++++++++
- cxl/libcxl.h       |   8 +++
- cxl/lib/libcxl.sym |   4 ++
- 4 files changed, 176 insertions(+)
+ Documentation/cxl/lib/cxl_new.txt | 43 +++++++++++++++++++++++
+ Documentation/cxl/lib/libcxl.txt  | 56 +++++++++++++++++++++++++++++
+ configure.ac                      |  1 +
+ Makefile.am                       |  1 +
+ .gitignore                        |  3 ++
+ Documentation/cxl/lib/Makefile.am | 58 +++++++++++++++++++++++++++++++
+ 6 files changed, 162 insertions(+)
+ create mode 100644 Documentation/cxl/lib/cxl_new.txt
+ create mode 100644 Documentation/cxl/lib/libcxl.txt
+ create mode 100644 Documentation/cxl/lib/Makefile.am
 
-diff --git a/cxl/lib/private.h b/cxl/lib/private.h
-index 2f0b6ea..375ba22 100644
---- a/cxl/lib/private.h
-+++ b/cxl/lib/private.h
-@@ -88,6 +88,12 @@ struct cxl_cmd_get_lsa_in {
- 	le32 length;
- } __attribute__((packed));
+diff --git a/Documentation/cxl/lib/cxl_new.txt b/Documentation/cxl/lib/cxl_new.txt
+new file mode 100644
+index 0000000..147d4e0
+--- /dev/null
++++ b/Documentation/cxl/lib/cxl_new.txt
+@@ -0,0 +1,43 @@
++// SPDX-License-Identifier: LGPL-2.0
++
++cxl_new(3)
++==========
++
++NAME
++----
++cxl_new - Create a new library context object that acts as a handle for all
++library operations
++
++SYNOPSIS
++--------
++[verse]
++----
++#include <cxl/libcxl.h>
++
++int cxl_new(struct cxl_ctx **ctx);
++----
++
++DESCRIPTION
++-----------
++Instantiates a new library context, and stores an opaque pointer in ctx. The
++context is freed by linklibcxl:cxl_unref[3], i.e. cxl_new(3) implies an
++internal linklibcxl:cxl_ref[3].
++
++
++RETURN VALUE
++------------
++Returns 0 on success, and a negative errno on failure.
++Possible error codes are:
++
++ * -ENOMEM
++ * -ENXIO
++
++EXAMPLE
++-------
++See example usage in test/libcxl.c
++
++include::../../copyright.txt[]
++
++SEE ALSO
++--------
++linklibcxl:cxl_ref[3], linklibcxl:cxl_unref[3]
+diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
+new file mode 100644
+index 0000000..2539369
+--- /dev/null
++++ b/Documentation/cxl/lib/libcxl.txt
+@@ -0,0 +1,56 @@
++// SPDX-License-Identifier: LGPL-2.0
++
++libcxl(3)
++=========
++
++NAME
++----
++libcxl - A library to interact with CXL devices through sysfs(5)
++and ioctl(2) interfaces
++
++SYNOPSIS
++--------
++[verse]
++#include <cxl/libcxl.h>
++cc ... -lcxl
++
++DESCRIPTION
++-----------
++libcxl provides interfaces to interact with CXL devices in Linux, using sysfs
++interfaces for most kernel interactions, and the ioctl() interface for command
++submission.
++
++The starting point for all library interfaces is a 'cxl_ctx' object, returned
++by linklibcxl:cxl_new[3]. CXL 'Type 3' memory devices are children of the
++cxl_ctx object, and can be iterated through using an iterator API.
++
++Library level interfaces that are agnostic to any device, or a specific
++subclass of operations have the prefix 'cxl_'
++
++The object representing a CXL Type 3 device is 'cxl_memdev'. Library interfaces
++related to these devices have the prefix 'cxl_memdev_'. These interfaces are
++mostly associated with sysfs interactions (unless otherwise noted in their
++respective documentation pages). They are typically used to retrieve data
++published by the kernel, or to send data or trigger kernel operations for a
++given device.
++
++A 'cxl_cmd' is a reference counted object which is used to perform 'Mailbox'
++commands as described in the CXL Specification. A 'cxl_cmd' object is tied to a
++'cxl_memdev'. Associated library interfaces have the prefix 'cxl_cmd_'. Within
++this sub-class of interfaces, there are:
++
++ * 'cxl_cmd_new_*' interfaces that allocate a new cxl_cmd object for a given
++   command type.
++
++ * 'cxl_cmd_submit' which submits the command via ioctl()
++
++ * 'cxl_cmd_<name>_get_<field>' interfaces that get specific fields out of the
++   command response
++
++ * 'cxl_cmd_get_*' interfaces to get general command related information.
++
++include::../../copyright.txt[]
++
++SEE ALSO
++--------
++linklibcxl:cxl[1]
+diff --git a/configure.ac b/configure.ac
+index dadae0a..00497ae 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -231,6 +231,7 @@ AC_CONFIG_FILES([
+         Documentation/ndctl/Makefile
+         Documentation/daxctl/Makefile
+         Documentation/cxl/Makefile
++        Documentation/cxl/lib/Makefile
+ ])
  
-+struct cxl_cmd_set_lsa {
-+	le32 offset;
-+	le32 rsvd;
-+	unsigned char lsa_data[0];
-+} __attribute__ ((packed));
-+
- struct cxl_cmd_get_health_info {
- 	u8 health_status;
- 	u8 media_status;
-diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index 7bc0696..a63e18f 100644
---- a/cxl/lib/libcxl.c
-+++ b/cxl/lib/libcxl.c
-@@ -1197,3 +1197,161 @@ CXL_EXPORT int cxl_cmd_get_out_size(struct cxl_cmd *cmd)
- {
- 	return cmd->send_cmd->out.size;
- }
-+
-+CXL_EXPORT struct cxl_cmd *cxl_cmd_new_write_label(struct cxl_memdev *memdev,
-+		void *lsa_buf, unsigned int offset, unsigned int length)
-+{
-+	struct cxl_ctx *ctx = cxl_memdev_get_ctx(memdev);
-+	struct cxl_cmd_set_lsa *set_lsa;
-+	struct cxl_cmd *cmd;
-+	int rc;
-+
-+	cmd = cxl_cmd_new_generic(memdev, CXL_MEM_COMMAND_ID_SET_LSA);
-+	if (!cmd)
-+		return NULL;
-+
-+	/* this will allocate 'in.payload' */
-+	rc = cxl_cmd_set_input_payload(cmd, NULL, sizeof(*set_lsa) + length);
-+	if (rc) {
-+		err(ctx, "%s: cmd setup failed: %s\n",
-+			cxl_memdev_get_devname(memdev), strerror(-rc));
-+		goto out_fail;
-+	}
-+	set_lsa = (struct cxl_cmd_set_lsa *)cmd->send_cmd->in.payload;
-+	set_lsa->offset = cpu_to_le32(offset);
-+	memcpy(set_lsa->lsa_data, lsa_buf, length);
-+
-+	return cmd;
-+
-+out_fail:
-+	cxl_cmd_unref(cmd);
-+	return NULL;
-+}
-+
-+enum lsa_op {
-+	LSA_OP_GET,
-+	LSA_OP_SET,
-+	LSA_OP_ZERO,
-+};
-+
-+static int __lsa_op(struct cxl_memdev *memdev, int op, void *buf,
-+		size_t length, size_t offset)
-+{
-+	const char *devname = cxl_memdev_get_devname(memdev);
-+	struct cxl_ctx *ctx = cxl_memdev_get_ctx(memdev);
-+	void *zero_buf = NULL;
-+	struct cxl_cmd *cmd;
-+	ssize_t ret_len;
-+	int rc = 0;
-+
-+	switch (op) {
-+	case LSA_OP_GET:
-+		cmd = cxl_cmd_new_read_label(memdev, offset, length);
-+		if (!cmd)
-+			return -ENOMEM;
-+		rc = cxl_cmd_set_output_payload(cmd, buf, length);
-+		if (rc) {
-+			err(ctx, "%s: cmd setup failed: %s\n",
-+			    cxl_memdev_get_devname(memdev), strerror(-rc));
-+			goto out;
-+		}
-+		break;
-+	case LSA_OP_ZERO:
-+		zero_buf = calloc(1, length);
-+		if (!zero_buf)
-+			return -ENOMEM;
-+		buf = zero_buf;
-+		/* fall through */
-+	case LSA_OP_SET:
-+		cmd = cxl_cmd_new_write_label(memdev, buf, offset, length);
-+		if (!cmd) {
-+			rc = -ENOMEM;
-+			goto out_free;
-+		}
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	rc = cxl_cmd_submit(cmd);
-+	if (rc < 0) {
-+		err(ctx, "%s: cmd submission failed: %s\n",
-+			devname, strerror(-rc));
-+		goto out;
-+	}
-+
-+	rc = cxl_cmd_get_mbox_status(cmd);
-+	if (rc != 0) {
-+		err(ctx, "%s: firmware status: %d\n",
-+			devname, rc);
-+		rc = -ENXIO;
-+		goto out;
-+	}
-+
-+	if (op == LSA_OP_GET) {
-+		ret_len = cxl_cmd_read_label_get_payload(cmd, buf, length);
-+		if (ret_len < 0) {
-+			rc = ret_len;
-+			goto out;
-+		}
-+	}
-+
-+out:
-+	cxl_cmd_unref(cmd);
-+out_free:
-+	free(zero_buf);
-+	return rc;
-+
-+}
-+
-+static int lsa_op(struct cxl_memdev *memdev, int op, void *buf,
-+		size_t length, size_t offset)
-+{
-+	const char *devname = cxl_memdev_get_devname(memdev);
-+	struct cxl_ctx *ctx = cxl_memdev_get_ctx(memdev);
-+	size_t remaining = length, cur_len, cur_off = 0;
-+	int label_iter_max, rc = 0;
-+
-+	if (op != LSA_OP_ZERO && buf == NULL) {
-+		err(ctx, "%s: LSA buffer cannot be NULL\n", devname);
-+		return -EINVAL;
-+	}
-+
-+	if (length == 0)
-+		return 0;
-+
-+	label_iter_max = memdev->payload_max - sizeof(struct cxl_cmd_set_lsa);
-+	while (remaining) {
-+		cur_len = min((size_t)label_iter_max, remaining);
-+		rc = __lsa_op(memdev, op, buf + cur_off,
-+				cur_len, offset + cur_off);
-+		if (rc)
-+			break;
-+
-+		remaining -= cur_len;
-+		cur_off += cur_len;
-+	}
-+
-+	if (rc && (op == LSA_OP_SET))
-+		err(ctx, "%s: labels may be in an inconsistent state\n",
-+			devname);
-+	return rc;
-+}
-+
-+CXL_EXPORT int cxl_memdev_zero_label(struct cxl_memdev *memdev, size_t length,
-+		size_t offset)
-+{
-+	return lsa_op(memdev, LSA_OP_ZERO, NULL, length, offset);
-+}
-+
-+CXL_EXPORT int cxl_memdev_write_label(struct cxl_memdev *memdev, void *buf,
-+		size_t length, size_t offset)
-+{
-+	return lsa_op(memdev, LSA_OP_SET, buf, length, offset);
-+}
-+
-+CXL_EXPORT int cxl_memdev_read_label(struct cxl_memdev *memdev, void *buf,
-+		size_t length, size_t offset)
-+{
-+	return lsa_op(memdev, LSA_OP_GET, buf, length, offset);
-+}
-diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index 535e349..89d35ba 100644
---- a/cxl/libcxl.h
-+++ b/cxl/libcxl.h
-@@ -44,6 +44,12 @@ unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev);
- const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev);
- size_t cxl_memdev_get_label_size(struct cxl_memdev *memdev);
- int cxl_memdev_nvdimm_bridge_active(struct cxl_memdev *memdev);
-+int cxl_memdev_zero_label(struct cxl_memdev *memdev, size_t length,
-+		size_t offset);
-+int cxl_memdev_read_label(struct cxl_memdev *memdev, void *buf, size_t length,
-+		size_t offset);
-+int cxl_memdev_write_label(struct cxl_memdev *memdev, void *buf, size_t length,
-+		size_t offset);
+ AC_OUTPUT
+diff --git a/Makefile.am b/Makefile.am
+index 4904ee7..e2f6bef 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -4,6 +4,7 @@ ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
+ SUBDIRS = . cxl/lib daxctl/lib ndctl/lib cxl ndctl daxctl
+ if ENABLE_DOCS
+ SUBDIRS += Documentation/ndctl Documentation/daxctl Documentation/cxl
++SUBDIRS += Documentation/cxl/lib
+ endif
+ SUBDIRS += test
  
- #define cxl_memdev_foreach(ctx, memdev) \
-         for (memdev = cxl_memdev_get_first(ctx); \
-@@ -101,6 +107,8 @@ struct cxl_cmd *cxl_cmd_new_read_label(struct cxl_memdev *memdev,
- 		unsigned int offset, unsigned int length);
- ssize_t cxl_cmd_read_label_get_payload(struct cxl_cmd *cmd, void *buf,
- 		unsigned int length);
-+struct cxl_cmd *cxl_cmd_new_write_label(struct cxl_memdev *memdev,
-+		void *buf, unsigned int offset, unsigned int length);
- 
- #ifdef __cplusplus
- } /* extern "C" */
-diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index f3b0c63..077d104 100644
---- a/cxl/lib/libcxl.sym
-+++ b/cxl/lib/libcxl.sym
-@@ -66,6 +66,10 @@ global:
- 	cxl_cmd_read_label_get_payload;
- 	cxl_memdev_get_label_size;
- 	cxl_memdev_nvdimm_bridge_active;
-+	cxl_cmd_new_write_label;
-+	cxl_memdev_zero_label;
-+	cxl_memdev_write_label;
-+	cxl_memdev_read_label;
- local:
-         *;
- };
+diff --git a/.gitignore b/.gitignore
+index 6a97b92..6468c7a 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -14,12 +14,15 @@ Makefile.in
+ /libtool
+ /stamp-h1
+ *.1
++*.3
+ Documentation/daxctl/asciidoc.conf
+ Documentation/ndctl/asciidoc.conf
+ Documentation/cxl/asciidoc.conf
++Documentation/cxl/lib/asciidoc.conf
+ Documentation/daxctl/asciidoctor-extensions.rb
+ Documentation/ndctl/asciidoctor-extensions.rb
+ Documentation/cxl/asciidoctor-extensions.rb
++Documentation/cxl/lib/asciidoctor-extensions.rb
+ Documentation/ndctl/attrs.adoc
+ .dirstamp
+ daxctl/config.h
+diff --git a/Documentation/cxl/lib/Makefile.am b/Documentation/cxl/lib/Makefile.am
+new file mode 100644
+index 0000000..41e3a5f
+--- /dev/null
++++ b/Documentation/cxl/lib/Makefile.am
+@@ -0,0 +1,58 @@
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (C) 2020-2021 Intel Corporation. All rights reserved.
++
++if USE_ASCIIDOCTOR
++
++do_subst = sed -e 's,@Utility@,Libcxl,g' -e's,@utility@,libcxl,g'
++CONFFILE = asciidoctor-extensions.rb
++asciidoctor-extensions.rb: ../../asciidoctor-extensions.rb.in
++	$(AM_V_GEN) $(do_subst) < $< > $@
++
++else
++
++do_subst = sed -e 's,UTILITY,libcxl,g'
++CONFFILE = asciidoc.conf
++asciidoc.conf: ../../asciidoc.conf.in
++	$(AM_V_GEN) $(do_subst) < $< > $@
++
++endif
++
++man3_MANS = \
++	libcxl.3 \
++	cxl_new.3
++
++EXTRA_DIST = $(man3_MANS)
++
++CLEANFILES = $(man3_MANS)
++
++XML_DEPS = \
++	../../../version.m4 \
++	../../copyright.txt \
++	Makefile \
++	$(CONFFILE)
++
++RM ?= rm -f
++
++if USE_ASCIIDOCTOR
++
++%.3: %.txt $(XML_DEPS)
++	$(AM_V_GEN)$(RM) $@+ $@ && \
++		$(ASCIIDOC) -b manpage -d manpage -acompat-mode \
++		-I. -rasciidoctor-extensions \
++		-amansource=libcxl -amanmanual="libcxl Manual" \
++		-andctl_version=$(VERSION) -o $@+ $< && \
++		mv $@+ $@
++
++else
++
++%.xml: %.txt $(XML_DEPS)
++	$(AM_V_GEN)$(RM) $@+ $@ && \
++		$(ASCIIDOC) -b docbook -d manpage -f asciidoc.conf \
++		--unsafe -alibcxl_version=$(VERSION) -o $@+ $< && \
++		mv $@+ $@
++
++%.3: %.xml $(XML_DEPS)
++	$(AM_V_GEN)$(RM) $@ && \
++		$(XMLTO) -o . -m ../../manpage-normal.xsl man $<
++
++endif
 -- 
 2.31.1
 
