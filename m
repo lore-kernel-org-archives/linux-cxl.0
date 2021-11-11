@@ -2,1316 +2,267 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 670B8C433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 21:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBC5C4332F
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 22:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 465A861452
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 21:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 493D66152A
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 Nov 2021 22:03:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230221AbhKKWCH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 11 Nov 2021 17:02:07 -0500
-Received: from mga12.intel.com ([192.55.52.136]:49997 "EHLO mga12.intel.com"
+        id S229652AbhKKWGY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 11 Nov 2021 17:06:24 -0500
+Received: from mga14.intel.com ([192.55.52.115]:45977 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229520AbhKKWCG (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 11 Nov 2021 17:02:06 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10165"; a="213055408"
+        id S234244AbhKKWGX (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 11 Nov 2021 17:06:23 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10165"; a="233266009"
 X-IronPort-AV: E=Sophos;i="5.87,227,1631602800"; 
-   d="scan'208";a="213055408"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 13:59:16 -0800
+   d="scan'208";a="233266009"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 14:03:15 -0800
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.87,227,1631602800"; 
-   d="scan'208";a="504599438"
-Received: from dmamols-mobl1.amr.corp.intel.com (HELO vverma7-desk.amr.corp.intel.com) ([10.255.92.53])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 13:59:15 -0800
-From:   Vishal Verma <vishal.l.verma@intel.com>
-To:     <linux-cxl@vger.kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        <nvdimm@lists.linux.dev>, Vishal Verma <vishal.l.verma@intel.com>
-Subject: [ndctl PATCH v6 02/16] cxl: add a cxl utility and libcxl library
-Date:   Thu, 11 Nov 2021 14:59:10 -0700
-Message-Id: <20211111215910.1596916-1-vishal.l.verma@intel.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20211111204436.1560365-3-vishal.l.verma@intel.com>
-References: <20211111204436.1560365-3-vishal.l.verma@intel.com>
+   d="scan'208";a="670429152"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orsmga005.jf.intel.com with ESMTP; 11 Nov 2021 14:03:15 -0800
+Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.12; Thu, 11 Nov 2021 14:03:14 -0800
+Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
+ fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.12; Thu, 11 Nov 2021 14:03:14 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.12 via Frontend Transport; Thu, 11 Nov 2021 14:03:14 -0800
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.168)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2242.12; Thu, 11 Nov 2021 14:03:14 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eacG2BYHu/xoDVEgjrgEetBONzpo99DX9ZSYpTBXzjEYVEpuuCD8kDlqZQatRxucfFQtDzmIGttbDb3JuQZ918qYfrn0BgtfxPh3qsiwPOztpEExfgmiXmF+OKl9wUdi1JZc0qiHo+Il0rxaEm6kWE+9jgn3GkmQvGybb+g6a0hQqMuaCY7WbohpF5stCZ8q3pMVgHN36/SaZoPu45+EsmiZMN7qEOWOlq3kEvsmh3iXdr4InBdN2ErDKzL+NXaXxwtIdRwPiwoPpV8tvw3wVoSl4qnSLz1dTiJ63ZOODVzz5uB+PsWHQ7pxcpUMyj6p1W6ufriUnJ+ApO0JVaS5aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=p0YM1xrmsQFnGlakphfx4taCPIWUAalATun24vx6ep0=;
+ b=f5NTcQBRM3QNjSs3wiFjnaOM1pQyvWRVehyr5Pzw/Ue/dE3sKQDbkG0gPB1op43YpwjaTCegEfXsVw8rB5DZbnhg9ROT5fTHgeDWNnwGB/0oIHT/YooV5yRMPfoBtNESX1z2imAO6QW5plYPVlYXu4Oc/JuddwgZ0VSWoMa+PeIfwugUqApwJ9uxF0mMovTujMCYcwa4GMu0GkIrwRq0YIfzVDfWPLAKPcAkjM5WLtiGBvXeQmt5wQrPf8vL8wSvETwRZq1FPpWBfNUsN8NqzLK2kskkT+grcfSZ2KyS8/sIpX2eORO8sdJ2UolU42LBRjaHfB1drIr/poaa9D0gIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p0YM1xrmsQFnGlakphfx4taCPIWUAalATun24vx6ep0=;
+ b=b6yKdbiWDueMO8K6Qgu6d6JfdaEfTawP6gZCug7XGfpCeKiG00OQ03s77QSOZSiT/0G+U8bqzEftShcAgBrPhm0lps+z2on4W73pAq4mh5DvvJnsihUeJmqf7CFmuY15WGAmicOrd8jwtA+dE7U09VgJ9MXAL1ptRrEJR+KJ09Q=
+Received: from MN2PR11MB3999.namprd11.prod.outlook.com (2603:10b6:208:154::32)
+ by MN2PR11MB4093.namprd11.prod.outlook.com (2603:10b6:208:13f::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4669.16; Thu, 11 Nov
+ 2021 22:03:12 +0000
+Received: from MN2PR11MB3999.namprd11.prod.outlook.com
+ ([fe80::d8a5:47b2:8750:11df]) by MN2PR11MB3999.namprd11.prod.outlook.com
+ ([fe80::d8a5:47b2:8750:11df%7]) with mapi id 15.20.4669.016; Thu, 11 Nov 2021
+ 22:03:11 +0000
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+CC:     "Widawsky, Ben" <ben.widawsky@intel.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>
+Subject: Re: [PATCH] cxl/pmem: Fix module reload vs workqueue state
+Thread-Topic: [PATCH] cxl/pmem: Fix module reload vs workqueue state
+Thread-Index: AQHX1yiiVAjLTOZQGk6zgoh2qH+l6av+4YIA
+Date:   Thu, 11 Nov 2021 22:03:11 +0000
+Message-ID: <0d268df9abc0e8c64e888e6504d5f2cead76cf6f.camel@intel.com>
+References: <163665474585.3505991.8397182770066720755.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <163665474585.3505991.8397182770066720755.stgit@dwillia2-desk3.amr.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.40.4 (3.40.4-1.fc34) 
+authentication-results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3368e1d1-2675-4b47-e416-08d9a55f0d9d
+x-ms-traffictypediagnostic: MN2PR11MB4093:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
+x-microsoft-antispam-prvs: <MN2PR11MB4093B98114273B1DE5C72856C7949@MN2PR11MB4093.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 4njCE0retGlIso4wnr1YlPoaauYc9ebNv8aEM83g51e7a/1MoRQ4wc8uO0JxE9aex68/qt1/vCQoSaB1unkGL2ONjS/Obkms5wW4O5121QzfARN2yLBib97fB1ttwHpxivgJK8kcDRPAw3Swz0V5DRoFGb0l2yojWJW9x+Gxxfl9JRmJsrG8Hj8eRhEg079m+5qR2+BV/5iJsvg4mYoCLLqLRsWEeU7/Ug9PBO0/Z0imdl8vARz3mN4wyjYlWlRUOuCQKS1sx/pYiNkFD6ZtYWAMU+iI2KVGXV/Esyuc1Hg2+hat9YJ75v2vAvNOd2MutZBgOLHp2pCqGIp0ceS31jv8w1OnBUS9OqMQ0/bI1xS8ldahjS9BynpRymz3y9dA9nGkFfzoTcbQtbw6wjfyAGOyqlrlBQ6zLPWweUHEjHQRyOglcH+OIQOmtPwASzWxIAa6PBhNLxxcyUK1WQCYsj1Kz9JPxgk24yTrxooWoPTSBXbYct+bXuuk1Dj1FLW6shRqvXOQSyN1UIRQ4fN3OUR1KTOqGSMg70QRJzKh/Vxd3AbRR5d8rgyJJVoMEDjloyxvWldrCdLzcF06i8XrVfQlehgj96s7rDPZpgUzXvlBKxOeHbGPC/QAAJWg0UaFu01adhN0gAlEGEjUrXD09JX2CBABER6UGO9GspM+xBpzGHWRMhywqSMyEQfAgoWWISA0sfdwoaMUpwFvuExaSg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB3999.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(6512007)(36756003)(316002)(5660300002)(38100700002)(110136005)(26005)(508600001)(38070700005)(54906003)(83380400001)(186003)(6506007)(86362001)(4326008)(8676002)(76116006)(66476007)(66556008)(66446008)(64756008)(122000001)(91956017)(82960400001)(66946007)(71200400001)(4001150100001)(2616005)(2906002)(6486002)(8936002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Y3BpRXJJK3BqRG90YXVpQ00yU3R6dlRLdVNSbTV1d2J4NmFJbElsNlZIdGp5?=
+ =?utf-8?B?TUdsUEl0MGw5ZjhxeEo1bjhFR2lETXBzc21zVzV6aDVnVGlZeEZpbXRkd1ll?=
+ =?utf-8?B?Q3NZak00WWlzTXdSUlR5Q1lGUUhHMm9HVE5zb284VnRmWDAya3lyZldSVUh1?=
+ =?utf-8?B?c0lhSFZmajBOWk9wbjNpRVdzYVRMVmUzRDVIV1lGcjBJMERvTXlaWjhHYkZP?=
+ =?utf-8?B?TDR2TURoMVo5dDNFRk94b0hRZ01vQ3VJN0NGZFBBSjNMazl4VGxBcmhzNm5z?=
+ =?utf-8?B?aGhTVzRlbUliMnNSQXBBOXpuaFhqSzFNem1yaEhocmczc0h5eXcvcTJCZWwr?=
+ =?utf-8?B?eWFjeE54Z3FSMjBlV3A2dTNmak9vSkw2anltczBYZzNGdTlhcHV1MU51c3Q4?=
+ =?utf-8?B?Z2oxOWdJUlY3SVlKNWlYblN4ZlpsUE1GNWhubml4ZDg0SllGRStnZ3hSYkc1?=
+ =?utf-8?B?Zlc2bGltVjhiRXFibTVLQU1nMmxVNTlzZnA5VzFRMEcvTThUc1hQYlV6dEg1?=
+ =?utf-8?B?azV6VUVwa2JpUk82ZW9wMUxSaFFON0g3UFFvRFlkV0k3clJqNFROeWF3WnNr?=
+ =?utf-8?B?THJiV3k3Yzk5SlVKTjJQUXFPZ1RYRi85dlBzcC9vZCtYNVJkVmltME1rclRM?=
+ =?utf-8?B?QjczZEQ3cVU1Rno5M0pRcVRRS3lCTVp6VGZocUN2TzFBcG54NFRkZ2Jndm52?=
+ =?utf-8?B?TFN3S2RTY3FOQnd2MEo0NHhPcllGVnVIVWptdnBIT0xIdDE1eFRmNzhNcW56?=
+ =?utf-8?B?MUwzRnMybE1oTktsbUpwektSSTJYYmZXdkZpdkxVTys0M3d0NWk4ekNRVG1l?=
+ =?utf-8?B?RzRqRzR0aFhNVlVXTkQxWDZPakZtT2MwNWNXaG5qYW5pZ2VYNnVIOHY0S2ZU?=
+ =?utf-8?B?dEJvdytYOTlDUVpycTNjUmF0bWxqVjZPME91b0VTNTBXbU96bm1rZVhJTUpi?=
+ =?utf-8?B?ZGZ0bnlCV3I2WUppd3d6M2ZWSmVvWDhsbTN3TDJIZzRUUUV3MDFYWEJNUk1L?=
+ =?utf-8?B?L05vMzZjVTI1cUN0UGJlVGFxTTNwaUw2UUNrVmJWQUl0UGxySUZ0MVZKSWJD?=
+ =?utf-8?B?T2JGNmkvUGJpY1MrM3ZNemt1clloZUJDbUdGelFxeVZNQWl4NWE0czNNM1BZ?=
+ =?utf-8?B?YXdZQStMbUNMV0t5dC82cEtIYzVJcEYwTkpCVmZXVXhLNXBxNTQ2Snp3SWdD?=
+ =?utf-8?B?Rm9aazRvNmlYWHhTVXRLY1FJUGFUUUdjSGZEbm5lbVVyM3lFaGcyWFlZM25E?=
+ =?utf-8?B?QkpIWGNMMWw0REsyUitpSnVPYUJMRllyTHgrVUdvZFo4TDRhWndoeWJzN0lL?=
+ =?utf-8?B?K1o2ZVhPOFNZUExsdGtnUGhGRm4vS3JyY2ZPRDV1MkF4ZmMreEFBYUcva05B?=
+ =?utf-8?B?MXFObHhDMWo3bEttR1M3SWlxU2JTMFJJMXphMFV1UlpzZU1JOFBDRWtiMlF2?=
+ =?utf-8?B?eWZNVEdkcElJNFh2REhFTTM0MFRDVi9OYTVaUnFadjZueWpZZ2Rwc1JSS0h5?=
+ =?utf-8?B?VzZTWW05azYwek5hWXhaa1BvV2oxT1dIRVRyTWRsLzY1SWlmVGpVQm1zWGhj?=
+ =?utf-8?B?WCtLRk0rejZOc2Npb0M1UkpNTG9lczY4b1lHOVJlWGFTR24rSHF2ZmRhWDBT?=
+ =?utf-8?B?a3Rqd3FtUkxTZk9JamRYR2E5L1pQcE5Pa2JNbVZRWlZsTlZJeVpPWWlnOFY0?=
+ =?utf-8?B?NERqcW15NUttRE1xV3prQk1ZQzUxaHR2VWlpckdiV1Bvb29Ka3FHWjUxU0tk?=
+ =?utf-8?B?QlptSEtGbFp4RG82Smc5NWd3dTdPQzY2ZjBYbS9VV3hnTUFUbkVXNGs0TXky?=
+ =?utf-8?B?SERVVHdzMHlnczQ0VC8ySnk1VGwzeElvN0QzV3RzeFFuK2Vha096TXNqcE04?=
+ =?utf-8?B?R2h3eFFyNG1rbVF4SUZNZ01ldzY2WDQ4Z2t6dUxHMnVLN1E3L3A5bitYTkdO?=
+ =?utf-8?B?dlFzMHh0cFpvWFU4KzZGako2a0xuWFVOOTdEZzVIajhPeml0UllkOXFxUUJI?=
+ =?utf-8?B?T3EwUG1nTHQzcjJVNTZaL05qa1J1TWdwUklPYXNUM3UyRVBIeDVPanlmVzU4?=
+ =?utf-8?B?bCt0dEtMMnh2U2lwcGZlQ0pnVW8wY1dxd1p0Z1k3aktUbkRsbURpWVMyM3c1?=
+ =?utf-8?B?a0drUEtzVWJMaHNLaWdXYmxXME80M3RFSzN5MU1Jc3VvU3RUNEFvem5Dc1pU?=
+ =?utf-8?B?NndTanNsbjA4TlBWK2RHYjU2dHhxVkJtNkN1VERmR2pFS2VrMitZL3FjYnhp?=
+ =?utf-8?Q?6HZTPbnZykdsxmyq/Y8m5aZsBeZYWPJwWoLL8n3vsg=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2656E8188D7F114FAEC3408EF531830E@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=33556; h=from:subject; bh=VZ5Fchen6MG+jTA2VIqPFyO3/SzjAxyd9kP5R93ovTc=; b=owGbwMvMwCHGf25diOft7jLG02pJDIm9k/QuORTLLV8+o+rnio75+8UbPR3f5mxc9sXktv3rmbYG FbbfO0pZGMQ4GGTFFFn+7vnIeExuez5PYIIjzBxWJpAhDFycAjCRTT2MDB1HGBbx3dsauMZzjvfeTy cPza/Tbv/e2fI4eP9TaV3jp6cY/vvt39/tnPn6i+Lz2lajGUtXP/3aF2Gl1VGqKZs8zcLRixUA
-X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR11MB3999.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3368e1d1-2675-4b47-e416-08d9a55f0d9d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2021 22:03:11.7623
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cqhHOX84dVPCvK6LUbgBQGAyV1ZT4MEzNQfZLIIqAV+tlj1DHJJRArYNBSCJobWLu/VJtXjPPE8w9b1rNugL20nann7DwltaIFvqyMj9Rpo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4093
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-CXL - or Compute eXpress Link - is a new interconnect that extends PCIe
-to support a wide range of devices, including cache coherent memory
-expanders. As such, these devices can be new sources of 'persistent
-memory', and the 'ndctl' umbrella of tools and libraries needs to be able
-to interact with them.
-
-Add a new utility and library for managing these CXL memory devices. This
-is an initial bring-up for interacting with CXL devices, and only includes
-adding the utility and library infrastructure, parsing device information
-from sysfs for CXL devices, and providing a 'cxl-list' command to
-display this information in JSON formatted output.
-
-Cc: Ben Widawsky <ben.widawsky@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
----
-
-Changes in v6:
-- Use -m/-M as the short options for listing memdevs (Dan)
-
- Documentation/cxl/cxl-list.txt       |  64 +++++
- Documentation/cxl/cxl.txt            |  34 +++
- Documentation/cxl/human-option.txt   |   8 +
- Documentation/cxl/verbose-option.txt |   5 +
- configure.ac                         |   3 +
- Makefile.am                          |   8 +-
- Makefile.am.in                       |   4 +
- cxl/lib/private.h                    |  29 +++
- cxl/lib/libcxl.c                     | 345 +++++++++++++++++++++++++++
- cxl/builtin.h                        |   8 +
- cxl/libcxl.h                         |  55 +++++
- util/filter.h                        |   2 +
- util/json.h                          |   3 +
- util/main.h                          |   3 +
- cxl/cxl.c                            |  96 ++++++++
- cxl/list.c                           | 113 +++++++++
- util/filter.c                        |  20 ++
- util/json.c                          |  26 ++
- .clang-format                        |   1 +
- .gitignore                           |   4 +-
- Documentation/cxl/Makefile.am        |  58 +++++
- cxl/Makefile.am                      |  21 ++
- cxl/lib/Makefile.am                  |  32 +++
- cxl/lib/libcxl.pc.in                 |  11 +
- cxl/lib/libcxl.sym                   |  25 ++
- 25 files changed, 974 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/cxl/cxl-list.txt
- create mode 100644 Documentation/cxl/cxl.txt
- create mode 100644 Documentation/cxl/human-option.txt
- create mode 100644 Documentation/cxl/verbose-option.txt
- create mode 100644 cxl/lib/private.h
- create mode 100644 cxl/lib/libcxl.c
- create mode 100644 cxl/builtin.h
- create mode 100644 cxl/libcxl.h
- create mode 100644 cxl/cxl.c
- create mode 100644 cxl/list.c
- create mode 100644 Documentation/cxl/Makefile.am
- create mode 100644 cxl/Makefile.am
- create mode 100644 cxl/lib/Makefile.am
- create mode 100644 cxl/lib/libcxl.pc.in
- create mode 100644 cxl/lib/libcxl.sym
-
-diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
-new file mode 100644
-index 0000000..e761cfa
---- /dev/null
-+++ b/Documentation/cxl/cxl-list.txt
-@@ -0,0 +1,64 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+cxl-list(1)
-+===========
-+
-+NAME
-+----
-+cxl-list - List CXL capable memory devices, and their attributes in json.
-+
-+SYNOPSIS
-+--------
-+[verse]
-+'cxl list' [<options>]
-+
-+Walk the CXL capable device hierarchy in the system and list all device
-+instances along with some of their major attributes.
-+
-+Options can be specified to limit the output to specific memdevs.
-+By default, 'cxl list' with no options is equivalent to:
-+[verse]
-+cxl list --memdevs
-+
-+EXAMPLE
-+-------
-+----
-+# cxl list --memdevs
-+{
-+  "memdev":"mem0",
-+  "pmem_size":268435456,
-+  "ram_size":0,
-+}
-+----
-+
-+OPTIONS
-+-------
-+-m::
-+--memdev=::
-+	Specify a cxl memory device name to filter the listing. For example:
-+----
-+# cxl list --memdev=mem0
-+{
-+  "memdev":"mem0",
-+  "pmem_size":268435456,
-+  "ram_size":0,
-+}
-+----
-+
-+-M::
-+--memdevs::
-+	Include all CXL memory devices in the listing
-+
-+-i::
-+--idle::
-+	Include idle (not enabled / zero-sized) devices in the listing
-+
-+include::human-option.txt[]
-+
-+include::verbose-option.txt[]
-+
-+include::../copyright.txt[]
-+
-+SEE ALSO
-+--------
-+linkcxl:ndctl-list[1]
-diff --git a/Documentation/cxl/cxl.txt b/Documentation/cxl/cxl.txt
-new file mode 100644
-index 0000000..41a51c7
---- /dev/null
-+++ b/Documentation/cxl/cxl.txt
-@@ -0,0 +1,34 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+cxl(1)
-+======
-+
-+NAME
-+----
-+cxl - Provides enumeration and provisioning commands for CXL platforms
-+
-+SYNOPSIS
-+--------
-+[verse]
-+'cxl' [--version] [--help] COMMAND [ARGS]
-+
-+OPTIONS
-+-------
-+-v::
-+--version::
-+  Display the version of the 'cxl' utility.
-+
-+-h::
-+--help::
-+  Run the 'cxl help' command.
-+
-+DESCRIPTION
-+-----------
-+The cxl utility provides enumeration and provisioning commands for
-+the CXL devices managed by the Linux kernel.
-+
-+include::../copyright.txt[]
-+
-+SEE ALSO
-+--------
-+linkcxl:ndctl[1]
-diff --git a/Documentation/cxl/human-option.txt b/Documentation/cxl/human-option.txt
-new file mode 100644
-index 0000000..2f4de7a
---- /dev/null
-+++ b/Documentation/cxl/human-option.txt
-@@ -0,0 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+-u::
-+--human::
-+	By default the command will output machine-friendly raw-integer
-+	data. Instead, with this flag, numbers representing storage size
-+	will be formatted as human readable strings with units, other
-+	fields are converted to hexadecimal strings.
-diff --git a/Documentation/cxl/verbose-option.txt b/Documentation/cxl/verbose-option.txt
-new file mode 100644
-index 0000000..cb62c8e
---- /dev/null
-+++ b/Documentation/cxl/verbose-option.txt
-@@ -0,0 +1,5 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+-v::
-+--verbose::
-+	Emit more debug messages
-diff --git a/configure.ac b/configure.ac
-index dc39dbe..dadae0a 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -222,12 +222,15 @@ AC_CONFIG_HEADERS(config.h)
- AC_CONFIG_FILES([
-         Makefile
-         daxctl/lib/Makefile
-+        cxl/lib/Makefile
-         ndctl/lib/Makefile
-         ndctl/Makefile
-         daxctl/Makefile
-+        cxl/Makefile
-         test/Makefile
-         Documentation/ndctl/Makefile
-         Documentation/daxctl/Makefile
-+        Documentation/cxl/Makefile
- ])
- 
- AC_OUTPUT
-diff --git a/Makefile.am b/Makefile.am
-index 60a1998..428fd40 100644
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -1,9 +1,9 @@
- include Makefile.am.in
- 
- ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
--SUBDIRS = . daxctl/lib ndctl/lib ndctl daxctl
-+SUBDIRS = . cxl/lib daxctl/lib ndctl/lib cxl ndctl daxctl
- if ENABLE_DOCS
--SUBDIRS += Documentation/ndctl Documentation/daxctl
-+SUBDIRS += Documentation/ndctl Documentation/daxctl Documentation/cxl
- endif
- SUBDIRS += test
- 
-@@ -87,4 +87,6 @@ libutil_a_SOURCES = \
- 	util/filter.h \
- 	util/bitmap.h
- 
--nobase_include_HEADERS = daxctl/libdaxctl.h
-+nobase_include_HEADERS = \
-+	daxctl/libdaxctl.h \
-+	cxl/libcxl.h
-diff --git a/Makefile.am.in b/Makefile.am.in
-index bdceda9..aaeee53 100644
---- a/Makefile.am.in
-+++ b/Makefile.am.in
-@@ -42,3 +42,7 @@ LIBNDCTL_AGE=19
- LIBDAXCTL_CURRENT=6
- LIBDAXCTL_REVISION=0
- LIBDAXCTL_AGE=5
-+
-+LIBCXL_CURRENT=1
-+LIBCXL_REVISION=0
-+LIBCXL_AGE=0
-diff --git a/cxl/lib/private.h b/cxl/lib/private.h
-new file mode 100644
-index 0000000..fc88fa1
---- /dev/null
-+++ b/cxl/lib/private.h
-@@ -0,0 +1,29 @@
-+/* SPDX-License-Identifier: LGPL-2.1 */
-+/* Copyright (C) 2020-2021, Intel Corporation. All rights reserved. */
-+#ifndef _LIBCXL_PRIVATE_H_
-+#define _LIBCXL_PRIVATE_H_
-+
-+#include <libkmod.h>
-+
-+#define CXL_EXPORT __attribute__ ((visibility("default")))
-+
-+struct cxl_memdev {
-+	int id, major, minor;
-+	void *dev_buf;
-+	size_t buf_len;
-+	char *dev_path;
-+	char *firmware_version;
-+	struct cxl_ctx *ctx;
-+	struct list_node list;
-+	unsigned long long pmem_size;
-+	unsigned long long ram_size;
-+	int payload_max;
-+	struct kmod_module *module;
-+};
-+
-+static inline int check_kmod(struct kmod_ctx *kmod_ctx)
-+{
-+	return kmod_ctx ? 0 : -ENXIO;
-+}
-+
-+#endif /* _LIBCXL_PRIVATE_H_ */
-diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-new file mode 100644
-index 0000000..c15e987
---- /dev/null
-+++ b/cxl/lib/libcxl.c
-@@ -0,0 +1,345 @@
-+// SPDX-License-Identifier: LGPL-2.1
-+// Copyright (C) 2020-2021, Intel Corporation. All rights reserved.
-+#include <stdio.h>
-+#include <errno.h>
-+#include <limits.h>
-+#include <libgen.h>
-+#include <stdlib.h>
-+#include <dirent.h>
-+#include <unistd.h>
-+#include <sys/stat.h>
-+#include <sys/types.h>
-+#include <sys/sysmacros.h>
-+#include <uuid/uuid.h>
-+#include <ccan/list/list.h>
-+#include <ccan/array_size/array_size.h>
-+
-+#include <util/log.h>
-+#include <util/sysfs.h>
-+#include <util/bitmap.h>
-+#include <cxl/libcxl.h>
-+#include "private.h"
-+
-+/**
-+ * struct cxl_ctx - library user context to find "nd" instances
-+ *
-+ * Instantiate with cxl_new(), which takes an initial reference.  Free
-+ * the context by dropping the reference count to zero with
-+ * cxl_unref(), or take additional references with cxl_ref()
-+ * @timeout: default library timeout in milliseconds
-+ */
-+struct cxl_ctx {
-+	/* log_ctx must be first member for cxl_set_log_fn compat */
-+	struct log_ctx ctx;
-+	int refcount;
-+	void *userdata;
-+	int memdevs_init;
-+	struct list_head memdevs;
-+	struct kmod_ctx *kmod_ctx;
-+	void *private_data;
-+};
-+
-+static void free_memdev(struct cxl_memdev *memdev, struct list_head *head)
-+{
-+	if (head)
-+		list_del_from(head, &memdev->list);
-+	kmod_module_unref(memdev->module);
-+	free(memdev->firmware_version);
-+	free(memdev->dev_buf);
-+	free(memdev->dev_path);
-+	free(memdev);
-+}
-+
-+/**
-+ * cxl_get_userdata - retrieve stored data pointer from library context
-+ * @ctx: cxl library context
-+ *
-+ * This might be useful to access from callbacks like a custom logging
-+ * function.
-+ */
-+CXL_EXPORT void *cxl_get_userdata(struct cxl_ctx *ctx)
-+{
-+	if (ctx == NULL)
-+		return NULL;
-+	return ctx->userdata;
-+}
-+
-+/**
-+ * cxl_set_userdata - store custom @userdata in the library context
-+ * @ctx: cxl library context
-+ * @userdata: data pointer
-+ */
-+CXL_EXPORT void cxl_set_userdata(struct cxl_ctx *ctx, void *userdata)
-+{
-+	if (ctx == NULL)
-+		return;
-+	ctx->userdata = userdata;
-+}
-+
-+CXL_EXPORT void cxl_set_private_data(struct cxl_ctx *ctx, void *data)
-+{
-+	ctx->private_data = data;
-+}
-+
-+CXL_EXPORT void *cxl_get_private_data(struct cxl_ctx *ctx)
-+{
-+	return ctx->private_data;
-+}
-+
-+/**
-+ * cxl_new - instantiate a new library context
-+ * @ctx: context to establish
-+ *
-+ * Returns zero on success and stores an opaque pointer in ctx.  The
-+ * context is freed by cxl_unref(), i.e. cxl_new() implies an
-+ * internal cxl_ref().
-+ */
-+CXL_EXPORT int cxl_new(struct cxl_ctx **ctx)
-+{
-+	struct kmod_ctx *kmod_ctx;
-+	struct cxl_ctx *c;
-+	int rc = 0;
-+
-+	c = calloc(1, sizeof(struct cxl_ctx));
-+	if (!c)
-+		return -ENOMEM;
-+
-+	kmod_ctx = kmod_new(NULL, NULL);
-+	if (check_kmod(kmod_ctx) != 0) {
-+		rc = -ENXIO;
-+		goto out;
-+	}
-+
-+	c->refcount = 1;
-+	log_init(&c->ctx, "libcxl", "CXL_LOG");
-+	info(c, "ctx %p created\n", c);
-+	dbg(c, "log_priority=%d\n", c->ctx.log_priority);
-+	*ctx = c;
-+	list_head_init(&c->memdevs);
-+	c->kmod_ctx = kmod_ctx;
-+
-+	return 0;
-+out:
-+	free(c);
-+	return rc;
-+}
-+
-+/**
-+ * cxl_ref - take an additional reference on the context
-+ * @ctx: context established by cxl_new()
-+ */
-+CXL_EXPORT struct cxl_ctx *cxl_ref(struct cxl_ctx *ctx)
-+{
-+	if (ctx == NULL)
-+		return NULL;
-+	ctx->refcount++;
-+	return ctx;
-+}
-+
-+/**
-+ * cxl_unref - drop a context reference count
-+ * @ctx: context established by cxl_new()
-+ *
-+ * Drop a reference and if the resulting reference count is 0 destroy
-+ * the context.
-+ */
-+CXL_EXPORT void cxl_unref(struct cxl_ctx *ctx)
-+{
-+	struct cxl_memdev *memdev, *_d;
-+
-+	if (ctx == NULL)
-+		return;
-+	ctx->refcount--;
-+	if (ctx->refcount > 0)
-+		return;
-+
-+	list_for_each_safe(&ctx->memdevs, memdev, _d, list)
-+		free_memdev(memdev, &ctx->memdevs);
-+
-+	kmod_unref(ctx->kmod_ctx);
-+	info(ctx, "context %p released\n", ctx);
-+	free(ctx);
-+}
-+
-+/**
-+ * cxl_set_log_fn - override default log routine
-+ * @ctx: cxl library context
-+ * @log_fn: function to be called for logging messages
-+ *
-+ * The built-in logging writes to stderr. It can be overridden by a
-+ * custom function, to plug log messages into the user's logging
-+ * functionality.
-+ */
-+CXL_EXPORT void cxl_set_log_fn(struct cxl_ctx *ctx,
-+		void (*cxl_log_fn)(struct cxl_ctx *ctx, int priority,
-+			const char *file, int line, const char *fn,
-+			const char *format, va_list args))
-+{
-+	ctx->ctx.log_fn = (log_fn) cxl_log_fn;
-+	info(ctx, "custom logging function %p registered\n", cxl_log_fn);
-+}
-+
-+/**
-+ * cxl_get_log_priority - retrieve current library loglevel (syslog)
-+ * @ctx: cxl library context
-+ */
-+CXL_EXPORT int cxl_get_log_priority(struct cxl_ctx *ctx)
-+{
-+	return ctx->ctx.log_priority;
-+}
-+
-+/**
-+ * cxl_set_log_priority - set log verbosity
-+ * @priority: from syslog.h, LOG_ERR, LOG_INFO, LOG_DEBUG
-+ *
-+ * Note: LOG_DEBUG requires library be built with "configure --enable-debug"
-+ */
-+CXL_EXPORT void cxl_set_log_priority(struct cxl_ctx *ctx, int priority)
-+{
-+	ctx->ctx.log_priority = priority;
-+}
-+
-+static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
-+{
-+	const char *devname = devpath_to_devname(cxlmem_base);
-+	char *path = calloc(1, strlen(cxlmem_base) + 100);
-+	struct cxl_ctx *ctx = parent;
-+	struct cxl_memdev *memdev, *memdev_dup;
-+	char buf[SYSFS_ATTR_SIZE];
-+	struct stat st;
-+
-+	if (!path)
-+		return NULL;
-+	dbg(ctx, "%s: base: \'%s\'\n", devname, cxlmem_base);
-+
-+	memdev = calloc(1, sizeof(*memdev));
-+	if (!memdev)
-+		goto err_dev;
-+	memdev->id = id;
-+	memdev->ctx = ctx;
-+
-+	sprintf(path, "/dev/cxl/%s", devname);
-+	if (stat(path, &st) < 0)
-+		goto err_read;
-+	memdev->major = major(st.st_rdev);
-+	memdev->minor = minor(st.st_rdev);
-+
-+	sprintf(path, "%s/pmem/size", cxlmem_base);
-+	if (sysfs_read_attr(ctx, path, buf) < 0)
-+		goto err_read;
-+	memdev->pmem_size = strtoull(buf, NULL, 0);
-+
-+	sprintf(path, "%s/ram/size", cxlmem_base);
-+	if (sysfs_read_attr(ctx, path, buf) < 0)
-+		goto err_read;
-+	memdev->ram_size = strtoull(buf, NULL, 0);
-+
-+	sprintf(path, "%s/payload_max", cxlmem_base);
-+	if (sysfs_read_attr(ctx, path, buf) < 0)
-+		goto err_read;
-+	memdev->payload_max = strtoull(buf, NULL, 0);
-+	if (memdev->payload_max < 0)
-+		goto err_read;
-+
-+	memdev->dev_path = strdup(cxlmem_base);
-+	if (!memdev->dev_path)
-+		goto err_read;
-+
-+	sprintf(path, "%s/firmware_version", cxlmem_base);
-+	if (sysfs_read_attr(ctx, path, buf) < 0)
-+		goto err_read;
-+
-+	memdev->firmware_version = strdup(buf);
-+	if (!memdev->firmware_version)
-+		goto err_read;
-+
-+	memdev->dev_buf = calloc(1, strlen(cxlmem_base) + 50);
-+	if (!memdev->dev_buf)
-+		goto err_read;
-+	memdev->buf_len = strlen(cxlmem_base) + 50;
-+
-+	cxl_memdev_foreach(ctx, memdev_dup)
-+		if (memdev_dup->id == memdev->id) {
-+			free_memdev(memdev, NULL);
-+			free(path);
-+			return memdev_dup;
-+		}
-+
-+	list_add(&ctx->memdevs, &memdev->list);
-+	free(path);
-+	return memdev;
-+
-+ err_read:
-+	free(memdev->firmware_version);
-+	free(memdev->dev_buf);
-+	free(memdev->dev_path);
-+	free(memdev);
-+ err_dev:
-+	free(path);
-+	return NULL;
-+}
-+
-+static void cxl_memdevs_init(struct cxl_ctx *ctx)
-+{
-+	if (ctx->memdevs_init)
-+		return;
-+
-+	ctx->memdevs_init = 1;
-+
-+	sysfs_device_parse(ctx, "/sys/bus/cxl/devices", "mem", ctx,
-+			   add_cxl_memdev);
-+}
-+
-+CXL_EXPORT struct cxl_ctx *cxl_memdev_get_ctx(struct cxl_memdev *memdev)
-+{
-+	return memdev->ctx;
-+}
-+
-+CXL_EXPORT struct cxl_memdev *cxl_memdev_get_first(struct cxl_ctx *ctx)
-+{
-+	cxl_memdevs_init(ctx);
-+
-+	return list_top(&ctx->memdevs, struct cxl_memdev, list);
-+}
-+
-+CXL_EXPORT struct cxl_memdev *cxl_memdev_get_next(struct cxl_memdev *memdev)
-+{
-+	struct cxl_ctx *ctx = memdev->ctx;
-+
-+	return list_next(&ctx->memdevs, memdev, list);
-+}
-+
-+CXL_EXPORT int cxl_memdev_get_id(struct cxl_memdev *memdev)
-+{
-+	return memdev->id;
-+}
-+
-+CXL_EXPORT const char *cxl_memdev_get_devname(struct cxl_memdev *memdev)
-+{
-+	return devpath_to_devname(memdev->dev_path);
-+}
-+
-+CXL_EXPORT int cxl_memdev_get_major(struct cxl_memdev *memdev)
-+{
-+	return memdev->major;
-+}
-+
-+CXL_EXPORT int cxl_memdev_get_minor(struct cxl_memdev *memdev)
-+{
-+	return memdev->minor;
-+}
-+
-+CXL_EXPORT unsigned long long cxl_memdev_get_pmem_size(struct cxl_memdev *memdev)
-+{
-+	return memdev->pmem_size;
-+}
-+
-+CXL_EXPORT unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev)
-+{
-+	return memdev->ram_size;
-+}
-+
-+CXL_EXPORT const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev)
-+{
-+	return memdev->firmware_version;
-+}
-diff --git a/cxl/builtin.h b/cxl/builtin.h
-new file mode 100644
-index 0000000..3797f98
---- /dev/null
-+++ b/cxl/builtin.h
-@@ -0,0 +1,8 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (C) 2020-2021 Intel Corporation. All rights reserved. */
-+#ifndef _CXL_BUILTIN_H_
-+#define _CXL_BUILTIN_H_
-+
-+struct cxl_ctx;
-+int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx);
-+#endif /* _CXL_BUILTIN_H_ */
-diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-new file mode 100644
-index 0000000..fd06790
---- /dev/null
-+++ b/cxl/libcxl.h
-@@ -0,0 +1,55 @@
-+/* SPDX-License-Identifier: LGPL-2.1 */
-+/* Copyright (C) 2020-2021, Intel Corporation. All rights reserved. */
-+#ifndef _LIBCXL_H_
-+#define _LIBCXL_H_
-+
-+#include <stdarg.h>
-+#include <unistd.h>
-+
-+#ifdef HAVE_UUID
-+#include <uuid/uuid.h>
-+#else
-+typedef unsigned char uuid_t[16];
-+#endif
-+
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
-+
-+struct cxl_ctx;
-+struct cxl_ctx *cxl_ref(struct cxl_ctx *ctx);
-+void cxl_unref(struct cxl_ctx *ctx);
-+int cxl_new(struct cxl_ctx **ctx);
-+void cxl_set_log_fn(struct cxl_ctx *ctx,
-+		void (*log_fn)(struct cxl_ctx *ctx, int priority,
-+			const char *file, int line, const char *fn,
-+			const char *format, va_list args));
-+int cxl_get_log_priority(struct cxl_ctx *ctx);
-+void cxl_set_log_priority(struct cxl_ctx *ctx, int priority);
-+void cxl_set_userdata(struct cxl_ctx *ctx, void *userdata);
-+void *cxl_get_userdata(struct cxl_ctx *ctx);
-+void cxl_set_private_data(struct cxl_ctx *ctx, void *data);
-+void *cxl_get_private_data(struct cxl_ctx *ctx);
-+
-+struct cxl_memdev;
-+struct cxl_memdev *cxl_memdev_get_first(struct cxl_ctx *ctx);
-+struct cxl_memdev *cxl_memdev_get_next(struct cxl_memdev *memdev);
-+int cxl_memdev_get_id(struct cxl_memdev *memdev);
-+const char *cxl_memdev_get_devname(struct cxl_memdev *memdev);
-+int cxl_memdev_get_major(struct cxl_memdev *memdev);
-+int cxl_memdev_get_minor(struct cxl_memdev *memdev);
-+struct cxl_ctx *cxl_memdev_get_ctx(struct cxl_memdev *memdev);
-+unsigned long long cxl_memdev_get_pmem_size(struct cxl_memdev *memdev);
-+unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev);
-+const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev);
-+
-+#define cxl_memdev_foreach(ctx, memdev) \
-+        for (memdev = cxl_memdev_get_first(ctx); \
-+             memdev != NULL; \
-+             memdev = cxl_memdev_get_next(memdev))
-+
-+#ifdef __cplusplus
-+} /* extern "C" */
-+#endif
-+
-+#endif
-diff --git a/util/filter.h b/util/filter.h
-index 1e1a41c..9a80d65 100644
---- a/util/filter.h
-+++ b/util/filter.h
-@@ -29,6 +29,8 @@ struct daxctl_dev *util_daxctl_dev_filter(struct daxctl_dev *dev,
- 		const char *ident);
- struct daxctl_region *util_daxctl_region_filter(struct daxctl_region *region,
- 		const char *ident);
-+struct cxl_memdev *util_cxl_memdev_filter(struct cxl_memdev *memdev,
-+		const char *ident);
- 
- enum ndctl_namespace_mode util_nsmode(const char *mode);
- const char *util_nsmode_name(enum ndctl_namespace_mode mode);
-diff --git a/util/json.h b/util/json.h
-index 0f09e36..91918c8 100644
---- a/util/json.h
-+++ b/util/json.h
-@@ -55,4 +55,7 @@ struct json_object *util_dimm_health_to_json(struct ndctl_dimm *dimm);
- struct json_object *util_dimm_firmware_to_json(struct ndctl_dimm *dimm,
- 		unsigned long flags);
- struct json_object *util_region_capabilities_to_json(struct ndctl_region *region);
-+struct cxl_memdev;
-+struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
-+		unsigned long flags);
- #endif /* __NDCTL_JSON_H__ */
-diff --git a/util/main.h b/util/main.h
-index c89a843..80b55c4 100644
---- a/util/main.h
-+++ b/util/main.h
-@@ -10,16 +10,19 @@
- enum program {
- 	PROG_NDCTL,
- 	PROG_DAXCTL,
-+	PROG_CXL,
- };
- 
- struct ndctl_ctx;
- struct daxctl_ctx;
-+struct cxl_ctx;
- 
- struct cmd_struct {
- 	const char *cmd;
- 	union {
- 		int (*n_fn)(int, const char **, struct ndctl_ctx *ctx);
- 		int (*d_fn)(int, const char **, struct daxctl_ctx *ctx);
-+		int (*c_fn)(int, const char **, struct cxl_ctx *ctx);
- 	};
- };
- 
-diff --git a/cxl/cxl.c b/cxl/cxl.c
-new file mode 100644
-index 0000000..a7725f8
---- /dev/null
-+++ b/cxl/cxl.c
-@@ -0,0 +1,96 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (C) 2020-2021 Intel Corporation. All rights reserved. */
-+/* Copyright (C) 2005 Andreas Ericsson. All rights reserved. */
-+
-+/* originally copied from perf and git */
-+
-+#include <stdio.h>
-+#include <errno.h>
-+#include <string.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <sys/stat.h>
-+#include <sys/types.h>
-+#include <cxl/libcxl.h>
-+#include <util/parse-options.h>
-+#include <ccan/array_size/array_size.h>
-+
-+#include <util/strbuf.h>
-+#include <util/util.h>
-+#include <util/main.h>
-+#include <cxl/builtin.h>
-+
-+const char cxl_usage_string[] = "cxl [--version] [--help] COMMAND [ARGS]";
-+const char cxl_more_info_string[] =
-+	"See 'cxl help COMMAND' for more information on a specific command.\n"
-+	" cxl --list-cmds to see all available commands";
-+
-+static int cmd_version(int argc, const char **argv, struct cxl_ctx *ctx)
-+{
-+	printf("%s\n", VERSION);
-+	return 0;
-+}
-+
-+static int cmd_help(int argc, const char **argv, struct cxl_ctx *ctx)
-+{
-+	const char * const builtin_help_subcommands[] = {
-+		"list",
-+		NULL,
-+	};
-+	struct option builtin_help_options[] = {
-+		OPT_END(),
-+	};
-+	const char *builtin_help_usage[] = {
-+		"cxl help [command]",
-+		NULL
-+	};
-+
-+	argc = parse_options_subcommand(argc, argv, builtin_help_options,
-+			builtin_help_subcommands, builtin_help_usage, 0);
-+
-+	if (!argv[0]) {
-+		printf("\n usage: %s\n\n", cxl_usage_string);
-+		printf("\n %s\n\n", cxl_more_info_string);
-+		return 0;
-+	}
-+
-+	return help_show_man_page(argv[0], "cxl", "CXL_MAN_VIEWER");
-+}
-+
-+static struct cmd_struct commands[] = {
-+	{ "version", .c_fn = cmd_version },
-+	{ "list", .c_fn = cmd_list },
-+	{ "help", .c_fn = cmd_help },
-+};
-+
-+int main(int argc, const char **argv)
-+{
-+	struct cxl_ctx *ctx;
-+	int rc;
-+
-+	/* Look for flags.. */
-+	argv++;
-+	argc--;
-+	main_handle_options(&argv, &argc, cxl_usage_string, commands,
-+			ARRAY_SIZE(commands));
-+
-+	if (argc > 0) {
-+		if (!prefixcmp(argv[0], "--"))
-+			argv[0] += 2;
-+	} else {
-+		/* The user didn't specify a command; give them help */
-+		printf("\n usage: %s\n\n", cxl_usage_string);
-+		printf("\n %s\n\n", cxl_more_info_string);
-+		goto out;
-+	}
-+
-+	rc = cxl_new(&ctx);
-+	if (rc)
-+		goto out;
-+	main_handle_internal_command(argc, argv, ctx, commands,
-+			ARRAY_SIZE(commands), PROG_CXL);
-+	cxl_unref(ctx);
-+	fprintf(stderr, "Unknown command: '%s'\n", argv[0]);
-+out:
-+	return 1;
-+}
-diff --git a/cxl/list.c b/cxl/list.c
-new file mode 100644
-index 0000000..7c1d2eb
---- /dev/null
-+++ b/cxl/list.c
-@@ -0,0 +1,113 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (C) 2020-2021 Intel Corporation. All rights reserved. */
-+#include <stdio.h>
-+#include <errno.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <limits.h>
-+#include <util/json.h>
-+#include <util/filter.h>
-+#include <json-c/json.h>
-+#include <cxl/libcxl.h>
-+#include <util/parse-options.h>
-+#include <ccan/array_size/array_size.h>
-+
-+static struct {
-+	bool memdevs;
-+	bool idle;
-+	bool human;
-+} list;
-+
-+static unsigned long listopts_to_flags(void)
-+{
-+	unsigned long flags = 0;
-+
-+	if (list.idle)
-+		flags |= UTIL_JSON_IDLE;
-+	if (list.human)
-+		flags |= UTIL_JSON_HUMAN;
-+	return flags;
-+}
-+
-+static struct {
-+	const char *memdev;
-+} param;
-+
-+static int did_fail;
-+
-+#define fail(fmt, ...) \
-+do { \
-+	did_fail = 1; \
-+	fprintf(stderr, "cxl-%s:%s:%d: " fmt, \
-+			VERSION, __func__, __LINE__, ##__VA_ARGS__); \
-+} while (0)
-+
-+static int num_list_flags(void)
-+{
-+	return list.memdevs;
-+}
-+
-+int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
-+{
-+	const struct option options[] = {
-+		OPT_STRING('m', "memdev", &param.memdev, "memory device name",
-+			   "filter by CXL memory device name"),
-+		OPT_BOOLEAN('M', "memdevs", &list.memdevs,
-+			    "include CXL memory device info"),
-+		OPT_BOOLEAN('i', "idle", &list.idle, "include idle devices"),
-+		OPT_BOOLEAN('u', "human", &list.human,
-+				"use human friendly number formats "),
-+		OPT_END(),
-+	};
-+	const char * const u[] = {
-+		"cxl list [<options>]",
-+		NULL
-+	};
-+	struct json_object *jdevs = NULL;
-+	unsigned long list_flags;
-+	struct cxl_memdev *memdev;
-+	int i;
-+
-+	argc = parse_options(argc, argv, options, u, 0);
-+	for (i = 0; i < argc; i++)
-+		error("unknown parameter \"%s\"\n", argv[i]);
-+
-+	if (argc)
-+		usage_with_options(u, options);
-+
-+	if (num_list_flags() == 0)
-+		list.memdevs = true;
-+
-+	list_flags = listopts_to_flags();
-+
-+	cxl_memdev_foreach(ctx, memdev) {
-+		struct json_object *jdev = NULL;
-+
-+		if (!util_cxl_memdev_filter(memdev, param.memdev))
-+			continue;
-+
-+		if (list.memdevs) {
-+			if (!jdevs) {
-+				jdevs = json_object_new_array();
-+				if (!jdevs) {
-+					fail("\n");
-+					continue;
-+				}
-+			}
-+
-+			jdev = util_cxl_memdev_to_json(memdev, list_flags);
-+			if (!jdev) {
-+				fail("\n");
-+				continue;
-+			}
-+			json_object_array_add(jdevs, jdev);
-+		}
-+	}
-+
-+	if (jdevs)
-+		util_display_json_array(stdout, jdevs, list_flags);
-+
-+	if (did_fail)
-+		return -ENOMEM;
-+	return 0;
-+}
-diff --git a/util/filter.c b/util/filter.c
-index 8b4aad3..d81dade 100644
---- a/util/filter.c
-+++ b/util/filter.c
-@@ -12,6 +12,7 @@
- #include <util/filter.h>
- #include <ndctl/libndctl.h>
- #include <daxctl/libdaxctl.h>
-+#include <cxl/libcxl.h>
- 
- struct ndctl_bus *util_bus_filter(struct ndctl_bus *bus, const char *__ident)
- {
-@@ -339,6 +340,25 @@ struct daxctl_region *util_daxctl_region_filter(struct daxctl_region *region,
- 	return NULL;
- }
- 
-+struct cxl_memdev *util_cxl_memdev_filter(struct cxl_memdev *memdev,
-+					  const char *ident)
-+{
-+	int memdev_id;
-+
-+	if (!ident || strcmp(ident, "all") == 0)
-+		return memdev;
-+
-+	if (strcmp(ident, cxl_memdev_get_devname(memdev)) == 0)
-+		return memdev;
-+
-+	if ((sscanf(ident, "%d", &memdev_id) == 1
-+			|| sscanf(ident, "mem%d", &memdev_id) == 1)
-+			&& cxl_memdev_get_id(memdev) == memdev_id)
-+		return memdev;
-+
-+	return NULL;
-+}
-+
- enum ndctl_namespace_mode util_nsmode(const char *mode)
- {
- 	if (!mode)
-diff --git a/util/json.c b/util/json.c
-index a8d2412..3be3a92 100644
---- a/util/json.c
-+++ b/util/json.c
-@@ -9,6 +9,7 @@
- #include <json-c/printbuf.h>
- #include <ndctl/libndctl.h>
- #include <daxctl/libdaxctl.h>
-+#include <cxl/libcxl.h>
- #include <ccan/array_size/array_size.h>
- #include <ccan/short_types/short_types.h>
- #include <ndctl.h>
-@@ -1440,3 +1441,28 @@ struct json_object *util_badblock_rec_to_json(u64 block, u64 count,
- 	json_object_put(jerr);
- 	return NULL;
- }
-+
-+struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
-+		unsigned long flags)
-+{
-+	const char *devname = cxl_memdev_get_devname(memdev);
-+	struct json_object *jdev, *jobj;
-+
-+	jdev = json_object_new_object();
-+	if (!devname || !jdev)
-+		return NULL;
-+
-+	jobj = json_object_new_string(devname);
-+	if (jobj)
-+		json_object_object_add(jdev, "memdev", jobj);
-+
-+	jobj = util_json_object_size(cxl_memdev_get_pmem_size(memdev), flags);
-+	if (jobj)
-+		json_object_object_add(jdev, "pmem_size", jobj);
-+
-+	jobj = util_json_object_size(cxl_memdev_get_ram_size(memdev), flags);
-+	if (jobj)
-+		json_object_object_add(jdev, "ram_size", jobj);
-+
-+	return jdev;
-+}
-diff --git a/.clang-format b/.clang-format
-index 4e00fff..d2e77d0 100644
---- a/.clang-format
-+++ b/.clang-format
-@@ -77,6 +77,7 @@ ExperimentalAutoDetectBinPacking: false
- # 		-e 's/\(.*foreach.*\)(.*/\1/' \
- # 	| sort -u)
- ForEachMacros:
-+  - 'cxl_memdev_foreach'
-   - 'daxctl_dev_foreach'
-   - 'daxctl_mapping_foreach'
-   - 'daxctl_region_foreach'
-diff --git a/.gitignore b/.gitignore
-index 53512b2..6a97b92 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -16,9 +16,11 @@ Makefile.in
- *.1
- Documentation/daxctl/asciidoc.conf
- Documentation/ndctl/asciidoc.conf
--Documentation/ndctl/attrs.adoc
-+Documentation/cxl/asciidoc.conf
- Documentation/daxctl/asciidoctor-extensions.rb
- Documentation/ndctl/asciidoctor-extensions.rb
-+Documentation/cxl/asciidoctor-extensions.rb
-+Documentation/ndctl/attrs.adoc
- .dirstamp
- daxctl/config.h
- daxctl/daxctl
-diff --git a/Documentation/cxl/Makefile.am b/Documentation/cxl/Makefile.am
-new file mode 100644
-index 0000000..db98dd7
---- /dev/null
-+++ b/Documentation/cxl/Makefile.am
-@@ -0,0 +1,58 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2020-2021 Intel Corporation. All rights reserved.
-+
-+if USE_ASCIIDOCTOR
-+
-+do_subst = sed -e 's,@Utility@,Cxl,g' -e's,@utility@,cxl,g'
-+CONFFILE = asciidoctor-extensions.rb
-+asciidoctor-extensions.rb: ../asciidoctor-extensions.rb.in
-+	$(AM_V_GEN) $(do_subst) < $< > $@
-+
-+else
-+
-+do_subst = sed -e 's,UTILITY,cxl,g'
-+CONFFILE = asciidoc.conf
-+asciidoc.conf: ../asciidoc.conf.in
-+	$(AM_V_GEN) $(do_subst) < $< > $@
-+
-+endif
-+
-+man1_MANS = \
-+	cxl.1 \
-+	cxl-list.1
-+
-+EXTRA_DIST = $(man1_MANS)
-+
-+CLEANFILES = $(man1_MANS)
-+
-+XML_DEPS = \
-+	../../version.m4 \
-+	../copyright.txt \
-+	Makefile \
-+	$(CONFFILE)
-+
-+RM ?= rm -f
-+
-+if USE_ASCIIDOCTOR
-+
-+%.1: %.txt $(XML_DEPS)
-+	$(AM_V_GEN)$(RM) $@+ $@ && \
-+		$(ASCIIDOC) -b manpage -d manpage -acompat-mode \
-+		-I. -rasciidoctor-extensions \
-+		-amansource=cxl -amanmanual="cxl Manual" \
-+		-andctl_version=$(VERSION) -o $@+ $< && \
-+		mv $@+ $@
-+
-+else
-+
-+%.xml: %.txt $(XML_DEPS)
-+	$(AM_V_GEN)$(RM) $@+ $@ && \
-+		$(ASCIIDOC) -b docbook -d manpage -f asciidoc.conf \
-+		--unsafe -acxl_version=$(VERSION) -o $@+ $< && \
-+		mv $@+ $@
-+
-+%.1: %.xml $(XML_DEPS)
-+	$(AM_V_GEN)$(RM) $@ && \
-+		$(XMLTO) -o . -m ../manpage-normal.xsl man $<
-+
-+endif
-diff --git a/cxl/Makefile.am b/cxl/Makefile.am
-new file mode 100644
-index 0000000..98606b9
---- /dev/null
-+++ b/cxl/Makefile.am
-@@ -0,0 +1,21 @@
-+include $(top_srcdir)/Makefile.am.in
-+
-+bin_PROGRAMS = cxl
-+
-+DISTCLEANFILES = config.h
-+BUILT_SOURCES = config.h
-+config.h: $(srcdir)/Makefile.am
-+	$(AM_V_GEN) echo "/* Autogenerated by cxl/Makefile.am */" >$@
-+
-+cxl_SOURCES =\
-+		cxl.c \
-+		list.c \
-+		../util/json.c \
-+		builtin.h
-+
-+cxl_LDADD =\
-+	lib/libcxl.la \
-+	../libutil.a \
-+	$(UUID_LIBS) \
-+	$(KMOD_LIBS) \
-+	$(JSON_LIBS)
-diff --git a/cxl/lib/Makefile.am b/cxl/lib/Makefile.am
-new file mode 100644
-index 0000000..277f0cd
---- /dev/null
-+++ b/cxl/lib/Makefile.am
-@@ -0,0 +1,32 @@
-+include $(top_srcdir)/Makefile.am.in
-+
-+%.pc: %.pc.in Makefile
-+	$(SED_PROCESS)
-+
-+pkginclude_HEADERS = ../libcxl.h
-+lib_LTLIBRARIES = libcxl.la
-+
-+libcxl_la_SOURCES =\
-+	../libcxl.h \
-+	private.h \
-+	../../util/sysfs.c \
-+	../../util/sysfs.h \
-+	../../util/log.c \
-+	../../util/log.h \
-+	libcxl.c
-+
-+libcxl_la_LIBADD =\
-+	$(UUID_LIBS) \
-+	$(KMOD_LIBS)
-+
-+EXTRA_DIST += libcxl.sym
-+
-+libcxl_la_LDFLAGS = $(AM_LDFLAGS) \
-+	-version-info $(LIBCXL_CURRENT):$(LIBCXL_REVISION):$(LIBCXL_AGE) \
-+	-Wl,--version-script=$(top_srcdir)/cxl/lib/libcxl.sym
-+libcxl_la_DEPENDENCIES = libcxl.sym
-+
-+pkgconfigdir = $(libdir)/pkgconfig
-+pkgconfig_DATA = libcxl.pc
-+EXTRA_DIST += libcxl.pc.in
-+CLEANFILES += libcxl.pc
-diff --git a/cxl/lib/libcxl.pc.in b/cxl/lib/libcxl.pc.in
-new file mode 100644
-index 0000000..949fcdc
---- /dev/null
-+++ b/cxl/lib/libcxl.pc.in
-@@ -0,0 +1,11 @@
-+prefix=@prefix@
-+exec_prefix=@exec_prefix@
-+libdir=@libdir@
-+includedir=@includedir@
-+
-+Name: libcxl
-+Description: Manage CXL devices
-+Version: @VERSION@
-+Libs: -L${libdir} -lcxl
-+Libs.private:
-+Cflags: -I${includedir}
-diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-new file mode 100644
-index 0000000..2616e5c
---- /dev/null
-+++ b/cxl/lib/libcxl.sym
-@@ -0,0 +1,25 @@
-+LIBCXL_1 {
-+global:
-+	cxl_get_userdata;
-+	cxl_set_userdata;
-+	cxl_get_private_data;
-+	cxl_set_private_data;
-+	cxl_ref;
-+	cxl_get_log_priority;
-+	cxl_set_log_fn;
-+	cxl_unref;
-+	cxl_set_log_priority;
-+	cxl_new;
-+	cxl_memdev_get_first;
-+	cxl_memdev_get_next;
-+	cxl_memdev_get_id;
-+	cxl_memdev_get_devname;
-+	cxl_memdev_get_major;
-+	cxl_memdev_get_minor;
-+	cxl_memdev_get_ctx;
-+	cxl_memdev_get_pmem_size;
-+	cxl_memdev_get_ram_size;
-+	cxl_memdev_get_firmware_verison;
-+local:
-+        *;
-+};
--- 
-2.31.1
-
+T24gVGh1LCAyMDIxLTExLTExIGF0IDEwOjE5IC0wODAwLCBEYW4gV2lsbGlhbXMgd3JvdGU6DQo+
+IEEgdGVzdCBvZiB0aGUgZm9ybToNCj4gDQo+ICAgICB3aGlsZSB0cnVlOyBkbyBtb2Rwcm9iZSAt
+ciBjeGxfcG1lbTsgbW9kcHJvYmUgY3hsX3BtZW07IGRvbmUNCj4gDQo+IE1heSBsZWFkIHRvIGEg
+Y3Jhc2ggc2lnbmF0dXJlIG9mIHRoZSBmb3JtOg0KPiANCj4gICAgIEJVRzogdW5hYmxlIHRvIGhh
+bmRsZSBwYWdlIGZhdWx0IGZvciBhZGRyZXNzOiBmZmZmZmZmZmMwNjYwMDMwDQo+ICAgICAjUEY6
+IHN1cGVydmlzb3IgaW5zdHJ1Y3Rpb24gZmV0Y2ggaW4ga2VybmVsIG1vZGUNCj4gICAgICNQRjog
+ZXJyb3JfY29kZSgweDAwMTApIC0gbm90LXByZXNlbnQgcGFnZQ0KPiAgICAgWy4uXQ0KPiAgICAg
+V29ya3F1ZXVlOiBjeGxfcG1lbSAweGZmZmZmZmZmYzA2NjAwMzANCj4gICAgIFJJUDogMDAxMDow
+eGZmZmZmZmZmYzA2NjAwMzANCj4gICAgIENvZGU6IFVuYWJsZSB0byBhY2Nlc3Mgb3Bjb2RlIGJ5
+dGVzIGF0IFJJUCAweGZmZmZmZmZmYzA2NjAwMDYuDQo+ICAgICBbLi5dDQo+ICAgICBDYWxsIFRy
+YWNlOg0KPiAgICAgID8gcHJvY2Vzc19vbmVfd29yaysweDRlYy8weDljMA0KPiAgICAgID8gcHdx
+X2RlY19ucl9pbl9mbGlnaHQrMHgxMDAvMHgxMDANCj4gICAgICA/IHJ3bG9ja19idWcucGFydC4w
+KzB4NjAvMHg2MA0KPiAgICAgID8gd29ya2VyX3RocmVhZCsweDJlYi8weDcwMA0KPiANCj4gSW4g
+dGhhdCByZXBvcnQgdGhlIDB4ZmZmZmZmZmZjMDY2MDAzMCBhZGRyZXNzIGNvcnJlc3BvbmRzIHRv
+IHRoZSBmb3JtZXINCj4gZnVuY3Rpb24gYWRkcmVzcyBvZiBjeGxfbnZiX3VwZGF0ZV9zdGF0ZSgp
+IGZyb20gYSBwcmV2aW91cyBsb2FkIG9mIHRoZQ0KPiBtb2R1bGUsIG5vdCB0aGUgY3VycmVudCBh
+ZGRyZXNzLiBGaXggdGhhdCBieSBhcnJhbmdpbmcgZm9yIC0+c3RhdGVfd29yaw0KPiBpbiB0aGUg
+J3N0cnVjdCBjeGxfbnZkaW1tX2JyaWRnZScgb2JqZWN0IHRvIGJlIHJlaW5pdGlhbGl6ZWQgb24g
+Y3hsX3BtZW0NCj4gbW9kdWxlIHJlbG9hZC4NCj4gDQo+IERldGFpbHM6DQo+IA0KPiBSZWNhbGwg
+dGhhdCBDWEwgc3Vic3lzdGVtIHdhbnRzIHRvIGxpbmsgYSBDWEwgbWVtb3J5IGV4cGFuZGVyIGRl
+dmljZSB0bw0KPiBhbiBOVkRJTU0gc3ViLWhpZXJhcmNoeSB3aGVuIGJvdGggYSBwZXJzaXN0ZW50
+IG1lbW9yeSByYW5nZSBoYXMgYmVlbg0KPiByZWdpc3RlcmVkIGJ5IHRoZSBDWEwgcGxhdGZvcm0g
+ZHJpdmVyIChjeGxfYWNwaSkgKmFuZCogd2hlbiB0aGF0IENYTA0KPiBtZW1vcnkgZXhwYW5kZXIg
+aGFzIHB1Ymxpc2hlZCBwZXJzaXN0ZW50IG1lbW9yeSBjYXBhY2l0eSAoR2V0IFBhcnRpdGlvbg0K
+PiBJbmZvKS4gVG8gdGhpcyBlbmQgdGhlIGN4bF9udmRpbW1fYnJpZGdlIGRyaXZlciBhcnJhbmdl
+cyB0byByZXNjYW4gdGhlDQo+IENYTCBidXMgd2hlbiBlaXRoZXIgb2YgdGhvc2UgY29uZGl0aW9u
+cyBjaGFuZ2UuIFRoZSBoZWxwZXINCj4gYnVzX3Jlc2Nhbl9kZXZpY2VzKCkgY2FuIG5vdCBiZSBj
+YWxsZWQgdW5kZXJuZWF0aCB0aGUgZGV2aWNlX2xvY2soKSBmb3INCj4gYW55IGRldmljZSBvbiB0
+aGF0IGJ1cywgc28gdGhlIGN4bF9udmRpbW1fYnJpZGdlIGRyaXZlciB1c2VzIGEgd29ya3F1ZXVl
+DQo+IGZvciB0aGUgcmVzY2FuLg0KPiANCj4gVHlwaWNhbGx5IGEgZHJpdmVyIGFsbG9jYXRlcyBk
+cml2ZXIgZGF0YSB0byBob2xkIGEgJ3N0cnVjdCB3b3JrX3N0cnVjdCcNCj4gZm9yIGEgZHJpdmVu
+IGRldmljZSwgYnV0IGZvciBhIHdvcmtxdWV1ZSB0aGF0IG1heSBydW4gYWZ0ZXIgLT5yZW1vdmUo
+KQ0KPiByZXR1cm5zLCBkcml2ZXIgZGF0YSB3aWxsIGhhdmUgYmVlbiBmcmVlZC4gVGhlICdzdHJ1
+Y3QNCj4gY3hsX252ZGltbV9icmlkZ2UnIG9iamVjdCBob2xkcyB0aGUgc3RhdGUgYW5kIHdvcmtf
+c3RydWN0IGRpcmVjdGx5Lg0KPiBVbmZvcnR1bmF0ZWx5IGl0IHdhcyBvbmx5IGFycmFuZ2luZyBm
+b3IgdGhhdCBpbmZyYXN0cnVjdHVyZSB0byBiZQ0KPiBpbml0aWFsaXplZCBvbmNlIHBlciBkZXZp
+Y2UgY3JlYXRpb24gcmF0aGVyIHRoYW4gdGhlIG5lY2Vzc2FyeSBvbmNlIHBlcg0KPiB3b3JrcXVl
+dWUgKGN4bF9wbWVtX3dxKSBjcmVhdGlvbi4NCj4gDQo+IEludHJvZHVjZSBpc19jeGxfbnZkaW1t
+X2JyaWRnZSgpIGFuZCBjeGxfbnZkaW1tX2JyaWRnZV9yZXNldCgpIGluDQo+IHN1cHBvcnQgb2Yg
+aW52YWxpZGF0aW5nIHN0YWxlIHJlZmVyZW5jZXMgdG8gYSByZWNlbnRseSBkZXN0cm95ZWQNCj4g
+Y3hsX3BtZW1fd3EuDQo+IA0KPiBDYzogPHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmc+DQo+IEZpeGVz
+OiA4ZmRjYjE3MDRmNjEgKCJjeGwvcG1lbTogQWRkIGluaXRpYWwgaW5mcmFzdHJ1Y3R1cmUgZm9y
+IHBtZW0gc3VwcG9ydCIpDQo+IFJlcG9ydGVkLWJ5OiBWaXNoYWwgVmVybWEgPHZpc2hhbC5sLnZl
+cm1hQGludGVsLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogRGFuIFdpbGxpYW1zIDxkYW4uai53aWxs
+aWFtc0BpbnRlbC5jb20+DQoNClRyaWVkIHRoaXMgb3V0IGFuZCB3b3JrcyBmaW5lIG5vdywgdGhh
+bmtzIGZvciB0aGUgcXVpY2sgZml4IQ0KDQpUZXN0ZWQtYnk6IFZpc2hhbCBWZXJtYSA8dmlzaGFs
+LmwudmVybWFAaW50ZWwuY29tPg0KDQo+IC0tLQ0KPiAgZHJpdmVycy9jeGwvY29yZS9wbWVtLmMg
+fCAgICA4ICsrKysrKystDQo+ICBkcml2ZXJzL2N4bC9jeGwuaCAgICAgICB8ICAgIDggKysrKysr
+KysNCj4gIGRyaXZlcnMvY3hsL3BtZW0uYyAgICAgIHwgICAyOSArKysrKysrKysrKysrKysrKysr
+KysrKysrKystLQ0KPiAgMyBmaWxlcyBjaGFuZ2VkLCA0MiBpbnNlcnRpb25zKCspLCAzIGRlbGV0
+aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY3hsL2NvcmUvcG1lbS5jIGIvZHJp
+dmVycy9jeGwvY29yZS9wbWVtLmMNCj4gaW5kZXggNzZhNGZhMzk4MzRjLi5jYzQwMmNiN2E5MDUg
+MTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvY3hsL2NvcmUvcG1lbS5jDQo+ICsrKyBiL2RyaXZlcnMv
+Y3hsL2NvcmUvcG1lbS5jDQo+IEBAIC01MSwxMCArNTEsMTYgQEAgc3RydWN0IGN4bF9udmRpbW1f
+YnJpZGdlICp0b19jeGxfbnZkaW1tX2JyaWRnZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ICB9DQo+
+ICBFWFBPUlRfU1lNQk9MX05TX0dQTCh0b19jeGxfbnZkaW1tX2JyaWRnZSwgQ1hMKTsNCj4gIA0K
+PiAtX19tb2NrIGludCBtYXRjaF9udmRpbW1fYnJpZGdlKHN0cnVjdCBkZXZpY2UgKmRldiwgY29u
+c3Qgdm9pZCAqZGF0YSkNCj4gK2Jvb2wgaXNfY3hsX252ZGltbV9icmlkZ2Uoc3RydWN0IGRldmlj
+ZSAqZGV2KQ0KPiAgew0KPiAgCXJldHVybiBkZXYtPnR5cGUgPT0gJmN4bF9udmRpbW1fYnJpZGdl
+X3R5cGU7DQo+ICB9DQo+ICtFWFBPUlRfU1lNQk9MX05TX0dQTChpc19jeGxfbnZkaW1tX2JyaWRn
+ZSwgQ1hMKTsNCj4gKw0KPiArX19tb2NrIGludCBtYXRjaF9udmRpbW1fYnJpZGdlKHN0cnVjdCBk
+ZXZpY2UgKmRldiwgY29uc3Qgdm9pZCAqZGF0YSkNCj4gK3sNCj4gKwlyZXR1cm4gaXNfY3hsX252
+ZGltbV9icmlkZ2UoZGV2KTsNCj4gK30NCj4gIA0KPiAgc3RydWN0IGN4bF9udmRpbW1fYnJpZGdl
+ICpjeGxfZmluZF9udmRpbW1fYnJpZGdlKHN0cnVjdCBjeGxfbnZkaW1tICpjeGxfbnZkKQ0KPiAg
+ew0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jeGwvY3hsLmggYi9kcml2ZXJzL2N4bC9jeGwuaA0K
+PiBpbmRleCA1ZTJlOTM0NTE5MjguLmNhOTc5ZWUxMTAxNyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
+cy9jeGwvY3hsLmgNCj4gKysrIGIvZHJpdmVycy9jeGwvY3hsLmgNCj4gQEAgLTIyMSw2ICsyMjEs
+MTMgQEAgc3RydWN0IGN4bF9kZWNvZGVyIHsNCj4gIH07DQo+ICANCj4gIA0KPiArLyoqDQo+ICsg
+KiBlbnVtIGN4bF9udmRpbW1fYnJpZ2Vfc3RhdGUgLSBzdGF0ZSBtYWNoaW5lIGZvciBtYW5hZ2lu
+ZyBidXMgcmVzY2Fucw0KPiArICogQENYTF9OVkJfTkVXOiBTZXQgYXQgYnJpZGdlIGNyZWF0ZSBh
+bmQgYWZ0ZXIgY3hsX3BtZW1fd3EgaXMgZGVzdHJveWVkDQo+ICsgKiBAQ1hMX05WQl9ERUFEOiBT
+ZXQgYXQgYnJpZ2UgdW5yZWdpc3RyYXRpb24gdG8gcHJlY2x1ZGUgYXN5bmMgcHJvYmluZw0KPiAr
+ICogQENYTF9OVkJfT05MSU5FOiBUYXJnZXQgc3RhdGUgYWZ0ZXIgc3VjY2Vzc2Z1bCAtPnByb2Jl
+KCkNCj4gKyAqIEBDWExfTlZCX09GRkxJTkU6IFRhcmdldCBzdGF0ZSBhZnRlciAtPnJlbW92ZSgp
+IG9yIGZhaWxlZCAtPnByb2JlKCkNCj4gKyAqLw0KPiAgZW51bSBjeGxfbnZkaW1tX2JyaWdlX3N0
+YXRlIHsNCj4gIAlDWExfTlZCX05FVywNCj4gIAlDWExfTlZCX0RFQUQsDQo+IEBAIC0zMzMsNiAr
+MzQwLDcgQEAgc3RydWN0IGN4bF9udmRpbW1fYnJpZGdlICpkZXZtX2N4bF9hZGRfbnZkaW1tX2Jy
+aWRnZShzdHJ1Y3QgZGV2aWNlICpob3N0LA0KPiAgCQkJCQkJICAgICBzdHJ1Y3QgY3hsX3BvcnQg
+KnBvcnQpOw0KPiAgc3RydWN0IGN4bF9udmRpbW0gKnRvX2N4bF9udmRpbW0oc3RydWN0IGRldmlj
+ZSAqZGV2KTsNCj4gIGJvb2wgaXNfY3hsX252ZGltbShzdHJ1Y3QgZGV2aWNlICpkZXYpOw0KPiAr
+Ym9vbCBpc19jeGxfbnZkaW1tX2JyaWRnZShzdHJ1Y3QgZGV2aWNlICpkZXYpOw0KPiAgaW50IGRl
+dm1fY3hsX2FkZF9udmRpbW0oc3RydWN0IGRldmljZSAqaG9zdCwgc3RydWN0IGN4bF9tZW1kZXYg
+KmN4bG1kKTsNCj4gIHN0cnVjdCBjeGxfbnZkaW1tX2JyaWRnZSAqY3hsX2ZpbmRfbnZkaW1tX2Jy
+aWRnZShzdHJ1Y3QgY3hsX252ZGltbSAqY3hsX252ZCk7DQo+ICANCj4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvY3hsL3BtZW0uYyBiL2RyaXZlcnMvY3hsL3BtZW0uYw0KPiBpbmRleCAxN2U4MmFlOTA0
+NTYuLmI2NWEyNzJhMmQ2ZCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9jeGwvcG1lbS5jDQo+ICsr
+KyBiL2RyaXZlcnMvY3hsL3BtZW0uYw0KPiBAQCAtMzE1LDYgKzMxNSwzMSBAQCBzdGF0aWMgc3Ry
+dWN0IGN4bF9kcml2ZXIgY3hsX252ZGltbV9icmlkZ2VfZHJpdmVyID0gew0KPiAgCS5pZCA9IENY
+TF9ERVZJQ0VfTlZESU1NX0JSSURHRSwNCj4gIH07DQo+ICANCj4gKy8qDQo+ICsgKiBSZXR1cm4g
+YWxsIGJyaWRnZXMgdG8gdGhlIENYTF9OVkJfTkVXIHN0YXRlIHRvIGludmFsaWRhdGUgYW55DQo+
+ICsgKiAtPnN0YXRlX3dvcmsgcmVmZXJyaW5nIHRvIHRoZSBub3cgZGVzdHJveWVkIGN4bF9wbWVt
+X3dxLg0KPiArICovDQo+ICtzdGF0aWMgaW50IGN4bF9udmRpbW1fYnJpZGdlX3Jlc2V0KHN0cnVj
+dCBkZXZpY2UgKmRldiwgdm9pZCAqZGF0YSkNCj4gK3sNCj4gKwlzdHJ1Y3QgY3hsX252ZGltbV9i
+cmlkZ2UgKmN4bF9udmI7DQo+ICsNCj4gKwlpZiAoIWlzX2N4bF9udmRpbW1fYnJpZGdlKGRldikp
+DQo+ICsJCXJldHVybiAwOw0KPiArDQo+ICsJY3hsX252YiA9IHRvX2N4bF9udmRpbW1fYnJpZGdl
+KGRldik7DQo+ICsJZGV2aWNlX2xvY2soZGV2KTsNCj4gKwljeGxfbnZiLT5zdGF0ZSA9IENYTF9O
+VkJfTkVXOw0KPiArCWRldmljZV91bmxvY2soZGV2KTsNCj4gKw0KPiArCXJldHVybiAwOw0KPiAr
+fQ0KPiArDQo+ICtzdGF0aWMgdm9pZCBkZXN0cm95X2N4bF9wbWVtX3dxKHZvaWQpDQo+ICt7DQo+
+ICsJZGVzdHJveV93b3JrcXVldWUoY3hsX3BtZW1fd3EpOw0KPiArCWJ1c19mb3JfZWFjaF9kZXYo
+JmN4bF9idXNfdHlwZSwgTlVMTCwgTlVMTCwgY3hsX252ZGltbV9icmlkZ2VfcmVzZXQpOw0KPiAr
+fQ0KPiArDQo+ICBzdGF0aWMgX19pbml0IGludCBjeGxfcG1lbV9pbml0KHZvaWQpDQo+ICB7DQo+
+ICAJaW50IHJjOw0KPiBAQCAtMzQwLDcgKzM2NSw3IEBAIHN0YXRpYyBfX2luaXQgaW50IGN4bF9w
+bWVtX2luaXQodm9pZCkNCj4gIGVycl9udmRpbW06DQo+ICAJY3hsX2RyaXZlcl91bnJlZ2lzdGVy
+KCZjeGxfbnZkaW1tX2JyaWRnZV9kcml2ZXIpOw0KPiAgZXJyX2JyaWRnZToNCj4gLQlkZXN0cm95
+X3dvcmtxdWV1ZShjeGxfcG1lbV93cSk7DQo+ICsJZGVzdHJveV9jeGxfcG1lbV93cSgpOw0KPiAg
+CXJldHVybiByYzsNCj4gIH0NCj4gIA0KPiBAQCAtMzQ4LDcgKzM3Myw3IEBAIHN0YXRpYyBfX2V4
+aXQgdm9pZCBjeGxfcG1lbV9leGl0KHZvaWQpDQo+ICB7DQo+ICAJY3hsX2RyaXZlcl91bnJlZ2lz
+dGVyKCZjeGxfbnZkaW1tX2RyaXZlcik7DQo+ICAJY3hsX2RyaXZlcl91bnJlZ2lzdGVyKCZjeGxf
+bnZkaW1tX2JyaWRnZV9kcml2ZXIpOw0KPiAtCWRlc3Ryb3lfd29ya3F1ZXVlKGN4bF9wbWVtX3dx
+KTsNCj4gKwlkZXN0cm95X2N4bF9wbWVtX3dxKCk7DQo+ICB9DQo+ICANCj4gIE1PRFVMRV9MSUNF
+TlNFKCJHUEwgdjIiKTsNCj4gDQoNCg==
