@@ -2,77 +2,345 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D143C433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 12 Nov 2021 00:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDF2C433F5
+	for <linux-cxl@archiver.kernel.org>; Fri, 12 Nov 2021 21:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E1B561268
-	for <linux-cxl@archiver.kernel.org>; Fri, 12 Nov 2021 00:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A79CB61051
+	for <linux-cxl@archiver.kernel.org>; Fri, 12 Nov 2021 21:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234605AbhKLA7U (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 11 Nov 2021 19:59:20 -0500
-Received: from mail-ed1-f43.google.com ([209.85.208.43]:45938 "EHLO
-        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234146AbhKLA7T (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 11 Nov 2021 19:59:19 -0500
-Received: by mail-ed1-f43.google.com with SMTP id f4so30900094edx.12;
-        Thu, 11 Nov 2021 16:56:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ILyyi8QjSp1kiJ38sxFtC8IcpNL/iV0bSL1B4louovc=;
-        b=23P0Rup7A5Dtk0n59yizWnz6dJdViQxmqsD7j2H7Guy6sIpjYbWtvDlI+nKthVOVMj
-         tsjQJ8hLS18SOb2lE0pmScc2ybwlmLeTK/xKCX+g40+IGUIVGtibf9w7PHQn7oLk/Xm3
-         Awrxq5V2p+K1K1O6FmE/81nxMuA7t5lKOFqBrGFwK/G5GtsgXfX6sYOsrcKLt+zCg2mk
-         gIGDex0aFyUoUb6RUruGuJKpqPfhOqTQ70NHJ8atviQ7Uafxo2uawS9i0pZHB9J9+YUV
-         hnBxCeXXIcH6PihmQM1qBEcct1eR9LdiEbudo1FI+Ykz1O48sxhVm7bN3JTy8OP1tFcf
-         KaIg==
-X-Gm-Message-State: AOAM533sBOuJqNSS0En0f+Xo/XprNIGq2oxTRq8qFkGkc+rY63LdgRN3
-        C7YVm1LTum0skWqvmow59hY=
-X-Google-Smtp-Source: ABdhPJzXubFYK2c9wpsc5PLlX2QszNt0lE30oFWWJux9hJ9zUgDD25KHTiLiNLKtxSGw84l5HVX0fQ==
-X-Received: by 2002:a50:e608:: with SMTP id y8mr15291156edm.39.1636678588993;
-        Thu, 11 Nov 2021 16:56:28 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id ho30sm2058172ejc.30.2021.11.11.16.56.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Nov 2021 16:56:28 -0800 (PST)
-Date:   Fri, 12 Nov 2021 01:56:27 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     stuart hayes <stuart.w.hayes@gmail.com>
-Cc:     "Tkaczyk, Mariusz" <mariusz.tkaczyk@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "lukas@wunner.de" <lukas@wunner.de>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v3] Add support for PCIe SSD status LED management
-Message-ID: <YY27u8IfLK6ffpI+@rocinante>
-References: <20210813213653.3760-1-stuart.w.hayes@gmail.com>
- <5d1eb958c13553d70e4bee7a7b342febcf1c02ee.camel@intel.com>
- <4bb26dc0-9b82-21d6-0257-d50ec206a130@gmail.com>
- <CAPcyv4iig5rxCNb7GyGV9akhZKLF+OeGhewSbOeAzzA6pKreRA@mail.gmail.com>
- <19dcfbea-efcd-b385-4031-23fae5c1c78b@linux.intel.com>
- <4cb4d599-a146-2219-6c6a-c713f022bd7c@gmail.com>
+        id S235859AbhKLVzk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 12 Nov 2021 16:55:40 -0500
+Received: from mga06.intel.com ([134.134.136.31]:47891 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235806AbhKLVzk (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Fri, 12 Nov 2021 16:55:40 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10166"; a="294037111"
+X-IronPort-AV: E=Sophos;i="5.87,230,1631602800"; 
+   d="scan'208";a="294037111"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2021 13:52:48 -0800
+X-IronPort-AV: E=Sophos;i="5.87,230,1631602800"; 
+   d="scan'208";a="471283861"
+Received: from gjmorale-mobl.amr.corp.intel.com (HELO vverma7-desk.amr.corp.intel.com) ([10.251.137.106])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2021 13:52:48 -0800
+From:   Vishal Verma <vishal.l.verma@intel.com>
+To:     <linux-cxl@vger.kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        <nvdimm@lists.linux.dev>, Vishal Verma <vishal.l.verma@intel.com>
+Subject: [ndctl PATCH v6 16/16] cxl: add health information to cxl-list
+Date:   Fri, 12 Nov 2021 14:52:45 -0700
+Message-Id: <20211112215245.1887356-1-vishal.l.verma@intel.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20211111204436.1560365-17-vishal.l.verma@intel.com>
+References: <20211111204436.1560365-17-vishal.l.verma@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4cb4d599-a146-2219-6c6a-c713f022bd7c@gmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9561; h=from:subject; bh=8ZYI7ATPwJQglcg+9mSE51jo9xWDuD3lTULe2WQJROA=; b=owGbwMvMwCHGf25diOft7jLG02pJDIl9jxTNEn/XHV5xIDP7vP8F3/q7vN8PTPFlNqs++u79umzP LV8DOkpZGMQ4GGTFFFn+7vnIeExuez5PYIIjzBxWJpAhDFycAjCR28cY/nDxdnvL/ZkXsf2VZvTfop xLq6/2bNlq0n1EZh3vBpmfk+4x/BVvMmFN5X95ff+6hQfLZvW+5lg3bVn40fYlCxSb36+uV2cEAA==
+X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Stuart,
+Add JSON output for fields from the 'GET_HEALTH_INFO' mailbox command
+to memory device listings.
 
-[...]
-> I've reworked the code so it is an auxiliary driver (to nvme, and
-> hopefully cxl and pcieport, but I haven't added that yet), and so it
-> registers as an enclosure (instead of using the LED subsystem).
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+---
+ Documentation/cxl/cxl-list.txt |  38 +++++++
+ util/json.h                    |   1 +
+ cxl/list.c                     |   5 +
+ util/json.c                    | 179 +++++++++++++++++++++++++++++++++
+ 4 files changed, 223 insertions(+)
 
-Would you be able to post this new reworded driver as either a new
-version or a completely new series, or even as an RFC?  It would help
-to get a fresh perspective and also make it easier to review it.
+diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
+index e761cfa..d305a37 100644
+--- a/Documentation/cxl/cxl-list.txt
++++ b/Documentation/cxl/cxl-list.txt
+@@ -53,6 +53,44 @@ OPTIONS
+ --idle::
+ 	Include idle (not enabled / zero-sized) devices in the listing
+ 
++-H::
++--health::
++	Include health information in the memdev listing. Example listing:
++----
++# cxl list -m mem0 -H
++[
++  {
++    "memdev":"mem0",
++    "pmem_size":268435456,
++    "ram_size":268435456,
++    "health":{
++      "maintenance_needed":true,
++      "performance_degraded":true,
++      "hw_replacement_needed":true,
++      "media_normal":false,
++      "media_not_ready":false,
++      "media_persistence_lost":false,
++      "media_data_lost":true,
++      "media_powerloss_persistence_loss":false,
++      "media_shutdown_persistence_loss":false,
++      "media_persistence_loss_imminent":false,
++      "media_powerloss_data_loss":false,
++      "media_shutdown_data_loss":false,
++      "media_data_loss_imminent":false,
++      "ext_life_used":"normal",
++      "ext_temperature":"critical",
++      "ext_corrected_volatile":"warning",
++      "ext_corrected_persistent":"normal",
++      "life_used_percent":15,
++      "temperature":25,
++      "dirty_shutdowns":10,
++      "volatile_errors":20,
++      "pmem_errors":30
++    }
++  }
++]
++----
++
+ include::human-option.txt[]
+ 
+ include::verbose-option.txt[]
+diff --git a/util/json.h b/util/json.h
+index 91918c8..ce575e6 100644
+--- a/util/json.h
++++ b/util/json.h
+@@ -19,6 +19,7 @@ enum util_json_flags {
+ 	UTIL_JSON_CONFIGURED	= (1 << 7),
+ 	UTIL_JSON_FIRMWARE	= (1 << 8),
+ 	UTIL_JSON_DAX_MAPPINGS	= (1 << 9),
++	UTIL_JSON_HEALTH	= (1 << 10),
+ };
+ 
+ struct json_object;
+diff --git a/cxl/list.c b/cxl/list.c
+index 7c1d2eb..931606a 100644
+--- a/cxl/list.c
++++ b/cxl/list.c
+@@ -16,6 +16,7 @@ static struct {
+ 	bool memdevs;
+ 	bool idle;
+ 	bool human;
++	bool health;
+ } list;
+ 
+ static unsigned long listopts_to_flags(void)
+@@ -26,6 +27,8 @@ static unsigned long listopts_to_flags(void)
+ 		flags |= UTIL_JSON_IDLE;
+ 	if (list.human)
+ 		flags |= UTIL_JSON_HUMAN;
++	if (list.health)
++		flags |= UTIL_JSON_HEALTH;
+ 	return flags;
+ }
+ 
+@@ -57,6 +60,8 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
+ 		OPT_BOOLEAN('i', "idle", &list.idle, "include idle devices"),
+ 		OPT_BOOLEAN('u', "human", &list.human,
+ 				"use human friendly number formats "),
++		OPT_BOOLEAN('H', "health", &list.health,
++				"include memory device health information "),
+ 		OPT_END(),
+ 	};
+ 	const char * const u[] = {
+diff --git a/util/json.c b/util/json.c
+index 3be3a92..f97cf07 100644
+--- a/util/json.c
++++ b/util/json.c
+@@ -1442,6 +1442,180 @@ struct json_object *util_badblock_rec_to_json(u64 block, u64 count,
+ 	return NULL;
+ }
+ 
++static struct json_object *util_cxl_memdev_health_to_json(
++		struct cxl_memdev *memdev, unsigned long flags)
++{
++	struct json_object *jhealth;
++	struct json_object *jobj;
++	struct cxl_cmd *cmd;
++	u32 field;
++	int rc;
++
++	jhealth = json_object_new_object();
++	if (!jhealth)
++		return NULL;
++	if (!memdev)
++		goto err_jobj;
++
++	cmd = cxl_cmd_new_get_health_info(memdev);
++	if (!cmd)
++		goto err_jobj;
++
++	rc = cxl_cmd_submit(cmd);
++	if (rc < 0)
++		goto err_cmd;
++	rc = cxl_cmd_get_mbox_status(cmd);
++	if (rc != 0)
++		goto err_cmd;
++
++	/* health_status fields */
++	rc = cxl_cmd_health_info_get_maintenance_needed(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "maintenance_needed", jobj);
++
++	rc = cxl_cmd_health_info_get_performance_degraded(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "performance_degraded", jobj);
++
++	rc = cxl_cmd_health_info_get_hw_replacement_needed(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "hw_replacement_needed", jobj);
++
++	/* media_status fields */
++	rc = cxl_cmd_health_info_get_media_normal(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "media_normal", jobj);
++
++	rc = cxl_cmd_health_info_get_media_not_ready(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "media_not_ready", jobj);
++
++	rc = cxl_cmd_health_info_get_media_persistence_lost(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "media_persistence_lost", jobj);
++
++	rc = cxl_cmd_health_info_get_media_data_lost(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "media_data_lost", jobj);
++
++	rc = cxl_cmd_health_info_get_media_powerloss_persistence_loss(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "media_powerloss_persistence_loss", jobj);
++
++	rc = cxl_cmd_health_info_get_media_shutdown_persistence_loss(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "media_shutdown_persistence_loss", jobj);
++
++	rc = cxl_cmd_health_info_get_media_persistence_loss_imminent(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "media_persistence_loss_imminent", jobj);
++
++	rc = cxl_cmd_health_info_get_media_powerloss_data_loss(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "media_powerloss_data_loss", jobj);
++
++	rc = cxl_cmd_health_info_get_media_shutdown_data_loss(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "media_shutdown_data_loss", jobj);
++
++	rc = cxl_cmd_health_info_get_media_data_loss_imminent(cmd);
++	jobj = json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jhealth, "media_data_loss_imminent", jobj);
++
++	/* ext_status fields */
++	if (cxl_cmd_health_info_get_ext_life_used_normal(cmd))
++		jobj = json_object_new_string("normal");
++	else if (cxl_cmd_health_info_get_ext_life_used_warning(cmd))
++		jobj = json_object_new_string("warning");
++	else if (cxl_cmd_health_info_get_ext_life_used_critical(cmd))
++		jobj = json_object_new_string("critical");
++	else
++		jobj = json_object_new_string("unknown");
++	if (jobj)
++		json_object_object_add(jhealth, "ext_life_used", jobj);
++
++	if (cxl_cmd_health_info_get_ext_temperature_normal(cmd))
++		jobj = json_object_new_string("normal");
++	else if (cxl_cmd_health_info_get_ext_temperature_warning(cmd))
++		jobj = json_object_new_string("warning");
++	else if (cxl_cmd_health_info_get_ext_temperature_critical(cmd))
++		jobj = json_object_new_string("critical");
++	else
++		jobj = json_object_new_string("unknown");
++	if (jobj)
++		json_object_object_add(jhealth, "ext_temperature", jobj);
++
++	if (cxl_cmd_health_info_get_ext_corrected_volatile_normal(cmd))
++		jobj = json_object_new_string("normal");
++	else if (cxl_cmd_health_info_get_ext_corrected_volatile_warning(cmd))
++		jobj = json_object_new_string("warning");
++	else
++		jobj = json_object_new_string("unknown");
++	if (jobj)
++		json_object_object_add(jhealth, "ext_corrected_volatile", jobj);
++
++	if (cxl_cmd_health_info_get_ext_corrected_persistent_normal(cmd))
++		jobj = json_object_new_string("normal");
++	else if (cxl_cmd_health_info_get_ext_corrected_persistent_warning(cmd))
++		jobj = json_object_new_string("warning");
++	else
++		jobj = json_object_new_string("unknown");
++	if (jobj)
++		json_object_object_add(jhealth, "ext_corrected_persistent", jobj);
++
++	/* other fields */
++	field = cxl_cmd_health_info_get_life_used(cmd);
++	if (field != 0xff) {
++		jobj = json_object_new_int(field);
++		if (jobj)
++			json_object_object_add(jhealth, "life_used_percent", jobj);
++	}
++
++	field = cxl_cmd_health_info_get_temperature(cmd);
++	if (field != 0xffff) {
++		jobj = json_object_new_int(field);
++		if (jobj)
++			json_object_object_add(jhealth, "temperature", jobj);
++	}
++
++	field = cxl_cmd_health_info_get_dirty_shutdowns(cmd);
++	jobj = json_object_new_int64(field);
++	if (jobj)
++		json_object_object_add(jhealth, "dirty_shutdowns", jobj);
++
++	field = cxl_cmd_health_info_get_volatile_errors(cmd);
++	jobj = json_object_new_int64(field);
++	if (jobj)
++		json_object_object_add(jhealth, "volatile_errors", jobj);
++
++	field = cxl_cmd_health_info_get_pmem_errors(cmd);
++	jobj = json_object_new_int64(field);
++	if (jobj)
++		json_object_object_add(jhealth, "pmem_errors", jobj);
++
++	cxl_cmd_unref(cmd);
++	return jhealth;
++
++err_cmd:
++	cxl_cmd_unref(cmd);
++err_jobj:
++	json_object_put(jhealth);
++	return NULL;
++}
++
+ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+ 		unsigned long flags)
+ {
+@@ -1464,5 +1638,10 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+ 	if (jobj)
+ 		json_object_object_add(jdev, "ram_size", jobj);
+ 
++	if (flags & UTIL_JSON_HEALTH) {
++		jobj = util_cxl_memdev_health_to_json(memdev, flags);
++		if (jobj)
++			json_object_object_add(jdev, "health", jobj);
++	}
+ 	return jdev;
+ }
+-- 
+2.31.1
 
-	Krzysztof
