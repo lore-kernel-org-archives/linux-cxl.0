@@ -2,97 +2,118 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1462C433F5
-	for <linux-cxl@archiver.kernel.org>; Fri, 19 Nov 2021 06:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4BFC433F5
+	for <linux-cxl@archiver.kernel.org>; Fri, 19 Nov 2021 14:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95E2561AFD
-	for <linux-cxl@archiver.kernel.org>; Fri, 19 Nov 2021 06:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E09BB6142A
+	for <linux-cxl@archiver.kernel.org>; Fri, 19 Nov 2021 14:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232005AbhKSGvg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 19 Nov 2021 01:51:36 -0500
-Received: from verein.lst.de ([213.95.11.211]:50013 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229457AbhKSGvf (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 19 Nov 2021 01:51:35 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 1F3EA68AFE; Fri, 19 Nov 2021 07:48:31 +0100 (CET)
-Date:   Fri, 19 Nov 2021 07:48:30 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        ira.weiny@intel.com, Dan Williams <dan.j.williams@intel.com>,
+        id S235996AbhKSOnl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 19 Nov 2021 09:43:41 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4112 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232249AbhKSOnl (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 19 Nov 2021 09:43:41 -0500
+Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HwfT155wQz67tVr;
+        Fri, 19 Nov 2021 22:39:49 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Fri, 19 Nov 2021 15:40:37 +0100
+Received: from localhost (10.52.121.45) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Fri, 19 Nov
+ 2021 14:40:36 +0000
+Date:   Fri, 19 Nov 2021 14:40:30 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-cxl@vger.kernel.org,
-        linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 3/5] cxl/pci: Add DOE Auxiliary Devices
-Message-ID: <20211119064830.GA15425@lst.de>
-References: <20211117122335.00000b35@Huawei.com> <20211117221536.GA1778765@bhelgaas>
+        "Ben Widawsky" <ben.widawsky@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 4/5] cxl/mem: Add CDAT table reading from DOE
+Message-ID: <20211119144030.00002f86@Huawei.com>
+In-Reply-To: <20211105235056.3711389-5-ira.weiny@intel.com>
+References: <20211105235056.3711389-1-ira.weiny@intel.com>
+        <20211105235056.3711389-5-ira.weiny@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211117221536.GA1778765@bhelgaas>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.121.45]
+X-ClientProxiedBy: lhreml737-chm.china.huawei.com (10.201.108.187) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Nov 17, 2021 at 04:15:36PM -0600, Bjorn Helgaas wrote:
-> > Agreed though how it all gets tied together isn't totally clear
-> > to me yet. The messy bit is interrupts given I don't think we have
-> > a model for enabling those anywhere other than in individual PCI drivers.
+On Fri, 5 Nov 2021 16:50:55 -0700
+<ira.weiny@intel.com> wrote:
+
+> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > 
-> Ah.  Yeah, that is a little messy.  The only real precedent where the
-> PCI core and a driver might need to coordinate on interrupts is the
-> portdrv.  So far we've pretended that bridges do not have
-> device-specific functionality that might require interrupts.  I don't
-> think that's actually true, but we haven't integrated drivers for the
-> tuning, performance monitoring, and similar features that bridges may
-> have.  Yet.
-
-And portdrv really is conceptually part of the core PCI core, and
-should eventually be fully integrated..
-
-> In any case, I think the argument that DOE capabilities are not
-> CXL-specific still holds.
-
-Agreed.
-
-> Oh, right, of course.  A hint here that MSI/MSI-X depends on bus
-> mastering would save me the trouble.
+> Read CDAT raw table data from the cxl_mem state object.  Currently this
+> is only supported by a PCI CXL object through a DOE mailbox which supports
+> CDAT.  But any cxl_mem type object can provide this data later if need
+> be.  For example for testing.
 > 
-> I wonder if the infrastructure, e.g., something inside
-> pci_alloc_irq_vectors_affinity() should do this for us.  The
-> connection is "obvious" but not mentioned in
-> Documentation/PCI/msi-howto.rst and I'm not sure how callers that
-> supply PCI_IRQ_ALL_TYPES would know whether they got a single MSI
-> vector (which requires bus mastering) or an INTx vector (which does
-> not).
-
-As a minimum step we should document that this.  That being said
-I don't tink we can just make the interrupt API call pci_set_master
-as there might be strange ordering requirements in the drivers.
-
-> > > So we get an auxiliary device for every instance of a DOE
-> > > capability?  I think the commit log should mention something about
-> > > how many are created (e.g., "one per DOE capability"), how they
-> > > are named, whether they appear in sysfs, how drivers bind to them,
-> > > etc.
-> > > 
-> > > I assume there needs to be some coordination between possible
-> > > multiple users of a DOE capability?  How does that work?
-> > 
-> > The DOE handling implementation makes everything synchronous - so if
-> > multiple users each may have to wait on queueing their query /
-> > responses exchanges.
-> > 
-> > The fun of non OS software accessing these is still an open
-> > question.
+> Cache this data for later parsing.  Provide a sysfs binary attribute to
+> allow dumping of the CDAT.
 > 
-> Sounds like something that potentially could be wrapped up in a safe
-> but slow interface that could be usable by others, including lspci?
+> Binary dumping is modeled on /sys/firmware/ACPI/tables/
+> 
+> The ability to dump this table will be very useful for emulation of real
+> devices once they become available as QEMU CXL type 3 device emulation will
+> be able to load this file in.
+> 
+> This does not support table updates at runtime. It will always provide
+> whatever was there when first cached. Handling of table updates can be
+> implemented later.
+> 
+> Once there are more users, this code can move out to driver/cxl/cdat.c
+> or similar.
+> 
+> Finally create a complete list of DOE defines within cdat.h for anyone
+> wishing to decode the CDAT table.
+> 
+> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
 
-I guess we have to.  I think this interface is a nightmare.  Why o why
-does the PCI SGI keep doing these stupid things (see also VPDs).
+>  
+>  static struct attribute_group cxl_memdev_ram_attribute_group = {
+> @@ -293,6 +329,16 @@ devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
+>  	if (rc)
+>  		goto err;
+>  
+> +	/* Cache the data early to ensure is_visible() works */
+> +	if (!cxl_mem_cdat_get_length(cxlds, &cxlmd->cdat_length)) {
+> +		cxlmd->cdat_table = devm_kzalloc(dev, cxlmd->cdat_length, GFP_KERNEL);
+
+I think this devm_ call should be using the parent device, not this one.
+
+As it stands it breaks Ben's mem.c driver which probes for this device
+and fails because you can't call probe for a device that already has things
+in it's devres queue.
+
+Too many patches in flight at the same time makes for some entertaining
+rebases if you want them all at once..
+
+Jonathan
+
+> +		if (!cxlmd->cdat_table) {
+> +			rc = -ENOMEM;
+> +			goto err;
+> +		}
+> +		cxl_mem_cdat_read_table(cxlds, cxlmd->cdat_table, cxlmd->cdat_length);
+> +	}
+> +
+>  	/*
+>  	 * Activate ioctl operations, no cxl_memdev_rwsem manipulation
+>  	 * needed as this is ordered with cdev_add() publishing the device.
