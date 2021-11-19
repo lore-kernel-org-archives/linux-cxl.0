@@ -2,88 +2,97 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 171D2C433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 19 Nov 2021 03:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1462C433F5
+	for <linux-cxl@archiver.kernel.org>; Fri, 19 Nov 2021 06:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E85E661452
-	for <linux-cxl@archiver.kernel.org>; Fri, 19 Nov 2021 03:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E2561AFD
+	for <linux-cxl@archiver.kernel.org>; Fri, 19 Nov 2021 06:48:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233048AbhKSD2q (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 18 Nov 2021 22:28:46 -0500
-Received: from mga18.intel.com ([134.134.136.126]:32116 "EHLO mga18.intel.com"
+        id S232005AbhKSGvg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 19 Nov 2021 01:51:36 -0500
+Received: from verein.lst.de ([213.95.11.211]:50013 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232977AbhKSD2q (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 18 Nov 2021 22:28:46 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10172"; a="221226958"
-X-IronPort-AV: E=Sophos;i="5.87,246,1631602800"; 
-   d="scan'208";a="221226958"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2021 19:25:42 -0800
-X-IronPort-AV: E=Sophos;i="5.87,246,1631602800"; 
-   d="scan'208";a="495689013"
-Received: from dmkresin-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.138.155])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2021 19:25:42 -0800
-Date:   Thu, 18 Nov 2021 19:25:41 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Shreyas Shah <shreyas.shah@elastics.cloud>
-Cc:     Saransh Gupta1 <saransh@ibm.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>
-Subject: Re: Follow-up on the CXL discussion at OFTC
-Message-ID: <20211119032541.gr6berwu2ve4tkax@intel.com>
-References: <OF255704A1.78FEF164-ON0025878E.00821084-0025878F.00015560@ibm.com>
- <20211117165719.pqig62t5z2grgjvv@intel.com>
- <20211117173201.00002513@Huawei.com>
- <OF164E5BA6.E927FE73-ON00258791.0078E206-88258791.007ABBAD@ibm.com>
- <BY5PR12MB4179A47F68A9A15E5888D074E89B9@BY5PR12MB4179.namprd12.prod.outlook.com>
- <20211119014822.j247ayrsdve4yxyu@intel.com>
- <BY5PR12MB4179AA1B062AEA75098E15D8E89C9@BY5PR12MB4179.namprd12.prod.outlook.com>
+        id S229457AbhKSGvf (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Fri, 19 Nov 2021 01:51:35 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 1F3EA68AFE; Fri, 19 Nov 2021 07:48:31 +0100 (CET)
+Date:   Fri, 19 Nov 2021 07:48:30 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        ira.weiny@intel.com, Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 3/5] cxl/pci: Add DOE Auxiliary Devices
+Message-ID: <20211119064830.GA15425@lst.de>
+References: <20211117122335.00000b35@Huawei.com> <20211117221536.GA1778765@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BY5PR12MB4179AA1B062AEA75098E15D8E89C9@BY5PR12MB4179.namprd12.prod.outlook.com>
+In-Reply-To: <20211117221536.GA1778765@bhelgaas>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21-11-19 02:29:51, Shreyas Shah wrote:
-> Hi Ben
+On Wed, Nov 17, 2021 at 04:15:36PM -0600, Bjorn Helgaas wrote:
+> > Agreed though how it all gets tied together isn't totally clear
+> > to me yet. The messy bit is interrupts given I don't think we have
+> > a model for enabling those anywhere other than in individual PCI drivers.
 > 
-> Are you planning to add the CXL2.0 switch inside QEMU or already added in one of the version? 
->  
+> Ah.  Yeah, that is a little messy.  The only real precedent where the
+> PCI core and a driver might need to coordinate on interrupts is the
+> portdrv.  So far we've pretended that bridges do not have
+> device-specific functionality that might require interrupts.  I don't
+> think that's actually true, but we haven't integrated drivers for the
+> tuning, performance monitoring, and similar features that bridges may
+> have.  Yet.
 
-From me, there are no plans for QEMU anything until/unless upstream thinks it
-will merge the existing patches, or provide feedback as to what it would take to
-get them merged. If upstream doesn't see a point in these patches, then I really
-don't see much value in continuing to further them. Once hardware comes out, the
-value proposition is certainly less.
+And portdrv really is conceptually part of the core PCI core, and
+should eventually be fully integrated..
 
-Having said that, once I get the port/region patches merged for the Linux
-driver, I do intend to go back and try to implement a basic switch so that we
-can test those flows.
+> In any case, I think the argument that DOE capabilities are not
+> CXL-specific still holds.
 
-I admit, I'm curious why you're interested in switches.
+Agreed.
 
-> Regards,
-> Shreyas
+> Oh, right, of course.  A hint here that MSI/MSI-X depends on bus
+> mastering would save me the trouble.
 > 
-> -----Original Message-----
-> From: Ben Widawsky <ben.widawsky@intel.com> 
-> Sent: Thursday, November 18, 2021 5:48 PM
-> To: Shreyas Shah <shreyas.shah@elastics.cloud>
-> Cc: Saransh Gupta1 <saransh@ibm.com>; Jonathan Cameron <Jonathan.Cameron@huawei.com>; linux-cxl@vger.kernel.org; qemu-devel@nongnu.org
-> Subject: Re: Follow-up on the CXL discussion at OFTC
-> 
-> On 21-11-18 22:52:56, Shreyas Shah wrote:
-> > Hello Folks,
+> I wonder if the infrastructure, e.g., something inside
+> pci_alloc_irq_vectors_affinity() should do this for us.  The
+> connection is "obvious" but not mentioned in
+> Documentation/PCI/msi-howto.rst and I'm not sure how callers that
+> supply PCI_IRQ_ALL_TYPES would know whether they got a single MSI
+> vector (which requires bus mastering) or an INTx vector (which does
+> not).
+
+As a minimum step we should document that this.  That being said
+I don't tink we can just make the interrupt API call pci_set_master
+as there might be strange ordering requirements in the drivers.
+
+> > > So we get an auxiliary device for every instance of a DOE
+> > > capability?  I think the commit log should mention something about
+> > > how many are created (e.g., "one per DOE capability"), how they
+> > > are named, whether they appear in sysfs, how drivers bind to them,
+> > > etc.
+> > > 
+> > > I assume there needs to be some coordination between possible
+> > > multiple users of a DOE capability?  How does that work?
 > > 
-> > Any plan to add CXL2.0 switch ports in QEMU? 
-> 
-> What's your definition of plan?
-> 
+> > The DOE handling implementation makes everything synchronous - so if
+> > multiple users each may have to wait on queueing their query /
+> > responses exchanges.
 > > 
-> > Regards,
-> > Shreyas
+> > The fun of non OS software accessing these is still an open
+> > question.
 > 
-> [snip]
+> Sounds like something that potentially could be wrapped up in a safe
+> but slow interface that could be usable by others, including lspci?
+
+I guess we have to.  I think this interface is a nightmare.  Why o why
+does the PCI SGI keep doing these stupid things (see also VPDs).
