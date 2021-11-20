@@ -2,24 +2,24 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E3DC43219
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F41C41535
 	for <linux-cxl@archiver.kernel.org>; Sat, 20 Nov 2021 00:03:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231466AbhKTAGP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 19 Nov 2021 19:06:15 -0500
-Received: from mga12.intel.com ([192.55.52.136]:5724 "EHLO mga12.intel.com"
+        id S236347AbhKTAGR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 19 Nov 2021 19:06:17 -0500
+Received: from mga12.intel.com ([192.55.52.136]:5726 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231298AbhKTAGK (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        id S234759AbhKTAGK (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
         Fri, 19 Nov 2021 19:06:10 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10173"; a="214542405"
+X-IronPort-AV: E=McAfee;i="6200,9189,10173"; a="214542411"
 X-IronPort-AV: E=Sophos;i="5.87,248,1631602800"; 
-   d="scan'208";a="214542405"
+   d="scan'208";a="214542411"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2021 16:02:57 -0800
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2021 16:02:59 -0800
 X-IronPort-AV: E=Sophos;i="5.87,248,1631602800"; 
-   d="scan'208";a="496088370"
+   d="scan'208";a="496088386"
 Received: from jfaistl-mobl1.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.139.58])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2021 16:02:57 -0800
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2021 16:02:58 -0800
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
 Cc:     Ben Widawsky <ben.widawsky@intel.com>,
@@ -28,9 +28,9 @@ Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH 10/23] cxl/core: Convert decoder range to resource
-Date:   Fri, 19 Nov 2021 16:02:37 -0800
-Message-Id: <20211120000250.1663391-11-ben.widawsky@intel.com>
+Subject: [PATCH 14/23] cxl: Introduce topology host registration
+Date:   Fri, 19 Nov 2021 16:02:41 -0800
+Message-Id: <20211120000250.1663391-15-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.34.0
 In-Reply-To: <20211120000250.1663391-1-ben.widawsky@intel.com>
 References: <20211120000250.1663391-1-ben.widawsky@intel.com>
@@ -40,137 +40,188 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-CXL decoders manage address ranges in a hierarchical fashion whereby a
-leaf is a unique subregion of its parent decoder (midlevel or root). It
-therefore makes sense to use the resource API for handling this.
+The description of the CXL topology will be conveyed by a platform
+specific entity that is expected to be a singleton. For ACPI based
+systems, this is ACPI0017. When the topology host goes away, which as of
+now can only be triggered by module unload, it is desirable to have the
+entire topology cleaned up. Regular devm unwinding handles most
+situations already, but what's missing is the ability to teardown the
+root port. Since the root port is platform specific, the core needs a
+set of APIs to allow platform specific drivers to register their root
+ports. With that, all the automatic teardown can occur.
+
+cxl_test makes for an interesting case. cxl_test creates an alternate
+universe where there are possibly two root topology hosts (a real
+ACPI0016, and a fake ACPI0016). For this to work in the future, cxl_acpi
+(or some future platform host driver) will need to be unloaded first.
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-
 ---
-Changes since RFCv2
-- Switch to DEFINE_RES_MEM from NAMED variant (Dan)
-- Differentiate CFMWS resources and other decoder resources (Ben)
-- Make decoder resources be range, nor resource (Dan)
-- Set decoder name in cxl_decoder_add() (Dan)
+The topology lock can be used for more things. I'd like to save that as
+an add-on patch since it's extra risk for no reward, at this point.
 ---
- drivers/cxl/acpi.c     | 16 ++++++----------
- drivers/cxl/core/bus.c | 19 +++++++++++++++++--
- drivers/cxl/cxl.h      |  8 ++++++--
- 3 files changed, 29 insertions(+), 14 deletions(-)
+ drivers/cxl/acpi.c     | 18 ++++++++++---
+ drivers/cxl/core/bus.c | 57 +++++++++++++++++++++++++++++++++++++++---
+ drivers/cxl/cxl.h      |  5 +++-
+ 3 files changed, 73 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 7cfa8b568013..3415184a2e61 100644
+index 3415184a2e61..82cc42ab38c6 100644
 --- a/drivers/cxl/acpi.c
 +++ b/drivers/cxl/acpi.c
-@@ -108,10 +108,8 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
- 
- 	cxld->flags = cfmws_to_decoder_flags(cfmws->restrictions);
- 	cxld->target_type = CXL_DECODER_EXPANDER;
--	cxld->range = (struct range){
--		.start = cfmws->base_hpa,
--		.end = cfmws->base_hpa + cfmws->window_size - 1,
--	};
-+	cxld->platform_res = (struct resource)DEFINE_RES_MEM(cfmws->base_hpa,
-+							     cfmws->window_size);
- 	cxld->interleave_ways = CFMWS_INTERLEAVE_WAYS(cfmws);
- 	cxld->interleave_granularity = CFMWS_INTERLEAVE_GRANULARITY(cfmws);
- 
-@@ -127,8 +125,9 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+@@ -224,8 +224,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
  		return 0;
  	}
- 	dev_dbg(dev, "add: %s node: %d range %#llx-%#llx\n",
--		dev_name(&cxld->dev), phys_to_target_node(cxld->range.start),
--		cfmws->base_hpa, cfmws->base_hpa + cfmws->window_size - 1);
-+		dev_name(&cxld->dev),
-+		phys_to_target_node(cxld->platform_res.start), cfmws->base_hpa,
-+		cfmws->base_hpa + cfmws->window_size - 1);
  
- 	return 0;
+-	port = devm_cxl_add_port(host, match, dport->component_reg_phys,
+-				 root_port);
++	port = devm_cxl_add_port(match, dport->component_reg_phys, root_port);
+ 	if (IS_ERR(port))
+ 		return PTR_ERR(port);
+ 	dev_dbg(host, "%s: add: %s\n", dev_name(match), dev_name(&port->dev));
+@@ -376,6 +375,11 @@ static int add_root_nvdimm_bridge(struct device *match, void *data)
+ 	return 1;
  }
-@@ -267,10 +266,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
- 	cxld->interleave_ways = 1;
- 	cxld->interleave_granularity = PAGE_SIZE;
- 	cxld->target_type = CXL_DECODER_EXPANDER;
--	cxld->range = (struct range) {
--		.start = 0,
--		.end = -1,
--	};
-+	cxld->platform_res = (struct resource)DEFINE_RES_MEM(0, 0);
  
- 	device_lock(&port->dev);
- 	dport = list_first_entry(&port->dports, typeof(*dport), list);
++static void clear_topology_host(void *data)
++{
++	cxl_unregister_topology_host(data);
++}
++
+ static int cxl_acpi_probe(struct platform_device *pdev)
+ {
+ 	int rc;
+@@ -384,7 +388,15 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+ 	struct acpi_device *adev = ACPI_COMPANION(host);
+ 	struct cxl_cfmws_context ctx;
+ 
+-	root_port = devm_cxl_add_port(host, host, CXL_RESOURCE_NONE, NULL);
++	rc = cxl_register_topology_host(host);
++	if (rc)
++		return rc;
++
++	rc = devm_add_action_or_reset(host, clear_topology_host, host);
++	if (rc)
++		return rc;
++
++	root_port = devm_cxl_add_port(host, CXL_RESOURCE_NONE, root_port);
+ 	if (IS_ERR(root_port))
+ 		return PTR_ERR(root_port);
+ 	dev_dbg(host, "add: %s\n", dev_name(&root_port->dev));
 diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-index 17a4fff029f8..8e80e85350b1 100644
+index cd6fe7823c69..2ad38167796d 100644
 --- a/drivers/cxl/core/bus.c
 +++ b/drivers/cxl/core/bus.c
-@@ -46,8 +46,14 @@ static ssize_t start_show(struct device *dev, struct device_attribute *attr,
- 			  char *buf)
- {
- 	struct cxl_decoder *cxld = to_cxl_decoder(dev);
-+	u64 start = 0;
+@@ -25,6 +25,53 @@
+  */
  
--	return sysfs_emit(buf, "%#llx\n", cxld->range.start);
-+	if (is_root_decoder(dev))
-+		start = cxld->platform_res.start;
-+	else
-+		start = cxld->decoder_range.start;
+ static DEFINE_IDA(cxl_port_ida);
++static DECLARE_RWSEM(topology_host_sem);
 +
-+	return sysfs_emit(buf, "%#llx\n", start);
- }
- static DEVICE_ATTR_RO(start);
- 
-@@ -55,8 +61,14 @@ static ssize_t size_show(struct device *dev, struct device_attribute *attr,
- 			char *buf)
- {
- 	struct cxl_decoder *cxld = to_cxl_decoder(dev);
-+	u64 size = 0;
- 
--	return sysfs_emit(buf, "%#llx\n", range_len(&cxld->range));
-+	if (is_root_decoder(dev))
-+		size = resource_size(&cxld->platform_res);
-+	else
-+		size = range_len(&cxld->decoder_range);
++static struct device *cxl_topology_host;
 +
-+	return sysfs_emit(buf, "%#llx\n", size);
- }
- static DEVICE_ATTR_RO(size);
++int cxl_register_topology_host(struct device *host)
++{
++	down_write(&topology_host_sem);
++	if (cxl_topology_host) {
++		up_write(&topology_host_sem);
++		pr_warn("%s host currently in use. Please try unloading %s",
++			dev_name(cxl_topology_host), host->driver->name);
++		return -EBUSY;
++	}
++
++	cxl_topology_host = host;
++	up_write(&topology_host_sem);
++
++	return 0;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_register_topology_host, CXL);
++
++void cxl_unregister_topology_host(struct device *host)
++{
++	down_write(&topology_host_sem);
++	if (cxl_topology_host == host)
++		cxl_topology_host = NULL;
++	else
++		pr_warn("topology host in use by %s\n",
++			cxl_topology_host->driver->name);
++	up_write(&topology_host_sem);
++}
++EXPORT_SYMBOL_NS_GPL(cxl_unregister_topology_host, CXL);
++
++static struct device *get_cxl_topology_host(void)
++{
++	down_read(&topology_host_sem);
++	if (cxl_topology_host)
++		return cxl_topology_host;
++	up_read(&topology_host_sem);
++	return NULL;
++}
++
++static void put_cxl_topology_host(struct device *dev)
++{
++	WARN_ON(dev != cxl_topology_host);
++	up_read(&topology_host_sem);
++}
  
-@@ -548,6 +560,9 @@ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+ static ssize_t devtype_show(struct device *dev, struct device_attribute *attr,
+ 			    char *buf)
+@@ -362,17 +409,16 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
+ 
+ /**
+  * devm_cxl_add_port - register a cxl_port in CXL memory decode hierarchy
+- * @host: host device for devm operations
+  * @uport: "physical" device implementing this upstream port
+  * @component_reg_phys: (optional) for configurable cxl_port instances
+  * @parent_port: next hop up in the CXL memory decode hierarchy
+  */
+-struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
++struct cxl_port *devm_cxl_add_port(struct device *uport,
+ 				   resource_size_t component_reg_phys,
+ 				   struct cxl_port *parent_port)
+ {
++	struct device *dev, *host;
+ 	struct cxl_port *port;
+-	struct device *dev;
+ 	int rc;
+ 
+ 	port = cxl_port_alloc(uport, component_reg_phys, parent_port);
+@@ -391,7 +437,12 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
  	if (rc)
- 		return rc;
+ 		goto err;
  
-+	if (is_root_decoder(dev))
-+		cxld->platform_res.name = dev_name(dev);
++	host = get_cxl_topology_host();
++	if (!host)
++		return ERR_PTR(-ENODEV);
 +
- 	return device_add(dev);
- }
- EXPORT_SYMBOL_NS_GPL(cxl_decoder_add, CXL);
+ 	rc = devm_add_action_or_reset(host, unregister_port, port);
++	put_cxl_topology_host(host);
+ 	if (rc)
+ 		return ERR_PTR(rc);
+ 
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index d39d45f4a770..ad816fb5bdcc 100644
+index 2c5627fa8a34..6fac4826d22b 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -179,7 +179,8 @@ enum cxl_decoder_type {
-  * struct cxl_decoder - CXL address range decode configuration
-  * @dev: this decoder's device
-  * @id: kernel device name id
-- * @range: address range considered by this decoder
-+ * @platform_res: address space resources considered by root decoder
-+ * @decoder_range: address space resources considered by midlevel decoder
-  * @interleave_ways: number of cxl_dports in this decode
-  * @interleave_granularity: data stride per dport
-  * @target_type: accelerator vs expander (type2 vs type3) selector
-@@ -190,7 +191,10 @@ enum cxl_decoder_type {
- struct cxl_decoder {
- 	struct device dev;
- 	int id;
--	struct range range;
-+	union {
-+		struct resource platform_res;
-+		struct range decoder_range;
-+	};
- 	int interleave_ways;
- 	int interleave_granularity;
- 	enum cxl_decoder_type target_type;
+@@ -152,6 +152,9 @@ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+ #define CXL_RESOURCE_NONE ((resource_size_t) -1)
+ #define CXL_TARGET_STRLEN 20
+ 
++int cxl_register_topology_host(struct device *host);
++void cxl_unregister_topology_host(struct device *host);
++
+ /*
+  * cxl_decoder flags that define the type of memory / devices this
+  * decoder supports as well as configuration lock status See "CXL 2.0
+@@ -279,7 +282,7 @@ struct cxl_dport {
+ };
+ 
+ struct cxl_port *to_cxl_port(struct device *dev);
+-struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
++struct cxl_port *devm_cxl_add_port(struct device *uport,
+ 				   resource_size_t component_reg_phys,
+ 				   struct cxl_port *parent_port);
+ 
 -- 
 2.34.0
 
