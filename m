@@ -2,27 +2,27 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 364B6C433F5
-	for <linux-cxl@archiver.kernel.org>; Mon, 22 Nov 2021 14:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1A8C433F5
+	for <linux-cxl@archiver.kernel.org>; Mon, 22 Nov 2021 15:02:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235993AbhKVOwp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 22 Nov 2021 09:52:45 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4128 "EHLO
+        id S238864AbhKVPFl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 22 Nov 2021 10:05:41 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4129 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231697AbhKVOwo (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 22 Nov 2021 09:52:44 -0500
-Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HyVWp4tc7z6H7tl;
-        Mon, 22 Nov 2021 22:48:38 +0800 (CST)
+        with ESMTP id S237699AbhKVPFj (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 22 Nov 2021 10:05:39 -0500
+Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HyVqL4QPTz67LfL;
+        Mon, 22 Nov 2021 23:02:06 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
+ fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Mon, 22 Nov 2021 15:49:35 +0100
+ 15.1.2308.20; Mon, 22 Nov 2021 16:02:30 +0100
 Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Mon, 22 Nov
- 2021 14:49:35 +0000
-Date:   Mon, 22 Nov 2021 14:49:34 +0000
+ 2021 15:02:28 +0000
+Date:   Mon, 22 Nov 2021 15:02:27 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Ben Widawsky <ben.widawsky@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
@@ -30,11 +30,11 @@ CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 02/23] cxl: Flesh out register names
-Message-ID: <20211122144934.000050ca@Huawei.com>
-In-Reply-To: <20211120000250.1663391-3-ben.widawsky@intel.com>
+Subject: Re: [PATCH 04/23] cxl/pci: Implement Interface Ready Timeout
+Message-ID: <20211122150227.00000020@Huawei.com>
+In-Reply-To: <20211120000250.1663391-5-ben.widawsky@intel.com>
 References: <20211120000250.1663391-1-ben.widawsky@intel.com>
-        <20211120000250.1663391-3-ben.widawsky@intel.com>
+        <20211120000250.1663391-5-ben.widawsky@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -48,107 +48,84 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 19 Nov 2021 16:02:29 -0800
+On Fri, 19 Nov 2021 16:02:31 -0800
 Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-> Get a better naming scheme in place for upcoming additions.
+> The original driver implementation used the doorbell timeout for the
+> Mailbox Interface Ready bit to piggy back off of, since the latter
+> doesn't have a defined timeout. This functionality, introduced in
+> 8adaf747c9f0 ("cxl/mem: Find device capabilities"), can now be improved
+> since a timeout has been defined with an ECN to the 2.0 spec.
+> 
+> While devices implemented prior to the ECN could have an arbitrarily
+> long wait and still be within spec, the max ECN value (256s) is chosen
+> as the default for all devices. All vendors in the consortium agreed to
+> this amount and so it is reasonable to assume no devices made will
+> exceed this amount.
+
+Optimistic :)
+
 > 
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-
-Seems like a good balance to me between the different directions this
-sort of naming gets dragged in.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
 > ---
-> Changes since RFCv2:
-> Use some abbreviations (Jonathan)
-> Prefix everything with CXL (Jonathan)
-> Remove new additions (Dan)
-> 
-> Original discussion motivating this occurred here:
-> https://lore.kernel.org/linux-pci/20210913190131.xiiszmno46qie7v5@intel.com/
+> This patch did not exist in RFCv2
 > ---
->  drivers/cxl/pci.c | 14 +++++++-------
->  drivers/cxl/pci.h | 19 ++++++++++---------
->  2 files changed, 17 insertions(+), 16 deletions(-)
+>  drivers/cxl/pci.c | 29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
 > 
 > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 8dc91fd3396a..a6ea9811a05b 100644
+> index 6c8d09fb3a17..2cef9fec8599 100644
 > --- a/drivers/cxl/pci.c
 > +++ b/drivers/cxl/pci.c
-> @@ -403,10 +403,10 @@ static int cxl_map_regs(struct cxl_dev_state *cxlds, struct cxl_register_map *ma
->  static void cxl_decode_regblock(u32 reg_lo, u32 reg_hi,
->  				struct cxl_register_map *map)
+> @@ -2,6 +2,7 @@
+>  /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+>  #include <linux/io-64-nonatomic-lo-hi.h>
+>  #include <linux/module.h>
+> +#include <linux/delay.h>
+>  #include <linux/sizes.h>
+>  #include <linux/mutex.h>
+>  #include <linux/list.h>
+> @@ -298,6 +299,34 @@ static int cxl_pci_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *c
+>  static int cxl_pci_setup_mailbox(struct cxl_dev_state *cxlds)
 >  {
-> -	map->block_offset =
-> -		((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
-> -	map->barno = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
-> -	map->reg_type = FIELD_GET(CXL_REGLOC_RBI_MASK, reg_lo);
-> +	map->block_offset = ((u64)reg_hi << 32) |
-> +			    (reg_lo & CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK);
-> +	map->barno = FIELD_GET(CXL_DVSEC_REG_LOCATOR_BIR_MASK, reg_lo);
-> +	map->reg_type = FIELD_GET(CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK, reg_lo);
->  }
+>  	const int cap = readl(cxlds->regs.mbox + CXLDEV_MBOX_CAPS_OFFSET);
+> +	unsigned long timeout;
+> +	u64 md_status;
+> +	int rc;
+> +
+> +	/*
+> +	 * CXL 2.0 ECN "Add Mailbox Ready Time" defines a capability field to
+> +	 * dictate how long to wait for the mailbox to become ready. For
+> +	 * simplicity, and to handle devices that might have been implemented
+
+I'm not keen on the 'for simplicity' argument here.  If the device is advertising
+a lower value, then that is what we should use.  It's fine to wait the max time
+if nothing is specified.  It'll cost us a few lines of code at most unless
+I am missing something...
+
+Jonathan
+
+> +	 * prior to the ECN, wait the max amount of time no matter what the
+> +	 * device says.
+> +	 */
+> +	timeout = jiffies + 256 * HZ;
+> +
+> +	rc = check_device_status(cxlds);
+> +	if (rc)
+> +		return rc;
+> +
+> +	do {
+> +		md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+> +		if (md_status & CXLMDEV_MBOX_IF_READY)
+> +			break;
+> +		if (msleep_interruptible(100))
+> +			break;
+> +	} while (!time_after(jiffies, timeout));
+> +
+> +	/* It's assumed that once the interface is ready, it will remain ready. */
+> +	if (!(md_status & CXLMDEV_MBOX_IF_READY))
+> +		return -EIO;
 >  
->  /**
-> @@ -427,15 +427,15 @@ static int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
->  	int regloc, i;
->  
->  	regloc = pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL,
-> -					   PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID);
-> +					   CXL_DVSEC_REG_LOCATOR);
->  	if (!regloc)
->  		return -ENXIO;
->  
->  	pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
->  	regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
->  
-> -	regloc += PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET;
-> -	regblocks = (regloc_size - PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET) / 8;
-> +	regloc += CXL_DVSEC_REG_LOCATOR_BLOCK1_OFFSET;
-> +	regblocks = (regloc_size - CXL_DVSEC_REG_LOCATOR_BLOCK1_OFFSET) / 8;
->  
->  	for (i = 0; i < regblocks; i++, regloc += 8) {
->  		u32 reg_lo, reg_hi;
-> diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
-> index 7d3e4bf06b45..29b8eaef3a0a 100644
-> --- a/drivers/cxl/pci.h
-> +++ b/drivers/cxl/pci.h
-> @@ -7,17 +7,21 @@
->  
->  /*
->   * See section 8.1 Configuration Space Registers in the CXL 2.0
-> - * Specification
-> + * Specification. Names are taken straight from the specification with "CXL" and
-> + * "DVSEC" redundancies removed. When obvious, abbreviations may be used.
->   */
->  #define PCI_DVSEC_HEADER1_LENGTH_MASK	GENMASK(31, 20)
->  #define PCI_DVSEC_VENDOR_ID_CXL		0x1E98
-> -#define PCI_DVSEC_ID_CXL		0x0
->  
-> -#define PCI_DVSEC_ID_CXL_REGLOC_DVSEC_ID	0x8
-> -#define PCI_DVSEC_ID_CXL_REGLOC_BLOCK1_OFFSET	0xC
-> +/* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
-> +#define CXL_DVSEC_PCIE_DEVICE					0
->  
-> -/* BAR Indicator Register (BIR) */
-> -#define CXL_REGLOC_BIR_MASK GENMASK(2, 0)
-> +/* CXL 2.0 8.1.9: Register Locator DVSEC */
-> +#define CXL_DVSEC_REG_LOCATOR					8
-> +#define   CXL_DVSEC_REG_LOCATOR_BLOCK1_OFFSET			0xC
-> +#define     CXL_DVSEC_REG_LOCATOR_BIR_MASK			GENMASK(2, 0)
-> +#define	    CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK			GENMASK(15, 8)
-> +#define     CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK		GENMASK(31, 16)
->  
->  /* Register Block Identifier (RBI) */
->  enum cxl_regloc_type {
-> @@ -28,7 +32,4 @@ enum cxl_regloc_type {
->  	CXL_REGLOC_RBI_TYPES
->  };
->  
-> -#define CXL_REGLOC_RBI_MASK GENMASK(15, 8)
-> -#define CXL_REGLOC_ADDR_MASK GENMASK(31, 16)
-> -
->  #endif /* __CXL_PCI_H__ */
+>  	cxlds->mbox_send = cxl_pci_mbox_send;
+>  	cxlds->payload_size =
 
