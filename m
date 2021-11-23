@@ -2,401 +2,246 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CB4C433EF
-	for <linux-cxl@archiver.kernel.org>; Tue, 23 Nov 2021 00:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23768C433EF
+	for <linux-cxl@archiver.kernel.org>; Tue, 23 Nov 2021 11:06:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229617AbhKWAJs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 22 Nov 2021 19:09:48 -0500
-Received: from mga04.intel.com ([192.55.52.120]:16038 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229575AbhKWAJs (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 22 Nov 2021 19:09:48 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10176"; a="233633155"
-X-IronPort-AV: E=Sophos;i="5.87,255,1631602800"; 
-   d="scan'208";a="233633155"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2021 16:05:28 -0800
-X-IronPort-AV: E=Sophos;i="5.87,255,1631602800"; 
-   d="scan'208";a="497068863"
-Received: from wqiu6-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.143.45])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2021 16:05:27 -0800
-Date:   Mon, 22 Nov 2021 16:05:25 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-        Alison Schofield <alison.schofield@intel.com>,
+        id S231691AbhKWLJH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 23 Nov 2021 06:09:07 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4153 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234312AbhKWLJG (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 23 Nov 2021 06:09:06 -0500
+Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Hz1Rw0164z67Ml8;
+        Tue, 23 Nov 2021 19:02:03 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Tue, 23 Nov 2021 12:05:56 +0100
+Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Tue, 23 Nov
+ 2021 11:05:55 +0000
+Date:   Tue, 23 Nov 2021 11:05:53 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        "Alison Schofield" <alison.schofield@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 22/23] cxl/mem: Introduce cxl_mem driver
-Message-ID: <20211123000525.p7exvgkqhluyzusc@intel.com>
+Subject: Re: [PATCH 13/23] cxl/core: Move target population locking to
+ caller
+Message-ID: <20211123110553.00001e2b@Huawei.com>
+In-Reply-To: <20211122215801.gshai367q2fhp6uj@intel.com>
 References: <20211120000250.1663391-1-ben.widawsky@intel.com>
- <20211120000250.1663391-23-ben.widawsky@intel.com>
- <20211122181734.00003c90@Huawei.com>
+        <20211120000250.1663391-14-ben.widawsky@intel.com>
+        <20211122163302.00005ae9@Huawei.com>
+        <20211122215801.gshai367q2fhp6uj@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211122181734.00003c90@Huawei.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.41]
+X-ClientProxiedBy: lhreml744-chm.china.huawei.com (10.201.108.194) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21-11-22 18:17:34, Jonathan Cameron wrote:
-> On Fri, 19 Nov 2021 16:02:49 -0800
-> Ben Widawsky <ben.widawsky@intel.com> wrote:
-> 
-> > Add a driver that is capable of determining whether a device is in a
-> > CXL.mem routed part of the topology.
+On Mon, 22 Nov 2021 13:58:01 -0800
+Ben Widawsky <ben.widawsky@intel.com> wrote:
+
+> On 21-11-22 16:33:02, Jonathan Cameron wrote:
+> > On Fri, 19 Nov 2021 16:02:40 -0800
+> > Ben Widawsky <ben.widawsky@intel.com> wrote:
+> >   
+> > > In preparation for a port driver that enumerates a descendant port +
+> > > decoder hierarchy, arrange for an unlocked version of cxl_decoder_add().
+> > > Otherwise a port-driver that adds a child decoder will deadlock on the
+> > > device_lock() in ->probe().
+> > >   
 > > 
-> > This driver allows a higher level driver - such as one controlling CXL
-> > regions, which is itself a set of CXL devices - to easily determine if
-> > the CXL devices are CXL.mem capable by checking if the driver has bound.
-> > CXL memory device services may also be provided by this driver though
-> > none are needed as of yet. cxl_mem also plays the part of registering
-> > itself as an endpoint port, which is a required step to enumerate the
-> > device's HDM decoder resources.
+> > I think this description should call out that the lock was originally taken
+> > for a much shorter time in decoder_populate_targets() but is moved
+> > up one layer.  
+> 
+> Sounds good.
+With that added and below discussion resolved.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> 
 > > 
-> > Even though cxl_mem driver is the only consumer of the new
-> > cxl_scan_ports() introduced in cxl_core, because that functionality has
-> > PCIe specificity it is kept out of this driver.
+> > One other query inline.  Seems like we the WARN_ON stuff is a bit
+> > over paranoid given what's visible in this patch.  If there is a
+> > good reason for that, then add something to the patch description to
+> > justify it.
+> >    
+> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > > 
+> > > ---
+> > > 
+> > > Changes since RFCv2:
+> > > - Reword commit message (Dan)
+> > > - Move decoder API changes into this patch (Dan)
+> > > ---
+> > >  drivers/cxl/core/bus.c | 59 +++++++++++++++++++++++++++++++-----------
+> > >  drivers/cxl/cxl.h      |  1 +
+> > >  2 files changed, 45 insertions(+), 15 deletions(-)
+> > > 
+> > > diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
+> > > index 16b15f54fb62..cd6fe7823c69 100644
+> > > --- a/drivers/cxl/core/bus.c
+> > > +++ b/drivers/cxl/core/bus.c
+> > > @@ -487,28 +487,22 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
+> > >  {
+> > >  	int rc = 0, i;
+> > >  
+> > > +	device_lock_assert(&port->dev);
+> > > +
+> > >  	if (!target_map)
+> > >  		return 0;
+> > >  
+> > > -	device_lock(&port->dev);
+> > > -	if (list_empty(&port->dports)) {
+> > > -		rc = -EINVAL;
+> > > -		goto out_unlock;
+> > > -	}
+> > > +	if (list_empty(&port->dports))
+> > > +		return -EINVAL;
+> > >  
+> > >  	for (i = 0; i < cxld->nr_targets; i++) {
+> > >  		struct cxl_dport *dport = find_dport(port, target_map[i]);
+> > >  
+> > > -		if (!dport) {
+> > > -			rc = -ENXIO;
+> > > -			goto out_unlock;
+> > > -		}
+> > > +		if (!dport)
+> > > +			return -ENXIO;
+> > >  		cxld->target[i] = dport;
+> > >  	}
+> > >  
+> > > -out_unlock:
+> > > -	device_unlock(&port->dev);
+> > > -
+> > >  	return rc;
+> > >  }
+> > >  
+> > > @@ -571,7 +565,7 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
+> > >  EXPORT_SYMBOL_NS_GPL(cxl_decoder_alloc, CXL);
+> > >  
+> > >  /**
+> > > - * cxl_decoder_add - Add a decoder with targets
+> > > + * cxl_decoder_add_locked - Add a decoder with targets
+> > >   * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
+> > >   * @target_map: A list of downstream ports that this decoder can direct memory
+> > >   *              traffic to. These numbers should correspond with the port number
+> > > @@ -581,12 +575,14 @@ EXPORT_SYMBOL_NS_GPL(cxl_decoder_alloc, CXL);
+> > >   * is an endpoint device. A more awkward example is a hostbridge whose root
+> > >   * ports get hot added (technically possible, though unlikely).
+> > >   *
+> > > - * Context: Process context. Takes and releases the cxld's device lock.
+> > > + * This is the locked variant of cxl_decoder_add().
+> > > + *
+> > > + * Context: Process context. Expects the cxld's device lock to be held.
+> > >   *
+> > >   * Return: Negative error code if the decoder wasn't properly configured; else
+> > >   *	   returns 0.
+> > >   */
+> > > -int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+> > > +int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map)
+> > >  {
+> > >  	struct cxl_port *port;
+> > >  	struct device *dev;
+> > > @@ -619,6 +615,39 @@ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+> > >  
+> > >  	return device_add(dev);
+> > >  }
+> > > +EXPORT_SYMBOL_NS_GPL(cxl_decoder_add_locked, CXL);
+> > > +
+> > > +/**
+> > > + * cxl_decoder_add - Add a decoder with targets
+> > > + * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
+> > > + * @target_map: A list of downstream ports that this decoder can direct memory
+> > > + *              traffic to. These numbers should correspond with the port number
+> > > + *              in the PCIe Link Capabilities structure.
+> > > + *
+> > > + * This is the unlocked variant of cxl_decoder_add_locked().
+> > > + * See cxl_decoder_add_locked().
+> > > + *
+> > > + * Context: Process context. Takes and releases the cxld's device lock.
+> > > + */
+> > > +int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+> > > +{
+> > > +	struct cxl_port *port;
+> > > +	int rc;
+> > > +
+> > > +	if (WARN_ON_ONCE(!cxld))
+> > > +		return -EINVAL;  
 > > 
-> > As part of this patch, find_dport_by_dev() is promoted to the cxl_core's
-> > set of APIs for use by the new driver.
+> > Why do we now need these protections but didn't before?  
+> 
+> I don't quite understand what you're trying to point out.
+> 
+> Prior to this patch, cxl_decoder_add() checks:
+> - !cxld
+> - IS_ERR(cxld)
+> - cxld->interleave_ways != 0
+> 
+> After this patch, cxl_decoder_add() checks:
+> - !cxld
+> - IS_ERR(cxld)
+> - (and then calls cxl_decoder_add_locked())
+> 
+> And cxl_decoder_add_locked() checks:
+> - !cxld
+> - IS_ERR(cxld)
+> - cxld->interleave_ways != 0
+> 
+> Ultimately we want to check all 3, and since cxl_decoder_add() calls
+> cxl_decoder_add_locked(), we're good there. The problem is to get from a cxld to
+> a port, you need to make sure you have a valid cxld, and the API previously
+> allowed !cxld and IS_ERR(cxld). So there are duplicative checks if you call
+> cxl_decoder_add(), but other than that I don't see any new protections.
+
+Ah. It was the duplication that I didn't follow.
+
+Fair enough
+
+J
+> 
 > > 
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > 
-> Main thing in here is the mysterious private data. I'd drop
-> that until we have patches that set it in the same series.
+> >   
+> > > +
+> > > +	if (WARN_ON_ONCE(IS_ERR(cxld)))
+> > > +		return PTR_ERR(cxld);
+> > > +
+> > > +	port = to_cxl_port(cxld->dev.parent);
+> > > +
+> > > +	device_lock(&port->dev);
+> > > +	rc = cxl_decoder_add_locked(cxld, target_map);
+> > > +	device_unlock(&port->dev);
+> > > +
+> > > +	return rc;
+> > > +}
+> > >  EXPORT_SYMBOL_NS_GPL(cxl_decoder_add, CXL);
+> > >  
+> > >  static void cxld_unregister(void *dev)
+> > > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> > > index b66ed8f241c6..2c5627fa8a34 100644
+> > > --- a/drivers/cxl/cxl.h
+> > > +++ b/drivers/cxl/cxl.h
+> > > @@ -290,6 +290,7 @@ struct cxl_decoder *to_cxl_decoder(struct device *dev);
+> > >  bool is_root_decoder(struct device *dev);
+> > >  struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
+> > >  				      unsigned int nr_targets);
+> > > +int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map);
+> > >  int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
+> > >  int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld);
+> > >    
+> >   
 
-It's used, it just got leaked into the wrong patch (b37c9a7eca3f ("cxl/port:
-Introduce a port driver")). I'll fix it up so it gets added here.
-
-/* Minor layering violation */
-static int dvsec_range_used(struct cxl_port *port)
-{
-        struct cxl_endpoint_dvsec_info *info;
-        int i, ret = 0;
-
-        if (!is_endpoint_port(port))
-                return 0;
-
-        info = port->data;
-        for (i = 0; i < info->ranges; i++)
-                if (info->range[i].size)
-                        ret |= 1 << i;
-
-        return ret;
-}
-
-
-> 
-> 
-> 
-> 
-> ...
-> 
-> > diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-> > index acfa212eea21..cab3aabd5abc 100644
-> > --- a/drivers/cxl/core/bus.c
-> > +++ b/drivers/cxl/core/bus.c
-> > @@ -8,6 +8,7 @@
-> >  #include <linux/idr.h>
-> >  #include <cxlmem.h>
-> >  #include <cxl.h>
-> > +#include <pci.h>
-> >  #include "core.h"
-> >  
-> >  /**
-> > @@ -436,7 +437,7 @@ static int devm_cxl_link_uport(struct device *host, struct cxl_port *port)
-> >  
-> >  static struct cxl_port *cxl_port_alloc(struct device *uport,
-> >  				       resource_size_t component_reg_phys,
-> > -				       struct cxl_port *parent_port)
-> > +				       struct cxl_port *parent_port, void *data)
-> >  {
-> >  	struct cxl_port *port;
-> >  	struct device *dev;
-> > @@ -465,6 +466,7 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
-> >  
-> >  	port->uport = uport;
-> >  	port->component_reg_phys = component_reg_phys;
-> > +	port->data = data;
-> >  	ida_init(&port->decoder_ida);
-> >  	INIT_LIST_HEAD(&port->dports);
-> >  
-> > @@ -485,16 +487,17 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
-> >   * @uport: "physical" device implementing this upstream port
-> >   * @component_reg_phys: (optional) for configurable cxl_port instances
-> >   * @parent_port: next hop up in the CXL memory decode hierarchy
-> > + * @data: opaque data to be used by the port driver
-> >   */
-> >  struct cxl_port *devm_cxl_add_port(struct device *uport,
-> >  				   resource_size_t component_reg_phys,
-> > -				   struct cxl_port *parent_port)
-> > +				   struct cxl_port *parent_port, void *data)
-> >  {
-> >  	struct device *dev, *host;
-> >  	struct cxl_port *port;
-> >  	int rc;
-> >  
-> > -	port = cxl_port_alloc(uport, component_reg_phys, parent_port);
-> > +	port = cxl_port_alloc(uport, component_reg_phys, parent_port, data);
-> >  	if (IS_ERR(port))
-> >  		return port;
-> >  
-> > @@ -531,6 +534,113 @@ struct cxl_port *devm_cxl_add_port(struct device *uport,
-> >  }
-> >  EXPORT_SYMBOL_NS_GPL(devm_cxl_add_port, CXL);
-> >  
-> 
-> 
-> ...
-> 
-> > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> > new file mode 100644
-> > index 000000000000..818e30571e4d
-> > --- /dev/null
-> > +++ b/drivers/cxl/core/pci.c
-> > @@ -0,0 +1,119 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/* Copyright(c) 2021 Intel Corporation. All rights reserved. */
-> > +#include <linux/device.h>
-> > +#include <linux/pci.h>
-> > +#include <cxl.h>
-> > +#include <pci.h>
-> > +#include "core.h"
-> > +
-> > +/**
-> > + * DOC: cxl core pci
-> > + *
-> > + * Compute Express Link protocols are layered on top of PCIe. CXL core provides
-> > + * a set of helpers for CXL interactions which occur via PCIe.
-> > + */
-> > +
-> > +/**
-> > + * find_parent_cxl_port() - Finds parent port through PCIe mechanisms
-> > + * @pdev: PCIe USP or DSP to find an upstream port for
-> > + *
-> > + * Once all CXL ports are enumerated, there is no need to reference the PCIe
-> > + * parallel universe as all downstream ports are contained in a linked list, and
-> > + * all upstream ports are accessible via pointer. During the enumeration, it is
-> > + * very convenient to be able to peak up one level in the hierarchy without
-> > + * needing the established relationship between data structures so that the
-> > + * parenting can be done as the ports/dports are created.
-> > + *
-> > + * A reference is kept to the found port.
-> > + */
-> > +struct cxl_port *find_parent_cxl_port(struct pci_dev *pdev)
-> > +{
-> > +	struct device *parent_dev, *gparent_dev;
-> > +
-> > +	/* Parent is either a downstream port, or root port */
-> > +	parent_dev = get_device(pdev->dev.parent);
-> > +
-> > +	if (is_cxl_switch_usp(&pdev->dev)) {
-> > +		if (dev_WARN_ONCE(&pdev->dev,
-> 
-> maybe put the condition var in a local variable to reduce the indent and get something
-> more readable?
-> 
-> > +				  pci_pcie_type(pdev) !=
-> > +						  PCI_EXP_TYPE_DOWNSTREAM &&
-> > +					  pci_pcie_type(pdev) !=
-> > +						  PCI_EXP_TYPE_ROOT_PORT,
-> > +				  "Parent not downstream\n"))
-> > +			goto err;
-> > +
-> > +		/*
-> > +		 * Grandparent is either an upstream port or a platform device that has
-> > +		 * been added as a cxl_port already.
-> > +		 */
-> > +		gparent_dev = get_device(parent_dev->parent);
-> > +		put_device(parent_dev);
-> > +
-> > +		return to_cxl_port(gparent_dev);
-> > +	} else if (is_cxl_switch_dsp(&pdev->dev)) {
-> > +		if (dev_WARN_ONCE(&pdev->dev,
-> > +				  pci_pcie_type(pdev) != PCI_EXP_TYPE_UPSTREAM,
-> > +				  "Parent not upstream"))
-> > +			goto err;
-> > +		return to_cxl_port(parent_dev);
-> > +	}
-> > +
-> > +err:
-> > +	dev_WARN(&pdev->dev, "Invalid topology\n");
-> > +	put_device(parent_dev);
-> > +	return NULL;
-> > +}
-> > +
-> 
-> ...
-> 
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > index f8354241c5a3..3bda806f4244 100644
-> > --- a/drivers/cxl/cxl.h
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -296,6 +296,7 @@ struct cxl_port {
-> >   * @port: reference to cxl_port that contains this downstream port
-> >   * @list: node for a cxl_port's list of cxl_dport instances
-> >   * @root_port_link: node for global list of root ports
-> > + * @data: Opaque data passed by other drivers, used by port driver
-> 
-> Is this used yet? possible leave introducing this until we need it
-> as not obvious here what it will be for.
-> 
-
-Yep...
-
-> >   */
-> >  struct cxl_dport {
-> >  	struct device *dport;
-> > @@ -304,16 +305,20 @@ struct cxl_dport {
-> >  	struct cxl_port *port;
-> >  	struct list_head list;
-> >  	struct list_head root_port_link;
-> > +	void *data;
-> >  };
-> >  
-> >  struct cxl_port *to_cxl_port(struct device *dev);
-> >  struct cxl_port *devm_cxl_add_port(struct device *uport,
-> >  				   resource_size_t component_reg_phys,
-> > -				   struct cxl_port *parent_port);
-> > +				   struct cxl_port *parent_port, void *data);
-> > +void cxl_scan_ports(struct cxl_dport *root_port);
-> 
-> ...
-> 
-> > +
-> > +static int create_endpoint(struct device *dev, struct cxl_port *parent,
-> > +			   struct cxl_dport *dport)
-> > +{
-> > +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> > +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> > +	struct cxl_endpoint_dvsec_info *info = cxlds->info;
-> > +	struct cxl_port *endpoint;
-> > +	int rc;
-> > +
-> > +	endpoint =
-> > +		devm_cxl_add_port(dev, cxlds->component_reg_phys, parent, info);
-> 
-> I'd just have that on one line, or break it somewhere in the parameter list.
-> Right now it just looks odd and saves maybe 4 characters in line length.
-> 
-> > +	if (IS_ERR(endpoint))
-> > +		return PTR_ERR(endpoint);
-> > +
-> > +	rc = sysfs_create_link(&cxlmd->dev.kobj, &dport->dport->kobj,
-> > +			       "root_port");
-> 
-> Not obvious to me what this link is for.  Maybe needs a docs update
-> somewhere?
-> 
-
-Okay. IIRC this was a request from Dan to help userspace tooling but I might be
-mistaken on that.
-
-> > +	if (rc) {
-> > +		device_del(&endpoint->dev);
-> > +		return rc;
-> > +	}
-> > +	dev_dbg(dev, "add: %s\n", dev_name(&endpoint->dev));
-> > +
-> > +	return devm_add_action_or_reset(dev, remove_endpoint, cxlmd);
-> > +}
-> > +
-> > +static int cxl_mem_probe(struct device *dev)
-> > +{
-> > +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> > +	struct cxl_port *hostbridge, *parent_port;
-> > +	struct walk_ctx ctx = { NULL, false };
-> 
-> Perhaps use c99 style to show what is being initialized inside the walk ctx.
-> Will make it more obvious these are the right values.
-> 
-> > +	struct cxl_dport *dport;
-> > +	int rc;
-> > +
-> > +	rc = wait_for_media(cxlmd);
-> > +	if (rc) {
-> > +		dev_err(dev, "Media not active (%d)\n", rc);
-> > +		return rc;
-> > +	}
-> > +
-> > +	walk_to_root_port(dev, &ctx);
-> > +
-> > +	/*
-> > +	 * Couldn't find a CXL capable root port. This may happen even with a
-> > +	 * CXL capable topology if cxl_acpi hasn't completed yet. A rescan will
-> > +	 * occur.
-> > +	 */
-> > +	if (!ctx.root_port)
-> > +		return -ENODEV;
-> > +
-> > +	hostbridge = ctx.root_port->port;
-> > +	device_lock(&hostbridge->dev);
-> > +
-> > +	/* hostbridge has no port driver, the topology isn't enabled yet */
-> > +	if (!hostbridge->dev.driver) {
-> > +		device_unlock(&hostbridge->dev);
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	/* No switch + found root port means we're done */
-> > +	if (!ctx.has_switch) {
-> > +		parent_port = to_cxl_port(&hostbridge->dev);
-> > +		dport = ctx.root_port;
-> > +		goto out;
-> > +	}
-> > +
-> > +	/* Walk down from the root port and add all switches */
-> > +	cxl_scan_ports(ctx.root_port);
-> > +
-> > +	/* If parent is a dport the endpoint is good to go. */
-> > +	parent_port = to_cxl_port(dev->parent->parent);
-> > +	dport = cxl_find_dport_by_dev(parent_port, dev->parent);
-> > +	if (!dport) {
-> > +		rc = -ENODEV;
-> > +		goto err_out;
-> > +	}
-> > +
-> > +out:
-> > +	rc = create_endpoint(dev, parent_port, dport);
-> > +	if (rc)
-> > +		goto err_out;
-> > +
-> > +	cxlmd->root_port = ctx.root_port;
-> > +
-> > +err_out:
-> > +	device_unlock(&hostbridge->dev);
-> > +	return rc;
-> > +}
-> > +
-> 
-> > diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
-> > index 2a48cd65bf59..3fd0909522f2 100644
-> > --- a/drivers/cxl/pci.h
-> > +++ b/drivers/cxl/pci.h
-> > @@ -15,6 +15,7 @@
-> >  
-> >  /* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
-> >  #define CXL_DVSEC_PCIE_DEVICE					0
-> > +
-> 
-> Noise that shouldn't be in this patch.
-> 
-
-I wish there was some automation I had to catch this kind of thing... Thanks.
-
-> >  #define   CXL_DVSEC_PCIE_DEVICE_CAP_OFFSET			0xA
-> >  #define     CXL_DVSEC_PCIE_DEVICE_MEM_CAPABLE			BIT(2)
-> >  #define     CXL_DVSEC_PCIE_DEVICE_HDM_COUNT_MASK		GENMASK(5, 4)
-> > @@ -64,4 +65,7 @@ enum cxl_regloc_type {
-> >  	((resource_size_t)(pci_resource_start(pdev, (map)->barno) +            \
-> >  			   (map)->block_offset))
-> >  
-> > +bool is_cxl_switch_usp(struct device *dev);
-> > +bool is_cxl_switch_dsp(struct device *dev);
-> > +
-> >  #endif /* __CXL_PCI_H__ */
-> 
-> 
