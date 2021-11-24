@@ -2,27 +2,59 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172E2C4332F
-	for <linux-cxl@archiver.kernel.org>; Wed, 24 Nov 2021 08:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EFEEC433EF
+	for <linux-cxl@archiver.kernel.org>; Wed, 24 Nov 2021 18:25:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231949AbhKXIY4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 24 Nov 2021 03:24:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229733AbhKXIYz (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Wed, 24 Nov 2021 03:24:55 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8A97D60F5D;
-        Wed, 24 Nov 2021 08:21:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1637742106;
-        bh=iRJV566wWy9TwKvYb4r0Wes1xMamTHsrmwaXBsxss9E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zXfCTZw1+nUFPRDyogQ23SbwxyFE3gEHPPgahw5HEVFomTslnEMYg56/FbGNoLaXw
-         RpNrKmekhJmjDXl5aS7fFTY/RRTM/fN06TChckwUNy4kCo0nomEKh1/vyjpw8ielTX
-         Hn2RKk5mV8RDcTE4OhtEhQfW+zFGckYCj5PkpmHo=
-Date:   Wed, 24 Nov 2021 09:21:43 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dan Williams <dan.j.williams@intel.com>
+        id S232385AbhKXS2J (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 24 Nov 2021 13:28:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46598 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229935AbhKXS2J (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Nov 2021 13:28:09 -0500
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 757E1C061574
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 10:24:59 -0800 (PST)
+Received: by mail-pf1-x429.google.com with SMTP id n85so3436695pfd.10
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 10:24:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Cv9LR98z/haBcGUoxtoB1LyZRHlF0e4WkqMsUbQ83LM=;
+        b=yeYYVhRqpz/0ryEmg/zVDuxmBbG3xzAIcnrMUkwzZfg8iv2T91kYPG6Ppv/G9dbF0s
+         RiRTqxLzrxaW6CaocImUXnXWdZOs2fB4tlKVP2Loqyz6K/huZ6y3gSan1m8DbGbwwde9
+         Sp4mfSvuquEmSikFkhqC32DG++f7Pl3tcP48qT2IshVHsusxWmTcKURepg3lZBVKQDmM
+         UrpNXa2vJnkaWgcuCnWETrZP52LZ1JY3/foeWMMiUYhkSB1f7llIeysmn+yvBjefGL2e
+         3dHMNjVXNX8JAydvN4dYuauULqVSniujXhKeNlJcuoMqt9WbximZg1R9l5uzFqWOzfty
+         mnFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Cv9LR98z/haBcGUoxtoB1LyZRHlF0e4WkqMsUbQ83LM=;
+        b=AyxtKVHMx4D0qbA2pwIjqCTMHXXTvugSF5moCYO+8dXWr8agAFr4JYCyOqIhs+7C7u
+         4PYr0XtyHmaXIYKFXlygevpvvMQm/Imc5+aSsn6BvrOlS6bMjxqguf5VXFsrcBjAJw9Y
+         LX5eVAa2/jlWwjCsioyDAX3qQd2EhhxYtohLS05WVIRpui0fmZMCQ7WqGYPKdr0J4RBB
+         70i68kH26CglDEQAlofSjCeaPpKGnFsGc9wiBDvkaf8sNqkp0virbKXu5QBVaowaOhl5
+         eIwQsPgxFZDarIQ6bU21tVx4ryg51CMcJTLjLkrpmR3gkR732Rbn2woyBLsdlu/CkcLc
+         Xfjw==
+X-Gm-Message-State: AOAM533upNxnAVt1O3CUb8pcp9ExT7U3kAJxqh6yHcMFCGMd4T0M2hZI
+        aJ/kpeMDei20GzEC3q47mwlJk6Xc7CeJ/QIO9z0s0w==
+X-Google-Smtp-Source: ABdhPJzUQt3PryOf5wtWBEw1C6RWXhgSxvUCpainw28rcYPUxg6Z6ceywSEaUg75sFYumIC7hTm+GQW8cIpna34oV/c=
+X-Received: by 2002:a63:88c3:: with SMTP id l186mr5910722pgd.377.1637778299033;
+ Wed, 24 Nov 2021 10:24:59 -0800 (PST)
+MIME-Version: 1.0
+References: <CAPcyv4h7h3oJTEorMhL6MMD5FYbSxaWs6tb3-w=JWxhR=j77+A@mail.gmail.com>
+ <20211123235557.GA2247853@bhelgaas> <CAPcyv4g0=zz8BtB9DRW0FGsRRvgGwEaQcgbmXDhJ3DwNFS9Z+g@mail.gmail.com>
+ <20211124063316.GA6792@lst.de> <CAPcyv4ii=bjKNQxoMLF-gscJy7Bh8CUn205_1GpCwfMyJ22+6g@mail.gmail.com>
+ <20211124072824.GA7738@lst.de> <YZ3qvtHlMkRnC74f@kroah.com>
+ <CAPcyv4iYcBFDhDtcxc37EWfX1Wpuh8Zsm4-whTL0vNyY4zW3AQ@mail.gmail.com> <YZ32F0e/Cun9rB0i@kroah.com>
+In-Reply-To: <YZ32F0e/Cun9rB0i@kroah.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 24 Nov 2021 10:24:48 -0800
+Message-ID: <CAPcyv4i0t0Y8pPWM1x5ctcdszxHfHCG7s4_DAJeg=MG_6gcdTw@mail.gmail.com>
+Subject: Re: [PATCH 20/23] cxl/port: Introduce a port driver
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Christoph Hellwig <hch@lst.de>, Bjorn Helgaas <helgaas@kernel.org>,
         Ben Widawsky <ben.widawsky@intel.com>,
         linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
@@ -31,83 +63,94 @@ Cc:     Christoph Hellwig <hch@lst.de>, Bjorn Helgaas <helgaas@kernel.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 20/23] cxl/port: Introduce a port driver
-Message-ID: <YZ32F0e/Cun9rB0i@kroah.com>
-References: <CAPcyv4h7h3oJTEorMhL6MMD5FYbSxaWs6tb3-w=JWxhR=j77+A@mail.gmail.com>
- <20211123235557.GA2247853@bhelgaas>
- <CAPcyv4g0=zz8BtB9DRW0FGsRRvgGwEaQcgbmXDhJ3DwNFS9Z+g@mail.gmail.com>
- <20211124063316.GA6792@lst.de>
- <CAPcyv4ii=bjKNQxoMLF-gscJy7Bh8CUn205_1GpCwfMyJ22+6g@mail.gmail.com>
- <20211124072824.GA7738@lst.de>
- <YZ3qvtHlMkRnC74f@kroah.com>
- <CAPcyv4iYcBFDhDtcxc37EWfX1Wpuh8Zsm4-whTL0vNyY4zW3AQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4iYcBFDhDtcxc37EWfX1Wpuh8Zsm4-whTL0vNyY4zW3AQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Nov 23, 2021 at 11:54:03PM -0800, Dan Williams wrote:
-> On Tue, Nov 23, 2021 at 11:33 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Wed, Nov 24, 2021 at 08:28:24AM +0100, Christoph Hellwig wrote:
-> > > On Tue, Nov 23, 2021 at 11:17:55PM -0800, Dan Williams wrote:
-> > > > I am missing the counter proposal in both Bjorn's and your distaste
-> > > > for aux bus and PCIe portdrv?
+On Wed, Nov 24, 2021 at 12:22 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Nov 23, 2021 at 11:54:03PM -0800, Dan Williams wrote:
+> > On Tue, Nov 23, 2021 at 11:33 PM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
 > > >
-> > > Given that I've only brought in in the last mail I have no idea what
-> > > the original proposal even is.
+> > > On Wed, Nov 24, 2021 at 08:28:24AM +0100, Christoph Hellwig wrote:
+> > > > On Tue, Nov 23, 2021 at 11:17:55PM -0800, Dan Williams wrote:
+> > > > > I am missing the counter proposal in both Bjorn's and your distaste
+> > > > > for aux bus and PCIe portdrv?
+> > > >
+> > > > Given that I've only brought in in the last mail I have no idea what
+> > > > the original proposal even is.
+> > >
+> > > Neither do I :(
 > >
-> > Neither do I :(
-> 
-> To be clear I am also trying to get to the root of Bjorn's concern.
-> 
-> The proposal in $SUBJECT is to build on / treat a CXL topology as a
-> Linux device topology on /sys/bus/cxl that references devices on
-> /sys/bus/platform (CXL ACPI topology root and Host Bridges) and
-> /sys/bus/pci (CXL Switches and Endpoints).
+> > To be clear I am also trying to get to the root of Bjorn's concern.
+> >
+> > The proposal in $SUBJECT is to build on / treat a CXL topology as a
+> > Linux device topology on /sys/bus/cxl that references devices on
+> > /sys/bus/platform (CXL ACPI topology root and Host Bridges) and
+> > /sys/bus/pci (CXL Switches and Endpoints).
+>
+> Wait, I am confused.
+>
+> A bus lists devices that are on that bus.  It does not list devices that
+> are on other busses.
+>
+> Now a device in a bus list can have a parent be on different types of
+> busses, as the parent device does not matter, but the device itself can
+> not be of different types.
+>
+> So I do not understand what you are describing here at all.  Do you have
+> an example output of sysfs that shows this situation?
 
-Wait, I am confused.
+Commit 40ba17afdfab ("cxl/acpi: Introduce cxl_decoder objects")
 
-A bus lists devices that are on that bus.  It does not list devices that
-are on other busses.
+...has an example of the devices registered on the CXL bus by the
+cxl_acpi driver.
 
-Now a device in a bus list can have a parent be on different types of
-busses, as the parent device does not matter, but the device itself can
-not be of different types.
+> > This CXL port device topology has already been shipping for a few
+> > kernel cycles.
+>
+> So it's always been broken?  :)
 
-So I do not understand what you are describing here at all.  Do you have
-an example output of sysfs that shows this situation?
+Kidding aside, CXL has different moving pieces than PCI and the Linux
+device-driver model is how we are organizing that complexity. CXL is
+also symbiotically attached to PCI as it borrows the enumeration
+mechanism while building up a parallel CXL.mem universe to live
+alongside PCI.config and PCI.mmio. The CXL subsystem is similar to MD
+/ DM where virtual devices are built up from other devices.
 
-> This CXL port device topology has already been shipping for a few
-> kernel cycles.
+> > What is on
+> > the table now is a driver for CXL port devices (a logical Linux
+> > construct). The driver handles discovery of "component registers"
+> > either by ACPI table or PCI DVSEC and offers services to proxision CXL
+> > regions.
+>
+> So a normal bus controller device that creates new devices of a bus
+> type, right?  What is special about that?
 
-So it's always been broken?  :)
+Yes, which is the root of my confusion about Bjorn's concern.
 
-> What is on
-> the table now is a driver for CXL port devices (a logical Linux
-> construct). The driver handles discovery of "component registers"
-> either by ACPI table or PCI DVSEC and offers services to proxision CXL
-> regions.
+> > CXL 'regions' are also proposed as Linux devices that
+> > represent an active CXL memory range which can interleave multiple
+> > endpoints across multiple switches and host bridges.
+>
+> As long as these 'devices' have drivers and do not mess with the
+> resources of any other device in the system, I do not understand the
+> problem here.
 
-So a normal bus controller device that creates new devices of a bus
-type, right?  What is special about that?
+Correct, these drivers manage CXL.mem resources and leave PCI.mmio
+resource management to PCI.
 
-> CXL 'regions' are also proposed as Linux devices that
-> represent an active CXL memory range which can interleave multiple
-> endpoints across multiple switches and host bridges.
+> Or is the issue that you are again trying to carve up "real" devices
+> into tiny devices that then somehow need to be aware of the resources
+> being touched by different drivers at the same time?
 
-As long as these 'devices' have drivers and do not mess with the
-resources of any other device in the system, I do not understand the
-problem here.
+No, there's no multiplexing of resources across devices / drivers that
+requires cross-driver awareness.
 
-Or is the issue that you are again trying to carve up "real" devices
-into tiny devices that then somehow need to be aware of the resources
-being touched by different drivers at the same time?
+> I'm still confused, sorry.
 
-I'm still confused, sorry.
-
-greg k-h
+No worries, appreciate the attention to make sure this implementation
+is idiomatic and avoids any architectural dragons.
