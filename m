@@ -2,95 +2,309 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CBCC433F5
-	for <linux-cxl@archiver.kernel.org>; Wed, 24 Nov 2021 22:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3B2C433EF
+	for <linux-cxl@archiver.kernel.org>; Wed, 24 Nov 2021 22:18:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245638AbhKXWG1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 24 Nov 2021 17:06:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40108 "EHLO
+        id S245590AbhKXWVu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 24 Nov 2021 17:21:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245236AbhKXWG1 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Nov 2021 17:06:27 -0500
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E139C06173E
-        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 14:03:17 -0800 (PST)
-Received: by mail-pj1-x1036.google.com with SMTP id n15-20020a17090a160f00b001a75089daa3so6148232pja.1
-        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 14:03:17 -0800 (PST)
+        with ESMTP id S245503AbhKXWVt (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Nov 2021 17:21:49 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ED43C061574
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 14:18:38 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id v23so3605656pjr.5
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 14:18:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=16s7UcoI1ggoDVX9XRSZk645m6dxvQ8lddinmk7z5AI=;
-        b=jNAxLW0AilkWXrzLszef6eGL/sdVYwMs0DTvhI4xt/bChY98cAmAnuWwoh42xuzu+j
-         +dfCVZ5DuOzIF2movkOlwkd/OEYZYGp+OdVt74mmVeGLDGT47vEYxKd3RRHMP7dFDpEM
-         hSaIm2MdC7Zy+RFk9ecA3gSMjBznHnY8EqMNGtFUEsiUsnF4eT5ePpixnB2bJUMYQAmK
-         lI+FWE0w5bCuzXvSyAtHBTffuY1KND3WHBWk+q/wVAJcJpIn8LEnd6bXgCGe0msQwq6N
-         1MCu1V9pL20O7Wtko1l7QXEsph5uj1Ps6JkgSpV5b8U+v2bUivJrknjM+WPmHhq20S/J
-         YS1Q==
+        bh=t136RXUUjljW+zq+0uABWBZU7E88tMGuF++JYX1S51w=;
+        b=RsBMDNpQ094UksOy23GRpmiXc2C9+Ne9lh98ax8D8VVELglTix32+b9fzA5X0uRWrU
+         NCIJ+eQ2C5GI4r+10ghhCEnbQ4mR7kPlQPPZLtMnfBC6AuclcDxklfCkJVfFtbieB+Dk
+         S3QuNYG0r5BQLa4eqOrYJMcIBsE4RIyGL360Vtr00sprQmKtIuxa/J7JIqqs+K0Sd0Wq
+         oeecZY4NikmNaKr9sSfCTmPX533FmOmtUTzCvI9N5oTfq/6M5Pm/Vm5aivVqKlou33E0
+         1PPl+8IDBMyDDACKRFAO92VrR8OmMyU9R832mAihE18S3aGRjQF2DQaBEQOe0fOLgtN2
+         Hyaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=16s7UcoI1ggoDVX9XRSZk645m6dxvQ8lddinmk7z5AI=;
-        b=u1L9LxEBFRAI1EOpCBvrGyzPfxR9UOXtouXcrcS90WEPMdaunysRYFwWj44Y0vP3VB
-         aMmZ+/vmEm9Ek2TSi7hsFjmx9SULC9lEHYLaPBNyYhNc1782wMg6lWncrkqXFw4MAMhI
-         S48CNYFQrHe4VvvRkt1xRuEeu4pGf4pbaP/heXVIAEd1wp5H54Z8DEtBd9LHzI2sHEfc
-         5wnckI/f2lHC+JWaKLqBZI6vmaBowgqeti6koe1gw2KiO+7AI7CiTA8RkmKOUn2+4A/W
-         2T322ZmW+VPyBW3WXFIOVhXRjte7aH69g5LM01GUK4sR1mkR80eXGpaUovb2NLDtfypg
-         LSfg==
-X-Gm-Message-State: AOAM531iK4QxJv1pHCKPib2dMbS+ey6hj7coFcQqNU5Au+KqRy+eWfic
-        DM1PkCSbhU+IwPvwVBaFXralIVBC5qM/D1yDw663+w==
-X-Google-Smtp-Source: ABdhPJwsrH+5hDWFNmTRaL38ZDOvtnVsabDPru6WTPCkRHBzVEZKkkxipeFGrIMiZ4uvKN/q55DfK6gVsxCwcqubI6U=
-X-Received: by 2002:a17:90a:e7ca:: with SMTP id kb10mr536849pjb.8.1637791396596;
- Wed, 24 Nov 2021 14:03:16 -0800 (PST)
+        bh=t136RXUUjljW+zq+0uABWBZU7E88tMGuF++JYX1S51w=;
+        b=IRk2e+zcL6T6lTwom9HEAq7Afwb14sI6AnfElee+Ly2mPQnoVQTAP5iADuMctMO1xM
+         wHD3obaDk1DVLPsZ6VlYzUgZ3BOQE3KrjWeMxU5rziQWvepK9LC+ood/ieXrrCrmWR0v
+         GEuo03/L7w/k6NsjNWOmpe61CuwYwdpxV6O9oKX7Y+gigLfOoM6/vC1pY+FHLClF/DC9
+         8JDUHWeufBs+XO3wOZHfsIalQmTZ4I30F3J3CQB2F0bkKOTUdZmhYRi/Jax0ZJ05CAG5
+         PoFLdfxaX7GSB/7z6oGjZmLbCKw8oK5WDLVfYfqb2OK10u4PMaO2bVwUQv4cHKtqXut8
+         QX1A==
+X-Gm-Message-State: AOAM532aB0txdajzlkyt68LloSX4SHz7B3Da3ktajPd1cHWlMBNG7+qM
+        KNXf+K9P6qHkDNkZTsimVXoLjQKbq1Ngwvx3+CTpMw==
+X-Google-Smtp-Source: ABdhPJwzZ+etC3NasPHDxICacataNUohNOput2FltlBEMwd2pZ5AxT9KapbtXD7bbmb8I/niJVyJiPfXACUugzFcJ8s=
+X-Received: by 2002:a17:902:7fcd:b0:142:8ab3:ec0e with SMTP id
+ t13-20020a1709027fcd00b001428ab3ec0emr23105992plb.4.1637792317776; Wed, 24
+ Nov 2021 14:18:37 -0800 (PST)
 MIME-Version: 1.0
-References: <20211120000250.1663391-1-ben.widawsky@intel.com>
- <20211120000250.1663391-8-ben.widawsky@intel.com> <20211122152224.0000467e@Huawei.com>
- <20211122173226.f72gy2ipbf7awuqw@intel.com>
-In-Reply-To: <20211122173226.f72gy2ipbf7awuqw@intel.com>
+References: <20211120000250.1663391-1-ben.widawsky@intel.com> <20211120000250.1663391-9-ben.widawsky@intel.com>
+In-Reply-To: <20211120000250.1663391-9-ben.widawsky@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 24 Nov 2021 14:03:06 -0800
-Message-ID: <CAPcyv4gv93EyTEmgiscAkydT8DAcm8PagQCa3jKfhCj8TD13Dg@mail.gmail.com>
-Subject: Re: [PATCH 07/23] cxl/pci: Add new DVSEC definitions
+Date:   Wed, 24 Nov 2021 14:18:27 -0800
+Message-ID: <CAPcyv4j2r-B9MM9F_Qsmwt2ezC_uytHYQPUGk7v2_6+4ySGkZg@mail.gmail.com>
+Subject: Re: [PATCH 08/23] cxl/acpi: Map component registers for Root Ports
 To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
         Alison Schofield <alison.schofield@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Nov 22, 2021 at 9:32 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Fri, Nov 19, 2021 at 4:03 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> On 21-11-22 15:22:24, Jonathan Cameron wrote:
-> > On Fri, 19 Nov 2021 16:02:34 -0800
-> > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> >
-> > > While the new definitions are yet necessary at this point, they are
-> > > introduced at this point to help solidify the newly minted schema for
-> > > naming registers.
-> > >
-> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> >
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huwei.com>
+> This implements the TODO in cxl_acpi for mapping component registers.
+> cxl_acpi becomes the second consumer of CXL register block enumeration
+> (cxl_pci being the first). Moving the functionality to cxl_core allows
+> both of these drivers to use the functionality. Equally importantly it
+> allows cxl_core to use the functionality in the future.
 >
-> Thanks. I realized on re-reading this I didn't like the commit message. I
-> reworded to this:
+> CXL 2.0 root ports are similar to CXL 2.0 Downstream Ports with the main
+> distinction being they're a part of the CXL 2.0 host bridge. While
+> mapping their component registers is not immediately useful for the CXL
+> drivers, the movement of register block enumeration into core is a vital
+> step towards HDM decoder programming.
 >
-> While the new definitions are not yet necessary at this point, they are
-> introduced to help solidify the newly minted schema for naming
-> registers.
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 >
-> Please let me know if you'd like me to drop your reviewed-by tag.
+> ---
+> Changes since RFCv2:
+> - Squash commits together (Dan)
+> - Reword commit message to account for above.
+> ---
+>  drivers/cxl/acpi.c      | 10 ++++++--
+>  drivers/cxl/core/regs.c | 54 +++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h       |  4 +++
+>  drivers/cxl/pci.c       | 52 ---------------------------------------
+>  drivers/cxl/pci.h       |  4 +++
+>  5 files changed, 70 insertions(+), 54 deletions(-)
+>
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index 3163167ecc3a..7cfa8b568013 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/acpi.h>
+>  #include <linux/pci.h>
+>  #include "cxl.h"
+> +#include "pci.h"
+>
+>  /* Encode defined in CXL 2.0 8.2.5.12.7 HDM Decoder Control Register */
+>  #define CFMWS_INTERLEAVE_WAYS(x)       (1 << (x)->interleave_ways)
+> @@ -134,11 +135,13 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+>
+>  __mock int match_add_root_ports(struct pci_dev *pdev, void *data)
+>  {
+> +       resource_size_t creg = CXL_RESOURCE_NONE;
+>         struct cxl_walk_context *ctx = data;
+>         struct pci_bus *root_bus = ctx->root;
+>         struct cxl_port *port = ctx->port;
+>         int type = pci_pcie_type(pdev);
+>         struct device *dev = ctx->dev;
+> +       struct cxl_register_map map;
+>         u32 lnkcap, port_num;
+>         int rc;
+>
+> @@ -152,9 +155,12 @@ __mock int match_add_root_ports(struct pci_dev *pdev, void *data)
+>                                   &lnkcap) != PCIBIOS_SUCCESSFUL)
+>                 return 0;
+>
+> -       /* TODO walk DVSEC to find component register base */
+> +       rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
+> +       if (!rc)
+> +               creg = cxl_reg_block(pdev, &map);
 
-The typical changelog template for patches like this is:
+A couple comments: the difference between cxl_find_regblock() and
+cxl_reg_block() is not obvious from the names. Setting aside why one
+is regblock and the other is reg_block I would expect a name like
+cxl_regmap_to_base() is easier to read.
 
-"In preparation for adding features X, Y, and Z, add definitions for
-A, B, and C."
+It occurs to me that if cxl_find_regblock() failures are optional it
+would be nice if cxl_regmap_to_base() returns CXL_RESOURCE_NONE if the
+map is not populated. Then this can unconditionally call
+cxl_regmap_to_base().
 
-Otherwise, patch looks good.
+> +
+>         port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
+> -       rc = cxl_add_dport(port, &pdev->dev, port_num, CXL_RESOURCE_NONE);
+> +       rc = cxl_add_dport(port, &pdev->dev, port_num, creg);
+>         if (rc) {
+>                 ctx->error = rc;
+>                 return rc;
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index e37e23bf4355..41a0245867ea 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -5,6 +5,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/pci.h>
+>  #include <cxlmem.h>
+> +#include <pci.h>
+>
+>  /**
+>   * DOC: cxl registers
+> @@ -247,3 +248,56 @@ int cxl_map_device_regs(struct pci_dev *pdev,
+>         return 0;
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_map_device_regs, CXL);
+> +
+> +static void cxl_decode_regblock(u32 reg_lo, u32 reg_hi,
+> +                               struct cxl_register_map *map)
+> +{
+> +       map->block_offset = ((u64)reg_hi << 32) |
+> +                           (reg_lo & CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK);
+> +       map->barno = FIELD_GET(CXL_DVSEC_REG_LOCATOR_BIR_MASK, reg_lo);
+> +       map->reg_type = FIELD_GET(CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK, reg_lo);
+> +}
+> +
+> +/**
+> + * cxl_find_regblock() - Locate register blocks by type
+> + * @pdev: The CXL PCI device to enumerate.
+> + * @type: Register Block Indicator id
+> + * @map: Enumeration output, clobbered on error
+> + *
+> + * Return: 0 if register block enumerated, negative error code otherwise
+> + *
+> + * A CXL DVSEC may additional point one or more register blocks, search
+> + * for them by @type.
+> + */
+> +int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+> +                     struct cxl_register_map *map)
+> +{
+> +       u32 regloc_size, regblocks;
+> +       int regloc, i;
+> +
+> +       regloc = pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL,
+> +                                          CXL_DVSEC_REG_LOCATOR);
+> +       if (!regloc)
+> +               return -ENXIO;
+> +
+> +       pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
+> +       regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
+> +
+> +       regloc += CXL_DVSEC_REG_LOCATOR_BLOCK1_OFFSET;
+> +       regblocks = (regloc_size - CXL_DVSEC_REG_LOCATOR_BLOCK1_OFFSET) / 8;
+> +
+> +       for (i = 0; i < regblocks; i++, regloc += 8) {
+> +               u32 reg_lo, reg_hi;
+> +
+> +               pci_read_config_dword(pdev, regloc, &reg_lo);
+> +               pci_read_config_dword(pdev, regloc + 4, &reg_hi);
+> +
+> +               cxl_decode_regblock(reg_lo, reg_hi, map);
+> +
+> +               if (map->reg_type == type)
+> +                       return 0;
+> +       }
+> +
+> +       return -ENODEV;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_find_regblock, CXL);
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index ab4596f0b751..7150a9694f66 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -145,6 +145,10 @@ int cxl_map_device_regs(struct pci_dev *pdev,
+>                         struct cxl_device_regs *regs,
+>                         struct cxl_register_map *map);
+>
+> +enum cxl_regloc_type;
+> +int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+> +                     struct cxl_register_map *map);
+> +
+>  #define CXL_RESOURCE_NONE ((resource_size_t) -1)
+>  #define CXL_TARGET_STRLEN 20
+>
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 711bf4514480..d2c743a31b0c 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -433,58 +433,6 @@ static int cxl_map_regs(struct cxl_dev_state *cxlds, struct cxl_register_map *ma
+>         return 0;
+>  }
+>
+> -static void cxl_decode_regblock(u32 reg_lo, u32 reg_hi,
+> -                               struct cxl_register_map *map)
+> -{
+> -       map->block_offset = ((u64)reg_hi << 32) |
+> -                           (reg_lo & CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK);
+> -       map->barno = FIELD_GET(CXL_DVSEC_REG_LOCATOR_BIR_MASK, reg_lo);
+> -       map->reg_type = FIELD_GET(CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK, reg_lo);
+> -}
+> -
+> -/**
+> - * cxl_find_regblock() - Locate register blocks by type
+> - * @pdev: The CXL PCI device to enumerate.
+> - * @type: Register Block Indicator id
+> - * @map: Enumeration output, clobbered on error
+> - *
+> - * Return: 0 if register block enumerated, negative error code otherwise
+> - *
+> - * A CXL DVSEC may point to one or more register blocks, search for them
+> - * by @type.
+> - */
+> -static int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+> -                            struct cxl_register_map *map)
+> -{
+> -       u32 regloc_size, regblocks;
+> -       int regloc, i;
+> -
+> -       regloc = pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL,
+> -                                          CXL_DVSEC_REG_LOCATOR);
+> -       if (!regloc)
+> -               return -ENXIO;
+> -
+> -       pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
+> -       regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
+> -
+> -       regloc += CXL_DVSEC_REG_LOCATOR_BLOCK1_OFFSET;
+> -       regblocks = (regloc_size - CXL_DVSEC_REG_LOCATOR_BLOCK1_OFFSET) / 8;
+> -
+> -       for (i = 0; i < regblocks; i++, regloc += 8) {
+> -               u32 reg_lo, reg_hi;
+> -
+> -               pci_read_config_dword(pdev, regloc, &reg_lo);
+> -               pci_read_config_dword(pdev, regloc + 4, &reg_hi);
+> -
+> -               cxl_decode_regblock(reg_lo, reg_hi, map);
+> -
+> -               if (map->reg_type == type)
+> -                       return 0;
+> -       }
+> -
+> -       return -ENODEV;
+> -}
+> -
+>  static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+>                           struct cxl_register_map *map)
+>  {
+> diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
+> index 8ae2b4adc59d..a4b506bb37d1 100644
+> --- a/drivers/cxl/pci.h
+> +++ b/drivers/cxl/pci.h
+> @@ -47,4 +47,8 @@ enum cxl_regloc_type {
+>         CXL_REGLOC_RBI_TYPES
+>  };
+>
+> +#define cxl_reg_block(pdev, map)                                               \
+> +       ((resource_size_t)(pci_resource_start(pdev, (map)->barno) +            \
+> +                          (map)->block_offset))
+> +
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+I see no reason for this to be macro. It's also a bug timebomb if
+someone in the future does something like:
+
+    cxl_reg_block(pdev, map++);
+
+...because the macro references its arguments more than once.
