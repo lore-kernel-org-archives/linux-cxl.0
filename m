@@ -2,54 +2,54 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A29C433F5
-	for <linux-cxl@archiver.kernel.org>; Wed, 24 Nov 2021 22:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EF4C433F5
+	for <linux-cxl@archiver.kernel.org>; Wed, 24 Nov 2021 22:55:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231809AbhKXWpU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 24 Nov 2021 17:45:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48870 "EHLO
+        id S1346225AbhKXW63 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 24 Nov 2021 17:58:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231743AbhKXWpU (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Nov 2021 17:45:20 -0500
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01B04C06173E
-        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 14:42:10 -0800 (PST)
-Received: by mail-pl1-x629.google.com with SMTP id y7so3089820plp.0
-        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 14:42:09 -0800 (PST)
+        with ESMTP id S1345385AbhKXW62 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Nov 2021 17:58:28 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BA1FC06173E
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 14:55:18 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id gx15-20020a17090b124f00b001a695f3734aso4111051pjb.0
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 14:55:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+1Q4ZlGTBOATTQOQ5br1/BXNrVoSlyGXFm1sTwcyv0U=;
-        b=7+nerVzgcqxel+bXeYjFSJU+3pF4llyEQqlFiRz0Qvx4BJQ2O42+FrhOjxghVmPsyP
-         TKHmlfnXTVHkhG/YqfV9QI6RaK4wbgb1jMfplXUJneNUzj/37BboiXEQnECYLR1m68RR
-         /XacUZeOWjM5EuSCSjp5Mi6vME9kKh2/GG+rBH9zJWrFyJadbogJMNyvU51OvnAJ9evi
-         fZ7hIZ12Jq1ooD04BKoOU16UvprvsmpN1b/c9nnXrNxzp00Me7dpD5uh7uXhTgQAIKWV
-         PVZkyDxQVWYR+haC303hwJ8SJ4NQh20mc2CEGjgan1/QFDA+MThMXKKgPVxFnp2+XwzW
-         Rcuw==
+        bh=sEkXTr1CVlB4OvzJNloCs5luN2SOG/AE8/F/zeex2Q8=;
+        b=Vh4LeKm6XE23WW2uQBz8rJeoRE5Lz3+Gl+1q/Er3IUj1MxuNT4zjPpngzSk84mYb+B
+         KJf+RswKjhj5X4pevNp9HtWcuXJ2sF5qLKDmxT/a+x11yqzTY0Ds1vozSZ5E6LlaiaYK
+         hs+WXsmMtL0fclpZogZ29AfesB1zkHPUezzwdDh206re0sbnpkrIkTEZ4u8USfYO9L48
+         Qgig3/Jm9NchgBCK2beQIXxOCpegxifNuNg3C//jQcPZP3qduimzUstbjxTu6XezbTSp
+         DK8wVmmY9h4LRjwGY6kF2zSFEVV+cf5xXNXTtAdL3Ml1L+5tKcisVpESHYa/YkYXH+PO
+         I+5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+1Q4ZlGTBOATTQOQ5br1/BXNrVoSlyGXFm1sTwcyv0U=;
-        b=gwIqh7PKBjTazwBSE1a9Whan1VS/PoTRUI6sGYbjYaXrQc/6ehOcCEeA6yav4ORKe1
-         MDXIFg+jenqEGa9P2q5sZh/vTGaBnUCO+ThwBT8FpPnRmEJ4lfWCNnZ7D90cpf819jWP
-         vLOBiBVMIStUhbBYOPn85PPATr8biqirbnJNCvm1Lm/txNwO4qt6sXKyKWMGD+bfjFiW
-         JRscalrNqaqdXy/U9tfhwNxB5o5jNW3pAXcPqQMoGdu97ZJF+dPWjJSDy9vt6dZjm5M3
-         UuSqXmsBr12gzJGWDPVbLUL8WA/Hx0xoFNjzY8XvqF319Z+1KY4KkLTBaR8lhx2HrcL5
-         8gxQ==
-X-Gm-Message-State: AOAM533v8ktIjqtvQqUjCj5pjYi91C8FOWormsja3IjIjKx4XVPUkggX
-        WTorRZn6yzKHbwPBqboLHBI1iHauHWP325qIFWmdYQ==
-X-Google-Smtp-Source: ABdhPJxE9W91V3eeKsJuJKXRLIxfPSh5eIk7JcMf91gbC2VJEJ+4woxlRUWD0vPepwePG8nqOb+XN0Jm5gz5sqDCJK4=
-X-Received: by 2002:a17:90b:1e49:: with SMTP id pi9mr779516pjb.220.1637793729510;
- Wed, 24 Nov 2021 14:42:09 -0800 (PST)
+        bh=sEkXTr1CVlB4OvzJNloCs5luN2SOG/AE8/F/zeex2Q8=;
+        b=mu4D4KcJGPnstvogiGSO2bdSf0ERufQ+6DM7X4IOS8aZgFYdSmuyk+/NXoAhsQSL2I
+         2CbtHA13jHNGWpLZaELQAR9AukmS1/oZOHHVpLR7eMpExLDwG9ru4lRqiGo56sSqX2P4
+         eX1/T5tOY53ZtQxmmfY6++w0YbQ8v9IOX85zYWZKNRI9zJdae873hDtYGQtmsBtovCJL
+         3j3w3XAAgzut92SbDWp9PyBzZanz8jOk1kLdHoybXjyNHhznfrFwNshZAHJ+DlHNQCIm
+         OiiH+FX1sDDNRpfE7g1WRYkQrqb52/0z8XBCeNDg3DjXPzAlb2Lzj5X0FobWdZ4sf6Wi
+         OX/g==
+X-Gm-Message-State: AOAM532i04M6mqCtsdalwVcI6GwZCvwB4AH8SvYFk/yRwN4S3JwaU7QP
+        nYhnAB1Gwy9t1qcpkIlyvBKIbHyyYteZW72fRgFGKg==
+X-Google-Smtp-Source: ABdhPJxzAggYjDjVpJuE9CXjDLPIcFWy84MuHHNMSY9727LcP9eEGNmGHhtJPJlJsdXpkc9UB+ATvaMt0RMJKhjh1vo=
+X-Received: by 2002:a17:90b:1e07:: with SMTP id pg7mr834434pjb.93.1637794517965;
+ Wed, 24 Nov 2021 14:55:17 -0800 (PST)
 MIME-Version: 1.0
-References: <20211120000250.1663391-1-ben.widawsky@intel.com> <20211120000250.1663391-11-ben.widawsky@intel.com>
-In-Reply-To: <20211120000250.1663391-11-ben.widawsky@intel.com>
+References: <20211120000250.1663391-1-ben.widawsky@intel.com> <20211120000250.1663391-12-ben.widawsky@intel.com>
+In-Reply-To: <20211120000250.1663391-12-ben.widawsky@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 24 Nov 2021 14:41:59 -0800
-Message-ID: <CAPcyv4h3hjhG9Z8o5roUw2k9Dcxe5w1PKukOCONedU7gcH4C1Q@mail.gmail.com>
-Subject: Re: [PATCH 10/23] cxl/core: Convert decoder range to resource
+Date:   Wed, 24 Nov 2021 14:55:07 -0800
+Message-ID: <CAPcyv4gh+Q0e56do-AuKeu4WFWVhutFjX475=5rQKazT_kcxTw@mail.gmail.com>
+Subject: Re: [PATCH 11/23] cxl/core: Document and tighten up decoder APIs
 To:     Ben Widawsky <ben.widawsky@intel.com>
 Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
         Alison Schofield <alison.schofield@intel.com>,
@@ -63,127 +63,100 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 On Fri, Nov 19, 2021 at 4:03 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> CXL decoders manage address ranges in a hierarchical fashion whereby a
-> leaf is a unique subregion of its parent decoder (midlevel or root). It
-> therefore makes sense to use the resource API for handling this.
+> Since the code to add decoders for switches and endpoints is on the
+> horizon it helps to have properly documented APIs. In addition, the
+> decoder APIs will never need to support a negative count for downstream
+> targets as the spec explicitly starts numbering them at 1, ie. even 0 is
+> an "invalid" value which can be used as a sentinel.
+
+Looks good to me:
+
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+
 >
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 >
 > ---
-> Changes since RFCv2
-> - Switch to DEFINE_RES_MEM from NAMED variant (Dan)
-> - Differentiate CFMWS resources and other decoder resources (Ben)
-> - Make decoder resources be range, nor resource (Dan)
-> - Set decoder name in cxl_decoder_add() (Dan)
+>
+> This is respun from a previous incantation here:
+> https://lore.kernel.org/linux-cxl/20210915155946.308339-1-ben.widawsky@intel.com/
 > ---
->  drivers/cxl/acpi.c     | 16 ++++++----------
->  drivers/cxl/core/bus.c | 19 +++++++++++++++++--
->  drivers/cxl/cxl.h      |  8 ++++++--
->  3 files changed, 29 insertions(+), 14 deletions(-)
+>  drivers/cxl/core/bus.c | 33 +++++++++++++++++++++++++++++++--
+>  drivers/cxl/cxl.h      |  3 ++-
+>  2 files changed, 33 insertions(+), 3 deletions(-)
 >
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index 7cfa8b568013..3415184a2e61 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -108,10 +108,8 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
->
->         cxld->flags = cfmws_to_decoder_flags(cfmws->restrictions);
->         cxld->target_type = CXL_DECODER_EXPANDER;
-> -       cxld->range = (struct range){
-> -               .start = cfmws->base_hpa,
-> -               .end = cfmws->base_hpa + cfmws->window_size - 1,
-> -       };
-> +       cxld->platform_res = (struct resource)DEFINE_RES_MEM(cfmws->base_hpa,
-> +                                                            cfmws->window_size);
->         cxld->interleave_ways = CFMWS_INTERLEAVE_WAYS(cfmws);
->         cxld->interleave_granularity = CFMWS_INTERLEAVE_GRANULARITY(cfmws);
->
-> @@ -127,8 +125,9 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
->                 return 0;
->         }
->         dev_dbg(dev, "add: %s node: %d range %#llx-%#llx\n",
-> -               dev_name(&cxld->dev), phys_to_target_node(cxld->range.start),
-> -               cfmws->base_hpa, cfmws->base_hpa + cfmws->window_size - 1);
-> +               dev_name(&cxld->dev),
-> +               phys_to_target_node(cxld->platform_res.start), cfmws->base_hpa,
-> +               cfmws->base_hpa + cfmws->window_size - 1);
-
-Since you converted to resource you can us %pr:
-
-        dev_dbg(dev, "add: %s node: %d range %pr\n", dev_name(&cxld->dev),
-                phys_to_target_node(cxld->platform_res.start),
-                &cxld->platform_res);
-
-
->
->         return 0;
->  }
-> @@ -267,10 +266,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
->         cxld->interleave_ways = 1;
->         cxld->interleave_granularity = PAGE_SIZE;
->         cxld->target_type = CXL_DECODER_EXPANDER;
-> -       cxld->range = (struct range) {
-> -               .start = 0,
-> -               .end = -1,
-> -       };
-> +       cxld->platform_res = (struct resource)DEFINE_RES_MEM(0, 0);
->
->         device_lock(&port->dev);
->         dport = list_first_entry(&port->dports, typeof(*dport), list);
 > diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-> index 17a4fff029f8..8e80e85350b1 100644
+> index 8e80e85350b1..1ee12a60f3f4 100644
 > --- a/drivers/cxl/core/bus.c
 > +++ b/drivers/cxl/core/bus.c
-> @@ -46,8 +46,14 @@ static ssize_t start_show(struct device *dev, struct device_attribute *attr,
->                           char *buf)
->  {
->         struct cxl_decoder *cxld = to_cxl_decoder(dev);
-> +       u64 start = 0;
-
-No need to init to zero.
-
->
-> -       return sysfs_emit(buf, "%#llx\n", cxld->range.start);
-> +       if (is_root_decoder(dev))
-> +               start = cxld->platform_res.start;
-> +       else
-> +               start = cxld->decoder_range.start;
-> +
-> +       return sysfs_emit(buf, "%#llx\n", start);
+> @@ -495,7 +495,20 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
+>         return rc;
 >  }
->  static DEVICE_ATTR_RO(start);
 >
-> @@ -55,8 +61,14 @@ static ssize_t size_show(struct device *dev, struct device_attribute *attr,
->                         char *buf)
+> -struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
+> +/**
+> + * cxl_decoder_alloc - Allocate a new CXL decoder
+> + * @port: owning port of this decoder
+> + * @nr_targets: downstream targets accessible by this decoder. All upstream
+> + *             ports and root ports must have at least 1 target.
+> + *
+> + * A port should contain one or more decoders. Each of those decoders enable
+> + * some address space for CXL.mem utilization. A decoder is expected to be
+> + * configured by the caller before registering.
+> + *
+> + * Return: A new cxl decoder to be registered by cxl_decoder_add()
+> + */
+> +struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
+> +                                     unsigned int nr_targets)
 >  {
->         struct cxl_decoder *cxld = to_cxl_decoder(dev);
-> +       u64 size = 0;
-
-Same "no init" comment.
-
+>         struct cxl_decoder *cxld, cxld_const_init = {
+>                 .nr_targets = nr_targets,
+> @@ -503,7 +516,7 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
+>         struct device *dev;
+>         int rc = 0;
 >
-> -       return sysfs_emit(buf, "%#llx\n", range_len(&cxld->range));
-> +       if (is_root_decoder(dev))
-> +               size = resource_size(&cxld->platform_res);
-> +       else
-> +               size = range_len(&cxld->decoder_range);
-> +
-> +       return sysfs_emit(buf, "%#llx\n", size);
+> -       if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets < 1)
+> +       if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets == 0)
+>                 return ERR_PTR(-EINVAL);
+>
+>         cxld = kzalloc(struct_size(cxld, target, nr_targets), GFP_KERNEL);
+> @@ -535,6 +548,22 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
 >  }
->  static DEVICE_ATTR_RO(size);
+>  EXPORT_SYMBOL_NS_GPL(cxl_decoder_alloc, CXL);
 >
-> @@ -548,6 +560,9 @@ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
->         if (rc)
->                 return rc;
+> +/**
+> + * cxl_decoder_add - Add a decoder with targets
+> + * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
+> + * @target_map: A list of downstream ports that this decoder can direct memory
+> + *              traffic to. These numbers should correspond with the port number
+> + *              in the PCIe Link Capabilities structure.
+> + *
+> + * Certain types of decoders may not have any targets. The main example of this
+> + * is an endpoint device. A more awkward example is a hostbridge whose root
+> + * ports get hot added (technically possible, though unlikely).
+> + *
+> + * Context: Process context. Takes and releases the cxld's device lock.
+> + *
+> + * Return: Negative error code if the decoder wasn't properly configured; else
+> + *        returns 0.
+> + */
+>  int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+>  {
+>         struct cxl_port *port;
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index ad816fb5bdcc..b66ed8f241c6 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -288,7 +288,8 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
 >
-> +       if (is_root_decoder(dev))
-> +               cxld->platform_res.name = dev_name(dev);
-
-Maybe a comment about why the resource wants the name of the decoder?
-Just to help explain the motivation to separate this initialization
-step from the rest of the resource init.
-
-
-Other than that you can add:
-
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+>  struct cxl_decoder *to_cxl_decoder(struct device *dev);
+>  bool is_root_decoder(struct device *dev);
+> -struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets);
+> +struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
+> +                                     unsigned int nr_targets);
+>  int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
+>  int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld);
+>
+> --
+> 2.34.0
+>
