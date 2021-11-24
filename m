@@ -2,155 +2,180 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EFEEC433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 24 Nov 2021 18:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EBD4C433F5
+	for <linux-cxl@archiver.kernel.org>; Wed, 24 Nov 2021 19:31:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232385AbhKXS2J (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 24 Nov 2021 13:28:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46598 "EHLO
+        id S1351179AbhKXTeo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 24 Nov 2021 14:34:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229935AbhKXS2J (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Nov 2021 13:28:09 -0500
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 757E1C061574
-        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 10:24:59 -0800 (PST)
-Received: by mail-pf1-x429.google.com with SMTP id n85so3436695pfd.10
-        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 10:24:59 -0800 (PST)
+        with ESMTP id S1351230AbhKXTeQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Nov 2021 14:34:16 -0500
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0C82C06173E
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 11:31:06 -0800 (PST)
+Received: by mail-pg1-x52a.google.com with SMTP id g28so3064941pgg.3
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 11:31:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Cv9LR98z/haBcGUoxtoB1LyZRHlF0e4WkqMsUbQ83LM=;
-        b=yeYYVhRqpz/0ryEmg/zVDuxmBbG3xzAIcnrMUkwzZfg8iv2T91kYPG6Ppv/G9dbF0s
-         RiRTqxLzrxaW6CaocImUXnXWdZOs2fB4tlKVP2Loqyz6K/huZ6y3gSan1m8DbGbwwde9
-         Sp4mfSvuquEmSikFkhqC32DG++f7Pl3tcP48qT2IshVHsusxWmTcKURepg3lZBVKQDmM
-         UrpNXa2vJnkaWgcuCnWETrZP52LZ1JY3/foeWMMiUYhkSB1f7llIeysmn+yvBjefGL2e
-         3dHMNjVXNX8JAydvN4dYuauULqVSniujXhKeNlJcuoMqt9WbximZg1R9l5uzFqWOzfty
-         mnFg==
+        bh=vI7SzUj5UovgtfMb+fdADiLIwlcQ1wWC4aPy4AKa9sw=;
+        b=0bLuuQ/jE+gTjDQ7ciBE/07ddYj2uqOteQnZLi85uA8MFu8jSoIUYqqJCccGABtrTF
+         A78/mVgvstS02fSGtc8JEl33phPEac/WZZL7AmRbJxiWgXhlevV+smf69rNbhc9RoY4L
+         OdMXMQpGDvQ1a9+DKKGEyPvaBuy2/gNYEkqQ8m5CtKGOyxog3YkFzqDWpSz+I7i9ZJj9
+         8vLtEE+lnvfb/0/3ccZUw9Utcz2RzvdJSyirxLeiHsNBoblVFWtxy0EmtfEs5ixviCGf
+         ntc2dts22JJo5BbzkzJhTxcHYc661w25eCwPiOJ5PK8YOuQNmEBR/7RQNLQ7ux9FijIg
+         9ZIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Cv9LR98z/haBcGUoxtoB1LyZRHlF0e4WkqMsUbQ83LM=;
-        b=AyxtKVHMx4D0qbA2pwIjqCTMHXXTvugSF5moCYO+8dXWr8agAFr4JYCyOqIhs+7C7u
-         4PYr0XtyHmaXIYKFXlygevpvvMQm/Imc5+aSsn6BvrOlS6bMjxqguf5VXFsrcBjAJw9Y
-         LX5eVAa2/jlWwjCsioyDAX3qQd2EhhxYtohLS05WVIRpui0fmZMCQ7WqGYPKdr0J4RBB
-         70i68kH26CglDEQAlofSjCeaPpKGnFsGc9wiBDvkaf8sNqkp0virbKXu5QBVaowaOhl5
-         eIwQsPgxFZDarIQ6bU21tVx4ryg51CMcJTLjLkrpmR3gkR732Rbn2woyBLsdlu/CkcLc
-         Xfjw==
-X-Gm-Message-State: AOAM533upNxnAVt1O3CUb8pcp9ExT7U3kAJxqh6yHcMFCGMd4T0M2hZI
-        aJ/kpeMDei20GzEC3q47mwlJk6Xc7CeJ/QIO9z0s0w==
-X-Google-Smtp-Source: ABdhPJzUQt3PryOf5wtWBEw1C6RWXhgSxvUCpainw28rcYPUxg6Z6ceywSEaUg75sFYumIC7hTm+GQW8cIpna34oV/c=
-X-Received: by 2002:a63:88c3:: with SMTP id l186mr5910722pgd.377.1637778299033;
- Wed, 24 Nov 2021 10:24:59 -0800 (PST)
+        bh=vI7SzUj5UovgtfMb+fdADiLIwlcQ1wWC4aPy4AKa9sw=;
+        b=R9PQ6vsB8VHhYZF8J5cHScrgM9JPDg6fzBPeDquZeCRsY+hv1Otb3veFKzoMI1ttcd
+         IIMQrfW3uwRUKKlvTx+TrosU3J929V+Jn983vsgyKLmq1YQ3CGqgFkwonfYpUWe95ohL
+         aSLcqY/qGyS11MW6rFkwcL+kLa1guDFxgXAzDfEcvl+/ErYd1aC/zhEih/3tnkQjX746
+         YiMKnFxs52RGM9XsYUxl3TuVyLGEgb1tfjGSfsx/5L/9ey0qf5/2zwI2H0a2uK8sV+2r
+         DB956MJnGUoos2xw/9J+W+u7Dxfo2Yy3nYt54ZPjgcD1Yg6gHCD3WQwT8iwcJzA1MoTf
+         0B8g==
+X-Gm-Message-State: AOAM533SuS21tU0Hni7YnKqaIfTwrzvbbjGUqlWDE/Pzh5FoX+urfxZV
+        ADnJ7Rdu5/QMOt5DLZsAn0O4tiCW/L2z+4Bhj77QTg==
+X-Google-Smtp-Source: ABdhPJwu4BzXwUzPTOx3eZyuEmi1g/2RqUwz46ZVZuCSxJm6PakajWT8pRAEysCQkiHfpnoiaOBdmQLapQccbnY/QTM=
+X-Received: by 2002:a05:6a00:140e:b0:444:b077:51ef with SMTP id
+ l14-20020a056a00140e00b00444b07751efmr8535703pfu.61.1637782266311; Wed, 24
+ Nov 2021 11:31:06 -0800 (PST)
 MIME-Version: 1.0
-References: <CAPcyv4h7h3oJTEorMhL6MMD5FYbSxaWs6tb3-w=JWxhR=j77+A@mail.gmail.com>
- <20211123235557.GA2247853@bhelgaas> <CAPcyv4g0=zz8BtB9DRW0FGsRRvgGwEaQcgbmXDhJ3DwNFS9Z+g@mail.gmail.com>
- <20211124063316.GA6792@lst.de> <CAPcyv4ii=bjKNQxoMLF-gscJy7Bh8CUn205_1GpCwfMyJ22+6g@mail.gmail.com>
- <20211124072824.GA7738@lst.de> <YZ3qvtHlMkRnC74f@kroah.com>
- <CAPcyv4iYcBFDhDtcxc37EWfX1Wpuh8Zsm4-whTL0vNyY4zW3AQ@mail.gmail.com> <YZ32F0e/Cun9rB0i@kroah.com>
-In-Reply-To: <YZ32F0e/Cun9rB0i@kroah.com>
+References: <20211120000250.1663391-1-ben.widawsky@intel.com> <20211120000250.1663391-4-ben.widawsky@intel.com>
+In-Reply-To: <20211120000250.1663391-4-ben.widawsky@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 24 Nov 2021 10:24:48 -0800
-Message-ID: <CAPcyv4i0t0Y8pPWM1x5ctcdszxHfHCG7s4_DAJeg=MG_6gcdTw@mail.gmail.com>
-Subject: Re: [PATCH 20/23] cxl/port: Introduce a port driver
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Bjorn Helgaas <helgaas@kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+Date:   Wed, 24 Nov 2021 11:30:56 -0800
+Message-ID: <CAPcyv4ic827h-WPxU2e1aKu1mVo78aNdNo82skcLW6hqnOnSEQ@mail.gmail.com>
+Subject: Re: [PATCH 03/23] cxl/pci: Extract device status check
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
         Alison Schofield <alison.schofield@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
+        Vishal Verma <vishal.l.verma@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Nov 24, 2021 at 12:22 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Fri, Nov 19, 2021 at 4:03 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> On Tue, Nov 23, 2021 at 11:54:03PM -0800, Dan Williams wrote:
-> > On Tue, Nov 23, 2021 at 11:33 PM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Wed, Nov 24, 2021 at 08:28:24AM +0100, Christoph Hellwig wrote:
-> > > > On Tue, Nov 23, 2021 at 11:17:55PM -0800, Dan Williams wrote:
-> > > > > I am missing the counter proposal in both Bjorn's and your distaste
-> > > > > for aux bus and PCIe portdrv?
-> > > >
-> > > > Given that I've only brought in in the last mail I have no idea what
-> > > > the original proposal even is.
-> > >
-> > > Neither do I :(
-> >
-> > To be clear I am also trying to get to the root of Bjorn's concern.
-> >
-> > The proposal in $SUBJECT is to build on / treat a CXL topology as a
-> > Linux device topology on /sys/bus/cxl that references devices on
-> > /sys/bus/platform (CXL ACPI topology root and Host Bridges) and
-> > /sys/bus/pci (CXL Switches and Endpoints).
+> The Memory Device Status register is inspected in the same way for at
+> least two flows in the CXL Type 3 Memory Device Software Guide
+> (Revision: 1.0): 2.13.9 Device discovery and mailbox ready sequence,
+> and 2.13.10 Media ready sequence. Extract this common functionality for
+> use by both.
+
+Can you translate this into CXL specification terms? See below for the
+rationale...
+
 >
-> Wait, I am confused.
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> ---
+> This patch did not exist in RFCv2
+> ---
+>  drivers/cxl/pci.c | 33 +++++++++++++++++++++++++--------
+>  1 file changed, 25 insertions(+), 8 deletions(-)
 >
-> A bus lists devices that are on that bus.  It does not list devices that
-> are on other busses.
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index a6ea9811a05b..6c8d09fb3a17 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -182,6 +182,27 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_state *cxlds,
+>         return 0;
+>  }
 >
-> Now a device in a bus list can have a parent be on different types of
-> busses, as the parent device does not matter, but the device itself can
-> not be of different types.
+> +/*
+> + * Implements roughly the bottom half of Figure 42 of the CXL Type 3 Memory
+> + * Device Software Guide
+
+I do appreciate that document for working through some of the concerns
+that system software might have for various CXL flows, but at the same
+time it's not authoritative. I.e. it is not a specification itself and
+it depends on the CXL specification as the "source of truth". So for
+Linux commentary I would translate the guide's recommendations back
+into the base truth from the CXL specification.
+
+There will be places where Linux goes a different direction than the
+software guide so I do not want to set any expectations that those
+excursions are a bug, or otherwise require someone to consult a
+specific hardware vendor's software guide.
+
+Especially in this case when the logic is simply "check a couple fatal
+status flags", the base specification is sufficient and the original
+code made no reference to the guide.
+
+> + */
+> +static int check_device_status(struct cxl_dev_state *cxlds)
+> +{
+> +       const u64 md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+> +
+> +       if (md_status & CXLMDEV_DEV_FATAL) {
+> +               dev_err(cxlds->dev, "Fatal: replace device\n");
+
+The specification says "replace device", I disagree that the kernel
+should be recommending that the device by replaced. Just report what
+the driver does, and that's probably easier if the error messages are
+left to the caller.
+
+        const u64 md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+
+        if (md_status & (CXLMDEV_DEV_FATAL | CXLMDEV_FW_HALT)) {
+                dev_err(dev, "mbox: failed to acquire, device state:%s%s\n",
+                        md_status & CXLMDEV_DEV_FATAL ? " fatal" : "",
+                        md_status & CXLMDEV_FW_HALT ? " firmware-halt" : "");
+                return -EIO;
+        }
+
+...i.e. it's not clear to me the helper helps.
+
+> +               return -EIO;
+> +       }
+> +
+> +       if (md_status & CXLMDEV_FW_HALT) {
+> +               dev_err(cxlds->dev, "FWHalt: reset or replace device\n");
+> +               return -EBUSY;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  /**
+>   * cxl_pci_mbox_get() - Acquire exclusive access to the mailbox.
+>   * @cxlds: The device state to gain access to.
+> @@ -231,17 +252,13 @@ static int cxl_pci_mbox_get(struct cxl_dev_state *cxlds)
+>          * Hardware shouldn't allow a ready status but also have failure bits
+>          * set. Spit out an error, this should be a bug report
+>          */
+> -       rc = -EFAULT;
+> -       if (md_status & CXLMDEV_DEV_FATAL) {
+> -               dev_err(dev, "mbox: reported ready, but fatal\n");
+> +       rc = check_device_status(cxlds);
+> +       if (rc)
+>                 goto out;
+> -       }
+> -       if (md_status & CXLMDEV_FW_HALT) {
+> -               dev_err(dev, "mbox: reported ready, but halted\n");
+> -               goto out;
+> -       }
+> +
+>         if (CXLMDEV_RESET_NEEDED(md_status)) {
+
+I think this check needs to go. If the reset is needed because of one
+of the above failure statuses then the function will have already
+error exited. If the reset is needed because media is disabled that
+should not be fatal for mailbox operations. It could be useful to do
+some interrogation of *why* media is disabled.
+
+>                 dev_err(dev, "mbox: reported ready, but reset needed\n");
+> +               rc = -EFAULT;
+>                 goto out;
+>         }
 >
-> So I do not understand what you are describing here at all.  Do you have
-> an example output of sysfs that shows this situation?
-
-Commit 40ba17afdfab ("cxl/acpi: Introduce cxl_decoder objects")
-
-...has an example of the devices registered on the CXL bus by the
-cxl_acpi driver.
-
-> > This CXL port device topology has already been shipping for a few
-> > kernel cycles.
+> --
+> 2.34.0
 >
-> So it's always been broken?  :)
-
-Kidding aside, CXL has different moving pieces than PCI and the Linux
-device-driver model is how we are organizing that complexity. CXL is
-also symbiotically attached to PCI as it borrows the enumeration
-mechanism while building up a parallel CXL.mem universe to live
-alongside PCI.config and PCI.mmio. The CXL subsystem is similar to MD
-/ DM where virtual devices are built up from other devices.
-
-> > What is on
-> > the table now is a driver for CXL port devices (a logical Linux
-> > construct). The driver handles discovery of "component registers"
-> > either by ACPI table or PCI DVSEC and offers services to proxision CXL
-> > regions.
->
-> So a normal bus controller device that creates new devices of a bus
-> type, right?  What is special about that?
-
-Yes, which is the root of my confusion about Bjorn's concern.
-
-> > CXL 'regions' are also proposed as Linux devices that
-> > represent an active CXL memory range which can interleave multiple
-> > endpoints across multiple switches and host bridges.
->
-> As long as these 'devices' have drivers and do not mess with the
-> resources of any other device in the system, I do not understand the
-> problem here.
-
-Correct, these drivers manage CXL.mem resources and leave PCI.mmio
-resource management to PCI.
-
-> Or is the issue that you are again trying to carve up "real" devices
-> into tiny devices that then somehow need to be aware of the resources
-> being touched by different drivers at the same time?
-
-No, there's no multiplexing of resources across devices / drivers that
-requires cross-driver awareness.
-
-> I'm still confused, sorry.
-
-No worries, appreciate the attention to make sure this implementation
-is idiomatic and avoids any architectural dragons.
