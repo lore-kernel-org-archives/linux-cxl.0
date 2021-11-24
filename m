@@ -2,174 +2,144 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51440C433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 24 Nov 2021 00:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D665BC433FE
+	for <linux-cxl@archiver.kernel.org>; Wed, 24 Nov 2021 04:15:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231338AbhKXAn1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 23 Nov 2021 19:43:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34468 "EHLO
+        id S232238AbhKXESd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 23 Nov 2021 23:18:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231303AbhKXAn1 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 23 Nov 2021 19:43:27 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72D50C061714
-        for <linux-cxl@vger.kernel.org>; Tue, 23 Nov 2021 16:40:18 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id p18so422179plf.13
-        for <linux-cxl@vger.kernel.org>; Tue, 23 Nov 2021 16:40:18 -0800 (PST)
+        with ESMTP id S232641AbhKXESc (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 23 Nov 2021 23:18:32 -0500
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C634C061714
+        for <linux-cxl@vger.kernel.org>; Tue, 23 Nov 2021 20:15:23 -0800 (PST)
+Received: by mail-pg1-x52e.google.com with SMTP id p17so975644pgj.2
+        for <linux-cxl@vger.kernel.org>; Tue, 23 Nov 2021 20:15:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=x60Xz0mkS57X48j482rWr3Rf1pfRVTsLKSyPPWK2n7o=;
-        b=PP/37UqeWqTr4zwflvUMn4A13jKlcRadpeHxCgfdqsltijGxLQJ1PO2JakPNwr6kHm
-         1US4XJGWoioEgLS+RXeliDnOcXlF+2X3Mu4pPMvuBUZwlQU17z25HkskICW7WuNHwhUE
-         WiZ9Cd3F6KC6WqyPj5bDSDUanNxH2yA1IV2bARaUIIuTfYBdVlMmhyU1vLhTZkdqgoke
-         dgyrgHmJv+ssQAT6d9PY95Xf+R/IlzwsW8MEXKB24E+c8G4GjBpdJDZXys2n5e4wILo1
-         SuxeqQ6EnYffqbsKSQge+sQumy/U4AlnbAcJSGCGehqWRXHPWoYM1n1P8hUCQAVdbhsD
-         M5vw==
+        bh=wxLF7u8QoM20c372oL9wZ9ZMbqobmlvg8VEP/5FR5bw=;
+        b=rXcXoN9mjL9HrOaVuVtr0OkHqnoLKOCUGz9XXIMvBXGU8zsOAWbjvutZy+O9pXOGbm
+         eSjnHVSuutZ5RAPctBjRftWx5lyNMq+cLkiliGVSKtmfHOYCJJ7VI9tVMgwkEauaN837
+         HOYtZYddjYFnc5UDVkK960qAZVheSl1a8q2tx2YQ9k+5Z8rz1he9fx7/22JbCcnqNCxB
+         7FaVpqndimVqCoZ+mLq7VZLxl26PhNCrDYWot7W47EXe92rONBodpmjWZhhaUFxkcHQl
+         OovvbP105Dtch1rSxJ3L2f75iX7pcYOkUaGfgbjeQv2k7F6wWVq3CuJMlieIVZO556BB
+         K9CA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=x60Xz0mkS57X48j482rWr3Rf1pfRVTsLKSyPPWK2n7o=;
-        b=K+Ku1Wn7Ow3YsQ9Vz+eio//pwsfiySELXKRfIA9GUV1zT9bNHxvTIGwrzZwyNjuALe
-         HoaKs+girXp0r1NI08BLamWt59rCK8wCQbb5julIXFrFzsrO9WjTP6d0RDliWUcEB5If
-         TMoZ9ocYpttlwzLxC1T7Tp0KmVSN3k5ksppUwjcozfNWidTE5R6FzeYZUfxmnhZ/hlJl
-         P6kBoaMjX0GNRVtkXIhKpc+8GHx0OyzzftO0puqWATO031wXTFzbXcaDXPpQ1PO/+LYH
-         /MbZZw4mOE6IhcVzK05hUD0OryI/bwk1n1mVqHIbhc/82J0jIl3XTvT6VS5M9sPB1nrA
-         CGtA==
-X-Gm-Message-State: AOAM530JA3SjhEYpYCob9A9Q8XDLvk4YaPbZcdp0sU0Mcgxp4me/NHIO
-        ALDk81obqJ21F9PqvhRml/ZDpu9xpgH+pHCNVp3QFQ==
-X-Google-Smtp-Source: ABdhPJzfjgUAWFKANfRT1itwVNc2NbH7evF2wVZUdpMMPt2dfZQlRdKcEQLH2LOS8/MV0JEEqcNjm5d6ZU9o26CT9po=
-X-Received: by 2002:a17:90a:e7ca:: with SMTP id kb10mr9008554pjb.8.1637714417799;
- Tue, 23 Nov 2021 16:40:17 -0800 (PST)
+        bh=wxLF7u8QoM20c372oL9wZ9ZMbqobmlvg8VEP/5FR5bw=;
+        b=aU1QNS6oKIdxO5d9KryxcyepQ1hiwcp7kolmKG5n3R8OGd7bN4WAADETh0l0iUfMNf
+         uHd2lDdqRPygYK97Ac72lFFuyeUZzmLQ9SfmccDPQmPjd1PzdkaAZjUiMm/NQk0TZbca
+         cJXTdBig8BpN2+5OsatNNDb9iDyyrTfmAalaT09JTx5wcRSpZnYf7kvMY3BD753j/ul8
+         uVlgIf1+LC7pQCoWQ9KfHMkorCpFmHYsrWihFmOpsHExVpWBuNVtYZ8EeJJD8XXM/Lmf
+         9/Y2fJb3mkFMgK0iGCXQ/p99Nd5H8i79SPGciw7ln7SF/9HUNb0zQu5qf+UH//XD61/z
+         U6nA==
+X-Gm-Message-State: AOAM533/yDIK01WMdhm3/HbEPrNOHxnHNy5B1GAqQNFVsFKjWsikCs0V
+        fglLi7KZ/Y0fV7SKov6xyQtjEcvi+8hNf7w/J0T9hw==
+X-Google-Smtp-Source: ABdhPJwn8C0TVVqaIkNJMKGMZskgbr7QkoamHPCDWPdmW74faUztMSRwKmwGJ2ltAb/0UnFcxQ39nsQ7DZeKTFbl8sk=
+X-Received: by 2002:aa7:8d0a:0:b0:4a2:82d7:1695 with SMTP id
+ j10-20020aa78d0a000000b004a282d71695mr2819706pfe.86.1637727323026; Tue, 23
+ Nov 2021 20:15:23 -0800 (PST)
 MIME-Version: 1.0
-References: <CAPcyv4h7h3oJTEorMhL6MMD5FYbSxaWs6tb3-w=JWxhR=j77+A@mail.gmail.com>
- <20211123235557.GA2247853@bhelgaas>
-In-Reply-To: <20211123235557.GA2247853@bhelgaas>
+References: <20211120000250.1663391-1-ben.widawsky@intel.com> <20211120000250.1663391-2-ben.widawsky@intel.com>
+In-Reply-To: <20211120000250.1663391-2-ben.widawsky@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 23 Nov 2021 16:40:06 -0800
-Message-ID: <CAPcyv4g0=zz8BtB9DRW0FGsRRvgGwEaQcgbmXDhJ3DwNFS9Z+g@mail.gmail.com>
-Subject: Re: [PATCH 20/23] cxl/port: Introduce a port driver
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
-        Linux PCI <linux-pci@vger.kernel.org>,
+Date:   Tue, 23 Nov 2021 20:15:12 -0800
+Message-ID: <CAPcyv4iinb288amqu=QZ78wXMSNOADTtTzybcSVgKKvm74u-Sg@mail.gmail.com>
+Subject: Re: [PATCH 01/23] cxl: Rename CXL_MEM to CXL_PCI
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
         Alison Schofield <alison.schofield@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
+        Vishal Verma <vishal.l.verma@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Nov 23, 2021 at 3:56 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Fri, Nov 19, 2021 at 4:03 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> [+cc Christoph, since he has opinions about portdrv;
-> Greg, Rafael, since they have good opinions about sysfs structure]
+> The cxl_mem module was renamed cxl_pci in commit 21e9f76733a8 ("cxl:
+> Rename mem to pci"). In preparation for adding an ancillary driver for
+> cxl_memdev devices (registered on the cxl bus by cxl_pci), go ahead and
+> rename CONFIG_CXL_MEM to CONFIG_CXL_PCI. Free up the CXL_MEM name for
+> that new driver to manage CXL.mem endpoint operations.
 >
-> On Tue, Nov 23, 2021 at 02:36:32PM -0800, Dan Williams wrote:
-> > On Tue, Nov 23, 2021 at 2:03 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > [..]
-> > > > I hope this driver is not modeled on the PCI portdrv.  IMO, that
-> > > > was a design error, and the "port service drivers" (PME,
-> > > > hotplug, AER, etc) should be directly integrated into the PCI
-> > > > core instead of pretending to be independent drivers.
-> > >
-> > > I'd like to understand a bit about why you think it was a design
-> > > error. The port driver is intended to be a port services driver,
-> > > however I see the services provided as quite different than the
-> > > ones you mention. The primary service cxl_port will provide from
-> > > here on out is the ability to manage HDM decoder resources for a
-> > > port. Other independent drivers that want to use HDM decoder
-> > > resources would rely on the port driver for this.
-> > >
-> > > It could be in CXL core just the same, but I don't see too much of
-> > > a benefit since the code would be almost identical. One nice
-> > > aspect of having the port driver outside of CXL core is it would
-> > > allow CXL devices which do not need port services (type-1 and
-> > > probably type-2) to not need to load the port driver. We do not
-> > > have examples of such devices today but there's good evidence they
-> > > are being built. Whether or not they will even want CXL core is
-> > > another topic up for debate however.
-> > >
-> > > I admit Dan and I did discuss putting this in either its own port
-> > > driver, or within core as a port driver. My inclination is, less
-> > > is more in CXL core; but perhaps you will be able to change my
-> > > mind.
-> >
-> > No, I don't think Bjorn is talking about whether the driver is
-> > integrated into cxl_core.ko vs its own cxl_port.ko. IIUC this goes
-> > back to the original contention about have /sys/bus/cxl at all:
-> >
-> > https://lore.kernel.org/r/CAPcyv4iu8D-hJoujLXw8a4myS7trOE1FcUhESLB_imGMECVfrg@mail.gmail.com
->
-> That question was about whether we want the same physical device to be
-> represented both in the /sys/bus/pci hierarchy and the /sys/bus/cxl
-> hierarchy.  That still seems a little weird to me, but I don't know
-> enough about the CXL constraints to really object to it.
->
-> My question here is more about whether you're going to use something
-> like the pcie_port_service_register() model for supporting multiple
-> drivers attached to the same physical device.
->
-> The PCIe portdrv creates a /sys/bus/pci_express hierarchy parallel to
-> the /sys/bus/pci hierarchy.  The pci_express hierarchy has a "device"
-> for every service (hotplug, AER, DPC, PME, etc) (see
-> pcie_device_init()).  This device creation is quite complicated and
-> depends on whether the Port advertises a Capability, whether the
-> platform has granted control to the OS, whether support is compiled
-> in, etc.
->
-> I think that was a mistake because these hotplug, AER, DPC, PME
-> "devices" are not independent things.  They are optional features that
-> can be added to a variety of devices, and those devices might have
-> their own drivers.  For example, we want to write drivers for
-> vendor-specific functionality like PMUs in switches, but we can't do
-> that cleanly because portdrv claims them.
->
-> The portdrv features are fully specified by the PCIe spec, so nothing
-> is vendor-specific.  They share interrupts.  They share power state.
-> They cannot be reset independently.  They are not addressable entities
-> in the usual bus/device/function model.  They can't be removed or
-> added like the underlying device can.  I wasn't there when they were
-> designed, but from reading the spec, it seems like they were designed
-> as optional features of a device, not as separate devices themselves.
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
 
-Let me ask a clarifying question coming from the other direction that
-resulted in the creation of the auxiliary bus architecture. Some
-background. RDMA is a protocol that may run on top of Ethernet.
-Consider the case where you have multiple generations of Ethernet
-adapter devices, but they all support common RDMA functionality. You
-only have the one PCI device to attach a unique Ethernet driver. What
-is an idiomatic way to deploy a module that automatically loads and
-attaches to the exported common functionality across adapters that
-otherwise have a unique native driver for the hardware device?
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 
-Another example, the Native PCIe Enclosure Management (NPEM)
-specification defines a handful of registers that can appear anywhere
-in the PCIe hierarchy. How can you write a common driver that is
-generically applicable to any given NPEM instance?
 
-The auxiliary bus answer to those questions is to register an
-auxiliary device to be driven by a common auxiliary driver across
-hard-device generations from the same vendor or even across vendors.
-
-For your example about a PCIe port PMU driver it ultimately requires
-something to enumerate that capability and a library of code to
-exercise that functionality. What is a more natural fit than a Linux
-"device" and a Linux driver to coordinate attaching enabling code to a
-standalone hardware capability?
-
-PCIe portdrv may be awkward because there was never a real native
-driver for the device to begin with and it all could have handled by
-'pcie_portdriver' directly without registering more Linux devices, but
-assigning self contained features to Linux devices otherwise seems a
-useful idiom to me.
-
-As for CXL, there is no analog of the PCIe portdrv pattern of just
-having a device act as a multiplexer of features to other Linux
-devices.
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+>
+> ---
+> Changes since RFCv2:
+> - Reword commit message (Dan)
+> - Reword Kconfig description (Dan)
+> ---
+>  drivers/cxl/Kconfig  | 23 ++++++++++++-----------
+>  drivers/cxl/Makefile |  2 +-
+>  2 files changed, 13 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index 67c91378f2dd..ef05e96f8f97 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -13,25 +13,26 @@ menuconfig CXL_BUS
+>
+>  if CXL_BUS
+>
+> -config CXL_MEM
+> -       tristate "CXL.mem: Memory Devices"
+> +config CXL_PCI
+> +       tristate "PCI manageability"
+>         default CXL_BUS
+>         help
+> -         The CXL.mem protocol allows a device to act as a provider of
+> -         "System RAM" and/or "Persistent Memory" that is fully coherent
+> -         as if the memory was attached to the typical CPU memory
+> -         controller.
+> +         The CXL specification defines a "CXL memory device" sub-class in the
+> +         PCI "memory controller" base class of devices. Device's identified by
+> +         this class code provide support for volatile and / or persistent
+> +         memory to be mapped into the system address map (Host-managed Device
+> +         Memory (HDM)).
+>
+> -         Say 'y/m' to enable a driver that will attach to CXL.mem devices for
+> -         configuration and management primarily via the mailbox interface. See
+> -         Chapter 2.3 Type 3 CXL Device in the CXL 2.0 specification for more
+> -         details.
+> +         Say 'y/m' to enable a driver that will attach to CXL memory expander
+> +         devices enumerated by the memory device class code for configuration
+> +         and management primarily via the mailbox interface. See Chapter 2.3
+> +         Type 3 CXL Device in the CXL 2.0 specification for more details.
+>
+>           If unsure say 'm'.
+>
+>  config CXL_MEM_RAW_COMMANDS
+>         bool "RAW Command Interface for Memory Devices"
+> -       depends on CXL_MEM
+> +       depends on CXL_PCI
+>         help
+>           Enable CXL RAW command interface.
+>
+> diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+> index d1aaabc940f3..cf07ae6cea17 100644
+> --- a/drivers/cxl/Makefile
+> +++ b/drivers/cxl/Makefile
+> @@ -1,6 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-$(CONFIG_CXL_BUS) += core/
+> -obj-$(CONFIG_CXL_MEM) += cxl_pci.o
+> +obj-$(CONFIG_CXL_PCI) += cxl_pci.o
+>  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+>  obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
+>
+> --
+> 2.34.0
+>
