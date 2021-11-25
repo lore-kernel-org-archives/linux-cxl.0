@@ -2,161 +2,105 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EF4C433F5
-	for <linux-cxl@archiver.kernel.org>; Wed, 24 Nov 2021 22:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C17C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 25 Nov 2021 00:07:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346225AbhKXW63 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 24 Nov 2021 17:58:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51922 "EHLO
+        id S231193AbhKYAKp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 24 Nov 2021 19:10:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345385AbhKXW62 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Nov 2021 17:58:28 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BA1FC06173E
-        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 14:55:18 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id gx15-20020a17090b124f00b001a695f3734aso4111051pjb.0
-        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 14:55:18 -0800 (PST)
+        with ESMTP id S243273AbhKYAKo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Nov 2021 19:10:44 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCE99C06173E
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 16:07:33 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id cq22-20020a17090af99600b001a9550a17a5so6324477pjb.2
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 16:07:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sEkXTr1CVlB4OvzJNloCs5luN2SOG/AE8/F/zeex2Q8=;
-        b=Vh4LeKm6XE23WW2uQBz8rJeoRE5Lz3+Gl+1q/Er3IUj1MxuNT4zjPpngzSk84mYb+B
-         KJf+RswKjhj5X4pevNp9HtWcuXJ2sF5qLKDmxT/a+x11yqzTY0Ds1vozSZ5E6LlaiaYK
-         hs+WXsmMtL0fclpZogZ29AfesB1zkHPUezzwdDh206re0sbnpkrIkTEZ4u8USfYO9L48
-         Qgig3/Jm9NchgBCK2beQIXxOCpegxifNuNg3C//jQcPZP3qduimzUstbjxTu6XezbTSp
-         DK8wVmmY9h4LRjwGY6kF2zSFEVV+cf5xXNXTtAdL3Ml1L+5tKcisVpESHYa/YkYXH+PO
-         I+5Q==
+        bh=6I8hR1KxT4wL35Zv30bY7/ny/CJuScUrd2M5h9luPJc=;
+        b=rQP9g8WcqcSUgu+wVJPZyaqA72pyJcjJdOPxk6lR282+Sce1iTiGDMO324f+MjUTgP
+         S7HAp/v5nC9Uz4MYwgppClUs0doJraLsEWbcqDRPF2vXe9SMdfIQ20NoVC3MW+kdOlz1
+         kgcFOcaQS62OuaoWM/HMsFtkmgF5T3Yj0UjXUUwKcpVVhKSYbgjgC00OdbLtkoFpm3jh
+         3pfyeY2wfMPN3CAOn1VAVx3EQnCV3NFFAnu50tfEZAKSZsEdJXa3lbKGJQdXUN2iavCJ
+         HLnE5U7xfzLU39pIeSzg6wqhU7wDQzd8BsfdDwDGtQIxRbU8ATkl5z8yXKIzAayv0bqQ
+         GFXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sEkXTr1CVlB4OvzJNloCs5luN2SOG/AE8/F/zeex2Q8=;
-        b=mu4D4KcJGPnstvogiGSO2bdSf0ERufQ+6DM7X4IOS8aZgFYdSmuyk+/NXoAhsQSL2I
-         2CbtHA13jHNGWpLZaELQAR9AukmS1/oZOHHVpLR7eMpExLDwG9ru4lRqiGo56sSqX2P4
-         eX1/T5tOY53ZtQxmmfY6++w0YbQ8v9IOX85zYWZKNRI9zJdae873hDtYGQtmsBtovCJL
-         3j3w3XAAgzut92SbDWp9PyBzZanz8jOk1kLdHoybXjyNHhznfrFwNshZAHJ+DlHNQCIm
-         OiiH+FX1sDDNRpfE7g1WRYkQrqb52/0z8XBCeNDg3DjXPzAlb2Lzj5X0FobWdZ4sf6Wi
-         OX/g==
-X-Gm-Message-State: AOAM532i04M6mqCtsdalwVcI6GwZCvwB4AH8SvYFk/yRwN4S3JwaU7QP
-        nYhnAB1Gwy9t1qcpkIlyvBKIbHyyYteZW72fRgFGKg==
-X-Google-Smtp-Source: ABdhPJxzAggYjDjVpJuE9CXjDLPIcFWy84MuHHNMSY9727LcP9eEGNmGHhtJPJlJsdXpkc9UB+ATvaMt0RMJKhjh1vo=
-X-Received: by 2002:a17:90b:1e07:: with SMTP id pg7mr834434pjb.93.1637794517965;
- Wed, 24 Nov 2021 14:55:17 -0800 (PST)
+        bh=6I8hR1KxT4wL35Zv30bY7/ny/CJuScUrd2M5h9luPJc=;
+        b=kbUN9OfC/HbotLIIRJ6ZOdKHuzO8x0xKBnYeV4YhMgpozgJ0L2Zc/KDCVXBlFrXYus
+         9nX+NbnpjbF1Ix0IHj/l3lO9ceSUJgAWDO/X3AoL6N0evklda2N0o65dNGmz2jZdADri
+         ZBscAAkE8GCHqN5OXQQ9XRiGuUbKJTQZyX9RHMZ4bCFsWb2434ibiJhvNqwo50gCv5Cu
+         kheA4uNmQBBU9lTZDgaY27/l92cDPdv8Y2k9jHUh5hZHiP9RCobE4EpOUKkSO7ES1k2W
+         OcEIIVf90goFbmfKv1p98KfFaFNUoIHUqCmQtWdxcH73RFvdMQErDTbn9PHia5Gp0AyS
+         0DDA==
+X-Gm-Message-State: AOAM530MGWXPBeeyTrdKzncvG4YaJ1SKaNY0VGg6jU7x1xEDN7RgvQm+
+        JxnEz1cgoVLLopNKqS7T4I4rza8LicItgdaAp2MWCA==
+X-Google-Smtp-Source: ABdhPJwIM1z+xHukqE41p1pECXF9iTVnQjwh+qZUXgG5v3RG+5vj3HBBsQUv9dCIIT0L/V7y+dATRLP6crENzk1EIYw=
+X-Received: by 2002:a17:90b:1e49:: with SMTP id pi9mr1473018pjb.220.1637798853373;
+ Wed, 24 Nov 2021 16:07:33 -0800 (PST)
 MIME-Version: 1.0
-References: <20211120000250.1663391-1-ben.widawsky@intel.com> <20211120000250.1663391-12-ben.widawsky@intel.com>
-In-Reply-To: <20211120000250.1663391-12-ben.widawsky@intel.com>
+References: <20211120000250.1663391-1-ben.widawsky@intel.com>
+ <20211120000250.1663391-13-ben.widawsky@intel.com> <20211122162039.000022c1@Huawei.com>
+ <20211122193751.gipqgs5ap24dacm3@intel.com>
+In-Reply-To: <20211122193751.gipqgs5ap24dacm3@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 24 Nov 2021 14:55:07 -0800
-Message-ID: <CAPcyv4gh+Q0e56do-AuKeu4WFWVhutFjX475=5rQKazT_kcxTw@mail.gmail.com>
-Subject: Re: [PATCH 11/23] cxl/core: Document and tighten up decoder APIs
+Date:   Wed, 24 Nov 2021 16:07:23 -0800
+Message-ID: <CAPcyv4gBmc+C4d1RExH5qB2qunhkkMRqNZwzz29gc-1uaJiM4A@mail.gmail.com>
+Subject: Re: [PATCH 12/23] cxl: Introduce endpoint decoders
 To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
         Alison Schofield <alison.schofield@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Nov 19, 2021 at 4:03 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Mon, Nov 22, 2021 at 11:38 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> Since the code to add decoders for switches and endpoints is on the
-> horizon it helps to have properly documented APIs. In addition, the
-> decoder APIs will never need to support a negative count for downstream
-> targets as the spec explicitly starts numbering them at 1, ie. even 0 is
-> an "invalid" value which can be used as a sentinel.
+> On 21-11-22 16:20:39, Jonathan Cameron wrote:
+> > On Fri, 19 Nov 2021 16:02:39 -0800
+> > Ben Widawsky <ben.widawsky@intel.com> wrote:
+> >
+> > > Endpoints have decoders too. It is useful to share the same
+> > > infrastructure from cxl_core. Endpoints do not have dports (downstream
+> > > targets), only the underlying physical medium. As a result, some special
+> > > casing is needed.
+> > >
+> > > There is no functional change introduced yet as endpoints don't actually
+> > > enumerate decoders yet.
+> > >
+> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> >
+> > I'm not a fan of special values like using 0 here to indicate endpoint
+> > device.  I'd rather see a base cxl_decode_alloc(..., bool ep)
+> > and possibly wrappers for the non ep case and ep one.
+> >
+> > Jonathan
+> >
+>
+> My inclination is the opposite. However, I think you and Dan both brought up
+> something to this effect in the previous RFCs.
+>
+> Dan, do you have a preference here?
 
-Looks good to me:
+I was thinking something along the lines of what Jonathan wants,
+explicit per-type APIs, but internal / private to the core can use
+heuristics like nr_targets == 0 == endpoint.
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+So unexport cxl_decoder_alloc() and have separate:
 
->
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
->
-> ---
->
-> This is respun from a previous incantation here:
-> https://lore.kernel.org/linux-cxl/20210915155946.308339-1-ben.widawsky@intel.com/
-> ---
->  drivers/cxl/core/bus.c | 33 +++++++++++++++++++++++++++++++--
->  drivers/cxl/cxl.h      |  3 ++-
->  2 files changed, 33 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-> index 8e80e85350b1..1ee12a60f3f4 100644
-> --- a/drivers/cxl/core/bus.c
-> +++ b/drivers/cxl/core/bus.c
-> @@ -495,7 +495,20 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
->         return rc;
->  }
->
-> -struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
-> +/**
-> + * cxl_decoder_alloc - Allocate a new CXL decoder
-> + * @port: owning port of this decoder
-> + * @nr_targets: downstream targets accessible by this decoder. All upstream
-> + *             ports and root ports must have at least 1 target.
-> + *
-> + * A port should contain one or more decoders. Each of those decoders enable
-> + * some address space for CXL.mem utilization. A decoder is expected to be
-> + * configured by the caller before registering.
-> + *
-> + * Return: A new cxl decoder to be registered by cxl_decoder_add()
-> + */
-> +struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
-> +                                     unsigned int nr_targets)
->  {
->         struct cxl_decoder *cxld, cxld_const_init = {
->                 .nr_targets = nr_targets,
-> @@ -503,7 +516,7 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
->         struct device *dev;
->         int rc = 0;
->
-> -       if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets < 1)
-> +       if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets == 0)
->                 return ERR_PTR(-EINVAL);
->
->         cxld = kzalloc(struct_size(cxld, target, nr_targets), GFP_KERNEL);
-> @@ -535,6 +548,22 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_decoder_alloc, CXL);
->
-> +/**
-> + * cxl_decoder_add - Add a decoder with targets
-> + * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
-> + * @target_map: A list of downstream ports that this decoder can direct memory
-> + *              traffic to. These numbers should correspond with the port number
-> + *              in the PCIe Link Capabilities structure.
-> + *
-> + * Certain types of decoders may not have any targets. The main example of this
-> + * is an endpoint device. A more awkward example is a hostbridge whose root
-> + * ports get hot added (technically possible, though unlikely).
-> + *
-> + * Context: Process context. Takes and releases the cxld's device lock.
-> + *
-> + * Return: Negative error code if the decoder wasn't properly configured; else
-> + *        returns 0.
-> + */
->  int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
->  {
->         struct cxl_port *port;
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index ad816fb5bdcc..b66ed8f241c6 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -288,7 +288,8 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
->
->  struct cxl_decoder *to_cxl_decoder(struct device *dev);
->  bool is_root_decoder(struct device *dev);
-> -struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets);
-> +struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
-> +                                     unsigned int nr_targets);
->  int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
->  int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld);
->
-> --
-> 2.34.0
->
+cxl_root_decoder_alloc()
+cxl_switch_decoder_alloc()
+cxl_endpoint_decoder_alloc()
+
+...apis that use a static cxl_decoder_alloc() internally. Probably
+also wants a cxl_endpoint_decoder_add() that drops the need to pass a
+NULL @target_map.
