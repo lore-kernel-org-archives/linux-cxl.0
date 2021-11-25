@@ -2,218 +2,169 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7DBC433FE
-	for <linux-cxl@archiver.kernel.org>; Thu, 25 Nov 2021 00:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A534C433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 25 Nov 2021 01:26:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346044AbhKYATX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 24 Nov 2021 19:19:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41634 "EHLO
+        id S1347334AbhKYB3t (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 24 Nov 2021 20:29:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243273AbhKYATX (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Nov 2021 19:19:23 -0500
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5A1EC061574
-        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 16:16:12 -0800 (PST)
-Received: by mail-pg1-x534.google.com with SMTP id r138so3535897pgr.13
-        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 16:16:12 -0800 (PST)
+        with ESMTP id S244479AbhKYB1t (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Nov 2021 20:27:49 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16FB7C08ECBE
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 16:34:20 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id n15-20020a17090a160f00b001a75089daa3so6366377pja.1
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Nov 2021 16:34:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=uUUQjs/pBmHAN/W+SUU/EXK8L3S8hFjZgOd+JkQS5So=;
-        b=i7cLou8vQ2/aOQoLh2sCopA9cS7fWv9AwHYbSZrWkFGSIXnL2Mnhdz7sM5RHluzZ/Q
-         IV17J0+MfxCrCe/V40xVNNekO8N22LIjwbOsEwKk7Z2YEP8X5R48kgAuy6QwRn66ZnzF
-         Y5VaW8vAXpAIht+oMk4n6L27NTPzrozgx7+z2oe3ixx/4gxCgUrPVUAe7xe0BKh+dw8m
-         1wH+fwyslySZoS7PMivSCaPviLqp03qnLdHof4cySGwz4Vg0zEDBRg5pwftP1FFkx7aA
-         MneDiStApJw9zP0kGLEQ4G/3zK0yAvizjJbCce63D9IvndMa4DRdB/vTR59hvXCGVC5t
-         +SAw==
+        bh=u4KIN2dv3zujSKlFX2maO2xnyNaGGDuJrxaXEWwcRpQ=;
+        b=vC2csGsqUGxpMVK1Wrd1CpFBkezStgqStPUWia/9biTRwxrW4G8n4JJEQDizEKJOcv
+         fSCgNVr1cO2vHRirG8kUOoW3PbuB7xneC+5/oJXcBCQl9wwNTa+OCqF6gdjdUhe/gn37
+         y5VJ3006d/FcLdWFhff/IBEl3I0VcjiQsvy8M89oQ/LORrfjQ6Ei2Sc04MuyNUEAeyMy
+         t2KyeybrUQ/UrEz/A23wBbKQoyl5Y/FzlGMr27Dvetr64FG1LHOQDy+nfBZB+01CzD0F
+         Zrl1xOVx/7b6ZTMHitEa+hY9x1Gcnv+hHC7yr3u2hZGv77C4r7Byi7XX41JJ2iEalbqJ
+         a7mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uUUQjs/pBmHAN/W+SUU/EXK8L3S8hFjZgOd+JkQS5So=;
-        b=acdu92WkOVJhzVJXTIpaVjI2bcgtz+fcRwP/rmO7WkbQy/UrpLXQS3QqNJbRcAbjsq
-         Hv/QxD2yKeZUnRLh11DMmjifBzl4BtG8e74YQ4UXWRWJQXNYYY+KRthaaUNhA0kjDQ57
-         tYtaJxHz/G09fPUqRkozB9yA74hcU6XwWEeaPtIlcv3dO11/bpqDu2HBAmUyoqCCaWX2
-         cINHaIZZE8FhlPB+OSeFX3880SdX4U5XW6dN2mCdRcpMe6ZnCZde29uM/IdSKRZryaWt
-         n1vB/7xkqxIQo8OBSWE15WA+zh37oMF/ZAByf4oEnpUx5Z56CtWE041YXHVu2GK8kCfj
-         wwig==
-X-Gm-Message-State: AOAM531lwDZe/4G+guAFrTCFMfRpUzfv5+Tfr7UEGxI6MsMyzkg877UI
-        +MOv3j3z3OD6lZ0vqyYUINkcQqT7BBlpwpGlGUR90g==
-X-Google-Smtp-Source: ABdhPJwKMhK5S/OXjF0sWlyVa52YPSi/BNanTFbWux6uelstSy2W7+MKd87CDqFbkcgRd76axBj2BHzxCXVGwnN31Kc=
-X-Received: by 2002:a63:5401:: with SMTP id i1mr13413319pgb.356.1637799372374;
- Wed, 24 Nov 2021 16:16:12 -0800 (PST)
+        bh=u4KIN2dv3zujSKlFX2maO2xnyNaGGDuJrxaXEWwcRpQ=;
+        b=Hbge1CXMB9+tJR8UHWfGnfobuB2u0Nmq6XixeppzP8bDT7Qns1WeTRBNInyoYYuDzF
+         i54sX2Dc5zxIda71Nk8qHZPZwZyBNQDPfYgbUZMN7A2UCL/655N2K09EgSEJdSWbcQM7
+         YkoYMj+Fms/BSZRS3F7qcT9cARnhNA4ufJovtKGWmgK5tvWaZzHeE1a+QE2wrVE11vT6
+         GyGA/8X+eKMeKild7xTIWoYdHO0aIuZfHqGl9iiZnVEUKIEtXIIpLBVKFGOOg440gNya
+         Z4mSei8Qrkzsq6zhlI2w2Oovdd6MfQzZWGggpJU9NaU0/odRRY6r497z/bbe7QBKe26W
+         URJQ==
+X-Gm-Message-State: AOAM530VZpgYOtBm6WIUjr9sKk6wFAjGsBCGzt52blVUIlCrvT9oMf0j
+        KUYWYqhsUj+TFadBzme1bsDQYHRRXxkf3rMP/Ay2Lg==
+X-Google-Smtp-Source: ABdhPJz9397l5v8CijNctOC/Xc8xCBkGt3KFU1rVNNw+qoHCx9npaqi3bSQRtCCdWAGomHBvocbkphEOI7tefDIf3OE=
+X-Received: by 2002:a17:90b:1e07:: with SMTP id pg7mr1640070pjb.93.1637800459614;
+ Wed, 24 Nov 2021 16:34:19 -0800 (PST)
 MIME-Version: 1.0
-References: <CAPcyv4jEby_ifqgPyfbSgouLJKseNRCCN=rcLHze_Y4X8BZC7g@mail.gmail.com>
- <YVY7wY/mhMiRLATk@zn.tnic> <ba3b12bf-c71e-7422-e205-258e96f29be5@oracle.com>
- <CAPcyv4j9KH+Y4hperuCwBMLOSPHKfbbku_T8uFNoqiNYrvfRdA@mail.gmail.com>
- <YVbn3ohRhYkTNdEK@zn.tnic> <CAPcyv4i4r5-0i3gpZxwP7ojndqbrSmebtDcGbo8JR346B-2NpQ@mail.gmail.com>
- <YVdPWcggek5ykbft@zn.tnic> <CAPcyv4hrXPb1tASBZUg-GgdVs0OOFKXMXLiHmktg_kFi7YBMyQ@mail.gmail.com>
- <YVgxnPWX2xCcbv19@zn.tnic> <48c47c52-499a-8721-350a-5ac55a9a70de@oracle.com>
- <7ae58b24-ad48-7afa-c023-23ccf28e3994@oracle.com> <CAPcyv4imjWNuwsQKhWinq+vtuSgXAznhLXVfsy69Dq7q7eiXbA@mail.gmail.com>
- <f80d03c6-e650-49df-81d1-309dd138de8f@oracle.com> <CAPcyv4hPRyPtAJoDdOn+UnJQYgQW7XQTnMveKu9YdYXxekUg8A@mail.gmail.com>
- <a3c07537-f623-17fb-d2b7-45500093c337@oracle.com> <CAPcyv4iF0bQx0J0qrXVdCfRcS4QWaCyR1-DuXaoe59ofzH-FEw@mail.gmail.com>
- <1b1600b0-b50b-3e35-3609-9503b8b960b8@oracle.com> <CAPcyv4jBHnYtqoxoJY1NGNE1DXOv3bAg0gBzjZ=eOvarVXDRbA@mail.gmail.com>
- <b51fb3d6-6d39-c450-e0a1-94a1645a22ec@oracle.com>
-In-Reply-To: <b51fb3d6-6d39-c450-e0a1-94a1645a22ec@oracle.com>
+References: <20211120000250.1663391-1-ben.widawsky@intel.com> <20211120000250.1663391-14-ben.widawsky@intel.com>
+In-Reply-To: <20211120000250.1663391-14-ben.widawsky@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 24 Nov 2021 16:16:02 -0800
-Message-ID: <CAPcyv4g4mEVDcUw2Ph0oMH1=ZQgCbnLx+ZdgoavyOQt+9q6aVw@mail.gmail.com>
-Subject: Re: [RFT PATCH] x86/pat: Fix set_mce_nospec() for pmem
-To:     Jane Chu <jane.chu@oracle.com>
-Cc:     Borislav Petkov <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        Luis Chamberlain <mcgrof@suse.com>, linux-cxl@vger.kernel.org
+Date:   Wed, 24 Nov 2021 16:34:09 -0800
+Message-ID: <CAPcyv4jjVvCn2848-m8BOEHOW+20a=o3zC4Msr+Exa4n_g75Mg@mail.gmail.com>
+Subject: Re: [PATCH 13/23] cxl/core: Move target population locking to caller
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Nov 18, 2021 at 11:04 AM Jane Chu <jane.chu@oracle.com> wrote:
+On Fri, Nov 19, 2021 at 4:03 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> On 11/13/2021 12:47 PM, Dan Williams wrote:
-> <snip>
-> >>> It should know because the MCE that unmapped the page will have
-> >>> communicated a "whole_page()" MCE. When dax_recovery_read() goes to
-> >>> consult the badblocks list to try to read the remaining good data it
-> >>> will see that every single cacheline is covered by badblocks, so
-> >>> nothing to read, and no need to establish the UC mapping. So the the
-> >>> "Tony fix" was incomplete in retrospect. It neglected to update the
-> >>> NVDIMM badblocks tracking for the whole page case.
-> >>
-> >> So the call in nfit_handle_mce():
-> >>     nvdimm_bus_add_badrange(acpi_desc->nvdimm_bus,
-> >>                   ALIGN(mce->addr, L1_CACHE_BYTES),
-> >>                   L1_CACHE_BYTES);
-> >> should be replaced by
-> >>     nvdimm_bus_add_badrange(acpi_desc->nvdimm_bus,
-> >>                   ALIGN(mce->addr, L1_CACHE_BYTES),
-> >>                   (1 << MCI_MISC_ADDR_LSB(m->misc)));
-> >> right?
-> >
-> > Yes.
-> >
-> >>
-> >> And when dax_recovery_read() calls
-> >>     badblocks_check(bb, sector, len / 512, &first_bad, &num_bad)
-> >> it should always, in case of 'NP', discover that 'first_bad'
-> >> is the first sector in the poisoned page,  hence no need
-> >> to switch to 'UC', right?
-> >
-> > Yes.
-> >
-> >>
-> >> In case the 'first_bad' is in the middle of the poisoned page,
-> >> that is, dax_recover_read() could potentially read some clean
-> >> sectors, is there problem to
-> >>     call _set_memory_UC(pfn, 1),
-> >>     do the mc_safe read,
-> >>     and then call set_memory_NP(pfn, 1)
-> >> ?
-> >> Why do we need to call ioremap() or vmap()?
-> >
-> > I'm worried about concurrent operations and enabling access to threads
-> > outside of the one currently in dax_recovery_read(). If a local vmap()
-> > / ioremap() is used it effectively makes the access thread local.
-> > There might still need to be an rwsem to allow dax_recovery_write() to
-> > fixup the pfn access and syncrhonize with dax_recovery_read()
-> > operations.
-> >
+> In preparation for a port driver that enumerates a descendant port +
+> decoder hierarchy, arrange for an unlocked version of cxl_decoder_add().
+> Otherwise a port-driver that adds a child decoder will deadlock on the
+> device_lock() in ->probe().
 >
-> <snip>
-> >> I didn't even know that guest could clear poison by trapping hypervisor
-> >> with the ClearError DSM method,
-> >
-> > The guest can call the Clear Error DSM if the virtual BIOS provides
-> > it. Whether that actually clears errors or not is up to the
-> > hypervisor.
-> >
-> >> I thought guest isn't privileged with that.
-> >
-> > The guest does not have access to the bare metal DSM path, but the
-> > hypervisor can certainly offer translation service for that operation.
-> >
-> >> Would you mind to elaborate about the mechanism and maybe point
-> >> out the code, and perhaps if you have test case to share?
-> >
-> > I don't have a test case because until Tony's fix I did not realize
-> > that a virtual #MC would allow the guest to learn of poisoned
-> > locations without necessarily allowing the guest to trigger actual
-> > poison consumption.
-> >
-> > In other words I was operating under the assumption that telling
-> > guests where poison is located is potentially handing the guest a way
-> > to DoS the VMM. However, Tony's fix shows that when the hypervisor
-> > unmaps the guest physical page it can prevent the guest from accessing
-> > it again. So it follows that it should be ok to inject virtual #MC to
-> > the guest, and unmap the guest physical range, but later allow that
-> > guest physical range to be repaired if the guest asks the hypervisor
-> > to repair the page.
-> >
-> > Tony, does this match your understanding?
-> >
-> >>
-> >> but I'm not sure what to do about
-> >>> guests that later want to use MOVDIR64B to clear errors.
-> >>>
-> >>
-> >> Yeah, perhaps there is no way to prevent guest from accidentally
-> >> clear error via MOVDIR64B, given some application rely on MOVDIR64B
-> >> for fast data movement (straight to the media). I guess in that case,
-> >> the consequence is false alarm, nothing disastrous, right?
-> >
-> > You'll just continue to get false positive failures because the error
-> > tracking will be out-of-sync with reality.
-> >
-> >> How about allowing the potential bad-block bookkeeping gap, and
-> >> manage to close the gap at certain checkpoints? I guess one of
-> >> the checkpoints might be when page fault discovers a poisoned
-> >> page?
-> >
-> > Not sure how that would work... it's already the case that new error
-> > entries are appended to the list at #MC time, the problem is knowing
-> > when to clear those stale entries. I still think that needs to be at
-> > dax_recovery_write() time.
-> >
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 >
-> Thanks Dan for taking the time elaborating so much details!
+> ---
 >
-> After some amount of digging, I have a feel that we need to take
-> dax error handling in phases.
+> Changes since RFCv2:
+> - Reword commit message (Dan)
+> - Move decoder API changes into this patch (Dan)
+> ---
+>  drivers/cxl/core/bus.c | 59 +++++++++++++++++++++++++++++++-----------
+>  drivers/cxl/cxl.h      |  1 +
+>  2 files changed, 45 insertions(+), 15 deletions(-)
 >
-> Phase-1: the simplest dax_recovery_write on page granularity, along
->           with fix to set poisoned page to 'NP', serialize
->           dax_recovery_write threads.
-
-You mean special case PAGE_SIZE overwrites when dax_direct_access()
-fails, but leave out the sub-page error handling and
-read-around-poison support?
-
-That makes sense to me. Incremental is good.
-
-> Phase-2: provide dax_recovery_read support and hence shrink the error
->           recovery granularity.  As ioremap returns __iomem pointer
->           that is only allowed to be referenced with helpers like
->           readl() which do not have a mc_safe variant, and I'm
->           not sure whether there should be.  Also the synchronization
->           between dax_recovery_read and dax_recovery_write threads.
-
-You can just use memremap() like the driver does to drop the iomem annotation.
-
-> Phase-3: the hypervisor error-record keeping issue, suppose there is
->           an issue, I'll need to figure out how to setup a test case.
-> Phase-4: the how-to-mitigate-MOVDIR64B-false-alarm issue.
-
-My expectation is that CXL supports MOVDIR64B error clearing without
-needing to send the Clear Poison command. I think this can be phase3,
-phase4 is the more difficult question about how / if to coordinate
-with VMM poison tracking. Right now I don't see a choice but to make
-it paravirtualized.
-
+> diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
+> index 16b15f54fb62..cd6fe7823c69 100644
+> --- a/drivers/cxl/core/bus.c
+> +++ b/drivers/cxl/core/bus.c
+> @@ -487,28 +487,22 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
+>  {
+>         int rc = 0, i;
 >
-> Right now, it seems to me providing Phase-1 solution is urgent, to give
-> something that customers can rely on.
+> +       device_lock_assert(&port->dev);
+> +
+>         if (!target_map)
+>                 return 0;
 >
-> How does this sound to you?
+> -       device_lock(&port->dev);
+> -       if (list_empty(&port->dports)) {
+> -               rc = -EINVAL;
+> -               goto out_unlock;
+> -       }
+> +       if (list_empty(&port->dports))
+> +               return -EINVAL;
+>
+>         for (i = 0; i < cxld->nr_targets; i++) {
+>                 struct cxl_dport *dport = find_dport(port, target_map[i]);
+>
+> -               if (!dport) {
+> -                       rc = -ENXIO;
+> -                       goto out_unlock;
+> -               }
+> +               if (!dport)
+> +                       return -ENXIO;
+>                 cxld->target[i] = dport;
+>         }
+>
+> -out_unlock:
+> -       device_unlock(&port->dev);
+> -
+>         return rc;
+>  }
+>
+> @@ -571,7 +565,7 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
+>  EXPORT_SYMBOL_NS_GPL(cxl_decoder_alloc, CXL);
+>
+>  /**
+> - * cxl_decoder_add - Add a decoder with targets
+> + * cxl_decoder_add_locked - Add a decoder with targets
+>   * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
+>   * @target_map: A list of downstream ports that this decoder can direct memory
+>   *              traffic to. These numbers should correspond with the port number
+> @@ -581,12 +575,14 @@ EXPORT_SYMBOL_NS_GPL(cxl_decoder_alloc, CXL);
+>   * is an endpoint device. A more awkward example is a hostbridge whose root
+>   * ports get hot added (technically possible, though unlikely).
+>   *
+> - * Context: Process context. Takes and releases the cxld's device lock.
+> + * This is the locked variant of cxl_decoder_add().
+> + *
+> + * Context: Process context. Expects the cxld's device lock to be held.
+>   *
+>   * Return: Negative error code if the decoder wasn't properly configured; else
+>   *        returns 0.
+>   */
+> -int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+> +int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map)
+>  {
+>         struct cxl_port *port;
+>         struct device *dev;
+> @@ -619,6 +615,39 @@ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+>
+>         return device_add(dev);
+>  }
+> +EXPORT_SYMBOL_NS_GPL(cxl_decoder_add_locked, CXL);
+> +
+> +/**
+> + * cxl_decoder_add - Add a decoder with targets
+> + * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
+> + * @target_map: A list of downstream ports that this decoder can direct memory
+> + *              traffic to. These numbers should correspond with the port number
+> + *              in the PCIe Link Capabilities structure.
+> + *
+> + * This is the unlocked variant of cxl_decoder_add_locked().
+> + * See cxl_decoder_add_locked().
+> + *
+> + * Context: Process context. Takes and releases the cxld's device lock.
 
-Sounds good.
+No, it takes the port's lock to walk its dport list.
+
+Otherwise, looks good to me:
+
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
