@@ -2,188 +2,163 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB874C433F5
-	for <linux-cxl@archiver.kernel.org>; Mon, 29 Nov 2021 21:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED687C433F5
+	for <linux-cxl@archiver.kernel.org>; Mon, 29 Nov 2021 22:37:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231408AbhK2WB7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 29 Nov 2021 17:01:59 -0500
-Received: from mga18.intel.com ([134.134.136.126]:46994 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231812AbhK2V77 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 29 Nov 2021 16:59:59 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10183"; a="222968510"
-X-IronPort-AV: E=Sophos;i="5.87,273,1631602800"; 
-   d="scan'208";a="222968510"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2021 13:47:27 -0800
-X-IronPort-AV: E=Sophos;i="5.87,273,1631602800"; 
-   d="scan'208";a="458596109"
-Received: from ajsteine-mobl13.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.141.244])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2021 13:47:26 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        id S231522AbhK2Wkv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 29 Nov 2021 17:40:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232319AbhK2WkW (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 29 Nov 2021 17:40:22 -0500
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A215C203961
+        for <linux-cxl@vger.kernel.org>; Mon, 29 Nov 2021 11:18:42 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id v19so12964455plo.7
+        for <linux-cxl@vger.kernel.org>; Mon, 29 Nov 2021 11:18:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=64mdYM4TFDap+15tFzg//A188pEwlRg5eeO/kY3qwEo=;
+        b=0WPhk10QRX8aw8s2z/Us1MoEvLG4aJilJSHe+aSI/b3WKuAb/MpnhsicHbQZAPN8cF
+         Onb1LBIkTmQ/EqCrp/r+jN9h1eTJlanGOts6PgEFrBfhnk21laCF1ydzSX3kuCJVNShm
+         vWt114+3H0TaJxSdXwW0PbbvQ3yMHR7MUJI4LW/e63bg1vtc7bMb6DkC4FgJZkuLTK7O
+         OaC4NPru6mKTHPoNkm32OAe7ONDNsk6JBzBZZiYef/St/oedklmXv3TEoZgJES1lXi0z
+         oaZlA8MGJPBANuu4Gekp9jO5ydCDRgB0/2VscxREiQo0BMEyL7fvCJ3ffKVdz9z+MRJU
+         QOnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=64mdYM4TFDap+15tFzg//A188pEwlRg5eeO/kY3qwEo=;
+        b=sG5g9K5z1brQ2N8eeSbbFaeX1vr+RQKo0FBN/TkAlWeMQMKzHfYRf+Y265W8u3XcDJ
+         sNB98OuEkf7qvhAaXecCzCf7zvRhCOFjfi5+eKyVmDHsSFGqKrtnUdkXYGYmNeYnp3ru
+         031YZ65aQUg7HgchLIqp6Xj7JHG/Kn9oL/a1fQ3y5mP3JY16/4nHIewfEb0wjM5AbJXe
+         T4IeaBLLaKnlY9lJi1p2xcpSCb0DtznYvqwVB+qFtM9sLpWM4pFkPkyvxdAGVDEgQO12
+         jX36cVqEv5kXKP6sOQy3U+wsrTeQd88g+4h9beSbEN1ME4LFUgPdc4gnT+KCp2Oezikv
+         fYxA==
+X-Gm-Message-State: AOAM530m2dvEOWT4ktba0x/hJI9k8+5ZnMh46lAsvC4Tbfrixodp3A98
+        5SJU444YejJK98INq7lshfv8/uBMIFmdo0aL5DbT6A==
+X-Google-Smtp-Source: ABdhPJzpto0h5jTWmvea6qu030oHXXa3VLAJxIbmE+Ii6u+BCn7xekcL27lUJYBwFlPt1ClYPlZm+iACqKJGvTnPjkc=
+X-Received: by 2002:a17:90b:1e49:: with SMTP id pi9mr21907pjb.220.1638213521627;
+ Mon, 29 Nov 2021 11:18:41 -0800 (PST)
+MIME-Version: 1.0
+References: <20211120000250.1663391-1-ben.widawsky@intel.com>
+ <20211120000250.1663391-6-ben.widawsky@intel.com> <CAPcyv4jUExKbFhTXQGs_ayUvQqrp_76Z5Wywf7=ADXKcTF3DnQ@mail.gmail.com>
+ <20211129183330.svptvcystceazgwc@intel.com> <CAPcyv4hPP8KYXD-6mrpHRpLYLqSQb22Lie2_m1Nc=Y5NqqfJgQ@mail.gmail.com>
+ <20211129191146.vhiwkf5jsegil4aa@intel.com>
+In-Reply-To: <20211129191146.vhiwkf5jsegil4aa@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 29 Nov 2021 11:18:36 -0800
+Message-ID: <CAPcyv4gboiSXq1zCtmnP7oWzjaoMG=RL5sgmhFtXuxsTTPf3fA@mail.gmail.com>
+Subject: Re: [PATCH 05/23] cxl/pci: Don't poll doorbell for mailbox access
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
         Alison Schofield <alison.schofield@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH 9/9] cxl/core: Convert decoder range to resource
-Date:   Mon, 29 Nov 2021 13:47:21 -0800
-Message-Id: <20211129214721.1668325-10-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20211129214721.1668325-1-ben.widawsky@intel.com>
-References: <20211129214721.1668325-1-ben.widawsky@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-CXL decoders manage address ranges in a hierarchical fashion whereby a
-leaf is a unique subregion of its parent decoder (midlevel or root). It
-therefore makes sense to use the resource API for handling this.
+On Mon, Nov 29, 2021 at 11:11 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> On 21-11-29 11:02:41, Dan Williams wrote:
+> > On Mon, Nov 29, 2021 at 10:33 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > >
+> > > On 21-11-24 13:55:03, Dan Williams wrote:
+> > > > On Fri, Nov 19, 2021 at 4:03 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > > > >
+> > > > > The expectation is that the mailbox interface ready bit is the first
+> > > > > step in access through the mailbox interface. Therefore, waiting for the
+> > > > > doorbell busy bit to be clear would imply that the mailbox interface is
+> > > > > ready. The original driver implementation used the doorbell timeout for
+> > > > > the Mailbox Interface Ready bit to piggyback off of, since the latter
+> > > > > doesn't have a defined timeout (introduced in 8adaf747c9f0 ("cxl/mem:
+> > > > > Find device capabilities"), a timeout has since been defined with an ECN
+> > > > > to the 2.0 spec). With the current driver waiting for mailbox interface
+> > > > > ready as a part of probe() it's no longer necessary to use the
+> > > > > piggyback.
+> > > > >
+> > > > > With the piggybacking no longer necessary it doesn't make sense to check
+> > > > > doorbell status when acquiring the mailbox. It will be checked during
+> > > > > the normal mailbox exchange protocol.
+> > > > >
+> > > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > > > > ---
+> > > > > This patch did not exist in RFCv2
+> > > > > ---
+> > > > >  drivers/cxl/pci.c | 25 ++++++-------------------
+> > > > >  1 file changed, 6 insertions(+), 19 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > > > > index 2cef9fec8599..869b4fc18e27 100644
+> > > > > --- a/drivers/cxl/pci.c
+> > > > > +++ b/drivers/cxl/pci.c
+> > > > > @@ -221,27 +221,14 @@ static int cxl_pci_mbox_get(struct cxl_dev_state *cxlds)
+> > > > >
+> > > > >         /*
+> > > > >          * XXX: There is some amount of ambiguity in the 2.0 version of the spec
+> > > > > -        * around the mailbox interface ready (8.2.8.5.1.1).  The purpose of the
+> > > > > +        * around the mailbox interface ready (8.2.8.5.1.1). The purpose of the
+> > > > >          * bit is to allow firmware running on the device to notify the driver
+> > > > > -        * that it's ready to receive commands. It is unclear if the bit needs
+> > > > > -        * to be read for each transaction mailbox, ie. the firmware can switch
+> > > > > -        * it on and off as needed. Second, there is no defined timeout for
+> > > > > -        * mailbox ready, like there is for the doorbell interface.
+> > > > > -        *
+> > > > > -        * Assumptions:
+> > > > > -        * 1. The firmware might toggle the Mailbox Interface Ready bit, check
+> > > > > -        *    it for every command.
+> > > > > -        *
+> > > > > -        * 2. If the doorbell is clear, the firmware should have first set the
+> > > > > -        *    Mailbox Interface Ready bit. Therefore, waiting for the doorbell
+> > > > > -        *    to be ready is sufficient.
+> > > > > +        * that it's ready to receive commands. The spec does not clearly define
+> > > > > +        * under what conditions the bit may get set or cleared. As of the 2.0
+> > > > > +        * base specification there was no defined timeout for mailbox ready,
+> > > > > +        * like there is for the doorbell interface. This was fixed with an ECN,
+> > > > > +        * but it's possible early devices implemented this before the ECN.
+> > > >
+> > > > Can we just drop comment block altogether? Outside of
+> > > > cxl_pci_setup_mailbox() the only time the mailbox status should be
+> > > > checked is after a doorbell timeout after submitting a command.
+> > > >
+> > >
+> > > Yes, I think it's fine to drop it.
+> > >
+> > > > >          */
+> > > > > -       rc = cxl_pci_mbox_wait_for_doorbell(cxlds);
+> > > > > -       if (rc) {
+> > > > > -               dev_warn(dev, "Mailbox interface not ready\n");
+> > > > > -               goto out;
+> > > > > -       }
+> > > > > -
+> > > > >         md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+> > > > >         if (!(md_status & CXLMDEV_MBOX_IF_READY && CXLMDEV_READY(md_status))) {
+> > > > >                 dev_err(dev, "mbox: reported doorbell ready, but not mbox ready\n");
+> > > >
+> > > > This error message is obsolete since nothing is pre-checking the
+> > > > mailbox anymore, and per above I see no problem waiting to check the
+> > > > status until after the mailbox has failed to respond after a timeout.
+> > >
+> > > The message is wrong, but I think the logic is still valuable. How about:
+> > > "mbox: reported interface ready, but mbox not ready"
+> >
+> > You mean check this every time even though the spec says the driver
+> > only needs to check it once per-reset?
+>
+> Unfortunately it does not say that. "... it shall remain set until the next
+> reset or the device encounters an error that prevents any mailbox
+> communication."
+>
+> Once we have real error checking in place, this could go away, though I see no
+> harm in leaving it.
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> (v1)
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
----
-Changes since v1:
-- Use %pr for resource formatting (Dan)
-- Drop unnecessary zero initialization (Dan)
-- Add comment about root decoder resource naming (Dan)
----
- drivers/cxl/acpi.c     | 22 ++++++++--------------
- drivers/cxl/core/bus.c | 23 +++++++++++++++++++++--
- drivers/cxl/cxl.h      |  8 ++++++--
- 3 files changed, 35 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index c656a49a11a9..da70f1836db6 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -108,10 +108,8 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
- 
- 	cxld->flags = cfmws_to_decoder_flags(cfmws->restrictions);
- 	cxld->target_type = CXL_DECODER_EXPANDER;
--	cxld->range = (struct range){
--		.start = cfmws->base_hpa,
--		.end = cfmws->base_hpa + cfmws->window_size - 1,
--	};
-+	cxld->platform_res = (struct resource)DEFINE_RES_MEM(cfmws->base_hpa,
-+							     cfmws->window_size);
- 	cxld->interleave_ways = CFMWS_INTERLEAVE_WAYS(cfmws);
- 	cxld->interleave_granularity = CFMWS_INTERLEAVE_GRANULARITY(cfmws);
- 
-@@ -121,14 +119,13 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
- 	else
- 		rc = cxl_decoder_autoremove(dev, cxld);
- 	if (rc) {
--		dev_err(dev, "Failed to add decoder for %#llx-%#llx\n",
--			cfmws->base_hpa,
--			cfmws->base_hpa + cfmws->window_size - 1);
-+		dev_err(dev, "Failed to add decoder for %pr\n",
-+			&cxld->platform_res);
- 		return 0;
- 	}
--	dev_dbg(dev, "add: %s node: %d range %#llx-%#llx\n",
--		dev_name(&cxld->dev), phys_to_target_node(cxld->range.start),
--		cfmws->base_hpa, cfmws->base_hpa + cfmws->window_size - 1);
-+	dev_dbg(dev, "add: %s node: %d range %pr\n", dev_name(&cxld->dev),
-+		phys_to_target_node(cxld->platform_res.start),
-+		&cxld->platform_res);
- 
- 	return 0;
- }
-@@ -270,10 +267,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
- 	cxld->interleave_ways = 1;
- 	cxld->interleave_granularity = PAGE_SIZE;
- 	cxld->target_type = CXL_DECODER_EXPANDER;
--	cxld->range = (struct range) {
--		.start = 0,
--		.end = -1,
--	};
-+	cxld->platform_res = (struct resource)DEFINE_RES_MEM(0, 0);
- 
- 	device_lock(&port->dev);
- 	dport = list_first_entry(&port->dports, typeof(*dport), list);
-diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-index 17a4fff029f8..ab756a53a983 100644
---- a/drivers/cxl/core/bus.c
-+++ b/drivers/cxl/core/bus.c
-@@ -46,8 +46,14 @@ static ssize_t start_show(struct device *dev, struct device_attribute *attr,
- 			  char *buf)
- {
- 	struct cxl_decoder *cxld = to_cxl_decoder(dev);
-+	u64 start;
- 
--	return sysfs_emit(buf, "%#llx\n", cxld->range.start);
-+	if (is_root_decoder(dev))
-+		start = cxld->platform_res.start;
-+	else
-+		start = cxld->decoder_range.start;
-+
-+	return sysfs_emit(buf, "%#llx\n", start);
- }
- static DEVICE_ATTR_RO(start);
- 
-@@ -55,8 +61,14 @@ static ssize_t size_show(struct device *dev, struct device_attribute *attr,
- 			char *buf)
- {
- 	struct cxl_decoder *cxld = to_cxl_decoder(dev);
-+	u64 size;
- 
--	return sysfs_emit(buf, "%#llx\n", range_len(&cxld->range));
-+	if (is_root_decoder(dev))
-+		size = resource_size(&cxld->platform_res);
-+	else
-+		size = range_len(&cxld->decoder_range);
-+
-+	return sysfs_emit(buf, "%#llx\n", size);
- }
- static DEVICE_ATTR_RO(size);
- 
-@@ -548,6 +560,13 @@ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
- 	if (rc)
- 		return rc;
- 
-+	/*
-+	 * Platform decoder resources should show up with a reasonable name. All
-+	 * other resources are just sub ranges within the main decoder resource.
-+	 */
-+	if (is_root_decoder(dev))
-+		cxld->platform_res.name = dev_name(dev);
-+
- 	return device_add(dev);
- }
- EXPORT_SYMBOL_NS_GPL(cxl_decoder_add, CXL);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index d39d45f4a770..ad816fb5bdcc 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -179,7 +179,8 @@ enum cxl_decoder_type {
-  * struct cxl_decoder - CXL address range decode configuration
-  * @dev: this decoder's device
-  * @id: kernel device name id
-- * @range: address range considered by this decoder
-+ * @platform_res: address space resources considered by root decoder
-+ * @decoder_range: address space resources considered by midlevel decoder
-  * @interleave_ways: number of cxl_dports in this decode
-  * @interleave_granularity: data stride per dport
-  * @target_type: accelerator vs expander (type2 vs type3) selector
-@@ -190,7 +191,10 @@ enum cxl_decoder_type {
- struct cxl_decoder {
- 	struct device dev;
- 	int id;
--	struct range range;
-+	union {
-+		struct resource platform_res;
-+		struct range decoder_range;
-+	};
- 	int interleave_ways;
- 	int interleave_granularity;
- 	enum cxl_decoder_type target_type;
--- 
-2.34.1
-
+Right, there's no harm in the check, it just seems overly paranoid to
+me if it was already checked once. Until a doorbell timeout happens
+it's an extra MMIO cycle that can saved for a "what happened?" check
+after a timeout.
