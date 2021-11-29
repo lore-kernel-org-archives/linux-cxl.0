@@ -2,89 +2,97 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46204C4167D
-	for <linux-cxl@archiver.kernel.org>; Mon, 29 Nov 2021 20:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 576BEC433EF
+	for <linux-cxl@archiver.kernel.org>; Mon, 29 Nov 2021 21:08:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235137AbhK2UV0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 29 Nov 2021 15:21:26 -0500
-Received: from mga03.intel.com ([134.134.136.65]:34090 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232484AbhK2UR2 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 29 Nov 2021 15:17:28 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10183"; a="236011259"
-X-IronPort-AV: E=Sophos;i="5.87,273,1631602800"; 
-   d="scan'208";a="236011259"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2021 12:05:16 -0800
-X-IronPort-AV: E=Sophos;i="5.87,273,1631602800"; 
-   d="scan'208";a="594818378"
-Received: from ajsteine-mobl13.amr.corp.intel.com (HELO intel.com) ([10.252.141.244])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2021 12:05:15 -0800
-Date:   Mon, 29 Nov 2021 12:05:14 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+        id S231329AbhK2VLk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 29 Nov 2021 16:11:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229577AbhK2VJk (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 29 Nov 2021 16:09:40 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAF45C214FE4
+        for <linux-cxl@vger.kernel.org>; Mon, 29 Nov 2021 11:37:39 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id w33-20020a17090a6ba400b001a722a06212so12365267pjj.0
+        for <linux-cxl@vger.kernel.org>; Mon, 29 Nov 2021 11:37:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y57dLs12KYOjEguyKsDB0gIGYTL2paAzcRcVxaXn2oo=;
+        b=r5u6OKTR8lVUXIMCr531D3Yg6CBADkWid6ozW3oE7IVursYcy0DG/mg2M2vodGrhQp
+         UbUYSFequ4/C6m05MiqI35a7dg+YfcSlogIVtvUHAaOspZgPG1LK10Rum7tp8F9dxVI+
+         4OXHkBU9tRrkraUTfRF0o+UYXh89DbDsi4VSF61Sh6VBU5xiFrTwkNI2lvoScGnTZlsc
+         0viUW9enwY2dw8PyuCmKeDSl5f9WFRMiwtilYaZlYs+9UN7pay0nWoybJBiqw9fYPu3W
+         iwRrlk/JF645UQSNr3iuR5cV11muM7gYOvL3E6l+plD8yPcm/EDA0TvsiFs49UIk3hvs
+         j2vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y57dLs12KYOjEguyKsDB0gIGYTL2paAzcRcVxaXn2oo=;
+        b=Byuy9D/TJRzqUn9qMNeiGNBu5OZMH+1b47z7Zrjn4nMvp4AuU0UJ40vtgBGIe4eERl
+         jtYZ2gIFv2Gg5x3tcnDzYMlgX2alh0w8v2lVc5SqCcMLTQ6PRAI+klHgVX1h5C9M+V61
+         cu9RXtEoaQT+1SuRqYJnkjRmhY5rEs3y1qvQxVYZwrtPkxCobUoQ/QgUPrUnoWrD9GUG
+         NeEcml3pxaRZ+qnpuTdxe4p+xbJZRjX3ucXomgafO6RIjHlq8NnEY9YQ7ckTaZOCaCXN
+         5AShqPzUv41+WE4kWoRYLr5p1U6nfAZBdd9FEGFr+1Y/qgLZ4+Pr2Fw8qND5pYPwDv3i
+         6xxw==
+X-Gm-Message-State: AOAM532+jUQ/NHIeXvGgiSIgRrNbBwdf3r127VZqyoxEbOTszbAPDD2D
+        TH+ue3/2PRWHjvkHNwHaeikWcyiTS8v/Rrsl3eiJrg==
+X-Google-Smtp-Source: ABdhPJwsdoXDfCBVNW5BkZLN8ABu/S9KNhziapIOp8Po/ehEWog/GfaVWWX6dcv5+ONBYQh8g1jNRC8HJ2934pmI42E=
+X-Received: by 2002:a17:902:6acb:b0:142:76c3:d35f with SMTP id
+ i11-20020a1709026acb00b0014276c3d35fmr62152271plt.89.1638214659265; Mon, 29
+ Nov 2021 11:37:39 -0800 (PST)
+MIME-Version: 1.0
+References: <20211120000250.1663391-1-ben.widawsky@intel.com>
+ <20211120000250.1663391-6-ben.widawsky@intel.com> <CAPcyv4jUExKbFhTXQGs_ayUvQqrp_76Z5Wywf7=ADXKcTF3DnQ@mail.gmail.com>
+ <20211129183330.svptvcystceazgwc@intel.com> <CAPcyv4hPP8KYXD-6mrpHRpLYLqSQb22Lie2_m1Nc=Y5NqqfJgQ@mail.gmail.com>
+ <20211129191146.vhiwkf5jsegil4aa@intel.com> <CAPcyv4gboiSXq1zCtmnP7oWzjaoMG=RL5sgmhFtXuxsTTPf3fA@mail.gmail.com>
+ <20211129193156.wtm7p7cdpn7iedqa@intel.com>
+In-Reply-To: <20211129193156.wtm7p7cdpn7iedqa@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 29 Nov 2021 11:37:34 -0800
+Message-ID: <CAPcyv4jT_5x7itJovgjRyfsRsjWqPghRYshxqvga=af8GJ6Nmw@mail.gmail.com>
+Subject: Re: [PATCH 05/23] cxl/pci: Don't poll doorbell for mailbox access
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
         Alison Schofield <alison.schofield@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 12/23] cxl: Introduce endpoint decoders
-Message-ID: <20211129200514.2o2zmjelfl3nahyt@intel.com>
-References: <20211120000250.1663391-1-ben.widawsky@intel.com>
- <20211120000250.1663391-13-ben.widawsky@intel.com>
- <20211122162039.000022c1@Huawei.com>
- <20211122193751.gipqgs5ap24dacm3@intel.com>
- <CAPcyv4gBmc+C4d1RExH5qB2qunhkkMRqNZwzz29gc-1uaJiM4A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4gBmc+C4d1RExH5qB2qunhkkMRqNZwzz29gc-1uaJiM4A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21-11-24 16:07:23, Dan Williams wrote:
-> On Mon, Nov 22, 2021 at 11:38 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Mon, Nov 29, 2021 at 11:32 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+[..]
 > >
-> > On 21-11-22 16:20:39, Jonathan Cameron wrote:
-> > > On Fri, 19 Nov 2021 16:02:39 -0800
-> > > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > >
-> > > > Endpoints have decoders too. It is useful to share the same
-> > > > infrastructure from cxl_core. Endpoints do not have dports (downstream
-> > > > targets), only the underlying physical medium. As a result, some special
-> > > > casing is needed.
-> > > >
-> > > > There is no functional change introduced yet as endpoints don't actually
-> > > > enumerate decoders yet.
-> > > >
-> > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > >
-> > > I'm not a fan of special values like using 0 here to indicate endpoint
-> > > device.  I'd rather see a base cxl_decode_alloc(..., bool ep)
-> > > and possibly wrappers for the non ep case and ep one.
-> > >
-> > > Jonathan
-> > >
-> >
-> > My inclination is the opposite. However, I think you and Dan both brought up
-> > something to this effect in the previous RFCs.
-> >
-> > Dan, do you have a preference here?
-> 
-> I was thinking something along the lines of what Jonathan wants,
-> explicit per-type APIs, but internal / private to the core can use
-> heuristics like nr_targets == 0 == endpoint.
-> 
-> So unexport cxl_decoder_alloc() and have separate:
-> 
-> cxl_root_decoder_alloc()
-> cxl_switch_decoder_alloc()
-> cxl_endpoint_decoder_alloc()
-> 
-> ...apis that use a static cxl_decoder_alloc() internally. Probably
-> also wants a cxl_endpoint_decoder_add() that drops the need to pass a
-> NULL @target_map.
+> > Right, there's no harm in the check, it just seems overly paranoid to
+> > me if it was already checked once. Until a doorbell timeout happens
+> > it's an extra MMIO cycle that can saved for a "what happened?" check
+> > after a timeout.
+>
+> Well I suspect we're just rearranging the deck chairs on the Titanic now, but...
 
-Would you a like a prep patch to set up the APIs first, or just do it all in
-one?
+Not so much, just trying to get this driver in line with other error
+handling designs.
+
+> I see doorbell timeouts as disconnected from whether or not the mailbox
+> interface is ready. If they were the same, we wouldn't need both bits and we
+> could just wait extra long for the doorbell when probing.
+>
+> In other words, I expect if the interface goes unready, doorbell timeout will
+> occur, but I don't think we should assume if doorbell timeout occurs, the
+> interface is no longer ready. I don't purport to know why a doorbell timeout
+> might occur while the interface remains available (likely a firmware bug, I
+> presume).
+>
+> It does seem interesting to check if the interface is no longer ready on timeout
+> though.
+
+So I'm just modeling this off of NVME error handling where there is a
+Controller Fatal Status bit that could be checked every transaction,
+but instead the driver waits until a command timeout to collect if the
+device went fatal / not-ready.
