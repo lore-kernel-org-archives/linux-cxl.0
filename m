@@ -2,71 +2,115 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C566C433F5
-	for <linux-cxl@archiver.kernel.org>; Mon, 29 Nov 2021 21:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 676E4C4332F
+	for <linux-cxl@archiver.kernel.org>; Mon, 29 Nov 2021 21:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229994AbhK2VdU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 29 Nov 2021 16:33:20 -0500
-Received: from mga05.intel.com ([192.55.52.43]:46903 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232771AbhK2VbS (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 29 Nov 2021 16:31:18 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10183"; a="322318957"
-X-IronPort-AV: E=Sophos;i="5.87,273,1631602800"; 
-   d="scan'208";a="322318957"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2021 13:24:00 -0800
-X-IronPort-AV: E=Sophos;i="5.87,273,1631602800"; 
-   d="scan'208";a="594837751"
-Received: from ajsteine-mobl13.amr.corp.intel.com (HELO intel.com) ([10.252.141.244])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2021 13:23:59 -0800
-Date:   Mon, 29 Nov 2021 13:23:57 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+        id S232578AbhK2Vtx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 29 Nov 2021 16:49:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231965AbhK2Vrw (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 29 Nov 2021 16:47:52 -0500
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFFE6C08EB49
+        for <linux-cxl@vger.kernel.org>; Mon, 29 Nov 2021 12:07:05 -0800 (PST)
+Received: by mail-pf1-x432.google.com with SMTP id b68so18073383pfg.11
+        for <linux-cxl@vger.kernel.org>; Mon, 29 Nov 2021 12:07:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NJrp2+FzWwPNKC0TiiwoM0QJLZPs30y4vXdiwN3K1eI=;
+        b=wdoaFhdkx5b4Neu0p1DGZnwHEG/SIHmDN4CJ50K6XljfDvdX6HT9b+3ejBMYtAFIe+
+         Cc/FZi/wlBJPt1xD1hlZH5RPpWIxX0BEMPSs1iYlo9khwxd88IkPgKZBNRFQc4cxapau
+         sMROcMOBmFgUhZBYwDAkiAcu81+wroFGj0+5P0ydawrb0/w0ofYqt/Xn8IKJqTS6oi0e
+         mkHYZAtrpUSk/ZB7BXQvdHV64nvoJ2m2xDzYpZf+sPWCZSC8fjb9gjrw78wu3G2F2ATH
+         II5RrZbQynVa3z4dmF8SHahuTA/VdqcOTp1QHnRyyk3D3NSI8xdmwlYdATKK0YeSPh6k
+         Vh/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NJrp2+FzWwPNKC0TiiwoM0QJLZPs30y4vXdiwN3K1eI=;
+        b=xC1y8D+HoDSGB4medwlma2AYp5StJcs0Fx20J8y3ycWz+wysV7kOX0gfJ77iqD2JSY
+         TtQShGrYqeZnpaQ03sd9LC7ezL4Vd4K4hljKlgIwHKublS4XiIcryBb5oce9hG98+lk4
+         /G7msSHC6Xs01xTmJD/CNKhVSKsc7zdR840dwpJ8momZSbOvXUIyd5aJkLMg/nyGzwkw
+         limsmpj42CROS9nLFv9JkdHiX0bXQYyNFI3BECZA/ydkYWwCgw2ETVbfP+Qc0uJ6TtPK
+         CuvdvR2N3ZWUElq1cAWD924EnhijMsNIa4m2fReQSiXlK4gBH71FI1/hoJkkMHxkuNMk
+         CswA==
+X-Gm-Message-State: AOAM530RXSJKaYFy2Th9lleG+jfFKOtQwIB25GkF1wHuZu0M/rr3qZku
+        mkP3bv0C+PcEm2Ek3L16zMXj4lwbYgw8Bphzm8UCbw==
+X-Google-Smtp-Source: ABdhPJyvcANPg6SUDCV4oyzlP2Gi2CZUfp1yUKyo+IcaxZgUlJn3exxwQddmyi/EQqgweFk6HFgHF7pdNAs5KZiVOQQ=
+X-Received: by 2002:a63:ef03:: with SMTP id u3mr25991020pgh.74.1638216425405;
+ Mon, 29 Nov 2021 12:07:05 -0800 (PST)
+MIME-Version: 1.0
+References: <20211120000250.1663391-1-ben.widawsky@intel.com>
+ <20211120000250.1663391-13-ben.widawsky@intel.com> <20211122162039.000022c1@Huawei.com>
+ <20211122193751.gipqgs5ap24dacm3@intel.com> <CAPcyv4gBmc+C4d1RExH5qB2qunhkkMRqNZwzz29gc-1uaJiM4A@mail.gmail.com>
+ <20211129200514.2o2zmjelfl3nahyt@intel.com>
+In-Reply-To: <20211129200514.2o2zmjelfl3nahyt@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 29 Nov 2021 12:07:00 -0800
+Message-ID: <CAPcyv4gONHAxas+=LfJnQSOf+3gZPr6i+mJLV6NO8ODFGoVfJQ@mail.gmail.com>
+Subject: Re: [PATCH 12/23] cxl: Introduce endpoint decoders
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
         Alison Schofield <alison.schofield@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 14/23] cxl: Introduce topology host registration
-Message-ID: <20211129212357.6fnqn4vaoowo4vpq@intel.com>
-References: <20211120000250.1663391-1-ben.widawsky@intel.com>
- <20211120000250.1663391-15-ben.widawsky@intel.com>
- <CAPcyv4inKyG7biUh6nxhq9Y22-D5Pg4FgJeZw7mbhSrfwqxGcA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4inKyG7biUh6nxhq9Y22-D5Pg4FgJeZw7mbhSrfwqxGcA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21-11-24 17:09:03, Dan Williams wrote:
-> On Fri, Nov 19, 2021 at 4:03 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Mon, Nov 29, 2021 at 12:05 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> On 21-11-24 16:07:23, Dan Williams wrote:
+> > On Mon, Nov 22, 2021 at 11:38 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > >
+> > > On 21-11-22 16:20:39, Jonathan Cameron wrote:
+> > > > On Fri, 19 Nov 2021 16:02:39 -0800
+> > > > Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > > >
+> > > > > Endpoints have decoders too. It is useful to share the same
+> > > > > infrastructure from cxl_core. Endpoints do not have dports (downstream
+> > > > > targets), only the underlying physical medium. As a result, some special
+> > > > > casing is needed.
+> > > > >
+> > > > > There is no functional change introduced yet as endpoints don't actually
+> > > > > enumerate decoders yet.
+> > > > >
+> > > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > > >
+> > > > I'm not a fan of special values like using 0 here to indicate endpoint
+> > > > device.  I'd rather see a base cxl_decode_alloc(..., bool ep)
+> > > > and possibly wrappers for the non ep case and ep one.
+> > > >
+> > > > Jonathan
+> > > >
+> > >
+> > > My inclination is the opposite. However, I think you and Dan both brought up
+> > > something to this effect in the previous RFCs.
+> > >
+> > > Dan, do you have a preference here?
 > >
-> > The description of the CXL topology will be conveyed by a platform
-> > specific entity that is expected to be a singleton. For ACPI based
-> > systems, this is ACPI0017. When the topology host goes away, which as of
-> > now can only be triggered by module unload, it is desirable to have the
-> > entire topology cleaned up. Regular devm unwinding handles most
-> > situations already, but what's missing is the ability to teardown the
-> > root port. Since the root port is platform specific, the core needs a
-> > set of APIs to allow platform specific drivers to register their root
-> > ports. With that, all the automatic teardown can occur.
-> 
-> Wait, no, that was one of the original motivations, but then we
-> discussed here [1] that devm teardown of a topology can happen
-> naturally / hierarchically.
-> 
-> [1]: https://lore.kernel.org/r/CAPcyv4ikVFFqyfH2zLhBVJ28N1_gufGHd2gVbP2h+Rv2cZEpeA@mail.gmail.com
-> 
-> No, the reason for the cxl_topology_host is as a constraint for when
-> CXL.mem connectivity can be verified from root to endpoint. Given that
-> endpoints can attach at any point in time relative to when the root
-> arrives CXL.mem connectivity needs to be revalidated at every topology
-> host arrival / depart event.
+> > I was thinking something along the lines of what Jonathan wants,
+> > explicit per-type APIs, but internal / private to the core can use
+> > heuristics like nr_targets == 0 == endpoint.
+> >
+> > So unexport cxl_decoder_alloc() and have separate:
+> >
+> > cxl_root_decoder_alloc()
+> > cxl_switch_decoder_alloc()
+> > cxl_endpoint_decoder_alloc()
+> >
+> > ...apis that use a static cxl_decoder_alloc() internally. Probably
+> > also wants a cxl_endpoint_decoder_add() that drops the need to pass a
+> > NULL @target_map.
+>
+> Would you a like a prep patch to set up the APIs first, or just do it all in
+> one?
 
-Oops. I forgot to update the commit message, I will take what you wrote with
-slight modification.
-
-
+Prep patch to switch over the current usages to the new style before
+introducing more helpers sounds good to me.
