@@ -2,36 +2,36 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AF0C433F5
-	for <linux-cxl@archiver.kernel.org>; Mon, 29 Nov 2021 21:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F591C433EF
+	for <linux-cxl@archiver.kernel.org>; Mon, 29 Nov 2021 21:56:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232552AbhK2V6D (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 29 Nov 2021 16:58:03 -0500
-Received: from mga18.intel.com ([134.134.136.126]:47152 "EHLO mga18.intel.com"
+        id S232011AbhK2V76 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 29 Nov 2021 16:59:58 -0500
+Received: from mga18.intel.com ([134.134.136.126]:46994 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232663AbhK2V4D (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 29 Nov 2021 16:56:03 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10183"; a="222968505"
+        id S232388AbhK2V56 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 29 Nov 2021 16:57:58 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10183"; a="222968506"
 X-IronPort-AV: E=Sophos;i="5.87,273,1631602800"; 
-   d="scan'208";a="222968505"
+   d="scan'208";a="222968506"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
   by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2021 13:47:26 -0800
 X-IronPort-AV: E=Sophos;i="5.87,273,1631602800"; 
-   d="scan'208";a="458596095"
+   d="scan'208";a="458596098"
 Received: from ajsteine-mobl13.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.141.244])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2021 13:47:25 -0800
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2021 13:47:26 -0800
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alison Schofield <alison.schofield@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH 5/9] cxl/pci: Don't poll doorbell for mailbox access
-Date:   Mon, 29 Nov 2021 13:47:17 -0800
-Message-Id: <20211129214721.1668325-6-ben.widawsky@intel.com>
+Subject: [PATCH 6/9] cxl/pci: Add new DVSEC definitions
+Date:   Mon, 29 Nov 2021 13:47:18 -0800
+Message-Id: <20211129214721.1668325-7-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20211129214721.1668325-1-ben.widawsky@intel.com>
 References: <20211129214721.1668325-1-ben.widawsky@intel.com>
@@ -41,87 +41,47 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The expectation is that the mailbox interface ready bit will be set at
-the start of any access through the mailbox interface. Therefore,
-waiting for the doorbell busy bit to be clear would imply that the
-mailbox interface is ready. The original driver implementation used the
-doorbell timeout for the Mailbox Interface Ready bit to piggyback off
-of, since the latter doesn't have a defined timeout (introduced in
-commit 8adaf747c9f0 ("cxl/mem: Find device capabilities"), a timeout has
-since been defined with an ECN to the 2.0 spec). With the current driver
-waiting for mailbox interface ready as a part of probe() it's no longer
-necessary to use the piggyback.
+In preparation for properly supporting memory active timeout, and later
+on, other attributes obtained from DVSEC fields, add the full list of
+DVSEC identifiers from the CXL 2.0 specification.
 
-With the piggybacking no longer necessary it doesn't make sense to check
-doorbell status when acquiring the mailbox. It will be checked during
-the normal mailbox exchange protocol.
-
-While here, make minor whitespace fix in the comment describing the
-behavior.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> (v1)
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huwei.com> (v1)
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
-Changes since v1:
-Reword commit message (Jonathan)
-Drop comment block altogether (Dan)
-Don't check IF ready in mbox_get() (Dan)
----
- drivers/cxl/pci.c | 36 +-----------------------------------
- 1 file changed, 1 insertion(+), 35 deletions(-)
 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index b28c220d48ea..ada0d67c8194 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -219,46 +219,12 @@ static int cxl_pci_mbox_get(struct cxl_dev_state *cxlds)
+Changes since v1:
+- Reword commit message (Dan)
+---
+ drivers/cxl/pci.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
+index 29b8eaef3a0a..8ae2b4adc59d 100644
+--- a/drivers/cxl/pci.h
++++ b/drivers/cxl/pci.h
+@@ -16,6 +16,21 @@
+ /* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
+ #define CXL_DVSEC_PCIE_DEVICE					0
  
- 	mutex_lock_io(&cxlds->mbox_mutex);
- 
--	/*
--	 * XXX: There is some amount of ambiguity in the 2.0 version of the spec
--	 * around the mailbox interface ready (8.2.8.5.1.1).  The purpose of the
--	 * bit is to allow firmware running on the device to notify the driver
--	 * that it's ready to receive commands. It is unclear if the bit needs
--	 * to be read for each transaction mailbox, ie. the firmware can switch
--	 * it on and off as needed. Second, there is no defined timeout for
--	 * mailbox ready, like there is for the doorbell interface.
--	 *
--	 * Assumptions:
--	 * 1. The firmware might toggle the Mailbox Interface Ready bit, check
--	 *    it for every command.
--	 *
--	 * 2. If the doorbell is clear, the firmware should have first set the
--	 *    Mailbox Interface Ready bit. Therefore, waiting for the doorbell
--	 *    to be ready is sufficient.
--	 */
--	rc = cxl_pci_mbox_wait_for_doorbell(cxlds);
--	if (rc) {
--		dev_warn(dev, "Mailbox interface not ready\n");
--		goto out;
--	}
--
--	md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
--	if (!(md_status & CXLMDEV_MBOX_IF_READY && CXLMDEV_READY(md_status))) {
--		dev_err(dev, "mbox: reported doorbell ready, but not mbox ready\n");
--		rc = -EBUSY;
--		goto out;
--	}
--
--	/*
--	 * Hardware shouldn't allow a ready status but also have failure bits
--	 * set. Spit out an error, this should be a bug report
--	 */
- 	rc = check_device_status(cxlds);
- 	if (rc)
- 		goto out;
- 
- 	if (CXLMDEV_RESET_NEEDED(md_status)) {
--		dev_err(dev, "mbox: reported ready, but reset needed\n");
-+		dev_err(dev, "mbox: reset needed\n");
- 		rc = -EFAULT;
- 		goto out;
- 	}
++/* CXL 2.0 8.1.4: Non-CXL Function Map DVSEC */
++#define CXL_DVSEC_FUNCTION_MAP					2
++
++/* CXL 2.0 8.1.5: CXL 2.0 Extensions DVSEC for Ports */
++#define CXL_DVSEC_PORT_EXTENSIONS				3
++
++/* CXL 2.0 8.1.6: GPF DVSEC for CXL Port */
++#define CXL_DVSEC_PORT_GPF					4
++
++/* CXL 2.0 8.1.7: GPF DVSEC for CXL Device */
++#define CXL_DVSEC_DEVICE_GPF					5
++
++/* CXL 2.0 8.1.8: PCIe DVSEC for Flex Bus Port */
++#define CXL_DVSEC_PCIE_FLEXBUS_PORT				7
++
+ /* CXL 2.0 8.1.9: Register Locator DVSEC */
+ #define CXL_DVSEC_REG_LOCATOR					8
+ #define   CXL_DVSEC_REG_LOCATOR_BLOCK1_OFFSET			0xC
 -- 
 2.34.1
 
