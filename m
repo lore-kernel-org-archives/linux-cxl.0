@@ -2,163 +2,222 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED687C433F5
-	for <linux-cxl@archiver.kernel.org>; Mon, 29 Nov 2021 22:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 757C4C4167D
+	for <linux-cxl@archiver.kernel.org>; Mon, 29 Nov 2021 22:57:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231522AbhK2Wkv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 29 Nov 2021 17:40:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33788 "EHLO
+        id S236683AbhK2XBQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 29 Nov 2021 18:01:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232319AbhK2WkW (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 29 Nov 2021 17:40:22 -0500
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A215C203961
-        for <linux-cxl@vger.kernel.org>; Mon, 29 Nov 2021 11:18:42 -0800 (PST)
-Received: by mail-pl1-x630.google.com with SMTP id v19so12964455plo.7
-        for <linux-cxl@vger.kernel.org>; Mon, 29 Nov 2021 11:18:42 -0800 (PST)
+        with ESMTP id S237103AbhK2XAn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 29 Nov 2021 18:00:43 -0500
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E68DC1A1956
+        for <linux-cxl@vger.kernel.org>; Mon, 29 Nov 2021 10:37:10 -0800 (PST)
+Received: by mail-wm1-x333.google.com with SMTP id i8-20020a7bc948000000b0030db7b70b6bso17607503wml.1
+        for <linux-cxl@vger.kernel.org>; Mon, 29 Nov 2021 10:37:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=64mdYM4TFDap+15tFzg//A188pEwlRg5eeO/kY3qwEo=;
-        b=0WPhk10QRX8aw8s2z/Us1MoEvLG4aJilJSHe+aSI/b3WKuAb/MpnhsicHbQZAPN8cF
-         Onb1LBIkTmQ/EqCrp/r+jN9h1eTJlanGOts6PgEFrBfhnk21laCF1ydzSX3kuCJVNShm
-         vWt114+3H0TaJxSdXwW0PbbvQ3yMHR7MUJI4LW/e63bg1vtc7bMb6DkC4FgJZkuLTK7O
-         OaC4NPru6mKTHPoNkm32OAe7ONDNsk6JBzBZZiYef/St/oedklmXv3TEoZgJES1lXi0z
-         oaZlA8MGJPBANuu4Gekp9jO5ydCDRgB0/2VscxREiQo0BMEyL7fvCJ3ffKVdz9z+MRJU
-         QOnw==
+        d=linaro.org; s=google;
+        h=references:user-agent:from:to:cc:subject:date:in-reply-to
+         :message-id:mime-version:content-transfer-encoding;
+        bh=/mph0GEPDLeh915zdMYHYXWQVTPRIe6JV1CzcmKwPC4=;
+        b=aSH66nUsDTgB58N4loeGVT9OQ7A4ajG7WVnLUi4qPpPiD1aJdsucoWdeIInM7ALY6K
+         6Jt1lHZ6YCSuy/SL0K+GVY6e5plLhfRSm+urWa3kOhU3r8WjAOxb+t4zA9z48xkS95b8
+         5SHpsJFTiOqx4QcLk33OuJMFE/iYJRHE7eC9A05BPn8e8cAHuTZJrIxlcJXb68+bnHwr
+         X/sW7zvINoJBBqoW5QBG16q213VMXb9l77UIK/GZf6GiVYHFy0LTTAvVTK3aTX359hYo
+         FWfrw8si+SfR+srcD7hP0PhJ54J2fJh7jk9SB0VfuicGyqB+jBZsHhxI9Tk2INpQrrQQ
+         cqFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=64mdYM4TFDap+15tFzg//A188pEwlRg5eeO/kY3qwEo=;
-        b=sG5g9K5z1brQ2N8eeSbbFaeX1vr+RQKo0FBN/TkAlWeMQMKzHfYRf+Y265W8u3XcDJ
-         sNB98OuEkf7qvhAaXecCzCf7zvRhCOFjfi5+eKyVmDHsSFGqKrtnUdkXYGYmNeYnp3ru
-         031YZ65aQUg7HgchLIqp6Xj7JHG/Kn9oL/a1fQ3y5mP3JY16/4nHIewfEb0wjM5AbJXe
-         T4IeaBLLaKnlY9lJi1p2xcpSCb0DtznYvqwVB+qFtM9sLpWM4pFkPkyvxdAGVDEgQO12
-         jX36cVqEv5kXKP6sOQy3U+wsrTeQd88g+4h9beSbEN1ME4LFUgPdc4gnT+KCp2Oezikv
-         fYxA==
-X-Gm-Message-State: AOAM530m2dvEOWT4ktba0x/hJI9k8+5ZnMh46lAsvC4Tbfrixodp3A98
-        5SJU444YejJK98INq7lshfv8/uBMIFmdo0aL5DbT6A==
-X-Google-Smtp-Source: ABdhPJzpto0h5jTWmvea6qu030oHXXa3VLAJxIbmE+Ii6u+BCn7xekcL27lUJYBwFlPt1ClYPlZm+iACqKJGvTnPjkc=
-X-Received: by 2002:a17:90b:1e49:: with SMTP id pi9mr21907pjb.220.1638213521627;
- Mon, 29 Nov 2021 11:18:41 -0800 (PST)
-MIME-Version: 1.0
-References: <20211120000250.1663391-1-ben.widawsky@intel.com>
- <20211120000250.1663391-6-ben.widawsky@intel.com> <CAPcyv4jUExKbFhTXQGs_ayUvQqrp_76Z5Wywf7=ADXKcTF3DnQ@mail.gmail.com>
- <20211129183330.svptvcystceazgwc@intel.com> <CAPcyv4hPP8KYXD-6mrpHRpLYLqSQb22Lie2_m1Nc=Y5NqqfJgQ@mail.gmail.com>
- <20211129191146.vhiwkf5jsegil4aa@intel.com>
-In-Reply-To: <20211129191146.vhiwkf5jsegil4aa@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 29 Nov 2021 11:18:36 -0800
-Message-ID: <CAPcyv4gboiSXq1zCtmnP7oWzjaoMG=RL5sgmhFtXuxsTTPf3fA@mail.gmail.com>
-Subject: Re: [PATCH 05/23] cxl/pci: Don't poll doorbell for mailbox access
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject:date
+         :in-reply-to:message-id:mime-version:content-transfer-encoding;
+        bh=/mph0GEPDLeh915zdMYHYXWQVTPRIe6JV1CzcmKwPC4=;
+        b=E70qEdM4HjwNAVSQSAWtLpW3KhYMREQ97hNR5Ekmdt4HObQg0KJMAb0BcseJirBJWM
+         BvO6Vp6Sn5NIYn2cAYOXqoHXQlYPev9D1wgmaVabPUGJbTHQFADY2MTa9viz9tDAmP4j
+         x66bnga2XedcGH1yKTsDEi4iUNp7yk+Vj4JtLmXIcQs8F1OjKCdFPs78E6Ezrdew3FGJ
+         XA8UdIfvMYA2CJjLFNEAkjlq1Eqk3KyU505/sIuHXIMQGuvxrKPftDubHzDTXW3gFt6V
+         +QjZk34Bzlx7VlF0lH4LZnJzNe9bppVGkUTp3SXYFo9N62of4JPoS5PvCx2GCXwJ8ILr
+         tozQ==
+X-Gm-Message-State: AOAM530GveGrG2LgfrxNysEWr92fRjZlcDL2WjkWdCz+tvMZ8PzulJrj
+        Le6N5x9JUMAf+geFGvnTqVfkig==
+X-Google-Smtp-Source: ABdhPJzyXYNnXHoieMjBrLtgGmAI44YNAgQiLDiW6tNLOWScg7g1vvQ1py2SmfnvDBAw3bbxAtf6vw==
+X-Received: by 2002:a05:600c:1c8d:: with SMTP id k13mr44687wms.177.1638211028818;
+        Mon, 29 Nov 2021 10:37:08 -0800 (PST)
+Received: from zen.linaroharston ([51.148.130.216])
+        by smtp.gmail.com with ESMTPSA id g5sm19180690wri.45.2021.11.29.10.37.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Nov 2021 10:37:08 -0800 (PST)
+Received: from zen (localhost [127.0.0.1])
+        by zen.linaroharston (Postfix) with ESMTP id 543041FF96;
+        Mon, 29 Nov 2021 18:37:07 +0000 (GMT)
+References: <OF255704A1.78FEF164-ON0025878E.00821084-0025878F.00015560@ibm.com>
+ <20211117165719.pqig62t5z2grgjvv@intel.com>
+ <20211117173201.00002513@Huawei.com>
+ <OF164E5BA6.E927FE73-ON00258791.0078E206-88258791.007ABBAD@ibm.com>
+ <BY5PR12MB4179A47F68A9A15E5888D074E89B9@BY5PR12MB4179.namprd12.prod.outlook.com>
+ <20211119014822.j247ayrsdve4yxyu@intel.com>
+ <BY5PR12MB4179AA1B062AEA75098E15D8E89C9@BY5PR12MB4179.namprd12.prod.outlook.com>
+ <20211119032541.gr6berwu2ve4tkax@intel.com> <8735njf6f7.fsf@linaro.org>
+ <20211129171631.ytixckw2gz3rya25@intel.com>
+User-agent: mu4e 1.7.5; emacs 28.0.60
+From:   Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>
 To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
+Cc:     Shreyas Shah <shreyas.shah@elastics.cloud>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        Saransh Gupta1 <saransh@ibm.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        qemu-devel@nongnu.org, Peter Maydell <peter.maydell@linaro.org>,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
+Subject: Re: Follow-up on the CXL discussion at OFTC
+Date:   Mon, 29 Nov 2021 18:28:43 +0000
+In-reply-to: <20211129171631.ytixckw2gz3rya25@intel.com>
+Message-ID: <87mtlmzu3w.fsf@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Nov 29, 2021 at 11:11 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> On 21-11-29 11:02:41, Dan Williams wrote:
-> > On Mon, Nov 29, 2021 at 10:33 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > >
-> > > On 21-11-24 13:55:03, Dan Williams wrote:
-> > > > On Fri, Nov 19, 2021 at 4:03 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > > >
-> > > > > The expectation is that the mailbox interface ready bit is the first
-> > > > > step in access through the mailbox interface. Therefore, waiting for the
-> > > > > doorbell busy bit to be clear would imply that the mailbox interface is
-> > > > > ready. The original driver implementation used the doorbell timeout for
-> > > > > the Mailbox Interface Ready bit to piggyback off of, since the latter
-> > > > > doesn't have a defined timeout (introduced in 8adaf747c9f0 ("cxl/mem:
-> > > > > Find device capabilities"), a timeout has since been defined with an ECN
-> > > > > to the 2.0 spec). With the current driver waiting for mailbox interface
-> > > > > ready as a part of probe() it's no longer necessary to use the
-> > > > > piggyback.
-> > > > >
-> > > > > With the piggybacking no longer necessary it doesn't make sense to check
-> > > > > doorbell status when acquiring the mailbox. It will be checked during
-> > > > > the normal mailbox exchange protocol.
-> > > > >
-> > > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > > > ---
-> > > > > This patch did not exist in RFCv2
-> > > > > ---
-> > > > >  drivers/cxl/pci.c | 25 ++++++-------------------
-> > > > >  1 file changed, 6 insertions(+), 19 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > > > > index 2cef9fec8599..869b4fc18e27 100644
-> > > > > --- a/drivers/cxl/pci.c
-> > > > > +++ b/drivers/cxl/pci.c
-> > > > > @@ -221,27 +221,14 @@ static int cxl_pci_mbox_get(struct cxl_dev_state *cxlds)
-> > > > >
-> > > > >         /*
-> > > > >          * XXX: There is some amount of ambiguity in the 2.0 version of the spec
-> > > > > -        * around the mailbox interface ready (8.2.8.5.1.1).  The purpose of the
-> > > > > +        * around the mailbox interface ready (8.2.8.5.1.1). The purpose of the
-> > > > >          * bit is to allow firmware running on the device to notify the driver
-> > > > > -        * that it's ready to receive commands. It is unclear if the bit needs
-> > > > > -        * to be read for each transaction mailbox, ie. the firmware can switch
-> > > > > -        * it on and off as needed. Second, there is no defined timeout for
-> > > > > -        * mailbox ready, like there is for the doorbell interface.
-> > > > > -        *
-> > > > > -        * Assumptions:
-> > > > > -        * 1. The firmware might toggle the Mailbox Interface Ready bit, check
-> > > > > -        *    it for every command.
-> > > > > -        *
-> > > > > -        * 2. If the doorbell is clear, the firmware should have first set the
-> > > > > -        *    Mailbox Interface Ready bit. Therefore, waiting for the doorbell
-> > > > > -        *    to be ready is sufficient.
-> > > > > +        * that it's ready to receive commands. The spec does not clearly define
-> > > > > +        * under what conditions the bit may get set or cleared. As of the 2.0
-> > > > > +        * base specification there was no defined timeout for mailbox ready,
-> > > > > +        * like there is for the doorbell interface. This was fixed with an ECN,
-> > > > > +        * but it's possible early devices implemented this before the ECN.
-> > > >
-> > > > Can we just drop comment block altogether? Outside of
-> > > > cxl_pci_setup_mailbox() the only time the mailbox status should be
-> > > > checked is after a doorbell timeout after submitting a command.
-> > > >
-> > >
-> > > Yes, I think it's fine to drop it.
-> > >
-> > > > >          */
-> > > > > -       rc = cxl_pci_mbox_wait_for_doorbell(cxlds);
-> > > > > -       if (rc) {
-> > > > > -               dev_warn(dev, "Mailbox interface not ready\n");
-> > > > > -               goto out;
-> > > > > -       }
-> > > > > -
-> > > > >         md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
-> > > > >         if (!(md_status & CXLMDEV_MBOX_IF_READY && CXLMDEV_READY(md_status))) {
-> > > > >                 dev_err(dev, "mbox: reported doorbell ready, but not mbox ready\n");
-> > > >
-> > > > This error message is obsolete since nothing is pre-checking the
-> > > > mailbox anymore, and per above I see no problem waiting to check the
-> > > > status until after the mailbox has failed to respond after a timeout.
-> > >
-> > > The message is wrong, but I think the logic is still valuable. How about:
-> > > "mbox: reported interface ready, but mbox not ready"
-> >
-> > You mean check this every time even though the spec says the driver
-> > only needs to check it once per-reset?
->
-> Unfortunately it does not say that. "... it shall remain set until the next
-> reset or the device encounters an error that prevents any mailbox
-> communication."
->
-> Once we have real error checking in place, this could go away, though I see no
-> harm in leaving it.
 
-Right, there's no harm in the check, it just seems overly paranoid to
-me if it was already checked once. Until a doorbell timeout happens
-it's an extra MMIO cycle that can saved for a "what happened?" check
-after a timeout.
+Ben Widawsky <ben.widawsky@intel.com> writes:
+
+> On 21-11-26 12:08:08, Alex Benn=C3=A9e wrote:
+>>=20
+>> Ben Widawsky <ben.widawsky@intel.com> writes:
+>>=20
+>> > On 21-11-19 02:29:51, Shreyas Shah wrote:
+>> >> Hi Ben
+>> >>=20
+>> >> Are you planning to add the CXL2.0 switch inside QEMU or already adde=
+d in one of the version?=20
+>> >>=20=20
+>> >
+>> > From me, there are no plans for QEMU anything until/unless upstream th=
+inks it
+>> > will merge the existing patches, or provide feedback as to what it wou=
+ld take to
+>> > get them merged. If upstream doesn't see a point in these patches, the=
+n I really
+>> > don't see much value in continuing to further them. Once hardware come=
+s out, the
+>> > value proposition is certainly less.
+>>=20
+>> I take it:
+>>=20
+>>   Subject: [RFC PATCH v3 00/31] CXL 2.0 Support
+>>   Date: Mon,  1 Feb 2021 16:59:17 -0800
+>>   Message-Id: <20210202005948.241655-1-ben.widawsky@intel.com>
+>>=20
+>> is the current state of the support? I saw there was a fair amount of
+>> discussion on the thread so assumed there would be a v4 forthcoming at
+>> some point.
+>
+> Hi Alex,
+>
+> There is a v4, however, we never really had a solid plan for the primary =
+issue
+> which was around handling CXL memory expander devices properly (both from=
+ an
+> interleaving standpoint as well as having a device which hosts multiple m=
+emory
+> capacities, persistent and volatile). I didn't feel it was worth sending =
+a v4
+> unless someone could say
+>
+> 1. we will merge what's there and fix later, or
+> 2. you must have a more perfect emulation in place, or
+> 3. we want to see usages for a real guest
+
+I think 1. is acceptable if the community is happy there will be ongoing
+development and it's not just a code dump. Given it will have a
+MAINTAINERS entry I think that is demonstrated.
+
+What's the current use case? Testing drivers before real HW comes out?
+Will it still be useful after real HW comes out for people wanting to
+debug things without HW?
+
+>
+> I had hoped we could merge what was there mostly as is and fix it up as w=
+e go.
+> It's useful in the state it is now, and as time goes on, we find more use=
+cases
+> for it in a VMM, and not just driver development.
+>
+>>=20
+>> Adding new subsystems to QEMU does seem to be a pain point for new
+>> contributors. Patches tend to fall through the cracks of existing
+>> maintainers who spend most of their time looking at stuff that directly
+>> touches their files. There is also a reluctance to merge large chunks of
+>> functionality without an identified maintainer (and maybe reviewers) who
+>> can be the contact point for new patches. So in short you need:
+>>=20
+>>  - Maintainer Reviewed-by/Acked-by on patches that touch other sub-syste=
+ms
+>
+> This is the challenging one. I have Cc'd the relevant maintainers (hw/pci=
+ and
+> hw/mem are the two) in the past, but I think there interest is lacking (a=
+nd
+> reasonably so, it is an entirely different subsystem).
+
+So the best approach to that is to leave a Cc: tag in the patch itself
+on your next posting so we can see the maintainer did see it but didn't
+contribute a review tag. This is also a good reason to keep Message-Id
+tags in patches so we can go back to the original threads.
+
+So in my latest PR you'll see:
+
+  Signed-off-by: Willian Rampazzo <willianr@redhat.com>
+  Reviewed-by: Beraldo Leal <bleal@redhat.com>
+  Message-Id: <20211122191124.31620-1-willianr@redhat.com>
+  Signed-off-by: Alex Benn=C3=A9e <alex.bennee@linaro.org>
+  Reviewed-by: Philippe Mathieu-Daud=C3=A9 <philmd@redhat.com>
+  Message-Id: <20211129140932.4115115-7-alex.bennee@linaro.org>
+
+which shows the Message-Id from Willian's original posting and the
+latest Message-Id from my posting of the maintainer tree (I trim off my
+old ones).
+
+>>  - Reviewed-by tags on the new sub-system patches from anyone who unders=
+tands CXL
+>
+> I have/had those from Jonathan.
+>
+>>  - Some* in-tree testing (so it doesn't quietly bitrot)
+>
+> We had this, but it's stale now. We can bring this back up.
+>
+>>  - A patch adding the sub-system to MAINTAINERS with identified people
+>
+> That was there too. Since the original posting, I'd be happy to sign Jona=
+than up
+> to this if he's willing.
+
+Sounds good to me.
+
+>> * Some means at least ensuring qtest can instantiate the device and not
+>>   fall over. Obviously more testing is better but it can always be
+>>   expanded on in later series.
+>
+> This was in the patch series. It could use more testing for sure, but I h=
+ad
+> basic functional testing in place via qtest.
+
+More is always better but the basic qtest does ensure a device doesn't
+segfault if it's instantiated.
+
+>
+>>=20
+>> Is that the feedback you were looking for?
+>
+> You validated my assumptions as to what's needed, but your first bullet i=
+s the
+> one I can't seem to pin down.
+>
+> Thanks.
+> Ben
+
+
+--=20
+Alex Benn=C3=A9e
