@@ -2,39 +2,39 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 173C4C433F5
-	for <linux-cxl@archiver.kernel.org>; Tue, 30 Nov 2021 13:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B73C433FE
+	for <linux-cxl@archiver.kernel.org>; Tue, 30 Nov 2021 13:24:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239787AbhK3NZ4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 30 Nov 2021 08:25:56 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4183 "EHLO
+        id S239822AbhK3N1W (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 30 Nov 2021 08:27:22 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4184 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229492AbhK3NZs (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 30 Nov 2021 08:25:48 -0500
-Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4J3NCm1nZbz67LyN;
-        Tue, 30 Nov 2021 21:21:40 +0800 (CST)
+        with ESMTP id S240025AbhK3N1R (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 30 Nov 2021 08:27:17 -0500
+Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4J3N9k6KYtz67XMQ;
+        Tue, 30 Nov 2021 21:19:54 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
+ fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Tue, 30 Nov 2021 14:22:27 +0100
+ 15.1.2308.20; Tue, 30 Nov 2021 14:23:57 +0100
 Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Tue, 30 Nov
- 2021 13:22:26 +0000
-Date:   Tue, 30 Nov 2021 13:22:25 +0000
+ 2021 13:23:56 +0000
+Date:   Tue, 30 Nov 2021 13:23:55 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Ben Widawsky <ben.widawsky@intel.com>
 CC:     <linux-cxl@vger.kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        "Ira Weiny" <ira.weiny@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 7/9] cxl/acpi: Map component registers for Root Ports
-Message-ID: <20211130132225.00005cea@Huawei.com>
-In-Reply-To: <20211129214721.1668325-8-ben.widawsky@intel.com>
+Subject: Re: [PATCH 8/9] cxl: Introduce module_cxl_driver
+Message-ID: <20211130132355.00004f82@Huawei.com>
+In-Reply-To: <20211129214721.1668325-9-ben.widawsky@intel.com>
 References: <20211129214721.1668325-1-ben.widawsky@intel.com>
-        <20211129214721.1668325-8-ben.widawsky@intel.com>
+        <20211129214721.1668325-9-ben.widawsky@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -48,20 +48,36 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 29 Nov 2021 13:47:19 -0800
+On Mon, 29 Nov 2021 13:47:20 -0800
 Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-> This implements the TODO in cxl_acpi for mapping component registers.
-> cxl_acpi becomes the second consumer of CXL register block enumeration
-> (cxl_pci being the first). Moving the functionality to cxl_core allows
-> both of these drivers to use the functionality. Equally importantly it
-> allows cxl_core to use the functionality in the future.
+> Many CXL drivers simply want to register and unregister themselves.
+> module_driver already supported this. A simple wrapper around that
+> reduces a decent amount of boilerplate in upcoming patches.
 > 
-> CXL 2.0 root ports are similar to CXL 2.0 Downstream Ports with the main
-> distinction being they're a part of the CXL 2.0 host bridge. While
-> mapping their component registers is not immediately useful for the CXL
-> drivers, the movement of register block enumeration into core is a vital
-> step towards HDM decoder programming.
-> 
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+FWIW this is obviously useful.
+
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> ---
+>  drivers/cxl/cxl.h | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 7150a9694f66..d39d45f4a770 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -308,6 +308,9 @@ int __cxl_driver_register(struct cxl_driver *cxl_drv, struct module *owner,
+>  #define cxl_driver_register(x) __cxl_driver_register(x, THIS_MODULE, KBUILD_MODNAME)
+>  void cxl_driver_unregister(struct cxl_driver *cxl_drv);
+>  
+> +#define module_cxl_driver(__cxl_driver) \
+> +	module_driver(__cxl_driver, cxl_driver_register, cxl_driver_unregister)
+> +
+>  #define CXL_DEVICE_NVDIMM_BRIDGE	1
+>  #define CXL_DEVICE_NVDIMM		2
+>  
+
