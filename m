@@ -2,236 +2,204 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CB8C433EF
-	for <linux-cxl@archiver.kernel.org>; Tue, 30 Nov 2021 18:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CCCC433F5
+	for <linux-cxl@archiver.kernel.org>; Tue, 30 Nov 2021 23:01:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239230AbhK3SIy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 30 Nov 2021 13:08:54 -0500
-Received: from mga05.intel.com ([192.55.52.43]:24021 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234430AbhK3SIy (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 30 Nov 2021 13:08:54 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10184"; a="322520750"
-X-IronPort-AV: E=Sophos;i="5.87,276,1631602800"; 
-   d="scan'208";a="322520750"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2021 09:22:00 -0800
-X-IronPort-AV: E=Sophos;i="5.87,276,1631602800"; 
-   d="scan'208";a="477190362"
-Received: from galatour-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.141.213])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2021 09:22:00 -0800
-Date:   Tue, 30 Nov 2021 09:21:58 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        Shreyas Shah <shreyas.shah@elastics.cloud>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        Saransh Gupta1 <saransh@ibm.com>, qemu-devel@nongnu.org,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        shameerali.kolothum.thodi@huawei.com
-Subject: Re: Follow-up on the CXL discussion at OFTC
-Message-ID: <20211130172158.kzuptl2pxlcgvzft@intel.com>
-References: <20211117173201.00002513@Huawei.com>
- <OF164E5BA6.E927FE73-ON00258791.0078E206-88258791.007ABBAD@ibm.com>
- <BY5PR12MB4179A47F68A9A15E5888D074E89B9@BY5PR12MB4179.namprd12.prod.outlook.com>
- <20211119014822.j247ayrsdve4yxyu@intel.com>
- <BY5PR12MB4179AA1B062AEA75098E15D8E89C9@BY5PR12MB4179.namprd12.prod.outlook.com>
- <20211119032541.gr6berwu2ve4tkax@intel.com>
- <8735njf6f7.fsf@linaro.org>
- <20211129171631.ytixckw2gz3rya25@intel.com>
- <87mtlmzu3w.fsf@linaro.org>
- <20211130130956.00000ccd@Huawei.com>
+        id S236949AbhK3XEo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 30 Nov 2021 18:04:44 -0500
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:36700 "EHLO
+        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233731AbhK3XEf (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 30 Nov 2021 18:04:35 -0500
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AUM6oG9016593;
+        Tue, 30 Nov 2021 23:00:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=O1FqLMoBnO45VyeG3UdPW0QdUq7ymg6frg7vah1flsw=;
+ b=r7+UGjjqoXNKF8toxjBVNfh5XR3diWCShl7tv7CIfJvgcLZtBsl1I9ITYOeW8bC0Eg3Z
+ A1HtWVq+JIJBZ6FM2GpK1lrRYi0bLLK47WzsvUDOGfSMiWXpSyTe2S3qsQPcusznKTFH
+ 7+aTnOwyJCb9A3WIhMqhV7kBrSu1PD9DvRQQ1QdOopHiGi7x5pJB4NElT4oJTHObHu2Y
+ SRxRldrKb5lG3kuCamScsQRtQUHHomqfS3Da9UuD1q+29qVIq61TTCNwznwWH7cywvfL
+ OD3EWz9Y/PkSR0YckIKRUb5pSoxXoEJHdJCbacU/NaxatTqkeRJYNP3iI82WxYzgp+Nj Kg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3cmu1wm9p8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Nov 2021 23:00:58 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 1AUMq1Gm165057;
+        Tue, 30 Nov 2021 23:00:56 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2109.outbound.protection.outlook.com [104.47.58.109])
+        by userp3030.oracle.com with ESMTP id 3ck9t0gyq4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Nov 2021 23:00:56 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VF2/LV4szRMTWSVyB/haTiGwdVhRCHR4nRO5wGPU2e3hQ4H4VCE2C2oSWZx28BHLDiSgkRHrwPpO+CTJ0q85IRerU87SI3h+AZaPzblb+ip/BZcRzDL1R+kN4fTdIb46Lur/kohJHOHNqkbOzS2oVPWQ9ZumhKFggYx1DCHvV7ht05T2etzRDcuETP1/zs6uazsJYAZBp0KNO/puw56CcSTYsZEOmQ1FaLYTT4EOmzSOA2kKtb0MR9tlg4koLgAqEnEczvxXQiwtrD9SAVKZHdnOD4Trb/iGuKnqRz1+AlVLUI1e5mkLJZwND6Nlk+Fdzhm2I3BgxT5H/e9UkLg28Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=O1FqLMoBnO45VyeG3UdPW0QdUq7ymg6frg7vah1flsw=;
+ b=QhWFg6Ws+WRqIyoz9BfkGT+ZkEccNt66Q5tq4874cNLZfn9Eg9QgiOG/EqHRYCpCwxp9IF2F71j9QZyDf70A3fNn5DZs65moIqoTfk8oGy+aqsA48Z2GV4iBemv/FKSqqLzFem7cmU+QNmAdsDN7iZvTmg9MLoLooFZdt9NXzikSo9kplyhwXDRUOYk+kunAGLBr0USoPBt+327WYf4xK8O7EIgrIbN/7b2DTojJM2zoHO0HElo8m6kbKDebkZZHYtMyEY2Ly58wKfRs2V5t6hCzxEwLVGJaneGZgwM1zoQYPoKLVKou80JACcLtFJcI4qZo24y92WPSW2Sq9AUZZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O1FqLMoBnO45VyeG3UdPW0QdUq7ymg6frg7vah1flsw=;
+ b=XFekQDuIAHljpbbLxTupYSs63+ls52cmHxdGxVGWJunZB9m5CZG0txylm0CJ+A9MBdCzV4Of++hSDfBY2IdWQJHMT5CleUA0mEQp0bHknQ5dR/eBzje5MhpAY2oDiuYuDLKt8HTGI72hXi1v1TPTiI14qySEcvhdUvyeghMfH1Q=
+Received: from SJ0PR10MB4429.namprd10.prod.outlook.com (2603:10b6:a03:2d1::14)
+ by BYAPR10MB2440.namprd10.prod.outlook.com (2603:10b6:a02:b2::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.22; Tue, 30 Nov
+ 2021 23:00:54 +0000
+Received: from SJ0PR10MB4429.namprd10.prod.outlook.com
+ ([fe80::418c:dfe4:f3ee:feaa]) by SJ0PR10MB4429.namprd10.prod.outlook.com
+ ([fe80::418c:dfe4:f3ee:feaa%7]) with mapi id 15.20.4755.011; Tue, 30 Nov 2021
+ 23:00:54 +0000
+From:   Jane Chu <jane.chu@oracle.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Borislav Petkov <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>,
+        Luis Chamberlain <mcgrof@suse.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Subject: Re: [RFT PATCH] x86/pat: Fix set_mce_nospec() for pmem
+Thread-Topic: [RFT PATCH] x86/pat: Fix set_mce_nospec() for pmem
+Thread-Index: AQHXcsuUGdCdj5TLi0qPljMZ83rdmquiLs2AgAISgwCAARWOAIACN9EAgAD6fICABatcAIAPJJmAgAACXwCAACIPAIAABBsAgAAEnACAAAQRgIAABMWAgAABtoCAAAQ3AIAAA0SAgAAEIoCAAAXwAIAADw6AgAAjpgCAABYKgIAAk30AgABlNoCAABYmgIAABQ6AgAEIqwCAPjKpgIABmROAgAAF4YCAAR65gIAAGD6AgAA1W4CAAAkygIAAcDKAgAD6wQCAB768gIAJxS0AgAlY+4A=
+Date:   Tue, 30 Nov 2021 23:00:53 +0000
+Message-ID: <1d34f45c-2b6a-1f4d-71ff-715885f8f41a@oracle.com>
+References: <CAPcyv4jEby_ifqgPyfbSgouLJKseNRCCN=rcLHze_Y4X8BZC7g@mail.gmail.com>
+ <YVbn3ohRhYkTNdEK@zn.tnic>
+ <CAPcyv4i4r5-0i3gpZxwP7ojndqbrSmebtDcGbo8JR346B-2NpQ@mail.gmail.com>
+ <YVdPWcggek5ykbft@zn.tnic>
+ <CAPcyv4hrXPb1tASBZUg-GgdVs0OOFKXMXLiHmktg_kFi7YBMyQ@mail.gmail.com>
+ <YVgxnPWX2xCcbv19@zn.tnic> <48c47c52-499a-8721-350a-5ac55a9a70de@oracle.com>
+ <7ae58b24-ad48-7afa-c023-23ccf28e3994@oracle.com>
+ <CAPcyv4imjWNuwsQKhWinq+vtuSgXAznhLXVfsy69Dq7q7eiXbA@mail.gmail.com>
+ <f80d03c6-e650-49df-81d1-309dd138de8f@oracle.com>
+ <CAPcyv4hPRyPtAJoDdOn+UnJQYgQW7XQTnMveKu9YdYXxekUg8A@mail.gmail.com>
+ <a3c07537-f623-17fb-d2b7-45500093c337@oracle.com>
+ <CAPcyv4iF0bQx0J0qrXVdCfRcS4QWaCyR1-DuXaoe59ofzH-FEw@mail.gmail.com>
+ <1b1600b0-b50b-3e35-3609-9503b8b960b8@oracle.com>
+ <CAPcyv4jBHnYtqoxoJY1NGNE1DXOv3bAg0gBzjZ=eOvarVXDRbA@mail.gmail.com>
+ <b51fb3d6-6d39-c450-e0a1-94a1645a22ec@oracle.com>
+ <CAPcyv4g4mEVDcUw2Ph0oMH1=ZQgCbnLx+ZdgoavyOQt+9q6aVw@mail.gmail.com>
+In-Reply-To: <CAPcyv4g4mEVDcUw2Ph0oMH1=ZQgCbnLx+ZdgoavyOQt+9q6aVw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0effcf22-1f3c-4596-7ddf-08d9b455433b
+x-ms-traffictypediagnostic: BYAPR10MB2440:
+x-microsoft-antispam-prvs: <BYAPR10MB244051113B427257F60A5FE8F3679@BYAPR10MB2440.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: g1cnBN7XYQTjGn/9k1h2LgdxxyQekYlcyK0rcKlw+FL4c5baln4Gxh+RY/OXr6VwZgbjKzqDkYVuVgylLAp4bnOu9hJqBdY9LZWfII0wgGNHDBWeN9jSfbhqhHBI/BGLBHFgbbeLzKtHKLJizwF8OTR+b+wR6mDCm8tmBrALH0SdCbQhB1WobtPVrBAMIJRawIeLqHoYYp1dE6BPKmlwDPB0cFov26mIfqHZqDOUcZ3d1vgqVLPcdI8wIcXo+8tFVOcGlZ575wsncgAesUq4MMdUuTd8AhtuhzZbWa+ZoqFDdWZ0owUwyDly7oAysS3STkn4qOqtPRmUn5WRt8WrEK4QwYB56SIQTh8YKMKzE2CJuHjhGcr0By9euD1Z/sNtOOp8VA5uvyQbD4WhxzeJ8cN58uz5THMCc+I3VGGRVaYf/eSBmo3aWl3NQQaYdYXEwzMNo1pR+qO3Lfjc1Cj0nl5kad10cuMmqXd6s+iwxNlkgUCj2ALMTU2eIz+TjWCTHG9nzyZ2xRS177ujzdekIVQd5ScyX9tywM4/Y7VL/s4JRs32RrVn/b6202M1zfhN62a0a6dX/h8saB7RQhuDJl+/x5ChVnhU0FO+1V57hhlou8H1xs8Of8KHo2VaSP0kY+1uTuy9VgVhR5c8O9Cbwz7fpmFLl3D5C+qXifF5F37hzrEmXQsWplx3ol9ZOKe78RnzWH4pZ8S0+s/Y1Df9KLpoCoqPrfAFBH5y1DHcVMy5511t0MKeoCjH035OfQYmivy8Yao/klzgF1jDE/ByjQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4429.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(6506007)(2906002)(8676002)(186003)(54906003)(4326008)(38070700005)(31686004)(31696002)(71200400001)(6512007)(44832011)(5660300002)(508600001)(122000001)(53546011)(83380400001)(64756008)(76116006)(8936002)(66556008)(66446008)(66476007)(6916009)(66946007)(86362001)(6486002)(38100700002)(36756003)(2616005)(316002)(26005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VEhjSW5FSkNxbnF6U3B1VVJWK0thVzZuVXB6TDg0T1dlU2grS0ZrdzJrRm5U?=
+ =?utf-8?B?elUrZ2ROQUlDdWRCZWczS05XdmdyczJBQ1hGbjZuVVEraHlnMGczQ2pFUzZF?=
+ =?utf-8?B?UjZ3RUZqWjljbXJxSjNIZ3NxSVgxaW9wN09SK1J5YVZnT3M1aG5MQ3ZTK0NH?=
+ =?utf-8?B?UUk0MFd3Y3BPV24yS2pJcHU5TzE5YmtxS21yT251ZGJuZDFDUnJpUVNMMDl5?=
+ =?utf-8?B?N01pRi9SWjBIZzY4QWczWXFsRno5VHZwbHVQOVUwRG9MU0IrT3hVM0JVY3JC?=
+ =?utf-8?B?YlViZnQ3NXVBSW4xdlNNeiswUWV3Q0VmeGpwTTF4ZlRGYzhaZ0NVT2xiWUxp?=
+ =?utf-8?B?cUpiV0lncXJ2c2RIWkNkbDZHaGFodWhPUTQvdy9Xc082dzF2dkdBMVhPeHR3?=
+ =?utf-8?B?MmszVTkwYmVjS2tYRnBmL002SUlOanp1YWRVNDFkL1dzNjlpRTQvT1FTYkdn?=
+ =?utf-8?B?bDIzOWRvUU8zdjhjS21hSWpqanlUbkx1cUVHUzJ1eXJIenlaVHRZZU1vOVQr?=
+ =?utf-8?B?ZGl1RkdWbFZQRGVEdXI4Z3NzZmVBQUg2M0dIZEV3SUNtT2ViNGExRU9FeS9m?=
+ =?utf-8?B?VGNmTlVJeVBBZElpQThEVUpoUHV3eUVZdnRPNDBidzExTnloSGxPcGR3SHZK?=
+ =?utf-8?B?OE0zSGNIYkZVOFJKenBrMEtyTTlRVGxPbmxCYXdQS3hIRkJDWDhKZTZlNjdY?=
+ =?utf-8?B?L3lEcURmQkZjYzh5SjJpTkRja3FROEhra0dkbHliaUE4bmdqNzZsaHZEMGlF?=
+ =?utf-8?B?am55UFlRVjZpWTJGazRWdzhiUm42UEZYUkNNbVR5M0dLNm5NN0Y4Q1pjT2dj?=
+ =?utf-8?B?RS83R3lzNXVUemZWL3d4VHFrRjZHRWUvOFMvOStrb0RkZUg5cU1LZitXRzEz?=
+ =?utf-8?B?NHlXdnl1WG85THB4WUdEckxNSU9MZE9jaVM2MzVISjdpeUxGejNXdWJiR3NR?=
+ =?utf-8?B?RGYwN1NrUnVqY0xCQ003WDA2TlhMQy8yc3NiZ3Q4eGJSc3lCekFjYktCdHVm?=
+ =?utf-8?B?THZDbzBXbGt2SHhtSkRRWmlZcmJHVWNLTFJ0cHJObE5rNGdZSlhBQzRiM281?=
+ =?utf-8?B?MmVaU3pLSnU1Mk5KT0pJcmlaRzZIUUdTSThNL2oraW85SFpyWHF1R1VRc3pG?=
+ =?utf-8?B?S0liMldFYWRHT005dmdtZGFsZWF2aXBMSmtvaldDVWt4Q2kyK2NMK2tlUFIz?=
+ =?utf-8?B?UjZNcEl5dzB3MzFZV0hXYVVxa2oyK2p6L05aTlVJVmhyN05DVUYvWFhJMThq?=
+ =?utf-8?B?V0JOUUdVUFZCMXlVQXorSFBHa0ZFc2h5bFJ0RTdNTmlabFE3b0NYdTNvaDBF?=
+ =?utf-8?B?UUNua0ZPTU1FL0hKWDA2SkxmUStuZlZPSW5nK25xd1Q0OVRXUzVCb3MrdnBp?=
+ =?utf-8?B?Nk5PUGdjMm5wd0I2V0M0dDU1UDZxUjhFNFMzUnd1MjkvcjZEODRaU3VOb0cw?=
+ =?utf-8?B?YXVDU05sdFkrRkNySUpKU05TTG9mY1pCcVFrZzFzREFURlVNQUdlZW52U1dj?=
+ =?utf-8?B?ZElaU21vRUhMNlhSQy8vejc4cUFHVVkvVUx0ejI2dnBHNVRSS24wcTJNc3hN?=
+ =?utf-8?B?eGh1bXgvc1RtbWZNL2xyNVNFTVFidEU1eHZGUGRnRjk3SEcxQmV2UnQ5VGNV?=
+ =?utf-8?B?eHBDbGRiWHJqNVJFSkN6ajhPbHMrdjY1aXJmdzlJMmUrMWkzczBNY3lLTzJa?=
+ =?utf-8?B?bW04L0V2d0dMR0NqUFNFUjhtVEJaSlgvMkRkcUU3TVJOK2lLbHV0ck9rRHZU?=
+ =?utf-8?B?L2NESjVpVE1CQjE5cG5EY21USXRXbDJ6TzhZdG9zcjVpaEVieDQ5TUpJVXgx?=
+ =?utf-8?B?WHdncHgzMGVQSnRvSklUUjN1NktaSVRkVlNzVXg2L0dMd2FxN0I5eTQxRmwz?=
+ =?utf-8?B?eXF0cHJUV0J1ZVdISjdUVDRDUkw4TnNHQ0NsMTg1MHo1TWE5ZEdmQVpBNkFG?=
+ =?utf-8?B?cnZRTEpuMFdPQ0IraUZaSFAzN2RxdnFLTjNoOE9vYmZBRWd5UGVDR2dCaHg0?=
+ =?utf-8?B?RmpFRUNjQUx3MkI3OWN5ODBZZEcvY2huV2pkR2ttWU1CQi9VK3JybzhRQ0xS?=
+ =?utf-8?B?WkhRYlhTVHZnWGd4enV3MmdmRFdnTjd4b3d4L2hIMURrZUYyODJTVjh6L3VT?=
+ =?utf-8?B?cXdTT3NzUGNnV2hrbDJLcTNoaXpmZEZuOTk1ZDhDZk5rZmpKWkpqUGp5L3d6?=
+ =?utf-8?B?bHc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <73B2BC9618ED2F448792759D7FEF31A4@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211130130956.00000ccd@Huawei.com>
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4429.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0effcf22-1f3c-4596-7ddf-08d9b455433b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Nov 2021 23:00:54.1095
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: S0qK3k6VnkRyZbq9pgcqRIkApjU2/hdSNXeSEIYuS06CpFpvshX3KZILMwBOoHsYf7KwgdDLsC/8s3WIDaYtLQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB2440
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10184 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 malwarescore=0
+ spamscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2110150000
+ definitions=main-2111300112
+X-Proofpoint-GUID: rjUGkXbkmvko1uEldAfcEnYGlfdQSveq
+X-Proofpoint-ORIG-GUID: rjUGkXbkmvko1uEldAfcEnYGlfdQSveq
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21-11-30 13:09:56, Jonathan Cameron wrote:
-> On Mon, 29 Nov 2021 18:28:43 +0000
-> Alex Bennée <alex.bennee@linaro.org> wrote:
-> 
-> > Ben Widawsky <ben.widawsky@intel.com> writes:
-> > 
-> > > On 21-11-26 12:08:08, Alex Bennée wrote:  
-> > >> 
-> > >> Ben Widawsky <ben.widawsky@intel.com> writes:
-> > >>   
-> > >> > On 21-11-19 02:29:51, Shreyas Shah wrote:  
-> > >> >> Hi Ben
-> > >> >> 
-> > >> >> Are you planning to add the CXL2.0 switch inside QEMU or already added in one of the version? 
-> > >> >>    
-> > >> >
-> > >> > From me, there are no plans for QEMU anything until/unless upstream thinks it
-> > >> > will merge the existing patches, or provide feedback as to what it would take to
-> > >> > get them merged. If upstream doesn't see a point in these patches, then I really
-> > >> > don't see much value in continuing to further them. Once hardware comes out, the
-> > >> > value proposition is certainly less.  
-> > >> 
-> > >> I take it:
-> > >> 
-> > >>   Subject: [RFC PATCH v3 00/31] CXL 2.0 Support
-> > >>   Date: Mon,  1 Feb 2021 16:59:17 -0800
-> > >>   Message-Id: <20210202005948.241655-1-ben.widawsky@intel.com>
-> > >> 
-> > >> is the current state of the support? I saw there was a fair amount of
-> > >> discussion on the thread so assumed there would be a v4 forthcoming at
-> > >> some point.  
-> > >
-> > > Hi Alex,
-> > >
-> > > There is a v4, however, we never really had a solid plan for the primary issue
-> > > which was around handling CXL memory expander devices properly (both from an
-> > > interleaving standpoint as well as having a device which hosts multiple memory
-> > > capacities, persistent and volatile). I didn't feel it was worth sending a v4
-> > > unless someone could say
-> > >
-> > > 1. we will merge what's there and fix later, or
-> > > 2. you must have a more perfect emulation in place, or
-> > > 3. we want to see usages for a real guest  
-> > 
-> > I think 1. is acceptable if the community is happy there will be ongoing
-> > development and it's not just a code dump. Given it will have a
-> > MAINTAINERS entry I think that is demonstrated.
-> 
-> My thought is also 1.  There are a few hacks we need to clean out but
-> nothing that should take too long.  I'm sure it'll take a rev or two more.
-> Right now for example, I've added support to arm-virt and maybe need to
-> move that over to a different machine model...
-> 
-
-The most annoying thing about rebasing it is passing the ACPI tests. They keep
-changing upstream. Being able to at least merge up to there would be huge.
-
-> > 
-> > What's the current use case? Testing drivers before real HW comes out?
-> > Will it still be useful after real HW comes out for people wanting to
-> > debug things without HW?
-> 
-> CXL is continuing to expand in scope and capabilities and I don't see that
-> reducing any time soon (My guess is 3 years+ to just catch up with what is
-> under discussion today).  So I see two long term use cases:
-> 
-> 1) Automated verification that we haven't broken things.  I suspect no
-> one person is going to have a test farm covering all the corner cases.
-> So we'll need emulation + firmware + kernel based testing.
-> 
-
-Does this exist in other forms? AFAICT for x86, there isn't much example of
-this.
-
-> 2) New feature prove out.  We have already used it for some features that
-> will appear in the next spec version. Obviously I can't say what or
-> send that code out yet.  Its very useful and the spec draft has changed
-> in various ways a result.  I can't commit others, but Huawei will be
-> doing more of this going forwards.  For that we need a stable base to
-> which we add the new stuff once spec publication allows it.
-> 
-
-I can't commit for Intel but I will say there's more latitude now to work on
-projects like this compared to when I first wrote the patches. I have
-interesting in continuing to develop this as well. I'm very interested in
-supporting interleave and hotplug specifically.
-
-> > 
-> > >
-> > > I had hoped we could merge what was there mostly as is and fix it up as we go.
-> > > It's useful in the state it is now, and as time goes on, we find more usecases
-> > > for it in a VMM, and not just driver development.
-> > >  
-> > >> 
-> > >> Adding new subsystems to QEMU does seem to be a pain point for new
-> > >> contributors. Patches tend to fall through the cracks of existing
-> > >> maintainers who spend most of their time looking at stuff that directly
-> > >> touches their files. There is also a reluctance to merge large chunks of
-> > >> functionality without an identified maintainer (and maybe reviewers) who
-> > >> can be the contact point for new patches. So in short you need:
-> > >> 
-> > >>  - Maintainer Reviewed-by/Acked-by on patches that touch other sub-systems  
-> > >
-> > > This is the challenging one. I have Cc'd the relevant maintainers (hw/pci and
-> > > hw/mem are the two) in the past, but I think there interest is lacking (and
-> > > reasonably so, it is an entirely different subsystem).  
-> > 
-> > So the best approach to that is to leave a Cc: tag in the patch itself
-> > on your next posting so we can see the maintainer did see it but didn't
-> > contribute a review tag. This is also a good reason to keep Message-Id
-> > tags in patches so we can go back to the original threads.
-> > 
-> > So in my latest PR you'll see:
-> > 
-> >   Signed-off-by: Willian Rampazzo <willianr@redhat.com>
-> >   Reviewed-by: Beraldo Leal <bleal@redhat.com>
-> >   Message-Id: <20211122191124.31620-1-willianr@redhat.com>
-> >   Signed-off-by: Alex Bennée <alex.bennee@linaro.org>
-> >   Reviewed-by: Philippe Mathieu-Daudé <philmd@redhat.com>
-> >   Message-Id: <20211129140932.4115115-7-alex.bennee@linaro.org>
-> > 
-> > which shows the Message-Id from Willian's original posting and the
-> > latest Message-Id from my posting of the maintainer tree (I trim off my
-> > old ones).
-> > 
-> > >>  - Reviewed-by tags on the new sub-system patches from anyone who understands CXL  
-> > >
-> > > I have/had those from Jonathan.
-> > >  
-> > >>  - Some* in-tree testing (so it doesn't quietly bitrot)  
-> > >
-> > > We had this, but it's stale now. We can bring this back up.
-> > >  
-> > >>  - A patch adding the sub-system to MAINTAINERS with identified people  
-> > >
-> > > That was there too. Since the original posting, I'd be happy to sign Jonathan up
-> > > to this if he's willing.  
-> > 
-> > Sounds good to me.
-> 
-> Sure that's fine with me.  Ben, I'm assuming you are fine with being joint maintainer?
-> 
-
-Yes, I brought it up :D. Once I land the region creation patches I should have
-more time for a bit to circle back to this, which I'd like to do. FOSDEM CFP is
-out again, perhaps I should advertise there.
-
-> > 
-> > >> * Some means at least ensuring qtest can instantiate the device and not
-> > >>   fall over. Obviously more testing is better but it can always be
-> > >>   expanded on in later series.  
-> > >
-> > > This was in the patch series. It could use more testing for sure, but I had
-> > > basic functional testing in place via qtest.  
-> > 
-> > More is always better but the basic qtest does ensure a device doesn't
-> > segfault if it's instantiated.
-> 
-> I'll confess this is a bit I haven't looked at yet. Will get Shameer to give
-> me a hand.
-> 
-> Thanks
-
-I'd certainly feel better if we had more tests. I also suspect the qtest I wrote
-originally no longer works. The biggest challenge I had was getting gitlab CI
-working for me.
-
-> 
-> Jonathan
-> 
-> 
-> > 
-> > >  
-> > >> 
-> > >> Is that the feedback you were looking for?  
-> > >
-> > > You validated my assumptions as to what's needed, but your first bullet is the
-> > > one I can't seem to pin down.
-> > >
-> > > Thanks.
-> > > Ben  
-> > 
-> > 
-> 
+T24gMTEvMjQvMjAyMSA0OjE2IFBNLCBEYW4gV2lsbGlhbXMgd3JvdGU6DQo+IE9uIFRodSwgTm92
+IDE4LCAyMDIxIGF0IDExOjA0IEFNIEphbmUgQ2h1IDxqYW5lLmNodUBvcmFjbGUuY29tPiB3cm90
+ZToNCj4+DQo+PiBPbiAxMS8xMy8yMDIxIDEyOjQ3IFBNLCBEYW4gV2lsbGlhbXMgd3JvdGU6DQo+
+PiA8c25pcD4NCjxzbmlwPg0KPj4NCj4+IFRoYW5rcyBEYW4gZm9yIHRha2luZyB0aGUgdGltZSBl
+bGFib3JhdGluZyBzbyBtdWNoIGRldGFpbHMhDQo+Pg0KPj4gQWZ0ZXIgc29tZSBhbW91bnQgb2Yg
+ZGlnZ2luZywgSSBoYXZlIGEgZmVlbCB0aGF0IHdlIG5lZWQgdG8gdGFrZQ0KPj4gZGF4IGVycm9y
+IGhhbmRsaW5nIGluIHBoYXNlcy4NCj4+DQo+PiBQaGFzZS0xOiB0aGUgc2ltcGxlc3QgZGF4X3Jl
+Y292ZXJ5X3dyaXRlIG9uIHBhZ2UgZ3JhbnVsYXJpdHksIGFsb25nDQo+PiAgICAgICAgICAgIHdp
+dGggZml4IHRvIHNldCBwb2lzb25lZCBwYWdlIHRvICdOUCcsIHNlcmlhbGl6ZQ0KPj4gICAgICAg
+ICAgICBkYXhfcmVjb3Zlcnlfd3JpdGUgdGhyZWFkcy4NCj4gDQo+IFlvdSBtZWFuIHNwZWNpYWwg
+Y2FzZSBQQUdFX1NJWkUgb3ZlcndyaXRlcyB3aGVuIGRheF9kaXJlY3RfYWNjZXNzKCkNCj4gZmFp
+bHMsIGJ1dCBsZWF2ZSBvdXQgdGhlIHN1Yi1wYWdlIGVycm9yIGhhbmRsaW5nIGFuZA0KPiByZWFk
+LWFyb3VuZC1wb2lzb24gc3VwcG9ydD8NCg0KWWVzLg0KPiANCj4gVGhhdCBtYWtlcyBzZW5zZSB0
+byBtZS4gSW5jcmVtZW50YWwgaXMgZ29vZC4NCg0KVGhhbmtzIQ0KPiANCj4+IFBoYXNlLTI6IHBy
+b3ZpZGUgZGF4X3JlY292ZXJ5X3JlYWQgc3VwcG9ydCBhbmQgaGVuY2Ugc2hyaW5rIHRoZSBlcnJv
+cg0KPj4gICAgICAgICAgICByZWNvdmVyeSBncmFudWxhcml0eS4gIEFzIGlvcmVtYXAgcmV0dXJu
+cyBfX2lvbWVtIHBvaW50ZXINCj4+ICAgICAgICAgICAgdGhhdCBpcyBvbmx5IGFsbG93ZWQgdG8g
+YmUgcmVmZXJlbmNlZCB3aXRoIGhlbHBlcnMgbGlrZQ0KPj4gICAgICAgICAgICByZWFkbCgpIHdo
+aWNoIGRvIG5vdCBoYXZlIGEgbWNfc2FmZSB2YXJpYW50LCBhbmQgSSdtDQo+PiAgICAgICAgICAg
+IG5vdCBzdXJlIHdoZXRoZXIgdGhlcmUgc2hvdWxkIGJlLiAgQWxzbyB0aGUgc3luY2hyb25pemF0
+aW9uDQo+PiAgICAgICAgICAgIGJldHdlZW4gZGF4X3JlY292ZXJ5X3JlYWQgYW5kIGRheF9yZWNv
+dmVyeV93cml0ZSB0aHJlYWRzLg0KPiANCj4gWW91IGNhbiBqdXN0IHVzZSBtZW1yZW1hcCgpIGxp
+a2UgdGhlIGRyaXZlciBkb2VzIHRvIGRyb3AgdGhlIGlvbWVtIGFubm90YXRpb24uDQoNCk9rYXks
+IHdpbGwgaW52ZXN0aWdhdGUgaW4gcGhhc2UgMi4NCg0KPiANCj4+IFBoYXNlLTM6IHRoZSBoeXBl
+cnZpc29yIGVycm9yLXJlY29yZCBrZWVwaW5nIGlzc3VlLCBzdXBwb3NlIHRoZXJlIGlzDQo+PiAg
+ICAgICAgICAgIGFuIGlzc3VlLCBJJ2xsIG5lZWQgdG8gZmlndXJlIG91dCBob3cgdG8gc2V0dXAg
+YSB0ZXN0IGNhc2UuDQo+PiBQaGFzZS00OiB0aGUgaG93LXRvLW1pdGlnYXRlLU1PVkRJUjY0Qi1m
+YWxzZS1hbGFybSBpc3N1ZS4NCj4gDQo+IE15IGV4cGVjdGF0aW9uIGlzIHRoYXQgQ1hMIHN1cHBv
+cnRzIE1PVkRJUjY0QiBlcnJvciBjbGVhcmluZyB3aXRob3V0DQo+IG5lZWRpbmcgdG8gc2VuZCB0
+aGUgQ2xlYXIgUG9pc29uIGNvbW1hbmQuIEkgdGhpbmsgdGhpcyBjYW4gYmUgcGhhc2UzLA0KPiBw
+aGFzZTQgaXMgdGhlIG1vcmUgZGlmZmljdWx0IHF1ZXN0aW9uIGFib3V0IGhvdyAvIGlmIHRvIGNv
+b3JkaW5hdGUNCj4gd2l0aCBWTU0gcG9pc29uIHRyYWNraW5nLiBSaWdodCBub3cgSSBkb24ndCBz
+ZWUgYSBjaG9pY2UgYnV0IHRvIG1ha2UNCj4gaXQgcGFyYXZpcnR1YWxpemVkLg0KPiANCj4+DQo+
+PiBSaWdodCBub3csIGl0IHNlZW1zIHRvIG1lIHByb3ZpZGluZyBQaGFzZS0xIHNvbHV0aW9uIGlz
+IHVyZ2VudCwgdG8gZ2l2ZQ0KPj4gc29tZXRoaW5nIHRoYXQgY3VzdG9tZXJzIGNhbiByZWx5IG9u
+Lg0KPj4NCj4+IEhvdyBkb2VzIHRoaXMgc291bmQgdG8geW91Pw0KPiANCj4gU291bmRzIGdvb2Qu
+DQo+IA0KDQpUaGFua3MhDQotamFuZQ0K
