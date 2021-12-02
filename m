@@ -2,175 +2,157 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1553BC433EF
-	for <linux-cxl@archiver.kernel.org>; Thu,  2 Dec 2021 10:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7354C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu,  2 Dec 2021 17:09:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229918AbhLBKfu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 2 Dec 2021 05:35:50 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4192 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232856AbhLBKft (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 2 Dec 2021 05:35:49 -0500
-Received: from fraeml701-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4J4XLY0H3qz67SLW;
-        Thu,  2 Dec 2021 18:31:33 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.20; Thu, 2 Dec 2021 11:32:25 +0100
-Received: from localhost (10.52.127.197) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Thu, 2 Dec
- 2021 10:32:24 +0000
-Date:   Thu, 2 Dec 2021 10:32:21 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>
-CC:     <qemu-devel@nongnu.org>, David Hildenbrand <david@redhat.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
-        "John Groves (jgroves)" <jgroves@micron.com>,
-        Chris Browy <cbrowy@avery-design.com>,
-        "Markus Armbruster" <armbru@redhat.com>,
-        <linux-cxl@vger.kernel.org>,
-        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [RFC PATCH v3 14/31] acpi/pci: Consolidate host bridge setup
-Message-ID: <20211202103221.0000280b@Huawei.com>
-In-Reply-To: <20210202005948.241655-15-ben.widawsky@intel.com>
-References: <20210202005948.241655-1-ben.widawsky@intel.com>
-        <20210202005948.241655-15-ben.widawsky@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        id S1347861AbhLBRNS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 2 Dec 2021 12:13:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235350AbhLBRNR (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 2 Dec 2021 12:13:17 -0500
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54F78C06174A
+        for <linux-cxl@vger.kernel.org>; Thu,  2 Dec 2021 09:09:55 -0800 (PST)
+Received: by mail-pl1-x62d.google.com with SMTP id u11so178761plf.3
+        for <linux-cxl@vger.kernel.org>; Thu, 02 Dec 2021 09:09:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c5Au6s2fZ0UHVOVXUd+kxNSxuNXEbhFIO++4h56vFRk=;
+        b=Q2QeB1qUo3MjE8h9M0QQErVxgAGGhtAR0+BPz0Xe3T7JSW9Zu2QMc4FYY5DE9qEAZ8
+         7X2etgx13V/alRNbC6hHKnGTjLrTMrzsiWxYPR/fRmBX0nEirVU2Cho0Bapp9kn6o5f/
+         NcqjE2DG68iCcQv9mlYVL23S9RxbRvXxZAyRyiRDW0YJHIWGX/J8ytSPgpSGFHWh7Dd7
+         y22Al4W2ZMwI2kXZ+30vNxfkMe19S0bPx/Fqg7ngIFwriFTn0G4llX9O1WGRBvT9XDEq
+         v+QU3oOiY2sts1IlkFcgTOvC5DOGNp3SLWg5kRlbFiDttnc5qE0lR4S/wsc+dHKEapg7
+         TE8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c5Au6s2fZ0UHVOVXUd+kxNSxuNXEbhFIO++4h56vFRk=;
+        b=8LAy5zb4g4yvcxvBTSqoZSh9TRCHx8zgUpMzrvRlU7PYTAd6Lr6pa5cfCRMNJT9WH3
+         YwfMbYTqKsiHZ/Cg5BkMy5WoxxXlwxjTuEOFtk9wXHaX6G7dvwGArvFTEGsLJ3RetIBB
+         YKOTJudzRvtG74QWnYYqlE5xp9xYqRK7azGf9TFMeQmuf/OkNB9KqL7kcukTA6UxxXqj
+         A7rz6aPlsYA/gzVht7YsbSWifwNyi9oxk8J+NPajSaW9cNk6amvELuxrR5hKRDGw4A1I
+         mMa5Qc6Cg01drRbWTe58HhABdKJutgvVxG7No6mSy22bwRXrWQTsrR+CgbCfCLzWyPjO
+         AkCQ==
+X-Gm-Message-State: AOAM531HLQrMI/xKkb/Raczbk835G0byv6OxwuhL8VAVd42zJIjskzd4
+        bmbKb+5zff+63IFddx98t9pzm9pOk4dzD9LGVDImqg==
+X-Google-Smtp-Source: ABdhPJw5Gl1ZvePNtgPUSidOE/By3ElI3IUEQbAowywGUKPaXmXGardcjWjBadh8iDu3vOQqSk1WOd2iPrkN13tlMlI=
+X-Received: by 2002:a17:902:7fcd:b0:142:8ab3:ec0e with SMTP id
+ t13-20020a1709027fcd00b001428ab3ec0emr16414414plb.4.1638464994038; Thu, 02
+ Dec 2021 09:09:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.127.197]
-X-ClientProxiedBy: lhreml710-chm.china.huawei.com (10.201.108.61) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <20211129214721.1668325-1-ben.widawsky@intel.com> <20211129214721.1668325-4-ben.widawsky@intel.com>
+In-Reply-To: <20211129214721.1668325-4-ben.widawsky@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 2 Dec 2021 09:09:44 -0800
+Message-ID: <CAPcyv4iWNPA98x6GsOpeqF+11YeWgZternCJ0wgQtWOOknViSw@mail.gmail.com>
+Subject: Re: [PATCH 3/9] cxl/pci: Extract device status check
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 1 Feb 2021 16:59:31 -0800
-Ben Widawsky <ben.widawsky@intel.com> wrote:
-
-> This cleanup will make it easier to add support for CXL to the mix.
-> 
+On Mon, Nov 29, 2021 at 1:47 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> The Memory Device Status register is inspected in the same way for at
+> least two flows in the CXL Type 3 Memory Device Software Guide
+> (Revision: 1.0): 2.13.9 Device discovery and mailbox ready sequence,
+> and 2.13.10 Media ready sequence. Extract this common functionality for
+> use by both.
+>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-
-Hi Ben / all (particularly PCI experts!)
-
-So... I was looking at the large impact this has on needing to update
-ACPI tables for the tests and that got me wondering.
-The issue is it reorders things a bit rather than making any functional changes.
-
-Why does the pxb expander ACPI not have ADR set and all other
-PNP0A03 / PNP0A08 root bridge acpi chunks do?
-
-I've messed around with the values provided and dug around in Linux
-and other than them being exposed in the sysfs for firmware blobs associated with
-/sys/class/pci_bus/devices these particular _ADR entries don't actually seem to
-be used by Linux.
-
-So it becomes a question of what the specification says...
-
-As ever clear as mud :)
-
-PCI firmware spec doesn't say, but has an example with non _ADR entry.
-4.5.3 in the PCI Firmware Specification Revisions 3.3
-The ACPI spec has an example with _ADR when describing _SEG.
-6.5.6 in ACPI 6.4
-
-_ADR description is the address of the device on it's parent bus.
-I'm not sure a root bridge parent bus (which is probably the SB, has
-any such concept of an address (which probably explains why I've never
-seen it set to anything other than 0).
-
-Checking where the _ADR 0 entries came from, they go back to Michael importing
-tables from seabios in 2013.
-
-My current feeling is we don't want to risk breaking some user of these values
-so perhaps the simple option is just to add _ADR to the PXB ACPI block as well?
-
-That way I think we will cause less churn in the ACPI tables needed for tests
-and end up at least consistent in what QEMU presents.
-
-Note I'd ideally like to separate this as a precursor to the CXL series rather than
-burying it in the middle of that!
-
-Jonathan
-
 > ---
->  hw/i386/acpi-build.c | 31 +++++++++++++++++--------------
->  1 file changed, 17 insertions(+), 14 deletions(-)
-> 
-> diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
-> index f56d699c7f..cf6eb54c22 100644
-> --- a/hw/i386/acpi-build.c
-> +++ b/hw/i386/acpi-build.c
-> @@ -1194,6 +1194,20 @@ static void build_smb0(Aml *table, I2CBus *smbus, int devnr, int func)
->      aml_append(table, scope);
+>  drivers/cxl/pci.c | 33 +++++++++++++++++++++++++--------
+>  1 file changed, 25 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index a6ea9811a05b..6c8d09fb3a17 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -182,6 +182,27 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_state *cxlds,
+>         return 0;
 >  }
->  
-> +enum { PCI, PCIE };
-> +static void init_pci_acpi(Aml *dev, int uid, int type)
+>
+> +/*
+> + * Implements roughly the bottom half of Figure 42 of the CXL Type 3 Memory
+> + * Device Software Guide
+> + */
+
+This version did not address the feedback about referencing the CXL
+specification instead of the software guide.
+
+> +static int check_device_status(struct cxl_dev_state *cxlds)
 > +{
-> +    if (type == PCI) {
-> +        aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A03")));
-> +        aml_append(dev, aml_name_decl("_UID", aml_int(uid)));
-> +    } else {
-> +        aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A08")));
-> +        aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A03")));
-> +        aml_append(dev, aml_name_decl("_UID", aml_int(uid)));
-> +        aml_append(dev, build_q35_osc_method());
-> +    }
+> +       const u64 md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+> +
+> +       if (md_status & CXLMDEV_DEV_FATAL) {
+> +               dev_err(cxlds->dev, "Fatal: replace device\n");
+> +               return -EIO;
+> +       }
+> +
+> +       if (md_status & CXLMDEV_FW_HALT) {
+> +               dev_err(cxlds->dev, "FWHalt: reset or replace device\n");
+> +               return -EBUSY;
+> +       }
+> +
+> +       return 0;
 > +}
 > +
->  static void
->  build_dsdt(GArray *table_data, BIOSLinker *linker,
->             AcpiPmInfo *pm, AcpiMiscInfo *misc,
-> @@ -1222,9 +1236,8 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
->      if (misc->is_piix4) {
->          sb_scope = aml_scope("_SB");
->          dev = aml_device("PCI0");
-> -        aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A03")));
-> +        init_pci_acpi(dev, 0, PCI);
->          aml_append(dev, aml_name_decl("_ADR", aml_int(0)));
-> -        aml_append(dev, aml_name_decl("_UID", aml_int(0)));
->          aml_append(sb_scope, dev);
->          aml_append(dsdt, sb_scope);
->  
-> @@ -1238,11 +1251,8 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
->      } else {
->          sb_scope = aml_scope("_SB");
->          dev = aml_device("PCI0");
-> -        aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A08")));
-> -        aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A03")));
-> +        init_pci_acpi(dev, 0, PCIE);
->          aml_append(dev, aml_name_decl("_ADR", aml_int(0)));
-> -        aml_append(dev, aml_name_decl("_UID", aml_int(0)));
-> -        aml_append(dev, build_q35_osc_method());
->          aml_append(sb_scope, dev);
->  
->          if (pm->smi_on_cpuhp) {
-> @@ -1345,15 +1355,8 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
->  
->              scope = aml_scope("\\_SB");
->              dev = aml_device("PC%.02X", bus_num);
-> -            aml_append(dev, aml_name_decl("_UID", aml_int(bus_num)));
->              aml_append(dev, aml_name_decl("_BBN", aml_int(bus_num)));
-> -            if (pci_bus_is_express(bus)) {
-> -                aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A08")));
-> -                aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A03")));
-> -                aml_append(dev, build_q35_osc_method());
-> -            } else {
-> -                aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A03")));
-> -            }
-> +            init_pci_acpi(dev, bus_num, pci_bus_is_express(bus) ? PCIE : PCI);
->  
->              if (numa_node != NUMA_NODE_UNASSIGNED) {
->                  aml_append(dev, aml_name_decl("_PXM", aml_int(numa_node)));
+>  /**
+>   * cxl_pci_mbox_get() - Acquire exclusive access to the mailbox.
+>   * @cxlds: The device state to gain access to.
+> @@ -231,17 +252,13 @@ static int cxl_pci_mbox_get(struct cxl_dev_state *cxlds)
+>          * Hardware shouldn't allow a ready status but also have failure bits
+>          * set. Spit out an error, this should be a bug report
+>          */
+> -       rc = -EFAULT;
+> -       if (md_status & CXLMDEV_DEV_FATAL) {
+> -               dev_err(dev, "mbox: reported ready, but fatal\n");
+> +       rc = check_device_status(cxlds);
+> +       if (rc)
+>                 goto out;
+> -       }
+> -       if (md_status & CXLMDEV_FW_HALT) {
+> -               dev_err(dev, "mbox: reported ready, but halted\n");
+> -               goto out;
+> -       }
+> +
+>         if (CXLMDEV_RESET_NEEDED(md_status)) {
+>                 dev_err(dev, "mbox: reported ready, but reset needed\n");
+> +               rc = -EFAULT;
+>                 goto out;
 
+It also did not address the feedback that the reset needed check can
+be dropped because per the spec* it is redundant with the other checks
+above. The driver need not give up on mailbox commands just because
+the media is not ready. So this wants a lead-in patch to clean that up
+first.
+
+"This field returns non-zero value if FW Halt is set or Media Status
+is not in the ready state."
+
+Going further I do not think the driver should preemptively abort
+commands due to device-fatal, or even firmware halt for that matter.
+The true sign of failure and dead firmware is timed-out responses to
+incoming commands. Just in case there are some commands still
+functional in a device-fatal condition, or the firmware-halt indicator
+was a false positive, let the command through, and then if it fails
+report these forensic statuses.
+
+"Mailbox Interfaces Ready" is the only status that needs to be checked
+preemptively, and only once at the beginning of time until the next
+command timeout where the driver collects it to find out what
+happened.
+
+I'll take a shot at a lead-in patch to that effect.
