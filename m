@@ -2,24 +2,24 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA233C433F5
-	for <linux-cxl@archiver.kernel.org>; Thu,  2 Dec 2021 04:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4721DC433EF
+	for <linux-cxl@archiver.kernel.org>; Thu,  2 Dec 2021 04:40:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355527AbhLBEnc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 1 Dec 2021 23:43:32 -0500
-Received: from mga09.intel.com ([134.134.136.24]:61242 "EHLO mga09.intel.com"
+        id S1355360AbhLBEng (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 1 Dec 2021 23:43:36 -0500
+Received: from mga09.intel.com ([134.134.136.24]:61244 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1355360AbhLBEnZ (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Wed, 1 Dec 2021 23:43:25 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="236438362"
+        id S1355497AbhLBEn0 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Wed, 1 Dec 2021 23:43:26 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="236438363"
 X-IronPort-AV: E=Sophos;i="5.87,281,1631602800"; 
-   d="scan'208";a="236438362"
+   d="scan'208";a="236438363"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
   by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 20:40:03 -0800
 X-IronPort-AV: E=Sophos;i="5.87,281,1631602800"; 
-   d="scan'208";a="745717370"
+   d="scan'208";a="745717375"
 Received: from liudanie-mobl1.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.143.85])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 20:40:02 -0800
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 20:40:03 -0800
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     Ben Widawsky <ben.widawsky@intel.com>,
@@ -28,160 +28,185 @@ Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH v2 00/14] Add drivers for CXL ports and mem devices
-Date:   Wed,  1 Dec 2021 20:37:36 -0800
-Message-Id: <20211202043750.3501494-1-ben.widawsky@intel.com>
+Subject: [PATCH v2 01/14] cxl/core: Add, document, and tighten up decoder APIs
+Date:   Wed,  1 Dec 2021 20:37:37 -0800
+Message-Id: <20211202043750.3501494-2-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20211202043750.3501494-1-ben.widawsky@intel.com>
+References: <20211202043750.3501494-1-ben.widawsky@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Significant changes since v1 [1]:
-- Reworked decoder alloc APIs to be specific to component type
-- cxl_mem handles DVSEC checks instead of cxl_port
-- buggy switch handling in cxl_mem is #if 0'd out
-- cxl_pci will fail if the Device DVSEC can't be found
+Since the code to add decoders for switches and endpoints is on the
+horizon it helps to have properly documented APIs. In addition, the
+decoder APIs will never need to support a negative count for downstream
+targets as the spec explicitly starts numbering them at 1, ie. even 0 is
+an "invalid" value which can be used as a sentinel.
 
-There were a few improvements from the RFC, v1, and discussions on IRC (goto
-#cxl on OFTC). Dan has some patches that apply either on top of, or squashed in
-with these. Those are:
-1. Global root port list doesn't need to exist.
-2. Port enumeration doesn't rely on PCIe concepts to walk topology
-3. Port driver should handle enumerating dports
-
-Here I've also dropped the prep patches which are mostly reviewed. Those are
-here [2].
-
-What follows is the original cover letter from v1 [1]
-
-[1]: https://lore.kernel.org/linux-cxl/20211120000250.1663391-1-ben.widawsky@intel.com/
-[2]: https://lore.kernel.org/linux-cxl/20211129214721.1668325-1-ben.widawsky@intel.com/
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
-
-This is the first set of patches from the RFC [1] for region creation. The
-patches enable port enumeration for endpoint devices, and enumeration of decoder
-resources for ports. In the RFC [1], I felt it necessary to post the consumer of
-this work, the region driver, so that it was clear why these patches were
-necessary. Because the region patches patches are less baked, and received no
-review in the RFC, they are excluded here. If you find yourself unclear about
-why these patches are interesting, go look at the RFC [1].
-
-Each patch contains the list of changes from RFCv2. IMHO the following are the
-high level most important changes:
-1. Rework cxl_pci to fix mailbox handling and allow for wait media ready.
-2. DVSEC range information is passed from cxl_pci and checked
-
-linux-pci is on the Cc since CXL lives in a parallel universe to PCI and some
-PCI mechanisms are reused here. Feedback from experts in that domain is very
-welcome.
-
-What was requested and not changed:
-1. Dropping global list of root ports.
-2. Improving find_parent_cxl_port()
-
+Changes since v1:
+- Added decoder type specific APIs (Dan)
 ---
+ drivers/cxl/acpi.c     |  4 +--
+ drivers/cxl/core/bus.c | 82 +++++++++++++++++++++++++++++++++++++-----
+ drivers/cxl/cxl.h      |  5 ++-
+ 3 files changed, 79 insertions(+), 12 deletions(-)
 
-Summary
-=======
-
-Two new drivers are introduced to support Compute Express Link 2.0 [2] HDM
-decoder enumeration. While the existing cxl_acpi and cxl_pci drivers already
-create some of the necessary devices, they did not do full enumeration of
-decoders, and they did not do port enumeration for switches. Additionally, CXL
-2.0 Root Port component registers are now handled as well.
-
-cxl_port
-========
-
-The cxl_port driver is implemented within the cxl_port module. While loading of
-this module is optional, the other new drivers depend, and cxl_acpi depend on it
-for complete enumeration. The port driver is responsible for all activities
-around HDM decoder enumeration and programming. Introduced earlier, the concept
-of a port is an abstraction over CXL components with an upstream port, every
-host bridge, switch, and endpoint.
-
-cxl_mem
-=======
-
-The cxl_mem driver's main job is to walk up the hierarchy to make the
-determination if it is CXL.mem routed, meaning, all components above it in the
-hierarchy are participating in the CXL.mem protocol. It is implemented within
-the cxl_mem module. As the host bridge ports are added by a platform specific
-driver, such as cxl_acpi, the scope of the mem driver can be reduced to scan for
-switches and ask cxl_core to work on enumerating them. With this done, the
-determination as to whether a device is CXL.mem routed can be done simply by
-checking if the struct device has a driver bound to it.
-
-Results
-=======
-
-Running these patches should yield new devices and new drivers under
-/sys/bus/cxl/devices and /sys/bus/cxl/drivers. For example, in a standard QEMU
-run, using run_qemu [3]
-
-/sys/bus/cxl/devices (new):
-# The host bridge CHBS decoder
-lrwxrwxrwx 1 root root 0 Nov 19 15:23 decoder1.0 -> ../../../devices/platform/ACPI0017:00/root0/port1/decoder1.0
-# mem0's decoder
-lrwxrwxrwx 1 root root 0 Nov 19 15:23 decoder2.0 -> ../../../devices/platform/ACPI0017:00/root0/port1/port2/decoder2.0
-# mem1's decoder
-lrwxrwxrwx 1 root root 0 Nov 19 15:23 decoder3.0 -> ../../../devices/platform/ACPI0017:00/root0/port1/port3/decoder3.0
-# mem0's port
-lrwxrwxrwx 1 root root 0 Nov 19 15:23 port2 -> ../../../devices/platform/ACPI0017:00/root0/port1/port2
-# mem1's port
-lrwxrwxrwx 1 root root 0 Nov 19 15:23 port3 -> ../../../devices/platform/ACPI0017:00/root0/port1/port3
-
-/sys/bus/cxl/drivers:
-drwxr-xr-x 2 root root 0 Nov 19 15:23 cxl_mem
-
-[1]: https://lore.kernel.org/linux-cxl/20211022183709.1199701-1-ben.widawsky@intel.com/T/#t
-[2]: https://www.computeexpresslink.org/download-the-specification
-[3]: https://github.com/pmem/run_qemu/
-drwxr-xr-x 2 root root 0 Nov 19 15:23 cxl_port
-Ben Widawsky (14):
-  cxl/core: Add, document, and tighten up decoder APIs
-  cxl: Introduce endpoint decoders
-  cxl/core: Move target population locking to caller
-  cxl: Introduce topology host registration
-  cxl/core: Store global list of root ports
-  cxl/pci: Cache device DVSEC offset
-  cxl: Cache and pass DVSEC ranges
-  cxl/pci: Implement wait for media active
-  cxl/pci: Store component register base in cxlds
-  cxl: Make passthrough decoder init implicit
-  cxl/port: Introduce a port driver
-  cxl: Unify port enumeration for decoders
-  cxl/port: Cleanup adding passthrough decoders
-  cxl/mem: Introduce cxl_mem driver
-
- Documentation/ABI/testing/sysfs-bus-cxl       |   9 +
- .../driver-api/cxl/memory-devices.rst         |  14 +
- drivers/cxl/Kconfig                           |  21 +
- drivers/cxl/Makefile                          |   4 +
- drivers/cxl/acpi.c                            |  82 +--
- drivers/cxl/core/Makefile                     |   1 +
- drivers/cxl/core/bus.c                        | 479 ++++++++++++++++--
- drivers/cxl/core/core.h                       |   3 +
- drivers/cxl/core/memdev.c                     |   2 +-
- drivers/cxl/core/pci.c                        | 117 +++++
- drivers/cxl/core/regs.c                       |   6 +-
- drivers/cxl/cxl.h                             |  59 ++-
- drivers/cxl/cxlmem.h                          |  23 +
- drivers/cxl/mem.c                             | 285 +++++++++++
- drivers/cxl/pci.c                             | 200 ++++++++
- drivers/cxl/pci.h                             |  16 +
- drivers/cxl/port.c                            | 368 ++++++++++++++
- tools/testing/cxl/Kbuild                      |   1 +
- tools/testing/cxl/mock_acpi.c                 |   4 +-
- 19 files changed, 1589 insertions(+), 105 deletions(-)
- create mode 100644 drivers/cxl/core/pci.c
- create mode 100644 drivers/cxl/mem.c
- create mode 100644 drivers/cxl/port.c
-
-
-base-commit: c19a248a84b950ef53c6768751cc917ec2c6b6cf
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index da70f1836db6..9f88dec03b33 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -102,7 +102,7 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+ 	for (i = 0; i < CFMWS_INTERLEAVE_WAYS(cfmws); i++)
+ 		target_map[i] = cfmws->interleave_targets[i];
+ 
+-	cxld = cxl_decoder_alloc(root_port, CFMWS_INTERLEAVE_WAYS(cfmws));
++	cxld = cxl_root_decoder_alloc(root_port, CFMWS_INTERLEAVE_WAYS(cfmws));
+ 	if (IS_ERR(cxld))
+ 		return 0;
+ 
+@@ -260,7 +260,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+ 	 * dport. Disable the range until the first CXL region is enumerated /
+ 	 * activated.
+ 	 */
+-	cxld = cxl_decoder_alloc(port, 1);
++	cxld = cxl_root_decoder_alloc(port, 1);
+ 	if (IS_ERR(cxld))
+ 		return PTR_ERR(cxld);
+ 
+diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
+index ab756a53a983..2f72087846e3 100644
+--- a/drivers/cxl/core/bus.c
++++ b/drivers/cxl/core/bus.c
+@@ -495,7 +495,20 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
+ 	return rc;
+ }
+ 
+-struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
++/**
++ * cxl_decoder_alloc - Allocate a new CXL decoder
++ * @port: owning port of this decoder
++ * @nr_targets: downstream targets accessible by this decoder. All upstream
++ *		ports and root ports must have at least 1 target.
++ *
++ * A port should contain one or more decoders. Each of those decoders enable
++ * some address space for CXL.mem utilization. A decoder is expected to be
++ * configured by the caller before registering.
++ *
++ * Return: A new cxl decoder to be registered by cxl_decoder_add()
++ */
++static struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
++					     unsigned int nr_targets)
+ {
+ 	struct cxl_decoder *cxld, cxld_const_init = {
+ 		.nr_targets = nr_targets,
+@@ -503,7 +516,7 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
+ 	struct device *dev;
+ 	int rc = 0;
+ 
+-	if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets < 1)
++	if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets == 0)
+ 		return ERR_PTR(-EINVAL);
+ 
+ 	cxld = kzalloc(struct_size(cxld, target, nr_targets), GFP_KERNEL);
+@@ -522,19 +535,70 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
+ 	dev->parent = &port->dev;
+ 	dev->bus = &cxl_bus_type;
+ 
+-	/* root ports do not have a cxl_port_type parent */
+-	if (port->dev.parent->type == &cxl_port_type)
+-		dev->type = &cxl_decoder_switch_type;
+-	else
+-		dev->type = &cxl_decoder_root_type;
+-
+ 	return cxld;
+ err:
+ 	kfree(cxld);
+ 	return ERR_PTR(rc);
+ }
+-EXPORT_SYMBOL_NS_GPL(cxl_decoder_alloc, CXL);
+ 
++/**
++ * cxl_root_decoder_alloc - Allocate a root level decoder
++ * @port: owning port of this decoder
++ * @nr_targets: number of downstream targets. The number of downstream targets
++ *		is determined with a platform specific mechanism.
++ *
++ * Return: A new cxl decoder to be registered by cxl_decoder_add()
++ */
++struct cxl_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
++					   unsigned int nr_targets)
++{
++	struct cxl_decoder *cxld;
++
++	cxld = cxl_decoder_alloc(port, nr_targets);
++	if (!IS_ERR(cxld))
++		cxld->dev.type = &cxl_decoder_root_type;
++
++	return cxld;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_root_decoder_alloc, CXL);
++
++/**
++ * cxl_switch_decoder_alloc - Allocate a switch level decoder
++ * @port: owning port of this decoder
++ * @nr_targets: number of downstream targets. The number of downstream targets
++ *		is determined via CXL capability registers.
++ *
++ * Return: A new cxl decoder to be registered by cxl_decoder_add()
++ */
++struct cxl_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
++					     unsigned int nr_targets)
++{
++	struct cxl_decoder *cxld;
++
++	cxld = cxl_decoder_alloc(port, nr_targets);
++	if (!IS_ERR(cxld))
++		cxld->dev.type = &cxl_decoder_switch_type;
++
++	return cxld;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_switch_decoder_alloc, CXL);
++
++/**
++ * cxl_decoder_add - Add a decoder with targets
++ * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
++ * @target_map: A list of downstream ports that this decoder can direct memory
++ *              traffic to. These numbers should correspond with the port number
++ *              in the PCIe Link Capabilities structure.
++ *
++ * Certain types of decoders may not have any targets. The main example of this
++ * is an endpoint device. A more awkward example is a hostbridge whose root
++ * ports get hot added (technically possible, though unlikely).
++ *
++ * Context: Process context. Takes and releases the cxld's device lock.
++ *
++ * Return: Negative error code if the decoder wasn't properly configured; else
++ *	   returns 0.
++ */
+ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+ {
+ 	struct cxl_port *port;
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index ad816fb5bdcc..a036594ec5b3 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -288,7 +288,10 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
+ 
+ struct cxl_decoder *to_cxl_decoder(struct device *dev);
+ bool is_root_decoder(struct device *dev);
+-struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets);
++struct cxl_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
++					   unsigned int nr_targets);
++struct cxl_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
++					     unsigned int nr_targets);
+ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
+ int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld);
+ 
 -- 
 2.34.1
 
