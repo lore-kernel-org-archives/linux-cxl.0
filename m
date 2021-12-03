@@ -2,153 +2,256 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30323C433F5
-	for <linux-cxl@archiver.kernel.org>; Fri,  3 Dec 2021 21:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 907BDC433EF
+	for <linux-cxl@archiver.kernel.org>; Fri,  3 Dec 2021 22:03:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344098AbhLCVKH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 3 Dec 2021 16:10:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59936 "EHLO
+        id S239210AbhLCWG2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 3 Dec 2021 17:06:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236111AbhLCVKH (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Dec 2021 16:10:07 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DBEBC061751
-        for <linux-cxl@vger.kernel.org>; Fri,  3 Dec 2021 13:06:43 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id fv9-20020a17090b0e8900b001a6a5ab1392so3516489pjb.1
-        for <linux-cxl@vger.kernel.org>; Fri, 03 Dec 2021 13:06:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BQpzrxuS1C20zBM7chBd7cN+Lfuz0ToH/W6JL8/xVXU=;
-        b=M8MSih3OUfPx/BnQbGdeL2n8Y+T86NY9fgLbTypD+vIilYHrGqf1MVmsS+zbv0i6J4
-         +Jtodh7R+FwpAQUqt7wwXHG51OAIwjMUafpsnLtTEiW6TVK6FgKfXDbQc1PIXuRhU3A4
-         7mhjEOuBd78aR0pf2qlRda2wWVMehOKVFJp5RJJJpGOP+XZfR2sn6Ad/rC33z14yKB1S
-         97d5RIVeQHgHK4NhSA9YdjW5uZkXkSTyLKwI3c15Ga5ffO5ATfdj7HdQ5tA5ij/YMQQU
-         gKXiWONTFqokrwXlZIM2UaljVtbmV4VMFNyPmO2D9eN9uHbSwB1XwQjWO0dNPG8q2Znc
-         Wjaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BQpzrxuS1C20zBM7chBd7cN+Lfuz0ToH/W6JL8/xVXU=;
-        b=S3L1hzsvsBhCzDDwoQLg8D9v6+XmJRmm7/SBaljYj+CynujyuY3lNZ74L/ltg1Up7k
-         UlMUXpx+M0tVjvImcAItkqBSGt9OdZcDy8nIcy8PAuZh3bveb3NbjNi8m7uHWYkyLzEB
-         XgDAlYhF5UvrDFQOqIajL5WQCHQ4RQg+yQoJN3OuQOLDvQQDTID/vgnYRd/5z1DXBReU
-         lQL/3lvULtOHCvk5hjtcEhcwWMLeJg3HN/3Lx8pFOA8W1X9RHr/7IfwL/PcYXDaOiZph
-         KteTqLnn8e8XdgPnCCeh8prZXd/Y9TuMpYw4Uy4IG4cxBl8ttbpAaf5n4GpP2+QM/FJQ
-         72DA==
-X-Gm-Message-State: AOAM531oBUTwCS9v/NwLmtlt5AVmDmawqQZT2+bElz7s1phDLR4tLxfH
-        /+KvJTACnQ5VvvVn+v6LZL9u64NhD5z0vwzgONR0lQ==
-X-Google-Smtp-Source: ABdhPJxdpQWaA02LM0ZZ8qZv8106leQXE+gttnb+9AOuJearOz+VgO5pMlFCaEb4zyCY6nHGSh0kXsVjA4r7lXmE0+w=
-X-Received: by 2002:a17:902:7fcd:b0:142:8ab3:ec0e with SMTP id
- t13-20020a1709027fcd00b001428ab3ec0emr25212527plb.4.1638565602654; Fri, 03
- Dec 2021 13:06:42 -0800 (PST)
-MIME-Version: 1.0
-References: <20211202043750.3501494-1-ben.widawsky@intel.com>
- <20211202043750.3501494-5-ben.widawsky@intel.com> <CAPcyv4gQGeeBvPHwLC3h0mE75+dZ=5SujRY1+vZuUyCjvjUA6w@mail.gmail.com>
-In-Reply-To: <CAPcyv4gQGeeBvPHwLC3h0mE75+dZ=5SujRY1+vZuUyCjvjUA6w@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 3 Dec 2021 13:06:34 -0800
-Message-ID: <CAPcyv4iWS++obGT96HT0CGHjffEcufwg0iNSeja3PDRSEZoZow@mail.gmail.com>
-Subject: Re: [PATCH v2 04/14] cxl: Introduce topology host registration
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        with ESMTP id S1383281AbhLCWG2 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Dec 2021 17:06:28 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E822C061751;
+        Fri,  3 Dec 2021 14:03:03 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 28F2462D29;
+        Fri,  3 Dec 2021 22:03:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A6D4C53FAD;
+        Fri,  3 Dec 2021 22:03:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638568982;
+        bh=H2BgCLm3pz5R138ik5NPBfu1aihTaYxp7vBcb9Mo9nk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=RdYJgu/ErPChHGjPfvCbdY7dwR3GK6AEP77aIC0clQnnq7/XqRsbWVgxyf31MPgO0
+         OyPrzQYs7AYzE5BMhSWT2gO5xzgMBjrod7t8VZ6zH2N4ETnzZyVzMD0NuDAuEDmMp/
+         hAenwW7aNShzUlhlHJx+1pbF0fpuaOrYVMTvmVcf7EO27fVCTmQf0b39pc46dJ4paA
+         e/kkAGPJJLq96+VTnhMNFYoPFYTUfXrKFgB9GbPXsYI0w8f4xR2MQZROh+tjl8/ASN
+         tR3MvFNKkRRbqbnTUxmZD1SPmsi8Uh41Dj5fxonmNJo4wxFwuMDFRNdKUbUfpyEjVq
+         AyQ8nFE//YbXg==
+Date:   Fri, 3 Dec 2021 16:03:01 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
         Alison Schofield <alison.schofield@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Stuart Hayes <Stuart.Hayes@dell.com>
+Subject: Re: [PATCH 20/23] cxl/port: Introduce a port driver
+Message-ID: <20211203220301.GA3021152@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4jrm+9UmV=6UHpBDkDd+5TTFvWo-jqDKQ6JZyaygmeB+g@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Dec 1, 2021 at 9:58 PM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Wed, Dec 1, 2021 at 8:40 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Thu, Dec 02, 2021 at 05:38:17PM -0800, Dan Williams wrote:
+> [ add Stuart for NPEM feedback ]
+> 
+> On Thu, Dec 2, 2021 at 1:24 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Tue, Nov 23, 2021 at 11:17:55PM -0800, Dan Williams wrote:
+> > > On Tue, Nov 23, 2021 at 10:33 PM Christoph Hellwig <hch@lst.de> wrote:
+> > > > On Tue, Nov 23, 2021 at 04:40:06PM -0800, Dan Williams wrote:
+> > > > > Let me ask a clarifying question coming from the other direction that
+> > > > > resulted in the creation of the auxiliary bus architecture. Some
+> > > > > background. RDMA is a protocol that may run on top of Ethernet.
+> > > >
+> > > > No, RDMA is a concept.  Linux supports 2 and a half RDMA protocols
+> > > > that run over ethernet (RoCE v1 and v2 and iWarp).
+> > >
+> > > Yes, I was being too coarse, point taken. However, I don't think that
+> > > changes the observation that multiple vendors are using aux bus to
+> > > share a feature driver across multiple base Ethernet drivers.
+> > >
+> > > > > Consider the case where you have multiple generations of Ethernet
+> > > > > adapter devices, but they all support common RDMA functionality. You
+> > > > > only have the one PCI device to attach a unique Ethernet driver. What
+> > > > > is an idiomatic way to deploy a module that automatically loads and
+> > > > > attaches to the exported common functionality across adapters that
+> > > > > otherwise have a unique native driver for the hardware device?
+> > > >
+> > > > The whole aux bus drama is mostly because the intel design for these
+> > > > is really fucked up.  All the sane HCAs do not use this model.  All
+> > > > this attchment crap really should not be there.
+> > >
+> > > I am missing the counter proposal in both Bjorn's and your distaste
+> > > for aux bus and PCIe portdrv?
 > >
-> > The description of the CXL topology will be conveyed by a platform
-> > specific entity that is expected to be a singleton. For ACPI based
-> > systems, this is ACPI0017. This cxl_topology_host is needed as a
-> > constraint for when CXL.mem connectivity can be verified from root to
-> > endpoint. Given that endpoints can attach at any point in time relative
-> > to when the root arrives CXL.mem connectivity needs to be revalidated at
-> > every topology host arrival / depart event.
+> > For the case of PCIe portdrv, the functionality involved is Power
+> > Management Events (PME), Advanced Error Reporting (AER), PCIe native
+> > hotplug, Downstream Port Containment (DPC), and Bandwidth
+> > Notifications.
 > >
-> > cxl_test makes for an interesting case. cxl_test creates an alternate
-> > universe where there are possibly two root topology hosts (a real
-> > ACPI0017/CEDT, and a fake ACPI0017/CEDT). For this to work in the
-> > future, cxl_acpi (or some future platform host driver) will need to be
-> > unloaded first.
+> > Currently each has a separate "port service driver" with .probe(),
+> > .remove(), .suspend(), .resume(), etc.
 > >
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > ---
-> > Changes since v1
-> > - Commit message overhaul (Dan)
->
-> More critically this fixes an uninitialized variable bug in the call
-> to create the root port.
+> > The services share interrupt vectors.  It's quite complicated to set
+> > them up, and it has to be done in the portdrv, not in the individual
+> > drivers.
+> >
+> > They also share power state (D0, D3hot, etc).
+> >
+> > In my mind these are not separate devices from the underlying PCI
+> > device, and I don't think splitting the support into "service drivers"
+> > made things better.  I think it would be simpler if these were just
+> > added to pci_init_capabilities() like other optional pieces of PCI
+> > functionality.
+> >
+> > Sysfs looks like this:
+> >
+> >   /sys/devices/pci0000:00/0000:00:1c.0/                       # Root Port
+> >   /sys/devices/pci0000:00/0000:00:1c.0/0000:00:1c.0:pcie002/  # AER "device"
+> >   /sys/devices/pci0000:00/0000:00:1c.0/0000:00:1c.0:pcie010/  # BW notif
+> >
+> >   /sys/bus/pci/devices/0000:00:1c.0 -> ../../../devices/pci0000:00/0000:00:1c.0/
+> >   /sys/bus/pci_express/devices/0000:00:1c.0:pcie002 -> ../../../devices/pci0000:00/0000:00:1c.0/0000:00:1c.0:pcie002/
+> >
+> > The "pcie002" names (hex for PCIE_PORT_SERVICE_AER, etc.) are
+> > unintelligible.  I don't know why we have a separate
+> > /sys/bus/pci_express hierarchy.
+> >
+> > IIUC, CXL devices will be enumerated by the usual PCI enumeration, so
+> > there will be a struct pci_dev for them, and they will appear under
+> > /sys/devices/pci*/.
+> >
+> > They will have the usual PCI Power Management, MSI, AER, DPC, and
+> > similar Capabilites, so the PCI core will manage them.
+> >
+> > CXL devices have lots of fancy additional features.  Does that merit
+> > making a separate struct device and a separate sysfs hierarchy for
+> > them?  I don't know.
+> 
+> Thank you, this framing really helps.
+> 
+> So, if I look at this through the lens of the "can this just be
+> handled by pci_init_capabilities()?" guardband, where the capability
+> is device-scoped and shares resources that a driver for the same
+> device would use, then yes, PCIe port services do not merit a separate
+> bus.
+> 
+> CXL memory expansion is distinctly not in that category. CXL is a
+> distinct specification (i.e. unlike PCIe port services which are
+> literally in the PCI Sig purview), distinct transport/data layer
+> (effectively a different physical connection on the wire), and is
+> composable in ways that PCIe is not.
+> 
+> For example, if you trigger FLR on a PCI device you would expect the
+> entirety of pci_init_capabilities() needs to be saved / restored, CXL
+> state is not affected by FLR.
+> 
+> The separate link layer for CXL means that mere device visibility is
+> not sufficient to determine CXL operation. Whereas with a PCI driver
+> if you can see the device you know that the device is ready to be the
+> target of config, io, and mmio cycles, 
 
-Oh wait, I misread it didn't fix it, see below...
+Not strictly true.  A PCI device must respond to config transactions
+within a short time after reset, but it does not respond to IO or MEM
+transactions until a driver sets PCI_COMMAND_IO or PCI_COMMAND_MEMORY.
 
->
-> So this is missing:
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
->
-> However, I have line of sight to fixup all the get_topology_host users
-> to just walk the device tree, so I think we can get by without this
-> facility for now.
->
-> > ---
-> >  drivers/cxl/acpi.c     | 18 ++++++++++---
-> >  drivers/cxl/core/bus.c | 57 +++++++++++++++++++++++++++++++++++++++---
-> >  drivers/cxl/cxl.h      |  5 +++-
-> >  3 files changed, 73 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> > index 9f88dec03b33..7bcb54e9fe00 100644
-> > --- a/drivers/cxl/acpi.c
-> > +++ b/drivers/cxl/acpi.c
-> > @@ -225,8 +225,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
-> >                 return 0;
-> >         }
-> >
-> > -       port = devm_cxl_add_port(host, match, dport->component_reg_phys,
-> > -                                root_port);
-> > +       port = devm_cxl_add_port(match, dport->component_reg_phys, root_port);
-> >         if (IS_ERR(port))
-> >                 return PTR_ERR(port);
-> >         dev_dbg(host, "%s: add: %s\n", dev_name(match), dev_name(&port->dev));
-> > @@ -377,6 +376,11 @@ static int add_root_nvdimm_bridge(struct device *match, void *data)
-> >         return 1;
-> >  }
-> >
-> > +static void clear_topology_host(void *data)
-> > +{
-> > +       cxl_unregister_topology_host(data);
-> > +}
-> > +
-> >  static int cxl_acpi_probe(struct platform_device *pdev)
-> >  {
-> >         int rc;
-> > @@ -385,7 +389,15 @@ static int cxl_acpi_probe(struct platform_device *pdev)
-> >         struct acpi_device *adev = ACPI_COMPANION(host);
-> >         struct cxl_cfmws_context ctx;
-> >
-> > -       root_port = devm_cxl_add_port(host, host, CXL_RESOURCE_NONE, NULL);
-> > +       rc = cxl_register_topology_host(host);
-> > +       if (rc)
-> > +               return rc;
-> > +
-> > +       rc = devm_add_action_or_reset(host, clear_topology_host, host);
-> > +       if (rc)
-> > +               return rc;
-> > +
-> > +       root_port = devm_cxl_add_port(host, CXL_RESOURCE_NONE, root_port);
+> ... CXL.mem operation may not be available when the device is
+> visible to enumeration.
 
-@root_port can't be an argument and a result to devm_cxl_add_port.
+> The composability of CXL places the highest demand for an independent
+> 'struct bus_type' and registering CXL devices for their corresponding
+> PCIe devices. The bus is a rendezvous for all the moving pieces needed
+> to validate and provision a CXL memory region that may span multiple
+> endpoints, switches and host bridges. An action like reprogramming
+> memory decode of an endpoint needs to be coordinated across the entire
+> topology.
 
-I have this fixed up in my reworks.
+I guess software uses the CXL DVSEC to distinguish a CXL device from a
+PCIe device, at least for 00.0.  Not sure about non-Dev 0 Func 0
+devices; maybe this implies other functions in the same device are
+part of the same CXL device?
+
+A CXL device may comprise several PCIe devices, and I think they may
+have non-CXL Capabilities, so I assume you need a struct pci_dev for
+each PCIe device?
+
+Looks like a single CXL DVSEC controls the entire CXL device
+(including several PCIe devices), so I assume you want some kind of
+struct cxl_dev to represent that aggregation?
+
+> The fact that the PCI core remains blissfully unaware of all these
+> interdependencies is a feature because CXL is effectively a super-set
+> of PCIe for fast-path CXL.mem operation, even though it is derivative
+> for enumeration and slow-path manageability.
+
+I don't know how blissfully unaware PCI can be.  Can a user remove a
+PCIe device that's part of a CXL device via sysfs?  Is the PCIe device
+available for drivers to claim?  Do we need coordination between
+cxl_driver_register() and pci_register_driver()?  Does CXL impose new
+constraints on PCI power management?
+
+> So I hope you see CXL's need to create some PCIe-symbiotic objects in
+> order to compose CXL objects (like interleaved memory regions) that
+> have no PCIe analog.
+
+> > Hotplug is more central to PCI than NPEM is, but NPEM is a little bit
+> > like PCIe native hotplug in concept: hotplug has a few registers that
+> > control downstream indicators, interlock, and power controller; NPEM
+> > has registers that control downstream indicators.
+> >
+> > Both are prescribed by the PCIe spec and presumably designed to work
+> > alongside the usual device-specific drivers for bridges, SSDs, etc.
+> >
+> > I would at least explore the idea of doing common support by
+> > integrating NPEM into the PCI core.  There would have to be some hook
+> > for the enclosure-specific bits, but I think it's fair for the details
+> > of sending commands and polling for command completed to be part of
+> > the PCI core.
+> 
+> The problem with NPEM compared to hotplug LED signaling is that it has
+> the strange property that an NPEM higher in the topology might
+> override one lower in the topology. This is to support things like
+> NVME enclosures where the NVME device itself may have an NPEM
+> instance, but that instance is of course not suitable for signaling
+> that the device is not present.
+
+I would envision the PCI core providing only a bare-bones "send this
+command and wait for it to complete" sort of interface.  Everything
+else, including deciding which device to use, would go elsewhere.
+
+> So, instead the system may be designed to have an NPEM in the
+> upstream switch port and disable the NPEM instances in the device.
+> Platform firmware decides which NPEM is in use.
+
+Since you didn't mention a firmware interface to communicate which
+NPEM is in use, I assume firmware does this by preventing other
+devices from advertising NPEM support?
+
+> It also has the "fun" property of additionally being overridden by ACPI.
+> ...
+> One of the nice properties of the auxiliary organization is well
+> defined module boundaries. Will NPEM in the PCI core now force
+> CONFIG_ENCLOSURE_SERVICES to be built-in? That seems an unwanted side
+> effect to me.
+
+If the PCI core provides only the mechanism, and the smarts of NPEM
+are in something analogous to drivers/scsi/ses.c, I don't think it
+would force CONFIG_ENCLOSURE_SERVICES to be built-in.
+
+> > DOE *is* specified by PCIe, at least in terms of the data transfer
+> > protocol (interrupt usage, read/write mailbox, etc).  I think that,
+> > and the fact that it's not specific to CXL, means we need some kind of
+> > PCI core interface to do the transfers.
+> 
+> DOE transfer code belongs in drivers/pci/ period, but does it really
+> need to be in drivers/pci/built-in.a for everyone regardless of
+> whether it is being used or not?
+
+I think my opinion would depend on how small the DOE transfer code
+could be made and how much it would complicate things to make it a
+module.  And also how we could enforce whatever mutual exclusion we
+need to make it safe.
+
+Bjorn
