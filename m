@@ -2,133 +2,153 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 735F2C433EF
-	for <linux-cxl@archiver.kernel.org>; Fri,  3 Dec 2021 20:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30323C433F5
+	for <linux-cxl@archiver.kernel.org>; Fri,  3 Dec 2021 21:06:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1383122AbhLCUvx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 3 Dec 2021 15:51:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55852 "EHLO
+        id S1344098AbhLCVKH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 3 Dec 2021 16:10:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1383120AbhLCUvv (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Dec 2021 15:51:51 -0500
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26C14C061751
-        for <linux-cxl@vger.kernel.org>; Fri,  3 Dec 2021 12:48:27 -0800 (PST)
-Received: by mail-pj1-x1032.google.com with SMTP id k6-20020a17090a7f0600b001ad9d73b20bso1145759pjl.3
-        for <linux-cxl@vger.kernel.org>; Fri, 03 Dec 2021 12:48:27 -0800 (PST)
+        with ESMTP id S236111AbhLCVKH (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Dec 2021 16:10:07 -0500
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DBEBC061751
+        for <linux-cxl@vger.kernel.org>; Fri,  3 Dec 2021 13:06:43 -0800 (PST)
+Received: by mail-pj1-x102f.google.com with SMTP id fv9-20020a17090b0e8900b001a6a5ab1392so3516489pjb.1
+        for <linux-cxl@vger.kernel.org>; Fri, 03 Dec 2021 13:06:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DNT6B9whYmsy184prYD5kMbG4i53/KUJovkWhs7XTLE=;
-        b=oIwzaq1zkIWYc/kL//qpxt4ey4dOwJ2Y7PuiAyEegaIW5FA8BPgGDRfu4gtimgVLAe
-         q4V0s2sNEARpebMbpJa4JYJ3aooLUgLbr678Su5GOkyAkwwjXtRLOo1yLkqJoN8Gd6UP
-         mWlUD02j5GW69PIT5jcU9AU3s/e1ScysUr6nrr7J15RL6D7/Uti3EaXNEMDzdT4qMbSd
-         5kwX2cRgQjOFIZuTyjS51ac9HlF9W/Q2cn2IAF43tEbDo93uLDRDiCFTUyjodWL+idvX
-         LYjQNp06YACwbRPTV0p0Z7Pz4IRjLrZq6lnNzIC8QgbMPA6bkfKnI7e7n5hWKpmJ5cN9
-         9JUQ==
+        bh=BQpzrxuS1C20zBM7chBd7cN+Lfuz0ToH/W6JL8/xVXU=;
+        b=M8MSih3OUfPx/BnQbGdeL2n8Y+T86NY9fgLbTypD+vIilYHrGqf1MVmsS+zbv0i6J4
+         +Jtodh7R+FwpAQUqt7wwXHG51OAIwjMUafpsnLtTEiW6TVK6FgKfXDbQc1PIXuRhU3A4
+         7mhjEOuBd78aR0pf2qlRda2wWVMehOKVFJp5RJJJpGOP+XZfR2sn6Ad/rC33z14yKB1S
+         97d5RIVeQHgHK4NhSA9YdjW5uZkXkSTyLKwI3c15Ga5ffO5ATfdj7HdQ5tA5ij/YMQQU
+         gKXiWONTFqokrwXlZIM2UaljVtbmV4VMFNyPmO2D9eN9uHbSwB1XwQjWO0dNPG8q2Znc
+         Wjaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DNT6B9whYmsy184prYD5kMbG4i53/KUJovkWhs7XTLE=;
-        b=qWjq5KUi9coDD7SvJBMMqdjK95+LsUo5W4MmwVplvHgWKj3fy1O9al8MmQRxQJ2Z6z
-         jujW7SxLG9WYe17LCyWrC0mdwHeRcuAoiNDiAp1p9Iv2KB4GWySuHMif6titDjvlMaUb
-         wopan/H0g0aXFd/cTBWGYT/c/VAFkIwDzc1wZr+wtrKYYXjGQHjk4DjGpYOlpHM+A9v1
-         M32qUaDmo5BKdZkYjYDCVVMbXAsrKBB7p0k+po6zNct6rONYFoCPQL7P48kAjqPzIAaB
-         ehb/7ce+0qS9pDcIH1sN2jpd1+SN1mxxIXCyVaZz5iPHU4TjVEIFeqJ4UEbST9SOmBxu
-         wZsA==
-X-Gm-Message-State: AOAM531Pr9OCOXPPZqn5m4DkuyKol6NSsvRMkoaKKmizVu7FdP0W8cx6
-        pNn7V7u7s5IpD9RCp12a4ha6vEvc7T+fEmnhjvZijw==
-X-Google-Smtp-Source: ABdhPJxuv6hWNGcnuJgUHi3Fal3yKooDkqABsEv7McGCe709JL8ABuOX3ii0jhRBPgDZzLS5Gn9wrtGIukW6YDChSCs=
-X-Received: by 2002:a17:90b:1e07:: with SMTP id pg7mr16665852pjb.93.1638564506684;
- Fri, 03 Dec 2021 12:48:26 -0800 (PST)
+        bh=BQpzrxuS1C20zBM7chBd7cN+Lfuz0ToH/W6JL8/xVXU=;
+        b=S3L1hzsvsBhCzDDwoQLg8D9v6+XmJRmm7/SBaljYj+CynujyuY3lNZ74L/ltg1Up7k
+         UlMUXpx+M0tVjvImcAItkqBSGt9OdZcDy8nIcy8PAuZh3bveb3NbjNi8m7uHWYkyLzEB
+         XgDAlYhF5UvrDFQOqIajL5WQCHQ4RQg+yQoJN3OuQOLDvQQDTID/vgnYRd/5z1DXBReU
+         lQL/3lvULtOHCvk5hjtcEhcwWMLeJg3HN/3Lx8pFOA8W1X9RHr/7IfwL/PcYXDaOiZph
+         KteTqLnn8e8XdgPnCCeh8prZXd/Y9TuMpYw4Uy4IG4cxBl8ttbpAaf5n4GpP2+QM/FJQ
+         72DA==
+X-Gm-Message-State: AOAM531oBUTwCS9v/NwLmtlt5AVmDmawqQZT2+bElz7s1phDLR4tLxfH
+        /+KvJTACnQ5VvvVn+v6LZL9u64NhD5z0vwzgONR0lQ==
+X-Google-Smtp-Source: ABdhPJxdpQWaA02LM0ZZ8qZv8106leQXE+gttnb+9AOuJearOz+VgO5pMlFCaEb4zyCY6nHGSh0kXsVjA4r7lXmE0+w=
+X-Received: by 2002:a17:902:7fcd:b0:142:8ab3:ec0e with SMTP id
+ t13-20020a1709027fcd00b001428ab3ec0emr25212527plb.4.1638565602654; Fri, 03
+ Dec 2021 13:06:42 -0800 (PST)
 MIME-Version: 1.0
-References: <20211105235056.3711389-3-ira.weiny@intel.com> <20211116234826.GA1598332@bhelgaas>
-In-Reply-To: <20211116234826.GA1598332@bhelgaas>
+References: <20211202043750.3501494-1-ben.widawsky@intel.com>
+ <20211202043750.3501494-5-ben.widawsky@intel.com> <CAPcyv4gQGeeBvPHwLC3h0mE75+dZ=5SujRY1+vZuUyCjvjUA6w@mail.gmail.com>
+In-Reply-To: <CAPcyv4gQGeeBvPHwLC3h0mE75+dZ=5SujRY1+vZuUyCjvjUA6w@mail.gmail.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 3 Dec 2021 12:48:18 -0800
-Message-ID: <CAPcyv4hDTitnqasVwLTV4QPJqW_ykoJc+hRVRm8aLzG4xBxVag@mail.gmail.com>
-Subject: Re: [PATCH 2/5] PCI/DOE: Add Data Object Exchange Aux Driver
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Weiny, Ira" <ira.weiny@intel.com>,
+Date:   Fri, 3 Dec 2021 13:06:34 -0800
+Message-ID: <CAPcyv4iWS++obGT96HT0CGHjffEcufwg0iNSeja3PDRSEZoZow@mail.gmail.com>
+Subject: Re: [PATCH v2 04/14] cxl: Introduce topology host registration
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-cxl@vger.kernel.org,
-        Linux PCI <linux-pci@vger.kernel.org>
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Nov 16, 2021 at 3:48 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Wed, Dec 1, 2021 at 9:58 PM Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> On Fri, Nov 05, 2021 at 04:50:53PM -0700, ira.weiny@intel.com wrote:
-> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> On Wed, Dec 1, 2021 at 8:40 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
 > >
-> > Introduced in a PCI ECN [1], DOE provides a config space based mailbox
-> > with standard protocol discovery.  Each mailbox is accessed through a
-> > DOE Extended Capability.
+> > The description of the CXL topology will be conveyed by a platform
+> > specific entity that is expected to be a singleton. For ACPI based
+> > systems, this is ACPI0017. This cxl_topology_host is needed as a
+> > constraint for when CXL.mem connectivity can be verified from root to
+> > endpoint. Given that endpoints can attach at any point in time relative
+> > to when the root arrives CXL.mem connectivity needs to be revalidated at
+> > every topology host arrival / depart event.
 > >
-> > Define an auxiliary device driver which control DOE auxiliary devices
-> > registered on the auxiliary bus.
+> > cxl_test makes for an interesting case. cxl_test creates an alternate
+> > universe where there are possibly two root topology hosts (a real
+> > ACPI0017/CEDT, and a fake ACPI0017/CEDT). For this to work in the
+> > future, cxl_acpi (or some future platform host driver) will need to be
+> > unloaded first.
+> >
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > ---
+> > Changes since v1
+> > - Commit message overhaul (Dan)
 >
-> What do we gain by making this an auxiliary driver?
+> More critically this fixes an uninitialized variable bug in the call
+> to create the root port.
+
+Oh wait, I misread it didn't fix it, see below...
+
 >
-> This doesn't really feel like a "driver," and apparently it used to be
-> a library.  I'd like to see the rationale and benefits of the driver
-> approach (in the eventual commit log as well as the current email
-> thread).
+> So this is missing:
 >
-
-I asked Ira to use the auxiliary bus for DOE primarily for the ABI it
-offers for userspace to manage kernel vs userspace access to a device.
-CONFIG_IO_STRICT_DEVMEM set the precedent that userspace can not
-clobber mmio space that is actively claimed by a kernel driver. I
-submit that DOE merits the same protection for DOE instances that the
-kernel consumes.
-
-Unlike other PCI configuration registers that root userspace has no
-reason to touch unless it wants to actively break things, DOE is a
-mechanism that root userspace may need to access directly in some
-cases. There are a few examples that come to mind.
-
-CXL Compliance Testing (see CXL 2.0 14.16.4 Compliance Mode DOE)
-offers a mechanism to set different test modes for a DOE device. The
-kernel has no reason to ever use that interface, and it has strong
-reasons to want to block access to it in production. However, hardware
-vendors also use debug Linux builds for hardware bringup. So I would
-like to be able to say that the mechanism to gain access to the
-compliance DOE is to detach the aux DOE driver from the right aux DOE
-device. Could we build a custom way to do the same for the DOE
-library, sure, but why re-invent the wheel when udev and the driver
-model can handle this type of policy question already?
-
-Another use case is SPDM where an agent can establish a secure message
-passing channel to a device, or paravirtualized device to exchange
-protected messages with the hypervisor. My expectation is that in
-addition to the kernel establishing SPDM sessions for PCI IDE and
-CXL.cachemem IDE (link Integrity and Data Encryption) there will be
-use cases for root userspace to establish their own SPDM session. In
-that scenario as well the kernel can be told to give up control of a
-specific DOE instance by detaching the aux device for its driver, but
-otherwise the kernel driver can be assured that userspace will not
-clobber its communications with its own attempts to talk over the DOE.
-
-Lastly, and perhaps this is minor, the PCI core is a built-in object
-and aux-bus allows for breaking out device library functionality like
-this into a dedicated module. But yes, that's not a good reason unto
-itself because you could "auxify" almost anything past the point of
-reason just to get more modules.
-
-> > A DOE mailbox is allowed to support any number of protocols while some
-> > DOE protocol specifications apply additional restrictions.
+> Reported-by: kernel test robot <lkp@intel.com>
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 >
-> This sounds something like a fancy version of VPD, and VPD has been a
-> huge headache.  I hope DOE avoids that ;)
+> However, I have line of sight to fixup all the get_topology_host users
+> to just walk the device tree, so I think we can get by without this
+> facility for now.
+>
+> > ---
+> >  drivers/cxl/acpi.c     | 18 ++++++++++---
+> >  drivers/cxl/core/bus.c | 57 +++++++++++++++++++++++++++++++++++++++---
+> >  drivers/cxl/cxl.h      |  5 +++-
+> >  3 files changed, 73 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > index 9f88dec03b33..7bcb54e9fe00 100644
+> > --- a/drivers/cxl/acpi.c
+> > +++ b/drivers/cxl/acpi.c
+> > @@ -225,8 +225,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+> >                 return 0;
+> >         }
+> >
+> > -       port = devm_cxl_add_port(host, match, dport->component_reg_phys,
+> > -                                root_port);
+> > +       port = devm_cxl_add_port(match, dport->component_reg_phys, root_port);
+> >         if (IS_ERR(port))
+> >                 return PTR_ERR(port);
+> >         dev_dbg(host, "%s: add: %s\n", dev_name(match), dev_name(&port->dev));
+> > @@ -377,6 +376,11 @@ static int add_root_nvdimm_bridge(struct device *match, void *data)
+> >         return 1;
+> >  }
+> >
+> > +static void clear_topology_host(void *data)
+> > +{
+> > +       cxl_unregister_topology_host(data);
+> > +}
+> > +
+> >  static int cxl_acpi_probe(struct platform_device *pdev)
+> >  {
+> >         int rc;
+> > @@ -385,7 +389,15 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+> >         struct acpi_device *adev = ACPI_COMPANION(host);
+> >         struct cxl_cfmws_context ctx;
+> >
+> > -       root_port = devm_cxl_add_port(host, host, CXL_RESOURCE_NONE, NULL);
+> > +       rc = cxl_register_topology_host(host);
+> > +       if (rc)
+> > +               return rc;
+> > +
+> > +       rc = devm_add_action_or_reset(host, clear_topology_host, host);
+> > +       if (rc)
+> > +               return rc;
+> > +
+> > +       root_port = devm_cxl_add_port(host, CXL_RESOURCE_NONE, root_port);
 
-Please say a bit more, I think DOE is a rather large headache as
-evidenced by us fine folks grappling with how to architect the Linux
-enabling.
+@root_port can't be an argument and a result to devm_cxl_add_port.
+
+I have this fixed up in my reworks.
