@@ -2,37 +2,37 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4828EC433EF
-	for <linux-cxl@archiver.kernel.org>; Mon,  3 Jan 2022 20:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0297FC433EF
+	for <linux-cxl@archiver.kernel.org>; Mon,  3 Jan 2022 20:11:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229586AbiACULb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 3 Jan 2022 15:11:31 -0500
-Received: from mga12.intel.com ([192.55.52.136]:35284 "EHLO mga12.intel.com"
+        id S230161AbiACULe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 3 Jan 2022 15:11:34 -0500
+Received: from mga12.intel.com ([192.55.52.136]:35292 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229472AbiACULb (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 3 Jan 2022 15:11:31 -0500
+        id S229617AbiACULe (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 3 Jan 2022 15:11:34 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641240691; x=1672776691;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=8sDi/Kimq1iHRQaPdk6q5S1OO9Z52op8jc+WHkJVM30=;
-  b=DKu3Ve0+2Cue/2Pd8SYB/CD+JEBBzA+YMMDhyB2H0p1lIozV3v2MRcBr
-   aYguFVSxM3m6KKhQVHDpAfmNmtawfEP/APRxphgWq1U5poOh9UG2QKfD2
-   8BwAlcMbvcfVK0AsogpOqxZPYJAhxRwMEZKpcpiW1rbUsMwkX6poOHho0
-   gB8nmtVbWyGv2MLGjesPN8p29K7//Hna0RxU/RY3ZAXLuKKe7XS8APuql
-   lHo/ix437a+B7CR9eUJuhsda81a0+wLgcWR1M0h6N06akhV6YLyrRKeNJ
-   ov9d4lv7DI68PIpvb+ce5BGxT2rdD3UjOoOKjTeh0vdxBl8bz2KEGTTBA
+  t=1641240694; x=1672776694;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=a4ist+wRtz5MUDFftoH8bUzPjP4x2s9lbL9nKwk7uk8=;
+  b=m8CcMS3C5iAAOKGUQJQ2J951lXp8U1+6P1wy+QeJuTK8MuJyaOBPYj6i
+   jYD+MduCdg5PQjVotHxKgtG7j5es3LS0OEQBDuYu8CAG5cVTuI7NsDD27
+   tP08l8p7ycjiDoD2pBDUNg74joMRQWLvXe+EV/uAs0yW7FJvpknCsXPAT
+   C1aRepF6/a1E6WMb+BAq6srqKn6SThAAsd+9KZYI4gb3GxlGkIWjM8qPz
+   PlRxH/Dj1vsFuS4dQ88r1xgo+4QR+9/x+nG8eBJmFIgecUdwWe9J5I5Al
+   LiQT3EyiKFSSArN/RRj5gRn5Z8HYk45TLQM93OsvN52ZMY3vVXkDVdL/U
    w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10216"; a="222105768"
+X-IronPort-AV: E=McAfee;i="6200,9189,10216"; a="222105775"
 X-IronPort-AV: E=Sophos;i="5.88,258,1635231600"; 
-   d="scan'208";a="222105768"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2022 12:11:30 -0800
+   d="scan'208";a="222105775"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2022 12:11:33 -0800
 X-IronPort-AV: E=Sophos;i="5.88,258,1635231600"; 
-   d="scan'208";a="512201586"
+   d="scan'208";a="525709392"
 Received: from alison-desk.jf.intel.com (HELO localhost) ([10.54.74.41])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2022 12:11:30 -0800
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2022 12:11:33 -0800
 From:   alison.schofield@intel.com
 To:     Ben Widawsky <ben.widawsky@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
@@ -40,10 +40,12 @@ To:     Ben Widawsky <ben.widawsky@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
 Cc:     Alison Schofield <alison.schofield@intel.com>,
         nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Subject: [ndctl PATCH 0/7] Add partitioning support for CXL memdevs
-Date:   Mon,  3 Jan 2022 12:16:11 -0800
-Message-Id: <cover.1641233076.git.alison.schofield@intel.com>
+Subject: [ndctl PATCH 2/7] libcxl: add accessors for capacity fields of the IDENTIFY command
+Date:   Mon,  3 Jan 2022 12:16:13 -0800
+Message-Id: <577012d59f5b6b9754d2ce1147585ce5f91a3108.1641233076.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1641233076.git.alison.schofield@intel.com>
+References: <cover.1641233076.git.alison.schofield@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -52,88 +54,85 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-To support changing partitions on CXL memdevs, first provide access
-to device partitioning info. The first 4 patches add accessors to all
-the partition info a CXL command parser needs in order to validate
-the command. This info is added to cxl list to assist the user in
-creating valid partition requests.
+Add accessors to retrieve total capacity, volatile only capacity,
+and persistent only capacity from the IDENTIFY mailbox command.
+These values are useful when partitioning the device.
 
-# cxl list -MP
-[
-  {
-    "memdev":"mem0",
-    "pmem_size":0,
-    "ram_size":273535729664,
-    "partition":{
-      "active_volatile_capacity":273535729664,
-      "active_persistent_capacity":0,
-      "next_volatile_capacity":268435456,
-      "next_persistent_capacity":273267294208,
-      "total_capacity":273535729664,
-      "volatile_only_capacity":0,
-      "persistent_only_capacity":0,
-      "partition_alignment":268435456
-    }
-  }
-]
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
+ cxl/libcxl.h       |  3 +++
+ cxl/lib/libcxl.c   | 29 +++++++++++++++++++++++++++++
+ cxl/lib/libcxl.sym |  3 +++
+ 3 files changed, 35 insertions(+)
 
-Next introduce libcxl ioctl() interfaces for the SET_PARTITION_INFO
-mailbox command and the new CXL command. cxl-cli does the constraints
-checking. It does not offer the IMMEDIATE mode option since we do not
-have driver support for that yet.
-
-# cxl set-partition-info
- usage: cxl set-partition-info <mem0> [<mem1>..<memN>] [<options>]
-
-    -v, --verbose         turn on debug
-    -s, --volatile_size <n>
-                          next volatile partition size in bytes
-
-Guessing that a libcxl user could send the SET_PARTITION_INFO mailbox
-command outside of cxl-cli tool, so a kernel patch that disables the
-immediate bit, on the receiving end of the ioctl, follows.
-
-It may be simpler to block the immediate bit in the libcxl API today,
-(and as I write this cover letter I'm wondering just how far this goes
-astray ;)) However, the kernel patch to peek in the payload sets us on
-the path of inspecting set-partition-info mailbox commands in the future,
-when immediate mode support is required.
-
-Testing - so far I've only tested w one memdev in a Simics env. So,
-next will be growing that Simics config, using cxl_test env, and 
-adding a unit test.
-
-Alison Schofield (7):
-  libcxl: add GET_PARTITION_INFO mailbox command and accessors
-  libcxl: add accessors for capacity fields of the IDENTIFY command
-  libcxl: apply CXL_CAPACITY_MULTIPLIER to partition alignment field
-  cxl: add memdev partition information to cxl-list
-  libcxl: add interfaces for SET_PARTITION_INFO mailbox command
-  ndctl, util: use 'unsigned long long' type in OPT_U64 define
-  cxl: add command set-partition-info
-
- Documentation/cxl/cxl-list.txt               |  23 ++++
- Documentation/cxl/cxl-set-partition-info.txt |  27 +++++
- Documentation/cxl/partition-description.txt  |  15 +++
- Documentation/cxl/partition-options.txt      |  19 +++
- Documentation/cxl/Makefile.am                |   3 +-
- cxl/builtin.h                                |   1 +
- cxl/lib/private.h                            |  19 +++
- cxl/libcxl.h                                 |  12 ++
- util/json.h                                  |   1 +
- util/parse-options.h                         |   2 +-
- util/size.h                                  |   1 +
- cxl/cxl.c                                    |   1 +
- cxl/lib/libcxl.c                             | 117 ++++++++++++++++++-
- cxl/lib/libcxl.sym                           |  11 ++
- cxl/list.c                                   |   5 +
- cxl/memdev.c                                 |  89 ++++++++++++++
- util/json.c                                  | 112 ++++++++++++++++++
- 17 files changed, 455 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/cxl/cxl-set-partition-info.txt
- create mode 100644 Documentation/cxl/partition-description.txt
- create mode 100644 Documentation/cxl/partition-options.txt
-
+diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+index 7cf9061..d333b6d 100644
+--- a/cxl/libcxl.h
++++ b/cxl/libcxl.h
+@@ -68,6 +68,9 @@ int cxl_cmd_get_mbox_status(struct cxl_cmd *cmd);
+ int cxl_cmd_get_out_size(struct cxl_cmd *cmd);
+ struct cxl_cmd *cxl_cmd_new_identify(struct cxl_memdev *memdev);
+ int cxl_cmd_identify_get_fw_rev(struct cxl_cmd *cmd, char *fw_rev, int fw_len);
++unsigned long long cxl_cmd_identify_get_total_capacity(struct cxl_cmd *cmd);
++unsigned long long cxl_cmd_identify_get_volatile_only_capacity(struct cxl_cmd *cmd);
++unsigned long long cxl_cmd_identify_get_persistent_only_capacity(struct cxl_cmd *cmd);
+ unsigned long long cxl_cmd_identify_get_partition_align(struct cxl_cmd *cmd);
+ unsigned int cxl_cmd_identify_get_label_size(struct cxl_cmd *cmd);
+ struct cxl_cmd *cxl_cmd_new_get_health_info(struct cxl_memdev *memdev);
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index f3d4022..715d8e4 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -1102,6 +1102,35 @@ CXL_EXPORT unsigned int cxl_cmd_identify_get_label_size(struct cxl_cmd *cmd)
+ 	return le32_to_cpu(id->lsa_size);
+ }
+ 
++#define cmd_identify_get_capacity_field(cmd, field)			\
++do {										\
++	struct cxl_cmd_identify *c =					\
++		(struct cxl_cmd_identify *)cmd->send_cmd->out.payload;\
++	int rc = cxl_cmd_validate_status(cmd,					\
++			CXL_MEM_COMMAND_ID_IDENTIFY);			\
++	if (rc)									\
++		return ULLONG_MAX;							\
++	return le64_to_cpu(c->field) * CXL_CAPACITY_MULTIPLIER;			\
++} while (0)
++
++CXL_EXPORT unsigned long long
++cxl_cmd_identify_get_total_capacity(struct cxl_cmd *cmd)
++{
++	cmd_identify_get_capacity_field(cmd, total_capacity);
++}
++
++CXL_EXPORT unsigned long long
++cxl_cmd_identify_get_volatile_only_capacity(struct cxl_cmd *cmd)
++{
++	cmd_identify_get_capacity_field(cmd, volatile_capacity);
++}
++
++CXL_EXPORT unsigned long long
++cxl_cmd_identify_get_persistent_only_capacity(struct cxl_cmd *cmd)
++{
++	cmd_identify_get_capacity_field(cmd, persistent_capacity);
++}
++
+ CXL_EXPORT struct cxl_cmd *cxl_cmd_new_raw(struct cxl_memdev *memdev,
+ 		int opcode)
+ {
+diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+index 09d6d94..bed6427 100644
+--- a/cxl/lib/libcxl.sym
++++ b/cxl/lib/libcxl.sym
+@@ -31,6 +31,9 @@ global:
+ 	cxl_cmd_get_out_size;
+ 	cxl_cmd_new_identify;
+ 	cxl_cmd_identify_get_fw_rev;
++	cxl_cmd_identify_get_total_capacity;
++	cxl_cmd_identify_get_volatile_only_capacity;
++	cxl_cmd_identify_get_persistent_only_capacity;
+ 	cxl_cmd_identify_get_partition_align;
+ 	cxl_cmd_identify_get_label_size;
+ 	cxl_cmd_new_get_health_info;
 -- 
 2.31.1
 
