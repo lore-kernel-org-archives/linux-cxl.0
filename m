@@ -2,173 +2,115 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E81DBC433F5
-	for <linux-cxl@archiver.kernel.org>; Tue,  4 Jan 2022 23:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4889C433F5
+	for <linux-cxl@archiver.kernel.org>; Tue,  4 Jan 2022 23:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235465AbiADXVh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 4 Jan 2022 18:21:37 -0500
-Received: from mga04.intel.com ([192.55.52.120]:52090 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234277AbiADXVh (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 4 Jan 2022 18:21:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641338497; x=1672874497;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=N4KWko6gNsPH+L2DhocuIpYWZspbvU83Ae1Kuy3EK+0=;
-  b=JQwMocN8saf/yaM8CmcaOy4pnccPjfhSNLTsQr3VdquxERBwI8QAH0ix
-   agYiY4/g18u2grkNutx7gFoxSyiV4BXWYQrOoLntFiuox/P0rTN8ZpED+
-   DvAOTk8E7Dvl0unh6oNAEhELw1+qLjynEsQqxNI2r1xg9J/GzgiPiYQq8
-   NK/zDG7OLb4shspzn/NTLV0SAVEDKWGKksgh8Qa79QPFBP5XK2Ax1/bBg
-   RXLLBISRuTemc2+CJIe4ItAz0+Qf3B2wVpm9H3yd+b6hsqwDb7+7WIC0l
-   kbKISk8+SMViwAR0RE+Ufp9ptHbf1gbPWDG37xBfCMo1lCzgbG8yAuNKW
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="241140071"
-X-IronPort-AV: E=Sophos;i="5.88,262,1635231600"; 
-   d="scan'208";a="241140071"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 15:21:37 -0800
-X-IronPort-AV: E=Sophos;i="5.88,262,1635231600"; 
-   d="scan'208";a="620819633"
-Received: from pchilaka-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.136.197])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 15:21:36 -0800
-Date:   Tue, 4 Jan 2022 15:21:34 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     alison.schofield@intel.com
-Cc:     Dan Williams <dan.j.williams@intel.com>,
+        id S235854AbiADXiH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 4 Jan 2022 18:38:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235850AbiADXiG (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 4 Jan 2022 18:38:06 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C8BAC061761
+        for <linux-cxl@vger.kernel.org>; Tue,  4 Jan 2022 15:38:06 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id r16-20020a17090a0ad000b001b276aa3aabso1455223pje.0
+        for <linux-cxl@vger.kernel.org>; Tue, 04 Jan 2022 15:38:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N+XwbyOAEYwKfSCbcneS+ZFrxFYsfYI1RsdWcciI7aA=;
+        b=yATaJXLTbTXokuqjszBNSMBM+P7RZL3vH7npM3SW0ypWQ47HQoU3vowdmNTs8byTxh
+         hVfGM+3oqACUIiYBoRwTURmDBGQqUWHN+6q8Eh0v8jz/cxBe+hUTC3H8JKVo9KSlNhvi
+         ot0sdZfUBJnNrK5QVK1Cs9rxLCHAC8t4HBqt8lLxOb6qn2apvHYb3lsv3sEiaG8k1G+c
+         qGMQAy/+UU3zCyLBSA7lYF+CC5h5Pfdo7GUlNvxAkoXwfixoQIlSaN0RDZZqFu1KLoQk
+         ED/dMtG2RS0QOD+4MGI8/0fcXltjetrd+9aTVoYHc9sfh1s0DTwVowq/VLThwLczJJ2q
+         whrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N+XwbyOAEYwKfSCbcneS+ZFrxFYsfYI1RsdWcciI7aA=;
+        b=DDCVeRjet07AJ1Apurvm0hvKHNQCXVYEn8kvao3ihnjgzPyzeCO6Z5icQ1tBBG7rTE
+         SikibAyCqf4ci9AHMqPGsi82cnZDBiVd/SpBJNb2O/BeBbxlUAAtTHUCLSU9s2JaXLw0
+         36zRaJW5Xj9+OEXUo0paUjvFm9h58UMIUQdvuePBFkIU5CIDMr4TxV4lI53FsaAhvnhD
+         xoGwy5gROpvs1u8KuiD8vN7fhEyKNalROuTGOBAvuCPZlSgP2CG5furfsg8XzE6Jgthz
+         gKZlc028Lu4h50nalzwdBMgyfSTFb9ZDNLa7c6/EL5ie/+ukeuxJbQr9PT4eICyRk3L/
+         dICQ==
+X-Gm-Message-State: AOAM530+SswlngPOtgjGRDPOw0iVWY2vf9/qkpmkqNIflW9r7syH0Arj
+        fZBHxtGfqjR3bXZ6BBTQd1c6yoPBxAiPsJrtQszEvg==
+X-Google-Smtp-Source: ABdhPJzAKfEMDMq7Zt/iMe6ctmXn6p0S7ob5A0UmYkTRA3k3pLSb8qFkyMh0bDg80CWZOGmMtIXmGQHSM7fUQf5OHqs=
+X-Received: by 2002:a17:90a:7101:: with SMTP id h1mr848480pjk.93.1641339485712;
+ Tue, 04 Jan 2022 15:38:05 -0800 (PST)
+MIME-Version: 1.0
+References: <20220104232114.789948-1-alison.schofield@intel.com>
+In-Reply-To: <20220104232114.789948-1-alison.schofield@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 4 Jan 2022 15:37:55 -0800
+Message-ID: <CAPcyv4jWQSA9=TRPGcKG2qfu13JqNjPvnX_pbzMUqFa2fLZTfw@mail.gmail.com>
+Subject: Re: [PATCH] cxl/mbox: Use __le32 in get,set_lsa mailbox structures
+To:     "Schofield, Alison" <alison.schofield@intel.com>
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] cxl/mbox: Do not allow immediate mode in
- SET_PARTITION_INFO
-Message-ID: <20220104232134.y7j5rs4ljizkl462@intel.com>
-References: <20220103202100.784194-1-alison.schofield@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220103202100.784194-1-alison.schofield@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 22-01-03 12:21:00, alison.schofield@intel.com wrote:
+On Tue, Jan 4, 2022 at 3:16 PM <alison.schofield@intel.com> wrote:
+>
 > From: Alison Schofield <alison.schofield@intel.com>
-> 
-> User space may send the SET_PARTITION_INFO mailbox command using
-> the IOCTL interface. Inspect the input payload and fail if the
-> immediate flag is set.
-> 
-> This is the first instance of the driver inspecting an input payload
-> from user space. Assume there will be more such cases and implement
-> with an extensible helper.
-
-Not sure if it's useful, but this was implemented at some point:
-https://lore.kernel.org/linux-cxl/20210210000259.635748-8-ben.widawsky@intel.com/
-
-> 
-> Note: At this time immediate partitioning is not allowed because the
-> kernel will need to react immediately to this configuration change
-> and that support is not yet implemented.
-> 
+>
+> CXL specification defines these as little endian.
+>
+> Fixes: 60b8f17215de ("cxl/pmem: Translate NVDIMM label commands to CXL label commands")
+> Reported-by: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 > ---
->  drivers/cxl/core/mbox.c | 43 +++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxlmem.h    |  7 +++++++
->  2 files changed, 50 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index be61a0d8016b..2cf5ccdea7df 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -352,6 +352,41 @@ int cxl_query_cmd(struct cxl_memdev *cxlmd,
->  	return 0;
->  }
->  
-> +/**
-> + * cxl_payload_from_user_allowed() - Check contents of in_payload.
-> + * @opcode: The mailbox command opcode.
-> + * @payload_in: Pointer to the input payload passed in from user space.
-> + *
-> + * Return:
-> + *  * true	- payload_in passes check for @opcode.
-> + *  * false	- payload_in contains invalid or unsupported values.
-> + *
-> + * The driver may inspect payload contents before sending a mailbox
-> + * command from user space to the device. The intent is to reject
-> + * commands with input payloads that are known to be unsafe. This
-> + * check is not intended to replace the users careful selection of
-> + * mailbox command parameters and makes no guarantee that the user
-> + * command will succeed, nor that it is appropriate.
-> + *
-> + * The specific checks are determined by the opcode.
-> + */
-> +static bool cxl_payload_from_user_allowed(u16 opcode, void *payload_in)
-> +{
-> +	switch (opcode) {
-> +	case CXL_MBOX_OP_SET_PARTITION_INFO: {
-> +		struct cxl_mbox_set_partition_info *pi;
-> +
-> +		pi = (struct cxl_mbox_set_partition_info *)payload_in;
-> +		if (pi->flags && CXL_SET_PARTITION_IMMEDIATE_FLAG)
-> +			return false;
-> +		break;
-> +	}
-> +	default:
-> +		break;
-> +	}
-> +	return true;
-> +}
-> +
->  /**
->   * handle_mailbox_cmd_from_user() - Dispatch a mailbox command for userspace.
->   * @cxlds: The device data for the operation
-> @@ -405,6 +440,14 @@ static int handle_mailbox_cmd_from_user(struct cxl_dev_state *cxlds,
->  		}
->  	}
->  
-> +	if (!cxl_payload_from_user_allowed(mbox_cmd.opcode,
-> +					   mbox_cmd.payload_in)) {
-> +		dev_dbg(dev, "%s: input payload not allowed\n",
-> +			cxl_command_names[cmd->info.id].name);
-> +		rc = -EINVAL;
-> +		goto out;
-> +	}
-> +
-
-Perhaps foolishly, the kdocs for handle_mailbox_cmd_from_user() documents the
-error conditions. Would you mind adding EINVAL?
-
-Also, cxl_validate_cmd_from_user() was supposed to handle this kind of stuff.
-All validation from user commands should spawn from that. Is there some reason
-this one is different?
-
->  	dev_dbg(dev,
->  		"Submitting %s command for user\n"
->  		"\topcode: %x\n"
+>  drivers/cxl/cxlmem.h | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
 > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 8d96d009ad90..e10b86f06c75 100644
+> index 8d96d009ad90..eae2a687ea5d 100644
 > --- a/drivers/cxl/cxlmem.h
 > +++ b/drivers/cxl/cxlmem.h
-> @@ -231,6 +231,13 @@ struct cxl_mbox_set_lsa {
->  	u8 data[];
+> @@ -221,13 +221,13 @@ struct cxl_mbox_identify {
 >  } __packed;
->  
-> +struct cxl_mbox_set_partition_info {
-> +	u64 volatile_capacity;
-> +	u8 flags;
-> +} __packed;
-> +
-> +#define  CXL_SET_PARTITION_IMMEDIATE_FLAG	BIT(0)
-> +
+>
+>  struct cxl_mbox_get_lsa {
+> -       u32 offset;
+> -       u32 length;
+> +       __le32 offset;
+> +       __le32 length;
+>  } __packed;
+>
+>  struct cxl_mbox_set_lsa {
+> -       u32 offset;
+> -       u32 reserved;
+> +       __le32 offset;
+> +       __le32 reserved;
+>         u8 data[];
+>  } __packed;
 
-I think these defines belong in cxl.h
+You'll also need to fixup up the users like this:
 
->  /**
->   * struct cxl_mem_command - Driver representation of a memory device command
->   * @info: Command information as it exists for the UAPI
-> 
-> base-commit: 53989fad1286e652ea3655ae3367ba698da8d2ff
-> -- 
-> 2.31.1
-> 
+diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+index ceb2115981e5..90f6346c0fe1 100644
+--- a/drivers/cxl/pmem.c
++++ b/drivers/cxl/pmem.c
+@@ -108,8 +108,8 @@ static int cxl_pmem_get_config_data(struct cxl_mem *cxlm,
+                return -EINVAL;
+
+        get_lsa = (struct cxl_mbox_get_lsa) {
+-               .offset = cmd->in_offset,
+-               .length = cmd->in_length,
++               .offset = cpu_to_le32(cmd->in_offset),
++               .length = cpu_to_le32(cmd->in_length),
+        };
+
+        rc = cxl_mem_mbox_send_cmd(cxlm, CXL_MBOX_OP_GET_LSA, &get_lsa,
+
+...etc
