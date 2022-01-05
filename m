@@ -2,44 +2,44 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AD1C433F5
-	for <linux-cxl@archiver.kernel.org>; Wed,  5 Jan 2022 21:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEC9C433FE
+	for <linux-cxl@archiver.kernel.org>; Wed,  5 Jan 2022 21:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244507AbiAEVeg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 5 Jan 2022 16:34:36 -0500
-Received: from mga14.intel.com ([192.55.52.115]:63662 "EHLO mga14.intel.com"
+        id S244426AbiAEVei (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 5 Jan 2022 16:34:38 -0500
+Received: from mga14.intel.com ([192.55.52.115]:63626 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244426AbiAEVdz (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Wed, 5 Jan 2022 16:33:55 -0500
+        id S244458AbiAEVeI (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Wed, 5 Jan 2022 16:34:08 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641418435; x=1672954435;
+  t=1641418448; x=1672954448;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=nkw69Y9cVQM75moQImxfRDkfj6yZ6Kns0MeaOUeKsSU=;
-  b=YiM0qbZ7G5V6mBpXtJ9joBOAXODlH6clfCEVxF48jo05GoM5grvbtKV0
-   5McHUOkSrtGshJuAa35d7WdXIAgdlexRhn5xHYKPY391CRr1bqkha912c
-   yiR8RGxiAm1q+8Sb2T4w6TOlW8GLKQMxAQezgsP17ZcJXHQIgw5HqhEG/
-   IGSiL33BaxEoDaF1wnu2KPgnWhiEyfmSaNHJNgLPail7KiUMzZoLpAhB2
-   lr6L906Wy1EvAjPsKYwzXDRS4RhvhZV7lc4zUlJajEPSzx7KJ/R+24PLt
-   LiBMo5T/0Rodorxgm2RPc4+FFUr0dOfonOluWaZk0G/6PHQROx/g2MwOT
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="242746574"
+  bh=VvqYIlkRHgJ9qXPmwzXXUh/RgXfXlalF6pCDeVGVYq4=;
+  b=d9y0psjJuPnytsFHWqp0rxzRQeSuHOv4GWY39qvqT3T9rD2WtF6aUOP0
+   zvYXo+W+PawMOutJqd4zbXxJDUTl6FH3Ya9YrWjAiFvEUmjrcSljhPXAF
+   wUkYPOFBfz84RtSEoEGd0LDb4xbYovUsVI487LJhRSmholv3TjIJDVAuo
+   G3//1+xpLIEFL+AT1I40QVgbty036OyIj/DeMc/HlAAMlH+MEKezH5ahe
+   MCAsbpSAWR1NsvZxYhzUQnBjG4s2D/taf4nvXK6WfisaHjmnO0gXH7o6x
+   O6VHjrTBhfOMJuL3BUl0KZLn9ESDcqFlZm9ERU+sDAymEz5CDVcls0Y3z
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="242746608"
 X-IronPort-AV: E=Sophos;i="5.88,264,1635231600"; 
-   d="scan'208";a="242746574"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 13:31:55 -0800
+   d="scan'208";a="242746608"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 13:32:00 -0800
 X-IronPort-AV: E=Sophos;i="5.88,264,1635231600"; 
-   d="scan'208";a="470718730"
+   d="scan'208";a="488727326"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 13:31:55 -0800
-Subject: [ndctl PATCH v3 03/16] ndctl/test: Move 'reset()' to function in
- 'common'
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 13:32:00 -0800
+Subject: [ndctl PATCH v3 04/16] ndctl/test: Initialize the label area by
+ default
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     vishal.l.verma@intel.com
 Cc:     nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Date:   Wed, 05 Jan 2022 13:31:55 -0800
-Message-ID: <164141831509.3990253.14783946910211635678.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Wed, 05 Jan 2022 13:32:00 -0800
+Message-ID: <164141832017.3990253.10383328274835531066.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <164141829899.3990253.17547886681174580434.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <164141829899.3990253.17547886681174580434.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -50,420 +50,96 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-When BLK mode is removed, tests that expect the nfit_test region to allow
-pmem namespace creation will need to 'init' rather than 'zero' labels. In
-preparation, take the time opportunity to move reset() to a common
-function. So that 'ndctl zero-labels' can be replaced with 'ndctl
-init-labels' in one central location.
+The removal of BLK-mode support causes nfit_test regions to not be
+'aliased' by default, which means that the only way to enable labels is to
+initialize the namespace label index block. In support of that the common
+'reset()' helper is updated to initialize v1.1 labels instead of zero them.
+Additionally, it highlighted that some btt tests have silent assumptions of
+v1.1 vs v1.2 label support. Add a 'resetV()' alternative to the common
+'reset()' function that initializes the label area to v1.2.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- test/blk-exhaust.sh             |    4 +---
- test/btt-check.sh               |    7 -------
- test/btt-errors.sh              |   12 +++---------
- test/btt-pad-compat.sh          |    7 -------
- test/clear.sh                   |    4 +---
- test/common                     |   15 +++++++++++++++
- test/create.sh                  |    4 +---
- test/daxctl-create.sh           |    4 ++--
- test/daxdev-errors.sh           |    4 +---
- test/firmware-update.sh         |    8 +++-----
- test/inject-error.sh            |    7 -------
- test/max_available_extent_ns.sh |    9 +--------
- test/monitor.sh                 |   11 ++---------
- test/multi-dax.sh               |    4 +---
- test/pfn-meta-errors.sh         |    4 +---
- test/pmem-errors.sh             |    4 +---
- test/rescan-partitions.sh       |    7 -------
- test/sector-mode.sh             |    9 ++-------
- test/track-uuid.sh              |    4 +---
- 19 files changed, 36 insertions(+), 92 deletions(-)
+ test/btt-errors.sh     |    4 ++--
+ test/btt-pad-compat.sh |    2 +-
+ test/common            |   11 +++++++++--
+ test/label-compat.sh   |    2 +-
+ 4 files changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/test/blk-exhaust.sh b/test/blk-exhaust.sh
-index 09c4aae146a6..b6d3808969f1 100755
---- a/test/blk-exhaust.sh
-+++ b/test/blk-exhaust.sh
-@@ -14,9 +14,7 @@ trap 'err $LINENO' ERR
- 
- # setup (reset nfit_test dimms)
- modprobe nfit_test
--$NDCTL disable-region -b $NFIT_TEST_BUS0 all
--$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
--$NDCTL enable-region -b $NFIT_TEST_BUS0 all
-+reset
- 
- # if the kernel accounting is correct we should be able to create two
- # pmem and two blk namespaces on nfit_test.0
-diff --git a/test/btt-check.sh b/test/btt-check.sh
-index 8e0b489a8eca..65b5c58bb236 100755
---- a/test/btt-check.sh
-+++ b/test/btt-check.sh
-@@ -39,13 +39,6 @@ create()
- 	[ $size -gt 0 ] || err "$LINENO"
- }
- 
--reset()
--{
--	$NDCTL disable-region -b $NFIT_TEST_BUS0 all
--	$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
--	$NDCTL enable-region -b $NFIT_TEST_BUS0 all
--}
--
- # re-enable the BTT namespace, and do IO to it in an attempt to
- # verify it still comes up ok, and functions as expected
- post_repair_test()
 diff --git a/test/btt-errors.sh b/test/btt-errors.sh
-index 4e59f57aea7c..5a20d26fe6d5 100755
+index 5a20d26fe6d5..6e69178cc3cf 100755
 --- a/test/btt-errors.sh
 +++ b/test/btt-errors.sh
-@@ -45,9 +45,7 @@ trap 'err $LINENO cleanup' ERR
+@@ -45,7 +45,7 @@ trap 'err $LINENO cleanup' ERR
  
  # setup (reset nfit_test dimms)
  modprobe nfit_test
--$NDCTL disable-region -b $NFIT_TEST_BUS0 all
--$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
--$NDCTL enable-region -b $NFIT_TEST_BUS0 all
-+reset
+-reset
++resetV
  
  rc=1
  
-@@ -126,9 +124,7 @@ dd if=$MNT/$FILE of=/dev/null iflag=direct bs=4096 count=1
+@@ -124,7 +124,7 @@ dd if=$MNT/$FILE of=/dev/null iflag=direct bs=4096 count=1
  
  # reset everything to get a clean log
  if grep -q "$MNT" /proc/mounts; then umount $MNT; fi
--$NDCTL disable-region -b $NFIT_TEST_BUS0 all
--$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
--$NDCTL enable-region -b $NFIT_TEST_BUS0 all
-+reset
+-reset
++resetV
  dev="x"
  json=$($NDCTL create-namespace -b $NFIT_TEST_BUS0 -t pmem -m sector)
  eval "$(echo "$json" | json2var)"
-@@ -148,9 +144,7 @@ force_raw 0
- dd if=/dev/$blockdev of=/dev/null iflag=direct bs=4096 count=1 && err $LINENO || true
- 
- # done, exit
--$NDCTL disable-region -b $NFIT_TEST_BUS0 all
--$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
--$NDCTL enable-region -b $NFIT_TEST_BUS0 all
-+reset
- cleanup
- _cleanup
- exit 0
 diff --git a/test/btt-pad-compat.sh b/test/btt-pad-compat.sh
-index bf1ea54af9d2..be538b761151 100755
+index be538b761151..005316a205c8 100755
 --- a/test/btt-pad-compat.sh
 +++ b/test/btt-pad-compat.sh
-@@ -37,13 +37,6 @@ create()
- 	fi
- }
+@@ -148,7 +148,7 @@ do_tests()
+ 	verify_idx 0 1
  
--reset()
--{
--	$NDCTL disable-region -b $NFIT_TEST_BUS0 all
--	$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
--	$NDCTL enable-region -b $NFIT_TEST_BUS0 all
--}
--
- verify_idx()
- {
- 	idx0="$1"
-diff --git a/test/clear.sh b/test/clear.sh
-index fb9d52c837d4..c4d02d54714d 100755
---- a/test/clear.sh
-+++ b/test/clear.sh
-@@ -14,9 +14,7 @@ trap 'err $LINENO' ERR
- 
- # setup (reset nfit_test dimms)
- modprobe nfit_test
--$NDCTL disable-region -b $NFIT_TEST_BUS0 all
--$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
--$NDCTL enable-region -b $NFIT_TEST_BUS0 all
-+reset
- 
- rc=1
+ 	# do the same with an old format namespace
+-	reset
++	resetV
+ 	create_oldfmt_ns
+ 	verify_idx 0 2
  
 diff --git a/test/common b/test/common
-index 6bcefcad9bf9..3c54d633251f 100644
+index 3c54d633251f..b6d47128f209 100644
 --- a/test/common
 +++ b/test/common
-@@ -46,6 +46,21 @@ err()
- 	exit $rc
- }
- 
-+reset()
-+{
-+	$NDCTL disable-region -b $NFIT_TEST_BUS0 all
-+	$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
+@@ -49,14 +49,21 @@ err()
+ reset()
+ {
+ 	$NDCTL disable-region -b $NFIT_TEST_BUS0 all
+-	$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
++	$NDCTL init-labels -f -b $NFIT_TEST_BUS0 all
 +	$NDCTL enable-region -b $NFIT_TEST_BUS0 all
 +}
 +
-+reset1()
++resetV()
 +{
-+	$NDCTL disable-region -b $NFIT_TEST_BUS1 all
-+	$NDCTL zero-labels -b $NFIT_TEST_BUS1 all
-+	$NDCTL enable-region -b $NFIT_TEST_BUS1 all
-+}
-+
-+
- # check_min_kver
- # $1: Supported kernel version. format: X.Y
- #
-diff --git a/test/create.sh b/test/create.sh
-index b0fd99f1e7b1..e9baaa075a28 100755
---- a/test/create.sh
-+++ b/test/create.sh
-@@ -15,9 +15,7 @@ trap 'err $LINENO' ERR
- 
- # setup (reset nfit_test dimms)
- modprobe nfit_test
--$NDCTL disable-region -b $NFIT_TEST_BUS0 all
--$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
--$NDCTL enable-region -b $NFIT_TEST_BUS0 all
-+reset
- 
- rc=1
- 
-diff --git a/test/daxctl-create.sh b/test/daxctl-create.sh
-index 198779a851b4..d319a3939ac5 100755
---- a/test/daxctl-create.sh
-+++ b/test/daxctl-create.sh
-@@ -10,7 +10,7 @@ trap 'cleanup $LINENO' ERR
- cleanup()
- {
- 	printf "Error at line %d\n" "$1"
--	[[ $testdev ]] && reset
-+	[[ $testdev ]] && reset_dax
- 	exit $rc
++	$NDCTL disable-region -b $NFIT_TEST_BUS0 all
++	$NDCTL init-labels -f -V 1.2 -b $NFIT_TEST_BUS0 all
+ 	$NDCTL enable-region -b $NFIT_TEST_BUS0 all
  }
  
-@@ -70,7 +70,7 @@ reset_dev()
- 	"$DAXCTL" enable-device "$testdev"
+ reset1()
+ {
+ 	$NDCTL disable-region -b $NFIT_TEST_BUS1 all
+-	$NDCTL zero-labels -b $NFIT_TEST_BUS1 all
++	$NDCTL init-labels -f -b $NFIT_TEST_BUS1 all
+ 	$NDCTL enable-region -b $NFIT_TEST_BUS1 all
  }
  
--reset()
-+reset_dax()
- {
- 	test -n "$testdev"
- 
-diff --git a/test/daxdev-errors.sh b/test/daxdev-errors.sh
-index 9547d781162b..e13453dfaa73 100755
---- a/test/daxdev-errors.sh
-+++ b/test/daxdev-errors.sh
-@@ -15,9 +15,7 @@ trap 'err $LINENO' ERR
- 
+diff --git a/test/label-compat.sh b/test/label-compat.sh
+index 8ab285878d84..7ae4d5efd0ff 100755
+--- a/test/label-compat.sh
++++ b/test/label-compat.sh
+@@ -17,7 +17,7 @@ trap 'err $LINENO' ERR
  # setup (reset nfit_test dimms)
  modprobe nfit_test
--$NDCTL disable-region -b $NFIT_TEST_BUS0 all
+ $NDCTL disable-region -b $NFIT_TEST_BUS0 all
 -$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
--$NDCTL enable-region -b $NFIT_TEST_BUS0 all
-+reset
++$NDCTL init-labels -f -b $NFIT_TEST_BUS0 all
  
- rc=1
- 
-diff --git a/test/firmware-update.sh b/test/firmware-update.sh
-index 8cc9c41b57ca..93ce166e6255 100755
---- a/test/firmware-update.sh
-+++ b/test/firmware-update.sh
-@@ -10,11 +10,9 @@ image="update-fw.img"
- 
- trap 'err $LINENO' ERR
- 
--reset()
-+fwupd_reset()
- {
--	$NDCTL disable-region -b $NFIT_TEST_BUS0 all
--	$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
--	$NDCTL enable-region -b $NFIT_TEST_BUS0 all
-+	reset
- 	if [ -f $image ]; then
- 		rm -f $image
- 	fi
-@@ -73,7 +71,7 @@ do_tests()
- check_min_kver "4.16" || do_skip "may lack firmware update test handling"
- 
- modprobe nfit_test
--reset
-+fwupd_reset
- detect
- rc=1
- do_tests
-diff --git a/test/inject-error.sh b/test/inject-error.sh
-index 7d0b8269f5db..fd823b6cfa13 100755
---- a/test/inject-error.sh
-+++ b/test/inject-error.sh
-@@ -37,13 +37,6 @@ create()
- 	[ $size -gt 0 ] || err "$LINENO"
- }
- 
--reset()
--{
--	$NDCTL disable-region -b $NFIT_TEST_BUS0 all
--	$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
--	$NDCTL enable-region -b $NFIT_TEST_BUS0 all
--}
--
- check_status()
- {
- 	local sector="$1"
-diff --git a/test/max_available_extent_ns.sh b/test/max_available_extent_ns.sh
-index 343f3c9eac49..47a921f5edf2 100755
---- a/test/max_available_extent_ns.sh
-+++ b/test/max_available_extent_ns.sh
-@@ -11,13 +11,6 @@ trap 'err $LINENO' ERR
- check_min_kver "4.19" || do_skip "kernel $KVER may not support max_available_size"
- check_prereq "jq"
- 
--init()
--{
--	$NDCTL disable-region -b $NFIT_TEST_BUS0 all
--	$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
--	$NDCTL enable-region -b $NFIT_TEST_BUS0 all
--}
--
- do_test()
- {
- 	region=$($NDCTL list -b $NFIT_TEST_BUS0 -R -t pmem | jq -r 'sort_by(-.size) | .[].dev' | head -1)
-@@ -40,7 +33,7 @@ do_test()
- 
- modprobe nfit_test
- rc=1
--init
-+reset
- do_test
- _cleanup
- exit 0
-diff --git a/test/monitor.sh b/test/monitor.sh
-index 28c55415c819..14450a7b23e3 100755
---- a/test/monitor.sh
-+++ b/test/monitor.sh
-@@ -19,13 +19,6 @@ trap 'err $LINENO' ERR
- 
- check_min_kver "4.15" || do_skip "kernel $KVER may not support monitor service"
- 
--init()
--{
--	$NDCTL disable-region -b $NFIT_TEST_BUS0 all
--	$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
--	$NDCTL enable-region -b $NFIT_TEST_BUS0 all
--}
--
- start_monitor()
- {
- 	logfile=$(mktemp)
-@@ -112,7 +105,7 @@ test_filter_region()
- 
- test_filter_namespace()
- {
--	init
-+	reset
- 	monitor_namespace=$($NDCTL create-namespace -b $smart_supported_bus | jq -r .dev)
- 	monitor_dimms=$(get_monitor_dimm "-n $monitor_namespace")
- 	start_monitor "-n $monitor_namespace"
-@@ -170,7 +163,7 @@ do_tests()
- 
- modprobe nfit_test
- rc=1
--init
-+reset
- set_smart_supported_bus
- do_tests
- _cleanup
-diff --git a/test/multi-dax.sh b/test/multi-dax.sh
-index b343a3869f9c..04070adb18e4 100755
---- a/test/multi-dax.sh
-+++ b/test/multi-dax.sh
-@@ -17,9 +17,7 @@ ALIGN_SIZE=`getconf PAGESIZE`
- 
- # setup (reset nfit_test dimms)
- modprobe nfit_test
--$NDCTL disable-region -b $NFIT_TEST_BUS0 all
--$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
--$NDCTL enable-region -b $NFIT_TEST_BUS0 all
-+reset
- rc=1
- 
+ # grab the largest pmem region on -b $NFIT_TEST_BUS0
  query=". | sort_by(.available_size) | reverse | .[0].dev"
-diff --git a/test/pfn-meta-errors.sh b/test/pfn-meta-errors.sh
-index 0ade2e52a8ad..631489797087 100755
---- a/test/pfn-meta-errors.sh
-+++ b/test/pfn-meta-errors.sh
-@@ -29,9 +29,7 @@ trap 'err $LINENO' ERR
- 
- # setup (reset nfit_test dimms)
- modprobe nfit_test
--$NDCTL disable-region -b $NFIT_TEST_BUS0 all
--$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
--$NDCTL enable-region -b $NFIT_TEST_BUS0 all
-+reset
- 
- rc=1
- 
-diff --git a/test/pmem-errors.sh b/test/pmem-errors.sh
-index 4225c3bce0c7..20657801fc0e 100755
---- a/test/pmem-errors.sh
-+++ b/test/pmem-errors.sh
-@@ -28,9 +28,7 @@ trap 'err $LINENO cleanup' ERR
- 
- # setup (reset nfit_test dimms)
- modprobe nfit_test
--$NDCTL disable-region -b $NFIT_TEST_BUS0 all
--$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
--$NDCTL enable-region -b $NFIT_TEST_BUS0 all
-+reset
- 
- rc=1
- 
-diff --git a/test/rescan-partitions.sh b/test/rescan-partitions.sh
-index 1686de3552f1..51bbd731fb55 100755
---- a/test/rescan-partitions.sh
-+++ b/test/rescan-partitions.sh
-@@ -25,13 +25,6 @@ check_min_kver "4.16" || do_skip "may not contain fixes for partition rescanning
- check_prereq "parted"
- check_prereq "blockdev"
- 
--reset()
--{
--	$NDCTL disable-region -b $NFIT_TEST_BUS0 all
--	$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
--	$NDCTL enable-region -b $NFIT_TEST_BUS0 all
--}
--
- test_mode()
- {
- 	local mode="$1"
-diff --git a/test/sector-mode.sh b/test/sector-mode.sh
-index 7a2faeae8a2d..439ef331adaf 100755
---- a/test/sector-mode.sh
-+++ b/test/sector-mode.sh
-@@ -15,13 +15,8 @@ ALIGN_SIZE=`getconf PAGESIZE`
- 
- # setup (reset nfit_test dimms)
- modprobe nfit_test
--$NDCTL disable-region -b $NFIT_TEST_BUS0 all
--$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
--$NDCTL enable-region -b $NFIT_TEST_BUS0 all
--
--$NDCTL disable-region -b $NFIT_TEST_BUS1 all
--$NDCTL zero-labels -b $NFIT_TEST_BUS1 all
--$NDCTL enable-region -b $NFIT_TEST_BUS1 all
-+reset
-+reset1
- 
- rc=1
- query=". | sort_by(.size) | reverse | .[0].dev"
-diff --git a/test/track-uuid.sh b/test/track-uuid.sh
-index be3cf9c07a0a..3bacd2c24787 100755
---- a/test/track-uuid.sh
-+++ b/test/track-uuid.sh
-@@ -12,9 +12,7 @@ trap 'err $LINENO' ERR
- 
- # setup (reset nfit_test dimms)
- modprobe nfit_test
--$NDCTL disable-region -b $NFIT_TEST_BUS0 all
--$NDCTL zero-labels -b $NFIT_TEST_BUS0 all
--$NDCTL enable-region -b $NFIT_TEST_BUS0 all
-+reset
- 
- rc=1
- 
 
