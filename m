@@ -2,44 +2,44 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 900C7C433EF
-	for <linux-cxl@archiver.kernel.org>; Wed,  5 Jan 2022 21:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 977CBC433EF
+	for <linux-cxl@archiver.kernel.org>; Wed,  5 Jan 2022 21:32:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244489AbiAEVcR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 5 Jan 2022 16:32:17 -0500
-Received: from mga11.intel.com ([192.55.52.93]:32461 "EHLO mga11.intel.com"
+        id S244508AbiAEVce (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 5 Jan 2022 16:32:34 -0500
+Received: from mga14.intel.com ([192.55.52.115]:63652 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244495AbiAEVbr (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Wed, 5 Jan 2022 16:31:47 -0500
+        id S244513AbiAEVbu (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Wed, 5 Jan 2022 16:31:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641418307; x=1672954307;
+  t=1641418310; x=1672954310;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=1jf6mjMkVfAxzHE5koXGaHq5xLDtB1enGeGWwlLvxlI=;
-  b=Ux+6tiSgFyLrdhmu5Jam255tzKaiILGgBpqyEWRWEejuVli7mYTgXEZP
-   e3E8Tw0IH5TbYycRBNT92edDYUWKvVPRFgrA4HbQU/tm1ooSAQMPQ1oCu
-   MzoqKAHK/BV8APwPWYFrPwEPk79X6cv3ItcTL+da30b5qvNHuoIyJnmyl
-   dtpYZRJ6jdsAVK/XZ1PXoG1AM1G1rabdAjXLV8KAKvkfx81BSjjnAo9QR
-   K0t6xv/HyjIblg78eJfJog7EUGIHaGmJa37Y6KFtYTiSs3NN33K7uCZXh
-   5hulzSD3fxjzEUFxVr8LWXJHIriDvSs135ey3GfhIjPld/Ssjd+HslUU8
+  bh=ZajtxRjy+8ZNb8dlfcJqunXfCWxVuhwxI8eHmJpO6+c=;
+  b=fImsRBzPF81xXxpw+llIXSfZ15H7yEUDdwp7tDyrODy0SFiUk3d7Rxkd
+   6VCdWBrQ98k3z/QWVUZLM8uyJ0WK3NRRe+oleZjIlSMY7aHY99WR7jUZy
+   zFz/7tAb2t3JHjJuz459jTj9fRh/o2gJ7ZJLiihaMdBdNYjrr1Bh3d1FT
+   Xz5iM/boTeCIAbn2UoDmcslkH1ZPVYDEnsTsLHPKS74iQ9jbDvEnNMHN6
+   ur12J4a/3p7SdE+DUq81KkC2FzSnXvhKfYfab2KyUdtvgQvzshS9CdVvT
+   7EYg7eJf17Kjg9HtZLQ4ZE/XGFVvCKBR/OmtYSzXQqjWlZp0I8rRlrwmg
    A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="240083925"
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="242746534"
 X-IronPort-AV: E=Sophos;i="5.88,264,1635231600"; 
-   d="scan'208";a="240083925"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 13:31:45 -0800
+   d="scan'208";a="242746534"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 13:31:50 -0800
 X-IronPort-AV: E=Sophos;i="5.88,264,1635231600"; 
-   d="scan'208";a="488727214"
+   d="scan'208";a="470718707"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 13:31:44 -0800
-Subject: [ndctl PATCH v3 01/16] ndctl/docs: Clarify update-firwmware
- activation 'overflow' conditions
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 13:31:50 -0800
+Subject: [ndctl PATCH v3 02/16] ndctl/test: Prepare for BLK-aperture support
+ removal
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     vishal.l.verma@intel.com
 Cc:     nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Date:   Wed, 05 Jan 2022 13:31:44 -0800
-Message-ID: <164141830490.3990253.6263569501446070716.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Wed, 05 Jan 2022 13:31:50 -0800
+Message-ID: <164141830999.3990253.5021445352398348657.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <164141829899.3990253.17547886681174580434.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <164141829899.3990253.17547886681174580434.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -50,88 +50,163 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Give examples and remediation for "overflow" events, i.e. where the
-estimated time to complete activation exceeds the platform advertised
-maximum. When that happens forced activation can lead to undefined results.
+The kernel is dropping its support for the BLK-aperture access method. The
+primary side effect of this for nfit_test is that NVDIMM namespace labeling
+will not be enabled by default. Update the unit tests to initialize the
+label index area in this scenario.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- Documentation/ndctl/ndctl-update-firmware.txt |   64 +++++++++++++++++++++++++
- 1 file changed, 63 insertions(+), 1 deletion(-)
+ test/core.c     |   31 ++++++++++++++++++++++++++++---
+ test/libndctl.c |   49 +++++++++++++++++++++++++++++++++++--------------
+ 2 files changed, 63 insertions(+), 17 deletions(-)
 
-diff --git a/Documentation/ndctl/ndctl-update-firmware.txt b/Documentation/ndctl/ndctl-update-firmware.txt
-index 1080d62a20b9..61664575f5b1 100644
---- a/Documentation/ndctl/ndctl-update-firmware.txt
-+++ b/Documentation/ndctl/ndctl-update-firmware.txt
-@@ -58,7 +58,69 @@ include::xable-bus-options.txt[]
- 	Arm a device for firmware activation. This is enabled by default
- 	when a firmware image is specified. Specify --no-arm to disable
- 	this default. Otherwise, without a firmware image, this option can be
--	used to manually arm a device for firmware activate.
-+	used to manually arm a device for firmware activate. When a
-+	device transitions from unarmed to armed the platform recalculates the
-+	firmware activation time and compares it against the maximum platform
-+	supported time. If the activation time would exceed the platform maximum the
-+	arm attempt is aborted:
-+
-+[verse]
-+ndctl update-firmware --arm --bus=nfit_test.0 all
-+  Error: update firmware: nmem4: arm aborted, tripped overflow
-+[
-+  {
-+    "dev":"nmem1",
-+    "id":"cdab-0a-07e0-ffffffff",
-+    "handle":"0",
-+    "phys_id":"0",
-+    "security":"disabled",
-+    "firmware":{
-+      "current_version":"0",
-+      "can_update":true
-+    }
-+  },
-+  {
-+    "dev":"nmem3",
-+    "id":"cdab-0a-07e0-fffeffff",
-+    "handle":"0x100",
-+    "phys_id":"0x2",
-+    "security":"disabled",
-+    "firmware":{
-+      "current_version":"0",
-+      "can_update":true
-+    }
-+  },
-+  {
-+    "dev":"nmem2",
-+    "id":"cdab-0a-07e0-feffffff",
-+    "handle":"0x1",
-+    "phys_id":"0x1",
-+    "security":"disabled",
-+    "firmware":{
-+      "current_version":"0",
-+      "can_update":true
-+    }
-+  }
-+]
-+updated 3 nmems.
-+
-+	It is possible, but not recommended, to ignore timeout overflows
-+	with the --force option. At any point to view the 'armed' state of the
-+	bus do:
-+
-+[verse]
-+ndctl list -BF -b nfit_test.0
-+[
-+  {
-+    "provider":"nfit_test.0",
-+    "dev":"ndbus2",
-+    "scrub_state":"idle",
-+    "firmware":{
-+      "activate_method":"suspend",
-+      "activate_state":"overflow"
-+    }
-+  }
-+]
+diff --git a/test/core.c b/test/core.c
+index 2b03aa9b3f2a..93e1dae5a144 100644
+--- a/test/core.c
++++ b/test/core.c
+@@ -261,8 +261,8 @@ retry:
+ 		ndctl_bus_foreach(nd_ctx, bus) {
+ 			struct ndctl_region *region;
  
- -D::
- --disarm::
+-			if (strncmp(ndctl_bus_get_provider(bus),
+-						"nfit_test", 9) != 0)
++			if (strcmp(ndctl_bus_get_provider(bus),
++				   "nfit_test.0") != 0)
+ 				continue;
+ 			ndctl_region_foreach(bus, region)
+ 				ndctl_region_disable_invalidate(region);
+@@ -280,5 +280,30 @@ retry:
+ 			NULL, NULL, NULL, NULL);
+ 	if (rc)
+ 		kmod_unref(*ctx);
+-	return rc;
++
++	if (!nd_ctx)
++		return rc;
++
++	ndctl_bus_foreach (nd_ctx, bus) {
++		struct ndctl_region *region;
++		struct ndctl_dimm *dimm;
++
++		if (strcmp(ndctl_bus_get_provider(bus), "nfit_test.0") != 0)
++			continue;
++
++		ndctl_region_foreach (bus, region)
++			ndctl_region_disable_invalidate(region);
++
++		ndctl_dimm_foreach (bus, dimm) {
++			ndctl_dimm_read_label_index(dimm);
++			ndctl_dimm_init_labels(dimm, NDCTL_NS_VERSION_1_2);
++			ndctl_dimm_disable(dimm);
++			ndctl_dimm_enable(dimm);
++		}
++
++		ndctl_region_foreach (bus, region)
++			ndctl_region_enable(region);
++	}
++
++	return 0;
+ }
+diff --git a/test/libndctl.c b/test/libndctl.c
+index 391b94086dae..0d6b9dd5b04b 100644
+--- a/test/libndctl.c
++++ b/test/libndctl.c
+@@ -2588,17 +2588,41 @@ static int check_dimms(struct ndctl_bus *bus, struct dimm *dimms, int n,
+ 	return 0;
+ }
+ 
+-static void reset_bus(struct ndctl_bus *bus)
++enum dimm_reset {
++	DIMM_INIT,
++	DIMM_ZERO,
++};
++
++static int reset_dimms(struct ndctl_bus *bus, enum dimm_reset reset)
+ {
+-	struct ndctl_region *region;
+ 	struct ndctl_dimm *dimm;
++	int rc = 0;
++
++	ndctl_dimm_foreach(bus, dimm) {
++		if (reset == DIMM_ZERO)
++			ndctl_dimm_zero_labels(dimm);
++		else {
++			ndctl_dimm_read_label_index(dimm);
++			ndctl_dimm_init_labels(dimm, NDCTL_NS_VERSION_1_2);
++		}
++		ndctl_dimm_disable(dimm);
++		rc = ndctl_dimm_enable(dimm);
++		if (rc)
++			break;
++	}
++
++	return rc;
++}
++
++static void reset_bus(struct ndctl_bus *bus, enum dimm_reset reset)
++{
++	struct ndctl_region *region;
+ 
+ 	/* disable all regions so that set_config_data commands are permitted */
+ 	ndctl_region_foreach(bus, region)
+ 		ndctl_region_disable_invalidate(region);
+ 
+-	ndctl_dimm_foreach(bus, dimm)
+-		ndctl_dimm_zero_labels(dimm);
++	reset_dimms(bus, reset);
+ 
+ 	/* set regions back to their default state */
+ 	ndctl_region_foreach(bus, region)
+@@ -2609,7 +2633,6 @@ static int do_test0(struct ndctl_ctx *ctx, struct ndctl_test *test)
+ {
+ 	struct ndctl_bus *bus = ndctl_bus_get_by_provider(ctx, NFIT_PROVIDER0);
+ 	struct ndctl_region *region;
+-	struct ndctl_dimm *dimm;
+ 	int rc;
+ 
+ 	if (!bus)
+@@ -2626,13 +2649,10 @@ static int do_test0(struct ndctl_ctx *ctx, struct ndctl_test *test)
+ 	if (rc)
+ 		return rc;
+ 
+-	ndctl_dimm_foreach(bus, dimm) {
+-		rc = ndctl_dimm_zero_labels(dimm);
+-		if (rc < 0) {
+-			fprintf(stderr, "failed to zero %s\n",
+-					ndctl_dimm_get_devname(dimm));
+-			return rc;
+-		}
++	rc = reset_dimms(bus, DIMM_INIT);
++	if (rc < 0) {
++		fprintf(stderr, "failed to reset dimms\n");
++		return rc;
+ 	}
+ 
+ 	/*
+@@ -2650,14 +2670,14 @@ static int do_test0(struct ndctl_ctx *ctx, struct ndctl_test *test)
+ 		rc = check_regions(bus, regions0, ARRAY_SIZE(regions0), DAX);
+ 		if (rc)
+ 			return rc;
+-		reset_bus(bus);
++		reset_bus(bus, DIMM_INIT);
+ 	}
+ 
+ 	if (ndctl_test_attempt(test, KERNEL_VERSION(4, 8, 0))) {
+ 		rc = check_regions(bus, regions0, ARRAY_SIZE(regions0), PFN);
+ 		if (rc)
+ 			return rc;
+-		reset_bus(bus);
++		reset_bus(bus, DIMM_INIT);
+ 	}
+ 
+ 	return check_regions(bus, regions0, ARRAY_SIZE(regions0), BTT);
+@@ -2672,6 +2692,7 @@ static int do_test1(struct ndctl_ctx *ctx, struct ndctl_test *test)
+ 		return -ENXIO;
+ 
+ 	ndctl_bus_wait_probe(bus);
++	reset_bus(bus, DIMM_ZERO);
+ 
+ 	/*
+ 	 * Starting with v4.10 the dimm on nfit_test.1 gets a unique
 
