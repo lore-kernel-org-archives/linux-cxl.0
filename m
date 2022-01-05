@@ -2,44 +2,43 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 977CBC433EF
-	for <linux-cxl@archiver.kernel.org>; Wed,  5 Jan 2022 21:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50663C433EF
+	for <linux-cxl@archiver.kernel.org>; Wed,  5 Jan 2022 21:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244508AbiAEVce (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 5 Jan 2022 16:32:34 -0500
-Received: from mga14.intel.com ([192.55.52.115]:63652 "EHLO mga14.intel.com"
+        id S244520AbiAEVdT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 5 Jan 2022 16:33:19 -0500
+Received: from mga12.intel.com ([192.55.52.136]:14713 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244513AbiAEVbu (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Wed, 5 Jan 2022 16:31:50 -0500
+        id S244535AbiAEVcG (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Wed, 5 Jan 2022 16:32:06 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641418310; x=1672954310;
+  t=1641418326; x=1672954326;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ZajtxRjy+8ZNb8dlfcJqunXfCWxVuhwxI8eHmJpO6+c=;
-  b=fImsRBzPF81xXxpw+llIXSfZ15H7yEUDdwp7tDyrODy0SFiUk3d7Rxkd
-   6VCdWBrQ98k3z/QWVUZLM8uyJ0WK3NRRe+oleZjIlSMY7aHY99WR7jUZy
-   zFz/7tAb2t3JHjJuz459jTj9fRh/o2gJ7ZJLiihaMdBdNYjrr1Bh3d1FT
-   Xz5iM/boTeCIAbn2UoDmcslkH1ZPVYDEnsTsLHPKS74iQ9jbDvEnNMHN6
-   ur12J4a/3p7SdE+DUq81KkC2FzSnXvhKfYfab2KyUdtvgQvzshS9CdVvT
-   7EYg7eJf17Kjg9HtZLQ4ZE/XGFVvCKBR/OmtYSzXQqjWlZp0I8rRlrwmg
+  bh=Lqxas7Jp2n48528XZYMSoM/T1vo3G5+Ksw7UW8FLeP8=;
+  b=VlrP+/yzNK0jLhw8Y8ZixrvT5vsxkbE/3YiI3fpEvNMBIcxw6q2LXONZ
+   REPNyeU452EpvVn1aXmS+gdrvKTTDB1ocsdO1T0YOoXyzuK65JX1omGRp
+   HC3dT4Kja7uKzi/7fUMA5nPuC1rW9UMHRrriWKMNMXrEEJrSmeIIBS7Ta
+   uei5oETReY6f6Ya9i/sYXhla7wXqmcfYTVyBQgkbLyTtiULqaL5Wb6ufR
+   xSFdrd+G551PdZYySoxPNDdeQFi45SZ7Bx6cMVKHAdEjYULeTEy5dVKSN
+   BqLG6+jm33u0zus5GF9k86HWjl1lz3NBheF0gG1UyahgLaAHbxOc75xop
    A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="242746534"
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="222535851"
 X-IronPort-AV: E=Sophos;i="5.88,264,1635231600"; 
-   d="scan'208";a="242746534"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 13:31:50 -0800
+   d="scan'208";a="222535851"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 13:32:05 -0800
 X-IronPort-AV: E=Sophos;i="5.88,264,1635231600"; 
-   d="scan'208";a="470718707"
+   d="scan'208";a="574526270"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 13:31:50 -0800
-Subject: [ndctl PATCH v3 02/16] ndctl/test: Prepare for BLK-aperture support
- removal
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 13:32:05 -0800
+Subject: [ndctl PATCH v3 05/16] ndctl/test: Skip BLK flags checks
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     vishal.l.verma@intel.com
 Cc:     nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Date:   Wed, 05 Jan 2022 13:31:50 -0800
-Message-ID: <164141830999.3990253.5021445352398348657.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Wed, 05 Jan 2022 13:32:05 -0800
+Message-ID: <164141832529.3990253.16538298357542644310.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <164141829899.3990253.17547886681174580434.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <164141829899.3990253.17547886681174580434.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -50,163 +49,35 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The kernel is dropping its support for the BLK-aperture access method. The
-primary side effect of this for nfit_test is that NVDIMM namespace labeling
-will not be enabled by default. Update the unit tests to initialize the
-label index area in this scenario.
+With the removal of BLK-mode support, test/libndctl will fail to detect the
+JEDEC format on the nfit_test bus. Report + skip that check rather than
+fail the test when that happens.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- test/core.c     |   31 ++++++++++++++++++++++++++++---
- test/libndctl.c |   49 +++++++++++++++++++++++++++++++++++--------------
- 2 files changed, 63 insertions(+), 17 deletions(-)
+ test/libndctl.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/test/core.c b/test/core.c
-index 2b03aa9b3f2a..93e1dae5a144 100644
---- a/test/core.c
-+++ b/test/core.c
-@@ -261,8 +261,8 @@ retry:
- 		ndctl_bus_foreach(nd_ctx, bus) {
- 			struct ndctl_region *region;
- 
--			if (strncmp(ndctl_bus_get_provider(bus),
--						"nfit_test", 9) != 0)
-+			if (strcmp(ndctl_bus_get_provider(bus),
-+				   "nfit_test.0") != 0)
- 				continue;
- 			ndctl_region_foreach(bus, region)
- 				ndctl_region_disable_invalidate(region);
-@@ -280,5 +280,30 @@ retry:
- 			NULL, NULL, NULL, NULL);
- 	if (rc)
- 		kmod_unref(*ctx);
--	return rc;
-+
-+	if (!nd_ctx)
-+		return rc;
-+
-+	ndctl_bus_foreach (nd_ctx, bus) {
-+		struct ndctl_region *region;
-+		struct ndctl_dimm *dimm;
-+
-+		if (strcmp(ndctl_bus_get_provider(bus), "nfit_test.0") != 0)
-+			continue;
-+
-+		ndctl_region_foreach (bus, region)
-+			ndctl_region_disable_invalidate(region);
-+
-+		ndctl_dimm_foreach (bus, dimm) {
-+			ndctl_dimm_read_label_index(dimm);
-+			ndctl_dimm_init_labels(dimm, NDCTL_NS_VERSION_1_2);
-+			ndctl_dimm_disable(dimm);
-+			ndctl_dimm_enable(dimm);
-+		}
-+
-+		ndctl_region_foreach (bus, region)
-+			ndctl_region_enable(region);
-+	}
-+
-+	return 0;
- }
 diff --git a/test/libndctl.c b/test/libndctl.c
-index 391b94086dae..0d6b9dd5b04b 100644
+index 0d6b9dd5b04b..aa624289c708 100644
 --- a/test/libndctl.c
 +++ b/test/libndctl.c
-@@ -2588,17 +2588,41 @@ static int check_dimms(struct ndctl_bus *bus, struct dimm *dimms, int n,
- 	return 0;
- }
- 
--static void reset_bus(struct ndctl_bus *bus)
-+enum dimm_reset {
-+	DIMM_INIT,
-+	DIMM_ZERO,
-+};
-+
-+static int reset_dimms(struct ndctl_bus *bus, enum dimm_reset reset)
- {
--	struct ndctl_region *region;
- 	struct ndctl_dimm *dimm;
-+	int rc = 0;
-+
-+	ndctl_dimm_foreach(bus, dimm) {
-+		if (reset == DIMM_ZERO)
-+			ndctl_dimm_zero_labels(dimm);
-+		else {
-+			ndctl_dimm_read_label_index(dimm);
-+			ndctl_dimm_init_labels(dimm, NDCTL_NS_VERSION_1_2);
-+		}
-+		ndctl_dimm_disable(dimm);
-+		rc = ndctl_dimm_enable(dimm);
-+		if (rc)
-+			break;
-+	}
-+
-+	return rc;
-+}
-+
-+static void reset_bus(struct ndctl_bus *bus, enum dimm_reset reset)
-+{
-+	struct ndctl_region *region;
- 
- 	/* disable all regions so that set_config_data commands are permitted */
- 	ndctl_region_foreach(bus, region)
- 		ndctl_region_disable_invalidate(region);
- 
--	ndctl_dimm_foreach(bus, dimm)
--		ndctl_dimm_zero_labels(dimm);
-+	reset_dimms(bus, reset);
- 
- 	/* set regions back to their default state */
- 	ndctl_region_foreach(bus, region)
-@@ -2609,7 +2633,6 @@ static int do_test0(struct ndctl_ctx *ctx, struct ndctl_test *test)
- {
- 	struct ndctl_bus *bus = ndctl_bus_get_by_provider(ctx, NFIT_PROVIDER0);
- 	struct ndctl_region *region;
--	struct ndctl_dimm *dimm;
- 	int rc;
- 
- 	if (!bus)
-@@ -2626,13 +2649,10 @@ static int do_test0(struct ndctl_ctx *ctx, struct ndctl_test *test)
- 	if (rc)
- 		return rc;
- 
--	ndctl_dimm_foreach(bus, dimm) {
--		rc = ndctl_dimm_zero_labels(dimm);
--		if (rc < 0) {
--			fprintf(stderr, "failed to zero %s\n",
--					ndctl_dimm_get_devname(dimm));
--			return rc;
--		}
-+	rc = reset_dimms(bus, DIMM_INIT);
-+	if (rc < 0) {
-+		fprintf(stderr, "failed to reset dimms\n");
-+		return rc;
- 	}
- 
- 	/*
-@@ -2650,14 +2670,14 @@ static int do_test0(struct ndctl_ctx *ctx, struct ndctl_test *test)
- 		rc = check_regions(bus, regions0, ARRAY_SIZE(regions0), DAX);
- 		if (rc)
- 			return rc;
--		reset_bus(bus);
-+		reset_bus(bus, DIMM_INIT);
- 	}
- 
- 	if (ndctl_test_attempt(test, KERNEL_VERSION(4, 8, 0))) {
- 		rc = check_regions(bus, regions0, ARRAY_SIZE(regions0), PFN);
- 		if (rc)
- 			return rc;
--		reset_bus(bus);
-+		reset_bus(bus, DIMM_INIT);
- 	}
- 
- 	return check_regions(bus, regions0, ARRAY_SIZE(regions0), BTT);
-@@ -2672,6 +2692,7 @@ static int do_test1(struct ndctl_ctx *ctx, struct ndctl_test *test)
- 		return -ENXIO;
- 
- 	ndctl_bus_wait_probe(bus);
-+	reset_bus(bus, DIMM_ZERO);
- 
- 	/*
- 	 * Starting with v4.10 the dimm on nfit_test.1 gets a unique
+@@ -2536,7 +2536,7 @@ static int check_dimms(struct ndctl_bus *bus, struct dimm *dimms, int n,
+ 				fprintf(stderr, "dimm%d expected formats: %d got: %d\n",
+ 						i, dimms[i].formats,
+ 						ndctl_dimm_get_formats(dimm));
+-				return -ENXIO;
++				fprintf(stderr, "continuing...\n");
+ 			}
+ 			for (j = 0; j < dimms[i].formats; j++) {
+ 				if (ndctl_dimm_get_formatN(dimm, j) != dimms[i].format[j]) {
+@@ -2544,7 +2544,7 @@ static int check_dimms(struct ndctl_bus *bus, struct dimm *dimms, int n,
+ 						"dimm%d expected format[%d]: %d got: %d\n",
+ 							i, j, dimms[i].format[j],
+ 							ndctl_dimm_get_formatN(dimm, j));
+-					return -ENXIO;
++					fprintf(stderr, "continuing...\n");
+ 				}
+ 			}
+ 		}
 
