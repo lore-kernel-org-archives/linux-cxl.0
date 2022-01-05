@@ -2,128 +2,298 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74932C433EF
-	for <linux-cxl@archiver.kernel.org>; Wed,  5 Jan 2022 03:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4568CC433EF
+	for <linux-cxl@archiver.kernel.org>; Wed,  5 Jan 2022 21:32:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229705AbiAEDW0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 4 Jan 2022 22:22:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbiAEDWZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 4 Jan 2022 22:22:25 -0500
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DBB9C061761
-        for <linux-cxl@vger.kernel.org>; Tue,  4 Jan 2022 19:22:25 -0800 (PST)
-Received: by mail-pj1-x102a.google.com with SMTP id o63-20020a17090a0a4500b001b1c2db8145so1981488pjo.5
-        for <linux-cxl@vger.kernel.org>; Tue, 04 Jan 2022 19:22:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EKXXMyW17upeqYNPseiC57t1roSrNuMgRBcYFS/Cn48=;
-        b=wdPsxr5ZpxV6pXRK0toKdgcFCLwtRv9a/Tuofp/f0vCX76nFzFhOpFxaPqdQQRkTcV
-         cPkAXQtRzsH3tdp02ZjFp68OTvcCGyUYxt+eI6FsnsVYSn3o92eZlTqFh6Kqjh8esXM8
-         Jyn8HpQLkmxWDEPaSWxAUIzfrKuJ71cp7l7Z6r3TUr2p0ERpsiuTT3wQVWwyur7pjMY6
-         kcammZ/fWPouhIWAvykJXg3vETlX2UHAMJ54xVFD8OAt7PFDTJXSLUBbJkw7I4wUn7j2
-         8lVjysZx3ZQp+VpGBZXZ1xS9V9CkBKrZ4xZpyHTR46ItrZKZ3tYsXcMUDLl24qB67Ro6
-         UGLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EKXXMyW17upeqYNPseiC57t1roSrNuMgRBcYFS/Cn48=;
-        b=PV6WrIs6x9g+whCm9KnRZWhnhnw9ZHvDpCz1CdH//Iv+H+g2GYKKGjH9X3QHqQKtgG
-         HCJbV2dLoZM3WUO5wP4AJR5uSNDgJp8mbqU1JguxP13Kqj03W7DqTNcnb0r/7EB+iZgK
-         YjJJaPh38DtFhFzF4PHPveZtYFpp9P6dIIFmU3KXCaZToaFs32Ok9RYOen5Qh4qAmPlJ
-         iDYnF8YJkO2zL7qLtP8p09DTA1ZnBet5NgTzQ0DA34EAnnr3IW7oUrFaPEUlXHh0k582
-         H1Hz3iXjxm6mn/ImhumH/t2KffuCgXY9JVVF/n+PENbcZRxBhSnhdPNpxlim2eVccYGX
-         XF8w==
-X-Gm-Message-State: AOAM531ARO5MxvMWWzlgymw2H7VTWkpF7CUTj9aBomHOMaaNLR9NCX4p
-        9R0hqZDJ2sAFjcKcggbytWQoSmXVXFDNrunUIBtOtw==
-X-Google-Smtp-Source: ABdhPJzf6TcbcwNR9X36HIimIm4mlqyAUoSUgOxrj3aMJ8Z8qSBiudCbjHIfRdM9iyoy0QdE2Q7PBF1Gd2MjFnhEdes=
-X-Received: by 2002:a17:902:c94d:b0:149:16cb:22e1 with SMTP id
- i13-20020a170902c94d00b0014916cb22e1mr51906508pla.34.1641352944820; Tue, 04
- Jan 2022 19:22:24 -0800 (PST)
-MIME-Version: 1.0
-References: <20220103202100.784194-1-alison.schofield@intel.com>
- <20220104232134.y7j5rs4ljizkl462@intel.com> <20220105005916.GA790377@alison-desk>
-In-Reply-To: <20220105005916.GA790377@alison-desk>
+        id S244478AbiAEVcI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 5 Jan 2022 16:32:08 -0500
+Received: from mga14.intel.com ([192.55.52.115]:63626 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S244476AbiAEVbl (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Wed, 5 Jan 2022 16:31:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641418301; x=1672954301;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Hi+2ZP4Pqr3i+LxVRDwSB2J991orqZ2nf+YDvaIjTEQ=;
+  b=UsY76x4vr27peL8ArnbkiLQJiw0+47p2842Ld9+cdBThFVT/k+w8JwJE
+   hdQ93jbioByRg0RnP7sK8Czd7ntiB3fRQl/Wp5kGvBT0SSOTfepqcpGx+
+   Hd8VV2bWN8SbJqhBRqWMg/BO1xoW2hc3p0g0IP9DtEdeuBiuGu3pFQoZh
+   yE4MHwh11H3XmVSLZRi4jvZXDYJxn37/dVxzNigIrwBrRv+FXQHzWYW7M
+   JxDhKDfGFGE1pEHzq6GTT6ZoTcRIkacF7+IBiPozEhXJO3q0UrdGlt8qF
+   fJvd5LBA+xhRacbeFInS6gWnyXML7/BVqSZNDFww3a0RRDWfBpNjt8ZXZ
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="242746444"
+X-IronPort-AV: E=Sophos;i="5.88,264,1635231600"; 
+   d="scan'208";a="242746444"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 13:31:39 -0800
+X-IronPort-AV: E=Sophos;i="5.88,264,1635231600"; 
+   d="scan'208";a="591175711"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 13:31:39 -0800
+Subject: [ndctl PATCH v3 00/16] ndctl: Meson support
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 4 Jan 2022 19:22:14 -0800
-Message-ID: <CAPcyv4j1fOTLSLad4__gFQvLhEhXRyAuoHY7M1GetyQ1qdNASA@mail.gmail.com>
-Subject: Re: [PATCH] cxl/mbox: Do not allow immediate mode in SET_PARTITION_INFO
-To:     Alison Schofield <alison.schofield@intel.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
+To:     vishal.l.verma@intel.com
+Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>, nvdimm@lists.linux.dev,
         linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Date:   Wed, 05 Jan 2022 13:31:39 -0800
+Message-ID: <164141829899.3990253.17547886681174580434.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Jan 4, 2022 at 4:54 PM Alison Schofield
-<alison.schofield@intel.com> wrote:
->
-> Thanks for the review Ben...
->
-> On Tue, Jan 04, 2022 at 03:21:34PM -0800, Ben Widawsky wrote:
-> > On 22-01-03 12:21:00, alison.schofield@intel.com wrote:
-> > > From: Alison Schofield <alison.schofield@intel.com>
-> > >
-> > > User space may send the SET_PARTITION_INFO mailbox command using
-> > > the IOCTL interface. Inspect the input payload and fail if the
-> > > immediate flag is set.
-> > >
-> > > This is the first instance of the driver inspecting an input payload
-> > > from user space. Assume there will be more such cases and implement
-> > > with an extensible helper.
-> >
-> > Not sure if it's useful, but this was implemented at some point:
-> > https://lore.kernel.org/linux-cxl/20210210000259.635748-8-ben.widawsky@intel.com/
->
-> Thanks. Looking.
->
-> >
-> snip
->
-> > > @@ -405,6 +440,14 @@ static int handle_mailbox_cmd_from_user(struct cxl_dev_state *cxlds,
-> > >             }
-> > >     }
-> > >
-> > > +   if (!cxl_payload_from_user_allowed(mbox_cmd.opcode,
-> > > +                                      mbox_cmd.payload_in)) {
-> > > +           dev_dbg(dev, "%s: input payload not allowed\n",
-> > > +                   cxl_command_names[cmd->info.id].name);
-> > > +           rc = -EINVAL;
-> > > +           goto out;
-> > > +   }
-> > > +
-> >
-> > Perhaps foolishly, the kdocs for handle_mailbox_cmd_from_user() documents the
-> > error conditions. Would you mind adding EINVAL?
->
-> I'm going to try to mv the allowable check, so this will go away.
+Changes since v2 [1]:
 
-Wouldn't the error code be EBUSY just like the other commands the
-kernel blocks based on the state of the device?
+- Rebase on v72
+  - Add Meson support for the new config file directory definitions.
+  - Add Meson support for landing the daxctl udev rule
+    daxdev-reconfigure service in the right directories
+- Include the deprecation of BLK Aperture test infrastructure
+- Include a miscellaneous doc clarification for 'ndctl update-firmware'
+- Fix the tests support for moving the build directory out-of-line
+- Include a fix for the deprectation of the dax_pmem_compat module
+  pending in the libnvdimm-for-next tree.
 
-It's moot if this is moving.
+[1]: https://lore.kernel.org/r/163061537869.1943957.8491829881215255815.stgit@dwillia2-desk3.amr.corp.intel.com
 
->
-> >
-> > Also, cxl_validate_cmd_from_user() was supposed to handle this kind of stuff.
-> > All validation from user commands should spawn from that. Is there some reason
-> > this one is different?
->
-> The existing cxl_validate_cmd_from_user() happens before we copy the
-> payload from user - so this payload check didn't fit in there.
-> Let me look at reorganizing a bit so validating the cmd and it's payload
-> can both spawn from cxl_validate_cmd_from_user().
+---
 
-Having cxl_validate_cmd_from_user() setup the 'struct cxl_mbox_cmd'
-and then forward that along to handle_mailbox_cmd_from_user() doesn't
-sound too bad. It does mean we need to remember that if the kernel
-grows internal paths for calling commands that might be disallowed by
-the state of the device we might need to move this validation out of
-the "from user" context.
+As mentioned in patch 14 the motiviation for converting to Meson is
+primarily driven by speed (an order of magnitude in some scenarios), but
+Meson also includes better test and debug-build support. The build
+language is easier to read, write, and debug. Meson is all around better
+suited to the next phase of the ndctl project that will include all
+things "device memory" related (ndctl, daxctl, and cxl).
+
+In order to simplify the conversion the old BLK-aperture test
+infrastructure is jettisoned and it will also be removed upstream. Some
+other refactorings and fixups are included as well to better organize
+the utilty infrastructure between truly common and sub-tool specific.
+
+Vishal,
+
+In preparation for ndctl-v73 please consider pulling in this series
+early mainly for my own sanity of not needing to forward port more
+updates to the autotools infrastructure.
+
+---
+
+Dan Williams (16):
+      ndctl/docs: Clarify update-firwmware activation 'overflow' conditions
+      ndctl/test: Prepare for BLK-aperture support removal
+      ndctl/test: Move 'reset()' to function in 'common'
+      ndctl/test: Initialize the label area by default
+      ndctl/test: Skip BLK flags checks
+      ndctl/test: Move sector-mode to a different region
+      ndctl: Deprecate BLK aperture support
+      ndctl/test: Fix support for missing dax_pmem_compat module
+      util: Distribute 'filter' and 'json' helpers to per-tool objects
+      Documentation: Drop attrs.adoc include
+      build: Drop unnecessary $tool/config.h includes
+      test: Prepare out of line builds
+      ndctl: Drop executable bit for bash-completion script
+      build: Add meson build infrastructure
+      build: Add meson rpmbuild support
+      ndctl: Jettison autotools
+
+
+ .gitignore                                         |   64 -
+ Documentation/cxl/Makefile.am                      |   61 -
+ Documentation/cxl/lib/Makefile.am                  |   58 -
+ Documentation/cxl/lib/meson.build                  |   79 +
+ Documentation/cxl/meson.build                      |   84 +
+ Documentation/daxctl/Makefile.am                   |   75 -
+ Documentation/daxctl/daxctl-reconfigure-device.txt |    2 
+ Documentation/daxctl/meson.build                   |   94 +
+ Documentation/ndctl/Makefile.am                    |  106 -
+ Documentation/ndctl/intel-nvdimm-security.txt      |    2 
+ Documentation/ndctl/labels-description.txt         |    5 
+ Documentation/ndctl/meson.build                    |  124 ++
+ Documentation/ndctl/ndctl-create-namespace.txt     |   29 
+ Documentation/ndctl/ndctl-init-labels.txt          |    7 
+ Documentation/ndctl/ndctl-list.txt                 |    4 
+ Documentation/ndctl/ndctl-load-keys.txt            |    2 
+ Documentation/ndctl/ndctl-monitor.txt              |    2 
+ Documentation/ndctl/ndctl-sanitize-dimm.txt        |    2 
+ Documentation/ndctl/ndctl-setup-passphrase.txt     |    2 
+ Documentation/ndctl/ndctl-update-firmware.txt      |   64 +
+ Documentation/ndctl/ndctl-update-passphrase.txt    |    2 
+ Documentation/ndctl/region-description.txt         |   10 
+ Makefile.am                                        |  103 -
+ Makefile.am.in                                     |   49 -
+ README.md                                          |    1 
+ autogen.sh                                         |   28 
+ clean_config.sh                                    |    2 
+ config.h.meson                                     |  151 ++
+ configure.ac                                       |  270 ----
+ contrib/meson.build                                |   28 
+ contrib/ndctl                                      |    0 
+ contrib/nfit_test_depmod.conf                      |    1 
+ cxl/Makefile.am                                    |   22 
+ cxl/filter.c                                       |   25 
+ cxl/filter.h                                       |    7 
+ cxl/json.c                                         |  214 +++
+ cxl/json.h                                         |    8 
+ cxl/lib/Makefile.am                                |   32 
+ cxl/lib/meson.build                                |   35 
+ cxl/list.c                                         |    4 
+ cxl/memdev.c                                       |    3 
+ cxl/meson.build                                    |   25 
+ daxctl/Makefile.am                                 |   40 -
+ daxctl/device.c                                    |    5 
+ daxctl/filter.c                                    |   43 +
+ daxctl/filter.h                                    |   12 
+ daxctl/json.c                                      |  245 +++
+ daxctl/json.h                                      |   18 
+ daxctl/lib/Makefile.am                             |   42 -
+ daxctl/lib/meson.build                             |   44 +
+ daxctl/list.c                                      |    4 
+ daxctl/meson.build                                 |   35 
+ daxctl/migrate.c                                   |    1 
+ meson.build                                        |  286 ++++
+ meson_options.txt                                  |   25 
+ ndctl.spec.in                                      |   15 
+ ndctl/Makefile.am                                  |   84 -
+ ndctl/bat.c                                        |    5 
+ ndctl/bus.c                                        |    4 
+ ndctl/check.c                                      |    2 
+ ndctl/dimm.c                                       |    6 
+ ndctl/filter.c                                     |   60 -
+ ndctl/filter.h                                     |   12 
+ ndctl/inject-error.c                               |    6 
+ ndctl/inject-smart.c                               |    6 
+ ndctl/json-smart.c                                 |    5 
+ ndctl/json.c                                       | 1114 ++++++++++++++
+ ndctl/json.h                                       |   24 
+ ndctl/keys.c                                       |    6 
+ ndctl/keys.h                                       |    0 
+ ndctl/lib/Makefile.am                              |   58 -
+ ndctl/lib/libndctl.c                               |    2 
+ ndctl/lib/meson.build                              |   48 +
+ ndctl/lib/papr.c                                   |    4 
+ ndctl/lib/private.h                                |    4 
+ ndctl/list.c                                       |    5 
+ ndctl/load-keys.c                                  |    7 
+ ndctl/meson.build                                  |   82 +
+ ndctl/monitor.c                                    |    5 
+ ndctl/namespace.c                                  |    6 
+ ndctl/region.c                                     |    3 
+ ndctl/test.c                                       |   11 
+ rhel/meson.build                                   |   22 
+ rpmbuild.sh                                        |    5 
+ sles/meson.build                                   |   35 
+ test.h                                             |    3 
+ test/Makefile.am                                   |  192 --
+ test/ack-shutdown-count-set.c                      |    2 
+ test/blk-exhaust.sh                                |   32 
+ test/blk_namespaces.c                              |  357 -----
+ test/btt-check.sh                                  |    7 
+ test/btt-errors.sh                                 |   16 
+ test/btt-pad-compat.sh                             |    9 
+ test/clear.sh                                      |    4 
+ test/common                                        |   59 +
+ test/core.c                                        |   57 +
+ test/create.sh                                     |   17 
+ test/dax-pmd.c                                     |   11 
+ test/dax.sh                                        |    6 
+ test/daxctl-create.sh                              |    4 
+ test/daxdev-errors.c                               |    2 
+ test/daxdev-errors.sh                              |    8 
+ test/device-dax-fio.sh                             |    2 
+ test/device-dax.c                                  |    2 
+ test/dm.sh                                         |    4 
+ test/dpa-alloc.c                                   |  326 ----
+ test/dsm-fail.c                                    |    4 
+ test/firmware-update.sh                            |    8 
+ test/inject-error.sh                               |    7 
+ test/inject-smart.sh                               |    2 
+ test/label-compat.sh                               |    2 
+ test/libndctl.c                                    |  253 +--
+ test/list-smart-dimm.c                             |    6 
+ test/max_available_extent_ns.sh                    |    9 
+ test/meson.build                                   |  237 +++
+ test/mmap.sh                                       |    6 
+ test/monitor.sh                                    |   17 
+ test/multi-dax.sh                                  |    4 
+ test/multi-pmem.c                                  |  285 ----
+ test/parent-uuid.c                                 |  254 ---
+ test/pfn-meta-errors.sh                            |    4 
+ test/pmem-errors.sh                                |   12 
+ test/pmem_namespaces.c                             |    2 
+ test/rescan-partitions.sh                          |    7 
+ test/revoke-devmem.c                               |    2 
+ test/sector-mode.sh                                |   17 
+ test/sub-section.sh                                |    4 
+ test/track-uuid.sh                                 |    6 
+ tools/meson-vcs-tag.sh                             |   18 
+ util/help.c                                        |    2 
+ util/json.c                                        | 1542 --------------------
+ util/json.h                                        |   39 -
+ util/meson.build                                   |   16 
+ version.h.in                                       |    2 
+ 134 files changed, 3561 insertions(+), 4658 deletions(-)
+ delete mode 100644 Documentation/cxl/Makefile.am
+ delete mode 100644 Documentation/cxl/lib/Makefile.am
+ create mode 100644 Documentation/cxl/lib/meson.build
+ create mode 100644 Documentation/cxl/meson.build
+ delete mode 100644 Documentation/daxctl/Makefile.am
+ create mode 100644 Documentation/daxctl/meson.build
+ delete mode 100644 Documentation/ndctl/Makefile.am
+ create mode 100644 Documentation/ndctl/meson.build
+ delete mode 100644 Makefile.am
+ delete mode 100644 Makefile.am.in
+ delete mode 100755 autogen.sh
+ create mode 100755 clean_config.sh
+ create mode 100644 config.h.meson
+ delete mode 100644 configure.ac
+ create mode 100644 contrib/meson.build
+ mode change 100755 => 100644 contrib/ndctl
+ delete mode 100644 cxl/Makefile.am
+ create mode 100644 cxl/filter.c
+ create mode 100644 cxl/filter.h
+ create mode 100644 cxl/json.c
+ create mode 100644 cxl/json.h
+ delete mode 100644 cxl/lib/Makefile.am
+ create mode 100644 cxl/lib/meson.build
+ create mode 100644 cxl/meson.build
+ delete mode 100644 daxctl/Makefile.am
+ create mode 100644 daxctl/filter.c
+ create mode 100644 daxctl/filter.h
+ create mode 100644 daxctl/json.c
+ create mode 100644 daxctl/json.h
+ delete mode 100644 daxctl/lib/Makefile.am
+ create mode 100644 daxctl/lib/meson.build
+ create mode 100644 daxctl/meson.build
+ create mode 100644 meson.build
+ create mode 100644 meson_options.txt
+ delete mode 100644 ndctl/Makefile.am
+ rename util/filter.c => ndctl/filter.c (88%)
+ rename util/filter.h => ndctl/filter.h (89%)
+ rename ndctl/{util/json-smart.c => json-smart.c} (99%)
+ create mode 100644 ndctl/json.c
+ create mode 100644 ndctl/json.h
+ rename ndctl/{util/keys.c => keys.c} (99%)
+ rename ndctl/{util/keys.h => keys.h} (100%)
+ delete mode 100644 ndctl/lib/Makefile.am
+ create mode 100644 ndctl/lib/meson.build
+ create mode 100644 ndctl/meson.build
+ create mode 100644 rhel/meson.build
+ create mode 100644 sles/meson.build
+ delete mode 100644 test/Makefile.am
+ delete mode 100755 test/blk-exhaust.sh
+ delete mode 100644 test/blk_namespaces.c
+ delete mode 100644 test/dpa-alloc.c
+ create mode 100644 test/meson.build
+ delete mode 100644 test/multi-pmem.c
+ delete mode 100644 test/parent-uuid.c
+ create mode 100755 tools/meson-vcs-tag.sh
+ create mode 100644 util/meson.build
+ create mode 100644 version.h.in
+
+base-commit: 25062cf34c70012f5d42ce1fef7e2dc129807c10
