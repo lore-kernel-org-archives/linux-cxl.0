@@ -2,44 +2,43 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3494EC433FE
-	for <linux-cxl@archiver.kernel.org>; Wed,  5 Jan 2022 21:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB887C433FE
+	for <linux-cxl@archiver.kernel.org>; Wed,  5 Jan 2022 21:33:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244497AbiAEVdk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 5 Jan 2022 16:33:40 -0500
-Received: from mga05.intel.com ([192.55.52.43]:46270 "EHLO mga05.intel.com"
+        id S244502AbiAEVdn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 5 Jan 2022 16:33:43 -0500
+Received: from mga09.intel.com ([134.134.136.24]:55028 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244541AbiAEVcc (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Wed, 5 Jan 2022 16:32:32 -0500
+        id S244504AbiAEVcd (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Wed, 5 Jan 2022 16:32:33 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641418352; x=1672954352;
+  t=1641418353; x=1672954353;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=YG9eeeLnbMrLQY6Q0GuYOl0nHLjVehSnzpcQ/ICYIL0=;
-  b=EMEUzUdOs2hqO7iQfm/KJFZQWLvSkunqRdc4Akf4NV5BAfPOSLj4dw57
-   rHoKExNsWN/8KLmDItcNhLpVEmLIB3GMz8mX1g6g7ksz9r50+Cmsph6vh
-   1CPoRGfNW+GD4AtgP3/n7BnhcRtsGEvlgr15cCWNVr/zT6XPgw0dqgsv2
-   5JtkNwu2VFLb4jZOVQLMaJfgy7F8PvzGqExfMpFBG40giMvMNRccLZAPk
-   JW/usvspBQn1T7iMQp0gRK9w4u5in/JqZgAEejZou+1uwzErQCq16+dmd
-   NgSmxiRVAAD7NUenZxldk3oy230qFHEWSzT4U+PgDiHAw9af6Wujqz1LR
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="328888202"
+  bh=8EsYsC8sLdmWL7CZn1enLYmo+tnnY5yU8S9zwfashtY=;
+  b=KJ9w5DOWDr75kXgFbKtZGzLJy9ciWEs4dhCYlbMyw5mkAVEabhPpE30h
+   VtreIBY9anZVJB4eLCNa7jUwGouAb/x29Lwn1Z19bN5D5swEQWDgQjPQv
+   b4aikuQuEQZJ9NjgHGL3IKpWAfML/ZPHqtd+aDCY9h7+6CYimxOa9q0BG
+   Kvs8LbfxcqQEOCmhGWhauz6Xp3FgFK+L/RHQriHkshVnQRXqPOaNEVSnT
+   ytI6S58Bh3KyTUbdHQA+bzXdIrkikmdFXOYGeg8wnZLLme6f9LvF7+jdz
+   AANiM3Ov3otzo2BmfRZgTB18vj1f8+AgedyAeJBJyMfJywNtpkdravC6Z
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="242335880"
 X-IronPort-AV: E=Sophos;i="5.88,264,1635231600"; 
-   d="scan'208";a="328888202"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 13:32:10 -0800
+   d="scan'208";a="242335880"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 13:32:32 -0800
 X-IronPort-AV: E=Sophos;i="5.88,264,1635231600"; 
-   d="scan'208";a="689157245"
+   d="scan'208";a="556686657"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 13:32:10 -0800
-Subject: [ndctl PATCH v3 06/16] ndctl/test: Move sector-mode to a different
- region
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 13:32:32 -0800
+Subject: [ndctl PATCH v3 10/16] Documentation: Drop attrs.adoc include
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     vishal.l.verma@intel.com
 Cc:     nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Date:   Wed, 05 Jan 2022 13:32:10 -0800
-Message-ID: <164141833068.3990253.15694496866707006837.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Wed, 05 Jan 2022 13:32:32 -0800
+Message-ID: <164141835217.3990253.17678912974035740752.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <164141829899.3990253.17547886681174580434.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <164141829899.3990253.17547886681174580434.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -50,33 +49,213 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Previously the largest region on the nfit_test.1 bus belonged to a BLK-mode
-region. With the removal of BLK-mode support update the test to instead
-find a suitable PMEM region to perform the checkout.
+In preparation for switching build systems, drop the attrs.adoc include for
+communicating variables to asciidoc. Simply add the necessary variable
+values to the invocation of the command using the --attribute argument.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- test/sector-mode.sh |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .gitignore                                         |    1 -
+ Documentation/daxctl/Makefile.am                   |   17 +++++++----------
+ Documentation/daxctl/daxctl-reconfigure-device.txt |    2 --
+ Documentation/ndctl/Makefile.am                    |   17 +++++++----------
+ Documentation/ndctl/intel-nvdimm-security.txt      |    2 --
+ Documentation/ndctl/ndctl-load-keys.txt            |    2 --
+ Documentation/ndctl/ndctl-monitor.txt              |    2 --
+ Documentation/ndctl/ndctl-sanitize-dimm.txt        |    2 --
+ Documentation/ndctl/ndctl-setup-passphrase.txt     |    2 --
+ Documentation/ndctl/ndctl-update-passphrase.txt    |    2 --
+ 10 files changed, 14 insertions(+), 35 deletions(-)
 
-diff --git a/test/sector-mode.sh b/test/sector-mode.sh
-index 439ef331adaf..f70b0f1786f4 100755
---- a/test/sector-mode.sh
-+++ b/test/sector-mode.sh
-@@ -19,11 +19,11 @@ reset
- reset1
+diff --git a/.gitignore b/.gitignore
+index 6b19d90a12f1..4ab393e71a89 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -23,7 +23,6 @@ Documentation/daxctl/asciidoctor-extensions.rb
+ Documentation/ndctl/asciidoctor-extensions.rb
+ Documentation/cxl/asciidoctor-extensions.rb
+ Documentation/cxl/lib/asciidoctor-extensions.rb
+-Documentation/ndctl/attrs.adoc
+ .dirstamp
+ daxctl/config.h
+ daxctl/daxctl
+diff --git a/Documentation/daxctl/Makefile.am b/Documentation/daxctl/Makefile.am
+index 9c43e6176b28..78c47f5055c4 100644
+--- a/Documentation/daxctl/Makefile.am
++++ b/Documentation/daxctl/Makefile.am
+@@ -33,20 +33,11 @@ EXTRA_DIST = $(man1_MANS)
  
- rc=1
--query=". | sort_by(.size) | reverse | .[0].dev"
--NAMESPACE=$($NDCTL list -b $NFIT_TEST_BUS1 -N | jq -r "$query")
--REGION=$($NDCTL list -R --namespace=$NAMESPACE | jq -r "(.[]) | .dev")
-+query=". | sort_by(.available_size) | reverse | .[0].dev"
-+REGION=$($NDCTL list -R -b $NFIT_TEST_BUS1 | jq -r "$query")
- echo 0 > /sys/bus/nd/devices/$REGION/read_only
--$NDCTL create-namespace --no-autolabel -e $NAMESPACE -m sector -f -l 4K
-+echo $ALIGN_SIZE > /sys/bus/nd/devices/$REGION/align
-+NAMESPACE=$($NDCTL create-namespace --no-autolabel -r $REGION -m sector -f -l 4K | jq -r ".dev")
- $NDCTL create-namespace --no-autolabel -e $NAMESPACE -m dax -f -a $ALIGN_SIZE
- $NDCTL create-namespace --no-autolabel -e $NAMESPACE -m sector -f -l 4K
+ CLEANFILES = $(man1_MANS)
+ 
+-.ONESHELL:
+-attrs.adoc: $(srcdir)/Makefile.am
+-	$(AM_V_GEN) cat <<- EOF >$@
+-		:daxctl_confdir: $(daxctl_confdir)
+-		:daxctl_conf: $(daxctl_conf)
+-		:ndctl_keysdir: $(ndctl_keysdir)
+-		EOF
+-
+ XML_DEPS = \
+ 	../../version.m4 \
+ 	../copyright.txt \
+ 	Makefile \
+-	$(CONFFILE) \
+-	attrs.adoc
++	$(CONFFILE)
+ 
+ RM ?= rm -f
+ 
+@@ -57,6 +48,9 @@ if USE_ASCIIDOCTOR
+ 		$(ASCIIDOC) -b manpage -d manpage -acompat-mode \
+ 		-I. -rasciidoctor-extensions \
+ 		-amansource=daxctl -amanmanual="daxctl Manual" \
++		-adaxctl_confdir=$(daxctl_confdir) \
++		-adaxctl_conf=$(daxctl_conf) \
++		-andctl_keysdir=$(ndctl_keysdir) \
+ 		-andctl_version=$(VERSION) -o $@+ $< && \
+ 		mv $@+ $@
+ 
+@@ -65,6 +59,9 @@ else
+ %.xml: %.txt $(XML_DEPS)
+ 	$(AM_V_GEN)$(RM) $@+ $@ && \
+ 		$(ASCIIDOC) -b docbook -d manpage -f asciidoc.conf \
++		-adaxctl_confdir=$(daxctl_confdir) \
++		-adaxctl_conf=$(daxctl_conf) \
++		-andctl_keysdir=$(ndctl_keysdir) \
+ 		--unsafe -adaxctl_version=$(VERSION) -o $@+ $< && \
+ 		mv $@+ $@
+ 
+diff --git a/Documentation/daxctl/daxctl-reconfigure-device.txt b/Documentation/daxctl/daxctl-reconfigure-device.txt
+index b2184ec862bb..385c0c53931d 100644
+--- a/Documentation/daxctl/daxctl-reconfigure-device.txt
++++ b/Documentation/daxctl/daxctl-reconfigure-device.txt
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+-include::attrs.adoc[]
+-
+ daxctl-reconfigure-device(1)
+ ============================
+ 
+diff --git a/Documentation/ndctl/Makefile.am b/Documentation/ndctl/Makefile.am
+index 37855cc0585d..203158c1dfaf 100644
+--- a/Documentation/ndctl/Makefile.am
++++ b/Documentation/ndctl/Makefile.am
+@@ -56,14 +56,6 @@ EXTRA_DIST = $(man1_MANS)
+ 
+ CLEANFILES = $(man1_MANS)
+ 
+-.ONESHELL:
+-attrs.adoc: $(srcdir)/Makefile.am
+-	$(AM_V_GEN) cat <<- EOF >$@
+-		:ndctl_confdir: $(ndctl_confdir)
+-		:ndctl_monitorconf: $(ndctl_monitorconf)
+-		:ndctl_keysdir: $(ndctl_keysdir)
+-		EOF
+-
+ XML_DEPS = \
+ 	../../version.m4 \
+ 	Makefile \
+@@ -76,8 +68,7 @@ XML_DEPS = \
+ 	xable-namespace-options.txt \
+ 	ars-description.txt \
+ 	labels-description.txt \
+-	labels-options.txt \
+-	attrs.adoc
++	labels-options.txt
+ 
+ RM ?= rm -f
+ 
+@@ -88,6 +79,9 @@ if USE_ASCIIDOCTOR
+ 		$(ASCIIDOC) -b manpage -d manpage -acompat-mode \
+ 		-I. -rasciidoctor-extensions \
+ 		-amansource=ndctl -amanmanual="ndctl Manual" \
++		-andctl_confdir=$(ndctl_confdir) \
++		-andctl_monitorconf=$(ndctl_monitorconf) \
++		-andctl_keysdir=$(ndctl_keysdir) \
+ 		-andctl_version=$(VERSION) -o $@+ $< && \
+ 		mv $@+ $@
+ 
+@@ -96,6 +90,9 @@ else
+ %.xml: %.txt $(XML_DEPS)
+ 	$(AM_V_GEN)$(RM) $@+ $@ && \
+ 		$(ASCIIDOC) -b docbook -d manpage -f asciidoc.conf \
++		-andctl_confdir=$(ndctl_confdir) \
++		-andctl_monitorconf=$(ndctl_monitorconf) \
++		-andctl_keysdir=$(ndctl_keysdir) \
+ 		--unsafe -andctl_version=$(VERSION) -o $@+ $< && \
+ 		mv $@+ $@
+ 
+diff --git a/Documentation/ndctl/intel-nvdimm-security.txt b/Documentation/ndctl/intel-nvdimm-security.txt
+index 142b4603db69..88b305b81978 100644
+--- a/Documentation/ndctl/intel-nvdimm-security.txt
++++ b/Documentation/ndctl/intel-nvdimm-security.txt
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+-include::attrs.adoc[]
+-
+ THEORY OF OPERATION
+ -------------------
+ The Intel Device Specific Methods (DSM) specification v1.7 and v1.8 [1]
+diff --git a/Documentation/ndctl/ndctl-load-keys.txt b/Documentation/ndctl/ndctl-load-keys.txt
+index a064f97fd069..70db57441820 100644
+--- a/Documentation/ndctl/ndctl-load-keys.txt
++++ b/Documentation/ndctl/ndctl-load-keys.txt
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+-include::attrs.adoc[]
+-
+ ndctl-load-keys(1)
+ ==================
+ 
+diff --git a/Documentation/ndctl/ndctl-monitor.txt b/Documentation/ndctl/ndctl-monitor.txt
+index 8c8c35b41ace..eca079d56a32 100644
+--- a/Documentation/ndctl/ndctl-monitor.txt
++++ b/Documentation/ndctl/ndctl-monitor.txt
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+-include::attrs.adoc[]
+-
+ ndctl-monitor(1)
+ ================
+ 
+diff --git a/Documentation/ndctl/ndctl-sanitize-dimm.txt b/Documentation/ndctl/ndctl-sanitize-dimm.txt
+index b2e5fde9ecb3..e04467856ca4 100644
+--- a/Documentation/ndctl/ndctl-sanitize-dimm.txt
++++ b/Documentation/ndctl/ndctl-sanitize-dimm.txt
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+-include::attrs.adoc[]
+-
+ ndctl-sanitize-dimm(1)
+ ======================
+ 
+diff --git a/Documentation/ndctl/ndctl-setup-passphrase.txt b/Documentation/ndctl/ndctl-setup-passphrase.txt
+index 1219279b4c66..96f709b468fc 100644
+--- a/Documentation/ndctl/ndctl-setup-passphrase.txt
++++ b/Documentation/ndctl/ndctl-setup-passphrase.txt
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+-include::attrs.adoc[]
+-
+ ndctl-setup-passphrase(1)
+ =========================
+ 
+diff --git a/Documentation/ndctl/ndctl-update-passphrase.txt b/Documentation/ndctl/ndctl-update-passphrase.txt
+index c7c1bfc8ab0b..591ce44ebc3e 100644
+--- a/Documentation/ndctl/ndctl-update-passphrase.txt
++++ b/Documentation/ndctl/ndctl-update-passphrase.txt
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+-include::attrs.adoc[]
+-
+ ndctl-update-passphrase(1)
+ ==========================
  
 
