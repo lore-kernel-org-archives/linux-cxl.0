@@ -2,68 +2,98 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 642B2C433F5
-	for <linux-cxl@archiver.kernel.org>; Wed,  5 Jan 2022 21:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D157C433F5
+	for <linux-cxl@archiver.kernel.org>; Thu,  6 Jan 2022 16:55:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244528AbiAEVf3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 5 Jan 2022 16:35:29 -0500
-Received: from mga18.intel.com ([134.134.136.126]:16459 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244519AbiAEVfF (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Wed, 5 Jan 2022 16:35:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641418504; x=1672954504;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=nCAaItum+5HppG++YWpzN72ImzToj0lcy7j7tv0h9UU=;
-  b=XhEekTivjbngi6K3q/tcPVK9+Ai3IaUv6IBg2eQy6zA6Xxmii3xCG46t
-   j2nD/CgqK9KKiVLwg0rOri99ddYmCnN6ADjbNfL9sIgk/pM1VIwFeTFKp
-   xH9oWMcWBWiAPgkycDFn55alJfphTGGHv3p2MJqSwpR6jFUl5cJMygtic
-   p7GOzZ2heULcqjE2G+CO798lnQCsj6qAexpL93vKWHLgELNkKPRq4+bnz
-   CnHf4QJ9IM1DOx1xwHtj+bxV38xa2gSw15YIcS/PDsJAIYWT5zgpip5jf
-   hslXC3A9E0GIM///oPwGe0Uh7dnxY2zeJgL2YQNzlMTC592le4baYFD2j
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="229354124"
-X-IronPort-AV: E=Sophos;i="5.88,264,1635231600"; 
-   d="scan'208";a="229354124"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 13:32:48 -0800
-X-IronPort-AV: E=Sophos;i="5.88,264,1635231600"; 
-   d="scan'208";a="668240795"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 13:32:48 -0800
-Subject: [ndctl PATCH v3 13/16] ndctl: Drop executable bit for
- bash-completion script
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     vishal.l.verma@intel.com
-Cc:     nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Date:   Wed, 05 Jan 2022 13:32:47 -0800
-Message-ID: <164141836772.3990253.4996882214531720931.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <164141829899.3990253.17547886681174580434.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <164141829899.3990253.17547886681174580434.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        id S241444AbiAFQzw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 6 Jan 2022 11:55:52 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4358 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241433AbiAFQzv (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 6 Jan 2022 11:55:51 -0500
+Received: from fraeml734-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JVC800RZtz67GQ8;
+        Fri,  7 Jan 2022 00:52:32 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml734-chm.china.huawei.com (10.206.15.215) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Thu, 6 Jan 2022 17:55:49 +0100
+Received: from localhost (10.122.247.231) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.20; Thu, 6 Jan
+ 2022 16:55:49 +0000
+Date:   Thu, 6 Jan 2022 16:55:47 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+CC:     <linux-cxl@vger.kernel.org>,
+        Chet Douglas <chet.r.douglas@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: Re: [RFC PATCH v2 23/28] cxl/region: Implement XHB verification
+Message-ID: <20220106165547.000016bd@huawei.com>
+In-Reply-To: <20211022183709.1199701-24-ben.widawsky@intel.com>
+References: <20211022183709.1199701-1-ben.widawsky@intel.com>
+        <20211022183709.1199701-24-ben.widawsky@intel.com>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhreml701-chm.china.huawei.com (10.201.108.50) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The rpm build process warns:
+On Fri, 22 Oct 2021 11:37:04 -0700
+Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-*** WARNING: ./usr/share/bash-completion/completions/ndctl is executable but has no shebang, removing executable bit
+> Cross host bridge verification primarily determines if the requested
+> interleave ordering can be achieved by the root decoder, which isn't as
+> programmable as other decoders.
+> 
+> The algorithm implemented here is based on the CXL Type 3 Memory Device
+> Software Guide, chapter 2.13.14
+> 
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> ---
+>  .clang-format        |  1 +
+>  drivers/cxl/region.c | 81 +++++++++++++++++++++++++++++++++++++++++++-
+>  drivers/cxl/trace.h  |  3 ++
+>  3 files changed, 84 insertions(+), 1 deletion(-)
+> 
+> diff --git a/.clang-format b/.clang-format
+> index cb7c46371465..55f628f21722 100644
+> --- a/.clang-format
+> +++ b/.clang-format
+> @@ -169,6 +169,7 @@ ForEachMacros:
+>    - 'for_each_cpu_and'
+>    - 'for_each_cpu_not'
+>    - 'for_each_cpu_wrap'
+> +  - 'for_each_cxl_decoder_target'
+>    - 'for_each_cxl_endpoint'
+>    - 'for_each_dapm_widgets'
+>    - 'for_each_dev_addr'
+> diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
+> index d127c9c69eef..53442de33d11 100644
+> --- a/drivers/cxl/region.c
+> +++ b/drivers/cxl/region.c
+> @@ -30,6 +30,11 @@
+>  	for (idx = 0, ep = (region)->targets[idx]; idx < region_ways(region);  \
+>  	     idx++, ep = (region)->targets[idx])
+>  
+> +#define for_each_cxl_decoder_target(target, decoder, idx)                      \
+> +	for (idx = 0, target = (decoder)->target[idx];                         \
+> +	     idx < (decoder)->nr_targets;                                      \
+> +	     idx++, target = (decoder)->target[idx])
+> +
+target used for too many things in this macro.
 
-Clear the unnecessary executable bit since completion helpers are sourced,
-not executed.
+I'm messing around with this to poke some of the Qemu stuff and noticed
+this in passing...
 
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- contrib/ndctl |    0 
- 1 file changed, 0 insertions(+), 0 deletions(-)
- mode change 100755 => 100644 contrib/ndctl
-
-diff --git a/contrib/ndctl b/contrib/ndctl
-old mode 100755
-new mode 100644
-
+Jonathan
