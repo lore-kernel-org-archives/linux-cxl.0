@@ -2,111 +2,313 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7043DC433EF
-	for <linux-cxl@archiver.kernel.org>; Thu,  6 Jan 2022 20:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C209CC433F5
+	for <linux-cxl@archiver.kernel.org>; Thu,  6 Jan 2022 20:49:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232688AbiAFUkY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 6 Jan 2022 15:40:24 -0500
-Received: from mga01.intel.com ([192.55.52.88]:36722 "EHLO mga01.intel.com"
+        id S243952AbiAFUtG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 6 Jan 2022 15:49:06 -0500
+Received: from mga06.intel.com ([134.134.136.31]:22913 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232673AbiAFUkX (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 6 Jan 2022 15:40:23 -0500
+        id S244004AbiAFUtG (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 6 Jan 2022 15:49:06 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641501623; x=1673037623;
+  t=1641502146; x=1673038146;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=KZyQPDpbiZhWCmOnCsxj9VhyJoF0sP1HJlXxHYTbXEc=;
-  b=mDDRVNH+Oi/8xAICeluBANpNJICcFI/dChPSVYUp46II+rOTlMdSjNSx
-   bLIDf1uQPY3Q8va/DIbqzL67nRQ9+LbIuQVTPhDPdBH/p7h4m11rqCWRz
-   kbiJZjSRfOKu271SxBl2423dp4E816naR3d2MaGx+63yOEPiWhh2psPB1
-   fUldK/b8SO5klg5HvbijoOqS6VcQeUwL2aVd8vtkpf7B0opMdSpYDVVKT
-   ulIRsq1/+aZVhoG84SgBDaTge2UUSAIhC7555vz4SAsNe+G1P+NfOClNo
-   A5uyxjPqNZezjiwzY4/yY+8bQ7NgfLn7lm5Gl+8iwJsvT8hVovosQTqAp
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="267025678"
+  bh=YXIWpJSDkXCPKWmzsbTssesp7LszSl7Ai2Xqf3BMVhE=;
+  b=XUtAgZTHYAi/6Ny7f3fBnKy5HhnAcDbxxYGgxIkw3xaD7mbFcM/KEqfE
+   MirGrNQ5URoZZkYz0dzayaXWLjq/hW6tOxivWev6Ex76sYtw+nS0ByApv
+   lYnQHikZLL5bKp/HMoZsx5V6q3GQsWwI9sJoqL+VV5SnGy1dXJsjbk/Om
+   9eSxvUV/dFXT/bNYbq0v76QY1vBYTtqcKLyRtk8DuucXRSNMC+FbnBV0x
+   Btf52l02inQvlgGO1LnltVWFTzeyBebIyLboYznpBFOq00/vp1Df5NOrg
+   Qxyqld2exwwx7pWfHtrrQCyEweJ5jbAkzQsiwd88mkLbt2sIGF8AWHAMy
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="303482929"
 X-IronPort-AV: E=Sophos;i="5.88,267,1635231600"; 
-   d="scan'208";a="267025678"
+   d="scan'208";a="303482929"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 12:40:19 -0800
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 12:49:05 -0800
 X-IronPort-AV: E=Sophos;i="5.88,267,1635231600"; 
-   d="scan'208";a="668556215"
+   d="scan'208";a="668558332"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 12:40:19 -0800
-Date:   Thu, 6 Jan 2022 12:40:19 -0800
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 12:49:05 -0800
+Date:   Thu, 6 Jan 2022 12:49:05 -0800
 From:   Ira Weiny <ira.weiny@intel.com>
 To:     alison.schofield@intel.com
 Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Subject: Re: [ndctl PATCH 3/7] libcxl: apply CXL_CAPACITY_MULTIPLIER to
- partition alignment field
-Message-ID: <20220106204019.GD178135@iweiny-DESK2.sc.intel.com>
+Subject: Re: [ndctl PATCH 4/7] cxl: add memdev partition information to
+ cxl-list
+Message-ID: <20220106204905.GE178135@iweiny-DESK2.sc.intel.com>
 Mail-Followup-To: alison.schofield@intel.com,
         Ben Widawsky <ben.widawsky@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>, nvdimm@lists.linux.dev,
         linux-cxl@vger.kernel.org
 References: <cover.1641233076.git.alison.schofield@intel.com>
- <a5ff95fd75d42c29a15d285caee81cb9ea4c05d8.1641233076.git.alison.schofield@intel.com>
+ <78ff68a062f23cef48fb6ea1f91bcd7e11e4fa6e.1641233076.git.alison.schofield@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a5ff95fd75d42c29a15d285caee81cb9ea4c05d8.1641233076.git.alison.schofield@intel.com>
+In-Reply-To: <78ff68a062f23cef48fb6ea1f91bcd7e11e4fa6e.1641233076.git.alison.schofield@intel.com>
 User-Agent: Mutt/1.11.1 (2018-12-01)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Jan 03, 2022 at 12:16:14PM -0800, Schofield, Alison wrote:
+On Mon, Jan 03, 2022 at 12:16:15PM -0800, Schofield, Alison wrote:
 > From: Alison Schofield <alison.schofield@intel.com>
 > 
-> The IDENTIFY mailbox command returns the partition alignment field
-> expressed in multiples of 256 MB.
 
-Interesting...
+"Users will want to be able to check the current partition information.  In
+addition they will need to know the capacity values to form a valid set
+partition information command."
 
-I don't think anyone is using this function just yet but this does technically
-change the behavior of this function.
+> Add information useful for managing memdev partitions to cxl-list
+     ^
+   "optional"
 
-Will that break anyone or cxl-cli?
-
-> Use CXL_CAPACITY_MULTIPLIER when
-> returning this field.
+> output. Include all of the fields from GET_PARTITION_INFO and the
+> partitioning related fields from the IDENTIFY mailbox command.
 > 
-> This is in sync with all the other partitioning related fields using
-> the multiplier.
 
-To me the fact that this was not in bytes implies that the original API of
-libcxl was intended to not convert these values.
+"Sample output for this section is:"
 
-Vishal may have an opinion.  Should these be in bytes or 'CXL Capacity' units
-(ie 256MB's)?
-
-I think I prefer bytes as well.
-
-Ira
-
+>     "partition":{
+>       "active_volatile_capacity":273535729664,
+>       "active_persistent_capacity":0,
+>       "next_volatile_capacity":0,
+>       "next_persistent_capacity":0,
+>       "total_capacity":273535729664,
+>       "volatile_only_capacity":0,
+>       "persistent_only_capacity":0,
+>       "partition_alignment":268435456
+>     }
 > 
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 > ---
->  cxl/lib/libcxl.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/cxl/cxl-list.txt |  23 +++++++
+>  util/json.h                    |   1 +
+>  cxl/list.c                     |   5 ++
+>  util/json.c                    | 112 +++++++++++++++++++++++++++++++++
+>  4 files changed, 141 insertions(+)
 > 
-> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-> index 715d8e4..85a6c0e 100644
-> --- a/cxl/lib/libcxl.c
-> +++ b/cxl/lib/libcxl.c
-> @@ -1086,7 +1086,7 @@ CXL_EXPORT unsigned long long cxl_cmd_identify_get_partition_align(
->  	if (cmd->status < 0)
->  		return cmd->status;
+> diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
+> index c8d10fb..e65e944 100644
+> --- a/Documentation/cxl/cxl-list.txt
+> +++ b/Documentation/cxl/cxl-list.txt
+> @@ -85,6 +85,29 @@ OPTIONS
+>    }
+>  ]
+>  ----
+> +-P::
+> +--partition::
+> +	Include partition information in the memdev listing. Example listing:
+> +----
+> +# cxl list -m mem0 -P
+> +[
+> +  {
+> +    "memdev":"mem0",
+> +    "pmem_size":0,
+> +    "ram_size":273535729664,
+> +    "partition":{
+> +      "active_volatile_capacity":273535729664,
+> +      "active_persistent_capacity":0,
+> +      "next_volatile_capacity":0,
+> +      "next_persistent_capacity":0,
+> +      "total_capacity":273535729664,
+> +      "volatile_only_capacity":0,
+> +      "persistent_only_capacity":0,
+> +      "partition_alignment":268435456
+> +    }
+> +  }
+> +]
+> +----
 >  
-> -	return le64_to_cpu(id->partition_align);
-> +	return le64_to_cpu(id->partition_align) * CXL_CAPACITY_MULTIPLIER;
+>  include::human-option.txt[]
+>  
+> diff --git a/util/json.h b/util/json.h
+> index ce575e6..76a8816 100644
+> --- a/util/json.h
+> +++ b/util/json.h
+> @@ -20,6 +20,7 @@ enum util_json_flags {
+>  	UTIL_JSON_FIRMWARE	= (1 << 8),
+>  	UTIL_JSON_DAX_MAPPINGS	= (1 << 9),
+>  	UTIL_JSON_HEALTH	= (1 << 10),
+> +	UTIL_JSON_PARTITION	= (1 << 11),
+>  };
+>  
+>  struct json_object;
+> diff --git a/cxl/list.c b/cxl/list.c
+> index b1468b7..368ec21 100644
+> --- a/cxl/list.c
+> +++ b/cxl/list.c
+> @@ -17,6 +17,7 @@ static struct {
+>  	bool idle;
+>  	bool human;
+>  	bool health;
+> +	bool partition;
+>  } list;
+>  
+>  static unsigned long listopts_to_flags(void)
+> @@ -29,6 +30,8 @@ static unsigned long listopts_to_flags(void)
+>  		flags |= UTIL_JSON_HUMAN;
+>  	if (list.health)
+>  		flags |= UTIL_JSON_HEALTH;
+> +	if (list.partition)
+> +		flags |= UTIL_JSON_PARTITION;
+>  	return flags;
 >  }
 >  
->  CXL_EXPORT unsigned int cxl_cmd_identify_get_label_size(struct cxl_cmd *cmd)
+> @@ -62,6 +65,8 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
+>  				"use human friendly number formats "),
+>  		OPT_BOOLEAN('H', "health", &list.health,
+>  				"include memory device health information "),
+> +		OPT_BOOLEAN('P', "partition", &list.partition,
+> +				"include memory device partition information "),
+>  		OPT_END(),
+>  	};
+>  	const char * const u[] = {
+> diff --git a/util/json.c b/util/json.c
+> index f97cf07..4254dea 100644
+> --- a/util/json.c
+> +++ b/util/json.c
+> @@ -1616,6 +1616,113 @@ err_jobj:
+>  	return NULL;
+>  }
+>  
+> +/*
+> + * Present complete view of memdev partition by presenting fields from
+> + * both GET_PARTITION_INFO and IDENTIFY mailbox commands.
+> + */
+> +static struct json_object *util_cxl_memdev_partition_to_json(struct cxl_memdev *memdev,
+> +		unsigned long flags)
+> +{
+> +	struct json_object *jobj = NULL;
+> +	struct json_object *jpart;
+> +	unsigned long long cap;
+> +	struct cxl_cmd *cmd;
+> +	int rc;
+> +
+> +	jpart = json_object_new_object();
+> +	if (!jpart)
+> +		return NULL;
+> +	if (!memdev)
+> +		goto err_jobj;
+> +
+> +	/* Retrieve partition info in GET_PARTITION_INFO mbox cmd */
+> +	cmd = cxl_cmd_new_get_partition_info(memdev);
+
+Oh...  now I understand the 'new'...  Sorry...
+
+> +	if (!cmd)
+> +		goto err_jobj;
+> +
+> +	rc = cxl_cmd_submit(cmd);
+> +	if (rc < 0)
+> +		goto err_cmd;
+> +	rc = cxl_cmd_get_mbox_status(cmd);
+> +	if (rc != 0)
+> +		goto err_cmd;
+> +
+> +	cap = cxl_cmd_get_partition_info_get_active_volatile_cap(cmd);
+> +	if (cap != ULLONG_MAX) {
+> +		jobj = util_json_object_size(cap, flags);
+> +		if (jobj)
+> +			json_object_object_add(jpart,
+> +					"active_volatile_capacity", jobj);
+> +	}
+> +	cap = cxl_cmd_get_partition_info_get_active_persistent_cap(cmd);
+> +	if (cap != ULLONG_MAX) {
+> +		jobj = util_json_object_size(cap, flags);
+> +		if (jobj)
+> +			json_object_object_add(jpart,
+> +					"active_persistent_capacity", jobj);
+> +	}
+> +	cap = cxl_cmd_get_partition_info_get_next_volatile_cap(cmd);
+> +	if (cap != ULLONG_MAX) {
+> +		jobj = util_json_object_size(cap, flags);
+> +		if (jobj)
+> +			json_object_object_add(jpart,
+> +					"next_volatile_capacity", jobj);
+> +	}
+> +	cap = cxl_cmd_get_partition_info_get_next_persistent_cap(cmd);
+> +	if (cap != ULLONG_MAX) {
+> +		jobj = util_json_object_size(cap, flags);
+> +		if (jobj)
+> +			json_object_object_add(jpart,
+> +					"next_persistent_capacity", jobj);
+> +	}
+> +	cxl_cmd_unref(cmd);
+> +
+> +	/* Retrieve partition info in the IDENTIFY mbox cmd */
+> +	cmd = cxl_cmd_new_identify(memdev);
+> +	if (!cmd)
+> +		goto err_jobj;
+> +
+> +	rc = cxl_cmd_submit(cmd);
+> +	if (rc < 0)
+> +		goto err_cmd;
+> +	rc = cxl_cmd_get_mbox_status(cmd);
+> +	if (rc != 0)
+> +		goto err_cmd;
+> +
+> +	cap = cxl_cmd_identify_get_total_capacity(cmd);
+> +	if (cap != ULLONG_MAX) {
+> +		jobj = util_json_object_size(cap, flags);
+> +		if (jobj)
+> +			json_object_object_add(jpart, "total_capacity", jobj);
+> +	}
+> +	cap = cxl_cmd_identify_get_volatile_only_capacity(cmd);
+> +	if (cap != ULLONG_MAX) {
+> +		jobj = util_json_object_size(cap, flags);
+> +		if (jobj)
+> +			json_object_object_add(jpart,
+> +					"volatile_only_capacity", jobj);
+> +	}
+> +	cap = cxl_cmd_identify_get_persistent_only_capacity(cmd);
+> +	if (cap != ULLONG_MAX) {
+> +		jobj = util_json_object_size(cap, flags);
+> +		if (jobj)
+> +			json_object_object_add(jpart,
+> +					"persistent_only_capacity", jobj);
+> +	}
+> +	cap = cxl_cmd_identify_get_partition_align(cmd);
+> +	jobj = util_json_object_size(cap, flags);
+> +	if (jobj)
+> +		json_object_object_add(jpart, "partition_alignment", jobj);
+> +
+> +	return jpart;
+> +
+> +err_cmd:
+
+Doesn't this need to be called always, not just on error?
+
+Ira
+
+> +	cxl_cmd_unref(cmd);
+> +err_jobj:
+> +	json_object_put(jpart);
+> +	return NULL;
+> +}
+> +
+>  struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+>  		unsigned long flags)
+>  {
+> @@ -1643,5 +1750,10 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+>  		if (jobj)
+>  			json_object_object_add(jdev, "health", jobj);
+>  	}
+> +	if (flags & UTIL_JSON_PARTITION) {
+> +		jobj = util_cxl_memdev_partition_to_json(memdev, flags);
+> +		if (jobj)
+> +			json_object_object_add(jdev, "partition", jobj);
+> +	}
+>  	return jdev;
+>  }
 > -- 
 > 2.31.1
 > 
