@@ -2,147 +2,216 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8C1C433EF
-	for <linux-cxl@archiver.kernel.org>; Fri,  7 Jan 2022 19:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA542C433F5
+	for <linux-cxl@archiver.kernel.org>; Fri,  7 Jan 2022 19:39:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231420AbiAGTUW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 7 Jan 2022 14:20:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54432 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230475AbiAGTUV (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 7 Jan 2022 14:20:21 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3752C06173E
-        for <linux-cxl@vger.kernel.org>; Fri,  7 Jan 2022 11:20:21 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id pj2so4726025pjb.2
-        for <linux-cxl@vger.kernel.org>; Fri, 07 Jan 2022 11:20:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0KUHdYWZrNQNGd+wqJYrVbHFyI10Jcy+xpDfU5P3J28=;
-        b=VniaEUOJjfHFUTU+bdguSmbz3nDd7hjAGjCTcSZwPzluLWmAaLu/IEMmu16Hjkv6mX
-         5kgSvqc8NZdVqCQaI4eYeT4HTQzfckR9gHjXko3ouU4O/KOqkJSKQNR/8KpMDEJZ8y9A
-         0G8Fuxu5OZQCYkVMWTADPiX528ASEDm0nSeR6vWg/wI4SFsYwVFSRgb8dPKbiXQXokPY
-         xVCoqY61Q0uo2s9KWkxWznmHemXlIojSHUULCCDSclaNX9rBTwIn5eKIvmmC/35T3sLx
-         uZTohww8udIskzgZZdtor7Iriq01DGywF01j+2cga7sFEBocYwYMulZIbnR/Zlla5qA0
-         AMIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0KUHdYWZrNQNGd+wqJYrVbHFyI10Jcy+xpDfU5P3J28=;
-        b=HEVZtVRxC6DNYGXJlYFYjLbAiMjm7ckEx2CDnxjtmMI3HbxSJxdKoK3D634OH43Yl8
-         c81CTnB1eXN/o94+UitIRVXmsZpRjtWIRAlMD5ixRZQiM7BMwW8u/Vv6Xi4/JINzVtqA
-         pdg7FyrgdeIprt6TAO39BHBzlPzB3YIVGvTkngCFPI3W8X88MDJfjx6k2AdfpZABP5+b
-         DYpfjhRB9XcMxvJ957SLxCMN+cPnJXJClx07mix2B/iwL8Mlo02O8oRA6l11Xl9Yiy8M
-         IgdmMsvvB690Mq98rIzmkvoQB040kG91mQRSkTqNKGd2f0wFxnQcBPSz4PC8Q/JCbAxh
-         iyQA==
-X-Gm-Message-State: AOAM532speaiBd0JfOX4BmjUWcU80ySFZyzk/wfupBq2nvdBH5eckok3
-        Y+MyiruLk5ZmHHYgEJ2DDgzlQM8lvK3fsiexpqsRKg==
-X-Google-Smtp-Source: ABdhPJyJf8RMwf7gYVJ0h6mf+V2vkE5ytFqOUl5SZvDR+zFeHtA7ne8qbFO9vjyorkThp60xVYTI+LFqhXMZEYfLiSo=
-X-Received: by 2002:a17:90a:7101:: with SMTP id h1mr17108928pjk.93.1641583221168;
- Fri, 07 Jan 2022 11:20:21 -0800 (PST)
+        id S232685AbiAGTjM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 7 Jan 2022 14:39:12 -0500
+Received: from mga09.intel.com ([134.134.136.24]:9112 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230338AbiAGTjM (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Fri, 7 Jan 2022 14:39:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641584352; x=1673120352;
+  h=date:from:to:subject:message-id:references:mime-version:
+   in-reply-to;
+  bh=AHDbmmtOhyCftkxkrACEYqu07BXhff8gmmgKFaPekxI=;
+  b=glhitbDskT2OkFNzhBua4xGJeNUWFMi03YVLKBXJRZw9fUpsqeM9oRcJ
+   WgEr9vhzyckDnjSXuRy7Q0T5vszUhnv7Krv6ejSqLoHkIBljolfrNL/ml
+   8DvpdoT6jfWcQe1LBo3+JJVKGI4UcuUpHM8LJj42Xs/7Htl6zD5Ow+nu2
+   Mnv6H4atzdi7KjCKbt/NSbB62Rwv87WG9BNt83mlL0DmkM8UTFTCaUCw8
+   Eo+CkNXMc3z0BBY3P0hef/hCVSWDMKX2KXPOlGBikzAhMl+RXy9H1Jht1
+   1jc/KinZLd3en41gfV6Hx75FgKOGlkKdAoxwgBmS3GacDjdJ3nXLILwri
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10220"; a="242729488"
+X-IronPort-AV: E=Sophos;i="5.88,270,1635231600"; 
+   d="scan'208";a="242729488"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2022 11:39:08 -0800
+X-IronPort-AV: E=Sophos;i="5.88,270,1635231600"; 
+   d="scan'208";a="612277590"
+Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.41])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2022 11:39:07 -0800
+Date:   Fri, 7 Jan 2022 11:44:17 -0800
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+Subject: Re: [ndctl PATCH 0/7] Add partitioning support for CXL memdevs
+Message-ID: <20220107194417.GA803588@alison-desk>
+References: <cover.1641233076.git.alison.schofield@intel.com>
+ <20220106203246.GB178135@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-References: <20220107003756.806582-1-ben.widawsky@intel.com>
- <20220107003756.806582-13-ben.widawsky@intel.com> <20220107181454.00004a1b@huawei.com>
-In-Reply-To: <20220107181454.00004a1b@huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 7 Jan 2022 11:20:10 -0800
-Message-ID: <CAPcyv4hmt0mJ9Bek7R0dOeX1aQm_yKkv6JhXcTzG36Zs7xVRYg@mail.gmail.com>
-Subject: Re: [PATCH 12/13] cxl/region: Record host bridge target list
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux PCI <linux-pci@vger.kernel.org>, patches@lists.linux.dev,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220106203246.GB178135@iweiny-DESK2.sc.intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Jan 7, 2022 at 10:15 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Thu,  6 Jan 2022 16:37:55 -0800
-> Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> > Part of host bridge verification in the CXL Type 3 Memory Device
-> > Software Guide calculates the host bridge interleave target list (6th
-> > step in the flow chart). With host bridge verification already done, it
-> > is trivial to store away the configuration information.
-> >
-> > TODO: Needs support for switches (7th step in the flow chart).
-> >
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > ---
-> >  drivers/cxl/region.c | 41 +++++++++++++++++++++++++++++++----------
-> >  1 file changed, 31 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
-> > index eafd95419895..3120b65b0bc5 100644
-> > --- a/drivers/cxl/region.c
-> > +++ b/drivers/cxl/region.c
-> > @@ -385,6 +385,7 @@ static bool region_hb_rp_config_valid(struct cxl_region *region,
-> >       }
-> >
-> >       for (i = 0; i < hb_count; i++) {
-> > +             struct cxl_decoder *cxld;
-> >               int idx, position_mask;
-> >               struct cxl_dport *rp;
-> >               struct cxl_port *hb;
-> > @@ -422,10 +423,8 @@ static bool region_hb_rp_config_valid(struct cxl_region *region,
-> >                               if (get_rp(ep) != rp)
-> >                                       continue;
-> >
-> > -                             if (port_grouping == -1) {
-> > +                             if (port_grouping == -1)
-> >                                       port_grouping = idx & position_mask;
-> > -                                     continue;
-> > -                             }
-> >
-> >                               /*
-> >                                * Do all devices in the region connected to this CXL
-> > @@ -436,10 +435,32 @@ static bool region_hb_rp_config_valid(struct cxl_region *region,
-> >                                                         "One or more devices are not connected to the correct Host Bridge Root Port\n");
-> >                                       return false;
-> >                               }
-> > +
-> > +                             if (!state_update)
-> > +                                     continue;
-> > +
-> > +                             if (dev_WARN_ONCE(&cxld->dev,
-> > +                                               port_grouping >= cxld->nr_targets,
-> > +                                               "Invalid port grouping %d/%d\n",
-> > +                                               port_grouping, cxld->nr_targets))
-> > +                                     return false;
-> > +
-> > +                             cxld->interleave_ways++;
-> > +                             cxld->target[port_grouping] = get_rp(ep);
->
-> Hi Ben,
->
-> Just one more based on debug rather than review.
->
-> The reason is across 2 patches so not necessary obvious from what is visible here,
-> but port_grouping here for a 2hb, 2rp on each and 1 ep on each of those
-> case goes 0,1,2,3 resulting in us setting one of the host bridges to have
-> a decoder with targets 2 and 3 rather than 0 and 1 set.
->
-> I haven't figured out a particularly good solution yet...  If everything is nice and symmetric
-> and power of 2 then you can simply change the mask on the index to reflect num_root_ports / num_host_bridges
->
-> With that change in place my decoders all look good on this particular configuration :)
-> Note this is eyeball based testing only and on just one configuration so far.
->
-> I'll have to try your tool as it is really annoying that the mem devices change order on every
-> boot as my script is dumb currently so have to edit it every run.
+Thanks for the review Ira!
+There's one question back at you wrt adding MAN page to cover letter.
+Otherwise, I'm absorbing all your feedback.
 
-I have support pending for cxl-cli that lets memdevs be filtered by
-serial number so you don't need to worry about dynamic kernel device
-names.
 
-Should be posted later today.
+On Thu, Jan 06, 2022 at 12:32:46PM -0800, Ira Weiny wrote:
+> On Mon, Jan 03, 2022 at 12:16:11PM -0800, Schofield, Alison wrote:
+> > From: Alison Schofield <alison.schofield@intel.com>
+>  
+> First, thanks for taking this on!  :-D
+> 
+> > To support changing partitions on CXL memdevs, first provide access to device
+> > partitioning info.
+> >
+> 
+> How about:
+> 
+> Users will want to configure CXL memdevs on CXL devices which support
+> partitioning.  CXL provides get and set partition info mailbox command to do
+> this.
+> 
+> Add support to retrieve partition info and set partition info.
+> 
+> ...
+> 
+
+Will reword, thanks.
+
+> >
+> >
+> > The first 4 patches add accessors to all
+> > the partition info a CXL command parser needs in order to validate
+> > the command. This info is added to cxl list to assist the user in
+> > creating valid partition requests.
+> 
+> Great but what is a valid partition request?
+>
+
+I didn't regurgitate the restrictions here in the cover letter, nor
+in the patch commit logs. They are only visible in the MAN page, and
+I reference the MAN page in the cxl set-partition-info command patch.
+I could add a pretty version of the MAN page here to give the cover
+letter more details.
+
+Would you like to see the MAN page here?
+
+> > 
+> > # cxl list -MP
+> > [
+> >   {
+> >     "memdev":"mem0",
+> >     "pmem_size":0,
+> >     "ram_size":273535729664,
+> >     "partition":{
+> >       "active_volatile_capacity":273535729664,
+> >       "active_persistent_capacity":0,
+> >       "next_volatile_capacity":268435456,
+> >       "next_persistent_capacity":273267294208,
+> >       "total_capacity":273535729664,
+> >       "volatile_only_capacity":0,
+> >       "persistent_only_capacity":0,
+> >       "partition_alignment":268435456
+> >     }
+> >   }
+> > ]
+> > 
+> > Next introduce libcxl ioctl() interfaces for the SET_PARTITION_INFO
+> > mailbox command and the new CXL command. cxl-cli does the constraints
+> > checking. It does not offer the IMMEDIATE mode option since we do not
+> > have driver support for that yet.
+> 
+> How about something like 'cxl-cli restricts the use of the IMMEDIATE flag until
+> such time as the driver supports it'?
+
+Those words are really not true. cxl-cli doesn't restrict the flags use,
+it simply does not offer the option.
+
+> 
+> But we probably should just let the command through and rely on the driver to
+> do what it does...
+> 
+Nah. I don't think I should add -i --immediate to the command yet.
+
+(I think we covered this in chatroom)
+
+> > 
+> > # cxl set-partition-info
+> >  usage: cxl set-partition-info <mem0> [<mem1>..<memN>] [<options>]
+> > 
+> >     -v, --verbose         turn on debug
+> >     -s, --volatile_size <n>
+> >                           next volatile partition size in bytes
+> > 
+> > Guessing that
+>   ^^^^^^^^^^^^^
+>   Delete
+> 
+> 'A libcxl user can...'
+> 
+> >
+
+Will delete.
+
+
+> > a libcxl user could send the SET_PARTITION_INFO mailbox
+> > command outside of cxl-cli tool, so a kernel patch that disables the
+> > immediate bit, on the receiving end of the ioctl, follows.
+> 
+> cool!
+> 
+> > 
+> > It may be simpler to block the immediate bit in the libcxl API today,
+> > (and as I write this cover letter I'm wondering just how far this goes
+> > astray ;)) However, the kernel patch to peek in the payload sets us on
+> > the path of inspecting set-partition-info mailbox commands in the future,
+> > when immediate mode support is required.
+> 
+> I'd just delete this.  I think it is best to leave the kernel to the
+> enforcement and not complicate the user space.
+
+got it.
+
+> 
+> Ira
+> 
+> > 
+> > Testing - so far I've only tested w one memdev in a Simics env. So,
+> > next will be growing that Simics config, using cxl_test env, and 
+> > adding a unit test.
+> > 
+> > Alison Schofield (7):
+> >   libcxl: add GET_PARTITION_INFO mailbox command and accessors
+> >   libcxl: add accessors for capacity fields of the IDENTIFY command
+> >   libcxl: apply CXL_CAPACITY_MULTIPLIER to partition alignment field
+> >   cxl: add memdev partition information to cxl-list
+> >   libcxl: add interfaces for SET_PARTITION_INFO mailbox command
+> >   ndctl, util: use 'unsigned long long' type in OPT_U64 define
+> >   cxl: add command set-partition-info
+> > 
+> >  Documentation/cxl/cxl-list.txt               |  23 ++++
+> >  Documentation/cxl/cxl-set-partition-info.txt |  27 +++++
+> >  Documentation/cxl/partition-description.txt  |  15 +++
+> >  Documentation/cxl/partition-options.txt      |  19 +++
+> >  Documentation/cxl/Makefile.am                |   3 +-
+> >  cxl/builtin.h                                |   1 +
+> >  cxl/lib/private.h                            |  19 +++
+> >  cxl/libcxl.h                                 |  12 ++
+> >  util/json.h                                  |   1 +
+> >  util/parse-options.h                         |   2 +-
+> >  util/size.h                                  |   1 +
+> >  cxl/cxl.c                                    |   1 +
+> >  cxl/lib/libcxl.c                             | 117 ++++++++++++++++++-
+> >  cxl/lib/libcxl.sym                           |  11 ++
+> >  cxl/list.c                                   |   5 +
+> >  cxl/memdev.c                                 |  89 ++++++++++++++
+> >  util/json.c                                  | 112 ++++++++++++++++++
+> >  17 files changed, 455 insertions(+), 3 deletions(-)
+> >  create mode 100644 Documentation/cxl/cxl-set-partition-info.txt
+> >  create mode 100644 Documentation/cxl/partition-description.txt
+> >  create mode 100644 Documentation/cxl/partition-options.txt
+> > 
+> > -- 
+> > 2.31.1
+> > 
