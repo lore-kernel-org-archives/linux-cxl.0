@@ -2,372 +2,180 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DEDC433FE
-	for <linux-cxl@archiver.kernel.org>; Thu,  6 Jan 2022 22:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A24C433EF
+	for <linux-cxl@archiver.kernel.org>; Fri,  7 Jan 2022 00:38:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244807AbiAFWTU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 6 Jan 2022 17:19:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244435AbiAFWTU (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 6 Jan 2022 17:19:20 -0500
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58AD9C061245
-        for <linux-cxl@vger.kernel.org>; Thu,  6 Jan 2022 14:19:20 -0800 (PST)
-Received: by mail-pl1-x630.google.com with SMTP id l8so1244064plt.6
-        for <linux-cxl@vger.kernel.org>; Thu, 06 Jan 2022 14:19:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qdMFx/QzoWX1+IsHVch7VB0wvIBZ3X//+6+hiPtIjgU=;
-        b=N7ZsI2oOLr2Oi+fdo5EhNd7p6qy3DtpaDsrd3M1NkDP7fxWsSlbPtAymMQattl+5U1
-         6qoeo1hghGIoTH+voaWPbrI3iKHxC6W3IWTl5cnYZjBzIZphXhSulDGlsnNVYv3V0sXy
-         qJxe1QPFg3UfHeCHAn0OuKd0CAkK5g2l/uil9yeVfgVbEYyJQfhNtIkQdLCalOgj9ODl
-         CVi31MvrEBDt2FMuJa55tekR3MlCKnkK2W2S7f/AVdUuAkvYVjQ721zscBBxS3feFRqs
-         bYe5LDS748YTqhL3z8PwdmWiWSKRw0uwunHa2BOQfvfQpKJT9iitViZbzbHfDIBCbG0N
-         7VKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qdMFx/QzoWX1+IsHVch7VB0wvIBZ3X//+6+hiPtIjgU=;
-        b=MF/tRFBEJHZwCgxVNOV1U4/Sz+qCsyUXBkw0E9r+heDDM8XpKOsiOX/3aI3m3InmTX
-         o1iod9wVrS9uNFANVZglzcOel+80nsrDA/oyEXrCpn2xHZqi9QSR6UkRApiI+yd9HaPb
-         C1G3RcfFHis6+srfw80QySnOlL/J0rgYHw6DFG141SKNo8Jz2JISyCw1AD+JimDVVfTA
-         gL2sbV3df9oyk1ZI1qH8AOUfxwbzt05xAXTbKKmswrCPwFOmnwMP7kt6S7AWDoCFDuOO
-         KPK8tnKpV1iZevMzVVdQ1OA2KC11zOMr+Nlj+NHmpUa5x5M3MHMTlvqSVZfz1/r9WhyF
-         /pFQ==
-X-Gm-Message-State: AOAM532d62SCIkrT48ZD7nolGMdIE+cVmNK1BfenermJN8rkLx9tEMME
-        aTUEaQ4qALSORdM6vkCr4ikiVUVTuL9mua6LJOne6Q==
-X-Google-Smtp-Source: ABdhPJz7wSNyUpzVxsu0sLTZhQQykIHmLvm6Oa4jrE6skLZv8EmqFOvoaCUvHrD0KiVH1jILnBBXFTpEDT4IlkLcQic=
-X-Received: by 2002:a17:902:8488:b0:149:8545:5172 with SMTP id
- c8-20020a170902848800b0014985455172mr46479336plo.132.1641507559738; Thu, 06
- Jan 2022 14:19:19 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1641233076.git.alison.schofield@intel.com> <fd590fbbc2f1abaeca1fd368d26c4e90c3a89d69.1641233076.git.alison.schofield@intel.com>
-In-Reply-To: <fd590fbbc2f1abaeca1fd368d26c4e90c3a89d69.1641233076.git.alison.schofield@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 6 Jan 2022 14:19:08 -0800
-Message-ID: <CAPcyv4gYjDo7vuFYqJgUL6mvOKosrzLRMxTA8tB0v86s08f_VA@mail.gmail.com>
-Subject: Re: [ndctl PATCH 7/7] cxl: add command set-partition-info
-To:     "Schofield, Alison" <alison.schofield@intel.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        id S1343972AbiAGAiK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 6 Jan 2022 19:38:10 -0500
+Received: from mga18.intel.com ([134.134.136.126]:59426 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1343881AbiAGAiJ (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 6 Jan 2022 19:38:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641515889; x=1673051889;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=JTW2+0Slo7dKP7CwxOP9ODtSOY8+sQIm7TNbacS3M6g=;
+  b=OFC29+UgKCEX1q+4c/BhtaPHenNMHEZyjO2uiHjmStc4XtVnAnFTIY0o
+   Gazhb+NXLg7DUu81mDzjzvD33k39HqPa/dn4MTlhb5S1v88LhgCJTfpPV
+   gwd2ZLsFngIzMipRZ6/YvGKTynY+zUOP0xmsiQYsgX0eD6HlgZ1S2Eo4a
+   woLwUdDQuo6zsy4vTbH5ZTsZ7v8QvcNh1bpRMuiEY2bldSuCrsI5KcDlO
+   a1xKm772LHSvfW1aY/J0eSpYiBzgbNutaSbb0Y0b/R+zTJQ5JdXxzESjc
+   HBD0eq5fusKalu+EB6cqsFD1Rk+LzAvjholptUSqTEOix7Gtg1cboq/zW
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="229582012"
+X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
+   d="scan'208";a="229582012"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:38:09 -0800
+X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
+   d="scan'208";a="471123166"
+Received: from elenawei-mobl2.amr.corp.intel.com (HELO localhost.localdomain) ([10.252.138.104])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:38:09 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     linux-cxl@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-pci@vger.kernel.org
+Cc:     patches@lists.linux.dev, Bjorn Helgaas <helgaas@kernel.org>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: [PATCH 00/13] CXL Region driver
+Date:   Thu,  6 Jan 2022 16:37:43 -0800
+Message-Id: <20220107003756.806582-1-ben.widawsky@intel.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Jan 3, 2022 at 12:11 PM <alison.schofield@intel.com> wrote:
->
-> From: Alison Schofield <alison.schofield@intel.com>
->
-> The command 'cxl set-partition-info' operates on a CXL memdev,
-> or a set of memdevs, allowing the user to change the partition
-> layout of the device.
->
-> Synopsis:
-> Usage: cxl set-partition-info <mem0> [<mem1>..<memN>] [<options>]
->
->     -v, --verbose         turn on debug
->     -s, --volatile_size <n>
->                           next volatile partition size in bytes
->
-> The MAN page explains how to find partitioning capabilities and
-> restrictions.
->
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> ---
->  Documentation/cxl/cxl-set-partition-info.txt | 27 ++++++
->  Documentation/cxl/partition-description.txt  | 15 ++++
->  Documentation/cxl/partition-options.txt      | 19 +++++
->  Documentation/cxl/Makefile.am                |  3 +-
->  cxl/builtin.h                                |  1 +
->  cxl/cxl.c                                    |  1 +
->  cxl/memdev.c                                 | 89 ++++++++++++++++++++
->  7 files changed, 154 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/cxl/cxl-set-partition-info.txt
->  create mode 100644 Documentation/cxl/partition-description.txt
->  create mode 100644 Documentation/cxl/partition-options.txt
->
-> diff --git a/Documentation/cxl/cxl-set-partition-info.txt b/Documentation=
-/cxl/cxl-set-partition-info.txt
-> new file mode 100644
-> index 0000000..32418b6
-> --- /dev/null
-> +++ b/Documentation/cxl/cxl-set-partition-info.txt
-> @@ -0,0 +1,27 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +cxl-set-partition-info(1)
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
-> +
-> +NAME
-> +----
-> +cxl-set-partition-info - set the partitioning between volatile and persi=
-stent capacity on a CXL memdev
-> +
-> +SYNOPSIS
-> +--------
-> +[verse]
-> +'cxl set-partition-info <mem> [ [<mem1>..<memN>] [<options>]'
-> +
-> +include::partition-description.txt[]
-> +Partition the device on the next device reset using the volatile capacit=
-y
-> +requested. Using this command to change the size of the persistent capac=
-ity
-> +shall result in the loss of stored data.
-> +
-> +OPTIONS
-> +-------
-> +include::partition-options.txt[]
-> +
-> +SEE ALSO
-> +--------
-> +linkcxl:cxl-list[1],
-> +CXL-2.0 8.2.9.5.2
-> diff --git a/Documentation/cxl/partition-description.txt b/Documentation/=
-cxl/partition-description.txt
-> new file mode 100644
-> index 0000000..b3efac8
-> --- /dev/null
-> +++ b/Documentation/cxl/partition-description.txt
-> @@ -0,0 +1,15 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +DESCRIPTION
-> +-----------
-> +Partition the device into volatile and persistent capacity. The change
-> +in partitioning will become the =E2=80=9Cnext=E2=80=9D configuration, to=
- become active
-> +on the next device reset.
-> +
-> +Use "cxl list -m <memdev> -P" to examine the partition capacities
-> +supported on a device. Paritionable capacity must exist on the
-> +device. A partition_alignment of zero means no partitionable
-> +capacity is available.
-> +
-> +Using this command to change the size of the persistent capacity shall
-> +result in the loss of data stored.
-> diff --git a/Documentation/cxl/partition-options.txt b/Documentation/cxl/=
-partition-options.txt
-> new file mode 100644
-> index 0000000..84e49c9
-> --- /dev/null
-> +++ b/Documentation/cxl/partition-options.txt
-> @@ -0,0 +1,19 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +<memory device(s)>::
-> +include::memdev-option.txt[]
-> +
-> +-s::
-> +--size=3D::
-> +       Size in bytes of the volatile partition requested.
-> +
-> +       Size must align to the devices partition_alignment.
-> +       Use 'cxl list -m <memdev> -P' to find partition_alignment.
-> +
-> +       Size must be less than or equal to the devices partitionable byte=
-s.
-> +       (total_capacity - volatile_only_capacity - persistent_only_capaci=
-ty)
-> +       Use 'cxl list -m <memdev> -P' to find *_capacity values.
-> +
-> +-v::
-> +       Turn on verbose debug messages in the library (if libcxl was buil=
-t with
-> +       logging and debug enabled).
-> diff --git a/Documentation/cxl/Makefile.am b/Documentation/cxl/Makefile.a=
-m
-> index efabaa3..c5faf04 100644
-> --- a/Documentation/cxl/Makefile.am
-> +++ b/Documentation/cxl/Makefile.am
-> @@ -22,7 +22,8 @@ man1_MANS =3D \
->         cxl-list.1 \
->         cxl-read-labels.1 \
->         cxl-write-labels.1 \
-> -       cxl-zero-labels.1
-> +       cxl-zero-labels.1 \
-> +       cxl-set-partition-info.1
->
->  EXTRA_DIST =3D $(man1_MANS)
->
-> diff --git a/cxl/builtin.h b/cxl/builtin.h
-> index 78eca6e..7f11f28 100644
-> --- a/cxl/builtin.h
-> +++ b/cxl/builtin.h
-> @@ -10,4 +10,5 @@ int cmd_read_labels(int argc, const char **argv, struct=
- cxl_ctx *ctx);
->  int cmd_zero_labels(int argc, const char **argv, struct cxl_ctx *ctx);
->  int cmd_init_labels(int argc, const char **argv, struct cxl_ctx *ctx);
->  int cmd_check_labels(int argc, const char **argv, struct cxl_ctx *ctx);
-> +int cmd_set_partition_info(int argc, const char **argv, struct cxl_ctx *=
-ctx);
->  #endif /* _CXL_BUILTIN_H_ */
-> diff --git a/cxl/cxl.c b/cxl/cxl.c
-> index 4b1661d..3153cf0 100644
-> --- a/cxl/cxl.c
-> +++ b/cxl/cxl.c
-> @@ -64,6 +64,7 @@ static struct cmd_struct commands[] =3D {
->         { "zero-labels", .c_fn =3D cmd_zero_labels },
->         { "read-labels", .c_fn =3D cmd_read_labels },
->         { "write-labels", .c_fn =3D cmd_write_labels },
-> +       { "set-partition-info", .c_fn =3D cmd_set_partition_info },
->  };
->
->  int main(int argc, const char **argv)
-> diff --git a/cxl/memdev.c b/cxl/memdev.c
-> index 5ee38e5..fa63317 100644
-> --- a/cxl/memdev.c
-> +++ b/cxl/memdev.c
-> @@ -6,6 +6,7 @@
->  #include <unistd.h>
->  #include <limits.h>
->  #include <util/log.h>
-> +#include <util/size.h>
->  #include <util/filter.h>
->  #include <cxl/libcxl.h>
->  #include <util/parse-options.h>
-> @@ -23,6 +24,7 @@ static struct parameters {
->         unsigned len;
->         unsigned offset;
->         bool verbose;
-> +       unsigned long long volatile_size;
->  } param;
->
->  #define fail(fmt, ...) \
-> @@ -47,6 +49,10 @@ OPT_UINTEGER('s', "size", &param.len, "number of label=
- bytes to operate"), \
->  OPT_UINTEGER('O', "offset", &param.offset, \
->         "offset into the label area to start operation")
->
-> +#define SET_PARTITION_OPTIONS() \
-> +OPT_U64('s', "volatile_size",  &param.volatile_size, \
-> +       "next volatile partition size in bytes")
-> +
->  static const struct option read_options[] =3D {
->         BASE_OPTIONS(),
->         LABEL_OPTIONS(),
-> @@ -67,6 +73,12 @@ static const struct option zero_options[] =3D {
->         OPT_END(),
->  };
->
-> +static const struct option set_partition_options[] =3D {
-> +       BASE_OPTIONS(),
-> +       SET_PARTITION_OPTIONS(),
-> +       OPT_END(),
-> +};
-> +
->  static int action_zero(struct cxl_memdev *memdev, struct action_context =
-*actx)
->  {
->         size_t size;
-> @@ -174,6 +186,73 @@ out:
->         return rc;
->  }
->
-> +static int validate_partition(struct cxl_memdev *memdev,
-> +               unsigned long long volatile_request)
-> +{
-> +       unsigned long long total_cap, volatile_only, persistent_only;
-> +       unsigned long long partitionable_bytes, partition_align_bytes;
-> +       const char *devname =3D cxl_memdev_get_devname(memdev);
-> +       struct cxl_cmd *cmd;
-> +       int rc;
-> +
-> +       cmd =3D cxl_cmd_new_identify(memdev);
-> +       if (!cmd)
-> +               return -ENXIO;
-> +       rc =3D cxl_cmd_submit(cmd);
-> +       if (rc < 0)
-> +               goto err;
-> +       rc =3D cxl_cmd_get_mbox_status(cmd);
-> +       if (rc !=3D 0)
-> +               goto err;
-> +
-> +       partition_align_bytes =3D cxl_cmd_identify_get_partition_align(cm=
-d);
-> +       if (partition_align_bytes =3D=3D 0) {
-> +               fprintf(stderr, "%s: no partitionable capacity\n", devnam=
-e);
-> +               rc =3D -EINVAL;
-> +               goto err;
-> +       }
-> +
-> +       total_cap =3D cxl_cmd_identify_get_total_capacity(cmd);
-> +       volatile_only =3D cxl_cmd_identify_get_volatile_only_capacity(cmd=
-);
-> +       persistent_only =3D cxl_cmd_identify_get_persistent_only_capacity=
-(cmd);
-> +
-> +       partitionable_bytes =3D total_cap - volatile_only - persistent_on=
-ly;
-> +
-> +       if (volatile_request > partitionable_bytes) {
-> +               fprintf(stderr, "%s: volatile size %lld exceeds partition=
-able capacity %lld\n",
-> +                       devname, volatile_request, partitionable_bytes);
-> +               rc =3D -EINVAL;
-> +               goto err;
-> +       }
-> +       if (!IS_ALIGNED(volatile_request, partition_align_bytes)) {
-> +               fprintf(stderr, "%s: volatile size %lld is not partition =
-aligned %lld\n",
-> +                       devname, volatile_request, partition_align_bytes)=
-;
-> +               rc =3D -EINVAL;
-> +       }
-> +err:
-> +       cxl_cmd_unref(cmd);
-> +       return rc;
-> +}
-> +
-> +static int action_set_partition(struct cxl_memdev *memdev,
-> +               struct action_context *actx)
-> +{
-> +       const char *devname =3D cxl_memdev_get_devname(memdev);
-> +       unsigned long long volatile_request;
-> +       int rc;
-> +
-> +       volatile_request =3D param.volatile_size;
-> +
-> +       rc =3D validate_partition(memdev, volatile_request);
-> +       if (rc)
-> +               return rc;
-> +
-> +       rc =3D cxl_memdev_set_partition_info(memdev, volatile_request, 0)=
-;
-> +       if (rc)
-> +               fprintf(stderr, "%s error: %s\n", devname, strerror(-rc))=
-;
-> +       return rc;
+This patch series introduces the CXL region driver as well as associated APIs in
+CXL core. The region driver enables the creation of "regions" which is a concept
+defined by the CXL 2.0 specification [1]. Region verification and programming
+state are owned by the cxl_region driver (implemented in the cxl_region module).
+It relies on cxl_mem to determine if devices are CXL routed, and cxl_port to
+actually handle the programming of the HDM decoders. Much of the region driver
+is an implementation of algorithms described in the CXL Type 3 Memory Device
+Software Guide [2].
 
-One of the conventions from ndctl is that any command that modifies an
-object should also emit the updated state of that object in JSON. For
-example, "ndctl reconfigure-namespace" arranges for:
+The region driver will be responsible for configuring regions found on
+persistent capacities in the Label Storage Area (LSA), it will also enumerate
+regions configured by BIOS, usually volatile capacities, and will allow for
+dynamic region creation (which can then be stored in the LSA). It is the primary
+consumer of the CXL Port [3] and CXL Mem drivers introduced previously [4]. Dan
+as reworked some of this which is required for this branch. A cached copy is
+included in the gitlab for this project [5]. Those patches will be posted
+shortly.
 
-                unsigned long flags =3D UTIL_JSON_DAX | UTIL_JSON_DAX_DEVS;
-                struct json_object *jndns;
+The patches for the region driver could be squashed. They're broken out to aid
+review and because that's the order they were implemented in. My preference is
+to keep those as they are.
 
-                if (isatty(1))
-                        flags |=3D UTIL_JSON_HUMAN;
-                jndns =3D util_namespace_to_json(ndns, flags);
-                if (jndns)
-                        printf("%s\n", json_object_to_json_string_ext(jndns=
-,
-                                                JSON_C_TO_STRING_PRETTY));
+Some things are still missing and will be worked on while these are reviewed (in
+priority order):
+1. Connection to libnvdimm labels (No plan)
+2. Volatile regions/LSA regions (Have a plan)
+3. Switch ports (Have a plan)
+4. Decoder programming restrictions (No plan). The one know restriction I've
+   missed is to disallow programming HDM decoders that aren't in incremental
+   system physical address ranges.
+5. Stress testing
 
-...to dump the updated state of the namespace, so a similar
-util_memdev_to_json() seems appropriate here. However, perhaps that
-can come later. I have work-in-progress patches to move the core of
-cxl/list.c to a cxl_filter_walk() helper that would allow you to just
-call that to dump a listing for all the memdevs that were passed on
-the command line.
+Here is an example of output when programming a x2 interleave region:
+./cxlctl create-region -i2 -n -a -s $((512<<20)) /sys/bus/cxl/devices/decoder0.0
+[   42.971496][  T644] cxl_core:cxl_bus_probe:1384: cxl_region region0.0:0: probe: -19
+[   42.972400][  T644] cxl_core:cxl_add_region:478: cxl region0.0:0: Added region0.0:0 to decoder0.0
+[   42.979388][  T644] cxl_core:cxl_commit_decoder:394: cxl_port port1: decoder1.0
+[   42.979388][  T644] 	Base 0x0000004c00000000
+[   42.979388][  T644] 	Size 536870912
+[   42.979388][  T644] 	IG 8
+[   42.979388][  T644] 	IW 2
+[   42.979388][  T644] 	TargetList: 0 1 -1 -1 -1 -1 -1 -1
+[   42.982410][  T644] cxl_core:cxl_commit_decoder:394: cxl_port endpoint3: decoder3.0
+[   42.982410][  T644] 	Base 0x0000004c00000000
+[   42.982410][  T644] 	Size 536870912
+[   42.982410][  T644] 	IG 8
+[   42.982410][  T644] 	IW 2
+[   42.982410][  T644] 	TargetList: -1 -1 -1 -1 -1 -1 -1 -1
+[   42.985427][  T644] cxl_core:cxl_commit_decoder:394: cxl_port endpoint2: decoder2.0
+[   42.985427][  T644] 	Base 0x0000004c00000000
+[   42.985427][  T644] 	Size 536870912
+[   42.985427][  T644] 	IG 8
+[   42.985427][  T644] 	IW 2
+[   42.985427][  T644] 	TargetList: -1 -1 -1 -1 -1 -1 -1 -1
+[   42.987937][  T644] cxl_core:cxl_bus_probe:1384: cxl_region region0.0:0: probe: 0
+
+If you're wondering how I tested this, I've baked it into my cxlctl app [6] and
+lib [7]. Eventually this will get absorbed by ndctl/cxl-cli/libcxl.
+
+To get the detailed errors, trace-cmd can be utilized. Until a region device
+exists, the region module will not be loaded, which means the region tracepoints
+will not exist. To get around this, modprobe cxl_region before anything.
+
+trace-cmd record -e cxl ./cxlctl create-region -n -a -s $((256<<20)) /sys/bus/cxl/devices/decoder0.0
+
+Branch can be found at gitlab [8].
+
+---
+
+[1]: https://www.computeexpresslink.org/download-the-specification
+[2]: https://cdrdv2.intel.com/v1/dl/getContent/643805?wapkw=CXL%20memory%20device%20sw%20guide
+[3]: https://lore.kernel.org/linux-cxl/20211022183709.1199701-9-ben.widawsky@intel.com/
+[4]: https://lore.kernel.org/linux-cxl/20211022183709.1199701-17-ben.widawsky@intel.com/
+[5]: https://gitlab.com/bwidawsk/linux/-/commit/126793e22427f7975a8f2fca373764be78012e88
+[6]: https://gitlab.com/bwidawsk-cxl/cxlctl
+[7]: https://gitlab.com/bwidawsk-cxl/cxl_rs
+[8]: https://gitlab.com/bwidawsk/linux/-/tree/cxl_region
+
+---
+
+Ben Widawsky (13):
+  cxl/core: Rename find_cxl_port
+  cxl/core: Track port depth
+  cxl/region: Add region creation ABI
+  cxl/region: Introduce concept of region configuration
+  cxl/mem: Cache port created by the mem dev
+  cxl/region: Introduce a cxl_region driver
+  cxl/acpi: Handle address space allocation
+  cxl/region: Address space allocation
+  cxl/region: Implement XHB verification
+  cxl/region: HB port config verification
+  cxl/region: Add infrastructure for decoder programming
+  cxl/region: Record host bridge target list
+  cxl: Program decoders for regions
+
+ .clang-format                                 |   3 +
+ Documentation/ABI/testing/sysfs-bus-cxl       |  63 ++
+ .../driver-api/cxl/memory-devices.rst         |  14 +
+ drivers/cxl/Makefile                          |   2 +
+ drivers/cxl/acpi.c                            |  30 +
+ drivers/cxl/core/Makefile                     |   1 +
+ drivers/cxl/core/core.h                       |   4 +
+ drivers/cxl/core/hdm.c                        | 198 +++++
+ drivers/cxl/core/port.c                       | 132 +++-
+ drivers/cxl/core/region.c                     | 525 +++++++++++++
+ drivers/cxl/cxl.h                             |  32 +
+ drivers/cxl/cxlmem.h                          |   9 +
+ drivers/cxl/mem.c                             |  16 +-
+ drivers/cxl/port.c                            |  42 +-
+ drivers/cxl/region.c                          | 695 ++++++++++++++++++
+ drivers/cxl/region.h                          |  47 ++
+ drivers/cxl/trace.h                           |  54 ++
+ tools/testing/cxl/Kbuild                      |   1 +
+ 18 files changed, 1849 insertions(+), 19 deletions(-)
+ create mode 100644 drivers/cxl/core/region.c
+ create mode 100644 drivers/cxl/region.c
+ create mode 100644 drivers/cxl/region.h
+ create mode 100644 drivers/cxl/trace.h
+
+
+base-commit: 03716ce2db3c17ba38f26a88d75049c0472a629e
+prerequisite-patch-id: af6a0315e22bfc1099d4f58610b8b897e6e5a060
+-- 
+2.34.1
+
