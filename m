@@ -2,88 +2,187 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00FBC433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 12 Jan 2022 22:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A008C433F5
+	for <linux-cxl@archiver.kernel.org>; Wed, 12 Jan 2022 23:48:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230448AbiALWRx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 12 Jan 2022 17:17:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229938AbiALWRw (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Jan 2022 17:17:52 -0500
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 293CEC06173F
-        for <linux-cxl@vger.kernel.org>; Wed, 12 Jan 2022 14:17:51 -0800 (PST)
-Received: by mail-ed1-x531.google.com with SMTP id q25so15676166edb.2
-        for <linux-cxl@vger.kernel.org>; Wed, 12 Jan 2022 14:17:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=33k6EULhqoNT8C0bFRWhcDpVds5mWskVOlY+a5+29m0=;
-        b=edicIIiBYeE6G3fKcn01uvbuwVX17f1qsKRd+UMXLLUpMyuRUytxbOFWiiyrvHz0t7
-         ZaJu/fyNRdfj5YuoOCSScaZAQYJHfLzDgbhn0voVNPhDkeoXr5zr+JidXvd5I/ywN/KG
-         5REI/zDAkl902/WsfVMPBTu9Vq8rFNiRC9OyT3OCgLCmOAvJaHTt1WqwwPNcPbOIw/ID
-         EWU3FyzEzsJ1mealQzp1vIvhh1PBv8xDsRMoEIRAchQn7CSR2ekkGPKrJnHRuJKHbNjR
-         ippIMCh31Z//sbGCqe+HKcK2zmVlN9bJI8e02Gr2t0zveNEWqxV9LdrwTB0IJ89Stxzp
-         AhAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=33k6EULhqoNT8C0bFRWhcDpVds5mWskVOlY+a5+29m0=;
-        b=hOMujhBZA3K8gcq6oDAuHZYQHNszkKSL6LFwL2ar3jigH3evDlrfpuHkK/0mmhvQSw
-         OiKB1RiKpEA2Ix3Shjn9LaJGTyZ2bM6IpiG2He5ZxCh5NlpHz1SrUEIoXhgBfupcgIgj
-         /BZx4VU+6H+Gd23CN/fx26Y20cHLOy7QtNCA+Ouk7n4HJOXZY97+fCAfs/Tiy/2+2YxX
-         U2abHVCB4lmn/ZqQNngaG48vhcLThlSqHuZ5I5uGFOaUSTnTIidEZMIHiJJJvy+jrnsy
-         iPP0ZaZIvpM542L34Aub7GzBcF8gfAlCD5HPZ8UbGtb1EEMeVkjohhMfq2FoqJBNKXdp
-         ocAw==
-X-Gm-Message-State: AOAM530UsOeASMKOc2eBYc/ge2uoF0z6z7gNZHWtntqqKBQvcocX1rPi
-        JiulNVwmAn5XQOdEoCE519y7l/RTFaVttyZY6/mcNA==
-X-Google-Smtp-Source: ABdhPJytuYsrVpHkmi+Y4Nlpxkm0BfAiwaQC5e6gL4rxweFaNLe8LQGEn7HkQgcNZAkp606q/X23E3EtT2KW5QNLwuU=
-X-Received: by 2002:a05:6402:848:: with SMTP id b8mr1519247edz.79.1642025869621;
- Wed, 12 Jan 2022 14:17:49 -0800 (PST)
+        id S235640AbiALXsE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 12 Jan 2022 18:48:04 -0500
+Received: from mga04.intel.com ([192.55.52.120]:13985 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235642AbiALXsC (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Wed, 12 Jan 2022 18:48:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1642031282; x=1673567282;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=D6dnueQCdz88+vZC8U8lA4/WtL0w6JeRzu7qunSkRtg=;
+  b=XPp8oEVsamBNB45Ulh5gof6nKzUF4MDbIE4fM3fcjbuKNVg1P5XBpjMf
+   pd34FkplAqrwQOQFAXWcuQiv+lNF0j+H5YQE7OBmX1zsM7FkkfriC2Tkk
+   jChMEKRjYP3ZgM+5uPPaWfZgFVTdRbpKwOKIeN/bpoT3ZfaWmGB1CGpJd
+   lwcJUS/r9eUTEBnHiOnvj9rshCOsHGxkbe2+7xsbPaL4PLWUBY/3Qdw53
+   Gb71nQHCjVY95BtjTLOSQVCl+yZ4K8bjHW1XnhIOp8uBOwBDAfdMXMiWp
+   McZkRppHD4evfGxhYjl29UMgMRkTkihDjmWCZ++1ZbdtXcbgEPTHJZ0Fj
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="242695323"
+X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
+   d="scan'208";a="242695323"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 15:48:02 -0800
+X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
+   d="scan'208";a="670324165"
+Received: from jmaclean-mobl1.amr.corp.intel.com (HELO localhost.localdomain) ([10.252.136.131])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 15:48:01 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+        linux-pci@vger.kernel.org
+Cc:     patches@lists.linux.dev, Bjorn Helgaas <helgaas@kernel.org>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: [PATCH v2 00/15] CXL Region driver
+Date:   Wed, 12 Jan 2022 15:47:34 -0800
+Message-Id: <20220112234749.1965960-1-ben.widawsky@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <CAAJ9+9fq1=EcOaSoo3oD_5QjYNAv6PPDjKS+gC9o7XDp2p1XpQ@mail.gmail.com>
-In-Reply-To: <CAAJ9+9fq1=EcOaSoo3oD_5QjYNAv6PPDjKS+gC9o7XDp2p1XpQ@mail.gmail.com>
-From:   Zayd Qumsieh <zaydq@rivosinc.com>
-Date:   Wed, 12 Jan 2022 14:16:18 -0800
-Message-ID: <CAAJ9+9ct3+N0LyH+9N03ZQYUZnF23LFAyWFcnNK4bD7SvaohrQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/2] cxl/mem: Add CDAT table reading from DOE
-To:     jonathan.cameron@huawei.com
-Cc:     alison.schofield@intel.com, ben.widawsky@intel.com,
-        cbrowy@avery-design.com, dan.j.williams@intel.com,
-        f.fangjian@huawei.com, helgaas@kernel.org, ira.weiny@intel.com,
-        linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-        linux-pci@vger.kernel.org, linuxarm@huawei.com,
-        lorenzo.pieralisi@arm.com, vishal.l.verma@intel.com,
-        Dylan Reid <dylan@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hello all,
+Major changes since v1:
+- bug fixes in certain calculations for region programming
+- bug fix in for_each_cxl_decoder_target
+- clarify ENIW and IG from ways and granularity
+- wait_for_commit bug fix
+- use devm management for region removal
+- remove trace points
+- add basic libnvdimm connection
 
-Due to issues with vger.kernel.org marking HTML emails as spam, I'll
-be resending the email in plain text:
+Original commit message follows with minor updates for correctness.
+
+---
+
+This patch series introduces the CXL region driver as well as associated APIs in
+CXL core. The region driver enables the creation of "regions" which is a concept
+defined by the CXL 2.0 specification [1]. Region verification and programming
+state are owned by the cxl_region driver (implemented in the cxl_region module).
+It relies on cxl_mem to determine if devices are CXL routed, and cxl_port to
+actually handle the programming of the HDM decoders. Much of the region driver
+is an implementation of algorithms described in the CXL Type 3 Memory Device
+Software Guide [2].
+
+The region driver will be responsible for configuring regions found on
+persistent capacities in the Label Storage Area (LSA), it will also enumerate
+regions configured by BIOS, usually volatile capacities, and will allow for
+dynamic region creation (which can then be stored in the LSA). It is the primary
+consumer of the CXL Port [3] and CXL Mem drivers introduced previously [4]. Dan
+has reworked those drivers which is a requirement for this branch. A cached copy
+is included in the gitlab for this project [5]. Those patches will be posted
+shortly.
+
+The patches for the region driver could be squashed. They're broken out to aid
+review and because that's the order they were implemented in. My preference is
+to keep those as they are.
+
+Some things are still missing and will be worked on while these are reviewed (in
+priority order):
+1. Volatile regions/LSA regions (Have a plan)
+2. Switch ports (Have a plan)
+3. Decoder programming restrictions (No plan). The one know restriction I've
+   missed is to disallow programming HDM decoders that aren't in incremental
+   system physical address ranges.
+4. CXL region teardown -> nd_region teardown
+5. Stress testing
+
+Here is an example of output when programming a x2 interleave region
+
+# ./cxlctl create-region -n -a -s $((256<<20)) /sys/bus/cxl/devices/decoder0.0
+[   57.564475][  T654] cxl_core:cxl_add_region:478: cxl region0.0:0: Added region0.0:0 to decoder0.0
+[   57.608949][  T655] cxl_region:allocate_address_space:170: cxl_region region0.0:0: resource [mem 0x4c00000000-0x4c1fffffff]
+[   57.610056][  T655] cxl_core:cxl_commit_decoder:394: cxl_port port1: decoder1.0
+[   57.610056][  T655]  Base 0x0000004c00000000
+[   57.610056][  T655]  Size 512M
+[   57.610056][  T655]  IG 0 (256b)
+[   57.610056][  T655]  ENIW 1 (x2)
+[   57.610056][  T655]  TargetList: 0 1 -1 -1 -1 -1 -1 -1
+[   57.613584][  T655] cxl_core:cxl_commit_decoder:394: cxl_port endpoint2: decoder2.0
+[   57.613584][  T655]  Base 0x0000004c00000000
+[   57.613584][  T655]  Size 512M
+[   57.613584][  T655]  IG 0 (256b)
+[   57.613584][  T655]  ENIW 1 (x2)
+[   57.613584][  T655]  TargetList: -1 -1 -1 -1 -1 -1 -1 -1
+[   57.617051][  T655] cxl_core:cxl_commit_decoder:394: cxl_port endpoint3: decoder3.0
+[   57.617051][  T655]  Base 0x0000004c00000000
+[   57.617051][  T655]  Size 512M
+[   57.617051][  T655]  IG 0 (256b)
+[   57.617051][  T655]  ENIW 1 (x2)
+[   57.617051][  T655]  TargetList: -1 -1 -1 -1 -1 -1 -1 -1
+[   57.619433][  T655] cxl_region region0.0:0: Bound
+[   57.621435][  T655] cxl_core:cxl_bus_probe:1384: cxl_region region0.0:0: probe: 0
+
+If you're wondering how I tested this, I've baked it into my cxlctl app [6] and
+lib [7]. Eventually this will get absorbed by ndctl/cxl-cli/libcxl.
 
 
+Branch can be found at gitlab [8].
 
-Hello all, First off, thanks for your work on implementing PCI Data
-Object Exchange in QEMU and Linux.
+---
 
-1. Are these patches still being worked on? If not, I=E2=80=99ll try to get
-them rebased and finished.
+[1]: https://www.computeexpresslink.org/download-the-specification
+[2]: https://cdrdv2.intel.com/v1/dl/getContent/643805?wapkw=CXL%20memory%20device%20sw%20guide
+[3]: https://lore.kernel.org/linux-cxl/20211022183709.1199701-9-ben.widawsky@intel.com/
+[4]: https://lore.kernel.org/linux-cxl/20211022183709.1199701-17-ben.widawsky@intel.com/
+[5]: https://gitlab.com/bwidawsk/linux/-/commit/126793e22427f7975a8f2fca373764be78012e88
+[6]: https://gitlab.com/bwidawsk-cxl/cxlctl
+[7]: https://gitlab.com/bwidawsk-cxl/cxl_rs
+[8]: https://gitlab.com/bwidawsk/linux/-/tree/cxl_region-v2
 
-2. Are there any notes not mentioned in the emails you feel are
-important to know about?
+Ben Widawsky (15):
+  cxl/core: Rename find_cxl_port
+  cxl/core: Track port depth
+  cxl/region: Add region creation ABI
+  cxl/region: Introduce concept of region configuration
+  cxl/mem: Cache port created by the mem dev
+  cxl/region: Introduce a cxl_region driver
+  cxl/acpi: Handle address space allocation
+  cxl/region: Address space allocation
+  cxl/region: Implement XHB verification
+  cxl/region: HB port config verification
+  cxl/region: Add infrastructure for decoder programming
+  cxl/region: Collect host bridge decoders
+  cxl: Program decoders for regions
+  cxl/pmem: Convert nvdimm bridge API to use memdev
+  cxl/region: Create an nd_region
 
-3. I'm particularly interested in the testing framework - the emails
-mention that a lot of testing has been done through QEMU but how can I
-carry out these tests on my own? What tools did you use?
+ .clang-format                                 |   3 +
+ Documentation/ABI/testing/sysfs-bus-cxl       |  63 ++
+ .../driver-api/cxl/memory-devices.rst         |  14 +
+ drivers/cxl/Makefile                          |   2 +
+ drivers/cxl/acpi.c                            |  30 +
+ drivers/cxl/core/Makefile                     |   1 +
+ drivers/cxl/core/core.h                       |   4 +
+ drivers/cxl/core/hdm.c                        | 199 +++++
+ drivers/cxl/core/pmem.c                       |  19 +-
+ drivers/cxl/core/port.c                       | 132 ++-
+ drivers/cxl/core/region.c                     | 525 ++++++++++++
+ drivers/cxl/cxl.h                             |  48 +-
+ drivers/cxl/cxlmem.h                          |   9 +
+ drivers/cxl/mem.c                             |  16 +-
+ drivers/cxl/pmem.c                            |   2 +-
+ drivers/cxl/port.c                            |  42 +-
+ drivers/cxl/region.c                          | 769 ++++++++++++++++++
+ drivers/cxl/region.h                          |  47 ++
+ tools/testing/cxl/Kbuild                      |   1 +
+ 19 files changed, 1903 insertions(+), 23 deletions(-)
+ create mode 100644 drivers/cxl/core/region.c
+ create mode 100644 drivers/cxl/region.c
+ create mode 100644 drivers/cxl/region.h
 
-Thanks,
+-- 
+2.34.1
 
-Zayd
