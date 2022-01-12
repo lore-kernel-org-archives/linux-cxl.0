@@ -2,152 +2,158 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AD8C433EF
-	for <linux-cxl@archiver.kernel.org>; Tue, 11 Jan 2022 22:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97951C433EF
+	for <linux-cxl@archiver.kernel.org>; Wed, 12 Jan 2022 06:28:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346651AbiAKWtW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 11 Jan 2022 17:49:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33658 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346647AbiAKWtV (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 11 Jan 2022 17:49:21 -0500
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6110C061751
-        for <linux-cxl@vger.kernel.org>; Tue, 11 Jan 2022 14:49:20 -0800 (PST)
-Received: by mail-pj1-x1029.google.com with SMTP id 59-20020a17090a09c100b001b34a13745eso8083431pjo.5
-        for <linux-cxl@vger.kernel.org>; Tue, 11 Jan 2022 14:49:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=W11G8KOKO0fe1jEMu72qehVZONI87KeyD8+Vm5Xf76U=;
-        b=0JxaCMJ1GyV8z331bQf2eZSF9nbkko60u09Jj/RK4b4X8Z9NMX1pg09y0uwtIB8GLr
-         auuDdG8RncHOGCb7+qIb8SxUtg9Inxfwq2/FcFrItisxZRMZgcxyOZ0G6T99HrnWsuBQ
-         k6FJykIPYsaNoCkbUnPHoAWimQSscJSLjb6i+qOQ7QScRzqTWThC8ydPExfG5Fdk1R/T
-         1r/tdrdNgXS33b4NthDIix8KJIsrXphJ1NBGatTT/dmngGwnBWzvFbgoCACNaCXfLS79
-         uCnfYlTKAYojz7W5uBkQPxlHv478EpMmLZP1LNIKQ58ZVbxo+rEBudvJa4diSvRIvn2h
-         YRRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=W11G8KOKO0fe1jEMu72qehVZONI87KeyD8+Vm5Xf76U=;
-        b=bH8YDlqUSDglp1gHzos0yZh9/Ox7JDOyMffsMWkRXRSqpCo4S88zACFyHcbVOYqdik
-         ONOol+XYP7FrB2WMH59HgqmX8tDf304TTcV1z91XrAXOT7UH6JnjItgg82yaS1QCRi+8
-         vGBxOWCUM3kkH775a69zcXaUbJKHT574Jk4+e5ML9KWfPyHeimfpOLOxRVZISBl7DQCv
-         NxcS34R22saicAsnobAlyv4lxfvf23hEp9whVANIGIp9svkICP2kpgwwsydXOW9eWNVp
-         reAqitBMsMqUtoxGYxZgACVd1EN7wBOjHEfCNUvNS7x5cHFNfUI44euKuYXRWhYkawmu
-         H+sQ==
-X-Gm-Message-State: AOAM5338eJxWbTE8xH3qgAIOf0TTJUZdgGALDq95tWPxB3gdmuuypfyn
-        fdNcgxwwrJrFX9v9hJ9MF6WaTKmzU5eqWQwpBhXrFA==
-X-Google-Smtp-Source: ABdhPJxGZpEtTNJNY8srJCMQx1uA1lWF7NpqUotUHbEwy5YC9/+Xwh7r4cHpRs7imbRArXjCsHhKGB4n1PjRv1viREw=
-X-Received: by 2002:a17:902:8f8f:b0:14a:766:67f1 with SMTP id
- z15-20020a1709028f8f00b0014a076667f1mr6600855plo.34.1641941360403; Tue, 11
- Jan 2022 14:49:20 -0800 (PST)
+        id S1350987AbiALG2e (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 12 Jan 2022 01:28:34 -0500
+Received: from mga03.intel.com ([134.134.136.65]:56878 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231773AbiALG2d (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Wed, 12 Jan 2022 01:28:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641968913; x=1673504913;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=JDv1dddvwYO1p7gaboiyqEnd33tSdsa/qI5+PGi6IkA=;
+  b=SH2bL9oBLZOnpV4PZZVryhOWAXmgdob4SlPKhbuh8kLnw6Tnm/eGOnBP
+   BkpautvXh1Y2MMg1TBp9huP7yu6obdHS1u6+/kDrJW9BX2FEg4srZLqiO
+   jYkCa4NWPTQUDaJ2fH2Nvnh4+DYdjuztzicMzJuF/lKwoY+Kb7CfxM70J
+   6ro7fPnHHyLR4Pcc/1s22cC7yUZXP6BbB4LF3bGvGMQIHrryZxEifV33r
+   fFnKlDnRmfghDqUnLOTVjbUoFP7fZPj9BDbCO3TBWpFhEJsTMxHKYX9v1
+   gq1Jamkq5qtfJNPhQiRbEeIYQ+/6Cl0hBeP+JHcqWkJ/SnE7RHJHE/0if
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10224"; a="243624915"
+X-IronPort-AV: E=Sophos;i="5.88,282,1635231600"; 
+   d="scan'208";a="243624915"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2022 22:28:33 -0800
+X-IronPort-AV: E=Sophos;i="5.88,282,1635231600"; 
+   d="scan'208";a="529051344"
+Received: from alison-desk.jf.intel.com (HELO localhost) ([10.54.74.41])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2022 22:28:33 -0800
+From:   alison.schofield@intel.com
+To:     Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+Subject: [ndctl PATCH v2 0/6] Add partitioning support for CXL memdevs
+Date:   Tue, 11 Jan 2022 22:33:28 -0800
+Message-Id: <cover.1641965853.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 11 Jan 2022 14:49:09 -0800
-Message-ID: <CAPcyv4j0NfC4RKr=VU6yUKrqVRKdAer9YeSezRctpp-k31iAzA@mail.gmail.com>
-Subject: [GIT PULL] Compute Express Link for 5.17
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux ACPI <linux-acpi@vger.kernel.org>, linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Linus, please pull from:
+From: Alison Schofield <alison.schofield@intel.com>
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-5.17
+Users may want to view and change partition layouts of CXL memory
+devices that support partitioning. Provide userspace access to
+the device partitioning capabilities as defined in the CXL 2.0
+specification.
 
-...to receive the CXL update for v5.17. The highlight is initial
-support for CXL memory hotplug. The static NUMA node (ACPI SRAT
-Physical Address to Proximity Domain) information known to platform
-firmware is extended to support the potential performance-class /
-memory-target nodes dynamically created from available CXL memory
-device capacity.
+The first 4 patches add accessors for all the information needed
+to formulate a new partition layout. This info is accessible via
+the libcxl API and a new option in the cxl list command:
 
-New unit test infrastructure is added for validating health
-information payloads.
+    "partition_info":{
+      "active_volatile_bytes":273535729664,
+      "active_persistent_bytes":0,
+      "next_volatile_bytes":268435456,
+      "next_persistent_bytes":273267294208,
+      "total_bytes":273535729664,
+      "volatile_only_bytes":0,
+      "persistent_only_bytes":0,
+      "partition_alignment_bytes":268435456
+    }
 
-Fixes to module reload stress and stack usage from exposure in -next
-are included. A symbol rename and some other miscellaneous fixups are
-included as well.
+Patch 5 introduces the libcxl interfaces for the SET_PARTITION_INFO
+mailbox command and Patch 6 adds the new CXL command: 
 
-This has been in -next for several weeks with no reported issues / conflicts.
+# cxl set-partition-info
+ usage: cxl set-partition-info <mem0> [<mem1>..<memN>] [<options>]
 
----
+    -v, --verbose         turn on debug
+    -s, --volatile_size <n>
+                          next volatile partition size in bytes
 
-The following changes since commit fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf:
+The CXL command does not offer the IMMEDIATE mode option defined
+in the CXL 2.0 spec because the CXL kernel driver does not support
+immediate mode yet. Since userspace could use the libcxl API to
+send a SET_PARTITION_INFO mailbox command with immediate mode
+selected, a kernel patch that rejects such requests is in review
+for the CXL driver.
 
-  Linux 5.16-rc1 (2021-11-14 13:56:52 -0800)
+Tested with one memdev in a Simics environment. Still need to
+expand that Simics config, use cxl_test, and add a unit test.
 
-are available in the Git repository at:
+Repo: https://github.com/AlisonSchofield/ndctl/tree/as/partitions
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-5.17
+Changes in v2:
+- Rebase onto https://github.com/pmem/ndctl.git djbw/meson.
+- Clarify that capacities are reported in bytes. (Ira)
+  This led to renaming accessors like *_capacity to  *_bytes and 
+  a spattering of changes in the man pages and commit messages.
+- Add missing cxl_cmd_unref() when creating json objects. (Ira)
+- Change the cxl list option to: -I --partition (Dan) 
+- Use OPT_STRING for the --volatile_size parameter (Dan, Vishal)
+- Drop extra _get_ in accessor names. (Vishal)
+- Add an accessor for the SET_PARTITION_INFO mbox cmd flag.
+- Display usage_with_options if size parameter is missing.
+- Drop the OPT64 define patch. Use OPT_STRING instead.
 
-for you to fetch changes up to be185c2988b48db65348d94168c793bdbc8d23c3:
+Alison Schofield (6):
+  libcxl: add GET_PARTITION_INFO mailbox command and accessors
+  libcxl: add accessors for capacity fields of the IDENTIFY command
+  libcxl: return the partition alignment field in bytes
+  cxl: add memdev partition information to cxl-list
+  libcxl: add interfaces for SET_PARTITION_INFO mailbox command
+  cxl: add command set-partition-info
 
-  cxl/core: Remove cxld_const_init in cxl_decoder_alloc() (2022-01-04
-17:29:31 -0800)
+ Documentation/cxl/cxl-list.txt               |  23 ++++
+ Documentation/cxl/cxl-set-partition-info.txt |  27 ++++
+ Documentation/cxl/partition-description.txt  |  15 +++
+ Documentation/cxl/partition-options.txt      |  20 +++
+ cxl/builtin.h                                |   1 +
+ cxl/cxl.c                                    |   1 +
+ cxl/json.c                                   | 114 +++++++++++++++++
+ cxl/lib/libcxl.c                             | 124 ++++++++++++++++++-
+ cxl/lib/libcxl.sym                           |  15 ++-
+ cxl/lib/private.h                            |  18 +++
+ cxl/libcxl.h                                 |  15 ++-
+ cxl/list.c                                   |   5 +
+ cxl/memdev.c                                 | 101 +++++++++++++++
+ util/json.h                                  |   1 +
+ util/size.h                                  |   1 +
+ 15 files changed, 477 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/cxl/cxl-set-partition-info.txt
+ create mode 100644 Documentation/cxl/partition-description.txt
+ create mode 100644 Documentation/cxl/partition-options.txt
 
-----------------------------------------------------------------
-cxl for 5.17
 
-- Rework ACPI sub-table infrastructure to optionally be used outside of
-  __init scenarios and use it for CEDT.CFMWS sub-table parsing.
-- Add support for extending num_possible_nodes by the potential hotplug
-  CXL memory ranges
-- Extend tools/testing/cxl with mock memory device health information
-- Fix a module-reload workqueue race
-- Fix excessive stack-frame usage
-- Rename the driver context data structure from "cxl_mem" since that
-  name collides with a proposed driver name
-- Use EXPORT_SYMBOL_NS_GPL instead of -DDEFAULT_SYMBOL_NAMESPACE at
-  build time
+base-commit: 25062cf34c70012f5d42ce1fef7e2dc129807c10
+prerequisite-patch-id: d34c91059d77651eaf1e71adb6135b397f64c056
+prerequisite-patch-id: 72a64823dc720b5c7b65fe949d75e9f6fbf79035
+prerequisite-patch-id: f9fd1d50d96896f27ce1d6df59d1aa8ea06795ab
+prerequisite-patch-id: 0e904349e14e74754a22bd72ce97add030d80e90
+prerequisite-patch-id: 331899e7b565c625ef0647f71057850a919535d8
+prerequisite-patch-id: 0ddeb2219011fe7b272cbbf59bc046bf26ee1bc7
+prerequisite-patch-id: fe1023948a0202cca8d641e694de425512512f92
+prerequisite-patch-id: 48b0b8feddcc98201f3c75b15bb1ed13d30e1269
+prerequisite-patch-id: 5a9be92f860c0bf9144772b550d62e0c0a463e7c
+prerequisite-patch-id: 113e1fa147e96ba5d4127246cc3dcae895d33e7c
+prerequisite-patch-id: 03ad3eb99d14b51a0d0a48dfb3f6f3b2f84bac24
+prerequisite-patch-id: 6c9b29768efc178c37d62c53501a98bc7baa9934
+prerequisite-patch-id: d4086981a857f5f2d3720f33e1c823f906b3211f
+prerequisite-patch-id: 3ad6ea54cc6430977c8ae4a0833e22499f1ccd96
+prerequisite-patch-id: d4ff0ee2dc988440e0cad26d43e1a740fb89fbfd
+prerequisite-patch-id: e33606c2a4ab9ac74034cb3bde8947317274d8b3
+prerequisite-patch-id: e7b57274d44fd9cdf1b64ca802b33afe255cef44
+-- 
+2.31.1
 
-----------------------------------------------------------------
-Alison Schofield (1):
-      ACPI: NUMA: Add a node and memblk for each CFMWS not in SRAT
-
-Dan Williams (8):
-      cxl/pmem: Fix reference counting for delayed work
-      cxl/core: Convert to EXPORT_SYMBOL_NS_GPL
-      ACPI: Keep sub-table parsing infrastructure available for modules
-      ACPI: Teach ACPI table parsing about the CEDT header format
-      ACPI: Add a context argument for table parsing handlers
-      cxl/acpi: Convert CFMWS parsing to ACPI sub-table helpers
-      cxl/test: Mock acpi_table_parse_cedt()
-      cxl/pmem: Fix module reload vs workqueue state
-
-Ira Weiny (3):
-      cxl/mbox: Remove bad comment
-      cxl/memdev: Change cxl_mem to a more descriptive name
-      cxl/memdev: Remove unused cxlmd field
-
-Nathan Chancellor (1):
-      cxl/core: Remove cxld_const_init in cxl_decoder_alloc()
-
-Vishal Verma (1):
-      tools/testing/cxl: add mock output for the GET_HEALTH_INFO command
-
- drivers/acpi/Kconfig          |   3 +
- drivers/acpi/numa/srat.c      |  59 ++++++++++-
- drivers/acpi/tables.c         |  87 ++++++++++++----
- drivers/cxl/Kconfig           |   1 +
- drivers/cxl/acpi.c            | 237 ++++++++++++++++--------------------------
- drivers/cxl/core/Makefile     |   2 +-
- drivers/cxl/core/bus.c        |  26 +++--
- drivers/cxl/core/mbox.c       | 186 ++++++++++++++++-----------------
- drivers/cxl/core/memdev.c     |  55 +++++-----
- drivers/cxl/core/pmem.c       |  20 ++--
- drivers/cxl/core/regs.c       |   8 +-
- drivers/cxl/cxl.h             |  10 +-
- drivers/cxl/cxlmem.h          |  37 ++++---
- drivers/cxl/pci.c             | 120 ++++++++++-----------
- drivers/cxl/pmem.c            |  85 ++++++++++-----
- include/linux/acpi.h          |  34 ++++--
- tools/testing/cxl/Kbuild      |   3 +-
- tools/testing/cxl/test/cxl.c  |  68 ++++++++----
- tools/testing/cxl/test/mem.c  |  99 +++++++++++++-----
- tools/testing/cxl/test/mock.c |  30 ++----
- tools/testing/cxl/test/mock.h |   6 +-
- 21 files changed, 675 insertions(+), 501 deletions(-)
