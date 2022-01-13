@@ -2,100 +2,132 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2395C433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 13 Jan 2022 09:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C59EC433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 13 Jan 2022 16:27:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230116AbiAMJZQ convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 13 Jan 2022 04:25:16 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4410 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229748AbiAMJZP (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 13 Jan 2022 04:25:15 -0500
-Received: from fraeml744-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JZJqL0WmWz67Ybb;
-        Thu, 13 Jan 2022 17:22:22 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml744-chm.china.huawei.com (10.206.15.225) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Thu, 13 Jan 2022 10:25:12 +0100
-Received: from localhost (10.47.73.102) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Thu, 13 Jan
- 2022 09:25:11 +0000
-Date:   Thu, 13 Jan 2022 09:25:12 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Zayd Qumsieh <zaydq@rivosinc.com>
-CC:     <alison.schofield@intel.com>, <ben.widawsky@intel.com>,
-        <cbrowy@avery-design.com>, <dan.j.williams@intel.com>,
-        <f.fangjian@huawei.com>, <helgaas@kernel.org>,
-        <ira.weiny@intel.com>, <linux-acpi@vger.kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linuxarm@huawei.com>, <lorenzo.pieralisi@arm.com>,
-        <vishal.l.verma@intel.com>, Dylan Reid <dylan@rivosinc.com>
-Subject: Re: [RFC PATCH 2/2] cxl/mem: Add CDAT table reading from DOE
-Message-ID: <20220113092512.000011d6@Huawei.com>
-In-Reply-To: <CAAJ9+9ct3+N0LyH+9N03ZQYUZnF23LFAyWFcnNK4bD7SvaohrQ@mail.gmail.com>
-References: <CAAJ9+9fq1=EcOaSoo3oD_5QjYNAv6PPDjKS+gC9o7XDp2p1XpQ@mail.gmail.com>
-        <CAAJ9+9ct3+N0LyH+9N03ZQYUZnF23LFAyWFcnNK4bD7SvaohrQ@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        id S236651AbiAMQ1L (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 13 Jan 2022 11:27:11 -0500
+Received: from mga02.intel.com ([134.134.136.20]:34897 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236638AbiAMQ1L (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 13 Jan 2022 11:27:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1642091231; x=1673627231;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2KqVysjo1STcaRcSk5SeVRCpxfh0h/KQt5/R8OYhhtA=;
+  b=CHIJ71Lws3a0Lr56lzKWKfEaaCLrHES4bhV+J8ocMui1fIHxcE7QaBiF
+   Ed17mQp10ta6Y9flCT4+ogwJK2VbXw/Kal9MYY3Z6TlpLt4oS8X5pIUQR
+   mBKAV8Q4OU/C67TNztCvFbM2tAQH20QGOIWcpEcCVQsUg5ksnT3mfZnqT
+   lhFHqj/Ara7HMFeVzDiFWkfIH/Qi+GS2F7A8DT04teF0KOH6MGKFYrUSZ
+   FcIBcUaHwgbGaXgZbPUdBfztVhZHAl4UJUDGucAh8qFparmU4dKEuO6sB
+   Kd0zkn3vJiP69Z/91EpD1ce6Nzch1+I5sjfGhWh+KXsVTEVotE6fiFb1M
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="231393012"
+X-IronPort-AV: E=Sophos;i="5.88,286,1635231600"; 
+   d="scan'208";a="231393012"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2022 08:26:54 -0800
+X-IronPort-AV: E=Sophos;i="5.88,286,1635231600"; 
+   d="scan'208";a="529720754"
+Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.41])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2022 08:26:50 -0800
+Date:   Thu, 13 Jan 2022 08:31:49 -0800
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Cc:     nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+Subject: Re: [ndctl PATCH v2 3/6] libcxl: return the partition alignment
+ field in bytes
+Message-ID: <20220113163149.GA831535@alison-desk>
+References: <cover.1641965853.git.alison.schofield@intel.com>
+ <ca1821eee9f8e2372e378165d5c24bbf9161e6fe.1641965853.git.alison.schofield@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.47.73.102]
-X-ClientProxiedBy: lhreml717-chm.china.huawei.com (10.201.108.68) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ca1821eee9f8e2372e378165d5c24bbf9161e6fe.1641965853.git.alison.schofield@intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 12 Jan 2022 14:16:18 -0800
-Zayd Qumsieh <zaydq@rivosinc.com> wrote:
 
-> Hello all,
+On Tue, Jan 11, 2022 at 10:33:31PM -0800, alison.schofield@intel.com wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> Due to issues with vger.kernel.org marking HTML emails as spam, I'll
-> be resending the email in plain text:
+> Per the CXL specification, the partition alignment field reports
+> the alignment value in multiples of 256MB. In the libcxl API, values
+> for all capacity fields are defined to return bytes.
 > 
+> Update the partition alignment accessor to return bytes so that it
+> is in sync with other capacity related fields.
 > 
-> 
-> Hello all, First off, thanks for your work on implementing PCI Data
-> Object Exchange in QEMU and Linux.
-> 
-> 1. Are these patches still being worked on? If not, I’ll try to get
-> them rebased and finished.
-> 
-> 2. Are there any notes not mentioned in the emails you feel are
-> important to know about?
-> 
-> 3. I'm particularly interested in the testing framework - the emails
-> mention that a lot of testing has been done through QEMU but how can I
-> carry out these tests on my own? What tools did you use?
-> 
-> Thanks,
-> 
-> Zayd
+> Rename the function to reflect the new return value:
+> cxl_cmd_identify_get_partition_align_bytes()
 
-https://lore.kernel.org/all/20211105235056.3711389-1-ira.weiny@intel.com/
-Is the latest version of this.  For basic testing Ben's qemu branch should
-work for you. 
-https://gitlab.com/bwidawsk/qemu/-/commits/cxl-2.0v4/
+Vishal,
+Just realized that the cxl_identify_get_partition_align() API was released
+in ndctl-v72. Does that mean NAK on changing the name here?
+Alison
 
-Note there are some big questions over the approach used for integrating
-this with the PCI subsystem (auxiliary bus vs library) which I'm not sure
-we've reached a conclusion on yet.
-
-One minor thing on the wish list is lspci support to at least identify the
-presence of a DOE.  I have patches for that and will send out fairly soon
-once I've cleared a backlog of other stuff.
-
-My main focus right now is on resolving some of the opens around the
-QEMU support for CXL emul in general, but I haven't touched the DOE stuff
-beyond rebasing.  *fingers crossed* I should have an updated qemu tree
-out sometime in next week or so.
-
-Thanks,
-
-Jonathan
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> ---
+>  cxl/lib/libcxl.c   | 4 ++--
+>  cxl/lib/libcxl.sym | 2 +-
+>  cxl/libcxl.h       | 2 +-
+>  3 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+> index 1fd584a..823bcb0 100644
+> --- a/cxl/lib/libcxl.c
+> +++ b/cxl/lib/libcxl.c
+> @@ -1078,7 +1078,7 @@ CXL_EXPORT int cxl_cmd_identify_get_fw_rev(struct cxl_cmd *cmd, char *fw_rev,
+>  	return 0;
+>  }
+>  
+> -CXL_EXPORT unsigned long long cxl_cmd_identify_get_partition_align(
+> +CXL_EXPORT unsigned long long cxl_cmd_identify_get_partition_align_bytes(
+>  		struct cxl_cmd *cmd)
+>  {
+>  	struct cxl_cmd_identify *id =
+> @@ -1089,7 +1089,7 @@ CXL_EXPORT unsigned long long cxl_cmd_identify_get_partition_align(
+>  	if (cmd->status < 0)
+>  		return cmd->status;
+>  
+> -	return le64_to_cpu(id->partition_align);
+> +	return le64_to_cpu(id->partition_align) * CXL_CAPACITY_MULTIPLIER;
+>  }
+>  
+>  CXL_EXPORT unsigned int cxl_cmd_identify_get_label_size(struct cxl_cmd *cmd)
+> diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+> index b7e969f..1e2cf05 100644
+> --- a/cxl/lib/libcxl.sym
+> +++ b/cxl/lib/libcxl.sym
+> @@ -34,7 +34,7 @@ global:
+>  	cxl_cmd_identify_get_total_bytes;
+>  	cxl_cmd_identify_get_volatile_only_bytes;
+>  	cxl_cmd_identify_get_persistent_only_bytes;
+> -	cxl_cmd_identify_get_partition_align;
+> +	cxl_cmd_identify_get_partition_align_bytes;
+>  	cxl_cmd_identify_get_label_size;
+>  	cxl_cmd_new_get_health_info;
+>  	cxl_cmd_health_info_get_maintenance_needed;
+> diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+> index 46f99fb..f19ed4f 100644
+> --- a/cxl/libcxl.h
+> +++ b/cxl/libcxl.h
+> @@ -71,7 +71,7 @@ int cxl_cmd_identify_get_fw_rev(struct cxl_cmd *cmd, char *fw_rev, int fw_len);
+>  unsigned long long cxl_cmd_identify_get_total_bytes(struct cxl_cmd *cmd);
+>  unsigned long long cxl_cmd_identify_get_volatile_only_bytes(struct cxl_cmd *cmd);
+>  unsigned long long cxl_cmd_identify_get_persistent_only_bytes(struct cxl_cmd *cmd);
+> -unsigned long long cxl_cmd_identify_get_partition_align(struct cxl_cmd *cmd);
+> +unsigned long long cxl_cmd_identify_get_partition_align_bytes(struct cxl_cmd *cmd);
+>  unsigned int cxl_cmd_identify_get_label_size(struct cxl_cmd *cmd);
+>  struct cxl_cmd *cxl_cmd_new_get_health_info(struct cxl_memdev *memdev);
+>  int cxl_cmd_health_info_get_maintenance_needed(struct cxl_cmd *cmd);
+> -- 
+> 2.31.1
+> 
