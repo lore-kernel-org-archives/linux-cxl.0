@@ -2,174 +2,189 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE2DC433F5
-	for <linux-cxl@archiver.kernel.org>; Sat, 15 Jan 2022 01:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E16BAC433EF
+	for <linux-cxl@archiver.kernel.org>; Sat, 15 Jan 2022 18:54:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230281AbiAOBQj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 14 Jan 2022 20:16:39 -0500
-Received: from mga01.intel.com ([192.55.52.88]:56488 "EHLO mga01.intel.com"
+        id S233504AbiAOSyM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 15 Jan 2022 13:54:12 -0500
+Received: from mga01.intel.com ([192.55.52.88]:48464 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229775AbiAOBQj (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Fri, 14 Jan 2022 20:16:39 -0500
+        id S233483AbiAOSyL (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Sat, 15 Jan 2022 13:54:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642209399; x=1673745399;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=Md7WOYqHeSLx7hxtkHsBTubhYWviAX6mP4ZRgS+H2xE=;
-  b=ZuvyUTHqtd1z9nWrTiJUh1nkokcVzmucsIPAQr/E7FYcH5NGfZ/XTLNj
-   YwNwsWShYIwi8oqAdSd1Qr8t0vI64eK4yvomjhS0qiyHl8I7gjIaaMx74
-   RSx/l2ubhVXqcY0lILAlI6eug57MNaWQ17UjfFBb0wbinmolHEtsSug5Q
-   YohnXxZRzCz4a6qf/3LZ0qpE13y1n0vzHMVVic+iqrLwdCBHYgI97End6
-   3h4iszti/Vtd6IeLpLuxSAc59w5ZIwpCwSqCSHuFjJg10ZqiiyR8h3AsE
-   SwPFiltIyBnHXSOC1umM2qzCTcWMC6aUmQFzQjgNVEEnCRiLhBk37MY0k
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10227"; a="268731848"
+  t=1642272851; x=1673808851;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=i76GCVlFBaOsyithlV0nHGAcP/Ted2+NVlUbn4Y3I/Q=;
+  b=h0BZoKLESU4Rq9lfrm1SMkHfXqTXiHbnXCI2z5+ozlWITIZ4YgxsTvcJ
+   7EohyqPq47o53FM1TL+Kug+KPJf9kDzvw6Ka1MbGZhYkoYQ73B0Hpqge3
+   gt4BryLc0PZDnKcSUUV+R1TxmMZPKaOQwgyk7DGF4wk4D5Kvq3Z3ud9Ik
+   DwuIGmV64JqiBchSh4UoMXSRg5K3akEYSAzo/sq/2Ua34ThyoHq3iRirG
+   84RbTzAj6SXrdC/Mvcg7tKokIpGb1AwoW0pD/EarNoNtJy3RbFHtb9rxi
+   /EyNAFKV9YkOwV484BvY3BWNmU1wr9ype0RhnA/HtN+CIlNV2xJkX1XlR
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10228"; a="268803410"
 X-IronPort-AV: E=Sophos;i="5.88,290,1635231600"; 
-   d="scan'208";a="268731848"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2022 17:16:38 -0800
-X-ExtLoop1: 1
+   d="scan'208";a="268803410"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2022 10:54:11 -0800
 X-IronPort-AV: E=Sophos;i="5.88,290,1635231600"; 
-   d="scan'208";a="577478482"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmsmga008.fm.intel.com with ESMTP; 14 Jan 2022 17:16:38 -0800
-Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Fri, 14 Jan 2022 17:16:38 -0800
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Fri, 14 Jan 2022 17:16:37 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20 via Frontend Transport; Fri, 14 Jan 2022 17:16:37 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.174)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.20; Fri, 14 Jan 2022 17:16:37 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LSCZl5j3eiPlJcxKHdHpCc66r/s2m8ICeiKJaQ8gEOL5jS/3MbcfkEk0ybqNhm2LynfBDfmf3ZWbdUU7tk1ohSwHCSsCAaTmT7RH/rvjK4P1j6aa1g0VZoahmNSvSSKoLZIsLMKW21Spj5glKIkURV98tuFGQbmrnFXiJIosBwWv5JAulsIVE5q51I91N0HfZSNwbIKUvKQtRDaOmGnP+IOrH/flG1LHg71LPw4L8mm+MRaXulgBQPxxNIjWMUq4m377J/eqJmKwPgGsFY+7Jbxfe9YQtyjxR340MT7kbwi5nDmxBF81c2WyWaFZXtu/qe9rk/n88gfMPEeGaX5DWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Md7WOYqHeSLx7hxtkHsBTubhYWviAX6mP4ZRgS+H2xE=;
- b=kVi9j8f/xDmxkuOfLinDPMqFZMXK3TMF7nh4skLIJYJeNYkG1+wiejz2cG4g/IeHh1hVsRxsepBZ9s9IWKQipz6TW5nzBrRMgoXC3wepu9wvNuezL75j9oMOyl9OX2B3y29+VEStpYcOgRYaJjztbkPNyWRQtKxGRR29Fxpov+UzVJyS46IYOIhTFt9VE4Xj85OpwuU7YgG7+gbsQ43X9yHogLo1piaSyE12cANirO5A+GruKjoS/WBTqg3PfX8RC34S7CJG0Jf2fkaFsX8G3Ek59TSz7HkZ6XG5D5irtvtQEPsTDv1NL/3H5CiJYvbOgbX0HRtqwYNhb18ILqGLQQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BN6PR11MB3988.namprd11.prod.outlook.com (2603:10b6:405:7c::23)
- by DM5PR11MB0074.namprd11.prod.outlook.com (2603:10b6:4:69::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4888.9; Sat, 15 Jan
- 2022 01:16:35 +0000
-Received: from BN6PR11MB3988.namprd11.prod.outlook.com
- ([fe80::e1a7:283b:4025:328]) by BN6PR11MB3988.namprd11.prod.outlook.com
- ([fe80::e1a7:283b:4025:328%6]) with mapi id 15.20.4888.011; Sat, 15 Jan 2022
- 01:16:35 +0000
-From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
-To:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "chu, jane" <jane.chu@oracle.com>
-CC:     "kilobyte@angband.pl" <kilobyte@angband.pl>,
-        "jmoyer@redhat.com" <jmoyer@redhat.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
-        "breno.leitao@gmail.com" <breno.leitao@gmail.com>,
-        "msuchanek@suse.de" <msuchanek@suse.de>,
-        "vaibhav@linux.ibm.com" <vaibhav@linux.ibm.com>
-Subject: Re: [ndctl PATCH v3 00/16] ndctl: Meson support
-Thread-Topic: [ndctl PATCH v3 00/16] ndctl: Meson support
-Thread-Index: AQHYAnulcNZJ9TW7fkuxyaLtBaP9V6xiu8EAgABr/QCAAATUgIAAKYgA
-Date:   Sat, 15 Jan 2022 01:16:35 +0000
-Message-ID: <9dcd4029fc655690d87bb7dd12f97c5ddddf697c.camel@intel.com>
-References: <164141829899.3990253.17547886681174580434.stgit@dwillia2-desk3.amr.corp.intel.com>
-         <d4a57facb2b778867e3bbe8564f03868b58e2f72.camel@intel.com>
-         <c6be7804-419e-d547-062d-6b852494bceb@oracle.com>
-         <CAPcyv4jYg3DRv6Eeq3s2c0kk4dSvr3_i_jk+Uc2Pew9FON+zmA@mail.gmail.com>
-In-Reply-To: <CAPcyv4jYg3DRv6Eeq3s2c0kk4dSvr3_i_jk+Uc2Pew9FON+zmA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.42.2 (3.42.2-1.fc35) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1bbd18bb-0851-4c0c-bdbd-08d9d7c4ac45
-x-ms-traffictypediagnostic: DM5PR11MB0074:EE_
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
-x-microsoft-antispam-prvs: <DM5PR11MB0074DFAFDB59E3758105BCCAC7559@DM5PR11MB0074.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 84l5BK16iKrfG9oJwZIWe91ronWL9ONPOBkZ8J7DDKAc6O+yF2D+VlMBBWhDR4kNgcf4vCPQlIh4rEfxZ1i9qHSbfFLeEz4RbUGWeRtZNTJRSUApb477ziUQwYInAZYgbCetGRu1Zzt4QXn9nLhKui5lRbi61L49bqVioQ/WAb9YPtV7RU/U3wCOZXY4GKuEXaoACv5XXYR8o3V1v5GlS10+GNiK5cVRabOButed13Gh+v7sNMtr4+WmgwTeaXLHKeDZKofUC/WnzALLNtJF+0MDwnW+hdq+JUl+JcpnlKHmvDW+7lTXp/N2i252U5qPRLHGuvZ209RQVGyKAwks46LZn2Q72H75907jIo1YDEn4cErMTyqmWVTAAnMRhhxgdG2u+Stn8dZH5L2vFqLiA4FprlTKMzxZqLY+kWgc7ue5oQTuo8dvFSAyUg/vrbVPJQd4koxKUd7ZGmykSpoq+BHeC0Zf0/dI7dzvlIYZMRZNo/ygi1T9/6A240MzTLCDolqBeTgqHjgAn1uI2GsAfYL/+m0OavrXC2E+oPX2lxJd4fXiCmtyqxdc1F15KC1mB9Su6zhnigUBJPtOEjxlm3wF0verkoxHBDy4qIVDJayf6v4VjXvRmAmbcFkMcNO+F9JfOEviaEJmxHPrexoysimpzh7LRMEGOsqJ1OPhHfScJhxkDatPu1c996KKYCvZGFMMKC9lT0Nw7GDSlBlerA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR11MB3988.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(64756008)(66476007)(66556008)(36756003)(38070700005)(91956017)(8936002)(54906003)(316002)(76116006)(86362001)(110136005)(38100700002)(66446008)(82960400001)(122000001)(66946007)(6512007)(6486002)(8676002)(2906002)(53546011)(4326008)(26005)(71200400001)(83380400001)(6506007)(2616005)(508600001)(186003)(4744005)(5660300002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?cVRNY1BvbjF3MG0vb3NrVnRxR01wc0trQ1lyVGEyS1d3d2VhTHRKVEthY09l?=
- =?utf-8?B?MUl2NU5DL09mSUJyNDNxeGQyUXdKVXppVnRSekUxWlV5dVpwSVFJRlArNWhZ?=
- =?utf-8?B?cHd0OHprdU84ZEhqYVpnL1BERlVQZDhoV0R5Qit6blBvam1DQmF3emRFTlI4?=
- =?utf-8?B?T1J6MGxDd2ZDYjFwRG45amluSUtuZ0VYVXVkY1AveGpTNmVNM0RCdXNhbmFK?=
- =?utf-8?B?bmlXdmFFcGk4bUhFRXFOREtsdkUrUnRpV0lKTW0rTno2T21DUFNLRndrR2ps?=
- =?utf-8?B?b0NORndmaWI4cFhubm9CdXdPM2pITVhsZkdPR1lJQ1VkZFRwTU9rZVA2UGZq?=
- =?utf-8?B?TnNBRXUvR3VjYXkxZmkvTmsyd2F0NUhjdmVybXdCdWdaMnpJWGRYdDVndDhz?=
- =?utf-8?B?b01mYkt5VjFZbVozYW9RdkRiY3dZZ2ZBcTJXcHU0WDNvRlRDY1dNZmxlOXN4?=
- =?utf-8?B?ZERtdlFuRnJtUkQ5L24vbFdPVktTMXdpTWFUWUdiTHlTOWt2QXcyMUpwcys5?=
- =?utf-8?B?c3VCVk1CWDQzQmJ4NUlFSmxuaUlhWXNRM2ZSSTc0eDkvUEhjTmozRUcrSjFa?=
- =?utf-8?B?WU92VnplNHRmTjR6eVBtN0RmQ2VjakJFU0VVanRDSnB1VC9MVXJLZ2Zwd083?=
- =?utf-8?B?MXVjaFZnN2N1TU4yTVU5SW15RFZMQ3ZUSm5EMlVBZDZ6Z1hVSFp1b21VSER5?=
- =?utf-8?B?OFF2L0pWUEk4R0hVcll6UHMxUkFienY1QVM5clB4Mm03TTZ3OEViL01TcWN6?=
- =?utf-8?B?TUovZXJmYkFTRFNlMnhiUzRUK0FKcUZjOXVPYUJjdi9MS25xby9QOGJmeHlt?=
- =?utf-8?B?UlVvZzYwYTlWai9kcUlxUzVrSHdBck5WOTJuQnRkRWJLcTIzYzVHYWQwTEUx?=
- =?utf-8?B?S0RzNndmR3QvMklWVUNzK2REOE5Ld1VaeVJWVEJKT2F4MlJTaGlrZ2lZZlFo?=
- =?utf-8?B?cUhGdjdBUzdRcUIrNFN2ZFFIOWdNL2RleUViR3o3d3RtR016Q0x1OFZLbXNo?=
- =?utf-8?B?SldnTGVXZnNXQkltSE9GTTNxOHRMMWNOUXpnL21DTWMzSGhManZtYnREbXpU?=
- =?utf-8?B?aENwWUVWNWovNDZrdVhmTng4T1BtR21CVDkyYSt6b29zRlhBc0RPUHlwWWRF?=
- =?utf-8?B?dnFxQW9FbU9DUHlOUTYyWGZGMVBwK0YvZERndTJ1WHF4KytVTVBwN2lJMDJN?=
- =?utf-8?B?ejFzTGU2bXl1Q3dkMUQ0TnNBKzBySFRCRENBTE4wNmluTW96aWszWlBnVmVv?=
- =?utf-8?B?NE4vUUNVUjZrSWg3UHE3ZWcrallpbmEyL0ZxdXI2Q01LZTRaTnIvTTg5N0V1?=
- =?utf-8?B?UDA2Q1B4bnN5UmNXdTkzZGRnb2NuMUZlSThWUnJlVFBpUXpFckFDbTdHTFU5?=
- =?utf-8?B?SlJsL1kvb0xjMXpZWmlzdGVyRVZpMmdvQWV0c0pVS1g5TzNJYVlERFpYaW5L?=
- =?utf-8?B?dmg1R3lueUY0TUpNM0ZLNjdMMGJ4eWRCd3hCY2t6cUZ3ZTRVcFIyNEJKWXAr?=
- =?utf-8?B?cWZXQWw4QTFMWjRaeXBEVXI2TmI5M2Nvc1ViWXMxdlRob0FlaHEyQUdOSDNa?=
- =?utf-8?B?d1pqVEI0Q0RBMjdtbnBZOGFCcVl4YS9NbWJUakZnQW5MOU1kYzYvMi9oZW5O?=
- =?utf-8?B?Qlp2S0E1ZEV2N1o2cGJrU0xKdTR6OXpqMFdtVFlZNERJSlpkN1JUOGxqeTJ5?=
- =?utf-8?B?Zml0TnJFMzlEZVdtVDdQUEZnQXdvcUcrdnJ0TVpDQm5pT2NZekhMeVA5Z0lU?=
- =?utf-8?B?a1FvczRZcWVKWmZPMDZ0UExhOG51L3NQRmk0c2pSVXB1d1BIRnQzL3o5VEdr?=
- =?utf-8?B?WGpZdkMxY0JRaVgvWktaY1BIaVU2T1l1SHJkWjVXTUZtanVxYWhvT041VWY2?=
- =?utf-8?B?ZXFYOUI0MTdPWVZycVI1LzFDOEVOZ2EvU01WQmgzeW5YZFNPRWx6NCtIaDVq?=
- =?utf-8?B?OEtNNXQ1RVpZZXZMMDVFT2FmaGdBUlFHUmRoTDdYMVo5eXg1STBvTWdYZjQ3?=
- =?utf-8?B?ZXIxL01BREwxL2pCRXFUZ0ZTR3gzM09pd3RQOEFUZmJyVXJZNWdtWmtWTWha?=
- =?utf-8?B?dDZ0ditJSnVXdS9Hd21SWlc1cVI3cXJLVDNpKzcvMGM2OWtOdkxvQ0RpV2RY?=
- =?utf-8?B?dHM2SEhGS0RYNTJBVVB1ZWw5YVluMk9XZ0F3WXVHWDB2YXRJdmNqWmhSZnBa?=
- =?utf-8?B?eWFhdXhNdStQMTlLdzQyLzd3bklJVFJDWGpDK3lpL21CMStpYW1xYlloaDJj?=
- =?utf-8?Q?pIFt+P7wzb5aAHROtMRu+gHKGyu6jhKYL0HpqgAEkw=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F60C82ED064C194699B50CC4AA511A47@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+   d="scan'208";a="624746727"
+Received: from jayitada-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.140.240])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2022 10:54:11 -0800
+Date:   Sat, 15 Jan 2022 10:54:09 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     linux-cxl@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-pci@vger.kernel.org
+Cc:     patches@lists.linux.dev, Bjorn Helgaas <helgaas@kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: Re: [PATCH 00/13] CXL Region driver
+Message-ID: <20220115185409.tllecpbztzblr3nc@intel.com>
+References: <20220107003756.806582-1-ben.widawsky@intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN6PR11MB3988.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1bbd18bb-0851-4c0c-bdbd-08d9d7c4ac45
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2022 01:16:35.2668
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oswJ3tKPkg8SRsaAXAR/ihEgybne1YxDlnpuUF4LY+c3+TW79qL4IrQfbbdWWxiH92y+R6kuA7IBkN0OzEZdA5KRZJX9a/2o7rd1M/zUU/o=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB0074
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220107003756.806582-1-ben.widawsky@intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-T24gRnJpLCAyMDIyLTAxLTE0IGF0IDE0OjQ3IC0wODAwLCBEYW4gV2lsbGlhbXMgd3JvdGU6DQo+
-IE9uIEZyaSwgSmFuIDE0LCAyMDIyIGF0IDI6MzEgUE0gSmFuZSBDaHUgPGphbmUuY2h1QG9yYWNs
-ZS5jb20+IHdyb3RlOg0KPiA+IA0KPiA+IEhpLA0KPiA+IA0KPiA+IFNob3VsZCB0aGUgUkVBRE1F
-Lm1kIGZpbGUgZ2V0IHVwZGF0ZWQgYWNjb3JkaW5nbHk/DQo+IA0KPiBJbmRlZWQhIFdpbGwgZml4
-Lg0KDQpZZXAgSSBoYXZlIGEgcGF0Y2ggZm9yIHRoaXMgYWN0dWFsbHkgaW4gYSBsb2NhbCBicmFu
-Y2gsIEknbGwgc2VuZCBpdA0Kb3V0IC0gd2FzIGp1c3Qgd2FpdGluZyB0byBzZWUgaWYgYW55IHJl
-bGF0ZWQgZml4ZXMgcG9wIHVwLg0KDQo=
+Hi all.
+
+I found some last minute bugs which I've fixed. Please ignore this series and
+wait until I send out v3.
+
+Thanks.
+Ben
+
+On 22-01-06 16:37:43, Ben Widawsky wrote:
+> This patch series introduces the CXL region driver as well as associated APIs in
+> CXL core. The region driver enables the creation of "regions" which is a concept
+> defined by the CXL 2.0 specification [1]. Region verification and programming
+> state are owned by the cxl_region driver (implemented in the cxl_region module).
+> It relies on cxl_mem to determine if devices are CXL routed, and cxl_port to
+> actually handle the programming of the HDM decoders. Much of the region driver
+> is an implementation of algorithms described in the CXL Type 3 Memory Device
+> Software Guide [2].
+> 
+> The region driver will be responsible for configuring regions found on
+> persistent capacities in the Label Storage Area (LSA), it will also enumerate
+> regions configured by BIOS, usually volatile capacities, and will allow for
+> dynamic region creation (which can then be stored in the LSA). It is the primary
+> consumer of the CXL Port [3] and CXL Mem drivers introduced previously [4]. Dan
+> as reworked some of this which is required for this branch. A cached copy is
+> included in the gitlab for this project [5]. Those patches will be posted
+> shortly.
+> 
+> The patches for the region driver could be squashed. They're broken out to aid
+> review and because that's the order they were implemented in. My preference is
+> to keep those as they are.
+> 
+> Some things are still missing and will be worked on while these are reviewed (in
+> priority order):
+> 1. Connection to libnvdimm labels (No plan)
+> 2. Volatile regions/LSA regions (Have a plan)
+> 3. Switch ports (Have a plan)
+> 4. Decoder programming restrictions (No plan). The one know restriction I've
+>    missed is to disallow programming HDM decoders that aren't in incremental
+>    system physical address ranges.
+> 5. Stress testing
+> 
+> Here is an example of output when programming a x2 interleave region:
+> ./cxlctl create-region -i2 -n -a -s $((512<<20)) /sys/bus/cxl/devices/decoder0.0
+> [   42.971496][  T644] cxl_core:cxl_bus_probe:1384: cxl_region region0.0:0: probe: -19
+> [   42.972400][  T644] cxl_core:cxl_add_region:478: cxl region0.0:0: Added region0.0:0 to decoder0.0
+> [   42.979388][  T644] cxl_core:cxl_commit_decoder:394: cxl_port port1: decoder1.0
+> [   42.979388][  T644] 	Base 0x0000004c00000000
+> [   42.979388][  T644] 	Size 536870912
+> [   42.979388][  T644] 	IG 8
+> [   42.979388][  T644] 	IW 2
+> [   42.979388][  T644] 	TargetList: 0 1 -1 -1 -1 -1 -1 -1
+> [   42.982410][  T644] cxl_core:cxl_commit_decoder:394: cxl_port endpoint3: decoder3.0
+> [   42.982410][  T644] 	Base 0x0000004c00000000
+> [   42.982410][  T644] 	Size 536870912
+> [   42.982410][  T644] 	IG 8
+> [   42.982410][  T644] 	IW 2
+> [   42.982410][  T644] 	TargetList: -1 -1 -1 -1 -1 -1 -1 -1
+> [   42.985427][  T644] cxl_core:cxl_commit_decoder:394: cxl_port endpoint2: decoder2.0
+> [   42.985427][  T644] 	Base 0x0000004c00000000
+> [   42.985427][  T644] 	Size 536870912
+> [   42.985427][  T644] 	IG 8
+> [   42.985427][  T644] 	IW 2
+> [   42.985427][  T644] 	TargetList: -1 -1 -1 -1 -1 -1 -1 -1
+> [   42.987937][  T644] cxl_core:cxl_bus_probe:1384: cxl_region region0.0:0: probe: 0
+> 
+> If you're wondering how I tested this, I've baked it into my cxlctl app [6] and
+> lib [7]. Eventually this will get absorbed by ndctl/cxl-cli/libcxl.
+> 
+> To get the detailed errors, trace-cmd can be utilized. Until a region device
+> exists, the region module will not be loaded, which means the region tracepoints
+> will not exist. To get around this, modprobe cxl_region before anything.
+> 
+> trace-cmd record -e cxl ./cxlctl create-region -n -a -s $((256<<20)) /sys/bus/cxl/devices/decoder0.0
+> 
+> Branch can be found at gitlab [8].
+> 
+> ---
+> 
+> [1]: https://www.computeexpresslink.org/download-the-specification
+> [2]: https://cdrdv2.intel.com/v1/dl/getContent/643805?wapkw=CXL%20memory%20device%20sw%20guide
+> [3]: https://lore.kernel.org/linux-cxl/20211022183709.1199701-9-ben.widawsky@intel.com/
+> [4]: https://lore.kernel.org/linux-cxl/20211022183709.1199701-17-ben.widawsky@intel.com/
+> [5]: https://gitlab.com/bwidawsk/linux/-/commit/126793e22427f7975a8f2fca373764be78012e88
+> [6]: https://gitlab.com/bwidawsk-cxl/cxlctl
+> [7]: https://gitlab.com/bwidawsk-cxl/cxl_rs
+> [8]: https://gitlab.com/bwidawsk/linux/-/tree/cxl_region
+> 
+> ---
+> 
+> Ben Widawsky (13):
+>   cxl/core: Rename find_cxl_port
+>   cxl/core: Track port depth
+>   cxl/region: Add region creation ABI
+>   cxl/region: Introduce concept of region configuration
+>   cxl/mem: Cache port created by the mem dev
+>   cxl/region: Introduce a cxl_region driver
+>   cxl/acpi: Handle address space allocation
+>   cxl/region: Address space allocation
+>   cxl/region: Implement XHB verification
+>   cxl/region: HB port config verification
+>   cxl/region: Add infrastructure for decoder programming
+>   cxl/region: Record host bridge target list
+>   cxl: Program decoders for regions
+> 
+>  .clang-format                                 |   3 +
+>  Documentation/ABI/testing/sysfs-bus-cxl       |  63 ++
+>  .../driver-api/cxl/memory-devices.rst         |  14 +
+>  drivers/cxl/Makefile                          |   2 +
+>  drivers/cxl/acpi.c                            |  30 +
+>  drivers/cxl/core/Makefile                     |   1 +
+>  drivers/cxl/core/core.h                       |   4 +
+>  drivers/cxl/core/hdm.c                        | 198 +++++
+>  drivers/cxl/core/port.c                       | 132 +++-
+>  drivers/cxl/core/region.c                     | 525 +++++++++++++
+>  drivers/cxl/cxl.h                             |  32 +
+>  drivers/cxl/cxlmem.h                          |   9 +
+>  drivers/cxl/mem.c                             |  16 +-
+>  drivers/cxl/port.c                            |  42 +-
+>  drivers/cxl/region.c                          | 695 ++++++++++++++++++
+>  drivers/cxl/region.h                          |  47 ++
+>  drivers/cxl/trace.h                           |  54 ++
+>  tools/testing/cxl/Kbuild                      |   1 +
+>  18 files changed, 1849 insertions(+), 19 deletions(-)
+>  create mode 100644 drivers/cxl/core/region.c
+>  create mode 100644 drivers/cxl/region.c
+>  create mode 100644 drivers/cxl/region.h
+>  create mode 100644 drivers/cxl/trace.h
+> 
+> 
+> base-commit: 03716ce2db3c17ba38f26a88d75049c0472a629e
+> prerequisite-patch-id: af6a0315e22bfc1099d4f58610b8b897e6e5a060
+> -- 
+> 2.34.1
+> 
