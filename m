@@ -2,37 +2,37 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E9FC433F5
-	for <linux-cxl@archiver.kernel.org>; Tue, 18 Jan 2022 20:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF99C4332F
+	for <linux-cxl@archiver.kernel.org>; Tue, 18 Jan 2022 20:20:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349131AbiARUUb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S1349122AbiARUUb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Tue, 18 Jan 2022 15:20:31 -0500
 Received: from mga07.intel.com ([134.134.136.100]:58421 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1349098AbiARUUa (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 18 Jan 2022 15:20:30 -0500
+        id S1349138AbiARUUb (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Tue, 18 Jan 2022 15:20:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642537230; x=1674073230;
+  t=1642537231; x=1674073231;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=5BfBNZA4cDZx28lOEHJoMmO/axgVrEIzIMxH3cnGJeE=;
-  b=cHZk665GqzuNRS9Qe2adwr2y08Syy607h9rw2A0Vi2ilmu3a8iKYSA6k
-   b7coJRrIq5AEdi94OS2wuh1yxD8bWjAsECU6sYbCehjrEzGn0PAsrGhEW
-   6yrvjh/nqSasy6Ms6yjbp5ZgbFGRkuoiGq/9tunpkcWc9E8Tp6eyIKy9V
-   Q8624YVO/bI7B09yFVEzz+3YCQfTCOEEM3bBaAW9zXo0DkmF/ziVwSiyk
-   fHTKYMQT7DXnu4esr+l4wWi7SgC61T1oZWUmGdNMqvf5hm7ey5umwlJK4
-   cmjqhKibdSTE6yHh9URWl7b9duyjLludvM1zU/HRdlQSnFHcLWjpnBAG9
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10231"; a="308250308"
+  bh=+vOG/MGG3HFOK6Q+Ameq9bNgHeIQFxU/FTVdUSHEkes=;
+  b=C8S1hpq8Lb5TGRhmm/NQAhxVTVByHJjDZ3bEcnhY3C3DZPhj2RSEKqbH
+   vJcA6DwcOS0Ps7nIvQkK4AyVAEuDEcFnkE8VKi4DGlAQZAt1bqb91unF4
+   gbZ72JWncCvwOBNWNiepNuVt6Pc4thCrJWO8yIxIrtUd2jc5XAYK4Dyb8
+   bPaz0ACgRH7jqoTkEWWtlJzYK627HmRKZvIipkYZNNYWLIDbyCX3GIKgB
+   wAJEv5rRdk7qkSltr9yV/KdoR1Syeebq1daXdd7bBL2fzkj5Hz3D35iYF
+   NjgY3T1mtdUG8FUqN5N/ZXHpK50mmzya3DPp5HiZxARFluJY4KyT8+A4E
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10231"; a="308250311"
 X-IronPort-AV: E=Sophos;i="5.88,298,1635231600"; 
-   d="scan'208";a="308250308"
+   d="scan'208";a="308250311"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2022 12:20:30 -0800
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2022 12:20:31 -0800
 X-IronPort-AV: E=Sophos;i="5.88,298,1635231600"; 
-   d="scan'208";a="671953850"
+   d="scan'208";a="671953858"
 Received: from alison-desk.jf.intel.com (HELO localhost) ([10.54.74.41])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2022 12:20:29 -0800
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2022 12:20:30 -0800
 From:   alison.schofield@intel.com
 To:     Ben Widawsky <ben.widawsky@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
@@ -40,9 +40,9 @@ To:     Ben Widawsky <ben.widawsky@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
 Cc:     Alison Schofield <alison.schofield@intel.com>,
         nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Subject: [ndctl PATCH v3 1/6] libcxl: add GET_PARTITION_INFO mailbox command and accessors
-Date:   Tue, 18 Jan 2022 12:25:10 -0800
-Message-Id: <2072a34022dabcc92e3cc73b16c8008656e1084e.1642535478.git.alison.schofield@intel.com>
+Subject: [ndctl PATCH v3 3/6] libcxl: return the partition alignment field in bytes
+Date:   Tue, 18 Jan 2022 12:25:12 -0800
+Message-Id: <6e295b9c3ab676906e6f58588b54071ea968e0cd.1642535478.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1642535478.git.alison.schofield@intel.com>
 References: <cover.1642535478.git.alison.schofield@intel.com>
@@ -54,153 +54,31 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-Users need access to the CXL GET_PARTITION_INFO mailbox command
-to inspect and confirm changes to the partition layout of a memory
-device.
+Per the CXL specification, the partition alignment field reports
+the alignment value in multiples of 256MB. In the libcxl API, values
+for all capacity fields are defined to return bytes.
 
-Add libcxl APIs to create a new GET_PARTITION_INFO mailbox command,
-the command output data structure (privately), and accessor APIs to
-return the different fields in the partition info output.
-
-Per the CXL 2.0 specification, devices report partition capacities
-as multiples of 256MB. Define and use a capacity multiplier to
-convert the raw data into bytes for user consumption. Use byte
-format as the norm for all capacity values produced or consumed
-using CXL Mailbox commands.
+Update the partition alignment accessor to return bytes so that it
+is in sync with other capacity related fields.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- cxl/lib/libcxl.c   | 41 +++++++++++++++++++++++++++++++++++++++++
- cxl/lib/libcxl.sym |  5 +++++
- cxl/lib/private.h  | 10 ++++++++++
- cxl/libcxl.h       |  5 +++++
- util/size.h        |  1 +
- 5 files changed, 62 insertions(+)
+ cxl/lib/libcxl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index 3390eb9..58181c0 100644
+index 1fd584a..5b1fc32 100644
 --- a/cxl/lib/libcxl.c
 +++ b/cxl/lib/libcxl.c
-@@ -1160,6 +1160,47 @@ CXL_EXPORT ssize_t cxl_cmd_read_label_get_payload(struct cxl_cmd *cmd,
- 	return length;
+@@ -1089,7 +1089,7 @@ CXL_EXPORT unsigned long long cxl_cmd_identify_get_partition_align(
+ 	if (cmd->status < 0)
+ 		return cmd->status;
+ 
+-	return le64_to_cpu(id->partition_align);
++	return le64_to_cpu(id->partition_align) * CXL_CAPACITY_MULTIPLIER;
  }
  
-+CXL_EXPORT struct cxl_cmd *cxl_cmd_new_get_partition_info(struct cxl_memdev *memdev)
-+{
-+	return cxl_cmd_new_generic(memdev,
-+				   CXL_MEM_COMMAND_ID_GET_PARTITION_INFO);
-+}
-+
-+#define cmd_partition_get_capacity_field(cmd, field)			\
-+do {										\
-+	struct cxl_cmd_get_partition_info *c =					\
-+		(struct cxl_cmd_get_partition_info *)cmd->send_cmd->out.payload;\
-+	int rc = cxl_cmd_validate_status(cmd,					\
-+			CXL_MEM_COMMAND_ID_GET_PARTITION_INFO);			\
-+	if (rc)									\
-+		return ULLONG_MAX;							\
-+	return le64_to_cpu(c->field) * CXL_CAPACITY_MULTIPLIER;			\
-+} while (0)
-+
-+CXL_EXPORT unsigned long long
-+cxl_cmd_partition_info_get_active_volatile_bytes(struct cxl_cmd *cmd)
-+{
-+	cmd_partition_get_capacity_field(cmd, active_volatile_cap);
-+}
-+
-+CXL_EXPORT unsigned long long
-+cxl_cmd_partition_info_get_active_persistent_bytes(struct cxl_cmd *cmd)
-+{
-+	cmd_partition_get_capacity_field(cmd, active_persistent_cap);
-+}
-+
-+CXL_EXPORT unsigned long long
-+cxl_cmd_partition_info_get_next_volatile_bytes(struct cxl_cmd *cmd)
-+{
-+	cmd_partition_get_capacity_field(cmd, next_volatile_cap);
-+}
-+
-+CXL_EXPORT unsigned long long
-+cxl_cmd_partition_info_get_next_persistent_bytes(struct cxl_cmd *cmd)
-+{
-+	cmd_partition_get_capacity_field(cmd, next_persistent_cap);
-+}
-+
- CXL_EXPORT int cxl_cmd_submit(struct cxl_cmd *cmd)
- {
- 	struct cxl_memdev *memdev = cmd->memdev;
-diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index 077d104..e019c3c 100644
---- a/cxl/lib/libcxl.sym
-+++ b/cxl/lib/libcxl.sym
-@@ -70,6 +70,11 @@ global:
- 	cxl_memdev_zero_label;
- 	cxl_memdev_write_label;
- 	cxl_memdev_read_label;
-+	cxl_cmd_new_get_partition_info;
-+	cxl_cmd_partition_info_get_active_volatile_bytes;
-+	cxl_cmd_partition_info_get_active_persistent_bytes;
-+	cxl_cmd_partition_info_get_next_volatile_bytes;
-+	cxl_cmd_partition_info_get_next_persistent_bytes;
- local:
-         *;
- };
-diff --git a/cxl/lib/private.h b/cxl/lib/private.h
-index a1b8b50..dd9234f 100644
---- a/cxl/lib/private.h
-+++ b/cxl/lib/private.h
-@@ -7,6 +7,7 @@
- #include <cxl/cxl_mem.h>
- #include <ccan/endian/endian.h>
- #include <ccan/short_types/short_types.h>
-+#include <util/size.h>
- 
- #define CXL_EXPORT __attribute__ ((visibility("default")))
- 
-@@ -104,6 +105,15 @@ struct cxl_cmd_get_health_info {
- 	le32 pmem_errors;
- } __attribute__((packed));
- 
-+struct cxl_cmd_get_partition_info {
-+	le64 active_volatile_cap;
-+	le64 active_persistent_cap;
-+	le64 next_volatile_cap;
-+	le64 next_persistent_cap;
-+} __attribute__((packed));
-+
-+#define CXL_CAPACITY_MULTIPLIER		SZ_256M
-+
- /* CXL 2.0 8.2.9.5.3 Byte 0 Health Status */
- #define CXL_CMD_HEALTH_INFO_STATUS_MAINTENANCE_NEEDED_MASK		BIT(0)
- #define CXL_CMD_HEALTH_INFO_STATUS_PERFORMANCE_DEGRADED_MASK		BIT(1)
-diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index 89d35ba..08fd840 100644
---- a/cxl/libcxl.h
-+++ b/cxl/libcxl.h
-@@ -109,6 +109,11 @@ ssize_t cxl_cmd_read_label_get_payload(struct cxl_cmd *cmd, void *buf,
- 		unsigned int length);
- struct cxl_cmd *cxl_cmd_new_write_label(struct cxl_memdev *memdev,
- 		void *buf, unsigned int offset, unsigned int length);
-+struct cxl_cmd *cxl_cmd_new_get_partition_info(struct cxl_memdev *memdev);
-+unsigned long long cxl_cmd_partition_info_get_active_volatile_bytes(struct cxl_cmd *cmd);
-+unsigned long long cxl_cmd_partition_info_get_active_persistent_bytes(struct cxl_cmd *cmd);
-+unsigned long long cxl_cmd_partition_info_get_next_volatile_bytes(struct cxl_cmd *cmd);
-+unsigned long long cxl_cmd_partition_info_get_next_persistent_bytes(struct cxl_cmd *cmd);
- 
- #ifdef __cplusplus
- } /* extern "C" */
-diff --git a/util/size.h b/util/size.h
-index a0f3593..e72467f 100644
---- a/util/size.h
-+++ b/util/size.h
-@@ -15,6 +15,7 @@
- #define SZ_4M     0x00400000
- #define SZ_16M    0x01000000
- #define SZ_64M    0x04000000
-+#define SZ_256M	  0x10000000
- #define SZ_1G     0x40000000
- #define SZ_1T 0x10000000000ULL
- 
+ CXL_EXPORT unsigned int cxl_cmd_identify_get_label_size(struct cxl_cmd *cmd)
 -- 
 2.31.1
 
