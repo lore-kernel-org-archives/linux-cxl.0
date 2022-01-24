@@ -2,43 +2,43 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E36F1C433F5
-	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jan 2022 00:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B84A4C433EF
+	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jan 2022 00:52:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240650AbiAXAwf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 23 Jan 2022 19:52:35 -0500
-Received: from mga11.intel.com ([192.55.52.93]:50209 "EHLO mga11.intel.com"
+        id S240652AbiAXAwh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 23 Jan 2022 19:52:37 -0500
+Received: from mga05.intel.com ([192.55.52.43]:8720 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240634AbiAXAwb (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Sun, 23 Jan 2022 19:52:31 -0500
+        id S240634AbiAXAwg (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Sun, 23 Jan 2022 19:52:36 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642985551; x=1674521551;
+  t=1642985556; x=1674521556;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=NF2XknFo78Bj2VyYzMjDGENQQPGTTQUgtgoGrzfXLiQ=;
-  b=IZJZcRN1fQHXhZ8QTsm71j4EVk/aUT2a6OpgkdSNzm0O40bL5reiNWnI
-   pCWfStAa56qFSmig8nnTFn0eI/0G7mjsfc3ei2Lk13EKzRoJFe5Kt8Jni
-   lR/Lo67ZzBu66+p+5wpEU4zoUNq7YS4Pv82AOxfU26ut9MXWVYOMerYL5
-   XVgLn6nadOx/IK7LvIFmaN9S/pGSgwytrbVb5A8OM8t4SvQVkTt9eJnN5
-   uJgn+6ytOcl4/beEetimMaFTS+MbmBYS4H84yQF7lS/7fWM71VJDgoDMU
-   lEfqyMjaRzFYWAOhW3sampcYTmiFRY+Uu74UUshxbjHuLheZ6eIj74oKI
+  bh=zRZhMssWva2iAQrYOI28+YnglDuqKCXKGQfcfBO/qLw=;
+  b=gbUGN5a3HVZJ/cc8WTYaCv8A/NOCVk2ccPnl0ZPfxdmEm1CS6D+tlP4h
+   hcSgJ9Zh6RyE5JAsBZVgU+OD/MSTG2I6IHEUvDXOEo2d72M2MNwOp7YTp
+   WTnD5ktaXqrvLpGr9fKuRk0/CzimrlkQA6/lXgU/WPUQm7TuwOMTTB8/J
+   XKdOV1jgmO7FzzBPKQU4p1Tc2OfRMiAP4rjrNRtvj5uXAfSMAnR7n9Emx
+   QOr5Br5nB30LwVjMW/dJ1qJAKrDm2lLOIYo4kj+kjTYwYfDuydNqQAp+Q
+   eAW5KW/TIVElKbw/XVehPZraSEbKTMxGTGmuP+eLqjIA4yz56IGJEvoE9
    w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="243530535"
+X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="332290515"
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="243530535"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:52:31 -0800
+   d="scan'208";a="332290515"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:52:36 -0800
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="695243342"
+   d="scan'208";a="766233178"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:52:31 -0800
-Subject: [ndctl PATCH 08/37] cxl/list: Introduce cxl_filter_walk()
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:52:36 -0800
+Subject: [ndctl PATCH 09/37] cxl/list: Emit device serial numbers
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     vishal.l.verma@intel.com
-Date:   Sun, 23 Jan 2022 16:52:31 -0800
-Message-ID: <164298555121.3021641.16127840206319352254.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Sun, 23 Jan 2022 16:52:36 -0800
+Message-ID: <164298555630.3021641.3246226448369816200.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <164298550885.3021641.11210386002804544864.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <164298550885.3021641.11210386002804544864.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -49,286 +49,153 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-In preparation for introducing more objects and filtering options for 'cxl
-list' introduce cxl_filter_walk() to centralize CXL topology walks. It
-fills the same role as ndctl_filter_walk() as a way to distribute topology
-interrogation beyond 'cxl list' to other commands, and serve as the
-template for CXL object hierarchy in JSON output payloads.
-
-Use the common dbg() logger for log messages.
+Starting with the v5.17 kernel the CXL driver emits the mandatory device
+serial number for each memory device. Include it in the memory device
+listing.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- Documentation/cxl/cxl-list.txt |    2 +
- cxl/filter.c                   |   50 ++++++++++++++++++++
- cxl/filter.h                   |   18 ++++++-
- cxl/list.c                     |  102 ++++++++--------------------------------
- cxl/meson.build                |    1 
- 5 files changed, 90 insertions(+), 83 deletions(-)
+ Documentation/cxl/cxl-list.txt |   15 +++++++++------
+ cxl/json.c                     |   11 ++++++++++-
+ cxl/lib/libcxl.c               |   11 +++++++++++
+ cxl/lib/libcxl.sym             |    5 +++++
+ cxl/lib/private.h              |    1 +
+ cxl/libcxl.h                   |    1 +
+ 6 files changed, 37 insertions(+), 7 deletions(-)
 
 diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
-index 686e0ea768f0..4d409babb99a 100644
+index 4d409babb99a..bd0207e942cb 100644
 --- a/Documentation/cxl/cxl-list.txt
 +++ b/Documentation/cxl/cxl-list.txt
-@@ -15,6 +15,8 @@ SYNOPSIS
- Walk the CXL capable device hierarchy in the system and list all device
- instances along with some of their major attributes.
- 
-+Options can be specified to limit the output to specific objects.
-+
- EXAMPLE
- -------
- ----
-diff --git a/cxl/filter.c b/cxl/filter.c
-index 405b653d80b2..d1ff4b62c806 100644
---- a/cxl/filter.c
-+++ b/cxl/filter.c
-@@ -1,10 +1,16 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (C) 2015-2020 Intel Corporation. All rights reserved.
-+#include <errno.h>
- #include <stdio.h>
- #include <string.h>
- #include <stdlib.h>
-+#include <util/log.h>
-+#include <util/json.h>
- #include <cxl/libcxl.h>
-+#include <json-c/json.h>
-+
- #include "filter.h"
-+#include "json.h"
- 
- static const char *which_sep(const char *filter)
- {
-@@ -48,3 +54,47 @@ struct cxl_memdev *util_cxl_memdev_filter(struct cxl_memdev *memdev,
- 		return memdev;
- 	return NULL;
- }
-+
-+static unsigned long params_to_flags(struct cxl_filter_params *param)
-+{
-+	unsigned long flags = 0;
-+
-+	if (param->idle)
-+		flags |= UTIL_JSON_IDLE;
-+	if (param->human)
-+		flags |= UTIL_JSON_HUMAN;
-+	if (param->health)
-+		flags |= UTIL_JSON_HEALTH;
-+	return flags;
-+}
-+
-+int cxl_filter_walk(struct cxl_ctx *ctx, struct cxl_filter_params *p)
-+{
-+	struct json_object *jplatform = json_object_new_array();
-+	unsigned long flags = params_to_flags(p);
-+	struct cxl_memdev *memdev;
-+
-+	if (!jplatform) {
-+		dbg(p, "platform object allocation failure\n");
-+		return -ENOMEM;
-+	}
-+
-+	cxl_memdev_foreach(ctx, memdev) {
-+		struct json_object *jdev;
-+
-+		if (!util_cxl_memdev_filter(memdev, p->memdev_filter))
-+			continue;
-+		if (p->memdevs) {
-+			jdev = util_cxl_memdev_to_json(memdev, flags);
-+			if (!jdev) {
-+				dbg(p, "memdev object allocation failure\n");
-+				continue;
-+			}
-+			json_object_array_add(jplatform, jdev);
-+		}
-+	}
-+
-+	util_display_json_array(stdout, jplatform, flags);
-+
-+	return 0;
-+}
-diff --git a/cxl/filter.h b/cxl/filter.h
-index da800336b528..664b74b23b0a 100644
---- a/cxl/filter.h
-+++ b/cxl/filter.h
-@@ -1,7 +1,21 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--/* Copyright (C) 2015-2020 Intel Corporation. All rights reserved. */
-+/* Copyright (C) 2021 Intel Corporation. All rights reserved. */
- #ifndef _CXL_UTIL_FILTER_H_
- #define _CXL_UTIL_FILTER_H_
-+
-+#include <stdbool.h>
-+#include <util/log.h>
-+
-+struct cxl_filter_params {
-+	const char *memdev_filter;
-+	bool memdevs;
-+	bool idle;
-+	bool human;
-+	bool health;
-+	struct log_ctx ctx;
-+};
-+
- struct cxl_memdev *util_cxl_memdev_filter(struct cxl_memdev *memdev,
--		const char *ident);
-+					  const char *ident);
-+int cxl_filter_walk(struct cxl_ctx *ctx, struct cxl_filter_params *param);
- #endif /* _CXL_UTIL_FILTER_H_ */
-diff --git a/cxl/list.c b/cxl/list.c
-index 7f7a04d9a6e5..17303073b49a 100644
---- a/cxl/list.c
-+++ b/cxl/list.c
-@@ -9,60 +9,27 @@
- #include <json-c/json.h>
- #include <cxl/libcxl.h>
- #include <util/parse-options.h>
--#include <ccan/array_size/array_size.h>
- 
--#include "json.h"
- #include "filter.h"
- 
--static struct {
--	bool memdevs;
--	bool idle;
--	bool human;
--	bool health;
--} list;
--
--static unsigned long listopts_to_flags(void)
--{
--	unsigned long flags = 0;
--
--	if (list.idle)
--		flags |= UTIL_JSON_IDLE;
--	if (list.human)
--		flags |= UTIL_JSON_HUMAN;
--	if (list.health)
--		flags |= UTIL_JSON_HEALTH;
--	return flags;
--}
--
--static struct {
--	const char *memdev;
--} param;
--
--static int did_fail;
--
--#define fail(fmt, ...) \
--do { \
--	did_fail = 1; \
--	fprintf(stderr, "cxl-%s:%s:%d: " fmt, \
--			VERSION, __func__, __LINE__, ##__VA_ARGS__); \
--} while (0)
-+static struct cxl_filter_params param;
- 
- static int num_list_flags(void)
- {
--	return list.memdevs;
-+	return param.memdevs;
+@@ -41,22 +41,25 @@ OPTIONS
+   "ram_size":0,
  }
  
- int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
- {
- 	const struct option options[] = {
--		OPT_STRING('m', "memdev", &param.memdev, "memory device name",
-+		OPT_STRING('m', "memdev", &param.memdev_filter, "memory device name",
- 			   "filter by CXL memory device name"),
--		OPT_BOOLEAN('M', "memdevs", &list.memdevs,
-+		OPT_BOOLEAN('M', "memdevs", &param.memdevs,
- 			    "include CXL memory device info"),
--		OPT_BOOLEAN('i', "idle", &list.idle, "include idle devices"),
--		OPT_BOOLEAN('u', "human", &list.human,
-+		OPT_BOOLEAN('i', "idle", &param.idle, "include disabled devices"),
-+		OPT_BOOLEAN('u', "human", &param.human,
- 				"use human friendly number formats "),
--		OPT_BOOLEAN('H', "health", &list.health,
-+		OPT_BOOLEAN('H', "health", &param.health,
- 				"include memory device health information "),
- 		OPT_END(),
- 	};
-@@ -70,9 +37,6 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
- 		"cxl list [<options>]",
- 		NULL
- 	};
--	struct json_object *jdevs = NULL;
--	unsigned long list_flags;
--	struct cxl_memdev *memdev;
- 	int i;
- 
- 	argc = parse_options(argc, argv, options, u, 0);
-@@ -83,46 +47,22 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
- 		usage_with_options(u, options);
- 
- 	if (num_list_flags() == 0) {
--		/*
--		 * TODO: We likely want to list regions by default if nothing
--		 * was explicitly asked for. But until we have region support,
--		 * print this error asking for devices explicitly.
--		 * Once region support is added, this TODO can be removed.
--		 */
--		error("please specify entities to list, e.g. using -m/-M\n");
--		usage_with_options(u, options);
--	}
--
--	list_flags = listopts_to_flags();
--
--	cxl_memdev_foreach(ctx, memdev) {
--		struct json_object *jdev = NULL;
--
--		if (!util_cxl_memdev_filter(memdev, param.memdev))
--			continue;
--
--		if (list.memdevs) {
--			if (!jdevs) {
--				jdevs = json_object_new_array();
--				if (!jdevs) {
--					fail("\n");
--					continue;
--				}
--			}
--
--			jdev = util_cxl_memdev_to_json(memdev, list_flags);
--			if (!jdev) {
--				fail("\n");
--				continue;
--			}
--			json_object_array_add(jdevs, jdev);
-+		if (param.memdev_filter)
-+			param.memdevs = true;
-+		else {
-+			/*
-+			 * TODO: We likely want to list regions by default if
-+			 * nothing was explicitly asked for. But until we have
-+			 * region support, print this error asking for devices
-+			 * explicitly.  Once region support is added, this TODO
-+			 * can be removed.
-+			 */
-+			error("please specify entities to list, e.g. using -m/-M\n");
-+			usage_with_options(u, options);
- 		}
- 	}
- 
--	if (jdevs)
--		util_display_json_array(stdout, jdevs, list_flags);
-+	log_init(&param.ctx, "cxl list", "CXL_LIST_LOG");
- 
--	if (did_fail)
--		return -ENOMEM;
--	return 0;
-+	return cxl_filter_walk(ctx, &param);
- }
-diff --git a/cxl/meson.build b/cxl/meson.build
-index 805924b9df9b..fc7ee71b54f0 100644
---- a/cxl/meson.build
-+++ b/cxl/meson.build
-@@ -3,6 +3,7 @@ cxl_src = [
-   'list.c',
-   'memdev.c',
-   '../util/json.c',
-+  '../util/log.c',
-   'json.c',
-   'filter.c',
+-# cxl list -m "0 mem1 2"
++# cxl list -M --memdev="0 mem3 5"
+ [
+   {
+     "memdev":"mem0",
+     "pmem_size":268435456,
+-    "ram_size":0
++    "ram_size":0,
++    "serial":0
+   },
+   {
+-    "memdev":"mem2",
++    "memdev":"mem3",
+     "pmem_size":268435456,
+-    "ram_size":268435456
++    "ram_size":268435456,
++    "serial":2
+   },
+   {
+-    "memdev":"mem1",
++    "memdev":"mem5",
+     "pmem_size":268435456,
+-    "ram_size":268435456
++    "ram_size":268435456,
++    "serial":4
+   }
  ]
+ ----
+diff --git a/cxl/json.c b/cxl/json.c
+index 3ef9f7670510..d8e65df241a1 100644
+--- a/cxl/json.c
++++ b/cxl/json.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+-// Copyright (C) 2015-2020 Intel Corporation. All rights reserved.
++// Copyright (C) 2015-2021 Intel Corporation. All rights reserved.
++#include <limits.h>
+ #include <util/json.h>
+ #include <uuid/uuid.h>
+ #include <cxl/libcxl.h>
+@@ -188,6 +189,7 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+ {
+ 	const char *devname = cxl_memdev_get_devname(memdev);
+ 	struct json_object *jdev, *jobj;
++	unsigned long long serial;
+ 
+ 	jdev = json_object_new_object();
+ 	if (!jdev)
+@@ -210,5 +212,12 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+ 		if (jobj)
+ 			json_object_object_add(jdev, "health", jobj);
+ 	}
++
++	serial = cxl_memdev_get_serial(memdev);
++	if (serial < ULLONG_MAX) {
++		jobj = util_json_object_hex(serial, flags);
++		if (jobj)
++			json_object_object_add(jdev, "serial", jobj);
++	}
+ 	return jdev;
+ }
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index 3390eb91ecb5..8d3cf8092c8b 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -296,6 +296,12 @@ static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
+ 	if (memdev->lsa_size == ULLONG_MAX)
+ 		goto err_read;
+ 
++	sprintf(path, "%s/serial", cxlmem_base);
++	if (sysfs_read_attr(ctx, path, buf) < 0)
++		memdev->serial = ULLONG_MAX;
++	else
++		memdev->serial = strtoull(buf, NULL, 0);
++
+ 	memdev->dev_path = strdup(cxlmem_base);
+ 	if (!memdev->dev_path)
+ 		goto err_read;
+@@ -371,6 +377,11 @@ CXL_EXPORT int cxl_memdev_get_id(struct cxl_memdev *memdev)
+ 	return memdev->id;
+ }
+ 
++CXL_EXPORT unsigned long long cxl_memdev_get_serial(struct cxl_memdev *memdev)
++{
++	return memdev->serial;
++}
++
+ CXL_EXPORT const char *cxl_memdev_get_devname(struct cxl_memdev *memdev)
+ {
+ 	return devpath_to_devname(memdev->dev_path);
+diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+index 077d10434cde..4411035f962a 100644
+--- a/cxl/lib/libcxl.sym
++++ b/cxl/lib/libcxl.sym
+@@ -73,3 +73,8 @@ global:
+ local:
+         *;
+ };
++
++LIBCXL_2 {
++global:
++	cxl_memdev_get_serial;
++} LIBCXL_1;
+diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+index a1b8b507225e..28f7e16dbd04 100644
+--- a/cxl/lib/private.h
++++ b/cxl/lib/private.h
+@@ -31,6 +31,7 @@ struct cxl_memdev {
+ 	size_t lsa_size;
+ 	struct kmod_module *module;
+ 	struct cxl_nvdimm_bridge *bridge;
++	unsigned long long serial;
+ };
+ 
+ enum cxl_cmd_query_status {
+diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+index 89d35ba957e6..bcdede8f12e8 100644
+--- a/cxl/libcxl.h
++++ b/cxl/libcxl.h
+@@ -35,6 +35,7 @@ struct cxl_memdev;
+ struct cxl_memdev *cxl_memdev_get_first(struct cxl_ctx *ctx);
+ struct cxl_memdev *cxl_memdev_get_next(struct cxl_memdev *memdev);
+ int cxl_memdev_get_id(struct cxl_memdev *memdev);
++unsigned long long cxl_memdev_get_serial(struct cxl_memdev *memdev);
+ const char *cxl_memdev_get_devname(struct cxl_memdev *memdev);
+ int cxl_memdev_get_major(struct cxl_memdev *memdev);
+ int cxl_memdev_get_minor(struct cxl_memdev *memdev);
 
