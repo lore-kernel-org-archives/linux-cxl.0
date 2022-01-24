@@ -2,86 +2,209 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0649AC433F5
-	for <linux-cxl@archiver.kernel.org>; Thu, 20 Jan 2022 19:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E856FC433EF
+	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jan 2022 00:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346971AbiATTGb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 20 Jan 2022 14:06:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346956AbiATTGb (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 20 Jan 2022 14:06:31 -0500
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A02C3C06161C
-        for <linux-cxl@vger.kernel.org>; Thu, 20 Jan 2022 11:06:30 -0800 (PST)
-Received: by mail-pg1-x531.google.com with SMTP id c5so6059126pgk.12
-        for <linux-cxl@vger.kernel.org>; Thu, 20 Jan 2022 11:06:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=srs3TN/75QhowKqGGsiHvm6pbhOWZu8Z1iu0c5373LQ=;
-        b=oYBx1lVcXUkFnUepbpxU0fVmaVVHsTyb+loylm1UD3UHlFhok3pZDRUbSSi32gafpI
-         B9QkEKiCwEQXWs4RL85vh+68H2K34uKoEfk1KZawdaziy8qjNTom3gXcUTX1PfMD4H3J
-         Hi2r7lvhdDOOURTkZYMei+BngqzoEcEAkZ3ZAeAua7R5rk4BcMT+S71z74l5ynjlYmaW
-         bx97vsGX//Ankpza0NK6/59HF1TAl80urO2VwN1q+iaSvRwAAo6/Pn+hqF/40Cuocjdz
-         jLSyCANRo3v1zKeuWtWlhvO7KMNp9V5FnoYge6BzTly4IG8aXsbXwcoyqWTvVc5Ls/HC
-         ORFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=srs3TN/75QhowKqGGsiHvm6pbhOWZu8Z1iu0c5373LQ=;
-        b=6IkXl5MqL9MoM+iAADWFafJzisIPzo/ZuuZKXBLxOS583gOQ8VUwfsA5w5ARl7l+7u
-         sxNCivgUS/2glx81m/vWDtlcmH8ussGZwiGYHoI8vzsnP9iq1vTFrwhJ/CnJE2npojCJ
-         EHy3l8d/CEkoswHW4NwgNF+xIye2eHlsQfo8/BLhPqoImMd6R3cGJNNqwEIoqK+Ks6ma
-         xH56Y40hdruf9vKfGo6rg+wAV3psprpzkxIQ96OL5rlyF2wr1ok07DWIrj/FRrRT9qy1
-         oUTH0K6a3V1cqHD+lXkSo49TZCsOQcVxYjRldq/NSwPi3KD+aWr9atbryoDmrzrxtoT0
-         boQQ==
-X-Gm-Message-State: AOAM531zhFGryhsre4GLciPHGdTQFadDxOkLwpYp5iOhN0IcJq/xFiQr
-        tacg0fo0NncTnUjG9t4Kw8uSM0mWvNv7y28RXMJL+gmNbHnhwQ==
-X-Google-Smtp-Source: ABdhPJx/W/CfDq5GkBhdtzDO1btrPLmYyQ4ne7AminxEUjN8xkQzFlcmwfd045bEUy0Ta5xv3LcanJaERxAvTuy9DMg=
-X-Received: by 2002:a05:6a00:8d3:b0:4bc:3fe0:98d2 with SMTP id
- s19-20020a056a0008d300b004bc3fe098d2mr173324pfu.3.1642705590104; Thu, 20 Jan
- 2022 11:06:30 -0800 (PST)
-MIME-Version: 1.0
-References: <198c0ae2-efdf-7f47-11c7-27e9a87b3f32@boldcoder.com> <CAJZ5v0ghyNEZayq6CsRpP3LDjFRrCsuSUacU99s8U1Bj6x1o9A@mail.gmail.com>
-In-Reply-To: <CAJZ5v0ghyNEZayq6CsRpP3LDjFRrCsuSUacU99s8U1Bj6x1o9A@mail.gmail.com>
+        id S240539AbiAXA2k (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 23 Jan 2022 19:28:40 -0500
+Received: from mga04.intel.com ([192.55.52.120]:41947 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235008AbiAXA2j (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Sun, 23 Jan 2022 19:28:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1642984119; x=1674520119;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=O+MpZFnYgrZlyePty/+JLNKv2kOTRvJBvM66K63gDg8=;
+  b=I1GOc6/Q0b2oG4LYqWwaK4gnGFxCwKU8pHGXUC+PCXzhbv1e0jbEcEIC
+   n/JUnlktA7wpiv35FaisZEgj1sw2WGkthyHHCwqFlY7Mmb33BxDnBnI1X
+   uNcWreNwtO+IZTe6qFecv81Z3Rx3frmYmQQdXyGWXhAz9g21tUYjqshiS
+   xyr/PS7ITqQANt6fvgadXJpKLrI0h6hflX01wA9pbt8yI66nzAvN+8g37
+   sILw0I++b6dWH2Mthr5S9siFtD3uSRzigpHYht6BlZgemmijEAEvJfeCN
+   IKs6fEf4+y6usBpG4mALDHTbSb18J9qxL2eEd9PLbHQC39EK4st1GnV9o
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="244766434"
+X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
+   d="scan'208";a="244766434"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:28:39 -0800
+X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
+   d="scan'208";a="476536323"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:28:39 -0800
+Subject: [PATCH v3 00/40] CXL.mem Topology Discovery and Hotplug Support
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 20 Jan 2022 11:06:19 -0800
-Message-ID: <CAPcyv4h7DtL0v3TPtsMk+t_Y=YKZetiaiZfsAcMgKwPGsbQ7AQ@mail.gmail.com>
-Subject: Re: Patch: Make ACPI subsystem provide CEDT table
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Robert Kiraly <me@boldcoder.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>, linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+To:     linux-cxl@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+        kernel test robot <lkp@intel.com>, linux-pci@vger.kernel.org,
+        nvdimm@lists.linux.dev
+Date:   Sun, 23 Jan 2022 16:28:38 -0800
+Message-ID: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-[ add linux-cxl ]
+Changes since v2 [1]:
+- Rework the series to clarify the role of 'struct cxl_port' objects and
+  fix hotplug bugs.
+  - Drop the cxl_topology_host() concept.
+  - Fix endpoint unregistration relative to port ->remove() and
+    switch-port unregistration relative to to endpoint ->remove().
+- Add cxl_test infrastructure to validate switch enumeration and various
+  hotplug scenarios (see upcoming updates to the 'cxl' tool for the
+  userspace side of this testing).
+- Add lockdep coverage of the CXL subsystem's use of the device_lock().
+- Add a "Theory of Operation" section to
+  Documentation/driver-api/cxl/memory-devices.rst describing the
+  behavior and role of the 'struct bus_type cxl_bus_type' instance (see:
+  [PATCH v3 24/40] cxl/port: Add a driver for 'struct cxl_port' objects).
+- For timeout scenarios like mailbox ready time, memory valid, memory
+  active, use a sleeping wait rather than a spin wait
+- Add a 'serial' attribute to memory devices since CXL mandates device
+  implement the PCIe Device Serial Number definition.
+- Rename report_status() / report_cmd_status() cxl_err() / cxl_cmd_err()
+  (Jonathan)
+
+[1]: https://lore.kernel.org/r/20211202043750.3501494-1-ben.widawsky@intel.com
+
+---
+
+The CXL subsystem enabling story so far has been concerned with
+enumerating the platform firmware described "root" level of a CXL
+topology (CXL capable Host Bridges and CXL platform address ranges), and
+the endpoint level (CXL Memory Expanders identified by PCIe class code).
+The next phase is connecting endpoints to that root description by an
+arbitrary number of intervening switch ports.
+
+The driver for CXL Memory Expanders, 'cxl_pci', registers a 'struct
+cxl_memdev' on the CXL bus. To date that device has only served as the
+entry point for submitting CXL Memory Device control and management
+commands. Now a new 'cxl_mem' driver takes that device and probes the
+topology to validate it is capable of CXL.mem operations.
+
+As 'cxl_mem' probes the topology it registers 'struct cxl_port'
+instances at each Upstream Switch Port that it finds on the walk to the
+CXL root. Each of those port device in turn attempt to attach to a
+'cxl_port' driver. The 'cxl_port' probe process enumerates Downstream
+Ports and CXL HDM Decoder Capability structures. If cxl_port_probe()
+fails it unwinds all descendent ports that were previously registered
+and ultimately fails cxl_mem_probe() as result.
+
+This design lets CXL Port capabilities be enumerated late, and only in
+the presence of attached Memory Expander endpoints.
+
+- The first 16 patches are fixes and preparatory cleanups including
+  support for validating usage of device_lock() in the subsystem.
+- Patches 17-24 centralize Downstream Port and HDM Decoder Capability
+  enumeration in the core and then introduces the cxl_port driver.
+- Patches 25-33 validates the CXL.mem link came up in endpoints, adds
+  core infrastructure to enumerate Swicht Ports, and adds the cxl_mem
+  driver.
+- Patches 34 and 35 add endpoint decoder enumeration.
+- The last 5 patches add cxl_test infrastructure to validate all the
+  mechanics of attaching and detaching cxl_port and cxl_memdev
+  instances.
+
+See the Documentation updates in patch 24 for more details.
+
+---
+
+Ben Widawsky (17):
+      cxl: Rename CXL_MEM to CXL_PCI
+      cxl/pci: Implement Interface Ready Timeout
+      cxl: Flesh out register names
+      cxl/pci: Add new DVSEC definitions
+      cxl/acpi: Map component registers for Root Ports
+      cxl: Introduce module_cxl_driver
+      cxl/core: Convert decoder range to resource
+      cxl/core/port: Clarify decoder creation
+      cxl/core/port: Make passthrough decoder init implicit
+      cxl/core: Track port depth
+      cxl/port: Add a driver for 'struct cxl_port' objects
+      cxl/pci: Store component register base in cxlds
+      cxl/pci: Cache device DVSEC offset
+      cxl/pci: Retrieve CXL DVSEC memory info
+      cxl/pci: Implement wait for media active
+      cxl/mem: Add the cxl_mem driver
+      cxl/core/port: Add endpoint decoders
+
+Dan Williams (23):
+      cxl/pci: Defer mailbox status checks to command timeouts
+      cxl/core/port: Rename bus.c to port.c
+      cxl/decoder: Hide physical address information from non-root
+      cxl/core: Fix cxl_probe_component_regs() error message
+      cxl: Prove CXL locking
+      cxl/core/port: Use dedicated lock for decoder target list
+      cxl/port: Introduce cxl_port_to_pci_bus()
+      cxl/pmem: Introduce a find_cxl_root() helper
+      cxl/port: Up-level cxl_add_dport() locking requirements to the caller
+      cxl/pci: Rename pci.h to cxlpci.h
+      cxl/core: Generalize dport enumeration in the core
+      cxl/core/hdm: Add CXL standard decoder enumeration to the core
+      cxl/core: Emit modalias for CXL devices
+      cxl/core/port: Remove @host argument for dport + decoder enumeration
+      cxl/pci: Emit device serial number
+      cxl/memdev: Add numa_node attribute
+      cxl/core/port: Add switch port enumeration
+      cxl/core: Move target_list out of base decoder attributes
+      tools/testing/cxl: Mock dvsec_ranges()
+      tools/testing/cxl: Fix root port to host bridge assignment
+      tools/testing/cxl: Mock one level of switches
+      tools/testing/cxl: Enumerate mock decoders
+      tools/testing/cxl: Add a physical_node link
 
 
-On Thu, Jan 20, 2022 at 10:49 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Thu, Jan 13, 2022 at 12:16 AM Robert Kiraly <me@boldcoder.com> wrote:
-> >
-> > This is a simple ACPI patch. I'm submitting a revised version to
-> > linux-acpi as opposed to linux-pm at Rafael Wysocki's suggestion.
-> >
-> > The patch adds ACPI_SIG_CEDT to table_sigs[] in "drivers/acpi/tables.c".
->
-> This can be done, but please send a patch in the message body (not as
-> an attachment) and provide a Signed-off-by tag for it.
+ Documentation/ABI/testing/sysfs-bus-cxl         |   36 +
+ Documentation/driver-api/cxl/memory-devices.rst |  315 +++++
+ drivers/cxl/Kconfig                             |   44 +
+ drivers/cxl/Makefile                            |    6 
+ drivers/cxl/acpi.c                              |  151 --
+ drivers/cxl/core/Makefile                       |    4 
+ drivers/cxl/core/bus.c                          |  675 ----------
+ drivers/cxl/core/core.h                         |    3 
+ drivers/cxl/core/hdm.c                          |  253 ++++
+ drivers/cxl/core/memdev.c                       |   46 +
+ drivers/cxl/core/pci.c                          |   98 ++
+ drivers/cxl/core/pmem.c                         |   18 
+ drivers/cxl/core/port.c                         | 1483 +++++++++++++++++++++++
+ drivers/cxl/core/regs.c                         |   63 +
+ drivers/cxl/cxl.h                               |  184 +++
+ drivers/cxl/cxlmem.h                            |   40 +
+ drivers/cxl/cxlpci.h                            |   75 +
+ drivers/cxl/mem.c                               |  221 +++
+ drivers/cxl/pci.c                               |  373 ++++--
+ drivers/cxl/pci.h                               |   34 -
+ drivers/cxl/pmem.c                              |   12 
+ drivers/cxl/port.c                              |   76 +
+ drivers/nvdimm/nd-core.h                        |    2 
+ lib/Kconfig.debug                               |   23 
+ tools/testing/cxl/Kbuild                        |   22 
+ tools/testing/cxl/mock_acpi.c                   |   74 -
+ tools/testing/cxl/mock_mem.c                    |   10 
+ tools/testing/cxl/mock_pmem.c                   |   24 
+ tools/testing/cxl/test/cxl.c                    |  330 ++++-
+ tools/testing/cxl/test/mem.c                    |   19 
+ tools/testing/cxl/test/mock.c                   |   91 +
+ tools/testing/cxl/test/mock.h                   |    8 
+ 32 files changed, 3591 insertions(+), 1222 deletions(-)
+ delete mode 100644 drivers/cxl/core/bus.c
+ create mode 100644 drivers/cxl/core/hdm.c
+ create mode 100644 drivers/cxl/core/pci.c
+ create mode 100644 drivers/cxl/core/port.c
+ create mode 100644 drivers/cxl/cxlpci.h
+ create mode 100644 drivers/cxl/mem.c
+ delete mode 100644 drivers/cxl/pci.h
+ create mode 100644 drivers/cxl/port.c
+ create mode 100644 tools/testing/cxl/mock_mem.c
+ delete mode 100644 tools/testing/cxl/mock_pmem.c
 
-Yes, although I don't see much incremental benefit to developers
-publishing a root only raw table given it needs to be parsed along
-with all the other cxl information in the system. So, not opposed to
-the patch, but I want to direct you to the sysfs representation of the
-CEDT and CFMWS in /sys/bus/cxl/devices is what the cxl tool and libcxl
-library [1] will be using instead of the raw table. Platform firmware
-CXL details are modeled as "CXL root" objects in the /sys/bus/cxl
-device model.
-
-[1]: https://github.com/pmem/ndctl/tree/main/cxl
+base-commit: be185c2988b48db65348d94168c793bdbc8d23c3
