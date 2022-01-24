@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D6DC433EF
-	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jan 2022 17:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAE5C433EF
+	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jan 2022 17:33:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244479AbiAXRc6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 24 Jan 2022 12:32:58 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4476 "EHLO
+        id S244520AbiAXRd5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 24 Jan 2022 12:33:57 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4477 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244172AbiAXRc6 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Jan 2022 12:32:58 -0500
-Received: from fraeml703-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JjH9v3rSxz686wr;
-        Tue, 25 Jan 2022 01:32:35 +0800 (CST)
+        with ESMTP id S244728AbiAXRd3 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Jan 2022 12:33:29 -0500
+Received: from fraeml702-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JjHBV11F4z6867c;
+        Tue, 25 Jan 2022 01:33:06 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
+ fraeml702-chm.china.huawei.com (10.206.15.51) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.21; Mon, 24 Jan 2022 18:32:56 +0100
+ 15.1.2308.21; Mon, 24 Jan 2022 18:33:26 +0100
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Mon, 24 Jan 2022 17:32:55 +0000
+ 15.1.2308.21; Mon, 24 Jan 2022 17:33:26 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <qemu-devel@nongnu.org>, Marcel Apfelbaum <marcel@redhat.com>,
         "Michael S . Tsirkin" <mst@redhat.com>,
@@ -38,9 +38,9 @@ CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
         Chris Browy <cbrowy@avery-design.com>,
         Samarth Saxena <samarths@cadence.com>,
         "Dan Williams" <dan.j.williams@intel.com>
-Subject: [PATCH v4 31/42] hw/pci-host/gpex-acpi: Add support for dsdt construction for pxb-cxl
-Date:   Mon, 24 Jan 2022 17:16:54 +0000
-Message-ID: <20220124171705.10432-32-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v4 32/42] pci/pcie_port: Add pci_find_port_by_pn()
+Date:   Mon, 24 Jan 2022 17:16:55 +0000
+Message-ID: <20220124171705.10432-33-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220124171705.10432-1-Jonathan.Cameron@huawei.com>
 References: <20220124171705.10432-1-Jonathan.Cameron@huawei.com>
@@ -55,85 +55,70 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-This adds code to instantiate the slightly extended ACPI root port
-description in DSDT as per the CXL 2.0 specification.
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-Basically a cut and paste job from the i386/pc code.
+Simple function to search a PCIBus to find a port by
+it's port number.
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+CXL interleave decoding uses the port number as a target
+so it is necessary to locate the port when doing interleave
+decoding.
+
+Signed-off-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 ---
- hw/arm/Kconfig          |  1 +
- hw/pci-host/gpex-acpi.c | 22 +++++++++++++++++++---
- 2 files changed, 20 insertions(+), 3 deletions(-)
+ hw/pci/pcie_port.c         | 25 +++++++++++++++++++++++++
+ include/hw/pci/pcie_port.h |  2 ++
+ 2 files changed, 27 insertions(+)
 
-diff --git a/hw/arm/Kconfig b/hw/arm/Kconfig
-index 2e0049196d..3df419fa6d 100644
---- a/hw/arm/Kconfig
-+++ b/hw/arm/Kconfig
-@@ -29,6 +29,7 @@ config ARM_VIRT
-     select ACPI_APEI
-     select ACPI_VIOT
-     select VIRTIO_MEM_SUPPORTED
-+    select ACPI_CXL
+diff --git a/hw/pci/pcie_port.c b/hw/pci/pcie_port.c
+index e95c1e5519..687e4e763a 100644
+--- a/hw/pci/pcie_port.c
++++ b/hw/pci/pcie_port.c
+@@ -136,6 +136,31 @@ static void pcie_port_class_init(ObjectClass *oc, void *data)
+     device_class_set_props(dc, pcie_port_props);
+ }
  
- config CHEETAH
-     bool
-diff --git a/hw/pci-host/gpex-acpi.c b/hw/pci-host/gpex-acpi.c
-index e7e162a00a..fb60aa517f 100644
---- a/hw/pci-host/gpex-acpi.c
-+++ b/hw/pci-host/gpex-acpi.c
-@@ -5,6 +5,7 @@
- #include "hw/pci/pci_bus.h"
- #include "hw/pci/pci_bridge.h"
- #include "hw/pci/pcie_host.h"
-+#include "hw/acpi/cxl.h"
- 
- static void acpi_dsdt_add_pci_route_table(Aml *dev, uint32_t irq)
- {
-@@ -139,6 +140,7 @@ void acpi_dsdt_add_gpex(Aml *scope, struct GPEXConfig *cfg)
-         QLIST_FOREACH(bus, &bus->child, sibling) {
-             uint8_t bus_num = pci_bus_num(bus);
-             uint8_t numa_node = pci_bus_numa_node(bus);
-+            bool is_cxl;
- 
-             if (!pci_bus_is_root(bus)) {
-                 continue;
-@@ -153,9 +155,19 @@ void acpi_dsdt_add_gpex(Aml *scope, struct GPEXConfig *cfg)
-                 nr_pcie_buses = bus_num;
-             }
- 
-+            is_cxl = pci_bus_is_cxl(bus);
++PCIDevice *pcie_find_port_by_pn(PCIBus *bus, uint8_t pn)
++{
++    int devfn;
 +
-             dev = aml_device("PC%.02X", bus_num);
--            aml_append(dev, aml_name_decl("_HID", aml_string("PNP0A08")));
--            aml_append(dev, aml_name_decl("_CID", aml_string("PNP0A03")));
-+            if (is_cxl) {
-+                struct Aml *pkg = aml_package(2);
-+                aml_append(dev, aml_name_decl("_HID", aml_string("ACPI0016")));
-+                aml_append(pkg, aml_eisaid("PNP0A08"));
-+                aml_append(pkg, aml_eisaid("PNP0A03"));
-+                aml_append(dev, aml_name_decl("_CID", pkg));
-+            } else {
-+                aml_append(dev, aml_name_decl("_HID", aml_string("PNP0A08")));
-+                aml_append(dev, aml_name_decl("_CID", aml_string("PNP0A03")));
-+            }
-             aml_append(dev, aml_name_decl("_BBN", aml_int(bus_num)));
-             aml_append(dev, aml_name_decl("_UID", aml_int(bus_num)));
-             aml_append(dev, aml_name_decl("_STR", aml_unicode("pxb Device")));
-@@ -175,7 +187,11 @@ void acpi_dsdt_add_gpex(Aml *scope, struct GPEXConfig *cfg)
-                             cfg->pio.base, 0, 0, 0);
-             aml_append(dev, aml_name_decl("_CRS", crs));
++    for (devfn = 0; devfn < ARRAY_SIZE(bus->devices); devfn++) {
++        PCIDevice *d = bus->devices[devfn];
++        PCIEPort *port;
++
++        if (!d || !pci_is_express(d) || !d->exp.exp_cap) {
++            continue;
++        }
++
++        if (!object_dynamic_cast(OBJECT(d), TYPE_PCIE_PORT)) {
++            continue;
++        }
++
++        port = PCIE_PORT(d);
++        if (port->port == pn) {
++            return d;
++        }
++    }
++
++    return NULL;
++}
++
+ static const TypeInfo pcie_port_type_info = {
+     .name = TYPE_PCIE_PORT,
+     .parent = TYPE_PCI_BRIDGE,
+diff --git a/include/hw/pci/pcie_port.h b/include/hw/pci/pcie_port.h
+index e25b289ce8..7b8193061a 100644
+--- a/include/hw/pci/pcie_port.h
++++ b/include/hw/pci/pcie_port.h
+@@ -39,6 +39,8 @@ struct PCIEPort {
  
--            acpi_dsdt_add_pci_osc(dev);
-+            if (is_cxl) {
-+                build_cxl_osc_method(dev);
-+            } else {
-+                acpi_dsdt_add_pci_osc(dev);
-+            }
+ void pcie_port_init_reg(PCIDevice *d);
  
-             aml_append(scope, dev);
-         }
++PCIDevice *pcie_find_port_by_pn(PCIBus *bus, uint8_t pn);
++
+ #define TYPE_PCIE_SLOT "pcie-slot"
+ OBJECT_DECLARE_SIMPLE_TYPE(PCIESlot, PCIE_SLOT)
+ 
 -- 
 2.32.0
 
