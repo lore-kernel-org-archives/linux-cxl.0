@@ -2,43 +2,44 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD8BC433F5
-	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jan 2022 00:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB5AFC433F5
+	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jan 2022 00:53:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240661AbiAXAxa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 23 Jan 2022 19:53:30 -0500
-Received: from mga11.intel.com ([192.55.52.93]:50270 "EHLO mga11.intel.com"
+        id S240662AbiAXAxf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 23 Jan 2022 19:53:35 -0500
+Received: from mga09.intel.com ([134.134.136.24]:11570 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240660AbiAXAx3 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Sun, 23 Jan 2022 19:53:29 -0500
+        id S240660AbiAXAxf (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Sun, 23 Jan 2022 19:53:35 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642985609; x=1674521609;
+  t=1642985615; x=1674521615;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=MGlDDmtZNcO8ieWQlpQT7zmj4zdRHjht25+tjsspKok=;
-  b=AZQRUbL4JnIVVROAyFs2+l8AIc6vYZm7ymIHz4YHFcSt+G3jTEsX7uFQ
-   5ODvaJrjRFx06P0mvJTWg1GsZ7kf9KmrS7AuTVdAjdWeBlYLEilSZVEYF
-   oszCHMzO7cQ6y/Sx4f9MNOMhPq/OvHXekVNeddnLyQWoyyXlI3LtDF7e2
-   /7K18nybYfUGv1C5eEkGulswtj4DUodytK3bq/MuOf6PsiK1yL3VOXL3i
-   7hwAd8KRe3SKNoC2V0OwvOKBBA7VckQPFm0TwH/OkJ+NVCWeIX5SAh6tC
-   /HNfQx3i1xvOyI5lh0phB0+atGQq5nBW+hg4XvafOC4Hhx7wz31xWb0Ky
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="243530607"
+  bh=nlNfJkKl8APMxEXgALkB1i3Sa/zDe5+OYQ/NpI1ky10=;
+  b=dr690TEe/CTCcJvbgdlNmMtIC9hqmPd0Agws2OvQPWb3vyAFlCr+773s
+   t7GlhWu4qC4On2haMeE4Dqsfp3bqQJaTQ+4AoItcnWCUQ/Rs3yX1lA4Ne
+   oYK5/CF/iSCFIq89M3gB1ZGmw2mHOREkFbmgtwWsttyoj1lqJUrxmVmFZ
+   Uwsj+8LXpZ+p85IPvgw/uf3GHSok6fVWZ8x1i7cSlkeImg4l05HnZ/s5P
+   Yz0/YGw3UUD/vu8wxavXZTK4WQ3BXz7WVV3BfWr1YWJK/AruOiStOqa8S
+   nKVeZ3Z8dh9caLSNNxTCmvRqoUm+iATh3AqNcEqSxHhhJDtIvjXGQzGho
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="245716883"
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="243530607"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:53:29 -0800
+   d="scan'208";a="245716883"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:53:34 -0800
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="596630743"
+   d="scan'208";a="695243471"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:53:29 -0800
-Subject: [ndctl PATCH 19/37] cxl/list: Add endpoints
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:53:34 -0800
+Subject: [ndctl PATCH 20/37] cxl/list: Add 'host' entries for port-like
+ objects
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     vishal.l.verma@intel.com
-Date:   Sun, 23 Jan 2022 16:53:29 -0800
-Message-ID: <164298560917.3021641.13753578554905796298.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Sun, 23 Jan 2022 16:53:34 -0800
+Message-ID: <164298561473.3021641.16508989603599026269.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <164298550885.3021641.11210386002804544864.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <164298550885.3021641.11210386002804544864.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -49,740 +50,148 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Endpoints are port-like objects that represent the HDM decoders at terminal
-end of a decode chain. Unlike port decoders that route to downstream ports,
-endpoint decoders route to endpoint DPA (Device Physical Address) ranges.
+Add the device name of the "host" device for a given CXL port object. The
+kernel calls this the 'uport' attribute.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- .clang-format                    |    1 
- Documentation/cxl/cxl-list.txt   |   16 ++++
- Documentation/cxl/lib/libcxl.txt |   31 ++++++++
- cxl/filter.c                     |  147 +++++++++++++++++++++++++++++++++++---
- cxl/filter.h                     |    2 +
- cxl/json.c                       |   20 ++++-
- cxl/json.h                       |    2 +
- cxl/lib/libcxl.c                 |  107 ++++++++++++++++++++++++++++
- cxl/lib/libcxl.sym               |    9 ++
- cxl/lib/private.h                |   10 +++
- cxl/libcxl.h                     |   15 ++++
- cxl/list.c                       |   13 +++
- 12 files changed, 355 insertions(+), 18 deletions(-)
+ Documentation/cxl/cxl-list.txt   |    9 +++++++++
+ Documentation/cxl/lib/libcxl.txt |    5 +++++
+ cxl/json.c                       |    4 ++++
+ cxl/lib/libcxl.c                 |   10 ++++++++++
+ cxl/lib/libcxl.sym               |    2 ++
+ cxl/libcxl.h                     |    2 ++
+ 6 files changed, 32 insertions(+)
 
-diff --git a/.clang-format b/.clang-format
-index 391cd3420947..106bc5e25434 100644
---- a/.clang-format
-+++ b/.clang-format
-@@ -80,6 +80,7 @@ ForEachMacros:
-   - 'cxl_memdev_foreach'
-   - 'cxl_bus_foreach'
-   - 'cxl_port_foreach'
-+  - 'cxl_endpoint_foreach'
-   - 'daxctl_dev_foreach'
-   - 'daxctl_mapping_foreach'
-   - 'daxctl_region_foreach'
 diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
-index 42b6de6e5c61..d342da27d3da 100644
+index d342da27d3da..30b61615644b 100644
 --- a/Documentation/cxl/cxl-list.txt
 +++ b/Documentation/cxl/cxl-list.txt
-@@ -190,6 +190,12 @@ OPTIONS
- ----
- # cxl list -B
- # cxl list -P -p root
-+----
-+	Additionally, endpoint objects are also ports so the following commands
-+	are also equivalent.
+@@ -210,6 +210,15 @@ OPTIONS
+ --endpoints::
+ 	Include endpoint objects (CXL Memory Device decoders) in the
+ 	listing.
 +----
 +# cxl list -E
-+# cxl list -P -p endpoint
- ----
- 	By default, only 'switch' ports are listed.
++[
++  {
++    "endpoint":"endpoint2",
++    "host":"mem0"
++  }
++]
++----
  
-@@ -200,6 +206,16 @@ OPTIONS
- 	descendants of the individual ports that match the filter. By default
- 	all descendant objects are listed.
- 
-+-E::
-+--endpoints::
-+	Include endpoint objects (CXL Memory Device decoders) in the
-+	listing.
-+
-+-e::
-+--endpoint::
-+	Specify CXL endpoint device name(s), or device id(s) to filter
-+	the emitted endpoint(s).
-+
- --debug::
- 	If the cxl tool was built with debug enabled, turn on debug
- 	messages.
+ -e::
+ --endpoint::
 diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
-index 804e9ca1500e..eebab37acb3d 100644
+index eebab37acb3d..e4b372d781ec 100644
 --- a/Documentation/cxl/lib/libcxl.txt
 +++ b/Documentation/cxl/lib/libcxl.txt
-@@ -199,12 +199,41 @@ int cxl_port_get_id(struct cxl_port *port);
- int cxl_port_is_enabled(struct cxl_port *port);
- bool cxl_port_is_root(struct cxl_port *port);
- bool cxl_port_is_switch(struct cxl_port *port);
-+bool cxl_port_is_endpoint(struct cxl_port *port);
+@@ -178,6 +178,7 @@ struct cxl_port *cxl_port_get_next(struct cxl_port *port);
+ struct cxl_port *cxl_port_get_parent(struct cxl_port *port);
+ struct cxl_bus *cxl_port_get_bus(struct cxl_port *port);
+ struct cxl_ctx *cxl_port_get_ctx(struct cxl_port *port);
++const char *cxl_port_get_host(struct cxl_port *port);
+ 
+ #define cxl_port_foreach(parent, port)                                      \
+        for (port = cxl_port_get_first(parent); port != NULL;                \
+@@ -192,6 +193,9 @@ as a parent object retrievable via cxl_port_get_parent().
+ The root port of a hiearchy can be retrieved via any port instance in
+ that hierarchy via cxl_port_get_bus().
+ 
++The host of a port is the corresponding device name of the PCIe Root
++Port, or Switch Upstream Port with CXL capabilities.
++
+ === PORT: Attributes
  ----
- The port type is communicated via cxl_port_is_<type>(). An 'enabled' port
- is one that has succeeded in discovering the CXL component registers in
- the host device and has enumerated its downstream ports. In order for a
- memdev to be enabled for CXL memory operation all CXL ports in its
--ancestry must also be enabled.
-+ancestry must also be enabled including a root port, an arbitrary number
-+of intervening switch ports, and a terminal endpoint port.
-+
-+ENDPOINTS
-+---------
-+CXL endpoint objects encapsulate the set of host-managed device-memory
-+(HDM) decoders in a physical memory device. The endpoint is the last hop
-+in a decoder chain that translate SPA to DPA (system-physical-address to
-+device-local-physical-address).
-+
-+=== ENDPOINT: Enumeration
-+----
-+struct cxl_endpoint *cxl_endpoint_get_first(struct cxl_port *parent);
-+struct cxl_endpoint *cxl_endpoint_get_next(struct cxl_endpoint *endpoint);
-+struct cxl_ctx *cxl_endpoint_get_ctx(struct cxl_endpoint *endpoint);
-+struct cxl_port *cxl_endpoint_get_parent(struct cxl_endpoint *endpoint);
-+struct cxl_port *cxl_endpoint_get_port(struct cxl_endpoint *endpoint);
-+
-+#define cxl_endpoint_foreach(port, endpoint)                                 \
-+       for (endpoint = cxl_endpoint_get_first(port); endpoint != NULL;       \
-+            endpoint = cxl_endpoint_get_next(endpoint))
-+----
-+
-+=== ENDPOINT: Attributes
-+----
-+const char *cxl_endpoint_get_devname(struct cxl_endpoint *endpoint);
-+int cxl_endpoint_get_id(struct cxl_endpoint *endpoint);
-+int cxl_endpoint_is_enabled(struct cxl_endpoint *endpoint);
-+----
+ const char *cxl_port_get_devname(struct cxl_port *port);
+@@ -222,6 +226,7 @@ struct cxl_endpoint *cxl_endpoint_get_next(struct cxl_endpoint *endpoint);
+ struct cxl_ctx *cxl_endpoint_get_ctx(struct cxl_endpoint *endpoint);
+ struct cxl_port *cxl_endpoint_get_parent(struct cxl_endpoint *endpoint);
+ struct cxl_port *cxl_endpoint_get_port(struct cxl_endpoint *endpoint);
++const char *cxl_endpoint_get_host(struct cxl_endpoint *endpoint);
  
- include::../../copyright.txt[]
- 
-diff --git a/cxl/filter.c b/cxl/filter.c
-index 32171a47e8d5..5d80d1b3922a 100644
---- a/cxl/filter.c
-+++ b/cxl/filter.c
-@@ -47,8 +47,42 @@ bool cxl_filter_has(const char *__filter, const char *needle)
- 	return false;
- }
- 
-+static struct cxl_endpoint *
-+util_cxl_endpoint_filter(struct cxl_endpoint *endpoint, const char *__ident)
-+{
-+	char *ident, *save;
-+	const char *arg;
-+	int endpoint_id;
-+
-+	if (!__ident)
-+		return endpoint;
-+
-+	ident = strdup(__ident);
-+	if (!ident)
-+		return NULL;
-+
-+	for (arg = strtok_r(ident, which_sep(__ident), &save); arg;
-+	     arg = strtok_r(NULL, which_sep(__ident), &save)) {
-+		if (strcmp(arg, "all") == 0)
-+			break;
-+
-+		if ((sscanf(arg, "%d", &endpoint_id) == 1 ||
-+		     sscanf(arg, "endpoint%d", &endpoint_id) == 1) &&
-+		    cxl_endpoint_get_id(endpoint) == endpoint_id)
-+			break;
-+
-+		if (strcmp(arg, cxl_endpoint_get_devname(endpoint)) == 0)
-+			break;
-+	}
-+
-+	free(ident);
-+	if (arg)
-+		return endpoint;
-+	return NULL;
-+}
-+
- static struct cxl_port *__util_cxl_port_filter(struct cxl_port *port,
--					     const char *__ident)
-+					       const char *__ident)
- {
- 	char *ident, *save;
- 	const char *arg;
-@@ -72,6 +106,9 @@ static struct cxl_port *__util_cxl_port_filter(struct cxl_port *port,
- 		if (strcmp(arg, "switch") == 0 && cxl_port_is_switch(port))
- 			break;
- 
-+		if (strcmp(arg, "endpoint") == 0 && cxl_port_is_endpoint(port))
-+			break;
-+
- 		if ((sscanf(arg, "%d", &port_id) == 1 ||
- 		     sscanf(arg, "port%d", &port_id) == 1) &&
- 		    cxl_port_get_id(port) == port_id)
-@@ -116,6 +153,24 @@ static struct cxl_port *util_cxl_port_filter(struct cxl_port *port,
- 	return NULL;
- }
- 
-+static struct cxl_endpoint *
-+util_cxl_endpoint_filter_by_port(struct cxl_endpoint *endpoint,
-+				 const char *ident,
-+				 enum cxl_port_filter_mode mode)
-+{
-+	struct cxl_port *iter = cxl_endpoint_get_port(endpoint);
-+
-+	if (util_cxl_port_filter(iter, ident, CXL_PF_SINGLE))
-+		return endpoint;
-+	iter = cxl_port_get_parent(iter);
-+	if (!iter)
-+		return NULL;
-+	if (util_cxl_port_filter(iter, ident, mode))
-+		return endpoint;
-+
-+	return NULL;
-+}
-+
- static struct cxl_bus *util_cxl_bus_filter(struct cxl_bus *bus,
- 					   const char *__ident)
- {
-@@ -325,10 +380,34 @@ static struct json_object *pick_array(struct json_object *child,
- 	return NULL;
- }
- 
-+static void walk_endpoints(struct cxl_port *port, struct cxl_filter_params *p,
-+			   struct json_object *jeps, unsigned long flags)
-+{
-+	struct cxl_endpoint *endpoint;
-+
-+	cxl_endpoint_foreach(port, endpoint) {
-+		struct cxl_port *ep_port = cxl_endpoint_get_port(endpoint);
-+		struct json_object *jendpoint;
-+
-+		if (!util_cxl_endpoint_filter(endpoint, p->endpoint_filter))
-+			continue;
-+		if (!util_cxl_port_filter_by_bus(ep_port, p->bus_filter))
-+			continue;
-+		if (!util_cxl_endpoint_filter_by_port(endpoint, p->port_filter,
-+						      pf_mode(p)))
-+			continue;
-+		if (!p->idle && !cxl_endpoint_is_enabled(endpoint))
-+			continue;
-+		jendpoint = util_cxl_endpoint_to_json(endpoint, flags);
-+		if (jendpoint)
-+			json_object_array_add(jeps, jendpoint);
-+	}
-+}
-+
- static void walk_child_ports(struct cxl_port *parent_port,
- 			     struct cxl_filter_params *p,
- 			     struct json_object *jports,
--			     unsigned long flags)
-+			     struct json_object *jeps, unsigned long flags)
- {
- 	struct cxl_port *port;
- 
-@@ -336,6 +415,7 @@ static void walk_child_ports(struct cxl_port *parent_port,
- 		const char *devname = cxl_port_get_devname(port);
- 		struct json_object *jport = NULL;
- 		struct json_object *jchildports = NULL;
-+		struct json_object *jchildendpoints = NULL;
- 
- 		if (!util_cxl_port_filter(port, p->port_filter, pf_mode(p)))
- 			goto walk_children;
-@@ -343,21 +423,41 @@ static void walk_child_ports(struct cxl_port *parent_port,
- 			goto walk_children;
- 		if (!p->idle && !cxl_port_is_enabled(port))
- 			continue;
--		if (p->ports)
-+		if (p->ports) {
- 			jport = util_cxl_port_to_json(port, flags);
--		if (!jport)
--			continue;
--		json_object_array_add(jports, jport);
--		jchildports = json_object_new_array();
--		if (!jchildports) {
--			err(p, "%s: failed to enumerate child ports\n",
--			    devname);
--			continue;
-+			if (!jport) {
-+				err(p, "%s: failed to list\n", devname);
-+				continue;
-+			}
-+			json_object_array_add(jports, jport);
-+			jchildports = json_object_new_array();
-+			if (!jchildports) {
-+				err(p, "%s: failed to enumerate child ports\n",
-+				    devname);
-+				continue;
-+			}
-+		}
-+
-+		if (p->ports && p->endpoints) {
-+			jchildendpoints = json_object_new_array();
-+			if (!jchildendpoints) {
-+				err(p,
-+				    "%s: failed to enumerate child endpoints\n",
-+				    devname);
-+				continue;
-+			}
- 		}
-+
- walk_children:
-+		if (p->endpoints)
-+			walk_endpoints(port, p, pick_array(jchildendpoints, jeps),
-+				       flags);
-+
- 		walk_child_ports(port, p, pick_array(jchildports, jports),
--				 flags);
-+				 pick_array(jchildendpoints, jeps), flags);
- 		cond_add_put_array_suffix(jport, "ports", devname, jchildports);
-+		cond_add_put_array_suffix(jport, "endpoints", devname,
-+					  jchildendpoints);
- 	}
- }
- 
-@@ -366,6 +466,7 @@ int cxl_filter_walk(struct cxl_ctx *ctx, struct cxl_filter_params *p)
- 	struct json_object *jdevs = NULL, *jbuses = NULL, *jports = NULL;
- 	struct json_object *jplatform = json_object_new_array();
- 	unsigned long flags = params_to_flags(p);
-+	struct json_object *jeps = NULL;
- 	struct cxl_memdev *memdev;
- 	int top_level_objs = 0;
- 	struct cxl_bus *bus;
-@@ -387,6 +488,10 @@ int cxl_filter_walk(struct cxl_ctx *ctx, struct cxl_filter_params *p)
- 	if (!jports)
- 		goto err;
- 
-+	jeps = json_object_new_array();
-+	if (!jeps)
-+		goto err;
-+
- 	dbg(p, "walk memdevs\n");
- 	cxl_memdev_foreach(ctx, memdev) {
- 		struct json_object *jdev;
-@@ -408,6 +513,7 @@ int cxl_filter_walk(struct cxl_ctx *ctx, struct cxl_filter_params *p)
- 	cxl_bus_foreach(ctx, bus) {
- 		struct json_object *jbus = NULL;
- 		struct json_object *jchildports = NULL;
-+		struct json_object *jchildeps = NULL;
- 		struct cxl_port *port = cxl_bus_get_port(bus);
- 		const char *devname = cxl_bus_get_devname(bus);
- 
-@@ -431,12 +537,23 @@ int cxl_filter_walk(struct cxl_ctx *ctx, struct cxl_filter_params *p)
- 					continue;
- 				}
- 			}
-+			if (p->endpoints) {
-+				jchildeps = json_object_new_array();
-+				if (!jchildeps) {
-+					err(p,
-+					    "%s: failed to enumerate child endpoints\n",
-+					    devname);
-+					continue;
-+				}
-+			}
- 		}
- walk_children:
- 		dbg(p, "walk ports\n");
- 		walk_child_ports(port, p, pick_array(jchildports, jports),
--				 flags);
-+				 pick_array(jchildeps, jeps), flags);
- 		cond_add_put_array_suffix(jbus, "ports", devname, jchildports);
-+		cond_add_put_array_suffix(jbus, "endpoints", devname,
-+					  jchildeps);
- 	}
- 
- 	if (json_object_array_length(jdevs))
-@@ -445,10 +562,13 @@ walk_children:
- 		top_level_objs++;
- 	if (json_object_array_length(jports))
- 		top_level_objs++;
-+	if (json_object_array_length(jeps))
-+		top_level_objs++;
- 
- 	splice_array(p, jdevs, jplatform, "anon memdevs", top_level_objs > 1);
- 	splice_array(p, jbuses, jplatform, "buses", top_level_objs > 1);
- 	splice_array(p, jports, jplatform, "ports", top_level_objs > 1);
-+	splice_array(p, jeps, jplatform, "endpoints", top_level_objs > 1);
- 
- 	util_display_json_array(stdout, jplatform, flags);
- 
-@@ -457,6 +577,7 @@ err:
- 	json_object_put(jdevs);
- 	json_object_put(jbuses);
- 	json_object_put(jports);
-+	json_object_put(jeps);
- 	json_object_put(jplatform);
- 	return -ENOMEM;
- }
-diff --git a/cxl/filter.h b/cxl/filter.h
-index 0d83304bd612..bbd341c71721 100644
---- a/cxl/filter.h
-+++ b/cxl/filter.h
-@@ -11,7 +11,9 @@ struct cxl_filter_params {
- 	const char *serial_filter;
- 	const char *bus_filter;
- 	const char *port_filter;
-+	const char *endpoint_filter;
- 	bool single;
-+	bool endpoints;
- 	bool memdevs;
- 	bool ports;
- 	bool buses;
+ #define cxl_endpoint_foreach(port, endpoint)                                 \
+        for (endpoint = cxl_endpoint_get_first(port); endpoint != NULL;       \
 diff --git a/cxl/json.c b/cxl/json.c
-index d9f864edb86b..08f6192fe121 100644
+index 08f6192fe121..af3b4fe6a0eb 100644
 --- a/cxl/json.c
 +++ b/cxl/json.c
-@@ -243,8 +243,9 @@ struct json_object *util_cxl_bus_to_json(struct cxl_bus *bus,
- 	return jbus;
- }
- 
--struct json_object *util_cxl_port_to_json(struct cxl_port *port,
--					  unsigned long flags)
-+static struct json_object *__util_cxl_port_to_json(struct cxl_port *port,
-+						   const char *name_key,
-+						   unsigned long flags)
- {
- 	const char *devname = cxl_port_get_devname(port);
- 	struct json_object *jport, *jobj;
-@@ -255,7 +256,7 @@ struct json_object *util_cxl_port_to_json(struct cxl_port *port,
- 
- 	jobj = json_object_new_string(devname);
+@@ -258,6 +258,10 @@ static struct json_object *__util_cxl_port_to_json(struct cxl_port *port,
  	if (jobj)
--		json_object_object_add(jport, "port", jobj);
-+		json_object_object_add(jport, name_key, jobj);
+ 		json_object_object_add(jport, name_key, jobj);
  
++	jobj = json_object_new_string(cxl_port_get_host(port));
++	if (jobj)
++		json_object_object_add(jport, "host", jobj);
++
  	if (!cxl_port_is_enabled(port)) {
  		jobj = json_object_new_string("disabled");
-@@ -265,3 +266,16 @@ struct json_object *util_cxl_port_to_json(struct cxl_port *port,
- 
- 	return jport;
- }
-+
-+struct json_object *util_cxl_port_to_json(struct cxl_port *port,
-+					  unsigned long flags)
-+{
-+	return __util_cxl_port_to_json(port, "port", flags);
-+}
-+
-+struct json_object *util_cxl_endpoint_to_json(struct cxl_endpoint *endpoint,
-+					      unsigned long flags)
-+{
-+	return __util_cxl_port_to_json(cxl_endpoint_get_port(endpoint),
-+				       "endpoint", flags);
-+}
-diff --git a/cxl/json.h b/cxl/json.h
-index 36653db6ef6a..8f45190f67e5 100644
---- a/cxl/json.h
-+++ b/cxl/json.h
-@@ -11,4 +11,6 @@ struct json_object *util_cxl_bus_to_json(struct cxl_bus *bus,
- struct cxl_port;
- struct json_object *util_cxl_port_to_json(struct cxl_port *port,
- 					  unsigned long flags);
-+struct json_object *util_cxl_endpoint_to_json(struct cxl_endpoint *endpoint,
-+					      unsigned long flags);
- #endif /* __CXL_UTIL_JSON_H__ */
+ 		if (jobj)
 diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index 03eff3cd6073..a25e7152af2a 100644
+index a25e7152af2a..5f48202d7b93 100644
 --- a/cxl/lib/libcxl.c
 +++ b/cxl/lib/libcxl.c
-@@ -67,14 +67,18 @@ static void free_memdev(struct cxl_memdev *memdev, struct list_head *head)
+@@ -626,6 +626,11 @@ CXL_EXPORT struct cxl_port *cxl_endpoint_get_port(struct cxl_endpoint *endpoint)
+ 	return &endpoint->port;
  }
  
- static void free_port(struct cxl_port *port, struct list_head *head);
-+static void free_endpoint(struct cxl_endpoint *endpoint, struct list_head *head);
- static void __free_port(struct cxl_port *port, struct list_head *head)
++CXL_EXPORT const char *cxl_endpoint_get_host(struct cxl_endpoint *endpoint)
++{
++	return cxl_port_get_host(&endpoint->port);
++}
++
+ CXL_EXPORT int cxl_endpoint_is_enabled(struct cxl_endpoint *endpoint)
  {
- 	struct cxl_port *child, *_c;
-+	struct cxl_endpoint *endpoint, *_e;
- 
- 	if (head)
- 		list_del_from(head, &port->list);
- 	list_for_each_safe(&port->child_ports, child, _c, list)
- 		free_port(child, &port->child_ports);
-+	list_for_each_safe(&port->endpoints, endpoint, _e, port.list)
-+		free_endpoint(endpoint, &port->endpoints);
- 	kmod_module_unref(port->module);
- 	free(port->dev_buf);
- 	free(port->dev_path);
-@@ -87,6 +91,12 @@ static void free_port(struct cxl_port *port, struct list_head *head)
- 	free(port);
+ 	return cxl_port_is_enabled(&endpoint->port);
+@@ -744,6 +749,11 @@ CXL_EXPORT struct cxl_bus *cxl_port_get_bus(struct cxl_port *port)
+ 	return bus;
  }
  
-+static void free_endpoint(struct cxl_endpoint *endpoint, struct list_head *head)
++CXL_EXPORT const char *cxl_port_get_host(struct cxl_port *port)
 +{
-+	__free_port(&endpoint->port, head);
-+	free(endpoint);
++	return devpath_to_devname(port->uport);
 +}
 +
- static void free_bus(struct cxl_bus *bus, struct list_head *head)
+ CXL_EXPORT int cxl_port_is_enabled(struct cxl_port *port)
  {
- 	__free_port(&bus->port, head);
-@@ -500,6 +510,7 @@ static int cxl_port_init(struct cxl_port *port, struct cxl_port *parent_port,
- 	port->parent = parent_port;
- 
- 	list_head_init(&port->child_ports);
-+	list_head_init(&port->endpoints);
- 
- 	port->dev_path = strdup(cxlport_base);
- 	if (!port->dev_path)
-@@ -529,6 +540,97 @@ err:
- 	return -ENOMEM;
- }
- 
-+static void *add_cxl_endpoint(void *parent, int id, const char *cxlep_base)
-+{
-+	const char *devname = devpath_to_devname(cxlep_base);
-+	struct cxl_endpoint *endpoint, *endpoint_dup;
-+	struct cxl_port *port = parent;
-+	struct cxl_ctx *ctx = cxl_port_get_ctx(port);
-+	int rc;
-+
-+	dbg(ctx, "%s: base: \'%s\'\n", devname, cxlep_base);
-+
-+	endpoint = calloc(1, sizeof(*endpoint));
-+	if (!endpoint)
-+		return NULL;
-+
-+	rc = cxl_port_init(&endpoint->port, port, CXL_PORT_ENDPOINT, ctx, id,
-+			   cxlep_base);
-+	if (rc)
-+		goto err;
-+
-+	cxl_endpoint_foreach(port, endpoint_dup)
-+		if (endpoint_dup->port.id == endpoint->port.id) {
-+			free_endpoint(endpoint, NULL);
-+			return endpoint_dup;
-+		}
-+
-+	list_add(&port->endpoints, &endpoint->port.list);
-+	return endpoint;
-+
-+err:
-+	free(endpoint);
-+	return NULL;
-+
-+}
-+
-+static void cxl_endpoints_init(struct cxl_port *port)
-+{
-+	struct cxl_ctx *ctx = cxl_port_get_ctx(port);
-+
-+	if (port->endpoints_init)
-+		return;
-+
-+	port->endpoints_init = 1;
-+
-+	sysfs_device_parse(ctx, port->dev_path, "endpoint", port,
-+			   add_cxl_endpoint);
-+}
-+
-+CXL_EXPORT struct cxl_ctx *cxl_endpoint_get_ctx(struct cxl_endpoint *endpoint)
-+{
-+	return endpoint->port.ctx;
-+}
-+
-+CXL_EXPORT struct cxl_endpoint *cxl_endpoint_get_first(struct cxl_port *port)
-+{
-+	cxl_endpoints_init(port);
-+
-+	return list_top(&port->endpoints, struct cxl_endpoint, port.list);
-+}
-+
-+CXL_EXPORT struct cxl_endpoint *cxl_endpoint_get_next(struct cxl_endpoint *endpoint)
-+{
-+	struct cxl_port *port = endpoint->port.parent;
-+
-+	return list_next(&port->endpoints, endpoint, port.list);
-+}
-+
-+CXL_EXPORT const char *cxl_endpoint_get_devname(struct cxl_endpoint *endpoint)
-+{
-+	return devpath_to_devname(endpoint->port.dev_path);
-+}
-+
-+CXL_EXPORT int cxl_endpoint_get_id(struct cxl_endpoint *endpoint)
-+{
-+	return endpoint->port.id;
-+}
-+
-+CXL_EXPORT struct cxl_port *cxl_endpoint_get_parent(struct cxl_endpoint *endpoint)
-+{
-+	return endpoint->port.parent;
-+}
-+
-+CXL_EXPORT struct cxl_port *cxl_endpoint_get_port(struct cxl_endpoint *endpoint)
-+{
-+	return &endpoint->port;
-+}
-+
-+CXL_EXPORT int cxl_endpoint_is_enabled(struct cxl_endpoint *endpoint)
-+{
-+	return cxl_port_is_enabled(&endpoint->port);
-+}
-+
- static void *add_cxl_port(void *parent, int id, const char *cxlport_base)
- {
- 	const char *devname = devpath_to_devname(cxlport_base);
-@@ -619,6 +721,11 @@ CXL_EXPORT bool cxl_port_is_switch(struct cxl_port *port)
- 	return port->type == CXL_PORT_SWITCH;
- }
- 
-+CXL_EXPORT bool cxl_port_is_endpoint(struct cxl_port *port)
-+{
-+	return port->type == CXL_PORT_ENDPOINT;
-+}
-+
- CXL_EXPORT struct cxl_bus *cxl_port_get_bus(struct cxl_port *port)
- {
- 	struct cxl_bus *bus;
+ 	struct cxl_ctx *ctx = cxl_port_get_ctx(port);
 diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index a7e923f7d721..7a51a0c42069 100644
+index 7a51a0c42069..dc2863e150cf 100644
 --- a/cxl/lib/libcxl.sym
 +++ b/cxl/lib/libcxl.sym
-@@ -93,5 +93,14 @@ global:
- 	cxl_port_is_root;
- 	cxl_port_is_switch;
+@@ -95,6 +95,7 @@ global:
  	cxl_port_to_bus;
-+	cxl_port_is_endpoint;
+ 	cxl_port_is_endpoint;
  	cxl_port_get_bus;
-+	cxl_endpoint_get_first;
-+	cxl_endpoint_get_next;
-+	cxl_endpoint_get_devname;
-+	cxl_endpoint_get_id;
-+	cxl_endpoint_get_ctx;
-+	cxl_endpoint_is_enabled;
-+	cxl_endpoint_get_parent;
-+	cxl_endpoint_get_port;
++	cxl_port_get_host;
+ 	cxl_endpoint_get_first;
+ 	cxl_endpoint_get_next;
+ 	cxl_endpoint_get_devname;
+@@ -103,4 +104,5 @@ global:
+ 	cxl_endpoint_is_enabled;
+ 	cxl_endpoint_get_parent;
+ 	cxl_endpoint_get_port;
++	cxl_endpoint_get_host;
  } LIBCXL_1;
-diff --git a/cxl/lib/private.h b/cxl/lib/private.h
-index 637f90d8dfa2..cedd2f2361a1 100644
---- a/cxl/lib/private.h
-+++ b/cxl/lib/private.h
-@@ -17,6 +17,7 @@ struct cxl_pmem {
- 	char *dev_path;
- };
- 
-+struct cxl_endpoint;
- struct cxl_memdev {
- 	int id, major, minor;
- 	void *dev_buf;
-@@ -32,11 +33,13 @@ struct cxl_memdev {
- 	struct kmod_module *module;
- 	struct cxl_pmem *pmem;
- 	unsigned long long serial;
-+	struct cxl_endpoint *endpoint;
- };
- 
- enum cxl_port_type {
- 	CXL_PORT_ROOT,
- 	CXL_PORT_SWITCH,
-+	CXL_PORT_ENDPOINT,
- };
- 
- struct cxl_port {
-@@ -46,6 +49,7 @@ struct cxl_port {
- 	char *dev_path;
- 	char *uport;
- 	int ports_init;
-+	int endpoints_init;
- 	struct cxl_ctx *ctx;
- 	struct cxl_bus *bus;
- 	enum cxl_port_type type;
-@@ -53,12 +57,18 @@ struct cxl_port {
- 	struct kmod_module *module;
- 	struct list_node list;
- 	struct list_head child_ports;
-+	struct list_head endpoints;
- };
- 
- struct cxl_bus {
- 	struct cxl_port port;
- };
- 
-+struct cxl_endpoint {
-+	struct cxl_port port;
-+	struct cxl_memdev *memdev;
-+};
-+
- enum cxl_cmd_query_status {
- 	CXL_CMD_QUERY_NOT_RUN = 0,
- 	CXL_CMD_QUERY_OK,
 diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index efbb397eb2be..f6ba9a105168 100644
+index f6ba9a105168..a60777ed0c7a 100644
 --- a/cxl/libcxl.h
 +++ b/cxl/libcxl.h
-@@ -81,12 +81,27 @@ struct cxl_port *cxl_port_get_parent(struct cxl_port *port);
- bool cxl_port_is_root(struct cxl_port *port);
- bool cxl_port_is_switch(struct cxl_port *port);
+@@ -83,6 +83,7 @@ bool cxl_port_is_switch(struct cxl_port *port);
  struct cxl_bus *cxl_port_to_bus(struct cxl_port *port);
-+bool cxl_port_is_endpoint(struct cxl_port *port);
+ bool cxl_port_is_endpoint(struct cxl_port *port);
  struct cxl_bus *cxl_port_get_bus(struct cxl_port *port);
++const char *cxl_port_get_host(struct cxl_port *port);
  
  #define cxl_port_foreach(parent, port)                                         \
  	for (port = cxl_port_get_first(parent); port != NULL;                  \
- 	     port = cxl_port_get_next(port))
+@@ -97,6 +98,7 @@ struct cxl_ctx *cxl_endpoint_get_ctx(struct cxl_endpoint *endpoint);
+ int cxl_endpoint_is_enabled(struct cxl_endpoint *endpoint);
+ struct cxl_port *cxl_endpoint_get_parent(struct cxl_endpoint *endpoint);
+ struct cxl_port *cxl_endpoint_get_port(struct cxl_endpoint *endpoint);
++const char *cxl_endpoint_get_host(struct cxl_endpoint *endpoint);
  
-+struct cxl_endpoint;
-+struct cxl_endpoint *cxl_endpoint_get_first(struct cxl_port *parent);
-+struct cxl_endpoint *cxl_endpoint_get_next(struct cxl_endpoint *endpoint);
-+const char *cxl_endpoint_get_devname(struct cxl_endpoint *endpoint);
-+int cxl_endpoint_get_id(struct cxl_endpoint *endpoint);
-+struct cxl_ctx *cxl_endpoint_get_ctx(struct cxl_endpoint *endpoint);
-+int cxl_endpoint_is_enabled(struct cxl_endpoint *endpoint);
-+struct cxl_port *cxl_endpoint_get_parent(struct cxl_endpoint *endpoint);
-+struct cxl_port *cxl_endpoint_get_port(struct cxl_endpoint *endpoint);
-+
-+#define cxl_endpoint_foreach(port, endpoint)                                   \
-+	for (endpoint = cxl_endpoint_get_first(port); endpoint != NULL;        \
-+	     endpoint = cxl_endpoint_get_next(endpoint))
-+
- struct cxl_cmd;
- const char *cxl_cmd_get_devname(struct cxl_cmd *cmd);
- struct cxl_cmd *cxl_cmd_new_raw(struct cxl_memdev *memdev, int opcode);
-diff --git a/cxl/list.c b/cxl/list.c
-index 01ab19bff706..b15e01ce40f6 100644
---- a/cxl/list.c
-+++ b/cxl/list.c
-@@ -31,6 +31,11 @@ static const struct option options[] = {
- 	OPT_BOOLEAN('P', "ports", &param.ports, "include CXL port info"),
- 	OPT_BOOLEAN('S', "single", &param.single,
- 		    "skip listing descendant objects"),
-+	OPT_STRING('e', "endpoint", &param.endpoint_filter,
-+		   "endpoint device name",
-+		   "filter by CXL endpoint device name(s)"),
-+	OPT_BOOLEAN('E', "endpoints", &param.endpoints,
-+		    "include CXL endpoint info"),
- 	OPT_BOOLEAN('i', "idle", &param.idle, "include disabled devices"),
- 	OPT_BOOLEAN('u', "human", &param.human,
- 		    "use human friendly number formats "),
-@@ -44,7 +49,8 @@ static const struct option options[] = {
- 
- static int num_list_flags(void)
- {
--       return !!param.memdevs + !!param.buses + !!param.ports;
-+	return !!param.memdevs + !!param.buses + !!param.ports +
-+	       !!param.endpoints;
- }
- 
- int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
-@@ -74,6 +80,8 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
- 			param.buses = true;
- 		if (param.port_filter)
- 			param.ports = true;
-+		if (param.endpoint_filter)
-+			param.endpoints = true;
- 		if (num_list_flags() == 0) {
- 			/*
- 			 * TODO: We likely want to list regions by default if
-@@ -96,6 +104,9 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
- 	if (cxl_filter_has(param.port_filter, "root") && param.ports)
- 		param.buses = true;
- 
-+	if (cxl_filter_has(param.port_filter, "endpoint") && param.ports)
-+		param.endpoints = true;
-+
- 	dbg(&param, "walk topology\n");
- 	return cxl_filter_walk(ctx, &param);
- }
+ #define cxl_endpoint_foreach(port, endpoint)                                   \
+ 	for (endpoint = cxl_endpoint_get_first(port); endpoint != NULL;        \
 
