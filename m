@@ -2,43 +2,43 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BAAC433F5
-	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jan 2022 00:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05112C433F5
+	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jan 2022 00:54:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235351AbiAXAyV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 23 Jan 2022 19:54:21 -0500
-Received: from mga12.intel.com ([192.55.52.136]:3972 "EHLO mga12.intel.com"
+        id S240672AbiAXAyY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 23 Jan 2022 19:54:24 -0500
+Received: from mga09.intel.com ([134.134.136.24]:11614 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240670AbiAXAyR (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Sun, 23 Jan 2022 19:54:17 -0500
+        id S240668AbiAXAyW (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Sun, 23 Jan 2022 19:54:22 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642985657; x=1674521657;
+  t=1642985662; x=1674521662;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=vHekN5lP0FydPCqtjPLuBuMRkc4Fj1Bhsd2qWnFJ8v4=;
-  b=m3tdmZuXbvo7zj6bhu70Ql3ZUZgUOhb96NK2J5FH6azHdtwAkRGVCgXi
-   C5qaBEkqwmsA+OE980i65tpMyKnQvwKorvM3jkgZ4YQrfmCur4ZLJ78ep
-   WPVE2eLEvDmPeeelPOxV+6SQjzrObKQqqQqffzbFJCJdIY6dd6bjWKppm
-   afvMN4Vwiph1IjHmZbtKy7a2ornPq+H9RwG9MTUmD/PYyduhMx3kgahrV
-   xvHQcWKwYqIPHC2s9LtsuQcTAhgXKf/oTEk3NVzLrvV6PYghkWLsPSCW5
-   EGy8aD0bnt+LXMrY08va5bhcLx3kzYF4q0Fz+ziH6NYDNsj18UxAEBxbU
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="225916746"
+  bh=NIFLWaazWmXou71PyrkU4h+JkBSI/vrVxQL4ujxEz24=;
+  b=ZHRBosPTHnW11u17yg53C1Mgb8c+M0/SjbSfE0faZNbjByDs/cENNUyD
+   Pt+7HS3by+JQ5z50MGHHv4fgSPmq5sR309A9CNmx4WZNWXcs23Bj3tlkH
+   3GXxf5X43yON9/dnIXoB5G/afn383Rc+DJ4QNjtDiI04o/3idHFawC0R/
+   Hjh3sm69JmegUU1cQiHfjXERwxBbrHxMcksH/7Zc/digtiwnSGaNrTRXV
+   rZ9rBqRKePfWTHFuj9tUXj2Duuo8v2/uGRZwb3CBXAPMfPRqMuuINVOt6
+   YvRjmCxvzpCTYM+OFUGzN/ZG4lMwLFAQnlwEQ8kTnyElktmx9Z7pRd2iZ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="245716924"
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="225916746"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:54:17 -0800
+   d="scan'208";a="245716924"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:54:22 -0800
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="596630819"
+   d="scan'208";a="695243556"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:54:17 -0800
-Subject: [ndctl PATCH 28/37] util: Implement common bind/unbind helpers
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:54:22 -0800
+Subject: [ndctl PATCH 29/37] cxl/memdev: Enable / disable support
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     vishal.l.verma@intel.com
-Date:   Sun, 23 Jan 2022 16:54:17 -0800
-Message-ID: <164298565707.3021641.7763459936156744907.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Sun, 23 Jan 2022 16:54:22 -0800
+Message-ID: <164298566245.3021641.12696907310209056878.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <164298550885.3021641.11210386002804544864.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <164298550885.3021641.11210386002804544864.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -49,323 +49,373 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Refactor ndctl_{bind,unbind}() into util_{bind,unbind}() for libcxl to
-reuse.
+Introduce the 'cxl {enable,disable}-memdev' commands. When a memdev is
+disabled the ports in the topology may be unregistered. CXL memory regions
+require each endpoint in the interleave to attach to the cxl_mem driver
+before regions are activated.
 
-daxctl can not join the party for now as it needs to play games with
-'new_id'.
+Note that this starts out with the deliberate bug that it has false
+positive detection of active memdevs. The fix for that bug requires kernel
+support to detect the device's active participation in a region, until then
+require all disable attempts to specify the --force override. This way
+there are never any releases of cxl-cli that lack disable-memdev safety.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- ndctl/lib/libndctl.c |  103 ++++++--------------------------------------------
- util/sysfs.c         |   76 +++++++++++++++++++++++++++++++++++++
- util/sysfs.h         |    8 ++++
- 3 files changed, 96 insertions(+), 91 deletions(-)
+ Documentation/cxl/cxl-disable-memdev.txt |   37 +++++++++++++++++++
+ Documentation/cxl/cxl-enable-memdev.txt  |   34 +++++++++++++++++
+ Documentation/cxl/lib/libcxl.txt         |   23 ++++++++++++
+ Documentation/cxl/meson.build            |    2 +
+ cxl/builtin.h                            |    2 +
+ cxl/cxl.c                                |    2 +
+ cxl/lib/libcxl.c                         |   58 +++++++++++++++++++++++++++++
+ cxl/lib/libcxl.sym                       |    2 +
+ cxl/libcxl.h                             |    2 +
+ cxl/memdev.c                             |   60 ++++++++++++++++++++++++++++++
+ 10 files changed, 221 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/cxl/cxl-disable-memdev.txt
+ create mode 100644 Documentation/cxl/cxl-enable-memdev.txt
 
-diff --git a/ndctl/lib/libndctl.c b/ndctl/lib/libndctl.c
-index 1374ad9e504f..98d184ba1bf8 100644
---- a/ndctl/lib/libndctl.c
-+++ b/ndctl/lib/libndctl.c
-@@ -1665,10 +1665,6 @@ static enum ndctl_fwa_result fwa_result_to_result(const char *result)
- 	return NDCTL_FWA_RESULT_INVALID;
- }
- 
--static int ndctl_bind(struct ndctl_ctx *ctx, struct kmod_module *module,
--		const char *devname);
--static int ndctl_unbind(struct ndctl_ctx *ctx, const char *devpath);
--
- static int populate_dimm_attributes(struct ndctl_dimm *dimm,
- 				    const char *dimm_base,
- 				    const char *bus_prefix)
-@@ -2305,7 +2301,7 @@ NDCTL_EXPORT int ndctl_dimm_disable(struct ndctl_dimm *dimm)
- 	if (!ndctl_dimm_is_enabled(dimm))
- 		return 0;
- 
--	ndctl_unbind(ctx, dimm->dimm_path);
-+	util_unbind(dimm->dimm_path, ctx);
- 
- 	if (ndctl_dimm_is_enabled(dimm)) {
- 		err(ctx, "%s: failed to disable\n", devname);
-@@ -2324,7 +2320,7 @@ NDCTL_EXPORT int ndctl_dimm_enable(struct ndctl_dimm *dimm)
- 	if (ndctl_dimm_is_enabled(dimm))
- 		return 0;
- 
--	ndctl_bind(ctx, dimm->module, devname);
-+	util_bind(devname, dimm->module, "nd", ctx);
- 
- 	if (!ndctl_dimm_is_enabled(dimm)) {
- 		err(ctx, "%s: failed to enable\n", devname);
-@@ -3573,7 +3569,7 @@ NDCTL_EXPORT int ndctl_region_enable(struct ndctl_region *region)
- 	if (ndctl_region_is_enabled(region))
- 		return 0;
- 
--	ndctl_bind(ctx, region->module, devname);
-+	util_bind(devname, region->module, "nd", ctx);
- 
- 	if (!ndctl_region_is_enabled(region)) {
- 		err(ctx, "%s: failed to enable\n", devname);
-@@ -3610,7 +3606,7 @@ static int ndctl_region_disable(struct ndctl_region *region, int cleanup)
- 	if (!ndctl_region_is_enabled(region))
- 		return 0;
- 
--	ndctl_unbind(ctx, region->region_path);
-+	util_unbind(region->region_path, ctx);
- 
- 	if (ndctl_region_is_enabled(region)) {
- 		err(ctx, "%s: failed to disable\n", devname);
-@@ -4373,81 +4369,6 @@ NDCTL_EXPORT struct badblock *ndctl_namespace_get_first_badblock(
- 	return badblocks_iter_first(&ndns->bb_iter, ctx, path);
- }
- 
--static int ndctl_bind(struct ndctl_ctx *ctx, struct kmod_module *module,
--		const char *devname)
--{
--	DIR *dir;
--	int rc = 0;
--	char path[200];
--	struct dirent *de;
--	const int len = sizeof(path);
--
--	if (!devname) {
--		err(ctx, "missing devname\n");
--		return -EINVAL;
--	}
--
--	if (module) {
--		rc = kmod_module_probe_insert_module(module,
--				KMOD_PROBE_APPLY_BLACKLIST, NULL, NULL, NULL,
--				NULL);
--		if (rc < 0) {
--			err(ctx, "%s: insert failure: %d\n", __func__, rc);
--			return rc;
--		}
--	}
--
--	if (snprintf(path, len, "/sys/bus/nd/drivers") >= len) {
--		err(ctx, "%s: buffer too small!\n", devname);
--		return -ENXIO;
--	}
--
--	dir = opendir(path);
--	if (!dir) {
--		err(ctx, "%s: opendir(\"%s\") failed\n", devname, path);
--		return -ENXIO;
--	}
--
--	while ((de = readdir(dir)) != NULL) {
--		char *drv_path;
--
--		if (de->d_ino == 0)
--			continue;
--		if (de->d_name[0] == '.')
--			continue;
--		if (asprintf(&drv_path, "%s/%s/bind", path, de->d_name) < 0) {
--			err(ctx, "%s: path allocation failure\n", devname);
--			continue;
--		}
--
--		rc = sysfs_write_attr_quiet(ctx, drv_path, devname);
--		free(drv_path);
--		if (rc == 0)
--			break;
--	}
--	closedir(dir);
--
--	if (rc) {
--		dbg(ctx, "%s: bind failed\n", devname);
--		return -ENXIO;
--	}
--	return 0;
--}
--
--static int ndctl_unbind(struct ndctl_ctx *ctx, const char *devpath)
--{
--	const char *devname = devpath_to_devname(devpath);
--	char path[200];
--	const int len = sizeof(path);
--
--	if (snprintf(path, len, "%s/driver/unbind", devpath) >= len) {
--		err(ctx, "%s: buffer too small!\n", devname);
--		return -ENXIO;
--	}
--
--	return sysfs_write_attr(ctx, path, devname);
--}
--
- static void *add_btt(void *parent, int id, const char *btt_base);
- static void *add_pfn(void *parent, int id, const char *pfn_base);
- static void *add_dax(void *parent, int id, const char *dax_base);
-@@ -4533,7 +4454,7 @@ NDCTL_EXPORT int ndctl_namespace_enable(struct ndctl_namespace *ndns)
- 	if (ndctl_namespace_is_enabled(ndns))
- 		return 0;
- 
--	rc = ndctl_bind(ctx, ndns->module, devname);
-+	rc = util_bind(devname, ndns->module, "nd", ctx);
- 
- 	/*
- 	 * Rescan now as successfully enabling a namespace device leads
-@@ -4581,7 +4502,7 @@ NDCTL_EXPORT int ndctl_namespace_disable(struct ndctl_namespace *ndns)
- 	if (!ndctl_namespace_is_enabled(ndns))
- 		return 0;
- 
--	ndctl_unbind(ctx, ndns->ndns_path);
-+	util_unbind(ndns->ndns_path, ctx);
- 
- 	if (ndctl_namespace_is_enabled(ndns)) {
- 		err(ctx, "%s: failed to disable\n", devname);
-@@ -5420,7 +5341,7 @@ NDCTL_EXPORT int ndctl_btt_enable(struct ndctl_btt *btt)
- 	if (ndctl_btt_is_enabled(btt))
- 		return 0;
- 
--	ndctl_bind(ctx, btt->module, devname);
-+	util_bind(devname, btt->module, "nd", ctx);
- 
- 	if (!ndctl_btt_is_enabled(btt)) {
- 		err(ctx, "%s: failed to enable\n", devname);
-@@ -5457,7 +5378,7 @@ NDCTL_EXPORT int ndctl_btt_delete(struct ndctl_btt *btt)
- 		return 0;
- 	}
- 
--	ndctl_unbind(ctx, btt->btt_path);
-+	util_unbind(btt->btt_path, ctx);
- 
- 	rc = ndctl_btt_set_namespace(btt, NULL);
- 	if (rc) {
-@@ -5908,7 +5829,7 @@ NDCTL_EXPORT int ndctl_pfn_enable(struct ndctl_pfn *pfn)
- 	if (ndctl_pfn_is_enabled(pfn))
- 		return 0;
- 
--	ndctl_bind(ctx, pfn->module, devname);
-+	util_bind(devname, pfn->module, "nd", ctx);
- 
- 	if (!ndctl_pfn_is_enabled(pfn)) {
- 		err(ctx, "%s: failed to enable\n", devname);
-@@ -5945,7 +5866,7 @@ NDCTL_EXPORT int ndctl_pfn_delete(struct ndctl_pfn *pfn)
- 		return 0;
- 	}
- 
--	ndctl_unbind(ctx, pfn->pfn_path);
-+	util_unbind(pfn->pfn_path, ctx);
- 
- 	rc = ndctl_pfn_set_namespace(pfn, NULL);
- 	if (rc) {
-@@ -6101,7 +6022,7 @@ NDCTL_EXPORT int ndctl_dax_enable(struct ndctl_dax *dax)
- 	if (ndctl_dax_is_enabled(dax))
- 		return 0;
- 
--	ndctl_bind(ctx, pfn->module, devname);
-+	util_bind(devname, pfn->module, "nd", ctx);
- 
- 	if (!ndctl_dax_is_enabled(dax)) {
- 		err(ctx, "%s: failed to enable\n", devname);
-@@ -6132,7 +6053,7 @@ NDCTL_EXPORT int ndctl_dax_delete(struct ndctl_dax *dax)
- 		return 0;
- 	}
- 
--	ndctl_unbind(ctx, pfn->pfn_path);
-+	util_unbind(pfn->pfn_path, ctx);
- 
- 	rc = ndctl_dax_set_namespace(dax, NULL);
- 	if (rc) {
-diff --git a/util/sysfs.c b/util/sysfs.c
-index 23330cb29002..968683b19f4e 100644
---- a/util/sysfs.c
-+++ b/util/sysfs.c
-@@ -145,3 +145,79 @@ struct kmod_module *__util_modalias_to_module(struct kmod_ctx *kmod_ctx,
- 
- 	return mod;
- }
+diff --git a/Documentation/cxl/cxl-disable-memdev.txt b/Documentation/cxl/cxl-disable-memdev.txt
+new file mode 100644
+index 000000000000..edd538578b14
+--- /dev/null
++++ b/Documentation/cxl/cxl-disable-memdev.txt
+@@ -0,0 +1,37 @@
++// SPDX-License-Identifier: GPL-2.0
 +
-+int __util_bind(const char *devname, struct kmod_module *module,
-+		const char *bus, struct log_ctx *ctx)
++cxl-disable-memdev(1)
++=====================
++
++NAME
++----
++cxl-disable-memdev - deactivate / hot-remove a given CXL memdev
++
++SYNOPSIS
++--------
++[verse]
++'cxl disable-memdev' <mem0> [<mem1>..<memN>] [<options>]
++
++
++OPTIONS
++-------
++<memory device(s)>::
++include::memdev-option.txt[]
++
++-f::
++--force::
++	DANGEROUS: Override the safety measure that blocks attempts to disable
++	a device if the tool determines the memdev is in active usage. Recall
++	that CXL memory ranges might have been established by platform
++	firmware and disabling an active device is akin to force removing
++	memory from a running system.
++
++-v::
++	Turn on verbose debug messages in the library (if libcxl was built with
++	logging and debug enabled).
++
++include::../copyright.txt[]
++
++SEE ALSO
++--------
++linkcxl:cxl-enable-memdev[1]
+diff --git a/Documentation/cxl/cxl-enable-memdev.txt b/Documentation/cxl/cxl-enable-memdev.txt
+new file mode 100644
+index 000000000000..088d5e0a4a3c
+--- /dev/null
++++ b/Documentation/cxl/cxl-enable-memdev.txt
+@@ -0,0 +1,34 @@
++// SPDX-License-Identifier: GPL-2.0
++
++cxl-enable-memdev(1)
++====================
++
++NAME
++----
++cxl-enable-memdev - activate / hot-add a given CXL memdev
++
++SYNOPSIS
++--------
++[verse]
++'cxl enable-memdev' <mem0> [<mem1>..<memN>] [<options>]
++
++A memdev typically autoenables at initial device discovery. However, if
++it was manually disabled this command can trigger the kernel to activate
++it again. This involves detecting the state of the HDM (Host Managed
++Device Memory) Decoders and validating that CXL.mem is enabled for each
++port in the device's hierarchy.
++
++OPTIONS
++-------
++<memory device(s)>::
++include::memdev-option.txt[]
++
++-v::
++	Turn on verbose debug messages in the library (if libcxl was built with
++	logging and debug enabled).
++
++include::../copyright.txt[]
++
++SEE ALSO
++--------
++linkcxl:cxl-disable-memdev[1]
+diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
+index de88d192523a..49edb71b1f97 100644
+--- a/Documentation/cxl/lib/libcxl.txt
++++ b/Documentation/cxl/lib/libcxl.txt
+@@ -93,6 +93,29 @@ device.
+ cxl_memdev_get_numa_node() returns the affinitized CPU node number if
+ available or -1 otherwise.
+ 
++=== MEMDEV: Control
++----
++int cxl_memdev_disable_invalidate(struct cxl_memdev *memdev);
++int cxl_memdev_enable(struct cxl_memdev *memdev);
++----
++When a memory device is disabled it unregisters its associated endpoints
++and potentially intervening switch ports if there are no other memdevs
++pinning that port active. That means that any existing port objects that
++the library has previously returned are in valid and need to be re-read.
++Callers must be careful to re-retrieve port objects after
++cxl_memdev_disable_invalidate(). Any usage of a previously obtained port
++object after a cxl_memdev_disable_invalidate() call is a use-after-free
++programming error. It follows that after cxl_memdev_enable() new ports
++may appear in the topology that were not previously enumerable.
++
++NOTE: cxl_memdev_disable_invalidate() will force disable the memdev
++regardless of whether the memory provided by the device is in active use
++by the operating system. Callers take responisbility for assuring that
++it is safe to disable the memory device. Otherwise, this call can be as
++destructive as ripping a DIMM out of a running system. Like all other
++libcxl calls that mutate the system state or divulge security sensitive
++information this call requires root / CAP_SYS_ADMIN.
++
+ === MEMDEV: Commands
+ ----
+ struct cxl_cmd *cxl_cmd_new_raw(struct cxl_memdev *memdev, int opcode);
+diff --git a/Documentation/cxl/meson.build b/Documentation/cxl/meson.build
+index 0a6346bc47ca..7618c97278b4 100644
+--- a/Documentation/cxl/meson.build
++++ b/Documentation/cxl/meson.build
+@@ -30,6 +30,8 @@ cxl_manpages = [
+   'cxl-read-labels.txt',
+   'cxl-write-labels.txt',
+   'cxl-zero-labels.txt',
++  'cxl-enable-memdev.txt',
++  'cxl-disable-memdev.txt',
+ ]
+ 
+ foreach man : cxl_manpages
+diff --git a/cxl/builtin.h b/cxl/builtin.h
+index 78eca6e2faf9..621c85c2ffcc 100644
+--- a/cxl/builtin.h
++++ b/cxl/builtin.h
+@@ -10,4 +10,6 @@ int cmd_read_labels(int argc, const char **argv, struct cxl_ctx *ctx);
+ int cmd_zero_labels(int argc, const char **argv, struct cxl_ctx *ctx);
+ int cmd_init_labels(int argc, const char **argv, struct cxl_ctx *ctx);
+ int cmd_check_labels(int argc, const char **argv, struct cxl_ctx *ctx);
++int cmd_disable_memdev(int argc, const char **argv, struct cxl_ctx *ctx);
++int cmd_enable_memdev(int argc, const char **argv, struct cxl_ctx *ctx);
+ #endif /* _CXL_BUILTIN_H_ */
+diff --git a/cxl/cxl.c b/cxl/cxl.c
+index 4b1661d8d4c1..78d2e9aec0bd 100644
+--- a/cxl/cxl.c
++++ b/cxl/cxl.c
+@@ -64,6 +64,8 @@ static struct cmd_struct commands[] = {
+ 	{ "zero-labels", .c_fn = cmd_zero_labels },
+ 	{ "read-labels", .c_fn = cmd_read_labels },
+ 	{ "write-labels", .c_fn = cmd_write_labels },
++	{ "disable-memdev", .c_fn = cmd_disable_memdev },
++	{ "enable-memdev", .c_fn = cmd_enable_memdev },
+ };
+ 
+ int main(int argc, const char **argv)
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index 14c7db88ff5e..2fdaf71bb837 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -500,6 +500,64 @@ CXL_EXPORT const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev
+ 	return memdev->firmware_version;
+ }
+ 
++CXL_EXPORT int cxl_memdev_disable_invalidate(struct cxl_memdev *memdev)
 +{
-+	DIR *dir;
-+	int rc = 0;
-+	char path[200];
-+	struct dirent *de;
-+	const int len = sizeof(path);
++	struct cxl_ctx *ctx = cxl_memdev_get_ctx(memdev);
++	const char *devname = cxl_memdev_get_devname(memdev);
++	struct cxl_port *port, *_p, *bus_port;
++	struct cxl_bus *bus;
 +
-+	if (!devname) {
-+		log_err(ctx, "missing devname\n");
-+		return -EINVAL;
-+	}
++	if (!cxl_memdev_is_enabled(memdev))
++		return 0;
 +
-+	if (module) {
-+		rc = kmod_module_probe_insert_module(module,
-+						     KMOD_PROBE_APPLY_BLACKLIST,
-+						     NULL, NULL, NULL, NULL);
-+		if (rc < 0) {
-+			log_err(ctx, "%s: insert failure: %d\n", __func__, rc);
-+			return rc;
-+		}
-+	}
-+
-+	if (snprintf(path, len, "/sys/bus/%s/drivers", bus) >= len) {
-+		log_err(ctx, "%s: buffer too small!\n", devname);
++	bus = cxl_memdev_get_bus(memdev);
++	if (!bus) {
++		err(ctx, "%s: failed to invalidate\n", devname);
 +		return -ENXIO;
 +	}
 +
-+	dir = opendir(path);
-+	if (!dir) {
-+		log_err(ctx, "%s: opendir(\"%s\") failed\n", devname, path);
-+		return -ENXIO;
++	util_unbind(memdev->dev_path, ctx);
++
++	if (cxl_memdev_is_enabled(memdev)) {
++		err(ctx, "%s: failed to disable\n", devname);
++		return -EBUSY;
 +	}
 +
-+	while ((de = readdir(dir)) != NULL) {
-+		char *drv_path;
++	/*
++	 * The state of all ports is now indeterminate, delete them all
++	 * and start over.
++	 */
++	bus_port = cxl_bus_get_port(bus);
++	list_for_each_safe(&bus_port->child_ports, port, _p, list)
++		free_port(port, &bus_port->child_ports);
++	bus_port->ports_init = 0;
++	memdev->endpoint = NULL;
 +
-+		if (de->d_ino == 0)
-+			continue;
-+		if (de->d_name[0] == '.')
-+			continue;
++	dbg(ctx, "%s: disabled\n", devname);
 +
-+		if (asprintf(&drv_path, "%s/%s/bind", path, de->d_name) < 0) {
-+			log_err(ctx, "%s: path allocation failure\n", devname);
-+			continue;
-+		}
-+
-+		rc = __sysfs_write_attr_quiet(ctx, drv_path, devname);
-+		free(drv_path);
-+		if (rc == 0)
-+			break;
-+	}
-+	closedir(dir);
-+
-+	if (rc) {
-+		log_dbg(ctx, "%s: bind failed\n", devname);
-+		return -ENXIO;
-+	}
 +	return 0;
 +}
 +
-+int __util_unbind(const char *devpath, struct log_ctx *ctx)
++CXL_EXPORT int cxl_memdev_enable(struct cxl_memdev *memdev)
 +{
-+	const char *devname = devpath_to_devname(devpath);
-+	char path[200];
-+	const int len = sizeof(path);
++	struct cxl_ctx *ctx = cxl_memdev_get_ctx(memdev);
++	const char *devname = cxl_memdev_get_devname(memdev);
 +
-+	if (snprintf(path, len, "%s/driver/unbind", devpath) >= len) {
-+		log_err(ctx, "%s: buffer too small!\n", devname);
++	if (cxl_memdev_is_enabled(memdev))
++		return 0;
++
++	util_bind(devname, memdev->module, "cxl", ctx);
++
++	if (!cxl_memdev_is_enabled(memdev)) {
++		err(ctx, "%s: failed to enable\n", devname);
 +		return -ENXIO;
 +	}
 +
-+	return __sysfs_write_attr(ctx, path, devname);
++	dbg(ctx, "%s: enabled\n", devname);
++
++	return 0;
 +}
-diff --git a/util/sysfs.h b/util/sysfs.h
-index bdee4f5c291d..4c95c70558ba 100644
---- a/util/sysfs.h
-+++ b/util/sysfs.h
-@@ -35,4 +35,12 @@ struct kmod_module *__util_modalias_to_module(struct kmod_ctx *kmod_ctx,
- 					      struct log_ctx *log);
- #define util_modalias_to_module(ctx, buf)                                      \
- 	__util_modalias_to_module((ctx)->kmod_ctx, buf, &(ctx)->ctx)
 +
-+int __util_bind(const char *devname, struct kmod_module *module, const char *bus,
-+	      struct log_ctx *ctx);
-+#define util_bind(n, m, b, c) __util_bind(n, m, b, &(c)->ctx)
+ static struct cxl_endpoint *cxl_port_find_endpoint(struct cxl_port *parent_port,
+ 						   struct cxl_memdev *memdev)
+ {
+diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+index b13a2d6d25d1..f235e99e3bf0 100644
+--- a/cxl/lib/libcxl.sym
++++ b/cxl/lib/libcxl.sym
+@@ -115,4 +115,6 @@ global:
+ 	cxl_memdev_get_endpoint;
+ 	cxl_memdev_is_enabled;
+ 	cxl_memdev_get_bus;
++	cxl_memdev_disable_invalidate;
++	cxl_memdev_enable;
+ } LIBCXL_1;
+diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+index be656ed0d90d..53f68dde2770 100644
+--- a/cxl/libcxl.h
++++ b/cxl/libcxl.h
+@@ -48,6 +48,8 @@ unsigned long long cxl_memdev_get_pmem_size(struct cxl_memdev *memdev);
+ unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev);
+ const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev);
+ size_t cxl_memdev_get_label_size(struct cxl_memdev *memdev);
++int cxl_memdev_disable_invalidate(struct cxl_memdev *memdev);
++int cxl_memdev_enable(struct cxl_memdev *memdev);
+ struct cxl_endpoint;
+ struct cxl_endpoint *cxl_memdev_get_endpoint(struct cxl_memdev *memdev);
+ int cxl_memdev_nvdimm_bridge_active(struct cxl_memdev *memdev);
+diff --git a/cxl/memdev.c b/cxl/memdev.c
+index ef5343ad892b..90b33e1b4195 100644
+--- a/cxl/memdev.c
++++ b/cxl/memdev.c
+@@ -25,13 +25,14 @@ static struct parameters {
+ 	unsigned offset;
+ 	bool verbose;
+ 	bool serial;
++	bool force;
+ } param;
+ 
+ static struct log_ctx ml;
+ 
+ #define BASE_OPTIONS() \
+ OPT_BOOLEAN('v',"verbose", &param.verbose, "turn on debug"), \
+-OPT_BOOLEAN('S', "serial", &param.serial, "user serials numbers to id memdevs")
++OPT_BOOLEAN('S', "serial", &param.serial, "use serial numbers to id memdevs")
+ 
+ #define READ_OPTIONS() \
+ OPT_STRING('o', "output", &param.outfile, "output-file", \
+@@ -46,6 +47,10 @@ OPT_UINTEGER('s', "size", &param.len, "number of label bytes to operate"), \
+ OPT_UINTEGER('O', "offset", &param.offset, \
+ 	"offset into the label area to start operation")
+ 
++#define DISABLE_OPTIONS()                                              \
++OPT_BOOLEAN('f', "force", &param.force,                                \
++	    "DANGEROUS: override active memdev safety checks")
 +
-+int __util_unbind(const char *devpath, struct log_ctx *ctx);
-+#define util_unbind(p, c) __util_unbind(p, &(c)->ctx)
+ static const struct option read_options[] = {
+ 	BASE_OPTIONS(),
+ 	LABEL_OPTIONS(),
+@@ -66,6 +71,37 @@ static const struct option zero_options[] = {
+ 	OPT_END(),
+ };
+ 
++static const struct option disable_options[] = {
++	BASE_OPTIONS(),
++	DISABLE_OPTIONS(),
++	OPT_END(),
++};
 +
- #endif /* __UTIL_SYSFS_H__ */
++static const struct option enable_options[] = {
++	BASE_OPTIONS(),
++	OPT_END(),
++};
++
++static int action_disable(struct cxl_memdev *memdev, struct action_context *actx)
++{
++	if (!cxl_memdev_is_enabled(memdev))
++		return 0;
++
++	if (!param.force) {
++		/* TODO: actually detect rather than assume active */
++		log_err(&ml, "%s is part of an active region\n",
++			cxl_memdev_get_devname(memdev));
++		return -EBUSY;
++	}
++
++	return cxl_memdev_disable_invalidate(memdev);
++}
++
++static int action_enable(struct cxl_memdev *memdev, struct action_context *actx)
++{
++	return cxl_memdev_enable(memdev);
++}
++
+ static int action_zero(struct cxl_memdev *memdev, struct action_context *actx)
+ {
+ 	size_t size;
+@@ -340,3 +376,25 @@ int cmd_zero_labels(int argc, const char **argv, struct cxl_ctx *ctx)
+ 		 count > 1 ? "s" : "");
+ 	return count >= 0 ? 0 : EXIT_FAILURE;
+ }
++
++int cmd_disable_memdev(int argc, const char **argv, struct cxl_ctx *ctx)
++{
++	int count = memdev_action(
++		argc, argv, ctx, action_disable, disable_options,
++		"cxl disable-memdev <mem0> [<mem1>..<memN>] [<options>]");
++
++	log_info(&ml, "disabled %d mem%s\n", count >= 0 ? count : 0,
++		 count > 1 ? "s" : "");
++	return count >= 0 ? 0 : EXIT_FAILURE;
++}
++
++int cmd_enable_memdev(int argc, const char **argv, struct cxl_ctx *ctx)
++{
++	int count = memdev_action(
++		argc, argv, ctx, action_enable, enable_options,
++		"cxl enable-memdev <mem0> [<mem1>..<memN>] [<options>]");
++
++	log_info(&ml, "enabled %d mem%s\n", count >= 0 ? count : 0,
++		 count > 1 ? "s" : "");
++	return count >= 0 ? 0 : EXIT_FAILURE;
++}
 
