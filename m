@@ -2,44 +2,43 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D3FC433F5
-	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jan 2022 00:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E1AC433EF
+	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jan 2022 00:54:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240666AbiAXAyH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 23 Jan 2022 19:54:07 -0500
-Received: from mga07.intel.com ([134.134.136.100]:6530 "EHLO mga07.intel.com"
+        id S240669AbiAXAyN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 23 Jan 2022 19:54:13 -0500
+Received: from mga11.intel.com ([192.55.52.93]:50319 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240668AbiAXAyG (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Sun, 23 Jan 2022 19:54:06 -0500
+        id S235351AbiAXAyN (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Sun, 23 Jan 2022 19:54:13 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642985646; x=1674521646;
+  t=1642985653; x=1674521653;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=bz+nZmy5ZWyfZbPxruY+qRQpcN773rl+hSXf6yyFCuw=;
-  b=nHOyRB51G655oA5CyuSzlFWgkElt6+gsQ93FfQsoN3L/gAkfSzDSWeXM
-   S9XVf+re3I/1pAIgewYSSDTpk5uRpvlf6Sl5FAKZLE977aqA/1PHoQVMm
-   mG6Zk7ROukiph+e2LxI17O19DbkxRCDm/KQIiVfXdquM9LXkpczXetcJh
-   isRE3MG1ibuUHRamW8UtkxRTqcYZgU8MRx8iX7I1RFYr2naj5bTYtMli4
-   aGJD4O6wSg3lSKdrjMMUI8OTR84sl8AW2gJrBjJ+oUIfAOj+bGixf4xO9
-   x6ThvQPrJVdTfPzuGyy8HxO4xFVrzukqI+A7mJqARl7CGr90ZVj382ucD
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="309257415"
+  bh=N5krYuICLkseMYpurEurIFF8ViUohFRRZLYVobxhBIM=;
+  b=XgEJeuyR84IyY3F45UtPs+CCGgfy0ZCZOg+h02rkSflguJ4cbDH21IJz
+   fLMvQ3eT1LsKI8zVxwyKyQ69bakZgEupd6icl3ukzzSQXUKGBs4ctbVG9
+   oCV1tGNRWf8USu6XP8RkUBDaZNjQuzalsrqMTlpkVPvafiofrXEIYS6j+
+   aupNs54GFaE44GV6K1Ld2OrIJCIJTuudtwBpf71Rg1Bmi1lpYIxQwfuns
+   VKc3SsRnpfJ/p28SrwhXphVYYg2BOPDzGWvBrR6NZiHu63B8gCiw9bpaw
+   d+5KwC/v41IN36+NZGkgjFnipzlpZgksYtCmgGOYv4UfgCAhkFmU4VGg5
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="243530647"
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="309257415"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:54:06 -0800
+   d="scan'208";a="243530647"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:54:12 -0800
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="534005241"
+   d="scan'208";a="596630808"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:54:06 -0800
-Subject: [ndctl PATCH 26/37] cxl/memdev: Add serial support for
- memdev-related commands
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:54:11 -0800
+Subject: [ndctl PATCH 27/37] cxl/list: Add 'numa_node' to memdev listings
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     vishal.l.verma@intel.com
-Date:   Sun, 23 Jan 2022 16:54:06 -0800
-Message-ID: <164298564631.3021641.5552442288217413180.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Sun, 23 Jan 2022 16:54:11 -0800
+Message-ID: <164298565156.3021641.14097226245654611710.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <164298550885.3021641.11210386002804544864.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <164298550885.3021641.11210386002804544864.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -50,126 +49,130 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Allow for a "-s, --serial" option to turn the argument list into serial
-identifiers.
+If the kernel exports a valid numa_node, >= 0, include it in memdev objects
+listings.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- Documentation/cxl/memdev-option.txt |    5 ++++
- Documentation/cxl/meson.build       |    4 ++-
- cxl/memdev.c                        |   45 ++++++++++++++++++++++++++---------
- 3 files changed, 41 insertions(+), 13 deletions(-)
+ Documentation/cxl/lib/libcxl.txt |    4 ++++
+ cxl/json.c                       |    8 ++++++++
+ cxl/lib/libcxl.c                 |   11 +++++++++++
+ cxl/lib/libcxl.sym               |    1 +
+ cxl/lib/private.h                |    1 +
+ cxl/libcxl.h                     |    1 +
+ 6 files changed, 26 insertions(+)
 
-diff --git a/Documentation/cxl/memdev-option.txt b/Documentation/cxl/memdev-option.txt
-index e7785827ab4c..64348bed1791 100644
---- a/Documentation/cxl/memdev-option.txt
-+++ b/Documentation/cxl/memdev-option.txt
-@@ -2,3 +2,8 @@
- A 'memX' device name, or a memdev id number. Restrict the operation to
- the specified memdev(s). The keyword 'all' can be specified to indicate
- the lack of any restriction.
+diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
+index b0253d7be07c..de88d192523a 100644
+--- a/Documentation/cxl/lib/libcxl.txt
++++ b/Documentation/cxl/lib/libcxl.txt
+@@ -71,6 +71,7 @@ unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev);
+ const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev);
+ size_t cxl_memdev_get_label_size(struct cxl_memdev *memdev);
+ int cxl_memdev_nvdimm_bridge_active(struct cxl_memdev *memdev);
++int cxl_memdev_get_numa_node(struct cxl_memdev *memdev);
+ ----
+ 
+ A memdev is given a kernel device name of the form "mem%d" where an id
+@@ -89,6 +90,9 @@ The 'pmem_size' and 'ram_size' attributes return the current
+ provisioning of DPA (Device Physical Address / local capacity) in the
+ device.
+ 
++cxl_memdev_get_numa_node() returns the affinitized CPU node number if
++available or -1 otherwise.
 +
-+-S::
-+--serial::
-+	Rather an a memdev id number, interpret the <memdev> argument(s)
-+	as a list of serial numbers.
-diff --git a/Documentation/cxl/meson.build b/Documentation/cxl/meson.build
-index 64ce13f59012..0a6346bc47ca 100644
---- a/Documentation/cxl/meson.build
-+++ b/Documentation/cxl/meson.build
-@@ -19,7 +19,9 @@ else
- endif
+ === MEMDEV: Commands
+ ----
+ struct cxl_cmd *cxl_cmd_new_raw(struct cxl_memdev *memdev, int opcode);
+diff --git a/cxl/json.c b/cxl/json.c
+index b809332b8d51..51918d65f671 100644
+--- a/cxl/json.c
++++ b/cxl/json.c
+@@ -190,6 +190,7 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+ 	const char *devname = cxl_memdev_get_devname(memdev);
+ 	struct json_object *jdev, *jobj;
+ 	unsigned long long serial;
++	int numa_node;
  
- filedeps = [
--        '../copyright.txt',
-+  '../copyright.txt',
-+  'memdev-option.txt',
-+  'labels-options.txt',
- ]
- 
- cxl_manpages = [
-diff --git a/cxl/memdev.c b/cxl/memdev.c
-index 4cca8b8c10be..ef5343ad892b 100644
---- a/cxl/memdev.c
-+++ b/cxl/memdev.c
-@@ -24,12 +24,14 @@ static struct parameters {
- 	unsigned len;
- 	unsigned offset;
- 	bool verbose;
-+	bool serial;
- } param;
- 
- static struct log_ctx ml;
- 
- #define BASE_OPTIONS() \
--OPT_BOOLEAN('v',"verbose", &param.verbose, "turn on debug")
-+OPT_BOOLEAN('v',"verbose", &param.verbose, "turn on debug"), \
-+OPT_BOOLEAN('S', "serial", &param.serial, "user serials numbers to id memdevs")
- 
- #define READ_OPTIONS() \
- OPT_STRING('o', "output", &param.outfile, "output-file", \
-@@ -172,8 +174,9 @@ out:
- }
- 
- static int memdev_action(int argc, const char **argv, struct cxl_ctx *ctx,
--		int (*action)(struct cxl_memdev *memdev, struct action_context *actx),
--		const struct option *options, const char *usage)
-+			 int (*action)(struct cxl_memdev *memdev,
-+				       struct action_context *actx),
-+			 const struct option *options, const char *usage)
- {
- 	struct cxl_memdev *memdev, *single = NULL;
- 	struct action_context actx = { 0 };
-@@ -190,16 +193,25 @@ static int memdev_action(int argc, const char **argv, struct cxl_ctx *ctx,
- 	if (argc == 0)
- 		usage_with_options(u, options);
- 	for (i = 0; i < argc; i++) {
--		if (strcmp(argv[i], "all") == 0) {
--			argc = 1;
--			break;
-+		if (param.serial) {
-+			char *end;
-+
-+			strtoull(argv[i], &end, 0);
-+			if (end[0] == 0)
-+				continue;
-+		} else {
-+			if (strcmp(argv[i], "all") == 0) {
-+				argc = 1;
-+				break;
-+			}
-+			if (sscanf(argv[i], "mem%lu", &id) == 1)
-+				continue;
-+			if (sscanf(argv[i], "%lu", &id) == 1)
-+				continue;
- 		}
--		if (sscanf(argv[i], "mem%lu", &id) == 1)
--			continue;
--		if (sscanf(argv[i], "%lu", &id) == 1)
--			continue;
- 
--		log_err(&ml, "'%s' is not a valid memdev name\n", argv[i]);
-+		log_err(&ml, "'%s' is not a valid memdev %s\n", argv[i],
-+			param.serial ? "serial number" : "name");
- 		err++;
+ 	jdev = json_object_new_object();
+ 	if (!jdev)
+@@ -220,6 +221,13 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+ 			json_object_object_add(jdev, "serial", jobj);
  	}
  
-@@ -244,7 +256,16 @@ static int memdev_action(int argc, const char **argv, struct cxl_ctx *ctx,
- 
- 	for (i = 0; i < argc; i++) {
- 		cxl_memdev_foreach(ctx, memdev) {
--			if (!util_cxl_memdev_filter(memdev, argv[i], NULL))
-+			const char *memdev_filter = NULL;
-+			const char *serial_filter = NULL;
++	numa_node = cxl_memdev_get_numa_node(memdev);
++	if (numa_node >= 0) {
++		jobj = json_object_new_int(numa_node);
++		if (jobj)
++			json_object_object_add(jdev, "numa_node", jobj);
++	}
 +
-+			if (param.serial)
-+				serial_filter = argv[i];
-+			else
-+				memdev_filter = argv[i];
-+
-+			if (!util_cxl_memdev_filter(memdev, memdev_filter,
-+						    serial_filter))
- 				continue;
+ 	jobj = json_object_new_string(cxl_memdev_get_host(memdev));
+ 	if (jobj)
+ 		json_object_object_add(jdev, "host", jobj);
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index 0065f6baeead..14c7db88ff5e 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -348,6 +348,12 @@ static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
+ 	else
+ 		memdev->serial = strtoull(buf, NULL, 0);
  
- 			if (action == action_write) {
++	sprintf(path, "%s/numa_node", cxlmem_base);
++	if (sysfs_read_attr(ctx, path, buf) < 0)
++		memdev->numa_node = -1;
++	else
++		memdev->numa_node = strtol(buf, NULL, 0);
++
+ 	memdev->dev_path = strdup(cxlmem_base);
+ 	if (!memdev->dev_path)
+ 		goto err_read;
+@@ -445,6 +451,11 @@ CXL_EXPORT unsigned long long cxl_memdev_get_serial(struct cxl_memdev *memdev)
+ 	return memdev->serial;
+ }
+ 
++CXL_EXPORT int cxl_memdev_get_numa_node(struct cxl_memdev *memdev)
++{
++	return memdev->numa_node;
++}
++
+ CXL_EXPORT const char *cxl_memdev_get_devname(struct cxl_memdev *memdev)
+ {
+ 	return devpath_to_devname(memdev->dev_path);
+diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+index 29f34988e42f..b13a2d6d25d1 100644
+--- a/cxl/lib/libcxl.sym
++++ b/cxl/lib/libcxl.sym
+@@ -77,6 +77,7 @@ local:
+ LIBCXL_2 {
+ global:
+ 	cxl_memdev_get_serial;
++	cxl_memdev_get_numa_node;
+ 	cxl_memdev_get_host;
+ 	cxl_bus_get_first;
+ 	cxl_bus_get_next;
+diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+index b097bdfbfd6b..c00bb3600138 100644
+--- a/cxl/lib/private.h
++++ b/cxl/lib/private.h
+@@ -20,6 +20,7 @@ struct cxl_pmem {
+ struct cxl_endpoint;
+ struct cxl_memdev {
+ 	int id, major, minor;
++	int numa_node;
+ 	void *dev_buf;
+ 	size_t buf_len;
+ 	char *host;
+diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+index e7b675e5328f..be656ed0d90d 100644
+--- a/cxl/libcxl.h
++++ b/cxl/libcxl.h
+@@ -37,6 +37,7 @@ struct cxl_memdev *cxl_memdev_get_first(struct cxl_ctx *ctx);
+ struct cxl_memdev *cxl_memdev_get_next(struct cxl_memdev *memdev);
+ int cxl_memdev_get_id(struct cxl_memdev *memdev);
+ unsigned long long cxl_memdev_get_serial(struct cxl_memdev *memdev);
++int cxl_memdev_get_numa_node(struct cxl_memdev *memdev);
+ const char *cxl_memdev_get_devname(struct cxl_memdev *memdev);
+ const char *cxl_memdev_get_host(struct cxl_memdev *memdev);
+ struct cxl_bus *cxl_memdev_get_bus(struct cxl_memdev *memdev);
 
