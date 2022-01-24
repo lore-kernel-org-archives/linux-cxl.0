@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60128C4332F
-	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jan 2022 17:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DCDC433EF
+	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jan 2022 17:26:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232076AbiAXRZt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 24 Jan 2022 12:25:49 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4462 "EHLO
+        id S244526AbiAXR0S (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 24 Jan 2022 12:26:18 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4463 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244513AbiAXRZr (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Jan 2022 12:25:47 -0500
-Received: from fraeml739-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JjGx81J0Sz6FBMZ;
-        Tue, 25 Jan 2022 01:21:32 +0800 (CST)
+        with ESMTP id S241604AbiAXR0S (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Jan 2022 12:26:18 -0500
+Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JjH2C3g1dz686wr;
+        Tue, 25 Jan 2022 01:25:55 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml739-chm.china.huawei.com (10.206.15.220) with Microsoft SMTP Server
+ fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Mon, 24 Jan 2022 18:25:45 +0100
+ 15.1.2308.21; Mon, 24 Jan 2022 18:26:16 +0100
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Mon, 24 Jan 2022 17:25:44 +0000
+ 15.1.2308.21; Mon, 24 Jan 2022 17:26:15 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <qemu-devel@nongnu.org>, Marcel Apfelbaum <marcel@redhat.com>,
         "Michael S . Tsirkin" <mst@redhat.com>,
@@ -38,9 +38,9 @@ CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
         Chris Browy <cbrowy@avery-design.com>,
         Samarth Saxena <samarths@cadence.com>,
         "Dan Williams" <dan.j.williams@intel.com>
-Subject: [PATCH v4 17/42] cxl: Machine level control on whether CXL support is enabled
-Date:   Mon, 24 Jan 2022 17:16:40 +0000
-Message-ID: <20220124171705.10432-18-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v4 18/42] hw/cxl/component: Implement host bridge MMIO (8.2.5, table 142)
+Date:   Mon, 24 Jan 2022 17:16:41 +0000
+Message-ID: <20220124171705.10432-19-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220124171705.10432-1-Jonathan.Cameron@huawei.com>
 References: <20220124171705.10432-1-Jonathan.Cameron@huawei.com>
@@ -55,161 +55,246 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
+From: Ben Widawsky <ben.widawsky@intel.com>
 
-There are going to be some potential overheads to CXL enablement,
-for example the host bridge region reserved in memory maps.
-Add a machine level control so that CXL is disabled by default.
+CXL host bridges themselves may have MMIO. Since host bridges don't have
+a BAR they are treated as special for MMIO.  This patch includes
+i386/pc support.
 
-Signed-off-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- hw/arm/virt.c        |  1 +
- hw/core/machine.c    | 26 ++++++++++++++++++++++++++
- hw/i386/microvm.c    |  1 +
- hw/i386/pc.c         |  1 +
- hw/ppc/spapr.c       |  1 +
- include/hw/boards.h  |  2 ++
- include/hw/cxl/cxl.h |  4 ++++
- 7 files changed, 36 insertions(+)
+ hw/i386/acpi-build.c                | 26 +++++++++++---
+ hw/i386/pc.c                        | 27 ++++++++++++++-
+ hw/pci-bridge/pci_expander_bridge.c | 53 ++++++++++++++++++++++++++++-
+ include/hw/cxl/cxl.h                |  4 +++
+ 4 files changed, 104 insertions(+), 6 deletions(-)
 
-diff --git a/hw/arm/virt.c b/hw/arm/virt.c
-index 2b6cc7aa9e..cbb18dcba6 100644
---- a/hw/arm/virt.c
-+++ b/hw/arm/virt.c
-@@ -2856,6 +2856,7 @@ static void virt_machine_class_init(ObjectClass *oc, void *data)
-     hc->unplug = virt_machine_device_unplug_cb;
-     mc->nvdimm_supported = true;
-     mc->smp_props.clusters_supported = true;
-+    mc->cxl_supported = false;
-     mc->auto_enable_numa_with_memhp = true;
-     mc->auto_enable_numa_with_memdev = true;
-     mc->default_ram_id = "mach-virt.ram";
-diff --git a/hw/core/machine.c b/hw/core/machine.c
-index d856485cb4..01b7e1aa37 100644
---- a/hw/core/machine.c
-+++ b/hw/core/machine.c
-@@ -31,6 +31,7 @@
- #include "sysemu/qtest.h"
+diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
+index 1d8ee988f2..ad4f8eb22a 100644
+--- a/hw/i386/acpi-build.c
++++ b/hw/i386/acpi-build.c
+@@ -28,6 +28,7 @@
+ #include "qemu/bitmap.h"
+ #include "qemu/error-report.h"
  #include "hw/pci/pci.h"
- #include "hw/mem/nvdimm.h"
 +#include "hw/cxl/cxl.h"
- #include "migration/global_state.h"
- #include "migration/vmstate.h"
- #include "exec/confidential-guest-support.h"
-@@ -545,6 +546,20 @@ static void machine_set_nvdimm_persistence(Object *obj, const char *value,
-     nvdimms_state->persistence_string = g_strdup(value);
+ #include "hw/core/cpu.h"
+ #include "target/i386/cpu.h"
+ #include "hw/misc/pvpanic.h"
+@@ -1398,7 +1399,7 @@ static void build_smb0(Aml *table, I2CBus *smbus, int devnr, int func)
+     aml_append(table, scope);
  }
  
-+static bool machine_get_cxl(Object *obj, Error **errp)
-+{
-+    MachineState *ms = MACHINE(obj);
-+
-+    return ms->cxl_devices_state->is_enabled;
-+}
-+
-+static void machine_set_cxl(Object *obj, bool value, Error **errp)
-+{
-+    MachineState *ms = MACHINE(obj);
-+
-+    ms->cxl_devices_state->is_enabled = value;
-+}
-+
- void machine_class_allow_dynamic_sysbus_dev(MachineClass *mc, const char *type)
+-enum { PCI, PCIE };
++enum { PCI, PCIE, CXL };
+ static void init_pci_acpi(Aml *dev, int uid, int type, bool native_pcie_hp)
  {
-     QAPI_LIST_PREPEND(mc->allowed_dynamic_sysbus_devices, g_strdup(type));
-@@ -922,6 +937,16 @@ static void machine_initfn(Object *obj)
-                                         "Valid values are cpu, mem-ctrl");
+     if (type == PCI) {
+@@ -1561,22 +1562,30 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
+         QLIST_FOREACH(bus, &bus->child, sibling) {
+             uint8_t bus_num = pci_bus_num(bus);
+             uint8_t numa_node = pci_bus_numa_node(bus);
++            int32_t uid = bus_num; /* TODO: Explicit uid */
++            int type;
+ 
+             /* look only for expander root buses */
+             if (!pci_bus_is_root(bus)) {
+                 continue;
+             }
+ 
++            type = pci_bus_is_cxl(bus) ? CXL :
++                                         pci_bus_is_express(bus) ? PCIE : PCI;
++
+             if (bus_num < root_bus_limit) {
+                 root_bus_limit = bus_num - 1;
+             }
+ 
+             scope = aml_scope("\\_SB");
+-            dev = aml_device("PC%.02X", bus_num);
++            if (type == CXL) {
++                dev = aml_device("CL%.02X", uid);
++            } else {
++                dev = aml_device("PC%.02X", bus_num);
++            }
+             aml_append(dev, aml_name_decl("_BBN", aml_int(bus_num)));
+ 
+-            init_pci_acpi(dev, bus_num,
+-                          pci_bus_is_express(bus) ? PCIE : PCI, true);
++            init_pci_acpi(dev, uid, type, true);
+ 
+             if (numa_node != NUMA_NODE_UNASSIGNED) {
+                 aml_append(dev, aml_name_decl("_PXM", aml_int(numa_node)));
+@@ -1588,6 +1597,15 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
+             aml_append(dev, aml_name_decl("_CRS", crs));
+             aml_append(scope, dev);
+             aml_append(dsdt, scope);
++
++            /* Handle the ranges for the PXB expanders */
++            if (type == CXL) {
++                MemoryRegion *mr = &machine->cxl_devices_state->host_mr;
++                uint64_t base = mr->addr;
++
++                crs_range_insert(crs_range_set.mem_ranges, base,
++                                 base + memory_region_size(mr) - 1);
++            }
+         }
      }
  
-+    if (mc->cxl_supported) {
-+        Object *obj = OBJECT(ms);
-+
-+        ms->cxl_devices_state = g_new0(CXLState, 1);
-+        object_property_add_bool(obj, "cxl", machine_get_cxl, machine_set_cxl);
-+        object_property_set_description(obj, "cxl",
-+                                        "Set on/off to enable/disable "
-+                                        "CXL instantiation");
-+    }
-+
-     if (mc->cpu_index_to_instance_props && mc->get_default_cpu_node_id) {
-         ms->numa_state = g_new0(NumaState, 1);
-         object_property_add_bool(obj, "hmat",
-@@ -956,6 +981,7 @@ static void machine_finalize(Object *obj)
-     g_free(ms->device_memory);
-     g_free(ms->nvdimms_state);
-     g_free(ms->numa_state);
-+    g_free(ms->cxl_devices_state);
- }
- 
- bool machine_usb(MachineState *machine)
-diff --git a/hw/i386/microvm.c b/hw/i386/microvm.c
-index 4b3b1dd262..6381d833fa 100644
---- a/hw/i386/microvm.c
-+++ b/hw/i386/microvm.c
-@@ -685,6 +685,7 @@ static void microvm_class_init(ObjectClass *oc, void *data)
-     mc->auto_enable_numa_with_memdev = false;
-     mc->default_cpu_type = TARGET_DEFAULT_CPU_TYPE;
-     mc->nvdimm_supported = false;
-+    mc->cxl_supported = false;
-     mc->default_ram_id = "microvm.ram";
- 
-     /* Avoid relying too much on kernel components */
 diff --git a/hw/i386/pc.c b/hw/i386/pc.c
-index c8696ac01e..b6800a511a 100644
+index b6800a511a..7a18dce529 100644
 --- a/hw/i386/pc.c
 +++ b/hw/i386/pc.c
-@@ -1739,6 +1739,7 @@ static void pc_machine_class_init(ObjectClass *oc, void *data)
-     mc->default_cpu_type = TARGET_DEFAULT_CPU_TYPE;
-     mc->nvdimm_supported = true;
-     mc->smp_props.dies_supported = true;
-+    mc->cxl_supported = true;
-     mc->default_ram_id = "pc.ram";
+@@ -75,6 +75,7 @@
+ #include "acpi-build.h"
+ #include "hw/mem/pc-dimm.h"
+ #include "hw/mem/nvdimm.h"
++#include "hw/cxl/cxl.h"
+ #include "qapi/error.h"
+ #include "qapi/qapi-visit-common.h"
+ #include "qapi/qapi-visit-machine.h"
+@@ -815,6 +816,7 @@ void pc_memory_init(PCMachineState *pcms,
+     MachineClass *mc = MACHINE_GET_CLASS(machine);
+     PCMachineClass *pcmc = PC_MACHINE_GET_CLASS(pcms);
+     X86MachineState *x86ms = X86_MACHINE(pcms);
++    hwaddr cxl_base;
  
-     object_class_property_add(oc, PC_MACHINE_MAX_RAM_BELOW_4G, "size",
-diff --git a/hw/ppc/spapr.c b/hw/ppc/spapr.c
-index 72f5dce751..56f135833d 100644
---- a/hw/ppc/spapr.c
-+++ b/hw/ppc/spapr.c
-@@ -4569,6 +4569,7 @@ static void spapr_machine_class_init(ObjectClass *oc, void *data)
-     mc->default_cpu_type = POWERPC_CPU_TYPE_NAME("power9_v2.0");
-     mc->has_hotpluggable_cpus = true;
-     mc->nvdimm_supported = true;
-+    mc->cxl_supported = false;
-     smc->resize_hpt_default = SPAPR_RESIZE_HPT_ENABLED;
-     fwc->get_dev_path = spapr_get_fw_dev_path;
-     nc->nmi_monitor_handler = spapr_nmi;
-diff --git a/include/hw/boards.h b/include/hw/boards.h
-index c92ac8815c..680718dafc 100644
---- a/include/hw/boards.h
-+++ b/include/hw/boards.h
-@@ -269,6 +269,7 @@ struct MachineClass {
-     bool ignore_boot_device_suffixes;
-     bool smbus_no_migration_support;
-     bool nvdimm_supported;
-+    bool cxl_supported;
-     bool numa_mem_supported;
-     bool auto_enable_numa;
-     SMPCompatProps smp_props;
-@@ -360,6 +361,7 @@ struct MachineState {
-     CPUArchIdList *possible_cpus;
-     CpuTopology smp;
-     struct NVDIMMState *nvdimms_state;
-+    struct CXLState *cxl_devices_state;
-     struct NumaState *numa_state;
+     assert(machine->ram_size == x86ms->below_4g_mem_size +
+                                 x86ms->above_4g_mem_size);
+@@ -904,6 +906,26 @@ void pc_memory_init(PCMachineState *pcms,
+                                     &machine->device_memory->mr);
+     }
+ 
++    if (machine->cxl_devices_state->is_enabled) {
++        MemoryRegion *mr = &machine->cxl_devices_state->host_mr;
++        hwaddr cxl_size = MiB;
++
++        if (pcmc->has_reserved_memory && machine->device_memory->base) {
++            cxl_base = machine->device_memory->base;
++            if (!pcmc->broken_reserved_end) {
++                cxl_base += memory_region_size(&machine->device_memory->mr);
++            }
++        } else if (pcms->sgx_epc.size != 0) {
++            cxl_base = sgx_epc_above_4g_end(&pcms->sgx_epc);
++        } else {
++            cxl_base = 0x100000000ULL + x86ms->above_4g_mem_size;
++        }
++
++        e820_add_entry(cxl_base, cxl_size, E820_RESERVED);
++        memory_region_init(mr, OBJECT(machine), "cxl_host_reg", cxl_size);
++        memory_region_add_subregion(system_memory, cxl_base, mr);
++    }
++
+     /* Initialize PC system firmware */
+     pc_system_firmware_init(pcms, rom_memory);
+ 
+@@ -964,7 +986,10 @@ uint64_t pc_pci_hole64_start(void)
+     X86MachineState *x86ms = X86_MACHINE(pcms);
+     uint64_t hole64_start = 0;
+ 
+-    if (pcmc->has_reserved_memory && ms->device_memory->base) {
++    if (ms->cxl_devices_state->host_mr.addr) {
++        hole64_start = ms->cxl_devices_state->host_mr.addr +
++            memory_region_size(&ms->cxl_devices_state->host_mr);
++    } else if (pcmc->has_reserved_memory && ms->device_memory->base) {
+         hole64_start = ms->device_memory->base;
+         if (!pcmc->broken_reserved_end) {
+             hole64_start += memory_region_size(&ms->device_memory->mr);
+diff --git a/hw/pci-bridge/pci_expander_bridge.c b/hw/pci-bridge/pci_expander_bridge.c
+index 7009b541de..e62d623551 100644
+--- a/hw/pci-bridge/pci_expander_bridge.c
++++ b/hw/pci-bridge/pci_expander_bridge.c
+@@ -200,6 +200,56 @@ static const TypeInfo pxb_host_info = {
+     .class_init    = pxb_host_class_init,
  };
  
++static void pxb_cxl_realize(DeviceState *dev, Error **errp)
++{
++    MachineState *ms = MACHINE(qdev_get_machine());
++    SysBusDevice *sbd = SYS_BUS_DEVICE(dev);
++    CXLHost *cxl = PXB_CXL_HOST(dev);
++    CXLComponentState *cxl_cstate = &cxl->cxl_cstate;
++    struct MemoryRegion *mr = &cxl_cstate->crb.component_registers;
++    hwaddr offset;
++
++    if (!ms->cxl_devices_state->is_enabled) {
++        error_setg(errp, "Machine does not have cxl=on");
++        return;
++    }
++    cxl_component_register_block_init(OBJECT(dev), cxl_cstate,
++                                      TYPE_PXB_CXL_HOST);
++    sysbus_init_mmio(sbd, mr);
++
++    offset = memory_region_size(mr) * ms->cxl_devices_state->next_mr_idx;
++    if (offset > memory_region_size(&ms->cxl_devices_state->host_mr)) {
++        error_setg(errp, "Insufficient space for pxb cxl host register space");
++        return;
++    }
++
++    memory_region_add_subregion(&ms->cxl_devices_state->host_mr, offset, mr);
++    ms->cxl_devices_state->next_mr_idx++;
++}
++
++static void pxb_cxl_host_class_init(ObjectClass *class, void *data)
++{
++    DeviceClass *dc = DEVICE_CLASS(class);
++    PCIHostBridgeClass *hc = PCI_HOST_BRIDGE_CLASS(class);
++
++    hc->root_bus_path = pxb_host_root_bus_path;
++    dc->fw_name = "cxl";
++    dc->realize = pxb_cxl_realize;
++    /* Reason: Internal part of the pxb/pxb-pcie device, not usable by itself */
++    dc->user_creatable = false;
++}
++
++/*
++ * This is a device to handle the MMIO for a CXL host bridge. It does nothing
++ * else.
++ */
++static const TypeInfo cxl_host_info = {
++    .name          = TYPE_PXB_CXL_HOST,
++    .parent        = TYPE_PCI_HOST_BRIDGE,
++    .instance_size = sizeof(CXLHost),
++    .class_init    = pxb_cxl_host_class_init,
++};
++
+ /*
+  * Registers the PXB bus as a child of pci host root bus.
+  */
+@@ -290,7 +340,7 @@ static void pxb_dev_realize_common(PCIDevice *dev, enum BusType type,
+         dev_name = dev->qdev.id;
+     }
+ 
+-    ds = qdev_new(TYPE_PXB_HOST);
++    ds = qdev_new(type == CXL ? TYPE_PXB_CXL_HOST : TYPE_PXB_HOST);
+     if (type == PCIE) {
+         bus = pci_root_bus_new(ds, dev_name, NULL, NULL, 0, TYPE_PXB_PCIE_BUS);
+     } else if (type == CXL) {
+@@ -487,6 +537,7 @@ static void pxb_register_types(void)
+     type_register_static(&pxb_pcie_bus_info);
+     type_register_static(&pxb_cxl_bus_info);
+     type_register_static(&pxb_host_info);
++    type_register_static(&cxl_host_info);
+     type_register_static(&pxb_dev_info);
+     type_register_static(&pxb_pcie_dev_info);
+     type_register_static(&pxb_cxl_dev_info);
 diff --git a/include/hw/cxl/cxl.h b/include/hw/cxl/cxl.h
-index 554ad93b6b..31af92fd5e 100644
+index 31af92fd5e..75e5bf71e1 100644
 --- a/include/hw/cxl/cxl.h
 +++ b/include/hw/cxl/cxl.h
-@@ -17,4 +17,8 @@
+@@ -17,8 +17,12 @@
  #define CXL_COMPONENT_REG_BAR_IDX 0
  #define CXL_DEVICE_REG_BAR_IDX 2
  
-+typedef struct CXLState {
-+    bool is_enabled;
-+} CXLState;
++#define CXL_WINDOW_MAX 10
 +
+ typedef struct CXLState {
+     bool is_enabled;
++    MemoryRegion host_mr;
++    unsigned int next_mr_idx;
+ } CXLState;
+ 
  #endif
 -- 
 2.32.0
