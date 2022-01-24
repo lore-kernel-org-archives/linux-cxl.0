@@ -2,44 +2,43 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D064C433F5
-	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jan 2022 00:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE689C433F5
+	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jan 2022 00:54:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240668AbiAXAyk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 23 Jan 2022 19:54:40 -0500
-Received: from mga02.intel.com ([134.134.136.20]:61693 "EHLO mga02.intel.com"
+        id S235269AbiAXAyp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 23 Jan 2022 19:54:45 -0500
+Received: from mga11.intel.com ([192.55.52.93]:50352 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235269AbiAXAyk (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Sun, 23 Jan 2022 19:54:40 -0500
+        id S235402AbiAXAyp (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Sun, 23 Jan 2022 19:54:45 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642985680; x=1674521680;
+  t=1642985685; x=1674521685;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=B0NdwC93ssfg88OI+v7HvqVpIZAZ5L44ySP0ZKcYAP4=;
-  b=HhqR0HLTfAB0b/Pcuhm6n5f4q0HRZLxoBIRWYJIF7vIWYUUX4o/YexZI
-   K5lXhewRsBVdhmZkkdMwkRl2/wR55XE8B/JcpziBk8KiHSRP+LFynJE2d
-   fc7c2+hCkwoGs64EsVFPwxfnQym5fEdwifgnBTqLPdUjZ9GQ4ccA84QAt
-   sfejIpDJ7RExEQosLMZPiPimWoPWuRNtxcHmChzrlIohd02OmJxQJOtRV
-   9613FRgLf6TzNgPZtnHwGRzUVhVgEGKHZeC84QzTIayVoTj/9XnxQdl1w
-   ss/XtYa9BjkOQD4rbwhBYqtzGsVORLmlFOyV6O2O6tOiOFr82Nem2723U
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="233294034"
+  bh=Kzl+mNcmg6hRO7PNlyPucEvX/AvTuhDJjAXMnkTJZXo=;
+  b=RM8tx1ozh9/0MJ1Qouix7aILupYKO444zjR5eG0WS9bipyTMko58J1UZ
+   SpfBYJL3/QOQ5ETpj6MPvgZkzdT2zbbVjnRdcWraEvYciyZWxrJ5suDBk
+   XWhgg5hjV7I19OZwDS3AobErWYGPXc4Fiugi7nopWJqVmgaaNcJlbTDXi
+   rgS5NvV/pG/A7aZnN6OoV/lgiJqpdUSsHOLX9dMiraIrCWAyU2zh6/00n
+   A0vLoRf03XcRIxz+UjeL/70NZD0h1Dn+hZ6ufd+0zPr7N9/aljIdrSrym
+   xY0ET7QyBpWcfXRezIZymtM1GzHY576h0TExeepXpHVfQ5XUXZ9rM3pf/
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="243530672"
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="233294034"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:54:40 -0800
+   d="scan'208";a="243530672"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:54:45 -0800
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="580175296"
+   d="scan'208";a="531922020"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:54:39 -0800
-Subject: [ndctl PATCH 32/37] cxl/list: Use 'physical_node' for root port
- attachment detection
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:54:45 -0800
+Subject: [ndctl PATCH 33/37] cxl/list: Reuse the --target option for ports
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     vishal.l.verma@intel.com
-Date:   Sun, 23 Jan 2022 16:54:39 -0800
-Message-ID: <164298567943.3021641.12696733268157328279.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Sun, 23 Jan 2022 16:54:44 -0800
+Message-ID: <164298568481.3021641.4632086646702812643.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <164298550885.3021641.11210386002804544864.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <164298550885.3021641.11210386002804544864.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -50,149 +49,451 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Platform firmware objects like ACPI0016 link from /sys/bus/acpi to
-/sys/bus/pci via a 'physical_node' attribute. Consider that link when
-attempting to link memdevs to root ports.
+It is useful to be able to dump the dport-id to host-device-name. Rather
+than introduce a new option, just interpret --target as "list dports" for
+port objects.
 
-Emit it in the the target listing as the 'alias' for the listed target
-device.
+$ cxl list -BTu -b ACPI.CXL
+{
+  "bus":"root0",
+  "provider":"ACPI.CXL",
+  "nr_dports":1,
+  "dports":[
+    {
+      "dport":"ACPI0016:00",
+      "alias":"pci0000:34",
+      "id":"0"
+    }
+  ]
+}
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- Documentation/cxl/lib/libcxl.txt |    6 ++++++
- cxl/json.c                       |    8 ++++++++
- cxl/lib/libcxl.c                 |   16 +++++++++++++++-
- cxl/lib/libcxl.sym               |    1 +
- cxl/lib/private.h                |    1 +
- cxl/libcxl.h                     |    1 +
- 6 files changed, 32 insertions(+), 1 deletion(-)
+ .clang-format                    |    1 
+ Documentation/cxl/cxl-list.txt   |   18 ++++++
+ Documentation/cxl/lib/libcxl.txt |   27 +++++++++
+ cxl/json.c                       |   56 +++++++++++++++++++-
+ cxl/lib/libcxl.c                 |  109 ++++++++++++++++++++++++++++++++++++++
+ cxl/lib/libcxl.sym               |    7 ++
+ cxl/lib/private.h                |   13 +++++
+ cxl/libcxl.h                     |   12 ++++
+ cxl/list.c                       |    2 -
+ 9 files changed, 240 insertions(+), 5 deletions(-)
 
+diff --git a/.clang-format b/.clang-format
+index 47fb657ff09a..c75348764105 100644
+--- a/.clang-format
++++ b/.clang-format
+@@ -82,6 +82,7 @@ ForEachMacros:
+   - 'cxl_port_foreach'
+   - 'cxl_decoder_foreach'
+   - 'cxl_target_foreach'
++  - 'cxl_dport_foreach'
+   - 'cxl_endpoint_foreach'
+   - 'daxctl_dev_foreach'
+   - 'daxctl_mapping_foreach'
+diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
+index 20ff2cb54fcb..e1299d9fbd84 100644
+--- a/Documentation/cxl/cxl-list.txt
++++ b/Documentation/cxl/cxl-list.txt
+@@ -272,7 +272,23 @@ OPTIONS
+ 
+ -T::
+ --targets::
+-	Extend decoder listings with downstream port target information.
++	Extend decoder listings with downstream port target information, and /
++	or port and bus listings with the downstream port information.
++----
++# cxl list -BTu -b ACPI.CXL
++{
++  "bus":"root0",
++  "provider":"ACPI.CXL",
++  "nr_dports":1,
++  "dports":[
++    {
++      "dport":"ACPI0016:00",
++      "alias":"pci0000:34",
++      "id":"0"
++    }
++  ]
++}
++----
+ 
+ --debug::
+ 	If the cxl tool was built with debug enabled, turn on debug
 diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
-index bd92fef962fa..a68a58b06c5d 100644
+index a68a58b06c5d..2e8570d18a86 100644
 --- a/Documentation/cxl/lib/libcxl.txt
 +++ b/Documentation/cxl/lib/libcxl.txt
-@@ -389,6 +389,7 @@ unsigned long cxl_target_get_id(struct cxl_target *target);
- const char *cxl_target_get_devname(struct cxl_target *target);
- bool cxl_target_maps_memdev(struct cxl_target *target,
-                            struct cxl_memdev *memdev);
-+const char *cxl_target_get_physical_node(struct cxl_target *target);
+@@ -245,6 +245,7 @@ bool cxl_port_is_root(struct cxl_port *port);
+ bool cxl_port_is_switch(struct cxl_port *port);
+ bool cxl_port_is_endpoint(struct cxl_port *port);
+ bool cxl_port_hosts_memdev(struct cxl_port *port, struct cxl_memdev *memdev);
++int cxl_port_get_nr_dports(struct cxl_port *port);
  ----
- The position of a decoder along with the interleave granularity dictate
- which address in the decoder's resource range map to which port.
-@@ -410,6 +411,11 @@ The cxl_target_maps_memdev() helper is the companion of
- cxl_decoder_get_target_by_memdev() to determine which downstream ports /
- targets are capable of mapping which memdevs.
+ The port type is communicated via cxl_port_is_<type>(). An 'enabled' port
+ is one that has succeeded in discovering the CXL component registers in
+@@ -256,6 +257,32 @@ of intervening switch ports, and a terminal endpoint port.
+ cxl_port_hosts_memdev() returns true if the port's host appears in the
+ memdev host's device topology ancestry.
  
-+Some platform firmware implementations define an alias / companion
-+device to represent the root of a PCI device hierarchy. The
-+cxl_target_get_physical_node() helper returns the device name of that
-+companion object in the PCI hierarchy.
++==== DPORTS
++A CXL dport object represents a CXL / PCIe Switch Downstream Port, or a
++CXL / PCIe host bridge.
 +
- include::../../copyright.txt[]
- 
- SEE ALSO
++===== DPORT: Enumeration
++----
++struct cxl_dport *cxl_dport_get_first(struct cxl_port *port);
++struct cxl_dport *cxl_dport_get_next(struct cxl_dport *dport);
++
++#define cxl_dport_foreach(port, dport)                                     \
++       for (dport = cxl_dport_get_first(port); dport != NULL;              \
++            dport = cxl_dport_get_next(dport))
++
++----
++
++===== DPORT: Attributes
++----
++const char *cxl_dport_get_devname(struct cxl_dport *dport);
++const char *cxl_dport_get_physical_node(struct cxl_dport *dport);
++int cxl_dport_get_id(struct cxl_dport *dport);
++----
++The id of a dport is the hardware idenfifier used by an upstream port to
++reference a downstream port. The physical node of a dport is only
++available for platform firmware defined downstream ports and alias the
++companion object, like a PCI host bridge, in the PCI device hierarchy.
++
+ ENDPOINTS
+ ---------
+ CXL endpoint objects encapsulate the set of host-managed device-memory
 diff --git a/cxl/json.c b/cxl/json.c
-index 3a3790955370..d81aed8f7729 100644
+index d81aed8f7729..4fb5eec11077 100644
 --- a/cxl/json.c
 +++ b/cxl/json.c
-@@ -342,6 +342,7 @@ struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
+@@ -241,6 +241,58 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+ 	return jdev;
+ }
  
- 	cxl_target_foreach(decoder, target) {
- 		struct json_object *jtarget = json_object_new_object();
++static struct json_object *util_cxl_dports_to_json(struct json_object *jport,
++						   struct cxl_port *port,
++						   unsigned long flags)
++{
++	struct json_object *jobj, *jdports;
++	struct cxl_dport *dport;
++	int val;
++
++	val = cxl_port_get_nr_dports(port);
++	if (!val || !(flags & UTIL_JSON_TARGETS))
++		return jport;
++
++	jobj = json_object_new_int(val);
++	if (jobj)
++		json_object_object_add(jport, "nr_dports", jobj);
++
++	jdports = json_object_new_array();
++	if (!jdports)
++		return jport;
++
++	cxl_dport_foreach(port, dport) {
++		struct json_object *jdport;
 +		const char *phys_node;
- 
- 		if (!jtarget)
- 			continue;
-@@ -351,6 +352,13 @@ struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
- 		if (jobj)
- 			json_object_object_add(jtarget, "target", jobj);
- 
-+		phys_node = cxl_target_get_physical_node(target);
++
++		jdport = json_object_new_object();
++		if (!jdport)
++			continue;
++
++		jobj = json_object_new_string(cxl_dport_get_devname(dport));
++		if (jobj)
++			json_object_object_add(jdport, "dport", jobj);
++
++		phys_node = cxl_dport_get_physical_node(dport);
 +		if (phys_node) {
 +			jobj = json_object_new_string(phys_node);
 +			if (jobj)
-+				json_object_object_add(jtarget, "alias", jobj);
++				json_object_object_add(jdport, "alias", jobj);
 +		}
 +
- 		val = cxl_target_get_position(target);
- 		jobj = json_object_new_int(val);
- 		if (jobj)
-diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index 877f42c9145e..7bf79492ca88 100644
---- a/cxl/lib/libcxl.c
-+++ b/cxl/lib/libcxl.c
-@@ -72,6 +72,7 @@ static void free_target(struct cxl_target *target, struct list_head *head)
- 	if (head)
- 		list_del_from(head, &target->list);
- 	free(target->dev_path);
-+	free(target->phys_path);
- 	free(target);
- }
- 
-@@ -970,7 +971,11 @@ static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
- 			free(target);
- 			break;
- 		}
--		dbg(ctx, "%s: target%ld %s\n", devname, i, target->dev_path);
-+		sprintf(port->dev_buf, "%s/dport%d/physical_node", port->dev_path, did);
-+		target->phys_path = realpath(port->dev_buf, NULL);
-+		dbg(ctx, "%s: target%ld %s phys_path: %s\n", devname, i,
-+		    target->dev_path,
-+		    target->phys_path ? target->phys_path : "none");
- 		list_add(&decoder->targets, &target->list);
- 	}
- 
-@@ -1138,9 +1143,18 @@ CXL_EXPORT bool cxl_target_maps_memdev(struct cxl_target *target,
- 	dbg(ctx, "memdev: %s target: %s\n", memdev->host_path,
- 	    target->dev_path);
- 
-+	if (target->phys_path)
-+		return !!strstr(memdev->host_path, target->phys_path);
- 	return !!strstr(memdev->host_path, target->dev_path);
- }
- 
-+CXL_EXPORT const char *cxl_target_get_physical_node(struct cxl_target *target)
-+{
-+	if (!target->phys_path)
-+		return NULL;
-+	return devpath_to_devname(target->phys_path);
++		val = cxl_dport_get_id(dport);
++		jobj = util_json_object_hex(val, flags);
++		if (jobj)
++			json_object_object_add(jdport, "id", jobj);
++
++		json_object_array_add(jdports, jdport);
++	}
++
++	json_object_object_add(jport, "dports", jdports);
++
++	return jport;
 +}
 +
- CXL_EXPORT struct cxl_target *
- cxl_decoder_get_target_by_memdev(struct cxl_decoder *decoder,
- 				 struct cxl_memdev *memdev)
+ struct json_object *util_cxl_bus_to_json(struct cxl_bus *bus,
+ 					 unsigned long flags)
+ {
+@@ -259,7 +311,7 @@ struct json_object *util_cxl_bus_to_json(struct cxl_bus *bus,
+ 	if (jobj)
+ 		json_object_object_add(jbus, "provider", jobj);
+ 
+-	return jbus;
++	return util_cxl_dports_to_json(jbus, cxl_bus_get_port(bus), flags);
+ }
+ 
+ struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
+@@ -403,7 +455,7 @@ static struct json_object *__util_cxl_port_to_json(struct cxl_port *port,
+ 			json_object_object_add(jport, "state", jobj);
+ 	}
+ 
+-	return jport;
++	return util_cxl_dports_to_json(jport, port, flags);
+ }
+ 
+ struct json_object *util_cxl_port_to_json(struct cxl_port *port,
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index 7bf79492ca88..d7a3f1084465 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -89,13 +89,24 @@ static void free_decoder(struct cxl_decoder *decoder, struct list_head *head)
+ 	free(decoder);
+ }
+ 
++static void free_dport(struct cxl_dport *dport, struct list_head *head)
++{
++	if (head)
++		list_del_from(head, &dport->list);
++	free(dport->dev_buf);
++	free(dport->dev_path);
++	free(dport->phys_path);
++	free(dport);
++}
++
+ static void free_port(struct cxl_port *port, struct list_head *head);
+ static void free_endpoint(struct cxl_endpoint *endpoint, struct list_head *head);
+ static void __free_port(struct cxl_port *port, struct list_head *head)
+ {
+-	struct cxl_port *child, *_c;
+ 	struct cxl_endpoint *endpoint, *_e;
+ 	struct cxl_decoder *decoder, *_d;
++	struct cxl_dport *dport, *_dp;
++	struct cxl_port *child, *_c;
+ 
+ 	if (head)
+ 		list_del_from(head, &port->list);
+@@ -105,6 +116,8 @@ static void __free_port(struct cxl_port *port, struct list_head *head)
+ 		free_endpoint(endpoint, &port->endpoints);
+ 	list_for_each_safe(&port->decoders, decoder, _d, list)
+ 		free_decoder(decoder, &port->decoders);
++	list_for_each_safe(&port->dports, dport, _dp, list)
++		free_dport(dport , &port->dports);
+ 	kmod_module_unref(port->module);
+ 	free(port->dev_buf);
+ 	free(port->dev_path);
+@@ -701,6 +714,7 @@ static int cxl_port_init(struct cxl_port *port, struct cxl_port *parent_port,
+ 	list_head_init(&port->child_ports);
+ 	list_head_init(&port->endpoints);
+ 	list_head_init(&port->decoders);
++	list_head_init(&port->dports);
+ 
+ 	port->dev_path = strdup(cxlport_base);
+ 	if (!port->dev_path)
+@@ -1332,6 +1346,99 @@ CXL_EXPORT struct cxl_bus *cxl_port_to_bus(struct cxl_port *port)
+ 	return container_of(port, struct cxl_bus, port);
+ }
+ 
++static void *add_cxl_dport(void *parent, int id, const char *cxldport_base)
++{
++	const char *devname = devpath_to_devname(cxldport_base);
++	struct cxl_dport *dport, *dport_dup;
++	struct cxl_port *port = parent;
++	struct cxl_ctx *ctx = cxl_port_get_ctx(port);
++
++	dbg(ctx, "%s: base: \'%s\'\n", devname, cxldport_base);
++
++	dport = calloc(1, sizeof(*dport));
++	if (!dport)
++		return NULL;
++
++	dport->id = id;
++	dport->port = port;
++
++	dport->dev_path = realpath(cxldport_base, NULL);
++	if (!dport->dev_path)
++		goto err;
++
++	dport->dev_buf = calloc(1, strlen(cxldport_base) + 50);
++	if (!dport->dev_buf)
++		goto err;
++	dport->buf_len = strlen(cxldport_base) + 50;
++
++	sprintf(dport->dev_buf, "%s/physical_node", cxldport_base);
++	dport->phys_path = realpath(dport->dev_buf, NULL);
++
++	cxl_dport_foreach(port, dport_dup)
++		if (dport_dup->id == dport->id) {
++			free_dport(dport, NULL);
++			return dport_dup;
++		}
++
++	port->nr_dports++;
++	list_add(&port->dports, &dport->list);
++	return dport;
++
++err:
++	free_dport(dport, NULL);
++	return NULL;
++}
++
++static void cxl_dports_init(struct cxl_port *port)
++{
++	struct cxl_ctx *ctx = cxl_port_get_ctx(port);
++
++	if (port->dports_init)
++		return;
++
++	port->dports_init = 1;
++
++	sysfs_device_parse(ctx, port->dev_path, "dport", port, add_cxl_dport);
++}
++
++CXL_EXPORT int cxl_port_get_nr_dports(struct cxl_port *port)
++{
++	if (!port->dports_init)
++		cxl_dports_init(port);
++	return port->nr_dports;
++}
++
++CXL_EXPORT struct cxl_dport *cxl_dport_get_first(struct cxl_port *port)
++{
++	cxl_dports_init(port);
++
++	return list_top(&port->dports, struct cxl_dport, list);
++}
++
++CXL_EXPORT struct cxl_dport *cxl_dport_get_next(struct cxl_dport *dport)
++{
++	struct cxl_port *port = dport->port;
++
++	return list_next(&port->dports, dport, list);
++}
++
++CXL_EXPORT const char *cxl_dport_get_devname(struct cxl_dport *dport)
++{
++	return devpath_to_devname(dport->dev_path);
++}
++
++CXL_EXPORT const char *cxl_dport_get_physical_node(struct cxl_dport *dport)
++{
++	if (!dport->phys_path)
++		return NULL;
++	return devpath_to_devname(dport->phys_path);
++}
++
++CXL_EXPORT int cxl_dport_get_id(struct cxl_dport *dport)
++{
++	return dport->id;
++}
++
+ static void *add_cxl_bus(void *parent, int id, const char *cxlbus_base)
+ {
+ 	const char *devname = devpath_to_devname(cxlbus_base);
 diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index cb33180c2aa8..ce01298d8b43 100644
+index ce01298d8b43..0190b132d3d6 100644
 --- a/cxl/lib/libcxl.sym
 +++ b/cxl/lib/libcxl.sym
-@@ -141,4 +141,5 @@ global:
- 	cxl_target_get_id;
+@@ -101,6 +101,8 @@ global:
+ 	cxl_port_get_host;
+ 	cxl_port_get_bus;
+ 	cxl_port_hosts_memdev;
++	cxl_port_get_nr_dports;
++	cxl_port_get_next_all;
+ 	cxl_endpoint_get_first;
+ 	cxl_endpoint_get_next;
+ 	cxl_endpoint_get_devname;
+@@ -142,4 +144,9 @@ global:
  	cxl_target_get_devname;
  	cxl_target_maps_memdev;
-+	cxl_target_get_physical_node;
+ 	cxl_target_get_physical_node;
++	cxl_dport_get_first;
++	cxl_dport_get_next;
++	cxl_dport_get_devname;
++	cxl_dport_get_physical_node;
++	cxl_dport_get_id;
  } LIBCXL_1;
 diff --git a/cxl/lib/private.h b/cxl/lib/private.h
-index 1743a244877a..7e7742d523f3 100644
+index 7e7742d523f3..f483c308a8b5 100644
 --- a/cxl/lib/private.h
 +++ b/cxl/lib/private.h
-@@ -77,6 +77,7 @@ struct cxl_target {
- 	struct list_node list;
- 	struct cxl_decoder *decoder;
- 	char *dev_path;
-+	char *phys_path;
- 	int id, position;
+@@ -38,6 +38,16 @@ struct cxl_memdev {
+ 	struct cxl_endpoint *endpoint;
  };
  
++struct cxl_dport {
++	int id;
++	void *dev_buf;
++	size_t buf_len;
++	char *dev_path;
++	char *phys_path;
++	struct cxl_port *port;
++	struct list_node list;
++};
++
+ enum cxl_port_type {
+ 	CXL_PORT_ROOT,
+ 	CXL_PORT_SWITCH,
+@@ -53,6 +63,8 @@ struct cxl_port {
+ 	int ports_init;
+ 	int endpoints_init;
+ 	int decoders_init;
++	int dports_init;
++	int nr_dports;
+ 	struct cxl_ctx *ctx;
+ 	struct cxl_bus *bus;
+ 	enum cxl_port_type type;
+@@ -62,6 +74,7 @@ struct cxl_port {
+ 	struct list_head child_ports;
+ 	struct list_head endpoints;
+ 	struct list_head decoders;
++	struct list_head dports;
+ };
+ 
+ struct cxl_bus {
 diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index abda0e51644c..0e484cc79f28 100644
+index 0e484cc79f28..07f4a311d29d 100644
 --- a/cxl/libcxl.h
 +++ b/cxl/libcxl.h
-@@ -140,6 +140,7 @@ unsigned long cxl_target_get_id(struct cxl_target *target);
- const char *cxl_target_get_devname(struct cxl_target *target);
- bool cxl_target_maps_memdev(struct cxl_target *target,
- 			    struct cxl_memdev *memdev);
-+const char *cxl_target_get_physical_node(struct cxl_target *target);
+@@ -93,11 +93,23 @@ bool cxl_port_is_endpoint(struct cxl_port *port);
+ struct cxl_bus *cxl_port_get_bus(struct cxl_port *port);
+ const char *cxl_port_get_host(struct cxl_port *port);
+ bool cxl_port_hosts_memdev(struct cxl_port *port, struct cxl_memdev *memdev);
++int cxl_port_get_nr_dports(struct cxl_port *port);
  
- #define cxl_target_foreach(decoder, target)                                    \
- 	for (target = cxl_target_get_first(decoder); target != NULL;           \
+ #define cxl_port_foreach(parent, port)                                         \
+ 	for (port = cxl_port_get_first(parent); port != NULL;                  \
+ 	     port = cxl_port_get_next(port))
+ 
++struct cxl_dport;
++struct cxl_dport *cxl_dport_get_first(struct cxl_port *port);
++struct cxl_dport *cxl_dport_get_next(struct cxl_dport *dport);
++const char *cxl_dport_get_devname(struct cxl_dport *dport);
++const char *cxl_dport_get_physical_node(struct cxl_dport *dport);
++int cxl_dport_get_id(struct cxl_dport *dport);
++
++#define cxl_dport_foreach(port, dport)                                         \
++	for (dport = cxl_dport_get_first(port); dport != NULL;                 \
++	     dport = cxl_dport_get_next(dport))
++
+ struct cxl_decoder;
+ struct cxl_decoder *cxl_decoder_get_first(struct cxl_port *port);
+ struct cxl_decoder *cxl_decoder_get_next(struct cxl_decoder *decoder);
+diff --git a/cxl/list.c b/cxl/list.c
+index 27c963a93aaa..de96ff91fb5d 100644
+--- a/cxl/list.c
++++ b/cxl/list.c
+@@ -42,7 +42,7 @@ static const struct option options[] = {
+ 	OPT_BOOLEAN('D', "decoders", &param.decoders,
+ 		    "include CXL decoder info"),
+ 	OPT_BOOLEAN('T', "targets", &param.targets,
+-		    "include CXL target data with decoders"),
++		    "include CXL target data with decoders or ports"),
+ 	OPT_BOOLEAN('i', "idle", &param.idle, "include disabled devices"),
+ 	OPT_BOOLEAN('u', "human", &param.human,
+ 		    "use human friendly number formats "),
 
