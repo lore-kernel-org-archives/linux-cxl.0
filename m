@@ -2,44 +2,44 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 767A5C433FE
-	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jan 2022 00:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D064C433F5
+	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jan 2022 00:54:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235260AbiAXAyf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 23 Jan 2022 19:54:35 -0500
-Received: from mga06.intel.com ([134.134.136.31]:17172 "EHLO mga06.intel.com"
+        id S240668AbiAXAyk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 23 Jan 2022 19:54:40 -0500
+Received: from mga02.intel.com ([134.134.136.20]:61693 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240679AbiAXAye (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Sun, 23 Jan 2022 19:54:34 -0500
+        id S235269AbiAXAyk (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Sun, 23 Jan 2022 19:54:40 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642985674; x=1674521674;
+  t=1642985680; x=1674521680;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=QedveqbESZDCj0Mnw+nUuV7aW0a4MMNTtdVaLUocSIc=;
-  b=QSjI9Teojzi8KfJLaX5dWiEwWOm31MVO07SPacfxvY2I8GDj0jGDZ53X
-   bnXCMKh0b3EbSSv9XK7MLO/4aGqLHTURbsiM+6DegO4TfRhDDAqMwn4bI
-   FwbH7yXokSUgRpRFK4n+k0ZHQjhBAiBdkoM7D08sPCL/b6yZ3BrDRr6/T
-   eKaZDm9C1Cv702iOuqrBHbr8h44G8ayq9cY6ukG4aiCqTA40F2IdhgoSR
-   KgbhQEM+VyzkosINOAlAyXsoelaO6xEg67VOWP8eIOsM0rkw1MnI8/8Lh
-   tqEh+0CQF68shobgD/e8DuggxiJUxGOg4q7DOOX41RhgSSALG6czkhCGW
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="306652202"
+  bh=B0NdwC93ssfg88OI+v7HvqVpIZAZ5L44ySP0ZKcYAP4=;
+  b=HhqR0HLTfAB0b/Pcuhm6n5f4q0HRZLxoBIRWYJIF7vIWYUUX4o/YexZI
+   K5lXhewRsBVdhmZkkdMwkRl2/wR55XE8B/JcpziBk8KiHSRP+LFynJE2d
+   fc7c2+hCkwoGs64EsVFPwxfnQym5fEdwifgnBTqLPdUjZ9GQ4ccA84QAt
+   sfejIpDJ7RExEQosLMZPiPimWoPWuRNtxcHmChzrlIohd02OmJxQJOtRV
+   9613FRgLf6TzNgPZtnHwGRzUVhVgEGKHZeC84QzTIayVoTj/9XnxQdl1w
+   ss/XtYa9BjkOQD4rbwhBYqtzGsVORLmlFOyV6O2O6tOiOFr82Nem2723U
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="233294034"
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="306652202"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:54:34 -0800
+   d="scan'208";a="233294034"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:54:40 -0800
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="627309455"
+   d="scan'208";a="580175296"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:54:34 -0800
-Subject: [ndctl PATCH 31/37] cxl/list: Extend decoder objects with target
- information
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:54:39 -0800
+Subject: [ndctl PATCH 32/37] cxl/list: Use 'physical_node' for root port
+ attachment detection
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     vishal.l.verma@intel.com
-Date:   Sun, 23 Jan 2022 16:54:34 -0800
-Message-ID: <164298567435.3021641.3771899644901785666.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Sun, 23 Jan 2022 16:54:39 -0800
+Message-ID: <164298567943.3021641.12696733268157328279.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <164298550885.3021641.11210386002804544864.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <164298550885.3021641.11210386002804544864.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -50,530 +50,149 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-A target combines information about a dport along with its position in the
-intereleave order. With targets enumerated decoders can also be filtered be
-memory devices by seeing which decoders have a dport in the memory-device's
-ancestry.
+Platform firmware objects like ACPI0016 link from /sys/bus/acpi to
+/sys/bus/pci via a 'physical_node' attribute. Consider that link when
+attempting to link memdevs to root ports.
 
-$ cxl list -D -d 3.1 -T -u
-{
-  "decoder":"decoder3.1",
-  "resource":"0x8030000000",
-  "size":"512.00 MiB (536.87 MB)",
-  "volatile_capable":true,
-  "nr_targets":2,
-  "targets":[
-    {
-      "target":"cxl_host_bridge.1",
-      "position":1,
-      "id":"0x1"
-    },
-    {
-      "target":"cxl_host_bridge.0",
-      "position":0,
-      "id":"0"
-    }
-  ]
-}
+Emit it in the the target listing as the 'alias' for the listed target
+device.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- .clang-format                    |    1 
- Documentation/cxl/cxl-list.txt   |    8 ++-
- Documentation/cxl/lib/libcxl.txt |   58 +++++++++++++++++++
- cxl/filter.c                     |   25 ++++++++
- cxl/filter.h                     |    1 
- cxl/json.c                       |   46 +++++++++++++++
- cxl/lib/libcxl.c                 |  115 ++++++++++++++++++++++++++++++++++++++
- cxl/lib/libcxl.sym               |   10 +++
- cxl/libcxl.h                     |   19 ++++++
- cxl/list.c                       |    2 +
- 10 files changed, 283 insertions(+), 2 deletions(-)
+ Documentation/cxl/lib/libcxl.txt |    6 ++++++
+ cxl/json.c                       |    8 ++++++++
+ cxl/lib/libcxl.c                 |   16 +++++++++++++++-
+ cxl/lib/libcxl.sym               |    1 +
+ cxl/lib/private.h                |    1 +
+ cxl/libcxl.h                     |    1 +
+ 6 files changed, 32 insertions(+), 1 deletion(-)
 
-diff --git a/.clang-format b/.clang-format
-index 16e28ac86959..47fb657ff09a 100644
---- a/.clang-format
-+++ b/.clang-format
-@@ -81,6 +81,7 @@ ForEachMacros:
-   - 'cxl_bus_foreach'
-   - 'cxl_port_foreach'
-   - 'cxl_decoder_foreach'
-+  - 'cxl_target_foreach'
-   - 'cxl_endpoint_foreach'
-   - 'daxctl_dev_foreach'
-   - 'daxctl_mapping_foreach'
-diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
-index 84872b912975..20ff2cb54fcb 100644
---- a/Documentation/cxl/cxl-list.txt
-+++ b/Documentation/cxl/cxl-list.txt
-@@ -44,8 +44,8 @@ would only list objects that are beneath port10 AND map mem0, mem1, OR
- mem2.
- 
- Given that many topology queries seek to answer questions relative to a
--given memdev, buses, ports, and endpoints can be filtered by one or more
--memdevs. For example:
-+given memdev, buses, ports, endpoints, and decoders can be filtered by
-+one or more memdevs. For example:
- ----
- # cxl list -P -p switch,endpoint -m mem0
- [
-@@ -270,6 +270,10 @@ OPTIONS
- 	"decoder<port_id>.<instance_id>". The possible decoder type names are
- 	"root", "switch", or "endpoint", similar to the port filter syntax.
- 
-+-T::
-+--targets::
-+	Extend decoder listings with downstream port target information.
-+
- --debug::
- 	If the cxl tool was built with debug enabled, turn on debug
- 	messages.
 diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
-index 73af3d03b108..bd92fef962fa 100644
+index bd92fef962fa..a68a58b06c5d 100644
 --- a/Documentation/cxl/lib/libcxl.txt
 +++ b/Documentation/cxl/lib/libcxl.txt
-@@ -300,6 +300,7 @@ device-local-physical-address).
- struct cxl_decoder *cxl_decoder_get_first(struct cxl_port *port);
- struct cxl_decoder *cxl_decoder_get_next(struct cxl_decoder *decoder);
- struct cxl_ctx *cxl_decoder_get_ctx(struct cxl_decoder *decoder);
-+struct cxl_decoder *cxl_target_get_decoder(struct cxl_target *target);
+@@ -389,6 +389,7 @@ unsigned long cxl_target_get_id(struct cxl_target *target);
+ const char *cxl_target_get_devname(struct cxl_target *target);
+ bool cxl_target_maps_memdev(struct cxl_target *target,
+                            struct cxl_memdev *memdev);
++const char *cxl_target_get_physical_node(struct cxl_target *target);
+ ----
+ The position of a decoder along with the interleave granularity dictate
+ which address in the decoder's resource range map to which port.
+@@ -410,6 +411,11 @@ The cxl_target_maps_memdev() helper is the companion of
+ cxl_decoder_get_target_by_memdev() to determine which downstream ports /
+ targets are capable of mapping which memdevs.
  
- #define cxl_decoder_foreach(port, decoder)                                  \
-        for (decoder = cxl_decoder_get_first(port); decoder != NULL;         \
-@@ -314,6 +315,7 @@ unsigned long long cxl_decoder_get_resource(struct cxl_decoder *decoder);
- unsigned long long cxl_decoder_get_size(struct cxl_decoder *decoder);
- const char *cxl_decoder_get_devname(struct cxl_decoder *decoder);
- int cxl_decoder_get_id(struct cxl_decoder *decoder);
-+int cxl_decoder_get_nr_targets(struct cxl_decoder *decoder);
- 
- enum cxl_decoder_target_type {
-        CXL_DECODER_TTYPE_UNKNOWN,
-@@ -352,6 +354,62 @@ Platform firmware may setup the CXL decode hierarchy before the OS
- boots, and may additionally require that the OS not change the decode
- settings. This property is indicated by the cxl_decoder_is_locked() API.
- 
-+==== TARGETS
-+A root or switch level decoder takes an SPA (system-physical-address) as
-+input and routes it to a downstream port. Which downstream port depends
-+on the downstream port's position in the interleave. A 'struct
-+cxl_target' object represents the properties of a given downstream port
-+relative to its interleave configuration.
-+
-+===== TARGET: Enumeration
-+----
-+struct cxl_target *cxl_decoder_get_target_by_memdev(struct cxl_decoder *decoder,
-+                                                   struct cxl_memdev *memdev);
-+struct cxl_target *
-+cxl_decoder_get_target_by_position(struct cxl_decoder *decoder, int position);
-+struct cxl_target *cxl_target_get_first(struct cxl_decoder *decoder);
-+struct cxl_target *cxl_target_get_next(struct cxl_target *target);
-+
-+#define cxl_target_foreach(decoder, target)                                   \
-+       for (target = cxl_target_get_first(decoder); target != NULL;           \
-+            target = cxl_target_get_next(target))
-+----
-+Target objects can only be enumerated if the decoder has been
-+configured, for switch decoders. For root decoders they are always
-+available since the root decoder target mapping is static. The
-+cxl_decoder_get_target_by_memdev() helper walks the topology to validate
-+if the given memory device is capable of receiving cycles from this
-+upstream decoder. It does not validate if the memory device is currently
-+configured to participate in that decode.
-+
-+===== TARGET: Attributes
-+----
-+int cxl_target_get_position(struct cxl_target *target);
-+unsigned long cxl_target_get_id(struct cxl_target *target);
-+const char *cxl_target_get_devname(struct cxl_target *target);
-+bool cxl_target_maps_memdev(struct cxl_target *target,
-+                           struct cxl_memdev *memdev);
-+----
-+The position of a decoder along with the interleave granularity dictate
-+which address in the decoder's resource range map to which port.
-+
-+The target id is an identifier that the CXL port uses to reference this
-+downstream port. For CXL / PCIe downstream switch ports the id is
-+defined by the PCIe Link Capability Port Number field. For root decoders
-+the id is specified by platform firmware specific mechanism. For
-+ACPI.CXL defined root ports the id comes from the CEDT.CHBS / ACPI0016
-+_UID.
-+
-+The device name of a target is the name of the host device for the
-+downstream port. For CXL / PCIe downstream ports the devname is
-+downstream switch port PCI device. For CXL root ports the devname is a
-+platform firmware object for the host bridge like a ACPI0016 device
-+instance.
-+
-+The cxl_target_maps_memdev() helper is the companion of
-+cxl_decoder_get_target_by_memdev() to determine which downstream ports /
-+targets are capable of mapping which memdevs.
++Some platform firmware implementations define an alias / companion
++device to represent the root of a PCI device hierarchy. The
++cxl_target_get_physical_node() helper returns the device name of that
++companion object in the PCI hierarchy.
 +
  include::../../copyright.txt[]
  
  SEE ALSO
-diff --git a/cxl/filter.c b/cxl/filter.c
-index dc052f63d0c5..05ede9116559 100644
---- a/cxl/filter.c
-+++ b/cxl/filter.c
-@@ -421,6 +421,26 @@ static struct cxl_decoder *util_cxl_decoder_filter(struct cxl_decoder *decoder,
- 	return NULL;
- }
- 
-+static struct cxl_decoder *
-+util_cxl_decoder_filter_by_memdev(struct cxl_decoder *decoder,
-+				  const char *ident, const char *serial)
-+{
-+	struct cxl_ctx *ctx = cxl_decoder_get_ctx(decoder);
-+	struct cxl_memdev *memdev;
-+
-+	if (!ident && !serial)
-+		return decoder;
-+
-+	cxl_memdev_foreach(ctx, memdev) {
-+		if (!util_cxl_memdev_filter(memdev, ident, serial))
-+			continue;
-+		if (cxl_decoder_get_target_by_memdev(decoder, memdev))
-+			return decoder;
-+	}
-+
-+	return NULL;
-+}
-+
- static unsigned long params_to_flags(struct cxl_filter_params *param)
- {
- 	unsigned long flags = 0;
-@@ -431,6 +451,8 @@ static unsigned long params_to_flags(struct cxl_filter_params *param)
- 		flags |= UTIL_JSON_HUMAN;
- 	if (param->health)
- 		flags |= UTIL_JSON_HEALTH;
-+	if (param->targets)
-+		flags |= UTIL_JSON_TARGETS;
- 	return flags;
- }
- 
-@@ -521,6 +543,9 @@ static void walk_decoders(struct cxl_port *port, struct cxl_filter_params *p,
- 		if (!util_cxl_decoder_filter_by_port(decoder, p->port_filter,
- 						     pf_mode(p)))
- 			continue;
-+		if (!util_cxl_decoder_filter_by_memdev(
-+			    decoder, p->memdev_filter, p->serial_filter))
-+			continue;
- 		if (!p->idle && cxl_decoder_get_size(decoder) == 0)
- 			continue;
- 		jdecoder = util_cxl_decoder_to_json(decoder, flags);
-diff --git a/cxl/filter.h b/cxl/filter.h
-index 5d7bf45f3301..6fd469f02ea2 100644
---- a/cxl/filter.h
-+++ b/cxl/filter.h
-@@ -16,6 +16,7 @@ struct cxl_filter_params {
- 	bool single;
- 	bool endpoints;
- 	bool decoders;
-+	bool targets;
- 	bool memdevs;
- 	bool ports;
- 	bool buses;
 diff --git a/cxl/json.c b/cxl/json.c
-index 548bc52f2d16..3a3790955370 100644
+index 3a3790955370..d81aed8f7729 100644
 --- a/cxl/json.c
 +++ b/cxl/json.c
-@@ -268,6 +268,8 @@ struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
- 	const char *devname = cxl_decoder_get_devname(decoder);
- 	struct cxl_port *port = cxl_decoder_get_port(decoder);
- 	struct json_object *jdecoder, *jobj;
-+	struct json_object *jtargets;
-+	struct cxl_target *target;
- 	u64 val;
+@@ -342,6 +342,7 @@ struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
  
- 	jdecoder = json_object_new_object();
-@@ -321,7 +323,51 @@ struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
- 					       jobj);
- 	}
+ 	cxl_target_foreach(decoder, target) {
+ 		struct json_object *jtarget = json_object_new_object();
++		const char *phys_node;
  
-+	/* Endpoints don't have targets, they *are* targets */
-+	if (cxl_port_is_endpoint(port))
-+		return jdecoder;
-+
-+	val = cxl_decoder_get_nr_targets(decoder);
-+	jobj = json_object_new_int(val);
-+	if (jobj)
-+		json_object_object_add(jdecoder, "nr_targets", jobj);
-+
-+	if (!(flags & UTIL_JSON_TARGETS) ||
-+	    !cxl_decoder_get_nr_targets(decoder))
-+		return jdecoder;
-+
-+	jtargets = json_object_new_array();
-+	if (!jtargets)
-+		return jdecoder;
-+
-+	cxl_target_foreach(decoder, target) {
-+		struct json_object *jtarget = json_object_new_object();
-+
-+		if (!jtarget)
-+			continue;
-+
-+		devname = cxl_target_get_devname(target);
-+		jobj = json_object_new_string(devname);
-+		if (jobj)
-+			json_object_object_add(jtarget, "target", jobj);
-+
-+		val = cxl_target_get_position(target);
-+		jobj = json_object_new_int(val);
-+		if (jobj)
-+			json_object_object_add(jtarget, "position", jobj);
-+
-+		val = cxl_target_get_id(target);
-+		jobj = util_json_object_hex(val, flags);
-+		if (jobj)
-+			json_object_object_add(jtarget, "id", jobj);
-+
-+		json_object_array_add(jtargets, jtarget);
-+	}
-+
-+	json_object_object_add(jdecoder, "targets", jtargets);
-+
- 	return jdecoder;
-+
- }
+ 		if (!jtarget)
+ 			continue;
+@@ -351,6 +352,13 @@ struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
+ 		if (jobj)
+ 			json_object_object_add(jtarget, "target", jobj);
  
- static struct json_object *__util_cxl_port_to_json(struct cxl_port *port,
++		phys_node = cxl_target_get_physical_node(target);
++		if (phys_node) {
++			jobj = json_object_new_string(phys_node);
++			if (jobj)
++				json_object_object_add(jtarget, "alias", jobj);
++		}
++
+ 		val = cxl_target_get_position(target);
+ 		jobj = json_object_new_int(val);
+ 		if (jobj)
 diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index 5e3092364e4a..877f42c9145e 100644
+index 877f42c9145e..7bf79492ca88 100644
 --- a/cxl/lib/libcxl.c
 +++ b/cxl/lib/libcxl.c
-@@ -67,10 +67,22 @@ static void free_memdev(struct cxl_memdev *memdev, struct list_head *head)
- 	free(memdev);
- }
- 
-+static void free_target(struct cxl_target *target, struct list_head *head)
-+{
-+	if (head)
-+		list_del_from(head, &target->list);
-+	free(target->dev_path);
-+	free(target);
-+}
-+
- static void free_decoder(struct cxl_decoder *decoder, struct list_head *head)
- {
-+	struct cxl_target *target, *_t;
-+
+@@ -72,6 +72,7 @@ static void free_target(struct cxl_target *target, struct list_head *head)
  	if (head)
- 		list_del_from(head, &decoder->list);
-+	list_for_each_safe(&decoder->targets, target, _t, list)
-+		free_target(target, &decoder->targets);
- 	free(decoder->dev_buf);
- 	free(decoder->dev_path);
- 	free(decoder);
-@@ -856,6 +868,7 @@ static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
- 	struct cxl_port *port = parent;
- 	struct cxl_ctx *ctx = cxl_port_get_ctx(port);
- 	char buf[SYSFS_ATTR_SIZE];
-+	char *target_id, *save;
- 	size_t i;
- 
- 	dbg(ctx, "%s: base: \'%s\'\n", devname, cxldecoder_base);
-@@ -870,6 +883,7 @@ static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
- 	decoder->id = id;
- 	decoder->ctx = ctx;
- 	decoder->port = port;
-+	list_head_init(&decoder->targets);
- 
- 	decoder->dev_path = strdup(cxldecoder_base);
- 	if (!decoder->dev_path)
-@@ -935,6 +949,36 @@ static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
- 	}
- 	}
- 
-+	sprintf(path, "%s/target_list", cxldecoder_base);
-+	if (sysfs_read_attr(ctx, path, buf) < 0)
-+		buf[0] = '\0';
-+
-+	for (i = 0, target_id = strtok_r(buf, ",", &save); target_id;
-+	     target_id = strtok_r(NULL, ",", &save), i++) {
-+		int did = strtoul(target_id, NULL, 0);
-+		struct cxl_target *target = calloc(1, sizeof(*target));
-+
-+		if (!target)
-+			break;
-+
-+		target->id = did;
-+		target->position = i;
-+		target->decoder = decoder;
-+		sprintf(port->dev_buf, "%s/dport%d", port->dev_path, did);
-+		target->dev_path = realpath(port->dev_buf, NULL);
-+		if (!target->dev_path) {
-+			free(target);
-+			break;
-+		}
-+		dbg(ctx, "%s: target%ld %s\n", devname, i, target->dev_path);
-+		list_add(&decoder->targets, &target->list);
-+	}
-+
-+	if (target_id)
-+		err(ctx, "%s: failed to parse target%ld\n",
-+		    devpath_to_devname(cxldecoder_base), i);
-+	decoder->nr_targets = i;
-+
- 	cxl_decoder_foreach(port, decoder_dup)
- 		if (decoder_dup->id == decoder->id) {
- 			free_decoder(decoder, NULL);
-@@ -1044,11 +1088,82 @@ CXL_EXPORT bool cxl_decoder_is_locked(struct cxl_decoder *decoder)
- 	return decoder->locked;
+ 		list_del_from(head, &target->list);
+ 	free(target->dev_path);
++	free(target->phys_path);
+ 	free(target);
  }
  
-+CXL_EXPORT int cxl_decoder_get_nr_targets(struct cxl_decoder *decoder)
-+{
-+	return decoder->nr_targets;
-+}
-+
- CXL_EXPORT const char *cxl_decoder_get_devname(struct cxl_decoder *decoder)
- {
- 	return devpath_to_devname(decoder->dev_path);
+@@ -970,7 +971,11 @@ static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
+ 			free(target);
+ 			break;
+ 		}
+-		dbg(ctx, "%s: target%ld %s\n", devname, i, target->dev_path);
++		sprintf(port->dev_buf, "%s/dport%d/physical_node", port->dev_path, did);
++		target->phys_path = realpath(port->dev_buf, NULL);
++		dbg(ctx, "%s: target%ld %s phys_path: %s\n", devname, i,
++		    target->dev_path,
++		    target->phys_path ? target->phys_path : "none");
+ 		list_add(&decoder->targets, &target->list);
+ 	}
+ 
+@@ -1138,9 +1143,18 @@ CXL_EXPORT bool cxl_target_maps_memdev(struct cxl_target *target,
+ 	dbg(ctx, "memdev: %s target: %s\n", memdev->host_path,
+ 	    target->dev_path);
+ 
++	if (target->phys_path)
++		return !!strstr(memdev->host_path, target->phys_path);
+ 	return !!strstr(memdev->host_path, target->dev_path);
  }
  
-+CXL_EXPORT struct cxl_target *cxl_target_get_first(struct cxl_decoder *decoder)
++CXL_EXPORT const char *cxl_target_get_physical_node(struct cxl_target *target)
 +{
-+	return list_top(&decoder->targets, struct cxl_target, list);
++	if (!target->phys_path)
++		return NULL;
++	return devpath_to_devname(target->phys_path);
 +}
 +
-+CXL_EXPORT struct cxl_decoder *cxl_target_get_decoder(struct cxl_target *target)
-+{
-+	return target->decoder;
-+}
-+
-+CXL_EXPORT struct cxl_target *cxl_target_get_next(struct cxl_target *target)
-+{
-+	struct cxl_decoder *decoder = cxl_target_get_decoder(target);
-+
-+	return list_next(&decoder->targets, target, list);
-+}
-+
-+CXL_EXPORT const char *cxl_target_get_devname(struct cxl_target *target)
-+{
-+	return devpath_to_devname(target->dev_path);
-+}
-+
-+CXL_EXPORT unsigned long cxl_target_get_id(struct cxl_target *target)
-+{
-+	return target->id;
-+}
-+
-+CXL_EXPORT int cxl_target_get_position(struct cxl_target *target)
-+{
-+	return target->position;
-+}
-+
-+CXL_EXPORT bool cxl_target_maps_memdev(struct cxl_target *target,
-+					struct cxl_memdev *memdev)
-+{
-+	struct cxl_ctx *ctx = cxl_memdev_get_ctx(memdev);
-+
-+	dbg(ctx, "memdev: %s target: %s\n", memdev->host_path,
-+	    target->dev_path);
-+
-+	return !!strstr(memdev->host_path, target->dev_path);
-+}
-+
-+CXL_EXPORT struct cxl_target *
-+cxl_decoder_get_target_by_memdev(struct cxl_decoder *decoder,
-+				 struct cxl_memdev *memdev)
-+{
-+	struct cxl_target *target;
-+
-+	cxl_target_foreach(decoder, target)
-+		if (cxl_target_maps_memdev(target, memdev))
-+			return target;
-+	return NULL;
-+}
-+
-+CXL_EXPORT struct cxl_target *
-+cxl_decoder_get_target_by_position(struct cxl_decoder *decoder, int position)
-+{
-+	struct cxl_target *target;
-+
-+	cxl_target_foreach(decoder, target)
-+		if (target->position == position)
-+			return target;
-+	return NULL;
-+}
-+
- static void *add_cxl_port(void *parent, int id, const char *cxlport_base)
- {
- 	const char *devname = devpath_to_devname(cxlport_base);
+ CXL_EXPORT struct cxl_target *
+ cxl_decoder_get_target_by_memdev(struct cxl_decoder *decoder,
+ 				 struct cxl_memdev *memdev)
 diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index 22babb760f23..cb33180c2aa8 100644
+index cb33180c2aa8..ce01298d8b43 100644
 --- a/cxl/lib/libcxl.sym
 +++ b/cxl/lib/libcxl.sym
-@@ -125,10 +125,20 @@ global:
- 	cxl_decoder_get_resource;
- 	cxl_decoder_get_size;
- 	cxl_decoder_get_devname;
-+	cxl_decoder_get_target_by_memdev;
-+	cxl_decoder_get_target_by_position;
-+	cxl_decoder_get_nr_targets;
- 	cxl_decoder_get_target_type;
- 	cxl_decoder_is_pmem_capable;
- 	cxl_decoder_is_volatile_capable;
- 	cxl_decoder_is_mem_capable;
- 	cxl_decoder_is_accelmem_capable;
- 	cxl_decoder_is_locked;
-+	cxl_target_get_first;
-+	cxl_target_get_next;
-+	cxl_target_get_decoder;
-+	cxl_target_get_position;
-+	cxl_target_get_id;
-+	cxl_target_get_devname;
-+	cxl_target_maps_memdev;
+@@ -141,4 +141,5 @@ global:
+ 	cxl_target_get_id;
+ 	cxl_target_get_devname;
+ 	cxl_target_maps_memdev;
++	cxl_target_get_physical_node;
  } LIBCXL_1;
+diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+index 1743a244877a..7e7742d523f3 100644
+--- a/cxl/lib/private.h
++++ b/cxl/lib/private.h
+@@ -77,6 +77,7 @@ struct cxl_target {
+ 	struct list_node list;
+ 	struct cxl_decoder *decoder;
+ 	char *dev_path;
++	char *phys_path;
+ 	int id, position;
+ };
+ 
 diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index 439ed9305397..abda0e51644c 100644
+index abda0e51644c..0e484cc79f28 100644
 --- a/cxl/libcxl.h
 +++ b/cxl/libcxl.h
-@@ -104,6 +104,11 @@ struct cxl_decoder *cxl_decoder_get_next(struct cxl_decoder *decoder);
- unsigned long long cxl_decoder_get_resource(struct cxl_decoder *decoder);
- unsigned long long cxl_decoder_get_size(struct cxl_decoder *decoder);
- const char *cxl_decoder_get_devname(struct cxl_decoder *decoder);
-+struct cxl_target *cxl_decoder_get_target_by_memdev(struct cxl_decoder *decoder,
-+						    struct cxl_memdev *memdev);
-+struct cxl_target *
-+cxl_decoder_get_target_by_position(struct cxl_decoder *decoder, int position);
-+int cxl_decoder_get_nr_targets(struct cxl_decoder *decoder);
- struct cxl_ctx *cxl_decoder_get_ctx(struct cxl_decoder *decoder);
- int cxl_decoder_get_id(struct cxl_decoder *decoder);
- struct cxl_port *cxl_decoder_get_port(struct cxl_decoder *decoder);
-@@ -126,6 +131,20 @@ bool cxl_decoder_is_locked(struct cxl_decoder *decoder);
- 	for (decoder = cxl_decoder_get_first(port); decoder != NULL;           \
- 	     decoder = cxl_decoder_get_next(decoder))
+@@ -140,6 +140,7 @@ unsigned long cxl_target_get_id(struct cxl_target *target);
+ const char *cxl_target_get_devname(struct cxl_target *target);
+ bool cxl_target_maps_memdev(struct cxl_target *target,
+ 			    struct cxl_memdev *memdev);
++const char *cxl_target_get_physical_node(struct cxl_target *target);
  
-+struct cxl_target;
-+struct cxl_target *cxl_target_get_first(struct cxl_decoder *decoder);
-+struct cxl_target *cxl_target_get_next(struct cxl_target *target);
-+struct cxl_decoder *cxl_target_get_decoder(struct cxl_target *target);
-+int cxl_target_get_position(struct cxl_target *target);
-+unsigned long cxl_target_get_id(struct cxl_target *target);
-+const char *cxl_target_get_devname(struct cxl_target *target);
-+bool cxl_target_maps_memdev(struct cxl_target *target,
-+			    struct cxl_memdev *memdev);
-+
-+#define cxl_target_foreach(decoder, target)                                    \
-+	for (target = cxl_target_get_first(decoder); target != NULL;           \
-+	     target = cxl_target_get_next(target))
-+
- struct cxl_endpoint;
- struct cxl_endpoint *cxl_endpoint_get_first(struct cxl_port *parent);
- struct cxl_endpoint *cxl_endpoint_get_next(struct cxl_endpoint *endpoint);
-diff --git a/cxl/list.c b/cxl/list.c
-index d70192a8cecf..27c963a93aaa 100644
---- a/cxl/list.c
-+++ b/cxl/list.c
-@@ -41,6 +41,8 @@ static const struct option options[] = {
- 		   "filter by CXL decoder device name(s) / class"),
- 	OPT_BOOLEAN('D', "decoders", &param.decoders,
- 		    "include CXL decoder info"),
-+	OPT_BOOLEAN('T', "targets", &param.targets,
-+		    "include CXL target data with decoders"),
- 	OPT_BOOLEAN('i', "idle", &param.idle, "include disabled devices"),
- 	OPT_BOOLEAN('u', "human", &param.human,
- 		    "use human friendly number formats "),
+ #define cxl_target_foreach(decoder, target)                                    \
+ 	for (target = cxl_target_get_first(decoder); target != NULL;           \
 
