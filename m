@@ -2,43 +2,44 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2E9C433EF
-	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jan 2022 00:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD22C433F5
+	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jan 2022 00:52:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240646AbiAXAwQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 23 Jan 2022 19:52:16 -0500
-Received: from mga06.intel.com ([134.134.136.31]:17039 "EHLO mga06.intel.com"
+        id S240649AbiAXAwV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 23 Jan 2022 19:52:21 -0500
+Received: from mga05.intel.com ([192.55.52.43]:8699 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240634AbiAXAwQ (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Sun, 23 Jan 2022 19:52:16 -0500
+        id S240634AbiAXAwV (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Sun, 23 Jan 2022 19:52:21 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642985535; x=1674521535;
+  t=1642985541; x=1674521541;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Tl0B76NhTuz3dgMGjXjwas0s1oooQWVjsPp0B7rfZ+c=;
-  b=V430JhHgezfj24wA97bQT3sQDg/1csiwMDkRv2kEGR4fdpXxDAWChzxq
-   ZuAwtFBOj3hLNEAUhT0ekOhH/VUqEe0ChkhR0n8ilxHS7eUwRI/Lb9kYd
-   rUC50WAAgNv/Mp3fsB41vVWWgMIDR382rlyj6syQp2JEu9bF7qC1gjbZu
-   lBhwu1pCchwcfGETimWt03bK3b7vhNMv7cy0pwj/ejUXHWABku5EmC90T
-   Enl5ksswLYJBVMdK66X7OjtK0QOubQa+BQykGXn+2KDB7d764sPz5A8Zz
-   KkQIdeceBTZCDYwlwm4Cs9xM6MDThJFOZVR0ngRL80ua84MIjwNFiNSiH
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="306652113"
+  bh=gIl0LMGiyWB84AFs7TueUh77sY+5EatOxuI43f2vfPE=;
+  b=kpr3RKNz/buLeF4yE5fXyAHt6ace+9vjAVXNU2JHNbrBJalfcorgLvBp
+   pyPMaevfvTQzJ/HiWxvSbty7QK11Ayi8uRu0IpdRNfnS+29W30+yI3OTT
+   d3nIZ4d3BXoYKWXwBGPYvAWYkVMTJtqomNg3LfjRRwpLeifH6ReXMZMBF
+   cuY21M7dbbxO/VfVRwj45r60rSOhgjl1ioaZ0RMDRtw1o/l8+Q7Rnse/E
+   vhAFT1WS38Dy4bw/Kg5noYDQIgxDHH8XfZYyBVXA/w5QWyUtM3obxrGkg
+   ShHt/t3LYzEyJj0r9cSksmq7GM78sE7h2fMz2SaJx4bIpNrTjevUaCEp5
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="332290506"
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="306652113"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:52:15 -0800
+   d="scan'208";a="332290506"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:52:21 -0800
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="476540359"
+   d="scan'208";a="673456327"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:52:15 -0800
-Subject: [ndctl PATCH 05/37] cxl/json: Cleanup object leak false positive
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:52:21 -0800
+Subject: [ndctl PATCH 06/37] cxl/list: Support multiple memdev device name
+ filter arguments
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     vishal.l.verma@intel.com
-Date:   Sun, 23 Jan 2022 16:52:15 -0800
-Message-ID: <164298553566.3021641.11858634436119663877.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Sun, 23 Jan 2022 16:52:20 -0800
+Message-ID: <164298554075.3021641.17678360870961637912.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <164298550885.3021641.11210386002804544864.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <164298550885.3021641.11210386002804544864.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -49,26 +50,111 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-As written it is a leak of the json object to return if devname is NULL.
-However, the devname can not be NULL because the memdev would not have been
-enumerated. Drop the error checking.
+Similar to 'ndctl list', allow for a syntax like:
+
+    cxl list -m "$(seq -s ' ' 2 5)"
+
+...to filter the output to just those 4 memdevs.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- cxl/json.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/cxl/cxl-list.txt |   21 ++++++++++++++++++++-
+ cxl/filter.c                   |   38 +++++++++++++++++++++++++++-----------
+ 2 files changed, 47 insertions(+), 12 deletions(-)
 
-diff --git a/cxl/json.c b/cxl/json.c
-index 97ed76b65a6b..3ef9f7670510 100644
---- a/cxl/json.c
-+++ b/cxl/json.c
-@@ -190,7 +190,7 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
- 	struct json_object *jdev, *jobj;
+diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
+index c8d10fb5ef86..686e0ea768f0 100644
+--- a/Documentation/cxl/cxl-list.txt
++++ b/Documentation/cxl/cxl-list.txt
+@@ -30,7 +30,7 @@ OPTIONS
+ -------
+ -m::
+ --memdev=::
+-	Specify a cxl memory device name to filter the listing. For example:
++	Specify CXL memory device name(s), or device id(s), to filter the listing. For example:
+ ----
+ # cxl list --memdev=mem0
+ {
+@@ -38,6 +38,25 @@ OPTIONS
+   "pmem_size":268435456,
+   "ram_size":0,
+ }
++
++# cxl list -m "0 mem1 2"
++[
++  {
++    "memdev":"mem0",
++    "pmem_size":268435456,
++    "ram_size":0
++  },
++  {
++    "memdev":"mem2",
++    "pmem_size":268435456,
++    "ram_size":268435456
++  },
++  {
++    "memdev":"mem1",
++    "pmem_size":268435456,
++    "ram_size":268435456
++  }
++]
+ ----
  
- 	jdev = json_object_new_object();
--	if (!devname || !jdev)
-+	if (!jdev)
- 		return NULL;
+ -M::
+diff --git a/cxl/filter.c b/cxl/filter.c
+index 21322ed4b4d0..efafaf5a3197 100644
+--- a/cxl/filter.c
++++ b/cxl/filter.c
+@@ -2,24 +2,40 @@
+ // Copyright (C) 2015-2020 Intel Corporation. All rights reserved.
+ #include <stdio.h>
+ #include <string.h>
++#include <stdlib.h>
+ #include <cxl/libcxl.h>
+ #include "filter.h"
  
- 	jobj = json_object_new_string(devname);
+ struct cxl_memdev *util_cxl_memdev_filter(struct cxl_memdev *memdev,
+-                                         const char *ident)
++					  const char *__ident)
+ {
+-       int memdev_id;
++	char *ident, *save;
++	const char *name;
++	int memdev_id;
+ 
+-       if (!ident || strcmp(ident, "all") == 0)
+-               return memdev;
++	if (!__ident)
++		return memdev;
+ 
+-       if (strcmp(ident, cxl_memdev_get_devname(memdev)) == 0)
+-               return memdev;
++	ident = strdup(__ident);
++	if (!ident)
++		return NULL;
+ 
+-       if ((sscanf(ident, "%d", &memdev_id) == 1
+-                       || sscanf(ident, "mem%d", &memdev_id) == 1)
+-                       && cxl_memdev_get_id(memdev) == memdev_id)
+-               return memdev;
++	for (name = strtok_r(ident, " ", &save); name;
++	     name = strtok_r(NULL, " ", &save)) {
++		if (strcmp(name, "all") == 0)
++			break;
+ 
+-       return NULL;
++		if ((sscanf(name, "%d", &memdev_id) == 1 ||
++		     sscanf(name, "mem%d", &memdev_id) == 1) &&
++		    cxl_memdev_get_id(memdev) == memdev_id)
++			break;
++
++		if (strcmp(name, cxl_memdev_get_devname(memdev)) == 0)
++			break;
++	}
++
++	free(ident);
++	if (name)
++		return memdev;
++	return NULL;
+ }
 
