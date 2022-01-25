@@ -2,206 +2,110 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7F8C433EF
-	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jan 2022 18:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8A4C433F5
+	for <linux-cxl@archiver.kernel.org>; Tue, 25 Jan 2022 06:43:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235750AbiAXSLt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 24 Jan 2022 13:11:49 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4489 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235684AbiAXSLt (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Jan 2022 13:11:49 -0500
-Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JjHzD1HH3z67M4k;
-        Tue, 25 Jan 2022 02:08:24 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Mon, 24 Jan 2022 19:11:47 +0100
-Received: from localhost (10.122.247.231) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Mon, 24 Jan
- 2022 18:11:46 +0000
-Date:   Mon, 24 Jan 2022 18:11:44 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <qemu-devel@nongnu.org>, Marcel Apfelbaum <marcel@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>
-CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
-        Alex =?ISO-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        <linuxarm@huawei.com>,
-        "Shameerali Kolothum Thodi" <shameerali.kolothum.thodi@huawei.com>,
-        Philippe =?ISO-8859-1?Q?Mat?= =?ISO-8859-1?Q?hieu-Daud=E9?= 
-        <f4bug@amsat.org>, Saransh Gupta1 <saransh@ibm.com>,
-        Shreyas Shah <shreyas.shah@elastics.cloud>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Samarth Saxena <samarths@cadence.com>,
-        "Dan Williams" <dan.j.williams@intel.com>
-Subject: Re: [PATCH v4 00/42] CXl 2.0 emulation Support
-Message-ID: <20220124181144.00006d92@huawei.com>
-In-Reply-To: <20220124171705.10432-1-Jonathan.Cameron@huawei.com>
-References: <20220124171705.10432-1-Jonathan.Cameron@huawei.com>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+        id S1349087AbiAYGnP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 25 Jan 2022 01:43:15 -0500
+Received: from box.aukejan.com ([173.82.79.94]:45123 "EHLO box.aukejan.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1355652AbiAYGlH (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Tue, 25 Jan 2022 01:41:07 -0500
+X-Greylist: delayed 631 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Jan 2022 01:41:04 EST
+Received: from authenticated-user (box.aukejan.com [173.82.79.94])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        (No client certificate requested)
+        by box.aukejan.com (Postfix) with ESMTPSA id DE7F75D334;
+        Mon, 24 Jan 2022 22:30:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=boldcoder.com;
+        s=mail; t=1643092222;
+        bh=kvafKXzjkn/Bnf3nCC3bA3bKGXSxh/H7lXD2LBSFypA=;
+        h=Subject:References:To:From:Cc:Date:In-Reply-To:From;
+        b=Sa28aqWv3BU/laUhoiXsb/ddDe2usBbgoeeQi3MYnJV9lQ6zdaYNHCOqoRx5lIxPY
+         kcdxMEjwLZhvIeZ/fjez3x625eP9REC2qOK49BLw6MATUaQCQZ43AmFYxeDY/ovXne
+         RCueyPCXhESbH5Zc1+wWL7czGipE9fdSOgUIUqlHKdFYZmYnXn4SR/yW6zDDMw0Wmo
+         BSXIaFwyHUo0/jf450Ej5/Ha22QpNaK8XU1CwTDvZ/NPMkrVQ3hEWvLMWXU2d6JbpM
+         DD3MPSGNOH0cpV5Vs1vg+72sPats+u1m1WGJbxgbJ7UhJCcRim93cFvlmovVSSDRMF
+         +BPbpozAY5hwg==
+Subject: Patch: Make ACPI subsystem provide CEDT table
+References: <1b871357-2231-336d-099c-cdccae03f837@boldcoder.com>
+To:     linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org
+From:   Robert Kiraly <me@boldcoder.com>
+Cc:     Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+X-Forwarded-Message-Id: <1b871357-2231-336d-099c-cdccae03f837@boldcoder.com>
+Message-ID: <82f254a1-c765-0a87-f017-8c07c8ef07cd@boldcoder.com>
+Date:   Mon, 24 Jan 2022 22:30:22 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhreml740-chm.china.huawei.com (10.201.108.190) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+In-Reply-To: <1b871357-2231-336d-099c-cdccae03f837@boldcoder.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 24 Jan 2022 17:16:23 +0000
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+This is a simple ACPI patch. I'm submitting a revised version to=20
+linux-acpi per Rafael Wysocki and linux-cxl per Dan Williams.
 
-> 
-> I'll post a git tree shortly for any who prefer that to lots
-> of emails ;)
+The patch has been moved to the message body and a Signed-off-by tag has =
 
+been added. Thunderbird has added CRs so "patch -p1 -l" is needed. To=20
+address other points:
 
-https://github.com/hisilicon/qemu.git  cxl-v4
+Q. Dan Williams said: Yes, although I don't see much incremental benefit =
 
-I've included the pci swizzle fix on the tree as it
-avoids some really annoying waits for interrupts to get
-masked when testing on ARM.
+to developers publishing a root only raw table... So, not opposed to the =
 
-I've also put the basic DOE patch set on top (CDAT + compliance)
-and the ARM GIC ITS support patch for virt as who wouldn't
-want that?
+patch, but I want to direct you to the sysfs representation of the CEDT=20
+and CFMWS in /sys/bus/cxl/devices... Platform firmware CXL details are=20
+modeled as "CXL root" objects in the /sys/bus/cxl device model.
 
-Thanks,
+A. The patch is being submitted in connection with work on a CXL bridge. =
 
-Jonathan
- 
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-> Ben Widawsky (26):
->   hw/pci/cxl: Add a CXL component type (interface)
->   hw/cxl/component: Introduce CXL components (8.1.x, 8.2.5)
->   hw/cxl/device: Introduce a CXL device (8.2.8)
->   hw/cxl/device: Implement the CAP array (8.2.8.1-2)
->   hw/cxl/device: Implement basic mailbox (8.2.8.4)
->   hw/cxl/device: Add memory device utilities
->   hw/cxl/device: Add cheap EVENTS implementation (8.2.9.1)
->   hw/cxl/device: Timestamp implementation (8.2.9.3)
->   hw/cxl/device: Add log commands (8.2.9.4) + CEL
->   hw/pxb: Use a type for realizing expanders
->   hw/pci/cxl: Create a CXL bus type
->   hw/pxb: Allow creation of a CXL PXB (host bridge)
->   acpi/pci: Consolidate host bridge setup
->   hw/cxl/component: Implement host bridge MMIO (8.2.5, table 142)
->   hw/cxl/rp: Add a root port
->   hw/cxl/device: Add a memory device (8.2.8.5)
->   hw/cxl/device: Implement MMIO HDM decoding (8.2.5.12)
->   acpi/cxl: Add _OSC implementation (9.14.2)
->   tests/acpi: allow CEDT table addition
->   acpi/cxl: Create the CEDT (9.14.1)
->   hw/cxl/device: Add some trivial commands
->   hw/cxl/device: Plumb real Label Storage Area (LSA) sizing
->   hw/cxl/device: Implement get/set Label Storage Area (LSA)
->   acpi/cxl: Introduce CFMWS structures in CEDT
->   hw/cxl/component Add a dumb HDM decoder handler
->   qtest/cxl: Add very basic sanity tests
-> 
-> Jonathan Cameron (16):
->   MAINTAINERS: Add entry for Compute Express Link Emulation
->   tests/acpi: allow DSDT.viot table changes.
->   tests/acpi: Add update DSDT.viot
->   cxl: Machine level control on whether CXL support is enabled
->   hw/cxl/component: Add utils for interleave parameter encoding/decoding
->   hw/cxl/host: Add support for CXL Fixed Memory Windows.
->   hw/pci-host/gpex-acpi: Add support for dsdt construction for pxb-cxl
->   pci/pcie_port: Add pci_find_port_by_pn()
->   CXL/cxl_component: Add cxl_get_hb_cstate()
->   mem/cxl_type3: Add read and write functions for associated hostmem.
->   cxl/cxl-host: Add memops for CFMWS region.
->   arm/virt: Allow virt/CEDT creation
->   hw/arm/virt: Basic CXL enablement on pci_expander_bridge instances
->     pxb-cxl
->   RFC: softmmu/memory: Add ops to memory_region_ram_init_from_file
->   i386/pc: Enable CXL fixed memory windows
->   qtest/acpi: Add reference CEDT tables.
-> 
->  MAINTAINERS                         |   7 +
->  hw/Kconfig                          |   1 +
->  hw/acpi/Kconfig                     |   5 +
->  hw/acpi/cxl.c                       | 232 +++++++++++++
->  hw/acpi/meson.build                 |   1 +
->  hw/arm/Kconfig                      |   1 +
->  hw/arm/virt-acpi-build.c            |  30 ++
->  hw/arm/virt.c                       |  40 ++-
->  hw/core/machine.c                   |  26 ++
->  hw/cxl/Kconfig                      |   3 +
->  hw/cxl/cxl-component-utils.c        | 277 +++++++++++++++
->  hw/cxl/cxl-device-utils.c           | 268 +++++++++++++++
->  hw/cxl/cxl-host-stubs.c             |  22 ++
->  hw/cxl/cxl-host.c                   | 263 ++++++++++++++
->  hw/cxl/cxl-mailbox-utils.c          | 509 ++++++++++++++++++++++++++++
->  hw/cxl/meson.build                  |   9 +
->  hw/i386/acpi-build.c                |  97 +++++-
->  hw/i386/microvm.c                   |   1 +
->  hw/i386/pc.c                        |  57 +++-
->  hw/mem/Kconfig                      |   5 +
->  hw/mem/cxl_type3.c                  | 353 +++++++++++++++++++
->  hw/mem/meson.build                  |   1 +
->  hw/meson.build                      |   1 +
->  hw/pci-bridge/Kconfig               |   5 +
->  hw/pci-bridge/cxl_root_port.c       | 231 +++++++++++++
->  hw/pci-bridge/meson.build           |   1 +
->  hw/pci-bridge/pci_expander_bridge.c | 179 +++++++++-
->  hw/pci-bridge/pcie_root_port.c      |   6 +-
->  hw/pci-host/gpex-acpi.c             |  22 +-
->  hw/pci/pci.c                        |  21 +-
->  hw/pci/pcie_port.c                  |  25 ++
->  hw/ppc/spapr.c                      |   1 +
->  include/hw/acpi/cxl.h               |  28 ++
->  include/hw/arm/virt.h               |   1 +
->  include/hw/boards.h                 |   2 +
->  include/hw/cxl/cxl.h                |  51 +++
->  include/hw/cxl/cxl_component.h      | 206 +++++++++++
->  include/hw/cxl/cxl_device.h         | 266 +++++++++++++++
->  include/hw/cxl/cxl_pci.h            | 160 +++++++++
->  include/hw/pci/pci.h                |  14 +
->  include/hw/pci/pci_bridge.h         |  20 ++
->  include/hw/pci/pci_bus.h            |   7 +
->  include/hw/pci/pci_ids.h            |   1 +
->  include/hw/pci/pcie_port.h          |   2 +
->  qapi/machine.json                   |  15 +
->  qemu-options.hx                     |  37 ++
->  softmmu/memory.c                    |   9 +
->  softmmu/vl.c                        |  11 +
->  tests/data/acpi/pc/CEDT             | Bin 0 -> 36 bytes
->  tests/data/acpi/q35/CEDT            | Bin 0 -> 36 bytes
->  tests/data/acpi/q35/DSDT.viot       | Bin 9398 -> 9416 bytes
->  tests/data/acpi/virt/CEDT           | Bin 0 -> 36 bytes
->  tests/qtest/cxl-test.c              | 151 +++++++++
->  tests/qtest/meson.build             |   4 +
->  54 files changed, 3645 insertions(+), 40 deletions(-)
->  create mode 100644 hw/acpi/cxl.c
->  create mode 100644 hw/cxl/Kconfig
->  create mode 100644 hw/cxl/cxl-component-utils.c
->  create mode 100644 hw/cxl/cxl-device-utils.c
->  create mode 100644 hw/cxl/cxl-host-stubs.c
->  create mode 100644 hw/cxl/cxl-host.c
->  create mode 100644 hw/cxl/cxl-mailbox-utils.c
->  create mode 100644 hw/cxl/meson.build
->  create mode 100644 hw/mem/cxl_type3.c
->  create mode 100644 hw/pci-bridge/cxl_root_port.c
->  create mode 100644 include/hw/acpi/cxl.h
->  create mode 100644 include/hw/cxl/cxl.h
->  create mode 100644 include/hw/cxl/cxl_component.h
->  create mode 100644 include/hw/cxl/cxl_device.h
->  create mode 100644 include/hw/cxl/cxl_pci.h
->  create mode 100644 tests/data/acpi/pc/CEDT
->  create mode 100644 tests/data/acpi/q35/CEDT
->  create mode 100644 tests/data/acpi/virt/CEDT
->  create mode 100644 tests/qtest/cxl-test.c
-> 
+The developers would like to express appreciation for the "sysfs" point. =
+
+They find it useful to be able to do initialization through the table=20
+but will look at the "sysfs" approach.
+
+Q. Rafael J. Wysocki said: I'm not sure why the #ifdef is needed.
+
+A. I reviewed cxl-next and decided to add the #ifdef to ensure that the=20
+code would compile regardless of the direction that the codebase takes.
+
+=3D=3D=3D=3D start of patch =3D=3D=3D=3D
+Subject: Make ACPI subsystem provide CEDT table
+Signed-off-by: Robert Kiraly <me@boldcoder.com>
+
+This is a simple patch to the ACPI subsystem. The patch adds ACPI
+_SIG_CEDT to table_sigs[] in  "drivers/acpi/tables.c".
+
+Presently,  CXL code isn't able to make use of the  CEDT table at
+the initrd stage. Subsequent to the change, the CEDT table can be
+used.
+
+If  a developer  plans to use the CEDT table to  program  the CXL
+ports,  this change is needed.  Otherwise,  it isn't  expected to
+make a difference.
+
+I certify  compliance with  Developer=E2=80=99s Certificate of Origin 1.1=
+
+as listed in:
+https://www.kernel.org/doc/html/v4.10/process/submitting-patches.
+html
+
+--- linux-5.16.old/drivers/acpi/tables.c
++++ linux-5.16/drivers/acpi/tables.c
+@@ -500,6 +500,9 @@
+  	ACPI_SIG_WDDT, ACPI_SIG_WDRT, ACPI_SIG_DSDT, ACPI_SIG_FADT,
+  	ACPI_SIG_PSDT, ACPI_SIG_RSDT, ACPI_SIG_XSDT, ACPI_SIG_SSDT,
+  	ACPI_SIG_IORT, ACPI_SIG_NFIT, ACPI_SIG_HMAT, ACPI_SIG_PPTT,
++#ifdef ACPI_SIG_CEDT
++       ACPI_SIG_CEDT,
++#endif
+  	ACPI_SIG_NHLT };
+
+  #define ACPI_HEADER_SIZE sizeof(struct acpi_table_header)
+=3D=3D=3D=3D end of patch =3D=3D=3D=3D
+
 
