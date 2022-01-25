@@ -2,110 +2,108 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8A4C433F5
-	for <linux-cxl@archiver.kernel.org>; Tue, 25 Jan 2022 06:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC6CC433EF
+	for <linux-cxl@archiver.kernel.org>; Tue, 25 Jan 2022 13:56:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349087AbiAYGnP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 25 Jan 2022 01:43:15 -0500
-Received: from box.aukejan.com ([173.82.79.94]:45123 "EHLO box.aukejan.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1355652AbiAYGlH (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 25 Jan 2022 01:41:07 -0500
-X-Greylist: delayed 631 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Jan 2022 01:41:04 EST
-Received: from authenticated-user (box.aukejan.com [173.82.79.94])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-        (No client certificate requested)
-        by box.aukejan.com (Postfix) with ESMTPSA id DE7F75D334;
-        Mon, 24 Jan 2022 22:30:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=boldcoder.com;
-        s=mail; t=1643092222;
-        bh=kvafKXzjkn/Bnf3nCC3bA3bKGXSxh/H7lXD2LBSFypA=;
-        h=Subject:References:To:From:Cc:Date:In-Reply-To:From;
-        b=Sa28aqWv3BU/laUhoiXsb/ddDe2usBbgoeeQi3MYnJV9lQ6zdaYNHCOqoRx5lIxPY
-         kcdxMEjwLZhvIeZ/fjez3x625eP9REC2qOK49BLw6MATUaQCQZ43AmFYxeDY/ovXne
-         RCueyPCXhESbH5Zc1+wWL7czGipE9fdSOgUIUqlHKdFYZmYnXn4SR/yW6zDDMw0Wmo
-         BSXIaFwyHUo0/jf450Ej5/Ha22QpNaK8XU1CwTDvZ/NPMkrVQ3hEWvLMWXU2d6JbpM
-         DD3MPSGNOH0cpV5Vs1vg+72sPats+u1m1WGJbxgbJ7UhJCcRim93cFvlmovVSSDRMF
-         +BPbpozAY5hwg==
-Subject: Patch: Make ACPI subsystem provide CEDT table
-References: <1b871357-2231-336d-099c-cdccae03f837@boldcoder.com>
-To:     linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org
-From:   Robert Kiraly <me@boldcoder.com>
-Cc:     Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
+        id S242101AbiAYN4C (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 25 Jan 2022 08:56:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1386762AbiAYNx4 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 25 Jan 2022 08:53:56 -0500
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 361E8C06175E
+        for <linux-cxl@vger.kernel.org>; Tue, 25 Jan 2022 05:53:55 -0800 (PST)
+Received: by mail-ed1-x535.google.com with SMTP id b13so63080253edn.0
+        for <linux-cxl@vger.kernel.org>; Tue, 25 Jan 2022 05:53:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=references:user-agent:from:to:cc:subject:date:in-reply-to
+         :message-id:mime-version:content-transfer-encoding;
+        bh=AQLpznwZjUVv3sUgFHwsQE4uBZUuzaht9HIbBFEo6f4=;
+        b=oFVlvNme6+1uraHXIpqVTZJooeuciNw3iWAL/Ey8x2RkjnC+h68gn0/gbbr8v9MAMi
+         MXbRgdJY/Hm1keH5w9cjeRuuHJXPP6v64vM0CY7rmBKwlITwHNaLUmqrRLxPYAHGoiSG
+         A+0hIMaETf6QYNLW5wQJOV5DsO+rBFp/SkDZ9Cfx6tGZtU1pEB1P5qiejX5d/2+4f+by
+         jE0NUFh+b/9men+gJGB4WQKRdhUHLiH2vlD9YR1lzrbbupJY67wPVUcrK7SJ6grjKleA
+         VMPliylUt1jrUTqfZzuQ8NoLodZtAerxSkbIdn/jGkHiquBXElaA4bWr8FSBmQPmERY4
+         4p7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject:date
+         :in-reply-to:message-id:mime-version:content-transfer-encoding;
+        bh=AQLpznwZjUVv3sUgFHwsQE4uBZUuzaht9HIbBFEo6f4=;
+        b=ZeQOZsfI+rQ+CimLCZIetH5YgWkgceHpELo4QxhA7d/YPySMneWdrfeiaFxrqR/wi6
+         gFuk77sumMBarhyoBK9FNAqSJ8Twrl5UNvbS7c7fRs2SNQYdcmzENgBbvWjxmUWPKblr
+         2IEja7hePswIpm1Gpyays0NCDxYjRLyxhItW9tr9pynnLWnX2MeNuk1jVEmIl2nDDlrs
+         Ynm5id82WjKQ9BJKEo5QSQVQ68otBJI3r7MuAp2DsUXbUbOe2uWqFOs/12YT0AV1aqz6
+         yiHgWFRo1LbnaXO4LOXHc8I2ek8rJYWnMUHbm8DxXsVRgrgT0jOrTd9CIARnRQxVwdui
+         Qukw==
+X-Gm-Message-State: AOAM531lXNuv3hdPX8bAVJnZrxBvgZ8EgtoPQ5DooD+cvFxXIAamZNQ/
+        Gj8l9d4j9lY/oXhzKcT6qcylGg==
+X-Google-Smtp-Source: ABdhPJy6DeMd2H4MLD/JsGpZo+K3RcDzCGsRbxaB1boo5gDl5I+vBQoaGm3YmYICFx72cFJXlvGjfg==
+X-Received: by 2002:aa7:c412:: with SMTP id j18mr11429475edq.393.1643118833563;
+        Tue, 25 Jan 2022 05:53:53 -0800 (PST)
+Received: from zen.linaroharston ([51.148.130.216])
+        by smtp.gmail.com with ESMTPSA id v5sm6164216ejc.40.2022.01.25.05.53.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jan 2022 05:53:52 -0800 (PST)
+Received: from zen (localhost [127.0.0.1])
+        by zen.linaroharston (Postfix) with ESMTP id B3DAA1FFB7;
+        Tue, 25 Jan 2022 13:53:51 +0000 (GMT)
+References: <20220124171705.10432-1-Jonathan.Cameron@huawei.com>
+ <20220124171705.10432-2-Jonathan.Cameron@huawei.com>
+User-agent: mu4e 1.7.6; emacs 28.0.91
+From:   Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     qemu-devel@nongnu.org, Marcel Apfelbaum <marcel@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>, linux-cxl@vger.kernel.org,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Peter Maydell <peter.maydell@linaro.org>, linuxarm@huawei.com,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        Saransh Gupta1 <saransh@ibm.com>,
+        Shreyas Shah <shreyas.shah@elastics.cloud>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Samarth Saxena <samarths@cadence.com>,
         Dan Williams <dan.j.williams@intel.com>
-X-Forwarded-Message-Id: <1b871357-2231-336d-099c-cdccae03f837@boldcoder.com>
-Message-ID: <82f254a1-c765-0a87-f017-8c07c8ef07cd@boldcoder.com>
-Date:   Mon, 24 Jan 2022 22:30:22 -0800
+Subject: Re: [PATCH v4 01/42] hw/pci/cxl: Add a CXL component type (interface)
+Date:   Tue, 25 Jan 2022 13:53:45 +0000
+In-reply-to: <20220124171705.10432-2-Jonathan.Cameron@huawei.com>
+Message-ID: <875yq7exao.fsf@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <1b871357-2231-336d-099c-cdccae03f837@boldcoder.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-This is a simple ACPI patch. I'm submitting a revised version to=20
-linux-acpi per Rafael Wysocki and linux-cxl per Dan Williams.
 
-The patch has been moved to the message body and a Signed-off-by tag has =
+Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
 
-been added. Thunderbird has added CRs so "patch -p1 -l" is needed. To=20
-address other points:
+> From: Ben Widawsky <ben.widawsky@intel.com>
+>
+> A CXL component is a hardware entity that implements CXL component
+> registers from the CXL 2.0 spec (8.2.3). Currently these represent 3
+> general types.
+> 1. Host Bridge
+> 2. Ports (root, upstream, downstream)
+> 3. Devices (memory, other)
+>
+> A CXL component can be conceptually thought of as a PCIe device with
+> extra functionality when enumerated and enabled. For this reason, CXL
+> does here, and will continue to add on to existing PCI code paths.
+>
+> Host bridges will typically need to be handled specially and so they can
+> implement this newly introduced interface or not. All other components
+> should implement this interface. Implementing this interface allows the
+> core PCI code to treat these devices as special where appropriate.
+>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Q. Dan Williams said: Yes, although I don't see much incremental benefit =
+Reviewed-by: Alex Benn=C3=A9e <alex.bennee@linaro.org>
 
-to developers publishing a root only raw table... So, not opposed to the =
-
-patch, but I want to direct you to the sysfs representation of the CEDT=20
-and CFMWS in /sys/bus/cxl/devices... Platform firmware CXL details are=20
-modeled as "CXL root" objects in the /sys/bus/cxl device model.
-
-A. The patch is being submitted in connection with work on a CXL bridge. =
-
-The developers would like to express appreciation for the "sysfs" point. =
-
-They find it useful to be able to do initialization through the table=20
-but will look at the "sysfs" approach.
-
-Q. Rafael J. Wysocki said: I'm not sure why the #ifdef is needed.
-
-A. I reviewed cxl-next and decided to add the #ifdef to ensure that the=20
-code would compile regardless of the direction that the codebase takes.
-
-=3D=3D=3D=3D start of patch =3D=3D=3D=3D
-Subject: Make ACPI subsystem provide CEDT table
-Signed-off-by: Robert Kiraly <me@boldcoder.com>
-
-This is a simple patch to the ACPI subsystem. The patch adds ACPI
-_SIG_CEDT to table_sigs[] in  "drivers/acpi/tables.c".
-
-Presently,  CXL code isn't able to make use of the  CEDT table at
-the initrd stage. Subsequent to the change, the CEDT table can be
-used.
-
-If  a developer  plans to use the CEDT table to  program  the CXL
-ports,  this change is needed.  Otherwise,  it isn't  expected to
-make a difference.
-
-I certify  compliance with  Developer=E2=80=99s Certificate of Origin 1.1=
-
-as listed in:
-https://www.kernel.org/doc/html/v4.10/process/submitting-patches.
-html
-
---- linux-5.16.old/drivers/acpi/tables.c
-+++ linux-5.16/drivers/acpi/tables.c
-@@ -500,6 +500,9 @@
-  	ACPI_SIG_WDDT, ACPI_SIG_WDRT, ACPI_SIG_DSDT, ACPI_SIG_FADT,
-  	ACPI_SIG_PSDT, ACPI_SIG_RSDT, ACPI_SIG_XSDT, ACPI_SIG_SSDT,
-  	ACPI_SIG_IORT, ACPI_SIG_NFIT, ACPI_SIG_HMAT, ACPI_SIG_PPTT,
-+#ifdef ACPI_SIG_CEDT
-+       ACPI_SIG_CEDT,
-+#endif
-  	ACPI_SIG_NHLT };
-
-  #define ACPI_HEADER_SIZE sizeof(struct acpi_table_header)
-=3D=3D=3D=3D end of patch =3D=3D=3D=3D
-
-
+--=20
+Alex Benn=C3=A9e
