@@ -2,262 +2,287 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2BFC433EF
-	for <linux-cxl@archiver.kernel.org>; Tue, 25 Jan 2022 18:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 547FEC433F5
+	for <linux-cxl@archiver.kernel.org>; Tue, 25 Jan 2022 19:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229630AbiAYSQe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 25 Jan 2022 13:16:34 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:58612 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229627AbiAYSQ3 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 25 Jan 2022 13:16:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643134588;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MFKvRWpac/k/tcD/7PSlRY2F8e3BMrDfE2T2pUtuuMI=;
-        b=W1qxiBwOjWJFbQocPE1abzViC2fUfX7RtYZcXOYufSnVDhMGKj6Q6M4xRdaz/RxQRNm7g8
-        PH16v4BBAOQpIT9L2R6uKvMxidV2ia6w22IU2n7ojwIV3M+WfmsdS1r5NBczqSSnu6qdSl
-        83s9NnqWPBkjZNWDv3Uo8cKjvup+5+o=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-22-lmYsIFuONMmR6pR2SYMtFQ-1; Tue, 25 Jan 2022 13:16:25 -0500
-X-MC-Unique: lmYsIFuONMmR6pR2SYMtFQ-1
-Received: by mail-ej1-f69.google.com with SMTP id v2-20020a170906292200b006a94a27f903so3787347ejd.8
-        for <linux-cxl@vger.kernel.org>; Tue, 25 Jan 2022 10:16:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=71ZJGD/DijMxAkURI59OyT/kYxMjfhgqWOAHUeL78TU=;
-        b=hT+fKsoI4ZgNL0g60cprbhTDRwwQDTAP/zEf1hz+FXz/Mb8DUfdtWtCEcfD2gH9yrh
-         g2w8Io2AEclCs4oyv2zQgMhIiDcpVBKTvFbbpMxuz8Ws/cdBDgOqDJPKkrUbNhFqUGfk
-         ZQP3lcWOanUoWbxEeGVI0OqtK/UpaaaPK2byGkE2WJ2MB/VYFDI6Qt/SmK/ehQwkc2ZD
-         LqKMwC9RqOxEL4ckKKAeSUtlYTEqxyliOVcSeMTEvP4m/LFEFBCVmp/VHg6/hRpZSlCH
-         MO59z/mjCMPKxi2soIB+o47CYmF26SfB8G/hJhXuHldoUe1z6c+DtdmcEEsZ+R7T6vqB
-         BFRA==
-X-Gm-Message-State: AOAM532LosX2EuH99HsD+EMbJzCMkATnBot0u3XwYYpsMIFfjCj2bd+R
-        LYVN6JB8Tylaf7rk0LFxZ4p0ueB+4HRGgzhAHU+6U6rXsHyALwL1TMgIQN8GpWXuJ9wCm6zpc9/
-        sBLEMlrYtt3FQcRZ/Y+fn
-X-Received: by 2002:a17:907:1c9b:: with SMTP id nb27mr14034855ejc.433.1643134583844;
-        Tue, 25 Jan 2022 10:16:23 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxDRVLA3u0Hs0z/3DtuliP4gdZ58CxWvaO9Gf15sWI7Tlsro/Fr8vGCScgqPV4SWoywfq+EhQ==
-X-Received: by 2002:a17:907:1c9b:: with SMTP id nb27mr14034837ejc.433.1643134583559;
-        Tue, 25 Jan 2022 10:16:23 -0800 (PST)
-Received: from redhat.com ([176.12.185.204])
-        by smtp.gmail.com with ESMTPSA id c8sm8603181edr.70.2022.01.25.10.16.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jan 2022 10:16:23 -0800 (PST)
-Date:   Tue, 25 Jan 2022 13:16:17 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
+        id S229819AbiAYTSR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 25 Jan 2022 14:18:17 -0500
+Received: from mga17.intel.com ([192.55.52.151]:47773 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230001AbiAYTSL (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Tue, 25 Jan 2022 14:18:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643138290; x=1674674290;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=0hLtylA604YuRLZ580x5CON+geQ4cf1w7KBzG0dO9uQ=;
+  b=GWhwHUnmtLCKTXI3SNi4JRLloalPXsyoDr6C2pOygd3xbz05AtU7Map8
+   gxZHTW1FBQ3HnuURUfF8zU+XfkTlH+dwAG1hHy75m6psWAkY+o2+iL2Gm
+   TOhH6Ief7ymz5CWCWhFnR+T0AySV8kXSD18nbdyX0lL8vqheMbmTi5hIl
+   cVH1SrfNc3tpbcDT9r/sKtQk/H4SVwoXEDsOgZGq3+pRk/+h43JcOmvzJ
+   ES9mggPpVOS5lI3sklcpB+ent0a9zMf0luOIJYqVGxDIo6Xs4uVGO2oVb
+   //a/TQPsEMUDDurVQitnZLkLfBBIHvmC0dutFRN956ZxAfxxtITQEwsdy
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10238"; a="227066514"
+X-IronPort-AV: E=Sophos;i="5.88,315,1635231600"; 
+   d="scan'208";a="227066514"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2022 11:18:08 -0800
+X-IronPort-AV: E=Sophos;i="5.88,315,1635231600"; 
+   d="scan'208";a="532524278"
+Received: from jungjunk-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.128.93])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2022 11:18:07 -0800
+Date:   Tue, 25 Jan 2022 11:18:06 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-        qemu-devel@nongnu.org, Marcel Apfelbaum <marcel@redhat.com>,
+Cc:     qemu-devel@nongnu.org, Marcel Apfelbaum <marcel@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
         Igor Mammedov <imammedo@redhat.com>, linux-cxl@vger.kernel.org,
-        Ben Widawsky <ben.widawsky@intel.com>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
         Peter Maydell <peter.maydell@linaro.org>, linuxarm@huawei.com,
         Shameerali Kolothum Thodi 
         <shameerali.kolothum.thodi@huawei.com>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
         Saransh Gupta1 <saransh@ibm.com>,
         Shreyas Shah <shreyas.shah@elastics.cloud>,
         Chris Browy <cbrowy@avery-design.com>,
         Samarth Saxena <samarths@cadence.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v4 31/42] hw/pci-host/gpex-acpi: Add support for dsdt
- construction for pxb-cxl
-Message-ID: <20220125131527-mutt-send-email-mst@kernel.org>
+Subject: Re: [PATCH v4 00/42] CXl 2.0 emulation Support
+Message-ID: <20220125191806.ifbv2fuj2bik44zw@intel.com>
 References: <20220124171705.10432-1-Jonathan.Cameron@huawei.com>
- <20220124171705.10432-32-Jonathan.Cameron@huawei.com>
- <87o83zd99r.fsf@linaro.org>
- <20220125181313.0000209c@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20220125181313.0000209c@huawei.com>
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=mst@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220124171705.10432-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Jan 25, 2022 at 06:13:13PM +0000, Jonathan Cameron wrote:
-> On Tue, 25 Jan 2022 17:15:58 +0000
-> Alex Benn=E9e <alex.bennee@linaro.org> wrote:
->=20
-> > Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
-> >=20
-> > > This adds code to instantiate the slightly extended ACPI root port
-> > > description in DSDT as per the CXL 2.0 specification.
-> > >
-> > > Basically a cut and paste job from the i386/pc code. =20
-> >=20
-> > This fails to build on all machines:
-> >=20
-> >   FAILED: qemu-system-mips64el=20
-> >   c++ -m64 -mcx16  -o qemu-system-mips64el qemu-system-mips64el.p/softm=
-mu_main.c.o <snip> subprojects/libvhost-user/libvhost-user.a libmigration.f=
-a libhwcore.fa libqom.fa libio.fa libcrypto.fa libauthz.fa libblockdev.fa l=
-ibblock.fa libchardev.fa libqmp.fa @block.syms @qemu.syms /usr/lib/x86_64-l=
-inux-gnu/libpixman-1.so -lepoxy /usr/lib/x86_64-linux-gnu/libcapstone.so /u=
-sr/lib/x86_64-linux-gnu/libspice-server.so -Xlinker --dynamic-list=3D/home/=
-alex/lsrc/qemu.git/plugins/qemu-plugins.symbols /usr/lib/x86_64-linux-gnu/l=
-ibz.so /usr/lib/x86_64-linux-gnu/libpng16.so /usr/lib/x86_64-linux-gnu/libj=
-peg.so /usr/lib/x86_64-linux-gnu/libgnutls.so -lsasl2 /usr/lib/x86_64-linux=
--gnu/libpmem.so /usr/lib/x86_64-linux-gnu/libseccomp.so -lnuma -lgio-2.0 -l=
-gobject-2.0 -lglib-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0 -lrdmacm -libverb=
-s -libumad /usr/lib/gcc/x86_64-linux-gnu/10/../../../x86_64-linux-gnu/libzs=
-td.so /usr/lib/x86_64-linux-gnu/libslirp.so /usr/lib/x86_64-linux-gnu/libgl=
-ib-2.0.so -lvdeplug /usr/lib/x86_64-linux-gnu/libudev.so /usr/lib/x86_64-li=
-nux-gnu/libbpf.so /usr/lib/x86_64-linux-gnu/libasound.so /usr/lib/x86_64-li=
-nux-gnu/libpulse.so -lbrlapi /usr/lib/x86_64-linux-gnu/libvirglrenderer.so =
-/usr/lib/x86_64-linux-gnu/libusb-1.0.so /usr/lib/x86_64-linux-gnu/libusbred=
-irparser.so /usr/lib/x86_64-linux-gnu/libcacard.so -lncursesw -ltinfo -pthr=
-ead -lgmodule-2.0 -lglib-2.0 /usr/lib/x86_64-linux-gnu/libgbm.so /usr/lib/x=
-86_64-linux-gnu/libgtk-3.so /usr/lib/x86_64-linux-gnu/libgdk-3.so /usr/lib/=
-x86_64-linux-gnu/libpangocairo-1.0.so /usr/lib/x86_64-linux-gnu/libpango-1.=
-0.so /usr/lib/x86_64-linux-gnu/libharfbuzz.so /usr/lib/x86_64-linux-gnu/lib=
-atk-1.0.so /usr/lib/x86_64-linux-gnu/libcairo-gobject.so /usr/lib/x86_64-li=
-nux-gnu/libcairo.so /usr/lib/x86_64-linux-gnu/libgdk_pixbuf-2.0.so /usr/lib=
-/x86_64-linux-gnu/libgio-2.0.so /usr/lib/x86_64-linux-gnu/libgobject-2.0.so=
- /usr/lib/x86_64-linux-gnu/libvte-2.91.so /usr/lib/x86_64-linux-gnu/libX11.=
-so @block.syms -lutil -lgio-2.0 -lgobject-2.0 -lglib-2.0 -lgio-2.0 -lgobjec=
-t-2.0 -lglib-2.0 -lgmodule-2.0 -lglib-2.0 -lm -lgmodule-2.0 -lglib-2.0 /usr=
-/lib/x86_64-linux-gnu/libiscsi.so -laio /usr/lib/x86_64-linux-gnu/libcurl.s=
-o -lgmodule-2.0 -lglib-2.0 -lbz2 /usr/lib/x86_64-linux-gnu/libacl.so /usr/l=
-ib/x86_64-linux-gnu/libgfapi.so /usr/lib/x86_64-linux-gnu/libglusterfs.so /=
-usr/lib/x86_64-linux-gnu/libgfrpc.so /usr/lib/x86_64-linux-gnu/libgfxdr.so =
-/usr/lib/x86_64-linux-gnu/libuuid.so /usr/lib/x86_64-linux-gnu/libnfs.so -l=
-rbd -lrados /usr/lib/x86_64-linux-gnu/libssh.so -lstdc++ -Wl,--end-group
-> >   /usr/bin/ld: /lib/x86_64-linux-gnu/libtirpc.so.3: warning: common of =
-`rpc_createerr@@GLIBC_2.2.5' overridden by definition from /lib/x86_64-linu=
-x-gnu/libc.so.6
-> >   /usr/bin/ld: libcommon.fa.p/hw_pci-host_gpex-acpi.c.o: in function `a=
-cpi_dsdt_add_gpex':
-> >   /home/alex/lsrc/qemu.git/builds/all/../../hw/pci-host/gpex-acpi.c:191=
-: undefined reference to `build_cxl_osc_method'
-> >   collect2: error: ld returned 1 exit status
-> >   [1600/2203] Linking target qemu-system-or1k
-> >=20
-> >=20
-> > >
-> > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > ---
-> > >  hw/arm/Kconfig          |  1 +
-> > >  hw/pci-host/gpex-acpi.c | 22 +++++++++++++++++++---
-> > >  2 files changed, 20 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/hw/arm/Kconfig b/hw/arm/Kconfig
-> > > index 2e0049196d..3df419fa6d 100644
-> > > --- a/hw/arm/Kconfig
-> > > +++ b/hw/arm/Kconfig
-> > > @@ -29,6 +29,7 @@ config ARM_VIRT
-> > >      select ACPI_APEI
-> > >      select ACPI_VIOT
-> > >      select VIRTIO_MEM_SUPPORTED
-> > > +    select ACPI_CXL
-> > > =20
-> > >  config CHEETAH
-> > >      bool
-> > > diff --git a/hw/pci-host/gpex-acpi.c b/hw/pci-host/gpex-acpi.c
-> > > index e7e162a00a..fb60aa517f 100644
-> > > --- a/hw/pci-host/gpex-acpi.c
-> > > +++ b/hw/pci-host/gpex-acpi.c
-> > > @@ -5,6 +5,7 @@
-> > >  #include "hw/pci/pci_bus.h"
-> > >  #include "hw/pci/pci_bridge.h"
-> > >  #include "hw/pci/pcie_host.h"
-> > > +#include "hw/acpi/cxl.h"
-> > > =20
-> > >  static void acpi_dsdt_add_pci_route_table(Aml *dev, uint32_t irq)
-> > >  {
-> > > @@ -139,6 +140,7 @@ void acpi_dsdt_add_gpex(Aml *scope, struct GPEXCo=
-nfig *cfg)
-> > >          QLIST_FOREACH(bus, &bus->child, sibling) {
-> > >              uint8_t bus_num =3D pci_bus_num(bus);
-> > >              uint8_t numa_node =3D pci_bus_numa_node(bus);
-> > > +            bool is_cxl;
-> > > =20
-> > >              if (!pci_bus_is_root(bus)) {
-> > >                  continue;
-> > > @@ -153,9 +155,19 @@ void acpi_dsdt_add_gpex(Aml *scope, struct GPEXC=
-onfig *cfg)
-> > >                  nr_pcie_buses =3D bus_num;
-> > >              }
-> > > =20
-> > > +            is_cxl =3D pci_bus_is_cxl(bus);
-> > > +
-> > >              dev =3D aml_device("PC%.02X", bus_num);
-> > > -            aml_append(dev, aml_name_decl("_HID", aml_string("PNP0A0=
-8")));
-> > > -            aml_append(dev, aml_name_decl("_CID", aml_string("PNP0A0=
-3")));
-> > > +            if (is_cxl) {
-> > > +                struct Aml *pkg =3D aml_package(2);
-> > > +                aml_append(dev, aml_name_decl("_HID", aml_string("AC=
-PI0016")));
-> > > +                aml_append(pkg, aml_eisaid("PNP0A08"));
-> > > +                aml_append(pkg, aml_eisaid("PNP0A03"));
-> > > +                aml_append(dev, aml_name_decl("_CID", pkg));
-> > > +            } else {
-> > > +                aml_append(dev, aml_name_decl("_HID", aml_string("PN=
-P0A08")));
-> > > +                aml_append(dev, aml_name_decl("_CID", aml_string("PN=
-P0A03")));
-> > > +            }
-> > >              aml_append(dev, aml_name_decl("_BBN", aml_int(bus_num)))=
-;
-> > >              aml_append(dev, aml_name_decl("_UID", aml_int(bus_num)))=
-;
-> > >              aml_append(dev, aml_name_decl("_STR", aml_unicode("pxb D=
-evice")));
-> > > @@ -175,7 +187,11 @@ void acpi_dsdt_add_gpex(Aml *scope, struct GPEXC=
-onfig *cfg)
-> > >                              cfg->pio.base, 0, 0, 0);
-> > >              aml_append(dev, aml_name_decl("_CRS", crs));
-> > > =20
-> > > -            acpi_dsdt_add_pci_osc(dev);
-> > > +            if (is_cxl) {
-> > > +                build_cxl_osc_method(dev); =20
-> >=20
-> > Either we need an #ifdef gate on CONFIG_ACPI_CXL
->=20
->  error: attempt to use poisoned "CONFIG_ACPI_CXL"
->=20
-> > or possibly a stub
-> > implementation (with a g_assert_not_reached()).
-> That works.
->=20
-> Turns out I was too lazy thinking riscv was enough to exercise the
-> not CXL support case.
->=20
-> Lesson learned - mips64el now in my standard config :)
-> I'd not realized there were ACPI supporting MIPS machines...
->=20
+Really awesome work Jonathan. Dan and I are wrapping up some of the kernel bits,
+so all I'll do for now is try to run this, but I hope to be able to review the
+parts I'm familiar with at least.
+
+On 22-01-24 17:16:23, Jonathan Cameron wrote:
+> Previous version was RFC v3: CXL 2.0 Support.
+> No longer an RFC as I would consider the vast majority of this
+> to be ready for detailed review. There are still questions called
+> out in some patches however.
+> 
+> Looking in particular for:
+> * Review of the PCI interactions
+> * x86 and ARM machine interactions (particularly the memory maps)
+> * Review of the interleaving approach - is the basic idea
+>   acceptable?
+> * Review of the command line interface.
+> * CXL related review welcome but much of that got reviewed
+>   in earlier versions and hasn't changed substantially.
+> 
+> Main changes:
+> * The CXL fixed memory windows are now instantiated via a
+>   -cxl-fixed-memory-window command line option.  As they are host level
+>   entities, not associated with a particular hardware entity a top
+>   level parameter seems the most natural way to describe them.
+>   This is also much closer to how it works on a real host than the
+>   previous assignment of a physical address window to all components
+>   along the CXL path.
+
+Excellent.
+
+> * Dynamic host memory physical address space allocation both for
+>   the CXL host bridge MMIO space and the CFMWS windows.
+
+I thought I had done the host bridge MMIO, but perhaps I was mistaken. Either
+way, this is an important step to support all platforms more generally.
+
+> * Interleaving support (based loosely on Philippe Mathieu-Daudé's
+>   earlier work on an interleaved memory device).  Note this is rudimentary
+>   and low performance but it may be sufficient for test purposes.
+
+I'll have to look at this further. I had some thoughts about how we might make
+this fast, but it would be more of fake interleaving. How low is "low"?
+
+> * Additional PCI and memory related utility functions needed for the
+>   interleaving.
+> * Various minor cleanup and increase in scope of tests.
+> * For now dropped the support for presenting CXL type 3 devices
+>   as memory devices in various QEMU interfaces.
+
+What are the downsides to this? I only used the memory interface originally
+because it seemed like a natural fit, but looking back I'm not sure we gain
+much (though my memory is very lossy).
+
+> * Dropped the patch letting UID be different from bus_nr.  Whilst
+>   it may be a useful thing to have, we don't need it for this series
+>   and so should be handled separately.
+> 
+> I've called out patches with major changes by marking them as
+> co-developed or introducing them as new patches. The original
+> memory window code has been dropped
+> 
+> After discussions at plumbers and more recently on the mailing list
+> it was clear that there was interest in getting emulation for CXL 2.0
+> upstream in QEMU.  This version resolves many of the outstanding issues
+> and enables the following features:
+> 
+> * Support on both x86/pc and ARM/virt with relevant ACPI tables
+>   generated in QEMU.
+> * Host bridge based on the existing PCI Expander Bridge PXB.
+> * CXL fixed memory windows, allowing host to describe interleaving
+>   across multiple CXL host bridges.
+> * pxb-cxl CXL host bridge support including MMIO region for control
+>   and HDM (Host manage device memory - basically interleaving / routing)
+>   decoder configuration.
+> * Basic CXL Root port support.
+> * CXL Type 3 device support with persistent memory regions (backed by
+>   hostmem backend).
+> * Pulled MAINTAINERS entry out to a separate patch and add myself as
+>   a co-maintainer at Ben's suggestion.
+> 
+> Big TODOs:
+> 
+> * Volatile memory devices (easy but it's more code so left for now).
+> * Switch support.
+> * Hotplug?  May not need much but it's not tested yet!
+> * More tests and tighter verification that values written to hardware
+>   are actually valid - stuff that real hardware would check.
+> * Main host bridge support (not a priority for me...)
+
+I originally cared about this for the sake of making a system more realistic. I
+now believe we should drop this entirely.
+
+> * Testing, testing and more testing.  I have been running a basic
+>   set of ARM and x86 tests on this, but there is always room for
+>   more tests and greater automation.
+> 
+> Why do we want QEMU emulation of CXL?
+> 
+> As Ben stated in V3, QEMU support has been critical to getting OS
+> software written given lack of availability of hardware supporting the
+> latest CXL features (coupled with very high demand for support being
+> ready in a timely fashion). What has become clear since Ben's v3
+> is that situation is a continuous one.  Whilst we can't talk about
+> them yet, CXL 3.0 features and OS support have been prototyped on
+> top of this support and a lot of the ongoing kernel work is being
+> tested against these patches.
+> 
+> Other features on the qemu-list that build on these include PCI-DOE
+> /CDAT support from the Avery Design team further showing how this
+> code is useful.  Whilst not directly related this is also the test
+> platform for work on PCI IDE/CMA + related DMTF SPDM as CXL both
+> utilizes and extends those technologies and is likely to be an early
+> adopter.
+> Refs:
+> CMA Kernel: https://lore.kernel.org/all/20210804161839.3492053-1-Jonathan.Cameron@huawei.com/
+> CMA Qemu: https://lore.kernel.org/qemu-devel/1624665723-5169-1-git-send-email-cbrowy@avery-design.com/
+> DOE Qemu: https://lore.kernel.org/qemu-devel/1623329999-15662-1-git-send-email-cbrowy@avery-design.com/
+> 
+> 
+> As can be seen there is non trivial interaction with other areas of
+> Qemu, particularly PCI and keeping this set up to date is proving
+> a burden we'd rather do without :)
+> 
+> Ben mentioned a few other good reasons in v3:
+> https://lore.kernel.org/qemu-devel/20210202005948.241655-1-ben.widawsky@intel.com/
+> 
+> The evolution of this series perhaps leave it in a less than
+> entirely obvious order and that may get tidied up in future postings.
+> I'm also open to this being considered in bite sized chunks.  What
+> we have here is about what you need for it to be useful for testing
+> currently kernel code.
+> 
+> All comments welcome.
+> 
+> Ben - I lifted one patch from your git tree that didn't have a
+> Sign-off.   hw/cxl/component Add a dumb HDM decoder handler
+> Could you confirm you are happy for one to be added?
+
+Sure.
+
+> 
+> Example of new command line (with virt ITS patches ;)
+> 
+> qemu-system-aarch64 -M virt,gic-version=3,cxl=on \
+>  -m 4g,maxmem=8G,slots=8 \
+>  ...
+>  -object memory-backend-file,id=cxl-mem1,share=on,mem-path=/tmp/cxltest.raw,size=256M,align=256M \
+>  -object memory-backend-file,id=cxl-mem2,share=on,mem-path=/tmp/cxltest2.raw,size=256M,align=256M \
+>  -object memory-backend-file,id=cxl-mem3,share=on,mem-path=/tmp/cxltest3.raw,size=256M,align=256M \
+>  -object memory-backend-file,id=cxl-mem4,share=on,mem-path=/tmp/cxltest4.raw,size=256M,align=256M \
+>  -object memory-backend-file,id=cxl-lsa1,share=on,mem-path=/tmp/lsa.raw,size=256M,align=256M \
+>  -object memory-backend-file,id=cxl-lsa2,share=on,mem-path=/tmp/lsa2.raw,size=256M,align=256M \
+>  -object memory-backend-file,id=cxl-lsa3,share=on,mem-path=/tmp/lsa3.raw,size=256M,align=256M \
+>  -object memory-backend-file,id=cxl-lsa4,share=on,mem-path=/tmp/lsa4.raw,size=256M,align=256M \
+
+Is align actually necessary here?
+
+>  -object memory-backend-file,id=tt,share=on,mem-path=/tmp/tt.raw,size=1g \
+
+Did you mean to put this in there? Is it somehow used internally?
+
+>  -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
+>  -device pxb-cxl,bus_nr=222,bus=pcie.0,id=cxl.2 \
+>  -device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
+>  -device cxl-type3,bus=root_port13,memdev=cxl-mem1,lsa=cxl-lsa1,id=cxl-pmem0,size=256M \
+>  -device cxl-rp,port=1,bus=cxl.1,id=root_port14,chassis=0,slot=3 \
+>  -device cxl-type3,bus=root_port14,memdev=cxl-mem2,lsa=cxl-lsa2,id=cxl-pmem1,size=256M \
+>  -device cxl-rp,port=0,bus=cxl.2,id=root_port15,chassis=0,slot=5 \
+>  -device cxl-type3,bus=root_port15,memdev=cxl-mem3,lsa=cxl-lsa3,id=cxl-pmem2,size=256M \
+>  -device cxl-rp,port=1,bus=cxl.2,id=root_port16,chassis=0,slot=6 \
+>  -device cxl-type3,bus=root_port16,memdev=cxl-mem4,lsa=cxl-lsa4,id=cxl-pmem3,size=256M \
+>  -cxl-fixed-memory-window targets=cxl.1,size=4G,interleave-granularity=8k \
+>  -cxl-fixed-memory-window targets=cxl.1,targets=cxl.2,size=4G,interleave-granularity=8k
+
+I assume interleave-ways is based on the number of targets. For testing purposes
+it might be nice to add the flags as well (perhaps it's there).
+
+> 
+> First CFMWS suitable for 2 way interleave, the second for 4 way (2 way
+> at host level and 2 way at the host bridge).
+> targets=<range of pxb-cxl uids> , multiple entries if range is disjoint.
+> 
+> With Ben's CXL region patches (v3 shortly) plus fixes as discussed on list,
+> Linux commands to bring up a 4 way interleave is:
+> 
+>  cd /sys/bus/cxl/devices/
+>  region=$(cat decoder0.1/create_region)
+>  echo $region  > decoder0.1/create_region
+>  ls -lh
+>  
+>  //Note the order of devices and adjust the following to make sure they
+>  //are in order across the 4 root ports.  Easy to do in a tool, but
+>  //not easy to paste in a cover letter.
+> 
+>  cd region0.1\:0
+>  echo 4 > interleave_ways
+>  echo mem2 > target0
+>  echo mem3 > target1
+>  echo mem0 > target2
+>  echo mem1 > target3
+>  echo $((1024<<20)) > size
+>  echo 4096 > interleave_granularity
+>  echo region0.1:0 > /sys/bus/cxl/drivers/cxl_region/bind
+> 
+> Tested with devmem2 and files with known content.
+> Kernel tree was based on previous version of the region patches
+> from Ben with various fixes. As Dan just posted an updated version
+> next job on my list is to test that.
+> 
+> Thanks to Shameer for his help with reviewing the new stuff before
+> posting.
+> 
+> I'll post a git tree shortly for any who prefer that to lots
+> of emails ;)
+> 
 > Thanks,
->=20
+> 
 > Jonathan
 
-Fine for development but before you post you really should pass make
-check with all machine types. Subtle interactions are not uncommon.
+Thanks again!
+Ben
 
->=20
->=20
-> >=20
-> > > +            } else {
-> > > +                acpi_dsdt_add_pci_osc(dev);
-> > > +            }
-> > > =20
-> > >              aml_append(scope, dev);
-> > >          } =20
-> >=20
-> >=20
+[snip]
+
 
