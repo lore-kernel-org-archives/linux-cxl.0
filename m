@@ -2,59 +2,97 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B38C2BA4C
-	for <linux-cxl@archiver.kernel.org>; Wed, 26 Jan 2022 15:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5D3C28CF5
+	for <linux-cxl@archiver.kernel.org>; Wed, 26 Jan 2022 16:07:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232763AbiAZPzj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 26 Jan 2022 10:55:39 -0500
-Received: from mail-yb1-f175.google.com ([209.85.219.175]:33752 "EHLO
-        mail-yb1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231444AbiAZPzj (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 26 Jan 2022 10:55:39 -0500
-Received: by mail-yb1-f175.google.com with SMTP id l68so303865ybl.0;
-        Wed, 26 Jan 2022 07:55:39 -0800 (PST)
+        id S236422AbiAZQH3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 26 Jan 2022 11:07:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54062 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236383AbiAZQH3 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 26 Jan 2022 11:07:29 -0500
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17F45C06161C
+        for <linux-cxl@vger.kernel.org>; Wed, 26 Jan 2022 08:07:28 -0800 (PST)
+Received: by mail-pl1-x62d.google.com with SMTP id c9so22881027plg.11
+        for <linux-cxl@vger.kernel.org>; Wed, 26 Jan 2022 08:07:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Gcv5s7rBRNBJ5HHAx5BTh92SWh3a8LAuqVI+SvJy7ts=;
+        b=1COukkru4jBOb3S5Q67y/wjv81NVjc9WM7QbPEWSqbar+e9+5fYgWM77aP8uTtbr3Z
+         rkaSmJed5oJ3Uxw4vUQ2OuzqOFf5FevD6sc4kE32NVwKbcWRgFhQxXFPCmK3gwmN0WFN
+         ua4MXAaIOmZeS3Dk1iz3iLCz651wCJFjRL9RIF9VXmDAcno+lNQVeJlizh9bdgPON+qo
+         GBbBVUiuU45LurCOTJ5/xeHh0Z9w1sIKWUIq0kOIH0KYzPGhL2/9YbS+WhsGx4ReK8vR
+         ZMUEwnht2P0MunhPIix0dKSTgNbkXwb6eUDmCYvs2p2STwuS71fWw4fzKQqgNZCWkY/F
+         aEug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tS/hU9a6qKbfRs6o4tBwBgMOHHqiA1hfrv/AMjRdAAk=;
-        b=Y3Yyt2qk6ntPjm1gzZPBx71wbqs0nW/K8Nu1Jzsyv0MY6Fi4jZY35bgDB/ulSXkaHe
-         DR0jUolxT4iMDD7YdJGZZ0r8IgCSV9XwAE0pUJNjKxbBceN8u8Cjjs36Q+v+pC6eFuod
-         QtfTcCGRDScosLdqRdjQFvO2Husz3ofGlilILvJJumEIFMYvluXQsRVqLxeZ8ZYqcq/4
-         NFRq7OytGluygww4XKtLbENiz+7ZdkcqvJD0buARHC/URdoNX2PjUQEY6SB/ugv2MbJL
-         xGbGBHV76Y2ZttqItwCme8m9oDqrmelJ7sY2lf+LAwIJlQVby8guvBdzMTQU14HsO+On
-         q2JA==
-X-Gm-Message-State: AOAM533vdrbM6+2MWWmhrj7zMYNzsH72RvJ71DsXN5rnTYmHMBnuiKRy
-        /eEjZ3Gc2SK0GVQ0bU1KOz1Y+W6rHz0AlxHpLDA=
-X-Google-Smtp-Source: ABdhPJwlkaUgZUT74WOhSFXXyQ/PLIOJUJ6EWYLi+FYjEnbTFILheuGkr+lNCQrHGqWx8kGwJbD4dDdydO/9DnnKDXE=
-X-Received: by 2002:a5b:58d:: with SMTP id l13mr38206370ybp.475.1643212538736;
- Wed, 26 Jan 2022 07:55:38 -0800 (PST)
+        bh=Gcv5s7rBRNBJ5HHAx5BTh92SWh3a8LAuqVI+SvJy7ts=;
+        b=1ctK+Qxis4cC50jqO0HFZYKOcF2uI5kc1YPrbyW4ly61+xmKSEM7jArJuK5+N41URR
+         VKR9R43ONW5BIw7uMDG1ZiEXMQb38WadxYDmKOG9T0NRloOjKAckFxUvh+6vT6eXKba0
+         flPMbm2eU7e06kct4iBFZPdeVIKu/6QN3iIMz0+6tpKwc2bSPb9VNVj7Yzq+rEq/Ksug
+         VohB2ZlQsK9tfzSHeatEAcLpBRetPVcmpNP4MgFI6Yzmrzy3DkjdBX/gbnraFMCoqHy3
+         IpNufJOQ60FknFpQIeRUz+vUxA2DN4pMrhsmlC4HzZAPh+Qp68Gh69By+S6c98qtU5yd
+         KhJw==
+X-Gm-Message-State: AOAM530wIbyaE/G2F8Q4roWoYqbW2TjhxOZKVqpjh13S3gkKvqxH8Smt
+        Y+uqoXo/gp56zZ+ex104OjpE0OJUfHQsNaig0rhXbA==
+X-Google-Smtp-Source: ABdhPJy1McJNZUNI3CIFgkyOW7NHw2oG5bzzyaZnDTSML8CbU3gzm1uIJISlctdV3bHiMOyqV8uYp+yriwc2u97Khhs=
+X-Received: by 2002:a17:902:ce8d:b0:14b:4bc6:e81 with SMTP id
+ f13-20020a170902ce8d00b0014b4bc60e81mr14603301plg.132.1643213248391; Wed, 26
+ Jan 2022 08:07:28 -0800 (PST)
 MIME-Version: 1.0
-References: <1b871357-2231-336d-099c-cdccae03f837@boldcoder.com>
- <82f254a1-c765-0a87-f017-8c07c8ef07cd@boldcoder.com> <CAJZ5v0hRgzGm=axigeW9aPw+ai5hMCy975=vgdY4dGYZFzzMTA@mail.gmail.com>
- <46ce952d-e854-876d-26d4-b955064743f7@boldcoder.com>
-In-Reply-To: <46ce952d-e854-876d-26d4-b955064743f7@boldcoder.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 26 Jan 2022 16:55:27 +0100
-Message-ID: <CAJZ5v0hmv7HsLUZFJwNYBAWU=Dz_Yzz6nPj7esk4TQBSQ-h2DQ@mail.gmail.com>
-Subject: Re: Patch: Make ACPI subsystem provide CEDT table
-To:     Robert Kiraly <me@boldcoder.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-cxl@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
+References: <cover.1642535478.git.alison.schofield@intel.com> <2072a34022dabcc92e3cc73b16c8008656e1084e.1642535478.git.alison.schofield@intel.com>
+In-Reply-To: <2072a34022dabcc92e3cc73b16c8008656e1084e.1642535478.git.alison.schofield@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 26 Jan 2022 08:07:17 -0800
+Message-ID: <CAPcyv4jde6kd1oT2ZEoGWDiB1E6QX2pYzSHWr=38jtY6XB5ATA@mail.gmail.com>
+Subject: Re: [ndctl PATCH v3 1/6] libcxl: add GET_PARTITION_INFO mailbox
+ command and accessors
+To:     "Schofield, Alison" <alison.schofield@intel.com>
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>,
+        linux-cxl@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Jan 26, 2022 at 4:12 AM Robert Kiraly <me@boldcoder.com> wrote:
+On Tue, Jan 18, 2022 at 12:20 PM <alison.schofield@intel.com> wrote:
 >
-> On 01/25/2022 06:49AM, Rafael J. Wysocki wrote:
->  >
->  > ACPI_SIG_CEDT is defined in 5.17-rc1 AFAICS, so the #ifdef is redundant.
+> From: Alison Schofield <alison.schofield@intel.com>
 >
-> Noted. Thank you. Should I resubmit without the #ifdef or if the patch
-> is accepted can it be removed by upstream?
+> Users need access to the CXL GET_PARTITION_INFO mailbox command
+> to inspect and confirm changes to the partition layout of a memory
+> device.
+>
+> Add libcxl APIs to create a new GET_PARTITION_INFO mailbox command,
+> the command output data structure (privately), and accessor APIs to
+> return the different fields in the partition info output.
+>
+> Per the CXL 2.0 specification, devices report partition capacities
+> as multiples of 256MB. Define and use a capacity multiplier to
+> convert the raw data into bytes for user consumption. Use byte
+> format as the norm for all capacity values produced or consumed
+> using CXL Mailbox commands.
+>
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-Please resubmit it without the #ifdef.
+Looks good to me, you might want to also add a short note about the
+"cxl_cmd_new_get_partition_info()" API in the "=== MEMDEV: Commands"
+section of Documentation/cxl/lib/libcxl.txt that I started here:
+
+https://lore.kernel.org/r/164298557771.3021641.14904324834528700206.stgit@dwillia2-desk3.amr.corp.intel.com
+
+Note that I'm not adding every single API there, but I think each
+cxl_cmd_new_<command_type>() API could use a short note.
+
+That can be a follow on depending on whether Vishal merges this first
+or the topology enumeration series.
+
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
