@@ -2,56 +2,56 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22880C433F5
-	for <linux-cxl@archiver.kernel.org>; Thu, 27 Jan 2022 14:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60E5C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 27 Jan 2022 14:12:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242232AbiA0OLw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 27 Jan 2022 09:11:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45300 "EHLO
+        id S237306AbiA0OMn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 27 Jan 2022 09:12:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242211AbiA0OLw (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 27 Jan 2022 09:11:52 -0500
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11374C061714
-        for <linux-cxl@vger.kernel.org>; Thu, 27 Jan 2022 06:11:52 -0800 (PST)
-Received: by mail-wr1-x42d.google.com with SMTP id a13so5012347wrh.9
-        for <linux-cxl@vger.kernel.org>; Thu, 27 Jan 2022 06:11:51 -0800 (PST)
+        with ESMTP id S242264AbiA0OMl (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 27 Jan 2022 09:12:41 -0500
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C5D9C061714
+        for <linux-cxl@vger.kernel.org>; Thu, 27 Jan 2022 06:12:40 -0800 (PST)
+Received: by mail-ej1-x62b.google.com with SMTP id ah7so6171036ejc.4
+        for <linux-cxl@vger.kernel.org>; Thu, 27 Jan 2022 06:12:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=references:user-agent:from:to:cc:subject:date:in-reply-to
          :message-id:mime-version:content-transfer-encoding;
-        bh=nfBtEnUaAD+Rl57EBhhAi7yBAFPLODzTZc4TVL6N3wU=;
-        b=i+F/SpSK1sgmeVVUg5Ao+uTuympTSQjIqxOsTx56HkG7Mlg2mm0RZMb7YXypCaBePX
-         WqsJBRKnBF0d1oIcByS6lQ6bJExz9UplPg5AqLYp42HbeF5vC88ue3Qs0wRVqWpD+BCg
-         ciOVdTf1m4t0wEmIUUBkeejJhDdybH6wh3LDMK3XBidmUExeT2AjYv1LRA5/y3q7CLF+
-         3Q5vmZjmNd1WMS0b+gfCPqnA930iqa3yFsdZTT7/av2UukWYs7+SvhQGVxmKNx3h3dPE
-         hTzfxhS2T/QN6d3dtf4cDP08Sbo7Vr/lNxeckuIyMptAlftj36xuLnB2M8X5/jHH4fOk
-         IntA==
+        bh=KLTW43m14STAUOT82UxdiR7lbPM9jRR2XlYTsv+pZb8=;
+        b=LSKiQNQ/QDgcXDk80fCC+vPvJCCtK4mCR6QO+86xQG0j3STLd3VHVNLvfxMcaNfvfU
+         8x0fZYewSKI0Lp2TAiU0Dbd2yexqmNKVJCeN9DZwLjF5Z4WH7b1UEh39MvxEDIa7Zz4/
+         QyfVlYh1ORz8cE+cpW5+nHY/pgsuKor8o4aRwtiCjK3vOa21tx1hV3VmmnM2Vadmp4gI
+         7HNAwOQBZnBPrEcsg+sw2hHZLCQEkQ1eFmg5xXa57TOYUl7n4l1YSs2NTM1PnEKO0NCZ
+         ZU5JnYyHzmF7eMqsfqFpHf0jGSkMnfbMF8feZpqHQZEBdeIz8tkwwwVH7c5GtuwjZ3iC
+         rvPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:references:user-agent:from:to:cc:subject:date
          :in-reply-to:message-id:mime-version:content-transfer-encoding;
-        bh=nfBtEnUaAD+Rl57EBhhAi7yBAFPLODzTZc4TVL6N3wU=;
-        b=PRa298TzYFtoHR6cWms62U6US9Ee6ikthpudn+sABleDzDTWgqWfuZD7yikrYUwCpc
-         3rtkrfDfVcmfQ3d01Hr01IxU9dONOiwVPXXSFgCcqsHvvDoKiFZ0ETaxxDZDwSJ+hr7c
-         J1oxCj4JFCP7piwLPaeCfPvoCNA66wH/rLXo5dhQzevolYAJeyLcQskMWpAGp8iQaZhH
-         8RlhAADQsfb/VXP0Ta8lzWrWVhEfS337bOY62x526dGg4Sg5y3nmRF0R+FApjpBjFqpV
-         Gk0deE1CsVoMwry4EzJGrshW3j8ORmRZ9iNBBh+9FzGmibcs+JRGFlrknxJWGNKBtzJZ
-         5bRw==
-X-Gm-Message-State: AOAM532aliRD7IwYn8tfxQwmgwOJZM3OuRWuX879Dj6hXq2CtLmtobnh
-        g1VylHQpamtppc5p6vZm6WR3pQ==
-X-Google-Smtp-Source: ABdhPJywtdipFXmukBO+I0QEyggurZdjA9YNF3Y9x0oKpJkpu859hPM/bdut3+8SLR27Nc++86wEAw==
-X-Received: by 2002:adf:e60f:: with SMTP id p15mr3176772wrm.177.1643292710553;
-        Thu, 27 Jan 2022 06:11:50 -0800 (PST)
+        bh=KLTW43m14STAUOT82UxdiR7lbPM9jRR2XlYTsv+pZb8=;
+        b=nNF066Me4Q3xhfjpGsyISyegpKZielnu868GJDGi6b5Hv3G+4MGzcBL1XLEPf0BRRT
+         wEjwtfAr9YWmdlDBoAurh1UBvvvDpqQ1Jf18UywFIZ7/oiowGso282mDY7iK3R/yDc5t
+         e6D6+g0vnaXQt0CgKeHVsu5iOQIFAXXdgzkEyuJMgBP2Wr/9KTQbNWHYUEIcuq0m/mXl
+         7Rbn3vQxfXP9Fi6YT/ObIMpnWNXRxDH4jv4DW7zGgKmFQMnAf0LJ9fzRGaZJK7tJztOL
+         ZhGeF9222AgSvCg71D9omNIX8MC+fLZZ5yL/J6JPwwwErKKXqfU/M/hKKJkT9VIvWiaO
+         2F7g==
+X-Gm-Message-State: AOAM531RV2UPyFw0rLQISS9pCe6LLOR4JHUbdIBISHDTMAtLlH+mc+Ap
+        ZE3Otf2BKzNG5UgTqztm0ei5tQ==
+X-Google-Smtp-Source: ABdhPJxRAYsYL5RpikAUlTxLEzPGj4fGnku4zZ0OeqxLswk+XuLJqQDV02jMOOSuyJl7sVPR1NMjRA==
+X-Received: by 2002:a17:906:938f:: with SMTP id l15mr3028131ejx.99.1643292759195;
+        Thu, 27 Jan 2022 06:12:39 -0800 (PST)
 Received: from zen.linaroharston ([51.148.130.216])
-        by smtp.gmail.com with ESMTPSA id n5sm2318273wmq.43.2022.01.27.06.11.49
+        by smtp.gmail.com with ESMTPSA id by22sm8777166ejb.84.2022.01.27.06.12.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jan 2022 06:11:49 -0800 (PST)
+        Thu, 27 Jan 2022 06:12:38 -0800 (PST)
 Received: from zen (localhost [127.0.0.1])
-        by zen.linaroharston (Postfix) with ESMTP id 674831FFB7;
-        Thu, 27 Jan 2022 14:11:48 +0000 (GMT)
+        by zen.linaroharston (Postfix) with ESMTP id 7A7F61FFB7;
+        Thu, 27 Jan 2022 14:12:37 +0000 (GMT)
 References: <20220124171705.10432-1-Jonathan.Cameron@huawei.com>
- <20220124171705.10432-16-Jonathan.Cameron@huawei.com>
+ <20220124171705.10432-17-Jonathan.Cameron@huawei.com>
 User-agent: mu4e 1.7.6; emacs 28.0.91
 From:   Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
@@ -68,10 +68,10 @@ Cc:     qemu-devel@nongnu.org, Marcel Apfelbaum <marcel@redhat.com>,
         Chris Browy <cbrowy@avery-design.com>,
         Samarth Saxena <samarths@cadence.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v4 15/42] acpi/pci: Consolidate host bridge setup
-Date:   Thu, 27 Jan 2022 14:10:00 +0000
-In-reply-to: <20220124171705.10432-16-Jonathan.Cameron@huawei.com>
-Message-ID: <875yq59skb.fsf@linaro.org>
+Subject: Re: [PATCH v4 16/42] tests/acpi: Add update DSDT.viot
+Date:   Thu, 27 Jan 2022 14:12:24 +0000
+In-reply-to: <20220124171705.10432-17-Jonathan.Cameron@huawei.com>
+Message-ID: <871r0t9siy.fsf@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
@@ -82,107 +82,59 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
 
-> From: Ben Widawsky <ben.widawsky@intel.com>
+> From: Jonathan Cameron <jonathan.cameron@huawei.com>
 >
-> This cleanup will make it easier to add support for CXL to the mix.
+> The consolidation of DSDT AML generation for PCI host bridges
+> lead to some minor ordering changes and the addition of _ADR
+> with a default of 0 for those case that didn't already have it.
+> Only DSDT.viot test is affected.
 >
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Changes all similar to:
+>
+> Scope (\_SB)
+>      {
+>        Device (PC30)
+>        {
+> -        Name (_UID, 0x30)  // _UID: Unique ID
+>          Name (_BBN, 0x30)  // _BBN: BIOS Bus Number
+>          Name (_HID, EisaId ("PNP0A08") /* PCI Express Bus */)  // _HID: =
+Hardware ID
+>          Name (_CID, EisaId ("PNP0A03") /* PCI Bus */)  // _CID: Compatib=
+le ID
+> +        Name (_ADR, Zero)  // _ADR: Address
+> +        Name (_UID, 0x30)  // _UID: Unique ID
+>          Method (_OSC, 4, NotSerialized)  // _OSC: Operating System Capab=
+ilities
+>
+> Signed-off-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 > ---
->  hw/i386/acpi-build.c | 38 +++++++++++++++++++++-----------------
->  1 file changed, 21 insertions(+), 17 deletions(-)
+>  tests/data/acpi/q35/DSDT.viot               | Bin 9398 -> 9416 bytes
+>  tests/qtest/bios-tables-test-allowed-diff.h |   1 -
+>  2 files changed, 1 deletion(-)
 >
-> diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
-> index ce823e8fcb..1d8ee988f2 100644
-> --- a/hw/i386/acpi-build.c
-> +++ b/hw/i386/acpi-build.c
-> @@ -1398,6 +1398,23 @@ static void build_smb0(Aml *table, I2CBus *smbus, =
-int devnr, int func)
->      aml_append(table, scope);
->  }
->=20=20
-> +enum { PCI, PCIE };
+> diff --git a/tests/data/acpi/q35/DSDT.viot b/tests/data/acpi/q35/DSDT.viot
+> index 1c3b4da5cbe81ecab5e1ef50d383b561c5e0f55f..207ac5b9ae4c3a4bc0094c224=
+2d1a1b08771b784 100644
+> GIT binary patch
+> delta 139
+> zcmdnydBT&+CD<k8gbD)#<CBeCu5zLdVlnZ-PVv!A?xF$C#s(bmPELMY6KfQhxC}No
+> z$Z0Y1qbM*kn0!E9nwKNq(Itq1BR<sAg-ZdbOrCM_F9mK?rG^HRr4><?3V@Yv4pmBI
+> F0sxp4B{u*7
+>
+> delta 143
+> zcmX@%xy_TyCD<ion+gL1<MNGMu5zMYqA~HoPVv!Aj-mn1#s(bmp`I>WlVjy%CeC%7
+> z+^Kj^(SX5#0jQdxl0g7Ptr1kM!sPw((lEse3<_8k8$uNeOjb|?Dc;<vXwM7)8)+to
+>
+> diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bi=
+os-tables-test-allowed-diff.h
+> index 08a8095432..dfb8523c8b 100644
+> --- a/tests/qtest/bios-tables-test-allowed-diff.h
+> +++ b/tests/qtest/bios-tables-test-allowed-diff.h
+> @@ -1,2 +1 @@
+>  /* List of comma-separated changed AML files to ignore */
+> -"tests/data/acpi/q35/DSDT.viot",
 
-Make this a typed enum and update the signatures to use it instead of
-int to prevent confusion.
-
-> +static void init_pci_acpi(Aml *dev, int uid, int type, bool native_pcie_=
-hp)
-> +{
-> +    if (type =3D=3D PCI) {
-> +        aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A03")));
-> +        aml_append(dev, aml_name_decl("_ADR", aml_int(0)));
-> +        aml_append(dev, aml_name_decl("_UID", aml_int(uid)));
-> +    } else {
-> +        aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A08")));
-> +        aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A03")));
-> +        aml_append(dev, aml_name_decl("_ADR", aml_int(0)));
-> +        aml_append(dev, aml_name_decl("_UID", aml_int(uid)));
-> +        /* Expander bridges do not have ACPI PCI Hot-plug enabled */
-> +        aml_append(dev, build_q35_osc_method(native_pcie_hp));
-> +    }
-> +}
-> +
->  static void
->  build_dsdt(GArray *table_data, BIOSLinker *linker,
->             AcpiPmInfo *pm, AcpiMiscInfo *misc,
-> @@ -1429,9 +1446,7 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
->      if (misc->is_piix4) {
->          sb_scope =3D aml_scope("_SB");
->          dev =3D aml_device("PCI0");
-> -        aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A03")));
-> -        aml_append(dev, aml_name_decl("_ADR", aml_int(0)));
-> -        aml_append(dev, aml_name_decl("_UID", aml_int(pcmc->pci_root_uid=
-)));
-> +        init_pci_acpi(dev, pcmc->pci_root_uid, PCI, false);
->          aml_append(sb_scope, dev);
->          aml_append(dsdt, sb_scope);
->=20=20
-> @@ -1447,11 +1462,7 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
->      } else {
->          sb_scope =3D aml_scope("_SB");
->          dev =3D aml_device("PCI0");
-> -        aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A08")));
-> -        aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A03")));
-> -        aml_append(dev, aml_name_decl("_ADR", aml_int(0)));
-> -        aml_append(dev, aml_name_decl("_UID", aml_int(pcmc->pci_root_uid=
-)));
-> -        aml_append(dev, build_q35_osc_method(!pm->pcihp_bridge_en));
-> +        init_pci_acpi(dev, pcmc->pci_root_uid, PCIE, !pm->pcihp_bridge_e=
-n);
->          aml_append(sb_scope, dev);
->          if (mcfg_valid) {
->              aml_append(sb_scope, build_q35_dram_controller(&mcfg));
-> @@ -1562,17 +1573,10 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
->=20=20
->              scope =3D aml_scope("\\_SB");
->              dev =3D aml_device("PC%.02X", bus_num);
-> -            aml_append(dev, aml_name_decl("_UID", aml_int(bus_num)));
->              aml_append(dev, aml_name_decl("_BBN", aml_int(bus_num)));
-> -            if (pci_bus_is_express(bus)) {
-> -                aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A0=
-8")));
-> -                aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A0=
-3")));
->=20=20
-> -                /* Expander bridges do not have ACPI PCI Hot-plug enable=
-d */
-> -                aml_append(dev, build_q35_osc_method(true));
-> -            } else {
-> -                aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A0=
-3")));
-> -            }
-> +            init_pci_acpi(dev, bus_num,
-> +                          pci_bus_is_express(bus) ? PCIE : PCI, true);
->=20=20
->              if (numa_node !=3D NUMA_NODE_UNASSIGNED) {
->                  aml_append(dev, aml_name_decl("_PXM", aml_int(numa_node)=
-));
-
-Otherwise:
-
-Reviewed-by: Alex Benn=C3=A9e <alex.bennee@linaro.org>
-
+squash with the change please.
 
 --=20
 Alex Benn=C3=A9e
