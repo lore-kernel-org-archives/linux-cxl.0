@@ -2,78 +2,77 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B7CC433F5
-	for <linux-cxl@archiver.kernel.org>; Thu, 27 Jan 2022 21:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BCBC433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 27 Jan 2022 22:46:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230317AbiA0V3g (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 27 Jan 2022 16:29:36 -0500
-Received: from mga03.intel.com ([134.134.136.65]:30536 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229610AbiA0V3g (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 27 Jan 2022 16:29:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643318976; x=1674854976;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=gQO89et669dzx6ow2bGppQogeEOsPa/FRO7ZoBM0oT4=;
-  b=Wt7qivZIL0RZrGtT28zq1I3LsyZ822Y9uv6/MFORpBrhrR6AHf3DNzqE
-   zg02RffYttELEW2EW6ZcfOjNPiq4ZwxKndf6OC06bTlpFNfHTyD97JBnB
-   I4MMDA9jjxo5m6OD4Dt7jsW2rB+d8w1SLwe0AEX+6l/X838xxIxMdKrZM
-   hp8ULzb0d5Ica8zPaJARxNM7MeoZylD3IbvD25COOSJIaY6y/jjm6ph2Q
-   FL8hPNJ1QiSJ/AvuMr1g4I6VV4h21FAVZ19zcdyVRHSzZsV0adSgLE5Ql
-   DLu2azI4APXZQkTzKxsKGqAVCIej4cte8PWZWI3vXbar8jF6LO4hjEQWK
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10239"; a="246914534"
-X-IronPort-AV: E=Sophos;i="5.88,321,1635231600"; 
-   d="scan'208";a="246914534"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2022 13:29:33 -0800
-X-IronPort-AV: E=Sophos;i="5.88,321,1635231600"; 
-   d="scan'208";a="521402187"
-Received: from vrao2-mobl1.gar.corp.intel.com (HELO localhost.localdomain) ([10.252.129.6])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2022 13:29:32 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     patches@lists.linux.dev, Ben Widawsky <ben.widawsky@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH 1/4] cxl/acpi: Store interleave granularity absolutely
-Date:   Thu, 27 Jan 2022 13:29:08 -0800
-Message-Id: <20220127212911.127741-2-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.35.0
-In-Reply-To: <20220127212911.127741-1-ben.widawsky@intel.com>
-References: <20220127212911.127741-1-ben.widawsky@intel.com>
+        id S236300AbiA0WqF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 27 Jan 2022 17:46:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52898 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232505AbiA0WqF (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 27 Jan 2022 17:46:05 -0500
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBF6CC061714
+        for <linux-cxl@vger.kernel.org>; Thu, 27 Jan 2022 14:46:04 -0800 (PST)
+Received: by mail-pf1-x429.google.com with SMTP id 128so4284522pfe.12
+        for <linux-cxl@vger.kernel.org>; Thu, 27 Jan 2022 14:46:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5baFyXldvQMErFU+/ifbyciqTBCmZNJDFU4jFRID7Sc=;
+        b=jc5NcQe5YZDoJ8NVYCY0XyYexoxkcBDTwpQPjuG/lEMLr+zJUaq5FPhRACD01OV9Wv
+         XR2Xp6NMg3zfcFPeg8cMdfUuiSigVhuUYet7Ll4ht3A5gt1I35lrOqr/ye/dkOWugt+G
+         GeymfKAWdOf8t1KPcYXfR3t5se1bo8I//nmwZACwmcE8RMSdWoK7HXphWji4JR2pigtE
+         Rau+TBN4vRoRG2HFz6EmhS2gZJLyoV05tVA5Rl2P4rTCPW0VqZdeX5hyOO0Ma5FX9/sD
+         PsuqJD3j+xCvzM8F+ikQ8eN4Bm/SX6A0a0PXgLB+aDFLV1nBmzLr++HnOevLY/NLNQME
+         UNvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5baFyXldvQMErFU+/ifbyciqTBCmZNJDFU4jFRID7Sc=;
+        b=ghF1cS/6syXS8zexAvyxj7G6nMyTTCkIMzQj5EkwIMMJISuyJxnmYhQwE76Xs5Cx2b
+         22upg9NOSrbCE5zbaBrHYuFYHrnQEqTCvJWw9dVOIXL7dJLkzKPgEBhEjGwzU+QpWBVC
+         p/LCEJ1rsZNFLpeiHd9xXfo0OJuUSGK3wfLMt0NmgUyA1o3cKlRnpkOAUOoBxOeeYKCB
+         +HfdcL14ZdyG9G9BMHzL01yGC9QokuzQE9TjgMq5ZVoJ0lbZNsjxsS126SavUj5hyknN
+         bg8GoRZ0lx51Jtsj1cXK2RLhjwuVOaPxw7m1OeF6mo47GmC6rCV3gqKhy8zygUasKzSh
+         zSeg==
+X-Gm-Message-State: AOAM530QQKgTaQ3Kl3It0F9ihyMeY7nv9IJ2tJpFnwY3h7Lha2AcOx8E
+        pwEBonSerGJwdIj/q2CtUhnY4JI8qkFj2EhjE1meiH0tZWqZnA==
+X-Google-Smtp-Source: ABdhPJzEmxxk1ppI610r8vxQ20er+wXH07RAWUU25vYVKbXyfrMjJazNJ+F9r1YtkkAP1AtheniX47agrsCbnenki90=
+X-Received: by 2002:a63:550f:: with SMTP id j15mr4335426pgb.40.1643323564338;
+ Thu, 27 Jan 2022 14:46:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220127212911.127741-1-ben.widawsky@intel.com> <20220127212911.127741-3-ben.widawsky@intel.com>
+In-Reply-To: <20220127212911.127741-3-ben.widawsky@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 27 Jan 2022 14:45:53 -0800
+Message-ID: <CAPcyv4irOFTkrtAai7SLK1pdKNceQv83JrVoh5P5Px5xC5t3WQ@mail.gmail.com>
+Subject: Re: [PATCH 2/4] cxl/core: Add more decoder attributes to sysfs
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, patches@lists.linux.dev,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-This matches the usages everywhere else in the driver and matches the
-existing kernel documentation defined for CXL decoders.
+On Thu, Jan 27, 2022 at 1:29 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> The decoder attributes are consumed by userspace in order to program and
+> verify the CXL topology.
+>
+> An example of the new attributes is with x1 and 8192 granularity:
+> archlinux ~ # cat /sys/bus/cxl/devices/decoder0.0/interleave_{ways,granularity}
+> 1
+> 8192
+>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> ---
+>  drivers/cxl/core/port.c | 21 +++++++++++++++++++++
 
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
----
- drivers/cxl/acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index f64d98bfcb3b..f99cad8350fd 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -11,7 +11,7 @@
- 
- /* Encode defined in CXL 2.0 8.2.5.12.7 HDM Decoder Control Register */
- #define CFMWS_INTERLEAVE_WAYS(x)	(1 << (x)->interleave_ways)
--#define CFMWS_INTERLEAVE_GRANULARITY(x)	((x)->granularity + 8)
-+#define CFMWS_INTERLEAVE_GRANULARITY(x)	(1 << ((x)->granularity + 8))
- 
- static unsigned long cfmws_to_decoder_flags(int restrictions)
- {
--- 
-2.35.0
-
+Looks good, just missing the update to Documentation/ABI/testing/sysfs-bus-cxl
