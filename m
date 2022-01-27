@@ -2,201 +2,84 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D719AC433F5
-	for <linux-cxl@archiver.kernel.org>; Thu, 27 Jan 2022 05:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB42C433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 27 Jan 2022 10:15:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236302AbiA0Fjy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 27 Jan 2022 00:39:54 -0500
-Received: from mga07.intel.com ([134.134.136.100]:38383 "EHLO mga07.intel.com"
+        id S235159AbiA0KPX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 27 Jan 2022 05:15:23 -0500
+Received: from box.aukejan.com ([173.82.79.94]:41535 "EHLO box.aukejan.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229801AbiA0Fjw (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 27 Jan 2022 00:39:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643261992; x=1674797992;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=EokrHqfA7vWfvlxb+/FaHr7Z5GBS3hJ/BD9JQb4yPVQ=;
-  b=CFvyVsr4E7LvJOmVLe6WCy9Rkck2A81A7oYMwcLuSkRH/nZHUb6J+83O
-   jW+76cSs7jZb62Z6JnoQDSuU73J/TAFie3U5ydK3iuuFQFSEDsAuOuOaT
-   Qr8EqH+YQF18zjZQq3RlPR45/eab3/PIPMchrOIOdTobz4GI+C6ZdF9E/
-   zsKrBbEbXmyF7Hr78aGS2WBFeq0FHzJe6Ti7+CvvC8sZ4VqvSXLWvog9j
-   tu6+qgFip75d22Be7SHKZDnAcx9YaA6bbXHC9+p54MDpVGsWF/ijyYfYk
-   Qkk3nXCuhyzNDDmHnj9qx7Gllg8iWVZ1ikjrLs/MvRbS2QaR5dXGqTSCl
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10239"; a="310068904"
-X-IronPort-AV: E=Sophos;i="5.88,320,1635231600"; 
-   d="scan'208";a="310068904"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 21:39:51 -0800
-X-IronPort-AV: E=Sophos;i="5.88,320,1635231600"; 
-   d="scan'208";a="769615312"
-Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.41])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 21:39:51 -0800
-Date:   Wed, 26 Jan 2022 21:44:21 -0800
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        linux-cxl@vger.kernel.org
-Subject: Re: [ndctl PATCH v3 6/6] cxl: add command set-partition-info
-Message-ID: <20220127054421.GE890284@alison-desk>
-References: <cover.1642535478.git.alison.schofield@intel.com>
- <d8760a4a0ca5b28be4eee27a2581ca8c2abe3e49.1642535478.git.alison.schofield@intel.com>
- <CAPcyv4gx+mvAPEmYstUXAsjWY=Aq7zb4y4V+QGzwnauk1F8DEw@mail.gmail.com>
+        id S238913AbiA0KPX (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 27 Jan 2022 05:15:23 -0500
+Received: from authenticated-user (box.aukejan.com [173.82.79.94])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        (No client certificate requested)
+        by box.aukejan.com (Postfix) with ESMTPSA id E207B5D244;
+        Thu, 27 Jan 2022 02:15:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=boldcoder.com;
+        s=mail; t=1643278522;
+        bh=ZdKc9q4aIMBMcoe62PEfHd193UcT39U+kgm3F2x+ues=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=OcUDpf/zonOAhWMQzzfOt0MBka/zueJNNhkyQ4uLLYNZKGhJwsOZrRpOoF3TxFVCL
+         xwn2h3t4z7lhM6SQSOmNY9hfnGMKYj98lMLD+mTji00Bn08H3R9IbWr/N9Cpof5vca
+         +c+rf5+kRmNzrUmWOi5/r3mv9xPzmwYQmea/wF9NTp8C++HFefe32Zgd+DjGqhayGC
+         +VuPVdUVxkw7azWHo9J1xtd1DsUICczQvGnpNy/5ynlGC4c1yPBrpMbmsTfiz/y6b1
+         9DXLa6HBTrV1QjRx3c99W5hc2g7GjfBKGl5ml0LNhaErTghVNp+Ts2gh5nlgmpmQbo
+         BfItEKmF04l1w==
+Subject: Patch: Make ACPI subsystem provide CEDT table
+From:   Robert Kiraly <me@boldcoder.com>
+To:     linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org
+Cc:     Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <1b871357-2231-336d-099c-cdccae03f837@boldcoder.com>
+ <82f254a1-c765-0a87-f017-8c07c8ef07cd@boldcoder.com>
+Message-ID: <a20337bb-9e83-e387-7d10-a2843f7286b3@boldcoder.com>
+Date:   Thu, 27 Jan 2022 02:15:23 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4gx+mvAPEmYstUXAsjWY=Aq7zb4y4V+QGzwnauk1F8DEw@mail.gmail.com>
+In-Reply-To: <82f254a1-c765-0a87-f017-8c07c8ef07cd@boldcoder.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Jan 26, 2022 at 05:44:54PM -0800, Dan Williams wrote:
-> On Tue, Jan 18, 2022 at 12:20 PM <alison.schofield@intel.com> wrote:
-> >
-> > From: Alison Schofield <alison.schofield@intel.com>
-> >
-> > Users may want to change the partition layout of a memory
-> > device using the CXL command line tool.
-> 
-> How about:
-> 
-> CXL devices may support both volatile and persistent memory capacity.
-> The amount of device capacity set aside for each type is typically
-> established at the factory, but some devices also allow for dynamic
-> re-partitioning, add a command for this purpose.
+This is a simple ACPI patch. I'm submitting a revised version to=20
+linux-acpi per Rafael Wysocki and linux-cxl per Dan Williams.
 
-Thanks!
-> 
-> > Add a new CXL command,
-> > 'cxl set-partition-info', that operates on a CXL memdev, or a
-> > set of memdevs, and allows the user to change the partition
-> > layout of the device(s).
-> >
-> > Synopsis:
-> > Usage: cxl set-partition-info <mem0> [<mem1>..<memN>] [<options>]
-> 
-> It's unfortunate that the specification kept the word "info" in the
-> set-partition command name, let's leave it out of this name and just
-> call this 'cxl set-partition'.
-> 
-Will do. 
+Thunderbird has added CRs so "patch -p1 -l" is needed.
 
-> >
-> >         -v, --verbose           turn on debug
-> >         -s, --volatile_size <n>
-> >                                 next volatile partition size in bytes
-> 
-> Some users will come to this tool with the thought, "I want volatile
-> capacity X", others "I want pmem capacity Y". All but the most
-> advanced users will not understand how the volatile setting affects
-> the pmem and vice versa, nor will they understand that capacity might
-> be fixed and other capacity is dynamic.
+=3D=3D=3D=3D start of patch =3D=3D=3D=3D
+Subject: Make ACPI subsystem provide CEDT table
+Signed-off-by: Robert Kiraly <me@boldcoder.com>
 
-I went very by the spec here, with those advance users in mind. I do
-think the user with limited knowledge may get frustrated by the rules.
-ie. like finding that their total capacity is not all partitionable
-capacity. I looked at ipmctl goal setting, where they do percentages,
-and didn't pursue - stuck with the spec.
+This is a simple patch to the ACPI subsystem. The patch adds ACPI
+_SIG_CEDT to table_sigs[] in  "drivers/acpi/tables.c".
 
-I like this below. If user wants 100% of any type, no math needed. But,
-anything else the user will have to specify a byte value.
+Presently,  CXL code isn't able to make use of the  CEDT table at
+the initrd stage. Subsequent to the change, the CEDT table can be
+used.
 
-> So how about a set of options like:
-> 
-> -t, --type=<volatile,pmem>
-> -s,--size=<size>
-> 
-> ...where by default -t is 'pmem' and -s is '0' for 100% of the dynamic
-> capacity set to PMEM.
->
-I don't get the language "and -s is '0' for 100%", specifically, the
-"-s is 0".
+If  a developer  plans to use the CEDT table to  program  the CXL
+ports,  this change is needed.  Otherwise,  it isn't  expected to
+make a difference.
 
-If -s is ommitted the default behavior will be to set 100% of the
-partitionable capacity to type.
+I certify  compliance with  Developer=E2=80=99s Certificate of Origin 1.1=
 
-If both type and size are ommitted, 100% of partitionable capacity is
-set to PMEM.
+as listed in:
+https://www.kernel.org/doc/html/v4.10/process/submitting-patches.
+html
 
-Humor me...are these right?  
+--- linux-5.16.old/drivers/acpi/tables.c
++++ linux-5.16/drivers/acpi/tables.c
+@@ -500,7 +500,7 @@
+  	ACPI_SIG_WDDT, ACPI_SIG_WDRT, ACPI_SIG_DSDT, ACPI_SIG_FADT,
+  	ACPI_SIG_PSDT, ACPI_SIG_RSDT, ACPI_SIG_XSDT, ACPI_SIG_SSDT,
+  	ACPI_SIG_IORT, ACPI_SIG_NFIT, ACPI_SIG_HMAT, ACPI_SIG_PPTT,
+-	ACPI_SIG_NHLT };
++	ACPI_SIG_CEDT, ACPI_SIG_NHLT };
 
-set-partition mem0
-	100% to pmem
+  #define ACPI_HEADER_SIZE sizeof(struct acpi_table_header)
 
-set-partition mem0 -tpmem 
-	100% to pmem
+=3D=3D=3D=3D end of patch =3D=3D=3D=3D
 
-set-partition mem0 -tvolatile -s0
-	100% to pmem          ^^ That's what I think a -s0 does?!?
-
-set-partition mem0 -tvolatile
-	100% to volatile
-
-set-partition mem0 -tvolatile -s256MB
-	256MB to volatile
-	Remainder to pmem
-
-set-partition mem0 -s256MB
-	256MB to pmem
-	Remainder to volatile
-
-Thanks!
-
-> The tool can then help the user get what they want relative to
-> whatever frame of reference led them to read the set-partition man
-> page. The tool can figure out the details behind the scenes, or warn
-> them if they want something impossible like setting PMEM capacity to
-> 1GB on a device where 2GB of PMEM is statically allocated.
-> 
-> This also helps with future proofing in case there are other types
-> that come along.
-> 
-Got it.
-
-> >
-> > The included MAN page explains how to find the partitioning
-> > capabilities and restrictions of a CXL memory device.
-> >
-snip
-
-> > +-------
-> > +<memory device(s)>::
-> > +include::memdev-option.txt[]
-> > +
-> > +-s::
-> > +--size=::
-> 
-> This is "--volatile_size" in the current patch, but that's moot with
-> feedback to move to a --type + --size scheme.
-
-Got it.
-
-> 
-> > +        Size in bytes of the volatile partition requested.
-> > +
-> > +        Size must align to the devices partition_alignment_bytes.
-> > +        Use 'cxl list -m <memdev> -I' to find partition_alignment_bytes.
-> 
-> This a static 256M, that can just be documented here.
-> 
-My read of the spec says partition alignment is "Expressed in multiples
-of 256MB", not static. Where is it defined as static?
-
-> > +
-> > +        Size must be less than or equal to the device's partitionable bytes.
-> > +        Calculate partitionable bytes by subracting the volatile_only_bytes,
-> 
-> s/subracting/subtracting/
-> 
-> ...but rather than teaching the user to input valid values, tell them
-> the validation and translation the tool will do on their behalf with
-> the input based on type and the details they don't need to worry
-> about.
-
-Got it.
-
-Thanks Dan.
