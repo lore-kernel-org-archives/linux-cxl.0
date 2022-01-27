@@ -2,235 +2,198 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0E4C433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 26 Jan 2022 23:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6581C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 27 Jan 2022 01:45:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231509AbiAZX7I (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 26 Jan 2022 18:59:08 -0500
-Received: from mga09.intel.com ([134.134.136.24]:34296 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229547AbiAZX7I (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Wed, 26 Jan 2022 18:59:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643241548; x=1674777548;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=y58xquDc3V7DyNC7NTUtBsYIcGV8ga/AGHousy1DxZo=;
-  b=jFgYu98BFkrTeXuxMDXPKmDZujkVS6t9PTlRrr4fJrxYM19qSyrHTI3A
-   2yTWJfmW5JQodjvIWL1sZV+sjek+lQ+/gamFn+SVO9cr8CldEO5zOuHd4
-   Gd6co8mLofzNBa0RnbKIHgcoS/zBn9aLfQ8v6WiJAVBwW2hbSnNgKN+gs
-   guYsWne0vGotGL7VZa2sThskpobhj8rmRG5EgUd/9aRGv9pkD6ViwJedz
-   FRm1fkPBa7EFgURJB85lZiaAuUzmiJlbexnN1aNm5cGuI3JZf4GzvnXDh
-   xfSdklh8VAbfadoBMTTBUNXPCz+3B36vIXzdDI+J9Hkbs880/Isu5vyPV
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10239"; a="246470890"
-X-IronPort-AV: E=Sophos;i="5.88,319,1635231600"; 
-   d="scan'208";a="246470890"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 15:59:07 -0800
-X-IronPort-AV: E=Sophos;i="5.88,319,1635231600"; 
-   d="scan'208";a="628482768"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 15:59:07 -0800
-Subject: [PATCH v5 18/40] cxl/pmem: Introduce a find_cxl_root() helper
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-pci@vger.kernel.org,
-        nvdimm@lists.linux.dev
-Date:   Wed, 26 Jan 2022 15:59:07 -0800
-Message-ID: <164324151672.3935633.11277011056733051668.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <164322333437.3694981.17087130505938650994.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <164322333437.3694981.17087130505938650994.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        id S234670AbiA0BpG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 26 Jan 2022 20:45:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45992 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229816AbiA0BpG (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 26 Jan 2022 20:45:06 -0500
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB26DC06161C
+        for <linux-cxl@vger.kernel.org>; Wed, 26 Jan 2022 17:45:05 -0800 (PST)
+Received: by mail-pf1-x433.google.com with SMTP id i30so1275876pfk.8
+        for <linux-cxl@vger.kernel.org>; Wed, 26 Jan 2022 17:45:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=tYGK3wY4fdBRiVN5u48Y7M8NvjV74Kds/0Hqs31NUKk=;
+        b=T8MjxwC21g/W/VMj9bBTRnkhzmDWvX9Vo0/FxC1/XNa2tQTuVa0/UChFLc4QeEjNa0
+         +rTtsF2HgzcYoStq2Ycxt1V4hTOGzJ8xlo0PeELiVJGx5JcdBxExxFSre25bgOCp6FBg
+         dE/tvM4PfMdTFzWzAShPRWeD51ptqFUuQYcusqdr8ZfuipNraEoftYDnnNI0PpFCJ2Kp
+         BjD6KiBzlDtovrzlaKqR+oI1Y5oWq+ejdKuCQ16OEeOYzDYEIbt9lwIMHa9n81Qn83s4
+         Exi0aSYlsTDd9TgfsjnW5ft9vCnQGcLW+znFICAGbZCyk0behEcxZFG4qnwoAmzeIciA
+         nbbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tYGK3wY4fdBRiVN5u48Y7M8NvjV74Kds/0Hqs31NUKk=;
+        b=A5jLdo86Zi1rvKA6vvYgxuz0yMjPDNA8I9ec5o64wwOJu6f9hb92BK55Bay8TKfh0m
+         LgqnfqQJZoB0h0bGnMxkIuh79Dt18dLc29sUJpOvTQVTTTfzC0rWHTUPEHtEbVnAhnOD
+         j2lB9eoJ3fu6cW0c6AdqKO8W2PL7M9DwhsoJG5ha+Ot532aLgYTdX4dxM3BS/HqoLnt9
+         ESF8Lzh3LGviYCZjip62nvVED2hKKLnN4qzfeU5DR3PnYnZgYZU+dySH/2DDkblMHsu5
+         RbfAkptn2TF2ADlr9REBpOjvY3dO85bhOCD4okU57YAFfqWeMoDwgj3FRlVNfouh7HFD
+         Y0dA==
+X-Gm-Message-State: AOAM531FZtLeUu1fcfj6Mj+yG7RC9rHu2JAwE4XPcnUYuiJ1P/JhZhIH
+        W2mqXYm6Wx8bnVeDBtGDLzJORAYJXKQrn9Gpbj4L0A==
+X-Google-Smtp-Source: ABdhPJxjy5VA2QU5lfhoTOMwxvSDWV/AzlYSz9OA8wBGSB0C6aZ8GQECMrLT8IMY6QEWAtZHUAfbB3VW6Hei0TVDfgg=
+X-Received: by 2002:a63:4717:: with SMTP id u23mr1223011pga.74.1643247905301;
+ Wed, 26 Jan 2022 17:45:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <cover.1642535478.git.alison.schofield@intel.com> <d8760a4a0ca5b28be4eee27a2581ca8c2abe3e49.1642535478.git.alison.schofield@intel.com>
+In-Reply-To: <d8760a4a0ca5b28be4eee27a2581ca8c2abe3e49.1642535478.git.alison.schofield@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 26 Jan 2022 17:44:54 -0800
+Message-ID: <CAPcyv4gx+mvAPEmYstUXAsjWY=Aq7zb4y4V+QGzwnauk1F8DEw@mail.gmail.com>
+Subject: Re: [ndctl PATCH v3 6/6] cxl: add command set-partition-info
+To:     "Schofield, Alison" <alison.schofield@intel.com>
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>,
+        linux-cxl@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-In preparation for switch port enumeration while also preserving the
-potential for multi-domain / multi-root CXL topologies. Introduce a
-'struct device' generic mechanism for retrieving a root CXL port, if one
-is registered. Note that the only know multi-domain CXL configurations
-are running the cxl_test unit test on a system that also publishes an
-ACPI0017 device.
+On Tue, Jan 18, 2022 at 12:20 PM <alison.schofield@intel.com> wrote:
+>
+> From: Alison Schofield <alison.schofield@intel.com>
+>
+> Users may want to change the partition layout of a memory
+> device using the CXL command line tool.
 
-With this in hand the nvdimm-bridge lookup can be with
-device_find_child() instead of bus_find_device() + custom mocked lookup
-infrastructure in cxl_test.
+How about:
 
-The mechanism looks for a 2nd level port since the root level topology
-is platform-firmware specific and the 2nd level down follows standard
-PCIe topology expectations. The cxl_acpi 2nd level is associated with a
-PCIe Root Port.
+CXL devices may support both volatile and persistent memory capacity.
+The amount of device capacity set aside for each type is typically
+established at the factory, but some devices also allow for dynamic
+re-partitioning, add a command for this purpose.
 
-Reported-by: Ben Widawsky <ben.widawsky@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
-Changes since v4:
-- reset @iter each loop otherwise only the first dport can be scanned.
+> Add a new CXL command,
+> 'cxl set-partition-info', that operates on a CXL memdev, or a
+> set of memdevs, and allows the user to change the partition
+> layout of the device(s).
+>
+> Synopsis:
+> Usage: cxl set-partition-info <mem0> [<mem1>..<memN>] [<options>]
 
- drivers/cxl/core/pmem.c       |   14 ++++++++---
- drivers/cxl/core/port.c       |   50 +++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h             |    1 +
- tools/testing/cxl/Kbuild      |    2 --
- tools/testing/cxl/mock_pmem.c |   24 --------------------
- 5 files changed, 61 insertions(+), 30 deletions(-)
- delete mode 100644 tools/testing/cxl/mock_pmem.c
+It's unfortunate that the specification kept the word "info" in the
+set-partition command name, let's leave it out of this name and just
+call this 'cxl set-partition'.
 
-diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
-index 40b3f5030496..8de240c4d96b 100644
---- a/drivers/cxl/core/pmem.c
-+++ b/drivers/cxl/core/pmem.c
-@@ -57,24 +57,30 @@ bool is_cxl_nvdimm_bridge(struct device *dev)
- }
- EXPORT_SYMBOL_NS_GPL(is_cxl_nvdimm_bridge, CXL);
- 
--__mock int match_nvdimm_bridge(struct device *dev, const void *data)
-+static int match_nvdimm_bridge(struct device *dev, void *data)
- {
- 	return is_cxl_nvdimm_bridge(dev);
- }
- 
- struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd)
- {
-+	struct cxl_port *port = find_cxl_root(&cxl_nvd->dev);
- 	struct device *dev;
- 
--	dev = bus_find_device(&cxl_bus_type, NULL, cxl_nvd, match_nvdimm_bridge);
-+	if (!port)
-+		return NULL;
-+
-+	dev = device_find_child(&port->dev, NULL, match_nvdimm_bridge);
-+	put_device(&port->dev);
-+
- 	if (!dev)
- 		return NULL;
-+
- 	return to_cxl_nvdimm_bridge(dev);
- }
- EXPORT_SYMBOL_NS_GPL(cxl_find_nvdimm_bridge, CXL);
- 
--static struct cxl_nvdimm_bridge *
--cxl_nvdimm_bridge_alloc(struct cxl_port *port)
-+static struct cxl_nvdimm_bridge *cxl_nvdimm_bridge_alloc(struct cxl_port *port)
- {
- 	struct cxl_nvdimm_bridge *cxl_nvb;
- 	struct device *dev;
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 4c921c49f967..6447f12ef71d 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -457,6 +457,56 @@ int devm_cxl_register_pci_bus(struct device *host, struct device *uport,
- }
- EXPORT_SYMBOL_NS_GPL(devm_cxl_register_pci_bus, CXL);
- 
-+/* Find a 2nd level CXL port that has a dport that is an ancestor of @match */
-+static int match_cxl_root_child(struct device *dev, const void *match)
-+{
-+	const struct device *iter = NULL;
-+	struct cxl_port *port, *parent;
-+	struct cxl_dport *dport;
-+
-+	if (!is_cxl_port(dev))
-+		return 0;
-+
-+	port = to_cxl_port(dev);
-+	if (is_cxl_root(port))
-+		return 0;
-+
-+	parent = to_cxl_port(port->dev.parent);
-+	if (!is_cxl_root(parent))
-+		return 0;
-+
-+	cxl_device_lock(&port->dev);
-+	list_for_each_entry(dport, &port->dports, list) {
-+		iter = match;
-+		while (iter) {
-+			if (iter == dport->dport)
-+				goto out;
-+			iter = iter->parent;
-+		}
-+	}
-+out:
-+	cxl_device_unlock(&port->dev);
-+
-+	return !!iter;
-+}
-+
-+struct cxl_port *find_cxl_root(struct device *dev)
-+{
-+	struct device *port_dev;
-+	struct cxl_port *root;
-+
-+	port_dev =
-+		bus_find_device(&cxl_bus_type, NULL, dev, match_cxl_root_child);
-+	if (!port_dev)
-+		return NULL;
-+
-+	root = to_cxl_port(port_dev->parent);
-+	get_device(&root->dev);
-+	put_device(port_dev);
-+	return root;
-+}
-+EXPORT_SYMBOL_NS_GPL(find_cxl_root, CXL);
-+
- static struct cxl_dport *find_dport(struct cxl_port *port, int id)
- {
- 	struct cxl_dport *dport;
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 4e8d504546c5..7523e4d60953 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -298,6 +298,7 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
- 
- int cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
- 		  resource_size_t component_reg_phys);
-+struct cxl_port *find_cxl_root(struct device *dev);
- 
- struct cxl_decoder *to_cxl_decoder(struct device *dev);
- bool is_root_decoder(struct device *dev);
-diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index 3299fb0977b2..ddaee8a2c418 100644
---- a/tools/testing/cxl/Kbuild
-+++ b/tools/testing/cxl/Kbuild
-@@ -32,6 +32,4 @@ cxl_core-y += $(CXL_CORE_SRC)/memdev.o
- cxl_core-y += $(CXL_CORE_SRC)/mbox.o
- cxl_core-y += config_check.o
- 
--cxl_core-y += mock_pmem.o
--
- obj-m += test/
-diff --git a/tools/testing/cxl/mock_pmem.c b/tools/testing/cxl/mock_pmem.c
-deleted file mode 100644
-index f7315e6f52c0..000000000000
---- a/tools/testing/cxl/mock_pmem.c
-+++ /dev/null
-@@ -1,24 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/* Copyright(c) 2021 Intel Corporation. All rights reserved. */
--#include <cxl.h>
--#include "test/mock.h"
--#include <core/core.h>
--
--int match_nvdimm_bridge(struct device *dev, const void *data)
--{
--	int index, rc = 0;
--	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
--	const struct cxl_nvdimm *cxl_nvd = data;
--
--	if (ops) {
--		if (dev->type == &cxl_nvdimm_bridge_type &&
--		    (ops->is_mock_dev(dev->parent->parent) ==
--		     ops->is_mock_dev(cxl_nvd->dev.parent->parent)))
--			rc = 1;
--	} else
--		rc = dev->type == &cxl_nvdimm_bridge_type;
--
--	put_cxl_mock_ops(index);
--
--	return rc;
--}
+>
+>         -v, --verbose           turn on debug
+>         -s, --volatile_size <n>
+>                                 next volatile partition size in bytes
 
+Some users will come to this tool with the thought, "I want volatile
+capacity X", others "I want pmem capacity Y". All but the most
+advanced users will not understand how the volatile setting affects
+the pmem and vice versa, nor will they understand that capacity might
+be fixed and other capacity is dynamic. So how about a set of options
+like:
+
+-t, --type=3D<volatile,pmem>
+-s,--size=3D<size>
+
+...where by default -t is 'pmem' and -s is '0' for 100% of the dynamic
+capacity set to PMEM.
+
+The tool can then help the user get what they want relative to
+whatever frame of reference led them to read the set-partition man
+page. The tool can figure out the details behind the scenes, or warn
+them if they want something impossible like setting PMEM capacity to
+1GB on a device where 2GB of PMEM is statically allocated.
+
+This also helps with future proofing in case there are other types
+that come along.
+
+>
+> The included MAN page explains how to find the partitioning
+> capabilities and restrictions of a CXL memory device.
+>
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> ---
+>  Documentation/cxl/cxl-set-partition-info.txt |  53 ++++++++++
+>  Documentation/cxl/meson.build                |   1 +
+>  cxl/builtin.h                                |   1 +
+>  cxl/cxl.c                                    |   1 +
+>  cxl/memdev.c                                 | 101 +++++++++++++++++++
+>  5 files changed, 157 insertions(+)
+>  create mode 100644 Documentation/cxl/cxl-set-partition-info.txt
+>
+> diff --git a/Documentation/cxl/cxl-set-partition-info.txt b/Documentation=
+/cxl/cxl-set-partition-info.txt
+> new file mode 100644
+> index 0000000..d99a1b9
+> --- /dev/null
+> +++ b/Documentation/cxl/cxl-set-partition-info.txt
+> @@ -0,0 +1,53 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +cxl-set-partition-info(1)
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> +
+> +NAME
+> +----
+> +cxl-set-partition-info - set the partitioning between volatile and persi=
+stent capacity on a CXL memdev
+> +
+> +SYNOPSIS
+> +--------
+> +[verse]
+> +'cxl set-partition-info <mem> [ [<mem1>..<memN>] [<options>]'
+> +
+> +DESCRIPTION
+> +-----------
+> +Partition the device into volatile and persistent capacity. The change
+> +in partitioning will become the =E2=80=9Cnext=E2=80=9D configuration, to=
+ become active
+> +on the next device reset.
+> +
+> +Use "cxl list -m <memdev> -I" to examine the partitioning capabilities
+> +of a device. A partition_alignment_bytes value of zero means there are
+> +no partitionable bytes available and therefore the partitions cannot be
+> +changed.
+> +
+> +Using this command to change the size of the persistent capacity shall
+> +result in the loss of data stored.
+> +
+> +OPTIONS
+> +-------
+> +<memory device(s)>::
+> +include::memdev-option.txt[]
+> +
+> +-s::
+> +--size=3D::
+
+This is "--volatile_size" in the current patch, but that's moot with
+feedback to move to a --type + --size scheme.
+
+> +        Size in bytes of the volatile partition requested.
+> +
+> +        Size must align to the devices partition_alignment_bytes.
+> +        Use 'cxl list -m <memdev> -I' to find partition_alignment_bytes.
+
+This a static 256M, that can just be documented here.
+
+> +
+> +        Size must be less than or equal to the device's partitionable by=
+tes.
+> +        Calculate partitionable bytes by subracting the volatile_only_by=
+tes,
+
+s/subracting/subtracting/
+
+...but rather than teaching the user to input valid values, tell them
+the validation and translation the tool will do on their behalf with
+the input based on type and the details they don't need to worry
+about.
