@@ -2,56 +2,56 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83CAC433FE
-	for <linux-cxl@archiver.kernel.org>; Thu, 27 Jan 2022 11:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF8BC433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 27 Jan 2022 12:00:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240274AbiA0LwO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 27 Jan 2022 06:52:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40774 "EHLO
+        id S229922AbiA0MAP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 27 Jan 2022 07:00:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235985AbiA0LwO (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 27 Jan 2022 06:52:14 -0500
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0468C061714
-        for <linux-cxl@vger.kernel.org>; Thu, 27 Jan 2022 03:52:13 -0800 (PST)
-Received: by mail-wr1-x42e.google.com with SMTP id a13so4255836wrh.9
-        for <linux-cxl@vger.kernel.org>; Thu, 27 Jan 2022 03:52:13 -0800 (PST)
+        with ESMTP id S229521AbiA0MAO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 27 Jan 2022 07:00:14 -0500
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A216C061714
+        for <linux-cxl@vger.kernel.org>; Thu, 27 Jan 2022 04:00:14 -0800 (PST)
+Received: by mail-wr1-x434.google.com with SMTP id a13so4293732wrh.9
+        for <linux-cxl@vger.kernel.org>; Thu, 27 Jan 2022 04:00:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=references:user-agent:from:to:cc:subject:date:in-reply-to
          :message-id:mime-version:content-transfer-encoding;
-        bh=J32YRRvubcvH+G0DcSKEUpH881ecDRy/XA4es9r1le0=;
-        b=zLgQ/J/yXDoITM3hjrhmxalkfZbFXTwl/w6gxNToy+PrPJG2ApNGJyeKW3biflrkZ6
-         rZQHu3Vjtc2buuQ5ZkLc4aWFbWofRgXLxBpeC5cqAdxfg97/ddqjw97ZXvVzf9jQCasi
-         DFfSvPmkKGPnrBBF0EYkkqo9NUhmvrZGS5rw9T41VAG5/BFyuF0HaRN2FAsgzpqgNXMD
-         GNdNgqhd2P40OlGXGQLyu5npE/wR8l7dMafBuLt+4oQUAXe2dLEawbUK8lZAMaigcN5G
-         Vw6deUD3NYoGIgaIVx8KbtiF8VEg3QyyEBrAQfO+FNiZ/LtfPV+I0VfJ69sDCn4aOGYA
-         OJqg==
+        bh=QrXnYqB322/NMxK2rGYEhWex1R0mxBSK4v3HkaeYkxM=;
+        b=vi1lWKEp5p2i4F0MfvPYJIQsnDli94qeICmPHV2aFjGpfmqOthThrWcidDR1LZIySx
+         Pj2yoJmb+iUFY/VyiIBZJiu2o7CcDGM/aoTOLBGz/9jsfOHh1a7LnUT0OcY0/UWZwiTB
+         8jnkph0WRO306ZusdbV/WaXLQrpX6NZoLmDrdtw70u+Pt5COLq1OPl1+x5PA1exWVyLC
+         u4IBlpa/wzO6ekI3Mvb3i591oAuhuD59sMgSwVItVwxM/YRPKvAYP7uWn/25RAMpAyka
+         zGZvsPj1oz+oip9SvavqMxT42Egl49nCrAcn9FdZVu7j+4VsLUPubTYcQsd4y2CFvXkc
+         HDGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:references:user-agent:from:to:cc:subject:date
          :in-reply-to:message-id:mime-version:content-transfer-encoding;
-        bh=J32YRRvubcvH+G0DcSKEUpH881ecDRy/XA4es9r1le0=;
-        b=SUMA6/agHnHDek7SchlL/HqsLZRiLGrZ2IQCumkyiR7YX2JgLTadzGC971Mly+RTov
-         Vz9Y6xDyUPfy4R8JKQpX7+lw7S2wtZ7Il14tnxPJMJNiOb2GT4SwHI8cF3uT2Vw9tSKv
-         9geSN5ETUY0bxhX0quMEB7PaHQc5nWkMUHE26lh9NSdx9cibkmAbu39MlY0jsLjXs4W+
-         uPtEzgjQGFJgEfGr+2W7jS+8Jb+DYzAjxjEbOjdk8Qj32b1hNLp+YuqOmz4ngJJESbyu
-         KBSyVqsopJi2T6qYzTJymhyoOW/f5sgGM6BrVuB/qLmM6EeU+5sZSqTQH6NA3k3KZ2QJ
-         AKSQ==
-X-Gm-Message-State: AOAM531+738smS3il89A4j5tR0Y9y5v/zqixGo1QiRTf3zT6M5JnLUEu
-        0YUDvPrAi3bu7rVeNQn7fbHGow==
-X-Google-Smtp-Source: ABdhPJxqCmE31jPx6t+vwS28BSP8f0Kn//1a2ea2JtqBkkVX9Rf/r4Uggp3lrsOeH2Ipg5wbUFb1+w==
-X-Received: by 2002:adf:fb0e:: with SMTP id c14mr2699787wrr.586.1643284332327;
-        Thu, 27 Jan 2022 03:52:12 -0800 (PST)
+        bh=QrXnYqB322/NMxK2rGYEhWex1R0mxBSK4v3HkaeYkxM=;
+        b=SQtxacbwOZfAIn2oM2jngXmqEBT6IcM4IuFSiehsGj/MWWbllf5vTgrvfsJwRNZdyZ
+         t6pGCgLDG+qPHEVjhOMoJRHUyPufyM1MhVgBkvHZ1GJAQh6gkTBUabXNupJ5eEQ4M/wm
+         bAgynNsJG0wevGzq4Yj2UCF2TglwNGDbaerbFqwCjd+hAiyR7k8YpN4atM/jARDOZ6Ru
+         0C6ofcLTEZiIDlbTpSbBlq4XBSvkYJZ48KzEpA3rnUIyJgLaZYFxDYuvtujPxcx37zc4
+         bmXooQSUDxocZQ1BKXZCDc5NvpwVCXLE6rwVv9torEpF5OMq0ZWhakyE8wFBxawUR4Dd
+         OTdA==
+X-Gm-Message-State: AOAM530zz4MhlCkqq6ZVqvd5jIpT1ezAQ6e2nZywA6ZChVnShMN0CfPO
+        ckBwEImmqjbnpXHtzuCbPllfQQ==
+X-Google-Smtp-Source: ABdhPJxHZdBZrrxKmCdd3hXnwrEWjAr64UX7U0v6S+gZDK6fFg+Ppq1OD++ve4OK0IoIlL4Chf+GMw==
+X-Received: by 2002:a5d:65ce:: with SMTP id e14mr2800858wrw.245.1643284813058;
+        Thu, 27 Jan 2022 04:00:13 -0800 (PST)
 Received: from zen.linaroharston ([51.148.130.216])
-        by smtp.gmail.com with ESMTPSA id y15sm3126774wry.36.2022.01.27.03.52.10
+        by smtp.gmail.com with ESMTPSA id o10sm2352988wri.19.2022.01.27.04.00.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jan 2022 03:52:11 -0800 (PST)
+        Thu, 27 Jan 2022 04:00:12 -0800 (PST)
 Received: from zen (localhost [127.0.0.1])
-        by zen.linaroharston (Postfix) with ESMTP id 8102F1FFB7;
-        Thu, 27 Jan 2022 11:52:10 +0000 (GMT)
+        by zen.linaroharston (Postfix) with ESMTP id 8BD9C1FFB7;
+        Thu, 27 Jan 2022 12:00:11 +0000 (GMT)
 References: <20220124171705.10432-1-Jonathan.Cameron@huawei.com>
- <20220124171705.10432-10-Jonathan.Cameron@huawei.com>
+ <20220124171705.10432-11-Jonathan.Cameron@huawei.com>
 User-agent: mu4e 1.7.6; emacs 28.0.91
 From:   Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
@@ -68,10 +68,10 @@ Cc:     qemu-devel@nongnu.org, Marcel Apfelbaum <marcel@redhat.com>,
         Chris Browy <cbrowy@avery-design.com>,
         Samarth Saxena <samarths@cadence.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v4 09/42] hw/cxl/device: Timestamp implementation (8.2.9.3)
-Date:   Thu, 27 Jan 2022 11:50:08 +0000
-In-reply-to: <20220124171705.10432-10-Jonathan.Cameron@huawei.com>
-Message-ID: <874k5pbdlh.fsf@linaro.org>
+Subject: Re: [PATCH v4 10/42] hw/cxl/device: Add log commands (8.2.9.4) + CEL
+Date:   Thu, 27 Jan 2022 11:55:47 +0000
+In-reply-to: <20220124171705.10432-11-Jonathan.Cameron@huawei.com>
+Message-ID: <87zgnh9yno.fsf@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
@@ -84,127 +84,135 @@ Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
 
 > From: Ben Widawsky <ben.widawsky@intel.com>
 >
-> Per spec, timestamp appears to be a free-running counter from a value
-> set by the host via the Set Timestamp command (0301h). There are
-> references to the epoch, which seem like a red herring. Therefore, the
-> implementation implements the timestamp as freerunning counter from the
-> last value that was issued by the Set Timestamp command.
+> CXL specification provides for the ability to obtain logs from the
+> device. Logs are either spec defined, like the "Command Effects Log"
+> (CEL), or vendor specific. UUIDs are defined for all log types.
+>
+> The CEL is a mechanism to provide information to the host about which
+> commands are supported. It is useful both to determine which spec'd
+> optional commands are supported, as well as provide a list of vendor
+> specified commands that might be used. The CEL is already created as
+> part of mailbox initialization, but here it is now exported to hosts
+> that use these log commands.
 >
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
->  hw/cxl/cxl-mailbox-utils.c  | 53 +++++++++++++++++++++++++++++++++++++
->  include/hw/cxl/cxl_device.h |  6 +++++
->  2 files changed, 59 insertions(+)
+>  hw/cxl/cxl-mailbox-utils.c | 67 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
 >
 > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 1a87846356..cea4b2a59c 100644
+> index cea4b2a59c..0ab0592e6c 100644
 > --- a/hw/cxl/cxl-mailbox-utils.c
 > +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -43,6 +43,9 @@ enum {
->          #define CLEAR_RECORDS   0x1
->          #define GET_INTERRUPT_POLICY   0x2
->          #define SET_INTERRUPT_POLICY   0x3
-> +    TIMESTAMP   =3D 0x03,
-> +        #define GET           0x0
-> +        #define SET           0x1
+> @@ -46,6 +46,9 @@ enum {
+>      TIMESTAMP   =3D 0x03,
+>          #define GET           0x0
+>          #define SET           0x1
+> +    LOGS        =3D 0x04,
+> +        #define GET_SUPPORTED 0x0
+> +        #define GET_LOG       0x1
 >  };
 >=20=20
 >  /* 8.2.8.4.5.1 Command Return Codes */
-> @@ -117,8 +120,11 @@ define_mailbox_handler_zeroed(EVENTS_GET_RECORDS, 0x=
-20);
->  define_mailbox_handler_nop(EVENTS_CLEAR_RECORDS);
->  define_mailbox_handler_zeroed(EVENTS_GET_INTERRUPT_POLICY, 4);
+> @@ -122,6 +125,8 @@ define_mailbox_handler_zeroed(EVENTS_GET_INTERRUPT_PO=
+LICY, 4);
 >  define_mailbox_handler_nop(EVENTS_SET_INTERRUPT_POLICY);
-> +declare_mailbox_handler(TIMESTAMP_GET);
-> +declare_mailbox_handler(TIMESTAMP_SET);
+>  declare_mailbox_handler(TIMESTAMP_GET);
+>  declare_mailbox_handler(TIMESTAMP_SET);
+> +declare_mailbox_handler(LOGS_GET_SUPPORTED);
+> +declare_mailbox_handler(LOGS_GET_LOG);
 >=20=20
 >  #define IMMEDIATE_CONFIG_CHANGE (1 << 1)
-> +#define IMMEDIATE_POLICY_CHANGE (1 << 3)
->  #define IMMEDIATE_LOG_CHANGE (1 << 4)
->=20=20
->  #define CXL_CMD(s, c, in, cel_effect) \
-> @@ -129,10 +135,57 @@ static struct cxl_cmd cxl_cmd_set[256][256] =3D {
->      CXL_CMD(EVENTS, CLEAR_RECORDS, ~0, IMMEDIATE_LOG_CHANGE),
->      CXL_CMD(EVENTS, GET_INTERRUPT_POLICY, 0, 0),
+>  #define IMMEDIATE_POLICY_CHANGE (1 << 3)
+> @@ -137,6 +142,8 @@ static struct cxl_cmd cxl_cmd_set[256][256] =3D {
 >      CXL_CMD(EVENTS, SET_INTERRUPT_POLICY, 4, IMMEDIATE_CONFIG_CHANGE),
-> +    CXL_CMD(TIMESTAMP, GET, 0, 0),
-> +    CXL_CMD(TIMESTAMP, SET, 8, IMMEDIATE_POLICY_CHANGE),
+>      CXL_CMD(TIMESTAMP, GET, 0, 0),
+>      CXL_CMD(TIMESTAMP, SET, 8, IMMEDIATE_POLICY_CHANGE),
+> +    CXL_CMD(LOGS, GET_SUPPORTED, 0, 0),
+> +    CXL_CMD(LOGS, GET_LOG, 0x18, 0),
 >  };
 >=20=20
 >  #undef CXL_CMD
+> @@ -188,6 +195,66 @@ define_mailbox_handler(TIMESTAMP_SET)
 >=20=20
-> +/*
-> + * 8.2.9.3.1
-> + */
-> +define_mailbox_handler(TIMESTAMP_GET)
-> +{
-> +    struct timespec ts;
-> +    uint64_t delta;
-> +
-> +    if (!cxl_dstate->timestamp.set) {
-> +        *(uint64_t *)cmd->payload =3D 0;
-> +        goto done;
-> +    }
-> +
-> +    /* First find the delta from the last time the host set the time. */
-> +    clock_gettime(CLOCK_REALTIME, &ts);
-
-Could you consider using qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL)?
-Otherwise by introducing a dependency on real time you'll loose the
-ability to get deterministic execution via icount.=20
-
-> +    delta =3D (ts.tv_sec * NANOSECONDS_PER_SECOND + ts.tv_nsec) -
-> +            cxl_dstate->timestamp.last_set;
-> +
-> +    /* Then adjust the actual time */
-> +    stq_le_p(cmd->payload, cxl_dstate->timestamp.host_set + delta);
-> +
-> +done:
-> +    *len =3D 8;
-> +    return CXL_MBOX_SUCCESS;
-> +}
-> +
-> +/*
-> + * 8.2.9.3.2
-> + */
-> +define_mailbox_handler(TIMESTAMP_SET)
-> +{
-> +    struct timespec ts;
-> +
-> +    clock_gettime(CLOCK_REALTIME, &ts);
-> +
-> +    cxl_dstate->timestamp.set =3D true;
-> +    cxl_dstate->timestamp.last_set =3D
-> +        ts.tv_sec * NANOSECONDS_PER_SECOND + ts.tv_nsec;
-> +
-> +    cxl_dstate->timestamp.host_set =3D le64_to_cpu(*(uint64_t *)cmd->pay=
-load);
-> +
-> +    *len =3D 0;
-> +    return CXL_MBOX_SUCCESS;
-> +}
-> +
 >  QemuUUID cel_uuid;
 >=20=20
->  void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index f88f844cb6..3dde7fb1fb 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
-> @@ -114,6 +114,12 @@ typedef struct cxl_device_state {
->          size_t cel_size;
->      };
->=20=20
+> +/* 8.2.9.4.1 */
+> +define_mailbox_handler(LOGS_GET_SUPPORTED)
+> +{
+
+Here is where I get a bit wary of the define_mailbox_handler define
+which from what I can tell just hides the declarations. This makes the
+handling of things like *cmd rather opaque. There is an argument for the
+boilerplate definitions (_nop and _zeroed) but perhaps not these.
+
 > +    struct {
-> +        bool set;
-> +        uint64_t last_set;
-> +        uint64_t host_set;
-> +    } timestamp;
+> +        uint16_t entries;
+> +        uint8_t rsvd[6];
+> +        struct {
+> +            QemuUUID uuid;
+> +            uint32_t size;
+> +        } log_entries[1];
+> +    } __attribute__((packed)) *supported_logs =3D (void *)cmd->payload;
+> +    _Static_assert(sizeof(*supported_logs) =3D=3D 0x1c, "Bad supported l=
+og size");
 > +
->      /* memory region for persistent memory, HDM */
->      uint64_t pmem_size;
->  } CXLDeviceState;
+> +    supported_logs->entries =3D 1;
+> +    supported_logs->log_entries[0].uuid =3D cel_uuid;
+> +    supported_logs->log_entries[0].size =3D 4 * cxl_dstate->cel_size;
+> +
+> +    *len =3D sizeof(*supported_logs);
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+> +/* 8.2.9.4.2 */
+> +define_mailbox_handler(LOGS_GET_LOG)
+> +{
+> +    struct {
+> +        QemuUUID uuid;
+> +        uint32_t offset;
+> +        uint32_t length;
+> +    } __attribute__((packed, __aligned__(16))) *get_log =3D (void *)cmd-=
+>payload;
+> +
+> +    /*
+> +     * 8.2.9.4.2
+> +     *   The device shall return Invalid Parameter if the Offset or Leng=
+th
+> +     *   fields attempt to access beyond the size of the log as reported=
+ by Get
+> +     *   Supported Logs.
+> +     *
+> +     * XXX: Spec is wrong, "Invalid Parameter" isn't a thing.
+> +     * XXX: Spec doesn't address incorrect UUID incorrectness.
+> +     *
+> +     * The CEL buffer is large enough to fit all commands in the emulati=
+on, so
+> +     * the only possible failure would be if the mailbox itself isn't big
+> +     * enough.
+> +     */
+> +    if (get_log->offset + get_log->length > cxl_dstate->payload_size) {
+> +        return CXL_MBOX_INVALID_INPUT;
+> +    }
+> +
+> +    if (!qemu_uuid_is_equal(&get_log->uuid, &cel_uuid)) {
+> +        return CXL_MBOX_UNSUPPORTED;
+> +    }
+> +
+> +    /* Store off everything to local variables so we can wipe out the pa=
+yload */
+> +    *len =3D get_log->length;
+> +
+> +    memmove(cmd->payload, cxl_dstate->cel_log + get_log->offset,
+> +           get_log->length);
+> +
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+>  void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
+>  {
+>      uint16_t ret =3D CXL_MBOX_SUCCESS;
 
 
 --=20
