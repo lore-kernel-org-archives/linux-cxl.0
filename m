@@ -2,28 +2,28 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA63C433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 28 Jan 2022 14:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC639C433F5
+	for <linux-cxl@archiver.kernel.org>; Fri, 28 Jan 2022 15:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349400AbiA1Oqe convert rfc822-to-8bit (ORCPT
+        id S245734AbiA1PDH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 28 Jan 2022 09:46:34 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4547 "EHLO
+        Fri, 28 Jan 2022 10:03:07 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4548 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349433AbiA1Oqe (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 28 Jan 2022 09:46:34 -0500
-Received: from fraeml744-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JlgHx4v9Zz67Xkw;
-        Fri, 28 Jan 2022 22:46:05 +0800 (CST)
+        with ESMTP id S1346152AbiA1PDH (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 28 Jan 2022 10:03:07 -0500
+Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JlgbQ5l8Hz67F8F;
+        Fri, 28 Jan 2022 22:59:30 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml744-chm.china.huawei.com (10.206.15.225) with Microsoft SMTP Server
+ fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Fri, 28 Jan 2022 15:46:32 +0100
+ 15.1.2308.21; Fri, 28 Jan 2022 16:03:04 +0100
 Received: from localhost (10.47.76.156) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Fri, 28 Jan
- 2022 14:46:31 +0000
-Date:   Fri, 28 Jan 2022 14:46:22 +0000
+ 2022 15:03:03 +0000
+Date:   Fri, 28 Jan 2022 15:02:54 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Alex =?ISO-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>
 CC:     <qemu-devel@nongnu.org>, Marcel Apfelbaum <marcel@redhat.com>,
@@ -38,18 +38,16 @@ CC:     <qemu-devel@nongnu.org>, Marcel Apfelbaum <marcel@redhat.com>,
         Chris Browy <cbrowy@avery-design.com>,
         Samarth Saxena <samarths@cadence.com>,
         "Dan Williams" <dan.j.williams@intel.com>
-Subject: Re: [PATCH v4 02/42] hw/cxl/component: Introduce CXL components
- (8.1.x, 8.2.5)
-Message-ID: <20220128144622.00004b7f@Huawei.com>
-In-Reply-To: <20220128142251.0000437f@Huawei.com>
+Subject: Re: [PATCH v4 04/42] hw/cxl/device: Introduce a CXL device (8.2.8)
+Message-ID: <20220128150254.000020e5@Huawei.com>
+In-Reply-To: <87y232bc0f.fsf@linaro.org>
 References: <20220124171705.10432-1-Jonathan.Cameron@huawei.com>
-        <20220124171705.10432-3-Jonathan.Cameron@huawei.com>
-        <87bkzyd3c7.fsf@linaro.org>
-        <20220128142251.0000437f@Huawei.com>
+        <20220124171705.10432-5-Jonathan.Cameron@huawei.com>
+        <87y232bc0f.fsf@linaro.org>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 8BIT
 X-Originating-IP: [10.47.76.156]
 X-ClientProxiedBy: lhreml731-chm.china.huawei.com (10.201.108.82) To
@@ -59,175 +57,241 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 28 Jan 2022 14:22:51 +0000
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+On Wed, 26 Jan 2022 18:07:40 +0000
+Alex Benn�e <alex.bennee@linaro.org> wrote:
 
-> On Wed, 26 Jan 2022 12:32:01 +0000
-> Alex Bennée <alex.bennee@linaro.org> wrote:
+> Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
 > 
-> > Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
-> >   
-> > > From: Ben Widawsky <ben.widawsky@intel.com>
-> > >
-> > > A CXL 2.0 component is any entity in the CXL topology. All components
-> > > have a analogous function in PCIe. Except for the CXL host bridge, all
-> > > have a PCIe config space that is accessible via the common PCIe
-> > > mechanisms. CXL components are enumerated via DVSEC fields in the
-> > > extended PCIe header space. CXL components will minimally implement some
-> > > subset of CXL.mem and CXL.cache registers defined in 8.2.5 of the CXL
-> > > 2.0 specification. Two headers and a utility library are introduced to
-> > > support the minimum functionality needed to enumerate components.
-> > >
-> > > The cxl_pci header manages bits associated with PCI, specifically the
-> > > DVSEC and related fields. The cxl_component.h variant has data
-> > > structures and APIs that are useful for drivers implementing any of the
-> > > CXL 2.0 components. The library takes care of making use of the DVSEC
-> > > bits and the CXL.[mem|cache] registers. Per spec, the registers are
-> > > little endian.
-> > >
-> > > None of the mechanisms required to enumerate a CXL capable hostbridge
-> > > are introduced at this point.
-> > >
-> > > Note that the CXL.mem and CXL.cache registers used are always 4B wide.
-> > > It's possible in the future that this constraint will not hold.
-> > >
-> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > ---
-> > >  hw/Kconfig                     |   1 +
-> > >  hw/cxl/Kconfig                 |   3 +
-> > >  hw/cxl/cxl-component-utils.c   | 212 +++++++++++++++++++++++++++++++++
-> > >  hw/cxl/meson.build             |   3 +
-> > >  hw/meson.build                 |   1 +
-> > >  include/hw/cxl/cxl.h           |  16 +++
-> > >  include/hw/cxl/cxl_component.h | 196 ++++++++++++++++++++++++++++++
-> > >  include/hw/cxl/cxl_pci.h       | 138 +++++++++++++++++++++
-> > >  8 files changed, 570 insertions(+)
-> > >
-> > > diff --git a/hw/Kconfig b/hw/Kconfig
-> > > index ad20cce0a9..50e0952889 100644
-> > > --- a/hw/Kconfig
-> > > +++ b/hw/Kconfig
-> > > @@ -6,6 +6,7 @@ source audio/Kconfig
-> > >  source block/Kconfig
-> > >  source char/Kconfig
-> > >  source core/Kconfig
-> > > +source cxl/Kconfig
-> > >  source display/Kconfig
-> > >  source dma/Kconfig
-> > >  source gpio/Kconfig
-> > > diff --git a/hw/cxl/Kconfig b/hw/cxl/Kconfig
-> > > new file mode 100644
-> > > index 0000000000..8e67519b16
-> > > --- /dev/null
-> > > +++ b/hw/cxl/Kconfig
-> > > @@ -0,0 +1,3 @@
-> > > +config CXL
-> > > +    bool
-> > > +    default y if PCI_EXPRESS
-> > > diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
-> > > new file mode 100644
-> > > index 0000000000..5007b29ebb
-> > > --- /dev/null
-> > > +++ b/hw/cxl/cxl-component-utils.c
-> > > @@ -0,0 +1,212 @@
-> > > +/*
-> > > + * CXL Utility library for components
-> > > + *
-> > > + * Copyright(C) 2020 Intel Corporation.
-> > > + *
-> > > + * This work is licensed under the terms of the GNU GPL, version 2. See the
-> > > + * COPYING file in the top-level directory.
-> > > + */
-> > > +
-> > > +#include "qemu/osdep.h"
-> > > +#include "qemu/log.h"
-> > > +#include "hw/pci/pci.h"
-> > > +#include "hw/cxl/cxl.h"
-> > > +
-> > > +static uint64_t cxl_cache_mem_read_reg(void *opaque, hwaddr offset,
-> > > +                                       unsigned size)
-> > > +{
-> > > +    CXLComponentState *cxl_cstate = opaque;
-> > > +    ComponentRegisters *cregs = &cxl_cstate->crb;
-> > > +
-> > > +    assert(size == 4);    
-> > 
-> > You assert here but bellow:
-> >   
-> > > +
-> > > +/*
-> > > + * 8.2.3
-> > > + *   The access restrictions specified in Section 8.2.2 also apply to CXL 2.0
-> > > + *   Component Registers.
-> > > + *
-> > > + * 8.2.2
-> > > + *   • A 32 bit register shall be accessed as a 4 Bytes quantity. Partial
-> > > + *   reads are not permitted.
-> > > + *   • A 64 bit register shall be accessed as a 8 Bytes quantity. Partial
-> > > + *   reads are not permitted.
-> > > + *
-> > > + * As of the spec defined today, only 4 byte registers exist.
-> > > + */
-> > > +static const MemoryRegionOps cache_mem_ops = {
-> > > +    .read = cxl_cache_mem_read_reg,
-> > > +    .write = cxl_cache_mem_write_reg,
-> > > +    .endianness = DEVICE_LITTLE_ENDIAN,
-> > > +    .valid = {
-> > > +        .min_access_size = 4,
-> > > +        .max_access_size = 8,
-> > > +        .unaligned = false,
-> > > +    },
-> > > +    .impl = {
-> > > +        .min_access_size = 4,
-> > > +        .max_access_size = 4,
-> > > +    },
-> > > +};    
-> > 
-> > You have constrained the access to 4 so you will only see 4 bytes
-> > accesses. If it is valid for the guest to access 64bit words then it
-> > would be better to no-op that case and maybe LOG_UNIMP the fact.
-> >   
+> > From: Ben Widawsky <ben.widawsky@intel.com>
+> >
+> > A CXL device is a type of CXL component. Conceptually, a CXL device
+> > would be a leaf node in a CXL topology. From an emulation perspective,
+> > CXL devices are the most complex and so the actual implementation is
+> > reserved for discrete commits.
+> >
+> > This new device type is specifically catered towards the eventual
+> > implementation of a Type3 CXL.mem device, 8.2.8.5 in the CXL 2.0
+> > specification.
+> >
+> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> >  include/hw/cxl/cxl.h        |   1 +
+> >  include/hw/cxl/cxl_device.h | 157 ++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 158 insertions(+)
+> >
+> > diff --git a/include/hw/cxl/cxl.h b/include/hw/cxl/cxl.h
+> > index 8c738c7a2b..b9d1ac3fad 100644
+> > --- a/include/hw/cxl/cxl.h
+> > +++ b/include/hw/cxl/cxl.h
+> > @@ -12,5 +12,6 @@
+> >  
+> >  #include "cxl_pci.h"
+> >  #include "cxl_component.h"
+> > +#include "cxl_device.h"
+> >  
+> >  #endif
+> > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> > new file mode 100644
+> > index 0000000000..3b6ed745f0
+> > --- /dev/null
+> > +++ b/include/hw/cxl/cxl_device.h
+> > @@ -0,0 +1,157 @@
+> > +/*
+> > + * QEMU CXL Devices
+> > + *
+> > + * Copyright (c) 2020 Intel
+> > + *
+> > + * This work is licensed under the terms of the GNU GPL, version 2. See the
+> > + * COPYING file in the top-level directory.
+> > + */
+> > +
+> > +#ifndef CXL_DEVICE_H
+> > +#define CXL_DEVICE_H
+> > +
+> > +#include "hw/register.h"
+> > +
+> > +/*
+> > + * The following is how a CXL device's MMIO space is laid out. The only
+> > + * requirement from the spec is that the capabilities array and the capability
+> > + * headers start at offset 0 and are contiguously packed. The headers themselves
+> > + * provide offsets to the register fields. For this emulation, registers will
+> > + * start at offset 0x80 (m == 0x80). No secondary mailbox is implemented which
+> > + * means that n = m + sizeof(mailbox registers) + sizeof(device registers).
+> > + *
+> > + * This is roughly described in 8.2.8 Figure 138 of the CXL 2.0 spec.
+> > + *
+> > + *                       +---------------------------------+
+> > + *                       |                                 |
+> > + *                       |    Memory Device Registers      |
+> > + *                       |                                 |
+> > + * n + PAYLOAD_SIZE_MAX  -----------------------------------
+> > + *                  ^    |                                 |
+> > + *                  |    |                                 |
+> > + *                  |    |                                 |
+> > + *                  |    |                                 |
+> > + *                  |    |                                 |
+> > + *                  |    |         Mailbox Payload         |
+> > + *                  |    |                                 |
+> > + *                  |    |                                 |
+> > + *                  |    |                                 |
+> > + *                  |    -----------------------------------
+> > + *                  |    |       Mailbox Registers         |
+> > + *                  |    |                                 |
+> > + *                  n    -----------------------------------
+> > + *                  ^    |                                 |
+> > + *                  |    |        Device Registers         |
+> > + *                  |    |                                 |
+> > + *                  m    ---------------------------------->
+> > + *                  ^    |  Memory Device Capability Header|
+> > + *                  |    -----------------------------------
+> > + *                  |    |     Mailbox Capability Header   |
+> > + *                  |    -------------- --------------------
+> > + *                  |    |     Device Capability Header    |
+> > + *                  |    -----------------------------------
+> > + *                  |    |                                 |
+> > + *                  |    |                                 |
+> > + *                  |    |      Device Cap Array[0..n]     |
+> > + *                  |    |                                 |
+> > + *                  |    |                                 |
+> > + *                       |                                 |
+> > + *                  0    +---------------------------------+
+> > + *
+> > + */  
 > 
-> Ugh. This looks suspiciously like a work around for a kernel bug (possibly
-> an accidental one).
+> Excellent diagram ;-)
 > 
-> If the comment above is correct (I've checked the spec and agree with it)..
+> > +
+> > +#define CXL_DEVICE_CAP_HDR1_OFFSET 0x10 /* Figure 138 */
+> > +#define CXL_DEVICE_CAP_REG_SIZE 0x10 /* 8.2.8.2 */
+> > +#define CXL_DEVICE_CAPS_MAX 4 /* 8.2.8.2.1 + 8.2.8.5 */
+> > +
+> > +#define CXL_DEVICE_REGISTERS_OFFSET 0x80 /* Read comment above */
+> > +#define CXL_DEVICE_REGISTERS_LENGTH 0x8 /* 8.2.8.3.1 */
+> > +
+> > +#define CXL_MAILBOX_REGISTERS_OFFSET \
+> > +    (CXL_DEVICE_REGISTERS_OFFSET + CXL_DEVICE_REGISTERS_LENGTH)
+> > +#define CXL_MAILBOX_REGISTERS_SIZE 0x20 /* 8.2.8.4, Figure 139 */
+> > +#define CXL_MAILBOX_PAYLOAD_SHIFT 11
+> > +#define CXL_MAILBOX_MAX_PAYLOAD_SIZE (1 << CXL_MAILBOX_PAYLOAD_SHIFT)
+> > +#define CXL_MAILBOX_REGISTERS_LENGTH \
+> > +    (CXL_MAILBOX_REGISTERS_SIZE + CXL_MAILBOX_MAX_PAYLOAD_SIZE)
+> > +
+> > +typedef struct cxl_device_state {
+> > +    MemoryRegion device_registers;
+> > +
+> > +    /* mmio for device capabilities array - 8.2.8.2 */
+> > +    MemoryRegion caps;
+> > +
+> > +    /* mmio for the device status registers 8.2.8.3 */
+> > +    MemoryRegion device;
+> > +
+> > +    /* mmio for the mailbox registers 8.2.8.4 */
+> > +    MemoryRegion mailbox;
+> > +
+> > +    /* memory region for persistent memory, HDM */
+> > +    uint64_t pmem_size;
+> > +} CXLDeviceState;
+> > +
+> > +/* Initialize the register block for a device */
+> > +void cxl_device_register_block_init(Object *obj, CXLDeviceState *dev);
+> > +
+> > +/* Set up default values for the register block */
+> > +void cxl_device_register_init_common(CXLDeviceState *dev);
+> > +
+> > +/* CXL 2.0 - 8.2.8.1 */
+> > +REG32(CXL_DEV_CAP_ARRAY, 0) /* 48b!?!?! */  
 > 
-> https://elixir.bootlin.com/linux/v5.17-rc1/source/drivers/cxl/core/regs.c#L48
-> 
-> cap_array = readq(base + CXL_CM_CAP_HDR_OFFSET);
-> 
-> is undefined behavior as CAP_HDR is a 32bit register.
-> 
-> I guess the undefined choice on all the hardware people actually have
-> is to service the 8 byte read, but there is no reason to believe future
-> hardware will.
-> 
-> ... and this is why we like having emulation in Qemu :)
-> + eagle eyed reviewers!
-> 
-> Guess I'd better send a kernel fix sometime soon.
+> What does this comment mean? A 48 bit register stuffed in a 32 bit one?
+> Doesn't seem right.
 
-However, after another read of the spec there are link related registers
-which we currently don't implement emulation for but do advertise as
-being present (as they are required) are 8 bytes long.
+ah. I'd forgotten about this.. !?!?! is code word for spec bug without
+actually saying it in a public email...
 
-Linux doesn't use them yet, but it may come so I'll need to leave
-max_access_size = 8 enabled and as you suggested LOG_UNIMP.
-
-Probably makes sense to implement the link registers in a follow up
-patch set along with (possibly) some kernel support to expose
-the information available in those registers.
-
-Jonathan
+It's fixed now in the published errata which makes this a 128bit
+register but then says you can access it as a 64 bit register and reserves
+everything above bit 48.  I'll update the comment and make it a REG64.
 
 > 
-> Jonathan
+> > +    FIELD(CXL_DEV_CAP_ARRAY, CAP_ID, 0, 16)
+> > +    FIELD(CXL_DEV_CAP_ARRAY, CAP_VERSION, 16, 8)
+> > +REG32(CXL_DEV_CAP_ARRAY2, 4) /* We're going to pretend it's 64b */
+> > +    FIELD(CXL_DEV_CAP_ARRAY2, CAP_COUNT, 0, 16)  
 > 
-> > Otherwise the rest looks ok to me:
-> > 
-> > Reviewed-by: Alex Bennée <alex.bennee@linaro.org>
-> >   
+> I'm confused why you don't treat it as a single register it is in the
+> spec.
+
+Code predates introduction of REG64() and I'd missed that turning up.
+
+> 
+> > +
+> > +/*
+> > + * Helper macro to initialize capability headers for CXL devices.
+> > + *
+> > + * In the 8.2.8.2, this is listed as a 128b register, but in 8.2.8, it says:
+> > + * > No registers defined in Section 8.2.8 are larger than 64-bits wide so that
+> > + * > is the maximum access size allowed for these registers. If this rule is not
+> > + * > followed, the behavior is undefined
+> > + *
+> > + * Here we've chosen to make it 4 dwords. The spec allows any pow2 multiple
+> > + * access to be used for a register (2 qwords, 8 words, 128 bytes).
+
+The F4 errata covers this as well, making it clear that 128bit registers
+can be accessed as 1,2,4,8 byte aligned reads.  No read advantage
+of REG64 over REG32 as neither matches the spec, so I'll leave this one alone
+but update the comment..
+
+> > + */
+> > +#define CXL_DEVICE_CAPABILITY_HEADER_REGISTER(n, offset)  \
+> > +    REG32(CXL_DEV_##n##_CAP_HDR0, offset)                 \
+> > +        FIELD(CXL_DEV_##n##_CAP_HDR0, CAP_ID, 0, 16)      \
+> > +        FIELD(CXL_DEV_##n##_CAP_HDR0, CAP_VERSION, 16, 8) \
+> > +    REG32(CXL_DEV_##n##_CAP_HDR1, offset + 4)             \
+> > +        FIELD(CXL_DEV_##n##_CAP_HDR1, CAP_OFFSET, 0, 32)  \
+> > +    REG32(CXL_DEV_##n##_CAP_HDR2, offset + 8)             \
+> > +        FIELD(CXL_DEV_##n##_CAP_HDR2, CAP_LENGTH, 0, 32)
+> > +
+> > +CXL_DEVICE_CAPABILITY_HEADER_REGISTER(DEVICE, CXL_DEVICE_CAP_HDR1_OFFSET)
+> > +CXL_DEVICE_CAPABILITY_HEADER_REGISTER(MAILBOX, CXL_DEVICE_CAP_HDR1_OFFSET + \
+> > +                                               CXL_DEVICE_CAP_REG_SIZE)
+> > +
+> > +REG32(CXL_DEV_MAILBOX_CAP, 0)
+> > +    FIELD(CXL_DEV_MAILBOX_CAP, PAYLOAD_SIZE, 0, 5)
+> > +    FIELD(CXL_DEV_MAILBOX_CAP, INT_CAP, 5, 1)
+> > +    FIELD(CXL_DEV_MAILBOX_CAP, BG_INT_CAP, 6, 1)
+> > +    FIELD(CXL_DEV_MAILBOX_CAP, MSI_N, 7, 4)
+> > +
+> > +REG32(CXL_DEV_MAILBOX_CTRL, 4)
+> > +    FIELD(CXL_DEV_MAILBOX_CTRL, DOORBELL, 0, 1)
+> > +    FIELD(CXL_DEV_MAILBOX_CTRL, INT_EN, 1, 1)
+> > +    FIELD(CXL_DEV_MAILBOX_CTRL, BG_INT_EN, 2, 1)
+> > +
+> > +/* XXX: actually a 64b register */
+> > +REG32(CXL_DEV_MAILBOX_STS, 0x10)
+> > +    FIELD(CXL_DEV_MAILBOX_STS, BG_OP, 0, 1)
+> > +    FIELD(CXL_DEV_MAILBOX_STS, ERRNO, 32, 16)
+> > +    FIELD(CXL_DEV_MAILBOX_STS, VENDOR_ERRNO, 48, 16)
+> > +
+> > +/* XXX: actually a 64b register */
+> > +REG32(CXL_DEV_BG_CMD_STS, 0x18)
+> > +    FIELD(CXL_DEV_BG_CMD_STS, BG, 0, 16)
+> > +    FIELD(CXL_DEV_BG_CMD_STS, DONE, 16, 7)
+> > +    FIELD(CXL_DEV_BG_CMD_STS, ERRNO, 32, 16)
+> > +    FIELD(CXL_DEV_BG_CMD_STS, VENDOR_ERRNO, 48, 16)  
+> 
+> Again is there a reason not to use REG64? I can see the need to split
+> 128 bit registers but not 64 bit ones.
+
+Will do.
+
+> 
+> > +
+> > +REG32(CXL_DEV_CMD_PAYLOAD, 0x20)
+> > +
+> > +#endif  
+> 
+> Otherwise:
+> 
+> Reviewed-by: Alex Benn�e <alex.bennee@linaro.org>
 > 
 
