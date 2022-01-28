@@ -2,37 +2,37 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A0CC4321E
-	for <linux-cxl@archiver.kernel.org>; Fri, 28 Jan 2022 00:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDEFC4167E
+	for <linux-cxl@archiver.kernel.org>; Fri, 28 Jan 2022 00:29:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344645AbiA1A3J (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 27 Jan 2022 19:29:09 -0500
-Received: from mga18.intel.com ([134.134.136.126]:64742 "EHLO mga18.intel.com"
+        id S1344681AbiA1A3K (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 27 Jan 2022 19:29:10 -0500
+Received: from mga18.intel.com ([134.134.136.126]:64771 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1344646AbiA1A27 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Thu, 27 Jan 2022 19:28:59 -0500
+        id S241305AbiA1A3C (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 27 Jan 2022 19:29:02 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643329739; x=1674865739;
+  t=1643329742; x=1674865742;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=eZfTd1SDHxpeSkQFf4Hi1IY90tP7t53lECHImTN5KkA=;
-  b=O/wFWEIddl+8scEiCCR3zkRVlfJufFO/1qP7McYEnRkrv7rtHdAOcGax
-   UlwZ4ek9q4IP/JfBLhWcx0nq6a1al7D0CMHjCWaLx7u3YfKoY1/JBgLfr
-   Gjp2JYOSTW4agR2esp8p3j2Ym9yt3qrEizlfkX2jMnOmRiob6nGQZqJIp
-   YjLREC6lG5yTjCqgbGhvTJWUs96+iGmHB6eTEp0w2+Zi8zjr8aNc7hKzr
-   5JUbInndh+AhudP7dRGXzWknanIC56wAAKIVO/POxygCBFoNKhKnfEh75
-   Y3d5F4tHvwqrUDezU/NtzFwHkHpyR3JS3o6XR4MluCiTmWRLAtoIRCvJ1
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10239"; a="230580007"
+  bh=T9XKBUWEiW5Gc/EQfMiMf7KQVNCUAgi9KBZ44Hu22xc=;
+  b=hXJI33dejaKH3PaKe1LWIsSvCpKi+9sF05mYtQroKV6JhgseYaNywLgd
+   8O+puq+Mj4FKEJOUdRcTZRlGCt5f2GFWrqKLChzzm2B31Zi8Q1tSeqson
+   u2y2F3zXbHjzvuV0gu+n7pVgdGArbOlagIVwRcQ3VDGoQbAZQukpmB6dQ
+   LKrWJ/uRAc8pYTAxpGbIgtlp74H7J2ljyoORblq+Rc4jwafYw4QD7MaUj
+   yGlcYMqEURkdi+t7Rn5FofBQtlvu/XXKwOaakGGWVYjYqNBi3hicbfHdU
+   zu+LdHmOX5CCNwI5DoOYwhhOICxPOEju0m0GS39Vt+XLlrHWpAx6cQv68
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10239"; a="230580005"
 X-IronPort-AV: E=Sophos;i="5.88,322,1635231600"; 
-   d="scan'208";a="230580007"
+   d="scan'208";a="230580005"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2022 16:27:25 -0800
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2022 16:27:24 -0800
 X-IronPort-AV: E=Sophos;i="5.88,322,1635231600"; 
-   d="scan'208";a="674909623"
+   d="scan'208";a="674909611"
 Received: from vrao2-mobl1.gar.corp.intel.com (HELO localhost.localdomain) ([10.252.129.6])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2022 16:27:24 -0800
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2022 16:27:23 -0800
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     patches@lists.linux.dev, Ben Widawsky <ben.widawsky@intel.com>,
@@ -43,9 +43,9 @@ Cc:     patches@lists.linux.dev, Ben Widawsky <ben.widawsky@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Bjorn Helgaas <helgaas@kernel.org>, nvdimm@lists.linux.dev,
         linux-pci@vger.kernel.org
-Subject: [PATCH v3 05/14] cxl/acpi: Handle address space allocation
-Date:   Thu, 27 Jan 2022 16:26:58 -0800
-Message-Id: <20220128002707.391076-6-ben.widawsky@intel.com>
+Subject: [PATCH v3 03/14] cxl/mem: Cache port created by the mem dev
+Date:   Thu, 27 Jan 2022 16:26:56 -0800
+Message-Id: <20220128002707.391076-4-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.35.0
 In-Reply-To: <20220128002707.391076-1-ben.widawsky@intel.com>
 References: <20220128002707.391076-1-ben.widawsky@intel.com>
@@ -55,111 +55,121 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Regions are carved out of an addresses space which is claimed by top
-level decoders, and subsequently their children decoders. Regions are
-created with a size and therefore must fit, with proper alignment, in
-that address space. The support for doing this fitting is handled by the
-driver automatically.
-
-As an example, a platform might configure a top level decoder to claim
-1TB of address space @ 0x800000000 -> 0x10800000000; it would be
-possible to create M regions with appropriate alignment to occupy that
-address space. Each of those regions would have a host physical address
-somewhere in the range between 32G and 1.3TB, and the location will be
-determined by the logic added here.
-
-The request_region() usage is not strictly mandatory at this point as
-the actual handling of the address space is done with genpools. It is
-highly likely however that the resource/region APIs will become useful
-in the not too distant future.
-
-All decoders manage a host physical address space while active. Only the
-root decoder has constraints on location and size. As a result, it makes
-most sense for the root decoder to be responsible for managing the
-entire address space, and mid-level decoders and endpoints can ask the
-root decoder for suballocations.
+Since region programming sees all components in the topology as a port,
+it's required that endpoints are treated equally. The easiest way to go
+from endpoint to port is to simply cache it at creation time.
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
----
- drivers/cxl/acpi.c | 30 ++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h  |  2 ++
- 2 files changed, 32 insertions(+)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index d6dcb2b6af48..74681bfbf53c 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /* Copyright(c) 2021 Intel Corporation. All rights reserved. */
- #include <linux/platform_device.h>
-+#include <linux/genalloc.h>
- #include <linux/module.h>
- #include <linux/device.h>
- #include <linux/kernel.h>
-@@ -73,6 +74,27 @@ static int cxl_acpi_cfmws_verify(struct device *dev,
+---
+Changes since v2:
+- Rebased on Dan's latest port/mem changes
+- Keep a reference to the port until the memdev goes away
+- add action to release device reference for the port
+---
+ drivers/cxl/cxlmem.h |  2 ++
+ drivers/cxl/mem.c    | 35 ++++++++++++++++++++++++++++-------
+ 2 files changed, 30 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 7ba0edb4a1ab..2b8c66616d4e 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -37,6 +37,7 @@
+  * @id: id number of this memdev instance.
+  * @detach_work: active memdev lost a port in its ancestry
+  * @component_reg_phys: register base of component registers
++ * @port: The port created by this device
+  */
+ struct cxl_memdev {
+ 	struct device dev;
+@@ -44,6 +45,7 @@ struct cxl_memdev {
+ 	struct cxl_dev_state *cxlds;
+ 	struct work_struct detach_work;
+ 	int id;
++	struct cxl_port *port;
+ };
+ 
+ static inline struct cxl_memdev *to_cxl_memdev(struct device *dev)
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index 27f9dd0d55b6..c36219193886 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -45,26 +45,31 @@ static int wait_for_media(struct cxl_memdev *cxlmd)
  	return 0;
  }
  
-+/*
-+ * Every decoder while active has an address space that it is decoding. However,
-+ * only the root level decoders have fixed host physical address space ranges.
-+ */
-+static int cxl_create_cfmws_address_space(struct cxl_decoder *cxld,
-+					  struct acpi_cedt_cfmws *cfmws)
+-static int create_endpoint(struct cxl_memdev *cxlmd,
+-			   struct cxl_port *parent_port)
++static struct cxl_port *create_endpoint(struct cxl_memdev *cxlmd,
++					struct cxl_port *parent_port)
+ {
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+ 	struct cxl_port *endpoint;
++	int rc;
+ 
+ 	endpoint = devm_cxl_add_port(&parent_port->dev, &cxlmd->dev,
+ 				     cxlds->component_reg_phys, parent_port);
+ 	if (IS_ERR(endpoint))
+-		return PTR_ERR(endpoint);
++		return endpoint;
+ 
+ 	dev_dbg(&cxlmd->dev, "add: %s\n", dev_name(&endpoint->dev));
+ 
+ 	if (!endpoint->dev.driver) {
+ 		dev_err(&cxlmd->dev, "%s failed probe\n",
+ 			dev_name(&endpoint->dev));
+-		return -ENXIO;
++		return ERR_PTR(-ENXIO);
+ 	}
+ 
+-	return cxl_endpoint_autoremove(cxlmd, endpoint);
++	rc = cxl_endpoint_autoremove(cxlmd, endpoint);
++	if (rc)
++		return ERR_PTR(rc);
++
++	return endpoint;
+ }
+ 
+ /**
+@@ -127,11 +132,18 @@ __mock bool cxl_dvsec_decode_init(struct cxl_dev_state *cxlds)
+ 	return do_hdm_init;
+ }
+ 
++static void delete_memdev(void *dev)
 +{
-+	const int order = ilog2(SZ_256M * cxld->interleave_ways);
-+	struct device *dev = &cxld->dev;
-+	struct gen_pool *pool;
++	struct cxl_memdev *cxlmd = dev;
 +
-+	pool = devm_gen_pool_create(dev, order, NUMA_NO_NODE, dev_name(dev));
-+	if (IS_ERR(pool))
-+		return PTR_ERR(pool);
-+
-+	cxld->address_space = pool;
-+
-+	return gen_pool_add(cxld->address_space, cfmws->base_hpa,
-+			    cfmws->window_size, NUMA_NO_NODE);
++	put_device(&cxlmd->port->dev);
 +}
 +
- struct cxl_cfmws_context {
- 	struct device *dev;
- 	struct cxl_port *root_port;
-@@ -113,6 +135,14 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
- 	cxld->interleave_ways = CFMWS_INTERLEAVE_WAYS(cfmws);
- 	cxld->interleave_granularity = CFMWS_INTERLEAVE_GRANULARITY(cfmws);
+ static int cxl_mem_probe(struct device *dev)
+ {
+ 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+-	struct cxl_port *parent_port;
++	struct cxl_port *parent_port, *ep_port;
+ 	int rc;
  
-+	rc = cxl_create_cfmws_address_space(cxld, cfmws);
-+	if (rc) {
-+		dev_err(dev,
-+			"Failed to create CFMWS address space for decoder\n");
-+		put_device(&cxld->dev);
-+		return 0;
+ 	/*
+@@ -201,7 +213,16 @@ static int cxl_mem_probe(struct device *dev)
+ 		goto out;
+ 	}
+ 
+-	rc = create_endpoint(cxlmd, parent_port);
++	ep_port = create_endpoint(cxlmd, parent_port);
++	if (IS_ERR(ep_port)) {
++		rc = PTR_ERR(ep_port);
++		goto out;
 +	}
 +
- 	rc = cxl_decoder_add(cxld, target_map);
- 	if (rc)
- 		put_device(&cxld->dev);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index d1a8ca19c9ea..b300673072f5 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -251,6 +251,7 @@ enum cxl_decoder_type {
-  * @flags: memory type capabilities and locking
-  * @target_lock: coordinate coherent reads of the target list
-  * @region_ida: allocator for region ids.
-+ * @address_space: Used/free address space for regions.
-  * @nr_targets: number of elements in @target
-  * @target: active ordered target list in current decoder configuration
-  */
-@@ -267,6 +268,7 @@ struct cxl_decoder {
- 	unsigned long flags;
- 	seqlock_t target_lock;
- 	struct ida region_ida;
-+	struct gen_pool *address_space;
- 	int nr_targets;
- 	struct cxl_dport *target[];
- };
++	get_device(&ep_port->dev);
++	cxlmd->port = ep_port;
++
++	rc = devm_add_action_or_reset(dev, delete_memdev, cxlmd);
+ out:
+ 	cxl_device_unlock(&parent_port->dev);
+ 	put_device(&parent_port->dev);
 -- 
 2.35.0
 
