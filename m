@@ -2,146 +2,270 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3451EC433EF
-	for <linux-cxl@archiver.kernel.org>; Mon, 31 Jan 2022 22:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 364FAC433EF
+	for <linux-cxl@archiver.kernel.org>; Mon, 31 Jan 2022 22:28:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232800AbiAaWVF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 31 Jan 2022 17:21:05 -0500
-Received: from mga09.intel.com ([134.134.136.24]:33059 "EHLO mga09.intel.com"
+        id S233017AbiAaW2L (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 31 Jan 2022 17:28:11 -0500
+Received: from mga09.intel.com ([134.134.136.24]:33652 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232213AbiAaWVE (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 31 Jan 2022 17:21:04 -0500
+        id S230136AbiAaW2L (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 31 Jan 2022 17:28:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643667664; x=1675203664;
+  t=1643668091; x=1675204091;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=xLvWi7iNzzHbAeE/HUpENMW6kzoJZd4Uqflerx8m0/E=;
-  b=cWkKBQERPNRWMETNYnChJQ4rrrjxVRCbH8cffHOc6IJi4Qb1AMnFrl/S
-   2pd3JFKoNA9qtzk0k8W87cdtbhyJns8Yu9GemGvcPGDXdRmLoqYqkZHq3
-   bg7/htupTZ7xiXTf2zrEsfM8rf/8Fysf26ouhrN3KZ8Nu0qejundhrfC6
-   L2JOWZE73u21FWmx2w9K7f9l1wjbag+1MMtJLYZA1s2AvSk95vuPE4r5V
-   r2iZml22wa/KfKGonItvJsbn5rUyfqLklf4tE4IZlFlRFD0DWXAlWcvJl
-   X6w5mcbsacPjh3N4r7gPBSFhKIAu7le6mY4UAcAdlcraEPLC8Lf9SHbcQ
+  bh=9WLB85i0owrYX8M10oRGSSx6TtdTOtxPK//pnDqDdY0=;
+  b=LHATsvKZni0aITeMldpTXpwWRtacq3mvOejLCyiXyrNBIVQgYlxj6w6e
+   fOB5RnPIg+6X8eJ3+XIw/7Dmmo2RwrCfQ6TSnohgxc9VOcb5KEceFnGVg
+   P7nu+EWftjab7cA4Oq1sQ+S12WKSW8OKWbJXDcoV3+h7kIIWTTKISLD4a
+   ixAZ915N6WAppvMq+sufsjKJGPK+EATYityYbPdFymXXQHrrrruX62eDD
+   +ZdSlBsSkcJfG/QrNYCEac8O7smhYwzEDo6LEz51PnXgjU6X9Du9hxuhI
+   JOb+G99ru7Rk1KPdBJHmMyhAhQXtio4IEhawU/RCOyZ/yy4beU8+ySN/6
    g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="247332649"
+X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="247333552"
 X-IronPort-AV: E=Sophos;i="5.88,331,1635231600"; 
-   d="scan'208";a="247332649"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 14:21:04 -0800
+   d="scan'208";a="247333552"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 14:28:10 -0800
 X-IronPort-AV: E=Sophos;i="5.88,331,1635231600"; 
-   d="scan'208";a="619535111"
+   d="scan'208";a="534328236"
 Received: from sssheth-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.130.247])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 14:21:03 -0800
-Date:   Mon, 31 Jan 2022 14:21:01 -0800
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 14:28:10 -0800
+Date:   Mon, 31 Jan 2022 14:28:08 -0800
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>
 Cc:     linux-cxl@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         linux-pci@vger.kernel.org, nvdimm@lists.linux.dev
-Subject: Re: [PATCH v3 02/40] cxl/pci: Implement Interface Ready Timeout
-Message-ID: <20220131222101.tckwbcxheuuorkiq@intel.com>
+Subject: Re: [PATCH v3 03/40] cxl/pci: Defer mailbox status checks to command
+ timeouts
+Message-ID: <20220131222808.kipxr7ezpyhw2y5p@intel.com>
 References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164298412919.3018233.12491722885382120190.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164298413480.3018233.9643395389297971819.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <164298412919.3018233.12491722885382120190.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <164298413480.3018233.9643395389297971819.stgit@dwillia2-desk3.amr.corp.intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 22-01-23 16:28:49, Dan Williams wrote:
-> From: Ben Widawsky <ben.widawsky@intel.com>
+On 22-01-23 16:28:54, Dan Williams wrote:
+> Device status can change without warning at any point in time. This
+> effectively means that no amount of status checking before a command is
+> submitted can guarantee that the device is not in an error condition
+> when the command is later submitted. The clearest signal that a device
+> is not able to process commands is if it fails to process commands.
 > 
-> The original driver implementation used the doorbell timeout for the
-> Mailbox Interface Ready bit to piggy back off of, since the latter does
-> not have a defined timeout. This functionality, introduced in commit
-> 8adaf747c9f0 ("cxl/mem: Find device capabilities"), needs improvement as
-> the recent "Add Mailbox Ready Time" ECN timeout indicates that the
-> mailbox ready time can be significantly longer that 2 seconds.
+> With the above understanding in hand, update cxl_pci_setup_mailbox() to
+> validate the readiness of the mailbox once at the beginning of time, and
+> then use timeouts and busy sequencing errors as the only occasions to
+> report status.
 > 
-> While the specification limits the maximum timeout to 256s, the cxl_pci
-> driver gives up on the mailbox after 60s. This value corresponds with
-> important timeout values already present in the kernel. A module
-> parameter is provided as an emergency override and represents the
-> default Linux policy for all devices.
+> Just as before, unless and until the driver gains a reset recovery path,
+> doorbell clearing failures by the device are fatal to mailbox
+> operations.
 > 
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> [djbw: add modparam, drop check_device_status()]
-> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > ---
->  drivers/cxl/pci.c |   35 +++++++++++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
+>  drivers/cxl/pci.c |  134 +++++++++++++----------------------------------------
+>  1 file changed, 33 insertions(+), 101 deletions(-)
 > 
 > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 8dc91fd3396a..ed8de9eac970 100644
+> index ed8de9eac970..91de2e4aff6f 100644
 > --- a/drivers/cxl/pci.c
 > +++ b/drivers/cxl/pci.c
-> @@ -1,7 +1,9 @@
->  // SPDX-License-Identifier: GPL-2.0-only
->  /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
->  #include <linux/io-64-nonatomic-lo-hi.h>
-> +#include <linux/moduleparam.h>
->  #include <linux/module.h>
-> +#include <linux/delay.h>
->  #include <linux/sizes.h>
->  #include <linux/mutex.h>
->  #include <linux/list.h>
-> @@ -35,6 +37,20 @@
->  /* CXL 2.0 - 8.2.8.4 */
->  #define CXL_MAILBOX_TIMEOUT_MS (2 * HZ)
+> @@ -73,14 +73,16 @@ static int cxl_pci_mbox_wait_for_doorbell(struct cxl_dev_state *cxlds)
+>  	return 0;
+>  }
 >  
-> +/*
-> + * CXL 2.0 ECN "Add Mailbox Ready Time" defines a capability field to
-> + * dictate how long to wait for the mailbox to become ready. The new
-> + * field allows the device to tell software the amount of time to wait
-> + * before mailbox ready. This field per the spec theoretically allows
-> + * for up to 255 seconds. 255 seconds is unreasonably long, its longer
-> + * than the maximum SATA port link recovery wait. Default to 60 seconds
-> + * until someone builds a CXL device that needs more time in practice.
-> + */
-> +static unsigned short mbox_ready_timeout = 60;
-> +module_param(mbox_ready_timeout, ushort, 0600);
-
-Any reason not to make it 0644?
-
-> +MODULE_PARM_DESC(mbox_ready_timeout,
-> +		 "seconds to wait for mailbox ready status");
+> -static void cxl_pci_mbox_timeout(struct cxl_dev_state *cxlds,
+> -				 struct cxl_mbox_cmd *mbox_cmd)
+> -{
+> -	struct device *dev = cxlds->dev;
+> +#define cxl_err(dev, status, msg)                                        \
+> +	dev_err_ratelimited(dev, msg ", device state %s%s\n",                  \
+> +			    status & CXLMDEV_DEV_FATAL ? " fatal" : "",        \
+> +			    status & CXLMDEV_FW_HALT ? " firmware-halt" : "")
+>  
+> -	dev_dbg(dev, "Mailbox command (opcode: %#x size: %zub) timed out\n",
+> -		mbox_cmd->opcode, mbox_cmd->size_in);
+> -}
+> +#define cxl_cmd_err(dev, cmd, status, msg)                               \
+> +	dev_err_ratelimited(dev, msg " (opcode: %#x), device state %s%s\n",    \
+> +			    (cmd)->opcode,                                     \
+> +			    status & CXLMDEV_DEV_FATAL ? " fatal" : "",        \
+> +			    status & CXLMDEV_FW_HALT ? " firmware-halt" : "")
+>  
+>  /**
+>   * __cxl_pci_mbox_send_cmd() - Execute a mailbox command
+> @@ -134,7 +136,11 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_state *cxlds,
+>  
+>  	/* #1 */
+>  	if (cxl_doorbell_busy(cxlds)) {
+> -		dev_err_ratelimited(dev, "Mailbox re-busy after acquiring\n");
+> +		u64 md_status =
+> +			readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
 > +
->  static int cxl_pci_mbox_wait_for_doorbell(struct cxl_dev_state *cxlds)
+> +		cxl_cmd_err(cxlds->dev, mbox_cmd, md_status,
+> +			    "mailbox queue busy");
+>  		return -EBUSY;
+>  	}
+>  
+> @@ -160,7 +166,9 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_state *cxlds,
+>  	/* #5 */
+>  	rc = cxl_pci_mbox_wait_for_doorbell(cxlds);
+>  	if (rc == -ETIMEDOUT) {
+> -		cxl_pci_mbox_timeout(cxlds, mbox_cmd);
+> +		u64 md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+> +
+> +		cxl_cmd_err(cxlds->dev, mbox_cmd, md_status, "mailbox timeout");
+>  		return rc;
+>  	}
+>  
+> @@ -198,98 +206,13 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_state *cxlds,
+>  	return 0;
+>  }
+>  
+> -/**
+> - * cxl_pci_mbox_get() - Acquire exclusive access to the mailbox.
+> - * @cxlds: The device state to gain access to.
+> - *
+> - * Context: Any context. Takes the mbox_mutex.
+> - * Return: 0 if exclusive access was acquired.
+> - */
+> -static int cxl_pci_mbox_get(struct cxl_dev_state *cxlds)
+> -{
+> -	struct device *dev = cxlds->dev;
+> -	u64 md_status;
+> -	int rc;
+> -
+> -	mutex_lock_io(&cxlds->mbox_mutex);
+> -
+> -	/*
+> -	 * XXX: There is some amount of ambiguity in the 2.0 version of the spec
+> -	 * around the mailbox interface ready (8.2.8.5.1.1).  The purpose of the
+> -	 * bit is to allow firmware running on the device to notify the driver
+> -	 * that it's ready to receive commands. It is unclear if the bit needs
+> -	 * to be read for each transaction mailbox, ie. the firmware can switch
+> -	 * it on and off as needed. Second, there is no defined timeout for
+> -	 * mailbox ready, like there is for the doorbell interface.
+> -	 *
+> -	 * Assumptions:
+> -	 * 1. The firmware might toggle the Mailbox Interface Ready bit, check
+> -	 *    it for every command.
+> -	 *
+> -	 * 2. If the doorbell is clear, the firmware should have first set the
+> -	 *    Mailbox Interface Ready bit. Therefore, waiting for the doorbell
+> -	 *    to be ready is sufficient.
+> -	 */
+> -	rc = cxl_pci_mbox_wait_for_doorbell(cxlds);
+> -	if (rc) {
+> -		dev_warn(dev, "Mailbox interface not ready\n");
+> -		goto out;
+> -	}
+> -
+> -	md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+> -	if (!(md_status & CXLMDEV_MBOX_IF_READY && CXLMDEV_READY(md_status))) {
+> -		dev_err(dev, "mbox: reported doorbell ready, but not mbox ready\n");
+> -		rc = -EBUSY;
+> -		goto out;
+> -	}
+> -
+> -	/*
+> -	 * Hardware shouldn't allow a ready status but also have failure bits
+> -	 * set. Spit out an error, this should be a bug report
+> -	 */
+> -	rc = -EFAULT;
+> -	if (md_status & CXLMDEV_DEV_FATAL) {
+> -		dev_err(dev, "mbox: reported ready, but fatal\n");
+> -		goto out;
+> -	}
+> -	if (md_status & CXLMDEV_FW_HALT) {
+> -		dev_err(dev, "mbox: reported ready, but halted\n");
+> -		goto out;
+> -	}
+> -	if (CXLMDEV_RESET_NEEDED(md_status)) {
+> -		dev_err(dev, "mbox: reported ready, but reset needed\n");
+> -		goto out;
+> -	}
+> -
+> -	/* with lock held */
+> -	return 0;
+> -
+> -out:
+> -	mutex_unlock(&cxlds->mbox_mutex);
+> -	return rc;
+> -}
+> -
+> -/**
+> - * cxl_pci_mbox_put() - Release exclusive access to the mailbox.
+> - * @cxlds: The device state to communicate with.
+> - *
+> - * Context: Any context. Expects mbox_mutex to be held.
+> - */
+> -static void cxl_pci_mbox_put(struct cxl_dev_state *cxlds)
+> -{
+> -	mutex_unlock(&cxlds->mbox_mutex);
+> -}
+> -
+>  static int cxl_pci_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
 >  {
->  	const unsigned long start = jiffies;
-> @@ -281,6 +297,25 @@ static int cxl_pci_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *c
->  static int cxl_pci_setup_mailbox(struct cxl_dev_state *cxlds)
->  {
->  	const int cap = readl(cxlds->regs.mbox + CXLDEV_MBOX_CAPS_OFFSET);
-> +	unsigned long timeout;
-> +	u64 md_status;
-> +
-> +	timeout = jiffies + mbox_ready_timeout * HZ;
-> +	do {
-> +		md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
-> +		if (md_status & CXLMDEV_MBOX_IF_READY)
-> +			break;
-> +		if (msleep_interruptible(100))
-> +			break;
-> +	} while (!time_after(jiffies, timeout));
-
-Just pointing out the [probably] obvious. If the user specifies a zero second
-timeout, the code will still wait 100ms.
-
-> +
-> +	if (!(md_status & CXLMDEV_MBOX_IF_READY)) {
-> +		dev_err(cxlds->dev,
-> +			"timeout awaiting mailbox ready, device state:%s%s\n",
-> +			md_status & CXLMDEV_DEV_FATAL ? " fatal" : "",
-> +			md_status & CXLMDEV_FW_HALT ? " firmware-halt" : "");
-> +		return -EIO;
+>  	int rc;
+>  
+> -	rc = cxl_pci_mbox_get(cxlds);
+> -	if (rc)
+> -		return rc;
+> -
+> +	mutex_lock_io(&cxlds->mbox_mutex);
+>  	rc = __cxl_pci_mbox_send_cmd(cxlds, cmd);
+> -	cxl_pci_mbox_put(cxlds);
+> +	mutex_unlock(&cxlds->mbox_mutex);
+>  
+>  	return rc;
+>  }
+> @@ -310,11 +233,20 @@ static int cxl_pci_setup_mailbox(struct cxl_dev_state *cxlds)
+>  	} while (!time_after(jiffies, timeout));
+>  
+>  	if (!(md_status & CXLMDEV_MBOX_IF_READY)) {
+> -		dev_err(cxlds->dev,
+> -			"timeout awaiting mailbox ready, device state:%s%s\n",
+> -			md_status & CXLMDEV_DEV_FATAL ? " fatal" : "",
+> -			md_status & CXLMDEV_FW_HALT ? " firmware-halt" : "");
+> -		return -EIO;
+> +		cxl_err(cxlds->dev, md_status,
+> +			"timeout awaiting mailbox ready");
+> +		return -ETIMEDOUT;
 > +	}
+> +
+> +	/*
+> +	 * A command may be in flight from a previous driver instance,
+> +	 * think kexec, do one doorbell wait so that
+> +	 * __cxl_pci_mbox_send_cmd() can assume that it is the only
+> +	 * source for future doorbell busy events.
+> +	 */
+
+Does this mean for background commands? Does kexec run if the current kernel is
+holding a mutex?
+
+> +	if (cxl_pci_mbox_wait_for_doorbell(cxlds) != 0) {
+> +		cxl_err(cxlds->dev, md_status, "timeout awaiting mailbox idle");
+> +		return -ETIMEDOUT;
+
+It might be useful to post the return code in the mailbox status register should
+this event happen.
+
+It would be ideal if we reset the device at this point, however, it could be
+actively decoding and we wouldn't know until cxl_mem driver comes up, which it
+can't because this would have failed. I'm not sure how to deal with that
+dependency, but it seems non-optimal to me. Perhaps it does make sense to
+continue with binding the binding the driver and just removing mailbox
+functionality?
+
+>  	}
 >  
 >  	cxlds->mbox_send = cxl_pci_mbox_send;
->  	cxlds->payload_size =
 > 
