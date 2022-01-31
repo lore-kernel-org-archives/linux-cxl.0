@@ -2,60 +2,167 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B14C433EF
-	for <linux-cxl@archiver.kernel.org>; Mon, 31 Jan 2022 22:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9F0C433F5
+	for <linux-cxl@archiver.kernel.org>; Mon, 31 Jan 2022 23:11:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234387AbiAaWkJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 31 Jan 2022 17:40:09 -0500
-Received: from mga04.intel.com ([192.55.52.120]:58604 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234386AbiAaWkI (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Mon, 31 Jan 2022 17:40:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643668808; x=1675204808;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ssB0iV/cMxck25dO81DeYUJAunxOtDWbLOabp/wUCZA=;
-  b=e62z4Yw1UM7Y10+wueEIIctu2xlFqrYAyGaZ642s5TvfXG/ZXDhp4tqu
-   F35cyrCErxvOpNZ/GEPn0mBxA/N+ncBQRBXDUvN0tt7o5jVWY0SDnuoKV
-   sAvmctWzuBKog28BQBdNl5DvrTThIZGp0Ng6pzEq4xIS41AU6FbRxihwh
-   7W1GyMxaic/puizTys7qoc0xXHLuDIXcdR4pLJyYAQZZbkXgZyHKVBxFj
-   /UT200p04IefoZla5Ea/m7fe8snguHo53uW3LRl+ngaiIz7UkqMoeBMlZ
-   tjY/OcLfXttgGvbkoo70juiX9lirI1VJH8E8vNyenC9TdeimvfajVt3IB
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="246399177"
-X-IronPort-AV: E=Sophos;i="5.88,331,1635231600"; 
-   d="scan'208";a="246399177"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 14:40:01 -0800
-X-IronPort-AV: E=Sophos;i="5.88,331,1635231600"; 
-   d="scan'208";a="626525085"
-Received: from sssheth-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.130.247])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 14:40:01 -0800
-Date:   Mon, 31 Jan 2022 14:39:59 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-        nvdimm@lists.linux.dev
-Subject: Re: [PATCH v3 12/40] cxl/core: Fix cxl_probe_component_regs() error
- message
-Message-ID: <20220131223959.l4uvkjwzu2t3k5lt@intel.com>
-References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164298418268.3018233.17790073375430834911.stgit@dwillia2-desk3.amr.corp.intel.com>
+        id S237265AbiAaXLN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 31 Jan 2022 18:11:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44672 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237144AbiAaXLN (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 31 Jan 2022 18:11:13 -0500
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54EFBC061714
+        for <linux-cxl@vger.kernel.org>; Mon, 31 Jan 2022 15:11:13 -0800 (PST)
+Received: by mail-pl1-x636.google.com with SMTP id k17so13942127plk.0
+        for <linux-cxl@vger.kernel.org>; Mon, 31 Jan 2022 15:11:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nUAfe5k5e+O9VOxg05HBUCs0ZoR1vq/g20INw2GApW4=;
+        b=qmvYEkdbgSm0MKddhofhmaAmaAImSOucN6ofDmMdVVbijHgeHWk29U0wos47F/RAFs
+         3kZScef3ZNeCQE6SCiCUo+FV35hLZ8MZqXV7OgSGXfTLWZfjXoX0W++XirDG5ClhFSiH
+         OJhHehDBdcY+Aom9512lN4IQOjiMpmz0wLf1IxzsmSFNWTqZfEvTD7yYzqki9yKO8ceF
+         5Acjn2AQl3eJ8p5haKydk9V+uXPT1LP+Fpz/qiefhlFygNtzBVywvafP4LsyEp/K43jz
+         o+wiDvJ1lC/IkUhwV3aCSeiiW/YYFah69/klqerK+hZGmJ9+EC5snJANignNBqUOEHa2
+         E2PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nUAfe5k5e+O9VOxg05HBUCs0ZoR1vq/g20INw2GApW4=;
+        b=Hbuo5RELfLwonu26DEoirpZp9PVeIl6eyZp7h2xa5G4vmcoU1oq+FTHWCjWWVM6fQb
+         XBo+oOY7unKZSBQ/c0KSlnw1EF7QYxlOcwNnKsJV/E3BwzBMxz/5ztcnUuOr1O+93qTL
+         lyll0gJzhMz6G9Po6iwGGB9241FmmhFrE3mfRSFaDj29NPg+mQjipOjxgAJz/v3fIzjS
+         vOQeWSDbi5fMsLU1huXoNiIRqortiaM+YL7EI8I/hUElnHlme4lPuzqezf8gNqYC+1A0
+         zYHgcDFdL3JVEdxjSjdzqZudFZ50GIq1MoOXQ9M6rwhlT0aqz95hWe6MkkSCZqGvOpC2
+         /cvQ==
+X-Gm-Message-State: AOAM532Osw0hs68RMuxl5sMbnngSYjSJox3i3x8jTfJvDLA/r2Sgat19
+        aH5kW++Jg4hwIGNTISbO0VNS7FFgF/ZXxtis0jgk+w==
+X-Google-Smtp-Source: ABdhPJyzz80R6E7ToGcRvh4cwCJ5RQFQJXB+VaJmWkazPmjyCzehEf3VtKGOFrwbiLZxZurxqRIEI6shZkoJmDt5Hq8=
+X-Received: by 2002:a17:902:d705:: with SMTP id w5mr22375544ply.34.1643670672853;
+ Mon, 31 Jan 2022 15:11:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <164298418268.3018233.17790073375430834911.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164298412919.3018233.12491722885382120190.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20220131222101.tckwbcxheuuorkiq@intel.com>
+In-Reply-To: <20220131222101.tckwbcxheuuorkiq@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 31 Jan 2022 15:11:05 -0800
+Message-ID: <CAPcyv4gGMsUbJ=Cu8U0B2Znz6+jE6PcDCALNfxJzvAHZZccVvQ@mail.gmail.com>
+Subject: Re: [PATCH v3 02/40] cxl/pci: Implement Interface Ready Timeout
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 22-01-23 16:29:42, Dan Williams wrote:
-> Fix a '\n' vs '/n' typo.
-> 
-> Fixes: 08422378c4ad ("cxl/pci: Add HDM decoder capabilities")
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Acked-by: Ben Widawsky <ben.widawsky@intel.com
+On Mon, Jan 31, 2022 at 2:21 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> On 22-01-23 16:28:49, Dan Williams wrote:
+> > From: Ben Widawsky <ben.widawsky@intel.com>
+> >
+> > The original driver implementation used the doorbell timeout for the
+> > Mailbox Interface Ready bit to piggy back off of, since the latter does
+> > not have a defined timeout. This functionality, introduced in commit
+> > 8adaf747c9f0 ("cxl/mem: Find device capabilities"), needs improvement as
+> > the recent "Add Mailbox Ready Time" ECN timeout indicates that the
+> > mailbox ready time can be significantly longer that 2 seconds.
+> >
+> > While the specification limits the maximum timeout to 256s, the cxl_pci
+> > driver gives up on the mailbox after 60s. This value corresponds with
+> > important timeout values already present in the kernel. A module
+> > parameter is provided as an emergency override and represents the
+> > default Linux policy for all devices.
+> >
+> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > [djbw: add modparam, drop check_device_status()]
+> > Co-developed-by: Dan Williams <dan.j.williams@intel.com>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  drivers/cxl/pci.c |   35 +++++++++++++++++++++++++++++++++++
+> >  1 file changed, 35 insertions(+)
+> >
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > index 8dc91fd3396a..ed8de9eac970 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> > @@ -1,7 +1,9 @@
+> >  // SPDX-License-Identifier: GPL-2.0-only
+> >  /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+> >  #include <linux/io-64-nonatomic-lo-hi.h>
+> > +#include <linux/moduleparam.h>
+> >  #include <linux/module.h>
+> > +#include <linux/delay.h>
+> >  #include <linux/sizes.h>
+> >  #include <linux/mutex.h>
+> >  #include <linux/list.h>
+> > @@ -35,6 +37,20 @@
+> >  /* CXL 2.0 - 8.2.8.4 */
+> >  #define CXL_MAILBOX_TIMEOUT_MS (2 * HZ)
+> >
+> > +/*
+> > + * CXL 2.0 ECN "Add Mailbox Ready Time" defines a capability field to
+> > + * dictate how long to wait for the mailbox to become ready. The new
+> > + * field allows the device to tell software the amount of time to wait
+> > + * before mailbox ready. This field per the spec theoretically allows
+> > + * for up to 255 seconds. 255 seconds is unreasonably long, its longer
+> > + * than the maximum SATA port link recovery wait. Default to 60 seconds
+> > + * until someone builds a CXL device that needs more time in practice.
+> > + */
+> > +static unsigned short mbox_ready_timeout = 60;
+> > +module_param(mbox_ready_timeout, ushort, 0600);
+>
+> Any reason not to make it 0644?
+>
 
-[snip]
+Are there any tooling scenarios where this information is usable by non-root?
+
+> > +MODULE_PARM_DESC(mbox_ready_timeout,
+> > +              "seconds to wait for mailbox ready status");
+> > +
+> >  static int cxl_pci_mbox_wait_for_doorbell(struct cxl_dev_state *cxlds)
+> >  {
+> >       const unsigned long start = jiffies;
+> > @@ -281,6 +297,25 @@ static int cxl_pci_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *c
+> >  static int cxl_pci_setup_mailbox(struct cxl_dev_state *cxlds)
+> >  {
+> >       const int cap = readl(cxlds->regs.mbox + CXLDEV_MBOX_CAPS_OFFSET);
+> > +     unsigned long timeout;
+> > +     u64 md_status;
+> > +
+> > +     timeout = jiffies + mbox_ready_timeout * HZ;
+> > +     do {
+> > +             md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+> > +             if (md_status & CXLMDEV_MBOX_IF_READY)
+> > +                     break;
+> > +             if (msleep_interruptible(100))
+> > +                     break;
+> > +     } while (!time_after(jiffies, timeout));
+>
+> Just pointing out the [probably] obvious. If the user specifies a zero second
+> timeout, the code will still wait 100ms.
+
+Sure, is that going to be a problem in practice? I expect the
+overwhelming common case is that the mailbox is already ready by this
+point, so it's a zero-wait.
+
+>
+> > +
+> > +     if (!(md_status & CXLMDEV_MBOX_IF_READY)) {
+> > +             dev_err(cxlds->dev,
+> > +                     "timeout awaiting mailbox ready, device state:%s%s\n",
+> > +                     md_status & CXLMDEV_DEV_FATAL ? " fatal" : "",
+> > +                     md_status & CXLMDEV_FW_HALT ? " firmware-halt" : "");
+> > +             return -EIO;
+> > +     }
+> >
+> >       cxlds->mbox_send = cxl_pci_mbox_send;
+> >       cxlds->payload_size =
+> >
