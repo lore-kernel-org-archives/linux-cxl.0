@@ -2,97 +2,68 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0EAC433EF
-	for <linux-cxl@archiver.kernel.org>; Mon, 31 Jan 2022 23:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A435C433EF
+	for <linux-cxl@archiver.kernel.org>; Mon, 31 Jan 2022 23:41:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229582AbiAaXiz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 31 Jan 2022 18:38:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229608AbiAaXiw (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 31 Jan 2022 18:38:52 -0500
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B497C06173B
-        for <linux-cxl@vger.kernel.org>; Mon, 31 Jan 2022 15:38:52 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id u11so13876619plh.13
-        for <linux-cxl@vger.kernel.org>; Mon, 31 Jan 2022 15:38:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6vOCLYMOxUbUApT9HbI5FSaW7HrkYDiGCAlYIBP1qU8=;
-        b=y5Gc5mz9i67hNtmNqXv8utVOziwwRl+j5ZyQ5cW/fPpfTUfAUWiDK1v8K35o7f1Vsk
-         T91L4zpwTpHpPQOtWr2aeQ2Lsy5aZZaFDuq82GiBOyNEDWH6vPJn4vQRkjQ4eBB3n33J
-         tLPzWhrrbaR7acnXPJrRVi7Cxj0TELu/Qj0nsI8jguFQRvpg8M0OFyAAKLlGSGExEWh1
-         Q3SJLGDy0SzmOzGU8U9AeemuFYzoe0lcqL5VEb+WZNmtPBefnXbT/gB781pU4lBUSdoo
-         cnELrFsISGbUygEtKEWZu5WDKZSIlzDZfZIojiLpEQtDe5kF5C8uEuxsbr/j6z2QWxGe
-         iEYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6vOCLYMOxUbUApT9HbI5FSaW7HrkYDiGCAlYIBP1qU8=;
-        b=X85g2oKArVz302gAtxXa9gEQd4J3qDJGGNTLPc6AtB412xvR35CzcN3JOkdvAwDQ6i
-         lNlsMK6pECpTCjNHstRT8Ixyki7sqUQEHLCsOSXm0WuBbhIJUGSf54jkVhOi355TeDDg
-         IfIe1S1OHWf8HYJ8r/hKiF56MjzpEKmGltaA2DCO+TOwXHiKd5eYOXGr0t939zqb1RJ7
-         2ncvV9frnlclHE1eOEcrLsDTf1Mw1PVB7y4ubzEO1GfZM1bSE/DFx5TUth7zcSewoDWs
-         Uvcc4d0mcKRapzN03z5OMYAubbKnTColZrYzwb726ErDYticDLK3FoId44fonVm2Guz7
-         ycJg==
-X-Gm-Message-State: AOAM533+dpKOi/l3r7ibTKvE9pvVYAwrkc5WD1Q73+yuZ2ZZB05/LfAs
-        YC13vJm2mvkixUt/zyLnZxk9RskFE/jbxbFltnXlZw==
-X-Google-Smtp-Source: ABdhPJwguyNOPmFwDrco2lLS7Rj3fKLBxsK1kYtPGwPykoCdnEFPqdFwq9bgloA8zzisbdGyCWOoppLClYsF+LP7oC8=
-X-Received: by 2002:a17:902:b20a:: with SMTP id t10mr22895008plr.132.1643672331921;
- Mon, 31 Jan 2022 15:38:51 -0800 (PST)
+        id S229674AbiAaXlz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 31 Jan 2022 18:41:55 -0500
+Received: from mga07.intel.com ([134.134.136.100]:61134 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229691AbiAaXly (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Mon, 31 Jan 2022 18:41:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643672514; x=1675208514;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yjQHh0Yfr1scPww3LtRFqwgJl85g3BYaKqA4/Bg6Km4=;
+  b=KRvRTMRlaUgvrNa+98dqdbmH3kFYTJtkeae038/h/+J1FnqaLBkDgY4w
+   B4JPmtF88h6s1LHrO3yWjsbEwUI3Abkn7Za0KL7M5hl3l2Wm21hSFX3r6
+   UW65t/zmZeNdXMQ2sV+aWe+33eVRzRaKZWTH0q7yC+64Y814JjT7ZICyU
+   obRxGWs5iD72SkHGNU3nufBohPvlF1KOujg6+apbE+KF7/GwCwAgE8R5o
+   b8gUIz8/bGyVcgbZSKFXOyHz+XWmZFfOTK3hsgZuINIEGxdRGA+rbe/B3
+   wdm7ulinVDX5ZQ4+CK6jeJ9TkdgzD9KALcskM9Hash6QUttxqOI6QAjpO
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="310884504"
+X-IronPort-AV: E=Sophos;i="5.88,332,1635231600"; 
+   d="scan'208";a="310884504"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 15:41:54 -0800
+X-IronPort-AV: E=Sophos;i="5.88,332,1635231600"; 
+   d="scan'208";a="522844661"
+Received: from sssheth-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.130.247])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 15:41:54 -0800
+Date:   Mon, 31 Jan 2022 15:41:52 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-pci@vger.kernel.org, nvdimm@lists.linux.dev
+Subject: Re: [PATCH v4 17/40] cxl/port: Introduce cxl_port_to_pci_bus()
+Message-ID: <20220131234152.ttpp5xkiunrxv3zp@intel.com>
+References: <164298420951.3018233.1498794101372312682.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164364745633.85488.9744017377155103992.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-References: <164298420439.3018233.5113217660229718675.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164316562430.3437160.122223070771602475.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20220131233422.xo6sugw4bvoyh6ia@intel.com>
-In-Reply-To: <20220131233422.xo6sugw4bvoyh6ia@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 31 Jan 2022 15:38:44 -0800
-Message-ID: <CAPcyv4hD9jPaTJZE47hx1mg66T44KWCyiaCZGrqG1i-mNAfKqA@mail.gmail.com>
-Subject: Re: [PATCH v4 16/40] cxl/core/port: Use dedicated lock for decoder
- target list
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <164364745633.85488.9744017377155103992.stgit@dwillia2-desk3.amr.corp.intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Jan 31, 2022 at 3:34 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> On 22-01-25 18:54:36, Dan Williams wrote:
-> > Lockdep reports:
-> >
-> >  ======================================================
-> >  WARNING: possible circular locking dependency detected
-> >  5.16.0-rc1+ #142 Tainted: G           OE
-> >  ------------------------------------------------------
-> >  cxl/1220 is trying to acquire lock:
-> >  ffff979b85475460 (kn->active#144){++++}-{0:0}, at: __kernfs_remove+0x1ab/0x1e0
-> >
-> >  but task is already holding lock:
-> >  ffff979b87ab38e8 (&dev->lockdep_mutex#2/4){+.+.}-{3:3}, at: cxl_remove_ep+0x50c/0x5c0 [cxl_core]
-> >
-> > ...where cxl_remove_ep() is a helper that wants to delete ports while
-> > holding a lock on the host device for that port. That sets up a lockdep
-> > violation whereby target_list_show() can not rely holding the decoder's
-> > device lock while walking the target_list. Switch to a dedicated seqlock
-> > for this purpose.
-> >
-> > Reported-by: Ben Widawsky <ben.widawsky@intel.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > ---
-> > Changes in v4:
-> > - Fix missing unlock in error exit case (Ben)
->
-> Could you help me understand why we need a lock at all for the target list? I
-> thought the target list remains static throughout the lifetime of the decoder at
-> which point, the only issue would be reading the sysfs entries while the decoder
-> is being destroyed. Is that possible?
+On 22-01-31 08:44:52, Dan Williams wrote:
+> Add a helper for converting a PCI enumerated cxl_port into the pci_bus
+> that hosts its dports. For switch ports this is trivial, but for root
+> ports there is no generic way to go from a platform defined host bridge
+> device, like ACPI0016 to its corresponding pci_bus. Rather than spill
+> ACPI goop outside of the cxl_acpi driver, just arrange for it to
+> register an xarray translation from the uport device to the
+> corresponding pci_bus.
+> 
+> This is in preparation for centralizing dport enumeration in the core.
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Ben Widawsky <ben.widawsky@intel.com>
 
-This is emitting the target list per the current configuration. If
-another thread or the kernel is configuring the decoder and while the
-target list is being read it should get a coherent snapshot, not the
-intermediate settings.
+[snip]
