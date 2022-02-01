@@ -2,237 +2,790 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9465C433F5
-	for <linux-cxl@archiver.kernel.org>; Tue,  1 Feb 2022 19:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEF8C433EF
+	for <linux-cxl@archiver.kernel.org>; Tue,  1 Feb 2022 20:24:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234483AbiBATFg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 1 Feb 2022 14:05:36 -0500
-Received: from mga06.intel.com ([134.134.136.31]:48322 "EHLO mga06.intel.com"
+        id S230029AbiBAUYz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 1 Feb 2022 15:24:55 -0500
+Received: from mga09.intel.com ([134.134.136.24]:6708 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234438AbiBATFf (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
-        Tue, 1 Feb 2022 14:05:35 -0500
+        id S229793AbiBAUYy (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Tue, 1 Feb 2022 15:24:54 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643742335; x=1675278335;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nme2HohwG4cYQY68sjZJc5W1kNylfqbOIi5QZOKqZi4=;
-  b=jTqali7wIZx5ZCL56vE/rnkTLoUFnK8kau1MnOJUnpgEHJgdnIMEqiQS
-   I6ymebVMc73S8wHKKupOY+uowfHYhUiF2fH3/8F0wn0XatYO1gcCJSIuA
-   Qpe/Tns0mOVzMxDjZJN/6Xt+BZi5kwgDXGmgWVrjZetQIHmdAZKaFTUhm
-   rYZ8jesfgzB6+9go1kfcTyGxpYQ6s1ZpTduHK/v50ELiJg/fSITQRnbNV
-   oGs5GGpuno3qvEyXj3EmbZHsZyWX5yIKk7GY6/KLP9zlYkmsFQVn5YIWY
-   pI7fKpYbNckCA9afF1j96udpRuZ0EXtei2ioCtVM0QuQi/edN1Sgs8kZc
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10245"; a="308495751"
+  t=1643747094; x=1675283094;
+  h=subject:from:to:cc:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=vF9yP9Z8y0+Jx+Kq7p5ttusyaopSXwpCYnI0ZYUjsvM=;
+  b=btQn592kG1Q8g+3JM7XAe7KTTbLSUPQkdJoWO7Xsfe2A0RnHvwD/neEW
+   j1i+yyesQiD8GvXATvqmDuqdweJq/Tg7bp8jUnMkpfZt0G908JY2LY98a
+   fgOYoKqK1/SR+f0cpQJjoWmECiDObq0VRa+1Hm1fL3dk3KPHhbGMePBdb
+   oRniKeNN9g2bMUKSKcXpjrnDVbSyOLgk6G/LntvWqFJEIqbX4VZxsxukE
+   yWhe/lACK0xa7qMWiL4vPL/JGAjnq8ODTXJJg2g8lxi6oyskVKGcoJWDA
+   QBOnyeF7irEa04Z7ysBIGrPSKXfzLeR0RlVg4qMSDD66wUdP1elb/KeZ7
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10245"; a="247553432"
 X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
-   d="scan'208";a="308495751"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 11:05:34 -0800
+   d="scan'208";a="247553432"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 12:24:30 -0800
 X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
-   d="scan'208";a="497449689"
-Received: from rashmigh-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.132.8])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 11:05:34 -0800
-Date:   Tue, 1 Feb 2022 11:05:32 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     ira.weiny@intel.com
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH V6 10/10] cxl/cdat: Parse out DSMAS data from CDAT table
-Message-ID: <20220201190532.ynwr73ninobqx7bm@intel.com>
-References: <20220201071952.900068-1-ira.weiny@intel.com>
- <20220201071952.900068-11-ira.weiny@intel.com>
+   d="scan'208";a="523184743"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 12:24:30 -0800
+Subject: [PATCH v5 22/40] cxl/core/hdm: Add CXL standard decoder enumeration
+ to the core
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-pci@vger.kernel.org,
+        nvdimm@lists.linux.dev
+Date:   Tue, 01 Feb 2022 12:24:30 -0800
+Message-ID: <164374688404.395335.9239248252443123526.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <164316647461.3437452.7695738236907745246.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <164316647461.3437452.7695738236907745246.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220201071952.900068-11-ira.weiny@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 22-01-31 23:19:52, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> CXL memory devices need the information in the Device Scoped Memory
-> Affinity Structure (DSMAS).  This information is contained within the
-> CDAT table buffer which is already read and cached.
-> 
-> Parse and cache DSMAS data from the CDAT table.  Store this data in
-> unmarshaled struct dsmas data structures for ease of use.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
-> Changes from V5
-> 	Fix up sparse warnings
-> 	Split out cdat_hdr_valid()
-> 	Update cdat_hdr_valid()
-> 		Remove revision and cs field parsing
-> 			There is no point in these
-> 		Add seq check and debug print.
-> 	From Jonathan
-> 		Add spaces around '+' and '/'
-> 		use devm_krealloc() for dmas_ary
-> 
-> Changes from V4
-> 	New patch
-> ---
->  drivers/cxl/cdat.h        | 21 ++++++++++++
->  drivers/cxl/core/memdev.c | 70 +++++++++++++++++++++++++++++++++++++++
->  2 files changed, 91 insertions(+)
-> 
-> diff --git a/drivers/cxl/cdat.h b/drivers/cxl/cdat.h
-> index a7725d26f2d2..f8c126190d18 100644
-> --- a/drivers/cxl/cdat.h
-> +++ b/drivers/cxl/cdat.h
-> @@ -83,17 +83,38 @@
->  #define CDAT_SSLBIS_ENTRY_PORT_Y(entry, i) (((entry)[4 + (i) * 2] & 0xffff0000) >> 16)
->  #define CDAT_SSLBIS_ENTRY_LAT_OR_BW(entry, i) ((entry)[4 + (i) * 2 + 1] & 0x0000ffff)
->  
-> +/**
-> + * struct cxl_dsmas - host unmarshaled version of DSMAS data
-> + *
-> + * As defined in the Coherent Device Attribute Table (CDAT) specification this
-> + * represents a single DSMAS entry in that table.
-> + *
-> + * @dpa_base: The lowest DPA address associated with this DSMAD
-> + * @dpa_length: Length in bytes of this DSMAD
-> + * @non_volatile: If set, the memory region represents Non-Volatile memory
-> + */
-> +struct cxl_dsmas {
-> +	u64 dpa_base;
-> +	u64 dpa_length;
-> +	/* Flags */
-> +	u8 non_volatile:1;
-> +};
-> +
->  /**
->   * struct cxl_cdat - CXL CDAT data
->   *
->   * @table: cache of CDAT table
->   * @length: length of cached CDAT table
->   * @seq: Last read Sequence number of the CDAT table
-> + * @dsmas_ary: Array of DSMAS entries as parsed from the CDAT table
-> + * @nr_dsmas: Number of entries in dsmas_ary
->   */
->  struct cxl_cdat {
->  	void *table;
->  	size_t length;
->  	u32 seq;
-> +	struct cxl_dsmas *dsmas_ary;
-> +	int nr_dsmas;
->  };
->  
->  #endif /* !__CXL_CDAT_H__ */
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index 11d721c56f08..32342a15e991 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -6,6 +6,7 @@
->  #include <linux/idr.h>
->  #include <linux/pci.h>
->  #include <cxlmem.h>
-> +#include "cdat.h"
->  #include "core.h"
->  
->  static DECLARE_RWSEM(cxl_memdev_rwsem);
-> @@ -386,6 +387,71 @@ static int read_cdat_data(struct cxl_memdev *cxlmd,
->  	return rc;
->  }
->  
-> +static int parse_dsmas(struct cxl_memdev *cxlmd)
-> +{
-> +	struct cxl_dsmas *dsmas_ary = NULL;
-> +	u32 *data = cxlmd->cdat.table;
-> +	int bytes_left = cxlmd->cdat.length;
-> +	int nr_dsmas = 0;
-> +
-> +	if (!data)
-> +		return -ENXIO;
-> +
-> +	/* Skip header */
-> +	data += CDAT_HEADER_LENGTH_DW;
-> +	bytes_left -= CDAT_HEADER_LENGTH_BYTES;
-> +
-> +	while (bytes_left > 0) {
-> +		u32 *cur_rec = data;
-> +		u8 type = FIELD_GET(CDAT_STRUCTURE_DW0_TYPE, cur_rec[0]);
-> +		u16 length = FIELD_GET(CDAT_STRUCTURE_DW0_LENGTH, cur_rec[0]);
-> +
-> +		if (type == CDAT_STRUCTURE_DW0_TYPE_DSMAS) {
-> +			struct cxl_dsmas *new_ary;
-> +			u8 flags;
-> +
-> +			new_ary = devm_krealloc(&cxlmd->dev, dsmas_ary,
-> +					   sizeof(*dsmas_ary) * (nr_dsmas + 1),
-> +					   GFP_KERNEL);
-> +			if (!new_ary) {
-> +				dev_err(&cxlmd->dev,
-> +					"Failed to allocate memory for DSMAS data\n");
-> +				return -ENOMEM;
-> +			}
+Unlike the decoder enumeration for "root decoders" described by platform
+firmware, standard decoders can be enumerated from the component
+registers space once the base address has been identified (via PCI,
+ACPI, or another mechanism).
 
-One thought here - it looks like there are at most 256 DSMAS entries. You could
-allocate the full 256 up front, and then realloc *down* to the actual number.
+Add common infrastructure for HDM (Host-managed-Device-Memory) Decoder
+enumeration and share it between host-bridge, upstream switch port, and
+cxl_test defined decoders.
 
-> +			dsmas_ary = new_ary;
-> +
-> +			flags = FIELD_GET(CDAT_DSMAS_DW1_FLAGS, cur_rec[1]);
-> +
-> +			dsmas_ary[nr_dsmas].dpa_base = CDAT_DSMAS_DPA_OFFSET(cur_rec);
-> +			dsmas_ary[nr_dsmas].dpa_length = CDAT_DSMAS_DPA_LEN(cur_rec);
-> +			dsmas_ary[nr_dsmas].non_volatile = CDAT_DSMAS_NON_VOLATILE(flags);
-> +
-> +			dev_dbg(&cxlmd->dev, "DSMAS %d: %llx:%llx %s\n",
-> +				nr_dsmas,
-> +				dsmas_ary[nr_dsmas].dpa_base,
-> +				dsmas_ary[nr_dsmas].dpa_base +
-> +					dsmas_ary[nr_dsmas].dpa_length,
-> +				(dsmas_ary[nr_dsmas].non_volatile ?
-> +					"Persistent" : "Volatile")
-> +				);
-> +
-> +			nr_dsmas++;
-> +		}
-> +
-> +		data += (length / sizeof(u32));
-> +		bytes_left -= length;
-> +	}
-> +
-> +	if (nr_dsmas == 0)
-> +		return -ENXIO;
+The locking model for switch level decoders is to hold the port lock
+over the enumeration. This facilitates moving the dport and decoder
+enumeration to a 'port' driver. For now, the only enumerator of decoder
+resources is the cxl_acpi root driver.
 
-Hmm is there documentation that suggests a DSMAS must be implemented? Could this
-just return 0? I'd put maybe dev_dbg here if it's unexpected but not a failure
-and return success.
+Co-developed-by: Ben Widawsky <ben.widawsky@intel.com>
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+Changes since v4:
+- Fix kdoc for @host arg, for real this time (Jonathan and Ben)
+- Drop unused cxl_register_map from map_hdm_decoder_regs (Jonathan)
+- s/coders/decoders/ in changelog (Ben)
+- Add Ben's co-developed-by
 
-> +
-> +	dev_dbg(&cxlmd->dev, "Found %d DSMAS entries\n", nr_dsmas);
-> +	cxlmd->cdat.dsmas_ary = dsmas_ary;
-> +	cxlmd->cdat.nr_dsmas = nr_dsmas;
-> +
-> +	return 0;
-> +}
-> +
->  struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
->  {
->  	struct cxl_memdev *cxlmd;
-> @@ -407,6 +473,10 @@ struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
->  	if (rc)
->  		goto err;
->  
-> +	rc = parse_dsmas(cxlmd);
-> +	if (rc)
-> +		dev_warn(dev, "No DSMAS data found: %d\n", rc);
-> +
->  	/*
->  	 * Activate ioctl operations, no cxl_memdev_rwsem manipulation
->  	 * needed as this is ordered with cdev_add() publishing the device.
-> -- 
-> 2.31.1
-> 
+ drivers/cxl/acpi.c            |   43 ++-----
+ drivers/cxl/core/Makefile     |    1 
+ drivers/cxl/core/core.h       |    2 
+ drivers/cxl/core/hdm.c        |  248 +++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/port.c       |   57 +++++++--
+ drivers/cxl/core/regs.c       |    5 -
+ drivers/cxl/cxl.h             |   33 ++++-
+ drivers/cxl/cxlmem.h          |    8 +
+ tools/testing/cxl/Kbuild      |    4 +
+ tools/testing/cxl/test/cxl.c  |   29 +++++
+ tools/testing/cxl/test/mock.c |   50 ++++++++
+ tools/testing/cxl/test/mock.h |    3 
+ 12 files changed, 434 insertions(+), 49 deletions(-)
+ create mode 100644 drivers/cxl/core/hdm.c
+
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index 259441245687..8c2ced91518b 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -168,10 +168,10 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+ 	struct device *host = root_port->dev.parent;
+ 	struct acpi_device *bridge = to_cxl_host_bridge(host, match);
+ 	struct acpi_pci_root *pci_root;
+-	int single_port_map[1], rc;
+-	struct cxl_decoder *cxld;
+ 	struct cxl_dport *dport;
++	struct cxl_hdm *cxlhdm;
+ 	struct cxl_port *port;
++	int rc;
+ 
+ 	if (!bridge)
+ 		return 0;
+@@ -200,37 +200,24 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+ 	rc = devm_cxl_port_enumerate_dports(host, port);
+ 	if (rc < 0)
+ 		return rc;
+-	if (rc > 1)
+-		return 0;
+-
+-	/* TODO: Scan CHBCR for HDM Decoder resources */
+-
+-	/*
+-	 * Per the CXL specification (8.2.5.12 CXL HDM Decoder Capability
+-	 * Structure) single ported host-bridges need not publish a decoder
+-	 * capability when a passthrough decode can be assumed, i.e. all
+-	 * transactions that the uport sees are claimed and passed to the single
+-	 * dport. Disable the range until the first CXL region is enumerated /
+-	 * activated.
+-	 */
+-	cxld = cxl_switch_decoder_alloc(port, 1);
+-	if (IS_ERR(cxld))
+-		return PTR_ERR(cxld);
+-
+ 	cxl_device_lock(&port->dev);
+-	dport = list_first_entry(&port->dports, typeof(*dport), list);
+-	cxl_device_unlock(&port->dev);
++	if (rc == 1) {
++		rc = devm_cxl_add_passthrough_decoder(host, port);
++		goto out;
++	}
+ 
+-	single_port_map[0] = dport->port_id;
++	cxlhdm = devm_cxl_setup_hdm(host, port);
++	if (IS_ERR(cxlhdm)) {
++		rc = PTR_ERR(cxlhdm);
++		goto out;
++	}
+ 
+-	rc = cxl_decoder_add(cxld, single_port_map);
++	rc = devm_cxl_enumerate_decoders(host, cxlhdm);
+ 	if (rc)
+-		put_device(&cxld->dev);
+-	else
+-		rc = cxl_decoder_autoremove(host, cxld);
++		dev_err(&port->dev, "Couldn't enumerate decoders (%d)\n", rc);
+ 
+-	if (rc == 0)
+-		dev_dbg(host, "add: %s\n", dev_name(&cxld->dev));
++out:
++	cxl_device_unlock(&port->dev);
+ 	return rc;
+ }
+ 
+diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+index 91057f0ec763..6d37cd78b151 100644
+--- a/drivers/cxl/core/Makefile
++++ b/drivers/cxl/core/Makefile
+@@ -8,3 +8,4 @@ cxl_core-y += regs.o
+ cxl_core-y += memdev.o
+ cxl_core-y += mbox.o
+ cxl_core-y += pci.o
++cxl_core-y += hdm.o
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index e0c9aacc4e9c..1a50c0fc399c 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -14,6 +14,8 @@ struct cxl_mem_query_commands;
+ int cxl_query_cmd(struct cxl_memdev *cxlmd,
+ 		  struct cxl_mem_query_commands __user *q);
+ int cxl_send_cmd(struct cxl_memdev *cxlmd, struct cxl_send_command __user *s);
++void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
++				   resource_size_t length);
+ 
+ int cxl_memdev_init(void);
+ void cxl_memdev_exit(void);
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+new file mode 100644
+index 000000000000..84f4ed288a88
+--- /dev/null
++++ b/drivers/cxl/core/hdm.c
+@@ -0,0 +1,248 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
++#include <linux/io-64-nonatomic-hi-lo.h>
++#include <linux/device.h>
++#include <linux/delay.h>
++
++#include "cxlmem.h"
++#include "core.h"
++
++/**
++ * DOC: cxl core hdm
++ *
++ * Compute Express Link Host Managed Device Memory, starting with the
++ * CXL 2.0 specification, is managed by an array of HDM Decoder register
++ * instances per CXL port and per CXL endpoint. Define common helpers
++ * for enumerating these registers and capabilities.
++ */
++
++static int add_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
++			   int *target_map)
++{
++	int rc;
++
++	rc = cxl_decoder_add_locked(cxld, target_map);
++	if (rc) {
++		put_device(&cxld->dev);
++		dev_err(&port->dev, "Failed to add decoder\n");
++		return rc;
++	}
++
++	rc = cxl_decoder_autoremove(&port->dev, cxld);
++	if (rc)
++		return rc;
++
++	dev_dbg(&cxld->dev, "Added to port %s\n", dev_name(&port->dev));
++
++	return 0;
++}
++
++/*
++ * Per the CXL specification (8.2.5.12 CXL HDM Decoder Capability Structure)
++ * single ported host-bridges need not publish a decoder capability when a
++ * passthrough decode can be assumed, i.e. all transactions that the uport sees
++ * are claimed and passed to the single dport. Disable the range until the first
++ * CXL region is enumerated / activated.
++ */
++int devm_cxl_add_passthrough_decoder(struct device *host, struct cxl_port *port)
++{
++	struct cxl_decoder *cxld;
++	struct cxl_dport *dport;
++	int single_port_map[1];
++
++	cxld = cxl_switch_decoder_alloc(port, 1);
++	if (IS_ERR(cxld))
++		return PTR_ERR(cxld);
++
++	device_lock_assert(&port->dev);
++
++	dport = list_first_entry(&port->dports, typeof(*dport), list);
++	single_port_map[0] = dport->port_id;
++
++	return add_hdm_decoder(port, cxld, single_port_map);
++}
++EXPORT_SYMBOL_NS_GPL(devm_cxl_add_passthrough_decoder, CXL);
++
++static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
++{
++	u32 hdm_cap;
++
++	hdm_cap = readl(cxlhdm->regs.hdm_decoder + CXL_HDM_DECODER_CAP_OFFSET);
++	cxlhdm->decoder_count = cxl_hdm_decoder_count(hdm_cap);
++	cxlhdm->target_count =
++		FIELD_GET(CXL_HDM_DECODER_TARGET_COUNT_MASK, hdm_cap);
++	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_11_8, hdm_cap))
++		cxlhdm->interleave_mask |= GENMASK(11, 8);
++	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_14_12, hdm_cap))
++		cxlhdm->interleave_mask |= GENMASK(14, 12);
++}
++
++static void __iomem *map_hdm_decoder_regs(struct cxl_port *port,
++					  void __iomem *crb)
++{
++	struct cxl_component_reg_map map;
++
++	cxl_probe_component_regs(&port->dev, crb, &map);
++	if (!map.hdm_decoder.valid) {
++		dev_err(&port->dev, "HDM decoder registers invalid\n");
++		return IOMEM_ERR_PTR(-ENXIO);
++	}
++
++	return crb + map.hdm_decoder.offset;
++}
++
++/**
++ * devm_cxl_setup_hdm - map HDM decoder component registers
++ * @host: devm context for allocations
++ * @port: cxl_port to map
++ */
++struct cxl_hdm *devm_cxl_setup_hdm(struct device *host, struct cxl_port *port)
++{
++	struct device *dev = &port->dev;
++	void __iomem *crb, *hdm;
++	struct cxl_hdm *cxlhdm;
++
++	cxlhdm = devm_kzalloc(host, sizeof(*cxlhdm), GFP_KERNEL);
++	if (!cxlhdm)
++		return ERR_PTR(-ENOMEM);
++
++	cxlhdm->port = port;
++	crb = devm_cxl_iomap_block(host, port->component_reg_phys,
++				   CXL_COMPONENT_REG_BLOCK_SIZE);
++	if (!crb) {
++		dev_err(dev, "No component registers mapped\n");
++		return ERR_PTR(-ENXIO);
++	}
++
++	hdm = map_hdm_decoder_regs(port, crb);
++	if (IS_ERR(hdm))
++		return ERR_CAST(hdm);
++	cxlhdm->regs.hdm_decoder = hdm;
++
++	parse_hdm_decoder_caps(cxlhdm);
++	if (cxlhdm->decoder_count == 0) {
++		dev_err(dev, "Spec violation. Caps invalid\n");
++		return ERR_PTR(-ENXIO);
++	}
++
++	return cxlhdm;
++}
++EXPORT_SYMBOL_NS_GPL(devm_cxl_setup_hdm, CXL);
++
++static int to_interleave_granularity(u32 ctrl)
++{
++	int val = FIELD_GET(CXL_HDM_DECODER0_CTRL_IG_MASK, ctrl);
++
++	return 256 << val;
++}
++
++static int to_interleave_ways(u32 ctrl)
++{
++	int val = FIELD_GET(CXL_HDM_DECODER0_CTRL_IW_MASK, ctrl);
++
++	switch (val) {
++	case 0 ... 4:
++		return 1 << val;
++	case 8 ... 10:
++		return 3 << (val - 8);
++	default:
++		return 0;
++	}
++}
++
++static void init_hdm_decoder(struct cxl_decoder *cxld, int *target_map,
++			     void __iomem *hdm, int which)
++{
++	u64 size, base;
++	u32 ctrl;
++	int i;
++	union {
++		u64 value;
++		unsigned char target_id[8];
++	} target_list;
++
++	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(which));
++	base = ioread64_hi_lo(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(which));
++	size = ioread64_hi_lo(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(which));
++
++	if (!(ctrl & CXL_HDM_DECODER0_CTRL_COMMITTED))
++		size = 0;
++
++	cxld->decoder_range = (struct range) {
++		.start = base,
++		.end = base + size - 1,
++	};
++
++	/* switch decoders are always enabled if committed */
++	if (ctrl & CXL_HDM_DECODER0_CTRL_COMMITTED) {
++		cxld->flags |= CXL_DECODER_F_ENABLE;
++		if (ctrl & CXL_HDM_DECODER0_CTRL_LOCK)
++			cxld->flags |= CXL_DECODER_F_LOCK;
++	}
++	cxld->interleave_ways = to_interleave_ways(ctrl);
++	cxld->interleave_granularity = to_interleave_granularity(ctrl);
++
++	if (FIELD_GET(CXL_HDM_DECODER0_CTRL_TYPE, ctrl))
++		cxld->target_type = CXL_DECODER_EXPANDER;
++	else
++		cxld->target_type = CXL_DECODER_ACCELERATOR;
++
++	target_list.value =
++		ioread64_hi_lo(hdm + CXL_HDM_DECODER0_TL_LOW(which));
++	for (i = 0; i < cxld->interleave_ways; i++)
++		target_map[i] = target_list.target_id[i];
++}
++
++/**
++ * devm_cxl_enumerate_decoders - add decoder objects per HDM register set
++ * @host: devm allocation context
++ * @cxlhdm: Structure to populate with HDM capabilities
++ */
++int devm_cxl_enumerate_decoders(struct device *host, struct cxl_hdm *cxlhdm)
++{
++	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
++	struct cxl_port *port = cxlhdm->port;
++	int i, committed;
++	u32 ctrl;
++
++	/*
++	 * Since the register resource was recently claimed via request_region()
++	 * be careful about trusting the "not-committed" status until the commit
++	 * timeout has elapsed.  The commit timeout is 10ms (CXL 2.0
++	 * 8.2.5.12.20), but double it to be tolerant of any clock skew between
++	 * host and target.
++	 */
++	for (i = 0, committed = 0; i < cxlhdm->decoder_count; i++) {
++		ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(i));
++		if (ctrl & CXL_HDM_DECODER0_CTRL_COMMITTED)
++			committed++;
++	}
++
++	/* ensure that future checks of committed can be trusted */
++	if (committed != cxlhdm->decoder_count)
++		msleep(20);
++
++	for (i = 0; i < cxlhdm->decoder_count; i++) {
++		int target_map[CXL_DECODER_MAX_INTERLEAVE] = { 0 };
++		int rc, target_count = cxlhdm->target_count;
++		struct cxl_decoder *cxld;
++
++		cxld = cxl_switch_decoder_alloc(port, target_count);
++		if (IS_ERR(cxld)) {
++			dev_warn(&port->dev,
++				 "Failed to allocate the decoder\n");
++			return PTR_ERR(cxld);
++		}
++
++		init_hdm_decoder(cxld, target_map, cxlhdm->regs.hdm_decoder, i);
++		rc = add_hdm_decoder(port, cxld, target_map);
++		if (rc) {
++			dev_warn(&port->dev,
++				 "Failed to add decoder to port\n");
++			return rc;
++		}
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_NS_GPL(devm_cxl_enumerate_decoders, CXL);
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index fee9c7affef4..4dfb9df9e648 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -594,16 +594,15 @@ EXPORT_SYMBOL_NS_GPL(devm_cxl_add_dport, CXL);
+ static int decoder_populate_targets(struct cxl_decoder *cxld,
+ 				    struct cxl_port *port, int *target_map)
+ {
+-	int rc = 0, i;
++	int i, rc = 0;
+ 
+ 	if (!target_map)
+ 		return 0;
+ 
+-	cxl_device_lock(&port->dev);
+-	if (list_empty(&port->dports)) {
+-		rc = -EINVAL;
+-		goto out_unlock;
+-	}
++	device_lock_assert(&port->dev);
++
++	if (list_empty(&port->dports))
++		return -EINVAL;
+ 
+ 	write_seqlock(&cxld->target_lock);
+ 	for (i = 0; i < cxld->nr_targets; i++) {
+@@ -617,9 +616,6 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
+ 	}
+ 	write_sequnlock(&cxld->target_lock);
+ 
+-out_unlock:
+-	cxl_device_unlock(&port->dev);
+-
+ 	return rc;
+ }
+ 
+@@ -721,7 +717,7 @@ struct cxl_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
+ EXPORT_SYMBOL_NS_GPL(cxl_switch_decoder_alloc, CXL);
+ 
+ /**
+- * cxl_decoder_add - Add a decoder with targets
++ * cxl_decoder_add_locked - Add a decoder with targets
+  * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
+  * @target_map: A list of downstream ports that this decoder can direct memory
+  *              traffic to. These numbers should correspond with the port number
+@@ -731,12 +727,15 @@ EXPORT_SYMBOL_NS_GPL(cxl_switch_decoder_alloc, CXL);
+  * is an endpoint device. A more awkward example is a hostbridge whose root
+  * ports get hot added (technically possible, though unlikely).
+  *
+- * Context: Process context. Takes and releases the cxld's device lock.
++ * This is the locked variant of cxl_decoder_add().
++ *
++ * Context: Process context. Expects the device lock of the port that owns the
++ *	    @cxld to be held.
+  *
+  * Return: Negative error code if the decoder wasn't properly configured; else
+  *	   returns 0.
+  */
+-int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
++int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map)
+ {
+ 	struct cxl_port *port;
+ 	struct device *dev;
+@@ -770,6 +769,40 @@ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+ 
+ 	return device_add(dev);
+ }
++EXPORT_SYMBOL_NS_GPL(cxl_decoder_add_locked, CXL);
++
++/**
++ * cxl_decoder_add - Add a decoder with targets
++ * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
++ * @target_map: A list of downstream ports that this decoder can direct memory
++ *              traffic to. These numbers should correspond with the port number
++ *              in the PCIe Link Capabilities structure.
++ *
++ * This is the unlocked variant of cxl_decoder_add_locked().
++ * See cxl_decoder_add_locked().
++ *
++ * Context: Process context. Takes and releases the device lock of the port that
++ *	    owns the @cxld.
++ */
++int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
++{
++	struct cxl_port *port;
++	int rc;
++
++	if (WARN_ON_ONCE(!cxld))
++		return -EINVAL;
++
++	if (WARN_ON_ONCE(IS_ERR(cxld)))
++		return PTR_ERR(cxld);
++
++	port = to_cxl_port(cxld->dev.parent);
++
++	cxl_device_lock(&port->dev);
++	rc = cxl_decoder_add_locked(cxld, target_map);
++	cxl_device_unlock(&port->dev);
++
++	return rc;
++}
+ EXPORT_SYMBOL_NS_GPL(cxl_decoder_add, CXL);
+ 
+ static void cxld_unregister(void *dev)
+diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+index 65d7f5880671..718b6b0ae4b3 100644
+--- a/drivers/cxl/core/regs.c
++++ b/drivers/cxl/core/regs.c
+@@ -159,9 +159,8 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_probe_device_regs, CXL);
+ 
+-static void __iomem *devm_cxl_iomap_block(struct device *dev,
+-					  resource_size_t addr,
+-					  resource_size_t length)
++void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
++				   resource_size_t length)
+ {
+ 	void __iomem *ret_val;
+ 	struct resource *res;
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 0754c68ccd33..c127d5c0ac96 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -17,6 +17,9 @@
+  * (port-driver, region-driver, nvdimm object-drivers... etc).
+  */
+ 
++/* CXL 2.0 8.2.4 CXL Component Register Layout and Definition */
++#define CXL_COMPONENT_REG_BLOCK_SIZE SZ_64K
++
+ /* CXL 2.0 8.2.5 CXL.cache and CXL.mem Registers*/
+ #define CXL_CM_OFFSET 0x1000
+ #define CXL_CM_CAP_HDR_OFFSET 0x0
+@@ -36,11 +39,23 @@
+ #define CXL_HDM_DECODER_CAP_OFFSET 0x0
+ #define   CXL_HDM_DECODER_COUNT_MASK GENMASK(3, 0)
+ #define   CXL_HDM_DECODER_TARGET_COUNT_MASK GENMASK(7, 4)
+-#define CXL_HDM_DECODER0_BASE_LOW_OFFSET 0x10
+-#define CXL_HDM_DECODER0_BASE_HIGH_OFFSET 0x14
+-#define CXL_HDM_DECODER0_SIZE_LOW_OFFSET 0x18
+-#define CXL_HDM_DECODER0_SIZE_HIGH_OFFSET 0x1c
+-#define CXL_HDM_DECODER0_CTRL_OFFSET 0x20
++#define   CXL_HDM_DECODER_INTERLEAVE_11_8 BIT(8)
++#define   CXL_HDM_DECODER_INTERLEAVE_14_12 BIT(9)
++#define CXL_HDM_DECODER_CTRL_OFFSET 0x4
++#define   CXL_HDM_DECODER_ENABLE BIT(1)
++#define CXL_HDM_DECODER0_BASE_LOW_OFFSET(i) (0x20 * (i) + 0x10)
++#define CXL_HDM_DECODER0_BASE_HIGH_OFFSET(i) (0x20 * (i) + 0x14)
++#define CXL_HDM_DECODER0_SIZE_LOW_OFFSET(i) (0x20 * (i) + 0x18)
++#define CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(i) (0x20 * (i) + 0x1c)
++#define CXL_HDM_DECODER0_CTRL_OFFSET(i) (0x20 * (i) + 0x20)
++#define   CXL_HDM_DECODER0_CTRL_IG_MASK GENMASK(3, 0)
++#define   CXL_HDM_DECODER0_CTRL_IW_MASK GENMASK(7, 4)
++#define   CXL_HDM_DECODER0_CTRL_LOCK BIT(8)
++#define   CXL_HDM_DECODER0_CTRL_COMMIT BIT(9)
++#define   CXL_HDM_DECODER0_CTRL_COMMITTED BIT(10)
++#define   CXL_HDM_DECODER0_CTRL_TYPE BIT(12)
++#define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
++#define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
+ 
+ static inline int cxl_hdm_decoder_count(u32 cap_hdr)
+ {
+@@ -162,7 +177,8 @@ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+ #define CXL_DECODER_F_TYPE2 BIT(2)
+ #define CXL_DECODER_F_TYPE3 BIT(3)
+ #define CXL_DECODER_F_LOCK  BIT(4)
+-#define CXL_DECODER_F_MASK  GENMASK(4, 0)
++#define CXL_DECODER_F_ENABLE    BIT(5)
++#define CXL_DECODER_F_MASK  GENMASK(5, 0)
+ 
+ enum cxl_decoder_type {
+        CXL_DECODER_ACCELERATOR = 2,
+@@ -306,7 +322,12 @@ struct cxl_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+ struct cxl_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
+ 					     unsigned int nr_targets);
+ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
++int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map);
+ int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld);
++struct cxl_hdm;
++struct cxl_hdm *devm_cxl_setup_hdm(struct device *host, struct cxl_port *port);
++int devm_cxl_enumerate_decoders(struct device *host, struct cxl_hdm *cxlhdm);
++int devm_cxl_add_passthrough_decoder(struct device *host, struct cxl_port *port);
+ 
+ extern struct bus_type cxl_bus_type;
+ 
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 8d96d009ad90..fca2d1b5f6ff 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -264,4 +264,12 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds);
+ struct cxl_dev_state *cxl_dev_state_create(struct device *dev);
+ void set_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
+ void clear_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
++
++struct cxl_hdm {
++	struct cxl_component_regs regs;
++	unsigned int decoder_count;
++	unsigned int target_count;
++	unsigned int interleave_mask;
++	struct cxl_port *port;
++};
+ #endif /* __CXL_MEM_H__ */
+diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+index 61123544aa49..3045d7cba0db 100644
+--- a/tools/testing/cxl/Kbuild
++++ b/tools/testing/cxl/Kbuild
+@@ -5,6 +5,9 @@ ldflags-y += --wrap=acpi_evaluate_integer
+ ldflags-y += --wrap=acpi_pci_find_root
+ ldflags-y += --wrap=nvdimm_bus_register
+ ldflags-y += --wrap=devm_cxl_port_enumerate_dports
++ldflags-y += --wrap=devm_cxl_setup_hdm
++ldflags-y += --wrap=devm_cxl_add_passthrough_decoder
++ldflags-y += --wrap=devm_cxl_enumerate_decoders
+ 
+ DRIVERS := ../../../drivers
+ CXL_SRC := $(DRIVERS)/cxl
+@@ -31,6 +34,7 @@ cxl_core-y += $(CXL_CORE_SRC)/regs.o
+ cxl_core-y += $(CXL_CORE_SRC)/memdev.o
+ cxl_core-y += $(CXL_CORE_SRC)/mbox.o
+ cxl_core-y += $(CXL_CORE_SRC)/pci.o
++cxl_core-y += $(CXL_CORE_SRC)/hdm.o
+ cxl_core-y += config_check.o
+ 
+ obj-m += test/
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index ef002e909d38..81c09380c537 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -8,6 +8,7 @@
+ #include <linux/acpi.h>
+ #include <linux/pci.h>
+ #include <linux/mm.h>
++#include <cxlmem.h>
+ #include "mock.h"
+ 
+ #define NR_CXL_HOST_BRIDGES 4
+@@ -398,6 +399,31 @@ static struct acpi_pci_root *mock_acpi_pci_find_root(acpi_handle handle)
+ 	return &mock_pci_root[host_bridge_index(adev)];
+ }
+ 
++static struct cxl_hdm *mock_cxl_setup_hdm(struct device *host,
++					  struct cxl_port *port)
++{
++	struct cxl_hdm *cxlhdm = devm_kzalloc(&port->dev, sizeof(*cxlhdm), GFP_KERNEL);
++
++	if (!cxlhdm)
++		return ERR_PTR(-ENOMEM);
++
++	cxlhdm->port = port;
++	return cxlhdm;
++}
++
++static int mock_cxl_add_passthrough_decoder(struct device *host,
++					    struct cxl_port *port)
++{
++	dev_err(&port->dev, "unexpected passthrough decoder for cxl_test\n");
++	return -EOPNOTSUPP;
++}
++
++static int mock_cxl_enumerate_decoders(struct device *host,
++				       struct cxl_hdm *cxlhdm)
++{
++	return 0;
++}
++
+ static int mock_cxl_port_enumerate_dports(struct device *host,
+ 					  struct cxl_port *port)
+ {
+@@ -439,6 +465,9 @@ static struct cxl_mock_ops cxl_mock_ops = {
+ 	.acpi_evaluate_integer = mock_acpi_evaluate_integer,
+ 	.acpi_pci_find_root = mock_acpi_pci_find_root,
+ 	.devm_cxl_port_enumerate_dports = mock_cxl_port_enumerate_dports,
++	.devm_cxl_setup_hdm = mock_cxl_setup_hdm,
++	.devm_cxl_add_passthrough_decoder = mock_cxl_add_passthrough_decoder,
++	.devm_cxl_enumerate_decoders = mock_cxl_enumerate_decoders,
+ 	.list = LIST_HEAD_INIT(cxl_mock_ops.list),
+ };
+ 
+diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
+index 56b4b7d734bc..18d3b65e2a9b 100644
+--- a/tools/testing/cxl/test/mock.c
++++ b/tools/testing/cxl/test/mock.c
+@@ -131,6 +131,56 @@ __wrap_nvdimm_bus_register(struct device *dev,
+ }
+ EXPORT_SYMBOL_GPL(__wrap_nvdimm_bus_register);
+ 
++struct cxl_hdm *__wrap_devm_cxl_setup_hdm(struct device *host,
++					  struct cxl_port *port)
++{
++	int index;
++	struct cxl_hdm *cxlhdm;
++	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
++
++	if (ops && ops->is_mock_port(port->uport))
++		cxlhdm = ops->devm_cxl_setup_hdm(host, port);
++	else
++		cxlhdm = devm_cxl_setup_hdm(host, port);
++	put_cxl_mock_ops(index);
++
++	return cxlhdm;
++}
++EXPORT_SYMBOL_NS_GPL(__wrap_devm_cxl_setup_hdm, CXL);
++
++int __wrap_devm_cxl_add_passthrough_decoder(struct device *host,
++					    struct cxl_port *port)
++{
++	int rc, index;
++	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
++
++	if (ops && ops->is_mock_port(port->uport))
++		rc = ops->devm_cxl_add_passthrough_decoder(host, port);
++	else
++		rc = devm_cxl_add_passthrough_decoder(host, port);
++	put_cxl_mock_ops(index);
++
++	return rc;
++}
++EXPORT_SYMBOL_NS_GPL(__wrap_devm_cxl_add_passthrough_decoder, CXL);
++
++int __wrap_devm_cxl_enumerate_decoders(struct device *host,
++				       struct cxl_hdm *cxlhdm)
++{
++	int rc, index;
++	struct cxl_port *port = cxlhdm->port;
++	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
++
++	if (ops && ops->is_mock_port(port->uport))
++		rc = ops->devm_cxl_enumerate_decoders(host, cxlhdm);
++	else
++		rc = devm_cxl_enumerate_decoders(host, cxlhdm);
++	put_cxl_mock_ops(index);
++
++	return rc;
++}
++EXPORT_SYMBOL_NS_GPL(__wrap_devm_cxl_enumerate_decoders, CXL);
++
+ int __wrap_devm_cxl_port_enumerate_dports(struct device *host,
+ 					  struct cxl_port *port)
+ {
+diff --git a/tools/testing/cxl/test/mock.h b/tools/testing/cxl/test/mock.h
+index 99e7ff38090d..15e48063ea4b 100644
+--- a/tools/testing/cxl/test/mock.h
++++ b/tools/testing/cxl/test/mock.h
+@@ -21,6 +21,9 @@ struct cxl_mock_ops {
+ 	bool (*is_mock_dev)(struct device *dev);
+ 	int (*devm_cxl_port_enumerate_dports)(struct device *host,
+ 					      struct cxl_port *port);
++	struct cxl_hdm *(*devm_cxl_setup_hdm)(struct device *host, struct cxl_port *port);
++	int (*devm_cxl_add_passthrough_decoder)(struct device *host, struct cxl_port *port);
++	int (*devm_cxl_enumerate_decoders)(struct device *host, struct cxl_hdm *hdm);
+ };
+ 
+ void register_cxl_mock_ops(struct cxl_mock_ops *ops);
+
