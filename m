@@ -2,224 +2,86 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB36C433F5
-	for <linux-cxl@archiver.kernel.org>; Tue,  1 Feb 2022 05:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C22C433EF
+	for <linux-cxl@archiver.kernel.org>; Tue,  1 Feb 2022 07:20:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233511AbiBAFKr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 1 Feb 2022 00:10:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233140AbiBAFKq (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 1 Feb 2022 00:10:46 -0500
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DCB4C06173B
-        for <linux-cxl@vger.kernel.org>; Mon, 31 Jan 2022 21:10:46 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id x11so14456726plg.6
-        for <linux-cxl@vger.kernel.org>; Mon, 31 Jan 2022 21:10:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zERJMJPBpohrP2OBXDhHeMNlTlvak+q9cq9xkLiq8cs=;
-        b=Q7p0+fZRtjBpmrqg7yoZiXmzq7FfO/5CVGMmaEQ5y8m6HF3302/Bd+d2ezzYvoGXuR
-         CBdblKqJYmZvq82bremm7D+yQollQTFy1CyBJyRHUDuRRdC0/b9Rj3XNq9CroLQsCxME
-         iMjtFcH7qSGLdZpegl28C/TTqK51dl0/2sGnLoW73SUWv67kX7swbmPmJ03YBkT+WRkC
-         vcak5hTYwmULKKR/lUGV5Dc3HtwALjt7B4BaHLqPyPZD6jGUXvvmXVOfcw5hTtnBaNnu
-         pbokaUO7NTdW5UjTaxVygugmb1Q1koSJ9Ds6ks6yrfkhexM7LPXZJCbmHeu3vNRJ4o/o
-         17LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zERJMJPBpohrP2OBXDhHeMNlTlvak+q9cq9xkLiq8cs=;
-        b=jxMRxNhSExIkGCE4NGdPYlqXjzKii522kvc5oQSzncTXwlwLpI/5dSGMgRfDTpThmW
-         5OwJg1GMDYOUmAdM8Sp4ON6yFx+ZA7L/O0vytuPG4IZg1irBYyCOWYXXLGl7hvNQq+jJ
-         bGB4wFX/5qxDuf2PlT7AdBoj+JAhG8oU0aQmZ+bXUdOU9jqemhC+60omNBHaWQqzXyNE
-         nkTM3gAAhnkRXuXi9o3nRGC9NgZCJqusdpPjfePv5htGc2+yc38PgcNljRyujgZABTCs
-         sMmIhYM2gfCrom0/18IDLvpIE7GwnkxkIyE9JxQtjTsQz4Ja5W/Hh8nPdQuablgz6+Mb
-         cSMw==
-X-Gm-Message-State: AOAM532aJu5l0ZD0mZrZFucq5d0vfUUj1UOm2h6JONeO19gZJlxAXs/m
-        EvGvHuvCRvkt1VIaBHD71WAPKEqwF3D3v1BsoL5G0Q==
-X-Google-Smtp-Source: ABdhPJxgY6Cc29jss7BazwLtJXT9yMAR83l9do4jRuSf73vp02djQpT6psSdBHq5yiTwZhKqmfbeb3s9NJU9RKL7ef0=
-X-Received: by 2002:a17:902:7c15:: with SMTP id x21mr24503898pll.147.1643692245630;
- Mon, 31 Jan 2022 21:10:45 -0800 (PST)
+        id S234696AbiBAHT7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 1 Feb 2022 02:19:59 -0500
+Received: from mga07.intel.com ([134.134.136.100]:26795 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234687AbiBAHT7 (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Tue, 1 Feb 2022 02:19:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643699999; x=1675235999;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=EUq4qTJCDuR52iNO3fH2Zz916n1DoQ0Wd3lHRxgq0zM=;
+  b=EYJu4g/QVTzZ52JrHBJfdnqzEhlcTY/OpHAKYY9K+dRpt24SN6DsgxS5
+   GzC5AiXFc20jYCoCpGxnWWP6XsdqS6xd4hjOcDajfK4o8uCxllXmb3tJ3
+   7U8wZfbSkMFbeWnLU5a/xSNg7berg05UJ0Sr47a6Xpom/6Bv02kJpcrJC
+   4JNtN9+WM+GUTsY6ng3CD5fed4/Ve1mDHgCUDg5Zs2asAHGDQZO5g03JU
+   oMEJGVb/ALFToz3jSsKrE1Lm+AmwHYjywz21aFGMZBplAcgPQHhsuSfGw
+   gV4oaBO2itajtKgXclWKJIaxXk3MqBvgnlYuN4PZNnMObrc6MwnSAYyyZ
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="310942240"
+X-IronPort-AV: E=Sophos;i="5.88,333,1635231600"; 
+   d="scan'208";a="310942240"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 23:19:58 -0800
+X-IronPort-AV: E=Sophos;i="5.88,333,1635231600"; 
+   d="scan'208";a="676000441"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 23:19:58 -0800
+From:   ira.weiny@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH V6 01/10] PCI: Add vendor ID for the PCI SIG
+Date:   Mon, 31 Jan 2022 23:19:43 -0800
+Message-Id: <20220201071952.900068-2-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20220201071952.900068-1-ira.weiny@intel.com>
+References: <20220201071952.900068-1-ira.weiny@intel.com>
 MIME-Version: 1.0
-References: <164298423561.3018233.8938479363856921038.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164316647461.3437452.7695738236907745246.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20220131175159.00006d3d@Huawei.com>
-In-Reply-To: <20220131175159.00006d3d@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 31 Jan 2022 21:10:38 -0800
-Message-ID: <CAPcyv4gxeKEq93h1dC7noRPANnQRxT0xAgpJyR9ecJWLb-hewQ@mail.gmail.com>
-Subject: Re: [PATCH v4 22/40] cxl/core/hdm: Add CXL standard decoder
- enumeration to the core
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Jan 31, 2022 at 9:52 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Tue, 25 Jan 2022 19:09:25 -0800
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > Unlike the decoder enumeration for "root decoders" described by platform
-> > firmware, standard coders can be enumerated from the component registers
-> > space once the base address has been identified (via PCI, ACPI, or
-> > another mechanism).
-> >
-> > Add common infrastructure for HDM (Host-managed-Device-Memory) Decoder
-> > enumeration and share it between host-bridge, upstream switch port, and
-> > cxl_test defined decoders.
-> >
-> > The locking model for switch level decoders is to hold the port lock
-> > over the enumeration. This facilitates moving the dport and decoder
-> > enumeration to a 'port' driver. For now, the only enumerator of decoder
-> > resources is the cxl_acpi root driver.
-> >
-> > [ben: fixup kdoc]
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> Mostly looks nice.  A couple of queries inline.
->
-> Jonathan
->
-> > ---
-> > Changes since v3:
-> > - Fixup kdoc for devm_cxl_enumerate_decoders() (Ben)
-> > - Cleanup a sparse warning around __iomem usage (Ben)
-> >
-> >  drivers/cxl/acpi.c            |   43 ++-----
-> >  drivers/cxl/core/Makefile     |    1
-> >  drivers/cxl/core/core.h       |    2
-> >  drivers/cxl/core/hdm.c        |  248 +++++++++++++++++++++++++++++++++++++++++
-> >  drivers/cxl/core/port.c       |   57 +++++++--
-> >  drivers/cxl/core/regs.c       |    5 -
-> >  drivers/cxl/cxl.h             |   33 ++++-
-> >  drivers/cxl/cxlmem.h          |    8 +
-> >  tools/testing/cxl/Kbuild      |    4 +
-> >  tools/testing/cxl/test/cxl.c  |   29 +++++
-> >  tools/testing/cxl/test/mock.c |   50 ++++++++
-> >  tools/testing/cxl/test/mock.h |    3
-> >  12 files changed, 434 insertions(+), 49 deletions(-)
-> >  create mode 100644 drivers/cxl/core/hdm.c
-> >
-> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> > index 259441245687..8c2ced91518b 100644
-> > --- a/drivers/cxl/acpi.c
-> > +++ b/drivers/cxl/acpi.c
-> > @@ -168,10 +168,10 @@ static int add_host_bridge_uport(struct device *match, void *arg)
-> >       struct device *host = root_port->dev.parent;
-> >       struct acpi_device *bridge = to_cxl_host_bridge(host, match);
-> >       struct acpi_pci_root *pci_root;
-> > -     int single_port_map[1], rc;
-> > -     struct cxl_decoder *cxld;
-> >       struct cxl_dport *dport;
-> > +     struct cxl_hdm *cxlhdm;
-> >       struct cxl_port *port;
-> > +     int rc;
-> >
-> >       if (!bridge)
-> >               return 0;
-> > @@ -200,37 +200,24 @@ static int add_host_bridge_uport(struct device *match, void *arg)
-> >       rc = devm_cxl_port_enumerate_dports(host, port);
-> >       if (rc < 0)
-> >               return rc;
-> > -     if (rc > 1)
-> > -             return 0;
-> > -
-> > -     /* TODO: Scan CHBCR for HDM Decoder resources */
-> > -
-> > -     /*
-> > -      * Per the CXL specification (8.2.5.12 CXL HDM Decoder Capability
-> > -      * Structure) single ported host-bridges need not publish a decoder
-> > -      * capability when a passthrough decode can be assumed, i.e. all
-> > -      * transactions that the uport sees are claimed and passed to the single
-> > -      * dport. Disable the range until the first CXL region is enumerated /
-> > -      * activated.
-> > -      */
-> > -     cxld = cxl_switch_decoder_alloc(port, 1);
-> > -     if (IS_ERR(cxld))
-> > -             return PTR_ERR(cxld);
-> > -
-> >       cxl_device_lock(&port->dev);
-> > -     dport = list_first_entry(&port->dports, typeof(*dport), list);
-> > -     cxl_device_unlock(&port->dev);
-> > +     if (rc == 1) {
-> > +             rc = devm_cxl_add_passthrough_decoder(host, port);
-> > +             goto out;
-> > +     }
-> >
-> > -     single_port_map[0] = dport->port_id;
-> > +     cxlhdm = devm_cxl_setup_hdm(host, port);
-> > +     if (IS_ERR(cxlhdm)) {
-> > +             rc = PTR_ERR(cxlhdm);
-> > +             goto out;
-> > +     }
-> >
-> > -     rc = cxl_decoder_add(cxld, single_port_map);
-> > +     rc = devm_cxl_enumerate_decoders(host, cxlhdm);
-> >       if (rc)
-> > -             put_device(&cxld->dev);
-> > -     else
-> > -             rc = cxl_decoder_autoremove(host, cxld);
-> > +             dev_err(&port->dev, "Couldn't enumerate decoders (%d)\n", rc);
-> >
-> > -     if (rc == 0)
-> > -             dev_dbg(host, "add: %s\n", dev_name(&cxld->dev));
-> > +out:
-> > +     cxl_device_unlock(&port->dev);
-> >       return rc;
-> >  }
-> >
->
-> ...
->
-> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> > new file mode 100644
-> > index 000000000000..fd9782269c56
-> > --- /dev/null
-> > +++ b/drivers/cxl/core/hdm.c
-> > @@ -0,0 +1,248 @@
->
->
-> ...
->
-> > +
-> > +static void __iomem *map_hdm_decoder_regs(struct cxl_port *port,
-> > +                                       void __iomem *crb)
-> > +{
-> > +     struct cxl_register_map map;
-> > +     struct cxl_component_reg_map *comp_map = &map.component_map;
->
-> Why can't we use a cxl_register_map directly in here?
-> Doesn't seem to make use of the containing structure.
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Yeah, I don't see a reason for cxl_register_map to be used here since
-that was built for cxl_find_regblock(). The cxl_find_regblock() work
-was already done.
+This ID is used in DOE headers to identify protocols that are defined
+within the PCI Express Base Specification.
 
->
-> > +
-> > +     cxl_probe_component_regs(&port->dev, crb, comp_map);
-> > +     if (!comp_map->hdm_decoder.valid) {
-> > +             dev_err(&port->dev, "HDM decoder registers invalid\n");
-> > +             return IOMEM_ERR_PTR(-ENXIO);
-> > +     }
-> > +
-> > +     return crb + comp_map->hdm_decoder.offset;
-> > +}
-> > +
-> > +/**
-> > + * devm_cxl_setup_hdm - map HDM decoder component registers
-> > + * @port: cxl_port to map
-> > + */
-> > +struct cxl_hdm *devm_cxl_setup_hdm(struct device *host, struct cxl_port *port)
->
-> Mentioned this in earlier reply, but good to keep docs in sync with
-> code even if going to change it shortly.
+Specified in Table 7-x2 of the Data Object Exchange ECN (approved 12 March
+2020) available from https://members.pcisig.com/wg/PCI-SIG/document/14143
 
-Yeah, I meant to fix that up, looks like I didn't commit the hunk on the resend.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ include/linux/pci_ids.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 011f2f1ea5bb..849f514cd7db 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -149,6 +149,7 @@
+ #define PCI_CLASS_OTHERS		0xff
+ 
+ /* Vendors and devices.  Sort key: vendor first, device next. */
++#define PCI_VENDOR_ID_PCI_SIG		0x0001
+ 
+ #define PCI_VENDOR_ID_LOONGSON		0x0014
+ 
+-- 
+2.31.1
+
