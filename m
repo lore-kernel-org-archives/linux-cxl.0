@@ -2,55 +2,55 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D767C433EF
-	for <linux-cxl@archiver.kernel.org>; Tue,  1 Feb 2022 23:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FCEC433EF
+	for <linux-cxl@archiver.kernel.org>; Wed,  2 Feb 2022 01:18:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243026AbiBAX7W (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 1 Feb 2022 18:59:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44422 "EHLO
+        id S243165AbiBBBSa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 1 Feb 2022 20:18:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243024AbiBAX7W (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 1 Feb 2022 18:59:22 -0500
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 767B0C061714
-        for <linux-cxl@vger.kernel.org>; Tue,  1 Feb 2022 15:59:22 -0800 (PST)
-Received: by mail-pj1-x102a.google.com with SMTP id v15-20020a17090a4ecf00b001b82db48754so61155pjl.2
-        for <linux-cxl@vger.kernel.org>; Tue, 01 Feb 2022 15:59:22 -0800 (PST)
+        with ESMTP id S231531AbiBBBS2 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 1 Feb 2022 20:18:28 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87BE8C061714
+        for <linux-cxl@vger.kernel.org>; Tue,  1 Feb 2022 17:18:28 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id o64so18808233pjo.2
+        for <linux-cxl@vger.kernel.org>; Tue, 01 Feb 2022 17:18:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=B+R2Zx0ML/EKvqqWNoD035jGto0p6Ur7g9Wctqz24S0=;
-        b=UCunpy71JKDOit4ttSfjBKYqp5/RyIRc0W3fWcBS7EnSLrZb2hbPekd6WiumFNGxbh
-         uPGdk1b0Ok+v1S4OwzGXWz2MlKPqTbvncVnPPAFf95ueNPFdrdjdIukRCnpDAd8pg6v9
-         qDJ0BmaojFwpmc9JGdWv3Ev/NGxacfMe2u7ImmdJN9BZt1Sy1UpcbKhOQyIuOOsakmuZ
-         aYq7fXuAoIGsP5owoVlJe+NAKN+zVi7LWwjWnfa8+I3gKpKZklaijbuKEmaYjtgQqvXC
-         cDoPUBgKztx7w6I6NsQKZ7G0DLDdHiUA0qMW9N8shHqHgYvL6wEJyulS2kCwFuusPO7y
-         OarQ==
+        bh=GZoglC+ge1/99sWCkClXyTN7rb8YyTH+ODtl0a/JGbU=;
+        b=18M2BdDfm/5B8kM8ilplUX6iGkgJTOHlDzgN2eNKlUZxamjhDokdAusL197I7R72eR
+         tKAslpONvIyxbJhcyVg9kgjl4hInCrnaS+Snfo6yyEnqVHtCtksJFqAmBDV476GAuqJ1
+         QqLFnyMnoNjSz65W6dPMkA89Vqdq0z+BgCwtXmnJsG/m6rsG4mNT4NcLsq41hndgbF84
+         s0HlVR7LNc6Ulx3zzOHMKMBqc9b/MsFzNVFiqZAsT4k6OIehTyMz0tKwALOiPfA6LT5i
+         Uitiq4H1dYIN9QGimJf/uTfQSga/JlnYqdQS41hrp1904oZRUQbp5nP2A3bLmdi+GZcx
+         CXMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=B+R2Zx0ML/EKvqqWNoD035jGto0p6Ur7g9Wctqz24S0=;
-        b=oGA5P9ixxTq7KSbNB/PV3+XzgT4wL/u+KFCx5ruPliodsJbmFq4J8sBOQxy1PmzDpx
-         E7TWt2wbI1oShKHXRu6eUNTDkFGR528sKig0hEK2RAVx4noDIuG+un1Zyd4giVJ0Qs3r
-         0ZfAwpuoztrn9ko+KLprCMKxxcm3F5WPXepVoN56m+ob7oS3+pVG48jsmGhRG6x6r24I
-         Y3/3qEeCgZlwBHG8KQViGtbl+upJkFkE6hnyyLzZTbQMv8T0wYDNqa5K9Fv3YT6RMI6A
-         8DE3fW//psYMqv2zpAPWrRXsp12ehsnH05Zpa47Jakdw75j63y912IY5WOaV5A8ng0WD
-         LhzQ==
-X-Gm-Message-State: AOAM532uplsVhsBEYZWdb/mKo1jM6j7Yz+CBhO7HfrN22xhcgKRRYSXh
-        M9D/+p7mRuXVQIv9Vqs+4lOCaSpls7EglnkdlGopVYZtUyM=
-X-Google-Smtp-Source: ABdhPJwnehpby8yp683SdJKAdL2F3StWXxd8JVVi5jbP7vbcqpz39az5sXc/ZEgCSo9OuFwSGV+fpFbdQQe0dYjLOZY=
-X-Received: by 2002:a17:90b:3ece:: with SMTP id rm14mr912273pjb.220.1643759962079;
- Tue, 01 Feb 2022 15:59:22 -0800 (PST)
+        bh=GZoglC+ge1/99sWCkClXyTN7rb8YyTH+ODtl0a/JGbU=;
+        b=P4OrWaFRyIzcVwXYeO1i47tTAXG2mS6ps82PfZh0+j0itAGa6Xu5HohMok0MZDbqcz
+         ADsy0xqQvqTor16BzwODJoYxa3chTLQIh2dRvpVGA1tpQgvRJw4FyXjsc7AdN+xvFutE
+         q+OxZ/Xu4+LXQHlS9t6wosHgu87G5HV2gEg0zvBegNoorPkRlFsKoKrG5wVsblOpH8TY
+         XYm973izhgUwyJ/xSngmvo3Z532IQGKhEa7IV2nNrlUQEt/U+/8lGizYJdmI5xrryuiD
+         QXIHEY8DXRPmzAuHmAsVVki/FkvWITcyWkuKK4xgIiJUhvBScOLLCFRV/85WR3y8qNBo
+         /VTQ==
+X-Gm-Message-State: AOAM533CkmRlKOCKEER5Nm3Tu0DsvnRK7fMEeFsP6OOdtf9F+ZIFWiFI
+        rfWkeqQO+tiXw4yWd7Tr3WiBUAeH1FvRyIPvKLzk6A==
+X-Google-Smtp-Source: ABdhPJwk7Oc7NbOGM9oqNhNg31hkcCL0gPpe9YgWryGjzEvWTuEX48SKeDm5Vh0Tdbl3hybV1iwW5b6PeJpLQd7Iiso=
+X-Received: by 2002:a17:90b:3ece:: with SMTP id rm14mr1232162pjb.220.1643764708061;
+ Tue, 01 Feb 2022 17:18:28 -0800 (PST)
 MIME-Version: 1.0
 References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
  <164298428430.3018233.16409089892707993289.stgit@dwillia2-desk3.amr.corp.intel.com>
  <20220201153154.jpyxayuulbhdran4@intel.com>
 In-Reply-To: <20220201153154.jpyxayuulbhdran4@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 1 Feb 2022 15:59:15 -0800
-Message-ID: <CAPcyv4ibSpq6VyyBmMA=DqsQTPMP7a+2hv4Uvq7cghpBh+Sjog@mail.gmail.com>
+Date:   Tue, 1 Feb 2022 17:18:21 -0800
+Message-ID: <CAPcyv4jBZALQH1zhuMw5O6u+OfyXmdQN_j7jwvLbFB=X2zHQVg@mail.gmail.com>
 Subject: Re: [PATCH v3 31/40] cxl/memdev: Add numa_node attribute
 To:     Ben Widawsky <ben.widawsky@intel.com>
 Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
@@ -72,9 +72,38 @@ On Tue, Feb 1, 2022 at 7:32 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
 > This brings up an interesting question. Are all devices in a region affinitized
 > to the same NUMA node? I think they must be - at which point, should this
 > attribute be a part of a region, rather than a device?
+>
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-cxl |    9 +++++++++
+> >  drivers/cxl/core/memdev.c               |   17 +++++++++++++++++
+> >  tools/testing/cxl/test/cxl.c            |    1 +
+> >  3 files changed, 27 insertions(+)
+> >
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> > index 87c0e5e65322..0b51cfec0c66 100644
+> > --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> > @@ -34,6 +34,15 @@ Description:
+> >               capability. Mandatory for CXL devices, see CXL 2.0 8.1.12.2
+> >               Memory Device PCIe Capabilities and Extended Capabilities.
+> >
+> > +What:                /sys/bus/cxl/devices/memX/numa_node
+> > +Date:                January, 2022
+> > +KernelVersion:       v5.18
+> > +Contact:     linux-cxl@vger.kernel.org
+> > +Description:
+> > +             (RO) If NUMA is enabled and the platform has affinitized the
+> > +             host PCI device for this memory device, emit the CPU node
+> > +             affinity for this device.
+> > +
+>
+> I think you'd want to say something about the device actively decoding. Perhaps
+> I'm mistaken though, can you affinitize without setting up HDM decoders for the
+> device?
 
-This attribute is only here so that 'cxl list' can convey what CPU
-node platform firmware might have affinitized the memory device. This
-is for enumeration questions like, "how many memory devices are on
-socket 0". The region NUMA node / affinity is wholly separate from
-this number.
+Missed replying to this.
+
+No, the memory decode is independent of the CPU to device affinity.
+This affinity is like the affinity of an NVME device i.e. the affinity
+of PCI.mmio to a CPU, not the resulting CXL.mem node of which there
+may be multiple for a single device.
