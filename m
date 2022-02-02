@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0240BC433EF
-	for <linux-cxl@archiver.kernel.org>; Wed,  2 Feb 2022 14:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B0DC433F5
+	for <linux-cxl@archiver.kernel.org>; Wed,  2 Feb 2022 14:22:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344869AbiBBOVy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 2 Feb 2022 09:21:54 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4639 "EHLO
+        id S238143AbiBBOWY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 2 Feb 2022 09:22:24 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4640 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233716AbiBBOVx (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Feb 2022 09:21:53 -0500
-Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JpkRH5shGz67NpT;
-        Wed,  2 Feb 2022 22:18:03 +0800 (CST)
+        with ESMTP id S229775AbiBBOWY (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Feb 2022 09:22:24 -0500
+Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JpkQs5hDTz67HpF;
+        Wed,  2 Feb 2022 22:17:41 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
+ fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Wed, 2 Feb 2022 15:21:51 +0100
+ 15.1.2308.21; Wed, 2 Feb 2022 15:22:22 +0100
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Wed, 2 Feb 2022 14:21:51 +0000
+ 15.1.2308.21; Wed, 2 Feb 2022 14:22:21 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <qemu-devel@nongnu.org>,
         =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
@@ -37,9 +37,9 @@ CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
         Chris Browy <cbrowy@avery-design.com>,
         Samarth Saxena <samarths@cadence.com>,
         "Dan Williams" <dan.j.williams@intel.com>
-Subject: [PATCH v5 22/43] acpi/cxl: Add _OSC implementation (9.14.2)
-Date:   Wed, 2 Feb 2022 14:10:16 +0000
-Message-ID: <20220202141037.17352-23-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v5 23/43] tests/acpi: allow CEDT table addition
+Date:   Wed, 2 Feb 2022 14:10:17 +0000
+Message-ID: <20220202141037.17352-24-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220202141037.17352-1-Jonathan.Cameron@huawei.com>
 References: <20220202141037.17352-1-Jonathan.Cameron@huawei.com>
@@ -56,261 +56,33 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Ben Widawsky <ben.widawsky@intel.com>
 
-CXL 2.0 specification adds 2 new dwords to the existing _OSC definition
-from PCIe. The new dwords are accessed with a new uuid. This
-implementation supports what is in the specification.
+Following patches will add a new ACPI table, the
+CXL Early Discovery Table (CEDT).
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
-v5: Fix for issue seen on in patch 31.
- - Introduce stubs as the gpex pxb code is compiled on mips machines.
- 
- hw/acpi/Kconfig       |   5 ++
- hw/acpi/cxl-stub.c    |  12 +++++
- hw/acpi/cxl.c         | 104 ++++++++++++++++++++++++++++++++++++++++++
- hw/acpi/meson.build   |   4 +-
- hw/i386/acpi-build.c  |  14 +++++-
- include/hw/acpi/cxl.h |  23 ++++++++++
- 6 files changed, 160 insertions(+), 2 deletions(-)
- create mode 100644 hw/acpi/cxl-stub.c
- create mode 100644 hw/acpi/cxl.c
- create mode 100644 include/hw/acpi/cxl.h
+ tests/data/acpi/pc/CEDT                     | 0
+ tests/data/acpi/q35/CEDT                    | 0
+ tests/qtest/bios-tables-test-allowed-diff.h | 2 ++
+ 3 files changed, 2 insertions(+)
+ create mode 100644 tests/data/acpi/pc/CEDT
+ create mode 100644 tests/data/acpi/q35/CEDT
 
-diff --git a/hw/acpi/Kconfig b/hw/acpi/Kconfig
-index 622b0b50b7..76cafca652 100644
---- a/hw/acpi/Kconfig
-+++ b/hw/acpi/Kconfig
-@@ -5,6 +5,7 @@ config ACPI_X86
-     bool
-     select ACPI
-     select ACPI_NVDIMM
-+    select ACPI_CXL
-     select ACPI_CPU_HOTPLUG
-     select ACPI_MEMORY_HOTPLUG
-     select ACPI_HMAT
-@@ -60,3 +61,7 @@ config ACPI_HW_REDUCED
-     select ACPI
-     select ACPI_MEMORY_HOTPLUG
-     select ACPI_NVDIMM
-+
-+config ACPI_CXL
-+    bool
-+    depends on ACPI
-diff --git a/hw/acpi/cxl-stub.c b/hw/acpi/cxl-stub.c
+diff --git a/tests/data/acpi/pc/CEDT b/tests/data/acpi/pc/CEDT
 new file mode 100644
-index 0000000000..15bc21076b
---- /dev/null
-+++ b/hw/acpi/cxl-stub.c
-@@ -0,0 +1,12 @@
-+
-+/*
-+ * Stubs for ACPI platforms that don't support CXl
-+ */
-+#include "qemu/osdep.h"
-+#include "hw/acpi/aml-build.h"
-+#include "hw/acpi/cxl.h"
-+
-+void build_cxl_osc_method(Aml *dev)
-+{
-+    g_assert_not_reached();
-+}
-diff --git a/hw/acpi/cxl.c b/hw/acpi/cxl.c
+index 0000000000..e69de29bb2
+diff --git a/tests/data/acpi/q35/CEDT b/tests/data/acpi/q35/CEDT
 new file mode 100644
-index 0000000000..7124d5a1a3
---- /dev/null
-+++ b/hw/acpi/cxl.c
-@@ -0,0 +1,104 @@
-+/*
-+ * CXL ACPI Implementation
-+ *
-+ * Copyright(C) 2020 Intel Corporation.
-+ *
-+ * This library is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU Lesser General Public
-+ * License as published by the Free Software Foundation; either
-+ * version 2 of the License, or (at your option) any later version.
-+ *
-+ * This library is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * Lesser General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU Lesser General Public
-+ * License along with this library; if not, see <http://www.gnu.org/licenses/>
-+ */
-+
-+#include "qemu/osdep.h"
-+#include "hw/cxl/cxl.h"
-+#include "hw/acpi/acpi.h"
-+#include "hw/acpi/aml-build.h"
-+#include "hw/acpi/bios-linker-loader.h"
-+#include "hw/acpi/cxl.h"
-+#include "qapi/error.h"
-+#include "qemu/uuid.h"
-+
-+static Aml *__build_cxl_osc_method(void)
-+{
-+    Aml *method, *if_uuid, *else_uuid, *if_arg1_not_1, *if_cxl, *if_caps_masked;
-+    Aml *a_ctrl = aml_local(0);
-+    Aml *a_cdw1 = aml_name("CDW1");
-+
-+    method = aml_method("_OSC", 4, AML_NOTSERIALIZED);
-+    aml_append(method, aml_create_dword_field(aml_arg(3), aml_int(0), "CDW1"));
-+
-+    /* 9.14.2.1.4 */
-+    if_uuid = aml_if(
-+        aml_lor(aml_equal(aml_arg(0),
-+                          aml_touuid("33DB4D5B-1FF7-401C-9657-7441C03DD766")),
-+                aml_equal(aml_arg(0),
-+                          aml_touuid("68F2D50B-C469-4D8A-BD3D-941A103FD3FC"))));
-+    aml_append(if_uuid, aml_create_dword_field(aml_arg(3), aml_int(4), "CDW2"));
-+    aml_append(if_uuid, aml_create_dword_field(aml_arg(3), aml_int(8), "CDW3"));
-+
-+    aml_append(if_uuid, aml_store(aml_name("CDW3"), a_ctrl));
-+
-+    /* This is all the same as what's used for PCIe */
-+    aml_append(if_uuid,
-+               aml_and(aml_name("CTRL"), aml_int(0x1F), aml_name("CTRL")));
-+
-+    if_arg1_not_1 = aml_if(aml_lnot(aml_equal(aml_arg(1), aml_int(0x1))));
-+    /* Unknown revision */
-+    aml_append(if_arg1_not_1, aml_or(a_cdw1, aml_int(0x08), a_cdw1));
-+    aml_append(if_uuid, if_arg1_not_1);
-+
-+    if_caps_masked = aml_if(aml_lnot(aml_equal(aml_name("CDW3"), a_ctrl)));
-+    /* Capability bits were masked */
-+    aml_append(if_caps_masked, aml_or(a_cdw1, aml_int(0x10), a_cdw1));
-+    aml_append(if_uuid, if_caps_masked);
-+
-+    aml_append(if_uuid, aml_store(aml_name("CDW2"), aml_name("SUPP")));
-+    aml_append(if_uuid, aml_store(aml_name("CDW3"), aml_name("CTRL")));
-+
-+    if_cxl = aml_if(aml_equal(
-+        aml_arg(0), aml_touuid("68F2D50B-C469-4D8A-BD3D-941A103FD3FC")));
-+    /* CXL support field */
-+    aml_append(if_cxl, aml_create_dword_field(aml_arg(3), aml_int(12), "CDW4"));
-+    /* CXL capabilities */
-+    aml_append(if_cxl, aml_create_dword_field(aml_arg(3), aml_int(16), "CDW5"));
-+    aml_append(if_cxl, aml_store(aml_name("CDW4"), aml_name("SUPC")));
-+    aml_append(if_cxl, aml_store(aml_name("CDW5"), aml_name("CTRC")));
-+
-+    /* CXL 2.0 Port/Device Register access */
-+    aml_append(if_cxl,
-+               aml_or(aml_name("CDW5"), aml_int(0x1), aml_name("CDW5")));
-+    aml_append(if_uuid, if_cxl);
-+
-+    /* Update DWORD3 (the return value) */
-+    aml_append(if_uuid, aml_store(a_ctrl, aml_name("CDW3")));
-+
-+    aml_append(if_uuid, aml_return(aml_arg(3)));
-+    aml_append(method, if_uuid);
-+
-+    else_uuid = aml_else();
-+
-+    /* unrecognized uuid */
-+    aml_append(else_uuid,
-+               aml_or(aml_name("CDW1"), aml_int(0x4), aml_name("CDW1")));
-+    aml_append(else_uuid, aml_return(aml_arg(3)));
-+    aml_append(method, else_uuid);
-+
-+    return method;
-+}
-+
-+void build_cxl_osc_method(Aml *dev)
-+{
-+    aml_append(dev, aml_name_decl("SUPP", aml_int(0)));
-+    aml_append(dev, aml_name_decl("CTRL", aml_int(0)));
-+    aml_append(dev, aml_name_decl("SUPC", aml_int(0)));
-+    aml_append(dev, aml_name_decl("CTRC", aml_int(0)));
-+    aml_append(dev, __build_cxl_osc_method());
-+}
-diff --git a/hw/acpi/meson.build b/hw/acpi/meson.build
-index adf6347bc4..b9bc681205 100644
---- a/hw/acpi/meson.build
-+++ b/hw/acpi/meson.build
-@@ -13,6 +13,7 @@ acpi_ss.add(when: 'CONFIG_ACPI_MEMORY_HOTPLUG', if_false: files('acpi-mem-hotplu
- acpi_ss.add(when: 'CONFIG_ACPI_NVDIMM', if_true: files('nvdimm.c'))
- acpi_ss.add(when: 'CONFIG_ACPI_NVDIMM', if_false: files('acpi-nvdimm-stub.c'))
- acpi_ss.add(when: 'CONFIG_ACPI_PCI', if_true: files('pci.c'))
-+acpi_ss.add(when: 'CONFIG_ACPI_CXL', if_true: files('cxl.c'), if_false: files('cxl-stub.c'))
- acpi_ss.add(when: 'CONFIG_ACPI_VMGENID', if_true: files('vmgenid.c'))
- acpi_ss.add(when: 'CONFIG_ACPI_HW_REDUCED', if_true: files('generic_event_device.c'))
- acpi_ss.add(when: 'CONFIG_ACPI_HMAT', if_true: files('hmat.c'))
-@@ -30,4 +31,5 @@ softmmu_ss.add_all(when: 'CONFIG_ACPI', if_true: acpi_ss)
- softmmu_ss.add(when: 'CONFIG_ALL', if_true: files('acpi-stub.c', 'aml-build-stub.c',
-                                                   'acpi-x86-stub.c', 'ipmi-stub.c', 'ghes-stub.c',
-                                                   'acpi-mem-hotplug-stub.c', 'acpi-cpu-hotplug-stub.c',
--                                                  'acpi-pci-hotplug-stub.c', 'acpi-nvdimm-stub.c'))
-+                                                  'acpi-pci-hotplug-stub.c', 'acpi-nvdimm-stub.c',
-+                                                  'cxl-stub.c'))
-diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
-index 1e1e9b9d38..cec7465267 100644
---- a/hw/i386/acpi-build.c
-+++ b/hw/i386/acpi-build.c
-@@ -65,6 +65,7 @@
- #include "hw/acpi/aml-build.h"
- #include "hw/acpi/utils.h"
- #include "hw/acpi/pci.h"
-+#include "hw/acpi/cxl.h"
- 
- #include "qom/qom-qobject.h"
- #include "hw/i386/amd_iommu.h"
-@@ -1407,13 +1408,24 @@ static void init_pci_acpi(Aml *dev, int uid, PCIBusType type,
-         aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A03")));
-         aml_append(dev, aml_name_decl("_ADR", aml_int(0)));
-         aml_append(dev, aml_name_decl("_UID", aml_int(uid)));
--    } else {
-+    } else if (type == PCIE) {
-         aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A08")));
-         aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A03")));
-         aml_append(dev, aml_name_decl("_ADR", aml_int(0)));
-         aml_append(dev, aml_name_decl("_UID", aml_int(uid)));
-+
-         /* Expander bridges do not have ACPI PCI Hot-plug enabled */
-         aml_append(dev, build_q35_osc_method(native_pcie_hp));
-+    } else { /* CXL */
-+        struct Aml *pkg = aml_package(2);
-+
-+        aml_append(dev, aml_name_decl("_HID", aml_string("ACPI0016")));
-+        aml_append(pkg, aml_eisaid("PNP0A08"));
-+        aml_append(pkg, aml_eisaid("PNP0A03"));
-+        aml_append(dev, aml_name_decl("_CID", pkg));
-+        aml_append(dev, aml_name_decl("_ADR", aml_int(0)));
-+        aml_append(dev, aml_name_decl("_UID", aml_int(uid)));
-+        build_cxl_osc_method(dev);
-     }
- }
- 
-diff --git a/include/hw/acpi/cxl.h b/include/hw/acpi/cxl.h
-new file mode 100644
-index 0000000000..7b8f3b8a2e
---- /dev/null
-+++ b/include/hw/acpi/cxl.h
-@@ -0,0 +1,23 @@
-+/*
-+ * Copyright (C) 2020 Intel Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+
-+ * You should have received a copy of the GNU General Public License along
-+ * with this program; if not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#ifndef HW_ACPI_CXL_H
-+#define HW_ACPI_CXL_H
-+
-+void build_cxl_osc_method(Aml *dev);
-+
-+#endif
+index 0000000000..e69de29bb2
+diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
+index dfb8523c8b..9b07f1e1ff 100644
+--- a/tests/qtest/bios-tables-test-allowed-diff.h
++++ b/tests/qtest/bios-tables-test-allowed-diff.h
+@@ -1 +1,3 @@
+ /* List of comma-separated changed AML files to ignore */
++"tests/data/acpi/pc/CEDT",
++"tests/data/acpi/q35/CEDT",
 -- 
 2.32.0
 
