@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D9EC433F5
-	for <linux-cxl@archiver.kernel.org>; Wed,  2 Feb 2022 14:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 492DAC433F5
+	for <linux-cxl@archiver.kernel.org>; Wed,  2 Feb 2022 14:31:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344958AbiBBObH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 2 Feb 2022 09:31:07 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4657 "EHLO
+        id S232108AbiBBObh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 2 Feb 2022 09:31:37 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4658 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243765AbiBBObG (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Feb 2022 09:31:06 -0500
-Received: from fraeml709-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Jpkcv4lNGz67TN2;
-        Wed,  2 Feb 2022 22:26:23 +0800 (CST)
+        with ESMTP id S230290AbiBBObh (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Feb 2022 09:31:37 -0500
+Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JpkkG2Ww3z67n09;
+        Wed,  2 Feb 2022 22:31:02 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
+ fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Wed, 2 Feb 2022 15:31:04 +0100
+ 15.1.2308.21; Wed, 2 Feb 2022 15:31:35 +0100
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Wed, 2 Feb 2022 14:31:04 +0000
+ 15.1.2308.21; Wed, 2 Feb 2022 14:31:34 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <qemu-devel@nongnu.org>,
         =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
@@ -37,9 +37,9 @@ CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
         Chris Browy <cbrowy@avery-design.com>,
         Samarth Saxena <samarths@cadence.com>,
         "Dan Williams" <dan.j.williams@intel.com>
-Subject: [PATCH v5 40/43] i386/pc: Enable CXL fixed memory windows
-Date:   Wed, 2 Feb 2022 14:10:34 +0000
-Message-ID: <20220202141037.17352-41-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v5 41/43] qtest/acpi: Add reference CEDT tables.
+Date:   Wed, 2 Feb 2022 14:10:35 +0000
+Message-ID: <20220202141037.17352-42-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220202141037.17352-1-Jonathan.Cameron@huawei.com>
 References: <20220202141037.17352-1-Jonathan.Cameron@huawei.com>
@@ -56,77 +56,53 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-Add the CFMWs memory regions to the memorymap and adjust the
-PCI window to avoid hitting the same memory.
+More sophisticated tests will come later, but for now deal
+with the NULL case.
 
-Signed-off-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- hw/i386/pc.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+ tests/data/acpi/pc/CEDT                     | Bin 0 -> 36 bytes
+ tests/data/acpi/q35/CEDT                    | Bin 0 -> 36 bytes
+ tests/data/acpi/virt/CEDT                   | Bin 0 -> 36 bytes
+ tests/qtest/bios-tables-test-allowed-diff.h |   3 ---
+ 4 files changed, 3 deletions(-)
 
-diff --git a/hw/i386/pc.c b/hw/i386/pc.c
-index 7a18dce529..5ece806d2b 100644
---- a/hw/i386/pc.c
-+++ b/hw/i386/pc.c
-@@ -816,7 +816,7 @@ void pc_memory_init(PCMachineState *pcms,
-     MachineClass *mc = MACHINE_GET_CLASS(machine);
-     PCMachineClass *pcmc = PC_MACHINE_GET_CLASS(pcms);
-     X86MachineState *x86ms = X86_MACHINE(pcms);
--    hwaddr cxl_base;
-+    hwaddr cxl_base, cxl_resv_end = 0;
- 
-     assert(machine->ram_size == x86ms->below_4g_mem_size +
-                                 x86ms->above_4g_mem_size);
-@@ -924,6 +924,24 @@ void pc_memory_init(PCMachineState *pcms,
-         e820_add_entry(cxl_base, cxl_size, E820_RESERVED);
-         memory_region_init(mr, OBJECT(machine), "cxl_host_reg", cxl_size);
-         memory_region_add_subregion(system_memory, cxl_base, mr);
-+        cxl_resv_end = cxl_base + cxl_size;
-+        if (machine->cxl_devices_state->fixed_windows) {
-+            hwaddr cxl_fmw_base;
-+            GList *it;
-+
-+            cxl_fmw_base = ROUND_UP(cxl_base + cxl_size, 256 * MiB);
-+            for (it = machine->cxl_devices_state->fixed_windows; it; it = it->next) {
-+                CXLFixedWindow *fw = it->data;
-+
-+                fw->base = cxl_fmw_base;
-+                memory_region_init_io(&fw->mr, OBJECT(machine), &cfmws_ops, fw,
-+                                      "cxl-fixed-memory-region", fw->size);
-+                memory_region_add_subregion(system_memory, fw->base, &fw->mr);
-+                e820_add_entry(fw->base, fw->size, E820_RESERVED);
-+                cxl_fmw_base += fw->size;
-+                cxl_resv_end = cxl_fmw_base;
-+            }
-+        }
-     }
- 
-     /* Initialize PC system firmware */
-@@ -953,6 +971,10 @@ void pc_memory_init(PCMachineState *pcms,
-         if (!pcmc->broken_reserved_end) {
-             res_mem_end += memory_region_size(&machine->device_memory->mr);
-         }
-+
-+        if (machine->cxl_devices_state->is_enabled) {
-+            res_mem_end = cxl_resv_end;
-+        }
-         *val = cpu_to_le64(ROUND_UP(res_mem_end, 1 * GiB));
-         fw_cfg_add_file(fw_cfg, "etc/reserved-memory-end", val, sizeof(*val));
-     }
-@@ -989,6 +1011,13 @@ uint64_t pc_pci_hole64_start(void)
-     if (ms->cxl_devices_state->host_mr.addr) {
-         hole64_start = ms->cxl_devices_state->host_mr.addr +
-             memory_region_size(&ms->cxl_devices_state->host_mr);
-+        if (ms->cxl_devices_state->fixed_windows) {
-+            GList *it;
-+            for (it = ms->cxl_devices_state->fixed_windows; it; it = it->next) {
-+                CXLFixedWindow *fw = it->data;
-+                hole64_start = fw->mr.addr + memory_region_size(&fw->mr);
-+            }
-+        }
-     } else if (pcmc->has_reserved_memory && ms->device_memory->base) {
-         hole64_start = ms->device_memory->base;
-         if (!pcmc->broken_reserved_end) {
+diff --git a/tests/data/acpi/pc/CEDT b/tests/data/acpi/pc/CEDT
+index e69de29bb2d1d6434b8b29ae775ad8c2e48c5391..b44db4ce1db980d783ad568a03c17c2915d111b0 100644
+GIT binary patch
+literal 36
+jcmZ>EbqP^nU|?VjaPoKd2v%^42yj*a0!E-1hz+6veU1hJ
+
+literal 0
+HcmV?d00001
+
+diff --git a/tests/data/acpi/q35/CEDT b/tests/data/acpi/q35/CEDT
+index e69de29bb2d1d6434b8b29ae775ad8c2e48c5391..b44db4ce1db980d783ad568a03c17c2915d111b0 100644
+GIT binary patch
+literal 36
+jcmZ>EbqP^nU|?VjaPoKd2v%^42yj*a0!E-1hz+6veU1hJ
+
+literal 0
+HcmV?d00001
+
+diff --git a/tests/data/acpi/virt/CEDT b/tests/data/acpi/virt/CEDT
+index e69de29bb2d1d6434b8b29ae775ad8c2e48c5391..b44db4ce1db980d783ad568a03c17c2915d111b0 100644
+GIT binary patch
+literal 36
+jcmZ>EbqP^nU|?VjaPoKd2v%^42yj*a0!E-1hz+6veU1hJ
+
+literal 0
+HcmV?d00001
+
+diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
+index c7726cad80..dfb8523c8b 100644
+--- a/tests/qtest/bios-tables-test-allowed-diff.h
++++ b/tests/qtest/bios-tables-test-allowed-diff.h
+@@ -1,4 +1 @@
+ /* List of comma-separated changed AML files to ignore */
+-"tests/data/acpi/pc/CEDT",
+-"tests/data/acpi/q35/CEDT",
+-"tests/data/acpi/virt/CEDT",
 -- 
 2.32.0
 
