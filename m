@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D52C4332F
-	for <linux-cxl@archiver.kernel.org>; Wed,  2 Feb 2022 14:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CF5C433F5
+	for <linux-cxl@archiver.kernel.org>; Wed,  2 Feb 2022 14:24:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231666AbiBBOY2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 2 Feb 2022 09:24:28 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4644 "EHLO
+        id S1344890AbiBBOY6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 2 Feb 2022 09:24:58 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4645 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234696AbiBBOY1 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Feb 2022 09:24:27 -0500
-Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JpkTD4JCcz67tf3;
-        Wed,  2 Feb 2022 22:19:44 +0800 (CST)
+        with ESMTP id S233378AbiBBOY6 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Feb 2022 09:24:58 -0500
+Received: from fraeml710-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JpkTq1YSyz67xyP;
+        Wed,  2 Feb 2022 22:20:15 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
+ fraeml710-chm.china.huawei.com (10.206.15.59) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Wed, 2 Feb 2022 15:24:25 +0100
+ 15.1.2308.21; Wed, 2 Feb 2022 15:24:56 +0100
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Wed, 2 Feb 2022 14:24:24 +0000
+ 15.1.2308.21; Wed, 2 Feb 2022 14:24:55 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <qemu-devel@nongnu.org>,
         =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
@@ -37,9 +37,9 @@ CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
         Chris Browy <cbrowy@avery-design.com>,
         Samarth Saxena <samarths@cadence.com>,
         "Dan Williams" <dan.j.williams@intel.com>
-Subject: [PATCH v5 27/43] hw/cxl/device: Implement get/set Label Storage Area (LSA)
-Date:   Wed, 2 Feb 2022 14:10:21 +0000
-Message-ID: <20220202141037.17352-28-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v5 28/43] hw/cxl/component: Add utils for interleave parameter encoding/decoding
+Date:   Wed, 2 Feb 2022 14:10:22 +0000
+Message-ID: <20220202141037.17352-29-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220202141037.17352-1-Jonathan.Cameron@huawei.com>
 References: <20220202141037.17352-1-Jonathan.Cameron@huawei.com>
@@ -54,215 +54,85 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Ben Widawsky <ben.widawsky@intel.com>
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-Implement get and set handlers for the Label Storage Area
-used to hold data describing persistent memory configuration
-so that it can be ensured it is seen in the same configuration
-after reboot.
+Both registers and the CFMWS entries in CDAT use simple encodings
+for the number of interleave ways and the interleave granularity.
+Introduce simple conversion functions to/from the unencoded
+number / size.  So far the iw decode has not been needed so is
+it not implemented.
 
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
-v5:
- Fix wrong bit for IMMEDIATE_DATA_CHANGE
+ hw/cxl/cxl-component-utils.c   | 34 ++++++++++++++++++++++++++++++++++
+ include/hw/cxl/cxl_component.h |  8 ++++++++
+ 2 files changed, 42 insertions(+)
 
- hw/cxl/cxl-mailbox-utils.c  | 57 +++++++++++++++++++++++++++++++++++++
- hw/mem/cxl_type3.c          | 56 +++++++++++++++++++++++++++++++++++-
- include/hw/cxl/cxl_device.h |  5 ++++
- 3 files changed, 117 insertions(+), 1 deletion(-)
-
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index ccf9c3d794..f4a309ddbf 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -56,6 +56,8 @@ enum {
-         #define MEMORY_DEVICE 0x0
-     CCLS        = 0x41,
-         #define GET_PARTITION_INFO     0x0
-+        #define GET_LSA       0x2
-+        #define SET_LSA       0x3
- };
+diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
+index 07297b3bbe..795dbc7561 100644
+--- a/hw/cxl/cxl-component-utils.c
++++ b/hw/cxl/cxl-component-utils.c
+@@ -9,6 +9,7 @@
  
- /* 8.2.8.4.5.1 Command Return Codes */
-@@ -327,7 +329,59 @@ static ret_code cmd_ccls_get_partition_info(struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
- }
- 
-+static ret_code cmd_ccls_get_lsa(struct cxl_cmd *cmd,
-+                                 CXLDeviceState *cxl_dstate,
-+                                 uint16_t *len)
-+{
-+    struct {
-+        uint32_t offset;
-+        uint32_t length;
-+    } __attribute__((packed, __aligned__(8))) *get_lsa;
-+    CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
-+    CXLType3Class *cvc = CXL_TYPE3_DEV_GET_CLASS(ct3d);
-+    uint32_t offset, length;
-+
-+    get_lsa = (void *)cmd->payload;
-+    offset = get_lsa->offset;
-+    length = get_lsa->length;
-+
-+    *len = 0;
-+    if (offset + length > cvc->get_lsa_size(ct3d)) {
-+        return CXL_MBOX_INVALID_INPUT;
-+    }
-+
-+    *len = cvc->get_lsa(ct3d, get_lsa, length, offset);
-+    return CXL_MBOX_SUCCESS;
-+}
-+
-+static ret_code cmd_ccls_set_lsa(struct cxl_cmd *cmd,
-+                                 CXLDeviceState *cxl_dstate,
-+                                 uint16_t *len)
-+{
-+    struct {
-+        uint32_t offset;
-+        uint32_t rsvd;
-+    } __attribute__((packed, __aligned__(8))) *set_lsa = (void *)cmd->payload;
-+    CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
-+    CXLType3Class *cvc = CXL_TYPE3_DEV_GET_CLASS(ct3d);
-+    uint16_t plen = *len;
-+
-+    *len = 0;
-+    if (!plen) {
-+        return CXL_MBOX_SUCCESS;
-+    }
-+
-+    if (set_lsa->offset + plen > cvc->get_lsa_size(ct3d) + sizeof(*set_lsa)) {
-+        return CXL_MBOX_INVALID_INPUT;
-+    }
-+
-+    cvc->set_lsa(ct3d, (void *)set_lsa + sizeof(*set_lsa),
-+                 plen - sizeof(*set_lsa), set_lsa->offset);
-+    return CXL_MBOX_SUCCESS;
-+}
-+
- #define IMMEDIATE_CONFIG_CHANGE (1 << 1)
-+#define IMMEDIATE_DATA_CHANGE (1 << 2)
- #define IMMEDIATE_POLICY_CHANGE (1 << 3)
- #define IMMEDIATE_LOG_CHANGE (1 << 4)
- 
-@@ -350,6 +404,9 @@ static struct cxl_cmd cxl_cmd_set[256][256] = {
-         cmd_identify_memory_device, 0, 0 },
-     [CCLS][GET_PARTITION_INFO] = { "CCLS_GET_PARTITION_INFO",
-         cmd_ccls_get_partition_info, 0, 0 },
-+    [CCLS][GET_LSA] = { "CCLS_GET_LSA", cmd_ccls_get_lsa, 0, 0 },
-+    [CCLS][SET_LSA] = { "CCLS_SET_LSA", cmd_ccls_set_lsa,
-+        ~0, IMMEDIATE_CONFIG_CHANGE | IMMEDIATE_DATA_CHANGE },
- };
- 
- void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index b16262d3cc..b1ba4bf0de 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -8,6 +8,7 @@
- #include "qapi/error.h"
+ #include "qemu/osdep.h"
  #include "qemu/log.h"
- #include "qemu/module.h"
-+#include "qemu/pmem.h"
- #include "qemu/range.h"
- #include "qemu/rcu.h"
- #include "sysemu/hostmem.h"
-@@ -114,6 +115,11 @@ static void cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
-     memory_region_set_enabled(mr, true);
-     host_memory_backend_set_mapped(ct3d->hostmem, true);
-     ct3d->cxl_dstate.pmem_size = ct3d->hostmem->size;
++#include "qapi/error.h"
+ #include "hw/pci/pci.h"
+ #include "hw/cxl/cxl.h"
+ 
+@@ -217,3 +218,36 @@ void cxl_component_create_dvsec(CXLComponentState *cxl, uint16_t length,
+     range_init_nofail(&cxl->dvsecs[type], cxl->dvsec_offset, length);
+     cxl->dvsec_offset += length;
+ }
 +
-+    if (!ct3d->lsa) {
-+        error_setg(errp, "lsa property must be set");
-+        return;
++uint8_t cxl_interleave_ways_enc(int iw, Error **errp)
++{
++    switch (iw) {
++    case 1: return 0x0;
++    case 2: return 0x1;
++    case 4: return 0x2;
++    case 8: return 0x3;
++    case 16: return 0x4;
++    case 3: return 0x8;
++    case 6: return 0x9;
++    case 12: return 0xa;
++    default:
++        error_setg(errp, "Interleave ways: %d not supported", iw);
++        return 0;
 +    }
- }
- 
- 
-@@ -168,12 +174,58 @@ static Property ct3_props[] = {
-     DEFINE_PROP_SIZE("size", CXLType3Dev, size, -1),
-     DEFINE_PROP_LINK("memdev", CXLType3Dev, hostmem, TYPE_MEMORY_BACKEND,
-                      HostMemoryBackend *),
-+    DEFINE_PROP_LINK("lsa", CXLType3Dev, lsa, TYPE_MEMORY_BACKEND,
-+                     HostMemoryBackend *),
-     DEFINE_PROP_END_OF_LIST(),
- };
- 
- static uint64_t get_lsa_size(CXLType3Dev *ct3d)
- {
--    return 0;
-+    MemoryRegion *mr;
-+
-+    mr = host_memory_backend_get_memory(ct3d->lsa);
-+    return memory_region_size(mr);
 +}
 +
-+static void validate_lsa_access(MemoryRegion *mr, uint64_t size,
-+                                uint64_t offset)
++uint8_t cxl_interleave_granularity_enc(uint64_t gran, Error **errp)
 +{
-+    assert(offset + size <= memory_region_size(mr));
-+    assert(offset + size > offset);
++    switch (gran) {
++    case 256: return 0;
++    case 512: return 1;
++    case 1024: return 2;
++    case 2048: return 3;
++    case 4096: return 4;
++    case 8192: return 5;
++    case 16384: return 6;
++    default:
++        error_setg(errp, "Interleave granularity: %" PRIu64 " invalid", gran);
++        return 0;
++    }
++}
+diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
+index 33aeab9b99..42cd140f75 100644
+--- a/include/hw/cxl/cxl_component.h
++++ b/include/hw/cxl/cxl_component.h
+@@ -193,4 +193,12 @@ void cxl_component_register_init_common(uint32_t *reg_state,
+ void cxl_component_create_dvsec(CXLComponentState *cxl_cstate, uint16_t length,
+                                 uint16_t type, uint8_t rev, uint8_t *body);
+ 
++uint8_t cxl_interleave_ways_enc(int iw, Error **errp);
++uint8_t cxl_interleave_granularity_enc(uint64_t gran, Error **errp);
++
++static inline hwaddr cxl_decode_ig(int ig)
++{
++    return 1 << (ig + 8);
 +}
 +
-+static uint64_t get_lsa(CXLType3Dev *ct3d, void *buf, uint64_t size,
-+                    uint64_t offset)
-+{
-+    MemoryRegion *mr;
-+    void *lsa;
-+
-+    mr = host_memory_backend_get_memory(ct3d->lsa);
-+    validate_lsa_access(mr, size, offset);
-+
-+    lsa = memory_region_get_ram_ptr(mr) + offset;
-+    memcpy(buf, lsa, size);
-+
-+    return size;
-+}
-+
-+static void set_lsa(CXLType3Dev *ct3d, const void *buf, uint64_t size,
-+                    uint64_t offset)
-+{
-+    MemoryRegion *mr;
-+    void *lsa;
-+
-+    mr = host_memory_backend_get_memory(ct3d->lsa);
-+    validate_lsa_access(mr, size, offset);
-+
-+    lsa = memory_region_get_ram_ptr(mr) + offset;
-+    memcpy(lsa, buf, size);
-+    memory_region_set_dirty(mr, offset, size);
-+
-+    /*
-+     * Just like the PMEM, if the guest is not allowed to exit gracefully, label
-+     * updates will get lost.
-+     */
- }
- 
- static void ct3_class_init(ObjectClass *oc, void *data)
-@@ -194,6 +246,8 @@ static void ct3_class_init(ObjectClass *oc, void *data)
-     device_class_set_props(dc, ct3_props);
- 
-     cvc->get_lsa_size = get_lsa_size;
-+    cvc->get_lsa = get_lsa;
-+    cvc->set_lsa = set_lsa;
- }
- 
- static const TypeInfo ct3d_info = {
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index ebb391153a..43908f161b 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -257,6 +257,11 @@ struct CXLType3Class {
- 
-     /* public */
-     uint64_t (*get_lsa_size)(CXLType3Dev *ct3d);
-+
-+    uint64_t (*get_lsa)(CXLType3Dev *ct3d, void *buf, uint64_t size,
-+                        uint64_t offset);
-+    void (*set_lsa)(CXLType3Dev *ct3d, const void *buf, uint64_t size,
-+                    uint64_t offset);
- };
- 
  #endif
 -- 
 2.32.0
