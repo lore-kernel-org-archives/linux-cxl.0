@@ -2,83 +2,98 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D95C433F5
-	for <linux-cxl@archiver.kernel.org>; Wed,  2 Feb 2022 14:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D9AC43219
+	for <linux-cxl@archiver.kernel.org>; Wed,  2 Feb 2022 15:44:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345006AbiBBOcj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 2 Feb 2022 09:32:39 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4660 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230290AbiBBOcj (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Feb 2022 09:32:39 -0500
-Received: from fraeml703-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JpklR6nFKz67sRl;
-        Wed,  2 Feb 2022 22:32:03 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.21; Wed, 2 Feb 2022 15:32:36 +0100
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Wed, 2 Feb 2022 14:32:36 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <qemu-devel@nongnu.org>,
-        =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        Marcel Apfelbaum <marcel@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>
-CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
-        "Peter Maydell" <peter.maydell@linaro.org>, <linuxarm@huawei.com>,
-        "Shameerali Kolothum Thodi" <shameerali.kolothum.thodi@huawei.com>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        Saransh Gupta1 <saransh@ibm.com>,
-        Shreyas Shah <shreyas.shah@elastics.cloud>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Samarth Saxena <samarths@cadence.com>,
-        "Dan Williams" <dan.j.williams@intel.com>
-Subject: [PATCH v5 43/43] scripts/device-crash-test: Add exception for pxb-cxl
-Date:   Wed, 2 Feb 2022 14:10:37 +0000
-Message-ID: <20220202141037.17352-44-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220202141037.17352-1-Jonathan.Cameron@huawei.com>
-References: <20220202141037.17352-1-Jonathan.Cameron@huawei.com>
+        id S233080AbiBBPov (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 2 Feb 2022 10:44:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345561AbiBBPou (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Feb 2022 10:44:50 -0500
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C0ACC06173B
+        for <linux-cxl@vger.kernel.org>; Wed,  2 Feb 2022 07:44:50 -0800 (PST)
+Received: by mail-pl1-x635.google.com with SMTP id z5so18638154plg.8
+        for <linux-cxl@vger.kernel.org>; Wed, 02 Feb 2022 07:44:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nGLMWM6Y1bKurzXYC7D1UpkKTONcroCJv+sUS8+G3fk=;
+        b=oAsuNoeuBakCdBEHynR3D8MON2hWZXsKI9XI297BBNUhha9c5YL8xp0RCdMb8JU+/k
+         ieW+QU4GNQqS6tdyJcoU27SbO29Y0ANPws4KLSzMa/M3CSP8C0wZKBwczBLLw3gPnNAN
+         Gl6cZyMGNMFWjboPOPGFZtz1LNlSqjmBOf55RkOfHZzI36rRUBekQHNylrwPdS6ljBg+
+         fjpSn/M8F31lQorK+FtiHoJjVSPDQ6eewGwlZPXsUljURYxNzEbTZ1uLwVx57muEeyIY
+         7mUbwW6n+qnN0pxVKKhvuFbQWfS1lylV5SAQJt8d1EDFzucGM5+CwnURCeX0Ni+iUl60
+         4WzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nGLMWM6Y1bKurzXYC7D1UpkKTONcroCJv+sUS8+G3fk=;
+        b=Ta2bpTcNVkrkaxrxphPj4AXUBd2aICkgRJph92ZzwUhKnRc3yZaQLaq4VXi4jT/HRy
+         fNDW4P8RXInAyVw8mQy7ZTnIQFOAM3cAXtbw2+3+pX2/GIOoNz2KjhJj87B9W8nUNq6D
+         GK/z+EfGpcVMuyrjYoyfKLRZK0JdhU1GiDmMoPLWEkKeWa2wagGUbIQzvLfy3C4mJS+v
+         N9U5e/Icf+UHBFwjxobr/pg+kGUnxoNutkMl7VrL5Y9EmSUu1JS9WG5ZLu/n7/mCPqCX
+         TrJfLMttx27devo2OIsm/Va9XFemnCT8DDwGzKYoRSNtGBz+lsJSlFsG6+J0PgwEqfKi
+         kAGQ==
+X-Gm-Message-State: AOAM530rccGAQHZ1LLOTXrDBmCXmt/A/kAMk4byZRGz4SRHMVVep54xX
+        RQJk5mJC48fU4fnO/PpoEi5ki/UBKunHhvmXeO6ubA==
+X-Google-Smtp-Source: ABdhPJyfNfM+gsqWl5W1Qo2NaPXgRGSdgmEDd2DqFNA9P0isGwV8K8W3Z3JrGGkyrmxZ/kz8+YCi0/483ncGEhKz54Y=
+X-Received: by 2002:a17:902:7c15:: with SMTP id x21mr31615433pll.147.1643816689833;
+ Wed, 02 Feb 2022 07:44:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164298428430.3018233.16409089892707993289.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20220131184126.00002a47@Huawei.com> <CAPcyv4iYpj7MH4kKMP57ouHb85GffEmhXPupq5i1mwJwzFXr0w@mail.gmail.com>
+ <20220202094437.00003c03@Huawei.com>
+In-Reply-To: <20220202094437.00003c03@Huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 2 Feb 2022 07:44:37 -0800
+Message-ID: <CAPcyv4hwdMetDJ-+yL9-2rY92g2C4wWPqpRiQULaX_M6ZQPMtA@mail.gmail.com>
+Subject: Re: [PATCH v3 31/40] cxl/memdev: Add numa_node attribute
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The CXL expander bridge has several requirements but the one that
-is checked first is that it is attached to a PCI Express bus,
-not a PCI one so document that.
+On Wed, Feb 2, 2022 at 1:45 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Tue, 1 Feb 2022 15:57:10 -0800
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> > On Mon, Jan 31, 2022 at 10:41 AM Jonathan Cameron
+> > <Jonathan.Cameron@huawei.com> wrote:
+> > >
+> > > On Sun, 23 Jan 2022 16:31:24 -0800
+> > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > >
+> > > > While CXL memory targets will have their own memory target node,
+> > > > individual memory devices may be affinitized like other PCI devices.
+> > > > Emit that attribute for memdevs.
+> > > >
+> > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > >
+> > > Hmm. Is this just duplicating what we can get from
+> > > the PCI device?  It feels a bit like overkill to have it here
+> > > as well.
+> >
+> > Not all cxl_memdevs are associated with PCI devices.
+>
+> Platform devices have numa nodes too...
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
-v5:
- New patch - should probably be pushed down to introduction of pxb-cxl.
- Will do that in v6
- 
- scripts/device-crash-test | 1 +
- 1 file changed, 1 insertion(+)
+So what's the harm in having a numa_node attribute local to the memdev?
 
-diff --git a/scripts/device-crash-test b/scripts/device-crash-test
-index 7fbd99158b..52bd3d8f71 100755
---- a/scripts/device-crash-test
-+++ b/scripts/device-crash-test
-@@ -93,6 +93,7 @@ ERROR_RULE_LIST = [
-     {'device':'pci-bridge', 'expected':True},              # Bridge chassis not specified. Each bridge is required to be assigned a unique chassis id > 0.
-     {'device':'pci-bridge-seat', 'expected':True},         # Bridge chassis not specified. Each bridge is required to be assigned a unique chassis id > 0.
-     {'device':'pxb', 'expected':True},                     # Bridge chassis not specified. Each bridge is required to be assigned a unique chassis id > 0.
-+    {'device':'pxb-cxl', 'expected':True},                 # pxb-cxl devices cannot reside on a PCI bus.
-     {'device':'scsi-block', 'expected':True},              # drive property not set
-     {'device':'scsi-generic', 'expected':True},            # drive property not set
-     {'device':'scsi-hd', 'expected':True},                 # drive property not set
--- 
-2.32.0
+Yes, userspace could carry complications like:
 
+cat $(readlink -f /sys/bus/cxl/devices/mem0)/../numa_node
+
+...but if you take that argument to its extreme, most "numa_node"
+attributes in sysfs could be eliminated because userspace can keep
+walking up the hierarchy to find the numa_node versus the kernel doing
+it on behalf of userspace.
