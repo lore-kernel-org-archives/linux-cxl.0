@@ -2,128 +2,106 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE446C4332F
-	for <linux-cxl@archiver.kernel.org>; Thu,  3 Feb 2022 18:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70004C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu,  3 Feb 2022 20:28:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237648AbiBCSFk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 3 Feb 2022 13:05:40 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4669 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353197AbiBCSFj (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 3 Feb 2022 13:05:39 -0500
-Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JqRLx4Bnzz67lMW;
-        Fri,  4 Feb 2022 02:01:45 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Thu, 3 Feb 2022 19:05:36 +0100
-Received: from localhost (10.47.78.15) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Thu, 3 Feb
- 2022 18:05:36 +0000
-Date:   Thu, 3 Feb 2022 18:05:32 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>,
-        "Linux NVDIMM" <nvdimm@lists.linux.dev>
-Subject: Re: [PATCH v3 31/40] cxl/memdev: Add numa_node attribute
-Message-ID: <20220203180532.00007083@Huawei.com>
-In-Reply-To: <CAPcyv4gJozea7aDg+KyKdwEbSO5PV-rUUGC5u-6NNTHA755etA@mail.gmail.com>
-References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <164298428430.3018233.16409089892707993289.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <20220131184126.00002a47@Huawei.com>
-        <CAPcyv4iYpj7MH4kKMP57ouHb85GffEmhXPupq5i1mwJwzFXr0w@mail.gmail.com>
-        <20220202094437.00003c03@Huawei.com>
-        <CAPcyv4hwdMetDJ-+yL9-2rY92g2C4wWPqpRiQULaX_M6ZQPMtA@mail.gmail.com>
-        <20220203094123.000049e6@Huawei.com>
-        <CAPcyv4gJozea7aDg+KyKdwEbSO5PV-rUUGC5u-6NNTHA755etA@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        id S236293AbiBCU2L (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 3 Feb 2022 15:28:11 -0500
+Received: from mga02.intel.com ([134.134.136.20]:26035 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234566AbiBCU2K (ORCPT <rfc822;linux-cxl@vger.kernel.org>);
+        Thu, 3 Feb 2022 15:28:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643920090; x=1675456090;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=tB1HUyQO+nYJafkdVgFOWJU/qrAWAD/qIqDemUlXcmw=;
+  b=Ig+Fydl95U4qgkPd5rGKioFwlq97gvZ4JcmbGpzhtvw2GV2emKikCQR7
+   //zY9uJvAniyuYd3CcOfuBIZyrSwxMkBHnYdHUxWTP/4oBESXD916Qb4E
+   57PuRATvrFN2R/VE6e9hlHuCr8ykUjPZU9AQyak/ol1PNNJbyY98WNquo
+   8odWnwLkswQVhn9DnbgIXdY2C0jIw84gFhwlXAeYX6aOn9yfE9y12W48S
+   JCo3F36ViBxZlG5oXvYAgOUa8RNuXJALL50lsUrN6qawg7GKC7z2ugIEw
+   oYroElvuox5qSNQ3+od49kfTpDawkBEKGNPcNRZIdyn1+Iiz2q/vCQMCI
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10247"; a="235646203"
+X-IronPort-AV: E=Sophos;i="5.88,340,1635231600"; 
+   d="scan'208";a="235646203"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2022 12:28:10 -0800
+X-IronPort-AV: E=Sophos;i="5.88,340,1635231600"; 
+   d="scan'208";a="524069910"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2022 12:28:10 -0800
+Date:   Thu, 3 Feb 2022 12:28:10 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V6 01/10] PCI: Add vendor ID for the PCI SIG
+Message-ID: <20220203202810.GX785175@iweiny-DESK2.sc.intel.com>
+Mail-Followup-To: Bjorn Helgaas <helgaas@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>, linux-kernel@vger.kernel.org,
+        linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20220201071952.900068-2-ira.weiny@intel.com>
+ <20220203171112.GA103601@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.78.15]
-X-ClientProxiedBy: lhreml731-chm.china.huawei.com (10.201.108.82) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220203171112.GA103601@bhelgaas>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 3 Feb 2022 08:59:44 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Thu, Feb 03, 2022 at 11:11:12AM -0600, Bjorn Helgaas wrote:
+> On Mon, Jan 31, 2022 at 11:19:43PM -0800, ira.weiny@intel.com wrote:
+> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > 
+> > This ID is used in DOE headers to identify protocols that are defined
+> > within the PCI Express Base Specification.
+> > 
+> > Specified in Table 7-x2 of the Data Object Exchange ECN (approved 12 March
+> > 2020) available from https://members.pcisig.com/wg/PCI-SIG/document/14143
+> 
+> Please update this citation to PCIe r6.0, sec 6.30.1.1, table 6-32.
 
-> On Thu, Feb 3, 2022 at 1:41 AM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > On Wed, 2 Feb 2022 07:44:37 -0800
-> > Dan Williams <dan.j.williams@intel.com> wrote:
+Done.
+
+Thanks,
+Ira
+
+> 
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> >  include/linux/pci_ids.h | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> > index 011f2f1ea5bb..849f514cd7db 100644
+> > --- a/include/linux/pci_ids.h
+> > +++ b/include/linux/pci_ids.h
+> > @@ -149,6 +149,7 @@
+> >  #define PCI_CLASS_OTHERS		0xff
 > >  
-> > > On Wed, Feb 2, 2022 at 1:45 AM Jonathan Cameron
-> > > <Jonathan.Cameron@huawei.com> wrote:  
-> > > >
-> > > > On Tue, 1 Feb 2022 15:57:10 -0800
-> > > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > > >  
-> > > > > On Mon, Jan 31, 2022 at 10:41 AM Jonathan Cameron
-> > > > > <Jonathan.Cameron@huawei.com> wrote:  
-> > > > > >
-> > > > > > On Sun, 23 Jan 2022 16:31:24 -0800
-> > > > > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > > > > >  
-> > > > > > > While CXL memory targets will have their own memory target node,
-> > > > > > > individual memory devices may be affinitized like other PCI devices.
-> > > > > > > Emit that attribute for memdevs.
-> > > > > > >
-> > > > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>  
-> > > > > >
-> > > > > > Hmm. Is this just duplicating what we can get from
-> > > > > > the PCI device?  It feels a bit like overkill to have it here
-> > > > > > as well.  
-> > > > >
-> > > > > Not all cxl_memdevs are associated with PCI devices.  
-> > > >
-> > > > Platform devices have numa nodes too...  
-> > >
-> > > So what's the harm in having a numa_node attribute local to the memdev?
-> > >  
-> >
-> > I'm not really against, it just wanted to raise the question of
-> > whether we want these to go further than the granularity at which
-> > numa nodes can be assigned.  
-> 
-> What is the "granularity at which numa nodes can be assigned"? It
-> sounds like you are referencing a standard / document, so maybe I
-> missed something. Certainly Proximity Domains != Linux NUMA nodes so
-> it's not ACPI.
-
-Sure, it's the fusion of a number of possible sources, one of which
-is ACPI. If there is a reason why it differs to the parent device
-(which can be ACPI, or can just be from a bunch of other places which
-I'm sure will keep growing) then it definitely makes sense to expose
-it at that level. 
-
-> 
-> >  Right now that at platform_device or
-> > PCI EP (from ACPI anyway).  Sure the value might come from higher
-> > up a hierarchy but at least in theory it can be assigned to
-> > individual devices.
-> >
-> > This is pushing that description beyond that point so is worth discussing.  
-> 
-> To me, any device that presents a driver interface can declare its CPU
-> affinity with a numa_node leaf attribute. Once you start walking the
-> device tree to infer the node from parent information you also need to
-> be worried about whether the Linux device topology follows the NUMA
-> topology. The leaf attribute removes that ambiguity.
-I'll go with 'maybe'...
-
-Either way I'm fine with this change, just wanted to bring attention to
-the duplication as it wasn't totally clear to me it was a good idea.
-
-FWIW
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-
+> >  /* Vendors and devices.  Sort key: vendor first, device next. */
+> > +#define PCI_VENDOR_ID_PCI_SIG		0x0001
+> >  
+> >  #define PCI_VENDOR_ID_LOONGSON		0x0014
+> >  
+> > -- 
+> > 2.31.1
+> > 
