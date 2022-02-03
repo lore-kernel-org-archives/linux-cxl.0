@@ -2,167 +2,99 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DE1C433EF
-	for <linux-cxl@archiver.kernel.org>; Thu,  3 Feb 2022 05:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CCEC433F5
+	for <linux-cxl@archiver.kernel.org>; Thu,  3 Feb 2022 09:41:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236538AbiBCFGx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 3 Feb 2022 00:06:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44710 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236536AbiBCFGx (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 3 Feb 2022 00:06:53 -0500
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5651FC06173B
-        for <linux-cxl@vger.kernel.org>; Wed,  2 Feb 2022 21:06:53 -0800 (PST)
-Received: by mail-pj1-x102d.google.com with SMTP id d5so1364720pjk.5
-        for <linux-cxl@vger.kernel.org>; Wed, 02 Feb 2022 21:06:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1JHTwPLvgnSdOvlUJPxurry7jIgozOgrWp88o7ApzHU=;
-        b=AImR9zJ8OCzu9bnDTiEZfXEseEPGFUn05Zvepykpqlqvc7RbeCSp/6iFOcJwPh3ez+
-         mDzMWl8Ox2lVLXTIQBCLACcbdQUsEpZLb5ojevv6AIVNO8tr8j7hKr9WjmyVXnG58cpl
-         A89iTphpwTxZOuOIrayeZTiGDs6sHmRWimjAwiJ4LNmeBCW2mDZIywU3PKdtN4mQxggj
-         JV4nzC4yN2pcQvLlsE2+r2Olgl40ix4pYgT0n9/atZn8deGCRee0ulyBlmfzvUhOCGm1
-         SehZ0KEnjS34j2Ni/SdCmznHupRuOgWnY9p5PBoW3CfbDjm422am9J9EXUSUGrhNAdwW
-         kRpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1JHTwPLvgnSdOvlUJPxurry7jIgozOgrWp88o7ApzHU=;
-        b=H01EtCK9Dg5qMpbJ/0fu/SlG+slO09cfJjXYiT++V7GhDoNQenXSFR8UN9O5VtzUE0
-         uPzlH1xsngxLKRYJ1xzu0niVxnVy63ANTYW3qecAX36BVVoyaKzPvbQNNg5xdehHRFO8
-         X91txFQpMQCixjcFvbOvTXsgPXhm16sdhV+NrtS9Vi2+HxQ0AjnLAtDP5rQuscH9fyXM
-         nv0x09+ytZl/jN/6dLKOojlKvSvaxkARuy6t/9m7atR9dWnuULTn7drfxuyEMol9oQRe
-         A98FvrhKgWR4WSZBI8DMEMqXQ76ga0C6d3edcGP8Loto2sy6YVifOOsO2zhOLUIZCkNx
-         jWJA==
-X-Gm-Message-State: AOAM531HBaL6CBrorA43DLoVlHEPRjMNcfPtNEL2MqQanHbsI8F6ojeY
-        y3OgQjgEd7Ctl3/H8TBuEyBVwaWrImIOp/M01itzsOIM7g9bXg==
-X-Google-Smtp-Source: ABdhPJxqM77is0yFSyX0KGpP8UcSw0l8m3YOfuSF4sUAAILJspUd73S24QbhCyeq0gImKi2X1JHSEnWeU5sIcL9wz+g=
-X-Received: by 2002:a17:902:b20a:: with SMTP id t10mr33736247plr.132.1643864812773;
- Wed, 02 Feb 2022 21:06:52 -0800 (PST)
+        id S233414AbiBCJld (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 3 Feb 2022 04:41:33 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4663 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230206AbiBCJlc (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 3 Feb 2022 04:41:32 -0500
+Received: from fraeml737-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JqDF41lBMz67Sfy;
+        Thu,  3 Feb 2022 17:40:56 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml737-chm.china.huawei.com (10.206.15.218) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Thu, 3 Feb 2022 10:41:30 +0100
+Received: from localhost (10.47.78.15) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Thu, 3 Feb
+ 2022 09:41:30 +0000
+Date:   Thu, 3 Feb 2022 09:41:23 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>,
+        "Linux NVDIMM" <nvdimm@lists.linux.dev>
+Subject: Re: [PATCH v3 31/40] cxl/memdev: Add numa_node attribute
+Message-ID: <20220203094123.000049e6@Huawei.com>
+In-Reply-To: <CAPcyv4hwdMetDJ-+yL9-2rY92g2C4wWPqpRiQULaX_M6ZQPMtA@mail.gmail.com>
+References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <164298428430.3018233.16409089892707993289.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <20220131184126.00002a47@Huawei.com>
+        <CAPcyv4iYpj7MH4kKMP57ouHb85GffEmhXPupq5i1mwJwzFXr0w@mail.gmail.com>
+        <20220202094437.00003c03@Huawei.com>
+        <CAPcyv4hwdMetDJ-+yL9-2rY92g2C4wWPqpRiQULaX_M6ZQPMtA@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <20220128002707.391076-1-ben.widawsky@intel.com>
- <20220128002707.391076-3-ben.widawsky@intel.com> <CAPcyv4hHJcPLRJM-7z+wKhjBhp9HH2qXuEeC0VfDnD6yU9H-Wg@mail.gmail.com>
- <20220201145943.mevjv3rygo43o2lf@intel.com>
-In-Reply-To: <20220201145943.mevjv3rygo43o2lf@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 2 Feb 2022 21:06:40 -0800
-Message-ID: <CAPcyv4jNDRwgOFKtaVf2KZtMOWag2=zTbiUq=R-5UJ_BV6kNmA@mail.gmail.com>
-Subject: Re: [PATCH v3 02/14] cxl/region: Introduce concept of region configuration
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, patches@lists.linux.dev,
-        kernel test robot <lkp@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.78.15]
+X-ClientProxiedBy: lhreml731-chm.china.huawei.com (10.201.108.82) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Feb 1, 2022 at 6:59 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> I will cut to the part that effects ABI so tool development can continue. I'll
-> get back to the other bits later.
->
-> On 22-01-28 16:25:34, Dan Williams wrote:
->
-> [snip]
->
+On Wed, 2 Feb 2022 07:44:37 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
+
+> On Wed, Feb 2, 2022 at 1:45 AM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
 > >
-> > > +
-> > > +       return ret;
-> > > +}
-> > > +
-> > > +static size_t set_targetN(struct cxl_region *cxlr, const char *buf, int n,
-> > > +                         size_t len)
-> > > +{
-> > > +       struct device *memdev_dev;
-> > > +       struct cxl_memdev *cxlmd;
-> > > +
-> > > +       device_lock(&cxlr->dev);
-> > > +
-> > > +       if (len == 1 || cxlr->config.targets[n])
-> > > +               remove_target(cxlr, n);
-> > > +
-> > > +       /* Remove target special case */
-> > > +       if (len == 1) {
-> > > +               device_unlock(&cxlr->dev);
-> > > +               return len;
-> > > +       }
-> > > +
-> > > +       memdev_dev = bus_find_device_by_name(&cxl_bus_type, NULL, buf);
+> > On Tue, 1 Feb 2022 15:57:10 -0800
+> > Dan Williams <dan.j.williams@intel.com> wrote:
+> >  
+> > > On Mon, Jan 31, 2022 at 10:41 AM Jonathan Cameron
+> > > <Jonathan.Cameron@huawei.com> wrote:  
+> > > >
+> > > > On Sun, 23 Jan 2022 16:31:24 -0800
+> > > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > > >  
+> > > > > While CXL memory targets will have their own memory target node,
+> > > > > individual memory devices may be affinitized like other PCI devices.
+> > > > > Emit that attribute for memdevs.
+> > > > >
+> > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>  
+> > > >
+> > > > Hmm. Is this just duplicating what we can get from
+> > > > the PCI device?  It feels a bit like overkill to have it here
+> > > > as well.  
+> > >
+> > > Not all cxl_memdevs are associated with PCI devices.  
 > >
-> > I think this wants to be an endpoint decoder, not a memdev. Because
-> > it's the decoder that joins a memdev to a region, or at least a
-> > decoder should be picked when the memdev is assigned so that the DPA
-> > mapping can be registered. If all the decoders are allocated then fail
-> > here.
-> >
->
-> You've put two points in here:
->
-> 1. Handle decoder allocation at sysfs boundary. I'll respond to this when I come
-> back around to the rest of the review comments.
->
-> 2. Take a decoder for target instead of a memdev. I don't agree with this
-> direction as it's asymmetric to how LSA processing works. The goal was to model
-> the LSA for configuration. The kernel will have to be in the business of
-> reserving and enumerating decoders out of memdevs for both LSA (where we have a
-> list of memdevs) and volatile (where we use the memdevs in the system to
-> enumerate populated decoders). I don't see much value in making userspace do the
-> same.
->
-> I'd like to ask you reconsider if you still think it's preferable to use
-> decoders as part of the ABI and if you still feel that way I can go change it
-> since it has minimal impact overall.
+> > Platform devices have numa nodes too...  
+> 
+> So what's the harm in having a numa_node attribute local to the memdev?
+> 
 
-It's more than a preference. I think there are fundamental recovery
-scenarios where the kernel needs userspace help to resolve decoder /
-DPA assignment and conflicts.
+I'm not really against, it just wanted to raise the question of
+whether we want these to go further than the granularity at which
+numa nodes can be assigned.  Right now that at platform_device or
+PCI EP (from ACPI anyway).  Sure the value might come from higher
+up a hierarchy but at least in theory it can be assigned to
+individual devices.
 
-PMEM interleaves behave similarly to RAID where you have multiple
-devices in a set that can each fail independently, and because they
-are hotplug capable the chances of migrating devices from one system
-to another are higher than PMEM devices today where hotplug is mostly
-non-existent. If you lurk on linux-raid long enough you will
-inevitably encounter someone coming to the list saying, "help a drive
-in my RAID array was dying. I managed to save it off, help me
-reassemble my array". The story often gets worse when they say "I
-managed to corrupt my metadata block, so I don't know what order the
-drives are supposed to be in". There are several breadcrumbs and trial
-and error steps that one takes to try to get the data back online:
-https://raid.wiki.kernel.org/index.php/RAID_Recovery.
+This is pushing that description beyond that point so is worth discussing.
 
-Now imagine that scenario with CXL where there are additional
-complicating factors like label-storage-area can fail independently of
-the data area, there are region labels with HPA fields that mandate
-assembly at a given address, decoders must be programmed in increasing
-DPA order, volatile memory and locked/fixed decoders complicate
-decoder selection. Considering all the ways that CXL region assembly
-can fail it seems inevitable that someone will get into a situation
-where they need to pick the decoder and the DPA to map while also not
-clobbering the LSA. I.e. I see a "CXL Recovery" wiki in our future.
-
-The requirements that I think fall out from that are:
-
-1/ Region assembly needs to be possible without updating labels. So,
-in contrast to the way that nvdimm does it, instead of updating the
-region label on every attribute write there would be a commit step
-that realizes the current region configuration in the labels, or is
-ommitted in recovery scenarios where you are not ready to clobber the
-labels.
-
-2/ Userspace needs the flexibility to be able to select/override which
-DPA gets mapped in which decoder (kernel would handle DPA skip).
-
-All the ways I can think of to augment the ABI to allow for this style
-of recovery devolve to just assigning decoders to regions in the first
-instance.
+> Yes, userspace could carry complications like:
+> 
+> cat $(readlink -f /sys/bus/cxl/devices/mem0)/../numa_node
+> 
+> ...but if you take that argument to its extreme, most "numa_node"
+> attributes in sysfs could be eliminated because userspace can keep
+> walking up the hierarchy to find the numa_node versus the kernel doing
+> it on behalf of userspace.
