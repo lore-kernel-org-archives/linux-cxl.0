@@ -2,804 +2,592 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA875C433F5
-	for <linux-cxl@archiver.kernel.org>; Thu,  3 Feb 2022 00:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB93C433F5
+	for <linux-cxl@archiver.kernel.org>; Thu,  3 Feb 2022 02:49:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344659AbiBCA6e (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 2 Feb 2022 19:58:34 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:60826 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245608AbiBCA6d (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Feb 2022 19:58:33 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 62E8C60FB9;
-        Thu,  3 Feb 2022 00:58:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E723C004E1;
-        Thu,  3 Feb 2022 00:58:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643849912;
-        bh=BHuwaFh8S5Jf8u2x4imMc1lWrU/jIy+7nR3RZzGboIA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=s+zUt9Za/uxZgqxnvbky7dOkQbBdL6te3h4+LzKEeXCarDIytholnAtvUV8TV26oP
-         Nibf7WflwM+vFvb8YEcdPD48Zk91K+u/WLL4JYTJ7YrNPubbXbx87Ve4hIzhI0Vs1W
-         VfYGYoco6E8xkkpfmeIP+Wo+9qxjgdFDf/wMR4bjrXFzxb6TcHnqQ4EDFax+5q98XI
-         iisgNdSFTXGFYs3I+77Zsub8S6VE3J0rnb+FNenLc1kmJ8qOI8eg2T0e+kKcat3zPM
-         2YPQraf5mhgorCFdIvzNimuYdmG8l6wmwlpKzxmdRbl3WK3nKm8f+e3OEekVftuQ0b
-         jGz56Bs/zWflA==
-Date:   Wed, 2 Feb 2022 18:58:30 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Keith Busch <kbusch@kernel.org>, kw@linux.com,
-        mariusz.tkaczyk@linux.intel.com, lukas@wunner.de, pavel@ucw.cz,
-        linux-cxl@vger.kernel.org, martin.petersen@oracle.com,
-        James.Bottomley@hansenpartnership.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [RFC PATCH v2 2/3] Add PCIe enclosure management auxiliary driver
-Message-ID: <20220203005830.GA56289@bhelgaas>
+        id S1348497AbiBCCt4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 2 Feb 2022 21:49:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42742 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1347744AbiBCCtz (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Feb 2022 21:49:55 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDA08C06173B
+        for <linux-cxl@vger.kernel.org>; Wed,  2 Feb 2022 18:49:55 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id oa14-20020a17090b1bce00b001b61aed4a03so1477306pjb.5
+        for <linux-cxl@vger.kernel.org>; Wed, 02 Feb 2022 18:49:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GcsOGZFm2GGVI5gRsUje5bABHa+wBoU6Q3fgBSVWDV4=;
+        b=ClXXrnq5ruXvJb7obUzpFiuqL/faz5hq8O4Za3g+1ShwBLHXwzcADu85O1pG24/YGo
+         av82Z9uulC9Lr82mMQwJ99oLc2XJz/pnmk9xcm8GZV5MevrJUlK6d+NFvRYrRlstnhMl
+         kfn+ZL2WyW6E2W3IsYVovXE3zgRbsFA7+ZBc1ZnTBLXH2bi2wSwvR4ravy+GQRIT+0QY
+         kdCWeY+nUPC6zmbnwzxgYPOKDcV456UpwmmX4g7Tpn1c2iomu8RnqePdhyq9yGrqGjQV
+         +IRb2FJhIsR5zi8TjXHnjEyfx48SvpSu4mcJUlLlAoGzfgcq6GC9dpK51d62SpCpXYcr
+         /jAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GcsOGZFm2GGVI5gRsUje5bABHa+wBoU6Q3fgBSVWDV4=;
+        b=gbVYAScslpH/C6wHfAXpurzIEEx/2YmzTE1uZenu85fewBUFJ2CsoJRfu2gruneZB9
+         RABOpk4gnvgMf8v7T78XW2Em4Fv4atLv1THSZw0FLOP6UscP0cQ+ki2aePWDKi7yCUs2
+         BAVZx8WxkIDQh8LpiRL0XE0mbhrGdDiCInBoyvcaxKMyh/jtdTI+jftN9viedenHsiTo
+         PveWIzfp4qpDlQV2XZf+fn7MsKzo8bIsQ1TERpIinsChqhrcC6n+UAeyz/8FCgDqy5pj
+         Kym9IrOqpPZ0skhDE/dJyN0sEEPoVl92J+X12MqrqnvAQ/L9u/nyozl4mFXO7wT8oiSf
+         2oqA==
+X-Gm-Message-State: AOAM5300LC5G6Xp7Y9Eogn0XAF50k7m+QHvTwbU3pQpbrF6Q/880cBQP
+        1FwwIf3lMfxPr++C05fTcdQENUublNFuXVJZ+IEzAw==
+X-Google-Smtp-Source: ABdhPJxFvZwjJjIC03ztmTEd37gkB0u0htdTa4MgMixr9pCjfEfmW2TJEP8YNoSRBcEallApDofu6Io3RRPa3bkziTo=
+X-Received: by 2002:a17:902:bcca:: with SMTP id o10mr2354633pls.147.1643856594886;
+ Wed, 02 Feb 2022 18:49:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <644e380e0fa53c541db25d38ce7fee7ef3fd717b.1643822289.git.stuart.w.hayes@gmail.com>
+References: <164298429450.3018233.13269591903486669825.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164316691403.3437657.5374419213236572727.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20220201124506.000031e2@Huawei.com>
+In-Reply-To: <20220201124506.000031e2@Huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 2 Feb 2022 18:49:43 -0800
+Message-ID: <CAPcyv4jBs4DXGUE0rtyhp2WG2pU45zBv1zGJuLjMfyAKGmfVyw@mail.gmail.com>
+Subject: Re: [PATCH v4 33/40] cxl/mem: Add the cxl_mem driver
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Feb 02, 2022 at 11:59:12AM -0600, Stuart Hayes wrote:
-> This patch adds a new auxiliary driver to support PCIe enclosure
-> management (NPEM and _DSM).  Drivers whose PCIe devices could have
-> NPEM and/or _DSM enclosure management support could register an
-> auxiliary device, and this driver will attach to that and register an
-> enclosure to allow user space control of the associated state
-> indicators.
-> 
-> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> ---
->  drivers/pci/pcie/Kconfig      |   8 +
->  drivers/pci/pcie/Makefile     |   1 +
->  drivers/pci/pcie/pcie_em.c    | 473 ++++++++++++++++++++++++++++++++++
+On Tue, Feb 1, 2022 at 4:45 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Tue, 25 Jan 2022 19:16:05 -0800
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> > From: Ben Widawsky <ben.widawsky@intel.com>
+> >
+> > At this point the subsystem can enumerate all CXL ports (CXL.mem decode
+> > resources in upstream switch ports and host bridges) in a system. The
+> > last mile is connecting those ports to endpoints.
+> >
+> > The cxl_mem driver connects an endpoint device to the platform CXL.mem
+> > protoctol decode-topology. At ->probe() time it walks its
+> > device-topology-ancestry and adds a CXL Port object at every Upstream
+> > Port hop until it gets to CXL root. The CXL root object is only present
+> > after a platform firmware driver registers platform CXL resources. For
+> > ACPI based platform this is managed by the ACPI0017 device and the
+> > cxl_acpi driver.
+> >
+> > The ports are registered such that disabling a given port automatically
+> > unregisters all descendant ports, and the chain can only be registered
+> > after the root is established.
+> >
+> > Given ACPI device scanning may run asynchronously compared to PCI device
+> > scanning the root driver is tasked with rescanning the bus after the
+> > root successfully probes.
+> >
+> > Conversely if any ports in a chain between the root and an endpoint
+> > becomes disconnected it subsequently triggers the endpoint to
+> > unregister. Given lock depenedencies the endpoint unregistration happens
+> > in a workqueue asynchronously. If userspace cares about synchronizing
+> > delayed work after port events the /sys/bus/cxl/flush attribute is
+> > available for that purpose.
+> >
+> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > [djbw: clarify changelog, rework hotplug support]
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+>
+> A few comments inline.
+>
+> Jonathan
+>
+> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > index 7bd53dc691ec..df6691d0a6d0 100644
+> > --- a/drivers/cxl/acpi.c
+> > +++ b/drivers/cxl/acpi.c
+> > @@ -314,7 +314,8 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+> >       if (rc < 0)
+> >               return rc;
+> >
+> > -     return 0;
+> > +     /* In case PCI is scanned before ACPI re-trigger memdev attach */
+> > +     return cxl_bus_rescan();
+> >  }
+> >
+> >  static const struct acpi_device_id cxl_acpi_ids[] = {
+> > @@ -335,3 +336,4 @@ module_platform_driver(cxl_acpi_driver);
+> >  MODULE_LICENSE("GPL v2");
+> >  MODULE_IMPORT_NS(CXL);
+> >  MODULE_IMPORT_NS(ACPI);
+> > +MODULE_SOFTDEP("pre: cxl_port");
+> I think a comment on 'why' would be useful for the SOFTDEP.
+>
+> They are rare enough that it might surprise people.
 
-Despite having "PCIe" in the name, NPEM has nothing in particular to
-do with PCIe, and does not require portdrv or any PCIe-specific
-services.  If we do this, I think this should go in drivers/pci, not
-in drivers/pci/pcie/.
+Sure.
 
-And "pcie_em" is both unnecessarily specific ("pcie", when it's not
-PCIe-specific and could be completely via ACPI) and not descriptive
-enough ("em" doesn't give a clue about what this is).
+>
+> > diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> > index 1a50c0fc399c..efbaa851929d 100644
+> > --- a/drivers/cxl/core/core.h
+> > +++ b/drivers/cxl/core/core.h
+> > @@ -6,6 +6,7 @@
+> >
+> >  extern const struct device_type cxl_nvdimm_bridge_type;
+> >  extern const struct device_type cxl_nvdimm_type;
+> > +extern const struct device_type cxl_memdev_type;
+> >
+> >  extern struct attribute_group cxl_base_attribute_group;
+> >
+> > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> > index b2773664e407..ee0156419d06 100644
+> > --- a/drivers/cxl/core/memdev.c
+> > +++ b/drivers/cxl/core/memdev.c
+> > @@ -155,13 +155,19 @@ static const struct attribute_group *cxl_memdev_attribute_groups[] = {
+> >       NULL,
+> >  };
+> >
+> > -static const struct device_type cxl_memdev_type = {
+> > +const struct device_type cxl_memdev_type = {
+>
+> Currently this is only exposed for type checking and you also have is_cxl_memdev for
+> that so seems a bit unnecessary.
 
->  include/linux/pcie_em.h       |  97 +++++++
->  include/uapi/linux/pci_regs.h |  11 +-
->  5 files changed, 589 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/pci/pcie/pcie_em.c
->  create mode 100644 include/linux/pcie_em.h
-> 
-> diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
-> index 45a2ef702b45..deaaf00c0d38 100644
-> --- a/drivers/pci/pcie/Kconfig
-> +++ b/drivers/pci/pcie/Kconfig
-> @@ -142,3 +142,11 @@ config PCIE_EDR
->  	  the PCI Firmware Specification r3.2.  Enable this if you want to
->  	  support hybrid DPC model which uses both firmware and OS to
->  	  implement DPC.
-> +
-> +config PCIE_EM
-> +	tristate "PCIe Enclosure Management support"
-> +	depends on ENCLOSURE_SERVICES
-> +	help
-> +	  Auxiliary driver for PCI Express enclosure management (support
-> +	  for Native PCIe Enclosure Management (NPEM) and the related _DSM
-> +	  interface for status LED management).
-> diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
-> index 5783a2f79e6a..3b2b160b6f13 100644
-> --- a/drivers/pci/pcie/Makefile
-> +++ b/drivers/pci/pcie/Makefile
-> @@ -13,3 +13,4 @@ obj-$(CONFIG_PCIE_PME)		+= pme.o
->  obj-$(CONFIG_PCIE_DPC)		+= dpc.o
->  obj-$(CONFIG_PCIE_PTM)		+= ptm.o
->  obj-$(CONFIG_PCIE_EDR)		+= edr.o
-> +obj-$(CONFIG_PCIE_EM)		+= pcie_em.o
-> diff --git a/drivers/pci/pcie/pcie_em.c b/drivers/pci/pcie/pcie_em.c
-> new file mode 100644
-> index 000000000000..fe6ec3aaa561
-> --- /dev/null
-> +++ b/drivers/pci/pcie/pcie_em.c
-> @@ -0,0 +1,473 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Auxiliary driver providing support for PCIe Native PCIe Enclosure
-> + * Management, supporting both the PCIe NPEM extended capability and the
-> + * _DSM interface (as defined in the PCI Firmware Specification Rev
-> + * 3.3, chapter 4.7, "_DSM Definitions for PCIe SSD Status LED".
-> + *
-> + * Copyright (c) 2021 Dell Inc.
-> + *
-> + * TODO: Actually add NPEM extended capability support
+Yes, might have been a rebase error moving is_cxl_memdev() from a
+'static inline' to an out-of-line helper in the core.
 
-Looks like you have NPEM support now?
+>
+> >       .name = "cxl_memdev",
+> >       .release = cxl_memdev_release,
+> >       .devnode = cxl_memdev_devnode,
+> >       .groups = cxl_memdev_attribute_groups,
+> >  };
+> >
+> > +bool is_cxl_memdev(struct device *dev)
+> > +{
+> > +     return dev->type == &cxl_memdev_type;
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(is_cxl_memdev, CXL);
+> > +
+> >  /**
+> >   * set_exclusive_cxl_commands() - atomically disable user cxl commands
+> >   * @cxlds: The device state to operate on
+> > @@ -213,6 +219,15 @@ static void cxl_memdev_unregister(void *_cxlmd)
+> >       put_device(dev);
+> >  }
+> >
+> > +static void detach_memdev(struct work_struct *work)
+> > +{
+> > +     struct cxl_memdev *cxlmd;
+> > +
+> > +     cxlmd = container_of(work, typeof(*cxlmd), detach_work);
+> > +     device_release_driver(&cxlmd->dev);
+> > +     put_device(&cxlmd->dev);
+> > +}
+> > +
+> >  static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
+> >                                          const struct file_operations *fops)
+> >  {
+> > @@ -237,6 +252,7 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
+> >       dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
+> >       dev->type = &cxl_memdev_type;
+> >       device_set_pm_not_required(dev);
+> > +     INIT_WORK(&cxlmd->detach_work, detach_memdev);
+> >
+> >       cdev = &cxlmd->cdev;
+> >       cdev_init(cdev, fops);
+> > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> > index b61957636907..75a66540a795 100644
+> > --- a/drivers/cxl/core/port.c
+> > +++ b/drivers/cxl/core/port.c
+> > @@ -1,6 +1,7 @@
+> >  // SPDX-License-Identifier: GPL-2.0-only
+> >  /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+> >  #include <linux/io-64-nonatomic-lo-hi.h>
+> > +#include <linux/workqueue.h>
+> >  #include <linux/device.h>
+> >  #include <linux/module.h>
+> >  #include <linux/pci.h>
+> > @@ -46,6 +47,8 @@ static int cxl_device_id(struct device *dev)
+> >                       return CXL_DEVICE_ROOT;
+> >               return CXL_DEVICE_PORT;
+> >       }
+> > +     if (dev->type == &cxl_memdev_type)
+>
+> is_cxl_memdev() ?
+> Having dong that, is there any need to expose cxl_memdev_type?
 
-> + *       Add pcieport & cxl support
+Yup, good catch.
 
-Maybe I spoke too soon above.  What do you envision needing for
-pcieport support?
+>
+> > +             return CXL_DEVICE_MEMORY_EXPANDER;
+> >       return 0;
+> >  }
+> >
+> > @@ -320,8 +323,10 @@ static void unregister_port(void *_port)
+> >  {
+> >       struct cxl_port *port = _port;
+> >
+> > -     if (!is_cxl_root(port))
+> > +     if (!is_cxl_root(port)) {
+> >               device_lock_assert(port->dev.parent);
+> > +             port->uport = NULL;
+> > +     }
+> >
+> >       device_unregister(&port->dev);
+> >  }
+>
+> ...
+>
+> > +static void delete_endpoint(void *data)
+> > +{
+> > +     struct cxl_memdev *cxlmd = data;
+> > +     struct cxl_port *endpoint = dev_get_drvdata(&cxlmd->dev);
+> > +     struct cxl_port *parent_port;
+> > +     struct device *parent;
+> > +
+> > +     parent_port = cxl_mem_find_port(cxlmd);
+> > +     if (!parent_port)
+> > +             return;
+> > +     parent = &parent_port->dev;
+> > +
+> > +     cxl_device_lock(parent);
+> > +     if (parent->driver && endpoint->uport) {
+> > +             devm_release_action(parent, cxl_unlink_uport, endpoint);
+> > +             devm_release_action(parent, unregister_port, endpoint);
+> > +     }
+> > +     cxl_device_unlock(parent);
+> > +     put_device(parent);
+> > +     put_device(&endpoint->dev);
+> > +}
+> > +
+> > +int cxl_endpoint_autoremove(struct cxl_memdev *cxlmd, struct cxl_port *endpoint)
+> > +{
+> > +     struct device *dev = &cxlmd->dev;
+> > +
+> > +     get_device(&endpoint->dev);
+> > +     dev_set_drvdata(dev, endpoint);
+>
+> That's a little nasty if it's just to provide
+> a second parameter to delete_endpoint, but I guess nothing else was using the drvdata..
 
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+Nothing else is using drvdata it and this endpoint port object really
+is the primary driver state that matters for cxl_mem, so it would be
+odd for it *not* to be available via drvdata.
 
-Does this actually work?  The only messages I see below are pci_dbg(),
-and they would use dev_fmt, not pr_fmt.
+>
+> > +     return devm_add_action_or_reset(dev, delete_endpoint, cxlmd);
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(cxl_endpoint_autoremove, CXL);
+>
+> ...
+>
+>
+> > +static BUS_ATTR_WO(flush);
+> > +
+> >  static __init int cxl_core_init(void)
+> >  {
+> >       int rc;
+> > @@ -1329,12 +1395,27 @@ static __init int cxl_core_init(void)
+> >       if (rc)
+> >               return rc;
+> >
+> > +     cxl_bus_wq = alloc_ordered_workqueue("cxl_port", 0);
+> > +     if (!cxl_bus_wq) {
+> > +             rc = -ENOMEM;
+> > +             goto err_wq;
+> > +     }
+> > +
+> >       rc = bus_register(&cxl_bus_type);
+> >       if (rc)
+> > -             goto err;
+> > +             goto err_bus;
+> > +
+> > +     rc = bus_create_file(&cxl_bus_type, &bus_attr_flush);
+>
+> Can't we add this as part of the bus_type?  Always good to avoid
+> dynamic sysfs file creation if we possibly can.
 
-> +#include <linux/acpi.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/pci.h>
-> +#include <linux/enclosure.h>
-> +#include <linux/auxiliary_bus.h>
-> +#include <linux/delay.h>
-> +#include "../pci.h"
-> +#include <linux/pcie_em.h>
-> +
-> +#define DRIVER_NAME	"pcie-em"
-> +#define DRIVER_VERSION	"v1.0"
-> +
-> +#define NPEM_EXT_CAP_H
+I agree, and apparently I did sped through this because setting
+bus_groups before registration is certainly an option, will fix.
 
-Unused?
+>
+> > +     if (rc)
+> > +             goto err_flush;
+> > +
+> >       return 0;
+> >
+> > -err:
+> > +err_flush:
+> > +     bus_unregister(&cxl_bus_type);
+> > +err_bus:
+> > +     destroy_workqueue(cxl_bus_wq);
+> > +err_wq:
+> >       cxl_memdev_exit();
+> >       cxl_mbox_exit();
+> >       return rc;
+> > @@ -1342,7 +1423,9 @@ static __init int cxl_core_init(void)
+> >
+> >  static void cxl_core_exit(void)
+> >  {
+> > +     bus_remove_file(&cxl_bus_type, &bus_attr_flush);
+> >       bus_unregister(&cxl_bus_type);
+> > +     destroy_workqueue(cxl_bus_wq);
+> >       cxl_memdev_exit();
+> >       cxl_mbox_exit();
+> >  }
+> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> > index b71d40b68ccd..0bbe394f2f26 100644
+> > --- a/drivers/cxl/cxl.h
+> > +++ b/drivers/cxl/cxl.h
+> > @@ -323,6 +323,8 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
+> >  struct cxl_port *find_cxl_root(struct device *dev);
+> >  int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd);
+> >  int cxl_bus_rescan(void);
+> > +struct cxl_port *cxl_mem_find_port(struct cxl_memdev *cxlmd);
+>
+> Should be in previous patch where the function is defined.
 
-> +/*
-> + * NPEM & _DSM use the same state bit definitions
-> + */
-> +#define	NPEM_STATE_OK		BIT(2)
-> +#define	NPEM_STATE_LOCATE	BIT(3)
-> +#define	NPEM_STATE_FAILED	BIT(4)
-> +#define	NPEM_STATE_REBUILD	BIT(5)
-> +#define	NPEM_STATE_PFA		BIT(6)  /* predicted failure analysis */
-> +#define	NPEM_STATE_HOTSPARE	BIT(7)
-> +#define	NPEM_STATE_ICA		BIT(8)  /* in a critical array */
-> +#define	NPEM_STATE_IFA		BIT(9)  /* in a failed array */
-> +#define	NPEM_STATE_INVALID	BIT(10)
-> +#define	NPEM_STATE_DISABLED	BIT(11)
-> +#define NPEM_ALL_STATES		GENMASK(11, 2)
-> +
-> +static const u32 to_npem_state[ENCLOSURE_LED_MAX] = {
-> +	[ENCLOSURE_LED_FAULT]		= NPEM_STATE_FAILED,
-> +	[ENCLOSURE_LED_LOCATE]		= NPEM_STATE_LOCATE,
-> +	[ENCLOSURE_LED_OK]		= NPEM_STATE_OK,
-> +	[ENCLOSURE_LED_REBUILD]		= NPEM_STATE_REBUILD,
-> +	[ENCLOSURE_LED_PRDFAIL]		= NPEM_STATE_PFA,
-> +	[ENCLOSURE_LED_HOTSPARE]	= NPEM_STATE_HOTSPARE,
-> +	[ENCLOSURE_LED_ICA]		= NPEM_STATE_ICA,
-> +	[ENCLOSURE_LED_IFA]		= NPEM_STATE_IFA,
-> +	[ENCLOSURE_LED_DISABLED]	= NPEM_STATE_DISABLED,
-> +};
-> +
-> +/*
-> + * pcie_em_dev->pdev could be the drive itself or the downstream port
-> + * leading to it
+Not really, because this patch is the first time it is used outside of
+core/port.c. I would say convert the previous patch to make it static,
+and move the export into this patch, but I'm also tempted to leave
+well enough alone here unless there some additional reason to respin
+patch 32.
 
-Which downstream port?  The closest one?  Or any downstream port in
-the path?
+>
+> > +bool schedule_cxl_memdev_detach(struct cxl_memdev *cxlmd);
+> >
+>
+> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> > index 0ba0cf8dcdbc..7ba0edb4a1ab 100644
+> > --- a/drivers/cxl/cxlmem.h
+> > +++ b/drivers/cxl/cxlmem.h
+> > @@ -35,11 +35,14 @@
+> >   * @cdev: char dev core object for ioctl operations
+> >   * @cxlds: The device state backing this device
+> >   * @id: id number of this memdev instance.
+> > + * @detach_work: active memdev lost a port in its ancestry
+> > + * @component_reg_phys: register base of component registers
+>
+> ?
 
-> + */
-> +struct pcie_em_dev {
-> +	struct pci_dev *pdev;			/* dev with controls */
-> +	struct pcie_em_led_state_ops *ops;	/* _DSM or NPEM ops */
-> +	struct enclosure_device *edev;
-> +	u32 states;				/* last written states */
-> +	u32 supported_states;
-> +	u16 npem_pos;				/* position of NPEM ext cap */
-> +	struct work_struct npem_work;		/* NPEM control write work func */
-> +	unsigned long last_ctrl_write;		/* time of last NPEM ctrl write */
+Rebase error.
 
-Wrap or better yet, shorten, to fit in 80 columns.  Also other
-instances below.
+>
+> >   */
+> >  struct cxl_memdev {
+> >       struct device dev;
+> >       struct cdev cdev;
+> >       struct cxl_dev_state *cxlds;
+> > +     struct work_struct detach_work;
+> >       int id;
+> >  };
+> >
+> > @@ -48,6 +51,12 @@ static inline struct cxl_memdev *to_cxl_memdev(struct device *dev)
+> >       return container_of(dev, struct cxl_memdev, dev);
+> >  }
+> >
+> > +bool is_cxl_memdev(struct device *dev);
+> > +static inline bool is_cxl_endpoint(struct cxl_port *port)
+> > +{
+> > +     return is_cxl_memdev(port->uport);
+> > +}
+> > +
+> >  struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds);
+> >
+> >  /**
+> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> > new file mode 100644
+> > index 000000000000..27f9dd0d55b6
+> > --- /dev/null
+> > +++ b/drivers/cxl/mem.c
+> > @@ -0,0 +1,222 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+> > +#include <linux/device.h>
+> > +#include <linux/module.h>
+> > +#include <linux/pci.h>
+> > +
+> > +#include "cxlmem.h"
+> > +#include "cxlpci.h"
+> > +
+> > +/**
+> > + * DOC: cxl mem
+> > + *
+> > + * CXL memory endpoint devices and switches are CXL capable devices that are
+> > + * participating in CXL.mem protocol. Their functionality builds on top of the
+> > + * CXL.io protocol that allows enumerating and configuring components via
+> > + * standard PCI mechanisms.
+> > + *
+> > + * The cxl_mem driver owns kicking off the enumeration of this CXL.mem
+> > + * capability. With the detection of a CXL capable endpoint, the driver will
+> > + * walk up to find the platform specific port it is connected to, and determine
+> > + * if there are intervening switches in the path. If there are switches, a
+> > + * secondary action to enumerate those (implemented in cxl_core).
+>
+> action is to
 
-> +};
-> +
-> +struct pcie_em_led_state_ops {
-> +	void (*init)(struct pcie_em_dev *emdev);
-> +	int (*get_supported_states)(struct pcie_em_dev *emdev);
-> +	int (*get_current_states)(struct pcie_em_dev *emdev, u32 *states);
-> +	int (*set_current_states)(struct pcie_em_dev *emdev);
-> +};
-> +
-> +static struct mutex pcie_em_lock;
-> +static int pcie_em_exiting;
+Yup.
 
-Hmmm.  I'm not a module expert, but I'm looking sort of sideways at
-this "exiting" thing.  Is this a common design pattern?
+>
+> > Finally the
+> > + * cxl_mem driver will add the device it is bound to as a CXL port for use in
+> > + * higher level operations.
+> > + */
+>
+> ...
+>
+>
+> > +
+> > +/**
+> > + * cxl_dvsec_decode_init() - Setup HDM decoding for the endpoint
+> > + * @cxlds: Device state
+> > + *
+> > + * Additionally, enables global HDM decoding. Warning: don't call this outside
+> > + * of probe. Once probe is complete, the port driver owns all access to the HDM
+> > + * decoder registers.
+> > + *
+> > + * Returns: false if DVSEC Ranges are being used instead of HDM decoders;
+> > + *       otherwise returns true.
+>
+> It feels like some of the paths below could reflect other problems
+> rather than an intention to use ranges.  Maybe this nees to have separate
+> error handling from detection of range register usage?
 
-> +#ifdef CONFIG_ACPI
-> +/*
-> + * _DSM LED control
-> + */
-> +static const guid_t pcie_pcie_em_dsm_guid = PCIE_SSD_LEDS_DSM_GUID;
-> +
-> +struct pcie_em_dsm_output {
-> +	u16 status;
-> +	u8 function_specific_err;
-> +	u8 vendor_specific_err;
-> +	u32 state;
-> +};
-> +
-> +static void dsm_status_err_print(struct pci_dev *pdev,
-> +				 struct pcie_em_dsm_output *output)
-> +{
-> +	switch (output->status) {
-> +	case 0:
-> +		break;
-> +	case 1:
-> +		pci_dbg(pdev, "_DSM not supported\n");
-> +		break;
-> +	case 2:
-> +		pci_dbg(pdev, "_DSM invalid input parameters\n");
-> +		break;
-> +	case 3:
-> +		pci_dbg(pdev, "_DSM communication error\n");
-> +		break;
-> +	case 4:
-> +		pci_dbg(pdev, "_DSM function-specific error 0x%x\n",
-> +			output->function_specific_err);
-> +		break;
-> +	case 5:
-> +		pci_dbg(pdev, "_DSM vendor-specific error 0x%x\n",
-> +			output->vendor_specific_err);
-> +		break;
-> +	default:
-> +		pci_dbg(pdev, "_DSM returned unknown status 0x%x\n",
-> +			output->status);
-> +	}
-> +}
-> +
-> +static int dsm_set(struct pci_dev *pdev, u32 value)
-> +{
-> +	acpi_handle handle;
-> +	union acpi_object *out_obj, arg3[2];
-> +	struct pcie_em_dsm_output *dsm_output;
-> +
-> +	handle = ACPI_HANDLE(&pdev->dev);
-> +	if (!handle)
-> +		return -ENODEV;
-> +
-> +	arg3[0].type = ACPI_TYPE_PACKAGE;
-> +	arg3[0].package.count = 1;
-> +	arg3[0].package.elements = &arg3[1];
-> +
-> +	arg3[1].type = ACPI_TYPE_BUFFER;
-> +	arg3[1].buffer.length = 4;
-> +	arg3[1].buffer.pointer = (u8 *)&value;
-> +
-> +	out_obj = acpi_evaluate_dsm_typed(handle, &pcie_pcie_em_dsm_guid,
-> +				1, SET_STATE_DSM, &arg3[0], ACPI_TYPE_BUFFER);
-> +	if (!out_obj)
-> +		return -EIO;
-> +
-> +	if (out_obj->buffer.length < 8) {
-> +		ACPI_FREE(out_obj);
-> +		return -EIO;
-> +	}
-> +
-> +	dsm_output = (struct pcie_em_dsm_output *)out_obj->buffer.pointer;
-> +
-> +	if (dsm_output->status != 0) {
-> +		dsm_status_err_print(pdev, dsm_output);
-> +		ACPI_FREE(out_obj);
-> +		return -EIO;
-> +	}
-> +	ACPI_FREE(out_obj);
-> +	return 0;
-> +}
-> +
-> +static int dsm_get(struct pci_dev *pdev, u64 dsm_func, u32 *output)
-> +{
-> +	acpi_handle handle;
-> +	union acpi_object *out_obj;
-> +	struct pcie_em_dsm_output *dsm_output;
-> +
-> +	handle = ACPI_HANDLE(&pdev->dev);
-> +	if (!handle)
-> +		return -ENODEV;
-> +
-> +	out_obj = acpi_evaluate_dsm_typed(handle, &pcie_pcie_em_dsm_guid, 0x1,
-> +					  dsm_func, NULL, ACPI_TYPE_BUFFER);
-> +	if (!out_obj)
-> +		return -EIO;
-> +
-> +	if (out_obj->buffer.length < 8) {
-> +		ACPI_FREE(out_obj);
-> +		return -EIO;
-> +	}
-> +
-> +	dsm_output = (struct pcie_em_dsm_output *)out_obj->buffer.pointer;
-> +	if (dsm_output->status != 0) {
-> +		dsm_status_err_print(pdev, dsm_output);
-> +		ACPI_FREE(out_obj);
-> +		return -EIO;
-> +	}
-> +
-> +	*output = dsm_output->state;
-> +	ACPI_FREE(out_obj);
-> +	return 0;
-> +}
-> +
-> +static int get_supported_states_dsm(struct pcie_em_dev *emdev)
-> +{
-> +	return dsm_get(emdev->pdev, GET_SUPPORTED_STATES_DSM, &emdev->supported_states);
-> +}
-> +
-> +static int get_current_states_dsm(struct pcie_em_dev *emdev, u32 *states)
-> +{
-> +	return dsm_get(emdev->pdev, GET_STATE_DSM, states);
-> +}
-> +
-> +static int set_current_states_dsm(struct pcie_em_dev *emdev)
-> +{
-> +	return dsm_set(emdev->pdev, emdev->states);
-> +}
-> +
-> +static struct pcie_em_led_state_ops dsm_pcie_em_led_state_ops = {
-> +	.get_supported_states	= get_supported_states_dsm,
-> +	.get_current_states	= get_current_states_dsm,
-> +	.set_current_states	= set_current_states_dsm,
-> +};
-> +
-> +/*
-> + * end of _DSM code
-> + */
-> +
-> +#endif /* CONFIG_ACPI */
-> +
-> +/*
-> + * NPEM LED control
-> + */
-> +
-> +static inline int npem_write_ctrl(struct pcie_em_dev *emdev, u32 reg)
-> +{
-> +	struct pci_dev *pdev = emdev->pdev;
-> +
-> +	emdev->last_ctrl_write = jiffies;
-> +	return pci_write_config_dword(pdev, emdev->npem_pos + PCI_NPEM_CTRL, reg);
-> +}
-> +
-> +static int get_supported_states_npem(struct pcie_em_dev *emdev)
-> +{
-> +	struct pci_dev *pdev = emdev->pdev;
-> +	u32 reg;
-> +	int ret;
-> +
-> +	ret = pci_read_config_dword(pdev, emdev->npem_pos + PCI_NPEM_CAP, &reg);
-> +	if (!ret)
-> +		emdev->supported_states = reg & NPEM_ALL_STATES;
-> +	return ret;
-> +}
-> +
-> +static int get_current_states_npem(struct pcie_em_dev *emdev, u32 *states)
-> +{
-> +	struct pci_dev *pdev = emdev->pdev;
-> +	u32 reg;
-> +	int ret;
-> +
-> +	ret = pci_read_config_dword(pdev, emdev->npem_pos + PCI_NPEM_CTRL, &reg);
-> +	if (!ret)
-> +		*states = reg & NPEM_ALL_STATES;
-> +	return ret;
-> +}
-> +
-> +static void npem_set_states_work(struct work_struct *w)
-> +{
-> +	struct pcie_em_dev *emdev = container_of(w, struct pcie_em_dev, npem_work);
-> +	struct pci_dev *pdev = emdev->pdev;
-> +	u32 status;
-> +
-> +	/*
-> +	 * per spec, wait up to 1 second for command completed status bit to be high
+I don't think they need to be broken out, but I do think the kdoc is a
+bit misleading, will clarify.
 
-Include spec citation, please.  "PCIe r6.0, sec 7.9.19.4," I think.
+>
+> > + */
+> > +__mock bool cxl_dvsec_decode_init(struct cxl_dev_state *cxlds)
+> > +{
+> > +     struct cxl_endpoint_dvsec_info *info = &cxlds->info;
+> > +     struct cxl_register_map map;
+> > +     struct cxl_component_reg_map *cmap = &map.component_map;
+> > +     bool global_enable, do_hdm_init = false;
+> > +     void __iomem *crb;
+> > +     u32 global_ctrl;
+> > +
+> > +     /* map hdm decoder */
+> > +     crb = ioremap(cxlds->component_reg_phys, CXL_COMPONENT_REG_BLOCK_SIZE);
+> > +     if (!crb) {
+> > +             dev_dbg(cxlds->dev, "Failed to map component registers\n");
+> > +             return false;
+> > +     }
+> > +
+> > +     cxl_probe_component_regs(cxlds->dev, crb, cmap);
+> > +     if (!cmap->hdm_decoder.valid) {
+> > +             dev_dbg(cxlds->dev, "Invalid HDM decoder registers\n");
+> > +             goto out;
+> > +     }
+> > +
+> > +     global_ctrl = readl(crb + cmap->hdm_decoder.offset +
+> > +                         CXL_HDM_DECODER_CTRL_OFFSET);
+> > +     global_enable = global_ctrl & CXL_HDM_DECODER_ENABLE;
+> > +     if (!global_enable && info->ranges) {
+> > +             dev_dbg(cxlds->dev, "DVSEC regions\n");
+>
+> Perhaps worth adding a little more description to that.
+> Perhaps
+>
+> "DVSEC ranges already programmed and HDM decoders not enabled."
 
-Capitalize these like normal English sentences.
+Looks good.
 
-> +	 */
-> +	while (true) {
-> +		if (pci_read_config_dword(pdev, emdev->npem_pos + PCI_NPEM_STATUS,
-> +					  &status))
-> +			return;
-> +		if ((status & PCI_NPEM_STATUS_CC) ||
-> +		    time_after(jiffies, emdev->last_ctrl_write + HZ)) {
-> +			break;
-> +		}
-> +		msleep(20);
-> +	}
-> +	npem_write_ctrl(emdev, emdev->states | PCI_NPEM_CTRL_EN);
-> +}
-> +
-> +static int set_current_states_npem(struct pcie_em_dev *emdev)
-> +{
-> +	schedule_work(&emdev->npem_work);
-> +	return 0;
-> +}
-> +
-> +static void npem_init(struct pcie_em_dev *emdev)
-> +{
-> +	struct pci_dev *pdev = emdev->pdev;
-> +
-> +	emdev->npem_pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_NPEM);
+>
+> > +             goto out;
+> > +     }
+> > +
+> > +     do_hdm_init = true;
+> > +
+> > +     /*
+> > +      * Turn on global enable now since DVSEC ranges aren't being used and
+> > +      * we'll eventually want the decoder enabled. This also prevents special
+> > +      * casing in the port driver since this only applies to endpoints.
+>
+> Possibly worth saying why it isn't worth turning this off again in the remove
+> path...
 
-I don't really like the fact that we don't check for 0 here.  I know
-there's something up the chain that checks this, but it's a fair
-amount of work to verify that.  I'd like it to be completely obvious
-that this isn't going to poke at the wrong things in config space.
+Yeah, unlike PCI where the BARs are programmed at bus scan time and
+the driver does the enable, CXL decoders are programmed synchronously
+with enabling new interleaves. Also, for devices that have some
+capacity already mapped by the BIOS into "Fixed" regions in the CFMWS,
+global disable would potentially crash / hang the kernel.
 
-Maybe .init() should be able to return failure?
+Will add a comment for that and delete the comment about "preventing
+special casing" since that's more changelog fodder than helpful inline
+code comment.
 
-> +	npem_write_ctrl(emdev, PCI_NPEM_CTRL_EN);
-> +	INIT_WORK(&emdev->npem_work, npem_set_states_work);
-> +}
-> +
-> +static struct pcie_em_led_state_ops npem_pcie_em_led_state_ops = {
-> +	.init			= npem_init,
-> +	.get_supported_states	= get_supported_states_npem,
-> +	.get_current_states	= get_current_states_npem,
-> +	.set_current_states	= set_current_states_npem,
-> +};
-> +
-> +/*
-> + * end of NPEM code
-> + */
-> +
-> +static void pcie_em_get_led(struct enclosure_device *edev,
-> +			     struct enclosure_component *ecomp,
-> +			     enum enclosure_component_led led)
-> +{
-> +	struct pcie_em_dev *emdev = ecomp->scratch;
-> +	u32 states = 0;
-> +
-> +	emdev->ops->get_current_states(emdev, &states);
-> +	ecomp->led[led] = !!(states & to_npem_state[led]) ?
-> +		ENCLOSURE_SETTING_ENABLED : ENCLOSURE_SETTING_DISABLED;
+>
+> > +      */
+> > +     if (!global_enable) {
+> > +             dev_dbg(cxlds->dev, "Enabling HDM decode\n");
+> > +             writel(global_ctrl | CXL_HDM_DECODER_ENABLE,
+> > +                    crb + cmap->hdm_decoder.offset +
+> > +                            CXL_HDM_DECODER_CTRL_OFFSET);
+> > +     }
+> > +
+> > +out:
+> > +     iounmap(crb);
+> > +     return do_hdm_init;
+> > +}
+> > +
+>
+> > +MODULE_LICENSE("GPL v2");
+> > +MODULE_IMPORT_NS(CXL);
+> > +MODULE_ALIAS_CXL(CXL_DEVICE_MEMORY_EXPANDER);
+> > +MODULE_SOFTDEP("pre: cxl_port");
+>
+> As above, a 'why' comment for the softdep would be a good to have.
 
-Personal bias: I don't really care for "!!".  Does it add something
-here?  It looks like this would work the same without it.
+Sure.
 
-> +}
-> +
-> +static int pcie_em_set_led(struct enclosure_device *edev,
-> +			 struct enclosure_component *ecomp,
-> +			 enum enclosure_component_led led,
-> +			 enum enclosure_component_setting val)
-> +{
-> +	struct pcie_em_dev *emdev = ecomp->scratch;
-> +	u32 npem_state = to_npem_state[led], states;
-> +	int rc;
-> +
-> +	if (val != ENCLOSURE_SETTING_ENABLED
-> +	    && val != ENCLOSURE_SETTING_DISABLED)
-> +		return -EINVAL;
-> +
-> +	states = emdev->states & ~npem_state;
-> +	states |= val == ENCLOSURE_SETTING_ENABLED ? npem_state : 0;
-> +
-> +	if ((states & emdev->supported_states) != states)
-> +		return -EINVAL;
-> +
-> +	emdev->states = states;
-> +	rc = emdev->ops->set_current_states(emdev);
+>
+> > diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> > index ae94a537eccc..27ab7f8d122e 100644
+> > --- a/drivers/cxl/port.c
+> > +++ b/drivers/cxl/port.c
+> > @@ -25,16 +25,27 @@
+> >   * PCIe topology.
+> >   */
+> >
+> > +static void schedule_detach(void *cxlmd)
+> > +{
+> > +     schedule_cxl_memdev_detach(cxlmd);
+> > +}
+> > +
+> >  static int cxl_port_probe(struct device *dev)
+> >  {
+> >       struct cxl_port *port = to_cxl_port(dev);
+> >       struct cxl_hdm *cxlhdm;
+> >       int rc;
+> >
+> > +     if (is_cxl_endpoint(port)) {
+> > +             struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport);
+> > +
+> > +             get_device(&cxlmd->dev);
+> > +             return devm_add_action_or_reset(dev, schedule_detach, cxlmd);
+> > +     }
+> > +
+> >       rc = devm_cxl_port_enumerate_dports(port);
+> >       if (rc < 0)
+> >               return rc;
+> > -
+>
+> Reasonable to drop this, but not in this patch.
 
-No need for "rc"; you can just
+Ok.
 
-  return emdev->ops->set_current_states(emdev);
 
-> +	/*
-> +	 * save last written state so it doesn't have to be re-read via NPEM/
-> +	 * _DSM on the next write
-> +	 */
-
-I'm guessing this comment applies to "emdev->states = states" above,
-and should be moved before that?
-
-It doesn't look like _DSM has any need to reread anything; you could
-just call "emdev->ops->set_current_states(emdev, states)" for it.
-
-But for NPEM it looks like you might need to save the states for the
-scheduled work.  Maybe the comment needs to omit _DSM?  But even NPEM
-doesn't *reread* anything.  I guess I just don't understand the
-comment at all.
-
-> +	return rc;
-> +}
-> +
-> +static struct enclosure_component_callbacks pcie_em_cb = {
-> +	.get_led	= pcie_em_get_led,
-> +	.set_led	= pcie_em_set_led,
-> +};
-> +
-> +static void pcie_em_remove(struct auxiliary_device *adev)
-> +{
-> +	struct pcie_em_dev *emdev = dev_get_drvdata(&adev->dev);
-> +
-> +	emdev->edev->scratch = NULL;
-> +	enclosure_unregister(emdev->edev);
-> +	dev_set_drvdata(&adev->dev, NULL);
-> +	kfree(emdev);
-> +}
-> +
-> +static int add_pcie_em_dev(struct auxiliary_device *adev,
-> +				struct pcie_em_led_state_ops *ops)
-> +{
-> +	struct pcie_em_dev *emdev;
-> +	struct pci_dev *pdev = to_pci_dev(adev->dev.parent);
-> +	struct enclosure_device *edev;
-> +	struct enclosure_component *ecomp;
-> +	int rc = 0;
-> +
-> +	mutex_lock(&pcie_em_lock);
-> +	if (pcie_em_exiting)
-> +		goto out_unlock;
-> +
-> +	emdev = kzalloc(sizeof(*emdev), GFP_KERNEL);
-> +	if (!emdev) {
-> +		rc = -ENOMEM;
-> +		goto out_unlock;
-> +	}
-> +	emdev->pdev = pdev;
-> +	emdev->ops = ops;
-> +	emdev->states = 0;
-> +	if (emdev->ops->init)
-> +		emdev->ops->init(emdev);
-> +
-> +	if (emdev->ops->get_supported_states(emdev) != 0)
-> +		goto out_free;
-> +
-> +	edev = enclosure_register(&pdev->dev, dev_name(&adev->dev), 1, &pcie_em_cb);
-> +	if (!edev)
-> +		goto out_free;
-> +
-> +	ecomp = enclosure_component_alloc(edev, 0, ENCLOSURE_COMPONENT_DEVICE, dev_name(&pdev->dev));
-> +	if (IS_ERR(ecomp))
-> +		goto out_unreg;
-> +
-> +	ecomp->type = ENCLOSURE_COMPONENT_ARRAY_DEVICE;
-> +	rc = enclosure_component_register(ecomp);
-> +	if (rc < 0)
-> +		goto out_unreg;
-> +
-> +	ecomp->scratch = emdev;
-> +	emdev->edev = edev;
-> +	dev_set_drvdata(&adev->dev, emdev);
-> +	goto out_unlock;
-> +
-> +out_unreg:
-> +	enclosure_unregister(edev);
-> +out_free:
-> +	kfree(emdev);
-> +out_unlock:
-> +	mutex_unlock(&pcie_em_lock);
-> +	return rc;
-> +}
-> +
-> +static int pcie_em_probe(struct auxiliary_device *adev,
-> +			  const struct auxiliary_device_id *id)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(adev->dev.parent);
-> +
-> +	/*
-> +	 * The PCI Firmware Spec Rev 3.3 says that the _DSM should be used
-
-Can you include the section reference, please?
-
-> +	 * in preference to NPEM if available.
-> +	 */
-> +#ifdef CONFIG_ACPI
-> +	if (pci_has_pcie_em_dsm(pdev))
-> +		return add_pcie_em_dev(adev, &dsm_pcie_em_led_state_ops);
-> +#endif
-> +	if (pci_has_npem(pdev))
-> +		return add_pcie_em_dev(adev, &npem_pcie_em_led_state_ops);
-> +
-> +	/*
-> +	 * should not get here
-> +	 */
-
-What assures us that we shouldn't get here?  I think it's all the
-magic inside register_pcie_em_auxdev(), but honestly, that's pretty
-hard to verify.  It must have something do with "nvme.pcie_em" devices
-only existing if pci_has_enclosure_management(), but I can't connect
-the dots there because "nvme.pcie_em" only appears here.
-
-> +	return -ENODEV;
-> +}
-> +
-> +static const struct auxiliary_device_id pcie_em_id_table[] = {
-> +	{ .name = "nvme.pcie_em", },
-> +//	{ .name = "cxl.pcie_em", },
-> +//	{ .name = "pcieport.pcie_em", },
-> +	{},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(auxiliary, pcie_em_id_table);
-> +
-> +static struct auxiliary_driver pcie_em_driver = {
-> +	.name = "pcie_em",
-> +	.probe = pcie_em_probe,
-> +	.remove = pcie_em_remove,
-> +	.id_table = pcie_em_id_table,
-> +};
-> +
-> +static int __init pcie_em_init(void)
-> +{
-> +	mutex_init(&pcie_em_lock);
-> +	auxiliary_driver_register(&pcie_em_driver);
-> +	return 0;
-> +}
-> +
-> +static void __exit pcie_em_exit(void)
-> +{
-> +	mutex_lock(&pcie_em_lock);
-> +	pcie_em_exiting = 1;
-> +	mutex_unlock(&pcie_em_lock);
-> +	auxiliary_driver_unregister(&pcie_em_driver);
-> +}
-> +
-> +module_init(pcie_em_init);
-> +module_exit(pcie_em_exit);
-> +
-> +MODULE_AUTHOR("Stuart Hayes <stuart.w.hayes@gmail.com>");
-> +MODULE_DESCRIPTION("Support for PCIe SSD Status LEDs");
-> +MODULE_LICENSE("GPL");
-> diff --git a/include/linux/pcie_em.h b/include/linux/pcie_em.h
-> new file mode 100644
-> index 000000000000..26b6d68cccd3
-> --- /dev/null
-> +++ b/include/linux/pcie_em.h
-> @@ -0,0 +1,97 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef DRIVERS_PCI_PCIE_EM_H
-> +#define DRIVERS_PCI_PCIE_EM_H
-> +
-> +#include <linux/pci.h>
-> +#include <linux/acpi.h>
-> +
-
-AFAICT, most of the stuff here is only needed internally and only the
-register_pcie_em_auxdev() and unregister_pcie_em_auxdev() declarations
-are actually needed outside driver/pci.  It'd be nice if all the rest
-were not visible outside drivers/pci.
-
-I don't know enough about modules to know how this works if nvme calls
-register_pcie_em_auxdev() when the pcie_em.o module is not loaded.  Is
-there some module dependency that guarantees that can never happen?
-
-> +#define PCIE_SSD_LEDS_DSM_GUID						\
-> +	GUID_INIT(0x5d524d9d, 0xfff9, 0x4d4b,				\
-> +		  0x8c, 0xb7, 0x74, 0x7e, 0xd5, 0x1e, 0x19, 0x4d)
-> +
-> +#define GET_SUPPORTED_STATES_DSM	0x01
-> +#define GET_STATE_DSM			0x02
-> +#define SET_STATE_DSM			0x03
-> +
-> +static inline bool pci_has_pcie_em_dsm(struct pci_dev *pdev)
-> +{
-> +#ifdef CONFIG_ACPI
-> +	acpi_handle handle;
-> +	const guid_t pcie_ssd_leds_dsm_guid = PCIE_SSD_LEDS_DSM_GUID;
-> +
-> +	handle = ACPI_HANDLE(&pdev->dev);
-> +	if (handle)
-> +		if (acpi_check_dsm(handle, &pcie_ssd_leds_dsm_guid, 0x1,
-> +				   1 << GET_SUPPORTED_STATES_DSM ||
-> +				   1 << GET_STATE_DSM ||
-> +				   1 << SET_STATE_DSM))
-> +			return true;
-> +#endif
-> +	return false;
-> +}
-> +
-> +static inline bool pci_has_npem(struct pci_dev *pdev)
-> +{
-> +	int pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_NPEM);
-
-It's a real shame we need to do this twice (here and in npem_init()).
-
-> +	u32 cap;
-> +
-> +	if (pos)
-> +		if (!pci_read_config_dword(pdev, pos + PCI_NPEM_CAP, &cap))
-> +			return cap & PCI_NPEM_CAP_NPEM_CAP;
-> +	return false;
-> +}
-> +
-> +static inline bool pci_has_enclosure_management(struct pci_dev *pdev)
-> +{
-> +	return pci_has_pcie_em_dsm(pdev) || pci_has_npem(pdev);
-> +}
-> +
-> +static inline void release_pcie_em_aux_device(struct device *dev)
-> +{
-> +	kfree(to_auxiliary_dev(dev));
-> +}
-> +
-> +static inline struct auxiliary_device *register_pcie_em_auxdev(struct device *dev, int id)
-> +{
-> +	struct auxiliary_device *adev;
-> +	int ret;
-> +
-> +	if (!pci_has_enclosure_management(to_pci_dev(dev)))
-> +		return NULL;
-> +
-> +	adev = kzalloc(sizeof(*adev), GFP_KERNEL);
-> +	if (!adev)
-> +		goto em_reg_out_err;
-> +
-> +	adev->name = "pcie_em";
-> +	adev->dev.parent = dev;
-> +	adev->dev.release = release_pcie_em_aux_device;
-> +	adev->id = id;
-> +
-> +	ret = auxiliary_device_init(adev);
-> +	if (ret < 0)
-> +		goto em_reg_out_free;
-> +
-> +	ret = auxiliary_device_add(adev);
-> +	if (ret) {
-> +		auxiliary_device_uninit(adev);
-> +		goto em_reg_out_free;
-> +	}
-> +
-> +	return adev;
-> +em_reg_out_free:
-> +	kfree(adev);
-> +em_reg_out_err:
-> +	dev_warn(dev, "failed to register pcie_em device\n");
-> +	return NULL;
-> +}
-> +
-> +static inline void unregister_pcie_em_auxdev(struct auxiliary_device *auxdev)
-> +{
-> +	if (auxdev) {
-> +		auxiliary_device_delete(auxdev);
-> +		auxiliary_device_uninit(auxdev);
-> +	}
-
-This makes me nervous because IIUC this relies on the driver (nvme,
-etc) to do the right thing if the PCI device gets removed.  If the
-driver forgets to call this, we have this auxiliary device hanging
-around and probably accessible via sysfs, and something probably blows
-up if the user reads/writes it.
-
-> +}
-> +
-> +#endif /* DRIVERS_PCI_PCIE_EM_H */
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index ff6ccbc6efe9..375540065c29 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -736,7 +736,8 @@
->  #define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-Specific */
->  #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
->  #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
-> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL_16GT
-> +#define PCI_EXT_CAP_ID_NPEM	0x29	/* Native PCIe Enclosure Management */
-> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_NPEM
->  
->  #define PCI_EXT_CAP_DSN_SIZEOF	12
->  #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
-> @@ -1098,4 +1099,12 @@
->  #define  PCI_PL_16GT_LE_CTRL_USP_TX_PRESET_MASK		0x000000F0
->  #define  PCI_PL_16GT_LE_CTRL_USP_TX_PRESET_SHIFT	4
->  
-> +/* NPEM */
-> +#define PCI_NPEM_CAP		0x04
-> +#define  PCI_NPEM_CAP_NPEM_CAP		0x00000001  /* dev is NPEM capable */
-> +#define PCI_NPEM_CTRL		0x08
-> +#define  PCI_NPEM_CTRL_EN		0x00000001  /* Enable NPEM */
-> +#define PCI_NPEM_STATUS		0x0c
-> +#define  PCI_NPEM_STATUS_CC		0x00000001  /* NPEM command completed */
-> +
->  #endif /* LINUX_PCI_REGS_H */
-> -- 
-> 2.31.1
-> 
+>
+>
+> >       if (rc == 1)
+> >               return devm_cxl_add_passthrough_decoder(port);
+> >
+>
