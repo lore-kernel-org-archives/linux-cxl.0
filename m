@@ -2,172 +2,147 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4266FC433F5
-	for <linux-cxl@archiver.kernel.org>; Fri,  4 Feb 2022 02:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA5AC433EF
+	for <linux-cxl@archiver.kernel.org>; Fri,  4 Feb 2022 04:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242219AbiBDCpo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 3 Feb 2022 21:45:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57680 "EHLO
+        id S1356956AbiBDE0M (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 3 Feb 2022 23:26:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230467AbiBDCpn (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 3 Feb 2022 21:45:43 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3706C06173B
-        for <linux-cxl@vger.kernel.org>; Thu,  3 Feb 2022 18:45:43 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id cq9-20020a17090af98900b001b8262fe2d5so5048397pjb.0
-        for <linux-cxl@vger.kernel.org>; Thu, 03 Feb 2022 18:45:43 -0800 (PST)
+        with ESMTP id S1356935AbiBDE0L (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 3 Feb 2022 23:26:11 -0500
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29EE9C061714
+        for <linux-cxl@vger.kernel.org>; Thu,  3 Feb 2022 20:26:11 -0800 (PST)
+Received: by mail-pl1-x62f.google.com with SMTP id y17so4112002plg.7
+        for <linux-cxl@vger.kernel.org>; Thu, 03 Feb 2022 20:26:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8ybJv4007VY1nVqz0l0+c5F0IO2JpuCUf6LTy70kbUk=;
-        b=WW0nPvokReJnYzJlT6bzNxjhgdJLwQxhUi5+wJj67wgjQBkMLkHkTqKyC5s0TKUXNy
-         qvznZcNGeR9MUl0+7fWkjEMSs8TNCdLmPibjqsJP2GX4zA0jhvniADeMvSJGoBc+nWuv
-         6eHdjEhadO10+CBzftQWedDygxk99FG8YMTxYgApAEm2uErs3kMSzwjiBozIh9ygq7/P
-         5PE7EybSKgIE3G2HZyKBVY1lNTczXwMIr/kYaDwQGm95yEETcujXirRtllOVXSt1c0Ws
-         ziQejWl947d5gGg0cXRNusmZW4+BTEfV5wfyGQeTOnhzaeQYgl1GcjRW9wSvhgMhS835
-         b0CQ==
+         :cc;
+        bh=qNO8XI0s2IJe0dOG++UNZPM+4qBVHP9LahgM133K508=;
+        b=F33tz2gW5xc+H/zo8drJNNoYOl5wWG4oYZOYKPKkqoLlCV1LTAXK4I8i1rhkUFhPg3
+         xNdeuMQ2fsuPezb1NVm8BKn1Q77zsjqYWno0IO+aiwcEEsJ6P5JSKpxw9kx1LnYLlIu7
+         mPeJEDe92aWYyHKc4YTNwg3u95JrARl3C06DMHUVckI7XOFgaozT7feSDOK4ueMvdzwt
+         Q8mbO8ci6SzLV5c5wRfUFRBVfmnc+gMI9oeSV8kH8yaZI1z+ZKYA7gOvU9GN0UfTKcMU
+         b9Uzzu2Bp4292NQnk7W03v9cxnHcebhdYINglNfaeeQkftzTGvGIcwnvkz9zOW/lbrGO
+         TCgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8ybJv4007VY1nVqz0l0+c5F0IO2JpuCUf6LTy70kbUk=;
-        b=7QWvKsWCYcuF/JEs7wLfuR2m4QrhR+L73fF8P53juzmwrFu1kqpJC0nKDZotYlaxcG
-         JTXiCWPcXHYxVUGSPshQSRCURLGJmcIHzjFnRiJNBT6yJQhtW0DA1u+p9W7dnYmMtYK5
-         DZAyTD0kS/928sgupDEhPvI7XrUFZevZdMbv5AkVEt2mjHhnH3O2GVxocsTL+5nqc1vP
-         1dC1ZjwEMhbVWT40hB4HJIm3paa1bhBxq20Nw/TlOkXRvgti7Jm6O2+nry4TFWvLn+85
-         SXFODtEK8piDIPcBDY5T5wGgb5t/tN3EtE+ytJCaunURRvhF7yGZHiIcWcbUBiQQjB54
-         CNvQ==
-X-Gm-Message-State: AOAM532/mEnnzWW9VFLydi4Bok9U+UcY8roIVhq8DGULgjUSiwgu8O5E
-        vAP43eNDU8IWAENSE5L4KnYR43Vnsy/n6z503XYcAQ==
-X-Google-Smtp-Source: ABdhPJzGR2iKkxbJY5KRKyOe32ftl29+6yRc08Uv9RS5UK6af4JeKS+PxqjGm2T6anVIFVtDn0pa/Rfbs7i78Olk5DA=
-X-Received: by 2002:a17:90b:1bcc:: with SMTP id oa12mr754529pjb.93.1643942743215;
- Thu, 03 Feb 2022 18:45:43 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=qNO8XI0s2IJe0dOG++UNZPM+4qBVHP9LahgM133K508=;
+        b=54Du2TOHGQ70eG894G+AjuoqWyHCM1vTXGmVk6mwfFi+fCGr5wL0wTLBG0oA4LNx30
+         d2p0xkde29JCmvsF9y+wlzDhYw936oG5zTeb/PoqSfSMN4Uc50388qzyjWFP8vSjq3KB
+         vwmtPG30lEld5fJ3FLEy/t7cjLeBv5onhx92N60f0ZD4+H7O1v2xR15JBlcbk9Zol6L2
+         gxPH6X/UsHxl04MebcJR5SmQr+thbco78RHg9GP/bj8p/c7Q6NtlR1azZx+kIYKGqVnD
+         DAT6jKr7wd4cc8kcwjMswr65oESOmRbtpSodzb55Ugydr9G64oUoPzbZrR6PxtRyJE2y
+         KAOA==
+X-Gm-Message-State: AOAM5319jCYMjpAKXrk1pma5HACwI+EXtIcNEAQavZYInrmUTLxkV3Yo
+        PsZ53FWQrJp4Nkl+rPxsBb8sw0yN5rqVBJJiAVszswlB9t0=
+X-Google-Smtp-Source: ABdhPJwqyG+G+9GgrIrs1fMv3a+GqhlWXZ0SovqqjLooA08PQJQWr7FqJSewXVV+gWYIby0fPFo2Z9M/9sb26O8QRtw=
+X-Received: by 2002:a17:902:bcca:: with SMTP id o10mr1350771pls.147.1643948770583;
+ Thu, 03 Feb 2022 20:26:10 -0800 (PST)
 MIME-Version: 1.0
-References: <20220128002707.391076-1-ben.widawsky@intel.com>
- <20220128002707.391076-3-ben.widawsky@intel.com> <CAPcyv4hHJcPLRJM-7z+wKhjBhp9HH2qXuEeC0VfDnD6yU9H-Wg@mail.gmail.com>
- <20220201231117.lksqoukbvss6e3ec@intel.com> <CAPcyv4iGQWXX8rzCH7BJUSyvDXbdiuHw4kLiuqGmVVBGTh2a1Q@mail.gmail.com>
- <20220203222300.gf4st36yoqjxq5q6@intel.com> <CAPcyv4icq8_9E+ziU5KKYrAepUtNP32Qf6wYGYpcUU2K1P4mAA@mail.gmail.com>
- <20220204001950.cxncxxxsmoyc6jcy@intel.com>
-In-Reply-To: <20220204001950.cxncxxxsmoyc6jcy@intel.com>
+References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164298428430.3018233.16409089892707993289.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20220131184126.00002a47@Huawei.com> <CAPcyv4iYpj7MH4kKMP57ouHb85GffEmhXPupq5i1mwJwzFXr0w@mail.gmail.com>
+ <20220202094437.00003c03@Huawei.com> <CAPcyv4hwdMetDJ-+yL9-2rY92g2C4wWPqpRiQULaX_M6ZQPMtA@mail.gmail.com>
+ <20220203094123.000049e6@Huawei.com> <CAPcyv4gJozea7aDg+KyKdwEbSO5PV-rUUGC5u-6NNTHA755etA@mail.gmail.com>
+ <20220203180532.00007083@Huawei.com>
+In-Reply-To: <20220203180532.00007083@Huawei.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 3 Feb 2022 18:45:30 -0800
-Message-ID: <CAPcyv4gYzeYUNBDobktrNRsBvqx1YBchnLi3YN6fTqm0RxemWA@mail.gmail.com>
-Subject: Re: [PATCH v3 02/14] cxl/region: Introduce concept of region configuration
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, patches@lists.linux.dev,
-        kernel test robot <lkp@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        Linux PCI <linux-pci@vger.kernel.org>
+Date:   Thu, 3 Feb 2022 20:25:58 -0800
+Message-ID: <CAPcyv4hDLVye0UGPchHP__n+_hdNL1ZFqPawcz47hoOePBuggA@mail.gmail.com>
+Subject: Re: [PATCH v3 31/40] cxl/memdev: Add numa_node attribute
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Feb 3, 2022 at 4:20 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
-[..]
-> > > > Basic input validation to me is things like:
-> > > >
-> > > > - Don't allow writes while the region is active
-> > > > - Check that values are in bound. So yes, the interleave-ways value=
- of
-> > > > 3 would fail until the kernel supports it, and granularity values >
-> > > > 16K would also fail.
-> > > > - Check that memdevs are actually downstream targets of the given d=
-ecoder
-> > > > - Check that the region uuid is unique
+On Thu, Feb 3, 2022 at 10:15 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Thu, 3 Feb 2022 08:59:44 -0800
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> > On Thu, Feb 3, 2022 at 1:41 AM Jonathan Cameron
+> > <Jonathan.Cameron@huawei.com> wrote:
 > > >
-> > > These are obviously easy and informative at attr store time (in fact,=
- active was
-> > > meant to be checked already for many cases). So if we agree to codify=
- this at
-> > > probe via WARN, and add it to kdoc, I've no problem with it.
-> >
-> > Why is WARN needed? Either the sysfs validation does it job correctly
-> > or it doesn't. Also if sysfs didn't WARN when the bad input is
-> > specified why would the core do anything higher than dev_err()?
-> > Basically I think the bar for WARN is obvious kernel programming error
-> > where only a kernel-developer will see it vs EINVAL at runtime
-> > scenarios. I have seen Greg raise the bar for WARN in his reviews
-> > given how many deployments turn on 'panic_on_warn'.
->
-> Ultimately some checking will need to occur in one form or another in reg=
-ion
-> probe(). Either explicit via conditional: if (!is_valid(interleave_ways))=
- return
-> -EINVAL, or implicitly, for example 1 << (rootd_ig - cxlr_ig) is some inv=
-alid
-> nonsense which later fails host bridge programming verification. Before
-> discussing further, which are you suggesting?
-
-Explicit validation at probe in addition to the explicit validation at
-the sysfs boundary (as much as possible to report errors early). The
-"at probe time" validation does not know if this was a new region, or
-one enumerated from LSA or the configuration that the BIOS specified.
-So I do expect validation overlap, but there will also be distinct
-checks for those different scenarios. For example, see how NVDIMM
-validates namespace configuration writes via sysfs, but does not
-validate the LSA because it's writing the label and had better be
-prepared to read what it writes.
-
->
-> >
-> > > > - Check that decoder has capacity
-> > > > - Check that the memdev has capacity
-> > > > - Check that the decoder to map the DPA is actually available given
-> > > > decoders must be programmed in increasing DPA order
+> > > On Wed, 2 Feb 2022 07:44:37 -0800
+> > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > >
+> > > > On Wed, Feb 2, 2022 at 1:45 AM Jonathan Cameron
+> > > > <Jonathan.Cameron@huawei.com> wrote:
+> > > > >
+> > > > > On Tue, 1 Feb 2022 15:57:10 -0800
+> > > > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > >
+> > > > > > On Mon, Jan 31, 2022 at 10:41 AM Jonathan Cameron
+> > > > > > <Jonathan.Cameron@huawei.com> wrote:
+> > > > > > >
+> > > > > > > On Sun, 23 Jan 2022 16:31:24 -0800
+> > > > > > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > > > >
+> > > > > > > > While CXL memory targets will have their own memory target node,
+> > > > > > > > individual memory devices may be affinitized like other PCI devices.
+> > > > > > > > Emit that attribute for memdevs.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > > > > > >
+> > > > > > > Hmm. Is this just duplicating what we can get from
+> > > > > > > the PCI device?  It feels a bit like overkill to have it here
+> > > > > > > as well.
+> > > > > >
+> > > > > > Not all cxl_memdevs are associated with PCI devices.
+> > > > >
+> > > > > Platform devices have numa nodes too...
 > > > >
-> > > > Essentially any validation short of walking the topology to program
-> > > > upstream decoders since those errors are only resolved by racing
-> > > > region probes that try to grab upstream decoder resources.
+> > > > So what's the harm in having a numa_node attribute local to the memdev?
 > > > >
 > > >
-> > > I intentionally avoided doing a lot of these until probe because it s=
-eemed like
-> > > not a great policy to deny regions from being populated if another re=
-gion
-> > > utilizing those resources hasn't been bound yes. For a simple example=
-, if x1
-> > > region A is created and utilizes all of memdev =C9=91's capacity you =
-block out any
-> > > other region setup using memdev =C9=91, even if region A wasn't bound=
-. There's a
-> > > similar problem with specifying decoders as part of configuration.
-> > >
-> > > I'll infer from your comment that you are fine with this tradeoff, or=
- you have
-> > > some other way to manage this in mind.
+> > > I'm not really against, it just wanted to raise the question of
+> > > whether we want these to go further than the granularity at which
+> > > numa nodes can be assigned.
 > >
-> > It comes back to observability if threadA allocates all the DPA then
-> > yes all other threads should see -ENOSPC. No different than if 3 fdisk
-> > threads all tried to create a partition, the first one to the kernel
-> > wins. If threadA does not end up activating that regionA's capacity
-> > that's userspace's fault, and the admin needs to make sure that
-> > configuration does not race itself. The kernel allocating DPA
-> > immediately lets those races be found early such that threadB finds
-> > all the DPA gone and stops trying to create the region.
+> > What is the "granularity at which numa nodes can be assigned"? It
+> > sounds like you are referencing a standard / document, so maybe I
+> > missed something. Certainly Proximity Domains != Linux NUMA nodes so
+> > it's not ACPI.
 >
-> Okay. I don't have a strong opinion on how userspace should or shouldn't =
-use
-> this interface. It seems less friendly to do it this way, but per the fol=
-lowing
-> comment, if it's root only, it doesn't really matter.
+> Sure, it's the fusion of a number of possible sources, one of which
+> is ACPI. If there is a reason why it differs to the parent device
+> (which can be ACPI, or can just be from a bunch of other places which
+> I'm sure will keep growing) then it definitely makes sense to expose
+> it at that level.
 >
-> I was under the impression you expected userspace to manage the DPA as we=
-ll. I
-> don't really see any reason why the kernel should manage it if userspace =
-is
-> already handling all these other bits. Let userspace set the offset and s=
-ize
-> (can make a single device attr for it), and upon doing so it gets reserve=
-d.
+> >
+> > >  Right now that at platform_device or
+> > > PCI EP (from ACPI anyway).  Sure the value might come from higher
+> > > up a hierarchy but at least in theory it can be assigned to
+> > > individual devices.
+> > >
+> > > This is pushing that description beyond that point so is worth discussing.
+> >
+> > To me, any device that presents a driver interface can declare its CPU
+> > affinity with a numa_node leaf attribute. Once you start walking the
+> > device tree to infer the node from parent information you also need to
+> > be worried about whether the Linux device topology follows the NUMA
+> > topology. The leaf attribute removes that ambiguity.
+> I'll go with 'maybe'...
+>
+> Either way I'm fine with this change, just wanted to bring attention to
+> the duplication as it wasn't totally clear to me it was a good idea.
 
-Userspace sense requests, kernel allocates or denies that request
-after resolving races with other requesters. Yes, this makes the
-interface stateful. Sysfs is not suited to stateless operation.
+If the bar to upstream something was when it was totally clear it was
+a good idea... I'd have a lot less patches to send.
+
+>
+> FWIW
+>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+Appreciate the discussion.
