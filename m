@@ -2,147 +2,177 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA5AC433EF
-	for <linux-cxl@archiver.kernel.org>; Fri,  4 Feb 2022 04:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7DCC433FE
+	for <linux-cxl@archiver.kernel.org>; Fri,  4 Feb 2022 13:17:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356956AbiBDE0M (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 3 Feb 2022 23:26:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356935AbiBDE0L (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 3 Feb 2022 23:26:11 -0500
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29EE9C061714
-        for <linux-cxl@vger.kernel.org>; Thu,  3 Feb 2022 20:26:11 -0800 (PST)
-Received: by mail-pl1-x62f.google.com with SMTP id y17so4112002plg.7
-        for <linux-cxl@vger.kernel.org>; Thu, 03 Feb 2022 20:26:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qNO8XI0s2IJe0dOG++UNZPM+4qBVHP9LahgM133K508=;
-        b=F33tz2gW5xc+H/zo8drJNNoYOl5wWG4oYZOYKPKkqoLlCV1LTAXK4I8i1rhkUFhPg3
-         xNdeuMQ2fsuPezb1NVm8BKn1Q77zsjqYWno0IO+aiwcEEsJ6P5JSKpxw9kx1LnYLlIu7
-         mPeJEDe92aWYyHKc4YTNwg3u95JrARl3C06DMHUVckI7XOFgaozT7feSDOK4ueMvdzwt
-         Q8mbO8ci6SzLV5c5wRfUFRBVfmnc+gMI9oeSV8kH8yaZI1z+ZKYA7gOvU9GN0UfTKcMU
-         b9Uzzu2Bp4292NQnk7W03v9cxnHcebhdYINglNfaeeQkftzTGvGIcwnvkz9zOW/lbrGO
-         TCgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qNO8XI0s2IJe0dOG++UNZPM+4qBVHP9LahgM133K508=;
-        b=54Du2TOHGQ70eG894G+AjuoqWyHCM1vTXGmVk6mwfFi+fCGr5wL0wTLBG0oA4LNx30
-         d2p0xkde29JCmvsF9y+wlzDhYw936oG5zTeb/PoqSfSMN4Uc50388qzyjWFP8vSjq3KB
-         vwmtPG30lEld5fJ3FLEy/t7cjLeBv5onhx92N60f0ZD4+H7O1v2xR15JBlcbk9Zol6L2
-         gxPH6X/UsHxl04MebcJR5SmQr+thbco78RHg9GP/bj8p/c7Q6NtlR1azZx+kIYKGqVnD
-         DAT6jKr7wd4cc8kcwjMswr65oESOmRbtpSodzb55Ugydr9G64oUoPzbZrR6PxtRyJE2y
-         KAOA==
-X-Gm-Message-State: AOAM5319jCYMjpAKXrk1pma5HACwI+EXtIcNEAQavZYInrmUTLxkV3Yo
-        PsZ53FWQrJp4Nkl+rPxsBb8sw0yN5rqVBJJiAVszswlB9t0=
-X-Google-Smtp-Source: ABdhPJwqyG+G+9GgrIrs1fMv3a+GqhlWXZ0SovqqjLooA08PQJQWr7FqJSewXVV+gWYIby0fPFo2Z9M/9sb26O8QRtw=
-X-Received: by 2002:a17:902:bcca:: with SMTP id o10mr1350771pls.147.1643948770583;
- Thu, 03 Feb 2022 20:26:10 -0800 (PST)
+        id S1352509AbiBDNRp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 4 Feb 2022 08:17:45 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4672 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234895AbiBDNRp (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 4 Feb 2022 08:17:45 -0500
+Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Jqx015Hssz67dLY;
+        Fri,  4 Feb 2022 21:17:05 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Fri, 4 Feb 2022 14:17:41 +0100
+Received: from localhost (10.47.31.86) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Fri, 4 Feb
+ 2022 13:17:41 +0000
+Date:   Fri, 4 Feb 2022 13:17:38 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Alison Schofield" <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH V6 08/10] cxl/cdat: Introduce cdat_hdr_valid()
+Message-ID: <20220204131738.00004acf@Huawei.com>
+In-Reply-To: <20220201222903.GP785175@iweiny-DESK2.sc.intel.com>
+References: <20220201071952.900068-1-ira.weiny@intel.com>
+        <20220201071952.900068-9-ira.weiny@intel.com>
+        <20220201185640.4kc5v66vsxd3cial@intel.com>
+        <20220201222903.GP785175@iweiny-DESK2.sc.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164298428430.3018233.16409089892707993289.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20220131184126.00002a47@Huawei.com> <CAPcyv4iYpj7MH4kKMP57ouHb85GffEmhXPupq5i1mwJwzFXr0w@mail.gmail.com>
- <20220202094437.00003c03@Huawei.com> <CAPcyv4hwdMetDJ-+yL9-2rY92g2C4wWPqpRiQULaX_M6ZQPMtA@mail.gmail.com>
- <20220203094123.000049e6@Huawei.com> <CAPcyv4gJozea7aDg+KyKdwEbSO5PV-rUUGC5u-6NNTHA755etA@mail.gmail.com>
- <20220203180532.00007083@Huawei.com>
-In-Reply-To: <20220203180532.00007083@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 3 Feb 2022 20:25:58 -0800
-Message-ID: <CAPcyv4hDLVye0UGPchHP__n+_hdNL1ZFqPawcz47hoOePBuggA@mail.gmail.com>
-Subject: Re: [PATCH v3 31/40] cxl/memdev: Add numa_node attribute
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.31.86]
+X-ClientProxiedBy: lhreml724-chm.china.huawei.com (10.201.108.75) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Feb 3, 2022 at 10:15 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Thu, 3 Feb 2022 08:59:44 -0800
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > On Thu, Feb 3, 2022 at 1:41 AM Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com> wrote:
-> > >
-> > > On Wed, 2 Feb 2022 07:44:37 -0800
-> > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > > On Wed, Feb 2, 2022 at 1:45 AM Jonathan Cameron
-> > > > <Jonathan.Cameron@huawei.com> wrote:
-> > > > >
-> > > > > On Tue, 1 Feb 2022 15:57:10 -0800
-> > > > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > > > >
-> > > > > > On Mon, Jan 31, 2022 at 10:41 AM Jonathan Cameron
-> > > > > > <Jonathan.Cameron@huawei.com> wrote:
-> > > > > > >
-> > > > > > > On Sun, 23 Jan 2022 16:31:24 -0800
-> > > > > > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > > > > > >
-> > > > > > > > While CXL memory targets will have their own memory target node,
-> > > > > > > > individual memory devices may be affinitized like other PCI devices.
-> > > > > > > > Emit that attribute for memdevs.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > > > > >
-> > > > > > > Hmm. Is this just duplicating what we can get from
-> > > > > > > the PCI device?  It feels a bit like overkill to have it here
-> > > > > > > as well.
-> > > > > >
-> > > > > > Not all cxl_memdevs are associated with PCI devices.
-> > > > >
-> > > > > Platform devices have numa nodes too...
-> > > >
-> > > > So what's the harm in having a numa_node attribute local to the memdev?
-> > > >
-> > >
-> > > I'm not really against, it just wanted to raise the question of
-> > > whether we want these to go further than the granularity at which
-> > > numa nodes can be assigned.
-> >
-> > What is the "granularity at which numa nodes can be assigned"? It
-> > sounds like you are referencing a standard / document, so maybe I
-> > missed something. Certainly Proximity Domains != Linux NUMA nodes so
-> > it's not ACPI.
->
-> Sure, it's the fusion of a number of possible sources, one of which
-> is ACPI. If there is a reason why it differs to the parent device
-> (which can be ACPI, or can just be from a bunch of other places which
-> I'm sure will keep growing) then it definitely makes sense to expose
-> it at that level.
->
-> >
-> > >  Right now that at platform_device or
-> > > PCI EP (from ACPI anyway).  Sure the value might come from higher
-> > > up a hierarchy but at least in theory it can be assigned to
-> > > individual devices.
-> > >
-> > > This is pushing that description beyond that point so is worth discussing.
-> >
-> > To me, any device that presents a driver interface can declare its CPU
-> > affinity with a numa_node leaf attribute. Once you start walking the
-> > device tree to infer the node from parent information you also need to
-> > be worried about whether the Linux device topology follows the NUMA
-> > topology. The leaf attribute removes that ambiguity.
-> I'll go with 'maybe'...
->
-> Either way I'm fine with this change, just wanted to bring attention to
-> the duplication as it wasn't totally clear to me it was a good idea.
+On Tue, 1 Feb 2022 14:29:03 -0800
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-If the bar to upstream something was when it was totally clear it was
-a good idea... I'd have a lot less patches to send.
+> On Tue, Feb 01, 2022 at 10:56:40AM -0800, Widawsky, Ben wrote:
+> > On 22-01-31 23:19:50, ira.weiny@intel.com wrote:  
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > The CDAT data is protected by a checksum which should be checked when
+> > > the CDAT is read to ensure it is valid.  In addition the lengths
+> > > specified should be checked.
+> > > 
+> > > Introduce cdat_hdr_valid() to check the checksum.  While at it check and
+> > > store the sequence number.
+> > > 
+> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > ---
+> > > Changes from V5
+> > > 	New patch, split out
+> > > 	Update cdat_hdr_valid()
+> > > 		Remove revision and cs field parsing
+> > > 			There is no point in these
+> > > 		Add seq check and debug print.
+> > > ---
+> > >  drivers/cxl/cdat.h |  2 ++
+> > >  drivers/cxl/pci.c  | 32 ++++++++++++++++++++++++++++++++
+> > >  2 files changed, 34 insertions(+)
+> > > 
+> > > diff --git a/drivers/cxl/cdat.h b/drivers/cxl/cdat.h
+> > > index 4722b6bbbaf0..a7725d26f2d2 100644
+> > > --- a/drivers/cxl/cdat.h
+> > > +++ b/drivers/cxl/cdat.h
+> > > @@ -88,10 +88,12 @@
+> > >   *
+> > >   * @table: cache of CDAT table
+> > >   * @length: length of cached CDAT table
+> > > + * @seq: Last read Sequence number of the CDAT table
+> > >   */
+> > >  struct cxl_cdat {
+> > >  	void *table;
+> > >  	size_t length;
+> > > +	u32 seq;
+> > >  };
+> > >  
+> > >  #endif /* !__CXL_CDAT_H__ */
+> > > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > > index 28b973a9e29e..c362c75feed2 100644
+> > > --- a/drivers/cxl/pci.c
+> > > +++ b/drivers/cxl/pci.c
+> > > @@ -586,6 +586,35 @@ static int cxl_setup_doe_devices(struct cxl_dev_state *cxlds)
+> > >  	return 0;
+> > >  }
+> > >  
+> > > +static bool cxl_cdat_hdr_valid(struct device *dev, struct cxl_cdat *cdat)
+> > > +{
+> > > +	u32 *table = cdat->table;
+> > > +	u8 *data8 = cdat->table;
+> > > +	u32 length, seq;
+> > > +	u8 check;
+> > > +	int i;
+> > > +
+> > > +	length = FIELD_GET(CDAT_HEADER_DW0_LENGTH, table[0]);
+> > > +	if (length < CDAT_HEADER_LENGTH_BYTES)
+> > > +		return false;
+> > > +
+> > > +	if (length > cdat->length)
+> > > +		return false;
+> > > +
+> > > +	seq = FIELD_GET(CDAT_HEADER_DW3_SEQUENCE, table[3]);
+> > > +
+> > > +	/* Store the sequence for now. */
+> > > +	if (cdat->seq != seq) {
+> > > +		dev_info(dev, "CDAT seq change %x -> %x\n", cdat->seq, seq);
+> > > +		cdat->seq = seq;
+> > > +	}  
+> > 
+> > If sequence hasn't changed you could short-circuit the checksum.  
+> 
+> I'm not sure.  Jonathan mentioned that reading may race with updates and that
+> the correct thing to do is re-read.[1]
 
->
-> FWIW
->
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+As things stand I 'think' a failure of the checksum on a previous run wouldn't
+mean we didn't store the sequence number.
 
-Appreciate the discussion.
+Now we only call this once at the moment so that doesn't matter yet..
+
+If on each call we rerun to hopefully get an update after the race with
+a good checksum / sequence number and don't store it on failure to validate
+then we could indeed just use the sequence check to skip the checksum validation.
+Mind you this isn't a hot path... Do we really care? 
+
+
+> 
+> But I should probably check the CS first...
+> 
+> Ira
+> 
+> [1] https://lore.kernel.org/linux-cxl/20211108145239.000010a5@Huawei.com/
+> 
+> >   
+> > > +
+> > > +	for (check = 0, i = 0; i < length; i++)
+> > > +		check += data8[i];
+> > > +
+> > > +	return check == 0;
+> > > +}
+> > > +
+> > >  #define CDAT_DOE_REQ(entry_handle)					\
+> > >  	(FIELD_PREP(CXL_DOE_TABLE_ACCESS_REQ_CODE,			\
+> > >  		    CXL_DOE_TABLE_ACCESS_REQ_CODE_READ) |		\
+> > > @@ -658,6 +687,9 @@ static int cxl_cdat_read_table(struct cxl_dev_state *cxlds,
+> > >  
+> > >  	} while (entry_handle != 0xFFFF);
+> > >  
+> > > +	if (!cxl_cdat_hdr_valid(cxlds->dev, cdat))
+> > > +		return -EIO;
+> > > +
+> > >  	return 0;
+> > >  }
+> > >  
+> > > -- 
+> > > 2.31.1
+> > >   
+
