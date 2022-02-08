@@ -2,165 +2,139 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 735F3C433FE
-	for <linux-cxl@archiver.kernel.org>; Tue,  8 Feb 2022 22:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594CFC43219
+	for <linux-cxl@archiver.kernel.org>; Tue,  8 Feb 2022 22:25:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1383703AbiBHWZk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 8 Feb 2022 17:25:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57068 "EHLO
+        id S1387601AbiBHWZo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 8 Feb 2022 17:25:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1386496AbiBHUmd (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 8 Feb 2022 15:42:33 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 537A3C0613CB
-        for <linux-cxl@vger.kernel.org>; Tue,  8 Feb 2022 12:42:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644352952; x=1675888952;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6Hbe7SCFFi7aOilBmY9Td8U0nHyoptevwpwaEl6teRU=;
-  b=j/pSIV9pojrNYPNPMEdct86kn/vY9YBjvIACrDNMNTSvfQLIiZKcijiC
-   UCiccqW3W0fYcb52c/AiB96962dTU2AajBFNJkCguAkJhKUn/bGFlhvVl
-   7U4QyfukvuIKnra/3iDK5jX+G8YYyeQjzxtpvIX7n+u90SQ5FsCsomhyE
-   PK7s7+6N3Ny5Pn2Y0UPUgJ4qNKHLZ3/zwduIsyvEnwewDbm03GRGl6ArE
-   PEGV/l6cdtGnmHY9vIAluziBJxHkO0nfI9XijhokxemhqMQ3Vd4ywDRkI
-   ZBjfzShxFl6riCQLLH92AvjxY0qwElI8T0qiWWR84ADYE9T/lJQD+nfz0
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10252"; a="273581597"
-X-IronPort-AV: E=Sophos;i="5.88,353,1635231600"; 
-   d="scan'208";a="273581597"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2022 12:42:30 -0800
-X-IronPort-AV: E=Sophos;i="5.88,353,1635231600"; 
-   d="scan'208";a="601370783"
-Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.41])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2022 12:42:30 -0800
-Date:   Tue, 8 Feb 2022 12:46:36 -0800
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
+        with ESMTP id S1386442AbiBHUef (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 8 Feb 2022 15:34:35 -0500
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C66F3C0612C1
+        for <linux-cxl@vger.kernel.org>; Tue,  8 Feb 2022 12:34:34 -0800 (PST)
+Received: by mail-pf1-x429.google.com with SMTP id y5so492908pfe.4
+        for <linux-cxl@vger.kernel.org>; Tue, 08 Feb 2022 12:34:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gXOr74ZqxDbW2NHi8mT1BWeZ44BcpKSk2J1e3DuFzZ4=;
+        b=AXaCk3sp+x06s/HtFgY8v5DpUjMNsvko9jEBwdAvKBBd0qN1IFbJU+MzgFdwdggwdk
+         gYpVS5CiGAcQROCTr9WPYJ1IJTT0Z8VxC/yC0QXR61VFjwvREM/ibPlFtUE5ukCTFzON
+         4aMK4HYDVMnLi4Ym8CDj/Ozet+noj61YbYkKQlBfC6r9ER1n9CLuC7EXqqlg2mcPFRN0
+         ZgFAfwTKpoWBkDMy8R4KaswPAEGKZXsWBmU/wl6S4Odgi3iM9TKW59a2Wjes0YjoPAfp
+         lVGY0t7KFMRcTRW6hRwwpcDTZGU+ZXZ1qenoV7rG53fV61itt2Z+/e/3hwFxBjSDh2cB
+         YR5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gXOr74ZqxDbW2NHi8mT1BWeZ44BcpKSk2J1e3DuFzZ4=;
+        b=QdVRSunTO6bPJqVSV04U/nWg84Jk/Dx5Gyec3aWhaHrpfiiTBVFKP8nfi6FPA7Wo22
+         MkVaT+AuLIxsPGHyZ16W6sBs48zO0pEUs+fY8QyIV0wXCvhW4p6Cr+kF4buT1oEfOeyG
+         /kY02ob+NOgt8gbRNOat6VvFIMcBtsrht/WQcUms9YxSsX/s/K/1amAf5k0mX/Vxc/Hk
+         iVdVCN6JQ2hxUmuPbqw48oNwZUORn2gRSr53QHV3/xutDcL4y3gYEEMijxMah5/oNgHF
+         R1cSO7HM9HBX13wc35C9aujSmbXUMuTjHxQstzsustHw6fK/B85FkrRRdXqIQIyoblFz
+         sInQ==
+X-Gm-Message-State: AOAM5324YGnSopGCbbaHJyEfUulisa8CPpH609JsghoNpsot60Sq4O+N
+        P/fj7gE4dJOSW5usTnM/D4TB/exh9lcvVNphKoUrUQ==
+X-Google-Smtp-Source: ABdhPJw5zlCGQ2nGF2qvA47+wUptq6SIuYOpA4S1R/pn67LuSNBMzaR5jgmoWVKQ2nMoG7BOYXz1SpO9PH5AG0fEdl4=
+X-Received: by 2002:a63:4717:: with SMTP id u23mr4989089pga.74.1644352474249;
+ Tue, 08 Feb 2022 12:34:34 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1644271559.git.alison.schofield@intel.com> <034755a71999a66da79356ec7efbabeaa4eacd88.1644271559.git.alison.schofield@intel.com>
+In-Reply-To: <034755a71999a66da79356ec7efbabeaa4eacd88.1644271559.git.alison.schofield@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 8 Feb 2022 12:34:23 -0800
+Message-ID: <CAPcyv4juShujHXrh5ZB7d2sVtE4+sn6idi-KCbKZ=4pwz6jxpg@mail.gmail.com>
+Subject: Re: [ndctl PATCH v4 2/6] libcxl: add accessors for capacity fields of
+ the IDENTIFY command
+To:     "Schofield, Alison" <alison.schofield@intel.com>
 Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Linux NVDIMM <nvdimm@lists.linux.dev>,
         linux-cxl@vger.kernel.org
-Subject: Re: [ndctl PATCH v4 1/6] libcxl: add GET_PARTITION_INFO mailbox
- command and accessors
-Message-ID: <20220208204636.GA950445@alison-desk>
-References: <cover.1644271559.git.alison.schofield@intel.com>
- <396ccc39525b3eb829acd4e06f704f6fb57a94a8.1644271559.git.alison.schofield@intel.com>
- <CAPcyv4gYbLGkd99fvKixAmLAhpkfQU8gNJ0e0BHrmVUZ3wWA_A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4gYbLGkd99fvKixAmLAhpkfQU8gNJ0e0BHrmVUZ3wWA_A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Thanks Dan! Got it all.
-<eom>
+On Mon, Feb 7, 2022 at 3:06 PM <alison.schofield@intel.com> wrote:
+>
+> From: Alison Schofield <alison.schofield@intel.com>
+>
+> Users need access to a few additional fields reported by the IDENTIFY
 
-On Tue, Feb 08, 2022 at 12:20:56PM -0800, Dan Williams wrote:
-> On Mon, Feb 7, 2022 at 3:06 PM <alison.schofield@intel.com> wrote:
-> >
-> > From: Alison Schofield <alison.schofield@intel.com>
-> >
-> > Users need access to the CXL GET_PARTITION_INFO mailbox command
-> > to inspect and confirm changes to the partition layout of a memory
-> > device.
-> >
-> > Add libcxl APIs to create a new GET_PARTITION_INFO mailbox command,
-> > the command output data structure (privately), and accessor APIs to
-> > return the different fields in the partition info output.
-> >
-> > Per the CXL 2.0 specification, devices report partition capacities
-> > as multiples of 256MB. Define and use a capacity multiplier to
-> > convert the raw data into bytes for user consumption. Use byte
-> > format as the norm for all capacity values produced or consumed
-> > using CXL Mailbox commands.
-> >
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > ---
-> >  Documentation/cxl/lib/libcxl.txt |  1 +
-> >  cxl/lib/libcxl.c                 | 57 ++++++++++++++++++++++++++++++++
-> >  cxl/lib/libcxl.sym               |  5 +++
-> >  cxl/lib/private.h                | 10 ++++++
-> >  cxl/libcxl.h                     |  5 +++
-> >  util/size.h                      |  1 +
-> >  6 files changed, 79 insertions(+)
-> >
-> > diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
-> > index 4392b47..a6986ab 100644
-> > --- a/Documentation/cxl/lib/libcxl.txt
-> > +++ b/Documentation/cxl/lib/libcxl.txt
-> > @@ -131,6 +131,7 @@ int cxl_memdev_read_label(struct cxl_memdev *memdev, void *buf, size_t length,
-> >                           size_t offset);
-> >  int cxl_memdev_write_label(struct cxl_memdev *memdev, void *buf, size_t length,
-> >                            size_t offset);
-> > +struct cxl_cmd *cxl_cmd_new_get_partition(struct cxl_memdev *memdev);
-> >
-> >  ----
-> >
-> > diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-> > index e0b443f..33cf06b 100644
-> > --- a/cxl/lib/libcxl.c
-> > +++ b/cxl/lib/libcxl.c
-> > @@ -1985,6 +1985,12 @@ static int cxl_cmd_validate_status(struct cxl_cmd *cmd, u32 id)
-> >         return 0;
-> >  }
-> >
-> > +static unsigned long long
-> > +capacity_to_bytes(unsigned long long size)
-> 
-> If this helper converts an encoded le64 to bytes then the function
-> signature should reflect that:
-> 
-> static uint64_t cxl_capacity_to_bytes(leint64_t size)
-> 
-> > +{
-> > +       return le64_to_cpu(size) * CXL_CAPACITY_MULTIPLIER;
-> > +}
-> > +
-> >  /* Helpers for health_info fields (no endian conversion) */
-> >  #define cmd_get_field_u8(cmd, n, N, field)                             \
-> >  do {                                                                   \
-> > @@ -2371,6 +2377,57 @@ CXL_EXPORT ssize_t cxl_cmd_read_label_get_payload(struct cxl_cmd *cmd,
-> >         return length;
-> >  }
-> >
-> > +CXL_EXPORT struct cxl_cmd *cxl_cmd_new_get_partition(struct cxl_memdev *memdev)
-> > +{
-> > +       return cxl_cmd_new_generic(memdev,
-> > +                                  CXL_MEM_COMMAND_ID_GET_PARTITION_INFO);
-> > +}
-> > +
-> > +static struct cxl_cmd_get_partition *
-> > +cmd_to_get_partition(struct cxl_cmd *cmd)
-> > +{
-> 
-> This could also check for cmd == NULL just to be complete.
-> 
-> > +       if (cxl_cmd_validate_status(cmd, CXL_MEM_COMMAND_ID_GET_PARTITION_INFO))
-> > +               return NULL;
-> > +
-> > +       return cmd->output_payload;
-> > +}
-> > +
-> > +CXL_EXPORT unsigned long long
-> > +cxl_cmd_partition_get_active_volatile_size(struct cxl_cmd *cmd)
-> > +{
-> > +       struct cxl_cmd_get_partition *c;
-> > +
-> > +       c = cmd_to_get_partition(cmd);
-> > +       return c ? capacity_to_bytes(c->active_volatile) : ULLONG_MAX;
-> 
-> I'd prefer kernel coding style which wants:
-> 
-> if (!c)
->     return ULLONG_MAX;
-> return cxl_capacity_to_bytes(c->active_volatile);
-> 
-> Otherwise, looks good to me:
-> 
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Ah, I see the "Users need" pattern... To me, the "Users need"
+statement is a step removed / secondary from the real driving
+motivation which is the "CXL PMEM provisioning model specifies /
+mandates".
+
+It feels like a watered down abstraction to me.
+
+> mailbox command: total, volatile_only, and persistent_only capacities.
+> These values are useful when defining partition layouts.
+>
+> Add accessors to the libcxl API to retrieve these values from the
+> IDENTIFY command.
+>
+> The fields are specified in multiples of 256MB per the CXL 2.0 spec.
+> Use the capacity multiplier to convert the raw data into bytes for user
+> consumption.
+>
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> ---
+>  cxl/lib/libcxl.c   | 36 ++++++++++++++++++++++++++++++++++++
+>  cxl/lib/libcxl.sym |  3 +++
+>  cxl/libcxl.h       |  3 +++
+>  3 files changed, 42 insertions(+)
+>
+> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+> index 33cf06b..e9d7762 100644
+> --- a/cxl/lib/libcxl.c
+> +++ b/cxl/lib/libcxl.c
+> @@ -2322,6 +2322,42 @@ CXL_EXPORT unsigned int cxl_cmd_identify_get_label_size(struct cxl_cmd *cmd)
+>         return le32_to_cpu(id->lsa_size);
+>  }
+>
+> +static struct cxl_cmd_identify *
+> +cmd_to_identify(struct cxl_cmd *cmd)
+> +{
+> +       if (cxl_cmd_validate_status(cmd, CXL_MEM_COMMAND_ID_IDENTIFY))
+> +               return NULL;
+> +
+> +       return cmd->output_payload;
+> +}
+> +
+> +CXL_EXPORT unsigned long long
+> +cxl_cmd_identify_get_total_size(struct cxl_cmd *cmd)
+> +{
+> +       struct cxl_cmd_identify *c;
+> +
+> +       c = cmd_to_identify(cmd);
+> +       return c ? capacity_to_bytes(c->total_capacity) : ULLONG_MAX;
+> +}
+> +
+> +CXL_EXPORT unsigned long long
+> +cxl_cmd_identify_get_volatile_only_size(struct cxl_cmd *cmd)
+> +{
+> +       struct cxl_cmd_identify *c;
+> +
+> +       c = cmd_to_identify(cmd);
+> +       return c ? capacity_to_bytes(c->volatile_capacity) : ULLONG_MAX;
+> +}
+> +
+> +CXL_EXPORT unsigned long long
+> +cxl_cmd_identify_get_persistent_only_size(struct cxl_cmd *cmd)
+> +{
+> +       struct cxl_cmd_identify *c;
+> +
+> +       c = cmd_to_identify(cmd);
+> +       return c ? capacity_to_bytes(c->persistent_capacity) : ULLONG_MAX;
+
+Same style comments as last patch, but otherwise:
+
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
