@@ -2,126 +2,105 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B56C433F5
-	for <linux-cxl@archiver.kernel.org>; Wed,  9 Feb 2022 17:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E77C433FE
+	for <linux-cxl@archiver.kernel.org>; Wed,  9 Feb 2022 18:19:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238440AbiBIRtk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 9 Feb 2022 12:49:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47408 "EHLO
+        id S238949AbiBISTm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 9 Feb 2022 13:19:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238308AbiBIRtj (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Feb 2022 12:49:39 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFA91C05CB82
-        for <linux-cxl@vger.kernel.org>; Wed,  9 Feb 2022 09:49:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644428982; x=1675964982;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Axkasq/Vcc/vlh05p9NYmeF717ERT73towQJZdQXfvo=;
-  b=OwJ7ZyA0HuffmRd3Ig1+yMMJRuiUKSui/HrcGhSUfzuB3Z3bzkRQfY4x
-   ke0j3vsc7jTAdqqwAXIIhMhzDJw4IG0RldH0Q+7iOAvUGPFvp/QQBvgF1
-   tXUJPsmefixI37+pz/f6vOkOZxhhJ9taDB7yyKLrA+ih/1+3fLMW+ypdu
-   JVpxLe1zQkjMkAYe0HcctJem8RNtrg3hbxGtgs/d2RWT3uIaAqZQPMpd0
-   JKg7RQK47IYnVyREgczwgiVD0lojhvejgt1Wg455KJbxHxuNLUdex8XQm
-   jQVpn84YJ1UIo1YErrA004AnSdEoqk8bqxzIb1MOzg0UYHokYzW4PlLI+
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10252"; a="248110184"
-X-IronPort-AV: E=Sophos;i="5.88,356,1635231600"; 
-   d="scan'208";a="248110184"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 09:49:42 -0800
-X-IronPort-AV: E=Sophos;i="5.88,356,1635231600"; 
-   d="scan'208";a="537016717"
-Received: from dgarg1-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.131.253])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 09:49:42 -0800
-Date:   Wed, 9 Feb 2022 09:49:41 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] cxl/core/port: Fix unregister_port() lock assertion
-Message-ID: <20220209174941.uyjm3t4qdvggeepk@intel.com>
-References: <164439224893.2941117.18331456248117887720.stgit@dwillia2-desk3.amr.corp.intel.com>
+        with ESMTP id S239152AbiBISTa (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Feb 2022 13:19:30 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A9D7C0045EC
+        for <linux-cxl@vger.kernel.org>; Wed,  9 Feb 2022 10:18:33 -0800 (PST)
+Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Jv7LC68jmz67tt6;
+        Thu, 10 Feb 2022 02:13:55 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Wed, 9 Feb 2022 19:18:04 +0100
+Received: from localhost (10.122.247.231) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Wed, 9 Feb
+ 2022 18:18:03 +0000
+Date:   Wed, 9 Feb 2022 18:18:01 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <qemu-devel@nongnu.org>, Marcel Apfelbaum <marcel@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>
+CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
+        Alex =?ISO-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        <linuxarm@huawei.com>,
+        "Shameerali Kolothum Thodi" <shameerali.kolothum.thodi@huawei.com>,
+        Philippe =?ISO-8859-1?Q?Mat?= =?ISO-8859-1?Q?hieu-Daud=E9?= 
+        <f4bug@amsat.org>, Saransh Gupta1 <saransh@ibm.com>,
+        Shreyas Shah <shreyas.shah@elastics.cloud>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Samarth Saxena <samarths@cadence.com>,
+        "Dan Williams" <dan.j.williams@intel.com>
+Subject: Re: [PATCH v4 23/42] tests/acpi: allow CEDT table addition
+Message-ID: <20220209181801.00000e4d@huawei.com>
+In-Reply-To: <20220124171705.10432-24-Jonathan.Cameron@huawei.com>
+References: <20220124171705.10432-1-Jonathan.Cameron@huawei.com>
+        <20220124171705.10432-24-Jonathan.Cameron@huawei.com>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <164439224893.2941117.18331456248117887720.stgit@dwillia2-desk3.amr.corp.intel.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 22-02-08 23:37:28, Dan Williams wrote:
-> The device_lock_assert() in unregister_port() fails to pick the right
-> device leading to splats like the following from:
-> 
-> echo "ACPI0017:00" > /sys/bus/platform/drivers/cxl_acpi/unbind
-> 
->  WARNING: CPU: 32 PID: 1147 at include/linux/device.h:787 unregister_port+0x49/0x50 [cxl_c
->  [..]
->  RIP: 0010:unregister_port+0x49/0x50 [cxl_core]
->  [..]
->  Call Trace:
->   <TASK>
->   release_nodes+0x63/0x80
->   devres_release_all+0x8b/0xc0
->   __device_release_driver+0x190/0x240
->   device_driver_detach+0x3e/0xa0
->   unbind_store+0x113/0x130
-> 
-> Fix it up to assert on the device_lock() for ACPI0017 for root and 1st
-> level ports, and parent ports for all the rest.
-> 
-> Fixes: 54cdbf845cf7 ("cxl/port: Add a driver for 'struct cxl_port' objects")
-> Reported-by: Ben Widawsky <ben.widawsky@intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+On Mon, 24 Jan 2022 17:16:46 +0000
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-Comment/question below...
-Reviewed-by: Ben Widawsky <ben.widawsky@intel.com>
-
+> From: Ben Widawsky <ben.widawsky@intel.com>
+> 
+> Following patches will add a new ACPI table, the
+> CXL Early Discovery Table (CEDT).
+> 
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
->  drivers/cxl/core/port.c |   24 ++++++++++++++++++++----
->  1 file changed, 20 insertions(+), 4 deletions(-)
+>  tests/data/acpi/pc/CEDT                     | 0
+>  tests/data/acpi/q35/CEDT                    | 0
+>  tests/qtest/bios-tables-test-allowed-diff.h | 2 ++
+>  3 files changed, 2 insertions(+)
 > 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index c3e83c624700..9b4bbd51fbaa 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -348,12 +348,28 @@ EXPORT_SYMBOL_NS_GPL(to_cxl_port, CXL);
->  static void unregister_port(void *_port)
->  {
->  	struct cxl_port *port = _port;
-> +	struct cxl_port *parent;
-> +	struct device *lock_dev;
->  
-> -	if (!is_cxl_root(port)) {
-> -		device_lock_assert(port->dev.parent);
-> -		port->uport = NULL;
-> -	}
-> +	if (is_cxl_root(port))
-> +		parent = NULL;
-> +	else
-> +		parent = to_cxl_port(port->dev.parent);
-> +
-> +	/*
-> +	 * CXL root port's and the first level of ports are unregistered
-> +	 * under the platform firmware device lock, all other ports are
-> +	 * unregistered while holding their parent port lock.
-> +	 */
-> +	if (!parent)
-> +		lock_dev = port->uport;
-> +	else if (is_cxl_root(parent))
-> +		lock_dev = parent->uport;
-> +	else
-> +		lock_dev = &parent->dev;
+> diff --git a/tests/data/acpi/pc/CEDT b/tests/data/acpi/pc/CEDT
+> new file mode 100644
+> index 0000000000..e69de29bb2
+> diff --git a/tests/data/acpi/q35/CEDT b/tests/data/acpi/q35/CEDT
+> new file mode 100644
+> index 0000000000..e69de29bb2
+> diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
+> index dfb8523c8b..9b07f1e1ff 100644
+> --- a/tests/qtest/bios-tables-test-allowed-diff.h
+> +++ b/tests/qtest/bios-tables-test-allowed-diff.h
+> @@ -1 +1,3 @@
+>  /* List of comma-separated changed AML files to ignore */
+> +"tests/data/acpi/pc/CEDT",
+> +"tests/data/acpi/q35/CEDT",
 
-I wonder if it would be a little cleaner if the root port and host bridge ports
-had a separate unregistration callback from switches and endpoints.
+Whilst reordering the series to allow partial sets to be picked up
+it occurred to me that there is reason why we should now generate a CEDT
+table unless cxl=on is set for the relevant machine.
 
->  
-> +	device_lock_assert(lock_dev);
-> +	port->uport = NULL;
->  	device_unregister(&port->dev);
->  }
->  
-> 
+Adding the relevant conditions means we can avoid this dance
+to add effectively empty CEDT tables.  I have added a proper
+test for to bios-test-tables but that can be introduced once
+everything is in place, rather than as we go along (whereas
+for qtests/cxl-test.c I am doing a series of updates as the 
+functionality is built up.).
+
+Makes for a simpler patch series to update.
+
+Jonathan
