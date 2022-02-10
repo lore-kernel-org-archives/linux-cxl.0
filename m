@@ -2,99 +2,158 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F953C433F5
-	for <linux-cxl@archiver.kernel.org>; Thu, 10 Feb 2022 21:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3C1C433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 10 Feb 2022 23:02:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245076AbiBJVvb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 10 Feb 2022 16:51:31 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38530 "EHLO
+        id S1345360AbiBJXCt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 10 Feb 2022 18:02:49 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:55192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238886AbiBJVvb (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Feb 2022 16:51:31 -0500
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7314FE6B;
-        Thu, 10 Feb 2022 13:51:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644529891; x=1676065891;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RtABhcfz++1lD4BxroCHUgbb9du3AHo0vVF0UojqTVo=;
-  b=lj/MKt9Bz7XjoX8SUE9donZ1vbJu+AigWl00ZudBIfOYQnCmbOx+JrzD
-   DeY3dankoEV6vNzkXZEJX24R0MuMmPchzMH579PoiFWEUAGEx8scmYBEG
-   tXgnukX1+i1NoyztWTWQnm9w7NrRatsYFhrUDiNGGac6RYY/TiCMHga75
-   UzWzoSzLWe2ab89FxiINW4Xl6tv0IUB4utbMUmqovoNcV+csDW5ePVPK9
-   MGo+8fBPhlkVFia5pxPTtTZLefdCREZPJO4ZMMsSXBlMDOG61E6E4cw5t
-   69zeldo/RWm2JKS9bp7Te4Cw2KodWqf8tyO0Yf2WPnq4KMn1Z7JSReVLN
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10254"; a="310337049"
-X-IronPort-AV: E=Sophos;i="5.88,359,1635231600"; 
-   d="scan'208";a="310337049"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2022 13:51:31 -0800
-X-IronPort-AV: E=Sophos;i="5.88,359,1635231600"; 
-   d="scan'208";a="485954165"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2022 13:51:29 -0800
-Date:   Thu, 10 Feb 2022 13:51:29 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
+        with ESMTP id S1345039AbiBJXCt (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Feb 2022 18:02:49 -0500
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23EDD27A;
+        Thu, 10 Feb 2022 15:02:49 -0800 (PST)
+Received: by mail-lj1-x236.google.com with SMTP id k10so7163472ljq.2;
+        Thu, 10 Feb 2022 15:02:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=utz0VRFK/Z4T1V8Xj6WH93qgAKh3TJKNnOSR9iLg9ic=;
+        b=Tohe9kBajf8I3Veod2AThoiouhOpdws6koyqaGcfiM/5AatC8ADlPeXTzP9K+U7xxy
+         nJ7/DV2KZ+ptjt+NxZi5y53elUaAiebmmRh8/SeVhccMpPgz0kxuAiiqtZ+ejtUbBmnd
+         i5eiHBSHABKrj5GEbYs2eCMpkP2ZDJcFCw4odvV7AtdAHNUQOCrvWj80PVkANMngwvUC
+         /FOv+S5rzmyB/6a0c+1t4GLz7MIry0fLnQh+TujqNdH88vunQDBt+KnEa7zyFjCI2bFb
+         IV+z2yxuudte9uaS2Zb3BJQqL0dbpHL7i0wr7W3bCAArLumz2C3mARUsq3Bk50L3q9X0
+         KV5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=utz0VRFK/Z4T1V8Xj6WH93qgAKh3TJKNnOSR9iLg9ic=;
+        b=VkZOrX4HNSJg2Rb4M1blTWkb8vtbU+2JCdqoyHT7CQj7uEOIKKK1sfRrpGatGmU3x6
+         5weQqFyw5ya2tVKNRty/+Sgzm31sQ09qPOpjzUelIjokPw/SyJWF+8vOBTEdrAmvspcN
+         ZeBlsHTyeP+0xulgIX+a2AQGMOI19zUrXA915GdmvQxSz+j8JXnDXTmlCmPO1OEGGoVR
+         fmCikixmG21aBhQ2Hl35daHFvHX3qbeqcMoPTJTUcBhZsl29W84Nl7/sbaQFkgbrGmZH
+         63kJJf4BayP6jQdfmdwo+y0xTOdmElFUQ/Ec3ftf5RKAau5Y3kLILdVtEjsEOGZGDrLP
+         fxxw==
+X-Gm-Message-State: AOAM531WhAF3nTDPA+JZc+V3HEzu6cyyhnaaF/QzNZgHROQG2lzORbVO
+        fAxGJl4x5PspnlBMX2HDxtYCSkq3D3A=
+X-Google-Smtp-Source: ABdhPJwfh/ttJ3hH2u54w//qvoPdv8NShKMDdgORtEo/D2Hw/LBLfo4X5Pv/kZbgdNawQJjTDHP0fw==
+X-Received: by 2002:a2e:9916:: with SMTP id v22mr6014431lji.232.1644534167305;
+        Thu, 10 Feb 2022 15:02:47 -0800 (PST)
+Received: from localhost.localdomain (h-155-4-221-129.NA.cust.bahnhof.se. [155.4.221.129])
+        by smtp.gmail.com with ESMTPSA id h2sm1022378lfv.10.2022.02.10.15.02.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Feb 2022 15:02:46 -0800 (PST)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+To:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
 Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V6 03/10] PCI/DOE: Add Data Object Exchange Aux Driver
-Message-ID: <20220210215128.GA998480@iweiny-DESK2.sc.intel.com>
-Mail-Followup-To: Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>
-References: <20220201071952.900068-1-ira.weiny@intel.com>
- <20220201071952.900068-4-ira.weiny@intel.com>
- <CAPcyv4hYAgyf-WcArGvbWHAJgc5+p=OO_6ah_dXJhNM5cXcVTw@mail.gmail.com>
- <20220209101320.00000473@Huawei.com>
- <CAPcyv4g2nNHKPuYVOEH3TbJtCiB1rkRNCVbfDWHnWkotvTAcJg@mail.gmail.com>
- <20220209165756.00002841@huawei.com>
- <CAPcyv4j9mEOn_sJSwX+rY_6wFjuU_JB7e075_n_Q5sfgiGsqew@mail.gmail.com>
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Subject: [PATCH] cxl/core: Constify static attribute_group structs
+Date:   Fri, 11 Feb 2022 00:02:35 +0100
+Message-Id: <20220210230235.4463-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4j9mEOn_sJSwX+rY_6wFjuU_JB7e075_n_Q5sfgiGsqew@mail.gmail.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Feb 09, 2022 at 11:57:38AM -0800, Dan Williams wrote:
-> On Wed, Feb 9, 2022 at 8:58 AM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> [..]
-> > > It just seems an unnecessary hunk of code for the core to carry when
-> > > it's trivial for a client of the core to do:
-> > >
-> > > task->private = &completion;
-> > > task->end_task = complete_completion;
-> > > submit_task()
-> > > wait_for_completion(&completion);
-> >
-> > OK, we can move this to the callers though function obviously will
-> > also need renaming - I guess to pci_doe_exchange() and now need to take a
-> > task rather than the exchange.
-> >
-> > I personally slightly prefer the layered approach, but don't care that
-> > strongly.
-> 
-> Like I said, you and Ira are holding the pen, so if you decide to keep
-> the layering, just document the ontology somewhere and I'll let it go.
+The only usage of these is to put their address in arrays of pointers to
+const struct attribute_group, so make them const to allow the compiler
+to put them in read-only memory.
 
-I'm busy with the PKS series ATM but I should get back to reviewing all these
-comments soon.
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+---
+ drivers/cxl/core/bus.c    | 8 ++++----
+ drivers/cxl/core/core.h   | 2 +-
+ drivers/cxl/core/memdev.c | 6 +++---
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
-Ira
+diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
+index 3f9b98ecd18b..4532ef8b806f 100644
+--- a/drivers/cxl/core/bus.c
++++ b/drivers/cxl/core/bus.c
+@@ -38,7 +38,7 @@ static struct attribute *cxl_base_attributes[] = {
+ 	NULL,
+ };
+ 
+-struct attribute_group cxl_base_attribute_group = {
++const struct attribute_group cxl_base_attribute_group = {
+ 	.attrs = cxl_base_attributes,
+ };
+ 
+@@ -136,7 +136,7 @@ static struct attribute *cxl_decoder_base_attrs[] = {
+ 	NULL,
+ };
+ 
+-static struct attribute_group cxl_decoder_base_attribute_group = {
++static const struct attribute_group cxl_decoder_base_attribute_group = {
+ 	.attrs = cxl_decoder_base_attrs,
+ };
+ 
+@@ -148,7 +148,7 @@ static struct attribute *cxl_decoder_root_attrs[] = {
+ 	NULL,
+ };
+ 
+-static struct attribute_group cxl_decoder_root_attribute_group = {
++static const struct attribute_group cxl_decoder_root_attribute_group = {
+ 	.attrs = cxl_decoder_root_attrs,
+ };
+ 
+@@ -164,7 +164,7 @@ static struct attribute *cxl_decoder_switch_attrs[] = {
+ 	NULL,
+ };
+ 
+-static struct attribute_group cxl_decoder_switch_attribute_group = {
++static const struct attribute_group cxl_decoder_switch_attribute_group = {
+ 	.attrs = cxl_decoder_switch_attrs,
+ };
+ 
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index e0c9aacc4e9c..1c0562cc9297 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -7,7 +7,7 @@
+ extern const struct device_type cxl_nvdimm_bridge_type;
+ extern const struct device_type cxl_nvdimm_type;
+ 
+-extern struct attribute_group cxl_base_attribute_group;
++extern const struct attribute_group cxl_base_attribute_group;
+ 
+ struct cxl_send_command;
+ struct cxl_mem_query_commands;
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index 61029cb7ac62..ac2d40741686 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -106,16 +106,16 @@ static struct attribute *cxl_memdev_ram_attributes[] = {
+ 	NULL,
+ };
+ 
+-static struct attribute_group cxl_memdev_attribute_group = {
++static const struct attribute_group cxl_memdev_attribute_group = {
+ 	.attrs = cxl_memdev_attributes,
+ };
+ 
+-static struct attribute_group cxl_memdev_ram_attribute_group = {
++static const struct attribute_group cxl_memdev_ram_attribute_group = {
+ 	.name = "ram",
+ 	.attrs = cxl_memdev_ram_attributes,
+ };
+ 
+-static struct attribute_group cxl_memdev_pmem_attribute_group = {
++static const struct attribute_group cxl_memdev_pmem_attribute_group = {
+ 	.name = "pmem",
+ 	.attrs = cxl_memdev_pmem_attributes,
+ };
+-- 
+2.35.1
+
