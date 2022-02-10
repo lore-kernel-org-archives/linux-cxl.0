@@ -2,87 +2,85 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B58AC433F5
-	for <linux-cxl@archiver.kernel.org>; Wed,  9 Feb 2022 19:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16681C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 10 Feb 2022 01:22:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229956AbiBIT5t (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 9 Feb 2022 14:57:49 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:44148 "EHLO
+        id S231305AbiBJBV7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 9 Feb 2022 20:21:59 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:40450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229924AbiBIT5s (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Feb 2022 14:57:48 -0500
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F0D8E067868
-        for <linux-cxl@vger.kernel.org>; Wed,  9 Feb 2022 11:57:50 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id y17so3157026plg.7
-        for <linux-cxl@vger.kernel.org>; Wed, 09 Feb 2022 11:57:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hLa+EiH1mRG9f1fQTD6dnIZH6dFitXQQk4vxZMPiC5c=;
-        b=KX8AdbYmDS6spCCkdzMJ7tZJv5GtJ1yMkJcpmSpW1TfCRtSAnNQtHSMa4mPauEi/Cd
-         +MLAjE0FY3+SJWZvR4HwSBSax5Hqg4pXKqJ/idqJG8nDynA1AsxQJpTKolXkM86ZpzU7
-         ki/MDoBo1aeE5Odl8CYDrDcAO19oeCWrrOmQxrbIcqw7Fdcqtmv81Eax8I1LRRfHCsgY
-         x2VvrtSCBcpwbVqKkOdPql2XNRQjEUyX1omLLffMH6H6QhQhX1Ck3H52H1nan8+jCpNh
-         vf2/wuHA4n9yW+x/PpSvpKtY1P3Ub3+fzkAzDOgV78LZvHrBDurXd+d4HTq3jzSBhucc
-         WgbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hLa+EiH1mRG9f1fQTD6dnIZH6dFitXQQk4vxZMPiC5c=;
-        b=kv3AjIsVcxrC7ZX/dDyHnfWIHA7PQfdB6QDt+rlZG9XZrYg1tzZB+bqqVaTnwASI3r
-         a+6IgKQTtYIXKJsVTRoBxy6IJZIaOCY/XXCmHjOhWQO6uI385ru8cArSVeIy5kzNB82e
-         1USGkZvXci7/kdY7D2GYoDfaNSRHHKFooHXwAOIroUsVzS/yANx+HxNmYoh7GcDb/JiZ
-         pfEDIwVPQiaZPelPdj/16J1A1lHeryOpLfZD6T7sqmwsvEVWRM+31QLNwa5ZJ8IBOTq+
-         Sqa9//CIe7HD2zSKq8IdRm+739qvLd5jJW7A/VD9PmcJrzoMzgi74rg/OV/Ao47ENKVv
-         BwDQ==
-X-Gm-Message-State: AOAM532P8ex+8WsYZXZPwcL1iZUCqRMeGHX8bh/BMXgGZ+qfvIDifHzm
-        bmKIolsd/Z3AG4VOe+INMXwh1ShMthW5KkKi2AbsPg==
-X-Google-Smtp-Source: ABdhPJy1CZ+jtneOWBZEOWg3IGJXU0RLO7anSCnJ9xepD6AnWwHom3tpnlP5xqHgKfePw1ryjZF96fweobvsuAxF1rA=
-X-Received: by 2002:a17:902:bcca:: with SMTP id o10mr3830543pls.147.1644436669601;
- Wed, 09 Feb 2022 11:57:49 -0800 (PST)
+        with ESMTP id S231313AbiBJBVx (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Feb 2022 20:21:53 -0500
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49E4E764B
+        for <linux-cxl@vger.kernel.org>; Wed,  9 Feb 2022 17:21:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1644456115; x=1675992115;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=k4XmFxYwiQf90YO5F9uSngj6XxlhUgVcFHJaBkORY+8=;
+  b=EM2E1pSjwAlTm23Rc9kJIhipV7plmXTjWuQ4EbcZ/7NUc1d/CXn4EKR2
+   ObGnrmbcRM7Pn6EeVOP3c2XiaYL7TOAamyg/vfbHit/B36gxTlPEaPRQ5
+   2nAg0iYnS4tXnI9FwnakcMV17O1fM6O3xY/pTM3WOFsIfX0HTjZjgn80J
+   C0qUudlxz5QKo6W2BgZwtTpEZVffD+QT0mjQAGEpHBTULPdSNGW4aah/f
+   blumHJ9/j9wbrywlPGsmOorLJm6tub8ovshefrm7mUgPFdraEGpmXqHGL
+   zbApz0wZ0n4pQH8lW+k2kDVcwZtBqVeBiWnTpZA3q7LfNkLOhGZdTFs4X
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10253"; a="310119597"
+X-IronPort-AV: E=Sophos;i="5.88,357,1635231600"; 
+   d="scan'208";a="310119597"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 17:06:42 -0800
+X-IronPort-AV: E=Sophos;i="5.88,357,1635231600"; 
+   d="scan'208";a="482555871"
+Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.41])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 17:06:42 -0800
+Date:   Wed, 9 Feb 2022 17:10:46 -0800
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, vishal.l.verma@intel.com
+Subject: Re: [ndctl PATCH 26/37] cxl/memdev: Add serial support for
+ memdev-related commands
+Message-ID: <20220210011046.GA956428@alison-desk>
+References: <164298550885.3021641.11210386002804544864.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164298564631.3021641.5552442288217413180.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-References: <20220201071952.900068-1-ira.weiny@intel.com> <20220201071952.900068-4-ira.weiny@intel.com>
- <CAPcyv4hYAgyf-WcArGvbWHAJgc5+p=OO_6ah_dXJhNM5cXcVTw@mail.gmail.com>
- <20220209101320.00000473@Huawei.com> <CAPcyv4g2nNHKPuYVOEH3TbJtCiB1rkRNCVbfDWHnWkotvTAcJg@mail.gmail.com>
- <20220209165756.00002841@huawei.com>
-In-Reply-To: <20220209165756.00002841@huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 9 Feb 2022 11:57:38 -0800
-Message-ID: <CAPcyv4j9mEOn_sJSwX+rY_6wFjuU_JB7e075_n_Q5sfgiGsqew@mail.gmail.com>
-Subject: Re: [PATCH V6 03/10] PCI/DOE: Add Data Object Exchange Aux Driver
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     "Weiny, Ira" <ira.weiny@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <164298564631.3021641.5552442288217413180.stgit@dwillia2-desk3.amr.corp.intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Feb 9, 2022 at 8:58 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
-[..]
-> > It just seems an unnecessary hunk of code for the core to carry when
-> > it's trivial for a client of the core to do:
-> >
-> > task->private = &completion;
-> > task->end_task = complete_completion;
-> > submit_task()
-> > wait_for_completion(&completion);
->
-> OK, we can move this to the callers though function obviously will
-> also need renaming - I guess to pci_doe_exchange() and now need to take a
-> task rather than the exchange.
->
-> I personally slightly prefer the layered approach, but don't care that
-> strongly.
+On Sun, Jan 23, 2022 at 04:54:06PM -0800, Dan Williams wrote:
+> Allow for a "-s, --serial" option to turn the argument list into serial
+> identifiers.
+> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  Documentation/cxl/memdev-option.txt |    5 ++++
+>  Documentation/cxl/meson.build       |    4 ++-
+>  cxl/memdev.c                        |   45 ++++++++++++++++++++++++++---------
+>  3 files changed, 41 insertions(+), 13 deletions(-)
+> 
+> diff --git a/Documentation/cxl/memdev-option.txt b/Documentation/cxl/memdev-option.txt
+> index e7785827ab4c..64348bed1791 100644
+> --- a/Documentation/cxl/memdev-option.txt
+> +++ b/Documentation/cxl/memdev-option.txt
+> @@ -2,3 +2,8 @@
+>  A 'memX' device name, or a memdev id number. Restrict the operation to
+>  the specified memdev(s). The keyword 'all' can be specified to indicate
+>  the lack of any restriction.
+> +
+> +-S::
+> +--serial::
+> +	Rather an a memdev id number, interpret the <memdev> argument(s)
 
-Like I said, you and Ira are holding the pen, so if you decide to keep
-the layering, just document the ontology somewhere and I'll let it go.
+Rather 'than'
+
+That's all :)
+> +	as a list of serial numbers.
+
+snip
+
