@@ -2,29 +2,29 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B60EC433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 11 Feb 2022 12:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93F0C433EF
+	for <linux-cxl@archiver.kernel.org>; Fri, 11 Feb 2022 12:19:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234142AbiBKMTD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 11 Feb 2022 07:19:03 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59004 "EHLO
+        id S232345AbiBKMTf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 11 Feb 2022 07:19:35 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232345AbiBKMTD (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 11 Feb 2022 07:19:03 -0500
+        with ESMTP id S235326AbiBKMTe (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 11 Feb 2022 07:19:34 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15829EB0
-        for <linux-cxl@vger.kernel.org>; Fri, 11 Feb 2022 04:19:02 -0800 (PST)
-Received: from fraeml706-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JwCMZ64wqz67QKq;
-        Fri, 11 Feb 2022 20:18:50 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE85BF26
+        for <linux-cxl@vger.kernel.org>; Fri, 11 Feb 2022 04:19:32 -0800 (PST)
+Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JwCHT5wgtz67x9D;
+        Fri, 11 Feb 2022 20:15:17 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
+ fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.21; Fri, 11 Feb 2022 13:18:59 +0100
+ 15.1.2308.21; Fri, 11 Feb 2022 13:19:30 +0100
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Fri, 11 Feb 2022 12:18:59 +0000
+ 15.1.2308.21; Fri, 11 Feb 2022 12:19:30 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <qemu-devel@nongnu.org>,
         =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
@@ -40,9 +40,9 @@ CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
         Chris Browy <cbrowy@avery-design.com>,
         Samarth Saxena <samarths@cadence.com>,
         "Dan Williams" <dan.j.williams@intel.com>
-Subject: [PATCH v6 22/43] hw/cxl/device: Implement get/set Label Storage Area (LSA)
-Date:   Fri, 11 Feb 2022 12:07:26 +0000
-Message-ID: <20220211120747.3074-23-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v6 23/43] hw/cxl/component: Implement host bridge MMIO (8.2.5, table 142)
+Date:   Fri, 11 Feb 2022 12:07:27 +0000
+Message-ID: <20220211120747.3074-24-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220211120747.3074-1-Jonathan.Cameron@huawei.com>
 References: <20220211120747.3074-1-Jonathan.Cameron@huawei.com>
@@ -59,209 +59,265 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Ben Widawsky <ben.widawsky@intel.com>
 
-Implement get and set handlers for the Label Storage Area
-used to hold data describing persistent memory configuration
-so that it can be ensured it is seen in the same configuration
-after reboot.
+CXL host bridges themselves may have MMIO. Since host bridges don't have
+a BAR they are treated as special for MMIO.  This patch includes
+i386/pc support.
+Also hook up the device reset now that we have have the MMIO
+space in which the results are visible.
+
+Note that we duplicate the PCI express case for the aml_build but
+the implementations will diverge when the CXL specific _OSC is
+introduced.
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- hw/cxl/cxl-mailbox-utils.c  | 57 +++++++++++++++++++++++++++++++++++++
- hw/mem/cxl_type3.c          | 56 +++++++++++++++++++++++++++++++++++-
- include/hw/cxl/cxl_device.h |  5 ++++
- 3 files changed, 117 insertions(+), 1 deletion(-)
+ hw/i386/acpi-build.c                | 25 +++++++++++-
+ hw/i386/pc.c                        | 27 ++++++++++++-
+ hw/pci-bridge/pci_expander_bridge.c | 62 ++++++++++++++++++++++++++++-
+ include/hw/cxl/cxl.h                |  3 ++
+ 4 files changed, 113 insertions(+), 4 deletions(-)
 
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index ccf9c3d794..f4a309ddbf 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -56,6 +56,8 @@ enum {
-         #define MEMORY_DEVICE 0x0
-     CCLS        = 0x41,
-         #define GET_PARTITION_INFO     0x0
-+        #define GET_LSA       0x2
-+        #define SET_LSA       0x3
- };
+diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
+index ebd47aa26f..0a28dd6d4e 100644
+--- a/hw/i386/acpi-build.c
++++ b/hw/i386/acpi-build.c
+@@ -28,6 +28,7 @@
+ #include "qemu/bitmap.h"
+ #include "qemu/error-report.h"
+ #include "hw/pci/pci.h"
++#include "hw/cxl/cxl.h"
+ #include "hw/core/cpu.h"
+ #include "target/i386/cpu.h"
+ #include "hw/misc/pvpanic.h"
+@@ -1564,10 +1565,21 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
+             }
  
- /* 8.2.8.4.5.1 Command Return Codes */
-@@ -327,7 +329,59 @@ static ret_code cmd_ccls_get_partition_info(struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
- }
+             scope = aml_scope("\\_SB");
+-            dev = aml_device("PC%.02X", bus_num);
++
++            if (pci_bus_is_cxl(bus)) {
++                dev = aml_device("CL%.02X", bus_num);
++            } else {
++                dev = aml_device("PC%.02X", bus_num);
++            }
+             aml_append(dev, aml_name_decl("_UID", aml_int(bus_num)));
+             aml_append(dev, aml_name_decl("_BBN", aml_int(bus_num)));
+-            if (pci_bus_is_express(bus)) {
++            if (pci_bus_is_cxl(bus)) {
++                aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A08")));
++                aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A03")));
++
++                /* Expander bridges do not have ACPI PCI Hot-plug enabled */
++                aml_append(dev, build_q35_osc_method(true));
++            } else if (pci_bus_is_express(bus)) {
+                 aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A08")));
+                 aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A03")));
  
-+static ret_code cmd_ccls_get_lsa(struct cxl_cmd *cmd,
-+                                 CXLDeviceState *cxl_dstate,
-+                                 uint16_t *len)
-+{
-+    struct {
-+        uint32_t offset;
-+        uint32_t length;
-+    } __attribute__((packed, __aligned__(8))) *get_lsa;
-+    CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
-+    CXLType3Class *cvc = CXL_TYPE3_DEV_GET_CLASS(ct3d);
-+    uint32_t offset, length;
+@@ -1587,6 +1599,15 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
+             aml_append(dev, aml_name_decl("_CRS", crs));
+             aml_append(scope, dev);
+             aml_append(dsdt, scope);
 +
-+    get_lsa = (void *)cmd->payload;
-+    offset = get_lsa->offset;
-+    length = get_lsa->length;
++            /* Handle the ranges for the PXB expanders */
++            if (pci_bus_is_cxl(bus)) {
++                MemoryRegion *mr = &machine->cxl_devices_state->host_mr;
++                uint64_t base = mr->addr;
 +
-+    *len = 0;
-+    if (offset + length > cvc->get_lsa_size(ct3d)) {
-+        return CXL_MBOX_INVALID_INPUT;
-+    }
-+
-+    *len = cvc->get_lsa(ct3d, get_lsa, length, offset);
-+    return CXL_MBOX_SUCCESS;
-+}
-+
-+static ret_code cmd_ccls_set_lsa(struct cxl_cmd *cmd,
-+                                 CXLDeviceState *cxl_dstate,
-+                                 uint16_t *len)
-+{
-+    struct {
-+        uint32_t offset;
-+        uint32_t rsvd;
-+    } __attribute__((packed, __aligned__(8))) *set_lsa = (void *)cmd->payload;
-+    CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
-+    CXLType3Class *cvc = CXL_TYPE3_DEV_GET_CLASS(ct3d);
-+    uint16_t plen = *len;
-+
-+    *len = 0;
-+    if (!plen) {
-+        return CXL_MBOX_SUCCESS;
-+    }
-+
-+    if (set_lsa->offset + plen > cvc->get_lsa_size(ct3d) + sizeof(*set_lsa)) {
-+        return CXL_MBOX_INVALID_INPUT;
-+    }
-+
-+    cvc->set_lsa(ct3d, (void *)set_lsa + sizeof(*set_lsa),
-+                 plen - sizeof(*set_lsa), set_lsa->offset);
-+    return CXL_MBOX_SUCCESS;
-+}
-+
- #define IMMEDIATE_CONFIG_CHANGE (1 << 1)
-+#define IMMEDIATE_DATA_CHANGE (1 << 2)
- #define IMMEDIATE_POLICY_CHANGE (1 << 3)
- #define IMMEDIATE_LOG_CHANGE (1 << 4)
++                crs_range_insert(crs_range_set.mem_ranges, base,
++                                 base + memory_region_size(mr) - 1);
++            }
+         }
+     }
  
-@@ -350,6 +404,9 @@ static struct cxl_cmd cxl_cmd_set[256][256] = {
-         cmd_identify_memory_device, 0, 0 },
-     [CCLS][GET_PARTITION_INFO] = { "CCLS_GET_PARTITION_INFO",
-         cmd_ccls_get_partition_info, 0, 0 },
-+    [CCLS][GET_LSA] = { "CCLS_GET_LSA", cmd_ccls_get_lsa, 0, 0 },
-+    [CCLS][SET_LSA] = { "CCLS_SET_LSA", cmd_ccls_set_lsa,
-+        ~0, IMMEDIATE_CONFIG_CHANGE | IMMEDIATE_DATA_CHANGE },
- };
- 
- void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index b16262d3cc..b1ba4bf0de 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -8,6 +8,7 @@
+diff --git a/hw/i386/pc.c b/hw/i386/pc.c
+index b6800a511a..7a18dce529 100644
+--- a/hw/i386/pc.c
++++ b/hw/i386/pc.c
+@@ -75,6 +75,7 @@
+ #include "acpi-build.h"
+ #include "hw/mem/pc-dimm.h"
+ #include "hw/mem/nvdimm.h"
++#include "hw/cxl/cxl.h"
  #include "qapi/error.h"
- #include "qemu/log.h"
- #include "qemu/module.h"
-+#include "qemu/pmem.h"
- #include "qemu/range.h"
- #include "qemu/rcu.h"
- #include "sysemu/hostmem.h"
-@@ -114,6 +115,11 @@ static void cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
-     memory_region_set_enabled(mr, true);
-     host_memory_backend_set_mapped(ct3d->hostmem, true);
-     ct3d->cxl_dstate.pmem_size = ct3d->hostmem->size;
+ #include "qapi/qapi-visit-common.h"
+ #include "qapi/qapi-visit-machine.h"
+@@ -815,6 +816,7 @@ void pc_memory_init(PCMachineState *pcms,
+     MachineClass *mc = MACHINE_GET_CLASS(machine);
+     PCMachineClass *pcmc = PC_MACHINE_GET_CLASS(pcms);
+     X86MachineState *x86ms = X86_MACHINE(pcms);
++    hwaddr cxl_base;
+ 
+     assert(machine->ram_size == x86ms->below_4g_mem_size +
+                                 x86ms->above_4g_mem_size);
+@@ -904,6 +906,26 @@ void pc_memory_init(PCMachineState *pcms,
+                                     &machine->device_memory->mr);
+     }
+ 
++    if (machine->cxl_devices_state->is_enabled) {
++        MemoryRegion *mr = &machine->cxl_devices_state->host_mr;
++        hwaddr cxl_size = MiB;
 +
-+    if (!ct3d->lsa) {
-+        error_setg(errp, "lsa property must be set");
++        if (pcmc->has_reserved_memory && machine->device_memory->base) {
++            cxl_base = machine->device_memory->base;
++            if (!pcmc->broken_reserved_end) {
++                cxl_base += memory_region_size(&machine->device_memory->mr);
++            }
++        } else if (pcms->sgx_epc.size != 0) {
++            cxl_base = sgx_epc_above_4g_end(&pcms->sgx_epc);
++        } else {
++            cxl_base = 0x100000000ULL + x86ms->above_4g_mem_size;
++        }
++
++        e820_add_entry(cxl_base, cxl_size, E820_RESERVED);
++        memory_region_init(mr, OBJECT(machine), "cxl_host_reg", cxl_size);
++        memory_region_add_subregion(system_memory, cxl_base, mr);
++    }
++
+     /* Initialize PC system firmware */
+     pc_system_firmware_init(pcms, rom_memory);
+ 
+@@ -964,7 +986,10 @@ uint64_t pc_pci_hole64_start(void)
+     X86MachineState *x86ms = X86_MACHINE(pcms);
+     uint64_t hole64_start = 0;
+ 
+-    if (pcmc->has_reserved_memory && ms->device_memory->base) {
++    if (ms->cxl_devices_state->host_mr.addr) {
++        hole64_start = ms->cxl_devices_state->host_mr.addr +
++            memory_region_size(&ms->cxl_devices_state->host_mr);
++    } else if (pcmc->has_reserved_memory && ms->device_memory->base) {
+         hole64_start = ms->device_memory->base;
+         if (!pcmc->broken_reserved_end) {
+             hole64_start += memory_region_size(&ms->device_memory->mr);
+diff --git a/hw/pci-bridge/pci_expander_bridge.c b/hw/pci-bridge/pci_expander_bridge.c
+index f762eb4a6e..b3b5f93650 100644
+--- a/hw/pci-bridge/pci_expander_bridge.c
++++ b/hw/pci-bridge/pci_expander_bridge.c
+@@ -75,6 +75,9 @@ struct PXBDev {
+     uint8_t bus_nr;
+     uint16_t numa_node;
+     bool bypass_iommu;
++    struct cxl_dev {
++        CXLHost *cxl_host_bridge;
++    } cxl;
+ };
+ 
+ static PXBDev *convert_to_pxb(PCIDevice *dev)
+@@ -92,6 +95,9 @@ static GList *pxb_dev_list;
+ 
+ #define TYPE_PXB_HOST "pxb-host"
+ 
++#define TYPE_PXB_CXL_HOST "pxb-cxl-host"
++#define PXB_CXL_HOST(obj) OBJECT_CHECK(CXLHost, (obj), TYPE_PXB_CXL_HOST)
++
+ static int pxb_bus_num(PCIBus *bus)
+ {
+     PXBDev *pxb = convert_to_pxb(bus->parent_dev);
+@@ -197,6 +203,52 @@ static const TypeInfo pxb_host_info = {
+     .class_init    = pxb_host_class_init,
+ };
+ 
++static void pxb_cxl_realize(DeviceState *dev, Error **errp)
++{
++    MachineState *ms = MACHINE(qdev_get_machine());
++    SysBusDevice *sbd = SYS_BUS_DEVICE(dev);
++    CXLHost *cxl = PXB_CXL_HOST(dev);
++    CXLComponentState *cxl_cstate = &cxl->cxl_cstate;
++    struct MemoryRegion *mr = &cxl_cstate->crb.component_registers;
++    hwaddr offset;
++
++    cxl_component_register_block_init(OBJECT(dev), cxl_cstate,
++                                      TYPE_PXB_CXL_HOST);
++    sysbus_init_mmio(sbd, mr);
++
++    offset = memory_region_size(mr) * ms->cxl_devices_state->next_mr_idx;
++    if (offset > memory_region_size(&ms->cxl_devices_state->host_mr)) {
++        error_setg(errp, "Insufficient space for pxb cxl host register space");
 +        return;
 +    }
- }
++
++    memory_region_add_subregion(&ms->cxl_devices_state->host_mr, offset, mr);
++    ms->cxl_devices_state->next_mr_idx++;
++}
++
++static void pxb_cxl_host_class_init(ObjectClass *class, void *data)
++{
++    DeviceClass *dc = DEVICE_CLASS(class);
++    PCIHostBridgeClass *hc = PCI_HOST_BRIDGE_CLASS(class);
++
++    hc->root_bus_path = pxb_host_root_bus_path;
++    dc->fw_name = "cxl";
++    dc->realize = pxb_cxl_realize;
++    /* Reason: Internal part of the pxb/pxb-pcie device, not usable by itself */
++    dc->user_creatable = false;
++}
++
++/*
++ * This is a device to handle the MMIO for a CXL host bridge. It does nothing
++ * else.
++ */
++static const TypeInfo cxl_host_info = {
++    .name          = TYPE_PXB_CXL_HOST,
++    .parent        = TYPE_PCI_HOST_BRIDGE,
++    .instance_size = sizeof(CXLHost),
++    .class_init    = pxb_cxl_host_class_init,
++};
++
+ /*
+  * Registers the PXB bus as a child of pci host root bus.
+  */
+@@ -245,6 +297,12 @@ static int pxb_map_irq_fn(PCIDevice *pci_dev, int pin)
  
- 
-@@ -168,12 +174,58 @@ static Property ct3_props[] = {
-     DEFINE_PROP_SIZE("size", CXLType3Dev, size, -1),
-     DEFINE_PROP_LINK("memdev", CXLType3Dev, hostmem, TYPE_MEMORY_BACKEND,
-                      HostMemoryBackend *),
-+    DEFINE_PROP_LINK("lsa", CXLType3Dev, lsa, TYPE_MEMORY_BACKEND,
-+                     HostMemoryBackend *),
-     DEFINE_PROP_END_OF_LIST(),
- };
- 
- static uint64_t get_lsa_size(CXLType3Dev *ct3d)
+ static void pxb_dev_reset(DeviceState *dev)
  {
--    return 0;
-+    MemoryRegion *mr;
++    CXLHost *cxl = PXB_CXL_DEV(dev)->cxl.cxl_host_bridge;
++    CXLComponentState *cxl_cstate = &cxl->cxl_cstate;
++    uint32_t *reg_state = cxl_cstate->crb.cache_mem_registers;
 +
-+    mr = host_memory_backend_get_memory(ct3d->lsa);
-+    return memory_region_size(mr);
-+}
-+
-+static void validate_lsa_access(MemoryRegion *mr, uint64_t size,
-+                                uint64_t offset)
-+{
-+    assert(offset + size <= memory_region_size(mr));
-+    assert(offset + size > offset);
-+}
-+
-+static uint64_t get_lsa(CXLType3Dev *ct3d, void *buf, uint64_t size,
-+                    uint64_t offset)
-+{
-+    MemoryRegion *mr;
-+    void *lsa;
-+
-+    mr = host_memory_backend_get_memory(ct3d->lsa);
-+    validate_lsa_access(mr, size, offset);
-+
-+    lsa = memory_region_get_ram_ptr(mr) + offset;
-+    memcpy(buf, lsa, size);
-+
-+    return size;
-+}
-+
-+static void set_lsa(CXLType3Dev *ct3d, const void *buf, uint64_t size,
-+                    uint64_t offset)
-+{
-+    MemoryRegion *mr;
-+    void *lsa;
-+
-+    mr = host_memory_backend_get_memory(ct3d->lsa);
-+    validate_lsa_access(mr, size, offset);
-+
-+    lsa = memory_region_get_ram_ptr(mr) + offset;
-+    memcpy(lsa, buf, size);
-+    memory_region_set_dirty(mr, offset, size);
-+
-+    /*
-+     * Just like the PMEM, if the guest is not allowed to exit gracefully, label
-+     * updates will get lost.
-+     */
++    cxl_component_register_init_common(reg_state, CXL2_ROOT_PORT);
++    ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, TARGET_COUNT, 8);
  }
  
- static void ct3_class_init(ObjectClass *oc, void *data)
-@@ -194,6 +246,8 @@ static void ct3_class_init(ObjectClass *oc, void *data)
-     device_class_set_props(dc, ct3_props);
+ static gint pxb_compare(gconstpointer a, gconstpointer b)
+@@ -281,12 +339,13 @@ static void pxb_dev_realize_common(PCIDevice *dev, enum BusType type,
+         dev_name = dev->qdev.id;
+     }
  
-     cvc->get_lsa_size = get_lsa_size;
-+    cvc->get_lsa = get_lsa;
-+    cvc->set_lsa = set_lsa;
- }
+-    ds = qdev_new(TYPE_PXB_HOST);
++    ds = qdev_new(type == CXL ? TYPE_PXB_CXL_HOST : TYPE_PXB_HOST);
+     if (type == PCIE) {
+         bus = pci_root_bus_new(ds, dev_name, NULL, NULL, 0, TYPE_PXB_PCIE_BUS);
+     } else if (type == CXL) {
+         bus = pci_root_bus_new(ds, dev_name, NULL, NULL, 0, TYPE_PXB_CXL_BUS);
+         bus->flags |= PCI_BUS_CXL;
++        PXB_CXL_DEV(dev)->cxl.cxl_host_bridge = PXB_CXL_HOST(ds);
+     } else {
+         bus = pci_root_bus_new(ds, "pxb-internal", NULL, NULL, 0, TYPE_PXB_BUS);
+         bds = qdev_new("pci-bridge");
+@@ -475,6 +534,7 @@ static void pxb_register_types(void)
+     type_register_static(&pxb_pcie_bus_info);
+     type_register_static(&pxb_cxl_bus_info);
+     type_register_static(&pxb_host_info);
++    type_register_static(&cxl_host_info);
+     type_register_static(&pxb_dev_info);
+     type_register_static(&pxb_pcie_dev_info);
+     type_register_static(&pxb_cxl_dev_info);
+diff --git a/include/hw/cxl/cxl.h b/include/hw/cxl/cxl.h
+index f74ba58ca1..6889362230 100644
+--- a/include/hw/cxl/cxl.h
++++ b/include/hw/cxl/cxl.h
+@@ -18,9 +18,12 @@
+ #define CXL_DEVICE_REG_BAR_IDX 2
  
- static const TypeInfo ct3d_info = {
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index ebb391153a..43908f161b 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -257,6 +257,11 @@ struct CXLType3Class {
+ #define TYPE_CXL_TYPE3_DEV "cxl-type3"
++#define CXL_WINDOW_MAX 10
  
-     /* public */
-     uint64_t (*get_lsa_size)(CXLType3Dev *ct3d);
-+
-+    uint64_t (*get_lsa)(CXLType3Dev *ct3d, void *buf, uint64_t size,
-+                        uint64_t offset);
-+    void (*set_lsa)(CXLType3Dev *ct3d, const void *buf, uint64_t size,
-+                    uint64_t offset);
- };
+ typedef struct CXLState {
+     bool is_enabled;
++    MemoryRegion host_mr;
++    unsigned int next_mr_idx;
+ } CXLState;
  
  #endif
 -- 
