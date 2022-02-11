@@ -2,158 +2,90 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3C1C433F5
-	for <linux-cxl@archiver.kernel.org>; Thu, 10 Feb 2022 23:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 535F2C433F5
+	for <linux-cxl@archiver.kernel.org>; Fri, 11 Feb 2022 01:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345360AbiBJXCt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 10 Feb 2022 18:02:49 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:55192 "EHLO
+        id S1346600AbiBKBEn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 10 Feb 2022 20:04:43 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:47400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345039AbiBJXCt (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Feb 2022 18:02:49 -0500
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23EDD27A;
-        Thu, 10 Feb 2022 15:02:49 -0800 (PST)
-Received: by mail-lj1-x236.google.com with SMTP id k10so7163472ljq.2;
-        Thu, 10 Feb 2022 15:02:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=utz0VRFK/Z4T1V8Xj6WH93qgAKh3TJKNnOSR9iLg9ic=;
-        b=Tohe9kBajf8I3Veod2AThoiouhOpdws6koyqaGcfiM/5AatC8ADlPeXTzP9K+U7xxy
-         nJ7/DV2KZ+ptjt+NxZi5y53elUaAiebmmRh8/SeVhccMpPgz0kxuAiiqtZ+ejtUbBmnd
-         i5eiHBSHABKrj5GEbYs2eCMpkP2ZDJcFCw4odvV7AtdAHNUQOCrvWj80PVkANMngwvUC
-         /FOv+S5rzmyB/6a0c+1t4GLz7MIry0fLnQh+TujqNdH88vunQDBt+KnEa7zyFjCI2bFb
-         IV+z2yxuudte9uaS2Zb3BJQqL0dbpHL7i0wr7W3bCAArLumz2C3mARUsq3Bk50L3q9X0
-         KV5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=utz0VRFK/Z4T1V8Xj6WH93qgAKh3TJKNnOSR9iLg9ic=;
-        b=VkZOrX4HNSJg2Rb4M1blTWkb8vtbU+2JCdqoyHT7CQj7uEOIKKK1sfRrpGatGmU3x6
-         5weQqFyw5ya2tVKNRty/+Sgzm31sQ09qPOpjzUelIjokPw/SyJWF+8vOBTEdrAmvspcN
-         ZeBlsHTyeP+0xulgIX+a2AQGMOI19zUrXA915GdmvQxSz+j8JXnDXTmlCmPO1OEGGoVR
-         fmCikixmG21aBhQ2Hl35daHFvHX3qbeqcMoPTJTUcBhZsl29W84Nl7/sbaQFkgbrGmZH
-         63kJJf4BayP6jQdfmdwo+y0xTOdmElFUQ/Ec3ftf5RKAau5Y3kLILdVtEjsEOGZGDrLP
-         fxxw==
-X-Gm-Message-State: AOAM531WhAF3nTDPA+JZc+V3HEzu6cyyhnaaF/QzNZgHROQG2lzORbVO
-        fAxGJl4x5PspnlBMX2HDxtYCSkq3D3A=
-X-Google-Smtp-Source: ABdhPJwfh/ttJ3hH2u54w//qvoPdv8NShKMDdgORtEo/D2Hw/LBLfo4X5Pv/kZbgdNawQJjTDHP0fw==
-X-Received: by 2002:a2e:9916:: with SMTP id v22mr6014431lji.232.1644534167305;
-        Thu, 10 Feb 2022 15:02:47 -0800 (PST)
-Received: from localhost.localdomain (h-155-4-221-129.NA.cust.bahnhof.se. [155.4.221.129])
-        by smtp.gmail.com with ESMTPSA id h2sm1022378lfv.10.2022.02.10.15.02.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Feb 2022 15:02:46 -0800 (PST)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-To:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: [PATCH] cxl/core: Constify static attribute_group structs
-Date:   Fri, 11 Feb 2022 00:02:35 +0100
-Message-Id: <20220210230235.4463-1-rikard.falkeborn@gmail.com>
-X-Mailer: git-send-email 2.35.1
+        with ESMTP id S244058AbiBKBEm (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Feb 2022 20:04:42 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1F3410BB
+        for <linux-cxl@vger.kernel.org>; Thu, 10 Feb 2022 17:04:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1644541482; x=1676077482;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=z4eYwYIDRohzBBXlw9aGJhhdUWKIRY+4DRqUZznnX8Y=;
+  b=KW6LJGQMAItdc5mujMTMhBu0AQP30nLcitc0HMqI8G4yfGdX/DAL8QSQ
+   UrgmAuqgy0+0KfkP0kb1ggEcgTC7xo3Mn6xutBTAd7Wqv/vbIfh5JgrFM
+   GD/WaBU7JTflyNA9bDxRs7JiG6geKWLtCq4NsuXn//Tts6fkfi+jlgjqx
+   pmlJaqXk7vA1KIc7PsejkyUAttqXB6NsSOFVWby8OZa/eMQPAagV8kL8M
+   GKK1s0ZlICKSg/sz2CQGjkHXe7eFikugYfVRHTxk51/pOORpdi9tCg1Hn
+   yr2QymEB0n1h4gieEBfg2RR+/4b1b6H7Lqs8lhlsKNwoBjcj1VaUzSKO0
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10254"; a="229596606"
+X-IronPort-AV: E=Sophos;i="5.88,359,1635231600"; 
+   d="scan'208";a="229596606"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2022 17:04:42 -0800
+X-IronPort-AV: E=Sophos;i="5.88,359,1635231600"; 
+   d="scan'208";a="629920186"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2022 17:04:42 -0800
+Subject: [PATCH] cxl/port: Fix endpoint refcount leak
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     ben.widawsky@intel.com
+Date:   Thu, 10 Feb 2022 17:04:42 -0800
+Message-ID: <164454148209.3429624.12905500880311609053.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The only usage of these is to put their address in arrays of pointers to
-const struct attribute_group, so make them const to allow the compiler
-to put them in read-only memory.
+An endpoint can be unregistered via two paths. Either its parent port is
+unregistered, or the memdev that registered the endpoint is removed. The
+memdev remove path is responsible for synchronizing against the parent
+->remove() event and if the memdev remove path wins, manually trigger
+unregister_port() via devm_release_action(). Until that race is resolved
+the memdev remove path holds a reference on the endpoint.
 
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+If the parent port for the endpoint can not be found that is an
+indication that the endpoint has already been registered. Be sure to
+drop the reference in all exit paths from delete_endpoint().
+
+Fixes: 8dd2bc0f8e02 ("cxl/mem: Add the cxl_mem driver")
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/bus.c    | 8 ++++----
- drivers/cxl/core/core.h   | 2 +-
- drivers/cxl/core/memdev.c | 6 +++---
- 3 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/cxl/core/port.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-index 3f9b98ecd18b..4532ef8b806f 100644
---- a/drivers/cxl/core/bus.c
-+++ b/drivers/cxl/core/bus.c
-@@ -38,7 +38,7 @@ static struct attribute *cxl_base_attributes[] = {
- 	NULL,
- };
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index d29eb2abdbc2..0fc1441be014 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -850,7 +850,7 @@ static void delete_endpoint(void *data)
  
--struct attribute_group cxl_base_attribute_group = {
-+const struct attribute_group cxl_base_attribute_group = {
- 	.attrs = cxl_base_attributes,
- };
+ 	parent_port = cxl_mem_find_port(cxlmd);
+ 	if (!parent_port)
+-		return;
++		goto out;
+ 	parent = &parent_port->dev;
  
-@@ -136,7 +136,7 @@ static struct attribute *cxl_decoder_base_attrs[] = {
- 	NULL,
- };
+ 	cxl_device_lock(parent);
+@@ -860,6 +860,7 @@ static void delete_endpoint(void *data)
+ 	}
+ 	cxl_device_unlock(parent);
+ 	put_device(parent);
++out:
+ 	put_device(&endpoint->dev);
+ }
  
--static struct attribute_group cxl_decoder_base_attribute_group = {
-+static const struct attribute_group cxl_decoder_base_attribute_group = {
- 	.attrs = cxl_decoder_base_attrs,
- };
- 
-@@ -148,7 +148,7 @@ static struct attribute *cxl_decoder_root_attrs[] = {
- 	NULL,
- };
- 
--static struct attribute_group cxl_decoder_root_attribute_group = {
-+static const struct attribute_group cxl_decoder_root_attribute_group = {
- 	.attrs = cxl_decoder_root_attrs,
- };
- 
-@@ -164,7 +164,7 @@ static struct attribute *cxl_decoder_switch_attrs[] = {
- 	NULL,
- };
- 
--static struct attribute_group cxl_decoder_switch_attribute_group = {
-+static const struct attribute_group cxl_decoder_switch_attribute_group = {
- 	.attrs = cxl_decoder_switch_attrs,
- };
- 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index e0c9aacc4e9c..1c0562cc9297 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -7,7 +7,7 @@
- extern const struct device_type cxl_nvdimm_bridge_type;
- extern const struct device_type cxl_nvdimm_type;
- 
--extern struct attribute_group cxl_base_attribute_group;
-+extern const struct attribute_group cxl_base_attribute_group;
- 
- struct cxl_send_command;
- struct cxl_mem_query_commands;
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 61029cb7ac62..ac2d40741686 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -106,16 +106,16 @@ static struct attribute *cxl_memdev_ram_attributes[] = {
- 	NULL,
- };
- 
--static struct attribute_group cxl_memdev_attribute_group = {
-+static const struct attribute_group cxl_memdev_attribute_group = {
- 	.attrs = cxl_memdev_attributes,
- };
- 
--static struct attribute_group cxl_memdev_ram_attribute_group = {
-+static const struct attribute_group cxl_memdev_ram_attribute_group = {
- 	.name = "ram",
- 	.attrs = cxl_memdev_ram_attributes,
- };
- 
--static struct attribute_group cxl_memdev_pmem_attribute_group = {
-+static const struct attribute_group cxl_memdev_pmem_attribute_group = {
- 	.name = "pmem",
- 	.attrs = cxl_memdev_pmem_attributes,
- };
--- 
-2.35.1
 
