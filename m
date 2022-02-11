@@ -2,29 +2,29 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A37CC433F5
-	for <linux-cxl@archiver.kernel.org>; Fri, 11 Feb 2022 12:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9304DC433EF
+	for <linux-cxl@archiver.kernel.org>; Fri, 11 Feb 2022 12:18:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349942AbiBKMRd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 11 Feb 2022 07:17:33 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:58202 "EHLO
+        id S1349960AbiBKMSC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 11 Feb 2022 07:18:02 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:58724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232345AbiBKMRa (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 11 Feb 2022 07:17:30 -0500
+        with ESMTP id S1347912AbiBKMSC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 11 Feb 2022 07:18:02 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDA77F28
-        for <linux-cxl@vger.kernel.org>; Fri, 11 Feb 2022 04:17:29 -0800 (PST)
-Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JwCKp49MGz67Y9y;
-        Fri, 11 Feb 2022 20:17:18 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1330CEB0
+        for <linux-cxl@vger.kernel.org>; Fri, 11 Feb 2022 04:18:01 -0800 (PST)
+Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JwCFj5KlDz67yK4;
+        Fri, 11 Feb 2022 20:13:45 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
+ fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Fri, 11 Feb 2022 13:17:27 +0100
+ 15.1.2308.21; Fri, 11 Feb 2022 13:17:58 +0100
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Fri, 11 Feb 2022 12:17:27 +0000
+ 15.1.2308.21; Fri, 11 Feb 2022 12:17:57 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <qemu-devel@nongnu.org>,
         =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
@@ -40,9 +40,9 @@ CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
         Chris Browy <cbrowy@avery-design.com>,
         Samarth Saxena <samarths@cadence.com>,
         "Dan Williams" <dan.j.williams@intel.com>
-Subject: [PATCH v6 19/43] hw/cxl/device: Implement MMIO HDM decoding (8.2.5.12)
-Date:   Fri, 11 Feb 2022 12:07:23 +0000
-Message-ID: <20220211120747.3074-20-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v6 20/43] hw/cxl/device: Add some trivial commands
+Date:   Fri, 11 Feb 2022 12:07:24 +0000
+Message-ID: <20220211120747.3074-21-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220211120747.3074-1-Jonathan.Cameron@huawei.com>
 References: <20220211120747.3074-1-Jonathan.Cameron@huawei.com>
@@ -59,109 +59,132 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Ben Widawsky <ben.widawsky@intel.com>
 
-A device's volatile and persistent memory are known Host Defined Memory
-(HDM) regions. The mechanism by which the device is programmed to claim
-the addresses associated with those regions is through dedicated logic
-known as the HDM decoder. In order to allow the OS to properly program
-the HDMs, the HDM decoders must be modeled.
-
-There are two ways the HDM decoders can be implemented, the legacy
-mechanism is through the PCIe DVSEC programming from CXL 1.1 (8.1.3.8),
-and MMIO is found in 8.2.5.12 of the spec. For now, 8.1.3.8 is not
-implemented.
-
-Much of CXL device logic is implemented in cxl-utils. The HDM decoder
-however is implemented directly by the device implementation.
-Whilst the implementation currently does no validity checks on the
-encoder set up, future work will add sanity checking specific to
-the type of cxl component.
+GET_FW_INFO and GET_PARTITION_INFO, for this emulation, is equivalent to
+info already returned in the IDENTIFY command. To have a more robust
+implementation, add those.
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- hw/mem/cxl_type3.c | 54 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ hw/cxl/cxl-mailbox-utils.c | 69 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 68 insertions(+), 1 deletion(-)
 
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index c4021d2434..da091157f2 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -61,6 +61,56 @@ static void build_dvsecs(CXLType3Dev *ct3d)
-                                REG_LOC_DVSEC_REVID, dvsec);
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index 808faec114..d022711b2a 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -44,6 +44,8 @@ enum {
+         #define CLEAR_RECORDS   0x1
+         #define GET_INTERRUPT_POLICY   0x2
+         #define SET_INTERRUPT_POLICY   0x3
++    FIRMWARE_UPDATE = 0x02,
++        #define GET_INFO      0x0
+     TIMESTAMP   = 0x03,
+         #define GET           0x0
+         #define SET           0x1
+@@ -52,6 +54,8 @@ enum {
+         #define GET_LOG       0x1
+     IDENTIFY    = 0x40,
+         #define MEMORY_DEVICE 0x0
++    CCLS        = 0x41,
++        #define GET_PARTITION_INFO     0x0
+ };
+ 
+ /* 8.2.8.4.5.1 Command Return Codes */
+@@ -114,6 +118,39 @@ DEFINE_MAILBOX_HANDLER_NOP(events_clear_records);
+ DEFINE_MAILBOX_HANDLER_ZEROED(events_get_interrupt_policy, 4);
+ DEFINE_MAILBOX_HANDLER_NOP(events_set_interrupt_policy);
+ 
++/* 8.2.9.2.1 */
++static ret_code cmd_firmware_update_get_info(struct cxl_cmd *cmd,
++                                             CXLDeviceState *cxl_dstate,
++                                             uint16_t *len)
++{
++    struct {
++        uint8_t slots_supported;
++        uint8_t slot_info;
++        uint8_t caps;
++        uint8_t rsvd[0xd];
++        char fw_rev1[0x10];
++        char fw_rev2[0x10];
++        char fw_rev3[0x10];
++        char fw_rev4[0x10];
++    } __attribute__((packed)) *fw_info;
++    _Static_assert(sizeof(*fw_info) == 0x50, "Bad firmware info size");
++
++    if (cxl_dstate->pmem_size < (256 << 20)) {
++        return CXL_MBOX_INTERNAL_ERROR;
++    }
++
++    fw_info = (void *)cmd->payload;
++    memset(fw_info, 0, sizeof(*fw_info));
++
++    fw_info->slots_supported = 2;
++    fw_info->slot_info = BIT(0) | BIT(3);
++    fw_info->caps = 0;
++    snprintf(fw_info->fw_rev1, 0x10, "BWFW VERSION %02d", 0);
++
++    *len = sizeof(*fw_info);
++    return CXL_MBOX_SUCCESS;
++}
++
+ /* 8.2.9.3.1 */
+ static ret_code cmd_timestamp_get(struct cxl_cmd *cmd,
+                                   CXLDeviceState *cxl_dstate,
+@@ -260,6 +297,33 @@ static ret_code cmd_identify_memory_device(struct cxl_cmd *cmd,
+     return CXL_MBOX_SUCCESS;
  }
  
-+static void hdm_decoder_commit(CXLType3Dev *ct3d, int which)
++static ret_code cmd_ccls_get_partition_info(struct cxl_cmd *cmd,
++                                           CXLDeviceState *cxl_dstate,
++                                           uint16_t *len)
 +{
-+    ComponentRegisters *cregs = &ct3d->cxl_cstate.crb;
-+    uint32_t *cache_mem = cregs->cache_mem_registers;
++    struct {
++        uint64_t active_vmem;
++        uint64_t active_pmem;
++        uint64_t next_vmem;
++        uint64_t next_pmem;
++    } __attribute__((packed)) *part_info = (void *)cmd->payload;
++    _Static_assert(sizeof(*part_info) == 0x20, "Bad get partition info size");
++    uint64_t size = cxl_dstate->pmem_size;
 +
-+    assert(which == 0);
-+
-+    /* TODO: Sanity checks that the decoder is possible */
-+    ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, COMMIT, 0);
-+    ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, ERR, 0);
-+
-+    ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, COMMITTED, 1);
-+}
-+
-+static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
-+                           unsigned size)
-+{
-+    CXLComponentState *cxl_cstate = opaque;
-+    ComponentRegisters *cregs = &cxl_cstate->crb;
-+    CXLType3Dev *ct3d = container_of(cxl_cstate, CXLType3Dev, cxl_cstate);
-+    uint32_t *cache_mem = cregs->cache_mem_registers;
-+    bool should_commit = false;
-+    int which_hdm = -1;
-+
-+    assert(size == 4);
-+
-+    switch (offset) {
-+    case A_CXL_HDM_DECODER0_CTRL:
-+        should_commit = FIELD_EX32(value, CXL_HDM_DECODER0_CTRL, COMMIT);
-+        which_hdm = 0;
-+        break;
-+    default:
-+        break;
++    if (!QEMU_IS_ALIGNED(size, 256 << 20)) {
++        return CXL_MBOX_INTERNAL_ERROR;
 +    }
 +
-+    stl_le_p((uint8_t *)cache_mem + offset, value);
-+    if (should_commit) {
-+        hdm_decoder_commit(ct3d, which_hdm);
-+    }
++    /* PMEM only */
++    part_info->active_vmem = 0;
++    part_info->next_vmem = 0;
++    part_info->active_pmem = size / (256 << 20);
++    part_info->next_pmem = part_info->active_pmem;
++
++    *len = sizeof(*part_info);
++    return CXL_MBOX_SUCCESS;
 +}
 +
-+static void ct3_finalize(Object *obj)
-+{
-+    CXLType3Dev *ct3d = CT3(obj);
-+    CXLComponentState *cxl_cstate = &ct3d->cxl_cstate;
-+    ComponentRegisters *regs = &cxl_cstate->crb;
-+
-+    g_free((void *)regs->special_ops);
-+}
-+
- static void cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
+ #define IMMEDIATE_CONFIG_CHANGE (1 << 1)
+ #define IMMEDIATE_POLICY_CHANGE (1 << 3)
+ #define IMMEDIATE_LOG_CHANGE (1 << 4)
+@@ -273,15 +337,18 @@ static struct cxl_cmd cxl_cmd_set[256][256] = {
+         cmd_events_get_interrupt_policy, 0, 0 },
+     [EVENTS][SET_INTERRUPT_POLICY] = { "EVENTS_SET_INTERRUPT_POLICY",
+         cmd_events_set_interrupt_policy, 4, IMMEDIATE_CONFIG_CHANGE },
++    [FIRMWARE_UPDATE][GET_INFO] = { "FIRMWARE_UPDATE_GET_INFO",
++        cmd_firmware_update_get_info, 0, 0 },
+     [TIMESTAMP][GET] = { "TIMESTAMP_GET", cmd_timestamp_get, 0, 0 },
+     [TIMESTAMP][SET] = { "TIMESTAMP_SET", cmd_timestamp_set, 8, IMMEDIATE_POLICY_CHANGE },
+     [LOGS][GET_SUPPORTED] = { "LOGS_GET_SUPPORTED", cmd_logs_get_supported, 0, 0 },
+     [LOGS][GET_LOG] = { "LOGS_GET_LOG", cmd_logs_get_log, 0x18, 0 },
+     [IDENTIFY][MEMORY_DEVICE] = { "IDENTIFY_MEMORY_DEVICE",
+         cmd_identify_memory_device, 0, 0 },
++    [CCLS][GET_PARTITION_INFO] = { "CCLS_GET_PARTITION_INFO",
++        cmd_ccls_get_partition_info, 0, 0 },
+ };
+ 
+-
+ void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
  {
-     MemoryRegion *mr;
-@@ -103,6 +153,9 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
-     ct3d->cxl_cstate.pdev = pci_dev;
-     build_dvsecs(ct3d);
- 
-+    regs->special_ops = g_new0(MemoryRegionOps, 1);
-+    regs->special_ops->write = ct3d_reg_write;
-+
-     cxl_component_register_block_init(OBJECT(pci_dev), cxl_cstate,
-                                       TYPE_CXL_TYPE3_DEV);
- 
-@@ -155,6 +208,7 @@ static const TypeInfo ct3d_info = {
-     .parent = TYPE_PCI_DEVICE,
-     .class_init = ct3_class_init,
-     .instance_size = sizeof(CXLType3Dev),
-+    .instance_finalize = ct3_finalize,
-     .interfaces = (InterfaceInfo[]) {
-         { INTERFACE_CXL_DEVICE },
-         { INTERFACE_PCIE_DEVICE },
+     uint16_t ret = CXL_MBOX_SUCCESS;
 -- 
 2.32.0
 
