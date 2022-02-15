@@ -2,147 +2,221 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1093C433EF
-	for <linux-cxl@archiver.kernel.org>; Mon, 14 Feb 2022 19:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96164C433F5
+	for <linux-cxl@archiver.kernel.org>; Tue, 15 Feb 2022 16:10:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229483AbiBNT5K (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 14 Feb 2022 14:57:10 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:57000 "EHLO
+        id S241380AbiBOQKc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 15 Feb 2022 11:10:32 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229590AbiBNT5K (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Feb 2022 14:57:10 -0500
-Received: from mail-oi1-x22f.google.com (mail-oi1-x22f.google.com [IPv6:2607:f8b0:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B912116A58C
-        for <linux-cxl@vger.kernel.org>; Mon, 14 Feb 2022 11:56:53 -0800 (PST)
-Received: by mail-oi1-x22f.google.com with SMTP id u13so18600386oie.5
-        for <linux-cxl@vger.kernel.org>; Mon, 14 Feb 2022 11:56:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=LNIIAz3zQQaMmzK3Lz7n5biZPq3E2euYGu1gGCUEiUU=;
-        b=e+9/aIcapobLzUjuzWwCgjtrECD4Nz67ZklJZLlhaJiox8qfEoUy+GU7FMZlc9tQKf
-         70XobxmHxms3p+b3cX1vPLmpMzFtT4TUxGpxDFVgIsD1tIcgAidU7NyTOhAPOvtWOOOL
-         trGD4b8Z6qqdEiHjjhgqr21N2vFoaCE3/fgG4Wh6mNqpZLb+OIGpnaXP37C5FH3V44Nc
-         3SxQUaw7z7VJb3t8wRiidTg9AXs/QyF4FNIIvKuYzseQDibK2D4jwHdkgpSqWN1+UJ6C
-         7PaeNPx+1C6E06lXbGybY0/do0xzLQHhRBwrNTxzgB3KagOb9AUR7u2K0azCw4YX3nvJ
-         hDwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=LNIIAz3zQQaMmzK3Lz7n5biZPq3E2euYGu1gGCUEiUU=;
-        b=f3gPczMxdwU5jJ173fdAvxUBBvzy4yK/oF+E/A7JRnsFM5pBmGJtB+N0qgeiu0tLc7
-         fQAAZqNxbkLy33KdBF9Xt7b2VYFwVOboM8GGHWea6iDftbO8NCIgMVgpJpeB4U7rmidk
-         W68Lidj6kx5VC/qUKfCt/evTfmJ2QLR0hQTPd41mjPOzHPiR25cnJdTjtcBakiAx5ObC
-         sYj7f+SlFzCEpjk2rk8h8/AyuDXg2ZuUempHdDy3LG5UKIi3CWwS6q7EZScoXW+Hw2VK
-         omgLZdQIRXflqSsipufVQkSnWwvrnVIfxTUJqWV331w2mU0adQ/1UyQhVKxJd8MzONaI
-         Tylg==
-X-Gm-Message-State: AOAM532cQ9xDlKDoYnRQESqQyy9MT6bKnnUylSIGzZuPoiXnoIqx50RA
-        eMTYqd2gx0wfFWTP0glH+LqCW3GjhvBibJd7FpampVohmOk=
-X-Google-Smtp-Source: ABdhPJxVTF5h08NSNXTHrXWdDbPywfICYCIAA4dvceyfHnC11SOo3zAin7e+e2W6f7vCUWzlvI+mSWTgxqtkOna79vk=
-X-Received: by 2002:a17:90a:e7cb:: with SMTP id kb11mr94342pjb.220.1644866060312;
- Mon, 14 Feb 2022 11:14:20 -0800 (PST)
+        with ESMTP id S241381AbiBOQKc (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 15 Feb 2022 11:10:32 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74C306C940;
+        Tue, 15 Feb 2022 08:10:20 -0800 (PST)
+Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JymHm6sXzz67wr8;
+        Wed, 16 Feb 2022 00:09:24 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Tue, 15 Feb 2022 17:10:16 +0100
+Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.21; Tue, 15 Feb
+ 2022 16:10:16 +0000
+Date:   Tue, 15 Feb 2022 16:10:14 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <patches@lists.linux.dev>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Ira Weiny" <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Bjorn Helgaas" <helgaas@kernel.org>, <nvdimm@lists.linux.dev>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v3 11/14] cxl/region: Add support for single switch
+ level
+Message-ID: <20220215161014.00001c68@Huawei.com>
+In-Reply-To: <20220128002707.391076-12-ben.widawsky@intel.com>
+References: <20220128002707.391076-1-ben.widawsky@intel.com>
+        <20220128002707.391076-12-ben.widawsky@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <164298430609.3018233.3860765171749496117.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164386092069.765089.14895687988217608642.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20220214174521.00003b84@Huawei.com>
-In-Reply-To: <20220214174521.00003b84@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 14 Feb 2022 11:14:13 -0800
-Message-ID: <CAPcyv4g++ishMNkSLYAq3ss_qMXv-gabubVG_q2H9ed+C7KW-A@mail.gmail.com>
-Subject: Re: [PATCH v4 35/40] cxl/core/port: Add endpoint decoders
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.41]
+X-ClientProxiedBy: lhreml701-chm.china.huawei.com (10.201.108.50) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Feb 14, 2022 at 9:47 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Wed, 02 Feb 2022 20:02:06 -0800
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > From: Ben Widawsky <ben.widawsky@intel.com>
-> >
-> > Recall that a CXL Port is any object that publishes a CXL HDM Decoder
-> > Capability structure. That is Host Bridge and Switches that have been
-> > enabled so far. Now, add decoder support to the 'endpoint' CXL Ports
-> > registered by the cxl_mem driver. They mostly share the same enumeratio=
-n
-> > as Bridges and Switches, but witout a target list. The target of
-> > endpoint decode is device-internal DPA space, not another downstream
-> > port.
-> >
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > [djbw: clarify changelog, hookup enumeration in the port driver]
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->
-> ...
->
-> > index f5e5b4ac8228..990b6670222e 100644
-> > --- a/drivers/cxl/cxl.h
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -346,6 +346,7 @@ struct cxl_decoder *cxl_root_decoder_alloc(struct c=
-xl_port *port,
-> >  struct cxl_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
-> >                                            unsigned int nr_targets);
-> >  int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
-> > +struct cxl_decoder *cxl_endpoint_decoder_alloc(struct cxl_port *port);
-> >  int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map);
-> >  int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cx=
-ld);
-> >  int cxl_endpoint_autoremove(struct cxl_memdev *cxlmd, struct cxl_port =
-*endpoint);
-> > diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> > index 4d4e23b9adff..d420da5fc39c 100644
-> > --- a/drivers/cxl/port.c
-> > +++ b/drivers/cxl/port.c
-> > @@ -40,16 +40,17 @@ static int cxl_port_probe(struct device *dev)
-> >               struct cxl_memdev *cxlmd =3D to_cxl_memdev(port->uport);
-> >
-> >               get_device(&cxlmd->dev);
-> > -             return devm_add_action_or_reset(dev, schedule_detach, cxl=
-md);
-> > +             rc =3D devm_add_action_or_reset(dev, schedule_detach, cxl=
-md);
-> > +             if (rc)
-> > +                     return rc;
-> > +     } else {
-> > +             rc =3D devm_cxl_port_enumerate_dports(port);
-> > +             if (rc < 0)
-> > +                     return rc;
-> > +             if (rc =3D=3D 1)
-> > +                     return devm_cxl_add_passthrough_decoder(port);
->
-> This is just a convenient place to ask a question rather that really bein=
-g
-> connected to this patch.
->
-> 8.2.5.12 in CXL r2.0
->
-> "A CXL Host Bridge is identified as an ACPI device with Host Interface ID=
- (HID) of
-> =E2=80=9CACPI0016=E2=80=9D and is associated with one or more CXL Root po=
-rts. Any CXL 2.0 Host
-> Bridge that is associated with more than one CXL Root Port must contain o=
-ne instance
-> of this capability structure in the CHBCR. This capability structure reso=
-lves the target
-> CXL Root Ports for a given memory address."
->
-> Suggests to me that there may be an HDM decoder in the one port case and =
-it may need
-> programming.
->
-> Hitting this in QEMU but I suspect it'll occur in real systems as well.
+On Thu, 27 Jan 2022 16:27:04 -0800
+Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-It seems reasonable to wait for a real system like that to arrive. If
-someone is cheap enough to build a one-port host bridge would they
-spend the silicon gates on these unnecessary registers?
+> CXL switches have HDM decoders just like host bridges and endpoints.
+> Their programming works in a similar fashion.
+> 
+> The spec does not prohibit multiple levels of switches, however, those
+> are not implemented at this time.
+> 
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+Hi Ben,
+
+I'm still hammering away at trying to bring up qemu switch emulation.
+Even though I know you are reworking this, seems only sensible to point
+out issues when I hit them.  If no longer relevant you can ignore them!
+
+With these bits and a few other minor tweaks the decoders now look
+to be right - I just need to wire up the QEMU side so that
+I don't get hardware exceptions on actually reading and writing once
+the region is bound :) 
+
+Thanks,
+
+J
+> ---
+>  drivers/cxl/cxl.h    |  5 ++++
+>  drivers/cxl/region.c | 61 ++++++++++++++++++++++++++++++++++++++++++--
+>  2 files changed, 64 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 8ace6cca0776..d70d8c85d05f 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -96,6 +96,11 @@ static inline u8 cxl_to_ig(u16 g)
+>  	return ilog2(g) - 8;
+>  }
+>  
+> +static inline int cxl_to_ways(u8 ways)
+> +{
+> +	return 1 << ways;
+> +}
+> +
+>  static inline bool cxl_is_interleave_ways_valid(int iw)
+>  {
+>  	switch (iw) {
+> diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
+> index b8982be13bfe..f748060733dd 100644
+> --- a/drivers/cxl/region.c
+> +++ b/drivers/cxl/region.c
+> @@ -359,6 +359,23 @@ static bool has_switch(const struct cxl_region *cxlr)
+>  	return false;
+>  }
+>  
+> +static bool has_multi_switch(const struct cxl_region *cxlr)
+> +{
+> +	struct cxl_memdev *ep;
+> +	int i;
+> +
+> +	for_each_cxl_endpoint(ep, cxlr, i)
+> +		if (ep->port->depth > 3)
+> +			return true;
+> +
+> +	return false;
+> +}
+> +
+> +static struct cxl_port *get_switch(struct cxl_memdev *ep)
+> +{
+> +	return to_cxl_port(ep->port->dev.parent);
+> +}
+> +
+>  static struct cxl_decoder *get_decoder(struct cxl_region *cxlr,
+>  				       struct cxl_port *p)
+>  {
+> @@ -409,6 +426,8 @@ static bool region_hb_rp_config_valid(struct cxl_region *cxlr,
+>  				      const struct cxl_decoder *rootd,
+>  				      bool state_update)
+>  {
+> +	const int region_ig = cxl_to_ig(cxlr->config.interleave_granularity);
+> +	const int region_eniw = cxl_to_eniw(cxlr->config.interleave_ways);
+>  	const int num_root_ports = get_num_root_ports(cxlr);
+>  	struct cxl_port *hbs[CXL_DECODER_MAX_INTERLEAVE];
+>  	struct cxl_decoder *cxld, *c;
+> @@ -416,8 +435,12 @@ static bool region_hb_rp_config_valid(struct cxl_region *cxlr,
+>  
+>  	hb_count = get_unique_hostbridges(cxlr, hbs);
+>  
+> -	/* TODO: Switch support */
+> -	if (has_switch(cxlr))
+> +	/* TODO: support multiple levels of switches */
+> +	if (has_multi_switch(cxlr))
+> +		return false;
+> +
+> +	/* TODO: x3 interleave for switches is hard. */
+> +	if (has_switch(cxlr) && !is_power_of_2(region_ways(cxlr)))
+>  		return false;
+>  
+>  	/*
+> @@ -470,8 +493,14 @@ static bool region_hb_rp_config_valid(struct cxl_region *cxlr,
+>  		list_for_each_entry(rp, &hb->dports, list) {
+>  			struct cxl_memdev *ep;
+>  			int port_grouping = -1;
+> +			int target_ndx;
+As things currently stand, with a switch connected below a single port
+of a host bridge (4 type 3 off the switch) this will program the HB
+decoder to have 4 targets, all routed to the switch USP.
+
+There is an argument that this is correct but its not what I'd expect.
+I'd expect to see 1 target only.  It's not a problem for small cases, but
+with enough rp and switches we can run out of targets.
+
+>  
+>  			for_each_cxl_endpoint_hb(ep, cxlr, hb, idx) {
+> +				struct cxl_decoder *switch_cxld;
+> +				struct cxl_dport *target;
+> +				struct cxl_port *switch_port;
+> +				bool found = false;
+> +
+>  				if (get_rp(ep) != rp)
+>  					continue;
+>  
+> @@ -499,6 +528,34 @@ static bool region_hb_rp_config_valid(struct cxl_region *cxlr,
+>  
+>  				cxld->interleave_ways++;
+>  				cxld->target[port_grouping] = get_rp(ep);
+> +
+> +				/*
+> +				 * At least one switch is connected here if the endpoint
+> +				 * has a depth > 2
+> +				 */
+> +				if (ep->port->depth == 2)
+> +					continue;
+> +
+> +				/* Check the staged list to see if this
+> +				 * port has already been added
+> +				 */
+> +				switch_port = get_switch(ep);
+> +				list_for_each_entry(switch_cxld, &cxlr->staged_list, region_link) {
+> +					if (to_cxl_port(switch_cxld->dev.parent) == switch_port)
+> +						found = true;
+
+break;
+
+> +				}
+> +
+> +				if (found) {
+> +					target = cxl_find_dport_by_dev(switch_port, ep->dev.parent->parent);
+> +					switch_cxld->target[target_ndx++] = target;
+> +					continue;
+> +				}
+> +
+> +				target_ndx = 0;
+> +
+> +				switch_cxld = get_decoder(cxlr, switch_port);
+> +				switch_cxld->interleave_ways++;
+> +				switch_cxld->interleave_granularity = cxl_to_ways(region_ig + region_eniw);
+
+I'm not following this.  Perhaps comment on why this particular maths?  I was assuming the switch
+interleave granularity would that of the region as the switch is last level of decode.
+
+Need to do the equivalent here of what you do in the if (found) or the first target is missed.
+Also need to be updating interleave_ways only in the found path, not here (as the default is 1)
+
+>  			}
+>  		}
+>  	}
+
