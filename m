@@ -2,109 +2,75 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC57C433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Feb 2022 00:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9083DC433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Feb 2022 01:20:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229648AbiBQAZ2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 16 Feb 2022 19:25:28 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:44286 "EHLO
+        id S230142AbiBQBUy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 16 Feb 2022 20:20:54 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:44582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbiBQAZZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Feb 2022 19:25:25 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A17E22A97EC
-        for <linux-cxl@vger.kernel.org>; Wed, 16 Feb 2022 16:25:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645057512; x=1676593512;
-  h=subject:from:to:cc:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=JDhTIuqZPzLHPjbXHtTs7+FVrfLcSIbJFyebZ0U8+4o=;
-  b=SyngWuEygpJsv+rFJxS6YHRr+QtOBId/W19khtpWJOerSSvexWOp50QY
-   hw65DPB86rBiMsBfR1HeAEpEcoNyIBHdIYoqZBLD5VMYs5uO69Zc44ZNM
-   9iL2J82k315vcoNUPvSFQSdOU03v66CUAOofY0dIXm+S2+dPd485rYUXN
-   1GZBzYo903v3CatIGP63jRlv+MWmip7dPtV7ausPcqQbRjQ4LqhAMh5TA
-   lmjTAlNYbS9hMga3Vt4yhD/Zj5hoByRSnMxXnSzZa3RgZhUsTy48iRiXq
-   7sHNGK3n8LuyGLOwrpoprVfILiW5NPq4sGauVm/27i4AS7NPalFa9Kz/V
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10260"; a="337198244"
-X-IronPort-AV: E=Sophos;i="5.88,374,1635231600"; 
-   d="scan'208";a="337198244"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2022 16:25:12 -0800
-X-IronPort-AV: E=Sophos;i="5.88,374,1635231600"; 
-   d="scan'208";a="540491622"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2022 16:25:12 -0800
-Subject: [PATCH] cxl/port: Hold port reference until decoder release
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>
-Date:   Wed, 16 Feb 2022 16:25:11 -0800
-Message-ID: <164505751190.4175768.13324905271463416712.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        with ESMTP id S230173AbiBQBUy (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Feb 2022 20:20:54 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15FC72A0D49
+        for <linux-cxl@vger.kernel.org>; Wed, 16 Feb 2022 17:20:40 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id v13-20020a17090ac90d00b001b87bc106bdso7994480pjt.4
+        for <linux-cxl@vger.kernel.org>; Wed, 16 Feb 2022 17:20:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=i7cadtmmQLWpqnDfNO/7BqDxIT7kznXIolyywHVAbf4=;
+        b=sS4wdzZnPrT37CjCYgWCu8TLp11Ei7CFxuIjGDv44Mt2ivHoti/wY6MSdwNP0cKoXs
+         Z21zfBugMb1CY2vsjABdEjflXhE4sdqTYSfDLkoAWfYWucbo1M7uHtiAqtTpogLYrl0T
+         Bny4tAEmHxEn1N7T6sp5A5zMZsLgdkoxEdNhQMBVzalmJx54O6aDMEOdT2Io7FbEn8kA
+         36+YLJcNQWtJzG2nJiiiuLwlw2U0p7FhhKvp6vg923Gz/g7rsu250azpMQiZTwABpqnr
+         uPRpauBD6c9T+s5+i/bFlkwQZ/rM3RoYv8gkX6G0ez0kJPNKL/hqyrwrK3Wz+5D7lGGk
+         Ol4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i7cadtmmQLWpqnDfNO/7BqDxIT7kznXIolyywHVAbf4=;
+        b=3BVR1BuXUMqgJPXjYPdhFIjZgNaoLFjY0ZnbL4+UfbCAH3T2i06R71HJR9X6gYp+gv
+         phYq2hmTVs8E+KVPIMoeOHGzr3F7PyUmJLYyPUU/DGg+Iz1Vqdh644qSAPQlJSw4cHF/
+         szVMhti+fem0HwKEUDb51/nggie21PAY66J45VQIABPtoBhyueCpuAbQSizp5msOOBgk
+         yo7wgHO9P0TY/ie5y4SiErAqAaDR8Bdig7AqTOwI89wEqDPnDQNai0MhCOIGu65/hOv+
+         17JkdB2teI7n25LkNYpV9/iKuZOc4b8uH7pKNjFs7QxjZR17tJIFxTyDSAOaru83002I
+         /wwA==
+X-Gm-Message-State: AOAM5314BF7Lg28uyoaE2m9bc61hOYAuCVroYg0pdlSpE8VKfkDbEZtI
+        05dlD921mTEZXr8mU5x6Hj36xO7sJvdDH1G/QpkknA==
+X-Google-Smtp-Source: ABdhPJwGogsHvhC8P7qOIe64MKrYPXZoUlX6w2MClweVcGHPqJw7K83Y/KeKSJi0yGjqpvs9L6OgDsIEYrhg9zspKmA=
+X-Received: by 2002:a17:90a:f28d:b0:1b9:975f:1a9f with SMTP id
+ fs13-20020a17090af28d00b001b9975f1a9fmr598286pjb.220.1645060839612; Wed, 16
+ Feb 2022 17:20:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20220128002707.391076-1-ben.widawsky@intel.com> <20220128002707.391076-4-ben.widawsky@intel.com>
+In-Reply-To: <20220128002707.391076-4-ben.widawsky@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 16 Feb 2022 17:20:27 -0800
+Message-ID: <CAPcyv4idjxVE=U8wQJj+7cZ+ZxP79q6GqCdQG4GQZ8pRX3fb+A@mail.gmail.com>
+Subject: Re: [PATCH v3 03/14] cxl/mem: Cache port created by the mem dev
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, patches@lists.linux.dev,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-KASAN + DEBUG_KOBJECT_RELEASE reports a potential use-after-free in
-cxl_decoder_release() where it goes to reference its parent, a cxl_port,
-to free its id back to port->decoder_ida.
+On Thu, Jan 27, 2022 at 4:27 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> Since region programming sees all components in the topology as a port,
+> it's required that endpoints are treated equally. The easiest way to go
+> from endpoint to port is to simply cache it at creation time.
 
- BUG: KASAN: use-after-free in to_cxl_port+0x18/0x90 [cxl_core]
- Read of size 8 at addr ffff888119270908 by task kworker/35:2/379
-
- CPU: 35 PID: 379 Comm: kworker/35:2 Tainted: G           OE     5.17.0-rc2+ #198
- Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
- Workqueue: events kobject_delayed_cleanup
- Call Trace:
-  <TASK>
-  dump_stack_lvl+0x59/0x73
-  print_address_description.constprop.0+0x1f/0x150
-  ? to_cxl_port+0x18/0x90 [cxl_core]
-  kasan_report.cold+0x83/0xdf
-  ? to_cxl_port+0x18/0x90 [cxl_core]
-  to_cxl_port+0x18/0x90 [cxl_core]
-  cxl_decoder_release+0x2a/0x60 [cxl_core]
-  device_release+0x5f/0x100
-  kobject_cleanup+0x80/0x1c0
-
-The device core only guarantees parent lifetime until all children are
-unregistered. If a child needs a parent to complete its ->release()
-callback that child needs to hold a reference to extend the lifetime of
-the parent.
-
-Fixes: 40ba17afdfab ("cxl/acpi: Introduce cxl_decoder objects")
-Reported-by: Ben Widawsky <ben.widawsky@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/cxl/core/port.c |    4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 0fc1441be014..c1681248f322 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -251,6 +251,7 @@ static void cxl_decoder_release(struct device *dev)
- 
- 	ida_free(&port->decoder_ida, cxld->id);
- 	kfree(cxld);
-+	put_device(&port->dev);
- }
- 
- static const struct device_type cxl_decoder_endpoint_type = {
-@@ -1202,7 +1203,10 @@ static struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
- 	if (rc < 0)
- 		goto err;
- 
-+	/* need parent to stick around to release the id */
-+	get_device(&port->dev);
- 	cxld->id = rc;
-+
- 	cxld->nr_targets = nr_targets;
- 	seqlock_init(&cxld->target_lock);
- 	dev = &cxld->dev;
-
+As of 8dd2bc0f8e02 ("cxl/mem: Add the cxl_mem driver"),
+cxl_endpoint_autoremove() already sets cxlmd drvdata to @endpoint, so
+this patch isn't needed.
