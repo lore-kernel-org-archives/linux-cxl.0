@@ -2,40 +2,40 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFCBC433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Feb 2022 17:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23992C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Feb 2022 17:20:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237119AbiBQRNP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Feb 2022 12:13:15 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56912 "EHLO
+        id S229719AbiBQRUg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Feb 2022 12:20:36 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243597AbiBQRNO (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Feb 2022 12:13:14 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19FB429C120;
-        Thu, 17 Feb 2022 09:12:59 -0800 (PST)
+        with ESMTP id S243662AbiBQRUf (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Feb 2022 12:20:35 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 371D22AEDB6;
+        Thu, 17 Feb 2022 09:20:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645117979; x=1676653979;
+  t=1645118420; x=1676654420;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=0Kdj7ImYvcwQw8lmmiUOnavoXB2sUQ89Xbe3+l21UyM=;
-  b=gG9hT8Srt0UhquXTvyhLlOGeGWR3MYlmoFPEN4k4djxAxKxE5WIVs59+
-   RlzO/ktsRPlejSA2dQpAsNXQq8PqQHIg291TOUnCiMk1q2eDh+VyxMnT9
-   QQFeI0k61rrhazjUuV6RRv/Ngj/zoS+51J/7wGh1se5TD2Utzei/VUDPa
-   H+K5rp7zG3hPH64+U7yMjruLf3ML1Ubdor7mlaiDqTI+7oUfUwacSTEpU
-   lSNjKdNVKNiJwV0dvILsCZAJpSPcCtobLGMJ9syuXc2H98BnvgBSdEa/Q
-   Y+wD2DvEE4tT0aQTqXAkXPqBmQsnirDBfPAKgqUSE7Ii1fFpE5tgybOlV
+  bh=OK7fDA0dBVfpPzOfXSMQgQsi4WNr2mF12B/wyA/rass=;
+  b=ZABvaxj7DslL6jMxOSf334QL+kTgRZNDFjzoIALD59gk68AJzdUoEmGo
+   jAsZCRXdr1V9Fg4P87Y1Iu8QjMOLLbPLoXByeiEgk5hmAJUnSOtw2jKV1
+   tiRYP8JWrFM8gvjkXId7fe0L06GkzHGe3ofjVFus48hs7tHRJYH+2Y9+w
+   ZgGpmpipWvLXZmKQaZJuurWu3eYM/+2kK1Plj1fp/L+6hkYTtTR2fI9AK
+   kCZYRa50gALf3+8F/WPdS3fRoqtzFa22tDSzBWD+czaBICphXnzE2xlIF
+   kpLWSSN6/eXilUrjqFLaeq4dc67m2J+YTRPfGu7kVgoQ8/OYLPMkHLn88
    Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10261"; a="249758220"
+X-IronPort-AV: E=McAfee;i="6200,9189,10261"; a="231549043"
 X-IronPort-AV: E=Sophos;i="5.88,376,1635231600"; 
-   d="scan'208";a="249758220"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2022 09:11:35 -0800
+   d="scan'208";a="231549043"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2022 09:19:42 -0800
 X-IronPort-AV: E=Sophos;i="5.88,376,1635231600"; 
-   d="scan'208";a="530370337"
+   d="scan'208";a="634903955"
 Received: from lmmcwade-mobl2.amr.corp.intel.com (HELO localhost.localdomain) ([10.252.137.203])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2022 09:11:20 -0800
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2022 09:19:39 -0800
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     patches@lists.linux.dev, Ben Widawsky <ben.widawsky@intel.com>,
@@ -46,12 +46,12 @@ Cc:     patches@lists.linux.dev, Ben Widawsky <ben.widawsky@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Bjorn Helgaas <helgaas@kernel.org>, nvdimm@lists.linux.dev,
         linux-pci@vger.kernel.org
-Subject: [PATCH v4 01/14] cxl/region: Add region creation ABI
-Date:   Thu, 17 Feb 2022 09:10:57 -0800
-Message-Id: <20220217171057.685705-1-ben.widawsky@intel.com>
+Subject: [PATCH v5 01/15] cxl/region: Add region creation ABI
+Date:   Thu, 17 Feb 2022 09:19:31 -0800
+Message-Id: <20220217171931.740926-1-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220128002707.391076-2-ben.widawsky@intel.com>
-References: <20220128002707.391076-2-ben.widawsky@intel.com>
+In-Reply-To: <20220217171057.685705-1-ben.widawsky@intel.com>
+References: <20220217171057.685705-1-ben.widawsky@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -86,20 +86,9 @@ echo $region > /sys/bus/cxl/devices/decoder0.0/delete_region
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 
 ---
-Changes since v3:
-- Change ABI for creation (cache a next) (Dan)
-- For above, Use ratelimited dev_err for new ABI
-- Use devm management for regions (Dan)
-- Move device initialization to alloc (Dan)
-- Move device alloc to add
-- Change functions naming to use foo_bar_alloc instead of foo_alloc_bar
-- Update commit message example for ABI change (Dan)
-- Update ABI documentation (Dan)
-- Update copyright date (Dan)
-- Update region kdoc (Dan)
-- Remove unnecessary WARN in region creation (Dan)
-- Remove is_cxl_region() (for now) (Jonathan)
-- Check driver binding to avoid double free of region (Dan)
+Changes since v4:
+- Add the missed base attributes addition
+
 ---
  Documentation/ABI/testing/sysfs-bus-cxl       |  23 ++
  .../driver-api/cxl/memory-devices.rst         |  11 +
@@ -512,8 +501,6 @@ index 82e49ab0937d..3fe6d34e6d59 100644
  cxl_core-y += config_check.o
  
  obj-m += test/
-
-base-commit: 3bdf187d313e067de2a81109f9a1dd3da7f3dc2c
 -- 
 2.35.1
 
