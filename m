@@ -2,442 +2,339 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC61AC433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 18 Feb 2022 16:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 287F4C433EF
+	for <linux-cxl@archiver.kernel.org>; Fri, 18 Feb 2022 18:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233719AbiBRQlk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 18 Feb 2022 11:41:40 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57842 "EHLO
+        id S239133AbiBRSSM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 18 Feb 2022 13:18:12 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238027AbiBRQlk (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Feb 2022 11:41:40 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C36422B2C44;
-        Fri, 18 Feb 2022 08:41:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645202482; x=1676738482;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WL3GOj2IXEOVr2W/EHt34nmS+xA/ho34n4j2b4QRx0o=;
-  b=Z5ifnOHTOhT8TuBSZ9LD0DqQIQ2t/MwFw4Tnrgp+rtChV79TIc7Z3qTl
-   1JpVzlMpLaGPqnt0cWb+vLyxWO5lnSXR3u6VR6wYZTj0gL3waaNHpyrk8
-   hb2JWnpKSPTGPCVkwsHXKd9GQVuJSmVkMn2pXvy/C1T57HGu7ZmsYKU8G
-   OhubOabEJnnNKPG3NYSYCI7HbEVePD4sJRidY7iRg5mqJylfLUus4LoyB
-   isU0ZNziKvOaXklOyM/1oeJF8WURwG5lBfJUb8+utzSu73YLFOpzHTyZw
-   HLddozXLhOHla2Yd4VPVpEotePC4yiHxdlQfj/gjAmb1oYnORnHdrLZIg
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10262"; a="238564358"
-X-IronPort-AV: E=Sophos;i="5.88,379,1635231600"; 
-   d="scan'208";a="238564358"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2022 08:41:20 -0800
-X-IronPort-AV: E=Sophos;i="5.88,379,1635231600"; 
-   d="scan'208";a="635884043"
-Received: from reddingx-mobl2.amr.corp.intel.com (HELO intel.com) ([10.252.138.64])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2022 08:41:19 -0800
-Date:   Fri, 18 Feb 2022 08:41:18 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, patches@lists.linux.dev,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v5 01/15] cxl/region: Add region creation ABI
-Message-ID: <20220218164118.t5fvk2fie7ktzpdy@intel.com>
-References: <20220217171057.685705-1-ben.widawsky@intel.com>
- <20220217171931.740926-1-ben.widawsky@intel.com>
- <CAPcyv4i83TxCN_-Y3a5CuM2ng9bCAyLm53=wcHWutASd434gkg@mail.gmail.com>
- <20220217222208.f5krwchjljrzjieg@intel.com>
- <CAPcyv4jURh0DbJpDjEwTn-_9WtkSokJN5R3PG5tuwJSMMu_Xcw@mail.gmail.com>
+        with ESMTP id S239136AbiBRSSE (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Feb 2022 13:18:04 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D04128BF7C
+        for <linux-cxl@vger.kernel.org>; Fri, 18 Feb 2022 10:17:44 -0800 (PST)
+Received: from fraeml706-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4K0fzK0vC1z67Prk;
+        Sat, 19 Feb 2022 02:16:45 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.21; Fri, 18 Feb 2022 19:17:41 +0100
+Received: from localhost (10.47.75.241) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Fri, 18 Feb
+ 2022 18:17:39 +0000
+Date:   Fri, 18 Feb 2022 18:17:38 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     <qemu-devel@nongnu.org>,
+        Alex =?ISO-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+        Marcel Apfelbaum <marcel@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>
+CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
+        "Peter Maydell" <peter.maydell@linaro.org>, <linuxarm@huawei.com>,
+        "Shameerali Kolothum Thodi" <shameerali.kolothum.thodi@huawei.com>,
+        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
+        Saransh Gupta1 <saransh@ibm.com>,
+        Shreyas Shah <shreyas.shah@elastics.cloud>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Samarth Saxena <samarths@cadence.com>,
+        "Dan Williams" <dan.j.williams@intel.com>
+Subject: Re: [PATCH v6 00/43] CXl 2.0 emulation Support
+Message-ID: <20220218181738.00001dd5@Huawei.com>
+In-Reply-To: <20220211120747.3074-1-Jonathan.Cameron@huawei.com>
+References: <20220211120747.3074-1-Jonathan.Cameron@huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4jURh0DbJpDjEwTn-_9WtkSokJN5R3PG5tuwJSMMu_Xcw@mail.gmail.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.75.241]
+X-ClientProxiedBy: lhreml726-chm.china.huawei.com (10.201.108.77) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 22-02-17 15:32:44, Dan Williams wrote:
-> On Thu, Feb 17, 2022 at 2:22 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> >
-> > On 22-02-17 09:58:04, Dan Williams wrote:
-> > > On Thu, Feb 17, 2022 at 9:19 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > >
-> > > > Regions are created as a child of the decoder that encompasses an
-> > > > address space with constraints. Regions have a number of attributes that
-> > > > must be configured before the region can be activated.
-> > > >
-> > > > The ABI is not meant to be secure, but is meant to avoid accidental
-> > > > races. As a result, a buggy process may create a region by name that was
-> > > > allocated by a different process. However, multiple processes which are
-> > > > trying not to race with each other shouldn't need special
-> > > > synchronization to do so.
-> > > >
-> > > > // Allocate a new region name
-> > > > region=$(cat /sys/bus/cxl/devices/decoder0.0/create_region)
-> > > >
-> > > > // Create a new region by name
-> > > > while
-> > > > region=$(cat /sys/bus/cxl/devices/decoder0.0/create_region)
-> > > > ! echo $region > /sys/bus/cxl/devices/decoder0.0/create_region
-> > > > do true; done
-> > > >
-> > > > // Region now exists in sysfs
-> > > > stat -t /sys/bus/cxl/devices/decoder0.0/$region
-> > > >
-> > > > // Delete the region, and name
-> > > > echo $region > /sys/bus/cxl/devices/decoder0.0/delete_region
-> > > >
-> > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > >
-> > > Looking good, a few more fixes and cleanups identified below.
-> > >
-> > > >
-> > > > ---
-> > > > Changes since v4:
-> > > > - Add the missed base attributes addition
-> > > >
-> > > > ---
-> > > >  Documentation/ABI/testing/sysfs-bus-cxl       |  23 ++
-> > > >  .../driver-api/cxl/memory-devices.rst         |  11 +
-> > > >  drivers/cxl/core/Makefile                     |   1 +
-> > > >  drivers/cxl/core/core.h                       |   3 +
-> > > >  drivers/cxl/core/port.c                       |  11 +
-> > > >  drivers/cxl/core/region.c                     | 213 ++++++++++++++++++
-> > > >  drivers/cxl/cxl.h                             |   5 +
-> > > >  drivers/cxl/region.h                          |  23 ++
-> > > >  tools/testing/cxl/Kbuild                      |   1 +
-> > > >  9 files changed, 291 insertions(+)
-> > > >  create mode 100644 drivers/cxl/core/region.c
-> > > >  create mode 100644 drivers/cxl/region.h
-> > > >
-> > > > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> > > > index 7c2b846521f3..e5db45ea70ad 100644
-> > > > --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> > > > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> > > > @@ -163,3 +163,26 @@ Description:
-> > > >                 memory (type-3). The 'target_type' attribute indicates the
-> > > >                 current setting which may dynamically change based on what
-> > > >                 memory regions are activated in this decode hierarchy.
-> > > > +
-> > > > +What:          /sys/bus/cxl/devices/decoderX.Y/create_region
-> > > > +Date:          January, 2022
-> > > > +KernelVersion: v5.18
-> > > > +Contact:       linux-cxl@vger.kernel.org
-> > > > +Description:
-> > > > +               Write a value of the form 'regionX.Y:Z' to instantiate a new
-> > > > +               region within the decode range bounded by decoderX.Y. The value
-> > > > +               written must match the current value returned from reading this
-> > > > +               attribute. This behavior lets the kernel arbitrate racing
-> > > > +               attempts to create a region. The thread that fails to write
-> > > > +               loops and tries the next value. Regions must be created for root
-> > > > +               decoders, and must subsequently configured and bound to a region
-> > > > +               driver before they can be used.
-> > > > +
-> > > > +What:          /sys/bus/cxl/devices/decoderX.Y/delete_region
-> > > > +Date:          January, 2022
-> > > > +KernelVersion: v5.18
-> > > > +Contact:       linux-cxl@vger.kernel.org
-> > > > +Description:
-> > > > +               Deletes the named region.  The attribute expects a region in the
-> > > > +               form "regionX.Y:Z". The region's name, allocated by reading
-> > > > +               create_region, will also be released.
-> > > > diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
-> > > > index db476bb170b6..66ddc58a21b1 100644
-> > > > --- a/Documentation/driver-api/cxl/memory-devices.rst
-> > > > +++ b/Documentation/driver-api/cxl/memory-devices.rst
-> > > > @@ -362,6 +362,17 @@ CXL Core
-> > > >  .. kernel-doc:: drivers/cxl/core/mbox.c
-> > > >     :doc: cxl mbox
-> > > >
-> > > > +CXL Regions
-> > > > +-----------
-> > > > +.. kernel-doc:: drivers/cxl/region.h
-> > > > +   :identifiers:
-> > > > +
-> > > > +.. kernel-doc:: drivers/cxl/core/region.c
-> > > > +   :doc: cxl core region
-> > > > +
-> > > > +.. kernel-doc:: drivers/cxl/core/region.c
-> > > > +   :identifiers:
-> > > > +
-> > > >  External Interfaces
-> > > >  ===================
-> > > >
-> > > > diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> > > > index 6d37cd78b151..39ce8f2f2373 100644
-> > > > --- a/drivers/cxl/core/Makefile
-> > > > +++ b/drivers/cxl/core/Makefile
-> > > > @@ -4,6 +4,7 @@ obj-$(CONFIG_CXL_BUS) += cxl_core.o
-> > > >  ccflags-y += -I$(srctree)/drivers/cxl
-> > > >  cxl_core-y := port.o
-> > > >  cxl_core-y += pmem.o
-> > > > +cxl_core-y += region.o
-> > > >  cxl_core-y += regs.o
-> > > >  cxl_core-y += memdev.o
-> > > >  cxl_core-y += mbox.o
-> > > > diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> > > > index 1a50c0fc399c..adfd42370b28 100644
-> > > > --- a/drivers/cxl/core/core.h
-> > > > +++ b/drivers/cxl/core/core.h
-> > > > @@ -9,6 +9,9 @@ extern const struct device_type cxl_nvdimm_type;
-> > > >
-> > > >  extern struct attribute_group cxl_base_attribute_group;
-> > > >
-> > > > +extern struct device_attribute dev_attr_create_region;
-> > > > +extern struct device_attribute dev_attr_delete_region;
-> > > > +
-> > > >  struct cxl_send_command;
-> > > >  struct cxl_mem_query_commands;
-> > > >  int cxl_query_cmd(struct cxl_memdev *cxlmd,
-> > > > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> > > > index 1e785a3affaa..860e91cae29b 100644
-> > > > --- a/drivers/cxl/core/port.c
-> > > > +++ b/drivers/cxl/core/port.c
-> > > > @@ -213,6 +213,8 @@ static struct attribute_group cxl_decoder_base_attribute_group = {
-> > > >  };
-> > > >
-> > > >  static struct attribute *cxl_decoder_root_attrs[] = {
-> > > > +       &dev_attr_create_region.attr,
-> > > > +       &dev_attr_delete_region.attr,
-> > > >         &dev_attr_cap_pmem.attr,
-> > > >         &dev_attr_cap_ram.attr,
-> > > >         &dev_attr_cap_type2.attr,
-> > > > @@ -270,6 +272,8 @@ static void cxl_decoder_release(struct device *dev)
-> > > >         struct cxl_decoder *cxld = to_cxl_decoder(dev);
-> > > >         struct cxl_port *port = to_cxl_port(dev->parent);
-> > > >
-> > > > +       ida_free(&cxld->region_ida, cxld->next_region_id);
-> > > > +       ida_destroy(&cxld->region_ida);
-> > > >         ida_free(&port->decoder_ida, cxld->id);
-> > > >         kfree(cxld);
-> > > >  }
-> > > > @@ -1244,6 +1248,13 @@ static struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
-> > > >         cxld->target_type = CXL_DECODER_EXPANDER;
-> > > >         cxld->platform_res = (struct resource)DEFINE_RES_MEM(0, 0);
-> > > >
-> > > > +       mutex_init(&cxld->id_lock);
-> > > > +       ida_init(&cxld->region_ida);
-> > > > +       rc = ida_alloc(&cxld->region_ida, GFP_KERNEL);
-> > > > +       if (rc < 0)
-> > > > +               goto err;
-> > > > +
-> > > > +       cxld->next_region_id = rc;
-> > > >         return cxld;
-> > > >  err:
-> > > >         kfree(cxld);
-> > > > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > > > new file mode 100644
-> > > > index 000000000000..5576952e4aa1
-> > > > --- /dev/null
-> > > > +++ b/drivers/cxl/core/region.c
-> > > > @@ -0,0 +1,213 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > > +/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
-> > > > +#include <linux/device.h>
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/slab.h>
-> > > > +#include <linux/idr.h>
-> > > > +#include <region.h>
-> > > > +#include <cxl.h>
-> > > > +#include "core.h"
-> > > > +
-> > > > +/**
-> > > > + * DOC: cxl core region
-> > > > + *
-> > > > + * CXL Regions represent mapped memory capacity in system physical address
-> > > > + * space. Whereas the CXL Root Decoders identify the bounds of potential CXL
-> > > > + * Memory ranges, Regions represent the active mapped capacity by the HDM
-> > > > + * Decoder Capability structures throughout the Host Bridges, Switches, and
-> > > > + * Endpoints in the topology.
-> > > > + */
-> > > > +
-> > > > +static void cxl_region_release(struct device *dev);
-> > >
-> > > Why forward declare this versus move cxl_region_type after the definition?
-> > >
-> > > No other CXL object release functions are forward declared.
-> > >
-> > > > +
-> > > > +static const struct device_type cxl_region_type = {
-> > > > +       .name = "cxl_region",
-> > > > +       .release = cxl_region_release,
-> > > > +};
-> > > > +
-> > > > +static struct cxl_region *to_cxl_region(struct device *dev)
-> > > > +{
-> > > > +       if (dev_WARN_ONCE(dev, dev->type != &cxl_region_type,
-> > > > +                         "not a cxl_region device\n"))
-> > > > +               return NULL;
-> > > > +
-> > > > +       return container_of(dev, struct cxl_region, dev);
-> > > > +}
-> > > > +
-> > > > +static struct cxl_region *cxl_region_alloc(struct cxl_decoder *cxld)
-> > > > +{
-> > > > +       struct cxl_region *cxlr;
-> > > > +       struct device *dev;
-> > > > +
-> > > > +       cxlr = kzalloc(sizeof(*cxlr), GFP_KERNEL);
-> > > > +       if (!cxlr)
-> > > > +               return ERR_PTR(-ENOMEM);
-> > > > +
-> > > > +       dev = &cxlr->dev;
-> > > > +       device_initialize(dev);
-> > > > +       dev->parent = &cxld->dev;
-> > > > +       device_set_pm_not_required(dev);
-> > > > +       dev->bus = &cxl_bus_type;
-> > > > +       dev->type = &cxl_region_type;
-> > > > +
-> > > > +       return cxlr;
-> > > > +}
-> > > > +
-> > > > +static void unregister_region(void *_cxlr)
-> > > > +{
-> > > > +       struct cxl_region *cxlr = _cxlr;
-> > > > +
-> > > > +       if (!test_and_set_bit(REGION_DEAD, &cxlr->flags))
-> > > > +               device_unregister(&cxlr->dev);
-> > >
-> > > I thought REGION_DEAD was needed to prevent double
-> > > devm_release_action(), not double unregister?
-> > >
-> > > > +}
-> > > > +
-> > > > +/**
-> > > > + * devm_cxl_add_region - Adds a region to a decoder
-> > > > + * @cxld: Parent decoder.
-> > > > + * @cxlr: Region to be added to the decoder.
-> > > > + *
-> > > > + * This is the second step of region initialization. Regions exist within an
-> > > > + * address space which is mapped by a @cxld. That @cxld must be a root decoder,
-> > > > + * and it enforces constraints upon the region as it is configured.
-> > > > + *
-> > > > + * Return: 0 if the region was added to the @cxld, else returns negative error
-> > > > + * code. The region will be named "regionX.Y.Z" where X is the port, Y is the
-> > > > + * decoder id, and Z is the region number.
-> > > > + */
-> > > > +static struct cxl_region *devm_cxl_add_region(struct cxl_decoder *cxld)
-> > > > +{
-> > > > +       struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-> > > > +       struct cxl_region *cxlr;
-> > > > +       struct device *dev;
-> > > > +       int rc;
-> > > > +
-> > > > +       cxlr = cxl_region_alloc(cxld);
-> > > > +       if (IS_ERR(cxlr))
-> > > > +               return cxlr;
-> > > > +
-> > > > +       dev = &cxlr->dev;
-> > > > +
-> > > > +       cxlr->id = cxld->next_region_id;
-> > > > +       rc = dev_set_name(dev, "region%d.%d:%d", port->id, cxld->id, cxlr->id);
-> > > > +       if (rc)
-> > > > +               goto err_out;
-> > > > +
-> > > > +       /* affirm that release will have access to the decoder's region ida  */
-> > > > +       get_device(&cxld->dev);
-> > > > +
-> > > > +       rc = device_add(dev);
-> > > > +       if (!rc)
-> > > > +               rc = devm_add_action_or_reset(port->uport, unregister_region,
-> > > > +                                             cxlr);
-> > > > +       if (rc)
-> > > > +               goto err_out;
-> > >
-> > > All the other usages in device_add() in the subsystem follow the style of:
-> > >
-> > > rc = device_add(dev);
-> > > if (rc)
-> > >     goto err;
-> > >
-> > > ...any reason to be unique here and indent the success case?
-> > >
-> > >
-> > > > +
-> > > > +       return cxlr;
-> > > > +
-> > > > +err_out:
-> > > > +       put_device(dev);
-> > > > +       kfree(cxlr);
-> > >
-> > > This is a double-free of cxlr;
-> > >
-> > > > +       return ERR_PTR(rc);
-> > > > +}
-> > > > +
-> > > > +static ssize_t create_region_show(struct device *dev,
-> > > > +                                 struct device_attribute *attr, char *buf)
-> > > > +{
-> > > > +       struct cxl_port *port = to_cxl_port(dev->parent);
-> > > > +       struct cxl_decoder *cxld = to_cxl_decoder(dev);
-> > > > +
-> > > > +       return sysfs_emit(buf, "region%d.%d:%d\n", port->id, cxld->id,
-> > > > +                         cxld->next_region_id);
-> > > > +}
-> > > > +
-> > > > +static ssize_t create_region_store(struct device *dev,
-> > > > +                                  struct device_attribute *attr,
-> > > > +                                  const char *buf, size_t len)
-> > > > +{
-> > > > +       struct cxl_port *port = to_cxl_port(dev->parent);
-> > > > +       struct cxl_decoder *cxld = to_cxl_decoder(dev);
-> > > > +       struct cxl_region *cxlr;
-> > > > +       int d, p, r, rc = 0;
-> > > > +
-> > > > +       if (sscanf(buf, "region%d.%d:%d", &p, &d, &r) != 3)
-> > > > +               return -EINVAL;
-> > > > +
-> > > > +       if (port->id != p || cxld->id != d)
-> > > > +               return -EINVAL;
-> > > > +
-> > > > +       rc = mutex_lock_interruptible(&cxld->id_lock);
-> > > > +       if (rc)
-> > > > +               return rc;
-> > > > +
-> > > > +       if (cxld->next_region_id != r) {
-> > > > +               rc = -EINVAL;
-> > > > +               goto out;
-> > > > +       }
-> > > > +
-> > > > +       rc = ida_alloc(&cxld->region_ida, GFP_KERNEL);
-> > > > +       if (rc < 0) {
-> > > > +               dev_dbg(dev, "Failed to get next cached id (%d)\n", rc);
-> > > > +               goto out;
-> > > > +       }
-> > > > +
-> > > > +       cxlr = devm_cxl_add_region(cxld);
-> > > > +       if (IS_ERR(cxlr)) {
-> > > > +               rc = PTR_ERR(cxlr);
-> > > > +               goto out;
-> > > > +       }
-> > > > +
-> > > > +       cxld->next_region_id = rc;
-> > >
-> > > This looks like a leak in the case when devm_cxl_add_region() fails,
-> > > so just move it above that call.
-> > >
-> >
-> > It's not super simple with the current pre-caching. If you move this above
-> > devm_cxl_add_region(), then you lose the previously pre-cached region. I think
-> > the cleaner solution is to just free the ida on failure. Pretty sure no matter
-> > what method you go, you need an ida_free in there somewhere. Do you see another
-> > way?
-> 
-> As soon as one thread has successfully acquired the next_region_id
-> then it is safe to advance and assume that the devm_cxl_add_region()
-> owns releasing that id.
-> 
-> In fact, just make that implicit. Move the ida_alloc() and the
-> next_region_id advancement internal to cxl_region_alloc() with a
-> device_lock_assert() for the id_lock. Then the recovery of the
-> allocated id happens naturally like all the other ids in the subsystem
-> i.e. at release time.
+On Fri, 11 Feb 2022 12:07:04 +0000
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-This is the right answer. Regions created from LSA/BIOS will need this anyway.
+> This version is mainly a reorganization of v5 patch ordering to make for
+> more sensible stepwise review and merging. I took the opportunity to add
+> a few more tests and introduce an overview document.
+
+In case anyone is interested at:
+
+https://gitlab.com/jic23/qemu/-/commits/cxl-v7-draft-for-test
+is a draft of what will be v7 with basic CXL switch support
+and the issue that Ben pointed out in patch 17 fixed.
+No change to anything before patch 17 so does not affect the proposed
+first block of patches to apply (i.e. no need to wait for v7 if
+it makes sense to pick those up sooner!)
+
+There was some follow through from the fix in the later qtests
+as they now correctly require LSA / Label Storage Areas to be provided
+for CXL-mem types. I've also moved the initial type 3 test later in
+the series so that lsa parameter is required by the time it is introduced.
+The LSA requirement may be relaxed in the future when volatile memory
+support is added as then an LSA becomes optional.
+
+The switch support includes interleave decoding for one layer of switches
+and at least for basic tests it all seems to work.  Note that with
+current kernel proposal you'll need 2 ports on a host bridge (one can
+have nothing attached to it) so as to ensure the kernel programs the HDM decoders.
+I'll see if I can find an elegant solution on the kernel side for this
+as single port HB with HDM decoders is allowed by the CXL spec.
+
+Next up is fleshing out sanity checks / write masks etc for various interfaces
+so that the emulation will reject invalid writes etc much as real
+hardware would be expected to do.
+
+Thanks,
+
+Jonathan
+
+
+> 
+> Changes since v5: Thanks to Michael and Igor for comments.
+> - Reorganize series to make it more sensible to take in several chunks.
+>   Includes splitting qtest/cxl-test up so that we have basic testing
+>   for each stage. Suggested chunks as follows:
+>   1-15: Infrastructure + host bridge
+>     At this stage the pxb-cxl host bridge it is presented to the OS
+>     as a legacy / pcie host bridge.
+>     This set is close to those Michael Tsirkin suggested picking up
+>     in v5, but the cxl=on machine parameter was pulled forwards to
+>     avoid breaking backwards compatibility. It could logically be
+>     delayed until HB MMIO is introduced but only at cost of then
+>     failing to instantiate pxb-cxl in cases that would previously
+>     have 'worked'.
+>   16-22: Root port, plus CXL type 3 device.
+>     Will allow Linux cxl-pci driver to bind and present some basic
+>     features of the type 3 devices.
+>   23-40: x86 PC support including HB MMIO and CFMWS
+>     At this region creation and use is possible on x86 platforms.
+>     Includes a new bios-table-test and more complex qtests/cxl-test
+>     cases. Includes the interleaving code and an RFC about adding
+>     ops to memory_region_ram_init_from_file().
+>   41-42: ARM virt enabling equivalent to that done for x86.
+>   43: Documentation
+>     I can break this down if helpful as it includes command line
+>     examples only possible after support is in place for all elements.
+>   I've had gitlab CI pipelines testing at patch 15, 22, and 43
+>   and other than the build-oss-fuzz which is timing out and a false
+>   positive (I think) in checkpatch they are clean.
+>   http://gitlab.com/jic23/qemu/~/pipelines
+>   (trivial commit message update followed pushing those out, but
+>    the code is the same).
+> 
+> - Add a documentation patch as requested by Alex in v4 review.
+> - Drop the code unification around PCI host bridge setup.
+>   It will need extensive testing and was only of marginal benefit for this
+>   series so get it off the critical path.
+> - Don't build CEDT unless machine parameter cxl=on is set. Tests added
+>   to exercise the cxl=on case and generate meaningful tables (not empty).
+> - Move handling of pxb-cxl reset to a later patch where the required
+>   infrastructure has been created (avoids a crash).
+> - Split up qtests/cxl-test to build up step by step.
+>   Introduced an aarch64 test case covering most complex case only as
+>   this probably sufficient to catch any arch specific problems.
+> - Introduce test plus bios tables CEDT.cxl and DSDT.cxl.
+> 
+> Updated background info from v5:
+> 
+> Looking in particular for:
+> * Review of the PCI interactions
+> * x86 and ARM machine interactions (particularly the memory maps)
+> * Review of the interleaving approach - is the basic idea
+>   acceptable?
+> * Review of the command line interface.
+> * CXL related review welcome but much of that got reviewed
+>   in earlier versions and hasn't changed substantially.
+> 
+> Big TODOs:
+> 
+> * Lack of unaligned accesses to interleaved memory. Are there any
+>   side effects of this restriction?
+> * Volatile memory devices (easy but it's more code so left for now).
+> * Switch support. Linux kernel support is under review currently,
+>   so there is now something to test against.
+> * Hotplug?  May not need much but it's not tested yet!
+> * More tests and tighter verification that values written to hardware
+>   are actually valid - stuff that real hardware would check.
+> * Testing, testing and more testing.  I have been running a basic
+>   set of ARM and x86 tests on this, but there is always room for
+>   more tests and greater automation.
+> * CFMWS flags as requested by Ben.
+> 
+> Why do we want QEMU emulation of CXL?
+> 
+> As Ben stated in V3, QEMU support has been critical to getting OS
+> software written given lack of availability of hardware supporting the
+> latest CXL features (coupled with very high demand for support being
+> ready in a timely fashion). What has become clear since Ben's v3
+> is that situation is a continuous one. Whilst we can't talk about
+> them yet, CXL 3.0 features and OS support have been prototyped on
+> top of this support and a lot of the ongoing kernel work is being
+> tested against these patches. The kernel CXL mocking code allows
+> some forms of testing, but QEMU provides a more versatile and
+> exensible platform.
+> 
+> Other features on the qemu-list that build on these include PCI-DOE
+> /CDAT support from the Avery Design team further showing how this
+> code is useful. Whilst not directly related this is also the test
+> platform for work on PCI IDE/CMA + related DMTF SPDM as CXL both
+> utilizes and extends those technologies and is likely to be an early
+> adopter.
+> Refs:
+> CMA Kernel: https://lore.kernel.org/all/20210804161839.3492053-1-Jonathan.Cameron@huawei.com/
+> CMA Qemu: https://lore.kernel.org/qemu-devel/1624665723-5169-1-git-send-email-cbrowy@avery-design.com/
+> DOE Qemu: https://lore.kernel.org/qemu-devel/1623329999-15662-1-git-send-email-cbrowy@avery-design.com/
+> 
+> As can be seen there is non trivial interaction with other areas of
+> Qemu, particularly PCI and keeping this set up to date is proving
+> a burden we'd rather do without :)
+> 
+> Ben mentioned a few other good reasons in v3:
+> https://lore.kernel.org/qemu-devel/20210202005948.241655-1-ben.widawsky@intel.com/
+> 
+> What we have here is about what you need for it to be useful for testing
+> currently kernel code.  Note the kernel code is moving fast so
+> since v4, some features have been introduced we don't yet support in
+> QEMU (e.g. use of the PCIe serial number extended capability).
+> 
+> All comments welcome.
+> 
+> Additional info that was here in v5 is now in the documentation patch.
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+> Ben Widawsky (24):
+>   hw/pci/cxl: Add a CXL component type (interface)
+>   hw/cxl/component: Introduce CXL components (8.1.x, 8.2.5)
+>   hw/cxl/device: Introduce a CXL device (8.2.8)
+>   hw/cxl/device: Implement the CAP array (8.2.8.1-2)
+>   hw/cxl/device: Implement basic mailbox (8.2.8.4)
+>   hw/cxl/device: Add memory device utilities
+>   hw/cxl/device: Add cheap EVENTS implementation (8.2.9.1)
+>   hw/cxl/device: Timestamp implementation (8.2.9.3)
+>   hw/cxl/device: Add log commands (8.2.9.4) + CEL
+>   hw/pxb: Use a type for realizing expanders
+>   hw/pci/cxl: Create a CXL bus type
+>   hw/pxb: Allow creation of a CXL PXB (host bridge)
+>   hw/cxl/rp: Add a root port
+>   hw/cxl/device: Add a memory device (8.2.8.5)
+>   hw/cxl/device: Implement MMIO HDM decoding (8.2.5.12)
+>   hw/cxl/device: Add some trivial commands
+>   hw/cxl/device: Plumb real Label Storage Area (LSA) sizing
+>   hw/cxl/device: Implement get/set Label Storage Area (LSA)
+>   hw/cxl/component: Implement host bridge MMIO (8.2.5, table 142)
+>   acpi/cxl: Add _OSC implementation (9.14.2)
+>   acpi/cxl: Create the CEDT (9.14.1)
+>   acpi/cxl: Introduce CFMWS structures in CEDT
+>   hw/cxl/component Add a dumb HDM decoder handler
+>   qtest/cxl: Add more complex test cases with CFMWs
+> 
+> Jonathan Cameron (19):
+>   MAINTAINERS: Add entry for Compute Express Link Emulation
+>   cxl: Machine level control on whether CXL support is enabled
+>   qtest/cxl: Introduce initial test for pxb-cxl only.
+>   qtests/cxl: Add initial root port and CXL type3 tests
+>   hw/cxl/component: Add utils for interleave parameter encoding/decoding
+>   hw/cxl/host: Add support for CXL Fixed Memory Windows.
+>   hw/pci-host/gpex-acpi: Add support for dsdt construction for pxb-cxl
+>   pci/pcie_port: Add pci_find_port_by_pn()
+>   CXL/cxl_component: Add cxl_get_hb_cstate()
+>   mem/cxl_type3: Add read and write functions for associated hostmem.
+>   cxl/cxl-host: Add memops for CFMWS region.
+>   RFC: softmmu/memory: Add ops to memory_region_ram_init_from_file
+>   i386/pc: Enable CXL fixed memory windows
+>   tests/acpi: q35: Allow addition of a CXL test.
+>   qtests/bios-tables-test: Add a test for CXL emulation.
+>   tests/acpi: Add tables for CXL emulation.
+>   hw/arm/virt: Basic CXL enablement on pci_expander_bridge instances
+>     pxb-cxl
+>   qtest/cxl: Add aarch64 virt test for CXL  docs/cxl: Add initial Compute eXpress Link (CXL) documentation.
+> 
+>  MAINTAINERS                         |   7 +
+>  docs/system/device-emulation.rst    |   1 +
+>  docs/system/devices/cxl.rst         | 302 +++++++++++++++++
+>  hw/Kconfig                          |   1 +
+>  hw/acpi/Kconfig                     |   5 +
+>  hw/acpi/cxl-stub.c                  |  12 +
+>  hw/acpi/cxl.c                       | 231 +++++++++++++
+>  hw/acpi/meson.build                 |   4 +-
+>  hw/arm/Kconfig                      |   1 +
+>  hw/arm/virt-acpi-build.c            |  33 ++
+>  hw/arm/virt.c                       |  40 ++-
+>  hw/core/machine.c                   |  28 ++
+>  hw/cxl/Kconfig                      |   3 +
+>  hw/cxl/cxl-component-utils.c        | 284 ++++++++++++++++
+>  hw/cxl/cxl-device-utils.c           | 271 ++++++++++++++++
+>  hw/cxl/cxl-host-stubs.c             |  22 ++
+>  hw/cxl/cxl-host.c                   | 262 +++++++++++++++
+>  hw/cxl/cxl-mailbox-utils.c          | 483 ++++++++++++++++++++++++++++
+>  hw/cxl/meson.build                  |  12 +
+>  hw/i386/acpi-build.c                |  57 +++-
+>  hw/i386/pc.c                        |  57 +++-
+>  hw/mem/Kconfig                      |   5 +
+>  hw/mem/cxl_type3.c                  | 353 ++++++++++++++++++++
+>  hw/mem/meson.build                  |   1 +
+>  hw/meson.build                      |   1 +
+>  hw/pci-bridge/Kconfig               |   5 +
+>  hw/pci-bridge/cxl_root_port.c       | 231 +++++++++++++
+>  hw/pci-bridge/meson.build           |   1 +
+>  hw/pci-bridge/pci_expander_bridge.c | 172 +++++++++-
+>  hw/pci-bridge/pcie_root_port.c      |   6 +-
+>  hw/pci-host/gpex-acpi.c             |  22 +-
+>  hw/pci/pci.c                        |  21 +-
+>  hw/pci/pcie_port.c                  |  25 ++
+>  include/hw/acpi/cxl.h               |  28 ++
+>  include/hw/arm/virt.h               |   1 +
+>  include/hw/boards.h                 |   2 +
+>  include/hw/cxl/cxl.h                |  51 +++
+>  include/hw/cxl/cxl_component.h      | 206 ++++++++++++
+>  include/hw/cxl/cxl_device.h         | 272 ++++++++++++++++
+>  include/hw/cxl/cxl_pci.h            | 160 +++++++++
+>  include/hw/pci/pci.h                |  14 +
+>  include/hw/pci/pci_bridge.h         |  20 ++
+>  include/hw/pci/pci_bus.h            |   7 +
+>  include/hw/pci/pci_ids.h            |   1 +
+>  include/hw/pci/pcie_port.h          |   2 +
+>  qapi/machine.json                   |  15 +
+>  qemu-options.hx                     |  37 +++
+>  scripts/device-crash-test           |   1 +
+>  softmmu/memory.c                    |   9 +
+>  softmmu/vl.c                        |  11 +
+>  tests/data/acpi/q35/CEDT.cxl        | Bin 0 -> 184 bytes
+>  tests/data/acpi/q35/DSDT.cxl        | Bin 0 -> 9627 bytes
+>  tests/qtest/bios-tables-test.c      |  39 +++
+>  tests/qtest/cxl-test.c              | 181 +++++++++++
+>  tests/qtest/meson.build             |   5 +
+>  55 files changed, 3996 insertions(+), 25 deletions(-)
+>  create mode 100644 docs/system/devices/cxl.rst
+>  create mode 100644 hw/acpi/cxl-stub.c
+>  create mode 100644 hw/acpi/cxl.c
+>  create mode 100644 hw/cxl/Kconfig
+>  create mode 100644 hw/cxl/cxl-component-utils.c
+>  create mode 100644 hw/cxl/cxl-device-utils.c
+>  create mode 100644 hw/cxl/cxl-host-stubs.c
+>  create mode 100644 hw/cxl/cxl-host.c
+>  create mode 100644 hw/cxl/cxl-mailbox-utils.c
+>  create mode 100644 hw/cxl/meson.build
+>  create mode 100644 hw/mem/cxl_type3.c
+>  create mode 100644 hw/pci-bridge/cxl_root_port.c
+>  create mode 100644 include/hw/acpi/cxl.h
+>  create mode 100644 include/hw/cxl/cxl.h
+>  create mode 100644 include/hw/cxl/cxl_component.h
+>  create mode 100644 include/hw/cxl/cxl_device.h
+>  create mode 100644 include/hw/cxl/cxl_pci.h
+>  create mode 100644 tests/data/acpi/q35/CEDT.cxl
+>  create mode 100644 tests/data/acpi/q35/DSDT.cxl
+>  create mode 100644 tests/qtest/cxl-test.c
+> 
 
