@@ -2,143 +2,205 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01056C433F5
-	for <linux-cxl@archiver.kernel.org>; Fri, 18 Feb 2022 23:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED5CC433EF
+	for <linux-cxl@archiver.kernel.org>; Tue, 22 Feb 2022 18:19:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240194AbiBRXnU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 18 Feb 2022 18:43:20 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:58044 "EHLO
+        id S234663AbiBVSUS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 22 Feb 2022 13:20:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240193AbiBRXnT (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Feb 2022 18:43:19 -0500
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0C6D27B489
-        for <linux-cxl@vger.kernel.org>; Fri, 18 Feb 2022 15:43:01 -0800 (PST)
-Received: by mail-pf1-x42a.google.com with SMTP id i6so3542432pfc.9
-        for <linux-cxl@vger.kernel.org>; Fri, 18 Feb 2022 15:43:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=whNrfqumba6KC2p9V6Pih5sz382GhTFok83j4GryLwE=;
-        b=CUnXvna/nzoToDBNZHEzzpgX9e9lvq6R5InCaM/8HF+c7M9qkefrBPgyeiu5SgKjwk
-         jEZEUbXNb6amnFGNQzFKtKgy4IJ10aeKpa8wfzSW2C6y+Vd/+2SiGAjXMB3g2sFwqHSo
-         Za+If67L34iRq0VJSFjud16DUVXwrH4EtEpl8mWvfxEbPF3dHM64vQ+DAqaPBwVjZJ8R
-         Keeq+HV319aTYJohVMKRB7mh+p5elAQIdI1oNh2ZqwV8wtajiKftYdDj/AttAHquQqDu
-         N5vpefmxuZHO6pcjQRG5aDIGXR/EqqNOUTLUKQCTC3vCo6VPyV7pW49Omlz2eqRGqdGO
-         iyhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=whNrfqumba6KC2p9V6Pih5sz382GhTFok83j4GryLwE=;
-        b=D3nhLofdCuwci0HFFQSHchWTrTSr356XIxrw/q5L+QTeF7PDn9zt+EvOnlDsrfWSi+
-         eJ75bc3J4pJ0yqTLvG2QpaTyRk1hkkyyxSLcGtuLUKKKGj7Zx2S6lk+xOadDWEdZfnkz
-         v4KJWbLS8rIsdFDpCiCJMx0hJCoJPJ6AUodcTlVCayoDFykqIaXP6Zv5JllsLqOviWOq
-         D+7lVJ7JSiLvr9Wx+OoZJhekGH8vWJ4zeyQTDQOhr4Bzwd7ap8OypjXtKQStIpb7fOen
-         kfL49LRjM3E7KcMGGmF6keIoOdkru4K+mFBIE2hi3pi7i10N7nwGDEC8gkfvyPtUV5BL
-         t3qQ==
-X-Gm-Message-State: AOAM5332O9SRXbKVQ/OxPjYBRmxZU1hV4VG2Rp9OV2lZB3zJ/PaOpZm5
-        WDamKwY3eAv/qDLOoq1dr+y+N8ZNAW/2cqLtIETsSA==
-X-Google-Smtp-Source: ABdhPJzZmMN0+mLLFV6zFhJAgugkrkGZAZ9hJGF12JTGW372UotC0sF+5W85WXQp3DLcCjcKKLEsii9H7AGCDkc/R9o=
-X-Received: by 2002:a62:ab09:0:b0:4e0:d967:318f with SMTP id
- p9-20020a62ab09000000b004e0d967318fmr10148714pff.86.1645227781372; Fri, 18
- Feb 2022 15:43:01 -0800 (PST)
-MIME-Version: 1.0
-References: <20220128002707.391076-1-ben.widawsky@intel.com> <20220128002707.391076-11-ben.widawsky@intel.com>
-In-Reply-To: <20220128002707.391076-11-ben.widawsky@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 18 Feb 2022 15:42:50 -0800
-Message-ID: <CAPcyv4hF=DWWszAhrOTiBLFxm5s8gcJ_TcdVz9UNfYEuXNiJTw@mail.gmail.com>
-Subject: Re: [PATCH v3 10/14] cxl/region: Collect host bridge decoders
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, patches@lists.linux.dev,
-        Alison Schofield <alison.schofield@intel.com>,
+        with ESMTP id S232502AbiBVSUS (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Feb 2022 13:20:18 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC94CB1536
+        for <linux-cxl@vger.kernel.org>; Tue, 22 Feb 2022 10:19:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645553992; x=1677089992;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0rEXS1BuAw97LDr61nE2Cke/w1FyXu3aaZfWJ2BEyvY=;
+  b=X0seOzilRr79f7rk3DhZLWoLkHxzHs+hZfnBkGTFbV4zj5xjBdD08PYE
+   hs6jd4nwdaC9y6LjGF6w4TuIE55YwNgv8QfcaGSmvl7gqlmjGmjYXMi57
+   4qj0vOhLpwC2WcJTsh1tJ7A0WNZ7uUcnK9xxxDQb9E1T4kik/HJzwqUao
+   qtfvVXCOYNMruEzUVOCP7JypQVdvQb3/zQcf+FgxHQdFqMtGZa39FbkcG
+   W07g3UfrX24abQsnXk+bKJqFcOwL8qJTfRB5PTmwBBf60WR+koDLI+PYQ
+   ldW5uwDusI3ZLZg386IDpSegk0xqmHPKnl+aliBCin1c828SjxixWiAce
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10266"; a="232399151"
+X-IronPort-AV: E=Sophos;i="5.88,387,1635231600"; 
+   d="scan'208";a="232399151"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2022 10:19:52 -0800
+X-IronPort-AV: E=Sophos;i="5.88,387,1635231600"; 
+   d="scan'208";a="532333094"
+Received: from alison-desk.jf.intel.com (HELO localhost) ([10.54.74.41])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2022 10:19:51 -0800
+From:   alison.schofield@intel.com
+To:     Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Vishal Verma <vishal.l.verma@intel.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+Subject: [ndctl PATCH] cxl/list: Handle GET_PARTITION_INFO command as optional
+Date:   Tue, 22 Feb 2022 10:23:28 -0800
+Message-Id: <20220222182328.1009333-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Jan 27, 2022 at 4:27 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> Part of host bridge verification in the CXL Type 3 Memory Device
-> Software Guide calculates the host bridge interleave target list (6th
-> step in the flow chart), ie. verification and state update are done in
-> the same step. Host bridge verification is already in place, so go ahead
-> and store the decoders with their target lists.
->
-> Switches are implemented in a separate patch.
->
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> ---
->  drivers/cxl/region.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
-> index 145d7bb02714..b8982be13bfe 100644
-> --- a/drivers/cxl/region.c
-> +++ b/drivers/cxl/region.c
-> @@ -428,6 +428,7 @@ static bool region_hb_rp_config_valid(struct cxl_region *cxlr,
->                 return simple_config(cxlr, hbs[0]);
->
->         for (i = 0; i < hb_count; i++) {
-> +               struct cxl_decoder *cxld;
->                 int idx, position_mask;
->                 struct cxl_dport *rp;
->                 struct cxl_port *hb;
-> @@ -486,6 +487,18 @@ static bool region_hb_rp_config_valid(struct cxl_region *cxlr,
->                                                 "One or more devices are not connected to the correct Host Bridge Root Port\n");
->                                         goto err;
->                                 }
-> +
-> +                               if (!state_update)
-> +                                       continue;
-> +
-> +                               if (dev_WARN_ONCE(&cxld->dev,
-> +                                                 port_grouping >= cxld->nr_targets,
-> +                                                 "Invalid port grouping %d/%d\n",
-> +                                                 port_grouping, cxld->nr_targets))
-> +                                       goto err;
-> +
-> +                               cxld->interleave_ways++;
-> +                               cxld->target[port_grouping] = get_rp(ep);
+From: Alison Schofield <alison.schofield@intel.com>
 
-There is not enough context in the changelog to understand what this
-code is doing, but I do want to react to all this caching of objects
-without references. I'd prefer helpers that walk the device that are
-already synced with device_del() events than worry about these caches
-and when to invalidate their references.
+CXL specifies GET_PARTITION_INFO mailbox command as optional. A device
+may not support the command when it has no partitionable space.
 
->                         }
->                 }
->         }
-> @@ -538,7 +551,7 @@ static bool rootd_valid(const struct cxl_region *cxlr,
->
->  struct rootd_context {
->         const struct cxl_region *cxlr;
-> -       struct cxl_port *hbs[CXL_DECODER_MAX_INTERLEAVE];
-> +       const struct cxl_port *hbs[CXL_DECODER_MAX_INTERLEAVE];
->         int count;
->  };
->
-> @@ -564,7 +577,7 @@ static struct cxl_decoder *find_rootd(const struct cxl_region *cxlr,
->         struct rootd_context ctx;
->         struct device *ret;
->
-> -       ctx.cxlr = cxlr;
-> +       ctx.cxlr = (struct cxl_region *)cxlr;
+Flip the order in which the command cxl-list retrieves the partition
+info so that the fields reported by the IDENTIFY mailbox command are
+always reported, and then the fields reported by the GET_PARTITION_INFO
+mailbox command are optionally reported.
 
-If const requires casting then don't use const.
+Fixes: 7581aba52da0 ("cxl: add memdev partition information to cxl-list")
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
 
->
->         ret = device_find_child((struct device *)&root->dev, &ctx, rootd_match);
->         if (ret)
-> --
-> 2.35.0
->
+Vishal, I wasn't sure whether to rev the original patchset or post as a
+fix. Let me know.
+
+
+ cxl/json.c | 97 +++++++++++++++++++++++++++++-------------------------
+ 1 file changed, 52 insertions(+), 45 deletions(-)
+
+diff --git a/cxl/json.c b/cxl/json.c
+index 69671b3e7fe9..fdc6f73a86c1 100644
+--- a/cxl/json.c
++++ b/cxl/json.c
+@@ -204,48 +204,6 @@ static struct json_object *util_cxl_memdev_partition_to_json(struct cxl_memdev *
+ 	if (!memdev)
+ 		goto err_jobj;
+ 
+-	/* Retrieve partition info in GET_PARTITION_INFO mbox cmd */
+-	cmd = cxl_cmd_new_get_partition(memdev);
+-	if (!cmd)
+-		goto err_jobj;
+-
+-	rc = cxl_cmd_submit(cmd);
+-	if (rc < 0)
+-		goto err_cmd;
+-	rc = cxl_cmd_get_mbox_status(cmd);
+-	if (rc != 0)
+-		goto err_cmd;
+-
+-	cap = cxl_cmd_partition_get_active_volatile_size(cmd);
+-	if (cap != ULLONG_MAX) {
+-		jobj = util_json_object_size(cap, flags);
+-		if (jobj)
+-			json_object_object_add(jpart,
+-					"active_volatile_size", jobj);
+-	}
+-	cap = cxl_cmd_partition_get_active_persistent_size(cmd);
+-	if (cap != ULLONG_MAX) {
+-		jobj = util_json_object_size(cap, flags);
+-		if (jobj)
+-			json_object_object_add(jpart,
+-					"active_persistent_size", jobj);
+-	}
+-	cap = cxl_cmd_partition_get_next_volatile_size(cmd);
+-	if (cap != ULLONG_MAX) {
+-		jobj = util_json_object_size(cap, flags);
+-		if (jobj)
+-			json_object_object_add(jpart,
+-					"next_volatile_size", jobj);
+-	}
+-	cap = cxl_cmd_partition_get_next_persistent_size(cmd);
+-	if (cap != ULLONG_MAX) {
+-		jobj = util_json_object_size(cap, flags);
+-		if (jobj)
+-			json_object_object_add(jpart,
+-					"next_persistent_size", jobj);
+-	}
+-	cxl_cmd_unref(cmd);
+-
+ 	/* Retrieve partition info in the IDENTIFY mbox cmd */
+ 	cmd = cxl_cmd_new_identify(memdev);
+ 	if (!cmd)
+@@ -253,10 +211,10 @@ static struct json_object *util_cxl_memdev_partition_to_json(struct cxl_memdev *
+ 
+ 	rc = cxl_cmd_submit(cmd);
+ 	if (rc < 0)
+-		goto err_cmd;
++		goto err_identify;
+ 	rc = cxl_cmd_get_mbox_status(cmd);
+ 	if (rc != 0)
+-		goto err_cmd;
++		goto err_identify;
+ 
+ 	cap = cxl_cmd_identify_get_total_size(cmd);
+ 	if (cap != ULLONG_MAX) {
+@@ -284,10 +242,59 @@ static struct json_object *util_cxl_memdev_partition_to_json(struct cxl_memdev *
+ 		json_object_object_add(jpart, "partition_alignment_size", jobj);
+ 
+ 	cxl_cmd_unref(cmd);
++
++	/* Return now if there is no partition info to get. */
++	if (!cap)
++		return jpart;
++
++	/* Retrieve partition info in GET_PARTITION_INFO mbox cmd */
++	cmd = cxl_cmd_new_get_partition(memdev);
++	if (!cmd)
++		return jpart;
++
++	rc = cxl_cmd_submit(cmd);
++	if (rc < 0)
++		goto err_get;
++	rc = cxl_cmd_get_mbox_status(cmd);
++	if (rc != 0)
++		goto err_get;
++
++	cap = cxl_cmd_partition_get_active_volatile_size(cmd);
++	if (cap != ULLONG_MAX) {
++		jobj = util_json_object_size(cap, flags);
++		if (jobj)
++			json_object_object_add(jpart,
++					"active_volatile_size", jobj);
++	}
++	cap = cxl_cmd_partition_get_active_persistent_size(cmd);
++	if (cap != ULLONG_MAX) {
++		jobj = util_json_object_size(cap, flags);
++		if (jobj)
++			json_object_object_add(jpart,
++					"active_persistent_size", jobj);
++	}
++	cap = cxl_cmd_partition_get_next_volatile_size(cmd);
++	if (cap != ULLONG_MAX) {
++		jobj = util_json_object_size(cap, flags);
++		if (jobj)
++			json_object_object_add(jpart,
++					"next_volatile_size", jobj);
++	}
++	cap = cxl_cmd_partition_get_next_persistent_size(cmd);
++	if (cap != ULLONG_MAX) {
++		jobj = util_json_object_size(cap, flags);
++		if (jobj)
++			json_object_object_add(jpart,
++					"next_persistent_size", jobj);
++	}
++
++err_get:
++	cxl_cmd_unref(cmd);
+ 	return jpart;
+ 
+-err_cmd:
++err_identify:
+ 	cxl_cmd_unref(cmd);
++
+ err_jobj:
+ 	json_object_put(jpart);
+ 	return NULL;
+-- 
+2.31.1
+
