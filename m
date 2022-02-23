@@ -2,452 +2,706 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1E2C4332F
-	for <linux-cxl@archiver.kernel.org>; Tue, 22 Feb 2022 19:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE435C433EF
+	for <linux-cxl@archiver.kernel.org>; Wed, 23 Feb 2022 21:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235335AbiBVTxI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 22 Feb 2022 14:53:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53956 "EHLO
+        id S240831AbiBWVu2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 23 Feb 2022 16:50:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235331AbiBVTxE (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Feb 2022 14:53:04 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A402FC5595
-        for <linux-cxl@vger.kernel.org>; Tue, 22 Feb 2022 11:52:38 -0800 (PST)
+        with ESMTP id S235875AbiBWVu1 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 23 Feb 2022 16:50:27 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C31147069;
+        Wed, 23 Feb 2022 13:49:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645559558; x=1677095558;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ee1UdJrfOmyH51HvJJPxJDtcPSYBf631vBoDQWhI4xA=;
-  b=PAp51jnoP2plgSl1BQ58FT2l7gjuOzUXeOx0tvF0GfPr+DEF1Pl+Qikf
-   ZVC8Uxlg7DZobVqkoNMWWuSjXvN+KsadsZzQHsCcmL9xAbvW2DnyLJZLS
-   abwLMFKTRbrTTCH4tfJ3ExxI8qsG6u5CD+bhjmKU7g3w7cAAoE01ET9TC
-   D+JW+0tQvUh9t4lQqCG+mqqnYecNV+x3bO8JzWkngrB21sAsd0WTXSuiQ
-   ghlMxhfcghB7akI7ik8Ht8nC9CEI/Z+KN1DLcCpdCsvDAVBVjs84M4j+f
-   BA+sKQsRBoVztnXMphfhx+caEwL2lBGjNyEmQ0qossHibr7nRFNKzJT1A
+  t=1645652998; x=1677188998;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=JJ3pECddufL3NfMArJ0nIQ9vJAzu0EVDnXWrbX/5sTU=;
+  b=hbvg3NqeDVVYKyTsr9FPWRFXoKTeXy2OnJzhdvqYdd7nXfNXjfwDDslI
+   YAgOVddHHcTVydvOaZBJZvS6FJEuQipHhfW4n353x5nyMJDFUeuWnKgPv
+   wjd5DZIndrMMAxxb/QhbOK58Sjn0Ragpn2Hno79LvzJig3tmyZCI0OBjo
+   dR8RNyw5Rd8VikQ6lbx6Jf5t1eAClfJeuwJeb3NJH8FJ3cGIlO2pKp4Fm
+   mY6xFeZJ9iovwNPHlpP9b8fQnqxkDLcBLbBYdDQgDf1YPQx6uTvldf7t7
+   QKZyxpCIb9HAdpLIz+QKjEtoMsC/L5YW6k/UI1MHRiYW0SFN6S8k5fKu7
    w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10266"; a="250624967"
-X-IronPort-AV: E=Sophos;i="5.88,387,1635231600"; 
-   d="scan'208";a="250624967"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2022 11:52:38 -0800
-X-IronPort-AV: E=Sophos;i="5.88,387,1635231600"; 
-   d="scan'208";a="683637821"
-Received: from alison-desk.jf.intel.com (HELO localhost) ([10.54.74.41])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2022 11:52:38 -0800
-From:   alison.schofield@intel.com
-To:     Ben Widawsky <ben.widawsky@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+X-IronPort-AV: E=McAfee;i="6200,9189,10267"; a="338524836"
+X-IronPort-AV: E=Sophos;i="5.88,392,1635231600"; 
+   d="scan'208";a="338524836"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 13:49:57 -0800
+X-IronPort-AV: E=Sophos;i="5.88,392,1635231600"; 
+   d="scan'208";a="491363648"
+Received: from srikrish-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.138.225])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 13:49:56 -0800
+Date:   Wed, 23 Feb 2022 13:49:55 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, patches@lists.linux.dev,
+        kernel test robot <lkp@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Subject: [ndctl PATCH v6 6/6] cxl: add command 'cxl set-partition'
-Date:   Tue, 22 Feb 2022 11:56:08 -0800
-Message-Id: <e7accc7ba93def81b48304cf5fb483345757410d.1645558189.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1645558189.git.alison.schofield@intel.com>
-References: <cover.1645558189.git.alison.schofield@intel.com>
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v3 02/14] cxl/region: Introduce concept of region
+ configuration
+Message-ID: <20220223214955.riljjquteodtdyaj@intel.com>
+References: <20220128002707.391076-1-ben.widawsky@intel.com>
+ <20220128002707.391076-3-ben.widawsky@intel.com>
+ <CAPcyv4hHJcPLRJM-7z+wKhjBhp9HH2qXuEeC0VfDnD6yU9H-Wg@mail.gmail.com>
+ <20220217183628.6iwph6w3ndoct3o3@intel.com>
+ <CAPcyv4gTgwmeX_WpsPdZ1K253XmwXwWU4629PKB__n4MF6CeFQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPcyv4gTgwmeX_WpsPdZ1K253XmwXwWU4629PKB__n4MF6CeFQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+On 22-02-17 11:57:59, Dan Williams wrote:
+> On Thu, Feb 17, 2022 at 10:36 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> >
+> > Consolidating earlier discussions...
+> >
+> > On 22-01-28 16:25:34, Dan Williams wrote:
+> > > On Thu, Jan 27, 2022 at 4:27 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > > >
+> > > > The region creation APIs create a vacant region. Configuring the region
+> > > > works in the same way as similar subsystems such as devdax. Sysfs attrs
+> > > > will be provided to allow userspace to configure the region.  Finally
+> > > > once all configuration is complete, userspace may activate the region.
+> > > >
+> > > > Introduced here are the most basic attributes needed to configure a
+> > > > region. Details of these attribute are described in the ABI
+> > >
+> > > s/attribute/attributes/
+> > >
+> > > > Documentation. Sanity checking of configuration parameters are done at
+> > > > region binding time. This consolidates all such logic in one place,
+> > > > rather than being strewn across multiple places.
+> > >
+> > > I think that's too late for some of the validation. The complex
+> > > validation that the region driver does throughout the topology is
+> > > different from the basic input validation that can  be done at the
+> > > sysfs write time. For example ,this patch allows negative
+> > > interleave_granularity values to specified, just return -EINVAL. I
+> > > agree that sysfs should not validate everything, I disagree with
+> > > pushing all validation to cxl_region_probe().
+> > >
+> >
+> > Okay. It might save us some back and forth if you could outline everything you'd
+> > expect to be validated, but I can also make an attempt to figure out the
+> > reasonable set of things.
+> 
+> Input validation. Every value that gets written to a sysfs attribute
+> should be checked for validity, more below:
+> 
+> >
+> > > >
+> > > > A example is provided below:
+> > > >
+> > > > /sys/bus/cxl/devices/region0.0:0
+> > > > ├── interleave_granularity
+> 
+> ...validate granularity is within spec and can be supported by the root decoder.
+> 
+> > > > ├── interleave_ways
+> 
+> ...validate ways is within spec and can be supported by the root decoder.
 
-CXL devices may support both volatile and persistent memory capacity.
-The amount of device capacity set aside for each type is typically
-established at the factory, but some devices also allow for dynamic
-re-partitioning. Add a command for this purpose.
+I'm not sure how to do this one. Validation requires device positions and we
+can't set the targets until ways is set. Can you please provide some more
+insight on what you'd like me to check in addition to the value being within
+spec?
 
- usage: cxl set-partition <mem0> [<mem1>..<memN>] [<options>]
-
-    -v, --verbose         turn on debug
-    -S, --serial          use serial numbers to id memdevs
-    -t, --type <type>     'pmem' or 'volatile' (Default: 'pmem')
-    -s, --size <size>     size in bytes (Default: all available capacity)
-    -a, --align           auto-align --size per device's requirement
-
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
----
- Documentation/cxl/cxl-set-partition.txt |  68 ++++++++
- Documentation/cxl/meson.build           |   1 +
- cxl/builtin.h                           |   1 +
- cxl/cxl.c                               |   1 +
- cxl/memdev.c                            | 206 ++++++++++++++++++++++++
- 5 files changed, 277 insertions(+)
- create mode 100644 Documentation/cxl/cxl-set-partition.txt
-
-diff --git a/Documentation/cxl/cxl-set-partition.txt b/Documentation/cxl/cxl-set-partition.txt
-new file mode 100644
-index 000000000000..1e548af77da2
---- /dev/null
-+++ b/Documentation/cxl/cxl-set-partition.txt
-@@ -0,0 +1,68 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+cxl-set-partition(1)
-+====================
-+
-+NAME
-+----
-+cxl-set-partition - set the partitioning between volatile and persistent capacity on a CXL memdev
-+
-+SYNOPSIS
-+--------
-+[verse]
-+'cxl set-partition <mem0> [ [<mem1>..<memN>] [<options>]'
-+
-+DESCRIPTION
-+-----------
-+CXL devices may support both volatile and persistent memory capacity.
-+The amount of device capacity set aside for each type is typically
-+established at the factory, but some devices also allow for dynamic
-+re-partitioning.
-+
-+Use this command to partition a device into volatile and persistent
-+capacity. The change in partitioning becomes the “next” configuration,
-+to become active on the next device reset.
-+
-+Use "cxl list -m <memdev> -I" to examine the partitioning capabilities
-+of a device. A partition_alignment_size value of zero means there is
-+no available capacity and therefore the partitions cannot be changed.
-+
-+Using this command to change the size of the persistent capacity shall
-+result in the loss of data stored.
-+
-+OPTIONS
-+-------
-+<memory device(s)>::
-+include::memdev-option.txt[]
-+
-+-t::
-+--type=::
-+	Type of partition, 'pmem' or 'volatile', to modify.
-+	Default: 'pmem'
-+
-+-s::
-+--size=::
-+	Size of the <type> partition in bytes. Size must align to the
-+	devices alignment requirement. Use 'cxl list -m <memdev> -I'
-+	to find 'partition_alignment_size', or, use the --align option.
-+	Default: All available capacity is assigned to <type>.
-+
-+-a::
-+--align::
-+	Select this option to allow the automatic alignment of --size
-+	to meet device alignment requirements. When using this option,
-+	specify the minimum --size of the --type partition needed. When
-+	this option is omitted, the command fails if --size is not
-+	properly aligned. Use 'cxl list -m <memdev> -I' to examine the
-+	partition_alignment_size.
-+
-+-v::
-+        Turn on verbose debug messages in the library (if libcxl was built with
-+        logging and debug enabled).
-+
-+include::../copyright.txt[]
-+
-+SEE ALSO
-+--------
-+linkcxl:cxl-list[1],
-+CXL-2.0 8.2.9.5.2
-diff --git a/Documentation/cxl/meson.build b/Documentation/cxl/meson.build
-index 96f4666a828d..e927644a3826 100644
---- a/Documentation/cxl/meson.build
-+++ b/Documentation/cxl/meson.build
-@@ -34,6 +34,7 @@ cxl_manpages = [
-   'cxl-disable-memdev.txt',
-   'cxl-enable-port.txt',
-   'cxl-disable-port.txt',
-+  'cxl-set-partition.txt',
- ]
- 
- foreach man : cxl_manpages
-diff --git a/cxl/builtin.h b/cxl/builtin.h
-index 3123d5e0d4ed..7bbad98f67ac 100644
---- a/cxl/builtin.h
-+++ b/cxl/builtin.h
-@@ -14,4 +14,5 @@ int cmd_disable_memdev(int argc, const char **argv, struct cxl_ctx *ctx);
- int cmd_enable_memdev(int argc, const char **argv, struct cxl_ctx *ctx);
- int cmd_disable_port(int argc, const char **argv, struct cxl_ctx *ctx);
- int cmd_enable_port(int argc, const char **argv, struct cxl_ctx *ctx);
-+int cmd_set_partition(int argc, const char **argv, struct cxl_ctx *ctx);
- #endif /* _CXL_BUILTIN_H_ */
-diff --git a/cxl/cxl.c b/cxl/cxl.c
-index c20c5693fd2b..ab4bbeccaa76 100644
---- a/cxl/cxl.c
-+++ b/cxl/cxl.c
-@@ -68,6 +68,7 @@ static struct cmd_struct commands[] = {
- 	{ "enable-memdev", .c_fn = cmd_enable_memdev },
- 	{ "disable-port", .c_fn = cmd_disable_port },
- 	{ "enable-port", .c_fn = cmd_enable_port },
-+	{ "set-partition", .c_fn = cmd_set_partition },
- };
- 
- int main(int argc, const char **argv)
-diff --git a/cxl/memdev.c b/cxl/memdev.c
-index 90b33e1b4195..91d914db5af6 100644
---- a/cxl/memdev.c
-+++ b/cxl/memdev.c
-@@ -6,11 +6,14 @@
- #include <unistd.h>
- #include <limits.h>
- #include <util/log.h>
-+#include <util/json.h>
-+#include <util/size.h>
- #include <cxl/libcxl.h>
- #include <util/parse-options.h>
- #include <ccan/minmax/minmax.h>
- #include <ccan/array_size/array_size.h>
- 
-+#include "json.h"
- #include "filter.h"
- 
- struct action_context {
-@@ -26,10 +29,18 @@ static struct parameters {
- 	bool verbose;
- 	bool serial;
- 	bool force;
-+	bool align;
-+	const char *type;
-+	const char *size;
- } param;
- 
- static struct log_ctx ml;
- 
-+enum cxl_setpart_type {
-+	CXL_SETPART_PMEM,
-+	CXL_SETPART_VOLATILE,
-+};
-+
- #define BASE_OPTIONS() \
- OPT_BOOLEAN('v',"verbose", &param.verbose, "turn on debug"), \
- OPT_BOOLEAN('S', "serial", &param.serial, "use serial numbers to id memdevs")
-@@ -51,6 +62,14 @@ OPT_UINTEGER('O', "offset", &param.offset, \
- OPT_BOOLEAN('f', "force", &param.force,                                \
- 	    "DANGEROUS: override active memdev safety checks")
- 
-+#define SET_PARTITION_OPTIONS() \
-+OPT_STRING('t', "type",  &param.type, "type",			\
-+	"'pmem' or 'volatile' (Default: 'pmem')"),		\
-+OPT_STRING('s', "size",  &param.size, "size",			\
-+	"size in bytes (Default: all available capacity)"),	\
-+OPT_BOOLEAN('a', "align",  &param.align,			\
-+	"auto-align --size per device's requirement")
-+
- static const struct option read_options[] = {
- 	BASE_OPTIONS(),
- 	LABEL_OPTIONS(),
-@@ -82,6 +101,12 @@ static const struct option enable_options[] = {
- 	OPT_END(),
- };
- 
-+static const struct option set_partition_options[] = {
-+	BASE_OPTIONS(),
-+	SET_PARTITION_OPTIONS(),
-+	OPT_END(),
-+};
-+
- static int action_disable(struct cxl_memdev *memdev, struct action_context *actx)
- {
- 	if (!cxl_memdev_is_enabled(memdev))
-@@ -209,6 +234,176 @@ out:
- 	return rc;
- }
- 
-+static unsigned long long
-+partition_align(const char *devname, enum cxl_setpart_type type,
-+		unsigned long long volatile_size, unsigned long long alignment,
-+		unsigned long long available)
-+{
-+	if (IS_ALIGNED(volatile_size, alignment))
-+		return volatile_size;
-+
-+	if (!param.align) {
-+		log_err(&ml, "%s: size %lld is not partition aligned %lld\n",
-+			devname, volatile_size, alignment);
-+		return ULLONG_MAX;
-+	}
-+
-+	/* Align based on partition type to fulfill users size request */
-+	if (type == CXL_SETPART_PMEM)
-+		volatile_size = ALIGN_DOWN(volatile_size, alignment);
-+	else
-+		volatile_size = ALIGN(volatile_size, alignment);
-+
-+	/* Fail if the align pushes size over the available limit. */
-+	if (volatile_size > available) {
-+		log_err(&ml, "%s: aligned partition size %lld exceeds available size %lld\n",
-+			devname, volatile_size, available);
-+		volatile_size = ULLONG_MAX;
-+	}
-+
-+	return volatile_size;
-+}
-+
-+static unsigned long long
-+param_size_to_volatile_size(const char *devname, enum cxl_setpart_type type,
-+		unsigned long long size, unsigned long long available)
-+{
-+	/* User omits size option. Apply all available capacity to type. */
-+	if (size == ULLONG_MAX) {
-+		if (type == CXL_SETPART_PMEM)
-+			return 0;
-+		return available;
-+	}
-+
-+	/* User includes a size option. Apply it to type */
-+	if (size > available) {
-+		log_err(&ml, "%s: %lld exceeds available capacity %lld\n",
-+			devname, size, available);
-+			return ULLONG_MAX;
-+	}
-+	if (type == CXL_SETPART_PMEM)
-+		return available - size;
-+	return size;
-+}
-+
-+/*
-+ * Return the volatile_size to use in the CXL set paritition
-+ * command, or ULLONG_MAX if unable to validate the partition
-+ * request.
-+ */
-+static unsigned long long
-+validate_partition(struct cxl_memdev *memdev, enum cxl_setpart_type type,
-+		unsigned long long size)
-+{
-+	unsigned long long total_cap, volatile_only, persistent_only;
-+	const char *devname = cxl_memdev_get_devname(memdev);
-+	unsigned long long volatile_size = ULLONG_MAX;
-+	unsigned long long available, alignment;
-+	struct cxl_cmd *cmd;
-+	int rc;
-+
-+	cmd = cxl_cmd_new_identify(memdev);
-+	if (!cmd)
-+		return ULLONG_MAX;
-+	rc = cxl_cmd_submit(cmd);
-+	if (rc < 0)
-+		goto out;
-+	rc = cxl_cmd_get_mbox_status(cmd);
-+	if (rc != 0)
-+		goto out;
-+
-+	alignment = cxl_cmd_identify_get_partition_align(cmd);
-+	if (alignment == 0) {
-+		log_err(&ml, "%s: no available capacity\n", devname);
-+		goto out;
-+	}
-+
-+	/* Calculate the actual available capacity */
-+	total_cap = cxl_cmd_identify_get_total_size(cmd);
-+	volatile_only = cxl_cmd_identify_get_volatile_only_size(cmd);
-+	persistent_only = cxl_cmd_identify_get_persistent_only_size(cmd);
-+	available = total_cap - volatile_only - persistent_only;
-+
-+	/* Translate the users size request into an aligned volatile_size */
-+	volatile_size = param_size_to_volatile_size(devname, type, size,
-+				available);
-+	if (volatile_size == ULLONG_MAX)
-+		goto out;
-+
-+	volatile_size = partition_align(devname, type, volatile_size, alignment,
-+				available);
-+
-+out:
-+	cxl_cmd_unref(cmd);
-+	return volatile_size;
-+}
-+
-+static int action_setpartition(struct cxl_memdev *memdev,
-+		struct action_context *actx)
-+{
-+	const char *devname = cxl_memdev_get_devname(memdev);
-+	enum cxl_setpart_type type = CXL_SETPART_PMEM;
-+	unsigned long long size = ULLONG_MAX;
-+	struct json_object *jmemdev;
-+	struct cxl_cmd *cmd;
-+	int rc;
-+
-+	if (param.type) {
-+		if (strcmp(param.type, "pmem") == 0)
-+			/* default */;
-+		else if (strcmp(param.type, "volatile") == 0)
-+			type = CXL_SETPART_VOLATILE;
-+		else {
-+			log_err(&ml, "invalid type '%s'\n", param.type);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	if (param.size) {
-+		size = parse_size64(param.size);
-+		if (size == ULLONG_MAX) {
-+			log_err(&ml, "%s: failed to parse size option '%s'\n",
-+			devname, param.size);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	size = validate_partition(memdev, type, size);
-+	if (size == ULLONG_MAX)
-+		return -EINVAL;
-+
-+	cmd = cxl_cmd_new_set_partition(memdev, size);
-+	if (!cmd) {
-+		rc = -ENXIO;
-+		goto out_err;
-+	}
-+
-+	rc = cxl_cmd_submit(cmd);
-+	if (rc < 0) {
-+		log_err(&ml, "cmd submission failed: %s\n", strerror(-rc));
-+		goto out_cmd;
-+	}
-+
-+	rc = cxl_cmd_get_mbox_status(cmd);
-+	if (rc != 0) {
-+		log_err(&ml, "%s: mbox status: %d\n", __func__, rc);
-+		rc = -ENXIO;
-+	}
-+
-+out_cmd:
-+	cxl_cmd_unref(cmd);
-+out_err:
-+	if (rc)
-+		log_err(&ml, "%s error: %s\n", devname, strerror(-rc));
-+
-+	jmemdev = util_cxl_memdev_to_json(memdev, UTIL_JSON_PARTITION);
-+	if (jmemdev)
-+		printf("%s\n", json_object_to_json_string_ext(jmemdev,
-+		       JSON_C_TO_STRING_PRETTY));
-+
-+	return rc;
-+}
-+
- static int memdev_action(int argc, const char **argv, struct cxl_ctx *ctx,
- 			 int (*action)(struct cxl_memdev *memdev,
- 				       struct action_context *actx),
-@@ -398,3 +593,14 @@ int cmd_enable_memdev(int argc, const char **argv, struct cxl_ctx *ctx)
- 		 count > 1 ? "s" : "");
- 	return count >= 0 ? 0 : EXIT_FAILURE;
- }
-+
-+int cmd_set_partition(int argc, const char **argv, struct cxl_ctx *ctx)
-+{
-+	int count = memdev_action(argc, argv, ctx, action_setpartition,
-+			set_partition_options,
-+			"cxl set-partition <mem0> [<mem1>..<memN>] [<options>]");
-+	log_info(&ml, "set_partition %d mem%s\n", count >= 0 ? count : 0,
-+		 count > 1 ? "s" : "");
-+
-+	return count >= 0 ? 0 : EXIT_FAILURE;
-+}
--- 
-2.31.1
-
+> 
+> > > > ├── offset
+> > > > ├── size
+> 
+> ...try to reserve decoder capacity to validate that there is available space.
+> 
+> > > > ├── subsystem -> ../../../../../../bus/cxl
+> > > > ├── target0
+> 
+> ...validate that the target maps to the decoder.
+> 
+> > > > ├── uevent
+> > > > └── uuid
+> 
+> ...validate that the uuid is unique relative to other regions.
+> 
+> > >
+> > > As mentioned off-list, it looks like devtype and modalias are missing.
+> > >
+> >
+> > Yep. This belongs in the previous patch though.
+> >
+> > > >
+> > > > Reported-by: kernel test robot <lkp@intel.com> (v2)
+> > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > > > ---
+> > > >  Documentation/ABI/testing/sysfs-bus-cxl |  40 ++++
+> > > >  drivers/cxl/core/region.c               | 300 ++++++++++++++++++++++++
+> > > >  2 files changed, 340 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> > > > index dcc728458936..50ba5018014d 100644
+> > > > --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> > > > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> > > > @@ -187,3 +187,43 @@ Description:
+> > > >                 region driver before being deleted. The attributes expects a
+> > > >                 region in the form "regionX.Y:Z". The region's name, allocated
+> > > >                 by reading create_region, will also be released.
+> > > > +
+> > > > +What:          /sys/bus/cxl/devices/decoderX.Y/regionX.Y:Z/offset
+> > >
+> > > This is just another 'resource' attribute for the physical base
+> > > address of the region, right? 'offset' sounds like something that
+> > > would be relative instead of absolute.
+> > >
+> >
+> > It was meant to be relative. I can make it absolute if that's preferable but the
+> > physical base is known at the decoder level already.
+> 
+> Yes, but it saves userspace a step to get the absolute value here and
+> matches what happens in PCI sysfs where the user is not required to
+> look up the bridge base to calculate the absolute value.
+> 
+> >
+> > > > +Date:          August, 2021
+> > >
+> > > Same date update comment here.
+> > >
+> > > > +KernelVersion: v5.18
+> > > > +Contact:       linux-cxl@vger.kernel.org
+> > > > +Description:
+> > > > +               (RO) A region resides within an address space that is claimed by
+> > > > +               a decoder.
+> > >
+> > > "A region is a contiguous partition of a CXL Root decoder address space."
+> > >
+> > > >                  Region space allocation is handled by the driver, but
+> > >
+> > > "Region capacity is allocated by writing to the size attribute, the
+> > > resulting physical address base determined by the driver is reflected
+> > > here."
+> > >
+> > > > +               the offset may be read by userspace tooling in order to
+> > > > +               determine fragmentation, and available size for new regions.
+> > >
+> > > I would also expect, before / along with these new region attributes,
+> > > there would be 'available' and 'max_extent_available' at the decoder
+> > > level to indicate how much free space the decoder has and how big the
+> > > next region creation can be. User tooling can walk  the decoder and
+> > > the regions together to determine fragmentation if necessary, but for
+> > > the most part the tool likely only cares about "how big can the next
+> > > region be?" and "how full is this decoder?".
+> > >
+> >
+> > Since this is the configuration part of the ABI, I'd rather add that information
+> > when the plumbing to report them exists. I'm struggling to understand the
+> > balance (as mentioned also earlier in this mail thread) as to what userspace
+> > does and what the kernel does. I will add these as you request.
+> 
+> Userspace asks by DPA size and SPA size and the kernel validates /
+> performs the allocation on its behalf.
+> 
+> > > > +
+> > > > +What:
+> > > > +/sys/bus/cxl/devices/decoderX.Y/regionX.Y:Z/{interleave,size,uuid,target[0-15]}
+> > > > +Date:          August, 2021
+> > > > +KernelVersion: v5.18
+> > > > +Contact:       linux-cxl@vger.kernel.org
+> > > > +Description:
+> > > > +               (RW) Configuring regions requires a minimal set of parameters in
+> > > > +               order for the subsequent bind operation to succeed. The
+> > > > +               following parameters are defined:
+> > >
+> > > Let's split up the descriptions into individual sections. That can
+> > > also document the order that attributes must be written. For example,
+> > > doesn't size need to be set before targets are added so that targets
+> > > can be validated whether they have sufficient capacity?
+> > >
+> >
+> > Okay. Since we're moving toward making the sysfs ABI stateful,
+> 
+> sysfs is always stateful. Stateless would be an ioctl.
+> 
+> > would you like me
+> > to make the attrs only visible when they can actually be set?
+> 
+> No, that's a bit too much magic, and it would be racy.
+> 
+> >
+> > > > +
+> > > > +               ==      ========================================================
+> > > > +               interleave_granularity Mandatory. Number of consecutive bytes
+> > > > +                       each device in the interleave set will claim. The
+> > > > +                       possible interleave granularity values are determined by
+> > > > +                       the CXL spec and the participating devices.
+> > > > +               interleave_ways Mandatory. Number of devices participating in the
+> > > > +                       region. Each device will provide 1/interleave of storage
+> > > > +                       for the region.
+> > > > +               size    Manadatory. Phsyical address space the region will
+> > > > +                       consume.
+> > >
+> > > s/Phsyical/Physical/
+> > >
+> > > > +               target  Mandatory. Memory devices are the backing storage for a
+> > > > +                       region. There will be N targets based on the number of
+> > > > +                       interleave ways that the top level decoder is configured
+> > > > +                       for.
+> > >
+> > > That doesn't sound right, IW at the root != IW at the endpoint level
+> > > and the region needs to record all the endpoint level targets.
+> >
+> > Correct.
+> >
+> > >
+> > > > Each target must be set with a memdev device ie.
+> > > > +                       'mem1'. This attribute only becomes available after
+> > > > +                       setting the 'interleave' attribute.
+> > > > +               uuid    Optional. A unique identifier for the region. If none is
+> > > > +                       selected, the kernel will create one.
+> > >
+> > > Let's drop the Mandatory / Optional distinction, or I am otherwise not
+> > > understanding what this is trying to document. For example 'uuid' is
+> > > "mandatory" for PMEM regions and "omitted" for volatile regions not
+> > > optional.
+> >
+> > Okay.
+> >
+> > >
+> > > > +               ==      ========================================================
+> > > > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> > > > index 1a448543db0d..3b48e0469fc7 100644
+> > > > --- a/drivers/cxl/core/region.c
+> > > > +++ b/drivers/cxl/core/region.c
+> > > > @@ -3,9 +3,12 @@
+> > > >  #include <linux/io-64-nonatomic-lo-hi.h>
+> > > >  #include <linux/device.h>
+> > > >  #include <linux/module.h>
+> > > > +#include <linux/sizes.h>
+> > > >  #include <linux/slab.h>
+> > > > +#include <linux/uuid.h>
+> > > >  #include <linux/idr.h>
+> > > >  #include <region.h>
+> > > > +#include <cxlmem.h>
+> > > >  #include <cxl.h>
+> > > >  #include "core.h"
+> > > >
+> > > > @@ -18,11 +21,305 @@
+> > > >   * (programming the hardware) is handled by a separate region driver.
+> > > >   */
+> > > >
+> > > > +struct cxl_region *to_cxl_region(struct device *dev);
+> > > > +static const struct attribute_group region_interleave_group;
+> > > > +
+> > > > +static bool is_region_active(struct cxl_region *cxlr)
+> > > > +{
+> > > > +       /* TODO: Regions can't be activated yet. */
+> > > > +       return false;
+> > >
+> > > This function seems redundant with just checking "cxlr->dev.driver !=
+> > > NULL"? The benefit of that is there is no need to carry a TODO in the
+> > > series.
+> > >
+> >
+> > The idea behind this was to give the reviewer somewhat of a bigger picture as to
+> > how things should work in the code rather than in a commit message. I will
+> > remove this.
+> 
+> They look premature to me.
+> 
+> >
+> > > > +}
+> > > > +
+> > > > +static void remove_target(struct cxl_region *cxlr, int target)
+> > > > +{
+> > > > +       struct cxl_memdev *cxlmd;
+> > > > +
+> > > > +       cxlmd = cxlr->config.targets[target];
+> > > > +       if (cxlmd)
+> > > > +               put_device(&cxlmd->dev);
+> > >
+> > > A memdev can be a member of multiple regions at once, shouldn't this
+> > > be an endpoint decoder or similar, not the entire memdev?
+> > >
+> > > Also, if memdevs autoremove themselves from regions at memdev
+> > > ->remove() time then I don't think the region needs to hold references
+> > > on memdevs.
+> > >
+> >
+> > This needs some work. The concern I have is region operations will need to
+> > operate on memdevs/decoders at various points in time. When the memdev goes
+> > away, the region will also need to go away. None of that plumbing was in place
+> > in v3 and the reference on the memdev was just a half-hearted attempt at doing
+> > the right thing.
+> >
+> > For now if you prefer I remove the reference, but perhaps the decoder reference
+> > would buy us some safety?
+> 
+> So, I don't want to merge an interim solution. I think this series
+> needs to prove out the end to end final ABI with all the lifetime
+> issues worked out before committing to it upstream because lifetime
+> issues get much harder to fix when they also need to conform to a
+> legacy ABI.
+> 
+> >
+> > > > +       cxlr->config.targets[target] = NULL;
+> > > > +}
+> > > > +
+> > > > +static ssize_t interleave_ways_show(struct device *dev,
+> > > > +                                   struct device_attribute *attr, char *buf)
+> > > > +{
+> > > > +       struct cxl_region *cxlr = to_cxl_region(dev);
+> > > > +
+> > > > +       return sysfs_emit(buf, "%d\n", cxlr->config.interleave_ways);
+> > > > +}
+> > > > +
+> > > > +static ssize_t interleave_ways_store(struct device *dev,
+> > > > +                                    struct device_attribute *attr,
+> > > > +                                    const char *buf, size_t len)
+> > > > +{
+> > > > +       struct cxl_region *cxlr = to_cxl_region(dev);
+> > > > +       int ret, prev_iw;
+> > > > +       int val;
+> > >
+> > > I would expect:
+> > >
+> > > if (dev->driver)
+> > >    return -EBUSY;
+> > >
+> > > ...to shutdown configuration writes once the region is active. Might
+> > > also need a region-wide seqlock like target_list_show. So that region
+> > > probe drains  all active sysfs writers before assuming the
+> > > configuration is stable.
+> >
+> > Initially my thought here is that this is a problem for userspace to deal with.
+> > If userspace can't figure out how to synchronously configure and bind the
+> > region, that's not a kernel problem.
+> 
+> The kernel always needs to protect itself. Userspace is free to race
+> itself, but it can not be allowed to trigger a kernel race. So there
+> needs to be protection against userspace writing interleave_ways and
+> the kernel being able to trust that interleave_ways is now static for
+> the life of the region.
+> 
+> > However, we've put some effort into
+> > protecting userspace from itself in the create ABI, so it might be more in line
+> > to do that here.
+> 
+> That safety was about preventing userspace from leaking kernel memory,
+> not about protecting userspace from itself. It's still the case that
+> userspace racing itself will get horribly confused when it collides
+> region creation, but the kernel protects itself by resolving the race.
+> 
+> > In summary, I'm fine to add it, but I think I really need to get more in your
+> > brain about the userspace/kernel divide sooner rather than later.
+> 
+> Don't let userspace break the kernel, that's it.
+> 
+> >
+> > >
+> > > > +
+> > > > +       prev_iw = cxlr->config.interleave_ways;
+> > > > +       ret = kstrtoint(buf, 0, &val);
+> > > > +       if (ret)
+> > > > +               return ret;
+> > > > +       if (ret < 0 || ret > CXL_DECODER_MAX_INTERLEAVE)
+> > > > +               return -EINVAL;
+> > > > +
+> > > > +       cxlr->config.interleave_ways = val;
+> > > > +
+> > > > +       ret = sysfs_update_group(&dev->kobj, &region_interleave_group);
+> > > > +       if (ret < 0)
+> > > > +               goto err;
+> > > > +
+> > > > +       sysfs_notify(&dev->kobj, NULL, "target_interleave");
+> > >
+> > > Why?
+> > >
+> >
+> > copypasta
+> >
+> > > > +
+> > > > +       while (prev_iw > cxlr->config.interleave_ways)
+> > > > +               remove_target(cxlr, --prev_iw);
+> > >
+> > > To make the kernel side simpler this attribute could just require that
+> > > setting interleave ways is a one way street, if you want to change it
+> > > you need to delete the region and start over.
+> > >
+> >
+> > Okay. One of the earlier versions did this implicitly since the #ways was needed
+> > to create the region. I thought from the ABI perspective, flexibility was good.
+> > Userspace may choose not to utilize it.
+> 
+> More flexibility == more maintenance burden. If it's not strictly
+> necessary, don't expose it, so making this read-only seems simpler to
+> me.
+> 
+> [..]
+> > > > +       device_lock(&cxlr->dev);
+> > > > +       if (is_region_active(cxlr))
+> > > > +               rc = -EBUSY;
+> > > > +       else
+> > > > +               cxlr->config.size = val;
+> > > > +       device_unlock(&cxlr->dev);
+> > >
+> > > I think lockdep will complain about device_lock() usage in an
+> > > attribute. Try changing this to cxl_device_lock() with
+> > > CONFIG_PROVE_CXL_LOCKING=y.
+> > >
+> >
+> > I might have messed it up, but I didn't seem to run into an issue. With the
+> > driver bound check though, it can go away.
+> >
+> > I think it would be really good to add this kind of detail to sysfs.rst. Quick
+> > grep finds me arm64/kernel/mte and the nfit driver taking the device lock in an
+> > attr.
+> 
+> Yeah, CONFIG_PROVE_{NVDIMM,CXL}_LOCKING needs to annotate the
+> driver-core as well. I'm concerned there's a class of deadlocks that
+> lockdep just can't see.
+> 
+> >
+> >
+> > > > +
+> > > > +       return rc ? rc : len;
+> > > > +}
+> > > > +static DEVICE_ATTR_RW(size);
+> > > > +
+> > > > +static ssize_t uuid_show(struct device *dev, struct device_attribute *attr,
+> > > > +                        char *buf)
+> > > > +{
+> > > > +       struct cxl_region *cxlr = to_cxl_region(dev);
+> > > > +
+> > > > +       return sysfs_emit(buf, "%pUb\n", &cxlr->config.uuid);
+> > > > +}
+> > > > +
+> > > > +static ssize_t uuid_store(struct device *dev, struct device_attribute *attr,
+> > > > +                         const char *buf, size_t len)
+> > > > +{
+> > > > +       struct cxl_region *cxlr = to_cxl_region(dev);
+> > > > +       ssize_t rc;
+> > > > +
+> > > > +       if (len != UUID_STRING_LEN + 1)
+> > > > +               return -EINVAL;
+> > > > +
+> > > > +       device_lock(&cxlr->dev);
+> > > > +       if (is_region_active(cxlr))
+> > > > +               rc = -EBUSY;
+> > > > +       else
+> > > > +               rc = uuid_parse(buf, &cxlr->config.uuid);
+> > > > +       device_unlock(&cxlr->dev);
+> > > > +
+> > > > +       return rc ? rc : len;
+> > > > +}
+> > > > +static DEVICE_ATTR_RW(uuid);
+> > > > +
+> > > > +static struct attribute *region_attrs[] = {
+> > > > +       &dev_attr_interleave_ways.attr,
+> > > > +       &dev_attr_interleave_granularity.attr,
+> > > > +       &dev_attr_offset.attr,
+> > > > +       &dev_attr_size.attr,
+> > > > +       &dev_attr_uuid.attr,
+> > > > +       NULL,
+> > > > +};
+> > > > +
+> > > > +static const struct attribute_group region_group = {
+> > > > +       .attrs = region_attrs,
+> > > > +};
+> > > > +
+> > > > +static size_t show_targetN(struct cxl_region *cxlr, char *buf, int n)
+> > > > +{
+> > > > +       int ret;
+> > > > +
+> > > > +       device_lock(&cxlr->dev);
+> > > > +       if (!cxlr->config.targets[n])
+> > > > +               ret = sysfs_emit(buf, "\n");
+> > > > +       else
+> > > > +               ret = sysfs_emit(buf, "%s\n",
+> > > > +                                dev_name(&cxlr->config.targets[n]->dev));
+> > > > +       device_unlock(&cxlr->dev);
+> > >
+> > > The component contribution of a memdev to a region is a DPA-span, not
+> > > the whole memdev. I would expect something like dax_mapping_attributes
+> > > or REGION_MAPPING() from drivers/nvdimm/region_devs.c. A tuple of
+> > > information about the component contribution of a memdev to a region.
+> > >
+> >
+> > I think show_target should just return the chosen decoder and then the decoder
+> > attributes will tell the rest, wouldn't they?
+> 
+> Given the conflicts that can arise between HDM decoders needing to map
+> increasing DPA values and other conflicts that there will be
+> situations where the kernel auto-picking a decoder will get in the
+> way. Exposing the decoder selection to userspace also gives one more
+> place to do leaf validation. I.e. at decoder-to-region assignment time
+> the kernel can validate that the DPA is available and can be mapped by
+> the given decoder given the state of other decoders on that device.
+> 
+> >
+> > > > +
+> > > > +       return ret;
+> > > > +}
+> > > > +
+> > > > +static size_t set_targetN(struct cxl_region *cxlr, const char *buf, int n,
+> > > > +                         size_t len)
+> > > > +{
+> > > > +       struct device *memdev_dev;
+> > > > +       struct cxl_memdev *cxlmd;
+> > > > +
+> > > > +       device_lock(&cxlr->dev);
+> > > > +
+> > > > +       if (len == 1 || cxlr->config.targets[n])
+> > > > +               remove_target(cxlr, n);
+> > > > +
+> > > > +       /* Remove target special case */
+> > > > +       if (len == 1) {
+> > > > +               device_unlock(&cxlr->dev);
+> > > > +               return len;
+> > > > +       }
+> > > > +
+> > > > +       memdev_dev = bus_find_device_by_name(&cxl_bus_type, NULL, buf);
+> > >
+> > > I think this wants to be an endpoint decoder, not a memdev. Because
+> > > it's the decoder that joins a memdev to a region, or at least a
+> > > decoder should be picked when the memdev is assigned so that the DPA
+> > > mapping can be registered. If all the decoders are allocated then fail
+> > > here.
+> > >
+> >
+> > Per above, I think making this decoders makes sense. I could make it flexible
+> > for ease of use, like if you specify memX, the kernel will pick a decoder for
+> > you however I suspect you won't like that.
+> 
+> Right, put the user friendliness in the tooling, not sysfs ABI.
+> 
+> >
+> > > > +       if (!memdev_dev) {
+> > > > +               device_unlock(&cxlr->dev);
+> > > > +               return -ENOENT;
+> > > > +       }
+> > > > +
+> > > > +       /* reference to memdev held until target is unset or region goes away */
+> > > > +
+> > > > +       cxlmd = to_cxl_memdev(memdev_dev);
+> > > > +       cxlr->config.targets[n] = cxlmd;
+> > > > +
+> > > > +       device_unlock(&cxlr->dev);
+> > > > +
+> > > > +       return len;
+> > > > +}
+> > > > +
+> > > > +#define TARGET_ATTR_RW(n)                                                      \
+> > > > +       static ssize_t target##n##_show(                                       \
+> > > > +               struct device *dev, struct device_attribute *attr, char *buf)  \
+> > > > +       {                                                                      \
+> > > > +               return show_targetN(to_cxl_region(dev), buf, (n));             \
+> > > > +       }                                                                      \
+> > > > +       static ssize_t target##n##_store(struct device *dev,                   \
+> > > > +                                        struct device_attribute *attr,        \
+> > > > +                                        const char *buf, size_t len)          \
+> > > > +       {                                                                      \
+> > > > +               return set_targetN(to_cxl_region(dev), buf, (n), len);         \
+> > > > +       }                                                                      \
+> > > > +       static DEVICE_ATTR_RW(target##n)
+> > > > +
+> > > > +TARGET_ATTR_RW(0);
+> > > > +TARGET_ATTR_RW(1);
+> > > > +TARGET_ATTR_RW(2);
+> > > > +TARGET_ATTR_RW(3);
+> > > > +TARGET_ATTR_RW(4);
+> > > > +TARGET_ATTR_RW(5);
+> > > > +TARGET_ATTR_RW(6);
+> > > > +TARGET_ATTR_RW(7);
+> > > > +TARGET_ATTR_RW(8);
+> > > > +TARGET_ATTR_RW(9);
+> > > > +TARGET_ATTR_RW(10);
+> > > > +TARGET_ATTR_RW(11);
+> > > > +TARGET_ATTR_RW(12);
+> > > > +TARGET_ATTR_RW(13);
+> > > > +TARGET_ATTR_RW(14);
+> > > > +TARGET_ATTR_RW(15);
+> > > > +
+> > > > +static struct attribute *interleave_attrs[] = {
+> > > > +       &dev_attr_target0.attr,
+> > > > +       &dev_attr_target1.attr,
+> > > > +       &dev_attr_target2.attr,
+> > > > +       &dev_attr_target3.attr,
+> > > > +       &dev_attr_target4.attr,
+> > > > +       &dev_attr_target5.attr,
+> > > > +       &dev_attr_target6.attr,
+> > > > +       &dev_attr_target7.attr,
+> > > > +       &dev_attr_target8.attr,
+> > > > +       &dev_attr_target9.attr,
+> > > > +       &dev_attr_target10.attr,
+> > > > +       &dev_attr_target11.attr,
+> > > > +       &dev_attr_target12.attr,
+> > > > +       &dev_attr_target13.attr,
+> > > > +       &dev_attr_target14.attr,
+> > > > +       &dev_attr_target15.attr,
+> > > > +       NULL,
+> > > > +};
+> > > > +
+> > > > +static umode_t visible_targets(struct kobject *kobj, struct attribute *a, int n)
+> > > > +{
+> > > > +       struct device *dev = container_of(kobj, struct device, kobj);
+> > > > +       struct cxl_region *cxlr = to_cxl_region(dev);
+> > > > +
+> > > > +       if (n < cxlr->config.interleave_ways)
+> > > > +               return a->mode;
+> > > > +       return 0;
+> > > > +}
+> > > > +
+> > > > +static const struct attribute_group region_interleave_group = {
+> > > > +       .attrs = interleave_attrs,
+> > > > +       .is_visible = visible_targets,
+> > > > +};
+> > > > +
+> > > > +static const struct attribute_group *region_groups[] = {
+> > > > +       &region_group,
+> > > > +       &region_interleave_group,
+> > > > +       NULL,
+> > > > +};
+> > > > +
+> > > >  static void cxl_region_release(struct device *dev);
+> > > >
+> > > >  static const struct device_type cxl_region_type = {
+> > > >         .name = "cxl_region",
+> > > >         .release = cxl_region_release,
+> > > > +       .groups = region_groups
+> > > >  };
+> > > >
+> > > >  static ssize_t create_region_show(struct device *dev,
+> > > > @@ -108,8 +405,11 @@ static void cxl_region_release(struct device *dev)
+> > > >  {
+> > > >         struct cxl_decoder *cxld = to_cxl_decoder(dev->parent);
+> > > >         struct cxl_region *cxlr = to_cxl_region(dev);
+> > > > +       int i;
+> > > >
+> > > >         ida_free(&cxld->region_ida, cxlr->id);
+> > > > +       for (i = 0; i < cxlr->config.interleave_ways; i++)
+> > > > +               remove_target(cxlr, i);
+> > >
+> > > Like the last patch this feels too late. I expect whatever unregisters
+> > > the region should have already handled removing the targets.
+> > >
+> >
+> > Would remove() be more appropriate?
+> 
+> ->remove() does not seem a good fit since it may be the case that
+> someone wants do "echo $region >
+> /sys/bus/cxl/drivers/cxl_region/unbind; echo $region >
+> /sys/bus/cxl/drivers/cxl_region/bind;" without needing to go
+> reconfigure the targets. I am suggesting that before
+> device_unregister(&cxlr->dev) the targets are released.
