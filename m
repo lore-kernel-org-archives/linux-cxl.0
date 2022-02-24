@@ -2,498 +2,266 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0861C433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 24 Feb 2022 00:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AE7C433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 24 Feb 2022 05:28:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235218AbiBXAJb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 23 Feb 2022 19:09:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33808 "EHLO
+        id S230133AbiBXF2q (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 24 Feb 2022 00:28:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243413AbiBXAJa (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 23 Feb 2022 19:09:30 -0500
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B95D45F25A
-        for <linux-cxl@vger.kernel.org>; Wed, 23 Feb 2022 16:09:01 -0800 (PST)
-Received: by mail-pl1-x636.google.com with SMTP id z2so233139plg.8
-        for <linux-cxl@vger.kernel.org>; Wed, 23 Feb 2022 16:09:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VCdc9GEAmO266OC+X01dJhtydsgrTXY5Kn2FZrQL71c=;
-        b=MAnsIIS4IB/GthG2Mrc7kTIO2V0rECTyRW0Ci5XTvXpBBt80yIANXz1/8CqotsOh3a
-         7YmODyTqTvRbxfUHyW+tQjsnm8M7NJcljLbzzYFnlcHIvnT6NbIfEIs+A8+t1zUflT2M
-         RXUGd36BUC8O64DuTZj7JefJ0hWrIyktqjPLNoAKKTajIVpzuPQOmaEGvxephGcgNMLm
-         FihTsRf/IWntlz1BOtTUfE5hSLy55IDlO+ptedmiW4TpgHHBHuy1xfPeDELCxv4Qvkwk
-         X0r8uk3yIaH82SQVunnqS3eYvfKYlRBkMJ2FJU+h9KD5VzXliWO+TXslLe8aUDaFENcp
-         Oerw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VCdc9GEAmO266OC+X01dJhtydsgrTXY5Kn2FZrQL71c=;
-        b=mAqTV/M1vCkxqeEMSWz3DEPQTTZ2c9Gk/rxhsFfuVOFlzg3Y+xE6xceNnhQIL+Jsgf
-         8kGu5QBx53nGXFgEn0TAKFqjjGYY4G2XsnD70svIeAoNvo4JOzcXZWD5eWor0Mt8mH94
-         MT8CkDcfxSUQj/8ATDm43GxwvAykjARYH5dGVNl5XrB9UneyahvpxixBRdI37NyO+jkr
-         PyCYp/mIJwqw65AHHLCDC8/nyJRRMm5N4UkGmAKuMsLtTs4E2OjDKmzxAGU/vPyBFKSX
-         j5t95wKoShA+sjmxJH3JcEyel5HdZS/r9QRVf8ySVgaSBSSrPtNcEEV5HpM5OjYi1H8a
-         EhmQ==
-X-Gm-Message-State: AOAM531IYmSRSM2wRwAR98YxiL6TzSr9kAQo+gnnO79w2zQu4Hqf4urb
-        FsOyKVw6xqE0ZVvh2RRof/53czM7ne/paN8zZhwkrFpe2Zqktg==
-X-Google-Smtp-Source: ABdhPJwid12NWGDXBt5wmyt+BeP14CZhJpyGGHck1QL2sP52n49iYOfNLhCfmU8ktcqcvkUCbiExq+2655CajEUKb9c=
-X-Received: by 2002:a17:90a:990c:b0:1bc:3c9f:2abe with SMTP id
- b12-20020a17090a990c00b001bc3c9f2abemr64928pjp.220.1645661341096; Wed, 23 Feb
- 2022 16:09:01 -0800 (PST)
+        with ESMTP id S230243AbiBXF2p (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 24 Feb 2022 00:28:45 -0500
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 854F7175853
+        for <linux-cxl@vger.kernel.org>; Wed, 23 Feb 2022 21:28:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645680496; x=1677216496;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/zZ7yTw1hHT2Ai7RyNEMmpKKL7pXVpOZD3bbYkTy+zI=;
+  b=LNevWQ3443Eatu+HsEiIruwnISJa9P4dYh8L8kz17DMYPwKhew5N11By
+   iNVgjwtWdL5Mr2AQ9YShlqexj+KGzWNJvcboAdhnLaxpScwTIYVSnAUNU
+   mANXFEC/YQ5PJqxplqvmN7hPMAJdMpVQ6OaYkKY94sVRPykNrblSXHb08
+   15InLxVWlAILFKnnPhLBbawBH5SuHyrT/BYpAzG8N7badMcewBW67ACh3
+   MmDNRl5jWfTMi0oufOxSsV8PY6mQY4J/P3198rUpDQL3/9ktOEsRR3TOv
+   R/uVcOVjLw6+PmhF8q96aniY4lL2MkMaKjWNAGiKRfG0viCOyJBnnr592
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10267"; a="312870344"
+X-IronPort-AV: E=Sophos;i="5.88,393,1635231600"; 
+   d="scan'208";a="312870344"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 21:28:15 -0800
+X-IronPort-AV: E=Sophos;i="5.88,393,1635231600"; 
+   d="scan'208";a="508733769"
+Received: from mmgiotto-mobl.amr.corp.intel.com (HELO vverma7-desk.amr.corp.intel.com) ([10.212.17.173])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 21:28:15 -0800
+From:   Vishal Verma <vishal.l.verma@intel.com>
+To:     <nvdimm@lists.linux.dev>
+Cc:     Joao Martins <joao.m.martins@oracle.com>,
+        <linux-cxl@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: [ndctl PATCH] util/size.h: fix build for older compilers
+Date:   Wed, 23 Feb 2022 22:28:05 -0700
+Message-Id: <20220224052805.2462449-1-vishal.l.verma@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20220128002707.391076-1-ben.widawsky@intel.com> <20220128002707.391076-13-ben.widawsky@intel.com>
-In-Reply-To: <20220128002707.391076-13-ben.widawsky@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 23 Feb 2022 16:08:50 -0800
-Message-ID: <CAPcyv4hZETHNa2Lw7ug8=c=PnNVDP4KRoaDUL8nyD7SAarTohw@mail.gmail.com>
-Subject: Re: [PATCH v3 12/14] cxl: Program decoders for regions
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, patches@lists.linux.dev,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6909; h=from:subject; bh=/zZ7yTw1hHT2Ai7RyNEMmpKKL7pXVpOZD3bbYkTy+zI=; b=owGbwMvMwCXGf25diOft7jLG02pJDEni4hFxa4PXSU2MeVymy/rc0nBZFPPs8h+tj+c8rJymZj2l dPrejlIWBjEuBlkxRZa/ez4yHpPbns8TmOAIM4eVCWQIAxenAEzEWZfhf42G6sS+lRGGbw/s2m/F+7 5+ff17bvOXWX+KXyfuj9I9+Z2RYXKB+/RnB5hOhzK8Ljyx1V13/VMNpxns2/W/ObIlP+E0ZAAA
+X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Jan 27, 2022 at 4:27 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> Configure and commit the HDM decoders for the region. Since the region
-> driver already was able to walk the topology and build the list of
-> needed decoders, all that was needed to finish region setup was to
-> actually write the HDM decoder MMIO.
->
-> CXL regions appear as linear addresses in the system's physical address
-> space. CXL memory devices comprise the storage for the region. In order
-> for traffic to be properly routed to the memory devices in the region, a
-> set of Host-manged Device Memory decoders must be present. The decoders
-> are a piece of hardware defined in the CXL specification.
->
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
->
-> ---
-> Changes since v2:
-> - Fix unwind issue in bind_region introduced in v2
-> ---
->  drivers/cxl/core/hdm.c | 209 +++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h      |   3 +
->  drivers/cxl/region.c   |  72 +++++++++++---
->  3 files changed, 272 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index a28369f264da..66c08d69f7a6 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -268,3 +268,212 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
->         return 0;
->  }
->  EXPORT_SYMBOL_NS_GPL(devm_cxl_enumerate_decoders, CXL);
-> +
-> +#define COMMIT_TIMEOUT_MS 10
-> +static int wait_for_commit(struct cxl_decoder *cxld)
-> +{
-> +       const unsigned long end = jiffies + msecs_to_jiffies(COMMIT_TIMEOUT_MS);
-> +       struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-> +       void __iomem *hdm_decoder;
-> +       struct cxl_hdm *cxlhdm;
-> +       u32 ctrl;
-> +
-> +       cxlhdm = dev_get_drvdata(&port->dev);
-> +       hdm_decoder = cxlhdm->regs.hdm_decoder;
-> +
-> +       while (1) {
+Add a fallback for older compilers that lack __builtin_add_overflow()
+and friends. Commit 7aa7c7be6e80 ("util: add the struct_size() helper from the
+kernel") which added these helpers from the kernel neglected to copy
+over the fallback code.
 
-A live wait is too expensive. Also, given region programming is
-writing multiple decoders it would seem to make sense to amortize the
-waiting over multiple decoders. I.e. a flow like:
+Fixes: 7aa7c7be6e80 ("util: add the struct_size() helper from the kernel")
+Reported-by: Joao Martins <joao.m.martins@oracle.com>
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+---
+ util/size.h | 163 ++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 159 insertions(+), 4 deletions(-)
 
-program all decoders
-commit all decoders
-10ms wait
-check all decoder for commit timeouts
+diff --git a/util/size.h b/util/size.h
+index e72467f..1cb0669 100644
+--- a/util/size.h
++++ b/util/size.h
+@@ -6,6 +6,7 @@
+ #include <stdbool.h>
+ #include <stdint.h>
+ #include <util/util.h>
++#include <ccan/short_types/short_types.h>
+ 
+ #define SZ_1K     0x00000400
+ #define SZ_4K     0x00001000
+@@ -43,23 +44,177 @@ static inline bool is_power_of_2(unsigned long long v)
+  * alias for __builtin_add_overflow, but add type checks similar to
+  * below.
+  */
+-#define check_add_overflow(a, b, d) (({	\
++#define is_signed_type(type)       (((type)(-1)) < (type)1)
++#define __type_half_max(type) ((type)1 << (8*sizeof(type) - 1 - is_signed_type(type)))
++#define type_max(T) ((T)((__type_half_max(T) - 1) + __type_half_max(T)))
++#define type_min(T) ((T)((T)-type_max(T)-(T)1))
++
++#if GCC_VERSION >= 50100
++#define COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW 1
++#endif
++
++#if __clang__ && \
++    __has_builtin(__builtin_mul_overflow) && \
++    __has_builtin(__builtin_add_overflow)
++#define COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW 1
++#endif
++
++#if COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW
++
++#define check_add_overflow(a, b, d) ({		\
+ 	typeof(a) __a = (a);			\
+ 	typeof(b) __b = (b);			\
+ 	typeof(d) __d = (d);			\
+ 	(void) (&__a == &__b);			\
+ 	(void) (&__a == __d);			\
+ 	__builtin_add_overflow(__a, __b, __d);	\
+-}))
++})
+ 
+-#define check_mul_overflow(a, b, d) (({	\
++#define check_sub_overflow(a, b, d) ({		\
++	typeof(a) __a = (a);			\
++	typeof(b) __b = (b);			\
++	typeof(d) __d = (d);			\
++	(void) (&__a == &__b);			\
++	(void) (&__a == __d);			\
++	__builtin_sub_overflow(__a, __b, __d);	\
++})
++
++#define check_mul_overflow(a, b, d) ({		\
+ 	typeof(a) __a = (a);			\
+ 	typeof(b) __b = (b);			\
+ 	typeof(d) __d = (d);			\
+ 	(void) (&__a == &__b);			\
+ 	(void) (&__a == __d);			\
+ 	__builtin_mul_overflow(__a, __b, __d);	\
+-}))
++})
++
++
++#else /* !COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW */
++
++/* Checking for unsigned overflow is relatively easy without causing UB. */
++#define __unsigned_add_overflow(a, b, d) ({	\
++	typeof(a) __a = (a);			\
++	typeof(b) __b = (b);			\
++	typeof(d) __d = (d);			\
++	(void) (&__a == &__b);			\
++	(void) (&__a == __d);			\
++	*__d = __a + __b;			\
++	*__d < __a;				\
++})
++#define __unsigned_sub_overflow(a, b, d) ({	\
++	typeof(a) __a = (a);			\
++	typeof(b) __b = (b);			\
++	typeof(d) __d = (d);			\
++	(void) (&__a == &__b);			\
++	(void) (&__a == __d);			\
++	*__d = __a - __b;			\
++	__a < __b;				\
++})
++/*
++ * If one of a or b is a compile-time constant, this avoids a division.
++ */
++#define __unsigned_mul_overflow(a, b, d) ({		\
++	typeof(a) __a = (a);				\
++	typeof(b) __b = (b);				\
++	typeof(d) __d = (d);				\
++	(void) (&__a == &__b);				\
++	(void) (&__a == __d);				\
++	*__d = __a * __b;				\
++	__builtin_constant_p(__b) ?			\
++	  __b > 0 && __a > type_max(typeof(__a)) / __b : \
++	  __a > 0 && __b > type_max(typeof(__b)) / __a;	 \
++})
++
++/*
++ * For signed types, detecting overflow is much harder, especially if
++ * we want to avoid UB. But the interface of these macros is such that
++ * we must provide a result in *d, and in fact we must produce the
++ * result promised by gcc's builtins, which is simply the possibly
++ * wrapped-around value. Fortunately, we can just formally do the
++ * operations in the widest relevant unsigned type (u64) and then
++ * truncate the result - gcc is smart enough to generate the same code
++ * with and without the (u64) casts.
++ */
++
++/*
++ * Adding two signed integers can overflow only if they have the same
++ * sign, and overflow has happened iff the result has the opposite
++ * sign.
++ */
++#define __signed_add_overflow(a, b, d) ({	\
++	typeof(a) __a = (a);			\
++	typeof(b) __b = (b);			\
++	typeof(d) __d = (d);			\
++	(void) (&__a == &__b);			\
++	(void) (&__a == __d);			\
++	*__d = (u64)__a + (u64)__b;		\
++	(((~(__a ^ __b)) & (*__d ^ __a))	\
++		& type_min(typeof(__a))) != 0;	\
++})
++
++/*
++ * Subtraction is similar, except that overflow can now happen only
++ * when the signs are opposite. In this case, overflow has happened if
++ * the result has the opposite sign of a.
++ */
++#define __signed_sub_overflow(a, b, d) ({	\
++	typeof(a) __a = (a);			\
++	typeof(b) __b = (b);			\
++	typeof(d) __d = (d);			\
++	(void) (&__a == &__b);			\
++	(void) (&__a == __d);			\
++	*__d = (u64)__a - (u64)__b;		\
++	((((__a ^ __b)) & (*__d ^ __a))		\
++		& type_min(typeof(__a))) != 0;	\
++})
++
++/*
++ * Signed multiplication is rather hard. gcc always follows C99, so
++ * division is truncated towards 0. This means that we can write the
++ * overflow check like this:
++ *
++ * (a > 0 && (b > MAX/a || b < MIN/a)) ||
++ * (a < -1 && (b > MIN/a || b < MAX/a) ||
++ * (a == -1 && b == MIN)
++ *
++ * The redundant casts of -1 are to silence an annoying -Wtype-limits
++ * (included in -Wextra) warning: When the type is u8 or u16, the
++ * __b_c_e in check_mul_overflow obviously selects
++ * __unsigned_mul_overflow, but unfortunately gcc still parses this
++ * code and warns about the limited range of __b.
++ */
++
++#define __signed_mul_overflow(a, b, d) ({				\
++	typeof(a) __a = (a);						\
++	typeof(b) __b = (b);						\
++	typeof(d) __d = (d);						\
++	typeof(a) __tmax = type_max(typeof(a));				\
++	typeof(a) __tmin = type_min(typeof(a));				\
++	(void) (&__a == &__b);						\
++	(void) (&__a == __d);						\
++	*__d = (u64)__a * (u64)__b;					\
++	(__b > 0   && (__a > __tmax/__b || __a < __tmin/__b)) ||	\
++	(__b < (typeof(__b))-1  && (__a > __tmin/__b || __a < __tmax/__b)) || \
++	(__b == (typeof(__b))-1 && __a == __tmin);			\
++})
++
++
++#define check_add_overflow(a, b, d)					\
++	__builtin_choose_expr(is_signed_type(typeof(a)),		\
++			__signed_add_overflow(a, b, d),			\
++			__unsigned_add_overflow(a, b, d))
++
++#define check_sub_overflow(a, b, d)					\
++	__builtin_choose_expr(is_signed_type(typeof(a)),		\
++			__signed_sub_overflow(a, b, d),			\
++			__unsigned_sub_overflow(a, b, d))
++
++#define check_mul_overflow(a, b, d)					\
++	__builtin_choose_expr(is_signed_type(typeof(a)),		\
++			__signed_mul_overflow(a, b, d),			\
++			__unsigned_mul_overflow(a, b, d))
++
++#endif
+ 
+ /*
+  * Compute a*b+c, returning SIZE_MAX on overflow. Internal helper for
 
-> +               ctrl = readl(hdm_decoder +
-> +                            CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-> +               if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
-> +                       break;
-> +
-> +               if (time_after(jiffies, end)) {
-> +                       dev_err(&cxld->dev, "HDM decoder commit timeout %x\n",
-> +                               ctrl);
-> +                       return -ETIMEDOUT;
-> +               }
-> +               if ((ctrl & CXL_HDM_DECODER0_CTRL_COMMIT_ERROR) != 0) {
-> +                       dev_err(&cxld->dev, "HDM decoder commit error %x\n",
-> +                               ctrl);
-> +                       return -ENXIO;
-> +               }
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +/**
-> + * cxl_commit_decoder() - Program a configured cxl_decoder
-> + * @cxld: The preconfigured cxl decoder.
-> + *
-> + * A cxl decoder that is to be committed should have been earmarked as enabled.
-> + * This mechanism acts as a soft reservation on the decoder.
-> + *
-> + * Returns 0 if commit was successful, negative error code otherwise.
-> + */
-> +int cxl_commit_decoder(struct cxl_decoder *cxld)
-> +{
-> +       u32 ctrl, tl_lo, tl_hi, base_lo, base_hi, size_lo, size_hi;
-> +       struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-> +       void __iomem *hdm_decoder;
-> +       struct cxl_hdm *cxlhdm;
-> +       int rc;
-> +
-> +       /*
-> +        * Decoder flags are entirely software controlled and therefore this
-> +        * case is purely a driver bug.
-> +        */
-> +       if (dev_WARN_ONCE(&port->dev, (cxld->flags & CXL_DECODER_F_ENABLE) != 0,
-> +                         "Invalid %s enable state\n", dev_name(&cxld->dev)))
-> +               return -ENXIO;
-> +
-> +       cxlhdm = dev_get_drvdata(&port->dev);
-> +       hdm_decoder = cxlhdm->regs.hdm_decoder;
-> +       ctrl = readl(hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-> +
-> +       /*
-> +        * A decoder that's currently active cannot be changed without the
-> +        * system being quiesced. While the driver should prevent against this,
-> +        * for a variety of reasons the hardware might not be in sync with the
-> +        * hardware and so, do not splat on error.
-> +        */
-> +       size_hi = readl(hdm_decoder +
-> +                       CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(cxld->id));
-> +       size_lo =
-> +               readl(hdm_decoder + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(cxld->id));
-> +       if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl) &&
-> +           (size_lo + size_hi)) {
-> +               dev_err(&port->dev, "Tried to change an active decoder (%s)\n",
-> +                       dev_name(&cxld->dev));
-> +               return -EBUSY;
-> +       }
-> +
-> +       u32p_replace_bits(&ctrl, cxl_to_ig(cxld->interleave_granularity),
-> +                         CXL_HDM_DECODER0_CTRL_IG_MASK);
+base-commit: 3e4a66f0dfb02046f6d3375d637840b6da9c71d1
+-- 
+2.34.1
 
-Usage of u32p_replace_bits() makes me wonder what is worth preserving
-in the old control value? In this case the code is completely
-overwriting the old value so it can just do typical updates for a
-@ctrl variable initialized to zero at the start. Otherwise a comment
-is needed as to what fields in the current @ctrl need to be preserved
-after programming granularity, ways, type, and commit.
-
-> +       u32p_replace_bits(&ctrl, cxl_to_eniw(cxld->interleave_ways),
-> +                         CXL_HDM_DECODER0_CTRL_IW_MASK);
-> +       u32p_replace_bits(&ctrl, 1, CXL_HDM_DECODER0_CTRL_COMMIT);
-> +
-> +       /* TODO: set based on type */
-> +       u32p_replace_bits(&ctrl, 1, CXL_HDM_DECODER0_CTRL_TYPE);
-> +
-> +       base_lo = GENMASK(31, 28) & lower_32_bits(cxld->decoder_range.start);
-> +       base_hi = upper_32_bits(cxld->decoder_range.start);
-> +
-> +       size_lo = GENMASK(31, 28) & (u32)(range_len(&cxld->decoder_range));
-
-Why the cast vs just lower_32_bits(range_len(&cxld->decoder_range))?
-
-> +       size_hi = upper_32_bits(range_len(&cxld->decoder_range) >> 32);
-
-Isn't this always 0? I would expect upper_32_bits() without the shift.
-
-> +
-> +       if (cxld->nr_targets > 0) {
-> +               tl_hi = 0;
-> +
-> +               tl_lo = FIELD_PREP(GENMASK(7, 0), cxld->target[0]->port_id);
-> +
-> +               if (cxld->interleave_ways > 1)
-> +                       tl_lo |= FIELD_PREP(GENMASK(15, 8),
-> +                                           cxld->target[1]->port_id);
-> +               if (cxld->interleave_ways > 2)
-> +                       tl_lo |= FIELD_PREP(GENMASK(23, 16),
-> +                                           cxld->target[2]->port_id);
-> +               if (cxld->interleave_ways > 3)
-> +                       tl_lo |= FIELD_PREP(GENMASK(31, 24),
-> +                                           cxld->target[3]->port_id);
-> +               if (cxld->interleave_ways > 4)
-> +                       tl_hi |= FIELD_PREP(GENMASK(7, 0),
-> +                                           cxld->target[4]->port_id);
-> +               if (cxld->interleave_ways > 5)
-> +                       tl_hi |= FIELD_PREP(GENMASK(15, 8),
-> +                                           cxld->target[5]->port_id);
-> +               if (cxld->interleave_ways > 6)
-> +                       tl_hi |= FIELD_PREP(GENMASK(23, 16),
-> +                                           cxld->target[6]->port_id);
-> +               if (cxld->interleave_ways > 7)
-> +                       tl_hi |= FIELD_PREP(GENMASK(31, 24),
-> +                                           cxld->target[7]->port_id);
-> +
-> +               writel(tl_hi, hdm_decoder + CXL_HDM_DECODER0_TL_HIGH(cxld->id));
-> +               writel(tl_lo, hdm_decoder + CXL_HDM_DECODER0_TL_LOW(cxld->id));
-> +       } else {
-> +               /* Zero out skip list for devices */
-
-Seems unwieldy to mix root and downstream port decoder programming in
-the same function as endpoint decoder programming. Let's keep them
-separate. They can of course share helpers, but I don't want the
-mental strain of reading this function and wondering what context it
-is being called, that should be evident from the function name.
-
-> +               writel(0, hdm_decoder + CXL_HDM_DECODER0_TL_HIGH(cxld->id));
-> +               writel(0, hdm_decoder + CXL_HDM_DECODER0_TL_LOW(cxld->id));
-> +       }
-> +
-> +       writel(size_hi,
-> +              hdm_decoder + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(cxld->id));
-> +       writel(size_lo,
-> +              hdm_decoder + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(cxld->id));
-> +       writel(base_hi,
-> +              hdm_decoder + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(cxld->id));
-> +       writel(base_lo,
-> +              hdm_decoder + CXL_HDM_DECODER0_BASE_LOW_OFFSET(cxld->id));
-> +       writel(ctrl, hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-> +
-> +       rc = wait_for_commit(cxld);
-
-per above, do you think it's workable to have a common wait for all
-decoders at least per level of the hierarcy, i.e.:
-
-program root decoders, wait;
-program switch decoders, wait;
-program endpoint decoders, wait;
-
-> +       if (rc)
-> +               return rc;
-> +
-> +       cxld->flags |= CXL_DECODER_F_ENABLE;
-> +
-> +#define DPORT_TL_STR "%d %d %d %d %d %d %d %d"
-> +#define DPORT(i)                                                               \
-> +       (cxld->nr_targets && cxld->interleave_ways > (i)) ?                    \
-> +               cxld->target[(i)]->port_id :                                   \
-> +                     -1
-> +#define DPORT_TL                                                               \
-> +       DPORT(0), DPORT(1), DPORT(2), DPORT(3), DPORT(4), DPORT(5), DPORT(6),  \
-> +               DPORT(7)
-> +
-> +       dev_dbg(&cxld->dev,
-> +               "%s (depth %d)\n\tBase %pa\n\tSize %llu\n\tIG %u (%ub)\n\tENIW %u (x%u)\n\tTargetList: \n" DPORT_TL_STR,
-> +               dev_name(&port->dev), port->depth, &cxld->decoder_range.start,
-> +               range_len(&cxld->decoder_range),
-> +               cxl_to_ig(cxld->interleave_granularity),
-> +               cxld->interleave_granularity,
-> +               cxl_to_eniw(cxld->interleave_ways), cxld->interleave_ways,
-> +               DPORT_TL);
-> +#undef DPORT_TL
-> +#undef DPORT
-> +#undef DPORT_TL_STR
-
-It just seems like all of this data is available in sysfs, does the
-kernel need to print it?
-
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(cxl_commit_decoder);
-
-EXPOER_SYMBOL_NS_GPL
-
-> +
-> +/**
-> + * cxl_disable_decoder() - Disables a decoder
-> + * @cxld: The active cxl decoder.
-> + *
-> + * CXL decoders (as of 2.0 spec) have no way to deactivate them other than to
-> + * set the size of the HDM to 0. This function will clear all registers, and if
-> + * the decoder is active, commit the 0'd out registers.
-> + */
-> +void cxl_disable_decoder(struct cxl_decoder *cxld)
-> +{
-> +       struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-> +       void __iomem *hdm_decoder;
-> +       struct cxl_hdm *cxlhdm;
-> +       u32 ctrl;
-> +
-> +       cxlhdm = dev_get_drvdata(&port->dev);
-> +       hdm_decoder = cxlhdm->regs.hdm_decoder;
-> +       ctrl = readl(hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-> +
-> +       if (dev_WARN_ONCE(&port->dev, (cxld->flags & CXL_DECODER_F_ENABLE) == 0,
-> +                         "Invalid decoder enable state\n"))
-
-Why crash the kernel when trying to disable a disabled decoder?
-
-Where does the "locked" check happen?
-
-> +               return;
-> +
-> +       cxld->flags &= ~CXL_DECODER_F_ENABLE;
-> +
-> +       /* There's no way to "uncommit" a committed decoder, only 0 size it */
-> +       writel(0, hdm_decoder + CXL_HDM_DECODER0_TL_HIGH(cxld->id));
-> +       writel(0, hdm_decoder + CXL_HDM_DECODER0_TL_LOW(cxld->id));
-
-Shouldn't size be first just in case there are cycles still in flight?
-
-> +       writel(0, hdm_decoder + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(cxld->id));
-> +       writel(0, hdm_decoder + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(cxld->id));
-> +       writel(0, hdm_decoder + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(cxld->id));
-> +       writel(0, hdm_decoder + CXL_HDM_DECODER0_BASE_LOW_OFFSET(cxld->id));
-> +
-> +       /* If the device isn't actually active, just zero out all the fields */
-
-Why not unconditionally try to commit the new size here? I'd be ok to
-keep this policy as you have it, but the comment needs to be changed
-to indicate "why?", not "what?" because the code answers the latter.
-
-> +       if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
-> +               writel(CXL_HDM_DECODER0_CTRL_COMMIT,
-> +                      hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-> +}
-> +EXPORT_SYMBOL_GPL(cxl_disable_decoder);
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index d70d8c85d05f..f9dab312ed26 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -55,6 +55,7 @@
->  #define   CXL_HDM_DECODER0_CTRL_LOCK BIT(8)
->  #define   CXL_HDM_DECODER0_CTRL_COMMIT BIT(9)
->  #define   CXL_HDM_DECODER0_CTRL_COMMITTED BIT(10)
-> +#define   CXL_HDM_DECODER0_CTRL_COMMIT_ERROR BIT(11)
->  #define   CXL_HDM_DECODER0_CTRL_TYPE BIT(12)
->  #define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
->  #define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
-> @@ -416,6 +417,8 @@ struct cxl_dport *devm_cxl_add_dport(struct cxl_port *port,
->  struct cxl_dport *cxl_find_dport_by_dev(struct cxl_port *port,
->                                         const struct device *dev);
->  struct cxl_port *ep_find_cxl_port(struct cxl_memdev *cxlmd, unsigned int depth);
-> +int cxl_commit_decoder(struct cxl_decoder *cxld);
-> +void cxl_disable_decoder(struct cxl_decoder *cxld);
->
->  struct cxl_decoder *to_cxl_decoder(struct device *dev);
->  bool is_cxl_decoder(struct device *dev);
-> diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
-> index f748060733dd..ac290677534d 100644
-> --- a/drivers/cxl/region.c
-> +++ b/drivers/cxl/region.c
-> @@ -678,10 +678,52 @@ static int collect_ep_decoders(struct cxl_region *cxlr)
->         return rc;
->  }
->
-> -static int bind_region(const struct cxl_region *cxlr)
-
-Try not to change the function signature twice in the same patch
-series, i.e. make it non-const at the outset... although I'm not sure
-this function survives the new ABI that is assigning decoders to
-regions as that would also impact the need to have these ->staged_list
-and ->commit_list trackers.
-
-> +static int bind_region(struct cxl_region *cxlr)
->  {
-> -       /* TODO: */
-> -       return 0;
-> +       struct cxl_decoder *cxld, *d;
-> +       int rc;
-> +
-> +       list_for_each_entry_safe(cxld, d, &cxlr->staged_list, region_link) {
-> +               rc = cxl_commit_decoder(cxld);
-> +               if (!rc) {
-> +                       list_move_tail(&cxld->region_link, &cxlr->commit_list);
-> +               } else {
-> +                       dev_dbg(&cxlr->dev, "Failed to commit %s\n",
-> +                               dev_name(&cxld->dev));
-> +                       break;
-> +               }
-> +       }
-> +
-> +       list_for_each_entry_safe(cxld, d, &cxlr->commit_list, region_link) {
-> +               if (rc) {
-> +                       cxl_disable_decoder(cxld);
-> +                       list_del(&cxld->region_link);
-> +               }
-> +       }
-> +
-> +       if (rc)
-> +               cleanup_staged_decoders(cxlr);
-> +
-> +       BUG_ON(!list_empty(&cxlr->staged_list));
-> +       return rc;
-> +}
-> +
-> +static void region_unregister(void *dev)
-> +{
-> +       struct cxl_region *region = to_cxl_region(dev);
-> +       struct cxl_decoder *cxld, *d;
-> +
-> +       if (dev_WARN_ONCE(dev, !list_empty(&region->staged_list),
-> +                         "Decoders still staged"))
-
-If I am reading this correctly, why is it a programming error to
-unregister a region mid-programming? Certainly userspace could abort a
-create attempt and delete after adding some targets, but not others.
-
-> +               cleanup_staged_decoders(region);
-> +
-> +       /* TODO: teardown the nd_region */
-> +
-> +       list_for_each_entry_safe(cxld, d, &region->commit_list, region_link) {
-> +               cxl_disable_decoder(cxld);
-> +               list_del(&cxld->region_link);
-> +               cxl_put_decoder(cxld);
-> +       }
->  }
->
->  static int cxl_region_probe(struct device *dev)
-> @@ -732,20 +774,26 @@ static int cxl_region_probe(struct device *dev)
->                 put_device(&ours->dev);
->
->         ret = collect_ep_decoders(cxlr);
-> -       if (ret)
-> -               goto err;
-> +       if (ret) {
-> +               cleanup_staged_decoders(cxlr);
-> +               return ret;
-> +       }
->
->         ret = bind_region(cxlr);
-> -       if (ret)
-> -               goto err;
-> +       if (ret) {
-> +               /* bind_region should cleanup after itself */
-> +               if (dev_WARN_ONCE(dev, !list_empty(&cxlr->staged_list),
-> +                                 "Region bind failed to cleanup staged decoders\n"))
-> +                       cleanup_staged_decoders(cxlr);
-> +               if (dev_WARN_ONCE(dev, !list_empty(&cxlr->commit_list),
-> +                                 "Region bind failed to cleanup committed decoders\n"))
-> +                       region_unregister(&cxlr->dev);
-> +               return ret;
-> +       }
->
->         cxlr->active = true;
->         dev_info(dev, "Bound");
-> -       return 0;
-> -
-> -err:
-> -       cleanup_staged_decoders(cxlr);
-> -       return ret;
-> +       return devm_add_action_or_reset(dev, region_unregister, dev);
->  }
->
->  static struct cxl_driver cxl_region_driver = {
-> --
-> 2.35.0
->
