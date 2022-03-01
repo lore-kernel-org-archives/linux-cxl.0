@@ -2,206 +2,623 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BCFC433F5
-	for <linux-cxl@archiver.kernel.org>; Tue,  1 Mar 2022 18:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF635C433F5
+	for <linux-cxl@archiver.kernel.org>; Tue,  1 Mar 2022 18:34:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237012AbiCAS3X (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 1 Mar 2022 13:29:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46662 "EHLO
+        id S230499AbiCASfJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 1 Mar 2022 13:35:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232134AbiCAS3T (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 1 Mar 2022 13:29:19 -0500
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 708966516A
-        for <linux-cxl@vger.kernel.org>; Tue,  1 Mar 2022 10:28:27 -0800 (PST)
-Received: by mail-ej1-x634.google.com with SMTP id p15so33244654ejc.7
-        for <linux-cxl@vger.kernel.org>; Tue, 01 Mar 2022 10:28:27 -0800 (PST)
+        with ESMTP id S230328AbiCASfI (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 1 Mar 2022 13:35:08 -0500
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9272B57168
+        for <linux-cxl@vger.kernel.org>; Tue,  1 Mar 2022 10:34:22 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id ay5so11340715plb.1
+        for <linux-cxl@vger.kernel.org>; Tue, 01 Mar 2022 10:34:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=references:user-agent:from:to:cc:subject:date:in-reply-to
-         :message-id:mime-version:content-transfer-encoding;
-        bh=qWn8f/zcEThACHHu7HzVrOzQdOqQBxED78bE6EUhDxE=;
-        b=uyjWNcsW6mwFZ+AJ9vhsG4li0vju83daLrm05o/Dhis7pnHymq26RkKNv+rLIeCOzm
-         bOTqZj+HQQBjTGh2DqhkO+3N4Jxl+y10jTQq6EcuUUEIpxFFG9Bb1YyDeLCBrlVrn7cm
-         9BVXzPAAdsditQS3xSgdvyzqJvuhhKZz/4iJt+BuyMTEESONCpVmhIoEbsZZaS1q12/B
-         fkNyN5y2/lO+ASUGAn2CQ8uWgDG1gkWC76A6Rsuy8sJgtRq0SI79WpFlBYgiwwmyeQ0G
-         GvLUe2byeA84JAPip+49OgF55gwvGPnZ1P5Iu/ygD4s92k4DDi4wZmhutTjqzcETz/5E
-         DMbg==
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=A7Lb50coBfv4eaLuyXghnfX06FeXKcD89kuHAt5B8z0=;
+        b=qL3PoXpzI+P/9v0ORKY5nZxFR7zyEEmtI4i6i2vJU26JSmw8JdtW6N5g3vFWswmhIg
+         WOJ5FEgN0sOF7xbENADq+X/b3zRSvMeTwMoGVESdfnd2viNoDMYO4+sVkJqO3eZS12cW
+         NTjLfrjUTKGzk034HpIzFTD0UmaP2x4SnicbGTqipwAnxO1AAdU1GYweQepO4UPBmCTJ
+         Xg+Vo5EpfaKxGggcAYF0q4JyqMBiTWolswcIQO0MtzfTTxzVjzOaVVPxGTQk/G0eV3b/
+         hUTebKcbUmly1mSzI5eGwJiYpjakyrMdnvqY/VWLXQ1g/IPcBokCAF1VQFiGv6R8iMjI
+         Sa9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject:date
-         :in-reply-to:message-id:mime-version:content-transfer-encoding;
-        bh=qWn8f/zcEThACHHu7HzVrOzQdOqQBxED78bE6EUhDxE=;
-        b=pH2Lq5Rp/kbDh+g+pfI7MjqmZ33KC57gSPedsi7K/SnaP/8CKophre3KMFJpBYxfvM
-         J+qhbK2NB45F4ulT8JfbP4hpRP7I6dmKhHoQj1FHTeQ2aREZmaMU6MvF3xo87JGt2H6l
-         exQPpvMBfEiePAcpYvEk/g7QNBCbdpXyvU/rTq8bvqkbCsn4nTULcorV/hstbz61dDt+
-         FNI7Q72+X39WZYyHaWJwY7YPu9/jmP2bNTf5kNOod2jz4bjClcsuGvTKsN0U0GaGm5yx
-         QIDrbeWYevzOM7IbhOmCXpPyEQorCk1crhqNZNhbImvzPIKu+CKTi3cyglFF0QTgXbAT
-         Jh6g==
-X-Gm-Message-State: AOAM530CyofIo97DKXd7zh+7Gn5Ynzv/N5YWpPdyBtV2TvLRMFBJZwms
-        J9lHHJpjRccu1777NOPCmLsADw==
-X-Google-Smtp-Source: ABdhPJwYK263NnIBiELmpbYksqmULeF1YL2l/SICdrtOZ6R5LGVyVPMFshHx7y980IKq5nQHJllq2w==
-X-Received: by 2002:a17:906:a1a:b0:6cf:d2d9:410c with SMTP id w26-20020a1709060a1a00b006cfd2d9410cmr20199459ejf.713.1646159305949;
-        Tue, 01 Mar 2022 10:28:25 -0800 (PST)
-Received: from zen.linaroharston ([51.148.130.216])
-        by smtp.gmail.com with ESMTPSA id h30-20020a056402095e00b00412b81dd96esm7371133edz.29.2022.03.01.10.28.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Mar 2022 10:28:25 -0800 (PST)
-Received: from zen (localhost [127.0.0.1])
-        by zen.linaroharston (Postfix) with ESMTP id 6F05E1FFB7;
-        Tue,  1 Mar 2022 18:28:24 +0000 (GMT)
-References: <20220211120747.3074-1-Jonathan.Cameron@huawei.com>
- <20220211120747.3074-20-Jonathan.Cameron@huawei.com>
-User-agent: mu4e 1.7.9; emacs 28.0.91
-From:   Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     qemu-devel@nongnu.org, Marcel Apfelbaum <marcel@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>, linux-cxl@vger.kernel.org,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Peter Maydell <peter.maydell@linaro.org>, linuxarm@huawei.com,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        Saransh Gupta1 <saransh@ibm.com>,
-        Shreyas Shah <shreyas.shah@elastics.cloud>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Samarth Saxena <samarths@cadence.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v6 19/43] hw/cxl/device: Implement MMIO HDM decoding
- (8.2.5.12)
-Date:   Tue, 01 Mar 2022 18:17:35 +0000
-In-reply-to: <20220211120747.3074-20-Jonathan.Cameron@huawei.com>
-Message-ID: <87a6e9le7r.fsf@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=A7Lb50coBfv4eaLuyXghnfX06FeXKcD89kuHAt5B8z0=;
+        b=vH9gAjNRH6vOj/ooel1Sv/m5+2QQy4XG68AhmfCLlz3KMuJuH96ZqJT0iwmVQenKyf
+         4FG/4k3iLRij0CooQZxigfQ5HkvTZqw/+hvM2lCD4gOVEE3Fo0NVE9RgDuO7RK2jJJrz
+         LIHAXTFT2zVTqVdk5PVYtXaPZiQhlJNV9F4D5bKMVJh7HAJo22ahpTqHjQZxTU+k+8Uk
+         QAwb+Pu4BhM39CRZu8npGYrDJNU/9wdu4dOC7Mdddl7otgQ1UBLpdO4TcsUxK/W3uXXg
+         9Gk7k3yUtmDoY/0lAVujoxVPnmDAxLC6gR72sy1gOaCRC0Yb0g8IX1AYt8xlfH9mzX3Z
+         qjTw==
+X-Gm-Message-State: AOAM530ePoXk8Eircxwb/deLaLecChJUhibDHOlEm5P/D4RUtKL8nEUq
+        TAik+kln7QpjQxrnxm7bXs/N3vu5YIiqaaReoCj8Lw==
+X-Google-Smtp-Source: ABdhPJwwqj9RSFb6QaCXqY0aFmaCSCNn+crHqbm3g8rVSR6SXshd2aZ4zZ6nQVhioq31j7/v1AYSH0kMk4PjAS+v/Wo=
+X-Received: by 2002:a17:902:7296:b0:14b:4bc6:e81 with SMTP id
+ d22-20020a170902729600b0014b4bc60e81mr26717973pll.132.1646159661869; Tue, 01
+ Mar 2022 10:34:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20220225060038.1511562-1-ben.widawsky@intel.com>
+ <20220225060038.1511562-3-ben.widawsky@intel.com> <CAPcyv4gVpBc_58cqZjHSK8yALf_uSx16U_A8dQBUMSp1SP81RA@mail.gmail.com>
+ <20220301174324.g7ivb6pgs3bvt4j5@intel.com>
+In-Reply-To: <20220301174324.g7ivb6pgs3bvt4j5@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 1 Mar 2022 10:34:09 -0800
+Message-ID: <CAPcyv4i9jC5JabNMp+ZQG2NXRs4AEDi6m9YzatMdH0f-6rM6-w@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] cxl/region: Introduce concept of region configuration
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, patches@lists.linux.dev,
+        kernel test robot <lkp@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-
-Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
-
-> From: Ben Widawsky <ben.widawsky@intel.com>
+On Tue, Mar 1, 2022 at 9:43 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> A device's volatile and persistent memory are known Host Defined Memory
-> (HDM) regions. The mechanism by which the device is programmed to claim
-> the addresses associated with those regions is through dedicated logic
-> known as the HDM decoder. In order to allow the OS to properly program
-> the HDMs, the HDM decoders must be modeled.
+> On 22-02-28 17:16:10, Dan Williams wrote:
+> > On Thu, Feb 24, 2022 at 10:01 PM Ben Widawsky <ben.widawsky@intel.com> =
+wrote:
+> > >
+> > > The region creation APIs create a vacant region. Configuring the regi=
+on
+> > > works in the same way as similar subsystems such as devdax. Sysfs att=
+rs
+> > > will be provided to allow userspace to configure the region.  Finally
+> > > once all configuration is complete, userspace may activate the region=
+.
+> > >
+> > > Introduced here are the most basic attributes needed to configure a
+> > > region. Details of these attribute are described in the ABI
+> > > Documentation.
+> > >
+> > > A example is provided below:
+> > >
+> > > /sys/bus/cxl/devices/region0.0:0
+> > > =E2=94=9C=E2=94=80=E2=94=80 devtype
+> > > =E2=94=9C=E2=94=80=E2=94=80 interleave_granularity
+> > > =E2=94=9C=E2=94=80=E2=94=80 interleave_ways
+> > > =E2=94=9C=E2=94=80=E2=94=80 modalias
+> > > =E2=94=9C=E2=94=80=E2=94=80 offset
+> > > =E2=94=9C=E2=94=80=E2=94=80 size
+> > > =E2=94=9C=E2=94=80=E2=94=80 subsystem -> ../../../../../../bus/cxl
+> > > =E2=94=9C=E2=94=80=E2=94=80 target0
+> > > =E2=94=9C=E2=94=80=E2=94=80 uevent
+> > > =E2=94=94=E2=94=80=E2=94=80 uuid
+> > >
+> > > Reported-by: kernel test robot <lkp@intel.com> (v2)
+> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > > ---
+> > > Changes since v3:
+> > > - Make target be a decoder
+> > > - Use device_lock for protecting config/probe race
+> > > - Teardown region on decoder removal
+> > >
+> > > Size is still not handled.
+> > > ---
+> > >  Documentation/ABI/testing/sysfs-bus-cxl |  59 ++++
+> > >  drivers/cxl/core/port.c                 |   8 +
+> > >  drivers/cxl/core/region.c               | 351 ++++++++++++++++++++++=
++-
+> > >  drivers/cxl/cxl.h                       |  16 +-
+> > >  drivers/cxl/region.h                    |  65 +++++
+> > >  5 files changed, 495 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/=
+ABI/testing/sysfs-bus-cxl
+> > > index e5db45ea70ad..c447826e8286 100644
+> > > --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> > > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> > > @@ -186,3 +186,62 @@ Description:
+> > >                 Deletes the named region.  The attribute expects a re=
+gion in the
+> > >                 form "regionX.Y:Z". The region's name, allocated by r=
+eading
+> > >                 create_region, will also be released.
+> > > +               Deletes the named region. A region must be unbound fr=
+om the
+> > > +               region driver before being deleted.
+> >
+> > This is not enforced by patch1, and I don't see why this would be
+> > required, the kernel will do that as a part of device_unregister,
+> > right?
+> >
 >
-> There are two ways the HDM decoders can be implemented, the legacy
-> mechanism is through the PCIe DVSEC programming from CXL 1.1 (8.1.3.8),
-> and MMIO is found in 8.2.5.12 of the spec. For now, 8.1.3.8 is not
-> implemented.
+> This predates my understanding that unbind can't fail. I was planning to =
+use
+> unbind to support managed hot remove. I will [try to remember] to change =
+this.
 >
-> Much of CXL device logic is implemented in cxl-utils. The HDM decoder
-> however is implemented directly by the device implementation.
-> Whilst the implementation currently does no validity checks on the
-> encoder set up, future work will add sanity checking specific to
-> the type of cxl component.
+> > >   The attributes expects a
+> > > +               region in the form "regionX.Y:Z". The region's name, =
+allocated
+> > > +               by reading create_region, will also be released.
+> >
+> > This can also be dropped, userspace does not have any sensitivity to
+> > when / how the region name memory allocation is managed.
+> >
 >
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  hw/mem/cxl_type3.c | 54 ++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
+> Okay.
 >
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index c4021d2434..da091157f2 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -61,6 +61,56 @@ static void build_dvsecs(CXLType3Dev *ct3d)
->                                 REG_LOC_DVSEC_REVID, dvsec);
->  }
->=20=20
-> +static void hdm_decoder_commit(CXLType3Dev *ct3d, int which)
-> +{
-> +    ComponentRegisters *cregs =3D &ct3d->cxl_cstate.crb;
-> +    uint32_t *cache_mem =3D cregs->cache_mem_registers;
-> +
-> +    assert(which =3D=3D 0);
-> +
-> +    /* TODO: Sanity checks that the decoder is possible */
-> +    ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, COMMIT, 0);
-> +    ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, ERR, 0);
-> +
-> +    ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, COMMITTED, 1);
-> +}
-> +
-> +static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
-> +                           unsigned size)
-> +{
-> +    CXLComponentState *cxl_cstate =3D opaque;
-> +    ComponentRegisters *cregs =3D &cxl_cstate->crb;
-> +    CXLType3Dev *ct3d =3D container_of(cxl_cstate, CXLType3Dev, cxl_csta=
-te);
-> +    uint32_t *cache_mem =3D cregs->cache_mem_registers;
-> +    bool should_commit =3D false;
-> +    int which_hdm =3D -1;
-> +
-> +    assert(size =3D=3D 4);
+> > > +
+> > > +What:          /sys/bus/cxl/devices/decoderX.Y/regionX.Y:Z/resource
+> > > +Date:          January, 2022
+> > > +KernelVersion: v5.18
+> > > +Contact:       linux-cxl@vger.kernel.org
+> > > +Description:
+> > > +               A region is a contiguous partition of a CXL Root deco=
+der address
+> > > +               space. Region capacity is allocated by writing to the=
+ size
+> > > +               attribute, the resulting physical address base determ=
+ined by the
+> > > +               driver is reflected here.
+> > > +
+> > > +What:          /sys/bus/cxl/devices/decoderX.Y/regionX.Y:Z/size
+> > > +Date:          January, 2022
+> > > +KernelVersion: v5.18
+> > > +Contact:       linux-cxl@vger.kernel.org
+> > > +Description:
+> > > +               System physical address space to be consumed by the r=
+egion.
+> >
+> > s/to be//
+> >
+> > > +
+> > > +What:          /sys/bus/cxl/devices/decoderX.Y/regionX.Y:Z/interleav=
+e_ways
+> > > +Date:          January, 2022
+> > > +KernelVersion: v5.18
+> > > +Contact:       linux-cxl@vger.kernel.org
+> > > +Description:
+> > > +               Configures the number of devices participating in the=
+ region is
+> > > +               set by writing this value. Each device will provide
+> > > +               1/interleave_ways of storage for the region.
+> > > +
+> > > +What:          /sys/bus/cxl/devices/decoderX.Y/regionX.Y:Z/interleav=
+e_granularity
+> > > +Date:          January, 2022
+> > > +KernelVersion: v5.18
+> > > +Contact:       linux-cxl@vger.kernel.org
+> > > +Description:
+> > > +               Set the number of consecutive bytes each device in th=
+e
+> > > +               interleave set will claim. The possible interleave gr=
+anularity
+> > > +               values are determined by the CXL spec and the partici=
+pating
+> > > +               devices.
+> > > +
+> > > +What:          /sys/bus/cxl/devices/decoderX.Y/regionX.Y:Z/uuid
+> > > +Date:          January, 2022
+> > > +KernelVersion: v5.18
+> > > +Contact:       linux-cxl@vger.kernel.org
+> > > +Description:
+> > > +               Write a unique identifier for the region. This field =
+must be set
+> > > +               for persistent regions and it must not conflict with =
+the UUID of
+> > > +               another region. If this field is set for volatile reg=
+ions, the
+> > > +               value is ignored.
+> >
+> > Hmm, could this attribute just be hidden via is_visible() if the
+> > region type is not persistent? Although that opens up new questions
+> > like, what about root decoders that can simultaneously support
+> > volatile and pmem? Encode the type in the create ABI? I.e. have
+> > create_pmem_region and create_volatile_region I like the idea that the
+> > region type is unambiguous at create time.
+> >
+>
+> Right. Originally I was thinking the decoder implicitly determines the ty=
+pe,
+> however as you point out decoders can support both. I'm okay to create tw=
+o
+> nodes. We could also utilize a string for single create: volatileX, or
+> persistentY. My preference is two nodes, I'm just offering an alternative=
+.
 
-Maybe add:
+The right sysfs-answer is 2 nodes.
 
-      g_assert(offset <=3D (CXL2_COMPONENT_CM_REGION_SIZE >> 2));
+> You do end up with asymmetry because there will be only one delete node f=
+or 2
+> create nodes. Not sure if you care about that.
 
+Nope, don't care. sysfs interfaces are meant to be utilitarian, not
+necessarily user-friendly.
 
-> +
-> +    switch (offset) {
-> +    case A_CXL_HDM_DECODER0_CTRL:
-> +        should_commit =3D FIELD_EX32(value, CXL_HDM_DECODER0_CTRL, COMMI=
-T);
-> +        which_hdm =3D 0;
-> +        break;
-> +    default:
-> +        break;
-> +    }
-> +
-> +    stl_le_p((uint8_t *)cache_mem + offset, value);
-> +    if (should_commit) {
-> +        hdm_decoder_commit(ct3d, which_hdm);
-> +    }
-> +}
-> +
-> +static void ct3_finalize(Object *obj)
-> +{
-> +    CXLType3Dev *ct3d =3D CT3(obj);
-> +    CXLComponentState *cxl_cstate =3D &ct3d->cxl_cstate;
-> +    ComponentRegisters *regs =3D &cxl_cstate->crb;
-> +
-> +    g_free((void *)regs->special_ops);
+>
+> > > +
+> > > +What: /sys/bus/cxl/devices/decoderX.Y/regionX.Y:Z/endpoint_decoder[0=
+..interleave_ways]
+> > > +Date:          January, 2022
+> > > +KernelVersion: v5.18
+> > > +Contact:       linux-cxl@vger.kernel.org
+> > > +Description:
+> > > +               Write a decoder object that is unused and will partic=
+ipate in
+> > > +               decoding memory transactions for the interleave set, =
+ie.
+> > > +               decoderX.Y. All attributes must be populated.
+> >
+> > Feels like this wants a lead-in patch describing / implementing the
+> > writable decoder attributes.
+>
+> Agreed.
+>
+> >
+> > > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> > > index f3e1313217a8..0eff36f748c3 100644
+> > > --- a/drivers/cxl/core/port.c
+> > > +++ b/drivers/cxl/core/port.c
+> > > @@ -1415,6 +1415,14 @@ EXPORT_SYMBOL_NS_GPL(cxl_decoder_add, CXL);
+> > >
+> > >  static void cxld_unregister(void *dev)
 
-nit: you don't need to cast her.
+Let's not use local variable shorthand names in function identifiers.
+This should be called cxl_decoder_unregister(), I had misread this as
+cxlr_unregister(), apologies.
 
-> +}
-> +
->  static void cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
->  {
->      MemoryRegion *mr;
-> @@ -103,6 +153,9 @@ static void ct3_realize(PCIDevice *pci_dev, Error **e=
-rrp)
->      ct3d->cxl_cstate.pdev =3D pci_dev;
->      build_dvsecs(ct3d);
->=20=20
-> +    regs->special_ops =3D g_new0(MemoryRegionOps, 1);
-> +    regs->special_ops->write =3D ct3d_reg_write;
-> +
->      cxl_component_register_block_init(OBJECT(pci_dev), cxl_cstate,
->                                        TYPE_CXL_TYPE3_DEV);
->=20=20
-> @@ -155,6 +208,7 @@ static const TypeInfo ct3d_info =3D {
->      .parent =3D TYPE_PCI_DEVICE,
->      .class_init =3D ct3_class_init,
->      .instance_size =3D sizeof(CXLType3Dev),
-> +    .instance_finalize =3D ct3_finalize,
->      .interfaces =3D (InterfaceInfo[]) {
->          { INTERFACE_CXL_DEVICE },
->          { INTERFACE_PCIE_DEVICE },
+> > >  {
+> > > +       struct cxl_decoder *cxld =3D to_cxl_decoder(dev);
+> > > +
+> > > +       if (cxld->cxlr) {
+> > > +               mutex_lock(&cxld->cxlr->remove_lock);
+> >
+> > I don't understand what this lock is for? Perhaps if it was named
+> > after the data it is locking rather than the code it would be more
+> > obvious.
+> >
+>
+> It was trying to prevent racing decoders removal with the region's remova=
+l.
 
-Reviewed-by: Alex Benn=C3=A9e <alex.bennee@linaro.org>
+It's naming suggested to me that it was locking code rather than data,
+let's call it targets_lock.
 
---=20
-Alex Benn=C3=A9e
+> > > +               device_release_driver(&cxld->cxlr->dev);
+> >
+> > I would expect device_release_driver() to only be used in scenarios
+> > where the region is being disabled, but if it is being unregistered
+> > just let the device core detach the driver naturally.
+>
+> What's the proposal then to make it work? I don't see how the region driv=
+er is
+> notified that a decoder went away without something like this.
+
+Perhaps with the naming fixed up I would not have confused this for
+the cxl_region unregister path. I think this can work, but it needs a
+paired check in the probe path to take the targets_lock to prevent the
+region from going enabled again between dropping the targets_lock and
+unregistering the decoder.
+
+>
+> >
+> > > +               mutex_unlock(&cxld->cxlr->remove_lock);
+> > > +       }
+> > > +
+> > >         device_unregister(dev);
+> > >  }
+> > >
+> > > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> > > index a934938f8630..2b17b0af48de 100644
+> > > --- a/drivers/cxl/core/region.c
+> > > +++ b/drivers/cxl/core/region.c
+> > > @@ -2,9 +2,12 @@
+> > >  /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+> > >  #include <linux/device.h>
+> > >  #include <linux/module.h>
+> > > +#include <linux/sizes.h>
+> > >  #include <linux/slab.h>
+> > > +#include <linux/uuid.h>
+> > >  #include <linux/idr.h>
+> > >  #include <region.h>
+> > > +#include <cxlmem.h>
+> > >  #include <cxl.h>
+> > >  #include "core.h"
+> > >
+> > > @@ -16,28 +19,367 @@
+> > >   * Memory ranges, Regions represent the active mapped capacity by th=
+e HDM
+> > >   * Decoder Capability structures throughout the Host Bridges, Switch=
+es, and
+> > >   * Endpoints in the topology.
+> > > + *
+> > > + * Region configuration has some ordering constraints:
+> >
+> > Add some "why" commentary to supplement the what.
+> >
+> > > + * - Size: Must be set after all targets
+> >
+> > I would expect the other way around so that decoder capacity can be
+> > validated as they are registered to the region?
+>
+> When size is set, I need to confirm both root decoder capacity exists as =
+well as
+> individual device capacity. I could flip it around and not allow targets =
+that do
+> not have enough capacity left. Either is fine really, but ordering is exp=
+licit
+> either way.
+>
+> If we mandate that the decoders themselves are first configured via sysfs=
+ (which
+> I think we did say but I forgot to add), then this should work fine.
+
+Yeah, they are 2 separate steps. It should be fine to independently
+allocate HPA-capacity and DPA-capacity and then validate that the
+settings are compatible at decoder-to-region association time. So no
+need to have a strict order, just check compatibility when they come
+together.
+
+> > > + * - Targets: Must be set after interleave ways
+> > > + * - Interleave ways: Must be set after Interleave Granularity
+> > > + *
+> > > + * UUID may be set at any time before binding the driver to the regi=
+on.
+> >
+> > Did we also talk about making all properties write once? Perhaps only
+> > if it simplifies some of the validation code.
+>
+> I never saw a response from you about that when I asked. Sorry if I misse=
+d it. I
+> think write once is fine and makes things easier.
+
+Works for me, it can always be relaxed later if it proves too restrictive.
+
+> > >   */
+> > >
+> > >
+> > > -static struct cxl_region *to_cxl_region(struct device *dev);
+> > > +static const struct attribute_group region_interleave_group;
+> > > +
+> > > +#define _REGION_ATTR_RO(name)                                       =
+           \
+> > > +       static ssize_t name##_show(struct device *dev,               =
+          \
+> > > +                                  struct device_attribute *attr, cha=
+r *buf)   \
+> > > +       {                                                            =
+          \
+> > > +               struct cxl_region *cxlr =3D to_cxl_region(dev);      =
+            \
+> > > +               if (cxlr->flags & REGION_DEAD)                       =
+          \
+> >
+> > Per the feedback on patch1 this likely wants to be:
+> >
+> > if (work_pending(&cxlr->detach_work))
+>
+> I've already forgotten patch1 check but I can go back and check later.
+
+It's a lot of feedback to be sure, but we need to get through it to
+converge. Sometimes the feedback is based on a misunderstanding like
+the clx[rd] confusion above, so I appreciate you taking the care to
+reconcile it all.
+
+> > > +                       return -ENODEV;                              =
+          \
+> > > +               return show_##name(to_cxl_region(dev), buf);         =
+          \
+> >
+> > I'd rather skip this macro indirection and just open code the 'dead'
+> > check in the show handler...
+> >
+> > > +       }
+> > > +
+> > > +#define REGION_ATTR_RO(name)                                        =
+           \
+> > > +       _REGION_ATTR_RO(name)                                        =
+          \
+> > > +       static DEVICE_ATTR_RO(name)
+> >
+> > ...because this looks exotic to me.
+> >
+> > > +
+> > > +#define _REGION_ATTR_WO(name)                                       =
+           \
+> >
+> > More macro that can just be C helpers / open-coded.
+> >
+>
+> Every attribute has the same race prevention. It seemed nice to combine i=
+t in a
+> relatively simple macro. I can remove it however if you don't like it but=
+ I do
+> believe it helps guard against future errors if adding new attributes.
+
+I don't like that it will make debugging more difficult for resolving
+back traces to line numbers, and the common code can be handled with
+common preamble / postamble helper functions.
+
+>
+> > > +       static ssize_t name##_store(struct device *dev,              =
+          \
+> > > +                                   struct device_attribute *attr,   =
+          \
+> > > +                                   const char *buf, size_t len)     =
+          \
+> > > +       {                                                            =
+          \
+> > > +               int ret;                                             =
+          \
+> > > +               if (device_lock_interruptible(dev) < 0)              =
+          \
+> >
+> > lockdep gave the thumbs up on this? Useful lockdep reports is another
+> > reason to have not this detail buried in macros.
+> >
+>
+> I'm running your patches and I hadn't seen anything. I am confused though=
+, isn't
+> this what we discussed to prevent the race with remove()?
+
+It's similar to what nvdimm is using for deadlock avoidance, but CXL
+locking !=3D NVDIMM locking so it needs reverification. You would need
+to update cxl_regions to have a lock_class, see cxl_set_lock_class()
+in the new set.
+
+> Looks like there is more below.
+>
+> > > +                       return -EINTR;                               =
+          \
+> > > +               if (dev->driver) {                                   =
+          \
+> > > +                       device_unlock(dev);                          =
+          \
+> > > +                       return -EBUSY;                               =
+          \
+> > > +               }                                                    =
+          \
+> > > +               ret =3D store_##name(to_cxl_region(dev), buf, len);  =
+            \
+> > > +               device_unlock(dev);                                  =
+          \
+> > > +               return ret;                                          =
+          \
+> > > +       }
+> > > +
+> > > +#define REGION_ATTR_RW(name)                                        =
+           \
+> > > +       _REGION_ATTR_RO(name)                                        =
+          \
+> > > +       _REGION_ATTR_WO(name)                                        =
+          \
+> > > +       static DEVICE_ATTR_RW(name)
+> > > +
+> > > +#define TARGET_ATTR_RW(n)                                           =
+           \
+> > > +       static ssize_t target##n##_show(                             =
+          \
+> > > +               struct device *dev, struct device_attribute *attr, ch=
+ar *buf)  \
+> > > +       {                                                            =
+          \
+> > > +               return show_targetN(to_cxl_region(dev), buf, (n));   =
+          \
+> > > +       }                                                            =
+          \
+> > > +       static ssize_t target##n##_store(struct device *dev,         =
+          \
+> > > +                                        struct device_attribute *att=
+r,        \
+> > > +                                        const char *buf, size_t len)=
+          \
+> > > +       {                                                            =
+          \
+> > > +               int ret;                                             =
+          \
+> > > +               if (device_lock_interruptible(dev) < 0)              =
+          \
+> > > +                       return -EINTR;                               =
+          \
+> > > +               if (dev->driver) {                                   =
+          \
+> > > +                       device_unlock(dev);                          =
+          \
+> > > +                       return -EBUSY;                               =
+          \
+> > > +               }                                                    =
+          \
+> > > +               ret =3D store_targetN(to_cxl_region(dev), buf, (n), l=
+en);        \
+> > > +               device_unlock(dev);                                  =
+          \
+> > > +               return ret;                                          =
+          \
+> > > +       }                                                            =
+          \
+> > > +       static DEVICE_ATTR_RW(target##n)
+> > > +
+> > > +static void remove_target(struct cxl_region *cxlr, int target)
+> > > +{
+> > > +       struct cxl_decoder *cxld;
+> > > +
+> > > +       mutex_lock(&cxlr->remove_lock);
+> > > +       cxld =3D cxlr->targets[target];
+> > > +       if (cxld) {
+> > > +               cxld->cxlr =3D NULL;
+> > > +               put_device(&cxld->dev);
+> > > +       }
+> > > +       cxlr->targets[target] =3D NULL;
+> > > +       mutex_unlock(&cxlr->remove_lock);
+> >
+> > How does this synchronize with memdev ->remove() and decoders becoming
+> > unregistered while still referenced by an active region? I think,
+> > especially for error handling scenarios the region driver will want to
+> > be able to assume that the region will go through ->remove() before
+> > any targets successfully observed by ->probe() can be removed. To me
+> > that means this needs a test for the memdev ->remove() flow and
+> > whether memdev ->remove() could perhaps synchronously trigger region
+> > remove for all associated regions. That would mean that the region
+> > device lock would need to nest beneath endpoint decoder device_lock().
+> > Other flows get easier if region driver flows can assume that until
+> > region ->remove() the target decoder list is stable.
+> >
+>
+> How do I enforce it goes through remove() first?
+
+If the equivalent of remove_target() happened inside the targets_lock
+(formerly remove_lock) section of cxl_decoder_unregister() (formerly
+cxld_unregister) after the region had been unbound, then I think that
+might be sufficient. Otherwise a standalone remove_target() outside of
+the decoder unregister path does not track for me. What am I missing?
+
+[..]
+>
+> > > +}
+> > > +
+> > > +static inline bool
+> > > +cxl_is_interleave_granularity_valid(const struct cxl_decoder *rootd,=
+ int ig)
+> > > +{
+> > > +       int rootd_hbig;
+> > > +
+> > > +       if (!is_power_of_2(ig))
+> > > +               return false;
+> > > +
+> > > +       /* 16K is the max */
+> > > +       if (ig >> 15)
+> >
+> > Why the shift instead of the more straightforward:
+> >
+> > if (ig > SZ_16K)
+> >
+>
+> Okay.
+>
+> > > +               return false;
+> > > +
+> > > +       rootd_hbig =3D cxl_from_granularity(rootd->interleave_granula=
+rity);
+> > > +       if (rootd_hbig < cxl_from_granularity(ig))
+> > > +               return false;
+> >
+> > Why do the comparison in CXL encoding vs ordinal:
+> >
+> > if (ig > rootd->interleave_granularity)
+> >
+> > ?
+>
+> It was meant to future proof in case interleave granularity becomes non-o=
+rdinal.
+> I had a hunch you would request this change. I'd prefer to leave this as-=
+is
+> unless you really hate it.
+
+How could interleave granularity become non-ordinal in the future?
+It's not about hate or taste, it does not have a logical reason to
+exist that I can see.
