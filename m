@@ -2,56 +2,56 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36994C433EF
-	for <linux-cxl@archiver.kernel.org>; Tue,  1 Mar 2022 18:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BCFC433F5
+	for <linux-cxl@archiver.kernel.org>; Tue,  1 Mar 2022 18:28:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236842AbiCASOI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 1 Mar 2022 13:14:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39252 "EHLO
+        id S237012AbiCAS3X (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 1 Mar 2022 13:29:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235929AbiCASOH (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 1 Mar 2022 13:14:07 -0500
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AECC724BDA
-        for <linux-cxl@vger.kernel.org>; Tue,  1 Mar 2022 10:13:25 -0800 (PST)
-Received: by mail-ej1-x632.google.com with SMTP id r13so33175801ejd.5
-        for <linux-cxl@vger.kernel.org>; Tue, 01 Mar 2022 10:13:25 -0800 (PST)
+        with ESMTP id S232134AbiCAS3T (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 1 Mar 2022 13:29:19 -0500
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 708966516A
+        for <linux-cxl@vger.kernel.org>; Tue,  1 Mar 2022 10:28:27 -0800 (PST)
+Received: by mail-ej1-x634.google.com with SMTP id p15so33244654ejc.7
+        for <linux-cxl@vger.kernel.org>; Tue, 01 Mar 2022 10:28:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=references:user-agent:from:to:cc:subject:date:in-reply-to
          :message-id:mime-version:content-transfer-encoding;
-        bh=DQAbB6wKQQ6wxqSXqBT0TsbD3Jc00NpvT+qsB4Q96Hs=;
-        b=YFeLIi1unrQPs1ShvQc4yilmZW5SrdZiYuXr60lU8CMZurn2vpdfXXjh9mE/S0eY7O
-         hmx4bT+IfgTnl/e2vnn0XpbmkDaT9Q4xARzeHxtK0gPtRahLhQJrqJMr2x8m+wa32IlL
-         bSHAkftEZP5ox1wrerLuuLGz+6wZOpjkQhj9TAW+V7/VvPZ1Eq7XTpc7dZDD1d203kEK
-         +Qxy5NVDRGaTTbXZXCET+gzA+mqFInNC4EcK2N+jU6DVWKIwhiYK0dEjHnNxl6oUZ8GI
-         tgijpFN++Fg81+mb2eZo+Jp/vKC24AwUxrA8QK1ytaEsOtBFwpQjrLc3J7cDbSnU+VEh
-         VgqA==
+        bh=qWn8f/zcEThACHHu7HzVrOzQdOqQBxED78bE6EUhDxE=;
+        b=uyjWNcsW6mwFZ+AJ9vhsG4li0vju83daLrm05o/Dhis7pnHymq26RkKNv+rLIeCOzm
+         bOTqZj+HQQBjTGh2DqhkO+3N4Jxl+y10jTQq6EcuUUEIpxFFG9Bb1YyDeLCBrlVrn7cm
+         9BVXzPAAdsditQS3xSgdvyzqJvuhhKZz/4iJt+BuyMTEESONCpVmhIoEbsZZaS1q12/B
+         fkNyN5y2/lO+ASUGAn2CQ8uWgDG1gkWC76A6Rsuy8sJgtRq0SI79WpFlBYgiwwmyeQ0G
+         GvLUe2byeA84JAPip+49OgF55gwvGPnZ1P5Iu/ygD4s92k4DDi4wZmhutTjqzcETz/5E
+         DMbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:references:user-agent:from:to:cc:subject:date
          :in-reply-to:message-id:mime-version:content-transfer-encoding;
-        bh=DQAbB6wKQQ6wxqSXqBT0TsbD3Jc00NpvT+qsB4Q96Hs=;
-        b=1hzfJtRoeq1A6SrBiPGEn62JPvHCh0AMgcRuXcjBXyOIy5IeZ/8Ypp/WQC5uPjI4h7
-         RqFOrtbV0qHzEdbXM/uA63O59fcZzH8HHKMx+oCXsrnGSQ2CVTE+Nip6/DmhR8mBL39e
-         ZCNmK8fgy8NN7Dn4ha+dx68eMNnV9NgOXzNkv+cSTLrMeBg3tLifgA6pCFDksvJBXp4c
-         PmIRbiC4XPJiMhyImlNATXOOCXdg/vyUM3sFUCKmrFtDOowg2oq8ksyBpZRRKDb8tugr
-         /PADjx91fyAbS9J2isHKBOlU2GjVkym0OEn+oBjHqHNlqvoCgZYsPsbiUgO6EIKHHxIF
-         w9HA==
-X-Gm-Message-State: AOAM531IbYNdSWRLehXVrkTfAUdkZAJCypFW4QbfdBrgPiE1F6iOkRhA
-        KVwqeiH90lDGcgUKbFvvMbtt/w==
-X-Google-Smtp-Source: ABdhPJyLH7S1zDTjGNYhDfTUnqKe7lR5uP9D0hF4fjI/CEZd3sm+n3YQax/O8wNk74KaR8h1iEjuXQ==
-X-Received: by 2002:a17:906:8549:b0:69f:25ee:b38e with SMTP id h9-20020a170906854900b0069f25eeb38emr19925030ejy.443.1646158404204;
-        Tue, 01 Mar 2022 10:13:24 -0800 (PST)
+        bh=qWn8f/zcEThACHHu7HzVrOzQdOqQBxED78bE6EUhDxE=;
+        b=pH2Lq5Rp/kbDh+g+pfI7MjqmZ33KC57gSPedsi7K/SnaP/8CKophre3KMFJpBYxfvM
+         J+qhbK2NB45F4ulT8JfbP4hpRP7I6dmKhHoQj1FHTeQ2aREZmaMU6MvF3xo87JGt2H6l
+         exQPpvMBfEiePAcpYvEk/g7QNBCbdpXyvU/rTq8bvqkbCsn4nTULcorV/hstbz61dDt+
+         FNI7Q72+X39WZYyHaWJwY7YPu9/jmP2bNTf5kNOod2jz4bjClcsuGvTKsN0U0GaGm5yx
+         QIDrbeWYevzOM7IbhOmCXpPyEQorCk1crhqNZNhbImvzPIKu+CKTi3cyglFF0QTgXbAT
+         Jh6g==
+X-Gm-Message-State: AOAM530CyofIo97DKXd7zh+7Gn5Ynzv/N5YWpPdyBtV2TvLRMFBJZwms
+        J9lHHJpjRccu1777NOPCmLsADw==
+X-Google-Smtp-Source: ABdhPJwYK263NnIBiELmpbYksqmULeF1YL2l/SICdrtOZ6R5LGVyVPMFshHx7y980IKq5nQHJllq2w==
+X-Received: by 2002:a17:906:a1a:b0:6cf:d2d9:410c with SMTP id w26-20020a1709060a1a00b006cfd2d9410cmr20199459ejf.713.1646159305949;
+        Tue, 01 Mar 2022 10:28:25 -0800 (PST)
 Received: from zen.linaroharston ([51.148.130.216])
-        by smtp.gmail.com with ESMTPSA id v5-20020a056402184500b00412e1a73c7bsm7370907edy.61.2022.03.01.10.13.22
+        by smtp.gmail.com with ESMTPSA id h30-20020a056402095e00b00412b81dd96esm7371133edz.29.2022.03.01.10.28.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Mar 2022 10:13:22 -0800 (PST)
+        Tue, 01 Mar 2022 10:28:25 -0800 (PST)
 Received: from zen (localhost [127.0.0.1])
-        by zen.linaroharston (Postfix) with ESMTP id E78D91FFB7;
-        Tue,  1 Mar 2022 18:13:21 +0000 (GMT)
+        by zen.linaroharston (Postfix) with ESMTP id 6F05E1FFB7;
+        Tue,  1 Mar 2022 18:28:24 +0000 (GMT)
 References: <20220211120747.3074-1-Jonathan.Cameron@huawei.com>
- <20220211120747.3074-19-Jonathan.Cameron@huawei.com>
+ <20220211120747.3074-20-Jonathan.Cameron@huawei.com>
 User-agent: mu4e 1.7.9; emacs 28.0.91
 From:   Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
@@ -68,11 +68,11 @@ Cc:     qemu-devel@nongnu.org, Marcel Apfelbaum <marcel@redhat.com>,
         Chris Browy <cbrowy@avery-design.com>,
         Samarth Saxena <samarths@cadence.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v6 18/43] qtests/cxl: Add initial root port and CXL
- type3 tests
-Date:   Tue, 01 Mar 2022 18:11:25 +0000
-In-reply-to: <20220211120747.3074-19-Jonathan.Cameron@huawei.com>
-Message-ID: <87h78hlewu.fsf@linaro.org>
+Subject: Re: [PATCH v6 19/43] hw/cxl/device: Implement MMIO HDM decoding
+ (8.2.5.12)
+Date:   Tue, 01 Mar 2022 18:17:35 +0000
+In-reply-to: <20220211120747.3074-20-Jonathan.Cameron@huawei.com>
+Message-ID: <87a6e9le7r.fsf@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
@@ -83,197 +83,123 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
 
-> At this stage we can boot configurations with host bridges,
-> root ports and type 3 memory devices, so add appropriate
-> tests.
+> From: Ben Widawsky <ben.widawsky@intel.com>
 >
+> A device's volatile and persistent memory are known Host Defined Memory
+> (HDM) regions. The mechanism by which the device is programmed to claim
+> the addresses associated with those regions is through dedicated logic
+> known as the HDM decoder. In order to allow the OS to properly program
+> the HDMs, the HDM decoders must be modeled.
+>
+> There are two ways the HDM decoders can be implemented, the legacy
+> mechanism is through the PCIe DVSEC programming from CXL 1.1 (8.1.3.8),
+> and MMIO is found in 8.2.5.12 of the spec. For now, 8.1.3.8 is not
+> implemented.
+>
+> Much of CXL device logic is implemented in cxl-utils. The HDM decoder
+> however is implemented directly by the device implementation.
+> Whilst the implementation currently does no validity checks on the
+> encoder set up, future work will add sanity checking specific to
+> the type of cxl component.
+>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
->  tests/qtest/cxl-test.c | 126 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 126 insertions(+)
+>  hw/mem/cxl_type3.c | 54 ++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
 >
-> diff --git a/tests/qtest/cxl-test.c b/tests/qtest/cxl-test.c
-> index 1006c8ae4e..1436de40e2 100644
-> --- a/tests/qtest/cxl-test.c
-> +++ b/tests/qtest/cxl-test.c
-> @@ -8,6 +8,47 @@
->  #include "qemu/osdep.h"
->  #include "libqtest-single.h"
->=20=20
-> +#define QEMU_PXB_CMD "-machine q35,cxl=3Don " \
-> +                     "-device pxb-cxl,id=3Dcxl.0,bus=3Dpcie.0,bus_nr=3D5=
-2 "
-> +
-> +#define QEMU_2PXB_CMD "-machine q35,cxl=3Don " \
-> +                      "-device pxb-cxl,id=3Dcxl.0,bus=3Dpcie.0,bus_nr=3D=
-52 "  \
-> +                      "-device pxb-cxl,id=3Dcxl.1,bus=3Dpcie.0,bus_nr=3D=
-53 "
-> +
-> +#define QEMU_RP "-device cxl-rp,id=3Drp0,bus=3Dcxl.0,chassis=3D0,slot=3D=
-0 "
-> +
-> +/* Dual ports on first pxb */
-> +#define QEMU_2RP "-device cxl-rp,id=3Drp0,bus=3Dcxl.0,chassis=3D0,slot=
-=3D0 " \
-> +                 "-device cxl-rp,id=3Drp1,bus=3Dcxl.0,chassis=3D0,slot=
-=3D1 "
-> +
-> +/* Dual ports on each of the pxb instances */
-> +#define QEMU_4RP "-device cxl-rp,id=3Drp0,bus=3Dcxl.0,chassis=3D0,slot=
-=3D0 " \
-> +                 "-device cxl-rp,id=3Drp1,bus=3Dcxl.0,chassis=3D0,slot=
-=3D1 " \
-> +                 "-device cxl-rp,id=3Drp2,bus=3Dcxl.1,chassis=3D0,slot=
-=3D2 " \
-> +                 "-device cxl-rp,id=3Drp3,bus=3Dcxl.1,chassis=3D0,slot=
-=3D3 "
-> +
-> +#define QEMU_T3D "-object memory-backend-file,id=3Dcxl-mem0,mem-path=3D%=
-s,size=3D256M " \
-> +                 "-device cxl-type3,bus=3Drp0,memdev=3Dcxl-mem0,id=3Dcxl=
--pmem0,size=3D256M "
-> +
-> +#define QEMU_2T3D "-object memory-backend-file,id=3Dcxl-mem0,mem-path=3D=
-%s,size=3D256M "    \
-> +                  "-device cxl-type3,bus=3Drp0,memdev=3Dcxl-mem0,id=3Dcx=
-l-pmem0,size=3D256M " \
-> +                  "-object memory-backend-file,id=3Dcxl-mem1,mem-path=3D=
-%s,size=3D256M "    \
-> +                  "-device cxl-type3,bus=3Drp1,memdev=3Dcxl-mem1,id=3Dcx=
-l-pmem1,size=3D256M "
-> +
-> +#define QEMU_4T3D "-object memory-backend-file,id=3Dcxl-mem0,mem-path=3D=
-%s,size=3D256M "    \
-> +                  "-device cxl-type3,bus=3Drp0,memdev=3Dcxl-mem0,id=3Dcx=
-l-pmem0,size=3D256M " \
-> +                  "-object memory-backend-file,id=3Dcxl-mem1,mem-path=3D=
-%s,size=3D256M "    \
-> +                  "-device cxl-type3,bus=3Drp1,memdev=3Dcxl-mem1,id=3Dcx=
-l-pmem1,size=3D256M " \
-> +                  "-object memory-backend-file,id=3Dcxl-mem2,mem-path=3D=
-%s,size=3D256M "    \
-> +                  "-device cxl-type3,bus=3Drp2,memdev=3Dcxl-mem2,id=3Dcx=
-l-pmem2,size=3D256M " \
-> +                  "-object memory-backend-file,id=3Dcxl-mem3,mem-path=3D=
-%s,size=3D256M "    \
-> +                  "-device cxl-type3,bus=3Drp3,memdev=3Dcxl-mem3,id=3Dcx=
-l-pmem3,size=3D256M "
-> +
-> +static void cxl_basic_hb(void)
-> +{
-> +    qtest_start("-machine q35,cxl=3Don");
-> +    qtest_end();
-> +}
->=20=20
->  static void cxl_basic_pxb(void)
->  {
-> @@ -15,9 +56,94 @@ static void cxl_basic_pxb(void)
->      qtest_end();
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index c4021d2434..da091157f2 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -61,6 +61,56 @@ static void build_dvsecs(CXLType3Dev *ct3d)
+>                                 REG_LOC_DVSEC_REVID, dvsec);
 >  }
 >=20=20
-> +static void cxl_pxb_with_window(void)
+> +static void hdm_decoder_commit(CXLType3Dev *ct3d, int which)
 > +{
-> +    qtest_start(QEMU_PXB_CMD);
-> +    qtest_end();
+> +    ComponentRegisters *cregs =3D &ct3d->cxl_cstate.crb;
+> +    uint32_t *cache_mem =3D cregs->cache_mem_registers;
+> +
+> +    assert(which =3D=3D 0);
+> +
+> +    /* TODO: Sanity checks that the decoder is possible */
+> +    ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, COMMIT, 0);
+> +    ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, ERR, 0);
+> +
+> +    ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, COMMITTED, 1);
 > +}
 > +
-> +static void cxl_2pxb_with_window(void)
+> +static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
+> +                           unsigned size)
 > +{
-> +    qtest_start(QEMU_2PXB_CMD);
-> +    qtest_end();
-> +}
+> +    CXLComponentState *cxl_cstate =3D opaque;
+> +    ComponentRegisters *cregs =3D &cxl_cstate->crb;
+> +    CXLType3Dev *ct3d =3D container_of(cxl_cstate, CXLType3Dev, cxl_csta=
+te);
+> +    uint32_t *cache_mem =3D cregs->cache_mem_registers;
+> +    bool should_commit =3D false;
+> +    int which_hdm =3D -1;
 > +
-> +static void cxl_root_port(void)
-> +{
-> +    qtest_start(QEMU_PXB_CMD QEMU_RP);
-> +    qtest_end();
-> +}
-> +
-> +static void cxl_2root_port(void)
-> +{
-> +    qtest_start(QEMU_PXB_CMD QEMU_2RP);
-> +    qtest_end();
-> +}
-> +
-> +static void cxl_t3d(void)
-> +{
-> +    GString *cmdline;
-> +    char template[] =3D "/tmp/cxl-test-XXXXXX";
-> +    const char *tmpfs;
-> +
-> +    tmpfs =3D mkdtemp(template);
-> +
-> +    cmdline =3D g_string_new(NULL);
-> +    g_string_printf(cmdline, QEMU_PXB_CMD QEMU_RP QEMU_T3D, tmpfs);
-> +
-> +    qtest_start(cmdline->str);
-> +    qtest_end();
-> +
-> +    g_string_free(cmdline, TRUE);
+> +    assert(size =3D=3D 4);
 
-For future reference you could do:
+Maybe add:
 
-  g_autoptr(GString) cmdline =3D g_string_new(NULL);
+      g_assert(offset <=3D (CXL2_COMPONENT_CM_REGION_SIZE >> 2));
 
-and drop the free ;-)
 
+> +
+> +    switch (offset) {
+> +    case A_CXL_HDM_DECODER0_CTRL:
+> +        should_commit =3D FIELD_EX32(value, CXL_HDM_DECODER0_CTRL, COMMI=
+T);
+> +        which_hdm =3D 0;
+> +        break;
+> +    default:
+> +        break;
+> +    }
+> +
+> +    stl_le_p((uint8_t *)cache_mem + offset, value);
+> +    if (should_commit) {
+> +        hdm_decoder_commit(ct3d, which_hdm);
+> +    }
 > +}
 > +
-> +static void cxl_1pxb_2rp_2t3d(void)
+> +static void ct3_finalize(Object *obj)
 > +{
-> +    GString *cmdline;
-> +    char template[] =3D "/tmp/cxl-test-XXXXXX";
-> +    const char *tmpfs;
+> +    CXLType3Dev *ct3d =3D CT3(obj);
+> +    CXLComponentState *cxl_cstate =3D &ct3d->cxl_cstate;
+> +    ComponentRegisters *regs =3D &cxl_cstate->crb;
 > +
-> +    tmpfs =3D mkdtemp(template);
-> +
-> +    cmdline =3D g_string_new(NULL);
-> +    g_string_printf(cmdline, QEMU_PXB_CMD QEMU_2RP QEMU_2T3D, tmpfs, tmp=
-fs);
-> +
-> +    qtest_start(cmdline->str);
-> +    qtest_end();
-> +
-> +    g_string_free(cmdline, TRUE);
+> +    g_free((void *)regs->special_ops);
+
+nit: you don't need to cast her.
+
 > +}
 > +
-> +static void cxl_2pxb_4rp_4t3d(void)
-> +{
-> +    GString *cmdline;
-> +    char template[] =3D "/tmp/cxl-test-XXXXXX";
-> +    const char *tmpfs;
-> +
-> +    tmpfs =3D mkdtemp(template);
-> +
-> +    cmdline =3D g_string_new(NULL);
-> +    g_string_printf(cmdline, QEMU_2PXB_CMD QEMU_4RP QEMU_4T3D,
-> +                    tmpfs, tmpfs, tmpfs, tmpfs);
-> +
-> +    qtest_start(cmdline->str);
-> +    qtest_end();
-> +
-> +    g_string_free(cmdline, TRUE);
-> +}
-> +
->  int main(int argc, char **argv)
+>  static void cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
 >  {
->      g_test_init(&argc, &argv, NULL);
+>      MemoryRegion *mr;
+> @@ -103,6 +153,9 @@ static void ct3_realize(PCIDevice *pci_dev, Error **e=
+rrp)
+>      ct3d->cxl_cstate.pdev =3D pci_dev;
+>      build_dvsecs(ct3d);
+>=20=20
+> +    regs->special_ops =3D g_new0(MemoryRegionOps, 1);
+> +    regs->special_ops->write =3D ct3d_reg_write;
 > +
-> +    qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
->      qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
-> +    qtest_add_func("/pci/cxl/pxb_with_window", cxl_pxb_with_window);
-> +    qtest_add_func("/pci/cxl/pxb_x2_with_window", cxl_2pxb_with_window);
-> +    qtest_add_func("/pci/cxl/rp", cxl_root_port);
-> +    qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
-> +    qtest_add_func("/pci/cxl/type3_device", cxl_t3d);
-> +    qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
-> +    qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4", cxl_2pxb_4rp=
-_4t3d);
->      return g_test_run();
->  }
-
-Otherwise:
+>      cxl_component_register_block_init(OBJECT(pci_dev), cxl_cstate,
+>                                        TYPE_CXL_TYPE3_DEV);
+>=20=20
+> @@ -155,6 +208,7 @@ static const TypeInfo ct3d_info =3D {
+>      .parent =3D TYPE_PCI_DEVICE,
+>      .class_init =3D ct3_class_init,
+>      .instance_size =3D sizeof(CXLType3Dev),
+> +    .instance_finalize =3D ct3_finalize,
+>      .interfaces =3D (InterfaceInfo[]) {
+>          { INTERFACE_CXL_DEVICE },
+>          { INTERFACE_PCIE_DEVICE },
 
 Reviewed-by: Alex Benn=C3=A9e <alex.bennee@linaro.org>
 
