@@ -2,56 +2,56 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C57F8C433F5
-	for <linux-cxl@archiver.kernel.org>; Wed,  2 Mar 2022 10:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E91C433EF
+	for <linux-cxl@archiver.kernel.org>; Wed,  2 Mar 2022 12:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236376AbiCBKWS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 2 Mar 2022 05:22:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48140 "EHLO
+        id S241707AbiCBMP3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 2 Mar 2022 07:15:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231748AbiCBKWS (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Mar 2022 05:22:18 -0500
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCB6290CE5
-        for <linux-cxl@vger.kernel.org>; Wed,  2 Mar 2022 02:21:34 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id w3so1544044edu.8
-        for <linux-cxl@vger.kernel.org>; Wed, 02 Mar 2022 02:21:34 -0800 (PST)
+        with ESMTP id S237017AbiCBMP2 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Mar 2022 07:15:28 -0500
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DD11457A4
+        for <linux-cxl@vger.kernel.org>; Wed,  2 Mar 2022 04:14:43 -0800 (PST)
+Received: by mail-ed1-x532.google.com with SMTP id x5so1958199edd.11
+        for <linux-cxl@vger.kernel.org>; Wed, 02 Mar 2022 04:14:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=references:user-agent:from:to:cc:subject:date:in-reply-to
          :message-id:mime-version:content-transfer-encoding;
-        bh=/Lv0QiGiMPXUp9tW+ey9C8YoyPBhTcyAOPxIDFYGmLc=;
-        b=bpuIj0g9nNVopoEw9zjYo2yi0w4IuNGMA4rcNxAbM9o2pJXD+xjNn6HzT+c78qbQx+
-         dhxwhLp9oz5+DXEFWTen1iVt7N2wcSYdcgr7lnTgQ6ROGdTlCf4GAbLB8fvD571px3EU
-         1sjot/B++i35UkBwlBfW+WSgkISPp727wMJdEfl3kLK38hUtScHjiiwyaADCeHeafAkT
-         2TH89OQzJGW0yM4cfONxxNrg/3RGeILW6fJwbyy1Jg1ifdoj6lieRDPDMR/A7tfJeT9L
-         UQeA6C/+j2j1Pvl55HFbKLgxtAI0pw0F/Sgk0ZukdQGTgN40r2GOGvAY6ALAmznyBM3y
-         KJwg==
+        bh=NV6NA/Nwe48ecOcCM9J4f7Mq7Gweo54m6HO2YMX84EI=;
+        b=q31j2+aRkgwG9MJ6B1vhEGHABIOnU7MXqMHaHAxULrzm5wlog/VshiVPVW+4lTkwzJ
+         0ZQqNBmNCHPnqBmm0UeBH4cXZJylcXC0wHG05k6KsDoZZZBJQ4r2VFDQ+pm75vpZf2SV
+         Sak4wHu4fzyLq9WnEIvbdt8rh16hHBMhHDMzaZKDzpkDnbC4PzebNLiowlYq8YJ7m1P5
+         lDUrCsT+6v/uRrLXPGXjPeTkpO1+dUf/02N836OUYT8Cdh31B/vP01yS4oQsqgNdgFFU
+         hoZsbKPxQ3uUEGWbm64mPjhGVT1no1VEKE7wXVhqpkMoFEyddZ2MYs5CULNBXSiZ+b8Z
+         SzpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:references:user-agent:from:to:cc:subject:date
          :in-reply-to:message-id:mime-version:content-transfer-encoding;
-        bh=/Lv0QiGiMPXUp9tW+ey9C8YoyPBhTcyAOPxIDFYGmLc=;
-        b=QfGy0AWTNDuvAhaOaBzcE+yhHqA27wuHMI8Zca/9ZCQUMuoatyekpqc5hwWAGC3n2Q
-         rRLC5Xkzu34okzGd84rwi9sYtqmUUv8fxa8FpHpQ19eqH/RSYs/KuVszRxJPQTTI1CVW
-         BLXj/Qrhhe9kqLpPpzJ62EEuLz0FihVyy1UAaaC8tARHe7o39eQnx0tCXJg00piNAdQg
-         NJczWVZeqIfqwRBD23ABfa3X+Z0A42SH3UUMVsK9w+uzuOZSCpmLA7oNITSorK05oh2K
-         VVrVqZAF9gaD+6SYi/WNkk97q06zdowbxBlizgSu9XlS39+qG8nTRA+tsY/W1CEnCm6E
-         kIsg==
-X-Gm-Message-State: AOAM532Z9ROrFgio84iltyLOMjDvuxJbWfGM3tad2Tc6K/GjNasdKfcN
-        VmcL8sdX35JOX11lKz1oydwwWw==
-X-Google-Smtp-Source: ABdhPJx1cHpdl6yo5lQMzlsTz2tuYX4VNlAWau8oWy5J3vROkRy9ofdDujiNxl/7XtO4bssWW2DwUQ==
-X-Received: by 2002:a50:f1c9:0:b0:415:a0f6:147d with SMTP id y9-20020a50f1c9000000b00415a0f6147dmr4589046edl.247.1646216493351;
-        Wed, 02 Mar 2022 02:21:33 -0800 (PST)
+        bh=NV6NA/Nwe48ecOcCM9J4f7Mq7Gweo54m6HO2YMX84EI=;
+        b=oLJBfDiiF/CHXMANDe2YyjST6gDPf8sZskq9U4TbO6zKOlP5J3BFvB62qsCD2e+pHE
+         bvAb8/VPKdphtweYZ8kYlqpa+ECZjJPdU5Mw2/TkBclp/G+ja8tqCwI0LyQEW4gMfeWV
+         YfH+JdziVlWQ+QjfUrp68NlXJptVvmxyYAKyE9AUew+Ixt/hR0DnApZYW3cQ4WcVI1W9
+         2XJKXMPjN0xSfhekFMqoFhYureWfnmGZdnb73H1F1V7FMeYO/d2z+PhjeLlGVVisiY1C
+         bF5AZTZJw0OE7nlCgg1WL++zLizqQYEuoziaJVjRHNYCEcoPgyqZK/q87VMcbLQXvFB+
+         yfmA==
+X-Gm-Message-State: AOAM530ldsfH/p+sEqXsGRYIbZZ0i5SEUO6sUeewN892KZSBNU/qGtPF
+        7I0i/a7vFcknA3ahZg4jAPD8cw==
+X-Google-Smtp-Source: ABdhPJyEC4fp7pQ0GFEdG7j/1PsqJDZz8Hc/EXvtMksf39pzgpjXIv2Wb9mHDVK8qAgaGvSHp1rb6w==
+X-Received: by 2002:a05:6402:5304:b0:413:8a0c:c54a with SMTP id eo4-20020a056402530400b004138a0cc54amr21032819edb.172.1646223278902;
+        Wed, 02 Mar 2022 04:14:38 -0800 (PST)
 Received: from zen.linaroharston ([51.148.130.216])
-        by smtp.gmail.com with ESMTPSA id r23-20020aa7da17000000b00415a1431488sm1142585eds.4.2022.03.02.02.21.32
+        by smtp.gmail.com with ESMTPSA id my16-20020a1709065a5000b006d6e1023b7bsm1856260ejc.8.2022.03.02.04.14.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Mar 2022 02:21:32 -0800 (PST)
+        Wed, 02 Mar 2022 04:14:37 -0800 (PST)
 Received: from zen (localhost [127.0.0.1])
-        by zen.linaroharston (Postfix) with ESMTP id 7F4A91FFB7;
-        Wed,  2 Mar 2022 10:21:31 +0000 (GMT)
+        by zen.linaroharston (Postfix) with ESMTP id D65641FFB7;
+        Wed,  2 Mar 2022 12:14:36 +0000 (GMT)
 References: <20220211120747.3074-1-Jonathan.Cameron@huawei.com>
- <20220211120747.3074-24-Jonathan.Cameron@huawei.com>
+ <20220211120747.3074-25-Jonathan.Cameron@huawei.com>
 User-agent: mu4e 1.7.9; emacs 28.0.91
 From:   Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
@@ -68,11 +68,10 @@ Cc:     qemu-devel@nongnu.org, Marcel Apfelbaum <marcel@redhat.com>,
         Chris Browy <cbrowy@avery-design.com>,
         Samarth Saxena <samarths@cadence.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v6 23/43] hw/cxl/component: Implement host bridge MMIO
- (8.2.5, table 142)
-Date:   Wed, 02 Mar 2022 10:20:27 +0000
-In-reply-to: <20220211120747.3074-24-Jonathan.Cameron@huawei.com>
-Message-ID: <87sfs0k638.fsf@linaro.org>
+Subject: Re: [PATCH v6 24/43] acpi/cxl: Add _OSC implementation (9.14.2)
+Date:   Wed, 02 Mar 2022 12:14:15 +0000
+In-reply-to: <20220211120747.3074-25-Jonathan.Cameron@huawei.com>
+Message-ID: <87o82ok0ur.fsf@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
@@ -85,22 +84,14 @@ Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
 
 > From: Ben Widawsky <ben.widawsky@intel.com>
 >
-> CXL host bridges themselves may have MMIO. Since host bridges don't have
-> a BAR they are treated as special for MMIO.  This patch includes
-> i386/pc support.
-> Also hook up the device reset now that we have have the MMIO
-> space in which the results are visible.
->
-> Note that we duplicate the PCI express case for the aml_build but
-> the implementations will diverge when the CXL specific _OSC is
-> introduced.
+> CXL 2.0 specification adds 2 new dwords to the existing _OSC definition
+> from PCIe. The new dwords are accessed with a new uuid. This
+> implementation supports what is in the specification.
 >
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Looks good to me although I'll defer to the i386 maintainers if they
-think otherwise.
+From my limited understanding of the ACPI AML DSL we use:
 
 Reviewed-by: Alex Benn=C3=A9e <alex.bennee@linaro.org>
 
