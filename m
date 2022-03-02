@@ -2,56 +2,56 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3078C433F5
-	for <linux-cxl@archiver.kernel.org>; Wed,  2 Mar 2022 12:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D04C433EF
+	for <linux-cxl@archiver.kernel.org>; Wed,  2 Mar 2022 12:18:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234033AbiCBMS1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 2 Mar 2022 07:18:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50620 "EHLO
+        id S241686AbiCBMTL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 2 Mar 2022 07:19:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241686AbiCBMS1 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Mar 2022 07:18:27 -0500
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3088F1408C
-        for <linux-cxl@vger.kernel.org>; Wed,  2 Mar 2022 04:17:44 -0800 (PST)
-Received: by mail-ej1-x633.google.com with SMTP id a8so3317901ejc.8
-        for <linux-cxl@vger.kernel.org>; Wed, 02 Mar 2022 04:17:44 -0800 (PST)
+        with ESMTP id S239514AbiCBMTI (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Mar 2022 07:19:08 -0500
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0815C26ADE
+        for <linux-cxl@vger.kernel.org>; Wed,  2 Mar 2022 04:18:24 -0800 (PST)
+Received: by mail-ej1-x62a.google.com with SMTP id qk11so3374775ejb.2
+        for <linux-cxl@vger.kernel.org>; Wed, 02 Mar 2022 04:18:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=references:user-agent:from:to:cc:subject:date:in-reply-to
          :message-id:mime-version:content-transfer-encoding;
-        bh=XFbsNJ/C8bGOizqltxDMSepVZdclwbG6sb4etyg80Ak=;
-        b=dmWAoLHD+jxyQfpkqYN6miTKY4pqgOWbiq7KTwnspmAwpUdK3txyqQPQLiICaz0BYo
-         S+eaA9ZaL9Fq7vIOyjjNCisHaTPKa4894VTU0udtmWn3nIBKG+sH8Gw9pOk6QZowvN7N
-         /15DxiCbZ8enreVFoheClqwPMHJA4ILHYZbnUNQbvGruHyfYibHIqXkrvE5pkEvGSqn0
-         lx4B3Z3Ok1iWahrTsq/+D8sWKaoDRVvH0tE1xSzn8+7V65KsMgf9Degiy5gPtoJM/ldk
-         VRyez9e1GEt2UdVMbSTnGaYZ4YiRcvbOljc36iVeMkurD/6W+x+d2t+wpowexEu6+e0Y
-         X0KQ==
+        bh=jgIaKdgCmX9XzFPul0xeQhCe+1+YoHtNENK9hgsvxN0=;
+        b=ZF0xBuWPuetP7AW3J4ql19Tgg8XyE29giS8CtrvnkCRDwvrKA/XRxOWxx117QsjL3h
+         zqINYUxOu30NOFHoeshGCHoaZfmmRO1+DbgmVQw9jym8Dv+HShOebZRZIw8xjj6Wlmd2
+         lzpvpDHDPVOcnT41rp+/13gdfQMf27DEQFOGqJ7/Qz8j5Baato3IeWSDY9qM7kcUHdd1
+         xrziaro7PYObqVwTvGOw0HrdH1vshzVMDo9Z03AQBXAz5xqHF7d/9mOvdS9guYlHh+s5
+         I5cfd17oMSXlrUI0ttJnLIHbNar8TEFheHfl9Rah7GxgWuBcaEGg0EVAS6MD5lB4E/lD
+         hZ1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:references:user-agent:from:to:cc:subject:date
          :in-reply-to:message-id:mime-version:content-transfer-encoding;
-        bh=XFbsNJ/C8bGOizqltxDMSepVZdclwbG6sb4etyg80Ak=;
-        b=crdQX8hqu/YT6iNp0bS7LKGcSrCSqqGjfkLzruhB1VCl7840+JqdKOgIfvB7e0OksT
-         CD3FZJaUAk6Fm2BTf/z67ehd+/5ONK6YBWqC9xv4KK1ZeRpqkMqmhJcMocYOY+6V1Fe0
-         PveyAYRVHs79DJWgB7AIHeRVZo7WKw0LhFm4j2y3f/89i755ufvTQZ9v4LxihK0XGPrB
-         c5oAXJH2xs96e+0zBIC4WcI86lzAI7XptaqJ5l13+wyUOStHttJmM/2FxFrkdbQ0zTAb
-         k5dr8GhdXK9M225y6A60XMJrzxHDsETWIuqDZ1GqoaFpivAhAkwe/g2wzGtRAqTxgml4
-         AvwQ==
-X-Gm-Message-State: AOAM5315Z6Ijx69eg2tPEOhmT5guub6g29p33us0nIitB22y2yTpYXt/
-        MY5O1Q0fG6A/pgqciK2O1ST9HQ==
-X-Google-Smtp-Source: ABdhPJxcb3KLiVPqrIY+ap+FGTLMif1vYEWIVSVtnBlP44+TC5zacuoa8DO8MJe7t52mI7A8VBCMMw==
-X-Received: by 2002:a17:906:1c57:b0:69f:2625:3f67 with SMTP id l23-20020a1709061c5700b0069f26253f67mr21784165ejg.632.1646223462683;
-        Wed, 02 Mar 2022 04:17:42 -0800 (PST)
+        bh=jgIaKdgCmX9XzFPul0xeQhCe+1+YoHtNENK9hgsvxN0=;
+        b=fgQ7OrHTxIQ9VOQaYWhaD21KHxtOFZpQs5UTEbS1NR9+yRP2JSbifL/9FOpdDKeq2j
+         0hDou77IH8rbCtN+Dd24tanxcZUtRclrdd6Au3jFLECI+NnmLehdjuzS+oM6aXR3sFwx
+         cCyMdzhDKs2rCbNK5aetAaTOQHLbBg4k5ilARk/u1m7FZGUbkGdMQ0DqJP733vSVudQZ
+         qWmwKhMRvPE47HGfvIz7Stzr2BjugqGsuKSWe+rht9qrVmQjqqNzjLXeg8Kr32bj611p
+         ymL3ZaRFcVEgwEm5qw2Ordj8UK2iHcY/BJGTJpQL2rUPlSbbHNuVr8ampEFifb1uAb3v
+         eNCg==
+X-Gm-Message-State: AOAM530J/SI/xzISWgpfcjjiPdJ8fcKXqnMW6Fa/YsDTOT+H0/HL89qr
+        /0vdd2sSuYvqycqdKVYSmCYHtQ==
+X-Google-Smtp-Source: ABdhPJyv9GHDfgeLqQuBcbRZZaoG7y1EDmH3HRMSg6KyY5wtgpeuCGh7yV2un9IYkC6B/nrkUqaA4A==
+X-Received: by 2002:a17:907:9712:b0:6b7:98d6:6139 with SMTP id jg18-20020a170907971200b006b798d66139mr3095518ejc.498.1646223503432;
+        Wed, 02 Mar 2022 04:18:23 -0800 (PST)
 Received: from zen.linaroharston ([51.148.130.216])
-        by smtp.gmail.com with ESMTPSA id q9-20020a170906770900b006d20acf7e2bsm6257729ejm.200.2022.03.02.04.17.41
+        by smtp.gmail.com with ESMTPSA id i26-20020a17090671da00b006d9b2150a22sm669505ejk.146.2022.03.02.04.18.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Mar 2022 04:17:41 -0800 (PST)
+        Wed, 02 Mar 2022 04:18:22 -0800 (PST)
 Received: from zen (localhost [127.0.0.1])
-        by zen.linaroharston (Postfix) with ESMTP id E7F9B1FFB7;
-        Wed,  2 Mar 2022 12:17:40 +0000 (GMT)
+        by zen.linaroharston (Postfix) with ESMTP id A6F591FFB7;
+        Wed,  2 Mar 2022 12:18:21 +0000 (GMT)
 References: <20220211120747.3074-1-Jonathan.Cameron@huawei.com>
- <20220211120747.3074-27-Jonathan.Cameron@huawei.com>
+ <20220211120747.3074-29-Jonathan.Cameron@huawei.com>
 User-agent: mu4e 1.7.9; emacs 28.0.91
 From:   Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
@@ -68,11 +68,10 @@ Cc:     qemu-devel@nongnu.org, Marcel Apfelbaum <marcel@redhat.com>,
         Chris Browy <cbrowy@avery-design.com>,
         Samarth Saxena <samarths@cadence.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v6 26/43] hw/cxl/component: Add utils for interleave
- parameter encoding/decoding
-Date:   Wed, 02 Mar 2022 12:17:35 +0000
-In-reply-to: <20220211120747.3074-27-Jonathan.Cameron@huawei.com>
-Message-ID: <87fso0k0pn.fsf@linaro.org>
+Subject: Re: [PATCH v6 28/43] acpi/cxl: Introduce CFMWS structures in CEDT
+Date:   Wed, 02 Mar 2022 12:18:15 +0000
+In-reply-to: <20220211120747.3074-29-Jonathan.Cameron@huawei.com>
+Message-ID: <87bkyok0oi.fsf@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
@@ -83,14 +82,15 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
 
-> From: Jonathan Cameron <jonathan.cameron@huawei.com>
+> From: Ben Widawsky <ben.widawsky@intel.com>
 >
-> Both registers and the CFMWS entries in CDAT use simple encodings
-> for the number of interleave ways and the interleave granularity.
-> Introduce simple conversion functions to/from the unencoded
-> number / size.  So far the iw decode has not been needed so is
-> it not implemented.
+> The CEDT CXL Fixed Window Memory Window Structures (CFMWs)
+> define regions of the host phyiscal address map which
+> (via an impdef means) are configured such that they have
+> a particular interleave setup across one or more CXL Host Bridges.
 >
+> Reported-by: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 Reviewed-by: Alex Benn=C3=A9e <alex.bennee@linaro.org>
