@@ -2,29 +2,29 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A772FC433EF
-	for <linux-cxl@archiver.kernel.org>; Sun,  6 Mar 2022 17:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C6AC433EF
+	for <linux-cxl@archiver.kernel.org>; Sun,  6 Mar 2022 17:56:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230119AbiCFR4l (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 6 Mar 2022 12:56:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56812 "EHLO
+        id S230447AbiCFR5M (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 6 Mar 2022 12:57:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230447AbiCFR4l (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 6 Mar 2022 12:56:41 -0500
+        with ESMTP id S230377AbiCFR5L (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sun, 6 Mar 2022 12:57:11 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED8FE4C402
-        for <linux-cxl@vger.kernel.org>; Sun,  6 Mar 2022 09:55:48 -0800 (PST)
-Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KBTkD0WXzz67Sfy;
-        Mon,  7 Mar 2022 01:54:28 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C57B4BFFD
+        for <linux-cxl@vger.kernel.org>; Sun,  6 Mar 2022 09:56:19 -0800 (PST)
+Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KBTkm0Zyhz67NTZ;
+        Mon,  7 Mar 2022 01:54:56 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
+ fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Sun, 6 Mar 2022 18:55:47 +0100
+ 15.1.2308.21; Sun, 6 Mar 2022 18:56:17 +0100
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2308.21; Sun, 6 Mar 2022 17:55:46 +0000
+ 15.1.2308.21; Sun, 6 Mar 2022 17:56:16 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <linuxarm@huawei.com>, <qemu-devel@nongnu.org>,
         =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
@@ -42,9 +42,9 @@ CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
         Chris Browy <cbrowy@avery-design.com>,
         Samarth Saxena <samarths@cadence.com>,
         "Dan Williams" <dan.j.williams@intel.com>
-Subject: [PATCH v7 28/46] acpi/cxl: Introduce CFMWS structures in CEDT
-Date:   Sun, 6 Mar 2022 17:41:19 +0000
-Message-ID: <20220306174137.5707-29-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v7 29/46] hw/pci-host/gpex-acpi: Add support for dsdt construction for pxb-cxl
+Date:   Sun, 6 Mar 2022 17:41:20 +0000
+Message-ID: <20220306174137.5707-30-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220306174137.5707-1-Jonathan.Cameron@huawei.com>
 References: <20220306174137.5707-1-Jonathan.Cameron@huawei.com>
@@ -59,98 +59,85 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Ben Widawsky <ben.widawsky@intel.com>
+This adds code to instantiate the slightly extended ACPI root port
+description in DSDT as per the CXL 2.0 specification.
 
-The CEDT CXL Fixed Window Memory Window Structures (CFMWs)
-define regions of the host phyiscal address map which
-(via an impdef means) are configured such that they have
-a particular interleave setup across one or more CXL Host Bridges.
+Basically a cut and paste job from the i386/pc code.
 
-Reported-by: Alison Schofield <alison.schofield@intel.com>
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 Reviewed-by: Alex Bennée <alex.bennee@linaro.org>
 ---
- hw/acpi/cxl.c | 59 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+v7:
+* Host is_cxl assignment to declaration. (Alex)
+ hw/arm/Kconfig          |  1 +
+ hw/pci-host/gpex-acpi.c | 20 +++++++++++++++++---
+ 2 files changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/hw/acpi/cxl.c b/hw/acpi/cxl.c
-index 442f836a3e..50efc7f690 100644
---- a/hw/acpi/cxl.c
-+++ b/hw/acpi/cxl.c
-@@ -60,6 +60,64 @@ static void cedt_build_chbs(GArray *table_data, PXBDev *cxl)
-     build_append_int_noprefix(table_data, memory_region_size(mr), 8);
- }
+diff --git a/hw/arm/Kconfig b/hw/arm/Kconfig
+index 6945330030..d926dc0e4d 100644
+--- a/hw/arm/Kconfig
++++ b/hw/arm/Kconfig
+@@ -29,6 +29,7 @@ config ARM_VIRT
+     select ACPI_APEI
+     select ACPI_VIOT
+     select VIRTIO_MEM_SUPPORTED
++    select ACPI_CXL
  
-+/*
-+ * CFMWS entries in CXL 2.0 ECN: CEDT CFMWS & QTG _DSM.
-+ * Interleave ways encoding in CXL 2.0 ECN: 3, 6, 12 and 16-way memory
-+ * interleaving.
-+ */
-+static void cedt_build_cfmws(GArray *table_data, MachineState *ms)
-+{
-+    CXLState *cxls = ms->cxl_devices_state;
-+    GList *it;
-+
-+    for (it = cxls->fixed_windows; it; it = it->next) {
-+        CXLFixedWindow *fw = it->data;
-+        int i;
-+
-+        /* Type */
-+        build_append_int_noprefix(table_data, 1, 1);
-+
-+        /* Reserved */
-+        build_append_int_noprefix(table_data, 0, 1);
-+
-+        /* Record Length */
-+        build_append_int_noprefix(table_data, 36 + 4 * fw->num_targets, 2);
-+
-+        /* Reserved */
-+        build_append_int_noprefix(table_data, 0, 4);
-+
-+        /* Base HPA */
-+        build_append_int_noprefix(table_data, fw->mr.addr, 8);
-+
-+        /* Window Size */
-+        build_append_int_noprefix(table_data, fw->size, 8);
-+
-+        /* Host Bridge Interleave Ways */
-+        build_append_int_noprefix(table_data, fw->enc_int_ways, 1);
-+
-+        /* Host Bridge Interleave Arithmetic */
-+        build_append_int_noprefix(table_data, 0, 1);
-+
-+        /* Reserved */
-+        build_append_int_noprefix(table_data, 0, 2);
-+
-+        /* Host Bridge Interleave Granularity */
-+        build_append_int_noprefix(table_data, fw->enc_int_gran, 4);
-+
-+        /* Window Restrictions */
-+        build_append_int_noprefix(table_data, 0x0f, 2); /* No restrictions */
-+
-+        /* QTG ID */
-+        build_append_int_noprefix(table_data, 0, 2);
-+
-+        /* Host Bridge List (list of UIDs - currently bus_nr) */
-+        for (i = 0; i < fw->num_targets; i++) {
-+            g_assert(fw->target_hbs[i]);
-+            build_append_int_noprefix(table_data, fw->target_hbs[i]->bus_nr, 4);
-+        }
-+    }
-+}
-+
- static int cxl_foreach_pxb_hb(Object *obj, void *opaque)
+ config CHEETAH
+     bool
+diff --git a/hw/pci-host/gpex-acpi.c b/hw/pci-host/gpex-acpi.c
+index e7e162a00a..7c7316bc96 100644
+--- a/hw/pci-host/gpex-acpi.c
++++ b/hw/pci-host/gpex-acpi.c
+@@ -5,6 +5,7 @@
+ #include "hw/pci/pci_bus.h"
+ #include "hw/pci/pci_bridge.h"
+ #include "hw/pci/pcie_host.h"
++#include "hw/acpi/cxl.h"
+ 
+ static void acpi_dsdt_add_pci_route_table(Aml *dev, uint32_t irq)
  {
-     Aml *cedt = opaque;
-@@ -86,6 +144,7 @@ void cxl_build_cedt(MachineState *ms, GArray *table_offsets, GArray *table_data,
-     /* reserve space for CEDT header */
+@@ -139,6 +140,7 @@ void acpi_dsdt_add_gpex(Aml *scope, struct GPEXConfig *cfg)
+         QLIST_FOREACH(bus, &bus->child, sibling) {
+             uint8_t bus_num = pci_bus_num(bus);
+             uint8_t numa_node = pci_bus_numa_node(bus);
++            bool is_cxl = pci_bus_is_cxl(bus);
  
-     object_child_foreach_recursive(object_get_root(), cxl_foreach_pxb_hb, cedt);
-+    cedt_build_cfmws(cedt->buf, ms);
+             if (!pci_bus_is_root(bus)) {
+                 continue;
+@@ -154,8 +156,16 @@ void acpi_dsdt_add_gpex(Aml *scope, struct GPEXConfig *cfg)
+             }
  
-     /* copy AML table into ACPI tables blob and patch header there */
-     g_array_append_vals(table_data, cedt->buf->data, cedt->buf->len);
+             dev = aml_device("PC%.02X", bus_num);
+-            aml_append(dev, aml_name_decl("_HID", aml_string("PNP0A08")));
+-            aml_append(dev, aml_name_decl("_CID", aml_string("PNP0A03")));
++            if (is_cxl) {
++                struct Aml *pkg = aml_package(2);
++                aml_append(dev, aml_name_decl("_HID", aml_string("ACPI0016")));
++                aml_append(pkg, aml_eisaid("PNP0A08"));
++                aml_append(pkg, aml_eisaid("PNP0A03"));
++                aml_append(dev, aml_name_decl("_CID", pkg));
++            } else {
++                aml_append(dev, aml_name_decl("_HID", aml_string("PNP0A08")));
++                aml_append(dev, aml_name_decl("_CID", aml_string("PNP0A03")));
++            }
+             aml_append(dev, aml_name_decl("_BBN", aml_int(bus_num)));
+             aml_append(dev, aml_name_decl("_UID", aml_int(bus_num)));
+             aml_append(dev, aml_name_decl("_STR", aml_unicode("pxb Device")));
+@@ -175,7 +185,11 @@ void acpi_dsdt_add_gpex(Aml *scope, struct GPEXConfig *cfg)
+                             cfg->pio.base, 0, 0, 0);
+             aml_append(dev, aml_name_decl("_CRS", crs));
+ 
+-            acpi_dsdt_add_pci_osc(dev);
++            if (is_cxl) {
++                build_cxl_osc_method(dev);
++            } else {
++                acpi_dsdt_add_pci_osc(dev);
++            }
+ 
+             aml_append(scope, dev);
+         }
 -- 
 2.32.0
 
