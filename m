@@ -2,29 +2,29 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF7BC433F5
-	for <linux-cxl@archiver.kernel.org>; Sun,  6 Mar 2022 17:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A04A9C433F5
+	for <linux-cxl@archiver.kernel.org>; Sun,  6 Mar 2022 17:45:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233362AbiCFRp1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 6 Mar 2022 12:45:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57424 "EHLO
+        id S233937AbiCFRp4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 6 Mar 2022 12:45:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233273AbiCFRp0 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 6 Mar 2022 12:45:26 -0500
+        with ESMTP id S233273AbiCFRp4 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sun, 6 Mar 2022 12:45:56 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64FE011C31
-        for <linux-cxl@vger.kernel.org>; Sun,  6 Mar 2022 09:44:33 -0800 (PST)
-Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KBTT95tVkz67LGD;
-        Mon,  7 Mar 2022 01:43:09 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E407F25E8F
+        for <linux-cxl@vger.kernel.org>; Sun,  6 Mar 2022 09:45:03 -0800 (PST)
+Received: from fraeml706-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KBTTq0KVhz67NvB;
+        Mon,  7 Mar 2022 01:43:43 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Sun, 6 Mar 2022 18:44:31 +0100
+ fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.21; Sun, 6 Mar 2022 18:45:01 +0100
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2308.21; Sun, 6 Mar 2022 17:44:30 +0000
+ 15.1.2308.21; Sun, 6 Mar 2022 17:45:01 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <linuxarm@huawei.com>, <qemu-devel@nongnu.org>,
         =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
@@ -42,9 +42,9 @@ CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
         Chris Browy <cbrowy@avery-design.com>,
         Samarth Saxena <samarths@cadence.com>,
         "Dan Williams" <dan.j.williams@intel.com>
-Subject: [PATCH v7 06/46] hw/cxl/device: Implement basic mailbox (8.2.8.4)
-Date:   Sun, 6 Mar 2022 17:40:57 +0000
-Message-ID: <20220306174137.5707-7-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v7 07/46] hw/cxl/device: Add memory device utilities
+Date:   Sun, 6 Mar 2022 17:40:58 +0000
+Message-ID: <20220306174137.5707-8-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220306174137.5707-1-Jonathan.Cameron@huawei.com>
 References: <20220306174137.5707-1-Jonathan.Cameron@huawei.com>
@@ -61,134 +61,45 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Ben Widawsky <ben.widawsky@intel.com>
 
-This is the beginning of implementing mailbox support for CXL 2.0
-devices. The implementation recognizes when the doorbell is rung,
-handles the command/payload, clears the doorbell while returning error
-codes and data.
+Memory devices implement extra capabilities on top of CXL devices. This
+adds support for that.
 
-Generally the mailbox mechanism is designed to permit communication
-between the host OS and the firmware running on the device. For our
-purposes, we emulate both the firmware, implemented primarily in
-cxl-mailbox-utils.c, and the hardware.
-
-No commands are implemented yet.
+A large part of memory devices is the mailbox/command interface. All of
+the mailbox handling is done in the mailbox-utils library. Longer term,
+new CXL devices that are being emulated may want to handle commands
+differently, and therefore would need a mechanism to opt in/out of the
+specific generic handlers. As such, this is considered sufficient for
+now, but may need more depth in the future.
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Reviewed-by: Alex Bennée <alex.bennee@linaro.org>
 ---
-
-v7:
-* Fixed 
-* Dropped documentation for a non-existent lock. (Alex)
-* Added error code suitable for unimplemented commands. (Alex)
-* Reordered code for better readability. (Alex)
-
- hw/cxl/cxl-device-utils.c   | 122 ++++++++++++++++++++++++-
- hw/cxl/cxl-mailbox-utils.c  | 171 ++++++++++++++++++++++++++++++++++++
- hw/cxl/meson.build          |   1 +
- include/hw/cxl/cxl.h        |   3 +
- include/hw/cxl/cxl_device.h |  19 +++-
- 5 files changed, 314 insertions(+), 2 deletions(-)
+ hw/cxl/cxl-device-utils.c   | 38 ++++++++++++++++++++++++++++++++++++-
+ include/hw/cxl/cxl_device.h | 22 ++++++++++++++++++---
+ 2 files changed, 56 insertions(+), 4 deletions(-)
 
 diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
-index 0895b9d78b..4b995beba7 100644
+index 4b995beba7..1f5587ffcd 100644
 --- a/hw/cxl/cxl-device-utils.c
 +++ b/hw/cxl/cxl-device-utils.c
-@@ -44,6 +44,108 @@ static uint64_t dev_reg_read(void *opaque, hwaddr offset, unsigned size)
-     return 0;
+@@ -131,6 +131,31 @@ static void mailbox_reg_write(void *opaque, hwaddr offset, uint64_t value,
+     }
  }
  
-+static uint64_t mailbox_reg_read(void *opaque, hwaddr offset, unsigned size)
++static uint64_t mdev_reg_read(void *opaque, hwaddr offset, unsigned size)
 +{
-+    CXLDeviceState *cxl_dstate = opaque;
++    uint64_t retval = 0;
 +
-+    switch (size) {
-+    case 1:
-+        return cxl_dstate->mbox_reg_state[offset];
-+    case 2:
-+        return cxl_dstate->mbox_reg_state16[offset / 2];
-+    case 4:
-+        return cxl_dstate->mbox_reg_state32[offset / 4];
-+    case 8:
-+        return cxl_dstate->mbox_reg_state64[offset / 8];
-+    default:
-+        g_assert_not_reached();
-+    }
++    retval = FIELD_DP64(retval, CXL_MEM_DEV_STS, MEDIA_STATUS, 1);
++    retval = FIELD_DP64(retval, CXL_MEM_DEV_STS, MBOX_READY, 1);
++
++    return retval;
 +}
 +
-+static void mailbox_mem_writel(uint32_t *reg_state, hwaddr offset,
-+                               uint64_t value)
-+{
-+    switch (offset) {
-+    case A_CXL_DEV_MAILBOX_CTRL:
-+        /* fallthrough */
-+    case A_CXL_DEV_MAILBOX_CAP:
-+        /* RO register */
-+        break;
-+    default:
-+        qemu_log_mask(LOG_UNIMP,
-+                      "%s Unexpected 32-bit access to 0x%" PRIx64 " (WI)\n",
-+                      __func__, offset);
-+        return;
-+    }
-+
-+    reg_state[offset / 4] = value;
-+}
-+
-+static void mailbox_mem_writeq(uint64_t *reg_state, hwaddr offset,
-+                               uint64_t value)
-+{
-+    switch (offset) {
-+    case A_CXL_DEV_MAILBOX_CMD:
-+        break;
-+    case A_CXL_DEV_BG_CMD_STS:
-+        /* BG not supported */
-+        /* fallthrough */
-+    case A_CXL_DEV_MAILBOX_STS:
-+        /* Read only register, will get updated by the state machine */
-+        return;
-+    default:
-+        qemu_log_mask(LOG_UNIMP,
-+                      "%s Unexpected 64-bit access to 0x%" PRIx64 " (WI)\n",
-+                      __func__, offset);
-+        return;
-+    }
-+
-+
-+    reg_state[offset / 8] = value;
-+}
-+
-+static void mailbox_reg_write(void *opaque, hwaddr offset, uint64_t value,
-+                              unsigned size)
-+{
-+    CXLDeviceState *cxl_dstate = opaque;
-+
-+    if (offset >= A_CXL_DEV_CMD_PAYLOAD) {
-+        memcpy(cxl_dstate->mbox_reg_state + offset, &value, size);
-+        return;
-+    }
-+
-+    switch (size) {
-+    case 4:
-+        mailbox_mem_writel(cxl_dstate->mbox_reg_state32, offset, value);
-+        break;
-+    case 8:
-+        mailbox_mem_writeq(cxl_dstate->mbox_reg_state64, offset, value);
-+        break;
-+    default:
-+        g_assert_not_reached();
-+    }
-+
-+    if (ARRAY_FIELD_EX32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CTRL,
-+                         DOORBELL)) {
-+        cxl_process_mailbox(cxl_dstate);
-+    }
-+}
-+
-+static const MemoryRegionOps mailbox_ops = {
-+    .read = mailbox_reg_read,
-+    .write = mailbox_reg_write,
++static const MemoryRegionOps mdev_ops = {
++    .read = mdev_reg_read,
++    .write = NULL, /* memory device register is read only */
 +    .endianness = DEVICE_LITTLE_ENDIAN,
 +    .valid = {
 +        .min_access_size = 1,
@@ -196,295 +107,108 @@ index 0895b9d78b..4b995beba7 100644
 +        .unaligned = false,
 +    },
 +    .impl = {
-+        .min_access_size = 1,
++        .min_access_size = 8,
 +        .max_access_size = 8,
 +    },
 +};
 +
- static const MemoryRegionOps dev_ops = {
-     .read = dev_reg_read,
-     .write = NULL, /* status register is read only */
-@@ -84,20 +186,33 @@ void cxl_device_register_block_init(Object *obj, CXLDeviceState *cxl_dstate)
-                           "cap-array", CXL_CAPS_SIZE);
-     memory_region_init_io(&cxl_dstate->device, obj, &dev_ops, cxl_dstate,
+ static const MemoryRegionOps mailbox_ops = {
+     .read = mailbox_reg_read,
+     .write = mailbox_reg_write,
+@@ -188,6 +213,9 @@ void cxl_device_register_block_init(Object *obj, CXLDeviceState *cxl_dstate)
                            "device-status", CXL_DEVICE_REGISTERS_LENGTH);
-+    memory_region_init_io(&cxl_dstate->mailbox, obj, &mailbox_ops, cxl_dstate,
-+                          "mailbox", CXL_MAILBOX_REGISTERS_LENGTH);
+     memory_region_init_io(&cxl_dstate->mailbox, obj, &mailbox_ops, cxl_dstate,
+                           "mailbox", CXL_MAILBOX_REGISTERS_LENGTH);
++    memory_region_init_io(&cxl_dstate->memory_device, obj, &mdev_ops,
++                          cxl_dstate, "memory device caps",
++                          CXL_MEMORY_DEVICE_REGISTERS_LENGTH);
  
      memory_region_add_subregion(&cxl_dstate->device_registers, 0,
                                  &cxl_dstate->caps);
+@@ -197,6 +225,9 @@ void cxl_device_register_block_init(Object *obj, CXLDeviceState *cxl_dstate)
      memory_region_add_subregion(&cxl_dstate->device_registers,
-                                 CXL_DEVICE_REGISTERS_OFFSET,
-                                 &cxl_dstate->device);
+                                 CXL_MAILBOX_REGISTERS_OFFSET,
+                                 &cxl_dstate->mailbox);
 +    memory_region_add_subregion(&cxl_dstate->device_registers,
-+                                CXL_MAILBOX_REGISTERS_OFFSET,
-+                                &cxl_dstate->mailbox);
++                                CXL_MEMORY_DEVICE_REGISTERS_OFFSET,
++                                &cxl_dstate->memory_device);
  }
  
  static void device_reg_init_common(CXLDeviceState *cxl_dstate) { }
+@@ -209,10 +240,12 @@ static void mailbox_reg_init_common(CXLDeviceState *cxl_dstate)
+     cxl_dstate->payload_size = CXL_MAILBOX_MAX_PAYLOAD_SIZE;
+ }
  
-+static void mailbox_reg_init_common(CXLDeviceState *cxl_dstate)
-+{
-+    /* 2048 payload size, with no interrupt or background support */
-+    ARRAY_FIELD_DP32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CAP,
-+                     PAYLOAD_SIZE, CXL_MAILBOX_PAYLOAD_SHIFT);
-+    cxl_dstate->payload_size = CXL_MAILBOX_MAX_PAYLOAD_SIZE;
-+}
++static void memdev_reg_init_common(CXLDeviceState *cxl_dstate) { }
 +
  void cxl_device_register_init_common(CXLDeviceState *cxl_dstate)
  {
      uint64_t *cap_hdrs = cxl_dstate->caps_reg_state64;
--    const int cap_count = 1;
-+    const int cap_count = 2;
+-    const int cap_count = 2;
++    const int cap_count = 3;
  
      /* CXL Device Capabilities Array Register */
      ARRAY_FIELD_DP64(cap_hdrs, CXL_DEV_CAP_ARRAY, CAP_ID, 0);
-@@ -106,4 +221,9 @@ void cxl_device_register_init_common(CXLDeviceState *cxl_dstate)
+@@ -225,5 +258,8 @@ void cxl_device_register_init_common(CXLDeviceState *cxl_dstate)
+     cxl_device_cap_init(cxl_dstate, MAILBOX, 2);
+     mailbox_reg_init_common(cxl_dstate);
  
-     cxl_device_cap_init(cxl_dstate, DEVICE, 1);
-     device_reg_init_common(cxl_dstate);
++    cxl_device_cap_init(cxl_dstate, MEMORY_DEVICE, 0x4000);
++    memdev_reg_init_common(cxl_dstate);
 +
-+    cxl_device_cap_init(cxl_dstate, MAILBOX, 2);
-+    mailbox_reg_init_common(cxl_dstate);
-+
-+    assert(cxl_initialize_mailbox(cxl_dstate) == 0);
+     assert(cxl_initialize_mailbox(cxl_dstate) == 0);
  }
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-new file mode 100644
-index 0000000000..7e03dc224a
---- /dev/null
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -0,0 +1,171 @@
-+/*
-+ * CXL Utility library for mailbox interface
-+ *
-+ * Copyright(C) 2020 Intel Corporation.
-+ *
-+ * This work is licensed under the terms of the GNU GPL, version 2. See the
-+ * COPYING file in the top-level directory.
-+ */
-+
-+#include "qemu/osdep.h"
-+#include "hw/cxl/cxl.h"
-+#include "hw/pci/pci.h"
-+#include "qemu/log.h"
-+#include "qemu/uuid.h"
-+
-+/*
-+ * How to add a new command, example. The command set FOO, with cmd BAR.
-+ *  1. Add the command set and cmd to the enum.
-+ *     FOO    = 0x7f,
-+ *          #define BAR 0
-+ *  2. Implement the handler
-+ *    static ret_code cmd_foo_bar(struct cxl_cmd *cmd,
-+ *                                  CXLDeviceState *cxl_dstate, uint16_t *len)
-+ *  3. Add the command to the cxl_cmd_set[][]
-+ *    [FOO][BAR] = { "FOO_BAR", cmd_foo_bar, x, y },
-+ *  4. Implement your handler
-+ *     define_mailbox_handler(FOO_BAR) { ... return CXL_MBOX_SUCCESS; }
-+ *
-+ *
-+ *  Writing the handler:
-+ *    The handler will provide the &struct cxl_cmd, the &CXLDeviceState, and the
-+ *    in/out length of the payload. The handler is responsible for consuming the
-+ *    payload from cmd->payload and operating upon it as necessary. It must then
-+ *    fill the output data into cmd->payload (overwriting what was there),
-+ *    setting the length, and returning a valid return code.
-+ *
-+ *  XXX: The handler need not worry about endianess. The payload is read out of
-+ *  a register interface that already deals with it.
-+ */
-+
-+/* 8.2.8.4.5.1 Command Return Codes */
-+typedef enum {
-+    CXL_MBOX_SUCCESS = 0x0,
-+    CXL_MBOX_BG_STARTED = 0x1,
-+    CXL_MBOX_INVALID_INPUT = 0x2,
-+    CXL_MBOX_UNSUPPORTED = 0x3,
-+    CXL_MBOX_INTERNAL_ERROR = 0x4,
-+    CXL_MBOX_RETRY_REQUIRED = 0x5,
-+    CXL_MBOX_BUSY = 0x6,
-+    CXL_MBOX_MEDIA_DISABLED = 0x7,
-+    CXL_MBOX_FW_XFER_IN_PROGRESS = 0x8,
-+    CXL_MBOX_FW_XFER_OUT_OF_ORDER = 0x9,
-+    CXL_MBOX_FW_AUTH_FAILED = 0xa,
-+    CXL_MBOX_FW_INVALID_SLOT = 0xb,
-+    CXL_MBOX_FW_ROLLEDBACK = 0xc,
-+    CXL_MBOX_FW_REST_REQD = 0xd,
-+    CXL_MBOX_INVALID_HANDLE = 0xe,
-+    CXL_MBOX_INVALID_PA = 0xf,
-+    CXL_MBOX_INJECT_POISON_LIMIT = 0x10,
-+    CXL_MBOX_PERMANENT_MEDIA_FAILURE = 0x11,
-+    CXL_MBOX_ABORTED = 0x12,
-+    CXL_MBOX_INVALID_SECURITY_STATE = 0x13,
-+    CXL_MBOX_INCORRECT_PASSPHRASE = 0x14,
-+    CXL_MBOX_UNSUPPORTED_MAILBOX = 0x15,
-+    CXL_MBOX_INVALID_PAYLOAD_LENGTH = 0x16,
-+    CXL_MBOX_MAX = 0x17
-+} ret_code;
-+
-+struct cxl_cmd;
-+typedef ret_code (*opcode_handler)(struct cxl_cmd *cmd,
-+                                   CXLDeviceState *cxl_dstate, uint16_t *len);
-+struct cxl_cmd {
-+    const char *name;
-+    opcode_handler handler;
-+    ssize_t in;
-+    uint16_t effect; /* Reported in CEL */
-+    uint8_t *payload;
-+};
-+
-+#define DEFINE_MAILBOX_HANDLER_ZEROED(name, size)                         \
-+    uint16_t __zero##name = size;                                         \
-+    static ret_code cmd_##name(struct cxl_cmd *cmd,                       \
-+                               CXLDeviceState *cxl_dstate, uint16_t *len) \
-+    {                                                                     \
-+        *len = __zero##name;                                              \
-+        memset(cmd->payload, 0, *len);                                    \
-+        return CXL_MBOX_SUCCESS;                                          \
-+    }
-+#define DEFINE_MAILBOX_HANDLER_NOP(name)                                  \
-+    static ret_code cmd_##name(struct cxl_cmd *cmd,                       \
-+                               CXLDeviceState *cxl_dstate, uint16_t *len) \
-+    {                                                                     \
-+        return CXL_MBOX_SUCCESS;                                          \
-+    }
-+
-+static QemuUUID cel_uuid;
-+
-+static struct cxl_cmd cxl_cmd_set[256][256] = {};
-+
-+void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
-+{
-+    uint16_t ret = CXL_MBOX_SUCCESS;
-+    struct cxl_cmd *cxl_cmd;
-+    uint64_t status_reg;
-+    opcode_handler h;
-+
-+    /*
-+     * current state of mailbox interface
-+     *  mbox_cap_reg = cxl_dstate->reg_state32[R_CXL_DEV_MAILBOX_CAP];
-+     *  mbox_ctrl_reg = cxl_dstate->reg_state32[R_CXL_DEV_MAILBOX_CTRL];
-+     *  status_reg = *(uint64_t *)&cxl_dstate->reg_state[A_CXL_DEV_MAILBOX_STS];
-+     */
-+    uint64_t command_reg = cxl_dstate->mbox_reg_state64[R_CXL_DEV_MAILBOX_CMD];
-+
-+    uint8_t set = FIELD_EX64(command_reg, CXL_DEV_MAILBOX_CMD, COMMAND_SET);
-+    uint8_t cmd = FIELD_EX64(command_reg, CXL_DEV_MAILBOX_CMD, COMMAND);
-+    uint16_t len = FIELD_EX64(command_reg, CXL_DEV_MAILBOX_CMD, LENGTH);
-+    cxl_cmd = &cxl_cmd_set[set][cmd];
-+    h = cxl_cmd->handler;
-+    if (h) {
-+        if (len == cxl_cmd->in) {
-+            cxl_cmd->payload = cxl_dstate->mbox_reg_state +
-+                A_CXL_DEV_CMD_PAYLOAD;
-+            ret = (*h)(cxl_cmd, cxl_dstate, &len);
-+            assert(len <= cxl_dstate->payload_size);
-+        } else {
-+            ret = CXL_MBOX_INVALID_PAYLOAD_LENGTH;
-+        }
-+    } else {
-+        qemu_log_mask(LOG_UNIMP, "Command %04xh not implemented\n",
-+                      set << 8 | cmd);
-+        ret = CXL_MBOX_UNSUPPORTED;
-+    }
-+
-+    /* Set the return code */
-+    status_reg = FIELD_DP64(0, CXL_DEV_MAILBOX_STS, ERRNO, ret);
-+
-+    /* Set the return length */
-+    command_reg = FIELD_DP64(command_reg, CXL_DEV_MAILBOX_CMD, COMMAND_SET, 0);
-+    command_reg = FIELD_DP64(command_reg, CXL_DEV_MAILBOX_CMD, COMMAND, 0);
-+    command_reg = FIELD_DP64(command_reg, CXL_DEV_MAILBOX_CMD, LENGTH, len);
-+
-+    cxl_dstate->mbox_reg_state64[R_CXL_DEV_MAILBOX_CMD] = command_reg;
-+    cxl_dstate->mbox_reg_state64[R_CXL_DEV_MAILBOX_STS] = status_reg;
-+
-+    /* Tell the host we're done */
-+    ARRAY_FIELD_DP32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CTRL,
-+                     DOORBELL, 0);
-+}
-+
-+int cxl_initialize_mailbox(CXLDeviceState *cxl_dstate)
-+{
-+    /* CXL 2.0: Table 169 Get Supported Logs Log Entry */
-+    const char *cel_uuidstr = "0da9c0b5-bf41-4b78-8f79-96b1623b3f17";
-+
-+    for (int set = 0; set < 256; set++) {
-+        for (int cmd = 0; cmd < 256; cmd++) {
-+            if (cxl_cmd_set[set][cmd].handler) {
-+                struct cxl_cmd *c = &cxl_cmd_set[set][cmd];
-+                struct cel_log *log =
-+                    &cxl_dstate->cel_log[cxl_dstate->cel_size];
-+
-+                log->opcode = (set << 8) | cmd;
-+                log->effect = c->effect;
-+                cxl_dstate->cel_size++;
-+            }
-+        }
-+    }
-+
-+    return qemu_uuid_parse(cel_uuidstr, &cel_uuid);
-+}
-diff --git a/hw/cxl/meson.build b/hw/cxl/meson.build
-index dd7c6f8e5a..e68eea2358 100644
---- a/hw/cxl/meson.build
-+++ b/hw/cxl/meson.build
-@@ -2,4 +2,5 @@ softmmu_ss.add(when: 'CONFIG_CXL',
-                if_true: files(
-                    'cxl-component-utils.c',
-                    'cxl-device-utils.c',
-+                   'cxl-mailbox-utils.c',
-                ))
-diff --git a/include/hw/cxl/cxl.h b/include/hw/cxl/cxl.h
-index b9d1ac3fad..554ad93b6b 100644
---- a/include/hw/cxl/cxl.h
-+++ b/include/hw/cxl/cxl.h
-@@ -14,4 +14,7 @@
- #include "cxl_component.h"
- #include "cxl_device.h"
- 
-+#define CXL_COMPONENT_REG_BAR_IDX 0
-+#define CXL_DEVICE_REG_BAR_IDX 2
-+
- #endif
 diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index 1ac0dcd97e..49dcca7e44 100644
+index 49dcca7e44..7fd8d0f616 100644
 --- a/include/hw/cxl/cxl_device.h
 +++ b/include/hw/cxl/cxl_device.h
-@@ -95,7 +95,21 @@ typedef struct cxl_device_state {
-     };
+@@ -77,15 +77,21 @@
+ #define CXL_MAILBOX_REGISTERS_LENGTH \
+     (CXL_MAILBOX_REGISTERS_SIZE + CXL_MAILBOX_MAX_PAYLOAD_SIZE)
  
-     /* mmio for the mailbox registers 8.2.8.4 */
--    MemoryRegion mailbox;
-+    struct {
-+        MemoryRegion mailbox;
-+        uint16_t payload_size;
-+        union {
-+            uint8_t mbox_reg_state[CXL_MAILBOX_REGISTERS_LENGTH];
-+            uint16_t mbox_reg_state16[CXL_MAILBOX_REGISTERS_LENGTH / 2];
-+            uint32_t mbox_reg_state32[CXL_MAILBOX_REGISTERS_LENGTH / 4];
-+            uint64_t mbox_reg_state64[CXL_MAILBOX_REGISTERS_LENGTH / 8];
-+        };
-+        struct cel_log {
-+            uint16_t opcode;
-+            uint16_t effect;
-+        } cel_log[1 << 16];
-+        size_t cel_size;
-+    };
+-#define CXL_MMIO_SIZE                                           \
+-    (CXL_DEVICE_CAP_REG_SIZE + CXL_DEVICE_REGISTERS_LENGTH +    \
+-     CXL_MAILBOX_REGISTERS_LENGTH)
++
++#define CXL_MEMORY_DEVICE_REGISTERS_OFFSET \
++    (CXL_MAILBOX_REGISTERS_OFFSET + CXL_MAILBOX_REGISTERS_LENGTH)
++#define CXL_MEMORY_DEVICE_REGISTERS_LENGTH 0x8
++
++#define CXL_MMIO_SIZE                                                   \
++    (CXL_DEVICE_CAP_REG_SIZE + CXL_DEVICE_REGISTERS_LENGTH +            \
++     CXL_MAILBOX_REGISTERS_LENGTH + CXL_MEMORY_DEVICE_REGISTERS_LENGTH)
  
-     /* memory region for persistent memory, HDM */
-     uint64_t pmem_size;
-@@ -145,6 +159,9 @@ CXL_DEVICE_CAPABILITY_HEADER_REGISTER(DEVICE, CXL_DEVICE_CAP_HDR1_OFFSET)
+ typedef struct cxl_device_state {
+     MemoryRegion device_registers;
+ 
+     /* mmio for device capabilities array - 8.2.8.2 */
+     MemoryRegion device;
++    MemoryRegion memory_device;
+     struct {
+         MemoryRegion caps;
+         union {
+@@ -158,6 +164,9 @@ REG64(CXL_DEV_CAP_ARRAY, 0) /* Documented as 128 bit register but 64 byte access
+ CXL_DEVICE_CAPABILITY_HEADER_REGISTER(DEVICE, CXL_DEVICE_CAP_HDR1_OFFSET)
  CXL_DEVICE_CAPABILITY_HEADER_REGISTER(MAILBOX, CXL_DEVICE_CAP_HDR1_OFFSET + \
                                                 CXL_DEVICE_CAP_REG_SIZE)
++CXL_DEVICE_CAPABILITY_HEADER_REGISTER(MEMORY_DEVICE,
++                                      CXL_DEVICE_CAP_HDR1_OFFSET +
++                                          CXL_DEVICE_CAP_REG_SIZE * 2)
  
-+int cxl_initialize_mailbox(CXLDeviceState *cxl_dstate);
-+void cxl_process_mailbox(CXLDeviceState *cxl_dstate);
+ int cxl_initialize_mailbox(CXLDeviceState *cxl_dstate);
+ void cxl_process_mailbox(CXLDeviceState *cxl_dstate);
+@@ -208,4 +217,11 @@ REG64(CXL_DEV_BG_CMD_STS, 0x18)
+ 
+ REG32(CXL_DEV_CMD_PAYLOAD, 0x20)
+ 
++REG64(CXL_MEM_DEV_STS, 0)
++    FIELD(CXL_MEM_DEV_STS, FATAL, 0, 1)
++    FIELD(CXL_MEM_DEV_STS, FW_HALT, 1, 1)
++    FIELD(CXL_MEM_DEV_STS, MEDIA_STATUS, 2, 2)
++    FIELD(CXL_MEM_DEV_STS, MBOX_READY, 4, 1)
++    FIELD(CXL_MEM_DEV_STS, RESET_NEEDED, 5, 3)
 +
- #define cxl_device_cap_init(dstate, reg, cap_id)                           \
-     do {                                                                   \
-         uint32_t *cap_hdrs = dstate->caps_reg_state32;                     \
+ #endif
 -- 
 2.32.0
 
