@@ -2,369 +2,139 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 199E0C43219
-	for <linux-cxl@archiver.kernel.org>; Mon,  7 Mar 2022 09:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A955C433F5
+	for <linux-cxl@archiver.kernel.org>; Mon,  7 Mar 2022 09:51:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233551AbiCGJnR convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 7 Mar 2022 04:43:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49912 "EHLO
+        id S238246AbiCGJvm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 7 Mar 2022 04:51:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241034AbiCGJlq (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Mar 2022 04:41:46 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D64356D4EB
-        for <linux-cxl@vger.kernel.org>; Mon,  7 Mar 2022 01:39:23 -0800 (PST)
-Received: from fraeml744-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KBtfs2RYZz67cHq;
-        Mon,  7 Mar 2022 17:37:57 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml744-chm.china.huawei.com (10.206.15.225) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Mon, 7 Mar 2022 10:39:20 +0100
-Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Mon, 7 Mar
- 2022 09:39:19 +0000
-Date:   Mon, 7 Mar 2022 09:39:18 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-CC:     Peter Maydell <peter.maydell@linaro.org>,
-        Ben Widawsky <ben.widawsky@intel.com>, <qemu-devel@nongnu.org>,
-        Samarth Saxena <samarths@cadence.com>,
-        Chris Browy <cbrowy@avery-design.com>, <linuxarm@huawei.com>,
-        <linux-cxl@vger.kernel.org>, Markus Armbruster <armbru@redhat.com>,
-        Shreyas Shah <shreyas.shah@elastics.cloud>,
-        "Saransh Gupta1" <saransh@ibm.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Marcel Apfelbaum <marcel@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
+        with ESMTP id S239376AbiCGJtj (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Mar 2022 04:49:39 -0500
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2124.outbound.protection.outlook.com [40.107.255.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B994F6E782;
+        Mon,  7 Mar 2022 01:43:14 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oReBBcEkae1q1tRJWNlJu7nomlidklUn4FzELS/vZyZeadyt/FXsbShd7J3DlGXXSK0Z1R+QiUnJs1d3EecYLV6xr+gakEN2GA78ILG3u92gbIt2aedMcFv3IquBmgYQL+ofGdPZtYiwKzfVvXdGJ6HORTsYNrfsnx0LN+Z0Fc0isJCvj0FVnYpk7pxPGtSuc8m34Vq69acBvkyTEB/OQs9B9gnNwnT2xcqeqpCymZXgwFPbaC7kFyGeZEM6mAQML65YO2pbfWE8lEiVSJtujxe6x07KPF2opQ2HnebhjWSDy46LNfOON0Aa0ozWwqmqXpKdIUNYv0ub31Y+ggxd4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sHSyRcdp4nLd8tk6RJf3f3HDLO7+7+jsT3clLNE0NLk=;
+ b=MbAEg6bK0L4wOUjo4d9PVb/vXpxo4gnvZkYX9oTVCGAk99iGv52c0nwmzGIVP9EJGUe2SclAhQcq3aZ5HhI5eXkcH4x+r4QSzmrVfB6iIAVH6f00NNiL03XL+DdrKGETvbJsdw7rVHTxdTVjRlnBfcHhfNzuJW5RQlznXUEPZmUdRHocaZ2MlqfvZdtDEpUSZdfLvngm4qA9Cex/zIIPPqOzNJviAyQ1RAELdtkaVvsoNGHLeJ44B7mR5rJ0J6YeBYDRjHwck/6BNznLgs6N+NX25hva6WYCZ1BoeOlRiF1Dhlk8p0JOPS3Mnt5dRfcEpfuFAHigcc0+5SUIDTf4VQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo0.onmicrosoft.com;
+ s=selector2-vivo0-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sHSyRcdp4nLd8tk6RJf3f3HDLO7+7+jsT3clLNE0NLk=;
+ b=Jbthxcxp6NcfMDN4zZW9Jbd7NkYVQthvbz57B7xoBzGEEcpdT1pk1xDDvLaIbu66Yw6n37ksEnL6vGSF44qGpjVCE1V1xaa5qpWuq9PpNMM4aY6FNpMaZhHfstl5ny6mgaZ7z7r/nxtuKly/l2CztjJiTL/aqrv7CjINXDinvKA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SG2PR06MB3367.apcprd06.prod.outlook.com (2603:1096:4:78::19) by
+ TYZPR06MB4094.apcprd06.prod.outlook.com (2603:1096:400:27::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5038.14; Mon, 7 Mar 2022 09:43:02 +0000
+Received: from SG2PR06MB3367.apcprd06.prod.outlook.com
+ ([fe80::9d3f:ff3b:1948:d732]) by SG2PR06MB3367.apcprd06.prod.outlook.com
+ ([fe80::9d3f:ff3b:1948:d732%4]) with mapi id 15.20.5038.026; Mon, 7 Mar 2022
+ 09:43:02 +0000
+From:   Wan Jiabing <wanjiabing@vivo.com>
+To:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        Alex =?ISO-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH v7 00/46] CXl 2.0 emulation Support
-Message-ID: <20220307093918.00002f20@Huawei.com>
-In-Reply-To: <20220306163119-mutt-send-email-mst@kernel.org>
-References: <20220306174137.5707-1-Jonathan.Cameron@huawei.com>
-        <20220306163119-mutt-send-email-mst@kernel.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kael_w@qq.com, Wan Jiabing <wanjiabing@vivo.com>
+Subject: [PATCH] cxl/core/port: fix NULL but dereferenced coccicheck error
+Date:   Mon,  7 Mar 2022 17:41:48 +0800
+Message-Id: <20220307094158.404882-1-wanjiabing@vivo.com>
+X-Mailer: git-send-email 2.35.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: HK2PR06CA0021.apcprd06.prod.outlook.com
+ (2603:1096:202:2e::33) To SG2PR06MB3367.apcprd06.prod.outlook.com
+ (2603:1096:4:78::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.202.226.41]
-X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a246a15b-590f-47a8-39a5-08da001edeeb
+X-MS-TrafficTypeDiagnostic: TYZPR06MB4094:EE_
+X-Microsoft-Antispam-PRVS: <TYZPR06MB40941EB3449D865B0467240EAB089@TYZPR06MB4094.apcprd06.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: avhaEd0WR064Vjak9i8lVoh8JytfIHZqVdKuxCknmCGSMcGPCp/7W7klVOSVVeaWOz+1R4ktj/EBnIBAPX9gK0jHwzQL1RNd2gh1Sh3q1bEIZQoye8zPZkYy8/Sv2PrOgOrzZn9fiJycpJCE4yPaYpAPnkmbPmgd7pHJPKifNMYAtWNcCxxiDOrNtmzMzPv51Y3Ga/bXolJkCBsLRHzqhZmG2IiBT8bJQoS0BwNIhBHm5PRAcd0eMWGsHNcI2uvO/F77712jzY8DH0YMhoLtmE7bGdcomfjqJD+NVnIp8vyFtQUarOCio8Yfm99htkcQYVpA5qMBpKNSsv9RVxiDhpKULozQmnZzD0YibSEsfdz49l+qLWwXH/8gAc0hQhq/d2y5tm8aNeLxxHoR5DmV6YzzLItuh2zssewPujxNhX9Q+PsyHtCuojMrTudO/O1YsscNQTkWNRxlmEjhTiKiUXnYHoeozdV8TZ0u20OqwpRaDNWGE30lrsTVrVHwCCbPoMMun3hoUFYdf/csj/+WZ0J+IzFBX6dU/45uYCZqESL24FndqnWHMoLG/+t3qaLAhy0K+YrnGzNtmvfNsUX7kdMu4FE54fbeAOWxKULmtuV2Q31Or5/4MzUMzgNRppTSgJjp0og+fBORwVRX1L8YULvGfZDPA8TSj1MNXqyFGyZgASEapeCDLVM9NdFeblsU
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2PR06MB3367.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(66946007)(36756003)(8676002)(4326008)(66476007)(66556008)(83380400001)(86362001)(8936002)(5660300002)(110136005)(38350700002)(38100700002)(6486002)(316002)(508600001)(1076003)(6512007)(107886003)(26005)(186003)(52116002)(6506007)(4744005)(2616005)(6666004)(2906002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?To6aVpMwae3Amw4SB/kuE8oY00NY5iN4ag18Pn4vNKXo50J2yvAkkaS5n++0?=
+ =?us-ascii?Q?Y/okb9u+2ekeKFEs0c1jY0pmrIUKBDYAPbn4rQ/SLCHFlX42qkXbTkQgJUng?=
+ =?us-ascii?Q?8Er070DfxOOkXPceymAIRF0xqMd7e74FVEU3P5ZOHS4vA4iShKK8jTR8i/oO?=
+ =?us-ascii?Q?iw0mt2hTig/HkFP2G3r9yBCPYVeWAz6r5dUNrbDET6akDfsYx7YydFP216JL?=
+ =?us-ascii?Q?Z6jhMZlP+p/6Q23JVV2CGlaiEo5tRderyiBRqnfVBTjC65dfPyCr6Y1m0rhh?=
+ =?us-ascii?Q?6x4R+zYQjw46Kbdx34nukrO9PCnJP4GwGArSPt2JMlkiCJZY8ZKIc3dMG8xT?=
+ =?us-ascii?Q?4B6SnqtJE9OtDHX2UVJ6qmBkeyXPJ80Rph83SkTbE/fQwJxgFeYNjEATbDt0?=
+ =?us-ascii?Q?g4duNwyXx6CDjPDU3c+9bca4ZNfXiSxBKMUCtleqFLPFwvM3G2Oopo/CNVFq?=
+ =?us-ascii?Q?HyJk1+kIkbETWtQRdelz6Huq0fvpp1lOCS7nvCdOhW1RD30zMODW20dkb9fa?=
+ =?us-ascii?Q?NcrL49i6/y4QAcF6eQJmzM5pZxhGxSBL5uE3mN5zb7Xp15qGeNSGHSWzQoJd?=
+ =?us-ascii?Q?HzvlI1Yf3AyZfIqHHnYOeD/SZVMEo1HzBlHTRgPyssQbWIWF1R/0vS7w6DgH?=
+ =?us-ascii?Q?uahw4777HkYgMpsAm+PHAo3zcNxvs8Q4W8aIwj6if2vocvVDWiXDAazjHGA5?=
+ =?us-ascii?Q?HWW/dEATexNulZ6um25Twco+/HnUFvxKz1eB8MuptDhd1L285+YQx1SnqnfQ?=
+ =?us-ascii?Q?bPL9xVShgOaUHR2wnjEZpPKpOfwkrL9BF5g2quYO0gCzM4BLZ+HsJs//HI4/?=
+ =?us-ascii?Q?lAHNnC92rt8ZYVi7/Y8lbejfVbf4PZk3BZ3hrnNKg3rLBopIJpCA3+JzDZaY?=
+ =?us-ascii?Q?YSEK3iWkt2GfPrEluO9dpGMezWDlYB8k1bqQ6P4xNy645zFM9XmaH5Lb/8kn?=
+ =?us-ascii?Q?RrGWL9xS2MLB44BlK7AnlBvODLXGyk1WaJB6ZUJmeREcsMUviwJ7bs1olZbP?=
+ =?us-ascii?Q?XkgcopWHXEIkOwFvrcPEEPwznwIa7nAqOIze213ED8GN0kqvGKH4Flmxrcis?=
+ =?us-ascii?Q?8YmFNltjGBZqzbrD9NQnw/VwfhJ+chJz1SBDcOMnCcG6Wnr3xNLvAeYwAqBH?=
+ =?us-ascii?Q?Hed84VXWSeJQNhirYdnboTfif5q2LEVJw51trN0U4alfRNULw0o9ZxOzWGLy?=
+ =?us-ascii?Q?PYEgVA3/LwdGOaSO5OWa5ZsaLMuR3Ba0J27g9hlf+mpMQoXjNTJdD03j1F/n?=
+ =?us-ascii?Q?3uxvL4NqCC69n1sbvQREmyrgOBsQgLkTOHozWxrR1gr+enIXuYSWGcAPOamP?=
+ =?us-ascii?Q?tkc+zgF4+QkkBOTmxSY8YmefxELrXyjDD1D8xRsblkXBmOUNB5XQJNOay2Si?=
+ =?us-ascii?Q?OKDNzpIVhxlQ/qzB/W3Mb/I/NxpCGxWmpPqL5/HxUlrkzHtpV8BwSSZ8fttW?=
+ =?us-ascii?Q?VmBF1D4JJoQyGGWxUbXMx4UsfGXkfafEQE6YC8zN9Uybp6u4jR1gi6Do1Q5x?=
+ =?us-ascii?Q?KemcIrMqVFEY7dI+va50Un+nHK8OXSI9cmjxGAwQeJAg8acXrqtAuyAIoAM7?=
+ =?us-ascii?Q?8CzV5UER8NfwShtzz3Q3tOAkBeFan7+BnYAZwmHI0F7fp4ePE9pJSMeTqkjR?=
+ =?us-ascii?Q?Qk8hJywU7vPEx6QXBFxrTY8=3D?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a246a15b-590f-47a8-39a5-08da001edeeb
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3367.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2022 09:43:01.9853
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yaJ5QkS73+xrTiX3R+7N2RSk2RwsqBn9/Hwxm4UupQJL26cELkQndHyrmj7OFgEwpowzi5/p+fh/Y8aBiPZqsQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB4094
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sun, 6 Mar 2022 16:33:40 -0500
-"Michael S. Tsirkin" <mst@redhat.com> wrote:
+Fix the following coccicheck warning:
+./drivers/cxl/core/port.c:913:21-24: ERROR: port is NULL but dereferenced.
 
-> On Sun, Mar 06, 2022 at 05:40:51PM +0000, Jonathan Cameron wrote:
-> > Ideally I'd love it if we could start picking up the earlier
-> > sections of this series as I think those have been reasonably
-> > well reviewed and should not be particularly controversial.
-> > (perhaps up to patch 15 inline with what Michael Tsirkin suggested
-> > on v5).  
-> 
-> Well true but given we are entering freeze this will leave
-> us with a half baked devices which cant be used.
-> At this point if we can't merge it up to documentation then
-> I think we should wait until after the release.
+Signed-off-by: Wan Jiabing <wanjiabing@vivo.com>
+---
+ drivers/cxl/core/port.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Makes sense.
-
-If any of the memory maintainers can take a look at patch 34 that would
-be great as to my mind that and the related interleave decoding in general is
-the big unknown in this set. I just realized I haven't cc'd everyone
-I should have for that - added them here and I'll make sure to CC them
-all on V8.
-
-Thanks.
-
-Jonathan
-
-> 
-> > There is one core memory handling related patch (34) marked as RFC.
-> > Whilst it's impact seems small to me, I'm not sure it is the best way
-> > to meet our requirements wrt interleaving.
-> > 
-> > Changes since v7:
-> > 
-> > Thanks to all who have taken a look.
-> > Small amount of reordering was necessary due to LSA fix in patch 17.
-> > Test moved forwards to patch 22 and so all intermediate patches
-> > move -1 in the series.
-> > 
-> > (New stuff)
-> > - Switch support.  Needed to support more interesting topologies.
-> > (Ben Widawsky)
-> > - Patch 17: Fix reversed condition on presence of LSA that meant these never
-> >   got properly initialized. Related change needed to ensure test for cxl_type3
-> >   always needs an LSA. We can relax this later when adding volatile memory
-> >   support.
-> > (Markus Armbuster)
-> > - Patch 27: Change -cxl-fixed-memory-window option handling to use
-> >   qobject_input_visitor_new_str().  This changed the required handling of
-> >   targets parameter to require an array index and hence test and docs updates.
-> >   e.g. targets.1=cxl_hb0,targets.2=cxl_hb1
-> >   (Patches 38,40,42,43)
-> > - Missing structure element docs and version number (optimisitic :)
-> > (Alex Bennée)
-> > - Added Reviewed-by tags.  Thanks!.
-> > - Series wise: Switch to compiler.h QEMU_BUILD_BUG_ON/MSG QEMU_PACKED
-> >   and QEMU_ALIGNED as Alex suggested in patch 20.
-> > - Patch 6: Dropped documentation for a non-existent lock.
-> >            Added error code suitable for unimplemented commands.
-> > 	   Reordered code for better readability.
-> > - Patch 9: Reorder as suggested to avoid a goto.
-> > - Patch 16: Add LOG_UNIMP message where feature not yet implemented.
-> >             Drop "Explain" comment that doesn't explain anything.
-> > - Patch 18: Drop pointless void * cast.
-> >             Add assertion as suggested (without divide)
-> > - Patch 19: Use pstrcpy rather than snprintf for a fixed string.
-> >             The compiler.h comment was in this patch but affects a
-> > 	    number of other patches as well.
-> > - Patch 20: Move structure CXLType3Dev to header when originally
-> >             introduced so changes are more obvious in this patch.
-> > - Patch 21: Substantial refactor to resolve unclear use of sizeof
-> >             on the LSA command header. Now uses a variable length
-> > 	    last element so we can use offsetof()
-> > - Patch 22: Use g_autoptr() to avoid need for explicit free in tests
-> >   	    Similar in later patches.
-> > - Patch 29: Minor reorganziation as suggested.
-> > 	    
-> > (Tidy up from me)
-> > - Trivial stuff like moving header includes to patch where first used.
-> > - Patch 17: Drop ifndef protections from TYPE_CXL_TYPE3_DEV as there
-> >             doesn't seem to be a reason.
-> > 
-> > Series organized to allow it to be taken in stages if the maintainers
-> > prefer that approach. Most sets end with the addition of appropriate
-> > tests (TBD for final set)
-> > 
-> > Patches 0-15 - CXL PXB
-> > Patches 16-22 - Type 3 Device, Root Port
-> > Patches 23-40 - ACPI, board elements and interleave decoding to enable x86 hosts
-> > Patches 41-42 - arm64 support on virt.
-> > Patch 43 - Initial documentation
-> > Patches 44-46 - Switch support.
-> > 
-> > Gitlab CI is proving challenging to get a completely clean bill of health
-> > as there seem to be some intermittent failures in common with the
-> > main QEMU gitlab. In particular an ASAN leak error that appears in some
-> > upstream CI runs and build-oss-fuzz timeouts.
-> > Results at http://gitlab.com/jic23/qemu cxl-v7-draft-2-for-test
-> > which also includes the DOE/CDAT patches serial number support which
-> > will form part of a future series.
-> > 
-> > Updated background info:
-> > 
-> > Looking in particular for:
-> > * Review of the PCI interactions
-> > * x86 and ARM machine interactions (particularly the memory maps)
-> > * Review of the interleaving approach - is the basic idea
-> >   acceptable?
-> > * Review of the command line interface.
-> > * CXL related review welcome but much of that got reviewed
-> >   in earlier versions and hasn't changed substantially.
-> > 
-> > Big TODOs:
-> > 
-> > * Volatile memory devices (easy but it's more code so left for now).
-> > * Hotplug?  May not need much but it's not tested yet!
-> > * More tests and tighter verification that values written to hardware
-> >   are actually valid - stuff that real hardware would check.
-> > * Testing, testing and more testing.  I have been running a basic
-> >   set of ARM and x86 tests on this, but there is always room for
-> >   more tests and greater automation.
-> > * CFMWS flags as requested by Ben.
-> > 
-> > Why do we want QEMU emulation of CXL?
-> > 
-> > As Ben stated in V3, QEMU support has been critical to getting OS
-> > software written given lack of availability of hardware supporting the
-> > latest CXL features (coupled with very high demand for support being
-> > ready in a timely fashion). What has become clear since Ben's v3
-> > is that situation is a continuous one. Whilst we can't talk about
-> > them yet, CXL 3.0 features and OS support have been prototyped on
-> > top of this support and a lot of the ongoing kernel work is being
-> > tested against these patches. The kernel CXL mocking code allows
-> > some forms of testing, but QEMU provides a more versatile and
-> > exensible platform.
-> > 
-> > Other features on the qemu-list that build on these include PCI-DOE
-> > /CDAT support from the Avery Design team further showing how this
-> > code is useful. Whilst not directly related this is also the test
-> > platform for work on PCI IDE/CMA + related DMTF SPDM as CXL both
-> > utilizes and extends those technologies and is likely to be an early
-> > adopter.
-> > Refs:
-> > CMA Kernel: https://lore.kernel.org/all/20210804161839.3492053-1-Jonathan.Cameron@huawei.com/
-> > CMA Qemu: https://lore.kernel.org/qemu-devel/1624665723-5169-1-git-send-email-cbrowy@avery-design.com/
-> > DOE Qemu: https://lore.kernel.org/qemu-devel/1623329999-15662-1-git-send-email-cbrowy@avery-design.com/
-> > 
-> > As can be seen there is non trivial interaction with other areas of
-> > Qemu, particularly PCI and keeping this set up to date is proving
-> > a burden we'd rather do without :)
-> > 
-> > Ben mentioned a few other good reasons in v3:
-> > https://lore.kernel.org/qemu-devel/20210202005948.241655-1-ben.widawsky@intel.com/
-> > 
-> > What we have here is about what you need for it to be useful for testing
-> > currently kernel code.  Note the kernel code is moving fast so
-> > since v4, some features have been introduced we don't yet support in
-> > QEMU (e.g. use of the PCIe serial number extended capability).
-> > 
-> > All comments welcome.
-> > 
-> > Additional info that was here in v5 is now in the documentation patch.
-> > 
-> > Thanks,
-> > 
-> > Jonathan
-> > 
-> > Ben Widawsky (24):
-> >   hw/pci/cxl: Add a CXL component type (interface)
-> >   hw/cxl/component: Introduce CXL components (8.1.x, 8.2.5)
-> >   hw/cxl/device: Introduce a CXL device (8.2.8)
-> >   hw/cxl/device: Implement the CAP array (8.2.8.1-2)
-> >   hw/cxl/device: Implement basic mailbox (8.2.8.4)
-> >   hw/cxl/device: Add memory device utilities
-> >   hw/cxl/device: Add cheap EVENTS implementation (8.2.9.1)
-> >   hw/cxl/device: Timestamp implementation (8.2.9.3)
-> >   hw/cxl/device: Add log commands (8.2.9.4) + CEL
-> >   hw/pxb: Use a type for realizing expanders
-> >   hw/pci/cxl: Create a CXL bus type
-> >   hw/pxb: Allow creation of a CXL PXB (host bridge)
-> >   hw/cxl/rp: Add a root port
-> >   hw/cxl/device: Add a memory device (8.2.8.5)
-> >   hw/cxl/device: Implement MMIO HDM decoding (8.2.5.12)
-> >   hw/cxl/device: Add some trivial commands
-> >   hw/cxl/device: Plumb real Label Storage Area (LSA) sizing
-> >   hw/cxl/device: Implement get/set Label Storage Area (LSA)
-> >   hw/cxl/component: Implement host bridge MMIO (8.2.5, table 142)
-> >   acpi/cxl: Add _OSC implementation (9.14.2)
-> >   acpi/cxl: Create the CEDT (9.14.1)
-> >   acpi/cxl: Introduce CFMWS structures in CEDT
-> >   hw/cxl/component Add a dumb HDM decoder handler
-> >   qtest/cxl: Add more complex test cases with CFMWs
-> > 
-> > Jonathan Cameron (22):
-> >   MAINTAINERS: Add entry for Compute Express Link Emulation
-> >   cxl: Machine level control on whether CXL support is enabled
-> >   qtest/cxl: Introduce initial test for pxb-cxl only.
-> >   qtests/cxl: Add initial root port and CXL type3 tests
-> >   hw/cxl/component: Add utils for interleave parameter encoding/decoding
-> >   hw/cxl/host: Add support for CXL Fixed Memory Windows.
-> >   hw/pci-host/gpex-acpi: Add support for dsdt construction for pxb-cxl
-> >   pci/pcie_port: Add pci_find_port_by_pn()
-> >   CXL/cxl_component: Add cxl_get_hb_cstate()
-> >   mem/cxl_type3: Add read and write functions for associated hostmem.
-> >   cxl/cxl-host: Add memops for CFMWS region.
-> >   RFC: softmmu/memory: Add ops to memory_region_ram_init_from_file
-> >   i386/pc: Enable CXL fixed memory windows
-> >   tests/acpi: q35: Allow addition of a CXL test.
-> >   qtests/bios-tables-test: Add a test for CXL emulation.
-> >   tests/acpi: Add tables for CXL emulation.
-> >   hw/arm/virt: Basic CXL enablement on pci_expander_bridge instances
-> >     pxb-cxl
-> >   qtest/cxl: Add aarch64 virt test for CXL
-> >   docs/cxl: Add initial Compute eXpress Link (CXL) documentation.
-> >   pci-bridge/cxl_upstream: Add a CXL switch upstream port
-> >   pci-bridge/cxl_downstream: Add a CXL switch downstream port
-> >   cxl/cxl-host: Support interleave decoding with one level of switches.
-> > 
-> >  MAINTAINERS                         |   7 +
-> >  docs/system/device-emulation.rst    |   1 +
-> >  docs/system/devices/cxl.rst         | 302 +++++++++++++++++
-> >  hw/Kconfig                          |   1 +
-> >  hw/acpi/Kconfig                     |   5 +
-> >  hw/acpi/cxl-stub.c                  |  12 +
-> >  hw/acpi/cxl.c                       | 231 +++++++++++++
-> >  hw/acpi/meson.build                 |   4 +-
-> >  hw/arm/Kconfig                      |   1 +
-> >  hw/arm/virt-acpi-build.c            |  33 ++
-> >  hw/arm/virt.c                       |  40 ++-
-> >  hw/core/machine.c                   |  28 ++
-> >  hw/cxl/Kconfig                      |   3 +
-> >  hw/cxl/cxl-component-utils.c        | 284 ++++++++++++++++
-> >  hw/cxl/cxl-device-utils.c           | 265 +++++++++++++++
-> >  hw/cxl/cxl-host-stubs.c             |  16 +
-> >  hw/cxl/cxl-host.c                   | 262 +++++++++++++++
-> >  hw/cxl/cxl-mailbox-utils.c          | 485 ++++++++++++++++++++++++++++
-> >  hw/cxl/meson.build                  |  12 +
-> >  hw/i386/acpi-build.c                |  57 +++-
-> >  hw/i386/pc.c                        |  57 +++-
-> >  hw/mem/Kconfig                      |   5 +
-> >  hw/mem/cxl_type3.c                  | 352 ++++++++++++++++++++
-> >  hw/mem/meson.build                  |   1 +
-> >  hw/meson.build                      |   1 +
-> >  hw/pci-bridge/Kconfig               |   5 +
-> >  hw/pci-bridge/cxl_downstream.c      | 229 +++++++++++++
-> >  hw/pci-bridge/cxl_root_port.c       | 231 +++++++++++++
-> >  hw/pci-bridge/cxl_upstream.c        | 206 ++++++++++++
-> >  hw/pci-bridge/meson.build           |   1 +
-> >  hw/pci-bridge/pci_expander_bridge.c | 172 +++++++++-
-> >  hw/pci-bridge/pcie_root_port.c      |   6 +-
-> >  hw/pci-host/gpex-acpi.c             |  20 +-
-> >  hw/pci/pci.c                        |  21 +-
-> >  hw/pci/pcie_port.c                  |  25 ++
-> >  include/hw/acpi/cxl.h               |  28 ++
-> >  include/hw/arm/virt.h               |   1 +
-> >  include/hw/boards.h                 |   2 +
-> >  include/hw/cxl/cxl.h                |  54 ++++
-> >  include/hw/cxl/cxl_component.h      | 207 ++++++++++++
-> >  include/hw/cxl/cxl_device.h         | 270 ++++++++++++++++
-> >  include/hw/cxl/cxl_pci.h            | 156 +++++++++
-> >  include/hw/pci/pci.h                |  14 +
-> >  include/hw/pci/pci_bridge.h         |  20 ++
-> >  include/hw/pci/pci_bus.h            |   7 +
-> >  include/hw/pci/pci_ids.h            |   1 +
-> >  include/hw/pci/pcie_port.h          |   2 +
-> >  qapi/machine.json                   |  18 ++
-> >  qemu-options.hx                     |  38 +++
-> >  scripts/device-crash-test           |   1 +
-> >  softmmu/memory.c                    |   9 +
-> >  softmmu/vl.c                        |  42 +++
-> >  tests/data/acpi/q35/CEDT.cxl        | Bin 0 -> 184 bytes
-> >  tests/data/acpi/q35/DSDT.cxl        | Bin 0 -> 9627 bytes
-> >  tests/qtest/bios-tables-test.c      |  44 +++
-> >  tests/qtest/cxl-test.c              | 181 +++++++++++
-> >  tests/qtest/meson.build             |   5 +
-> >  57 files changed, 4456 insertions(+), 25 deletions(-)
-> >  create mode 100644 docs/system/devices/cxl.rst
-> >  create mode 100644 hw/acpi/cxl-stub.c
-> >  create mode 100644 hw/acpi/cxl.c
-> >  create mode 100644 hw/cxl/Kconfig
-> >  create mode 100644 hw/cxl/cxl-component-utils.c
-> >  create mode 100644 hw/cxl/cxl-device-utils.c
-> >  create mode 100644 hw/cxl/cxl-host-stubs.c
-> >  create mode 100644 hw/cxl/cxl-host.c
-> >  create mode 100644 hw/cxl/cxl-mailbox-utils.c
-> >  create mode 100644 hw/cxl/meson.build
-> >  create mode 100644 hw/mem/cxl_type3.c
-> >  create mode 100644 hw/pci-bridge/cxl_downstream.c
-> >  create mode 100644 hw/pci-bridge/cxl_root_port.c
-> >  create mode 100644 hw/pci-bridge/cxl_upstream.c
-> >  create mode 100644 include/hw/acpi/cxl.h
-> >  create mode 100644 include/hw/cxl/cxl.h
-> >  create mode 100644 include/hw/cxl/cxl_component.h
-> >  create mode 100644 include/hw/cxl/cxl_device.h
-> >  create mode 100644 include/hw/cxl/cxl_pci.h
-> >  create mode 100644 tests/data/acpi/q35/CEDT.cxl
-> >  create mode 100644 tests/data/acpi/q35/DSDT.cxl
-> >  create mode 100644 tests/qtest/cxl-test.c
-> > 
-> > -- 
-> > 2.32.0  
-> 
-> 
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index d29eb2abdbc2..3349e9f7b89e 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -909,7 +909,10 @@ static void cxl_detach_ep(void *data)
+ 			break;
+ 
+ 		port = find_cxl_port(dport_dev);
+-		if (!port || is_cxl_root(port)) {
++		if (!port)
++			continue;
++
++		if (is_cxl_root(port)) {
+ 			put_device(&port->dev);
+ 			continue;
+ 		}
+-- 
+2.35.1
 
