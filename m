@@ -2,359 +2,279 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2E2C433F5
-	for <linux-cxl@archiver.kernel.org>; Mon,  7 Mar 2022 17:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D03AC43217
+	for <linux-cxl@archiver.kernel.org>; Mon,  7 Mar 2022 22:50:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235914AbiCGRCa convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 7 Mar 2022 12:02:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44194 "EHLO
+        id S243322AbiCGWvQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 7 Mar 2022 17:51:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232458AbiCGRC3 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Mar 2022 12:02:29 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A4736D186
-        for <linux-cxl@vger.kernel.org>; Mon,  7 Mar 2022 09:01:33 -0800 (PST)
-Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KC4VD2xchz6GD1s;
-        Tue,  8 Mar 2022 01:01:08 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
+        with ESMTP id S239416AbiCGWvP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Mar 2022 17:51:15 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 649416FA18
+        for <linux-cxl@vger.kernel.org>; Mon,  7 Mar 2022 14:50:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1646693418; x=1678229418;
+  h=from:to:subject:date:message-id:mime-version;
+  bh=KBH953ovLu8NKPZKlA6aucArDn5aTsmIziQlUHzX5fM=;
+  b=Wux/xJjGQJiNiFQqaAqS428MJVIri3R+lZvhlCNDcYlPmpIULi+0a6nB
+   D2szZ+lalaJ0nTdidNZ2XzjQ5LQqjkCqvkTgFHOVBE1TvwqQLqyeTs27+
+   wu2OB2ilpyr9Y4cgGD9qI9GJK3/im81xJIrq+i3SkdOP/8Hq6XZlT3P8m
+   bwg/bh6jHW/Aa6gfMpdDIGltWIYErK2nbiGE+va7D6Vi8FKIt2EwQva97
+   GVCng84Pazj5gxA+NcGlCt8p7VdbXYV4RtPvN3IzeIwEZV1MRBS4LjC5s
+   GxvU0hNginkDHfQ/VOsYEso4GKRPjLvdEUtNLLU8v8auuPzkwbw82HeSu
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10279"; a="235136245"
+X-IronPort-AV: E=Sophos;i="5.90,163,1643702400"; 
+   d="asc'?scan'208";a="235136245"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2022 14:50:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,163,1643702400"; 
+   d="asc'?scan'208";a="509876853"
+Received: from fmsmsx604.amr.corp.intel.com ([10.18.126.84])
+  by orsmga002.jf.intel.com with ESMTP; 07 Mar 2022 14:50:08 -0800
+Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
+ fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Mon, 7 Mar 2022 18:01:30 +0100
-Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Mon, 7 Mar
- 2022 17:01:29 +0000
-Date:   Mon, 7 Mar 2022 17:01:27 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-CC:     <linuxarm@huawei.com>, <qemu-devel@nongnu.org>,
-        Alex =?ISO-8859-1?Q?Benn?= =?ISO-8859-1?Q?=E9e?= 
-        <alex.bennee@linaro.org>, Marcel Apfelbaum <marcel@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Markus Armbruster <armbru@redhat.com>,
-        <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
-        Saransh Gupta1 <saransh@ibm.com>,
-        Shreyas Shah <shreyas.shah@elastics.cloud>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Samarth Saxena <samarths@cadence.com>,
-        "Dan Williams" <dan.j.williams@intel.com>
-Subject: Re: [PATCH v7 24/46] acpi/cxl: Add _OSC implementation (9.14.2)
-Message-ID: <20220307170127.0000582b@Huawei.com>
-In-Reply-To: <20220306162444-mutt-send-email-mst@kernel.org>
-References: <20220306174137.5707-1-Jonathan.Cameron@huawei.com>
-        <20220306174137.5707-25-Jonathan.Cameron@huawei.com>
-        <20220306162444-mutt-send-email-mst@kernel.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+ 15.1.2308.21; Mon, 7 Mar 2022 14:50:08 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Mon, 7 Mar 2022 14:50:08 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21 via Frontend Transport; Mon, 7 Mar 2022 14:50:08 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.173)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2308.21; Mon, 7 Mar 2022 14:50:07 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JSrSJ6MmLXErRN8Hhh3ap3kAKcE6YW9yaQkBKzjKgsjzHrTqaD8J0hHurTRLx652NEOQCVf6ffwtgZ7dyyo/X4TKHTt8oJlLYKIaf34YsAtCtu598dQgx3+AwXCqTM6860gUISwsHMVu3+YVIg/N+/H0Clee6Dj6bfm7LCzi44+yaK67Viz0+9rGkfgrsXawzKi3z12rc66T3sb+2Cs9V8lZjrVWwsUs8wLRthanZ3n0+Vamn44jqwSq0rrX4COEYSQZRa5IPOthLcTMtZDf1Wb41Y+bsGXXi6FMD7upVCGH8kJ7VTrcAWqb4G7cGvcZW6r0xW0F6Nb0qwnf5EaMMQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rUGlI8pCGydMwIJAGAne5NakpCQfbcQBitZVIzp9oaI=;
+ b=V6g0Jy/msVc0HgoSy1c7dZ9kJm066KJ8NEnrBNbINn1wXlgLQAL3XgHTfw88mh8D6W+HO2CQfdSqzHsxslEto0wSVXtZKqTgVbtZPZz8YhXR+28Bqz8ohKK4c12/ro2kyZEBxTH+gTPiVjSJjrRINqBRneTNrhGVcDUMwuSQyTWIIIzuZaVWk9CdnjY7VYrC+IpFjMESusH40GmUka2b9dZXMHeb2Rp26b/4gvWTjqVLhr193/UikV3idIb3Fr40N6CbP032XlpF9r3EvYsFN2gDEXecdu8nVxH4t2qs23sVnMvhQ9CkFK+vUB6wj3IdWF6OLK9Pj06Gf2OVFL2eNQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MN2PR11MB3999.namprd11.prod.outlook.com (2603:10b6:208:154::32)
+ by BYAPR11MB2744.namprd11.prod.outlook.com (2603:10b6:a02:c8::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.17; Mon, 7 Mar
+ 2022 22:50:00 +0000
+Received: from MN2PR11MB3999.namprd11.prod.outlook.com
+ ([fe80::d898:84ee:d6a:4eb1]) by MN2PR11MB3999.namprd11.prod.outlook.com
+ ([fe80::d898:84ee:d6a:4eb1%6]) with mapi id 15.20.5038.027; Mon, 7 Mar 2022
+ 22:50:00 +0000
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
+Subject: [ANNOUNCE] ndctl v73
+Thread-Topic: [ANNOUNCE] ndctl v73
+Thread-Index: AQHYMnWsq8bv32b5L0CkeNwqeBzLpQ==
+Date:   Mon, 7 Mar 2022 22:49:59 +0000
+Message-ID: <463edbb8e97b4df27ed61e580e5d1b84e0a0970b.camel@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.42.4 (3.42.4-1.fc35) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bf4e7b21-9c59-41a1-bfa8-08da008ccf88
+x-ms-traffictypediagnostic: BYAPR11MB2744:EE_
+x-microsoft-antispam-prvs: <BYAPR11MB27443AFB21197BA457229248C7089@BYAPR11MB2744.namprd11.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: NHAiaPFkjEBCEz214hkOZjIEwjnEXzuu+biiosbvJga4eizP7iVHXvZCmhAh5PzBU43EmUah2ZNyj+GrxHLno7T62XNFM1ZFKsszX+s1eooeTO4QwmB2W9d+2x4lOijShCUUp43SsGztYbkGwLV5O7FUi1yP+nlfjnjkHh3en5YCoH57duItFiopiEkBSWxMpX4VfwhYR0RO5d6iPDEmsXYMPZohRf0AkBL1ika8uTQeBQ6Qn+4l9XNv46Ti0gpL+FhBWUkdK+mzVeCf1nf/uDRNlj7Hn0rIWV3H+5fmkSsm+I7rz7hTO9d8bIuUEQ/aQDMv8V3ZblxY1PNiLMVU5disUKuH8B3uUEXELOditKmOD2ocFKBgWUm3g+L7AH3sLsjH7yigQJkxXXbMqnIxoixxE5wrFNVxbLWok2VLirrhwjX2QbYavtDU+Z3RmtXwo7hStvKmQvN41bn17TBb2uysIAoZZS7TtwJn64lgZaiugEbvevPg55V9OiLWFekRQ4Y99qIrB+Q/MlMrw/Alko9/dbxR3XN8E7qkSfCDrFI9fHLjHsmBTZsg1lPmND7HHWeT6HYW/+tKZuElDPnvORkeYV+vFyW9am2lQo8wk2EV4gCBXKMRkpQDqvnR/69/keWqcaUjxBcidhKE4a0dz8+Ns9PpP3AjA5m+mpvuDCtAOYclgFqCuTXCtLTkHrxoDNccqAI0CDWsFVUbR9x2YA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB3999.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(38100700002)(82960400001)(38070700005)(2616005)(186003)(6512007)(26005)(2906002)(5660300002)(8676002)(64756008)(66446008)(66476007)(66556008)(86362001)(83380400001)(66946007)(76116006)(91956017)(6506007)(110136005)(316002)(8936002)(36756003)(6486002)(508600001)(122000001)(99936003)(71200400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?NFdWeVBub0t0Tzh0R3o3cVkxRHMzSDI4UWdKUHhoalhsZ2Q4dlZhazlaQXZ0?=
+ =?utf-8?B?cGZCMzAzQWxVemN4Q2kweE5XZG1naGFYU2hCSngrdDB5UHU0VDNybDdtR3Vo?=
+ =?utf-8?B?b2pURzljamNrRkp0anJUaUlVRHNVc1ZFSithclRqRnIvK0NWWThWcGpIWkky?=
+ =?utf-8?B?RGMzbHF1cEVzZnFMOVVaK08yYnhFOE8weitSd1QzT1FEbTV4ODRoN1lRNExm?=
+ =?utf-8?B?NDlSOU5XOGQ0dDlkd2N0V0Zna3oyaXo1Z0RqZlh4ZG1qV1B1TVBFNENsaUo0?=
+ =?utf-8?B?bUZHalE3RTM4NU9tZFlBUmh1aWdLNytvbHFZbUhCTjJ0NDJlblRvYUwwbmlQ?=
+ =?utf-8?B?MDZWUVpqV3F1akJpR0J2Y2Z2aVZNNWRrWEVFaTYrbWpISU94QkpPT0EvejVO?=
+ =?utf-8?B?Q0V3S3YwZlp2MW5IdWJoYUtERlM3N05TQTloeWJmdnV4cDVHSTZYUGlpVjA3?=
+ =?utf-8?B?eTdsUXM5Q2pLdW9yS0ZHbm80YlA4VG0yVEU5V3ZLQm83RzdpV1VEUnJra1Zk?=
+ =?utf-8?B?SEJIWHlCUHkxKzVTeCt5TlRjSDV3VmdZU3VadU1VNXFFWUxZUEpGbDYwcFc2?=
+ =?utf-8?B?eW9qMWgzVGRiMFp5QXU4ODRZTUtQNGRyV2NrNzRYSm80dnJYaUtmY0lzNUFk?=
+ =?utf-8?B?eDQvYTZEWkczSFBWNlgwQnRQRXJUSE50OHUrTkJPNXlRWlg5cEhkT2Mvc2pP?=
+ =?utf-8?B?bWtZTFNDWmp1MUFqU29RdjIwQUhzQmNLYzV4bkRVTkQ4QS9WQWVZZmpJQ1pE?=
+ =?utf-8?B?VDhTOCtnd0Y0cS9MNUtrQjAzSEtnbm43ZUZReU01KzJqY2ZmMlBNdnB2Zmxv?=
+ =?utf-8?B?M2xzWEZ4VW1kVFhsV0lvRFVBUVRJL0ZJUS9GTVFDcmRUYVNxR0Z6K214dGlo?=
+ =?utf-8?B?Q1p4Rmw1QmN1czZCd3J3ZGt0SlgxVktxTEl5UlVLSEw2MWRnQmJLR2JSYzBY?=
+ =?utf-8?B?dkdLRHh1dzd2U2RyRHhYTFppaGxvWS9kYmdvWTBKczRHUkp5NVVvelh6RTF5?=
+ =?utf-8?B?NnNCc2xxdTRBb2FRNnA1S0Y4V0ZlRFd4NkRndEczdnRBODJTZ1hZNGxKZUl5?=
+ =?utf-8?B?NCtiSkJ2Rm5qbitVWXVmZ3kzQ2U1a3l3Z1YyZ1FUSk41Y0ZOeG9FUUo0N2dk?=
+ =?utf-8?B?djhFOVEwMFpqSlJTM3pEWHBYdHRKcmgvWE10bWNBZmVVOENjWjVucVBTOVkz?=
+ =?utf-8?B?ZnFMeWw3ejU3L2REUjh4ekpSa0J4OUlDSThLQVBDS0RlL2FkS05qdlkyWmQy?=
+ =?utf-8?B?dWQvNEdyTGhXU09ZbHRxSWVPVGhsUkEwOVQwUTVjT0NZOXNwMU5hOGpyaGl4?=
+ =?utf-8?B?VEVoQWI5WXQ0M0hIRnNYdDltRGp5azZyYlpkNkVVVVg5dWk0RFUydmxRalhy?=
+ =?utf-8?B?ZjQ4ODdyZVRtQ0hDOVRmVlNoN2ZuVXFlS21xNFhuSEtSeTZsMGtXeVpuam93?=
+ =?utf-8?B?bnZ6ZXlvS2xqNnNlWFFxcElHbDNZRCsycnRlS1lTZ09FaWJvcWE0eXZXd3BV?=
+ =?utf-8?B?bklGZERKNG82dml3aVE4aEdpK2dkNHpmWWRJcGFqRGllMDNTRlVlWTk4bnBw?=
+ =?utf-8?B?dWl2WnpqTUs3T2Juc2FpQWdVdll2Tzg2Y1A1Y1h5SitWOUdqcXhJTEhMd1Q5?=
+ =?utf-8?B?aW9OK25XVFhKUVc4bnNZSHA2Um5IQ1YrR01GZDlIVWdScHpVRURISk9HWFo2?=
+ =?utf-8?B?QXFKNHlhU01uT2tFUW1HdGZMZGJyN1BDcG1EbVMxMXZlcVVlVlJRckZrTWM4?=
+ =?utf-8?B?eDBSQTFkR0VGeXJxTTc1b0VZWGhHM3RlNXdva3FOV3h5RDcxZDJTSlZpM21p?=
+ =?utf-8?B?R3VnYnBiWVdzQjkzQjNCeUJwaGNURzdhUVV2K2t2RTNRL0J1NWMzUmlrOWlR?=
+ =?utf-8?B?TkRScm00VXhhMlc5QjRsWnpPNm80NzNNWkdXWlRFYjJaUU9OczVSZHRETFZF?=
+ =?utf-8?B?QmxPajNlWC81c2pMZVpPL3N2Q0J0cTBmekt0TG1vSVlvNTVZaHVray9FTjNM?=
+ =?utf-8?B?Sk80Z3RVNjBPSGZJUGQ4OEhYM1BsMS9RQVd2WE9zRzQvVTFMWGs0aDQrU1Ju?=
+ =?utf-8?B?UktpZmtXalJmMFpFYkdNR2xUYkgwTXowbmpoTUxtdU8vTDdlblMybllLMGQr?=
+ =?utf-8?B?SWRyMXphcVZFUnZvOTVTVG5SaGtKRXRnWnNZdHk5SDdMQldtS0p3enV2VnFD?=
+ =?utf-8?B?a2ZhN1l1M0FwK3VlK0xHUHhXTkVWcDl6U2VUMCtOUGFtMnA5MjNxRVhjSUU0?=
+ =?utf-8?Q?PkrCcycjukC6VS7dIvTlVbTLKbqmxb5fhnxeE1xKlk=3D?=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="=-LwXJDothEIo5Z2+fbvV/"
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.202.226.41]
-X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR11MB3999.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf4e7b21-9c59-41a1-bfa8-08da008ccf88
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2022 22:50:00.1894
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xcO7vqwJ7+nsScgxuX0u4WQotc5JmavqHgIFYFzewmbyYkS3F0juGXFqG+n5paLPJPNttfEh/4WdaN8E/6LcGaQ9Ws2ShmTGZDaC0uqqv24=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2744
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sun, 6 Mar 2022 16:31:05 -0500
-"Michael S. Tsirkin" <mst@redhat.com> wrote:
+--=-LwXJDothEIo5Z2+fbvV/
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> On Sun, Mar 06, 2022 at 05:41:15PM +0000, Jonathan Cameron wrote:
-> > From: Ben Widawsky <ben.widawsky@intel.com>
-> > 
-> > CXL 2.0 specification adds 2 new dwords to the existing _OSC definition
-> > from PCIe. The new dwords are accessed with a new uuid. This
-> > implementation supports what is in the specification.
-> > 
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Reviewed-by: Alex Bennée <alex.bennee@linaro.org>
+This release incorporates functionality up to the 5.17 kernel.
 
-Question for Ben inline.
+Highlights include full CXL topology walk and filtering in cxl-list, a
+new cxl-cli command to set memdev partitioning info, several unit test
+fixes, conversion of the build system to meson, smart error injection
+enhancements for 'papr' NVDIMMs, and RPM spec fixes to support config
+file migration, and flatpak builds.
 
-> > ---
-> >  hw/acpi/Kconfig       |   5 ++
-> >  hw/acpi/cxl-stub.c    |  12 +++++
-> >  hw/acpi/cxl.c         | 104 ++++++++++++++++++++++++++++++++++++++++++
-> >  hw/acpi/meson.build   |   4 +-
-> >  hw/i386/acpi-build.c  |  15 ++++--
-> >  include/hw/acpi/cxl.h |  23 ++++++++++
-> >  6 files changed, 157 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/hw/acpi/Kconfig b/hw/acpi/Kconfig
-> > index 19caebde6c..3703aca212 100644
-> > --- a/hw/acpi/Kconfig
-> > +++ b/hw/acpi/Kconfig
-> > @@ -5,6 +5,7 @@ config ACPI_X86
-> >      bool
-> >      select ACPI
-> >      select ACPI_NVDIMM
-> > +    select ACPI_CXL
-> >      select ACPI_CPU_HOTPLUG
-> >      select ACPI_MEMORY_HOTPLUG
-> >      select ACPI_HMAT
-> > @@ -66,3 +67,7 @@ config ACPI_ERST
-> >      bool
-> >      default y
-> >      depends on ACPI && PCI
-> > +
-> > +config ACPI_CXL
-> > +    bool
-> > +    depends on ACPI
-> > diff --git a/hw/acpi/cxl-stub.c b/hw/acpi/cxl-stub.c
-> > new file mode 100644
-> > index 0000000000..15bc21076b
-> > --- /dev/null
-> > +++ b/hw/acpi/cxl-stub.c
-> > @@ -0,0 +1,12 @@
-> > +
-> > +/*
-> > + * Stubs for ACPI platforms that don't support CXl
-> > + */
-> > +#include "qemu/osdep.h"
-> > +#include "hw/acpi/aml-build.h"
-> > +#include "hw/acpi/cxl.h"
-> > +
-> > +void build_cxl_osc_method(Aml *dev)
-> > +{
-> > +    g_assert_not_reached();
-> > +}
-> > diff --git a/hw/acpi/cxl.c b/hw/acpi/cxl.c
-> > new file mode 100644
-> > index 0000000000..7124d5a1a3
-> > --- /dev/null
-> > +++ b/hw/acpi/cxl.c
-> > @@ -0,0 +1,104 @@
-> > +/*
-> > + * CXL ACPI Implementation
-> > + *
-> > + * Copyright(C) 2020 Intel Corporation.
-> > + *
-> > + * This library is free software; you can redistribute it and/or
-> > + * modify it under the terms of the GNU Lesser General Public
-> > + * License as published by the Free Software Foundation; either
-> > + * version 2 of the License, or (at your option) any later version.
-> > + *
-> > + * This library is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-> > + * Lesser General Public License for more details.
-> > + *
-> > + * You should have received a copy of the GNU Lesser General Public
-> > + * License along with this library; if not, see <http://www.gnu.org/licenses/>
-> > + */
-> > +
-> > +#include "qemu/osdep.h"
-> > +#include "hw/cxl/cxl.h"
-> > +#include "hw/acpi/acpi.h"
-> > +#include "hw/acpi/aml-build.h"
-> > +#include "hw/acpi/bios-linker-loader.h"
-> > +#include "hw/acpi/cxl.h"
-> > +#include "qapi/error.h"
-> > +#include "qemu/uuid.h"
-> > +
-> > +static Aml *__build_cxl_osc_method(void)
-> > +{
-> > +    Aml *method, *if_uuid, *else_uuid, *if_arg1_not_1, *if_cxl, *if_caps_masked;
-> > +    Aml *a_ctrl = aml_local(0);
-> > +    Aml *a_cdw1 = aml_name("CDW1");
-> > +
-> > +    method = aml_method("_OSC", 4, AML_NOTSERIALIZED);
-> > +    aml_append(method, aml_create_dword_field(aml_arg(3), aml_int(0), "CDW1"));
-> > +
-> > +    /* 9.14.2.1.4 */  
-> 
-> List spec name and version pls?
+The shortlog is appended below.
 
-Added.
+Alison Schofield (10):
+      libcxl: add GET_PARTITION_INFO mailbox command and accessors
+      libcxl: add accessors for capacity fields of the IDENTIFY command
+      libcxl: return the partition alignment field in bytes
+      cxl: add memdev partition information to cxl-list
+      libcxl: add interfaces for SET_PARTITION_INFO mailbox command
+      cxl: add command 'cxl set-partition'
+      libcxl: Remove extraneous NULL checks when validating cmd status
+      libdaxctl: free resource allocated with asprintf()
+      cxl/list: tidy the error path in add_cxl_decoder()
+      cxl/list: always free the path var in add_cxl_decoder()
 
-> 
-> > +    if_uuid = aml_if(
-> > +        aml_lor(aml_equal(aml_arg(0),
-> > +                          aml_touuid("33DB4D5B-1FF7-401C-9657-7441C03DD766")),
-> > +                aml_equal(aml_arg(0),
-> > +                          aml_touuid("68F2D50B-C469-4D8A-BD3D-941A103FD3FC"))));
-> > +    aml_append(if_uuid, aml_create_dword_field(aml_arg(3), aml_int(4), "CDW2"));
-> > +    aml_append(if_uuid, aml_create_dword_field(aml_arg(3), aml_int(8), "CDW3"));
-> > +
-> > +    aml_append(if_uuid, aml_store(aml_name("CDW3"), a_ctrl));
-> > +
-> > +    /* This is all the same as what's used for PCIe */  
-> 
-> Referring to what exactly?
-> Better to also document the meaning.
+Dan Williams (55):
+      ndctl/docs: Clarify update-firwmware activation 'overflow' conditions
+      ndctl/test: Prepare for BLK-aperture support removal
+      ndctl/test: Move 'reset()' to function in 'common'
+      ndctl/test: Initialize the label area by default
+      ndctl/test: Skip BLK flags checks
+      ndctl/test: Move sector-mode to a different region
+      ndctl: Deprecate BLK aperture support
+      ndctl/test: Fix support for missing dax_pmem_compat module
+      util: Distribute 'filter' and 'json' helpers to per-tool objects
+      Documentation: Drop attrs.adoc include
+      build: Drop unnecessary $tool/config.h includes
+      test: Prepare out of line builds
+      ndctl: Drop executable bit for bash-completion script
+      build: Add meson build infrastructure
+      build: Add meson rpmbuild support
+      ndctl: Jettison autotools
+      ndctl/build: Default asciidoctor to enabled
+      test: Add 'suite' identifiers to tests
+      ndctl: Rename util_filter to ndctl_filter
+      build: Add tags
+      json: Add support for json_object_new_uint64()
+      cxl/json: Cleanup object leak false positive
+      cxl/list: Support multiple memdev device name filter arguments
+      cxl/list: Support comma separated lists
+      cxl/list: Introduce cxl_filter_walk()
+      cxl/list: Emit device serial numbers
+      cxl/list: Add filter by serial support
+      cxl/lib: Rename nvdimm bridge to pmem
+      cxl/list: Cleanup options definitions
+      Documentation: Enhance libcxl memdev API documentation
+      cxl/list: Add bus objects
+      util/json: Warn on stderr about empty list results
+      util/sysfs: Uplevel modalias lookup helper to util/
+      cxl/list: Add port enumeration
+      cxl/list: Add --debug option
+      cxl/list: Add endpoints
+      cxl/list: Add 'host' entries for port-like objects
+      cxl/list: Add 'host' entries for memdevs
+      cxl/list: Move enabled memdevs underneath their endpoint
+      cxl/list: Filter memdev by ancestry
+      cxl/memdev: Use a local logger for debug
+      cxl/memdev: Cleanup memdev filter
+      cxl/memdev: Add serial support for memdev-related commands
+      cxl/list: Add 'numa_node' to memdev listings
+      util: Implement common bind/unbind helpers
+      cxl/memdev: Enable / disable support
+      cxl/list: Add decoder support
+      cxl/list: Extend decoder objects with target information
+      cxl/list: Use 'physical_node' for root port attachment detection
+      cxl/list: Reuse the --target option for ports
+      cxl/list: Support filtering memdevs by decoders
+      cxl/list: Support filtering memdevs by ports
+      cxl/port: Add {disable,enable}-port command
+      cxl/list: Filter dports and targets by memdevs
+      build: Automate rpmbuild.sh
 
-Wise advice.  Having added documentation it is clear this was strangely ordered
-and contained at least one bug.  Guess I took this on a bit too much trust.
+Jay W (1):
+      Update ndctl.spec to allow flatpak builds
 
-> 
-> 
-> > +    aml_append(if_uuid,
-> > +               aml_and(aml_name("CTRL"), aml_int(0x1F), aml_name("CTRL")));
+Michal Suchanek (2):
+      config: deduplicate monitor sample configuration.
+      spec file: Add configuration migration.
 
-This should be
-		    aml_and(a_ctrl, aml_int(0x1F), a_ctrl)
-as we haven't stored anything to CTRL yet.  The a_ctrl variable ends up named
-Local0 when disassembled  which isn't particularly intuitive.
+Shivaprasad G Bhat (1):
+      ndtest/ack-shutdown-count: Skip the test on ndtest
 
-> > +
-> > +    if_arg1_not_1 = aml_if(aml_lnot(aml_equal(aml_arg(1), aml_int(0x1))));
-> > +    /* Unknown revision */
-> > +    aml_append(if_arg1_not_1, aml_or(a_cdw1, aml_int(0x08), a_cdw1));
-> > +    aml_append(if_uuid, if_arg1_not_1);
-> > +
-> > +    if_caps_masked = aml_if(aml_lnot(aml_equal(aml_name("CDW3"), a_ctrl)));
-> > +    /* Capability bits were masked */
-> > +    aml_append(if_caps_masked, aml_or(a_cdw1, aml_int(0x10), a_cdw1));
-> > +    aml_append(if_uuid, if_caps_masked);
-> > +
-> > +    aml_append(if_uuid, aml_store(aml_name("CDW2"), aml_name("SUPP")));
-> > +    aml_append(if_uuid, aml_store(aml_name("CDW3"), aml_name("CTRL")));
-> > +
-> > +    if_cxl = aml_if(aml_equal(
-> > +        aml_arg(0), aml_touuid("68F2D50B-C469-4D8A-BD3D-941A103FD3FC")));
-> > +    /* CXL support field */
-> > +    aml_append(if_cxl, aml_create_dword_field(aml_arg(3), aml_int(12), "CDW4"));
-> > +    /* CXL capabilities */
-> > +    aml_append(if_cxl, aml_create_dword_field(aml_arg(3), aml_int(16), "CDW5"));
-> > +    aml_append(if_cxl, aml_store(aml_name("CDW4"), aml_name("SUPC")));
-> > +    aml_append(if_cxl, aml_store(aml_name("CDW5"), aml_name("CTRC")));
-> > +
-> > +    /* CXL 2.0 Port/Device Register access */
+Vaibhav Jain (5):
+      libndctl/papr: Add support for reporting shutdown-count
+      libndctl, intel: Indicate supported smart-inject types
+      libndctl/papr: Add limited support for inject-smart
+      ndctl,libndctl: Update nvdimm flags after smart-inject
+      util/size.h: Fix build error for GCC < 10
 
-Ben, this seems to be wrong to me.  CDW5 is the CXL control register
-and the only defined bit in the 2.0 spec (and no ECR or errata seems to
-have changed it) is bit 0 as CXL Memory Error Reporting Control.
-We can't control access to the Port/Device registers as that's only
-specified in the 'supported' value in CDW4.
+Vishal Verma (5):
+      ndctl: add repology graphic to README.md
+      ndctl: update README.md for meson build
+      ndctl/test: make inject-smart.sh more tolerant of decimal fields
+      util/size.h: fix build for older compilers
+      scripts/docsurgeon: Fix document header for section 1 man pages
 
-We also should be setting bits the OS didn't ask for.
+Yasunori Goto (1):
+      Documentation/ndctl: fix self-reference of ndctl disable-namespace
 
-Obvious was a long time ago now, but can you recall what was intended here?
+michalbiesek (1):
+      daxctl: provide safe versions of iteration API
 
-Thanks,
+--=-LwXJDothEIo5Z2+fbvV/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-Jonathan
+-----BEGIN PGP SIGNATURE-----
 
- 
-> > +    aml_append(if_cxl,
-> > +               aml_or(aml_name("CDW5"), aml_int(0x1), aml_name("CDW5")));
-> > +    aml_append(if_uuid, if_cxl);
-> > +
-> > +    /* Update DWORD3 (the return value) */
-> > +    aml_append(if_uuid, aml_store(a_ctrl, aml_name("CDW3")));
-> > +
-> > +    aml_append(if_uuid, aml_return(aml_arg(3)));
-> > +    aml_append(method, if_uuid);
-> > +
-> > +    else_uuid = aml_else();
-> > +
-> > +    /* unrecognized uuid */
-> > +    aml_append(else_uuid,
-> > +               aml_or(aml_name("CDW1"), aml_int(0x4), aml_name("CDW1")));
-> > +    aml_append(else_uuid, aml_return(aml_arg(3)));
-> > +    aml_append(method, else_uuid);
-> > +
-> > +    return method;
-> > +}
-> > +
-> > +void build_cxl_osc_method(Aml *dev)
-> > +{
-> > +    aml_append(dev, aml_name_decl("SUPP", aml_int(0)));
-> > +    aml_append(dev, aml_name_decl("CTRL", aml_int(0)));
-> > +    aml_append(dev, aml_name_decl("SUPC", aml_int(0)));
-> > +    aml_append(dev, aml_name_decl("CTRC", aml_int(0)));
-> > +    aml_append(dev, __build_cxl_osc_method());
-> > +}
-> > diff --git a/hw/acpi/meson.build b/hw/acpi/meson.build
-> > index 8bea2e6933..cea2f5f93a 100644
-> > --- a/hw/acpi/meson.build
-> > +++ b/hw/acpi/meson.build
-> > @@ -13,6 +13,7 @@ acpi_ss.add(when: 'CONFIG_ACPI_MEMORY_HOTPLUG', if_false: files('acpi-mem-hotplu
-> >  acpi_ss.add(when: 'CONFIG_ACPI_NVDIMM', if_true: files('nvdimm.c'))
-> >  acpi_ss.add(when: 'CONFIG_ACPI_NVDIMM', if_false: files('acpi-nvdimm-stub.c'))
-> >  acpi_ss.add(when: 'CONFIG_ACPI_PCI', if_true: files('pci.c'))
-> > +acpi_ss.add(when: 'CONFIG_ACPI_CXL', if_true: files('cxl.c'), if_false: files('cxl-stub.c'))
-> >  acpi_ss.add(when: 'CONFIG_ACPI_VMGENID', if_true: files('vmgenid.c'))
-> >  acpi_ss.add(when: 'CONFIG_ACPI_HW_REDUCED', if_true: files('generic_event_device.c'))
-> >  acpi_ss.add(when: 'CONFIG_ACPI_HMAT', if_true: files('hmat.c'))
-> > @@ -33,4 +34,5 @@ softmmu_ss.add_all(when: 'CONFIG_ACPI', if_true: acpi_ss)
-> >  softmmu_ss.add(when: 'CONFIG_ALL', if_true: files('acpi-stub.c', 'aml-build-stub.c',
-> >                                                    'acpi-x86-stub.c', 'ipmi-stub.c', 'ghes-stub.c',
-> >                                                    'acpi-mem-hotplug-stub.c', 'acpi-cpu-hotplug-stub.c',
-> > -                                                  'acpi-pci-hotplug-stub.c', 'acpi-nvdimm-stub.c'))
-> > +                                                  'acpi-pci-hotplug-stub.c', 'acpi-nvdimm-stub.c',
-> > +                                                  'cxl-stub.c'))
-> > diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
-> > index 0a28dd6d4e..b5a4b663f2 100644
-> > --- a/hw/i386/acpi-build.c
-> > +++ b/hw/i386/acpi-build.c
-> > @@ -66,6 +66,7 @@
-> >  #include "hw/acpi/aml-build.h"
-> >  #include "hw/acpi/utils.h"
-> >  #include "hw/acpi/pci.h"
-> > +#include "hw/acpi/cxl.h"
-> >  
-> >  #include "qom/qom-qobject.h"
-> >  #include "hw/i386/amd_iommu.h"
-> > @@ -1574,11 +1575,15 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
-> >              aml_append(dev, aml_name_decl("_UID", aml_int(bus_num)));
-> >              aml_append(dev, aml_name_decl("_BBN", aml_int(bus_num)));
-> >              if (pci_bus_is_cxl(bus)) {
-> > -                aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A08")));
-> > -                aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A03")));
-> > -
-> > -                /* Expander bridges do not have ACPI PCI Hot-plug enabled */
-> > -                aml_append(dev, build_q35_osc_method(true));
-> > +                struct Aml *pkg = aml_package(2);
-> > +
-> > +                aml_append(dev, aml_name_decl("_HID", aml_string("ACPI0016")));
-> > +                aml_append(pkg, aml_eisaid("PNP0A08"));
-> > +                aml_append(pkg, aml_eisaid("PNP0A03"));
-> > +                aml_append(dev, aml_name_decl("_CID", pkg));
-> > +                aml_append(dev, aml_name_decl("_ADR", aml_int(0)));
-> > +                aml_append(dev, aml_name_decl("_UID", aml_int(bus_num)));
-> > +                build_cxl_osc_method(dev);
-> >              } else if (pci_bus_is_express(bus)) {
-> >                  aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A08")));
-> >                  aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A03")));
-> > diff --git a/include/hw/acpi/cxl.h b/include/hw/acpi/cxl.h
-> > new file mode 100644
-> > index 0000000000..7b8f3b8a2e
-> > --- /dev/null
-> > +++ b/include/hw/acpi/cxl.h
-> > @@ -0,0 +1,23 @@
-> > +/*
-> > + * Copyright (C) 2020 Intel Corporation
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License as published by
-> > + * the Free Software Foundation; either version 2 of the License, or
-> > + * (at your option) any later version.
-> > +
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > +
-> > + * You should have received a copy of the GNU General Public License along
-> > + * with this program; if not, see <http://www.gnu.org/licenses/>.
-> > + */
-> > +
-> > +#ifndef HW_ACPI_CXL_H
-> > +#define HW_ACPI_CXL_H
-> > +
-> > +void build_cxl_osc_method(Aml *dev);
-> > +
-> > +#endif
-> > -- 
-> > 2.32.0  
-> 
+iHUEABYKAB0WIQT9vPEBxh63bwxRYEEPzq5USduLdgUCYiaMCAAKCRAPzq5USduL
+dtCbAQD6XW65ba6Fm9GZgMTtvsBunCOkc+i4i8dw87q/uMGA+wEA2EE50PKhCX3e
+FpTa0L5OJDY7+z2YDjFNkbtyOVNkiQk=
+=K9qb
+-----END PGP SIGNATURE-----
 
+--=-LwXJDothEIo5Z2+fbvV/--
