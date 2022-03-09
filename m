@@ -2,113 +2,213 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DFFC433EF
-	for <linux-cxl@archiver.kernel.org>; Wed,  9 Mar 2022 08:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2748AC433EF
+	for <linux-cxl@archiver.kernel.org>; Wed,  9 Mar 2022 11:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229861AbiCIIQh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 9 Mar 2022 03:16:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36696 "EHLO
+        id S232125AbiCIL3g (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 9 Mar 2022 06:29:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231233AbiCIIQh (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Mar 2022 03:16:37 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 74F3F163D5B
-        for <linux-cxl@vger.kernel.org>; Wed,  9 Mar 2022 00:15:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646813738;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IQGsDgfSF8Kw9vxZ+gu1l0IplnaO0hq0RNvBXA+sM54=;
-        b=TCjQ/KokoodHMfZVowO+9ue4rhGY8AJKdQnrS10bInMkcO/zxckl3659ZdtRSjENHD9DGI
-        +wRa7HPxD5qQlsuRsKOvCL9Ba9k2wb/nuyy6CNKNTBjvHC2WQOh1weIzIpp0XaH3GVEcrF
-        xmWYkMB3hlnuLbcK2/6P+cn6cgL049U=
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
- [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-70-ixCNgKL6Njm5XQRYGM6NeA-1; Wed, 09 Mar 2022 03:15:37 -0500
-X-MC-Unique: ixCNgKL6Njm5XQRYGM6NeA-1
-Received: by mail-pf1-f200.google.com with SMTP id x8-20020aa79ac8000000b004f6caa3e63dso1120815pfp.17
-        for <linux-cxl@vger.kernel.org>; Wed, 09 Mar 2022 00:15:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IQGsDgfSF8Kw9vxZ+gu1l0IplnaO0hq0RNvBXA+sM54=;
-        b=0VPaOaS53qLNuwuc9TI/Qbv6hBp26MhrB4JXBd2utUqW2LvUc8DiO15GPUg7Cl+JSI
-         0K7X0D5g8vGmGtDX/IQL2ZmDeJH9ar/9UNFDxonEedTLR7az1dOlmYJhgFxHPFxxWLzf
-         G+Ss/O3YAYIqi4dWArUYp7GSxgDhQaDMzUpVYCiOEZ+8u99zFADVOLxyK1mylTS+jOqJ
-         r2OK2JZYQYbYPa45w6ELNygBUnFPh0AqZwnFs/2kLQfGJRQNBvRh+1+Qv0dxXrkNzxro
-         9S5HspR45VTCB/38nqqDaRuwXT04vVYEdPP2eVwq2M33L/wYYbrYzB8c5Quxy+5UIL8a
-         3lbg==
-X-Gm-Message-State: AOAM5331jvvivudTttj+5qiMbVjVl0N78cf9VU6AJI54O6OydMlEdhXQ
-        8vO0cr/dwcwpVARYcn5tImrO/bUMXgPGajqXpBUllCY6grkfAkganKSn9WeN4eWZfYi2riHjsDI
-        GxGn1zF/tpkeExlSS9mGY
-X-Received: by 2002:a05:6a00:84b:b0:4f7:439b:64e6 with SMTP id q11-20020a056a00084b00b004f7439b64e6mr4208192pfk.51.1646813736299;
-        Wed, 09 Mar 2022 00:15:36 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwjt7wYmUS6huK2BOrY+8jGjuBaXK2e76PQHDJmizQXhGrpH7EOG83FDPQiglJ8wFF696nACA==
-X-Received: by 2002:a05:6a00:84b:b0:4f7:439b:64e6 with SMTP id q11-20020a056a00084b00b004f7439b64e6mr4208159pfk.51.1646813735990;
-        Wed, 09 Mar 2022 00:15:35 -0800 (PST)
-Received: from xz-m1.local ([94.177.118.47])
-        by smtp.gmail.com with ESMTPSA id l13-20020a056a00140d00b004e13da93eaasm1750449pfu.62.2022.03.09.00.15.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Mar 2022 00:15:35 -0800 (PST)
-Date:   Wed, 9 Mar 2022 16:15:24 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        with ESMTP id S231309AbiCIL3f (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Mar 2022 06:29:35 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20E4A69281
+        for <linux-cxl@vger.kernel.org>; Wed,  9 Mar 2022 03:28:34 -0800 (PST)
+Received: from fraeml709-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KD8zm0pY0z67TNp;
+        Wed,  9 Mar 2022 19:27:00 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Wed, 9 Mar 2022 12:28:30 +0100
+Received: from localhost (10.47.72.217) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Wed, 9 Mar
+ 2022 11:28:28 +0000
+Date:   Wed, 9 Mar 2022 11:28:27 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Peter Xu <peterx@redhat.com>
+CC:     "Michael S. Tsirkin" <mst@redhat.com>,
         Peter Maydell <peter.maydell@linaro.org>,
-        Ben Widawsky <ben.widawsky@intel.com>, qemu-devel@nongnu.org,
+        Ben Widawsky <ben.widawsky@intel.com>, <qemu-devel@nongnu.org>,
         Samarth Saxena <samarths@cadence.com>,
-        Chris Browy <cbrowy@avery-design.com>, linuxarm@huawei.com,
-        linux-cxl@vger.kernel.org, Markus Armbruster <armbru@redhat.com>,
-        Shreyas Shah <shreyas.shah@elastics.cloud>,
+        Chris Browy <cbrowy@avery-design.com>, <linuxarm@huawei.com>,
+        <linux-cxl@vger.kernel.org>, Markus Armbruster <armbru@redhat.com>,
+        "Shreyas Shah" <shreyas.shah@elastics.cloud>,
         Saransh Gupta1 <saransh@ibm.com>,
         Shameerali Kolothum Thodi 
         <shameerali.kolothum.thodi@huawei.com>,
-        Marcel Apfelbaum <marcel@redhat.com>,
+        "Marcel Apfelbaum" <marcel@redhat.com>,
         Igor Mammedov <imammedo@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        Alex =?ISO-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
         Paolo Bonzini <pbonzini@redhat.com>,
         David Hildenbrand <david@redhat.com>
 Subject: Re: [PATCH v7 00/46] CXl 2.0 emulation Support
-Message-ID: <YihiHNxVjDFI0Z8r@xz-m1.local>
+Message-ID: <20220309112827.00002c73@Huawei.com>
+In-Reply-To: <YihiHNxVjDFI0Z8r@xz-m1.local>
 References: <20220306174137.5707-1-Jonathan.Cameron@huawei.com>
- <20220306163119-mutt-send-email-mst@kernel.org>
- <20220307093918.00002f20@Huawei.com>
+        <20220306163119-mutt-send-email-mst@kernel.org>
+        <20220307093918.00002f20@Huawei.com>
+        <YihiHNxVjDFI0Z8r@xz-m1.local>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <20220307093918.00002f20@Huawei.com>
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=peterx@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.72.217]
+X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Mar 07, 2022 at 09:39:18AM +0000, Jonathan Cameron via wrote:
-> If any of the memory maintainers can take a look at patch 34 that would
-> be great as to my mind that and the related interleave decoding in general is
-> the big unknown in this set. I just realized I haven't cc'd everyone
-> I should have for that - added them here and I'll make sure to CC them
-> all on V8.
+On Wed, 9 Mar 2022 16:15:24 +0800
+Peter Xu <peterx@redhat.com> wrote:
 
-https://lore.kernel.org/qemu-devel/20220306174137.5707-35-Jonathan.Cameron@huawei.com/
+> On Mon, Mar 07, 2022 at 09:39:18AM +0000, Jonathan Cameron via wrote:
+> > If any of the memory maintainers can take a look at patch 34 that would
+> > be great as to my mind that and the related interleave decoding in general is
+> > the big unknown in this set. I just realized I haven't cc'd everyone
+> > I should have for that - added them here and I'll make sure to CC them
+> > all on V8.  
 
-Having mr->ops set but with memory_access_is_direct() returning true sounds
-weird to me.
+Hi Peter,
 
-Sorry to have no understanding of the whole picture, but.. could you share
-more on what's the interleaving requirement on the proxying, and why it
-can't be done with adding some IO memory regions as sub-regions upon the
-file one?
+> 
+> https://lore.kernel.org/qemu-devel/20220306174137.5707-35-Jonathan.Cameron@huawei.com/
+> 
+> Having mr->ops set but with memory_access_is_direct() returning true sounds
+> weird to me.
+> 
+> Sorry to have no understanding of the whole picture, but.. could you share
+> more on what's the interleaving requirement on the proxying, and why it
+> can't be done with adding some IO memory regions as sub-regions upon the
+> file one?
+
+The proxying requirement is simply a means to read/write to a computed address
+within a memory region. There may well be a better way to do that.
+
+If I understand your suggestion correctly you would need a very high
+number of IO memory regions to be created dynamically when particular sets of
+registers across multiple devices in the topology are all programmed.
+
+The interleave can be 256 bytes across up to 16x, many terabyte, devices.
+So assuming a simple set of 16 1TB devices I think you'd need about 4x10^9
+IO regions.  Even for a minimal useful test case of largest interleave
+set of 16x 256MB devices (256MB is minimum size the specification allows per
+decoded region at the device) and 16 way interleave we'd need 10^6 IO regions.
+Any idea if that approach would scale sensibly to this number of regions?
+
+There are also complexities to getting all the information in one place to
+work out which IO memory regions maps where in PA space. Current solution is
+to do that mapping in the same way the hardware does which is hierarchical,
+so we walk the path to the device, picking directions based on each interleave
+decoder that we meet.
+Obviously this is a bit slow but I only really care about correctness at the
+moment.  I can think of various approaches to speeding it up but I'm not sure
+if we will ever care about performance.
+
+https://gitlab.com/jic23/qemu/-/blob/cxl-v7-draft-2-for-test/hw/cxl/cxl-host.c#L131
+has the logic for that and as you can see it's fairly simple because we are always
+going down the topology following the decoders.
+
+Below I have mapped out an algorithm I think would work for doing it with
+IO memory regions as subregions.
+
+We could fake the whole thing by limiting ourselves to small host
+memory windows which are always directly backed, but then I wouldn't
+achieve the main aim of this which is to provide a test base for the OS code.
+To do that I need real interleave so I can seed the files with test patterns
+and verify the accesses hit the correct locations. Emulating what the hardware
+is actually doing on a device by device basis is the easiest way I have
+come up with to do that.
+
+Let me try to provide some more background so you hopefully don't have
+to have read the specs to follow what is going on!
+There are an example for directly connected (no switches) topology in the
+docs
+
+https://gitlab.com/jic23/qemu/-/blob/cxl-v7-draft-2-for-test/docs/system/devices/cxl.rst
+
+The overall picture is we have a large number of CXL Type 3 memory devices,
+which at runtime (by OS at boot/on hotplug) are configured into various
+interleaving sets with hierarchical decoding at the host + host bridge
++ switch levels. For test setups I probably need to go to around 32 devices
+so I can hit various configurations simultaneously.
+No individual device has visibility of the full interleave setup - hence
+the walk in the existing code through the various decoders to find the
+final Device Physical address.
+
+At the host level the host provides a set of Physical Address windows with
+a fixed interleave decoding across the different host bridges in the system
+(CXL Fixed Memory windows, CFMWs)
+On a real system these have to be large enough to allow for any memory
+devices that might be hotplugged and all possible configurations (so
+with 2 host bridges you need at least 3 windows in the many TB range,
+much worse as the number of host bridges goes up). It'll be worse than
+this when we have QoS groups, but the current Qemu code just puts all
+the windows in group 0.  Hence my first thought of just putting memory
+behind those doesn't scale (a similar approach to this was in the
+earliest versions of this patch set - though the full access path
+wasn't wired up).
+
+The granularity can be in powers of 2 from 256 bytes to 16 kbytes
+
+Next each host bridge has programmable address decoders which take the
+incoming (often already interleaved) memory access and direct them to
+appropriate root ports.  The root ports can be connected to a switch
+which has additional address decoders in the upstream port to decide
+which downstream port to route to.  Note we currently only support 1 level
+of switches but it's easy to make this algorithm recursive to support
+multiple switch levels (currently the kernel proposals only support 1 level)
+
+Finally the End Point with the actual memory receives the interleaved request and
+takes the full address and (for power of 2 decoding - we don't yet support
+3,6 and 12 way which is more complex and there is no kernel support yet)
+it drops a few address bits and adds an offset for the decoder used to
+calculate it's own device physical address.  Note device will support
+multiple interleave sets for different parts of it's file once we add
+multiple decoder support (on the todo list).
+
+So the current solution is straight forward (with the exception of that
+proxying) because it follows the same decoding as used in real hardware
+to route the memory accesses. As a result we get a read/write to a
+device physical address and hence proxy that.  If any of the decoders
+along the path are not configured then we error out at that stage.
+
+To create the equivalent as IO subregions I think we'd have to do the
+following from (this might be mediated by some central entity that
+doesn't currently exist, or done on demand from which ever CXL device
+happens to have it's decoder set up last)
+
+1) Wait for a decoder commit (enable) on any component. Goto 2.
+2) Walk the topology (up to host decoder, down to memory device)
+If a complete interleaving path has been configured -
+   i.e. we have committed decoders all the way to the memory
+   device goto step 3, otherwise return to step 1 to wait for
+   more decoders to be committed.
+3) For the memory region being supplied by the memory device,
+   add subregions to map the device physical address (address
+   in the file) for each interleave stride to the appropriate
+   host Physical Address.
+4) Return to step 1 to wait for more decoders to commit.
+
+So summary is we can do it with IO regions, but there are a lot of them
+and the setup is somewhat complex as we don't have one single point in
+time where we know all the necessary information is available to compute
+the right addresses.
+
+Looking forward to your suggestions if I haven't caused more confusion!
 
 Thanks,
 
--- 
-Peter Xu
+Jonathan
+
+
+> 
+> Thanks,
+> 
 
