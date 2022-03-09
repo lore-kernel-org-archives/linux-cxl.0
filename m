@@ -2,279 +2,113 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D03AC43217
-	for <linux-cxl@archiver.kernel.org>; Mon,  7 Mar 2022 22:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DFFC433EF
+	for <linux-cxl@archiver.kernel.org>; Wed,  9 Mar 2022 08:15:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243322AbiCGWvQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 7 Mar 2022 17:51:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34286 "EHLO
+        id S229861AbiCIIQh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 9 Mar 2022 03:16:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239416AbiCGWvP (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Mar 2022 17:51:15 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 649416FA18
-        for <linux-cxl@vger.kernel.org>; Mon,  7 Mar 2022 14:50:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646693418; x=1678229418;
-  h=from:to:subject:date:message-id:mime-version;
-  bh=KBH953ovLu8NKPZKlA6aucArDn5aTsmIziQlUHzX5fM=;
-  b=Wux/xJjGQJiNiFQqaAqS428MJVIri3R+lZvhlCNDcYlPmpIULi+0a6nB
-   D2szZ+lalaJ0nTdidNZ2XzjQ5LQqjkCqvkTgFHOVBE1TvwqQLqyeTs27+
-   wu2OB2ilpyr9Y4cgGD9qI9GJK3/im81xJIrq+i3SkdOP/8Hq6XZlT3P8m
-   bwg/bh6jHW/Aa6gfMpdDIGltWIYErK2nbiGE+va7D6Vi8FKIt2EwQva97
-   GVCng84Pazj5gxA+NcGlCt8p7VdbXYV4RtPvN3IzeIwEZV1MRBS4LjC5s
-   GxvU0hNginkDHfQ/VOsYEso4GKRPjLvdEUtNLLU8v8auuPzkwbw82HeSu
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10279"; a="235136245"
-X-IronPort-AV: E=Sophos;i="5.90,163,1643702400"; 
-   d="asc'?scan'208";a="235136245"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2022 14:50:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,163,1643702400"; 
-   d="asc'?scan'208";a="509876853"
-Received: from fmsmsx604.amr.corp.intel.com ([10.18.126.84])
-  by orsmga002.jf.intel.com with ESMTP; 07 Mar 2022 14:50:08 -0800
-Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
- fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Mon, 7 Mar 2022 14:50:08 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Mon, 7 Mar 2022 14:50:08 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21 via Frontend Transport; Mon, 7 Mar 2022 14:50:08 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.173)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.21; Mon, 7 Mar 2022 14:50:07 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JSrSJ6MmLXErRN8Hhh3ap3kAKcE6YW9yaQkBKzjKgsjzHrTqaD8J0hHurTRLx652NEOQCVf6ffwtgZ7dyyo/X4TKHTt8oJlLYKIaf34YsAtCtu598dQgx3+AwXCqTM6860gUISwsHMVu3+YVIg/N+/H0Clee6Dj6bfm7LCzi44+yaK67Viz0+9rGkfgrsXawzKi3z12rc66T3sb+2Cs9V8lZjrVWwsUs8wLRthanZ3n0+Vamn44jqwSq0rrX4COEYSQZRa5IPOthLcTMtZDf1Wb41Y+bsGXXi6FMD7upVCGH8kJ7VTrcAWqb4G7cGvcZW6r0xW0F6Nb0qwnf5EaMMQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rUGlI8pCGydMwIJAGAne5NakpCQfbcQBitZVIzp9oaI=;
- b=V6g0Jy/msVc0HgoSy1c7dZ9kJm066KJ8NEnrBNbINn1wXlgLQAL3XgHTfw88mh8D6W+HO2CQfdSqzHsxslEto0wSVXtZKqTgVbtZPZz8YhXR+28Bqz8ohKK4c12/ro2kyZEBxTH+gTPiVjSJjrRINqBRneTNrhGVcDUMwuSQyTWIIIzuZaVWk9CdnjY7VYrC+IpFjMESusH40GmUka2b9dZXMHeb2Rp26b/4gvWTjqVLhr193/UikV3idIb3Fr40N6CbP032XlpF9r3EvYsFN2gDEXecdu8nVxH4t2qs23sVnMvhQ9CkFK+vUB6wj3IdWF6OLK9Pj06Gf2OVFL2eNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MN2PR11MB3999.namprd11.prod.outlook.com (2603:10b6:208:154::32)
- by BYAPR11MB2744.namprd11.prod.outlook.com (2603:10b6:a02:c8::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.17; Mon, 7 Mar
- 2022 22:50:00 +0000
-Received: from MN2PR11MB3999.namprd11.prod.outlook.com
- ([fe80::d898:84ee:d6a:4eb1]) by MN2PR11MB3999.namprd11.prod.outlook.com
- ([fe80::d898:84ee:d6a:4eb1%6]) with mapi id 15.20.5038.027; Mon, 7 Mar 2022
- 22:50:00 +0000
-From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
-To:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
-Subject: [ANNOUNCE] ndctl v73
-Thread-Topic: [ANNOUNCE] ndctl v73
-Thread-Index: AQHYMnWsq8bv32b5L0CkeNwqeBzLpQ==
-Date:   Mon, 7 Mar 2022 22:49:59 +0000
-Message-ID: <463edbb8e97b4df27ed61e580e5d1b84e0a0970b.camel@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.42.4 (3.42.4-1.fc35) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bf4e7b21-9c59-41a1-bfa8-08da008ccf88
-x-ms-traffictypediagnostic: BYAPR11MB2744:EE_
-x-microsoft-antispam-prvs: <BYAPR11MB27443AFB21197BA457229248C7089@BYAPR11MB2744.namprd11.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NHAiaPFkjEBCEz214hkOZjIEwjnEXzuu+biiosbvJga4eizP7iVHXvZCmhAh5PzBU43EmUah2ZNyj+GrxHLno7T62XNFM1ZFKsszX+s1eooeTO4QwmB2W9d+2x4lOijShCUUp43SsGztYbkGwLV5O7FUi1yP+nlfjnjkHh3en5YCoH57duItFiopiEkBSWxMpX4VfwhYR0RO5d6iPDEmsXYMPZohRf0AkBL1ika8uTQeBQ6Qn+4l9XNv46Ti0gpL+FhBWUkdK+mzVeCf1nf/uDRNlj7Hn0rIWV3H+5fmkSsm+I7rz7hTO9d8bIuUEQ/aQDMv8V3ZblxY1PNiLMVU5disUKuH8B3uUEXELOditKmOD2ocFKBgWUm3g+L7AH3sLsjH7yigQJkxXXbMqnIxoixxE5wrFNVxbLWok2VLirrhwjX2QbYavtDU+Z3RmtXwo7hStvKmQvN41bn17TBb2uysIAoZZS7TtwJn64lgZaiugEbvevPg55V9OiLWFekRQ4Y99qIrB+Q/MlMrw/Alko9/dbxR3XN8E7qkSfCDrFI9fHLjHsmBTZsg1lPmND7HHWeT6HYW/+tKZuElDPnvORkeYV+vFyW9am2lQo8wk2EV4gCBXKMRkpQDqvnR/69/keWqcaUjxBcidhKE4a0dz8+Ns9PpP3AjA5m+mpvuDCtAOYclgFqCuTXCtLTkHrxoDNccqAI0CDWsFVUbR9x2YA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB3999.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(38100700002)(82960400001)(38070700005)(2616005)(186003)(6512007)(26005)(2906002)(5660300002)(8676002)(64756008)(66446008)(66476007)(66556008)(86362001)(83380400001)(66946007)(76116006)(91956017)(6506007)(110136005)(316002)(8936002)(36756003)(6486002)(508600001)(122000001)(99936003)(71200400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?NFdWeVBub0t0Tzh0R3o3cVkxRHMzSDI4UWdKUHhoalhsZ2Q4dlZhazlaQXZ0?=
- =?utf-8?B?cGZCMzAzQWxVemN4Q2kweE5XZG1naGFYU2hCSngrdDB5UHU0VDNybDdtR3Vo?=
- =?utf-8?B?b2pURzljamNrRkp0anJUaUlVRHNVc1ZFSithclRqRnIvK0NWWThWcGpIWkky?=
- =?utf-8?B?RGMzbHF1cEVzZnFMOVVaK08yYnhFOE8weitSd1QzT1FEbTV4ODRoN1lRNExm?=
- =?utf-8?B?NDlSOU5XOGQ0dDlkd2N0V0Zna3oyaXo1Z0RqZlh4ZG1qV1B1TVBFNENsaUo0?=
- =?utf-8?B?bUZHalE3RTM4NU9tZFlBUmh1aWdLNytvbHFZbUhCTjJ0NDJlblRvYUwwbmlQ?=
- =?utf-8?B?MDZWUVpqV3F1akJpR0J2Y2Z2aVZNNWRrWEVFaTYrbWpISU94QkpPT0EvejVO?=
- =?utf-8?B?Q0V3S3YwZlp2MW5IdWJoYUtERlM3N05TQTloeWJmdnV4cDVHSTZYUGlpVjA3?=
- =?utf-8?B?eTdsUXM5Q2pLdW9yS0ZHbm80YlA4VG0yVEU5V3ZLQm83RzdpV1VEUnJra1Zk?=
- =?utf-8?B?SEJIWHlCUHkxKzVTeCt5TlRjSDV3VmdZU3VadU1VNXFFWUxZUEpGbDYwcFc2?=
- =?utf-8?B?eW9qMWgzVGRiMFp5QXU4ODRZTUtQNGRyV2NrNzRYSm80dnJYaUtmY0lzNUFk?=
- =?utf-8?B?eDQvYTZEWkczSFBWNlgwQnRQRXJUSE50OHUrTkJPNXlRWlg5cEhkT2Mvc2pP?=
- =?utf-8?B?bWtZTFNDWmp1MUFqU29RdjIwQUhzQmNLYzV4bkRVTkQ4QS9WQWVZZmpJQ1pE?=
- =?utf-8?B?VDhTOCtnd0Y0cS9MNUtrQjAzSEtnbm43ZUZReU01KzJqY2ZmMlBNdnB2Zmxv?=
- =?utf-8?B?M2xzWEZ4VW1kVFhsV0lvRFVBUVRJL0ZJUS9GTVFDcmRUYVNxR0Z6K214dGlo?=
- =?utf-8?B?Q1p4Rmw1QmN1czZCd3J3ZGt0SlgxVktxTEl5UlVLSEw2MWRnQmJLR2JSYzBY?=
- =?utf-8?B?dkdLRHh1dzd2U2RyRHhYTFppaGxvWS9kYmdvWTBKczRHUkp5NVVvelh6RTF5?=
- =?utf-8?B?NnNCc2xxdTRBb2FRNnA1S0Y4V0ZlRFd4NkRndEczdnRBODJTZ1hZNGxKZUl5?=
- =?utf-8?B?NCtiSkJ2Rm5qbitVWXVmZ3kzQ2U1a3l3Z1YyZ1FUSk41Y0ZOeG9FUUo0N2dk?=
- =?utf-8?B?djhFOVEwMFpqSlJTM3pEWHBYdHRKcmgvWE10bWNBZmVVOENjWjVucVBTOVkz?=
- =?utf-8?B?ZnFMeWw3ejU3L2REUjh4ekpSa0J4OUlDSThLQVBDS0RlL2FkS05qdlkyWmQy?=
- =?utf-8?B?dWQvNEdyTGhXU09ZbHRxSWVPVGhsUkEwOVQwUTVjT0NZOXNwMU5hOGpyaGl4?=
- =?utf-8?B?VEVoQWI5WXQ0M0hIRnNYdDltRGp5azZyYlpkNkVVVVg5dWk0RFUydmxRalhy?=
- =?utf-8?B?ZjQ4ODdyZVRtQ0hDOVRmVlNoN2ZuVXFlS21xNFhuSEtSeTZsMGtXeVpuam93?=
- =?utf-8?B?bnZ6ZXlvS2xqNnNlWFFxcElHbDNZRCsycnRlS1lTZ09FaWJvcWE0eXZXd3BV?=
- =?utf-8?B?bklGZERKNG82dml3aVE4aEdpK2dkNHpmWWRJcGFqRGllMDNTRlVlWTk4bnBw?=
- =?utf-8?B?dWl2WnpqTUs3T2Juc2FpQWdVdll2Tzg2Y1A1Y1h5SitWOUdqcXhJTEhMd1Q5?=
- =?utf-8?B?aW9OK25XVFhKUVc4bnNZSHA2Um5IQ1YrR01GZDlIVWdScHpVRURISk9HWFo2?=
- =?utf-8?B?QXFKNHlhU01uT2tFUW1HdGZMZGJyN1BDcG1EbVMxMXZlcVVlVlJRckZrTWM4?=
- =?utf-8?B?eDBSQTFkR0VGeXJxTTc1b0VZWGhHM3RlNXdva3FOV3h5RDcxZDJTSlZpM21p?=
- =?utf-8?B?R3VnYnBiWVdzQjkzQjNCeUJwaGNURzdhUVV2K2t2RTNRL0J1NWMzUmlrOWlR?=
- =?utf-8?B?TkRScm00VXhhMlc5QjRsWnpPNm80NzNNWkdXWlRFYjJaUU9OczVSZHRETFZF?=
- =?utf-8?B?QmxPajNlWC81c2pMZVpPL3N2Q0J0cTBmekt0TG1vSVlvNTVZaHVray9FTjNM?=
- =?utf-8?B?Sk80Z3RVNjBPSGZJUGQ4OEhYM1BsMS9RQVd2WE9zRzQvVTFMWGs0aDQrU1Ju?=
- =?utf-8?B?UktpZmtXalJmMFpFYkdNR2xUYkgwTXowbmpoTUxtdU8vTDdlblMybllLMGQr?=
- =?utf-8?B?SWRyMXphcVZFUnZvOTVTVG5SaGtKRXRnWnNZdHk5SDdMQldtS0p3enV2VnFD?=
- =?utf-8?B?a2ZhN1l1M0FwK3VlK0xHUHhXTkVWcDl6U2VUMCtOUGFtMnA5MjNxRVhjSUU0?=
- =?utf-8?Q?PkrCcycjukC6VS7dIvTlVbTLKbqmxb5fhnxeE1xKlk=3D?=
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="=-LwXJDothEIo5Z2+fbvV/"
+        with ESMTP id S231233AbiCIIQh (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Mar 2022 03:16:37 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 74F3F163D5B
+        for <linux-cxl@vger.kernel.org>; Wed,  9 Mar 2022 00:15:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646813738;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=IQGsDgfSF8Kw9vxZ+gu1l0IplnaO0hq0RNvBXA+sM54=;
+        b=TCjQ/KokoodHMfZVowO+9ue4rhGY8AJKdQnrS10bInMkcO/zxckl3659ZdtRSjENHD9DGI
+        +wRa7HPxD5qQlsuRsKOvCL9Ba9k2wb/nuyy6CNKNTBjvHC2WQOh1weIzIpp0XaH3GVEcrF
+        xmWYkMB3hlnuLbcK2/6P+cn6cgL049U=
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
+ [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-70-ixCNgKL6Njm5XQRYGM6NeA-1; Wed, 09 Mar 2022 03:15:37 -0500
+X-MC-Unique: ixCNgKL6Njm5XQRYGM6NeA-1
+Received: by mail-pf1-f200.google.com with SMTP id x8-20020aa79ac8000000b004f6caa3e63dso1120815pfp.17
+        for <linux-cxl@vger.kernel.org>; Wed, 09 Mar 2022 00:15:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IQGsDgfSF8Kw9vxZ+gu1l0IplnaO0hq0RNvBXA+sM54=;
+        b=0VPaOaS53qLNuwuc9TI/Qbv6hBp26MhrB4JXBd2utUqW2LvUc8DiO15GPUg7Cl+JSI
+         0K7X0D5g8vGmGtDX/IQL2ZmDeJH9ar/9UNFDxonEedTLR7az1dOlmYJhgFxHPFxxWLzf
+         G+Ss/O3YAYIqi4dWArUYp7GSxgDhQaDMzUpVYCiOEZ+8u99zFADVOLxyK1mylTS+jOqJ
+         r2OK2JZYQYbYPa45w6ELNygBUnFPh0AqZwnFs/2kLQfGJRQNBvRh+1+Qv0dxXrkNzxro
+         9S5HspR45VTCB/38nqqDaRuwXT04vVYEdPP2eVwq2M33L/wYYbrYzB8c5Quxy+5UIL8a
+         3lbg==
+X-Gm-Message-State: AOAM5331jvvivudTttj+5qiMbVjVl0N78cf9VU6AJI54O6OydMlEdhXQ
+        8vO0cr/dwcwpVARYcn5tImrO/bUMXgPGajqXpBUllCY6grkfAkganKSn9WeN4eWZfYi2riHjsDI
+        GxGn1zF/tpkeExlSS9mGY
+X-Received: by 2002:a05:6a00:84b:b0:4f7:439b:64e6 with SMTP id q11-20020a056a00084b00b004f7439b64e6mr4208192pfk.51.1646813736299;
+        Wed, 09 Mar 2022 00:15:36 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwjt7wYmUS6huK2BOrY+8jGjuBaXK2e76PQHDJmizQXhGrpH7EOG83FDPQiglJ8wFF696nACA==
+X-Received: by 2002:a05:6a00:84b:b0:4f7:439b:64e6 with SMTP id q11-20020a056a00084b00b004f7439b64e6mr4208159pfk.51.1646813735990;
+        Wed, 09 Mar 2022 00:15:35 -0800 (PST)
+Received: from xz-m1.local ([94.177.118.47])
+        by smtp.gmail.com with ESMTPSA id l13-20020a056a00140d00b004e13da93eaasm1750449pfu.62.2022.03.09.00.15.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Mar 2022 00:15:35 -0800 (PST)
+Date:   Wed, 9 Mar 2022 16:15:24 +0800
+From:   Peter Xu <peterx@redhat.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Ben Widawsky <ben.widawsky@intel.com>, qemu-devel@nongnu.org,
+        Samarth Saxena <samarths@cadence.com>,
+        Chris Browy <cbrowy@avery-design.com>, linuxarm@huawei.com,
+        linux-cxl@vger.kernel.org, Markus Armbruster <armbru@redhat.com>,
+        Shreyas Shah <shreyas.shah@elastics.cloud>,
+        Saransh Gupta1 <saransh@ibm.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Marcel Apfelbaum <marcel@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v7 00/46] CXl 2.0 emulation Support
+Message-ID: <YihiHNxVjDFI0Z8r@xz-m1.local>
+References: <20220306174137.5707-1-Jonathan.Cameron@huawei.com>
+ <20220306163119-mutt-send-email-mst@kernel.org>
+ <20220307093918.00002f20@Huawei.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR11MB3999.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf4e7b21-9c59-41a1-bfa8-08da008ccf88
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2022 22:50:00.1894
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xcO7vqwJ7+nsScgxuX0u4WQotc5JmavqHgIFYFzewmbyYkS3F0juGXFqG+n5paLPJPNttfEh/4WdaN8E/6LcGaQ9Ws2ShmTGZDaC0uqqv24=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2744
-X-OriginatorOrg: intel.com
+In-Reply-To: <20220307093918.00002f20@Huawei.com>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=peterx@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
---=-LwXJDothEIo5Z2+fbvV/
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Mon, Mar 07, 2022 at 09:39:18AM +0000, Jonathan Cameron via wrote:
+> If any of the memory maintainers can take a look at patch 34 that would
+> be great as to my mind that and the related interleave decoding in general is
+> the big unknown in this set. I just realized I haven't cc'd everyone
+> I should have for that - added them here and I'll make sure to CC them
+> all on V8.
 
-This release incorporates functionality up to the 5.17 kernel.
+https://lore.kernel.org/qemu-devel/20220306174137.5707-35-Jonathan.Cameron@huawei.com/
 
-Highlights include full CXL topology walk and filtering in cxl-list, a
-new cxl-cli command to set memdev partitioning info, several unit test
-fixes, conversion of the build system to meson, smart error injection
-enhancements for 'papr' NVDIMMs, and RPM spec fixes to support config
-file migration, and flatpak builds.
+Having mr->ops set but with memory_access_is_direct() returning true sounds
+weird to me.
 
-The shortlog is appended below.
+Sorry to have no understanding of the whole picture, but.. could you share
+more on what's the interleaving requirement on the proxying, and why it
+can't be done with adding some IO memory regions as sub-regions upon the
+file one?
 
-Alison Schofield (10):
-      libcxl: add GET_PARTITION_INFO mailbox command and accessors
-      libcxl: add accessors for capacity fields of the IDENTIFY command
-      libcxl: return the partition alignment field in bytes
-      cxl: add memdev partition information to cxl-list
-      libcxl: add interfaces for SET_PARTITION_INFO mailbox command
-      cxl: add command 'cxl set-partition'
-      libcxl: Remove extraneous NULL checks when validating cmd status
-      libdaxctl: free resource allocated with asprintf()
-      cxl/list: tidy the error path in add_cxl_decoder()
-      cxl/list: always free the path var in add_cxl_decoder()
+Thanks,
 
-Dan Williams (55):
-      ndctl/docs: Clarify update-firwmware activation 'overflow' conditions
-      ndctl/test: Prepare for BLK-aperture support removal
-      ndctl/test: Move 'reset()' to function in 'common'
-      ndctl/test: Initialize the label area by default
-      ndctl/test: Skip BLK flags checks
-      ndctl/test: Move sector-mode to a different region
-      ndctl: Deprecate BLK aperture support
-      ndctl/test: Fix support for missing dax_pmem_compat module
-      util: Distribute 'filter' and 'json' helpers to per-tool objects
-      Documentation: Drop attrs.adoc include
-      build: Drop unnecessary $tool/config.h includes
-      test: Prepare out of line builds
-      ndctl: Drop executable bit for bash-completion script
-      build: Add meson build infrastructure
-      build: Add meson rpmbuild support
-      ndctl: Jettison autotools
-      ndctl/build: Default asciidoctor to enabled
-      test: Add 'suite' identifiers to tests
-      ndctl: Rename util_filter to ndctl_filter
-      build: Add tags
-      json: Add support for json_object_new_uint64()
-      cxl/json: Cleanup object leak false positive
-      cxl/list: Support multiple memdev device name filter arguments
-      cxl/list: Support comma separated lists
-      cxl/list: Introduce cxl_filter_walk()
-      cxl/list: Emit device serial numbers
-      cxl/list: Add filter by serial support
-      cxl/lib: Rename nvdimm bridge to pmem
-      cxl/list: Cleanup options definitions
-      Documentation: Enhance libcxl memdev API documentation
-      cxl/list: Add bus objects
-      util/json: Warn on stderr about empty list results
-      util/sysfs: Uplevel modalias lookup helper to util/
-      cxl/list: Add port enumeration
-      cxl/list: Add --debug option
-      cxl/list: Add endpoints
-      cxl/list: Add 'host' entries for port-like objects
-      cxl/list: Add 'host' entries for memdevs
-      cxl/list: Move enabled memdevs underneath their endpoint
-      cxl/list: Filter memdev by ancestry
-      cxl/memdev: Use a local logger for debug
-      cxl/memdev: Cleanup memdev filter
-      cxl/memdev: Add serial support for memdev-related commands
-      cxl/list: Add 'numa_node' to memdev listings
-      util: Implement common bind/unbind helpers
-      cxl/memdev: Enable / disable support
-      cxl/list: Add decoder support
-      cxl/list: Extend decoder objects with target information
-      cxl/list: Use 'physical_node' for root port attachment detection
-      cxl/list: Reuse the --target option for ports
-      cxl/list: Support filtering memdevs by decoders
-      cxl/list: Support filtering memdevs by ports
-      cxl/port: Add {disable,enable}-port command
-      cxl/list: Filter dports and targets by memdevs
-      build: Automate rpmbuild.sh
+-- 
+Peter Xu
 
-Jay W (1):
-      Update ndctl.spec to allow flatpak builds
-
-Michal Suchanek (2):
-      config: deduplicate monitor sample configuration.
-      spec file: Add configuration migration.
-
-Shivaprasad G Bhat (1):
-      ndtest/ack-shutdown-count: Skip the test on ndtest
-
-Vaibhav Jain (5):
-      libndctl/papr: Add support for reporting shutdown-count
-      libndctl, intel: Indicate supported smart-inject types
-      libndctl/papr: Add limited support for inject-smart
-      ndctl,libndctl: Update nvdimm flags after smart-inject
-      util/size.h: Fix build error for GCC < 10
-
-Vishal Verma (5):
-      ndctl: add repology graphic to README.md
-      ndctl: update README.md for meson build
-      ndctl/test: make inject-smart.sh more tolerant of decimal fields
-      util/size.h: fix build for older compilers
-      scripts/docsurgeon: Fix document header for section 1 man pages
-
-Yasunori Goto (1):
-      Documentation/ndctl: fix self-reference of ndctl disable-namespace
-
-michalbiesek (1):
-      daxctl: provide safe versions of iteration API
-
---=-LwXJDothEIo5Z2+fbvV/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQT9vPEBxh63bwxRYEEPzq5USduLdgUCYiaMCAAKCRAPzq5USduL
-dtCbAQD6XW65ba6Fm9GZgMTtvsBunCOkc+i4i8dw87q/uMGA+wEA2EE50PKhCX3e
-FpTa0L5OJDY7+z2YDjFNkbtyOVNkiQk=
-=K9qb
------END PGP SIGNATURE-----
-
---=-LwXJDothEIo5Z2+fbvV/--
