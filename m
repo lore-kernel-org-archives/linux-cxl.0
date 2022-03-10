@@ -2,57 +2,57 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2282EC433EF
-	for <linux-cxl@archiver.kernel.org>; Wed,  9 Mar 2022 19:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BECC433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 10 Mar 2022 03:54:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236035AbiCIUAZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 9 Mar 2022 15:00:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47172 "EHLO
+        id S234822AbiCJDz3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 9 Mar 2022 22:55:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236837AbiCIUAX (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Mar 2022 15:00:23 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD5E6D87
-        for <linux-cxl@vger.kernel.org>; Wed,  9 Mar 2022 11:59:24 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id m2so2963041pll.0
-        for <linux-cxl@vger.kernel.org>; Wed, 09 Mar 2022 11:59:24 -0800 (PST)
+        with ESMTP id S234041AbiCJDz2 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Mar 2022 22:55:28 -0500
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2EEFE4481
+        for <linux-cxl@vger.kernel.org>; Wed,  9 Mar 2022 19:54:28 -0800 (PST)
+Received: by mail-pg1-x535.google.com with SMTP id 132so3659411pga.5
+        for <linux-cxl@vger.kernel.org>; Wed, 09 Mar 2022 19:54:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qY0faMoU6BxNREoouDEmmFkWjqNRWbbfGDDwPhgFlaA=;
-        b=ivyOe9HAmFp+PudsjkLZ5tKnlEZ4emhasp+yGMoOTg2U2ZJIqZkPIaXk1sql1I9WK/
-         nUQOffCU0ssrR/N1lWHZbUwROdhkUx1NUNSBwt2M8X/x7LR6luljUNwitO9CtXykihEV
-         7kMFECvdyoBIRJtwymkhM3klne+juuikdSIPpr4gNHAkjhB3bjU74tx0mu7aEZVFWwbD
-         84UlWp9k042Z8eHBdTXX0QlWCXBn+wKUPfpEmZeHi+kLP8NdiYFPshaM0E0/HqMx5RqT
-         ep+KpE+k3C30Da7hHMeIZR2O29RGOwYnk4gzbgAodkdGpUcAefZkLPIMO8V8FjE+ryc6
-         PukQ==
+        bh=lU5YJqnIdV6EY+Secthv0iH88/tqXC8YBp4+e6GV1+A=;
+        b=vWwRMK+EIdboVO5wlmn0/o8zduvLLav44n1w6rT88q/HHODVeCiCbS+vYYbHGA6UV4
+         lsUNLp70L/1OLzQ47T9bzH+030qyZSx/MTTOE2xZetveZ6il1kDT29fEUBXfRltQ5Eu8
+         hkkeBjJSg7iHJQ+N29qLjpIytfcxW3WAzHYEDpeJ6nrZymuJHrRgOPgpJSX0+QOuHvJm
+         C4qvxbQoMS+p5LKHuVroK6YQqwERfAD36xIRKCK8+SWDj3416FPLgejd5Dp+6xYnE9CC
+         VUFsXuGvwnhvkZXGQ0wL81sF7D/YaKSVq7dbXetnhyDB0ihysr99z/98GaqyiEjgr2an
+         i4MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qY0faMoU6BxNREoouDEmmFkWjqNRWbbfGDDwPhgFlaA=;
-        b=eXfxpiDHQ37lchu68pfjRHVjoS0Gl+Rtoz6KDEjuSWB1AAt9doh719cOExMFS+bsbW
-         tTzB4v6C+TBNZY6aEowxYkAjTBJOJTfblGjoq/yadTOmQGhIPc3nMTqWCTDzRN/oAel1
-         ZSgurAiXZqWAbYosi8oBqYzfiLMItHykc778nM9w/6vFTyGAQO50PoVZABixlOpHt5z5
-         M4v1pSIrWkG2eYiAwqmY+TdBERP0zeHgU+58QtCAHgzp4UDqP5Fxl85WBLUzakxn9spE
-         ox5GKMIMH+PVzYCrDY2PLuGp3Ix+78ZEVipqbky6avu1L6Q/9k0YH7XTH8cdPJBM5j4i
-         MdDg==
-X-Gm-Message-State: AOAM531mApVN8K1MXRo7v6MuwlXh/TuHHQpw2a/y3BbQ803jJu3E9l/e
-        9lTt+/XozYy8kiGRW1g0VoF7zpHvXYe9zAkxjlUoXQ==
-X-Google-Smtp-Source: ABdhPJyybkU4/zl86lxMdAicFm/HAASMobJ7TCzsCf62cS4iwKaWjXHvqPPPTaNM0MIrxlS5E1MmhGpaOR/XFMKMpRw=
-X-Received: by 2002:a17:903:32d1:b0:151:da5c:60ae with SMTP id
- i17-20020a17090332d100b00151da5c60aemr1327115plr.34.1646855964287; Wed, 09
- Mar 2022 11:59:24 -0800 (PST)
+        bh=lU5YJqnIdV6EY+Secthv0iH88/tqXC8YBp4+e6GV1+A=;
+        b=dnuag3bsxiAPpQkLcqMz3ONGGFSLlU14CMuKgisDAGs9Gvjk8nEvs7evSNudAfaO8f
+         U1E3IH4cDwiDscH+xSMhZUTn/46n7khBPCyKsrNC19lqJY7D5WZeGtZmi0FleQ8d8SnQ
+         plENdVon+rgl6ymbxmsPXLlR4ttK+c1uFETFF6SmHgjHMuOfkG2qUgQmWXDhvZTXT2ku
+         QZ4RzbusWkMEAVoo78TMSYNJvg3RkHwi71gmv0cBFS+GS4Q0Vtaw2R3ce0JheHw8NnDR
+         stNDubNccFy5CQNcwyOezlQISBRn3QzNr8zLkLmFgOctOGBcBZ48B3KBq08g6xuDneF/
+         DYyg==
+X-Gm-Message-State: AOAM5330ySowJcUlSp9lAK3LDwEYWKrbLB7bQmNRcxps9ClQLV62SZkc
+        1H15/wDbjQH7UwhuO/NxOMXQW/UA95XHrVShjeigsw==
+X-Google-Smtp-Source: ABdhPJwvemzucTPrgpseFphjjG8pwdptwyDczVK5E/gt4x73Np20Dd90o+US1aq+uxMNTq2O9E9h8MAmCdWWN6fMKqY=
+X-Received: by 2002:a05:6a02:283:b0:342:703e:1434 with SMTP id
+ bk3-20020a056a02028300b00342703e1434mr2456148pgb.74.1646884468421; Wed, 09
+ Mar 2022 19:54:28 -0800 (PST)
 MIME-Version: 1.0
 References: <164610292916.2682974.12924748003366352335.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164610295187.2682974.18123746840987009597.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20220309182650.00006b28@Huawei.com>
-In-Reply-To: <20220309182650.00006b28@Huawei.com>
+ <164610294604.2682974.11169622387063183603.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20220309182217.00006bf5@Huawei.com>
+In-Reply-To: <20220309182217.00006bf5@Huawei.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 9 Mar 2022 11:59:13 -0800
-Message-ID: <CAPcyv4iw+7WzAWykbsF+4pv9a8p0G8c6Bw5fk-JGfLZQX=susQ@mail.gmail.com>
-Subject: Re: [PATCH 04/11] cxl/core: Clamp max lock_class
+Date:   Wed, 9 Mar 2022 19:54:17 -0800
+Message-ID: <CAPcyv4jJyRZG70+P-Y8_W_MbSW42wZ=SN8DbJvUL4Q6Y7kDkvQ@mail.gmail.com>
+Subject: Re: [PATCH 03/11] cxl/core: Remove cxl_device_lock()
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc:     Greg KH <gregkh@linuxfoundation.org>,
         Rafael J Wysocki <rafael.j.wysocki@intel.com>,
@@ -67,38 +67,29 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Mar 9, 2022 at 10:27 AM Jonathan Cameron
+On Wed, Mar 9, 2022 at 10:22 AM Jonathan Cameron
 <Jonathan.Cameron@huawei.com> wrote:
 >
-> On Mon, 28 Feb 2022 18:49:11 -0800
+> On Mon, 28 Feb 2022 18:49:06 -0800
 > Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> > MAX_LOCKDEP_SUBCLASSES limits the depth of the CXL topology that can be
-> > validated by lockdep. Given that the cxl_test topology is already at
-> > this limit collapse some of the levels and clamp the max depth.
+> > In preparation for moving lockdep_mutex nested lock acquisition into the
+> > core, remove the cxl_device_lock() wrapper, but preserve
+> > cxl_lock_class() that will be used to inform the core of the subsystem's
+> > lock ordering rules.
 > >
 > > Cc: Alison Schofield <alison.schofield@intel.com>
 > > Cc: Vishal Verma <vishal.l.verma@intel.com>
 > > Cc: Ira Weiny <ira.weiny@intel.com>
 > > Cc: Ben Widawsky <ben.widawsky@intel.com>
 > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > ---
-> >  drivers/cxl/cxl.h |   21 +++++++++++++++++----
-> >  1 file changed, 17 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > index 97e6ca7e4940..1357a245037d 100644
-> > --- a/drivers/cxl/cxl.h
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -501,20 +501,33 @@ enum cxl_lock_class {
-> >       CXL_ANON_LOCK,
-> >       CXL_NVDIMM_LOCK,
-> >       CXL_NVDIMM_BRIDGE_LOCK,
 >
-> I'd be tempted to give explicit value to the one above as well
-> so it's immediate clear there is deliberate duplication here.
+> Makes sense, but perhaps the description should call out that after
+> this patch it's not just a wrapper remove, but rather the lock
+> checking is totally gone for now?
 
-Sounds good.
+Sure, that's worth a note.
 
-I also notice that clamp_lock_class() should return -1 when it wants
-to disable validation, not zero.
+>
+> Otherwise this looks fine to me. FWIW
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
