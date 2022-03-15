@@ -2,111 +2,98 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4D7C433F5
-	for <linux-cxl@archiver.kernel.org>; Mon, 14 Mar 2022 18:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B84C433EF
+	for <linux-cxl@archiver.kernel.org>; Tue, 15 Mar 2022 01:22:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239436AbiCNS6f (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 14 Mar 2022 14:58:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60830 "EHLO
+        id S234316AbiCOBX3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 14 Mar 2022 21:23:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232144AbiCNS6f (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Mar 2022 14:58:35 -0400
-Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60E0165CF
-        for <linux-cxl@vger.kernel.org>; Mon, 14 Mar 2022 11:57:23 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id A305B2C177A;
-        Mon, 14 Mar 2022 18:57:22 +0000 (UTC)
-Received: from pdx1-sub0-mail-a313.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id A94172C1466;
-        Mon, 14 Mar 2022 18:57:21 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1647284241; a=rsa-sha256;
-        cv=none;
-        b=2UvH5jcRvfUGRY7/AKK8aZq4w3uYYXxbMrbcsTTJMq1uDVkAcBpeiu2raTaTIj0LvNYgDy
-        m57lT2gjhLu6Db4YJ/SWVoNxDuqiymgQ5dH9kEeFQgAgXK2CTF5pEd19OK78L0A0wVqZlW
-        zY/K9c7BcS5Sw+pMj9uTamI9m6FXvAGfekO93k7jBBWJWFR84dZTUqHcMGD1OuHzhCQjiO
-        bxr7d/E8gdX9V8tGxNHA6VNz90ixtGBON+MTf2kHC5mmJmIfj8R01uIP2rx5zJ2SQQVBTZ
-        6htAx4dCb6OyVbRFQNBgZ9nJZI6SuOwIS2ZJRABIdy019N+mgkRM4gDss0CuDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1647284241;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=5nleZ0c0t7GX2xavCSGEWi6xPIqmw7fft/IrTavw+9k=;
-        b=YWrIB7b1+EOfc9lRfnlt8aOooePU59l2gIzggDjGWlF2Vcrkq7mxfcFqkvA2osx1iDJ4iB
-        KajoGpIOAj/dCFUZBFpyLDLVmMNhi2tGhHVhIY1Fw+S4zuVWXfAEcsOFmIrH1ODbE6/5NI
-        1JfiRO0gHlvFvysm7ODJNFl9eULiU3pqfPJPZzGH8/yJnjstKw95FkBfLLevEVOzXqZ2fS
-        tmLvvyOIE6cgaXkOBWzmoH+Iijhwab+T9HdvFBAVCq2DcdwqluOr9cK0i2Rh7gBcBzAoPS
-        vK+Jo0FiKmSg4DcU9p1nhnwAw3tiNKheLLiz7LCs5ECSpmcqLNMj6dOMLz2LUw==
-ARC-Authentication-Results: i=1;
-        rspamd-74bfb75fc6-tnhjm;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from pdx1-sub0-mail-a313.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.120.38.157 (trex/6.5.3);
-        Mon, 14 Mar 2022 18:57:22 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Broad-Gusty: 734527b8388dbfec_1647284242485_13410863
-X-MC-Loop-Signature: 1647284242485:1490249930
-X-MC-Ingress-Time: 1647284242485
-Received: from offworld (unknown [104.36.25.8])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a313.dreamhost.com (Postfix) with ESMTPSA id 4KHQl50bF5zZR;
-        Mon, 14 Mar 2022 11:57:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1647284241;
-        bh=5nleZ0c0t7GX2xavCSGEWi6xPIqmw7fft/IrTavw+9k=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=XUEPFtnVAMZYSCQPC5ySutRwaN/o6Jjmd1zfTX0gXI31KJVnrM722Fkf2khacS5QH
-         uaDOC6E3uprnVS/pY70PJ7kDGkuCJ33bnSybGpNzO0mlevEbzLSLRs4ZzypsM9xBP1
-         nSoalShO86mZGFJa7WBIFghqSnYY/FVe9+CRUj3QazocEx9LymwHyp/jRTihj9AIZs
-         bI1YQ10hGa+3PdDZSoz7s8eSilJVdZapC47EfiXoPS0ox8NrcmQEHBaP/h+eMcKTsR
-         rgHLO5Aibm443y6J8vkDBCLOQHxehMh+j3dwnh6vnb1vMuywuypYbUkKsLMWj0yRTZ
-         ninVU+uHG1NoQ==
-Date:   Mon, 14 Mar 2022 11:48:19 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Jonathan.Cameron@huawei.com,
-        ben.widawsky@intel.com
-Subject: Re: [PATCH 1/2] cxl/mem: Drop DVSEC vs EFI Memory Map sanity check
-Message-ID: <20220314184819.dzg6e5h6wym4mp2d@offworld>
-References: <164690155138.3326488.16049914482944930295.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164690155691.3326488.3362471282782924455.stgit@dwillia2-desk3.amr.corp.intel.com>
+        with ESMTP id S232197AbiCOBX2 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Mar 2022 21:23:28 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9263473AD
+        for <linux-cxl@vger.kernel.org>; Mon, 14 Mar 2022 18:22:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1647307337; x=1678843337;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4p3DGgEk6SwAVbuaSgTMZIKFYlGj8ZTXCx0tI/DeEdE=;
+  b=Y/NheOPLL0EnjrVXQaFg5W4xZttM4Z/OksxxpSAl8BYKxSK5WZkufqSw
+   WW94B/N5BtH30vK0mFJajKIZFrDSsZ2c1foIcPtxuptWQnbUsY+csCwZ7
+   4BcEdyn3m7ELA1Ty9VidP84s5ZJ8VqoU6oyndDXpo4nmN5w7hg3lWeUKc
+   SSLoFtxI6ddaoOloGORwjhbpcRK87UBCs4vBui65JDkrpOguvqzXfPfIw
+   J8t1d3rY1YZTo46bIABjCMXgx5Y82yQ3JrDrgLXbm+yEA1iTMbyJd5uGI
+   LiS5G0K/r8NaOe2L6dfVlZBbhJ4JQZ2AyVYKJfB9in/YlMJxQPasJvASa
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="342613061"
+X-IronPort-AV: E=Sophos;i="5.90,182,1643702400"; 
+   d="scan'208";a="342613061"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2022 18:22:17 -0700
+X-IronPort-AV: E=Sophos;i="5.90,182,1643702400"; 
+   d="scan'208";a="646037132"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2022 18:22:17 -0700
+Subject: [PATCH v2 0/6] cxl: Handle DVSEC range init failures
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Krzysztof Zach <krzysztof.zach@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>, ben.widawsky@intel.com,
+        ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com
+Date:   Mon, 14 Mar 2022 18:22:17 -0700
+Message-ID: <164730733718.3806189.9721916820488234094.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <164690155691.3326488.3362471282782924455.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: NeoMutt/20211029
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 10 Mar 2022, Dan Williams wrote:
+Changes since v1 [1]:
+- Split the debug message additions to their own patch (Ben)
+- Split the cxl_dvsec_range() handling in the cxl_mem driver to its own
+  patch.
+- Add a patch to rename cxl_dvsec_decode_init()
+- Add a patch to clarify global HDM decoder control vs DVSEC range
+  configuration.
+- Pick up David's Reviewed-by, thanks David!
 
->When the driver finds legacy DVSEC ranges active on a CXL Memory
->Expander it indicates that platform firmware is not aware of, or is
->deliberately disabling commone CXL 2.0 operation. In this case Linux
->generally has no choice, but to leave the device alone.
->
->The driver attempts to validate that the DVSEC range is in the EFI
->memory map. Remove that logic since there is no requirement that the
->BIOS publish DVSEC ranges in the EFI Memory Map.
->
->In the future the driver will want to permanently reserve this capacity
->out of the available CFMWS capacity and hide it from
->request_free_mem_region(), but it serves no purpose to warn about the
->range not appearing in the EFI Memory Map.
->
->Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+[1]: https://lore.kernel.org/r/164690155138.3326488.16049914482944930295.stgit@dwillia2-desk3.amr.corp.intel.com
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+
+Krzysztof reports a case where a timeout waiting for the "memory info
+valid" indication in the DVSEC range register also results in the PCI
+driver failing to load. Fix that scenario by making DVSEC range register
+probe failures non-fatal to the cxl_pci driver.
+
+Instead, convey the state of the DVSEC range registers to the cxl_mem
+driver which can decide if it wants to proceed. Recall that the reason
+cxl_mem relies on cxl_pci to do the register access is to keep PCI
+configuration space knowledge in the cxl_pci driver and leave MMIO based
+CXL.mem operations to the cxl_mem driver.
+
+While pulling on the above threads a few more fixup and clarification
+opportunities fell out.
+
+---
+
+Dan Williams (6):
+      cxl/mem: Drop DVSEC vs EFI Memory Map sanity check
+      cxl/pci: Add debug for DVSEC range init failures
+      cxl/mem: Make cxl_dvsec_range() init failure fatal
+      cxl/pci: Make cxl_dvsec_ranges() failure not fatal to cxl_pci
+      cxl/mem: Rename cxl_dvsec_decode_init() to cxl_hdm_decode_init()
+      cxl/mem: Replace redundant debug message with a comment
+
+
+ drivers/cxl/mem.c            |   52 +++++++++++++++---------------------------
+ drivers/cxl/pci.c            |   40 +++++++++++++++++++++++---------
+ tools/testing/cxl/mock_mem.c |    2 +-
+ 3 files changed, 48 insertions(+), 46 deletions(-)
+
+base-commit: 74be98774dfbc5b8b795db726bd772e735d2edd4
