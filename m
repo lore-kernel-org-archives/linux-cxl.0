@@ -2,92 +2,407 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3BDC433EF
-	for <linux-cxl@archiver.kernel.org>; Tue, 15 Mar 2022 01:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0DEC433EF
+	for <linux-cxl@archiver.kernel.org>; Tue, 15 Mar 2022 21:48:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241657AbiCOBYD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 14 Mar 2022 21:24:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55334 "EHLO
+        id S245209AbiCOVtm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 15 Mar 2022 17:49:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244594AbiCOBYC (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Mar 2022 21:24:02 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53E3D25F2
-        for <linux-cxl@vger.kernel.org>; Mon, 14 Mar 2022 18:22:49 -0700 (PDT)
+        with ESMTP id S1352049AbiCOVtl (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 15 Mar 2022 17:49:41 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0464313F92;
+        Tue, 15 Mar 2022 14:48:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647307370; x=1678843370;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=qN9p5xk/WTDkF0MZWYCxJPoJ4gEUABCCaka9eqvWLf4=;
-  b=HgkqF10HA2rfFk6curRavQaO3b1+vNud0rkXk1fnEBCSOgnVo96T7FjC
-   J+7vXZ076A1o9wKGowidvbLickKWGcCd1ANKLOeTg2dF5FWeu0PvHSJZN
-   FxVcxD+sRQoV6BrQJQpNS6WBIZWzdVKRnulOWQY8bz/R2aiGUZqqJ0WFv
-   4Q1jPBzfDbzIha8ruu/Utg7OI4gS4tASFoKSk8poyEjp8WP9Lbcr6zP78
-   1drtmuw2dhIrQNdBMo1/RFuo3v7nYi+/syqMSn0lVU1rkYGkSl7ctJsgJ
-   bFYUfNJl4nlj88PLOkuw1DiHB4vkY20Xb9s1CGyui8QAzg1UCadweMAQA
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="319408179"
-X-IronPort-AV: E=Sophos;i="5.90,182,1643702400"; 
-   d="scan'208";a="319408179"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2022 18:22:49 -0700
-X-IronPort-AV: E=Sophos;i="5.90,182,1643702400"; 
-   d="scan'208";a="512432574"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2022 18:22:49 -0700
-Subject: [PATCH v2 6/6] cxl/mem: Replace redundant debug message with a
- comment
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     ben.widawsky@intel.com, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com
-Date:   Mon, 14 Mar 2022 18:22:49 -0700
-Message-ID: <164730736948.3806189.17828261054974867700.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <164730733718.3806189.9721916820488234094.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <164730733718.3806189.9721916820488234094.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+  t=1647380908; x=1678916908;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZAft5YeHr1CVffF2O5+59Xi/ukFqQR0kvS8hu/bL/+0=;
+  b=aZLLsRWWAAp3r+gIfvPQHSuoL+Mt/Fo3lv7ePMWV/7MwsHJjy5pu6fXA
+   hW3/Ud6VM08l++XjcnrCtCG4yzespK8tKrC/uP3hzT47WRFRUaLYuoTsg
+   VEdQ93WmOA6oEG5NbtERzIMjnljS1a/MXikuCXIU255oPIHXy8kHVP89m
+   utZ6RpP8WColT5v54AmLcOfqZFb4rNo+AZsNBKirDhdgYbwB7BMVQcl3T
+   Rv4uvuQMKmeDeKjJJeEDW9MS4HOQg4ia1njxERV+S9CRFao9lvpGA2zQ2
+   aKnM62nZ7rEDKRYjWB+hsCteF68HWz7G9WlhJpjshekItoFEiahc0DYl6
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="255259138"
+X-IronPort-AV: E=Sophos;i="5.90,184,1643702400"; 
+   d="scan'208";a="255259138"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 14:48:26 -0700
+X-IronPort-AV: E=Sophos;i="5.90,184,1643702400"; 
+   d="scan'208";a="549751646"
+Received: from jpgabald-mobl.amr.corp.intel.com (HELO localhost) ([10.212.75.31])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 14:48:22 -0700
+Date:   Tue, 15 Mar 2022 14:48:21 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V6 03/10] PCI/DOE: Add Data Object Exchange Aux Driver
+Message-ID: <YjEJpWXeXA65E62J@iweiny-desk3>
+References: <20220201071952.900068-4-ira.weiny@intel.com>
+ <20220203224027.GA103950@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220203224027.GA103950@bhelgaas>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-cxl_mem_probe() already emits a log message when HDM operation can not
-be established. Delete the similar one in cxl_hdm_decode_init().
+On Thu, Feb 03, 2022 at 04:40:27PM -0600, Bjorn Helgaas wrote:
+> On Mon, Jan 31, 2022 at 11:19:45PM -0800, ira.weiny@intel.com wrote:
+> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > 
+> > Introduced in a PCI ECN [1], DOE provides a config space based mailbox
+> > with standard protocol discovery.  Each mailbox is accessed through a
+> > DOE Extended Capability.
+> > 
+> > Define an auxiliary device driver which control DOE auxiliary devices
+> > registered on the auxiliary bus.
+> > 
+> > A DOE mailbox is allowed to support any number of protocols while some
+> > DOE protocol specifications apply additional restrictions.
+> > 
+> > The protocols supported are queried and cached.  pci_doe_supports_prot()
+> > can be used to determine if the DOE device supports the protocol
+> > specified.
+> > 
+> > A synchronous interface is provided in pci_doe_exchange_sync() to
+> > perform a single query / response exchange from the driver through the
+> > device specified.
+> > 
+> > Testing was conducted against QEMU using:
+> > 
+> > https://lore.kernel.org/qemu-devel/1619454964-10190-1-git-send-email-cbrowy@avery-design.com/
+> > 
+> > This code is based on Jonathan's V4 series here:
+> > 
+> > https://lore.kernel.org/linux-cxl/20210524133938.2815206-1-Jonathan.Cameron@huawei.com/
+> 
+> Details like references to previous versions can go below the "---"
+> so they are omitted from the merged commit.  Many/most maintainers now
+> include a Link: tag that facilitates tracing back from a commit to the
+> mailing list history.
 
-What is less obvious is why global_ctrl being enabled makes positive
-values of info->ranges irrelevant.
+Done.
 
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/cxl/mem.c |   13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> > [1] https://members.pcisig.com/wg/PCI-SIG/document/14143
+> >     Data Object Exchange (DOE) - Approved 12 March 2020
+> 
+> Please update the "PCI ECN" text above and this citation to PCIe r6.0,
+> sec 6.30.  No need to reference the ECN now that it's part of the
+> published spec.
 
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 3baae1332760..6def7d7b6bfd 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -107,11 +107,16 @@ __mock bool cxl_hdm_decode_init(struct cxl_dev_state *cxlds)
- 	global_ctrl = readl(crb + cmap->hdm_decoder.offset +
- 			    CXL_HDM_DECODER_CTRL_OFFSET);
- 	global_enable = global_ctrl & CXL_HDM_DECODER_ENABLE;
--	if (!global_enable && info->ranges) {
--		dev_dbg(cxlds->dev,
--			"DVSEC ranges already programmed and HDM decoders not enabled.\n");
-+
-+	/*
-+	 * Per CXL 2.0 Section 8.1.3.8.3 and 8.1.3.8.4 DVSEC CXL Range 1 Base
-+	 * [High,Low] when HDM operation is enabled the range register values
-+	 * are ignored by the device, but the spec also recommends matching the
-+	 * DVSEC Range 1,2 to HDM Decoder Range 0,1 so, non-zero info->ranges
-+	 * are expected.
-+	 */
-+	if (!global_enable && info->ranges)
- 		goto out;
--	}
- 
- 	retval = true;
- 
+Done.
 
+> 
+> > +config PCI_DOE_DRIVER
+> > +	tristate "PCI Data Object Exchange (DOE) driver"
+> > +	select AUXILIARY_BUS
+> > +	help
+> > +	  Driver for DOE auxiliary devices.
+> > +
+> > +	  DOE provides a simple mailbox in PCI config space that is used by a
+> > +	  number of different protocols.  DOE is defined in the Data Object
+> > +	  Exchange ECN to the PCIe r5.0 spec.
+> 
+> Not sure this is relevant in Kconfig help, but if it is, update the
+> citation to PCIe r6.0, sec 6.30.
+
+I removed it.  I agree it will probably not age well.
+
+> 
+> > +obj-$(CONFIG_PCI_DOE_DRIVER)	+= pci-doe.o
+> >  obj-$(CONFIG_XEN_PCIDEV_FRONTEND) += xen-pcifront.o
+> >  
+> > +pci-doe-y := doe.o
+> 
+> Why do we need this doe.o to pci-doe.o dance?  Why not just rename
+> doe.c to pci-doe.c?  It looks like that's what we do with pci-stub.c
+> and pci-pf-stub.c, which are also tristate.
+
+Not sure.  I think I may have just carried that from the cxl side when I moved
+it here to pci.
+
+I agree pci-doe is good.  I'll adjust the series as needed.
+
+> 
+> > +++ b/drivers/pci/doe.c
+> > @@ -0,0 +1,675 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Data Object Exchange ECN
+> > + * https://members.pcisig.com/wg/PCI-SIG/document/14143
+> 
+> Update citation.  Maybe copyright dates, too.
+
+
+
+> 
+> > + * Copyright (C) 2021 Huawei
+> 
+> > +/* Timeout of 1 second from 6.xx.1 (Operation), ECN - Data Object Exchange */
+> 
+> Update citation.
+
+Done.
+
+> 
+> > +/**
+> > + * struct pci_doe - A single DOE mailbox driver
+> > + *
+> > + * @doe_dev: The DOE Auxiliary device being driven
+> > + * @abort_c: Completion used for initial abort handling
+> > + * @irq: Interrupt used for signaling DOE ready or abort
+> > + * @irq_name: Name used to identify the irq for a particular DOE
+> 
+> s/ irq / IRQ /
+
+Done.
+
+> 
+> > +static int pci_doe_cache_protocols(struct pci_doe *doe)
+> > +{
+> > +	u8 index = 0;
+> > +	int num_prots;
+> > +	int rc;
+> > +
+> > +	/* Discovery protocol must always be supported and must report itself */
+> > +	num_prots = 1;
+> > +	doe->prots = devm_kcalloc(&doe->doe_dev->adev.dev, num_prots,
+> > +				  sizeof(*doe->prots), GFP_KERNEL);
+> > +	if (doe->prots == NULL)
+> 
+> More idiomatic (and as you did below):
+> 
+>   if (!doe->prots)
+
+Done.
+
+> 
+> > +		return -ENOMEM;
+> > +
+> > +	do {
+> > +		struct pci_doe_protocol *prot;
+> > +
+> > +		prot = &doe->prots[num_prots - 1];
+> > +		rc = pci_doe_discovery(doe, &index, &prot->vid, &prot->type);
+> > +		if (rc)
+> > +			return rc;
+> > +
+> > +		if (index) {
+> > +			struct pci_doe_protocol *prot_new;
+> > +
+> > +			num_prots++;
+> > +			prot_new = devm_krealloc(&doe->doe_dev->adev.dev,
+> > +						 doe->prots,
+> > +						 sizeof(*doe->prots) *
+> > +							num_prots,
+> > +						 GFP_KERNEL);
+> > +			if (prot_new == NULL)
+> 
+> Ditto.
+
+Done.
+
+> 
+> > +				return -ENOMEM;
+> > +			doe->prots = prot_new;
+> > +		}
+> > +	} while (index);
+> > +
+> > +	doe->num_prots = num_prots;
+> > +	return 0;
+> > +}
+> 
+> > +static int pci_doe_reg_irq(struct pci_doe *doe)
+> > +{
+> > +	struct pci_dev *pdev = doe->doe_dev->pdev;
+> > +	bool poll = !pci_dev_msi_enabled(pdev);
+> > +	int offset = doe->doe_dev->cap_offset;
+> > +	int rc, irq;
+> > +	u32 val;
+> > +
+> 
+>   if (poll)
+>     return 0;
+> 
+> or maybe just:
+> 
+>   if (!pci_dev_msi_enabled(pdev))
+>     return 0;
+> 
+> No need to read PCI_DOE_CAP or indent all this code.
+
+Good point. done.
+
+> 
+> > +	pci_read_config_dword(pdev, offset + PCI_DOE_CAP, &val);
+> > +
+> > +	if (!poll && FIELD_GET(PCI_DOE_CAP_INT, val)) {
+> > +		irq = pci_irq_vector(pdev, FIELD_GET(PCI_DOE_CAP_IRQ, val));
+> > +		if (irq < 0)
+> > +			return irq;
+> > +
+> > +		doe->irq_name = devm_kasprintf(&doe->doe_dev->adev.dev,
+> > +						GFP_KERNEL,
+> > +						"DOE[%s]",
+> 
+> Fill line.
+
+Done.
+
+> 
+> > +						doe->doe_dev->adev.name);
+> > +		if (!doe->irq_name)
+> > +			return -ENOMEM;
+> > +
+> > +		rc = devm_request_irq(&pdev->dev, irq, pci_doe_irq, 0,
+> > +				      doe->irq_name, doe);
+> > +		if (rc)
+> > +			return rc;
+> > +
+> > +		doe->irq = irq;
+> > +		pci_write_config_dword(pdev, offset + PCI_DOE_CTRL,
+> > +				       PCI_DOE_CTRL_INT_EN);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> 
+> > +static int pci_doe_probe(struct auxiliary_device *aux_dev,
+> > +			 const struct auxiliary_device_id *id)
+> > +{
+> > +	struct pci_doe_dev *doe_dev = container_of(aux_dev,
+> > +					struct pci_doe_dev,
+> > +					adev);
+> 
+> Fill line.
+
+Done.
+
+> 
+> > +	struct pci_doe *doe;
+> > +	int rc;
+> > +
+> > +	doe = devm_kzalloc(&aux_dev->dev, sizeof(*doe), GFP_KERNEL);
+> > +	if (!doe)
+> > +		return -ENOMEM;
+> > +
+> > +	mutex_init(&doe->state_lock);
+> > +	init_completion(&doe->abort_c);
+> > +	doe->doe_dev = doe_dev;
+> > +	init_waitqueue_head(&doe->wq);
+> > +	INIT_DELAYED_WORK(&doe->statemachine, doe_statemachine_work);
+> > +	dev_set_drvdata(&aux_dev->dev, doe);
+> > +
+> > +	rc = pci_doe_reg_irq(doe);
+> 
+> "request_irq" or "setup_irq" or something?  "reg" is a little
+> ambiguous.
+
+Ok pci_doe_request_irq() since we are wrapping devm_request_irq()
+
+> 
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	/* Reset the mailbox by issuing an abort */
+> > +	rc = pci_doe_abort(doe);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	rc = pci_doe_cache_protocols(doe);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	return 0;
+> 
+> Same as:
+> 
+>   return pci_doe_cache_protocols(doe);
+
+Done.
+
+> 
+> > +static int __init pci_doe_init_module(void)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = auxiliary_driver_register(&pci_doe_auxiliary_drv);
+> > +	if (ret) {
+> > +		pr_err("Failed pci_doe auxiliary_driver_register() ret=%d\n",
+> > +		       ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	return 0;
+> 
+> Same as:
+> 
+>   if (ret)
+>     pr_err(...);
+> 
+>   return ret;
+
+Done.
+
+> 
+> > +++ b/include/linux/pci-doe.h
+> > @@ -0,0 +1,60 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Data Object Exchange was added as an ECN to the PCIe r5.0 spec.
+> 
+> Update citation.
+
+Done.
+
+> 
+> > +struct pci_doe_dev {
+> > +	struct auxiliary_device adev;
+> > +	struct pci_dev *pdev;
+> > +	int cap_offset;
+> 
+> Can you name this "doe_cap", in the style of "msi_cap", "msix_cap",
+> etc?
+
+I can.  However, I feel I have to point out that msi[x]_cap both have comments
+thusly:
+
+        u8                      msi_cap;        /* MSI capability offset */
+        u8                      msix_cap;       /* MSI-X capability offset */
+
+Whereas cap_offset when read in the code is nicely self documenting.
+
+...
+        int offset = doe->doe_dev->cap_offset;
+...
+
+So I feel like it should be left as cap_offset;
+
+Also there are 2 drivers which use cap_offset as well.
+
+
+drivers/pci/hotplug/shpchp.h|102| u32 cap_offset;
+drivers/pci/hotplug/shpchp_hpc.c|201| u32 cap_offset = ctrl->cap_offset;
+
+drivers/pci/controller/pcie-altera.c|112| u32 cap_offset;               /* PCIe capability structure register offset */
+drivers/pci/controller/pcie-altera.c|144| pcie->pcie_data->cap_offset +
+
+And I don't think the comment on the altera device is needed...
+
+So let me know if you feel strongly enough to change it.
+
+Ira
