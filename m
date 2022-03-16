@@ -2,97 +2,124 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9BCC433F5
-	for <linux-cxl@archiver.kernel.org>; Wed, 16 Mar 2022 02:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED92C433F5
+	for <linux-cxl@archiver.kernel.org>; Wed, 16 Mar 2022 04:13:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230250AbiCPCQA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 15 Mar 2022 22:16:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58772 "EHLO
+        id S1344761AbiCPEPC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 16 Mar 2022 00:15:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232659AbiCPCP7 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 15 Mar 2022 22:15:59 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AA4B642C
-        for <linux-cxl@vger.kernel.org>; Tue, 15 Mar 2022 19:14:46 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id p17so651872plo.9
-        for <linux-cxl@vger.kernel.org>; Tue, 15 Mar 2022 19:14:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GYgLGDjN7bBh9eUkBYm9fB085sxIPX8tBbz7CcJSMNo=;
-        b=357HrcwQ7kar2/o5pnP5AYSakCaFEeywuRqBR1G0sPFiFI0aWyTE7tq2Q1M8p9FbkE
-         cd3EO7BBzDRtnJihqjula3R4xYGIwH8djuGMvCMLR3++9qstOJiFgfikq4kHHYf8xQv/
-         vwYxoXqDcS/m+XNe6JOTbz9hIvb8lpJszUx8b2ry5WLFE1vL1TUQneVLxzoNmqhjsRuP
-         eJF5Fd7ASYZyxqzBf0cKrUk03PQT9QvAvrdFb2VdQ7qnfu7psm/cYXQ7MK961SoGMjrh
-         U+HBjd+tKGf84hWtXTENlt1DhWrpWbKTCbiMG4XB7RAESiQ0qDemQXLAXj+mMVq7H1zT
-         4EBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GYgLGDjN7bBh9eUkBYm9fB085sxIPX8tBbz7CcJSMNo=;
-        b=ko4jhFV8sww8Gw5FqGQSnVcG7AD9iPh2xl49JqVneI4az6TOGeWo3lb8C5tcKe6JBC
-         3n9P21nfrtNc3Uxn8GKUtc07sdiiI0UTaLFv0i/MiFY40NpH50fes3mTB0q94RR2SFFe
-         m7ELH/YrHmyzltNrK9Hda/n3BOKZeizlHjUi5WToEzsFhiJ+u7dWXoXrI0d/fap0VZ/P
-         Ew6amqRlyXYExoqB04xBigMERFGbcXsPfBIPN+btxni4gPhTqNn6QIkLC5vCuf4azmCT
-         bI5kkb/3dWomVEb4eYESFZfxLs1hjiuDMzUZ3fjh4iq64e3wtK+w+nWL4nfF1CZ9yXAu
-         bzPQ==
-X-Gm-Message-State: AOAM530x7WB7qy4Ol9/dGHVJC2X+XQtfmkVLJnX9RDuTCt+rurPz3+uG
-        rIUl5eukx3vmf+RcXZXV1e/VX6NFv8gw0xrlNWNvTA==
-X-Google-Smtp-Source: ABdhPJwNhPjn7GnmwxQze0BbWCInQRhNFjfnPN2lX/9ea5M35+LmR1tFTNso0Kvg0f8enSe82CwFo8zJb/J2Ir1Wyc4=
-X-Received: by 2002:a17:90a:430d:b0:1bc:f340:8096 with SMTP id
- q13-20020a17090a430d00b001bcf3408096mr7786077pjg.93.1647396886019; Tue, 15
- Mar 2022 19:14:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <164730733718.3806189.9721916820488234094.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164730735324.3806189.4167509857771192422.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20220316020028.2yqjvez4avwrni5l@offworld>
-In-Reply-To: <20220316020028.2yqjvez4avwrni5l@offworld>
+        with ESMTP id S229437AbiCPEPA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Mar 2022 00:15:00 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1297331DFF;
+        Tue, 15 Mar 2022 21:13:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1647404027; x=1678940027;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=HkxuiiMewEe5GHxvJNhs+IrRwLWpzGNBx7XjY8xEF00=;
+  b=dltiltzs4AJ1p0Uhl4H2cWbggZiboSNtm2OpBHXgQqRIW9V0ANPV/uiA
+   kjKJcgalzCDdRz6vrCkyjjFk+/j3BidNAzn+8mLngCmlrcF/fs14o4BEh
+   E1v43vamwGS8xikcxw7hmgHl4oNTZtCbZNn8PwJz3SokVpDX0+WzO0pda
+   0OJ1d2gD0Cvzazz0eLGB+/Vh2heEY2GdD6g3cdvhaYraoNnYnufTrKeFS
+   baVc+qSwee7ZPl6Vpv3NHBlu4AMCGBaw8u3DSjAtgrbuOyHY2o2lo25Hq
+   T3/kAtFY98f3NpWv9A+tm0uQKzTk/x79VNyBkWW5AWN91FFPw7ngogj/L
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="243942220"
+X-IronPort-AV: E=Sophos;i="5.90,185,1643702400"; 
+   d="scan'208";a="243942220"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 21:13:42 -0700
+X-IronPort-AV: E=Sophos;i="5.90,185,1643702400"; 
+   d="scan'208";a="516166347"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 21:13:42 -0700
+Subject: [PATCH 0/8] cxl/pci: Add fundamental error handling
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 15 Mar 2022 19:14:35 -0700
-Message-ID: <CAPcyv4hDbqa2d_6ZEwcNAUjgu_Aw7p_f_eB4UN=MrpOrb6QPxA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] cxl/mem: Make cxl_dvsec_range() init failure fatal
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+To:     linux-cxl@vger.kernel.org
+Cc:     ben.widawsky@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com, Jonathan.Cameron@huawei.com,
+        ira.weiny@intel.com, linux-pci@vger.kernel.org
+Date:   Tue, 15 Mar 2022 21:13:42 -0700
+Message-ID: <164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Mar 15, 2022 at 7:01 PM Davidlohr Bueso <dave@stgolabs.net> wrote:
->
-> On Mon, 14 Mar 2022, Dan Williams wrote:
->
-> >In preparation for the cxl_pci driver to continue operation after
-> >cxl_dvsec_range() failure, update cxl_mem to check for negative error
-> >codes in info->ranges. Treat that condition as fatal regardless of the
-> >state of the HDM configuration since cxl_mem needs positive confirmation
-> >that legacy ranges were not established by platform firmware or another
-> >agent.
-> >
-> >Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> >---
-> > drivers/cxl/mem.c |    3 +++
-> > 1 file changed, 3 insertions(+)
-> >
-> >diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> >index cd4e8bba82aa..50704deb2ff0 100644
-> >--- a/drivers/cxl/mem.c
-> >+++ b/drivers/cxl/mem.c
-> >@@ -88,6 +88,9 @@ __mock bool cxl_dvsec_decode_init(struct cxl_dev_state *cxlds)
-> >       void __iomem *crb;
-> >       u32 global_ctrl;
-> >
-> >+      if (info->ranges < 0)
-> >+              return false;
-> >+
->
-> Nit: shouldn't this be part of the next patch that actually implements negative
-> info->ranges?
+Add a 'struct pci_error_handlers' instance for the cxl_pci driver.
+Section 8.2.5.9 "CXL RAS Capability Structure" of the CXL 2.0
+specification defines the error sources considered in this
+implementation. The RAS Capability Structure defines protocol, link and
+internal errors which are distinct from memory poison errors that are
+conveyed via direct consumption and/or media scanning.
 
-I considered that. Ben had asked for a split and this patch is able to
-stand alone since info->ranges is always >= 0 until the next patch.
+The errors reported by the RAS registers are categorized into
+correctable and uncorrectable errors, where the uncorrectable errors are
+optionally steered to either fatal or non-fatal AER events. Table 224
+"Device Specific Error Reporting and Nomenclature Guidelines" in the CXL
+2.0 specification outlines that the remediation for uncorrectable errors
+is a reset to recover. This matches how the Linux PCIe AER core treats
+uncorrectable errors as occasions to reset the device to recover
+operation.
+
+While the specification notes "CXL Reset" or "Secondary Bus Reset" as
+theoretical recovery options, they are not feasible in practice since
+in-flight CXL.mem operations may not terminate and cause knock-on system
+fatal events. Reset is only reliable for recovering CXL.io, it is not
+reliable for recovering CXL.mem. Assuming the system survives, a reset
+causes CXL.mem operation to restart from scratch.
+
+The "ECN: Error Isolation on CXL.mem and CXL.cache" [1] document
+recognizes the CXL Reset vs CXL.mem operational conflict and helps to at
+least provide a mechanism for the Root Port to terminate in flight
+CXL.mem operations with completions. That still poses problems in
+practice if the kernel is running out of "System RAM" backed by the CXL
+device and poison is used to convey the data lost to the protocol error.
+
+Regardless of whether the reset and restart of CXL.mem operations is
+feasible / successful, the logging is still useful. So, the
+implementation reads, reports, and clears the status in the RAS
+Capability Structure registers, and it notifies the 'struct cxl_memdev'
+associated with the given PCIe endpoint to reattach to its driver over
+the reset so that the HDM decoder configuration can be reconstructed.
+
+The first half of the series reworks component register mapping so that
+the cxl_pci driver can own the RAS Capability while the cxl_port driver
+continues to own the HDM Decoder Capability. The last half implements
+the RAS Capability Structure mapping and reporting via 'struct
+pci_error_handlers'.
+
+[1]: https://www.computeexpresslink.org/spec-landing
+
+---
+
+
+Dan Williams (8):
+      cxl/pci: Cleanup repeated code in cxl_probe_regs() helpers
+      cxl/pci: Cleanup cxl_map_device_regs()
+      cxl/pci: Kill cxl_map_regs()
+      cxl/core/regs: Make cxl_map_{component,device}_regs() device generic
+      cxl/port: Limit the port driver to just the HDM Decoder Capability
+      cxl/pci: Prepare for mapping RAS Capability Structure
+      cxl/pci: Find and map the RAS Capability Structure
+      cxl/pci: Add (hopeful) error handling support
+
+
+ drivers/cxl/core/hdm.c    |   33 +++++----
+ drivers/cxl/core/memdev.c |    1 
+ drivers/cxl/core/pci.c    |    3 -
+ drivers/cxl/core/port.c   |    2 -
+ drivers/cxl/core/regs.c   |  172 ++++++++++++++++++++++++++-------------------
+ drivers/cxl/cxl.h         |   36 +++++++--
+ drivers/cxl/cxlmem.h      |    2 +
+ drivers/cxl/cxlpci.h      |    9 --
+ drivers/cxl/pci.c         |  163 ++++++++++++++++++++++++++++++++-----------
+ 9 files changed, 273 insertions(+), 148 deletions(-)
+
+base-commit: 74be98774dfbc5b8b795db726bd772e735d2edd4
