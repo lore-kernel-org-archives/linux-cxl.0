@@ -2,141 +2,274 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F62C433F5
-	for <linux-cxl@archiver.kernel.org>; Wed, 16 Mar 2022 04:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A09C433F5
+	for <linux-cxl@archiver.kernel.org>; Wed, 16 Mar 2022 16:50:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238962AbiCPEYu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 16 Mar 2022 00:24:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57426 "EHLO
+        id S239504AbiCPQvz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 16 Mar 2022 12:51:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344766AbiCPEYt (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Mar 2022 00:24:49 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3965E57B38
-        for <linux-cxl@vger.kernel.org>; Tue, 15 Mar 2022 21:23:35 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id m22so1232369pja.0
-        for <linux-cxl@vger.kernel.org>; Tue, 15 Mar 2022 21:23:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2QN5BxAjO70BpcDVhIOU50WJ7iElMmqxXJEcxNA1HN4=;
-        b=b7YXFRuHZZRLLBmmY/+nh6IFtnx6uwJMkcK89RhxxPeK6zuceplk23SRpazNuQBIqL
-         ctxp0R+z0FVeA3NbHfPbHL67kF6dzxkbd/II4SxBImJa6Gy7hPQ4dMT3vG00FcUfGuof
-         IsfQGYUnZypru1UVLYEumWdAh3mq2z4PdVGwu0kkyd2HAzocbofCGqTyjxf3+U/IaSIG
-         HzJDViODGkbVpI+LEbXnaJkn5+H/yU4JQim1Yh9VZutYUfBJKLK81bnEM04Y53gfLwol
-         +8fIjjD02MY06mABtJTITm2RPYgEwpyjqWygNXzcE7ahzGxdnQGSjEJnPWiL6m7K6CxW
-         wAGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2QN5BxAjO70BpcDVhIOU50WJ7iElMmqxXJEcxNA1HN4=;
-        b=rOQbTx1gVQQ2KPow5ii7CURLRv7EjV5wX86K3J1qQlZEolazq11uDlSIMVabqviHVn
-         6a/mKD7PeIOM4sybDwrA0BBSMMlQo17Xu0uEstpqZDxrUeRZBrvkqg9SeQQm/fAwttKC
-         f83M2CfIPWfMGMGam06dYCqsgd7vFr3ol39rF1BApCLgfTKkyj64SL7HRsTi5v55vznP
-         moWd8ZAZ5EW4SWs9jwbt2di5ZSZwwcmHNGrV8OxzVm+TS2RVaVQO5lrGSGorPXx1IXzS
-         HLDnx85ne90fbQ2zn5K+PaBsBju4skDOrAA3HWMXrB//vp2pdISOKxDRjQfz1LjZjDRl
-         /ehA==
-X-Gm-Message-State: AOAM5318CMZSGy5UT//vYb6QmQHJt0fVIwk/8bFxRMVn0C3om5pa9HKH
-        uuBEcS55dAu2znqCxaFRPTzcYDktQbO57q9BfgchaYTBbWmWSQ==
-X-Google-Smtp-Source: ABdhPJznDcFlJVdNMbsxVAO5sRQ1YIh+dEL9aBRO6eQu+nMMMdY5sRE4yU8E9k0oVv+GMDDusLjSd2LacGNI6nK20XM=
-X-Received: by 2002:a17:90a:cf03:b0:1bf:7005:7d73 with SMTP id
- h3-20020a17090acf0300b001bf70057d73mr8157618pju.8.1647404614488; Tue, 15 Mar
- 2022 21:23:34 -0700 (PDT)
+        with ESMTP id S238414AbiCPQvz (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Mar 2022 12:51:55 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D556937BCF
+        for <linux-cxl@vger.kernel.org>; Wed, 16 Mar 2022 09:50:39 -0700 (PDT)
+Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KJbnm4bHQz6H6hp;
+        Thu, 17 Mar 2022 00:48:44 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 16 Mar 2022 17:50:37 +0100
+Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Wed, 16 Mar
+ 2022 16:50:36 +0000
+Date:   Wed, 16 Mar 2022 16:50:34 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Peter Xu <peterx@redhat.com>
+CC:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Ben Widawsky <ben.widawsky@intel.com>, <qemu-devel@nongnu.org>,
+        Samarth Saxena <samarths@cadence.com>,
+        Chris Browy <cbrowy@avery-design.com>, <linuxarm@huawei.com>,
+        <linux-cxl@vger.kernel.org>, Markus Armbruster <armbru@redhat.com>,
+        "Shreyas Shah" <shreyas.shah@elastics.cloud>,
+        Saransh Gupta1 <saransh@ibm.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        "Marcel Apfelbaum" <marcel@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        Alex =?ISO-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v7 00/46] CXl 2.0 emulation Support
+Message-ID: <20220316165034.000037e7@Huawei.com>
+In-Reply-To: <Yimwjtd8SsVLOU5e@xz-m1.local>
+References: <20220306174137.5707-1-Jonathan.Cameron@huawei.com>
+        <20220306163119-mutt-send-email-mst@kernel.org>
+        <20220307093918.00002f20@Huawei.com>
+        <YihiHNxVjDFI0Z8r@xz-m1.local>
+        <20220309112827.00002c73@Huawei.com>
+        <Yimwjtd8SsVLOU5e@xz-m1.local>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 15 Mar 2022 21:23:23 -0700
-Message-ID: <CAPcyv4g8EGEwtUw5MEZ3pHa8d6sDjKV1eOP2OfYSoUxW2DDQjg@mail.gmail.com>
-Subject: Re: [PATCH 0/8] cxl/pci: Add fundamental error handling
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.41]
+X-ClientProxiedBy: lhreml744-chm.china.huawei.com (10.201.108.194) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Mar 15, 2022 at 9:14 PM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> Add a 'struct pci_error_handlers' instance for the cxl_pci driver.
-> Section 8.2.5.9 "CXL RAS Capability Structure" of the CXL 2.0
-> specification defines the error sources considered in this
-> implementation. The RAS Capability Structure defines protocol, link and
-> internal errors which are distinct from memory poison errors that are
-> conveyed via direct consumption and/or media scanning.
->
-> The errors reported by the RAS registers are categorized into
-> correctable and uncorrectable errors, where the uncorrectable errors are
-> optionally steered to either fatal or non-fatal AER events. Table 224
-> "Device Specific Error Reporting and Nomenclature Guidelines" in the CXL
-> 2.0 specification outlines that the remediation for uncorrectable errors
-> is a reset to recover. This matches how the Linux PCIe AER core treats
-> uncorrectable errors as occasions to reset the device to recover
-> operation.
->
-> While the specification notes "CXL Reset" or "Secondary Bus Reset" as
-> theoretical recovery options, they are not feasible in practice since
-> in-flight CXL.mem operations may not terminate and cause knock-on system
-> fatal events. Reset is only reliable for recovering CXL.io, it is not
-> reliable for recovering CXL.mem. Assuming the system survives, a reset
-> causes CXL.mem operation to restart from scratch.
->
-> The "ECN: Error Isolation on CXL.mem and CXL.cache" [1] document
-> recognizes the CXL Reset vs CXL.mem operational conflict and helps to at
-> least provide a mechanism for the Root Port to terminate in flight
-> CXL.mem operations with completions. That still poses problems in
-> practice if the kernel is running out of "System RAM" backed by the CXL
-> device and poison is used to convey the data lost to the protocol error.
->
-> Regardless of whether the reset and restart of CXL.mem operations is
-> feasible / successful, the logging is still useful. So, the
-> implementation reads, reports, and clears the status in the RAS
-> Capability Structure registers, and it notifies the 'struct cxl_memdev'
-> associated with the given PCIe endpoint to reattach to its driver over
-> the reset so that the HDM decoder configuration can be reconstructed.
->
-> The first half of the series reworks component register mapping so that
-> the cxl_pci driver can own the RAS Capability while the cxl_port driver
-> continues to own the HDM Decoder Capability. The last half implements
-> the RAS Capability Structure mapping and reporting via 'struct
-> pci_error_handlers'.
->
-> [1]: https://www.computeexpresslink.org/spec-landing
->
-> ---
->
->
-> Dan Williams (8):
->       cxl/pci: Cleanup repeated code in cxl_probe_regs() helpers
->       cxl/pci: Cleanup cxl_map_device_regs()
->       cxl/pci: Kill cxl_map_regs()
->       cxl/core/regs: Make cxl_map_{component,device}_regs() device generic
->       cxl/port: Limit the port driver to just the HDM Decoder Capability
->       cxl/pci: Prepare for mapping RAS Capability Structure
->       cxl/pci: Find and map the RAS Capability Structure
->       cxl/pci: Add (hopeful) error handling support
->
->
->  drivers/cxl/core/hdm.c    |   33 +++++----
->  drivers/cxl/core/memdev.c |    1
->  drivers/cxl/core/pci.c    |    3 -
->  drivers/cxl/core/port.c   |    2 -
->  drivers/cxl/core/regs.c   |  172 ++++++++++++++++++++++++++-------------------
->  drivers/cxl/cxl.h         |   36 +++++++--
->  drivers/cxl/cxlmem.h      |    2 +
->  drivers/cxl/cxlpci.h      |    9 --
->  drivers/cxl/pci.c         |  163 ++++++++++++++++++++++++++++++++-----------
->  9 files changed, 273 insertions(+), 148 deletions(-)
->
-> base-commit: 74be98774dfbc5b8b795db726bd772e735d2edd4
+On Thu, 10 Mar 2022 16:02:22 +0800
+Peter Xu <peterx@redhat.com> wrote:
 
-Apologies, wrong base-commit, this series is based on that commit + this series:
+> On Wed, Mar 09, 2022 at 11:28:27AM +0000, Jonathan Cameron wrote:
+> > Hi Peter,  
+> 
+> Hi, Jonathan,
+> 
+> >   
+> > > 
+> > > https://lore.kernel.org/qemu-devel/20220306174137.5707-35-Jonathan.Cameron@huawei.com/
+> > > 
+> > > Having mr->ops set but with memory_access_is_direct() returning true sounds
+> > > weird to me.
+> > > 
+> > > Sorry to have no understanding of the whole picture, but.. could you share
+> > > more on what's the interleaving requirement on the proxying, and why it
+> > > can't be done with adding some IO memory regions as sub-regions upon the
+> > > file one?  
+> > 
+> > The proxying requirement is simply a means to read/write to a computed address
+> > within a memory region. There may well be a better way to do that.
+> > 
+> > If I understand your suggestion correctly you would need a very high
+> > number of IO memory regions to be created dynamically when particular sets of
+> > registers across multiple devices in the topology are all programmed.
+> > 
+> > The interleave can be 256 bytes across up to 16x, many terabyte, devices.
+> > So assuming a simple set of 16 1TB devices I think you'd need about 4x10^9
+> > IO regions.  Even for a minimal useful test case of largest interleave
+> > set of 16x 256MB devices (256MB is minimum size the specification allows per
+> > decoded region at the device) and 16 way interleave we'd need 10^6 IO regions.
+> > Any idea if that approach would scale sensibly to this number of regions?
+> > 
+> > There are also complexities to getting all the information in one place to
+> > work out which IO memory regions maps where in PA space. Current solution is
+> > to do that mapping in the same way the hardware does which is hierarchical,
+> > so we walk the path to the device, picking directions based on each interleave
+> > decoder that we meet.
+> > Obviously this is a bit slow but I only really care about correctness at the
+> > moment.  I can think of various approaches to speeding it up but I'm not sure
+> > if we will ever care about performance.
+> > 
+> > https://gitlab.com/jic23/qemu/-/blob/cxl-v7-draft-2-for-test/hw/cxl/cxl-host.c#L131
+> > has the logic for that and as you can see it's fairly simple because we are always
+> > going down the topology following the decoders.
+> > 
+> > Below I have mapped out an algorithm I think would work for doing it with
+> > IO memory regions as subregions.
+> > 
+> > We could fake the whole thing by limiting ourselves to small host
+> > memory windows which are always directly backed, but then I wouldn't
+> > achieve the main aim of this which is to provide a test base for the OS code.
+> > To do that I need real interleave so I can seed the files with test patterns
+> > and verify the accesses hit the correct locations. Emulating what the hardware
+> > is actually doing on a device by device basis is the easiest way I have
+> > come up with to do that.
+> > 
+> > Let me try to provide some more background so you hopefully don't have
+> > to have read the specs to follow what is going on!
+> > There are an example for directly connected (no switches) topology in the
+> > docs
+> > 
+> > https://gitlab.com/jic23/qemu/-/blob/cxl-v7-draft-2-for-test/docs/system/devices/cxl.rst
+> > 
+> > The overall picture is we have a large number of CXL Type 3 memory devices,
+> > which at runtime (by OS at boot/on hotplug) are configured into various
+> > interleaving sets with hierarchical decoding at the host + host bridge
+> > + switch levels. For test setups I probably need to go to around 32 devices
+> > so I can hit various configurations simultaneously.
+> > No individual device has visibility of the full interleave setup - hence
+> > the walk in the existing code through the various decoders to find the
+> > final Device Physical address.
+> > 
+> > At the host level the host provides a set of Physical Address windows with
+> > a fixed interleave decoding across the different host bridges in the system
+> > (CXL Fixed Memory windows, CFMWs)
+> > On a real system these have to be large enough to allow for any memory
+> > devices that might be hotplugged and all possible configurations (so
+> > with 2 host bridges you need at least 3 windows in the many TB range,
+> > much worse as the number of host bridges goes up). It'll be worse than
+> > this when we have QoS groups, but the current Qemu code just puts all
+> > the windows in group 0.  Hence my first thought of just putting memory
+> > behind those doesn't scale (a similar approach to this was in the
+> > earliest versions of this patch set - though the full access path
+> > wasn't wired up).
+> > 
+> > The granularity can be in powers of 2 from 256 bytes to 16 kbytes
+> > 
+> > Next each host bridge has programmable address decoders which take the
+> > incoming (often already interleaved) memory access and direct them to
+> > appropriate root ports.  The root ports can be connected to a switch
+> > which has additional address decoders in the upstream port to decide
+> > which downstream port to route to.  Note we currently only support 1 level
+> > of switches but it's easy to make this algorithm recursive to support
+> > multiple switch levels (currently the kernel proposals only support 1 level)
+> > 
+> > Finally the End Point with the actual memory receives the interleaved request and
+> > takes the full address and (for power of 2 decoding - we don't yet support
+> > 3,6 and 12 way which is more complex and there is no kernel support yet)
+> > it drops a few address bits and adds an offset for the decoder used to
+> > calculate it's own device physical address.  Note device will support
+> > multiple interleave sets for different parts of it's file once we add
+> > multiple decoder support (on the todo list).
+> > 
+> > So the current solution is straight forward (with the exception of that
+> > proxying) because it follows the same decoding as used in real hardware
+> > to route the memory accesses. As a result we get a read/write to a
+> > device physical address and hence proxy that.  If any of the decoders
+> > along the path are not configured then we error out at that stage.
+> > 
+> > To create the equivalent as IO subregions I think we'd have to do the
+> > following from (this might be mediated by some central entity that
+> > doesn't currently exist, or done on demand from which ever CXL device
+> > happens to have it's decoder set up last)
+> > 
+> > 1) Wait for a decoder commit (enable) on any component. Goto 2.
+> > 2) Walk the topology (up to host decoder, down to memory device)
+> > If a complete interleaving path has been configured -
+> >    i.e. we have committed decoders all the way to the memory
+> >    device goto step 3, otherwise return to step 1 to wait for
+> >    more decoders to be committed.
+> > 3) For the memory region being supplied by the memory device,
+> >    add subregions to map the device physical address (address
+> >    in the file) for each interleave stride to the appropriate
+> >    host Physical Address.
+> > 4) Return to step 1 to wait for more decoders to commit.
+> > 
+> > So summary is we can do it with IO regions, but there are a lot of them
+> > and the setup is somewhat complex as we don't have one single point in
+> > time where we know all the necessary information is available to compute
+> > the right addresses.
+> > 
+> > Looking forward to your suggestions if I haven't caused more confusion!  
 
-https://lore.kernel.org/linux-cxl/164730733718.3806189.9721916820488234094.stgit@dwillia2-desk3.amr.corp.intel.com/
+Hi Peter,
+
+> 
+> Thanks for the write up - I must confess they're a lot! :)
+> 
+> I merely only learned what is CXL today, and I'm not very experienced on
+> device modeling either, so please bare with me with stupid questions..
+> 
+> IIUC so far CXL traps these memory accesses using CXLFixedWindow.mr.
+> That's a normal IO region, which looks very reasonable.
+> 
+> However I'm confused why patch "RFC: softmmu/memory: Add ops to
+> memory_region_ram_init_from_file" helped.
+> 
+> Per my knowledge, all the memory accesses upon this CFMW window trapped
+> using this IO region already.  There can be multiple memory file objects
+> underneath, and when read/write happens the object will be decoded from
+> cxl_cfmws_find_device() as you referenced.
+
+Yes.
+
+> 
+> However I see nowhere that these memory objects got mapped as sub-regions
+> into parent (CXLFixedWindow.mr).  Then I don't understand why they cannot
+> be trapped.
+
+AS you note they aren't mapped into the parent mr, hence we are trapping.
+The parent mem_ops are responsible for decoding the 'which device' +
+'what address in device memory space'. Once we've gotten that info
+the question is how do I actually do the access?
+
+Mapping as subregions seems unwise due to the huge number required.
+
+> 
+> To ask in another way: what will happen if you simply revert this RFC
+> patch?  What will go wrong?
+
+The call to memory_region_dispatch_read()
+https://gitlab.com/jic23/qemu/-/blob/cxl-v7-draft-2-for-test/hw/mem/cxl_type3.c#L556
+
+would call memory_region_access_valid() that calls 
+mr->ops->valid.accepts() which is set to
+unassigned_mem_accepts() and hence...
+you get back a MEMTX_DECODE_ERROR back and an exception in the
+guest.
+
+That wouldn't happen with a non proxied access to the ram as
+those paths never uses the ops as memory_access_is_direct() is called
+and simply memcpy used without any involvement of the ops.
+
+Is a better way to proxy those writes to the backing files?
+
+I was fishing a bit in the dark here and saw the existing ops defined
+for a different purpose for VFIO
+
+4a2e242bbb ("memory Don't use memcpy for ram_device regions")
+
+and those allowed the use of memory_region_dispatch_write() to work.
+
+Hence the RFC marking on that patch :)
+
+Thanks,
+
+Jonathan
+
+
+
+> 
+> Thanks,
+> 
+
