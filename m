@@ -2,40 +2,40 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E798AC43217
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EDBC433F5
 	for <linux-cxl@archiver.kernel.org>; Wed, 16 Mar 2022 23:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229667AbiCPXEf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 16 Mar 2022 19:04:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47596 "EHLO
+        id S229501AbiCPXEe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 16 Mar 2022 19:04:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229812AbiCPXEe (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Mar 2022 19:04:34 -0400
+        with ESMTP id S229812AbiCPXEd (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Mar 2022 19:04:33 -0400
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC8051029
-        for <linux-cxl@vger.kernel.org>; Wed, 16 Mar 2022 16:03:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB4F0D85
+        for <linux-cxl@vger.kernel.org>; Wed, 16 Mar 2022 16:03:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647471798; x=1679007798;
+  t=1647471797; x=1679007797;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=/Qhz+WuORuP5aJTt2PZoTffg5U/+iwZT6m7GyRTAYWA=;
-  b=QKNgxphExbBXR7DfxiXA/EPAyww7/+c4GTvZ3Ur+o7vN9iwUkUba1XDz
-   AttI/jx+UHwOTaep237tDBOqCIhk9tuZ3AG+lWl+up/xbPtPsEKsIPI+w
-   hzBDkQgs8KRpXLc7QbpEDfRVZRtWtMv2zrkBENCzwb18kAF1yaCq0ZKvW
-   MqVffMlrSFLZhDXOpV6Rb79sVbQ6zGV5t+GYCfjNFaBGzrdQxocwtnRHQ
-   CAolJNT7aEw4NkwE2+z6zN3vmuyliwor70x9uIDa4oxy9fbPdIAHy1OTA
-   391N9ZqqbYSsscbYpRtSM2uapgcO4y62IoTuACm9dl0gvB59Lp36YBYph
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10288"; a="236677531"
+  bh=mbC/izFadaPQKeRdEu9/VcKIuWmzXmC6nvjMugZI8ic=;
+  b=OXEQaj1D8try1gJJD5TVsR0ttBFJVN0u+jxRlEHQZOcMQK+Y6tR0vZQm
+   n15MM4Ip2yrJqq8GCRIwMveVkiRoHru+Tzg6JgqkV8pQV9IMJQc86iZP/
+   HpAnTVmmWLbzA2MFgSW0LV0vESxXutpp5vsdE6t5tuZArsJIxNjwvzfKv
+   gFQhDLE7GVFr0icy0H8fHab5U3B7og/qaLm2CaB/OxhtMffmv9nhxq2fu
+   7sWxhmrO4BZHGYj/flsqX3wBRPp4rO3tv7v6Tij7q8zRc9ttcDy+UWlEj
+   VP8OTbgDRlIK85Fs/3VqaDlyteiXriN/oPmsLB1PGgqKFRg/rF2pVk752
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10288"; a="236677528"
 X-IronPort-AV: E=Sophos;i="5.90,187,1643702400"; 
-   d="scan'208";a="236677531"
+   d="scan'208";a="236677528"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2022 16:03:17 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2022 16:03:16 -0700
 X-IronPort-AV: E=Sophos;i="5.90,187,1643702400"; 
-   d="scan'208";a="498621397"
+   d="scan'208";a="498621388"
 Received: from msimpso1-cxt.amr.corp.intel.com (HELO localhost.localdomain) ([10.252.132.128])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2022 16:03:17 -0700
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2022 16:03:16 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     patches@lists.linux.dev, Ben Widawsky <ben.widawsky@intel.com>,
@@ -44,9 +44,9 @@ Cc:     patches@lists.linux.dev, Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [RFC PATCH 4/7] cxl/core/hdm: Allocate resources from the media
-Date:   Wed, 16 Mar 2022 16:03:00 -0700
-Message-Id: <20220316230303.1813397-5-ben.widawsky@intel.com>
+Subject: [RFC PATCH 2/7] cxl/core: Distinguish cxl_decoder into types
+Date:   Wed, 16 Mar 2022 16:02:58 -0700
+Message-Id: <20220316230303.1813397-3-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220316230303.1813397-1-ben.widawsky@intel.com>
 References: <20220316230303.1813397-1-ben.widawsky@intel.com>
@@ -56,346 +56,493 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Similar to how decoders consume address space for the root decoder, they
-also consume space on the device's physical media. For future
-allocations, it's important to mark those as used/busy.
+CXL HDM decoders have distinct properties at each level in the
+hierarchy. Root decoders manage host physical address space. Switch
+decoders manage demultiplexing of data to downstream targets. Endpoint
+decoders must be aware of physical media size constraints. To properly
+support these unique needs, create these unique structures. As endpoint
+decoders don't handle media size accounting, that is saved for a later
+patch.
+
+CXL HDM decoders do have similar architectural properties at all levels:
+interleave properties, flags and types. Those are retained and when
+possible, still utilized.
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- drivers/cxl/core/core.h |  6 +++
- drivers/cxl/core/hdm.c  | 44 +++++++++++++++++-
- drivers/cxl/core/port.c | 99 +++++++++++++++++++++++++++++++++--------
- drivers/cxl/cxl.h       | 16 +++++--
- 4 files changed, 142 insertions(+), 23 deletions(-)
+ drivers/cxl/acpi.c           |   9 ++-
+ drivers/cxl/core/hdm.c       |   8 +--
+ drivers/cxl/core/port.c      |  99 ++++++++++++++++++++---------
+ drivers/cxl/cxl.h            | 118 +++++++++++++++++++++++++++++++----
+ tools/testing/cxl/test/cxl.c |   7 +--
+ 5 files changed, 186 insertions(+), 55 deletions(-)
 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 1a50c0fc399c..1dea4dbb4f33 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -9,6 +9,12 @@ extern const struct device_type cxl_nvdimm_type;
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index 09d6811736f2..822b615a25f4 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -108,8 +108,7 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
  
- extern struct attribute_group cxl_base_attribute_group;
+ 	cxld->flags = cfmws_to_decoder_flags(cfmws->restrictions);
+ 	cxld->target_type = CXL_DECODER_EXPANDER;
+-	cxld->platform_res = (struct resource)DEFINE_RES_MEM(cfmws->base_hpa,
+-							     cfmws->window_size);
++	cxl_set_decoder_extent(cxld, cfmws->base_hpa, cfmws->window_size);
+ 	cxld->interleave_ways = CFMWS_INTERLEAVE_WAYS(cfmws);
+ 	cxld->interleave_granularity = CFMWS_INTERLEAVE_GRANULARITY(cfmws);
  
-+extern struct device_attribute dev_attr_create_pmem_region;
-+extern struct device_attribute dev_attr_delete_region;
-+
-+extern int *gen_pool_vcookie;
-+extern int *gen_pool_pcookie;
-+
- struct cxl_send_command;
- struct cxl_mem_query_commands;
- int cxl_query_cmd(struct cxl_memdev *cxlmd,
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 83404cdb846b..4a4e07a010ec 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
- #include <linux/io-64-nonatomic-hi-lo.h>
-+#include <linux/genalloc.h>
- #include <linux/device.h>
- #include <linux/delay.h>
- 
-@@ -188,8 +189,11 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 	else
- 		cxld->target_type = CXL_DECODER_ACCELERATOR;
- 
--	if (is_endpoint_decoder(&cxld->dev))
-+	if (is_endpoint_decoder(&cxld->dev)) {
-+		to_cxl_endpoint_decoder(cxld)->skip =
-+			ioread64_hi_lo(hdm + CXL_HDM_DECODER0_TL_LOW(which));
+@@ -120,12 +119,12 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+ 		rc = cxl_decoder_autoremove(dev, cxld);
+ 	if (rc) {
+ 		dev_err(dev, "Failed to add decoder for %pr\n",
+-			&cxld->platform_res);
++			&to_cxl_root_decoder(cxld)->res);
  		return 0;
-+	}
+ 	}
+ 	dev_dbg(dev, "add: %s node: %d range %pr\n", dev_name(&cxld->dev),
+-		phys_to_target_node(cxld->platform_res.start),
+-		&cxld->platform_res);
++		phys_to_target_node(to_cxl_root_decoder(cxld)->res.start),
++		&to_cxl_root_decoder(cxld)->res);
  
- 	target_list.value =
- 		ioread64_hi_lo(hdm + CXL_HDM_DECODER0_TL_LOW(which));
-@@ -199,6 +203,35 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
  	return 0;
  }
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index 808b19215425..83404cdb846b 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -6,6 +6,7 @@
  
-+static void cxl_request_regions(struct cxl_endpoint_decoder *cxled,
-+				resource_size_t base)
-+{
-+	struct cxl_port *port = to_cxl_port(cxled->base.dev.parent);
-+	struct genpool_data_fixed gpdf;
-+	struct range r = cxled->hrange;
-+	unsigned long addr;
-+	void *type;
-+
-+	if (!(cxled->base.flags & CXL_DECODER_F_ENABLE))
-+		return;
-+
-+	gpdf.offset = base;
-+	addr = gen_pool_alloc_algo_owner(port->media, range_len(&r),
-+					 gen_pool_fixed_alloc, &gpdf, &type);
-+	if (addr != base || (base == 0 && !type)) {
-+		dev_warn(&port->dev, "Couldn't allocate media\n");
-+		return;
-+	} else if (type == &gen_pool_pcookie) {
-+		dev_warn(&port->dev, "Enumerated a persistent capacity\n");
-+		return;
-+	}
-+
-+	cxled->drange = (struct range) {
-+		.start = addr,
-+		.end = addr + range_len(&r) - 1,
-+	};
-+}
-+
+ #include "cxlmem.h"
+ #include "core.h"
++#include "cxl.h"
+ 
  /**
-  * devm_cxl_enumerate_decoders - add decoder objects per HDM register set
-  * @cxlhdm: Structure to populate with HDM capabilities
-@@ -208,6 +241,7 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
- 	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
- 	struct cxl_port *port = cxlhdm->port;
- 	int i, committed, failed;
-+	u64 base = 0;
- 	u32 ctrl;
+  * DOC: cxl core hdm
+@@ -165,10 +166,7 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+ 		return -ENXIO;
+ 	}
  
- 	/*
-@@ -230,6 +264,7 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
- 	for (i = 0, failed = 0; i < cxlhdm->decoder_count; i++) {
- 		int target_map[CXL_DECODER_MAX_INTERLEAVE] = { 0 };
- 		int rc, target_count = cxlhdm->target_count;
-+		struct cxl_endpoint_decoder *cxled;
+-	cxld->decoder_range = (struct range) {
+-		.start = base,
+-		.end = base + size - 1,
+-	};
++	cxl_set_decoder_extent(cxld, base, size);
+ 
+ 	/* switch decoders are always enabled if committed */
+ 	if (ctrl & CXL_HDM_DECODER0_CTRL_COMMITTED) {
+@@ -235,7 +233,7 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
  		struct cxl_decoder *cxld;
  
  		if (is_cxl_endpoint(port))
-@@ -255,6 +290,13 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
- 				 "Failed to add decoder to port\n");
- 			return rc;
- 		}
-+
-+		if (!is_cxl_endpoint(port))
-+			continue;
-+
-+		cxled = to_cxl_endpoint_decoder(cxld);
-+		cxl_request_regions(cxled, base + cxled->skip);
-+		base += cxled->skip + range_len(&cxled->hrange);
- 	}
- 
- 	if (failed == cxlhdm->decoder_count) {
+-			cxld = cxl_endpoint_decoder_alloc(port);
++			cxld = &cxl_endpoint_decoder_alloc(port)->base;
+ 		else
+ 			cxld = cxl_switch_decoder_alloc(port, target_count);
+ 		if (IS_ERR(cxld)) {
 diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 6653de4dfb43..fe50a42bed7b 100644
+index bda40e91af2b..c46f0b01ce3c 100644
 --- a/drivers/cxl/core/port.c
 +++ b/drivers/cxl/core/port.c
-@@ -452,16 +452,44 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
- 	return ERR_PTR(rc);
- }
- 
--/**
-- * devm_cxl_add_port - register a cxl_port in CXL memory decode hierarchy
-- * @host: host device for devm operations
-- * @uport: "physical" device implementing this upstream port
-- * @component_reg_phys: (optional) for configurable cxl_port instances
-- * @parent_port: next hop up in the CXL memory decode hierarchy
-- */
--struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
--				   resource_size_t component_reg_phys,
--				   struct cxl_port *parent_port)
-+int *gen_pool_vcookie;
-+int *gen_pool_pcookie;
-+
-+static int create_gen_pools(struct cxl_port *ep, u64 capacity, u64 pmem_offset)
-+{
-+	int rc;
-+
-+	ep->media = gen_pool_create(ilog2(SZ_256M), NUMA_NO_NODE);
-+	if (IS_ERR(ep->media))
-+		return PTR_ERR(ep->media);
-+
-+	if (pmem_offset) {
-+		rc = gen_pool_add_owner(ep->media, 0, -1, pmem_offset,
-+					NUMA_NO_NODE, &gen_pool_vcookie);
-+		if (rc) {
-+			gen_pool_destroy(ep->media);
-+			return rc;
-+		}
-+	}
-+
-+	if (pmem_offset < capacity) {
-+		rc = gen_pool_add_owner(ep->media, pmem_offset, -1,
-+					capacity - pmem_offset, NUMA_NO_NODE,
-+					&gen_pool_pcookie);
-+		if (rc) {
-+			gen_pool_destroy(ep->media);
-+			return rc;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static struct cxl_port *__devm_cxl_add_port(struct device *host,
-+					    struct device *uport,
-+					    resource_size_t component_reg_phys,
-+					    u64 capacity, u64 pmem_offset,
-+					    struct cxl_port *parent_port)
+@@ -73,14 +73,8 @@ static ssize_t start_show(struct device *dev, struct device_attribute *attr,
+ 			  char *buf)
  {
- 	struct cxl_port *port;
- 	struct device *dev;
-@@ -474,12 +502,15 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
- 	if (parent_port)
- 		port->depth = parent_port->depth + 1;
- 	dev = &port->dev;
--	if (is_cxl_memdev(uport))
-+	if (is_cxl_memdev(uport)) {
- 		rc = dev_set_name(dev, "endpoint%d", port->id);
--	else if (parent_port)
-+		if (!rc)
-+			rc = create_gen_pools(port, capacity, pmem_offset);
-+	} else if (parent_port) {
- 		rc = dev_set_name(dev, "port%d", port->id);
+ 	struct cxl_decoder *cxld = to_cxl_decoder(dev);
+-	u64 start;
+ 
+-	if (is_root_decoder(dev))
+-		start = cxld->platform_res.start;
 -	else
-+	} else {
- 		rc = dev_set_name(dev, "root%d", port->id);
-+	}
- 	if (rc)
- 		goto err;
- 
-@@ -502,10 +533,22 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
- 	put_device(dev);
- 	return ERR_PTR(rc);
+-		start = cxld->decoder_range.start;
+-
+-	return sysfs_emit(buf, "%#llx\n", start);
++	return sysfs_emit(buf, "%#llx\n", cxl_get_decoder_extent(cxld).start);
  }
--EXPORT_SYMBOL_NS_GPL(devm_cxl_add_port, CXL);
+ static DEVICE_ATTR_ADMIN_RO(start);
  
--static int *gen_pool_vcookie;
--static int *gen_pool_pcookie;
-+/**
-+ * devm_cxl_add_port - register a cxl_port in CXL memory decode hierarchy
-+ * @host: host device for devm operations
-+ * @uport: "physical" device implementing this upstream port
-+ * @component_reg_phys: (optional) for configurable cxl_port instances
-+ * @parent_port: next hop up in the CXL memory decode hierarchy
-+ */
-+struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
-+				   resource_size_t component_reg_phys,
-+				   struct cxl_port *parent_port)
+@@ -88,14 +82,9 @@ static ssize_t size_show(struct device *dev, struct device_attribute *attr,
+ 			char *buf)
+ {
+ 	struct cxl_decoder *cxld = to_cxl_decoder(dev);
+-	u64 size;
++	struct range r = cxl_get_decoder_extent(cxld);
+ 
+-	if (is_root_decoder(dev))
+-		size = resource_size(&cxld->platform_res);
+-	else
+-		size = range_len(&cxld->decoder_range);
+-
+-	return sysfs_emit(buf, "%#llx\n", size);
++	return sysfs_emit(buf, "%#llx\n", range_len(&r));
+ }
+ static DEVICE_ATTR_RO(size);
+ 
+@@ -152,18 +141,19 @@ static DEVICE_ATTR_RO(target_type);
+ 
+ static ssize_t emit_target_list(struct cxl_decoder *cxld, char *buf)
+ {
++	struct cxl_decoder_targets *t = cxl_get_decoder_targets(cxld);
+ 	ssize_t offset = 0;
+ 	int i, rc = 0;
+ 
+ 	for (i = 0; i < cxld->interleave_ways; i++) {
+-		struct cxl_dport *dport = cxld->target[i];
++		struct cxl_dport *dport = t->target[i];
+ 		struct cxl_dport *next = NULL;
+ 
+ 		if (!dport)
+ 			break;
+ 
+ 		if (i + 1 < cxld->interleave_ways)
+-			next = cxld->target[i + 1];
++			next = t->target[i + 1];
+ 		rc = sysfs_emit_at(buf, offset, "%d%s", dport->port_id,
+ 				   next ? "," : "");
+ 		if (rc < 0)
+@@ -178,14 +168,15 @@ static ssize_t target_list_show(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
+ {
+ 	struct cxl_decoder *cxld = to_cxl_decoder(dev);
++	struct cxl_decoder_targets *t = cxl_get_decoder_targets(cxld);
+ 	ssize_t offset;
+ 	unsigned int seq;
+ 	int rc;
+ 
+ 	do {
+-		seq = read_seqbegin(&cxld->target_lock);
++		seq = read_seqbegin(&t->target_lock);
+ 		rc = emit_target_list(cxld, buf);
+-	} while (read_seqretry(&cxld->target_lock, seq));
++	} while (read_seqretry(&t->target_lock, seq));
+ 
+ 	if (rc < 0)
+ 		return rc;
+@@ -297,6 +288,7 @@ bool is_endpoint_decoder(struct device *dev)
+ {
+ 	return dev->type == &cxl_decoder_endpoint_type;
+ }
++EXPORT_SYMBOL_NS_GPL(is_endpoint_decoder, CXL);
+ 
+ bool is_root_decoder(struct device *dev)
+ {
+@@ -1167,6 +1159,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_find_dport_by_dev, CXL);
+ static int decoder_populate_targets(struct cxl_decoder *cxld,
+ 				    struct cxl_port *port, int *target_map)
+ {
++	struct cxl_decoder_targets *t = cxl_get_decoder_targets(cxld);
+ 	int i, rc = 0;
+ 
+ 	if (!target_map)
+@@ -1177,21 +1170,70 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
+ 	if (list_empty(&port->dports))
+ 		return -EINVAL;
+ 
+-	write_seqlock(&cxld->target_lock);
+-	for (i = 0; i < cxld->nr_targets; i++) {
++	write_seqlock(&t->target_lock);
++	for (i = 0; i < t->nr_targets; i++) {
+ 		struct cxl_dport *dport = find_dport(port, target_map[i]);
+ 
+ 		if (!dport) {
+ 			rc = -ENXIO;
+ 			break;
+ 		}
+-		cxld->target[i] = dport;
++		t->target[i] = dport;
+ 	}
+-	write_sequnlock(&cxld->target_lock);
++	write_sequnlock(&t->target_lock);
+ 
+ 	return rc;
+ }
+ 
++static struct cxl_decoder *__cxl_decoder_alloc(struct cxl_port *port,
++					       unsigned int nr_targets)
 +{
-+	return __devm_cxl_add_port(host, uport, component_reg_phys, 0, 0,
-+				   parent_port);
-+}
-+EXPORT_SYMBOL_NS_GPL(devm_cxl_add_port, CXL);
- 
- struct cxl_port *devm_cxl_add_endpoint_port(struct device *host,
- 					    struct device *uport,
-@@ -513,9 +556,9 @@ struct cxl_port *devm_cxl_add_endpoint_port(struct device *host,
- 					    u64 capacity, u64 pmem_offset,
- 					    struct cxl_port *parent_port)
- {
--	int rc;
- 	struct cxl_port *ep =
--		devm_cxl_add_port(host, uport, component_reg_phys, parent_port);
-+		__devm_cxl_add_port(host, uport, component_reg_phys, capacity,
-+				    pmem_offset, parent_port);
- 	if (IS_ERR(ep) || !capacity)
- 		return ep;
- 
-@@ -526,6 +569,8 @@ struct cxl_port *devm_cxl_add_endpoint_port(struct device *host,
- 	}
- 
- 	if (pmem_offset) {
-+		int rc;
++	struct cxl_decoder *cxld;
 +
- 		rc = gen_pool_add_owner(ep->media, 0, -1, pmem_offset,
- 					NUMA_NO_NODE, &gen_pool_vcookie);
- 		if (rc) {
-@@ -537,6 +582,8 @@ struct cxl_port *devm_cxl_add_endpoint_port(struct device *host,
- 	}
- 
- 	if (pmem_offset < capacity) {
-+		int rc;
++	if (is_cxl_endpoint(port)) {
++		struct cxl_endpoint_decoder *cxled;
 +
- 		rc = gen_pool_add_owner(ep->media, pmem_offset, -1,
- 					capacity - pmem_offset, NUMA_NO_NODE,
- 					&gen_pool_pcookie);
-@@ -1250,6 +1297,7 @@ static struct cxl_decoder *__cxl_decoder_alloc(struct cxl_port *port,
- 		cxled = kzalloc(sizeof(*cxled), GFP_KERNEL);
- 		if (!cxled)
- 			return NULL;
-+		cxled->drange = (struct range){ 0, -1 };
- 		cxld = &cxled->base;
- 	} else if (is_cxl_root(port)) {
- 		struct cxl_root_decoder *cxlrd;
-@@ -1504,6 +1552,21 @@ EXPORT_SYMBOL_NS_GPL(cxl_decoder_add, CXL);
- 
- static void cxld_unregister(void *dev)
- {
-+	struct cxl_decoder *cxld = to_cxl_decoder(dev);
++		cxled = kzalloc(sizeof(*cxled), GFP_KERNEL);
++		if (!cxled)
++			return NULL;
++		cxld = &cxled->base;
++	} else if (is_cxl_root(port)) {
++		struct cxl_root_decoder *cxlrd;
 +
-+	if (is_endpoint_decoder(&cxld->dev)) {
-+		struct cxl_endpoint_decoder *cxled =
-+			to_cxl_endpoint_decoder(cxld);
-+		struct cxl_port *ep = to_cxl_port(cxld->dev.parent);
++		cxlrd = kzalloc(sizeof(*cxlrd), GFP_KERNEL);
++		if (!cxlrd)
++			return NULL;
 +
-+		if (!range_len(&cxled->drange))
-+			goto out;
++		cxlrd->targets =
++			kzalloc(struct_size(cxlrd->targets, target, nr_targets), GFP_KERNEL);
++		if (!cxlrd->targets) {
++			kfree(cxlrd);
++			return NULL;
++		}
++		cxlrd->targets->nr_targets = nr_targets;
++		seqlock_init(&cxlrd->targets->target_lock);
++		cxld = &cxlrd->base;
++	} else {
++		struct cxl_switch_decoder *cxlsd;
 +
-+		gen_pool_free(ep->media, cxled->drange.start,
-+			      range_len(&cxled->drange));
++		cxlsd = kzalloc(sizeof(*cxlsd), GFP_KERNEL);
++		if (!cxlsd)
++			return NULL;
++
++		cxlsd->targets =
++			kzalloc(struct_size(cxlsd->targets, target, nr_targets), GFP_KERNEL);
++		if (!cxlsd->targets) {
++			kfree(cxlsd);
++			return NULL;
++		}
++		cxlsd->targets->nr_targets = nr_targets;
++		seqlock_init(&cxlsd->targets->target_lock);
++		cxld = &cxlsd->base;
 +	}
 +
-+out:
- 	device_unregister(dev);
- }
++	return cxld;
++}
++
+ /**
+  * cxl_decoder_alloc - Allocate a new CXL decoder
+  * @port: owning port of this decoder
+@@ -1217,9 +1259,10 @@ static struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
+ 	if (nr_targets > CXL_DECODER_MAX_INTERLEAVE)
+ 		return ERR_PTR(-EINVAL);
  
+-	cxld = kzalloc(struct_size(cxld, target, nr_targets), GFP_KERNEL);
++	cxld = __cxl_decoder_alloc(port, nr_targets);
+ 	if (!cxld)
+ 		return ERR_PTR(-ENOMEM);
++	;
+ 
+ 	rc = ida_alloc(&port->decoder_ida, GFP_KERNEL);
+ 	if (rc < 0)
+@@ -1229,8 +1272,6 @@ static struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
+ 	get_device(&port->dev);
+ 	cxld->id = rc;
+ 
+-	cxld->nr_targets = nr_targets;
+-	seqlock_init(&cxld->target_lock);
+ 	dev = &cxld->dev;
+ 	device_initialize(dev);
+ 	device_set_pm_not_required(dev);
+@@ -1247,7 +1288,7 @@ static struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
+ 	cxld->interleave_ways = 1;
+ 	cxld->interleave_granularity = PAGE_SIZE;
+ 	cxld->target_type = CXL_DECODER_EXPANDER;
+-	cxld->platform_res = (struct resource)DEFINE_RES_MEM(0, 0);
++	cxl_set_decoder_extent(cxld, 0, 0);
+ 
+ 	return cxld;
+ err:
+@@ -1302,12 +1343,12 @@ EXPORT_SYMBOL_NS_GPL(cxl_switch_decoder_alloc, CXL);
+  *
+  * Return: A new cxl decoder to be registered by cxl_decoder_add()
+  */
+-struct cxl_decoder *cxl_endpoint_decoder_alloc(struct cxl_port *port)
++struct cxl_endpoint_decoder *cxl_endpoint_decoder_alloc(struct cxl_port *port)
+ {
+ 	if (!is_cxl_endpoint(port))
+ 		return ERR_PTR(-EINVAL);
+ 
+-	return cxl_decoder_alloc(port, 0);
++	return to_cxl_endpoint_decoder(cxl_decoder_alloc(port, 0));
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_endpoint_decoder_alloc, CXL);
+ 
+@@ -1366,7 +1407,7 @@ int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map)
+ 	 * other resources are just sub ranges within the main decoder resource.
+ 	 */
+ 	if (is_root_decoder(dev))
+-		cxld->platform_res.name = dev_name(dev);
++		to_cxl_root_decoder(cxld)->res.name = dev_name(dev);
+ 
+ 	cxl_set_lock_class(dev);
+ 	return device_add(dev);
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index d18e93e77f7e..e88b1efe54d3 100644
+index 4a93d409328f..f523268060fd 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -245,11 +245,15 @@ struct cxl_decoder {
- /**
-  * struct cxl_endpoint_decoder - An decoder residing in a CXL endpoint.
-  * @base: Base class decoder
-- * @range: Host physical address space consumed by this decoder.
-+ * @hrange: Host physical address space consumed by this decoder.
-+ * @drange: device space consumed by this decoder.
-+ * @skip: The skip count as specified in the CXL specification.
+@@ -210,6 +210,18 @@ enum cxl_decoder_type {
   */
- struct cxl_endpoint_decoder {
- 	struct cxl_decoder base;
--	struct range range;
-+	struct range hrange;
-+	struct range drange;
-+	u64 skip;
+ #define CXL_DECODER_MAX_INTERLEAVE 16
+ 
++/**
++ * struct cxl_decoder_targets - Target information for root and switch decoders.
++ * @target_lock: coordinate coherent reads of the target list
++ * @nr_targets: number of elements in @target
++ * @target: active ordered target list in current decoder configuration
++ */
++struct cxl_decoder_targets {
++	seqlock_t target_lock;
++	int nr_targets;
++	struct cxl_dport *target[];
++};
++
+ /**
+  * struct cxl_decoder - CXL address range decode configuration
+  * @dev: this decoder's device
+@@ -220,26 +232,60 @@ enum cxl_decoder_type {
+  * @interleave_granularity: data stride per dport
+  * @target_type: accelerator vs expander (type2 vs type3) selector
+  * @flags: memory type capabilities and locking
+- * @target_lock: coordinate coherent reads of the target list
+- * @nr_targets: number of elements in @target
+- * @target: active ordered target list in current decoder configuration
+  */
+ struct cxl_decoder {
+ 	struct device dev;
+ 	int id;
+-	union {
+-		struct resource platform_res;
+-		struct range decoder_range;
+-	};
+ 	int interleave_ways;
+ 	int interleave_granularity;
+ 	enum cxl_decoder_type target_type;
+ 	unsigned long flags;
+-	seqlock_t target_lock;
+-	int nr_targets;
+-	struct cxl_dport *target[];
  };
  
- /**
-@@ -269,11 +273,15 @@ struct cxl_switch_decoder {
-  * @base: Base class decoder
-  * @res: host address space owned by this decoder
-  * @targets: Downstream targets (ie. hostbridges).
-+ * @next_region_id: The pre-cached next region id.
-+ * @id_lock: Protects next_region_id
-  */
- struct cxl_root_decoder {
- 	struct cxl_decoder base;
- 	struct resource res;
- 	struct cxl_decoder_targets *targets;
-+	int next_region_id;
-+	struct mutex id_lock; /* synchronizes access to next_region_id */
- };
++/**
++ * struct cxl_endpoint_decoder - An decoder residing in a CXL endpoint.
++ * @base: Base class decoder
++ * @range: Host physical address space consumed by this decoder.
++ */
++struct cxl_endpoint_decoder {
++	struct cxl_decoder base;
++	struct range range;
++};
++
++/**
++ * struct cxl_switch_decoder - A decoder in a switch or hostbridge.
++ * @base: Base class decoder
++ * @range: Host physical address space consumed by this decoder.
++ * @targets: Downstream targets for this switch.
++ */
++struct cxl_switch_decoder {
++	struct cxl_decoder base;
++	struct range range;
++	struct cxl_decoder_targets *targets;
++};
++
++/**
++ * struct cxl_root_decoder - A toplevel/platform decoder
++ * @base: Base class decoder
++ * @res: host address space owned by this decoder
++ * @targets: Downstream targets (ie. hostbridges).
++ */
++struct cxl_root_decoder {
++	struct cxl_decoder base;
++	struct resource res;
++	struct cxl_decoder_targets *targets;
++};
++
++#define _to_cxl_decoder(x)                                                     \
++	static inline struct cxl_##x##_decoder *to_cxl_##x##_decoder(          \
++		struct cxl_decoder *cxld)                                      \
++	{                                                                      \
++		return container_of(cxld, struct cxl_##x##_decoder, base);     \
++	}
++
++_to_cxl_decoder(root)
++_to_cxl_decoder(switch)
++_to_cxl_decoder(endpoint)
  
- #define _to_cxl_decoder(x)                                                     \
-@@ -441,7 +449,7 @@ static inline void cxl_set_decoder_extent(struct cxl_decoder *cxld,
- 		to_cxl_root_decoder(cxld)->res =
- 			(struct resource)DEFINE_RES_MEM(base, size);
- 	else if (is_endpoint_decoder(&cxld->dev))
--		to_cxl_endpoint_decoder(cxld)->range = (struct range){
-+		to_cxl_endpoint_decoder(cxld)->drange = (struct range){
- 			.start = base,
- 			.end = base + size - 1
- 		};
-@@ -464,7 +472,7 @@ static inline struct range cxl_get_decoder_extent(struct cxl_decoder *cxld)
- 			.end = cxlrd->res.end
- 		};
- 	} else if (is_endpoint_decoder(&cxld->dev)) {
--		ret = to_cxl_endpoint_decoder(cxld)->range;
-+		ret = to_cxl_endpoint_decoder(cxld)->drange;
- 	} else {
- 		ret = to_cxl_switch_decoder(cxld)->range;
- 	}
+ /**
+  * enum cxl_nvdimm_brige_state - state machine for managing bus rescans
+@@ -364,11 +410,61 @@ struct cxl_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+ struct cxl_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
+ 					     unsigned int nr_targets);
+ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
+-struct cxl_decoder *cxl_endpoint_decoder_alloc(struct cxl_port *port);
++struct cxl_endpoint_decoder *cxl_endpoint_decoder_alloc(struct cxl_port *port);
+ int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map);
+ int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld);
+ int cxl_endpoint_autoremove(struct cxl_memdev *cxlmd, struct cxl_port *endpoint);
+ 
++static inline struct cxl_decoder_targets *
++cxl_get_decoder_targets(struct cxl_decoder *cxld)
++{
++	if (is_root_decoder(&cxld->dev))
++		return to_cxl_root_decoder(cxld)->targets;
++	else if (is_endpoint_decoder(&cxld->dev))
++		return NULL;
++	else
++		return to_cxl_switch_decoder(cxld)->targets;
++}
++
++static inline void cxl_set_decoder_extent(struct cxl_decoder *cxld,
++					  resource_size_t base,
++					  resource_size_t size)
++{
++	if (is_root_decoder(&cxld->dev))
++		to_cxl_root_decoder(cxld)->res =
++			(struct resource)DEFINE_RES_MEM(base, size);
++	else if (is_endpoint_decoder(&cxld->dev))
++		to_cxl_endpoint_decoder(cxld)->range = (struct range){
++			.start = base,
++			.end = base + size - 1
++		};
++	else
++		to_cxl_switch_decoder(cxld)->range = (struct range){
++			.start = base,
++			.end = base + size - 1
++		};
++}
++
++static inline struct range cxl_get_decoder_extent(struct cxl_decoder *cxld)
++{
++	struct range ret;
++
++	if (is_root_decoder(&cxld->dev)) {
++		struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxld);
++
++		ret = (struct range) {
++			.start = cxlrd->res.start,
++			.end = cxlrd->res.end
++		};
++	} else if (is_endpoint_decoder(&cxld->dev)) {
++		ret = to_cxl_endpoint_decoder(cxld)->range;
++	} else {
++		ret = to_cxl_switch_decoder(cxld)->range;
++	}
++
++	return ret;
++}
++
+ struct cxl_hdm;
+ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port);
+ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm);
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index 431f2bddf6c8..5b9fe64e4582 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -454,17 +454,14 @@ static int mock_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
+ 		if (target_count)
+ 			cxld = cxl_switch_decoder_alloc(port, target_count);
+ 		else
+-			cxld = cxl_endpoint_decoder_alloc(port);
++			cxld = &cxl_endpoint_decoder_alloc(port)->base;
+ 		if (IS_ERR(cxld)) {
+ 			dev_warn(&port->dev,
+ 				 "Failed to allocate the decoder\n");
+ 			return PTR_ERR(cxld);
+ 		}
+ 
+-		cxld->decoder_range = (struct range) {
+-			.start = 0,
+-			.end = -1,
+-		};
++		cxl_set_decoder_extent(cxld, 0, 0);
+ 
+ 		cxld->flags = CXL_DECODER_F_ENABLE;
+ 		cxld->interleave_ways = min_not_zero(target_count, 1);
 -- 
 2.35.1
 
