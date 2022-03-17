@@ -2,424 +2,347 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF43AC433F5
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Mar 2022 16:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D57C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Mar 2022 16:47:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236237AbiCQQLf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Mar 2022 12:11:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54200 "EHLO
+        id S235349AbiCQQss (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Mar 2022 12:48:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236344AbiCQQLf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Mar 2022 12:11:35 -0400
+        with ESMTP id S235132AbiCQQss (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Mar 2022 12:48:48 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 481AC141D92;
-        Thu, 17 Mar 2022 09:10:16 -0700 (PDT)
-Received: from fraeml734-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KKBrf1XTmz67lk0;
-        Fri, 18 Mar 2022 00:08:18 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BE5520830C
+        for <linux-cxl@vger.kernel.org>; Thu, 17 Mar 2022 09:47:28 -0700 (PDT)
+Received: from fraeml737-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KKChq0qS8z67sVs;
+        Fri, 18 Mar 2022 00:46:35 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml734-chm.china.huawei.com (10.206.15.215) with Microsoft SMTP Server
+ fraeml737-chm.china.huawei.com (10.206.15.218) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 17 Mar 2022 17:10:13 +0100
-Received: from localhost (10.47.67.100) by lhreml710-chm.china.huawei.com
+ 15.1.2375.24; Thu, 17 Mar 2022 17:47:25 +0100
+Received: from localhost (10.122.247.231) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Thu, 17 Mar
- 2022 16:10:12 +0000
-Date:   Thu, 17 Mar 2022 16:10:08 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Vishal Verma <vishal.l.verma@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+ 2022 16:47:25 +0000
+Date:   Thu, 17 Mar 2022 16:47:23 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
+CC:     Peter Maydell <peter.maydell@linaro.org>,
+        Shreyas Shah <shreyas.shah@elastics.cloud>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Marcel Apfelbaum <marcel@redhat.com>,
+        Samarth Saxena <samarths@cadence.com>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Markus Armbruster <armbru@redhat.com>,
+        Peter Xu <peterx@redhat.com>, <qemu-devel@nongnu.org>,
+        <linuxarm@huawei.com>, <linux-cxl@vger.kernel.org>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Saransh Gupta1 <saransh@ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [RFC PATCH 2/2] acpi/pci_root: negotiate CXL _OSC
-Message-ID: <20220317161008.00005f07@Huawei.com>
-In-Reply-To: <20220317002704.1835870-3-vishal.l.verma@intel.com>
-References: <20220317002704.1835870-1-vishal.l.verma@intel.com>
-        <20220317002704.1835870-3-vishal.l.verma@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        David Hildenbrand <david@redhat.com>,
+        Alex =?ISO-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+        "Shameerali Kolothum Thodi" <shameerali.kolothum.thodi@huawei.com>,
+        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>
+Subject: Re: [PATCH v7 00/46] CXl 2.0 emulation Support
+Message-ID: <20220317164723.00001c14@huawei.com>
+In-Reply-To: <31f383e6-01bb-cf9a-6af8-d0f1821b3fd1@ilande.co.uk>
+References: <20220306174137.5707-1-Jonathan.Cameron@huawei.com>
+        <20220306163119-mutt-send-email-mst@kernel.org>
+        <20220307093918.00002f20@Huawei.com>
+        <YihiHNxVjDFI0Z8r@xz-m1.local>
+        <20220309112827.00002c73@Huawei.com>
+        <Yimwjtd8SsVLOU5e@xz-m1.local>
+        <20220316165034.000037e7@Huawei.com>
+        <1efbfeeb-2598-57c5-2e2d-4f5fa2538aa7@ilande.co.uk>
+        <20220316175846.00007463@Huawei.com>
+        <20220316182618.00003ce5@Huawei.com>
+        <31f383e6-01bb-cf9a-6af8-d0f1821b3fd1@ilande.co.uk>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.67.100]
-X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
  lhreml710-chm.china.huawei.com (10.201.108.61)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 16 Mar 2022 18:27:04 -0600
-Vishal Verma <vishal.l.verma@intel.com> wrote:
+On Thu, 17 Mar 2022 08:12:56 +0000
+Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk> wrote:
 
-> Add full support for negotiating _OSC as defined in the CXL 2.0 spec, as
-> applicable to CXL-enabled platforms. Advertise support for the CXL
-> features we support - 'CXL 2.0 port/device register access', 'Protocol
-> Error Reporting', and 'CL Native Hot Plug'. Request control for 'CXL
-> Memory Error Reporting'. The requests are dependent on CONFIG_* based
-> pre-requisites, and prior PCI enabling, similar to how the standard PCI
-> _OSC bits are determined.
+> On 16/03/2022 18:26, Jonathan Cameron via wrote:
+> > On Wed, 16 Mar 2022 17:58:46 +0000
+> > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> >   
+> >> On Wed, 16 Mar 2022 17:16:55 +0000
+> >> Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk> wrote:
+> >>  
+> >>> On 16/03/2022 16:50, Jonathan Cameron via wrote:
+> >>>      
+> >>>> On Thu, 10 Mar 2022 16:02:22 +0800
+> >>>> Peter Xu <peterx@redhat.com> wrote:
+> >>>>        
+> >>>>> On Wed, Mar 09, 2022 at 11:28:27AM +0000, Jonathan Cameron wrote:  
+> >>>>>> Hi Peter,  
+> >>>>>
+> >>>>> Hi, Jonathan,
+> >>>>>       
+> >>>>>>           
+> >>>>>>>
+> >>>>>>> https://lore.kernel.org/qemu-devel/20220306174137.5707-35-Jonathan.Cameron@huawei.com/
+> >>>>>>>
+> >>>>>>> Having mr->ops set but with memory_access_is_direct() returning true sounds
+> >>>>>>> weird to me.
+> >>>>>>>
+> >>>>>>> Sorry to have no understanding of the whole picture, but.. could you share
+> >>>>>>> more on what's the interleaving requirement on the proxying, and why it
+> >>>>>>> can't be done with adding some IO memory regions as sub-regions upon the
+> >>>>>>> file one?  
+> >>>>>>
+> >>>>>> The proxying requirement is simply a means to read/write to a computed address
+> >>>>>> within a memory region. There may well be a better way to do that.
+> >>>>>>
+> >>>>>> If I understand your suggestion correctly you would need a very high
+> >>>>>> number of IO memory regions to be created dynamically when particular sets of
+> >>>>>> registers across multiple devices in the topology are all programmed.
+> >>>>>>
+> >>>>>> The interleave can be 256 bytes across up to 16x, many terabyte, devices.
+> >>>>>> So assuming a simple set of 16 1TB devices I think you'd need about 4x10^9
+> >>>>>> IO regions.  Even for a minimal useful test case of largest interleave
+> >>>>>> set of 16x 256MB devices (256MB is minimum size the specification allows per
+> >>>>>> decoded region at the device) and 16 way interleave we'd need 10^6 IO regions.
+> >>>>>> Any idea if that approach would scale sensibly to this number of regions?
+> >>>>>>
+> >>>>>> There are also complexities to getting all the information in one place to
+> >>>>>> work out which IO memory regions maps where in PA space. Current solution is
+> >>>>>> to do that mapping in the same way the hardware does which is hierarchical,
+> >>>>>> so we walk the path to the device, picking directions based on each interleave
+> >>>>>> decoder that we meet.
+> >>>>>> Obviously this is a bit slow but I only really care about correctness at the
+> >>>>>> moment.  I can think of various approaches to speeding it up but I'm not sure
+> >>>>>> if we will ever care about performance.
+> >>>>>>
+> >>>>>> https://gitlab.com/jic23/qemu/-/blob/cxl-v7-draft-2-for-test/hw/cxl/cxl-host.c#L131
+> >>>>>> has the logic for that and as you can see it's fairly simple because we are always
+> >>>>>> going down the topology following the decoders.
+> >>>>>>
+> >>>>>> Below I have mapped out an algorithm I think would work for doing it with
+> >>>>>> IO memory regions as subregions.
+> >>>>>>
+> >>>>>> We could fake the whole thing by limiting ourselves to small host
+> >>>>>> memory windows which are always directly backed, but then I wouldn't
+> >>>>>> achieve the main aim of this which is to provide a test base for the OS code.
+> >>>>>> To do that I need real interleave so I can seed the files with test patterns
+> >>>>>> and verify the accesses hit the correct locations. Emulating what the hardware
+> >>>>>> is actually doing on a device by device basis is the easiest way I have
+> >>>>>> come up with to do that.
+> >>>>>>
+> >>>>>> Let me try to provide some more background so you hopefully don't have
+> >>>>>> to have read the specs to follow what is going on!
+> >>>>>> There are an example for directly connected (no switches) topology in the
+> >>>>>> docs
+> >>>>>>
+> >>>>>> https://gitlab.com/jic23/qemu/-/blob/cxl-v7-draft-2-for-test/docs/system/devices/cxl.rst
+> >>>>>>
+> >>>>>> The overall picture is we have a large number of CXL Type 3 memory devices,
+> >>>>>> which at runtime (by OS at boot/on hotplug) are configured into various
+> >>>>>> interleaving sets with hierarchical decoding at the host + host bridge
+> >>>>>> + switch levels. For test setups I probably need to go to around 32 devices
+> >>>>>> so I can hit various configurations simultaneously.
+> >>>>>> No individual device has visibility of the full interleave setup - hence
+> >>>>>> the walk in the existing code through the various decoders to find the
+> >>>>>> final Device Physical address.
+> >>>>>>
+> >>>>>> At the host level the host provides a set of Physical Address windows with
+> >>>>>> a fixed interleave decoding across the different host bridges in the system
+> >>>>>> (CXL Fixed Memory windows, CFMWs)
+> >>>>>> On a real system these have to be large enough to allow for any memory
+> >>>>>> devices that might be hotplugged and all possible configurations (so
+> >>>>>> with 2 host bridges you need at least 3 windows in the many TB range,
+> >>>>>> much worse as the number of host bridges goes up). It'll be worse than
+> >>>>>> this when we have QoS groups, but the current Qemu code just puts all
+> >>>>>> the windows in group 0.  Hence my first thought of just putting memory
+> >>>>>> behind those doesn't scale (a similar approach to this was in the
+> >>>>>> earliest versions of this patch set - though the full access path
+> >>>>>> wasn't wired up).
+> >>>>>>
+> >>>>>> The granularity can be in powers of 2 from 256 bytes to 16 kbytes
+> >>>>>>
+> >>>>>> Next each host bridge has programmable address decoders which take the
+> >>>>>> incoming (often already interleaved) memory access and direct them to
+> >>>>>> appropriate root ports.  The root ports can be connected to a switch
+> >>>>>> which has additional address decoders in the upstream port to decide
+> >>>>>> which downstream port to route to.  Note we currently only support 1 level
+> >>>>>> of switches but it's easy to make this algorithm recursive to support
+> >>>>>> multiple switch levels (currently the kernel proposals only support 1 level)
+> >>>>>>
+> >>>>>> Finally the End Point with the actual memory receives the interleaved request and
+> >>>>>> takes the full address and (for power of 2 decoding - we don't yet support
+> >>>>>> 3,6 and 12 way which is more complex and there is no kernel support yet)
+> >>>>>> it drops a few address bits and adds an offset for the decoder used to
+> >>>>>> calculate it's own device physical address.  Note device will support
+> >>>>>> multiple interleave sets for different parts of it's file once we add
+> >>>>>> multiple decoder support (on the todo list).
+> >>>>>>
+> >>>>>> So the current solution is straight forward (with the exception of that
+> >>>>>> proxying) because it follows the same decoding as used in real hardware
+> >>>>>> to route the memory accesses. As a result we get a read/write to a
+> >>>>>> device physical address and hence proxy that.  If any of the decoders
+> >>>>>> along the path are not configured then we error out at that stage.
+> >>>>>>
+> >>>>>> To create the equivalent as IO subregions I think we'd have to do the
+> >>>>>> following from (this might be mediated by some central entity that
+> >>>>>> doesn't currently exist, or done on demand from which ever CXL device
+> >>>>>> happens to have it's decoder set up last)
+> >>>>>>
+> >>>>>> 1) Wait for a decoder commit (enable) on any component. Goto 2.
+> >>>>>> 2) Walk the topology (up to host decoder, down to memory device)
+> >>>>>> If a complete interleaving path has been configured -
+> >>>>>>      i.e. we have committed decoders all the way to the memory
+> >>>>>>      device goto step 3, otherwise return to step 1 to wait for
+> >>>>>>      more decoders to be committed.
+> >>>>>> 3) For the memory region being supplied by the memory device,
+> >>>>>>      add subregions to map the device physical address (address
+> >>>>>>      in the file) for each interleave stride to the appropriate
+> >>>>>>      host Physical Address.
+> >>>>>> 4) Return to step 1 to wait for more decoders to commit.
+> >>>>>>
+> >>>>>> So summary is we can do it with IO regions, but there are a lot of them
+> >>>>>> and the setup is somewhat complex as we don't have one single point in
+> >>>>>> time where we know all the necessary information is available to compute
+> >>>>>> the right addresses.
+> >>>>>>
+> >>>>>> Looking forward to your suggestions if I haven't caused more confusion!  
+> >>>>
+> >>>> Hi Peter,
+> >>>>        
+> >>>>>
+> >>>>> Thanks for the write up - I must confess they're a lot! :)
+> >>>>>
+> >>>>> I merely only learned what is CXL today, and I'm not very experienced on
+> >>>>> device modeling either, so please bare with me with stupid questions..
+> >>>>>
+> >>>>> IIUC so far CXL traps these memory accesses using CXLFixedWindow.mr.
+> >>>>> That's a normal IO region, which looks very reasonable.
+> >>>>>
+> >>>>> However I'm confused why patch "RFC: softmmu/memory: Add ops to
+> >>>>> memory_region_ram_init_from_file" helped.
+> >>>>>
+> >>>>> Per my knowledge, all the memory accesses upon this CFMW window trapped
+> >>>>> using this IO region already.  There can be multiple memory file objects
+> >>>>> underneath, and when read/write happens the object will be decoded from
+> >>>>> cxl_cfmws_find_device() as you referenced.  
+> >>>>
+> >>>> Yes.
+> >>>>        
+> >>>>>
+> >>>>> However I see nowhere that these memory objects got mapped as sub-regions
+> >>>>> into parent (CXLFixedWindow.mr).  Then I don't understand why they cannot
+> >>>>> be trapped.  
+> >>>>
+> >>>> AS you note they aren't mapped into the parent mr, hence we are trapping.
+> >>>> The parent mem_ops are responsible for decoding the 'which device' +
+> >>>> 'what address in device memory space'. Once we've gotten that info
+> >>>> the question is how do I actually do the access?
+> >>>>
+> >>>> Mapping as subregions seems unwise due to the huge number required.
+> >>>>        
+> >>>>>
+> >>>>> To ask in another way: what will happen if you simply revert this RFC
+> >>>>> patch?  What will go wrong?  
+> >>>>
+> >>>> The call to memory_region_dispatch_read()
+> >>>> https://gitlab.com/jic23/qemu/-/blob/cxl-v7-draft-2-for-test/hw/mem/cxl_type3.c#L556
+> >>>>
+> >>>> would call memory_region_access_valid() that calls
+> >>>> mr->ops->valid.accepts() which is set to
+> >>>> unassigned_mem_accepts() and hence...
+> >>>> you get back a MEMTX_DECODE_ERROR back and an exception in the
+> >>>> guest.
+> >>>>
+> >>>> That wouldn't happen with a non proxied access to the ram as
+> >>>> those paths never uses the ops as memory_access_is_direct() is called
+> >>>> and simply memcpy used without any involvement of the ops.
+> >>>>
+> >>>> Is a better way to proxy those writes to the backing files?
+> >>>>
+> >>>> I was fishing a bit in the dark here and saw the existing ops defined
+> >>>> for a different purpose for VFIO
+> >>>>
+> >>>> 4a2e242bbb ("memory Don't use memcpy for ram_device regions")
+> >>>>
+> >>>> and those allowed the use of memory_region_dispatch_write() to work.
+> >>>>
+> >>>> Hence the RFC marking on that patch :)  
+> >>>
+> >>> FWIW I had a similar issue implementing manual aliasing in one of my q800 patches
+> >>> where I found that dispatching a read to a non-IO memory region didn't work with
+> >>> memory_region_dispatch_read(). The solution in my case was to switch to using the
+> >>> address space API instead, which whilst requiring an absolute address for the target
+> >>> address space, handles the dispatch correctly across all different memory region types.
+> >>>
+> >>> Have a look at
+> >>> https://gitlab.com/mcayland/qemu/-/commit/318e12579c7570196187652da13542db86b8c722 to
+> >>> see how I did this in macio_alias_read().
+> >>>
+> >>> IIRC from my experiments in this area, my conclusion was that
+> >>> memory_region_dispatch_read() can only work correctly if mapping directly between 2
+> >>> IO memory regions, and for anything else you need to use the address space API.  
+> >>
+> >> Hi Mark,
+> >>
+> >> I'd wondered about the address space API as an alternative approach.
+> >>
+> >>  From that reference looks like you have the memory mapped into the system address
+> >> space and are providing an alias to that.  That's something I'd ideally like to
+> >> avoid doing as there is no meaningful way to do it so I'd just be hiding the memory
+> >> somewhere up high.  The memory should only be accessible through the one
+> >> route.
+> >>
+> >> I think I could spin a separate address space for this purpose (one per CXL type 3
+> >> device probably) but that seems like another nasty hack to make. I'll try a quick
+> >> prototype of this tomorrow.  
+> > 
+> > Turned out to be trivial so already done.  Will send out as v8 unless anyone
+> > feeds back that there is a major disadvantage to just spinning up one address space
+> > per CXL type3 device.  That will mean dropping the RFC patch as well as no longer
+> > used :)
+> > 
+> > Thanks for the hint Mark.
+> > 
+> > Jonathan  
 > 
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Robert Moore <robert.moore@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-Hi Vishal,
+> Ah great! As you've already noticed my particular case was performing partial 
+> decoding on a memory region, but there are no issues if you need to dispatch to 
+> another existing address space such as PCI/IOMMU. Creating a separate address space 
+> per device shouldn't be an issue either, as that's effectively how the PCI bus master 
+> requests are handled.
+> 
+> The address spaces are visible in "info mtree" so if you haven't already, I would 
+> recommend generating a dynamic name for the address space based upon the device 
+> name/address to make it easier for development and debugging.
+info mtree already provides the following with a static name
+address-space: cxl-type3-dpa-space
+  0000000000000000-000000000fffffff (prio 0, nv-ram): cxl-mem2
 
-A few minor queries inline.
+So the device association is there anyway.  Hence I'm not sure a dynamic name adds
+a lot on this occasion and code is simpler without making it dynamic.
+
+Thanks,
 
 Jonathan
 
-> ---
->  include/linux/acpi.h    |  11 +++
->  include/acpi/acpi_bus.h |   6 +-
->  drivers/acpi/pci_root.c | 147 ++++++++++++++++++++++++++++++++++------
->  3 files changed, 143 insertions(+), 21 deletions(-)
+
 > 
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 6274758648e3..1717ccc265d7 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -554,6 +554,8 @@ acpi_status acpi_run_osc(acpi_handle handle, struct acpi_osc_context *context);
->  #define OSC_QUERY_DWORD				0	/* DWORD 1 */
->  #define OSC_SUPPORT_DWORD			1	/* DWORD 2 */
->  #define OSC_CONTROL_DWORD			2	/* DWORD 3 */
-> +#define OSC_CXL_SUPPORT_DWORD			3	/* DWORD 4 */
-> +#define OSC_CXL_CONTROL_DWORD			4	/* DWORD 5 */
->  
->  /* _OSC Capabilities DWORD 1: Query/Control and Error Returns (generic) */
->  #define OSC_QUERY_ENABLE			0x00000001  /* input */
-> @@ -607,6 +609,15 @@ extern u32 osc_sb_native_usb4_control;
->  #define OSC_PCI_EXPRESS_LTR_CONTROL		0x00000020
->  #define OSC_PCI_EXPRESS_DPC_CONTROL		0x00000080
->  
-> +/* CXL _OSC: Capabilities DWORD 4: Support Field */
-> +#define OSC_CXL_1_1_PORT_REG_ACCESS_SUPPORT	0x00000001
-> +#define OSC_CXL_2_0_PORT_DEV_REG_ACCESS_SUPPORT	0x00000002
-> +#define OSC_CXL_PER_SUPPORT			0x00000004
-> +#define OSC_CXL_NATIVE_HP_SUPPORT		0x00000008
-> +
-> +/* CXL _OSC: Capabilities DWORD 5: Control Field */
-> +#define OSC_CXL_ERROR_REPORTING_CONTROL		0x00000001
-> +
->  #define ACPI_GSB_ACCESS_ATTRIB_QUICK		0x00000002
->  #define ACPI_GSB_ACCESS_ATTRIB_SEND_RCV         0x00000004
->  #define ACPI_GSB_ACCESS_ATTRIB_BYTE		0x00000006
-> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-> index 768ef1584055..5776d4c1509a 100644
-> --- a/include/acpi/acpi_bus.h
-> +++ b/include/acpi/acpi_bus.h
-> @@ -588,8 +588,10 @@ struct acpi_pci_root {
->  	bool cxl_osc_disable;
->  	struct resource secondary;	/* downstream bus range */
->  
-> -	u32 osc_support_set;	/* _OSC state of support bits */
-> -	u32 osc_control_set;	/* _OSC state of control bits */
-> +	u32 osc_support_set;		/* _OSC state of support bits */
-> +	u32 osc_control_set;		/* _OSC state of control bits */
-> +	u32 cxl_osc_support_set;	/* _OSC state of CXL support bits */
-> +	u32 cxl_osc_control_set;	/* _OSC state of CXL control bits */
->  	phys_addr_t mcfg_addr;
->  };
->  
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index 2d834504096b..c916318b11a0 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -142,6 +142,17 @@ static struct pci_osc_bit_struct pci_osc_control_bit[] = {
->  	{ OSC_PCI_EXPRESS_DPC_CONTROL, "DPC" },
->  };
->  
-> +static struct pci_osc_bit_struct cxl_osc_support_bit[] = {
-> +	{ OSC_CXL_1_1_PORT_REG_ACCESS_SUPPORT, "CXL11PortRegAccess" },
-> +	{ OSC_CXL_2_0_PORT_DEV_REG_ACCESS_SUPPORT, "CXL20PortDevRegAccess" },
-> +	{ OSC_CXL_PER_SUPPORT, "CXLProtocolErrorReporting" },
-> +	{ OSC_CXL_NATIVE_HP_SUPPORT, "CXLNativeHotPlug" },
-> +};
-> +
-> +static struct pci_osc_bit_struct cxl_osc_control_bit[] = {
-> +	{ OSC_CXL_ERROR_REPORTING_CONTROL, "CXLMemErrorReporting" },
-> +};
-> +
->  static void decode_osc_bits(struct acpi_pci_root *root, char *msg, u32 word,
->  			    struct pci_osc_bit_struct *table, int size)
->  {
-> @@ -170,6 +181,18 @@ static void decode_osc_control(struct acpi_pci_root *root, char *msg, u32 word)
->  			ARRAY_SIZE(pci_osc_control_bit));
->  }
->  
-> +static void decode_cxl_osc_support(struct acpi_pci_root *root, char *msg, u32 word)
-> +{
-> +	decode_osc_bits(root, msg, word, cxl_osc_support_bit,
-> +			ARRAY_SIZE(cxl_osc_support_bit));
-> +}
-> +
-> +static void decode_cxl_osc_control(struct acpi_pci_root *root, char *msg, u32 word)
-> +{
-> +	decode_osc_bits(root, msg, word, cxl_osc_control_bit,
-> +			ARRAY_SIZE(cxl_osc_control_bit));
-> +}
-> +
->  static bool is_pcie(struct acpi_pci_root *root)
->  {
->  	return strcmp(acpi_device_hid(root->device), "PNP0A08") == 0;
-> @@ -199,8 +222,19 @@ static int cap_length(struct acpi_pci_root *root)
->  	return sizeof(u32) * 3;
->  }
->  
-> +static u32 acpi_osc_ctx_get_pci_control(struct acpi_osc_context *context)
-> +{
-> +	return *((u32 *)(context->ret.pointer + 8));
-
-Use the defines for the offsets? sizeof(u32) * OSC_CONTROL_DWORD for example
-
-> +}
-> +
-> +static u32 acpi_osc_ctx_get_cxl_control(struct acpi_osc_context *context)
-> +{
-> +	return *((u32 *)(context->ret.pointer + 16));
-
-As above + sizeof(u32) * OSC_CXL_CONTROL_DWORD)
-
-> +}
-> +
->  static acpi_status acpi_pci_run_osc(struct acpi_pci_root *root,
-> -				    const u32 *capbuf, u32 *retval)
-> +				    const u32 *capbuf, u32 *pci_control,
-> +				    u32 *cxl_control)
->  {
->  	struct acpi_osc_context context = {
->  		.uuid_str = to_uuid(root),
-> @@ -212,18 +246,20 @@ static acpi_status acpi_pci_run_osc(struct acpi_pci_root *root,
->  
->  	status = acpi_run_osc(root->device->handle, &context);
->  	if (ACPI_SUCCESS(status)) {
-> -		*retval = *((u32 *)(context.ret.pointer + 8));
-> +		*pci_control = acpi_osc_ctx_get_pci_control(&context);
-> +		if (is_cxl(root))
-> +			*cxl_control = acpi_osc_ctx_get_cxl_control(&context);
->  		kfree(context.ret.pointer);
->  	}
->  	return status;
->  }
->  
-> -static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root,
-> -					u32 support,
-> -					u32 *control)
-> +static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root, u32 support,
-> +				      u32 *control, u32 cxl_support,
-> +				      u32 *cxl_control)
->  {
->  	acpi_status status;
-> -	u32 result, capbuf[6];
-> +	u32 pci_result, cxl_result, capbuf[8];
-
-Nice to set capbuf size off one of the defines if possible, though I'm not
-sure why it is 8 (or why it was 6 before for that mater).  I think it should be 5.
-
-
-
->  
->  	support |= root->osc_support_set;
->  
-> @@ -231,11 +267,21 @@ static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root,
->  	capbuf[OSC_SUPPORT_DWORD] = support;
->  	capbuf[OSC_CONTROL_DWORD] = *control | root->osc_control_set;
->  
-> +	if (is_cxl(root)) {
-> +		cxl_support |= root->cxl_osc_support_set;
-> +		capbuf[OSC_CXL_SUPPORT_DWORD] = cxl_support;
-> +		capbuf[OSC_CXL_CONTROL_DWORD] = *cxl_control | root->cxl_osc_control_set;
-> +	}
-> +
->  retry:
-> -	status = acpi_pci_run_osc(root, capbuf, &result);
-> +	status = acpi_pci_run_osc(root, capbuf, &pci_result, &cxl_result);
->  	if (ACPI_SUCCESS(status)) {
->  		root->osc_support_set = support;
-> -		*control = result;
-> +		*control = pci_result;
-> +		if (is_cxl(root)) {
-> +			root->cxl_osc_support_set = cxl_support;
-> +			*cxl_control = cxl_result;
-> +		}
->  	} else if (is_cxl(root)) {
->  		/*
->  		 * CXL _OSC is optional on CXL 1.1 hosts. Fall back to PCIe _OSC
-> @@ -358,6 +404,8 @@ EXPORT_SYMBOL_GPL(acpi_get_pci_dev);
->   * @handle: ACPI handle of a PCI root bridge (or PCIe Root Complex).
->   * @mask: Mask of _OSC bits to request control of, place to store control mask.
->   * @support: _OSC supported capability.
-> + * @cxl_mask: Mask of CXL _OSC control bits, place to store control mask.
-> + * @cxl_support: CXL _OSC supported capability.
->   *
->   * Run _OSC query for @mask and if that is successful, compare the returned
->   * mask of control bits with @req.  If all of the @req bits are set in the
-> @@ -368,12 +416,14 @@ EXPORT_SYMBOL_GPL(acpi_get_pci_dev);
->   * _OSC bits the BIOS has granted control of, but its contents are meaningless
->   * on failure.
->   **/
-> -static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 support)
-> +static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask,
-> +					    u32 support, u32 *cxl_mask,
-> +					    u32 cxl_support)
->  {
->  	u32 req = OSC_PCI_EXPRESS_CAPABILITY_CONTROL;
->  	struct acpi_pci_root *root;
->  	acpi_status status;
-> -	u32 ctrl, capbuf[6];
-> +	u32 ctrl, cxl_ctrl, capbuf[8];
-
-As above, why 8?
-
->  
->  	if (!mask)
->  		return AE_BAD_PARAMETER;
-> @@ -385,20 +435,35 @@ static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 s
->  	ctrl   = *mask;
->  	*mask |= root->osc_control_set;
->  
-> +	if (is_cxl(root)) {
-> +		cxl_ctrl   = *cxl_mask;
-
-Odd spacing
-
-> +		*mask |= root->osc_control_set;
-> +	}
-> +
->  	/* Need to check the available controls bits before requesting them. */
->  	do {
-> -		status = acpi_pci_query_osc(root, support, mask);
-> +		status = acpi_pci_query_osc(root, support, mask, cxl_support,
-> +					    cxl_mask);
->  		if (ACPI_FAILURE(status))
->  			return status;
-> -		if (ctrl == *mask)
-> -			break;
-> -		decode_osc_control(root, "platform does not support",
-> -				   ctrl & ~(*mask));
-> +		if (is_cxl(root)) {
-> +			if ((ctrl == *mask) && (cxl_ctrl == *cxl_mask))
-> +				break;
-> +			decode_cxl_osc_control(root, "platform does not support",
-> +					   cxl_ctrl & ~(*cxl_mask));
-> +		} else {
-> +			if (ctrl == *mask)
-> +				break;
-> +			decode_osc_control(root, "platform does not support",
-> +					   ctrl & ~(*mask));
-> +		}
->  		ctrl = *mask;
-> -	} while (*mask);
-> +		cxl_ctrl = *cxl_mask;
-> +	} while (*mask || *cxl_mask);
->  
->  	/* No need to request _OSC if the control was already granted. */
-> -	if ((root->osc_control_set & ctrl) == ctrl)
-> +	if (((root->osc_control_set & ctrl) == ctrl) &&
-> +	    ((root->cxl_osc_control_set & cxl_ctrl) == cxl_ctrl))
->  		return AE_OK;
->  
->  	if ((ctrl & req) != req) {
-> @@ -410,11 +475,17 @@ static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 s
->  	capbuf[OSC_QUERY_DWORD] = 0;
->  	capbuf[OSC_SUPPORT_DWORD] = root->osc_support_set;
->  	capbuf[OSC_CONTROL_DWORD] = ctrl;
-> -	status = acpi_pci_run_osc(root, capbuf, mask);
-> +	if (is_cxl(root)) {
-> +		capbuf[OSC_CXL_SUPPORT_DWORD] = root->cxl_osc_support_set;
-> +		capbuf[OSC_CXL_CONTROL_DWORD] = cxl_ctrl;
-> +	}
-> +
-> +	status = acpi_pci_run_osc(root, capbuf, mask, cxl_mask);
->  	if (ACPI_FAILURE(status))
->  		return status;
->  
->  	root->osc_control_set = *mask;
-> +	root->cxl_osc_control_set = *cxl_mask;
->  	return AE_OK;
->  }
->  
-> @@ -440,6 +511,18 @@ static u32 calculate_support(void)
->  	return support;
->  }
->  
-> +static u32 calculate_cxl_support(void)
-> +{
-> +	u32 support;
-> +
-> +	support = OSC_CXL_2_0_PORT_DEV_REG_ACCESS_SUPPORT;
-> +	support |= OSC_CXL_PER_SUPPORT;
-> +	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
-> +		support |= OSC_CXL_NATIVE_HP_SUPPORT;
-> +
-> +	return support;
-> +}
-> +
->  static u32 calculate_control(void)
->  {
->  	u32 control;
-> @@ -471,6 +554,16 @@ static u32 calculate_control(void)
->  	return control;
->  }
->  
-> +static u32 calculate_cxl_control(void)
-> +{
-> +	u32 control;
-> +
-> +	if (pci_aer_available())
-> +		control |= OSC_CXL_ERROR_REPORTING_CONTROL;
-> +
-> +	return control;
-> +}
-> +
->  static bool os_control_query_checks(struct acpi_pci_root *root, u32 support)
->  {
->  	struct acpi_device *device = root->device;
-> @@ -492,6 +585,7 @@ static bool os_control_query_checks(struct acpi_pci_root *root, u32 support)
->  static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm)
->  {
->  	u32 support, control = 0, requested = 0;
-> +	u32 cxl_support, cxl_control = 0, cxl_requested = 0;
->  	acpi_status status;
->  	struct acpi_device *device = root->device;
->  	acpi_handle handle = device->handle;
-> @@ -515,10 +609,20 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm)
->  	if (os_control_query_checks(root, support))
->  		requested = control = calculate_control();
->  
-> -	status = acpi_pci_osc_control_set(handle, &control, support);
-> +	if (is_cxl(root)) {
-> +		cxl_support = calculate_cxl_support();
-> +		decode_cxl_osc_support(root, "OS supports", cxl_support);
-> +		cxl_requested = cxl_control = calculate_cxl_control();
-> +	}
-> +
-> +	status = acpi_pci_osc_control_set(handle, &control, support,
-> +					  &cxl_control, cxl_support);
->  	if (ACPI_SUCCESS(status)) {
->  		if (control)
->  			decode_osc_control(root, "OS now controls", control);
-> +		if (cxl_control)
-> +			decode_cxl_osc_control(root, "OS now controls",
-> +					   cxl_control);
->  
->  		if (acpi_gbl_FADT.boot_flags & ACPI_FADT_NO_ASPM) {
->  			/*
-> @@ -547,6 +651,11 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm)
->  			decode_osc_control(root, "OS requested", requested);
->  			decode_osc_control(root, "platform willing to grant", control);
->  		}
-> +		if (cxl_control) {
-> +			decode_cxl_osc_control(root, "OS requested", cxl_requested);
-> +			decode_cxl_osc_control(root, "platform willing to grant",
-> +					   cxl_control);
-> +		}
->  
->  		dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
->  			 acpi_format_exception(status));
+> 
+> ATB,
+> 
+> Mark.
+> 
 
