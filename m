@@ -2,322 +2,195 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA87C433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Mar 2022 08:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1175CC433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Mar 2022 10:02:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230503AbiCQIOm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Mar 2022 04:14:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44860 "EHLO
+        id S231687AbiCQKD1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Mar 2022 06:03:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229599AbiCQIOl (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Mar 2022 04:14:41 -0400
-Received: from mail.default.ilande.bv.iomart.io (mail.ilande.co.uk [IPv6:2001:41c9:1:41f::167])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40BD7137016
-        for <linux-cxl@vger.kernel.org>; Thu, 17 Mar 2022 01:13:24 -0700 (PDT)
-Received: from [2a00:23c4:8ba2:c800:3cf5:fb4b:b388:106c]
-        by mail.default.ilande.bv.iomart.io with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <mark.cave-ayland@ilande.co.uk>)
-        id 1nUlF7-000BGZ-8y; Thu, 17 Mar 2022 08:12:25 +0000
-Message-ID: <31f383e6-01bb-cf9a-6af8-d0f1821b3fd1@ilande.co.uk>
-Date:   Thu, 17 Mar 2022 08:12:56 +0000
+        with ESMTP id S230027AbiCQKD1 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Mar 2022 06:03:27 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E69311DBAB8;
+        Thu, 17 Mar 2022 03:02:10 -0700 (PDT)
+Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KK2gx3s6Lz67mW6;
+        Thu, 17 Mar 2022 18:00:13 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 17 Mar 2022 11:02:08 +0100
+Received: from localhost (10.47.67.192) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Thu, 17 Mar
+ 2022 10:02:07 +0000
+Date:   Thu, 17 Mar 2022 10:02:05 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <ben.widawsky@intel.com>,
+        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+        <ira.weiny@intel.com>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 1/8] cxl/pci: Cleanup repeated code in cxl_probe_regs()
+ helpers
+Message-ID: <20220317100205.00002364@Huawei.com>
+In-Reply-To: <164740402774.3912056.671750814250190348.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164740402774.3912056.671750814250190348.stgit@dwillia2-desk3.amr.corp.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.2
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     Peter Xu <peterx@redhat.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Markus Armbruster <armbru@redhat.com>,
-        Samarth Saxena <samarths@cadence.com>,
-        Chris Browy <cbrowy@avery-design.com>, qemu-devel@nongnu.org,
-        linux-cxl@vger.kernel.org, linuxarm@huawei.com,
-        Shreyas Shah <shreyas.shah@elastics.cloud>,
-        Saransh Gupta1 <saransh@ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Marcel Apfelbaum <marcel@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        =?UTF-8?Q?Alex_Benn=c3=a9e?= <alex.bennee@linaro.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
-References: <20220306174137.5707-1-Jonathan.Cameron@huawei.com>
- <20220306163119-mutt-send-email-mst@kernel.org>
- <20220307093918.00002f20@Huawei.com> <YihiHNxVjDFI0Z8r@xz-m1.local>
- <20220309112827.00002c73@Huawei.com> <Yimwjtd8SsVLOU5e@xz-m1.local>
- <20220316165034.000037e7@Huawei.com>
- <1efbfeeb-2598-57c5-2e2d-4f5fa2538aa7@ilande.co.uk>
- <20220316175846.00007463@Huawei.com> <20220316182618.00003ce5@Huawei.com>
-From:   Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
-In-Reply-To: <20220316182618.00003ce5@Huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2a00:23c4:8ba2:c800:3cf5:fb4b:b388:106c
-X-SA-Exim-Mail-From: mark.cave-ayland@ilande.co.uk
-Subject: Re: [PATCH v7 00/46] CXl 2.0 emulation Support
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.default.ilande.bv.iomart.io)
+X-Originating-IP: [10.47.67.192]
+X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 16/03/2022 18:26, Jonathan Cameron via wrote:
-> On Wed, 16 Mar 2022 17:58:46 +0000
-> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+On Tue, 15 Mar 2022 21:13:47 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
+
+> Rather then duplicating the setting of valid, length, and offset for
+
+than
+
+> each type, just convey a pointer to the register map to common code.
 > 
->> On Wed, 16 Mar 2022 17:16:55 +0000
->> Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk> wrote:
->>
->>> On 16/03/2022 16:50, Jonathan Cameron via wrote:
->>>    
->>>> On Thu, 10 Mar 2022 16:02:22 +0800
->>>> Peter Xu <peterx@redhat.com> wrote:
->>>>      
->>>>> On Wed, Mar 09, 2022 at 11:28:27AM +0000, Jonathan Cameron wrote:
->>>>>> Hi Peter,
->>>>>
->>>>> Hi, Jonathan,
->>>>>     
->>>>>>         
->>>>>>>
->>>>>>> https://lore.kernel.org/qemu-devel/20220306174137.5707-35-Jonathan.Cameron@huawei.com/
->>>>>>>
->>>>>>> Having mr->ops set but with memory_access_is_direct() returning true sounds
->>>>>>> weird to me.
->>>>>>>
->>>>>>> Sorry to have no understanding of the whole picture, but.. could you share
->>>>>>> more on what's the interleaving requirement on the proxying, and why it
->>>>>>> can't be done with adding some IO memory regions as sub-regions upon the
->>>>>>> file one?
->>>>>>
->>>>>> The proxying requirement is simply a means to read/write to a computed address
->>>>>> within a memory region. There may well be a better way to do that.
->>>>>>
->>>>>> If I understand your suggestion correctly you would need a very high
->>>>>> number of IO memory regions to be created dynamically when particular sets of
->>>>>> registers across multiple devices in the topology are all programmed.
->>>>>>
->>>>>> The interleave can be 256 bytes across up to 16x, many terabyte, devices.
->>>>>> So assuming a simple set of 16 1TB devices I think you'd need about 4x10^9
->>>>>> IO regions.  Even for a minimal useful test case of largest interleave
->>>>>> set of 16x 256MB devices (256MB is minimum size the specification allows per
->>>>>> decoded region at the device) and 16 way interleave we'd need 10^6 IO regions.
->>>>>> Any idea if that approach would scale sensibly to this number of regions?
->>>>>>
->>>>>> There are also complexities to getting all the information in one place to
->>>>>> work out which IO memory regions maps where in PA space. Current solution is
->>>>>> to do that mapping in the same way the hardware does which is hierarchical,
->>>>>> so we walk the path to the device, picking directions based on each interleave
->>>>>> decoder that we meet.
->>>>>> Obviously this is a bit slow but I only really care about correctness at the
->>>>>> moment.  I can think of various approaches to speeding it up but I'm not sure
->>>>>> if we will ever care about performance.
->>>>>>
->>>>>> https://gitlab.com/jic23/qemu/-/blob/cxl-v7-draft-2-for-test/hw/cxl/cxl-host.c#L131
->>>>>> has the logic for that and as you can see it's fairly simple because we are always
->>>>>> going down the topology following the decoders.
->>>>>>
->>>>>> Below I have mapped out an algorithm I think would work for doing it with
->>>>>> IO memory regions as subregions.
->>>>>>
->>>>>> We could fake the whole thing by limiting ourselves to small host
->>>>>> memory windows which are always directly backed, but then I wouldn't
->>>>>> achieve the main aim of this which is to provide a test base for the OS code.
->>>>>> To do that I need real interleave so I can seed the files with test patterns
->>>>>> and verify the accesses hit the correct locations. Emulating what the hardware
->>>>>> is actually doing on a device by device basis is the easiest way I have
->>>>>> come up with to do that.
->>>>>>
->>>>>> Let me try to provide some more background so you hopefully don't have
->>>>>> to have read the specs to follow what is going on!
->>>>>> There are an example for directly connected (no switches) topology in the
->>>>>> docs
->>>>>>
->>>>>> https://gitlab.com/jic23/qemu/-/blob/cxl-v7-draft-2-for-test/docs/system/devices/cxl.rst
->>>>>>
->>>>>> The overall picture is we have a large number of CXL Type 3 memory devices,
->>>>>> which at runtime (by OS at boot/on hotplug) are configured into various
->>>>>> interleaving sets with hierarchical decoding at the host + host bridge
->>>>>> + switch levels. For test setups I probably need to go to around 32 devices
->>>>>> so I can hit various configurations simultaneously.
->>>>>> No individual device has visibility of the full interleave setup - hence
->>>>>> the walk in the existing code through the various decoders to find the
->>>>>> final Device Physical address.
->>>>>>
->>>>>> At the host level the host provides a set of Physical Address windows with
->>>>>> a fixed interleave decoding across the different host bridges in the system
->>>>>> (CXL Fixed Memory windows, CFMWs)
->>>>>> On a real system these have to be large enough to allow for any memory
->>>>>> devices that might be hotplugged and all possible configurations (so
->>>>>> with 2 host bridges you need at least 3 windows in the many TB range,
->>>>>> much worse as the number of host bridges goes up). It'll be worse than
->>>>>> this when we have QoS groups, but the current Qemu code just puts all
->>>>>> the windows in group 0.  Hence my first thought of just putting memory
->>>>>> behind those doesn't scale (a similar approach to this was in the
->>>>>> earliest versions of this patch set - though the full access path
->>>>>> wasn't wired up).
->>>>>>
->>>>>> The granularity can be in powers of 2 from 256 bytes to 16 kbytes
->>>>>>
->>>>>> Next each host bridge has programmable address decoders which take the
->>>>>> incoming (often already interleaved) memory access and direct them to
->>>>>> appropriate root ports.  The root ports can be connected to a switch
->>>>>> which has additional address decoders in the upstream port to decide
->>>>>> which downstream port to route to.  Note we currently only support 1 level
->>>>>> of switches but it's easy to make this algorithm recursive to support
->>>>>> multiple switch levels (currently the kernel proposals only support 1 level)
->>>>>>
->>>>>> Finally the End Point with the actual memory receives the interleaved request and
->>>>>> takes the full address and (for power of 2 decoding - we don't yet support
->>>>>> 3,6 and 12 way which is more complex and there is no kernel support yet)
->>>>>> it drops a few address bits and adds an offset for the decoder used to
->>>>>> calculate it's own device physical address.  Note device will support
->>>>>> multiple interleave sets for different parts of it's file once we add
->>>>>> multiple decoder support (on the todo list).
->>>>>>
->>>>>> So the current solution is straight forward (with the exception of that
->>>>>> proxying) because it follows the same decoding as used in real hardware
->>>>>> to route the memory accesses. As a result we get a read/write to a
->>>>>> device physical address and hence proxy that.  If any of the decoders
->>>>>> along the path are not configured then we error out at that stage.
->>>>>>
->>>>>> To create the equivalent as IO subregions I think we'd have to do the
->>>>>> following from (this might be mediated by some central entity that
->>>>>> doesn't currently exist, or done on demand from which ever CXL device
->>>>>> happens to have it's decoder set up last)
->>>>>>
->>>>>> 1) Wait for a decoder commit (enable) on any component. Goto 2.
->>>>>> 2) Walk the topology (up to host decoder, down to memory device)
->>>>>> If a complete interleaving path has been configured -
->>>>>>      i.e. we have committed decoders all the way to the memory
->>>>>>      device goto step 3, otherwise return to step 1 to wait for
->>>>>>      more decoders to be committed.
->>>>>> 3) For the memory region being supplied by the memory device,
->>>>>>      add subregions to map the device physical address (address
->>>>>>      in the file) for each interleave stride to the appropriate
->>>>>>      host Physical Address.
->>>>>> 4) Return to step 1 to wait for more decoders to commit.
->>>>>>
->>>>>> So summary is we can do it with IO regions, but there are a lot of them
->>>>>> and the setup is somewhat complex as we don't have one single point in
->>>>>> time where we know all the necessary information is available to compute
->>>>>> the right addresses.
->>>>>>
->>>>>> Looking forward to your suggestions if I haven't caused more confusion!
->>>>
->>>> Hi Peter,
->>>>      
->>>>>
->>>>> Thanks for the write up - I must confess they're a lot! :)
->>>>>
->>>>> I merely only learned what is CXL today, and I'm not very experienced on
->>>>> device modeling either, so please bare with me with stupid questions..
->>>>>
->>>>> IIUC so far CXL traps these memory accesses using CXLFixedWindow.mr.
->>>>> That's a normal IO region, which looks very reasonable.
->>>>>
->>>>> However I'm confused why patch "RFC: softmmu/memory: Add ops to
->>>>> memory_region_ram_init_from_file" helped.
->>>>>
->>>>> Per my knowledge, all the memory accesses upon this CFMW window trapped
->>>>> using this IO region already.  There can be multiple memory file objects
->>>>> underneath, and when read/write happens the object will be decoded from
->>>>> cxl_cfmws_find_device() as you referenced.
->>>>
->>>> Yes.
->>>>      
->>>>>
->>>>> However I see nowhere that these memory objects got mapped as sub-regions
->>>>> into parent (CXLFixedWindow.mr).  Then I don't understand why they cannot
->>>>> be trapped.
->>>>
->>>> AS you note they aren't mapped into the parent mr, hence we are trapping.
->>>> The parent mem_ops are responsible for decoding the 'which device' +
->>>> 'what address in device memory space'. Once we've gotten that info
->>>> the question is how do I actually do the access?
->>>>
->>>> Mapping as subregions seems unwise due to the huge number required.
->>>>      
->>>>>
->>>>> To ask in another way: what will happen if you simply revert this RFC
->>>>> patch?  What will go wrong?
->>>>
->>>> The call to memory_region_dispatch_read()
->>>> https://gitlab.com/jic23/qemu/-/blob/cxl-v7-draft-2-for-test/hw/mem/cxl_type3.c#L556
->>>>
->>>> would call memory_region_access_valid() that calls
->>>> mr->ops->valid.accepts() which is set to
->>>> unassigned_mem_accepts() and hence...
->>>> you get back a MEMTX_DECODE_ERROR back and an exception in the
->>>> guest.
->>>>
->>>> That wouldn't happen with a non proxied access to the ram as
->>>> those paths never uses the ops as memory_access_is_direct() is called
->>>> and simply memcpy used without any involvement of the ops.
->>>>
->>>> Is a better way to proxy those writes to the backing files?
->>>>
->>>> I was fishing a bit in the dark here and saw the existing ops defined
->>>> for a different purpose for VFIO
->>>>
->>>> 4a2e242bbb ("memory Don't use memcpy for ram_device regions")
->>>>
->>>> and those allowed the use of memory_region_dispatch_write() to work.
->>>>
->>>> Hence the RFC marking on that patch :)
->>>
->>> FWIW I had a similar issue implementing manual aliasing in one of my q800 patches
->>> where I found that dispatching a read to a non-IO memory region didn't work with
->>> memory_region_dispatch_read(). The solution in my case was to switch to using the
->>> address space API instead, which whilst requiring an absolute address for the target
->>> address space, handles the dispatch correctly across all different memory region types.
->>>
->>> Have a look at
->>> https://gitlab.com/mcayland/qemu/-/commit/318e12579c7570196187652da13542db86b8c722 to
->>> see how I did this in macio_alias_read().
->>>
->>> IIRC from my experiments in this area, my conclusion was that
->>> memory_region_dispatch_read() can only work correctly if mapping directly between 2
->>> IO memory regions, and for anything else you need to use the address space API.
->>
->> Hi Mark,
->>
->> I'd wondered about the address space API as an alternative approach.
->>
->>  From that reference looks like you have the memory mapped into the system address
->> space and are providing an alias to that.  That's something I'd ideally like to
->> avoid doing as there is no meaningful way to do it so I'd just be hiding the memory
->> somewhere up high.  The memory should only be accessible through the one
->> route.
->>
->> I think I could spin a separate address space for this purpose (one per CXL type 3
->> device probably) but that seems like another nasty hack to make. I'll try a quick
->> prototype of this tomorrow.
+> Yes, the equivalent change in cxl_probe_component_regs() does not save
+
+Why "equivalent"?  I'd just drop that word as not clear what it's equivalent to
+and sentence makes sense without it.
+
+> any lines of code, but it is preparation for adding another component
+> register type to map (RAS Capability Strucutre).
+
+Structure
+
 > 
-> Turned out to be trivial so already done.  Will send out as v8 unless anyone
-> feeds back that there is a major disadvantage to just spinning up one address space
-> per CXL type3 device.  That will mean dropping the RFC patch as well as no longer
-> used :)
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> ---
+>  drivers/cxl/core/regs.c |   46 ++++++++++++++++++++++++++--------------------
+>  1 file changed, 26 insertions(+), 20 deletions(-)
 > 
-> Thanks for the hint Mark.
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index 39a129c57d40..bd6ae14b679e 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -59,36 +59,41 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+>  
+>  	for (cap = 1; cap <= cap_count; cap++) {
+>  		void __iomem *register_block;
+> -		u32 hdr;
+> -		int decoder_cnt;
+> +		struct cxl_reg_map *rmap;
+>  		u16 cap_id, offset;
+> -		u32 length;
+> +		u32 length, hdr;
+
+Unrelated change, but meh, it makes sense and doesn't effect readability of overall
+patch much.
+
+>  
+>  		hdr = readl(base + cap * 0x4);
+>  
+>  		cap_id = FIELD_GET(CXL_CM_CAP_HDR_ID_MASK, hdr);
+>  		offset = FIELD_GET(CXL_CM_CAP_PTR_MASK, hdr);
+>  		register_block = base + offset;
+> +		hdr = readl(register_block);
+>  
+> +		rmap = NULL;
+>  		switch (cap_id) {
+> -		case CXL_CM_CAP_CAP_ID_HDM:
+> +		case CXL_CM_CAP_CAP_ID_HDM: {
+> +			int decoder_cnt;
+> +
+>  			dev_dbg(dev, "found HDM decoder capability (0x%x)\n",
+>  				offset);
+>  
+> -			hdr = readl(register_block);
+> -
+>  			decoder_cnt = cxl_hdm_decoder_count(hdr);
+>  			length = 0x20 * decoder_cnt + 0x10;
+> -
+> -			map->hdm_decoder.valid = true;
+> -			map->hdm_decoder.offset = CXL_CM_OFFSET + offset;
+> -			map->hdm_decoder.size = length;
+> +			rmap = &map->hdm_decoder;
+>  			break;
+> +		}
+>  		default:
+>  			dev_dbg(dev, "Unknown CM cap ID: %d (0x%x)\n", cap_id,
+>  				offset);
+>  			break;
+>  		}
+> +
+> +		if (!rmap)
+> +			continue;
+> +		rmap->valid = true;
+> +		rmap->offset = CXL_CM_OFFSET + offset;
+> +		rmap->size = length;
+>  	}
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_probe_component_regs, CXL);
+> @@ -117,6 +122,7 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
+>  	cap_count = FIELD_GET(CXLDEV_CAP_ARRAY_COUNT_MASK, cap_array);
+>  
+>  	for (cap = 1; cap <= cap_count; cap++) {
+> +		struct cxl_reg_map *rmap;
+>  		u32 offset, length;
+>  		u16 cap_id;
+>  
+> @@ -125,28 +131,22 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
+>  		offset = readl(base + cap * 0x10 + 0x4);
+>  		length = readl(base + cap * 0x10 + 0x8);
+>  
+> +		rmap = NULL;
+>  		switch (cap_id) {
+>  		case CXLDEV_CAP_CAP_ID_DEVICE_STATUS:
+>  			dev_dbg(dev, "found Status capability (0x%x)\n", offset);
+> -
+> -			map->status.valid = true;
+> -			map->status.offset = offset;
+> -			map->status.size = length;
+> +			rmap = &map->status;
+>  			break;
+>  		case CXLDEV_CAP_CAP_ID_PRIMARY_MAILBOX:
+>  			dev_dbg(dev, "found Mailbox capability (0x%x)\n", offset);
+> -			map->mbox.valid = true;
+> -			map->mbox.offset = offset;
+> -			map->mbox.size = length;
+> +			rmap = &map->mbox;
+>  			break;
+>  		case CXLDEV_CAP_CAP_ID_SECONDARY_MAILBOX:
+>  			dev_dbg(dev, "found Secondary Mailbox capability (0x%x)\n", offset);
+>  			break;
+>  		case CXLDEV_CAP_CAP_ID_MEMDEV:
+>  			dev_dbg(dev, "found Memory Device capability (0x%x)\n", offset);
+> -			map->memdev.valid = true;
+> -			map->memdev.offset = offset;
+> -			map->memdev.size = length;
+> +			rmap = &map->memdev;
+>  			break;
+>  		default:
+>  			if (cap_id >= 0x8000)
+> @@ -155,6 +155,12 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
+>  				dev_dbg(dev, "Unknown cap ID: %#x offset: %#x\n", cap_id, offset);
+>  			break;
+>  		}
+> +
+> +		if (!rmap)
+> +			continue;
+> +		rmap->valid = true;
+> +		rmap->offset = offset;
+> +		rmap->size = length;
+>  	}
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_probe_device_regs, CXL);
 > 
-> Jonathan
 
-Ah great! As you've already noticed my particular case was performing partial 
-decoding on a memory region, but there are no issues if you need to dispatch to 
-another existing address space such as PCI/IOMMU. Creating a separate address space 
-per device shouldn't be an issue either, as that's effectively how the PCI bus master 
-requests are handled.
-
-The address spaces are visible in "info mtree" so if you haven't already, I would 
-recommend generating a dynamic name for the address space based upon the device 
-name/address to make it easier for development and debugging.
-
-
-ATB,
-
-Mark.
