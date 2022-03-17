@@ -2,40 +2,41 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 892CAC433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Mar 2022 15:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68EBAC433FE
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Mar 2022 15:19:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235361AbiCQPST (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Mar 2022 11:18:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42660 "EHLO
+        id S231173AbiCQPVE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Mar 2022 11:21:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235663AbiCQPSS (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Mar 2022 11:18:18 -0400
+        with ESMTP id S235714AbiCQPVA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Mar 2022 11:21:00 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFF7D205979;
-        Thu, 17 Mar 2022 08:16:59 -0700 (PDT)
-Received: from fraeml710-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KK9gB3Rysz67Y0C;
-        Thu, 17 Mar 2022 23:15:02 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C252E15B9B5;
+        Thu, 17 Mar 2022 08:19:42 -0700 (PDT)
+Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KK9kK2Wfkz67VWd;
+        Thu, 17 Mar 2022 23:17:45 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml710-chm.china.huawei.com (10.206.15.59) with Microsoft SMTP Server
+ fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 17 Mar 2022 16:16:58 +0100
+ 15.1.2375.24; Thu, 17 Mar 2022 16:19:40 +0100
 Received: from localhost (10.47.67.100) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Thu, 17 Mar
- 2022 15:16:57 +0000
-Date:   Thu, 17 Mar 2022 15:16:55 +0000
+ 2022 15:19:40 +0000
+Date:   Thu, 17 Mar 2022 15:19:38 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <ben.widawsky@intel.com>,
-        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-        <ira.weiny@intel.com>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 8/8] cxl/pci: Add (hopeful) error handling support
-Message-ID: <20220317151655.0000015e@Huawei.com>
-In-Reply-To: <164740406489.3912056.8334546166826246693.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <164740406489.3912056.8334546166826246693.stgit@dwillia2-desk3.amr.corp.intel.com>
+To:     Vishal Verma <vishal.l.verma@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [RFC PATCH 0/2] acpi: add support for CXL _OSC
+Message-ID: <20220317151938.000042e9@Huawei.com>
+In-Reply-To: <20220317002704.1835870-1-vishal.l.verma@intel.com>
+References: <20220317002704.1835870-1-vishal.l.verma@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -49,224 +50,50 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 15 Mar 2022 21:14:24 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Wed, 16 Mar 2022 18:27:02 -0600
+Vishal Verma <vishal.l.verma@intel.com> wrote:
 
-> Add nominal error handling that tears down CXL.mem in response to error
-> notifications that imply a device reset. Given some CXL.mem may be
-> operating as System RAM, there is a high likelihood that these error
-> events are fatal. However, if the system survives the notification the
-> expectation is that the driver behavior is equivalent to a hot-unplug
-> and re-plug of an endpoint.
+> Add support for using the CXL definition of _OSC where applicable, and
+> negotiating CXL specific support and control bits.
 > 
-> Note that this does not change the mask values from the default. That
-> awaits CXL _OSC support to determine whether platform firmware is in
-> control of the mask registers.
+> Patch 1 adds the new CXL _OSC UUID, and uses it instead of the PCI UUID
+> when a root port is CXL enabled. It provides a fallback method for
+> CXL-1.1 devices that may not implement the CXL-2.0 _OSC.
+
+_OSC is implemented by the firmware of a host not the device so perhaps
+rephrase this.
+
 > 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-I'm far from an expert in PCI error handling...  I've asked one of our RAS
-folk to take a quick look so he may well reply as well.
-
-With that in mind...
-
-> ---
->  drivers/cxl/core/memdev.c |    1 
->  drivers/cxl/cxlmem.h      |    2 +
->  drivers/cxl/pci.c         |  109 +++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 112 insertions(+)
+> Patch 2 performs negotiation for the CXL specific _OSC support and
+> control bits.
 > 
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index 1f76b28f9826..223d512790e1 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -341,6 +341,7 @@ struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
->  	 * needed as this is ordered with cdev_add() publishing the device.
->  	 */
->  	cxlmd->cxlds = cxlds;
-> +	cxlds->cxlmd = cxlmd;
->  
->  	cdev = &cxlmd->cdev;
->  	rc = cdev_device_add(cdev, dev);
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 5d33ce24fe09..f58e16951414 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -117,6 +117,7 @@ struct cxl_endpoint_dvsec_info {
->   * Currently only memory devices are represented.
->   *
->   * @dev: The device associated with this CXL state
-> + * @cxlmd: The device representing the CXL.mem capabilities of @dev
->   * @regs: Parsed register blocks
->   * @cxl_dvsec: Offset to the PCIe device DVSEC
->   * @payload_size: Size of space for payload
-> @@ -148,6 +149,7 @@ struct cxl_endpoint_dvsec_info {
->   */
->  struct cxl_dev_state {
->  	struct device *dev;
-> +	struct cxl_memdev *cxlmd;
-
-This is only used I think to access the cxlmd->dev. Perhaps better to pass
-the dev and avoid having a reference to the memdev in here?
-
->  
->  	struct cxl_regs regs;
->  	int cxl_dvsec;
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index bde8929450f0..823cbfa093fa 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -8,6 +8,7 @@
->  #include <linux/mutex.h>
->  #include <linux/list.h>
->  #include <linux/pci.h>
-> +#include <linux/aer.h>
->  #include <linux/io.h>
->  #include "cxlmem.h"
->  #include "cxlpci.h"
-> @@ -533,6 +534,11 @@ static void cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
->  	info->ranges = __cxl_dvsec_ranges(cxlds, info);
->  }
->  
-> +static void disable_aer(void *pdev)
-> +{
-> +	pci_disable_pcie_error_reporting(pdev);
-> +}
-> +
->  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  {
->  	struct cxl_register_map map;
-> @@ -554,6 +560,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	cxlds = cxl_dev_state_create(&pdev->dev);
->  	if (IS_ERR(cxlds))
->  		return PTR_ERR(cxlds);
-> +	pci_set_drvdata(pdev, cxlds);
->  
->  	cxlds->serial = pci_get_dsn(pdev);
->  	cxlds->cxl_dvsec = pci_find_dvsec_capability(
-> @@ -610,6 +617,14 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (IS_ERR(cxlmd))
->  		return PTR_ERR(cxlmd);
->  
-> +	if (cxlds->regs.ras) {
-> +		pci_enable_pcie_error_reporting(pdev);
-> +		rc = devm_add_action_or_reset(&pdev->dev, disable_aer, pdev);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +	pci_save_state(pdev);
-> +
->  	if (range_len(&cxlds->pmem_range) && IS_ENABLED(CONFIG_CXL_PMEM))
->  		rc = devm_cxl_add_nvdimm(&pdev->dev, cxlmd);
->  
-> @@ -623,10 +638,104 @@ static const struct pci_device_id cxl_mem_pci_tbl[] = {
->  };
->  MODULE_DEVICE_TABLE(pci, cxl_mem_pci_tbl);
->  
-> +/*
-> + * Log the state of the RAS status registers and prepare them to log the
-> + * next error status.
-> + */
-> +static void cxl_report_and_clear(struct cxl_dev_state *cxlds)
-> +{
-> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> +	struct device *dev = &cxlmd->dev;
-> +	void __iomem *addr;
-> +	u32 status;
-> +
-> +	if (!cxlds->regs.ras)
-> +		return;
-> +
-> +	addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
-> +	status = readl(addr);
-> +	if (status & CXL_RAS_UNCORRECTABLE_STATUS_MASK) {
-> +		dev_warn(cxlds->dev, "%s: uncorrectable status: %#08x\n",
-> +			 dev_name(dev), status);
-> +		writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
-> +	}
-> +
-> +	addr = cxlds->regs.ras + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
-> +	status = readl(addr);
-> +	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
-> +		dev_warn(cxlds->dev, "%s: correctable status: %#08x\n",
-> +			 dev_name(dev), status);
-> +		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-> +	}
-> +}
-> +
-> +static pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
-> +					   pci_channel_state_t state)
-> +{
-> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> +	struct device *dev = &cxlmd->dev;
-
-Perhaps a more informative name than dev given we have several devs
-involved here?
-
-> +
-> +	/*
-> +	 * A frozen channel indicates an impending reset which is fatal to
-> +	 * CXL.mem operation, and will likely crash the system. On the off
-> +	 * chance the situation is recoverable dump the status of the RAS
-> +	 * capability registers and bounce the active state of the memdev.
-> +	 */
-> +	cxl_report_and_clear(cxlds);
-> +
-> +	switch (state) {
-> +	case pci_channel_io_normal:
-> +		return PCI_ERS_RESULT_CAN_RECOVER;
-> +	case pci_channel_io_frozen:
-> +		dev_warn(&pdev->dev,
-> +			 "%s: frozen state error detected, disable CXL.mem\n",
-> +			 dev_name(dev));
-> +		device_release_driver(dev);
-> +		return PCI_ERS_RESULT_NEED_RESET;
-> +	case pci_channel_io_perm_failure:
-> +		dev_warn(&pdev->dev,
-> +			 "failure state error detected, request disconnect\n");
-> +		return PCI_ERS_RESULT_DISCONNECT;
-> +	}
-> +	return PCI_ERS_RESULT_NEED_RESET;
-> +}
-> +
-> +static pci_ers_result_t cxl_slot_reset(struct pci_dev *pdev)
-> +{
-> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> +	struct device *dev = &cxlmd->dev;
-> +
-> +	dev_info(&pdev->dev, "%s: restart CXL.mem after slot reset\n",
-> +		 dev_name(dev));
-> +	pci_restore_state(pdev);
-> +	if (device_attach(dev) <= 0)
-> +		return PCI_ERS_RESULT_DISCONNECT;
-> +	return PCI_ERS_RESULT_RECOVERED;
-> +}
-> +
-> +static void cxl_error_resume(struct pci_dev *pdev)
-> +{
-> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> +	struct device *dev = &cxlmd->dev;
-> +
-> +	dev_info(&pdev->dev, "%s: error resume %s\n", dev_name(dev),
-> +		 dev->driver ? "successful" : "failed");
-> +}
-> +
-> +static const struct pci_error_handlers cxl_error_handlers = {
-> +	.error_detected	= cxl_error_detected,
-> +	.slot_reset	= cxl_slot_reset,
-> +	.resume		= cxl_error_resume,
-> +};
-> +
->  static struct pci_driver cxl_pci_driver = {
->  	.name			= KBUILD_MODNAME,
->  	.id_table		= cxl_mem_pci_tbl,
->  	.probe			= cxl_pci_probe,
-> +	.err_handler		= &cxl_error_handlers,
->  	.driver	= {
->  		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
->  	},
+> I've tested these against a custom qemu[1], which adds the CXL _OSC (in
+> addition to other CXL support). Specifically, _OSC support is added
+> here[2].
 > 
+> [1]: https://gitlab.com/jic23/qemu/-/tree/cxl-v7-draft-2-for-test
+> [2]: https://gitlab.com/jic23/qemu/-/commit/31c85054b84645dfbd9e9bb14aa35286141c14cf
+
+Glad that worked :) I was wondering if it was correct.
+There are some issues with that code raised in a recent review, so good
+to have this to test against it going forwards.
+
+Thanks,
+
+Jonathan
+
+> 
+> Dan Williams (1):
+>   PCI/ACPI: Use CXL _OSC instead of PCIe _OSC
+> 
+> Vishal Verma (1):
+>   acpi/pci_root: negotiate CXL _OSC
+> 
+>  include/linux/acpi.h    |  11 +++
+>  include/acpi/acpi_bus.h |   7 +-
+>  drivers/acpi/pci_root.c | 201 ++++++++++++++++++++++++++++++++++------
+>  3 files changed, 187 insertions(+), 32 deletions(-)
+> 
+> 
+> base-commit: 74be98774dfbc5b8b795db726bd772e735d2edd4
 
