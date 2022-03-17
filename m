@@ -2,136 +2,405 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CD8C433FE
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Mar 2022 19:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B284C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Mar 2022 20:24:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229891AbiCQTi4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Mar 2022 15:38:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47486 "EHLO
+        id S229602AbiCQUZS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Mar 2022 16:25:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231890AbiCQTiz (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Mar 2022 15:38:55 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8768F22E953;
-        Thu, 17 Mar 2022 12:37:36 -0700 (PDT)
+        with ESMTP id S229595AbiCQUZQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Mar 2022 16:25:16 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F7C5144B7A
+        for <linux-cxl@vger.kernel.org>; Thu, 17 Mar 2022 13:23:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647545856; x=1679081856;
+  t=1647548639; x=1679084639;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=Qo2D3TN6PoZ9wS60fZKZkGUnHxtz5zLGgEpjwbsjoIA=;
-  b=Aat7q+Ua303aWmUlGVX6EFqUr5/znu6J4bwCxsHW2rmyq7ISZFd0v2S3
-   T2MGpeP/qX91UaSBs1sE07VHNm2acml6ua93ymG9+rJUk9qSFJfSm8zi2
-   VbxpWZEDPotTc9EoYt7SrudtY0KU3fg1BqZyyR1HoPp6YJrabO/tOSpFB
-   vlxl6438S4TeFPzGxacDDyeg7qElyI8VgcavgyjOwLauRDL1KRHiWMk0f
-   Efx8LfSZ8t+ya8CyMhCZFcNVtOeN95A02aQXKTTZUDJCaS86lGXYQak4X
-   /fjI++rnajx/0svcvaoE/Jnalrqpq2ov4figRBY1OxNFIoJcyKhtiEjIk
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10289"; a="236909725"
-X-IronPort-AV: E=Sophos;i="5.90,188,1643702400"; 
-   d="scan'208";a="236909725"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 12:37:36 -0700
-X-IronPort-AV: E=Sophos;i="5.90,188,1643702400"; 
-   d="scan'208";a="635486137"
-Received: from mgsalahu-mobl.amr.corp.intel.com (HELO localhost) ([10.212.119.201])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 12:37:36 -0700
-Date:   Thu, 17 Mar 2022 12:37:35 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+  bh=BXVhiq2szAP9Zk+d+DqXnX4OgZhHnIKEKiPsS/lakBU=;
+  b=Lp/soEeab5K/9OrVMNLKcqQI/+8FK3L8EnAHkyQhrYiGApMj9C1/9cJf
+   zYh/T+h+slehcANtTSMBcbQXWTqTrQyyVMi9cw5g4VX49UfqhNq/WtUjd
+   DYnhDIsUq8MJ18P+1kArumHq59xm8Xl7q36uEB331WekLjWof76PcNZVp
+   mDiyXLc54NI0HVbeaTu5SItkufClsUWJ2G7nfKqFyqI9Cm1Q41OTN1Tef
+   yDTBUjShnJc0Ibudg4Lzl1/zM8/jQHDFKJ7cRnrOMpVRYHpdM3E0C15P1
+   qT4R68fDqs91nVmx9nCFaggXGxOKY/OEWXYnXTmT2zonanlcV2yIG7YCp
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10289"; a="239138113"
+X-IronPort-AV: E=Sophos;i="5.90,190,1643702400"; 
+   d="scan'208";a="239138113"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 13:23:59 -0700
+X-IronPort-AV: E=Sophos;i="5.90,190,1643702400"; 
+   d="scan'208";a="558093450"
+Received: from dshkut-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.132.229])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 13:23:59 -0700
+Date:   Thu, 17 Mar 2022 13:23:52 -0700
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     patches@lists.linux.dev,
         Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V6 03/10] PCI/DOE: Add Data Object Exchange Aux Driver
-Message-ID: <YjON/33+V1iNXnrk@iweiny-desk3>
-References: <20220201071952.900068-1-ira.weiny@intel.com>
- <20220201071952.900068-4-ira.weiny@intel.com>
- <CAPcyv4hYAgyf-WcArGvbWHAJgc5+p=OO_6ah_dXJhNM5cXcVTw@mail.gmail.com>
- <YjJpzzKAtV4vgM+H@iweiny-desk3>
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: Re: [RFC PATCH 4/7] cxl/core/hdm: Allocate resources from the media
+Message-ID: <20220317202352.7yc67wo7o5yy4pcn@intel.com>
+References: <20220316230303.1813397-1-ben.widawsky@intel.com>
+ <20220316230303.1813397-5-ben.widawsky@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YjJpzzKAtV4vgM+H@iweiny-desk3>
+In-Reply-To: <20220316230303.1813397-5-ben.widawsky@intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Mar 16, 2022 at 03:50:55PM -0700, Ira Weiny wrote:
-> On Tue, Feb 08, 2022 at 04:59:39PM -0800, Dan Williams wrote:
-> > On Mon, Jan 31, 2022 at 11:20 PM <ira.weiny@intel.com> wrote:
-
-[snip]
-
-> > 
-> > > +
-> > > +       return 0;
-> > > +}
-> > > +
-> > > +static void pci_doe_remove(struct auxiliary_device *aux_dev)
-> > > +{
-> > > +       struct pci_doe *doe = dev_get_drvdata(&aux_dev->dev);
-> > > +
-> > > +       /* First halt the state machine */
-> > > +       cancel_delayed_work_sync(&doe->statemachine);
-> > > +}
-> > > +
-> > > +static const struct auxiliary_device_id pci_doe_auxiliary_id_table[] = {
-> > > +       {},
-> > > +};
-> > > +
-> > > +MODULE_DEVICE_TABLE(auxiliary, pci_doe_auxiliary_id_table);
-> > 
-> > Why is this empty table here?
+On 22-03-16 16:03:00, Ben Widawsky wrote:
+> Similar to how decoders consume address space for the root decoder, they
+> also consume space on the device's physical media. For future
+> allocations, it's important to mark those as used/busy.
 > 
-> Filling the id table was done in the next patch.
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> ---
+>  drivers/cxl/core/core.h |  6 +++
+>  drivers/cxl/core/hdm.c  | 44 +++++++++++++++++-
+>  drivers/cxl/core/port.c | 99 +++++++++++++++++++++++++++++++++--------
+>  drivers/cxl/cxl.h       | 16 +++++--
+>  4 files changed, 142 insertions(+), 23 deletions(-)
 > 
-> The split of the patches may have been a bit arbitrary here.  This patch was
-> focused on the state machine and probing of the mailboxes.  The next patch
-> provided the helper function to create all the DOE devices for a given
-> PCI device; pci_doe_create_doe_devices()
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index 1a50c0fc399c..1dea4dbb4f33 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -9,6 +9,12 @@ extern const struct device_type cxl_nvdimm_type;
+>  
+>  extern struct attribute_group cxl_base_attribute_group;
+>  
+> +extern struct device_attribute dev_attr_create_pmem_region;
+> +extern struct device_attribute dev_attr_delete_region;
+> +
+> +extern int *gen_pool_vcookie;
+> +extern int *gen_pool_pcookie;
+> +
+>  struct cxl_send_command;
+>  struct cxl_mem_query_commands;
+>  int cxl_query_cmd(struct cxl_memdev *cxlmd,
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 83404cdb846b..4a4e07a010ec 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+>  #include <linux/io-64-nonatomic-hi-lo.h>
+> +#include <linux/genalloc.h>
+>  #include <linux/device.h>
+>  #include <linux/delay.h>
+>  
+> @@ -188,8 +189,11 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>  	else
+>  		cxld->target_type = CXL_DECODER_ACCELERATOR;
+>  
+> -	if (is_endpoint_decoder(&cxld->dev))
+> +	if (is_endpoint_decoder(&cxld->dev)) {
+> +		to_cxl_endpoint_decoder(cxld)->skip =
+> +			ioread64_hi_lo(hdm + CXL_HDM_DECODER0_TL_LOW(which));
+>  		return 0;
+> +	}
+>  
+>  	target_list.value =
+>  		ioread64_hi_lo(hdm + CXL_HDM_DECODER0_TL_LOW(which));
+> @@ -199,6 +203,35 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>  	return 0;
+>  }
+>  
+> +static void cxl_request_regions(struct cxl_endpoint_decoder *cxled,
+> +				resource_size_t base)
+> +{
+> +	struct cxl_port *port = to_cxl_port(cxled->base.dev.parent);
+> +	struct genpool_data_fixed gpdf;
+> +	struct range r = cxled->hrange;
+> +	unsigned long addr;
+> +	void *type;
+> +
+> +	if (!(cxled->base.flags & CXL_DECODER_F_ENABLE))
+> +		return;
+> +
+> +	gpdf.offset = base;
+> +	addr = gen_pool_alloc_algo_owner(port->media, range_len(&r),
+> +					 gen_pool_fixed_alloc, &gpdf, &type);
+> +	if (addr != base || (base == 0 && !type)) {
+> +		dev_warn(&port->dev, "Couldn't allocate media\n");
+> +		return;
+> +	} else if (type == &gen_pool_pcookie) {
+> +		dev_warn(&port->dev, "Enumerated a persistent capacity\n");
+> +		return;
+> +	}
+> +
+> +	cxled->drange = (struct range) {
+> +		.start = addr,
+> +		.end = addr + range_len(&r) - 1,
+> +	};
+> +}
+> +
+>  /**
+>   * devm_cxl_enumerate_decoders - add decoder objects per HDM register set
+>   * @cxlhdm: Structure to populate with HDM capabilities
+> @@ -208,6 +241,7 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
+>  	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
+>  	struct cxl_port *port = cxlhdm->port;
+>  	int i, committed, failed;
+> +	u64 base = 0;
+>  	u32 ctrl;
+>  
+>  	/*
+> @@ -230,6 +264,7 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
+>  	for (i = 0, failed = 0; i < cxlhdm->decoder_count; i++) {
+>  		int target_map[CXL_DECODER_MAX_INTERLEAVE] = { 0 };
+>  		int rc, target_count = cxlhdm->target_count;
+> +		struct cxl_endpoint_decoder *cxled;
+>  		struct cxl_decoder *cxld;
+>  
+>  		if (is_cxl_endpoint(port))
+> @@ -255,6 +290,13 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
+>  				 "Failed to add decoder to port\n");
+>  			return rc;
+>  		}
+> +
+> +		if (!is_cxl_endpoint(port))
+> +			continue;
+> +
+> +		cxled = to_cxl_endpoint_decoder(cxld);
+> +		cxl_request_regions(cxled, base + cxled->skip);
+> +		base += cxled->skip + range_len(&cxled->hrange);
+
+This is wrong. It assumes the decode is tightly packed. Working on a fix.
+
+>  	}
+>  
+>  	if (failed == cxlhdm->decoder_count) {
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 6653de4dfb43..fe50a42bed7b 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -452,16 +452,44 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
+>  	return ERR_PTR(rc);
+>  }
+>  
+> -/**
+> - * devm_cxl_add_port - register a cxl_port in CXL memory decode hierarchy
+> - * @host: host device for devm operations
+> - * @uport: "physical" device implementing this upstream port
+> - * @component_reg_phys: (optional) for configurable cxl_port instances
+> - * @parent_port: next hop up in the CXL memory decode hierarchy
+> - */
+> -struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
+> -				   resource_size_t component_reg_phys,
+> -				   struct cxl_port *parent_port)
+> +int *gen_pool_vcookie;
+> +int *gen_pool_pcookie;
+> +
+> +static int create_gen_pools(struct cxl_port *ep, u64 capacity, u64 pmem_offset)
+> +{
+> +	int rc;
+> +
+> +	ep->media = gen_pool_create(ilog2(SZ_256M), NUMA_NO_NODE);
+> +	if (IS_ERR(ep->media))
+> +		return PTR_ERR(ep->media);
+> +
+> +	if (pmem_offset) {
+> +		rc = gen_pool_add_owner(ep->media, 0, -1, pmem_offset,
+> +					NUMA_NO_NODE, &gen_pool_vcookie);
+> +		if (rc) {
+> +			gen_pool_destroy(ep->media);
+> +			return rc;
+> +		}
+> +	}
+> +
+> +	if (pmem_offset < capacity) {
+> +		rc = gen_pool_add_owner(ep->media, pmem_offset, -1,
+> +					capacity - pmem_offset, NUMA_NO_NODE,
+> +					&gen_pool_pcookie);
+> +		if (rc) {
+> +			gen_pool_destroy(ep->media);
+> +			return rc;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct cxl_port *__devm_cxl_add_port(struct device *host,
+> +					    struct device *uport,
+> +					    resource_size_t component_reg_phys,
+> +					    u64 capacity, u64 pmem_offset,
+> +					    struct cxl_port *parent_port)
+>  {
+>  	struct cxl_port *port;
+>  	struct device *dev;
+> @@ -474,12 +502,15 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
+>  	if (parent_port)
+>  		port->depth = parent_port->depth + 1;
+>  	dev = &port->dev;
+> -	if (is_cxl_memdev(uport))
+> +	if (is_cxl_memdev(uport)) {
+>  		rc = dev_set_name(dev, "endpoint%d", port->id);
+> -	else if (parent_port)
+> +		if (!rc)
+> +			rc = create_gen_pools(port, capacity, pmem_offset);
+> +	} else if (parent_port) {
+>  		rc = dev_set_name(dev, "port%d", port->id);
+> -	else
+> +	} else {
+>  		rc = dev_set_name(dev, "root%d", port->id);
+> +	}
+>  	if (rc)
+>  		goto err;
+>  
+> @@ -502,10 +533,22 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
+>  	put_device(dev);
+>  	return ERR_PTR(rc);
+>  }
+> -EXPORT_SYMBOL_NS_GPL(devm_cxl_add_port, CXL);
+>  
+> -static int *gen_pool_vcookie;
+> -static int *gen_pool_pcookie;
+> +/**
+> + * devm_cxl_add_port - register a cxl_port in CXL memory decode hierarchy
+> + * @host: host device for devm operations
+> + * @uport: "physical" device implementing this upstream port
+> + * @component_reg_phys: (optional) for configurable cxl_port instances
+> + * @parent_port: next hop up in the CXL memory decode hierarchy
+> + */
+> +struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
+> +				   resource_size_t component_reg_phys,
+> +				   struct cxl_port *parent_port)
+> +{
+> +	return __devm_cxl_add_port(host, uport, component_reg_phys, 0, 0,
+> +				   parent_port);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(devm_cxl_add_port, CXL);
+>  
+>  struct cxl_port *devm_cxl_add_endpoint_port(struct device *host,
+>  					    struct device *uport,
+> @@ -513,9 +556,9 @@ struct cxl_port *devm_cxl_add_endpoint_port(struct device *host,
+>  					    u64 capacity, u64 pmem_offset,
+>  					    struct cxl_port *parent_port)
+>  {
+> -	int rc;
+>  	struct cxl_port *ep =
+> -		devm_cxl_add_port(host, uport, component_reg_phys, parent_port);
+> +		__devm_cxl_add_port(host, uport, component_reg_phys, capacity,
+> +				    pmem_offset, parent_port);
+>  	if (IS_ERR(ep) || !capacity)
+>  		return ep;
+>  
+> @@ -526,6 +569,8 @@ struct cxl_port *devm_cxl_add_endpoint_port(struct device *host,
+>  	}
+>  
+>  	if (pmem_offset) {
+> +		int rc;
+> +
+>  		rc = gen_pool_add_owner(ep->media, 0, -1, pmem_offset,
+>  					NUMA_NO_NODE, &gen_pool_vcookie);
+>  		if (rc) {
+> @@ -537,6 +582,8 @@ struct cxl_port *devm_cxl_add_endpoint_port(struct device *host,
+>  	}
+>  
+>  	if (pmem_offset < capacity) {
+> +		int rc;
+> +
+>  		rc = gen_pool_add_owner(ep->media, pmem_offset, -1,
+>  					capacity - pmem_offset, NUMA_NO_NODE,
+>  					&gen_pool_pcookie);
+> @@ -1250,6 +1297,7 @@ static struct cxl_decoder *__cxl_decoder_alloc(struct cxl_port *port,
+>  		cxled = kzalloc(sizeof(*cxled), GFP_KERNEL);
+>  		if (!cxled)
+>  			return NULL;
+> +		cxled->drange = (struct range){ 0, -1 };
+>  		cxld = &cxled->base;
+>  	} else if (is_cxl_root(port)) {
+>  		struct cxl_root_decoder *cxlrd;
+> @@ -1504,6 +1552,21 @@ EXPORT_SYMBOL_NS_GPL(cxl_decoder_add, CXL);
+>  
+>  static void cxld_unregister(void *dev)
+>  {
+> +	struct cxl_decoder *cxld = to_cxl_decoder(dev);
+> +
+> +	if (is_endpoint_decoder(&cxld->dev)) {
+> +		struct cxl_endpoint_decoder *cxled =
+> +			to_cxl_endpoint_decoder(cxld);
+> +		struct cxl_port *ep = to_cxl_port(cxld->dev.parent);
+> +
+> +		if (!range_len(&cxled->drange))
+> +			goto out;
+> +
+> +		gen_pool_free(ep->media, cxled->drange.start,
+> +			      range_len(&cxled->drange));
+> +	}
+> +
+> +out:
+>  	device_unregister(dev);
+>  }
+>  
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index d18e93e77f7e..e88b1efe54d3 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -245,11 +245,15 @@ struct cxl_decoder {
+>  /**
+>   * struct cxl_endpoint_decoder - An decoder residing in a CXL endpoint.
+>   * @base: Base class decoder
+> - * @range: Host physical address space consumed by this decoder.
+> + * @hrange: Host physical address space consumed by this decoder.
+> + * @drange: device space consumed by this decoder.
+> + * @skip: The skip count as specified in the CXL specification.
+>   */
+>  struct cxl_endpoint_decoder {
+>  	struct cxl_decoder base;
+> -	struct range range;
+> +	struct range hrange;
+> +	struct range drange;
+> +	u64 skip;
+>  };
+>  
+>  /**
+> @@ -269,11 +273,15 @@ struct cxl_switch_decoder {
+>   * @base: Base class decoder
+>   * @res: host address space owned by this decoder
+>   * @targets: Downstream targets (ie. hostbridges).
+> + * @next_region_id: The pre-cached next region id.
+> + * @id_lock: Protects next_region_id
+>   */
+>  struct cxl_root_decoder {
+>  	struct cxl_decoder base;
+>  	struct resource res;
+>  	struct cxl_decoder_targets *targets;
+> +	int next_region_id;
+> +	struct mutex id_lock; /* synchronizes access to next_region_id */
+>  };
+>  
+>  #define _to_cxl_decoder(x)                                                     \
+> @@ -441,7 +449,7 @@ static inline void cxl_set_decoder_extent(struct cxl_decoder *cxld,
+>  		to_cxl_root_decoder(cxld)->res =
+>  			(struct resource)DEFINE_RES_MEM(base, size);
+>  	else if (is_endpoint_decoder(&cxld->dev))
+> -		to_cxl_endpoint_decoder(cxld)->range = (struct range){
+> +		to_cxl_endpoint_decoder(cxld)->drange = (struct range){
+>  			.start = base,
+>  			.end = base + size - 1
+>  		};
+> @@ -464,7 +472,7 @@ static inline struct range cxl_get_decoder_extent(struct cxl_decoder *cxld)
+>  			.end = cxlrd->res.end
+>  		};
+>  	} else if (is_endpoint_decoder(&cxld->dev)) {
+> -		ret = to_cxl_endpoint_decoder(cxld)->range;
+> +		ret = to_cxl_endpoint_decoder(cxld)->drange;
+>  	} else {
+>  		ret = to_cxl_switch_decoder(cxld)->range;
+>  	}
+> -- 
+> 2.35.1
 > 
-> > 
-> > > +
-> > > +struct auxiliary_driver pci_doe_auxiliary_drv = {
-> > > +       .name = "pci_doe",
-> > > +       .id_table = pci_doe_auxiliary_id_table,
-> > > +       .probe = pci_doe_probe,
-> > > +       .remove = pci_doe_remove
-> > > +};
-> > 
-> > I expect that these helpers would be provided by the PCI core, but
-> > then a subsystem like CXL would have code to register their auxiliary
-> > devices and drivers that mostly just wrap the PCI core DOE
-> > implementation.
-> 
-> Ah ok, I think I see what you are saying.  That is not quite as straight
-> forward a use of the auxiliary bus but I _think_ it will work.  I'll also
-> attempt to clarify with documentation how the above probe/remove functions are
-> to be used by those defining their own drivers.
-
-Ok looking at this again today I see why I did things the way I did.
-
-The question is:
-
-Is the DOE driver a PCI driver or a driver defined by the subsystems?
-
-The way I have it now the PCI core defines the driver and a couple of very
-small helper functions for the subsystems to use.
-
-What I think you are proposing is the PCI core supplies the helper functions to
-drive the protocol but the actual driver is defined as part of the subsystem?
-Is that correct?
-
-The implications are subtle but one thing about the way I have things is that
-subsystems don't really need to learn about auxiliary bus driver stuff.
-
-OTOH pushing the auxiliary bus code into the subsystem allows for a bit more
-flexibility around the use of the DOE protocol code within the PCI core.
-
-I'll keep looking.
-
-Ira
