@@ -2,63 +2,59 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC001C433F5
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Mar 2022 18:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8231C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Mar 2022 18:45:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229568AbiCQScS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Mar 2022 14:32:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35090 "EHLO
+        id S229482AbiCQSqj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Mar 2022 14:46:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235157AbiCQScS (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Mar 2022 14:32:18 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9538DE9CA2
-        for <linux-cxl@vger.kernel.org>; Thu, 17 Mar 2022 11:31:01 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id q19so3293017pgm.6
-        for <linux-cxl@vger.kernel.org>; Thu, 17 Mar 2022 11:31:01 -0700 (PDT)
+        with ESMTP id S237571AbiCQSqi (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Mar 2022 14:46:38 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39685D5563
+        for <linux-cxl@vger.kernel.org>; Thu, 17 Mar 2022 11:45:22 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id z3so5181410plg.8
+        for <linux-cxl@vger.kernel.org>; Thu, 17 Mar 2022 11:45:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0c2AnKHAK3iM3EVaDmQ1+jJVG3le62Hw54pTeLtsI74=;
-        b=3+OzCWg/u1D+s3hhxXImv9D1Cy6V44cs3wG5o3I5m5eHnemxp+mh3LavXfTpWloKb1
-         way2qcf4Q5/BSdU6Y0hGx5OllzU++k+6Aoccb7cMfI3v8uObNsWAyk8J9G4FcxbxsDEQ
-         2NlIbVq2/Ip56Ezn7uRLiaUMJRMWXagZO1IX9Qf/jLa222aO6HCvTpV/WN/KP3qrAzHK
-         Ldd9mHWlJErGkTfjOzSl+05omU5wo5F7dodgpOP1/AC5GT+w2iJ4lQXF+PwT/FOBmUEG
-         Xe6WtHj+1WKMEgeRmHYGpMGRL5Ub9HpHeXkHrpKJX//JHAAiL9h4Cgmg/pRGcZ//A7wV
-         Pm1w==
+        bh=rNtp9FR6dDO4XgEHXNGD5F1nM+oT977bFwfTyeWW3oU=;
+        b=Bgn+Fd4VxGDm331tGMCq9yABSmsvxJNy2GQ2MA+THXeL5d+V2Lqggj/6jjTdcJutsV
+         IcnJfvojozWayGh4EFNrojtoFwg3CUPdNrhDjyAAwe9QpCajv6wlsA/ANvDadM6DhBc/
+         ebVgCKkTP9KCwZdG0ZutD/J7l0lI0ade+qqXhaYC3fFW/OP9O96TVYp1J8Grva3KY3Lw
+         tSJf75xga8gG0zE4kixxxK86/46OIe097L3rn+SdSJyydPo3CZjsTJrTxfEptbT0N6bq
+         tFEiEg24VZfbf+1FNtMT+O+7OstoFEqokffFjgmvb2GbMK1gKJiZp3SIUNOyxSYkaaPF
+         EzVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0c2AnKHAK3iM3EVaDmQ1+jJVG3le62Hw54pTeLtsI74=;
-        b=A4MGh8QEKlGT5t00K49dHmFW2E1Itkd/bPmda7bB8NekEQsiPX5ds9DtnmDi6gTJo5
-         IU6lYTsSSH1V79bgjCvdKq+ElYE3fwqUQM+UUqeW+DF3afXwVxEn7u4VIyjmine3b1Lv
-         U6PKwDFlw1LtVB16jCnCnBqtGAIIm+yPLj/fuii40Xu+0fDAxx6e0h1WR9JQDpRWSxh9
-         ACwzBYDfFV0zlorT+bCfzJ0v11ArJixphSXFdMOoi1LUQDSP68H+G3NMv9m5KbnkM8fc
-         Si70brZuWT5eW1CTsRggHB+hpeVVgiMQcq6SG39uM05nirZgSuEjWzRXXAcEWSogzq+r
-         y3fg==
-X-Gm-Message-State: AOAM532LNSHUZ1+13kXIdu+LL5UIGarB168WdgG3Zf5Q2yo+6de5ZWQh
-        F6lfOWuxOa2eyOPEKJv+nfw4a9q6qmdrpkpVLIZPig==
-X-Google-Smtp-Source: ABdhPJxFX0nYe4WST8xR9d+r1Z2GsGW5aZ9p4QMM7mvGGGMYjOH/uvistQ2MHS/m3eJJR7fzTMFhdu39kBZK8ufpuQI=
-X-Received: by 2002:a05:6a00:8ca:b0:4e0:2ed3:5630 with SMTP id
- s10-20020a056a0008ca00b004e02ed35630mr6151594pfu.3.1647541861073; Thu, 17 Mar
- 2022 11:31:01 -0700 (PDT)
+        bh=rNtp9FR6dDO4XgEHXNGD5F1nM+oT977bFwfTyeWW3oU=;
+        b=z51kFBHxYjKt/q8rR2aCAhdJ3x6JwC7VJA2kFPIBB7HLpdJNlxiwE117+Hwn8aljUk
+         J5XANReF0zXc6JCLY/F7r05ZLnHKWf+Mr2A8I1Pz31CueuRM408m49laRpCXZhvHvlMf
+         xM6E7CtUlXCfwuAGY4gLEUz9XMBajnD2h/7qrx83mzbxo+RnB9RKuL9vchJoFDDvTyoc
+         VTtqUtn98HRqzMwUULUWMhPnZ9XVOorGFIUXFt7k0UGDvQy46Ckq0oOJLpAb6RsnRsK5
+         YiHIVGfphKRzgXRP9EpQr1u1jprUAUMl8/2t0A7sPquEb1prw8VB7ijN1Cq1qwu8evG0
+         0Osw==
+X-Gm-Message-State: AOAM533pelsS9Uh10a9pNkGH4z7WCzPTMTPURjCvZdfmYhMHMdHB1cLz
+        3gEyOjk6r23p6+cYW7MY3IZrcj1nVEb5bwZsNAT9RIY+iuLSXA==
+X-Google-Smtp-Source: ABdhPJyPv1xK7sSgN0d3nV/xcuaT/YY8t5hlvFAFS9cGdhp/n7ne/bZCVZPgXPqzKVVd73f/F2QvH3TqdpZSYQs6+LA=
+X-Received: by 2002:a17:902:d504:b0:154:172:3677 with SMTP id
+ b4-20020a170902d50400b0015401723677mr2169838plg.147.1647542721716; Thu, 17
+ Mar 2022 11:45:21 -0700 (PDT)
 MIME-Version: 1.0
 References: <164730733718.3806189.9721916820488234094.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164730735869.3806189.4032428192652531946.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20220317175228.wpzot2nu4snc6bz6@intel.com> <CAPcyv4gyaLun3xeo+cp-KVedR1RrSErH9qSyJ=dpL0fYT+Dvww@mail.gmail.com>
- <20220317182900.3dh6xdmrbqiuqzfl@intel.com>
-In-Reply-To: <20220317182900.3dh6xdmrbqiuqzfl@intel.com>
+ <164730736435.3806189.2537160791687837469.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20220317175426.bj2bfmrkc4ep2uxk@intel.com>
+In-Reply-To: <20220317175426.bj2bfmrkc4ep2uxk@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 17 Mar 2022 11:30:50 -0700
-Message-ID: <CAPcyv4i-Yk-L0CdOL1ebOCX5MBSja-Q2R4wEiTDcWfeGiWhyYQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] cxl/pci: Make cxl_dvsec_ranges() failure not fatal
- to cxl_pci
+Date:   Thu, 17 Mar 2022 11:45:10 -0700
+Message-ID: <CAPcyv4jX1p7stLOuEoGvnNXhwerbe13R-RTnnTnHskCJFyqM8Q@mail.gmail.com>
+Subject: Re: [PATCH v2 5/6] cxl/mem: Rename cxl_dvsec_decode_init() to cxl_hdm_decode_init()
 To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Krzysztof Zach <krzysztof.zach@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
+Cc:     linux-cxl@vger.kernel.org, "Weiny, Ira" <ira.weiny@intel.com>,
         Vishal L Verma <vishal.l.verma@intel.com>,
         "Schofield, Alison" <alison.schofield@intel.com>
 Content-Type: text/plain; charset="UTF-8"
@@ -66,77 +62,20 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Mar 17, 2022 at 11:29 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Thu, Mar 17, 2022 at 10:55 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> On 22-03-17 11:20:48, Dan Williams wrote:
-> > On Thu, Mar 17, 2022 at 10:52 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > >
-> > > On 22-03-14 18:22:38, Dan Williams wrote:
-> > > > cxl_dvsec_ranges(), the helper for enumerating the presence of an active
-> > > > legacy CXL.mem configuration on a CXL 2.0 Memory Expander, is not fatal
-> > > > for cxl_pci because there is still value to enable mailbox operations
-> > > > even if CXL.mem operation is disabled. Recall that the reason cxl_pci
-> > > > does this initialization and not cxl_mem is to preserve the useful
-> > > > property (for unit testing) that cxl_mem is cxl_memdev + mmio generic,
-> > > > and does not require access to a 'struct pci_dev' to issue config
-> > > > cycles.
-> > > >
-> > > > Update 'struct cxl_endpoint_dvsec_info' to carry either a positive
-> > > > number of non-zero size legacy CXL DVSEC ranges, or the negative error
-> > > > code from __cxl_dvsec_ranges() in its @ranges member.
-> > > >
-> > > > Reported-by: Krzysztof Zach <krzysztof.zach@intel.com>
-> > > > Fixes: 560f78559006 ("cxl/pci: Retrieve CXL DVSEC memory info")
-> > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > > ---
-> > > >  drivers/cxl/pci.c |   27 ++++++++++++++++++---------
-> > > >  1 file changed, 18 insertions(+), 9 deletions(-)
-> > > >
-> > > > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > > > index 257cf735505d..994c79bf6afd 100644
-> > > > --- a/drivers/cxl/pci.c
-> > > > +++ b/drivers/cxl/pci.c
-> > > > @@ -463,13 +463,18 @@ static int wait_for_media_ready(struct cxl_dev_state *cxlds)
-> > > >       return 0;
-> > > >  }
-> > > >
-> > > > -static int cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
-> > > > +/*
-> > > > + * Return positive number of non-zero ranges on success and a negative
-> > > > + * error code on failure. The cxl_mem driver depends on ranges == 0 to
-> > > > + * init HDM operation.
-> > > > + */
-> > >
-> > > It shouldn't depend on 0 ranges, it depends on ranges matching existing HDM
-> > > decoder ranges. I took a shortcut by just checking global enable originally
-> > > because we didn't yet have code to enumerate decoders (anything else would be a
-> > > crazy BIOS bug that's probably not worth working around).
+> On 22-03-14 18:22:44, Dan Williams wrote:
+> > cxl_dvsec_decode_init() is tasked with checking whether legacy DVSEC
+> > range based decode is in effect, or whether HDM can be enabled / already
+> > is enabled. As such it either succeeds or fails and that result is the
+> > return value. The @do_hdm_init variable is misleading in the case where
+> > HDM operation is already found to be active, so just call it @retval.
 > >
-> > Hmm, I don't see that as a shortcut. If global enable is set then
-> > there is no requirement that CXL DVSEC matches the HDM decoder ranges,
-> > if global enable is not set then the HDM decoder ranges are not in
-> > effect.
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 >
-> It's true that there is no requirement that the DVSEC matches HDM decoder
-> ranges, except as you point out before it's going against spec recommendation.
->
-> >
-> > This is what the new comment in cxl_hdm_decode_init() is trying to
-> > clarify. My proposal is that Linux ignores the recommendation which I
-> > think is trying to accommodate legacy CXL 1.1 software stacks which
-> > Linux never had.
-> >
->
-> Okay, that's fine.
->
-> >         /*
-> >          * Per CXL 2.0 Section 8.1.3.8.3 and 8.1.3.8.4 DVSEC CXL Range 1 Base
-> >          * [High,Low] when HDM operation is enabled the range register values
-> >          * are ignored by the device, but the spec also recommends matching the
-> >          * DVSEC Range 1,2 to HDM Decoder Range 0,1 so, non-zero info->ranges
-> >          * are expected.
-> >          */
->
-> Maybe explicitly say the driver does not attempt to check this recommendation.
+> If we're doing the rename, which I'm in favor of, maybe making it something else
+> instead? I think init is usually something which cannot fail. Perhaps
+> cxl_hdm_decode_probe()?
 
-Sure, I can add that.
+I think it's init, or at least not "probe", because the "probe" is
+what devm_cxl_enumerate_decoders() is doing, right?
