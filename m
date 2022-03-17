@@ -2,181 +2,73 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D566C433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Mar 2022 17:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0323C433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Mar 2022 17:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236928AbiCQReB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Mar 2022 13:34:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42016 "EHLO
+        id S236934AbiCQRfI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Mar 2022 13:35:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236923AbiCQReB (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Mar 2022 13:34:01 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0BF92156C7;
-        Thu, 17 Mar 2022 10:32:44 -0700 (PDT)
+        with ESMTP id S236933AbiCQRfI (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Mar 2022 13:35:08 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29D85D1CDB
+        for <linux-cxl@vger.kernel.org>; Thu, 17 Mar 2022 10:33:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647538364; x=1679074364;
+  t=1647538432; x=1679074432;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=+HAWrZsfheXDVLPHx4rCRyJeP+W33AP9BKwAIeOEOhA=;
-  b=B5Bamhg3b1IGeYRKR1pwrTCV51JUst1Lh3cg4/YJ1lHxmVdiAeAUvnbj
-   6LjbfQRN5SoheGMAR/ULVv9Pz1W9f3mV0Huwie5flcTOlxUQ+oYf46mb6
-   kj4SpnQ7P2H2UYhGC2BNO/3YvaPAEwXvvAVR0NNFH0Tsi4FQuPeh5RJTZ
-   mImzGksNw8UM2xsGaaXAZSFnbv7xzUcHix0UPLUZnYW00MZQ1cTBWJDg0
-   fATpNZ9BEDU7hrwNKO/TfDpo83X4pXkFDBdXKcS3dtgU+EpoLyk0gectr
-   cr9Krk6UltUIUaCY4YyqTk/60CtgaKhAXjddPNytQk+ndyNKiQU70lF5V
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10289"; a="239090755"
+  bh=5PO4TvKSahAQUhYWVY3VmbK524c1K9JN5HXHK2cWD8s=;
+  b=kWF8DL30y2QAX6706aXphNIWuaXSndWVdqK7R3FYFYjeR24vRpmAo5Cw
+   pG7VC70nfqt1LCjCg7bWLx3+sOlZjBzl6epWNTWYn9i7e2kNN+DpNOSol
+   rrtCfj8aHUHiEFVpij0O2L4jgirEyHF1Jr2HKtDNrX+uQ8i1bN3ZJ6UHT
+   vHNb5veey/1EwR2aMtxt723PPdvmirO8mx2OK6/rIgltlyUh9uD15QJqY
+   Y/GAOo9jYrQSyPiDc7LTRcaMDZxJznkVfGN7v0wuR1SU/4aEAno5vuVJG
+   LFnGfUh6yc1jsng+NqJSap9Ipb7HE3CocK2u5sE/mzMpfk6WIS4DrlCzr
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10289"; a="237545155"
 X-IronPort-AV: E=Sophos;i="5.90,188,1643702400"; 
-   d="scan'208";a="239090755"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 10:32:40 -0700
+   d="scan'208";a="237545155"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 10:33:51 -0700
 X-IronPort-AV: E=Sophos;i="5.90,188,1643702400"; 
-   d="scan'208";a="691014559"
+   d="scan'208";a="614070050"
 Received: from dshkut-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.132.229])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 10:32:40 -0700
-Date:   Thu, 17 Mar 2022 10:32:33 -0700
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 10:33:51 -0700
+Date:   Thu, 17 Mar 2022 10:33:44 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, vishal.l.verma@intel.com,
-        alison.schofield@intel.com, Jonathan.Cameron@huawei.com,
-        ira.weiny@intel.com, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 6/8] cxl/pci: Prepare for mapping RAS Capability Structure
-Message-ID: <20220317173233.w76rkwyd2tzunltd@intel.com>
-References: <164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164740405408.3912056.16337643017370667205.stgit@dwillia2-desk3.amr.corp.intel.com>
+Cc:     linux-cxl@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com
+Subject: Re: [PATCH v2 1/6] cxl/mem: Drop DVSEC vs EFI Memory Map sanity check
+Message-ID: <20220317173344.ub2zacvjbql2553j@intel.com>
+References: <164730733718.3806189.9721916820488234094.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164730734246.3806189.13995924771963139898.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <164740405408.3912056.16337643017370667205.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <164730734246.3806189.13995924771963139898.stgit@dwillia2-desk3.amr.corp.intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 22-03-15 21:14:14, Dan Williams wrote:
-> The RAS Capabilitiy Structure is a CXL Component register capability
-> block. Unlike the HDM Decoder Capability, it will be referenced by the
-> cxl_pci driver in response to PCIe AER events. Due to this it is no
-> longer the case that cxl_map_component_regs() can assume that it should
-> map all component registers. Plumb a bitmask of capability ids to map
-> through cxl_map_component_regs().
+On 22-03-14 18:22:22, Dan Williams wrote:
+> When the driver finds legacy DVSEC ranges active on a CXL Memory
+> Expander it indicates that platform firmware is not aware of, or is
+> deliberately disabling common CXL 2.0 operation. In this case Linux
+> generally has no choice, but to leave the device alone.
 > 
-> For symmetry cxl_probe_device_regs() is updated to populate @id in
-> 'struct cxl_reg_map' even though cxl_map_device_regs() does not have a
-> need to map a subset of the device registers per caller.
-
-This seems weird to me. You spent the first 4 or so patches consolidating the
-mapping into a nice loop only to break out an ID to do individual mappings
-again. Are you sure this is such a win over having discrete mapping functions?
-
+> The driver attempts to validate that the DVSEC range is in the EFI
+> memory map. Remove that logic since there is no requirement that the
+> BIOS publish DVSEC ranges in the EFI Memory Map.
 > 
+> In the future the driver will want to permanently reserve this capacity
+> out of the available CFMWS capacity and hide it from
+> request_free_mem_region(), but it serves no purpose to warn about the
+> range not appearing in the EFI Memory Map.
+> 
+> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  drivers/cxl/core/hdm.c  |    3 ++-
->  drivers/cxl/core/regs.c |   36 ++++++++++++++++++++++++++----------
->  drivers/cxl/cxl.h       |    7 ++++---
->  3 files changed, 32 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 09221afca309..b348217ab704 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -92,7 +92,8 @@ static int map_hdm_decoder_regs(struct cxl_port *port, void __iomem *crb,
->  		return -ENXIO;
->  	}
->  
-> -	return cxl_map_component_regs(&port->dev, regs, &map);
-> +	return cxl_map_component_regs(&port->dev, regs, &map,
-> +				      BIT(CXL_CM_CAP_CAP_ID_HDM));
->  }
->  
->  /**
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index 219c7d0e43e2..c022c8937dfc 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -92,6 +92,7 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
->  		if (!rmap)
->  			continue;
->  		rmap->valid = true;
-> +		rmap->id = cap_id;
->  		rmap->offset = CXL_CM_OFFSET + offset;
->  		rmap->size = length;
->  	}
-> @@ -159,6 +160,7 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
->  		if (!rmap)
->  			continue;
->  		rmap->valid = true;
-> +		rmap->id = cap_id;
->  		rmap->offset = offset;
->  		rmap->size = length;
->  	}
-> @@ -187,17 +189,31 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
->  }
->  
->  int cxl_map_component_regs(struct device *dev, struct cxl_component_regs *regs,
-> -			   struct cxl_register_map *map)
-> +			   struct cxl_register_map *map, unsigned long map_mask)
->  {
-> -	resource_size_t phys_addr;
-> -	resource_size_t length;
-> -
-> -	phys_addr = map->resource;
-> -	phys_addr += map->component_map.hdm_decoder.offset;
-> -	length = map->component_map.hdm_decoder.size;
-> -	regs->hdm_decoder = devm_cxl_iomap_block(dev, phys_addr, length);
-> -	if (!regs->hdm_decoder)
-> -		return -ENOMEM;
-> +	struct mapinfo {
-> +		struct cxl_reg_map *rmap;
-> +		void __iomem **addr;
-> +	} mapinfo[] = {
-> +		{ .rmap = &map->component_map.hdm_decoder, &regs->hdm_decoder },
-> +	};
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(mapinfo); i++) {
-> +		struct mapinfo *mi = &mapinfo[i];
-> +		resource_size_t phys_addr;
-> +		resource_size_t length;
-> +
-> +		if (!mi->rmap->valid)
-> +			continue;
-> +		if (!test_bit(mi->rmap->id, &map_mask))
-> +			continue;
-> +		phys_addr = map->resource + mi->rmap->offset;
-> +		length = mi->rmap->size;
-> +		*(mi->addr) = devm_cxl_iomap_block(dev, phys_addr, length);
-> +		if (!*(mi->addr))
-> +			return -ENOMEM;
-> +	}
->  
->  	return 0;
->  }
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 2080a75c61fe..52bd77d8e22a 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -115,6 +115,7 @@ struct cxl_regs {
->  
->  struct cxl_reg_map {
->  	bool valid;
-> +	int id;
->  	unsigned long offset;
->  	unsigned long size;
->  };
-> @@ -153,9 +154,9 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
->  			      struct cxl_component_reg_map *map);
->  void cxl_probe_device_regs(struct device *dev, void __iomem *base,
->  			   struct cxl_device_reg_map *map);
-> -int cxl_map_component_regs(struct device *dev,
-> -			   struct cxl_component_regs *regs,
-> -			   struct cxl_register_map *map);
-> +int cxl_map_component_regs(struct device *dev, struct cxl_component_regs *regs,
-> +			   struct cxl_register_map *map,
-> +			   unsigned long map_mask);
->  int cxl_map_device_regs(struct device *dev,
->  			struct cxl_device_regs *regs,
->  			struct cxl_register_map *map);
-> 
+Reviewed-by: Ben Widawsky <ben.widawsky@intel.com>
