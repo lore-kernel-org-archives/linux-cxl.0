@@ -2,41 +2,45 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68EBAC433FE
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Mar 2022 15:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53443C433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Mar 2022 15:40:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231173AbiCQPVE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Mar 2022 11:21:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50306 "EHLO
+        id S236013AbiCQPmC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Mar 2022 11:42:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235714AbiCQPVA (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Mar 2022 11:21:00 -0400
+        with ESMTP id S234145AbiCQPmB (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Mar 2022 11:42:01 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C252E15B9B5;
-        Thu, 17 Mar 2022 08:19:42 -0700 (PDT)
-Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KK9kK2Wfkz67VWd;
-        Thu, 17 Mar 2022 23:17:45 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBD1720D8AC;
+        Thu, 17 Mar 2022 08:40:43 -0700 (PDT)
+Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KKBBY4YN8z67kgH;
+        Thu, 17 Mar 2022 23:38:45 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
+ fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 17 Mar 2022 16:19:40 +0100
+ 15.1.2375.24; Thu, 17 Mar 2022 16:40:41 +0100
 Received: from localhost (10.47.67.100) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Thu, 17 Mar
- 2022 15:19:40 +0000
-Date:   Thu, 17 Mar 2022 15:19:38 +0000
+ 2022 15:40:40 +0000
+Date:   Thu, 17 Mar 2022 15:40:36 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Vishal Verma <vishal.l.verma@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Vishal Verma <vishal.l.verma@intel.com>,
+        <linux-cxl@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Robert Moore <robert.moore@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [RFC PATCH 0/2] acpi: add support for CXL _OSC
-Message-ID: <20220317151938.000042e9@Huawei.com>
-In-Reply-To: <20220317002704.1835870-1-vishal.l.verma@intel.com>
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [RFC PATCH 1/2] PCI/ACPI: Use CXL _OSC instead of PCIe _OSC
+Message-ID: <20220317154036.00000686@Huawei.com>
+In-Reply-To: <CAPcyv4h581oXv59Praskpyk6ywPBm1ksxT4YPvZiv80F6ugZnw@mail.gmail.com>
 References: <20220317002704.1835870-1-vishal.l.verma@intel.com>
+        <20220317002704.1835870-2-vishal.l.verma@intel.com>
+        <CAPcyv4h581oXv59Praskpyk6ywPBm1ksxT4YPvZiv80F6ugZnw@mail.gmail.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -50,50 +54,206 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 16 Mar 2022 18:27:02 -0600
-Vishal Verma <vishal.l.verma@intel.com> wrote:
+On Wed, 16 Mar 2022 18:47:11 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-> Add support for using the CXL definition of _OSC where applicable, and
-> negotiating CXL specific support and control bits.
+> On Wed, Mar 16, 2022 at 5:27 PM Vishal Verma <vishal.l.verma@intel.com> wrote:
+> >
+> > From: Dan Williams <dan.j.williams@intel.com>
+> >
+> > In preparation for negotiating OS control of CXL _OSC features, do the
+> > minimal enabling to use CXL _OSC to handle the base PCIe feature
+> > negotiation. Recall that CXL _OSC is a super-set of PCIe _OSC and the
+> > CXL 2.0 specification mandates: "If a CXL Host Bridge device exposes CXL
+> > _OSC, CXL aware OSPM shall evaluate CXL _OSC and not evaluate PCIe
+> > _OSC."
+> >
+> > A new ->cxl_osc_disable attribute is added for cases where platform
+> > firmware publishes ACPI0016, but does not also publish CXL _OSC.  
 > 
-> Patch 1 adds the new CXL _OSC UUID, and uses it instead of the PCI UUID
-> when a root port is CXL enabled. It provides a fallback method for
-> CXL-1.1 devices that may not implement the CXL-2.0 _OSC.
+> It's been a couple weeks since I wrote this... looking at it now I
+> would rewrite this to:
+> 
+> Rather than pass a boolean flag alongside @root to all the helper
+> functions that need to consider PCIe specifics, add is_pcie() and
+> is_cxl() helper functions to check the flavor of @root. This also
+> allows for dynamic fallback to PCIe _OSC in cases where an attempt to
+> use CXL _OXC fails. This can happen on CXL 1.1 platforms that publish
+> ACPI0016 devices to indicate CXL host bridges, but do not publish the
+> optional CXL _OSC method. CXL _OSC is mandatory for CXL 2.0 hosts.
+> 
+> >
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > Cc: Robert Moore <robert.moore@intel.com>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>  
+> 
+> Always include your own sign-off when forwarding a patch.
+> 
+Subject to Dan's rewording above, this looks good to me.
 
-_OSC is implemented by the firmware of a host not the device so perhaps
-rephrase this.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 > 
-> Patch 2 performs negotiation for the CXL specific _OSC support and
-> control bits.
-> 
-> I've tested these against a custom qemu[1], which adds the CXL _OSC (in
-> addition to other CXL support). Specifically, _OSC support is added
-> here[2].
-> 
-> [1]: https://gitlab.com/jic23/qemu/-/tree/cxl-v7-draft-2-for-test
-> [2]: https://gitlab.com/jic23/qemu/-/commit/31c85054b84645dfbd9e9bb14aa35286141c14cf
-
-Glad that worked :) I was wondering if it was correct.
-There are some issues with that code raised in a recent review, so good
-to have this to test against it going forwards.
-
-Thanks,
-
-Jonathan
-
-> 
-> Dan Williams (1):
->   PCI/ACPI: Use CXL _OSC instead of PCIe _OSC
-> 
-> Vishal Verma (1):
->   acpi/pci_root: negotiate CXL _OSC
-> 
->  include/linux/acpi.h    |  11 +++
->  include/acpi/acpi_bus.h |   7 +-
->  drivers/acpi/pci_root.c | 201 ++++++++++++++++++++++++++++++++++------
->  3 files changed, 187 insertions(+), 32 deletions(-)
-> 
-> 
-> base-commit: 74be98774dfbc5b8b795db726bd772e735d2edd4
+> > ---
+> >  include/acpi/acpi_bus.h |  1 +
+> >  drivers/acpi/pci_root.c | 62 +++++++++++++++++++++++++++++++----------
+> >  2 files changed, 48 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+> > index ca88c4706f2b..768ef1584055 100644
+> > --- a/include/acpi/acpi_bus.h
+> > +++ b/include/acpi/acpi_bus.h
+> > @@ -585,6 +585,7 @@ struct acpi_pci_root {
+> >         struct acpi_device * device;
+> >         struct pci_bus *bus;
+> >         u16 segment;
+> > +       bool cxl_osc_disable;
+> >         struct resource secondary;      /* downstream bus range */
+> >
+> >         u32 osc_support_set;    /* _OSC state of support bits */
+> > diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> > index b76db99cced3..2d834504096b 100644
+> > --- a/drivers/acpi/pci_root.c
+> > +++ b/drivers/acpi/pci_root.c
+> > @@ -170,20 +170,47 @@ static void decode_osc_control(struct acpi_pci_root *root, char *msg, u32 word)
+> >                         ARRAY_SIZE(pci_osc_control_bit));
+> >  }
+> >
+> > -static u8 pci_osc_uuid_str[] = "33DB4D5B-1FF7-401C-9657-7441C03DD766";
+> > +static bool is_pcie(struct acpi_pci_root *root)
+> > +{
+> > +       return strcmp(acpi_device_hid(root->device), "PNP0A08") == 0;
+> > +}
+> >
+> > -static acpi_status acpi_pci_run_osc(acpi_handle handle,
+> > +static bool is_cxl(struct acpi_pci_root *root)
+> > +{
+> > +       if (root->cxl_osc_disable)
+> > +               return false;
+> > +       return strcmp(acpi_device_hid(root->device), "ACPI0016") == 0;
+> > +}
+> > +
+> > +static u8 pci_osc_uuid_str[] = "33DB4D5B-1FF7-401C-9657-7441C03DD766";
+> > +static u8 cxl_osc_uuid_str[] = "68F2D50B-C469-4d8A-BD3D-941A103FD3FC";
+> > +
+> > +static char *to_uuid(struct acpi_pci_root *root)
+> > +{
+> > +       if (is_cxl(root))
+> > +               return cxl_osc_uuid_str;
+> > +       return pci_osc_uuid_str;
+> > +}
+> > +
+> > +static int cap_length(struct acpi_pci_root *root)
+> > +{
+> > +       if (is_cxl(root))
+> > +               return sizeof(u32) * 6;
+> > +       return sizeof(u32) * 3;
+> > +}
+> > +
+> > +static acpi_status acpi_pci_run_osc(struct acpi_pci_root *root,
+> >                                     const u32 *capbuf, u32 *retval)
+> >  {
+> >         struct acpi_osc_context context = {
+> > -               .uuid_str = pci_osc_uuid_str,
+> > +               .uuid_str = to_uuid(root),
+> >                 .rev = 1,
+> > -               .cap.length = 12,
+> > +               .cap.length = cap_length(root),
+> >                 .cap.pointer = (void *)capbuf,
+> >         };
+> >         acpi_status status;
+> >
+> > -       status = acpi_run_osc(handle, &context);
+> > +       status = acpi_run_osc(root->device->handle, &context);
+> >         if (ACPI_SUCCESS(status)) {
+> >                 *retval = *((u32 *)(context.ret.pointer + 8));
+> >                 kfree(context.ret.pointer);
+> > @@ -196,7 +223,7 @@ static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root,
+> >                                         u32 *control)
+> >  {
+> >         acpi_status status;
+> > -       u32 result, capbuf[3];
+> > +       u32 result, capbuf[6];
+> >
+> >         support |= root->osc_support_set;
+> >
+> > @@ -204,10 +231,18 @@ static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root,
+> >         capbuf[OSC_SUPPORT_DWORD] = support;
+> >         capbuf[OSC_CONTROL_DWORD] = *control | root->osc_control_set;
+> >
+> > -       status = acpi_pci_run_osc(root->device->handle, capbuf, &result);
+> > +retry:
+> > +       status = acpi_pci_run_osc(root, capbuf, &result);
+> >         if (ACPI_SUCCESS(status)) {
+> >                 root->osc_support_set = support;
+> >                 *control = result;
+> > +       } else if (is_cxl(root)) {
+> > +               /*
+> > +                * CXL _OSC is optional on CXL 1.1 hosts. Fall back to PCIe _OSC
+> > +                * upon any failure using CXL _OSC.
+> > +                */
+> > +               root->cxl_osc_disable = true;
+> > +               goto retry;
+> >         }
+> >         return status;
+> >  }
+> > @@ -338,7 +373,7 @@ static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 s
+> >         u32 req = OSC_PCI_EXPRESS_CAPABILITY_CONTROL;
+> >         struct acpi_pci_root *root;
+> >         acpi_status status;
+> > -       u32 ctrl, capbuf[3];
+> > +       u32 ctrl, capbuf[6];
+> >
+> >         if (!mask)
+> >                 return AE_BAD_PARAMETER;
+> > @@ -375,7 +410,7 @@ static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 s
+> >         capbuf[OSC_QUERY_DWORD] = 0;
+> >         capbuf[OSC_SUPPORT_DWORD] = root->osc_support_set;
+> >         capbuf[OSC_CONTROL_DWORD] = ctrl;
+> > -       status = acpi_pci_run_osc(handle, capbuf, mask);
+> > +       status = acpi_pci_run_osc(root, capbuf, mask);
+> >         if (ACPI_FAILURE(status))
+> >                 return status;
+> >
+> > @@ -454,8 +489,7 @@ static bool os_control_query_checks(struct acpi_pci_root *root, u32 support)
+> >         return true;
+> >  }
+> >
+> > -static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+> > -                                bool is_pcie)
+> > +static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm)
+> >  {
+> >         u32 support, control = 0, requested = 0;
+> >         acpi_status status;
+> > @@ -506,7 +540,7 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+> >                 *no_aspm = 1;
+> >
+> >                 /* _OSC is optional for PCI host bridges */
+> > -               if ((status == AE_NOT_FOUND) && !is_pcie)
+> > +               if ((status == AE_NOT_FOUND) && !is_pcie(root))
+> >                         return;
+> >
+> >                 if (control) {
+> > @@ -529,7 +563,6 @@ static int acpi_pci_root_add(struct acpi_device *device,
+> >         acpi_handle handle = device->handle;
+> >         int no_aspm = 0;
+> >         bool hotadd = system_state == SYSTEM_RUNNING;
+> > -       bool is_pcie;
+> >
+> >         root = kzalloc(sizeof(struct acpi_pci_root), GFP_KERNEL);
+> >         if (!root)
+> > @@ -587,8 +620,7 @@ static int acpi_pci_root_add(struct acpi_device *device,
+> >
+> >         root->mcfg_addr = acpi_pci_root_get_mcfg_addr(handle);
+> >
+> > -       is_pcie = strcmp(acpi_device_hid(device), "PNP0A08") == 0;
+> > -       negotiate_os_control(root, &no_aspm, is_pcie);
+> > +       negotiate_os_control(root, &no_aspm);
+> >
+> >         /*
+> >          * TBD: Need PCI interface for enumeration/configuration of roots.
+> > --
+> > 2.35.1
+> >  
 
