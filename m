@@ -2,142 +2,142 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F99C433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Mar 2022 17:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFF6C433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Mar 2022 17:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236978AbiCQRx6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Mar 2022 13:53:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47050 "EHLO
+        id S235431AbiCQRzx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Mar 2022 13:55:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235157AbiCQRx5 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Mar 2022 13:53:57 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC9361FDFEA
-        for <linux-cxl@vger.kernel.org>; Thu, 17 Mar 2022 10:52:40 -0700 (PDT)
+        with ESMTP id S232658AbiCQRzw (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Mar 2022 13:55:52 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C420617335C
+        for <linux-cxl@vger.kernel.org>; Thu, 17 Mar 2022 10:54:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647539560; x=1679075560;
+  t=1647539675; x=1679075675;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=su+YTzlmF1ib7N5bng6TP5zRQo+ixPEaTn6FJCOcF3c=;
-  b=JZ2mNuQWpmRMrrUPPa3x8dUY9UioEnJw/z8csszfyGzuWBfIR79hL+oE
-   YLjFNVAUOEmHaQ3VO3PkZuAgN6ryd960feeNc4kzgPcdeprEEhAIEpMAf
-   TGPxYFu6xn7pdiZ6yXEGkn6VOXojf2yLkVIKJc7KNHzGgs6tJBGiIBlrO
-   cKqUFFWuKbSVnlPRDDk4K6Uo/mr9wT9KDSAO4zABKjQ4GI0F2myQhzd1C
-   8VBJf6dzabb4fqDpZE60T34HWgHyB+heSC0bmy73FvzYQQfL2uqOOy4Lp
-   0pcKD8zRNYY1xnV8OKPviG1KyRdiVx9vIdJu30qVTdhBTAFnNVrCWU2kn
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10289"; a="320148698"
+  bh=5Ci4UZyEUgV3K9m4QFcKzFcK7BM6qLPC3BkYen78c34=;
+  b=LwYr4zoB+0Mn2ZoTZqOsXMYZCla/NCeL9xK0m72XbF0Xv53rsmjJlAfT
+   4U/oZQbBl/jPrXQGaAznjYqtMSx3ss8EvsTmQOxOp/JqXfaVYX659CbLj
+   Io1qgKmqZslVl8DNsufUH39OpuZBbfcbVpGBUg4+wCz8SLrus5m4bI8oG
+   dsNSFFLX5TPI+cFRnMX9em5BEv2PMNcLbwDquFCtnrGMJbgpyPUt/WNoW
+   zlhO8GeWPYgGV64nDUD8PcyQD4KbkI7Sb9juijWrz4VfAnPnALWmQXMfD
+   ZuKF5O9qr6ijfwvWf7u5zW5Hp/wZpjYjVC1IgbHI88ZMGnSvNKsBc5/Az
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10289"; a="236882409"
 X-IronPort-AV: E=Sophos;i="5.90,188,1643702400"; 
-   d="scan'208";a="320148698"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 10:52:39 -0700
+   d="scan'208";a="236882409"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 10:54:35 -0700
 X-IronPort-AV: E=Sophos;i="5.90,188,1643702400"; 
-   d="scan'208";a="821637681"
+   d="scan'208";a="645183155"
 Received: from dshkut-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.132.229])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 10:52:37 -0700
-Date:   Thu, 17 Mar 2022 10:52:28 -0700
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 10:54:34 -0700
+Date:   Thu, 17 Mar 2022 10:54:26 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Krzysztof Zach <krzysztof.zach@intel.com>, ira.weiny@intel.com,
+Cc:     linux-cxl@vger.kernel.org, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com
-Subject: Re: [PATCH v2 4/6] cxl/pci: Make cxl_dvsec_ranges() failure not
- fatal to cxl_pci
-Message-ID: <20220317175228.wpzot2nu4snc6bz6@intel.com>
+Subject: Re: [PATCH v2 5/6] cxl/mem: Rename cxl_dvsec_decode_init() to
+ cxl_hdm_decode_init()
+Message-ID: <20220317175426.bj2bfmrkc4ep2uxk@intel.com>
 References: <164730733718.3806189.9721916820488234094.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164730735869.3806189.4032428192652531946.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164730736435.3806189.2537160791687837469.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <164730735869.3806189.4032428192652531946.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <164730736435.3806189.2537160791687837469.stgit@dwillia2-desk3.amr.corp.intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 22-03-14 18:22:38, Dan Williams wrote:
-> cxl_dvsec_ranges(), the helper for enumerating the presence of an active
-> legacy CXL.mem configuration on a CXL 2.0 Memory Expander, is not fatal
-> for cxl_pci because there is still value to enable mailbox operations
-> even if CXL.mem operation is disabled. Recall that the reason cxl_pci
-> does this initialization and not cxl_mem is to preserve the useful
-> property (for unit testing) that cxl_mem is cxl_memdev + mmio generic,
-> and does not require access to a 'struct pci_dev' to issue config
-> cycles.
+On 22-03-14 18:22:44, Dan Williams wrote:
+> cxl_dvsec_decode_init() is tasked with checking whether legacy DVSEC
+> range based decode is in effect, or whether HDM can be enabled / already
+> is enabled. As such it either succeeds or fails and that result is the
+> return value. The @do_hdm_init variable is misleading in the case where
+> HDM operation is already found to be active, so just call it @retval.
 > 
-> Update 'struct cxl_endpoint_dvsec_info' to carry either a positive
-> number of non-zero size legacy CXL DVSEC ranges, or the negative error
-> code from __cxl_dvsec_ranges() in its @ranges member.
-> 
-> Reported-by: Krzysztof Zach <krzysztof.zach@intel.com>
-> Fixes: 560f78559006 ("cxl/pci: Retrieve CXL DVSEC memory info")
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+
+If we're doing the rename, which I'm in favor of, maybe making it something else
+instead? I think init is usually something which cannot fail. Perhaps
+cxl_hdm_decode_probe()?
+
 > ---
->  drivers/cxl/pci.c |   27 ++++++++++++++++++---------
->  1 file changed, 18 insertions(+), 9 deletions(-)
+>  drivers/cxl/mem.c            |   12 ++++++------
+>  tools/testing/cxl/mock_mem.c |    2 +-
+>  2 files changed, 7 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 257cf735505d..994c79bf6afd 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -463,13 +463,18 @@ static int wait_for_media_ready(struct cxl_dev_state *cxlds)
->  	return 0;
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index 50704deb2ff0..3baae1332760 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -68,7 +68,7 @@ static int create_endpoint(struct cxl_memdev *cxlmd,
 >  }
 >  
-> -static int cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
-> +/*
-> + * Return positive number of non-zero ranges on success and a negative
-> + * error code on failure. The cxl_mem driver depends on ranges == 0 to
-> + * init HDM operation.
-> + */
-
-It shouldn't depend on 0 ranges, it depends on ranges matching existing HDM
-decoder ranges. I took a shortcut by just checking global enable originally
-because we didn't yet have code to enumerate decoders (anything else would be a
-crazy BIOS bug that's probably not worth working around).
-
-> +static int __cxl_dvsec_ranges(struct cxl_dev_state *cxlds,
-> +			      struct cxl_endpoint_dvsec_info *info)
+>  /**
+> - * cxl_dvsec_decode_init() - Setup HDM decoding for the endpoint
+> + * cxl_hdm_decode_init() - Setup HDM decoding for the endpoint
+>   * @cxlds: Device state
+>   *
+>   * Additionally, enables global HDM decoding. Warning: don't call this outside
+> @@ -79,12 +79,12 @@ static int create_endpoint(struct cxl_memdev *cxlmd,
+>   * decoders, or if it can not be determined if DVSEC Ranges are in use.
+>   * Otherwise, returns true.
+>   */
+> -__mock bool cxl_dvsec_decode_init(struct cxl_dev_state *cxlds)
+> +__mock bool cxl_hdm_decode_init(struct cxl_dev_state *cxlds)
 >  {
-> -	struct cxl_endpoint_dvsec_info *info = &cxlds->info;
->  	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-> +	int hdm_count, rc, i, ranges = 0;
->  	struct device *dev = &pdev->dev;
->  	int d = cxlds->cxl_dvsec;
-> -	int hdm_count, rc, i;
->  	u16 cap, ctrl;
+>  	struct cxl_endpoint_dvsec_info *info = &cxlds->info;
+>  	struct cxl_register_map map;
+>  	struct cxl_component_reg_map *cmap = &map.component_map;
+> -	bool global_enable, do_hdm_init = false;
+> +	bool global_enable, retval = false;
+>  	void __iomem *crb;
+>  	u32 global_ctrl;
 >  
->  	if (!d) {
-> @@ -546,10 +551,17 @@ static int cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
->  		};
->  
->  		if (size)
-> -			info->ranges++;
-> +			ranges++;
+> @@ -113,7 +113,7 @@ __mock bool cxl_dvsec_decode_init(struct cxl_dev_state *cxlds)
+>  		goto out;
 >  	}
 >  
-> -	return 0;
-> +	return ranges;
-> +}
-> +
-> +static void cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
-> +{
-> +	struct cxl_endpoint_dvsec_info *info = &cxlds->info;
-> +
-> +	info->ranges = __cxl_dvsec_ranges(cxlds, info);
+> -	do_hdm_init = true;
+> +	retval = true;
+>  
+>  	/*
+>  	 * Permanently (for this boot at least) opt the device into HDM
+> @@ -129,7 +129,7 @@ __mock bool cxl_dvsec_decode_init(struct cxl_dev_state *cxlds)
+>  
+>  out:
+>  	iounmap(crb);
+> -	return do_hdm_init;
+> +	return retval;
 >  }
 >  
->  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> @@ -618,10 +630,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (rc)
->  		return rc;
+>  static int cxl_mem_probe(struct device *dev)
+> @@ -160,7 +160,7 @@ static int cxl_mem_probe(struct device *dev)
+>  	 * If DVSEC ranges are being used instead of HDM decoder registers there
+>  	 * is no use in trying to manage those.
+>  	 */
+> -	if (!cxl_dvsec_decode_init(cxlds)) {
+> +	if (!cxl_hdm_decode_init(cxlds)) {
+>  		dev_err(dev,
+>  			"Legacy range registers configuration prevents HDM operation.\n");
+>  		return -EBUSY;
+> diff --git a/tools/testing/cxl/mock_mem.c b/tools/testing/cxl/mock_mem.c
+> index d1dec5845139..69946f678cfa 100644
+> --- a/tools/testing/cxl/mock_mem.c
+> +++ b/tools/testing/cxl/mock_mem.c
+> @@ -4,7 +4,7 @@
+>  #include <linux/types.h>
 >  
-> -	rc = cxl_dvsec_ranges(cxlds);
-> -	if (rc)
-> -		dev_warn(&pdev->dev,
-> -			 "Failed to get DVSEC range information (%d)\n", rc);
-> +	cxl_dvsec_ranges(cxlds);
->  
->  	cxlmd = devm_cxl_add_memdev(cxlds);
->  	if (IS_ERR(cxlmd))
+>  struct cxl_dev_state;
+> -bool cxl_dvsec_decode_init(struct cxl_dev_state *cxlds)
+> +bool cxl_hdm_decode_init(struct cxl_dev_state *cxlds)
+>  {
+>  	return true;
+>  }
 > 
