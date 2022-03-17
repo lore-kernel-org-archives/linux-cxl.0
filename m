@@ -2,80 +2,136 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8231C433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Mar 2022 18:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CD8C433FE
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Mar 2022 19:37:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229482AbiCQSqj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Mar 2022 14:46:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43396 "EHLO
+        id S229891AbiCQTi4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Mar 2022 15:38:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237571AbiCQSqi (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Mar 2022 14:46:38 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39685D5563
-        for <linux-cxl@vger.kernel.org>; Thu, 17 Mar 2022 11:45:22 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id z3so5181410plg.8
-        for <linux-cxl@vger.kernel.org>; Thu, 17 Mar 2022 11:45:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rNtp9FR6dDO4XgEHXNGD5F1nM+oT977bFwfTyeWW3oU=;
-        b=Bgn+Fd4VxGDm331tGMCq9yABSmsvxJNy2GQ2MA+THXeL5d+V2Lqggj/6jjTdcJutsV
-         IcnJfvojozWayGh4EFNrojtoFwg3CUPdNrhDjyAAwe9QpCajv6wlsA/ANvDadM6DhBc/
-         ebVgCKkTP9KCwZdG0ZutD/J7l0lI0ade+qqXhaYC3fFW/OP9O96TVYp1J8Grva3KY3Lw
-         tSJf75xga8gG0zE4kixxxK86/46OIe097L3rn+SdSJyydPo3CZjsTJrTxfEptbT0N6bq
-         tFEiEg24VZfbf+1FNtMT+O+7OstoFEqokffFjgmvb2GbMK1gKJiZp3SIUNOyxSYkaaPF
-         EzVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rNtp9FR6dDO4XgEHXNGD5F1nM+oT977bFwfTyeWW3oU=;
-        b=z51kFBHxYjKt/q8rR2aCAhdJ3x6JwC7VJA2kFPIBB7HLpdJNlxiwE117+Hwn8aljUk
-         J5XANReF0zXc6JCLY/F7r05ZLnHKWf+Mr2A8I1Pz31CueuRM408m49laRpCXZhvHvlMf
-         xM6E7CtUlXCfwuAGY4gLEUz9XMBajnD2h/7qrx83mzbxo+RnB9RKuL9vchJoFDDvTyoc
-         VTtqUtn98HRqzMwUULUWMhPnZ9XVOorGFIUXFt7k0UGDvQy46Ckq0oOJLpAb6RsnRsK5
-         YiHIVGfphKRzgXRP9EpQr1u1jprUAUMl8/2t0A7sPquEb1prw8VB7ijN1Cq1qwu8evG0
-         0Osw==
-X-Gm-Message-State: AOAM533pelsS9Uh10a9pNkGH4z7WCzPTMTPURjCvZdfmYhMHMdHB1cLz
-        3gEyOjk6r23p6+cYW7MY3IZrcj1nVEb5bwZsNAT9RIY+iuLSXA==
-X-Google-Smtp-Source: ABdhPJyPv1xK7sSgN0d3nV/xcuaT/YY8t5hlvFAFS9cGdhp/n7ne/bZCVZPgXPqzKVVd73f/F2QvH3TqdpZSYQs6+LA=
-X-Received: by 2002:a17:902:d504:b0:154:172:3677 with SMTP id
- b4-20020a170902d50400b0015401723677mr2169838plg.147.1647542721716; Thu, 17
- Mar 2022 11:45:21 -0700 (PDT)
+        with ESMTP id S231890AbiCQTiz (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Mar 2022 15:38:55 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8768F22E953;
+        Thu, 17 Mar 2022 12:37:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1647545856; x=1679081856;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Qo2D3TN6PoZ9wS60fZKZkGUnHxtz5zLGgEpjwbsjoIA=;
+  b=Aat7q+Ua303aWmUlGVX6EFqUr5/znu6J4bwCxsHW2rmyq7ISZFd0v2S3
+   T2MGpeP/qX91UaSBs1sE07VHNm2acml6ua93ymG9+rJUk9qSFJfSm8zi2
+   VbxpWZEDPotTc9EoYt7SrudtY0KU3fg1BqZyyR1HoPp6YJrabO/tOSpFB
+   vlxl6438S4TeFPzGxacDDyeg7qElyI8VgcavgyjOwLauRDL1KRHiWMk0f
+   Efx8LfSZ8t+ya8CyMhCZFcNVtOeN95A02aQXKTTZUDJCaS86lGXYQak4X
+   /fjI++rnajx/0svcvaoE/Jnalrqpq2ov4figRBY1OxNFIoJcyKhtiEjIk
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10289"; a="236909725"
+X-IronPort-AV: E=Sophos;i="5.90,188,1643702400"; 
+   d="scan'208";a="236909725"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 12:37:36 -0700
+X-IronPort-AV: E=Sophos;i="5.90,188,1643702400"; 
+   d="scan'208";a="635486137"
+Received: from mgsalahu-mobl.amr.corp.intel.com (HELO localhost) ([10.212.119.201])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 12:37:36 -0700
+Date:   Thu, 17 Mar 2022 12:37:35 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH V6 03/10] PCI/DOE: Add Data Object Exchange Aux Driver
+Message-ID: <YjON/33+V1iNXnrk@iweiny-desk3>
+References: <20220201071952.900068-1-ira.weiny@intel.com>
+ <20220201071952.900068-4-ira.weiny@intel.com>
+ <CAPcyv4hYAgyf-WcArGvbWHAJgc5+p=OO_6ah_dXJhNM5cXcVTw@mail.gmail.com>
+ <YjJpzzKAtV4vgM+H@iweiny-desk3>
 MIME-Version: 1.0
-References: <164730733718.3806189.9721916820488234094.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164730736435.3806189.2537160791687837469.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20220317175426.bj2bfmrkc4ep2uxk@intel.com>
-In-Reply-To: <20220317175426.bj2bfmrkc4ep2uxk@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 17 Mar 2022 11:45:10 -0700
-Message-ID: <CAPcyv4jX1p7stLOuEoGvnNXhwerbe13R-RTnnTnHskCJFyqM8Q@mail.gmail.com>
-Subject: Re: [PATCH v2 5/6] cxl/mem: Rename cxl_dvsec_decode_init() to cxl_hdm_decode_init()
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, "Weiny, Ira" <ira.weiny@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YjJpzzKAtV4vgM+H@iweiny-desk3>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Mar 17, 2022 at 10:55 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> On 22-03-14 18:22:44, Dan Williams wrote:
-> > cxl_dvsec_decode_init() is tasked with checking whether legacy DVSEC
-> > range based decode is in effect, or whether HDM can be enabled / already
-> > is enabled. As such it either succeeds or fails and that result is the
-> > return value. The @do_hdm_init variable is misleading in the case where
-> > HDM operation is already found to be active, so just call it @retval.
-> >
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->
-> If we're doing the rename, which I'm in favor of, maybe making it something else
-> instead? I think init is usually something which cannot fail. Perhaps
-> cxl_hdm_decode_probe()?
+On Wed, Mar 16, 2022 at 03:50:55PM -0700, Ira Weiny wrote:
+> On Tue, Feb 08, 2022 at 04:59:39PM -0800, Dan Williams wrote:
+> > On Mon, Jan 31, 2022 at 11:20 PM <ira.weiny@intel.com> wrote:
 
-I think it's init, or at least not "probe", because the "probe" is
-what devm_cxl_enumerate_decoders() is doing, right?
+[snip]
+
+> > 
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +static void pci_doe_remove(struct auxiliary_device *aux_dev)
+> > > +{
+> > > +       struct pci_doe *doe = dev_get_drvdata(&aux_dev->dev);
+> > > +
+> > > +       /* First halt the state machine */
+> > > +       cancel_delayed_work_sync(&doe->statemachine);
+> > > +}
+> > > +
+> > > +static const struct auxiliary_device_id pci_doe_auxiliary_id_table[] = {
+> > > +       {},
+> > > +};
+> > > +
+> > > +MODULE_DEVICE_TABLE(auxiliary, pci_doe_auxiliary_id_table);
+> > 
+> > Why is this empty table here?
+> 
+> Filling the id table was done in the next patch.
+> 
+> The split of the patches may have been a bit arbitrary here.  This patch was
+> focused on the state machine and probing of the mailboxes.  The next patch
+> provided the helper function to create all the DOE devices for a given
+> PCI device; pci_doe_create_doe_devices()
+> 
+> > 
+> > > +
+> > > +struct auxiliary_driver pci_doe_auxiliary_drv = {
+> > > +       .name = "pci_doe",
+> > > +       .id_table = pci_doe_auxiliary_id_table,
+> > > +       .probe = pci_doe_probe,
+> > > +       .remove = pci_doe_remove
+> > > +};
+> > 
+> > I expect that these helpers would be provided by the PCI core, but
+> > then a subsystem like CXL would have code to register their auxiliary
+> > devices and drivers that mostly just wrap the PCI core DOE
+> > implementation.
+> 
+> Ah ok, I think I see what you are saying.  That is not quite as straight
+> forward a use of the auxiliary bus but I _think_ it will work.  I'll also
+> attempt to clarify with documentation how the above probe/remove functions are
+> to be used by those defining their own drivers.
+
+Ok looking at this again today I see why I did things the way I did.
+
+The question is:
+
+Is the DOE driver a PCI driver or a driver defined by the subsystems?
+
+The way I have it now the PCI core defines the driver and a couple of very
+small helper functions for the subsystems to use.
+
+What I think you are proposing is the PCI core supplies the helper functions to
+drive the protocol but the actual driver is defined as part of the subsystem?
+Is that correct?
+
+The implications are subtle but one thing about the way I have things is that
+subsystems don't really need to learn about auxiliary bus driver stuff.
+
+OTOH pushing the auxiliary bus code into the subsystem allows for a bit more
+flexibility around the use of the DOE protocol code within the PCI core.
+
+I'll keep looking.
+
+Ira
