@@ -2,138 +2,96 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5212FC433F5
-	for <linux-cxl@archiver.kernel.org>; Fri, 18 Mar 2022 16:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D860C433EF
+	for <linux-cxl@archiver.kernel.org>; Fri, 18 Mar 2022 17:06:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237883AbiCRQzj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 18 Mar 2022 12:55:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60412 "EHLO
+        id S239495AbiCRRHk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 18 Mar 2022 13:07:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233118AbiCRQzj (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Mar 2022 12:55:39 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7069C27F4C6
-        for <linux-cxl@vger.kernel.org>; Fri, 18 Mar 2022 09:54:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647622458; x=1679158458;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zYAJa5HkG7GrDnP4R6bnn+zO0ZSqQjs9KIygYP5gJfE=;
-  b=UYqM7vLX2sDCvEKbOhX9rEO4jLOGJRIILmV5A/Nl9qJEO11pCjfISiMJ
-   ZzRHRVegtfDJpgkq2PsTwJ8O0zVPo2b0llYLLuJTQyv4O1Ep/5XeLSKbg
-   zYVpOTFsKb5emXpFGlAUMrQF6K5kvGDvCABYptSZnYS25z581S3bCfIFG
-   iTlY1sE2lZRDTEfMwVNGLZQL7qjpLV8tciOZoXnPiJDv++7JTgbqMa7aI
-   LfdGGt4iz3udgBJUaqMv6jV+PrLrYUnQtppmNbYSrh6nbcKU7eo3/0eRj
-   QwSP/BQwv0xSj6YDnegruuW6jQjm8B02BIqali8ijMcvB7d0XBLuOB7ff
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10290"; a="254739005"
-X-IronPort-AV: E=Sophos;i="5.90,192,1643702400"; 
-   d="scan'208";a="254739005"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2022 09:53:34 -0700
-X-IronPort-AV: E=Sophos;i="5.90,192,1643702400"; 
-   d="scan'208";a="558535450"
-Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.41])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2022 09:53:33 -0700
-Date:   Fri, 18 Mar 2022 09:56:22 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linuxarm@huawei.com, qemu-devel@nongnu.org,
-        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-        Marcel Apfelbaum <marcel@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Markus Armbruster <armbru@redhat.com>,
-        linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
-        Peter Xu <peterx@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Saransh Gupta1 <saransh@ibm.com>,
-        Shreyas Shah <shreyas.shah@elastics.cloud>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Samarth Saxena <samarths@cadence.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
-Subject: Re: [PATCH v8 19/46] hw/cxl/device: Add some trivial commands
-Message-ID: <20220318165622.GA1119244@alison-desk>
-References: <20220318150635.24600-1-Jonathan.Cameron@huawei.com>
- <20220318150635.24600-20-Jonathan.Cameron@huawei.com>
+        with ESMTP id S239060AbiCRRHj (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Mar 2022 13:07:39 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23E15643D
+        for <linux-cxl@vger.kernel.org>; Fri, 18 Mar 2022 10:06:20 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id q1-20020a17090a4f8100b001c6575ae105so5945240pjh.0
+        for <linux-cxl@vger.kernel.org>; Fri, 18 Mar 2022 10:06:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TzGHDc4jmvyaPA0GygXIehDClBDWZrYMlE/AHHQovoA=;
+        b=yOivhIhspXFEWDE5XNzqhuJtUgWaRJ7q4ayfxwTYjODHFyEP59t1/F2ab4rLqpLYyZ
+         rI0pbM0f18QmByMVCkcT6AsYTzmhCY+z/wEzbw85MM5iKUVjTT7UL54b4iqpsJScCRpt
+         m671nknYMvypTZ12Dp8HkBCsntigNarCfbA76MOxAOtm8TVb5G95wzV2mbuXLHF04mRR
+         u/pJWaBkM8oMdcJeBNSmCnEEMUFFH+hqUF/OG22Nyv3Pc56zRPDNAXcXv15L5tb76cYL
+         xB3SzYoXUbh2cwP0S5oC19+URZSur8dzGuR8/sSfhN75KD4SpVjbHNzPTfVMwnPFiMeb
+         b3hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TzGHDc4jmvyaPA0GygXIehDClBDWZrYMlE/AHHQovoA=;
+        b=hEEONH0GOi2nYzwIyOhdOIEQ4JIAn5BZY8+Q2t4L9orNlSRvBVwlgVX2d/RDPsFy4M
+         aYr2NKA7OC4sKVtninEptTK4Q3fFnkBMNkxAi5v0EaiYlWmRfFZ6YXcYtS99ZQxxIo1p
+         055J8UzxvyfJxGDirNlef0bGyGlrODEmTpzxyvseMkNHJju0amOLcWW4iax+m8vYKbLw
+         r9e+oWl7t/4qrQEiOFIrcjh4SqkPjqQINcurZT8n3mCxX70BNeigEdtndHJ0CuTVmAZ/
+         YDxtYb4qfO2Y7mVfDC6Vm8zmDuBNS4Oy6+6h6jfKdmIuzD0L8CtPBa06se/xI4954S5Y
+         BA+Q==
+X-Gm-Message-State: AOAM530d0fKyf9AsTlyI8NjJTIug9JowtLhDNZa8KIw5esYrB7c1E2Fr
+        wO+j1T8WCrQFR0sEXca7HjupQ6z7+vLuLeXxluQMOw==
+X-Google-Smtp-Source: ABdhPJzBqD7O+Zl9hJpsItx9yEohNLWVK7GF8a7jyffxbDtZDo3pAbJuby3G5q9DxBIuiPaVdSp+4iI0gb1d5W+LXIY=
+X-Received: by 2002:a17:903:32d2:b0:153:9c6a:5750 with SMTP id
+ i18-20020a17090332d200b001539c6a5750mr441965plr.34.1647623179654; Fri, 18 Mar
+ 2022 10:06:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220318150635.24600-20-Jonathan.Cameron@huawei.com>
+References: <164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164740404348.3912056.9598057996803947688.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20220317102530.00007a79@Huawei.com>
+In-Reply-To: <20220317102530.00007a79@Huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 18 Mar 2022 10:06:09 -0700
+Message-ID: <CAPcyv4jiwaX9N6DddKOYi6o6bvxiOd70dLVSfB0T+N8Tb918yQ@mail.gmail.com>
+Subject: Re: [PATCH 4/8] cxl/core/regs: Make cxl_map_{component,
+ device}_regs() device generic
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Mar 18, 2022 at 03:06:08PM +0000, Jonathan Cameron wrote:
-> From: Ben Widawsky <ben.widawsky@intel.com>
-> 
-> GET_FW_INFO and GET_PARTITION_INFO, for this emulation, is equivalent to
-> info already returned in the IDENTIFY command. To have a more robust
-> implementation, add those.
-> 
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  hw/cxl/cxl-mailbox-utils.c | 69 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
-> 
+On Thu, Mar 17, 2022 at 3:25 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Tue, 15 Mar 2022 21:14:03 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> > There is no need to carry the barno and the block offset through the
+> > stack, just convert them to a resource base immediately.
+> >
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>
+> Other that this involving paths where we try to carry on after a broken
+> device is detected which I'd be far from confident are correct or regularly
+> tested, the patch looks fine.
 
-snip
+cxl_test covers some of these cases, but otherwise the failed state
+should be equivalent to the state after "cxl disable-memdev $memX"
 
->  
-> +static ret_code cmd_ccls_get_partition_info(struct cxl_cmd *cmd,
-> +                                           CXLDeviceState *cxl_dstate,
-> +                                           uint16_t *len)
-> +{
-> +    struct {
-> +        uint64_t active_vmem;
-> +        uint64_t active_pmem;
-> +        uint64_t next_vmem;
-> +        uint64_t next_pmem;
-> +    } QEMU_PACKED *part_info = (void *)cmd->payload;
-> +    QEMU_BUILD_BUG_ON(sizeof(*part_info) != 0x20);
-> +    uint64_t size = cxl_dstate->pmem_size;
-> +
-> +    if (!QEMU_IS_ALIGNED(size, 256 << 20)) {
-> +        return CXL_MBOX_INTERNAL_ERROR;
-> +    }
-> +
-> +    /* PMEM only */
-> +    part_info->active_vmem = 0;
-> +    part_info->next_vmem = 0;
-> +    part_info->active_pmem = size / (256 << 20);
-> +    part_info->next_pmem = part_info->active_pmem;
+> Particular case that bothers me is undersized bars. Before this patch
+> those were (I think) an error that would fail probe.  Are they still after
+> this patch?
 
-Setting next like this is logical, but it's not per the CXL spec:
+Yes, that check just moves to cxl_decode_regblock() directly.
 
-8.2.9.5.2.1
-"Next Persistent Capacity: If non-zero, this value shall become the
-Active Persistent Capacity on the next cold reset. If both this field and the
-Next Volatile Capacity field are zero, there is no pending change to the
-partitioning."
+>
+> Assuming that part is fine.
+>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-next_(vmem|pmem) should start as zero and only change as the result
-of a successful set_partition_info command.
-
-From your cover letter:
-* Volatile memory devices (easy but it's more code so left for now).
-Wondering if this is something I could do, and follow that with
-set_partition support. Does that sound reasonable? 
-
-Alison
-
-> +
-> +    *len = sizeof(*part_info);
-> +    return CXL_MBOX_SUCCESS;
-> +}
-> +
-
-snip
-
+Thanks.
