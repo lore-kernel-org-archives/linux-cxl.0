@@ -2,196 +2,102 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 120B6C433F5
-	for <linux-cxl@archiver.kernel.org>; Fri, 18 Mar 2022 15:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 770A7C433F5
+	for <linux-cxl@archiver.kernel.org>; Fri, 18 Mar 2022 16:23:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237995AbiCRPb1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 18 Mar 2022 11:31:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46044 "EHLO
+        id S238989AbiCRQYX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 18 Mar 2022 12:24:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238005AbiCRPb0 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Mar 2022 11:31:26 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47D56FD3C
-        for <linux-cxl@vger.kernel.org>; Fri, 18 Mar 2022 08:30:07 -0700 (PDT)
-Received: from fraeml735-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KKnvp4n0vz67KSc;
-        Fri, 18 Mar 2022 23:28:06 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml735-chm.china.huawei.com (10.206.15.216) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 18 Mar 2022 16:30:05 +0100
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Fri, 18 Mar 2022 15:30:04 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <linuxarm@huawei.com>, <qemu-devel@nongnu.org>,
-        =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        Marcel Apfelbaum <marcel@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Markus Armbruster <armbru@redhat.com>
-CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
-        "Peter Maydell" <peter.maydell@linaro.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        Peter Xu <peterx@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Saransh Gupta1 <saransh@ibm.com>,
-        Shreyas Shah <shreyas.shah@elastics.cloud>,
-        Chris Browy <cbrowy@avery-design.com>,
-        "Samarth Saxena" <samarths@cadence.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Mark Cave-Ayland" <mark.cave-ayland@ilande.co.uk>
-Subject: [PATCH v8 46/46] docs/cxl: Add switch documentation
-Date:   Fri, 18 Mar 2022 15:06:35 +0000
-Message-ID: <20220318150635.24600-47-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220318150635.24600-1-Jonathan.Cameron@huawei.com>
-References: <20220318150635.24600-1-Jonathan.Cameron@huawei.com>
+        with ESMTP id S239021AbiCRQX4 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Mar 2022 12:23:56 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7800313196B
+        for <linux-cxl@vger.kernel.org>; Fri, 18 Mar 2022 09:20:04 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id o68-20020a17090a0a4a00b001c686a48263so3188530pjo.1
+        for <linux-cxl@vger.kernel.org>; Fri, 18 Mar 2022 09:20:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=l7RxkEp0zKHcFi3dOuAOsG89ByGBaaumTlGp+ArO9I4=;
+        b=gpaOtnP4fvETeGQcWcobGtjWtPCR6duHSZ8VsD1bWBV5uzit+S1gHP0yLDB9SwD7/M
+         cJQxIK8fplvT/QOh3ZBmPZmDvJg5N15p+rJDRQFFqFdAGt+D+RB6HUrrPqq+1aw3q0yZ
+         XwSeSTZVj9Z5YmoSpZpZiGDN6y9QRVuhGJSmpohH5eKrqUXAMtqTCZzazdBHYmvs7kVM
+         KTMYTsJGHTujL6Fn6OcRlgOfQ04krrHtDct/Xc9S6eNOs1mYzrH/umc0zB4sp3P7QMA6
+         565C2W9dCYlITpOAj9z+G9imfmRcCJZyOF1S/DyqPBVdF+c0ZDeeewYJWo664PRZmh0f
+         oLDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l7RxkEp0zKHcFi3dOuAOsG89ByGBaaumTlGp+ArO9I4=;
+        b=Sg4WH1EGSloMnXtN8qjzv3FtpPXrflL2GaGiD6cVScs/tayhvNhU3UwT9LNDWdGmyh
+         PXAUg325kFVOt5Ge9/8SfHwb7Q0n+SAlMW/yrPXAOVAktQBWE9SdDK8gI5zsXQV9vLTG
+         ID6xHSfjEForrEpr6Doq9PDmtX6x+mzvs9t81HhLagJBKoHWKQPgWi+DTHaYrhZPJyTR
+         OBOOOrivOy8Kwzfjw2vPEr7BtpDoIetpzsTAaqMXopmlRuiKaQGw8wlQ+/iWrRoKZ7ax
+         CvZlkIGttoRJLUc5DHLp1E+Uap22+aW2/lrif15MoN2Q86pUb3ZLF9/i0dqEWp51JScE
+         5zYg==
+X-Gm-Message-State: AOAM531+rIIO0lUa/2C3c5VhNnYC759sWx/e08Gcl3iJmiVnzXLQuKAt
+        fdTAKZGlIn3EqgB9UZt4TMa3jzVJKeTIIaYVLlQP8g==
+X-Google-Smtp-Source: ABdhPJxT9KFsSqQrDt2elqDYQotSuQp+/4kTOh5bXPtBTbAA9iZXoTBT53I9X/2NvIHOpxJlQJHUjeFImEwVP8SIBds=
+X-Received: by 2002:a17:902:d504:b0:154:172:3677 with SMTP id
+ b4-20020a170902d50400b0015401723677mr171162plg.147.1647620400388; Fri, 18 Mar
+ 2022 09:20:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164740405408.3912056.16337643017370667205.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20220317173233.w76rkwyd2tzunltd@intel.com>
+In-Reply-To: <20220317173233.w76rkwyd2tzunltd@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 18 Mar 2022 09:19:49 -0700
+Message-ID: <CAPcyv4jPQGwM06xi2ThRjypS0Ne4pg2zawkQ=VHEFw_MyvCXPQ@mail.gmail.com>
+Subject: Re: [PATCH 6/8] cxl/pci: Prepare for mapping RAS Capability Structure
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Switches were already introduced, but now we support them update
-the documentation to provide an example in diagram and
-qemu command line parameter forms.
+On Thu, Mar 17, 2022 at 10:32 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> On 22-03-15 21:14:14, Dan Williams wrote:
+> > The RAS Capabilitiy Structure is a CXL Component register capability
+> > block. Unlike the HDM Decoder Capability, it will be referenced by the
+> > cxl_pci driver in response to PCIe AER events. Due to this it is no
+> > longer the case that cxl_map_component_regs() can assume that it should
+> > map all component registers. Plumb a bitmask of capability ids to map
+> > through cxl_map_component_regs().
+> >
+> > For symmetry cxl_probe_device_regs() is updated to populate @id in
+> > 'struct cxl_reg_map' even though cxl_map_device_regs() does not have a
+> > need to map a subset of the device registers per caller.
+>
+> This seems weird to me. You spent the first 4 or so patches consolidating the
+> mapping into a nice loop only to break out an ID to do individual mappings
+> again. Are you sure this is such a win over having discrete mapping functions?
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- docs/system/devices/cxl.rst | 88 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 86 insertions(+), 2 deletions(-)
+The loop is still there. This allows cxl_port and cxl_pci to share all
+the same logic save for a bitmap to select the block. You're angling
+for a:
 
-diff --git a/docs/system/devices/cxl.rst b/docs/system/devices/cxl.rst
-index 6871c26efd..ebc5fb3862 100644
---- a/docs/system/devices/cxl.rst
-+++ b/docs/system/devices/cxl.rst
-@@ -118,8 +118,6 @@ and associated component register access via PCI bars.
- 
- CXL Switch
- ~~~~~~~~~~
--Not yet implemented in QEMU.
--
- Here we consider a simple CXL switch with only a single
- virtual hierarchy. Whilst more complex devices exist, their
- visibility to a particular host is generally the same as for
-@@ -137,6 +135,10 @@ BARs.  The Upstream Port has the configuration interfaces for
- the HDM decoders which route incoming memory accesses to the
- appropriate downstream port.
- 
-+A CXL switch is created in a similar fashion to PCI switches
-+by creating an upstream port (cxl-upstream) and a number of
-+downstream ports on the internal switch bus (cxl-downstream).
-+
- CXL Memory Devices - Type 3
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~
- CXL type 3 devices use a PCI class code and are intended to be supported
-@@ -240,6 +242,62 @@ Notes:
-     they will take the Host Physical Addresses of accesses and map
-     them to their own local Device Physical Address Space (DPA).
- 
-+Example topology involving a switch::
-+
-+  |<------------------SYSTEM PHYSICAL ADDRESS MAP (1)----------------->|
-+  |    __________   __________________________________   __________    |
-+  |   |          | |                                  | |          |   |
-+  |   | CFMW 0   | |  CXL Fixed Memory Window 1       | | CFMW 1   |   |
-+  |   | HB0 only | |  Configured to interleave memory | | HB1 only |   |
-+  |   |          | |  memory accesses across HB0/HB1  | |          |   |
-+  |   |____x_____| |__________________________________| |__________|   |
-+           |             |                     |             |
-+           |             |                     |             |
-+           |             |                     |
-+  Interleave Decoder     |                     |             |
-+   Matches this HB       |                     |             |
-+           \_____________|                     |_____________/
-+               __________|__________      _____|_______________
-+              |                     |    |                     |
-+              | CXL HB 0            |    | CXL HB 1            |
-+              | HB IntLv Decoders   |    | HB IntLv Decoders   |
-+              | PCI/CXL Root Bus 0c |    | PCI/CXL Root Bus 0d |
-+              |                     |    |                     |
-+              |___x_________________|    |_____________________|
-+                  |              |          |               |
-+                  |
-+       A HB 0 HDM Decoder
-+       matches this Port
-+       ___________|___
-+      |  Root Port 0  |
-+      |  Appears in   |
-+      |  PCI topology |
-+      |  As 0c:00.0   |
-+      |___________x___|
-+                  |
-+                  |
-+                  \_____________________
-+                                        |
-+                                        |
-+            ---------------------------------------------------
-+           |    Switch 0  USP as PCI 0d:00.0                   |
-+           |    USP has HDM decoder which direct traffic to    |
-+           |    appropiate downstream port                     |
-+           |    Switch BUS appears as 0e                       |
-+           |x__________________________________________________|
-+            |                  |               |              |
-+            |                  |               |              |
-+       _____|_________   ______|______   ______|_____   ______|_______
-+   (4)|     x         | |             | |            | |              |
-+      | CXL Type3 0   | | CXL Type3 1 | | CXL type3 2| | CLX Type 3 3 |
-+      |               | |             | |            | |              |
-+      | PMEM0(Vol LSA)| | PMEM1 (...) | | PMEM2 (...)| | PMEM3 (...)  |
-+      | Decoder to go | |             | |            | |              |
-+      | from host PA  | | PCI 10:00.0 | | PCI 11:00.0| | PCI 12:00.0  |
-+      | to device PA  | |             | |            | |              |
-+      | PCI as 0f:00.0| |             | |            | |              |
-+      |_______________| |_____________| |____________| |______________|
-+
- Example command lines
- ---------------------
- A very simple setup with just one directly attached CXL Type 3 device::
-@@ -279,6 +337,32 @@ the CXL Type3 device directly attached (no switches).::
-   -device cxl-type3,bus=root_port16,memdev=cxl-mem4,lsa=cxl-lsa4,id=cxl-pmem3,size=256M \
-   -cxl-fixed-memory-window targets.0=cxl.1,targets.1=cxl.2,size=4G,interleave-granularity=8k
- 
-+An example of 4 devices below a switch suitable for 1, 2 or 4 way interleave::
-+
-+  qemu-system-aarch64 -M virt,gic-version=3,cxl=on -m 4g,maxmem=8G,slots=8 -cpu max \
-+  ...
-+  -object memory-backend-file,id=cxl-mem0,share=on,mem-path=/tmp/cxltest.raw,size=256M \
-+  -object memory-backend-file,id=cxl-mem1,share=on,mem-path=/tmp/cxltest1.raw,size=256M \
-+  -object memory-backend-file,id=cxl-mem2,share=on,mem-path=/tmp/cxltest2.raw,size=256M \
-+  -object memory-backend-file,id=cxl-mem3,share=on,mem-path=/tmp/cxltest3.raw,size=256M \
-+  -object memory-backend-file,id=cxl-lsa0,share=on,mem-path=/tmp/lsa0.raw,size=256M \
-+  -object memory-backend-file,id=cxl-lsa1,share=on,mem-path=/tmp/lsa1.raw,size=256M \
-+  -object memory-backend-file,id=cxl-lsa2,share=on,mem-path=/tmp/lsa2.raw,size=256M \
-+  -object memory-backend-file,id=cxl-lsa3,share=on,mem-path=/tmp/lsa3.raw,size=256M \
-+  -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
-+  -device cxl-rp,port=0,bus=cxl.1,id=root_port0,chassis=0,slot=0 \
-+  -device cxl-rp,port=1,bus=cxl.1,id=root_port1,chassis=0,slot=1 \
-+  -device cxl-upstream,bus=root_port0,id=us0 \
-+  -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
-+  -device cxl-type3,bus=swport0,memdev=cxl-mem0,lsa=cxl-lsa0,id=cxl-pmem0,size=256M \
-+  -device cxl-downstream,port=1,bus=us0,id=swport1,chassis=0,slot=5 \
-+  -device cxl-type3,bus=swport1,memdev=cxl-mem1,lsa=cxl-lsa1,id=cxl-pmem1,size=256M \
-+  -device cxl-downstream,port=2,bus=us0,id=swport2,chassis=0,slot=6 \
-+  -device cxl-type3,bus=swport2,memdev=cxl-mem2,lsa=cxl-lsa2,id=cxl-pmem2,size=256M \
-+  -device cxl-downstream,port=3,bus=us0,id=swport3,chassis=0,slot=7 \
-+  -device cxl-type3,bus=swport3,memdev=cxl-mem3,lsa=cxl-lsa3,id=cxl-pmem3,size=256M \
-+  -cxl-fixed-memory-window targets.0=cxl.1,size=4G,interleave-granularity=4k
-+  
- Kernel Configuration Options
- ----------------------------
- 
--- 
-2.32.0
+cxl_map_hdm_regs(&port->dev, regs, &map);
 
+...? Internally that cxl_map_hdm_regs() should be sharing code with
+cxl_map_ras_regs(), so as far as I can see "discrete mapping
+functions" is just asking for the below, and I'd rather skip the extra
+wrapper:
+
+int cxl_map_hdm_regs(struct pci_dev *pdev,
+                           struct cxl_component_regs *regs,
+                           struct cxl_register_map *map)
+{
+    return cxl_map_component_regs(&port->dev, regs, &map,
+BIT(CXL_CM_CAP_CAP_ID_HDM));
+}
