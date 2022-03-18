@@ -2,107 +2,205 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FBFC433F5
-	for <linux-cxl@archiver.kernel.org>; Fri, 18 Mar 2022 08:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F237CC433F5
+	for <linux-cxl@archiver.kernel.org>; Fri, 18 Mar 2022 09:42:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233545AbiCRIQi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 18 Mar 2022 04:16:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53308 "EHLO
+        id S234561AbiCRJnS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 18 Mar 2022 05:43:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232272AbiCRIQh (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Mar 2022 04:16:37 -0400
-Received: from mail.default.ilande.bv.iomart.io (mail.ilande.co.uk [IPv6:2001:41c9:1:41f::167])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C71C52AD5E0
-        for <linux-cxl@vger.kernel.org>; Fri, 18 Mar 2022 01:15:18 -0700 (PDT)
-Received: from [2a00:23c4:8ba2:c800:3cf5:fb4b:b388:106c]
-        by mail.default.ilande.bv.iomart.io with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <mark.cave-ayland@ilande.co.uk>)
-        id 1nV7ka-0007Qx-02; Fri, 18 Mar 2022 08:14:20 +0000
-Message-ID: <d710c6e1-a9b7-ed0d-ca23-c4315355268c@ilande.co.uk>
-Date:   Fri, 18 Mar 2022 08:14:58 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.2
+        with ESMTP id S232891AbiCRJnR (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Mar 2022 05:43:17 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE7D02C3DEB;
+        Fri, 18 Mar 2022 02:41:58 -0700 (PDT)
+Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KKfBX5tJVz67xNR;
+        Fri, 18 Mar 2022 17:40:20 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 18 Mar 2022 10:41:56 +0100
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Fri, 18 Mar 2022 09:41:55 +0000
+Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
+ lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.2308.021;
+ Fri, 18 Mar 2022 09:41:55 +0000
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+CC:     "ben.widawsky@intel.com" <ben.widawsky@intel.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "alison.schofield@intel.com" <alison.schofield@intel.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        "ira.weiny@intel.com" <ira.weiny@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: RE: [PATCH 8/8] cxl/pci: Add (hopeful) error handling support
+Thread-Topic: [PATCH 8/8] cxl/pci: Add (hopeful) error handling support
+Thread-Index: AQHYOOxc1v/bQA0COUCrd4PXNU5KpqzE3y+A
+Date:   Fri, 18 Mar 2022 09:41:55 +0000
+Message-ID: <e9de480061ad425e9603cf71db5c610d@huawei.com>
+References: <164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164740406489.3912056.8334546166826246693.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <164740406489.3912056.8334546166826246693.stgit@dwillia2-desk3.amr.corp.intel.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Peter Maydell <peter.maydell@linaro.org>,
-        Shreyas Shah <shreyas.shah@elastics.cloud>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Marcel Apfelbaum <marcel@redhat.com>,
-        Samarth Saxena <samarths@cadence.com>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Markus Armbruster <armbru@redhat.com>,
-        Peter Xu <peterx@redhat.com>, qemu-devel@nongnu.org,
-        linuxarm@huawei.com, linux-cxl@vger.kernel.org,
-        Igor Mammedov <imammedo@redhat.com>,
-        Saransh Gupta1 <saransh@ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        =?UTF-8?Q?Alex_Benn=c3=a9e?= <alex.bennee@linaro.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
-References: <20220306174137.5707-1-Jonathan.Cameron@huawei.com>
- <20220306163119-mutt-send-email-mst@kernel.org>
- <20220307093918.00002f20@Huawei.com> <YihiHNxVjDFI0Z8r@xz-m1.local>
- <20220309112827.00002c73@Huawei.com> <Yimwjtd8SsVLOU5e@xz-m1.local>
- <20220316165034.000037e7@Huawei.com>
- <1efbfeeb-2598-57c5-2e2d-4f5fa2538aa7@ilande.co.uk>
- <20220316175846.00007463@Huawei.com> <20220316182618.00003ce5@Huawei.com>
- <31f383e6-01bb-cf9a-6af8-d0f1821b3fd1@ilande.co.uk>
- <20220317164723.00001c14@huawei.com>
-From:   Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
-In-Reply-To: <20220317164723.00001c14@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2a00:23c4:8ba2:c800:3cf5:fb4b:b388:106c
-X-SA-Exim-Mail-From: mark.cave-ayland@ilande.co.uk
-Subject: Re: [PATCH v7 00/46] CXl 2.0 emulation Support
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.default.ilande.bv.iomart.io)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.70.222]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 17/03/2022 16:47, Jonathan Cameron via wrote:
-
->> Ah great! As you've already noticed my particular case was performing partial
->> decoding on a memory region, but there are no issues if you need to dispatch to
->> another existing address space such as PCI/IOMMU. Creating a separate address space
->> per device shouldn't be an issue either, as that's effectively how the PCI bus master
->> requests are handled.
->>
->> The address spaces are visible in "info mtree" so if you haven't already, I would
->> recommend generating a dynamic name for the address space based upon the device
->> name/address to make it easier for development and debugging.
-> info mtree already provides the following with a static name
-> address-space: cxl-type3-dpa-space
->    0000000000000000-000000000fffffff (prio 0, nv-ram): cxl-mem2
-> 
-> So the device association is there anyway.  Hence I'm not sure a dynamic name adds
-> a lot on this occasion and code is simpler without making it dynamic.
-
-Is this using a single address space for multiple memory devices, or one per device 
-as you were suggesting in the thread? If it is one per device and cxl-mem2 is the 
-value of the -device id parameter, I still think it is worth adding the same device 
-id into the address space name for the sake of a g_strdup_printf() and corresponding 
-g_free().
-
-Alas I don't currently have the time (and enough knowledge of CXL!) to do a more 
-comprehensive review of the patches, but a quick skim of the series suggests it seems 
-quite mature. The only thing that I noticed was that there doesn't seem to be any 
-trace-events added, which I think may be useful to aid driver developers if they need 
-to debug some of the memory access routing.
-
-Finally I should point out that there are a number of more experienced PCI developers 
-on the CC list than me, and they should have the final say on patch review. So please 
-consider these comments as recommendations based upon my development work on QEMU, 
-and not as a NAK for proceeding with the series :)
-
-
-ATB,
-
-Mark.
+SGkgRGFuLA0KDQo+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9tOiBEYW4gV2lsbGlh
+bXMgPGRhbi5qLndpbGxpYW1zQGludGVsLmNvbT4NCj5TZW50OiAxNiBNYXJjaCAyMDIyIDA0OjE0
+DQo+VG86IGxpbnV4LWN4bEB2Z2VyLmtlcm5lbC5vcmcNCj5DYzogYmVuLndpZGF3c2t5QGludGVs
+LmNvbTsgdmlzaGFsLmwudmVybWFAaW50ZWwuY29tOw0KPmFsaXNvbi5zY2hvZmllbGRAaW50ZWwu
+Y29tOyBKb25hdGhhbiBDYW1lcm9uDQo+PGpvbmF0aGFuLmNhbWVyb25AaHVhd2VpLmNvbT47IGly
+YS53ZWlueUBpbnRlbC5jb207IGxpbnV4LQ0KPnBjaUB2Z2VyLmtlcm5lbC5vcmcNCj5TdWJqZWN0
+OiBbUEFUQ0ggOC84XSBjeGwvcGNpOiBBZGQgKGhvcGVmdWwpIGVycm9yIGhhbmRsaW5nIHN1cHBv
+cnQNCj4NCj5BZGQgbm9taW5hbCBlcnJvciBoYW5kbGluZyB0aGF0IHRlYXJzIGRvd24gQ1hMLm1l
+bSBpbiByZXNwb25zZSB0byBlcnJvcg0KPm5vdGlmaWNhdGlvbnMgdGhhdCBpbXBseSBhIGRldmlj
+ZSByZXNldC4gR2l2ZW4gc29tZSBDWEwubWVtIG1heSBiZQ0KPm9wZXJhdGluZyBhcyBTeXN0ZW0g
+UkFNLCB0aGVyZSBpcyBhIGhpZ2ggbGlrZWxpaG9vZCB0aGF0IHRoZXNlIGVycm9yIGV2ZW50cw0K
+PmFyZSBmYXRhbC4gSG93ZXZlciwgaWYgdGhlIHN5c3RlbSBzdXJ2aXZlcyB0aGUgbm90aWZpY2F0
+aW9uIHRoZSBleHBlY3RhdGlvbiBpcw0KPnRoYXQgdGhlIGRyaXZlciBiZWhhdmlvciBpcyBlcXVp
+dmFsZW50IHRvIGEgaG90LXVucGx1ZyBhbmQgcmUtcGx1ZyBvZiBhbg0KPmVuZHBvaW50Lg0KPg0K
+Pk5vdGUgdGhhdCB0aGlzIGRvZXMgbm90IGNoYW5nZSB0aGUgbWFzayB2YWx1ZXMgZnJvbSB0aGUg
+ZGVmYXVsdC4gVGhhdCBhd2FpdHMNCj5DWEwgX09TQyBzdXBwb3J0IHRvIGRldGVybWluZSB3aGV0
+aGVyIHBsYXRmb3JtIGZpcm13YXJlIGlzIGluIGNvbnRyb2wgb2YgdGhlDQo+bWFzayByZWdpc3Rl
+cnMuDQo+DQo+U2lnbmVkLW9mZi1ieTogRGFuIFdpbGxpYW1zIDxkYW4uai53aWxsaWFtc0BpbnRl
+bC5jb20+DQo+LS0tDQo+IGRyaXZlcnMvY3hsL2NvcmUvbWVtZGV2LmMgfCAgICAxDQo+IGRyaXZl
+cnMvY3hsL2N4bG1lbS5oICAgICAgfCAgICAyICsNCj4gZHJpdmVycy9jeGwvcGNpLmMgICAgICAg
+ICB8ICAxMDkNCj4rKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysN
+Cj4gMyBmaWxlcyBjaGFuZ2VkLCAxMTIgaW5zZXJ0aW9ucygrKQ0KPg0KPmRpZmYgLS1naXQgYS9k
+cml2ZXJzL2N4bC9jb3JlL21lbWRldi5jIGIvZHJpdmVycy9jeGwvY29yZS9tZW1kZXYuYyBpbmRl
+eA0KPjFmNzZiMjhmOTgyNi4uMjIzZDUxMjc5MGUxIDEwMDY0NA0KPi0tLSBhL2RyaXZlcnMvY3hs
+L2NvcmUvbWVtZGV2LmMNCj4rKysgYi9kcml2ZXJzL2N4bC9jb3JlL21lbWRldi5jDQo+QEAgLTM0
+MSw2ICszNDEsNyBAQCBzdHJ1Y3QgY3hsX21lbWRldiAqZGV2bV9jeGxfYWRkX21lbWRldihzdHJ1
+Y3QNCj5jeGxfZGV2X3N0YXRlICpjeGxkcykNCj4gCSAqIG5lZWRlZCBhcyB0aGlzIGlzIG9yZGVy
+ZWQgd2l0aCBjZGV2X2FkZCgpIHB1Ymxpc2hpbmcgdGhlIGRldmljZS4NCj4gCSAqLw0KPiAJY3hs
+bWQtPmN4bGRzID0gY3hsZHM7DQo+KwljeGxkcy0+Y3hsbWQgPSBjeGxtZDsNCj4NCj4gCWNkZXYg
+PSAmY3hsbWQtPmNkZXY7DQo+IAlyYyA9IGNkZXZfZGV2aWNlX2FkZChjZGV2LCBkZXYpOw0KPmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2N4bC9jeGxtZW0uaCBiL2RyaXZlcnMvY3hsL2N4bG1lbS5oIGlu
+ZGV4DQo+NWQzM2NlMjRmZTA5Li5mNThlMTY5NTE0MTQgMTAwNjQ0DQo+LS0tIGEvZHJpdmVycy9j
+eGwvY3hsbWVtLmgNCj4rKysgYi9kcml2ZXJzL2N4bC9jeGxtZW0uaA0KPkBAIC0xMTcsNiArMTE3
+LDcgQEAgc3RydWN0IGN4bF9lbmRwb2ludF9kdnNlY19pbmZvIHsNCj4gICogQ3VycmVudGx5IG9u
+bHkgbWVtb3J5IGRldmljZXMgYXJlIHJlcHJlc2VudGVkLg0KPiAgKg0KPiAgKiBAZGV2OiBUaGUg
+ZGV2aWNlIGFzc29jaWF0ZWQgd2l0aCB0aGlzIENYTCBzdGF0ZQ0KPisgKiBAY3hsbWQ6IFRoZSBk
+ZXZpY2UgcmVwcmVzZW50aW5nIHRoZSBDWEwubWVtIGNhcGFiaWxpdGllcyBvZiBAZGV2DQo+ICAq
+IEByZWdzOiBQYXJzZWQgcmVnaXN0ZXIgYmxvY2tzDQo+ICAqIEBjeGxfZHZzZWM6IE9mZnNldCB0
+byB0aGUgUENJZSBkZXZpY2UgRFZTRUMNCj4gICogQHBheWxvYWRfc2l6ZTogU2l6ZSBvZiBzcGFj
+ZSBmb3IgcGF5bG9hZCBAQCAtMTQ4LDYgKzE0OSw3IEBAIHN0cnVjdA0KPmN4bF9lbmRwb2ludF9k
+dnNlY19pbmZvIHsNCj4gICovDQo+IHN0cnVjdCBjeGxfZGV2X3N0YXRlIHsNCj4gCXN0cnVjdCBk
+ZXZpY2UgKmRldjsNCj4rCXN0cnVjdCBjeGxfbWVtZGV2ICpjeGxtZDsNCj4NCj4gCXN0cnVjdCBj
+eGxfcmVncyByZWdzOw0KPiAJaW50IGN4bF9kdnNlYzsNCj5kaWZmIC0tZ2l0IGEvZHJpdmVycy9j
+eGwvcGNpLmMgYi9kcml2ZXJzL2N4bC9wY2kuYyBpbmRleA0KPmJkZTg5Mjk0NTBmMC4uODIzY2Jm
+YTA5M2ZhIDEwMDY0NA0KPi0tLSBhL2RyaXZlcnMvY3hsL3BjaS5jDQo+KysrIGIvZHJpdmVycy9j
+eGwvcGNpLmMNCj5AQCAtOCw2ICs4LDcgQEANCj4gI2luY2x1ZGUgPGxpbnV4L211dGV4Lmg+DQo+
+ICNpbmNsdWRlIDxsaW51eC9saXN0Lmg+DQo+ICNpbmNsdWRlIDxsaW51eC9wY2kuaD4NCj4rI2lu
+Y2x1ZGUgPGxpbnV4L2Flci5oPg0KPiAjaW5jbHVkZSA8bGludXgvaW8uaD4NCj4gI2luY2x1ZGUg
+ImN4bG1lbS5oIg0KPiAjaW5jbHVkZSAiY3hscGNpLmgiDQo+QEAgLTUzMyw2ICs1MzQsMTEgQEAg
+c3RhdGljIHZvaWQgY3hsX2R2c2VjX3JhbmdlcyhzdHJ1Y3QgY3hsX2Rldl9zdGF0ZQ0KPipjeGxk
+cykNCj4gCWluZm8tPnJhbmdlcyA9IF9fY3hsX2R2c2VjX3JhbmdlcyhjeGxkcywgaW5mbyk7ICB9
+DQo+DQo+K3N0YXRpYyB2b2lkIGRpc2FibGVfYWVyKHZvaWQgKnBkZXYpDQo+K3sNCj4rCXBjaV9k
+aXNhYmxlX3BjaWVfZXJyb3JfcmVwb3J0aW5nKHBkZXYpOw0KPit9DQo+Kw0KPiBzdGF0aWMgaW50
+IGN4bF9wY2lfcHJvYmUoc3RydWN0IHBjaV9kZXYgKnBkZXYsIGNvbnN0IHN0cnVjdCBwY2lfZGV2
+aWNlX2lkICppZCkNCj57DQo+IAlzdHJ1Y3QgY3hsX3JlZ2lzdGVyX21hcCBtYXA7DQo+QEAgLTU1
+NCw2ICs1NjAsNyBAQCBzdGF0aWMgaW50IGN4bF9wY2lfcHJvYmUoc3RydWN0IHBjaV9kZXYgKnBk
+ZXYsIGNvbnN0DQo+c3RydWN0IHBjaV9kZXZpY2VfaWQgKmlkKQ0KPiAJY3hsZHMgPSBjeGxfZGV2
+X3N0YXRlX2NyZWF0ZSgmcGRldi0+ZGV2KTsNCj4gCWlmIChJU19FUlIoY3hsZHMpKQ0KPiAJCXJl
+dHVybiBQVFJfRVJSKGN4bGRzKTsNCj4rCXBjaV9zZXRfZHJ2ZGF0YShwZGV2LCBjeGxkcyk7DQo+
+DQo+IAljeGxkcy0+c2VyaWFsID0gcGNpX2dldF9kc24ocGRldik7DQo+IAljeGxkcy0+Y3hsX2R2
+c2VjID0gcGNpX2ZpbmRfZHZzZWNfY2FwYWJpbGl0eSggQEAgLTYxMCw2ICs2MTcsMTQgQEANCj5z
+dGF0aWMgaW50IGN4bF9wY2lfcHJvYmUoc3RydWN0IHBjaV9kZXYgKnBkZXYsIGNvbnN0IHN0cnVj
+dCBwY2lfZGV2aWNlX2lkICppZCkNCj4gCWlmIChJU19FUlIoY3hsbWQpKQ0KPiAJCXJldHVybiBQ
+VFJfRVJSKGN4bG1kKTsNCj4NCj4rCWlmIChjeGxkcy0+cmVncy5yYXMpIHsNCj4rCQlwY2lfZW5h
+YmxlX3BjaWVfZXJyb3JfcmVwb3J0aW5nKHBkZXYpOw0KPisJCXJjID0gZGV2bV9hZGRfYWN0aW9u
+X29yX3Jlc2V0KCZwZGV2LT5kZXYsIGRpc2FibGVfYWVyLA0KPnBkZXYpOw0KPisJCWlmIChyYykN
+Cj4rCQkJcmV0dXJuIHJjOw0KPisJfQ0KPisJcGNpX3NhdmVfc3RhdGUocGRldik7DQo+Kw0KPiAJ
+aWYgKHJhbmdlX2xlbigmY3hsZHMtPnBtZW1fcmFuZ2UpICYmDQo+SVNfRU5BQkxFRChDT05GSUdf
+Q1hMX1BNRU0pKQ0KPiAJCXJjID0gZGV2bV9jeGxfYWRkX252ZGltbSgmcGRldi0+ZGV2LCBjeGxt
+ZCk7DQo+DQo+QEAgLTYyMywxMCArNjM4LDEwNCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBjaV9k
+ZXZpY2VfaWQgY3hsX21lbV9wY2lfdGJsW10NCj49IHsgIH07ICBNT0RVTEVfREVWSUNFX1RBQkxF
+KHBjaSwgY3hsX21lbV9wY2lfdGJsKTsNCj4NCj4rLyoNCj4rICogTG9nIHRoZSBzdGF0ZSBvZiB0
+aGUgUkFTIHN0YXR1cyByZWdpc3RlcnMgYW5kIHByZXBhcmUgdGhlbSB0byBsb2cNCj4rdGhlDQo+
+KyAqIG5leHQgZXJyb3Igc3RhdHVzLg0KPisgKi8NCj4rc3RhdGljIHZvaWQgY3hsX3JlcG9ydF9h
+bmRfY2xlYXIoc3RydWN0IGN4bF9kZXZfc3RhdGUgKmN4bGRzKSB7DQo+KwlzdHJ1Y3QgY3hsX21l
+bWRldiAqY3hsbWQgPSBjeGxkcy0+Y3hsbWQ7DQo+KwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmY3hs
+bWQtPmRldjsNCj4rCXZvaWQgX19pb21lbSAqYWRkcjsNCj4rCXUzMiBzdGF0dXM7DQo+Kw0KPisJ
+aWYgKCFjeGxkcy0+cmVncy5yYXMpDQo+KwkJcmV0dXJuOw0KSW4gdGhlIGN4bF9lcnJvcl9kZXRl
+Y3RlZCAoKSBtYXkgbmVlZCB0byByZXR1cm4gUENJX0VSU19SRVNVTFRfTk9ORQ0KZm9yIHRoZSBm
+b2xsb3dpbmcgY2FzZXMsIGlmIGV4aXN0LA0KMS4gaWYgKCFjeGxkcy0+cmVncy5yYXMpLA0KMi4g
+aWYgYW55IGVycm9ycyB3b3VsZCBiZSByZXBvcnRlZCBkdXJpbmcgdGhlIGRldiBpbml0aWFsaXph
+dGlvbi4gDQoNCj4rDQo+KwlhZGRyID0gY3hsZHMtPnJlZ3MucmFzICsgQ1hMX1JBU19VTkNPUlJF
+Q1RBQkxFX1NUQVRVU19PRkZTRVQ7DQo+KwlzdGF0dXMgPSByZWFkbChhZGRyKTsNCj4rCWlmIChz
+dGF0dXMgJiBDWExfUkFTX1VOQ09SUkVDVEFCTEVfU1RBVFVTX01BU0spIHsNCj4rCQlkZXZfd2Fy
+bihjeGxkcy0+ZGV2LCAiJXM6IHVuY29ycmVjdGFibGUgc3RhdHVzOiAlIzA4eFxuIiwNCj4rCQkJ
+IGRldl9uYW1lKGRldiksIHN0YXR1cyk7DQo+KwkJd3JpdGVsKHN0YXR1cyAmIENYTF9SQVNfVU5D
+T1JSRUNUQUJMRV9TVEFUVVNfTUFTSywNCj5hZGRyKTsNCj4rCX0NCkZvciB0aGUgdW5jb3JyZWN0
+YWJsZSBub24tZmF0YWwgZXJyb3JzLCBpZiBhbnksIG1heSBuZWVkIHRvIHJldHVybiBQQ0lfRVJT
+X1JFU1VMVF9ORUVEX1JFU0VUDQp0byB0cmlnZ2VyIHRoZSBzbG90IHJlc2V0IHRvIHByZXZlbnQg
+bW9yZSBzZXJpb3VzIGlzc3VlcyBsYXRlci4gRm9yIHRoaXMgY2FzZSB0aGUgc3RhdGUgd291bGQg
+YmUNCiJwY2lfY2hhbm5lbF9pb19ub3JtYWwiLg0KIA0KPisNCj4rCWFkZHIgPSBjeGxkcy0+cmVn
+cy5yYXMgKyBDWExfUkFTX0NPUlJFQ1RBQkxFX1NUQVRVU19PRkZTRVQ7DQo+KwlzdGF0dXMgPSBy
+ZWFkbChhZGRyKTsNCj4rCWlmIChzdGF0dXMgJiBDWExfUkFTX0NPUlJFQ1RBQkxFX1NUQVRVU19N
+QVNLKSB7DQo+KwkJZGV2X3dhcm4oY3hsZHMtPmRldiwgIiVzOiBjb3JyZWN0YWJsZSBzdGF0dXM6
+ICUjMDh4XG4iLA0KPisJCQkgZGV2X25hbWUoZGV2KSwgc3RhdHVzKTsNCj4rCQl3cml0ZWwoc3Rh
+dHVzICYgQ1hMX1JBU19DT1JSRUNUQUJMRV9TVEFUVVNfTUFTSywNCj5hZGRyKTsNCj4rCX0NCj4r
+fQ0KPisNCj4rc3RhdGljIHBjaV9lcnNfcmVzdWx0X3QgY3hsX2Vycm9yX2RldGVjdGVkKHN0cnVj
+dCBwY2lfZGV2ICpwZGV2LA0KPisJCQkJCSAgIHBjaV9jaGFubmVsX3N0YXRlX3Qgc3RhdGUpDQo+
+K3sNCj4rCXN0cnVjdCBjeGxfZGV2X3N0YXRlICpjeGxkcyA9IHBjaV9nZXRfZHJ2ZGF0YShwZGV2
+KTsNCj4rCXN0cnVjdCBjeGxfbWVtZGV2ICpjeGxtZCA9IGN4bGRzLT5jeGxtZDsNCj4rCXN0cnVj
+dCBkZXZpY2UgKmRldiA9ICZjeGxtZC0+ZGV2Ow0KPisNCj4rCS8qDQo+KwkgKiBBIGZyb3plbiBj
+aGFubmVsIGluZGljYXRlcyBhbiBpbXBlbmRpbmcgcmVzZXQgd2hpY2ggaXMgZmF0YWwgdG8NCj4r
+CSAqIENYTC5tZW0gb3BlcmF0aW9uLCBhbmQgd2lsbCBsaWtlbHkgY3Jhc2ggdGhlIHN5c3RlbS4g
+T24gdGhlIG9mZg0KPisJICogY2hhbmNlIHRoZSBzaXR1YXRpb24gaXMgcmVjb3ZlcmFibGUgZHVt
+cCB0aGUgc3RhdHVzIG9mIHRoZSBSQVMNCj4rCSAqIGNhcGFiaWxpdHkgcmVnaXN0ZXJzIGFuZCBi
+b3VuY2UgdGhlIGFjdGl2ZSBzdGF0ZSBvZiB0aGUgbWVtZGV2Lg0KPisJICovDQo+KwljeGxfcmVw
+b3J0X2FuZF9jbGVhcihjeGxkcyk7DQo+Kw0KPisJc3dpdGNoIChzdGF0ZSkgew0KPisJY2FzZSBw
+Y2lfY2hhbm5lbF9pb19ub3JtYWw6DQo+KwkJcmV0dXJuIFBDSV9FUlNfUkVTVUxUX0NBTl9SRUNP
+VkVSOw0KPisJY2FzZSBwY2lfY2hhbm5lbF9pb19mcm96ZW46DQo+KwkJZGV2X3dhcm4oJnBkZXYt
+PmRldiwNCj4rCQkJICIlczogZnJvemVuIHN0YXRlIGVycm9yIGRldGVjdGVkLCBkaXNhYmxlDQo+
+Q1hMLm1lbVxuIiwNCj4rCQkJIGRldl9uYW1lKGRldikpOw0KPisJCWRldmljZV9yZWxlYXNlX2Ry
+aXZlcihkZXYpOw0KPisJCXJldHVybiBQQ0lfRVJTX1JFU1VMVF9ORUVEX1JFU0VUOw0KPisJY2Fz
+ZSBwY2lfY2hhbm5lbF9pb19wZXJtX2ZhaWx1cmU6DQo+KwkJZGV2X3dhcm4oJnBkZXYtPmRldiwN
+Cj4rCQkJICJmYWlsdXJlIHN0YXRlIGVycm9yIGRldGVjdGVkLCByZXF1ZXN0IGRpc2Nvbm5lY3Rc
+biIpOw0KPisJCXJldHVybiBQQ0lfRVJTX1JFU1VMVF9ESVNDT05ORUNUOw0KPisJfQ0KPisJcmV0
+dXJuIFBDSV9FUlNfUkVTVUxUX05FRURfUkVTRVQ7DQo+K30NCj4rDQo+K3N0YXRpYyBwY2lfZXJz
+X3Jlc3VsdF90IGN4bF9zbG90X3Jlc2V0KHN0cnVjdCBwY2lfZGV2ICpwZGV2KSB7DQo+KwlzdHJ1
+Y3QgY3hsX2Rldl9zdGF0ZSAqY3hsZHMgPSBwY2lfZ2V0X2RydmRhdGEocGRldik7DQo+KwlzdHJ1
+Y3QgY3hsX21lbWRldiAqY3hsbWQgPSBjeGxkcy0+Y3hsbWQ7DQo+KwlzdHJ1Y3QgZGV2aWNlICpk
+ZXYgPSAmY3hsbWQtPmRldjsNCj4rDQo+KwlkZXZfaW5mbygmcGRldi0+ZGV2LCAiJXM6IHJlc3Rh
+cnQgQ1hMLm1lbSBhZnRlciBzbG90IHJlc2V0XG4iLA0KPisJCSBkZXZfbmFtZShkZXYpKTsNCj4r
+CXBjaV9yZXN0b3JlX3N0YXRlKHBkZXYpOw0KMS4gRG8gd2UgbmVlZCB0byBjYWxsIHBjaV9zYXZl
+X3N0YXRlKHBkZXYpIGhlcmUgYWZ0ZXIgdGhlIHJlc2V0PyB0aG91Z2ggcGNpX3NhdmVfc3RhdGUo
+cGRldikgaXMgYmVpbmcgaW52b2tlZCBpbiB0aGUgIA0KY3hsX3BjaV9wcm9iZSgpLg0KDQo+Kwlp
+ZiAoZGV2aWNlX2F0dGFjaChkZXYpIDw9IDApDQo+KwkJcmV0dXJuIFBDSV9FUlNfUkVTVUxUX0RJ
+U0NPTk5FQ1Q7DQpNeSB1bmRlcnN0YW5kaW5nIGlzIHRoYXQgcGNpX2Rpc2FibGVfcGNpZV9lcnJv
+cl9yZXBvcnRpbmcocGRldikgd291bGQgYmUgY2FsbGVkDQppbiB0aGUgZGlzYWJsZV9hZXIgKCkg
+aW4gdGhlIHJlc2V0LCANCnBjaV9lbmFibGVfcGNpZV9lcnJvcl9yZXBvcnRpbmcocGRldikgbWF5
+IG5lZWQgdG8gY2FsbCBoZXJlIGFmdGVyIHRoZSByZXNldD8NCiANCj4rCXJldHVybiBQQ0lfRVJT
+X1JFU1VMVF9SRUNPVkVSRUQ7DQo+K30NCj4rDQo+K3N0YXRpYyB2b2lkIGN4bF9lcnJvcl9yZXN1
+bWUoc3RydWN0IHBjaV9kZXYgKnBkZXYpIHsNCj4rCXN0cnVjdCBjeGxfZGV2X3N0YXRlICpjeGxk
+cyA9IHBjaV9nZXRfZHJ2ZGF0YShwZGV2KTsNCj4rCXN0cnVjdCBjeGxfbWVtZGV2ICpjeGxtZCA9
+IGN4bGRzLT5jeGxtZDsNCj4rCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZjeGxtZC0+ZGV2Ow0KPisN
+Cj4rCWRldl9pbmZvKCZwZGV2LT5kZXYsICIlczogZXJyb3IgcmVzdW1lICVzXG4iLCBkZXZfbmFt
+ZShkZXYpLA0KPisJCSBkZXYtPmRyaXZlciA/ICJzdWNjZXNzZnVsIiA6ICJmYWlsZWQiKTsgfQ0K
+PisNCj4rc3RhdGljIGNvbnN0IHN0cnVjdCBwY2lfZXJyb3JfaGFuZGxlcnMgY3hsX2Vycm9yX2hh
+bmRsZXJzID0gew0KPisJLmVycm9yX2RldGVjdGVkCT0gY3hsX2Vycm9yX2RldGVjdGVkLA0KPisJ
+LnNsb3RfcmVzZXQJPSBjeGxfc2xvdF9yZXNldCwNCj4rCS5yZXN1bWUJCT0gY3hsX2Vycm9yX3Jl
+c3VtZSwNCklmIHRoZSBGTFIgKEZ1bmN0aW9uIGxldmVsIHJlc2V0KSBzdXBwb3J0ZWQsIHBsZWFz
+ZSBhZGQgdGhlIGNvcnJlc3BvbmRpbmcgY2FsbGJhY2sgZnVuY3Rpb25zDQpyZXNldF9wcmVwYXJl
+KC4uKSBhbmQgcmVzZXRfZG9uZSguLikuDQoNCj4rfTsNCj4rDQo+IHN0YXRpYyBzdHJ1Y3QgcGNp
+X2RyaXZlciBjeGxfcGNpX2RyaXZlciA9IHsNCj4gCS5uYW1lCQkJPSBLQlVJTERfTU9ETkFNRSwN
+Cj4gCS5pZF90YWJsZQkJPSBjeGxfbWVtX3BjaV90YmwsDQo+IAkucHJvYmUJCQk9IGN4bF9wY2lf
+cHJvYmUsDQo+KwkuZXJyX2hhbmRsZXIJCT0gJmN4bF9lcnJvcl9oYW5kbGVycywNCj4gCS5kcml2
+ZXIJPSB7DQo+IAkJLnByb2JlX3R5cGUJPSBQUk9CRV9QUkVGRVJfQVNZTkNIUk9OT1VTLA0KPiAJ
+fSwNCg0KDQpUaGFua3MsDQpTaGlqdQ0K
