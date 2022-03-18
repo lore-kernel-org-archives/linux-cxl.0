@@ -2,192 +2,634 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A99F1C433F5
-	for <linux-cxl@archiver.kernel.org>; Fri, 18 Mar 2022 21:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4155FC433EF
+	for <linux-cxl@archiver.kernel.org>; Fri, 18 Mar 2022 22:12:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233695AbiCRVfe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 18 Mar 2022 17:35:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48890 "EHLO
+        id S241261AbiCRWN2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 18 Mar 2022 18:13:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231609AbiCRVfe (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Mar 2022 17:35:34 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D68F31D9170;
-        Fri, 18 Mar 2022 14:34:14 -0700 (PDT)
+        with ESMTP id S233782AbiCRWN1 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Mar 2022 18:13:27 -0400
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6717730A89C
+        for <linux-cxl@vger.kernel.org>; Fri, 18 Mar 2022 15:12:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647639254; x=1679175254;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=5QtKRMcT3LWr2JTAgPsXOCHSKb/V6i3YHU+5rcpyaDw=;
-  b=PitZrmg/TRZzN4zqvAx7Kej3q5YRnUp7kJovdIB7/OL30ztawINshYjI
-   eKrnvGZ7RHsxtbz3AWUjE9JcCEFrp3CYF47oq2jGQDQyBP3GNJc86eJfi
-   gP87vJd98kMXESojXLrojx4f8Jg9qV7LlWtz+pQaweRbeCl28YXD60odU
-   Whx/YaIAhA1XzxNTXcHjpnQ/NgWvY+B24zuqIZt7spSgxVTcpflj10/BH
-   Q7izHUnTHnGqcT4+3bm8R3cH9wBti+i5nhmCv+DteVBCjw8LCCM+C3ovF
-   iIKwuLDynPNKN4paBOiGyC0hUz6fIRgiFYEscw+4LQz+gf5e4RnIQ2onJ
+  t=1647641527; x=1679177527;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OyLYFG0M9Kq6o7xX148Ww/WmeDlavAVvkprRCXfWPEk=;
+  b=DUSscrOAi8qPtC3VtBkvCqt03Q0fjlJfK4rBF6z2etYDaVKE/lC5MZXR
+   H7GhEy8qaAxVI4EVeOfuM8hfZ3bBoLLOO78tXL/xU42THX/tH4LWpYB43
+   r0q4grlD05xY5jhdZpusNBd2DaRVgKLZB35y2dJf5opEUq8k2WDWhhUBI
+   as2q7ssTwX33ut2gRjvMDXELT0FxPW3rBOvxnEqUvgjMnEXeRf6dqVIva
+   CkxutDFLgsbYlrHwRPVJQNT7EesuyuWMsNAXvSnHU9EOatVxvZuWWcOxE
+   +4GmSTrfVrODT17N9vdRL+qF6aXyYpL82Z8pCwnbWK6oiMQIGJPnkHqv2
    g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10290"; a="237841378"
+X-IronPort-AV: E=McAfee;i="6200,9189,10290"; a="317948490"
 X-IronPort-AV: E=Sophos;i="5.90,192,1643702400"; 
-   d="scan'208";a="237841378"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2022 14:34:14 -0700
-X-ExtLoop1: 1
+   d="scan'208";a="317948490"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2022 15:12:07 -0700
 X-IronPort-AV: E=Sophos;i="5.90,192,1643702400"; 
-   d="scan'208";a="499397857"
-Received: from fmsmsx605.amr.corp.intel.com ([10.18.126.85])
-  by orsmga003.jf.intel.com with ESMTP; 18 Mar 2022 14:34:14 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Fri, 18 Mar 2022 14:34:13 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21 via Frontend Transport; Fri, 18 Mar 2022 14:34:13 -0700
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.170)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.21; Fri, 18 Mar 2022 14:34:13 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YqaqXVCgfPs5okIcWAORqxWCxlnjx6AAMe7Xo5rK22bS86VkZvZkzH9+YthoxEpOdD2+rtJnd7x23i57PcVZR5lP68+PPgvlj/V/9LjvSn5i03bxi/o1lb2JzxlnhkScm23hOeADRsB2ZJWMI2rCtumTpx4nPLy/QSquGmB/yWLR4ZNcIXI0DTmlZivLyC+vy51AgIBejTBfoxo9wntxDonfjHiiznoMmiP5L0cSRfM9MLic9tdNgl5ugVy7pyUVhGJ1MAQy70jZpP/aBp5qrcknPul1iuzq6Qemq5TAi3fPHLQQKlbQLgKxFd1RwbH2jOP5HHm8r+Ii8fx51cnZSA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5QtKRMcT3LWr2JTAgPsXOCHSKb/V6i3YHU+5rcpyaDw=;
- b=cGe/jobCU4LeFfd1CcuMEwff6kLpKXVGxQGqhEfPLPk/BfUsZ0+Bcv3f3wCmkXoy9HeYq5MjIq7tX0XO4QF1HFC5aGXt9FszdpQPYbeokX/Gv+0WX3OqL91cxMztqJj58GHK7KpOQDmDSXtiz3QEcUZchWQY+08x2dXj1VBXuL6GqqyKAa8//B99N3JV6U/tQyHyJuZAwd371d54V8MbdptxLH6Z3A9hfHK3EJu1smMrlZFgONV07UomljbtjJMeU2eJ1LNgG/fhiQ0409kE2m5X/ZTUn6MtKzlBBsj8rA1r4v4OXb2ugo3ogUGkvtN78SjhNZoZoHlUWVwKNEE4PA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MN2PR11MB3999.namprd11.prod.outlook.com (2603:10b6:208:154::32)
- by MWHPR11MB0062.namprd11.prod.outlook.com (2603:10b6:301:67::34) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5081.17; Fri, 18 Mar
- 2022 21:34:12 +0000
-Received: from MN2PR11MB3999.namprd11.prod.outlook.com
- ([fe80::d898:84ee:d6a:4eb1]) by MN2PR11MB3999.namprd11.prod.outlook.com
- ([fe80::d898:84ee:d6a:4eb1%6]) with mapi id 15.20.5081.018; Fri, 18 Mar 2022
- 21:34:11 +0000
-From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
-To:     "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Moore, Robert" <robert.moore@intel.com>,
-        "Jonathan.Cameron@Huawei.com" <Jonathan.Cameron@Huawei.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH 0/2] acpi: add support for CXL _OSC
-Thread-Topic: [PATCH 0/2] acpi: add support for CXL _OSC
-Thread-Index: AQHYOw9lRF/soW7qY02/37fs6UzftazFqa8A
-Date:   Fri, 18 Mar 2022 21:34:11 +0000
-Message-ID: <ca52884c6d627e9a6efdbda133fc88d03672b71c.camel@intel.com>
-References: <20220318213004.2287428-1-vishal.l.verma@intel.com>
-In-Reply-To: <20220318213004.2287428-1-vishal.l.verma@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.42.4 (3.42.4-1.fc35) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8f4ce74a-601b-41b7-1408-08da09270b03
-x-ms-traffictypediagnostic: MWHPR11MB0062:EE_
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
-x-microsoft-antispam-prvs: <MWHPR11MB006280A572B03B804652C589C7139@MWHPR11MB0062.namprd11.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Fxy5VjXQXTjGShGch8XdetSiansvNSAcialcLAJ4c53lfXPqBjFnNOjPg4c/XmNYFdsK4FovfBzoqnekpOfh4fgZADR2YdRNPrtwfGImUkq2mH4WSei8b/mf7iUiNVNv2A4dZnY5b0+YFzICvvOdKVtH2Y97Apqwb2A538uZ8m6BhUs2jm5gv6TSaXjfm0g3oo/oP+pMrw+AqJQv0GUFf+3SXwN26i2bXRsRiTGLG0buGUUn16zPapJPLcIk63+l3Hmgq01zR4O3Idfvlx+G+ZgP78ghhLi2Rf3gPzegHpWbwuTFlnvaCwXLaakxx0iDIol2I3/SKjbcb8XCzyj/e6XuI4fQEAQRzSn9wrAZml2EqzD1HMemFJ/bt4ZjABKCg8xuZXb1Uk5haUYXCtmSnEAte8RNzA0xFYE1bmF0IP7lVBjkfO65/POXVADg/d07RoAya9OAd7MO9ft/SJTYVjq+PJY6uVhmFsahWRvm1OTlxG69CvhD5wTRu0iWf4lKxXAaF2FO3gz/k2fpnLyS+Y204H+Q+YcSQJW67SWzQLkEOaajB9s8UPTFg65OXGfhAaRksFY2+/gp7shrAdum8g1QgW6cuUNgzq7oLnRbaNcpTvcKsWo7R/7X4Q8Ie/LXk3kweQ17glGXILTwM8F47L+HgsCnyQ1PzC9TUR/7l/6Tll/Vw3OrAcxMoWUHB0RmS7MI+41dXiJD4YcxPHFPzfsafUWY7DGQaRzUeYUu1071hUzOW68G1porLNyaRDVMLTOH2XYCq2OPHfkxSM9NVnFGNxp3Z/Eti2KGBTbl7Rz5pR+Ww8nMiumovDU9lw+fustGGAMFS6I5k9Y3OdF24w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB3999.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(508600001)(83380400001)(86362001)(6506007)(6636002)(6486002)(966005)(6512007)(5660300002)(2906002)(8936002)(8676002)(36756003)(37006003)(38100700002)(316002)(82960400001)(71200400001)(2616005)(122000001)(38070700005)(6862004)(4326008)(26005)(186003)(91956017)(66446008)(64756008)(66556008)(66476007)(66946007)(76116006)(54906003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?R3hxMzRWV3I1VExwVzM5WWl5UUN2c2REdEhDTW5aYWs3NkVRbG1LbkhmMDdT?=
- =?utf-8?B?dElUa01FTEtPR0FhVnJYQm4rQzlMdG5zeEZoT3d2bkorNGx0OTNyOXZvRXc4?=
- =?utf-8?B?d3Rjb29hZzkyMGRiNExwNTZJd2JsbWRNUlRKMGtEaFFDYWZVRDRnUmVJMGc2?=
- =?utf-8?B?ZkVKcXU1d0pESFRkTk5VRjI3eXJwZkQvd2ZzYlVMR0E4Rk54TFIzNEtCdXhr?=
- =?utf-8?B?SEROSWVoYjhVZTVoMGNNM3JVSGRIUU1PZTZTVENVMXdNbmh1VmtkUXhGaXFJ?=
- =?utf-8?B?YkpJV1pJVHJTcXFOWldMaDR6alNjU3Mwd29UYWZMczhWSkFUNEcxTHpnc0Jt?=
- =?utf-8?B?aEp1OFlXekxBdVRzK1BhRUdmWGowRlpabklFSHRWV2o5Z1BIYlF3ZWdYcTVw?=
- =?utf-8?B?SElXUGJIT2ZPMXhrV0FjRXpOdGdwWndXUDFXUFlnSjlyYXVWTjdIVGYwNEs5?=
- =?utf-8?B?eWptTkp1TXZlM1hFOXI0dmxuelU1NXZkaXB4d1d6UzZuV2JJS3E5MHpOVk1t?=
- =?utf-8?B?TXI3dHc1S1ZwOXArREFuUnY1TFlXWDNSS1pqendwNThwOG5iQ2hMVkNNVEVl?=
- =?utf-8?B?VjMyaEtaZitJYndKbHZ6elZGMUhpUERxeHBsb3ZDOTVhaytVeUtCekE3WGpV?=
- =?utf-8?B?RVhaejVsbnphbUNwZ1ZFZlMraFk2MTJUY1huMTRkcHFPc1pzcndabnJiT0pm?=
- =?utf-8?B?TERpZmhvKytSdTloTTNWRW1YNndpZFpFcWZPN250eHNSTzhzZTNQL0FMOW5r?=
- =?utf-8?B?eHJzRHpBMUlsaVdyZlBuM2NTSHYyS1V5TXB3NTB6RUR0WmZLL0cwbmZaRjJZ?=
- =?utf-8?B?ZzRVNUNQcHJlSGdhdENOckRFUzlLTlBqSEhuUjNmUjhaaVkyTVA3NDRmWlRp?=
- =?utf-8?B?SlJwZjN4ZWRIVDhhUDhQRE9TUFdBL3BpYjdRV3oyRHZFbDJPS2ZwWUlWaTUz?=
- =?utf-8?B?SjhaMlZRWVp3cklHdldGYW5uZkdlOVA4RjBVWmMrVGoyeDNYUjBKT05wd1NC?=
- =?utf-8?B?SzdBK2xicFJhTDFGRElXSHU2NGMzcHBTVXhnY29CYWZKVGp1eU9YNTgxaStG?=
- =?utf-8?B?MDRwM1BwL1dvb0dBbTlqVzU2MjNaanYyUWtjR2pvMFNTU0o2K2grd2REYWdN?=
- =?utf-8?B?MjVKYzRMOC9KQStJbzI5OUZZOFVzcEIvbWpMblo3dWt5M0Z2Y3p0RUpWRHpz?=
- =?utf-8?B?WWpMNW9jTmtqcXRRSlNBZTlPZitTYjFQenRGK3I1NGhQZEI0d05KbWE1NXpZ?=
- =?utf-8?B?VWQxSzBBMmNPb0hrTzlkSy9Db3FyL1VPR1laRGFHdjI5SENsV1FNVGJmdDFL?=
- =?utf-8?B?SUp5WjhMREVDV01sOGNLOFRiUXF2RU1udjlpTkJ2bHBObnR2QnpEa2NTT3Za?=
- =?utf-8?B?OEVuSHdvN2FuQzdWVytUQ3NXZE9rOXAxaUFqOGQvTFZQS0dOOG55T2swOUFT?=
- =?utf-8?B?UnZLejNEUDZkcm1Ed0QvU0dwdm1zNUtZS0RrQmxHQmd2azdLWXdRN1BpRkxY?=
- =?utf-8?B?bURRN2htMGRFZG1KY20rYW0xdDY5aUZaRHYvQ0hRMUc1WFNQVVpmN3lZTW1C?=
- =?utf-8?B?a0o2ODlsWERZaXlaODhrYjBSNjR1aEJuNmtDRlNubUx0TEhzeStZd2FacTNa?=
- =?utf-8?B?RDh6c3B1Qzg3NTlXQUdXL0N2dzkrM2FITmJHTE5RTmxsL0t1R0xDZDkrc2NU?=
- =?utf-8?B?VU9ud1p0RlVYSkhDY2poc0d1cWtCeEZOQWoxQmNsWnIxMExFRnV2M1VFK01W?=
- =?utf-8?B?ZDhuVk1QdzlyMEZ1WW8zamhBTi9vSjBYMGNUYXlSdjIzS2prdWhKcUo0Qm9t?=
- =?utf-8?B?N2dyY0oxSDd5WjdxdHExQVd1VDJESGNXWU9CenUrUUpmWjcxZUFZaVNJd1Ez?=
- =?utf-8?B?L0RwcFdBUldPb24wcXpNanhUTFlYaG9acCswZWovcDFiaklzMkhzbkU1a2No?=
- =?utf-8?B?OHdpMk9qcStEUFNjb09WVXo4cWlVNU1ML0dDdW9WK0tlNGVhNVUyY25NWndU?=
- =?utf-8?B?S0RCY3V6NDF3PT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F716CA31B2815349A1CEFEFBC148C0FE@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+   d="scan'208";a="542063027"
+Received: from mwilkins-mobl2.amr.corp.intel.com (HELO intel.com) ([10.252.141.3])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2022 15:12:06 -0700
+Date:   Fri, 18 Mar 2022 15:12:00 -0700
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, patches@lists.linux.dev,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: Re: [RFC PATCH 2/7] cxl/core: Distinguish cxl_decoder into types
+Message-ID: <20220318221200.2zj3b7paamsecshb@intel.com>
+References: <20220316230303.1813397-1-ben.widawsky@intel.com>
+ <20220316230303.1813397-3-ben.widawsky@intel.com>
+ <CAPcyv4j60_puoCe6q2KqWo8f-HzfwumRtgXqyj1Jr9ht+SBhKg@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR11MB3999.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f4ce74a-601b-41b7-1408-08da09270b03
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2022 21:34:11.8690
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9DC8kcHxN5ILivOWchDvVDeKPaPB487QcOvry6eurfoDBhXlPGJnjP56XezrUZQQSSUv/7wWoC+ro0ImiaCn1GTU6zRqPxKhCKwy0ND/cWk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB0062
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4j60_puoCe6q2KqWo8f-HzfwumRtgXqyj1Jr9ht+SBhKg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-T24gRnJpLCAyMDIyLTAzLTE4IGF0IDE1OjMwIC0wNjAwLCBWaXNoYWwgVmVybWEgd3JvdGU6DQo+
-IENoYW5nZXMgc2luY2UgdjFbMV06DQo+IC0gVXBkYXRlIGNoYW5nZWxvZ3MgZm9yIGJvdGggcGF0
-Y2hlcyAoRGFuKQ0KPiAtIEZpeCBzdXBwb3J0L2NvbnRyb2wgY2FsY3VsYXRpb24gdG8gYmUgYmFz
-ZWQgb2ZmIENPTkZJR19NRU1PUllfRkFJTFVSRQ0KPiDCoCAoRGFuKQ0KPiAtIFVzZSBkZWZpbmVz
-IGluc3RlYWQgb2YgbWFnaWMgbnVtYmVycyBpbiBhIGZldyBwbGFjZXMgaW4gcGF0Y2ggMg0KPiDC
-oCAoSm9uYXRoYW4pDQo+IC0gRml4ICdjYXBidWYnIGFycmF5IHRvIGJlIHRoZSBjb3JyZWN0IDUg
-ZWxlbWVudHMuIEFDUEkgcHJldmlvdXNseSBoYWQNCj4gwqAgJzYnIHdoZXJlIG9ubHkgMyB3ZXJl
-IG5lZWRlZC4gV2l0aCBDWEwgY2FwYWJpbGl0aWVzLCBub3csIDUgYXJlDQo+IMKgIG5lZWRlZC4g
-KEpvbmF0aGFuKS4NCj4gLSBGaXggYSBjb3VwbGUgb2YgdW5pbml0aWFsaXplZCB2YXJpYWJsZSB3
-YXJuaW5ncyByZXBvcnRlZCBieSAwZGF5L2xrcC4NCj4gLSBEcm9wICdSRkMnIGFubm90YXRpb24g
-Zm9yIHRoZSBzZXQNCj4gDQo+IEFkZCBzdXBwb3J0IGZvciB1c2luZyB0aGUgQ1hMIGRlZmluaXRp
-b24gb2YgX09TQyB3aGVyZSBhcHBsaWNhYmxlLCBhbmQNCj4gbmVnb3RpYXRpbmcgQ1hMIHNwZWNp
-ZmljIHN1cHBvcnQgYW5kIGNvbnRyb2wgYml0cy4NCj4gDQo+IFBhdGNoIDEgYWRkcyB0aGUgbmV3
-IENYTCBfT1NDIFVVSUQsIGFuZCB1c2VzIGl0IGluc3RlYWQgb2YgdGhlIFBDSSBVVUlEDQo+IHdo
-ZW4gYSByb290IHBvcnQgaXMgQ1hMIGVuYWJsZWQuIEl0IHByb3ZpZGVzIGEgZmFsbGJhY2sgbWV0
-aG9kIGZvcg0KPiBDWEwtMS4xIHBsYXRmb3JtcyB0aGF0IG1heSBub3QgaW1wbGVtZW50IHRoZSBD
-WEwtMi4wIF9PU0MuDQo+IA0KPiBQYXRjaCAyIHBlcmZvcm1zIG5lZ290aWF0aW9uIGZvciB0aGUg
-Q1hMIHNwZWNpZmljIF9PU0Mgc3VwcG9ydCBhbmQNCj4gY29udHJvbCBiaXRzLg0KPiANCj4gSSd2
-ZSB0ZXN0ZWQgdGhlc2UgYWdhaW5zdCBhIGN1c3RvbSBxZW11WzJdLCB3aGljaCBhZGRzIHRoZSBD
-WEwgX09TQyAoaW4NCj4gYWRkaXRpb24gdG8gb3RoZXIgQ1hMIHN1cHBvcnQpLiBTcGVjaWZpY2Fs
-bHksIF9PU0Mgc3VwcG9ydCBpcyBhZGRlZA0KPiBoZXJlWzNdLg0KPiANCj4gWzFdOiBodHRwczov
-L2xvcmUua2VybmVsLm9yZy9saW51eC1jeGwvMTQ2NTE0YjJlNTIzN2EzYzAyNzIzOWE3NWFjZTY5
-ZTcyNjcxZDRjOC5jYW1lbEBpbnRlbC5jb20vVC8jdA0KPiBbMl06IGh0dHBzOi8vZ2l0bGFiLmNv
-bS9qaWMyMy9xZW11Ly0vdHJlZS9jeGwtdjctZHJhZnQtMi1mb3ItdGVzdA0KPiBbM106IGh0dHBz
-Oi8vZ2l0bGFiLmNvbS9qaWMyMy9xZW11Ly0vY29tbWl0LzMxYzg1MDU0Yjg0NjQ1ZGZiZDllOWJi
-MTRhYTM1Mjg2MTQxYzE0Y2YNCg0KTG9naXN0aWNhbCBxdWVzdGlvbiAtIFJhZmFlbCwgZG8geW91
-IGV4cGVjdCB0aGlzIHRvIGdvIHRocm91Z2ggQUNQSSwgb3INCnNob3VsZCBEYW4gcGljayBpdCB1
-cCB0byBnbyB0aHJvdWdoIHRoZSBDWEwgdHJlZT8NCg0KPiANCj4gDQo+IERhbiBXaWxsaWFtcyAo
-MSk6DQo+IMKgIFBDSS9BQ1BJOiBVc2UgQ1hMIF9PU0MgaW5zdGVhZCBvZiBQQ0llIF9PU0MNCj4g
-DQo+IFZpc2hhbCBWZXJtYSAoMSk6DQo+IMKgIGFjcGkvcGNpX3Jvb3Q6IG5lZ290aWF0ZSBDWEwg
-X09TQw0KPiANCj4gwqBpbmNsdWRlL2xpbnV4L2FjcGkuaMKgwqDCoCB8wqAgMTQgKysrDQo+IMKg
-aW5jbHVkZS9hY3BpL2FjcGlfYnVzLmggfMKgwqAgNyArLQ0KPiDCoGRyaXZlcnMvYWNwaS9wY2lf
-cm9vdC5jIHwgMjA0ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0NCj4g
-wqAzIGZpbGVzIGNoYW5nZWQsIDE5MyBpbnNlcnRpb25zKCspLCAzMiBkZWxldGlvbnMoLSkNCj4g
-DQo+IA0KPiBiYXNlLWNvbW1pdDogNzRiZTk4Nzc0ZGZiYzViOGI3OTVkYjcyNmJkNzcyZTczNWQy
-ZWRkNA0KDQo=
+On 22-03-18 14:03:41, Dan Williams wrote:
+> On Wed, Mar 16, 2022 at 4:03 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> >
+> > CXL HDM decoders have distinct properties at each level in the
+> > hierarchy. Root decoders manage host physical address space. Switch
+> > decoders manage demultiplexing of data to downstream targets. Endpoint
+> > decoders must be aware of physical media size constraints. To properly
+> > support these unique needs, create these unique structures. As endpoint
+> > decoders don't handle media size accounting, that is saved for a later
+> > patch.
+> >
+> > CXL HDM decoders do have similar architectural properties at all levels:
+> > interleave properties, flags and types. Those are retained and when
+> > possible, still utilized.
+> 
+> This looks slightly more invasive than I was expecting for example, I
+> don't think the targets array needs to move and the direct assignment
+> of resources and ranges didn't seem to need fixing. An outline of my
+> thinking below if you want to consider it:
+> 
+> >
+> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > ---
+> >  drivers/cxl/acpi.c           |   9 ++-
+> >  drivers/cxl/core/hdm.c       |   8 +--
+> >  drivers/cxl/core/port.c      |  99 ++++++++++++++++++++---------
+> >  drivers/cxl/cxl.h            | 118 +++++++++++++++++++++++++++++++----
+> >  tools/testing/cxl/test/cxl.c |   7 +--
+> >  5 files changed, 186 insertions(+), 55 deletions(-)
+> >
+> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > index 09d6811736f2..822b615a25f4 100644
+> > --- a/drivers/cxl/acpi.c
+> > +++ b/drivers/cxl/acpi.c
+> > @@ -108,8 +108,7 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+> >
+> >         cxld->flags = cfmws_to_decoder_flags(cfmws->restrictions);
+> >         cxld->target_type = CXL_DECODER_EXPANDER;
+> > -       cxld->platform_res = (struct resource)DEFINE_RES_MEM(cfmws->base_hpa,
+> > -                                                            cfmws->window_size);
+> > +       cxl_set_decoder_extent(cxld, cfmws->base_hpa, cfmws->window_size);
+> >         cxld->interleave_ways = CFMWS_INTERLEAVE_WAYS(cfmws);
+> >         cxld->interleave_granularity = CFMWS_INTERLEAVE_GRANULARITY(cfmws);
+> >
+> > @@ -120,12 +119,12 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+> >                 rc = cxl_decoder_autoremove(dev, cxld);
+> >         if (rc) {
+> >                 dev_err(dev, "Failed to add decoder for %pr\n",
+> > -                       &cxld->platform_res);
+> > +                       &to_cxl_root_decoder(cxld)->res);
+> >                 return 0;
+> >         }
+> >         dev_dbg(dev, "add: %s node: %d range %pr\n", dev_name(&cxld->dev),
+> > -               phys_to_target_node(cxld->platform_res.start),
+> > -               &cxld->platform_res);
+> > +               phys_to_target_node(to_cxl_root_decoder(cxld)->res.start),
+> > +               &to_cxl_root_decoder(cxld)->res);
+> >
+> >         return 0;
+> >  }
+> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> > index 808b19215425..83404cdb846b 100644
+> > --- a/drivers/cxl/core/hdm.c
+> > +++ b/drivers/cxl/core/hdm.c
+> > @@ -6,6 +6,7 @@
+> >
+> >  #include "cxlmem.h"
+> >  #include "core.h"
+> > +#include "cxl.h"
+> >
+> >  /**
+> >   * DOC: cxl core hdm
+> > @@ -165,10 +166,7 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+> >                 return -ENXIO;
+> >         }
+> >
+> > -       cxld->decoder_range = (struct range) {
+> > -               .start = base,
+> > -               .end = base + size - 1,
+> > -       };
+> > +       cxl_set_decoder_extent(cxld, base, size);
+> >
+> >         /* switch decoders are always enabled if committed */
+> >         if (ctrl & CXL_HDM_DECODER0_CTRL_COMMITTED) {
+> > @@ -235,7 +233,7 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
+> >                 struct cxl_decoder *cxld;
+> >
+> >                 if (is_cxl_endpoint(port))
+> > -                       cxld = cxl_endpoint_decoder_alloc(port);
+> > +                       cxld = &cxl_endpoint_decoder_alloc(port)->base;
+> >                 else
+> >                         cxld = cxl_switch_decoder_alloc(port, target_count);
+> >                 if (IS_ERR(cxld)) {
+> > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> > index bda40e91af2b..c46f0b01ce3c 100644
+> > --- a/drivers/cxl/core/port.c
+> > +++ b/drivers/cxl/core/port.c
+> > @@ -73,14 +73,8 @@ static ssize_t start_show(struct device *dev, struct device_attribute *attr,
+> >                           char *buf)
+> >  {
+> >         struct cxl_decoder *cxld = to_cxl_decoder(dev);
+> > -       u64 start;
+> >
+> > -       if (is_root_decoder(dev))
+> > -               start = cxld->platform_res.start;
+> > -       else
+> > -               start = cxld->decoder_range.start;
+> > -
+> > -       return sysfs_emit(buf, "%#llx\n", start);
+> > +       return sysfs_emit(buf, "%#llx\n", cxl_get_decoder_extent(cxld).start);
+> >  }
+> >  static DEVICE_ATTR_ADMIN_RO(start);
+> >
+> > @@ -88,14 +82,9 @@ static ssize_t size_show(struct device *dev, struct device_attribute *attr,
+> >                         char *buf)
+> >  {
+> >         struct cxl_decoder *cxld = to_cxl_decoder(dev);
+> > -       u64 size;
+> > +       struct range r = cxl_get_decoder_extent(cxld);
+> >
+> > -       if (is_root_decoder(dev))
+> > -               size = resource_size(&cxld->platform_res);
+> > -       else
+> > -               size = range_len(&cxld->decoder_range);
+> > -
+> > -       return sysfs_emit(buf, "%#llx\n", size);
+> > +       return sysfs_emit(buf, "%#llx\n", range_len(&r));
+> >  }
+> >  static DEVICE_ATTR_RO(size);
+> >
+> > @@ -152,18 +141,19 @@ static DEVICE_ATTR_RO(target_type);
+> >
+> >  static ssize_t emit_target_list(struct cxl_decoder *cxld, char *buf)
+> >  {
+> > +       struct cxl_decoder_targets *t = cxl_get_decoder_targets(cxld);
+> >         ssize_t offset = 0;
+> >         int i, rc = 0;
+> >
+> >         for (i = 0; i < cxld->interleave_ways; i++) {
+> > -               struct cxl_dport *dport = cxld->target[i];
+> > +               struct cxl_dport *dport = t->target[i];
+> >                 struct cxl_dport *next = NULL;
+> >
+> >                 if (!dport)
+> >                         break;
+> >
+> >                 if (i + 1 < cxld->interleave_ways)
+> > -                       next = cxld->target[i + 1];
+> > +                       next = t->target[i + 1];
+> >                 rc = sysfs_emit_at(buf, offset, "%d%s", dport->port_id,
+> >                                    next ? "," : "");
+> >                 if (rc < 0)
+> > @@ -178,14 +168,15 @@ static ssize_t target_list_show(struct device *dev,
+> >                                 struct device_attribute *attr, char *buf)
+> >  {
+> >         struct cxl_decoder *cxld = to_cxl_decoder(dev);
+> > +       struct cxl_decoder_targets *t = cxl_get_decoder_targets(cxld);
+> >         ssize_t offset;
+> >         unsigned int seq;
+> >         int rc;
+> >
+> >         do {
+> > -               seq = read_seqbegin(&cxld->target_lock);
+> > +               seq = read_seqbegin(&t->target_lock);
+> >                 rc = emit_target_list(cxld, buf);
+> > -       } while (read_seqretry(&cxld->target_lock, seq));
+> > +       } while (read_seqretry(&t->target_lock, seq));
+> >
+> >         if (rc < 0)
+> >                 return rc;
+> > @@ -297,6 +288,7 @@ bool is_endpoint_decoder(struct device *dev)
+> >  {
+> >         return dev->type == &cxl_decoder_endpoint_type;
+> >  }
+> > +EXPORT_SYMBOL_NS_GPL(is_endpoint_decoder, CXL);
+> >
+> >  bool is_root_decoder(struct device *dev)
+> >  {
+> > @@ -1167,6 +1159,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_find_dport_by_dev, CXL);
+> >  static int decoder_populate_targets(struct cxl_decoder *cxld,
+> >                                     struct cxl_port *port, int *target_map)
+> >  {
+> > +       struct cxl_decoder_targets *t = cxl_get_decoder_targets(cxld);
+> >         int i, rc = 0;
+> >
+> >         if (!target_map)
+> > @@ -1177,21 +1170,70 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
+> >         if (list_empty(&port->dports))
+> >                 return -EINVAL;
+> >
+> > -       write_seqlock(&cxld->target_lock);
+> > -       for (i = 0; i < cxld->nr_targets; i++) {
+> > +       write_seqlock(&t->target_lock);
+> > +       for (i = 0; i < t->nr_targets; i++) {
+> >                 struct cxl_dport *dport = find_dport(port, target_map[i]);
+> >
+> >                 if (!dport) {
+> >                         rc = -ENXIO;
+> >                         break;
+> >                 }
+> > -               cxld->target[i] = dport;
+> > +               t->target[i] = dport;
+> >         }
+> > -       write_sequnlock(&cxld->target_lock);
+> > +       write_sequnlock(&t->target_lock);
+> >
+> >         return rc;
+> >  }
+> >
+> > +static struct cxl_decoder *__cxl_decoder_alloc(struct cxl_port *port,
+> > +                                              unsigned int nr_targets)
+> > +{
+> > +       struct cxl_decoder *cxld;
+> > +
+> > +       if (is_cxl_endpoint(port)) {
+> > +               struct cxl_endpoint_decoder *cxled;
+> > +
+> > +               cxled = kzalloc(sizeof(*cxled), GFP_KERNEL);
+> > +               if (!cxled)
+> > +                       return NULL;
+> > +               cxld = &cxled->base;
+> > +       } else if (is_cxl_root(port)) {
+> > +               struct cxl_root_decoder *cxlrd;
+> > +
+> > +               cxlrd = kzalloc(sizeof(*cxlrd), GFP_KERNEL);
+> > +               if (!cxlrd)
+> > +                       return NULL;
+> > +
+> > +               cxlrd->targets =
+> > +                       kzalloc(struct_size(cxlrd->targets, target, nr_targets), GFP_KERNEL);
+> > +               if (!cxlrd->targets) {
+> > +                       kfree(cxlrd);
+> > +                       return NULL;
+> > +               }
+> > +               cxlrd->targets->nr_targets = nr_targets;
+> > +               seqlock_init(&cxlrd->targets->target_lock);
+> > +               cxld = &cxlrd->base;
+> > +       } else {
+> > +               struct cxl_switch_decoder *cxlsd;
+> > +
+> > +               cxlsd = kzalloc(sizeof(*cxlsd), GFP_KERNEL);
+> > +               if (!cxlsd)
+> > +                       return NULL;
+> > +
+> > +               cxlsd->targets =
+> > +                       kzalloc(struct_size(cxlsd->targets, target, nr_targets), GFP_KERNEL);
+> > +               if (!cxlsd->targets) {
+> > +                       kfree(cxlsd);
+> > +                       return NULL;
+> > +               }
+> > +               cxlsd->targets->nr_targets = nr_targets;
+> > +               seqlock_init(&cxlsd->targets->target_lock);
+> > +               cxld = &cxlsd->base;
+> > +       }
+> > +
+> > +       return cxld;
+> > +}
+> > +
+> >  /**
+> >   * cxl_decoder_alloc - Allocate a new CXL decoder
+> >   * @port: owning port of this decoder
+> > @@ -1217,9 +1259,10 @@ static struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
+> >         if (nr_targets > CXL_DECODER_MAX_INTERLEAVE)
+> >                 return ERR_PTR(-EINVAL);
+> >
+> > -       cxld = kzalloc(struct_size(cxld, target, nr_targets), GFP_KERNEL);
+> > +       cxld = __cxl_decoder_alloc(port, nr_targets);
+> >         if (!cxld)
+> >                 return ERR_PTR(-ENOMEM);
+> > +       ;
+> >
+> >         rc = ida_alloc(&port->decoder_ida, GFP_KERNEL);
+> >         if (rc < 0)
+> > @@ -1229,8 +1272,6 @@ static struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
+> >         get_device(&port->dev);
+> >         cxld->id = rc;
+> >
+> > -       cxld->nr_targets = nr_targets;
+> > -       seqlock_init(&cxld->target_lock);
+> >         dev = &cxld->dev;
+> >         device_initialize(dev);
+> >         device_set_pm_not_required(dev);
+> > @@ -1247,7 +1288,7 @@ static struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
+> >         cxld->interleave_ways = 1;
+> >         cxld->interleave_granularity = PAGE_SIZE;
+> >         cxld->target_type = CXL_DECODER_EXPANDER;
+> > -       cxld->platform_res = (struct resource)DEFINE_RES_MEM(0, 0);
+> > +       cxl_set_decoder_extent(cxld, 0, 0);
+> >
+> >         return cxld;
+> >  err:
+> > @@ -1302,12 +1343,12 @@ EXPORT_SYMBOL_NS_GPL(cxl_switch_decoder_alloc, CXL);
+> >   *
+> >   * Return: A new cxl decoder to be registered by cxl_decoder_add()
+> >   */
+> > -struct cxl_decoder *cxl_endpoint_decoder_alloc(struct cxl_port *port)
+> > +struct cxl_endpoint_decoder *cxl_endpoint_decoder_alloc(struct cxl_port *port)
+> >  {
+> >         if (!is_cxl_endpoint(port))
+> >                 return ERR_PTR(-EINVAL);
+> >
+> > -       return cxl_decoder_alloc(port, 0);
+> > +       return to_cxl_endpoint_decoder(cxl_decoder_alloc(port, 0));
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(cxl_endpoint_decoder_alloc, CXL);
+> >
+> > @@ -1366,7 +1407,7 @@ int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map)
+> >          * other resources are just sub ranges within the main decoder resource.
+> >          */
+> >         if (is_root_decoder(dev))
+> > -               cxld->platform_res.name = dev_name(dev);
+> > +               to_cxl_root_decoder(cxld)->res.name = dev_name(dev);
+> >
+> >         cxl_set_lock_class(dev);
+> >         return device_add(dev);
+> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> > index 4a93d409328f..f523268060fd 100644
+> > --- a/drivers/cxl/cxl.h
+> > +++ b/drivers/cxl/cxl.h
+> > @@ -210,6 +210,18 @@ enum cxl_decoder_type {
+> >   */
+> >  #define CXL_DECODER_MAX_INTERLEAVE 16
+> >
+> > +/**
+> > + * struct cxl_decoder_targets - Target information for root and switch decoders.
+> > + * @target_lock: coordinate coherent reads of the target list
+> > + * @nr_targets: number of elements in @target
+> > + * @target: active ordered target list in current decoder configuration
+> > + */
+> > +struct cxl_decoder_targets {
+> > +       seqlock_t target_lock;
+> > +       int nr_targets;
+> > +       struct cxl_dport *target[];
+> > +};
+> > +
+> >  /**
+> >   * struct cxl_decoder - CXL address range decode configuration
+> >   * @dev: this decoder's device
+> > @@ -220,26 +232,60 @@ enum cxl_decoder_type {
+> >   * @interleave_granularity: data stride per dport
+> >   * @target_type: accelerator vs expander (type2 vs type3) selector
+> >   * @flags: memory type capabilities and locking
+> > - * @target_lock: coordinate coherent reads of the target list
+> > - * @nr_targets: number of elements in @target
+> > - * @target: active ordered target list in current decoder configuration
+> >   */
+> >  struct cxl_decoder {
+> >         struct device dev;
+> >         int id;
+> > -       union {
+> > -               struct resource platform_res;
+> > -               struct range decoder_range;
+> > -       };
+> >         int interleave_ways;
+> >         int interleave_granularity;
+> >         enum cxl_decoder_type target_type;
+> >         unsigned long flags;
+> > -       seqlock_t target_lock;
+> > -       int nr_targets;
+> > -       struct cxl_dport *target[];
+> >  };
+> >
+> > +/**
+> > + * struct cxl_endpoint_decoder - An decoder residing in a CXL endpoint.
+> > + * @base: Base class decoder
+> > + * @range: Host physical address space consumed by this decoder.
+> > + */
+> > +struct cxl_endpoint_decoder {
+> > +       struct cxl_decoder base;
+> > +       struct range range;
+> > +};
+> > +
+> > +/**
+> > + * struct cxl_switch_decoder - A decoder in a switch or hostbridge.
+> > + * @base: Base class decoder
+> > + * @range: Host physical address space consumed by this decoder.
+> > + * @targets: Downstream targets for this switch.
+> > + */
+> > +struct cxl_switch_decoder {
+> > +       struct cxl_decoder base;
+> > +       struct range range;
+> > +       struct cxl_decoder_targets *targets;
+> > +};
+> > +
+> > +/**
+> > + * struct cxl_root_decoder - A toplevel/platform decoder
+> > + * @base: Base class decoder
+> > + * @res: host address space owned by this decoder
+> > + * @targets: Downstream targets (ie. hostbridges).
+> > + */
+> > +struct cxl_root_decoder {
+> > +       struct cxl_decoder base;
+> > +       struct resource res;
+> > +       struct cxl_decoder_targets *targets;
+> > +};
+> 
+> This is what I had started to mock up, I think the only differences
+> are no out of line allocations, and the concept that endpoint decoders
+> need to track hpa, dpa, and skip. What do you think?
+
+If we're going through the effort to separate them, I do think it's beneficial
+to pull out target also. Are you so much opposed to that part? What part of the
+out of line allocation do you dislike? It seems fine to me and keeps the alloc
+function fitting on one screen, for me.
+
+> 
+> struct cxl_root_decoder {
+>        struct resource hpa;
+>        struct cxl_decoder decoder;
+> };
+> 
+> struct cxl_switch_decoder {
+>        struct range hpa_range;
+>        struct cxl_decoder decoder;
+> };
+> 
+> struct cxl_endpoint_decoder {
+>        struct resource *hpa_res;
+
+I thought we had decided that the region is the entity that creates the child
+resources of the HPA range. The problem with this is every decoder in a set will
+have the same HPA range.
+
+>        struct range dpa_range;
+
+Oh, I thought you were going to make dpa be resource based as well. Range is a
+little of a better fit IMO.
+
+>        struct range dpa_skip;
+
+You don't mean range here, do you? DPA us just a u64. Anything else can be
+constructed with dpa_range.
+
+>        struct cxl_decoder decoder;
+> };
+> 
+> Then at allocation it would be something like:
+> 
+>         if (is_cxl_root(port)) {
+>                 struct cxl_root_decoder *cxlrd;
+> 
+>                 cxlrd = kzalloc(struct_size(cxlrd, decoder.target, nr_targets),
+>                                 GFP_KERNEL);
+>                 if (!cxlrd)
+>                         return ERR_PTR(-ENOMEM);
+> 
+>                 cxlrd->hpa = (struct resource)DEFINE_RES_MEM(0, 0);
+>                 cxld = &cxlrd->decoder;
+>                 cxld->dev.type = &cxl_decoder_root_type;
+>         } else if (is_cxl_endpoint(port)) {
+>                 struct cxl_endpoint_decoder *cxled;
+> 
+>                 cxled = kzalloc(struct_size(cxled, decoder.target, nr_targets),
+>                                 GFP_KERNEL);
+>                 if (!cxled)
+>                         return ERR_PTR(-ENOMEM);
+> 
+>                 cxled->dpa_range = (struct range) {
+>                         .start = 0,
+>                         .end = -1,
+>                 };
+>                 cxled->dpa_skip = (struct range) {
+>                         .start = 0,
+>                         .end = -1,
+>                 };
+> 
+>                 cxld = &cxled->decoder;
+>                 cxld->dev.type = &cxl_decoder_endpoint_type;
+>         } else {
+>                 struct cxl_switch_decoder *cxlsd;
+> 
+>                 cxlsd = kzalloc(struct_size(cxlsd, decoder.target, nr_targets),
+>                                 GFP_KERNEL);
+>                 if (!cxlsd)
+>                         return ERR_PTR(-ENOMEM);
+> 
+>                 cxled->hpa_range = (struct range) {
+>                         .start = 0,
+>                         .end = -1,
+>                 };
+> 
+>                 cxld->dev.type = &cxl_decoder_switch_type;
+>                 if (!cxld)
+>                         return ERR_PTR(-ENOMEM);
+>         }
+> 
+> 
+> > +
+> > +#define _to_cxl_decoder(x)                                                     \
+> > +       static inline struct cxl_##x##_decoder *to_cxl_##x##_decoder(          \
+> > +               struct cxl_decoder *cxld)                                      \
+> > +       {                                                                      \
+> > +               return container_of(cxld, struct cxl_##x##_decoder, base);     \
+> > +       }
+> > +
+> > +_to_cxl_decoder(root)
+> > +_to_cxl_decoder(switch)
+> > +_to_cxl_decoder(endpoint)
+> 
+> I notice no is_{root,switch,endpoint}_decoder() sanity checking like
+> our other to_$object() helpers, deliberate?
+> 
+
+I'm not sure how you can do this and do a sanity check. I'm open to suggestions.
+
+> >
+> >  /**
+> >   * enum cxl_nvdimm_brige_state - state machine for managing bus rescans
+> > @@ -364,11 +410,61 @@ struct cxl_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+> >  struct cxl_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
+> >                                              unsigned int nr_targets);
+> >  int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
+> > -struct cxl_decoder *cxl_endpoint_decoder_alloc(struct cxl_port *port);
+> > +struct cxl_endpoint_decoder *cxl_endpoint_decoder_alloc(struct cxl_port *port);
+> >  int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map);
+> >  int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld);
+> >  int cxl_endpoint_autoremove(struct cxl_memdev *cxlmd, struct cxl_port *endpoint);
+> >
+> > +static inline struct cxl_decoder_targets *
+> > +cxl_get_decoder_targets(struct cxl_decoder *cxld)
+> > +{
+> > +       if (is_root_decoder(&cxld->dev))
+> > +               return to_cxl_root_decoder(cxld)->targets;
+> > +       else if (is_endpoint_decoder(&cxld->dev))
+> > +               return NULL;
+> > +       else
+> > +               return to_cxl_switch_decoder(cxld)->targets;
+> > +}
+> > +
+> > +static inline void cxl_set_decoder_extent(struct cxl_decoder *cxld,
+> > +                                         resource_size_t base,
+> > +                                         resource_size_t size)
+> > +{
+> > +       if (is_root_decoder(&cxld->dev))
+> > +               to_cxl_root_decoder(cxld)->res =
+> > +                       (struct resource)DEFINE_RES_MEM(base, size);
+> > +       else if (is_endpoint_decoder(&cxld->dev))
+> > +               to_cxl_endpoint_decoder(cxld)->range = (struct range){
+> > +                       .start = base,
+> > +                       .end = base + size - 1
+> > +               };
+> > +       else
+> > +               to_cxl_switch_decoder(cxld)->range = (struct range){
+> > +                       .start = base,
+> > +                       .end = base + size - 1
+> > +               };
+> > +}
+> > +
+> > +static inline struct range cxl_get_decoder_extent(struct cxl_decoder *cxld)
+> > +{
+> > +       struct range ret;
+> > +
+> > +       if (is_root_decoder(&cxld->dev)) {
+> > +               struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxld);
+> > +
+> > +               ret = (struct range) {
+> > +                       .start = cxlrd->res.start,
+> > +                       .end = cxlrd->res.end
+> > +               };
+> > +       } else if (is_endpoint_decoder(&cxld->dev)) {
+> > +               ret = to_cxl_endpoint_decoder(cxld)->range;
+> > +       } else {
+> > +               ret = to_cxl_switch_decoder(cxld)->range;
+> > +       }
+> > +
+> > +       return ret;
+> > +}
+> 
+> The caller context will know what decoder type it is operating on, so
+> the conversion to a generic type only to convert back into the
+> specific type somewhat defeats the purpose of having distinct types in
+> the first place.
+
+This was just to save typing for decoder attrs (size and start). You can get to
+the type, but then you have an if ladder for each of those. It's not my favorite
+solution, but neither was the repetitive typing.
