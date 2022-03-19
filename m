@@ -2,25 +2,25 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC2DC433EF
-	for <linux-cxl@archiver.kernel.org>; Sat, 19 Mar 2022 08:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21EEC433EF
+	for <linux-cxl@archiver.kernel.org>; Sat, 19 Mar 2022 08:53:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241360AbiCSIha (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 19 Mar 2022 04:37:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51966 "EHLO
+        id S233497AbiCSIzQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 19 Mar 2022 04:55:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232549AbiCSIha (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 19 Mar 2022 04:37:30 -0400
+        with ESMTP id S229801AbiCSIzQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 19 Mar 2022 04:55:16 -0400
 Received: from mail.default.ilande.bv.iomart.io (mail.ilande.co.uk [IPv6:2001:41c9:1:41f::167])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63912424B4
-        for <linux-cxl@vger.kernel.org>; Sat, 19 Mar 2022 01:36:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 639691C7F0F
+        for <linux-cxl@vger.kernel.org>; Sat, 19 Mar 2022 01:53:54 -0700 (PDT)
 Received: from [2a00:23c4:8ba2:c800:3cf5:fb4b:b388:106c]
         by mail.default.ilande.bv.iomart.io with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.92)
         (envelope-from <mark.cave-ayland@ilande.co.uk>)
-        id 1nVUYN-0003gn-Ds; Sat, 19 Mar 2022 08:35:19 +0000
-Message-ID: <10cae45f-9f3a-c7a5-c834-ae14a5fcbecf@ilande.co.uk>
-Date:   Sat, 19 Mar 2022 08:35:54 +0000
+        id 1nVUpZ-0003pZ-Jk; Sat, 19 Mar 2022 08:53:05 +0000
+Message-ID: <5e0dc4e5-d002-9fab-2b69-d849aee68acc@ilande.co.uk>
+Date:   Sat, 19 Mar 2022 08:53:40 +0000
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.6.2
@@ -46,15 +46,15 @@ Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
         Samarth Saxena <samarths@cadence.com>,
         Dan Williams <dan.j.williams@intel.com>
 References: <20220318150635.24600-1-Jonathan.Cameron@huawei.com>
- <20220318150635.24600-24-Jonathan.Cameron@huawei.com>
+ <20220318150635.24600-33-Jonathan.Cameron@huawei.com>
 From:   Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
-In-Reply-To: <20220318150635.24600-24-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20220318150635.24600-33-Jonathan.Cameron@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-SA-Exim-Connect-IP: 2a00:23c4:8ba2:c800:3cf5:fb4b:b388:106c
 X-SA-Exim-Mail-From: mark.cave-ayland@ilande.co.uk
-Subject: Re: [PATCH v8 23/46] hw/cxl/component: Implement host bridge MMIO
- (8.2.5, table 142)
+Subject: Re: [PATCH v8 32/46] mem/cxl_type3: Add read and write functions for
+ associated hostmem.
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on mail.default.ilande.bv.iomart.io)
 Precedence: bulk
@@ -63,275 +63,198 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 On 18/03/2022 15:06, Jonathan Cameron wrote:
 
-> From: Ben Widawsky <ben.widawsky@intel.com>
+> From: Jonathan Cameron <jonathan.cameron@huawei.com>
 > 
-> CXL host bridges themselves may have MMIO. Since host bridges don't have
-> a BAR they are treated as special for MMIO.  This patch includes
-> i386/pc support.
-> Also hook up the device reset now that we have have the MMIO
-> space in which the results are visible.
+> Once a read or write reaches a CXL type 3 device, the HDM decoders
+> on the device are used to establish the Device Physical Address
+> which should be accessed.  These functions peform the required maths
+> and then use a device specific address space to access the
+> hostmem->mr to fullfil the actual operation.  Note that failed writes
+> are silent, but failed reads return poison.  Note this is based
+> loosely on:
 > 
-> Note that we duplicate the PCI express case for the aml_build but
-> the implementations will diverge when the CXL specific _OSC is
-> introduced.
+> https://lore.kernel.org/qemu-devel/20200817161853.593247-6-f4bug@amsat.org/
+> [RFC PATCH 0/9] hw/misc: Add support for interleaved memory accesses
 > 
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Only lightly tested so far.  More complex test cases yet to be written.
+> 
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Alex Bennée <alex.bennee@linaro.org>
 > ---
->   hw/i386/acpi-build.c                | 25 +++++++++++-
->   hw/i386/pc.c                        | 27 ++++++++++++-
->   hw/pci-bridge/pci_expander_bridge.c | 62 ++++++++++++++++++++++++++++-
->   include/hw/cxl/cxl.h                |  4 ++
->   4 files changed, 114 insertions(+), 4 deletions(-)
+>   hw/mem/cxl_type3.c          | 88 +++++++++++++++++++++++++++++++++++++
+>   include/hw/cxl/cxl_device.h |  6 +++
+>   2 files changed, 94 insertions(+)
 > 
-> diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
-> index 4ad4d7286c..0b7d06e107 100644
-> --- a/hw/i386/acpi-build.c
-> +++ b/hw/i386/acpi-build.c
-> @@ -28,6 +28,7 @@
->   #include "qemu/bitmap.h"
->   #include "qemu/error-report.h"
->   #include "hw/pci/pci.h"
-> +#include "hw/cxl/cxl.h"
->   #include "hw/core/cpu.h"
->   #include "target/i386/cpu.h"
->   #include "hw/misc/pvpanic.h"
-> @@ -1572,10 +1573,21 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
->               }
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index 244eb5dc91..225155dac5 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -100,7 +100,9 @@ static void ct3_finalize(Object *obj)
 >   
->               scope = aml_scope("\\_SB");
-> -            dev = aml_device("PC%.02X", bus_num);
-> +
-> +            if (pci_bus_is_cxl(bus)) {
-> +                dev = aml_device("CL%.02X", bus_num);
-> +            } else {
-> +                dev = aml_device("PC%.02X", bus_num);
-> +            }
->               aml_append(dev, aml_name_decl("_UID", aml_int(bus_num)));
->               aml_append(dev, aml_name_decl("_BBN", aml_int(bus_num)));
-> -            if (pci_bus_is_express(bus)) {
-> +            if (pci_bus_is_cxl(bus)) {
-> +                aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A08")));
-> +                aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A03")));
-> +
-> +                /* Expander bridges do not have ACPI PCI Hot-plug enabled */
-> +                aml_append(dev, build_q35_osc_method(true));
-> +            } else if (pci_bus_is_express(bus)) {
->                   aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A08")));
->                   aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A03")));
->   
-> @@ -1595,6 +1607,15 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
->               aml_append(dev, aml_name_decl("_CRS", crs));
->               aml_append(scope, dev);
->               aml_append(dsdt, scope);
-> +
-> +            /* Handle the ranges for the PXB expanders */
-> +            if (pci_bus_is_cxl(bus)) {
-> +                MemoryRegion *mr = &machine->cxl_devices_state->host_mr;
-> +                uint64_t base = mr->addr;
-> +
-> +                crs_range_insert(crs_range_set.mem_ranges, base,
-> +                                 base + memory_region_size(mr) - 1);
-> +            }
->           }
->       }
->   
-> diff --git a/hw/i386/pc.c b/hw/i386/pc.c
-> index e2849fc741..da74f08f9e 100644
-> --- a/hw/i386/pc.c
-> +++ b/hw/i386/pc.c
-> @@ -75,6 +75,7 @@
->   #include "acpi-build.h"
->   #include "hw/mem/pc-dimm.h"
->   #include "hw/mem/nvdimm.h"
-> +#include "hw/cxl/cxl.h"
->   #include "qapi/error.h"
->   #include "qapi/qapi-visit-common.h"
->   #include "qapi/qapi-visit-machine.h"
-> @@ -813,6 +814,7 @@ void pc_memory_init(PCMachineState *pcms,
->       MachineClass *mc = MACHINE_GET_CLASS(machine);
->       PCMachineClass *pcmc = PC_MACHINE_GET_CLASS(pcms);
->       X86MachineState *x86ms = X86_MACHINE(pcms);
-> +    hwaddr cxl_base;
->   
->       assert(machine->ram_size == x86ms->below_4g_mem_size +
->                                   x86ms->above_4g_mem_size);
-> @@ -902,6 +904,26 @@ void pc_memory_init(PCMachineState *pcms,
->                                       &machine->device_memory->mr);
->       }
->   
-> +    if (machine->cxl_devices_state->is_enabled) {
-> +        MemoryRegion *mr = &machine->cxl_devices_state->host_mr;
-> +        hwaddr cxl_size = MiB;
-> +
-> +        if (pcmc->has_reserved_memory && machine->device_memory->base) {
-> +            cxl_base = machine->device_memory->base;
-> +            if (!pcmc->broken_reserved_end) {
-> +                cxl_base += memory_region_size(&machine->device_memory->mr);
-> +            }
-> +        } else if (pcms->sgx_epc.size != 0) {
-> +            cxl_base = sgx_epc_above_4g_end(&pcms->sgx_epc);
-> +        } else {
-> +            cxl_base = 0x100000000ULL + x86ms->above_4g_mem_size;
-> +        }
-> +
-> +        e820_add_entry(cxl_base, cxl_size, E820_RESERVED);
-> +        memory_region_init(mr, OBJECT(machine), "cxl_host_reg", cxl_size);
-> +        memory_region_add_subregion(system_memory, cxl_base, mr);
-> +    }
-> +
->       /* Initialize PC system firmware */
->       pc_system_firmware_init(pcms, rom_memory);
->   
-> @@ -962,7 +984,10 @@ uint64_t pc_pci_hole64_start(void)
->       X86MachineState *x86ms = X86_MACHINE(pcms);
->       uint64_t hole64_start = 0;
->   
-> -    if (pcmc->has_reserved_memory && ms->device_memory->base) {
-> +    if (ms->cxl_devices_state->host_mr.addr) {
-> +        hole64_start = ms->cxl_devices_state->host_mr.addr +
-> +            memory_region_size(&ms->cxl_devices_state->host_mr);
-> +    } else if (pcmc->has_reserved_memory && ms->device_memory->base) {
->           hole64_start = ms->device_memory->base;
->           if (!pcmc->broken_reserved_end) {
->               hole64_start += memory_region_size(&ms->device_memory->mr);
-> diff --git a/hw/pci-bridge/pci_expander_bridge.c b/hw/pci-bridge/pci_expander_bridge.c
-> index f762eb4a6e..b3b5f93650 100644
-> --- a/hw/pci-bridge/pci_expander_bridge.c
-> +++ b/hw/pci-bridge/pci_expander_bridge.c
-> @@ -75,6 +75,9 @@ struct PXBDev {
->       uint8_t bus_nr;
->       uint16_t numa_node;
->       bool bypass_iommu;
-> +    struct cxl_dev {
-> +        CXLHost *cxl_host_bridge;
-> +    } cxl;
->   };
->   
->   static PXBDev *convert_to_pxb(PCIDevice *dev)
-> @@ -92,6 +95,9 @@ static GList *pxb_dev_list;
->   
->   #define TYPE_PXB_HOST "pxb-host"
->   
-> +#define TYPE_PXB_CXL_HOST "pxb-cxl-host"
-> +#define PXB_CXL_HOST(obj) OBJECT_CHECK(CXLHost, (obj), TYPE_PXB_CXL_HOST)
-
-Again this is a legacy QOM type declaration and should be replaced with 
-OBJECT_DECLARE_SIMPLE_TYPE(). It should also be located in the associated header file 
-if it exists (include/hw/cxl/cxl.h in this case).
-
->   static int pxb_bus_num(PCIBus *bus)
+>   static void cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
 >   {
->       PXBDev *pxb = convert_to_pxb(bus->parent_dev);
-> @@ -197,6 +203,52 @@ static const TypeInfo pxb_host_info = {
->       .class_init    = pxb_host_class_init,
->   };
+> +    DeviceState *ds = DEVICE(ct3d);
+>       MemoryRegion *mr;
+> +    g_autofree char *name = NULL;
 >   
-> +static void pxb_cxl_realize(DeviceState *dev, Error **errp)
-> +{
-> +    MachineState *ms = MACHINE(qdev_get_machine());
-> +    SysBusDevice *sbd = SYS_BUS_DEVICE(dev);
-> +    CXLHost *cxl = PXB_CXL_HOST(dev);
-> +    CXLComponentState *cxl_cstate = &cxl->cxl_cstate;
-> +    struct MemoryRegion *mr = &cxl_cstate->crb.component_registers;
-> +    hwaddr offset;
+>       if (!ct3d->hostmem) {
+>           error_setg(errp, "memdev property must be set");
+> @@ -115,6 +117,13 @@ static void cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
+>       memory_region_set_nonvolatile(mr, true);
+>       memory_region_set_enabled(mr, true);
+>       host_memory_backend_set_mapped(ct3d->hostmem, true);
+
+There is an existing example for generating names for PCI devices in SPAPR which you 
+can borrow which looks something like this (not compile tested!):
+
+static char *cxl_type3_get_id(CXLType3Dev *ct3d)
+{
+     uint32_t busnr = pci_bus_num(PCI_BUS(qdev_get_parent_bus(DEVICE(ct3d))));
+     PCIDevice *pd = PCI_DEVICE(ct3d);
+     DeviceState *ds = DEVICE(ct3d);
+
+     if (ds->id) {
+         return g_strdup_printf("%s:%02x:%02x.%x", ds->id, busnr,
+                                PCI_SLOT(pd->devfn), PCI_FUNC(pd->devfn));
+     } else {
+         return g_strdup_printf("%02x:%02x.%x", busnr,
+                                PCI_SLOT(pd->devfn), PCI_FUNC(pd->devfn));
+     }
+}
+
 > +
-> +    cxl_component_register_block_init(OBJECT(dev), cxl_cstate,
-> +                                      TYPE_PXB_CXL_HOST);
-> +    sysbus_init_mmio(sbd, mr);
-> +
-> +    offset = memory_region_size(mr) * ms->cxl_devices_state->next_mr_idx;
-> +    if (offset > memory_region_size(&ms->cxl_devices_state->host_mr)) {
-> +        error_setg(errp, "Insufficient space for pxb cxl host register space");
-> +        return;
+> +    if (ds->id) {
+> +        name = g_strdup_printf("cxl-type3-dpa-space-%s", ds->id);
+> +    } else {
+> +        name = g_strdup("cxl-type3-dpa-space");
 > +    }
-> +
-> +    memory_region_add_subregion(&ms->cxl_devices_state->host_mr, offset, mr);
-> +    ms->cxl_devices_state->next_mr_idx++;
-> +}
-> +
-> +static void pxb_cxl_host_class_init(ObjectClass *class, void *data)
-> +{
-> +    DeviceClass *dc = DEVICE_CLASS(class);
-> +    PCIHostBridgeClass *hc = PCI_HOST_BRIDGE_CLASS(class);
-> +
-> +    hc->root_bus_path = pxb_host_root_bus_path;
-> +    dc->fw_name = "cxl";
-> +    dc->realize = pxb_cxl_realize;
-> +    /* Reason: Internal part of the pxb/pxb-pcie device, not usable by itself */
-> +    dc->user_creatable = false;
-> +}
-> +
-> +/*
-> + * This is a device to handle the MMIO for a CXL host bridge. It does nothing
-> + * else.
-> + */
-> +static const TypeInfo cxl_host_info = {
-> +    .name          = TYPE_PXB_CXL_HOST,
-> +    .parent        = TYPE_PCI_HOST_BRIDGE,
-> +    .instance_size = sizeof(CXLHost),
-> +    .class_init    = pxb_cxl_host_class_init,
-> +};
-> +
->   /*
->    * Registers the PXB bus as a child of pci host root bus.
->    */
-> @@ -245,6 +297,12 @@ static int pxb_map_irq_fn(PCIDevice *pci_dev, int pin)
+
+This then becomes:
+
+     char *id, *name;
+     ...
+
+     id = cxl_type3_get_id(ct3d);
+     name = g_strdup_printf("cxl-type3-dpa-space:%s", id);
+     address_space_init(&ct3d->hostmem_as, mr, name);
+     g_free(id);
+     g_free(name);
+
+> +    address_space_init(&ct3d->hostmem_as, mr, name);
+
+There is an address_space_init() here but no associated address_space_destroy() - 
+you'll need to add a ct3_finalize() function to remove the address space, otherwise 
+there will be a memory leak when the device is removed because of the dangling reference.
+
+>       ct3d->cxl_dstate.pmem_size = ct3d->hostmem->size;
 >   
->   static void pxb_dev_reset(DeviceState *dev)
->   {
-> +    CXLHost *cxl = PXB_CXL_DEV(dev)->cxl.cxl_host_bridge;
-> +    CXLComponentState *cxl_cstate = &cxl->cxl_cstate;
-> +    uint32_t *reg_state = cxl_cstate->crb.cache_mem_registers;
-> +
-> +    cxl_component_register_init_common(reg_state, CXL2_ROOT_PORT);
-> +    ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, TARGET_COUNT, 8);
+>       if (!ct3d->lsa) {
+> @@ -160,6 +169,85 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>                        &ct3d->cxl_dstate.device_registers);
 >   }
 >   
->   static gint pxb_compare(gconstpointer a, gconstpointer b)
-> @@ -281,12 +339,13 @@ static void pxb_dev_realize_common(PCIDevice *dev, enum BusType type,
->           dev_name = dev->qdev.id;
->       }
->   
-> -    ds = qdev_new(TYPE_PXB_HOST);
-> +    ds = qdev_new(type == CXL ? TYPE_PXB_CXL_HOST : TYPE_PXB_HOST);
->       if (type == PCIE) {
->           bus = pci_root_bus_new(ds, dev_name, NULL, NULL, 0, TYPE_PXB_PCIE_BUS);
->       } else if (type == CXL) {
->           bus = pci_root_bus_new(ds, dev_name, NULL, NULL, 0, TYPE_PXB_CXL_BUS);
->           bus->flags |= PCI_BUS_CXL;
-> +        PXB_CXL_DEV(dev)->cxl.cxl_host_bridge = PXB_CXL_HOST(ds);
->       } else {
->           bus = pci_root_bus_new(ds, "pxb-internal", NULL, NULL, 0, TYPE_PXB_BUS);
->           bds = qdev_new("pci-bridge");
-> @@ -475,6 +534,7 @@ static void pxb_register_types(void)
->       type_register_static(&pxb_pcie_bus_info);
->       type_register_static(&pxb_cxl_bus_info);
->       type_register_static(&pxb_host_info);
-> +    type_register_static(&cxl_host_info);
->       type_register_static(&pxb_dev_info);
->       type_register_static(&pxb_pcie_dev_info);
->       type_register_static(&pxb_cxl_dev_info);
-> diff --git a/include/hw/cxl/cxl.h b/include/hw/cxl/cxl.h
-> index 31af92fd5e..75e5bf71e1 100644
-> --- a/include/hw/cxl/cxl.h
-> +++ b/include/hw/cxl/cxl.h
-> @@ -17,8 +17,12 @@
->   #define CXL_COMPONENT_REG_BAR_IDX 0
->   #define CXL_DEVICE_REG_BAR_IDX 2
->   
-> +#define CXL_WINDOW_MAX 10
+> +/* TODO: Support multiple HDM decoders and DPA skip */
+> +static bool cxl_type3_dpa(CXLType3Dev *ct3d, hwaddr host_addr, uint64_t *dpa)
+> +{
+> +    uint32_t *cache_mem = ct3d->cxl_cstate.crb.cache_mem_registers;
+> +    uint64_t decoder_base, decoder_size, hpa_offset;
+> +    uint32_t hdm0_ctrl;
+> +    int ig, iw;
 > +
->   typedef struct CXLState {
->       bool is_enabled;
-> +    MemoryRegion host_mr;
-> +    unsigned int next_mr_idx;
->   } CXLState;
-
-... so simply drop the typedef and place OBJECT_DECLARE_SIMPLE_TYPE here instead.
-
+> +    decoder_base = (((uint64_t)cache_mem[R_CXL_HDM_DECODER0_BASE_HI] << 32) |
+> +                    cache_mem[R_CXL_HDM_DECODER0_BASE_LO]);
+> +    if ((uint64_t)host_addr < decoder_base) {
+> +        return false;
+> +    }
+> +
+> +    hpa_offset = (uint64_t)host_addr - decoder_base;
+> +
+> +    decoder_size = ((uint64_t)cache_mem[R_CXL_HDM_DECODER0_SIZE_HI] << 32) |
+> +        cache_mem[R_CXL_HDM_DECODER0_SIZE_LO];
+> +    if (hpa_offset >= decoder_size) {
+> +        return false;
+> +    }
+> +
+> +    hdm0_ctrl = cache_mem[R_CXL_HDM_DECODER0_CTRL];
+> +    iw = FIELD_EX32(hdm0_ctrl, CXL_HDM_DECODER0_CTRL, IW);
+> +    ig = FIELD_EX32(hdm0_ctrl, CXL_HDM_DECODER0_CTRL, IG);
+> +
+> +    *dpa = (MAKE_64BIT_MASK(0, 8 + ig) & hpa_offset) |
+> +        ((MAKE_64BIT_MASK(8 + ig + iw, 64 - 8 - ig - iw) & hpa_offset) >> iw);
+> +
+> +    return true;
+> +}
+> +
+> +MemTxResult cxl_type3_read(PCIDevice *d, hwaddr host_addr, uint64_t *data,
+> +                           unsigned size, MemTxAttrs attrs)
+> +{
+> +    CXLType3Dev *ct3d = CT3(d);
+> +    uint64_t dpa_offset;
+> +    MemoryRegion *mr;
+> +
+> +    /* TODO support volatile region */
+> +    mr = host_memory_backend_get_memory(ct3d->hostmem);
+> +    if (!mr) {
+> +        return MEMTX_ERROR;
+> +    }
+> +
+> +    if (!cxl_type3_dpa(ct3d, host_addr, &dpa_offset)) {
+> +        return MEMTX_ERROR;
+> +    }
+> +
+> +    if (dpa_offset > int128_get64(mr->size)) {
+> +        return MEMTX_ERROR;
+> +    }
+> +
+> +    return address_space_read(&ct3d->hostmem_as, dpa_offset, attrs, data, size);
+> +}
+> +
+> +MemTxResult cxl_type3_write(PCIDevice *d, hwaddr host_addr, uint64_t data,
+> +                            unsigned size, MemTxAttrs attrs)
+> +{
+> +    CXLType3Dev *ct3d = CT3(d);
+> +    uint64_t dpa_offset;
+> +    MemoryRegion *mr;
+> +
+> +    mr = host_memory_backend_get_memory(ct3d->hostmem);
+> +    if (!mr) {
+> +        return MEMTX_OK;
+> +    }
+> +
+> +    if (!cxl_type3_dpa(ct3d, host_addr, &dpa_offset)) {
+> +        return MEMTX_OK;
+> +    }
+> +
+> +    if (dpa_offset > int128_get64(mr->size)) {
+> +        return MEMTX_OK;
+> +    }
+> +    return address_space_write(&ct3d->hostmem_as, dpa_offset, attrs,
+> +                               &data, size);
+> +}
+> +
+>   static void ct3d_reset(DeviceState *dev)
+>   {
+>       CXLType3Dev *ct3d = CT3(dev);
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index 288cc11772..eb998791d7 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -235,6 +235,7 @@ typedef struct cxl_type3_dev {
+>       PCIDevice parent_obj;
+>   
+>       /* Properties */
+> +    AddressSpace hostmem_as;
+>       uint64_t size;
+>       HostMemoryBackend *hostmem;
+>       HostMemoryBackend *lsa;
+> @@ -262,4 +263,9 @@ struct CXLType3Class {
+>                       uint64_t offset);
+>   };
+>   
+> +MemTxResult cxl_type3_read(PCIDevice *d, hwaddr host_addr, uint64_t *data,
+> +                           unsigned size, MemTxAttrs attrs);
+> +MemTxResult cxl_type3_write(PCIDevice *d, hwaddr host_addr, uint64_t data,
+> +                            unsigned size, MemTxAttrs attrs);
+> +
 >   #endif
 
 
