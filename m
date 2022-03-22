@@ -2,51 +2,51 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C34CC433EF
-	for <linux-cxl@archiver.kernel.org>; Tue, 22 Mar 2022 21:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17474C433F5
+	for <linux-cxl@archiver.kernel.org>; Tue, 22 Mar 2022 21:10:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235077AbiCVVDk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 22 Mar 2022 17:03:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48732 "EHLO
+        id S230089AbiCVVLn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 22 Mar 2022 17:11:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234794AbiCVVDf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Mar 2022 17:03:35 -0400
+        with ESMTP id S230057AbiCVVLn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Mar 2022 17:11:43 -0400
 Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84D45506C9
-        for <linux-cxl@vger.kernel.org>; Tue, 22 Mar 2022 14:02:05 -0700 (PDT)
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20220322210200usoutp016b5715525da5a1b65b0e537423f291a6~ez7wzH2ev1172011720usoutp01B;
-        Tue, 22 Mar 2022 21:02:00 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20220322210200usoutp016b5715525da5a1b65b0e537423f291a6~ez7wzH2ev1172011720usoutp01B
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11CDE7663
+        for <linux-cxl@vger.kernel.org>; Tue, 22 Mar 2022 14:10:14 -0700 (PDT)
+Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
+        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20220322211013usoutp010977bb71ac94f1cc579a9651e45b1985~e0C8BCaaV1608616086usoutp01S;
+        Tue, 22 Mar 2022 21:10:13 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20220322211013usoutp010977bb71ac94f1cc579a9651e45b1985~e0C8BCaaV1608616086usoutp01S
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1647982920;
-        bh=xiqTUNncz7wjQWq+KglyfnHfHwT3yCH0q5GtL+7LVXI=;
+        s=mail20170921; t=1647983414;
+        bh=2fLUvOVdm5xcn3ytlYcayfxxnh5/sus9E+wX91HrNb4=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=hVH02Ga4uA5loLQlW5uuQJJLyzS1VEAiS5ywV3Qxm8tfj3ajoHOSkECNUWjXZPHZK
-         s1/LNLIruotMq7MrzlWIYCVpzdiK/n51HsZgvRHJ0wbudD5TYw+85wM+fHWMoBu56v
-         Ggo8+uIhk8RHq9eWeZsuFXYnwLNI5Kew9gVqiWaM=
-Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
-        [203.254.195.109]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20220322210159uscas1p12fd48d028e8185497b8c8678a25935df~ez7vgW2jV1726217262uscas1p19;
-        Tue, 22 Mar 2022 21:01:59 +0000 (GMT)
+        b=fiUTLAUiOdfrCrGEFZkodP6AjuZ1ohjrWWH5WEVRZyCdduvrXQYr1qvVf143yvHlj
+         nWXciHhScxtKcST+wU2E3Xp3ix3ltHV+rhZXNPlvc5ApgzUZ43V2sEt8OdhfiySMnA
+         IdCcFRvnRdjwnQmgfLCKS/CRBMNAGbuUIMb2xJDA=
+Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
+        [203.254.195.111]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20220322211013uscas1p2c5519fa03c8fb47c58ff7d12a11eb3df~e0C7x1Fid1053710537uscas1p2h;
+        Tue, 22 Mar 2022 21:10:13 +0000 (GMT)
 Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-        ussmges1new.samsung.com (USCPEMTA) with SMTP id BA.C4.09760.7493A326; Tue,
-        22 Mar 2022 17:01:59 -0400 (EDT)
-Received: from ussmgxs3new.samsung.com (u92.gpu85.samsung.co.kr
-        [203.254.195.92]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20220322210159uscas1p2b7bfb832c275068e1a159cc1183057c2~ez7vPSKrA0977909779uscas1p2X;
-        Tue, 22 Mar 2022 21:01:59 +0000 (GMT)
-X-AuditID: cbfec36d-51bff70000002620-c3-623a39477310
+        ussmges2new.samsung.com (USCPEMTA) with SMTP id F6.85.09642.53B3A326; Tue,
+        22 Mar 2022 17:10:13 -0400 (EDT)
+Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
+        [203.254.195.91]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20220322211013uscas1p2fe8d81180e00417559e3971ddf5bc2fc~e0C7XpbI22075020750uscas1p2h;
+        Tue, 22 Mar 2022 21:10:13 +0000 (GMT)
+X-AuditID: cbfec36f-bfdff700000025aa-b2-623a3b35e40f
 Received: from SSI-EX3.ssi.samsung.com ( [105.128.2.146]) by
-        ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id FD.A9.09665.6493A326; Tue,
-        22 Mar 2022 17:01:59 -0400 (EDT)
+        ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id EB.4A.09672.43B3A326; Tue,
+        22 Mar 2022 17:10:13 -0400 (EDT)
 Received: from SSI-EX3.ssi.samsung.com (105.128.2.228) by
         SSI-EX3.ssi.samsung.com (105.128.2.228) with Microsoft SMTP Server
         (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2242.4; Tue, 22 Mar 2022 14:01:58 -0700
+        15.1.2242.4; Tue, 22 Mar 2022 14:10:12 -0700
 Received: from SSI-EX3.ssi.samsung.com ([fe80::8d80:5816:c578:8c36]) by
         SSI-EX3.ssi.samsung.com ([fe80::8d80:5816:c578:8c36%3]) with mapi id
-        15.01.2242.008; Tue, 22 Mar 2022 14:01:58 -0700
+        15.01.2242.008; Tue, 22 Mar 2022 14:10:12 -0700
 From:   Adam Manzanares <a.manzanares@samsung.com>
 To:     Davidlohr Bueso <dave@stgolabs.net>
 CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
@@ -55,114 +55,127 @@ CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
         "ira.weiny@intel.com" <ira.weiny@intel.com>,
         "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
         "alison.schofield@intel.com" <alison.schofield@intel.com>
-Subject: Re: [PATCH 4/5] cxl/mbox: Use new return_code handling
-Thread-Topic: [PATCH 4/5] cxl/mbox: Use new return_code handling
-Thread-Index: AQHYPjARtXa0g70k/ES76DOkbulQ9A==
-Date:   Tue, 22 Mar 2022 21:01:58 +0000
-Message-ID: <20220322210158.GC198593@bgt-140510-bm01>
-In-Reply-To: <20220317234049.69323-5-dave@stgolabs.net>
+Subject: Re: [PATCH 5/5] cxl/mbox: Retry sending mbox command upon RETRY
+ return_code
+Thread-Topic: [PATCH 5/5] cxl/mbox: Retry sending mbox command upon RETRY
+        return_code
+Thread-Index: AQHYPjE4CeSEzxQasEGdCPz6IHnPew==
+Date:   Tue, 22 Mar 2022 21:10:12 +0000
+Message-ID: <20220322211012.GD198593@bgt-140510-bm01>
+In-Reply-To: <20220317234049.69323-6-dave@stgolabs.net>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-originating-ip: [105.128.2.176]
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1AC01E53D5BCD14CA4786893347A51B8@ssi.samsung.com>
+Content-ID: <B03BDFD83AE67A4BB393E91770A2DDE9@ssi.samsung.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCKsWRmVeSWpSXmKPExsWy7djXc7rullZJBvOOSFjcfXyBzaLrWT+z
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEKsWRmVeSWpSXmKPExsWy7djXc7qm1lZJBttfaljcfXyBzaLrWT+z
         xfSpFxgtVt9cw2ix/+lzFovzs06xWNyacIzJgd1j8Z6XTB5TZ9d7fN4kF8AcxWWTkpqTWZZa
-        pG+XwJXR9uYKW8EPvoqG1/sYGxin83QxcnJICJhIbP/3jrWLkYtDSGAlo8TpWfegnFYmifdr
-        brPAVP38s40NIrGWUeLf5+nsEM5HRol3jT+YIJwDjBJvVq9jA2lhEzCQ+H18IzOILSKgLjFv
-        7W1GkCJmgXNMEp1fW4GWcHAIC9hL/PnsC1HjIDH1/gk2CFtP4vS9f+wgNouAqsSbzlmsIDav
-        gKnEod19TCA2p4C5xLOGH4wgNqOAmMT3U2vA4swC4hK3nsxngjhbUGLR7D3MELaYxL9dD9kg
-        bEWJ+99fskPU60gs2P2JDcK2k7i58TorhK0tsWzha2aIvYISJ2c+gQaFpMTBFTdYQH6REDjD
-        ITFz50uohIvE2sfTGSFsaYnpay5DFa1ilJjyrY0dwtnMKDHj1wWo86wl/nVeY5/AqDILyeWz
-        kFw1C8lVs5BcNQvJVQsYWVcxipcWF+empxYb5qWW6xUn5haX5qXrJefnbmIEJqTT/w7n7mDc
-        ceuj3iFGJg7GQ4wSHMxKIryLP5gnCfGmJFZWpRblxxeV5qQWH2KU5mBREuddlrkhUUggPbEk
-        NTs1tSC1CCbLxMEp1cC06N3xTT5xL7+Hl0z6t9a4or3O1cDM+JOhkHD5LOXAbEVzb/ab17/u
-        fFi76nmnsSPDilxWr1ebDq+4+Or9S/++/Nn7tngf5Z7FOMNc5/rnMK0DUc0628tacp6eNp2r
-        ZruYv2bPLv5db2avfJ/is/voxH/8Vs5SE8sPf90dsedT2tLo5jcXSlXrytz6zs57G+gfdilB
-        I3lVye7YqbILeh+79M544Ho3YVbJhfkdf/8v5rVkPhfocvfYtA9nTO9+yEq89j9rYZN65Pyo
-        1gtpj7iDZk1p3/bm+qLPbdltXbyNz29ZCMys21DcGa70xsZn7q9D9yR930q+V1/kZ57yLk7y
-        TM7B21NLN949mBEbzZb3XomlOCPRUIu5qDgRAMq125e3AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPIsWRmVeSWpSXmKPExsWS2cA0Sdfd0irJ4M4DVou7jy+wWXQ962e2
-        mD71AqPF6ptrGC32P33OYnF+1ikWi1sTjjE5sHss3vOSyWPq7HqPz5vkApijuGxSUnMyy1KL
-        9O0SuDLa3lxhK/jBV9Hweh9jA+N0ni5GTg4JAROJn3+2sXUxcnEICaxmlFi+6DIzhPORUWL9
-        9Y3sEM4BRon559pYQFrYBAwkfh/fyAxiiwioS8xbe5sRpIhZ4AyTxIdHl4E6ODiEBewl/nz2
-        hahxkJh6/wQbhK0ncfreP3YQm0VAVeJN5yxWEJtXwFTi0O4+JhBbSCBZ4suFr2C7OAXMJZ41
-        /GAEsRkFxCS+n1oDVsMsIC5x68l8JogXBCSW7DnPDGGLSrx8/I8VwlaUuP/9JTtEvY7Egt2f
-        2CBsO4mbG6+zQtjaEssWvmaGuEFQ4uTMJywQvZISB1fcYJnAKDELybpZSEbNQjJqFpJRs5CM
-        WsDIuopRvLS4ODe9otg4L7Vcrzgxt7g0L10vOT93EyMwjk//Oxyzg/HerY96hxiZOBgPMUpw
-        MCuJ8C7+YJ4kxJuSWFmVWpQfX1Sak1p8iFGag0VJnNcjdmK8kEB6YklqdmpqQWoRTJaJg1Oq
-        gUn9gYPPW3eNrj8zeZr+LHF201pQdPv/1pjs9SLuD4xT2/2s+4LfKvBm77982ZgjJSB7sZvr
-        ur0qUddTK3/Y7iyaa/eM87lu88THj1RS58UI7tlaHC9zufDKMt7w+adfHRC+vMPpmq377vis
-        z0+5jzEH9W3tvrzJimuRhtanc9fPv/qlepjjLc8VcZ04kUONvsFddebV738bNTkEJIo0SFnW
-        /t8cdveRkNXWpjyxE/N3lytvyc782+nuqruda7/L5f/uG+4eUPfnMei8GW6zyulsp+vhPl4p
-        10sOV/c6PuCdmvMhhyPI6NGd7p1Gp3aV5mtvEr565e4F+fN/wo8YWJouZRP22H9oKq+oo9eR
-        LCWW4oxEQy3mouJEAPn9P9pSAwAA
-X-CMS-MailID: 20220322210159uscas1p2b7bfb832c275068e1a159cc1183057c2
+        pG+XwJVxbesbloJOgYrFd66xNDDe4+li5OSQEDCR+HVsBhuILSSwklHi++mCLkYuILuVSWLB
+        h18sMEVnm+4wQRStZZR48yAAougjo8TWpg2MEM4BRokDn3+CdbAJGEj8Pr6RGcQWEVCXmLf2
+        NlgRs8A5JonOr62sIAlhgTCJw4uOs0EUhUsc+/qPEcLWk5j2fzlYM4uAqsSKGRvB6nkFTCVO
+        HdzKDmJzCphL9J6/DWYzCohJfD+1Buw8ZgFxiVtP5jNBnC0osWj2HmYIW0zi366HbBC2osT9
+        7y/ZIep1JBbs/sQGYdtJPPn1BCquLbFs4WtmiL2CEidnPoEGhaTEwRU3WECekRA4wSHRMfs9
+        0NEcQI6LxJtGYYgaaYm/d5cxQdSsYpSY8q2NHcLZzCgx49cFqOusJf51XmOfwKgyC8nhs5Ac
+        NQvJUbOQHDULyVELGFlXMYqXFhfnpqcWG+WllusVJ+YWl+al6yXn525iBCaj0/8O5+9gvH7r
+        o94hRiYOxkOMEhzMSiK8iz+YJwnxpiRWVqUW5ccXleakFh9ilOZgURLnXZa5IVFIID2xJDU7
+        NbUgtQgmy8TBKdXAJPK9ef32L4af0/V8LPYYcVZI+TU+u2HxX1BB98aJ5CQRi23zr81tiP74
+        6NP7s7O8JjRO6hC4k1vF6rYkeu67a+envPg5ebXpk81rKzu3lx19xbl7vsUNfzMH4e+rtf7v
+        cbfa/mCfTq//5e+vJbS0alP2Rk+ZsH9NxO3zwpNumT1ivruuwf5TYNhnptUvql0lV9iLFNgK
+        hjHdfS+QkRP7IkCWd5Ll7339JQ+jBdm7subnbHvnJ8r0tJ9bd867LVMaX316LiMrfS3OY82H
+        tz4W7H5mPI/3vJj399u05gPMZXZr7I48vnfpkvPeJ+bTZUWy3JfsvLrq0/UkLc17znKlMgXT
+        NUvKWD+z/Nsvy92SH6zEUpyRaKjFXFScCABGFmHetQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrAIsWRmVeSWpSXmKPExsWS2cA0SdfU2irJ4G43t8XdxxfYLLqe9TNb
+        TJ96gdFi9c01jBb7nz5nsTg/6xSLxa0Jx5gc2D0W73nJ5DF1dr3H501yAcxRXDYpqTmZZalF
+        +nYJXBnXtr5hKegUqFh85xpLA+M9ni5GTg4JAROJs013mLoYuTiEBFYzSrz5N4UNwvnIKPH8
+        xHVWCOcAo8Sd6ydYQVrYBAwkfh/fyAxiiwioS8xbe5sRpIhZ4AyTxIdHl9lBEsICYRKHFx1n
+        gygKl9h4qI8dwtaTmPZ/OVgzi4CqxIoZG8GG8gqYSpw6uBWsRkggWWLn5PuMIDangLlE7/nb
+        YHFGATGJ76fWMIHYzALiEreezGeC+EFAYsme88wQtqjEy8f/WCFsRYn731+yQ9TrSCzY/YkN
+        wraTePLrCVRcW2LZwtfMEDcISpyc+YQFoldS4uCKGywTGCVmIVk3C8moWUhGzUIyahaSUQsY
+        WVcxipcWF+emVxQb5aWW6xUn5haX5qXrJefnbmIERvLpf4ejdzDevvVR7xAjEwfjIUYJDmYl
+        Ed7FH8yThHhTEiurUovy44tKc1KLDzFKc7AoifO+jJoYLySQnliSmp2aWpBaBJNl4uCUamBK
+        dbhuuDvfurlAN8fFdTJ70M7a4Hl5y3aWHFuWMyt6G89SvomWhiuXxvKcCGp69N5gn5Wq99v5
+        voffrwkWmzKvZYf355RnT012dNSv4TSSdldM+yn7dU7xtvWJa7meLSs+o/H1WH2IzSzHdOtU
+        z9maj76FSi+ZFBBn9SA081bHcd0ms+7w+b9+xtQHFr1w12RZJDfBIs1Bp/hxggd/a1nWypJK
+        aU8zK9kdSf2+HPpzf3MvbVv1Temz9OnLz+Q+VHNdL7tj1Kb3epXVpHweT0bpLww9PE+tPf5a
+        We+yidt8p+7nzKsXzX4UhSi9LLg4h1czY8Jqp8tXbAVaf2keL5usEBQTsyHYjvOBp8/BZCWW
+        4oxEQy3mouJEAA/Gm4FTAwAA
+X-CMS-MailID: 20220322211013uscas1p2fe8d81180e00417559e3971ddf5bc2fc
 CMS-TYPE: 301P
-X-CMS-RootMailID: 20220322210159uscas1p2b7bfb832c275068e1a159cc1183057c2
+X-CMS-RootMailID: 20220322211013uscas1p2fe8d81180e00417559e3971ddf5bc2fc
 References: <20220317234049.69323-1-dave@stgolabs.net>
-        <20220317234049.69323-5-dave@stgolabs.net>
-        <CGME20220322210159uscas1p2b7bfb832c275068e1a159cc1183057c2@uscas1p2.samsung.com>
+        <20220317234049.69323-6-dave@stgolabs.net>
+        <CGME20220322211013uscas1p2fe8d81180e00417559e3971ddf5bc2fc@uscas1p2.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Mar 17, 2022 at 04:40:48PM -0700, Davidlohr Bueso wrote:
-> Use the global cxl_mbox_cmd_rc table to improve debug messaging
-> in __cxl_pci_mbox_send_cmd() and allow cxl_mbox_send_cmd()
-> to map to proper kernel style errno codes - this patch
-> continues to use -ENXIO only so no change in semantics.
+On Thu, Mar 17, 2022 at 04:40:49PM -0700, Davidlohr Bueso wrote:
+> As mentioned in CXL 2.0 specs: the hardware can set a Retry
+> Required if the the command was not completed due to a
+> temporary error. An optional single retry may resolve the
+> issue. This is the only retry case as in general they are
+> not recommended for commands that return an error.
 >=20
 > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 > ---
->  drivers/cxl/core/mbox.c | 7 ++++---
->  drivers/cxl/pci.c       | 3 ++-
->  2 files changed, 6 insertions(+), 4 deletions(-)
+>  drivers/cxl/core/mbox.c | 23 ++++++++++++++---------
+>  1 file changed, 14 insertions(+), 9 deletions(-)
 >=20
 > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index d4d4a16820b7..fa9e7043f158 100644
+> index fa9e7043f158..567987052b68 100644
 > --- a/drivers/cxl/core/mbox.c
 > +++ b/drivers/cxl/core/mbox.c
-> @@ -170,9 +170,10 @@ int cxl_mbox_send_cmd(struct cxl_dev_state *cxlds, u=
-16 opcode, void *in,
->  	if (rc)
->  		return rc;
+> @@ -160,20 +160,25 @@ int cxl_mbox_send_cmd(struct cxl_dev_state *cxlds, =
+u16 opcode, void *in,
+
+Can you update the documentation cxl_mbox_send_cmd that the function now=20
+retries commands if the RC indicates it should be done?
+
+>  		.size_out =3D out_size,
+>  		.payload_out =3D out,
+>  	};
+> -	int rc;
+> +	int rc, retry =3D 1;
 > =20
-> -	/* TODO: Map return code to proper kernel style errno */
-> -	if (mbox_cmd.return_code !=3D CXL_MBOX_CMD_RC_SUCCESS)
-> -		return -ENXIO;
-> +	if (mbox_cmd.return_code !=3D CXL_MBOX_CMD_RC_SUCCESS) {
-> +		int err =3D cxl_mbox_cmd_rc2errno(&mbox_cmd);
-> +		return -err;
-> +	}
+>  	if (out_size > cxlds->payload_size)
+>  		return -E2BIG;
+> =20
+> -	/* acquire and releases the mbox_mutex */
+> -	rc =3D cxlds->mbox_send(cxlds, &mbox_cmd);
+> -	if (rc)
+> -		return rc;
+> +	do {
+> +		/* acquire and releases the mbox_mutex */
+> +		rc =3D cxlds->mbox_send(cxlds, &mbox_cmd);
+> +		if (rc)
+> +			return rc;
+> =20
+> -	if (mbox_cmd.return_code !=3D CXL_MBOX_CMD_RC_SUCCESS) {
+> -		int err =3D cxl_mbox_cmd_rc2errno(&mbox_cmd);
+> -		return -err;
+> -	}
+> +		if (mbox_cmd.return_code =3D=3D CXL_MBOX_CMD_RC_SUCCESS)
+> +			break;
+> +
+> +		if (mbox_cmd.return_code !=3D CXL_MBOX_CMD_RC_RETRY || !retry) {
+> +			int err =3D cxl_mbox_cmd_rc2errno(&mbox_cmd);
+> +			return -err;
+> +		}
+> +	} while (retry--);
 > =20
 >  	/*
 >  	 * Variable sized commands can't be validated and so it's up to the
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 0c36d111232b..67ec0220826f 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -178,7 +178,8 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_sta=
-te *cxlds,
->  		FIELD_GET(CXLDEV_MBOX_STATUS_RET_CODE_MASK, status_reg);
-> =20
->  	if (mbox_cmd->return_code !=3D CXL_MBOX_CMD_RC_SUCCESS) {
-> -		dev_dbg(dev, "Mailbox operation had an error\n");
-> +		dev_dbg(dev, "Mailbox operation had an error: %s\n",
-> +			cxl_mbox_cmd_rc2str(mbox_cmd));
->  		return 0;  /* completed but caller must check return_code */
->  	}
-> =20
 >=20
 > --=20
 > 2.26.2
->=20
+>
 
-Looks good.
+Other than the doc change for the cxl_mbox_send_cmd function.
+LGTM
 
 Reviewed by: Adam Manzanares <a.manzanares@samsung.com>=
