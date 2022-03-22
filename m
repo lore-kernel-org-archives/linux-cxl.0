@@ -2,247 +2,223 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD8F1C433F5
-	for <linux-cxl@archiver.kernel.org>; Tue, 22 Mar 2022 21:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A874C433EF
+	for <linux-cxl@archiver.kernel.org>; Tue, 22 Mar 2022 23:38:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236925AbiCVVw1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 22 Mar 2022 17:52:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47250 "EHLO
+        id S240559AbiCVXkF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 22 Mar 2022 19:40:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236897AbiCVVwZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Mar 2022 17:52:25 -0400
-Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBF876C959
-        for <linux-cxl@vger.kernel.org>; Tue, 22 Mar 2022 14:50:56 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id E90359219A4;
-        Tue, 22 Mar 2022 21:50:54 +0000 (UTC)
-Received: from pdx1-sub0-mail-a302.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 62ABC92184E;
-        Tue, 22 Mar 2022 21:50:24 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1647985854; a=rsa-sha256;
-        cv=none;
-        b=PnprPgLDAogDHKymHwTfG1XYI+yx7Go1vosaukUhME7LGJ4dJdDMu64vTc8IU4JE8iTpY+
-        IbMXSjYlzd0fzo3jcEmVHHZHh7HZRviQYXvp1j7zn1qNE17HHpP4a/TUSZwNqBodhTDzLh
-        juBl6vFLlOPu1Yif+Ej5R5TwQCiBI/Lr6gK1hCqGDNpfpgrmbcCo7Ua+HsttrPEujtXpTe
-        wgMU6zhTkG5+vLcazbTtd69O/l0qBQgUoeCXmFyntGm2OHprUJMff63tciJ9Hsa7MV2oyx
-        MhHUOSeX5BE68WWDdTF9lpwPO6dxJDPPebzpKX21l7Sf9ZcxBtl4g3YVHnbDag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1647985854;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=iSiIQtBV9gOo9Hb+uyCatBiflandKAcV/fhV61KhDLc=;
-        b=B/8002JRgHJcDjAQERe4YW56jShlmN1bqElpAD0MWGtn6uJvPlUtfS6hb2YIr6SJLmxMFq
-        O450IRHJVVnVa3Gl4P35HTB+nl6e2zDMwy9Af8chKQ4wDdxYCXNcjrpOmOvnSRr+bXx9zt
-        0f3QrDUpOuoTWFZqdCYMQdesj5CSNf8PxVxr50y6xyy85/Go6gJFOgoLZBWNipWg3qutiM
-        MC6Qs9ZMpr7L8Lwfxwbxfs9jym4aNCN8XZdHIW6KSaEMFIZKZDIXuS2i16/V3N0vy0PM4x
-        AF36zPaRYi8vKtjhkqqQ4h0HDY2aivdBLHR43ZIUyb3ZETmdLbcRgBxG3z4soQ==
-ARC-Authentication-Results: i=1;
-        rspamd-55d445dbdb-4n72t;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from pdx1-sub0-mail-a302.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.112.234.135 (trex/6.5.3);
-        Tue, 22 Mar 2022 21:50:54 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Relation-Scare: 1682f55712d38a83_1647985854753_2223154152
-X-MC-Loop-Signature: 1647985854753:3454190382
-X-MC-Ingress-Time: 1647985854753
-Received: from offworld (unknown [104.36.25.8])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a302.dreamhost.com (Postfix) with ESMTPSA id 4KNQBm1ZpHz18c;
-        Tue, 22 Mar 2022 14:50:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1647985809;
-        bh=iSiIQtBV9gOo9Hb+uyCatBiflandKAcV/fhV61KhDLc=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=SOl72TD2uQy/lbnQ5uvPtGIN75q9mgAyo3616sNaXfKP+J/X7GIkWmDM/uNUwWdao
-         Ap3ZS+HXFlw+REnCRw26MK0CKamniBN863DODFaGyXkVDtCIpndlL9aBrPVjvieQ3t
-         N99f73hPFMP2Ht25NpygZF1kSKFLOoX3hT+lxbCYRX4EJzsRlul9Q+jIYzjA3hfuRy
-         yIBjK5301GZCopqUc8XlHgmqxYPKgn95y9r5JKFlIfm3fapRhbxgecRbx889DXWtvt
-         UJWicMiz6fWiVhTt3pIscmFM/K14mbHKPRkhKLvdX8MTQ7soVSC4CQO/LS4qy6NADT
-         zJCxhopOF2PLA==
-Date:   Tue, 22 Mar 2022 14:50:04 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Adam Manzanares <a.manzanares@samsung.com>
-Cc:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "ben.widawsky@intel.com" <ben.widawsky@intel.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        "alison.schofield@intel.com" <alison.schofield@intel.com>
-Subject: Re: [PATCH 3/5] cxl/mbox: Improve handling of mbox_cmd return codes
-Message-ID: <20220322215004.sejgcghqpwse7gqx@offworld>
-References: <20220317234049.69323-1-dave@stgolabs.net>
- <20220317234049.69323-4-dave@stgolabs.net>
- <CGME20220322205612uscas1p17d7f32b9b23dbadc106ae0daf69477f9@uscas1p1.samsung.com>
- <20220322205611.GB198593@bgt-140510-bm01>
+        with ESMTP id S240942AbiCVXiZ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Mar 2022 19:38:25 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B613C6E29C
+        for <linux-cxl@vger.kernel.org>; Tue, 22 Mar 2022 16:36:56 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id e5so21324pls.4
+        for <linux-cxl@vger.kernel.org>; Tue, 22 Mar 2022 16:36:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=5DqFCQ2oE1pYCzIYiiNKM9mZOaie+LDyoMdfausdlzI=;
+        b=L33V0a+wmtYwezPj9X1Y4RJsFXoUt8lcvZygJQRB9QGp2FlIAFlFCQSenTQiToUg+c
+         3+e//zmnt99gfM9YruaQC/jabOcnXZHGDQJJDdByUeVnv/mVCp0W6RjHZEX/I8WX27Ql
+         gfRkjvV8mjJK2JqpRMhGmcG7akVWkhriyu5EbJnrNq4rpyVJGw0FIadK6tIQSUu/c78h
+         PuOzORsIXQ6y81ojU4gPKOVlrOgm4JcFomgufQdqbFe5GU4fxRJgeWFa7o4VGW4fOvZl
+         0C85Tzri705dX4QyezpCUZjgAGW/9zRpecwXMzaZT8oqBaLW+kqwh6kmfuXhI0OLhyvr
+         PCNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=5DqFCQ2oE1pYCzIYiiNKM9mZOaie+LDyoMdfausdlzI=;
+        b=WIFkXRRb8ujmneY520NGWC2qPWXPPMFZUhJSZAVOyv+E6rOte0Q6Piqg45hJgm4zBN
+         ZRK5vV8QBst+4BYV+ukyxNzIyHeF429xqcXJyaSIIVf7oupQdlm2vtE09VtBlzeymNsX
+         NdCVzeeggOEHnvHpsPRvI5NFOrz8w4d7wpMUPsv5NRWiDszKWVYN8OQtmB5DwLoU2bMa
+         TMYXyR8RR6hGFlPzwN5Rji+fxncdXfGSQrN+x7m1vlsaUspxvxPtSU5QaX4RJGYMDZeh
+         +Q8Uh+PycK5J7GY0jwIS8OfuAvFgVJJT7tBon0a9V543lLNpthq15r5l8AxKUWlx4b9l
+         SMUg==
+X-Gm-Message-State: AOAM531gP/P1bmxoGojjry7go4MyUMkPzMX9aVPA+pUGBnuIT3ObJVpg
+        5YomyblI1RUy/OKQ53sxa/BhU0tEqxumGQyUp6u2hA==
+X-Google-Smtp-Source: ABdhPJwaBAmXrFbdDD+Fv0CHyPPagaF2dqGsWuhdIMGEoUkYGhFSdY/MQiRuUWJd7gbbe4sUVvQHnLl99jCHRmIqx9M=
+X-Received: by 2002:a17:90a:c083:b0:1c6:a164:fd5d with SMTP id
+ o3-20020a17090ac08300b001c6a164fd5dmr8015377pjs.8.1647992216166; Tue, 22 Mar
+ 2022 16:36:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20220322205611.GB198593@bgt-140510-bm01>
-User-Agent: NeoMutt/20201120
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 22 Mar 2022 16:36:48 -0700
+Message-ID: <CAPcyv4jE=wfmfWS94WyMWhHwub0jJ4Vm6hnz8G3HJ9rd8pXKSA@mail.gmail.com>
+Subject: [GIT PULL] Compute Express Link update for v5.18
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-cxl@vger.kernel.org, Linux NVDIMM <nvdimm@lists.linux.dev>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 22 Mar 2022, Adam Manzanares wrote:
+Hi Linus, please pull from:
 
->On Thu, Mar 17, 2022 at 04:40:47PM -0700, Davidlohr Bueso wrote:
->> Upon a completed command the caller is still expected to check
->> the actual return_code register for to ensure it succeed. This
->
->Is  MB Status register == return_code register here. s/for to/to
->> adds, per the spec, the potential command return codes. It maps
->> the hardware return code with the kernel's errno style, and by
->> default continues to use -ENXIO (Command completed, but device
->> reported an error).
->>
->> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
->> ---
->>  drivers/cxl/core/mbox.c |  2 +-
->>  drivers/cxl/cxlmem.h    | 90 ++++++++++++++++++++++++++++++++++++++++-
->>  drivers/cxl/pci.c       |  2 +-
->>  3 files changed, 91 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
->> index 778b04a0fb0a..d4d4a16820b7 100644
->> --- a/drivers/cxl/core/mbox.c
->> +++ b/drivers/cxl/core/mbox.c
->> @@ -171,7 +171,7 @@ int cxl_mbox_send_cmd(struct cxl_dev_state *cxlds, u16 opcode, void *in,
->>		return rc;
->>
->>	/* TODO: Map return code to proper kernel style errno */
->> -	if (mbox_cmd.return_code != CXL_MBOX_SUCCESS)
->> +	if (mbox_cmd.return_code != CXL_MBOX_CMD_RC_SUCCESS)
->>		return -ENXIO;
->>
->>	/*
->> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
->> index 5d33ce24fe09..268597d1ff33 100644
->> --- a/drivers/cxl/cxlmem.h
->> +++ b/drivers/cxl/cxlmem.h
->> @@ -85,9 +85,97 @@ struct cxl_mbox_cmd {
->>	size_t size_in;
->>	size_t size_out;
->>	u16 return_code;
->> -#define CXL_MBOX_SUCCESS 0
->>  };
->>
->> +/*
->> + * Per CXL 2.0 Section 8.2.8.4.5.1
->> + */
->> +enum {
->> +	CXL_MBOX_CMD_RC_SUCCESS = 0,
->> +	CXL_MBOX_CMD_RC_BACKGROUND,
->> +	CXL_MBOX_CMD_RC_INVINPUT,
->> +	CXL_MBOX_CMD_RC_UNSUPPORTED,
->> +	CXL_MBOX_CMD_RC_INTERNAL,
->> +	CXL_MBOX_CMD_RC_RETRY,
->> +	CXL_MBOX_CMD_RC_BUSY,
->> +	CXL_MBOX_CMD_RC_MEDIADISABLED,
->> +	CXL_MBOX_CMD_RC_FWINPROGRESS,
->> +	CXL_MBOX_CMD_RC_FWOOO,
->> +	CXL_MBOX_CMD_RC_FWAUTH,
->> +	CXL_MBOX_CMD_RC_INVSLOT,
->
->Should we keep the FW prefix for INVSLOT, since this is still related to a
->FW operation?
->
->> +	CXL_MBOX_CMD_RC_FWROLLBACK,
->> +	CXL_MBOX_CMD_RC_FWRESET,
->> +	CXL_MBOX_CMD_RC_INVHANDLE,
->> +	CXL_MBOX_CMD_RC_INVPA,
->> +	CXL_MBOX_CMD_RC_INJPOISON,
->
->We should indicate that we hit the poison limit, something like the
->following POISONLMT
->
->> +	CXL_MBOX_CMD_RC_MEDIAFAILURE,
->> +	CXL_MBOX_CMD_RC_ABORT,
->> +	CXL_MBOX_CMD_RC_INVSECURITY,
->> +	CXL_MBOX_CMD_RC_PASSPHRASE,
->> +	CXL_MBOX_CMD_RC_MBOXUNSUPPORTED,
->> +	CXL_MBOX_CMD_RC_INVPAYLOAD,
->
->Might as well be more descriptive here PAYLOADLEN, looking at this more now
->maybe we drop all of the INV prefixes since most of the return codes are error
->codes.
+  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-5.18
 
-Yes to all the above.
+...to receive the CXL subsystem update for v5.18. This development
+cycle extends the subsystem to discover CXL resources throughout a
+CXL/PCIe switch topology and respond to hot add/remove events anywhere
+in that topology. This is more foundational infrastructure in
+preparation for dynamic memory region provisioning support. Recall
+that CXL memory regions, as the new "Theory of Operation" section of
+Documentation/driver-api/cxl/memory-devices.rst describes, bring
+storage volume striping semantics to memory. The hot add/remove
+behavior is validated with extensions to the cxl_test unit test
+environment and this test in the cxl-cli test suite:
 
->
->> +};
->> +
->> +#define CXL_CMD_RC(_value, errno, str)		\
->> +	[CXL_MBOX_CMD_RC_##_value] = {		\
->> +		.err = errno,			\
->> +		.desc =	str,			\
->> +	}
->> +
->> +/*
->> + * mbox cmd hardware return_code handling
->> + */
->> +struct cxl_mbox_cmd_rc {
->> +	int err; /* proper kernel style errno */
->> +	const char *desc;
->> +};
->> +
->> +static const struct cxl_mbox_cmd_rc cxl_mbox_cmd_rctable[] = {
->> +	CXL_CMD_RC(SUCCESS, 0, NULL),
->> +	CXL_CMD_RC(BACKGROUND, ENXIO, "background cmd started successfully"),
->> +	/* errors here on out */
->> +	CXL_CMD_RC(INVINPUT, ENXIO, "cmd input was invalid"),
->> +	CXL_CMD_RC(UNSUPPORTED, ENXIO, "cmd is not supported"),
->> +	CXL_CMD_RC(INTERNAL, ENXIO, "internal device error"),
->> +	CXL_CMD_RC(RETRY, ENXIO, "temporary error, retry once"),
->> +	CXL_CMD_RC(BUSY, ENXIO, "ongoing background operation"),
->> +	CXL_CMD_RC(MEDIADISABLED, ENXIO, "media access is disabled"),
->> +	CXL_CMD_RC(FWINPROGRESS, ENXIO,
->> +			"only one FW package can be transferred at a time"),
->> +	CXL_CMD_RC(FWOOO, ENXIO,
->> +			"FW package content was transferred out of order"),
->> +	CXL_CMD_RC(FWAUTH, ENXIO, "FW package authentication failed"),
->> +	CXL_CMD_RC(INVSLOT, ENXIO,
->> +			"FW slot specified is not supported for requested op"),
->> +	CXL_CMD_RC(FWROLLBACK, ENXIO,
->> +			"rolled back to the previous active FW"),
->> +	CXL_CMD_RC(FWRESET, ENXIO, "FW failed to activate, needs cold reset"),
->> +	CXL_CMD_RC(INVHANDLE, ENXIO,
->> +			"one or more Event Record Handles were invalid"),
->> +	CXL_CMD_RC(INVPA, ENXIO, "physical address specified is invalid"),
->> +	CXL_CMD_RC(INJPOISON, ENXIO,
->> +			"allowed poison injection has been reached"),
->
->injection limit
->
->> +	CXL_CMD_RC(MEDIAFAILURE, ENXIO, "permanent issue with the media"),
->> +	CXL_CMD_RC(ABORT, ENXIO, "background cmd was aborted by device"),
->> +	CXL_CMD_RC(INVSECURITY, ENXIO,
->> +		   "not valid in the current security state"),
->> +	CXL_CMD_RC(PASSPHRASE, ENXIO,
->> +			"passphrase doesn't match current passphrase"),
->
->current set passphrase
->
->> +	CXL_CMD_RC(MBOXUNSUPPORTED, ENXIO,
->> +			"not supported on the mailbox it was issued on"),
->> +	CXL_CMD_RC(INVPAYLOAD, ENXIO, "invalid payload length"),
->> +};
->
->Other than the minor nits.
->Looks good.
+https://github.com/pmem/ndctl/blob/djbw/for-74/cxl/test/cxl-topology.sh
 
-Thanks for reviewing. I'll add the changes in a v2 but will wait a bit
-for any further feedback.
+All but the top commit of this update have seen multiple weeks of
+exposure in Linux-next with no reported issues. The top-commit is an
+obviously correct fix applied today.
+
+---
+
+The following changes since commit 26291c54e111ff6ba87a164d85d4a4e134b7315c:
+
+  Linux 5.17-rc2 (2022-01-30 15:37:07 +0200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-5.18
+
+for you to fetch changes up to 05e815539f3f161585c13a9ab023341bade2c52f:
+
+  cxl/core/port: Fix NULL but dereferenced coccicheck error
+(2022-03-22 10:51:17 -0700)
+
+----------------------------------------------------------------
+cxl for 5.18
+
+- Add a driver for 'struct cxl_memdev' objects responsible for CXL.mem
+  operation as distinct from 'cxl_pci' mailbox operations. Its primary
+  responsibility is enumerating an endpoint 'struct cxl_port' and all the
+  'struct cxl_port' instances between an endpoint and the CXL platform
+  root.
+
+- Add a driver for 'struct cxl_port' objects responsible for enumerating
+  and operating all Host-managed Device Memory (HDM) decoder resources
+  between the platform-level CXL memory description, all intervening host
+  bridges / switches, and the HDM resources in endpoints.
+
+- Update the cxl_pci driver to validate CXL.mem operation precursors to
+  HDM decoder operation like ready-polling, and legacy CXL 1.1 DVSEC
+  based CXL.mem configuration.
+
+- Add basic lockdep coverage for usage of device_lock() on CXL subsystem
+  objects similar to what exists for LIBNVDIMM. Include a compile-time
+  switch for which subsystem to validate at run-time.
+
+- Update cxl_test to emulate a one level switch topology.
+
+- Document a "Theory of Operation" for the subsystem.
+
+- Add 'numa_node' and 'serial' attributes to cxl_memdev sysfs
+
+- Include miscellaneous fixes for spec / QEMU CXL emulation
+  compatibility and static analysis reports.
+
+----------------------------------------------------------------
+Ben Widawsky (17):
+      cxl: Rename CXL_MEM to CXL_PCI
+      cxl/pci: Implement Interface Ready Timeout
+      cxl: Flesh out register names
+      cxl/pci: Add new DVSEC definitions
+      cxl/acpi: Map component registers for Root Ports
+      cxl: Introduce module_cxl_driver
+      cxl/core: Convert decoder range to resource
+      cxl/core/port: Clarify decoder creation
+      cxl/core/port: Make passthrough decoder init implicit
+      cxl/core: Track port depth
+      cxl/port: Add a driver for 'struct cxl_port' objects
+      cxl/pci: Store component register base in cxlds
+      cxl/pci: Cache device DVSEC offset
+      cxl/pci: Retrieve CXL DVSEC memory info
+      cxl/pci: Implement wait for media active
+      cxl/mem: Add the cxl_mem driver
+      cxl/core/port: Add endpoint decoders
+
+Dan Williams (29):
+      cxl/pci: Defer mailbox status checks to command timeouts
+      cxl/core/port: Rename bus.c to port.c
+      cxl/decoder: Hide physical address information from non-root
+      cxl/core: Fix cxl_probe_component_regs() error message
+      cxl: Prove CXL locking
+      cxl/core/port: Use dedicated lock for decoder target list
+      cxl/port: Introduce cxl_port_to_pci_bus()
+      cxl/pmem: Introduce a find_cxl_root() helper
+      cxl/port: Up-level cxl_add_dport() locking requirements to the caller
+      cxl/pci: Rename pci.h to cxlpci.h
+      cxl/core: Generalize dport enumeration in the core
+      cxl/core/hdm: Add CXL standard decoder enumeration to the core
+      cxl/core: Emit modalias for CXL devices
+      cxl/core/port: Remove @host argument for dport + decoder enumeration
+      cxl/pci: Emit device serial number
+      cxl/memdev: Add numa_node attribute
+      cxl/core/port: Add switch port enumeration
+      cxl/core: Move target_list out of base decoder attributes
+      tools/testing/cxl: Mock dvsec_ranges()
+      tools/testing/cxl: Fix root port to host bridge assignment
+      tools/testing/cxl: Mock one level of switches
+      tools/testing/cxl: Enumerate mock decoders
+      tools/testing/cxl: Add a physical_node link
+      cxl/core/port: Fix / relax decoder target enumeration
+      cxl/core/port: Handle invalid decoders
+      cxl/core/port: Fix unregister_port() lock assertion
+      cxl/core: Fix cxl_device_lock() class detection
+      cxl/port: Fix endpoint refcount leak
+      cxl/port: Hold port reference until decoder release
+
+Jonathan Cameron (1):
+      cxl/regs: Fix size of CXL Capability Header Register
+
+Wan Jiabing (1):
+      cxl/core/port: Fix NULL but dereferenced coccicheck error
+
+ Documentation/ABI/testing/sysfs-bus-cxl         |   36 +
+ Documentation/driver-api/cxl/memory-devices.rst |  315 ++++-
+ drivers/cxl/Kconfig                             |   44 +-
+ drivers/cxl/Makefile                            |    6 +-
+ drivers/cxl/acpi.c                              |  152 +--
+ drivers/cxl/core/Makefile                       |    4 +-
+ drivers/cxl/core/bus.c                          |  675 ----------
+ drivers/cxl/core/core.h                         |    2 +
+ drivers/cxl/core/hdm.c                          |  276 ++++
+ drivers/cxl/core/memdev.c                       |   44 +
+ drivers/cxl/core/pci.c                          |   96 ++
+ drivers/cxl/core/pmem.c                         |   18 +-
+ drivers/cxl/core/port.c                         | 1568 +++++++++++++++++++++++
+ drivers/cxl/core/regs.c                         |   67 +-
+ drivers/cxl/cxl.h                               |  197 ++-
+ drivers/cxl/cxlmem.h                            |   39 +
+ drivers/cxl/cxlpci.h                            |   75 ++
+ drivers/cxl/mem.c                               |  228 ++++
+ drivers/cxl/pci.c                               |  383 ++++--
+ drivers/cxl/pci.h                               |   34 -
+ drivers/cxl/pmem.c                              |   12 +-
+ drivers/cxl/port.c                              |   76 ++
+ drivers/nvdimm/nd-core.h                        |    2 +-
+ lib/Kconfig.debug                               |   23 +
+ tools/testing/cxl/Kbuild                        |   22 +-
+ tools/testing/cxl/mock_acpi.c                   |   74 --
+ tools/testing/cxl/mock_mem.c                    |   10 +
+ tools/testing/cxl/mock_pmem.c                   |   24 -
+ tools/testing/cxl/test/cxl.c                    |  330 ++++-
+ tools/testing/cxl/test/mem.c                    |   19 +
+ tools/testing/cxl/test/mock.c                   |   91 +-
+ tools/testing/cxl/test/mock.h                   |    8 +-
+ 32 files changed, 3725 insertions(+), 1225 deletions(-)
+ delete mode 100644 drivers/cxl/core/bus.c
+ create mode 100644 drivers/cxl/core/hdm.c
+ create mode 100644 drivers/cxl/core/pci.c
+ create mode 100644 drivers/cxl/core/port.c
+ create mode 100644 drivers/cxl/cxlpci.h
+ create mode 100644 drivers/cxl/mem.c
+ delete mode 100644 drivers/cxl/pci.h
+ create mode 100644 drivers/cxl/port.c
+ create mode 100644 tools/testing/cxl/mock_mem.c
+ delete mode 100644 tools/testing/cxl/mock_pmem.c
