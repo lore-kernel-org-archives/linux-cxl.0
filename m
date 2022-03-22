@@ -2,49 +2,58 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D80C433F5
-	for <linux-cxl@archiver.kernel.org>; Tue, 22 Mar 2022 18:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96303C433EF
+	for <linux-cxl@archiver.kernel.org>; Tue, 22 Mar 2022 18:08:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240170AbiCVSDr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 22 Mar 2022 14:03:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33574 "EHLO
+        id S233476AbiCVSKU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 22 Mar 2022 14:10:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240136AbiCVSDp (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Mar 2022 14:03:45 -0400
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34AB968FB4;
-        Tue, 22 Mar 2022 11:02:04 -0700 (PDT)
-Received: by mail-io1-f50.google.com with SMTP id c23so21133219ioi.4;
-        Tue, 22 Mar 2022 11:02:04 -0700 (PDT)
+        with ESMTP id S236572AbiCVSKT (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Mar 2022 14:10:19 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18E246973B
+        for <linux-cxl@vger.kernel.org>; Tue, 22 Mar 2022 11:08:51 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id a5so18885108pfv.2
+        for <linux-cxl@vger.kernel.org>; Tue, 22 Mar 2022 11:08:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/Y78+EpZTl9Gh+x/vVs8YrCz+IB9ys8Pa5n8xQPsbZw=;
+        b=CsNHqU9nA7n3NjegTFFj7ZtozE362IdiOwNqiiFj8K8Wp2Q5utpFXQksbzXbvhpP5Z
+         LEYGU+fGgnpGCci8mr0X+h5e7l0KTt/WH1D/aaPomhdWbA4MhF6xN7w28NzBDp7Is/vM
+         yV3Ub8SXEYYJ/WYeeuheB4p4Y39S/cTr8BzoJrwVxRETUkBb6ewYEv71kBkQJ885zmIj
+         nQ6pLlD63d4mTQwWgcmgYgDEAaxsnr1QHoBVXqrQ34iZuIXcKHOnyKRJs8nxzSfPph51
+         1mFPyoCPb9H1Kgg2YDCb6itu8iT5jsPpr4DUn/Z7a4K+VDVvaU2ZzZ/D8WSj8NrZTJr1
+         cYOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5lW/SIzsJsDB/+cRXXP9peZNE/3ZejmVqRnQLPguCwI=;
-        b=hReCswd67v7ssIBXB4yP+dmrNu6CWs9V2zameSBJpnfDBaqLq33h3QcWTAXtkFxzb2
-         2UWqiVSjy/HAcD+Wozo4OED1fY2i2bQyMkKhpWgAKRIuun4KaVIsalHlh4S84O3aBwgs
-         AkZq60CnWdbEl8F9GTDwnJ/s4/rDKh1rvqevJUh4mMQTbCm5J47fdeFl10XYRxDxK2iK
-         kIOZprLEu36B3W+sBW9zqSPaDUKv89dyXrqCwGyrNhF1EDZlu96IoUP6LeMu8PbJ/CjQ
-         Qj9bq3wvdCWV/lYHfqzqKbttNsLuClSxt2KZjct+/mANcy321GGlRxBWKHZGg0SAZMzr
-         g6Pg==
-X-Gm-Message-State: AOAM531jsAFAXAZVazTT36NljjO+S2iD5u5YOTmDxb5/WEMubXXlnP7s
-        fe7cxbX+t2pkwlYbD0DM/qzQuFI5TOZBNMHTtnU=
-X-Google-Smtp-Source: ABdhPJx7HxrIGS+t1uz2ftjkTLJRd7GxDeBQ2HVuvG2QXVXW6c+60EdVLlAdA6DZwpgLM1F7MU8P7kVwHIHgdvzvQzc=
-X-Received: by 2002:a05:6638:2195:b0:31a:8815:f0c0 with SMTP id
- s21-20020a056638219500b0031a8815f0c0mr9772371jaj.301.1647972123437; Tue, 22
- Mar 2022 11:02:03 -0700 (PDT)
+        bh=/Y78+EpZTl9Gh+x/vVs8YrCz+IB9ys8Pa5n8xQPsbZw=;
+        b=nwVR1ZbtpVndXlCGWERxnqDUHKM0MdbrOVPJF1rtSczbNQvw7yoaTPNt635uHZX+C3
+         YvWyZAgd/GDD4f12mNi+0gQoOrxHjhqTBn19Ak1BSV2hm1p3YBAmpbtL4gBm27z5apCh
+         grCBQ2i8OeyyABvoIUdm3iWVTLU+U87Y37YS3UldxvO5juxw/nzoKrAWWeHV2H4IYXHk
+         dgmKjF3TdwQe1/QS0TNWyFxOHv4OdrszERxqZ4L1ipM6C0lTP4TbwIxBGq6w/V0Zj8WW
+         Rc2Gj/jucil/LJNdDJwOgoza8Z1yTtwT9uRE0JfPP2F5AmJ+GLVRU/BtcJJ+1S9Ea2wV
+         9UJA==
+X-Gm-Message-State: AOAM533H7Sg+1LT7Bn0sEYfG242Xcgvas60kug8/9gECqGpehDBQxdQD
+        Qo2dyNpYm1wT19kYNis8TeoUWZpllDqkhqH0Gve2VpZysjXTNg==
+X-Google-Smtp-Source: ABdhPJwmz++EHvnYolcRRWVJ+C8CuYzPwr4ylgMchCNWuWqghI1f/SsnXBsb+bqFUK1Wb/FEKoZczTCRrjVUusd6x+M=
+X-Received: by 2002:aa7:86c6:0:b0:4fa:46d:6005 with SMTP id
+ h6-20020aa786c6000000b004fa046d6005mr30211351pfo.86.1647972530584; Tue, 22
+ Mar 2022 11:08:50 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220318213004.2287428-1-vishal.l.verma@intel.com> <20220318213004.2287428-2-vishal.l.verma@intel.com>
 In-Reply-To: <20220318213004.2287428-2-vishal.l.verma@intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 22 Mar 2022 19:01:52 +0100
-Message-ID: <CAJZ5v0jRrvYg5Y2qnzt34K8uo9tYDi6WON3wCGczP5aSotG9AQ@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 22 Mar 2022 11:08:43 -0700
+Message-ID: <CAPcyv4gUGKHpsEPD_XhP5EzwSAQy0Jh0qpGeiMkYefa6Qnx4xg@mail.gmail.com>
 Subject: Re: [PATCH 1/2] PCI/ACPI: Use CXL _OSC instead of PCIe _OSC
 To:     Vishal Verma <vishal.l.verma@intel.com>
-Cc:     linux-cxl@vger.kernel.org,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+Cc:     linux-cxl@vger.kernel.org, Linux ACPI <linux-acpi@vger.kernel.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Robert Moore <robert.moore@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -54,9 +63,22 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Mar 18, 2022 at 10:30 PM Vishal Verma <vishal.l.verma@intel.com> wrote:
+On Fri, Mar 18, 2022 at 2:30 PM Vishal Verma <vishal.l.verma@intel.com> wrote:
 >
 > From: Dan Williams <dan.j.williams@intel.com>
+
+Oh, you dropped the first paragraph. When I said "I would replace" in
+my comment [1] I was only referring to the light-on-details second
+paragraph, so prepend this for the final version of the patch:
+
+ In preparation for negotiating OS control of CXL _OSC features, do the
+ minimal enabling to use CXL _OSC to handle the base PCIe feature
+ negotiation. Recall that CXL _OSC is a super-set of PCIe _OSC and the
+ CXL 2.0 specification mandates: "If a CXL Host Bridge device exposes CXL
+ _OSC, CXL aware OSPM shall evaluate CXL _OSC and not evaluate PCIe
+ _OSC."
+
+[1]: https://lore.kernel.org/r/CAPcyv4h581oXv59Praskpyk6ywPBm1ksxT4YPvZiv80F6ugZnw@mail.gmail.com
 >
 > Rather than pass a boolean flag alongside @root to all the helper
 > functions that need to consider PCIe specifics, add is_pcie() and
@@ -209,13 +231,6 @@ On Fri, Mar 18, 2022 at 10:30 PM Vishal Verma <vishal.l.verma@intel.com> wrote:
 >                 /* _OSC is optional for PCI host bridges */
 > -               if ((status == AE_NOT_FOUND) && !is_pcie)
 > +               if ((status == AE_NOT_FOUND) && !is_pcie(root))
-
-The parens around the status check are not needed.  Although they are
-present in the original code, you may as well drop them as you are
-changing this line anyway.
-
-The patch looks good to me otherwise.
-
 >                         return;
 >
 >                 if (control) {
