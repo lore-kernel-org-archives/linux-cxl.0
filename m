@@ -2,40 +2,40 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A77B1C433FE
-	for <linux-cxl@archiver.kernel.org>; Thu, 24 Mar 2022 01:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E120C43217
+	for <linux-cxl@archiver.kernel.org>; Thu, 24 Mar 2022 01:08:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239850AbiCXBKX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 23 Mar 2022 21:10:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48378 "EHLO
+        id S1347077AbiCXBKY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 23 Mar 2022 21:10:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240432AbiCXBKW (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 23 Mar 2022 21:10:22 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE3EC527D3
-        for <linux-cxl@vger.kernel.org>; Wed, 23 Mar 2022 18:08:50 -0700 (PDT)
+        with ESMTP id S1347075AbiCXBKX (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 23 Mar 2022 21:10:23 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32C2C527D3
+        for <linux-cxl@vger.kernel.org>; Wed, 23 Mar 2022 18:08:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648084130; x=1679620130;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=kPn9FsgRWvpZktZa/D8JyVHSeK6QUSW65xnGgklm/3Y=;
-  b=XSm2/ol30vs5Ip6gFZol4gtnDSAAw9OIsD3rLCsasPj0TZzJBrlxK9NJ
-   tqJke9Kz6LUOAz62Kxe7T/Cer/Tbn+qwFAsAXVWXuXn2eeoa3Fmf28Wta
-   eo2cK5nEfxSqwstw3sg+HzaOz54Vgez0EyY8yQhVglKq2FoH/vgMms4js
-   eaUztQlfd9PJ72jcQQOGrQ5zfa1VS6cPM0to/egYc+/ZG5wXf6BByG7AS
-   +MZE5Iuj9Eiv8nTITRyPNFdxdikU9b3S+S166EODRFCPV1qLSUu2YyzTj
-   +J3cA2U9cpikJltba0275unH8vQgfYz8OUJDsywZtK9r67FLao12F2nQF
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10295"; a="321457629"
+  t=1648084133; x=1679620133;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=hFvw6CF0Hn3KGO/Oeoc1gAUfRtf14K/mtfwDtHQOtOo=;
+  b=U6Exj52RlkqxV73OOOOuZfjP4F9VojiOsX47F1x6YSkZ95/xsV3yklWj
+   dKi4MPuPS1FwaAsxDGyW3SLJQNXo5d73PZFZ8VFt1VuCmc1zWxt4MoYNj
+   USh3T9gcWY1DZTiHfXo/59TxBy/tRdbPsZEOe+TEID/kzbSfQauUchN67
+   a3KvX2p2wSLbTXkqJMKq0YcBk2CRT9wtVAOTMPa/CpepK/iRxdMjEjoVI
+   6L8QmAE03FLuZ+dyuYwf7SRW1NIBt3JPVUgJQJva+XOx3hBuwRtc/DgPO
+   y8jdS2MIqwc30bLkC1FlFy/ppb89MtoFrV4MwTpH8zc7E2142/ODn8R+7
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10295"; a="258215003"
 X-IronPort-AV: E=Sophos;i="5.90,205,1643702400"; 
-   d="scan'208";a="321457629"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2022 18:08:50 -0700
+   d="scan'208";a="258215003"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2022 18:08:52 -0700
 X-IronPort-AV: E=Sophos;i="5.90,205,1643702400"; 
-   d="scan'208";a="561161449"
+   d="scan'208";a="693142821"
 Received: from alison-desk.jf.intel.com (HELO localhost) ([10.54.74.41])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2022 18:08:50 -0700
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2022 18:08:51 -0700
 From:   alison.schofield@intel.com
 To:     Ben Widawsky <ben.widawsky@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
@@ -43,10 +43,12 @@ To:     Ben Widawsky <ben.widawsky@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
 Cc:     Alison Schofield <alison.schofield@intel.com>,
         linux-cxl@vger.kernel.org
-Subject: [PATCH v3 0/9]  Do not allow set-partition immediate mode
-Date:   Wed, 23 Mar 2022 18:11:17 -0700
-Message-Id: <20220324011126.1144504-1-alison.schofield@intel.com>
+Subject: [PATCH v3 4/9] cxl/mbox: Construct a users cxl_mbox_cmd in the validation path
+Date:   Wed, 23 Mar 2022 18:11:21 -0700
+Message-Id: <20220324011126.1144504-5-alison.schofield@intel.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220324011126.1144504-1-alison.schofield@intel.com>
+References: <20220324011126.1144504-1-alison.schofield@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -55,66 +57,73 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-Blocking immediate mode in set-partition info triggered a
-refactoring of the send path of userspace mailbox commands.
+Since the validation of a mailbox command is done as it is built,
+move that work out of the dispatch path and into the validation
+path.
 
-The v1 to address the issue was a single patch [1] that inserted
-a new immediate mode check in the send path where the payload was
-available for examining. That was not in a validation function.
+This is a step in refactoring the handling of user space mailbox
+commands. The intent is to have all the validation work originate
+in cxl_validate_cmd_from_user().
 
-The v2 patchset [2] added refactoring of the send path so that
-validation work can all spawn from cxl_validate_cmd_from_user().
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
+ drivers/cxl/core/mbox.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-Here, v3 offers a finer level of refactoring:
-
-Patches 1-7: Refactor existing code so that all validation work
-	can spawn from cxl_validate_cmd_from_user().
-
-	The movement intends to cleanly rip the work of building a
-	mailbox command away from handle_mailbox_command_from_user()
-	and give it to cxl_validate_cmd_from_user().
-
-Patch 8: Blocks the immediate mode of the set-partition command.
-Patch 9: Removes CXL_PMEM exclusive commands restriction.
-
-[1] https://lore.kernel.org/linux-cxl/20220103202100.784194-1-alison.schofield@intel.com/
-[2] https://lore.kernel.org/linux-cxl/a4daafc4b537a0b1a673c55300da7747784c4573.1645817416.git.alison.schofield@intel.com/
-
-Changes in v3:
-- Split up the 'Centralize the validation...' patch into 6 pieces.
-Patch: cxl/mbox: Move cxl_mem_command construction to helper funcs
-- Safely initialize the cxl_mem_command structs. (Dan)
-- Remove unneeded memcpy (Dan)
-Patch: cxl/mbox: Block immediate mode in SET_PARTITION_INFO command
-- No Changes
-Patch: cxl/pmem: Remove CXL SET_PARTITION_INFO from exclusive_cmds list
-- No Changes
-
-Changes in v2:
-- Refactor the send path of userspace mbox cmds. (Dan, Ben)
-- Patch 3 commit log - update the need to block. (Dan)
-- Return -EBUSY (not -EINVAL), when blocking immediate mode. (Ben)
-- Remove unneeded cast of void (payload_in). (dan)
-- s/u64/__le64 in struct cxl_mbox_set_partition_info. (Dan)
-
-Alison Schofield (9):
-  cxl/mbox: Move cxl_mem_command construction to helper funcs
-  cxl/mbox: Move raw command warning to raw command validation
-  cxl/mbox: Move build of user mailbox cmd to a helper function
-  cxl/mbox: Construct a users cxl_mbox_cmd in the validation path
-  cxl/mbox: Remove dependency on cxl_mem_command for a debug msg
-  cxl/mbox: Make handle_mailbox_cmd_from_user() use a mbox param
-  cxl/mbox: Move cxl_mem_command param to a local variable
-  cxl/mbox: Block immediate mode in SET_PARTITION_INFO command
-  cxl/pmem: Remove CXL SET_PARTITION_INFO from exclusive_cmds list
-
- drivers/cxl/core/mbox.c | 311 +++++++++++++++++++++++++---------------
- drivers/cxl/cxlmem.h    |   7 +
- drivers/cxl/pmem.c      |   1 -
- 3 files changed, 200 insertions(+), 119 deletions(-)
-
-
-base-commit: 9b688fc651b9d2b633e8d959454670aba1c39162
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index d4233cfb2f99..205e671307c3 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -324,6 +324,7 @@ static int cxl_to_mem_cmd(struct cxl_dev_state *cxlds,
+  * @cxlds: The device data for the operation
+  * @send_cmd: &struct cxl_send_command copied in from userspace.
+  * @out_cmd: Sanitized and populated &struct cxl_mem_command.
++ * @mbox_cmd: Sanitized and populated &struct cxl_mbox_cmd.
+  *
+  * Return:
+  *  * %0	- @out_cmd is ready to send.
+@@ -340,7 +341,8 @@ static int cxl_to_mem_cmd(struct cxl_dev_state *cxlds,
+  */
+ static int cxl_validate_cmd_from_user(struct cxl_dev_state *cxlds,
+ 				      const struct cxl_send_command *send_cmd,
+-				      struct cxl_mem_command *out_cmd)
++				      struct cxl_mem_command *out_cmd,
++				      struct cxl_mbox_cmd *mbox_cmd)
+ {
+ 	int rc;
+ 
+@@ -361,6 +363,14 @@ static int cxl_validate_cmd_from_user(struct cxl_dev_state *cxlds,
+ 	else
+ 		rc = cxl_to_mem_cmd(cxlds, send_cmd, out_cmd);
+ 
++	if (rc)
++		return rc;
++
++	/* Sanitize and construct a cxl_mbox_cmd */
++	rc = cxl_to_mbox_cmd(cxlds, mbox_cmd, out_cmd->opcode,
++			     out_cmd->info.size_in, out_cmd->info.size_out,
++			     send_cmd->in.payload);
++
+ 	return rc;
+ }
+ 
+@@ -478,6 +488,7 @@ int cxl_send_cmd(struct cxl_memdev *cxlmd, struct cxl_send_command __user *s)
+ 	struct device *dev = &cxlmd->dev;
+ 	struct cxl_send_command send;
+ 	struct cxl_mem_command c;
++	struct cxl_mbox_cmd mbox_cmd;
+ 	int rc;
+ 
+ 	dev_dbg(dev, "Send IOCTL\n");
+@@ -485,7 +496,7 @@ int cxl_send_cmd(struct cxl_memdev *cxlmd, struct cxl_send_command __user *s)
+ 	if (copy_from_user(&send, s, sizeof(send)))
+ 		return -EFAULT;
+ 
+-	rc = cxl_validate_cmd_from_user(cxlmd->cxlds, &send, &c);
++	rc = cxl_validate_cmd_from_user(cxlmd->cxlds, &send, &c, &mbox_cmd);
+ 	if (rc)
+ 		return rc;
+ 
 -- 
 2.31.1
 
