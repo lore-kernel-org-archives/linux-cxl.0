@@ -2,38 +2,38 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BA9C433FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB71C43219
 	for <linux-cxl@archiver.kernel.org>; Thu, 24 Mar 2022 01:08:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347076AbiCXBK0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S1347073AbiCXBK0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Wed, 23 Mar 2022 21:10:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48578 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347073AbiCXBKY (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 23 Mar 2022 21:10:24 -0400
+        with ESMTP id S1347078AbiCXBKZ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 23 Mar 2022 21:10:25 -0400
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B702B532CC
-        for <linux-cxl@vger.kernel.org>; Wed, 23 Mar 2022 18:08:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E87F53715
+        for <linux-cxl@vger.kernel.org>; Wed, 23 Mar 2022 18:08:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648084133; x=1679620133;
+  t=1648084134; x=1679620134;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=+2+QcL9RrLy1+UG4suIImRbMeSEb6qq+pIsY0VK1A+Q=;
-  b=l7S1RjnXlWBLggAlBhL/88pcjAwDmfGMwhKaS5GECiY3ZwJeNOexTUtF
-   Z0c26mmGzeqFBQ/mZAvqwwc128qAzwGIEm3vkU92R8IFx5SB1TiN0r5Ol
-   zauEAioP6jkXd4qcMAeELUmOLbFqerA4Omp949xo1ZiOLAwde1aYKwY5p
-   Dyf8QG0pd0eYnnO1Dl6t1gqza283WkjyHo4eVqXfR36fWyh2zTqo/4VpE
-   y/1GJMUFOznrRZ7k69Jat7Pd3IMK0Zdf4+C1XcovdCVtmgKrYZ5Loj2Jg
-   EUmfxH9smK6GVK82qPZTuto36l7HNfonAUsjzgGwpMooC04fE9TBcI07Q
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10295"; a="258215006"
+  bh=mR9kozMzyNab8fkSgrK8PeuhFBgfds5py8h23HMOil4=;
+  b=AwdkJRUEQEyZJzSaI+3zYcsgRDjrNkbcpIZ+QACoFM65cszDBkE8WbAC
+   WxvONdqjE9oJrSPdj7S/vatudABzNCel8QtYNFX96qVjepGcIQAjllQyz
+   qap3fQl8xh+8rVFi4KAjog2bxeP6T9c775YPbf1bH0mT68eLLqwFFqQVo
+   kCZs1uu3n0fQOkCzT7D9YIC2sOTBt7rTQ1eCwmRM79gwSoh3lCYk1udoY
+   RN1aoDhDrJsg0lnFlMsH1tX5wydJDw1MxDnX+LpdJhdQv84oRAnuRUh46
+   WFo3tF87VtG8xIOcd61t/HOPpeR68wVspMGTHigGveyQTHOLh1JhuPlqH
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10295"; a="258215010"
 X-IronPort-AV: E=Sophos;i="5.90,205,1643702400"; 
-   d="scan'208";a="258215006"
+   d="scan'208";a="258215010"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2022 18:08:53 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2022 18:08:54 -0700
 X-IronPort-AV: E=Sophos;i="5.90,205,1643702400"; 
-   d="scan'208";a="693142831"
+   d="scan'208";a="693142837"
 Received: from alison-desk.jf.intel.com (HELO localhost) ([10.54.74.41])
   by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2022 18:08:53 -0700
 From:   alison.schofield@intel.com
@@ -43,9 +43,9 @@ To:     Ben Widawsky <ben.widawsky@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
 Cc:     Alison Schofield <alison.schofield@intel.com>,
         linux-cxl@vger.kernel.org
-Subject: [PATCH v3 6/9] cxl/mbox: Make handle_mailbox_cmd_from_user() use a mbox param
-Date:   Wed, 23 Mar 2022 18:11:23 -0700
-Message-Id: <20220324011126.1144504-7-alison.schofield@intel.com>
+Subject: [PATCH v3 8/9] cxl/mbox: Block immediate mode in SET_PARTITION_INFO command
+Date:   Wed, 23 Mar 2022 18:11:25 -0700
+Message-Id: <20220324011126.1144504-9-alison.schofield@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220324011126.1144504-1-alison.schofield@intel.com>
 References: <20220324011126.1144504-1-alison.schofield@intel.com>
@@ -57,118 +57,104 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-Previously, handle_mailbox_cmd_from_user(), constructed the mailbox
-command and dispatched it to the hardware. The construction work
-has moved to the validation path.
+User space may send the SET_PARTITION_INFO mailbox command using
+the IOCTL interface. Inspect the input payload and fail if the
+immediate flag is set.
 
-handle_mailbox_cmd_from_user() now expects a fully validated
-mbox param. Make it's caller, cxl_send_cmd(), deliver it. Update
-the comments and dereferencing of the new mbox parameter.
+This is the first instance of the driver inspecting an input payload
+from user space. Assume there will be more such cases and implement
+with an extensible helper.
+
+In order for the kernel to react to an immediate partition change it
+needs to assert that the change will not affect any active decode. At
+a minimum this requires validating that the device is using HDM
+decoders instead of the CXL DVSEC for decode, and that none of the
+active HDM decoders are affected by the partition change. For now,
+just fail until that support arrives.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- drivers/cxl/core/mbox.c | 45 +++++++++++++++++------------------------
- 1 file changed, 18 insertions(+), 27 deletions(-)
+ drivers/cxl/core/mbox.c | 41 +++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxlmem.h    |  7 +++++++
+ 2 files changed, 48 insertions(+)
 
 diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index d6d582baa1ee..0340399c7029 100644
+index c323d6792405..1930e203061d 100644
 --- a/drivers/cxl/core/mbox.c
 +++ b/drivers/cxl/core/mbox.c
-@@ -422,8 +422,7 @@ int cxl_query_cmd(struct cxl_memdev *cxlmd,
- /**
-  * handle_mailbox_cmd_from_user() - Dispatch a mailbox command for userspace.
-  * @cxlds: The device data for the operation
-- * @cmd: The validated command.
-- * @in_payload: Pointer to userspace's input payload.
-+ * @mbox_cmd: The validated mailbox command.
-  * @out_payload: Pointer to userspace's output payload.
-  * @size_out: (Input) Max payload size to copy out.
-  *            (Output) Payload size hardware generated.
-@@ -438,34 +437,27 @@ int cxl_query_cmd(struct cxl_memdev *cxlmd,
-  *  * %-EINTR	- Mailbox acquisition interrupted.
-  *  * %-EXXX	- Transaction level failures.
-  *
-- * Creates the appropriate mailbox command and dispatches it on behalf of a
-- * userspace request. The input and output payloads are copied between
-- * userspace.
-+ * Dispatches a mailbox command on behalf of a userspace request.
-+ * The output payload is copied to userspace.
-  *
-  * See cxl_send_cmd().
-  */
- static int handle_mailbox_cmd_from_user(struct cxl_dev_state *cxlds,
--					const struct cxl_mem_command *cmd,
--					u64 in_payload, u64 out_payload,
--					s32 *size_out, u32 *retval)
-+					struct cxl_mbox_cmd *mbox_cmd,
-+					u64 out_payload, s32 *size_out,
-+					u32 *retval)
- {
- 	struct device *dev = cxlds->dev;
--	struct cxl_mbox_cmd mbox_cmd;
- 	int rc;
- 
--	rc = cxl_to_mbox_cmd(cxlds, &mbox_cmd, cmd->opcode, cmd->info.size_in,
--			     cmd->info.size_out, in_payload);
--	if (rc)
--		return rc;
--
- 	dev_dbg(dev,
- 		"Submitting %s command for user\n"
- 		"\topcode: %x\n"
- 		"\tsize: %zx\n",
--		cxl_mem_opcode_to_name(mbox_cmd.opcode),
--		mbox_cmd.opcode, mbox_cmd.size_in);
-+		cxl_mem_opcode_to_name(mbox_cmd->opcode),
-+		mbox_cmd->opcode, mbox_cmd->size_in);
- 
--	rc = cxlds->mbox_send(cxlds, &mbox_cmd);
-+	rc = cxlds->mbox_send(cxlds, mbox_cmd);
- 	if (rc)
- 		goto out;
- 
-@@ -474,22 +466,22 @@ static int handle_mailbox_cmd_from_user(struct cxl_dev_state *cxlds,
- 	 * to userspace. While the payload may have written more output than
- 	 * this it will have to be ignored.
- 	 */
--	if (mbox_cmd.size_out) {
--		dev_WARN_ONCE(dev, mbox_cmd.size_out > *size_out,
-+	if (mbox_cmd->size_out) {
-+		dev_WARN_ONCE(dev, mbox_cmd->size_out > *size_out,
- 			      "Invalid return size\n");
- 		if (copy_to_user(u64_to_user_ptr(out_payload),
--				 mbox_cmd.payload_out, mbox_cmd.size_out)) {
-+				 mbox_cmd->payload_out, mbox_cmd->size_out)) {
- 			rc = -EFAULT;
- 			goto out;
- 		}
- 	}
- 
--	*size_out = mbox_cmd.size_out;
--	*retval = mbox_cmd.return_code;
-+	*size_out = mbox_cmd->size_out;
-+	*retval = mbox_cmd->return_code;
- 
- out:
--	kvfree(mbox_cmd.payload_in);
--	kvfree(mbox_cmd.payload_out);
-+	kvfree(mbox_cmd->payload_in);
-+	kvfree(mbox_cmd->payload_out);
- 	return rc;
+@@ -218,6 +218,40 @@ static bool cxl_mem_raw_command_allowed(u16 opcode)
+ 	return true;
  }
  
-@@ -511,9 +503,8 @@ int cxl_send_cmd(struct cxl_memdev *cxlmd, struct cxl_send_command __user *s)
- 	if (rc)
- 		return rc;
++/**
++ * cxl_payload_from_user_allowed() - Check contents of in_payload.
++ * @opcode: The mailbox command opcode.
++ * @payload_in: Pointer to the input payload passed in from user space.
++ *
++ * Return:
++ *  * true	- payload_in passes check for @opcode.
++ *  * false	- payload_in contains invalid or unsupported values.
++ *
++ * The driver may inspect payload contents before sending a mailbox
++ * command from user space to the device. The intent is to reject
++ * commands with input payloads that are known to be unsafe. This
++ * check is not intended to replace the users careful selection of
++ * mailbox command parameters and makes no guarantee that the user
++ * command will succeed, nor that it is appropriate.
++ *
++ * The specific checks are determined by the opcode.
++ */
++static bool cxl_payload_from_user_allowed(u16 opcode, void *payload_in)
++{
++	switch (opcode) {
++	case CXL_MBOX_OP_SET_PARTITION_INFO: {
++		struct cxl_mbox_set_partition_info *pi = payload_in;
++
++		if (pi->flags && CXL_SET_PARTITION_IMMEDIATE_FLAG)
++			return false;
++		break;
++	}
++	default:
++		break;
++	}
++	return true;
++}
++
+ static int cxl_to_mbox_cmd(struct cxl_dev_state *cxlds,
+ 			   struct cxl_mbox_cmd *mbox, u16 opcode,
+ 			   size_t in_size, size_t out_size, u64 in_payload)
+@@ -235,6 +269,13 @@ static int cxl_to_mbox_cmd(struct cxl_dev_state *cxlds,
+ 	if (!mbox->payload_in)
+ 		return PTR_ERR(mbox->payload_in);
  
--	rc = handle_mailbox_cmd_from_user(cxlds, &c, send.in.payload,
--					  send.out.payload, &send.out.size,
--					  &send.retval);
-+	rc = handle_mailbox_cmd_from_user(cxlds, &mbox_cmd, send.out.payload,
-+					  &send.out.size, &send.retval);
- 	if (rc)
- 		return rc;
++	if (!cxl_payload_from_user_allowed(opcode, mbox->payload_in)) {
++		dev_dbg(cxlds->dev, "%s: input payload not allowed\n",
++			cxl_mem_opcode_to_name(opcode));
++		kvfree(mbox->payload_in);
++		return -EBUSY;
++	}
++
+ size_out:
+ 	/* Prepare to handle a full payload for variable sized output */
+ 	if (out_size < 0)
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index d5c9a273d07d..dee574527e50 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -264,6 +264,13 @@ struct cxl_mbox_set_lsa {
+ 	u8 data[];
+ } __packed;
  
++struct cxl_mbox_set_partition_info {
++	__le64 volatile_capacity;
++	u8 flags;
++} __packed;
++
++#define  CXL_SET_PARTITION_IMMEDIATE_FLAG	BIT(0)
++
+ /**
+  * struct cxl_mem_command - Driver representation of a memory device command
+  * @info: Command information as it exists for the UAPI
 -- 
 2.31.1
 
