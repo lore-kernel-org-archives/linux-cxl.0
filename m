@@ -2,161 +2,102 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D80CC43219
-	for <linux-cxl@archiver.kernel.org>; Wed, 30 Mar 2022 01:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEE2C433F5
+	for <linux-cxl@archiver.kernel.org>; Wed, 30 Mar 2022 03:23:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241633AbiC3B3w (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 29 Mar 2022 21:29:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37338 "EHLO
+        id S242263AbiC3DZ2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 29 Mar 2022 23:25:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241632AbiC3B3t (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Mar 2022 21:29:49 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19AC924CEEE
-        for <linux-cxl@vger.kernel.org>; Tue, 29 Mar 2022 18:28:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648603686; x=1680139686;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=XgnQcVBarHR6K9Yhs1h4CrE6QOzDWuyS7e0MGnm6v+A=;
-  b=fmhI8HfoStM7UsgowbSUAh0DMTxwcTebd0aOnFj9qmD6WkzHCgB8PtgD
-   e0oqcr9qwOVvDAlY1Y2Ce6MorDkeigki0ugl3dqzqdL98QTYh3E1fx9pK
-   J8ZCnkG2Q1uMylgufhhB88+My0eQOe0A+3FvHSnA/+YHZSV7X3iQ5X3Gs
-   3zTBieF56zCi2XrQGwz02x6E7SB5lDH8SjiArytQcHjEDZAs4cQyLzqt2
-   Tth1mzt1jq7WLRcOUBGSVHlITPe2BOvwvWsoQL6uRiexupqGOGhx21Q43
-   izTC4/5wHZZ8bRfavDOWAadLrP9GinFt/uoZKxtL1QKvLSl1nSFQVEWyM
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10301"; a="322601863"
-X-IronPort-AV: E=Sophos;i="5.90,221,1643702400"; 
-   d="scan'208";a="322601863"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2022 18:28:01 -0700
-X-IronPort-AV: E=Sophos;i="5.90,221,1643702400"; 
-   d="scan'208";a="719776958"
-Received: from alison-desk.jf.intel.com (HELO localhost) ([10.54.74.41])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2022 18:28:01 -0700
-From:   alison.schofield@intel.com
-To:     Ben Widawsky <ben.widawsky@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+        with ESMTP id S242265AbiC3DZY (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Mar 2022 23:25:24 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73A3E6548
+        for <linux-cxl@vger.kernel.org>; Tue, 29 Mar 2022 20:23:37 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id z16so17614573pfh.3
+        for <linux-cxl@vger.kernel.org>; Tue, 29 Mar 2022 20:23:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gbIy+09lWriAjoJQkIaZDgvso2Ze50aQufgeiXJX5T4=;
+        b=MeKhrEB0/zKn5AsKhz5NyBLmgLPv7TxLyPUCA/4ZBiFm9U1yclUL9V/4ZaSvv2LMol
+         yTdu8s86mCwn4jS+5woxjdIBGL7A9bkI8c4OtbJvXjNY3LrQTlkFn6VqWOCJgAakiW7B
+         BgFC63oA+8LrLbSMK7TT1BLXzAsy1VFYtHNrYYbHIvpjH+WU8A1u6lvT6OG334tyTLHg
+         59rIb1g3NQBwIVO2l86LuM72WaC7oI8ufa8jEpfxDu3RzuE0tK1PtRqAgeWMWvathkRn
+         Cv2hm+T9J3Ztj5UnVFiOlj6LtC5qIqvyFSKkPN+Wi4Q0qW914N67T5m4WRnyAdvpl4OV
+         zRog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gbIy+09lWriAjoJQkIaZDgvso2Ze50aQufgeiXJX5T4=;
+        b=JoSGopHuAZ/FOx3xWjsfgTSMRAhFPeio4YmlBeC5U1hJklmh6Bq7tQ94fAIrTYlnPM
+         11uy/WtR+914P5IbgJwSb/wAsOT1zIEgqzHHcievfcwNt3AtrNVZl5R2LRnMAtk5o5fd
+         mVv3KIXlr2FG/ETD3hL0w1x0Fq7WNKG0G4dT0d4C7X2KbYtTWlcLbi0syPRVhH4xA+Xe
+         HVu2K4oNFzgkbLxE0Rc1PrwshOn3EOG36cdrzhNjmj3HI7nV5n9CAeIy0X9ue2sIQSzU
+         dMy/+iSUySakFHb2LdpZGPlDoJxXA/cX7GiaWndAeoa1Umtxs+UpnEh9broJcjmCj5gK
+         CG5Q==
+X-Gm-Message-State: AOAM530y7wgMpZJCyx1r1Lgm/2Qfq2M6N8dzdSMDb4oWRe+Oq/ePNSFl
+        TQQeKjaJl2mitKDrV0+opKMCOh2X5GqMi3MiVpthGK1Utwg=
+X-Google-Smtp-Source: ABdhPJwPmuYP7IliVswVdCRL16D7R24uw67BX0rXSOYkJyTOSeEJvqTaJ+02VI6LE2JY0Vq6UHqYB3+bD4svy49dK2E=
+X-Received: by 2002:aa7:86c6:0:b0:4fa:46d:6005 with SMTP id
+ h6-20020aa786c6000000b004fa046d6005mr31352447pfo.86.1648610616947; Tue, 29
+ Mar 2022 20:23:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1648601710.git.alison.schofield@intel.com> <3d563038e093f435396f58b3757c74374257727b.1648601710.git.alison.schofield@intel.com>
+In-Reply-To: <3d563038e093f435396f58b3757c74374257727b.1648601710.git.alison.schofield@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 29 Mar 2022 20:23:26 -0700
+Message-ID: <CAPcyv4hsHx_6Q_gRdm5dH-t5Esv7KB_S3GB_EA9w4_0wa4dAbQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/9] cxl/mbox: Move cxl_mem_command construction to
+ helper funcs
+To:     "Schofield, Alison" <alison.schofield@intel.com>
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
         linux-cxl@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v4 8/9] cxl/mbox: Block immediate mode in SET_PARTITION_INFO command
-Date:   Tue, 29 Mar 2022 18:30:23 -0700
-Message-Id: <8ded42fca3f0fdd273683e7cd03c451e61ef6fa7.1648601710.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1648601710.git.alison.schofield@intel.com>
-References: <cover.1648601710.git.alison.schofield@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+On Tue, Mar 29, 2022 at 6:28 PM <alison.schofield@intel.com> wrote:
+>
+> From: Alison Schofield <alison.schofield@intel.com>
+>
+> Sanitizing and constructing a cxl_mem_command from a userspace
+> command is part of the validation process prior to submitting
+> the command to a CXL device. Move this work to helper functions:
+> cxl_to_mem_cmd(), cxl_to_mem_cmd_raw().
+>
+> This declutters cxl_validate_cmd_from_user() in preparation for
+> adding new validation steps.
+>
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  drivers/cxl/core/mbox.c | 155 +++++++++++++++++++++-------------------
+>  1 file changed, 80 insertions(+), 75 deletions(-)
+>
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index be61a0d8016b..0b5bec7b8b5a 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -207,6 +207,81 @@ static bool cxl_mem_raw_command_allowed(u16 opcode)
+>         return true;
+>  }
+>
+> +static int cxl_to_mem_cmd_raw(struct cxl_dev_state *cxlds,
+> +                             const struct cxl_send_command *send_cmd,
+> +                             struct cxl_mem_command *mem_cmd)
 
-User space may send the SET_PARTITION_INFO mailbox command using
-the IOCTL interface. Inspect the input payload and fail if the
-immediate flag is set.
+For multi-parameter "to()" style helpers like this with a destination,
+I tend to prefer memcpy() style argument ordering where the
+destination to be clobbered is the first parameter and the other
+arguments tag on afterwards.
 
-This is the first instance of the driver inspecting an input payload
-from user space. Assume there will be more such cases and implement
-with an extensible helper.
+Other than that this looks good to me and you can add:
 
-In order for the kernel to react to an immediate partition change it
-needs to assert that the change will not affect any active decode. At
-a minimum this requires validating that the device is using HDM
-decoders instead of the CXL DVSEC for decode, and that none of the
-active HDM decoders are affected by the partition change. For now,
-just fail until that support arrives.
-
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- drivers/cxl/core/mbox.c | 41 +++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxlmem.h    |  7 +++++++
- 2 files changed, 48 insertions(+)
-
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 1b50e335d62b..dfd4b146c4e3 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -218,6 +218,40 @@ static bool cxl_mem_raw_command_allowed(u16 opcode)
- 	return true;
- }
- 
-+/**
-+ * cxl_payload_from_user_allowed() - Check contents of in_payload.
-+ * @opcode: The mailbox command opcode.
-+ * @payload_in: Pointer to the input payload passed in from user space.
-+ *
-+ * Return:
-+ *  * true	- payload_in passes check for @opcode.
-+ *  * false	- payload_in contains invalid or unsupported values.
-+ *
-+ * The driver may inspect payload contents before sending a mailbox
-+ * command from user space to the device. The intent is to reject
-+ * commands with input payloads that are known to be unsafe. This
-+ * check is not intended to replace the users careful selection of
-+ * mailbox command parameters and makes no guarantee that the user
-+ * command will succeed, nor that it is appropriate.
-+ *
-+ * The specific checks are determined by the opcode.
-+ */
-+static bool cxl_payload_from_user_allowed(u16 opcode, void *payload_in)
-+{
-+	switch (opcode) {
-+	case CXL_MBOX_OP_SET_PARTITION_INFO: {
-+		struct cxl_mbox_set_partition_info *pi = payload_in;
-+
-+		if (pi->flags && CXL_SET_PARTITION_IMMEDIATE_FLAG)
-+			return false;
-+		break;
-+	}
-+	default:
-+		break;
-+	}
-+	return true;
-+}
-+
- static int cxl_to_mbox_cmd(struct cxl_dev_state *cxlds,
- 			   struct cxl_mbox_cmd *mbox, u16 opcode,
- 			   size_t in_size, size_t out_size, u64 in_payload)
-@@ -232,6 +266,13 @@ static int cxl_to_mbox_cmd(struct cxl_dev_state *cxlds,
- 						in_size);
- 		if (!mbox->payload_in)
- 			return PTR_ERR(mbox->payload_in);
-+
-+		if (!cxl_payload_from_user_allowed(opcode, mbox->payload_in)) {
-+			dev_dbg(cxlds->dev, "%s: input payload not allowed\n",
-+				cxl_mem_opcode_to_name(opcode));
-+			kvfree(mbox->payload_in);
-+			return -EBUSY;
-+		}
- 	}
- 
- 	/* Prepare to handle a full payload for variable sized output */
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index d5c9a273d07d..dee574527e50 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -264,6 +264,13 @@ struct cxl_mbox_set_lsa {
- 	u8 data[];
- } __packed;
- 
-+struct cxl_mbox_set_partition_info {
-+	__le64 volatile_capacity;
-+	u8 flags;
-+} __packed;
-+
-+#define  CXL_SET_PARTITION_IMMEDIATE_FLAG	BIT(0)
-+
- /**
-  * struct cxl_mem_command - Driver representation of a memory device command
-  * @info: Command information as it exists for the UAPI
--- 
-2.31.1
-
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
