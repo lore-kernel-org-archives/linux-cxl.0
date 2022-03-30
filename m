@@ -2,38 +2,38 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5C4C4332F
-	for <linux-cxl@archiver.kernel.org>; Wed, 30 Mar 2022 01:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D80CC43219
+	for <linux-cxl@archiver.kernel.org>; Wed, 30 Mar 2022 01:28:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241624AbiC3B3w (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S241633AbiC3B3w (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Tue, 29 Mar 2022 21:29:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37340 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241633AbiC3B3t (ORCPT
+        with ESMTP id S241632AbiC3B3t (ORCPT
         <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Mar 2022 21:29:49 -0400
 Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2996D24D9A0
-        for <linux-cxl@vger.kernel.org>; Tue, 29 Mar 2022 18:28:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19AC924CEEE
+        for <linux-cxl@vger.kernel.org>; Tue, 29 Mar 2022 18:28:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1648603686; x=1680139686;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=yHF16x5D3zgG3WciOb/MCrBwV+747JgXvKxMM306SMU=;
-  b=mS/1f0ZlQaPhu6tzA/D7wGJmeIFIhyROqOK3hj728CnB1x3ewRAp1dsn
-   qF1xu+AK7LsGdHq5DlKDWZbbOOChi+4h+h3VG2vTbfU9aIS4FZseRvBN+
-   z6QFiUZiIOv9abrx9IZ2DEauZW14uDu54l44WNvCoy9Dm6XoYZ/3G5y9N
-   XitD92iLjwJdw7XP2VFplYqilro5CI+eBDEDNwuPgeCoiD6VNx+J770tP
-   94ZOcMN+oPf/Z498b7igoExGLVbgadE5gv23CzQY+jL7LbfO7uY7VNGbt
-   I9eoHfskRyGtpAC/Sc7VeEO0Ez/14Fb4ZjjQezidVUg27m3wzq5X75BvF
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10301"; a="322601864"
+  bh=XgnQcVBarHR6K9Yhs1h4CrE6QOzDWuyS7e0MGnm6v+A=;
+  b=fmhI8HfoStM7UsgowbSUAh0DMTxwcTebd0aOnFj9qmD6WkzHCgB8PtgD
+   e0oqcr9qwOVvDAlY1Y2Ce6MorDkeigki0ugl3dqzqdL98QTYh3E1fx9pK
+   J8ZCnkG2Q1uMylgufhhB88+My0eQOe0A+3FvHSnA/+YHZSV7X3iQ5X3Gs
+   3zTBieF56zCi2XrQGwz02x6E7SB5lDH8SjiArytQcHjEDZAs4cQyLzqt2
+   Tth1mzt1jq7WLRcOUBGSVHlITPe2BOvwvWsoQL6uRiexupqGOGhx21Q43
+   izTC4/5wHZZ8bRfavDOWAadLrP9GinFt/uoZKxtL1QKvLSl1nSFQVEWyM
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10301"; a="322601863"
 X-IronPort-AV: E=Sophos;i="5.90,221,1643702400"; 
-   d="scan'208";a="322601864"
+   d="scan'208";a="322601863"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
   by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2022 18:28:01 -0700
 X-IronPort-AV: E=Sophos;i="5.90,221,1643702400"; 
-   d="scan'208";a="719776962"
+   d="scan'208";a="719776958"
 Received: from alison-desk.jf.intel.com (HELO localhost) ([10.54.74.41])
   by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2022 18:28:01 -0700
 From:   alison.schofield@intel.com
@@ -42,10 +42,11 @@ To:     Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
 Cc:     Alison Schofield <alison.schofield@intel.com>,
-        linux-cxl@vger.kernel.org
-Subject: [PATCH v4 9/9] cxl/pmem: Remove CXL SET_PARTITION_INFO from exclusive_cmds list
-Date:   Tue, 29 Mar 2022 18:30:24 -0700
-Message-Id: <56e8479832ef95bee0aa9099148ecd3e5539c372.1648601710.git.alison.schofield@intel.com>
+        linux-cxl@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v4 8/9] cxl/mbox: Block immediate mode in SET_PARTITION_INFO command
+Date:   Tue, 29 Mar 2022 18:30:23 -0700
+Message-Id: <8ded42fca3f0fdd273683e7cd03c451e61ef6fa7.1648601710.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1648601710.git.alison.schofield@intel.com>
 References: <cover.1648601710.git.alison.schofield@intel.com>
@@ -57,46 +58,105 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-With SET_PARTITION_INFO on the exclusive_cmds list for the CXL_PMEM
-driver, userspace cannot execute a set-partition command without
-first unbinding the pmem driver from the device.
+User space may send the SET_PARTITION_INFO mailbox command using
+the IOCTL interface. Inspect the input payload and fail if the
+immediate flag is set.
 
-When userspace requests a partition change to take effect on the
-next reboot this unbind requirement is unnecessarily restrictive.
-The driver does not need to enforce an unbind because partitions
-will not change until the next reboot. Of course, userspace still
-needs to be aware that changing the size of persistent capacity
-on the next reboot will result in the loss of data stored. That
-can happen regardless of whether it is presently bound at the time
-of issuing the set-partition command.
+This is the first instance of the driver inspecting an input payload
+from user space. Assume there will be more such cases and implement
+with an extensible helper.
 
-When userspace requests a partition change to take effect immediately,
-restrictions are needed. The CXL_MEM driver currently blocks the usage
-of immediate mode, making the presence of SET_PARTITION_INFO, in this
-exclusive commands list, redundant.
-
-In the future, when the CXL_MEM driver adds support for immediate
-changes to device partitions it will ensure that the partition change
-will not affect any active decode. That means the work will not fall
-right back here, onto the CXL_PMEM driver.
+In order for the kernel to react to an immediate partition change it
+needs to assert that the change will not affect any active decode. At
+a minimum this requires validating that the device is using HDM
+decoders instead of the CXL DVSEC for decode, and that none of the
+active HDM decoders are affected by the partition change. For now,
+just fail until that support arrives.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/cxl/pmem.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/cxl/core/mbox.c | 41 +++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxlmem.h    |  7 +++++++
+ 2 files changed, 48 insertions(+)
 
-diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-index 564d125d25ef..35c6f3af18f2 100644
---- a/drivers/cxl/pmem.c
-+++ b/drivers/cxl/pmem.c
-@@ -344,7 +344,6 @@ static __init int cxl_pmem_init(void)
- {
- 	int rc;
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 1b50e335d62b..dfd4b146c4e3 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -218,6 +218,40 @@ static bool cxl_mem_raw_command_allowed(u16 opcode)
+ 	return true;
+ }
  
--	set_bit(CXL_MEM_COMMAND_ID_SET_PARTITION_INFO, exclusive_cmds);
- 	set_bit(CXL_MEM_COMMAND_ID_SET_SHUTDOWN_STATE, exclusive_cmds);
- 	set_bit(CXL_MEM_COMMAND_ID_SET_LSA, exclusive_cmds);
++/**
++ * cxl_payload_from_user_allowed() - Check contents of in_payload.
++ * @opcode: The mailbox command opcode.
++ * @payload_in: Pointer to the input payload passed in from user space.
++ *
++ * Return:
++ *  * true	- payload_in passes check for @opcode.
++ *  * false	- payload_in contains invalid or unsupported values.
++ *
++ * The driver may inspect payload contents before sending a mailbox
++ * command from user space to the device. The intent is to reject
++ * commands with input payloads that are known to be unsafe. This
++ * check is not intended to replace the users careful selection of
++ * mailbox command parameters and makes no guarantee that the user
++ * command will succeed, nor that it is appropriate.
++ *
++ * The specific checks are determined by the opcode.
++ */
++static bool cxl_payload_from_user_allowed(u16 opcode, void *payload_in)
++{
++	switch (opcode) {
++	case CXL_MBOX_OP_SET_PARTITION_INFO: {
++		struct cxl_mbox_set_partition_info *pi = payload_in;
++
++		if (pi->flags && CXL_SET_PARTITION_IMMEDIATE_FLAG)
++			return false;
++		break;
++	}
++	default:
++		break;
++	}
++	return true;
++}
++
+ static int cxl_to_mbox_cmd(struct cxl_dev_state *cxlds,
+ 			   struct cxl_mbox_cmd *mbox, u16 opcode,
+ 			   size_t in_size, size_t out_size, u64 in_payload)
+@@ -232,6 +266,13 @@ static int cxl_to_mbox_cmd(struct cxl_dev_state *cxlds,
+ 						in_size);
+ 		if (!mbox->payload_in)
+ 			return PTR_ERR(mbox->payload_in);
++
++		if (!cxl_payload_from_user_allowed(opcode, mbox->payload_in)) {
++			dev_dbg(cxlds->dev, "%s: input payload not allowed\n",
++				cxl_mem_opcode_to_name(opcode));
++			kvfree(mbox->payload_in);
++			return -EBUSY;
++		}
+ 	}
  
+ 	/* Prepare to handle a full payload for variable sized output */
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index d5c9a273d07d..dee574527e50 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -264,6 +264,13 @@ struct cxl_mbox_set_lsa {
+ 	u8 data[];
+ } __packed;
+ 
++struct cxl_mbox_set_partition_info {
++	__le64 volatile_capacity;
++	u8 flags;
++} __packed;
++
++#define  CXL_SET_PARTITION_IMMEDIATE_FLAG	BIT(0)
++
+ /**
+  * struct cxl_mem_command - Driver representation of a memory device command
+  * @info: Command information as it exists for the UAPI
 -- 
 2.31.1
 
