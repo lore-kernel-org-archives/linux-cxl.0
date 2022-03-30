@@ -2,56 +2,56 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D49C433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 30 Mar 2022 04:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF52EC433F5
+	for <linux-cxl@archiver.kernel.org>; Wed, 30 Mar 2022 04:50:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238767AbiC3ElG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 30 Mar 2022 00:41:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53994 "EHLO
+        id S242651AbiC3EwP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 30 Mar 2022 00:52:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236198AbiC3ElE (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Mar 2022 00:41:04 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A35C019288
-        for <linux-cxl@vger.kernel.org>; Tue, 29 Mar 2022 21:39:20 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id x2so19461465plm.7
-        for <linux-cxl@vger.kernel.org>; Tue, 29 Mar 2022 21:39:20 -0700 (PDT)
+        with ESMTP id S236198AbiC3EwO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Mar 2022 00:52:14 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B685227CD1
+        for <linux-cxl@vger.kernel.org>; Tue, 29 Mar 2022 21:50:28 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id j13so19472171plj.8
+        for <linux-cxl@vger.kernel.org>; Tue, 29 Mar 2022 21:50:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=UbSDNF/RY5maCG9SIWY3fV6YMGvTHhYuD+cLUJfkRjY=;
-        b=zSrD6+EEzIQKuDESGH1d8vXAeGrnF5w76bXnpAd1lxfAkxS8FS33FAMdN8gJstN9uA
-         nIghTXg+WmQPzFITjY+Q1idHnK6623W03SWrMkLt5lBNCwKcR/vtUb73IiEhIAX+qpwN
-         FgfAxTj/vICgHOgqBymfvOi6zERaXarT0xqmM+8mEczMQ14aoD/AOR8uxc8jjGNG2ime
-         Mni96wGUecMAl/4svOvjlA0nylOiqBB2VeXvWa8U4BrpFvEdadSk9j6hfUY3P0PSIbf2
-         BTorhXL6iql+vx9P/ijrBF9Lq7ILmXJhX0wwF2kn2IXoDia+xGxw2s33JsCnvr49ZIjv
-         v5dg==
+        bh=Dy1J/nx4xiDbAxQkGI7HHsF6NRuNW3+X/8tqOc0eOPY=;
+        b=cAj0nS1eCeiWT/9dVpXlC1ygJZ7RvlTuTgUABJI8KcyGeIhJXHmnaIB1qnEEEkRewV
+         9jmGhlH5uS6574p+NmuzOZYhCPi14bbjZi5JNgDmAG88aAgunjNIZt13epdBlcmWAvr9
+         o++Azkel62T7qXqWXmWTRHx32qNGxrJMai6xZyXf/ypPE0TjYp6zxZJe74mH35QUuEAq
+         xaSWQQ58NBR8dRbasMP6YG1SuZcbEgaRaOVeC/x6FYoKGSax38KMHShhT7gRnINqAUlQ
+         FuwIODm9DTxRoq3U8lajK4fcNss4zMnMhj1CieELDgN8APy/sd+z9q8AfC5xPGv1ZinF
+         aFrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UbSDNF/RY5maCG9SIWY3fV6YMGvTHhYuD+cLUJfkRjY=;
-        b=hMBdPruuJCPMPS/wE3NHLqvkwmtjUrme+YMQ+Sh3YvGEiKZ7uEsuLb5HAMsjPQrZ9c
-         GygUmbyTzJIIlmvpgBF8LvkhbYINJcrjZSZD/ayc0ZKySLCtNclonI5lV1ZvNjqQtXU+
-         A7qKZ7fBhDLFQmIIkBWUH9QDLH+f9curwxR4eQ6RXkhzz5c6uFOU/PvSeZ6UbTi1d9Ji
-         mlQCjPEwYgJc0/TsGpLAuefyhK/ATXch4rs7XVP/CuzXur2JraaIqS+22tDZM5mKvBHy
-         tC7EKxl8vWbD9zutw0Ii8QjEmZOEQ2NfG3sgbdR3LRpHiq4Dl/0oRZBh+/a0k59sL2Jt
-         OkbQ==
-X-Gm-Message-State: AOAM530nTLrAn9ZUfEQRIAMVj2KnG5hL7IgOB+qtjLpjwT+S3sqvErmY
-        b3fjbxhcIyue7n5BIXaQB3HLu8pQTDLosEq7k9e55g==
-X-Google-Smtp-Source: ABdhPJzX2iYk47FcI6a0JE02AB4nfSbo7KghZxc2a6q+ctKA3aqmoqcyHLf+i7vFfTlDHGb8cPnIOZ3Yie+Keccxt5k=
-X-Received: by 2002:a17:903:32c7:b0:154:4156:f384 with SMTP id
- i7-20020a17090332c700b001544156f384mr33748751plr.34.1648615160140; Tue, 29
- Mar 2022 21:39:20 -0700 (PDT)
+        bh=Dy1J/nx4xiDbAxQkGI7HHsF6NRuNW3+X/8tqOc0eOPY=;
+        b=5bgiyjgP7svyuuQNiB90a5d0PP87ZEKknHS/FbQ4Qs3NddUHVVcDfg3/Um6uSGqXwj
+         0t64CileAL7aoX65aA9nYzficZT7ZENttCzhfrv7ySrd7Oq8jP6lWl2rzIqZCHwwAF0Q
+         xothbWQBO1rV1UHrfBjOmmJ0buO44GAtREgDAsXCzAoM6UqRyoF6CZTiK+qIy1GddyYA
+         uLzq8rbAjWY92idGxkXGpMxEQI2Y97fACgrHbRPxYv82u5b0sQus+pXUmiszjUbNvQm4
+         YIo9SSHmJga3yCxPOp9nheHU2ESgB0JVBPVSdkdeV3KK7Tmyf3LvJKjOMDjy+3VNgCQq
+         2Y7A==
+X-Gm-Message-State: AOAM530DRP8wM2gBrO1qzNbCnZk3IDTo8hA67rUcDLfx2ZtwyWQXSeR7
+        XAgErrI/HnhuTH0iI5sROsjAxEHN308blbIV45UIsw==
+X-Google-Smtp-Source: ABdhPJwe7I01UYuBQLMUHXOYiDi20tcVEcHKzXYd53HBmzeoDOuVUqXMAjxJ4NZPPV99InvCnUJz4jnn+GRDTKOS3P8=
+X-Received: by 2002:a17:90a:990c:b0:1bc:3c9f:2abe with SMTP id
+ b12-20020a17090a990c00b001bc3c9f2abemr2936658pjp.220.1648615828240; Tue, 29
+ Mar 2022 21:50:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1648601710.git.alison.schofield@intel.com> <281bb6c00baa93c29a9f05162a274bd6140fea39.1648601710.git.alison.schofield@intel.com>
-In-Reply-To: <281bb6c00baa93c29a9f05162a274bd6140fea39.1648601710.git.alison.schofield@intel.com>
+References: <cover.1648601710.git.alison.schofield@intel.com> <1a1ebb7181b8be9fb746da48b41c02e54bee513e.1648601710.git.alison.schofield@intel.com>
+In-Reply-To: <1a1ebb7181b8be9fb746da48b41c02e54bee513e.1648601710.git.alison.schofield@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 29 Mar 2022 21:39:09 -0700
-Message-ID: <CAPcyv4jt9ZRJ880j+EDaa_EzXO=HAAkzL5MW2eaYzbg89mo_vA@mail.gmail.com>
-Subject: Re: [PATCH v4 4/9] cxl/mbox: Construct a users cxl_mbox_cmd in the
- validation path
+Date:   Tue, 29 Mar 2022 21:50:17 -0700
+Message-ID: <CAPcyv4gaZsFQYnFQtWBni67NYLoBxN+Hc=Y96OtPTPu5sRXfnA@mail.gmail.com>
+Subject: Re: [PATCH v4 5/9] cxl/mbox: Remove dependency on cxl_mem_command for
+ a debug msg
 To:     "Schofield, Alison" <alison.schofield@intel.com>
 Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
@@ -67,20 +67,54 @@ On Tue, Mar 29, 2022 at 6:28 PM <alison.schofield@intel.com> wrote:
 >
 > From: Alison Schofield <alison.schofield@intel.com>
 >
-> This is a step in refactoring the handling of user space mailbox
-> commands. The intent is to have all the validation work originate
-> in cxl_validate_cmd_from_user().
->
-> Move the construction and validation of a mailbox command to the
-> validation path. Continue to pass both the out_cmd and the mbox_cmd
-> until handle_mbox_cmd_from_user() learns how to use a mbox_cmd param.
+> In preparation for removing access to struct cxl_mem_command,
+> change this debug message to use cxl_mbox_cmd fields instead.
+> Retrieve the pretty command name from cxl_mbox_cmd using a new
+> opcode to command name helper.
 >
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
->  drivers/cxl/core/mbox.c | 21 +++++++++++++++++----
->  1 file changed, 17 insertions(+), 4 deletions(-)
+>  drivers/cxl/core/mbox.c | 17 ++++++++++++++---
+>  1 file changed, 14 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 95882ab9f87b..654e61a77eb3 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -127,6 +127,17 @@ static struct cxl_mem_command *cxl_mem_find_command(u16 opcode)
+>         return NULL;
+>  }
+>
+> +static const char *cxl_mem_opcode_to_name(u16 opcode)
+> +{
+> +       struct cxl_mem_command *c;
+> +
+> +       c = cxl_mem_find_command(opcode);
+> +       if (!c)
+> +               return NULL;
+> +
+> +       return cxl_command_names[c->info.id].name;
+> +}
+> +
+>  /**
+>   * cxl_mbox_send_cmd() - Send a mailbox command to a device.
+>   * @cxlds: The device data for the operation
+> @@ -445,9 +456,9 @@ static int handle_mailbox_cmd_from_user(struct cxl_dev_state *cxlds,
+>         dev_dbg(dev,
+>                 "Submitting %s command for user\n"
+>                 "\topcode: %x\n"
+> -               "\tsize: %ub\n",
+> -               cxl_command_names[cmd->info.id].name, mbox_cmd.opcode,
+> -               cmd->info.size_in);
+> +               "\tsize: %zx\n",
+> +               cxl_mem_opcode_to_name(mbox_cmd.opcode),
+> +               mbox_cmd.opcode, mbox_cmd.size_in);
 
-Looks good modulo destination parameter ordering.
+Looks ok, although it's just a debug statement so the raw opcode would
+also be acceptable to me to meet the goal of dropping the
+cxl_mem_command usage.
+
+Either way you decide to go:
 
 Reviewed-by: Dan Williams <dan.j.williams@intel.com>
