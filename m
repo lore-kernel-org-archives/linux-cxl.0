@@ -2,55 +2,55 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF41CC433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 30 Mar 2022 00:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 831FBC433EF
+	for <linux-cxl@archiver.kernel.org>; Wed, 30 Mar 2022 00:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233844AbiC3A0Y (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 29 Mar 2022 20:26:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58536 "EHLO
+        id S241179AbiC3AoY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 29 Mar 2022 20:44:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231516AbiC3A0X (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Mar 2022 20:26:23 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ABE751E77
-        for <linux-cxl@vger.kernel.org>; Tue, 29 Mar 2022 17:24:39 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id i11so7795681plg.12
-        for <linux-cxl@vger.kernel.org>; Tue, 29 Mar 2022 17:24:39 -0700 (PDT)
+        with ESMTP id S233084AbiC3AoY (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Mar 2022 20:44:24 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5513182AD7
+        for <linux-cxl@vger.kernel.org>; Tue, 29 Mar 2022 17:42:40 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id n18so19097773plg.5
+        for <linux-cxl@vger.kernel.org>; Tue, 29 Mar 2022 17:42:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ylrqPtDRpqKdH0Jofj0HZ85xHchR1jkh2/owj0NCXDI=;
-        b=c6v5MHQHyVJ26aZFG4bzjcl/PsBK5oWWp9raqNfrrd7FwbX+YAx1Y3oVaUmTz+0JQ1
-         i9onk+tsZzHuNCFaamJ5iGUvFZnzrbasgqevZaRzoetzsbMe7uC9Vp75dxDB4Go4QgQS
-         NMMqe7AeJuHRAS0kHCQKaKG4rSLwuLbuynUlCnZqsZo9TVxZ3ks35ThpRWGtS5Ss1Tx6
-         4rloL6Ovu/S6+sZggBUl6jGVWUSF/4yX8F2bzKkyJl/epHVYxLxnqkDcIp5NCAK647xv
-         vew1CTINKm9zP3SaN0+TLN5Bm273rmHRRVrT7Rm79M6UpR3GAR8EfblLdo5MvyG24YFr
-         /vqA==
+        bh=w8HogclTMgmXbtv6l9NSXrYFja93QdZ6Yt9uotZLQUc=;
+        b=TjxoX7G5yw2SJq49ElFfMokU/ROWD7iDVdjs4PBqjOCoErQd12BJmPs3Ven/TkpiWR
+         s0SHope5Yhe3RoSG1n123PCOLaLz72j/koLCwpgWInlUROjRIeByZZFdKkvvOitp5MS8
+         uA37LPFqs5/7Wy0XXs/K74CQIzlHEQ/EpKQHjZnDhDYttJCz8q5t7BsFYstcVpD/8YWi
+         DnQtjPykN6ztFGEcOsSEovPGwSsj7Jp3SO4cmsw3zccKt6quQuMfngoj1BBc7SdyHly3
+         FCqOpjIwFzhfG4s2epv1VoUfjJKknVrzpwnjQuIjt473B4AV0uW4Aet5QYx7+5qOMnFq
+         Ciug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ylrqPtDRpqKdH0Jofj0HZ85xHchR1jkh2/owj0NCXDI=;
-        b=rLaSijyOsa5D2k0wiCMg7ncglOpgJGJ9Z1iHjOeDhMv7xKX9A2yTz6Q1Jbu2BivmQw
-         w5oVhajNZ1/BOTtM9/60swsb9wSwb3gVtO3QGFDhD0FchvXLoOSPU061gVLoQGe6rB9O
-         eqBZqETfwgocBjyntYs9/k+L4ge7O8dW2A4LI3aDwBEce8QtiBmRyew7EH3x3JindZ0p
-         OMJ4NQWzOKTkqA7awJByj2EescVzjggbL8D92ack3mnvSoEcnjE2W7kFBLfUy1igCHTX
-         1ULUvWFeY06o3nHoIPHa7TwbQ0wZFQ9DBmxQs9eENW6baaPRJfP851xSlfDIrkvAwtXo
-         HO9w==
-X-Gm-Message-State: AOAM532MhdF1a+/vfagIbajRP43Br8u8H523jGbLlfyVuiWKa2eE4fU4
-        B8DahmTDZqjgaiDIZ87UdQgY6jqHi36CJOZTVNhyCw==
-X-Google-Smtp-Source: ABdhPJwEN6wCAsGpUO4j5nKq9o6JhoaSFLYdWkB5vQ36BAJ26V08RylmgVEqEgB8EgW6NqRtGUU2fCR+VoqvVAZDLXI=
-X-Received: by 2002:a17:90a:990c:b0:1bc:3c9f:2abe with SMTP id
- b12-20020a17090a990c00b001bc3c9f2abemr1878969pjp.220.1648599878497; Tue, 29
- Mar 2022 17:24:38 -0700 (PDT)
+        bh=w8HogclTMgmXbtv6l9NSXrYFja93QdZ6Yt9uotZLQUc=;
+        b=4eh2sCu0dn4K5DEBSjJMZaO4jyQ103FQEbuUILroRG+kPFICj6dgsz2QnNlgR8yovJ
+         ry/YBVZkcbKBpqzS+0+3l0ZVtZalCxaGH9LWTxd5xBXFsXAeeuARk+3tCMI9OJj807yv
+         BBl6ivSdiYZXMGvWIGkC7vKoyjPQAjslwNCOtc9d3/g0v1JSLNdvICPbxMKylhbx5ZmF
+         sWgMg4Be/NMFBBGAq0+tivEGWTu0gzlx+mrVtxA5VPkDQc/l4YoqghD9An3So9huAPVm
+         3/zmITzii7CCQDqJHPL1jehb5JsVj23zygJ9Hj94KMp+y7UuqLcnJZh2Q78L49opwCS6
+         HJNg==
+X-Gm-Message-State: AOAM533acIp9VBE3KpqncPGYFKbTWn7h9W8qUSji8FXyakR7GnkVrmoS
+        BNPm4Gz9eOd1z6VbwxpDUd/ztRFamdM9yYLNjabODA==
+X-Google-Smtp-Source: ABdhPJxrCItJLRZ0qytpxbYC7anMvsekGXyq/3FbMjxN1LBdKnr6CqBkFf6r26I8Z1aaM3h1N4fA5QubZFTh8lrHfnQ=
+X-Received: by 2002:a17:90a:430d:b0:1bc:f340:8096 with SMTP id
+ q13-20020a17090a430d00b001bcf3408096mr1895696pjg.93.1648600960396; Tue, 29
+ Mar 2022 17:42:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220317234049.69323-1-dave@stgolabs.net> <20220317234049.69323-5-dave@stgolabs.net>
-In-Reply-To: <20220317234049.69323-5-dave@stgolabs.net>
+References: <20220317234049.69323-1-dave@stgolabs.net> <20220317234049.69323-6-dave@stgolabs.net>
+In-Reply-To: <20220317234049.69323-6-dave@stgolabs.net>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 29 Mar 2022 17:24:27 -0700
-Message-ID: <CAPcyv4i=tV1dL3V=jCeZuxLbfqH8K0RCmQkutvnhxuqc3Z4rgw@mail.gmail.com>
-Subject: Re: [PATCH 4/5] cxl/mbox: Use new return_code handling
+Date:   Tue, 29 Mar 2022 17:42:29 -0700
+Message-ID: <CAPcyv4jn2LqwZ0LG3pFG1tWP21U_bbMJSO1STOc0N_rg=KRa5Q@mail.gmail.com>
+Subject: Re: [PATCH 5/5] cxl/mbox: Retry sending mbox command upon RETRY return_code
 To:     Davidlohr Bueso <dave@stgolabs.net>
 Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
         "Weiny, Ira" <ira.weiny@intel.com>,
@@ -63,51 +63,23 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 On Thu, Mar 17, 2022 at 4:41 PM Davidlohr Bueso <dave@stgolabs.net> wrote:
 >
-> Use the global cxl_mbox_cmd_rc table to improve debug messaging
-> in __cxl_pci_mbox_send_cmd() and allow cxl_mbox_send_cmd()
-> to map to proper kernel style errno codes - this patch
-> continues to use -ENXIO only so no change in semantics.
->
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> ---
->  drivers/cxl/core/mbox.c | 7 ++++---
->  drivers/cxl/pci.c       | 3 ++-
->  2 files changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index d4d4a16820b7..fa9e7043f158 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -170,9 +170,10 @@ int cxl_mbox_send_cmd(struct cxl_dev_state *cxlds, u16 opcode, void *in,
->         if (rc)
->                 return rc;
->
-> -       /* TODO: Map return code to proper kernel style errno */
-> -       if (mbox_cmd.return_code != CXL_MBOX_CMD_RC_SUCCESS)
-> -               return -ENXIO;
-> +       if (mbox_cmd.return_code != CXL_MBOX_CMD_RC_SUCCESS) {
-> +               int err = cxl_mbox_cmd_rc2errno(&mbox_cmd);
-> +               return -err;
+> As mentioned in CXL 2.0 specs: the hardware can set a Retry
+> Required if the the command was not completed due to a
+> temporary error. An optional single retry may resolve the
+> issue. This is the only retry case as in general they are
+> not recommended for commands that return an error.
 
-I don't like the need for a local variable and adding the negation.
-Just store the negative value directly and call the helper
-cxl_mbox_cmd_rc2err() so that this can just do "return
-cxl_mbox_cmd_rc2err(&mbox_cmd);".
-
-> +       }
->
->         /*
->          * Variable sized commands can't be validated and so it's up to the
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 0c36d111232b..67ec0220826f 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -178,7 +178,8 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_state *cxlds,
->                 FIELD_GET(CXLDEV_MBOX_STATUS_RET_CODE_MASK, status_reg);
->
->         if (mbox_cmd->return_code != CXL_MBOX_CMD_RC_SUCCESS) {
-> -               dev_dbg(dev, "Mailbox operation had an error\n");
-> +               dev_dbg(dev, "Mailbox operation had an error: %s\n",
-> +                       cxl_mbox_cmd_rc2str(mbox_cmd));
-
-Looks good.
+So I disagree that the driver should be deploying this behaviour by
+default. This was also tried for the ACPI NVDIMM commands and it was
+helpful for Linux to not play along and get the firmware implementers
+to get their act together and detail when a retry is appropriate. So,
+this policy is up to the submitter. If that agent has information that
+the kernel does not have about a retry being effective, it is free to
+attempt the retry after the failure. Otherwise, the spec is overly
+hopeful in expecting an implementation to attempt a speculative /
+optional retry. Hopefully, a default Linux policy to fail commands
+that end in a retry encourages fixes to devices / firmwares that want
+to use optional retry as a crutch... or it encourages the discipline
+to come back to the specification working group with explicit
+per-command updates to define the scenarios when a retry is mandatory
+and not optional.
