@@ -2,106 +2,87 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4C8C433F5
-	for <linux-cxl@archiver.kernel.org>; Thu, 31 Mar 2022 12:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C73C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 31 Mar 2022 15:20:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235997AbiCaMWN convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 31 Mar 2022 08:22:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48192 "EHLO
+        id S238136AbiCaPV7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 31 Mar 2022 11:21:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235996AbiCaMWN (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 31 Mar 2022 08:22:13 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D648C58814
-        for <linux-cxl@vger.kernel.org>; Thu, 31 Mar 2022 05:20:25 -0700 (PDT)
-Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KTj5T690xz685N3;
-        Thu, 31 Mar 2022 20:18:53 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 31 Mar 2022 14:20:23 +0200
-Received: from localhost (10.122.247.231) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 31 Mar
- 2022 13:20:22 +0100
-Date:   Thu, 31 Mar 2022 13:20:21 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <linuxarm@huawei.com>, <qemu-devel@nongnu.org>,
-        Alex =?ISO-8859-1?Q?Be?= =?ISO-8859-1?Q?nn=E9e?= 
-        <alex.bennee@linaro.org>, Marcel Apfelbaum <marcel@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Markus Armbruster <armbru@redhat.com>
-CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
-        "Peter Maydell" <peter.maydell@linaro.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Philippe =?ISO-8859-1?Q?Mathieu-D?= =?ISO-8859-1?Q?aud=E9?= 
-        <f4bug@amsat.org>, Peter Xu <peterx@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Saransh Gupta1 <saransh@ibm.com>,
-        Shreyas Shah <shreyas.shah@elastics.cloud>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Samarth Saxena <samarths@cadence.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
-Subject: Re: [PATCH v8 02/46] hw/cxl/component: Introduce CXL components
- (8.1.x, 8.2.5)
-Message-ID: <20220331132021.000014c4@huawei.com>
-In-Reply-To: <20220318150635.24600-3-Jonathan.Cameron@huawei.com>
-References: <20220318150635.24600-1-Jonathan.Cameron@huawei.com>
-        <20220318150635.24600-3-Jonathan.Cameron@huawei.com>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+        with ESMTP id S230458AbiCaPV6 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 31 Mar 2022 11:21:58 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FDCD194AA9;
+        Thu, 31 Mar 2022 08:20:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1648740011; x=1680276011;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LpfE9EOmt5CFwh3mL9y2HjLfgZakXpxm9CD99bN3kIk=;
+  b=X+P0mrnGugJdJN9w8QQWZJ61xpdwQCrJsH2LSsV+mGzXnvQWm+3xQKhZ
+   NSVSzikNi51lrEVFhgAkN9gI0hF9boUZMwxsUgSyEpabEPvRK47WGp+EK
+   LhwbWvjA+H2RWwG7TAm26Y0+NOQR21pHIJ5u5gvUDlBpR2l7+eJmLZlnJ
+   8K+dnsb5RAPWnsp5FOjL9b5t8NacSS0yG3r3vdVakNflHL6sczhtiv6jY
+   yzv5ZaMacDZNqzUPxMhPXEtTuwwKcw1Trzoj1QIR9vq7jAoiNmdWd8Ylw
+   a4Kck95t3yWrxq1nxVhUJnWF+rQ+2gdbJQi51CGIdzYJY0TvHP1BBIiGM
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10302"; a="323043672"
+X-IronPort-AV: E=Sophos;i="5.90,225,1643702400"; 
+   d="scan'208";a="323043672"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2022 08:19:58 -0700
+X-IronPort-AV: E=Sophos;i="5.90,225,1643702400"; 
+   d="scan'208";a="520610411"
+Received: from sgkeithl-mobl3.amr.corp.intel.com (HELO localhost) ([10.213.179.11])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2022 08:19:57 -0700
+Date:   Thu, 31 Mar 2022 08:19:56 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V7 03/10] PCI: Create PCI library functions in support of
+ DOE mailboxes.
+Message-ID: <YkXGnKsTEUAe29io@iweiny-desk3>
+References: <20220330235920.2800929-1-ira.weiny@intel.com>
+ <20220330235920.2800929-4-ira.weiny@intel.com>
+ <YkVBJ+nRA2g/WDxa@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhreml717-chm.china.huawei.com (10.201.108.68) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YkVBJ+nRA2g/WDxa@infradead.org>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 18 Mar 2022 15:05:51 +0000
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+On Wed, Mar 30, 2022 at 10:50:31PM -0700, Christoph Hellwig wrote:
+> On Wed, Mar 30, 2022 at 04:59:13PM -0700, ira.weiny@intel.com wrote:
+> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > 
+> > Introduced in a PCI v6.0[1], DOE provides a config space based mailbox
+> > with standard protocol discovery.  Each mailbox is accessed through a
+> > DOE Extended Capability.
+> > 
+> > Each DOE mailbox must support the DOE discovery protocol in addition to
+> > any number of additional protocols.
+> > 
+> > Define core PCI functionality to manage a single PCI DOE mailbox at a
+> > defined config space offset.  Functionality includes creating, supported
+> > protocol queries, submit tasks to, and destroying the new state objects.
+> > 
+> > If interrupts are desired, interrupts vectors should be allocated prior
+> > to asking for irq's when creating a mailbox object.
+> 
+> I really don't think this should be built unconditionally and bloat
+> every single kernel built with PCI support.
 
-> From: Ben Widawsky <ben.widawsky@intel.com>
-> 
-> A CXL 2.0 component is any entity in the CXL topology. All components
-> have a analogous function in PCIe. Except for the CXL host bridge, all
-> have a PCIe config space that is accessible via the common PCIe
-> mechanisms. CXL components are enumerated via DVSEC fields in the
-> extended PCIe header space. CXL components will minimally implement some
-> subset of CXL.mem and CXL.cache registers defined in 8.2.5 of the CXL
-> 2.0 specification. Two headers and a utility library are introduced to
-> support the minimum functionality needed to enumerate components.
-> 
-> The cxl_pci header manages bits associated with PCI, specifically the
-> DVSEC and related fields. The cxl_component.h variant has data
-> structures and APIs that are useful for drivers implementing any of the
-> CXL 2.0 components. The library takes care of making use of the DVSEC
-> bits and the CXL.[mem|cache] registers. Per spec, the registers are
-> little endian.
-> 
-> None of the mechanisms required to enumerate a CXL capable hostbridge
-> are introduced at this point.
-> 
-> Note that the CXL.mem and CXL.cache registers used are always 4B wide.
-> It's possible in the future that this constraint will not hold.
-> 
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Alex Bennée <alex.bennee@linaro.org>
-There will be one other addition to this in v9 which is to add
-the device GPF dvsec structure definition.
+I can add a Kconfig.
 
-I'll also add the relevant instantiation of this to the type 3 device
-and the Port GPF instantiation for the root port and switch
-DSP as these are mandatory (Even if they aren't that interesting to an OS)
-
->
+Thanks for looking,
+Ira
