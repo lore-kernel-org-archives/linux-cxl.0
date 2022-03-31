@@ -2,56 +2,56 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD92C433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 31 Mar 2022 22:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6385EC433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 31 Mar 2022 22:13:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235779AbiCaWNE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 31 Mar 2022 18:13:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43040 "EHLO
+        id S240560AbiCaWPM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 31 Mar 2022 18:15:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242367AbiCaWM7 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 31 Mar 2022 18:12:59 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26CD713E84
-        for <linux-cxl@vger.kernel.org>; Thu, 31 Mar 2022 15:11:12 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id mp6-20020a17090b190600b001c6841b8a52so3576350pjb.5
-        for <linux-cxl@vger.kernel.org>; Thu, 31 Mar 2022 15:11:12 -0700 (PDT)
+        with ESMTP id S239969AbiCaWPL (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 31 Mar 2022 18:15:11 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB63723BE7
+        for <linux-cxl@vger.kernel.org>; Thu, 31 Mar 2022 15:13:21 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id c2so843561pga.10
+        for <linux-cxl@vger.kernel.org>; Thu, 31 Mar 2022 15:13:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=UIsuc+VMrZHjV/gOA9v1R2HCzMsCz3sjByLBSEfd/Uc=;
-        b=tgiL3tXTR9ihSeeAQ77WFZQdby6+cj2zSm0bAwWlNestnU/wzjP0fHHqQiVD/lx9uZ
-         oazGqpKExTg9esgDfG7V7VV1bqXJF2Qx+E/EGTbzjGlirTic0Ec2z1PSsgp7A2BZguGN
-         z/HKhL1ZLc/U4f+0jvugj88tDtpXo/jXtDshuX7kThVbPgpzIC+UWkZchp9CtwjofstO
-         o4pHtbr0X8I0Ps1sOhz9efmf3gsHGVROmHXYzMIBCkRpLlM/hvJCTQhbtBCi4pTjXQfn
-         kPbsfY4WscCTZOVMzZvuHDCI5Yk0t2dAu5nCxQMVwkUoFVutZR9LP4e7yQoEw45vGiOY
-         Bmqw==
+        bh=HAkzSKoARw4W5M/05NnpNlTsJ4UBBzdHLgF+g5O6UAo=;
+        b=EXSn3zoZI8olPRavCT/LSZVZ6orIPv388AT6wbsdV51NVsFE2SfQXWwHd+lQzi/g1M
+         VS+7Cz0gX8rVOE0H1dXJzMp3Cm2T9Jkcp1qSti9Ddd5S4J+2gCo/xETA9upDs3+ermPn
+         V2ZNLUNnhwg9kzAcgKxWK3oGWXg50bUbRbwj9Xt5ezg5ouKdRLin/A1miPH0G17DJoKL
+         HsgfYCg8M4WqgBekNPcf4pmRoZXdmu4Ss0WYtf+IPjinJPzMf5MBAK5c/cFWkwco32R+
+         V5fsZGoMxj1YhqpdG9qWklZlEop4JbmK8SXh+pYc1jU9YrnOXf2HforAwqFfBoKslmqj
+         4XNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UIsuc+VMrZHjV/gOA9v1R2HCzMsCz3sjByLBSEfd/Uc=;
-        b=B5FU/WuorcSLF9br15ISQjSzzeOQgI6yxmGnER33H9t24MPQn37L2BJnIA3XBBjfwN
-         ho30pwQpGfRCnjqf/9XU9OOPMIAyzaIEOvIkG/N56oGUa1D+SwJi2pHLcGxfKdDtSfwF
-         P+Ko5WtvM5tipIRmDHJGWNF5kYrVuYtyFHSp8aqaxe0BTBB7YHtsaptIKe16YsJpupv/
-         eaTJjewiBK94vqPCKJR99xcZTS4dDdaka4BIRnnTYYC4VSrS1u+myzLiWShLsEF+wMz6
-         Z5GzAfTDx+pLH19lD5XFZ8KljMOOI6jXX4YPJGT7H/yzGUWv66qLpN9wNvnBptZ4KxWk
-         nUkw==
-X-Gm-Message-State: AOAM531scy5B6afmhwu4ogeMwaTN2g5ZmUt5GFJau3oezj+5QDKZW+0D
-        DeZrFtC7FVislloxKemHwen1OgwyrB/ttbf/mkoyLXGXe8A=
-X-Google-Smtp-Source: ABdhPJwifYZ/2DqepvKxV1o7z9C7klqh/ent7cWqhjxqtZg1SDVL/MO8j/9K81DJGTIgg8Mq1arMqXqxzq+uv9nBmv0=
-X-Received: by 2002:a17:903:32c7:b0:154:4156:f384 with SMTP id
- i7-20020a17090332c700b001544156f384mr7434787plr.34.1648764671670; Thu, 31 Mar
- 2022 15:11:11 -0700 (PDT)
+        bh=HAkzSKoARw4W5M/05NnpNlTsJ4UBBzdHLgF+g5O6UAo=;
+        b=W8bHAqbkDufn0mKfghr1/ibEn8THFzYAFv/DBASaChHdtWd+eytBO3RpOUIwpdp2p4
+         Oz0L4sZRZRw4zFplFWSS6J1w70FjM4vi82RlK7rMppKac69/wXdipBmsU6FTyJt1O2Gk
+         O+pIrZCuyiKtogpBeOrlcK6E8h3uPjb0GP/2Dd4JXbufPPV8A0u3wAoyBem2Kdu76mi5
+         UmKjusevilsWRFiBrPXfFmzq24orAcYbK3yGLD/MOrR6IXctJomGOSpbOiK9m+Atw6aK
+         RSfBPuTWxCR2YCwumyWSuFtci2onw64zoGTwcubdZlMf3Vq03Ab//zcBh3uM9E4G80pL
+         0zxg==
+X-Gm-Message-State: AOAM530q/sKywvT4DXwtanMRG6O+TslbEEN6RTRo3TNwbir4nBdzyFX8
+        3ErL+3P4Ba0uv6/5wmUXaKTjPnVA3hD7Mn35TOeyQg==
+X-Google-Smtp-Source: ABdhPJwhLsWtaUaXS8vjL/8jeKhh8cxahxLQUHJLPWidWGvCwyLes9giGrnbTcfOKbqxZ2UP/fxZnwM++na7Cw/YyCY=
+X-Received: by 2002:a05:6a00:8ca:b0:4e0:2ed3:5630 with SMTP id
+ s10-20020a056a0008ca00b004e02ed35630mr7698974pfu.3.1648764801270; Thu, 31 Mar
+ 2022 15:13:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1648687552.git.alison.schofield@intel.com> <241821186c363833980adbc389e2c547bc5a6395.1648687552.git.alison.schofield@intel.com>
-In-Reply-To: <241821186c363833980adbc389e2c547bc5a6395.1648687552.git.alison.schofield@intel.com>
+References: <cover.1648687552.git.alison.schofield@intel.com> <accc6abc878f0662093b81490a1a052f2ff6f06e.1648687552.git.alison.schofield@intel.com>
+In-Reply-To: <accc6abc878f0662093b81490a1a052f2ff6f06e.1648687552.git.alison.schofield@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 31 Mar 2022 15:11:00 -0700
-Message-ID: <CAPcyv4ifPKhyh-8SUjNW22KRARj43KOdX8r6sFHbpcZRSLCNug@mail.gmail.com>
-Subject: Re: [PATCH v5 8/9] cxl/mbox: Block immediate mode in
- SET_PARTITION_INFO command
+Date:   Thu, 31 Mar 2022 15:13:10 -0700
+Message-ID: <CAPcyv4gH12RTSxjHL3RYszHw+ofJupkv8q5AvBADFC+Dtf=qxQ@mail.gmail.com>
+Subject: Re: [PATCH v5 9/9] cxl/pmem: Remove CXL SET_PARTITION_INFO from
+ exclusive_cmds list
 To:     "Schofield, Alison" <alison.schofield@intel.com>
 Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
@@ -66,24 +66,31 @@ On Wed, Mar 30, 2022 at 6:25 PM <alison.schofield@intel.com> wrote:
 >
 > From: Alison Schofield <alison.schofield@intel.com>
 >
-> User space may send the SET_PARTITION_INFO mailbox command using
-> the IOCTL interface. Inspect the input payload and fail if the
-> immediate flag is set.
+> With SET_PARTITION_INFO on the exclusive_cmds list for the CXL_PMEM
+> driver, userspace cannot execute a set-partition command without
+> first unbinding the pmem driver from the device.
 >
-> This is the first instance of the driver inspecting an input payload
-> from user space. Assume there will be more such cases and implement
-> with an extensible helper.
+> When userspace requests a partition change to take effect on the
+> next reboot this unbind requirement is unnecessarily restrictive.
+> The driver does not need to enforce an unbind because partitions
+> will not change until the next reboot. Of course, userspace still
+> needs to be aware that changing the size of persistent capacity
+> on the next reboot will result in the loss of data stored. That
+> can happen regardless of whether it is presently bound at the time
+> of issuing the set-partition command.
 >
-> In order for the kernel to react to an immediate partition change it
-> needs to assert that the change will not affect any active decode. At
-> a minimum this requires validating that the device is using HDM
-> decoders instead of the CXL DVSEC for decode, and that none of the
-> active HDM decoders are affected by the partition change. For now,
-> just fail until that support arrives.
+> When userspace requests a partition change to take effect immediately,
+> restrictions are needed. The CXL_MEM driver currently blocks the usage
+> of immediate mode, making the presence of SET_PARTITION_INFO, in this
+> exclusive commands list, redundant.
+>
+> In the future, when the CXL_MEM driver adds support for immediate
+> changes to device partitions it will ensure that the partition change
+> will not affect any active decode. That means the work will not fall
+> right back here, onto the CXL_PMEM driver.
 >
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Looks good,
+Looks good.
 
 Reviewed-by: Dan Williams <dan.j.williams@intel.com>
