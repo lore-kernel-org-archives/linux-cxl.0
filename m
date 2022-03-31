@@ -2,87 +2,104 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C73C433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 31 Mar 2022 15:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 050BFC433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 31 Mar 2022 20:20:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238136AbiCaPV7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 31 Mar 2022 11:21:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60644 "EHLO
+        id S240990AbiCaUWQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 31 Mar 2022 16:22:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230458AbiCaPV6 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 31 Mar 2022 11:21:58 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FDCD194AA9;
-        Thu, 31 Mar 2022 08:20:11 -0700 (PDT)
+        with ESMTP id S235080AbiCaUWO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 31 Mar 2022 16:22:14 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBCA819E3B5;
+        Thu, 31 Mar 2022 13:20:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648740011; x=1680276011;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LpfE9EOmt5CFwh3mL9y2HjLfgZakXpxm9CD99bN3kIk=;
-  b=X+P0mrnGugJdJN9w8QQWZJ61xpdwQCrJsH2LSsV+mGzXnvQWm+3xQKhZ
-   NSVSzikNi51lrEVFhgAkN9gI0hF9boUZMwxsUgSyEpabEPvRK47WGp+EK
-   LhwbWvjA+H2RWwG7TAm26Y0+NOQR21pHIJ5u5gvUDlBpR2l7+eJmLZlnJ
-   8K+dnsb5RAPWnsp5FOjL9b5t8NacSS0yG3r3vdVakNflHL6sczhtiv6jY
-   yzv5ZaMacDZNqzUPxMhPXEtTuwwKcw1Trzoj1QIR9vq7jAoiNmdWd8Ylw
-   a4Kck95t3yWrxq1nxVhUJnWF+rQ+2gdbJQi51CGIdzYJY0TvHP1BBIiGM
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10302"; a="323043672"
+  t=1648758026; x=1680294026;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7L5p/Tsn4VQqphAlCBKZLC476uhq6ClY6VH+aZE2W58=;
+  b=Uupd/xRciT8URavyAmpwgQPB++qmjplCsKApfWeNU5N9evULI1lLJpcx
+   8Z38VLYLBG5LWpGhv3GIb907LKGsUcBbwx/52dBlgrp0wO+xBwAPuod/9
+   moMqGXI7+fdGdQv1zIp31Vv1lAKpmVM9eA5gWKibU+LSLI9w3u2s9nSid
+   wa8QoJDAVMOHxznrOp4yZRKjinx/7A304pi4/P3nxyweu2pBX3VYO2zHa
+   d0d9zpx5GPEHr469KLf+i5KNLFeot266OkzdrWQC966CJeMV628muiC9j
+   2nt5m3xxAfem6DQ3VFHLKI5eTVesFF/LxNHsSmePzPgBOudA7XKdHwMUb
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10302"; a="240543568"
 X-IronPort-AV: E=Sophos;i="5.90,225,1643702400"; 
-   d="scan'208";a="323043672"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2022 08:19:58 -0700
+   d="scan'208";a="240543568"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2022 13:20:26 -0700
 X-IronPort-AV: E=Sophos;i="5.90,225,1643702400"; 
-   d="scan'208";a="520610411"
-Received: from sgkeithl-mobl3.amr.corp.intel.com (HELO localhost) ([10.213.179.11])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2022 08:19:57 -0700
-Date:   Thu, 31 Mar 2022 08:19:56 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
+   d="scan'208";a="503899653"
+Received: from pmuthurs-mobl4.amr.corp.intel.com (HELO vverma7-desk1.intel.com) ([10.212.72.98])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2022 13:20:25 -0700
+From:   Vishal Verma <vishal.l.verma@intel.com>
+To:     <linux-cxl@vger.kernel.org>
+Cc:     <linux-acpi@vger.kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Robert Moore <robert.moore@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH V7 03/10] PCI: Create PCI library functions in support of
- DOE mailboxes.
-Message-ID: <YkXGnKsTEUAe29io@iweiny-desk3>
-References: <20220330235920.2800929-1-ira.weiny@intel.com>
- <20220330235920.2800929-4-ira.weiny@intel.com>
- <YkVBJ+nRA2g/WDxa@infradead.org>
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: [PATCH v4 0/3] PCI/ACPI: add support for CXL _OSC
+Date:   Thu, 31 Mar 2022 14:20:19 -0600
+Message-Id: <20220331202022.1823174-1-vishal.l.verma@intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YkVBJ+nRA2g/WDxa@infradead.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1616; h=from:subject; bh=7L5p/Tsn4VQqphAlCBKZLC476uhq6ClY6VH+aZE2W58=; b=owGbwMvMwCXGf25diOft7jLG02pJDEluPL+e9T9OKjcXLlY49Grypupdk9ut6+4c41yeuzR0rXem x/rDHaUsDGJcDLJiiix/93xkPCa3PZ8nMMERZg4rE8gQBi5OAZgIrwUjw8p7T/azlMaJfz5aYNd07u Pmfb9fy34LUFZR9Z16/6bLumqGP5y1/P1X1wjzHY3aPWdiQEr5K76va93Wthv4X3k39Zn3Cx4A
+X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Mar 30, 2022 at 10:50:31PM -0700, Christoph Hellwig wrote:
-> On Wed, Mar 30, 2022 at 04:59:13PM -0700, ira.weiny@intel.com wrote:
-> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > 
-> > Introduced in a PCI v6.0[1], DOE provides a config space based mailbox
-> > with standard protocol discovery.  Each mailbox is accessed through a
-> > DOE Extended Capability.
-> > 
-> > Each DOE mailbox must support the DOE discovery protocol in addition to
-> > any number of additional protocols.
-> > 
-> > Define core PCI functionality to manage a single PCI DOE mailbox at a
-> > defined config space offset.  Functionality includes creating, supported
-> > protocol queries, submit tasks to, and destroying the new state objects.
-> > 
-> > If interrupts are desired, interrupts vectors should be allocated prior
-> > to asking for irq's when creating a mailbox object.
-> 
-> I really don't think this should be built unconditionally and bloat
-> every single kernel built with PCI support.
+Changes since v3[1]:
+- Fix up commit subject prefixes (Bjorn)
+- Fix typos in commit messages (Bjorn)
+- Drop 0day's reported-by trailer (Bjorn)
+- Fix another 0day warning from v3
 
-I can add a Kconfig.
+Add support for using the CXL definition of _OSC where applicable, and
+negotiating CXL specific support and control bits.
 
-Thanks for looking,
-Ira
+Patch 1 is a preliminary cleanup that replaces open-coded pointer
+arithmetic to retrieve the Control DWORD with an inline helper.
+
+Patch 2 adds the new CXL _OSC UUID, and uses it instead of the PCI UUID
+when a root port is CXL enabled. It provides a fallback method for
+CXL-1.1 platforms that may not implement the CXL-2.0 _OSC.
+
+Patch 3 performs negotiation for the CXL specific _OSC support and
+control bits.
+
+I've tested these against a custom qemu[2], which adds the CXL _OSC (in
+addition to other CXL support). Specifically, _OSC support is added
+here[3].
+
+[1]: https://lore.kernel.org/linux-cxl/20220330181434.1515791-1-vishal.l.verma@intel.com/
+[2]: https://gitlab.com/jic23/qemu/-/tree/cxl-v8-draft
+[3]: https://gitlab.com/jic23/qemu/-/commit/1d67df6b6e3716c27462873f3451956f5c0673a3
+
+Dan Williams (1):
+  PCI/ACPI: Use CXL _OSC instead of PCIe _OSC
+
+Vishal Verma (2):
+  PCI/ACPI: add a helper for retrieving _OSC Control DWORDs
+  PCI/ACPI: negotiate CXL _OSC
+
+ include/linux/acpi.h    |  44 ++++++++-
+ include/acpi/acpi_bus.h |  12 ++-
+ drivers/acpi/bus.c      |   2 +-
+ drivers/acpi/pci_root.c | 207 ++++++++++++++++++++++++++++++++++------
+ 4 files changed, 231 insertions(+), 34 deletions(-)
+
+
+base-commit: 05e815539f3f161585c13a9ab023341bade2c52f
+-- 
+2.35.1
+
