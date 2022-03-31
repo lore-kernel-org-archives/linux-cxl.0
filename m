@@ -2,40 +2,40 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A013C4332F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C25C43217
 	for <linux-cxl@archiver.kernel.org>; Thu, 31 Mar 2022 01:25:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352306AbiCaB0u (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S1352307AbiCaB0u (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Wed, 30 Mar 2022 21:26:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37016 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352307AbiCaB0s (ORCPT
+        with ESMTP id S1352309AbiCaB0s (ORCPT
         <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Mar 2022 21:26:48 -0400
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0CA742EE3
-        for <linux-cxl@vger.kernel.org>; Wed, 30 Mar 2022 18:25:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E37C342ED0
+        for <linux-cxl@vger.kernel.org>; Wed, 30 Mar 2022 18:25:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648689901; x=1680225901;
+  t=1648689902; x=1680225902;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=x3JnkEWOsl9bfrD8jk1xfGxfZwmvj+ZVL3w/6j0Hcu4=;
-  b=OsmRa9hHeauiiTO7da0tvyjJxyyU2vwB5UQ72RwT9QPIxlgR386QO+Qz
-   FJieQK4FwM3LLmnFMc5iPEUdw10xLFMNiIXXXUP/hHkcjlKKhA7BNDuPP
-   YCLKTgpxYYTkNUsJrfJJ3z7iTd4+RuyaMtohzX7brUyCwJE47QM2eev7R
-   F/jM92w+ctPL4gWm3RN/ZDOZCah7NDLl5U/N+Pv8C0z1o0wlAseJeDTyx
-   oSfNcqcL/mLJCC/BjreRZH82lpp4r0bEb3vKjw9+vCWZSIS6TAKgMBl8Q
-   2oNfXETxsLohWH0VQyWwMJELofx23zfTUi3u7DuL3tT0AHLOEhTMYE7aG
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10302"; a="247186034"
+  bh=0omQn1eSlnQJrB5NEraUGojKZGOJx2SsKwLQpROersg=;
+  b=S5qivVYtzcSoAg2uWncreT3KRuEKKGlKd+jxucddZTTTK/aDuOuM4PHT
+   XCwjxY9deRqE3i6oamsmmqcEPZCfaDM0n3Y7vrJus/8qKMX8tYSVcVtPy
+   6qYHK5TLU9qaupqk9t5eJKM+GRbnv37vmAe1kqvewk/KnViuyoqDbbbi5
+   6Hk0+pHNqHyFQpbgPf2ANj8eB65tMy92QjP7SmclUP7l20OKM4sklJnu/
+   XyqshHczY7cv5PyAckgozfQquvq+5bm5+JPBGtjWkqb+SDCdtpFhl0VW2
+   kceK1J2Bd0XT0+W+f8uehtAqLr69ydQaFGkr7apN8Nyd157lLYaMSMAgI
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10302"; a="247186035"
 X-IronPort-AV: E=Sophos;i="5.90,224,1643702400"; 
-   d="scan'208";a="247186034"
+   d="scan'208";a="247186035"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2022 18:25:00 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2022 18:25:01 -0700
 X-IronPort-AV: E=Sophos;i="5.90,224,1643702400"; 
-   d="scan'208";a="838664621"
+   d="scan'208";a="838664646"
 Received: from alison-desk.jf.intel.com (HELO localhost) ([10.54.74.41])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2022 18:25:00 -0700
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2022 18:25:01 -0700
 From:   alison.schofield@intel.com
 To:     Ben Widawsky <ben.widawsky@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
@@ -43,9 +43,9 @@ To:     Ben Widawsky <ben.widawsky@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
 Cc:     Alison Schofield <alison.schofield@intel.com>,
         linux-cxl@vger.kernel.org
-Subject: [PATCH v5 6/9] cxl/mbox: Make handle_mailbox_cmd_from_user() use a mbox param
-Date:   Wed, 30 Mar 2022 18:27:16 -0700
-Message-Id: <77050ba512d6c30eccf7505467509e460dd325a0.1648687552.git.alison.schofield@intel.com>
+Subject: [PATCH v5 7/9] cxl/mbox: Move cxl_mem_command param to a local variable
+Date:   Wed, 30 Mar 2022 18:27:17 -0700
+Message-Id: <c11a437896d914daf36f5ac8ec62f999c5ec2da7.1648687552.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1648687552.git.alison.schofield@intel.com>
 References: <cover.1648687552.git.alison.schofield@intel.com>
@@ -57,116 +57,88 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-Previously, handle_mailbox_cmd_from_user(), constructed the mailbox
-command and dispatched it to the hardware. The construction work
-has moved to the validation path.
+cxl_validate_command_from_user() is now the single point of validation
+for mailbox commands coming from user space. Previously, it returned a
+a cxl_mem_command, but that was not sufficient when validation of the
+actual mailbox command became a requirement. Now, it returns a fully
+validated cxl_mbox_cmd.
 
-handle_mailbox_cmd_from_user() now expects a fully validated
-mbox param. Make it's caller, cxl_send_cmd(), deliver it. Update
-the comments and dereferencing of the new mbox parameter.
+Remove the extraneous cxl_mem_command parameter. Define and use a
+local version only.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/mbox.c | 44 ++++++++++++++++-------------------------
- 1 file changed, 17 insertions(+), 27 deletions(-)
+ drivers/cxl/core/mbox.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 8c59c6959c15..b4bef3c50ee3 100644
+index b4bef3c50ee3..704d6b313144 100644
 --- a/drivers/cxl/core/mbox.c
 +++ b/drivers/cxl/core/mbox.c
-@@ -423,8 +423,7 @@ int cxl_query_cmd(struct cxl_memdev *cxlmd,
- /**
-  * handle_mailbox_cmd_from_user() - Dispatch a mailbox command for userspace.
+@@ -338,7 +338,6 @@ static int cxl_to_mem_cmd(struct cxl_mem_command *mem_cmd,
+  * @mbox_cmd: Sanitized and populated &struct cxl_mbox_cmd.
   * @cxlds: The device data for the operation
-- * @cmd: The validated command.
-- * @in_payload: Pointer to userspace's input payload.
-+ * @mbox_cmd: The validated mailbox command.
-  * @out_payload: Pointer to userspace's output payload.
-  * @size_out: (Input) Max payload size to copy out.
-  *            (Output) Payload size hardware generated.
-@@ -439,35 +438,27 @@ int cxl_query_cmd(struct cxl_memdev *cxlmd,
-  *  * %-EINTR	- Mailbox acquisition interrupted.
-  *  * %-EXXX	- Transaction level failures.
+  * @send_cmd: &struct cxl_send_command copied in from userspace.
+- * @out_cmd: Sanitized and populated &struct cxl_mem_command.
   *
-- * Creates the appropriate mailbox command and dispatches it on behalf of a
-- * userspace request. The input and output payloads are copied between
-- * userspace.
-+ * Dispatches a mailbox command on behalf of a userspace request.
-+ * The output payload is copied to userspace.
+  * Return:
+  *  * %0	- @out_cmd is ready to send.
+@@ -348,16 +347,14 @@ static int cxl_to_mem_cmd(struct cxl_mem_command *mem_cmd,
+  *  * %-EPERM	- Attempted to use a protected command.
+  *  * %-EBUSY	- Kernel has claimed exclusive access to this opcode
   *
-  * See cxl_send_cmd().
+- * The result of this command is a fully validated command in @out_cmd that is
++ * The result of this command is a fully validated command in @mbox_cmd that is
+  * safe to send to the hardware.
+- *
+- * See handle_mailbox_cmd_from_user()
   */
- static int handle_mailbox_cmd_from_user(struct cxl_dev_state *cxlds,
--					const struct cxl_mem_command *cmd,
--					u64 in_payload, u64 out_payload,
--					s32 *size_out, u32 *retval)
-+					struct cxl_mbox_cmd *mbox_cmd,
-+					u64 out_payload, s32 *size_out,
-+					u32 *retval)
+ static int cxl_validate_cmd_from_user(struct cxl_mbox_cmd *mbox_cmd,
+ 				      struct cxl_dev_state *cxlds,
+-				      const struct cxl_send_command *send_cmd,
+-				      struct cxl_mem_command *out_cmd)
++				      const struct cxl_send_command *send_cmd)
  {
- 	struct device *dev = cxlds->dev;
--	struct cxl_mbox_cmd mbox_cmd;
++	struct cxl_mem_command mem_cmd;
  	int rc;
  
--	rc = cxl_mbox_cmd_ctor(&mbox_cmd, cxlds, cmd->opcode,
--			       cmd->info.size_in, cmd->info.size_out,
--			       in_payload);
--	if (rc)
--		return rc;
--
- 	dev_dbg(dev,
- 		"Submitting %s command for user\n"
- 		"\topcode: %x\n"
- 		"\tsize: %zx\n",
--		cxl_mem_opcode_to_name(mbox_cmd.opcode),
--		mbox_cmd.opcode, mbox_cmd.size_in);
-+		cxl_mem_opcode_to_name(mbox_cmd->opcode),
-+		mbox_cmd->opcode, mbox_cmd->size_in);
+ 	if (send_cmd->id == 0 || send_cmd->id >= CXL_MEM_COMMAND_ID_MAX)
+@@ -373,16 +370,16 @@ static int cxl_validate_cmd_from_user(struct cxl_mbox_cmd *mbox_cmd,
  
--	rc = cxlds->mbox_send(cxlds, &mbox_cmd);
-+	rc = cxlds->mbox_send(cxlds, mbox_cmd);
- 	if (rc)
- 		goto out;
+ 	/* Sanitize and construct a cxl_mem_command */
+ 	if (send_cmd->id == CXL_MEM_COMMAND_ID_RAW)
+-		rc = cxl_to_mem_cmd_raw(out_cmd, send_cmd, cxlds);
++		rc = cxl_to_mem_cmd_raw(&mem_cmd, send_cmd, cxlds);
+ 	else
+-		rc = cxl_to_mem_cmd(out_cmd, send_cmd, cxlds);
++		rc = cxl_to_mem_cmd(&mem_cmd, send_cmd, cxlds);
  
-@@ -476,21 +467,21 @@ static int handle_mailbox_cmd_from_user(struct cxl_dev_state *cxlds,
- 	 * to userspace. While the payload may have written more output than
- 	 * this it will have to be ignored.
- 	 */
--	if (mbox_cmd.size_out) {
--		dev_WARN_ONCE(dev, mbox_cmd.size_out > *size_out,
-+	if (mbox_cmd->size_out) {
-+		dev_WARN_ONCE(dev, mbox_cmd->size_out > *size_out,
- 			      "Invalid return size\n");
- 		if (copy_to_user(u64_to_user_ptr(out_payload),
--				 mbox_cmd.payload_out, mbox_cmd.size_out)) {
-+				 mbox_cmd->payload_out, mbox_cmd->size_out)) {
- 			rc = -EFAULT;
- 			goto out;
- 		}
- 	}
- 
--	*size_out = mbox_cmd.size_out;
--	*retval = mbox_cmd.return_code;
-+	*size_out = mbox_cmd->size_out;
-+	*retval = mbox_cmd->return_code;
- 
- out:
--	cxl_mbox_cmd_dtor(&mbox_cmd);
-+	cxl_mbox_cmd_dtor(mbox_cmd);
- 	return rc;
- }
- 
-@@ -512,9 +503,8 @@ int cxl_send_cmd(struct cxl_memdev *cxlmd, struct cxl_send_command __user *s)
  	if (rc)
  		return rc;
  
--	rc = handle_mailbox_cmd_from_user(cxlds, &c, send.in.payload,
--					  send.out.payload, &send.out.size,
--					  &send.retval);
-+	rc = handle_mailbox_cmd_from_user(cxlds, &mbox_cmd, send.out.payload,
-+					  &send.out.size, &send.retval);
+ 	/* Sanitize and construct a cxl_mbox_cmd */
+-	return cxl_mbox_cmd_ctor(mbox_cmd, cxlds, out_cmd->opcode,
+-				 out_cmd->info.size_in, out_cmd->info.size_out,
++	return cxl_mbox_cmd_ctor(mbox_cmd, cxlds, mem_cmd.opcode,
++				 mem_cmd.info.size_in, mem_cmd.info.size_out,
+ 				 send_cmd->in.payload);
+ }
+ 
+@@ -490,7 +487,6 @@ int cxl_send_cmd(struct cxl_memdev *cxlmd, struct cxl_send_command __user *s)
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+ 	struct device *dev = &cxlmd->dev;
+ 	struct cxl_send_command send;
+-	struct cxl_mem_command c;
+ 	struct cxl_mbox_cmd mbox_cmd;
+ 	int rc;
+ 
+@@ -499,7 +495,7 @@ int cxl_send_cmd(struct cxl_memdev *cxlmd, struct cxl_send_command __user *s)
+ 	if (copy_from_user(&send, s, sizeof(send)))
+ 		return -EFAULT;
+ 
+-	rc = cxl_validate_cmd_from_user(&mbox_cmd, cxlmd->cxlds, &send, &c);
++	rc = cxl_validate_cmd_from_user(&mbox_cmd, cxlmd->cxlds, &send);
  	if (rc)
  		return rc;
  
