@@ -2,71 +2,144 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9EBC433EF
-	for <linux-cxl@archiver.kernel.org>; Sat,  2 Apr 2022 14:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF38C433EF
+	for <linux-cxl@archiver.kernel.org>; Sun,  3 Apr 2022 00:58:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356853AbiDBOur (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 2 Apr 2022 10:50:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41778 "EHLO
+        id S229871AbiDCBAd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 2 Apr 2022 21:00:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356843AbiDBOuq (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 2 Apr 2022 10:50:46 -0400
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1B5013CD8;
-        Sat,  2 Apr 2022 07:48:53 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 5AB8D100E2006;
-        Sat,  2 Apr 2022 16:48:45 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 3965C4E024; Sat,  2 Apr 2022 16:48:45 +0200 (CEST)
-Date:   Sat, 2 Apr 2022 16:48:45 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH V7 03/10] PCI: Create PCI library functions in support of
- DOE mailboxes.
-Message-ID: <20220402144845.GA7822@wunner.de>
-References: <20220330235920.2800929-1-ira.weiny@intel.com>
- <20220330235920.2800929-4-ira.weiny@intel.com>
- <YkVBJ+nRA2g/WDxa@infradead.org>
- <YkXGnKsTEUAe29io@iweiny-desk3>
+        with ESMTP id S230021AbiDCBAc (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 2 Apr 2022 21:00:32 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365DF13CC4;
+        Sat,  2 Apr 2022 17:58:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1648947519; x=1680483519;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=nVAOtsgMnAV1IoOL1iOgLnzwJVC7f0kFIyd7uqIf+BM=;
+  b=a6Ip6XgyvdpY4d4ZndcKPkgqMQnC1i5HlkTiPtBYEED5Vo/BpIVino33
+   93FlTuM/H4tGGlAEg5yGluYCqgLzf9IMCfzjBdWC4hWx4MEXpl4KFng7p
+   ZritWjYJQvElXAFlrnAPd0CSzQ/pvY66n+g6WcKapkStzonpmOEzkJf8t
+   9SnoaRjPeNoMvk2OQRu1iYbBvt3wthgZ1CCtXpqKFI3+WuCWPQdl3zk9v
+   Ixt0foXwUg0cs2HlMuZeUfyPtE5HcifJBj64Q0pmDEyvrSX5FHvWzv9Rj
+   Miz0svgQbIowvVDdf0tyW/INMXA1DCiowZS5AoymRsCfXf11qukbhHpi6
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10305"; a="260525497"
+X-IronPort-AV: E=Sophos;i="5.90,231,1643702400"; 
+   d="scan'208";a="260525497"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2022 17:58:38 -0700
+X-IronPort-AV: E=Sophos;i="5.90,231,1643702400"; 
+   d="scan'208";a="548245047"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2022 17:58:37 -0700
+Subject: [PATCH] cxl/mem: Disable suspend
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Date:   Sat, 02 Apr 2022 17:58:37 -0700
+Message-ID: <164894751774.951952.9428402449668442020.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YkXGnKsTEUAe29io@iweiny-desk3>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Mar 31, 2022 at 08:19:56AM -0700, Ira Weiny wrote:
-> On Wed, Mar 30, 2022 at 10:50:31PM -0700, Christoph Hellwig wrote:
-> > On Wed, Mar 30, 2022 at 04:59:13PM -0700, ira.weiny@intel.com wrote:
-> > > Introduced in a PCI v6.0[1], DOE provides a config space based mailbox
-> > > with standard protocol discovery.  Each mailbox is accessed through a
-> > > DOE Extended Capability.
-> > 
-> > I really don't think this should be built unconditionally and bloat
-> > every single kernel built with PCI support.
-> 
-> I can add a Kconfig.
+The CXL specification claims S3 support at a hardware level, but at a
+system software level there are some missing pieces. Section 9.4 rightly
+claims that "CXL mem adapters may need aux power to retain memory
+context across S3", but there is no enumeration mechanism for the OS to
+determine if a given adapter has that support. Moreover the save state
+and resume image for the system may inadvertantly end up in a CXL device
+that needs to be restored before the save state is recoverable. I.e. a
+circular dependency that is not resolvable without a third party
+save-area.
 
-Ideally, that config option should live in the pcie/ subdirectory,
-i.e. in drivers/pci/pcie/Kconfig, alongside drivers/pci/pcie/doe.c,
-as we try to consolidate PCIe-specific features there and reserve
-core code in drivers/pci/*.c for functionality that also applies
-to Conventional PCI.
+Arrange for the cxl_mem driver to fail S3 attempts. This still nominaly
+allows for suspend, but requires unbinding all CXL memory devices before
+the suspend to ensure the typical DRAM flow is taken. The cxl_mem unbind
+flow is intended to also tear down all CXL memory regions associated
+with a given cxl_memdev.
 
-Thanks,
+It is reasonable to assume that any device participating in a System RAM
+range published in the EFI memory map is covered by aux power and
+save-area outside the device itself. So this restriction can be
+minimized in the future once pre-existing region enumeration support
+arrives, and perhaps a spec update to clarify if the EFI memory is
+sufficent for determining the range of devices managed by
+platform-firmware for S3 support.
 
-Lukas
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ drivers/cxl/core/memdev.c |    1 -
+ drivers/cxl/mem.c         |   26 ++++++++++++++++++++++++++
+ 2 files changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index 1f76b28f9826..efe4d2e9bfef 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -251,7 +251,6 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
+ 	dev->bus = &cxl_bus_type;
+ 	dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
+ 	dev->type = &cxl_memdev_type;
+-	device_set_pm_not_required(dev);
+ 	INIT_WORK(&cxlmd->detach_work, detach_memdev);
+ 
+ 	cdev = &cxlmd->cdev;
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index 49a4b1c47299..0660bb1488cb 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -3,6 +3,7 @@
+ #include <linux/device.h>
+ #include <linux/module.h>
+ #include <linux/pci.h>
++#include <linux/pm.h>
+ 
+ #include "cxlmem.h"
+ #include "cxlpci.h"
+@@ -210,10 +211,35 @@ static int cxl_mem_probe(struct device *dev)
+ 	return rc;
+ }
+ 
++static int cxl_mem_suspend(struct device *dev)
++{
++	/*
++	 * The kernel may be operating out of CXL memory on this device,
++	 * there is no spec defined way to determine whether this device
++	 * preserves contents over suspend, and there is no simple way
++	 * to arrange for the suspend image to avoid CXL memory which
++	 * would setup a circular dependency between PCI resume and save
++	 * state restoration.
++	 */
++	dev_err(dev, "CXL memory suspend not supported\n");
++	return -EBUSY;
++}
++
++static int cxl_mem_resume(struct device *dev)
++{
++	/* nothing to do since suspend is prevented */
++	return 0;
++}
++
++static DEFINE_SIMPLE_DEV_PM_OPS(cxl_pm_ops, cxl_mem_suspend, cxl_mem_resume);
++
+ static struct cxl_driver cxl_mem_driver = {
+ 	.name = "cxl_mem",
+ 	.probe = cxl_mem_probe,
+ 	.id = CXL_DEVICE_MEMORY_EXPANDER,
++	.drv = {
++		.pm = &cxl_pm_ops,
++	},
+ };
+ 
+ module_cxl_driver(cxl_mem_driver);
+
