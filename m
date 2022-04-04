@@ -2,172 +2,235 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E688C352A7
-	for <linux-cxl@archiver.kernel.org>; Mon,  4 Apr 2022 21:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0C0C433F5
+	for <linux-cxl@archiver.kernel.org>; Mon,  4 Apr 2022 21:39:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237375AbiDDVlE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 4 Apr 2022 17:41:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55556 "EHLO
+        id S1357162AbiDDVlH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 4 Apr 2022 17:41:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379852AbiDDSSK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 4 Apr 2022 14:18:10 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D4D53EA95
-        for <linux-cxl@vger.kernel.org>; Mon,  4 Apr 2022 11:16:14 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id p17so8808425plo.9
-        for <linux-cxl@vger.kernel.org>; Mon, 04 Apr 2022 11:16:14 -0700 (PDT)
+        with ESMTP id S1380257AbiDDTVJ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 4 Apr 2022 15:21:09 -0400
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58B7F1B783
+        for <linux-cxl@vger.kernel.org>; Mon,  4 Apr 2022 12:19:12 -0700 (PDT)
+Received: by mail-qt1-x834.google.com with SMTP id t2so8588529qtw.9
+        for <linux-cxl@vger.kernel.org>; Mon, 04 Apr 2022 12:19:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aZId2gcp4e7uRWUeoN/wi2O4R6KKYYzYuF+W5VbNu0E=;
-        b=C0HtoFQ2InO3oQg2qVHi89N0wihVTgwcGFZw31nn4aiTSa1wsZqB+3ZOlCd4IBddeV
-         9T6+DXvuWagp5u34Y8vLPxvoGK1fHuXNzA1qCvPF2z6XHvJST/ZX6VYYvZ8YiCqUIssq
-         pDr0PQG8fV3Q/dyJyGHR7McGfEvCxlPkGsJWswUJMXQz6jyaT7d6AmtrUSkSNz7TSXLX
-         vm0cTgrhRE3syzzlcNte3oArMkqH51Xx3RMvgRhemW1/CCaMS+p+xeYHaxX0G0wjxG1p
-         TT1ZkOl8cgl5ewzWAj3Q9EeCu0C7MsOTHEHI/QckpyM9o75Qf384mceoSe7VO5QfChMn
-         MlRw==
+        d=gmail.com; s=20210112;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=95OywlD1CSIf3qwS0056RsX7eSrGjupy3ny6169oNc0=;
+        b=O5FdBNrkMpZ9UAJ5rc5b1iUZJg1dJwPBOkN8tpWgvHEBRPFDsW37yOLDcg+t7oVn4x
+         P2Rp5M71Gl2fKc/mIwZUHXg3nBbNE7iLDJcYXlnsYTCdmF7wKT4+ZT5SAYDkn4bxWQs/
+         poiuqexoNn17/g9WCQLDFUpoeSy8klqH79rS1iRrMbQvfASQbjJRhfiLutTfVHPiVCOR
+         65PDySI7vG50Wi7tlQ/TtcNRCQPf7YXKcThyA/UeIRluafuKxk1OmRj5XABa9J0+xh/h
+         S8Gonr3Ll4iWJoMLVy2m/wvPb1N1FzlS41oWE+rHKKGPqPWuA7tSmKEmk1XkJhdGYBXL
+         pkJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aZId2gcp4e7uRWUeoN/wi2O4R6KKYYzYuF+W5VbNu0E=;
-        b=uSnz2kqTFKEjIXWGul1nBxbr0bs/PHgUDkbt1w/T+RmgpSxYZbtnM8jg1RvqDxtLSO
-         rrzkPcNGPKRrDHNctDhMcDUQ5GCmuAR+ygcROwJuNo6yFOfmNz0+7IYCBZAhrd+laMZT
-         wQa9ej5aevohr5xBnDS/QyPFvrV397D6aQeLvnDW3IuVE8JpuDlWzRBu49jYnLfXxlQX
-         bXUbdjtcnkDc+VsnQ/a0atf3o0IGxG/Qvog0ikELAAbzr672D6zHaOLdoIMBRaEA0112
-         NqGniUhzyaTPSjiL92Pgp8jZetvW7K9U09IxEQ7IQd9Ysu5WdXeOXyp2VhOTMGurxby1
-         0IIw==
-X-Gm-Message-State: AOAM532+5mAHXBCqV1ZU2UA8mR1f5m8esjnKPJClxVOb4KU1A/rv07X+
-        YN8TlJd+qHLa9SpX3vx5fSTIQA5l00ifd23XscSGFK4/oaw=
-X-Google-Smtp-Source: ABdhPJx6j1Pg3MxMS2E19o2abZ+CeX8qs8j8egUimFsz+9vTChQguK4uSt6rbvCWV9Vp2G3/F+C7L6kc/kQLJtRJDjY=
-X-Received: by 2002:a17:90a:ca:b0:1ca:5253:b625 with SMTP id
- v10-20020a17090a00ca00b001ca5253b625mr474110pjd.220.1649096173906; Mon, 04
- Apr 2022 11:16:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <164894751774.951952.9428402449668442020.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAJZ5v0hGVN_=3iU8OLpHY3Ak35T5+JcBM-qs8SbojKrpd0VXsA@mail.gmail.com>
-In-Reply-To: <CAJZ5v0hGVN_=3iU8OLpHY3Ak35T5+JcBM-qs8SbojKrpd0VXsA@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 4 Apr 2022 11:16:03 -0700
-Message-ID: <CAPcyv4hCseKbr_XXyeOACYmm0defeSet0LX3YWLKGRnCMS=MFQ@mail.gmail.com>
-Subject: Re: [PATCH] cxl/mem: Disable suspend
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=95OywlD1CSIf3qwS0056RsX7eSrGjupy3ny6169oNc0=;
+        b=lCKdZvgrvaNInBK5ppFIaaEoVMmuXQRUdPkuoqTEhygWA3iTSwHo4OFBSPNDkQ/hUK
+         2JpuXJM6scwHzpSiVujgm04el2AMz1ecEcM/RIZBN6bv/lpH9GiIXinsARa659RGORfq
+         /c94Matp9LlC/qiwjvJZMus0kPKfujP0oPnUkGl03hKDapX4SjSPe7gjD6TENBrzB2Md
+         CSYxxSR6R5yj9dahsElo12NUx2niV6DekLC55kmYWpEFydvIl8DWdYSusrH1F2qbc9kA
+         X6oKyct6dpyvUY4Ci8gm6dGJNBS/Cu5MlrdcEbtijq4CL2So0P11TdzNT/wtW4oCctBZ
+         O47Q==
+X-Gm-Message-State: AOAM530TjpQuGXB0ncNPA+NPKuPPZhx5C7r/aoepjIkVZ176CNWbS9bV
+        6arzc+y0HXbCHjraRHqrZN0=
+X-Google-Smtp-Source: ABdhPJyE6ripkBu+Okix3ICyYspwQP+wSTguS2V2zDOH+6a7gqN9dzhF2QojrPHgDjWQal/qtFlaPg==
+X-Received: by 2002:ac8:5784:0:b0:2e1:ed90:fc65 with SMTP id v4-20020ac85784000000b002e1ed90fc65mr1473205qta.232.1649099950985;
+        Mon, 04 Apr 2022 12:19:10 -0700 (PDT)
+Received: from smtpclient.apple (99-105-211-126.lightspeed.sntcca.sbcglobal.net. [99.105.211.126])
+        by smtp.gmail.com with ESMTPSA id j20-20020a37a014000000b0067b3a0c7d89sm6614694qke.38.2022.04.04.12.19.08
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Apr 2022 12:19:10 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 15.0 \(3693.60.0.1.1\))
+Subject: Re: [PATCH v9 18/45] hw/cxl/device: Implement MMIO HDM decoding
+ (8.2.5.12)
+From:   Tong Zhang <ztong0001@gmail.com>
+In-Reply-To: <20220404151445.10955-19-Jonathan.Cameron@huawei.com>
+Date:   Mon, 4 Apr 2022 12:19:07 -0700
+Cc:     linuxarm@huawei.com, qemu-devel@nongnu.org,
+        =?utf-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        Marcel Apfelbaum <marcel@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Markus Armbruster <armbru@redhat.com>,
+        Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        =?utf-8?Q?Philippe_Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        Peter Xu <peterx@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Saransh Gupta1 <saransh@ibm.com>,
+        Shreyas Shah <shreyas.shah@elastics.cloud>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Samarth Saxena <samarths@cadence.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "k . jensen @ samsung . com" <k.jensen@samsung.com>,
+        Tong Zhang <t.zhang2@samsung.com>, dave@stgolabs.net,
+        Alison Schofield <alison.schofield@intel.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <FC543734-8626-4F14-8449-E22969D18A7D@gmail.com>
+References: <20220404151445.10955-1-Jonathan.Cameron@huawei.com>
+ <20220404151445.10955-19-Jonathan.Cameron@huawei.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+X-Mailer: Apple Mail (2.3693.60.0.1.1)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Apr 4, 2022 at 9:00 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Sun, Apr 3, 2022 at 2:58 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > The CXL specification claims S3 support at a hardware level, but at a
-> > system software level there are some missing pieces. Section 9.4 rightly
-> > claims that "CXL mem adapters may need aux power to retain memory
-> > context across S3", but there is no enumeration mechanism for the OS to
-> > determine if a given adapter has that support. Moreover the save state
-> > and resume image for the system may inadvertantly end up in a CXL device
-> > that needs to be restored before the save state is recoverable. I.e. a
-> > circular dependency that is not resolvable without a third party
-> > save-area.
-> >
-> > Arrange for the cxl_mem driver to fail S3 attempts. This still nominaly
-> > allows for suspend, but requires unbinding all CXL memory devices before
-> > the suspend to ensure the typical DRAM flow is taken. The cxl_mem unbind
-> > flow is intended to also tear down all CXL memory regions associated
-> > with a given cxl_memdev.
-> >
-> > It is reasonable to assume that any device participating in a System RAM
-> > range published in the EFI memory map is covered by aux power and
-> > save-area outside the device itself. So this restriction can be
-> > minimized in the future once pre-existing region enumeration support
-> > arrives, and perhaps a spec update to clarify if the EFI memory is
-> > sufficent for determining the range of devices managed by
-> > platform-firmware for S3 support.
-> >
-> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->
-> A few thoughts:
->
-> 1. I don't think it is necessary to fail suspend-to-idle too (which
-> the driver will do after the patch AFAICS).
 
-Ah true, I missed that this would also disable suspend to idle.
 
-> 2. Should hibernation fail too?  From the description above it looks
-> like that should be the case.
+> On Apr 4, 2022, at 8:14 AM, Jonathan Cameron via =
+<qemu-devel@nongnu.org> wrote:
+>=20
+> From: Ben Widawsky <ben.widawsky@intel.com>
+>=20
+> A device's volatile and persistent memory are known Host Defined =
+Memory
+> (HDM) regions. The mechanism by which the device is programmed to =
+claim
+> the addresses associated with those regions is through dedicated logic
+> known as the HDM decoder. In order to allow the OS to properly program
+> the HDMs, the HDM decoders must be modeled.
+>=20
+> There are two ways the HDM decoders can be implemented, the legacy
+> mechanism is through the PCIe DVSEC programming from CXL 1.1 =
+(8.1.3.8),
+> and MMIO is found in 8.2.5.12 of the spec. For now, 8.1.3.8 is not
+> implemented.
+>=20
+> Much of CXL device logic is implemented in cxl-utils. The HDM decoder
+> however is implemented directly by the device implementation.
+> Whilst the implementation currently does no validity checks on the
+> encoder set up, future work will add sanity checking specific to
+> the type of cxl component.
+>=20
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Alex Benn=C3=A9e <alex.bennee@linaro.org>
+> ---
+> hw/mem/cxl_type3.c | 55 ++++++++++++++++++++++++++++++++++++++++++++++
+> 1 file changed, 55 insertions(+)
+>=20
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index 329a6ea2a9..5c93fbbd9b 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -50,6 +50,48 @@ static void build_dvsecs(CXLType3Dev *ct3d)
+>                                GPF_DEVICE_DVSEC_REVID, dvsec);
+> }
+>=20
+> +static void hdm_decoder_commit(CXLType3Dev *ct3d, int which)
+> +{
+> +    ComponentRegisters *cregs =3D &ct3d->cxl_cstate.crb;
+> +    uint32_t *cache_mem =3D cregs->cache_mem_registers;
+> +
+> +    assert(which =3D=3D 0);
+> +
+> +    /* TODO: Sanity checks that the decoder is possible */
+> +    ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, COMMIT, 0);
+> +    ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, ERR, 0);
+> +
+> +    ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, COMMITTED, 1);
+> +}
+> +
+> +static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t =
+value,
+> +                           unsigned size)
+> +{
+> +    CXLComponentState *cxl_cstate =3D opaque;
+> +    ComponentRegisters *cregs =3D &cxl_cstate->crb;
+> +    CXLType3Dev *ct3d =3D container_of(cxl_cstate, CXLType3Dev, =
+cxl_cstate);
+> +    uint32_t *cache_mem =3D cregs->cache_mem_registers;
+> +    bool should_commit =3D false;
+> +    int which_hdm =3D -1;
+> +
+> +    assert(size =3D=3D 4);
+> +    g_assert(offset <=3D CXL2_COMPONENT_CM_REGION_SIZE);
+> +
 
-Yes, any CXL address range that was provisioned by the OS would need
-some off-device save area for the device-state which seems difficult
-to support in the general case.
+Looks like this will allow offset =3D=3D CXL2_COMPONENT_CM_REGION_SIZE =
+to pass the check, and cause a buffer overrun.
+Shouldn=E2=80=99t this be g_assert(offset< =
+CXL2_COMPONENT_CM_REGION_SIZE)?
+We also need to make sure (offset + 4<=3D =
+CXL2_COMPONENT_CM_REGION_SIZE).
+Or maybe we just need offset +4 <=3D CXL2_COMPONENT_CM_REGION_SIZE here, =
+if offset < CXL2_COMPONENT_CM_REGION_SIZE is already checked somewhere =
+else.
 
-> 3. If "deep"suspend is going to fail every time, it may be better to
-> prevent "deep" from being written to /sys/power/mem_sleep instead of
-> failing suspend in progress, especially after freezing user space.
+> +    switch (offset) {
+> +    case A_CXL_HDM_DECODER0_CTRL:
+> +        should_commit =3D FIELD_EX32(value, CXL_HDM_DECODER0_CTRL, =
+COMMIT);
+> +        which_hdm =3D 0;
+> +        break;
+> +    default:
+> +        break;
+> +    }
+> +
+> +    stl_le_p((uint8_t *)cache_mem + offset, value);
+> +    if (should_commit) {
+> +        hdm_decoder_commit(ct3d, which_hdm);
+> +    }
+> +}
+> +
+> static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
+> {
+>     MemoryRegion *mr;
+> @@ -93,6 +135,9 @@ static void ct3_realize(PCIDevice *pci_dev, Error =
+**errp)
+>     ct3d->cxl_cstate.pdev =3D pci_dev;
+>     build_dvsecs(ct3d);
+>=20
+> +    regs->special_ops =3D g_new0(MemoryRegionOps, 1);
+> +    regs->special_ops->write =3D ct3d_reg_write;
+> +
+>     cxl_component_register_block_init(OBJECT(pci_dev), cxl_cstate,
+>                                       TYPE_CXL_TYPE3);
+>=20
+> @@ -107,6 +152,15 @@ static void ct3_realize(PCIDevice *pci_dev, Error =
+**errp)
+>                      &ct3d->cxl_dstate.device_registers);
+> }
+>=20
+> +static void ct3_exit(PCIDevice *pci_dev)
+> +{
+> +    CXLType3Dev *ct3d =3D CXL_TYPE3(pci_dev);
+> +    CXLComponentState *cxl_cstate =3D &ct3d->cxl_cstate;
+> +    ComponentRegisters *regs =3D &cxl_cstate->crb;
+> +
+> +    g_free(regs->special_ops);
+> +}
+> +
+> static void ct3d_reset(DeviceState *dev)
+> {
+>     CXLType3Dev *ct3d =3D CXL_TYPE3(dev);
+> @@ -128,6 +182,7 @@ static void ct3_class_init(ObjectClass *oc, void =
+*data)
+>     PCIDeviceClass *pc =3D PCI_DEVICE_CLASS(oc);
+>=20
+>     pc->realize =3D ct3_realize;
+> +    pc->exit =3D ct3_exit;
+>     pc->class_id =3D PCI_CLASS_STORAGE_EXPRESS;
+>     pc->vendor_id =3D PCI_VENDOR_ID_INTEL;
+>     pc->device_id =3D 0xd93; /* LVF for now */
+> --=20
+> 2.32.0
+>=20
+>=20
+>=20
 
-Yeah, that sounds much better, let me explore that option.
-
->
-> > ---
-> >  drivers/cxl/core/memdev.c |    1 -
-> >  drivers/cxl/mem.c         |   26 ++++++++++++++++++++++++++
-> >  2 files changed, 26 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> > index 1f76b28f9826..efe4d2e9bfef 100644
-> > --- a/drivers/cxl/core/memdev.c
-> > +++ b/drivers/cxl/core/memdev.c
-> > @@ -251,7 +251,6 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
-> >         dev->bus = &cxl_bus_type;
-> >         dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
-> >         dev->type = &cxl_memdev_type;
-> > -       device_set_pm_not_required(dev);
-> >         INIT_WORK(&cxlmd->detach_work, detach_memdev);
-> >
-> >         cdev = &cxlmd->cdev;
-> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > index 49a4b1c47299..0660bb1488cb 100644
-> > --- a/drivers/cxl/mem.c
-> > +++ b/drivers/cxl/mem.c
-> > @@ -3,6 +3,7 @@
-> >  #include <linux/device.h>
-> >  #include <linux/module.h>
-> >  #include <linux/pci.h>
-> > +#include <linux/pm.h>
-> >
-> >  #include "cxlmem.h"
-> >  #include "cxlpci.h"
-> > @@ -210,10 +211,35 @@ static int cxl_mem_probe(struct device *dev)
-> >         return rc;
-> >  }
-> >
-> > +static int cxl_mem_suspend(struct device *dev)
-> > +{
-> > +       /*
-> > +        * The kernel may be operating out of CXL memory on this device,
-> > +        * there is no spec defined way to determine whether this device
-> > +        * preserves contents over suspend, and there is no simple way
-> > +        * to arrange for the suspend image to avoid CXL memory which
-> > +        * would setup a circular dependency between PCI resume and save
-> > +        * state restoration.
-> > +        */
-> > +       dev_err(dev, "CXL memory suspend not supported\n");
-> > +       return -EBUSY;
-> > +}
-> > +
-> > +static int cxl_mem_resume(struct device *dev)
-> > +{
-> > +       /* nothing to do since suspend is prevented */
-> > +       return 0;
-> > +}
->
-> This is not needed AFAICS.
-
-Ok, I should have checked, but I'll circle back with sleep state
-disabling rather than failing suspend.
-
-Thanks, Rafael.
