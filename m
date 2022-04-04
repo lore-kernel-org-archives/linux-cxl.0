@@ -2,125 +2,117 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 547C8C433FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281A3C433F5
 	for <linux-cxl@archiver.kernel.org>; Mon,  4 Apr 2022 02:12:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235878AbiDDCOe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S1376885AbiDDCOe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Sun, 3 Apr 2022 22:14:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54864 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358063AbiDDCOd (ORCPT
+        with ESMTP id S235878AbiDDCOd (ORCPT
         <rfc822;linux-cxl@vger.kernel.org>); Sun, 3 Apr 2022 22:14:33 -0400
 Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F125835DD4
-        for <linux-cxl@vger.kernel.org>; Sun,  3 Apr 2022 19:12:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BF5C35DE1
+        for <linux-cxl@vger.kernel.org>; Sun,  3 Apr 2022 19:12:38 -0700 (PDT)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 2C18920F4B;
+        by relay.mailchannels.net (Postfix) with ESMTP id C81102130A;
         Mon,  4 Apr 2022 02:12:37 +0000 (UTC)
 Received: from pdx1-sub0-mail-a291.dreamhost.com (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 99D1620FD0;
-        Mon,  4 Apr 2022 02:12:36 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1649038356; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id 5EAE42149B;
+        Mon,  4 Apr 2022 02:12:37 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1649038357; a=rsa-sha256;
         cv=none;
-        b=IMehUMJ+opWyBq6NbnpXm5jCDewMz+LDIM9PSZdofXumQnom/wQer+QCyoWw/cVttUJs7v
-        YEPqJmrX8PcOB4xX5pb3GssKQnmOj5IXgvULWnZDpjGGY1Nrvsi69Sc3jtL2W9SJe0SbMc
-        EuPxnMiZHulJvr4X7MsXRhidBEdaS76stliziQBMR3qxTjVO9GPf/wkV8oSCWM0wg0bk8B
-        mzeQsDYpiBlZ/6wbO27hywF6EOnMm4CaEytDB6Lr+sZyaHFXtnjbuQfxx/Z59n8hiJ9v+z
-        xVSVTD0q6a99mu9BlseoZgSiviUQUuQIO8D3IqiK+5x5oCImf/ovKFLd2FXJHg==
+        b=hTzImmG6iCu7smtfEL3ldyHt3mup9HJEwwuwyW2kWC5CTYopvvVCGqIIVmyGv8QCQ+G+J2
+        hIxtGd4Ej989e+9iTgmEQsPh/P4bu0zGfJgg2Law5uDaq1YQP2FocEd8GxI7PlWy6TZ1Xa
+        y7KJzKetx5k1xu4f2WfaEGWuHBgVmZ4/ux7zilWwYsfWA/RNU3JKI8xbVY5IJ3U1Zoa5pd
+        Ip+QPEVKkHJuJaDfbzMImqMMm+6qyxFZB90xwgMzNC8TUt4hNrZ6wCnEIRZOcPciA0JDm4
+        lBKMZHwToCGwBiUlcndNU7+2VzYtJYlCUszXOPUPT2AKbwdVhgJReAHSnpDabg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1649038356;
+        s=arc-2022; t=1649038357;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:dkim-signature;
-        bh=qPHw1P4q/wSSmLIBzAwFYo5L5ANp2nKQ1P+bskH0gSY=;
-        b=xNFcHZqv/F29nF1Wh1Ts6MteHIMlPnzk1YlGIEv9ICN6HAtIiQ2ewgU62PGkm+lFUM0d34
-        6f+4jziDDH344k1ein2KSgbCOFJabV4slRQ1oLZfQS/Auon8WeXKBJlaEWZPBg7O2EH4zM
-        GwROiREVnivv8gWGszOVzkrhB99zTqwnDWXF5+utFGZ7Dt8NItimcKbq8T3OLxm6Xm5ZoP
-        IOmq6KZ2Bpk7zmb2pfAJonq8K6sNrprvvxycWzQ1GZz3O+cLEKBqG10QG9paRFQPBkE0Oz
-        Q780JsXzpP/xJnSIB8C1kTM4tVvWVZWAIKsJSsLC9PaoEWbsH3aXpbsmyy+I/g==
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=wv4wN/nk0m+YPlolNyZl3U5/E6F+TwicTHeK8Y/RfeE=;
+        b=V+WC33LKxOUB0eVixUhA51p79aQJPKy3dIIrgtsaZyeaTlHd4tzBwEhuYafh18by04exmd
+        fYYgANohvnP6N1ygVEL9Fx1bLAyg+y6LticbMZLNVLk8wGdyqXJn+wRiPAwRy28m3K9huw
+        7fSHzRMwoqd7W1yZdcxOkPwW5SNk+bZAQmFN6S7Y+D2O5rgW19fDSidKBkoc/M+8Q4UEse
+        cd+Sc4glciyWdIDPB6tC84lMnnqQqvtjEb07Zf0Rxp7Y57UtYqOVseGDzvsvIA60qNpSBC
+        Nd0Ulr3HV1J2DFoRS+pviHl05O/KrkWZmaHKuuTm9gu9m9oCbvHAO3ynMXnu3A==
 ARC-Authentication-Results: i=1;
-        rspamd-786f77c8d-mqvpf;
+        rspamd-786f77c8d-gmnn5;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from pdx1-sub0-mail-a291.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.124.238.97 (trex/6.7.1);
+        by 100.107.255.190 (trex/6.7.1);
         Mon, 04 Apr 2022 02:12:37 +0000
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Spicy-Cooperative: 1d43140e65533c1d_1649038356952_1615392169
-X-MC-Loop-Signature: 1649038356952:2154232054
-X-MC-Ingress-Time: 1649038356952
+X-Vacuous-Share: 5e09f16367772c79_1649038357702_2074411280
+X-MC-Loop-Signature: 1649038357702:813509929
+X-MC-Ingress-Time: 1649038357701
 Received: from localhost.localdomain (unknown [104.36.25.8])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a291.dreamhost.com (Postfix) with ESMTPSA id 4KWvS36KKdz1Pg;
-        Sun,  3 Apr 2022 19:12:35 -0700 (PDT)
+        by pdx1-sub0-mail-a291.dreamhost.com (Postfix) with ESMTPSA id 4KWvS44GpBz1PZ;
+        Sun,  3 Apr 2022 19:12:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1649038356;
-        bh=qPHw1P4q/wSSmLIBzAwFYo5L5ANp2nKQ1P+bskH0gSY=;
+        s=dreamhost; t=1649038357;
+        bh=q1KueJT9ZPCMhsJeqyptOzpcgqykjfhziky16keligg=;
         h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-        b=e5bMjg/UoaH8rH31WoMlmJ/v5pk+SIxu0Qcbbx3Q6JfeS5rv1GLXe15fGwK9NF3PQ
-         Ru5rg9tdz+qv+rAk1BhfcGh/PDc2afvwgCnXT0C0vM+kZsHyOyT/QjpN3zDTukn+o2
-         OODfJWJtc2Tjr9KkPvyF1VqpzVMdLmVIzJ7CbAfIZuhmd5yVxMivwdX4CevyCu+zP0
-         eLHNtb+i/ZhMcEBeO4Z1cliQ/ZXHyGhhFR31Lqu+i74lY4f08j0KGyqCv/sKF+lAiS
-         HKTlaMoQ4O+AjqJmWyj6SnjNxSMUN3jCcHP9AhC08BpbVi2RXYhxGVGLi0FWNp9i2/
-         XYDvnpEfy3aRQ==
+        b=dZqDkr3ttJ7YEdoyVpuL8EWgL5P+MC0Gox5hXKyQE7qKoxj3FLCSCQiSS8ah7N+yD
+         iIIb6du+3M1E8fYRg2xNnc9hAltH0xbWw0P6x3hlfdNoKtiC3eZqIipau6wrtFZN/y
+         IQZYgYgK44wBDGf+/LlKWRIvpq32dM7LgAjrYQlR4Z8S/WVRdQUJD1lXTvggPbX7Co
+         kfVys0GQhhZABm/KNi8w34aiTVKFpwtxq8CAosCvQ7Kt6ilNQ3NWXBBfFdoqFp/OQe
+         eYrKfvzKoAhNB92jzUeaPxwh6DZv7dm/aAqxIozpaDDnKycPwyDbVphtKGLhYNL7dW
+         1f4tlpVRN3R2Q==
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     linux-cxl@vger.kernel.org
 Cc:     dan.j.williams@intel.com, ben.widawsky@intel.com,
         ira.weiny@intel.com, vishal.l.verma@intel.com,
         alison.schofield@intel.com, a.manzanares@samsung.com,
         dave@stgolabs.net
-Subject: [PATCH v2 0/4] cxl/mbox: Robustify handling of mbox_cmd.return_code
-Date:   Sun,  3 Apr 2022 19:12:12 -0700
-Message-Id: <20220404021216.66841-1-dave@stgolabs.net>
+Subject: [PATCH 1/4] cxl/mbox: Drop mbox_mutex comment
+Date:   Sun,  3 Apr 2022 19:12:13 -0700
+Message-Id: <20220404021216.66841-2-dave@stgolabs.net>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20220404021216.66841-1-dave@stgolabs.net>
+References: <20220404021216.66841-1-dave@stgolabs.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi,
+... we have lockdep for this.
 
-Changes from v1 (https://lore.kernel.org/all/20220317234049.69323-1-dave@stgolabs.net/):
- - Patch 1 now just removes the lock comment, instead of moving it. (Dan)
- - Modified pach 3 to use CPP hackery + misc table improvements. (Dan and Adam)
- - Dropped patch 5 per concerns about implications with FW. (Dan)
- - Picked up Adam's review tags.
+Reviewed by: Adam Manzanares <a.manzanares@samsung.com>
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ drivers/cxl/core/mbox.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Currently the return_code from a completed mbox command is handled as
-either successful or not. This series teaches the driver to better deal
-with the different returns from the hardware, allowing better debugging
-and mapping to proper kernel errno semantics (which are left unchanged
-for now) as well as more ad-hoc handling.
-
-Applies against linux-cxl's next branch.
-
-Patches 1 and 2 are small nits.
-Patch 3 and 4 implement and use the new calls.
-
-Thanks!
-
-Davidlohr Bueso (4):
-  cxl/mbox: Drop mbox_mutex comment
-  cxl/pci: Use CXL_MBOX_SUCCESS to check against mbox_cmd return code
-  cxl/mbox: Improve handling of mbox_cmd hw return codes
-  cxl/mbox: Use new return_code handling
-
- drivers/cxl/core/mbox.c |  7 +++---
- drivers/cxl/cxlmem.h    | 53 ++++++++++++++++++++++++++++++++++++++++-
- drivers/cxl/pci.c       |  7 +++---
- 3 files changed, 59 insertions(+), 8 deletions(-)
-
---
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index be61a0d8016b..a586c0fa9555 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -136,7 +136,7 @@ static struct cxl_mem_command *cxl_mem_find_command(u16 opcode)
+  * @out: Caller allocated buffer for the output.
+  * @out_size: Expected size of output.
+  *
+- * Context: Any context. Will acquire and release mbox_mutex.
++ * Context: Any context.
+  * Return:
+  *  * %>=0	- Number of bytes returned in @out.
+  *  * %-E2BIG	- Payload is too large for hardware.
+-- 
 2.26.2
 
