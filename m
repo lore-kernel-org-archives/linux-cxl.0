@@ -2,29 +2,29 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF66C433EF
-	for <linux-cxl@archiver.kernel.org>; Mon,  4 Apr 2022 15:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FE2C433F5
+	for <linux-cxl@archiver.kernel.org>; Mon,  4 Apr 2022 15:22:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357129AbiDDPXp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 4 Apr 2022 11:23:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36328 "EHLO
+        id S1349482AbiDDPYQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 4 Apr 2022 11:24:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344613AbiDDPXp (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 4 Apr 2022 11:23:45 -0400
+        with ESMTP id S1344613AbiDDPYP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 4 Apr 2022 11:24:15 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1B123C703
-        for <linux-cxl@vger.kernel.org>; Mon,  4 Apr 2022 08:21:48 -0700 (PDT)
-Received: from fraeml742-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KXDwj0x9Fz687Wk;
-        Mon,  4 Apr 2022 23:20:05 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B9403DDF5
+        for <linux-cxl@vger.kernel.org>; Mon,  4 Apr 2022 08:22:19 -0700 (PDT)
+Received: from fraeml739-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KXDvx6N2Bz67s17;
+        Mon,  4 Apr 2022 23:19:25 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml742-chm.china.huawei.com (10.206.15.223) with Microsoft SMTP Server
+ fraeml739-chm.china.huawei.com (10.206.15.220) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 4 Apr 2022 17:21:46 +0200
+ 15.1.2375.24; Mon, 4 Apr 2022 17:22:17 +0200
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 4 Apr 2022 16:21:45 +0100
+ 15.1.2375.24; Mon, 4 Apr 2022 16:22:16 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <linuxarm@huawei.com>, <qemu-devel@nongnu.org>,
         =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
@@ -50,9 +50,9 @@ CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
         "k . jensen @ samsung . com" <k.jensen@samsung.com>,
         Tong Zhang <t.zhang2@samsung.com>, <dave@stgolabs.net>,
         Alison Schofield <alison.schofield@intel.com>
-Subject: [PATCH v9 14/45] hw/pxb: Allow creation of a CXL PXB (host bridge)
-Date:   Mon, 4 Apr 2022 16:14:14 +0100
-Message-ID: <20220404151445.10955-15-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v9 15/45] qtest/cxl: Introduce initial test for pxb-cxl only.
+Date:   Mon, 4 Apr 2022 16:14:15 +0100
+Message-ID: <20220404151445.10955-16-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220404151445.10955-1-Jonathan.Cameron@huawei.com>
 References: <20220404151445.10955-1-Jonathan.Cameron@huawei.com>
@@ -67,243 +67,68 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Ben Widawsky <ben.widawsky@intel.com>
+Initial test with just pxb-cxl.  Other tests will be added
+alongside functionality.
 
-This works like adding a typical pxb device, except the name is
-'pxb-cxl' instead of 'pxb-pcie'. An example command line would be as
-follows:
-  -device pxb-cxl,id=cxl.0,bus="pcie.0",bus_nr=1
-
-A CXL PXB is backward compatible with PCIe. What this means in practice
-is that an operating system that is unaware of CXL should still be able
-to enumerate this topology as if it were PCIe.
-
-One can create multiple CXL PXB host bridges, but a host bridge can only
-be connected to the main root bus. Host bridges cannot appear elsewhere
-in the topology.
-
-Note that as of this patch, the ACPI tables needed for the host bridge
-(specifically, an ACPI object in _SB named ACPI0016 and the CEDT) aren't
-created. So while this patch internally creates it, it cannot be
-properly used by an operating system or other system software.
-
-Also necessary is to add an exception to scripts/device-crash-test
-similar to that for exiting pxb as both must created on a PCIexpress
-host bus.
-
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-Signed-off-by: Jonathan.Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Reviewed-by: Alex Bennée <alex.bennee@linaro.org>
+Tested-by: Alex Bennée <alex.bennee@linaro.org>
 ---
- hw/pci-bridge/pci_expander_bridge.c | 86 ++++++++++++++++++++++++++++-
- hw/pci/pci.c                        |  7 +++
- include/hw/pci/pci.h                |  6 ++
- scripts/device-crash-test           |  1 +
- 4 files changed, 98 insertions(+), 2 deletions(-)
+ tests/qtest/cxl-test.c  | 23 +++++++++++++++++++++++
+ tests/qtest/meson.build |  4 ++++
+ 2 files changed, 27 insertions(+)
 
-diff --git a/hw/pci-bridge/pci_expander_bridge.c b/hw/pci-bridge/pci_expander_bridge.c
-index a6caa1e7b5..f762eb4a6e 100644
---- a/hw/pci-bridge/pci_expander_bridge.c
-+++ b/hw/pci-bridge/pci_expander_bridge.c
-@@ -17,6 +17,7 @@
- #include "hw/pci/pci_host.h"
- #include "hw/qdev-properties.h"
- #include "hw/pci/pci_bridge.h"
-+#include "hw/cxl/cxl.h"
- #include "qemu/range.h"
- #include "qemu/error-report.h"
- #include "qemu/module.h"
-@@ -56,6 +57,16 @@ DECLARE_INSTANCE_CHECKER(PXBDev, PXB_DEV,
- DECLARE_INSTANCE_CHECKER(PXBDev, PXB_PCIE_DEV,
-                          TYPE_PXB_PCIE_DEVICE)
- 
-+#define TYPE_PXB_CXL_DEVICE "pxb-cxl"
-+DECLARE_INSTANCE_CHECKER(PXBDev, PXB_CXL_DEV,
-+                         TYPE_PXB_CXL_DEVICE)
+diff --git a/tests/qtest/cxl-test.c b/tests/qtest/cxl-test.c
+new file mode 100644
+index 0000000000..1006c8ae4e
+--- /dev/null
++++ b/tests/qtest/cxl-test.c
+@@ -0,0 +1,23 @@
++/*
++ * QTest testcase for CXL
++ *
++ * This work is licensed under the terms of the GNU GPL, version 2 or later.
++ * See the COPYING file in the top-level directory.
++ */
 +
-+typedef struct CXLHost {
-+    PCIHostState parent_obj;
++#include "qemu/osdep.h"
++#include "libqtest-single.h"
 +
-+    CXLComponentState cxl_cstate;
-+} CXLHost;
 +
- struct PXBDev {
-     /*< private >*/
-     PCIDevice parent_obj;
-@@ -68,6 +79,11 @@ struct PXBDev {
- 
- static PXBDev *convert_to_pxb(PCIDevice *dev)
- {
-+    /* A CXL PXB's parent bus is PCIe, so the normal check won't work */
-+    if (object_dynamic_cast(OBJECT(dev), TYPE_PXB_CXL_DEVICE)) {
-+        return PXB_CXL_DEV(dev);
-+    }
-+
-     return pci_bus_is_express(pci_get_bus(dev))
-         ? PXB_PCIE_DEV(dev) : PXB_DEV(dev);
- }
-@@ -112,11 +128,20 @@ static const TypeInfo pxb_pcie_bus_info = {
-     .class_init    = pxb_bus_class_init,
- };
- 
-+static const TypeInfo pxb_cxl_bus_info = {
-+    .name          = TYPE_PXB_CXL_BUS,
-+    .parent        = TYPE_CXL_BUS,
-+    .instance_size = sizeof(PXBBus),
-+    .class_init    = pxb_bus_class_init,
-+};
-+
- static const char *pxb_host_root_bus_path(PCIHostState *host_bridge,
-                                           PCIBus *rootbus)
- {
--    PXBBus *bus = pci_bus_is_express(rootbus) ?
--                  PXB_PCIE_BUS(rootbus) : PXB_BUS(rootbus);
-+    PXBBus *bus = pci_bus_is_cxl(rootbus) ?
-+                      PXB_CXL_BUS(rootbus) :
-+                      pci_bus_is_express(rootbus) ? PXB_PCIE_BUS(rootbus) :
-+                                                    PXB_BUS(rootbus);
- 
-     snprintf(bus->bus_path, 8, "0000:%02x", pxb_bus_num(rootbus));
-     return bus->bus_path;
-@@ -218,6 +243,10 @@ static int pxb_map_irq_fn(PCIDevice *pci_dev, int pin)
-     return pin - PCI_SLOT(pxb->devfn);
- }
- 
-+static void pxb_dev_reset(DeviceState *dev)
++static void cxl_basic_pxb(void)
 +{
++    qtest_start("-machine q35,cxl=on -device pxb-cxl,bus=pcie.0");
++    qtest_end();
 +}
 +
- static gint pxb_compare(gconstpointer a, gconstpointer b)
- {
-     const PXBDev *pxb_a = a, *pxb_b = b;
-@@ -389,13 +418,66 @@ static const TypeInfo pxb_pcie_dev_info = {
-     },
- };
- 
-+static void pxb_cxl_dev_realize(PCIDevice *dev, Error **errp)
++int main(int argc, char **argv)
 +{
-+    MachineState *ms = MACHINE(qdev_get_machine());
-+
-+    /* A CXL PXB's parent bus is still PCIe */
-+    if (!pci_bus_is_express(pci_get_bus(dev))) {
-+        error_setg(errp, "pxb-cxl devices cannot reside on a PCI bus");
-+        return;
-+    }
-+    if (!ms->cxl_devices_state->is_enabled) {
-+        error_setg(errp, "Machine does not have cxl=on");
-+        return;
-+    }
-+
-+    pxb_dev_realize_common(dev, CXL, errp);
-+    pxb_dev_reset(DEVICE(dev));
++    g_test_init(&argc, &argv, NULL);
++    qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
++    return g_test_run();
 +}
-+
-+static void pxb_cxl_dev_class_init(ObjectClass *klass, void *data)
-+{
-+    DeviceClass *dc   = DEVICE_CLASS(klass);
-+    PCIDeviceClass *k = PCI_DEVICE_CLASS(klass);
-+
-+    k->realize             = pxb_cxl_dev_realize;
-+    k->exit                = pxb_dev_exitfn;
-+    /*
-+     * XXX: These types of bridges don't actually show up in the hierarchy so
-+     * vendor, device, class, etc. ids are intentionally left out.
-+     */
-+
-+    dc->desc = "CXL Host Bridge";
-+    device_class_set_props(dc, pxb_dev_properties);
-+    set_bit(DEVICE_CATEGORY_BRIDGE, dc->categories);
-+
-+    /* Host bridges aren't hotpluggable. FIXME: spec reference */
-+    dc->hotpluggable = false;
-+    dc->reset = pxb_dev_reset;
-+}
-+
-+static const TypeInfo pxb_cxl_dev_info = {
-+    .name          = TYPE_PXB_CXL_DEVICE,
-+    .parent        = TYPE_PCI_DEVICE,
-+    .instance_size = sizeof(PXBDev),
-+    .class_init    = pxb_cxl_dev_class_init,
-+    .interfaces =
-+        (InterfaceInfo[]){
-+            { INTERFACE_CONVENTIONAL_PCI_DEVICE },
-+            {},
-+        },
-+};
-+
- static void pxb_register_types(void)
- {
-     type_register_static(&pxb_bus_info);
-     type_register_static(&pxb_pcie_bus_info);
-+    type_register_static(&pxb_cxl_bus_info);
-     type_register_static(&pxb_host_info);
-     type_register_static(&pxb_dev_info);
-     type_register_static(&pxb_pcie_dev_info);
-+    type_register_static(&pxb_cxl_dev_info);
- }
+diff --git a/tests/qtest/meson.build b/tests/qtest/meson.build
+index d25f82bb5a..6e1ad4dc9a 100644
+--- a/tests/qtest/meson.build
++++ b/tests/qtest/meson.build
+@@ -41,6 +41,9 @@ qtests_pci = \
+   (config_all_devices.has_key('CONFIG_VGA') ? ['display-vga-test'] : []) +                  \
+   (config_all_devices.has_key('CONFIG_IVSHMEM_DEVICE') ? ['ivshmem-test'] : [])
  
- type_init(pxb_register_types)
-diff --git a/hw/pci/pci.c b/hw/pci/pci.c
-index a7f5c43587..adebe8a79c 100644
---- a/hw/pci/pci.c
-+++ b/hw/pci/pci.c
-@@ -229,6 +229,12 @@ static const TypeInfo pcie_bus_info = {
-     .class_init = pcie_bus_class_init,
- };
- 
-+static const TypeInfo cxl_bus_info = {
-+    .name       = TYPE_CXL_BUS,
-+    .parent     = TYPE_PCIE_BUS,
-+    .class_init = pcie_bus_class_init,
-+};
++qtests_cxl = \
++  (config_all_devices.has_key('CONFIG_CXL') ? ['cxl-test'] : [])
 +
- static PCIBus *pci_find_bus_nr(PCIBus *bus, int bus_num);
- static void pci_update_mappings(PCIDevice *d);
- static void pci_irq_handler(void *opaque, int irq_num, int level);
-@@ -2946,6 +2952,7 @@ static void pci_register_types(void)
- {
-     type_register_static(&pci_bus_info);
-     type_register_static(&pcie_bus_info);
-+    type_register_static(&cxl_bus_info);
-     type_register_static(&conventional_pci_interface_info);
-     type_register_static(&cxl_interface_info);
-     type_register_static(&pcie_interface_info);
-diff --git a/include/hw/pci/pci.h b/include/hw/pci/pci.h
-index 98f0d1b844..44dacfa224 100644
---- a/include/hw/pci/pci.h
-+++ b/include/hw/pci/pci.h
-@@ -408,6 +408,7 @@ typedef PCIINTxRoute (*pci_route_irq_fn)(void *opaque, int pin);
- #define TYPE_PCI_BUS "PCI"
- OBJECT_DECLARE_TYPE(PCIBus, PCIBusClass, PCI_BUS)
- #define TYPE_PCIE_BUS "PCIE"
-+#define TYPE_CXL_BUS "CXL"
- 
- typedef void (*pci_bus_dev_fn)(PCIBus *b, PCIDevice *d, void *opaque);
- typedef void (*pci_bus_fn)(PCIBus *b, void *opaque);
-@@ -770,6 +771,11 @@ static inline void pci_irq_pulse(PCIDevice *pci_dev)
-     pci_irq_deassert(pci_dev);
- }
- 
-+static inline int pci_is_cxl(const PCIDevice *d)
-+{
-+    return d->cap_present & QEMU_PCIE_CAP_CXL;
-+}
-+
- static inline int pci_is_express(const PCIDevice *d)
- {
-     return d->cap_present & QEMU_PCI_CAP_EXPRESS;
-diff --git a/scripts/device-crash-test b/scripts/device-crash-test
-index 7fbd99158b..52bd3d8f71 100755
---- a/scripts/device-crash-test
-+++ b/scripts/device-crash-test
-@@ -93,6 +93,7 @@ ERROR_RULE_LIST = [
-     {'device':'pci-bridge', 'expected':True},              # Bridge chassis not specified. Each bridge is required to be assigned a unique chassis id > 0.
-     {'device':'pci-bridge-seat', 'expected':True},         # Bridge chassis not specified. Each bridge is required to be assigned a unique chassis id > 0.
-     {'device':'pxb', 'expected':True},                     # Bridge chassis not specified. Each bridge is required to be assigned a unique chassis id > 0.
-+    {'device':'pxb-cxl', 'expected':True},                 # pxb-cxl devices cannot reside on a PCI bus.
-     {'device':'scsi-block', 'expected':True},              # drive property not set
-     {'device':'scsi-generic', 'expected':True},            # drive property not set
-     {'device':'scsi-hd', 'expected':True},                 # drive property not set
+ qtests_i386 = \
+   (slirp.found() ? ['pxe-test', 'test-netfilter'] : []) +             \
+   (config_host.has_key('CONFIG_POSIX') ? ['test-filter-mirror'] : []) +                     \
+@@ -75,6 +78,7 @@ qtests_i386 = \
+    slirp.found() ? ['virtio-net-failover'] : []) +                                          \
+   (unpack_edk2_blobs ? ['bios-tables-test'] : []) +                                         \
+   qtests_pci +                                                                              \
++  qtests_cxl +                                                                              \
+   ['fdc-test',
+    'ide-test',
+    'hd-geo-test',
 -- 
 2.32.0
 
