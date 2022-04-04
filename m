@@ -2,178 +2,172 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D1CC352B6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E688C352A7
 	for <linux-cxl@archiver.kernel.org>; Mon,  4 Apr 2022 21:39:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379493AbiDDVlG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 4 Apr 2022 17:41:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39074 "EHLO
+        id S237375AbiDDVlE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 4 Apr 2022 17:41:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380578AbiDDUcN (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 4 Apr 2022 16:32:13 -0400
-Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B483387AD;
-        Mon,  4 Apr 2022 13:30:16 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id C96B78E084F;
-        Mon,  4 Apr 2022 20:30:12 +0000 (UTC)
-Received: from pdx1-sub0-mail-a315.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 0578D8E0723;
-        Mon,  4 Apr 2022 20:30:12 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1649104212; a=rsa-sha256;
-        cv=none;
-        b=ytDKJAWGnXLvlvlxFi9Kh3C1avNb2ST77BxkbQl+b+35IS5B4e/l+lSi4jvG/zU6ESH+mx
-        JFeRkD/A1kDrzwD3SZb0N5ZpGijQ5DYgwDvmLQXfJD4CUpISqY5mugo9sTZwzVIx82K0Cm
-        td3V5EmBygtIz6jv8BXb4kU+TQhJgAs4gpNv3NEAf6hahVLRYkNaYIEpZ0J/cG48wM6DsC
-        D+dPU7T6/BqugyRJeBOzGKatAFBVIzHxk2OV5HqYVcS/GPG5B3hrYP36SZq+637MTpG+cH
-        n9BTOouTLUeVzSBGKeoZQC5r3PowNhpOgmhZ3uBZ7eTSffVbHv0tXbTu0w2yxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1649104212;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=9LI+subktCWSE4eEv6xpkrrptry9AUobNq6AoXjS2qw=;
-        b=ZRiyjdxgp2HT4uRJilHeTxGKmATvKHzFgKykC1yXS609+/FlIlaCeLoIh/SyceN74mxjLn
-        Hit53m2sU34RPOLjqfdc/dB638E6peUOLazLsqDBI1rhFDS2oaiA4IyBR9AdxyTL/VVs2J
-        U4KtiCeRQ2bf5+ID8WLoRmartDVxldcOZJqyOECQXkCfLx2pq/AuxUax50QiC0W+RnlqQK
-        ydj58+cMk2BDtXoDks097vkzOC2s6tgPEOCHQ9Z4/w9J2d8klOAiFdKajCzI1o249gcByZ
-        A/31U93OrcvejJOtFXEtjQYDu1DEtUvkeOqxW8AnAvMLICqEnM39f2EGXR7VHQ==
-ARC-Authentication-Results: i=1;
-        rspamd-f76767c84-4xpxg;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from pdx1-sub0-mail-a315.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.106.158.145 (trex/6.7.1);
-        Mon, 04 Apr 2022 20:30:12 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Company-Illustrious: 3400d08057b3e5fc_1649104212449_1787379020
-X-MC-Loop-Signature: 1649104212449:3528900814
-X-MC-Ingress-Time: 1649104212449
-Received: from offworld (unknown [104.36.25.8])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a315.dreamhost.com (Postfix) with ESMTPSA id 4KXMpT5Zq4z1q;
-        Mon,  4 Apr 2022 13:30:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1649104211;
-        bh=9LI+subktCWSE4eEv6xpkrrptry9AUobNq6AoXjS2qw=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=DyR68C9mlfEtLToG2NNpsA+qPBA2ZNn6vsel9d7k5U41zrw8ay6tWpB8KAJQsdJK1
-         GLYJmfsjR/v/TbJLbfivZ/RrIVb9nFKmhZtY9Vu0glUgeVv6NUWb/pL0xWlI7t4a4k
-         7Ic6y+bpwsELJwZy17CyIN3vILrl7SZQ57P+FQICW87KPhnQ9M8yEeUGq7uWPEiYXE
-         l3H99+hDRzanNYew+/O9T6s3gfIhTZEYu6DvwteLeHLRkuRNRLZE7GD8KwWm8kMg99
-         u2zTPu+6g47sDDv0W0gKBOyAlSjza+05JwzddOSeavF73g1Sr9Qw6CrQI/NeNnVHWI
-         4HqbyX1sM2QwA==
-Date:   Mon, 4 Apr 2022 13:30:05 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, a.manzanares@samsung.com
-Subject: Re: [PATCH v4 3/3] PCI/ACPI: negotiate CXL _OSC
-Message-ID: <20220404203005.wnee6i3aovvchpcr@offworld>
-References: <20220331202022.1823174-1-vishal.l.verma@intel.com>
- <20220331202022.1823174-4-vishal.l.verma@intel.com>
- <20220401204014.khgozoeu6biirknu@offworld>
- <CAPcyv4iGtgO6tqLV_UjOsORmC0q-Kw0y5yvstXd=OO8vQ=9XoQ@mail.gmail.com>
+        with ESMTP id S1379852AbiDDSSK (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 4 Apr 2022 14:18:10 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D4D53EA95
+        for <linux-cxl@vger.kernel.org>; Mon,  4 Apr 2022 11:16:14 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id p17so8808425plo.9
+        for <linux-cxl@vger.kernel.org>; Mon, 04 Apr 2022 11:16:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aZId2gcp4e7uRWUeoN/wi2O4R6KKYYzYuF+W5VbNu0E=;
+        b=C0HtoFQ2InO3oQg2qVHi89N0wihVTgwcGFZw31nn4aiTSa1wsZqB+3ZOlCd4IBddeV
+         9T6+DXvuWagp5u34Y8vLPxvoGK1fHuXNzA1qCvPF2z6XHvJST/ZX6VYYvZ8YiCqUIssq
+         pDr0PQG8fV3Q/dyJyGHR7McGfEvCxlPkGsJWswUJMXQz6jyaT7d6AmtrUSkSNz7TSXLX
+         vm0cTgrhRE3syzzlcNte3oArMkqH51Xx3RMvgRhemW1/CCaMS+p+xeYHaxX0G0wjxG1p
+         TT1ZkOl8cgl5ewzWAj3Q9EeCu0C7MsOTHEHI/QckpyM9o75Qf384mceoSe7VO5QfChMn
+         MlRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aZId2gcp4e7uRWUeoN/wi2O4R6KKYYzYuF+W5VbNu0E=;
+        b=uSnz2kqTFKEjIXWGul1nBxbr0bs/PHgUDkbt1w/T+RmgpSxYZbtnM8jg1RvqDxtLSO
+         rrzkPcNGPKRrDHNctDhMcDUQ5GCmuAR+ygcROwJuNo6yFOfmNz0+7IYCBZAhrd+laMZT
+         wQa9ej5aevohr5xBnDS/QyPFvrV397D6aQeLvnDW3IuVE8JpuDlWzRBu49jYnLfXxlQX
+         bXUbdjtcnkDc+VsnQ/a0atf3o0IGxG/Qvog0ikELAAbzr672D6zHaOLdoIMBRaEA0112
+         NqGniUhzyaTPSjiL92Pgp8jZetvW7K9U09IxEQ7IQd9Ysu5WdXeOXyp2VhOTMGurxby1
+         0IIw==
+X-Gm-Message-State: AOAM532+5mAHXBCqV1ZU2UA8mR1f5m8esjnKPJClxVOb4KU1A/rv07X+
+        YN8TlJd+qHLa9SpX3vx5fSTIQA5l00ifd23XscSGFK4/oaw=
+X-Google-Smtp-Source: ABdhPJx6j1Pg3MxMS2E19o2abZ+CeX8qs8j8egUimFsz+9vTChQguK4uSt6rbvCWV9Vp2G3/F+C7L6kc/kQLJtRJDjY=
+X-Received: by 2002:a17:90a:ca:b0:1ca:5253:b625 with SMTP id
+ v10-20020a17090a00ca00b001ca5253b625mr474110pjd.220.1649096173906; Mon, 04
+ Apr 2022 11:16:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4iGtgO6tqLV_UjOsORmC0q-Kw0y5yvstXd=OO8vQ=9XoQ@mail.gmail.com>
-User-Agent: NeoMutt/20201120
+References: <164894751774.951952.9428402449668442020.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAJZ5v0hGVN_=3iU8OLpHY3Ak35T5+JcBM-qs8SbojKrpd0VXsA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0hGVN_=3iU8OLpHY3Ak35T5+JcBM-qs8SbojKrpd0VXsA@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 4 Apr 2022 11:16:03 -0700
+Message-ID: <CAPcyv4hCseKbr_XXyeOACYmm0defeSet0LX3YWLKGRnCMS=MFQ@mail.gmail.com>
+Subject: Re: [PATCH] cxl/mem: Disable suspend
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 01 Apr 2022, Dan Williams wrote:
+On Mon, Apr 4, 2022 at 9:00 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Sun, Apr 3, 2022 at 2:58 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > The CXL specification claims S3 support at a hardware level, but at a
+> > system software level there are some missing pieces. Section 9.4 rightly
+> > claims that "CXL mem adapters may need aux power to retain memory
+> > context across S3", but there is no enumeration mechanism for the OS to
+> > determine if a given adapter has that support. Moreover the save state
+> > and resume image for the system may inadvertantly end up in a CXL device
+> > that needs to be restored before the save state is recoverable. I.e. a
+> > circular dependency that is not resolvable without a third party
+> > save-area.
+> >
+> > Arrange for the cxl_mem driver to fail S3 attempts. This still nominaly
+> > allows for suspend, but requires unbinding all CXL memory devices before
+> > the suspend to ensure the typical DRAM flow is taken. The cxl_mem unbind
+> > flow is intended to also tear down all CXL memory regions associated
+> > with a given cxl_memdev.
+> >
+> > It is reasonable to assume that any device participating in a System RAM
+> > range published in the EFI memory map is covered by aux power and
+> > save-area outside the device itself. So this restriction can be
+> > minimized in the future once pre-existing region enumeration support
+> > arrives, and perhaps a spec update to clarify if the EFI memory is
+> > sufficent for determining the range of devices managed by
+> > platform-firmware for S3 support.
+> >
+> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>
+> A few thoughts:
+>
+> 1. I don't think it is necessary to fail suspend-to-idle too (which
+> the driver will do after the patch AFAICS).
 
->On Fri, Apr 1, 2022 at 1:40 PM Davidlohr Bueso <dave@stgolabs.net> wrote:
->>
->> On Thu, 31 Mar 2022, Vishal Verma wrote:
->>
->> >The CXL specification does not define any additional constraints on
->> >the hotplug flow beyond PCIe native hotplug, so a kernel that supports
->> >native PCIe hotplug, supports CXL hotplug.
->>
->> Hmm but from a Linux-pov does it make sense to allow hotplug
->> support if the MM cannot handle it?
->
->I would say yes, i.e. do not consider CONFIG_MEMORY_HOTPLUG for
->OSC_CXL_NATIVE_HP_SUPPORT, but see below and poke holes in my
->argument...
->
->>
->> @@ -531,7 +518,8 @@ static u32 calculate_cxl_support(void)
->>         support = OSC_CXL_2_0_PORT_DEV_REG_ACCESS_SUPPORT;
->>         if (pci_aer_available())
->>                 support |= OSC_CXL_PROTOCOL_ERR_REPORTING_SUPPORT;
->> -       if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
->> +       if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE) &&
->> +           IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
->>                 support |= OSC_CXL_NATIVE_HP_SUPPORT;
->>
->>         return support;
->>
->> After all, per the CXL 2.0 Type 3 device Hot-Add flow:
->>
->> ""
->> 7. CXL aware software notifies OS memory manager about the new memory and its
->> attributes such as latency and bandwidth. Memory manager processes a request
->> and adds the new memory to its allocation pool.
->> ""
->
->If I look at ACPI hotplug it is true that CONFIG_ACPI_HOTPLUG_MEMORY
->depends on CONFIG_MEMORY_HOTPLUG. However, it is also true that there
->is no existing _OSC for memory hotplug support. The reason is that
->ACPI memory hotplug requires the OS to acknowledge / coordinate with
->memory plug events via a scan handler. On the CXL side the equivalent
->would be if Linux supported the Mechanical Retention Lock [1], or
->otherwise had some coordination for the driver of a PCI device
->undergoing hotplug to be consulted on whether the hotplug should
->proceed or not.
->
->The concern is that if Linux says no to supporting CXL hotplug then
->the BIOS may say no to giving the OS hotplug control of any other PCIe
->device. So the question here is not whether hotplug is enabled, it's
->whether it is handled natively by the at all OS, and if
->CONFIG_HOTPLUG_PCI_PCIE is enabled then the answer is "yes".
->
->Otherwise, the plan for CXL coordinated remove, since the kernel does
->not support blocking hotplug, is to require the memory device to be
->disabled before hotplug is attempted. When CONFIG_MEMORY_HOTPLUG is
->disabled that step will fail and the remove attempt cancelled. by the
->user. If that is not honored and the card is removed anyway then it
->does not matter if CONFIG_MEMORY_HOTPLUG is enabled or not, it will
->cause a crash and other badness.
->
->Long story short, just say yes, to CXL hotplug and require removal to
->be coordinated by userspace unless and until the kernel grows better
->mechanisms for doing "managed" removal of devices in consultation with
->the driver.
+Ah true, I missed that this would also disable suspend to idle.
 
-+Cc Adam.
+> 2. Should hibernation fail too?  From the description above it looks
+> like that should be the case.
 
-Thank you for the overview of the landscape; I was assuming this last
-part already existed. I would only suggest documenting the above in
-calculate_cxl_support(), such that future readers don't also wonder
-about this and why CXL doesn't follow what CONFIG_ACPI_HOTPLUG_MEMORY
-does.
+Yes, any CXL address range that was provisioned by the OS would need
+some off-device save area for the device-state which seems difficult
+to support in the general case.
 
-Thanks,
-Davidlohr
+> 3. If "deep"suspend is going to fail every time, it may be better to
+> prevent "deep" from being written to /sys/power/mem_sleep instead of
+> failing suspend in progress, especially after freezing user space.
+
+Yeah, that sounds much better, let me explore that option.
 
 >
->[1]: https://lore.kernel.org/all/20201122014203.4706-1-ashok.raj@intel.com/
+> > ---
+> >  drivers/cxl/core/memdev.c |    1 -
+> >  drivers/cxl/mem.c         |   26 ++++++++++++++++++++++++++
+> >  2 files changed, 26 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> > index 1f76b28f9826..efe4d2e9bfef 100644
+> > --- a/drivers/cxl/core/memdev.c
+> > +++ b/drivers/cxl/core/memdev.c
+> > @@ -251,7 +251,6 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
+> >         dev->bus = &cxl_bus_type;
+> >         dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
+> >         dev->type = &cxl_memdev_type;
+> > -       device_set_pm_not_required(dev);
+> >         INIT_WORK(&cxlmd->detach_work, detach_memdev);
+> >
+> >         cdev = &cxlmd->cdev;
+> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> > index 49a4b1c47299..0660bb1488cb 100644
+> > --- a/drivers/cxl/mem.c
+> > +++ b/drivers/cxl/mem.c
+> > @@ -3,6 +3,7 @@
+> >  #include <linux/device.h>
+> >  #include <linux/module.h>
+> >  #include <linux/pci.h>
+> > +#include <linux/pm.h>
+> >
+> >  #include "cxlmem.h"
+> >  #include "cxlpci.h"
+> > @@ -210,10 +211,35 @@ static int cxl_mem_probe(struct device *dev)
+> >         return rc;
+> >  }
+> >
+> > +static int cxl_mem_suspend(struct device *dev)
+> > +{
+> > +       /*
+> > +        * The kernel may be operating out of CXL memory on this device,
+> > +        * there is no spec defined way to determine whether this device
+> > +        * preserves contents over suspend, and there is no simple way
+> > +        * to arrange for the suspend image to avoid CXL memory which
+> > +        * would setup a circular dependency between PCI resume and save
+> > +        * state restoration.
+> > +        */
+> > +       dev_err(dev, "CXL memory suspend not supported\n");
+> > +       return -EBUSY;
+> > +}
+> > +
+> > +static int cxl_mem_resume(struct device *dev)
+> > +{
+> > +       /* nothing to do since suspend is prevented */
+> > +       return 0;
+> > +}
+>
+> This is not needed AFAICS.
+
+Ok, I should have checked, but I'll circle back with sleep state
+disabling rather than failing suspend.
+
+Thanks, Rafael.
