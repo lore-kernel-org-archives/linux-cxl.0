@@ -2,29 +2,29 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 333B0C433EF
-	for <linux-cxl@archiver.kernel.org>; Mon,  4 Apr 2022 15:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 732E0C433EF
+	for <linux-cxl@archiver.kernel.org>; Mon,  4 Apr 2022 15:20:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352401AbiDDPVm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 4 Apr 2022 11:21:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59398 "EHLO
+        id S1376932AbiDDPWO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 4 Apr 2022 11:22:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376309AbiDDPVl (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 4 Apr 2022 11:21:41 -0400
+        with ESMTP id S1376309AbiDDPWM (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 4 Apr 2022 11:22:12 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12F773B56B
-        for <linux-cxl@vger.kernel.org>; Mon,  4 Apr 2022 08:19:45 -0700 (PDT)
-Received: from fraeml702-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KXDtK42k9z686vG;
-        Mon,  4 Apr 2022 23:18:01 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 397183B56B
+        for <linux-cxl@vger.kernel.org>; Mon,  4 Apr 2022 08:20:16 -0700 (PDT)
+Received: from fraeml745-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KXDtw5FSMz67QFM;
+        Mon,  4 Apr 2022 23:18:32 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml702-chm.china.huawei.com (10.206.15.51) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.24; Mon, 4 Apr 2022 17:19:43 +0200
+ fraeml745-chm.china.huawei.com (10.206.15.226) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 4 Apr 2022 17:20:14 +0200
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 4 Apr 2022 16:19:42 +0100
+ 15.1.2375.24; Mon, 4 Apr 2022 16:20:13 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <linuxarm@huawei.com>, <qemu-devel@nongnu.org>,
         =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
@@ -50,9 +50,9 @@ CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
         "k . jensen @ samsung . com" <k.jensen@samsung.com>,
         Tong Zhang <t.zhang2@samsung.com>, <dave@stgolabs.net>,
         Alison Schofield <alison.schofield@intel.com>
-Subject: [PATCH v9 10/45] hw/cxl/device: Add log commands (8.2.9.4) + CEL
-Date:   Mon, 4 Apr 2022 16:14:10 +0100
-Message-ID: <20220404151445.10955-11-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v9 11/45] hw/pxb: Use a type for realizing expanders
+Date:   Mon, 4 Apr 2022 16:14:11 +0100
+Message-ID: <20220404151445.10955-12-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220404151445.10955-1-Jonathan.Cameron@huawei.com>
 References: <20220404151445.10955-1-Jonathan.Cameron@huawei.com>
@@ -69,118 +69,66 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Ben Widawsky <ben.widawsky@intel.com>
 
-CXL specification provides for the ability to obtain logs from the
-device. Logs are either spec defined, like the "Command Effects Log"
-(CEL), or vendor specific. UUIDs are defined for all log types.
-
-The CEL is a mechanism to provide information to the host about which
-commands are supported. It is useful both to determine which spec'd
-optional commands are supported, as well as provide a list of vendor
-specified commands that might be used. The CEL is already created as
-part of mailbox initialization, but here it is now exported to hosts
-that use these log commands.
+This opens up the possibility for more types of expanders (other than
+PCI and PCIe). We'll need this to create a CXL expander.
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Reviewed-by: Alex Bennée <alex.bennee@linaro.org>
 ---
- hw/cxl/cxl-mailbox-utils.c | 69 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+ hw/pci-bridge/pci_expander_bridge.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index 4584aa31f7..db473135c7 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -47,6 +47,9 @@ enum {
-     TIMESTAMP   = 0x03,
-         #define GET           0x0
-         #define SET           0x1
-+    LOGS        = 0x04,
-+        #define GET_SUPPORTED 0x0
-+        #define GET_LOG       0x1
- };
+diff --git a/hw/pci-bridge/pci_expander_bridge.c b/hw/pci-bridge/pci_expander_bridge.c
+index de932286b5..d4514227a8 100644
+--- a/hw/pci-bridge/pci_expander_bridge.c
++++ b/hw/pci-bridge/pci_expander_bridge.c
+@@ -24,6 +24,8 @@
+ #include "hw/boards.h"
+ #include "qom/object.h"
  
- /* 8.2.8.4.5.1 Command Return Codes */
-@@ -147,6 +150,70 @@ static ret_code cmd_timestamp_set(struct cxl_cmd *cmd,
++enum BusType { PCI, PCIE };
++
+ #define TYPE_PXB_BUS "pxb-bus"
+ typedef struct PXBBus PXBBus;
+ DECLARE_INSTANCE_CHECKER(PXBBus, PXB_BUS,
+@@ -221,7 +223,8 @@ static gint pxb_compare(gconstpointer a, gconstpointer b)
+            0;
+ }
  
- static QemuUUID cel_uuid;
+-static void pxb_dev_realize_common(PCIDevice *dev, bool pcie, Error **errp)
++static void pxb_dev_realize_common(PCIDevice *dev, enum BusType type,
++                                   Error **errp)
+ {
+     PXBDev *pxb = convert_to_pxb(dev);
+     DeviceState *ds, *bds = NULL;
+@@ -246,7 +249,7 @@ static void pxb_dev_realize_common(PCIDevice *dev, bool pcie, Error **errp)
+     }
  
-+/* 8.2.9.4.1 */
-+static ret_code cmd_logs_get_supported(struct cxl_cmd *cmd,
-+                                       CXLDeviceState *cxl_dstate,
-+                                       uint16_t *len)
-+{
-+    struct {
-+        uint16_t entries;
-+        uint8_t rsvd[6];
-+        struct {
-+            QemuUUID uuid;
-+            uint32_t size;
-+        } log_entries[1];
-+    } QEMU_PACKED *supported_logs = (void *)cmd->payload;
-+    QEMU_BUILD_BUG_ON(sizeof(*supported_logs) != 0x1c);
-+
-+    supported_logs->entries = 1;
-+    supported_logs->log_entries[0].uuid = cel_uuid;
-+    supported_logs->log_entries[0].size = 4 * cxl_dstate->cel_size;
-+
-+    *len = sizeof(*supported_logs);
-+    return CXL_MBOX_SUCCESS;
-+}
-+
-+/* 8.2.9.4.2 */
-+static ret_code cmd_logs_get_log(struct cxl_cmd *cmd,
-+                                 CXLDeviceState *cxl_dstate,
-+                                 uint16_t *len)
-+{
-+    struct {
-+        QemuUUID uuid;
-+        uint32_t offset;
-+        uint32_t length;
-+    } QEMU_PACKED QEMU_ALIGNED(16) *get_log = (void *)cmd->payload;
-+
-+    /*
-+     * 8.2.9.4.2
-+     *   The device shall return Invalid Parameter if the Offset or Length
-+     *   fields attempt to access beyond the size of the log as reported by Get
-+     *   Supported Logs.
-+     *
-+     * XXX: Spec is wrong, "Invalid Parameter" isn't a thing.
-+     * XXX: Spec doesn't address incorrect UUID incorrectness.
-+     *
-+     * The CEL buffer is large enough to fit all commands in the emulation, so
-+     * the only possible failure would be if the mailbox itself isn't big
-+     * enough.
-+     */
-+    if (get_log->offset + get_log->length > cxl_dstate->payload_size) {
-+        return CXL_MBOX_INVALID_INPUT;
-+    }
-+
-+    if (!qemu_uuid_is_equal(&get_log->uuid, &cel_uuid)) {
-+        return CXL_MBOX_UNSUPPORTED;
-+    }
-+
-+    /* Store off everything to local variables so we can wipe out the payload */
-+    *len = get_log->length;
-+
-+    memmove(cmd->payload, cxl_dstate->cel_log + get_log->offset,
-+           get_log->length);
-+
-+    return CXL_MBOX_SUCCESS;
-+}
-+
- #define IMMEDIATE_CONFIG_CHANGE (1 << 1)
- #define IMMEDIATE_POLICY_CHANGE (1 << 3)
- #define IMMEDIATE_LOG_CHANGE (1 << 4)
-@@ -162,6 +229,8 @@ static struct cxl_cmd cxl_cmd_set[256][256] = {
-         cmd_events_set_interrupt_policy, 4, IMMEDIATE_CONFIG_CHANGE },
-     [TIMESTAMP][GET] = { "TIMESTAMP_GET", cmd_timestamp_get, 0, 0 },
-     [TIMESTAMP][SET] = { "TIMESTAMP_SET", cmd_timestamp_set, 8, IMMEDIATE_POLICY_CHANGE },
-+    [LOGS][GET_SUPPORTED] = { "LOGS_GET_SUPPORTED", cmd_logs_get_supported, 0, 0 },
-+    [LOGS][GET_LOG] = { "LOGS_GET_LOG", cmd_logs_get_log, 0x18, 0 },
- };
+     ds = qdev_new(TYPE_PXB_HOST);
+-    if (pcie) {
++    if (type == PCIE) {
+         bus = pci_root_bus_new(ds, dev_name, NULL, NULL, 0, TYPE_PXB_PCIE_BUS);
+     } else {
+         bus = pci_root_bus_new(ds, "pxb-internal", NULL, NULL, 0, TYPE_PXB_BUS);
+@@ -295,7 +298,7 @@ static void pxb_dev_realize(PCIDevice *dev, Error **errp)
+         return;
+     }
  
- void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
+-    pxb_dev_realize_common(dev, false, errp);
++    pxb_dev_realize_common(dev, PCI, errp);
+ }
+ 
+ static void pxb_dev_exitfn(PCIDevice *pci_dev)
+@@ -348,7 +351,7 @@ static void pxb_pcie_dev_realize(PCIDevice *dev, Error **errp)
+         return;
+     }
+ 
+-    pxb_dev_realize_common(dev, true, errp);
++    pxb_dev_realize_common(dev, PCIE, errp);
+ }
+ 
+ static void pxb_pcie_dev_class_init(ObjectClass *klass, void *data)
 -- 
 2.32.0
 
