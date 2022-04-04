@@ -2,46 +2,47 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6CFC433F5
-	for <linux-cxl@archiver.kernel.org>; Mon,  4 Apr 2022 15:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B460CC352A8
+	for <linux-cxl@archiver.kernel.org>; Mon,  4 Apr 2022 21:39:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378807AbiDDQBs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 4 Apr 2022 12:01:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33960 "EHLO
+        id S238764AbiDDVlF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 4 Apr 2022 17:41:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242759AbiDDQBs (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 4 Apr 2022 12:01:48 -0400
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E649D245A5;
-        Mon,  4 Apr 2022 08:59:51 -0700 (PDT)
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-2e5e31c34bfso104471147b3.10;
-        Mon, 04 Apr 2022 08:59:51 -0700 (PDT)
+        with ESMTP id S1379962AbiDDS1F (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 4 Apr 2022 14:27:05 -0400
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB53113F48;
+        Mon,  4 Apr 2022 11:25:08 -0700 (PDT)
+Received: by mail-yb1-f180.google.com with SMTP id y38so19170728ybi.8;
+        Mon, 04 Apr 2022 11:25:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=w7ocDMuZoyG16WXF5ipj2JQf4AK4I9deIE3Jm5Bs/xc=;
-        b=P/Df+aT0y9hrhXdfv/bPeNgjQqqF6kfMvONu6fRJcBsUA1hRxsve/fckaqkFgBO+vY
-         aucQLxNq0AI3yryHtViHsHggd+95t46c4n1r1MtOmI9sD6NS/kdAHRKmaQ46PKLQ9KoL
-         dtKxJY8xlKyHnEikzXgYwigBw5yCbPGoKoWjZCL/yNGVf4+Qkge3Z4pFvEAj7aTICltn
-         eVs81PTD3UQwJdW57puke/E9qOqHrTQHYxZ0HTxCLbkRy2zKSAYi+brgC0EQiV+h1t11
-         G/H9E83nzLCpxiBkAGNZ4dGkvN6lemN/E/hX8/ilrqMNApAuk3wMi6+5oEXF7HSX+N0J
-         QhwA==
-X-Gm-Message-State: AOAM5327IJT3oa7H8AtR1/w2mr7bXHw4qwdg55vOZswvldOgKD87ldE+
-        Q68khFnlXamNCzIcZOoAtjuXwBUec8nJdwqxCwabO+7E
-X-Google-Smtp-Source: ABdhPJyM8jOQfNwC1LsuoX5wt2+Tez+WgTblGOwGdMIPsSlhv9ZXF+HmUFRB3Pb+p33UR5vpweNUm7aYvABMhBWTvO0=
-X-Received: by 2002:a81:36cf:0:b0:2e5:2597:a026 with SMTP id
- d198-20020a8136cf000000b002e52597a026mr567162ywa.301.1649087991154; Mon, 04
- Apr 2022 08:59:51 -0700 (PDT)
+        bh=bCV4HtxKKrFtYUzA08GGtmyQuDrR4SCJ17M7Fnxmr34=;
+        b=r3yPEzKhRac9iqyCIM8yg2iRAQmLrVVpU76b6aeqk2sl9JP/JaTv5gMhqiqBATKUlL
+         1lx6TJhRXKRFKuNcseFsIMdWIRFLbqII+4nMqSA4xoCp6cFdUvv/65BSe6OjD0QluhkU
+         lvpU1R+1PVlbM1LgOArpnn1Le4PvBNMZ0wOUly/1XVRdw+z5qVXoO6t+8SD4mZhmkXZK
+         lZiduZENQyxvhyio30T71th5sDUhzn62NOZ3lAiGeE+cnIKZ2yOQy2yWymZnxRXQ4W3P
+         P2Q8cfLHqYaM/WAByB9VAYrjJf+xw5vqzPbexcCoZ0xlnGIEeEzPddcklxd2MO66DfXW
+         JWDg==
+X-Gm-Message-State: AOAM532ywzZkKlVZ+XOcu6IcZJTAN8Xm+eBQFLBrFPURvxW450m/f8ft
+        oyxIuZWYdfh5BpoEotgDhFnLpxjLjy/qjbGClyw=
+X-Google-Smtp-Source: ABdhPJyZrHKGdImhZK9li020wFi6mVFXiU0hAl7RxyBC2L67Wz55stGtbnyQdQUfeGvM+JTuLG3HrRleXe/zWArnIiw=
+X-Received: by 2002:a05:6902:1544:b0:63d:d3a7:8cc4 with SMTP id
+ r4-20020a056902154400b0063dd3a78cc4mr1059291ybu.622.1649096708257; Mon, 04
+ Apr 2022 11:25:08 -0700 (PDT)
 MIME-Version: 1.0
 References: <164894751774.951952.9428402449668442020.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <164894751774.951952.9428402449668442020.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAJZ5v0hGVN_=3iU8OLpHY3Ak35T5+JcBM-qs8SbojKrpd0VXsA@mail.gmail.com> <CAPcyv4hCseKbr_XXyeOACYmm0defeSet0LX3YWLKGRnCMS=MFQ@mail.gmail.com>
+In-Reply-To: <CAPcyv4hCseKbr_XXyeOACYmm0defeSet0LX3YWLKGRnCMS=MFQ@mail.gmail.com>
 From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 4 Apr 2022 17:59:40 +0200
-Message-ID: <CAJZ5v0hGVN_=3iU8OLpHY3Ak35T5+JcBM-qs8SbojKrpd0VXsA@mail.gmail.com>
+Date:   Mon, 4 Apr 2022 20:24:57 +0200
+Message-ID: <CAJZ5v0gT=aAR=aW0-kkDWv2TotmL_EW4JVPqoh9oKwxtOyZr-A@mail.gmail.com>
 Subject: Re: [PATCH] cxl/mem: Disable suspend
 To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>, linux-cxl@vger.kernel.org,
         Linux PCI <linux-pci@vger.kernel.org>,
         ACPI Devel Maling List <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -49,111 +50,58 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sun, Apr 3, 2022 at 2:58 AM Dan Williams <dan.j.williams@intel.com> wrote:
+On Mon, Apr 4, 2022 at 8:16 PM Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> The CXL specification claims S3 support at a hardware level, but at a
-> system software level there are some missing pieces. Section 9.4 rightly
-> claims that "CXL mem adapters may need aux power to retain memory
-> context across S3", but there is no enumeration mechanism for the OS to
-> determine if a given adapter has that support. Moreover the save state
-> and resume image for the system may inadvertantly end up in a CXL device
-> that needs to be restored before the save state is recoverable. I.e. a
-> circular dependency that is not resolvable without a third party
-> save-area.
+> On Mon, Apr 4, 2022 at 9:00 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Sun, Apr 3, 2022 at 2:58 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> > >
+> > > The CXL specification claims S3 support at a hardware level, but at a
+> > > system software level there are some missing pieces. Section 9.4 rightly
+> > > claims that "CXL mem adapters may need aux power to retain memory
+> > > context across S3", but there is no enumeration mechanism for the OS to
+> > > determine if a given adapter has that support. Moreover the save state
+> > > and resume image for the system may inadvertantly end up in a CXL device
+> > > that needs to be restored before the save state is recoverable. I.e. a
+> > > circular dependency that is not resolvable without a third party
+> > > save-area.
+> > >
+> > > Arrange for the cxl_mem driver to fail S3 attempts. This still nominaly
+> > > allows for suspend, but requires unbinding all CXL memory devices before
+> > > the suspend to ensure the typical DRAM flow is taken. The cxl_mem unbind
+> > > flow is intended to also tear down all CXL memory regions associated
+> > > with a given cxl_memdev.
+> > >
+> > > It is reasonable to assume that any device participating in a System RAM
+> > > range published in the EFI memory map is covered by aux power and
+> > > save-area outside the device itself. So this restriction can be
+> > > minimized in the future once pre-existing region enumeration support
+> > > arrives, and perhaps a spec update to clarify if the EFI memory is
+> > > sufficent for determining the range of devices managed by
+> > > platform-firmware for S3 support.
+> > >
+> > > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> >
+> > A few thoughts:
+> >
+> > 1. I don't think it is necessary to fail suspend-to-idle too (which
+> > the driver will do after the patch AFAICS).
 >
-> Arrange for the cxl_mem driver to fail S3 attempts. This still nominaly
-> allows for suspend, but requires unbinding all CXL memory devices before
-> the suspend to ensure the typical DRAM flow is taken. The cxl_mem unbind
-> flow is intended to also tear down all CXL memory regions associated
-> with a given cxl_memdev.
+> Ah true, I missed that this would also disable suspend to idle.
 >
-> It is reasonable to assume that any device participating in a System RAM
-> range published in the EFI memory map is covered by aux power and
-> save-area outside the device itself. So this restriction can be
-> minimized in the future once pre-existing region enumeration support
-> arrives, and perhaps a spec update to clarify if the EFI memory is
-> sufficent for determining the range of devices managed by
-> platform-firmware for S3 support.
+> > 2. Should hibernation fail too?  From the description above it looks
+> > like that should be the case.
 >
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Yes, any CXL address range that was provisioned by the OS would need
+> some off-device save area for the device-state which seems difficult
+> to support in the general case.
 
-A few thoughts:
+So it should cause errors to be returned from the hibernation path
+too, ideally before the freezing of tasks.
 
-1. I don't think it is necessary to fail suspend-to-idle too (which
-the driver will do after the patch AFAICS).
-2. Should hibernation fail too?  From the description above it looks
-like that should be the case.
-3. If "deep"suspend is going to fail every time, it may be better to
-prevent "deep" from being written to /sys/power/mem_sleep instead of
-failing suspend in progress, especially after freezing user space.
-
-> ---
->  drivers/cxl/core/memdev.c |    1 -
->  drivers/cxl/mem.c         |   26 ++++++++++++++++++++++++++
->  2 files changed, 26 insertions(+), 1 deletion(-)
+> > 3. If "deep"suspend is going to fail every time, it may be better to
+> > prevent "deep" from being written to /sys/power/mem_sleep instead of
+> > failing suspend in progress, especially after freezing user space.
 >
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index 1f76b28f9826..efe4d2e9bfef 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -251,7 +251,6 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
->         dev->bus = &cxl_bus_type;
->         dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
->         dev->type = &cxl_memdev_type;
-> -       device_set_pm_not_required(dev);
->         INIT_WORK(&cxlmd->detach_work, detach_memdev);
->
->         cdev = &cxlmd->cdev;
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index 49a4b1c47299..0660bb1488cb 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -3,6 +3,7 @@
->  #include <linux/device.h>
->  #include <linux/module.h>
->  #include <linux/pci.h>
-> +#include <linux/pm.h>
->
->  #include "cxlmem.h"
->  #include "cxlpci.h"
-> @@ -210,10 +211,35 @@ static int cxl_mem_probe(struct device *dev)
->         return rc;
->  }
->
-> +static int cxl_mem_suspend(struct device *dev)
-> +{
-> +       /*
-> +        * The kernel may be operating out of CXL memory on this device,
-> +        * there is no spec defined way to determine whether this device
-> +        * preserves contents over suspend, and there is no simple way
-> +        * to arrange for the suspend image to avoid CXL memory which
-> +        * would setup a circular dependency between PCI resume and save
-> +        * state restoration.
-> +        */
-> +       dev_err(dev, "CXL memory suspend not supported\n");
-> +       return -EBUSY;
-> +}
-> +
-> +static int cxl_mem_resume(struct device *dev)
-> +{
-> +       /* nothing to do since suspend is prevented */
-> +       return 0;
-> +}
-
-This is not needed AFAICS.
-
-> +
-> +static DEFINE_SIMPLE_DEV_PM_OPS(cxl_pm_ops, cxl_mem_suspend, cxl_mem_resume);
-> +
->  static struct cxl_driver cxl_mem_driver = {
->         .name = "cxl_mem",
->         .probe = cxl_mem_probe,
->         .id = CXL_DEVICE_MEMORY_EXPANDER,
-> +       .drv = {
-> +               .pm = &cxl_pm_ops,
-> +       },
->  };
->
->  module_cxl_driver(cxl_mem_driver);
->
+> Yeah, that sounds much better, let me explore that option.
