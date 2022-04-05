@@ -2,333 +2,140 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CA5C433F5
-	for <linux-cxl@archiver.kernel.org>; Tue,  5 Apr 2022 22:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1FEC433EF
+	for <linux-cxl@archiver.kernel.org>; Tue,  5 Apr 2022 22:12:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229722AbiDEWNW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 5 Apr 2022 18:13:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51078 "EHLO
+        id S234528AbiDEWNJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 5 Apr 2022 18:13:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244252AbiDEUUc (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Apr 2022 16:20:32 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBE22692BA;
-        Tue,  5 Apr 2022 13:00:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649188806; x=1680724806;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=s9+5sWIrw/8+D5NpfC6Yf1k8qyONKg8kSkpaSpE5bF8=;
-  b=mwjp+Uy7XBAj/JvV932wF7wUZOXvjrLH7tuCmQJ5TJg/R2fYOc1m9656
-   LJUXKyBqigXEtwQYmps0KK368DlxNR8ZCL/yqUk9xPygyr6TATXkfQnZB
-   +UC8GAHp2GZB7GUFUGX6sQVMg/+zM0TU11vxpdcTHph8t8cTH864Yc1Bt
-   oAYQVZPE7NICBo+93+VY7rLIvDq6+JxJUDZpiRVMo7RDiYANcV/cHt9QJ
-   ruQ5J7c/zWDxz6plL8fGmFGUX2Igfe3cWkn0VZFJ2n3Sgiamw1iIBUQSK
-   nZ7/VIuiFWgjVInC2mlDGVXjG3GNJ6kgL3zQvE4saE6ZsVrr5d4o3NZQA
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10308"; a="260548291"
-X-IronPort-AV: E=Sophos;i="5.90,238,1643702400"; 
-   d="scan'208";a="260548291"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2022 13:00:06 -0700
-X-IronPort-AV: E=Sophos;i="5.90,238,1643702400"; 
-   d="scan'208";a="588073914"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2022 13:00:05 -0700
-Subject: [PATCH v2] PM: CXL: Disable suspend
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-Date:   Tue, 05 Apr 2022 13:00:05 -0700
-Message-ID: <164918880566.2022733.9710638662231385597.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <164894751774.951952.9428402449668442020.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <164894751774.951952.9428402449668442020.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        with ESMTP id S1391421AbiDEPeZ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Apr 2022 11:34:25 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D976B69294
+        for <linux-cxl@vger.kernel.org>; Tue,  5 Apr 2022 06:41:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1649166117;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9SMf3YY1I3dUwlFz96C1rsqKlIAyO743R5VQnaSrKUs=;
+        b=Nq8OwFL9wFzxsPTHjFAVUi8aD7XHl1X0rtIeXOhULJlxTJpijHhalMi+2hY7CA6orHsbiF
+        KhQFjCkQGKUeAf5MF4NSN3yYhL/Nh6E36DO9VFS4FoxunMnMx0ygxFLDPZoT1CJirL6Ehi
+        mITQAo/xTZWKJscgJ5+mkDQstKJIDGo=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-449-L-PbSyqDMum_KoabL6A9lg-1; Tue, 05 Apr 2022 09:41:54 -0400
+X-MC-Unique: L-PbSyqDMum_KoabL6A9lg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4224985A5A8;
+        Tue,  5 Apr 2022 13:41:53 +0000 (UTC)
+Received: from blackfin.pond.sub.org (unknown [10.36.112.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C70F540CFD05;
+        Tue,  5 Apr 2022 13:41:52 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+        id A34A721E6906; Tue,  5 Apr 2022 15:41:51 +0200 (CEST)
+From:   Markus Armbruster <armbru@redhat.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     <linuxarm@huawei.com>, <qemu-devel@nongnu.org>,
+        Alex =?utf-8?Q?Benn?= =?utf-8?Q?=C3=A9e?= 
+        <alex.bennee@linaro.org>, Marcel Apfelbaum <marcel@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        "Mark Cave-Ayland" <mark.cave-ayland@ilande.co.uk>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
+        "Peter Maydell" <peter.maydell@linaro.org>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        Peter Xu <peterx@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Saransh Gupta1 <saransh@ibm.com>,
+        Shreyas Shah <shreyas.shah@elastics.cloud>,
+        Chris Browy <cbrowy@avery-design.com>,
+        "Samarth Saxena" <samarths@cadence.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "k . jensen @ samsung . com" <k.jensen@samsung.com>,
+        Tong Zhang <t.zhang2@samsung.com>, <dave@stgolabs.net>,
+        Alison Schofield <alison.schofield@intel.com>
+Subject: Re: [PATCH v9 27/45] hw/cxl/host: Add support for CXL Fixed Memory
+ Windows.
+References: <20220404151445.10955-1-Jonathan.Cameron@huawei.com>
+        <20220404151445.10955-28-Jonathan.Cameron@huawei.com>
+Date:   Tue, 05 Apr 2022 15:41:51 +0200
+In-Reply-To: <20220404151445.10955-28-Jonathan.Cameron@huawei.com> (Jonathan
+        Cameron's message of "Mon, 4 Apr 2022 16:14:27 +0100")
+Message-ID: <87v8vn4pgg.fsf@pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=armbru@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The CXL specification claims S3 support at a hardware level, but at a
-system software level there are some missing pieces. Section 9.4 (CXL
-2.0) rightly claims that "CXL mem adapters may need aux power to retain
-memory context across S3", but there is no enumeration mechanism for the
-OS to determine if a given adapter has that support. Moreover the save
-state and resume image for the system may inadvertantly end up in a CXL
-device that needs to be restored before the save state is recoverable.
-I.e. a circular dependency that is not resolvable without a third party
-save-area.
+Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
 
-Arrange for the cxl_mem driver to fail S3 attempts. This still nominaly
-allows for suspend, but requires unbinding all CXL memory devices before
-the suspend to ensure the typical DRAM flow is taken. The cxl_mem unbind
-flow is intended to also tear down all CXL memory regions associated
-with a given cxl_memdev.
+> From: Jonathan Cameron <jonathan.cameron@huawei.com>
+>
+> The concept of these is introduced in [1] in terms of the
+> description the CEDT ACPI table. The principal is more general.
+> Unlike once traffic hits the CXL root bridges, the host system
+> memory address routing is implementation defined and effectively
+> static once observable by standard / generic system software.
+> Each CXL Fixed Memory Windows (CFMW) is a region of PA space
+> which has fixed system dependent routing configured so that
+> accesses can be routed to the CXL devices below a set of target
+> root bridges. The accesses may be interleaved across multiple
+> root bridges.
+>
+> For QEMU we could have fully specified these regions in terms
+> of a base PA + size, but as the absolute address does not matter
+> it is simpler to let individual platforms place the memory regions.
+>
+> ExampleS:
+> -cxl-fixed-memory-window targets.0=cxl.0,size=128G
+> -cxl-fixed-memory-window targets.0=cxl.1,size=128G
+> -cxl-fixed-memory-window targets.0=cxl0,targets.1=cxl.1,size=256G,interleave-granularity=2k
+>
+> Specifies
+> * 2x 128G regions not interleaved across root bridges, one for each of
+>   the root bridges with ids cxl.0 and cxl.1
+> * 256G region interleaved across root bridges with ids cxl.0 and cxl.1
+> with a 2k interleave granularity.
+>
+> When system software enumerates the devices below a given root bridge
+> it can then decide which CFMW to use. If non interleave is desired
+> (or possible) it can use the appropriate CFMW for the root bridge in
+> question.  If there are suitable devices to interleave across the
+> two root bridges then it may use the 3rd CFMS.
+>
+> A number of other designs were considered but the following constraints
+> made it hard to adapt existing QEMU approaches to this particular problem.
+> 1) The size must be known before a specific architecture / board brings
+>    up it's PA memory map.  We need to set up an appropriate region.
+> 2) Using links to the host bridges provides a clean command line interface
+>    but these links cannot be established until command line devices have
+>    been added.
+>
+> Hence the two step process used here of first establishing the size,
+> interleave-ways and granularity + caching the ids of the host bridges
+> and then, once available finding the actual host bridges so they can
+> be used later to support interleave decoding.
+>
+> [1] CXL 2.0 ECN: CEDT CFMWS & QTG DSM (computeexpresslink.org / specifications)
+>
+> Signed-off-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-It is reasonable to assume that any device participating in a System RAM
-range published in the EFI memory map is covered by aux power and
-save-area outside the device itself. So this restriction can be
-minimized in the future once pre-existing region enumeration support
-arrives, and perhaps a spec update to clarify if the EFI memory map is
-sufficent for determining the range of devices managed by
-platform-firmware for S3 support.
-
-Per Rafael, if the CXL configuration prevents suspend then it should
-fail early before tasks are frozen, and mem_sleep should stop showing
-'mem' as an option [1]. Effectively CXL augments the platform suspend
-->valid() op since, for example, the ACPI ops are not aware of the CXL /
-PCI dependencies. Given the split role of platform firmware vs OS
-provisioned CXL memory it is up to the cxl_mem driver to determine if
-the CXL configuration has elements that platform firmware may not be
-prepared to restore.
-
-Link: https://lore.kernel.org/r/CAJZ5v0hGVN_=3iU8OLpHY3Ak35T5+JcBM-qs8SbojKrpd0VXsA@mail.gmail.com [1]
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Len Brown <len.brown@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/Makefile           |    2 +-
- drivers/cxl/Kconfig        |    4 ++++
- drivers/cxl/Makefile       |    2 +-
- drivers/cxl/core/Makefile  |    1 +
- drivers/cxl/core/memdev.c  |    1 -
- drivers/cxl/core/suspend.c |   23 +++++++++++++++++++++++
- drivers/cxl/cxlmem.h       |   11 +++++++++++
- drivers/cxl/mem.c          |   22 +++++++++++++++++++++-
- include/linux/pm.h         |    9 +++++++++
- kernel/power/hibernate.c   |    2 +-
- kernel/power/main.c        |    5 ++++-
- kernel/power/suspend.c     |    3 ++-
- 12 files changed, 78 insertions(+), 7 deletions(-)
- create mode 100644 drivers/cxl/core/suspend.c
-
-diff --git a/drivers/Makefile b/drivers/Makefile
-index 020780b6b4d2..f735c4955143 100644
---- a/drivers/Makefile
-+++ b/drivers/Makefile
-@@ -72,9 +72,9 @@ obj-$(CONFIG_PARPORT)		+= parport/
- obj-y				+= base/ block/ misc/ mfd/ nfc/
- obj-$(CONFIG_LIBNVDIMM)		+= nvdimm/
- obj-$(CONFIG_DAX)		+= dax/
--obj-$(CONFIG_CXL_BUS)		+= cxl/
- obj-$(CONFIG_DMA_SHARED_BUFFER) += dma-buf/
- obj-$(CONFIG_NUBUS)		+= nubus/
-+obj-y				+= cxl/
- obj-y				+= macintosh/
- obj-y				+= scsi/
- obj-y				+= nvme/
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index b88ab956bb7c..f64e3984689f 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -98,4 +98,8 @@ config CXL_PORT
- 	default CXL_BUS
- 	tristate
- 
-+config CXL_SUSPEND
-+	def_bool y
-+	depends on SUSPEND && CXL_MEM
-+
- endif
-diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-index ce267ef11d93..a78270794150 100644
---- a/drivers/cxl/Makefile
-+++ b/drivers/cxl/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
--obj-$(CONFIG_CXL_BUS) += core/
-+obj-y += core/
- obj-$(CONFIG_CXL_PCI) += cxl_pci.o
- obj-$(CONFIG_CXL_MEM) += cxl_mem.o
- obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 6d37cd78b151..9d35085d25af 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_CXL_BUS) += cxl_core.o
-+obj-$(CONFIG_CXL_SUSPEND) += suspend.o
- 
- ccflags-y += -I$(srctree)/drivers/cxl
- cxl_core-y := port.o
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 1f76b28f9826..efe4d2e9bfef 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -251,7 +251,6 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
- 	dev->bus = &cxl_bus_type;
- 	dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
- 	dev->type = &cxl_memdev_type;
--	device_set_pm_not_required(dev);
- 	INIT_WORK(&cxlmd->detach_work, detach_memdev);
- 
- 	cdev = &cxlmd->cdev;
-diff --git a/drivers/cxl/core/suspend.c b/drivers/cxl/core/suspend.c
-new file mode 100644
-index 000000000000..88bdbe30a1df
---- /dev/null
-+++ b/drivers/cxl/core/suspend.c
-@@ -0,0 +1,23 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
-+#include <linux/atomic.h>
-+#include <linux/export.h>
-+
-+static atomic_t mem_active;
-+
-+bool cxl_mem_active(void)
-+{
-+	return atomic_read(&mem_active) != 0;
-+}
-+
-+void cxl_mem_active_inc(void)
-+{
-+	atomic_inc(&mem_active);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_mem_active_inc, CXL);
-+
-+void cxl_mem_active_dec(void)
-+{
-+	atomic_dec(&mem_active);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_mem_active_dec, CXL);
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 243dd86a8b46..7235d2f976e5 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -353,6 +353,17 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds);
- struct cxl_dev_state *cxl_dev_state_create(struct device *dev);
- void set_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
- void clear_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
-+#ifdef CONFIG_CXL_SUSPEND
-+void cxl_mem_active_inc(void);
-+void cxl_mem_active_dec(void);
-+#else
-+static inline void cxl_mem_active_inc(void)
-+{
-+}
-+static inline void cxl_mem_active_dec(void)
-+{
-+}
-+#endif
- 
- struct cxl_hdm {
- 	struct cxl_component_regs regs;
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 49a4b1c47299..0576d2d3df07 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -129,6 +129,11 @@ __mock bool cxl_dvsec_decode_init(struct cxl_dev_state *cxlds)
- 	return do_hdm_init;
- }
- 
-+static void enable_suspend(void *data)
-+{
-+	cxl_mem_active_dec();
-+}
-+
- static int cxl_mem_probe(struct device *dev)
- {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-@@ -207,7 +212,22 @@ static int cxl_mem_probe(struct device *dev)
- out:
- 	cxl_device_unlock(&parent_port->dev);
- 	put_device(&parent_port->dev);
--	return rc;
-+
-+	/*
-+	 * The kernel may be operating out of CXL memory on this device,
-+	 * there is no spec defined way to determine whether this device
-+	 * preserves contents over suspend, and there is no simple way
-+	 * to arrange for the suspend image to avoid CXL memory which
-+	 * would setup a circular dependency between PCI resume and save
-+	 * state restoration.
-+	 *
-+	 * TODO: support suspend when all the regions this device is
-+	 * hosting are locked and covered by the system address map,
-+	 * i.e. platform firmware owns restoring the HDM configuration
-+	 * that it locked.
-+	 */
-+	cxl_mem_active_inc();
-+	return devm_add_action_or_reset(dev, enable_suspend, NULL);
- }
- 
- static struct cxl_driver cxl_mem_driver = {
-diff --git a/include/linux/pm.h b/include/linux/pm.h
-index e65b3ab28377..7911c4c9a7be 100644
---- a/include/linux/pm.h
-+++ b/include/linux/pm.h
-@@ -36,6 +36,15 @@ static inline void pm_vt_switch_unregister(struct device *dev)
- }
- #endif /* CONFIG_VT_CONSOLE_SLEEP */
- 
-+#ifdef CONFIG_CXL_SUSPEND
-+bool cxl_mem_active(void);
-+#else
-+static inline bool cxl_mem_active(void)
-+{
-+	return false;
-+}
-+#endif
-+
- /*
-  * Device power management
-  */
-diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-index 938d5c78b421..20a66bf9f465 100644
---- a/kernel/power/hibernate.c
-+++ b/kernel/power/hibernate.c
-@@ -83,7 +83,7 @@ bool hibernation_available(void)
- {
- 	return nohibernate == 0 &&
- 		!security_locked_down(LOCKDOWN_HIBERNATION) &&
--		!secretmem_active();
-+		!secretmem_active() && !cxl_mem_active();
- }
- 
- /**
-diff --git a/kernel/power/main.c b/kernel/power/main.c
-index 7e646079fbeb..3e6be1c33e0b 100644
---- a/kernel/power/main.c
-+++ b/kernel/power/main.c
-@@ -127,7 +127,9 @@ static ssize_t mem_sleep_show(struct kobject *kobj, struct kobj_attribute *attr,
- 	char *s = buf;
- 	suspend_state_t i;
- 
--	for (i = PM_SUSPEND_MIN; i < PM_SUSPEND_MAX; i++)
-+	for (i = PM_SUSPEND_MIN; i < PM_SUSPEND_MAX; i++) {
-+		if (i >= PM_SUSPEND_MEM && cxl_mem_active())
-+			continue;
- 		if (mem_sleep_states[i]) {
- 			const char *label = mem_sleep_states[i];
- 
-@@ -136,6 +138,7 @@ static ssize_t mem_sleep_show(struct kobject *kobj, struct kobj_attribute *attr,
- 			else
- 				s += sprintf(s, "%s ", label);
- 		}
-+	}
- 
- 	/* Convert the last space to a newline if needed. */
- 	if (s != buf)
-diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
-index 6fcdee7e87a5..827075944d28 100644
---- a/kernel/power/suspend.c
-+++ b/kernel/power/suspend.c
-@@ -236,7 +236,8 @@ EXPORT_SYMBOL_GPL(suspend_valid_only_mem);
- 
- static bool sleep_state_supported(suspend_state_t state)
- {
--	return state == PM_SUSPEND_TO_IDLE || valid_state(state);
-+	return state == PM_SUSPEND_TO_IDLE ||
-+	       (valid_state(state) && !cxl_mem_active());
- }
- 
- static int platform_suspend_prepare(suspend_state_t state)
+QAPI schema
+Acked-by: Markus Armbruster <armbru@redhat.com>
 
