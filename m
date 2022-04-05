@@ -2,140 +2,286 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1FEC433EF
-	for <linux-cxl@archiver.kernel.org>; Tue,  5 Apr 2022 22:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F4FC43217
+	for <linux-cxl@archiver.kernel.org>; Tue,  5 Apr 2022 22:12:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234528AbiDEWNJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 5 Apr 2022 18:13:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35842 "EHLO
+        id S1346654AbiDEWNC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 5 Apr 2022 18:13:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1391421AbiDEPeZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Apr 2022 11:34:25 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D976B69294
-        for <linux-cxl@vger.kernel.org>; Tue,  5 Apr 2022 06:41:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1649166117;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9SMf3YY1I3dUwlFz96C1rsqKlIAyO743R5VQnaSrKUs=;
-        b=Nq8OwFL9wFzxsPTHjFAVUi8aD7XHl1X0rtIeXOhULJlxTJpijHhalMi+2hY7CA6orHsbiF
-        KhQFjCkQGKUeAf5MF4NSN3yYhL/Nh6E36DO9VFS4FoxunMnMx0ygxFLDPZoT1CJirL6Ehi
-        mITQAo/xTZWKJscgJ5+mkDQstKJIDGo=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-449-L-PbSyqDMum_KoabL6A9lg-1; Tue, 05 Apr 2022 09:41:54 -0400
-X-MC-Unique: L-PbSyqDMum_KoabL6A9lg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4224985A5A8;
-        Tue,  5 Apr 2022 13:41:53 +0000 (UTC)
-Received: from blackfin.pond.sub.org (unknown [10.36.112.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C70F540CFD05;
-        Tue,  5 Apr 2022 13:41:52 +0000 (UTC)
-Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
-        id A34A721E6906; Tue,  5 Apr 2022 15:41:51 +0200 (CEST)
-From:   Markus Armbruster <armbru@redhat.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     <linuxarm@huawei.com>, <qemu-devel@nongnu.org>,
-        Alex =?utf-8?Q?Benn?= =?utf-8?Q?=C3=A9e?= 
-        <alex.bennee@linaro.org>, Marcel Apfelbaum <marcel@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        "Mark Cave-Ayland" <mark.cave-ayland@ilande.co.uk>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
-        "Peter Maydell" <peter.maydell@linaro.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        Peter Xu <peterx@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Saransh Gupta1 <saransh@ibm.com>,
-        Shreyas Shah <shreyas.shah@elastics.cloud>,
-        Chris Browy <cbrowy@avery-design.com>,
-        "Samarth Saxena" <samarths@cadence.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "k . jensen @ samsung . com" <k.jensen@samsung.com>,
-        Tong Zhang <t.zhang2@samsung.com>, <dave@stgolabs.net>,
-        Alison Schofield <alison.schofield@intel.com>
-Subject: Re: [PATCH v9 27/45] hw/cxl/host: Add support for CXL Fixed Memory
- Windows.
-References: <20220404151445.10955-1-Jonathan.Cameron@huawei.com>
-        <20220404151445.10955-28-Jonathan.Cameron@huawei.com>
-Date:   Tue, 05 Apr 2022 15:41:51 +0200
-In-Reply-To: <20220404151445.10955-28-Jonathan.Cameron@huawei.com> (Jonathan
-        Cameron's message of "Mon, 4 Apr 2022 16:14:27 +0100")
-Message-ID: <87v8vn4pgg.fsf@pond.sub.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2 (gnu/linux)
+        with ESMTP id S1392188AbiDEPft (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Apr 2022 11:35:49 -0400
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4EF6113;
+        Tue,  5 Apr 2022 06:47:37 -0700 (PDT)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-2eb46d33db9so83315327b3.12;
+        Tue, 05 Apr 2022 06:47:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Kpj5H/ONbjNqMagoOWuzPrgVmm66wqLMrF02mwgAmpo=;
+        b=OrGuzQkdX87ycKXQGFFn9wFwATzVOUB8UBmxSCdZ/i1HMvyzf3eqwe8Q6ZfzrGDCkD
+         4ZgOAdBHfr/BVY8piIsHuZ1TD/EhKP85nQJH2l1zUAZA6X331jBHBfQyrdQKDaQZM2x0
+         OVFU7N7JGxAy6hiIwtmL5d45XVRH+qJfy50pLoGgxZc582EgZV0U5fkCpG3LVUUA96pR
+         tq2FwB+YUcGmLxC1N7DmaTSIRCiyFeqid0vIUsgB/ZxG1sUJsCD5xJRjhDmUiUhzB2j4
+         S/oIQCDbyYLRE0KYYN2o4TqydYh/FKBsDPginrXHibb9K8pkGrS96K7QarRPibQXwbRy
+         oucw==
+X-Gm-Message-State: AOAM533HV70dvH4QASm/2K4hMhdxS3kWif3K6/++rezSt+lIgkKXjHWy
+        CEMDkS5hmpJ2twyyjtdekvZtDA2FHh4aEcXGhWs=
+X-Google-Smtp-Source: ABdhPJzfEdjVgt9Yq4ho6UFYSWq/ei57AZIDDya7yTDU7iEHuC2ceka/83Uel44Ball5UZYkhXii4ZWAly82slEhlV0=
+X-Received: by 2002:a81:1549:0:b0:2eb:3dc7:bd16 with SMTP id
+ 70-20020a811549000000b002eb3dc7bd16mr2779780ywv.7.1649166457145; Tue, 05 Apr
+ 2022 06:47:37 -0700 (PDT)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=armbru@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+References: <20220331202022.1823174-1-vishal.l.verma@intel.com> <20220331202022.1823174-3-vishal.l.verma@intel.com>
+In-Reply-To: <20220331202022.1823174-3-vishal.l.verma@intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 5 Apr 2022 15:47:26 +0200
+Message-ID: <CAJZ5v0hfTXkHQE2j8B00Qvn1vuW0a-5AoUG-dSJvCH5PW70AZw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] PCI/ACPI: Use CXL _OSC instead of PCIe _OSC
+To:     Vishal Verma <vishal.l.verma@intel.com>
+Cc:     linux-cxl@vger.kernel.org,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
+First off, I would change the subject to something like "Prefer CXL
+_OSC to PCI _OSC for CXL host bridges".  As is, it kind of suggests
+that the CXL _OSC is preferred in all cases.
 
-> From: Jonathan Cameron <jonathan.cameron@huawei.com>
+On Thu, Mar 31, 2022 at 10:20 PM Vishal Verma <vishal.l.verma@intel.com> wrote:
 >
-> The concept of these is introduced in [1] in terms of the
-> description the CEDT ACPI table. The principal is more general.
-> Unlike once traffic hits the CXL root bridges, the host system
-> memory address routing is implementation defined and effectively
-> static once observable by standard / generic system software.
-> Each CXL Fixed Memory Windows (CFMW) is a region of PA space
-> which has fixed system dependent routing configured so that
-> accesses can be routed to the CXL devices below a set of target
-> root bridges. The accesses may be interleaved across multiple
-> root bridges.
+> From: Dan Williams <dan.j.williams@intel.com>
 >
-> For QEMU we could have fully specified these regions in terms
-> of a base PA + size, but as the absolute address does not matter
-> it is simpler to let individual platforms place the memory regions.
+> OB In preparation for negotiating OS control of CXL _OSC features, do the
+> minimal enabling to use CXL _OSC to handle the base PCIe feature
+> negotiation. Recall that CXL _OSC is a super-set of PCIe _OSC and the
+> CXL 2.0 specification mandates: "If a CXL Host Bridge device exposes CXL
+> _OSC, CXL aware OSPM shall evaluate CXL _OSC and not evaluate PCIe
+> _OSC."
 >
-> ExampleS:
-> -cxl-fixed-memory-window targets.0=cxl.0,size=128G
-> -cxl-fixed-memory-window targets.0=cxl.1,size=128G
-> -cxl-fixed-memory-window targets.0=cxl0,targets.1=cxl.1,size=256G,interleave-granularity=2k
+> Rather than pass a boolean flag alongside @root to all the helper
+> functions that need to consider PCIe specifics, add is_pcie() and
+> is_cxl() helper functions to check the flavor of @root. This also
+> allows for dynamic fallback to PCIe _OSC in cases where an attempt to
+> use CXL _OXC fails. This can happen on CXL 1.1 platforms that publish
+> ACPI0016 devices to indicate CXL host bridges, but do not publish the
+> optional CXL _OSC method. CXL _OSC is mandatory for CXL 2.0 hosts.
 >
-> Specifies
-> * 2x 128G regions not interleaved across root bridges, one for each of
->   the root bridges with ids cxl.0 and cxl.1
-> * 256G region interleaved across root bridges with ids cxl.0 and cxl.1
-> with a 2k interleave granularity.
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Robert Moore <robert.moore@intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+> ---
+>  include/linux/acpi.h    |  4 +++
+>  include/acpi/acpi_bus.h |  6 ++++
+>  drivers/acpi/pci_root.c | 70 ++++++++++++++++++++++++++++++++---------
+>  3 files changed, 65 insertions(+), 15 deletions(-)
 >
-> When system software enumerates the devices below a given root bridge
-> it can then decide which CFMW to use. If non interleave is desired
-> (or possible) it can use the appropriate CFMW for the root bridge in
-> question.  If there are suitable devices to interleave across the
-> two root bridges then it may use the 3rd CFMS.
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index ff4d1fdd9009..fc40da914315 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -550,6 +550,10 @@ struct acpi_osc_context {
 >
-> A number of other designs were considered but the following constraints
-> made it hard to adapt existing QEMU approaches to this particular problem.
-> 1) The size must be known before a specific architecture / board brings
->    up it's PA memory map.  We need to set up an appropriate region.
-> 2) Using links to the host bridges provides a clean command line interface
->    but these links cannot be established until command line devices have
->    been added.
+>  acpi_status acpi_run_osc(acpi_handle handle, struct acpi_osc_context *context);
 >
-> Hence the two step process used here of first establishing the size,
-> interleave-ways and granularity + caching the ids of the host bridges
-> and then, once available finding the actual host bridges so they can
-> be used later to support interleave decoding.
+> +/* Number of _OSC capability DWORDS depends on bridge type */
+> +#define OSC_PCI_CAPABILITY_DWORDS              3
+> +#define OSC_CXL_CAPABILITY_DWORDS              5
+> +
+>  /* Indexes into _OSC Capabilities Buffer (DWORDs 2 & 3 are device-specific) */
+>  #define OSC_QUERY_DWORD                                0       /* DWORD 1 */
+>  #define OSC_SUPPORT_DWORD                      1       /* DWORD 2 */
+> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+> index ca88c4706f2b..9413d2389711 100644
+> --- a/include/acpi/acpi_bus.h
+> +++ b/include/acpi/acpi_bus.h
+> @@ -581,10 +581,16 @@ int unregister_acpi_bus_type(struct acpi_bus_type *);
+>  int acpi_bind_one(struct device *dev, struct acpi_device *adev);
+>  int acpi_unbind_one(struct device *dev);
 >
-> [1] CXL 2.0 ECN: CEDT CFMWS & QTG DSM (computeexpresslink.org / specifications)
+> +enum acpi_bridge_type {
+> +       ACPI_BRIDGE_TYPE_PCIE = 1,
+> +       ACPI_BRIDGE_TYPE_CXL,
+> +};
+> +
+>  struct acpi_pci_root {
+>         struct acpi_device * device;
+>         struct pci_bus *bus;
+>         u16 segment;
+> +       int bridge_type;
+>         struct resource secondary;      /* downstream bus range */
 >
-> Signed-off-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+>         u32 osc_support_set;    /* _OSC state of support bits */
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index 40a74ff3fa02..5d33bc61fe44 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -170,20 +170,45 @@ static void decode_osc_control(struct acpi_pci_root *root, char *msg, u32 word)
+>                         ARRAY_SIZE(pci_osc_control_bit));
+>  }
+>
+> -static u8 pci_osc_uuid_str[] = "33DB4D5B-1FF7-401C-9657-7441C03DD766";
+> +static inline bool is_pcie(struct acpi_pci_root *root)
+> +{
+> +       return root->bridge_type == ACPI_BRIDGE_TYPE_PCIE;
+> +}
+>
+> -static acpi_status acpi_pci_run_osc(acpi_handle handle,
+> +static inline bool is_cxl(struct acpi_pci_root *root)
+> +{
+> +       return root->bridge_type == ACPI_BRIDGE_TYPE_CXL;
+> +}
+> +
+> +static u8 pci_osc_uuid_str[] = "33DB4D5B-1FF7-401C-9657-7441C03DD766";
+> +static u8 cxl_osc_uuid_str[] = "68F2D50B-C469-4d8A-BD3D-941A103FD3FC";
+> +
+> +static char *to_uuid(struct acpi_pci_root *root)
+> +{
+> +       if (is_cxl(root))
+> +               return cxl_osc_uuid_str;
+> +       return pci_osc_uuid_str;
+> +}
+> +
+> +static int cap_length(struct acpi_pci_root *root)
+> +{
+> +       if (is_cxl(root))
+> +               return sizeof(u32) * OSC_CXL_CAPABILITY_DWORDS;
+> +       return sizeof(u32) * OSC_PCI_CAPABILITY_DWORDS;
+> +}
+> +
+> +static acpi_status acpi_pci_run_osc(struct acpi_pci_root *root,
+>                                     const u32 *capbuf, u32 *retval)
+>  {
+>         struct acpi_osc_context context = {
+> -               .uuid_str = pci_osc_uuid_str,
+> +               .uuid_str = to_uuid(root),
+>                 .rev = 1,
+> -               .cap.length = 12,
+> +               .cap.length = cap_length(root),
+>                 .cap.pointer = (void *)capbuf,
+>         };
+>         acpi_status status;
+>
+> -       status = acpi_run_osc(handle, &context);
+> +       status = acpi_run_osc(root->device->handle, &context);
+>         if (ACPI_SUCCESS(status)) {
+>                 *retval = acpi_osc_ctx_get_pci_control(&context);
+>                 kfree(context.ret.pointer);
+> @@ -196,7 +221,7 @@ static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root,
+>                                         u32 *control)
+>  {
+>         acpi_status status;
+> -       u32 result, capbuf[3];
+> +       u32 result, capbuf[OSC_CXL_CAPABILITY_DWORDS];
+>
+>         support |= root->osc_support_set;
+>
+> @@ -204,10 +229,18 @@ static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root,
+>         capbuf[OSC_SUPPORT_DWORD] = support;
+>         capbuf[OSC_CONTROL_DWORD] = *control | root->osc_control_set;
+>
+> -       status = acpi_pci_run_osc(root->device->handle, capbuf, &result);
+> +retry:
+> +       status = acpi_pci_run_osc(root, capbuf, &result);
+>         if (ACPI_SUCCESS(status)) {
+>                 root->osc_support_set = support;
+>                 *control = result;
+> +       } else if (is_cxl(root)) {
+> +               /*
+> +                * CXL _OSC is optional on CXL 1.1 hosts. Fall back to PCIe _OSC
+> +                * upon any failure using CXL _OSC.
+> +                */
+> +               root->bridge_type = ACPI_BRIDGE_TYPE_PCIE;
+> +               goto retry;
+>         }
+>         return status;
+>  }
+> @@ -338,7 +371,7 @@ static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 s
+>         u32 req = OSC_PCI_EXPRESS_CAPABILITY_CONTROL;
+>         struct acpi_pci_root *root;
+>         acpi_status status;
+> -       u32 ctrl, capbuf[3];
+> +       u32 ctrl, capbuf[OSC_CXL_CAPABILITY_DWORDS];
+>
+>         if (!mask)
+>                 return AE_BAD_PARAMETER;
+> @@ -375,7 +408,7 @@ static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 s
+>         capbuf[OSC_QUERY_DWORD] = 0;
+>         capbuf[OSC_SUPPORT_DWORD] = root->osc_support_set;
+>         capbuf[OSC_CONTROL_DWORD] = ctrl;
+> -       status = acpi_pci_run_osc(handle, capbuf, mask);
+> +       status = acpi_pci_run_osc(root, capbuf, mask);
+>         if (ACPI_FAILURE(status))
+>                 return status;
+>
+> @@ -454,8 +487,7 @@ static bool os_control_query_checks(struct acpi_pci_root *root, u32 support)
+>         return true;
+>  }
+>
+> -static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+> -                                bool is_pcie)
+> +static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm)
+>  {
+>         u32 support, control = 0, requested = 0;
+>         acpi_status status;
+> @@ -506,7 +538,7 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>                 *no_aspm = 1;
+>
+>                 /* _OSC is optional for PCI host bridges */
+> -               if ((status == AE_NOT_FOUND) && !is_pcie)
+> +               if (status == AE_NOT_FOUND && !is_pcie(root))
+>                         return;
+>
+>                 if (control) {
+> @@ -529,7 +561,7 @@ static int acpi_pci_root_add(struct acpi_device *device,
+>         acpi_handle handle = device->handle;
+>         int no_aspm = 0;
+>         bool hotadd = system_state == SYSTEM_RUNNING;
+> -       bool is_pcie;
+> +       const char *acpi_hid;
+>
+>         root = kzalloc(sizeof(struct acpi_pci_root), GFP_KERNEL);
+>         if (!root)
+> @@ -587,8 +619,16 @@ static int acpi_pci_root_add(struct acpi_device *device,
+>
+>         root->mcfg_addr = acpi_pci_root_get_mcfg_addr(handle);
+>
+> -       is_pcie = strcmp(acpi_device_hid(device), "PNP0A08") == 0;
+> -       negotiate_os_control(root, &no_aspm, is_pcie);
+> +       acpi_hid = acpi_device_hid(root->device);
+> +       if (strcmp(acpi_hid, "PNP0A08") == 0)
+> +               root->bridge_type = ACPI_BRIDGE_TYPE_PCIE;
+> +       else if (strcmp(acpi_hid, "ACPI0016") == 0)
+> +               root->bridge_type = ACPI_BRIDGE_TYPE_CXL;
+> +       else
+> +               dev_warn(&device->dev, "unknown bridge type with hid: %s\n",
+> +                        acpi_hid);
 
-QAPI schema
-Acked-by: Markus Armbruster <armbru@redhat.com>
+Second, because "device" is an ACPI device object and it has a _HID,
+its name should include the ID in this case, so including it into the
+message once more is redundant.
 
+Also, if this is neither PCIe nor CXL, it should be a "legacy" PCI
+host bridge and that is not an error, so maybe use dev_dbg("Assuming
+non-PCIe host bridge\n")?
+
+> +
+> +       negotiate_os_control(root, &no_aspm);
+>
+>         /*
+>          * TBD: Need PCI interface for enumeration/configuration of roots.
+> --
