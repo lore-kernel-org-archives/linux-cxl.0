@@ -2,465 +2,230 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED77C433EF
-	for <linux-cxl@archiver.kernel.org>; Tue,  5 Apr 2022 22:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 935D5C4332F
+	for <linux-cxl@archiver.kernel.org>; Tue,  5 Apr 2022 22:10:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244694AbiDEWMV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 5 Apr 2022 18:12:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59722 "EHLO
+        id S232753AbiDEWMd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 5 Apr 2022 18:12:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1443854AbiDEPkX (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Apr 2022 11:40:23 -0400
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3442210E55E;
-        Tue,  5 Apr 2022 07:00:53 -0700 (PDT)
-Received: by mail-yb1-f174.google.com with SMTP id o62so8457318ybo.2;
-        Tue, 05 Apr 2022 07:00:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yiir21C1PlzdK+gf2MIb+hCEldfraLm9hTeR5KlUN+4=;
-        b=NzANIfLIVz7ltwMgi8k3ZB0ugaRxbITILpThWNCl23s4b27zHSKFm2TaT7yyeO/WiF
-         Fu/LRTudqKoHf6c9DZr60QiLk7n6/W/JdLCZWVuvVoUXFu4RhcvLCo9RH4gMt1devjNg
-         /cEstKdmjkBY27sITUXdE/xPxobS5DEzhlEZt/sn/lSwArPhnCByEfFCAxfRuP2rSxOl
-         T/ha5KGp7yzrqRHjVPWArtskS1OBQlE1b9oIx3Dq4aL/tNcZPnAny148ftuV8S0IVERV
-         WQ58a0kMP96FBecJHOIv+c00DeIkVOauS+9zxMHfBWMg/A9Sv6UMEKy7EaAkf34Tf+5n
-         M+Hw==
-X-Gm-Message-State: AOAM533CzvXfSP+QdSABEpjbGVmPeMYxmvihDmKz2CT6R90w02cjweOa
-        hM8fhquQfbzSuw0Vt4otU6fEiycOXlwGmYICGa1UGVEfvkk=
-X-Google-Smtp-Source: ABdhPJy8dUEmBTbLgJoNptgzgnB9nwMf+ms4NcDmsfJbCx94xZIiFReLi2bmjNBTfGTCDmWvXuTiVHCIqbmTrIMLvX8=
-X-Received: by 2002:a25:9d8a:0:b0:633:9668:c48a with SMTP id
- v10-20020a259d8a000000b006339668c48amr2734365ybp.153.1649167252094; Tue, 05
- Apr 2022 07:00:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220331202022.1823174-1-vishal.l.verma@intel.com> <20220331202022.1823174-4-vishal.l.verma@intel.com>
-In-Reply-To: <20220331202022.1823174-4-vishal.l.verma@intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 5 Apr 2022 16:00:40 +0200
-Message-ID: <CAJZ5v0haSXXDXaJdWEqpwS=b8r2HQzffKCoVpeDbxY9No5QXfw@mail.gmail.com>
+        with ESMTP id S1457512AbiDEQDT (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Apr 2022 12:03:19 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4E3E183B7;
+        Tue,  5 Apr 2022 08:56:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649174168; x=1680710168;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=BFspJGd9CB7+JJZIYrDM6mFb4mn/cTxRCjTekp+BIcA=;
+  b=ZuQ5Mh4sfYagMyZ+GvSvE1gtyBhYQHVjfk+t/DPsrlnM+aAZ1/XwEPn5
+   v4y7fr6kLuNRzppZ7ojBGcL5F3wRkJaxBYL7ywBZ0XHTXLYM6zZRqt0B/
+   jJZsztt8dHJk91orDvhHGQXVvhzleu9vZv2ybFKfX3Nh2THCEQAf15gW4
+   4MTtX7jCneiolUN4vEZiS76rdhWrSvIMNmrK58BRZ9OIN/7euLx4j8FCL
+   J+8WzwwJNa4uGCmtNPb/4aEywmJksZjm2nyW2KQbcuwnJE8u1yxy0z4L/
+   ozxwM3uzieLq6o/HhYRE60TOcpLRpirRbirlnxxLxgi5JQbakbxBy+g3E
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10308"; a="248302174"
+X-IronPort-AV: E=Sophos;i="5.90,236,1643702400"; 
+   d="scan'208";a="248302174"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2022 08:55:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,236,1643702400"; 
+   d="scan'208";a="641662923"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by FMSMGA003.fm.intel.com with ESMTP; 05 Apr 2022 08:55:50 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Tue, 5 Apr 2022 08:55:50 -0700
+Received: from orsmsx604.amr.corp.intel.com (10.22.229.17) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Tue, 5 Apr 2022 08:55:49 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27 via Frontend Transport; Tue, 5 Apr 2022 08:55:49 -0700
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.46) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2308.27; Tue, 5 Apr 2022 08:55:49 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l1VBf1Q9SwUT+YYW2aRMMouIenB3RGtbaJY4JDv1ZFX3p1DPayniGRfvYS43YdNBo8vR2ytfEVa66wvrHOnGhWRFP3Rrz7UDaqsWw3ZcqDKfHDw00SPH6kRo/r9YbOt3v4Z/NmIxOxV2j3h2fK9MD4482fHbuJBxLdSocnzuykqt2bUctFlSmrWIHErQkzcGJlUgHXQ42ojPKODefIUMJKWiD4gHdF9B+VwG7CdVlktOaOEhDxTPjYQs33qL9hQxvONTcFjpd5y6oNHsuEt2zC63Apoemom3bJD2NaPGBMHrltVAYsZfju1ASEMtMpLheIUzoyo+xwguq/JFQO4MeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BFspJGd9CB7+JJZIYrDM6mFb4mn/cTxRCjTekp+BIcA=;
+ b=oS9sUCI8IFmzmRWA81eeRxIprABvEzExYWK9QG0lTmJqenDKIRVSOKX6uMWKGY0Wcs9X2/togKcvhpueJPYOMmmxf9bHm4jnqNISLHkQdCecffI6w1roq2j/3zgihiO9yWm1XA/7V9Hemmc9Ppj/EUDj4sKkB9bdqQvwBSNuCe2ydPNzNNjGYv2SZc/WE7PEtqonXoKrLiBcCSRQ7Iqeuab4+szWgdXeOvquuU1SFm7HfHti+8ZMOOW82PIX+zpza1PMFwyy4XFOmciqOGY44IILfIiw6BWff0r96Iigy7HSxIjb4QtAyBwpXuPqox4v62V6MFf6/Odm+vGwNNBvzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MN2PR11MB3999.namprd11.prod.outlook.com (2603:10b6:208:154::32)
+ by BN7PR11MB2801.namprd11.prod.outlook.com (2603:10b6:406:b4::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5123.31; Tue, 5 Apr
+ 2022 15:55:47 +0000
+Received: from MN2PR11MB3999.namprd11.prod.outlook.com
+ ([fe80::41a:5dd4:f4b3:33cb]) by MN2PR11MB3999.namprd11.prod.outlook.com
+ ([fe80::41a:5dd4:f4b3:33cb%7]) with mapi id 15.20.5123.031; Tue, 5 Apr 2022
+ 15:55:47 +0000
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "rafael@kernel.org" <rafael@kernel.org>
+CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "Moore, Robert" <robert.moore@intel.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "dave@stgolabs.net" <dave@stgolabs.net>
 Subject: Re: [PATCH v4 3/3] PCI/ACPI: negotiate CXL _OSC
-To:     Vishal Verma <vishal.l.verma@intel.com>
-Cc:     linux-cxl@vger.kernel.org,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Thread-Topic: [PATCH v4 3/3] PCI/ACPI: negotiate CXL _OSC
+Thread-Index: AQHYRTzX1ng5YjcXVUWchGA2uAQ65KzhYJcAgAAgKAA=
+Date:   Tue, 5 Apr 2022 15:55:47 +0000
+Message-ID: <f7ee304bacd05e2407bc98138efdd7f291c0aad3.camel@intel.com>
+References: <20220331202022.1823174-1-vishal.l.verma@intel.com>
+         <20220331202022.1823174-4-vishal.l.verma@intel.com>
+         <CAJZ5v0haSXXDXaJdWEqpwS=b8r2HQzffKCoVpeDbxY9No5QXfw@mail.gmail.com>
+In-Reply-To: <CAJZ5v0haSXXDXaJdWEqpwS=b8r2HQzffKCoVpeDbxY9No5QXfw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.42.4 (3.42.4-1.fc35) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9a47813f-fcda-4a45-eb46-08da171cbfeb
+x-ms-traffictypediagnostic: BN7PR11MB2801:EE_
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
+x-microsoft-antispam-prvs: <BN7PR11MB2801F3CE65802FCB6A8B254FC7E49@BN7PR11MB2801.namprd11.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kvPTFzumfNsU7AIIWEQIKA5Fe+4y+52bBUqkIV3WETpNYGZxGOYx98qCJqWDyqHT0A0qv33Z9w8nJucnBkOp64MSrcDLln+SXkcFxMRBo8fRMkjIj1hFFYxumf9Tf6uiVSBnQpJdTeymuT6eWoVoG3ydYxuwxfnWiJUNzWYQoc++NSYrCbMee3tECS4jNqIus30geri6VqBJtRnpsXvbZE+QBzin5zczb+EJLX52G/qwOJp/llerlRIOqMDoYYcR3Wloz3Wupi1I/Hb2BETOptJGVn76kNJ3DMYSi8hFDRh4nYM8u88w+LEH8CA7XP5bWEAnWO9eNMCOvZ48d2nLxnnZirTtsdtrT8eVH2NLq5qofPNOyPPK/9i21Pry5kG+7APEc1eyPnAz9awromX3oI97xFvfDB5/A5vfbNMa03QVusEg9TR6ppOUePNU+E5zhs7KzaxsUzfzoNitP7jU0iYdPDsqIhgwqTND8khZxm3NtmcrUuC42i0QvswLRQrAmMv4ze8QLR3+k2fP5/Wia07Nr2r8/zsW63EdmapjkfKbAzhJVcRrwtZ7ZvmPmLSVEXXXyafeA9nhdNJubH8bDqawuYrvJhwX1cq7dOYIOEwZ1Kgi2tcRINwDpRaQBxoVHBY5T2e8NSSQQCa229jda2Ou8Qbz/ZrZVGm4J5hIb/MZ5kGXc6Bt3pFNPnTZU6XezQ6U3sPDjY82nYK9B7rlUwUd/JOVTBND18WDBb17MhNSA1y836DuBclTARQ6As+lKXqkh2FQBM7fimtk2Dgo3m6eFwnmm7GKJGXTcBmlaAM=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB3999.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(6486002)(76116006)(53546011)(38070700005)(66556008)(66476007)(66446008)(64756008)(91956017)(8676002)(66946007)(966005)(508600001)(6506007)(83380400001)(71200400001)(4326008)(38100700002)(6916009)(54906003)(2906002)(5660300002)(86362001)(8936002)(2616005)(36756003)(122000001)(82960400001)(186003)(316002)(26005)(6512007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?SlNvMDM5VGU1amZ4aEJCME9POTN4a3o5OUovcklNNStmaGswYW44bVFkbkZV?=
+ =?utf-8?B?QTc1dmUydDFCQTc4U2xsY2UrOFgyZGtkMS9OUEdGblQ2OHJCRkwzRXU0SXVB?=
+ =?utf-8?B?eWxBQ2hDbGU2SCt4NjMvSUZXRlk0Y25JblRnUEw3RGordFFBbW9KSW5HSzRP?=
+ =?utf-8?B?Nm1wUE1Xc2t4UTIvUGJ3SlA3RUNQT3h2YmNWb0szYk9zQWMvZDZxd2c1T25i?=
+ =?utf-8?B?UUp2V1E5bnFrdUZ3WFhNVVo0Umx0UVZzZW84QzlVTXZIOWpIbnBzeHI4ZmFG?=
+ =?utf-8?B?aWtocmtIMFFGQzBaY1JsbWlhZHZxN0FReTRDcGE4eGhWUDkxTnBvc3BSVU9B?=
+ =?utf-8?B?eEF1RUFhZGZIaG9EYWxJdXg2Sk5JeWJtRGpWL0dMTVhtVE9RWEVQc1BYeUt0?=
+ =?utf-8?B?K29NUlkzOC9qWVg4Y0F3V3ZQMUppa05TOUZubE9JT2RSSTBKalVIa2xpYlBq?=
+ =?utf-8?B?cUY4d2g3WmRiSE5KN1phNFBCVGU0R3M2Y0ZqMUNod1IreUFjRDhQWTA5dHZY?=
+ =?utf-8?B?M21iWWZoc0pHYWk1c2F6M3NNbkZoQkYrMGNGdFZzUVNTcjdxMHpOeTl2TUtM?=
+ =?utf-8?B?eHFEdFI3all1dnpPS0FWTFRRcHVEemJuVVdKQWxsSy9EVE9MV3YyTkVwNmgx?=
+ =?utf-8?B?bW10VkpYWnJsUnRUYjNFMVZZb0I2N0MxVTBTQUhyM3pPUFZLYXl1UnVyQ0xy?=
+ =?utf-8?B?azBNREp5WVVjcWovRE9lcStyT1BxRVVtZlFURXE0THBMekdKc3owYk8zRmtZ?=
+ =?utf-8?B?VEkyejUxZmg0N2tqelJaSGRhTFJDM0hOQUhKbGE2RFNDS1BSUVpQcTBoNlcy?=
+ =?utf-8?B?eGI2blJzeHU4S1hZOGhjSytLYy9Kem92d0Y2clJ1dFh1bVpiL0k4ejFyeElI?=
+ =?utf-8?B?VStMZzZSd1BUbWpNaFN5bkdhSTJhOWcrK2FaVVY1UGZWVU1XOXVnM3FEUXg5?=
+ =?utf-8?B?M0dyN2tITlp5eVJzUCtCUUJ1WUlpeS9QWm9aSDJkZXlzT3RqSitaeGdaZEo1?=
+ =?utf-8?B?ZW1jK1V0b3JGclEwb2JlL0Noc3dSTHFvMldJWlE5SkdvQVpqQnBJQVVMcUlx?=
+ =?utf-8?B?MGQrZmVuRDZCSTlHVXdobG9RMW85R0Q1aDZCVW8zdWhOeFhVbTZWSG5tdkdk?=
+ =?utf-8?B?aU1KMytDZHJKNk1FM1NxTUpiYXFiUytSUkVpMzVFbDJTYlRUckRHaHl6T3hh?=
+ =?utf-8?B?TnRPa0V1ckxYNGhOczdkcEFNQ2ZuU1lVc3pPcGoyUVd2cUpXU3JBQTRqSXlh?=
+ =?utf-8?B?VS92SjJaUy8yTWdzZmJnWW0vbS9sdy9yZkx3TDBVa3o3SS9PaFRkNFhDVFVU?=
+ =?utf-8?B?U0oxTjQ1YTRwZGdLanppZXhZaTdEU0RERWx0a24zUU1vdXc2MnU4V0d0ZFdI?=
+ =?utf-8?B?dllnbWJyMHdIS2pWZXdFZlNnNTVkYVBlTk1CbUlCZTQ4S0pZWVFndmloZDEx?=
+ =?utf-8?B?UncvUFBRUEprOUJHcFM2bk9ETE1mdTNQL2xWWlpTL0szSVNUY0QzaExMbmdF?=
+ =?utf-8?B?TzdmUUtYQy93R2RtWXlnM2ZXT2F6OXIxMDh3OXpNRmwzVHVVc0oxdUQ0Q05N?=
+ =?utf-8?B?dEFkV2FtbW5NeExkd3hYZ0k0QkpXdjI3K01GYkZtTGZWZVVscmZQTEVlU0JI?=
+ =?utf-8?B?QURNSDBqOXJkMUN0U2dKakdpcGZBa2xLSmIyUlAzNHF4K25XVFc0RCtxWFBI?=
+ =?utf-8?B?NlNaQkx2WmVUQk0zZXVrMDA5QkdGUnZ1dWFsc3czcHpOeCtOa3BIVUlpcXQw?=
+ =?utf-8?B?ajRiWC83ZWZwbi9INjR0azNZTUJQUjQ0VXNWOGZvLzNsU2w5UEZjNFJEN2dx?=
+ =?utf-8?B?UmU0VVowVXdLc0d0MGE4cTZuK05WSFg5eGlsQ0NoSzlzTkkyeWtqVGwrVHho?=
+ =?utf-8?B?d2xnd0R0QlJCRnNyaTBrdVo0OGNkUkpMRUlJMy9XT1Q4OE9vSzlCYStLUXIv?=
+ =?utf-8?B?TnpScHAwM2Nka1BPUEFES2lSZy8zbjdrV2RWUy83NnEyem9yTDFDOGt0azR2?=
+ =?utf-8?B?a0tIUk5kR24xcGwxT1NBaW1HcmJ0cU1hSmxIRzRBUFRZaVZYeEh2MHNLS29Z?=
+ =?utf-8?B?djQwN3pZY3pZbFQwUkhMRVZ2VThUOURDZ3VzcGFBK2lqNDE0SnlXT05SRkcw?=
+ =?utf-8?B?a1lDZUlUNXRyQmZiR3J3UVFiZENFZHJDajVBKzBscVRsMFVrZVk0cmk2NERH?=
+ =?utf-8?B?aWVTL2dsMmoxdXNqeStVMFZxOE5vWERaZFl1b1BkRWpnODBKdjBVR2FrdzB1?=
+ =?utf-8?B?Z01iZEJSS2ZLQVd1NjJlMWhNdnp3bHptZVNBRzlzc25DY3BPL3JGeWVCQzJp?=
+ =?utf-8?B?QzJaRzFubzBBeDBJVit6SHp2UnBHVEUrbC9HOTJaVkwxbE94aHhpcmpKOFNR?=
+ =?utf-8?Q?eUYkwG88GM0r3wUkWf5e29iist4HgsYqEmRcp?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E63A46D15384EF42B1B6D6155839FEAA@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR11MB3999.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a47813f-fcda-4a45-eb46-08da171cbfeb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Apr 2022 15:55:47.1529
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: As05NJRW32/GWhcjlE6xAw2FDies5WhNwhjbINIpN1+vjR/I5V0pbIgnVKpKTEnRBD4mB0WJRBosUPNYTqyb3Ilaqb2eEk1GdAQNwEUQ4eI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR11MB2801
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Mar 31, 2022 at 10:20 PM Vishal Verma <vishal.l.verma@intel.com> wrote:
->
-> Add full support for negotiating _OSC as defined in the CXL 2.0 spec, as
-> applicable to CXL-enabled platforms. Advertise support for the CXL
-> features we support - 'CXL 2.0 port/device register access', 'Protocol
-> Error Reporting', and 'CXL Native Hot Plug'. Request control for 'CXL
-> Memory Error Reporting'. The requests are dependent on CONFIG_* based
-> prerequisites, and prior PCI enabling, similar to how the standard PCI
-> _OSC bits are determined.
->
-> The CXL specification does not define any additional constraints on
-> the hotplug flow beyond PCIe native hotplug, so a kernel that supports
-> native PCIe hotplug, supports CXL hotplug. For error handling protocol
-> and link errors just use PCIe AER. There is nascent support for
-> amending AER events with CXL specific status [1], but there's
-> otherwise no additional OS responsibility for CXL errors beyond PCIe
-> AER. CXL Memory Errors behave the same as typical memory errors so
-> CONFIG_MEMORY_FAILURE is sufficient to indicate support to platform
-> firmware.
->
-> [1]: https://lore.kernel.org/linux-cxl/164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com/
->
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Robert Moore <robert.moore@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-> ---
->  include/linux/acpi.h    |  28 +++++++-
->  include/acpi/acpi_bus.h |   6 +-
->  drivers/acpi/pci_root.c | 145 ++++++++++++++++++++++++++++++++++------
->  3 files changed, 157 insertions(+), 22 deletions(-)
->
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index fc40da914315..cf360b9642d9 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -554,10 +554,15 @@ acpi_status acpi_run_osc(acpi_handle handle, struct acpi_osc_context *context);
->  #define OSC_PCI_CAPABILITY_DWORDS              3
->  #define OSC_CXL_CAPABILITY_DWORDS              5
->
-> -/* Indexes into _OSC Capabilities Buffer (DWORDs 2 & 3 are device-specific) */
-> +/*
-> + * Indexes into _OSC Capabilities Buffer
-> + * DWORDs 2 & 3 are device-specific, and 4 & 5 are specific to CXL platforms
-
-Say "DWORDs 2 through 5 are device-specific" and you don't need to
-mention CXL here.
-
-> + */
->  #define OSC_QUERY_DWORD                                0       /* DWORD 1 */
->  #define OSC_SUPPORT_DWORD                      1       /* DWORD 2 */
->  #define OSC_CONTROL_DWORD                      2       /* DWORD 3 */
-> +#define OSC_CXL_SUPPORT_DWORD                  3       /* DWORD 4 */
-> +#define OSC_CXL_CONTROL_DWORD                  4       /* DWORD 5 */
-
-I would rename the last two symbols as OSC_EXT_SUPPORT_DWORD and
-OSC_EXT_CONTROL_DWORD (see below for an explanation).
-
->
->  /* _OSC Capabilities DWORD 1: Query/Control and Error Returns (generic) */
->  #define OSC_QUERY_ENABLE                       0x00000001  /* input */
-> @@ -611,6 +616,15 @@ extern u32 osc_sb_native_usb4_control;
->  #define OSC_PCI_EXPRESS_LTR_CONTROL            0x00000020
->  #define OSC_PCI_EXPRESS_DPC_CONTROL            0x00000080
->
-> +/* CXL _OSC: Capabilities DWORD 4: Support Field */
-> +#define OSC_CXL_1_1_PORT_REG_ACCESS_SUPPORT    0x00000001
-> +#define OSC_CXL_2_0_PORT_DEV_REG_ACCESS_SUPPORT        0x00000002
-> +#define OSC_CXL_PROTOCOL_ERR_REPORTING_SUPPORT 0x00000004
-> +#define OSC_CXL_NATIVE_HP_SUPPORT              0x00000008
-> +
-> +/* CXL _OSC: Capabilities DWORD 5: Control Field */
-> +#define OSC_CXL_ERROR_REPORTING_CONTROL                0x00000001
-> +
->  static inline u32 acpi_osc_ctx_get_pci_control(struct acpi_osc_context *context)
->  {
->         u32 *ret = context->ret.pointer;
-> @@ -618,6 +632,13 @@ static inline u32 acpi_osc_ctx_get_pci_control(struct acpi_osc_context *context)
->         return ret[OSC_CONTROL_DWORD];
->  }
->
-> +static inline u32 acpi_osc_ctx_get_cxl_control(struct acpi_osc_context *context)
-> +{
-> +       u32 *ret = context->ret.pointer;
-> +
-> +       return ret[OSC_CXL_CONTROL_DWORD];
-> +}
-> +
->  #define ACPI_GSB_ACCESS_ATTRIB_QUICK           0x00000002
->  #define ACPI_GSB_ACCESS_ATTRIB_SEND_RCV         0x00000004
->  #define ACPI_GSB_ACCESS_ATTRIB_BYTE            0x00000006
-> @@ -1020,6 +1041,11 @@ static inline u32 acpi_osc_ctx_get_pci_control(struct acpi_osc_context *context)
->         return 0;
->  }
->
-> +static inline u32 acpi_osc_ctx_get_cxl_control(struct acpi_osc_context *context)
-> +{
-> +       return 0;
-> +}
-> +
->  #endif /* !CONFIG_ACPI */
->
->  #ifdef CONFIG_ACPI_HOTPLUG_IOAPIC
-> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-> index 9413d2389711..0fdd913c1fd7 100644
-> --- a/include/acpi/acpi_bus.h
-> +++ b/include/acpi/acpi_bus.h
-> @@ -593,8 +593,10 @@ struct acpi_pci_root {
->         int bridge_type;
->         struct resource secondary;      /* downstream bus range */
->
-> -       u32 osc_support_set;    /* _OSC state of support bits */
-> -       u32 osc_control_set;    /* _OSC state of control bits */
-> +       u32 osc_support_set;            /* _OSC state of support bits */
-> +       u32 osc_control_set;            /* _OSC state of control bits */
-> +       u32 cxl_osc_support_set;        /* _OSC state of CXL support bits */
-> +       u32 cxl_osc_control_set;        /* _OSC state of CXL control bits */
-
-Well, could these two be renamed to osc_ext_support_set and
-osc_ext_controle_set ("ext" for "extended"), respectively?
-
-At the acpi_bus.h level, CXL is irrelevant and expecting all of the
-prospective readers of it to find out what CXL means seems a bit
-excessive.
-
-Otherwise, the changes in this patch look reasonable to me.
-
->         phys_addr_t mcfg_addr;
->  };
->
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index 5d33bc61fe44..a2e74db28e30 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -142,6 +142,17 @@ static struct pci_osc_bit_struct pci_osc_control_bit[] = {
->         { OSC_PCI_EXPRESS_DPC_CONTROL, "DPC" },
->  };
->
-> +static struct pci_osc_bit_struct cxl_osc_support_bit[] = {
-> +       { OSC_CXL_1_1_PORT_REG_ACCESS_SUPPORT, "CXL11PortRegAccess" },
-> +       { OSC_CXL_2_0_PORT_DEV_REG_ACCESS_SUPPORT, "CXL20PortDevRegAccess" },
-> +       { OSC_CXL_PROTOCOL_ERR_REPORTING_SUPPORT, "CXLProtocolErrorReporting" },
-> +       { OSC_CXL_NATIVE_HP_SUPPORT, "CXLNativeHotPlug" },
-> +};
-> +
-> +static struct pci_osc_bit_struct cxl_osc_control_bit[] = {
-> +       { OSC_CXL_ERROR_REPORTING_CONTROL, "CXLMemErrorReporting" },
-> +};
-> +
->  static void decode_osc_bits(struct acpi_pci_root *root, char *msg, u32 word,
->                             struct pci_osc_bit_struct *table, int size)
->  {
-> @@ -170,6 +181,18 @@ static void decode_osc_control(struct acpi_pci_root *root, char *msg, u32 word)
->                         ARRAY_SIZE(pci_osc_control_bit));
->  }
->
-> +static void decode_cxl_osc_support(struct acpi_pci_root *root, char *msg, u32 word)
-> +{
-> +       decode_osc_bits(root, msg, word, cxl_osc_support_bit,
-> +                       ARRAY_SIZE(cxl_osc_support_bit));
-> +}
-> +
-> +static void decode_cxl_osc_control(struct acpi_pci_root *root, char *msg, u32 word)
-> +{
-> +       decode_osc_bits(root, msg, word, cxl_osc_control_bit,
-> +                       ARRAY_SIZE(cxl_osc_control_bit));
-> +}
-> +
->  static inline bool is_pcie(struct acpi_pci_root *root)
->  {
->         return root->bridge_type == ACPI_BRIDGE_TYPE_PCIE;
-> @@ -198,7 +221,8 @@ static int cap_length(struct acpi_pci_root *root)
->  }
->
->  static acpi_status acpi_pci_run_osc(struct acpi_pci_root *root,
-> -                                   const u32 *capbuf, u32 *retval)
-> +                                   const u32 *capbuf, u32 *pci_control,
-> +                                   u32 *cxl_control)
->  {
->         struct acpi_osc_context context = {
->                 .uuid_str = to_uuid(root),
-> @@ -210,18 +234,20 @@ static acpi_status acpi_pci_run_osc(struct acpi_pci_root *root,
->
->         status = acpi_run_osc(root->device->handle, &context);
->         if (ACPI_SUCCESS(status)) {
-> -               *retval = acpi_osc_ctx_get_pci_control(&context);
-> +               *pci_control = acpi_osc_ctx_get_pci_control(&context);
-> +               if (is_cxl(root))
-> +                       *cxl_control = acpi_osc_ctx_get_cxl_control(&context);
->                 kfree(context.ret.pointer);
->         }
->         return status;
->  }
->
-> -static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root,
-> -                                       u32 support,
-> -                                       u32 *control)
-> +static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root, u32 support,
-> +                                     u32 *control, u32 cxl_support,
-> +                                     u32 *cxl_control)
->  {
->         acpi_status status;
-> -       u32 result, capbuf[OSC_CXL_CAPABILITY_DWORDS];
-> +       u32 pci_result, cxl_result, capbuf[OSC_CXL_CAPABILITY_DWORDS];
->
->         support |= root->osc_support_set;
->
-> @@ -229,11 +255,21 @@ static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root,
->         capbuf[OSC_SUPPORT_DWORD] = support;
->         capbuf[OSC_CONTROL_DWORD] = *control | root->osc_control_set;
->
-> +       if (is_cxl(root)) {
-> +               cxl_support |= root->cxl_osc_support_set;
-> +               capbuf[OSC_CXL_SUPPORT_DWORD] = cxl_support;
-> +               capbuf[OSC_CXL_CONTROL_DWORD] = *cxl_control | root->cxl_osc_control_set;
-> +       }
-> +
->  retry:
-> -       status = acpi_pci_run_osc(root, capbuf, &result);
-> +       status = acpi_pci_run_osc(root, capbuf, &pci_result, &cxl_result);
->         if (ACPI_SUCCESS(status)) {
->                 root->osc_support_set = support;
-> -               *control = result;
-> +               *control = pci_result;
-> +               if (is_cxl(root)) {
-> +                       root->cxl_osc_support_set = cxl_support;
-> +                       *cxl_control = cxl_result;
-> +               }
->         } else if (is_cxl(root)) {
->                 /*
->                  * CXL _OSC is optional on CXL 1.1 hosts. Fall back to PCIe _OSC
-> @@ -356,6 +392,8 @@ EXPORT_SYMBOL_GPL(acpi_get_pci_dev);
->   * @handle: ACPI handle of a PCI root bridge (or PCIe Root Complex).
->   * @mask: Mask of _OSC bits to request control of, place to store control mask.
->   * @support: _OSC supported capability.
-> + * @cxl_mask: Mask of CXL _OSC control bits, place to store control mask.
-> + * @cxl_support: CXL _OSC supported capability.
->   *
->   * Run _OSC query for @mask and if that is successful, compare the returned
->   * mask of control bits with @req.  If all of the @req bits are set in the
-> @@ -366,12 +404,14 @@ EXPORT_SYMBOL_GPL(acpi_get_pci_dev);
->   * _OSC bits the BIOS has granted control of, but its contents are meaningless
->   * on failure.
->   **/
-> -static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 support)
-> +static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask,
-> +                                           u32 support, u32 *cxl_mask,
-> +                                           u32 cxl_support)
->  {
->         u32 req = OSC_PCI_EXPRESS_CAPABILITY_CONTROL;
->         struct acpi_pci_root *root;
->         acpi_status status;
-> -       u32 ctrl, capbuf[OSC_CXL_CAPABILITY_DWORDS];
-> +       u32 ctrl, cxl_ctrl = 0, capbuf[OSC_CXL_CAPABILITY_DWORDS];
->
->         if (!mask)
->                 return AE_BAD_PARAMETER;
-> @@ -383,20 +423,42 @@ static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 s
->         ctrl   = *mask;
->         *mask |= root->osc_control_set;
->
-> +       if (is_cxl(root)) {
-> +               cxl_ctrl = *cxl_mask;
-> +               *cxl_mask |= root->cxl_osc_control_set;
-> +       }
-> +
->         /* Need to check the available controls bits before requesting them. */
->         do {
-> -               status = acpi_pci_query_osc(root, support, mask);
-> +               u32 pci_missing = 0, cxl_missing = 0;
-> +
-> +               status = acpi_pci_query_osc(root, support, mask, cxl_support,
-> +                                           cxl_mask);
->                 if (ACPI_FAILURE(status))
->                         return status;
-> -               if (ctrl == *mask)
-> -                       break;
-> -               decode_osc_control(root, "platform does not support",
-> -                                  ctrl & ~(*mask));
-> +               if (is_cxl(root)) {
-> +                       if (ctrl == *mask && cxl_ctrl == *cxl_mask)
-> +                               break;
-> +                       pci_missing = ctrl & ~(*mask);
-> +                       cxl_missing = cxl_ctrl & ~(*cxl_mask);
-> +               } else {
-> +                       if (ctrl == *mask)
-> +                               break;
-> +                       pci_missing = ctrl & ~(*mask);
-> +               }
-> +               if (pci_missing)
-> +                       decode_osc_control(root, "platform does not support",
-> +                                          pci_missing);
-> +               if (cxl_missing)
-> +                       decode_cxl_osc_control(root, "CXL platform does not support",
-> +                                          cxl_missing);
->                 ctrl = *mask;
-> -       } while (*mask);
-> +               cxl_ctrl = *cxl_mask;
-> +       } while (*mask || *cxl_mask);
->
->         /* No need to request _OSC if the control was already granted. */
-> -       if ((root->osc_control_set & ctrl) == ctrl)
-> +       if ((root->osc_control_set & ctrl) == ctrl &&
-> +           (root->cxl_osc_control_set & cxl_ctrl) == cxl_ctrl)
->                 return AE_OK;
->
->         if ((ctrl & req) != req) {
-> @@ -408,11 +470,17 @@ static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 s
->         capbuf[OSC_QUERY_DWORD] = 0;
->         capbuf[OSC_SUPPORT_DWORD] = root->osc_support_set;
->         capbuf[OSC_CONTROL_DWORD] = ctrl;
-> -       status = acpi_pci_run_osc(root, capbuf, mask);
-> +       if (is_cxl(root)) {
-> +               capbuf[OSC_CXL_SUPPORT_DWORD] = root->cxl_osc_support_set;
-> +               capbuf[OSC_CXL_CONTROL_DWORD] = cxl_ctrl;
-> +       }
-> +
-> +       status = acpi_pci_run_osc(root, capbuf, mask, cxl_mask);
->         if (ACPI_FAILURE(status))
->                 return status;
->
->         root->osc_control_set = *mask;
-> +       root->cxl_osc_control_set = *cxl_mask;
->         return AE_OK;
->  }
->
-> @@ -438,6 +506,19 @@ static u32 calculate_support(void)
->         return support;
->  }
->
-> +static u32 calculate_cxl_support(void)
-> +{
-> +       u32 support;
-> +
-> +       support = OSC_CXL_2_0_PORT_DEV_REG_ACCESS_SUPPORT;
-> +       if (pci_aer_available())
-> +               support |= OSC_CXL_PROTOCOL_ERR_REPORTING_SUPPORT;
-> +       if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
-> +               support |= OSC_CXL_NATIVE_HP_SUPPORT;
-> +
-> +       return support;
-> +}
-> +
->  static u32 calculate_control(void)
->  {
->         u32 control;
-> @@ -469,6 +550,16 @@ static u32 calculate_control(void)
->         return control;
->  }
->
-> +static u32 calculate_cxl_control(void)
-> +{
-> +       u32 control = 0;
-> +
-> +       if (IS_ENABLED(CONFIG_MEMORY_FAILURE))
-> +               control |= OSC_CXL_ERROR_REPORTING_CONTROL;
-> +
-> +       return control;
-> +}
-> +
->  static bool os_control_query_checks(struct acpi_pci_root *root, u32 support)
->  {
->         struct acpi_device *device = root->device;
-> @@ -490,6 +581,7 @@ static bool os_control_query_checks(struct acpi_pci_root *root, u32 support)
->  static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm)
->  {
->         u32 support, control = 0, requested = 0;
-> +       u32 cxl_support = 0, cxl_control = 0, cxl_requested = 0;
->         acpi_status status;
->         struct acpi_device *device = root->device;
->         acpi_handle handle = device->handle;
-> @@ -513,10 +605,20 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm)
->         if (os_control_query_checks(root, support))
->                 requested = control = calculate_control();
->
-> -       status = acpi_pci_osc_control_set(handle, &control, support);
-> +       if (is_cxl(root)) {
-> +               cxl_support = calculate_cxl_support();
-> +               decode_cxl_osc_support(root, "OS supports", cxl_support);
-> +               cxl_requested = cxl_control = calculate_cxl_control();
-> +       }
-> +
-> +       status = acpi_pci_osc_control_set(handle, &control, support,
-> +                                         &cxl_control, cxl_support);
->         if (ACPI_SUCCESS(status)) {
->                 if (control)
->                         decode_osc_control(root, "OS now controls", control);
-> +               if (cxl_control)
-> +                       decode_cxl_osc_control(root, "OS now controls",
-> +                                          cxl_control);
->
->                 if (acpi_gbl_FADT.boot_flags & ACPI_FADT_NO_ASPM) {
->                         /*
-> @@ -545,6 +647,11 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm)
->                         decode_osc_control(root, "OS requested", requested);
->                         decode_osc_control(root, "platform willing to grant", control);
->                 }
-> +               if (cxl_control) {
-> +                       decode_cxl_osc_control(root, "OS requested", cxl_requested);
-> +                       decode_cxl_osc_control(root, "platform willing to grant",
-> +                                          cxl_control);
-> +               }
->
->                 dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
->                          acpi_format_exception(status));
-> --
-> 2.35.1
->
+T24gVHVlLCAyMDIyLTA0LTA1IGF0IDE2OjAwICswMjAwLCBSYWZhZWwgSi4gV3lzb2NraSB3cm90
+ZToNCj4gT24gVGh1LCBNYXIgMzEsIDIwMjIgYXQgMTA6MjAgUE0gVmlzaGFsIFZlcm1hIDx2aXNo
+YWwubC52ZXJtYUBpbnRlbC5jb20+IHdyb3RlOg0KPiA+IA0KPiA+IEFkZCBmdWxsIHN1cHBvcnQg
+Zm9yIG5lZ290aWF0aW5nIF9PU0MgYXMgZGVmaW5lZCBpbiB0aGUgQ1hMIDIuMCBzcGVjLCBhcw0K
+PiA+IGFwcGxpY2FibGUgdG8gQ1hMLWVuYWJsZWQgcGxhdGZvcm1zLiBBZHZlcnRpc2Ugc3VwcG9y
+dCBmb3IgdGhlIENYTA0KPiA+IGZlYXR1cmVzIHdlIHN1cHBvcnQgLSAnQ1hMIDIuMCBwb3J0L2Rl
+dmljZSByZWdpc3RlciBhY2Nlc3MnLCAnUHJvdG9jb2wNCj4gPiBFcnJvciBSZXBvcnRpbmcnLCBh
+bmQgJ0NYTCBOYXRpdmUgSG90IFBsdWcnLiBSZXF1ZXN0IGNvbnRyb2wgZm9yICdDWEwNCj4gPiBN
+ZW1vcnkgRXJyb3IgUmVwb3J0aW5nJy4gVGhlIHJlcXVlc3RzIGFyZSBkZXBlbmRlbnQgb24gQ09O
+RklHXyogYmFzZWQNCj4gPiBwcmVyZXF1aXNpdGVzLCBhbmQgcHJpb3IgUENJIGVuYWJsaW5nLCBz
+aW1pbGFyIHRvIGhvdyB0aGUgc3RhbmRhcmQgUENJDQo+ID4gX09TQyBiaXRzIGFyZSBkZXRlcm1p
+bmVkLg0KPiA+IA0KPiA+IFRoZSBDWEwgc3BlY2lmaWNhdGlvbiBkb2VzIG5vdCBkZWZpbmUgYW55
+IGFkZGl0aW9uYWwgY29uc3RyYWludHMgb24NCj4gPiB0aGUgaG90cGx1ZyBmbG93IGJleW9uZCBQ
+Q0llIG5hdGl2ZSBob3RwbHVnLCBzbyBhIGtlcm5lbCB0aGF0IHN1cHBvcnRzDQo+ID4gbmF0aXZl
+IFBDSWUgaG90cGx1Zywgc3VwcG9ydHMgQ1hMIGhvdHBsdWcuIEZvciBlcnJvciBoYW5kbGluZyBw
+cm90b2NvbA0KPiA+IGFuZCBsaW5rIGVycm9ycyBqdXN0IHVzZSBQQ0llIEFFUi4gVGhlcmUgaXMg
+bmFzY2VudCBzdXBwb3J0IGZvcg0KPiA+IGFtZW5kaW5nIEFFUiBldmVudHMgd2l0aCBDWEwgc3Bl
+Y2lmaWMgc3RhdHVzIFsxXSwgYnV0IHRoZXJlJ3MNCj4gPiBvdGhlcndpc2Ugbm8gYWRkaXRpb25h
+bCBPUyByZXNwb25zaWJpbGl0eSBmb3IgQ1hMIGVycm9ycyBiZXlvbmQgUENJZQ0KPiA+IEFFUi4g
+Q1hMIE1lbW9yeSBFcnJvcnMgYmVoYXZlIHRoZSBzYW1lIGFzIHR5cGljYWwgbWVtb3J5IGVycm9y
+cyBzbw0KPiA+IENPTkZJR19NRU1PUllfRkFJTFVSRSBpcyBzdWZmaWNpZW50IHRvIGluZGljYXRl
+IHN1cHBvcnQgdG8gcGxhdGZvcm0NCj4gPiBmaXJtd2FyZS4NCj4gPiANCj4gPiBbMV06IGh0dHBz
+Oi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LWN4bC8xNjQ3NDA0MDIyNDIuMzkxMjA1Ni44MzAzNjI1
+MzkyODcxMzEzODYwLnN0Z2l0QGR3aWxsaWEyLWRlc2szLmFtci5jb3JwLmludGVsLmNvbS8NCj4g
+PiANCj4gPiBDYzogQmpvcm4gSGVsZ2FhcyA8YmhlbGdhYXNAZ29vZ2xlLmNvbT4NCj4gPiBDYzog
+IlJhZmFlbCBKLiBXeXNvY2tpIiA8cmFmYWVsQGtlcm5lbC5vcmc+DQo+ID4gQ2M6IFJvYmVydCBN
+b29yZSA8cm9iZXJ0Lm1vb3JlQGludGVsLmNvbT4NCj4gPiBDYzogRGFuIFdpbGxpYW1zIDxkYW4u
+ai53aWxsaWFtc0BpbnRlbC5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogVmlzaGFsIFZlcm1hIDx2
+aXNoYWwubC52ZXJtYUBpbnRlbC5jb20+DQo+ID4gLS0tDQo+ID4gwqBpbmNsdWRlL2xpbnV4L2Fj
+cGkuaMKgwqDCoCB8wqAgMjggKysrKysrKy0NCj4gPiDCoGluY2x1ZGUvYWNwaS9hY3BpX2J1cy5o
+IHzCoMKgIDYgKy0NCj4gPiDCoGRyaXZlcnMvYWNwaS9wY2lfcm9vdC5jIHwgMTQ1ICsrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0NCj4gPiDCoDMgZmlsZXMgY2hhbmdlZCwg
+MTU3IGluc2VydGlvbnMoKyksIDIyIGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQg
+YS9pbmNsdWRlL2xpbnV4L2FjcGkuaCBiL2luY2x1ZGUvbGludXgvYWNwaS5oDQo+ID4gaW5kZXgg
+ZmM0MGRhOTE0MzE1Li5jZjM2MGI5NjQyZDkgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS9saW51
+eC9hY3BpLmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L2FjcGkuaA0KPiA+IEBAIC01NTQsMTAg
+KzU1NCwxNSBAQCBhY3BpX3N0YXR1cyBhY3BpX3J1bl9vc2MoYWNwaV9oYW5kbGUgaGFuZGxlLCBz
+dHJ1Y3QgYWNwaV9vc2NfY29udGV4dCAqY29udGV4dCk7DQo+ID4gwqAjZGVmaW5lIE9TQ19QQ0lf
+Q0FQQUJJTElUWV9EV09SRFPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAzDQo+ID4gwqAjZGVm
+aW5lIE9TQ19DWExfQ0FQQUJJTElUWV9EV09SRFPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA1
+DQo+ID4gDQo+ID4gLS8qIEluZGV4ZXMgaW50byBfT1NDIENhcGFiaWxpdGllcyBCdWZmZXIgKERX
+T1JEcyAyICYgMyBhcmUgZGV2aWNlLXNwZWNpZmljKSAqLw0KPiA+ICsvKg0KPiA+ICsgKiBJbmRl
+eGVzIGludG8gX09TQyBDYXBhYmlsaXRpZXMgQnVmZmVyDQo+ID4gKyAqIERXT1JEcyAyICYgMyBh
+cmUgZGV2aWNlLXNwZWNpZmljLCBhbmQgNCAmIDUgYXJlIHNwZWNpZmljIHRvIENYTCBwbGF0Zm9y
+bXMNCj4gDQo+IFNheSAiRFdPUkRzIDIgdGhyb3VnaCA1IGFyZSBkZXZpY2Utc3BlY2lmaWMiIGFu
+ZCB5b3UgZG9uJ3QgbmVlZCB0bw0KPiBtZW50aW9uIENYTCBoZXJlLg0KPiANCj4gPiArICovDQo+
+ID4gwqAjZGVmaW5lIE9TQ19RVUVSWV9EV09SRMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDDCoMKgwqDCoMKgwqAgLyogRFdPUkQg
+MSAqLw0KPiA+IMKgI2RlZmluZSBPU0NfU1VQUE9SVF9EV09SRMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAxwqDCoMKgwqDCoMKgIC8qIERXT1JEIDIgKi8NCj4gPiDC
+oCNkZWZpbmUgT1NDX0NPTlRST0xfRFdPUkTCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgMsKgwqDCoMKgwqDCoCAvKiBEV09SRCAzICovDQo+ID4gKyNkZWZpbmUgT1ND
+X0NYTF9TVVBQT1JUX0RXT1JEwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAzwqDC
+oMKgwqDCoMKgIC8qIERXT1JEIDQgKi8NCj4gPiArI2RlZmluZSBPU0NfQ1hMX0NPTlRST0xfRFdP
+UkTCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDTCoMKgwqDCoMKgwqAgLyogRFdP
+UkQgNSAqLw0KPiANCj4gSSB3b3VsZCByZW5hbWUgdGhlIGxhc3QgdHdvIHN5bWJvbHMgYXMgT1ND
+X0VYVF9TVVBQT1JUX0RXT1JEIGFuZA0KPiBPU0NfRVhUX0NPTlRST0xfRFdPUkQgKHNlZSBiZWxv
+dyBmb3IgYW4gZXhwbGFuYXRpb24pLg0KPiANCj4gDQpZZXAsIGRyb3BwaW5nIENYTCByZWZlcmVu
+Y2VzIGhlcmUgYW5kIHRoZSAnZXh0ZW5kZWQnIG5hbWluZyBzb3VuZHMNCmdvb2QsIEknbGwgdXBk
+YXRlIHdpdGggdGhlc2UgY2hhbmdlcy4NCg==
