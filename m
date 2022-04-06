@@ -2,139 +2,105 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB6DC433FE
-	for <linux-cxl@archiver.kernel.org>; Wed,  6 Apr 2022 13:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 012F5C433EF
+	for <linux-cxl@archiver.kernel.org>; Wed,  6 Apr 2022 14:19:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233827AbiDFNzy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 6 Apr 2022 09:55:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34898 "EHLO
+        id S234700AbiDFOVU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 6 Apr 2022 10:21:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233889AbiDFNzn (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 6 Apr 2022 09:55:43 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1FE0180060;
-        Tue,  5 Apr 2022 19:37:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649212679; x=1680748679;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Ph4sCGJraJETlyBGXYOiXSyOYbocgNTmfmzp8XB8aZg=;
-  b=HSlqWnthuFaGM3L7J4mDemwIpgioSC2eXwEmHNx8Rm2gAdHnFDddQ6IJ
-   SYff+hPZFh6dqM6nsxP8y4udfySgNZzYZkZxwEk+ffQcFBaam+3Wgcec5
-   RFxSMUio+H/DdoSgda2pmB5QIVg6xxMK90L6yvwknlqCT/F+yueVNuA3X
-   Gg1mXN5BGuNPibU7gMnK3FoFPFVVj5mqHDSKVV4lvyQNIMc96E8ct9eDp
-   dDw7Jy0QMdopT1XH3MTJcu0yGnAUFidFwKpAhCpdI1CNrFyJpiCe8ix3p
-   mrXRVeSHUcxunTvGo4wVdAxf2iVcDIKd/q8ZuFC4bOZQlSu/5ZTDrimHI
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10308"; a="241517561"
-X-IronPort-AV: E=Sophos;i="5.90,238,1643702400"; 
-   d="scan'208";a="241517561"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2022 19:37:59 -0700
-X-IronPort-AV: E=Sophos;i="5.90,238,1643702400"; 
-   d="scan'208";a="523738420"
-Received: from tomasevx-mobl2.amr.corp.intel.com (HELO vverma7-desk1.intel.com) ([10.213.162.23])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2022 19:37:58 -0700
-From:   Vishal Verma <vishal.l.verma@intel.com>
-To:     <linux-cxl@vger.kernel.org>
-Cc:     <linux-acpi@vger.kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Robert Moore <robert.moore@intel.com>,
+        with ESMTP id S234614AbiDFOVJ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 6 Apr 2022 10:21:09 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF6493479AB;
+        Wed,  6 Apr 2022 03:27:06 -0700 (PDT)
+Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KYKvz0p6rz686vL;
+        Wed,  6 Apr 2022 18:08:15 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 6 Apr 2022 12:11:12 +0200
+Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 6 Apr
+ 2022 11:11:11 +0100
+Date:   Wed, 6 Apr 2022 11:11:10 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Lukas Wunner <lukas@wunner.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Dan Williams" <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Davidlohr Bueso <dave@stgolabs.net>, a.manzanares@samsung.com,
+        Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [PATCH v5 1/3] PCI/ACPI: add a helper for retrieving _OSC Control DWORDs
-Date:   Tue,  5 Apr 2022 20:37:44 -0600
-Message-Id: <20220406023746.2807328-2-vishal.l.verma@intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220406023746.2807328-1-vishal.l.verma@intel.com>
-References: <20220406023746.2807328-1-vishal.l.verma@intel.com>
+        Ben Widawsky <ben.widawsky@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH V7 03/10] PCI: Create PCI library functions in support
+ of DOE mailboxes.
+Message-ID: <20220406111110.00000e72@Huawei.com>
+In-Reply-To: <YkzPIzIhfzQKIMe0@iweiny-desk3>
+References: <20220330235920.2800929-1-ira.weiny@intel.com>
+        <20220330235920.2800929-4-ira.weiny@intel.com>
+        <YkVBJ+nRA2g/WDxa@infradead.org>
+        <YkXGnKsTEUAe29io@iweiny-desk3>
+        <20220402144845.GA7822@wunner.de>
+        <YkzPIzIhfzQKIMe0@iweiny-desk3>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2825; h=from:subject; bh=Ph4sCGJraJETlyBGXYOiXSyOYbocgNTmfmzp8XB8aZg=; b=owGbwMvMwCXGf25diOft7jLG02pJDEk+f35eqjjYbVkhbi924Y3O9KNXc/j078irstmbTj62retT LqdHRykLgxgXg6yYIsvfPR8Zj8ltz+cJTHCEmcPKBDKEgYtTACbyw43hv3+s17mtty2nB2nsFDqkW6 x9NXeTVTvzi58Z274u67de+Yjhf8qeC9aSExQULdQUXJ++EyvLzfv9/tb2UL29a7nueu3IYAAA
-X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.41]
+X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-During _OSC negotiation, when the 'Control' DWORD is needed from the
-result buffer after running _OSC, a couple of places performed manual
-pointer arithmetic to offset into the right spot in the raw buffer.
-Add a acpi_osc_ctx_get_pci_control() helper to use the #define'd
-DWORD offsets to fetch the DWORDs needed from @acpi_osc_context, and
-replace the above instances of the open-coded arithmetic.
+On Tue, 5 Apr 2022 16:22:11 -0700
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Suggested-by: Davidlohr Bueso <dave@stgolabs.net>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
----
- include/linux/acpi.h    | 13 +++++++++++++
- drivers/acpi/bus.c      |  2 +-
- drivers/acpi/pci_root.c |  2 +-
- 3 files changed, 15 insertions(+), 2 deletions(-)
+> On Sat, Apr 02, 2022 at 04:48:45PM +0200, Lukas Wunner wrote:
+> > On Thu, Mar 31, 2022 at 08:19:56AM -0700, Ira Weiny wrote:  
+> > > On Wed, Mar 30, 2022 at 10:50:31PM -0700, Christoph Hellwig wrote:  
+> > > > On Wed, Mar 30, 2022 at 04:59:13PM -0700, ira.weiny@intel.com wrote:  
+> > > > > Introduced in a PCI v6.0[1], DOE provides a config space based mailbox
+> > > > > with standard protocol discovery.  Each mailbox is accessed through a
+> > > > > DOE Extended Capability.  
+> > > > 
+> > > > I really don't think this should be built unconditionally and bloat
+> > > > every single kernel built with PCI support.  
+> > > 
+> > > I can add a Kconfig.  
+> > 
+> > Ideally, that config option should live in the pcie/ subdirectory,
+> > i.e. in drivers/pci/pcie/Kconfig, alongside drivers/pci/pcie/doe.c,
+> > as we try to consolidate PCIe-specific features there and reserve
+> > core code in drivers/pci/*.c for functionality that also applies
+> > to Conventional PCI.  
+> 
+> Thanks for letting me know about this direction.  I was unaware of this.
 
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 6274758648e3..ff4d1fdd9009 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -607,6 +607,13 @@ extern u32 osc_sb_native_usb4_control;
- #define OSC_PCI_EXPRESS_LTR_CONTROL		0x00000020
- #define OSC_PCI_EXPRESS_DPC_CONTROL		0x00000080
- 
-+static inline u32 acpi_osc_ctx_get_pci_control(struct acpi_osc_context *context)
-+{
-+	u32 *ret = context->ret.pointer;
-+
-+	return ret[OSC_CONTROL_DWORD];
-+}
-+
- #define ACPI_GSB_ACCESS_ATTRIB_QUICK		0x00000002
- #define ACPI_GSB_ACCESS_ATTRIB_SEND_RCV         0x00000004
- #define ACPI_GSB_ACCESS_ATTRIB_BYTE		0x00000006
-@@ -1003,6 +1010,12 @@ static inline int acpi_register_wakeup_handler(int wake_irq,
- static inline void acpi_unregister_wakeup_handler(
- 	bool (*wakeup)(void *context), void *context) { }
- 
-+struct acpi_osc_context;
-+static inline u32 acpi_osc_ctx_get_pci_control(struct acpi_osc_context *context)
-+{
-+	return 0;
-+}
-+
- #endif	/* !CONFIG_ACPI */
- 
- #ifdef CONFIG_ACPI_HOTPLUG_IOAPIC
-diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-index 07f604832fd6..4992e05cf429 100644
---- a/drivers/acpi/bus.c
-+++ b/drivers/acpi/bus.c
-@@ -405,7 +405,7 @@ static void acpi_bus_osc_negotiate_usb_control(void)
- 	}
- 
- 	osc_sb_native_usb4_control =
--		control & ((u32 *)context.ret.pointer)[OSC_CONTROL_DWORD];
-+		control &  acpi_osc_ctx_get_pci_control(&context);
- 
- 	acpi_bus_decode_usb_osc("USB4 _OSC: OS supports", control);
- 	acpi_bus_decode_usb_osc("USB4 _OSC: OS controls",
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index b76db99cced3..40a74ff3fa02 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -185,7 +185,7 @@ static acpi_status acpi_pci_run_osc(acpi_handle handle,
- 
- 	status = acpi_run_osc(handle, &context);
- 	if (ACPI_SUCCESS(status)) {
--		*retval = *((u32 *)(context.ret.pointer + 8));
-+		*retval = acpi_osc_ctx_get_pci_control(&context);
- 		kfree(context.ret.pointer);
- 	}
- 	return status;
--- 
-2.35.1
+We had this in the pcie directory, but Bjorn asked us to move it to the pci
+directory as there isn't anything specific to PCIe about DOE. You could
+implement it on pci-x (maybe 2.0?) I think even though it's in the PCIe specification.
+
+https://lore.kernel.org/linux-pci/20210413194927.GA2241331@bjorn-Precision-5520/
+
+Thanks,
+
+Jonathan
+
+
+> 
+> I'll move the file no problem, thanks,
+> Ira
+> 
+> > 
+> > Thanks,
+> > 
+> > Lukas  
 
