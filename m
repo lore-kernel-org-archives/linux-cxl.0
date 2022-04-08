@@ -2,144 +2,125 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAE9C433FE
-	for <linux-cxl@archiver.kernel.org>; Fri,  8 Apr 2022 11:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B9BC433F5
+	for <linux-cxl@archiver.kernel.org>; Fri,  8 Apr 2022 15:29:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235074AbiDHLvM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 8 Apr 2022 07:51:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37182 "EHLO
+        id S232913AbiDHPcA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 8 Apr 2022 11:32:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235126AbiDHLvL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 8 Apr 2022 07:51:11 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80298217C63
-        for <linux-cxl@vger.kernel.org>; Fri,  8 Apr 2022 04:49:07 -0700 (PDT)
-Received: from fraeml734-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KZc1D2xCJz67bMc;
-        Fri,  8 Apr 2022 19:47:12 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml734-chm.china.huawei.com (10.206.15.215) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 8 Apr 2022 13:49:04 +0200
-Received: from localhost (10.81.210.4) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 8 Apr
- 2022 12:49:03 +0100
-Date:   Fri, 8 Apr 2022 12:49:01 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Tong Zhang <t.zhang2@samsung.com>
-CC:     "linuxarm@huawei.com" <linuxarm@huawei.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        Alex =?ISO-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-        Marcel Apfelbaum <marcel@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        "Markus Armbruster" <armbru@redhat.com>,
-        Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Philippe =?ISO-8859-1?Q?Mathieu-D?= =?ISO-8859-1?Q?aud=E9?= 
-        <f4bug@amsat.org>, "Peter Xu" <peterx@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Saransh Gupta1 <saransh@ibm.com>,
-        Shreyas Shah <shreyas.shah@elastics.cloud>,
-        Chris Browy <cbrowy@avery-design.com>,
-        "Samarth Saxena" <samarths@cadence.com>,
+        with ESMTP id S235426AbiDHPcA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 8 Apr 2022 11:32:00 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DF441CB178;
+        Fri,  8 Apr 2022 08:29:53 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 505452C18FC;
+        Fri,  8 Apr 2022 15:22:41 +0000 (UTC)
+Received: from pdx1-sub0-mail-a212.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id B73492C1723;
+        Fri,  8 Apr 2022 15:22:40 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1649431360; a=rsa-sha256;
+        cv=none;
+        b=8ZWU70W9gddEhAHr96ZC3w/kXy70z+PZMdCHlv8rJrfIIctF4069NEYUww+nBiwuzHb9Th
+        4+efs5UsTNGGYoq4JbUl4U+v88ANGs9G9JUSSWM8aKkFIXQ/rqIJC7YbmKg72nidu5rzuQ
+        +hiRvXsG5NMht0rBoQzaELbOnqN4HqH+U3gGSPOTg8eGQflrcTRb1Gu3vx7581zGDl4KVp
+        b7Bniu+2yzG/cK5rLhBHMRKtYPNmEB8CyObP5rPMQgM2xWhsQ2+ittRUR0TNkgw8i2oWnH
+        Q+HOtne6Df+HxKmwyq7HaK8immRjrGWixu5l0199oavsuXmCiYhkPHt0lepcjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1649431360;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=PcisFdEGS984kRrr/jV6MSFBSKJSJtTc9mSbo7fwkmk=;
+        b=jwgfUOV3niTwIvDLXZS3/P9iMLkAOkdQ73519pB0z7hJ2D3CI2Mu3MAyHFKzGlzRfzBwol
+        RKfuJbEek2qLgber9xHlKbVKYk8i4DV0D0wIbsOBI0HT3L2aEBW7cVXgX0Dcgng94GtAei
+        CowKUCirBgttvjUEJ6J0C5s2ahJLtMwYVBiFB27tDfuF5SmnNExGbH2dVQ9qgAEaHVfdGX
+        9aCQrMI87eBMKSQnBRcCjzolvi/dWo1/xDYWAJaXfsBdIhFpxji9WJmEdgYMlHb+fLTHaI
+        fphdSK1QyaixcUva9k9lzQ0W2SCsynClFTrjnJX4dDCklH2fU92pl7W/8kY9Zw==
+ARC-Authentication-Results: i=1;
+        rspamd-68f9d8f9d5-cr5h5;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from pdx1-sub0-mail-a212.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.112.55.239 (trex/6.7.1);
+        Fri, 08 Apr 2022 15:22:41 +0000
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Decisive-Cellar: 69f2375f5dcab964_1649431361116_1853168669
+X-MC-Loop-Signature: 1649431361116:3047169180
+X-MC-Ingress-Time: 1649431361115
+Received: from offworld (unknown [104.36.25.8])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a212.dreamhost.com (Postfix) with ESMTPSA id 4KZhnq6GGxz1K6;
+        Fri,  8 Apr 2022 08:22:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1649431360;
+        bh=PcisFdEGS984kRrr/jV6MSFBSKJSJtTc9mSbo7fwkmk=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=PACpE32tvuLpsuioLYe0IGGOODP3B+hcCUrXQCf7WZzir04Xh1CAPBrTpf6QpzX9y
+         js3LD+Y757wDp4YhRUUUSf4NLAPd8gs1q2n0etscE5IiQc1VW17Qf8tgsE6/t6VSn5
+         B6VWZnTPP4ze664xUUtyiAoE0Fwkk4vNuwvUKkegWRRZvFco4wQp3wCjGlxUxiipak
+         KPah80angg44xaUYO9AlNoUC6v/tJNUU27Id+cfo+iPxNP2I0M7avbWbPWJpH8cgre
+         FNwh0V+QqKRZv+7+EdGJLxkeFwn4m/OZSPFYsgeQIX4E68o4mDbFJpHQVzPJeObBTL
+         5f53flUaNgKqw==
+Date:   Fri, 8 Apr 2022 08:22:36 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Vishal Verma <vishal.l.verma@intel.com>
+Cc:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        "k . jensen @ samsung . com" <k.jensen@samsung.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>,
-        Alison Schofield <alison.schofield@intel.com>,
-        "ztong0001@gmail.com" <ztong0001@gmail.com>
-Subject: Re: [PATCH v9 33/45] cxl/cxl-host: Add memops for CFMWS region.
-Message-ID: <20220408124901.00007ced@Huawei.com>
-In-Reply-To: <7a17a19d-dcd4-61d5-b699-7ba06c9600bd@samsung.com>
-References: <20220404151445.10955-1-Jonathan.Cameron@huawei.com>
- <CGME20220404153138uscas1p2e261ac1dab4f0b2904e9d877acf77510@uscas1p2.samsung.com>
- <20220404151445.10955-34-Jonathan.Cameron@huawei.com>
- <7a17a19d-dcd4-61d5-b699-7ba06c9600bd@samsung.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, a.manzanares@samsung.com
+Subject: Re: [PATCH v5 0/3] PCI/ACPI: add support for CXL _OSC
+Message-ID: <20220408152236.d6bcs7ktdoy6lzeg@offworld>
+References: <20220406023746.2807328-1-vishal.l.verma@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.210.4]
-X-ClientProxiedBy: lhreml726-chm.china.huawei.com (10.201.108.77) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20220406023746.2807328-1-vishal.l.verma@intel.com>
+User-Agent: NeoMutt/20201120
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 7 Apr 2022 21:07:06 +0000
-Tong Zhang <t.zhang2@samsung.com> wrote:
+On Tue, 05 Apr 2022, Vishal Verma wrote:
 
-> On 4/4/22 08:14, Jonathan Cameron wrote:
-> > From: Jonathan Cameron <jonathan.cameron@huawei.com>
-> >
-> >
-> > +static MemTxResult cxl_read_cfmws(void *opaque, hwaddr addr, uint64_t *data,
-> > +                                  unsigned size, MemTxAttrs attrs)
-> > +{
-> > +    CXLFixedWindow *fw = opaque;
-> > +    PCIDevice *d;
-> > +
-> > +    d = cxl_cfmws_find_device(fw, addr);
-> > +    if (d == NULL) {
-> > +        *data = 0;  
-> 
-> I'm looking at this code and comparing it to CXL2.0 spec 8.2.5.12.2 CXL HDM
-> 
-> Decoder Global Control Register (Offset 04h) table. It seems that we should
-> 
-> check POSION_ON_ERR_EN bit, if this bit is set, we return poison, otherwise
-> 
-> should return all 1's data.
+>Changes since v4[1]:
+>- Collect an ack for patch 1 (Rafael)
+>- Fix commit subject wording in patch 2 (Rafael)
+>- Fix a debug print in patch 2 (Rafael)
+>- Document the reasoning behind calculation of cxl hotplug support (David)
+>- A few definition and variable name changes to make the new _OSC DWORDS
+>  generic instead of CXL specific (Rafael)
+>
+>Add support for using the CXL definition of _OSC where applicable, and
+>negotiating CXL specific support and control bits.
+>
+>Patch 1 is a preliminary cleanup that replaces open-coded pointer
+>arithmetic to retrieve the Control DWORD with an inline helper.
+>
+>Patch 2 adds the new CXL _OSC UUID, and uses it instead of the PCI UUID
+>when a root port is CXL enabled. It provides a fallback method for
+>CXL-1.1 platforms that may not implement the CXL-2.0 _OSC.
+>
+>Patch 3 performs negotiation for the CXL specific _OSC support and
+>control bits.
+>
+>I've tested these against a custom qemu[2], which adds the CXL _OSC (in
+>addition to other CXL support). Specifically, _OSC support is added
+>here[3].
 
-Good point.  Takes a bit of searching to find the statements on that, but
-it should indeed by all 1s not all 0s. I'll fix that up.
+For the series, feel free to add my:
 
-> 
-> Also, from the spec, this bit is implementation specific and hard 
-> wired(RO) to either 1 or 0,
-
-My temptation is to set that to 0 and not return poison, because the handling
-of that in the host is horribly implementation specific.
-
-> 
-> but for type3 device looks like we are currently allowing it to be 
-> overwritten in ct3d_reg_write()
-> 
-> function. We probably also need more sanitation in ct3d_reg_write. (Also 
-> for HDM
-> 
-> range/interleaving settings.)
-
-Absolutely agree. Generally my plan was to tighten up write restrictions
-as a follow on series because it tends to require quite a lot of code and
-makes it much harder to see the overall flow.
-
-So far I've done most of the PCI config space santization (see the gitlab
-tree) but not much yet on the memory mapped register space.
-
-I'll add it to the todo list. If it turns out this particular case is
-reasonably clean I might add it within this series.
-
-Jonathan
-
-> 
-> > +        /* Reads to invalid address return poison */
-> > +        return MEMTX_ERROR;
-> > +    }
-> > +
-> > +    return cxl_type3_read(d, addr + fw->base, data, size, attrs);
-> > +}
-> > +  
-> 
-> - Tong
-> 
-
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
