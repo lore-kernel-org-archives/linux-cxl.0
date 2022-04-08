@@ -2,125 +2,103 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B9BC433F5
-	for <linux-cxl@archiver.kernel.org>; Fri,  8 Apr 2022 15:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D72A2C433EF
+	for <linux-cxl@archiver.kernel.org>; Fri,  8 Apr 2022 19:30:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232913AbiDHPcA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 8 Apr 2022 11:32:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44250 "EHLO
+        id S232358AbiDHTck (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 8 Apr 2022 15:32:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235426AbiDHPcA (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 8 Apr 2022 11:32:00 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DF441CB178;
-        Fri,  8 Apr 2022 08:29:53 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 505452C18FC;
-        Fri,  8 Apr 2022 15:22:41 +0000 (UTC)
-Received: from pdx1-sub0-mail-a212.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id B73492C1723;
-        Fri,  8 Apr 2022 15:22:40 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1649431360; a=rsa-sha256;
-        cv=none;
-        b=8ZWU70W9gddEhAHr96ZC3w/kXy70z+PZMdCHlv8rJrfIIctF4069NEYUww+nBiwuzHb9Th
-        4+efs5UsTNGGYoq4JbUl4U+v88ANGs9G9JUSSWM8aKkFIXQ/rqIJC7YbmKg72nidu5rzuQ
-        +hiRvXsG5NMht0rBoQzaELbOnqN4HqH+U3gGSPOTg8eGQflrcTRb1Gu3vx7581zGDl4KVp
-        b7Bniu+2yzG/cK5rLhBHMRKtYPNmEB8CyObP5rPMQgM2xWhsQ2+ittRUR0TNkgw8i2oWnH
-        Q+HOtne6Df+HxKmwyq7HaK8immRjrGWixu5l0199oavsuXmCiYhkPHt0lepcjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1649431360;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=PcisFdEGS984kRrr/jV6MSFBSKJSJtTc9mSbo7fwkmk=;
-        b=jwgfUOV3niTwIvDLXZS3/P9iMLkAOkdQ73519pB0z7hJ2D3CI2Mu3MAyHFKzGlzRfzBwol
-        RKfuJbEek2qLgber9xHlKbVKYk8i4DV0D0wIbsOBI0HT3L2aEBW7cVXgX0Dcgng94GtAei
-        CowKUCirBgttvjUEJ6J0C5s2ahJLtMwYVBiFB27tDfuF5SmnNExGbH2dVQ9qgAEaHVfdGX
-        9aCQrMI87eBMKSQnBRcCjzolvi/dWo1/xDYWAJaXfsBdIhFpxji9WJmEdgYMlHb+fLTHaI
-        fphdSK1QyaixcUva9k9lzQ0W2SCsynClFTrjnJX4dDCklH2fU92pl7W/8kY9Zw==
-ARC-Authentication-Results: i=1;
-        rspamd-68f9d8f9d5-cr5h5;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from pdx1-sub0-mail-a212.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.112.55.239 (trex/6.7.1);
-        Fri, 08 Apr 2022 15:22:41 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Decisive-Cellar: 69f2375f5dcab964_1649431361116_1853168669
-X-MC-Loop-Signature: 1649431361116:3047169180
-X-MC-Ingress-Time: 1649431361115
-Received: from offworld (unknown [104.36.25.8])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a212.dreamhost.com (Postfix) with ESMTPSA id 4KZhnq6GGxz1K6;
-        Fri,  8 Apr 2022 08:22:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1649431360;
-        bh=PcisFdEGS984kRrr/jV6MSFBSKJSJtTc9mSbo7fwkmk=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=PACpE32tvuLpsuioLYe0IGGOODP3B+hcCUrXQCf7WZzir04Xh1CAPBrTpf6QpzX9y
-         js3LD+Y757wDp4YhRUUUSf4NLAPd8gs1q2n0etscE5IiQc1VW17Qf8tgsE6/t6VSn5
-         B6VWZnTPP4ze664xUUtyiAoE0Fwkk4vNuwvUKkegWRRZvFco4wQp3wCjGlxUxiipak
-         KPah80angg44xaUYO9AlNoUC6v/tJNUU27Id+cfo+iPxNP2I0M7avbWbPWJpH8cgre
-         FNwh0V+QqKRZv+7+EdGJLxkeFwn4m/OZSPFYsgeQIX4E68o4mDbFJpHQVzPJeObBTL
-         5f53flUaNgKqw==
-Date:   Fri, 8 Apr 2022 08:22:36 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Vishal Verma <vishal.l.verma@intel.com>
-Cc:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, a.manzanares@samsung.com
-Subject: Re: [PATCH v5 0/3] PCI/ACPI: add support for CXL _OSC
-Message-ID: <20220408152236.d6bcs7ktdoy6lzeg@offworld>
-References: <20220406023746.2807328-1-vishal.l.verma@intel.com>
+        with ESMTP id S239249AbiDHTcg (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 8 Apr 2022 15:32:36 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3307313EA9
+        for <linux-cxl@vger.kernel.org>; Fri,  8 Apr 2022 12:30:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649446231; x=1680982231;
+  h=subject:from:to:cc:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=cS1FEn1GuK1u3UbOtH8EETpNYnI4qwJeWQXKIvBkqiI=;
+  b=RHUCzjZSky1pM+Ty+8HuocbdeZluh+EFiFhV/76Zqmk86VwpJ+BLpdE4
+   eV7rHIh6UQhAK6pXkIL0gwO3KTVqi2gt1mUJmYIX19IJlxNPYZfKD9tdT
+   awzD2RE7Ga125nINVm/Wq82WAnQ9RqRNX2hy2/mSodlxHQeoc4URzdoaW
+   f4MSh+MVtbGxHWPCWDYlIJ1qmEcEyKL8CcHeAWUsCFdZ5DpdW76gP8NB1
+   WpgY7IwiSxTqxW1R7RjQvN2TpEhP5QpTwGG13Vkjhh9usGt40tH6e5nyK
+   QccDlp+DMqwdUCIrJQxINOl5SRtAokx1LCvaFjv1CevwbThkA8R1fSNAW
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10311"; a="261849804"
+X-IronPort-AV: E=Sophos;i="5.90,245,1643702400"; 
+   d="scan'208";a="261849804"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2022 12:30:30 -0700
+X-IronPort-AV: E=Sophos;i="5.90,245,1643702400"; 
+   d="scan'208";a="589337563"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2022 12:30:30 -0700
+Subject: [PATCH v3 6/6] cxl/mem: Replace redundant debug message with a
+ comment
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Date:   Fri, 08 Apr 2022 12:30:29 -0700
+Message-ID: <164944616743.454665.7055846627973202403.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <164730736948.3806189.17828261054974867700.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <164730736948.3806189.17828261054974867700.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20220406023746.2807328-1-vishal.l.verma@intel.com>
-User-Agent: NeoMutt/20201120
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 05 Apr 2022, Vishal Verma wrote:
+cxl_mem_probe() already emits a log message when HDM operation can not
+be established. Delete the similar one in cxl_hdm_decode_init().
 
->Changes since v4[1]:
->- Collect an ack for patch 1 (Rafael)
->- Fix commit subject wording in patch 2 (Rafael)
->- Fix a debug print in patch 2 (Rafael)
->- Document the reasoning behind calculation of cxl hotplug support (David)
->- A few definition and variable name changes to make the new _OSC DWORDS
->  generic instead of CXL specific (Rafael)
->
->Add support for using the CXL definition of _OSC where applicable, and
->negotiating CXL specific support and control bits.
->
->Patch 1 is a preliminary cleanup that replaces open-coded pointer
->arithmetic to retrieve the Control DWORD with an inline helper.
->
->Patch 2 adds the new CXL _OSC UUID, and uses it instead of the PCI UUID
->when a root port is CXL enabled. It provides a fallback method for
->CXL-1.1 platforms that may not implement the CXL-2.0 _OSC.
->
->Patch 3 performs negotiation for the CXL specific _OSC support and
->control bits.
->
->I've tested these against a custom qemu[2], which adds the CXL _OSC (in
->addition to other CXL support). Specifically, _OSC support is added
->here[3].
+What is less obvious is why global_ctrl being enabled makes positive
+values of info->ranges irrelevant, and the Linux behavior with respect
+to the spec recommendation to mirror CXL Range registers with HDM
+Decoder Base + Size registers.
 
-For the series, feel free to add my:
-
+Cc: Ben Widawsky <ben.widawsky@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+Changes since v2:
+- Clarify that Linux does not maintain the spec recommended match
+  between HDM decoders and CXL DVSEC range registers. (Ben and Jonathan)
+
+ drivers/cxl/mem.c |   14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index 3baae1332760..43e73d259207 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -107,11 +107,17 @@ __mock bool cxl_hdm_decode_init(struct cxl_dev_state *cxlds)
+ 	global_ctrl = readl(crb + cmap->hdm_decoder.offset +
+ 			    CXL_HDM_DECODER_CTRL_OFFSET);
+ 	global_enable = global_ctrl & CXL_HDM_DECODER_ENABLE;
+-	if (!global_enable && info->ranges) {
+-		dev_dbg(cxlds->dev,
+-			"DVSEC ranges already programmed and HDM decoders not enabled.\n");
++
++	/*
++	 * Per CXL 2.0 Section 8.1.3.8.3 and 8.1.3.8.4 DVSEC CXL Range 1 Base
++	 * [High,Low] when HDM operation is enabled the range register values
++	 * are ignored by the device, but the spec also recommends matching the
++	 * DVSEC Range 1,2 to HDM Decoder Range 0,1. So, non-zero info->ranges
++	 * are expected even though Linux does not require or maintain that
++	 * match.
++	 */
++	if (!global_enable && info->ranges)
+ 		goto out;
+-	}
+ 
+ 	retval = true;
+ 
+
