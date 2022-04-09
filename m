@@ -2,137 +2,94 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB7F4C433EF
-	for <linux-cxl@archiver.kernel.org>; Sat,  9 Apr 2022 03:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 173CBC433F5
+	for <linux-cxl@archiver.kernel.org>; Sat,  9 Apr 2022 23:47:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233194AbiDIDNX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 8 Apr 2022 23:13:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50960 "EHLO
+        id S233003AbiDIXtQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 9 Apr 2022 19:49:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230052AbiDIDNW (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 8 Apr 2022 23:13:22 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26040DF36
-        for <linux-cxl@vger.kernel.org>; Fri,  8 Apr 2022 20:11:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649473876; x=1681009876;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=UTeRAG924w9LUM0nE3iyY47p5IXJl+KBCDdy6zTgXd0=;
-  b=nvivG41i8nA5dRRaXW4UQUGULSINYyI+VYwWjKfuVoDV+aeo5pZp/omw
-   dYmmKduV4HUDthfTSjQ6qBXxC37hPpRuZgbZ2ma6li3uTGEmw9fQkGL5j
-   Q83k0VPPNFpUT8P/jnClqgAbCVNQhg2YxttZtpGvWrCu0q+MwgrpgVF1p
-   QsUzKWS8AIvK3FlVZ/vXWfm9+8UDyvzVfvC/y0qsAcg49BWYHEwpeLAh7
-   xyWhUhC+DWZAIB683u0BDD87nFhnhB4hTqfqR9SCo5/AhuNmLM0BriH/G
-   UV27zc9piFJC4aBfJqe9JWYkPgFQyXEhK5Jw2fHWVqgyKRADaxcSrDooS
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10311"; a="260595229"
-X-IronPort-AV: E=Sophos;i="5.90,246,1643702400"; 
-   d="scan'208";a="260595229"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2022 20:11:15 -0700
-X-IronPort-AV: E=Sophos;i="5.90,246,1643702400"; 
-   d="scan'208";a="698465707"
-Received: from alison-desk.jf.intel.com (HELO localhost) ([10.54.74.41])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2022 20:11:15 -0700
-From:   alison.schofield@intel.com
-To:     Ben Widawsky <ben.widawsky@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        linux-cxl@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH] cxl/mbox: Handle variable size output while still signed
-Date:   Fri,  8 Apr 2022 20:13:12 -0700
-Message-Id: <20220409031312.1220512-1-alison.schofield@intel.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229734AbiDIXtQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 9 Apr 2022 19:49:16 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEB85C71
+        for <linux-cxl@vger.kernel.org>; Sat,  9 Apr 2022 16:47:07 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id s8so11499774pfk.12
+        for <linux-cxl@vger.kernel.org>; Sat, 09 Apr 2022 16:47:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=MUbqjqroWUSuaCOjxZ4xcA3Ff9DzHo03eSpcfQTH7xs=;
+        b=jd+dwSeiQNDcvKJh2B6IY6Tk/lOz864fH4P0sxe5iJIo67C/PpEHyeb4rvZ1TYblNz
+         oyVI9ZXbEiaATFabXvynDPUOr5MarzmNgfogKr/e2hzv50KKXj+3Zi3UFjT0R+iPqZGR
+         vFShBM7h6Sjyl2B9z5uow5OBCl5b63L8Dq1WSBzr6iZ7uwyOHjFPhYvrdICCv1j2135j
+         f6JKaxvY62B8b/UwN+rOqJm8CgT84K6Q7bg9SDUOwc3OXMJgfm/QvM8iPOXK5Ul/8g/M
+         91xmV6Gvnxe4zKxSdtxJ229slvTSjap6EucN0yzNBBH6B/ouVnl9b3AlE4G/Yn1/uD+p
+         Fwgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=MUbqjqroWUSuaCOjxZ4xcA3Ff9DzHo03eSpcfQTH7xs=;
+        b=nzX2y2dPY5Q2aAP/wLOduQCScmGFzzBcOfEkMmIIkh73TzeygtPMBo8iDtClz9vQjS
+         OMm5h05Vw8q25bblJuaF9XDsPNvSHM9RaZdXaByHLRjSbFwZ/NEUm8EJSv5SRuz1EE9s
+         D/vJLXPBsHGDWe92G039Xp9ZT82g2MFNHJUAt8YHCFjfEfkGyUgpJcjeM7JigTtpyklu
+         yWHdMyYy6g1iuapuycxLIn0nuqPguABHD8FVR3ydp//DRrwkpk0diIo0yUVh/GTDzD1v
+         C2lYMOM20hW24Mlj4BvHPGJBrAQKQzf2ufcAbX1hAxuUxgYRz7gyCWmxsdZ+6UUhRMBP
+         vCgQ==
+X-Gm-Message-State: AOAM531lhRzov/JPYblSD3G+4nGDwOFSmD65qFmVm78/18EN2HRAZOz1
+        IGBiiX4AVDf10ZjWtMP2jGi07gk85NNpWeKvcycwlQ==
+X-Google-Smtp-Source: ABdhPJz86brASdkpVzG2YkHEjnR4KziiLzs3+/7QlKPE4XvQD/ceEaQo/bpzGu2sg4zmcjVzHdKPij9WgcSkJea0IeQ=
+X-Received: by 2002:a05:6a00:e14:b0:4fe:3cdb:23f with SMTP id
+ bq20-20020a056a000e1400b004fe3cdb023fmr26408877pfb.86.1649548027242; Sat, 09
+ Apr 2022 16:47:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sat, 9 Apr 2022 16:46:56 -0700
+Message-ID: <CAPcyv4gLVHZSJNPcxcb6tDD3z8DO_X49OvV-cudeziKfG_08mw@mail.gmail.com>
+Subject: [GIT PULL] NVDIMM + CXL fixes for v5.18-rc2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux NVDIMM <nvdimm@lists.linux.dev>, linux-cxl@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+Hi Linus, please pull from:
 
-A mailbox command output size value of (-1) means that a device
-may return a variable sized output for that command. The device
-defines a maximum payload size, so the driver will allocate enough
-memory to receive that maximum payload for these commands.
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+tags/cxl+nvdimm-for-5.18-rc2
 
-A recent code refactoring moved the check for variable sized output
-to occur after the signedness is discarded from the output size.
-Move the check to occur while still operating on the signed output
-size variable.
+...to pick up a couple fixups for code that went in during the merge
+window. These did not appear in -next yet, but they have seen kbuild
+robot exposure.
 
-Smatch warn: unsigned 'out_size' is never less than 0
-
-Fixes: be0d0ce77aa3 ("cxl/mbox: Move build of user mailbox cmd to a helper funct
-ions")
-Reported-by: kernel test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- drivers/cxl/core/mbox.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 8a8388599a85..987703ae1fe3 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -258,6 +258,7 @@ static int cxl_mbox_cmd_ctor(struct cxl_mbox_cmd *mbox,
- 	*mbox = (struct cxl_mbox_cmd) {
- 		.opcode = opcode,
- 		.size_in = in_size,
-+		.size_out = out_size,
- 	};
- 
- 	if (in_size) {
-@@ -274,12 +275,6 @@ static int cxl_mbox_cmd_ctor(struct cxl_mbox_cmd *mbox,
- 		}
- 	}
- 
--	/* Prepare to handle a full payload for variable sized output */
--	if (out_size < 0)
--		mbox->size_out = cxlds->payload_size;
--	else
--		mbox->size_out = out_size;
--
- 	if (mbox->size_out) {
- 		mbox->payload_out = kvzalloc(mbox->size_out, GFP_KERNEL);
- 		if (!mbox->payload_out) {
-@@ -320,7 +315,6 @@ static int cxl_to_mem_cmd_raw(struct cxl_mem_command *mem_cmd,
- 		.info = {
- 			.id = CXL_MEM_COMMAND_ID_RAW,
- 			.size_in = send_cmd->in.size,
--			.size_out = send_cmd->out.size,
- 		},
- 		.opcode = send_cmd->raw.opcode
- 	};
-@@ -365,7 +359,6 @@ static int cxl_to_mem_cmd(struct cxl_mem_command *mem_cmd,
- 			.id = info->id,
- 			.flags = info->flags,
- 			.size_in = send_cmd->in.size,
--			.size_out = send_cmd->out.size,
- 		},
- 		.opcode = c->opcode
- 	};
-@@ -417,6 +410,12 @@ static int cxl_validate_cmd_from_user(struct cxl_mbox_cmd *mbox_cmd,
- 	if (rc)
- 		return rc;
- 
-+	/* Prepare to handle a full payload for variable sized output */
-+	if (send_cmd->out.size < 0)
-+		mem_cmd.info.size_out = cxlds->payload_size;
-+	else
-+		mem_cmd.info.size_out = send_cmd->out.size;
-+
- 	/* Sanitize and construct a cxl_mbox_cmd */
- 	return cxl_mbox_cmd_ctor(mbox_cmd, cxlds, mem_cmd.opcode,
- 				 mem_cmd.info.size_in, mem_cmd.info.size_out,
+The following changes since commit 3123109284176b1532874591f7c81f3837bbdc17:
 
-base-commit: 7dc1d11d7abae52aada5340fb98885f0ddbb7c37
--- 
-2.31.1
+  Linux 5.18-rc1 (2022-04-03 14:08:21 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+tags/cxl+nvdimm-for-5.18-rc2
+
+for you to fetch changes up to d28820419ca332f856cdf8bef0cafed79c29ed05:
+
+  cxl/pci: Drop shadowed variable (2022-04-08 12:59:43 -0700)
+
+----------------------------------------------------------------
+cxl + nvdimm fixes for v5.18-rc2
+
+- Fix a compile error in the nvdimm unit tests
+
+- Fix a shadowed variable warning in the CXL PCI driver
+
+----------------------------------------------------------------
+Dan Williams (2):
+      tools/testing/nvdimm: Fix security_init() symbol collision
+      cxl/pci: Drop shadowed variable
+
+ drivers/cxl/pci.c                | 1 -
+ tools/testing/nvdimm/test/nfit.c | 4 ++--
+ 2 files changed, 2 insertions(+), 3 deletions(-)
