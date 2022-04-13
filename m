@@ -2,51 +2,51 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DF1C433FE
-	for <linux-cxl@archiver.kernel.org>; Wed, 13 Apr 2022 18:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 698B9C4332F
+	for <linux-cxl@archiver.kernel.org>; Wed, 13 Apr 2022 18:38:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237786AbiDMSkZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 13 Apr 2022 14:40:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55944 "EHLO
+        id S237794AbiDMSk0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 13 Apr 2022 14:40:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237769AbiDMSkR (ORCPT
+        with ESMTP id S237768AbiDMSkR (ORCPT
         <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Apr 2022 14:40:17 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76E255D5CC
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30D5453E2A
         for <linux-cxl@vger.kernel.org>; Wed, 13 Apr 2022 11:37:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1649875075; x=1681411075;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ueQH3WwkSvY8y69EXKcXNLoaONnTPsnAVGBYWnEIn+E=;
-  b=ioCESni35Yas5XkVioYj7l9oRm1QoTv3Q7ssXzLo8yOLSTZRfuw0Z/RW
-   gzDG6QI/4Ppi8/13Lg2zaEY4XhZHB9rQffyHEJsbWnGvujE5tfqwhE8Qm
-   VCyz8lOcZCUspPDUC1rw0H0vWPXOF2ucMq4mujdMjvarQd+AVIkpCC1e1
-   PyyCTOp2WmZggx88Ml6go58gQsu/LkMtBjm7vK3Bs6Z7LBtSZay5yw/8S
-   xuSZCwHtFXWHT3A4VV55Iwnp3j14I9GJ4dGIglduqKgFeIqAdh4+z5/Rs
-   pQlVhBZfmoAGDIRRJGw4EK3EwoTtzR2kd1bpKVlLUL47315qkv9tRJwUs
+  bh=aeZKwA6KXw/WgR7UJB3SvHnRt3gEatPvEZCT9hDGrhA=;
+  b=nj8m12VlA69YlFKE09ru30B/f8ryuZO+TGCOXJtZRuZJIu8WwcIu97Gg
+   Z+pANjZ3oS0P8n4bAC6IXHlP5AeAbDde3D82ncxPnbiz6LEnVvccBfQHi
+   VebA97OjYkW6LAyw9aVu0muN+2kdPRHBJPV2C8QhUjDDimdC/rXUaqF4r
+   nHLB6iY8D/cYCPCWN/AxXnSkGtIBQYyM9eRCFY/kZuhl5gd05Te+0xBGg
+   m7UGYkAeGuNRvIAglvegVgMXN1qraFsEoWR3kruIYePUgMh1sR5rJXaNF
+   7P7QnRrJMIUNY3dfAfbpn7zslQRHrcH+XVFA/m+kAE2VW5BoFEF374xQc
    Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10316"; a="261591506"
+X-IronPort-AV: E=McAfee;i="6400,9594,10316"; a="262497758"
 X-IronPort-AV: E=Sophos;i="5.90,257,1643702400"; 
-   d="scan'208";a="261591506"
+   d="scan'208";a="262497758"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2022 11:37:49 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2022 11:37:52 -0700
 X-IronPort-AV: E=Sophos;i="5.90,257,1643702400"; 
-   d="scan'208";a="725013586"
+   d="scan'208";a="725013640"
 Received: from sushobhi-mobl.amr.corp.intel.com (HELO localhost.localdomain) ([10.252.131.238])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2022 11:37:48 -0700
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2022 11:37:52 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
 Cc:     patches@lists.linux.dev, Ben Widawsky <ben.widawsky@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [RFC PATCH 05/15] cxl/acpi: Reserve CXL resources from request_free_mem_region
-Date:   Wed, 13 Apr 2022 11:37:10 -0700
-Message-Id: <20220413183720.2444089-6-ben.widawsky@intel.com>
+Subject: [RFC PATCH 15/15] cxl/region: Introduce a cxl_region driver
+Date:   Wed, 13 Apr 2022 11:37:20 -0700
+Message-Id: <20220413183720.2444089-16-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220413183720.2444089-1-ben.widawsky@intel.com>
 References: <20220413183720.2444089-1-ben.widawsky@intel.com>
@@ -56,172 +56,488 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Define an API which allows CXL drivers to manage CXL address space.
-CXL is unique in that the address space and various properties are only
-known after CXL drivers come up, and therefore cannot be part of core
-memory enumeration.
+The cxl_region driver is responsible for managing the HDM decoder
+programming in the CXL topology. Once a region is created it must be
+configured and bound to the driver in order to activate it.
 
-Compute Express Link 2.0 [ECN] defines a concept called CXL Fixed Memory
-Window Structures (CFMWS). Each CFMWS conveys a region of host physical
-address (HPA) space which has certain properties that are familiar to
-CXL, mainly interleave properties, and restrictions, such as
-persistence. The HPA ranges therefore should be owned, or at least
-guided by the relevant CXL driver, cxl_acpi [1].
+The following is a sample of how such controls might work:
 
-It would be desirable to simply insert this address space into
-iomem_resource with a new flag to denote this is CXL memory. This would
-permit request_free_mem_region() to be reused for CXL memory provided it
-learned some new tricks. For that, it is tempting to simply use
-insert_resource(). The API was designed specifically for cases where new
-devices may offer new address space. This cannot work in the general
-case. Boot firmware can pass, some, none, or all of the CFMWS range as
-various types of memory to the kernel, and this may be left alone,
-merged, or even expanded. As a result iomem_resource may intersect CFMWS
-regions in ways insert_resource cannot handle [2]. Similar reasoning
-applies to allocate_resource().
+region=$(cat /sys/bus/cxl/devices/decoder0.0/create_pmem_region)
+echo $region > /sys/bus/cxl/devices/decoder0.0/create_pmem_region
+echo 256 > /sys/bus/cxl/devices/decoder0.0/region0/interleave_granularity
+echo 2 > /sys/bus/cxl/devices/decoder0.0/region0/interleave_ways
+echo $((256<<20)) > /sys/bus/cxl/devices/decoder0.0/region0/size
+echo decoder3.0 > /sys/bus/cxl/devices/decoder0.0/region0/target0
+echo decoder4.0 > /sys/bus/cxl/devices/decoder0.0/region0/target1
+echo region0 > /sys/bus/cxl/drivers/cxl_region/bind
 
-With the insert_resource option out, the only reasonable approach left
-is to let the CXL driver manage the address space independently of
-iomem_resource and attempt to prevent users of device private memory
-APIs from using CXL memory. In the case where cxl_acpi comes up first,
-the new API allows cxl to block use of any CFMWS defined address space
-by assuming everything above the highest CFMWS entry is fair game. It is
-expected that this effectively will prevent usage of device private
-memory, but if such behavior is undesired, cxl_acpi can be blocked from
-loading, or unloaded. When device private memory is used before CXL
-comes up, or, there are intersections as described above, the CXL driver
-will have to make sure to not reuse sysram that is BUSY.
+Note that the above is not complete as the endpoint decoders also need
+configuration.
 
-[1]: The specification defines enumeration via ACPI, however, one could
-envision devicetree, or some other hardcoded mechanisms for doing the
-same thing.
-
-[2]: A common way to hit this case is when BIOS creates a volatile
-region with extra space for hotplug. In this case, you're likely to have
-
-|<--------------HPA space---------------------->|
-|<---iomem_resource -->|
-| DDR  | CXL Volatile  |
-|      | CFMWS for volatile w/ hotplug |
-
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- drivers/cxl/acpi.c     | 26 ++++++++++++++++++++++++++
- include/linux/ioport.h |  1 +
- kernel/resource.c      | 11 ++++++++++-
- 3 files changed, 37 insertions(+), 1 deletion(-)
+ .../driver-api/cxl/memory-devices.rst         |   3 +
+ drivers/cxl/Kconfig                           |   4 +
+ drivers/cxl/Makefile                          |   2 +
+ drivers/cxl/core/core.h                       |   1 +
+ drivers/cxl/core/port.c                       |   2 +
+ drivers/cxl/core/region.c                     |   2 +-
+ drivers/cxl/cxl.h                             |   6 +
+ drivers/cxl/region.c                          | 333 ++++++++++++++++++
+ 8 files changed, 352 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/cxl/region.c
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 9b69955b90cb..0870904fe4b5 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -76,6 +76,7 @@ static int cxl_acpi_cfmws_verify(struct device *dev,
- struct cxl_cfmws_context {
- 	struct device *dev;
- 	struct cxl_port *root_port;
-+	struct acpi_cedt_cfmws *high_cfmws;
- };
+diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
+index 66ddc58a21b1..8cb4dece5b17 100644
+--- a/Documentation/driver-api/cxl/memory-devices.rst
++++ b/Documentation/driver-api/cxl/memory-devices.rst
+@@ -364,6 +364,9 @@ CXL Core
  
- static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
-@@ -126,6 +127,14 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
- 			cfmws->base_hpa + cfmws->window_size - 1);
- 		return 0;
+ CXL Regions
+ -----------
++.. kernel-doc:: drivers/cxl/region.c
++   :doc: cxl region
++
+ .. kernel-doc:: drivers/cxl/region.h
+    :identifiers:
+ 
+diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+index 7ce86eee8bda..d5c41c96971f 100644
+--- a/drivers/cxl/Kconfig
++++ b/drivers/cxl/Kconfig
+@@ -104,4 +104,8 @@ config CXL_REGION
+ 	default CXL_BUS
+ 	select MEMREGION
+ 
++config CXL_REGION
++	default CXL_PORT
++	tristate
++
+ endif
+diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+index ce267ef11d93..02a4776e7ab9 100644
+--- a/drivers/cxl/Makefile
++++ b/drivers/cxl/Makefile
+@@ -5,9 +5,11 @@ obj-$(CONFIG_CXL_MEM) += cxl_mem.o
+ obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+ obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
+ obj-$(CONFIG_CXL_PORT) += cxl_port.o
++obj-$(CONFIG_CXL_REGION) += cxl_region.o
+ 
+ cxl_mem-y := mem.o
+ cxl_pci-y := pci.o
+ cxl_acpi-y := acpi.o
+ cxl_pmem-y := pmem.o
+ cxl_port-y := port.o
++cxl_region-y := region.o
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index a507a2502127..8871a3385604 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -6,6 +6,7 @@
+ 
+ extern const struct device_type cxl_nvdimm_bridge_type;
+ extern const struct device_type cxl_nvdimm_type;
++extern const struct device_type cxl_region_type;
+ 
+ extern struct attribute_group cxl_base_attribute_group;
+ 
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 19cf1fd16118..f22579cd031d 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -53,6 +53,8 @@ static int cxl_device_id(struct device *dev)
  	}
-+
-+	if (ctx->high_cfmws) {
-+		if (cfmws->base_hpa > ctx->high_cfmws->base_hpa)
-+			ctx->high_cfmws = cfmws;
-+	} else {
-+		ctx->high_cfmws = cfmws;
-+	}
-+
- 	dev_dbg(dev, "add: %s node: %d range %#llx-%#llx\n",
- 		dev_name(&cxld->dev), phys_to_target_node(cxld->range.start),
- 		cfmws->base_hpa, cfmws->base_hpa + cfmws->window_size - 1);
-@@ -299,6 +308,7 @@ static int cxl_acpi_probe(struct platform_device *pdev)
- 	ctx = (struct cxl_cfmws_context) {
- 		.dev = host,
- 		.root_port = root_port,
-+		.high_cfmws = NULL,
- 	};
- 	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, cxl_parse_cfmws, &ctx);
- 
-@@ -317,10 +327,25 @@ static int cxl_acpi_probe(struct platform_device *pdev)
- 	if (rc < 0)
- 		return rc;
- 
-+	if (ctx.high_cfmws) {
-+		resource_size_t end =
-+			ctx.high_cfmws->base_hpa + ctx.high_cfmws->window_size;
-+		dev_dbg(host,
-+			"Disabling free device private regions below %#llx\n",
-+			end);
-+		set_request_free_min_base(end);
-+	}
-+
- 	/* In case PCI is scanned before ACPI re-trigger memdev attach */
- 	return cxl_bus_rescan();
+ 	if (is_cxl_memdev(dev))
+ 		return CXL_DEVICE_MEMORY_EXPANDER;
++	if (dev->type == &cxl_region_type)
++		return CXL_DEVICE_REGION;
+ 	return 0;
  }
  
-+static int cxl_acpi_remove(struct platform_device *pdev)
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 4766d897f4bf..1c28d9623cb8 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -464,7 +464,7 @@ static const struct attribute_group *region_groups[] = {
+ 	NULL,
+ };
+ 
+-static const struct device_type cxl_region_type = {
++const struct device_type cxl_region_type = {
+ 	.name = "cxl_region",
+ 	.release = cxl_region_release,
+ 	.groups = region_groups
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index db69dfa16f71..184af920113d 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -212,6 +212,10 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
+ #define CXL_DECODER_F_ENABLE    BIT(5)
+ #define CXL_DECODER_F_MASK  GENMASK(5, 0)
+ 
++#define cxl_is_pmem_t3(flags)                                                  \
++	(((flags) & (CXL_DECODER_F_TYPE3 | CXL_DECODER_F_PMEM)) ==             \
++	 (CXL_DECODER_F_TYPE3 | CXL_DECODER_F_PMEM))
++
+ enum cxl_decoder_type {
+        CXL_DECODER_ACCELERATOR = 2,
+        CXL_DECODER_EXPANDER = 3,
+@@ -440,6 +444,7 @@ struct cxl_dport *devm_cxl_add_dport(struct cxl_port *port,
+ 				     resource_size_t component_reg_phys);
+ struct cxl_dport *cxl_find_dport_by_dev(struct cxl_port *port,
+ 					const struct device *dev);
++struct cxl_port *ep_find_cxl_port(struct cxl_memdev *cxlmd, unsigned int depth);
+ 
+ struct cxl_decoder *to_cxl_decoder(struct device *dev);
+ bool is_root_decoder(struct device *dev);
+@@ -501,6 +506,7 @@ void cxl_driver_unregister(struct cxl_driver *cxl_drv);
+ #define CXL_DEVICE_PORT			3
+ #define CXL_DEVICE_ROOT			4
+ #define CXL_DEVICE_MEMORY_EXPANDER	5
++#define CXL_DEVICE_REGION		6
+ 
+ #define MODULE_ALIAS_CXL(type) MODULE_ALIAS("cxl:t" __stringify(type) "*")
+ #define CXL_MODALIAS_FMT "cxl:t%d"
+diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
+new file mode 100644
+index 000000000000..f5de640623c0
+--- /dev/null
++++ b/drivers/cxl/region.c
+@@ -0,0 +1,333 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright(c) 2021 Intel Corporation. All rights reserved. */
++#include <linux/platform_device.h>
++#include <linux/device.h>
++#include <linux/module.h>
++#include <linux/pci.h>
++#include "cxlmem.h"
++#include "region.h"
++#include "cxl.h"
++
++/**
++ * DOC: cxl region
++ *
++ * This module implements a region driver that is capable of programming CXL
++ * hardware to setup regions.
++ *
++ * A CXL region encompasses a chunk of host physical address space that may be
++ * consumed by a single device (x1 interleave aka linear) or across multiple
++ * devices (xN interleaved). The region driver has the following
++ * responsibilities:
++ *
++ * * Walk topology to obtain decoder resources for region configuration.
++ * * Program decoder resources based on region configuration.
++ * * Bridge CXL regions to LIBNVDIMM
++ * * Initiates reading and configuring LSA regions
++ * * Enumerates regions created by BIOS (typically volatile)
++ */
++
++#define for_each_cxled(cxled, idx, cxlr) \
++	for (idx = 0; idx < cxlr->interleave_ways && (cxled = cxlr->targets[idx]); idx++)
++
++static struct cxl_decoder *rootd_from_region(const struct cxl_region *cxlr)
 +{
-+	set_request_free_min_base(0);
++	struct device *d = cxlr->dev.parent;
++
++	if (WARN_ONCE(!is_root_decoder(d),
++		      "Corrupt topology for root region\n"))
++		return NULL;
++
++	return to_cxl_decoder(d);
++}
++
++static struct cxl_port *get_hostbridge(const struct cxl_memdev *ep)
++{
++	struct cxl_port *port = dev_get_drvdata(&ep->dev);
++
++	while (!is_cxl_root(port)) {
++		port = to_cxl_port(port->dev.parent);
++		if (port->depth == 1)
++			return port;
++	}
++
++	BUG();
++	return NULL;
++}
++
++static struct cxl_port *get_root_decoder(const struct cxl_memdev *endpoint)
++{
++	struct cxl_port *hostbridge = get_hostbridge(endpoint);
++
++	if (hostbridge)
++		return to_cxl_port(hostbridge->dev.parent);
++
++	return NULL;
++}
++
++/**
++ * validate_region() - Check is region is reasonably configured
++ * @cxlr: The region to check
++ *
++ * Determination as to whether or not a region can possibly be configured is
++ * described in CXL Memory Device SW Guide. In order to implement the algorithms
++ * described there, certain more basic configuration parameters must first need
++ * to be validated. That is accomplished by this function.
++ *
++ * Returns 0 if the region is reasonably configured, else returns a negative
++ * error code.
++ */
++static int validate_region(const struct cxl_region *cxlr)
++{
++	const struct cxl_decoder *rootd = rootd_from_region(cxlr);
++	const int gran = cxlr->interleave_granularity;
++	const int ways = cxlr->interleave_ways;
++	struct cxl_endpoint_decoder *cxled;
++	int i;
++
++	/*
++	 * Interleave attributes should be caught by later math, but it's
++	 * easiest to find those issues here, now.
++	 */
++	if (!cxl_region_granularity_valid(rootd, gran)) {
++		dev_dbg(&cxlr->dev, "Invalid interleave granularity\n");
++		return -ENXIO;
++	}
++
++	if (!cxl_region_ways_valid(rootd, ways, gran)) {
++		dev_dbg(&cxlr->dev, "Invalid number of ways\n");
++		return -ENXIO;
++	}
++
++	if (!cxl_region_size_valid(range_len(&cxlr->range), ways)) {
++		dev_dbg(&cxlr->dev, "Invalid size. Must be multiple of %uM\n",
++			256 * ways);
++		return -ENXIO;
++	}
++
++	for_each_cxled(cxled, i, cxlr) {
++		struct cxl_memdev *cxlmd;
++		struct cxl_port *port;
++
++		port = to_cxl_port(cxled->base.dev.parent);
++		cxlmd = to_cxl_memdev(port->uport);
++		if (!cxlmd->dev.driver) {
++			dev_dbg(&cxlr->dev, "%s isn't CXL.mem capable\n",
++				dev_name(&cxled->base.dev));
++			return -ENODEV;
++		}
++
++		if ((range_len(&cxlr->range) / ways) !=
++		    range_len(&cxled->drange)) {
++			dev_dbg(&cxlr->dev, "%s is the wrong size\n",
++				dev_name(&cxled->base.dev));
++			return -ENXIO;
++		}
++	}
++
++	if (i != cxlr->interleave_ways) {
++		dev_dbg(&cxlr->dev, "Missing memory device target%u", i);
++		return -ENXIO;
++	}
++
 +	return 0;
 +}
 +
- static const struct acpi_device_id cxl_acpi_ids[] = {
- 	{ "ACPI0017" },
- 	{ },
-@@ -329,6 +354,7 @@ MODULE_DEVICE_TABLE(acpi, cxl_acpi_ids);
- 
- static struct platform_driver cxl_acpi_driver = {
- 	.probe = cxl_acpi_probe,
-+	.remove = cxl_acpi_remove,
- 	.driver = {
- 		.name = KBUILD_MODNAME,
- 		.acpi_match_table = cxl_acpi_ids,
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index ec5f71f7135b..dc41e4be5635 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -325,6 +325,7 @@ extern int
- walk_iomem_res_desc(unsigned long desc, unsigned long flags, u64 start, u64 end,
- 		    void *arg, int (*func)(struct resource *, void *));
- 
-+void set_request_free_min_base(resource_size_t val);
- struct resource *devm_request_free_mem_region(struct device *dev,
- 		struct resource *base, unsigned long size);
- struct resource *request_free_mem_region(struct resource *base,
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 34eaee179689..a4750689e529 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -1774,6 +1774,14 @@ void resource_list_free(struct list_head *head)
- EXPORT_SYMBOL(resource_list_free);
- 
- #ifdef CONFIG_DEVICE_PRIVATE
-+static resource_size_t request_free_min_base;
-+
-+void set_request_free_min_base(resource_size_t val)
++/**
++ * find_cdat_dsmas() - Find a valid DSMAS for the region
++ * @cxlr: The region
++ */
++static bool find_cdat_dsmas(const struct cxl_region *cxlr)
 +{
-+	request_free_min_base = val;
++	return true;
 +}
-+EXPORT_SYMBOL_GPL(set_request_free_min_base);
 +
- static struct resource *__request_free_mem_region(struct device *dev,
- 		struct resource *base, unsigned long size, const char *name)
- {
-@@ -1799,7 +1807,8 @@ static struct resource *__request_free_mem_region(struct device *dev,
- 	}
- 
- 	write_lock(&resource_lock);
--	for (; addr > size && addr >= base->start; addr -= size) {
-+	for (; addr > size && addr >= max(base->start, request_free_min_base);
-+	     addr -= size) {
- 		if (__region_intersects(addr, size, 0, IORES_DESC_NONE) !=
- 				REGION_DISJOINT)
- 			continue;
++/**
++ * qtg_match() - Does this root decoder have desirable QTG for the endpoint
++ * @rootd: The root decoder for the region
++ *
++ * Prior to calling this function, the caller should verify that all endpoints
++ * in the region have the same QTG ID.
++ *
++ * Returns true if the QTG ID of the root decoder matches the endpoint
++ */
++static bool qtg_match(const struct cxl_decoder *rootd)
++{
++	/* TODO: */
++	return true;
++}
++
++/**
++ * region_xhb_config_valid() - determine cross host bridge validity
++ * @cxlr: The region being programmed
++ * @rootd: The root decoder to check against
++ *
++ * The algorithm is outlined in 2.13.14 "Verify XHB configuration sequence" of
++ * the CXL Memory Device SW Guide (Rev1p0).
++ *
++ * Returns true if the configuration is valid.
++ */
++static bool region_xhb_config_valid(const struct cxl_region *cxlr,
++				    const struct cxl_decoder *rootd)
++{
++	/* TODO: */
++	return true;
++}
++
++/**
++ * region_hb_rp_config_valid() - determine root port ordering is correct
++ * @cxlr: Region to validate
++ * @rootd: root decoder for this @cxlr
++ *
++ * The algorithm is outlined in 2.13.15 "Verify HB root port configuration
++ * sequence" of the CXL Memory Device SW Guide (Rev1p0).
++ *
++ * Returns true if the configuration is valid.
++ */
++static bool region_hb_rp_config_valid(const struct cxl_region *cxlr,
++				      const struct cxl_decoder *rootd)
++{
++	/* TODO: */
++	return true;
++}
++
++/**
++ * rootd_contains() - determine if this region can exist in the root decoder
++ * @rootd: root decoder that potentially decodes to this region
++ * @cxlr: region to be routed by the @rootd
++ */
++static bool rootd_contains(const struct cxl_region *cxlr,
++			   const struct cxl_decoder *rootd)
++{
++	/* TODO: */
++	return true;
++}
++
++static bool rootd_valid(const struct cxl_region *cxlr,
++			const struct cxl_decoder *rootd)
++{
++	if (!qtg_match(rootd))
++		return false;
++
++	if (!cxl_is_pmem_t3(rootd->flags))
++		return false;
++
++	if (!region_xhb_config_valid(cxlr, rootd))
++		return false;
++
++	if (!region_hb_rp_config_valid(cxlr, rootd))
++		return false;
++
++	if (!rootd_contains(cxlr, rootd))
++		return false;
++
++	return true;
++}
++
++struct rootd_context {
++	const struct cxl_region *cxlr;
++	struct cxl_port *hbs[CXL_DECODER_MAX_INTERLEAVE];
++	int count;
++};
++
++static int rootd_match(struct device *dev, void *data)
++{
++	struct rootd_context *ctx = (struct rootd_context *)data;
++	const struct cxl_region *cxlr = ctx->cxlr;
++
++	if (!is_root_decoder(dev))
++		return 0;
++
++	return !!rootd_valid(cxlr, to_cxl_decoder(dev));
++}
++
++/*
++ * This is a roughly equivalent implementation to "Figure 45 - High-level
++ * sequence: Finding CFMWS for region" from the CXL Memory Device SW Guide
++ * Rev1p0.
++ */
++static struct cxl_decoder *find_rootd(const struct cxl_region *cxlr,
++				      const struct cxl_port *root)
++{
++	struct rootd_context ctx;
++	struct device *ret;
++
++	ctx.cxlr = cxlr;
++
++	ret = device_find_child((struct device *)&root->dev, &ctx, rootd_match);
++	if (ret)
++		return to_cxl_decoder(ret);
++
++	return NULL;
++}
++
++static int bind_region(const struct cxl_region *cxlr)
++{
++	struct cxl_endpoint_decoder *cxled;
++	int i;
++	/* TODO: */
++
++	/*
++	 * Natural decoder teardown can occur at this point, put the
++	 * reference which was taken when the target was set.
++	 */
++	for_each_cxled(cxled, i, cxlr)
++		put_device(&cxled->base.dev);
++
++	WARN_ON(i != cxlr->interleave_ways);
++	return 0;
++}
++
++static int cxl_region_probe(struct device *dev)
++{
++	struct cxl_region *cxlr = to_cxl_region(dev);
++	struct cxl_port *root_port, *ep_port;
++	struct cxl_decoder *rootd, *ours;
++	struct cxl_memdev *cxlmd;
++	int ret;
++
++	if (uuid_is_null(&cxlr->uuid))
++		uuid_gen(&cxlr->uuid);
++
++	/* TODO: What about volatile, and LSA generated regions? */
++
++	ret = validate_region(cxlr);
++	if (ret)
++		return ret;
++
++	if (!find_cdat_dsmas(cxlr))
++		return -ENXIO;
++
++	rootd = rootd_from_region(cxlr);
++	if (!rootd) {
++		dev_err(dev, "Couldn't find root decoder\n");
++		return -ENXIO;
++	}
++
++	if (!rootd_valid(cxlr, rootd)) {
++		dev_err(dev, "Picked invalid rootd\n");
++		return -ENXIO;
++	}
++
++	ep_port = to_cxl_port(cxlr->targets[0]->base.dev.parent);
++	cxlmd = to_cxl_memdev(ep_port->uport);
++	root_port = get_root_decoder(cxlmd);
++	ours = find_rootd(cxlr, root_port);
++	if (ours != rootd)
++		dev_dbg(dev, "Picked different rootd %s %s\n",
++			dev_name(&rootd->dev), dev_name(&ours->dev));
++	if (ours)
++		put_device(&ours->dev);
++
++	return bind_region(cxlr);
++}
++
++static struct cxl_driver cxl_region_driver = {
++	.name = "cxl_region",
++	.probe = cxl_region_probe,
++	.id = CXL_DEVICE_REGION,
++};
++module_cxl_driver(cxl_region_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_IMPORT_NS(CXL);
++MODULE_ALIAS_CXL(CXL_DEVICE_REGION);
 -- 
 2.35.1
 
