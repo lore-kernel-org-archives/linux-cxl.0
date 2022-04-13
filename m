@@ -2,91 +2,239 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBFEC433F5
-	for <linux-cxl@archiver.kernel.org>; Wed, 13 Apr 2022 21:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8A2C433EF
+	for <linux-cxl@archiver.kernel.org>; Wed, 13 Apr 2022 21:44:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231266AbiDMVjl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 13 Apr 2022 17:39:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34412 "EHLO
+        id S232039AbiDMVqX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 13 Apr 2022 17:46:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231252AbiDMVjl (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Apr 2022 17:39:41 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6241A5A09C
-        for <linux-cxl@vger.kernel.org>; Wed, 13 Apr 2022 14:37:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649885839; x=1681421839;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=k1lCeF1/ccmhHkwlC0ZX6ss/6hy6bj2z/gUpqtBWCd8=;
-  b=f1ktIUISuf9NNZFXCMw41/1Ft/6Amqn9HQNHsgCRjgmjBVEXn9rJJRUh
-   kS/8/k3NNsxFpVNAt3cCfwN1fXIYVHZa8Agh+Y9cWxTYGjv4naThgzObc
-   fz90fS9X46lSMt+81q1MkuBJ0Cttcpoe7FN04e6rF9wpOLyppP9mZEeLr
-   K9lEvjfZfashSN1VkjLT32TdADTBxshQh8f3EsUnwF22idrogiycGAQOk
-   34OKt4vPx9WNthJSIGaTkv0K+Odf1gYs3+/iwTV0HtwhQ4xo+QDY0X0j/
-   X8trisdY97cIbX+MouhH3MaTvHbl0vfuQGx4rIyuBQGpK5TyJ62yneV0i
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10316"; a="349216504"
-X-IronPort-AV: E=Sophos;i="5.90,257,1643702400"; 
-   d="scan'208";a="349216504"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2022 14:37:19 -0700
-X-IronPort-AV: E=Sophos;i="5.90,257,1643702400"; 
-   d="scan'208";a="623841718"
-Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.41])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2022 14:37:19 -0700
-Date:   Wed, 13 Apr 2022 14:39:13 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     "Widawsky, Ben" <ben.widawsky@intel.com>
-Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        lkp <lkp@intel.com>, Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v2] cxl/mbox: Restore signedness to a mailbox payload
- variable
-Message-ID: <20220413213913.GA1242919@alison-desk>
-References: <20220413191311.1242361-1-alison.schofield@intel.com>
- <20220413202902.bpyczvz56pxlhgkq@intel.com>
+        with ESMTP id S233354AbiDMVqW (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Apr 2022 17:46:22 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5721403E9
+        for <linux-cxl@vger.kernel.org>; Wed, 13 Apr 2022 14:43:59 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id a21so3118389pfv.10
+        for <linux-cxl@vger.kernel.org>; Wed, 13 Apr 2022 14:43:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a64lyEjoCz+sNKGggmaIK+RCZ9sGDKCWpc5k1FbkImc=;
+        b=3YT1NAYEmFgYYpwJAJpO2IbGfiAUogw+QHX1Ef+ed27J6Dxo8PL85+Yj9F2ajWbTZx
+         OjXbi8L6chYGttC4q/kdAejMluO96gNiFEHvPQ0R4NAM2uTWT+Jk4Uh6oUbMTmygv9ji
+         K6o1INMOAKgNK3PdWYGMzJ1QSEzH4lIhnFDxRjlzwUPnsKAffkrBMnmVnR+BtnBERi2L
+         M04MwPx7hAdtVPdOxX7FxUL983VCKzyCz8c3T/fhbFI0Hg5FfvDG+SGbKp9quWa5FXQr
+         MmTl98OzxdEeWBDPjyomcerMJ+2jG3+i/Sbmy26j09Fdstm+dt91cSaR8OEgC10/r6wq
+         aXJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a64lyEjoCz+sNKGggmaIK+RCZ9sGDKCWpc5k1FbkImc=;
+        b=FJkc+3y/sd9H1enwjTOwTVN+M7f55Wryzlwh9ob5fmWk+8XD92zgmlcSILhfvlos4u
+         yN5BbpJMdMq4JSrfSOx094n4zsoLQbjhPeRBHfdIIv8VR/oe2OqJ2xZYCTVWQx1B3do7
+         BpP6PAnlVe3DTVxsnqEr1GNhQT+QRcgdPftiy+9B3ftHYNEaNy9Vun90nY744UwixMm4
+         2f2Dm+UPOJorcVXS0Y7AZcyv4IVsDPDYeuNpxrREzs9ZGkAlQFGTXYnkk4uGVS6nfFXE
+         abr69Qgz5kw9QrAJOMIDB8ejkGvb6s6moT4dsx6+fXLOBLuL7Rry+UIlSRgX6ZSGcNiF
+         YY6w==
+X-Gm-Message-State: AOAM532rqIoBmou8qnDu+vNA27vwnYIeYqXabnD1W3kHtT/hJWexR7zK
+        prDXn1QUJmOIajS2iNlVaILkLDtHHOpmSnWrzfmnHA==
+X-Google-Smtp-Source: ABdhPJyTIbblRWH1EHAIfBiIV4i0WLLoKtU2wlqfnifoTTPqL7FnGrV0iSQwQkh+ghKl/Cwk/3iYGhAPmKHgYR5/opY=
+X-Received: by 2002:a05:6a00:8c5:b0:4fe:134d:30d3 with SMTP id
+ s5-20020a056a0008c500b004fe134d30d3mr799676pfu.3.1649886239302; Wed, 13 Apr
+ 2022 14:43:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220413202902.bpyczvz56pxlhgkq@intel.com>
+References: <20220413183720.2444089-1-ben.widawsky@intel.com> <20220413183720.2444089-4-ben.widawsky@intel.com>
+In-Reply-To: <20220413183720.2444089-4-ben.widawsky@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 13 Apr 2022 14:43:48 -0700
+Message-ID: <CAPcyv4iwNaJTi6DCVrVDLuwY2Cc99u_2BWokfavh3TqVqEa6UA@mail.gmail.com>
+Subject: Re: [RFC PATCH 03/15] Revert "cxl/core: Convert decoder range to resource"
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Linux NVDIMM <nvdimm@lists.linux.dev>,
+        patches@lists.linux.dev,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Apr 13, 2022 at 01:29:02PM -0700, Ben Widawsky wrote:
-> On 22-04-13 12:13:11, alison.schofield@intel.com wrote:
-> > From: Alison Schofield <alison.schofield@intel.com>
-> > 
-> > A mailbox command output size value of (-1) means that a device
-> > may return a variable sized output to that command. The device
-> > defines a maximum payload size, so the driver will allocate enough
-> > memory to receive that maximum payload for variable size mailbox
-> > commands.
-> > 
-> > A recent code refactoring discarded the signedness on 'out_size'
-> > before checking it, thereby breaking the handling of mailbox
-> > commands with variable sized output. Pass along both in_size and
-> > out_size with signedness, and only discard the signedness when
-> > building the cxl_mbox_cmd structure.
-> > 
-> > Smatch warn: unsigned 'out_size' is never less than 0
-> > 
-> > Fixes: be0d0ce77aa3 ("cxl/mbox: Move build of user mailbox cmd to a helper funct
-> > ions")
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> 
-> Per internal discussion, do we want to change in_size also? I'm in favor of
-> fixing the ABI.
-> 
-Thanks for reviewing!
-OK - next version will removed the signedness from the ABI.
-Compare to UINT_MAX for the variable size option.
+On Wed, Apr 13, 2022 at 11:38 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> This reverts commit 608135db1b790170d22848815c4671407af74e37. All
 
-> [snip]
-> 
+Did checkpatch not complain about this being in "commit
+<12-character-commit-id> <commit summary format>"? However, I'd rather
+just drop the revert language and say:
+
+Change root decoders to reuse the existing ->range field to track the
+decoder's programmed HPA range. The infrastructure to track the
+allocations out of the root decoder range is still a work-in-progress,
+but in the meantime it simplifies the code to always represent the
+current decoder range setting in the ->range field regardless of
+decoder type.
+
+> decoders do have a host physical address space and the revert allows us
+> to keep that uniformity. Decoder disambiguation will allow for decoder
+> type-specific members which is needed, but will be handled separately.
+>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+>
+> ---
+> The explanation for why it is impossible to make CFMWS ranges be
+> iomem_resources is explain in a later patch.
+
+This change stands alone / is independent of any iomem_resource concerns, right?
+
+> ---
+>  drivers/cxl/acpi.c      | 17 ++++++++++-------
+>  drivers/cxl/core/hdm.c  |  2 +-
+>  drivers/cxl/core/port.c | 28 ++++++----------------------
+>  drivers/cxl/cxl.h       |  8 ++------
+>  4 files changed, 19 insertions(+), 36 deletions(-)
+>
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index d15a6aec0331..9b69955b90cb 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -108,8 +108,10 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+>
+>         cxld->flags = cfmws_to_decoder_flags(cfmws->restrictions);
+>         cxld->target_type = CXL_DECODER_EXPANDER;
+> -       cxld->platform_res = (struct resource)DEFINE_RES_MEM(cfmws->base_hpa,
+> -                                                            cfmws->window_size);
+> +       cxld->range = (struct range){
+> +               .start = cfmws->base_hpa,
+> +               .end = cfmws->base_hpa + cfmws->window_size - 1,
+> +       };
+>         cxld->interleave_ways = CFMWS_INTERLEAVE_WAYS(cfmws);
+>         cxld->interleave_granularity = CFMWS_INTERLEAVE_GRANULARITY(cfmws);
+>
+> @@ -119,13 +121,14 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+>         else
+>                 rc = cxl_decoder_autoremove(dev, cxld);
+>         if (rc) {
+> -               dev_err(dev, "Failed to add decoder for %pr\n",
+> -                       &cxld->platform_res);
+> +               dev_err(dev, "Failed to add decoder for %#llx-%#llx\n",
+> +                       cfmws->base_hpa,
+> +                       cfmws->base_hpa + cfmws->window_size - 1);
+>                 return 0;
+>         }
+> -       dev_dbg(dev, "add: %s node: %d range %pr\n", dev_name(&cxld->dev),
+> -               phys_to_target_node(cxld->platform_res.start),
+> -               &cxld->platform_res);
+> +       dev_dbg(dev, "add: %s node: %d range %#llx-%#llx\n",
+> +               dev_name(&cxld->dev), phys_to_target_node(cxld->range.start),
+> +               cfmws->base_hpa, cfmws->base_hpa + cfmws->window_size - 1);
+>
+>         return 0;
+>  }
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index c3c021b54079..3055e246aab9 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -172,7 +172,7 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>                 return -ENXIO;
+>         }
+>
+> -       cxld->decoder_range = (struct range) {
+> +       cxld->range = (struct range) {
+>                 .start = base,
+>                 .end = base + size - 1,
+>         };
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 74c8e47bf915..86f451ecb7ed 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -73,14 +73,8 @@ static ssize_t start_show(struct device *dev, struct device_attribute *attr,
+>                           char *buf)
+>  {
+>         struct cxl_decoder *cxld = to_cxl_decoder(dev);
+> -       u64 start;
+>
+> -       if (is_root_decoder(dev))
+> -               start = cxld->platform_res.start;
+> -       else
+> -               start = cxld->decoder_range.start;
+> -
+> -       return sysfs_emit(buf, "%#llx\n", start);
+> +       return sysfs_emit(buf, "%#llx\n", cxld->range.start);
+>  }
+>  static DEVICE_ATTR_ADMIN_RO(start);
+>
+> @@ -88,14 +82,8 @@ static ssize_t size_show(struct device *dev, struct device_attribute *attr,
+>                         char *buf)
+>  {
+>         struct cxl_decoder *cxld = to_cxl_decoder(dev);
+> -       u64 size;
+>
+> -       if (is_root_decoder(dev))
+> -               size = resource_size(&cxld->platform_res);
+> -       else
+> -               size = range_len(&cxld->decoder_range);
+> -
+> -       return sysfs_emit(buf, "%#llx\n", size);
+> +       return sysfs_emit(buf, "%#llx\n", range_len(&cxld->range));
+>  }
+>  static DEVICE_ATTR_RO(size);
+>
+> @@ -1228,7 +1216,10 @@ static struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
+>         cxld->interleave_ways = 1;
+>         cxld->interleave_granularity = PAGE_SIZE;
+>         cxld->target_type = CXL_DECODER_EXPANDER;
+> -       cxld->platform_res = (struct resource)DEFINE_RES_MEM(0, 0);
+> +       cxld->range = (struct range) {
+> +               .start = 0,
+> +               .end = -1,
+> +       };
+>
+>         return cxld;
+>  err:
+> @@ -1342,13 +1333,6 @@ int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map)
+>         if (rc)
+>                 return rc;
+>
+> -       /*
+> -        * Platform decoder resources should show up with a reasonable name. All
+> -        * other resources are just sub ranges within the main decoder resource.
+> -        */
+> -       if (is_root_decoder(dev))
+> -               cxld->platform_res.name = dev_name(dev);
+> -
+>         return device_add(dev);
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_decoder_add_locked, CXL);
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 5102491e8d13..6517d5cdf5ee 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -197,8 +197,7 @@ enum cxl_decoder_type {
+>   * struct cxl_decoder - CXL address range decode configuration
+>   * @dev: this decoder's device
+>   * @id: kernel device name id
+> - * @platform_res: address space resources considered by root decoder
+> - * @decoder_range: address space resources considered by midlevel decoder
+> + * @range: address range considered by this decoder
+>   * @interleave_ways: number of cxl_dports in this decode
+>   * @interleave_granularity: data stride per dport
+>   * @target_type: accelerator vs expander (type2 vs type3) selector
+> @@ -210,10 +209,7 @@ enum cxl_decoder_type {
+>  struct cxl_decoder {
+>         struct device dev;
+>         int id;
+> -       union {
+> -               struct resource platform_res;
+> -               struct range decoder_range;
+> -       };
+> +       struct range range;
+>         int interleave_ways;
+>         int interleave_granularity;
+>         enum cxl_decoder_type target_type;
+> --
+> 2.35.1
+>
