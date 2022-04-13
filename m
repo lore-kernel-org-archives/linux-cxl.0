@@ -2,114 +2,163 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C98C433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 13 Apr 2022 14:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4706C433F5
+	for <linux-cxl@archiver.kernel.org>; Wed, 13 Apr 2022 18:37:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233624AbiDMOFJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 13 Apr 2022 10:05:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41196 "EHLO
+        id S237154AbiDMSkN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 13 Apr 2022 14:40:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231751AbiDMOFI (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Apr 2022 10:05:08 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 94BB057148
-        for <linux-cxl@vger.kernel.org>; Wed, 13 Apr 2022 07:02:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1649858566;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tAfD3NhN7fayTDj+zqA64IJMnx8ZxzqbVRBoMThFMGA=;
-        b=DpXmLyETWnY+UTtNVFfLoDQsbCtlVDvmXpz7H/kcYaiRwRjJ9Ea3VLmbhfnHp/Y8VS13W6
-        IndVnyRCksUN7h7EQIMG3T+xDD4Jb6do5FXlxu1Z1nJ6LAVjNgwun5xpjY+KvgWbBbWvnv
-        qcDScLvmEAZouIRU85eox+y9+OaHULI=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-636-xzrjdR4XMWORsqlOI_ibHw-1; Wed, 13 Apr 2022 10:02:44 -0400
-X-MC-Unique: xzrjdR4XMWORsqlOI_ibHw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D49A129DD987;
-        Wed, 13 Apr 2022 14:02:35 +0000 (UTC)
-Received: from [10.18.17.215] (dhcp-17-215.bos.redhat.com [10.18.17.215])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 569B4C28109;
-        Wed, 13 Apr 2022 14:02:35 +0000 (UTC)
-Message-ID: <06ed6ba2-00c4-ab38-4fcf-611133865615@redhat.com>
-Date:   Wed, 13 Apr 2022 10:02:35 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v2 00/12] device-core: Enable device_lock() lockdep
- validation
-Content-Language: en-US
-To:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Cc:     Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        with ESMTP id S236393AbiDMSkL (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Apr 2022 14:40:11 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC61A532CE
+        for <linux-cxl@vger.kernel.org>; Wed, 13 Apr 2022 11:37:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649875069; x=1681411069;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=xCFUJR0nc5jPOvEXzPtBuiu7iwfD2xyQ9QD7Fv5gBes=;
+  b=k2gfBzRZ/QskRA95R630XuV4BnrvAcG3z3zO7NoT95OOkomUVRFLmpnQ
+   xOmKiyBVI5QBb5DCdh+KcWQbGegHg3rKL3uEgBBisSSSisa2z8YndSoaJ
+   FqcrbRlx4889+S7yj2kUiA9GY47IMqZL3UunbYSSFgmCOcLBNk01+PGnO
+   6PKQyFnfxzyLSHbe05aXYaykb02MS+bxpYeTOhWzSWk3Sh6ZrTifqaXCa
+   55YoFjL3feyCveBuGVCFEOSMpP2fIc+euGN3VjzhA6n89MMfQUgf0xTq9
+   7Iz0HUA2ekkgEXhbZ0MBqbp00OqU9uwP4O5rLe6B68gtiRfTD50RAt16J
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10316"; a="262497735"
+X-IronPort-AV: E=Sophos;i="5.90,257,1643702400"; 
+   d="scan'208";a="262497735"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2022 11:37:49 -0700
+X-IronPort-AV: E=Sophos;i="5.90,257,1643702400"; 
+   d="scan'208";a="725013590"
+Received: from sushobhi-mobl.amr.corp.intel.com (HELO localhost.localdomain) ([10.252.131.238])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2022 11:37:49 -0700
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
+Cc:     patches@lists.linux.dev, Ben Widawsky <ben.widawsky@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev
-References: <164982968798.684294.15817853329823976469.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Waiman Long <longman@redhat.com>
-In-Reply-To: <164982968798.684294.15817853329823976469.stgit@dwillia2-desk3.amr.corp.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: [RFC PATCH 06/15] cxl/acpi: Manage root decoder's address space
+Date:   Wed, 13 Apr 2022 11:37:11 -0700
+Message-Id: <20220413183720.2444089-7-ben.widawsky@intel.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220413183720.2444089-1-ben.widawsky@intel.com>
+References: <20220413183720.2444089-1-ben.widawsky@intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 4/13/22 02:01, Dan Williams wrote:
-> Changes since v1 [1]:
-> - Improve the clarity of the cover letter and changelogs of the
->    major patches (Patch2 and Patch12) (Pierre, Kevin, and Dave)
-> - Fix device_lock_interruptible() false negative deadlock detection
->    (Kevin)
-> - Fix off-by-one error in the device_set_lock_class() enable case (Kevin)
-> - Spelling fixes in Patch2 changelog (Pierre)
-> - Compilation fixes when both CONFIG_CXL_BUS=n and
->    CONFIG_LIBNVDIMM=n. (0day robot)
->
-> [1]: https://lore.kernel.org/all/164610292916.2682974.12924748003366352335.stgit@dwillia2-desk3.amr.corp.intel.com/
->
-> ---
->
-> The device_lock() is why the lockdep_set_novalidate_class() API exists.
-> The lock is taken in too many disparate contexts, and lockdep by design
-> assumes that all device_lock() acquisitions are identical. The lack of
-> lockdep coverage leads to deadlock scenarios landing upstream. To
-> mitigate that problem the lockdep_mutex was added [2].
->
-> The lockdep_mutex lets a subsystem mirror device_lock() acquisitions
-> without lockdep_set_novalidate_class() to gain some limited lockdep
-> coverage. The mirroring approach is limited to taking the device_lock()
-> after-the-fact in a subsystem's 'struct bus_type' operations and fails
-> to cover device_lock() acquisition in the driver-core. It also can only
-> track the needs of one subsystem at a time so, for example the kernel
-> needs to be recompiled between CONFIG_PROVE_NVDIMM_LOCKING and
-> CONFIG_PROVE_CXL_LOCKING depending on which subsystem is being
-> regression tested. Obviously that also means that intra-subsystem
-> locking dependencies can not be validated.
+Use a gen_pool to manage the physical address space that is routed by
+the platform decoder (root decoder). As described in 'cxl/acpi: Resereve
+CXL resources from request_free_mem_region' the address space does not
+coexist well if part of all of it is conveyed in the memory map to the
+kernel.
 
-Instead of using a fake lockdep_mutex, maybe you can just use a unique 
-lockdep key for each subsystem and call lockdep_set_class() in the 
-device_initialize() if such key is present or 
-lockdep_set_novalidate_class() otherwise. The unique key can be passed 
-either as a parameter to device_initialize() or as part of the device 
-structure. It is certainly less cumbersome that having a fake 
-lockdep_mutex array in the device structure.
+Since the existing resource APIs of interest all rely on the root
+decoder's address space being in iomem_resource, the choices are to roll
+a new allocator because on struct resource, or use gen_pool. gen_pool is
+a good choice because it already has all the capabilities needed to
+satisfy CXL programming.
 
-Cheers,
-Longman
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+---
+ drivers/cxl/acpi.c | 36 ++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxl.h  |  2 ++
+ 2 files changed, 38 insertions(+)
+
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index 0870904fe4b5..a6b0c3181d0e 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /* Copyright(c) 2021 Intel Corporation. All rights reserved. */
+ #include <linux/platform_device.h>
++#include <linux/genalloc.h>
+ #include <linux/module.h>
+ #include <linux/device.h>
+ #include <linux/kernel.h>
+@@ -79,6 +80,25 @@ struct cxl_cfmws_context {
+ 	struct acpi_cedt_cfmws *high_cfmws;
+ };
+ 
++static int cfmws_cookie;
++
++static int fill_busy_mem(struct resource *res, void *_window)
++{
++	struct gen_pool *window = _window;
++	struct genpool_data_fixed gpdf;
++	unsigned long addr;
++	void *type;
++
++	gpdf.offset = res->start;
++	addr = gen_pool_alloc_algo_owner(window, resource_size(res),
++					 gen_pool_fixed_alloc, &gpdf, &type);
++	if (addr != res->start || (res->start == 0 && type != &cfmws_cookie))
++		return -ENXIO;
++
++	pr_devel("%pR removed from CFMWS\n", res);
++	return 0;
++}
++
+ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+ 			   const unsigned long end)
+ {
+@@ -88,6 +108,8 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+ 	struct device *dev = ctx->dev;
+ 	struct acpi_cedt_cfmws *cfmws;
+ 	struct cxl_decoder *cxld;
++	struct gen_pool *window;
++	char name[64];
+ 	int rc, i;
+ 
+ 	cfmws = (struct acpi_cedt_cfmws *) header;
+@@ -116,6 +138,20 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+ 	cxld->interleave_ways = CFMWS_INTERLEAVE_WAYS(cfmws);
+ 	cxld->interleave_granularity = CFMWS_INTERLEAVE_GRANULARITY(cfmws);
+ 
++	sprintf(name, "cfmws@%#llx", cfmws->base_hpa);
++	window = devm_gen_pool_create(dev, ilog2(SZ_256M), NUMA_NO_NODE, name);
++	if (IS_ERR(window))
++		return 0;
++
++	gen_pool_add_owner(window, cfmws->base_hpa, -1, cfmws->window_size,
++			   NUMA_NO_NODE, &cfmws_cookie);
++
++	/* Area claimed by other resources, remove those from the gen_pool. */
++	walk_iomem_res_desc(IORES_DESC_NONE, 0, cfmws->base_hpa,
++			    cfmws->base_hpa + cfmws->window_size - 1, window,
++			    fill_busy_mem);
++	to_cxl_root_decoder(cxld)->window = window;
++
+ 	rc = cxl_decoder_add(cxld, target_map);
+ 	if (rc)
+ 		put_device(&cxld->dev);
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 85fd5e84f978..0e1c65761ead 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -246,10 +246,12 @@ struct cxl_switch_decoder {
+ /**
+  * struct cxl_root_decoder - A toplevel/platform decoder
+  * @base: Base class decoder
++ * @window: host address space allocator
+  * @targets: Downstream targets (ie. hostbridges).
+  */
+ struct cxl_root_decoder {
+ 	struct cxl_decoder base;
++	struct gen_pool *window;
+ 	struct cxl_decoder_targets *targets;
+ };
+ 
+-- 
+2.35.1
 
