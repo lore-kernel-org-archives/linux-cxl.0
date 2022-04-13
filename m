@@ -2,55 +2,55 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A00A6C433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 13 Apr 2022 21:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A13AC433EF
+	for <linux-cxl@archiver.kernel.org>; Wed, 13 Apr 2022 21:31:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234621AbiDMVYj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 13 Apr 2022 17:24:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53914 "EHLO
+        id S229581AbiDMVeQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 13 Apr 2022 17:34:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239070AbiDMVYh (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Apr 2022 17:24:37 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A932465480
-        for <linux-cxl@vger.kernel.org>; Wed, 13 Apr 2022 14:22:15 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id bg24so3252939pjb.1
-        for <linux-cxl@vger.kernel.org>; Wed, 13 Apr 2022 14:22:15 -0700 (PDT)
+        with ESMTP id S229531AbiDMVeP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Apr 2022 17:34:15 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90C4B710FD
+        for <linux-cxl@vger.kernel.org>; Wed, 13 Apr 2022 14:31:53 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id o5-20020a17090ad20500b001ca8a1dc47aso7460074pju.1
+        for <linux-cxl@vger.kernel.org>; Wed, 13 Apr 2022 14:31:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4omrGBh4rMwEJEaoEHmM1XJRtehHXwGUeZy3KwoVcfc=;
-        b=JHwn8yeQUIn0NLauMr393piIbTf3OTdCg4uXX41ukSp+4RGipfV9bBe8uRCqMHQlMX
-         9S25rGSI3H+jBJ3AxQi2O0+xwcLfAeUPoncKPZXif+9g/IDp5dFHaydwnhjQANt1yLkX
-         GyJs2zPbkf1G739gFU7CyFtLQ+Hj+1YOi7cWu3kWoOrz/uV1Z437+TvYQ0lzA9rafhT7
-         uJIpadx77lSEA+Ry1z4neKG0sFKUF6fjIWOksJjovqetFl6uM2NWsDNj2hQ4DaJHC6NM
-         AT+4sAQSWhMPQElg5pijJvYjZFQevAs1L2uYm7r9kasb7Oo/ecs3QY3jm2SnWWRZMTyP
-         gytg==
+        bh=HAP4pqEac4lfNJXlvViTtFzP0gATvktiVtnIJE/uYVU=;
+        b=OgUsLuIUsRmFfr4A7P9lwSM4pawCMg07L9HQNRqW9PovWsQNVsSSizipMQzqnefQtR
+         dT3AYO5SlxNk0rXJLXPlp/n3ufv7OeBnqnAver93U09NRMQVlXjaqS6SGF/LLoTnAtZb
+         lxYTwF0Q2J+zQkytzs4WvXg+DAfVRYtVZNhcooK5MJqwXWKTzewMCMuhKyVsnwyWojWA
+         Lg0X3NO4LmioIHph39lzBB0zSLqIrW51B9PvxXyxt/7F2CwwJ7DVKeC8ikgphhXHClc6
+         +m0Zu+85RvBqAWQ5kMqdj10LFi1Qnzym+4+bnjKNYULR79BsWUVHcxHKVlhGiaW3rgTU
+         Bpxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4omrGBh4rMwEJEaoEHmM1XJRtehHXwGUeZy3KwoVcfc=;
-        b=ELDr4ssDqmDmAR+XVDN5US+pDJXU/NdPpTAJCdGUWPpAuAP95BWGVtwrJ2qAYMeU3o
-         kL/2adsvKQjWZZlsMSqnNAtY1kapwA+o/Uym+TBNyjJHLrHp5FfIgaP89gjMtMEGglFL
-         ObzsIqLy59Z890oW5FbBG4mcyMxdzBbI7RLP9VqZmRTGf/kOYp3zmg0g6LxQ8umUP1uu
-         hPfNTMDFm4YRlkGWbMVP+vsgdSgbdjpyNyV9J+sF6oZIYXQWaInyPxf6RjdpZwQqE/Df
-         QxCwgok7joSp5CPiEzWyuC6HAaJKh0UEwfCTanQunELXoSIY1+l9SjxXiv+m9XdFtHj6
-         c+/Q==
-X-Gm-Message-State: AOAM532Rd3xdSTqb8pc/LhUiLhgYoUlvFQxHKblt1FL8v5TL0/+7aW4o
-        TGe3Qr0JwtnCkLr3m1k5deCPPrX8FcNJzaLi3r0PIA==
-X-Google-Smtp-Source: ABdhPJzJ1KuMUw+23/AIxQgzDx5RbhtEYcoArH9fBDCciyTF6G30/td30jwZCE13hnZ4ygVGIROTwReA5Afzf8G+BBY=
-X-Received: by 2002:a17:90b:1804:b0:1cb:82e3:5cd0 with SMTP id
- lw4-20020a17090b180400b001cb82e35cd0mr743163pjb.8.1649884935282; Wed, 13 Apr
- 2022 14:22:15 -0700 (PDT)
+        bh=HAP4pqEac4lfNJXlvViTtFzP0gATvktiVtnIJE/uYVU=;
+        b=eWqxZJTtzsaFAAK26sFNcHs74SqJ/AbbexdQaftQRo4b3bSBfj5FDUJpeSQ9ZY0gYU
+         LGCSkbRSUXiBMiEPZXJz7jg5jRqGq0ueW1Frg3ghhd61c3Kz6gB6vhNQwU3iwMzfL1pr
+         fAqdvPYoE6ZlX8HYoPt3v3+JMOgEght1bvRNLiyBJvO/YtAAKFrO2fJpe1zEN/nNWlda
+         QwXKDJfzVlNKhtbibHM/4Ih31nxN1bVrvzSTyyLdfdLKsXQESW4EiGw/aSjwFh2feZoc
+         q0jgo8+YpILiEzi2gh3y3ita8Nzdq4WGVgXoNtYYp4yHUriS5XNrx6O9+rgZThMulJ+9
+         PA1w==
+X-Gm-Message-State: AOAM5311d0DHeIzqZKFKPcC6T0twNbZl+3h/otwh+WU7pRmn/jop81UG
+        8VLtkPl4UTMSjIr/pb8SF69qUy0KNuw+WYOs2NUXsg==
+X-Google-Smtp-Source: ABdhPJzHhDGvKo68ukuom7cTV+SESOYW7n3f9obDLSXfAilPQCpARZg985t9+XOVyOdt2pul9ubiwJdi+IRUHLr5ncc=
+X-Received: by 2002:a17:902:7296:b0:14b:4bc6:e81 with SMTP id
+ d22-20020a170902729600b0014b4bc60e81mr43905072pll.132.1649885513102; Wed, 13
+ Apr 2022 14:31:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220413183720.2444089-1-ben.widawsky@intel.com> <20220413183720.2444089-2-ben.widawsky@intel.com>
-In-Reply-To: <20220413183720.2444089-2-ben.widawsky@intel.com>
+References: <20220413183720.2444089-1-ben.widawsky@intel.com> <20220413183720.2444089-3-ben.widawsky@intel.com>
+In-Reply-To: <20220413183720.2444089-3-ben.widawsky@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 13 Apr 2022 14:22:04 -0700
-Message-ID: <CAPcyv4jJxeQ4MxG=coe+J-qsdDVZxP7f5oXSR0QkJoJ0d2tSdg@mail.gmail.com>
-Subject: Re: [RFC PATCH 01/15] cxl/core: Use is_endpoint_decoder
+Date:   Wed, 13 Apr 2022 14:31:42 -0700
+Message-ID: <CAPcyv4hKGEy_0dMQWfJAVVsGu364NjfNeup7URb7ORUYLSZncw@mail.gmail.com>
+Subject: Re: [RFC PATCH 02/15] cxl/core/hdm: Bail on endpoint init fail
 To:     Ben Widawsky <ben.widawsky@intel.com>
 Cc:     linux-cxl@vger.kernel.org, Linux NVDIMM <nvdimm@lists.linux.dev>,
         patches@lists.linux.dev,
@@ -63,17 +63,44 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Apr 13, 2022 at 11:37 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Wed, Apr 13, 2022 at 11:38 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> Save some characters and directly check decoder type rather than port
-> type. There's no need to check if the port is an endpoint port since we
-> already know the decoder, after alloc, has a specified type.
+> Endpoint decoder enumeration is the only way in which we can determine
+> Device Physical Address (DPA) -> Host Physical Address (HPA) mappings.
+> Information is obtained only when the register state can be read
+> sequentially. If when enumerating the decoders a failure occurs, all
+> other decoders must also fail since the decoders can no longer be
+> accurately managed (unless it's the last decoder in which case it can
+> still work).
 
-...a smidge more clarity:
+I think this should be expanded to fail if any decoder fails to
+allocate anywhere in the topology otherwise it leaves a mess for
+future address translation code to work through cases where decoder
+information is missing.
 
-s/we already know the decoder, after alloc,/,by this point,
-cxl_endpoint_decoder_alloc()/
+The current approach is based around the current expectation that
+nothing is enumerating pre-existing regions, and nothing is performing
+address translation.
 
-Otherwise, looks good to me.
-
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> ---
+>  drivers/cxl/core/hdm.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index bfc8ee876278..c3c021b54079 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -255,6 +255,8 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
+>                                       cxlhdm->regs.hdm_decoder, i);
+>                 if (rc) {
+>                         put_device(&cxld->dev);
+> +                       if (is_endpoint_decoder(&cxld->dev))
+> +                               return rc;
+>                         failed++;
+>                         continue;
+>                 }
+> --
+> 2.35.1
+>
