@@ -2,40 +2,40 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E7DC43217
-	for <linux-cxl@archiver.kernel.org>; Wed, 13 Apr 2022 18:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CCFC4332F
+	for <linux-cxl@archiver.kernel.org>; Wed, 13 Apr 2022 18:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237760AbiDMSkP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 13 Apr 2022 14:40:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55852 "EHLO
+        id S234572AbiDMSkO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 13 Apr 2022 14:40:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236393AbiDMSkO (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Apr 2022 14:40:14 -0400
+        with ESMTP id S235218AbiDMSkN (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Apr 2022 14:40:13 -0400
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 410A1532CE
-        for <linux-cxl@vger.kernel.org>; Wed, 13 Apr 2022 11:37:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E7CA51E4D
+        for <linux-cxl@vger.kernel.org>; Wed, 13 Apr 2022 11:37:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649875072; x=1681411072;
+  t=1649875071; x=1681411071;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ZwNEpFjzgDKXYjZD1HIgwd1pFDMWLxI8kgblOJUA2nE=;
-  b=PFeWKcJsl7An0pyyANqp4Kksp1h2eDs7JoAMbC5HGR0cGAe80rYUxQWs
-   i0k6fNz2l9ApbjdD3T/4XIA4UnWswfyi1pX0izuun6YxemcENdyQoM3sP
-   IS1K2kW1/MuqglE3aZ/fwstzWVcmxMKKk+020pgQ5o058HFR7AVisGTbA
-   pvzxqhsToCCxZ8SgP/hIN8Cp0ibpMQ3KzJIx/vhmNoTms9mqiEHN0NOJV
-   zxgBxw4WGAbeo70KomAmyNyZZElw0Br5OK33qv2Y2do9M5UorvXae7fvU
-   j5fZK/6p7kRYu/MPC9mwwUXXGkb3ImASq1xLLzZZ99soiYYmP8l9SSmeh
+  bh=pRLZars87pwyZ+h8xfv4rMp3ejVZKIggcp6TbwcwTjk=;
+  b=M//YvN75R1b3Ak7yO4QWQk6iLxqn062jpyAzoxHjAtcYUoH1fA98Oe7a
+   Icc+7WrwqG9V5963gdDNTg+jIGnzYKXrRhi6V3GdX27OBuXJK8iVH1O34
+   G8oLDq3LZCuaQfWcjKL2NFpX3tzUfsrqK7zk2lkqAqxzM6jh55pWQqK0O
+   7s2+LJlBYVi2TSt5rNwt9SeF6vVd90KvNrV+VV0SHLgMQvj/1B7FkRepa
+   ZgrPjqDPD0MLZq6aP2hwlnpoBaCDuhHBUqfkH7btqQ0Ks9j+6AbhMKNUR
+   uddXobwhrJjVS51YbGDN7KpM7+QStYvP5JNpQEY31GvfAie6EGcJ9rD06
    g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10316"; a="262497747"
+X-IronPort-AV: E=McAfee;i="6400,9594,10316"; a="262497743"
 X-IronPort-AV: E=Sophos;i="5.90,257,1643702400"; 
-   d="scan'208";a="262497747"
+   d="scan'208";a="262497743"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
   by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2022 11:37:50 -0700
 X-IronPort-AV: E=Sophos;i="5.90,257,1643702400"; 
-   d="scan'208";a="725013614"
+   d="scan'208";a="725013599"
 Received: from sushobhi-mobl.amr.corp.intel.com (HELO localhost.localdomain) ([10.252.131.238])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2022 11:37:50 -0700
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2022 11:37:49 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
 Cc:     patches@lists.linux.dev, Ben Widawsky <ben.widawsky@intel.com>,
@@ -44,9 +44,9 @@ Cc:     patches@lists.linux.dev, Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [RFC PATCH 10/15] cxl/core: Extract IW/IG decoding
-Date:   Wed, 13 Apr 2022 11:37:15 -0700
-Message-Id: <20220413183720.2444089-11-ben.widawsky@intel.com>
+Subject: [RFC PATCH 08/15] cxl/core/hdm: Allocate resources from the media
+Date:   Wed, 13 Apr 2022 11:37:13 -0700
+Message-Id: <20220413183720.2444089-9-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220413183720.2444089-1-ben.widawsky@intel.com>
 References: <20220413183720.2444089-1-ben.widawsky@intel.com>
@@ -56,72 +56,174 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Interleave granularity and ways have specification defined encodings.
-Extracting this functionality into the common header file allows other
-consumers to make use of it.
+Similar to how decoders consume address space for the root decoder, they
+also consume space on the device's physical media. For future
+allocations, it's required to mark those as used/busy.
+
+The CXL specification requires that HDM decoder are programmed in
+ascending physical address order. The device's address space can
+therefore be managed by a simple allocator. Fragmentation may occur if
+devices are taken in and out of active decoding. Fixing this is left to
+userspace to handle.
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- drivers/cxl/core/hdm.c | 11 ++---------
- drivers/cxl/cxl.h      | 17 +++++++++++++++++
- 2 files changed, 19 insertions(+), 9 deletions(-)
+ drivers/cxl/core/core.h |  3 +++
+ drivers/cxl/core/hdm.c  | 26 +++++++++++++++++++++++++-
+ drivers/cxl/core/port.c |  9 ++++++++-
+ drivers/cxl/cxl.h       | 10 ++++++++++
+ 4 files changed, 46 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index 1a50c0fc399c..a507a2502127 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -9,6 +9,9 @@ extern const struct device_type cxl_nvdimm_type;
+ 
+ extern struct attribute_group cxl_base_attribute_group;
+ 
++extern struct device_attribute dev_attr_create_pmem_region;
++extern struct device_attribute dev_attr_delete_region;
++
+ struct cxl_send_command;
+ struct cxl_mem_query_commands;
+ int cxl_query_cmd(struct cxl_memdev *cxlmd,
 diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 5326a2cd6968..b4b65aa55bd2 100644
+index 37c09c77e9a7..5326a2cd6968 100644
 --- a/drivers/cxl/core/hdm.c
 +++ b/drivers/cxl/core/hdm.c
-@@ -134,21 +134,14 @@ static int to_interleave_granularity(u32 ctrl)
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+ #include <linux/io-64-nonatomic-hi-lo.h>
++#include <linux/genalloc.h>
+ #include <linux/device.h>
+ #include <linux/delay.h>
+ 
+@@ -198,8 +199,11 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+ 	else
+ 		cxld->target_type = CXL_DECODER_ACCELERATOR;
+ 
+-	if (is_endpoint_decoder(&cxld->dev))
++	if (is_endpoint_decoder(&cxld->dev)) {
++		to_cxl_endpoint_decoder(cxld)->skip =
++			ioread64_hi_lo(hdm + CXL_HDM_DECODER0_TL_LOW(which));
+ 		return 0;
++	}
+ 
+ 	target_list.value =
+ 		ioread64_hi_lo(hdm + CXL_HDM_DECODER0_TL_LOW(which));
+@@ -218,6 +222,7 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
+ 	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
+ 	struct cxl_port *port = cxlhdm->port;
+ 	int i, committed, failed;
++	u64 base = 0;
+ 	u32 ctrl;
+ 
+ 	/*
+@@ -240,6 +245,7 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
+ 	for (i = 0, failed = 0; i < cxlhdm->decoder_count; i++) {
+ 		int target_map[CXL_DECODER_MAX_INTERLEAVE] = { 0 };
+ 		int rc, target_count = cxlhdm->target_count;
++		struct cxl_endpoint_decoder *cxled;
+ 		struct cxl_decoder *cxld;
+ 
+ 		if (is_cxl_endpoint(port))
+@@ -267,6 +273,24 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
+ 				 "Failed to add decoder to port\n");
+ 			return rc;
+ 		}
++
++		if (!is_cxl_endpoint(port))
++			continue;
++
++		cxled = to_cxl_endpoint_decoder(cxld);
++		cxled->drange = (struct range) {
++			.start = base,
++			.end = base + range_len(&cxld->range) - 1,
++		};
++
++		if (!range_len(&cxld->range))
++			continue;
++
++		dev_dbg(&cxld->dev,
++			"Enumerated decoder with DPA range %#llx-%#llx\n", base,
++			base + range_len(&cxled->drange));
++		base += cxled->skip + range_len(&cxld->range);
++		port->last_cxled = cxled;
+ 	}
+ 
+ 	if (failed == cxlhdm->decoder_count) {
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 0d946711685b..9ef8d69dbfa5 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -84,7 +84,14 @@ static ssize_t size_show(struct device *dev, struct device_attribute *attr,
  {
- 	int val = FIELD_GET(CXL_HDM_DECODER0_CTRL_IG_MASK, ctrl);
+ 	struct cxl_decoder *cxld = to_cxl_decoder(dev);
  
--	return 256 << val;
-+	return cxl_to_interleave_granularity(val);
+-	return sysfs_emit(buf, "%#llx\n", range_len(&cxld->range));
++	if (is_endpoint_decoder(dev)) {
++		struct cxl_endpoint_decoder *cxled;
++
++		cxled = to_cxl_endpoint_decoder(cxld);
++		return sysfs_emit(buf, "%#llx\n", range_len(&cxled->drange));
++	} else {
++		return sysfs_emit(buf, "%#llx\n", range_len(&cxld->range));
++	}
  }
+ static DEVICE_ATTR_RO(size);
  
- static int to_interleave_ways(u32 ctrl)
- {
- 	int val = FIELD_GET(CXL_HDM_DECODER0_CTRL_IW_MASK, ctrl);
- 
--	switch (val) {
--	case 0 ... 4:
--		return 1 << val;
--	case 8 ... 10:
--		return 3 << (val - 8);
--	default:
--		return 0;
--	}
-+	return cxl_to_interleave_ways(val);
- }
- 
- static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 07df13f05d3d..0586c3d4592c 100644
+index 52295548a071..33f8a55f2f84 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -64,6 +64,23 @@ static inline int cxl_hdm_decoder_count(u32 cap_hdr)
- 	return val ? val * 2 : 1;
- }
+@@ -228,9 +228,13 @@ struct cxl_decoder {
+ /**
+  * struct cxl_endpoint_decoder - An decoder residing in a CXL endpoint.
+  * @base: Base class decoder
++ * @drange: Device physical address space this decoder is using
++ * @skip: The skip count as specified in the CXL specification.
+  */
+ struct cxl_endpoint_decoder {
+ 	struct cxl_decoder base;
++	struct range drange;
++	u64 skip;
+ };
  
-+static inline int cxl_to_interleave_granularity(u16 ig)
-+{
-+	return 256 << ig;
-+}
-+
-+static inline int cxl_to_interleave_ways(u8 eniw)
-+{
-+	switch (eniw) {
-+	case 0 ... 4:
-+		return 1 << eniw;
-+	case 8 ... 10:
-+		return 3 << (eniw - 8);
-+	default:
-+		return 0;
-+	}
-+}
-+
- /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
- #define CXLDEV_CAP_ARRAY_OFFSET 0x0
- #define   CXLDEV_CAP_ARRAY_CAP_ID 0
+ /**
+@@ -248,11 +252,15 @@ struct cxl_switch_decoder {
+  * @base: Base class decoder
+  * @window: host address space allocator
+  * @targets: Downstream targets (ie. hostbridges).
++ * @next_region_id: The pre-cached next region id.
++ * @id_lock: Protects next_region_id
+  */
+ struct cxl_root_decoder {
+ 	struct cxl_decoder base;
+ 	struct gen_pool *window;
+ 	struct cxl_decoder_targets *targets;
++	int next_region_id;
++	struct mutex id_lock; /* synchronizes access to next_region_id */
+ };
+ 
+ #define _to_cxl_decoder(x)                                                     \
+@@ -312,6 +320,7 @@ struct cxl_nvdimm {
+  * @capacity: How much total storage the media can hold (endpoint only)
+  * @pmem_offset: Partition dividing volatile, [0, pmem_offset -1 ], and persistent
+  *		 [pmem_offset, capacity - 1] addresses.
++ * @last_cxled: Last active decoder doing decode (endpoint only)
+  */
+ struct cxl_port {
+ 	struct device dev;
+@@ -326,6 +335,7 @@ struct cxl_port {
+ 
+ 	u64 capacity;
+ 	u64 pmem_offset;
++	struct cxl_endpoint_decoder *last_cxled;
+ };
+ 
+ /**
 -- 
 2.35.1
 
