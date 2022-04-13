@@ -2,52 +2,53 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AE0C433F5
-	for <linux-cxl@archiver.kernel.org>; Wed, 13 Apr 2022 06:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A5CC433FE
+	for <linux-cxl@archiver.kernel.org>; Wed, 13 Apr 2022 06:02:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232831AbiDMGE6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 13 Apr 2022 02:04:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36660 "EHLO
+        id S232922AbiDMGFH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 13 Apr 2022 02:05:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232874AbiDMGEu (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Apr 2022 02:04:50 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65A4651E7A;
-        Tue, 12 Apr 2022 23:02:27 -0700 (PDT)
+        with ESMTP id S232860AbiDMGEx (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Apr 2022 02:04:53 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42C40517EB;
+        Tue, 12 Apr 2022 23:02:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649829747; x=1681365747;
+  t=1649829751; x=1681365751;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=aSeTDj0W2XFMu9PYXuSRlRhFrP+VndjIlxTuiHIALMw=;
-  b=SKwx41aZnak/CemJBqi0v27y+Yn+IJoU1Uti9b6pzmZY0e2jVg3fFVLB
-   4ZqYgLZmJJPPtXAChgFtOxLGoAzGYAOCkQcBKejcexsflpTn0s7xhATnF
-   Eo/C2x9NJt5bvjrBskEdPja5HNEYfVTWS+C4dVRcZ1MuYcuMwI3zDX9IA
-   ErRdESww5uoEWWi5Qh84ze3t30iJvPfeavY02M9IOx2jjb5aHVwU46Vw9
-   rt1Q/BcPGOwD3ZSFOCn325DRPMcYD4vuEsOn+Nn/S+a0NDS/BGD6akrFh
-   nprV+n1d1JhHxpbEYSQHmS0bIADolAO9OM4wpvf8OrrCJf9dD3nKtV4Od
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10315"; a="260180234"
-X-IronPort-AV: E=Sophos;i="5.90,255,1643702400"; 
-   d="scan'208";a="260180234"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2022 23:02:27 -0700
+  bh=iZkEJiezDzZSvDLuQ4QlHaZeACSH7DvqyONtGcXuk/g=;
+  b=jlsmJu5c5+x9EuFl3X9rQOK4W3wbbUQuUk8hR67BWi+VR07SwExtknht
+   3wcaN1++dtW3sOc4WRuBaZIyIHmKMqCUCbXlyXvoxdtnVbDDhu0Nx75CZ
+   ubOvbVjXjVRMCmjLAxVCUf9iPcwUgRdfX7k1fMBUiAPqalGpO8IY3CUkB
+   2cELgDw8meMiDkaupBLzSPXkMhj6bOFZjiIn2LmCosBl/ec2szb1dxyKZ
+   t0CThEHZRmxKdv1rJTwHmmxIz7tGwBc2KrR3fEkLLIf4k/cBgGbWVhivg
+   8LIL6kh7yEXoShBQp/V/D7+1+cmu+w0AIxSpvOiJdEwDQxdEkh+NDBL1f
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10315"; a="323027736"
 X-IronPort-AV: E=Sophos;i="5.90,256,1643702400"; 
-   d="scan'208";a="552064642"
+   d="scan'208";a="323027736"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2022 23:01:55 -0700
+X-IronPort-AV: E=Sophos;i="5.90,256,1643702400"; 
+   d="scan'208";a="724768554"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2022 23:02:26 -0700
-Subject: [PATCH v2 11/12] libnvdimm: Enable lockdep validation
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2022 23:01:55 -0700
+Subject: [PATCH v2 05/12] cxl/core: Clamp max lock_class
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
         Kevin Tian <kevin.tian@intel.com>, peterz@infradead.org,
-        alison.schofield@intel.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev
-Date:   Tue, 12 Apr 2022 23:02:26 -0700
-Message-ID: <164982974651.684294.17717238362306260099.stgit@dwillia2-desk3.amr.corp.intel.com>
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        nvdimm@lists.linux.dev
+Date:   Tue, 12 Apr 2022 23:01:55 -0700
+Message-ID: <164982971542.684294.12980151056534955888.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <164982968798.684294.15817853329823976469.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <164982968798.684294.15817853329823976469.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -58,65 +59,73 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Register libnvdimm subsystem devices with a non-zero lock_class to
-enable the device-core to track lock dependencies.
+MAX_LOCKDEP_SUBCLASSES limits the depth of the CXL topology that can be
+validated by lockdep. Given that the cxl_test topology is already at
+this limit collapse some of the levels and clamp the max depth.
 
+Cc: Alison Schofield <alison.schofield@intel.com>
 Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
 Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Ben Widawsky <ben.widawsky@intel.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Reviewed-by: Kevin Tian <kevin.tian@intel.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/nvdimm/bus.c     |    3 +++
- drivers/nvdimm/nd-core.h |    9 +++++++++
- 2 files changed, 12 insertions(+)
+ drivers/cxl/cxl.h |   25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
-index b5a1317c30dd..f2ae6825f533 100644
---- a/drivers/nvdimm/bus.c
-+++ b/drivers/nvdimm/bus.c
-@@ -360,6 +360,7 @@ struct nvdimm_bus *nvdimm_bus_register(struct device *parent,
- 	if (rc)
- 		goto err;
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index a6c1a027e389..b86aac8cde4f 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -410,20 +410,37 @@ enum cxl_lock_class {
+ 	CXL_ANON_LOCK,
+ 	CXL_NVDIMM_LOCK,
+ 	CXL_NVDIMM_BRIDGE_LOCK,
+-	CXL_PORT_LOCK,
++	/*
++	 * Collapse the compatible port and nvdimm-bridge lock classes
++	 * to save space
++	 */
++	CXL_PORT_LOCK = CXL_NVDIMM_BRIDGE_LOCK,
+ 	/*
+ 	 * Be careful to add new lock classes here, CXL_PORT_LOCK is
+ 	 * extended by the port depth, so a maximum CXL port topology
+-	 * depth would need to be defined first.
++	 * depth would need to be defined first. Also, the max
++	 * validation depth is limited by MAX_LOCKDEP_SUBCLASSES.
+ 	 */
+ };
  
-+	nvdimm_set_lock_class(&nvdimm_bus->dev);
- 	rc = device_add(&nvdimm_bus->dev);
- 	if (rc) {
- 		dev_dbg(&nvdimm_bus->dev, "registration failed: %d\n", rc);
-@@ -485,6 +486,7 @@ static void nd_async_device_register(void *d, async_cookie_t cookie)
- {
- 	struct device *dev = d;
- 
-+	nvdimm_set_lock_class(dev);
- 	if (device_add(dev) != 0) {
- 		dev_err(dev, "%s: failed\n", __func__);
- 		put_device(dev);
-@@ -738,6 +740,7 @@ int nvdimm_bus_create_ndctl(struct nvdimm_bus *nvdimm_bus)
- 	if (rc)
- 		goto err;
- 
-+	nvdimm_set_lock_class(dev);
- 	rc = device_add(dev);
- 	if (rc) {
- 		dev_dbg(&nvdimm_bus->dev, "failed to register ndctl%d: %d\n",
-diff --git a/drivers/nvdimm/nd-core.h b/drivers/nvdimm/nd-core.h
-index 1668a10e41ba..75892e43b2c9 100644
---- a/drivers/nvdimm/nd-core.h
-+++ b/drivers/nvdimm/nd-core.h
-@@ -191,5 +191,14 @@ static inline int nvdimm_lock_class(struct device *dev)
- 	else
- 		return -1;
- }
++static inline int clamp_lock_class(struct device *dev, int lock_class)
++{
++	if (lock_class >= MAX_LOCKDEP_SUBCLASSES) {
++		dev_warn_once(dev,
++			      "depth: %d, disabling lockdep for this device\n",
++			      lock_class);
++		return -1;
++	}
 +
-+static inline void nvdimm_set_lock_class(struct device *dev)
-+{
-+	device_set_lock_class(dev, nvdimm_lock_class(dev));
++	return lock_class;
 +}
-+#else
-+static inline void nvdimm_set_lock_class(struct device *dev)
-+{
-+}
- #endif
- #endif /* __ND_CORE_H__ */
++
+ static inline int cxl_lock_class(struct device *dev)
+ {
+ 	if (is_cxl_port(dev)) {
+ 		struct cxl_port *port = to_cxl_port(dev);
+ 
+-		return CXL_PORT_LOCK + port->depth;
++		return clamp_lock_class(dev, CXL_PORT_LOCK + port->depth);
+ 	} else if (is_cxl_decoder(dev)) {
+ 		struct cxl_port *port = to_cxl_port(dev->parent);
+ 
+@@ -431,7 +448,7 @@ static inline int cxl_lock_class(struct device *dev)
+ 		 * A decoder is the immediate child of a port, so set
+ 		 * its lock class equal to other child device siblings.
+ 		 */
+-		return CXL_PORT_LOCK + port->depth + 1;
++		return clamp_lock_class(dev, CXL_PORT_LOCK + port->depth + 1);
+ 	} else if (is_cxl_nvdimm_bridge(dev))
+ 		return CXL_NVDIMM_BRIDGE_LOCK;
+ 	else if (is_cxl_nvdimm(dev))
 
