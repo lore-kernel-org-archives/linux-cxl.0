@@ -2,42 +2,61 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DE1C433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 14 Apr 2022 19:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BB5C433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 14 Apr 2022 19:43:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345696AbiDNTg3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 14 Apr 2022 15:36:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52010 "EHLO
+        id S231784AbiDNTqP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 14 Apr 2022 15:46:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345705AbiDNTg3 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 14 Apr 2022 15:36:29 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A61DED902;
-        Thu, 14 Apr 2022 12:34:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=z6NO35KE2Lguj4JWi+iLnZSkryiHS70xMnjy6Usv8+0=; b=WsFWGMnRLs2cKSk1AHbHn+6lbq
-        GlViERsBnVWzXCVa1IxA2XFoZc/vgZT98MNb83dnSQpsXJqzuEIbnder6nkWJ5gkZEJ6QamglotGM
-        LtOBLInohgkkYtF5kBT5SQQHRlTFtdBbERanbnRw/rnywpj5uYzoNkIVjsL25cNbuhcBg9PM85eRm
-        fowdvJkzNi8GncNbjuLyNWsMrlAaWfZoCAoZpph4voSTsFNPS5t5/4BhxkTGPWwgrV+1upUpqPJrK
-        eB02eypVNOVtZ08bE6Rn3d/BPAbMASBMghG6flep15moulVwr8MstTQzODLP922h/TwH2jb6gIMFD
-        W4iihIjw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nf5E2-00FSBz-U7; Thu, 14 Apr 2022 19:33:55 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3FA9F30027B;
-        Thu, 14 Apr 2022 21:33:53 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1B96B322A1704; Thu, 14 Apr 2022 21:33:53 +0200 (CEST)
-Date:   Thu, 14 Apr 2022 21:33:53 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dan Williams <dan.j.williams@intel.com>
+        with ESMTP id S238706AbiDNTqI (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 14 Apr 2022 15:46:08 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6092ED9C3
+        for <linux-cxl@vger.kernel.org>; Thu, 14 Apr 2022 12:43:42 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id c12-20020a17090a020c00b001cba1ebb20cso6754645pjc.0
+        for <linux-cxl@vger.kernel.org>; Thu, 14 Apr 2022 12:43:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YMPolPkFbrluEA7trFzW5vfGL6xOTpY2rpO+rRWfteE=;
+        b=aD5O4GRMocgwH2YInqmL40T6Jk55qVWck1TJ1OI0qsVNqYmQVCJP5pBGIVgXGHnCL0
+         uZQmAvLy9RVTRE03fIPEewK7KYTFGSm9sEI/+ZaP12yw3Z6e+R6bW4QMjGx6acd1Sb0x
+         JWcmgYjHK+52nNHv1qDiHroGDkhFjZ6xRDdsyuhOBydIiMA8z7skSoharKjcq2oNZYcX
+         3GazU6w/ihmzJGraYZdRUKcwVu79CgyJzIn/WRXzZI0AHElODTZfy6xAuvYh/aADAMYZ
+         l9dqEHA2XSts/NFEDe17rqVXcfqTAg4bNhKU/xR2APWVP8XqY1JwG7dqEQ3xsDfspAli
+         rAeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YMPolPkFbrluEA7trFzW5vfGL6xOTpY2rpO+rRWfteE=;
+        b=TWb+g/8c/dLTXJf0nyyVUU4yn+4ga3+VPyjcAGY3Kr5PiLqsP39lu/oMtUp7BFooW5
+         6T85ghnYVaMEfTG1UoJaTb+MceylSH6e04GVkdx1k78NUnGeiv7E59sM4Mj0+U1IKXky
+         49ooe1xgi3peyrWTINXQ7JHV69D6iqV/46rMOLtdwRwTRbAEtJigCq8ycANPk0V7CY3g
+         iY2C6cvsuekSHJ03lEHC2D2wLJGaFyfYGUF+X6y+BjqJmOjlQVajnToUtq3q1mqRL3Jn
+         xKfhkWQe/s9vC1xDfnyxo5CNMvBxRC9mfSE31JrMG5/Li0Q0LprkAPh6izOIYEtKfXhM
+         yrlA==
+X-Gm-Message-State: AOAM5333ThMP5vFL+jQ3HWgySw5TJI9XY82lT8iTbPGPAu4hl+ilUJ9W
+        Yf6454JdVLeYYI7OVubhEUWUmDfBkpkyJUy3CGJB0A==
+X-Google-Smtp-Source: ABdhPJxLJx2dhijhY2GgYR6k+AAoWzSxf1ZMV2jWzsPbKL3wihos+1a3+smba0fpXn3HJ0WjmduhiN4tJaiMRMxnaEA=
+X-Received: by 2002:a17:902:dac7:b0:158:b284:cdc3 with SMTP id
+ q7-20020a170902dac700b00158b284cdc3mr6149439plx.34.1649965422400; Thu, 14 Apr
+ 2022 12:43:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <164982968798.684294.15817853329823976469.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164982969858.684294.17819743973041389492.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20220413084309.GV2731@worktop.programming.kicks-ass.net> <CAPcyv4huZVNkxa7-rQ_J=nVN77+5F1AJg5vi6kLHp8t5khcwHA@mail.gmail.com>
+ <Ylf0dewci8myLvoW@hirez.programming.kicks-ass.net> <CAPcyv4hFabn6H064HTrH8=GQ-cxsOk4xEK8s66JQxQavfgAzGw@mail.gmail.com>
+ <Ylh3ISDToV5y9/4P@hirez.programming.kicks-ass.net>
+In-Reply-To: <Ylh3ISDToV5y9/4P@hirez.programming.kicks-ass.net>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 14 Apr 2022 12:43:31 -0700
+Message-ID: <CAPcyv4hwsKCbaxDhAL6LPZQmLZZV2T4wpja+cNZpjy=enR-eYQ@mail.gmail.com>
+Subject: Re: [PATCH v2 02/12] device-core: Add dev->lock_class to enable
+ device_lock() lockdep validation
+To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     linux-cxl@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -47,75 +66,80 @@ Cc:     linux-cxl@vger.kernel.org,
         "Schofield, Alison" <alison.schofield@intel.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linux NVDIMM <nvdimm@lists.linux.dev>
-Subject: Re: [PATCH v2 02/12] device-core: Add dev->lock_class to enable
- device_lock() lockdep validation
-Message-ID: <Ylh3ISDToV5y9/4P@hirez.programming.kicks-ass.net>
-References: <164982968798.684294.15817853329823976469.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164982969858.684294.17819743973041389492.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20220413084309.GV2731@worktop.programming.kicks-ass.net>
- <CAPcyv4huZVNkxa7-rQ_J=nVN77+5F1AJg5vi6kLHp8t5khcwHA@mail.gmail.com>
- <Ylf0dewci8myLvoW@hirez.programming.kicks-ass.net>
- <CAPcyv4hFabn6H064HTrH8=GQ-cxsOk4xEK8s66JQxQavfgAzGw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4hFabn6H064HTrH8=GQ-cxsOk4xEK8s66JQxQavfgAzGw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 10:17:13AM -0700, Dan Williams wrote:
+On Thu, Apr 14, 2022 at 12:34 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Thu, Apr 14, 2022 at 10:17:13AM -0700, Dan Williams wrote:
+>
+> > One more sanity check... So in driver subsystems there are cases where
+> > a device on busA hosts a topology on busB. When that happens there's a
+> > need to set the lock class late in a driver since busA knows nothing
+> > about the locking rules of busB.
+>
+> I'll pretend I konw what you're talking about ;-)
+>
+> > Since the device has a longer lifetime than a driver when the driver
+> > exits it must set dev->mutex back to the novalidate class, otherwise
+> > it sets up a use after free of the static lock_class_key.
+>
+> I'm not following, static storage has infinite lifetime.
 
-> One more sanity check... So in driver subsystems there are cases where
-> a device on busA hosts a topology on busB. When that happens there's a
-> need to set the lock class late in a driver since busA knows nothing
-> about the locking rules of busB.
+Not static storage in a driver module.
 
-I'll pretend I konw what you're talking about ;-)
+modprobe -r fancy_lockdep_using_driver.ko
 
-> Since the device has a longer lifetime than a driver when the driver
-> exits it must set dev->mutex back to the novalidate class, otherwise
-> it sets up a use after free of the static lock_class_key.
+Any use of device_lock() by the core on a device that a driver in this
+module was driving will de-reference a now invalid pointer into
+whatever memory was vmalloc'd for the module static data.
 
-I'm not following, static storage has infinite lifetime.
+>
+> > I came up with this and it seems to work, just want to make sure I'm
+> > properly using the lock_set_class() API and it is ok to transition
+> > back and forth from the novalidate case:
+> >
+> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> > index 990b6670222e..32673e1a736d 100644
+> > --- a/drivers/cxl/cxl.h
+> > +++ b/drivers/cxl/cxl.h
+> > @@ -405,6 +405,29 @@ struct cxl_nvdimm_bridge
+> > *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd);
+> >  #define __mock static
+> >  #endif
+> >
+> > +#ifdef CONFIG_PROVE_LOCKING
+> > +static inline void cxl_lock_reset_class(void *_dev)
+> > +{
+> > +       struct device *dev = _dev;
+> > +
+> > +       lock_set_class(&dev->mutex.dep_map, "__lockdep_no_validate__",
+> > +                      &__lockdep_no_validate__, 0, _THIS_IP_);
+> > +}
+> > +
+> > +static inline int cxl_lock_set_class(struct device *dev, const char *name,
+> > +                                    struct lock_class_key *key)
+> > +{
+> > +       lock_set_class(&dev->mutex.dep_map, name, key, 0, _THIS_IP_);
+> > +       return devm_add_action_or_reset(dev, cxl_lock_reset_class, dev);
+> > +}
+> > +#else
+> > +static inline int cxl_lock_set_class(struct device *dev, const char *name,
+> > +                                    struct lock_class_key *key)
+> > +{
+> > +       return 0;
+> > +}
+> > +#endif
+>
+> Under the assumption that the lock is held (lock_set_class() will
+> actually barf if @lock isn't held) this should indeed work as expected
 
-> I came up with this and it seems to work, just want to make sure I'm
-> properly using the lock_set_class() API and it is ok to transition
-> back and forth from the novalidate case:
-> 
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 990b6670222e..32673e1a736d 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -405,6 +405,29 @@ struct cxl_nvdimm_bridge
-> *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd);
->  #define __mock static
->  #endif
-> 
-> +#ifdef CONFIG_PROVE_LOCKING
-> +static inline void cxl_lock_reset_class(void *_dev)
-> +{
-> +       struct device *dev = _dev;
-> +
-> +       lock_set_class(&dev->mutex.dep_map, "__lockdep_no_validate__",
-> +                      &__lockdep_no_validate__, 0, _THIS_IP_);
-> +}
-> +
-> +static inline int cxl_lock_set_class(struct device *dev, const char *name,
-> +                                    struct lock_class_key *key)
-> +{
-> +       lock_set_class(&dev->mutex.dep_map, name, key, 0, _THIS_IP_);
-> +       return devm_add_action_or_reset(dev, cxl_lock_reset_class, dev);
-> +}
-> +#else
-> +static inline int cxl_lock_set_class(struct device *dev, const char *name,
-> +                                    struct lock_class_key *key)
-> +{
-> +       return 0;
-> +}
-> +#endif
+Nice.
 
-Under the assumption that the lock is held (lock_set_class() will
-actually barf if @lock isn't held) this should indeed work as expected
-(although I think you got the @name part 'wrong', I think that's
-canonically something like "&dev->mutex" or something).
+> (although I think you got the @name part 'wrong', I think that's
+> canonically something like "&dev->mutex" or something).
+
+Ah, yes, I got it wrong for restoring the same name that results from
+lockdep_set_novalidate_class(), will fix.
