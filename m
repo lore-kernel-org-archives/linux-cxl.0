@@ -2,164 +2,199 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEA4C43217
-	for <linux-cxl@archiver.kernel.org>; Thu, 14 Apr 2022 17:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3042CC433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 14 Apr 2022 17:17:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244196AbiDNRK3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 14 Apr 2022 13:10:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60036 "EHLO
+        id S245616AbiDNRUV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 14 Apr 2022 13:20:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346108AbiDNRJ3 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 14 Apr 2022 13:09:29 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD9B6205E3
-        for <linux-cxl@vger.kernel.org>; Thu, 14 Apr 2022 09:58:58 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id 12so5118434pll.12
-        for <linux-cxl@vger.kernel.org>; Thu, 14 Apr 2022 09:58:58 -0700 (PDT)
+        with ESMTP id S245710AbiDNRTw (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 14 Apr 2022 13:19:52 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B6DB6305
+        for <linux-cxl@vger.kernel.org>; Thu, 14 Apr 2022 10:17:25 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d15so5167837pll.10
+        for <linux-cxl@vger.kernel.org>; Thu, 14 Apr 2022 10:17:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BPZr0zGQxINLzBPUzdpRKSuozUwt+nuTN3zQvazzYbo=;
-        b=eGTR6ngTL2wCPLZvJneqm0LHHnleZ6FDKuc/9Q5G+D6vCkXNYr1eL2/fUgKh6TA5s1
-         /Q6/b46IDx7bCYKHxNK10+lo7+AslhirJyfGoBuJg7Dk9lUGB0jCLBogBuBJOJp4h50t
-         iWIcZeuDmgYn7LJI09BxkxgecLHp1Ty7GqHtsy+MiwTOTllSaIbIwl7RC+nSNusyRVWR
-         1sVMvDZbtksm6K2aQ0m42xchXnWZ3oChwqgrS19CE5yKZloyuliMxQ42KE5wUHjCuhCq
-         XmhHk68W+rluBZFWeoDO314EOQhpj37Z6CboaQ908E+xlIIEfHaztbf+yv6pPqmQ+eJP
-         VZSQ==
+        bh=/xHnbfO/6RDF2V6Som/YOPdX7GJf70J0XIxAV0SFUKc=;
+        b=Wef1YPrL1c82H3OcohFJZHkyqYM2Pgnp2Sn52/3jc6OyRc8jdnkyLjTL51mZzDG7iS
+         gVutqtKgia4gJQ5EEyjlTYUR3ODJEipRJNWsbiQ0yudFxRHvicckNTd/GfWrm08L85lS
+         aBACkHBXM8GMvdgOOTIMZ3ZvAzVYixwiSc99ZxMC5dC9BUrunqd7d261XZgCoQaBITnn
+         8u0DxF80r31+6VmgTSdrBgwcr7aR/GHKLIGlE47CIz2l1Fdwu3vmnHEgI2bf6lkgMp7+
+         Iff3SMIPnA7Yx/57gV9xT7jh9zms1F38kmOOthyEBN5GroPrDmG4ChoCHraavRNiks5o
+         9vnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BPZr0zGQxINLzBPUzdpRKSuozUwt+nuTN3zQvazzYbo=;
-        b=nD+P9FAYg3HiXlQ3+d+Q5i/pfn2Mxk7aknNy5WrOkVzf+sTWJ0tfIXTfzGC3A8OGiV
-         y5xV1bDeIeUWBH+YWuA9HnreGJqZPm3qoIRVy2Gl80jb55eApE3MAdl5c0KWqBDVC+6Y
-         cea3ZIPr061SqopVbyycUWGQJhkQXzxgr1bGH4nYHiIyqBylnEECuYwaOydLYVtjlQfH
-         cVm2dN1GMbEQ5T7rmdhW/jiSXXXghPTMYGA/ydnptPEJsamldL3SZQU7XPkIYFeAefPx
-         2tNtTnKNP3wgUABibRdiSdrwU2DRITy+CtX2GxvVGzS9iPLMycIXzT51j6h3AokjpdZB
-         Q3PQ==
-X-Gm-Message-State: AOAM531eI0KRJCyZy1JWIbtMIGA6IgFQaAC33yE6QnpcxLdxl7faNt9S
-        /MPVnzs4g0m97EOXXBmtNFbzmAGvKjitohnTHnEHmg==
-X-Google-Smtp-Source: ABdhPJyduPzJVnNpUDzbIkNsTy/TW8LHrkZDDSUTa0ZNucnNJlLyYBxn3JVjU9r/DosN+WyfXqvThW4zoxnfJU5BmHU=
-X-Received: by 2002:a17:90b:1804:b0:1cb:82e3:5cd0 with SMTP id
- lw4-20020a17090b180400b001cb82e35cd0mr5353309pjb.8.1649955538169; Thu, 14 Apr
- 2022 09:58:58 -0700 (PDT)
+        bh=/xHnbfO/6RDF2V6Som/YOPdX7GJf70J0XIxAV0SFUKc=;
+        b=BzZXUvkl3+Y2McqjCUzF9QxvzaTilfXBBl+Qi4PxyKuCMC+p4OLeB8Lbbqs3t0f/8i
+         9fbaVxk1gwOPOczN11tIS+UtVo1jL22xE1Fboe00DLlCY+FgWWtW2bXx3USAt6Evx/Bj
+         INPNdVctNtFwyaR2mLzLXSt3vOfEexSVZ0ircxD0GIgmJuXKw2zePZeSLs8LVQbpV+9B
+         4b5hINPjYPV7DLj8fVpe6REckPQORyRVYBCWINPDk6vdlWgSR4oJGXrRm9b3JmFeLhqr
+         3ggtQMqubWJW173ealr32PIHHDNZpLQEmaKV9NvmdHDmnYo8eqS74JVdNZAajqOgr7LS
+         PbPQ==
+X-Gm-Message-State: AOAM5320NHFPOzLeiijpn/o/5P5eugaGJJ4wXM9br4LDTNLVfzVznNzi
+        e9hLKQ4ODDshfQaF7c2/R/51SEr2RcpxFG4GEKJe7A==
+X-Google-Smtp-Source: ABdhPJwCsQXpHY2XnN7Do9HE7onV49GxLhA2Lxccz9/ExwvX5ViFV1e6weDfJfzTsSUR0Tvdqll6UALmEGgpLmUAWQw=
+X-Received: by 2002:a17:90a:430d:b0:1bc:f340:8096 with SMTP id
+ q13-20020a17090a430d00b001bcf3408096mr4655205pjg.93.1649956644554; Thu, 14
+ Apr 2022 10:17:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220414051246.1244575-1-alison.schofield@intel.com>
-In-Reply-To: <20220414051246.1244575-1-alison.schofield@intel.com>
+References: <164982968798.684294.15817853329823976469.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164982969858.684294.17819743973041389492.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20220413084309.GV2731@worktop.programming.kicks-ass.net> <CAPcyv4huZVNkxa7-rQ_J=nVN77+5F1AJg5vi6kLHp8t5khcwHA@mail.gmail.com>
+ <Ylf0dewci8myLvoW@hirez.programming.kicks-ass.net>
+In-Reply-To: <Ylf0dewci8myLvoW@hirez.programming.kicks-ass.net>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 14 Apr 2022 09:58:46 -0700
-Message-ID: <CAPcyv4ifF-SwCDugZ32ACQk4rwoPErirJE6HUo0CSEjsrnrJGg@mail.gmail.com>
-Subject: Re: [PATCH v3] cxl/mbox: Use type __u32 for mailbox payload sizes
-To:     "Schofield, Alison" <alison.schofield@intel.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        linux-cxl@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
+Date:   Thu, 14 Apr 2022 10:17:13 -0700
+Message-ID: <CAPcyv4hFabn6H064HTrH8=GQ-cxsOk4xEK8s66JQxQavfgAzGw@mail.gmail.com>
+Subject: Re: [PATCH v2 02/12] device-core: Add dev->lock_class to enable
+ device_lock() lockdep validation
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-cxl@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Apr 13, 2022 at 10:11 PM <alison.schofield@intel.com> wrote:
+On Thu, Apr 14, 2022 at 3:16 AM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> From: Alison Schofield <alison.schofield@intel.com>
+> On Wed, Apr 13, 2022 at 03:01:21PM -0700, Dan Williams wrote:
 >
-> Payload sizes for mailbox commands are expected to be positive values
-> coming from userspace. The documentation correctly describes these as
-> always unsigned values. The mailbox and send structures that support
-> the mailbox commands however, use __s32 types for the payloads.
+> > > That's not an obvious conclusion; lockdep has lots of funny annotations,
+> > > subclasses is just one.
+> > >
+> > > I think the big new development in lockdep since that time with Alan
+> > > Stern is that lockdep now has support for dynamic keys; that is lock
+> > > keys in heap memory (as opposed to static storage).
+> >
+> > Ah, I was not aware of that, that should allow for deep cleanups of
+> > this proposal.
 >
-> Replace  __s32 with __u32 in the mailbox and send command structures
-> and update usages.
+> > > If you want lockdep validation for one (or more) dev->mutex instances,
+> > > why not pull them out of the no_validate class and use the normal
+> > > locking?
+> >
+> > Sounds perfect, just didn't know how to do that with my current
+> > understanding of how to communicate this to lockdep.
+> >
+> > >
+> > > This is all quite insane.
+> >
+> > Yes, certainly in comparison to your suggestion on the next patch.
+> > That looks much more sane, and even better I think it allows for
+> > optional lockdep validation without even needing to touch
+> > include/linux/device.h.
 >
-> Kernel users of the interface already block all negative values and
-> there is no known ability for userspace to have grown a dependency on
-> submitting negative values to the kernel. The known user of the IOCTL,
-> the CXL command line interface (cxl-cli) already enforces positive
-> size values.
+> Right, so lockdep has:
 >
-> A Smatch warning of a signedness uncovered this issue.
+>  - classes, based off of lock_class_key address;
 >
-> Reported-by: kernel test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> ---
+>    * lock_class_key should be static storage; except now we also have:
 >
-> Changes in v3:
-> - Toss v2 changes addressing signedness
-> - Replace __s32 with __u32 in mbox and send command structures (Ben)
-> - Update commit message and log
->   Was 'Restore signedness to a mailbox payload variable'
+>        lockdep_{,un}register_key()
 >
-> Changes in v2:
-> - Pass the payload sizes as signed rather than move the check (Dan)
-> - Signedness is now discarded on ssize_t to size_t assignment.
-> - Update commit msg. Was 'Handle variable size output while still
->   signed'
-> - Update commit log.
+>      which allows dynamic memory (aka. heap) to be used for classes,
+>      important to note that lockdep memory usage is still static storage
+>      because the memory allocators use locks too. So if you register too
+>      many dynamic keys, you'll run out of lockdep memory etc.. so be
+>      careful.
 >
->  drivers/cxl/core/mbox.c      | 28 +++++++++++++++-------------
->  include/uapi/linux/cxl_mem.h | 14 +++++++-------
->  2 files changed, 22 insertions(+), 20 deletions(-)
+>    * things like mutex_init() have a static lock_class_key per site
+>      and hence every lock initialized by the same code ends up in the
+>      same class by default.
 >
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 8a8388599a85..d54a6d175fff 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -35,6 +35,7 @@ static bool cxl_raw_allow_all;
->         .flags = _flags,                                                       \
->         }
+>    * can be trivially changed at any time, assuming the lock isn't held,
+>      using lockdep_set_class*() family.
 >
-> +#define CXL_VARIABLE_PAYLOAD   ~0U
->  /*
->   * This table defines the supported mailbox commands for the driver. This table
->   * is made up of a UAPI structure. Non-negative values as parameters in the
-> @@ -44,26 +45,26 @@ static bool cxl_raw_allow_all;
->  static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
->         CXL_CMD(IDENTIFY, 0, 0x43, CXL_CMD_FLAG_FORCE_ENABLE),
->  #ifdef CONFIG_CXL_MEM_RAW_COMMANDS
-> -       CXL_CMD(RAW, ~0, ~0, 0),
-> +       CXL_CMD(RAW, CXL_VARIABLE_PAYLOAD, CXL_VARIABLE_PAYLOAD, 0),
->  #endif
-> -       CXL_CMD(GET_SUPPORTED_LOGS, 0, ~0, CXL_CMD_FLAG_FORCE_ENABLE),
-> +       CXL_CMD(GET_SUPPORTED_LOGS, 0, CXL_VARIABLE_PAYLOAD, CXL_CMD_FLAG_FORCE_ENABLE),
->         CXL_CMD(GET_FW_INFO, 0, 0x50, 0),
->         CXL_CMD(GET_PARTITION_INFO, 0, 0x20, 0),
-> -       CXL_CMD(GET_LSA, 0x8, ~0, 0),
-> +       CXL_CMD(GET_LSA, 0x8, CXL_VARIABLE_PAYLOAD, 0),
->         CXL_CMD(GET_HEALTH_INFO, 0, 0x12, 0),
-> -       CXL_CMD(GET_LOG, 0x18, ~0, CXL_CMD_FLAG_FORCE_ENABLE),
-> +       CXL_CMD(GET_LOG, 0x18, CXL_VARIABLE_PAYLOAD, CXL_CMD_FLAG_FORCE_ENABLE),
->         CXL_CMD(SET_PARTITION_INFO, 0x0a, 0, 0),
-> -       CXL_CMD(SET_LSA, ~0, 0, 0),
-> +       CXL_CMD(SET_LSA, CXL_VARIABLE_PAYLOAD, 0, 0),
->         CXL_CMD(GET_ALERT_CONFIG, 0, 0x10, 0),
->         CXL_CMD(SET_ALERT_CONFIG, 0xc, 0, 0),
->         CXL_CMD(GET_SHUTDOWN_STATE, 0, 0x1, 0),
->         CXL_CMD(SET_SHUTDOWN_STATE, 0x1, 0, 0),
-> -       CXL_CMD(GET_POISON, 0x10, ~0, 0),
-> +       CXL_CMD(GET_POISON, 0x10, CXL_VARIABLE_PAYLOAD, 0),
->         CXL_CMD(INJECT_POISON, 0x8, 0, 0),
->         CXL_CMD(CLEAR_POISON, 0x48, 0, 0),
->         CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
->         CXL_CMD(SCAN_MEDIA, 0x11, 0, 0),
-> -       CXL_CMD(GET_SCAN_MEDIA, 0, ~0, 0),
-> +       CXL_CMD(GET_SCAN_MEDIA, 0, CXL_VARIABLE_PAYLOAD, 0),
->  };
+>      (extensively used all over the kernel, for example by the vfs to
+>       give each filesystem type their own locking order rules)
 >
->  /*
-> @@ -187,9 +188,10 @@ int cxl_mbox_send_cmd(struct cxl_dev_state *cxlds, u16 opcode, void *in,
->          * Variable sized commands can't be validated and so it's up to the
->          * caller to do that if they wish.
->          */
-> -       if (cmd->info.size_out >= 0 && mbox_cmd.size_out != out_size)
-> -               return -EIO;
-> -
-> +       if (cmd->info.size_out != CXL_VARIABLE_PAYLOAD) {
-> +               if (mbox_cmd.size_out != out_size)
+>    * lockdep_set_no_validate_class() is a magical variant of
+>      lockdep_set_class() that sets a magical lock_class_key.
 
-I'd prefer && here, but not enough to ask for the patch to be re-sent.
+Golden, thanks Peter!
 
-I'll pull this into the pending branch.
+>
+>    * can be changed while held using lock_set_class()
+
+One more sanity check... So in driver subsystems there are cases where
+a device on busA hosts a topology on busB. When that happens there's a
+need to set the lock class late in a driver since busA knows nothing
+about the locking rules of busB. Since the device has a longer
+lifetime than a driver when the driver exits it must set dev->mutex
+back to the novalidate class, otherwise it sets up a use after free of
+the static lock_class_key. I came up with this and it seems to work,
+just want to make sure I'm properly using the lock_set_class() API and
+it is ok to transition back and forth from the novalidate case:
+
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 990b6670222e..32673e1a736d 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -405,6 +405,29 @@ struct cxl_nvdimm_bridge
+*cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd);
+ #define __mock static
+ #endif
+
++#ifdef CONFIG_PROVE_LOCKING
++static inline void cxl_lock_reset_class(void *_dev)
++{
++       struct device *dev = _dev;
++
++       lock_set_class(&dev->mutex.dep_map, "__lockdep_no_validate__",
++                      &__lockdep_no_validate__, 0, _THIS_IP_);
++}
++
++static inline int cxl_lock_set_class(struct device *dev, const char *name,
++                                    struct lock_class_key *key)
++{
++       lock_set_class(&dev->mutex.dep_map, name, key, 0, _THIS_IP_);
++       return devm_add_action_or_reset(dev, cxl_lock_reset_class, dev);
++}
++#else
++static inline int cxl_lock_set_class(struct device *dev, const char *name,
++                                    struct lock_class_key *key)
++{
++       return 0;
++}
++#endif
++
+ #ifdef CONFIG_PROVE_CXL_LOCKING
+ enum cxl_lock_class {
+        CXL_ANON_LOCK,
+
+>      ( from a lockdep pov it unlocks the held stack,
+>        changes the class of your lock, and re-locks the
+>        held stack, now with a different class nesting ).
+>
+>      Be carefule! It doesn't forget the old nesting order, so you
+>      can trivally generate cycles.
+>
+>  - subclasses, basically distinct addresses inside above mentioned
+>    lock_class_key object, limited to 8. Normally used with
+>    *lock_nested() family of functions. Typically used to lock multiple
+>    instances of a single lock class where there is defined order between
+>    instances (see for instance: double_rq_lock()).
+>
+>  - nest_lock; eg. mutex_lock_nest_lock(), which allows expressing things
+>    like: multiple locks of class A can be taken in any order, provided
+>    we hold lock B.
+>
+> With many of these, it's possible to get it wrong and annotate real
+> deadlocks away, so be careful :-)
+
+Noted.
