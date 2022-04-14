@@ -2,144 +2,182 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BB5C433F5
-	for <linux-cxl@archiver.kernel.org>; Thu, 14 Apr 2022 19:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9DAC433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 14 Apr 2022 20:32:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231784AbiDNTqP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 14 Apr 2022 15:46:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49032 "EHLO
+        id S240868AbiDNUfK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 14 Apr 2022 16:35:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238706AbiDNTqI (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 14 Apr 2022 15:46:08 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6092ED9C3
-        for <linux-cxl@vger.kernel.org>; Thu, 14 Apr 2022 12:43:42 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id c12-20020a17090a020c00b001cba1ebb20cso6754645pjc.0
-        for <linux-cxl@vger.kernel.org>; Thu, 14 Apr 2022 12:43:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YMPolPkFbrluEA7trFzW5vfGL6xOTpY2rpO+rRWfteE=;
-        b=aD5O4GRMocgwH2YInqmL40T6Jk55qVWck1TJ1OI0qsVNqYmQVCJP5pBGIVgXGHnCL0
-         uZQmAvLy9RVTRE03fIPEewK7KYTFGSm9sEI/+ZaP12yw3Z6e+R6bW4QMjGx6acd1Sb0x
-         JWcmgYjHK+52nNHv1qDiHroGDkhFjZ6xRDdsyuhOBydIiMA8z7skSoharKjcq2oNZYcX
-         3GazU6w/ihmzJGraYZdRUKcwVu79CgyJzIn/WRXzZI0AHElODTZfy6xAuvYh/aADAMYZ
-         l9dqEHA2XSts/NFEDe17rqVXcfqTAg4bNhKU/xR2APWVP8XqY1JwG7dqEQ3xsDfspAli
-         rAeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YMPolPkFbrluEA7trFzW5vfGL6xOTpY2rpO+rRWfteE=;
-        b=TWb+g/8c/dLTXJf0nyyVUU4yn+4ga3+VPyjcAGY3Kr5PiLqsP39lu/oMtUp7BFooW5
-         6T85ghnYVaMEfTG1UoJaTb+MceylSH6e04GVkdx1k78NUnGeiv7E59sM4Mj0+U1IKXky
-         49ooe1xgi3peyrWTINXQ7JHV69D6iqV/46rMOLtdwRwTRbAEtJigCq8ycANPk0V7CY3g
-         iY2C6cvsuekSHJ03lEHC2D2wLJGaFyfYGUF+X6y+BjqJmOjlQVajnToUtq3q1mqRL3Jn
-         xKfhkWQe/s9vC1xDfnyxo5CNMvBxRC9mfSE31JrMG5/Li0Q0LprkAPh6izOIYEtKfXhM
-         yrlA==
-X-Gm-Message-State: AOAM5333ThMP5vFL+jQ3HWgySw5TJI9XY82lT8iTbPGPAu4hl+ilUJ9W
-        Yf6454JdVLeYYI7OVubhEUWUmDfBkpkyJUy3CGJB0A==
-X-Google-Smtp-Source: ABdhPJxLJx2dhijhY2GgYR6k+AAoWzSxf1ZMV2jWzsPbKL3wihos+1a3+smba0fpXn3HJ0WjmduhiN4tJaiMRMxnaEA=
-X-Received: by 2002:a17:902:dac7:b0:158:b284:cdc3 with SMTP id
- q7-20020a170902dac700b00158b284cdc3mr6149439plx.34.1649965422400; Thu, 14 Apr
- 2022 12:43:42 -0700 (PDT)
+        with ESMTP id S1346325AbiDNUfJ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 14 Apr 2022 16:35:09 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F768AACBE;
+        Thu, 14 Apr 2022 13:32:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649968363; x=1681504363;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=FGQSUPr61CrJ3mKDxUVwvrPPytbiptuHCa5PtNvibyQ=;
+  b=NfXpBCrpb6oSpFGUBhLsKqsYn400GuPdq/GJQnKXaer4M7o0H+Fb+aYs
+   Kf9mciIwssoZP8AgvudFOMgCYSxhrvHpMCz0LBU0mmCTvkzcfRYFr8uD+
+   Mg1qXZueMlo7ZErJ8Ex2zD8G0wfeZ7HM2XT6Z87ZqVjyrXcsNOIOJSWTI
+   bZ27E7YtS8af9IWw/UtIcw04GFgET0pFSv83iajnJzvXQqvGD/1jjzGFm
+   fDoouLfJybbFmGGuZ9fr9W2D+YyR6iylIZcCbXj6tpTnN3rAGhyCK95VZ
+   B4Tl5IKfGy7CmZxwMe+WH5rKyrQ3QDb04gh/sQgSysPG0cVXGB7NubDp6
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10317"; a="349460354"
+X-IronPort-AV: E=Sophos;i="5.90,260,1643702400"; 
+   d="scan'208";a="349460354"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 13:32:43 -0700
+X-IronPort-AV: E=Sophos;i="5.90,260,1643702400"; 
+   d="scan'208";a="725514035"
+Received: from aimeehax-mobl1.amr.corp.intel.com (HELO localhost) ([10.212.113.132])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 13:32:42 -0700
+From:   ira.weiny@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH V8 00/10] CXL: Read CDAT and DSMAS data from the device
+Date:   Thu, 14 Apr 2022 13:32:27 -0700
+Message-Id: <20220414203237.2198665-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-References: <164982968798.684294.15817853329823976469.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164982969858.684294.17819743973041389492.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20220413084309.GV2731@worktop.programming.kicks-ass.net> <CAPcyv4huZVNkxa7-rQ_J=nVN77+5F1AJg5vi6kLHp8t5khcwHA@mail.gmail.com>
- <Ylf0dewci8myLvoW@hirez.programming.kicks-ass.net> <CAPcyv4hFabn6H064HTrH8=GQ-cxsOk4xEK8s66JQxQavfgAzGw@mail.gmail.com>
- <Ylh3ISDToV5y9/4P@hirez.programming.kicks-ass.net>
-In-Reply-To: <Ylh3ISDToV5y9/4P@hirez.programming.kicks-ass.net>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 14 Apr 2022 12:43:31 -0700
-Message-ID: <CAPcyv4hwsKCbaxDhAL6LPZQmLZZV2T4wpja+cNZpjy=enR-eYQ@mail.gmail.com>
-Subject: Re: [PATCH v2 02/12] device-core: Add dev->lock_class to enable
- device_lock() lockdep validation
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-cxl@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 12:34 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, Apr 14, 2022 at 10:17:13AM -0700, Dan Williams wrote:
->
-> > One more sanity check... So in driver subsystems there are cases where
-> > a device on busA hosts a topology on busB. When that happens there's a
-> > need to set the lock class late in a driver since busA knows nothing
-> > about the locking rules of busB.
->
-> I'll pretend I konw what you're talking about ;-)
->
-> > Since the device has a longer lifetime than a driver when the driver
-> > exits it must set dev->mutex back to the novalidate class, otherwise
-> > it sets up a use after free of the static lock_class_key.
->
-> I'm not following, static storage has infinite lifetime.
+From: Ira Weiny <ira.weiny@intel.com>
 
-Not static storage in a driver module.
+Changes from V7:[4]
+	Avoid code bloat by making pci-doe.c conditional on CONFIG_PCI_DOE
+		which is auto selected by the CXL_PCI config option.
+	Minor code clean ups
+	Fix bug in pci_doe_supports_prot()
+	Rebase to cxl-pending
 
-modprobe -r fancy_lockdep_using_driver.ko
+Changes from V6:[3]
+	The big change is the removal of the auxiliary bus code from the PCI
+	layer.  The auxiliary bus usage is now in the CXL layer.  The PCI layer
+	provides helpers for subsystems to utilize DOE mailboxes by creating a
+	pci_doe_mb object which controls a state machine for that mailbox
+	capability.  The CXL layer wraps this object in an auxiliary device and
+	driver which can then be used to determine if the kernel is controlling
+	the capability or it is available to be used by user space.  Reads from
+	user space via lspci are allowed.  Writes are allowed but flagged via a
+	tainting the kernel.
 
-Any use of device_lock() by the core on a device that a driver in this
-module was driving will de-reference a now invalid pointer into
-whatever memory was vmalloc'd for the module static data.
+	Feedback from Bjorn, Jonathan, and Dan
+		Details in each patch
 
->
-> > I came up with this and it seems to work, just want to make sure I'm
-> > properly using the lock_set_class() API and it is ok to transition
-> > back and forth from the novalidate case:
-> >
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > index 990b6670222e..32673e1a736d 100644
-> > --- a/drivers/cxl/cxl.h
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -405,6 +405,29 @@ struct cxl_nvdimm_bridge
-> > *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd);
-> >  #define __mock static
-> >  #endif
-> >
-> > +#ifdef CONFIG_PROVE_LOCKING
-> > +static inline void cxl_lock_reset_class(void *_dev)
-> > +{
-> > +       struct device *dev = _dev;
-> > +
-> > +       lock_set_class(&dev->mutex.dep_map, "__lockdep_no_validate__",
-> > +                      &__lockdep_no_validate__, 0, _THIS_IP_);
-> > +}
-> > +
-> > +static inline int cxl_lock_set_class(struct device *dev, const char *name,
-> > +                                    struct lock_class_key *key)
-> > +{
-> > +       lock_set_class(&dev->mutex.dep_map, name, key, 0, _THIS_IP_);
-> > +       return devm_add_action_or_reset(dev, cxl_lock_reset_class, dev);
-> > +}
-> > +#else
-> > +static inline int cxl_lock_set_class(struct device *dev, const char *name,
-> > +                                    struct lock_class_key *key)
-> > +{
-> > +       return 0;
-> > +}
-> > +#endif
->
-> Under the assumption that the lock is held (lock_set_class() will
-> actually barf if @lock isn't held) this should indeed work as expected
+Changes from V5:[0]
 
-Nice.
+	Rework the patch set to split PCI vs CXL changes
+		Also make each change a bit more stand alone for easier review
+	Add cxl_cdat structure
+	Put CDAT related data structures in cdat.h
+	Clarify some device lifetimes with comments
+	Incorporate feedback from Jonathan, Bjorn and Dan
+		The bigest change is placing the DOE scanning code into the
+			pci_doe driver (part of the PCI codre).
+		Validate the CDAT when it is read rather than before DSMAS
+			parsing
+		Do not report DSMAS failure as an error, report a warning and
+			keep going.
+		Retry reading the table 1 time.
+	Update commit messages and this cover letter
 
-> (although I think you got the @name part 'wrong', I think that's
-> canonically something like "&dev->mutex" or something).
 
-Ah, yes, I got it wrong for restoring the same name that results from
-lockdep_set_novalidate_class(), will fix.
+
+CXL drivers need various data which are provided through generic DOE mailboxes
+as defined in the PCIe 6.0 spec.[1]
+
+One such data is the Coherent Device Atribute Table (CDAT).  CDAT data provides
+coherent information about the various devices in the system.  It was developed
+because systems no longer have a priori knowledge of all coherent devices
+within a system.  CDAT describes the coherent characteristics of the
+components on the CXL bus separate from system configurations.  The OS can
+then, for example, use this information to form correct interleave sets.
+
+To begin reading the CDAT the OS must have support to access the DOE mailboxes
+provided by the CXL devices.
+
+Because DOE is not specific to DOE but is provided within the PCI spec, the
+series adds PCI DOE capability library functions.  These functions allow for
+the iteration of the DOE capabilities on a device as well as creating
+pci_doe_mb structures which can control the operation of the DOE state machine.
+
+CXL iterates the DOE capabilities creates auxiliary bus devices.  These devices
+are driven by a CXL DOE auxiliary driver which calls into the PCI DOE library
+functions as appropriate.
+
+The auxiliary bus architecture allows for root users to control which DOE
+mailboxes are controlled by the kernel and which should be allowed for
+unrestricted access by user space.  One such use case is to allow for CXL
+Compliance Testing (CXL 2.0 14.16.4 Compliance Mode DOE).  By default the
+kernel controls all mailboxes found.
+
+After the devices are created and the driver attaches, CDAT data is read from
+the device and DSMAS information parsed from that CDAT blob for use later.
+
+This work was tested using qemu with additional patches.
+
+
+[0] https://lore.kernel.org/linux-cxl/20211105235056.3711389-1-ira.weiny@intel.com/
+[1] https://pcisig.com/specifications
+[2] https://lore.kernel.org/qemu-devel/20210202005948.241655-1-ben.widawsky@intel.com/
+[3] https://lore.kernel.org/linux-cxl/20220201071952.900068-1-ira.weiny@intel.com/
+[4] https://lore.kernel.org/linux-cxl/20220330235920.2800929-1-ira.weiny@intel.com/
+
+
+Ira Weiny (7):
+PCI: Replace magic constant for PCI Sig Vendor ID
+cxl/pci: Create auxiliary devices for each DOE mailbox
+cxl/pci: Create DOE auxiliary driver
+cxl/pci: Find the DOE mailbox which supports CDAT
+cxl/cdat: Introduce cxl_cdat_valid()
+cxl/mem: Retry reading CDAT on failure
+cxl/port: Parse out DSMAS data from CDAT table
+
+Jonathan Cameron (3):
+PCI: Add vendor ID for the PCI SIG
+PCI: Create PCI library functions in support of DOE mailboxes.
+cxl/mem: Read CDAT table
+
+drivers/cxl/Kconfig | 14 +
+drivers/cxl/Makefile | 2 +
+drivers/cxl/cdat.h | 116 +++++++
+drivers/cxl/core/memdev.c | 38 +++
+drivers/cxl/cxl.h | 8 +
+drivers/cxl/cxlmem.h | 28 ++
+drivers/cxl/cxlpci.h | 35 ++
+drivers/cxl/doe.c | 90 +++++
+drivers/cxl/pci.c | 423 +++++++++++++++++++++++
+drivers/cxl/port.c | 65 ++++
+drivers/pci/Kconfig | 3 +
+drivers/pci/Makefile | 1 +
+drivers/pci/pci-doe.c | 607 ++++++++++++++++++++++++++++++++++
+drivers/pci/probe.c | 2 +-
+include/linux/pci-doe.h | 119 +++++++
+include/linux/pci_ids.h | 1 +
+include/uapi/linux/pci_regs.h | 30 +-
+17 files changed, 1580 insertions(+), 2 deletions(-)
+create mode 100644 drivers/cxl/cdat.h
+create mode 100644 drivers/cxl/doe.c
+create mode 100644 drivers/pci/pci-doe.c
+create mode 100644 include/linux/pci-doe.h
+
+
+base-commit: 4f497e0dd3530981f8c897d5d47ee880b62baefb
+--
+2.35.1
+
