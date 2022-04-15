@@ -2,98 +2,177 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FFAC433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 15 Apr 2022 07:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEFBC433FE
+	for <linux-cxl@archiver.kernel.org>; Fri, 15 Apr 2022 20:51:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233697AbiDOH4X (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 15 Apr 2022 03:56:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38344 "EHLO
+        id S1351737AbiDOUxa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 15 Apr 2022 16:53:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232094AbiDOH4X (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 15 Apr 2022 03:56:23 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D2959BB84;
-        Fri, 15 Apr 2022 00:53:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=TY7QrgqvgkH5i76LkYOioJ0Vkl4t7pW84wpQ7D92y58=; b=AcTLpeAaH8w+tdpl/NmhorrElG
-        atvXYjPxEjQikC6x8SE+8HDVNTKWoEM+FsvUcvG076jAx7xNIBIvcqgiwE0V3stZBhNYOXvvA8vnZ
-        zc4gx12b/A49yO4WhN6hQsKF84PF1ZIKeDYCKEyTke1hgE7VU8FSAQ7J9g203MaXF6QO8AGljarVP
-        CiPXaijMzIGIDUDOW4kMw/7ezQFealbxmBG93M5cbBcYs9iGkeAWRYzU3JLVT2kx8bAwbi1fzS0Tr
-        4+8w56oKLwIqD+IPKGefsfHR8DOgu51TXQliqANImjXt/+Xm+usnuab0TgQGxZ+xFgwj5I68klTUD
-        SZQ9CvVg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nfGm5-00Fwly-Ay; Fri, 15 Apr 2022 07:53:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E02683001AE;
-        Fri, 15 Apr 2022 09:53:48 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9D2DF2025D913; Fri, 15 Apr 2022 09:53:48 +0200 (CEST)
-Date:   Fri, 15 Apr 2022 09:53:48 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>
-Subject: Re: [PATCH v2 02/12] device-core: Add dev->lock_class to enable
- device_lock() lockdep validation
-Message-ID: <YlkkjLJg4a+2gqiq@hirez.programming.kicks-ass.net>
-References: <164982968798.684294.15817853329823976469.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164982969858.684294.17819743973041389492.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20220413084309.GV2731@worktop.programming.kicks-ass.net>
- <CAPcyv4huZVNkxa7-rQ_J=nVN77+5F1AJg5vi6kLHp8t5khcwHA@mail.gmail.com>
- <Ylf0dewci8myLvoW@hirez.programming.kicks-ass.net>
- <CAPcyv4hFabn6H064HTrH8=GQ-cxsOk4xEK8s66JQxQavfgAzGw@mail.gmail.com>
- <Ylh3ISDToV5y9/4P@hirez.programming.kicks-ass.net>
- <CAPcyv4hwsKCbaxDhAL6LPZQmLZZV2T4wpja+cNZpjy=enR-eYQ@mail.gmail.com>
+        with ESMTP id S231648AbiDOUx3 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 15 Apr 2022 16:53:29 -0400
+Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4F4743AC0
+        for <linux-cxl@vger.kernel.org>; Fri, 15 Apr 2022 13:50:59 -0700 (PDT)
+Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
+        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20220415205054usoutp02a6724ca69cc982e85f6353434051425e~mLQ6QPQ_e2793527935usoutp02Z;
+        Fri, 15 Apr 2022 20:50:54 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20220415205054usoutp02a6724ca69cc982e85f6353434051425e~mLQ6QPQ_e2793527935usoutp02Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1650055854;
+        bh=rbPH910LIobk7Uf+bxHj1FGQoCQLyXIdRimZ7RIZzf4=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+        b=ID874J2826YFkiRJ0/yahd8+alg0rAlq3iSAk8aWlIeFxNrpxHH2aljOyLu7VsnI+
+         j9B6RW0H4rah7sCqmj3YTI2Bpi191oxD5TyKNGihW8litJMOk2nz4ni0u5Z4ghvaZo
+         10CJclwaZUSvWM032UZXvEhOB9FMBnIZP8rr3n34=
+Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
+        [203.254.195.109]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20220415205052uscas1p12c16360da29ef841fdc737753598c39e~mLQ5MhkMj1327213272uscas1p1F;
+        Fri, 15 Apr 2022 20:50:52 +0000 (GMT)
+Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
+        ussmges1new.samsung.com (USCPEMTA) with SMTP id 88.8E.09760.CAAD9526; Fri,
+        15 Apr 2022 16:50:52 -0400 (EDT)
+Received: from ussmgxs3new.samsung.com (u92.gpu85.samsung.co.kr
+        [203.254.195.92]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20220415205052uscas1p209e03abf95b9c80b2ba1f287c82dfd80~mLQ47mUSg2505025050uscas1p22;
+        Fri, 15 Apr 2022 20:50:52 +0000 (GMT)
+X-AuditID: cbfec36d-51bff70000002620-8b-6259daacff88
+Received: from SSI-EX3.ssi.samsung.com ( [105.128.2.145]) by
+        ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id 06.B4.09665.CAAD9526; Fri,
+        15 Apr 2022 16:50:52 -0400 (EDT)
+Received: from SSI-EX3.ssi.samsung.com (105.128.2.228) by
+        SSI-EX3.ssi.samsung.com (105.128.2.228) with Microsoft SMTP Server
+        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+        15.1.2242.4; Fri, 15 Apr 2022 13:50:51 -0700
+Received: from SSI-EX3.ssi.samsung.com ([fe80::8d80:5816:c578:8c36]) by
+        SSI-EX3.ssi.samsung.com ([fe80::4031:294d:7626:e900%4]) with mapi id
+        15.01.2242.008; Fri, 15 Apr 2022 13:50:51 -0700
+From:   Adam Manzanares <a.manzanares@samsung.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+        "patches@lists.linux.dev" <patches@lists.linux.dev>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: Re: [RFC PATCH 01/15] cxl/core: Use is_endpoint_decoder
+Thread-Topic: [RFC PATCH 01/15] cxl/core: Use is_endpoint_decoder
+Thread-Index: AQHYUQp+buRaSuq+ck6p5yfWSKlchg==
+Date:   Fri, 15 Apr 2022 20:50:51 +0000
+Message-ID: <20220415205034.GA67162@bgt-140510-bm01>
+In-Reply-To: <20220413183720.2444089-2-ben.widawsky@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [105.128.2.176]
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <60C9E0E4E632524F8632FB28E5FB8218@ssi.samsung.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4hwsKCbaxDhAL6LPZQmLZZV2T4wpja+cNZpjy=enR-eYQ@mail.gmail.com>
+X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTcRjG+59zdnY2Wp1W6JtSmhTRbU0JOnQZ2U3TDwsKpKLL1INaOm1z
+        TiUqyQilcFpSLcpLsdyaXVyapFkunal5Ic1KlPKSZmm4tCytlfMs2Lffy/s85/3x51C42MLz
+        omKUiaxKqYj1I4VEme178xpz575wqfm+lOnuayWZzIEsnLmc24qYpx8HCcZU0EEyLfoGgjH+
+        /M1j2l68QkynzoZtEQSn14zwgm9WDmHBnyxXUfBYyeLdxH7hpkg2NiaJVa2VHRFGGx1T/IRv
+        dHLJjUn8NEqbk4kEFNDroL1nHGUiISWmjQiqLBkEN5zFwFbbwvufytb14tyiGEFv4QseN9gR
+        jJ8pd22eIbAa2ghnhaSlMFX3AHfyAnoFjNxqnzmC02k4DN6rRs7FfHoLtJhySC4UCF23x/gc
+        S6B0qnm6TFEEvQzstqNOFE1r3K3wdSYEtAw+v0ufOYVoD5hoMGNOxmlP6OzPwzjreVB4rRLn
+        2AMcj3tIjpfA+4khPpdfDfkV30iOZVDdNIw4XgWGgi8zXdH0d+qv9hNcdyFUF72deSKg+ylo
+        HX7tOrYdsmxdLvaGy+Y2V+gcglFdFY8bdAi6Rn65NDaCI6ODr0NL9W7mejcrvZuV3s1K72aV
+        j3gm5KlRq+OiWLW/ktVK1Io4tUYZJYmIjytB0/9Vo+N5XDkq77RLrAijkBUBhfstEL3LCgsX
+        iyIVKamsKv6wShPLqq3ImyL8PEWGmPsKMR2lSGSPsWwCq/q/xSiB12ms6Id9vCdv1Gqa7Svz
+        /Rj2daQu6oiP43pzn3E49FzDfqlSZnievLW/Km3jm/oBYe6cQ3QA2Vu4eK9kp3bwg6B81phY
+        Nd5N270s25om1zcl+T8qlQbOLn25aDOCNadiNdqvObLI1IiciZDi7g3xEVTlrg0ng8oS6wIe
+        YaNkYo7/q4sBjZMGOb/gV6RhuyY0+Xx8WGPfvuboHcezr/lUyU35Bz8dGAw6E22pv5KV6aN9
+        c6kjdFNRTVl47p6hJ+tfzmViaitO1AaS2fLwh/IfbX1/ij206Gc7eIb8DdptTJfLv6ckrVhV
+        k7r8c8i91gvYgHdhcf2dRQn85IwD5pTJ+XvtIj9CHa3wX4mr1Ip/REBbdcYDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHIsWRmVeSWpSXmKPExsWS2cA0UXfNrcgkg/ePpS3uPr7AZtH1rJ/Z
+        YvrUC4wW+58+Z7FYtfAam8X5WadYLFb++MNqcfnEJUaLWxOOMTlwerQcecvqsXjPSyaPF5tn
+        Mnp83iQXwBLFZZOSmpNZllqkb5fAlbHy32/2gk8CFZvm/WJuYGzk62Lk5JAQMJGYOOERcxcj
+        F4eQwGpGiflnZzJBOB8ZJf7O3MAI4RxglPjS8JQNpIVNwEDi9/GNzCC2iICmxNslV8CKmAUa
+        mSWerz/ICJIQFnCQOL9qEhtEkaPEneWf2SFsPYmtv88BNXNwsAioSnw8lgVi8gKdsW63AkiF
+        kEChxM/9Z1lAbE4BO4lXN1vAbEYBMYnvp9YwgdjMAuISt57MZ4L4QEBiyZ7zzBC2qMTLx/9Y
+        IWxFifvfX7JD1OtILNj9iQ3CtpM4ePYNI4StLbFs4WuwXl4BQYmTM5+wQPRKShxccYNlAqPE
+        LCTrZiEZNQvJqFlIRs1CMmoBI+sqRvHS4uLc9Ipi47zUcr3ixNzi0rx0veT83E2MwCg//e9w
+        zA7Ge7c+6h1iZOJgPMQowcGsJMJ7sz88SYg3JbGyKrUoP76oNCe1+BCjNAeLkjivR+zEeCGB
+        9MSS1OzU1ILUIpgsEwenVANT6PWXosFrHZcWVk3ylMgSPrZ2hoMUT/BswdDZa1l3xKxxqj1x
+        oepd95wvH/Ob3Nu2hYemaS//vdVxqabhvqMpyQwR16Zt3X9yT9IVN94DXyLeTHZQ/pautm35
+        e9u563ckeLL8X5ZUlPXA5YHLrA0bT89z9Qj+KZlp3yDbvIQ5uf/ihUsH/+hHndh13sGkdwr7
+        GUOz15xChaI1txX+FZzfarE5yeTM3YbAvY3uOxa+uHxQmIPnVKj7+p//nmZ2bt/Ya/dPbFJQ
+        9dJLclXLdH8w7cnm45LVtC1okUty9ZgZGdvwKMBzf/IOkSmmGj/EmY4sD/porz1p6sMJm1OO
+        fzn5K2jGhU1na9aqJnf/3Ju0QImlOCPRUIu5qDgRABol7ihhAwAA
+X-CMS-MailID: 20220415205052uscas1p209e03abf95b9c80b2ba1f287c82dfd80
+CMS-TYPE: 301P
+X-CMS-RootMailID: 20220415205052uscas1p209e03abf95b9c80b2ba1f287c82dfd80
+References: <20220413183720.2444089-1-ben.widawsky@intel.com>
+        <20220413183720.2444089-2-ben.widawsky@intel.com>
+        <CGME20220415205052uscas1p209e03abf95b9c80b2ba1f287c82dfd80@uscas1p2.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 12:43:31PM -0700, Dan Williams wrote:
-> On Thu, Apr 14, 2022 at 12:34 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Thu, Apr 14, 2022 at 10:17:13AM -0700, Dan Williams wrote:
-> >
-> > > One more sanity check... So in driver subsystems there are cases where
-> > > a device on busA hosts a topology on busB. When that happens there's a
-> > > need to set the lock class late in a driver since busA knows nothing
-> > > about the locking rules of busB.
-> >
-> > I'll pretend I konw what you're talking about ;-)
-> >
-> > > Since the device has a longer lifetime than a driver when the driver
-> > > exits it must set dev->mutex back to the novalidate class, otherwise
-> > > it sets up a use after free of the static lock_class_key.
-> >
-> > I'm not following, static storage has infinite lifetime.
-> 
-> Not static storage in a driver module.
-> 
-> modprobe -r fancy_lockdep_using_driver.ko
-> 
-> Any use of device_lock() by the core on a device that a driver in this
-> module was driving will de-reference a now invalid pointer into
-> whatever memory was vmalloc'd for the module static data.
+On Wed, Apr 13, 2022 at 11:37:06AM -0700, Ben Widawsky wrote:
+> Save some characters and directly check decoder type rather than port
+> type. There's no need to check if the port is an endpoint port since we
+> already know the decoder, after alloc, has a specified type.
+>=20
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> ---
+>  drivers/cxl/core/hdm.c  | 2 +-
+>  drivers/cxl/core/port.c | 2 +-
+>  drivers/cxl/cxl.h       | 1 +
+>  3 files changed, 3 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 0e89a7a932d4..bfc8ee876278 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -197,7 +197,7 @@ static int init_hdm_decoder(struct cxl_port *port, st=
+ruct cxl_decoder *cxld,
+>  	else
+>  		cxld->target_type =3D CXL_DECODER_ACCELERATOR;
+> =20
+> -	if (is_cxl_endpoint(to_cxl_port(cxld->dev.parent)))
+> +	if (is_endpoint_decoder(&cxld->dev))
+>  		return 0;
+> =20
+>  	target_list.value =3D
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 2ab1ba4499b3..74c8e47bf915 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -272,7 +272,7 @@ static const struct device_type cxl_decoder_root_type=
+ =3D {
+>  	.groups =3D cxl_decoder_root_attribute_groups,
+>  };
+> =20
+> -static bool is_endpoint_decoder(struct device *dev)
+> +bool is_endpoint_decoder(struct device *dev)
+>  {
+>  	return dev->type =3D=3D &cxl_decoder_endpoint_type;
+>  }
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 990b6670222e..5102491e8d13 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -340,6 +340,7 @@ struct cxl_dport *cxl_find_dport_by_dev(struct cxl_po=
+rt *port,
+> =20
+>  struct cxl_decoder *to_cxl_decoder(struct device *dev);
+>  bool is_root_decoder(struct device *dev);
+> +bool is_endpoint_decoder(struct device *dev);
+>  bool is_cxl_decoder(struct device *dev);
+>  struct cxl_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+>  					   unsigned int nr_targets);
+> --=20
+> 2.35.1
+>=20
+>
 
-Ooh, modules (I always, conveniently, forget they exist). Yes, setting a
-lock instance from the core kernel to a key that's inside a module and
-then taking the module out will be 'interesting'.
 
-Most likely you'll get a splat from lockdep when doing this.
+Looks good.
+
+Reviewed by: Adam Manzanares <a.manzanares@samsung.com>=
