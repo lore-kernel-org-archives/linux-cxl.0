@@ -2,200 +2,180 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD95FC433F5
-	for <linux-cxl@archiver.kernel.org>; Mon, 18 Apr 2022 22:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62788C35296
+	for <linux-cxl@archiver.kernel.org>; Tue, 19 Apr 2022 16:47:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231371AbiDRWSj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 18 Apr 2022 18:18:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37562 "EHLO
+        id S1355443AbiDSQtx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 19 Apr 2022 12:49:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231285AbiDRWSj (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 18 Apr 2022 18:18:39 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C014829C95
-        for <linux-cxl@vger.kernel.org>; Mon, 18 Apr 2022 15:15:58 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id 203so2310764pgb.3
-        for <linux-cxl@vger.kernel.org>; Mon, 18 Apr 2022 15:15:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cXn+XlB+cHweCj8dldoZHVhXGxfPdw05rCWNbSdTdc4=;
-        b=a3/CLTjzJmABS8OJFu259ZAUTBgMaKGm4qDzfxoiRymib2vIz041twXe8ofgq4beSM
-         eSQL8xTTCC4e0rZY+34Qhb/SgeNRFRHayrKIXcXN0HlKhdLw0WGzrHDgTl+fmi8NEtHv
-         os5PoVy+JqKtRigkZSJ54ftSJ2lJkVAjmMUgdpAWnNC0Vj1K/r0tTGTv7knsD4EEq2Kr
-         Mi4ySkAyfxS87q5a8/jLaxSWyv+fhnnV+QyCWzhNWQ4gaaIjE2JYJ3aZWmvOaOG8v5Zm
-         qSSPB2ZqqAlCJKHPoOdtuy3NU5l0nlThx9ctndSpbQz+609wdbCpDGtAHMYaxo5fQHTp
-         Nlcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cXn+XlB+cHweCj8dldoZHVhXGxfPdw05rCWNbSdTdc4=;
-        b=gQQ7jF8Q43dAjvM8ZMS0d/kccDpiE8IYAqTwIfBL2R0r0Up8ggMmkKI3Gf8AjA+7ar
-         VLk8eeRfX96WH7OfZ1m3GArPOmqRHs5CWCB6kU6SDVIcUbVSw5G6/MKRefXrTxGvPR+C
-         qETFiJJ+MgnLI6HEUEq+acH0fgq985+Fora5H+71te5MDzDdQI8jQXu55Kb0pZAUO2a+
-         zYez132wbUIaGBFc3+WyJ8Ssn4Yk2AfUJuUAlLczaFnPMsFh5lchYCFsRwxjU2YC5aFA
-         6A1eoaYX7gFjrrbib7w5AoGkaLCZxyC9db+EW+TH928IOPwSZW7iEGar2plujKlHgGvR
-         M3CQ==
-X-Gm-Message-State: AOAM531zpGtAEOqCOTHDwRj9bjpMLO5Ucduau/1zG4lDZ++XAAWXiOOR
-        8B+FTRAGjTBYNt4HUVvA+zOsYHRL5e7IgDdRJDcEGg==
-X-Google-Smtp-Source: ABdhPJwWpbqzZFn6prFelZgwymqzv8uuDIY8ktJhHn2DeA4Oidn7MdV/6rumg9QinS8Ff9gdYQ4FlLujPhf5fWaz814=
-X-Received: by 2002:a05:6a00:e14:b0:4fe:3cdb:23f with SMTP id
- bq20-20020a056a000e1400b004fe3cdb023fmr14519126pfb.86.1650320158259; Mon, 18
- Apr 2022 15:15:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220413183720.2444089-1-ben.widawsky@intel.com> <20220413183720.2444089-7-ben.widawsky@intel.com>
-In-Reply-To: <20220413183720.2444089-7-ben.widawsky@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 18 Apr 2022 15:15:47 -0700
-Message-ID: <CAPcyv4hD93d20Sq25tPNMQ1T68uQmTTQo7aDXMKN36wrCTa1-Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 06/15] cxl/acpi: Manage root decoder's address space
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Linux NVDIMM <nvdimm@lists.linux.dev>,
-        patches@lists.linux.dev,
+        with ESMTP id S1354926AbiDSQqA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 19 Apr 2022 12:46:00 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2044.outbound.protection.outlook.com [40.107.237.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E7D839692
+        for <linux-cxl@vger.kernel.org>; Tue, 19 Apr 2022 09:43:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=d7idjfAA6NTiooZvpf2Y+5HZeNJR0Vq8OI/ey2qsRxtMoGkeVA9nxx/nPX+8OAo4NuroM2r5dnoEtmrFVPHGqZBH6U5kS69OJGPw9LlwTPO6JmrZc1UFe7+rDn1HZ4aGGy1cqih6wWuDmkN/VhWjGP+DaKOBxHTicRJqTTRecfVwbha8YOcXTLnowKntP2LjKSDneLGG50a0alHm/eingo/pcMqH0V1lyV5IhBsattX0e1NyNIgPQDKwHlZTDAXXLT33SPy5KwCDd5bf7LL8nLWErzekx64w8Li96yKrvqBUu9+3B3Zjyp8CilYqxEtNCurWVa21Iltd0XxVGD/2Ew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bNyPG8pEkRImKI4zqxNU+PAxLBlcQzX1T5ktOg+bT10=;
+ b=P/fZnqvyPZF3l36wWUSzy9HYxDpxNFmJfGOfNc4Y+n/qPJxfJN8qvCokhVM5bjxlEKkTeXtzde1ZrHVJEpVkJn3biRKY8Azp+cZ9drZHNDGdXp6DNO11hqvKoReoE2OEvgvV/IbK7sPk5afBMeMl0Ka+FRL5xufQAaPz16jnYCYpSRkRkAHDycUXANxDMk5LbFXxOKX+BrLRmGqz5hYxD6IQe0rMB+tMNKIQCR/yOZsIsR+ZQ7mmaF1AWi6ACEgdi9k7kTFwSPsq9XQxCCDCq0kzxgE3yZFsZc/gTqB8hYgaIZxalTS+NXlSAJC6495Zf7OWKNOa/XA2QH2hvWI/pA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bNyPG8pEkRImKI4zqxNU+PAxLBlcQzX1T5ktOg+bT10=;
+ b=KiS0WsVBTP6nnJUfgRufINj3pKTLstygm8kqwYAAR8ezZA6noLRhE7wO890naKk8NMtY/UsNtMkfxdj/FZaObUKKZ22iSg28peYj/xQWenhrJyJuDUHBnA9N1sZ8VAkRiwiENqXKQ4oWUKoUf/XZG0988SjMdxDFfmYFejPUxpQavJRgHILOnsp5x43AdZz1CTOFeNXZTe7VLbNF/ZXhi+YIXGLEzBmplJMIt0uJ3iJXJzmLOk7V/m7007/cG/1ABzfiuyD/fdL/ww5lSoZPNsqWukMCOIB+ZlqgR1zpW71O+VXzsjl8g7vTPrsqp04K783WOSRqZkEjtjrNyhCNGw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
+ by CH2PR12MB5003.namprd12.prod.outlook.com (2603:10b6:610:68::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5164.20; Tue, 19 Apr
+ 2022 16:43:14 +0000
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::ec2d:9167:1b47:2db2]) by MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::ec2d:9167:1b47:2db2%5]) with mapi id 15.20.5164.025; Tue, 19 Apr 2022
+ 16:43:14 +0000
+Date:   Tue, 19 Apr 2022 13:43:13 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
+        Linux NVDIMM <nvdimm@lists.linux.dev>, patches@lists.linux.dev,
         Alison Schofield <alison.schofield@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [RFC PATCH 05/15] cxl/acpi: Reserve CXL resources from
+ request_free_mem_region
+Message-ID: <20220419164313.GT2120790@nvidia.com>
+References: <20220413183720.2444089-1-ben.widawsky@intel.com>
+ <20220413183720.2444089-6-ben.widawsky@intel.com>
+ <CAPcyv4iM13nzCpnF5S4oHSWF769t4Av96gQM_3n4E=RAPSnSig@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4iM13nzCpnF5S4oHSWF769t4Av96gQM_3n4E=RAPSnSig@mail.gmail.com>
+X-ClientProxiedBy: BL1PR13CA0445.namprd13.prod.outlook.com
+ (2603:10b6:208:2c3::30) To MN2PR12MB4192.namprd12.prod.outlook.com
+ (2603:10b6:208:1d5::15)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0b8cb10d-de50-4f90-163c-08da2223b2b6
+X-MS-TrafficTypeDiagnostic: CH2PR12MB5003:EE_
+X-Microsoft-Antispam-PRVS: <CH2PR12MB50032ADC3E177245DDF6F146C2F29@CH2PR12MB5003.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: VnEwKGpP+O87eLItNqWhFXcNg6z7UiSY4pHZDq4VFKphnuUDvBsskaC3Jzq8Sz3otSKTbBBZhoTZcWsDCMr+mRlE+M1PteJmDG6AQIefw2EsWmw+X9kMr9HflBsvLuFdiHc/LzlqXY+QXa+oyE2jpPfjITzMx2GPg6HHwphcy2ChSk7cmGVP+YXDcUeTLqts+UavtQUTfycP7I8pkFOFFcjBSA5e83UqjL5KzM+4HPtrf/045bKITBT4d80Qk3ZWSVqKhKDD0o4m7y/CcfhEgngvQgHscnCGob2rrt9op+pY/sZMdNtguDgxBnMlY696yuJ/cuPTNj+QRmrU2R19NxavO1bKQ1PmzCZ5HZ0WcFTaXSSHWmTe/ZaAROOm8yisN/cuCR0X7gnBtrxma/gYsQ8+88pf4wfqCVbK/bU1VA4UR2G7HyLxSpBpL0ZW10JD7ozTzvOXKZCLli6O/ZVwji96qqqSOAn8sPnCA9C9Tu84LMq7LCWLwCt6P3fvBbqZkksthdiFi1UJzD6ywPLeaX33cu2SRk+u1uIXY6yY9X7dM2OUSNZ7iUyzKF50rqYpzSKT2vFgAA0/GFEMeaUfCB0/foBLBU3kkfwi73B+9pR0ODeg84O90hdVDhwa8pfmFfgrdJvblgjV5oBXD49r3w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(8676002)(6512007)(66476007)(38100700002)(66556008)(66946007)(1076003)(508600001)(36756003)(86362001)(53546011)(6916009)(54906003)(6506007)(107886003)(4326008)(2616005)(5660300002)(2906002)(316002)(6486002)(186003)(33656002)(83380400001)(7416002)(8936002)(26005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ikAEknIMUxHGVSikuUSyfOtaaCiwyIO//XyBemtqxT9aaLkRwyhSMNfUOCGZ?=
+ =?us-ascii?Q?T4M7CZI7dvPMQ43G54JOl2OJnL4SA9KANbcqYYjYzUGJU4cZzFneeOs/rObu?=
+ =?us-ascii?Q?/Ahw+Xvy6M/0G71diCzCwwrsyhHbJnN80jIllwNRQTRX18kE41KjSVSG0U7S?=
+ =?us-ascii?Q?87HJnZ+bCESpOu8BSyGf9ISn394f1GCs4PHHEfKSFBuqUg9RkqSaL5oQ4dLY?=
+ =?us-ascii?Q?VYHn6cSOcSccPDxFtFfjIrCuUQXePRQfi/Po6U/aJ53d5dsxlTqhLyZ6vwEz?=
+ =?us-ascii?Q?egSl7S8MKlmrwv65BBSGwYPOhCJ5cKPnYGhzBIhm7bmkwG10kvuRYcj+uu1U?=
+ =?us-ascii?Q?Y8HLYmy7OeKIzFr0qUxIIvAv+VJJR0J6HyTGkGWAohTcfhW/oZyaUiXAk3Tn?=
+ =?us-ascii?Q?zKKd3yXEkQpXcw6eJoVlNCCctiX9WApHeHGydwMepiWw+UdXRZYQdVQq60jA?=
+ =?us-ascii?Q?W98SlSmWJ18Bdk+Bb2BhJZFGoDDrp5ZNRWABAFFT7UmK8bsrVCRNVy1xRMCP?=
+ =?us-ascii?Q?5QcZmHknsqX+DiGOdVdmbf6Jiie5UU+iA/H4AMLuZwhEIc/3cFfMuL273jWm?=
+ =?us-ascii?Q?0mIVaXwV9uobEilLiCeKWpKkKLY4vqokXNYfEepuqz8ftbpOh3yhuxtS5NP3?=
+ =?us-ascii?Q?sMJ3x+ZnVrZYA2Esgr+W9XNVb+aPBndlFa4L8Z0QgVD/4aSLX1vkJzRK4x4b?=
+ =?us-ascii?Q?NATEmJ9NIJZm4smSXyEFlTTFEMpb+mdGCD45hg5jv1EylSOhDAGk0iLPgs1B?=
+ =?us-ascii?Q?zWec0rYjGlddIxPrLsUEI+Edppa1/xQZ3pISKIpHWhcIFUZqMD+KxEe3RN3q?=
+ =?us-ascii?Q?CqtrWYvizdfOjGmSQd3EG+817LfO/2ImDSn3pgchICOknvbWcn/k9qCoRvSu?=
+ =?us-ascii?Q?3sRDPFsEXrxwhWs0K7rQrbikUTv0ij5sZ/OaMbtzsXIHeI1HCDYpj+h68jfB?=
+ =?us-ascii?Q?936GARDX2T5P6DJ4QhhofCLHFcdvUOFZdR7JpDZsOUoDc7lIRKSkPJfN4EZ2?=
+ =?us-ascii?Q?EJxaD6rXZqmf+zWJfcm/2yOxx5xfhJoUTv109xxBaXA2EzJYdCkDNLhtkIQT?=
+ =?us-ascii?Q?MFarixmh45JyV6dnzKflPnIBFQbBtt0C2ycXqNasPNh/dFQh7eM0pNalwJoD?=
+ =?us-ascii?Q?w6JxN2r+WvE/SMU11jS7PZkPxigHa4l5b1AxnrYBI42Xd2Y39VtCQwpyNsRt?=
+ =?us-ascii?Q?xCYtKPKvHoMqdswNMMxX2NAUcd+cixRQQPkaqvEg7OWOn1CawdWF3rnHeRum?=
+ =?us-ascii?Q?AcZIWVNacMW3Q7Y3joYL+ScINYF1JJyLCBIgJ+Ew/VS4z9rqjl8BBZJYtiC6?=
+ =?us-ascii?Q?m4lDtNYKLJUDTigfBZtliT9OnQhU+LeNh1rZ2A3gQmIboDqGrbQTLI8YOLx4?=
+ =?us-ascii?Q?0hKXv6VqheS7n3mGLNH1w6lzoCWwrI40srGuoX3E/3Hw8jnA7Y0f3suFOScK?=
+ =?us-ascii?Q?9meRJh6nikCmr34GZsFIEQ/9ysd68aN/zoQ3uD7sqbWIpHV8JTYIex7kB+Pq?=
+ =?us-ascii?Q?ptSq7lZgdOV9Fqg6I082YdhPfSTHfzCxF2rnx/Ux3AmKgdJSPD3d3tW7o8bo?=
+ =?us-ascii?Q?EEbLsBSt/Rokf867qzWmv96WW855dOf7a8QecteNsigsVL++9o5JkPEWot3H?=
+ =?us-ascii?Q?Rxo9BT0Hk1579haCyBEAvOmBzvomp3IFlO5xoohLpouHmF6nLCXwTGG+PQyW?=
+ =?us-ascii?Q?B+WnjnY/aApchDeDHTSF+0vr6cTLZx88pqUFDwrwLqlhOeeQmVEo/05T4bk9?=
+ =?us-ascii?Q?9G1R/cM0hQ=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b8cb10d-de50-4f90-163c-08da2223b2b6
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2022 16:43:14.5556
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9uMlAXvlmgriXZk0ytb3KHM4bPYQpDuk4iZptxPxBQ2sH5XJ970rRhr6tvIVuxg5
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB5003
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Apr 13, 2022 at 11:38 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> Use a gen_pool to manage the physical address space that is routed by
-> the platform decoder (root decoder). As described in 'cxl/acpi: Resereve
-> CXL resources from request_free_mem_region' the address space does not
-> coexist well if part of all of it is conveyed in the memory map to the
-> kernel.
->
-> Since the existing resource APIs of interest all rely on the root
-> decoder's address space being in iomem_resource,
+On Mon, Apr 18, 2022 at 09:42:00AM -0700, Dan Williams wrote:
+> [ add the usual HMM suspects Christoph, Jason, and John ]
+> 
+> On Wed, Apr 13, 2022 at 11:38 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> >
+> > Define an API which allows CXL drivers to manage CXL address space.
+> > CXL is unique in that the address space and various properties are only
+> > known after CXL drivers come up, and therefore cannot be part of core
+> > memory enumeration.
+> 
+> I think this buries the lead on the problem introduced by
+> MEMORY_DEVICE_PRIVATE in the first place. Let's revisit that history
+> before diving into what CXL needs.
+> 
+> 
+> Commit 4ef589dc9b10 ("mm/hmm/devmem: device memory hotplug using
+> ZONE_DEVICE") introduced the concept of MEMORY_DEVICE_PRIVATE. At its
+> core MEMORY_DEVICE_PRIVATE uses the ZONE_DEVICE capability to annotate
+> an "unused" physical address range with 'struct page' for the purpose
+> of coordinating migration of buffers onto and off of a GPU /
+> accelerator. The determination of "unused" was based on a heuristic,
+> not a guarantee, that any address range not expressly conveyed in the
+> platform firmware map of the system can be repurposed for software
+> use. The CXL Fixed Memory Windows Structure  (CFMWS) definition
+> explicitly breaks the assumptions of that heuristic.
 
-I do not understand what this is trying to convey. Nothing requires
-that a given 'struct resource' be managed under iomem_resource.
+So CXL defines an address map that is not part of the FW list?
 
-> the choices are to roll
-> a new allocator because on struct resource, or use gen_pool. gen_pool is
-> a good choice because it already has all the capabilities needed to
-> satisfy CXL programming.
+> > It would be desirable to simply insert this address space into
+> > iomem_resource with a new flag to denote this is CXL memory. This would
+> > permit request_free_mem_region() to be reused for CXL memory provided it
+> > learned some new tricks. For that, it is tempting to simply use
+> > insert_resource(). The API was designed specifically for cases where new
+> > devices may offer new address space. This cannot work in the general
+> > case. Boot firmware can pass, some, none, or all of the CFMWS range as
+> > various types of memory to the kernel, and this may be left alone,
+> > merged, or even expanded.
 
-Not sure what comparison to 'struct resource' is being made here, what
-is the tradeoff as you see it? In other words, why mention 'struct
-resource' as a consideration?
+And then we understand that on CXL the FW is might pass stuff that
+intersects with the actual CXL ranges?
 
->
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> ---
->  drivers/cxl/acpi.c | 36 ++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h  |  2 ++
->  2 files changed, 38 insertions(+)
->
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index 0870904fe4b5..a6b0c3181d0e 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0-only
->  /* Copyright(c) 2021 Intel Corporation. All rights reserved. */
->  #include <linux/platform_device.h>
-> +#include <linux/genalloc.h>
->  #include <linux/module.h>
->  #include <linux/device.h>
->  #include <linux/kernel.h>
-> @@ -79,6 +80,25 @@ struct cxl_cfmws_context {
->         struct acpi_cedt_cfmws *high_cfmws;
->  };
->
-> +static int cfmws_cookie;
-> +
-> +static int fill_busy_mem(struct resource *res, void *_window)
-> +{
-> +       struct gen_pool *window = _window;
-> +       struct genpool_data_fixed gpdf;
-> +       unsigned long addr;
-> +       void *type;
-> +
-> +       gpdf.offset = res->start;
-> +       addr = gen_pool_alloc_algo_owner(window, resource_size(res),
-> +                                        gen_pool_fixed_alloc, &gpdf, &type);
+> > As a result iomem_resource may intersect CFMWS
+> > regions in ways insert_resource cannot handle [2]. Similar reasoning
+> > applies to allocate_resource().
+> >
+> > With the insert_resource option out, the only reasonable approach left
+> > is to let the CXL driver manage the address space independently of
+> > iomem_resource and attempt to prevent users of device private memory
 
-The "_owner" variant of gen_pool was only added for p2pdma as a way to
-coordinate reference counts across p2pdma space allocation and a
-'strcuct dev_pagemap' instance. The use here seems completely
-vestigial and can just move to gen_pool_alloc_algo.
+And finally due to all these FW problems we are going to make a 2nd
+allocator for physical address space and just disable the normal one?
 
-> +       if (addr != res->start || (res->start == 0 && type != &cfmws_cookie))
-> +               return -ENXIO;
+Then since DEVICE_PRIVATE is a notable user of this allocator we now
+understand it becomes broken?
 
-How can the second condition ever be true?
+Sounds horrible. IMHO you should fix the normal allocator somehow to
+understand that the ranges from FW have been reprogrammed by Linux and
+not try to build a whole different allocator in CXL code.
 
-> +
-> +       pr_devel("%pR removed from CFMWS\n", res);
-> +       return 0;
-> +}
-> +
->  static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
->                            const unsigned long end)
->  {
-> @@ -88,6 +108,8 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
->         struct device *dev = ctx->dev;
->         struct acpi_cedt_cfmws *cfmws;
->         struct cxl_decoder *cxld;
-> +       struct gen_pool *window;
-> +       char name[64];
->         int rc, i;
->
->         cfmws = (struct acpi_cedt_cfmws *) header;
-> @@ -116,6 +138,20 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
->         cxld->interleave_ways = CFMWS_INTERLEAVE_WAYS(cfmws);
->         cxld->interleave_granularity = CFMWS_INTERLEAVE_GRANULARITY(cfmws);
->
-> +       sprintf(name, "cfmws@%#llx", cfmws->base_hpa);
-> +       window = devm_gen_pool_create(dev, ilog2(SZ_256M), NUMA_NO_NODE, name);
-> +       if (IS_ERR(window))
-> +               return 0;
-> +
-> +       gen_pool_add_owner(window, cfmws->base_hpa, -1, cfmws->window_size,
-> +                          NUMA_NO_NODE, &cfmws_cookie);
-
-Similar comment about the "_owner" variant serving no visible purpose.
-
-These seems to pre-suppose that only the allocator will ever want to
-interrogate the state of free space, it might be worth registering
-objects for each intersection that are not cxl_regions so that
-userspace explicitly sees what the cxl_acpi driver sees in terms of
-available resources.
-
-> +
-> +       /* Area claimed by other resources, remove those from the gen_pool. */
-> +       walk_iomem_res_desc(IORES_DESC_NONE, 0, cfmws->base_hpa,
-> +                           cfmws->base_hpa + cfmws->window_size - 1, window,
-> +                           fill_busy_mem);
-> +       to_cxl_root_decoder(cxld)->window = window;
-> +
->         rc = cxl_decoder_add(cxld, target_map);
->         if (rc)
->                 put_device(&cxld->dev);
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 85fd5e84f978..0e1c65761ead 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -246,10 +246,12 @@ struct cxl_switch_decoder {
->  /**
->   * struct cxl_root_decoder - A toplevel/platform decoder
->   * @base: Base class decoder
-> + * @window: host address space allocator
->   * @targets: Downstream targets (ie. hostbridges).
->   */
->  struct cxl_root_decoder {
->         struct cxl_decoder base;
-> +       struct gen_pool *window;
->         struct cxl_decoder_targets *targets;
->  };
->
-> --
-> 2.35.1
->
+Jason
