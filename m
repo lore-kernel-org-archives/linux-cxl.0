@@ -2,137 +2,65 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDBCC433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 21 Apr 2022 15:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FEBC433FE
+	for <linux-cxl@archiver.kernel.org>; Thu, 21 Apr 2022 16:24:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351142AbiDUPlH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 21 Apr 2022 11:41:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36146 "EHLO
+        id S231549AbiDUQ13 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 21 Apr 2022 12:27:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349678AbiDUPlH (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 21 Apr 2022 11:41:07 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FB7D47567;
-        Thu, 21 Apr 2022 08:38:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650555497; x=1682091497;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=x3xS6cEt6lHXiNb+A1o9kWq7JklXoM+r+tP2gN5rJV4=;
-  b=Nfped+G9jtnauyMKN4Y3280vytBcN3IOLbF5Di6ZfGLfw1U/uHajWRJI
-   l4EaXaO1f1BNQirVHrQmcRPnxKXY4qLcjM1Cba8MkM5MtdD0iaYSsT+o9
-   nJaDq3ASlcK47+WWrm992j3TJ2D+5VN6hg3cjhEo+x/5quNI5Pksi7HRX
-   xv/fWnnHCK1jKry+ZTdQiX99xyVp2hQuU5BBI9RYgKiNvc2cIVPglSHci
-   LhWvZV8D8/X8iIF/VHX66UU18A9swzQLKtOwFooqprihu7kcg69WnyYM5
-   frLTs9vaR7G+SwKHT3T41E/dTQr26bWcGh9iefWIdsW7FjJExfke4y1gu
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="263241291"
-X-IronPort-AV: E=Sophos;i="5.90,279,1643702400"; 
-   d="scan'208";a="263241291"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2022 08:33:51 -0700
-X-IronPort-AV: E=Sophos;i="5.90,279,1643702400"; 
-   d="scan'208";a="530353769"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2022 08:33:51 -0700
-Subject: [PATCH v3 8/8] nvdimm: Fix firmware activation deadlock scenarios
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     peterz@infradead.org, vishal.l.verma@intel.com,
-        alison.schofield@intel.com, nvdimm@lists.linux.dev,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 21 Apr 2022 08:33:51 -0700
-Message-ID: <165055523099.3745911.9091010720291846249.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <165055518776.3745911.9346998911322224736.stgit@dwillia2-desk3.amr.corp.intel.com>
+        with ESMTP id S231837AbiDUQMa (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 21 Apr 2022 12:12:30 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B3624739D;
+        Thu, 21 Apr 2022 09:09:40 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DA5F861D0C;
+        Thu, 21 Apr 2022 16:09:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B061AC385A1;
+        Thu, 21 Apr 2022 16:09:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1650557379;
+        bh=gGW2aD1FiS7/o994OIGCeUWbCVF8Zet/5/0xuKOzlak=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=z1qv8JOuNYeGATk1P16N6jzvaM5CJNIaFkczBUjHLlOqzzOqfHe7Rio7fsMmxC2CM
+         pXe9g+UlNnk6AM88R+oAtchjgd8nr4nypdvT6SVilCIJBh5h0cXJfCgBWioJIlDA2+
+         7Dmy5h3EkvqhRmP6CeTqCgYMj6HafJSoorqxAxo0=
+Date:   Thu, 21 Apr 2022 18:09:36 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 7/8] device-core: Kill the lockdep_mutex
+Message-ID: <YmGBwKEGSNqh0x8P@kroah.com>
 References: <165055518776.3745911.9346998911322224736.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+ <165055522548.3745911.14298368286915484086.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <165055522548.3745911.14298368286915484086.stgit@dwillia2-desk3.amr.corp.intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Lockdep reports the following deadlock scenarios for CXL root device
-power-management, device_prepare(), operations, and device_shutdown()
-operations for 'nd_region' devices:
+On Thu, Apr 21, 2022 at 08:33:45AM -0700, Dan Williams wrote:
+> Per Peter [1], the lockdep API has native support for all the use cases
+> lockdep_mutex was attempting to enable. Now that all lockdep_mutex users
+> have been converted to those APIs, drop this lock.
+> 
+> Link: https://lore.kernel.org/r/Ylf0dewci8myLvoW@hirez.programming.kicks-ass.net [1]
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
----
- Chain exists of:
-   &nvdimm_region_key --> &nvdimm_bus->reconfig_mutex --> system_transition_mutex
+YES!!!!!
 
-  Possible unsafe locking scenario:
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-        CPU0                    CPU1
-        ----                    ----
-   lock(system_transition_mutex);
-                                lock(&nvdimm_bus->reconfig_mutex);
-                                lock(system_transition_mutex);
-   lock(&nvdimm_region_key);
 
---
-
- Chain exists of:
-   &cxl_nvdimm_bridge_key --> acpi_scan_lock --> &cxl_root_key
-
-  Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock(&cxl_root_key);
-                                lock(acpi_scan_lock);
-                                lock(&cxl_root_key);
-   lock(&cxl_nvdimm_bridge_key);
-
----
-
-These stem from holding nvdimm_bus_lock() over hibernate_quiet_exec()
-which walks the entire system device topology taking device_lock() along
-the way. The nvdimm_bus_lock() is protecting against unregistration,
-multiple simultaneous ops callers, and preventing activate_show() from
-racing activate_store(). For the first 2, the lock is redundant.
-Unregistration already flushes all ops users, and sysfs already prevents
-multiple threads to be active in an ops handler at the same time. For
-the last userspace should already be waiting for its last
-activate_store() to complete, and does not need activate_show() to flush
-the write side, so this lock usage can be deleted in these attributes.
-
-Fixes: 48001ea50d17 ("PM, libnvdimm: Add runtime firmware activation support")
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/nvdimm/core.c |    4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/drivers/nvdimm/core.c b/drivers/nvdimm/core.c
-index 144926b7451c..7c7f4a43fd4f 100644
---- a/drivers/nvdimm/core.c
-+++ b/drivers/nvdimm/core.c
-@@ -395,10 +395,8 @@ static ssize_t activate_show(struct device *dev,
- 	if (!nd_desc->fw_ops)
- 		return -EOPNOTSUPP;
- 
--	nvdimm_bus_lock(dev);
- 	cap = nd_desc->fw_ops->capability(nd_desc);
- 	state = nd_desc->fw_ops->activate_state(nd_desc);
--	nvdimm_bus_unlock(dev);
- 
- 	if (cap < NVDIMM_FWA_CAP_QUIESCE)
- 		return -EOPNOTSUPP;
-@@ -443,7 +441,6 @@ static ssize_t activate_store(struct device *dev,
- 	else
- 		return -EINVAL;
- 
--	nvdimm_bus_lock(dev);
- 	state = nd_desc->fw_ops->activate_state(nd_desc);
- 
- 	switch (state) {
-@@ -461,7 +458,6 @@ static ssize_t activate_store(struct device *dev,
- 	default:
- 		rc = -ENXIO;
- 	}
--	nvdimm_bus_unlock(dev);
- 
- 	if (rc == 0)
- 		rc = len;
-
+Nice work.
