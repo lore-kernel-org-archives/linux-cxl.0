@@ -2,59 +2,59 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C32C433F5
-	for <linux-cxl@archiver.kernel.org>; Thu, 21 Apr 2022 15:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84467C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 21 Apr 2022 15:36:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1390192AbiDUPj3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 21 Apr 2022 11:39:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35050 "EHLO
+        id S1390197AbiDUPji (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 21 Apr 2022 11:39:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377040AbiDUPj0 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 21 Apr 2022 11:39:26 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B8DD47068;
-        Thu, 21 Apr 2022 08:36:36 -0700 (PDT)
+        with ESMTP id S1377040AbiDUPjd (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 21 Apr 2022 11:39:33 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A39D47066;
+        Thu, 21 Apr 2022 08:36:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650555396; x=1682091396;
-  h=subject:from:to:cc:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=HRjWqKMI48PJpBkmXwqNCKGbFsNs0ocG1yVkfojUm7A=;
-  b=MP27JmYeuZWV0D/98q/TdozNiRDz+olBh5OH27YcnQy3zyiGRBJoWKuL
-   iOpGyoTiO82+x4/hUXedCdIxVJ5DrA/7HV0y2u4k0gZe9fgcLCNSdAAhG
-   oGuf88H/Zk0G3L8rCLhTfvaY0+0oTHGQGNT4B/sfkJZQ23IYBn0UuRNiT
-   OkDaKnKJM1JFCA/9+cc8ZsG+LICU/lJtqW3U45HlWdWmXfOgvFIwvUu5r
-   y2mksjxdH1QCavzknawXSyX1A5//LqysDYgLqFA4M9lECnboa9uDMM+fY
-   Nd5N5FsD5sBKN2aR5qH+ssJue26i11Pvr6WcxPw392Jx/CCu+9YZQEnb1
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="264159909"
+  t=1650555403; x=1682091403;
+  h=subject:from:to:cc:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=b12rEqc7iUpGB3utf8444UKsKjTJOKJnfs9Yk6b7HUQ=;
+  b=VoaT3SlFsyqjrzorp5DOImQLNmAKXJpz6OKXXMRpbW6tHW9dGV1GM6dC
+   a0THAEFENSXUmAFCruzd0ZXi0egkEZApM2KZtJxf2dkpt8z+kq3Hfh1kH
+   vtR1IxHPBjK2gSbUy1qXL4dNcqYeXomUmR0W11rwavprb3tS5s7KoBEff
+   21aJ8j7U0pU7Yc91GYJ5D0dRrTWQFzg+dvKPAZjVL69e+pTu7sCoUWRnt
+   hD6+eWVJwJ+z179oQmU8JDmlnVaOF58vDA1VuKsHSIr0vqNSMzaddI94l
+   jRUjOFmoOzWe+1mAHVRFJGdp0FA2a6PhUnvBnCLCGCne2anLEWUPRYMyW
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="324837860"
 X-IronPort-AV: E=Sophos;i="5.90,279,1643702400"; 
-   d="scan'208";a="264159909"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2022 08:33:08 -0700
+   d="scan'208";a="324837860"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP; 21 Apr 2022 08:33:19 -0700
 X-IronPort-AV: E=Sophos;i="5.90,279,1643702400"; 
-   d="scan'208";a="593708723"
+   d="scan'208";a="670939693"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2022 08:33:08 -0700
-Subject: [PATCH v3 0/8] device-core: Enable device_lock() lockdep validation
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2022 08:33:18 -0700
+Subject: [PATCH v3 2/8] cxl/acpi: Add root device lockdep validation
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Will Deacon <will@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
         Waiman Long <longman@redhat.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, nvdimm@lists.linux.dev,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 21 Apr 2022 08:33:08 -0700
-Message-ID: <165055518776.3745911.9346998911322224736.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Boqun Feng <boqun.feng@gmail.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org
+Date:   Thu, 21 Apr 2022 08:33:18 -0700
+Message-ID: <165055519869.3745911.10162603933337340370.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <165055518776.3745911.9346998911322224736.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <165055518776.3745911.9346998911322224736.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -63,68 +63,106 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Changes since v2 [1]
-- Use lockdep_set_class(), lockdep_set_class_and_subclass(), and
-  lock_set_class() instead of a 'lockdep_mutex' in 'struct device'.
-  (Peter and Waiman)
-- Include a fix identifed by this new infrastructure
+The CXL "root" device, ACPI0017, is an attach point for coordinating
+platform level CXL resources and is the parent device for a CXL port
+topology tree. As such it has distinct locking rules relative to other
+CXL subsystem objects, but because it is an ACPI device the lock class
+is established well before it is given to the cxl_acpi driver.
 
-[1]: https://lore.kernel.org/r/164982968798.684294.15817853329823976469.stgit@dwillia2-desk3.amr.corp.intel.com
+However, the lockdep API does support changing the lock class "live" for
+situations like this. Add a device_lock_set_class() helper that a driver
+can use in ->probe() to set a custom lock class, and
+device_lock_reset_class() to return to the default "no validate" class
+before the custom lock class key goes out of scope after ->remove().
 
-The device_lock() uses lockdep_set_novalidate_class() because it is
-taken in too many contexts that cannot be described by a single mutex
-lock class. The lack of lockdep coverage leads to deadlock scenarios
-landing upstream. To mitigate that problem the lockdep_mutex was added
-[2].
+Note the helpers are all macros to support dead code elimination in the
+CONFIG_PROVE_LOCKING=n case.
 
-The lockdep_mutex, however, is an unscalable hack that overlooks
-advancements in the lockdep API to change a given lock's lock class [3].
-With lockdep_set_class() a device subsystem can initialize a dedicated
-lock class per device type at device creation time, with
-lock_set_class() a device-driver can temporarily override a lockdep
-class after-the-fact. Use lockdep class assignment APIs to replace the
-usage of lockdep_mutex in the CXL and NVDIMM subsystems, and delete
-lockdep_mutex.
-
-[2]: commit 87a30e1f05d7 ("driver-core, libnvdimm: Let device subsystems add local lockdep coverage")
-[3]: https://lore.kernel.org/r/Ylf0dewci8myLvoW@hirez.programming.kicks-ass.net
-
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: Alison Schofield <alison.schofield@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Ben Widawsky <ben.widawsky@intel.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
+ drivers/cxl/acpi.c     |   15 +++++++++++++++
+ include/linux/device.h |   25 +++++++++++++++++++++++++
+ 2 files changed, 40 insertions(+)
 
-Dan Williams (8):
-      cxl: Replace lockdep_mutex with local lock classes
-      cxl/acpi: Add root device lockdep validation
-      cxl: Drop cxl_device_lock()
-      nvdimm: Replace lockdep_mutex with local lock classes
-      ACPI: NFIT: Drop nfit_device_lock()
-      nvdimm: Drop nd_device_lock()
-      device-core: Kill the lockdep_mutex
-      nvdimm: Fix firmware activation deadlock scenarios
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index d15a6aec0331..e19cea27387e 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -275,6 +275,15 @@ static int add_root_nvdimm_bridge(struct device *match, void *data)
+ 	return 1;
+ }
+ 
++static struct lock_class_key cxl_root_key;
++
++static void cxl_acpi_lock_reset_class(void *_dev)
++{
++	struct device *dev = _dev;
++
++	device_lock_reset_class(dev);
++}
++
+ static int cxl_acpi_probe(struct platform_device *pdev)
+ {
+ 	int rc;
+@@ -283,6 +292,12 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+ 	struct acpi_device *adev = ACPI_COMPANION(host);
+ 	struct cxl_cfmws_context ctx;
+ 
++	device_lock_set_class(&pdev->dev, &cxl_root_key);
++	rc = devm_add_action_or_reset(&pdev->dev, cxl_acpi_lock_reset_class,
++				      &pdev->dev);
++	if (rc)
++		return rc;
++
+ 	root_port = devm_cxl_add_port(host, host, CXL_RESOURCE_NONE, NULL);
+ 	if (IS_ERR(root_port))
+ 		return PTR_ERR(root_port);
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 93459724dcde..82c9d307e7bd 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -850,6 +850,31 @@ static inline bool device_supports_offline(struct device *dev)
+ 	return dev->bus && dev->bus->offline && dev->bus->online;
+ }
+ 
++#define __device_lock_set_class(dev, name, key) \
++	lock_set_class(&(dev)->mutex.dep_map, name, key, 0, _THIS_IP_)
++
++/**
++ * device_lock_set_class - Specify a temporary lock class while a device
++ *			   is attached to a driver
++ * @dev: device to modify
++ * @key: lock class key data
++ *
++ * This must be called with the device_lock() already held, for example
++ * from driver ->probe().
++ */
++#define device_lock_set_class(dev, key)				\
++	__device_lock_set_class(dev, #key, key)
++
++/**
++ * device_lock_reset_class - Return a device to the default lockdep novalidate state
++ * @dev: device to modify
++ *
++ * This must be called with the device_lock() already held, for example
++ * from driver ->remove().
++ */
++#define device_lock_reset_class(dev) \
++	device_lock_set_class(dev, &__lockdep_no_validate__)
++
+ void lock_device_hotplug(void);
+ void unlock_device_hotplug(void);
+ int lock_device_hotplug_sysfs(void);
 
-
- drivers/acpi/nfit/core.c        |   30 ++++++++-------
- drivers/acpi/nfit/nfit.h        |   24 ------------
- drivers/base/core.c             |    3 --
- drivers/cxl/acpi.c              |   15 ++++++++
- drivers/cxl/core/memdev.c       |    3 ++
- drivers/cxl/core/pmem.c         |   10 ++++-
- drivers/cxl/core/port.c         |   68 ++++++++++++++++------------------
- drivers/cxl/cxl.h               |   78 ---------------------------------------
- drivers/cxl/mem.c               |    4 +-
- drivers/cxl/pmem.c              |   12 +++---
- drivers/nvdimm/btt_devs.c       |   23 +++++++-----
- drivers/nvdimm/bus.c            |   38 ++++++++-----------
- drivers/nvdimm/core.c           |   14 +++----
- drivers/nvdimm/dax_devs.c       |    4 +-
- drivers/nvdimm/dimm_devs.c      |   12 ++++--
- drivers/nvdimm/namespace_devs.c |   46 ++++++++++++++---------
- drivers/nvdimm/nd-core.h        |   68 +---------------------------------
- drivers/nvdimm/pfn_devs.c       |   31 +++++++++-------
- drivers/nvdimm/pmem.c           |    2 +
- drivers/nvdimm/region.c         |    2 +
- drivers/nvdimm/region_devs.c    |   20 ++++++----
- include/linux/device.h          |   30 +++++++++++++--
- lib/Kconfig.debug               |   23 ------------
- 23 files changed, 209 insertions(+), 351 deletions(-)
-
-base-commit: ce522ba9ef7e2d9fb22a39eb3371c0c64e2a433e
