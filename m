@@ -2,138 +2,213 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8E4C433F5
-	for <linux-cxl@archiver.kernel.org>; Wed, 20 Apr 2022 15:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DB8C433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 21 Apr 2022 15:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380244AbiDTPfj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 20 Apr 2022 11:35:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36980 "EHLO
+        id S1357127AbiDUPjX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 21 Apr 2022 11:39:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380153AbiDTPfi (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 20 Apr 2022 11:35:38 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 825BE3EBB4
-        for <linux-cxl@vger.kernel.org>; Wed, 20 Apr 2022 08:32:52 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id mm4-20020a17090b358400b001cb93d8b137so5286730pjb.2
-        for <linux-cxl@vger.kernel.org>; Wed, 20 Apr 2022 08:32:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nXE5rwL9G2A41ELB44LpkE3yJsmwyolaHB1ZPKjmFOQ=;
-        b=0SXGd8Ae3eImiVBD6ABuD0fsXiFcFNvWy5KkdAeY/lHkDA49w+yQI4qNYa59bp6t+2
-         283Pj4uoCOZDNM9TduFm0HdsIrwhdFs9enJ/s2rBqPUVx/cZ5WyaqYQd6VrLRNUp8Fj7
-         2y2HF9Vn0OVAfc3pugwCMvw4w5sRTRCBGS5DdF8h6jBHBt17pBvouhWv63c/YzSqRban
-         5+pG+xaDeA1nOixh/UJXeULk1dAOgfYfB5Zo7lan6SA5ifoiRoNjxVFu57fOcCVc1Tai
-         XNGD1dYGFtFaCQcsJ/erjzWgGK0nynZfU5qeauO+TZuJ4oC4tZoYGjkN+TU4WsljBuIe
-         96vA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nXE5rwL9G2A41ELB44LpkE3yJsmwyolaHB1ZPKjmFOQ=;
-        b=zIs97JkLhY7niV8zmgzX9ppLKJDyMO/lON/I2rNkSXSLLu0IFzvrASLDkPSKPl/Skt
-         ZLt9i0KORWdDANdUxZy7wwvHhZzGQNBT0g1hI5WIdHnMtWhrm1nDW5oHkPk6rOO3E7Zx
-         wGl1eAi1Ssz7/twBwXciVvIHDW8fuSxvahgDU2lB9XnZgK2muN804/BwXr8ddLt+hjUd
-         N1+fuFEkMF9hr5ypcnoT9omHyjT/aPlfhFiByHWmCtItZ/PlccdwgeTf603NeCuUv/4A
-         kCD7Q2jzJdqM+8GjqBEjruR4aA3xWVnWxWuXdMpMFGnEBeOgg1KNgReAtZvvDy/EvjEF
-         5erQ==
-X-Gm-Message-State: AOAM533SXD4jQu5sqPrgX8yq3Wg+i2JGIWeNdrE44a7Yu1M9oXM9lw6X
-        lmqvVsUQQXKps9Vw7AL/uvT3xsmSV6sUAsLaZvbBtZZgpH4=
-X-Google-Smtp-Source: ABdhPJzxSLprMHwiebGFjIYgLqgnPEmnfHzZ+E1b9NgLe/j/RYYtesZJu7ti/Pt0NzfrUUWdkHUYvByBKWPEmHNRe0o=
-X-Received: by 2002:a17:902:7296:b0:14b:4bc6:e81 with SMTP id
- d22-20020a170902729600b0014b4bc60e81mr21203839pll.132.1650468771886; Wed, 20
- Apr 2022 08:32:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220413183720.2444089-1-ben.widawsky@intel.com>
- <20220413183720.2444089-6-ben.widawsky@intel.com> <CAPcyv4iM13nzCpnF5S4oHSWF769t4Av96gQM_3n4E=RAPSnSig@mail.gmail.com>
- <20220419164313.GT2120790@nvidia.com> <CAPcyv4hPBw0yJmu7qzSZ_gsbVuj+_R7-_r3+_W9-JsLTD6Uscw@mail.gmail.com>
- <CAPcyv4hyTRm7K8gu4wdL_gaMm2C+Agg1V2-BbnmJ8Kf0OH4sng@mail.gmail.com>
- <20220419230412.GU2120790@nvidia.com> <CAPcyv4i5MZcMcCq8V7sZQjqup6MPOoOj2Zuu8HEECADfFi2Tcg@mail.gmail.com>
- <20220420143406.GY2120790@nvidia.com>
-In-Reply-To: <20220420143406.GY2120790@nvidia.com>
+        with ESMTP id S1390181AbiDUPjW (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 21 Apr 2022 11:39:22 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 172B34705B;
+        Thu, 21 Apr 2022 08:36:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1650555392; x=1682091392;
+  h=subject:from:to:cc:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=TRUyEONDYCGKJGbctP3mgSXLVvF/IEH0B6IyZl7wwBc=;
+  b=P8HokuRfQFqA7OT5KUnvZywIfLqWQfv4c5Y8HtN5hEYyq5IzXtiPSUAa
+   GpbWWAWTHNNB85+UUPkZ4s4Q8/F8wUNu9Yr8JJ/5ZwDI0GUaSeFAFC7LO
+   1Z7OEIwBhEJkqQsvnLzz8d2yQ8WGMKVHnM3V6zP5jVmTkFh/so/qSemaD
+   2NEHRW3oJ6lxJYkJVfyQD2WUz1vmY34aG4k7xC9gchM+OHggkMFjd7LGE
+   lpv3VLHMlB/G0XXjQ/AxGChRoqQh5u9TzFd5+FRcLAZNpW6jZ6Qv1XCiW
+   7QC3w0o2RhCjChSSpsjYTOYC+FkljXEj4juzXVBnWuSnPGLhv3T+1vaPr
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="244318654"
+X-IronPort-AV: E=Sophos;i="5.90,279,1643702400"; 
+   d="scan'208";a="244318654"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2022 08:33:13 -0700
+X-IronPort-AV: E=Sophos;i="5.90,279,1643702400"; 
+   d="scan'208";a="805559484"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2022 08:33:13 -0700
+Subject: [PATCH v3 1/8] cxl: Replace lockdep_mutex with local lock classes
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 20 Apr 2022 08:32:41 -0700
-Message-ID: <CAPcyv4ju7vF7vaTgneVyPRX0SNncvsqz-BHkD9c8MhpAFAiNPw@mail.gmail.com>
-Subject: Re: [RFC PATCH 05/15] cxl/acpi: Reserve CXL resources from request_free_mem_region
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
-        Linux NVDIMM <nvdimm@lists.linux.dev>, patches@lists.linux.dev,
+To:     linux-cxl@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
         Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org
+Date:   Thu, 21 Apr 2022 08:33:13 -0700
+Message-ID: <165055519317.3745911.7342499516839702840.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <165055518776.3745911.9346998911322224736.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <165055518776.3745911.9346998911322224736.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Apr 20, 2022 at 7:35 AM Jason Gunthorpe <jgg@nvidia.com> wrote:
->
-> On Tue, Apr 19, 2022 at 05:47:56PM -0700, Dan Williams wrote:
-> > On Tue, Apr 19, 2022 at 4:04 PM Jason Gunthorpe <jgg@nvidia.com> wrote:
-> > >
-> > > On Tue, Apr 19, 2022 at 02:59:46PM -0700, Dan Williams wrote:
-> > >
-> > > > ...or are you suggesting to represent CXL free memory capacity in
-> > > > iomem_resource and augment the FW list early with CXL ranges. That
-> > > > seems doable, but it would only represent the free CXL ranges in
-> > > > iomem_resource as the populated CXL ranges cannot have their resources
-> > > > reparented after the fact, and there is plenty of code that expects
-> > > > "System RAM" to be a top-level resource.
-> > >
-> > > Yes, something more like this. iomem_resource should represent stuff
-> > > actually in use and CXL shouldn't leave behind an 'IOW' for address
-> > > space it isn't actually able to currently use.
-> >
-> > So that's the problem, these gigantic windows need to support someone
-> > showing up unannounced with a stack of multi-terabyte devices to add
-> > to the system.
->
-> In my experience PCIe hotplug is already extremely rare, you may need
-> to do this reservation on systems with hotplug slots, but not
-> generally. In PCIe world the BIOS often figures this out and bridge
-> windows are not significantly over allocated on non-hotplug HW.
->
-> (though even PCIe has the resizable bar extension and other things
-> that are quite like hotplug and do trigger huge resource requirements)
->
-> > > Your whole description sounds like the same problems PCI hotplug has
-> > > adjusting the bridge windows.
-> >
-> > ...but even there the base bounds (AFAICS) are coming from FW (_CRS
-> > entries for ACPI described PCIe host bridges). So if CXL follows that
-> > model then the entire unmapped portion of the CXL ranges should be
-> > marked as an idle resource in iomem_resource.
->
-> And possibly yes, because part of the point of this stuff is to
-> declare where HW is actually using the address space. So if FW has
-> left a host bridge decoder setup to actually consume this space then
-> it really has to be set aside to prevent hotplug of other bus types
-> from trying to claim the same address space for their own usages.
->
-> If no actual decoder is setup then it maybe it shouldn't be left as an
-> IOW in the resource tree. In this case it might be better to teach the
-> io resource allocator to leave gaps for future hotplug.
+In response to an attempt to expand dev->lockdep_mutex for device_lock()
+validation [1], Peter points out [2] that the lockdep API already has
+the ability to assign a dedicated lock class per subsystem device-type.
 
-Yeah, it is the former. These CXL ranges are all actively decoded by
-the CPU complex memory controller as "this range goes to DDR and this
-other range is interleaved across this set of CXL host bridges". Even
-if there is nothing behind those host bridges there is hardware
-actively routing requests that fall into those ranges to those
-downstream devices.
+Use lockdep_set_class() to override the default device_lock()
+'__lockdep_no_validate__' class for each CXL subsystem device-type. This
+enables lockdep to detect deadlocks and recursive locking within the
+device-driver core and the subsystem. The
+lockdep_set_class_and_subclass() API is used for port objects that
+recursively lock the 'cxl_port_key' class by hierarchical topology
+depth.
 
-> > The improvement that offers over this current proposal is that it
-> > allows for global visibility of CXL hotplug resources, but it does set
-> > up a discontinuity between FW mapped and OS mapped CXL. FW mapped will
-> > have top-level "System RAM" resources indistinguishable from typical
-> > DRAM while OS mapped CXL will look like this:
->
-> Maybe this can be reotractively fixed up in the resource tree?
+Link: https://lore.kernel.org/r/164982968798.684294.15817853329823976469.stgit@dwillia2-desk3.amr.corp.intel.com [1]
+Link: https://lore.kernel.org/r/Ylf0dewci8myLvoW@hirez.programming.kicks-ass.net [2]
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: Alison Schofield <alison.schofield@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Ben Widawsky <ben.widawsky@intel.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ drivers/cxl/core/memdev.c |    3 +++
+ drivers/cxl/core/pmem.c   |    6 ++++++
+ drivers/cxl/core/port.c   |   13 +++++++++----
+ 3 files changed, 18 insertions(+), 4 deletions(-)
 
-I had been discouraged to go that route considering some code only
-scans top-level iomem_resource entries, but it is probably better to
-try to fix that legacy code to operate correctly when System RAM is
-parented by a CXL Range.
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index 1f76b28f9826..f7cdcd33504a 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -228,6 +228,8 @@ static void detach_memdev(struct work_struct *work)
+ 	put_device(&cxlmd->dev);
+ }
+ 
++static struct lock_class_key cxl_memdev_key;
++
+ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
+ 					   const struct file_operations *fops)
+ {
+@@ -247,6 +249,7 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
+ 
+ 	dev = &cxlmd->dev;
+ 	device_initialize(dev);
++	lockdep_set_class(&dev->mutex, &cxl_memdev_key);
+ 	dev->parent = cxlds->dev;
+ 	dev->bus = &cxl_bus_type;
+ 	dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
+diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
+index 8de240c4d96b..e825e261278d 100644
+--- a/drivers/cxl/core/pmem.c
++++ b/drivers/cxl/core/pmem.c
+@@ -80,6 +80,8 @@ struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd)
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_find_nvdimm_bridge, CXL);
+ 
++static struct lock_class_key cxl_nvdimm_bridge_key;
++
+ static struct cxl_nvdimm_bridge *cxl_nvdimm_bridge_alloc(struct cxl_port *port)
+ {
+ 	struct cxl_nvdimm_bridge *cxl_nvb;
+@@ -99,6 +101,7 @@ static struct cxl_nvdimm_bridge *cxl_nvdimm_bridge_alloc(struct cxl_port *port)
+ 	cxl_nvb->port = port;
+ 	cxl_nvb->state = CXL_NVB_NEW;
+ 	device_initialize(dev);
++	lockdep_set_class(&dev->mutex, &cxl_nvdimm_bridge_key);
+ 	device_set_pm_not_required(dev);
+ 	dev->parent = &port->dev;
+ 	dev->bus = &cxl_bus_type;
+@@ -214,6 +217,8 @@ struct cxl_nvdimm *to_cxl_nvdimm(struct device *dev)
+ }
+ EXPORT_SYMBOL_NS_GPL(to_cxl_nvdimm, CXL);
+ 
++static struct lock_class_key cxl_nvdimm_key;
++
+ static struct cxl_nvdimm *cxl_nvdimm_alloc(struct cxl_memdev *cxlmd)
+ {
+ 	struct cxl_nvdimm *cxl_nvd;
+@@ -226,6 +231,7 @@ static struct cxl_nvdimm *cxl_nvdimm_alloc(struct cxl_memdev *cxlmd)
+ 	dev = &cxl_nvd->dev;
+ 	cxl_nvd->cxlmd = cxlmd;
+ 	device_initialize(dev);
++	lockdep_set_class(&dev->mutex, &cxl_nvdimm_key);
+ 	device_set_pm_not_required(dev);
+ 	dev->parent = &cxlmd->dev;
+ 	dev->bus = &cxl_bus_type;
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 2ab1ba4499b3..750aac95ed5f 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -391,6 +391,8 @@ static int devm_cxl_link_uport(struct device *host, struct cxl_port *port)
+ 	return devm_add_action_or_reset(host, cxl_unlink_uport, port);
+ }
+ 
++static struct lock_class_key cxl_port_key;
++
+ static struct cxl_port *cxl_port_alloc(struct device *uport,
+ 				       resource_size_t component_reg_phys,
+ 				       struct cxl_port *parent_port)
+@@ -415,9 +417,10 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
+ 	 * description.
+ 	 */
+ 	dev = &port->dev;
+-	if (parent_port)
++	if (parent_port) {
+ 		dev->parent = &parent_port->dev;
+-	else
++		port->depth = parent_port->depth + 1;
++	} else
+ 		dev->parent = uport;
+ 
+ 	port->uport = uport;
+@@ -427,6 +430,7 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
+ 	INIT_LIST_HEAD(&port->endpoints);
+ 
+ 	device_initialize(dev);
++	lockdep_set_class_and_subclass(&dev->mutex, &cxl_port_key, port->depth);
+ 	device_set_pm_not_required(dev);
+ 	dev->bus = &cxl_bus_type;
+ 	dev->type = &cxl_port_type;
+@@ -457,8 +461,6 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
+ 	if (IS_ERR(port))
+ 		return port;
+ 
+-	if (parent_port)
+-		port->depth = parent_port->depth + 1;
+ 	dev = &port->dev;
+ 	if (is_cxl_memdev(uport))
+ 		rc = dev_set_name(dev, "endpoint%d", port->id);
+@@ -1173,6 +1175,8 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
+ 	return rc;
+ }
+ 
++static struct lock_class_key cxl_decoder_key;
++
+ /**
+  * cxl_decoder_alloc - Allocate a new CXL decoder
+  * @port: owning port of this decoder
+@@ -1214,6 +1218,7 @@ static struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
+ 	seqlock_init(&cxld->target_lock);
+ 	dev = &cxld->dev;
+ 	device_initialize(dev);
++	lockdep_set_class(&dev->mutex, &cxl_decoder_key);
+ 	device_set_pm_not_required(dev);
+ 	dev->parent = &port->dev;
+ 	dev->bus = &cxl_bus_type;
+
