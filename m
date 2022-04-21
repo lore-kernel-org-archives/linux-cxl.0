@@ -2,50 +2,50 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB247C433F5
-	for <linux-cxl@archiver.kernel.org>; Thu, 21 Apr 2022 15:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEA0C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 21 Apr 2022 15:37:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231134AbiDUPkC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 21 Apr 2022 11:40:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35480 "EHLO
+        id S237513AbiDUPkb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 21 Apr 2022 11:40:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1390230AbiDUPj7 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 21 Apr 2022 11:39:59 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26DFA4739B;
-        Thu, 21 Apr 2022 08:37:10 -0700 (PDT)
+        with ESMTP id S1351142AbiDUPka (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 21 Apr 2022 11:40:30 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76B5E473B8;
+        Thu, 21 Apr 2022 08:37:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650555430; x=1682091430;
+  t=1650555460; x=1682091460;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Qo8mEyXyeD/WLpM5PUEvAxSmJze8tzwfv5FGI2P5jME=;
-  b=i5PaL36G/QodDj8+IeEkKjLjgOZ5m/0yw1R/iEJ5KAWAhGzREFU0HOwk
-   5LInBDwp8zoVd9TL0SilBaNLuRIrOByzt5pk+YoHp/uyTLIcngObjPMUS
-   Ix5BEuYjImjn8RYMRaMMsn46zM5RWPw2gn1jCJJVKydWlZzcrfi+dpqvM
-   /qql9ufP4v6uu9Om0h8T2cG8QG5r2vIj2vK2Q4QbgpDWzn22NknUmg61A
-   SV53IaRG8wZRChxoFUgQXAAedlSHXr+ANNNTcdhKiKck8E1aB2hocbqmy
-   amVVDJXXTk4aSKggT7Y3HwFPBMV6MsTC0bzqDsgZwk83RBSYyFQVyepZB
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="244967323"
+  bh=Go/sFTHzlF+LBzGN1k0aVVd0/qVHc6/DPcmOivDF7zQ=;
+  b=BWOGif9rR70SiRnxmx5gdZq3rjKGLb5+LPAws2vTH5OSnoWmGCQdMxb+
+   aNuXJPcWs07UN7iTihJRfSxKeY/ZW61w+DQG1Rjo61N65uvFJNs1vG32T
+   zZctZtjs+81rtqztEcm3gH4w+gkf2uVtDbF6vaz+rTyT2IhXFpnXoYLxv
+   tjLV3MQkF6DJtpDNFIriNY2lt9pcllDMXboodvZDGouGYinAtY6CXajNV
+   ZKvtLoKPaO+hemf+bUUuJbN8jK1SDa0l00tPmJkQAyehyoBPUsOmddr4S
+   H/9tSr55a2EeDxne2+o6x3ygZB65fdtjLPsC+V19KwLIVtQo54MFKRksX
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="251710818"
 X-IronPort-AV: E=Sophos;i="5.90,279,1643702400"; 
-   d="scan'208";a="244967323"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2022 08:33:46 -0700
+   d="scan'208";a="251710818"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2022 08:33:34 -0700
 X-IronPort-AV: E=Sophos;i="5.90,279,1643702400"; 
-   d="scan'208";a="866382131"
+   d="scan'208";a="805559718"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2022 08:33:45 -0700
-Subject: [PATCH v3 7/8] device-core: Kill the lockdep_mutex
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2022 08:33:34 -0700
+Subject: [PATCH v3 5/8] ACPI: NFIT: Drop nfit_device_lock()
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org
-Date:   Thu, 21 Apr 2022 08:33:45 -0700
-Message-ID: <165055522548.3745911.14298368286915484086.stgit@dwillia2-desk3.amr.corp.intel.com>
+Cc:     Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, peterz@infradead.org,
+        alison.schofield@intel.com, nvdimm@lists.linux.dev,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 21 Apr 2022 08:33:34 -0700
+Message-ID: <165055521409.3745911.8085645201146909612.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <165055518776.3745911.9346998911322224736.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <165055518776.3745911.9346998911322224736.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -56,55 +56,160 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Per Peter [1], the lockdep API has native support for all the use cases
-lockdep_mutex was attempting to enable. Now that all lockdep_mutex users
-have been converted to those APIs, drop this lock.
+The nfit_device_lock() helper was added to provide lockdep coverage for
+the NFIT driver's usage of device_lock() on the nvdimm_bus object. Now
+that nvdimm_bus objects have their own lock class this wrapper can be
+dropped.
 
-Link: https://lore.kernel.org/r/Ylf0dewci8myLvoW@hirez.programming.kicks-ass.net [1]
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/base/core.c    |    3 ---
- include/linux/device.h |    5 -----
- 2 files changed, 8 deletions(-)
+ drivers/acpi/nfit/core.c |   30 +++++++++++++++---------------
+ drivers/acpi/nfit/nfit.h |   24 ------------------------
+ 2 files changed, 15 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 3d6430eb0c6a..2eede2ec3d64 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -2864,9 +2864,6 @@ void device_initialize(struct device *dev)
- 	kobject_init(&dev->kobj, &device_ktype);
- 	INIT_LIST_HEAD(&dev->dma_pools);
- 	mutex_init(&dev->mutex);
+diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
+index fe61f617a943..ae5f4acf2675 100644
+--- a/drivers/acpi/nfit/core.c
++++ b/drivers/acpi/nfit/core.c
+@@ -1230,7 +1230,7 @@ static ssize_t hw_error_scrub_store(struct device *dev,
+ 	if (rc)
+ 		return rc;
+ 
+-	nfit_device_lock(dev);
++	device_lock(dev);
+ 	nd_desc = dev_get_drvdata(dev);
+ 	if (nd_desc) {
+ 		struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
+@@ -1247,7 +1247,7 @@ static ssize_t hw_error_scrub_store(struct device *dev,
+ 			break;
+ 		}
+ 	}
+-	nfit_device_unlock(dev);
++	device_unlock(dev);
+ 	if (rc)
+ 		return rc;
+ 	return size;
+@@ -1267,10 +1267,10 @@ static ssize_t scrub_show(struct device *dev,
+ 	ssize_t rc = -ENXIO;
+ 	bool busy;
+ 
+-	nfit_device_lock(dev);
++	device_lock(dev);
+ 	nd_desc = dev_get_drvdata(dev);
+ 	if (!nd_desc) {
+-		nfit_device_unlock(dev);
++		device_unlock(dev);
+ 		return rc;
+ 	}
+ 	acpi_desc = to_acpi_desc(nd_desc);
+@@ -1287,7 +1287,7 @@ static ssize_t scrub_show(struct device *dev,
+ 	}
+ 
+ 	mutex_unlock(&acpi_desc->init_mutex);
+-	nfit_device_unlock(dev);
++	device_unlock(dev);
+ 	return rc;
+ }
+ 
+@@ -1304,14 +1304,14 @@ static ssize_t scrub_store(struct device *dev,
+ 	if (val != 1)
+ 		return -EINVAL;
+ 
+-	nfit_device_lock(dev);
++	device_lock(dev);
+ 	nd_desc = dev_get_drvdata(dev);
+ 	if (nd_desc) {
+ 		struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
+ 
+ 		rc = acpi_nfit_ars_rescan(acpi_desc, ARS_REQ_LONG);
+ 	}
+-	nfit_device_unlock(dev);
++	device_unlock(dev);
+ 	if (rc)
+ 		return rc;
+ 	return size;
+@@ -1697,9 +1697,9 @@ static void acpi_nvdimm_notify(acpi_handle handle, u32 event, void *data)
+ 	struct acpi_device *adev = data;
+ 	struct device *dev = &adev->dev;
+ 
+-	nfit_device_lock(dev->parent);
++	device_lock(dev->parent);
+ 	__acpi_nvdimm_notify(dev, event);
+-	nfit_device_unlock(dev->parent);
++	device_unlock(dev->parent);
+ }
+ 
+ static bool acpi_nvdimm_has_method(struct acpi_device *adev, char *method)
+@@ -3152,8 +3152,8 @@ static int acpi_nfit_flush_probe(struct nvdimm_bus_descriptor *nd_desc)
+ 	struct device *dev = acpi_desc->dev;
+ 
+ 	/* Bounce the device lock to flush acpi_nfit_add / acpi_nfit_notify */
+-	nfit_device_lock(dev);
+-	nfit_device_unlock(dev);
++	device_lock(dev);
++	device_unlock(dev);
+ 
+ 	/* Bounce the init_mutex to complete initial registration */
+ 	mutex_lock(&acpi_desc->init_mutex);
+@@ -3305,8 +3305,8 @@ void acpi_nfit_shutdown(void *data)
+ 	 * acpi_nfit_ars_rescan() submissions have had a chance to
+ 	 * either submit or see ->cancel set.
+ 	 */
+-	nfit_device_lock(bus_dev);
+-	nfit_device_unlock(bus_dev);
++	device_lock(bus_dev);
++	device_unlock(bus_dev);
+ 
+ 	flush_workqueue(nfit_wq);
+ }
+@@ -3449,9 +3449,9 @@ EXPORT_SYMBOL_GPL(__acpi_nfit_notify);
+ 
+ static void acpi_nfit_notify(struct acpi_device *adev, u32 event)
+ {
+-	nfit_device_lock(&adev->dev);
++	device_lock(&adev->dev);
+ 	__acpi_nfit_notify(&adev->dev, adev->handle, event);
+-	nfit_device_unlock(&adev->dev);
++	device_unlock(&adev->dev);
+ }
+ 
+ static const struct acpi_device_id acpi_nfit_ids[] = {
+diff --git a/drivers/acpi/nfit/nfit.h b/drivers/acpi/nfit/nfit.h
+index 50882bdbeb96..6023ad61831a 100644
+--- a/drivers/acpi/nfit/nfit.h
++++ b/drivers/acpi/nfit/nfit.h
+@@ -337,30 +337,6 @@ static inline struct acpi_nfit_desc *to_acpi_desc(
+ 	return container_of(nd_desc, struct acpi_nfit_desc, nd_desc);
+ }
+ 
 -#ifdef CONFIG_PROVE_LOCKING
--	mutex_init(&dev->lockdep_mutex);
+-static inline void nfit_device_lock(struct device *dev)
+-{
+-	device_lock(dev);
+-	mutex_lock(&dev->lockdep_mutex);
+-}
+-
+-static inline void nfit_device_unlock(struct device *dev)
+-{
+-	mutex_unlock(&dev->lockdep_mutex);
+-	device_unlock(dev);
+-}
+-#else
+-static inline void nfit_device_lock(struct device *dev)
+-{
+-	device_lock(dev);
+-}
+-
+-static inline void nfit_device_unlock(struct device *dev)
+-{
+-	device_unlock(dev);
+-}
 -#endif
- 	lockdep_set_novalidate_class(&dev->mutex);
- 	spin_lock_init(&dev->devres_lock);
- 	INIT_LIST_HEAD(&dev->devres_head);
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 82c9d307e7bd..c00ab223da50 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -400,8 +400,6 @@ struct dev_msi_info {
-  * 		This identifies the device type and carries type-specific
-  * 		information.
-  * @mutex:	Mutex to synchronize calls to its driver.
-- * @lockdep_mutex: An optional debug lock that a subsystem can use as a
-- * 		peer lock to gain localized lockdep coverage of the device_lock.
-  * @bus:	Type of bus device is on.
-  * @driver:	Which driver has allocated this
-  * @platform_data: Platform data specific to the device.
-@@ -499,9 +497,6 @@ struct device {
- 					   core doesn't touch it */
- 	void		*driver_data;	/* Driver data, set and get with
- 					   dev_set_drvdata/dev_get_drvdata */
--#ifdef CONFIG_PROVE_LOCKING
--	struct mutex		lockdep_mutex;
--#endif
- 	struct mutex		mutex;	/* mutex to synchronize calls to
- 					 * its driver.
- 					 */
+-
+ const guid_t *to_nfit_uuid(enum nfit_uuids id);
+ int acpi_nfit_init(struct acpi_nfit_desc *acpi_desc, void *nfit, acpi_size sz);
+ void acpi_nfit_shutdown(void *data);
 
