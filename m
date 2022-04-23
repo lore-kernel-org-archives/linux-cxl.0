@@ -2,117 +2,173 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1287EC433F5
-	for <linux-cxl@archiver.kernel.org>; Sat, 23 Apr 2022 17:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FFEC433EF
+	for <linux-cxl@archiver.kernel.org>; Sat, 23 Apr 2022 21:05:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235097AbiDWRcM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 23 Apr 2022 13:32:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39726 "EHLO
+        id S237073AbiDWVIV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 23 Apr 2022 17:08:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235019AbiDWRcK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 23 Apr 2022 13:32:10 -0400
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6532E174421
-        for <linux-cxl@vger.kernel.org>; Sat, 23 Apr 2022 10:29:13 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id bg9so9895945pgb.9
-        for <linux-cxl@vger.kernel.org>; Sat, 23 Apr 2022 10:29:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AhQD7vPYfAiEn+1RfQt67d4Dixq2S1YB+w4qj2jR+Q0=;
-        b=xWKXKc58HUkxMRuDr/Zf6Aje7ybvTzC671zQtfNEALotesIZAxNUc2OGEA4z3Ra7Of
-         lkStFa3Uxdix3cOJZDYBHyrFCMutNH68Gfit3R7u95+uMerV4inCdkX5tYTlb8bQppfP
-         GVMOpuVsU+PKBwwRm8845rgsfzOkwkig89/gchUiiMe/tlrxvF59A4OkCGpnAU51r+CT
-         SOqoDAkKyGT2546Nu4M586YH6iQFI0TriSPXJ4zKHuLS6E7GYPU0KRqyP+1sSitkfvyE
-         /jlefNOpENa3XDJsSmPdNtL9DWk2ne95gAtVj79KvvOsDK8Xv5GoLzI4lnGOadxL3lh/
-         XALg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AhQD7vPYfAiEn+1RfQt67d4Dixq2S1YB+w4qj2jR+Q0=;
-        b=4Fu1+AJ3SgGqToLxkSRDR3fjgsxV+m+wT9FXz7oJhv7nq2M59KS/TY1ukhqI/HSWy5
-         WGx5wwxZf5R/n2M8qVNEPNx/RILAya7XnZh5PYg562MEVe8u/iHUr2Jv9VQCmYghZJlA
-         b/CNv2e6d1vbCXJrz4Sxy6M75XZStYe0ULRkBQ718RHL/+i/ETjt7MU28zYllzd3BYKk
-         RlmkKX+8EkwaDN3VRcT94crjBM9ewbamBum+uK1jawBrmR/zWcZmUaV8l0OA/eiDEsXm
-         hNwEufWW9HaSornTyKNJcDj8iF/zGkpjSbzl9faiZ2acshF5qAUVvOQqBrbUbJF/UzUo
-         qz4Q==
-X-Gm-Message-State: AOAM5333V3GpwJkNPyeKqwg35fkAHAiYUgOLQCa7TotD8aLrOxoxRqGJ
-        j8jhaXDcdCS/xDHlIHgoW9TbNsdntFbpStLOwZsOVg==
-X-Google-Smtp-Source: ABdhPJxHuHMaqsEKztBmTLaKInseY99XjI/+A47OoxmxiEuZUwC9WyROijbh+f6qYfCWMeRmXPrwJ1l3eN2+M0oAWek=
-X-Received: by 2002:a65:6e0e:0:b0:399:26d7:a224 with SMTP id
- bd14-20020a656e0e000000b0039926d7a224mr8657810pgb.437.1650734952939; Sat, 23
- Apr 2022 10:29:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <165055518776.3745911.9346998911322224736.stgit@dwillia2-desk3.amr.corp.intel.com>
- <165055523099.3745911.9091010720291846249.stgit@dwillia2-desk3.amr.corp.intel.com>
- <YmOAXqOIW7DE0nMR@iweiny-desk3>
-In-Reply-To: <YmOAXqOIW7DE0nMR@iweiny-desk3>
+        with ESMTP id S232418AbiDWVIT (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 23 Apr 2022 17:08:19 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E0EAD54
+        for <linux-cxl@vger.kernel.org>; Sat, 23 Apr 2022 14:05:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1650747920; x=1682283920;
+  h=subject:from:to:cc:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=u2uujpIWafLuqRQHmmYfUJuJS1w46wzg590lAQIVpiY=;
+  b=fVjWlD88vU5A71tdX1LRrnVjcDunY/jaiBIA7byYwQK2yvnSresTG33x
+   bqx6T5TyEjnzbieIqWkRhjE4y81ZJy0pqX0CsLfQRnmkKbnmUVA65bfWv
+   /M3+r41AOCSDAjrfgsx0slRoDHQzfA0xZtNoxHJB6yy1jxblzWu7W3DsD
+   tO7uZ4dqc8uhz2h1QLi2thmsH8pnr0rhMyoE0Jo9lLzNRhKN1d03ZjhqA
+   jDFJGQh82YIa0wTr7ZEHdOB2bdIjX45zean83kqm5n8wzUAWF83f+jhy+
+   feo8y7udJA2h18WhbSsFM5IhyTuueKuKqApC3RZdoIjeRh/12/VeBUhPo
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10326"; a="290088252"
+X-IronPort-AV: E=Sophos;i="5.90,285,1643702400"; 
+   d="scan'208";a="290088252"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2022 14:05:20 -0700
+X-IronPort-AV: E=Sophos;i="5.90,285,1643702400"; 
+   d="scan'208";a="729057744"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2022 14:05:20 -0700
+Subject: [PATCH v4 2/8] cxl/acpi: Add root device lockdep validation
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sat, 23 Apr 2022 10:29:02 -0700
-Message-ID: <CAPcyv4gOBypbVV8dCrR6xWGSv0EA0sAVyNNwah1=d-hkuV3A_Q@mail.gmail.com>
-Subject: Re: [PATCH v3 8/8] nvdimm: Fix firmware activation deadlock scenarios
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     linux-cxl@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ira Weiny <ira.weiny@intel.com>, nvdimm@lists.linux.dev
+Date:   Sat, 23 Apr 2022 14:05:20 -0700
+Message-ID: <165074768280.4047093.15803516065715087623.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <165055519869.3745911.10162603933337340370.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <165055519869.3745911.10162603933337340370.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Apr 22, 2022 at 9:28 PM Ira Weiny <ira.weiny@intel.com> wrote:
->
-> On Thu, Apr 21, 2022 at 08:33:51AM -0700, Dan Williams wrote:
-> > Lockdep reports the following deadlock scenarios for CXL root device
-> > power-management, device_prepare(), operations, and device_shutdown()
-> > operations for 'nd_region' devices:
-> >
-> > ---
-> >  Chain exists of:
-> >    &nvdimm_region_key --> &nvdimm_bus->reconfig_mutex --> system_transition_mutex
-> >
-> >   Possible unsafe locking scenario:
-> >
-> >         CPU0                    CPU1
-> >         ----                    ----
-> >    lock(system_transition_mutex);
-> >                                 lock(&nvdimm_bus->reconfig_mutex);
-> >                                 lock(system_transition_mutex);
-> >    lock(&nvdimm_region_key);
-> >
-> > --
-> >
-> >  Chain exists of:
-> >    &cxl_nvdimm_bridge_key --> acpi_scan_lock --> &cxl_root_key
-> >
-> >   Possible unsafe locking scenario:
-> >
-> >         CPU0                    CPU1
-> >         ----                    ----
-> >    lock(&cxl_root_key);
-> >                                 lock(acpi_scan_lock);
-> >                                 lock(&cxl_root_key);
-> >    lock(&cxl_nvdimm_bridge_key);
-> >
-> > ---
-> >
-> > These stem from holding nvdimm_bus_lock() over hibernate_quiet_exec()
-> > which walks the entire system device topology taking device_lock() along
-> > the way. The nvdimm_bus_lock() is protecting against unregistration,
-> > multiple simultaneous ops callers, and preventing activate_show() from
-> > racing activate_store(). For the first 2, the lock is redundant.
-> > Unregistration already flushes all ops users, and sysfs already prevents
-> > multiple threads to be active in an ops handler at the same time. For
-> > the last userspace should already be waiting for its last
-> > activate_store() to complete, and does not need activate_show() to flush
-> > the write side, so this lock usage can be deleted in these attributes.
-> >
->
-> I'm sorry if this is obvious but why can't the locking be removed from
-> capability_show() and nvdimm_bus_firmware_visible() as well?
+The CXL "root" device, ACPI0017, is an attach point for coordinating
+platform level CXL resources and is the parent device for a CXL port
+topology tree. As such it has distinct locking rules relative to other
+CXL subsystem objects, but because it is an ACPI device the lock class
+is established well before it is given to the cxl_acpi driver.
 
-It can, that's a good catch, thanks.
+However, the lockdep API does support changing the lock class "live" for
+situations like this. Add a device_lock_set_class() helper that a driver
+can use in ->probe() to set a custom lock class, and
+device_lock_reset_class() to return to the default "no validate" class
+before the custom lock class key goes out of scope after ->remove().
+
+Note the helpers are all macros to support dead code elimination in the
+CONFIG_PROVE_LOCKING=n case.
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: Alison Schofield <alison.schofield@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Ben Widawsky <ben.widawsky@intel.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+Changes since v3:
+- Add a comment about expected usage of device_lock_set_class() to only
+  override the "no validate" class (Ira)
+- Clang-format the macros
+- Fix device_lock_reset_class() to reset the lock class name to
+  "&dev->mutex".
+
+ drivers/cxl/acpi.c     |   15 +++++++++++++++
+ include/linux/device.h |   25 +++++++++++++++++++++++++
+ 2 files changed, 40 insertions(+)
+
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index d15a6aec0331..e19cea27387e 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -275,6 +275,15 @@ static int add_root_nvdimm_bridge(struct device *match, void *data)
+ 	return 1;
+ }
+ 
++static struct lock_class_key cxl_root_key;
++
++static void cxl_acpi_lock_reset_class(void *_dev)
++{
++	struct device *dev = _dev;
++
++	device_lock_reset_class(dev);
++}
++
+ static int cxl_acpi_probe(struct platform_device *pdev)
+ {
+ 	int rc;
+@@ -283,6 +292,12 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+ 	struct acpi_device *adev = ACPI_COMPANION(host);
+ 	struct cxl_cfmws_context ctx;
+ 
++	device_lock_set_class(&pdev->dev, &cxl_root_key);
++	rc = devm_add_action_or_reset(&pdev->dev, cxl_acpi_lock_reset_class,
++				      &pdev->dev);
++	if (rc)
++		return rc;
++
+ 	root_port = devm_cxl_add_port(host, host, CXL_RESOURCE_NONE, NULL);
+ 	if (IS_ERR(root_port))
+ 		return PTR_ERR(root_port);
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 93459724dcde..a4a7c1bf3b72 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -850,6 +850,31 @@ static inline bool device_supports_offline(struct device *dev)
+ 	return dev->bus && dev->bus->offline && dev->bus->online;
+ }
+ 
++#define __device_lock_set_class(dev, name, key)                                \
++	lock_set_class(&(dev)->mutex.dep_map, name, key, 0, _THIS_IP_)
++
++/**
++ * device_lock_set_class - Specify a temporary lock class while a device
++ *			   is attached to a driver
++ * @dev: device to modify
++ * @key: lock class key data
++ *
++ * This must be called with the device_lock() already held, for example
++ * from driver ->probe(). Take care to only override the default
++ * lockdep_no_validate class.
++ */
++#define device_lock_set_class(dev, key) __device_lock_set_class(dev, #key, key)
++
++/**
++ * device_lock_reset_class - Return a device to the default lockdep novalidate state
++ * @dev: device to modify
++ *
++ * This must be called with the device_lock() already held, for example
++ * from driver ->remove().
++ */
++#define device_lock_reset_class(dev)                                           \
++	__device_lock_set_class(dev, "&dev->mutex", &__lockdep_no_validate__)
++
+ void lock_device_hotplug(void);
+ void unlock_device_hotplug(void);
+ int lock_device_hotplug_sysfs(void);
+
