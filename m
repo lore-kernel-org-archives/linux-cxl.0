@@ -2,338 +2,163 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C97C433FE
-	for <linux-cxl@archiver.kernel.org>; Sun, 24 Apr 2022 22:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C143FC433EF
+	for <linux-cxl@archiver.kernel.org>; Sun, 24 Apr 2022 23:30:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236808AbiDXWSh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 24 Apr 2022 18:18:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39798 "EHLO
+        id S239900AbiDXXdP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 24 Apr 2022 19:33:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235941AbiDXWSg (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 24 Apr 2022 18:18:36 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF752644F2
-        for <linux-cxl@vger.kernel.org>; Sun, 24 Apr 2022 15:15:34 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id g3so11263346pgg.3
-        for <linux-cxl@vger.kernel.org>; Sun, 24 Apr 2022 15:15:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a94ygyO51sV1vySNBgzFK1fAmeNRwkA40gE431DNjw0=;
-        b=qCnGnBRIvOsy3+kYvqTJIWtB5AGeFFiyAB41IHuR0+F7NTytPaH0U1xbjI0A8Ylagu
-         UoiXr5Wllahjoy4iUFJ8yKQMEsjWh6bJS/caztgTOz3JWCo8n1Xgsk+eV4LzelEDLwnJ
-         zG7XApy80RYgeTZh8PyxWpx+R3wQW7oYkL7jc6bdFqAjbvxt8HlJ406di1/nFAvGLBGP
-         qj8lkeqaokvfXWTznRm/cK1eco0vgroO4o+f9bsp2NVsBIjnok7nSE3dCxMCDTbXxkl4
-         HhJWsbaBGxz2rPnDheLASc1X9uAfjz6jWPSob+tJmyrmTCyTnwOcxVWYLrmXTV3Hr1j5
-         QaRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a94ygyO51sV1vySNBgzFK1fAmeNRwkA40gE431DNjw0=;
-        b=R79WNv7wovXq2DqV8juNqGM79u6hRXzfUkaFEJVamxxoKGUk0NMxPbRkBcQjP4Rb95
-         iMELbJVvZfyyMuBORtWfABnqzF5n0mHuy+83rGxl4E7L9ZlbYAszBFvWhORfI2LdquSW
-         7il5dN6SHpnwOgD4woErdj1v/UXNfVf8w8cN2OBz5ZmazOzA+XUcF0MPtQP8XDbww1fE
-         CpzgbTzWsiHkThPLCd3jy1Xx1G2Z1IubhWgHdNfhAXAKn8nrks5iAF7GNkOBRggAumA+
-         qTkbHorDn3i17Aj6bXhPTTEsPtCvyoe4F9ecJmds0WlCV23+AFx5aLZLWVHSWZRY2MJk
-         MF4Q==
-X-Gm-Message-State: AOAM533zLOYi+GYdDWBVK3xZ2mB/ZUFMLRNoKiRxcTjEjZ2qMv+08Mgh
-        E1hf0VDEO/2tJqviMxb/G9w20RtNOtju0pDCQKqjVQ==
-X-Google-Smtp-Source: ABdhPJzV6moQD8qbpX8+5uEd53juTovRQ747gv7hTJDyB4u4ZUygoiLmPGd+WCvoFOwIi97ILxMqtCnNrEHgw+fCgA8=
-X-Received: by 2002:a05:6a00:8c5:b0:4fe:134d:30d3 with SMTP id
- s5-20020a056a0008c500b004fe134d30d3mr15819477pfu.3.1650838534294; Sun, 24 Apr
- 2022 15:15:34 -0700 (PDT)
+        with ESMTP id S239908AbiDXXdO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sun, 24 Apr 2022 19:33:14 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCA47A0
+        for <linux-cxl@vger.kernel.org>; Sun, 24 Apr 2022 16:30:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1650843010; x=1682379010;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0CAbJtUc7XDbq6Yn9U3wpzXeAjyQ4oUgrOuSSEHobxQ=;
+  b=nHwuJ34LxcEheGv9KGqFgnqQVN9MStg4p86hTFYAP/ZxItk9BucRcx+P
+   YeTuNUZPYYDqzli6ILFDfz3LwRhOiy7qK4PVj9Xp92P0LqFBiRdl54xBC
+   OzW5d4EsGszQzy83Y0wUTObe68ATuyORbs5avw6vANEhzirFNYCV5wDjb
+   l6FkDZTgwzCrhvFiICrBUhmkq7ARhPDMjSCvIhYBzrVyvBGt1TjNtcf6I
+   dSSOQoqhLfOQbzxQUTfGz90sv9fvCeCu02ySG01pclTeCvvR9sSMlF+sj
+   aC4/1rw9HBtw6xiZnMH4jiuFqBIBWUXcv/6AEZQH/E/EsYLgKt2ZAgBXF
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10327"; a="252457089"
+X-IronPort-AV: E=Sophos;i="5.90,287,1643702400"; 
+   d="scan'208";a="252457089"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2022 16:30:08 -0700
+X-IronPort-AV: E=Sophos;i="5.90,287,1643702400"; 
+   d="scan'208";a="531836478"
+Received: from hungyuan-mobl.amr.corp.intel.com (HELO localhost) ([10.212.88.155])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2022 16:30:07 -0700
+Date:   Sun, 24 Apr 2022 16:30:07 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
+Subject: Re: [PATCH v4 8/8] nvdimm: Fix firmware activation deadlock scenarios
+Message-ID: <YmXdf2zGuzNdOoPI@iweiny-desk3>
+References: <165055523099.3745911.9091010720291846249.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <165074883800.4116052.10737040861825806582.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-References: <164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164740406489.3912056.8334546166826246693.stgit@dwillia2-desk3.amr.corp.intel.com>
- <e9de480061ad425e9603cf71db5c610d@huawei.com>
-In-Reply-To: <e9de480061ad425e9603cf71db5c610d@huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sun, 24 Apr 2022 15:15:23 -0700
-Message-ID: <CAPcyv4i5vseE1+bDYYa33AcHs6r=b380hUKC5u_=NEpX8bR1SA@mail.gmail.com>
-Subject: Re: [PATCH 8/8] cxl/pci: Add (hopeful) error handling support
-To:     Shiju Jose <shiju.jose@huawei.com>
-Cc:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "ben.widawsky@intel.com" <ben.widawsky@intel.com>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        "alison.schofield@intel.com" <alison.schofield@intel.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <165074883800.4116052.10737040861825806582.stgit@dwillia2-desk3.amr.corp.intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Mar 18, 2022 at 2:42 AM Shiju Jose <shiju.jose@huawei.com> wrote:
->
-> Hi Dan,
+On Sat, Apr 23, 2022 at 02:22:18PM -0700, Dan Williams wrote:
+> Lockdep reports the following deadlock scenarios for CXL root device
+> power-management, device_prepare(), operations, and device_shutdown()
+> operations for 'nd_region' devices:
+> 
+> ---
+>  Chain exists of:
+>    &nvdimm_region_key --> &nvdimm_bus->reconfig_mutex --> system_transition_mutex
+> 
+>   Possible unsafe locking scenario:
+> 
+>         CPU0                    CPU1
+>         ----                    ----
+>    lock(system_transition_mutex);
+>                                 lock(&nvdimm_bus->reconfig_mutex);
+>                                 lock(system_transition_mutex);
+>    lock(&nvdimm_region_key);
+> 
+> --
+> 
+>  Chain exists of:
+>    &cxl_nvdimm_bridge_key --> acpi_scan_lock --> &cxl_root_key
+> 
+>   Possible unsafe locking scenario:
+> 
+>         CPU0                    CPU1
+>         ----                    ----
+>    lock(&cxl_root_key);
+>                                 lock(acpi_scan_lock);
+>                                 lock(&cxl_root_key);
+>    lock(&cxl_nvdimm_bridge_key);
+> 
+> ---
+> 
+> These stem from holding nvdimm_bus_lock() over hibernate_quiet_exec()
+> which walks the entire system device topology taking device_lock() along
+> the way. The nvdimm_bus_lock() is protecting against unregistration,
+> multiple simultaneous ops callers, and preventing activate_show() from
+> racing activate_store(). For the first 2, the lock is redundant.
+> Unregistration already flushes all ops users, and sysfs already prevents
+> multiple threads to be active in an ops handler at the same time. For
+> the last userspace should already be waiting for its last
+> activate_store() to complete, and does not need activate_show() to flush
+> the write side, so this lock usage can be deleted in these attributes.
+> 
+> Fixes: 48001ea50d17 ("PM, libnvdimm: Add runtime firmware activation support")
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Hi, thanks for taking a look at this.
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
->
-> >-----Original Message-----
-> >From: Dan Williams <dan.j.williams@intel.com>
-> >Sent: 16 March 2022 04:14
-> >To: linux-cxl@vger.kernel.org
-> >Cc: ben.widawsky@intel.com; vishal.l.verma@intel.com;
-> >alison.schofield@intel.com; Jonathan Cameron
-> ><jonathan.cameron@huawei.com>; ira.weiny@intel.com; linux-
-> >pci@vger.kernel.org
-> >Subject: [PATCH 8/8] cxl/pci: Add (hopeful) error handling support
-> >
-> >Add nominal error handling that tears down CXL.mem in response to error
-> >notifications that imply a device reset. Given some CXL.mem may be
-> >operating as System RAM, there is a high likelihood that these error events
-> >are fatal. However, if the system survives the notification the expectation is
-> >that the driver behavior is equivalent to a hot-unplug and re-plug of an
-> >endpoint.
-> >
-> >Note that this does not change the mask values from the default. That awaits
-> >CXL _OSC support to determine whether platform firmware is in control of the
-> >mask registers.
-> >
-> >Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> >---
-> > drivers/cxl/core/memdev.c |    1
-> > drivers/cxl/cxlmem.h      |    2 +
-> > drivers/cxl/pci.c         |  109
-> >+++++++++++++++++++++++++++++++++++++++++++++
-> > 3 files changed, 112 insertions(+)
-> >
-> >diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c index
-> >1f76b28f9826..223d512790e1 100644
-> >--- a/drivers/cxl/core/memdev.c
-> >+++ b/drivers/cxl/core/memdev.c
-> >@@ -341,6 +341,7 @@ struct cxl_memdev *devm_cxl_add_memdev(struct
-> >cxl_dev_state *cxlds)
-> >        * needed as this is ordered with cdev_add() publishing the device.
-> >        */
-> >       cxlmd->cxlds = cxlds;
-> >+      cxlds->cxlmd = cxlmd;
-> >
-> >       cdev = &cxlmd->cdev;
-> >       rc = cdev_device_add(cdev, dev);
-> >diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h index
-> >5d33ce24fe09..f58e16951414 100644
-> >--- a/drivers/cxl/cxlmem.h
-> >+++ b/drivers/cxl/cxlmem.h
-> >@@ -117,6 +117,7 @@ struct cxl_endpoint_dvsec_info {
-> >  * Currently only memory devices are represented.
-> >  *
-> >  * @dev: The device associated with this CXL state
-> >+ * @cxlmd: The device representing the CXL.mem capabilities of @dev
-> >  * @regs: Parsed register blocks
-> >  * @cxl_dvsec: Offset to the PCIe device DVSEC
-> >  * @payload_size: Size of space for payload @@ -148,6 +149,7 @@ struct
-> >cxl_endpoint_dvsec_info {
-> >  */
-> > struct cxl_dev_state {
-> >       struct device *dev;
-> >+      struct cxl_memdev *cxlmd;
-> >
-> >       struct cxl_regs regs;
-> >       int cxl_dvsec;
-> >diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c index
-> >bde8929450f0..823cbfa093fa 100644
-> >--- a/drivers/cxl/pci.c
-> >+++ b/drivers/cxl/pci.c
-> >@@ -8,6 +8,7 @@
-> > #include <linux/mutex.h>
-> > #include <linux/list.h>
-> > #include <linux/pci.h>
-> >+#include <linux/aer.h>
-> > #include <linux/io.h>
-> > #include "cxlmem.h"
-> > #include "cxlpci.h"
-> >@@ -533,6 +534,11 @@ static void cxl_dvsec_ranges(struct cxl_dev_state
-> >*cxlds)
-> >       info->ranges = __cxl_dvsec_ranges(cxlds, info);  }
-> >
-> >+static void disable_aer(void *pdev)
-> >+{
-> >+      pci_disable_pcie_error_reporting(pdev);
-> >+}
-> >+
-> > static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >{
-> >       struct cxl_register_map map;
-> >@@ -554,6 +560,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const
-> >struct pci_device_id *id)
-> >       cxlds = cxl_dev_state_create(&pdev->dev);
-> >       if (IS_ERR(cxlds))
-> >               return PTR_ERR(cxlds);
-> >+      pci_set_drvdata(pdev, cxlds);
-> >
-> >       cxlds->serial = pci_get_dsn(pdev);
-> >       cxlds->cxl_dvsec = pci_find_dvsec_capability( @@ -610,6 +617,14 @@
-> >static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >       if (IS_ERR(cxlmd))
-> >               return PTR_ERR(cxlmd);
-> >
-> >+      if (cxlds->regs.ras) {
-> >+              pci_enable_pcie_error_reporting(pdev);
-> >+              rc = devm_add_action_or_reset(&pdev->dev, disable_aer,
-> >pdev);
-> >+              if (rc)
-> >+                      return rc;
-> >+      }
-> >+      pci_save_state(pdev);
-> >+
-> >       if (range_len(&cxlds->pmem_range) &&
-> >IS_ENABLED(CONFIG_CXL_PMEM))
-> >               rc = devm_cxl_add_nvdimm(&pdev->dev, cxlmd);
-> >
-> >@@ -623,10 +638,104 @@ static const struct pci_device_id cxl_mem_pci_tbl[]
-> >= {  };  MODULE_DEVICE_TABLE(pci, cxl_mem_pci_tbl);
-> >
-> >+/*
-> >+ * Log the state of the RAS status registers and prepare them to log
-> >+the
-> >+ * next error status.
-> >+ */
-> >+static void cxl_report_and_clear(struct cxl_dev_state *cxlds) {
-> >+      struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> >+      struct device *dev = &cxlmd->dev;
-> >+      void __iomem *addr;
-> >+      u32 status;
-> >+
-> >+      if (!cxlds->regs.ras)
-> >+              return;
-> In the cxl_error_detected () may need to return PCI_ERS_RESULT_NONE
-> for the following cases, if exist,
-> 1. if (!cxlds->regs.ras),
-
-Yes, but given that the RAS capability is mandatory for CXL devices
-then I think the driver should just fail to register altogether if the
-RAS register are not found / mapped.
-
-> 2. if any errors would be reported during the dev initialization.
-
-This can't happen. The err_handler callback process takes the
-device_lock() which ensures that any initialization that has started
-completes before the callback is invoked.
-
->
-> >+
-> >+      addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
-> >+      status = readl(addr);
-> >+      if (status & CXL_RAS_UNCORRECTABLE_STATUS_MASK) {
-> >+              dev_warn(cxlds->dev, "%s: uncorrectable status: %#08x\n",
-> >+                       dev_name(dev), status);
-> >+              writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK,
-> >addr);
-> >+      }
-> For the uncorrectable non-fatal errors, if any, may need to return PCI_ERS_RESULT_NEED_RESET
-> to trigger the slot reset to prevent more serious issues later. For this case the state would be
-> "pci_channel_io_normal".
->
-
-Ah true, some pci_channel_io_normal recovery conditions still result
-in reset, will fix.
-
-> >+
-> >+      addr = cxlds->regs.ras + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
-> >+      status = readl(addr);
-> >+      if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
-> >+              dev_warn(cxlds->dev, "%s: correctable status: %#08x\n",
-> >+                       dev_name(dev), status);
-> >+              writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK,
-> >addr);
-> >+      }
-> >+}
-> >+
-> >+static pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
-> >+                                         pci_channel_state_t state)
-> >+{
-> >+      struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> >+      struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> >+      struct device *dev = &cxlmd->dev;
-> >+
-> >+      /*
-> >+       * A frozen channel indicates an impending reset which is fatal to
-> >+       * CXL.mem operation, and will likely crash the system. On the off
-> >+       * chance the situation is recoverable dump the status of the RAS
-> >+       * capability registers and bounce the active state of the memdev.
-> >+       */
-> >+      cxl_report_and_clear(cxlds);
-> >+
-> >+      switch (state) {
-> >+      case pci_channel_io_normal:
-> >+              return PCI_ERS_RESULT_CAN_RECOVER;
-> >+      case pci_channel_io_frozen:
-> >+              dev_warn(&pdev->dev,
-> >+                       "%s: frozen state error detected, disable
-> >CXL.mem\n",
-> >+                       dev_name(dev));
-> >+              device_release_driver(dev);
-> >+              return PCI_ERS_RESULT_NEED_RESET;
-> >+      case pci_channel_io_perm_failure:
-> >+              dev_warn(&pdev->dev,
-> >+                       "failure state error detected, request disconnect\n");
-> >+              return PCI_ERS_RESULT_DISCONNECT;
-> >+      }
-> >+      return PCI_ERS_RESULT_NEED_RESET;
-> >+}
-> >+
-> >+static pci_ers_result_t cxl_slot_reset(struct pci_dev *pdev) {
-> >+      struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> >+      struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> >+      struct device *dev = &cxlmd->dev;
-> >+
-> >+      dev_info(&pdev->dev, "%s: restart CXL.mem after slot reset\n",
-> >+               dev_name(dev));
-> >+      pci_restore_state(pdev);
-> 1. Do we need to call pci_save_state(pdev) here after the reset? though pci_save_state(pdev) is being invoked in the
-> cxl_pci_probe().
-
-The save state after probe is sufficient, it does not need to be
-snapshotted again as far as I can see.
-
->
-> >+      if (device_attach(dev) <= 0)
-> >+              return PCI_ERS_RESULT_DISCONNECT;
-> My understanding is that pci_disable_pcie_error_reporting(pdev) would be called
-> in the disable_aer () in the reset,
-> pci_enable_pcie_error_reporting(pdev) may need to call here after the reset?
-
-After the device is disconnected the driver needs to be reloaded to
-recover AER operation.
-
->
-> >+      return PCI_ERS_RESULT_RECOVERED;
-> >+}
-> >+
-> >+static void cxl_error_resume(struct pci_dev *pdev) {
-> >+      struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> >+      struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> >+      struct device *dev = &cxlmd->dev;
-> >+
-> >+      dev_info(&pdev->dev, "%s: error resume %s\n", dev_name(dev),
-> >+               dev->driver ? "successful" : "failed"); }
-> >+
-> >+static const struct pci_error_handlers cxl_error_handlers = {
-> >+      .error_detected = cxl_error_detected,
-> >+      .slot_reset     = cxl_slot_reset,
-> >+      .resume         = cxl_error_resume,
-> If the FLR (Function level reset) supported, please add the corresponding callback functions
-> reset_prepare(..) and reset_done(..).
-
-No, FLR does not recover any of the errors reported via AER.
-
->
-> >+};
-> >+
-> > static struct pci_driver cxl_pci_driver = {
-> >       .name                   = KBUILD_MODNAME,
-> >       .id_table               = cxl_mem_pci_tbl,
-> >       .probe                  = cxl_pci_probe,
-> >+      .err_handler            = &cxl_error_handlers,
-> >       .driver = {
-> >               .probe_type     = PROBE_PREFER_ASYNCHRONOUS,
-> >       },
->
->
-> Thanks,
-> Shiju
+> ---
+> Changes since v3:
+> - Remove nvdimm_bus_lock() from all ->capability() invocations (Ira)
+> 
+>  drivers/nvdimm/core.c |    9 ---------
+>  1 file changed, 9 deletions(-)
+> 
+> diff --git a/drivers/nvdimm/core.c b/drivers/nvdimm/core.c
+> index 144926b7451c..d91799b71d23 100644
+> --- a/drivers/nvdimm/core.c
+> +++ b/drivers/nvdimm/core.c
+> @@ -368,9 +368,7 @@ static ssize_t capability_show(struct device *dev,
+>  	if (!nd_desc->fw_ops)
+>  		return -EOPNOTSUPP;
+>  
+> -	nvdimm_bus_lock(dev);
+>  	cap = nd_desc->fw_ops->capability(nd_desc);
+> -	nvdimm_bus_unlock(dev);
+>  
+>  	switch (cap) {
+>  	case NVDIMM_FWA_CAP_QUIESCE:
+> @@ -395,10 +393,8 @@ static ssize_t activate_show(struct device *dev,
+>  	if (!nd_desc->fw_ops)
+>  		return -EOPNOTSUPP;
+>  
+> -	nvdimm_bus_lock(dev);
+>  	cap = nd_desc->fw_ops->capability(nd_desc);
+>  	state = nd_desc->fw_ops->activate_state(nd_desc);
+> -	nvdimm_bus_unlock(dev);
+>  
+>  	if (cap < NVDIMM_FWA_CAP_QUIESCE)
+>  		return -EOPNOTSUPP;
+> @@ -443,7 +439,6 @@ static ssize_t activate_store(struct device *dev,
+>  	else
+>  		return -EINVAL;
+>  
+> -	nvdimm_bus_lock(dev);
+>  	state = nd_desc->fw_ops->activate_state(nd_desc);
+>  
+>  	switch (state) {
+> @@ -461,7 +456,6 @@ static ssize_t activate_store(struct device *dev,
+>  	default:
+>  		rc = -ENXIO;
+>  	}
+> -	nvdimm_bus_unlock(dev);
+>  
+>  	if (rc == 0)
+>  		rc = len;
+> @@ -484,10 +478,7 @@ static umode_t nvdimm_bus_firmware_visible(struct kobject *kobj, struct attribut
+>  	if (!nd_desc->fw_ops)
+>  		return 0;
+>  
+> -	nvdimm_bus_lock(dev);
+>  	cap = nd_desc->fw_ops->capability(nd_desc);
+> -	nvdimm_bus_unlock(dev);
+> -
+>  	if (cap < NVDIMM_FWA_CAP_QUIESCE)
+>  		return 0;
+>  
+> 
