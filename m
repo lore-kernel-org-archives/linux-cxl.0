@@ -2,92 +2,66 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A912C433F5
-	for <linux-cxl@archiver.kernel.org>; Mon, 25 Apr 2022 16:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23214C433EF
+	for <linux-cxl@archiver.kernel.org>; Mon, 25 Apr 2022 18:14:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242768AbiDYQJN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 25 Apr 2022 12:09:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51390 "EHLO
+        id S243440AbiDYSRF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 25 Apr 2022 14:17:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235505AbiDYQJN (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 25 Apr 2022 12:09:13 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ABF93D4A5
-        for <linux-cxl@vger.kernel.org>; Mon, 25 Apr 2022 09:06:05 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id t13so1561306pfg.2
-        for <linux-cxl@vger.kernel.org>; Mon, 25 Apr 2022 09:06:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oLqZ9c6sJzKGVM/TrMqjVTTMcQElvmSe6MdCuYk9x8Q=;
-        b=Kl/Kuw7/AEkG7eQdk9S+05HGcLyCpNWYXhVVB2IJqCWiZn0qCxth0QAUBN9WCYGH2q
-         KHTEkQv5NB1gyhlYsq6fcoAXcZ0sRGVJXqSy7uVnctT4IqSt3J1KbZRLh+A3HXd+1/Xw
-         L/AWrHjhnCxxeO37Au6NcgvAFiJb7bb5OscK0lO8/zR5Jmgy5u2l0TORiJXO5ixPoHMs
-         zJRugmb3sdUUlbc5NmqLDWJWTqRas9qlraFQhD1G/O0KFHutPKqzNv2r2OeI/vsg/+ZD
-         e3vmoXhZeqIkne7m4mg69eNcbIJNjLoNtx+dAWKp3hxEIQHDBp+9uqGTn87ys0zkwJWp
-         yD5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oLqZ9c6sJzKGVM/TrMqjVTTMcQElvmSe6MdCuYk9x8Q=;
-        b=AapbLHtr+dxSTuEgt3TtQ+qm9pfPaAzpzRqOmhyaTwWQVLUNiJg0o7S+BRVDlWbsku
-         lnbu5rRS17FqtrIvbF6a6kal/X2U865eXzgfx8OHYCOQPvTPUVRDqI3Yb8DsqP5frqbm
-         ggP/xHrsrvBdPbfakWSSgeTfNaaOUZsQWnk73HPT0w4xj4EK5YTg4hSoIOZmLn/m9kRR
-         PcrmXCDZ/QrXAXW/Bo87ceXPf8iIpqbRm/SMeSWuwpOkGpuA2ZDmmd3Yir7o67brV9eo
-         36E85pKDZARabOsgFOY9gEK9Z59YSee6FPHuM78J8oTKzTDK1NFYoKqcYuyHnRpaGBRx
-         vw8Q==
-X-Gm-Message-State: AOAM530Wm9yBCwel/kNcjwLQYaDxSxHqfsGhgLErkrXOIIu10cRzwxoJ
-        zgKabxgYNI/yRvnDtitIMF7c3tNuYXCvVxYASwBAog==
-X-Google-Smtp-Source: ABdhPJwFK8ld7Fwmr2XzFlKxbva0mlpLg8j05RBrmyALHC9dgyLruIqa1nUtcD2iqd9rDwtnLmR2eEiosc52IWwKarM=
-X-Received: by 2002:a05:6a02:283:b0:342:703e:1434 with SMTP id
- bk3-20020a056a02028300b00342703e1434mr15676482pgb.74.1650902764645; Mon, 25
- Apr 2022 09:06:04 -0700 (PDT)
+        with ESMTP id S239452AbiDYSRF (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 25 Apr 2022 14:17:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E046E11117F;
+        Mon, 25 Apr 2022 11:14:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7AF2361660;
+        Mon, 25 Apr 2022 18:14:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2E03C385A7;
+        Mon, 25 Apr 2022 18:13:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650910439;
+        bh=PKN2TOPhZplmXRWvbfub9SLeqaCp4w91KN14SEiGq2o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=mp0/uPHxt2BvWD+sQtySMOmUgP63DlgEQxMmrZwf2+0dx6bgm7GTvKEVhvDrc5T4v
+         MuQKG3yG+jUKtB7WUslEFCP9iOq9cddoPHYBMebkJczsUMXDFANPlgloqxvO/7Zd9N
+         P6Jc1A5goQ32d5dc6D6tvaivl0JsJuDvlx3vxv6hUJiOku7EJzutlxbO2SHJPLFJ6D
+         fsvoBd2UOUOp1vyfdQ0SwaqB6hqOlf+3t3FLB0yVM7MfC4/Tr/LUnNIcSXyHEtj0pY
+         //Fdey8GTOReQQL+xKTgSAygZzuT+Q9LZgbWjgRpdHV/qqVN3nzNmvxCHgLHRMAFPH
+         P5kip87RQxwIw==
+Date:   Mon, 25 Apr 2022 13:13:57 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Verma, Vishal L" <vishal.l.verma@intel.com>
+Cc:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "Jonathan.Cameron@Huawei.com" <Jonathan.Cameron@Huawei.com>,
+        "a.manzanares@samsung.com" <a.manzanares@samsung.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "Moore, Robert" <robert.moore@intel.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "dave@stgolabs.net" <dave@stgolabs.net>
+Subject: Re: [PATCH v6 0/3] PCI/ACPI: add support for CXL _OSC
+Message-ID: <20220425181357.GA1647966@bhelgaas>
 MIME-Version: 1.0
-References: <165055518776.3745911.9346998911322224736.stgit@dwillia2-desk3.amr.corp.intel.com>
- <165055519869.3745911.10162603933337340370.stgit@dwillia2-desk3.amr.corp.intel.com>
- <YmNBJBTxUCvDHMbw@iweiny-desk3> <CAPcyv4jtNgfjWLyu6MtBAjwUiqe2qEBW802AzZZeg2gZ_wU9AQ@mail.gmail.com>
- <CAPcyv4hhD5t-qm_c_=bRjbJZFg9Mjkzbvu_2MEJB87fKy3hh-g@mail.gmail.com> <20220425103307.GI2731@worktop.programming.kicks-ass.net>
-In-Reply-To: <20220425103307.GI2731@worktop.programming.kicks-ass.net>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 25 Apr 2022 09:05:53 -0700
-Message-ID: <CAPcyv4i9ONW5w6p2P+E5rpw25_kmzpYf6SbmRM4+eP5hK4si-A@mail.gmail.com>
-Subject: Re: [PATCH v3 2/8] cxl/acpi: Add root device lockdep validation
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4f277b84c2ee770f6a2706744b96fb1dfd6184a7.camel@intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Apr 25, 2022 at 3:33 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Sat, Apr 23, 2022 at 10:27:52AM -0700, Dan Williams wrote:
->
-> > ...so I'm going to drop it and just add a comment about the
-> > expectations. As Peter said there's already a multitude of ways to
-> > cause false positive / negative results with lockdep so this is just
-> > one more area where one needs to be careful and understand the lock
-> > context they might be overriding.
->
-> One safe-guard might be to check the class you're overriding is indeed
-> __no_validate__, and WARN if not. Then the unconditional reset is
-> conistent.
->
-> Then, if/when, that WARN ever triggers you can revisit all this.
+On Fri, Apr 22, 2022 at 10:24:34PM +0000, Verma, Vishal L wrote:
+> On Wed, 2022-04-13 at 01:36 -0600, Vishal Verma wrote:
+> > Changes since v5[1]:
+> > - Collect an reviewed-by tags from Rafael, Adam, and David
+> > - Fix a couple of missed s/CXL/extended/ in acpi_bus.h (Rafael)
+> 
+> Rafael, or Bjorn,
+> 
+> Dan has offered to take this through cxl.git. Any objections to that -
+> would you prefer it to go through either the PCI or ACPI trees instead?
 
-Ok, that does seem to need a dummy definition of lockdep_match_class()
-in the CONFIG_LOCKDEP=n case, but that seems worth it to me for the
-sanity check.
+OK by me if Dan or Rafael takes it.
