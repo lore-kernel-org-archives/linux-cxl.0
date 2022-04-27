@@ -2,45 +2,45 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 466BAC433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 27 Apr 2022 08:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B732CC433EF
+	for <linux-cxl@archiver.kernel.org>; Wed, 27 Apr 2022 17:19:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231515AbiD0IjZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 27 Apr 2022 04:39:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52454 "EHLO
+        id S243957AbiD0RXC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 27 Apr 2022 13:23:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359454AbiD0IjL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 27 Apr 2022 04:39:11 -0400
+        with ESMTP id S236975AbiD0RXA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 27 Apr 2022 13:23:00 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 645534474F
-        for <linux-cxl@vger.kernel.org>; Wed, 27 Apr 2022 01:35:57 -0700 (PDT)
-Received: from fraeml703-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KpBn446n1z67xW6;
-        Wed, 27 Apr 2022 16:31:52 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A274744745;
+        Wed, 27 Apr 2022 10:19:47 -0700 (PDT)
+Received: from fraeml710-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KpQRD4GX0z685K1;
+        Thu, 28 Apr 2022 01:17:12 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.24; Wed, 27 Apr 2022 10:35:54 +0200
+ fraeml710-chm.china.huawei.com (10.206.15.59) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 27 Apr 2022 19:19:45 +0200
 Received: from localhost (10.81.200.74) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2375.24; Wed, 27 Apr
- 2022 09:35:53 +0100
-Date:   Wed, 27 Apr 2022 09:35:52 +0100
+ 2022 18:19:44 +0100
+Date:   Wed, 27 Apr 2022 18:19:42 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>
-Subject: Re: CXL type 3 which doesn't have cxl mem enabled.
-Message-ID: <20220427093552.0000376e@Huawei.com>
-In-Reply-To: <CAPcyv4jsd=mWOU0ftgxBzwD6KhZ1oMCRVDm5WTYStfbF7_jBTA@mail.gmail.com>
-References: <20220426180832.00005f0b@Huawei.com>
-        <CAPcyv4i+=ArjE7uH_jKGS+B9-dLJ3An_T+NgWB2xqC-7Zh-VYA@mail.gmail.com>
-        <20220426190615.000063ed@Huawei.com>
-        <CAPcyv4gjn7MAo-kzW40EAc9J6zQaOKh0a-42GyV1X5Efac_W_Q@mail.gmail.com>
-        <20220426203850.00006538@Huawei.com>
-        <CAPcyv4jsd=mWOU0ftgxBzwD6KhZ1oMCRVDm5WTYStfbF7_jBTA@mail.gmail.com>
+To:     <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH V8 04/10] cxl/pci: Create auxiliary devices for each DOE
+ mailbox
+Message-ID: <20220427181942.00003492@Huawei.com>
+In-Reply-To: <20220414203237.2198665-5-ira.weiny@intel.com>
+References: <20220414203237.2198665-1-ira.weiny@intel.com>
+        <20220414203237.2198665-5-ira.weiny@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -54,167 +54,289 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 26 Apr 2022 13:02:09 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Thu, 14 Apr 2022 13:32:31 -0700
+ira.weiny@intel.com wrote:
 
-> On Tue, Apr 26, 2022 at 12:39 PM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > On Tue, 26 Apr 2022 12:00:41 -0700
-> > Dan Williams <dan.j.williams@intel.com> wrote:
-> >  
-> > > On Tue, Apr 26, 2022 at 11:06 AM Jonathan Cameron
-> > > <Jonathan.Cameron@huawei.com> wrote:  
-> > > >
-> > > > On Tue, 26 Apr 2022 10:19:55 -0700
-> > > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > > >  
-> > > > > On Tue, Apr 26, 2022 at 10:09 AM Jonathan Cameron
-> > > > > <Jonathan.Cameron@huawei.com> wrote:  
-> > > > > >
-> > > > > > Hi All,
-> > > > > >
-> > > > > > I ran into this whilst debugging why on the current QEMU code
-> > > > > > we now get a probe failure for CXL mem due to the range 1 size being
-> > > > > > non 0.
-> > > > > >
-> > > > > > The conditions for whether we have legacy ranges programmed don't
-> > > > > > take into account if Mem_Enable = 1.  That is if the
-> > > > > > DVSEC CXL Control Mem_Enable bit is set on the type 3 device.
-> > > > > > If it's not then there is no existing user of the CXL memory
-> > > > > > setup by firmware or similar so we can switch over to HDM
-> > > > > > decoders and it doesn't matter what is in the range registers.
-> > > > > >
-> > > > > > Unfortunately the QEMU code was bringing the device up with
-> > > > > > Mem_Enabled already set.  So I fixed that.  After all default
-> > > > > > value of that bit should be 0.
-> > > > > >
-> > > > > > A few problems then showed up.
-> > > > > >
-> > > > > > 1. Nothing in the Linux code actually sets Mem_Enabled to 1.  
-> > > >
-> > > > Sorry - my mistake, that should be Mem_Enable. Though that doesn't
-> > > > actually clarify things much...
-> > > >  
-> > > > >
-> > > > > That's because the device is supposed to, I though, set it of its own
-> > > > > accord as a result of link training. It's an RO field in the spec, so
-> > > > > Linux can't set it:
-> > > > >
-> > > > > 8.2.1.3.3 DVSEC Flex Bus Port Status (Offset 0Eh)
-> > > > > "Mem_Enabled: When set, indicates that CXL.mem protocol operation has
-> > > > > been enabled as a result of PCIe alternate protocol negotiation for
-> > > > > Flex Bus."  
-> > > >
-> > > > Agreed with that statement.
-> > > >
-> > > > Ah. Nothing like confusing register field names that are very similar....
-> > > > A Mem_Enable is in DVSEC for CXL Device 8.1.3.2 and is RWL.
-> > > > Just for giggles there is also a Mem_Enable in the Flex Bus Port Control
-> > > > but the range registers comment isn't about that one (I hope anyway!).  
-> > >
-> > > Not sure whether to laugh or cry at that, sorry for the mix up on my part.
-> > >  
-> > > > The kernel currently sets the value of info->mem_enabled using
-> > > > the Mem_Enable field of the DVSEC for CXL Device.
-> > > > https://elixir.bootlin.com/linux/v5.18-rc4/source/drivers/cxl/pci.c#L501
-> > > >
-> > > > So I think wrong name and wrong DVSEC for that particular condition.  
-> > >
-> > > Yeah, I don't even see a need to cache that value, so something like
-> > > the attached? Note that the intent was to only have cxl_mem worry
-> > > about MMIO mapped register details and not require the 'struct
-> > > pci_dev' which makes things easier for cxl_test in the near term.
-> > >  
-> > Hi Dan,
-> >
-> > That fixes this problem (I'll test tomorrow but it looks right), but...
-> >
-> > I think we still run into the problem I was debugging in the
-> > first place which is whether the Device DVSEC Range 1 size is non 0.
-> > https://elixir.bootlin.com/linux/v5.18-rc4/source/drivers/cxl/pci.c#L541
-> > (ranges ends up > 0 and hence we conclude firmware already programmed the
-> >  device and fail the probe).
-> >
-> > As far as I can tell a CXL 2.0 type 3 device is allowed to provide
-> > the option to use ranges or HDM decoders (or it can be HDM decoder only).
-> > See the comment at end of 8.1.3.8.4 :
-> >
-> > "A CXL.mem capable device that implements CXL HDM Decoder Capability registers
-> > follows the above behavior as long as HDM Decoder Enable bit in CXL HDM Decoder
-> > Global Control register is zero."
-> >
-> > As such we can't use the range size alone to check if
-> > the Range registers are in use (it's a RO value, not something previously
-> > configured)  We need to perform the full check as described which
-> > includes checking Mem_Enable (which is in the above behavior that comment
-> > is directing us towards).
-> >
-> > As the below patch has already set Mem_Enable hardware field unconditionally
-> > we don't have the necessary info by the time we reach the relevant code.
-> > https://elixir.bootlin.com/linux/v5.18-rc4/source/drivers/cxl/mem.c#L107
-> >
-> > So you could cache the current value (perhaps with a more meaningful
-> > name than the spec gives it!) of Device DVSEC Mem_Enable
-> > at the point where you have it written in this patch and add a check
-> > on the cached value at the point in the reference above.
-> >
-> > That's still a little ugly as ideally we shouldn't transition through
-> > a somewhat invalid state - though it is harmless as no traffic
-> > will be sent by the host (probably - though I suspect hardware folk
-> > would tell me we can't assume it...).  
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> ...and there is also the worry about malicious devices, but I don't
-> know how to determine the difference between valid config, invalid
-> config, and malicious device claiming a range that it shouldn't.
-> Perhaps this needs at a minimum cross validation with the CFMWS?
+> CXL kernel drivers optionally need to access DOE mailbox capabilities.
+> Access to mailboxes for things such as CDAT, SPDM, and IDE are needed by
+> the kernel while other access is designed towards user space usage.  An
+> example of this is for CXL Compliance Testing (see CXL 2.0 14.16.4
+> Compliance Mode DOE) which offers a mechanism to set different test
+> modes for a device.
 > 
-> > The invalid state being:
-> > - Mem_Enable set
-> > - Range registers in use because global HDM Decoder enable not yet set.
-> > - Range registers were programmed by firmware to something that actually
-> >   works but not enabled for some odd reason. I think they might even be
-> >   technically valid with the defaults even though the base is 0 (imagine
-> >   a very large CXL memory - some of it might overlap with a region being
-> >   routed by the host to the CXL host bridges).  
+> There is no anticipated need for the kernel to share an individual
+> mailbox with user space.  Thus developing an interface to marshal access
+> between the kernel and user space for a single mailbox is unnecessary
+> overhead.  However, having the kernel relinquish some mailboxes to be
+> controlled by user space is a reasonable compromise to share access to
+> the device.
 > 
-> Oh yuck, yes the default init state of any device is that it will
-> decode the first 256MB of memory as long as mem_enabled is set, and
-> devices are "trusted" to not decode anything that they shouldn't.
+> The auxiliary bus provides an elegant solution for this.  Each DOE
+> capability is given its own auxiliary device.  This device is controlled
+> by a kernel driver by default which restricts access to the mailbox.
+> Unbinding the driver from a single auxiliary device (DOE mailbox
+> capability) frees the mailbox for user space access.  This architecture
+> also allows a clear picture on which mailboxes are kernel controlled vs
+> not.
 > 
-> I'm wondering if Linux should take a more draconian approach and
-> mandate that all devices that advertise the CXL 2.0 Class Code
-> capability must boot in HDM decoder enabled mode, or Mem_enable=0
-> mode. Any CXL 2.0 device found to have Mem_enable=1 without HDM
-> decoders enabled will have HDM decoder operation forced upon them so
-> that Linux can trust that nothing is being decoded by accident, if
-> that breaks the system, that's a BIOS bug, not a Linux bug. Of course,
-> could have a module parameter to override that policy while the BIOS
-> update is in-flight to the target system.
+> Iterate each DOE mailbox capability and create auxiliary bus devices.
+> Follow on patches will define a driver for the newly created devices.
+> 
+> sysfs shows the devices.
+> 
+> $ ls -l /sys/bus/auxiliary/devices/
+> total 0
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.0 -> ../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.0
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.1 -> ../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.1
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.2 -> ../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.2
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.3 -> ../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.3
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.4 -> ../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.4
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.5 -> ../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.5
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.6 -> ../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.6
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.7 -> ../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.7
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-I'm not sure it is technically a BIOS bug. Using the range approach with
-everything fully set up - e.g. with Memory also in the EFI memory map
-and other appropriate places is fine.  We should just ignore those
-devices.  Hopefully they also have the lock set.
+I'm not 100% happy with effectively having one solution for CXL
+and probably a different one for DOEs on switch ports
+(which I just hacked into a port service driver to convince
+myself there was at least one plausible way of doing that) but if
+this effectively separates the two discussions then I guess I can
+live with it for now ;)
 
-We could make what you suggest a Linux 'boot standard' though...
-We'd want to communicate that strongly to various BIOS teams though.
-Even better if we can get other OSVs on side.
+Once this is merged we can start the discussion about how to
+handle switch ports with DOEs both for CDAT and SPDM.
 
-I'll check with our BIOS team whether they'd mind this restriction.
+I'll send out an RFC that is so hideous it will get people to
+suggestion how to do it better!  Currently it starts and
+stops the mailbox 3 times in the registration path and I think
+it's more luck than judgement that is landing me with the right
+MSI.
+
+Anyhow, this looks good to me.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
 
 > 
-> > Ideally we wouldn't set that Mem_Enable until we have switched
-> > to the HDM decoders.  To avoid that we probably need another callback
-> > from cxl_mem into cxl_pci.  
+> ---
+> Changes from V7:
+> 	Minor code clean ups
+> 	Rebased on cxl-pending
 > 
-> Either another callback, or move more validation out of cxl_mem and
-> into cxl_pci. I am leaning towards the latter.
-Sure. That should work.
-
-Jonathan
+> Changes from V6:
+> 	Move all the auxiliary device stuff to the CXL layer
 > 
-> > Agreed on the laughing or crying. I'm off to find a beer.  
+> Changes from V5:
+> 	Split the CXL specific stuff off from the PCI DOE create
+> 	auxiliary device code.
+> ---
+>  drivers/cxl/Kconfig  |   1 +
+>  drivers/cxl/cxlpci.h |  21 +++++++
+>  drivers/cxl/pci.c    | 127 +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 149 insertions(+)
 > 
-> Cheers!
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index f64e3984689f..ac0f5ca95431 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -16,6 +16,7 @@ if CXL_BUS
+>  config CXL_PCI
+>  	tristate "PCI manageability"
+>  	default CXL_BUS
+> +	select AUXILIARY_BUS
+>  	help
+>  	  The CXL specification defines a "CXL memory device" sub-class in the
+>  	  PCI "memory controller" base class of devices. Device's identified by
+> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> index 329e7ea3f36a..2ad8715173ce 100644
+> --- a/drivers/cxl/cxlpci.h
+> +++ b/drivers/cxl/cxlpci.h
+> @@ -2,6 +2,7 @@
+>  /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+>  #ifndef __CXL_PCI_H__
+>  #define __CXL_PCI_H__
+> +#include <linux/auxiliary_bus.h>
+>  #include <linux/pci.h>
+>  #include "cxl.h"
+>  
+> @@ -72,4 +73,24 @@ static inline resource_size_t cxl_regmap_to_base(struct pci_dev *pdev,
+>  }
+>  
+>  int devm_cxl_port_enumerate_dports(struct cxl_port *port);
+> +
+> +/**
+> + * struct cxl_doe_dev - CXL DOE auxiliary bus device
+> + *
+> + * @adev: Auxiliary bus device
+> + * @pdev: PCI device this belongs to
+> + * @cap_offset: Capability offset
+> + * @use_irq: Set if IRQs are to be used with this mailbox
+> + *
+> + * This represents a single DOE mailbox device.  CXL devices should create this
+> + * device and register it on the Auxiliary bus for the CXL DOE driver to drive.
+> + */
+> +struct cxl_doe_dev {
+> +	struct auxiliary_device adev;
+> +	struct pci_dev *pdev;
+> +	int cap_offset;
+> +	bool use_irq;
+> +};
+> +#define DOE_DEV_NAME "doe"
+> +
+>  #endif /* __CXL_PCI_H__ */
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index e7ab9a34d718..41a6f3eb0a5c 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/list.h>
+>  #include <linux/pci.h>
+> +#include <linux/pci-doe.h>
+>  #include <linux/io.h>
+>  #include "cxlmem.h"
+>  #include "cxlpci.h"
+> @@ -564,6 +565,128 @@ static void cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
+>  	info->ranges = __cxl_dvsec_ranges(cxlds, info);
+>  }
+>  
+> +static void cxl_pci_free_irq_vectors(void *data)
+> +{
+> +	pci_free_irq_vectors(data);
+> +}
+> +
+> +static DEFINE_IDA(pci_doe_adev_ida);
+> +
+> +static void cxl_pci_doe_dev_release(struct device *dev)
+> +{
+> +	struct auxiliary_device *adev = container_of(dev,
+> +						struct auxiliary_device,
+> +						dev);
+> +	struct cxl_doe_dev *doe_dev = container_of(adev, struct cxl_doe_dev,
+> +						   adev);
+> +
+> +	ida_free(&pci_doe_adev_ida, adev->id);
+> +	kfree(doe_dev);
+> +}
+> +
+> +static void cxl_pci_doe_destroy_device(void *ad)
+> +{
+> +	auxiliary_device_delete(ad);
+> +	auxiliary_device_uninit(ad);
+> +}
+> +
+> +/**
+> + * cxl_pci_create_doe_devices - Create auxiliary bus DOE devices for all DOE
+> + *				mailboxes found
+> + *
+> + * @pci_dev: The PCI device to scan for DOE mailboxes
+> + *
+> + * There is no coresponding destroy of these devices.  This function associates
+> + * the DOE auxiliary devices created with the pci_dev passed in.  That
+> + * association is device managed (devm_*) such that the DOE auxiliary device
+> + * lifetime is always less than or equal to the lifetime of the pci_dev.
+> + *
+> + * RETURNS: 0 on success -ERRNO on failure.
+> + */
+> +static int cxl_pci_create_doe_devices(struct pci_dev *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	bool use_irq = true;
+> +	int irqs = 0;
+> +	u16 off = 0;
+> +	int rc;
+> +
+> +	pci_doe_for_each_off(pdev, off)
+> +		irqs++;
+> +	pci_info(pdev, "Found %d DOE mailbox's\n", irqs);
+> +
+> +	/*
+> +	 * Allocate enough vectors for the DOE's
+> +	 */
+> +	rc = pci_alloc_irq_vectors(pdev, irqs, irqs, PCI_IRQ_MSI |
+> +						     PCI_IRQ_MSIX);
+> +	if (rc != irqs) {
+> +		pci_err(pdev,
+> +			"Not enough interrupts for all the DOEs; use polling\n");
+> +		use_irq = false;
+> +		/* Some got allocated; clean them up */
+> +		if (rc > 0)
+> +			cxl_pci_free_irq_vectors(pdev);
+> +	} else {
+> +		/*
+> +		 * Enabling bus mastering is require for MSI/MSIx.  It could be
+> +		 * done later within the DOE initialization, but as it
+> +		 * potentially has other impacts keep it here when setting up
+> +		 * the IRQ's.
+> +		 */
+> +		pci_set_master(pdev);
+> +		rc = devm_add_action_or_reset(dev,
+> +					      cxl_pci_free_irq_vectors,
+> +					      pdev);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	pci_doe_for_each_off(pdev, off) {
+> +		struct auxiliary_device *adev;
+> +		struct cxl_doe_dev *new_dev;
+> +		int id;
+> +
+> +		new_dev = kzalloc(sizeof(*new_dev), GFP_KERNEL);
+> +		if (!new_dev)
+> +			return -ENOMEM;
+> +
+> +		new_dev->pdev = pdev;
+> +		new_dev->cap_offset = off;
+> +		new_dev->use_irq = use_irq;
+> +
+> +		/* Set up struct auxiliary_device */
+> +		adev = &new_dev->adev;
+> +		id = ida_alloc(&pci_doe_adev_ida, GFP_KERNEL);
+> +		if (id < 0) {
+> +			kfree(new_dev);
+> +			return -ENOMEM;
+> +		}
+> +
+> +		adev->id = id;
+> +		adev->name = DOE_DEV_NAME;
+> +		adev->dev.release = cxl_pci_doe_dev_release;
+> +		adev->dev.parent = dev;
+> +
+> +		if (auxiliary_device_init(adev)) {
+> +			cxl_pci_doe_dev_release(&adev->dev);
+> +			return -EIO;
+> +		}
+> +
+> +		if (auxiliary_device_add(adev)) {
+> +			auxiliary_device_uninit(adev);
+> +			return -EIO;
+> +		}
+> +
+> +		rc = devm_add_action_or_reset(dev, cxl_pci_doe_destroy_device,
+> +					      adev);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  {
+>  	struct cxl_register_map map;
+> @@ -630,6 +753,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (rc)
+>  		return rc;
+>  
+> +	rc = cxl_pci_create_doe_devices(pdev);
+> +	if (rc)
+> +		return rc;
+> +
+>  	cxl_dvsec_ranges(cxlds);
+>  
+>  	cxlmd = devm_cxl_add_memdev(cxlds);
 
