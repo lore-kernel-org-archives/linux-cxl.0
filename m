@@ -2,30 +2,30 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B732CC433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 27 Apr 2022 17:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1A5C433F5
+	for <linux-cxl@archiver.kernel.org>; Wed, 27 Apr 2022 17:44:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243957AbiD0RXC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 27 Apr 2022 13:23:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38430 "EHLO
+        id S231132AbiD0Rrp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 27 Apr 2022 13:47:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236975AbiD0RXA (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 27 Apr 2022 13:23:00 -0400
+        with ESMTP id S244320AbiD0RrF (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 27 Apr 2022 13:47:05 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A274744745;
-        Wed, 27 Apr 2022 10:19:47 -0700 (PDT)
-Received: from fraeml710-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KpQRD4GX0z685K1;
-        Thu, 28 Apr 2022 01:17:12 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B2782C103;
+        Wed, 27 Apr 2022 10:43:51 -0700 (PDT)
+Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KpQyz74xhz685K1;
+        Thu, 28 Apr 2022 01:41:15 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml710-chm.china.huawei.com (10.206.15.59) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 27 Apr 2022 19:19:45 +0200
+ fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2375.24; Wed, 27 Apr 2022 19:43:48 +0200
 Received: from localhost (10.81.200.74) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2375.24; Wed, 27 Apr
- 2022 18:19:44 +0100
-Date:   Wed, 27 Apr 2022 18:19:42 +0100
+ 2022 18:43:47 +0100
+Date:   Wed, 27 Apr 2022 18:43:45 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     <ira.weiny@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
@@ -35,12 +35,11 @@ CC:     Dan Williams <dan.j.williams@intel.com>,
         Ben Widawsky <ben.widawsky@intel.com>,
         <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
         <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V8 04/10] cxl/pci: Create auxiliary devices for each DOE
- mailbox
-Message-ID: <20220427181942.00003492@Huawei.com>
-In-Reply-To: <20220414203237.2198665-5-ira.weiny@intel.com>
+Subject: Re: [PATCH V8 05/10] cxl/pci: Create DOE auxiliary driver
+Message-ID: <20220427184345.000076b1@Huawei.com>
+In-Reply-To: <20220414203237.2198665-6-ira.weiny@intel.com>
 References: <20220414203237.2198665-1-ira.weiny@intel.com>
-        <20220414203237.2198665-5-ira.weiny@intel.com>
+        <20220414203237.2198665-6-ira.weiny@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -54,7 +53,7 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 14 Apr 2022 13:32:31 -0700
+On Thu, 14 Apr 2022 13:32:32 -0700
 ira.weiny@intel.com wrote:
 
 > From: Ira Weiny <ira.weiny@intel.com>
@@ -81,262 +80,323 @@ ira.weiny@intel.com wrote:
 > also allows a clear picture on which mailboxes are kernel controlled vs
 > not.
 > 
-> Iterate each DOE mailbox capability and create auxiliary bus devices.
-> Follow on patches will define a driver for the newly created devices.
+> Create a driver for the DOE auxiliary devices.  The driver uses the PCI
+> DOE core to manage the mailbox.
 > 
-> sysfs shows the devices.
+> User space must be prevented from unbinding the driver state when the
+> DOE auxiliary driver is being accessed by the kernel.  Add a read write
+> lock to the DOE auxiliary device to protect the driver data portion.
 > 
-> $ ls -l /sys/bus/auxiliary/devices/
+> Finally, flag the driver module to be preloaded by device creation to
+> ensure the driver is attached when iterating the DOE capabilities.
+> 
+> User space access can be obtained by unbinding the driver from that
+> device.  For example:
+> 
+> $ ls -l /sys/bus/auxiliary/drivers
 > total 0
-> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.0 -> ../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.0
-> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.1 -> ../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.1
-> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.2 -> ../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.2
-> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.3 -> ../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.3
-> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.4 -> ../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.4
-> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.5 -> ../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.5
-> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.6 -> ../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.6
-> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.7 -> ../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.7
+> drwxr-xr-x 2 root root 0 Mar 24 10:45 cxl_doe.cxl_doe_drv
+> 
+> $ ls -l /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci*
+> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.0 -> ../../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.0
+> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.1 -> ../../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.1
+> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.2 -> ../../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.2
+> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.3 -> ../../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.3
+> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.3 -> ../../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.4
+> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.5 -> ../../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.5
+> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.6 -> ../../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.6
+> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.7 -> ../../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.7
+> 
+> $ echo "cxl_pci.doe.4" > /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/unbind
+> 
+> $ ls -l /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci*
+> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.0 -> ../../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.0
+> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.1 -> ../../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.1
+> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.2 -> ../../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.2
+> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.3 -> ../../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.3
+> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.5 -> ../../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.5
+> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.6 -> ../../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.6
+> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.7 -> ../../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.7
 > 
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-I'm not 100% happy with effectively having one solution for CXL
-and probably a different one for DOEs on switch ports
-(which I just hacked into a port service driver to convince
-myself there was at least one plausible way of doing that) but if
-this effectively separates the two discussions then I guess I can
-live with it for now ;)
+Hi Ira,
 
-Once this is merged we can start the discussion about how to
-handle switch ports with DOEs both for CDAT and SPDM.
-
-I'll send out an RFC that is so hideous it will get people to
-suggestion how to do it better!  Currently it starts and
-stops the mailbox 3 times in the registration path and I think
-it's more luck than judgement that is landing me with the right
-MSI.
-
-Anyhow, this looks good to me.
+A few minor comments inline.
+With those cleaned up
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
 
 > 
 > ---
 > Changes from V7:
-> 	Minor code clean ups
-> 	Rebased on cxl-pending
+> 	Now need to select PCI_DOE
+> 	Change MODULE_LICENSE to 'GPL' instead of old 'GPL v2'
 > 
 > Changes from V6:
-> 	Move all the auxiliary device stuff to the CXL layer
+> 	The CXL layer now contains the driver for these auxiliary
+> 	devices.
 > 
 > Changes from V5:
 > 	Split the CXL specific stuff off from the PCI DOE create
 > 	auxiliary device code.
 > ---
->  drivers/cxl/Kconfig  |   1 +
->  drivers/cxl/cxlpci.h |  21 +++++++
->  drivers/cxl/pci.c    | 127 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 149 insertions(+)
+>  drivers/cxl/Kconfig           | 13 +++++
+>  drivers/cxl/Makefile          |  2 +
+>  drivers/cxl/cxlpci.h          | 13 +++++
+>  drivers/cxl/doe.c             | 90 +++++++++++++++++++++++++++++++++++
+>  drivers/cxl/pci.c             | 20 ++++++++
+>  include/uapi/linux/pci_regs.h |  1 +
+>  6 files changed, 139 insertions(+)
+>  create mode 100644 drivers/cxl/doe.c
 > 
 > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index f64e3984689f..ac0f5ca95431 100644
+> index ac0f5ca95431..82f3908fa5cc 100644
 > --- a/drivers/cxl/Kconfig
 > +++ b/drivers/cxl/Kconfig
-> @@ -16,6 +16,7 @@ if CXL_BUS
->  config CXL_PCI
->  	tristate "PCI manageability"
->  	default CXL_BUS
-> +	select AUXILIARY_BUS
->  	help
->  	  The CXL specification defines a "CXL memory device" sub-class in the
->  	  PCI "memory controller" base class of devices. Device's identified by
+> @@ -103,4 +103,17 @@ config CXL_SUSPEND
+>  	def_bool y
+>  	depends on SUSPEND && CXL_MEM
+>  
+> +config CXL_PCI_DOE
+> +      tristate "CXL PCI Data Object Exchange (DOE) support"
+> +      depends on CXL_PCI
+
+Should be leading tabs not spaces.
+
+> +      default CXL_BUS
+> +      select PCI_DOE
+> +      help
+> +        Driver for DOE auxiliary devices.
+> +
+> +	The DOE capabilities provides a simple mailbox in PCI config space that
+> +	is used for a number of different protocols useful to CXL.  The CXL PCI
+> +	subsystem creates auxiliary devices for each DOE mailbox capability
+> +	found.  This driver is required for the kernel to use these devices.
+> +
+>  endif
+> diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+> index a78270794150..c71b7a6345fb 100644
+> --- a/drivers/cxl/Makefile
+> +++ b/drivers/cxl/Makefile
+> @@ -1,6 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-y += core/
+>  obj-$(CONFIG_CXL_PCI) += cxl_pci.o
+> +obj-$(CONFIG_CXL_PCI_DOE) += cxl_doe.o
+>  obj-$(CONFIG_CXL_MEM) += cxl_mem.o
+>  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+>  obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
+> @@ -8,6 +9,7 @@ obj-$(CONFIG_CXL_PORT) += cxl_port.o
+>  
+>  cxl_mem-y := mem.o
+>  cxl_pci-y := pci.o
+> +cxl_doe-y := doe.o
+>  cxl_acpi-y := acpi.o
+>  cxl_pmem-y := pmem.o
+>  cxl_port-y := port.o
 > diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index 329e7ea3f36a..2ad8715173ce 100644
+> index 2ad8715173ce..821fe05e8289 100644
 > --- a/drivers/cxl/cxlpci.h
 > +++ b/drivers/cxl/cxlpci.h
-> @@ -2,6 +2,7 @@
->  /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
->  #ifndef __CXL_PCI_H__
->  #define __CXL_PCI_H__
-> +#include <linux/auxiliary_bus.h>
->  #include <linux/pci.h>
->  #include "cxl.h"
+> @@ -79,6 +79,7 @@ int devm_cxl_port_enumerate_dports(struct cxl_port *port);
+>   *
+>   * @adev: Auxiliary bus device
+>   * @pdev: PCI device this belongs to
+> + * @driver_access: Lock the driver during access
+>   * @cap_offset: Capability offset
+>   * @use_irq: Set if IRQs are to be used with this mailbox
+>   *
+> @@ -88,9 +89,21 @@ int devm_cxl_port_enumerate_dports(struct cxl_port *port);
+>  struct cxl_doe_dev {
+>  	struct auxiliary_device adev;
+>  	struct pci_dev *pdev;
+> +	struct rw_semaphore driver_access;
+>  	int cap_offset;
+>  	bool use_irq;
+>  };
+>  #define DOE_DEV_NAME "doe"
 >  
-> @@ -72,4 +73,24 @@ static inline resource_size_t cxl_regmap_to_base(struct pci_dev *pdev,
->  }
->  
->  int devm_cxl_port_enumerate_dports(struct cxl_port *port);
-> +
 > +/**
-> + * struct cxl_doe_dev - CXL DOE auxiliary bus device
+> + * struct cxl_doe_drv_state - state of the DOE Aux driver
 > + *
-> + * @adev: Auxiliary bus device
-> + * @pdev: PCI device this belongs to
-> + * @cap_offset: Capability offset
-> + * @use_irq: Set if IRQs are to be used with this mailbox
-> + *
-> + * This represents a single DOE mailbox device.  CXL devices should create this
-> + * device and register it on the Auxiliary bus for the CXL DOE driver to drive.
+> + * @doe_dev: The Auxiliary DOE device
+
+As far as I can tell no one actually uses the doe_dev from here for anything
+so do we need it at all?
+
+> + * @doe_mb: PCI DOE mailbox state
 > + */
-> +struct cxl_doe_dev {
-> +	struct auxiliary_device adev;
-> +	struct pci_dev *pdev;
-> +	int cap_offset;
-> +	bool use_irq;
+> +struct cxl_doe_drv_state {
+> +	struct cxl_doe_dev *doe_dev;
+> +	struct pci_doe_mb *doe_mb;
 > +};
-> +#define DOE_DEV_NAME "doe"
 > +
 >  #endif /* __CXL_PCI_H__ */
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index e7ab9a34d718..41a6f3eb0a5c 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -8,6 +8,7 @@
->  #include <linux/mutex.h>
->  #include <linux/list.h>
->  #include <linux/pci.h>
+> diff --git a/drivers/cxl/doe.c b/drivers/cxl/doe.c
+> new file mode 100644
+> index 000000000000..1d3a24a77002
+> --- /dev/null
+> +++ b/drivers/cxl/doe.c
+> @@ -0,0 +1,90 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+> +
+> +#include <linux/pci.h>
 > +#include <linux/pci-doe.h>
->  #include <linux/io.h>
->  #include "cxlmem.h"
->  #include "cxlpci.h"
-> @@ -564,6 +565,128 @@ static void cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
->  	info->ranges = __cxl_dvsec_ranges(cxlds, info);
->  }
->  
-> +static void cxl_pci_free_irq_vectors(void *data)
+
+Rather sparse include list given what is going on in here.
+We shouldn't rely too heavily on what comes indirectly except
+where it's really standard headers.
+
+Probably mod_devicetable.h and some headers for auxiliary devices
+and rwsem.h at least?  
+
+> +
+> +#include "cxlpci.h"
+> +
+> +static void doe_destroy_mb(void *ds)
 > +{
-> +	pci_free_irq_vectors(data);
+> +	struct cxl_doe_drv_state *doe_ds = ds;
+> +
+> +	pci_doe_destroy_mb(doe_ds->doe_mb);
 > +}
 > +
-> +static DEFINE_IDA(pci_doe_adev_ida);
-> +
-> +static void cxl_pci_doe_dev_release(struct device *dev)
+> +static int cxl_pci_doe_probe(struct auxiliary_device *aux_dev,
+> +			     const struct auxiliary_device_id *id)
 > +{
-> +	struct auxiliary_device *adev = container_of(dev,
-> +						struct auxiliary_device,
-> +						dev);
-> +	struct cxl_doe_dev *doe_dev = container_of(adev, struct cxl_doe_dev,
+> +	struct cxl_doe_dev *doe_dev = container_of(aux_dev, struct cxl_doe_dev,
 > +						   adev);
+> +	struct device *dev = &aux_dev->dev;
+> +	struct cxl_doe_drv_state *doe_ds;
+> +	struct pci_doe_mb *doe_mb;
 > +
-> +	ida_free(&pci_doe_adev_ida, adev->id);
-> +	kfree(doe_dev);
-> +}
+> +	doe_ds = devm_kzalloc(dev, sizeof(*doe_ds), GFP_KERNEL);
+> +	if (!doe_ds)
+> +		return -ENOMEM;
 > +
-> +static void cxl_pci_doe_destroy_device(void *ad)
-> +{
-> +	auxiliary_device_delete(ad);
-> +	auxiliary_device_uninit(ad);
-> +}
-> +
-> +/**
-> + * cxl_pci_create_doe_devices - Create auxiliary bus DOE devices for all DOE
-> + *				mailboxes found
-> + *
-> + * @pci_dev: The PCI device to scan for DOE mailboxes
-> + *
-> + * There is no coresponding destroy of these devices.  This function associates
-> + * the DOE auxiliary devices created with the pci_dev passed in.  That
-> + * association is device managed (devm_*) such that the DOE auxiliary device
-> + * lifetime is always less than or equal to the lifetime of the pci_dev.
-> + *
-> + * RETURNS: 0 on success -ERRNO on failure.
-> + */
-> +static int cxl_pci_create_doe_devices(struct pci_dev *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	bool use_irq = true;
-> +	int irqs = 0;
-> +	u16 off = 0;
-> +	int rc;
-> +
-> +	pci_doe_for_each_off(pdev, off)
-> +		irqs++;
-> +	pci_info(pdev, "Found %d DOE mailbox's\n", irqs);
-> +
-> +	/*
-> +	 * Allocate enough vectors for the DOE's
-> +	 */
-> +	rc = pci_alloc_irq_vectors(pdev, irqs, irqs, PCI_IRQ_MSI |
-> +						     PCI_IRQ_MSIX);
-> +	if (rc != irqs) {
-> +		pci_err(pdev,
-> +			"Not enough interrupts for all the DOEs; use polling\n");
-> +		use_irq = false;
-> +		/* Some got allocated; clean them up */
-> +		if (rc > 0)
-> +			cxl_pci_free_irq_vectors(pdev);
-> +	} else {
-> +		/*
-> +		 * Enabling bus mastering is require for MSI/MSIx.  It could be
-> +		 * done later within the DOE initialization, but as it
-> +		 * potentially has other impacts keep it here when setting up
-> +		 * the IRQ's.
-> +		 */
-> +		pci_set_master(pdev);
-> +		rc = devm_add_action_or_reset(dev,
-> +					      cxl_pci_free_irq_vectors,
-> +					      pdev);
-> +		if (rc)
-> +			return rc;
+> +	doe_mb = pci_doe_create_mb(doe_dev->pdev, doe_dev->cap_offset,
+> +				   doe_dev->use_irq);
+> +	if (IS_ERR(doe_mb)) {
+> +		dev_err(dev, "Failed to create the DOE mailbox state machine\n");
+
+You could use dev_err_probe() here to tidy this up a little bit.
+
+> +		return PTR_ERR(doe_mb);
+
 > +	}
 > +
-> +	pci_doe_for_each_off(pdev, off) {
-> +		struct auxiliary_device *adev;
-> +		struct cxl_doe_dev *new_dev;
-> +		int id;
+> +	doe_ds->doe_mb = doe_mb;
+> +	devm_add_action_or_reset(dev, doe_destroy_mb, doe_ds);
 > +
-> +		new_dev = kzalloc(sizeof(*new_dev), GFP_KERNEL);
-> +		if (!new_dev)
-> +			return -ENOMEM;
-> +
-> +		new_dev->pdev = pdev;
-> +		new_dev->cap_offset = off;
-> +		new_dev->use_irq = use_irq;
-> +
-> +		/* Set up struct auxiliary_device */
-> +		adev = &new_dev->adev;
-> +		id = ida_alloc(&pci_doe_adev_ida, GFP_KERNEL);
-> +		if (id < 0) {
-> +			kfree(new_dev);
-> +			return -ENOMEM;
-> +		}
-> +
-> +		adev->id = id;
-> +		adev->name = DOE_DEV_NAME;
-> +		adev->dev.release = cxl_pci_doe_dev_release;
-> +		adev->dev.parent = dev;
-> +
-> +		if (auxiliary_device_init(adev)) {
-> +			cxl_pci_doe_dev_release(&adev->dev);
-> +			return -EIO;
-> +		}
-> +
-> +		if (auxiliary_device_add(adev)) {
-> +			auxiliary_device_uninit(adev);
-> +			return -EIO;
-> +		}
-> +
-> +		rc = devm_add_action_or_reset(dev, cxl_pci_doe_destroy_device,
-> +					      adev);
-> +		if (rc)
-> +			return rc;
-> +	}
+> +	down_write(&doe_dev->driver_access);
+> +	auxiliary_set_drvdata(aux_dev, doe_ds);
+> +	up_write(&doe_dev->driver_access);
 > +
 > +	return 0;
 > +}
 > +
->  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  {
->  	struct cxl_register_map map;
-> @@ -630,6 +753,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (rc)
->  		return rc;
->  
-> +	rc = cxl_pci_create_doe_devices(pdev);
-> +	if (rc)
-> +		return rc;
+> +static void cxl_pci_doe_remove(struct auxiliary_device *aux_dev)
+> +{
+> +	struct cxl_doe_dev *doe_dev = container_of(aux_dev, struct cxl_doe_dev,
+> +						   adev);
 > +
->  	cxl_dvsec_ranges(cxlds);
+> +	down_write(&doe_dev->driver_access);
+> +	auxiliary_set_drvdata(aux_dev, NULL);
+
+This confused me for a bit.  I 'think' you are doing this to be able to use
+it as a flag for whether the driver is still bound. If so, a comment would
+be useful.
+
+> +	up_write(&doe_dev->driver_access);
+> +}
+> +
+> +static const struct auxiliary_device_id cxl_pci_doe_auxiliary_id_table[] = {
+> +	{.name = "cxl_pci." DOE_DEV_NAME, },
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(auxiliary, cxl_pci_doe_auxiliary_id_table);
+> +
+> +struct auxiliary_driver cxl_pci_doe_auxiliary_drv = {
+> +	.name = "cxl_doe_drv",
+> +	.id_table = cxl_pci_doe_auxiliary_id_table,
+> +	.probe = cxl_pci_doe_probe,
+> +	.remove = cxl_pci_doe_remove,
+> +};
+> +
+> +static int __init cxl_pci_doe_init_module(void)
+> +{
+> +	int ret;
+> +
+> +	ret = auxiliary_driver_register(&cxl_pci_doe_auxiliary_drv);
+> +	if (ret) {
+> +		pr_err("Failed cxl_pci_doe auxiliary_driver_register() ret=%d\n",
+> +		       ret);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static void __exit cxl_pci_doe_exit_module(void)
+> +{
+> +	auxiliary_driver_unregister(&cxl_pci_doe_auxiliary_drv);
+> +}
+> +
+> +module_init(cxl_pci_doe_init_module);
+> +module_exit(cxl_pci_doe_exit_module);
+> +MODULE_LICENSE("GPL");
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 41a6f3eb0a5c..0dec1f1a3f38 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -590,6 +590,17 @@ static void cxl_pci_doe_destroy_device(void *ad)
+>  	auxiliary_device_uninit(ad);
+>  }
 >  
->  	cxlmd = devm_cxl_add_memdev(cxlds);
+> +static struct cxl_doe_drv_state *cxl_pci_doe_get_drv(struct cxl_doe_dev *doe_dev)
+> +{
+> +	down_read(&doe_dev->driver_access);
+> +	return auxiliary_get_drvdata(&doe_dev->adev);
+> +}
+> +
+> +static void cxl_pci_doe_put_drv(struct cxl_doe_dev *doe_dev)
+> +{
+> +	up_read(&doe_dev->driver_access);
+> +}
+> +
+>  /**
+>   * cxl_pci_create_doe_devices - Create auxiliary bus DOE devices for all DOE
+>   *				mailboxes found
+> @@ -652,6 +663,7 @@ static int cxl_pci_create_doe_devices(struct pci_dev *pdev)
+>  			return -ENOMEM;
+>  
+>  		new_dev->pdev = pdev;
+> +		init_rwsem(&new_dev->driver_access);
+>  		new_dev->cap_offset = off;
+>  		new_dev->use_irq = use_irq;
+>  
+> @@ -682,6 +694,13 @@ static int cxl_pci_create_doe_devices(struct pci_dev *pdev)
+>  					      adev);
+>  		if (rc)
+>  			return rc;
+> +
+> +		if (device_attach(&adev->dev) != 1) {
+> +			dev_err(&adev->dev,
+> +				"Failed to attach a driver to DOE device %d\n",
+> +				adev->id);
+> +			return -ENODEV;
+> +		}
+
+Can you add a comment on why this has to be the case at this point.  Why can't
+the driver come along later?
+
+>  	}
+>  
+>  	return 0;
+> @@ -785,6 +804,7 @@ static struct pci_driver cxl_pci_driver = {
+>  	},
+>  };
+
+...
 
