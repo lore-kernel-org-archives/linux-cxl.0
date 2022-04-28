@@ -2,235 +2,167 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F69C433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 27 Apr 2022 18:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096B6C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 28 Apr 2022 09:47:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244575AbiD0SE3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 27 Apr 2022 14:04:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39694 "EHLO
+        id S229560AbiD1Ju1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 28 Apr 2022 05:50:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244542AbiD0SE2 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 27 Apr 2022 14:04:28 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20D2D37CEBB;
-        Wed, 27 Apr 2022 11:01:16 -0700 (PDT)
-Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KpRKL4s2cz67gQT;
-        Thu, 28 Apr 2022 01:57:10 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 27 Apr 2022 20:01:14 +0200
-Received: from localhost (10.81.200.74) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2375.24; Wed, 27 Apr
- 2022 19:01:13 +0100
-Date:   Wed, 27 Apr 2022 19:01:11 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
+        with ESMTP id S1348859AbiD1JmK (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 28 Apr 2022 05:42:10 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4D9E972B8;
+        Thu, 28 Apr 2022 02:38:56 -0700 (PDT)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 23S9S9X7032133;
+        Thu, 28 Apr 2022 09:38:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : content-type : mime-version; s=corp-2021-07-09;
+ bh=f3IBmG+KYnR10P3n/TcpNBkyH/RMZ5V2F2eqrlVJPjM=;
+ b=XQwWoOAEwK6ferD3pqNKf6EBUEEaDQbdHxDM/nBJnAzcXeoJl+TO1TjZutH6rI23/W8B
+ ciAWNo003mIKyRaLHm1cYBCRRQ+hyxwHZAd25szcu0WyB7ryxN/rLpbawIc5ovHV0oAD
+ 1qbZD6C/owO+hcR1Qq6ydKrOj08/ls6anVpEFw5T2mCX0/8QpnnWhkTWGOC+PDvBuHCq
+ r8DUVc6x18Zp/CRShSvjVkOYgGFi/q8i+GDcFynvZiFGnq860ucP3OEjJkikgSiLw9kH
+ fD4zD1coXSN1c36tKKBR780SvQhjKFD72A3JUF3n196AghBSMejWbehClPqBJ5IiJ2t/ 2Q== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3fmb1030hr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Apr 2022 09:38:47 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 23S9ab4l036475;
+        Thu, 28 Apr 2022 09:38:39 GMT
+Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam08lp2175.outbound.protection.outlook.com [104.47.73.175])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3fp5yndapk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Apr 2022 09:38:39 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l0TE4EK4BYKWy+e9jI1vB1SpyA2HvKwgYBh8FAxzmxiQp+Oie6AWyOhUFlRSAOzs0e2OgYHhrhKN636aYr30itx1jrq4ADE4o1TTE8ed2tv7bFXrC9SC7h8HwFtTkL4wqftZl90LLIe2tgBenx72mOE9dhQpyxtuRcNE1SxclJ193CHb0XgDnVU7f+7sGkKk++mL1Kh6lD9KFAJ4q0E5nVeMIBvEZRdCBEfh+XWYboyIbghrOYrqePEiLzEDzcY2/RHnF+UBH8OQDVAklg5sFYm0M3DskQVUXPUmXGkjukxAvFi3yfnx4vuA13bpI9gaV1iTZhxLfjXajsJBVAp0kw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=f3IBmG+KYnR10P3n/TcpNBkyH/RMZ5V2F2eqrlVJPjM=;
+ b=JvfvDToYMDN8qSQW7d3fjfpRY8t7Dbm7LxxJIikyo7PEISMXew/qmFSzJOPsIQv4FEkszUUHK+HYl3DIg2naIuN0iQUu6xVCc++CyFkRvPryPxtRmOACAQFhv5uQmPAq4jHahGpTP9o+KGfAYvzhCCtGq6KIPB5T3h+UxMgDt6jN6Jiw3JdTTmRTZ1MQ+ZPVIqjBeQ9BzbDgzL+xysZh4OYFOBfIFNzz5UUYYQQ1JDff3/6GiuwcQ55fKp0OK/QdRlJeQHjxJsCptJF771v41lmKnox8KWVFtGeQX0QVhHkE2539U+REIvzcqnFaDLV9cZ3wQbLqEroBONXVMDhxAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f3IBmG+KYnR10P3n/TcpNBkyH/RMZ5V2F2eqrlVJPjM=;
+ b=BgjuqzE4txeWUxJFazEV3wa6aFBIk+P2JG22NslLYCj2Y40eGkvtbLbP8Qz5cwxDp2qFiLdYPKV+YE4OemLs4ve7agBJTmvvZb0Cy/CX0GXKV2ZyHYPofrqqjh47OGs2WympUkXN5cGZkwukUBsly6g0YDwgDqEwP4nUUEz0Sh0=
+Received: from MWHPR1001MB2365.namprd10.prod.outlook.com
+ (2603:10b6:301:2d::28) by DM6PR10MB3099.namprd10.prod.outlook.com
+ (2603:10b6:5:1ad::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.15; Thu, 28 Apr
+ 2022 09:38:37 +0000
+Received: from MWHPR1001MB2365.namprd10.prod.outlook.com
+ ([fe80::b5d5:7b39:ca2d:1b87]) by MWHPR1001MB2365.namprd10.prod.outlook.com
+ ([fe80::b5d5:7b39:ca2d:1b87%5]) with mapi id 15.20.5164.025; Thu, 28 Apr 2022
+ 09:38:37 +0000
+Date:   Thu, 28 Apr 2022 12:38:25 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Alison Schofield <alison.schofield@intel.com>
+Cc:     Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Ben Widawsky <ben.widawsky@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V8 10/10] cxl/port: Parse out DSMAS data from CDAT table
-Message-ID: <20220427190111.0000785e@Huawei.com>
-In-Reply-To: <20220414203237.2198665-11-ira.weiny@intel.com>
-References: <20220414203237.2198665-1-ira.weiny@intel.com>
-        <20220414203237.2198665-11-ira.weiny@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] cxl/mbox: fix logical vs bitwise typo
+Message-ID: <YmpgkbbQ1Yxu36uO@kili>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+X-ClientProxiedBy: ZR0P278CA0004.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:16::14) To MWHPR1001MB2365.namprd10.prod.outlook.com
+ (2603:10b6:301:2d::28)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.200.74]
-X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4242b325-7ec5-45cb-1360-08da28fadeb3
+X-MS-TrafficTypeDiagnostic: DM6PR10MB3099:EE_
+X-Microsoft-Antispam-PRVS: <DM6PR10MB30991F9742677BF8B8936B508EFD9@DM6PR10MB3099.namprd10.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: GN2h9zARY+52GWPErHO65yLKtFpqkzZlXc7Z246c7OvwtspjFm1qFYZbGtWb33MJ9veYCBJKBhD6fUpVQNZ1hI2IzTyQ7DsMyy6toCVIgiZSS8cgRFQVrisowFFgv7LmHNturF8waf03wfK+DDtOnjE+t6JS2y5auIZ+X4f930YDp3OzptHaVPO0VG/WHvKio+c0SaXk20L2AMM+Y6yMcfUN6PAZXNDLXzfZlQPzfD9/kG/9p1aucQ4xi0lMGJ142OcEp10a0kRwIW17u/b7YpPgDtbiiYLwjrc3vUXvnuJEnaNW5tyuD1bGOFe9CZPqrFPXEKnsGfI2060/XAe7ZYJ0E/+7A9ubniaGp86Ct+yxWgIJmX5NU1SV00uuH723vpDuYWN0gwSYdgxx9gn6qafqNQCEh3HTzwdfPoD/x/3opxWqogH/iRemc6APSEl5dpmNv0AjwvZaiBO3qP1jHy+Mx21FSe3oJhCQtSZz9sLRib7egfu7h+NW4DdjlKJ1V3378Lvfg3wR1UqnNTq7UgkszqRxJx5Pog8JMDu/Z1DauJuSGWHBpfKtJtBdejKzZMnp1E7yQWFkhpR8jdHBUSdVmSmeqIycAresHbGNzzQkMO7SXkXNfFXxxJHMuQK3ipHBIDkuOoqU5ERoIHtQCuyKEvVy7Lld41ohKIV7CE16dwzu+R0xrULtL1vIeKv6yUJb7aXp+bUJhhcvGMOSmQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2365.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(7916004)(366004)(4326008)(6506007)(186003)(6666004)(2906002)(6512007)(5660300002)(9686003)(33716001)(44832011)(26005)(4744005)(6916009)(54906003)(66556008)(66476007)(8936002)(8676002)(508600001)(66946007)(83380400001)(38350700002)(38100700002)(316002)(52116002)(86362001)(6486002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?PhKXSSRtzB0D9dpW4t6w++T7lUOXJ/GT0Mjf/HBKmpeZoqKjQS0hAKPhuFq3?=
+ =?us-ascii?Q?RqFTDzFJGCTahbdUQCo5/171u7uOaL3MPNyVs6Q9tgepNYOykm85HK4EjqO6?=
+ =?us-ascii?Q?+CB8TQQ3xaZJJQYqh0BqPlpBjOpsOV1qrmwJD2Xoe1ycAMALDEUjSntKGbJl?=
+ =?us-ascii?Q?pg6YE7JiJnDyoSbVZJmuT7/NsNDWJvOIKKK42WGuL5JKIdNBskTgY0EEqE+x?=
+ =?us-ascii?Q?UNOYJd519QeS/v3MLEObNEUPHihxpWM7sMHXe+UANyudZ4eboamw9c/pl6Eo?=
+ =?us-ascii?Q?aFTr/jxs6xOk/mKp+xfDxoxYcQ/Bcvp9gOEdn44M37y1kzYP3UG9FS/n87T5?=
+ =?us-ascii?Q?mr35bnu3pcd7z0uPejMm1wYOCllDth2pxLwQslQKwjdI6LRV0lykRvC20Mbr?=
+ =?us-ascii?Q?r7QvLNsFAdLBVn9D1mMbRBmBCIC1/Em/qrORkgiRYWv7aYw0rrULS6yS7W6A?=
+ =?us-ascii?Q?rLulYEzhcVo84lZrOwaVH0vzj8ONbF5NhzuasDlrD3h4TFoSylnUiwqzBkET?=
+ =?us-ascii?Q?lJvJ8iIvNTejL8tPC5qfCM059TWu+9uaWXz1ZVfVGPLTfFAjRyPMXYe1VJV/?=
+ =?us-ascii?Q?97gbDSRVo33IY7dhS7BC4r6E1vvAIXI7GAxyQiOmUft3nqaa5pxJyRoZAd/K?=
+ =?us-ascii?Q?4YUUlDkgY2ZJYw/zAMsAaLAfo4xhhVmpVqGSwcYM0D3WRKFnDeNHLQzmrnbU?=
+ =?us-ascii?Q?PJkA5V1gf//JqgyeOI7QlxVsX52Wf9MBCeBQpUy+H51JHyB/fea7q6kUwi0E?=
+ =?us-ascii?Q?xtVxdXzDuBgI+vmTqOUXARpG7tKWnc5I8QwkEOJLLmWhXDmUpecUmZcp6fmN?=
+ =?us-ascii?Q?yvYQ30A4kxLkD4jSMfA3Uw3u+ItzUgHG8SWO1sFjcLB4kq/AiFxe2dklh3Wb?=
+ =?us-ascii?Q?/8mxIq9VWvmbVbKjg9rJbXVkZIvXnEWjfQZiCAtWg30SOvAyQrkYKD2zWWDX?=
+ =?us-ascii?Q?+Utuhk22XcJyw+YG9wBsn0X/i4dJ6cyulai/XyqmJFF3UeJZ/DsLHjGjLwoX?=
+ =?us-ascii?Q?ISQ0ft8SZqbd/mmtpXCkZ7ZwLdr+x84JIb8TPi7BBYLcLstP71Ml8wg0WS/Z?=
+ =?us-ascii?Q?XzM7I6l55c2nPdRDBxFneGYuX5j6vOX4Ryeqz2F2ftB8359mXAgrxMvuMzA7?=
+ =?us-ascii?Q?5iSE7jLWRGRjuL90rad0ITc3ZUTsIbEOBqC0Sl4T2nVrPLBts2ZjU68U2PCo?=
+ =?us-ascii?Q?YpZXTfhC2MKILGvEfQxuAm3H2TG49sqvg/jbnqRnQPxYpepKJNukChxwSLSX?=
+ =?us-ascii?Q?V4f1Hf0JAffCFjN46fJWcM54Z5R5Uy1FtUTsaygeRdHBbXgaYilRx5GRjSHN?=
+ =?us-ascii?Q?19GqbjKD3JrGjgwBMZN6gXEJKhP0JxOjjVFwdTQs5yd2QLggaUg0gOB9FZuI?=
+ =?us-ascii?Q?vU/9MkZCWJpGRHS7MrDHhQKghcwts6gK8VDtJIUPnxXbvWb+NtkD54rksEME?=
+ =?us-ascii?Q?gr3b/POulTe2wEKXdJ36Hq0/gVk1LPaVcl28ltJNSonHHN0f7Jyy3IX8EMpO?=
+ =?us-ascii?Q?eqHCqsrEfu/Wdg4g5HZ6FEPSH8bY2x6yVGYrm/NjERhSMliV7rPGUs1HbyOR?=
+ =?us-ascii?Q?EIGSOcnYwOIKeT1O3t/7qRPDr2PLT0R0FCj4i8iPcynQ887uR5xJMVpfoOSa?=
+ =?us-ascii?Q?0p5jhqWRw6FJALOWG+ox5pYDiQyqF9vffJA5TPYz/khWA/ByAiDLrNvItAzL?=
+ =?us-ascii?Q?z7E/lmuw41oR9axJqfOQxOsK23Gp9xMDKQVVzUkGukVCA224d4iEymT8X8tg?=
+ =?us-ascii?Q?L1cxgnN5DC0IVhKKiiy7Zo8d+BJcjdg=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4242b325-7ec5-45cb-1360-08da28fadeb3
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2365.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2022 09:38:37.0809
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pwPxz+hIPaBTKH7/C9K+4QXuNcH9sVjrMMpVq/tJFRwJ/UgVouzidfq4O8xSVpUciFaEkXAguiuJwMJRBIX9sRti+4m+Bs2rGfN0QZeLInQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR10MB3099
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.486,18.0.858
+ definitions=2022-04-28_01:2022-04-27,2022-04-28 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999 mlxscore=0
+ suspectscore=0 malwarescore=0 spamscore=0 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2204280058
+X-Proofpoint-ORIG-GUID: vlYLoFrY3dW5QI6QzWTCYQDY3obhyduW
+X-Proofpoint-GUID: vlYLoFrY3dW5QI6QzWTCYQDY3obhyduW
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 14 Apr 2022 13:32:37 -0700
-ira.weiny@intel.com wrote:
+This should be bitwise & instead of &&.
 
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> CXL Ports with memory devices attached need the information from the
-> Device Scoped Memory Affinity Structure (DSMAS).  This information is
-> contained within the CDAT table buffer which is previously read and
-> cached in the device state.
-> 
-> If CDAT data is available, parse and cache DSMAS data from the table.
-> Store this data in unmarshaled struct dsmas data structures for ease of
-> use.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Fixes: 6179045ccc0c ("cxl/mbox: Block immediate mode in SET_PARTITION_INFO command")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/cxl/core/mbox.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-You could hold off on this patch and having it in the series that uses
-the data.
-
-Patch itself looks fine - it's just a bit random to parse one particular
-record and do nothing with it beyond some debug prints :)
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> 
-> ---
-> Changes from V7
-> 	Rebased on cxl-pending
-> 
-> Changes from V6
-> 	Move to port.c
-> 	It is not an error if no DSMAS data is found
-> 
-> Changes from V5
-> 	Fix up sparse warnings
-> 	Split out cdat_hdr_valid()
-> 	Update cdat_hdr_valid()
-> 		Remove revision and cs field parsing
-> 			There is no point in these
-> 		Add seq check and debug print.
-> 	From Jonathan
-> 		Add spaces around '+' and '/'
-> 		use devm_krealloc() for dmas_ary
-> ---
->  drivers/cxl/cdat.h | 17 ++++++++++++
->  drivers/cxl/cxl.h  |  6 +++++
->  drivers/cxl/port.c | 65 ++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 88 insertions(+)
-> 
-> diff --git a/drivers/cxl/cdat.h b/drivers/cxl/cdat.h
-> index a7725d26f2d2..66706b238bc9 100644
-> --- a/drivers/cxl/cdat.h
-> +++ b/drivers/cxl/cdat.h
-> @@ -83,6 +83,23 @@
->  #define CDAT_SSLBIS_ENTRY_PORT_Y(entry, i) (((entry)[4 + (i) * 2] & 0xffff0000) >> 16)
->  #define CDAT_SSLBIS_ENTRY_LAT_OR_BW(entry, i) ((entry)[4 + (i) * 2 + 1] & 0x0000ffff)
->  
-> +/**
-> + * struct cxl_dsmas - host unmarshaled version of DSMAS data
-> + *
-> + * As defined in the Coherent Device Attribute Table (CDAT) specification this
-> + * represents a single DSMAS entry in that table.
-> + *
-> + * @dpa_base: The lowest Device Physical Address associated with this DSMAD
-> + * @length: Length in bytes of this DSMAD
-> + * @non_volatile: If set, the memory region represents Non-Volatile memory
-> + */
-> +struct cxl_dsmas {
-> +	u64 dpa_base;
-> +	u64 length;
-> +	/* Flags */
-> +	u8 non_volatile:1;
-> +};
-> +
->  /**
->   * struct cxl_cdat - CXL CDAT data
->   *
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 50817fd2c912..80fd39769a65 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -9,6 +9,8 @@
->  #include <linux/bitops.h>
->  #include <linux/io.h>
->  
-> +#include "cdat.h"
-> +
->  /**
->   * DOC: cxl objects
->   *
-> @@ -269,6 +271,8 @@ struct cxl_nvdimm {
->   * @component_reg_phys: component register capability base address (optional)
->   * @dead: last ep has been removed, force port re-creation
->   * @depth: How deep this port is relative to the root. depth 0 is the root.
-> + * @dsmas_ary: Array of DSMAS entries as parsed from the CDAT table
-> + * @nr_dsmas: Number of entries in dsmas_ary
->   */
->  struct cxl_port {
->  	struct device dev;
-> @@ -280,6 +284,8 @@ struct cxl_port {
->  	resource_size_t component_reg_phys;
->  	bool dead;
->  	unsigned int depth;
-> +	struct cxl_dsmas *dsmas_ary;
-> +	int nr_dsmas;
->  };
->  
->  /**
-> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> index d420da5fc39c..2288432a27cd 100644
-> --- a/drivers/cxl/port.c
-> +++ b/drivers/cxl/port.c
-> @@ -30,6 +30,70 @@ static void schedule_detach(void *cxlmd)
->  	schedule_cxl_memdev_detach(cxlmd);
->  }
->  
-> +static void parse_dsmas(struct cxl_port *port, struct cxl_dev_state *cxlds)
-> +{
-> +	struct device *dev = &port->dev;
-> +	struct cxl_dsmas *dsmas_ary = NULL;
-> +	u32 *data = cxlds->cdat.table;
-> +	int bytes_left = cxlds->cdat.length;
-> +	int nr_dsmas = 0;
-> +
-> +	if (!data) {
-> +		dev_info(dev, "No CDAT data available for DSMAS\n");
-> +		return;
-> +	}
-> +
-> +	/* Skip header */
-> +	data += CDAT_HEADER_LENGTH_DW;
-> +	bytes_left -= CDAT_HEADER_LENGTH_BYTES;
-> +
-> +	while (bytes_left > 0) {
-> +		u32 *cur_rec = data;
-> +		u8 type = FIELD_GET(CDAT_STRUCTURE_DW0_TYPE, cur_rec[0]);
-> +		u16 length = FIELD_GET(CDAT_STRUCTURE_DW0_LENGTH, cur_rec[0]);
-> +
-> +		if (type == CDAT_STRUCTURE_DW0_TYPE_DSMAS) {
-> +			struct cxl_dsmas *new_ary;
-> +			u8 flags;
-> +
-> +			new_ary = devm_krealloc(dev, dsmas_ary,
-> +					   sizeof(*dsmas_ary) * (nr_dsmas + 1),
-> +					   GFP_KERNEL);
-> +			if (!new_ary) {
-> +				dev_err(dev,
-> +					"Failed to allocate memory for DSMAS data (nr_dsmas %d)\n",
-> +					nr_dsmas);
-> +				return;
-> +			}
-> +			dsmas_ary = new_ary;
-> +
-> +			flags = FIELD_GET(CDAT_DSMAS_DW1_FLAGS, cur_rec[1]);
-> +
-> +			dsmas_ary[nr_dsmas].dpa_base = CDAT_DSMAS_DPA_OFFSET(cur_rec);
-> +			dsmas_ary[nr_dsmas].length = CDAT_DSMAS_DPA_LEN(cur_rec);
-> +			dsmas_ary[nr_dsmas].non_volatile = CDAT_DSMAS_NON_VOLATILE(flags);
-> +
-> +			dev_dbg(dev, "DSMAS %d: %llx:%llx %s\n",
-> +				nr_dsmas,
-> +				dsmas_ary[nr_dsmas].dpa_base,
-> +				dsmas_ary[nr_dsmas].dpa_base +
-> +					dsmas_ary[nr_dsmas].length,
-> +				(dsmas_ary[nr_dsmas].non_volatile ?
-> +					"Persistent" : "Volatile")
-> +				);
-> +
-> +			nr_dsmas++;
-> +		}
-> +
-> +		data += (length / sizeof(u32));
-> +		bytes_left -= length;
-> +	}
-> +
-> +	dev_dbg(dev, "Found %d DSMAS entries\n", nr_dsmas);
-> +	port->dsmas_ary = dsmas_ary;
-> +	port->nr_dsmas = nr_dsmas;
-> +}
-> +
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 731cb43b570e..54f434733b56 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -243,7 +243,7 @@ static bool cxl_payload_from_user_allowed(u16 opcode, void *payload_in)
+ 	case CXL_MBOX_OP_SET_PARTITION_INFO: {
+ 		struct cxl_mbox_set_partition_info *pi = payload_in;
+ 
+-		if (pi->flags && CXL_SET_PARTITION_IMMEDIATE_FLAG)
++		if (pi->flags & CXL_SET_PARTITION_IMMEDIATE_FLAG)
+ 			return false;
+ 		break;
+ 	}
+-- 
+2.35.1
 
