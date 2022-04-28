@@ -2,46 +2,46 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C00EFC433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 28 Apr 2022 22:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC837C433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 28 Apr 2022 22:10:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351921AbiD1WNa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 28 Apr 2022 18:13:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40616 "EHLO
+        id S230031AbiD1WNe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 28 Apr 2022 18:13:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230031AbiD1WN3 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 28 Apr 2022 18:13:29 -0400
+        with ESMTP id S1352787AbiD1WNe (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 28 Apr 2022 18:13:34 -0400
 Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78FD8101C8
-        for <linux-cxl@vger.kernel.org>; Thu, 28 Apr 2022 15:10:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41B2825EB3
+        for <linux-cxl@vger.kernel.org>; Thu, 28 Apr 2022 15:10:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651183812; x=1682719812;
+  t=1651183817; x=1682719817;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=RFAyZN2/4uvSqxhe+/wCCpJLam8t6Vv9GJQX9Qczqpo=;
-  b=jWqcWTSZcKg2LmqWMIby6LqXNVsUC+VMVyNOi5klGhrxzoAOMMq8Ekp3
-   5Y035rRTdPBwyocVcaDSu1HQ5dRTozQXFANFEnCx6MycQDZHw655cJuNk
-   lnRRfF8GhZ1a1/jUaD8vGcCxu+h8Xgw6Sb4R52ZqbzVytGY7nqcZYf57z
-   rXxQhtQ13dEju+wS1faW76tazIG34STvx5oq+T+ZIvT5YoFbEtrjheBl7
-   y2j/d7hRavUJ5ZZK56K2ByyekcJcuyStUQDyvJnkt94SO05+VYAhSAJIb
-   0C6QFA+/4zBgtqZqF3X5TrGUrk+7A74Z1otaaN41nLHYhFAkiYXjuMRVj
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10331"; a="326933484"
+  bh=nfv2zG5A8V35hocGwBFBf7FQQxSyBEnkJuli4Ie8N4s=;
+  b=AwjWn+JUs2fHCziwcFzos9M8wjlxXHH0BvsQHY5kBCki55tZ1G0F9woH
+   dyzZ/SSzp/uQUn26HPJan3GyyfhjMFQH3kZllGj7f6um9Qw1J+mjmeKmZ
+   YVe7HoDfgagKiv3gANnH1kL4v1E0Pw1JcVIdjRW3UWvDnA1Jhz25xC5bH
+   jZxRLln2nVrKNY1N0rpL5+sBM9ZNdmPO6b/66MmNAUls743Q3J0KgMek0
+   3hbkZ+ggfLMTlK7GSbi5YFawxqdxg7x1mqOPMMdxiBdOnbrxaa5G35qca
+   sfmnqePwaIi7mHzEHFRLZDC/2sIGp5eBsYAwJrmiHQXDtYQJZz7TY8vU9
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10331"; a="326933496"
 X-IronPort-AV: E=Sophos;i="5.91,296,1647327600"; 
-   d="scan'208";a="326933484"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 15:10:11 -0700
+   d="scan'208";a="326933496"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 15:10:17 -0700
 X-IronPort-AV: E=Sophos;i="5.91,296,1647327600"; 
-   d="scan'208";a="618356191"
+   d="scan'208";a="565821458"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 15:10:11 -0700
-Subject: [ndctl PATCH 02/10] util: Use SZ_ size macros in display size
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 15:10:16 -0700
+Subject: [ndctl PATCH 03/10] util: Pretty print terabytes
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     vishal.l.verma@intel.com
 Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-Date:   Thu, 28 Apr 2022 15:10:11 -0700
-Message-ID: <165118381109.1676208.8857362319985041575.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Thu, 28 Apr 2022 15:10:16 -0700
+Message-ID: <165118381648.1676208.1686584406206186723.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <165118380037.1676208.7644295506592461996.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <165118380037.1676208.7644295506592461996.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -52,54 +52,55 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-In preparation for adding "Terabyte" support, cleanup the "1024"
-multiplication with the SZ_* macros.
+CXL capacities are such that gigabytes are too small of a unit for
+displaying capacities. Add terabyte support to the display_size()
+helper.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- util/json.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ util/json.c |   15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
 diff --git a/util/json.c b/util/json.c
-index f8cc81f6e706..ebdf8d9eedd9 100644
+index ebdf8d9eedd9..1d5c6bc7822e 100644
 --- a/util/json.c
 +++ b/util/json.c
-@@ -5,6 +5,7 @@
- #include <stdio.h>
- #include <util/util.h>
- #include <util/json.h>
-+#include <util/size.h>
- #include <json-c/json.h>
- #include <json-c/printbuf.h>
- 
-@@ -27,24 +28,24 @@ static int display_size(struct json_object *jobj, struct printbuf *pbuf,
- 	 * If prefix == JEDEC, we mean prefixes like kilo,mega,giga etc.
- 	 */
- 
--	if (bytes < 5000*1024)
-+	if (bytes < 5000*SZ_1K)
- 		snprintf(buf, sizeof(buf), "%lld", bytes);
- 	else {
- 		/* IEC */
--		if (bytes < 2*1024LL*1024LL*1024LL) {
--			long cMiB = (bytes * 200LL / (1LL<<20) +1) /2;
-+		if (bytes < 2L*SZ_1G) {
-+			long cMiB = (bytes * 200LL / SZ_1M+1) /2;
+@@ -37,11 +37,16 @@ static int display_size(struct json_object *jobj, struct printbuf *pbuf,
  
  			c = snprintf(buf, sizeof(buf), "\"%ld.%02ld MiB",
  					cMiB/100 , cMiB % 100);
- 		} else {
--			long cGiB = (bytes * 200LL / (1LL<<30) +1) /2;
-+			long cGiB = (bytes * 200LL / SZ_1G+1) /2;
+-		} else {
++		} else if (bytes < 2*SZ_1T) {
+ 			long cGiB = (bytes * 200LL / SZ_1G+1) /2;
  
  			c = snprintf(buf, sizeof(buf), "\"%ld.%02ld GiB",
  					cGiB/100 , cGiB % 100);
++		} else {
++			long cTiB = (bytes * 200LL / SZ_1T+1) /2;
++
++			c = snprintf(buf, sizeof(buf), "\"%ld.%02ld TiB",
++					cTiB/100 , cTiB % 100);
  		}
  
  		/* JEDEC */
--		if (bytes < 2*1024LL*1024LL*1024LL) {
-+		if (bytes < 2L*SZ_1G) {
- 			long cMB  = (bytes / (1000000LL / 200LL) + 1) / 2;
+@@ -50,12 +55,18 @@ static int display_size(struct json_object *jobj, struct printbuf *pbuf,
  
  			snprintf(buf + c, sizeof(buf) - c, " (%ld.%02ld MB)\"",
+ 					cMB/100, cMB % 100);
+-		} else {
++		} else if (bytes < 2*SZ_1T) {
+ 			long cGB  = (bytes / (1000000000LL/200LL) + 1) / 2;
+ 
+ 			snprintf(buf + c, sizeof(buf) - c, " (%ld.%02ld GB)\"",
+ 					cGB/100 , cGB % 100);
++		} else {
++			long cTB  = (bytes / (1000000000000LL/200LL) + 1) / 2;
++
++			snprintf(buf + c, sizeof(buf) - c, " (%ld.%02ld TB)\"",
++					cTB/100 , cTB % 100);
+ 		}
++
+ 	}
+ 
+ 	return printbuf_memappend(pbuf, buf, strlen(buf));
 
