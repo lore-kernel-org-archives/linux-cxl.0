@@ -2,47 +2,46 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3160BC433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 28 Apr 2022 22:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D554C433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 28 Apr 2022 22:10:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352791AbiD1WNt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 28 Apr 2022 18:13:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41862 "EHLO
+        id S1352790AbiD1WOB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 28 Apr 2022 18:14:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352788AbiD1WNs (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 28 Apr 2022 18:13:48 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D800D580EC
-        for <linux-cxl@vger.kernel.org>; Thu, 28 Apr 2022 15:10:32 -0700 (PDT)
+        with ESMTP id S1352800AbiD1WNy (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 28 Apr 2022 18:13:54 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43E305A59B
+        for <linux-cxl@vger.kernel.org>; Thu, 28 Apr 2022 15:10:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651183832; x=1682719832;
+  t=1651183838; x=1682719838;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Hrj0oSqW1mU02KYyQv9rVPsdjuM/cGHNMk60O/cQWA4=;
-  b=bigoFQL6LsjrK0mIgwoHeiPqlUqBL7YJQWRYgHpZVWZGun09K7hCF+OU
-   2p8YjHeaPI+iyMZAEkkVSl74jhFG08b0uEplJyLVYUE0mHcL0BxgW9gR0
-   r2Y4B5YFAom2j4zLfhQLYxGmdDHHKlvgvmwIt3ruyJwYSYhhhBhbIpaHx
-   asBPbjf60IdxxDS2AT1osVtmmgCoXByj+jaOU0kSksG/zqvtHDQvmTiAK
-   jJQnIKMGdrVz8dcmzS7b28i67ULE7d4X4auAaYSR6cohZfU3G/r1ugTF1
-   9R7fGKaFJXi+61H7QQluJ/Z7TQh5wVsKr6Pnf7jvayfzVa7gEerp5qny0
+  bh=szNK7NyLKQ9MBHYyKQS30kvZW9aBafZ+FwCwnr+bNSM=;
+  b=fXSPAJuogO+FRQ2k1q9ZerizsTDheMFPbYhT0SfY953TeB4Styii4T8r
+   HY/MtqpJBg3OR6/f9yu/USppsiK2qkkqG8Z3rgkIVJL6B+y9jSjmX4pH+
+   WY/W1GIsIpf53EjRV/QkELYWog3gUQdhBrt7Ykm0nKbX7QnfxSEyuQJuE
+   t14yxcsTPbEpfkx04XrmTJnRcjLjzY0B5G+a/AfTSbogdUqbfp+Bg8bRT
+   TrVjjgiiPd+6qh8mYz1v27H76gFuTq/iUz2KeNOvsobnCafffYey7oDhz
+   0BuTMW2Db19YkhqZxYExyYIc2gLIgXEVYlJLTrk/0/qmLsfZXRTG2O3iR
    Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10331"; a="248371617"
+X-IronPort-AV: E=McAfee;i="6400,9594,10331"; a="264028302"
 X-IronPort-AV: E=Sophos;i="5.91,296,1647327600"; 
-   d="scan'208";a="248371617"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 15:10:32 -0700
+   d="scan'208";a="264028302"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 15:10:37 -0700
 X-IronPort-AV: E=Sophos;i="5.91,296,1647327600"; 
-   d="scan'208";a="731735541"
+   d="scan'208";a="808817336"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 15:10:32 -0700
-Subject: [ndctl PATCH 06/10] cxl/list: Auto-enable 'single' mode for port
- listings
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 15:10:37 -0700
+Subject: [ndctl PATCH 07/10] cxl/memdev: Fix bus_invalidate() crash
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     vishal.l.verma@intel.com
 Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-Date:   Thu, 28 Apr 2022 15:10:32 -0700
-Message-ID: <165118383246.1676208.2097194779584921177.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Thu, 28 Apr 2022 15:10:37 -0700
+Message-ID: <165118383756.1676208.5717187278816036969.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <165118380037.1676208.7644295506592461996.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <165118380037.1676208.7644295506592461996.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -53,31 +52,44 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The --single parameter instructs the filter code to gate listing of
-ancestor ports. However, that behavior can be inferred by attempts to list
-a port without the --ports option, i.e. make:
+bus_invalidate() attempts to limit the invalidation of memdevs to a single
+bus scope. However, the ordering of bus_invalidate() leads to a use after
+free. Unconditionally invalidate memdevs (disconnect memdevs from their
+endpoints) and resotre on next lookup. Otherwise the following command
+results in the following backtrace with cxl_test:
 
-    cxl list -p $port
+    cxl disable-memdev 5,1 --force
 
-...equivalent to:
-
-    cxl list -P -S -p $port
+#2  0x00007ffff7fb97d4 in snprintf (__fmt=0x7ffff7fbc3ed "%s/driver", __n=98,
+    __s=0x574d545619f7bae2 <error: Cannot access memory at address 0x574d545619f7bae2>)
+    at /usr/include/bits/stdio2.h:71
+#3  cxl_port_is_enabled (port=port@entry=0x422eb0) at ../cxl/lib/libcxl.c:1379
+#4  0x00007ffff7fb99a9 in cxl_port_get_bus (port=0x422eb0) at ../cxl/lib/libcxl.c:1339
+#5  0x00007ffff7fba3d0 in bus_invalidate (bus=bus@entry=0x421740) at ../cxl/lib/libcxl.c:549
+#6  0x00007ffff7fba4e7 in cxl_memdev_disable_invalidate (memdev=0x416fd0) at ../cxl/lib/libcxl.c:596
+#7  0x000000000040624e in memdev_action (argc=<optimized out>, argv=<optimized out>, ctx=0x4152a0,
+    action=action@entry=0x406b70 <action_disable>, options=options@entry=0x40fca0 <disable_options>,
+    usage=usage@entry=0x40f4b0 "cxl disable-memdev <mem0> [<mem1>..<memN>] [<options>]")
+    at ../cxl/memdev.c:506
+#8  0x0000000000406d57 in cmd_disable_memdev (argc=<optimized out>, argv=<optimized out>,
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- cxl/list.c |    1 +
- 1 file changed, 1 insertion(+)
+ cxl/lib/libcxl.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/cxl/list.c b/cxl/list.c
-index 1e9d441190a0..940782d33a10 100644
---- a/cxl/list.c
-+++ b/cxl/list.c
-@@ -104,6 +104,7 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
- 			error("please specify entities to list, e.g. using -m/-M\n");
- 			usage_with_options(u, options);
- 		}
-+		param.single = true;
- 	}
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index 0e8dd20e3c47..374b0f13905a 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -546,8 +546,7 @@ static void bus_invalidate(struct cxl_bus *bus)
+ 	 * indeterminate, delete them all and start over.
+ 	 */
+ 	cxl_memdev_foreach(ctx, memdev)
+-		if (cxl_memdev_get_bus(memdev) == bus)
+-			memdev->endpoint = NULL;
++		memdev->endpoint = NULL;
  
- 	log_init(&param.ctx, "cxl list", "CXL_LIST_LOG");
+ 	bus_port = cxl_bus_get_port(bus);
+ 	list_for_each_safe(&bus_port->child_ports, port, _p, list)
 
