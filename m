@@ -2,29 +2,29 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D214BC433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 29 Apr 2022 14:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64041C433F5
+	for <linux-cxl@archiver.kernel.org>; Fri, 29 Apr 2022 14:58:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359135AbiD2PBA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 29 Apr 2022 11:01:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53340 "EHLO
+        id S1377444AbiD2PBb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 29 Apr 2022 11:01:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358019AbiD2PA7 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Apr 2022 11:00:59 -0400
+        with ESMTP id S1377404AbiD2PBa (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Apr 2022 11:01:30 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1D95B1884
-        for <linux-cxl@vger.kernel.org>; Fri, 29 Apr 2022 07:57:40 -0700 (PDT)
-Received: from fraeml709-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KqbBH1rSHz67sHf;
-        Fri, 29 Apr 2022 22:55:03 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD410B1884
+        for <linux-cxl@vger.kernel.org>; Fri, 29 Apr 2022 07:58:11 -0700 (PDT)
+Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KqbBt2JQ0z67NNV;
+        Fri, 29 Apr 2022 22:55:34 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
+ fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 29 Apr 2022 16:57:38 +0200
+ 15.1.2375.24; Fri, 29 Apr 2022 16:58:09 +0200
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 29 Apr 2022 15:57:37 +0100
+ 15.1.2375.24; Fri, 29 Apr 2022 15:58:08 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <linuxarm@huawei.com>, <qemu-devel@nongnu.org>,
         <alex.bennee@linaro.org>, Marcel Apfelbaum <marcel@redhat.com>,
@@ -48,9 +48,9 @@ CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         <k.jensen@samsung.com>, <dave@stgolabs.net>,
         Alison Schofield <alison.schofield@intel.com>
-Subject: [PATCH v10 32/45] mem/cxl_type3: Add read and write functions for associated hostmem.
-Date:   Fri, 29 Apr 2022 15:40:57 +0100
-Message-ID: <20220429144110.25167-33-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v10 33/45] cxl/cxl-host: Add memops for CFMWS region.
+Date:   Fri, 29 Apr 2022 15:40:58 +0100
+Message-ID: <20220429144110.25167-34-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220429144110.25167-1-Jonathan.Cameron@huawei.com>
 References: <20220429144110.25167-1-Jonathan.Cameron@huawei.com>
@@ -67,162 +67,187 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-Once a read or write reaches a CXL type 3 device, the HDM decoders
-on the device are used to establish the Device Physical Address
-which should be accessed.  These functions peform the required maths
-and then use a device specific address space to access the
-hostmem->mr to fullfil the actual operation.  Note that failed writes
-are silent, but failed reads return poison.  Note this is based
-loosely on:
+These memops perform interleave decoding, walking down the
+CXL topology from CFMWS described host interleave
+decoder via CXL host bridge HDM decoders, through the CXL
+root ports and finally call CXL type 3 specific read and write
+functions.
 
-https://lore.kernel.org/qemu-devel/20200817161853.593247-6-f4bug@amsat.org/
-[RFC PATCH 0/9] hw/misc: Add support for interleaved memory accesses
+Note that, whilst functional the current implementation does
+not support:
+* switches
+* multiple HDM decoders at a given level.
+* unaligned accesses across the interleave boundaries
 
-Only lightly tested so far.  More complex test cases yet to be written.
-
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 ---
- hw/mem/cxl_type3.c          | 91 +++++++++++++++++++++++++++++++++++++
- include/hw/cxl/cxl_device.h |  6 +++
- 2 files changed, 97 insertions(+)
+ hw/cxl/cxl-host-stubs.c |   2 +
+ hw/cxl/cxl-host.c       | 128 ++++++++++++++++++++++++++++++++++++++++
+ include/hw/cxl/cxl.h    |   2 +
+ 3 files changed, 132 insertions(+)
 
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 6c6ed9a776..3bf2869573 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -97,7 +97,9 @@ static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
+diff --git a/hw/cxl/cxl-host-stubs.c b/hw/cxl/cxl-host-stubs.c
+index f8fd278d5d..24465a52ab 100644
+--- a/hw/cxl/cxl-host-stubs.c
++++ b/hw/cxl/cxl-host-stubs.c
+@@ -12,3 +12,5 @@ void cxl_fixed_memory_window_config(MachineState *ms,
+                                     Error **errp) {};
  
- static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
- {
-+    DeviceState *ds = DEVICE(ct3d);
-     MemoryRegion *mr;
-+    char *name;
- 
-     if (!ct3d->hostmem) {
-         error_setg(errp, "memdev property must be set");
-@@ -112,6 +114,15 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
-     memory_region_set_nonvolatile(mr, true);
-     memory_region_set_enabled(mr, true);
-     host_memory_backend_set_mapped(ct3d->hostmem, true);
+ void cxl_fixed_memory_window_link_targets(Error **errp) {};
 +
-+    if (ds->id) {
-+        name = g_strdup_printf("cxl-type3-dpa-space:%s", ds->id);
-+    } else {
-+        name = g_strdup("cxl-type3-dpa-space");
-+    }
-+    address_space_init(&ct3d->hostmem_as, mr, name);
-+    g_free(name);
-+
-     ct3d->cxl_dstate.pmem_size = ct3d->hostmem->size;
++const MemoryRegionOps cfmws_ops;
+diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
+index ec5a75cbf5..469b3c4ced 100644
+--- a/hw/cxl/cxl-host.c
++++ b/hw/cxl/cxl-host.c
+@@ -15,6 +15,10 @@
  
-     if (!ct3d->lsa) {
-@@ -167,6 +178,86 @@ static void ct3_exit(PCIDevice *pci_dev)
-     ComponentRegisters *regs = &cxl_cstate->crb;
+ #include "qapi/qapi-visit-machine.h"
+ #include "hw/cxl/cxl.h"
++#include "hw/pci/pci_bus.h"
++#include "hw/pci/pci_bridge.h"
++#include "hw/pci/pci_host.h"
++#include "hw/pci/pcie_port.h"
  
-     g_free(regs->special_ops);
-+    address_space_destroy(&ct3d->hostmem_as);
-+}
+ void cxl_fixed_memory_window_config(MachineState *ms,
+                                     CXLFixedMemoryWindowOptions *object,
+@@ -92,3 +96,127 @@ void cxl_fixed_memory_window_link_targets(Error **errp)
+         }
+     }
+ }
 +
-+/* TODO: Support multiple HDM decoders and DPA skip */
-+static bool cxl_type3_dpa(CXLType3Dev *ct3d, hwaddr host_addr, uint64_t *dpa)
++/* TODO: support, multiple hdm decoders */
++static bool cxl_hdm_find_target(uint32_t *cache_mem, hwaddr addr,
++                                uint8_t *target)
 +{
-+    uint32_t *cache_mem = ct3d->cxl_cstate.crb.cache_mem_registers;
-+    uint64_t decoder_base, decoder_size, hpa_offset;
-+    uint32_t hdm0_ctrl;
-+    int ig, iw;
++    uint32_t ctrl;
++    uint32_t ig_enc;
++    uint32_t iw_enc;
++    uint32_t target_reg;
++    uint32_t target_idx;
 +
-+    decoder_base = (((uint64_t)cache_mem[R_CXL_HDM_DECODER0_BASE_HI] << 32) |
-+                    cache_mem[R_CXL_HDM_DECODER0_BASE_LO]);
-+    if ((uint64_t)host_addr < decoder_base) {
++    ctrl = cache_mem[R_CXL_HDM_DECODER0_CTRL];
++    if (!FIELD_EX32(ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED)) {
 +        return false;
 +    }
 +
-+    hpa_offset = (uint64_t)host_addr - decoder_base;
++    ig_enc = FIELD_EX32(ctrl, CXL_HDM_DECODER0_CTRL, IG);
++    iw_enc = FIELD_EX32(ctrl, CXL_HDM_DECODER0_CTRL, IW);
++    target_idx = (addr / cxl_decode_ig(ig_enc)) % (1 << iw_enc);
 +
-+    decoder_size = ((uint64_t)cache_mem[R_CXL_HDM_DECODER0_SIZE_HI] << 32) |
-+        cache_mem[R_CXL_HDM_DECODER0_SIZE_LO];
-+    if (hpa_offset >= decoder_size) {
-+        return false;
++    if (target_idx > 4) {
++        target_reg = cache_mem[R_CXL_HDM_DECODER0_TARGET_LIST_LO];
++        target_reg >>= target_idx * 8;
++    } else {
++        target_reg = cache_mem[R_CXL_HDM_DECODER0_TARGET_LIST_LO];
++        target_reg >>= (target_idx - 4) * 8;
 +    }
-+
-+    hdm0_ctrl = cache_mem[R_CXL_HDM_DECODER0_CTRL];
-+    iw = FIELD_EX32(hdm0_ctrl, CXL_HDM_DECODER0_CTRL, IW);
-+    ig = FIELD_EX32(hdm0_ctrl, CXL_HDM_DECODER0_CTRL, IG);
-+
-+    *dpa = (MAKE_64BIT_MASK(0, 8 + ig) & hpa_offset) |
-+        ((MAKE_64BIT_MASK(8 + ig + iw, 64 - 8 - ig - iw) & hpa_offset) >> iw);
++    *target = target_reg & 0xff;
 +
 +    return true;
 +}
 +
-+MemTxResult cxl_type3_read(PCIDevice *d, hwaddr host_addr, uint64_t *data,
-+                           unsigned size, MemTxAttrs attrs)
++static PCIDevice *cxl_cfmws_find_device(CXLFixedWindow *fw, hwaddr addr)
 +{
-+    CXLType3Dev *ct3d = CXL_TYPE3(d);
-+    uint64_t dpa_offset;
-+    MemoryRegion *mr;
++    CXLComponentState *hb_cstate;
++    PCIHostState *hb;
++    int rb_index;
++    uint32_t *cache_mem;
++    uint8_t target;
++    bool target_found;
++    PCIDevice *rp, *d;
 +
-+    /* TODO support volatile region */
-+    mr = host_memory_backend_get_memory(ct3d->hostmem);
-+    if (!mr) {
-+        return MEMTX_ERROR;
++    /* Address is relative to memory region. Convert to HPA */
++    addr += fw->base;
++
++    rb_index = (addr / cxl_decode_ig(fw->enc_int_gran)) % fw->num_targets;
++    hb = PCI_HOST_BRIDGE(fw->target_hbs[rb_index]->cxl.cxl_host_bridge);
++    if (!hb || !hb->bus || !pci_bus_is_cxl(hb->bus)) {
++        return NULL;
 +    }
 +
-+    if (!cxl_type3_dpa(ct3d, host_addr, &dpa_offset)) {
-+        return MEMTX_ERROR;
++    hb_cstate = cxl_get_hb_cstate(hb);
++    if (!hb_cstate) {
++        return NULL;
 +    }
 +
-+    if (dpa_offset > int128_get64(mr->size)) {
-+        return MEMTX_ERROR;
++    cache_mem = hb_cstate->crb.cache_mem_registers;
++
++    target_found = cxl_hdm_find_target(cache_mem, addr, &target);
++    if (!target_found) {
++        return NULL;
 +    }
 +
-+    return address_space_read(&ct3d->hostmem_as, dpa_offset, attrs, data, size);
++    rp = pcie_find_port_by_pn(hb->bus, target);
++    if (!rp) {
++        return NULL;
++    }
++
++    d = pci_bridge_get_sec_bus(PCI_BRIDGE(rp))->devices[0];
++
++    if (!d || !object_dynamic_cast(OBJECT(d), TYPE_CXL_TYPE3)) {
++        return NULL;
++    }
++
++    return d;
 +}
 +
-+MemTxResult cxl_type3_write(PCIDevice *d, hwaddr host_addr, uint64_t data,
-+                            unsigned size, MemTxAttrs attrs)
++static MemTxResult cxl_read_cfmws(void *opaque, hwaddr addr, uint64_t *data,
++                                  unsigned size, MemTxAttrs attrs)
 +{
-+    CXLType3Dev *ct3d = CXL_TYPE3(d);
-+    uint64_t dpa_offset;
-+    MemoryRegion *mr;
++    CXLFixedWindow *fw = opaque;
++    PCIDevice *d;
 +
-+    mr = host_memory_backend_get_memory(ct3d->hostmem);
-+    if (!mr) {
++    d = cxl_cfmws_find_device(fw, addr);
++    if (d == NULL) {
++        *data = 0;
++        /* Reads to invalid address return poison */
++        return MEMTX_ERROR;
++    }
++
++    return cxl_type3_read(d, addr + fw->base, data, size, attrs);
++}
++
++static MemTxResult cxl_write_cfmws(void *opaque, hwaddr addr,
++                                   uint64_t data, unsigned size,
++                                   MemTxAttrs attrs)
++{
++    CXLFixedWindow *fw = opaque;
++    PCIDevice *d;
++
++    d = cxl_cfmws_find_device(fw, addr);
++    if (d == NULL) {
++        /* Writes to invalid address are silent */
 +        return MEMTX_OK;
 +    }
 +
-+    if (!cxl_type3_dpa(ct3d, host_addr, &dpa_offset)) {
-+        return MEMTX_OK;
-+    }
++    return cxl_type3_write(d, addr + fw->base, data, size, attrs);
++}
 +
-+    if (dpa_offset > int128_get64(mr->size)) {
-+        return MEMTX_OK;
-+    }
-+    return address_space_write(&ct3d->hostmem_as, dpa_offset, attrs,
-+                               &data, size);
- }
++const MemoryRegionOps cfmws_ops = {
++    .read_with_attrs = cxl_read_cfmws,
++    .write_with_attrs = cxl_write_cfmws,
++    .endianness = DEVICE_LITTLE_ENDIAN,
++    .valid = {
++        .min_access_size = 1,
++        .max_access_size = 8,
++        .unaligned = true,
++    },
++    .impl = {
++        .min_access_size = 1,
++        .max_access_size = 8,
++        .unaligned = true,
++    },
++};
+diff --git a/include/hw/cxl/cxl.h b/include/hw/cxl/cxl.h
+index dce38124db..21d28ca110 100644
+--- a/include/hw/cxl/cxl.h
++++ b/include/hw/cxl/cxl.h
+@@ -56,4 +56,6 @@ void cxl_fixed_memory_window_config(MachineState *ms,
+                                     Error **errp);
+ void cxl_fixed_memory_window_link_targets(Error **errp);
  
- static void ct3d_reset(DeviceState *dev)
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index 4285fbda08..1e141b6621 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -239,6 +239,7 @@ struct CXLType3Dev {
-     HostMemoryBackend *lsa;
- 
-     /* State */
-+    AddressSpace hostmem_as;
-     CXLComponentState cxl_cstate;
-     CXLDeviceState cxl_dstate;
- };
-@@ -259,4 +260,9 @@ struct CXLType3Class {
-                     uint64_t offset);
- };
- 
-+MemTxResult cxl_type3_read(PCIDevice *d, hwaddr host_addr, uint64_t *data,
-+                           unsigned size, MemTxAttrs attrs);
-+MemTxResult cxl_type3_write(PCIDevice *d, hwaddr host_addr, uint64_t data,
-+                            unsigned size, MemTxAttrs attrs);
++extern const MemoryRegionOps cfmws_ops;
 +
  #endif
 -- 
