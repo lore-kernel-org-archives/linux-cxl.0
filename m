@@ -2,61 +2,50 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55ADCC433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 29 Apr 2022 15:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA3EC433EF
+	for <linux-cxl@archiver.kernel.org>; Fri, 29 Apr 2022 15:33:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359729AbiD2PHm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 29 Apr 2022 11:07:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46706 "EHLO
+        id S1378513AbiD2Pgf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 29 Apr 2022 11:36:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358332AbiD2PHl (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Apr 2022 11:07:41 -0400
+        with ESMTP id S1378487AbiD2Pgf (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Apr 2022 11:36:35 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6CCCCD67C
-        for <linux-cxl@vger.kernel.org>; Fri, 29 Apr 2022 08:04:22 -0700 (PDT)
-Received: from fraeml734-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KqbL13BGrz67H19;
-        Fri, 29 Apr 2022 23:01:45 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0F1D89330;
+        Fri, 29 Apr 2022 08:33:15 -0700 (PDT)
+Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Kqbz04KbGz67fK4;
+        Fri, 29 Apr 2022 23:30:20 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml734-chm.china.huawei.com (10.206.15.215) with Microsoft SMTP Server
+ fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 29 Apr 2022 17:04:20 +0200
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 29 Apr 2022 16:04:19 +0100
+ 15.1.2375.24; Fri, 29 Apr 2022 17:33:12 +0200
+Received: from localhost (10.122.247.231) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 29 Apr
+ 2022 16:33:12 +0100
+Date:   Fri, 29 Apr 2022 16:33:11 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <linuxarm@huawei.com>, <qemu-devel@nongnu.org>,
-        <alex.bennee@linaro.org>, Marcel Apfelbaum <marcel@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Markus Armbruster <armbru@redhat.com>,
-        Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        Tong Zhang <ztong0001@gmail.com>
-CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
-        "Peter Maydell" <peter.maydell@linaro.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>, <f4bug@amsat.org>,
-        Peter Xu <peterx@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Saransh Gupta1 <saransh@ibm.com>,
-        Shreyas Shah <shreyas.shah@elastics.cloud>,
-        Chris Browy <cbrowy@avery-design.com>,
-        "Samarth Saxena" <samarths@cadence.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <k.jensen@samsung.com>, <dave@stgolabs.net>,
-        Alison Schofield <alison.schofield@intel.com>
-Subject: [PATCH v10 45/45] docs/cxl: Add switch documentation
-Date:   Fri, 29 Apr 2022 15:41:10 +0100
-Message-ID: <20220429144110.25167-46-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220429144110.25167-1-Jonathan.Cameron@huawei.com>
-References: <20220429144110.25167-1-Jonathan.Cameron@huawei.com>
+To:     <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH V7 04/10] cxl/pci: Create auxiliary devices for each DOE
+ mailbox
+Message-ID: <20220429163311.000060c1@huawei.com>
+In-Reply-To: <20220330235920.2800929-5-ira.weiny@intel.com>
+References: <20220330235920.2800929-1-ira.weiny@intel.com>
+        <20220330235920.2800929-5-ira.weiny@intel.com>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.122.247.231]
 X-ClientProxiedBy: lhreml727-chm.china.huawei.com (10.201.108.78) To
  lhreml710-chm.china.huawei.com (10.201.108.61)
@@ -65,135 +54,292 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Switches were already introduced, but now we support them update
-the documentation to provide an example in diagram and
-qemu command line parameter forms.
+On Wed, 30 Mar 2022 16:59:14 -0700
+ira.weiny@intel.com wrote:
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- docs/system/devices/cxl.rst | 88 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 86 insertions(+), 2 deletions(-)
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> CXL kernel drivers optionally need to access DOE mailbox capabilities.
+> Access to mailboxes for things such as CDAT, SPDM, and IDE are needed by
+> the kernel while other access is designed towards user space usage.  An
+> example of this is for CXL Compliance Testing (see CXL 2.0 14.16.4
+> Compliance Mode DOE) which offers a mechanism to set different test
+> modes for a device.
+> 
+> There is no anticipated need for the kernel to share an individual
+> mailbox with user space.  Thus developing an interface to marshal access
+> between the kernel and user space for a single mailbox is unnecessary
+> overhead.  However, having the kernel relinquish some mailboxes to be
+> controlled by user space is a reasonable compromise to share access to
+> the device.
+> 
+> The auxiliary bus provides an elegant solution for this.  Each DOE
+> capability is given its own auxiliary device.  This device is controlled
+> by a kernel driver by default which restricts access to the mailbox.
+> Unbinding the driver from a single auxiliary device (DOE mailbox
+> capability) frees the mailbox for user space access.  This architecture
+> also allows a clear picture on which mailboxes are kernel controlled vs
+> not.
+> 
+> Iterate each DOE mailbox capability and create auxiliary bus devices.
+> Follow on patches will define a driver for the newly created devices.
+> 
+> sysfs shows the devices.
+> 
+> $ ls -l /sys/bus/auxiliary/devices/
+> total 0
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.0 -> ../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.0
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.1 -> ../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.1
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.2 -> ../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.2
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.3 -> ../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.3
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.4 -> ../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.4
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.5 -> ../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.5
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.6 -> ../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.6
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.7 -> ../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.7
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Hi Ira,
 
-diff --git a/docs/system/devices/cxl.rst b/docs/system/devices/cxl.rst
-index 9293cbf01a..abf7c1f243 100644
---- a/docs/system/devices/cxl.rst
-+++ b/docs/system/devices/cxl.rst
-@@ -118,8 +118,6 @@ and associated component register access via PCI bars.
- 
- CXL Switch
- ~~~~~~~~~~
--Not yet implemented in QEMU.
--
- Here we consider a simple CXL switch with only a single
- virtual hierarchy. Whilst more complex devices exist, their
- visibility to a particular host is generally the same as for
-@@ -137,6 +135,10 @@ BARs.  The Upstream Port has the configuration interfaces for
- the HDM decoders which route incoming memory accesses to the
- appropriate downstream port.
- 
-+A CXL switch is created in a similar fashion to PCI switches
-+by creating an upstream port (cxl-upstream) and a number of
-+downstream ports on the internal switch bus (cxl-downstream).
-+
- CXL Memory Devices - Type 3
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~
- CXL type 3 devices use a PCI class code and are intended to be supported
-@@ -240,6 +242,62 @@ Notes:
-     they will take the Host Physical Addresses of accesses and map
-     them to their own local Device Physical Address Space (DPA).
- 
-+Example topology involving a switch::
-+
-+  |<------------------SYSTEM PHYSICAL ADDRESS MAP (1)----------------->|
-+  |    __________   __________________________________   __________    |
-+  |   |          | |                                  | |          |   |
-+  |   | CFMW 0   | |  CXL Fixed Memory Window 1       | | CFMW 1   |   |
-+  |   | HB0 only | |  Configured to interleave memory | | HB1 only |   |
-+  |   |          | |  memory accesses across HB0/HB1  | |          |   |
-+  |   |____x_____| |__________________________________| |__________|   |
-+           |             |                     |             |
-+           |             |                     |             |
-+           |             |                     |
-+  Interleave Decoder     |                     |             |
-+   Matches this HB       |                     |             |
-+           \_____________|                     |_____________/
-+               __________|__________      _____|_______________
-+              |                     |    |                     |
-+              | CXL HB 0            |    | CXL HB 1            |
-+              | HB IntLv Decoders   |    | HB IntLv Decoders   |
-+              | PCI/CXL Root Bus 0c |    | PCI/CXL Root Bus 0d |
-+              |                     |    |                     |
-+              |___x_________________|    |_____________________|
-+                  |              |          |               |
-+                  |
-+       A HB 0 HDM Decoder
-+       matches this Port
-+       ___________|___
-+      |  Root Port 0  |
-+      |  Appears in   |
-+      |  PCI topology |
-+      |  As 0c:00.0   |
-+      |___________x___|
-+                  |
-+                  |
-+                  \_____________________
-+                                        |
-+                                        |
-+            ---------------------------------------------------
-+           |    Switch 0  USP as PCI 0d:00.0                   |
-+           |    USP has HDM decoder which direct traffic to    |
-+           |    appropiate downstream port                     |
-+           |    Switch BUS appears as 0e                       |
-+           |x__________________________________________________|
-+            |                  |               |              |
-+            |                  |               |              |
-+       _____|_________   ______|______   ______|_____   ______|_______
-+   (4)|     x         | |             | |            | |              |
-+      | CXL Type3 0   | | CXL Type3 1 | | CXL type3 2| | CLX Type 3 3 |
-+      |               | |             | |            | |              |
-+      | PMEM0(Vol LSA)| | PMEM1 (...) | | PMEM2 (...)| | PMEM3 (...)  |
-+      | Decoder to go | |             | |            | |              |
-+      | from host PA  | | PCI 10:00.0 | | PCI 11:00.0| | PCI 12:00.0  |
-+      | to device PA  | |             | |            | |              |
-+      | PCI as 0f:00.0| |             | |            | |              |
-+      |_______________| |_____________| |____________| |______________|
-+
- Example command lines
- ---------------------
- A very simple setup with just one directly attached CXL Type 3 device::
-@@ -279,6 +337,32 @@ the CXL Type3 device directly attached (no switches).::
-   -device cxl-type3,bus=root_port16,memdev=cxl-mem4,lsa=cxl-lsa4,id=cxl-pmem3 \
-   -cxl-fixed-memory-window targets.0=cxl.1,targets.1=cxl.2,size=4G,interleave-granularity=8k
- 
-+An example of 4 devices below a switch suitable for 1, 2 or 4 way interleave::
-+
-+  qemu-system-aarch64 -M virt,gic-version=3,cxl=on -m 4g,maxmem=8G,slots=8 -cpu max \
-+  ...
-+  -object memory-backend-file,id=cxl-mem0,share=on,mem-path=/tmp/cxltest.raw,size=256M \
-+  -object memory-backend-file,id=cxl-mem1,share=on,mem-path=/tmp/cxltest1.raw,size=256M \
-+  -object memory-backend-file,id=cxl-mem2,share=on,mem-path=/tmp/cxltest2.raw,size=256M \
-+  -object memory-backend-file,id=cxl-mem3,share=on,mem-path=/tmp/cxltest3.raw,size=256M \
-+  -object memory-backend-file,id=cxl-lsa0,share=on,mem-path=/tmp/lsa0.raw,size=256M \
-+  -object memory-backend-file,id=cxl-lsa1,share=on,mem-path=/tmp/lsa1.raw,size=256M \
-+  -object memory-backend-file,id=cxl-lsa2,share=on,mem-path=/tmp/lsa2.raw,size=256M \
-+  -object memory-backend-file,id=cxl-lsa3,share=on,mem-path=/tmp/lsa3.raw,size=256M \
-+  -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
-+  -device cxl-rp,port=0,bus=cxl.1,id=root_port0,chassis=0,slot=0 \
-+  -device cxl-rp,port=1,bus=cxl.1,id=root_port1,chassis=0,slot=1 \
-+  -device cxl-upstream,bus=root_port0,id=us0 \
-+  -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
-+  -device cxl-type3,bus=swport0,memdev=cxl-mem0,lsa=cxl-lsa0,id=cxl-pmem0,size=256M \
-+  -device cxl-downstream,port=1,bus=us0,id=swport1,chassis=0,slot=5 \
-+  -device cxl-type3,bus=swport1,memdev=cxl-mem1,lsa=cxl-lsa1,id=cxl-pmem1,size=256M \
-+  -device cxl-downstream,port=2,bus=us0,id=swport2,chassis=0,slot=6 \
-+  -device cxl-type3,bus=swport2,memdev=cxl-mem2,lsa=cxl-lsa2,id=cxl-pmem2,size=256M \
-+  -device cxl-downstream,port=3,bus=us0,id=swport3,chassis=0,slot=7 \
-+  -device cxl-type3,bus=swport3,memdev=cxl-mem3,lsa=cxl-lsa3,id=cxl-pmem3,size=256M \
-+  -cxl-fixed-memory-window targets.0=cxl.1,size=4G,interleave-granularity=4k
-+
- Kernel Configuration Options
- ----------------------------
- 
--- 
-2.32.0
+Noticed something else about the number of irq vectors requested.
+
+Thanks,
+
+Jonathan
+
+> 
+> ---
+> Changes from V6:
+> 	Move all the auxiliary device stuff to the CXL layer
+> 
+> Changes from V5:
+> 	Split the CXL specific stuff off from the PCI DOE create
+> 	auxiliary device code.
+> ---
+>  drivers/cxl/Kconfig  |   1 +
+>  drivers/cxl/cxlpci.h |  21 +++++++
+>  drivers/cxl/pci.c    | 135 +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 157 insertions(+)
+> 
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index 054dc78d6f7d..77fff6f6b0fb 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -16,6 +16,7 @@ if CXL_BUS
+>  config CXL_PCI
+>  	tristate "PCI manageability"
+>  	default CXL_BUS
+> +	select AUXILIARY_BUS
+>  	help
+>  	  The CXL specification defines a "CXL memory device" sub-class in the
+>  	  PCI "memory controller" base class of devices. Device's identified by
+> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> index 329e7ea3f36a..2ad8715173ce 100644
+> --- a/drivers/cxl/cxlpci.h
+> +++ b/drivers/cxl/cxlpci.h
+> @@ -2,6 +2,7 @@
+>  /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+>  #ifndef __CXL_PCI_H__
+>  #define __CXL_PCI_H__
+> +#include <linux/auxiliary_bus.h>
+>  #include <linux/pci.h>
+>  #include "cxl.h"
+>  
+> @@ -72,4 +73,24 @@ static inline resource_size_t cxl_regmap_to_base(struct pci_dev *pdev,
+>  }
+>  
+>  int devm_cxl_port_enumerate_dports(struct cxl_port *port);
+> +
+> +/**
+> + * struct cxl_doe_dev - CXL DOE auxiliary bus device
+> + *
+> + * @adev: Auxiliary bus device
+> + * @pdev: PCI device this belongs to
+> + * @cap_offset: Capability offset
+> + * @use_irq: Set if IRQs are to be used with this mailbox
+> + *
+> + * This represents a single DOE mailbox device.  CXL devices should create this
+> + * device and register it on the Auxiliary bus for the CXL DOE driver to drive.
+> + */
+> +struct cxl_doe_dev {
+> +	struct auxiliary_device adev;
+> +	struct pci_dev *pdev;
+> +	int cap_offset;
+> +	bool use_irq;
+> +};
+> +#define DOE_DEV_NAME "doe"
+> +
+>  #endif /* __CXL_PCI_H__ */
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 8a7267d116b7..6249f2a30026 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/list.h>
+>  #include <linux/pci.h>
+> +#include <linux/pci-doe.h>
+>  #include <linux/io.h>
+>  #include "cxlmem.h"
+>  #include "cxlpci.h"
+> @@ -545,6 +546,136 @@ static int cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
+>  	return 0;
+>  }
+>  
+> +static void cxl_pci_free_irq_vectors(void *data)
+> +{
+> +	pci_free_irq_vectors(data);
+> +}
+> +
+> +static DEFINE_IDA(pci_doe_adev_ida);
+> +
+> +static void cxl_pci_doe_dev_release(struct device *dev)
+> +{
+> +	struct auxiliary_device *adev = container_of(dev,
+> +						struct auxiliary_device,
+> +						dev);
+> +	struct cxl_doe_dev *doe_dev = container_of(adev, struct cxl_doe_dev,
+> +						   adev);
+> +
+> +	ida_free(&pci_doe_adev_ida, adev->id);
+> +	kfree(doe_dev);
+> +}
+> +
+> +static void cxl_pci_doe_destroy_device(void *ad)
+> +{
+> +	auxiliary_device_delete(ad);
+> +	auxiliary_device_uninit(ad);
+> +}
+> +
+> +/**
+> + * cxl_pci_create_doe_devices - Create auxiliary bus DOE devices for all DOE
+> + *				mailboxes found
+> + *
+> + * @pci_dev: The PCI device to scan for DOE mailboxes
+> + *
+> + * There is no coresponding destroy of these devices.  This function associates
+> + * the DOE auxiliary devices created with the pci_dev passed in.  That
+> + * association is device managed (devm_*) such that the DOE auxiliary device
+> + * lifetime is always less than or equal to the lifetime of the pci_dev.
+> + *
+> + * RETURNS: 0 on success -ERRNO on failure.
+> + */
+> +int cxl_pci_create_doe_devices(struct pci_dev *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	bool use_irq = true;
+> +	int irqs = 0;
+> +	u16 off = 0;
+> +	int rc;
+> +
+> +	pci_doe_for_each_off(pdev, off)
+> +		irqs++;
+
+I don't think this is sufficient.  I think we need something similar
+to that done to calculate the necessary vectors in
+portdrv_core.c / pcie_message_numbers()
+https://elixir.bootlin.com/linux/latest/source/drivers/pci/pcie/portdrv_core.c#L45
+
+That is we need to ensure that vectors are requested such that we can always
+cover the vector for the DOE interrupt. To get that we need to read
+the capability register and then set irqs to one larger than that.
+
+Jonathan
+
+
+> +	pci_info(pdev, "Found %d DOE mailbox's\n", irqs);
+> +
+> +	/*
+> +	 * Allocate enough vectors for the DOE's
+> +	 */
+> +	rc = pci_alloc_irq_vectors(pdev, irqs, irqs, PCI_IRQ_MSI |
+> +						     PCI_IRQ_MSIX);
+> +	if (rc != irqs) {
+> +		pci_err(pdev,
+> +			"Not enough interrupts for all the DOEs; use polling\n");
+> +		use_irq = false;
+> +		/* Some got allocated; clean them up */
+> +		if (rc > 0)
+> +			cxl_pci_free_irq_vectors(pdev);
+> +	} else {
+> +		/*
+> +		 * Enabling bus mastering is require for MSI/MSIx.  It could be
+> +		 * done later within the DOE initialization, but as it
+> +		 * potentially has other impacts keep it here when setting up
+> +		 * the IRQ's.
+> +		 */
+> +		pci_set_master(pdev);
+> +		rc = devm_add_action_or_reset(dev,
+> +					      cxl_pci_free_irq_vectors,
+> +					      pdev);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	pci_doe_for_each_off(pdev, off) {
+> +		struct auxiliary_device *adev;
+> +		struct cxl_doe_dev *new_dev;
+> +		int id;
+> +
+> +		new_dev = kzalloc(sizeof(*new_dev), GFP_KERNEL);
+> +		if (!new_dev)
+> +			return -ENOMEM;
+> +
+> +		new_dev->pdev = pdev;
+> +		new_dev->cap_offset = off;
+> +		new_dev->use_irq = use_irq;
+> +
+> +		/* Set up struct auxiliary_device */
+> +		adev = &new_dev->adev;
+> +		id = ida_alloc(&pci_doe_adev_ida, GFP_KERNEL);
+> +		if (id < 0) {
+> +			kfree(new_dev);
+> +			return -ENOMEM;
+> +		}
+> +
+> +		adev->id = id;
+> +		adev->name = DOE_DEV_NAME;
+> +		adev->dev.release = cxl_pci_doe_dev_release;
+> +		adev->dev.parent = dev;
+> +
+> +		if (auxiliary_device_init(adev)) {
+> +			cxl_pci_doe_dev_release(&adev->dev);
+> +			return -EIO;
+> +		}
+> +
+> +		if (auxiliary_device_add(adev)) {
+> +			auxiliary_device_uninit(adev);
+> +			return -EIO;
+> +		}
+> +
+> +		rc = devm_add_action_or_reset(dev, cxl_pci_doe_destroy_device,
+> +					      adev);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int cxl_setup_doe_devices(struct cxl_dev_state *cxlds)
+> +{
+> +	struct device *dev = cxlds->dev;
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +
+> +	return cxl_pci_create_doe_devices(pdev);
+> +}
+> +
+>  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  {
+>  	struct cxl_register_map map;
+> @@ -611,6 +742,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (rc)
+>  		return rc;
+>  
+> +	rc = cxl_setup_doe_devices(cxlds);
+> +	if (rc)
+> +		return rc;
+> +
+>  	rc = cxl_dvsec_ranges(cxlds);
+>  	if (rc)
+>  		dev_warn(&pdev->dev,
 
