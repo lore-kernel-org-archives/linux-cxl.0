@@ -2,180 +2,217 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDFDC433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 29 Apr 2022 17:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF377C433EF
+	for <linux-cxl@archiver.kernel.org>; Fri, 29 Apr 2022 17:21:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379375AbiD2REq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 29 Apr 2022 13:04:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47548 "EHLO
+        id S235298AbiD2RY0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 29 Apr 2022 13:24:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378917AbiD2REj (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Apr 2022 13:04:39 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B47845DD34
-        for <linux-cxl@vger.kernel.org>; Fri, 29 Apr 2022 10:01:20 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id j6so7395739pfe.13
-        for <linux-cxl@vger.kernel.org>; Fri, 29 Apr 2022 10:01:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/8ErL6BnP6C5QttTgTp9GzvHjxiM+QiRr/nJIg3XkE4=;
-        b=3AXQ4KydmCXy9v5o5uLNP2D/LCb/Ti8kCwfBEaowrO4CHjOHcBLJiSgxmff9vsVC4z
-         JlcLFy9Q+NoAIywws86MIMutchNRuBep6qA1WTb4RwBRDaSFXmjdCjq91bvubvcwG0Ce
-         cvwphaU2ZtLFVTFLTIfCnYog58BmQjfewwTvFjYOlLaSB/dL1bclqzFTBCXDUQyKDDMf
-         X1KhgmYv2L/ubL6KWcPsrMG3tB6LJnhykVjcn10JmXpcyc42PD/5so77YW8P2A1KVLvJ
-         5UWtO6zZ33qxX/P6k2H/M9anJpUw+p77IO/Bb0p8FjTlSCjupknbQI4SnObzRkJObz5u
-         GL+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/8ErL6BnP6C5QttTgTp9GzvHjxiM+QiRr/nJIg3XkE4=;
-        b=pgG1cDFhAJCpuIssm0hpprD+LCxcnsiXC26cHatEsYyf4s0iqUE4ZfhiSi4Qrrqw3w
-         rmBcaT4gtcpfRFs5UC3CpUw4R8sGCaRBm2zDaUWjJnUPC5N3qy2DVdluQvkvsnTNHpoP
-         nYEwBSmsHtCLSERWHP1+hOIs9UmNY+YbcB+RohqVOZ16E5v94Ej+kGlJJZeDmA85bfOp
-         WtYnrGl2Wt2DibEnU1bevKQwhxB3c7nyY074bDczUWphNlI+OpXHrLNHq9EsFQlivyRx
-         XdFdm6fmhRg2E3FmC0Wfvma2JCDfYN5VCEujUp7AXS1dfiD6I62K8Gv3i7BqpWre0U/B
-         ajng==
-X-Gm-Message-State: AOAM532bQXYaaurVdwx7uBcjLYy7zZesH2h12xnZ+hn5xQaA4aDPLvjz
-        M523+mHNxRncrQo0D6Q9Mvce3Fd0dtpxt7/FLMKkug==
-X-Google-Smtp-Source: ABdhPJxK8MRKlKZjWavG8oR7gJ2mH52BBFfoWkuWHlQn2wWEpwlN0+7vspKLie2AvBeVUI9fwsOsI3VK+xLthfSE+qc=
-X-Received: by 2002:a65:6e0e:0:b0:399:26d7:a224 with SMTP id
- bd14-20020a656e0e000000b0039926d7a224mr256012pgb.437.1651251680182; Fri, 29
- Apr 2022 10:01:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220414203237.2198665-1-ira.weiny@intel.com> <20220414203237.2198665-5-ira.weiny@intel.com>
- <20220427181942.00003492@Huawei.com> <YmsCfHf/HMuqBkTk@iweiny-server> <20220429173843.00006dcd@Huawei.com>
-In-Reply-To: <20220429173843.00006dcd@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 29 Apr 2022 10:01:09 -0700
-Message-ID: <CAPcyv4huH2TPnVEzMmsKR=EGXv5A-4wd38M2nzRa-tkxeECV_Q@mail.gmail.com>
-Subject: Re: [PATCH V8 04/10] cxl/pci: Create auxiliary devices for each DOE mailbox
+        with ESMTP id S235457AbiD2RY0 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Apr 2022 13:24:26 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 404AB4C790;
+        Fri, 29 Apr 2022 10:21:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651252867; x=1682788867;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LDN4LTmiRFBu3yewHsXaqx2iqRnXy9xm2ypIZ36Kb28=;
+  b=PhSXqXUVilFIPk6P1a2eWhFgUAfrSPYAfwn3AyoVvOPhBL7Dbc4NJjYv
+   lgmprFH0G0HhoNonzQiYyCycAagq1ERkd5SMLmNbkJEhPhwktRdWZlJnZ
+   hYzrSNi/+w5JaKlCaMMqjhuCQ8SIX35sfz9bqwWNvnM22XxfP7/6XYQ/N
+   63LGENw2Uf+Re8J//I+xNX0kpt4daMiEWPu5HVd8vwvS56nDped55q6Gp
+   /iN194BfS+qVCIrK1e0UTqJFRkhLvIPbbXzipGzCmnSta1tqJB+9j88oR
+   kwTUZa7q3O+5Bba+dcYAw4eeXx10PmXwQvNtIYdZqDD46Xnrp/a0fjXu3
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10332"; a="266869745"
+X-IronPort-AV: E=Sophos;i="5.91,185,1647327600"; 
+   d="scan'208";a="266869745"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 10:20:55 -0700
+X-IronPort-AV: E=Sophos;i="5.91,185,1647327600"; 
+   d="scan'208";a="651838350"
+Received: from nadelgad-mobl.amr.corp.intel.com (HELO localhost) ([10.212.108.243])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 10:20:54 -0700
+Date:   Fri, 29 Apr 2022 10:20:54 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     "Weiny, Ira" <ira.weiny@intel.com>,
+Cc:     Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Ben Widawsky <ben.widawsky@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V8 04/10] cxl/pci: Create auxiliary devices for each DOE
+ mailbox
+Message-ID: <YmwedkzLrsOmsQt/@iweiny-desk3>
+References: <20220414203237.2198665-1-ira.weiny@intel.com>
+ <20220414203237.2198665-5-ira.weiny@intel.com>
+ <20220429165502.00000d01@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220429165502.00000d01@huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Apr 29, 2022 at 9:39 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Thu, 28 Apr 2022 14:09:38 -0700
+On Fri, Apr 29, 2022 at 04:55:02PM +0100, Jonathan Cameron wrote:
+> On Thu, 14 Apr 2022 13:32:31 -0700
 > ira.weiny@intel.com wrote:
->
-> > On Wed, Apr 27, 2022 at 06:19:42PM +0100, Jonathan Cameron wrote:
-> > > On Thu, 14 Apr 2022 13:32:31 -0700
-> > > ira.weiny@intel.com wrote:
-> > >
-> > > > From: Ira Weiny <ira.weiny@intel.com>
-> > > >
-> > > > CXL kernel drivers optionally need to access DOE mailbox capabilities.
-> > > > Access to mailboxes for things such as CDAT, SPDM, and IDE are needed by
-> > > > the kernel while other access is designed towards user space usage.  An
-> > > > example of this is for CXL Compliance Testing (see CXL 2.0 14.16.4
-> > > > Compliance Mode DOE) which offers a mechanism to set different test
-> > > > modes for a device.
-> > > >
-> > > > There is no anticipated need for the kernel to share an individual
-> > > > mailbox with user space.  Thus developing an interface to marshal access
-> > > > between the kernel and user space for a single mailbox is unnecessary
-> > > > overhead.  However, having the kernel relinquish some mailboxes to be
-> > > > controlled by user space is a reasonable compromise to share access to
-> > > > the device.
-> > > >
-> > > > The auxiliary bus provides an elegant solution for this.  Each DOE
-> > > > capability is given its own auxiliary device.  This device is controlled
-> > > > by a kernel driver by default which restricts access to the mailbox.
-> > > > Unbinding the driver from a single auxiliary device (DOE mailbox
-> > > > capability) frees the mailbox for user space access.  This architecture
-> > > > also allows a clear picture on which mailboxes are kernel controlled vs
-> > > > not.
-> > > >
-> > > > Iterate each DOE mailbox capability and create auxiliary bus devices.
-> > > > Follow on patches will define a driver for the newly created devices.
-> > > >
-> > > > sysfs shows the devices.
-> > > >
-> > > > $ ls -l /sys/bus/auxiliary/devices/
-> > > > total 0
-> > > > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.0 -> ../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.0
-> > > > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.1 -> ../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.1
-> > > > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.2 -> ../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.2
-> > > > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.3 -> ../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.3
-> > > > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.4 -> ../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.4
-> > > > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.5 -> ../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.5
-> > > > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.6 -> ../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.6
-> > > > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.7 -> ../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.7
-> > > >
-> > > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > >
-> > > I'm not 100% happy with effectively having one solution for CXL
-> > > and probably a different one for DOEs on switch ports
-> > > (which I just hacked into a port service driver to convince
-> > > myself there was at least one plausible way of doing that) but if
-> > > this effectively separates the two discussions then I guess I can
-> > > live with it for now ;)
-> >
-> > I took some time this morning to mull this over and talk to Dan...
-> >
-> > :-(
-> >
-> > Truthfully the aux driver does very little except provide a way for admins to
-> > trigger the driver to stop/start accessing the Mailbox.
-> >
-> > I suppose a simple sysfs interface could be done to do the same?
-> >
-> > I'll let Dan weigh in here.
->
-> I wonder if best short term option is to not provide a means of
-> removing it at all (separate from the PCI driver that is).
-> Then we can take our time to decide on the interface if we ever
-> get much demand for one.
->
-> >
-> > >
-> > > Once this is merged we can start the discussion about how to
-> > > handle switch ports with DOEs both for CDAT and SPDM.
-> >
-> > I'm ok with that too.  However, I was thinking that this was not a user ABI.
-> > But it really is.  If user space starts writing script to unbind drivers and
-> > then we drop the aux driver support it will break them...
-> >
-> > >
-> > > I'll send out an RFC that is so hideous it will get people to
-> > > suggestion how to do it better!
-> >
-> > I think I'd like to see that.
->
-> Fair enough. It may muddy the waters a bit :( I'll send an RFC
-> next week.  I've not looked at how the CXL region code etc would
-> actually get to the latency / bandwidth info from the driver yet
-> it just goes as far as reading a CDAT length. I also want to actually
-> hook up some decent switch CDAT emulation in the QEMU code
-> (right now it's giving the same default table as for a type 3 device).
->
-> I just hope we don't bikeshed around the RFC in a fashion that slows
-> this series moving forwards.
+> 
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
 
-I think we have time in the sense that the worst that happens is that
-tooling picks the wrong CFMWS to dynamically create a region and the
-performance ends up being sub-optimal. That's tolerable to work around
-in userspace in the near term. I want to get some wider confidence in
-the DOE ABI with respect to the known protocols and what to do about
-the vendor-specific protocols that may conflict and will be driven
-from userspace issued config-cycles. That likely means that no DOE ABI
-is the best ABI to start which means not moving forward with
-aux-devices so scripts do not become attached to something that is not
-fully committed to being carried forward.
+[snip]
 
-I still want to refresh the request_config_region() support for at
-least having the kernel warn on userspace conflicting configuration
-writes to config areas claimed by a driver.
+> > +
+> > +/**
+> > + * cxl_pci_create_doe_devices - Create auxiliary bus DOE devices for all DOE
+> > + *				mailboxes found
+> > + *
+> > + * @pci_dev: The PCI device to scan for DOE mailboxes
+> > + *
+> > + * There is no coresponding destroy of these devices.  This function associates
+> > + * the DOE auxiliary devices created with the pci_dev passed in.  That
+> > + * association is device managed (devm_*) such that the DOE auxiliary device
+> > + * lifetime is always less than or equal to the lifetime of the pci_dev.
+> > + *
+> > + * RETURNS: 0 on success -ERRNO on failure.
+> > + */
+> > +static int cxl_pci_create_doe_devices(struct pci_dev *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	bool use_irq = true;
+> > +	int irqs = 0;
+> > +	u16 off = 0;
+> > +	int rc;
+> > +
+> > +	pci_doe_for_each_off(pdev, off)
+> > +		irqs++;
+> I believe this is insufficient because there may be other irqs in use
+> on the device.
+
+I did not think that was true for any current CXL device.  From what I could
+tell all CXL devices would be covered by this simple calculation.  I left it to
+the reader to determine if a new CXL device came along which needed other irq's
+to lift this somewhere to cover those allocations.  I probably should have made
+some comment.  Sorry.
+
+> In a similar fashion to that done in pcie/portdrv_core.c
+> I think we need to instead find the maximum msi/msix vector number
+> by reading the config space.
+
+I was not aware I could do that...
+
+> Then we request one more vector
+> than that max value to ensure the vector we need has been requested.
+
+Yea at some point I figured this would be lifted out of here as part of a
+larger 'allocate all the vectors for the device' function.
+
+But for now this is the only place that needs irqs so I punted.  I can lift
+this into something like
+
+cxl_pci_alloc_irq_vectors(...) and then pass use_irq here.
+
+But to move this series forward I would propose that
+cxl_pci_alloc_irq_vectors() do what I'm doing here for now.
+
+Ira
+
+> 
+> Jonathan
+> 
+> > +	pci_info(pdev, "Found %d DOE mailbox's\n", irqs);
+> > +
+> > +	/*
+> > +	 * Allocate enough vectors for the DOE's
+> > +	 */
+> > +	rc = pci_alloc_irq_vectors(pdev, irqs, irqs, PCI_IRQ_MSI |
+> > +						     PCI_IRQ_MSIX);
+> > +	if (rc != irqs) {
+> > +		pci_err(pdev,
+> > +			"Not enough interrupts for all the DOEs; use polling\n");
+> > +		use_irq = false;
+> > +		/* Some got allocated; clean them up */
+> > +		if (rc > 0)
+> > +			cxl_pci_free_irq_vectors(pdev);
+> > +	} else {
+> > +		/*
+> > +		 * Enabling bus mastering is require for MSI/MSIx.  It could be
+> > +		 * done later within the DOE initialization, but as it
+> > +		 * potentially has other impacts keep it here when setting up
+> > +		 * the IRQ's.
+> > +		 */
+> > +		pci_set_master(pdev);
+> > +		rc = devm_add_action_or_reset(dev,
+> > +					      cxl_pci_free_irq_vectors,
+> > +					      pdev);
+> > +		if (rc)
+> > +			return rc;
+> > +	}
+> > +
+> > +	pci_doe_for_each_off(pdev, off) {
+> > +		struct auxiliary_device *adev;
+> > +		struct cxl_doe_dev *new_dev;
+> > +		int id;
+> > +
+> > +		new_dev = kzalloc(sizeof(*new_dev), GFP_KERNEL);
+> > +		if (!new_dev)
+> > +			return -ENOMEM;
+> > +
+> > +		new_dev->pdev = pdev;
+> > +		new_dev->cap_offset = off;
+> > +		new_dev->use_irq = use_irq;
+> > +
+> > +		/* Set up struct auxiliary_device */
+> > +		adev = &new_dev->adev;
+> > +		id = ida_alloc(&pci_doe_adev_ida, GFP_KERNEL);
+> > +		if (id < 0) {
+> > +			kfree(new_dev);
+> > +			return -ENOMEM;
+> > +		}
+> > +
+> > +		adev->id = id;
+> > +		adev->name = DOE_DEV_NAME;
+> > +		adev->dev.release = cxl_pci_doe_dev_release;
+> > +		adev->dev.parent = dev;
+> > +
+> > +		if (auxiliary_device_init(adev)) {
+> > +			cxl_pci_doe_dev_release(&adev->dev);
+> > +			return -EIO;
+> > +		}
+> > +
+> > +		if (auxiliary_device_add(adev)) {
+> > +			auxiliary_device_uninit(adev);
+> > +			return -EIO;
+> > +		}
+> > +
+> > +		rc = devm_add_action_or_reset(dev, cxl_pci_doe_destroy_device,
+> > +					      adev);
+> > +		if (rc)
+> > +			return rc;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >  {
+> >  	struct cxl_register_map map;
+> > @@ -630,6 +753,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >  	if (rc)
+> >  		return rc;
+> >  
+> > +	rc = cxl_pci_create_doe_devices(pdev);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> >  	cxl_dvsec_ranges(cxlds);
+> >  
+> >  	cxlmd = devm_cxl_add_memdev(cxlds);
+> 
