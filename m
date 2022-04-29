@@ -2,30 +2,30 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA3EC433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 29 Apr 2022 15:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D03A3C433FE
+	for <linux-cxl@archiver.kernel.org>; Fri, 29 Apr 2022 15:55:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378513AbiD2Pgf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 29 Apr 2022 11:36:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57508 "EHLO
+        id S232707AbiD2P63 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 29 Apr 2022 11:58:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378487AbiD2Pgf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Apr 2022 11:36:35 -0400
+        with ESMTP id S232082AbiD2P62 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Apr 2022 11:58:28 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0F1D89330;
-        Fri, 29 Apr 2022 08:33:15 -0700 (PDT)
-Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Kqbz04KbGz67fK4;
-        Fri, 29 Apr 2022 23:30:20 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE3CE2A1;
+        Fri, 29 Apr 2022 08:55:07 -0700 (PDT)
+Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KqcSY26c2z67MmR;
+        Fri, 29 Apr 2022 23:52:29 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
+ fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 29 Apr 2022 17:33:12 +0200
+ 15.1.2375.24; Fri, 29 Apr 2022 17:55:04 +0200
 Received: from localhost (10.122.247.231) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 29 Apr
- 2022 16:33:12 +0100
-Date:   Fri, 29 Apr 2022 16:33:11 +0100
+ 2022 16:55:03 +0100
+Date:   Fri, 29 Apr 2022 16:55:02 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <ira.weiny@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
@@ -35,12 +35,12 @@ CC:     Dan Williams <dan.j.williams@intel.com>,
         Ben Widawsky <ben.widawsky@intel.com>,
         <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
         <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V7 04/10] cxl/pci: Create auxiliary devices for each DOE
+Subject: Re: [PATCH V8 04/10] cxl/pci: Create auxiliary devices for each DOE
  mailbox
-Message-ID: <20220429163311.000060c1@huawei.com>
-In-Reply-To: <20220330235920.2800929-5-ira.weiny@intel.com>
-References: <20220330235920.2800929-1-ira.weiny@intel.com>
-        <20220330235920.2800929-5-ira.weiny@intel.com>
+Message-ID: <20220429165502.00000d01@huawei.com>
+In-Reply-To: <20220414203237.2198665-5-ira.weiny@intel.com>
+References: <20220414203237.2198665-1-ira.weiny@intel.com>
+        <20220414203237.2198665-5-ira.weiny@intel.com>
 Organization: Huawei Technologies R&D (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -54,7 +54,7 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 30 Mar 2022 16:59:14 -0700
+On Thu, 14 Apr 2022 13:32:31 -0700
 ira.weiny@intel.com wrote:
 
 > From: Ira Weiny <ira.weiny@intel.com>
@@ -98,16 +98,16 @@ ira.weiny@intel.com wrote:
 > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.7 -> ../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.7
 > 
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Hi Ira,
 
-Noticed something else about the number of irq vectors requested.
-
-Thanks,
-
-Jonathan
+oops. I just replied to v7. The point still stands though.
+Repeated briefly below.
 
 > 
 > ---
+> Changes from V7:
+> 	Minor code clean ups
+> 	Rebased on cxl-pending
+> 
 > Changes from V6:
 > 	Move all the auxiliary device stuff to the CXL layer
 > 
@@ -117,11 +117,11 @@ Jonathan
 > ---
 >  drivers/cxl/Kconfig  |   1 +
 >  drivers/cxl/cxlpci.h |  21 +++++++
->  drivers/cxl/pci.c    | 135 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 157 insertions(+)
+>  drivers/cxl/pci.c    | 127 +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 149 insertions(+)
 > 
 > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index 054dc78d6f7d..77fff6f6b0fb 100644
+> index f64e3984689f..ac0f5ca95431 100644
 > --- a/drivers/cxl/Kconfig
 > +++ b/drivers/cxl/Kconfig
 > @@ -16,6 +16,7 @@ if CXL_BUS
@@ -170,7 +170,7 @@ Jonathan
 > +
 >  #endif /* __CXL_PCI_H__ */
 > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 8a7267d116b7..6249f2a30026 100644
+> index e7ab9a34d718..41a6f3eb0a5c 100644
 > --- a/drivers/cxl/pci.c
 > +++ b/drivers/cxl/pci.c
 > @@ -8,6 +8,7 @@
@@ -181,8 +181,8 @@ Jonathan
 >  #include <linux/io.h>
 >  #include "cxlmem.h"
 >  #include "cxlpci.h"
-> @@ -545,6 +546,136 @@ static int cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
->  	return 0;
+> @@ -564,6 +565,128 @@ static void cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
+>  	info->ranges = __cxl_dvsec_ranges(cxlds, info);
 >  }
 >  
 > +static void cxl_pci_free_irq_vectors(void *data)
@@ -223,7 +223,7 @@ Jonathan
 > + *
 > + * RETURNS: 0 on success -ERRNO on failure.
 > + */
-> +int cxl_pci_create_doe_devices(struct pci_dev *pdev)
+> +static int cxl_pci_create_doe_devices(struct pci_dev *pdev)
 > +{
 > +	struct device *dev = &pdev->dev;
 > +	bool use_irq = true;
@@ -233,18 +233,13 @@ Jonathan
 > +
 > +	pci_doe_for_each_off(pdev, off)
 > +		irqs++;
-
-I don't think this is sufficient.  I think we need something similar
-to that done to calculate the necessary vectors in
-portdrv_core.c / pcie_message_numbers()
-https://elixir.bootlin.com/linux/latest/source/drivers/pci/pcie/portdrv_core.c#L45
-
-That is we need to ensure that vectors are requested such that we can always
-cover the vector for the DOE interrupt. To get that we need to read
-the capability register and then set irqs to one larger than that.
+I believe this is insufficient because there may be other irqs in use
+on the device.  In a similar fashion to that done in pcie/portdrv_core.c
+I think we need to instead find the maximum msi/msix vector number
+by reading the config space.  Then we request one more vector
+than that max value to ensure the vector we need has been requested.
 
 Jonathan
-
 
 > +	pci_info(pdev, "Found %d DOE mailbox's\n", irqs);
 > +
@@ -320,26 +315,18 @@ Jonathan
 > +	return 0;
 > +}
 > +
-> +static int cxl_setup_doe_devices(struct cxl_dev_state *cxlds)
-> +{
-> +	struct device *dev = cxlds->dev;
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +
-> +	return cxl_pci_create_doe_devices(pdev);
-> +}
-> +
 >  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 >  {
 >  	struct cxl_register_map map;
-> @@ -611,6 +742,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> @@ -630,6 +753,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 >  	if (rc)
 >  		return rc;
 >  
-> +	rc = cxl_setup_doe_devices(cxlds);
+> +	rc = cxl_pci_create_doe_devices(pdev);
 > +	if (rc)
 > +		return rc;
 > +
->  	rc = cxl_dvsec_ranges(cxlds);
->  	if (rc)
->  		dev_warn(&pdev->dev,
+>  	cxl_dvsec_ranges(cxlds);
+>  
+>  	cxlmd = devm_cxl_add_memdev(cxlds);
 
