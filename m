@@ -2,29 +2,29 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B0FC43219
-	for <linux-cxl@archiver.kernel.org>; Fri, 29 Apr 2022 14:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D89C433F5
+	for <linux-cxl@archiver.kernel.org>; Fri, 29 Apr 2022 14:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377809AbiD2OpA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 29 Apr 2022 10:45:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33424 "EHLO
+        id S1377819AbiD2OpZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 29 Apr 2022 10:45:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377366AbiD2Ooc (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Apr 2022 10:44:32 -0400
+        with ESMTP id S1377837AbiD2OpD (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Apr 2022 10:45:03 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9386E5B881
-        for <linux-cxl@vger.kernel.org>; Fri, 29 Apr 2022 07:41:11 -0700 (PDT)
-Received: from fraeml742-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KqZnR3G1Zz67MSg;
-        Fri, 29 Apr 2022 22:36:59 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C763E60066
+        for <linux-cxl@vger.kernel.org>; Fri, 29 Apr 2022 07:41:41 -0700 (PDT)
+Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KqZp23Zkmz67NLc;
+        Fri, 29 Apr 2022 22:37:30 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml742-chm.china.huawei.com (10.206.15.223) with Microsoft SMTP Server
+ fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 29 Apr 2022 16:41:08 +0200
+ 15.1.2375.24; Fri, 29 Apr 2022 16:41:39 +0200
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 29 Apr 2022 15:41:07 +0100
+ 15.1.2375.24; Fri, 29 Apr 2022 15:41:38 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <linuxarm@huawei.com>, <qemu-devel@nongnu.org>,
         <alex.bennee@linaro.org>, Marcel Apfelbaum <marcel@redhat.com>,
@@ -48,10 +48,12 @@ CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         <k.jensen@samsung.com>, <dave@stgolabs.net>,
         Alison Schofield <alison.schofield@intel.com>
-Subject: [PATCH v10 00/45] CXl 2.0 emulation Support
-Date:   Fri, 29 Apr 2022 15:40:25 +0100
-Message-ID: <20220429144110.25167-1-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v10 01/45] hw/pci/cxl: Add a CXL component type (interface)
+Date:   Fri, 29 Apr 2022 15:40:26 +0100
+Message-ID: <20220429144110.25167-2-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220429144110.25167-1-Jonathan.Cameron@huawei.com>
+References: <20220429144110.25167-1-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
@@ -63,252 +65,94 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Note that due to a bug in the kernel handling of Mem_Enable
-in the CXL Device DVSEC a fix is needed to sucessfully use these
-patches with Linux.
-https://lore.kernel.org/linux-cxl/CAPcyv4gFWw9s6r9kUoL-_P9qnaZSJBMz+EcmfY+0g1NHrJQx7Q@mail.gmail.com/T/#t
+From: Ben Widawsky <ben.widawsky@intel.com>
 
-Note the issue was detected using this emulation.
+A CXL component is a hardware entity that implements CXL component
+registers from the CXL 2.0 spec (8.2.3). Currently these represent 3
+general types.
+1. Host Bridge
+2. Ports (root, upstream, downstream)
+3. Devices (memory, other)
 
-Changes since v9:
+A CXL component can be conceptually thought of as a PCIe device with
+extra functionality when enumerated and enabled. For this reason, CXL
+does here, and will continue to add on to existing PCI code paths.
 
-Thanks to Tong Zhang and Markus Armbruster for review of v9.
-- Fixed return of all 1s on HDM decoder not matching.
-- Off by one error in an assert for register writes.
-- Write masks for both PCI config space structures and
-  registers in MMIO space. These were partly queued up
-  for a future patch set, but after review comment from
-  Tong, I decided it was best to put these in place from
-  the start.  Note I was a bit undecided on whether to drop
-  review tags for this (it's quit a bit of code, but very
-  simple).  Alex, and Adam if you want to take another look
-  at patch 2 in particular that would be great. 
-- Tag from Markus added.
-- Fix for wrong setting of Mem_Enable as described in the
-  thread linked above.
+Host bridges will typically need to be handled specially and so they can
+implement this newly introduced interface or not. All other components
+should implement this interface. Implementing this interface allows the
+core PCI code to treat these devices as special where appropriate.
 
-The series can be applied in parts if that makes sense:
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Alex Bennée <alex.bennee@linaro.org>
+Reviewed-by: Adam Manzanares <a.manzanares@samsung.com>
+---
+ hw/pci/pci.c         | 10 ++++++++++
+ include/hw/pci/pci.h |  8 ++++++++
+ 2 files changed, 18 insertions(+)
 
-Possible partial sets:
-1-15 (end with the test of the pxb-cxl host bridge)
-16-22 (end with the test for root port and type3 device)
-23-39 (end with tests on x86 pc for CFMWS including BIOS table updates)
-40-41 (arm64 virt support + simple test case)
-42 (documentation - we could pull this forwards to before the arm support)
-43-45 (switch support)
-
-gitlab tree at gitlab.com/jic23/qemu cxl-v10-draft-2
-
-As before that tree has additional patches on top that will form
-part of future postings. This time it has SPDM support via
-a socket connection to DMTF/spdm_emu / libspdm. I'll send an RFC
-on that topic as it's a discussion that can go on in parallel.
-
-Several people have asked about contributing additional features.
-As those come in I'll apply them on top of this series and handle
-rebases etc as necessary whilst we seek to get this first set
-of patches upstream.
-
-Updated background info:
-
-Looking in particular for:
-* Review of the PCI interactions
-* x86 and ARM machine interactions (particularly the memory maps)
-* Review of the interleaving approach - is the basic idea
-  acceptable?
-* Review of the command line interface.
-* CXL related review welcome but much of that got reviewed
-  in earlier versions and hasn't changed substantially.
-
-TODOs:
-
-* Volatile memory devices (easy but it's more code so left for now).
-* Hotplug?  May not need much but it's not tested yet!
-* More tests and tighter verification that values written to hardware
-  are actually valid - stuff that real hardware would check.
-* Testing, testing and more testing.  I have been running a basic
-  set of ARM and x86 tests on this, but there is always room for
-  more tests and greater automation.
-* CFMWS flags as requested by Ben.
-* Parititioning support - ability to change the balance of volatile
-  and non volatile memory on demand.
-* Trace points as suggested my Mark to help with debugging memory
-  interleaving setup.
-
-Why do we want QEMU emulation of CXL?
-
-As Ben stated in V3, QEMU support has been critical to getting OS
-software written given lack of availability of hardware supporting the
-latest CXL features (coupled with very high demand for support being
-ready in a timely fashion). What has become clear since Ben's v3
-is that situation is a continuous one. Whilst we can't talk about
-them yet, CXL 3.0 features and OS support have been prototyped on
-top of this support and a lot of the ongoing kernel work is being
-tested against these patches. The kernel CXL mocking code allows
-some forms of testing, but QEMU provides a more versatile and
-extensible platform.
-
-Other features on the qemu-list that build on these include PCI-DOE
-/CDAT support from the Avery Design team further showing how this
-code is useful. Whilst not directly related this is also the test
-platform for work on PCI IDE/CMA + related DMTF SPDM as CXL both
-utilizes and extends those technologies and is likely to be an early
-adopter.
-Refs:
-CMA Kernel: https://lore.kernel.org/all/20210804161839.3492053-1-Jonathan.Cameron@huawei.com/
-CMA Qemu: https://lore.kernel.org/qemu-devel/1624665723-5169-1-git-send-email-cbrowy@avery-design.com/
-DOE Qemu: https://lore.kernel.org/qemu-devel/1623329999-15662-1-git-send-email-cbrowy@avery-design.com/
-
-As can be seen there is non trivial interaction with other areas of
-Qemu, particularly PCI and keeping this set up to date is proving
-a burden we'd rather do without :)
-
-Ben mentioned a few other good reasons in v3:
-https://lore.kernel.org/qemu-devel/20210202005948.241655-1-ben.widawsky@intel.com/
-
-What we have here is about what you need for it to be useful for testing
-currently kernel code.  Note the kernel code is moving fast so
-since v4, some features have been introduced we don't yet support in
-QEMU (e.g. use of the PCIe serial number extended capability).
-
-All comments welcome.
-
-Additional info that was here in v5 is now in the documentation patch.
-
-Thanks,
-
-Jonathan
-
-Ben Widawsky (24):
-  hw/pci/cxl: Add a CXL component type (interface)
-  hw/cxl/component: Introduce CXL components (8.1.x, 8.2.5)
-  hw/cxl/device: Introduce a CXL device (8.2.8)
-  hw/cxl/device: Implement the CAP array (8.2.8.1-2)
-  hw/cxl/device: Implement basic mailbox (8.2.8.4)
-  hw/cxl/device: Add memory device utilities
-  hw/cxl/device: Add cheap EVENTS implementation (8.2.9.1)
-  hw/cxl/device: Timestamp implementation (8.2.9.3)
-  hw/cxl/device: Add log commands (8.2.9.4) + CEL
-  hw/pxb: Use a type for realizing expanders
-  hw/pci/cxl: Create a CXL bus type
-  hw/pxb: Allow creation of a CXL PXB (host bridge)
-  hw/cxl/rp: Add a root port
-  hw/cxl/device: Add a memory device (8.2.8.5)
-  hw/cxl/device: Implement MMIO HDM decoding (8.2.5.12)
-  hw/cxl/device: Add some trivial commands
-  hw/cxl/device: Plumb real Label Storage Area (LSA) sizing
-  hw/cxl/device: Implement get/set Label Storage Area (LSA)
-  hw/cxl/component: Implement host bridge MMIO (8.2.5, table 142)
-  acpi/cxl: Add _OSC implementation (9.14.2)
-  acpi/cxl: Create the CEDT (9.14.1)
-  acpi/cxl: Introduce CFMWS structures in CEDT
-  hw/cxl/component Add a dumb HDM decoder handler
-  qtest/cxl: Add more complex test cases with CFMWs
-
-Jonathan Cameron (21):
-  MAINTAINERS: Add entry for Compute Express Link Emulation
-  cxl: Machine level control on whether CXL support is enabled
-  qtest/cxl: Introduce initial test for pxb-cxl only.
-  qtests/cxl: Add initial root port and CXL type3 tests
-  hw/cxl/component: Add utils for interleave parameter encoding/decoding
-  hw/cxl/host: Add support for CXL Fixed Memory Windows.
-  hw/pci-host/gpex-acpi: Add support for dsdt construction for pxb-cxl
-  pci/pcie_port: Add pci_find_port_by_pn()
-  CXL/cxl_component: Add cxl_get_hb_cstate()
-  mem/cxl_type3: Add read and write functions for associated hostmem.
-  cxl/cxl-host: Add memops for CFMWS region.
-  i386/pc: Enable CXL fixed memory windows
-  tests/acpi: q35: Allow addition of a CXL test.
-  qtests/bios-tables-test: Add a test for CXL emulation.
-  tests/acpi: Add tables for CXL emulation.
-  hw/arm/virt: Basic CXL enablement on pci_expander_bridge instances
-    pxb-cxl
-  qtest/cxl: Add aarch64 virt test for CXL
-  docs/cxl: Add initial Compute eXpress Link (CXL) documentation.
-  pci-bridge/cxl_upstream: Add a CXL switch upstream port
-  pci-bridge/cxl_downstream: Add a CXL switch downstream port
-  docs/cxl: Add switch documentation
-
- MAINTAINERS                         |   7 +
- docs/system/device-emulation.rst    |   1 +
- docs/system/devices/cxl.rst         | 386 ++++++++++++++++++++++
- hw/Kconfig                          |   1 +
- hw/acpi/Kconfig                     |   5 +
- hw/acpi/cxl-stub.c                  |  12 +
- hw/acpi/cxl.c                       | 257 +++++++++++++++
- hw/acpi/meson.build                 |   4 +-
- hw/arm/Kconfig                      |   1 +
- hw/arm/virt-acpi-build.c            |  33 ++
- hw/arm/virt.c                       |  40 ++-
- hw/core/machine.c                   |  28 ++
- hw/cxl/Kconfig                      |   3 +
- hw/cxl/cxl-component-utils.c        | 396 +++++++++++++++++++++++
- hw/cxl/cxl-device-utils.c           | 265 +++++++++++++++
- hw/cxl/cxl-host-stubs.c             |  16 +
- hw/cxl/cxl-host.c                   | 261 +++++++++++++++
- hw/cxl/cxl-mailbox-utils.c          | 478 ++++++++++++++++++++++++++++
- hw/cxl/meson.build                  |  12 +
- hw/i386/acpi-build.c                |  57 +++-
- hw/i386/pc.c                        |  57 +++-
- hw/mem/Kconfig                      |   5 +
- hw/mem/cxl_type3.c                  | 371 +++++++++++++++++++++
- hw/mem/meson.build                  |   1 +
- hw/meson.build                      |   1 +
- hw/pci-bridge/Kconfig               |   5 +
- hw/pci-bridge/cxl_downstream.c      | 249 +++++++++++++++
- hw/pci-bridge/cxl_root_port.c       | 236 ++++++++++++++
- hw/pci-bridge/cxl_upstream.c        | 216 +++++++++++++
- hw/pci-bridge/meson.build           |   1 +
- hw/pci-bridge/pci_expander_bridge.c | 168 +++++++++-
- hw/pci-bridge/pcie_root_port.c      |   6 +-
- hw/pci-host/gpex-acpi.c             |  20 +-
- hw/pci/pci.c                        |  21 +-
- hw/pci/pcie_port.c                  |  25 ++
- include/hw/acpi/cxl.h               |  28 ++
- include/hw/arm/virt.h               |   1 +
- include/hw/boards.h                 |   2 +
- include/hw/cxl/cxl.h                |  65 ++++
- include/hw/cxl/cxl_component.h      | 223 +++++++++++++
- include/hw/cxl/cxl_device.h         | 268 ++++++++++++++++
- include/hw/cxl/cxl_pci.h            | 167 ++++++++++
- include/hw/pci/pci.h                |  14 +
- include/hw/pci/pci_bridge.h         |  20 ++
- include/hw/pci/pci_bus.h            |   7 +
- include/hw/pci/pci_ids.h            |   1 +
- include/hw/pci/pcie_port.h          |   2 +
- qapi/machine.json                   |  21 ++
- qemu-options.hx                     |  38 +++
- scripts/device-crash-test           |   1 +
- softmmu/vl.c                        |  47 +++
- tests/data/acpi/q35/CEDT.cxl        | Bin 0 -> 184 bytes
- tests/data/acpi/q35/DSDT.cxl        | Bin 0 -> 9615 bytes
- tests/qtest/bios-tables-test.c      |  44 +++
- tests/qtest/cxl-test.c              | 181 +++++++++++
- tests/qtest/meson.build             |   5 +
- 56 files changed, 4753 insertions(+), 27 deletions(-)
- create mode 100644 docs/system/devices/cxl.rst
- create mode 100644 hw/acpi/cxl-stub.c
- create mode 100644 hw/acpi/cxl.c
- create mode 100644 hw/cxl/Kconfig
- create mode 100644 hw/cxl/cxl-component-utils.c
- create mode 100644 hw/cxl/cxl-device-utils.c
- create mode 100644 hw/cxl/cxl-host-stubs.c
- create mode 100644 hw/cxl/cxl-host.c
- create mode 100644 hw/cxl/cxl-mailbox-utils.c
- create mode 100644 hw/cxl/meson.build
- create mode 100644 hw/mem/cxl_type3.c
- create mode 100644 hw/pci-bridge/cxl_downstream.c
- create mode 100644 hw/pci-bridge/cxl_root_port.c
- create mode 100644 hw/pci-bridge/cxl_upstream.c
- create mode 100644 include/hw/acpi/cxl.h
- create mode 100644 include/hw/cxl/cxl.h
- create mode 100644 include/hw/cxl/cxl_component.h
- create mode 100644 include/hw/cxl/cxl_device.h
- create mode 100644 include/hw/cxl/cxl_pci.h
- create mode 100644 tests/data/acpi/q35/CEDT.cxl
- create mode 100644 tests/data/acpi/q35/DSDT.cxl
- create mode 100644 tests/qtest/cxl-test.c
-
+diff --git a/hw/pci/pci.c b/hw/pci/pci.c
+index e99417e501..08bd2db2ad 100644
+--- a/hw/pci/pci.c
++++ b/hw/pci/pci.c
+@@ -200,6 +200,11 @@ static const TypeInfo pci_bus_info = {
+     .class_init = pci_bus_class_init,
+ };
+ 
++static const TypeInfo cxl_interface_info = {
++    .name          = INTERFACE_CXL_DEVICE,
++    .parent        = TYPE_INTERFACE,
++};
++
+ static const TypeInfo pcie_interface_info = {
+     .name          = INTERFACE_PCIE_DEVICE,
+     .parent        = TYPE_INTERFACE,
+@@ -2181,6 +2186,10 @@ static void pci_qdev_realize(DeviceState *qdev, Error **errp)
+         pci_dev->cap_present |= QEMU_PCI_CAP_EXPRESS;
+     }
+ 
++    if (object_class_dynamic_cast(klass, INTERFACE_CXL_DEVICE)) {
++        pci_dev->cap_present |= QEMU_PCIE_CAP_CXL;
++    }
++
+     pci_dev = do_pci_register_device(pci_dev,
+                                      object_get_typename(OBJECT(qdev)),
+                                      pci_dev->devfn, errp);
+@@ -2937,6 +2946,7 @@ static void pci_register_types(void)
+     type_register_static(&pci_bus_info);
+     type_register_static(&pcie_bus_info);
+     type_register_static(&conventional_pci_interface_info);
++    type_register_static(&cxl_interface_info);
+     type_register_static(&pcie_interface_info);
+     type_register_static(&pci_device_type_info);
+ }
+diff --git a/include/hw/pci/pci.h b/include/hw/pci/pci.h
+index 3a32b8dd40..98f0d1b844 100644
+--- a/include/hw/pci/pci.h
++++ b/include/hw/pci/pci.h
+@@ -194,6 +194,8 @@ enum {
+     QEMU_PCIE_LNKSTA_DLLLA = (1 << QEMU_PCIE_LNKSTA_DLLLA_BITNR),
+ #define QEMU_PCIE_EXTCAP_INIT_BITNR 9
+     QEMU_PCIE_EXTCAP_INIT = (1 << QEMU_PCIE_EXTCAP_INIT_BITNR),
++#define QEMU_PCIE_CXL_BITNR 10
++    QEMU_PCIE_CAP_CXL = (1 << QEMU_PCIE_CXL_BITNR),
+ };
+ 
+ #define TYPE_PCI_DEVICE "pci-device"
+@@ -201,6 +203,12 @@ typedef struct PCIDeviceClass PCIDeviceClass;
+ DECLARE_OBJ_CHECKERS(PCIDevice, PCIDeviceClass,
+                      PCI_DEVICE, TYPE_PCI_DEVICE)
+ 
++/*
++ * Implemented by devices that can be plugged on CXL buses. In the spec, this is
++ * actually a "CXL Component, but we name it device to match the PCI naming.
++ */
++#define INTERFACE_CXL_DEVICE "cxl-device"
++
+ /* Implemented by devices that can be plugged on PCI Express buses */
+ #define INTERFACE_PCIE_DEVICE "pci-express-device"
+ 
 -- 
 2.32.0
 
