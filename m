@@ -2,210 +2,218 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4AAC433F5
-	for <linux-cxl@archiver.kernel.org>; Tue,  3 May 2022 16:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C45C433EF
+	for <linux-cxl@archiver.kernel.org>; Wed,  4 May 2022 23:27:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239246AbiECQRx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 3 May 2022 12:17:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57226 "EHLO
+        id S231602AbiEDXaf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 4 May 2022 19:30:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239137AbiECQRw (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 3 May 2022 12:17:52 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D50E43A195;
-        Tue,  3 May 2022 09:14:18 -0700 (PDT)
-Received: from fraeml744-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Kt4hJ65g4z67tG2;
-        Wed,  4 May 2022 00:11:12 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml744-chm.china.huawei.com (10.206.15.225) with Microsoft SMTP Server
+        with ESMTP id S1383217AbiEDXHB (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 4 May 2022 19:07:01 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 092385DE68
+        for <linux-cxl@vger.kernel.org>; Wed,  4 May 2022 15:58:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651705115; x=1683241115;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=97MDwCeuXEBYnN3PMMEk2u0Rr98d4kxIyhnw5EXyTmk=;
+  b=K9MexkaVunTKO08nu4l9IXQU0FcMfNhiB3yEufL5+r40g/pjKFBf7RTP
+   Fu7Zq9E/rZZ+Cut+q7vdbte8SNRurY8y7cddykyf+G1RSeI3PRqzaaUbH
+   UjzjcpQ9u4YD6AatUiqSMLy8V+XllFJAX6FKPc5nsBAvOpzp/qCRW60No
+   clGy+RdCe7t0wsYKKADJMn3EHjn2JdGs9BNYADROAOeUQaEm7GcMEDLzt
+   7XWDxVU2Rj+PSGJat9QLrpSVMHkUQuFO4fevQZoloCH3WjWqm/tgqEhVL
+   MfWqb39b2jvl0tlVlcKpaa/tRR8eQGvITVpf5k57HmM9q54ndp/XvoBh2
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10337"; a="249905250"
+X-IronPort-AV: E=Sophos;i="5.91,199,1647327600"; 
+   d="scan'208";a="249905250"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2022 15:56:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,199,1647327600"; 
+   d="scan'208";a="537053384"
+Received: from fmsmsx605.amr.corp.intel.com ([10.18.126.85])
+  by orsmga006.jf.intel.com with ESMTP; 04 May 2022 15:56:57 -0700
+Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 3 May 2022 18:14:16 +0200
-Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 3 May
- 2022 17:14:15 +0100
-Date:   Tue, 3 May 2022 17:14:13 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     "Weiny, Ira" <ira.weiny@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        <linux-cxl@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V8 04/10] cxl/pci: Create auxiliary devices for each DOE
- mailbox
-Message-ID: <20220503171413.00001297@Huawei.com>
-In-Reply-To: <CAPcyv4huH2TPnVEzMmsKR=EGXv5A-4wd38M2nzRa-tkxeECV_Q@mail.gmail.com>
-References: <20220414203237.2198665-1-ira.weiny@intel.com>
-        <20220414203237.2198665-5-ira.weiny@intel.com>
-        <20220427181942.00003492@Huawei.com>
-        <YmsCfHf/HMuqBkTk@iweiny-server>
-        <20220429173843.00006dcd@Huawei.com>
-        <CAPcyv4huH2TPnVEzMmsKR=EGXv5A-4wd38M2nzRa-tkxeECV_Q@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+ 15.1.2308.27; Wed, 4 May 2022 15:56:57 -0700
+Received: from fmsmsx606.amr.corp.intel.com (10.18.126.86) by
+ fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Wed, 4 May 2022 15:56:56 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27 via Frontend Transport; Wed, 4 May 2022 15:56:56 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.102)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2308.27; Wed, 4 May 2022 15:56:56 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EilSXuQaHQJhTofcPW7hR1Ta9EIt+3S+UCESbO+fp7pvK+LHegK71AwsVtozYK3orEYqypytNj2blUXRyuIv84AEi9XRRNkVVFb8B6oZYKcBxpFvdbGNdkED1tzkqcT0/ZZ7SWpC/jgrO73xI4YXPHKRRPRTfS2aPjkwra98VhZyyE7OdnP0EVVZSJBfuq42n9Rqk8s/TkPSXVHVhBrKk9kM3m/O0NQQTSIzKOAJp4Bqvqfwd5LmNbGtbh8VWjJ9ZDHMvsOBdVNP7Qkx3JReJzF7APTHJtlXRfAXZhI2+QVpCm4I9yf6E1oJ/OM+p+VMkZWm5xgPn2hRTIMz71bU8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=97MDwCeuXEBYnN3PMMEk2u0Rr98d4kxIyhnw5EXyTmk=;
+ b=LdtxlY9R/U1BqH10dJFga8V54ZXs+soy7dtqs3IVk+Zrx4pjhAZo3qvxi1Vg15LhzTbOhB0gtxFC4P1MuAtJtmvJA8KdcMQ/pnstWx1qoY0uvcoTJKiox/GpqJ8bgztRNbjptjjizd59hha2xC1xAW0BAia3GUFH90zF487bSCxGHWq3+ZAsl8E/skGTFm42H23dnCTRTuT9yCyDVvETDRGDr1cjb9e15PRX546FkrFV9o6EHxFu+7mKiNCtB7rOHWjLeAArcp5bNcyW8VCjHFjIDhEqBwVb1EiXv9U0597YuG0p71sr2+qgl4juQ0oX1B/gUev4Whaj/E/luFl3nw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MN2PR11MB3999.namprd11.prod.outlook.com (2603:10b6:208:154::32)
+ by BY5PR11MB4401.namprd11.prod.outlook.com (2603:10b6:a03:1be::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5206.24; Wed, 4 May
+ 2022 22:56:48 +0000
+Received: from MN2PR11MB3999.namprd11.prod.outlook.com
+ ([fe80::e576:1ed2:dc35:14bc]) by MN2PR11MB3999.namprd11.prod.outlook.com
+ ([fe80::e576:1ed2:dc35:14bc%5]) with mapi id 15.20.5206.025; Wed, 4 May 2022
+ 22:56:48 +0000
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "Widawsky, Ben" <ben.widawsky@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
+CC:     "patches@lists.linux.dev" <patches@lists.linux.dev>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>
+Subject: Re: [RFC PATCH 12/15] cxl/region: Add region creation ABI
+Thread-Topic: [RFC PATCH 12/15] cxl/region: Add region creation ABI
+Thread-Index: AQHYT2WYYE5muSBTek66Cl+8D3t8rq0PdaoA
+Date:   Wed, 4 May 2022 22:56:47 +0000
+Message-ID: <f9fa0a306b167db2a91021aff70bcdbc8c154391.camel@intel.com>
+References: <20220413183720.2444089-1-ben.widawsky@intel.com>
+         <20220413183720.2444089-13-ben.widawsky@intel.com>
+In-Reply-To: <20220413183720.2444089-13-ben.widawsky@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.42.4 (3.42.4-2.fc35) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e8bb5da1-e2f1-48f2-8d7e-08da2e215e54
+x-ms-traffictypediagnostic: BY5PR11MB4401:EE_
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
+x-microsoft-antispam-prvs: <BY5PR11MB44019E2D6F2DECBC9A5E424DC7C39@BY5PR11MB4401.namprd11.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 4wyRpdfHmlLKOw8pN1F+yYBXW8j2FXkvcRxHZkhNuPDO++nlJQqZEWKjEIQ2lqyjUT/9vPqtN926o/RNQTp/GSOKfY0lLuFuUj2MyjECFPpvhoZCR2ttoHHGYbXbkhP60Xff2012LLSUIGliTxfEosZN49BbeuNMFVCU1ODVefd9DfJtUvr8MQAQvVGB6eSwZYMatbs5bCZ8gD5lf+mdALUlmnmHLZQZClnsX9UC9bksoTxVmtQkdmgK39Jv/cQMODgXWRsVyFBdgxvdfOc0ajIvBjx+bDxH7QsOzwDzNllauRghMOPr/Vx1faKineYTuXy0DtFYsa9ixCIz3WTf2pBrOq8ggN6TD4jNzxkwnEX2MiAU6DmHOhYKfQz4I9zjtnsWVZtKpIREKiqP1zyrbW/WPaWeEDMKlhkSWPpjgbGeUSSVGXhXYC75xuFyZNJbqEIkIUz34+bP1la+1HoywNHdKj1SRO+aTe+OqWBFi4CboeSl9FjFWmsdbDkEMA7f2lJjpNSIap/4BrM1P30c6ccN9yW/h4W7bOvCDKrVM8hfUyJ1/bosjyyRGP1N4JzYinWlJAme0bnKWRuIfM2QOUTxd/Sj01+QGTVnMnxmEHo1dTfRf78fN5vSbWa33n4UJqpm5FpdbXi5IkGSaKsnW6vE6/POd/BJ3SFmNer4S1d6AjDEAZQRMeENhm+sL3Hs+KDAK+5egbYHj8PgaxU57Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB3999.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(71200400001)(508600001)(66946007)(2616005)(6486002)(54906003)(6512007)(36756003)(64756008)(86362001)(26005)(38070700005)(186003)(38100700002)(83380400001)(66556008)(66446008)(91956017)(4326008)(76116006)(8676002)(122000001)(82960400001)(2906002)(110136005)(5660300002)(8936002)(6506007)(316002)(66476007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?SXNYOXFtdEM2ajZoSzlHdEJHSVF4M1ZKY2Vjb1VxOG14U2lZaWJ2dittaUtt?=
+ =?utf-8?B?bENPeERqbDBnUFQrNEs3WEhVczUwRThzalRIaWFTTnNkYkdwekpxeGtFaWNE?=
+ =?utf-8?B?VnRrc25Cb2JXekJ4NThzU3NaNVFOZ0xNaWVYVjlvNjNiUTA3NlRhTGhMbGh4?=
+ =?utf-8?B?a3c4RFZEdXhoRXl5T21rN1ZUdFM2dU04SXVCRFpPZDFXUjN5QlU2cXBYTVdz?=
+ =?utf-8?B?YXRtakdJSGoyTUNaWFhDNU5CUkFQWlpZZEx4c2pxQmVybTBYZkc4Q3NJRUtL?=
+ =?utf-8?B?NTRRN1V6VVVmLzdibzI4WC9US0wwQVZTOXlnaWl1b1U0TnV6ZG16NDlObCtu?=
+ =?utf-8?B?dGRxV1BXYzV0UG11UVo5L3ByTVk2MnYyMzdHMkZTMzRyTFVnZFhXVVlMWWtQ?=
+ =?utf-8?B?UW1KM3EweVBMY2xWTS9NVUJaZlhKRjVkaDU5UjBWMVl0dDlaOThUK2s5ckdM?=
+ =?utf-8?B?L2hBZXNzYXJTc0pQTXEwQ2h3N2JFRW5iZDNHbThxMWdPaEVKaGdyUm1jOXBr?=
+ =?utf-8?B?ajZ0dWNPbXVwY0IvT3pFUUNkT3grQjc1Z0VnQi82VlZxUzZCbjdUeC9vLzUv?=
+ =?utf-8?B?WFR0alVuVElqK0wrNnVSRTJxQWtvR0VrNG5KSVBybkswYXh3OHBvS2ZPWlJy?=
+ =?utf-8?B?TVFDYnNlbjhySStjbUhnQ3cvVWczaHpVaHZ3RlBHbWNpTWtpajNUdWpTeGFT?=
+ =?utf-8?B?NTlJMzFEZEh1Z0diNzBDazdCZmd5T2hjR3pVZlIxVDB0S1duSnRHVjlheVEr?=
+ =?utf-8?B?S1pNc3JQMmZ5Z0RDQUJlTGNWeVM2djAwS28rSmVDTWhoZDhWanN0MFkvL3U0?=
+ =?utf-8?B?anVwVkVKSlVHbHJNdzQvNGt2MUZ1czk1bnNqUnppN09UZjV2NWU1OCtlTUN2?=
+ =?utf-8?B?Q0hUeGhSdjE4WitGUUQ4WGlScnA3UzZCUFBJc3lreXE3WGZ0TTNvZDdTaVpK?=
+ =?utf-8?B?NndkRll2UE1xdE11dXJ3eDVpRzdEVmZHcW8wWkU2M3pzc0xsMklYYkRrQW9y?=
+ =?utf-8?B?WW0xWjMwNVRuOXQ5NmlNTktMN0h5RkZCMTdBZWh2WUZsYjd2QUszaFoxQVV2?=
+ =?utf-8?B?d0dzNjcrL2lrNy9KalBWVjZMNm1OK3NEMmMrVTllZE1CVWc3WG92YUM1bk52?=
+ =?utf-8?B?MVhwUzZJQUJGcWttUGNoelJIeUFjY1RoTzBYU3hyZGt4eE8xZEhGSjRFSk4y?=
+ =?utf-8?B?Yi81c0VaaW5JeUpwK3RpbjZUTGMrdjZ1MlppZmZjbEM5T0FxMERzSEpiU3Bk?=
+ =?utf-8?B?T1p3ZDd0NFVUNWxCc3ZLd2hrY014TWhOd2tjODBQSHdxOWx5WUwreXRqajNB?=
+ =?utf-8?B?R1ByV0RrekdycG93UVJOdW4vakYyanNrMDFuNEJUQ0l2Y0c1R3BnU1FZdmZW?=
+ =?utf-8?B?TE4zUUgvSG1MV0tJbEtZbUdvazFGYi94a01WcVlLZFRpTlBTMVE5ZGlrL2c3?=
+ =?utf-8?B?SC82ZGtiNmQrU29BY1FvMW5ySU1hWDAxVkZJcEpSL21UTml6Qzd4OUdXZGNj?=
+ =?utf-8?B?Z1BXNi9FazFpanlocExjZjNScDI0ZUZJNlkweXZuekJiTjFnUmFVL1FHUnIy?=
+ =?utf-8?B?NTFMbklKRlRCZVI0eWtMbE9ybXhObWY5TkphUjhza0RmdDM5eDJ5MjhMREdm?=
+ =?utf-8?B?cUVrY2dLeENCWkYrUDFyYzVrL1lwMThlc09ZNE85OFlqUjhMZFJ2Q090NzNM?=
+ =?utf-8?B?bjAzMm9wYis5RXJOWDJsRkloT1RUWGxOaThlcWMrYkk0ZnRHZjF4a3FxRWhU?=
+ =?utf-8?B?V0JKeCtZU1ZSMjdvZWFjOUVQUDQrdENFbUlKVGRLK29JazE4M29pYVVyUXhl?=
+ =?utf-8?B?WFRwM3g4bk50dDk4Kzc5K091Nll2dkwzd1g4dGxkNUVtbXdPc01VdHFXNzNy?=
+ =?utf-8?B?ZkNNME5ORGk3VEZEVkYwem9URS95SFd5cS9LK2w0QnNoeG9Sb0dOQW9WWE1J?=
+ =?utf-8?B?UFF3MVMyZEdYcFRmQnlseXd6cDlURUxkYlJOUFRNV1lta2xsR2hiRW53UFJJ?=
+ =?utf-8?B?d0ppbk90UTZLQjgwMHVpZ0R2MXdPQ2tuQjlyeVk0eS91ZSs3VEVianVVMk9V?=
+ =?utf-8?B?ZWpDUVIwYi95bHNUYjdYcWROcy9laURqQzZhMzY4T0pDYU9QUWFhMllzSjQx?=
+ =?utf-8?B?SW14RGZBYzRGQ0dHcThJOWk3M0kwL0RVQ0tOSDZVR3pOREtuL0dzcjc1MTRt?=
+ =?utf-8?B?dytZZUNLbVlFdWdidFRWY2x5dkZOemRZbThZVjhnVGx3aDFOSnphRVNudncv?=
+ =?utf-8?B?NGNvLzdTMzB1bDRZRlh6NGNUUnhDb1VrRVh5QW1vYWNvN2pEaUNpZEkvTUlH?=
+ =?utf-8?B?dkYxTWc1OWx6Y0tHLzlBNG0zcGpZZ0NORUN6S2t4bkkycjBLS0JwSTFTWW5Y?=
+ =?utf-8?Q?N+Uub8Pw/ILbcVIs=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <23CC6F9C7D16CF43AAC13787631932EA@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhreml723-chm.china.huawei.com (10.201.108.74) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR11MB3999.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8bb5da1-e2f1-48f2-8d7e-08da2e215e54
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 May 2022 22:56:47.7275
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Cquh/ttwG6Zpj9rxjqqT7/JT5EkqoG18gm5iKaF44KVJaDNR5DUViYXzx25k5BdZLMZ3uB9hxj/qBntA/pehutNd75r/zcRSKitTlzUx8W0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4401
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 29 Apr 2022 10:01:09 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
-
-> On Fri, Apr 29, 2022 at 9:39 AM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > On Thu, 28 Apr 2022 14:09:38 -0700
-> > ira.weiny@intel.com wrote:
-> >  
-> > > On Wed, Apr 27, 2022 at 06:19:42PM +0100, Jonathan Cameron wrote:  
-> > > > On Thu, 14 Apr 2022 13:32:31 -0700
-> > > > ira.weiny@intel.com wrote:
-> > > >  
-> > > > > From: Ira Weiny <ira.weiny@intel.com>
-> > > > >
-> > > > > CXL kernel drivers optionally need to access DOE mailbox capabilities.
-> > > > > Access to mailboxes for things such as CDAT, SPDM, and IDE are needed by
-> > > > > the kernel while other access is designed towards user space usage.  An
-> > > > > example of this is for CXL Compliance Testing (see CXL 2.0 14.16.4
-> > > > > Compliance Mode DOE) which offers a mechanism to set different test
-> > > > > modes for a device.
-> > > > >
-> > > > > There is no anticipated need for the kernel to share an individual
-> > > > > mailbox with user space.  Thus developing an interface to marshal access
-> > > > > between the kernel and user space for a single mailbox is unnecessary
-> > > > > overhead.  However, having the kernel relinquish some mailboxes to be
-> > > > > controlled by user space is a reasonable compromise to share access to
-> > > > > the device.
-> > > > >
-> > > > > The auxiliary bus provides an elegant solution for this.  Each DOE
-> > > > > capability is given its own auxiliary device.  This device is controlled
-> > > > > by a kernel driver by default which restricts access to the mailbox.
-> > > > > Unbinding the driver from a single auxiliary device (DOE mailbox
-> > > > > capability) frees the mailbox for user space access.  This architecture
-> > > > > also allows a clear picture on which mailboxes are kernel controlled vs
-> > > > > not.
-> > > > >
-> > > > > Iterate each DOE mailbox capability and create auxiliary bus devices.
-> > > > > Follow on patches will define a driver for the newly created devices.
-> > > > >
-> > > > > sysfs shows the devices.
-> > > > >
-> > > > > $ ls -l /sys/bus/auxiliary/devices/
-> > > > > total 0
-> > > > > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.0 -> ../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.0
-> > > > > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.1 -> ../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.1
-> > > > > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.2 -> ../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.2
-> > > > > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.3 -> ../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.3
-> > > > > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.4 -> ../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.4
-> > > > > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.5 -> ../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.5
-> > > > > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.6 -> ../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.6
-> > > > > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.7 -> ../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.7
-> > > > >
-> > > > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>  
-> > > >
-> > > > I'm not 100% happy with effectively having one solution for CXL
-> > > > and probably a different one for DOEs on switch ports
-> > > > (which I just hacked into a port service driver to convince
-> > > > myself there was at least one plausible way of doing that) but if
-> > > > this effectively separates the two discussions then I guess I can
-> > > > live with it for now ;)  
-> > >
-> > > I took some time this morning to mull this over and talk to Dan...
-> > >
-> > > :-(
-> > >
-> > > Truthfully the aux driver does very little except provide a way for admins to
-> > > trigger the driver to stop/start accessing the Mailbox.
-> > >
-> > > I suppose a simple sysfs interface could be done to do the same?
-> > >
-> > > I'll let Dan weigh in here.  
-> >
-> > I wonder if best short term option is to not provide a means of
-> > removing it at all (separate from the PCI driver that is).
-> > Then we can take our time to decide on the interface if we ever
-> > get much demand for one.
-> >  
-> > >  
-> > > >
-> > > > Once this is merged we can start the discussion about how to
-> > > > handle switch ports with DOEs both for CDAT and SPDM.  
-> > >
-> > > I'm ok with that too.  However, I was thinking that this was not a user ABI.
-> > > But it really is.  If user space starts writing script to unbind drivers and
-> > > then we drop the aux driver support it will break them...
-> > >  
-> > > >
-> > > > I'll send out an RFC that is so hideous it will get people to
-> > > > suggestion how to do it better!  
-> > >
-> > > I think I'd like to see that.  
-> >
-> > Fair enough. It may muddy the waters a bit :( I'll send an RFC
-> > next week.  I've not looked at how the CXL region code etc would
-> > actually get to the latency / bandwidth info from the driver yet
-> > it just goes as far as reading a CDAT length. I also want to actually
-> > hook up some decent switch CDAT emulation in the QEMU code
-> > (right now it's giving the same default table as for a type 3 device).
-> >
-> > I just hope we don't bikeshed around the RFC in a fashion that slows
-> > this series moving forwards.  
-> 
-> I think we have time in the sense that the worst that happens is that
-> tooling picks the wrong CFMWS to dynamically create a region and the
-> performance ends up being sub-optimal. That's tolerable to work around
-> in userspace in the near term. I want to get some wider confidence in
-> the DOE ABI with respect to the known protocols and what to do about
-> the vendor-specific protocols that may conflict and will be driven
-> from userspace issued config-cycles. 
-Hi Dan,
-
-Ok, though I would like to try to push the conversation forwards beyond where
-we got to last year. IIRC the general conclusion was that all protocols
-sharing a DOE instance (and more generally because they all share
-discovery) must be mediated by the kernel and that we would not be
-supporting a generic access interface (there was one in a much earlier
-version of this patch set).  Whilst it's far from the only thing that needs
-resolving, this DOE question is also a blocker on getting anywhere with
-CMA/SPDM.  Unbinding a driver as the means to stop the kernel accessing
-a DOE is reliant on the host driver not deciding to do any more protocol
-discovery - we can probably rely on that but it's not pretty.
-
-> That likely means that no DOE ABI
-> is the best ABI to start which means not moving forward with
-> aux-devices so scripts do not become attached to something that is not
-> fully committed to being carried forward.
-
-This isn't really DOE ABI we are currently discussing, it's a CXL subsystem ABI.
-If we decided to only expose the DOE as an internal implementation
-detail (calls made directly from appropriate existing CXL driver) then
-there wouldn't be an ABI question. We would be limiting DOE access
-for other protocols but personally I don't see that as a problem
-in the short to medium term.
-
-Things may be more 'interesting' for the PCIe port services driver though
-(see RFC just sent out)
-https://lore.kernel.org/linux-cxl/20220503153449.4088-1-Jonathan.Cameron@huawei.com/T/#t
-Perhaps if we can resolve what that should look like, the CXL EP side
-of things will be much easier to figure out?
-
-> 
-> I still want to refresh the request_config_region() support for at
-> least having the kernel warn on userspace conflicting configuration
-> writes to config areas claimed by a driver.
-
-Great, that seems like a sensible step to do in parallel.
-
-Jonathan
-
-
+T24gV2VkLCAyMDIyLTA0LTEzIGF0IDExOjM3IC0wNzAwLCBCZW4gV2lkYXdza3kgd3JvdGU6Cj4g
+UmVnaW9ucyBhcmUgY3JlYXRlZCBhcyBhIGNoaWxkIG9mIHRoZSBkZWNvZGVyIHRoYXQgZW5jb21w
+YXNzZXMgYW4KPiBhZGRyZXNzIHNwYWNlIHdpdGggY29uc3RyYWludHMuIFJlZ2lvbnMgaGF2ZSBh
+IG51bWJlciBvZiBhdHRyaWJ1dGVzIHRoYXQKPiBtdXN0IGJlIGNvbmZpZ3VyZWQgYmVmb3JlIHRo
+ZSByZWdpb24gY2FuIGJlIGFjdGl2YXRlZC4KPiAKPiBNdWx0aXBsZSBwcm9jZXNzZXMgd2hpY2gg
+YXJlIHRyeWluZyBub3QgdG8gcmFjZSB3aXRoIGVhY2ggb3RoZXIKPiBzaG91bGRuJ3QgbmVlZCBz
+cGVjaWFsIHVzZXJzcGFjZSBzeW5jaHJvbml6YXRpb24gdG8gZG8gc28uCj4gCj4gLy8gQWxsb2Nh
+dGUgYSBuZXcgcmVnaW9uIG5hbWUKPiByZWdpb249JChjYXQgL3N5cy9idXMvY3hsL2RldmljZXMv
+ZGVjb2RlcjAuMC9jcmVhdGVfcG1lbV9yZWdpb24pCj4gCj4gLy8gQ3JlYXRlIGEgbmV3IHJlZ2lv
+biBieSBuYW1lCj4gd2hpbGUKPiByZWdpb249JChjYXQgL3N5cy9idXMvY3hsL2RldmljZXMvZGVj
+b2RlcjAuMC9jcmVhdGVfcG1lbV9yZWdpb24pCj4gISBlY2hvICRyZWdpb24gPiAvc3lzL2J1cy9j
+eGwvZGV2aWNlcy9kZWNvZGVyMC4wL2NyZWF0ZV9wbWVtX3JlZ2lvbgo+IGRvIHRydWU7IGRvbmUK
+PiAKPiAvLyBSZWdpb24gbm93IGV4aXN0cyBpbiBzeXNmcwo+IHN0YXQgLXQgL3N5cy9idXMvY3hs
+L2RldmljZXMvZGVjb2RlcjAuMC8kcmVnaW9uCj4gCj4gLy8gRGVsZXRlIHRoZSByZWdpb24sIGFu
+ZCBuYW1lCj4gZWNobyAkcmVnaW9uID4gL3N5cy9idXMvY3hsL2RldmljZXMvZGVjb2RlcjAuMC9k
+ZWxldGVfcmVnaW9uCgpJIG5vdGljZWQgYSBzbGlnaHQgQUJJIGluY29uc2lzdGVuY3kgaGVyZSB3
+aGlsZSB3b3JraW5nIG9uIHRoZSBsaWJjeGwKc2lkZSBvZiB0aGlzIC0gc2VlIGJlbG93LgoKPiAr
+Cj4gK3N0YXRpYyBzc2l6ZV90IGNyZWF0ZV9wbWVtX3JlZ2lvbl9zaG93KHN0cnVjdCBkZXZpY2Ug
+KmRldiwKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3RydWN0IGRldmljZV9hdHRyaWJ1dGUgKmF0dHIs
+IGNoYXIgKmJ1ZikKPiArewo+ICvCoMKgwqDCoMKgwqDCoHN0cnVjdCBjeGxfZGVjb2RlciAqY3hs
+ZCA9IHRvX2N4bF9kZWNvZGVyKGRldik7Cj4gK8KgwqDCoMKgwqDCoMKgc3RydWN0IGN4bF9yb290
+X2RlY29kZXIgKmN4bHJkID0gdG9fY3hsX3Jvb3RfZGVjb2RlcihjeGxkKTsKPiArwqDCoMKgwqDC
+oMKgwqBzaXplX3QgcmM7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoC8qCj4gK8KgwqDCoMKgwqDCoMKg
+ICogVGhlcmUncyBubyBwb2ludCBpbiByZXR1cm5pbmcga25vd24gYmFkIGFuc3dlcnMgd2hlbiB0
+aGUgbG9jayBpcyBoZWxkCj4gK8KgwqDCoMKgwqDCoMKgICogb24gdGhlIHN0b3JlIHNpZGUsIGV2
+ZW4gdGhvdWdoIHRoZSBhbnN3ZXIgZ2l2ZW4gaGVyZSBtYXkgYmUKPiArwqDCoMKgwqDCoMKgwqAg
+KiBpbW1lZGlhdGVseSBpbnZhbGlkYXRlZCBhcyBzb29uIGFzIHRoZSBsb2NrIGlzIGRyb3BwZWQg
+aXQncyBzdGlsbAo+ICvCoMKgwqDCoMKgwqDCoCAqIHVzZWZ1bCB0byB0aHJvdHRsZSByZWFkZXJz
+IGluIHRoZSBwcmVzZW5jZSBvZiB3cml0ZXJzLgo+ICvCoMKgwqDCoMKgwqDCoCAqLwo+ICvCoMKg
+wqDCoMKgwqDCoHJjID0gbXV0ZXhfbG9ja19pbnRlcnJ1cHRpYmxlKCZjeGxyZC0+aWRfbG9jayk7
+Cj4gK8KgwqDCoMKgwqDCoMKgaWYgKHJjKQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqByZXR1cm4gcmM7Cj4gK8KgwqDCoMKgwqDCoMKgcmMgPSBzeXNmc19lbWl0KGJ1ZiwgIiVkXG4i
+LCBjeGxyZC0+bmV4dF9yZWdpb25faWQpOwoKVGhpcyBlbWl0cyBhIG51bWVyaWMgcmVnaW9uIElE
+LCBlLmcuICIwIiwgd2hlcmUgYXMKCj4gK8KgwqDCoMKgwqDCoMKgbXV0ZXhfdW5sb2NrKCZjeGxy
+ZC0+aWRfbG9jayk7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoHJldHVybiByYzsKPiArfQo+ICsKCjxz
+bmlwPgoKPiArc3RhdGljIHNzaXplX3QgZGVsZXRlX3JlZ2lvbl9zdG9yZShzdHJ1Y3QgZGV2aWNl
+ICpkZXYsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3QgZGV2aWNlX2F0dHJpYnV0ZSAqYXR0ciwKPiArwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIGNvbnN0IGNoYXIgKmJ1Ziwgc2l6ZV90IGxlbikKPiArewo+ICvCoMKgwqDCoMKgwqDC
+oHN0cnVjdCBjeGxfcG9ydCAqcG9ydCA9IHRvX2N4bF9wb3J0KGRldi0+cGFyZW50KTsKPiArwqDC
+oMKgwqDCoMKgwqBzdHJ1Y3QgY3hsX2RlY29kZXIgKmN4bGQgPSB0b19jeGxfZGVjb2RlcihkZXYp
+Owo+ICvCoMKgwqDCoMKgwqDCoHN0cnVjdCBjeGxfcmVnaW9uICpjeGxyOwo+ICsKPiArwqDCoMKg
+wqDCoMKgwqBjeGxyID0gY3hsX2ZpbmRfcmVnaW9uX2J5X25hbWUoY3hsZCwgYnVmKTsKClRoaXMg
+ZXhwZWN0cyBhIGZ1bGwgcmVnaW9uIG5hbWUgc3RyaW5nIGUuZy4gInJlZ2lvbjAiCgpXYXMgdGhp
+cyBpbnRlbnRpb25hbD8gSSBkb24ndCB0aGluayBpdCdzIGEgaHVnZSBkZWFsLCB0aGUgbGlicmFy
+eSBjYW4KY2VydGFpbmx5IGRlYWwgd2l0aCBpdCBpZiBuZWVkZWQgLSBidXQgd291bGQgaXQgYmUg
+YmV0dGVyIHRvIGhhdmUgdGhlCkFCSSBzeW1tZXRyaWNhbCBiZXR3ZWVuIGNyZWF0ZSBhbmQgZGVs
+ZXRlPwoK
