@@ -2,158 +2,101 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CD9C433EF
-	for <linux-cxl@archiver.kernel.org>; Fri,  6 May 2022 22:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B87C433EF
+	for <linux-cxl@archiver.kernel.org>; Sat,  7 May 2022 10:18:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1391354AbiEFWod (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 6 May 2022 18:44:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51508 "EHLO
+        id S1359818AbiEGKWm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 7 May 2022 06:22:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1444819AbiEFWoW (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 6 May 2022 18:44:22 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1AE72D1D2
-        for <linux-cxl@vger.kernel.org>; Fri,  6 May 2022 15:40:36 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id j6so7359890pfe.13
-        for <linux-cxl@vger.kernel.org>; Fri, 06 May 2022 15:40:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=065LDUWhqHCWgMdSSFbFDlbRvxvwACfC87yilPrGdlI=;
-        b=zBIqQHyP2DRtu8jz8+AeLb0ciWZUD2F8sqANruiZOVMvEMBEZAD3emBi/qQVdLHqzp
-         FVHMU/GpxMUVJkH9RZzn+SAkcjpv4QVSuwQq5svgxeZZuJMAfI5wZmEpZr/PUNpF0trc
-         v3FhaSLgSXaMB+u/Oj16M0ZDcapRGhaMUNu5wuOgExggSL2OpO6Q79H9C0m44+SLlmoK
-         CGdmBpImvHG/vxatvNPDekkhw+VeGMDKncZSVQPPJN84rz/lbCUkxKFc0jAyjgd0j8bN
-         XjopR/MAHgdcUIvAT/+tlwE2P5TQ9VWRpEznQWZ+5aS2XCz+uU3dwDcZAZ01ORpmZxyj
-         NKrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=065LDUWhqHCWgMdSSFbFDlbRvxvwACfC87yilPrGdlI=;
-        b=NC+H34XSCKjMvntiU5oCjwoMT0jBGzUWTbve1iBA9aqZ1y0NiucPDujO6jLyrXW21y
-         KrDiYZ9OH6ZwQxQ72eHH1R+zPMuzR0ySagn+j8qwmtQUhOdk/6BosNfQyBBABfhiJub/
-         CTeoAZYPMk0cCok/f+pRwIkxnjlW4OAWr2QZ9VWX3sxxwiS2gfjEUSeDY3MvC67HGR/F
-         OXE2ARmWS/SPu4+S1GkI6yJHOhFnm5KyYcMTKjluTv3tqStDin7peOqkXmlyuKAczyqf
-         W8uBRmruCmH4msz6057QPJ+fbYqSg561+krTLFEKFvoLAnO7TJ5/oldepCsYsgjUf1sH
-         ScsQ==
-X-Gm-Message-State: AOAM532P6HFFrryFtRSGVrlB1ZIC0ukPCOVaTovLGlE2tRgjb85g6BtY
-        HF3zcx8NzVXEkJym2CFwOR0JwFSa35f7aOUzWngvBg==
-X-Google-Smtp-Source: ABdhPJwmOiKypJh3j0YJSeDdlLbNrycMsjuELoXdkDcdp8bN/9RM2i9cleVTUpHB3xROZ6zQ4ez2oeSNjpMNfuP+Jtw=
-X-Received: by 2002:a63:1117:0:b0:399:2df0:7fb9 with SMTP id
- g23-20020a631117000000b003992df07fb9mr4692066pgl.40.1651876836471; Fri, 06
- May 2022 15:40:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220503153449.4088-1-Jonathan.Cameron@huawei.com>
-In-Reply-To: <20220503153449.4088-1-Jonathan.Cameron@huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 6 May 2022 15:40:25 -0700
-Message-ID: <CAPcyv4geBaTkoJ+Gefgq6RaKHtB3NMh5ruZ-1yV_i0UVaw3SWA@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/1] DOE usage with pcie/portdrv
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Linuxarm <linuxarm@huawei.com>, "Weiny, Ira" <ira.weiny@intel.com>,
+        with ESMTP id S1351004AbiEGKWj (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 7 May 2022 06:22:39 -0400
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B41814AE3B;
+        Sat,  7 May 2022 03:18:52 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id F2D863000E43D;
+        Sat,  7 May 2022 12:18:48 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id E71B427C582; Sat,  7 May 2022 12:18:48 +0200 (CEST)
+Date:   Sat, 7 May 2022 12:18:48 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
         Linux PCI <linux-pci@vger.kernel.org>,
-        linux-cxl@vger.kernel.org,
-        "Wunner, Lukas" <lukas.wunner@intel.com>,
-        CHUCK_LEVER <chuck.lever@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-cxl@vger.kernel.org, CHUCK_LEVER <chuck.lever@oracle.com>
+Subject: Re: [RFC PATCH 0/1] DOE usage with pcie/portdrv
+Message-ID: <20220507101848.GB31314@wunner.de>
+References: <20220503153449.4088-1-Jonathan.Cameron@huawei.com>
+ <CAPcyv4geBaTkoJ+Gefgq6RaKHtB3NMh5ruZ-1yV_i0UVaw3SWA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4geBaTkoJ+Gefgq6RaKHtB3NMh5ruZ-1yV_i0UVaw3SWA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-[ add Lukas and Chuck ]
+On Fri, May 06, 2022 at 03:40:25PM -0700, Dan Williams wrote:
+> On Tue, May 3, 2022 at 8:35 AM Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> So, like you, I was envisioning all the CMA and SPDM code landing in
+> the kernel until I read this:
+> 
+> "Extending in-kernel TLS support"
+> https://lwn.net/Articles/892216/
+> 
+> ...and questioned why this new CMA/SPDM session establishment, which
+> is similar to TLS, be done inside the kernel while TLS session
+> establishment is done in userspace? I had a chance to chat with Chuck
+> at LSF/MM and confirmed there is little appetite to change this
+> up-call requirement for session establishment and expect CMA to be the
+> same. The rough idea of how this works with CMA/SPDM is providing an
+> ABI to retrieve session setup data with the end result of userspace
+> instantiating a keyid via keyctl the to be used for future SPDM
+> messages.
 
-On Tue, May 3, 2022 at 8:35 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> So far, we have been considering Data Object Exchange (DOE) mailboxes only
-> on EPs (CXL type 3 devices).
-> CXL CDAT (technically CXL Table Query Protocol but lets just call it CDAT)
->   https://lore.kernel.org/linux-cxl/20220414203237.2198665-1-ira.weiny@intel.com
-> CMA/SPDM support
->   https://lore.kernel.org/linux-cxl/20220303135905.10420-1-Jonathan.Cameron@huawei.com/
->
-> However, a number of DOE protocols apply to switch (and root) ports.
-> DOE instances supporting CDAT occur on switch upstream ports as well as EPs.
->
-> DOE instances supporting CMA may occur in root ports, upstream switch ports,
-> downstream switch ports and EPs (including multiple functions where relevant).
->
+I'm still somewhat undecided on the kernel vs. user space question.
 
-So, like you, I was envisioning all the CMA and SPDM code landing in
-the kernel until I read this:
+The simplest approach would be to expose DOE to user space and just
+let it send the requests necessary for setting up an SPDM session
+as well as IDE.
 
-"Extending in-kernel TLS support"
-https://lwn.net/Articles/892216/
+Jonathan posted patches a while ago to expose a DOE chrdev:
+https://lore.kernel.org/all/20210524133938.2815206-5-Jonathan.Cameron@huawei.com/
 
-...and questioned why this new CMA/SPDM session establishment, which
-is similar to TLS, be done inside the kernel while TLS session
-establishment is done in userspace? I had a chance to chat with Chuck
-at LSF/MM and confirmed there is little appetite to change this
-up-call requirement for session establishment and expect CMA to be the
-same. The rough idea of how this works with CMA/SPDM is providing an
-ABI to retrieve session setup data with the end result of userspace
-instantiating a keyid via keyctl the to be used for future SPDM
-messages.
+On the other hand, I'm poring over Jonathan's latest kernel SPDM/CMA
+patches and they're not very large, hence seem upstreamable.
 
-> The intent of this RFC is to discuss how to actually implement such support.
-> The attached patch is a really rough PoC for CDAT on upstream switch ports
-> done by adding a new pcie_port_service_driver.  This is different from the
-> proposed auxiliary device used for CXL type 3 devices (for now).
+It would be nice to have the kernel auto-detect that a PCI device
+supports IDE and create a directory in sysfs as a result.  The user
+would just drop certificates there which are added to a keyring
+and the kernel would automatically try to set up an SPDM session
+with one of the certificates and bring up IDE encryption.  Binding of
+drivers to devices could be delayed until IDE is set up, as could be
+enumeration of devices below a hot-plugged, IDE-capable PCIe switch.
 
-CDAT to me is on the "CXL" side of a given PCI device. Given that
-endpoints and switches are each represented by cxl_port objects it
-seems those should generically carry the CDAT binary attribute, not
-the PCI device, don't you think?
+(I can think of plenty of use cases, some good, some evil.
+Such as preventing malicious / forged devices from being used,
+but also vendors and employers controlling what people plug into
+their machines.  Brave new world.)
 
->
-> So open questions:
->
-> 1. Granularity. Should we do a driver per group of protocols that may
->    be collocated, or one per DOE instance. For now, we might be looking
->    at CDAT as done for this PoC, and CMA/IDE.
+Of course, it would probably be possible to implement all of this
+in user space but it might not be as seamless.
 
-The more time goes by the more I am coming around to Bjorn's initial
-reaction to all this that DOE is closer to a VPD model than an
-auxiliary_device model or pcie_port_device model.
+I just fear that we may become a laughing stock for security researchers
+with a kernel-only implementation.  Kind of like "ASN.1 parsing at ring 0":
+https://x41-dsec.de/lab/blog/kernel_userspace/
 
-I.e. have some common discovery in the PCI core for enumerating DOE
-instances and advertisting protocols, but otherwise leave it up to
-individual leaf drivers like cxl_pci or cxl_port to use that core to
-run a given protocol.
+I have some feedback on Jonathan's SPDM/CMA patches and will send it
+out in a bit...
 
-> 2. Use of a pcie_port_service_driver a reasonable way to do this?
-> 3. Service provision. It is likely that all of the protocols defined
->    above will be used as part of activities that span multiple devices.
->    a) CDAT used to establish latencies and bandwidth between host CPU
->       and memory on a CXL type 3 device beyond one or more CXL switches.
->    b) CMA.  Might just be used to provide simple device attestation
->       and potentially lock out the upstream port above a switch if the
->       switch does not pass attestation.  Many many other uses possible...
+Thanks,
 
-Per above once userspace has installed an SPDM session keyid for a
-given PCI device it can also optionally set an 'authorized' attribute
-(similiar to what USB and Thunderbolt have) to indicate whether a
-device has passed attestation. As for the actual protocols that are
-going to run over the SPDM session those would need their own drivers
-that reference the established keyid.
-
->    c) Secure CMA / IDE. Likely to be used to set up link IDE.  What
->       this will look like is a question I've not really started
->       thinking about yet.
->
->    So how do we support this?  If nothing else we need to make sure
->    the drivers for the port don't go away whilst in use.
-
-Another reason to make it a core aspect of the PCI device like VPD so
-there are no entanglements beyond "PCI device exists".
-
-> The patch is a very early PoC just to show it would 'work'...
->
-> Note I am keen to not have the discussion around this support delay
-> Ira's series.
-
-Is there a nearer term forcing function for this? I.e. v5.20 seems to
-be where the current DOE series is going to intercept. I think abandon
-the "aux" organization for now and make DOE like VPD.
+Lukas
