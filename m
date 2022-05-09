@@ -2,132 +2,269 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C78C433F5
-	for <linux-cxl@archiver.kernel.org>; Mon,  9 May 2022 18:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAAAC433F5
+	for <linux-cxl@archiver.kernel.org>; Mon,  9 May 2022 21:25:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239976AbiEISLW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 9 May 2022 14:11:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34664 "EHLO
+        id S230119AbiEIV3V (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 9 May 2022 17:29:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240034AbiEISLR (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 9 May 2022 14:11:17 -0400
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF63FBF40;
-        Mon,  9 May 2022 11:07:21 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 72A45300002AC;
-        Mon,  9 May 2022 20:07:17 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 623D8B1FD3; Mon,  9 May 2022 20:07:17 +0200 (CEST)
-Date:   Mon, 9 May 2022 20:07:17 +0200
-From:   Lukas Wunner <lukas@wunner.de>
+        with ESMTP id S229599AbiEIV3U (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 9 May 2022 17:29:20 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B97C72C2571;
+        Mon,  9 May 2022 14:25:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652131524; x=1683667524;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=w9/+znMpjVvEE7LipRzImJB90PLvzBYflKc/N0o5Bbw=;
+  b=Il0iF2KPsWmdjr1+UqM8VO3/YixxuDDIJXhqFSyYlGIMAjYOPVOSflTJ
+   fXYYjRqQ+tm1tm82lImNztIrF8kPlT1vghGTrpVDtStRhp7Ur0IBnfEbi
+   OkLN3A7V7UjUc0+JPpoTiW2x8BXIiOaFj1YAzt+JDvIXKO7CdX3k+uTMj
+   fYYwZ2kYFyo/KspvbUWM0LDJvKDHZlIcVmSBs57rHMrqO2qmdxRIEndcg
+   AHuH80OW11zeceWij5vFreXNlWweAN63oNIgjWoBY3vPD56foHvgY3Et1
+   Bm8iTi6Jx2byeieByfQLeRSJrquwziQeybxjGjobMBwCBjmgWoZkSIPEb
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10342"; a="249708360"
+X-IronPort-AV: E=Sophos;i="5.91,212,1647327600"; 
+   d="scan'208";a="249708360"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2022 14:25:24 -0700
+X-IronPort-AV: E=Sophos;i="5.91,212,1647327600"; 
+   d="scan'208";a="551468941"
+Received: from sganapa1-mobl1.amr.corp.intel.com (HELO localhost) ([10.212.98.230])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2022 14:25:23 -0700
+Date:   Mon, 9 May 2022 14:25:23 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-        linuxarm@huawei.com, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Chris Browy <cbrowy@avery-design.com>,
-        keyrings@vger.kernel.org, Bjorn Helgaas <bjorn@helgaas.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        dan.j.williams@intel.com
-Subject: Re: [RFC PATCH v2 12/14] spdm: Introduce a library for DMTF SPDM
-Message-ID: <20220509180717.GA7015@wunner.de>
-References: <20220303135905.10420-1-Jonathan.Cameron@huawei.com>
- <20220303135905.10420-13-Jonathan.Cameron@huawei.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V8 06/10] cxl/pci: Find the DOE mailbox which supports
+ CDAT
+Message-ID: <YnmGw8bPMQYhd5N+@iweiny-desk3>
+References: <20220414203237.2198665-1-ira.weiny@intel.com>
+ <20220414203237.2198665-7-ira.weiny@intel.com>
+ <20220427184956.00004507@Huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220303135905.10420-13-Jonathan.Cameron@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20220427184956.00004507@Huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Mar 03, 2022 at 01:59:03PM +0000, Jonathan Cameron wrote:
-> --- /dev/null
-> +++ b/include/linux/spdm.h
-> @@ -0,0 +1,104 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * DMTF Security Protocol and Data Model
-> + *
+On Wed, Apr 27, 2022 at 06:49:56PM +0100, Jonathan Cameron wrote:
+> On Thu, 14 Apr 2022 13:32:33 -0700
+> ira.weiny@intel.com wrote:
+> 
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > Each CXL device may have multiple DOE mailbox capabilities and each
+> > mailbox may support multiple protocols.
+> > 
+> > Search the DOE auxiliary devices for one which supports the CDAT
+> > protocol.  Cache that device to be used for future queries.
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> One question inline.  With that addressed (or convincing argument why not)
+> the rest looks good.
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Please amend this comment at the top of both spdm.h and spdm.c
-with a link to https://www.dmtf.org/dsp/DSP0274
-so the casual reader knows the document number and
-knows where to find the spec.
+Thanks!
 
+> 
+> > 
+> > ---
+> > Changes from V7
+> > 	Minor code clean ups
+> > 
+> > Changes from V6
+> > 	Adjust for aux devices being a CXL only concept
+> > 	Update commit msg.
+> > 	Ensure devices iterated by auxiliary_find_device() are checked
+> > 		to be DOE devices prior to checking for the CDAT
+> > 		protocol
+> > 	From Ben
+> > 		Ensure reference from auxiliary_find_device() is dropped
+> > ---
+> >  drivers/cxl/cxl.h    |  2 ++
+> >  drivers/cxl/cxlmem.h |  2 ++
+> >  drivers/cxl/pci.c    | 76 +++++++++++++++++++++++++++++++++++++++++++-
+> >  3 files changed, 79 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> > index 990b6670222e..50817fd2c912 100644
+> > --- a/drivers/cxl/cxl.h
+> > +++ b/drivers/cxl/cxl.h
+> > @@ -90,6 +90,8 @@ static inline int cxl_hdm_decoder_count(u32 cap_hdr)
+> >  #define CXLDEV_MBOX_BG_CMD_STATUS_OFFSET 0x18
+> >  #define CXLDEV_MBOX_PAYLOAD_OFFSET 0x20
+> >  
+> > +#define CXL_DOE_PROTOCOL_TABLE_ACCESS 2
+> > +
+> >  /*
+> >   * Using struct_group() allows for per register-block-type helper routines,
+> >   * without requiring block-type agnostic code to include the prefix.
+> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> > index 7235d2f976e5..0dc6988afb30 100644
+> > --- a/drivers/cxl/cxlmem.h
+> > +++ b/drivers/cxl/cxlmem.h
+> > @@ -168,6 +168,7 @@ struct cxl_endpoint_dvsec_info {
+> >   * Currently only memory devices are represented.
+> >   *
+> >   * @dev: The device associated with this CXL state
+> > + * @cdat_doe: Auxiliary DOE device capabile of reading CDAT
+> >   * @regs: Parsed register blocks
+> >   * @cxl_dvsec: Offset to the PCIe device DVSEC
+> >   * @payload_size: Size of space for payload
+> > @@ -200,6 +201,7 @@ struct cxl_endpoint_dvsec_info {
+> >  struct cxl_dev_state {
+> >  	struct device *dev;
+> >  
+> > +	struct cxl_doe_dev *cdat_doe;
+> >  	struct cxl_regs regs;
+> >  	int cxl_dvsec;
+> >  
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > index 0dec1f1a3f38..622cac925262 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> > @@ -706,6 +706,80 @@ static int cxl_pci_create_doe_devices(struct pci_dev *pdev)
+> >  	return 0;
+> >  }
+> >  
+> > +static bool cxl_doe_dev_supports_prot(struct cxl_doe_dev *doe_dev, u16 vid, u16 pid)
+> > +{
+> > +	struct cxl_doe_drv_state *doe_ds;
+> > +	bool ret;
+> > +
+> > +	doe_ds = cxl_pci_doe_get_drv(doe_dev);
+> > +	if (!doe_ds) {
+> > +		cxl_pci_doe_put_drv(doe_dev);
+> 
+> That means the get_drv has a rather unexpected side effect.
+> Could you move the NULL check into the function so that we don't retain
+> a reference if it fails?
 
-> +struct spdm_header {
-> +	u8 version;
-> +	u8 code;  /* requestresponsecode */
-> +	u8 param1;
-> +	u8 param2;
-> +};
+Indeed.  I struggled a bit with this because get_* is usually taking a
+reference on the subject of the get but in this case we are really getting a
+reference on the device not the driver...
 
-I think you need to add __packed to all of the message structs
-to ensure the compiler doesn't add padding anywhere.
+I originally open coded this and the functions were 'get_device'...
 
+:-/
 
-> +struct spdm_exchange {
-> +	struct spdm_header *request_pl;
-> +	size_t request_pl_sz;
-> +	struct spdm_header *response_pl;
-> +	size_t response_pl_sz;
+I think this also may have been why the device was originally part of the
+driver state.
 
-I assume "pl" means payload.  This isn't accurate as the spec defines
-payload as the message body only (i.e. sans header).
-I'd just omit the "_pl" suffix.
+I think this is the better way to code these access functions:
 
+static struct cxl_doe_drv_state *cxl_pci_doe_get_drv(struct cxl_doe_dev *doe_dev)                                               
+{
+        struct cxl_doe_drv_state *cxl_ds;                                                                                       
+ 
+        down_read(&doe_dev->driver_access);                                                                                     
+        cxl_ds = auxiliary_get_drvdata(&doe_dev->adev);
+        if (!cxl_ds)
+                up_read(&doe_dev->driver_access);                                                                               
+        return cxl_ds;
+} 
+  
+static void cxl_pci_doe_put_drv(struct cxl_doe_drv_state *cxl_ds)                                                               
+{ 
+        if (!cxl_ds)
+                return;
+        up_read(&cxl_ds->doe_dev->driver_access);
+} 
 
-> +int spdm_measurements_get(struct spdm_state *spdm_state);
+Ira
 
-That function is declared in spdm.h but there's no implementation
-provided in this patch.  Probably a leftover from an older iteration?
-
-
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -289,6 +289,8 @@ obj-$(CONFIG_PERCPU_TEST) += percpu_test.o
->  obj-$(CONFIG_ASN1) += asn1_decoder.o
->  obj-$(CONFIG_ASN1_ENCODER) += asn1_encoder.o
->  
-> +obj-$(CONFIG_SPDM) += spdm.o
-
-It certainly seems wise to put this in lib/ so that it can be used by
-other buses as well once they add encryption/authentication.
-It's clearly not a PCIe-only feature.
-
-I'm thinking of USB specifically since the USB Authentication Spec
-seems to have served as a blueprint for SPDM.
-
-I'd suggest to only include a forward declaration of struct spdm_state
-in spdm.h to avoid exposing internals.  I'd further suggest to expose
-one function to allocate & initialize an spdm_state.  By initialize I mean
-that a transport function pointer is passed in which is stored in
-struct spdm_state.  The transport function performs one request/response
-transaction.  I think you should not mark the dev pointer in struct
-spdm_state as "For error reporting only", rather that's the device with
-which an SPDM exchange is performed.  The transport function should use
-that dev pointer instead of duplicating the pointer in transport_priv.
-
-Authenticating a device would thus encompass two function calls,
-one to allocate & initialize spdm_state, another one to perform
-SPDM session setup (which does authentication).
-
-Encryption would encompass a third function call to set up IDE.
-
-
-> +	spdm_state->measurement_hash_alg = __ffs(le16_to_cpu(rsp->measurement_hash_algo));
-> +	spdm_state->base_asym_alg = __ffs(le16_to_cpu(rsp->base_asym_sel));
-> +	spdm_state->base_hash_alg = __ffs(le16_to_cpu(rsp->base_hash_sel));
-
-The weaker algorithms are represented by lower bits, so this selects
-the weakest supported algorithm.  Wouldn't we want the opposite?
-I guess that's a policy decision that user space should decide...
-
-Thanks,
-
-Lukas
+> 
+> > +		return false;
+> > +	}
+> > +	ret = pci_doe_supports_prot(doe_ds->doe_mb, vid, pid);
+> > +	cxl_pci_doe_put_drv(doe_dev);
+> > +	return ret;
+> > +}
+> > +
+> > +static int cxl_match_cdat_doe_device(struct device *dev, const void *data)
+> > +{
+> > +	const struct cxl_dev_state *cxlds = data;
+> > +	struct auxiliary_device *adev = to_auxiliary_dev(dev);
+> > +	struct cxl_doe_dev *doe_dev;
+> > +
+> > +	/* Ensure this is a DOE device */
+> > +	if (strcmp(DOE_DEV_NAME, adev->name))
+> > +		return 0;
+> > +
+> > +	/* Determine if this auxiliary device belongs to the cxlds */
+> > +	if (cxlds->dev != dev->parent)
+> > +		return 0;
+> > +
+> > +	doe_dev = container_of(adev, struct cxl_doe_dev, adev);
+> > +
+> > +	/* If it is one of ours check for the CDAT protocol */
+> > +	if (!cxl_doe_dev_supports_prot(doe_dev, PCI_DVSEC_VENDOR_ID_CXL,
+> > +				   CXL_DOE_PROTOCOL_TABLE_ACCESS))
+> > +		return 0;
+> > +
+> > +	return 1;
+> > +}
+> > +
+> > +static void drop_cdat_doe_ref(void *data)
+> > +{
+> > +	struct cxl_doe_dev *cdat_doe = data;
+> > +
+> > +	put_device(&cdat_doe->adev.dev);
+> > +}
+> > +
+> > +static int cxl_setup_doe_devices(struct cxl_dev_state *cxlds)
+> > +{
+> > +	struct device *dev = cxlds->dev;
+> > +	struct pci_dev *pdev = to_pci_dev(dev);
+> > +	struct auxiliary_device *adev;
+> > +	int rc;
+> > +
+> > +	rc = cxl_pci_create_doe_devices(pdev);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	adev = auxiliary_find_device(NULL, cxlds, &cxl_match_cdat_doe_device);
+> > +
+> > +	if (adev) {
+> > +		struct cxl_doe_dev *doe_dev = container_of(adev,
+> > +							   struct cxl_doe_dev,
+> > +							   adev);
+> > +
+> > +		/* auxiliary_find_device() takes the reference */
+> > +		rc = devm_add_action_or_reset(dev, drop_cdat_doe_ref, doe_dev);
+> > +		if (rc)
+> > +			return rc;
+> > +		cxlds->cdat_doe = doe_dev;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >  {
+> >  	struct cxl_register_map map;
+> > @@ -772,7 +846,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >  	if (rc)
+> >  		return rc;
+> >  
+> > -	rc = cxl_pci_create_doe_devices(pdev);
+> > +	rc = cxl_setup_doe_devices(cxlds);
+> >  	if (rc)
+> >  		return rc;
+> >  
+> 
