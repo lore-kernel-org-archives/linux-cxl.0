@@ -2,145 +2,137 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB9EC433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 12 May 2022 17:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF402C433F5
+	for <linux-cxl@archiver.kernel.org>; Thu, 12 May 2022 18:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356850AbiELR15 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 12 May 2022 13:27:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58988 "EHLO
+        id S1357470AbiELSOT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 12 May 2022 14:14:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357030AbiELR1r (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 12 May 2022 13:27:47 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CFBD10115A
-        for <linux-cxl@vger.kernel.org>; Thu, 12 May 2022 10:27:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=POsmG8gxTJ+8opBsMUMlh4wZguh3L79HwkpJz2EQhGE=; b=UAhw9uCow//dvgzeqpZuVgDO0q
-        yVBGGglzPHB03fj1bF68oA5ctLYocF7GOkfSzv/LgwvGYFRh+GAP8WM39hrDi+S5I2NHaMt9Wxrg0
-        xKDyyhbaLtmLasiTlx6LjYeOWYvTtS/1OHuh1oQK9rQPWpXDRT+R4wy7gc6Y4IM7ExYUCvM3pNp8J
-        Qfjyq7zo+eV7NfkJkNsmCGfsOzYZM8xXfYBFJVxLOnsVPgXFUgSZ6FfaBysjAQy34qatn7F0dBjn4
-        ZCCCoTnfCdYDL86T6eKTVpLb0IolzmsCPOFS6u2K/3rFG9M2sqbVl5wy09WPHmdS0voRDS6XbaVDl
-        Xwnqaejg==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1npCbC-00D00T-K8; Thu, 12 May 2022 17:27:38 +0000
-Date:   Thu, 12 May 2022 10:27:38 -0700
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Ben Widawsky <ben.widawsky@intel.com>,
-        Klaus Jensen <its@irrelevant.dk>, Josef Bacik <jbacik@fb.com>
-Cc:     Adam Manzanares <a.manzanares@samsung.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [RFC PATCH 02/15] cxl/core/hdm: Bail on endpoint init fail
-Message-ID: <Yn1DiuqjYpklcEIT@bombadil.infradead.org>
-References: <20220413183720.2444089-1-ben.widawsky@intel.com>
- <20220413183720.2444089-3-ben.widawsky@intel.com>
- <CAPcyv4hKGEy_0dMQWfJAVVsGu364NjfNeup7URb7ORUYLSZncw@mail.gmail.com>
- <CGME20220418163713uscas1p17b3b1b45c7d27e54e3ecb62eb8af2469@uscas1p1.samsung.com>
- <20220418163702.GA85141@bgt-140510-bm01>
- <20220512155014.bbyqvxqbqnm3pk2p@intel.com>
+        with ESMTP id S241392AbiELSOS (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 12 May 2022 14:14:18 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 843A925F7B2
+        for <linux-cxl@vger.kernel.org>; Thu, 12 May 2022 11:14:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652379257; x=1683915257;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=3u/nMAeBRWMicz6TLD9iKdPTU+TkmymxLTEc67s2Vsk=;
+  b=dRzmeziu7+94G+XEN6mHLJQSnIyVAxJmZD2BNPvSQukdtioTFORWhBbA
+   grkgJVIOr1VDK+Wg3Jjn1SXgvpfLoGCGGdzbZGv5IFmlf3XMw5sFQMowT
+   LZBjsLrA4Brjo/Tm/vgGt9Z8wu9GNzhq3R/O11j7YF7FZDgKOm97A8njA
+   QZ7wpj6FkPkxqh7zgATEANduj09Dy6xx+0xk1JD1DXs5vod0wu2TRQUtC
+   1xo4H38NwPc94GsxnV/jrLuWDWoGS8LgfUcT67Gk+d3qDoI7Wz6nak0PU
+   mVcTvNDzI2lWZBd4zrhdS8jNCDdc08zWuJZyWz9SHQF7d19e4Sa6yAZnn
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10345"; a="268934813"
+X-IronPort-AV: E=Sophos;i="5.91,220,1647327600"; 
+   d="scan'208";a="268934813"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 11:14:17 -0700
+X-IronPort-AV: E=Sophos;i="5.91,220,1647327600"; 
+   d="scan'208";a="542899180"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 11:14:16 -0700
+Subject: [PATCH 00/14] cxl: Fix "mem_enable" handling
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Jonathan.Cameron@huawei.com, ben.widawsky@intel.com,
+        ira.weiny@intel.com, alison.schofield@intel.com,
+        vishal.l.verma@intel.com
+Date:   Thu, 12 May 2022 11:14:16 -0700
+Message-ID: <165237925642.3832067.15995008431029494571.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220512155014.bbyqvxqbqnm3pk2p@intel.com>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, May 12, 2022 at 08:50:14AM -0700, Ben Widawsky wrote:
-> On 22-04-18 16:37:12, Adam Manzanares wrote:
-> > On Wed, Apr 13, 2022 at 02:31:42PM -0700, Dan Williams wrote:
-> > > On Wed, Apr 13, 2022 at 11:38 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > >
-> > > > Endpoint decoder enumeration is the only way in which we can determine
-> > > > Device Physical Address (DPA) -> Host Physical Address (HPA) mappings.
-> > > > Information is obtained only when the register state can be read
-> > > > sequentially. If when enumerating the decoders a failure occurs, all
-> > > > other decoders must also fail since the decoders can no longer be
-> > > > accurately managed (unless it's the last decoder in which case it can
-> > > > still work).
-> > > 
-> > > I think this should be expanded to fail if any decoder fails to
-> > > allocate anywhere in the topology otherwise it leaves a mess for
-> > > future address translation code to work through cases where decoder
-> > > information is missing.
-> > > 
-> > > The current approach is based around the current expectation that
-> > > nothing is enumerating pre-existing regions, and nothing is performing
-> > > address translation.
-> > 
-> > Does the qemu support currently allow testing of this patch? If so, it would 
-> > be good to reference qemu configurations. Any other alternatives would be 
-> > welcome as well. 
-> > 
-> > +Luis on cc.
-> > 
-> 
-> No. This type of error injection would be cool to have, but I'm not sure of a
-> good way to support that in a scalable way. Maybe Jonathan has some ideas?
+Jonathan reports [1] that after he changed QEMU to stop setting
+Mem_Enable (8.1.3.2 DVSEC CXL Control (Bit 2)) by default the following
+problems arose:
 
-In case it helps on the Linux front the least intrusive way is to use
-ALLOW_ERROR_INJECTION(). It's what I hope we'll slowly strive for on
-the block layer and filesystems slowly. That incurs one macro call per error
-routine you want to allow error injection on.
+    1. Nothing in the Linux code actually sets Mem_Enable to 1.
+    2. Probing fails in mem.c as wait_for_media() checks for
+       info->mem_enabled (cached value of this bit).
 
-Then you use debugfs to dynamically enable / disable the error
-injection / rate etc.
+The investigation turned up more issues:
 
-So I think this begs the question, what error injection mechanisms
-exist for qemu and would new functionality be welcomed?
+- DVSEC ranges are always non-zero size, so it is ambiguous, just
+  looking at the registers, as to whether platform firmware is trying to
+  route the first 256M of memory to CXL, or just failed to change the
+  registers from the default.
 
-Linux builds off a brilliantly simple simple interface borrowed from
-failmalloc [0]. The initial implementation on Linux then was also really
-simple [1] [2] [3] however it required adding stubs on each call with a
-respective build option to enable failure injection. Configuration was done
-through debugfs.
+- No driver consideration for clearing "mem_enabled" and / or HDM
+  Decoder Enable.
 
-Later Josef enabled us to use BPF to allow overriding kprobed functions
-to return arbitrary values[4], and further generalized away from kprobes
-by Masami [5].
+- The cxl_test mock override for cxl_hdm_decode_init() was hiding bugs
+  in this path.
 
-If no failure injection is present in qemu something as simple as the initial
-approach could be considered [1] [2] [3], but a dynamic interface
-would certainly be wonderful long term.
+The end goal of these reworks are to improve detection for cases where
+platform firmware is actually operating in legacy CXL DVSEC Range mode,
+take ownership for setting and clearing "mem_enable" and HDM Decoder
+Enable, and cleanup the indirections / mocking for cxl_test.
 
-[0] http://www.nongnu.org/failmalloc/
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=de1ba09b214056365d9082982905b255caafb7a2
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6ff1cb355e628f8fc55fa2d01e269e5e1bbc2fe9
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8a8b6502fb669c3a0638a08955442814cedc86b1
-[4] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=92ace9991da08827e809c2d120108a96a281e7fc
-[5] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=540adea3809f61115d2a1ea4ed6e627613452ba1
+The new flow is described in patch 14:
 
-  Luis
+    Previously, the cxl_mem driver was relying on platform-firmware to set
+    "mem_enable". That is an invalid assumption as there is no requirement
+    that platform-firmware sets the bit before the driver sees a device,
+    especially in hot-plug scenarios. Additionally, ACPI-platforms that
+    support CXL 2.0 devices also support the ACPI CEDT (CXL Early Discovery
+    Table). That table outlines the platform permissible address ranges for
+    CXL operation. So, there is a need for the driver to set "mem_enable",
+    and there is information available to determine the validity of the CXL
+    DVSEC Ranges. Note that the DVSEC Ranges can not be shut off completely.
+    They always decode at least 256MB if "mem_enable" is set and the HDM
+    Decoder capability is disabled.
 
-> > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > > ---
-> > > >  drivers/cxl/core/hdm.c | 2 ++
-> > > >  1 file changed, 2 insertions(+)
-> > > >
-> > > > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> > > > index bfc8ee876278..c3c021b54079 100644
-> > > > --- a/drivers/cxl/core/hdm.c
-> > > > +++ b/drivers/cxl/core/hdm.c
-> > > > @@ -255,6 +255,8 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
-> > > >                                       cxlhdm->regs.hdm_decoder, i);
-> > > >                 if (rc) {
-> > > >                         put_device(&cxld->dev);
-> > > > +                       if (is_endpoint_decoder(&cxld->dev))
-> > > > +                               return rc;
-> > > >                         failed++;
-> > > >                         continue;
-> > > >                 }
-> > > > --
-> > > > 2.35.1
-> > > >
-> > > 
+    Arrange for the driver to optionally enable the HDM Decoder Capability
+    if "mem_enable" was not set by platform firmware, or the CXL DVSEC Range
+    configuration was invalid. Be careful to only disable memory decode if
+    the kernel was the one to enable it. In other words, if CXL is backing
+    all of kernel memory at boot the device needs to maintain "mem_enable"
+    and "HDM Decoder enable" all the way up to handoff back to platform
+    firmware (e.g. ACPI S5 state entry may require CXL memory to stay
+    active).
+
+Link: https://lore.kernel.org/r/20220426180832.00005f0b@Huawei.com [1]
+
+---
+
+Dan Williams (14):
+      cxl/mem: Drop mem_enabled check from wait_for_media()
+      cxl/pci: Consolidate wait_for_media() and wait_for_media_ready()
+      cxl/pci: Drop wait_for_valid() from cxl_await_media_ready()
+      cxl/mem: Fix cxl_mem_probe() error exit
+      cxl/mem: Validate port connectivity before dvsec ranges
+      cxl/pci: Move cxl_await_media_ready() to the core
+      cxl/mem: Consolidate CXL DVSEC Range enumeration in the core
+      cxl/mem: Skip range enumeration if mem_enable clear
+      cxl/mem: Fix CXL DVSEC Range Sizing
+      cxl/mem: Merge cxl_dvsec_ranges() and cxl_hdm_decode_init()
+      cxl/pci: Drop @info argument to cxl_hdm_decode_init()
+      cxl/port: Move endpoint HDM Decoder Capability init to port driver
+      cxl/port: Reuse 'struct cxl_hdm' context for hdm init
+      cxl/port: Enable HDM Capability after validating DVSEC Ranges
+
+
+ drivers/cxl/core/pci.c        |  362 +++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxlmem.h          |    4 
+ drivers/cxl/cxlpci.h          |    2 
+ drivers/cxl/mem.c             |  115 -------------
+ drivers/cxl/pci.c             |  184 ---------------------
+ drivers/cxl/port.c            |   28 ++-
+ tools/testing/cxl/Kbuild      |    3 
+ tools/testing/cxl/mock_mem.c  |   10 -
+ tools/testing/cxl/test/mem.c  |   17 --
+ tools/testing/cxl/test/mock.c |   29 +++
+ 10 files changed, 422 insertions(+), 332 deletions(-)
+ delete mode 100644 tools/testing/cxl/mock_mem.c
+
+base-commit: e6829d1bd3c4b58296ee9e412f7ed4d6cb390192
