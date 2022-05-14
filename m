@@ -2,78 +2,105 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D67DC433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 13 May 2022 19:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBD3C433F5
+	for <linux-cxl@archiver.kernel.org>; Sat, 14 May 2022 13:31:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356576AbiEMTbs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 13 May 2022 15:31:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60674 "EHLO
+        id S230124AbiENNbc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 14 May 2022 09:31:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232397AbiEMTbs (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 13 May 2022 15:31:48 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81C7A47AF5
-        for <linux-cxl@vger.kernel.org>; Fri, 13 May 2022 12:31:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=CaSLwW+oyLeDXgO9x0n9GkutaCX9RJ8P3gxIZQp44gE=; b=156/ResqB83asUUdyV614QUH6W
-        2gzvd8P+gUOmxTAe/ziA8p4/k+C8RA82mP5hod7Fi5KE5hAJIcKcMzjEZUhojIIauL3D60F7+5odR
-        +ff/onQ1sc0BmF0qzMOiAYckPrelYZBH9ccs2Chz71/C1HF2DwXv5/DhWGCTqAzf/rn6mS1zTqOQI
-        o3ksqEKoce0vSdtskQlULlKvhPlqj3tnQdx03dtCqUGqFvFIjlmgjnF+3cMnLLEkRYoNcsWesTOAz
-        dSOnf3v9Cm7rk8dQmZ4CN+57EArrtrWsiwUIDYM9Afu4k3OdGsonOLTsR0MRrAH6kojiMhBjjOLyl
-        at1eeXbw==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1npb0i-00HLHD-9e; Fri, 13 May 2022 19:31:36 +0000
-Date:   Fri, 13 May 2022 12:31:36 -0700
-From:   Luis Chamberlain <mcgrof@kernel.org>
+        with ESMTP id S232492AbiENNbU (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 14 May 2022 09:31:20 -0400
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67E1411C16;
+        Sat, 14 May 2022 06:31:16 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id E990D102F6762;
+        Sat, 14 May 2022 15:31:14 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id C923D2E6CDA; Sat, 14 May 2022 15:31:14 +0200 (CEST)
+Date:   Sat, 14 May 2022 15:31:14 +0200
+From:   Lukas Wunner <lukas@wunner.de>
 To:     Dan Williams <dan.j.williams@intel.com>
 Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Klaus Jensen <its@irrelevant.dk>, Josef Bacik <jbacik@fb.com>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [RFC PATCH 02/15] cxl/core/hdm: Bail on endpoint init fail
-Message-ID: <Yn6yGKmMZES0IQbw@bombadil.infradead.org>
-References: <20220413183720.2444089-1-ben.widawsky@intel.com>
- <20220413183720.2444089-3-ben.widawsky@intel.com>
- <CAPcyv4hKGEy_0dMQWfJAVVsGu364NjfNeup7URb7ORUYLSZncw@mail.gmail.com>
- <CGME20220418163713uscas1p17b3b1b45c7d27e54e3ecb62eb8af2469@uscas1p1.samsung.com>
- <20220418163702.GA85141@bgt-140510-bm01>
- <20220512155014.bbyqvxqbqnm3pk2p@intel.com>
- <Yn1DiuqjYpklcEIT@bombadil.infradead.org>
- <20220513130909.0000595e@Huawei.com>
- <Yn51WhjsC1FDKNfS@bombadil.infradead.org>
- <CAPcyv4gwi1gr-_XTV9z5aZ-HJ=J5gDonQk0_M-_U9yYDqqi3PQ@mail.gmail.com>
+        Gavin Hindman <gavin.hindman@intel.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        linux-cxl@vger.kernel.org, CHUCK_LEVER <chuck.lever@oracle.com>
+Subject: Re: [RFC PATCH 0/1] DOE usage with pcie/portdrv
+Message-ID: <20220514133114.GA14833@wunner.de>
+References: <20220503153449.4088-1-Jonathan.Cameron@huawei.com>
+ <CAPcyv4geBaTkoJ+Gefgq6RaKHtB3NMh5ruZ-1yV_i0UVaw3SWA@mail.gmail.com>
+ <20220507101848.GB31314@wunner.de>
+ <20220509104806.00007c61@Huawei.com>
+ <20220511191345.GA26623@wunner.de>
+ <CAPcyv4idjqiY9CV=sghDbWqQS_PM2Z0xWxr2MsrMxS-XqU1F=w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4gwi1gr-_XTV9z5aZ-HJ=J5gDonQk0_M-_U9yYDqqi3PQ@mail.gmail.com>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+In-Reply-To: <CAPcyv4idjqiY9CV=sghDbWqQS_PM2Z0xWxr2MsrMxS-XqU1F=w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, May 13, 2022 at 12:14:51PM -0700, Dan Williams wrote:
-> On Fri, May 13, 2022 at 8:12 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
-> > But with CONFIG_FAIL_FUNCTION this means you don't have to open code
-> > should_fail() calls, but instead for each routine you want to add a failure
-> > injection support you'd just use ALLOW_ERROR_INJECTION() per call.
+On Wed, May 11, 2022 at 12:42:24PM -0700, Dan Williams wrote:
+> I think power-management effects relative to IDE is a soft spot of the
+> specification.
+
+When resuming from system sleep, the kernel restores a device's
+config space in pci_pm_resume_noirq(), then calls the driver's
+->resume_noirq() callback.  The driver is free to assume that
+the device is accessible und usable at that point.
+
+IDE breaks that contract if establishment of an SPDM session
+depends on user space.  We can't call out to user space for
+authentication during the resume_noirq phase because interrupts
+are still disabled.
+
+Drivers would have to be aware that IDE has not yet been
+re-established and refrain from accessing the device.
+Any child devices of the PCI device cannot be resumed
+until then.
+
+Ideally we'd want IDE to be transparent to drivers.
+That's impossible if their access to devices is forbidden
+after system sleep for an indefinite amount of time.
+
+Runtime PM has similar issues as system sleep if the device
+was in D3cold.
+
+Reliance on user space also entails a risk of deadlocks:
+Let's say user space process A accesses a PCI device,
+the kernel runtime resumes the device and calls out to
+user space process B to authenticate it.  If A is holding
+a resource that B requires, the two tasks deadlock and
+the device never becomes accessible.
+
+The more I think about it, the more attractive does Jonathan's
+in-kernel SPDM approach look.  Performing SPDM authentication and
+IDE setup in the kernel would allow us to retain all existing
+assumptions and behavior around power management and reset recovery,
+avoid driver awareness of IDE and avoid deadlocks.
+
+
+> > If setting up an SPDM session is dependent on user space, the kernel
+> > would have to leave a device in an inoperable state after runtime resume
+> > or reset, until user space gets around to initiate SPDM.
 > 
-> So cxl_test takes the opposite approach and tries not to pollute the
-> production code with test instrumentation. All of the infrastructure
-> to replace calls and inject mocked values is self contained in
-> tools/testing/cxl/ where it builds replacement modules with test
-> instrumentation. Otherwise its a maintenance burden, in my view, to
-> read the error injection macros in the nominal code paths.
+> Yes, this seems acceptable from the perspective of server platforms
+> that can make the power management vs security tradeoff.
 
-Is relying on just ALLOW_ERROR_INJECTION() per routine you'd want
-to enable error injection for really too much to swallow?
+It seems likely that IDE will not only be used on server platforms.
 
-  Luis
+I'll see to to it that I provide more review feedback to Jonathan's RFC
+series so that we can move forward with this.
+
+Thanks,
+
+Lukas
