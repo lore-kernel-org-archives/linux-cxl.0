@@ -2,96 +2,106 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 502D4C433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 18 May 2022 15:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98855C433F5
+	for <linux-cxl@archiver.kernel.org>; Wed, 18 May 2022 15:33:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239137AbiERPJA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 18 May 2022 11:09:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38384 "EHLO
+        id S239380AbiERPdp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 18 May 2022 11:33:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239132AbiERPI7 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 18 May 2022 11:08:59 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD19619C396
-        for <linux-cxl@vger.kernel.org>; Wed, 18 May 2022 08:08:58 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id q18so2032925pln.12
-        for <linux-cxl@vger.kernel.org>; Wed, 18 May 2022 08:08:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pAOqA96aToO86xRKYS8qEzOGQS2kjgufaDi6zqwGWHU=;
-        b=O5xf+78qJhBHBcQ1CwJqcQ438s2ghvqvjXK4zlGjV2hTmpoNr2FDX8aKjDlMliuwhk
-         bPZyUfKFKL2YZsA0K/m3RnX/X0rhVMzKNcpKaxRTHVp6haXLuqIlfgcc9lbl2EaSRLlA
-         nTxDb9MkN9LlDfKRMEnzrZsnM6N4LlJfic+rsomjjxTkYMyZ20GXCerQlWJmhKWtVq6j
-         RaG8gIhHxPSYXNMMGk7naphxKx5duxHZFEjtd5vtJCpTB1vc16g8ROEqNA4IzGKwPtdw
-         20ifpFt3ESIseO9gyTSmcahllZJS/VOUcRiEnpVWiepnOgS6ku1L5OFeyesWIBZDapDB
-         QUpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pAOqA96aToO86xRKYS8qEzOGQS2kjgufaDi6zqwGWHU=;
-        b=kKR4MRKE/lGESnmpOcUzBiQ5LNsvxG3L3YFUnt26R7MzrHczWXNH+PQ6FBq2RDziW4
-         oxouXpU4r9qsv8c4ImrR7ALIjP40+2d51zvMaMG8G0U5J6MesdFh9An9gjyJPKkgNGIz
-         coaPMoc7DSh5YY3WB0H5gffuwcO6tLjHtGrBbYrWeFDULEKFhKro3TWC7YGif7xWsAmp
-         mCXzjpRJgU2dy6vmTwR6KAwOxahDmG9c+zxfMQohxBiaUjC34BY92uS+5YV/Ik/ln3Qd
-         QnIcMQo+Xu+vzDQ8OI0kDQ9KdRVFAywKbW7SFA42n3GTJk+thS5So+AxK+mqhx+Y/VHD
-         Korg==
-X-Gm-Message-State: AOAM5315W/hUZHlRDLbKUKZEgCl9wBWY9B9SmJ1olu8LZQr74X4Cp1MI
-        YQObPrXXp2bbNCYp9JmYQzCkRmQxEFGMkyZBjRI05g==
-X-Google-Smtp-Source: ABdhPJwhxMNnK7nG2eB3nT+2rJn4Rnr7ZBkWavdd1dpNrBulUMGOcRCebYPLvRZ8zt6Ji5T+F8TOMcqIk8Sfr+z4YDE=
-X-Received: by 2002:a17:902:da8b:b0:15e:c0e8:d846 with SMTP id
- j11-20020a170902da8b00b0015ec0e8d846mr189626plx.34.1652886538210; Wed, 18 May
- 2022 08:08:58 -0700 (PDT)
+        with ESMTP id S239408AbiERPdo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 18 May 2022 11:33:44 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC1987354F
+        for <linux-cxl@vger.kernel.org>; Wed, 18 May 2022 08:33:41 -0700 (PDT)
+Received: from fraeml739-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L3H7t14yJz6FGP2;
+        Wed, 18 May 2022 23:33:30 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml739-chm.china.huawei.com (10.206.15.220) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 18 May 2022 17:33:39 +0200
+Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 18 May
+ 2022 16:33:39 +0100
+Date:   Wed, 18 May 2022 16:33:37 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <Ariel.Sibley@microchip.com>, <linux-cxl@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>
+Subject: Re: [PATCH v2 14/14] cxl/port: Enable HDM Capability after
+ validating DVSEC Ranges
+Message-ID: <20220518163337.00005735@Huawei.com>
+In-Reply-To: <CAPcyv4jVAMsbUfN3D_5DnPKKP4FdU1V50XL1ZgZpdff7-c5tQQ@mail.gmail.com>
+References: <165237933127.3832067.12500546479146655886.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <165283418817.1033989.11273676872054815459.stgit@dwillia2-xfh>
+        <MN2PR11MB3645021EB1CC6D28206D75AD88D19@MN2PR11MB3645.namprd11.prod.outlook.com>
+        <CAPcyv4jVAMsbUfN3D_5DnPKKP4FdU1V50XL1ZgZpdff7-c5tQQ@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <20220503153449.4088-1-Jonathan.Cameron@huawei.com>
- <CAPcyv4geBaTkoJ+Gefgq6RaKHtB3NMh5ruZ-1yV_i0UVaw3SWA@mail.gmail.com>
- <20220507101848.GB31314@wunner.de> <20220509104806.00007c61@Huawei.com>
- <20220511191345.GA26623@wunner.de> <20220511191943.GB26623@wunner.de>
- <CAPcyv4hUKjt7QrA__wQ0KowfaxyQuMjHB5V-=rZBm=UbV4OvSg@mail.gmail.com>
- <20220514135521.GB14833@wunner.de> <YoT4C77Yem37NUUR@infradead.org>
-In-Reply-To: <YoT4C77Yem37NUUR@infradead.org>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 18 May 2022 08:08:47 -0700
-Message-ID: <CAPcyv4jb7D5AKZsxGE5X0jon5suob5feggotdCZWrO_XNaer3A@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/1] DOE usage with pcie/portdrv
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Lukas Wunner <lukas@wunner.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Gavin Hindman <gavin.hindman@intel.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-cxl@vger.kernel.org, CHUCK_LEVER <chuck.lever@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.42]
+X-ClientProxiedBy: lhreml753-chm.china.huawei.com (10.201.108.203) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, May 18, 2022 at 6:44 AM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Sat, May 14, 2022 at 03:55:21PM +0200, Lukas Wunner wrote:
-> > Circling back to the SPDM/IDE topic, while NVMe is now capable of
-> > reliably recovering from errors, it does expect the kernel to handle
-> > recovery within a few seconds.  I'm not sure we can continue to
-> > guarantee that if the kernel depends on user space to perform
-> > re-authentication with SPDM after reset.  That's another headache
-> > that we could avoid with in-kernel SPDM authentication.
->
-> I wonder if we need kernel bundled and tightly controlled userspace
-> code for these kinds of things (also for NVMe/NFS TLS).  That is,
-> bundle a userspace ELF file or files with a module which is unpacked
-> to or accessible by a ramfs-style file systems.  Then allow executing
-> it without any interaction with the normal userspace, and non-pagable
-> memory.  That way we can reuse existing userspace code, have really
-> nice address space isolation but avoid all the deadlock potential
-> of normal userspace code.  And I don't think it would be too hard to
-> implement either.
+On Tue, 17 May 2022 19:44:28 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Yes, I also want something like this for mitigating the vulnerability
-surface of things like PRM [1], where platform vendors are looking to
-move more runtime helpers out of SMM mode and into ring0. I would
-rather see those routines move all the way into ring3.
+> On Tue, May 17, 2022 at 7:08 PM <Ariel.Sibley@microchip.com> wrote:
+> >  
+> > > Previously, the cxl_mem driver was relying on platform-firmware to set
+> > > "mem_enable". That is an invalid assumption as there is no requirement
+> > > that platform-firmware sets the bit before the driver sees a device,
+> > > especially in hot-plug scenarios. Additionally, ACPI-platforms that
+> > > support CXL 2.0 devices also support the ACPI CEDT (CXL Early Discovery
+> > > Table). That table outlines the platform permissible address ranges for
+> > > CXL operation. So, there is a need for the driver to set "mem_enable",
+> > > and there is information available to determine the validity of the CXL
+> > > DVSEC Ranges. While DVSEC Ranges are expected to be at least
+> > > 256M in size, the specification (CXL 2.0 Section 8.1.3.8.4 DVSEC CXL
+> > > Range 1 Base Low) allows for the possibilty of devices smaller than
+> > > 256M. So the range [0, 256M) is considered active even if Memory_size
+> > > is 0.  
+> >
+> > Regarding "So the range [0, 256M) is considered active even if
+> > Memory_size is 0."
+> >
+> > Since Memory_Base is included in address A, this portion of the equation
+> > from CXL 2.0 Section 8.1.3.8.4 mandates that for host access to address A
+> > to be directed to local HDM memory, Memory_Size[63:28] must be > 0:
+> >
+> > (A >> 28) < Memory_Base[63:28] + Memory_Size[63:28]
+> >
+> > This means if a device advertises Memory_Size = 0, no host access will
+> > result in access to the HDM memory.
+> >
+> > I would also note this text from CXL 2.0 Section 8.1.3.8:
+> > "A CXL.mem capable device is permitted to report zero memory size."
+> >
+> > For a device with a non-zero capacity less than 256M to satisfy the
+> > equation, it would need to advertise a Memory_Size of at least 256M.  
+> 
+> I think we need an errata to delete the "(e.g. a device with less than
+> 256 MB of memory)" mention. I otherwise do not see how such a device
+> can exist if Memory_size must be >= 256M.
 
-[1]: https://uefi.org/sites/default/files/resources/Platform%20Runtime%20Mechanism%20-%20with%20legal%20notice.pdf
+My reading of that is it is permissible to implement a device that
+has say 16MiB or actual memory, report it as 256MiB and follow this
+behavior for the 16-256 MiB range.  It also covers a 300MiB device
+where the size of the HDM decoder is set to 512MiB etc.
+
+As such I don't think it's wrong, but rather just not relevant to us
+here (0 is a valid setting for Memory_Size).
+Would need impdef means to establish the actual size of the
+memory to do anything useful with that corner case.
+
+Jonathan
+
