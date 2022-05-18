@@ -2,44 +2,41 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B932C433F5
-	for <linux-cxl@archiver.kernel.org>; Wed, 18 May 2022 17:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4140EC433EF
+	for <linux-cxl@archiver.kernel.org>; Wed, 18 May 2022 17:22:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240848AbiERRVl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 18 May 2022 13:21:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34098 "EHLO
+        id S240853AbiERRWC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 18 May 2022 13:22:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240847AbiERRVk (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 18 May 2022 13:21:40 -0400
+        with ESMTP id S240847AbiERRWC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 18 May 2022 13:22:02 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CCDC6EB30
-        for <linux-cxl@vger.kernel.org>; Wed, 18 May 2022 10:21:39 -0700 (PDT)
-Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L3KSH1s2tz688wM;
-        Thu, 19 May 2022 01:17:51 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 486F695DFB
+        for <linux-cxl@vger.kernel.org>; Wed, 18 May 2022 10:22:01 -0700 (PDT)
+Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L3KSj0RC3z687wL;
+        Thu, 19 May 2022 01:18:13 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
+ fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 18 May 2022 19:21:37 +0200
+ 15.1.2375.24; Wed, 18 May 2022 19:21:59 +0200
 Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 18 May
- 2022 18:21:37 +0100
-Date:   Wed, 18 May 2022 18:21:35 +0100
+ 2022 18:21:58 +0100
+Date:   Wed, 18 May 2022 18:21:57 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 05/14] cxl/mem: Validate port connectivity before dvsec
- ranges
-Message-ID: <20220518182135.00002c09@Huawei.com>
-In-Reply-To: <CAPcyv4ib5-9W+dvHBgO5y06Gwt69NJXPc8b+GsuF-wiYT9iuPw@mail.gmail.com>
+CC:     <linux-cxl@vger.kernel.org>, <ben.widawsky@intel.com>,
+        <ira.weiny@intel.com>, <alison.schofield@intel.com>,
+        <vishal.l.verma@intel.com>
+Subject: Re: [PATCH 01/14] cxl/mem: Drop mem_enabled check from
+ wait_for_media()
+Message-ID: <20220518182157.0000348a@Huawei.com>
+In-Reply-To: <165237926188.3832067.15441813087107623945.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <165237925642.3832067.15995008431029494571.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <165237928334.3832067.16326444799383620141.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <20220518171305.000033c4@Huawei.com>
-        <CAPcyv4ib5-9W+dvHBgO5y06Gwt69NJXPc8b+GsuF-wiYT9iuPw@mail.gmail.com>
+        <165237926188.3832067.15441813087107623945.stgit@dwillia2-desk3.amr.corp.intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -53,74 +50,37 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 18 May 2022 09:41:43 -0700
+On Thu, 12 May 2022 11:14:21 -0700
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> On Wed, May 18, 2022 at 9:15 AM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > On Thu, 12 May 2022 11:14:43 -0700
-> > Dan Williams <dan.j.williams@intel.com> wrote:
-> >  
-> > > In preparation for validating DVSEC ranges against the platform declared
-> > > CXL memory ranges (ACPI CFMWS) move port enumeration before the
-> > > endpoint's decoder validation. Ultimately this logic will move to the
-> > > port driver, but create a bisect point before that larger move.
-> > >
-> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > ---
-> > >  drivers/cxl/mem.c |   36 ++++++++++++++++++------------------
-> > >  1 file changed, 18 insertions(+), 18 deletions(-)
-> > >
-> > > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > > index fed7f10ef9b2..80e75a410499 100644
-> > > --- a/drivers/cxl/mem.c
-> > > +++ b/drivers/cxl/mem.c
-> > > @@ -140,22 +140,6 @@ static int cxl_mem_probe(struct device *dev)
-> > >       if (work_pending(&cxlmd->detach_work))
-> > >               return -EBUSY;
-> > >
-> > > -     rc = cxlds->wait_media_ready(cxlds);
-> > > -     if (rc) {
-> > > -             dev_err(dev, "Media not active (%d)\n", rc);
-> > > -             return rc;
-> > > -     }
-> > > -
-> > > -     /*
-> > > -      * If DVSEC ranges are being used instead of HDM decoder registers there
-> > > -      * is no use in trying to manage those.
-> > > -      */
-> > > -     if (!cxl_hdm_decode_init(cxlds)) {
-> > > -             dev_err(dev,
-> > > -                     "Legacy range registers configuration prevents HDM operation.\n");
-> > > -             return -EBUSY;
-> > > -     }
-> > > -
-> > >       rc = devm_cxl_enumerate_ports(cxlmd);
-> > >       if (rc)
-> > >               return rc;
-> > > @@ -171,16 +155,32 @@ static int cxl_mem_probe(struct device *dev)
-> > >               dev_err(dev, "CXL port topology %s not enabled\n",
-> > >                       dev_name(&parent_port->dev));
-> > >               rc = -ENXIO;
-> > > -             goto out;
-> > > +             goto unlock;
-> > >       }
-> > >
-> > >       rc = create_endpoint(cxlmd, parent_port);
-> > > -out:
-> > > +unlock:  
-> >
-> > Trivial but I think this rename of the label would be better in the earlier
-> > patch where you first added the if (rc) below.
-> > I suppose it is arguable that the previous patch is a fix so should be minimal
-> > though so I'm not that bothered if you leave it here.
-> >  
+> Media ready is asserted by the device independent of whether mem_enabled
+> was ever set. Drop this check to allow for dropping wait_for_media() in
+> favor of ->wait_media_ready().
 > 
-> True, the rename is just as much a part of what "9ea4dcf49878 PM: CXL:
-> Disable suspend" was missing as the fix, I'll go ahead and make the
-> adjustment.
-
+> Fixes: 8dd2bc0f8e02 ("cxl/mem: Add the cxl_mem driver")
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-I'm lazy enough not to look again for something so trivial ;)
+> ---
+>  drivers/cxl/mem.c |    4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index 401b0fbe21db..c2d9dadf4a2e 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -27,12 +27,8 @@
+>  static int wait_for_media(struct cxl_memdev *cxlmd)
+>  {
+>  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> -	struct cxl_endpoint_dvsec_info *info = &cxlds->info;
+>  	int rc;
+>  
+> -	if (!info->mem_enabled)
+> -		return -EBUSY;
+> -
+>  	rc = cxlds->wait_media_ready(cxlds);
+>  	if (rc)
+>  		return rc;
+> 
+
