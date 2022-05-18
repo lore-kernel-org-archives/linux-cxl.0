@@ -2,48 +2,47 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2D6C433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 18 May 2022 23:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86290C433EF
+	for <linux-cxl@archiver.kernel.org>; Wed, 18 May 2022 23:34:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230164AbiERXe2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 18 May 2022 19:34:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44438 "EHLO
+        id S230055AbiERXef (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 18 May 2022 19:34:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231135AbiERXe1 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 18 May 2022 19:34:27 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3625ACE01
-        for <linux-cxl@vger.kernel.org>; Wed, 18 May 2022 16:34:27 -0700 (PDT)
+        with ESMTP id S231135AbiERXee (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 18 May 2022 19:34:34 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10BDE9CF61
+        for <linux-cxl@vger.kernel.org>; Wed, 18 May 2022 16:34:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652916867; x=1684452867;
+  t=1652916873; x=1684452873;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=0qD3bR9kyt+HHORwSCUHy2Fyxu3uM+F0gMBhnJj/ad0=;
-  b=m5cef9VqQZYRmkaULvTKofFYiZFgeM10kECgxtBL8GNlsSN+XkVmPrdi
-   eFuI8rrhbv/nHnqDgQOQAUNI+PXDKyeItCBdp2SDRpbzEXsxYZB+kLj0S
-   yirO7/e+CSpJ47ILZkRQWRTtqA0TiYliLgBurgPUy4HWtv4+dMP3FITAP
-   CBNZz7Z7s92HcItSjuQzLt6G2LGxF3ERb8nV/GE351N5fJQnMTo9GHpBF
-   h81V4qnBqfkQIigx4Lck21hsaHMEDkJ4A2kNCuO1WIdFAk5hcNkA4yuO4
-   UAaakOFV3fUnRMxcemUtk4uxzAnVF8e8ooHmznmpE7tAxVSUfR7jVcpTU
+  bh=s57FUjOIhGjLsGAx6krjXJnND402hlxxzp6RopffrMY=;
+  b=BITGeZqucVf69PAo5aCCJwJ6dyfsdwWNSjqdW1QmO3RD6dS5VdH2RMxT
+   c8MZQZh5g9RSQrRZdcAldRDqjsN23XEjPrnWp91mv7XmxgHKckW2w5jS4
+   NhOCHOW8bP0pS0UcMB/CL+iQRi0Y1nFcYYOEOyr/LU/BIFxZztMPRF9Qt
+   so4PPamK71QVEPFe2nI/pj3FQ4uwn8eSdSdpM4lgJdEKah9euwSo8ZL68
+   dXotveWPEce0DgCzNO8YaQ2/0/iKyFitJ2cGV05IOePEmbNWXWwB00QYi
+   BxM/dxQvSRHV5geGN+QUY3q/EgMjsa5P6UiBNsX2gigDEsHKLwy/3qjjk
    Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10351"; a="269525739"
+X-IronPort-AV: E=McAfee;i="6400,9594,10351"; a="334986007"
 X-IronPort-AV: E=Sophos;i="5.91,235,1647327600"; 
-   d="scan'208";a="269525739"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2022 16:34:26 -0700
+   d="scan'208";a="334986007"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2022 16:34:32 -0700
 X-IronPort-AV: E=Sophos;i="5.91,235,1647327600"; 
-   d="scan'208";a="700850057"
+   d="scan'208";a="714712876"
 Received: from vgarg-mobl2.amr.corp.intel.com (HELO [192.168.1.101]) ([10.209.5.211])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2022 16:34:26 -0700
-Subject: [PATCH v3 03/13] cxl/pci: Drop wait_for_valid() from
- cxl_await_media_ready()
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2022 16:34:32 -0700
+Subject: [PATCH v3 04/13] cxl/mem: Fix cxl_mem_probe() error exit
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Date:   Wed, 18 May 2022 16:34:26 -0700
-Message-ID: <165291686632.1426646.7479581732894574486.stgit@dwillia2-xfh>
+Date:   Wed, 18 May 2022 16:34:31 -0700
+Message-ID: <165291687176.1426646.15449254938752532784.stgit@dwillia2-xfh>
 In-Reply-To: <165291684910.1426646.8615474651213855015.stgit@dwillia2-xfh>
 References: <165291684910.1426646.8615474651213855015.stgit@dwillia2-xfh>
 User-Agent: StGit/0.18-3-g996c
@@ -54,29 +53,39 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-A check mem_info_valid already happens in __cxl_dvsec_ranges(). Rely on
-that instead of calling wait_for_valid again.
+The addition of cxl_mem_active() broke error exit scenarios for
+cxl_mem_probe(). Return early rather than proceed with disabling
+suspend, and update the label name since it is no longer a terminal
+"out" label that exits the function.
 
+Fixes: 9ea4dcf49878 ("PM: CXL: Disable suspend")
 Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/pci.c |    4 ----
- 1 file changed, 4 deletions(-)
+ drivers/cxl/mem.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 435f9f89b793..91b266911e52 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -431,10 +431,6 @@ static int cxl_await_media_ready(struct cxl_dev_state *cxlds)
- 	u64 md_status;
- 	int rc, i;
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index 7622cfefa1b0..184549e5093f 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -171,13 +171,15 @@ static int cxl_mem_probe(struct device *dev)
+ 		dev_err(dev, "CXL port topology %s not enabled\n",
+ 			dev_name(&parent_port->dev));
+ 		rc = -ENXIO;
+-		goto out;
++		goto unlock;
+ 	}
  
--	rc = wait_for_valid(cxlds);
--	if (rc)
--		return rc;
--
- 	for (i = mbox_ready_timeout; i; i--) {
- 		u32 temp;
+ 	rc = create_endpoint(cxlmd, parent_port);
+-out:
++unlock:
+ 	device_unlock(&parent_port->dev);
+ 	put_device(&parent_port->dev);
++	if (rc)
++		return rc;
  
+ 	/*
+ 	 * The kernel may be operating out of CXL memory on this device,
 
