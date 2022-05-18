@@ -2,125 +2,120 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8668BC433F5
-	for <linux-cxl@archiver.kernel.org>; Wed, 18 May 2022 16:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D60C433EF
+	for <linux-cxl@archiver.kernel.org>; Wed, 18 May 2022 17:07:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240469AbiERQwR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 18 May 2022 12:52:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49882 "EHLO
+        id S240643AbiERRHK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 18 May 2022 13:07:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240464AbiERQwQ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 18 May 2022 12:52:16 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1255210FE1
-        for <linux-cxl@vger.kernel.org>; Wed, 18 May 2022 09:52:15 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id c14so2699367pfn.2
-        for <linux-cxl@vger.kernel.org>; Wed, 18 May 2022 09:52:15 -0700 (PDT)
+        with ESMTP id S240748AbiERRHJ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 18 May 2022 13:07:09 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC0AB5D5F8
+        for <linux-cxl@vger.kernel.org>; Wed, 18 May 2022 10:07:08 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id x143so2699769pfc.11
+        for <linux-cxl@vger.kernel.org>; Wed, 18 May 2022 10:07:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=d6T6Mwy6p5rh1A/s3Kc5duBlOgAG0axcZfxqO1lb2G4=;
-        b=WorHFFG5qi9ErjU+Bx18E+bRXwk3jizZvoQ9f3YgJGmFlTS43I/Je5X1tUDX17+ndb
-         g/uv9TpzxRHHSiEsj/sri8LcUTm4twIGnpOXZ9CpDzEC1BeQRA/p03cuGXFB27QBGCaU
-         5u35dD4uWiunxcakyNGocLt4WGBqar1cVYS7cLL31UgGdOPrhIO3T23rdaEuuwVGtNvx
-         o1ppESh81Z+UlI8DfilJ92rRsJ9MRWd8CKRTf294HoNoUhks/oRhkQWWLd3g3qPExxbu
-         ukLl/QO3DcrsO6CI/+FhO7XI5xSJUMXExtC0Shj5sNRSSO44SIDjb4l4xB9zTjCeLkFw
-         A68g==
+        bh=nrClvgpSxFqISziY8Txw/xQB7v6ln85QRLtNVJrqsB0=;
+        b=q8J8E1dbMY+B9UB2RDGFk39dSRNhHwy5xlx9/Ee0l+lMXlTcVgXsfbQpavuA7qNQBG
+         ewoVAT/g/8pbbLgZM9iOKJwDIeBZ5W2DLPeX82jZisjIUhfrT78m/IQjjYSeFCO/QBqL
+         RqcRs4jjYk5mu917ZXhrEuMXsVXmAsgJjepGNEltYpUbZgd1OW7QD8smbVyDwsOyOYhA
+         Q1yxZBLU9C/PW6b62D/qkRsMCtkjA6V3OwFO/tj+ryvVKe/At39L9tJcDEQpF76Yqnt+
+         5ID9yn6jgrA+26X9uE0Kq9E+E0/wrJ/RC/iPeuRcC0DICbRgZvmG5aQzLZZosAZiddNy
+         14FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=d6T6Mwy6p5rh1A/s3Kc5duBlOgAG0axcZfxqO1lb2G4=;
-        b=aNd4JEbvggITpQRSfFfcBOr0wNQ/kN3tVsW6qrYRJ15VhVz6AjncwveiEQoI6BrIRq
-         lPplD4t+MfQ21QGtc4tSWio0NcbnzRKyMiadLnokifziowcTpDK5nDkyARQQDrLg3Aru
-         4lzpZk8hjvMOZtl5tLsyscUJqqwq5eaC60KuejxBjVM34awP4J8IHQj7H+H1cyOT8FH7
-         f0zih99yYqF0oVfMWkhVTqbmUV+PVk25MxS9wbZOv5rYcP7CiDQSqoYvcpcZqe827sWs
-         zwHKbmB7nL4WnGX2FzxTRwOYfUnBqIVfRSZtxkOGYqrib8NThXSPF1XHcKQ9rw+yjF+k
-         PvuQ==
-X-Gm-Message-State: AOAM533hZXQrl7oocLEWM8h2wYiSOmowAF+F41/SRcGpFhvm9JKh+TaH
-        KCe4wc/T5MN/NMkvNy/MMNm5KeDYLqiHHJHQEUNvlA==
-X-Google-Smtp-Source: ABdhPJzb5oL4Opmzl4/6/3A4uKouY9cuw/qRncHYX8YkGo05HpXA1OS3rvDUFX7ZHwSnGnzkM37So2IMmbJtH34vRec=
-X-Received: by 2002:a62:a105:0:b0:50d:c97b:3084 with SMTP id
- b5-20020a62a105000000b0050dc97b3084mr243703pff.61.1652892734548; Wed, 18 May
- 2022 09:52:14 -0700 (PDT)
+        bh=nrClvgpSxFqISziY8Txw/xQB7v6ln85QRLtNVJrqsB0=;
+        b=BumQjGMKP3BJqT5LEIo9HqOPRevhMqpGhSdjWgv6FLimXnwUQjf1cAyMlafV2Sw6QR
+         lemZBXi7qu8JKLK/T6TXm0ssN7ALdrbqwDl0p4Cmcgw2ywsKeW3y2eAa3w9k7cpTddF5
+         ipUtvsfOvNvtdjqjSiDgIz4Jj2WtnbumITtSryCU85MvcaIsHgpujjZ0I7OcAOnsHRPh
+         CDbR0aoH++bd6W83sTcfkFm2Fbxh716aLklHt9abuaNS+NzILwCprsPTBdN3sUqHJPBK
+         Sz4drBFujTHYlWfdkBuCT+2aYC3o/65QSIdiQbYxgYEycEoRNW9CfPxJ5x9qOHbbmDgj
+         1Lcg==
+X-Gm-Message-State: AOAM530qLMxxKhFSn9C9N4RerNQ8alNqqTyrVAyQiUxf3mbFV0jODoPD
+        HHwYiqysd/3wsKgtgtu1NEjXNOxGxfzIsEPjVr8/fQ==
+X-Google-Smtp-Source: ABdhPJyf5ZHO6cwW9w0qfCc7K+KlVmeUg8xySUmSD9Rss3+EEx14oQS/8eqGwWR+OXfiLkwfQ0pdhWtoxVJDcTcPHxQ=
+X-Received: by 2002:a63:e648:0:b0:3f2:7ade:8f86 with SMTP id
+ p8-20020a63e648000000b003f27ade8f86mr405863pgj.40.1652893628453; Wed, 18 May
+ 2022 10:07:08 -0700 (PDT)
 MIME-Version: 1.0
 References: <165237925642.3832067.15995008431029494571.stgit@dwillia2-desk3.amr.corp.intel.com>
- <165237929461.3832067.8402587124652027178.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20220518173159.00002e92@Huawei.com>
-In-Reply-To: <20220518173159.00002e92@Huawei.com>
+ <165237930521.3832067.16931437806464317011.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20220518174047.00007711@Huawei.com>
+In-Reply-To: <20220518174047.00007711@Huawei.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 18 May 2022 09:52:03 -0700
-Message-ID: <CAPcyv4i1qCkZoyPUubzy2BUZMg74tNNzzP7D3P-BPJKHncB1GQ@mail.gmail.com>
-Subject: Re: [PATCH 07/14] cxl/mem: Consolidate CXL DVSEC Range enumeration in
- the core
+Date:   Wed, 18 May 2022 10:06:57 -0700
+Message-ID: <CAPcyv4g-7aVgFtOJu-FE_6XHS9PHJBDigk_jQ=UTRs2sj1h3zg@mail.gmail.com>
+Subject: Re: [PATCH 09/14] cxl/mem: Fix CXL DVSEC Range Sizing
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
         "Weiny, Ira" <ira.weiny@intel.com>,
         "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Ariel.Sibley@microchip.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, May 18, 2022 at 9:37 AM Jonathan Cameron
+On Wed, May 18, 2022 at 9:42 AM Jonathan Cameron
 <Jonathan.Cameron@huawei.com> wrote:
 >
-> On Thu, 12 May 2022 11:14:54 -0700
+> On Thu, 12 May 2022 11:15:05 -0700
 > Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> > In preparation for fixing the setting of the 'mem_enabled' bit in CXL
-> > DVSEC Control register, move all CXL DVSEC range enumeration into the
-> > same source file.
+> > Per CXL 2.0 Section 8.1.3.8.4 "DVSEC CXL Range 1 Base Low" there is no
+> > way to specify decode sizes smaller than 256M. Fix cxl_dvsec_ranges()
+> > and cxl_hdm_decode_init() to account for that default decode range.
+>
+> This is effectively the same as the discussion on patch 14.
+>
+> My reading of the spec suggests that size can be 0 and that would mean
+> no access is passed on to the hardware.  It's a rather odd corner case
+> and would mean the device would only work with HDM decoders and might
+> well fail some compliance tests (I haven't checked)
+>
+> It's not a corner case I care about...
+>
+> > Note, that this means that any BIOS implementation that sets mem_enable,
+> > but not HDM Decoder Capability enable will cause the driver to fail to
+> > attach. A later change validates the DVSEC ranges against platform CXL
+> > decode (CXL CFMWS) to make a decision about overriding the default DVSEC
+> > Range configuration.
+>
 > >
+> > Fixes: 560f78559006 ("cxl/pci: Retrieve CXL DVSEC memory info")
 > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> Comment inline but not something to necessarily do anything about as
-> it's a transient thing mid series.
->
 > > ---
-> >  drivers/cxl/core/pci.c        |  129 +++++++++++++++++++++++++++++++++++++++
-> >  drivers/cxl/cxlmem.h          |    1
-> >  drivers/cxl/cxlpci.h          |    4 +
-> >  drivers/cxl/mem.c             |   14 ++--
-> >  drivers/cxl/pci.c             |  135 -----------------------------------------
-> >  tools/testing/cxl/Kbuild      |    1
-> >  tools/testing/cxl/test/mem.c  |   10 ---
-> >  tools/testing/cxl/test/mock.c |   16 +++++
-> >  8 files changed, 158 insertions(+), 152 deletions(-)
+> >  drivers/cxl/core/pci.c |   10 +++++++---
+> >  drivers/cxl/mem.c      |   10 +---------
+> >  2 files changed, 8 insertions(+), 12 deletions(-)
 > >
->
-> ...
->
->
-> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > index 8c3a1c85a7ae..0cfbde134fc7 100644
-> > --- a/drivers/cxl/mem.c
-> > +++ b/drivers/cxl/mem.c
-> > @@ -58,18 +58,15 @@ static int create_endpoint(struct cxl_memdev *cxlmd,
-> >   * decoders, or if it can not be determined if DVSEC Ranges are in use.
-> >   * Otherwise, returns true.
-> >   */
-> > -__mock bool cxl_hdm_decode_init(struct cxl_dev_state *cxlds)
-> > +__mock bool cxl_hdm_decode_init(struct cxl_dev_state *cxlds,
-> > +                             struct cxl_endpoint_dvsec_info *info)
->
-> Seems a little over the top to bring in info just to get to info->ranges.
-> Mind you you get rid of it again later so it's just temporary ugly.
-
-Yes, just a little ugliness to get through the impedance barrier to a
-more pretty state.
-
-> >  {
-> > -     struct cxl_endpoint_dvsec_info *info = &cxlds->info;
-> >       struct cxl_register_map map;
-> >       struct cxl_component_reg_map *cmap = &map.component_map;
-> >       bool global_enable, retval = false;
-> >       void __iomem *crb;
-> >       u32 global_ctrl;
+> > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> > index f3e59f8b6621..f1c0677a4f52 100644
+> > --- a/drivers/cxl/core/pci.c
+> > +++ b/drivers/cxl/core/pci.c
+> > @@ -236,7 +236,12 @@ int cxl_dvsec_ranges(struct cxl_dev_state *cxlds,
+> >               if (rc)
+> >                       return rc;
 > >
-> > -     if (info->ranges < 0)
-> > -             return false;
-> > -
-> >       /* map hdm decoder */
-> >       crb = ioremap(cxlds->component_reg_phys, CXL_COMPONENT_REG_BLOCK_SIZE);
+> > -             size = (u64)temp << 32;
+> > +             /*
+> > +              * Per CXL 2.0 Section 8.1.3.8.4 "DVSEC CXL Range 1 Base
+> > +              * Low", the minimum decode size is 256MB
+> > +              */
+> > +             size = SZ_256M;
+>
+> This is not how I read the spec.  The match is base <= Addr < base + size.
+> If size == 0 then there are no matches as base = base + size and so the
+> right condition isn't met.  Maybe I'm missing something though...
+
+That's how Ariel reads it too, so I'll just drop this as it doesn't
+affect the logic all that much, and hopefully the spec gets cleaned up
+to preclude the possibility of sub-256M sized devices.
