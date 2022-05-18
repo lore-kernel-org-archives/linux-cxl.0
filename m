@@ -2,137 +2,128 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D2AC433F5
-	for <linux-cxl@archiver.kernel.org>; Wed, 18 May 2022 16:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9EEC433EF
+	for <linux-cxl@archiver.kernel.org>; Wed, 18 May 2022 16:42:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240384AbiERQlK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 18 May 2022 12:41:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56382 "EHLO
+        id S240344AbiERQl7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 18 May 2022 12:41:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240408AbiERQky (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 18 May 2022 12:40:54 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4662FB866
-        for <linux-cxl@vger.kernel.org>; Wed, 18 May 2022 09:40:51 -0700 (PDT)
-Received: from fraeml701-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L3JdN2fnkz6H6sW;
-        Thu, 19 May 2022 00:40:40 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.24; Wed, 18 May 2022 18:40:49 +0200
-Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 18 May
- 2022 17:40:49 +0100
-Date:   Wed, 18 May 2022 17:40:47 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <ben.widawsky@intel.com>,
-        <ira.weiny@intel.com>, <alison.schofield@intel.com>,
-        <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 09/14] cxl/mem: Fix CXL DVSEC Range Sizing
-Message-ID: <20220518174047.00007711@Huawei.com>
-In-Reply-To: <165237930521.3832067.16931437806464317011.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <165237925642.3832067.15995008431029494571.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <165237930521.3832067.16931437806464317011.stgit@dwillia2-desk3.amr.corp.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S240334AbiERQlz (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 18 May 2022 12:41:55 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04BFB275EE
+        for <linux-cxl@vger.kernel.org>; Wed, 18 May 2022 09:41:55 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id w8so477480pga.9
+        for <linux-cxl@vger.kernel.org>; Wed, 18 May 2022 09:41:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NBk9liXdLS0NKnHa5cSCk1kHKDiXrcfTxdoTksvpPWo=;
+        b=fUCD6krc+E+FJOgYtBHguGGd/auEJCOh9wjeb/iiDXjFK4976AgWL812smQ4g8RynY
+         E6/8NypNp3IanTb08rCFXbD3MnolGhM7f0+P+nS8/a8lSbcGHL+p8AfejdD5B+aqYvmw
+         M00e8SjUwYYac4FrgiEzlSFUvAK4xYgdDUGzVIPUSaB1QGAQjhQmVozTV81jAekXVdLI
+         mKvUHLwvu70b9QvKkH1sou79HcHhIeeIAQfid3Qpp3VQAgUnZLPT+atprGxBfU7zoIQp
+         th+EUy90nXjvBtHZ//5wWv7VQps3wKJAfRJME4wmK7ealZRNOCJqp5gCD0pLKD1AseFL
+         yvLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NBk9liXdLS0NKnHa5cSCk1kHKDiXrcfTxdoTksvpPWo=;
+        b=Hvq8kjTxQyq9Iv05sWYayEAtjns1u4OZlrKtBnN5EcRMbeLj62GTWjCn+KFf2jvoGv
+         GkyPEUYvI5WLnoPg1TUgOUHQbcXfVKHQ2fftYfqHQEz1X7KBvuKL9CNi7c07GbnKaHt/
+         y2igM4gtmh2ci1p87flednzq0F8I6t1n9oi7dENvRDNubdquQeCv3rXGltCwj/Ar1KMj
+         6Z/ePoENb8YcCT3H7hIfVhMJC8S5jRIk1MGn9AMiXM3tZO6o4H7ve4R6ej930wdAHC4u
+         UAcco3BuvNZKdfiTkc4GhyIgaHYxvWHwerpyXySXYV2eKli9psY5MJ3xc3GxGlFxc1Z5
+         cTUg==
+X-Gm-Message-State: AOAM530ZM99dTmpH2qQlDIGlC7Qthi+EYkWK38sGg+Ece3DaNeOc+RSl
+        +l3ySzuaMYYYpNwJcI/8OF8oIrzyiZQemvnF6T+WIQ==
+X-Google-Smtp-Source: ABdhPJzUjB5Ylk3PrWUqr/WSM7qXoPTR7P7aoMQDfdSaMH6Xm76vX3AZXEla03jLgoKnoi50QRzx3ePplaskPOR3Nps=
+X-Received: by 2002:a63:e648:0:b0:3f2:7ade:8f86 with SMTP id
+ p8-20020a63e648000000b003f27ade8f86mr322639pgj.40.1652892114552; Wed, 18 May
+ 2022 09:41:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhreml753-chm.china.huawei.com (10.201.108.203) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <165237925642.3832067.15995008431029494571.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <165237928334.3832067.16326444799383620141.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20220518171305.000033c4@Huawei.com>
+In-Reply-To: <20220518171305.000033c4@Huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 18 May 2022 09:41:43 -0700
+Message-ID: <CAPcyv4ib5-9W+dvHBgO5y06Gwt69NJXPc8b+GsuF-wiYT9iuPw@mail.gmail.com>
+Subject: Re: [PATCH 05/14] cxl/mem: Validate port connectivity before dvsec ranges
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 12 May 2022 11:15:05 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Wed, May 18, 2022 at 9:15 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Thu, 12 May 2022 11:14:43 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> > In preparation for validating DVSEC ranges against the platform declared
+> > CXL memory ranges (ACPI CFMWS) move port enumeration before the
+> > endpoint's decoder validation. Ultimately this logic will move to the
+> > port driver, but create a bisect point before that larger move.
+> >
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  drivers/cxl/mem.c |   36 ++++++++++++++++++------------------
+> >  1 file changed, 18 insertions(+), 18 deletions(-)
+> >
+> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> > index fed7f10ef9b2..80e75a410499 100644
+> > --- a/drivers/cxl/mem.c
+> > +++ b/drivers/cxl/mem.c
+> > @@ -140,22 +140,6 @@ static int cxl_mem_probe(struct device *dev)
+> >       if (work_pending(&cxlmd->detach_work))
+> >               return -EBUSY;
+> >
+> > -     rc = cxlds->wait_media_ready(cxlds);
+> > -     if (rc) {
+> > -             dev_err(dev, "Media not active (%d)\n", rc);
+> > -             return rc;
+> > -     }
+> > -
+> > -     /*
+> > -      * If DVSEC ranges are being used instead of HDM decoder registers there
+> > -      * is no use in trying to manage those.
+> > -      */
+> > -     if (!cxl_hdm_decode_init(cxlds)) {
+> > -             dev_err(dev,
+> > -                     "Legacy range registers configuration prevents HDM operation.\n");
+> > -             return -EBUSY;
+> > -     }
+> > -
+> >       rc = devm_cxl_enumerate_ports(cxlmd);
+> >       if (rc)
+> >               return rc;
+> > @@ -171,16 +155,32 @@ static int cxl_mem_probe(struct device *dev)
+> >               dev_err(dev, "CXL port topology %s not enabled\n",
+> >                       dev_name(&parent_port->dev));
+> >               rc = -ENXIO;
+> > -             goto out;
+> > +             goto unlock;
+> >       }
+> >
+> >       rc = create_endpoint(cxlmd, parent_port);
+> > -out:
+> > +unlock:
+>
+> Trivial but I think this rename of the label would be better in the earlier
+> patch where you first added the if (rc) below.
+> I suppose it is arguable that the previous patch is a fix so should be minimal
+> though so I'm not that bothered if you leave it here.
+>
 
-> Per CXL 2.0 Section 8.1.3.8.4 "DVSEC CXL Range 1 Base Low" there is no
-> way to specify decode sizes smaller than 256M. Fix cxl_dvsec_ranges()
-> and cxl_hdm_decode_init() to account for that default decode range.
-
-This is effectively the same as the discussion on patch 14.
-
-My reading of the spec suggests that size can be 0 and that would mean
-no access is passed on to the hardware.  It's a rather odd corner case
-and would mean the device would only work with HDM decoders and might
-well fail some compliance tests (I haven't checked)
-
-It's not a corner case I care about... 
-
-> Note, that this means that any BIOS implementation that sets mem_enable,
-> but not HDM Decoder Capability enable will cause the driver to fail to
-> attach. A later change validates the DVSEC ranges against platform CXL
-> decode (CXL CFMWS) to make a decision about overriding the default DVSEC
-> Range configuration.
-
-> 
-> Fixes: 560f78559006 ("cxl/pci: Retrieve CXL DVSEC memory info")
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  drivers/cxl/core/pci.c |   10 +++++++---
->  drivers/cxl/mem.c      |   10 +---------
->  2 files changed, 8 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index f3e59f8b6621..f1c0677a4f52 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -236,7 +236,12 @@ int cxl_dvsec_ranges(struct cxl_dev_state *cxlds,
->  		if (rc)
->  			return rc;
->  
-> -		size = (u64)temp << 32;
-> +		/*
-> +		 * Per CXL 2.0 Section 8.1.3.8.4 "DVSEC CXL Range 1 Base
-> +		 * Low", the minimum decode size is 256MB
-> +		 */
-> +		size = SZ_256M;
-
-This is not how I read the spec.  The match is base <= Addr < base + size.
-If size == 0 then there are no matches as base = base + size and so the
-right condition isn't met.  Maybe I'm missing something though...
-
-
-> +		size |= (u64)temp << 32;
->  
->  		rc = pci_read_config_dword(
->  			pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(i), &temp);
-> @@ -264,8 +269,7 @@ int cxl_dvsec_ranges(struct cxl_dev_state *cxlds,
->  			.end = base + size - 1
->  		};
->  
-> -		if (size)
-> -			ranges++;
-> +		ranges++;
->  	}
->  
->  	info->ranges = ranges;
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index 902d1f6e189e..af4a88d3c5fa 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -84,15 +84,7 @@ __mock bool cxl_hdm_decode_init(struct cxl_dev_state *cxlds,
->  			    CXL_HDM_DECODER_CTRL_OFFSET);
->  	global_enable = global_ctrl & CXL_HDM_DECODER_ENABLE;
->  
-> -	/*
-> -	 * Per CXL 2.0 Section 8.1.3.8.3 and 8.1.3.8.4 DVSEC CXL Range 1 Base
-> -	 * [High,Low] when HDM operation is enabled the range register values
-> -	 * are ignored by the device, but the spec also recommends matching the
-> -	 * DVSEC Range 1,2 to HDM Decoder Range 0,1. So, non-zero info->ranges
-> -	 * are expected even though Linux does not require or maintain that
-> -	 * match.
-> -	 */
-> -	if (!global_enable && info->mem_enabled && info->ranges)
-> +	if (!global_enable && info->mem_enabled)
->  		goto out;
->  
->  	retval = true;
-> 
-
+True, the rename is just as much a part of what "9ea4dcf49878 PM: CXL:
+Disable suspend" was missing as the fix, I'll go ahead and make the
+adjustment.
