@@ -2,85 +2,116 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE1FC433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 20 May 2022 05:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4B8C433F5
+	for <linux-cxl@archiver.kernel.org>; Fri, 20 May 2022 15:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239647AbiETFm2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 20 May 2022 01:42:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37870 "EHLO
+        id S244602AbiETPKF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 20 May 2022 11:10:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345594AbiETFmU (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 20 May 2022 01:42:20 -0400
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09A3059322;
-        Thu, 19 May 2022 22:42:18 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id C903F10045BE2;
-        Fri, 20 May 2022 07:42:14 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id AC73D313920; Fri, 20 May 2022 07:42:14 +0200 (CEST)
-Date:   Fri, 20 May 2022 07:42:14 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Gavin Hindman <gavin.hindman@intel.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-cxl@vger.kernel.org, CHUCK_LEVER <chuck.lever@oracle.com>
-Subject: Re: [RFC PATCH 0/1] DOE usage with pcie/portdrv
-Message-ID: <20220520054214.GB22631@wunner.de>
-References: <20220503153449.4088-1-Jonathan.Cameron@huawei.com>
- <CAPcyv4geBaTkoJ+Gefgq6RaKHtB3NMh5ruZ-1yV_i0UVaw3SWA@mail.gmail.com>
- <20220507101848.GB31314@wunner.de>
- <20220509104806.00007c61@Huawei.com>
- <20220511191345.GA26623@wunner.de>
- <20220511191943.GB26623@wunner.de>
- <CAPcyv4hUKjt7QrA__wQ0KowfaxyQuMjHB5V-=rZBm=UbV4OvSg@mail.gmail.com>
- <20220514135521.GB14833@wunner.de>
- <YoT4C77Yem37NUUR@infradead.org>
+        with ESMTP id S1350612AbiETPKD (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 20 May 2022 11:10:03 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3630177883
+        for <linux-cxl@vger.kernel.org>; Fri, 20 May 2022 08:10:00 -0700 (PDT)
+Received: from fraeml710-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L4VSF0LgKz67Prk;
+        Fri, 20 May 2022 23:06:53 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml710-chm.china.huawei.com (10.206.15.59) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 20 May 2022 17:09:58 +0200
+Received: from localhost (10.122.247.231) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 20 May
+ 2022 16:09:57 +0100
+Date:   Fri, 20 May 2022 16:09:56 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Ariel Sibley <ariel.sibley@microchip.com>,
+        Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH v4 13/13] cxl/port: Enable HDM Capability after
+ validating DVSEC Ranges
+Message-ID: <20220520160956.00000602@huawei.com>
+In-Reply-To: <165299979159.2207134.5045405239146790589.stgit@dwillia2-xfh>
+References: <165291692286.1426646.10683669594268317024.stgit@dwillia2-xfh>
+        <165299979159.2207134.5045405239146790589.stgit@dwillia2-xfh>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YoT4C77Yem37NUUR@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhreml737-chm.china.huawei.com (10.201.108.187) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, May 18, 2022 at 06:43:39AM -0700, Christoph Hellwig wrote:
-> On Sat, May 14, 2022 at 03:55:21PM +0200, Lukas Wunner wrote:
-> > Circling back to the SPDM/IDE topic, while NVMe is now capable of
-> > reliably recovering from errors, it does expect the kernel to handle
-> > recovery within a few seconds.  I'm not sure we can continue to
-> > guarantee that if the kernel depends on user space to perform
-> > re-authentication with SPDM after reset.  That's another headache
-> > that we could avoid with in-kernel SPDM authentication.
+On Thu, 19 May 2022 15:38:56 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
+
+> CXL memory expanders that support the CXL 2.0 memory device class code
+> include an "HDM Decoder Capability" mechanism to supplant the "CXL DVSEC
+> Range" mechanism originally defined in CXL 1.1. Both mechanisms depend
+> on a "mem_enable" bit being set in configuration space before either
+> mechanism activates. When the HDM Decoder Capability is enabled the CXL
+> DVSEC Range settings are ignored.
 > 
-> I wonder if we need kernel bundled and tightly controlled userspace
-> code for these kinds of things (also for NVMe/NFS TLS).  That is,
-> bundle a userspace ELF file or files with a module which is unpacked
-> to or accessible by a ramfs-style file systems.  Then allow executing
-> it without any interaction with the normal userspace, and non-pagable
-> memory.  That way we can reuse existing userspace code, have really
-> nice address space isolation but avoid all the deadlock potential
-> of normal userspace code.  And I don't think it would be too hard to
-> implement either.
+> Previously, the cxl_mem driver was relying on platform-firmware to set
+> "mem_enable". That is an invalid assumption as there is no requirement
+> that platform-firmware sets the bit before the driver sees a device,
+> especially in hot-plug scenarios. Additionally, ACPI-platforms that
+> support CXL 2.0 devices also support the ACPI CEDT (CXL Early Discovery
+> Table). That table outlines the platform permissible address ranges for
+> CXL operation. So, there is a need for the driver to set "mem_enable",
+> and there is information available to determine the validity of the CXL
+> DVSEC Ranges.
+> 
+> Arrange for the driver to optionally enable the HDM Decoder Capability
+> if "mem_enable" was not set by platform firmware, or the CXL DVSEC Range
+> configuration was invalid. Be careful to only disable memory decode if
+> the kernel was the one to enable it. In other words, if CXL is backing
+> all of kernel memory at boot the device needs to maintain "mem_enable"
+> and "HDM Decoder enable" all the way up to handoff back to platform
+> firmware (e.g. ACPI S5 state entry may require CXL memory to stay
+> active).
+> 
+> Fixes: 560f78559006 ("cxl/pci: Retrieve CXL DVSEC memory info")
+> Cc: Dan Carpenter <dan.carpenter@oracle.com>
+> [dan: fix early terminiation of range-allowed loop]
+> Cc: Ariel Sibley <ariel.sibley@microchip.com>
+> [ariel: Memory_size must be non-zero]
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Link: https://lore.kernel.org/r/165291692286.1426646.10683669594268317024.stgit@dwillia2-xfh
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Just as a reminder, on resume from system sleep, IDE needs to be
-set up by pci_pm_resume_noirq() to comply with the existing assumption
-that a PCI driver's ->resume_noirq callback may access the device.
+Hi Dan,
 
-At that point (device) interrupts are disabled, so it's not possible
-to e.g. read certificates from disk or perform an OCSP request.
-So the bundled userspace code would have to conform to a number of
-severe restrictions to avoid resume issues.
+...
 
-Thanks,
+>  
+> +	/*
+> +	 * The current DVSEC values are moot if the memory capability is
+> +	 * disabled, and they will remain moot after the HDM Decoder
+> +	 * capability is enabled.
+> +	 */
+>  	info.mem_enabled = FIELD_GET(CXL_DVSEC_MEM_ENABLE, ctrl);
+>  	if (!info.mem_enabled)
+> -		return 0;
+> +		return __cxl_hdm_decode_init(cxlds, cxlhdm, &info);
 
-Lukas
+ __cxl_hdm_decode_init() returns bool whereas
+cxl_hdm_decode_init() return 0 on success negative on error.
+
+Leads to odd situation of getting a probe failed with a return value
+of 1.
+
+>  
+>  	for (i = 0; i < hdm_count; i++) {
+>  		u64 base, size;
+> 
+
