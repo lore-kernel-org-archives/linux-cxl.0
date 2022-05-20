@@ -2,29 +2,29 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB00C433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 20 May 2022 17:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C060BC433EF
+	for <linux-cxl@archiver.kernel.org>; Fri, 20 May 2022 17:02:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351960AbiETRBb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 20 May 2022 13:01:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51608 "EHLO
+        id S1347721AbiETRCE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 20 May 2022 13:02:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343837AbiETRBa (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 20 May 2022 13:01:30 -0400
+        with ESMTP id S1351999AbiETRCC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 20 May 2022 13:02:02 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0B285B3F4
-        for <linux-cxl@vger.kernel.org>; Fri, 20 May 2022 10:01:28 -0700 (PDT)
-Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L4Xvz0fhKz687qT;
-        Sat, 21 May 2022 00:57:35 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74725BE79
+        for <linux-cxl@vger.kernel.org>; Fri, 20 May 2022 10:01:59 -0700 (PDT)
+Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L4Y0j72fZz6H6rh;
+        Sat, 21 May 2022 01:01:41 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
+ fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 20 May 2022 19:01:27 +0200
+ 15.1.2375.24; Fri, 20 May 2022 19:01:57 +0200
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 20 May 2022 18:01:26 +0100
+ 15.1.2375.24; Fri, 20 May 2022 18:01:57 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <qemu-devel@nongnu.org>, Klaus Jensen <its@irrelevant.dk>
 CC:     <linux-cxl@vger.kernel.org>, Corey Minyard <minyard@acm.org>,
@@ -33,10 +33,12 @@ CC:     <linux-cxl@vger.kernel.org>, Corey Minyard <minyard@acm.org>,
         =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
         =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
         Ben Widawsky <ben.widawsky@intel.com>, <linuarm@huawei.com>
-Subject: [RFC PATCH 0/2] CXL FMAPI interface over MCTP/I2C
-Date:   Fri, 20 May 2022 18:01:26 +0100
-Message-ID: <20220520170128.4436-1-Jonathan.Cameron@huawei.com>
+Subject: [RFC PATCH 1/2] misc/i2c_mctp_cxl_fmapi: Initial device emulation
+Date:   Fri, 20 May 2022 18:01:27 +0100
+Message-ID: <20220520170128.4436-2-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220520170128.4436-1-Jonathan.Cameron@huawei.com>
+References: <20220520170128.4436-1-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -48,382 +50,1001 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-A quick PoC to show the feasibility of emulating the CXL 2.0
-Fabric Manager API over MCTP over I2C as possible path to standards
-based configuration of emulated CXL switches.  Lots of missing parts
-(such as hooking this up to the upstream ports or making it actually
-do anything useful), but it's enough to establish this as a plausible
-approach. Purpose of sharing this is mostly to let people know I've
-been messing around with this (and that Klaus' work was really
-helpful :)
-
-The end goal is to enable emulation of more sophisticated
-CXL switches that rely on an external agent (fabric manager) configuring
-them. One likely common way of doing this is to use the DMTF defined
-CXL FMAPI over MCTP binding (message type 7).  Whilst we don't have
-multiple hosts in QEMU, that doesn't matter for exercising both
-the switch configuration elements, and the host handling of the
-resulting events (we can have multiple virtual hierarchies via
-multiple CXL root ports - similar to multiple hosts, but with a
-few additional software complexities). Note there are a load
-of other protocols that we will want to emulate in future (such as
-SPDM) but this one was a simple place to start. Note QEMU emulation
-of simple CXL switches is still under review (queued behind ARM
-support for CXL due to some fuzz in test cases).
-https://lore.kernel.org/qemu-devel/20220429144110.25167-44-Jonathan.Cameron@huawei.com/
-
-FMAPI allows:
-* Management software to query switch state and capabilities (part of
-  this is implemented in this RFC)
-* Configuration of binding of physical ports to particular virtual
-  hierarchies (PCIe topologies visible to the host).
-* Configuration of the binding of MLD (Multiple Logical Device) LDs
-  to particular virtual ports within a Virtual Hierarchy (how CXL 2.0
-  handles memory pooling).
-* Lots of other stuff.
-
-Details in the CXL 2.0 specification and ECNs.
-
-FMAPI could be enabled via an external interface (and might be in
-some later patch set) but the recent RFC for I2C slave mode support
-https://lore.kernel.org/qemu-devel/20220331165737.1073520-1-its@irrelevant.dk/
-provided the option to simply expose an MCTP interface to the guest.
-(normally it would be exported to a BMC or similar, but meh, that doesn't
- matter for testing :) Ultimately emulation of all the common interfaces
- will be needed to provide a broad test platform.
-
-Note this use of the above patch set is rather different to using it to
-communicate between two emulated machines, one of which is running firmware for
-an appropriate device.  We could do that for CXL switches, but the
-tight coupling we will want to the other parts being emulated in QEMU
-would make such an approach challenging. Also the FMAPI is simple
-enough to lend itself to implementation as a state machine as part of the device
+The Fabric Manager API is used to configure CXL switches and
+devices. DMTF has defined an MCTP binding specification to carry
+these messages. Then end goal of this work is to hook this
+up to an emulated CXL switch and allow control of the switch
+configuration.  For now it's stand alone to show how the MCTP side
+of things works before hooking up the complexities of real switch
 emulation.
 
-Given I wanted a simple test platform without separate firmware requirements
-I've added the aspeed-i2c controller to the arm virt image. There are some
-quirks around this such as the need for reset controller but overall the
-support is straight forward.  A snag here is that for rest of CXL emulation
-I need to use ACPI and the aspeed-i2c driver in Linux is currently not
-very ACPI friendly and it may be controversial to make it so.
-
-To bring up the connection:
-
-* Use a kernel with appropriate i2c controller and mctp driver support.
-  (5.18-rc1 or later should work - though there are some bugs that can
-   be if you follow particular wrong configuration flows).
-* Get mctp and mctpd from https://github.com/CodeConstruct/mctp
-  - modify the mctpd systemd init as provided and start the daemon.
-  - for 64 bit support, get latest version as a sizeof() bug was identified
-    whilst testing this.
-
-
-# Bring up the link
-mctp link set mctpi2c0 up
-# Assign an address to the aspeed-i2c controller
-mctp addr add 50 dev mctpi2c0
-# Assign a neetwork ID to the link (11)
-mctp link set mctpi2c0 net 11
-# Start the daemon that uses dbus for configuration.
-systemctl start mctpd.service
-# Assign an EID to the EP (hard coded I2C address is 0x4d)
-busctl call xyz.openbmc_project.MCTP /xyz/openbmc_project/mctp au.com.CodeConstruct.MCTP AssignEndpoint say mctpi2c0 1 0x4d
-# Check it worked by dumping some state.
-busctl introspect xyz.openbmc_project.MCTP /xyz/openbmc_project/mctp/11/8 xyz.openbmc_project.MCTP.Endpoint
-
-At this point the control protocol has been exercised.
-
-The following test program will query some information about the
-'fake' CXL switch.
-
-/*
- * Trivial example program to exercise QEMU FMAPI Emulation over MCTP over I2C
- */
-#include <sys/socket.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include "mctp.h"
-#include "cxl_fmapi.h"
-
-#define AF_MCTP 45
-static int parse_physical_switch_identify_switch_device(void *buf, size_t buf_len)
-{
-	struct cxl_fmapi_header *head = buf;
-	struct cxl_fmapi_ident_switch_dev_resp_pl *pl = (void *)(head + 1);
-
-	printf("Num total vppb %d\n", pl->num_total_vppb);
-	return 0;
-}
-
-int query_physical_switch_info(int sd, struct sockaddr_mctp *addr, int *tag)
-{
-	uint8_t buf[1024];
-	int rc;
-	ssize_t len;
-	struct sockaddr_mctp addrrx;
-	socklen_t addrlen = sizeof(addrrx);
-	struct cxl_fmapi_header req = {
-		.category = CXL_MCTP_CATEGORY_REQ,
-		.tag = *tag++,
-		.command = CXL_IDENTIFY_SWITCH_DEVICE,
-		.command_set = CXL_FM_API_CMD_SET_PHYSICAL_SWITCH,
-		.vendor_ext_status = 0xabcd,
-	};
-
-	len = sendto(sd, &req, sizeof(req), 0, (struct sockaddr *)addr, sizeof(*addr));
-	if (len != sizeof(req)) {
-		printf("Failed to send whole request\n");
-		return -1;
-	}
-
-	len = recvfrom(sd, buf, sizeof(buf), 0, (struct sockaddr *)&addrrx, &addrlen);
-	if (len < 0) {
-		printf("Failed to receive response\n");
-		return -1;
-	}
-	rc = parse_physical_switch_identify_switch_device(buf, len);
-	if (rc)
-		return -1;
-
-	return 0;
-}
-
-static int parse_phys_port_state_rsp(void * buf, size_t buf_len, struct cxl_fmapi_header *head)
-{
-	struct cxl_fmapi_header *rsp_head = buf;
-	struct cxl_fmapi_get_phys_port_state_resp_pl *pl = (void *)(rsp_head + 1);
-	uint32_t pl_length = rsp_head->pl_length[0] |
-		(rsp_head->pl_length[1] << 8) |
-		((rsp_head->pl_length[2] & 0xf) << 16);
-
-	if (rsp_head->category != CXL_MCTP_CATEGORY_RESP) {
-		printf("Message not a response\n");
-		return -1;
-	}
-	if (rsp_head->tag != head->tag) {
-		printf("Reply has wrong tag\n");
-		return -1;
-	}
-	if ((rsp_head->command != head->command) ||
-		(rsp_head->command_set != head->command_set)) {
-		printf("Response to wrong command\n");
-		return -1;
-	}
-
-	if (rsp_head->return_code != 0) {
-		printf("Error code in response %d\n", rsp_head);
-		return -1;
-	}
-
-	if (pl_length < 4 ||  pl_length < (pl->num_ports * sizeof(pl->ports[0]))) {
-		printf("too short\n");
-		return -1;
-	}
-
-	for (int i = 0; i < pl->num_ports; i++) {
-		struct cxl_fmapi_port_state_info_block *port = &pl->ports[i];
-		const char *port_states[] = {
-			[0x0] = "Disabled",
-			[0x1] = "Bind in progress",
-			[0x2] = "Unbind in progress",
-			[0x3] = "DSP",
-			[0x4] = "USP",
-			[0x5] = "Reserved",
-			//other values not present.
-			[0xf] = "Invalid Port ID"
-		  };
-		const char *connected_device_modes[] = {
-			[0] = "Not CXL / connected",
-			[1] = "CXL 1.1",
-			[2] = "CXL 2.0",
-		};
-		const char *connected_device_type[] = {
-			[0] = "No device detected",
-			[1] = "PCIe device",
-			[2] = "CXL type 1 device",
-			[3] = "CXL type 2 device",
-			[4] = "CXL type 3 device",
-			[5] = "CXL type 3 pooled device",
-			[6] = "Reserved",
-		};
-		const char *ltssm_states[] = {
-			[0] = "Detect",
-			[1] = "Polling",
-			[2] = "Configuration",
-			[3] = "Recovery",
-			[4] = "L0",
-			[5] = "L0s",
-			[6] = "L1",
-			[7] = "L2",
-			[8] = "Disabled",
-			[9] = "Loop Back",
-			[10] = "Hot Reset",
-		};
-		printf("Port%02d:\n ", port->port_id);
-		printf("\tPort state: ");
-		if (port_states[port->config_state & 0xf])
-			printf("%s\n", port_states[port->config_state]);
-		else
-			printf("Unknown state\n");
-
-		if (port->config_state == 3) { /* DSP so device could be there */
-			printf("\tConnected Device CXL Version: ");
-			if (port->connected_device_cxl_version > 2)
-				printf("Unknown CXL Version\n");
-			else
-				printf("%s\n", connected_device_modes[port->connected_device_cxl_version]);
-
-			printf("\tConnected Device Type: ");
-			if (port->connected_device_type > 7)
-				printf("Unknown\n");
-			else
-				printf("%s\n", connected_device_type[port->connected_device_type]);
-		}
-
-		printf("\tSupported CXL Modes:");
-		if (port->port_cxl_version_bitmask & 0x1)
-			printf(" 1.1");
-		if (port->port_cxl_version_bitmask & 0x2)
-			printf(" 2.0");
-		printf("\n");
-
-		printf("\tMaximum Link Width: %d Negotiated Width %d\n",
-			   port->max_link_width,
-			   port->negotiated_link_width);
-		printf("\tSupported Speeds: ");
-		if (port->supported_link_speeds_vector & 0x1)
-			printf(" 2.5 GT/s");
-		if (port->supported_link_speeds_vector & 0x2)
-			printf(" 5.0 GT/s");
-		if (port->supported_link_speeds_vector & 0x4)
-			printf(" 8.0 GT/s");
-		if (port->supported_link_speeds_vector & 0x8)
-			printf(" 16.0 GT/s");
-		if (port->supported_link_speeds_vector & 0x10)
-			printf(" 32.0 GT/s");
-		if (port->supported_link_speeds_vector & 0x20)
-			printf(" 64.0 GT/s");
-		printf("\n");
-
-		printf("\tLTSSM: ");
-		if (port->ltssm_state >= sizeof(ltssm_states))
-			printf("Unkown\n");
-		else
-			printf("%s\n", ltssm_states[port->ltssm_state]);
-	}
-}
-
-int query_ports(int sd, struct sockaddr_mctp *addr, int *tag)
-{
-	uint8_t buf[1024];
-	ssize_t len;
-	int num_ports = 4;
-	int rc;
-	uint8_t port_list[4] = { 0, 3, 7, 4 };
-	struct sockaddr_mctp addrrx;
-	socklen_t addrlen = sizeof(addrrx);
-	struct cxl_fmapi_header *head;
-	struct cxl_fmapi_get_phys_port_state_req_pl *reqpl;
-	size_t req_sz = sizeof(*reqpl) + num_ports + sizeof(*head) ;
-
-	head = malloc(req_sz);
-	*head = (struct cxl_fmapi_header) {
-		.category = CXL_MCTP_CATEGORY_REQ,
-		.tag = *tag++,
-		.command = CXL_GET_PHYSICAL_PORT_STATE,
-		.command_set = CXL_FM_API_CMD_SET_PHYSICAL_SWITCH,
-		.pl_length = {
-			req_sz & 0xff,
-			(req_sz >> 8) & 0xff,
-			(req_sz >> 16) & 0xf },
-		.vendor_ext_status = 0x1234,
-	};
-	reqpl = (void *)(head + 1);
-	*reqpl = (struct cxl_fmapi_get_phys_port_state_req_pl) {
-		.num_ports = num_ports,
-	};
-	for (int j = 0; j < num_ports; j++)
-		reqpl->ports[j] = port_list[j];
-
-	len = sendto(sd, head, req_sz, 0,
-				 (struct sockaddr *)addr, sizeof(*addr));
-
-	len = recvfrom(sd, buf, sizeof(buf), 0,
-				   (struct sockaddr *)&addrrx, &addrlen);
-	if (len < sizeof(struct cxl_fmapi_header)) {
-		printf("Too short for header\n");
-	}
-	//TODO generic check of reply.
-	if (addrrx.smctp_type != 0x7) {
-		printf("Reply does not match expected message type\n");
-	}
-
-	rc = parse_phys_port_state_rsp(buf, len, head);
-	if (rc)
-		return rc;
-
-	return 0;
-}
-
-int main()
-{
-	int rc, sd;
-	int tag = 0; /* will increment on each use */
-	ssize_t len;
-	struct sockaddr_mctp addr = {
-		.smctp_family = AF_MCTP,
-		.smctp_network = 11,
-		.smctp_addr.s_addr = 8,
-		.smctp_type = 0x7, /* CXL FMAPI */
-		.smctp_tag = MCTP_TAG_OWNER,
-	};
-	struct sockaddr_mctp addrrx;
-	socklen_t addrlen = sizeof(addrrx);
-
-	sd = socket(AF_MCTP, SOCK_DGRAM, 0);
-	rc = bind(sd, (struct sockaddr *)&addr, sizeof(addr));
-	if (rc) {
-		printf("Bind failed\n");
-		return -1;
-	}
-
-	rc = query_physical_switch_info(sd, &addr, &tag);
-	if (rc)
-			return rc;
-
-	/* Next query some of the ports */
-	rc = query_ports(sd, &addr, &tag);
-	if (rc)
-		return rc;
-
-	return 0;
-}
-
-All feedback welcome.
-
-Enjoy,
-
-Jonathan
-
-Jonathan Cameron (2):
-  misc/i2c_mctp_cxl_fmapi: Initial device emulation
-  arm/virt: Add aspeed-i2c controller and MCTP EP to enable MCTP testing
-
- hw/arm/Kconfig                       |   1 +
- hw/arm/virt.c                        |  77 +++
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
  hw/misc/Kconfig                      |   3 +
  hw/misc/i2c_mctp_cxl_fmapi.c         | 759 +++++++++++++++++++++++++++
  hw/misc/meson.build                  |   2 +
- include/hw/arm/virt.h                |   2 +
  include/hw/cxl/cxl_fmapi.h           | 158 ++++++
  include/hw/misc/i2c_mctp_cxl_fmapi.h |  17 +
- 8 files changed, 1019 insertions(+)
- create mode 100644 hw/misc/i2c_mctp_cxl_fmapi.c
- create mode 100644 include/hw/cxl/cxl_fmapi.h
- create mode 100644 include/hw/misc/i2c_mctp_cxl_fmapi.h
+ 5 files changed, 939 insertions(+)
 
+diff --git a/hw/misc/Kconfig b/hw/misc/Kconfig
+index cbabe9f78c..d1aceab7a5 100644
+--- a/hw/misc/Kconfig
++++ b/hw/misc/Kconfig
+@@ -174,4 +174,7 @@ config VIRT_CTRL
+ config LASI
+     bool
+ 
++config I2C_MCTP_CXL_FMAPI
++    bool
++
+ source macio/Kconfig
+diff --git a/hw/misc/i2c_mctp_cxl_fmapi.c b/hw/misc/i2c_mctp_cxl_fmapi.c
+new file mode 100644
+index 0000000000..219e30bfd5
+--- /dev/null
++++ b/hw/misc/i2c_mctp_cxl_fmapi.c
+@@ -0,0 +1,759 @@
++/*
++ * SPDX-License-Identifier: GPL-2.0-or-later
++ *
++ * Emulation of a CXL Switch Fabric Management
++ * interface over MCTP over I2C.
++ *
++ * Copyright (c) 2022 Huawei Technologies.
++ */
++
++/*
++ * TODO
++ * - multiple packet message reception.
++ * - EID programing
++ * - Bridges
++ * - MTU discovery.
++ * - Factor out MCTP control from device type specific parts
++ */
++
++#include "qemu/osdep.h"
++#include "hw/i2c/i2c.h"
++#include "hw/irq.h"
++#include "migration/vmstate.h"
++#include "qapi/error.h"
++#include "qapi/visitor.h"
++#include "qemu/module.h"
++#include "block/aio.h"
++#include "qemu/main-loop.h"
++#include "hw/misc/i2c_mctp_cxl_fmapi.h"
++#include "hw/cxl/cxl_fmapi.h"
++
++enum states {
++    MCTP_I2C_PROCESS_REQUEST,
++    MCTP_I2C_START_SEND,
++    MCTP_I2C_ACK,
++};
++
++#define MCTP_MESSAGE_TYPE_CONTROL 0x00
++
++enum mctp_command_code {
++    MCTP_SET_ENDPOINT_ID = 0x1,
++    MCTP_GET_ENDPOINT_ID = 0x2,
++    MCTP_GET_ENDPOINT_UUID = 0x3,
++    MCTP_GET_VERSION = 0x4,
++    MCTP_GET_MESSAGE_TYPE_SUPPORT = 0x5,
++    MCTP_GET_VDM_SUPPORT = 0x6,
++    MCTP_RESOLVE_EPID = 0x7,
++    MCTP_ALLOCATE_EP_IDS = 0x8,
++    MCTP_ROUTING_INFORMATION_UPDATE = 0x9,
++    MCTP_GET_ROUTING_TABLE_ENTRIES = 0xa,
++    MCTP_EP_DISCOVERY_PREP = 0xb,
++    MCTP_EP_DISCOVERY = 0xc,
++    MCTP_DISCOVERY_NOTIFY = 0xd,
++    MCTP_GET_NETWORK_ID = 0xe,
++    MCTP_QUERY_HOP = 0xf,
++    MCTP_RESOLVE_UUID = 0x10,
++    MCTP_QUERY_RATE_LIMIT = 0x11,
++    MCTP_REQUEST_TX_RATE_LIMIT = 0x12,
++    MCTP_UPDATE_RATE_LIMIT = 0x13,
++    MCTP_QUERY_SUPPORTED_INTERFACES = 0x14,
++};
++
++#define MCTP_SET_EP_ID_OP_SET 0x0
++#define MCTP_SET_EP_ID_OP_FORCE 0x1
++#define MCTP_SET_EP_ID_OP_RESET 0x2
++#define MCTP_SET_EP_ID_OP_DISCOVERED 0x03
++
++enum mctp_control_comp_code {
++    MCTP_COMP_SUCCESS = 0x00,
++    MCTP_COMP_ERROR = 0x01,
++    MCTP_COMP_ERROR_INVALID_DATA = 0x02,
++    MCTP_COMP_ERROR_INVALID_LENGTH = 0x03,
++    MCTP_COMP_ERROR_NOT_READY = 0x04,
++    MCTP_COMP_ERROR_UNSUPPORTED_CMD = 0x05,
++    /* 0x80 to 0xff command specific */
++};
++
++#define NUM_PORTS 10
++
++/* TODO split out specific stuff from MCTP generic */
++struct I2C_MCTP_CXL_SWITCHState {
++    I2CSlave i2c;
++    I2CBus *bus;
++    int len;
++    bool eid_set;
++    uint8_t my_eid;
++    uint8_t byte_count;
++    uint8_t source_slave_addr;
++    uint8_t dest_eid;
++    uint8_t src_eid;
++    uint8_t tag;
++    uint8_t message_type;
++    union {
++        struct {
++            uint8_t rq_bit;
++            uint8_t d_bit;
++            uint8_t instance_id;
++            enum mctp_command_code command_code;
++            //completion only in response.
++            //for now
++        } control;
++        struct {
++            uint8_t tag; // another one?
++            uint8_t command;
++            uint8_t command_set;
++            uint32_t payloadlength;
++            uint16_t vendor_specific;
++            union {
++                struct {
++                    int num_ports_req;
++                    uint8_t ports_req[NUM_PORTS];
++                } get_physical_port_state;
++            };
++            //rest is payload.
++        } cxl_fmapi;
++        //other message types.
++    };
++    enum states state;
++    QEMUBH *bh;
++    uint8_t send_buf[128];
++};
++
++OBJECT_DECLARE_SIMPLE_TYPE(I2C_MCTP_CXL_SWITCHState, I2C_MCTP_CXL_SWITCH)
++
++static void mctp_command_set_eid_parse(I2C_MCTP_CXL_SWITCHState *s, uint8_t data)
++{
++    switch (s->len) {
++    case 10:
++        printf("Set end point ID message content %x\n", data & 0x3);
++                    break;
++    case 11:
++        printf("Set Endpoint ID to %x\n", data);
++        s->eid_set = true;
++        s->my_eid = data;
++        break;
++    default:
++        /* Will happen due to PEC */
++    }
++}
++
++static void mctp_command_get_version_parse(I2C_MCTP_CXL_SWITCHState *s, uint8_t data)
++{
++    switch (s->len) {
++    case 10:
++        if (data != 0xFF)
++            printf("Unsupported version request\n");
++        break;
++    default:
++        /* Will happen due to PEC */
++        break;
++    }
++}
++
++static void mctp_command_resolve_epid_parse(I2C_MCTP_CXL_SWITCHState *s,
++                                            uint8_t data)
++{
++    /* Very odd if this gets sent to an EP */
++    switch (s->len) {
++    case 10:
++        printf("ID for which a resolve is requested %x\n", data);
++        break;
++    default:
++        /* Will happen due to PEC */
++        break;
++    }
++}
++
++static void cxl_fmapi_cmd_set_physical_switch_parse(I2C_MCTP_CXL_SWITCHState *s,
++                                                    uint8_t data)
++{
++    switch (s->cxl_fmapi.command) {
++    case CXL_FMAPI_PHYSICAL_SWITCH_IDENTIFY_SWITCH:
++        break;
++    case CXL_FMAPI_GET_PHYSICAL_PORT_STATE:
++        switch (s->len) {
++        case 20:
++            s->cxl_fmapi.get_physical_port_state.num_ports_req = data;
++            break;
++        default:
++            if (s->len >= 21 && s->len < 21 + s->cxl_fmapi.get_physical_port_state.num_ports_req) {
++                s->cxl_fmapi.get_physical_port_state.ports_req[s->len - 21] = data;
++                break;
++            }
++            /* Eat anything else - subject to length checks elsewhere */
++            break;
++        }
++        break;
++    case CXL_FMAPI_PHYSICAL_PORT_CONTROL:
++        /* Emulation so no need to implement it ;) */
++        switch (s->len) {
++        case 20:
++            printf("ppb id : %d\n", data);
++            break;
++        case 21:
++            printf("op code : %d\n", data);
++            break;
++        }
++        break;
++    case CXL_FMAPI_SEND_PPB_CXLIO_CONFIG_REQ:
++        /* Implement this at some point */
++        break;
++    default:
++        printf("command not handled %d\n", s->cxl_fmapi.command);
++        break;
++    }
++}
++
++static int i2c_mctp_cxl_switch_tx(I2CSlave *i2c, uint8_t data)
++{
++    /* Will need to decode */
++    I2C_MCTP_CXL_SWITCHState *s = I2C_MCTP_CXL_SWITCH(i2c);
++
++    switch (s->len) {
++    case 0:
++        if (data != 0xf) {
++            printf("not an MCTP message\n");
++        }
++        break;
++    case 1:
++        s->byte_count = data;
++        break;
++    case 2:
++        s->source_slave_addr = data >> 1;
++        break;
++    case 3:
++        if ((data & 0xF) != 1)
++            printf("not MCTP 1.0\n");
++        break;
++    case 4:
++        s->dest_eid = data;
++        break;
++    case 5:
++        s->src_eid = data;
++        break;
++    case 6:
++        s->tag = data & 0x7;
++        break;
++    case 7:
++        s->message_type = data;
++        break;
++    }
++    if (s->len > 7 && s->message_type == 0x00) {
++        switch (s->len) {
++        case 8:
++            /* TODO: Add validity check */
++            s->control.rq_bit = (data & 0x80) ? 1 : 0;
++            s->control.d_bit = (data & 0x40) ? 1 : 0;
++            s->control.instance_id = data & 0x1f;
++            break;
++        case 9:
++            s->control.command_code = data;
++            printf("Control command code %x\n", s->control.command_code);
++            break;
++        }
++        if (s->len > 9) {
++            switch (s->control.command_code) {
++            case MCTP_SET_ENDPOINT_ID:
++                mctp_command_set_eid_parse(s, data);
++                break;
++            case MCTP_GET_VERSION:
++                mctp_command_get_version_parse(s, data);
++                break;
++            case MCTP_RESOLVE_EPID:
++                mctp_command_resolve_epid_parse(s, data);
++                break;
++            case MCTP_GET_ENDPOINT_ID:
++            case MCTP_GET_ENDPOINT_UUID:
++            case MCTP_GET_MESSAGE_TYPE_SUPPORT:
++            case MCTP_GET_VDM_SUPPORT:
++                /* Will happen due to PEC */
++                break;
++            default:
++                printf("not yet handled\n");
++                break;
++            }
++        }
++    } if (s->len > 7 && s->message_type == 0x7) {
++        //  printf(" byte[%d] of FM_API %x\n", s->len, data);
++        switch (s->len) {
++        case 8:
++            if (data) {
++                printf("Not a request?\n");
++            }
++            break;
++        case 9:
++            s->cxl_fmapi.tag = data;
++            break;
++        case 10:
++            //reserved
++            break;
++        case 11:
++            s->cxl_fmapi.command = data;
++            break;
++        case 12:
++            s->cxl_fmapi.command_set = data;
++            break;
++        }
++        if (s->len > 19) {
++            switch (s->cxl_fmapi.command_set) {
++            case CXL_FMAPI_CMD_SET_PHYSICAL_SWITCH:
++                cxl_fmapi_cmd_set_physical_switch_parse(s, data);
++                break;
++            default:
++                printf("Not yet handled\n");
++            }
++        }
++
++    }
++
++    s->len++;
++
++    return 0;
++}
++
++static uint8_t i2c_mctp_cxl_switch_rx(I2CSlave *i2c)
++{
++    return 0;
++}
++
++static int i2c_mctp_cxl_switch_event(I2CSlave *i2c, enum i2c_event event)
++{
++    I2C_MCTP_CXL_SWITCHState *s = I2C_MCTP_CXL_SWITCH(i2c);
++
++    switch (event) {
++    case I2C_START_RECV:
++        s->len = 0;
++        return 0;
++    case I2C_START_SEND:
++        s->len = 0;
++        return 0;
++    case I2C_FINISH:
++        s->len = 0;
++        s->state = MCTP_I2C_PROCESS_REQUEST;
++        qemu_bh_schedule(s->bh);
++        return 0;
++    case I2C_NACK:
++    default:
++        /* Handle this? */
++        return 0;
++    }
++}
++
++#define POLY    (0x1070U << 3)
++static uint8_t crc8(uint16_t data)
++{
++	int i;
++
++	for (i = 0; i < 8; i++) {
++		if (data & 0x8000)
++			data = data ^ POLY;
++		data = data << 1;
++	}
++	return (uint8_t)(data >> 8);
++}
++
++static uint8_t i2c_smbus_pec(uint8_t crc, uint8_t *p, size_t count)
++{
++    int i;
++                
++    for (i = 0; i < count; i++) {
++        crc = crc8((crc ^ p[i]) << 8);
++    }
++
++    return crc;
++}
++
++struct mctp_i2c_head { /* DSP0237 1.2.0 */
++    uint8_t slave_addr;
++    //Destination slave address not here due to slightly different handling.
++    uint8_t command_code;
++    uint8_t pl_size;
++    uint8_t saddr;
++    uint8_t hdr_ver;
++    uint8_t dest_eid;
++    uint8_t source_eid;
++    uint8_t flags;
++    uint8_t message_type;
++} QEMU_PACKED;
++
++struct mctp_command_head {
++    uint8_t instance_id;
++    uint8_t command_code;
++} QEMU_PACKED;
++
++struct mctp_i2c_cmd_combined_head {
++    struct mctp_i2c_head i2c_head;
++    struct mctp_command_head command_head;
++} QEMU_PACKED;
++
++/* Generic reply setup for control message responses */
++static uint8_t mctp_control_set_reply(I2C_MCTP_CXL_SWITCHState *s, size_t pl_size)
++{
++    I2CSlave *subordinate = I2C_SLAVE(s);
++    struct mctp_i2c_cmd_combined_head head = {
++        .i2c_head = {
++            .slave_addr = s->source_slave_addr << 1,
++            .command_code = 0x0f,
++            /* Size only includes data after this field */
++            .pl_size = sizeof(struct mctp_i2c_cmd_combined_head ) -
++            	offsetof(struct mctp_i2c_cmd_combined_head, i2c_head.saddr) +
++            	pl_size,
++            .saddr = (subordinate->address << 1) | 1,
++            .hdr_ver = 0x1,
++            .dest_eid = s->src_eid,
++            .source_eid = s->my_eid,
++            .flags = s->tag | 0x80 | 0x40,
++            .message_type = 0x0,
++        },
++        .command_head = {
++            .instance_id = s->control.instance_id,
++            .command_code = s->control.command_code,
++        },
++    };
++    
++    return ((uint8_t *)&head)[s->len];
++}
++
++static void mctp_cmd_send_reply(I2C_MCTP_CXL_SWITCHState *s, uint8_t *buf, uint8_t buf_size)
++{
++    const int com_head_size = sizeof(struct mctp_i2c_cmd_combined_head);
++    uint8_t val;
++
++    if (s->len < com_head_size) {
++        val = mctp_control_set_reply(s, buf_size);
++    } else if (s->len < com_head_size + buf_size) {
++        val = ((uint8_t *)buf)[s->len - com_head_size];
++    } else if (s->len == com_head_size + buf_size) {
++        val = i2c_smbus_pec(0, s->send_buf, s->len);
++    } else if (s->len == com_head_size + buf_size + 1) {
++        i2c_end_transfer(s->bus);
++        i2c_bus_release(s->bus);
++        return;
++    } else {
++        val = 0;
++        printf("bug\n");
++    }
++    i2c_send_async(s->bus, val);
++    s->send_buf[s->len] = val;
++    s->len++;
++}
++
++static void mctp_eid_set_reply(I2C_MCTP_CXL_SWITCHState *s)
++{
++    uint8_t buf[] = {
++        //completion code
++        [0] = 0,
++        [1] = 0, //accpeted, no pool.
++        [2] = s->my_eid,
++        [3] = 0,
++    };
++
++    mctp_cmd_send_reply(s, buf, sizeof(buf));
++}
++
++static void mctp_eid_get_reply(I2C_MCTP_CXL_SWITCHState *s)
++{
++    uint8_t buf[] = {
++        //completion code
++        [0] = 0,
++        [1] = s->my_eid,
++        [2] = 0, //Simple end point, dynamic EID.
++        [3] = 0, //medium specific.
++    };
++
++    mctp_cmd_send_reply(s, buf, sizeof(buf));
++}
++
++static void mctp_uuid_get_reply(I2C_MCTP_CXL_SWITCHState *s)
++{
++    uint8_t buf[] = 
++        { //completion code
++            0,
++            // version 4 code from an online generator (Who cares!)
++            0xdf, 0x2b, 0xbe, 0xba, 0x73, 0xc6, 0x4e, 0x33, 0x82, 0x5c, 0x98, 0x00, 0x15, 0x8a, 0xc9, 0x2e };
++
++    mctp_cmd_send_reply(s, buf, sizeof(buf));
++}
++
++static void mctp_version_get_reply(I2C_MCTP_CXL_SWITCHState *s)
++{
++    uint8_t buf[] = 
++        { //completion code
++            [0] = 0,
++            [1] = 1, //one entry
++            [2] = 0, //alpha
++            [3] = 0, //update
++            [4] = 3,
++            [5] = 1,
++        };
++
++    mctp_cmd_send_reply(s, buf, sizeof(buf));
++}
++
++static void mctp_message_type_support_reply(I2C_MCTP_CXL_SWITCHState *s)
++{
++    uint8_t buf[] = 
++        { //completion code
++            [0] = 0,
++            [1] = 2, //entry count
++            [2] = 0, //mctp control for now.
++            [3] = 0x7, //CXL FM-API from DSP0234
++        };
++
++    mctp_cmd_send_reply(s, buf, sizeof(buf));
++}
++
++static void mctp_vdm_support_reply(I2C_MCTP_CXL_SWITCHState *s)
++{
++    uint8_t buf[] = 
++        { //completion code
++            [0] = 0,
++            [1] = 0xff, //one entry so first one is end of list.
++            [2] = 0,
++            [3] = 0x19, // Huawei
++            [4] = 0xe5,
++            [5] = 0x0, //Test purposes only.
++            [6] = 0x0, 
++        };
++
++    mctp_cmd_send_reply(s, buf, sizeof(buf));
++}
++
++struct cxl_cci_message_head {
++    uint8_t message_category; /* 0..3 only */
++    uint8_t tag;
++    uint8_t rsv1;
++    uint8_t command;
++    uint8_t command_set;
++    uint8_t pl_length[3]; /* 20 bit little endian, BO bit at bit 23 */
++    uint16_t return_code;
++    uint16_t vendor_specific;
++} QEMU_PACKED;
++
++struct mctp_i2c_cxl_combined_header {
++    struct mctp_i2c_head i2c_head;
++    struct cxl_cci_message_head cci_head;
++} QEMU_PACKED;
++
++static uint8_t mctp_fmapi_set_reply(I2C_MCTP_CXL_SWITCHState *s, uint8_t pl_size)
++{
++    I2CSlave *subordinate = I2C_SLAVE(s);
++    struct mctp_i2c_cxl_combined_header packet_head = {
++        .i2c_head = {
++            .slave_addr = s->source_slave_addr << 1,
++            .command_code = 0x0f,
++            /* Size only includes data after this field */
++            .pl_size = sizeof(packet_head) -
++            	offsetof(struct mctp_i2c_cxl_combined_header, i2c_head.saddr) +
++            	pl_size,
++            .saddr = (subordinate->address << 1) | 1,
++            .hdr_ver = 0x1,
++            .dest_eid = s->src_eid,
++            .source_eid = s->my_eid,
++            .flags = s->tag | 0x80 | 0x40,
++            .message_type = 0x7,
++        },
++        .cci_head = {
++            .message_category = 0x1, /* response */
++            .tag = s->cxl_fmapi.tag,
++            .command = s->cxl_fmapi.command,
++            .command_set = s->cxl_fmapi.command_set,
++            .pl_length[0] = pl_size & 0xff,
++            .pl_length[1] = (pl_size >> 8) & 0xff,
++            .pl_length[2] = (pl_size >> 16) & 0xf,
++            .return_code = 0,
++            .vendor_specific = 0xbeef,
++        },
++    };
++
++    return ((uint8_t *)&packet_head)[s->len];
++}
++
++static void cxl_fmapi_reply(I2C_MCTP_CXL_SWITCHState *s, uint8_t *pl, size_t pl_size)
++{
++    const int com_head_size = sizeof(struct mctp_i2c_cxl_combined_header);
++    uint8_t val;
++
++    if (s->len < com_head_size) {
++        val = mctp_fmapi_set_reply(s, pl_size);
++    } else if (s->len < com_head_size + pl_size) {
++        val = ((uint8_t *)pl)[s->len - com_head_size];
++    } else if (s->len == com_head_size + pl_size) {
++        val = i2c_smbus_pec(0, s->send_buf, s->len);
++    } else if (s->len == com_head_size + pl_size + 1) {
++        i2c_end_transfer(s->bus);
++        i2c_bus_release(s->bus);
++        return;
++    } else {
++        printf("bug\n");
++        return;
++    }
++    i2c_send_async(s->bus, val);
++    s->send_buf[s->len] = val;
++    s->len++;
++}
++
++static void cxl_physical_port_state_reply(I2C_MCTP_CXL_SWITCHState *s)
++{
++    struct cxl_fmapi_get_phys_port_state_resp_pl *pl;
++    size_t pl_size = sizeof(*pl) +
++        sizeof(pl->ports[0]) * s->cxl_fmapi.get_physical_port_state.num_ports_req;
++    int i;
++
++    /* Todo this is characteristic of switch - no need to keep reallocating */
++    pl = g_malloc0(pl_size);
++    if (!pl)
++        printf("failed to allocate\n");
++
++    pl->num_ports = s->cxl_fmapi.get_physical_port_state.num_ports_req;
++    for (i = 0; i < pl->num_ports; i++) {
++        struct cxl_fmapi_port_state_info_block *port;
++        port = &pl->ports[i];
++        port->port_id = s->cxl_fmapi.get_physical_port_state.ports_req[i];
++        if (port->port_id < 2) { /* 2 upstream ports */
++            port->config_state = 4;
++            port->connected_device_type = 0;
++        } else { /* remainder downstream ports */
++            port->config_state = 3; 
++            port->connected_device_type = 4; /* CXL type 3 */
++            port->supported_ld_count = 3;
++        }
++        port->connected_device_cxl_version = 2;
++        port->port_cxl_version_bitmask = 0x2;
++        port->max_link_width = 0x10; /* x16 */
++        port->negotiated_link_width = 0x10;
++        port->supported_link_speeds_vector = 0x1c; /* 8, 16, 32 GT/s */
++        port->max_link_speed = 5;
++        port->current_link_speed = 5; /* 32 */
++        port->ltssm_state = 0x7; /* L2 */
++        port->first_lane_num = 0;
++        port->link_state = 0;
++    }
++
++    cxl_fmapi_reply(s, (uint8_t *)pl, pl_size);
++    g_free(pl);
++}
++
++static void cxl_physical_switch_identify_reply(I2C_MCTP_CXL_SWITCHState *s)
++{
++    const struct cxl_fmapi_ident_switch_dev_resp_pl pl = {
++        .ingres_port_id = 0,
++        .num_physical_ports = 10,
++        .num_vcs = 2,
++        .active_port_bitmask[0] = 0xff,
++        .active_port_bitmask[1] = 0x3,
++        .active_vcs_bitmask[0] = 0x3,
++        .num_total_vppb = 128,
++        .num_active_vppb = 8,
++    };
++    
++    cxl_fmapi_reply(s, (uint8_t *)&pl, sizeof(pl));
++}
++
++static void cxl_physical_switch_reply(I2C_MCTP_CXL_SWITCHState *s)
++{
++    switch (s->cxl_fmapi.command) {
++    case CXL_FMAPI_PHYSICAL_SWITCH_IDENTIFY_SWITCH:
++        cxl_physical_switch_identify_reply(s);
++        break;
++    case CXL_FMAPI_GET_PHYSICAL_PORT_STATE:
++        cxl_physical_port_state_reply(s);
++        break;
++    default:
++        printf("NOT IMP YET\n");
++        break;
++    }
++}
++
++static void mctp_bh(void *opaque)
++{
++    I2C_MCTP_CXL_SWITCHState *s = opaque;
++
++    switch (s->state) {
++    case MCTP_I2C_PROCESS_REQUEST:
++        i2c_bus_master(s->bus, s->bh);
++        s->state = MCTP_I2C_START_SEND;
++        return;
++        
++    case MCTP_I2C_START_SEND:
++        i2c_start_send(s->bus, s->source_slave_addr);
++        s->send_buf[s->len] = s->source_slave_addr << 1;
++        s->len++;
++        s->state = MCTP_I2C_ACK;
++        return;
++
++    case MCTP_I2C_ACK:
++        if (s->message_type == MCTP_MESSAGE_TYPE_CONTROL) {
++            switch (s->control.command_code) {
++            case MCTP_SET_ENDPOINT_ID:
++                mctp_eid_set_reply(s);
++                break;
++            case MCTP_GET_ENDPOINT_ID:
++                mctp_eid_get_reply(s);
++                break;
++            case MCTP_GET_ENDPOINT_UUID:
++                mctp_uuid_get_reply(s);
++                break;
++            case MCTP_GET_VERSION:
++                //untested so far.
++                mctp_version_get_reply(s);
++                break;
++            case MCTP_GET_MESSAGE_TYPE_SUPPORT:
++                mctp_message_type_support_reply(s);
++                break;
++            case MCTP_GET_VDM_SUPPORT:
++                mctp_vdm_support_reply(s);
++                break;
++            default:
++                printf("Unknown message\n");
++                break;
++            }
++        } else if (s->message_type == 0x7) {
++
++            switch (s->cxl_fmapi.command_set) {
++            case CXL_FMAPI_CMD_SET_PHYSICAL_SWITCH:
++                cxl_physical_switch_reply(s);
++                break;
++            default:
++                printf("not sure how to reply yet\n");
++                break;
++            }
++           
++        }
++        return;
++    }  
++}
++
++static void i2c_mctp_cxl_switch_realize(DeviceState *dev, Error **errp)
++{
++    I2C_MCTP_CXL_SWITCHState *s = I2C_MCTP_CXL_SWITCH(dev);
++    BusState *bus = qdev_get_parent_bus(dev);
++    
++    s->bh = qemu_bh_new(mctp_bh, s);
++    s->bus = I2C_BUS(bus);
++}
++
++static void i2c_mctp_cxl_switch_class_init(ObjectClass *klass, void *data)
++{
++    DeviceClass *dc = DEVICE_CLASS(klass);
++    I2CSlaveClass *k = I2C_SLAVE_CLASS(klass);
++
++    dc->realize = i2c_mctp_cxl_switch_realize;
++    k->event = i2c_mctp_cxl_switch_event;
++    k->recv = i2c_mctp_cxl_switch_rx;
++    k->send = i2c_mctp_cxl_switch_tx;
++}
++
++static const TypeInfo i2c_mctp_cxl_switch_info = {
++    .name = TYPE_I2C_MCTP_CXL_SWITCH,
++    .parent = TYPE_I2C_SLAVE,
++    .instance_size = sizeof(I2C_MCTP_CXL_SWITCHState),
++    .class_init = i2c_mctp_cxl_switch_class_init,
++};
++
++static void i2c_mctp_cxl_switch_register_types(void)
++{
++    type_register_static(&i2c_mctp_cxl_switch_info);
++}
++
++type_init(i2c_mctp_cxl_switch_register_types)
+diff --git a/hw/misc/meson.build b/hw/misc/meson.build
+index 8c366f94da..8c57dfbe2c 100644
+--- a/hw/misc/meson.build
++++ b/hw/misc/meson.build
+@@ -123,7 +123,9 @@ softmmu_ss.add(when: 'CONFIG_NRF51_SOC', if_true: files('nrf51_rng.c'))
+ 
+ softmmu_ss.add(when: 'CONFIG_GRLIB', if_true: files('grlib_ahb_apb_pnp.c'))
+ 
++
+ softmmu_ss.add(when: 'CONFIG_I2C', if_true: files('i2c-echo.c'))
++softmmu_ss.add(when: 'CONFIG_I2C_MCTP_CXL_FMAPI', if_true: files('i2c_mctp_cxl_fmapi.c'))
+ 
+ specific_ss.add(when: 'CONFIG_AVR_POWER', if_true: files('avr_power.c'))
+ 
+diff --git a/include/hw/cxl/cxl_fmapi.h b/include/hw/cxl/cxl_fmapi.h
+new file mode 100644
+index 0000000000..9d8699b308
+--- /dev/null
++++ b/include/hw/cxl/cxl_fmapi.h
+@@ -0,0 +1,158 @@
++/*
++ * SPDX-License-Identifier: GPL-2.0-or-later
++ *
++ * CXL Fabric Manager API definitions
++ *
++ * Copyright (c) 2022 Huawei Technologies.
++ */
++
++#ifndef CXL_FMAPI_H
++#define CXL_FMAPI_H
++
++#include "qemu/osdep.h"
++
++/*
++ * Errata for the Compute Express Link Specification Revision 2.0 - May 2021
++ * Errata F24 applies
++ */
++
++#define CXL_FMAPI_INF_STAT_SET 0x00
++#define CXL_FMAPI_INF_STAT_IDENITFY 0x01
++#define CXL_FMAPI_INF_STAT_BO_STAT 0x02
++#define CXL_FMAPI_INF_STAT_GET_RESP_MESSAGE_LIMIT 0x03
++#define CXL_FMAPI_INF_STAT_SET_RESP_MESSAGE_LMIT 0x04
++/*
++ * Errata F24 introduces Table X - Mandatory over MCTP
++ */
++struct cxl_fmapi_inf_stat_ident_resp_pl {
++    uint16_t pci_vendor_id;
++    uint16_t pci_device_id;
++    uint16_t pci_subsystem_vendor_id;
++    uint16_t pci_subsystem_id;
++    uint8_t serial_number[8];
++    uint8_t max_message_size;
++} QEMU_PACKED;
++
++/*
++ * Errata F24 introduces Table Y - Mandatory over MCTP
++ */
++struct cxl_fmapi_inf_stat_bo_stat_resp_pl {
++    uint8_t background_operation_status;
++    uint8_t rsv1;
++    uint16_t command_op_code;
++    uint16_t return_code;
++    uint16_t vendor_specific;
++} QEMU_PACKED;
++
++/*
++ * Errata F24 introduces Table Z - Mandatory over MCTP
++ */
++struct cxl_fmapi_inf_stat_get_resp_message_limit_resp_pl {
++    uint8_t message_limit;
++} QEMU_PACKED;
++
++/*
++ * Errata F24 introduces Table A - Mandatory over MCTP
++ */
++struct cxl_fmapi_inf_stat_set_resp_message_limit_req_pl {
++    uint8_t message_limit;
++} QEMU_PACKED;
++
++/*
++ * Errata F24 introduces Table B - Mandatory over MCTP
++ */
++struct cxl_fmapi_inf_stat_set_resp_message_limit_resp_pl {
++    uint8_t message_limit;
++} QEMU_PACKED;
++
++#define CXL_FMAPI_CMD_SET_PHYSICAL_SWITCH 0x51
++#define   CXL_FMAPI_PHYSICAL_SWITCH_IDENTIFY_SWITCH 0x00
++#define   CXL_FMAPI_GET_PHYSICAL_PORT_STATE 0x01
++#define   CXL_FMAPI_PHYSICAL_PORT_CONTROL 0x02
++#define   CXL_FMAPI_SEND_PPB_CXLIO_CONFIG_REQ 0x03
++#define CXL_FMAPI_CMD_SET_VIRTUAL_SWITCH 0x52
++#define   CXL_FMAPI_GET_VIRTUAL_SWITCH_INFO 0x00
++#define   CXL_FMAPI_BIND_VPPB 0x01
++#define   CXL_FMAPI_UNBIND_VPPD 0x02
++#define   CXL_FMAPI_GENERATE_AER_EVENT 0x03
++#define CXL_FMAPI_CMD_SET_MLD_PORT 0x53
++#define   CXL_FMAPI_MLD_TUNNEL_MANAGEMENT_COMMAND 0x00
++#define   CXL_FMAPI_MLD_SEND_PPB_CXLIO_CONFIG_REQ 0x01
++#define   CXL_FMAPI_MLD_SEND_PPB_CXLIO_MEMORY_REQ 0x02
++#define CXL_FMAPI_CMD_SET_MLD_COMPONENT 0x54 /* MLD only */
++#define   CXL_FMAPI_GET_LD_INFO 0x00
++#define   CXL_FMAPI_GET_LD_ALLOCATIONS 0x01
++#define   CXL_FMAPI_SET_LD_ALLOCATIONS 0x02
++#define   CXL_FMAPI_GET_QOS_CONTROL 0x03
++#define   CXL_FMAPI_SET_QOS_CONTROL 0x04
++#define   CXL_FMAPI_GET_QOS_STATUS 0x05
++#define   CXL_FMAPI_GET_QOS_ALLOCATED_BW 0x06
++#define   CXL_FMAPI_SET_QOS_ALLOCATED_BW 0x07
++#define   CXL_FMAPI_GET_QOS_BW_LIMIT 0x08
++#define   CXL_FMAPI_SET_QOS_BW_LIMIT 0x09
++
++/*
++ * CXL 2.0 Table 89 - Errata F24
++ */
++struct cxl_fmapi_ident_switch_dev_resp_pl {
++    uint8_t ingres_port_id;
++    uint8_t rsv1;
++    uint8_t num_physical_ports;
++    uint8_t num_vcs;
++    uint8_t active_port_bitmask[32];
++    uint8_t active_vcs_bitmask[32];
++    uint16_t num_total_vppb;
++    uint16_t num_active_vppb;
++} QEMU_PACKED;
++
++/*
++ * CXL 2.0
++ * Table 90 - Get Physical Port State Request Payload
++ * Table 91 - Get Physical Port State Response Payload
++ * Table 92 - Get Phsyical Port State Port Information Block Format
++ */
++struct cxl_fmapi_get_phys_port_state_req_pl {
++    uint8_t num_ports; /* CHECK. may get too large for MCTP message size */
++    uint8_t ports[];
++} QEMU_PACKED;
++
++struct cxl_fmapi_port_state_info_block {
++    uint8_t port_id;
++    uint8_t config_state;
++    uint8_t connected_device_cxl_version;
++    uint8_t rsv1;
++    uint8_t connected_device_type;
++    uint8_t port_cxl_version_bitmask;
++    uint8_t max_link_width;
++    uint8_t negotiated_link_width;
++    uint8_t supported_link_speeds_vector;
++    uint8_t max_link_speed;
++    uint8_t current_link_speed;
++    uint8_t ltssm_state;
++    uint8_t first_lane_num;
++    uint16_t link_state;
++    uint8_t supported_ld_count;
++} QEMU_PACKED;
++
++struct cxl_fmapi_get_phys_port_state_resp_pl {
++    uint8_t num_ports;
++    uint8_t rsv1[3];
++    struct cxl_fmapi_port_state_info_block ports[];
++} QEMU_PACKED;
++
++struct cxl_fmapi_physical_port_state_ctrl_req_pl {
++    uint8_t ppb_id;
++    uint8_t port_opcode;
++} QEMU_PACKED;
++
++struct cxl_fmapi_physical_port_send_config_req_pl {
++    uint8_t ppb_id;
++    uint8_t otherdata[3];
++    uint32_t write_data;
++} QEMU_PACKED;
++
++struct cxl_fmapi_physical_port_send_config_rsp_pl {
++    uint32_t read_data;
++} QEMU_PACKED;
++
++#endif /* CXL_FMAPI_H */
+diff --git a/include/hw/misc/i2c_mctp_cxl_fmapi.h b/include/hw/misc/i2c_mctp_cxl_fmapi.h
+new file mode 100644
+index 0000000000..b10ba897ab
+--- /dev/null
++++ b/include/hw/misc/i2c_mctp_cxl_fmapi.h
+@@ -0,0 +1,17 @@
++/*
++ * SPDX-License-Identifier: GPL-2.0-or-later
++ *
++ * Emulation of a CXL Switch Fabric Management
++ * interface over MCTP over I2C.
++ *
++ * Copyright (c) 2022 Huawei Technologies.
++ */
++
++#ifndef I2C_MCTP_CXL_FMAPI_H
++#define I2C_MCTP_CXL_FMAPI_H
++
++#include "qemu/osdep.h"
++
++#define TYPE_I2C_MCTP_CXL_SWITCH "i2c_mctp_cxl_switch"
++
++#endif
 -- 
 2.32.0
 
