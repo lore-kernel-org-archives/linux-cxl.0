@@ -2,218 +2,128 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E02FC433F5
-	for <linux-cxl@archiver.kernel.org>; Fri, 20 May 2022 17:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4995CC433F5
+	for <linux-cxl@archiver.kernel.org>; Fri, 20 May 2022 17:35:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352010AbiETRCd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 20 May 2022 13:02:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55772 "EHLO
+        id S232063AbiETRfU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 20 May 2022 13:35:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352009AbiETRCc (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 20 May 2022 13:02:32 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D2BA185C9B
-        for <linux-cxl@vger.kernel.org>; Fri, 20 May 2022 10:02:30 -0700 (PDT)
-Received: from fraeml736-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L4Y1J2LQ8z6H6r6;
-        Sat, 21 May 2022 01:02:12 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml736-chm.china.huawei.com (10.206.15.217) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 20 May 2022 19:02:28 +0200
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 20 May 2022 18:02:27 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <qemu-devel@nongnu.org>, Klaus Jensen <its@irrelevant.dk>
-CC:     <linux-cxl@vger.kernel.org>, Corey Minyard <minyard@acm.org>,
-        Damien Hedde <damien.hedde@greensocs.com>,
-        Peter Delevoryas <pdel@fb.com>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        Ben Widawsky <ben.widawsky@intel.com>, <linuarm@huawei.com>
-Subject: [RFC PATCH 2/2] arm/virt: Add aspeed-i2c controller and MCTP EP to enable MCTP testing
-Date:   Fri, 20 May 2022 18:01:28 +0100
-Message-ID: <20220520170128.4436-3-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220520170128.4436-1-Jonathan.Cameron@huawei.com>
-References: <20220520170128.4436-1-Jonathan.Cameron@huawei.com>
+        with ESMTP id S232027AbiETRfU (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 20 May 2022 13:35:20 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 701F5187DAB
+        for <linux-cxl@vger.kernel.org>; Fri, 20 May 2022 10:35:19 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id s14so7914430plk.8
+        for <linux-cxl@vger.kernel.org>; Fri, 20 May 2022 10:35:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ITJIWCytwVe1ES2GmpHpzZyTmpiHEe1tf/s+lxlySWQ=;
+        b=r7655LU3IwTkh+Yrrs737LqxhPROP7W9KFeYT30S3DOI4S/QoTSvu2I5gASaFcTvpI
+         mu0nFXSpQuipwl4bADcDpaQZZThnt2xEm3MjqzD256zC/GhPU3eI5fZMuzRSu+tobP1v
+         EUw8gYk/cySV2VhTZWg7B+vKZbIVR3nahejGUV6SDiEMyTRJoMfcD7cXFjHTuR9S/JOS
+         GuLVM0MMCVS1kLoyRytgEK7Wz5DjWiIe5OnVgnE5kYH62t+7J/WvERwtamJoGZON2lVj
+         EArriq7WA6nwduSo52yH3yUgRhzrnS59cllLKF7cawnY8HeXnc9h65lZwI2VZAfUeqQ5
+         g7Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ITJIWCytwVe1ES2GmpHpzZyTmpiHEe1tf/s+lxlySWQ=;
+        b=kGR/KDSMYPTylZ16bkv0mbGfSo/REYRVOVVwyx2GJiRCad/jdo/wBjY/rZfP9n2+8T
+         mvZtEH4DnKncdVkXGG9TBbwJL+hZRlpoqLNYtMr4Y7pW5SnH4AEDEqg32w0SrQ0g+utH
+         w62oKWxfLrEYEJHCAbNwW7Fjk6kNtrznNmC/IofvNJvQnA7M/IdNUQEn8SkZVg8j93Hy
+         4XBprnaV4Jx9Dp794xq6/k+5hMdGbrFhjqiViOJ/PeCs/DC8s0M7nQC50APvy4gWO0bZ
+         bRN9onxM/qadN0Rpe/m346Cgdp6drkbPjSMSHceGAkEj+3G0A0+NuenhGFzOFpb1US08
+         SwXg==
+X-Gm-Message-State: AOAM532hIykFxgTqkpxEiyZN0mHJXkK+OBgqP5GCpJvU9V1EFayMWnXa
+        ZCc7vlyYUGwUM0uXYeRpEuimYuYQYE+8YEF27sL+Tw==
+X-Google-Smtp-Source: ABdhPJxEMdPpmm3jAn+PKRSfqYzcYOh+B81VADkHeVJDTfz/IKR6s6xx3ohkOP+3rzx+WPruw2uHmWXBFueoIottqMo=
+X-Received: by 2002:a17:902:da8b:b0:15e:c0e8:d846 with SMTP id
+ j11-20020a170902da8b00b0015ec0e8d846mr10888193plx.34.1653068118993; Fri, 20
+ May 2022 10:35:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhreml737-chm.china.huawei.com (10.201.108.187) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <165291692286.1426646.10683669594268317024.stgit@dwillia2-xfh>
+ <165299979159.2207134.5045405239146790589.stgit@dwillia2-xfh> <20220520160956.00000602@huawei.com>
+In-Reply-To: <20220520160956.00000602@huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 20 May 2022 10:35:08 -0700
+Message-ID: <CAPcyv4gFX7azG6x=eyd_-QSzneApKbaTGfK0DQg3siet_jwKtw@mail.gmail.com>
+Subject: Re: [PATCH v4 13/13] cxl/port: Enable HDM Capability after validating
+ DVSEC Ranges
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Ariel Sibley <ariel.sibley@microchip.com>,
+        Ira Weiny <ira.weiny@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-As the only I2C emulation in QEMU that supports being both
-a master and a slave, suitable for MCTP over i2c is aspeed-i2c
-add this controller to the arm virt model and hook up our new
-i2c_mctp_cxl_fmapi device.
+On Fri, May 20, 2022 at 8:10 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Thu, 19 May 2022 15:38:56 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> > CXL memory expanders that support the CXL 2.0 memory device class code
+> > include an "HDM Decoder Capability" mechanism to supplant the "CXL DVSEC
+> > Range" mechanism originally defined in CXL 1.1. Both mechanisms depend
+> > on a "mem_enable" bit being set in configuration space before either
+> > mechanism activates. When the HDM Decoder Capability is enabled the CXL
+> > DVSEC Range settings are ignored.
+> >
+> > Previously, the cxl_mem driver was relying on platform-firmware to set
+> > "mem_enable". That is an invalid assumption as there is no requirement
+> > that platform-firmware sets the bit before the driver sees a device,
+> > especially in hot-plug scenarios. Additionally, ACPI-platforms that
+> > support CXL 2.0 devices also support the ACPI CEDT (CXL Early Discovery
+> > Table). That table outlines the platform permissible address ranges for
+> > CXL operation. So, there is a need for the driver to set "mem_enable",
+> > and there is information available to determine the validity of the CXL
+> > DVSEC Ranges.
+> >
+> > Arrange for the driver to optionally enable the HDM Decoder Capability
+> > if "mem_enable" was not set by platform firmware, or the CXL DVSEC Range
+> > configuration was invalid. Be careful to only disable memory decode if
+> > the kernel was the one to enable it. In other words, if CXL is backing
+> > all of kernel memory at boot the device needs to maintain "mem_enable"
+> > and "HDM Decoder enable" all the way up to handoff back to platform
+> > firmware (e.g. ACPI S5 state entry may require CXL memory to stay
+> > active).
+> >
+> > Fixes: 560f78559006 ("cxl/pci: Retrieve CXL DVSEC memory info")
+> > Cc: Dan Carpenter <dan.carpenter@oracle.com>
+> > [dan: fix early terminiation of range-allowed loop]
+> > Cc: Ariel Sibley <ariel.sibley@microchip.com>
+> > [ariel: Memory_size must be non-zero]
+> > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> > Link: https://lore.kernel.org/r/165291692286.1426646.10683669594268317024.stgit@dwillia2-xfh
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>
+> Hi Dan,
+>
+> ...
+>
+> >
+> > +     /*
+> > +      * The current DVSEC values are moot if the memory capability is
+> > +      * disabled, and they will remain moot after the HDM Decoder
+> > +      * capability is enabled.
+> > +      */
+> >       info.mem_enabled = FIELD_GET(CXL_DVSEC_MEM_ENABLE, ctrl);
+> >       if (!info.mem_enabled)
+> > -             return 0;
+> > +             return __cxl_hdm_decode_init(cxlds, cxlhdm, &info);
+>
+>  __cxl_hdm_decode_init() returns bool whereas
+> cxl_hdm_decode_init() return 0 on success negative on error.
+>
+> Leads to odd situation of getting a probe failed with a return value
+> of 1.
 
-The current Linux driver for aspeed-i2c has a hard requirement on
-a reset controller.  Throw down the simplest reset controller
-I could find so as to avoid need to make any chance to the kernel
-code.
-
-Patch also builds appropriate device tree.  Unfortunately for CXL
-we need to use ACPI (no DT bindings yet defined). Enabling this will
-either require appropriate support for MCTP on an i2c master that
-has ACPI bindings, or modifications of the kernel driver to support
-ACPI with aspeed-i2c (which might be a little controversial ;)
-
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- hw/arm/Kconfig        |  1 +
- hw/arm/virt.c         | 77 +++++++++++++++++++++++++++++++++++++++++++
- include/hw/arm/virt.h |  2 ++
- 3 files changed, 80 insertions(+)
-
-diff --git a/hw/arm/Kconfig b/hw/arm/Kconfig
-index 219262a8da..4a733298cd 100644
---- a/hw/arm/Kconfig
-+++ b/hw/arm/Kconfig
-@@ -30,6 +30,7 @@ config ARM_VIRT
-     select ACPI_VIOT
-     select VIRTIO_MEM_SUPPORTED
-     select ACPI_CXL
-+    select I2C_MCTP_CXL_FMAPI
- 
- config CHEETAH
-     bool
-diff --git a/hw/arm/virt.c b/hw/arm/virt.c
-index d818131b57..ea04279515 100644
---- a/hw/arm/virt.c
-+++ b/hw/arm/virt.c
-@@ -80,6 +80,9 @@
- #include "hw/char/pl011.h"
- #include "hw/cxl/cxl.h"
- #include "qemu/guest-random.h"
-+#include "hw/i2c/i2c.h"
-+#include "hw/i2c/aspeed_i2c.h"
-+#include "hw/misc/i2c_mctp_cxl_fmapi.h"
- 
- #define DEFINE_VIRT_MACHINE_LATEST(major, minor, latest) \
-     static void virt_##major##_##minor##_class_init(ObjectClass *oc, \
-@@ -156,6 +159,8 @@ static const MemMapEntry base_memmap[] = {
-     [VIRT_PVTIME] =             { 0x090a0000, 0x00010000 },
-     [VIRT_SECURE_GPIO] =        { 0x090b0000, 0x00001000 },
-     [VIRT_MMIO] =               { 0x0a000000, 0x00000200 },
-+    [VIRT_I2C] =                { 0x0b000000, 0x00004000 },
-+    [VIRT_RESET_FAKE] =         { 0x0b004000, 0x00000010 },
-     /* ...repeating for a total of NUM_VIRTIO_TRANSPORTS, each of that size */
-     [VIRT_PLATFORM_BUS] =       { 0x0c000000, 0x02000000 },
-     [VIRT_SECURE_MEM] =         { 0x0e000000, 0x01000000 },
-@@ -192,6 +197,7 @@ static const int a15irqmap[] = {
-     [VIRT_GPIO] = 7,
-     [VIRT_SECURE_UART] = 8,
-     [VIRT_ACPI_GED] = 9,
-+    [VIRT_I2C] = 10,
-     [VIRT_MMIO] = 16, /* ...to 16 + NUM_VIRTIO_TRANSPORTS - 1 */
-     [VIRT_GIC_V2M] = 48, /* ...to 48 + NUM_GICV2M_SPIS - 1 */
-     [VIRT_SMMU] = 74,    /* ...to 74 + NUM_SMMU_IRQS - 1 */
-@@ -1996,6 +2002,75 @@ static void virt_cpu_post_init(VirtMachineState *vms, MemoryRegion *sysmem)
-     }
- }
- 
-+static void create_mctp_test(MachineState *ms)
-+{
-+    VirtMachineState *vms = VIRT_MACHINE(ms);
-+    MemoryRegion *sysmem = get_system_memory();
-+    AspeedI2CState *aspeedi2c;
-+    struct DeviceState  *dev;
-+    char *nodename_i2c_master;
-+    char *nodename_i2c_sub;
-+    char *nodename_reset;
-+    uint32_t clk_phandle, reset_phandle;
-+    MemoryRegion *sysmem2;
-+   
-+    dev = qdev_new("aspeed.i2c-ast2600");
-+    aspeedi2c = ASPEED_I2C(dev);
-+    object_property_set_link(OBJECT(dev), "dram", OBJECT(ms->ram), &error_fatal);
-+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
-+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, vms->memmap[VIRT_I2C].base);
-+    sysbus_connect_irq(SYS_BUS_DEVICE(&aspeedi2c->busses[0]), 0, qdev_get_gpio_in(vms->gic, vms->irqmap[VIRT_I2C]));
-+
-+    /* I2C bus DT */
-+    reset_phandle = qemu_fdt_alloc_phandle(ms->fdt);
-+    nodename_reset = g_strdup_printf("/reset@%" PRIx64, vms->memmap[VIRT_RESET_FAKE].base);
-+    qemu_fdt_add_subnode(ms->fdt, nodename_reset);
-+    qemu_fdt_setprop_string(ms->fdt, nodename_reset, "compatible", "snps,dw-low-reset");
-+    qemu_fdt_setprop_sized_cells(ms->fdt, nodename_reset, "reg",
-+                                 2, vms->memmap[VIRT_RESET_FAKE].base,
-+                                 2, vms->memmap[VIRT_RESET_FAKE].size);
-+    qemu_fdt_setprop_cell(ms->fdt, nodename_reset, "#reset-cells", 0x1);
-+    qemu_fdt_setprop_cell(ms->fdt, nodename_reset, "phandle", reset_phandle);
-+    sysmem2 =  g_new(MemoryRegion, 1);
-+    memory_region_init_ram(sysmem2, NULL, "reset", vms->memmap[VIRT_RESET_FAKE].size, NULL);
-+    memory_region_add_subregion(sysmem, vms->memmap[VIRT_RESET_FAKE].base, sysmem2);
-+    
-+    clk_phandle = qemu_fdt_alloc_phandle(ms->fdt);
-+    
-+    qemu_fdt_add_subnode(ms->fdt, "/mclk");
-+    qemu_fdt_setprop_string(ms->fdt, "/mclk", "compatible", "fixed-clock");
-+    qemu_fdt_setprop_cell(ms->fdt, "/mclk", "#clock-cells", 0x0);
-+    qemu_fdt_setprop_cell(ms->fdt, "/mclk", "clock-frequency", 24000);
-+    qemu_fdt_setprop_string(ms->fdt, "/mclk", "clock-output-names", "bobsclk");
-+    qemu_fdt_setprop_cell(ms->fdt, "/mclk", "phandle", clk_phandle);
-+
-+    nodename_i2c_master = g_strdup_printf("/i2c@%" PRIx64, vms->memmap[VIRT_I2C].base);
-+    qemu_fdt_add_subnode(ms->fdt, nodename_i2c_master);
-+    qemu_fdt_setprop_string(ms->fdt, nodename_i2c_master, "compatible",  "aspeed,ast2600-i2c-bus");
-+    qemu_fdt_setprop_cells(ms->fdt, nodename_i2c_master, "multi-master");
-+    qemu_fdt_setprop_cell(ms->fdt, nodename_i2c_master, "#size-cells", 0);
-+    qemu_fdt_setprop_cell(ms->fdt, nodename_i2c_master, "#address-cells", 1);
-+    qemu_fdt_setprop_cell(ms->fdt, nodename_i2c_master, "clocks", clk_phandle);
-+    qemu_fdt_setprop_string(ms->fdt, nodename_i2c_master, "clock-names", "bobsclk");
-+    qemu_fdt_setprop(ms->fdt, nodename_i2c_master, "mctp-controller", NULL, 0);
-+    qemu_fdt_setprop_cells(ms->fdt, nodename_i2c_master, "interrupts", GIC_FDT_IRQ_TYPE_SPI,
-+                           vms->irqmap[VIRT_I2C], GIC_FDT_IRQ_FLAGS_LEVEL_HI);
-+    /* Offset to the first bus is 0x80, next one at 0x100 etc */
-+    qemu_fdt_setprop_sized_cells(ms->fdt, nodename_i2c_master, "reg",
-+                                 2, vms->memmap[VIRT_I2C].base + 0x80,
-+                                 2, 0x80);
-+    qemu_fdt_setprop_cells(ms->fdt, nodename_i2c_master, "resets", reset_phandle,  0);
-+
-+    nodename_i2c_sub = g_strdup_printf("/i2c@%" PRIx64 "/mctp@%" PRIx64, vms->memmap[VIRT_I2C].base, 0x50l);
-+    qemu_fdt_add_subnode(ms->fdt, nodename_i2c_sub);
-+    qemu_fdt_setprop_string(ms->fdt, nodename_i2c_sub, "compatible",  "mctp-i2c-controller");
-+    qemu_fdt_setprop_sized_cells(ms->fdt, nodename_i2c_sub, "reg", 1, 0x50 | 0x40000000);
-+
-+        
-+    /* Slave device - linux doesn't use the presence of dt node for this so don't create one*/
-+    i2c_slave_create_simple(aspeed_i2c_get_bus(aspeedi2c, 0), "i2c_mctp_cxl_switch", 0x4d);
-+}
-+
- static void machvirt_init(MachineState *machine)
- {
-     VirtMachineState *vms = VIRT_MACHINE(machine);
-@@ -2289,6 +2364,8 @@ static void machvirt_init(MachineState *machine)
-         create_gpio_devices(vms, VIRT_SECURE_GPIO, secure_sysmem);
-     }
- 
-+    create_mctp_test(machine);
-+
-      /* connect powerdown request */
-      vms->powerdown_notifier.notify = virt_powerdown_req;
-      qemu_register_powerdown_notifier(&vms->powerdown_notifier);
-diff --git a/include/hw/arm/virt.h b/include/hw/arm/virt.h
-index 67c08a62af..abbfac7c48 100644
---- a/include/hw/arm/virt.h
-+++ b/include/hw/arm/virt.h
-@@ -71,6 +71,8 @@ enum {
-     VIRT_SMMU,
-     VIRT_UART,
-     VIRT_MMIO,
-+    VIRT_I2C,
-+    VIRT_RESET_FAKE,
-     VIRT_RTC,
-     VIRT_FW_CFG,
-     VIRT_PCIE,
--- 
-2.32.0
-
+Ugh, yes, thanks. You seem to have identified that I only tested this
+on setups that enable mem_enable by default. Fix inbound.
