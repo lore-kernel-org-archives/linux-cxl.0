@@ -2,232 +2,361 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C806C433EF
-	for <linux-cxl@archiver.kernel.org>; Sat, 21 May 2022 09:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B063CC433EF
+	for <linux-cxl@archiver.kernel.org>; Mon, 23 May 2022 15:15:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241751AbiEUJLO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 21 May 2022 05:11:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56520 "EHLO
+        id S237556AbiEWPPR convert rfc822-to-8bit (ORCPT
+        <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 23 May 2022 11:15:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241747AbiEUJLM (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 21 May 2022 05:11:12 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 348C714D1B
-        for <linux-cxl@vger.kernel.org>; Sat, 21 May 2022 02:11:09 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id wh22so19338546ejb.7
-        for <linux-cxl@vger.kernel.org>; Sat, 21 May 2022 02:11:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=dbVZumlmqIlKW4tw4gW3FnmT0CGvI34/PKMaPOCdfEA=;
-        b=Uos3/RYP2bI7RvKwfAW6OhZivmMViyaaCvAks7M5nw7CY3tv5YNc3c2SgAD0xY6RFj
-         yUjyfVM4daibK6PD7EnWN6DBxECTGjDSFoArAjs85FYMH2/U+ezkM7kG1GmIpij9Hp0F
-         e8scaS2xMyvISnOa0xmrSQO7NIF2GxIqfG0BrWROMQ/pq2AtBHSwG+/w9kknF+q6uYnm
-         RBaTsc0qnoSY1YeT8My5MjlFlFWjlu5n55BQznNqdRWZrcQJ2/vShwAkbGHmnETtOIye
-         P8qnhRBVmuDuRPy1HMhq7VLAZbggBPxOJYWzK5Wkxfxk6oOGk3HF+4J2TOA32GZrzi1U
-         tPcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
-         :subject:content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=dbVZumlmqIlKW4tw4gW3FnmT0CGvI34/PKMaPOCdfEA=;
-        b=jx92EctVYqA6PQYrnbP2CCE1nq7mkh6Xuhs+hTw6trCbk/y4dc1S2iNnRIezZ1MefQ
-         lV+E62CXyrRj77+SQk/DXXhtkFZkGe1H5yb2eaDikgXEZtk0uXImrATu2ULSS1tVfll/
-         XBJAkz6eFacmAVRkbyovYDH23iE9jIyrNiuTBAd/1hix0WTxVWVIOaR6knrWeMpvIae1
-         laxXyFlLZ+FIhsWJ/hD3fimZYOPS5XgRcLw1L+YtGbTggRiXVRa/pzydLF8qXwCposvs
-         s8Ujn3dBOyTZRuFk6gRFvcTXjBb7pQifh9ob/MO4FCwaQ/sZe2Eset7FMnnQ8uvj6YkB
-         CqNw==
-X-Gm-Message-State: AOAM5303p+Ih6IG6mOuIy1ece5i2sYlVvjnxA9IJI5vHI9ESbDxDWoIB
-        e7Gu4d+BUPS1VyYdrSfemdY=
-X-Google-Smtp-Source: ABdhPJxt9jBPQAvpuf6fp0rlNFLbT3KhbwqCLXY2XL9cH3mahXwlRMu3IjsVe8jOpS6GLYwJLh0IlQ==
-X-Received: by 2002:a17:907:a40a:b0:6f4:d84e:3e49 with SMTP id sg10-20020a170907a40a00b006f4d84e3e49mr11471108ejc.361.1653124267680;
-        Sat, 21 May 2022 02:11:07 -0700 (PDT)
-Received: from ?IPV6:2001:b07:6468:f312:1c09:f536:3de6:228c? ([2001:b07:6468:f312:1c09:f536:3de6:228c])
-        by smtp.googlemail.com with ESMTPSA id q10-20020aa7da8a000000b0042617ba637fsm5476791eds.9.2022.05.21.02.11.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 May 2022 02:11:07 -0700 (PDT)
-Sender: Paolo Bonzini <paolo.bonzini@gmail.com>
-Message-ID: <c3dcb335-1a7f-b8d4-ee77-8b00aefcb274@redhat.com>
-Date:   Sat, 21 May 2022 11:11:00 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH v10 13/45] cxl: Machine level control on whether CXL
- support is enabled
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linuxarm@huawei.com, qemu-devel@nongnu.org, alex.bennee@linaro.org,
-        Marcel Apfelbaum <marcel@redhat.com>,
+        with ESMTP id S236571AbiEWPPO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 23 May 2022 11:15:14 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDF465C358
+        for <linux-cxl@vger.kernel.org>; Mon, 23 May 2022 08:15:12 -0700 (PDT)
+Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L6LQm3hjtz67qQW;
+        Mon, 23 May 2022 23:12:00 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 23 May 2022 17:15:10 +0200
+Received: from localhost (10.122.247.231) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 23 May
+ 2022 16:15:09 +0100
+Date:   Mon, 23 May 2022 16:15:07 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+CC:     <linuxarm@huawei.com>, <qemu-devel@nongnu.org>,
+        <alex.bennee@linaro.org>, Marcel Apfelbaum <marcel@redhat.com>,
         "Michael S . Tsirkin" <mst@redhat.com>,
         Igor Mammedov <imammedo@redhat.com>,
         Markus Armbruster <armbru@redhat.com>,
         Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
         Adam Manzanares <a.manzanares@samsung.com>,
-        Tong Zhang <ztong0001@gmail.com>
-Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
+        Tong Zhang <ztong0001@gmail.com>, <linux-cxl@vger.kernel.org>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        "Peter Maydell" <peter.maydell@linaro.org>,
         Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>, f4bug@amsat.org,
+        <shameerali.kolothum.thodi@huawei.com>, <f4bug@amsat.org>,
         Peter Xu <peterx@redhat.com>,
         David Hildenbrand <david@redhat.com>,
         Saransh Gupta1 <saransh@ibm.com>,
         Shreyas Shah <shreyas.shah@elastics.cloud>,
         Chris Browy <cbrowy@avery-design.com>,
         Samarth Saxena <samarths@cadence.com>,
-        Dan Williams <dan.j.williams@intel.com>, k.jensen@samsung.com,
-        dave@stgolabs.net, Alison Schofield <alison.schofield@intel.com>
+        "Dan Williams" <dan.j.williams@intel.com>, <k.jensen@samsung.com>,
+        <dave@stgolabs.net>, Alison Schofield <alison.schofield@intel.com>
+Subject: Re: [PATCH v10 27/45] hw/cxl/host: Add support for CXL Fixed Memory
+ Windows.
+Message-ID: <20220523161507.00006a3a@huawei.com>
+In-Reply-To: <0c0055ac-8d94-37d9-62c2-58c3da5461d3@redhat.com>
 References: <20220429144110.25167-1-Jonathan.Cameron@huawei.com>
- <20220429144110.25167-14-Jonathan.Cameron@huawei.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-In-Reply-To: <20220429144110.25167-14-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+ <20220429144110.25167-28-Jonathan.Cameron@huawei.com>
+ <0c0055ac-8d94-37d9-62c2-58c3da5461d3@redhat.com>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhreml737-chm.china.huawei.com (10.201.108.187) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 4/29/22 16:40, Jonathan Cameron via wrote:
-> From: Jonathan Cameron <jonathan.cameron@huawei.com>
-> 
-> There are going to be some potential overheads to CXL enablement,
-> for example the host bridge region reserved in memory maps.
-> Add a machine level control so that CXL is disabled by default.
-> 
-> Signed-off-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Reviewed-by: Alex Bennée <alex.bennee@linaro.org>
-> ---
->   hw/core/machine.c    | 28 ++++++++++++++++++++++++++++
->   hw/i386/pc.c         |  1 +
->   include/hw/boards.h  |  2 ++
->   include/hw/cxl/cxl.h |  4 ++++
->   4 files changed, 35 insertions(+)
+On Sat, 21 May 2022 11:07:13 +0200
+Paolo Bonzini <pbonzini@redhat.com> wrote:
 
-Another belated review, I think this shouldn't be added to machines that 
-do not support CXL (yes, there are options like -M usb but they are from 
-olden times---and CXL is a little more niche, too :)).
+> On 4/29/22 16:40, Jonathan Cameron via wrote:
+> > From: Jonathan Cameron <jonathan.cameron@huawei.com>
+> > 
+> > The concept of these is introduced in [1] in terms of the
+> > description the CEDT ACPI table. The principal is more general.
+> > Unlike once traffic hits the CXL root bridges, the host system
+> > memory address routing is implementation defined and effectively
+> > static once observable by standard / generic system software.
+> > Each CXL Fixed Memory Windows (CFMW) is a region of PA space
+> > which has fixed system dependent routing configured so that
+> > accesses can be routed to the CXL devices below a set of target
+> > root bridges. The accesses may be interleaved across multiple
+> > root bridges.
+> > 
+> > For QEMU we could have fully specified these regions in terms
+> > of a base PA + size, but as the absolute address does not matter
+> > it is simpler to let individual platforms place the memory regions.
+> > 
+> > ExampleS:
+> > -cxl-fixed-memory-window targets.0=cxl.0,size=128G
+> > -cxl-fixed-memory-window targets.0=cxl.1,size=128G
+> > -cxl-fixed-memory-window targets.0=cxl0,targets.1=cxl.1,size=256G,interleave-granularity=2k  
+> 
 
-Can you move the CXL code for machines to e.g. hw/cxl/machine.c and have
-the various machines call back into hooks to add the properties, resolve
-the memory window targets etc.?.  A CXLState* like cxl_devices_state can 
-be added to the machines and passed as CXLState** to one of these hooks.
+
+> Sorry for the late review, but: no more command line options should
+> be added to QEMU.  This should be:
+> 
+> -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=128G \
+> -M cxl-fmw.1.targets.0=cxl.1,cxl-fmw.1.size=128G \
+> -M cxl-fmw.2.targets.0=cxl.0,cxl-fmw.2.targets.1=cxl.1,cxl-fmw.2.size=128G,cxl-fmw.2.interleave-granularity=2k
+>
+
+Hi Paolo,
+
+I thought I had this working but have run into an issue where the parser
+seems not to like multiple parts of cxl-fmw as below being in different
+-M entries.  I get
+
+qemu-system-aarch64: -M cxl-fmw.1.targets.0=cxl.1,cxl-fmw.1.size=4G,cxl-fmw.1.interleave-granularity=8k: Parameters 'cxl-fmw.*' used inconsistently
+
+Seems it doesn't let me have multiple elements of a list in different -M entries.
+
+Not a disaster but it's going to lead to some unreadable command lines.
+
+Very lightly tested patch below.  I've not yet looked at movingstuff
+to machine specific callbacks as per your other comment.  I recall that wasn't
+easy to do with an earlier version of the series, but given a lot has changed
+since then it might now easier to accomplish.
 
 Thanks,
 
-Paolo
+Jonathan
 
-> diff --git a/hw/core/machine.c b/hw/core/machine.c
-> index cb9bbc844d..6ae2997f16 100644
-> --- a/hw/core/machine.c
-> +++ b/hw/core/machine.c
-> @@ -31,6 +31,7 @@
->   #include "sysemu/qtest.h"
->   #include "hw/pci/pci.h"
->   #include "hw/mem/nvdimm.h"
-> +#include "hw/cxl/cxl.h"
->   #include "migration/global_state.h"
->   #include "migration/vmstate.h"
->   #include "exec/confidential-guest-support.h"
-> @@ -550,6 +551,20 @@ static void machine_set_nvdimm_persistence(Object *obj, const char *value,
->       nvdimms_state->persistence_string = g_strdup(value);
->   }
->   
-> +static bool machine_get_cxl(Object *obj, Error **errp)
-> +{
-> +    MachineState *ms = MACHINE(obj);
-> +
-> +    return ms->cxl_devices_state->is_enabled;
-> +}
-> +
-> +static void machine_set_cxl(Object *obj, bool value, Error **errp)
-> +{
-> +    MachineState *ms = MACHINE(obj);
-> +
-> +    ms->cxl_devices_state->is_enabled = value;
-> +}
-> +
->   void machine_class_allow_dynamic_sysbus_dev(MachineClass *mc, const char *type)
->   {
->       QAPI_LIST_PREPEND(mc->allowed_dynamic_sysbus_devices, g_strdup(type));
-> @@ -782,6 +797,8 @@ static void machine_class_init(ObjectClass *oc, void *data)
->       mc->default_ram_size = 128 * MiB;
->       mc->rom_file_has_mr = true;
->   
-> +    /* Few machines support CXL, so default to off */
-> +    mc->cxl_supported = false;
->       /* numa node memory size aligned on 8MB by default.
->        * On Linux, each node's border has to be 8MB aligned
->        */
-> @@ -927,6 +944,16 @@ static void machine_initfn(Object *obj)
->                                           "Valid values are cpu, mem-ctrl");
->       }
->   
-> +    if (mc->cxl_supported) {
-> +        Object *obj = OBJECT(ms);
-> +
-> +        ms->cxl_devices_state = g_new0(CXLState, 1);
-> +        object_property_add_bool(obj, "cxl", machine_get_cxl, machine_set_cxl);
-> +        object_property_set_description(obj, "cxl",
-> +                                        "Set on/off to enable/disable "
-> +                                        "CXL instantiation");
-> +    }
-> +
->       if (mc->cpu_index_to_instance_props && mc->get_default_cpu_node_id) {
->           ms->numa_state = g_new0(NumaState, 1);
->           object_property_add_bool(obj, "hmat",
-> @@ -961,6 +988,7 @@ static void machine_finalize(Object *obj)
->       g_free(ms->device_memory);
->       g_free(ms->nvdimms_state);
->       g_free(ms->numa_state);
-> +    g_free(ms->cxl_devices_state);
->   }
->   
->   bool machine_usb(MachineState *machine)
-> diff --git a/hw/i386/pc.c b/hw/i386/pc.c
-> index 23bba9d82c..b752339beb 100644
-> --- a/hw/i386/pc.c
-> +++ b/hw/i386/pc.c
-> @@ -1761,6 +1761,7 @@ static void pc_machine_class_init(ObjectClass *oc, void *data)
->       mc->default_cpu_type = TARGET_DEFAULT_CPU_TYPE;
->       mc->nvdimm_supported = true;
->       mc->smp_props.dies_supported = true;
-> +    mc->cxl_supported = true;
->       mc->default_ram_id = "pc.ram";
->   
->       object_class_property_add(oc, PC_MACHINE_MAX_RAM_BELOW_4G, "size",
-> diff --git a/include/hw/boards.h b/include/hw/boards.h
-> index d64b5481e8..f756a1d5fc 100644
-> --- a/include/hw/boards.h
-> +++ b/include/hw/boards.h
-> @@ -269,6 +269,7 @@ struct MachineClass {
->       bool ignore_boot_device_suffixes;
->       bool smbus_no_migration_support;
->       bool nvdimm_supported;
-> +    bool cxl_supported;
->       bool numa_mem_supported;
->       bool auto_enable_numa;
->       SMPCompatProps smp_props;
-> @@ -360,6 +361,7 @@ struct MachineState {
->       CPUArchIdList *possible_cpus;
->       CpuTopology smp;
->       struct NVDIMMState *nvdimms_state;
-> +    struct CXLState *cxl_devices_state;
->       struct NumaState *numa_state;
->   };
->   
-> diff --git a/include/hw/cxl/cxl.h b/include/hw/cxl/cxl.h
-> index 554ad93b6b..31af92fd5e 100644
-> --- a/include/hw/cxl/cxl.h
-> +++ b/include/hw/cxl/cxl.h
-> @@ -17,4 +17,8 @@
->   #define CXL_COMPONENT_REG_BAR_IDX 0
->   #define CXL_DEVICE_REG_BAR_IDX 2
->   
-> +typedef struct CXLState {
-> +    bool is_enabled;
-> +} CXLState;
-> +
->   #endif
+> I'm not against adding a shortcut as above, but the implementation should
+> be entirely in MachineState using a QOM property.
+> 
+> The reason for this is that we're looking into doing machine setup entirely
+> via RPC, and any extra option is a new command to be implemented.
+> 
+> Would you be able to do the change?  Since you are already using QAPI to
+> deserialize the option it should not be hard.  I can promise a quick review,
+> and I can also provide with an example conversion for -boot at
+> https://lore.kernel.org/r/20220414165300.555321-3-pbonzini@redhat.com/.
+
+From d856959a08513b098fda22472f0b870750910543 Mon Sep 17 00:00:00 2001
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Date: Mon, 23 May 2022 16:07:45 +0100
+Subject: [PATCH] hw/cxl: Make the CXL fixed memory window setup a machine
+ parameter.
+
+Paolo Bonzini requested this change to simplify the ongoing
+effort to allow machine setup entirely via RPC.
+
+Includes shortening the command line form cxl-fixed-memory-window
+to cxl-fmw as the command lines are extremely long even with this
+change.
+
+The json change is needed to ensure that there is
+a CXLFixedMemoryWindowOptionsList even though the actual
+element in the json is never used.
+
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ hw/core/machine.c   | 33 +++++++++++++++++++++++++++++++
+ include/hw/boards.h |  1 +
+ qapi/machine.json   | 13 +++++++++++++
+ softmmu/vl.c        | 47 ++++-----------------------------------------
+ 4 files changed, 51 insertions(+), 43 deletions(-)
+
+diff --git a/hw/core/machine.c b/hw/core/machine.c
+index bb0dc8f6a9..93b3b8d34a 100644
+--- a/hw/core/machine.c
++++ b/hw/core/machine.c
+@@ -920,6 +920,33 @@ out_free:
+     qapi_free_BootConfiguration(config);
+ }
+ 
++static void machine_get_cfmw(Object *obj, Visitor *v, const char *name,
++                             void *opaque, Error **errp)
++{
++    MachineState *ms = MACHINE(obj);
++    CXLFixedMemoryWindowOptionsList *list = ms->cfmws_list;
++
++    visit_type_CXLFixedMemoryWindowOptionsList(v, name, &list, errp);
++}
++
++static void machine_set_cfmw(Object *obj, Visitor *v, const char *name,
++                             void *opaque, Error **errp)
++{
++    MachineState *ms = MACHINE(obj);
++    CXLFixedMemoryWindowOptionsList *cfmw_list = NULL;
++    CXLFixedMemoryWindowOptionsList *it;
++
++    visit_type_CXLFixedMemoryWindowOptionsList(v, name, &cfmw_list, errp);
++    if (!cfmw_list) {
++        return;
++    }
++
++    for (it = cfmw_list; it; it = it->next) {
++        cxl_fixed_memory_window_config(current_machine, it->value, errp);
++    }
++    ms->cfmws_list = cfmw_list;
++}
++
+ static void machine_class_init(ObjectClass *oc, void *data)
+ {
+     MachineClass *mc = MACHINE_CLASS(oc);
+@@ -966,6 +993,12 @@ static void machine_class_init(ObjectClass *oc, void *data)
+     object_class_property_set_description(oc, "boot",
+         "Boot configuration");
+ 
++    object_class_property_add(oc, "cxl-fmw", "CXLFixedMemoryWindow",
++        machine_get_cfmw, machine_set_cfmw,
++        NULL, NULL);
++    object_class_property_set_description(oc, "cxl-fmw",
++        "CXL Fixed Memory Window");
++
+     object_class_property_add(oc, "smp", "SMPConfiguration",
+         machine_get_smp, machine_set_smp,
+         NULL, NULL);
+diff --git a/include/hw/boards.h b/include/hw/boards.h
+index fa57bac4fb..dd9fc56df2 100644
+--- a/include/hw/boards.h
++++ b/include/hw/boards.h
+@@ -362,6 +362,7 @@ struct MachineState {
+     struct NVDIMMState *nvdimms_state;
+     struct CXLState *cxl_devices_state;
+     struct NumaState *numa_state;
++    CXLFixedMemoryWindowOptionsList *cfmws_list;
+ };
+ 
+ #define DEFINE_MACHINE(namestr, machine_initfn) \
+diff --git a/qapi/machine.json b/qapi/machine.json
+index 883ce3f9ea..b17ac79494 100644
+--- a/qapi/machine.json
++++ b/qapi/machine.json
+@@ -523,6 +523,19 @@
+       '*interleave-granularity': 'size',
+       'targets': ['str'] }}
+ 
++##
++# @CXLFMWProperties:
++#
++# List of CXL Fixed Memory Windows.
++#
++# @cxl-fmw: List of CXLFixedMemoryWindowOptions
++#
++# Since 7.1
++##
++{ 'struct' : 'CXLFMWProperties',
++  'data': { 'cxl-fmw': ['CXLFixedMemoryWindowOptions'] }
++}
++
+ ##
+ # @X86CPURegister32:
+ #
+diff --git a/softmmu/vl.c b/softmmu/vl.c
+index 84a31eba76..01997968f5 100644
+--- a/softmmu/vl.c
++++ b/softmmu/vl.c
+@@ -147,11 +147,6 @@ typedef struct BlockdevOptionsQueueEntry {
+ 
+ typedef QSIMPLEQ_HEAD(, BlockdevOptionsQueueEntry) BlockdevOptionsQueue;
+ 
+-typedef struct CXLFMWOptionQueueEntry {
+-    CXLFixedMemoryWindowOptions *opts;
+-    Location loc;
+-    QSIMPLEQ_ENTRY(CXLFMWOptionQueueEntry) entry;
+-} CXLFMWOptionQueueEntry;
+ 
+ typedef struct ObjectOption {
+     ObjectOptions *opts;
+@@ -179,8 +174,7 @@ static int snapshot;
+ static bool preconfig_requested;
+ static QemuPluginList plugin_list = QTAILQ_HEAD_INITIALIZER(plugin_list);
+ static BlockdevOptionsQueue bdo_queue = QSIMPLEQ_HEAD_INITIALIZER(bdo_queue);
+-static QSIMPLEQ_HEAD(, CXLFMWOptionQueueEntry) CXLFMW_opts =
+-    QSIMPLEQ_HEAD_INITIALIZER(CXLFMW_opts);
++
+ static bool nographic = false;
+ static int mem_prealloc; /* force preallocation of physical target memory */
+ static const char *vga_model = NULL;
+@@ -1165,24 +1159,6 @@ static void parse_display(const char *p)
+     }
+ }
+ 
+-static void parse_cxl_fixed_memory_window(const char *optarg)
+-{
+-    CXLFMWOptionQueueEntry *cfmws_entry;
+-    Visitor *v;
+-
+-    v = qobject_input_visitor_new_str(optarg, "cxl-fixed-memory-window",
+-                                      &error_fatal);
+-    cfmws_entry = g_new(CXLFMWOptionQueueEntry, 1);
+-    visit_type_CXLFixedMemoryWindowOptions(v, NULL, &cfmws_entry->opts,
+-                                           &error_fatal);
+-    if (!cfmws_entry->opts) {
+-        exit(1);
+-    }
+-    visit_free(v);
+-    loc_save(&cfmws_entry->loc);
+-    QSIMPLEQ_INSERT_TAIL(&CXLFMW_opts, cfmws_entry, entry);
+-}
+-
+ static inline bool nonempty_str(const char *str)
+ {
+     return str && *str;
+@@ -2045,20 +2021,6 @@ static void qemu_create_late_backends(void)
+     qemu_semihosting_console_init();
+ }
+ 
+-static void cxl_set_opts(void)
+-{
+-    while (!QSIMPLEQ_EMPTY(&CXLFMW_opts)) {
+-        CXLFMWOptionQueueEntry *cfmws_entry = QSIMPLEQ_FIRST(&CXLFMW_opts);
+-
+-        loc_restore(&cfmws_entry->loc);
+-        QSIMPLEQ_REMOVE_HEAD(&CXLFMW_opts, entry);
+-        cxl_fixed_memory_window_config(current_machine, cfmws_entry->opts,
+-                                       &error_fatal);
+-        qapi_free_CXLFixedMemoryWindowOptions(cfmws_entry->opts);
+-        g_free(cfmws_entry);
+-    }
+-}
+-
+ static void qemu_resolve_machine_memdev(void)
+ {
+     if (ram_memdev_id) {
+@@ -2187,6 +2149,7 @@ static bool is_qemuopts_group(const char *group)
+         g_str_equal(group, "machine") ||
+         g_str_equal(group, "smp-opts") ||
+         g_str_equal(group, "boot-opts") ||
++        g_str_equal(group, "cxl-fmw") ||
+         g_str_equal(group, "memory")) {
+         return false;
+     }
+@@ -2213,6 +2176,8 @@ static void qemu_record_config_group(const char *group, QDict *dict,
+         machine_merge_property("boot", dict, &error_fatal);
+     } else if (g_str_equal(group, "memory")) {
+         machine_merge_property("memory", dict, &error_fatal);
++    } else if (g_str_equal(group, "cxl-fmw")) {
++        machine_merge_property("cxl-fmw", dict, &error_fatal);
+     } else {
+         abort();
+     }
+@@ -2886,9 +2851,6 @@ void qemu_init(int argc, char **argv, char **envp)
+                     exit(1);
+                 }
+                 break;
+-            case QEMU_OPTION_cxl_fixed_memory_window:
+-                parse_cxl_fixed_memory_window(optarg);
+-                break;
+             case QEMU_OPTION_display:
+                 parse_display(optarg);
+                 break;
+@@ -3724,7 +3686,6 @@ void qemu_init(int argc, char **argv, char **envp)
+ 
+     qemu_resolve_machine_memdev();
+     parse_numa_opts(current_machine);
+-    cxl_set_opts();
+ 
+     if (vmstate_dump_file) {
+         /* dump and exit */
+-- 
+2.32.0
+
 
