@@ -2,361 +2,169 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B063CC433EF
-	for <linux-cxl@archiver.kernel.org>; Mon, 23 May 2022 15:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE26C433FE
+	for <linux-cxl@archiver.kernel.org>; Mon, 23 May 2022 17:44:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237556AbiEWPPR convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 23 May 2022 11:15:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38188 "EHLO
+        id S241554AbiEWRoR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 23 May 2022 13:44:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236571AbiEWPPO (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 23 May 2022 11:15:14 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDF465C358
-        for <linux-cxl@vger.kernel.org>; Mon, 23 May 2022 08:15:12 -0700 (PDT)
-Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L6LQm3hjtz67qQW;
-        Mon, 23 May 2022 23:12:00 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 23 May 2022 17:15:10 +0200
-Received: from localhost (10.122.247.231) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 23 May
- 2022 16:15:09 +0100
-Date:   Mon, 23 May 2022 16:15:07 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-CC:     <linuxarm@huawei.com>, <qemu-devel@nongnu.org>,
-        <alex.bennee@linaro.org>, Marcel Apfelbaum <marcel@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Markus Armbruster <armbru@redhat.com>,
-        Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        Tong Zhang <ztong0001@gmail.com>, <linux-cxl@vger.kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        "Peter Maydell" <peter.maydell@linaro.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>, <f4bug@amsat.org>,
-        Peter Xu <peterx@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Saransh Gupta1 <saransh@ibm.com>,
-        Shreyas Shah <shreyas.shah@elastics.cloud>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Samarth Saxena <samarths@cadence.com>,
-        "Dan Williams" <dan.j.williams@intel.com>, <k.jensen@samsung.com>,
-        <dave@stgolabs.net>, Alison Schofield <alison.schofield@intel.com>
-Subject: Re: [PATCH v10 27/45] hw/cxl/host: Add support for CXL Fixed Memory
- Windows.
-Message-ID: <20220523161507.00006a3a@huawei.com>
-In-Reply-To: <0c0055ac-8d94-37d9-62c2-58c3da5461d3@redhat.com>
-References: <20220429144110.25167-1-Jonathan.Cameron@huawei.com>
- <20220429144110.25167-28-Jonathan.Cameron@huawei.com>
- <0c0055ac-8d94-37d9-62c2-58c3da5461d3@redhat.com>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+        with ESMTP id S243686AbiEWRmX (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 23 May 2022 13:42:23 -0400
+Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30A399E9FE;
+        Mon, 23 May 2022 10:34:20 -0700 (PDT)
+Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
+        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20220523173241usoutp029eb833155efa9a452e6edc55a6789a33~xzEsh8v_Q0898108981usoutp02U;
+        Mon, 23 May 2022 17:32:41 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20220523173241usoutp029eb833155efa9a452e6edc55a6789a33~xzEsh8v_Q0898108981usoutp02U
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1653327161;
+        bh=HEfKl/NdTKSQGo39X2HbhKmB5mTaxUlPRuEMKR2+IH4=;
+        h=From:To:CC:Subject:Date:References:From;
+        b=EJ24G8MUIhxoL6zw7CYlzZoN9IGvWpIbRPyK0qzc+FBxerHJJUXj+RtHgtwMtYu4K
+         1Ik5TSTppp11+BVHiTYgYeCSmiKScTY+RsoTB/0ivbdPc2aKEjVu47nJ9xFmBRUhzZ
+         ToKAAQJO3V3jI+8a9LPHWMEdsawFmLZjQ3yO8hjA=
+Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
+        [203.254.195.111]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20220523173240uscas1p2022e4f537d4ef75e00ad54f8e4bc1d12~xzEr6-rYq0794907949uscas1p2Y;
+        Mon, 23 May 2022 17:32:40 +0000 (GMT)
+Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
+        ussmges2new.samsung.com (USCPEMTA) with SMTP id 79.56.09642.835CB826; Mon,
+        23 May 2022 13:32:40 -0400 (EDT)
+Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
+        [203.254.195.89]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20220523173240uscas1p10a3b4a1eb034af351bb726cce48bc1f6~xzErtFZ9K3215732157uscas1p1K;
+        Mon, 23 May 2022 17:32:40 +0000 (GMT)
+X-AuditID: cbfec36f-bfdff700000025aa-e4-628bc5389d21
+Received: from SSI-EX3.ssi.samsung.com ( [105.128.2.145]) by
+        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id 2E.FB.52349.835CB826; Mon,
+        23 May 2022 13:32:40 -0400 (EDT)
+Received: from SSI-EX3.ssi.samsung.com (105.128.2.228) by
+        SSI-EX3.ssi.samsung.com (105.128.2.228) with Microsoft SMTP Server
+        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+        15.1.2375.24; Mon, 23 May 2022 10:32:39 -0700
+Received: from SSI-EX3.ssi.samsung.com ([105.128.5.228]) by
+        SSI-EX3.ssi.samsung.com ([105.128.5.228]) with mapi id 15.01.2375.024; Mon,
+        23 May 2022 10:32:39 -0700
+From:   Adam Manzanares <a.manzanares@samsung.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "ben@bwidawsk.net" <ben@bwidawsk.net>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: [ANNOUNCE] CFP: CXL Microconference - Linux Plumbers Conference
+ 2022
+Thread-Topic: [ANNOUNCE] CFP: CXL Microconference - Linux Plumbers
+        Conference 2022
+Thread-Index: AQHYbssZbLXpAfi4tE2++gsNHiRkXQ==
+Date:   Mon, 23 May 2022 17:32:39 +0000
+Message-ID: <20220523173239.GB353513@bgt-140510-bm01>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [105.128.2.176]
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <821F680737C1394686B21DE39EFBA461@ssi.samsung.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhreml737-chm.china.huawei.com (10.201.108.187) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
 X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfVCLcRzA/fbs2Z6m1dPCvjhcW/0zrLxdj+Pycv5Yx0nOCXFZ9ahOqzxP
+        Ia9ZJOt0UxdnJZVbinlboVG5ilCoztV6cXVcl5y3mRtCC3vmbv99vm/3/Xx/9yMwSRU+g0hK
+        SaeZFHWyTCDi32l1dMynHuXFhnT1yamcK4086lxRJ6Ku9pkQ1WFo41Mv75UIqEHTBL5SoOo8
+        dgtXXap/x1OZ7QVCVVHxUdVX8+wN+DbR8ng6OWkvzQSH7RQl3vw8hKU98dv/tsSKslCpjw55
+        EUAuBmP5E0yHRISErEZQlW9EXHCCB1pdA+9/1yttO48rXENwxjEh4AI7gh+jZnelEkFF7TfX
+        iIAMgV+Pb2H/eAq5CuqaHK4JjPyKoO3TeVyHCMKfjADLwEKuZxPYLjiFHCuhYeSz4B/zySAo
+        Lf7myovJJdBuyXXlETkNvreZXLswUgr9wxfdqn5QUVyPcTwNnPdeCzgOgKHv74Rc/zwou28X
+        cBwGn27ku3kuVJa/x7hdfvD0/DCfm50OTVW9bq4l4MuLWRyvgY6WPMTxTOi2FrkeEsiTCGz6
+        RpwL9AhefRxzWywD56ket4UPjP98g/RIbvA4wuAhaPAQNHgIGjwEyxB+BUkzWFaTQLMLU+h9
+        SlatYTNSEpRxqRoz+vuZ2p0tqXXI2v9F2Yx4BGpGQGCyKeK76txYiThenXmAZlJjmIxkmm1G
+        Mwm+TCquTLqplpAJ6nR6N02n0cz/Ko/wmpHF285k8Z3a6r6H6Y5TXW/ZYzsCpXrKbpkXuceW
+        mbesNH/OovCeXiEV51u1Inj9JObMIHlo6ZGRJnLCsiXmRc1AwomT0f6i3gOXTBKLZMMvxcbk
+        qNP6utsHGcuI/KFUe3k8N9A7VjYa9Cb8rEo2XG8sTzNHbw28rpM/ZyLWbgqYSuiHakK9l6iy
+        raH4Zo1Jo1yZE9uaZrdVi1XdusPWBYZCzWKbIn6sZvPgtvCG0dDxrVFxwln+uI1V5CimTux6
+        pm3sD6ho/pCNCuU1FaNNuWLTgyi8JXikZ93v1mhR+W8fR4O921gwNNn36rWBTH326iIv7zmR
+        xqey4zk7vIMmBcr4bKJ6gQJjWPUfB7aBnbsDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLIsWRmVeSWpSXmKPExsWS2cA0UdfiaHeSwaxzAhZtq/YxWUyfeoHR
+        YvXNNYwW52edYrG4vGsOm8W9Nf9ZHdg8LjRuZPVYvOclk8emT5PYPabOrvf4vEkugDWKyyYl
+        NSezLLVI3y6BK2PD+/vMBScEK57Puc7YwDiPr4uRk0NCwETiTtNppi5GLg4hgdWMEr3zdkE5
+        nxglVvzZzwjhLANyHv1mBGlhEzCQ+H18IzOILSLgKLHj4Fc2kCJmgc+MElNWbmEFSQgL+Ers
+        ObCfBaIoRGLiIZgGPYm9z96zgdgsAqoS82Z/YwexeQVMJU7v7ACLMwqISXw/tYYJxGYWEJe4
+        9WQ+E8StAhJL9pxnhrBFJV4+/scKYStK3P/+kh2iXkdiwe5PbBC2ncS79X1QtrbEsoWvmSF2
+        CUqcnPmEBaJXUuLgihssExjFZiFZNwvJqFlIRs1CMmoWklELGFlXMYqXFhfnplcUG+allusV
+        J+YWl+al6yXn525iBMbo6X+HI3cwHr31Ue8QIxMH4yFGCQ5mJRHe7YkdSUK8KYmVValF+fFF
+        pTmpxYcYpTlYlMR5hVwnxgsJpCeWpGanphakFsFkmTg4pRqYnIsENbLDhLalaf9oSFF9q277
+        +LbV9aLKZVxHax8GHWmIalD7VX2Ov8t+/5bV+UfqJj1YJ39fJKN9jlJK8/lQoRVdTEGaR58c
+        esBr2FT63PrHZq/mpIa8m2ver/X6oRf/KGfhZeZpHW/yf7y54+Ntucf0dU0b5/Ore1jjWjnL
+        PLR+TLqc1paiNPO3ejXHV+V5W3Ue+Fxwdvx78s20aZc7cmuPPy49X7nUIGJmr2m/oozckjUm
+        /Y3ygktO/935X7rdS+ViZGKa6+U79cbmvzru7eo7u+xY1S2/mVqPv6/aExL4K+LljqlH9rR4
+        PHhod66yW20Rf9gXB4PWHdZ8TUddngftXM12u7XvzJewIyrpSizFGYmGWsxFxYkAEOshNUAD
+        AAA=
+X-CMS-MailID: 20220523173240uscas1p10a3b4a1eb034af351bb726cce48bc1f6
+CMS-TYPE: 301P
+X-CMS-RootMailID: 20220523173240uscas1p10a3b4a1eb034af351bb726cce48bc1f6
+References: <CGME20220523173240uscas1p10a3b4a1eb034af351bb726cce48bc1f6@uscas1p1.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sat, 21 May 2022 11:07:13 +0200
-Paolo Bonzini <pbonzini@redhat.com> wrote:
+Compute Express Link is a cache coherent fabric that is gaining momentum in=
+ the
+industry. Several hardware vendors have begun to ramp up on CXL 2.0 hardwar=
+e
+development and the Linux plumbing needs to keep pace. There is foundationa=
+l
+infrastructure in place in the kernel, QEMU, and user tooling that represen=
+ts
+the beginning of the CXL enabling journey. However, there is more to do and
+plenty of opportunities to scale the contributions past the initial set of
+developers that got the CXL subsystem off the ground.
 
-> On 4/29/22 16:40, Jonathan Cameron via wrote:
-> > From: Jonathan Cameron <jonathan.cameron@huawei.com>
-> > 
-> > The concept of these is introduced in [1] in terms of the
-> > description the CEDT ACPI table. The principal is more general.
-> > Unlike once traffic hits the CXL root bridges, the host system
-> > memory address routing is implementation defined and effectively
-> > static once observable by standard / generic system software.
-> > Each CXL Fixed Memory Windows (CFMW) is a region of PA space
-> > which has fixed system dependent routing configured so that
-> > accesses can be routed to the CXL devices below a set of target
-> > root bridges. The accesses may be interleaved across multiple
-> > root bridges.
-> > 
-> > For QEMU we could have fully specified these regions in terms
-> > of a base PA + size, but as the absolute address does not matter
-> > it is simpler to let individual platforms place the memory regions.
-> > 
-> > ExampleS:
-> > -cxl-fixed-memory-window targets.0=cxl.0,size=128G
-> > -cxl-fixed-memory-window targets.0=cxl.1,size=128G
-> > -cxl-fixed-memory-window targets.0=cxl0,targets.1=cxl.1,size=256G,interleave-granularity=2k  
-> 
+The Compute Express Link microconference focuses on how to evolve the Linux
+CXL kernel driver and userspace components for full support of the CXL 2.0
+spec (and beyond). The microconference provides a space to open the discuss=
+ion,
+incorporate more perspectives, and grow the CXL community with a goal that =
+the
+CXL Linux plumbing serves the needs of the CXL ecosystem while balancing th=
+e
+needs of the Linux kernel project. Specifically, this microconference welco=
+mes
+submissions detailing industry and academia use cases in order to develop u=
+sage
+model scenarios. Finally, it will be a good opportunity to have existing
+upstream CXL developers available in a forum to discuss current CXL support=
+ and
+to communicate areas that need additional involvement.
 
+Suggested topics:
+- Ecosystem & Architectural review
+- Regions
+- QEMU support
+- Security: IDE and SPDM
+- Managing vendor specificity
+- Type 2 accelerator support (bias flip management)
+- RAS (GPF, AER, Poison handling )
+- 1.1 to 2.0 compatibility
+- Hot add policy, daxctl
+- Hot remove
+- Industry and academia use cases
 
-> Sorry for the late review, but: no more command line options should
-> be added to QEMU.  This should be:
-> 
-> -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=128G \
-> -M cxl-fmw.1.targets.0=cxl.1,cxl-fmw.1.size=128G \
-> -M cxl-fmw.2.targets.0=cxl.0,cxl-fmw.2.targets.1=cxl.1,cxl-fmw.2.size=128G,cxl-fmw.2.interleave-granularity=2k
->
+If you are interested in participating in this microconference and have=20
+topics to propose, please use the LPC CFP process [1], and select "Compute
+Express Link MC" for the "Track".
 
-Hi Paolo,
+The submission deadline is June 30.
 
-I thought I had this working but have run into an issue where the parser
-seems not to like multiple parts of cxl-fmw as below being in different
--M entries.  I get
+Come and join us in the discussion. We hope to see you there!
 
-qemu-system-aarch64: -M cxl-fmw.1.targets.0=cxl.1,cxl-fmw.1.size=4G,cxl-fmw.1.interleave-granularity=8k: Parameters 'cxl-fmw.*' used inconsistently
+For more information, feel free to contact the Compute Express Link MC Lead=
+s:
+    Adam Manzanares <a.manzanares@samsung.com>
+    Dan Williams <dan.j.williams@intel.com>
+    Ben Widawsky <ben@bwidawsk.net>
+    Davidlohr Bueso <dave@stgolabs.net>
 
-Seems it doesn't let me have multiple elements of a list in different -M entries.
-
-Not a disaster but it's going to lead to some unreadable command lines.
-
-Very lightly tested patch below.  I've not yet looked at movingstuff
-to machine specific callbacks as per your other comment.  I recall that wasn't
-easy to do with an earlier version of the series, but given a lot has changed
-since then it might now easier to accomplish.
-
-Thanks,
-
-Jonathan
-
-> I'm not against adding a shortcut as above, but the implementation should
-> be entirely in MachineState using a QOM property.
-> 
-> The reason for this is that we're looking into doing machine setup entirely
-> via RPC, and any extra option is a new command to be implemented.
-> 
-> Would you be able to do the change?  Since you are already using QAPI to
-> deserialize the option it should not be hard.  I can promise a quick review,
-> and I can also provide with an example conversion for -boot at
-> https://lore.kernel.org/r/20220414165300.555321-3-pbonzini@redhat.com/.
-
-From d856959a08513b098fda22472f0b870750910543 Mon Sep 17 00:00:00 2001
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Date: Mon, 23 May 2022 16:07:45 +0100
-Subject: [PATCH] hw/cxl: Make the CXL fixed memory window setup a machine
- parameter.
-
-Paolo Bonzini requested this change to simplify the ongoing
-effort to allow machine setup entirely via RPC.
-
-Includes shortening the command line form cxl-fixed-memory-window
-to cxl-fmw as the command lines are extremely long even with this
-change.
-
-The json change is needed to ensure that there is
-a CXLFixedMemoryWindowOptionsList even though the actual
-element in the json is never used.
-
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- hw/core/machine.c   | 33 +++++++++++++++++++++++++++++++
- include/hw/boards.h |  1 +
- qapi/machine.json   | 13 +++++++++++++
- softmmu/vl.c        | 47 ++++-----------------------------------------
- 4 files changed, 51 insertions(+), 43 deletions(-)
-
-diff --git a/hw/core/machine.c b/hw/core/machine.c
-index bb0dc8f6a9..93b3b8d34a 100644
---- a/hw/core/machine.c
-+++ b/hw/core/machine.c
-@@ -920,6 +920,33 @@ out_free:
-     qapi_free_BootConfiguration(config);
- }
- 
-+static void machine_get_cfmw(Object *obj, Visitor *v, const char *name,
-+                             void *opaque, Error **errp)
-+{
-+    MachineState *ms = MACHINE(obj);
-+    CXLFixedMemoryWindowOptionsList *list = ms->cfmws_list;
-+
-+    visit_type_CXLFixedMemoryWindowOptionsList(v, name, &list, errp);
-+}
-+
-+static void machine_set_cfmw(Object *obj, Visitor *v, const char *name,
-+                             void *opaque, Error **errp)
-+{
-+    MachineState *ms = MACHINE(obj);
-+    CXLFixedMemoryWindowOptionsList *cfmw_list = NULL;
-+    CXLFixedMemoryWindowOptionsList *it;
-+
-+    visit_type_CXLFixedMemoryWindowOptionsList(v, name, &cfmw_list, errp);
-+    if (!cfmw_list) {
-+        return;
-+    }
-+
-+    for (it = cfmw_list; it; it = it->next) {
-+        cxl_fixed_memory_window_config(current_machine, it->value, errp);
-+    }
-+    ms->cfmws_list = cfmw_list;
-+}
-+
- static void machine_class_init(ObjectClass *oc, void *data)
- {
-     MachineClass *mc = MACHINE_CLASS(oc);
-@@ -966,6 +993,12 @@ static void machine_class_init(ObjectClass *oc, void *data)
-     object_class_property_set_description(oc, "boot",
-         "Boot configuration");
- 
-+    object_class_property_add(oc, "cxl-fmw", "CXLFixedMemoryWindow",
-+        machine_get_cfmw, machine_set_cfmw,
-+        NULL, NULL);
-+    object_class_property_set_description(oc, "cxl-fmw",
-+        "CXL Fixed Memory Window");
-+
-     object_class_property_add(oc, "smp", "SMPConfiguration",
-         machine_get_smp, machine_set_smp,
-         NULL, NULL);
-diff --git a/include/hw/boards.h b/include/hw/boards.h
-index fa57bac4fb..dd9fc56df2 100644
---- a/include/hw/boards.h
-+++ b/include/hw/boards.h
-@@ -362,6 +362,7 @@ struct MachineState {
-     struct NVDIMMState *nvdimms_state;
-     struct CXLState *cxl_devices_state;
-     struct NumaState *numa_state;
-+    CXLFixedMemoryWindowOptionsList *cfmws_list;
- };
- 
- #define DEFINE_MACHINE(namestr, machine_initfn) \
-diff --git a/qapi/machine.json b/qapi/machine.json
-index 883ce3f9ea..b17ac79494 100644
---- a/qapi/machine.json
-+++ b/qapi/machine.json
-@@ -523,6 +523,19 @@
-       '*interleave-granularity': 'size',
-       'targets': ['str'] }}
- 
-+##
-+# @CXLFMWProperties:
-+#
-+# List of CXL Fixed Memory Windows.
-+#
-+# @cxl-fmw: List of CXLFixedMemoryWindowOptions
-+#
-+# Since 7.1
-+##
-+{ 'struct' : 'CXLFMWProperties',
-+  'data': { 'cxl-fmw': ['CXLFixedMemoryWindowOptions'] }
-+}
-+
- ##
- # @X86CPURegister32:
- #
-diff --git a/softmmu/vl.c b/softmmu/vl.c
-index 84a31eba76..01997968f5 100644
---- a/softmmu/vl.c
-+++ b/softmmu/vl.c
-@@ -147,11 +147,6 @@ typedef struct BlockdevOptionsQueueEntry {
- 
- typedef QSIMPLEQ_HEAD(, BlockdevOptionsQueueEntry) BlockdevOptionsQueue;
- 
--typedef struct CXLFMWOptionQueueEntry {
--    CXLFixedMemoryWindowOptions *opts;
--    Location loc;
--    QSIMPLEQ_ENTRY(CXLFMWOptionQueueEntry) entry;
--} CXLFMWOptionQueueEntry;
- 
- typedef struct ObjectOption {
-     ObjectOptions *opts;
-@@ -179,8 +174,7 @@ static int snapshot;
- static bool preconfig_requested;
- static QemuPluginList plugin_list = QTAILQ_HEAD_INITIALIZER(plugin_list);
- static BlockdevOptionsQueue bdo_queue = QSIMPLEQ_HEAD_INITIALIZER(bdo_queue);
--static QSIMPLEQ_HEAD(, CXLFMWOptionQueueEntry) CXLFMW_opts =
--    QSIMPLEQ_HEAD_INITIALIZER(CXLFMW_opts);
-+
- static bool nographic = false;
- static int mem_prealloc; /* force preallocation of physical target memory */
- static const char *vga_model = NULL;
-@@ -1165,24 +1159,6 @@ static void parse_display(const char *p)
-     }
- }
- 
--static void parse_cxl_fixed_memory_window(const char *optarg)
--{
--    CXLFMWOptionQueueEntry *cfmws_entry;
--    Visitor *v;
--
--    v = qobject_input_visitor_new_str(optarg, "cxl-fixed-memory-window",
--                                      &error_fatal);
--    cfmws_entry = g_new(CXLFMWOptionQueueEntry, 1);
--    visit_type_CXLFixedMemoryWindowOptions(v, NULL, &cfmws_entry->opts,
--                                           &error_fatal);
--    if (!cfmws_entry->opts) {
--        exit(1);
--    }
--    visit_free(v);
--    loc_save(&cfmws_entry->loc);
--    QSIMPLEQ_INSERT_TAIL(&CXLFMW_opts, cfmws_entry, entry);
--}
--
- static inline bool nonempty_str(const char *str)
- {
-     return str && *str;
-@@ -2045,20 +2021,6 @@ static void qemu_create_late_backends(void)
-     qemu_semihosting_console_init();
- }
- 
--static void cxl_set_opts(void)
--{
--    while (!QSIMPLEQ_EMPTY(&CXLFMW_opts)) {
--        CXLFMWOptionQueueEntry *cfmws_entry = QSIMPLEQ_FIRST(&CXLFMW_opts);
--
--        loc_restore(&cfmws_entry->loc);
--        QSIMPLEQ_REMOVE_HEAD(&CXLFMW_opts, entry);
--        cxl_fixed_memory_window_config(current_machine, cfmws_entry->opts,
--                                       &error_fatal);
--        qapi_free_CXLFixedMemoryWindowOptions(cfmws_entry->opts);
--        g_free(cfmws_entry);
--    }
--}
--
- static void qemu_resolve_machine_memdev(void)
- {
-     if (ram_memdev_id) {
-@@ -2187,6 +2149,7 @@ static bool is_qemuopts_group(const char *group)
-         g_str_equal(group, "machine") ||
-         g_str_equal(group, "smp-opts") ||
-         g_str_equal(group, "boot-opts") ||
-+        g_str_equal(group, "cxl-fmw") ||
-         g_str_equal(group, "memory")) {
-         return false;
-     }
-@@ -2213,6 +2176,8 @@ static void qemu_record_config_group(const char *group, QDict *dict,
-         machine_merge_property("boot", dict, &error_fatal);
-     } else if (g_str_equal(group, "memory")) {
-         machine_merge_property("memory", dict, &error_fatal);
-+    } else if (g_str_equal(group, "cxl-fmw")) {
-+        machine_merge_property("cxl-fmw", dict, &error_fatal);
-     } else {
-         abort();
-     }
-@@ -2886,9 +2851,6 @@ void qemu_init(int argc, char **argv, char **envp)
-                     exit(1);
-                 }
-                 break;
--            case QEMU_OPTION_cxl_fixed_memory_window:
--                parse_cxl_fixed_memory_window(optarg);
--                break;
-             case QEMU_OPTION_display:
-                 parse_display(optarg);
-                 break;
-@@ -3724,7 +3686,6 @@ void qemu_init(int argc, char **argv, char **envp)
- 
-     qemu_resolve_machine_memdev();
-     parse_numa_opts(current_machine);
--    cxl_set_opts();
- 
-     if (vmstate_dump_file) {
-         /* dump and exit */
--- 
-2.32.0
-
-
+[1] https://lpc.events/event/16/abstracts/=
