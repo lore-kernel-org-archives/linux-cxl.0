@@ -2,169 +2,232 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE26C433FE
-	for <linux-cxl@archiver.kernel.org>; Mon, 23 May 2022 17:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D995C433F5
+	for <linux-cxl@archiver.kernel.org>; Tue, 24 May 2022 16:37:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241554AbiEWRoR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 23 May 2022 13:44:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39320 "EHLO
+        id S234266AbiEXQh3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 24 May 2022 12:37:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243686AbiEWRmX (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 23 May 2022 13:42:23 -0400
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30A399E9FE;
-        Mon, 23 May 2022 10:34:20 -0700 (PDT)
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20220523173241usoutp029eb833155efa9a452e6edc55a6789a33~xzEsh8v_Q0898108981usoutp02U;
-        Mon, 23 May 2022 17:32:41 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20220523173241usoutp029eb833155efa9a452e6edc55a6789a33~xzEsh8v_Q0898108981usoutp02U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1653327161;
-        bh=HEfKl/NdTKSQGo39X2HbhKmB5mTaxUlPRuEMKR2+IH4=;
-        h=From:To:CC:Subject:Date:References:From;
-        b=EJ24G8MUIhxoL6zw7CYlzZoN9IGvWpIbRPyK0qzc+FBxerHJJUXj+RtHgtwMtYu4K
-         1Ik5TSTppp11+BVHiTYgYeCSmiKScTY+RsoTB/0ivbdPc2aKEjVu47nJ9xFmBRUhzZ
-         ToKAAQJO3V3jI+8a9LPHWMEdsawFmLZjQ3yO8hjA=
-Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
-        [203.254.195.111]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20220523173240uscas1p2022e4f537d4ef75e00ad54f8e4bc1d12~xzEr6-rYq0794907949uscas1p2Y;
-        Mon, 23 May 2022 17:32:40 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-        ussmges2new.samsung.com (USCPEMTA) with SMTP id 79.56.09642.835CB826; Mon,
-        23 May 2022 13:32:40 -0400 (EDT)
-Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
-        [203.254.195.89]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20220523173240uscas1p10a3b4a1eb034af351bb726cce48bc1f6~xzErtFZ9K3215732157uscas1p1K;
-        Mon, 23 May 2022 17:32:40 +0000 (GMT)
-X-AuditID: cbfec36f-bfdff700000025aa-e4-628bc5389d21
-Received: from SSI-EX3.ssi.samsung.com ( [105.128.2.145]) by
-        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id 2E.FB.52349.835CB826; Mon,
-        23 May 2022 13:32:40 -0400 (EDT)
-Received: from SSI-EX3.ssi.samsung.com (105.128.2.228) by
-        SSI-EX3.ssi.samsung.com (105.128.2.228) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Mon, 23 May 2022 10:32:39 -0700
-Received: from SSI-EX3.ssi.samsung.com ([105.128.5.228]) by
-        SSI-EX3.ssi.samsung.com ([105.128.5.228]) with mapi id 15.01.2375.024; Mon,
-        23 May 2022 10:32:39 -0700
-From:   Adam Manzanares <a.manzanares@samsung.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "ben@bwidawsk.net" <ben@bwidawsk.net>,
-        "dave@stgolabs.net" <dave@stgolabs.net>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: [ANNOUNCE] CFP: CXL Microconference - Linux Plumbers Conference
- 2022
-Thread-Topic: [ANNOUNCE] CFP: CXL Microconference - Linux Plumbers
-        Conference 2022
-Thread-Index: AQHYbssZbLXpAfi4tE2++gsNHiRkXQ==
-Date:   Mon, 23 May 2022 17:32:39 +0000
-Message-ID: <20220523173239.GB353513@bgt-140510-bm01>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <821F680737C1394686B21DE39EFBA461@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S233418AbiEXQh2 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 24 May 2022 12:37:28 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ED685EBD2
+        for <linux-cxl@vger.kernel.org>; Tue, 24 May 2022 09:37:27 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C748F61183
+        for <linux-cxl@vger.kernel.org>; Tue, 24 May 2022 16:37:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0298EC34115;
+        Tue, 24 May 2022 16:37:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653410246;
+        bh=OtVt6xY3rD+YkacskCHASEsxEolh/JCkruqucr9MjRQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=i4lh1odMMXSQR5E/OEvV5nEBgABv2U2w9EqmMw96ptj/VeN3YPv8quEvDyngyh6Py
+         G4WbzzXb5TW8khPtbBtweeWEm6yTJn1NUjBhQ7jtVPEQDU19CGR9GhFj6JW3gSt2tT
+         RD6mKh96RQh/boopffgGUY/7+/Qw3WVIgXoLI23WE98jEjpw83Cr/rzrhUCHcNOMjk
+         L7bJYxG95W6KtWJLr307ulJhXPLjUOwB5cVbpb7fJq4YsGQ6j+/+TNWtM3zfPDXfxB
+         tZ8SY0L/anoxcwySVzggONanX446fhO23/dL1c6D3+J3cWOuC1jMrAxc8runXA+ClW
+         PRv9xKVVXeFzw==
+Date:   Tue, 24 May 2022 09:36:44 -0700
+From:   Ben Widawsky <bwidawsk@kernel.org>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     qemu-devel@nongnu.org, Klaus Jensen <its@irrelevant.dk>,
+        linux-cxl@vger.kernel.org, Corey Minyard <minyard@acm.org>,
+        Damien Hedde <damien.hedde@greensocs.com>,
+        Peter Delevoryas <pdel@fb.com>,
+        =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        linuarm@huawei.com
+Subject: Re: [RFC PATCH 2/2] arm/virt: Add aspeed-i2c controller and MCTP EP
+ to enable MCTP testing
+Message-ID: <20220524163633.gycxq6v5i5ucz4ja@bwidawsk-mobl5>
+References: <20220520170128.4436-1-Jonathan.Cameron@huawei.com>
+ <20220520170128.4436-3-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SfVCLcRzA/fbs2Z6m1dPCvjhcW/0zrLxdj+Pycv5Yx0nOCXFZ9ahOqzxP
-        Ia9ZJOt0UxdnJZVbinlboVG5ilCoztV6cXVcl5y3mRtCC3vmbv99vm/3/Xx/9yMwSRU+g0hK
-        SaeZFHWyTCDi32l1dMynHuXFhnT1yamcK4086lxRJ6Ku9pkQ1WFo41Mv75UIqEHTBL5SoOo8
-        dgtXXap/x1OZ7QVCVVHxUdVX8+wN+DbR8ng6OWkvzQSH7RQl3vw8hKU98dv/tsSKslCpjw55
-        EUAuBmP5E0yHRISErEZQlW9EXHCCB1pdA+9/1yttO48rXENwxjEh4AI7gh+jZnelEkFF7TfX
-        iIAMgV+Pb2H/eAq5CuqaHK4JjPyKoO3TeVyHCMKfjADLwEKuZxPYLjiFHCuhYeSz4B/zySAo
-        Lf7myovJJdBuyXXlETkNvreZXLswUgr9wxfdqn5QUVyPcTwNnPdeCzgOgKHv74Rc/zwou28X
-        cBwGn27ku3kuVJa/x7hdfvD0/DCfm50OTVW9bq4l4MuLWRyvgY6WPMTxTOi2FrkeEsiTCGz6
-        RpwL9AhefRxzWywD56ket4UPjP98g/RIbvA4wuAhaPAQNHgIGjwEyxB+BUkzWFaTQLMLU+h9
-        SlatYTNSEpRxqRoz+vuZ2p0tqXXI2v9F2Yx4BGpGQGCyKeK76txYiThenXmAZlJjmIxkmm1G
-        Mwm+TCquTLqplpAJ6nR6N02n0cz/Ko/wmpHF285k8Z3a6r6H6Y5TXW/ZYzsCpXrKbpkXuceW
-        mbesNH/OovCeXiEV51u1Inj9JObMIHlo6ZGRJnLCsiXmRc1AwomT0f6i3gOXTBKLZMMvxcbk
-        qNP6utsHGcuI/KFUe3k8N9A7VjYa9Cb8rEo2XG8sTzNHbw28rpM/ZyLWbgqYSuiHakK9l6iy
-        raH4Zo1Jo1yZE9uaZrdVi1XdusPWBYZCzWKbIn6sZvPgtvCG0dDxrVFxwln+uI1V5CimTux6
-        pm3sD6ho/pCNCuU1FaNNuWLTgyi8JXikZ93v1mhR+W8fR4O921gwNNn36rWBTH326iIv7zmR
-        xqey4zk7vIMmBcr4bKJ6gQJjWPUfB7aBnbsDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLIsWRmVeSWpSXmKPExsWS2cA0UdfiaHeSwaxzAhZtq/YxWUyfeoHR
-        YvXNNYwW52edYrG4vGsOm8W9Nf9ZHdg8LjRuZPVYvOclk8emT5PYPabOrvf4vEkugDWKyyYl
-        NSezLLVI3y6BK2PD+/vMBScEK57Puc7YwDiPr4uRk0NCwETiTtNppi5GLg4hgdWMEr3zdkE5
-        nxglVvzZzwjhLANyHv1mBGlhEzCQ+H18IzOILSLgKLHj4Fc2kCJmgc+MElNWbmEFSQgL+Ers
-        ObCfBaIoRGLiIZgGPYm9z96zgdgsAqoS82Z/YwexeQVMJU7v7ACLMwqISXw/tYYJxGYWEJe4
-        9WQ+E8StAhJL9pxnhrBFJV4+/scKYStK3P/+kh2iXkdiwe5PbBC2ncS79X1QtrbEsoWvmSF2
-        CUqcnPmEBaJXUuLgihssExjFZiFZNwvJqFlIRs1CMmoWklELGFlXMYqXFhfnplcUG+allusV
-        J+YWl+al6yXn525iBMbo6X+HI3cwHr31Ue8QIxMH4yFGCQ5mJRHe7YkdSUK8KYmVValF+fFF
-        pTmpxYcYpTlYlMR5hVwnxgsJpCeWpGanphakFsFkmTg4pRqYnIsENbLDhLalaf9oSFF9q277
-        +LbV9aLKZVxHax8GHWmIalD7VX2Ov8t+/5bV+UfqJj1YJ39fJKN9jlJK8/lQoRVdTEGaR58c
-        esBr2FT63PrHZq/mpIa8m2ver/X6oRf/KGfhZeZpHW/yf7y54+Ntucf0dU0b5/Ore1jjWjnL
-        PLR+TLqc1paiNPO3ejXHV+V5W3Ue+Fxwdvx78s20aZc7cmuPPy49X7nUIGJmr2m/oozckjUm
-        /Y3ygktO/935X7rdS+ViZGKa6+U79cbmvzru7eo7u+xY1S2/mVqPv6/aExL4K+LljqlH9rR4
-        PHhod66yW20Rf9gXB4PWHdZ8TUddngftXM12u7XvzJewIyrpSizFGYmGWsxFxYkAEOshNUAD
-        AAA=
-X-CMS-MailID: 20220523173240uscas1p10a3b4a1eb034af351bb726cce48bc1f6
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20220523173240uscas1p10a3b4a1eb034af351bb726cce48bc1f6
-References: <CGME20220523173240uscas1p10a3b4a1eb034af351bb726cce48bc1f6@uscas1p1.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220520170128.4436-3-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Compute Express Link is a cache coherent fabric that is gaining momentum in=
- the
-industry. Several hardware vendors have begun to ramp up on CXL 2.0 hardwar=
-e
-development and the Linux plumbing needs to keep pace. There is foundationa=
-l
-infrastructure in place in the kernel, QEMU, and user tooling that represen=
-ts
-the beginning of the CXL enabling journey. However, there is more to do and
-plenty of opportunities to scale the contributions past the initial set of
-developers that got the CXL subsystem off the ground.
+On 22-05-20 18:01:28, Jonathan Cameron wrote:
+> As the only I2C emulation in QEMU that supports being both
+> a master and a slave, suitable for MCTP over i2c is aspeed-i2c
+> add this controller to the arm virt model and hook up our new
+> i2c_mctp_cxl_fmapi device.
+> 
+> The current Linux driver for aspeed-i2c has a hard requirement on
+> a reset controller.  Throw down the simplest reset controller
+> I could find so as to avoid need to make any chance to the kernel
+> code.
 
-The Compute Express Link microconference focuses on how to evolve the Linux
-CXL kernel driver and userspace components for full support of the CXL 2.0
-spec (and beyond). The microconference provides a space to open the discuss=
-ion,
-incorporate more perspectives, and grow the CXL community with a goal that =
-the
-CXL Linux plumbing serves the needs of the CXL ecosystem while balancing th=
-e
-needs of the Linux kernel project. Specifically, this microconference welco=
-mes
-submissions detailing industry and academia use cases in order to develop u=
-sage
-model scenarios. Finally, it will be a good opportunity to have existing
-upstream CXL developers available in a forum to discuss current CXL support=
- and
-to communicate areas that need additional involvement.
+s/chance/change
 
-Suggested topics:
-- Ecosystem & Architectural review
-- Regions
-- QEMU support
-- Security: IDE and SPDM
-- Managing vendor specificity
-- Type 2 accelerator support (bias flip management)
-- RAS (GPF, AER, Poison handling )
-- 1.1 to 2.0 compatibility
-- Hot add policy, daxctl
-- Hot remove
-- Industry and academia use cases
+> 
+> Patch also builds appropriate device tree.  Unfortunately for CXL
+> we need to use ACPI (no DT bindings yet defined). Enabling this will
+> either require appropriate support for MCTP on an i2c master that
+> has ACPI bindings, or modifications of the kernel driver to support
+> ACPI with aspeed-i2c (which might be a little controversial ;)
 
-If you are interested in participating in this microconference and have=20
-topics to propose, please use the LPC CFP process [1], and select "Compute
-Express Link MC" for the "Track".
+I'm naive to what DT defines, but I assume what's there already is insufficient
+to make the bindings for CXL. I say this because I believe it wouldn't be too
+bad at all to make a cxl_dt.ko, and it's certainly less artificial than
+providing ACPI support for things which don't naturally have ACPI support.
 
-The submission deadline is June 30.
-
-Come and join us in the discussion. We hope to see you there!
-
-For more information, feel free to contact the Compute Express Link MC Lead=
-s:
-    Adam Manzanares <a.manzanares@samsung.com>
-    Dan Williams <dan.j.williams@intel.com>
-    Ben Widawsky <ben@bwidawsk.net>
-    Davidlohr Bueso <dave@stgolabs.net>
-
-[1] https://lpc.events/event/16/abstracts/=
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  hw/arm/Kconfig        |  1 +
+>  hw/arm/virt.c         | 77 +++++++++++++++++++++++++++++++++++++++++++
+>  include/hw/arm/virt.h |  2 ++
+>  3 files changed, 80 insertions(+)
+> 
+> diff --git a/hw/arm/Kconfig b/hw/arm/Kconfig
+> index 219262a8da..4a733298cd 100644
+> --- a/hw/arm/Kconfig
+> +++ b/hw/arm/Kconfig
+> @@ -30,6 +30,7 @@ config ARM_VIRT
+>      select ACPI_VIOT
+>      select VIRTIO_MEM_SUPPORTED
+>      select ACPI_CXL
+> +    select I2C_MCTP_CXL_FMAPI
+>  
+>  config CHEETAH
+>      bool
+> diff --git a/hw/arm/virt.c b/hw/arm/virt.c
+> index d818131b57..ea04279515 100644
+> --- a/hw/arm/virt.c
+> +++ b/hw/arm/virt.c
+> @@ -80,6 +80,9 @@
+>  #include "hw/char/pl011.h"
+>  #include "hw/cxl/cxl.h"
+>  #include "qemu/guest-random.h"
+> +#include "hw/i2c/i2c.h"
+> +#include "hw/i2c/aspeed_i2c.h"
+> +#include "hw/misc/i2c_mctp_cxl_fmapi.h"
+>  
+>  #define DEFINE_VIRT_MACHINE_LATEST(major, minor, latest) \
+>      static void virt_##major##_##minor##_class_init(ObjectClass *oc, \
+> @@ -156,6 +159,8 @@ static const MemMapEntry base_memmap[] = {
+>      [VIRT_PVTIME] =             { 0x090a0000, 0x00010000 },
+>      [VIRT_SECURE_GPIO] =        { 0x090b0000, 0x00001000 },
+>      [VIRT_MMIO] =               { 0x0a000000, 0x00000200 },
+> +    [VIRT_I2C] =                { 0x0b000000, 0x00004000 },
+> +    [VIRT_RESET_FAKE] =         { 0x0b004000, 0x00000010 },
+>      /* ...repeating for a total of NUM_VIRTIO_TRANSPORTS, each of that size */
+>      [VIRT_PLATFORM_BUS] =       { 0x0c000000, 0x02000000 },
+>      [VIRT_SECURE_MEM] =         { 0x0e000000, 0x01000000 },
+> @@ -192,6 +197,7 @@ static const int a15irqmap[] = {
+>      [VIRT_GPIO] = 7,
+>      [VIRT_SECURE_UART] = 8,
+>      [VIRT_ACPI_GED] = 9,
+> +    [VIRT_I2C] = 10,
+>      [VIRT_MMIO] = 16, /* ...to 16 + NUM_VIRTIO_TRANSPORTS - 1 */
+>      [VIRT_GIC_V2M] = 48, /* ...to 48 + NUM_GICV2M_SPIS - 1 */
+>      [VIRT_SMMU] = 74,    /* ...to 74 + NUM_SMMU_IRQS - 1 */
+> @@ -1996,6 +2002,75 @@ static void virt_cpu_post_init(VirtMachineState *vms, MemoryRegion *sysmem)
+>      }
+>  }
+>  
+> +static void create_mctp_test(MachineState *ms)
+> +{
+> +    VirtMachineState *vms = VIRT_MACHINE(ms);
+> +    MemoryRegion *sysmem = get_system_memory();
+> +    AspeedI2CState *aspeedi2c;
+> +    struct DeviceState  *dev;
+> +    char *nodename_i2c_master;
+> +    char *nodename_i2c_sub;
+> +    char *nodename_reset;
+> +    uint32_t clk_phandle, reset_phandle;
+> +    MemoryRegion *sysmem2;
+> +   
+> +    dev = qdev_new("aspeed.i2c-ast2600");
+> +    aspeedi2c = ASPEED_I2C(dev);
+> +    object_property_set_link(OBJECT(dev), "dram", OBJECT(ms->ram), &error_fatal);
+> +    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+> +    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, vms->memmap[VIRT_I2C].base);
+> +    sysbus_connect_irq(SYS_BUS_DEVICE(&aspeedi2c->busses[0]), 0, qdev_get_gpio_in(vms->gic, vms->irqmap[VIRT_I2C]));
+> +
+> +    /* I2C bus DT */
+> +    reset_phandle = qemu_fdt_alloc_phandle(ms->fdt);
+> +    nodename_reset = g_strdup_printf("/reset@%" PRIx64, vms->memmap[VIRT_RESET_FAKE].base);
+> +    qemu_fdt_add_subnode(ms->fdt, nodename_reset);
+> +    qemu_fdt_setprop_string(ms->fdt, nodename_reset, "compatible", "snps,dw-low-reset");
+> +    qemu_fdt_setprop_sized_cells(ms->fdt, nodename_reset, "reg",
+> +                                 2, vms->memmap[VIRT_RESET_FAKE].base,
+> +                                 2, vms->memmap[VIRT_RESET_FAKE].size);
+> +    qemu_fdt_setprop_cell(ms->fdt, nodename_reset, "#reset-cells", 0x1);
+> +    qemu_fdt_setprop_cell(ms->fdt, nodename_reset, "phandle", reset_phandle);
+> +    sysmem2 =  g_new(MemoryRegion, 1);
+> +    memory_region_init_ram(sysmem2, NULL, "reset", vms->memmap[VIRT_RESET_FAKE].size, NULL);
+> +    memory_region_add_subregion(sysmem, vms->memmap[VIRT_RESET_FAKE].base, sysmem2);
+> +    
+> +    clk_phandle = qemu_fdt_alloc_phandle(ms->fdt);
+> +    
+> +    qemu_fdt_add_subnode(ms->fdt, "/mclk");
+> +    qemu_fdt_setprop_string(ms->fdt, "/mclk", "compatible", "fixed-clock");
+> +    qemu_fdt_setprop_cell(ms->fdt, "/mclk", "#clock-cells", 0x0);
+> +    qemu_fdt_setprop_cell(ms->fdt, "/mclk", "clock-frequency", 24000);
+> +    qemu_fdt_setprop_string(ms->fdt, "/mclk", "clock-output-names", "bobsclk");
+> +    qemu_fdt_setprop_cell(ms->fdt, "/mclk", "phandle", clk_phandle);
+> +
+> +    nodename_i2c_master = g_strdup_printf("/i2c@%" PRIx64, vms->memmap[VIRT_I2C].base);
+> +    qemu_fdt_add_subnode(ms->fdt, nodename_i2c_master);
+> +    qemu_fdt_setprop_string(ms->fdt, nodename_i2c_master, "compatible",  "aspeed,ast2600-i2c-bus");
+> +    qemu_fdt_setprop_cells(ms->fdt, nodename_i2c_master, "multi-master");
+> +    qemu_fdt_setprop_cell(ms->fdt, nodename_i2c_master, "#size-cells", 0);
+> +    qemu_fdt_setprop_cell(ms->fdt, nodename_i2c_master, "#address-cells", 1);
+> +    qemu_fdt_setprop_cell(ms->fdt, nodename_i2c_master, "clocks", clk_phandle);
+> +    qemu_fdt_setprop_string(ms->fdt, nodename_i2c_master, "clock-names", "bobsclk");
+> +    qemu_fdt_setprop(ms->fdt, nodename_i2c_master, "mctp-controller", NULL, 0);
+> +    qemu_fdt_setprop_cells(ms->fdt, nodename_i2c_master, "interrupts", GIC_FDT_IRQ_TYPE_SPI,
+> +                           vms->irqmap[VIRT_I2C], GIC_FDT_IRQ_FLAGS_LEVEL_HI);
+> +    /* Offset to the first bus is 0x80, next one at 0x100 etc */
+> +    qemu_fdt_setprop_sized_cells(ms->fdt, nodename_i2c_master, "reg",
+> +                                 2, vms->memmap[VIRT_I2C].base + 0x80,
+> +                                 2, 0x80);
+> +    qemu_fdt_setprop_cells(ms->fdt, nodename_i2c_master, "resets", reset_phandle,  0);
+> +
+> +    nodename_i2c_sub = g_strdup_printf("/i2c@%" PRIx64 "/mctp@%" PRIx64, vms->memmap[VIRT_I2C].base, 0x50l);
+> +    qemu_fdt_add_subnode(ms->fdt, nodename_i2c_sub);
+> +    qemu_fdt_setprop_string(ms->fdt, nodename_i2c_sub, "compatible",  "mctp-i2c-controller");
+> +    qemu_fdt_setprop_sized_cells(ms->fdt, nodename_i2c_sub, "reg", 1, 0x50 | 0x40000000);
+> +
+> +        
+> +    /* Slave device - linux doesn't use the presence of dt node for this so don't create one*/
+> +    i2c_slave_create_simple(aspeed_i2c_get_bus(aspeedi2c, 0), "i2c_mctp_cxl_switch", 0x4d);
+> +}
+> +
+>  static void machvirt_init(MachineState *machine)
+>  {
+>      VirtMachineState *vms = VIRT_MACHINE(machine);
+> @@ -2289,6 +2364,8 @@ static void machvirt_init(MachineState *machine)
+>          create_gpio_devices(vms, VIRT_SECURE_GPIO, secure_sysmem);
+>      }
+>  
+> +    create_mctp_test(machine);
+> +
+>       /* connect powerdown request */
+>       vms->powerdown_notifier.notify = virt_powerdown_req;
+>       qemu_register_powerdown_notifier(&vms->powerdown_notifier);
+> diff --git a/include/hw/arm/virt.h b/include/hw/arm/virt.h
+> index 67c08a62af..abbfac7c48 100644
+> --- a/include/hw/arm/virt.h
+> +++ b/include/hw/arm/virt.h
+> @@ -71,6 +71,8 @@ enum {
+>      VIRT_SMMU,
+>      VIRT_UART,
+>      VIRT_MMIO,
+> +    VIRT_I2C,
+> +    VIRT_RESET_FAKE,
+>      VIRT_RTC,
+>      VIRT_FW_CFG,
+>      VIRT_PCIE,
+> -- 
+> 2.32.0
+> 
