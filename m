@@ -2,99 +2,104 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2CCC433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 26 May 2022 12:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7974C433EF
+	for <linux-cxl@archiver.kernel.org>; Fri, 27 May 2022 09:39:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233776AbiEZMKs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 26 May 2022 08:10:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45712 "EHLO
+        id S1350059AbiE0Jje (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 27 May 2022 05:39:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233345AbiEZMKr (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 26 May 2022 08:10:47 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BE9B6FA35
-        for <linux-cxl@vger.kernel.org>; Thu, 26 May 2022 05:10:46 -0700 (PDT)
-Received: from fraeml742-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L86BT5wtPz67MpP;
-        Thu, 26 May 2022 20:07:29 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml742-chm.china.huawei.com (10.206.15.223) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 26 May 2022 14:10:43 +0200
-Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 26 May
- 2022 13:10:42 +0100
-Date:   Thu, 26 May 2022 13:10:41 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <qemu-devel@nongnu.org>, Peter Maydell <peter.maydell@linaro.org>
-CC:     "Michael S . Tsirkin" <mst@redhat.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        <linux-cxl@vger.kernel.org>,
-        Alex =?ISO-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-        <linuxarm@huawei.com>
-Subject: Re: [PATCH v11 0/2] hw/arm/virt: CXL 2.0 emulation support
-Message-ID: <20220526131041.000077e2@Huawei.com>
-In-Reply-To: <20220520163732.27545-1-Jonathan.Cameron@huawei.com>
-References: <20220520163732.27545-1-Jonathan.Cameron@huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S245331AbiE0Jjd (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 27 May 2022 05:39:33 -0400
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 341A4BA55E;
+        Fri, 27 May 2022 02:39:32 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 7E2FE101951A4;
+        Fri, 27 May 2022 11:39:28 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 52D002F792A; Fri, 27 May 2022 11:39:28 +0200 (CEST)
+Date:   Fri, 27 May 2022 11:39:28 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Gavin Hindman <gavin.hindman@intel.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        linux-cxl@vger.kernel.org, CHUCK_LEVER <chuck.lever@oracle.com>
+Subject: Re: [RFC PATCH 0/1] DOE usage with pcie/portdrv
+Message-ID: <20220527093928.GA11083@wunner.de>
+References: <20220503153449.4088-1-Jonathan.Cameron@huawei.com>
+ <CAPcyv4geBaTkoJ+Gefgq6RaKHtB3NMh5ruZ-1yV_i0UVaw3SWA@mail.gmail.com>
+ <20220507101848.GB31314@wunner.de>
+ <20220509104806.00007c61@Huawei.com>
+ <20220511191345.GA26623@wunner.de>
+ <20220511191943.GB26623@wunner.de>
+ <CAPcyv4hUKjt7QrA__wQ0KowfaxyQuMjHB5V-=rZBm=UbV4OvSg@mail.gmail.com>
+ <20220514135521.GB14833@wunner.de>
+ <CAPcyv4izKEGKw0L=QkTxp8MMfuWxzF9Rz4Bb_F0rRRiy_+2m8w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhreml740-chm.china.huawei.com (10.201.108.190) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4izKEGKw0L=QkTxp8MMfuWxzF9Rz4Bb_F0rRRiy_+2m8w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 20 May 2022 17:37:30 +0100
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+On Mon, May 16, 2022 at 10:01:26AM -0700, Dan Williams wrote:
+> On Sat, May 14, 2022 at 6:55 AM Lukas Wunner <lukas@wunner.de> wrote:
+> > Circling back to the SPDM/IDE topic, while NVMe is now capable of
+> > reliably recovering from errors, it does expect the kernel to handle
+> > recovery within a few seconds.  I'm not sure we can continue to
+> > guarantee that if the kernel depends on user space to perform
+> > re-authentication with SPDM after reset.  That's another headache
+> > that we could avoid with in-kernel SPDM authentication.
+> 
+> What is missing from this conversation is what constitutes a device
+> leaving the trusted compute boundary and is the existing attestation
+> invalidated by a reset. I.e. perhaps the kernel can just do a
+> keep-alive heartbeat after the reset with the already negotiated key
+> to confirm the session is still valid.
 
-> The initial CXL support including support on x86/pc has now merged
-> (thanks Michael!).
-> 
-> This is the first of the two remaining parts of that series, unchanged
-> since v10.  The second is CXL switch support which can be applied
-> separately to this series and will be sent shortly.
-> 
-> CXL support requires two types of memory regions and this hooks them
-> up in arm/virt.
-> 
-> 1) CXL host bridge control register regions.  This allows for up to
->    16 host bridges which should keep anyone happy. The CEDT ACPI table
->    is used by system software to find these regions.
-> 2) CXL Fixed Memory Windows. CFMWs are regions of PA space that are
->    configured to perform interleaved accesses over multiple host bridges.
->    They are fixed, but the OS may select between multiple CFMWs to find
->    one suitable for the interleave it desires.  All interleave in the
->    host bridges and switches is programmable and discoverable - only
->    these top level regions are static and described to system software
->    via another structure in CEDT.
-> 
-> A simple test cases is added to existing cxl-test qtest.
-> 
-> Jonathan Cameron (2):
->   hw/arm/virt: Basic CXL enablement on pci_expander_bridge instances
->     pxb-cxl
->   qtest/cxl: Add aarch64 virt test for CXL
-> 
->  hw/arm/virt-acpi-build.c | 33 +++++++++++++++++++++++++++
->  hw/arm/virt.c            | 40 ++++++++++++++++++++++++++++++++-
->  include/hw/arm/virt.h    |  1 +
->  tests/qtest/cxl-test.c   | 48 ++++++++++++++++++++++++++++++++--------
->  tests/qtest/meson.build  |  1 +
->  5 files changed, 113 insertions(+), 10 deletions(-)
-> 
+After a bit of digging in the spec I think I can answer your question.
 
-Note I'll send out a v12 of this series after resolving Paolo's
-feedback on the main CXL series that proceeded this.
-Principal impacts on this series will be updated tests for the
-new command line and a move of CXLState into the virt machine
-specific state structure.
+Any type of reset (both Conventional Reset and FLR) "must result in all
+IDE Streams associated with that Function transitioning to the Insecure
+state, and all keys must be invalidated and rendered unreadable."
+(PCIe r6.0, sec 6.33.8).
+
+So IDE is always gone after reset and needs to be re-established.
+An SPDM session is necessary for that.  Does a reset affect SPDM?
+
+It depends on the type of reset:  A FLR "must not change the state
+of the secure session" (PCIe r6.0, sec 6.31.4).
+
+But for a Conventional Reset, the situation seems to be different:
+The CMA/SPDM section of the spec doesn't say what happens to an
+SPDM session upon a Conventional Reset, but sec 6.6.1 clearly states
+that "all Port registers and state machines must be set to their
+initialization values as specified in this document, except for
+sticky registers".  So I think we must assume that the SPDM session
+is gone after a Conventional Reset.
+
+DPC results in a Conventional Reset at the port where it occurs and
+also propagates a Hot Reset down the hierarchy (see ea401499e943).
+
+The bottom line is that after DPC, both the SPDM session as well as IDE
+need to be re-established, requiring the certificate validation
+which is controversial here when performed at the kernel level.
+
+(As an aside, sec 6.6.2 lists the registers not affected by a FLR
+but neglects to mention the SPDM/CMA session state.  I think that's
+an erratum, I've requested access to the protocol workgroup to
+report that.)
 
 Thanks,
 
-Jonathan
+Lukas
