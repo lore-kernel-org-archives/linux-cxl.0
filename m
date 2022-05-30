@@ -2,68 +2,73 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EE5C433F5
-	for <linux-cxl@archiver.kernel.org>; Sat, 28 May 2022 04:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF63DC433F5
+	for <linux-cxl@archiver.kernel.org>; Mon, 30 May 2022 14:22:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355717AbiE1EeK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 28 May 2022 00:34:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55056 "EHLO
+        id S237869AbiE3OWR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 30 May 2022 10:22:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355688AbiE1EeJ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 28 May 2022 00:34:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B09A5D5FE;
-        Fri, 27 May 2022 21:34:09 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AA44660B56;
-        Sat, 28 May 2022 04:34:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 13C91C34100;
-        Sat, 28 May 2022 04:34:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653712448;
-        bh=Zz0PDhW/cfQuL+8IPPj/9mTD5ewL3zI9sgHvV+Vf2+c=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=EU+m/8lcL9GyxUSVPJlOf2o0N1yKnwUJYvaAz05Lb0zmr22bjWEjrFXqViRieXa/L
-         8o6XKyz79FBPeMVhvb7PbOhbVaBQekn9FPJ1J8yoCjet1aiZVbIr590tmDufy5TzRs
-         7Cxu6/5DWf6IpI6pYTt6yxW+Mzj+RtnPJMi+CH4JBx2feDjFLsUyECHXTig0QDCGy/
-         +f7ygVpfNZ7CIfCnIbgOAx+6HvwfUH1CjNcM/TKkLWfugui0qbc6U93AS7ryTRjvlA
-         wIWdyGPs4ZvmEp07NvYIK9/DgPM6EQTPHsqrIkcHmA7k8wY7gptZ3i6GOBOyqqE/wf
-         yos3eKKAo2+1A==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 020DEF03942;
-        Sat, 28 May 2022 04:34:08 +0000 (UTC)
-Subject: Re: [GIT PULL] Compute Express Link for 5.19
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAPcyv4gmk-69G+eqtxqeNUoy0G9XPvdTJg1h32_F9qudbx4SOw@mail.gmail.com>
-References: <CAPcyv4gmk-69G+eqtxqeNUoy0G9XPvdTJg1h32_F9qudbx4SOw@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAPcyv4gmk-69G+eqtxqeNUoy0G9XPvdTJg1h32_F9qudbx4SOw@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-5.19
-X-PR-Tracked-Commit-Id: 34e37b4c432cd0f1842b352fde4b8878b4166888
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9d004b2f4fea97cde123e7f1939b80e77bf2e695
-Message-Id: <165371244800.8420.17303389715375838317.pr-tracker-bot@kernel.org>
-Date:   Sat, 28 May 2022 04:34:08 +0000
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-cxl@vger.kernel.org
+        with ESMTP id S241439AbiE3ORg (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 30 May 2022 10:17:36 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70C8E52507
+        for <linux-cxl@vger.kernel.org>; Mon, 30 May 2022 06:47:15 -0700 (PDT)
+Received: from fraeml742-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LBc7s6XLBz6H76d;
+        Mon, 30 May 2022 21:43:53 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml742-chm.china.huawei.com (10.206.15.223) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 30 May 2022 15:47:13 +0200
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 30 May 2022 14:47:12 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, <qemu-devel@nongnu.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>
+CC:     <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
+        <alex.bennee@linaro.org>, Marcel Apfelbaum <marcel@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Markus Armbruster <armbru@redhat.com>,
+        "Mark Cave-Ayland" <mark.cave-ayland@ilande.co.uk>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        Tong Zhang <ztong0001@gmail.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>
+Subject: [PATCH 4/8] tests/acpi: Allow modification of q35 CXL CEDT table.
+Date:   Mon, 30 May 2022 14:45:10 +0100
+Message-ID: <20220530134514.31664-5-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220530134514.31664-1-Jonathan.Cameron@huawei.com>
+References: <20220530134514.31664-1-Jonathan.Cameron@huawei.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The pull request you sent on Fri, 27 May 2022 16:02:53 -0700:
+Needed to allow memory address changes as a result of next patch.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-5.19
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ tests/qtest/bios-tables-test-allowed-diff.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9d004b2f4fea97cde123e7f1939b80e77bf2e695
-
-Thank you!
-
+diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
+index dfb8523c8b..effa58b75b 100644
+--- a/tests/qtest/bios-tables-test-allowed-diff.h
++++ b/tests/qtest/bios-tables-test-allowed-diff.h
+@@ -1 +1,2 @@
+ /* List of comma-separated changed AML files to ignore */
++"tests/data/acpi/q35/CEDT.cxl",
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.32.0
+
