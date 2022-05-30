@@ -2,29 +2,29 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0C4C43217
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE081C4167E
 	for <linux-cxl@archiver.kernel.org>; Mon, 30 May 2022 14:22:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238113AbiE3OWX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 30 May 2022 10:22:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40198 "EHLO
+        id S240898AbiE3OWY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 30 May 2022 10:22:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241411AbiE3ORe (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 30 May 2022 10:17:34 -0400
+        with ESMTP id S241904AbiE3OSK (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 30 May 2022 10:18:10 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 249A790CF2
-        for <linux-cxl@vger.kernel.org>; Mon, 30 May 2022 06:46:14 -0700 (PDT)
-Received: from fraeml703-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LBc5X20ywz6GD6W;
-        Mon, 30 May 2022 21:41:52 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED1FF9CCA9
+        for <linux-cxl@vger.kernel.org>; Mon, 30 May 2022 06:48:31 -0700 (PDT)
+Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LBc7t58vzz6GD5M;
+        Mon, 30 May 2022 21:43:54 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.24; Mon, 30 May 2022 15:46:12 +0200
+ fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 30 May 2022 15:48:14 +0200
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 30 May 2022 14:46:11 +0100
+ 15.1.2375.24; Mon, 30 May 2022 14:48:14 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>, <qemu-devel@nongnu.org>,
         "Michael S . Tsirkin" <mst@redhat.com>
@@ -38,9 +38,9 @@ CC:     <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
         Ben Widawsky <ben.widawsky@intel.com>,
         Shameerali Kolothum Thodi 
         <shameerali.kolothum.thodi@huawei.com>
-Subject: [PATCH 2/8] hw/acpi/cxl: Pass in the CXLState directly rather than MachineState
-Date:   Mon, 30 May 2022 14:45:08 +0100
-Message-ID: <20220530134514.31664-3-Jonathan.Cameron@huawei.com>
+Subject: [PATCH 6/8] tests/acpi: Update q35/CEDT.cxl for new memory addresses.
+Date:   Mon, 30 May 2022 14:45:12 +0100
+Message-ID: <20220530134514.31664-7-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220530134514.31664-1-Jonathan.Cameron@huawei.com>
 References: <20220530134514.31664-1-Jonathan.Cameron@huawei.com>
@@ -55,85 +55,32 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Refactoring step on path to moving all CXL state out of
-MachineState.
+The CEDT table includes addreses of host bridge registers.
+There are allocated in a different order due to the previous
+patch, so update to the table is needed.
 
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- hw/acpi/cxl.c         | 9 ++++-----
- hw/i386/acpi-build.c  | 4 ++--
- include/hw/acpi/cxl.h | 5 +++--
- 3 files changed, 9 insertions(+), 9 deletions(-)
+ tests/data/acpi/q35/CEDT.cxl                | Bin 184 -> 184 bytes
+ tests/qtest/bios-tables-test-allowed-diff.h |   1 -
+ 2 files changed, 1 deletion(-)
 
-diff --git a/hw/acpi/cxl.c b/hw/acpi/cxl.c
-index 31d5235136..2bf8c07993 100644
---- a/hw/acpi/cxl.c
-+++ b/hw/acpi/cxl.c
-@@ -65,9 +65,8 @@ static void cedt_build_chbs(GArray *table_data, PXBDev *cxl)
-  * Interleave ways encoding in CXL 2.0 ECN: 3, 6, 12 and 16-way memory
-  * interleaving.
-  */
--static void cedt_build_cfmws(GArray *table_data, MachineState *ms)
-+static void cedt_build_cfmws(GArray *table_data, CXLState *cxls)
- {
--    CXLState *cxls = ms->cxl_devices_state;
-     GList *it;
- 
-     for (it = cxls->fixed_windows; it; it = it->next) {
-@@ -129,9 +128,9 @@ static int cxl_foreach_pxb_hb(Object *obj, void *opaque)
-     return 0;
- }
- 
--void cxl_build_cedt(MachineState *ms, GArray *table_offsets, GArray *table_data,
-+void cxl_build_cedt(GArray *table_offsets, GArray *table_data,
-                     BIOSLinker *linker, const char *oem_id,
--                    const char *oem_table_id)
-+                    const char *oem_table_id, CXLState *cxl_state)
- {
-     Aml *cedt;
-     AcpiTable table = { .sig = "CEDT", .rev = 1, .oem_id = oem_id,
-@@ -144,7 +143,7 @@ void cxl_build_cedt(MachineState *ms, GArray *table_offsets, GArray *table_data,
-     /* reserve space for CEDT header */
- 
-     object_child_foreach_recursive(object_get_root(), cxl_foreach_pxb_hb, cedt);
--    cedt_build_cfmws(cedt->buf, ms);
-+    cedt_build_cfmws(cedt->buf, cxl_state);
- 
-     /* copy AML table into ACPI tables blob and patch header there */
-     g_array_append_vals(table_data, cedt->buf->data, cedt->buf->len);
-diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
-index c125939ed6..2e3b1dd9a2 100644
---- a/hw/i386/acpi-build.c
-+++ b/hw/i386/acpi-build.c
-@@ -2712,8 +2712,8 @@ void acpi_build(AcpiBuildTables *tables, MachineState *machine)
-                           x86ms->oem_id, x86ms->oem_table_id);
-     }
-     if (machine->cxl_devices_state->is_enabled) {
--        cxl_build_cedt(machine, table_offsets, tables_blob, tables->linker,
--                       x86ms->oem_id, x86ms->oem_table_id);
-+        cxl_build_cedt(table_offsets, tables_blob, tables->linker,
-+                       x86ms->oem_id, x86ms->oem_table_id, machine->cxl_devices_state);
-     }
- 
-     acpi_add_table(table_offsets, tables_blob);
-diff --git a/include/hw/acpi/cxl.h b/include/hw/acpi/cxl.h
-index 0c496538c0..acf4418886 100644
---- a/include/hw/acpi/cxl.h
-+++ b/include/hw/acpi/cxl.h
-@@ -19,10 +19,11 @@
- #define HW_ACPI_CXL_H
- 
- #include "hw/acpi/bios-linker-loader.h"
-+#include "hw/cxl/cxl.h"
- 
--void cxl_build_cedt(MachineState *ms, GArray *table_offsets, GArray *table_data,
-+void cxl_build_cedt(GArray *table_offsets, GArray *table_data,
-                     BIOSLinker *linker, const char *oem_id,
--                    const char *oem_table_id);
-+                    const char *oem_table_id, CXLState *cxl_state);
- void build_cxl_osc_method(Aml *dev);
- 
- #endif
+diff --git a/tests/data/acpi/q35/CEDT.cxl b/tests/data/acpi/q35/CEDT.cxl
+index b8fa06b00e65712e91e0a5ea0d9277e0146d1c00..ff8203af070241bd23dd0eb8a51460692bb7d229 100644
+GIT binary patch
+delta 18
+acmdnNxPx(m*~Boui7rAD&G;s!ga80Nd<HWB
+
+delta 18
+acmdnNxPx(m*~Boui7rAD&G;s!ga80Nd<HWB
+
+diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
+index effa58b75b..dfb8523c8b 100644
+--- a/tests/qtest/bios-tables-test-allowed-diff.h
++++ b/tests/qtest/bios-tables-test-allowed-diff.h
+@@ -1,2 +1 @@
+ /* List of comma-separated changed AML files to ignore */
+-"tests/data/acpi/q35/CEDT.cxl",
 -- 
 2.32.0
 
