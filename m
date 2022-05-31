@@ -2,78 +2,78 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB67C433F5
-	for <linux-cxl@archiver.kernel.org>; Tue, 31 May 2022 18:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1346C433F5
+	for <linux-cxl@archiver.kernel.org>; Tue, 31 May 2022 19:30:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244647AbiEaSPn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 31 May 2022 14:15:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37202 "EHLO
+        id S1347281AbiEaTaz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 31 May 2022 15:30:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237811AbiEaSPm (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 31 May 2022 14:15:42 -0400
+        with ESMTP id S231594AbiEaTay (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 31 May 2022 15:30:54 -0400
 Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58E4E8D686;
-        Tue, 31 May 2022 11:15:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04B0F4ECC8;
+        Tue, 31 May 2022 12:30:52 -0700 (PDT)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 33A7AC0AB6;
-        Tue, 31 May 2022 17:56:58 +0000 (UTC)
+        by relay.mailchannels.net (Postfix) with ESMTP id 6734D222B1;
+        Tue, 31 May 2022 19:30:51 +0000 (UTC)
 Received: from pdx1-sub0-mail-a312.dreamhost.com (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 2E3F2C0F2B;
-        Tue, 31 May 2022 17:56:57 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1654019817; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id BADC8219DB;
+        Tue, 31 May 2022 19:30:50 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1654025451; a=rsa-sha256;
         cv=none;
-        b=xrug5q8YuK93Ismc0mlBgaRdWubuWlBgnf3nSCCY57B/LzwTv4ylZWMnF84RRVdnOZtOGe
-        mahgVC4I0Cfvf9Ix1Zgpqijwjp0jjOPOLqcldrjLHL7KOuhNuL5e0Mr474v8IyYEeSmJeK
-        7noBWvx+pg9iEgNTQFzncZ7YbSEu/QkD3LKDYlO6UFH3Bn5mijRGUZFFNfbszNKzWIzIx4
-        6SsAZ6S/MnouHBtdl5kmH4tgdvOempiiLSXQwEL7fjulye0Y8ds7i852uYcVOSylDfKmd/
-        tm66Gl2AcJiE+eum3zXIXC0xpWrsCAtRlwQaBuaSL7ARML5cvlOAwsq3N6DwIQ==
+        b=GHifxgTwTgrq50J0ahKG4ErpRp9ja56wxBpHwUdWDzKqCh9KCP7/jXATIGbn+xAtSH6yoQ
+        KueNIZiFxZGwDuBVi8BPk47sobiLt+za791gGQg2hdS8oHsapyVWT/AILdSYQXtwAkM8An
+        qb8SiJ3mHU+SfwvHjQSVxk0n2oDPysdZMmWngFep3j5TorJsnGQwS7tGbibWPneVeBKo1w
+        QVRp86H6ip1Jq/bTAD6hPE41tSH0TEm9sv/0+/kCFIggzd1LOC8r+mGhJl0o/67x1DOZrB
+        V1+FRjmYR6/UpmHLtAA8ygiFzGFl5TRJQ8ysLniWVlKyQcjx3lQjxL9yYFuA+A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1654019817;
+        s=arc-2022; t=1654025451;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=Jqs4c0ygSjRf8XGruXmwMoD1JNWdncPA8hS82YZvfAM=;
-        b=7buWo4C0ty/+fwZmR/qY3/L4XKHYbtgSWcLM7HO8Cowyaludczemxy4EXfeEt0PEkQNSIG
-        hWRF6DHovdZBFATsOUrFhg6W/xsqiuUOze873MYnpKVXFfRZS7I6bzvvfYWaHl21ZTNkdi
-        /GHIAF9yanJYZORkOg1zwnfAHNwx9I81r5EuN1p9tkILxWn/mfWWW8f7KBTr0Ik8LXAoAi
-        nGMskmX2i8Xo73Xdayiy2DWJVzRGFxc25JRRfmcXL9LgRWZtaY1q/XhJY9MWwznvHKAbZk
-        aeQdHmxOh7QzHuWrypRN5VEMLlWN1+tIJdQ/0n8gojorLm/iz5NHit0F15sGCg==
+        bh=yjn8g0oYlpZ7Ojn4qLOFR1xRrZRUZDYgF0eVYsHCCQ0=;
+        b=fujZ9FP8dPSbyO80Yj1rYWggz4veP2J3COoTaixttgqa5PBTUtxG4ou7SuwUXRyjxUKbL8
+        o8aHCRfZZw2G+u741S8ncP4YbyZKPY6mNJgTYtzkUwaC9wQhktjlmkLZJLdST/Ygs0YHeJ
+        uYmLOFhHijlLU7/ZIpdIDnaBeQPIk2ilm8qNTczEeskebVlckUDudHMdLj3gPOo//yG4u+
+        3YsSVpEXaPS0exzbucxPZk38Wb4Jl144bpfF5mMJ7MYYNyMX6QoaegpBEmkh6729y5pYvB
+        6Ohiv/xXBFPsBpgp4CJZ+d6DTb8HoOSmqJbK0KL4toe1EvSOCtjQSC8+PYkj8A==
 ARC-Authentication-Results: i=1;
-        rspamd-54ff499d4f-6jrv7;
+        rspamd-77f9f854d9-fnqkg;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Invention-Occur: 4c0cf91f5e9557b6_1654019817965_4068604815
-X-MC-Loop-Signature: 1654019817965:1336790883
-X-MC-Ingress-Time: 1654019817965
+X-Battle-Bottle: 1914ce2e120b5944_1654025451251_759484802
+X-MC-Loop-Signature: 1654025451251:42469579
+X-MC-Ingress-Time: 1654025451250
 Received: from pdx1-sub0-mail-a312.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.101.255.183 (trex/6.7.1);
-        Tue, 31 May 2022 17:56:57 +0000
+        by 100.96.96.15 (trex/6.7.1);
+        Tue, 31 May 2022 19:30:51 +0000
 Received: from offworld (unknown [104.36.31.105])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a312.dreamhost.com (Postfix) with ESMTPSA id 4LCKjM72PZz2N;
-        Tue, 31 May 2022 10:56:55 -0700 (PDT)
+        by pdx1-sub0-mail-a312.dreamhost.com (Postfix) with ESMTPSA id 4LCMnj43XQz3H;
+        Tue, 31 May 2022 12:30:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1654019816;
-        bh=Jqs4c0ygSjRf8XGruXmwMoD1JNWdncPA8hS82YZvfAM=;
+        s=dreamhost; t=1654025450;
+        bh=yjn8g0oYlpZ7Ojn4qLOFR1xRrZRUZDYgF0eVYsHCCQ0=;
         h=Date:From:To:Cc:Subject:Content-Type;
-        b=C8XEopb91jmgMK3dvEx6kZSh8A6Y9Lb/yPrE0fpEBhAOkZxepnKFXhpjrw8M5/PxA
-         /RMUwgcNlcOwbjHRKTKok2ksH0CiPObbhwqlm8eUv6lo6nQZdThCwpgTJE8643DUkO
-         AeZJ2YBBLb06lUPoGHFTIqXmGZduwaoS1xfG8vqSWJmJwnqRazMcrUN/0IePof7NBZ
-         WBaC9HqXFYb2u2v0OTV5b9EFhZGBFGzerHGDk+fCvVgQHjCouoB4doi7LX6Ob1hto3
-         HDxsPvYzkBBJYtbtoIkhXDiBj6IlG+y8QikvO9StV3EYH+ZyMVBXyuDzvc2wZAf96w
-         3X18HZJIsmxXg==
-Date:   Tue, 31 May 2022 10:56:52 -0700
+        b=IgsygmY6NMceIkGxHDSbvprysRtVmtuA8F4dNs5xvCERvgZDGp9kbH/7PuI8hle9s
+         1/J6o44NYyTzWk23dnJJCpNsXK/45l8Rv63/I+dgpLeqMnkXK0Tv/3WQtKyXW8+lGW
+         sVHgnYhquzcLN/azgnmCjqdynpZRS/B6lXp2cpA/nbxyIglj3f+BsyAJItyUkQT1ie
+         Wq5v0y86nWzyWsXQg5JTmfoVn6n/Sd58HvhdHL7skHkxc/rYea2zZ3eJrj8Ei2vgV0
+         HVxIzDYJzLFesaPS5yTCY2jazXguwzItuNc9mhvhjByTSHVmHaiiEDabBq4imGqcBu
+         qopZmGgQrLHyg==
+Date:   Tue, 31 May 2022 12:30:46 -0700
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     "ira.weiny@intel.com" <ira.weiny@intel.com>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
@@ -85,49 +85,109 @@ Cc:     Dan Williams <dan.j.williams@intel.com>,
         Ben Widawsky <ben@bwidawsk.net>, linux-kernel@vger.kernel.org,
         linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
         a.manzanares@samsung.com
-Subject: Re: [PATCH v9 3/9] PCI: Create PCI library functions in support of
- DOE mailboxes.
-Message-ID: <20220531175652.qog7xaqmypy36whu@offworld>
+Subject: Re: [PATCH v9 8/9] cxl/port: Retry reading CDAT on failure
+Message-ID: <20220531193046.g34gjadvd4gq4i3p@offworld>
 References: <20220531152632.1397976-1-ira.weiny@intel.com>
- <20220531152632.1397976-4-ira.weiny@intel.com>
- <20220531172507.5ert5tgwellpe7fx@offworld>
+ <20220531152632.1397976-9-ira.weiny@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20220531172507.5ert5tgwellpe7fx@offworld>
+In-Reply-To: <20220531152632.1397976-9-ira.weiny@intel.com>
 User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 31 May 2022, Davidlohr Bueso wrote:
+On Tue, 31 May 2022, ira.weiny@intel.com wrote:
 
->On Tue, 31 May 2022, ira.weiny@intel.com wrote:
+>From: Ira Weiny <ira.weiny@intel.com>
 >
->>+static void doe_statemachine_work(struct work_struct *work)
->>+{
->>+	struct delayed_work *w = to_delayed_work(work);
->>+	struct pci_doe_mb *doe_mb = container_of(w, struct pci_doe_mb,
->>+						 statemachine);
->>+	struct pci_dev *pdev = doe_mb->pdev;
->>+	int offset = doe_mb->cap_offset;
->>+	struct pci_doe_task *task;
->>+	u32 val;
->>+	int rc;
->>+
->>+	mutex_lock(&doe_mb->task_lock);
->>+	task = doe_mb->cur_task;
->>+	mutex_unlock(&doe_mb->task_lock);
+>The CDAT read may fail for a number of reasons but mainly it is possible
+>to get different parts of a valid state.  The checksum in the CDAT table
+>protects against this.
 >
->Instead of a mutex, would it be better to use a rwsem here to protect
->the state machine and allow for concurrent reads for the work callback?
->It is a general interface and a trivial change, but not sure how much
->performance is cared about.
+>Now that the cdat data is validated issue a retries if the CDAT read
+>fails.  For now 5 retries are implemented.
+>
+>Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+>---
+>Changes from V8
+>	Move code to cxl/core/pci.c
+>
+>Changes from V6
+>	Move to pci.c
+>	Fix retries count
+>	Change to 5 retries
+>
+>Changes from V5:
+>	New patch -- easy to push off or drop.
+>---
+> drivers/cxl/core/pci.c | 32 +++++++++++++++++++++-----------
+> 1 file changed, 21 insertions(+), 11 deletions(-)
+>
+>diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+>index bb370df1cb6c..7f7dac9030a6 100644
+>--- a/drivers/cxl/core/pci.c
+>+++ b/drivers/cxl/core/pci.c
+>@@ -620,20 +620,18 @@ static int cxl_cdat_read_table(struct cxl_port *port,
+> 	return rc;
+> }
+>
+>-void read_cdat_data(struct cxl_port *port)
+>+static int __read_cdat_data(struct cxl_port *port)
+> {
+> 	struct device *dev = &port->dev;
+> 	size_t cdat_length;
+> 	int ret;
+>
+> 	if (cxl_cdat_get_length(port, &cdat_length))
+>-		return;
+>+		return 0;
+>
+> 	port->cdat.table = devm_kzalloc(dev, cdat_length, GFP_KERNEL);
+>-	if (!port->cdat.table) {
+>-		ret = -ENOMEM;
+>-		goto error;
+>-	}
+>+	if (!port->cdat.table)
+>+		return -ENOMEM;
+>
+> 	port->cdat.length = cdat_length;
+> 	ret = cxl_cdat_read_table(port, &port->cdat);
+>@@ -641,12 +639,24 @@ void read_cdat_data(struct cxl_port *port)
+> 		devm_kfree(dev, port->cdat.table);
+> 		port->cdat.table = NULL;
+> 		port->cdat.length = 0;
+>-		ret = -EIO;
+>-		goto error;
+>+		return -EIO;
+> 	}
+>
+>-	return;
+>-error:
+>-	dev_err(dev, "CDAT data read error (%d)\n", ret);
+>+	return 0;
+>+}
+>+
+>+void read_cdat_data(struct cxl_port *port)
+>+{
+>+	int retries = 5;
+>+	int rc;
+>+
+>+	while (retries--) {
+>+		rc = __read_cdat_data(port);
+>+		if (!rc)
+>+			break;
+>+		dev_err(&port->dev,
+>+			"CDAT data read error rc=%d (retries %d)\n",
+>+			rc, retries);
+>+	}
+> }
+> EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
 
-Actually why is this a sleeping lock at all? Afaict all critical regions
-are short and just deal with loads and stores of oe_mb->task_lock (and
-pci_doe_submit_task also checks the doe_mb->flags with the lock held).
-This could be a spinlock or similarly a rwlock.
+
+Better a single final error message after exhausting all retries
+instead of each time.
 
 Thanks,
 Davidlohr
