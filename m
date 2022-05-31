@@ -2,192 +2,369 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1346C433F5
-	for <linux-cxl@archiver.kernel.org>; Tue, 31 May 2022 19:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7648BC433EF
+	for <linux-cxl@archiver.kernel.org>; Tue, 31 May 2022 23:43:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347281AbiEaTaz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 31 May 2022 15:30:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53984 "EHLO
+        id S1348681AbiEaXnL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 31 May 2022 19:43:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231594AbiEaTay (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 31 May 2022 15:30:54 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04B0F4ECC8;
-        Tue, 31 May 2022 12:30:52 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 6734D222B1;
-        Tue, 31 May 2022 19:30:51 +0000 (UTC)
-Received: from pdx1-sub0-mail-a312.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id BADC8219DB;
-        Tue, 31 May 2022 19:30:50 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1654025451; a=rsa-sha256;
-        cv=none;
-        b=GHifxgTwTgrq50J0ahKG4ErpRp9ja56wxBpHwUdWDzKqCh9KCP7/jXATIGbn+xAtSH6yoQ
-        KueNIZiFxZGwDuBVi8BPk47sobiLt+za791gGQg2hdS8oHsapyVWT/AILdSYQXtwAkM8An
-        qb8SiJ3mHU+SfwvHjQSVxk0n2oDPysdZMmWngFep3j5TorJsnGQwS7tGbibWPneVeBKo1w
-        QVRp86H6ip1Jq/bTAD6hPE41tSH0TEm9sv/0+/kCFIggzd1LOC8r+mGhJl0o/67x1DOZrB
-        V1+FRjmYR6/UpmHLtAA8ygiFzGFl5TRJQ8ysLniWVlKyQcjx3lQjxL9yYFuA+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1654025451;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=yjn8g0oYlpZ7Ojn4qLOFR1xRrZRUZDYgF0eVYsHCCQ0=;
-        b=fujZ9FP8dPSbyO80Yj1rYWggz4veP2J3COoTaixttgqa5PBTUtxG4ou7SuwUXRyjxUKbL8
-        o8aHCRfZZw2G+u741S8ncP4YbyZKPY6mNJgTYtzkUwaC9wQhktjlmkLZJLdST/Ygs0YHeJ
-        uYmLOFhHijlLU7/ZIpdIDnaBeQPIk2ilm8qNTczEeskebVlckUDudHMdLj3gPOo//yG4u+
-        3YsSVpEXaPS0exzbucxPZk38Wb4Jl144bpfF5mMJ7MYYNyMX6QoaegpBEmkh6729y5pYvB
-        6Ohiv/xXBFPsBpgp4CJZ+d6DTb8HoOSmqJbK0KL4toe1EvSOCtjQSC8+PYkj8A==
-ARC-Authentication-Results: i=1;
-        rspamd-77f9f854d9-fnqkg;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Battle-Bottle: 1914ce2e120b5944_1654025451251_759484802
-X-MC-Loop-Signature: 1654025451251:42469579
-X-MC-Ingress-Time: 1654025451250
-Received: from pdx1-sub0-mail-a312.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.96.96.15 (trex/6.7.1);
-        Tue, 31 May 2022 19:30:51 +0000
-Received: from offworld (unknown [104.36.31.105])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a312.dreamhost.com (Postfix) with ESMTPSA id 4LCMnj43XQz3H;
-        Tue, 31 May 2022 12:30:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1654025450;
-        bh=yjn8g0oYlpZ7Ojn4qLOFR1xRrZRUZDYgF0eVYsHCCQ0=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=IgsygmY6NMceIkGxHDSbvprysRtVmtuA8F4dNs5xvCERvgZDGp9kbH/7PuI8hle9s
-         1/J6o44NYyTzWk23dnJJCpNsXK/45l8Rv63/I+dgpLeqMnkXK0Tv/3WQtKyXW8+lGW
-         sVHgnYhquzcLN/azgnmCjqdynpZRS/B6lXp2cpA/nbxyIglj3f+BsyAJItyUkQT1ie
-         Wq5v0y86nWzyWsXQg5JTmfoVn6n/Sd58HvhdHL7skHkxc/rYea2zZ3eJrj8Ei2vgV0
-         HVxIzDYJzLFesaPS5yTCY2jazXguwzItuNc9mhvhjByTSHVmHaiiEDabBq4imGqcBu
-         qopZmGgQrLHyg==
-Date:   Tue, 31 May 2022 12:30:46 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     "ira.weiny@intel.com" <ira.weiny@intel.com>
+        with ESMTP id S241462AbiEaXnK (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 31 May 2022 19:43:10 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A9386C0CF;
+        Tue, 31 May 2022 16:43:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654040589; x=1685576589;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1RPTB2MbClkXo6d6NveMB2OujJGHsYe4JAnZGSgCbDw=;
+  b=K2K8JpnhNqctOPNgYYBsFJiVLT+aBFlb3C3ZKq2omZnjPUIpsEK7XR3s
+   kmxysuHX0AScJIBBTtAp1xc3nwjHjpMBQqxn2RbFjfFzeQpfU/qYt3YcB
+   wFCNvdaORefdUP03rYi2/u7dnWM8dP+uP7UT+0bf7vL2yiJwxjYACbsoW
+   XzcmRotap1WbgIuano0h4JZ9BIvmda5jDfECHNyLyHVlm099zwoEhoFBi
+   FZi/Pp967oW3F00XJbCfPU351H5Ax0zoQSSQMFxkps5IuhVhVhaRpp+Uc
+   Yz99nrZ6xTEQFHq0Rofhl/LP5+yU79OtmU7ms6pdfHVHKUZDv3lfAHYVy
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10364"; a="263054015"
+X-IronPort-AV: E=Sophos;i="5.91,266,1647327600"; 
+   d="scan'208";a="263054015"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 16:43:08 -0700
+X-IronPort-AV: E=Sophos;i="5.91,266,1647327600"; 
+   d="scan'208";a="755369377"
+Received: from mdossant-mobl1.amr.corp.intel.com (HELO localhost) ([10.212.154.135])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 16:43:06 -0700
+Date:   Tue, 31 May 2022 16:43:05 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Lukas Wunner <lukas@wunner.de>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Christoph Hellwig <hch@infradead.org>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <ben@bwidawsk.net>, linux-kernel@vger.kernel.org,
-        linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-        a.manzanares@samsung.com
-Subject: Re: [PATCH v9 8/9] cxl/port: Retry reading CDAT on failure
-Message-ID: <20220531193046.g34gjadvd4gq4i3p@offworld>
-References: <20220531152632.1397976-1-ira.weiny@intel.com>
- <20220531152632.1397976-9-ira.weiny@intel.com>
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V8 03/10] PCI: Create PCI library functions in support of
+ DOE mailboxes.
+Message-ID: <YpaoCYcnuG1jLMWe@iweiny-desk3>
+References: <20220414203237.2198665-1-ira.weiny@intel.com>
+ <20220414203237.2198665-4-ira.weiny@intel.com>
+ <20220530190657.GA14765@wunner.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220531152632.1397976-9-ira.weiny@intel.com>
-User-Agent: NeoMutt/20220429
+In-Reply-To: <20220530190657.GA14765@wunner.de>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 31 May 2022, ira.weiny@intel.com wrote:
+On Mon, May 30, 2022 at 09:06:57PM +0200, Lukas Wunner wrote:
+> On Thu, Apr 14, 2022 at 01:32:30PM -0700, ira.weiny@intel.com wrote:
+> > +static int pci_doe_recv_resp(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
+> [...]
+> > +	pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
+> > +	/* Read the second dword to get the length */
+> > +	pci_read_config_dword(pdev, offset + PCI_DOE_READ, &val);
+> > +	pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
+> > +
+> > +	length = FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH, val);
+> > +	if (length > SZ_1M || length < 2)
+> > +		return -EIO;
+> > +
+> 
+> This API requires consumers to know the size of the response in advance.
+> That's not always the case, as exemplified by SPDM VERSION responses.
+> Jonathan uses a kludge in his SPDM patch which submits a first request
+> with a fixed size of 2 versions and, if that turns out to be too small,
+> submits a second request.
+> 
+> It would be nice if consumers are allowed to set request_pl to NULL.
+> Then a payload can be allocated here in pci_doe_recv_resp() with the
+> size retrieved above.
+> 
+> A flag may be necessary to indicate that the response is heap-allocated
+> and needs to be freed upon destruction of the pci_doe_task.
 
->From: Ira Weiny <ira.weiny@intel.com>
->
->The CDAT read may fail for a number of reasons but mainly it is possible
->to get different parts of a valid state.  The checksum in the CDAT table
->protects against this.
->
->Now that the cdat data is validated issue a retries if the CDAT read
->fails.  For now 5 retries are implemented.
->
->Signed-off-by: Ira Weiny <ira.weiny@intel.com>
->---
->Changes from V8
->	Move code to cxl/core/pci.c
->
->Changes from V6
->	Move to pci.c
->	Fix retries count
->	Change to 5 retries
->
->Changes from V5:
->	New patch -- easy to push off or drop.
->---
-> drivers/cxl/core/pci.c | 32 +++++++++++++++++++++-----------
-> 1 file changed, 21 insertions(+), 11 deletions(-)
->
->diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
->index bb370df1cb6c..7f7dac9030a6 100644
->--- a/drivers/cxl/core/pci.c
->+++ b/drivers/cxl/core/pci.c
->@@ -620,20 +620,18 @@ static int cxl_cdat_read_table(struct cxl_port *port,
-> 	return rc;
-> }
->
->-void read_cdat_data(struct cxl_port *port)
->+static int __read_cdat_data(struct cxl_port *port)
-> {
-> 	struct device *dev = &port->dev;
-> 	size_t cdat_length;
-> 	int ret;
->
-> 	if (cxl_cdat_get_length(port, &cdat_length))
->-		return;
->+		return 0;
->
-> 	port->cdat.table = devm_kzalloc(dev, cdat_length, GFP_KERNEL);
->-	if (!port->cdat.table) {
->-		ret = -ENOMEM;
->-		goto error;
->-	}
->+	if (!port->cdat.table)
->+		return -ENOMEM;
->
-> 	port->cdat.length = cdat_length;
-> 	ret = cxl_cdat_read_table(port, &port->cdat);
->@@ -641,12 +639,24 @@ void read_cdat_data(struct cxl_port *port)
-> 		devm_kfree(dev, port->cdat.table);
-> 		port->cdat.table = NULL;
-> 		port->cdat.length = 0;
->-		ret = -EIO;
->-		goto error;
->+		return -EIO;
-> 	}
->
->-	return;
->-error:
->-	dev_err(dev, "CDAT data read error (%d)\n", ret);
->+	return 0;
->+}
->+
->+void read_cdat_data(struct cxl_port *port)
->+{
->+	int retries = 5;
->+	int rc;
->+
->+	while (retries--) {
->+		rc = __read_cdat_data(port);
->+		if (!rc)
->+			break;
->+		dev_err(&port->dev,
->+			"CDAT data read error rc=%d (retries %d)\n",
->+			rc, retries);
->+	}
-> }
-> EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
+I'm not comfortable with PCI allocating memory.  Especially optionally
+allocating memory.  And I'm not sure this really saves the extra queries.  The
+PCI layer will have to query first to determine response length.
 
+If the community does want PCI to allocate memory then I think the interface
+should be to always allocate it.
 
-Better a single final error message after exhausting all retries
-instead of each time.
+> 
+> 
+> > +	/* First 2 dwords have already been read */
+> > +	length -= 2;
+> > +	/* Read the rest of the response payload */
+> > +	for (i = 0; i < min(length, task->response_pl_sz / sizeof(u32)); i++) {
+> > +		pci_read_config_dword(pdev, offset + PCI_DOE_READ,
+> > +				      &task->response_pl[i]);
+> > +		pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
+> > +	}
+> 
+> You need to check the Data Object Ready bit.  The device may clear the
+> bit prematurely (e.g. as a result of a concurrent FLR or Conventional
+> Reset).  You'll continue reading zero dwords from the mailbox and
+> pretend success to the caller even though the response is truncated.
 
-Thanks,
-Davidlohr
+If an FLR happens then truncation does not seem like a problem.
+
+> 
+> If you're concerned about performance when checking the bit on every
+> loop iteration, checking it only on the last but one iteration should
+> be sufficient to detect truncation.
+
+I'll review.  I don't think this is a fast path.
+
+> 
+> 
+> > +	*vid = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID, response_pl);
+> > +	*protocol = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL,
+> > +			      response_pl);
+> > +	*index = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX,
+> > +			   response_pl);
+> 
+> The fact that you need line breaks here is an indication that the
+> macros are too long.
+> 
+> 
+> > +/* DOE Data Object - note not actually registers */
+> > +#define PCI_DOE_DATA_OBJECT_HEADER_1_VID		0x0000ffff
+> > +#define PCI_DOE_DATA_OBJECT_HEADER_1_TYPE		0x00ff0000
+> > +#define PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH		0x0003ffff
+> > +
+> > +#define PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX		0x000000ff
+> > +#define PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID		0x0000ffff
+> > +#define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		0x00ff0000
+> > +#define PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX	0xff000000
+> 
+> I'd get rid of "DATA_OBJECT_" everywhere, it's redundant with the
+> "Data Object" in "DOE".
+
+I'm ok with renaming.  Jonathan chose the names and no one has complained yet.
+
+> 
+> 
+> > +#define  PCI_DOE_STATUS_INT_STATUS		0x00000002  /* DOE Interrupt Status */
+> 
+> Another redundancy, I would get rid of the second "_STATUS".
+> 
+> 
+> > +#define  PCI_DOE_STATUS_DATA_OBJECT_READY	0x80000000  /* Data Object Ready */
+> 
+> I would shorten to PCI_DOE_STATUS_READY.
+> 
+> 
+> > 		Simplify submitting work to the mailbox
+> > 			Replace pci_doe_exchange_sync() with
+> > 			pci_doe_submit_task() Consumers of the mailbox
+> > 			are now responsible for setting up callbacks
+> > 			within a task object and submitting them to the
+> > 			mailbox to be processed.
+> 
+> I honestly think that's a mistake.  All consumers both in the CDAT
+> as well as in the SPDM series just want to wait for completion of
+> the task.  They have no need for an arbitrary callback and shouldn't
+> be burdended with providing one.  It just unnecessarily complicates
+> the API.
+> 
+> So only providing pci_doe_exchange_sync() and doing away with
+> pci_doe_submit_task() would seem like a more appropriate approach.
+
+This was discussed a couple of times and it was decided to keep the
+synchronicity out of the library functions and allow users to decide how to
+handle it.
+
+> 
+> 
+> > +/**
+> > + * pci_doe_for_each_off - Iterate each DOE capability
+> > + * @pdev: struct pci_dev to iterate
+> > + * @off: u16 of config space offset of each mailbox capability found
+> > + */
+> > +#define pci_doe_for_each_off(pdev, off) \
+> > +	for (off = pci_find_next_ext_capability(pdev, off, \
+> > +					PCI_EXT_CAP_ID_DOE); \
+> > +		off > 0; \
+> > +		off = pci_find_next_ext_capability(pdev, off, \
+> > +					PCI_EXT_CAP_ID_DOE))
+> > +
+> > +struct pci_doe_mb *pci_doe_create_mb(struct pci_dev *pdev, u16 cap_offset,
+> > +				     bool use_irq);
+> > +void pci_doe_destroy_mb(struct pci_doe_mb *doe_mb);
+> > +bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type);
+> 
+> Drivers should not be concerned with the intricacies of DOE
+> capabilities and mailboxes.
+
+I think it depends on which driver one is considering.
+
+> 
+> Moreover, the above API doesn't allow different drivers to access
+> the same DOE mailbox concurrently, e.g. if that mailbox supports
+> multiple protocols.  There's no locking to serialize access to the
+> mailbox by the drivers.
+
+Correct it is up to the higher level code to do this.
+
+> 
+> This should be moved to the PCI core instead:  In pci_init_capabilities(),
+> add a new call pci_doe_init() which enumerates all DOE capabilities.
+> Add a list_head to struct pci_dev and add each DOE instance found
+> to that list.  Destroy the list elements in pci_destroy_dev().
+> No locking needed for the list_head, you only ever modify the list
+> on device enumeration and destruction.
+> 
+> Then provide a pci_doe_find_mailbox() library function which drivers
+> call to retrieve the pci_doe_mb for a given pci_dev/vid/type tuple.
+> That avoids the need to traverse the list time and again.
+
+All that could be done above these calls.  I've abandoned the aux bus stuff
+after discussions with Dan.  So perhaps burring this away from the CXL drivers
+is a good idea.  But I still think this can serve as a base within the PCIe
+code.
+
+> 
+> 
+> > +/**
+> > + * struct pci_doe_mb - State for a single DOE mailbox
+> 
+> We generally use the same terms as the spec to make it easier for
+> readers to connect the language in the spec to the implementation.
+> 
+> The spec uniformly refers to "DOE instance".  I guess "mailbox"
+> is slightly more concise, so keep that, but please at least mention
+> the term "instance" in the struct's kernel-doc.
+> 
+> This implementation uses the term "task" for one request/response.
+> That term is not mentioned in the spec at all.  The spec refers to
+> "exchange" and "transfer" on several occasions, so I would have chosen
+> either one of those instead of the somewhat unfortunate "task".
+
+Again this was discussed and we settled on task.  I'm not married to the term
+and s/task/exchange/ is fine with me.  But IFRC Dan was not happy with
+exchange.
+
+> 
+> 
+> > + * This state is used to manage a single DOE mailbox capability.  All fields
+> > + * should be considered opaque to the consumers and the structure passed into
+> > + * the helpers below after being created by devm_pci_doe_create()
+> 
+> If the struct is considered opaque, why is it exposed in a public
+> header file?  Just use a forward declaration in the header
+> so that consumers can pass around pointers to the struct,
+> and hide the declaration proper in doe.c.
+
+I could do that.  It just did not seem important enough to make it that strict.
+
+> 
+> 
+> > + * @pdev: PCI device this belongs to mailbox belongs to
+>                              ^^^^^^^^^^
+> Typo.
+
+oops... yea slipped by in v9 as well.
+
+>
+> 
+> > + * @prots: Array of protocols supported on this DOE
+> > + * @num_prots: Size of prots array
+> 
+> Use @prots instead of prots everywhere in the kernel-doc.
+
+Ok.
+
+> 
+> 
+> > +	/*
+> > +	 * NOTE: doe_mb_prots is freed by pci_doe_free_mb automatically on
+> > +	 * error if pci_doe_cache_protocols() fails past this point.
+> > +	 */
+> 
+> s/doe_mb_prots/doe_mb->prots/
+> s/pci_doe_free_mb/pci_doe_free_mb()/
+
+This note has changed.
+
+> 
+> 
+> > +	/* DOE requests must be a whole number of DW */
+> > +	if (task->request_pl_sz % sizeof(u32))
+> > +		return -EINVAL;
+> 
+> It would be nice if this restriction could be lifted.  SPDM uses
+> requests which are not padded to dword-length.  It can run over other
+> transports which may not impose such restrictions.  The SPDM layer
+> should not need to worry about quirks of the transport layer.
+
+Are you suggesting that this layer PAD the request?  I hear your concern but
+users of this layer will need to understand this in the request payload
+allocated anyway.
+
+> 
+> 
+> > +static irqreturn_t pci_doe_irq_handler(int irq, void *data)
+> > +{
+> > +	struct pci_doe_mb *doe_mb = data;
+> > +	struct pci_dev *pdev = doe_mb->pdev;
+> > +	int offset = doe_mb->cap_offset;
+> > +	u32 val;
+> > +
+> > +	pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
+> > +
+> > +	/* Leave the error case to be handled outside IRQ */
+> > +	if (FIELD_GET(PCI_DOE_STATUS_ERROR, val)) {
+> > +		mod_delayed_work(system_wq, &doe_mb->statemachine, 0);
+> > +		return IRQ_HANDLED;
+> > +	}
+> > +
+> > +	if (FIELD_GET(PCI_DOE_STATUS_INT_STATUS, val)) {
+> > +		pci_write_config_dword(pdev, offset + PCI_DOE_STATUS,
+> > +					PCI_DOE_STATUS_INT_STATUS);
+> > +		mod_delayed_work(system_wq, &doe_mb->statemachine, 0);
+> > +		return IRQ_HANDLED;
+> > +	}
+> > +
+> > +	return IRQ_NONE;
+> > +}
+> 
+> PCIe 6.0, table 7-316 says that an interrupt is also raised when
+> "the DOE Busy bit has been Cleared", yet such an interrupt is
+> not handled here.  It is incorrectly treated as a spurious
+> interrupt by returning IRQ_NONE.  The right thing to do
+> is probably to wake the state machine in case it's polling
+> for the Busy flag to clear.
+
+I thought Jonathan and I had work through how this was correct.  I'll have to
+review those threads.
+
+> 
+> 
+> > +enum pci_doe_state {
+> > +	DOE_IDLE,
+> > +	DOE_WAIT_RESP,
+> > +	DOE_WAIT_ABORT,
+> > +	DOE_WAIT_ABORT_ON_ERR,
+> > +};
+> > +
+> > +#define PCI_DOE_FLAG_ABORT	0
+> > +#define PCI_DOE_FLAG_DEAD	1
+> 
+> That's all internal and should live in doe.c, not the header file.
+
+Sure if struct pci_doe_mb is moved.
+
+Lets see how V9 looks from other perspectives.  I've incorporated some of this
+feedback for V10.
+
+Ira
+
+> Thanks,
+> 
+> Lukas
