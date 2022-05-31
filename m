@@ -2,49 +2,49 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53AC0C433FE
-	for <linux-cxl@archiver.kernel.org>; Tue, 31 May 2022 12:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F63C433EF
+	for <linux-cxl@archiver.kernel.org>; Tue, 31 May 2022 12:39:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241601AbiEaMWE convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 31 May 2022 08:22:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58402 "EHLO
+        id S1344339AbiEaMj6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 31 May 2022 08:39:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232616AbiEaMWD (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 31 May 2022 08:22:03 -0400
+        with ESMTP id S1344329AbiEaMj5 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 31 May 2022 08:39:57 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4320C1400A
-        for <linux-cxl@vger.kernel.org>; Tue, 31 May 2022 05:22:01 -0700 (PDT)
-Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LCBFx6sc6z67w73;
-        Tue, 31 May 2022 20:21:09 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 279EEE0B6
+        for <linux-cxl@vger.kernel.org>; Tue, 31 May 2022 05:39:56 -0700 (PDT)
+Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LCBbh4rCfz6H8VB;
+        Tue, 31 May 2022 20:36:32 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
+ fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 31 May 2022 14:21:59 +0200
-Received: from localhost (10.122.247.231) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 31 May
- 2022 13:21:58 +0100
-Date:   Tue, 31 May 2022 13:21:57 +0100
+ 15.1.2375.24; Tue, 31 May 2022 14:39:53 +0200
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 31 May 2022 13:39:52 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Ben Widawsky <ben.widawsky@intel.com>, <linux-cxl@vger.kernel.org>,
-        <nvdimm@lists.linux.dev>, <patches@lists.linux.dev>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [RFC PATCH 00/15] Region driver
-Message-ID: <20220531132157.000022c7@huawei.com>
-In-Reply-To: <CAPcyv4hkP1iuBxCPTK_FeQ=+afmVOLAAfE6t0z2u2OGH+Crmag@mail.gmail.com>
-References: <20220413183720.2444089-1-ben.widawsky@intel.com>
-        <20220520172325.000043d8@huawei.com>
-        <CAPcyv4hkP1iuBxCPTK_FeQ=+afmVOLAAfE6t0z2u2OGH+Crmag@mail.gmail.com>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+To:     <qemu-devel@nongnu.org>, "Michael S . Tsirkin" <mst@redhat.com>
+CC:     Paolo Bonzini <pbonzini@redhat.com>, <linux-cxl@vger.kernel.org>,
+        <linuxarm@huawei.com>, <alex.bennee@linaro.org>,
+        Marcel Apfelbaum <marcel@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Markus Armbruster <armbru@redhat.com>,
+        Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
+        "Adam Manzanares" <a.manzanares@samsung.com>,
+        Tong Zhang <ztong0001@gmail.com>,
+        "Ben Widawsky" <ben.widawsky@intel.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>
+Subject: [PATCH] hw/cxl: Fix missing write mask for HDM decoder target list registers
+Date:   Tue, 31 May 2022 13:39:53 +0100
+Message-ID: <20220531123953.17582-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 X-Originating-IP: [10.122.247.231]
 X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
  lhreml710-chm.china.huawei.com (10.201.108.61)
@@ -53,91 +53,27 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-....
-
-> > Hi Ben,
-> >
-> > I finally got around to actually trying this out on top of Dan's recent fix set
-> > (I rebased it from the cxl/preview branch on kernel.org).
-> >
-> > I'm not having much luck actually bring up a region.
-> >
-> > The patch set refers to configuring the end point decoders, but all their
-> > sysfs attributes are read only.  Am I missing a dependency somewhere or
-> > is the intent that this series is part of the solution only?
-> >
-> > I'm confused!  
-> 
-> There's a new series that's being reviewed internally before going to the list:
-> 
-> https://gitlab.com/bwidawsk/linux/-/tree/cxl_region-redux3
-> 
-> Given the proximity to the merge window opening and the need to get
-> the "mem_enabled" series staged, I asked Ben to hold it back from the
-> list for now.
-> 
-> There are some changes I am folding into it, but I hope to send it out
-> in the next few days after "mem_enabled" is finalized.
-
-Hi Dan,
-
-I switched from an earlier version of the region code over to a rebase of the tree.
-Two issues below you may already have fixed.
-
-The second is a carry over from an earlier set so I haven't tested
-without it but looks like it's still valid.
-
-Anyhow, thought it might save some cycles to preempt you sending
-out the series if these issues are still present.
-
-Minimal testing so far on these with 2 hb, 2 rp, 4 directly connected
-devices, but once you post I'll test more extensively.  I've not
-really thought about the below much, so might not be best way to fix.
-
-Found a bug in QEMU code as well (missing write masks for the
-target list registers) - will post fix for that shortly.
-
-Thanks,
-
-Jonathan
-
-
-From fa31f37214fcb121428be1ceb87ae335209fa4cc Mon Sep 17 00:00:00 2001
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Date: Tue, 31 May 2022 13:13:51 +0100
-Subject: [PATCH] Fixes for region code
+Without being able to write these registers, no interleaving is possible.
+More refined checks of HDM register state on commit to follow.
 
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/cxl/region.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ hw/cxl/cxl-component-utils.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
-index e81c5b1339ec..fbbf084004d9 100644
---- a/drivers/cxl/region.c
-+++ b/drivers/cxl/region.c
-@@ -229,10 +229,10 @@ static struct cxl_decoder *stage_decoder(struct cxl_region *cxlr,
-
-        return cxld;
+diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
+index 7985c9bfca..993248b5c0 100644
+--- a/hw/cxl/cxl-component-utils.c
++++ b/hw/cxl/cxl-component-utils.c
+@@ -174,6 +174,8 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk)
+         write_msk[R_CXL_HDM_DECODER0_SIZE_LO + i * 0x20] = 0xf0000000;
+         write_msk[R_CXL_HDM_DECODER0_SIZE_HI + i * 0x20] = 0xffffffff;
+         write_msk[R_CXL_HDM_DECODER0_CTRL + i * 0x20] = 0x13ff;
++        write_msk[R_CXL_HDM_DECODER0_TARGET_LIST_LO + i * 0x20] = 0xffffffff;
++        write_msk[R_CXL_HDM_DECODER0_TARGET_LIST_HI + i * 0x20] = 0xffffffff;
+     }
  }
--
-+// calculating whilst working down the tree - so divide granularity of previous level by local ways.
- static int calculate_ig(struct cxl_decoder *pcxld)
- {
--       return cxl_to_interleave_granularity(cxl_from_granularity(pcxld->cip.g) + cxl_from_ways(pcxld->cip.w));
-+       return cxl_to_interleave_granularity(cxl_from_granularity(pcxld->cip.g) - cxl_from_ways(pcxld->cip.w));
- }
-
- static void unstage_decoder(struct cxl_decoder *cxld)
-@@ -302,7 +302,8 @@ static struct cxl_decoder *stage_hb(struct cxl_region *cxlr,
-                          t->nr_targets))
-                return NULL;
-
--       t->target[port_grouping] = root_port;
-+       //      t->target[port_grouping] = root_port;
-+       t->target[hbd->cip.w] = root_port;
-        hbd->cip.w++;
-
-        /* If no switch, root port is connected to memdev */
---
+ 
+-- 
 2.32.0
+
