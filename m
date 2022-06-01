@@ -2,30 +2,43 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 435B1C43334
-	for <linux-cxl@archiver.kernel.org>; Wed,  1 Jun 2022 17:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 970CFC43334
+	for <linux-cxl@archiver.kernel.org>; Wed,  1 Jun 2022 20:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344298AbiFAR5C (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 1 Jun 2022 13:57:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46710 "EHLO
+        id S230256AbiFAUxp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 1 Jun 2022 16:53:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356532AbiFAR46 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Jun 2022 13:56:58 -0400
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 914E36574;
-        Wed,  1 Jun 2022 10:56:49 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id E68A830002502;
-        Wed,  1 Jun 2022 19:56:47 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id DB547350DAF; Wed,  1 Jun 2022 19:56:47 +0200 (CEST)
-Date:   Wed, 1 Jun 2022 19:56:47 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Ira Weiny <ira.weiny@intel.com>
+        with ESMTP id S230254AbiFAUxo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Jun 2022 16:53:44 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C950421112A;
+        Wed,  1 Jun 2022 13:53:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654116822; x=1685652822;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FfeLxW/HpQLw+GEfWrr/3Qjls87VQ3SLjaDsiWsQoDk=;
+  b=OxzaRPYEpYp8GgEoQcyGnQspp09wGeLUMfp7fH+NeL/4ocI2ai16dnl9
+   eNPPuOi8V2H3z+u4b6nWBMI+tdw8/LGl8QefRv1Cy3IC9+J9AknPPCD33
+   tRxZVk0VQL/LhSiCCRz+zFtuBMxGEhW5UBVITaU8kgyq10NrtS9412rGo
+   HyIPBtSTSfdKXJWnqF43oJoNXbDlNdfstbuZwXLMwa18CIKntv+tTL0tD
+   IwLbJhva/dQsWv41EGc/9omTnI7n5OgHz8szWFZ6x32Si9cJvVClRM6ZK
+   le9slYXD9SOSQJ3O25yNR61LWazYAD/YbD2GjEb2YbPtimZwT0kRM0eM9
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10365"; a="301077358"
+X-IronPort-AV: E=Sophos;i="5.91,269,1647327600"; 
+   d="scan'208";a="301077358"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 13:17:38 -0700
+X-IronPort-AV: E=Sophos;i="5.91,269,1647327600"; 
+   d="scan'208";a="720946603"
+Received: from cwmurphy-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.32.23])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 13:17:38 -0700
+Date:   Wed, 1 Jun 2022 13:17:38 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Lukas Wunner <lukas@wunner.de>
 Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -37,7 +50,7 @@ Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         linux-pci@vger.kernel.org
 Subject: Re: [PATCH V8 03/10] PCI: Create PCI library functions in support of
  DOE mailboxes.
-Message-ID: <20220601175647.GA21509@wunner.de>
+Message-ID: <YpfJYujerG2hM4vU@iweiny-desk3>
 References: <20220414203237.2198665-1-ira.weiny@intel.com>
  <20220414203237.2198665-4-ira.weiny@intel.com>
  <20220530190657.GA14765@wunner.de>
@@ -45,41 +58,46 @@ References: <20220414203237.2198665-1-ira.weiny@intel.com>
  <YpbWCYujYDEkMm1B@iweiny-desk3>
  <20220601071808.GA19924@wunner.de>
  <Ypee328j+l6ZdbUT@iweiny-desk3>
+ <20220601175647.GA21509@wunner.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Ypee328j+l6ZdbUT@iweiny-desk3>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20220601175647.GA21509@wunner.de>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Jun 01, 2022 at 10:16:15AM -0700, Ira Weiny wrote:
-> On Wed, Jun 01, 2022 at 09:18:08AM +0200, Lukas Wunner wrote:
-> > You only need to re-check the Data Object Ready bit on the last-but-one
-> > dword in case the function was reset concurrently.  Per sec. 6.30.2,
-> > "An FLR to a Function must result in the aborting of any DOE transfer
-> > in progress."
+On Wed, Jun 01, 2022 at 07:56:47PM +0200, Lukas Wunner wrote:
+> On Wed, Jun 01, 2022 at 10:16:15AM -0700, Ira Weiny wrote:
+> > On Wed, Jun 01, 2022 at 09:18:08AM +0200, Lukas Wunner wrote:
+> > > You only need to re-check the Data Object Ready bit on the last-but-one
+> > > dword in case the function was reset concurrently.  Per sec. 6.30.2,
+> > > "An FLR to a Function must result in the aborting of any DOE transfer
+> > > in progress."
+> > 
+> > I think I disagree.  Even if we do that and an FLR comes before the last read
+> > the last read could be 0's.
 > 
-> I think I disagree.  Even if we do that and an FLR comes before the last read
-> the last read could be 0's.
+> PCIe r6.0, Table 7-316 says:
+> 
+>   "If there is no additional data object ready for transfer, the
+>    DOE instance must clear this bit after the entire data object has been
+>    transferred, as indicated by software writing to the DOE Read Data
+>    Mailbox Register after reading the final DW of the data object."
+> 
+> Remember that you *read* a dword from the mailbox and then acknowledge
+> reception to the mailbox by *writing* a dword to the mailbox.
+> 
+> So you check that the Data Object Ready bit is set before acknowledging
+> the final dword with a register write.  That's race-free.
 
-PCIe r6.0, Table 7-316 says:
+Ok.
 
-  "If there is no additional data object ready for transfer, the
-   DOE instance must clear this bit after the entire data object has been
-   transferred, as indicated by software writing to the DOE Read Data
-   Mailbox Register after reading the final DW of the data object."
+> 
+> (I realize me talking about the "last-but-one dword" above was quite
+> unclear, sorry about that.)
+> 
 
-Remember that you *read* a dword from the mailbox and then acknowledge
-reception to the mailbox by *writing* a dword to the mailbox.
+Ah yes.  Ok, I'll put in a check before the final write.
 
-So you check that the Data Object Ready bit is set before acknowledging
-the final dword with a register write.  That's race-free.
-
-(I realize me talking about the "last-but-one dword" above was quite
-unclear, sorry about that.)
-
-Thanks,
-
-Lukas
+Ira
