@@ -2,92 +2,92 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94302C43334
-	for <linux-cxl@archiver.kernel.org>; Wed,  1 Jun 2022 16:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8128C43334
+	for <linux-cxl@archiver.kernel.org>; Wed,  1 Jun 2022 16:55:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356238AbiFAQql (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 1 Jun 2022 12:46:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40352 "EHLO
+        id S1349371AbiFAQzn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 1 Jun 2022 12:55:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348261AbiFAQqi (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Jun 2022 12:46:38 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F210C9E9DA
-        for <linux-cxl@vger.kernel.org>; Wed,  1 Jun 2022 09:46:37 -0700 (PDT)
-Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LCw0f0yP2z684X6;
-        Thu,  2 Jun 2022 00:42:10 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 1 Jun 2022 18:46:36 +0200
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 1 Jun 2022 17:46:35 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, <qemu-devel@nongnu.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>
-CC:     <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
-        <alex.bennee@linaro.org>, Marcel Apfelbaum <marcel@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Markus Armbruster <armbru@redhat.com>,
-        "Mark Cave-Ayland" <mark.cave-ayland@ilande.co.uk>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        Tong Zhang <ztong0001@gmail.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>
-Subject: [PATCH v2 8/8] hw/machine: Drop cxl_supported flag as no longer useful
-Date:   Wed, 1 Jun 2022 17:42:35 +0100
-Message-ID: <20220601164235.2117-9-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220601164235.2117-1-Jonathan.Cameron@huawei.com>
-References: <20220601164235.2117-1-Jonathan.Cameron@huawei.com>
+        with ESMTP id S1351331AbiFAQzm (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Jun 2022 12:55:42 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EFF79E9E0;
+        Wed,  1 Jun 2022 09:55:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654102542; x=1685638542;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=73mc9UeFg58ka932G9d5Vhn6ii7yZChtzbk6FVFDixA=;
+  b=FiRQhHIe7y4rkj4KBb8VCynHNDzTipwleFNqCpVfpKEgPGE1exw894NX
+   TMYfXQ4zKWLpvPEHUgv98SKJJIx25v+7VKi4BDgE/c5DxVQeqRcXZPqYK
+   5DqyTzPiviaxgB2l/uS6mVe21fvuJjtN1CmTRavoldv7mW4lPsxiBFUuP
+   TSzSNTKkUaOvLbsPNrS/80w6Gcb8shLbGjXiqiZIPGgcFoHhCIdIvh4pZ
+   sYneSxW290LvqgLung0E64GzBL6j8ldPx6f9lAZCe7DfVQYuTF4+Cy6nO
+   occajMI46O5naEOgDeoOyEWLpT3LoxtGsm/VNQbGWe1o82UQ3WpMN8o39
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10365"; a="275733973"
+X-IronPort-AV: E=Sophos;i="5.91,268,1647327600"; 
+   d="scan'208";a="275733973"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 09:55:38 -0700
+X-IronPort-AV: E=Sophos;i="5.91,268,1647327600"; 
+   d="scan'208";a="552399086"
+Received: from cwmurphy-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.32.23])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 09:55:37 -0700
+Date:   Wed, 1 Jun 2022 09:55:37 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <ben@bwidawsk.net>, linux-kernel@vger.kernel.org,
+        linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        a.manzanares@samsung.com
+Subject: Re: [PATCH v9 3/9] PCI: Create PCI library functions in support of
+ DOE mailboxes.
+Message-ID: <YpeaCSvFo1Mqvsgv@iweiny-desk3>
+References: <20220531152632.1397976-1-ira.weiny@intel.com>
+ <20220531152632.1397976-4-ira.weiny@intel.com>
+ <20220531172507.5ert5tgwellpe7fx@offworld>
+ <20220531175652.qog7xaqmypy36whu@offworld>
+ <Ypbw3d/vUyMHGcBW@iweiny-desk3>
+ <20220601135909.mvnam4vvfmofpsdb@offworld>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220601135909.mvnam4vvfmofpsdb@offworld>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-As all the CXL elements have moved to boards that support
-CXL, there is no need to maintain a top level flag.
+On Wed, Jun 01, 2022 at 06:59:09AM -0700, Davidlohr Bueso wrote:
+> On Tue, 31 May 2022, Ira Weiny wrote:
+> > Thinking about it I don't see a benefit to a rwlock.  We don't have multiple
+> > readers.
+> 
+> ... but you have concurrent workqueues reading the value of cur_task.
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- hw/i386/pc.c        | 1 -
- include/hw/boards.h | 1 -
- 2 files changed, 2 deletions(-)
+No, concurrent workqueues are reading the value of different DOE mailboxes'
+cur_task.  Each mailbox has it's own lock for its current task.
 
-diff --git a/hw/i386/pc.c b/hw/i386/pc.c
-index a0c0d69698..1b6067ff22 100644
---- a/hw/i386/pc.c
-+++ b/hw/i386/pc.c
-@@ -1804,7 +1804,6 @@ static void pc_machine_class_init(ObjectClass *oc, void *data)
-     mc->default_cpu_type = TARGET_DEFAULT_CPU_TYPE;
-     mc->nvdimm_supported = true;
-     mc->smp_props.dies_supported = true;
--    mc->cxl_supported = true;
-     mc->default_ram_id = "pc.ram";
- 
-     object_class_property_add(oc, PC_MACHINE_MAX_RAM_BELOW_4G, "size",
-diff --git a/include/hw/boards.h b/include/hw/boards.h
-index 031f5f884d..d94edcef28 100644
---- a/include/hw/boards.h
-+++ b/include/hw/boards.h
-@@ -269,7 +269,6 @@ struct MachineClass {
-     bool ignore_boot_device_suffixes;
-     bool smbus_no_migration_support;
-     bool nvdimm_supported;
--    bool cxl_supported;
-     bool numa_mem_supported;
-     bool auto_enable_numa;
-     SMPCompatProps smp_props;
--- 
-2.32.0
+This is a multiple writers to a single reader pattern.  The lock serializes
+driver requests (possibly from different threads) into the single mailbox as
+well as signaling when the cur_task is done; retire_cur_task().
 
+At the same time multiple mailboxes can be running parallel.
+
+I don't think taking the lock in doe_statemachine_work() is technically
+necessary.   But I left it there for completeness because if the queue depth is
+increased like it was in Jonathans original code the locking around cur_task
+will need to be adjusted in this area.
+
+Ira
+
+> 
+> Thanks,
+> Davidlohr
