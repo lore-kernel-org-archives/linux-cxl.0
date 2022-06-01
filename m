@@ -2,106 +2,166 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BF4C433F5
-	for <linux-cxl@archiver.kernel.org>; Wed,  1 Jun 2022 04:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7E4C433F5
+	for <linux-cxl@archiver.kernel.org>; Wed,  1 Jun 2022 07:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242217AbiFAEys (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 1 Jun 2022 00:54:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58726 "EHLO
+        id S1344350AbiFAHSU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 1 Jun 2022 03:18:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241589AbiFAEyr (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Jun 2022 00:54:47 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F29B9D06A;
-        Tue, 31 May 2022 21:54:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654059286; x=1685595286;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=aKg84/s6yFHRdNM0DCpugLBZclSxYw6qIlvYCF8pQgo=;
-  b=A9fIvJ/YIe6IGmu0ItXBGPw9IJCf1uKTu/1VJU7z1l6XZboI9fTBLbbG
-   fkS+tmB5lx5L2c9wenRTGYuYy15WboAUUfhTOsmc/3heMPJ+RgzGlu6Jk
-   BBduOA2U7EruRLcQpVaAZxvSCVM8TUGcsZv11ktG6t2afN8fejOj1VVfe
-   1hv5y3P5AGPVu+epRpHl5qG1eSVa/wDVQhXjtq/rMbSAI9S8vXaqMpRdM
-   8O4wuRQDJJdVplbotW/yvjlkdsMj0b+OeRHqfNnqcY7G5F8bJbPo52Mp4
-   bqrukeNmWUNFuREukBYitvIJC7JvAoKsRa9+4a1gPJDhodtlRJfgj/beb
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10364"; a="275481349"
-X-IronPort-AV: E=Sophos;i="5.91,266,1647327600"; 
-   d="scan'208";a="275481349"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 21:54:45 -0700
-X-IronPort-AV: E=Sophos;i="5.91,266,1647327600"; 
-   d="scan'208";a="645329689"
-Received: from mdossant-mobl1.amr.corp.intel.com (HELO localhost) ([10.212.154.135])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 21:54:45 -0700
-Date:   Tue, 31 May 2022 21:54:44 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Alison Schofield <alison.schofield@intel.com>
-Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        with ESMTP id S1349941AbiFAHST (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Jun 2022 03:18:19 -0400
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EEFE30572;
+        Wed,  1 Jun 2022 00:18:15 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 229E71002A013;
+        Wed,  1 Jun 2022 09:18:09 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id F2FF5118737; Wed,  1 Jun 2022 09:18:08 +0200 (CEST)
+Date:   Wed, 1 Jun 2022 09:18:08 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        Ben Widawsky <ben@bwidawsk.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V9 8/9] cxl/port: Retry reading CDAT on failure
-Message-ID: <YpbxFL4hhZMT2eIW@iweiny-desk3>
-References: <20220531152632.1397976-1-ira.weiny@intel.com>
- <20220531152632.1397976-9-ira.weiny@intel.com>
- <20220531170743.GA1457068@alison-desk>
+        Christoph Hellwig <hch@infradead.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V8 03/10] PCI: Create PCI library functions in support of
+ DOE mailboxes.
+Message-ID: <20220601071808.GA19924@wunner.de>
+References: <20220414203237.2198665-1-ira.weiny@intel.com>
+ <20220414203237.2198665-4-ira.weiny@intel.com>
+ <20220530190657.GA14765@wunner.de>
+ <20220531113350.0000421e@Huawei.com>
+ <YpbWCYujYDEkMm1B@iweiny-desk3>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220531170743.GA1457068@alison-desk>
+In-Reply-To: <YpbWCYujYDEkMm1B@iweiny-desk3>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, May 31, 2022 at 10:07:43AM -0700, Alison Schofield wrote:
-> On Tue, May 31, 2022 at 08:26:31AM -0700, Ira Weiny wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
+On Tue, May 31, 2022 at 07:59:21PM -0700, Ira Weiny wrote:
+> On Tue, May 31, 2022 at 11:33:50AM +0100, Jonathan Cameron wrote:
+> > On Mon, 30 May 2022 21:06:57 +0200 Lukas Wunner <lukas@wunner.de> wrote:
+> > > On Thu, Apr 14, 2022 at 01:32:30PM -0700, ira.weiny@intel.com wrote:
+> > > > +	/* First 2 dwords have already been read */
+> > > > +	length -= 2;
+> > > > +	/* Read the rest of the response payload */
+> > > > +	for (i = 0; i < min(length, task->response_pl_sz / sizeof(u32)); i++) {
+> > > > +		pci_read_config_dword(pdev, offset + PCI_DOE_READ,
+> > > > +				      &task->response_pl[i]);
+> > > > +		pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
+> > > > +	}  
+> > > 
+> > > You need to check the Data Object Ready bit.  The device may clear the
+> > > bit prematurely (e.g. as a result of a concurrent FLR or Conventional
+> > > Reset).  You'll continue reading zero dwords from the mailbox and
+> > > pretend success to the caller even though the response is truncated.
+> > > 
+> > > If you're concerned about performance when checking the bit on every
+> > > loop iteration, checking it only on the last but one iteration should
+> > > be sufficient to detect truncation.
 > > 
-> > The CDAT read may fail for a number of reasons but mainly it is possible
-> > to get different parts of a valid state.  The checksum in the CDAT table
-> > protects against this.
-> > 
-> > Now that the cdat data is validated issue a retries if the CDAT read
-> > fails.  For now 5 retries are implemented.
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > ---
+> > Good catch - I hate corner cases.  Thankfully this one is trivial to
+> > check for.
 > 
-> snip
+> Ok looking at the spec:  Strictly speaking this needs to happen multiple
+> times both in doe_statemachine_work() and inside pci_doe_recv_resp();
+> not just in this loop.  :-(
 > 
-> > +
-> > +void read_cdat_data(struct cxl_port *port)
-> > +{
-> > +	int retries = 5;
-> > +	int rc;
-> > +
-> > +	while (retries--) {
-> > +		rc = __read_cdat_data(port);
-> > +		if (!rc)
-> > +			break;
-> > +		dev_err(&port->dev,
-> > +			"CDAT data read error rc=%d (retries %d)\n",
-> > +			rc, retries);
-> > +	}
-> 
-> Perhaps dev_dbg() on retries and dev_err() only when retries are exhausted.
+> This is because, the check in doe_statemachine_work() only covers the
+> 1st dword read IIUC.
 
-Yes thanks!
-Ira
+The spec says "this bit indicates the DOE instance has a *data object*
+available to be read by system firmware/software".
 
-> 
-> 
-> >  }
-> >  EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
-> > -- 
-> > 2.35.1
+So, the entire object is available for reading, not just one dword.
+
+You've already got checks in place for the first two dwords which
+cover reading an "all zeroes" response.  No need to amend them.
+
+You only need to re-check the Data Object Ready bit on the last-but-one
+dword in case the function was reset concurrently.  Per sec. 6.30.2,
+"An FLR to a Function must result in the aborting of any DOE transfer
+in progress."
+
+
+> > > > +static irqreturn_t pci_doe_irq_handler(int irq, void *data)
+> > > > +{
+> > > > +	struct pci_doe_mb *doe_mb = data;
+> > > > +	struct pci_dev *pdev = doe_mb->pdev;
+> > > > +	int offset = doe_mb->cap_offset;
+> > > > +	u32 val;
+> > > > +
+> > > > +	pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
+> > > > +
+> > > > +	/* Leave the error case to be handled outside IRQ */
+> > > > +	if (FIELD_GET(PCI_DOE_STATUS_ERROR, val)) {
+> > > > +		mod_delayed_work(system_wq, &doe_mb->statemachine, 0);
+> > > > +		return IRQ_HANDLED;
+> > > > +	}
+> > > > +
+> > > > +	if (FIELD_GET(PCI_DOE_STATUS_INT_STATUS, val)) {
+> > > > +		pci_write_config_dword(pdev, offset + PCI_DOE_STATUS,
+> > > > +					PCI_DOE_STATUS_INT_STATUS);
+> > > > +		mod_delayed_work(system_wq, &doe_mb->statemachine, 0);
+> > > > +		return IRQ_HANDLED;
+> > > > +	}
+> > > > +
+> > > > +	return IRQ_NONE;
+> > > > +}  
+> > > 
+> > > PCIe 6.0, table 7-316 says that an interrupt is also raised when
+> > > "the DOE Busy bit has been Cleared", yet such an interrupt is
+> > > not handled here.  It is incorrectly treated as a spurious
+> > > interrupt by returning IRQ_NONE.  The right thing to do
+> > > is probably to wake the state machine in case it's polling
+> > > for the Busy flag to clear.
 > > 
+> > Ah. I remember testing this via a lot of hacking on the QEMU code
+> > to inject the various races that can occur (it was really ugly to do).
+> > 
+> > Guess we lost the handling at some point.  I think your fix
+> > is the right one.
+> 
+> Perhaps I am missing something but digging into this more.  I disagree
+> that the handler fails to handle this case.  If I read the spec correctly
+> DOE Interrupt Status must be set when an interrupt is generated.
+> The handler wakes the state machine in that case.  The state machine
+> then checks for busy if there is work to be done.
+
+Right, I was mistaken, sorry for the noise.
+
+
+> Normally we would not even need to check for status error.  But that is
+> special cased because clearing that status is left to the state machine.
+
+That however looks wrong because the DOE Interrupt Status bit is never
+cleared after a DOE Error is signaled.  The state machine performs an
+explicit abort upon an error by setting the DOE Abort bit, but that
+doesn't seem to clear DOE Interrupt Status:
+
+Per section 6.30.2, "At any time, the system firmware/software is
+permitted to set the DOE Abort bit in the DOE Control Register,
+and the DOE instance must Clear the Data Object Ready bit,
+if not already Clear, and Clear the DOE Error bit, if already Set,
+in the DOE Status Register, within 1 second."
+
+No mention of the DOE Interrupt Status bit, so we cannot assume that
+it's cleared by a DOE Abort and we must clear it explicitly.
+
+Thanks,
+
+Lukas
