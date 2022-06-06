@@ -2,263 +2,262 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF54C43334
-	for <linux-cxl@archiver.kernel.org>; Sun,  5 Jun 2022 00:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E47FC433EF
+	for <linux-cxl@archiver.kernel.org>; Mon,  6 Jun 2022 14:46:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244188AbiFEAwF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 4 Jun 2022 20:52:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47664 "EHLO
+        id S240012AbiFFOq5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 6 Jun 2022 10:46:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243136AbiFEAvb (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 4 Jun 2022 20:51:31 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 319034F465;
-        Sat,  4 Jun 2022 17:51:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654390281; x=1685926281;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=gWOJOaP6IeDKY3DDX8dKai+gQREln1Q+GDMupv/9Q+E=;
-  b=QUgVEQzN7aCK5Zon3Q2wkc/vER/+dc/uE0WFqvSZhaepDGyIE15si3F5
-   sOmJLqVsAJfPh4twIJE9iMJBgk1po1kK5z2JjyGVfkTPQM675ETcbmyau
-   2WjLjSHqTBod5N0gHkM5jRjSMeP8C0WwhtSpddwEMSLMfopkr8eMvFVRr
-   ugR0Gap4f74R9EbzlZyWrhpCgMi+WP0tQudTCO464KjpjhB1GYaeD5Kf5
-   VKpDiWNCZ3TnhvrEQnX6my7rwSzYxuwSeMSy84EpSuPkMQFCNe60UUzCZ
-   Ax/CMo77M9DteyaJJ8WMQUKl9Iwm6GQz6sENTnrtxP9ctbNm5gxK5g94Z
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10368"; a="258587699"
-X-IronPort-AV: E=Sophos;i="5.91,278,1647327600"; 
-   d="scan'208";a="258587699"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2022 17:51:21 -0700
-X-IronPort-AV: E=Sophos;i="5.91,278,1647327600"; 
-   d="scan'208";a="553856277"
-Received: from aftome-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.107.207])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2022 17:51:20 -0700
-From:   ira.weiny@intel.com
-To:     Dan Williams <dan.j.williams@intel.com>,
+        with ESMTP id S240031AbiFFOq4 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 6 Jun 2022 10:46:56 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F09D8694A7;
+        Mon,  6 Jun 2022 07:46:52 -0700 (PDT)
+Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LGx7D3bZcz67vyp;
+        Mon,  6 Jun 2022 22:43:20 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2375.24; Mon, 6 Jun 2022 16:46:49 +0200
+Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 6 Jun
+ 2022 15:46:49 +0100
+Date:   Mon, 6 Jun 2022 15:46:46 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Lukas Wunner <lukas@wunner.de>,
+        Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <ben@bwidawsk.net>, linux-kernel@vger.kernel.org,
-        linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH V10 9/9] cxl/port: Parse out DSMAS data from CDAT table
-Date:   Sat,  4 Jun 2022 17:50:49 -0700
-Message-Id: <20220605005049.2155874-10-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220605005049.2155874-1-ira.weiny@intel.com>
-References: <20220605005049.2155874-1-ira.weiny@intel.com>
+        Ben Widawsky <ben.widawsky@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH V8 03/10] PCI: Create PCI library functions in support
+ of DOE mailboxes.
+Message-ID: <20220606154646.00001663@Huawei.com>
+In-Reply-To: <Ypee328j+l6ZdbUT@iweiny-desk3>
+References: <20220414203237.2198665-1-ira.weiny@intel.com>
+        <20220414203237.2198665-4-ira.weiny@intel.com>
+        <20220530190657.GA14765@wunner.de>
+        <20220531113350.0000421e@Huawei.com>
+        <YpbWCYujYDEkMm1B@iweiny-desk3>
+        <20220601071808.GA19924@wunner.de>
+        <Ypee328j+l6ZdbUT@iweiny-desk3>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.42]
+X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+On Wed, 1 Jun 2022 10:16:15 -0700
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-CXL Ports with memory devices attached need the information from the
-Device Scoped Memory Affinity Structure (DSMAS).  This information is
-contained within the CDAT table buffer which is previously read and
-cached in the port device.
+> On Wed, Jun 01, 2022 at 09:18:08AM +0200, Lukas Wunner wrote:
+> > On Tue, May 31, 2022 at 07:59:21PM -0700, Ira Weiny wrote:  
+> > > On Tue, May 31, 2022 at 11:33:50AM +0100, Jonathan Cameron wrote:  
+> > > > On Mon, 30 May 2022 21:06:57 +0200 Lukas Wunner <lukas@wunner.de> wrote:  
+> > > > > On Thu, Apr 14, 2022 at 01:32:30PM -0700, ira.weiny@intel.com wrote:  
+> > > > > > +	/* First 2 dwords have already been read */
+> > > > > > +	length -= 2;
+> > > > > > +	/* Read the rest of the response payload */
+> > > > > > +	for (i = 0; i < min(length, task->response_pl_sz / sizeof(u32)); i++) {
+> > > > > > +		pci_read_config_dword(pdev, offset + PCI_DOE_READ,
+> > > > > > +				      &task->response_pl[i]);
+> > > > > > +		pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
+> > > > > > +	}    
+> > > > > 
+> > > > > You need to check the Data Object Ready bit.  The device may clear the
+> > > > > bit prematurely (e.g. as a result of a concurrent FLR or Conventional
+> > > > > Reset).  You'll continue reading zero dwords from the mailbox and
+> > > > > pretend success to the caller even though the response is truncated.
+> > > > > 
+> > > > > If you're concerned about performance when checking the bit on every
+> > > > > loop iteration, checking it only on the last but one iteration should
+> > > > > be sufficient to detect truncation.  
+> > > > 
+> > > > Good catch - I hate corner cases.  Thankfully this one is trivial to
+> > > > check for.  
+> > > 
+> > > Ok looking at the spec:  Strictly speaking this needs to happen multiple
+> > > times both in doe_statemachine_work() and inside pci_doe_recv_resp();
+> > > not just in this loop.  :-(
+> > > 
+> > > This is because, the check in doe_statemachine_work() only covers the
+> > > 1st dword read IIUC.  
+> > 
+> > The spec says "this bit indicates the DOE instance has a *data object*
+> > available to be read by system firmware/software".  
+> 
+> Ok yea.  I got confused by step 6 in sec 6.30.2.
+> 
+> > 
+> > So, the entire object is available for reading, not just one dword.  
+> 
+> Yes cool!
+> 
+> > 
+> > You've already got checks in place for the first two dwords which
+> > cover reading an "all zeroes" response.  No need to amend them.
+> > 
+> > You only need to re-check the Data Object Ready bit on the last-but-one
+> > dword in case the function was reset concurrently.  Per sec. 6.30.2,
+> > "An FLR to a Function must result in the aborting of any DOE transfer
+> > in progress."  
+> 
+> I think I disagree.  Even if we do that and an FLR comes before the last read
+> the last read could be 0's.
+> 
+> I think the interpretation of the data needs to happen above this and if an FLR
+> happens during this read we are going to have other issues.
+> 
+> But I can add the check if you feel strongly about it.
+> 
+> > 
+> >   
+> > > > > > +static irqreturn_t pci_doe_irq_handler(int irq, void *data)
+> > > > > > +{
+> > > > > > +	struct pci_doe_mb *doe_mb = data;
+> > > > > > +	struct pci_dev *pdev = doe_mb->pdev;
+> > > > > > +	int offset = doe_mb->cap_offset;
+> > > > > > +	u32 val;
+> > > > > > +
+> > > > > > +	pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
+> > > > > > +
+> > > > > > +	/* Leave the error case to be handled outside IRQ */
+> > > > > > +	if (FIELD_GET(PCI_DOE_STATUS_ERROR, val)) {
+> > > > > > +		mod_delayed_work(system_wq, &doe_mb->statemachine, 0);
+> > > > > > +		return IRQ_HANDLED;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	if (FIELD_GET(PCI_DOE_STATUS_INT_STATUS, val)) {
+> > > > > > +		pci_write_config_dword(pdev, offset + PCI_DOE_STATUS,
+> > > > > > +					PCI_DOE_STATUS_INT_STATUS);
+> > > > > > +		mod_delayed_work(system_wq, &doe_mb->statemachine, 0);
+> > > > > > +		return IRQ_HANDLED;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	return IRQ_NONE;
+> > > > > > +}    
+> > > > > 
+> > > > > PCIe 6.0, table 7-316 says that an interrupt is also raised when
+> > > > > "the DOE Busy bit has been Cleared", yet such an interrupt is
+> > > > > not handled here.  It is incorrectly treated as a spurious
+> > > > > interrupt by returning IRQ_NONE.  The right thing to do
+> > > > > is probably to wake the state machine in case it's polling
+> > > > > for the Busy flag to clear.  
+> > > > 
+> > > > Ah. I remember testing this via a lot of hacking on the QEMU code
+> > > > to inject the various races that can occur (it was really ugly to do).
+> > > > 
+> > > > Guess we lost the handling at some point.  I think your fix
+> > > > is the right one.  
+> > > 
+> > > Perhaps I am missing something but digging into this more.  I disagree
+> > > that the handler fails to handle this case.  If I read the spec correctly
+> > > DOE Interrupt Status must be set when an interrupt is generated.
+> > > The handler wakes the state machine in that case.  The state machine
+> > > then checks for busy if there is work to be done.  
+> > 
+> > Right, I was mistaken, sorry for the noise.  
+> 
+> NP I'm not always following this either.
+> 
+> > 
+> >   
+> > > Normally we would not even need to check for status error.  But that is
+> > > special cased because clearing that status is left to the state machine.  
+> > 
+> > That however looks wrong because the DOE Interrupt Status bit is never
+> > cleared after a DOE Error is signaled.  The state machine performs an
+> > explicit abort upon an error by setting the DOE Abort bit, but that
+> > doesn't seem to clear DOE Interrupt Status:
+> > 
+> > Per section 6.30.2, "At any time, the system firmware/software is
+> > permitted to set the DOE Abort bit in the DOE Control Register,
+> > and the DOE instance must Clear the Data Object Ready bit,
+> > if not already Clear, and Clear the DOE Error bit, if already Set,
+> > in the DOE Status Register, within 1 second."  
+> 
+> I thought that meant the hardware (the DOE instance) must clear those bits
+> within 1 second?
+> 
+> > 
+> > No mention of the DOE Interrupt Status bit, so we cannot assume that
+> > it's cleared by a DOE Abort and we must clear it explicitly.  
+> 
+> Oh...  yea.  Jonathan?  We discussed this before and I was convinced it worked
+> but I think Lukas is correct here.
 
-If CDAT data is available, parse and cache DSMAS data from the table.
-Store this data in unmarshaled struct dsmas data structures for ease of
-use later.
+Hmm. I thought we were good as well, but Lukas is correct in saying
+the interrupt status bit isn't cleared (which is 'novel' give the associated
+bit to tell you what the interrupt means will be cleared). 
 
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+I'm not sure I want to think around the race conditions that result...
 
----
-Changes from V8
-	Adjust to the cdat data being in cxl_port
+> 
+> Should we drop the special case in pci_doe_irq_handler() and just clear the
+> status always?  Or should we wait and clear it is pci_doe_abort_start?
 
-Changes from V7
-	Rebased on cxl-pending
+I don't think it matters.  pci_doe_irq_handler() seems a little cleaner.
 
-Changes from V6
-	Move to port.c
-	It is not an error if no DSMAS data is found
+I've not figured out completely if there are races however...
 
-Changes from V5
-	Fix up sparse warnings
-	Split out cdat_hdr_valid()
-	Update cdat_hdr_valid()
-		Remove revision and cs field parsing
-			There is no point in these
-		Add seq check and debug print.
-	From Jonathan
-		Add spaces around '+' and '/'
-		use devm_krealloc() for dmas_ary
----
- drivers/cxl/cdat.h     | 17 +++++++++++
- drivers/cxl/core/pci.c | 65 ++++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h      |  2 ++
- drivers/cxl/cxlmem.h   |  4 +++
- drivers/cxl/cxlpci.h   |  1 +
- drivers/cxl/mem.c      |  1 +
- 6 files changed, 90 insertions(+)
+It is set when no already set and we get transitions of any of the following:
+- DOE error bit set (this can't happen until abort so no race here)
 
-diff --git a/drivers/cxl/cdat.h b/drivers/cxl/cdat.h
-index 3d8945612511..0a510f73fe6d 100644
---- a/drivers/cxl/cdat.h
-+++ b/drivers/cxl/cdat.h
-@@ -85,6 +85,23 @@
- 
- #define CXL_DOE_PROTOCOL_TABLE_ACCESS 2
- 
-+/**
-+ * struct cxl_dsmas - host unmarshaled version of DSMAS data
-+ *
-+ * As defined in the Coherent Device Attribute Table (CDAT) specification this
-+ * represents a single DSMAS entry in that table.
-+ *
-+ * @dpa_base: The lowest Device Physical Address associated with this DSMAD
-+ * @length: Length in bytes of this DSMAD
-+ * @non_volatile: If set, the memory region represents Non-Volatile memory
-+ */
-+struct cxl_dsmas {
-+	u64 dpa_base;
-+	u64 length;
-+	/* Flags */
-+	u8 non_volatile:1;
-+};
+- Data Object Ready bit is set: Can this happen with the DOE error set? I don't
+  immediately see language saying it can't. However, I don't think it can
+  for any of the challenge response protocols yet defined (and there are other
+  problems if anyone wants to implement unsolicited messages)
+
+- DOE busy bit has cleared - can definitely happen after an abort (which is
+  fine as nothing to do anyway, so we'll handle a pointless interrupt).
+  Could it in theory happen when error is set? I think not but only because
+  of the statement  "Clear this bit when it is able to receive a new data
+  object."
+
+So I think we are fine doing it preabort, but wouldn't put it past a hardware
+designer to find some path through that which results in a bonus interrupt
+and potentially us resetting twice.
+
+If we clear it at the end of abort instead, what happens?
+Definitely no interrupts until we clear it. As we are doing query response
+protocols only, no new data until state machine moves on, so fine there.
+
+So what about just doing it unconditionally..
+
++	case DOE_WAIT_ABORT:
++	case DOE_WAIT_ABORT_ON_ERR:
++		pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
 +
- /**
-  * struct cxl_cdat - CXL CDAT data
-  *
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index e68f13e66fcf..9666cc4a67aa 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -673,3 +673,68 @@ void read_cdat_data(struct cxl_port *port)
- 		retries);
- }
- EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
-+
-+void parse_dsmas(struct cxl_memdev *cxlmd, struct cxl_port *port)
-+{
-+	struct device *dev = &port->dev;
-+	struct cxl_dsmas *dsmas_ary = NULL;
-+	u32 *data = port->cdat.table;
-+	int bytes_left = port->cdat.length;
-+	int nr_dsmas = 0;
-+
-+	if (!data) {
-+		dev_info(dev, "No CDAT data available for DSMAS\n");
-+		return;
-+	}
-+
-+	/* Skip header */
-+	data += CDAT_HEADER_LENGTH_DW;
-+	bytes_left -= CDAT_HEADER_LENGTH_BYTES;
-+
-+	while (bytes_left > 0) {
-+		u32 *cur_rec = data;
-+		u8 type = FIELD_GET(CDAT_STRUCTURE_DW0_TYPE, cur_rec[0]);
-+		u16 length = FIELD_GET(CDAT_STRUCTURE_DW0_LENGTH, cur_rec[0]);
-+
-+		if (type == CDAT_STRUCTURE_DW0_TYPE_DSMAS) {
-+			struct cxl_dsmas *new_ary;
-+			u8 flags;
-+
-+			new_ary = devm_krealloc(dev, dsmas_ary,
-+					   sizeof(*dsmas_ary) * (nr_dsmas + 1),
-+					   GFP_KERNEL);
-+			if (!new_ary) {
-+				dev_err(dev,
-+					"Failed to allocate memory for DSMAS data (nr_dsmas %d)\n",
-+					nr_dsmas);
-+				return;
-+			}
-+			dsmas_ary = new_ary;
-+
-+			flags = FIELD_GET(CDAT_DSMAS_DW1_FLAGS, cur_rec[1]);
-+
-+			dsmas_ary[nr_dsmas].dpa_base = CDAT_DSMAS_DPA_OFFSET(cur_rec);
-+			dsmas_ary[nr_dsmas].length = CDAT_DSMAS_DPA_LEN(cur_rec);
-+			dsmas_ary[nr_dsmas].non_volatile = CDAT_DSMAS_NON_VOLATILE(flags);
-+
-+			dev_dbg(dev, "DSMAS %d: %llx:%llx %s\n",
-+				nr_dsmas,
-+				dsmas_ary[nr_dsmas].dpa_base,
-+				dsmas_ary[nr_dsmas].dpa_base +
-+					dsmas_ary[nr_dsmas].length,
-+				(dsmas_ary[nr_dsmas].non_volatile ?
-+					"Persistent" : "Volatile")
-+				);
-+
-+			nr_dsmas++;
-+		}
-+
-+		data += (length / sizeof(u32));
-+		bytes_left -= length;
-+	}
-+
-+	dev_dbg(dev, "Found %d DSMAS entries\n", nr_dsmas);
-+	cxlmd->dsmas_ary = dsmas_ary;
-+	cxlmd->nr_dsmas = nr_dsmas;
-+}
-+EXPORT_SYMBOL_NS_GPL(parse_dsmas, CXL);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 531b77d296c7..4d779a8fb807 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -10,6 +10,8 @@
- #include <linux/io.h>
- #include "cdat.h"
- 
-+#include "cdat.h"
-+
- /**
-  * DOC: cxl objects
-  *
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 4d2764b865ab..ce5b00f3ebcb 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -36,6 +36,8 @@
-  * @cxlds: The device state backing this device
-  * @detach_work: active memdev lost a port in its ancestry
-  * @id: id number of this memdev instance.
-+ * @dsmas_ary: Array of DSMAS entries as parsed from the CDAT table
-+ * @nr_dsmas: Number of entries in dsmas_ary
-  */
- struct cxl_memdev {
- 	struct device dev;
-@@ -43,6 +45,8 @@ struct cxl_memdev {
- 	struct cxl_dev_state *cxlds;
- 	struct work_struct detach_work;
- 	int id;
-+	struct cxl_dsmas *dsmas_ary;
-+	int nr_dsmas;
- };
- 
- static inline struct cxl_memdev *to_cxl_memdev(struct device *dev)
-diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-index 71009a167a92..44d1c2b83aab 100644
---- a/drivers/cxl/cxlpci.h
-+++ b/drivers/cxl/cxlpci.h
-@@ -76,4 +76,5 @@ struct cxl_dev_state;
- int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm);
- void cxl_cache_cdat_mb(struct cxl_port *port);
- void read_cdat_data(struct cxl_port *port);
-+void parse_dsmas(struct cxl_memdev *cxlmd, struct cxl_port *port);
- #endif /* __CXL_PCI_H__ */
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index c310f1fd3db0..a8768df4ae38 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -35,6 +35,7 @@ static int create_endpoint(struct cxl_memdev *cxlmd,
- 	if (IS_ERR(endpoint))
- 		return PTR_ERR(endpoint);
- 
-+	parse_dsmas(cxlmd, endpoint);
- 	dev_dbg(&cxlmd->dev, "add: %s\n", dev_name(&endpoint->dev));
- 
- 	if (!endpoint->dev.driver) {
--- 
-2.35.1
++		if (!FIELD_GET(PCI_DOE_STATUS_ERROR, val) &&
++		    !FIELD_GET(PCI_DOE_STATUS_BUSY, val)) {
+
+	here...
+
++			/* Back to normal state - carry on */
++			retire_cur_task(doe_mb);
+
+This feels a little bit more 'standard' as we are allowing new interrupts
+only after everything is back to a nice state.
+
+> 
+> Ira
+> 
+> > 
+> > Thanks,
+> > 
+> > Lukas  
 
