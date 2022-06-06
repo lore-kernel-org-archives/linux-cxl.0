@@ -2,116 +2,78 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E69CCCA481
-	for <linux-cxl@archiver.kernel.org>; Mon,  6 Jun 2022 14:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF80C43334
+	for <linux-cxl@archiver.kernel.org>; Mon,  6 Jun 2022 17:24:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239984AbiFFOt7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 6 Jun 2022 10:49:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49934 "EHLO
+        id S229489AbiFFRYv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 6 Jun 2022 13:24:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240032AbiFFOt6 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 6 Jun 2022 10:49:58 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0E8B81499;
-        Mon,  6 Jun 2022 07:49:56 -0700 (PDT)
-Received: from fraeml745-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LGx9R1CJBz67ms2;
-        Mon,  6 Jun 2022 22:45:15 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml745-chm.china.huawei.com (10.206.15.226) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 6 Jun 2022 16:49:55 +0200
-Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 6 Jun
- 2022 15:49:54 +0100
-Date:   Mon, 6 Jun 2022 15:49:52 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Ben Widawsky" <ben@bwidawsk.net>, <linux-kernel@vger.kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V9 6/9] cxl/port: Read CDAT table
-Message-ID: <20220606154952.000008c7@Huawei.com>
-In-Reply-To: <Ypk+Cc0fWelIcamX@iweiny-desk3>
-References: <20220531152632.1397976-1-ira.weiny@intel.com>
-        <20220531152632.1397976-7-ira.weiny@intel.com>
-        <20220601163540.00006978@Huawei.com>
-        <20220601173113.000005a6@Huawei.com>
-        <YpkCHADvGv6i3jVP@iweiny-desk3>
-        <Ypk+Cc0fWelIcamX@iweiny-desk3>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S229451AbiFFRYu (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 6 Jun 2022 13:24:50 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F2C7719EC
+        for <linux-cxl@vger.kernel.org>; Mon,  6 Jun 2022 10:24:49 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4BB07B81A93
+        for <linux-cxl@vger.kernel.org>; Mon,  6 Jun 2022 17:24:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C288CC385A9;
+        Mon,  6 Jun 2022 17:24:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654536287;
+        bh=ZKigrDV9GJ7ivjkl9RUM+ZJF/2JYghwt9WdQwFyKVXc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=P36W+fagZYH8k3WHNuyv3UhXegsE6hjqE9rwj30Ce9QO/8S2wzcRIGOH/domgTq7y
+         brqLF4T1NULqWdD/TG3g3z2v+Bse81G8SEXUXjbnhgUO1ltuLm4ZEC83PpVuKDw0Rs
+         stioBLHOoivA/GR3Yo7xJ7xMDLNKU/VnkXIwcJs18SHsaLjpXzWWH8/i3SNqiGgk3f
+         a5JxROb/ZWrPXxUwNqqMapaJwUTTfT3vtM1a5xPfmiALH7qYMJw0VD05Rw4QBrbgoY
+         HIgXLyJ3dWih3ioPc/WiYlzKjnF7Ha+YLKWjovhIe5EUdrQDaaA7KtCukJ4TmhzR63
+         LpM5emRiZJ5OA==
+Date:   Mon, 6 Jun 2022 10:24:43 -0700
+From:   Ben Widawsky <bwidawsk@kernel.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        qemu-devel@nongnu.org, "Michael S . Tsirkin" <mst@redhat.com>,
+        linux-cxl@vger.kernel.org, linuxarm@huawei.com,
+        alex.bennee@linaro.org, Marcel Apfelbaum <marcel@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Markus Armbruster <armbru@redhat.com>,
+        Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        Tong Zhang <ztong0001@gmail.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>
+Subject: Re: [PATCH 1/8] hw/cxl: Make the CXL fixed memory window setup a
+ machine parameter.
+Message-ID: <20220606172338.3g6rb6qft4o5cu2o@bwidawsk-mobl5>
+References: <20220530134514.31664-1-Jonathan.Cameron@huawei.com>
+ <20220530134514.31664-2-Jonathan.Cameron@huawei.com>
+ <cdb07cb9-4705-5b63-4f40-a44a6f735f38@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cdb07cb9-4705-5b63-4f40-a44a6f735f38@redhat.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 2 Jun 2022 15:47:37 -0700
-Ira Weiny <ira.weiny@intel.com> wrote:
-
-> On Thu, Jun 02, 2022 at 11:31:56AM -0700, Ira wrote:
-> > On Wed, Jun 01, 2022 at 05:31:13PM +0100, Jonathan Cameron wrote:  
-> > > On Wed, 1 Jun 2022 16:35:40 +0100
-> > > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> > >   
-> > > > On Tue, 31 May 2022 08:26:29 -0700
-> > > > ira.weiny@intel.com wrote:
-> > > >   
-> > > > > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > > > 
-> > > > > The OS will need CDAT data from CXL devices to properly set up
-> > > > > interleave sets.  Currently this is supported through a DOE mailbox
-> > > > > which supports CDAT.
-> > > > > 
-> > > > > Cache the CDAT data for later parsing.  Provide a sysfs binary attribute
-> > > > > to allow dumping of the CDAT.
-> > > > > 
-> > > > > Binary dumping is modeled on /sys/firmware/ACPI/tables/
-> > > > > 
-> > > > > The ability to dump this table will be very useful for emulation of real
-> > > > > devices once they become available as QEMU CXL type 3 device emulation will
-> > > > > be able to load this file in.
-> > > > > 
-> > > > > This does not support table updates at runtime. It will always provide
-> > > > > whatever was there when first cached. Handling of table updates can be
-> > > > > implemented later.
-> > > > > 
-> > > > > Finally create a complete list of DOE defines within cdat.h for code
-> > > > > wishing to decode the CDAT table.
-> > > > > 
-> > > > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > > > Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> > > > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > > > >     
-> > > > 
-> > > > Fun question of ownership inline...  
-> > > 
-> > > And a follow up due to triggering a bug that predated this series...
-> > > 
-> > > I'd send a fix, but I'm off on a long weekend shortly :)  
-> > 
-> > NP I discussed with Dan and the use of dev_groups should allow me to move this
-> > to port probe where it belongs.  I put it here for the sysfs stuff.  
+On 22-05-31 09:26:27, Paolo Bonzini wrote:
+> On 5/30/22 15:45, Jonathan Cameron via wrote:
+> > +    object_property_add(obj, "cxl-fmw", "CXLFixedMemoryWindow",
+> > +                        machine_get_cfmw, machine_set_cfmw,
+> > +                        NULL, state);
+> > +    object_property_set_description(obj, "cxl-fmw",
+> > +                                    "CXL Fixed Memory Window");
 > 
-> Not to make a habit of replying to my own mails but this works.
+> Perhaps "CML fixed memory windows (array)" or something like that?
 > 
-> So I'm going to go forward with spinning this again.
+> Paolo
 
-It's the right solution - cleaner than moving the ownership.
+I had a mail which I apparently never sent. I'd like to see 'fmw' renamed, since
+that has no decoder ring in any spec that I'm aware of.
 
-Jonathan
+Why not keep cfmws nomenclature? It's well defined.
 
-> 
-> Ira
-
+Ben
