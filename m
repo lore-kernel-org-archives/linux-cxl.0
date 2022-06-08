@@ -2,78 +2,79 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8F6C433EF
-	for <linux-cxl@archiver.kernel.org>; Wed,  8 Jun 2022 19:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A017C433EF
+	for <linux-cxl@archiver.kernel.org>; Wed,  8 Jun 2022 21:27:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231435AbiFHTkS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 8 Jun 2022 15:40:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57424 "EHLO
+        id S234330AbiFHV1c (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 8 Jun 2022 17:27:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230030AbiFHTkS (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 8 Jun 2022 15:40:18 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B95001FE395;
-        Wed,  8 Jun 2022 12:40:16 -0700 (PDT)
+        with ESMTP id S233907AbiFHV10 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 8 Jun 2022 17:27:26 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0BC4F8254;
+        Wed,  8 Jun 2022 14:27:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654717216; x=1686253216;
+  t=1654723642; x=1686259642;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=Y0w66oyVs4yiK4P30CROxj1xWq1DUkbvFh/ImjFQr8k=;
-  b=nsvWAcbNKyla7aiZxHmojEFrWiV0HD00eter64B534SE6IinYLoO69SU
-   L3Hmkeu77G7y/WZ0YS0WvUXGdV7nHpLj22ljOVpfD/8IoT9XpLLH/dzXX
-   CCEu+2mgWNwxIPnY5BuH7ulcXr9EA3UPHnyymRR5ZsyZs84nj90c2Jowy
-   XgSTMetWPMVju6OOabXCL/2h6N9hXJ6uyww36Z8nP7JWkcSR32Llu4eiY
-   Dbc6ETHhH4NGdE5ukP3MMkzyVLMel3TDCdP8YrVP6SENitWrXdw7bf/qK
-   aS0Vdl6WBbrBY98jvVXvM6qO1esbYDz0THFwkr3atAcnP24npELTzkCDF
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10372"; a="277844053"
+  bh=296qNbsCWCJREHoqv1VyzVB89H6mr+0umvjDoM0LOsU=;
+  b=hGePXzxiNEA8F/SzDfbIQY45h6ywgBPXfIO7nmEAR43beeJ5Jh+lU9eW
+   ZjEYyjE+ysgpnMyiPZ6wUfuTKqM3s8aoIc6EXJaaUS8aMPk+xx/hsxXGq
+   huLHvuSFadVBAB2BKrmKzXSXVQSCgOSS9O4oTurDeS1ilITOX82TThMxd
+   RBNTJEuPrHFEQelJQe+OJJ6/nT0bTDESgzMhdc3YhMQB8iy8+MNy450q8
+   JKLpUNI/4TIZpRUNv6/wmGx6VarOT6DGFv31fyqZsVcIwQtFQRqvLjNYX
+   VUsutVBnP/MQyPMHBmNuB05dTLlyJp4wCWek3UVLBC9oTq425LPKZfXu9
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10372"; a="256882223"
 X-IronPort-AV: E=Sophos;i="5.91,286,1647327600"; 
-   d="scan'208";a="277844053"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2022 12:40:16 -0700
+   d="scan'208";a="256882223"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2022 14:27:22 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.91,286,1647327600"; 
-   d="scan'208";a="710090099"
-Received: from orsmsx606.amr.corp.intel.com ([10.22.229.19])
-  by orsmga004.jf.intel.com with ESMTP; 08 Jun 2022 12:40:16 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
+   d="scan'208";a="670789764"
+Received: from fmsmsx606.amr.corp.intel.com ([10.18.126.86])
+  by FMSMGA003.fm.intel.com with ESMTP; 08 Jun 2022 14:27:22 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Wed, 8 Jun 2022 12:40:16 -0700
-Received: from orsmsx609.amr.corp.intel.com (10.22.229.22) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ 15.1.2308.27; Wed, 8 Jun 2022 14:27:22 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Wed, 8 Jun 2022 12:40:15 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx609.amr.corp.intel.com (10.22.229.22) with Microsoft SMTP Server
+ 15.1.2308.27; Wed, 8 Jun 2022 14:27:21 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Wed, 8 Jun 2022 12:40:15 -0700
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.49) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ 15.1.2308.27 via Frontend Transport; Wed, 8 Jun 2022 14:27:21 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.105)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Wed, 8 Jun 2022 12:40:15 -0700
+ 15.1.2308.27; Wed, 8 Jun 2022 14:27:21 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C/bA5Y0pHbt/72yBxG4ZHUmic9fHGPVOt/bqf+gYZciWc5Jwp4LzJvF9O24AoqChIDVm+Ojh19qf5Uq7mAKEZgvSP7nllThQDw3wM7FFJ4lMW+bM1DD6/pXS0TT1SUqqktP0CngcojwVQUpuec2ZOSJOLXxwt6lk2WZatMl17AxvhQwStO6JX0em4xr738riEEXBw1gGCbq2ZTg1HrYnjCkdEmj8hPhj4zsIEN7w1DzWBfNEYz9sLSR0JaX65A+C9frZRtLzyPeGqrb4OkX3RTClvzQEEycC5Ya0yILUT+F2ylg9uJx6o0EdlU9XY98iYcsgYiPf7rKgkq8MNtBHgQ==
+ b=KZAfPslxTyBKe91mnNoU/Bcw77m9WkBGHDlqnnbZihDoVNORDQqN1oDPH/OTqDslYwehS9X57oum+ovFjcg42sk+5zMWG23O0mN6rEdz39CS4/2Qughn/iUvaXnQS1BDaLk01eaKcieDnM+Xf1iuU8HsutspbyM826a8KYxRt90/y1YeWgxUpOx4f6UoklY7B3js+lLbqZk4vTWsFuB9HFs41E19SmwvujXvyUitlBCtcSWC0KOUHiQj/4xvIQuYI7LXdzzl8mqYMBr5niWJCYV3Rm96S9R/KsgomTGTI/3JGB9G02CD85/EsgDzRHfJZ+PLNLO0+4KfuXNrJQW20w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QE/Ll8B3COcfJy9ZdsgfIhwbTeTFvtE0vww30C9sRMA=;
- b=dcCw+GCINTPID1K6dHeS9g211Z+2uW7JojsNUd3Zmxkp1ziwgauXl+qf8pO293dV0eCqz/y9qWZ51N27lcelJrv2tcZ4IUKcRA98vXqemqVgyMn5UcsWrVLFI0P6W0WUa65u3G94iDILx079L+IeapRXs+Ad0sbmdjsAjo1sN68+TDQ0v99MPqOdO4Bj8XB/O6V4jA2rOfAageUE33OyCHs7OBCdRU8X7FLvGDb+pc2EITZ4WynH0f/SmiwnLpEElGbawpHpMWIjBdNouizlBQovHslNK/dcSnzV4LosXaYgSeeo9+thIQVYWIuSUOBCZ3TveMRFDTUFamxskst3aw==
+ bh=KXffH6px5g3WWPfq+nKUeT+bNwiL8L1Jn8btnLuHymU=;
+ b=OpwTnOHWrO6FQeN/TawV4CbeTh1PnQnqEGS/JfuPjIOlalPKSNUPHREWH3a9HIQ0VpEi42lewZuJ93AL9Qq7yd0AOnag2FF2Lv+xI5TRX46UApOn4YK+aLve0Uyce7yCNw+XqyQDnY+fj36YMxZHBy/vXR1EfqAZ4ywaRoXaDYxCBgZtJ9+vI4/zdRX30FRgQatj7rOOK2Jc2xTEEw1MJLk0YSHuk6SO2n0MVx8t9w8HlrRK+UptxIoaVyuocNv+ve+153RJ1Fg3CfaTqbUXqfHqYGyfjaLX1+Ql2We0iwoegOmjvblEGbL/XORls6LNZEmuKIkmawTgdQEKZHphSQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from DM4PR11MB6311.namprd11.prod.outlook.com (2603:10b6:8:a6::21) by
- CH0PR11MB5300.namprd11.prod.outlook.com (2603:10b6:610:bf::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5314.15; Wed, 8 Jun 2022 19:40:13 +0000
+ CY4PR11MB1734.namprd11.prod.outlook.com (2603:10b6:903:125::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5314.13; Wed, 8 Jun
+ 2022 21:27:20 +0000
 Received: from DM4PR11MB6311.namprd11.prod.outlook.com
  ([fe80::d4e9:9ae1:29b2:90c]) by DM4PR11MB6311.namprd11.prod.outlook.com
  ([fe80::d4e9:9ae1:29b2:90c%4]) with mapi id 15.20.5332.012; Wed, 8 Jun 2022
- 19:40:13 +0000
-Date:   Wed, 8 Jun 2022 12:39:49 -0700
+ 21:27:19 +0000
+Date:   Wed, 8 Jun 2022 14:27:14 -0700
 From:   Ira Weiny <ira.weiny@intel.com>
 To:     Ben Widawsky <bwidawsk@kernel.org>
 CC:     Dan Williams <dan.j.williams@intel.com>,
@@ -84,236 +85,299 @@ CC:     Dan Williams <dan.j.williams@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
         <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
         <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V10 5/9] cxl/port: Find a DOE mailbox which supports CDAT
-Message-ID: <YqD7BZnbK4wuN6Zm@iweiny-desk3>
+Subject: Re: [PATCH V10 6/9] cxl/port: Read CDAT table
+Message-ID: <YqESPug9duS6BMfQ@iweiny-desk3>
 References: <20220605005049.2155874-1-ira.weiny@intel.com>
- <20220605005049.2155874-6-ira.weiny@intel.com>
- <20220606174819.hhnb4jh27nxxvrdf@bwidawsk-mobl5>
+ <20220605005049.2155874-7-ira.weiny@intel.com>
+ <20220606181541.ysb3zqdpe5cuk4e6@bwidawsk-mobl5>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20220606174819.hhnb4jh27nxxvrdf@bwidawsk-mobl5>
-X-ClientProxiedBy: SJ0PR03CA0202.namprd03.prod.outlook.com
- (2603:10b6:a03:2ef::27) To DM4PR11MB6311.namprd11.prod.outlook.com
+In-Reply-To: <20220606181541.ysb3zqdpe5cuk4e6@bwidawsk-mobl5>
+X-ClientProxiedBy: MW4PR04CA0233.namprd04.prod.outlook.com
+ (2603:10b6:303:87::28) To DM4PR11MB6311.namprd11.prod.outlook.com
  (2603:10b6:8:a6::21)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0df5f12e-2b20-469b-16c1-08da4986b4ed
-X-MS-TrafficTypeDiagnostic: CH0PR11MB5300:EE_
+X-MS-Office365-Filtering-Correlation-Id: 83b89fe9-d54a-48ef-1041-08da4995ab06
+X-MS-TrafficTypeDiagnostic: CY4PR11MB1734:EE_
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-Microsoft-Antispam-PRVS: <CH0PR11MB530072AD46940B3BDB9B6CF8F7A49@CH0PR11MB5300.namprd11.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <CY4PR11MB1734F9553896F30C7F5D8A80F7A49@CY4PR11MB1734.namprd11.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RtNaPQ5grwpi8LRzB+I0RpNHYugn7oOaMJXHLC0LpTjtmilIJhThWBHr4Df3g/AQ1w7Dq4GFuXMG172cuVpHhXktadjAk8jA45G+Cq8ltBkCxpbEwlkHohqv0KzWrgHqPaxLgcOkCTHg5sqUPTYFAu/8t18T5Ap+KI14T/EwIp0hyk2LDE54P5OvkSFha1FVhmpe2qasnctUtx+pYfpdf7w/DF5tdJEks6ohIZ8C68ipE6bhv6ucNmvtrwAvY9mCQ0dx1gI47Awoe4fo5d0W4ExTfUEWEW+HXh440NV6G+Sdw3LkGRBxSmtx/GZ6qsp4tYqDA9aZiubCJRxKx2w7n+QJOh+XfGW3/MhRAMpt46glF1qGwvZklPMbxaIaCN43W57ayA0r6BcHvpJV6hBK0WYPDNCspThaPap1VXjXinga9OnUpyfeGCqE9Qn3njldJwDXtvltS9f7Fx4JfjbbiTWeMa/xdwWalEN0RMAeG6BiRZHrGpGOkdyPe1/4t8uSTl+n6pCT4vFts2AOAuSur5/ZBgMPUGXDuJqfrl13+Y6ah+6By+IokjEMI7S3JmGyq35KtfjYwtUn2WB6Gk23w1/AD1/evSaxQ3LMsGRwQRApI0OdP778h3Z6jqCjUQKdbAAFnSMhCBS0jFduSZM1NA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6311.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(7916004)(366004)(2906002)(26005)(53546011)(44832011)(6486002)(6506007)(186003)(38100700002)(66556008)(8936002)(316002)(508600001)(33716001)(6916009)(54906003)(9686003)(5660300002)(6666004)(6512007)(66946007)(15650500001)(8676002)(66476007)(4326008)(86362001)(82960400001)(83380400001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: sTwDKEQt1vMkUWvF6kOHjgaRYONq4KkWz3tI7ywyppbW9MHSFMCWntNxG43dzYixzDJ6dZKajPa4oGjTFEKBkSoPLvp5eR0Fdz+W02+E8p1LdJHPIpUV/rEnsCxHXWSekItFXOsxzD9MlQdvmQP8uYC6A3i3AWtBmUM33cuGOArkWpK581Am9yGR5elIXVT1ts3WiFAcWDrkzVzZu/5RkQ6nx3zAQEjh8AhIaTnh6d4O0XOztRbU825TQJWEd52RViK9bsMu047Gr+R6dOlJ6ZbDyIK1iBYN7NaN7RLpDNyZ1LVwiQ9m4bTDr8XJw1VEwwDis/aOe6tDdF9frrdtdXCubwNZ/K1qwZ5nkNTLpgu2pJjZNKOq0h0T5myNwXKWnAiCACJ1N8BmhvYM13QcVbQ0cTyb2DBoZxYs0Lbg24cbGzfNTBaSDM78xd1VZoOp9WqZgin0P2WWhNAK+yOU1tPc7DLM/eiejVJTCkWVcnVDqrvRsRDjyo3PmSflp/+crqULrb3tx6zPOSQhzX1ikjDdkBFOOB5AucHMylk1LeBoUI1kxKtpLu2LLoOBEP0nmUMbSPr1uqiE8UhWwepEv3u4NSHdgK42bg1f0cCOM3GEBAefOeCX00fDAEg6Hx5d0yp5MiWNjhzok0P3Q6vF+Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6311.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(7916004)(366004)(2906002)(316002)(8936002)(6486002)(83380400001)(6666004)(6512007)(9686003)(26005)(5660300002)(38100700002)(33716001)(53546011)(54906003)(6506007)(44832011)(186003)(86362001)(82960400001)(66476007)(66556008)(8676002)(4326008)(6916009)(66946007)(508600001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?9lPoGlNj8jSUqxKiI/qLUdUZG83RJD5Nmezs76POl09z4V9NVA3owDW+nntk?=
- =?us-ascii?Q?QDiJOyZDv7MFtSR39ktNERha4GfcEjDhFkXyCSiLblWajGggTOZLildLWGWM?=
- =?us-ascii?Q?Fas3b4rEkYM4ev0Ud0ufjoYvdW+DHFNHtTR95DFgXhN+II8LIOuJNN323vhW?=
- =?us-ascii?Q?9Fji+yFhoivvx5vCP7coD298q/AYBNsSB+0mRpi0/RyrPuNyYZRYGGuxHb2b?=
- =?us-ascii?Q?NcZIXy6FXTEF0yAAqO9WooGlMZCKeQu8sD+2MF89f0oxMSggdeKJiXy2S5B+?=
- =?us-ascii?Q?KERsZ1PEBH6YswLGN1LuCkE3Ft+MWOMHg9sN57c01UvWFzrFMut1dMEDDa1c?=
- =?us-ascii?Q?PLLnMmcouGD/AiR/kfO8GhpunwNwg6nRJRsNtP9mI1qzrJwmjQ/IMMJkrSaK?=
- =?us-ascii?Q?wOTHx4HdtZnXtqiQIPmbV/De7Xqe3FXIWh/Pgr4jRQSoCqkWTS4eGaxrqUR6?=
- =?us-ascii?Q?flroqAdDLevY67NSszbMZJR9oVALKUE3w8t0eTVqJJ+sNlyqIiMmqxqhuKfb?=
- =?us-ascii?Q?uwsGkcwGRJMum0lRJZO3UONzNmm4Za9BOZZlej9F6TB7ju2pOF6U4B1rUAfk?=
- =?us-ascii?Q?0vj4K/homjGC6A1jN5fwCM1+O4aTVkrfjGFdyz8KYBOzKbCHyJHLy/anx/EZ?=
- =?us-ascii?Q?GmnMR0txpUGPh+EdZFiT+QjTLsOFpNUe76LtRU+L9YYp7bNHLpd4vb/VOW/I?=
- =?us-ascii?Q?MS35S4APsLRfmucS946jybcnWW8OgY3IcHQK3ZDg7JQKjEOZIkRa1j64gAZg?=
- =?us-ascii?Q?j5gsHREhQLvh1anPnvGc9Pgwd4WVeoec0bPjXI35PPJd2oqx/ZaUwKTn0ior?=
- =?us-ascii?Q?wOMO2qKTKXjFnBx7U2rNi0DvkKLMTN68wOLvOSraD10/iZattvYHkMCYJAaU?=
- =?us-ascii?Q?sRjKQSXSxObQT7dTHkDqsONyDkqWYBAPQohMzxn9DWbqdTDVVgcB8bM4aFCP?=
- =?us-ascii?Q?zJKx2JTOdUzsWQOn4NAHylPcBzpDTX/NeqM4ltz9IGOKmYT4q2y0n+IiNLZN?=
- =?us-ascii?Q?Nab5lH9EfirNbIuI19NI5BTC4y799mKnNLNlh2CbuOFxoR8xn2yP4NDu/uHl?=
- =?us-ascii?Q?IePfZ04jDPazd+G+3PIZKlIJaBjGV7pzgHYdIKPu0zlEf88OFNEKqwif+Wya?=
- =?us-ascii?Q?6oGI7eDov9Eap9kcmBYvY880TjUw2o8XWlI/nDHps0ifHWHt14YCWhZYr7Bj?=
- =?us-ascii?Q?KH5D0mBLmEhqPUtNi6govxp+Q4CsBrubJXTGykterRakqu5pzKVR9f7XEtMT?=
- =?us-ascii?Q?cV/zGMC4aQGH/rjLdNOCfdmb8cRvqxZvs8uTQCtrN/nR7Q2UV2PvpfbY4CPD?=
- =?us-ascii?Q?BpdcQIp8L77yqTgnPVeVH0WO3m7fNKy1u04zY7rlqYD45kiWYKE1KW92XbAZ?=
- =?us-ascii?Q?/CqjKrO5cSzA0n1A7v0DARkoIWv5gUMztyS7qSXb8q475DTVRvrlOC9sSXtt?=
- =?us-ascii?Q?/CGa6Ot1w2e+m9eQKYOE5X6x1gqS/BmY57xM2uYdfykza133QuTp4M8hF5SE?=
- =?us-ascii?Q?CRZEX1yWiIUjGoaTOrA7HfGUOcjVHVFPt8oLyPg6bN0zLvkYOH69qIDRITSJ?=
- =?us-ascii?Q?Il2uhymGlRp3PtnELE4VaYqeN/LN84WyOQQolt/mo0r8Dfy5RLC/F1u8OHkH?=
- =?us-ascii?Q?dc++p+yBzIeEPQKXIQyvJxGRAX/F5YINv8sbgEAYpgVroWWnKrkMVJVSJm1X?=
- =?us-ascii?Q?2e51Efqqu/qq5Qom01xxa1BkPZwEDJqc82G4GKF/sFoqxd4LNvXLXeI2xOaG?=
- =?us-ascii?Q?3H/6w6AxXQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0df5f12e-2b20-469b-16c1-08da4986b4ed
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?y6qiM6mhBUxws/sEsz7oWQY+EiSHHdP0HHWXu/RhlmZLxgjUhZI3Nxlav+qH?=
+ =?us-ascii?Q?hRSIaeUbIZpJk2OBsA2fnkD0QNN/DiZ/Zs0z3xUL52EjZ9TsYygf5yOgIbsG?=
+ =?us-ascii?Q?pA9FbuQrAcr2omMNPEhuEzuPbMicubvBEQG85WgUx/WN7VARS9hELXbdTOur?=
+ =?us-ascii?Q?5Q21f6AtH+h2HX7CRs+rcsa5VzVEJKdtejscgaqdgW5fbj+4W4mB2nmoREmO?=
+ =?us-ascii?Q?FMEK5ZHVHgRMSvj/lmusJ/Bm/1ytcwfxi3i7HyIGl6eMXWI6ToQ8vgTItWLL?=
+ =?us-ascii?Q?6kBIwzhNc4LBmHfD2cZvvjJHn4hXMuXN5yckJxyPhk4+WWF7SEAHmamTDEDa?=
+ =?us-ascii?Q?QZyBlTyGZp/SsEG7AnPij5dQa7HYSrBw1A9DcSexT191njc/FuzBC8slUsOq?=
+ =?us-ascii?Q?XsuZFZ72AoFzCAhF7f0J5r9nYN/vSF4CHnm1IQup6ppJbvo1z4ZOZ4tT53SS?=
+ =?us-ascii?Q?7bcgY+IQIAm8W8cJAoaqmdWXDa4bYTrKoNx7/ozyLJhxOw26EW/25f6HwXbl?=
+ =?us-ascii?Q?TsOfLGDaVC5TmPzHr0p6XcOtjyjnozHQEOQieu96ImEvxIROPtFYFpZCFjPI?=
+ =?us-ascii?Q?mtdIB63mD7icyeAYJCMVCZj83PUvGTYXfI1SEArsjSLwN9UVIJ34pkK96hNK?=
+ =?us-ascii?Q?z2AE4nJfW/UPWoAp0Vdg2OKLmFiSdRe2e8lg75LzN3N6yKe2+uPDn7n6hRxp?=
+ =?us-ascii?Q?sQZQl+rDVEkRiWYIqLwFIhOqgPNzDdiA8S26iCRaodgBMpHEybxXLL6NMEe8?=
+ =?us-ascii?Q?cKCPqL/AOWAzuleRwmo4ZSbhXq5ksky43G3okjjA+EIIrVn+K5qBVW/muCet?=
+ =?us-ascii?Q?zIZPbvZ5E1FWqEb2V1l/sc8F7bIiDnN87iU3A2b+fpyTrBSnmx0u2q/xxPnp?=
+ =?us-ascii?Q?ii8Tj5fnX9utzQeGiV76f80lCwZwqaCFbqowRUzOydSpjBFCCGtQGrBKja7w?=
+ =?us-ascii?Q?M74q0mI+X5K8/C09NfhAZPJ8ia4CpWUbYR85twIjYSTDok1ZQe9WNGgViyIB?=
+ =?us-ascii?Q?rqljyf+ZYQamz8PiBnToB9jJ9s5dyqX/XPvLCsNsPWUMHjnuGXCKGnwDziYf?=
+ =?us-ascii?Q?ZA6QrboDTwDPsJmJzX6anXd3yUznE/c6tqvkm9Dk/5jWQKkc/+HD9USfodTg?=
+ =?us-ascii?Q?D+Hd6OSp6bF1qgfrjd9aO9KtMvc6tajPln9lIJt72eywxkEEZby8zrqIXIc1?=
+ =?us-ascii?Q?iO5vE57gfZypAyzmWuOE0urJ1c4wgKGLSFqAn0MRWl910kif6clKezaXq01w?=
+ =?us-ascii?Q?Xo/C/cAGjGRykByHtXWwndgYPhuQesCkU5kvP/Wg2GsFgXNKhdigMT9UFRtv?=
+ =?us-ascii?Q?PEnSZV70ag8J3F+b4P3e7TFhLz7E9fd0+shD95xj4ZdXLUKug82SQXgH+NLo?=
+ =?us-ascii?Q?cNY8fQitMEqSSBRCg+hLClt2+egV+vvyVVK09zITvZEiMZTMQaC/1SKWiu2I?=
+ =?us-ascii?Q?8ae5upst/+BZaX59IUrLbmKRRnNoHHmRFqT8h//mb+3Q1+VEqGjVHgM4KrGm?=
+ =?us-ascii?Q?4lLietDgtmIerS9X1Nj5H2HoKdJhbMHvM4uRCcOqsxmcHd/Xssc49///Y2ud?=
+ =?us-ascii?Q?f9rb6ZsIYbRbtqZl11fKgQqD6wruD5KZnm1j3LG5/MXg51Cs+hYqg8hJX1Oh?=
+ =?us-ascii?Q?eXlVgEt3hTiSRicyLl+KvRFbLLIs/TxDXrPZAoFjDh+HXKeKKAAx1KbjZHeI?=
+ =?us-ascii?Q?Gn1MgpNQgFT195Cu5Nj4Gv2FqPon2QrBod3NmUTPkMQlkX8rZsw/hvZq8Nty?=
+ =?us-ascii?Q?+syEo3sXDQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 83b89fe9-d54a-48ef-1041-08da4995ab06
 X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6311.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jun 2022 19:40:13.7071
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jun 2022 21:27:19.7271
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: A4rcf2m8WZ75wOaxG9tTvME8y74zKkGbG2P2LzC0TuiCjy2E4MQV1D8D5OU57MN5V1nSpDPC5B+3E+vBbSH7FA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB5300
+X-MS-Exchange-CrossTenant-UserPrincipalName: dSQRY28mh1w2yQB78gft7pVzGXbI0reGcqfh0vgW0aKf3mAbrC8lvnMS3OskmBQJEggZUYsZB7fqjEbsImB1XQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB1734
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Jun 06, 2022 at 10:48:19AM -0700, Ben Widawsky wrote:
-> On 22-06-04 17:50:45, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
+On Mon, Jun 06, 2022 at 11:15:41AM -0700, Ben Widawsky wrote:
+> On 22-06-04 17:50:46, ira.weiny@intel.com wrote:
+> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > > 
-> > Each CXL device may have multiple DOE mailbox capabilities and each
-> > mailbox may support multiple protocols.  CXL port devices need to query
-> > the CDAT information specifically.
-> > 
-> > Search the DOE mailboxes for one which supports the CDAT protocol.
-> > Cache that mailbox to be used for future queries.
-> > 
-> > Only support memory devices at this time.
-> > 
-> > Cc: Ben Widawsky <ben.widawsky@intel.com>
-> > Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > ---
-> > Changes from V9
-> > 	Ben Widawsky
-> > 		s/cxl_find_cdat_mb/cxl_cache_cdat_mb/; add kdoc
-> > 	Jonathan Cameron
-> > 		Move cache_cdat to port probe [Not 100% necessary but it
-> > 		goes along with reading the cdat data.]
-> > 
-> > Changes from V8
-> > 	Incorporate feedback from Jonathan
-> > 	Move all this to the cxl_port object
-> > 
-> > Changes from V7
-> > 	Minor code clean ups
-> > 
-> > Changes from V6
-> > 	Adjust for aux devices being a CXL only concept
-> > 	Update commit msg.
-> > 	Ensure devices iterated by auxiliary_find_device() are checked
-> > 		to be DOE devices prior to checking for the CDAT
-> > 		protocol
-> > 	From Ben
-> > 		Ensure reference from auxiliary_find_device() is dropped
-> > ---
-> >  drivers/cxl/core/pci.c | 35 +++++++++++++++++++++++++++++++++++
-> >  drivers/cxl/cxl.h      |  2 ++
-> >  drivers/cxl/cxlpci.h   |  1 +
-> >  drivers/cxl/port.c     |  2 ++
-> >  4 files changed, 40 insertions(+)
-> > 
-> > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> > index c4c99ff7b55e..d814d8317975 100644
-> > --- a/drivers/cxl/core/pci.c
-> > +++ b/drivers/cxl/core/pci.c
-> > @@ -4,11 +4,14 @@
-> >  #include <linux/device.h>
-> >  #include <linux/delay.h>
-> >  #include <linux/pci.h>
-> > +#include <linux/pci-doe.h>
-> >  #include <cxlpci.h>
-> >  #include <cxlmem.h>
-> >  #include <cxl.h>
-> >  #include "core.h"
-> >  
-> > +#define CXL_DOE_PROTOCOL_TABLE_ACCESS 2
+
+[snip]
+
 > > +
-> >  /**
-> >   * DOC: cxl core pci
-> >   *
-> > @@ -458,3 +461,35 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm)
-> >  	return 0;
-> >  }
-> >  EXPORT_SYMBOL_NS_GPL(cxl_hdm_decode_init, CXL);
-> > +
-> > +/**
-> > + * cxl_cache_cdat_mb() -- cache the DOE mailbox which suports the CDAT protocol
-> > + *
-> > + * @port: Port to containing DOE Mailboxes
-> > + *
-> > + * Cache a pointer to the doe mailbox which supports CDAT.
-> > + */
-> > +void cxl_cache_cdat_mb(struct cxl_port *port)
+> > +static int cxl_cdat_get_length(struct cxl_port *port, size_t *length)
 > > +{
-> > +	struct device *dev = port->uport;
-> > +	struct cxl_memdev *cxlmd;
-> > +	struct cxl_dev_state *cxlds;
-> > +	int i;
+> > +	u32 cdat_request_pl = CDAT_DOE_REQ(0);
+> > +	u32 cdat_response_pl[32];
+> > +	DECLARE_COMPLETION_ONSTACK(c);
+> > +	struct pci_doe_task task = {
+> > +		.prot.vid = PCI_DVSEC_VENDOR_ID_CXL,
+> > +		.prot.type = CXL_DOE_PROTOCOL_TABLE_ACCESS,
+> > +		.request_pl = &cdat_request_pl,
+> > +		.request_pl_sz = sizeof(cdat_request_pl),
+> > +		.response_pl = cdat_response_pl,
+> > +		.response_pl_sz = sizeof(cdat_response_pl),
+> > +		.complete = cxl_doe_task_complete,
+> > +		.private = &c,
+> > +	};
+> 
+> This is looking like something that could be nicely populated with a macro.
+
+Probably.  But I'll leave that for another day.
+
+> 
+> > +	int rc = 0;
 > > +
-> > +	if (!is_cxl_memdev(dev))
+> > +	if (!port->cdat_mb) {
+> > +		dev_err(&port->dev, "No CDAT mailbox\n");
+> > +		return -EIO;
+> > +	}
+> 
+> AIUI, !port->cdat_mb isn't actually an error.
+
+It was when I was trying to get this to work...  ;-)  I change to dev_dbg().
+
+> Does it make sense to simply
+> return 0 here?
+
+No because this is just a helper to the read_cdat below.  0 could be used to
+indicate 'no data' but easier to return an obvious error.
+
+> 
+> > +
+> > +	rc = pci_doe_submit_task(port->cdat_mb, &task);
+> > +	if (rc < 0) {
+> > +		dev_err(&port->dev, "DOE submit failed: %d", rc);
+> > +		return rc;
+> > +	}
+> > +	wait_for_completion(&c);
+> > +
+> > +	if (task.rv < 1)
+> > +		return -EIO;
+> > +
+> > +	*length = cdat_response_pl[1];
+> > +	dev_dbg(&port->dev, "CDAT length %zu\n", *length);
+> > +
+> > +	return rc;
+> > +}
+> > +
+> > +static int cxl_cdat_read_table(struct cxl_port *port,
+> > +			       struct cxl_cdat *cdat)
+> > +{
+> > +	size_t length = cdat->length;
+> > +	u32 *data = cdat->table;
+> > +	int entry_handle = 0;
+> > +	int rc = 0;
+> > +
+> > +	if (!port->cdat_mb) {
+> > +		dev_err(&port->dev, "No CDAT mailbox\n");
+> > +		return -EIO;
+> > +	}
+> 
+> Similar to above, maybe just return 0?
+
+Same response.  But I'll change the messages to dev_dbg().
+
+> 
+> > +
+> > +	do {
+> > +		u32 cdat_request_pl = CDAT_DOE_REQ(entry_handle);
+> > +		u32 cdat_response_pl[32];
+> > +		DECLARE_COMPLETION_ONSTACK(c);
+> > +		struct pci_doe_task task = {
+> > +			.prot.vid = PCI_DVSEC_VENDOR_ID_CXL,
+> > +			.prot.type = CXL_DOE_PROTOCOL_TABLE_ACCESS,
+> > +			.request_pl = &cdat_request_pl,
+> > +			.request_pl_sz = sizeof(cdat_request_pl),
+> > +			.response_pl = cdat_response_pl,
+> > +			.response_pl_sz = sizeof(cdat_response_pl),
+> > +			.complete = cxl_doe_task_complete,
+> > +			.private = &c,
+> > +		};
+> > +		size_t entry_dw;
+> > +		u32 *entry;
+> > +
+> > +		rc = pci_doe_submit_task(port->cdat_mb, &task);
+> > +		if (rc < 0) {
+> > +			dev_err(&port->dev, "DOE submit failed: %d", rc);
+> > +			return rc;
+> > +		}
+> > +		wait_for_completion(&c);
+> 
+> I'd use the timeout variant, but if you don't want to, see below. I can't quite
+> tell if pci_doe_submit_task() is guaranteed to end with FLAG_DEAD at some
+> point...
+
+Yes it will if it goes south.  The issue with a timeout here is what should
+this layer expect for that time?
+
+> 
+> > +
+> > +		entry = cdat_response_pl + 1;
+> > +		entry_dw = task.rv / sizeof(u32);
+> > +		/* Skip Header */
+> > +		entry_dw -= 1;
+> > +		entry_dw = min(length / 4, entry_dw);
+> > +		memcpy(data, entry, entry_dw * sizeof(u32));
+> > +		length -= entry_dw * sizeof(u32);
+> > +		data += entry_dw;
+> > +		entry_handle = FIELD_GET(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE, cdat_response_pl[0]);
+> 
+> [0] looks suspicious...
+
+Actually I have to claim ignorance on this one.  I've carried this from
+Jonathan's original patches.  I'm not as worried about the [0] as that is just
+the first dword.  But I'm confused as to this entry handle now.
+
+Jonathan?  Help?
+
+> 
+> > +
+> > +	} while (entry_handle != 0xFFFF);
+> > +
+> > +	return rc;
+> > +}
+> > +
+> > +void read_cdat_data(struct cxl_port *port)
+> 
+> I think you need kdoc here, specifically because you've opted not to do a
+> timed wait, which means its possible to wait forever.
+
+Sure but we are not going to wait forever due to the DOE spec.  But I'll
+document that, sure.
+
+> 
+> > +{
+> > +	struct device *dev = &port->dev;
+> > +	size_t cdat_length;
+> > +	int ret;
+> > +
+> > +	if (cxl_cdat_get_length(port, &cdat_length))
 > > +		return;
 > > +
-> > +	cxlmd = to_cxl_memdev(dev);
-> > +	cxlds = cxlmd->cxlds;
-> > +
-> > +	for (i = 0; i < cxlds->num_mbs; i++) {
-> > +		struct pci_doe_mb *cur = cxlds->doe_mbs[i];
-> > +
-> > +		if (pci_doe_supports_prot(cur, PCI_DVSEC_VENDOR_ID_CXL,
-> > +					  CXL_DOE_PROTOCOL_TABLE_ACCESS)) {
-> > +			port->cdat_mb = cur;
-> 
-> What happens if cxl_pci is unloaded after this? Would it be better to copy out
-> the CDAT info? Otherwise, I think you need to hold a ref on the PCI device
-> (though I only took a quick look).
-
-<sigh> I thought that could not happen but I see I was wrong.
-
-A reference will need to be taken for at least the duration of the query.
-Originally I had this set up to try and make it easier to query later.  But I
-think that is a waste ATM.
-
-I'm going to rework this ownership.
-
-Thanks for the review,
-Ira
-
-> 
-> > +			return;
-> > +		}
+> > +	port->cdat.table = devm_kzalloc(dev, cdat_length, GFP_KERNEL);
+> > +	if (!port->cdat.table) {
+> > +		ret = -ENOMEM;
+> > +		goto error;
 > > +	}
-> > +}
-> > +EXPORT_SYMBOL_NS_GPL(cxl_cache_cdat_mb, CXL);
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > index 140dc3278cde..0a86be589ffc 100644
-> > --- a/drivers/cxl/cxl.h
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -267,6 +267,7 @@ struct cxl_nvdimm {
-> >   * @component_reg_phys: component register capability base address (optional)
-> >   * @dead: last ep has been removed, force port re-creation
-> >   * @depth: How deep this port is relative to the root. depth 0 is the root.
-> > + * @cdat_mb: Mailbox which supports the CDAT protocol
-> >   */
-> >  struct cxl_port {
-> >  	struct device dev;
-> > @@ -278,6 +279,7 @@ struct cxl_port {
-> >  	resource_size_t component_reg_phys;
-> >  	bool dead;
-> >  	unsigned int depth;
-> > +	struct pci_doe_mb *cdat_mb;
-> >  };
-> >  
-> >  /**
+> > +
+> > +	port->cdat.length = cdat_length;
+> > +	ret = cxl_cdat_read_table(port, &port->cdat);
+> > +	if (ret) {
+> > +		devm_kfree(dev, port->cdat.table);
+> 
+> Usually, when I see devm_kfree, it's a sign that it might not be a good
+> candidate for devm. You could consider plain kzalloc, and then putting the kfree
+> in the port destructor. I don't see anything incorrect though, so it's up to
+> you.
+
+I like it this way because we are really only doing this as an error condition.
+And it is less error prone to use devm.  Technically devm_kfree() does not even
+need to be here except that then we could potentially have a lot of cdat tables
+floating around until the port goes away.
+
+I can put in a comment to indicate why this was an anti-pattern.
+
+[snip]
+
 > > diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> > index fce1c11729c2..ddbb8b77752e 100644
+> > index ddbb8b77752e..71009a167a92 100644
 > > --- a/drivers/cxl/cxlpci.h
 > > +++ b/drivers/cxl/cxlpci.h
-> > @@ -74,4 +74,5 @@ static inline resource_size_t cxl_regmap_to_base(struct pci_dev *pdev,
-> >  int devm_cxl_port_enumerate_dports(struct cxl_port *port);
+> > @@ -75,4 +75,5 @@ int devm_cxl_port_enumerate_dports(struct cxl_port *port);
 > >  struct cxl_dev_state;
 > >  int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm);
-> > +void cxl_cache_cdat_mb(struct cxl_port *port);
+> >  void cxl_cache_cdat_mb(struct cxl_port *port);
+> > +void read_cdat_data(struct cxl_port *port);
 > >  #endif /* __CXL_PCI_H__ */
 > > diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> > index 3cf308f114c4..04f3d1fc6e07 100644
+> > index 04f3d1fc6e07..fdff20cf79e6 100644
 > > --- a/drivers/cxl/port.c
 > > +++ b/drivers/cxl/port.c
-> > @@ -49,6 +49,8 @@ static int cxl_port_probe(struct device *dev)
-> >  	if (IS_ERR(cxlhdm))
+> > @@ -50,6 +50,8 @@ static int cxl_port_probe(struct device *dev)
 > >  		return PTR_ERR(cxlhdm);
 > >  
-> > +	cxl_cache_cdat_mb(port);
-> > +
+> >  	cxl_cache_cdat_mb(port);
+> > +	/* Cache the data early to ensure is_visible() works */
+> > +	read_cdat_data(port);
+> >  
 > >  	if (is_cxl_endpoint(port)) {
 > >  		struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport);
-> >  		struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> > -- 
-> > 2.35.1
-> > 
+> > @@ -80,10 +82,58 @@ static int cxl_port_probe(struct device *dev)
+> >  	return 0;
+> >  }
+> >  
+> > +static ssize_t cdat_read(struct file *filp, struct kobject *kobj,
+> > +			 struct bin_attribute *bin_attr, char *buf,
+> > +			 loff_t offset, size_t count)
+> > +{
+> > +	struct device *dev = kobj_to_dev(kobj);
+> > +	struct cxl_port *port = to_cxl_port(dev);
+> > +
+> > +	if (!port->cdat.table)
+> > +		return 0;
+> 
+> With visibility setup below, do you need this?
+
+Not currently.  I was envisioning a later dynamic state for cdat.table where on
+error this could have been set to NULL.
+
+Ira
+
+[snip]
