@@ -2,58 +2,49 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5261C433EF
-	for <linux-cxl@archiver.kernel.org>; Wed,  8 Jun 2022 12:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CB3C433EF
+	for <linux-cxl@archiver.kernel.org>; Wed,  8 Jun 2022 13:08:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238878AbiFHMOM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 8 Jun 2022 08:14:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42972 "EHLO
+        id S239855AbiFHNIP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 8 Jun 2022 09:08:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238705AbiFHMOL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 8 Jun 2022 08:14:11 -0400
+        with ESMTP id S239925AbiFHNIO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 8 Jun 2022 09:08:14 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E48E238D87
-        for <linux-cxl@vger.kernel.org>; Wed,  8 Jun 2022 05:14:06 -0700 (PDT)
-Received: from fraeml706-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LJ5dz4Rlhz67jfG;
-        Wed,  8 Jun 2022 20:10:31 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D37D250E5E
+        for <linux-cxl@vger.kernel.org>; Wed,  8 Jun 2022 06:08:10 -0700 (PDT)
+Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LJ6py3wWJz67lbv;
+        Wed,  8 Jun 2022 21:03:22 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.24; Wed, 8 Jun 2022 14:14:03 +0200
-Received: from localhost (10.122.247.231) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2375.24; Wed, 8 Jun
- 2022 13:14:03 +0100
-Date:   Wed, 8 Jun 2022 13:14:01 +0100
+ fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 8 Jun 2022 15:08:07 +0200
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2375.24; Wed, 8 Jun 2022 14:08:07 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-CC:     Paolo Bonzini <pbonzini@redhat.com>, <qemu-devel@nongnu.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
-        <alex.bennee@linaro.org>, Marcel Apfelbaum <marcel@redhat.com>,
+To:     <qemu-devel@nongnu.org>, "Michael S . Tsirkin" <mst@redhat.com>,
+        "Ben Widawsky" <bwidawsk@kernel.org>
+CC:     Paolo Bonzini <pbonzini@redhat.com>, <linux-cxl@vger.kernel.org>,
+        <linuxarm@huawei.com>, <alex.bennee@linaro.org>,
+        Marcel Apfelbaum <marcel@redhat.com>,
         Igor Mammedov <imammedo@redhat.com>,
         Markus Armbruster <armbru@redhat.com>,
         Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
         "Adam Manzanares" <a.manzanares@samsung.com>,
         Tong Zhang <ztong0001@gmail.com>,
-        "Ben Widawsky" <ben.widawsky@intel.com>,
         Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yang Zhong <yang.zhong@intel.com>
-Subject: Re: [PATCH v2 1/8] hw/cxl: Make the CXL fixed memory window setup a
- machine parameter.
-Message-ID: <20220608131401.00004364@huawei.com>
-In-Reply-To: <20220607223702.lpq34pq6wqnvr7ej@offworld>
-References: <20220601164235.2117-1-Jonathan.Cameron@huawei.com>
-        <20220601164235.2117-2-Jonathan.Cameron@huawei.com>
-        <20220607223702.lpq34pq6wqnvr7ej@offworld>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+        <shameerali.kolothum.thodi@huawei.com>
+Subject: [PATCH v4] hw/cxl: Fix missing write mask for HDM decoder target list registers
+Date:   Wed, 8 Jun 2022 14:08:04 +0100
+Message-ID: <20220608130804.25795-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 X-Originating-IP: [10.122.247.231]
 X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
  lhreml710-chm.china.huawei.com (10.201.108.61)
@@ -62,150 +53,60 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 7 Jun 2022 15:37:02 -0700
-Davidlohr Bueso <dave@stgolabs.net> wrote:
+Without being able to write these registers, no interleaving is possible.
+More refined checks of HDM register state on commit to follow.
 
-> On Wed, 01 Jun 2022, Jonathan Cameron wrote:
-> 
-> >Paolo Bonzini requested this change to simplify the ongoing
-> >effort to allow machine setup entirely via RPC.
-> >
-> >Includes shortening the command line form cxl-fixed-memory-window
-> >to cxl-fmw as the command lines are extremely long even with this
-> >change.
-> >
-> >The json change is needed to ensure that there is
-> >a CXLFixedMemoryWindowOptionsList even though the actual
-> >element in the json is never used. Similar to existing
-> >SgxEpcProperties.
-> >
-> >Update cxl-test and bios-tables-test to reflect new parameters.
-> >
-> >Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>  
-> 
-> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Ben Widawsky <ben@bwidawsk.net>
+---
+v4: (Ben Widawsky review responses - thanks!)
+ - Expand list of matched types for 'skip' usages (with more restrictive
+   write mask) to include all CXL device types (type 3, type 1/2 and LD).
+   We only emulate type 3 so far but good for the function implementation
+   to be correct for the other types.
+ - Added Ben's RB.
+ 
+ hw/cxl/cxl-component-utils.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-Thanks.
-
-> 
-> One thing missing however is updating qemu-options.hx - maybe fold
-> in the below?
-
-Excellent point. 
-
-The original patch set has been rolling so long I'd forgotten we had
-documentation in qemu-options.hx.
-
-One comment inline though...
-> 
-> Thanks!
-> 
-> ----8<-------
-> o
-> diff --git a/qemu-options.hx b/qemu-options.hx
-> index 60cf188da429..3bcf1247b88a 100644
-> --- a/qemu-options.hx
-> +++ b/qemu-options.hx
-> @@ -127,10 +127,43 @@ SRST
->   ERST
->   
->   DEF("M", HAS_ARG, QEMU_OPTION_M,
-> +    "                cxl-fmw.0.targets.0=firsttarget,cxl-fmw.0.targets.1=secondtarget,cxl-fmw.0.size=size[,cxl-fmw.0.interleave-granularity=granularity]\n"
-
-This _M entry is odd, given it's just short hand for _machine.  So I'm thinking
-it makes more sense to document this lot in the "machine" block further up the doc.
-That particular entry has a different style to this one, so I'll modify this inline
-with existing entries there.
-
-Possibly someone should move the sgx entry over to machine as well.
-+Cc Sean Chistopherson and Yan Zhong as that sgx-epc entry is from their patch set.
-A quick glance through discussion of that patch didn't throw up a
-reason for doing it as a separate entry, but I haven't dug deep.
-
-
-
->       "                sgx-epc.0.memdev=memid,sgx-epc.0.node=numaid\n",
->       QEMU_ARCH_ALL)
->   
->   SRST
-> +``cxl-fmw.0.targets.0=firsttarget,cxl-fmw.0.targets.1=secondtarget,cxl-fmw.0.size=size[,cxl-fmw.0.interleave-granularity=granularity]``
-> +    Define a CXL Fixed Memory Window (CFMW).
-> +
-> +    Described in the CXL 2.0 ECN: CEDT CFMWS & QTG _DSM.
-> +
-> +    They are regions of Host Physical Addresses (HPA) on a system which
-> +    may be interleaved across one or more CXL host bridges.  The system
-> +    software will assign particular devices into these windows and
-> +    configure the downstream Host-managed Device Memory (HDM) decoders
-> +    in root ports, switch ports and devices appropriately to meet the
-> +    interleave requirements before enabling the memory devices.
-> +
-> +    ``targets.X=firsttarget`` provides the mapping to CXL host bridges
-> +    which may be identified by the id provied in the -device entry.
-> +    Multiple entries are needed to specify all the targets when
-> +    the fixed memory window represents interleaved memory. X is the
-> +    target index from 0.
-> +
-> +    ``size=size`` sets the size of the CFMW. This must be a multiple of
-> +    256MiB. The region will be aligned to 256MiB but the location is
-> +    platform and configuration dependent.
-> +
-> +    ``interleave-granularity=granularity`` sets the granularity of
-> +    interleave. Default 256KiB. Only 256KiB, 512KiB, 1024KiB, 2048KiB
-> +    4096KiB, 8192KiB and 16384KiB granularities supported.
-> +
-> +    Example:
-> +
-> +    ::
-> +
-> +	-M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.targets.1=cxl.1,cxl-fmw.0.size=128G,cxl-fmw.0.interleave-granularity=512k
-> +
->   ``sgx-epc.0.memdev=@var{memid},sgx-epc.0.node=@var{numaid}``
->       Define an SGX EPC section.
->   ERST
-> @@ -467,44 +500,6 @@ SRST
->           -numa hmat-cache,node-id=1,size=10K,level=1,associativity=direct,policy=write-back,line=8
->   ERST
->   
-> -DEF("cxl-fixed-memory-window", HAS_ARG, QEMU_OPTION_cxl_fixed_memory_window,
-> -    "-cxl-fixed-memory-window targets.0=firsttarget,targets.1=secondtarget,size=size[,interleave-granularity=granularity]\n",
-> -    QEMU_ARCH_ALL)
-> -SRST
-> -``-cxl-fixed-memory-window targets.0=firsttarget,targets.1=secondtarget,size=size[,interleave-granularity=granularity]``
-> -    Define a CXL Fixed Memory Window (CFMW).
-> -
-> -    Described in the CXL 2.0 ECN: CEDT CFMWS & QTG _DSM.
-> -
-> -    They are regions of Host Physical Addresses (HPA) on a system which
-> -    may be interleaved across one or more CXL host bridges.  The system
-> -    software will assign particular devices into these windows and
-> -    configure the downstream Host-managed Device Memory (HDM) decoders
-> -    in root ports, switch ports and devices appropriately to meet the
-> -    interleave requirements before enabling the memory devices.
-> -
-> -    ``targets.X=firsttarget`` provides the mapping to CXL host bridges
-> -    which may be identified by the id provied in the -device entry.
-> -    Multiple entries are needed to specify all the targets when
-> -    the fixed memory window represents interleaved memory. X is the
-> -    target index from 0.
-> -
-> -    ``size=size`` sets the size of the CFMW. This must be a multiple of
-> -    256MiB. The region will be aligned to 256MiB but the location is
-> -    platform and configuration dependent.
-> -
-> -    ``interleave-granularity=granularity`` sets the granularity of
-> -    interleave. Default 256KiB. Only 256KiB, 512KiB, 1024KiB, 2048KiB
-> -    4096KiB, 8192KiB and 16384KiB granularities supported.
-> -
-> -    Example:
-> -
-> -    ::
-> -
-> -        -cxl-fixed-memory-window targets.0=cxl.0,targets.1=cxl.1,size=128G,interleave-granularity=512k
-> -
-> -ERST
-> -
->   DEF("add-fd", HAS_ARG, QEMU_OPTION_add_fd,
->       "-add-fd fd=fd,set=set[,opaque=opaque]\n"
->       "                Add 'fd' to fd 'set'\n", QEMU_ARCH_ALL)
+diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
+index 7985c9bfca..3edd303a33 100644
+--- a/hw/cxl/cxl-component-utils.c
++++ b/hw/cxl/cxl-component-utils.c
+@@ -154,7 +154,8 @@ static void ras_init_common(uint32_t *reg_state, uint32_t *write_msk)
+     reg_state[R_CXL_RAS_ERR_CAP_CTRL] = 0x00;
+ }
+ 
+-static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk)
++static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
++                            enum reg_type type)
+ {
+     int decoder_count = 1;
+     int i;
+@@ -174,6 +175,14 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk)
+         write_msk[R_CXL_HDM_DECODER0_SIZE_LO + i * 0x20] = 0xf0000000;
+         write_msk[R_CXL_HDM_DECODER0_SIZE_HI + i * 0x20] = 0xffffffff;
+         write_msk[R_CXL_HDM_DECODER0_CTRL + i * 0x20] = 0x13ff;
++        if (type == CXL2_DEVICE ||
++            type == CXL2_TYPE3_DEVICE ||
++            type == CXL2_LOGICAL_DEVICE) {
++            write_msk[R_CXL_HDM_DECODER0_TARGET_LIST_LO + i * 0x20] = 0xf0000000;
++        } else {
++            write_msk[R_CXL_HDM_DECODER0_TARGET_LIST_LO + i * 0x20] = 0xffffffff;
++        }
++        write_msk[R_CXL_HDM_DECODER0_TARGET_LIST_HI + i * 0x20] = 0xffffffff;
+     }
+ }
+ 
+@@ -239,7 +248,7 @@ void cxl_component_register_init_common(uint32_t *reg_state, uint32_t *write_msk
+     }
+ 
+     init_cap_reg(HDM, 5, 1);
+-    hdm_init_common(reg_state, write_msk);
++    hdm_init_common(reg_state, write_msk, type);
+ 
+     if (caps < 5) {
+         return;
+-- 
+2.32.0
 
