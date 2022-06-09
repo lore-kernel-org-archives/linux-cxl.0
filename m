@@ -2,114 +2,99 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B87C43334
-	for <linux-cxl@archiver.kernel.org>; Thu,  9 Jun 2022 11:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 752C8C43334
+	for <linux-cxl@archiver.kernel.org>; Thu,  9 Jun 2022 13:45:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244018AbiFILsC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 9 Jun 2022 07:48:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38752 "EHLO
+        id S245182AbiFINpS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 9 Jun 2022 09:45:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236948AbiFILrt (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 9 Jun 2022 07:47:49 -0400
+        with ESMTP id S244380AbiFINpS (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 9 Jun 2022 09:45:18 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 226B4A3C21;
-        Thu,  9 Jun 2022 04:47:08 -0700 (PDT)
-Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LJj300DsPz67bHh;
-        Thu,  9 Jun 2022 19:45:48 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8A3B4C7B2
+        for <linux-cxl@vger.kernel.org>; Thu,  9 Jun 2022 06:45:16 -0700 (PDT)
+Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LJlbG1Wmrz67Q0K;
+        Thu,  9 Jun 2022 21:40:26 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
+ fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 9 Jun 2022 13:47:05 +0200
-Received: from localhost (10.81.202.195) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 9 Jun
- 2022 12:47:04 +0100
-Date:   Thu, 9 Jun 2022 12:47:02 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        "Christoph Hellwig" <hch@infradead.org>, <ira.weiny@intel.com>
-CC:     Adam Manzanares <a.manzanares@samsung.com>,
-        "ben@bwidawsk.net" <ben@bwidawsk.net>, <linuxarm@huawei.com>,
-        <lorenzo.pieralisi@arm.com>,
-        "Box, David E" <david.e.box@intel.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: (SPDM) Device attestation, secure channels from host to device etc:
- Discuss at Plumbers?
-Message-ID: <20220609124702.000037b0@Huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+ 15.1.2375.24; Thu, 9 Jun 2022 15:45:14 +0200
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2375.24; Thu, 9 Jun 2022 14:45:13 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <linux-cxl@vger.kernel.org>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, <linuxarm@huawei.com>
+Subject: [PATCH] cxl: Fix cleanup of port devices on failure to probe driver.
+Date:   Thu, 9 Jun 2022 14:45:19 +0100
+Message-ID: <20220609134519.11668-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.202.195]
-X-ClientProxiedBy: lhreml731-chm.china.huawei.com (10.201.108.82) To
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
  lhreml710-chm.china.huawei.com (10.201.108.61)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi All,
+The device is created, and then there is a check if a driver succesfully
+bound to it. In event of failing the bind (e.g. failure in cxl_port_probe())
+the device is left registered. When a bus rescan later occurs, fresh
+devices are created leading to a multiple device representing the same
+underlying hardware. Bad things may follow and at very least we have far too many
+devices.
 
-+CC list almost certainly misses people interested in this topic
-    so please forward as appropriate.
+Fix by ensuring autoremove is registered if the device create succeeds,
+but doesn't depend on sucessful binding to a driver.
 
-I'll start by saying I haven't moved forward much with the
-SPDM/CMA over Data Object Exchange proposal from the PoC that led to
-presenting it last year as part of the PCI etc uconf last year.
-https://lpc.events/event/11/contributions/1089/
-https://lore.kernel.org/all/20220303135905.10420-1-Jonathan.Cameron@huawei.com/
-I'm continuing to carry the QEMU emulation but not posted for a while
-as we are slowly working through a backlog of CXL stuff to merge.
-https://gitlab.com/jic23/qemu/-/commit/f989c8cf283302c70eb5b0b73625b5357c4eb44f
-On the plus side, Ira is driving the DOE support forwards so
-that will resolve one missing precursor.
+Bug was observed as side effect of incorrect ownership in
+[PATCH v9 6/9] cxl/port: Read CDAT table
+but will result from any failure to in cxl_port_probe().
 
-We had a lot of open questions last year and many of them are
-still at least somewhat open; perhaps now is time to revisit?
+Fixes: 8dd2bc0f8e02 ("cxl/mem: Add the cxl_mem driver")
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/cxl/mem.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-In the meantime there has been discussion[1]:
-[1] https://lore.kernel.org/all/CAPcyv4jb7D5AKZsxGE5X0jon5suob5feggotdCZWrO_XNaer3A@mail.gmail.com/
-[2] https://lore.kernel.org/all/20220511191345.GA26623@wunner.de/
-[3] https://lore.kernel.org/all/CAPcyv4iWGb7baQSsjjLJFuT1E11X8cHYdZoGXsNd+B9GHtsxLw@mail.gmail.com/
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index c310f1fd3db0..a979d0b484d5 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -29,6 +29,7 @@ static int create_endpoint(struct cxl_memdev *cxlmd,
+ {
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+ 	struct cxl_port *endpoint;
++	int rc;
+ 
+ 	endpoint = devm_cxl_add_port(&parent_port->dev, &cxlmd->dev,
+ 				     cxlds->component_reg_phys, parent_port);
+@@ -37,13 +38,17 @@ static int create_endpoint(struct cxl_memdev *cxlmd,
+ 
+ 	dev_dbg(&cxlmd->dev, "add: %s\n", dev_name(&endpoint->dev));
+ 
++	rc = cxl_endpoint_autoremove(cxlmd, endpoint);
++	if (rc)
++		return rc;
++
+ 	if (!endpoint->dev.driver) {
+ 		dev_err(&cxlmd->dev, "%s failed probe\n",
+ 			dev_name(&endpoint->dev));
+ 		return -ENXIO;
+ 	}
+ 
+-	return cxl_endpoint_autoremove(cxlmd, endpoint);
++	return 0;
+ }
+ 
+ static void enable_suspend(void *data)
+-- 
+2.32.0
 
-Perhaps it is worth putting in a proposal for either a session in an
-appropriate uconf at plumbers, or maybe a BoF given it is a
-broader topic than either PCI or CXL?
-
-We'll still need to dance around work in various standards bodies
-that we can't talk about yet, but it feels like it's worth
-some time hammering out a plan of attack on what we can
-discuss.
-
-Rough topics:
-
-* Use models. Without those hard to define the rest!
-* Policy.  What do we do if we can't establish a secure channel?
-* Transports of interest.  Single solution for MCTP vs
-  PCI/CMA or not?
-* Session setup etc in kernel / userspace / carefully curated hybrid
-  of the two (Dan mentioned this last one in one of the links above)
-  There may be similarities to the discussion around TLS (much simpler
-  though I think!)
-* Key management
-* Potential to use github.com/dmtf/libSPDM - is it suitable for any solutions
-  (it's handy for emulation if nothing else!)
-* Measurement and what to do with it.
-* No public hardware yet, so what else should we emulate to enable
-  work in this area. (SPDM over MCTP over I2C is on my list as easy
-  to do in QEMU building on
-  https://lore.kernel.org/all/20220520170128.4436-1-Jonathan.Cameron@huawei.com/ 
-* Many other things I've forgotten about - please add!
-
-So are people who care going to be at plumbers (in person or virtually)
-and if so, do we want to put forward a session proposal?
-
-Thanks,
-
-Jonathan
