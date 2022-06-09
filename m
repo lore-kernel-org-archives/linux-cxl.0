@@ -2,47 +2,45 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86305C43334
-	for <linux-cxl@archiver.kernel.org>; Thu,  9 Jun 2022 08:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B87C43334
+	for <linux-cxl@archiver.kernel.org>; Thu,  9 Jun 2022 11:48:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229441AbiFII1q (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 9 Jun 2022 04:27:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42306 "EHLO
+        id S244018AbiFILsC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 9 Jun 2022 07:48:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229934AbiFII1p (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 9 Jun 2022 04:27:45 -0400
+        with ESMTP id S236948AbiFILrt (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 9 Jun 2022 07:47:49 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 594BF14D7AD;
-        Thu,  9 Jun 2022 01:27:43 -0700 (PDT)
-Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LJcXs124Jz6892X;
-        Thu,  9 Jun 2022 16:22:53 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 226B4A3C21;
+        Thu,  9 Jun 2022 04:47:08 -0700 (PDT)
+Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LJj300DsPz67bHh;
+        Thu,  9 Jun 2022 19:45:48 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
+ fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 9 Jun 2022 10:27:40 +0200
+ 15.1.2375.24; Thu, 9 Jun 2022 13:47:05 +0200
 Received: from localhost (10.81.202.195) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 9 Jun
- 2022 09:27:39 +0100
-Date:   Thu, 9 Jun 2022 09:27:38 +0100
+ 2022 12:47:04 +0100
+Date:   Thu, 9 Jun 2022 12:47:02 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Alison Schofield" <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V10 6/9] cxl/port: Read CDAT table
-Message-ID: <20220609092738.00007553@Huawei.com>
-In-Reply-To: <YqESPug9duS6BMfQ@iweiny-desk3>
-References: <20220605005049.2155874-1-ira.weiny@intel.com>
-        <20220605005049.2155874-7-ira.weiny@intel.com>
-        <20220606181541.ysb3zqdpe5cuk4e6@bwidawsk-mobl5>
-        <YqESPug9duS6BMfQ@iweiny-desk3>
+To:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        "Christoph Hellwig" <hch@infradead.org>, <ira.weiny@intel.com>
+CC:     Adam Manzanares <a.manzanares@samsung.com>,
+        "ben@bwidawsk.net" <ben@bwidawsk.net>, <linuxarm@huawei.com>,
+        <lorenzo.pieralisi@arm.com>,
+        "Box, David E" <david.e.box@intel.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: (SPDM) Device attestation, secure channels from host to device etc:
+ Discuss at Plumbers?
+Message-ID: <20220609124702.000037b0@Huawei.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -56,62 +54,62 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 8 Jun 2022 14:27:14 -0700
-Ira Weiny <ira.weiny@intel.com> wrote:
+Hi All,
 
-> On Mon, Jun 06, 2022 at 11:15:41AM -0700, Ben Widawsky wrote:
-> > On 22-06-04 17:50:46, ira.weiny@intel.com wrote:  
-> > > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > >   
-> 
++CC list almost certainly misses people interested in this topic
+    so please forward as appropriate.
 
-[snip]
+I'll start by saying I haven't moved forward much with the
+SPDM/CMA over Data Object Exchange proposal from the PoC that led to
+presenting it last year as part of the PCI etc uconf last year.
+https://lpc.events/event/11/contributions/1089/
+https://lore.kernel.org/all/20220303135905.10420-1-Jonathan.Cameron@huawei.com/
+I'm continuing to carry the QEMU emulation but not posted for a while
+as we are slowly working through a backlog of CXL stuff to merge.
+https://gitlab.com/jic23/qemu/-/commit/f989c8cf283302c70eb5b0b73625b5357c4eb44f
+On the plus side, Ira is driving the DOE support forwards so
+that will resolve one missing precursor.
 
-> >   
-> > > +
-> > > +		entry = cdat_response_pl + 1;
-> > > +		entry_dw = task.rv / sizeof(u32);
-> > > +		/* Skip Header */
-> > > +		entry_dw -= 1;
-> > > +		entry_dw = min(length / 4, entry_dw);
-> > > +		memcpy(data, entry, entry_dw * sizeof(u32));
-> > > +		length -= entry_dw * sizeof(u32);
-> > > +		data += entry_dw;
-> > > +		entry_handle = FIELD_GET(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE, cdat_response_pl[0]);  
-> > 
-> > [0] looks suspicious...  
-> 
-> Actually I have to claim ignorance on this one.  I've carried this from
-> Jonathan's original patches.  I'm not as worried about the [0] as that is just
-> the first dword.  But I'm confused as to this entry handle now.
-> 
-> Jonathan?  Help?
+We had a lot of open questions last year and many of them are
+still at least somewhat open; perhaps now is time to revisit?
 
-Looks right to me.  The entryhandle is a field in the upper 16 bits of the
-first dword defined in Read Entry Response table in the CXL spec and also
-used in the request of the next entry (which is more or less a CDAT structure)
-Two magic values.
-0 -  CDAT header (request only - can't be returned)
-0xFFFF - No more entries.
+In the meantime there has been discussion[1]:
+[1] https://lore.kernel.org/all/CAPcyv4jb7D5AKZsxGE5X0jon5suob5feggotdCZWrO_XNaer3A@mail.gmail.com/
+[2] https://lore.kernel.org/all/20220511191345.GA26623@wunner.de/
+[3] https://lore.kernel.org/all/CAPcyv4iWGb7baQSsjjLJFuT1E11X8cHYdZoGXsNd+B9GHtsxLw@mail.gmail.com/
 
-As we are reading the whole table, we write 0 to first request and from there
-on use the value returned in the response for the next request until we see
-0xFFFF and stop.
+Perhaps it is worth putting in a proposal for either a session in an
+appropriate uconf at plumbers, or maybe a BoF given it is a
+broader topic than either PCI or CXL?
 
-Note IIRC the meaning of entry handle was clarified in a CXL 2.0 errata as
-was a bit ambiguous in the original spec (we had two QEMU implementations
-briefly and they did different things :)
+We'll still need to dance around work in various standards bodies
+that we can't talk about yet, but it feels like it's worth
+some time hammering out a plan of attack on what we can
+discuss.
+
+Rough topics:
+
+* Use models. Without those hard to define the rest!
+* Policy.  What do we do if we can't establish a secure channel?
+* Transports of interest.  Single solution for MCTP vs
+  PCI/CMA or not?
+* Session setup etc in kernel / userspace / carefully curated hybrid
+  of the two (Dan mentioned this last one in one of the links above)
+  There may be similarities to the discussion around TLS (much simpler
+  though I think!)
+* Key management
+* Potential to use github.com/dmtf/libSPDM - is it suitable for any solutions
+  (it's handy for emulation if nothing else!)
+* Measurement and what to do with it.
+* No public hardware yet, so what else should we emulate to enable
+  work in this area. (SPDM over MCTP over I2C is on my list as easy
+  to do in QEMU building on
+  https://lore.kernel.org/all/20220520170128.4436-1-Jonathan.Cameron@huawei.com/ 
+* Many other things I've forgotten about - please add!
+
+So are people who care going to be at plumbers (in person or virtually)
+and if so, do we want to put forward a session proposal?
+
+Thanks,
 
 Jonathan
-
-
-> 
-> >   
-> > > +
-> > > +	} while (entry_handle != 0xFFFF);
-> > > +
-> > > +	return rc;
-> > > +}
-> > > +
-
-
