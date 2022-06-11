@@ -2,176 +2,148 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0146CCA481
-	for <linux-cxl@archiver.kernel.org>; Fri, 10 Jun 2022 20:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E790C43334
+	for <linux-cxl@archiver.kernel.org>; Sat, 11 Jun 2022 02:11:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350662AbiFJUXs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 10 Jun 2022 16:23:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38698 "EHLO
+        id S236683AbiFKCLz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 10 Jun 2022 22:11:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350650AbiFJUXM (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Jun 2022 16:23:12 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5735E2A97F;
-        Fri, 10 Jun 2022 13:23:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654892591; x=1686428591;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=4p2mctKPaIflcK+x1MadV6MB5YwRUZ8n0NuOLocL9vY=;
-  b=KidfmEIT8xIcM4WPl6MnN50D6ct3VQmw0VxDTyV/FR1FfPKWs7AWyqZj
-   erbhH3p3uQp7QWL75Ze0Kaw4r4sDfQ4eRhx2KcDrK0/oFeDGaduPGOkVG
-   XqS55JWxlJUn7WWclFxUiUSmsX8GAElq3mQdZAePKANkv4h0fs1Rpw+n5
-   T3yU+EsQi+HJLeFSn+ZRlBrgRegUNoltY2QAnhK/XL86MoicsuCLLd/DK
-   CaES8vb/KfAU+XcVp2kBEHXKxBWgajt6HIQ4EX/03kGHyecU6ODh7R0cG
-   eERjuZnIooh291VhaOeLe3A0FQmHuk0bndni8tzlEQDxtRg8dyVHVZxqy
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10374"; a="278871133"
-X-IronPort-AV: E=Sophos;i="5.91,291,1647327600"; 
-   d="scan'208";a="278871133"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2022 13:23:10 -0700
-X-IronPort-AV: E=Sophos;i="5.91,291,1647327600"; 
-   d="scan'208";a="566990423"
-Received: from pleung-mobl1.amr.corp.intel.com (HELO localhost) ([10.212.33.34])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2022 13:23:09 -0700
-From:   ira.weiny@intel.com
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH V11 7/8] cxl/port: Retry reading CDAT on failure
-Date:   Fri, 10 Jun 2022 13:22:58 -0700
-Message-Id: <20220610202259.3544623-8-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220610202259.3544623-1-ira.weiny@intel.com>
-References: <20220610202259.3544623-1-ira.weiny@intel.com>
+        with ESMTP id S229693AbiFKCLy (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Jun 2022 22:11:54 -0400
+Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC9BD99827
+        for <linux-cxl@vger.kernel.org>; Fri, 10 Jun 2022 19:11:52 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 2E6256C1821;
+        Sat, 11 Jun 2022 02:02:58 +0000 (UTC)
+Received: from pdx1-sub0-mail-a312.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id A0DAF6C178B;
+        Sat, 11 Jun 2022 02:02:57 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1654912977; a=rsa-sha256;
+        cv=none;
+        b=6IceBlbpI29QcHf7l81dglQc3kVTnQYwl3pXNFwTquPX6aBUFkrnWBc6ZyjEJCIdMAXZT0
+        42qJrzT3nSmU9zzdb+X1/D+U7rcEfYFZAGtem7X6kLMMJevSfeuOVne5QHo1kqHDsQnT3R
+        SXXoGLIoqgbO7T4r0X5MKbgEtTNIb8EV12pp6We1lPEf45Xk7Pz2ypK0GPf2UkxdV7Apfw
+        V2eWfJK0egHnJeBxpCi4x8z+Ur4tVQVod5nVa1GX9S0nCUp9Xho0P7xxPDXfuJTPsg+Mit
+        XI7/YuoGZkYbStl1rwi4wpyiEvtVpKpkpj1XttUqhAiviNTnd3R1Au+07ZUGZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1654912977;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:dkim-signature;
+        bh=/EKdKMYQlkED0wOnzGNnwnCPCW0oniU3CZiV+Eb68zY=;
+        b=sUaAq4ByS9DbcO37i0cP42DAtkG3ztrZAtmGgy6bAbOUtNz1h8DHQzHm4sUR4tw7R/z2uY
+        prgfksGttApAfuRM9JIeKFehWyBTaO1IxeM4OFVkcZWKTYWS1YnW2D0jDZCcXAl7YS+1YA
+        pieUabXWbxJVfHKOj71/U268ipJU9OmT+iOSTH91Sx2ib1YWTIHWvPrFafOHlasoK+HuaX
+        exjn+UhAuiRi49JX/lYjaLtw4QaOsIiRNB1RAt1mY13g1+pF+XkG7hPL7O51g/eZLh0TuN
+        KYd5MwozQflQG5RNvAxifC25x+7GvUeLXRcuAdVnJkx/8/x8w5TWse3g6sgEUg==
+ARC-Authentication-Results: i=1;
+        rspamd-786f5898df-mqmm2;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Wide-Eyed-Name: 62b98a9a178eda8d_1654912977979_400923136
+X-MC-Loop-Signature: 1654912977978:1587980225
+X-MC-Ingress-Time: 1654912977978
+Received: from pdx1-sub0-mail-a312.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.124.238.94 (trex/6.7.1);
+        Sat, 11 Jun 2022 02:02:57 +0000
+Received: from offworld.. (unknown [104.36.31.105])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a312.dreamhost.com (Postfix) with ESMTPSA id 4LKh1X6kknz2W;
+        Fri, 10 Jun 2022 19:02:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1654912977;
+        bh=/EKdKMYQlkED0wOnzGNnwnCPCW0oniU3CZiV+Eb68zY=;
+        h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+        b=dxEqCjI26GaFGsxkgBCadqrLK7MZlXuCnEzoDYj495HaKx7gquDHEjOXjUxWUCYmI
+         aeSZT4tDf9Y3e2QCnFfr9nN1xkWKrj7VkVYjqD87tkOO95/Iv+eJGwxfpVMpS4RP/a
+         ZCiW5aySICRx/cUFKi1z9IDRLxlntPIOKt4bc5oFFIM5iI1LrgUqFs7QvPl5VRbxu0
+         Cnw0px3YUaAJisBIvSL90U6KB0OtYPwjYS7UFHxzDOCOT364G4r993vfY227k1HSOU
+         ghVs0UVeLeLjrMXWtTxHW4D5HIxlBoaek55S0vk/dUInbPoXLZ8xIY6ZAoVR+fMKvT
+         YSB0OoF9rB4Jw==
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     linux-cxl@vger.kernel.org
+Cc:     dan.j.williams@intel.com, ben.widawsky@intel.com,
+        ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com, a.manzanares@samsung.com,
+        dave@stgolabs.net
+Subject: [PATCH] cxl/port: Check for sane CXL.io values for device DVSEC
+Date:   Fri, 10 Jun 2022 19:02:46 -0700
+Message-Id: <20220611020246.140637-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+These must always be set in the capability and control words.
+Explicitly check for these and identify any bogus setups
+while doing cxl_hdm_decode_init().
 
-The CDAT read may fail for a number of reasons but mainly it is possible
-to get different parts of a valid state.  The checksum in the CDAT table
-protects against this.
-
-Now that the cdat data is validated, issue a retry if the CDAT read
-fails.  For now 5 retries are implemented.
-
-Reviewed-by: Ben Widawsky <bwidawsk@kernel.org>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 ---
-Changes from V10
-	Pick up review tag and fix commit message
-
-Changes from V9
-	Alison Schofield/Davidlohr Bueso
-		Print debug on each iteration and error only after failure
-
-Changes from V8
-	Move code to cxl/core/pci.c
-
-Changes from V6
-	Move to pci.c
-	Fix retries count
-	Change to 5 retries
-
-Changes from V5:
-	New patch -- easy to push off or drop.
----
- drivers/cxl/core/pci.c | 40 +++++++++++++++++++++++++++++++---------
- 1 file changed, 31 insertions(+), 9 deletions(-)
+ drivers/cxl/core/pci.c | 14 ++++++++++++--
+ drivers/cxl/cxlpci.h   |  2 ++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index cb70287e2984..fd02bc7c0d97 100644
+index c4c99ff7b55e..c69be8f120fc 100644
 --- a/drivers/cxl/core/pci.c
 +++ b/drivers/cxl/core/pci.c
-@@ -617,19 +617,13 @@ static int cxl_cdat_read_table(struct device *dev,
- 	return rc;
- }
+@@ -367,12 +367,22 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm)
+ 	if (rc)
+ 		return rc;
  
--/**
-- * read_cdat_data - Read the CDAT data on this port
-- * @port: Port to read data from
-- *
-- * This call will sleep waiting for responses from the DOE mailbox.
-- */
--void read_cdat_data(struct cxl_port *port)
-+static int __read_cdat_data(struct cxl_port *port)
- {
- 	static struct pci_doe_mb *cdat_mb;
- 	struct device *dev = &port->dev;
- 	struct device *uport = port->uport;
- 	size_t cdat_length;
--	int ret;
-+	int ret = 0;
++	if (!(cap & CXL_DVSEC_IO_CAPABLE)) {
++		dev_dbg(dev, "Not IO Capable\n");
++		return -ENXIO;
++	}
++
++	if (!(cap & CXL_DVSEC_MEM_CAPABLE)) {
++		dev_dbg(dev, "Not MEM Capable\n");
++		return -ENXIO;
++	}
++
+ 	rc = pci_read_config_word(pdev, d + CXL_DVSEC_CTRL_OFFSET, &ctrl);
+ 	if (rc)
+ 		return rc;
  
- 	/*
- 	 * Ensure a reference on the underlying uport device which has the
-@@ -640,17 +634,21 @@ void read_cdat_data(struct cxl_port *port)
- 	cdat_mb = find_cdat_mb(uport);
- 	if (!cdat_mb) {
- 		dev_dbg(dev, "No CDAT mailbox\n");
-+		ret = -EIO;
- 		goto out;
+-	if (!(cap & CXL_DVSEC_MEM_CAPABLE)) {
+-		dev_dbg(dev, "Not MEM Capable\n");
++	if (!(ctrl & CXL_DVSEC_IO_ENABLE)) {
++		dev_dbg(dev, "Not IO Enable\n");
+ 		return -ENXIO;
  	}
  
- 	if (cxl_cdat_get_length(dev, cdat_mb, &cdat_length)) {
- 		dev_dbg(dev, "No CDAT length\n");
-+		ret = -EIO;
- 		goto out;
- 	}
- 
- 	port->cdat.table = devm_kzalloc(dev, cdat_length, GFP_KERNEL);
--	if (!port->cdat.table)
-+	if (!port->cdat.table) {
-+		ret = -ENOMEM;
- 		goto out;
-+	}
- 
- 	port->cdat.length = cdat_length;
- 	ret = cxl_cdat_read_table(dev, cdat_mb, &port->cdat);
-@@ -664,5 +662,29 @@ void read_cdat_data(struct cxl_port *port)
- 
- out:
- 	put_device(uport);
-+	return ret;
-+}
-+
-+/**
-+ * read_cdat_data - Read the CDAT data on this port
-+ * @port: Port to read data from
-+ *
-+ * This call will sleep waiting for responses from the DOE mailbox.
-+ */
-+void read_cdat_data(struct cxl_port *port)
-+{
-+	int retries = 5;
-+	int rc;
-+
-+	while (retries--) {
-+		rc = __read_cdat_data(port);
-+		if (!rc)
-+			return;
-+		dev_dbg(&port->dev,
-+			"CDAT data read error rc=%d (retries %d)\n",
-+			rc, retries);
-+	}
-+	dev_err(&port->dev, "CDAT data read failed after %d retries\n",
-+		retries);
- }
- EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
+diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+index fce1c11729c2..845f59288dc3 100644
+--- a/drivers/cxl/cxlpci.h
++++ b/drivers/cxl/cxlpci.h
+@@ -18,9 +18,11 @@
+ /* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
+ #define CXL_DVSEC_PCIE_DEVICE					0
+ #define   CXL_DVSEC_CAP_OFFSET		0xA
++#define     CXL_DVSEC_IO_CAPABLE	BIT(1)
+ #define     CXL_DVSEC_MEM_CAPABLE	BIT(2)
+ #define     CXL_DVSEC_HDM_COUNT_MASK	GENMASK(5, 4)
+ #define   CXL_DVSEC_CTRL_OFFSET		0xC
++#define     CXL_DVSEC_IO_ENABLE		BIT(1)
+ #define     CXL_DVSEC_MEM_ENABLE	BIT(2)
+ #define   CXL_DVSEC_RANGE_SIZE_HIGH(i)	(0x18 + (i * 0x10))
+ #define   CXL_DVSEC_RANGE_SIZE_LOW(i)	(0x1C + (i * 0x10))
 -- 
-2.35.1
+2.36.1
 
