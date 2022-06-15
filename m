@@ -2,201 +2,216 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C4EC433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 15 Jun 2022 04:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CE9C43334
+	for <linux-cxl@archiver.kernel.org>; Wed, 15 Jun 2022 05:08:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234341AbiFOESo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 15 Jun 2022 00:18:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55698 "EHLO
+        id S235517AbiFOFIL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 15 Jun 2022 01:08:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234067AbiFOESn (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 15 Jun 2022 00:18:43 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D408F4A3F7;
-        Tue, 14 Jun 2022 21:18:42 -0700 (PDT)
+        with ESMTP id S233958AbiFOFIL (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 15 Jun 2022 01:08:11 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A495719F89;
+        Tue, 14 Jun 2022 22:08:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655266722; x=1686802722;
+  t=1655269689; x=1686805689;
   h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=RAwT4sNZajwkr9AmI8kob3r3qSmavigBxRxkj2BnNVY=;
-  b=Y5v5wACsLpQzNPc384KdNaB8Tmv3HwRDzduuRQ7uRs3nnxREtq+dADPi
-   QKaSotSUTmZjLE1CY+HG/p+1v4/8LiNezP6UNe4K4VTDrHhO6PFShHlM6
-   3x9zVPxhhlhf2VgyLmJIFhKwQw4po+9t2I7AQwrgMhquPnsJZsM9Zy7el
-   Wd/slp2ZJJLOkxoOC90ze8gvCVBKfU16WfQcDDiV09xsWFZUkzCxkXUy0
-   /XtLySP5n6Ww+vnTzYL///iiBrINX7IOWYwrb7P4NCOna+UVC59nfwwIz
-   zgT+TrXjRN32xBBIs0rnmMmxXms6h373KnRKLxMw+U72YnLoVTEaLFUrj
+   mime-version:in-reply-to;
+  bh=8W6+BS5zW2ikAODP0FdofqAW5wGMZqw2O6tgAoEQX+k=;
+  b=OyeIfBy9vzTOnbt1scKaqBNaEvgz60bNL1AVqJgbMCI7UatRz3/CH47J
+   D+D6kTcud6v16UqVLOKfMDgxchwlqlMz7gLzAEjVBR/k0LOOX5KxZNk0G
+   WnpEm/4nRCTv/mV683P9/aYehtaG3cfVIGkQfmwHsEzWdhKxipuDIJIhy
+   8BgfTkh+AG/82ohd1s6Fi3dVwlNrxqHqS3jb6cc3gdzTLMioqp5p5MACi
+   lCSPPHrBb8wDzEK8WoRePFhx/JlBwnQ5N+AkdQ+vdgsx0bunZMZqGePy1
+   3j2f5X1URWZ03CH+v80iKh03K0GTM+vH/h8YEuVVXJ4p1xxfjdiIBqZu9
    A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10378"; a="365178201"
+X-IronPort-AV: E=McAfee;i="6400,9594,10378"; a="259296007"
 X-IronPort-AV: E=Sophos;i="5.91,300,1647327600"; 
-   d="scan'208";a="365178201"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2022 21:18:42 -0700
-X-ExtLoop1: 1
+   d="scan'208";a="259296007"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2022 22:08:09 -0700
 X-IronPort-AV: E=Sophos;i="5.91,300,1647327600"; 
-   d="scan'208";a="687071159"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga002.fm.intel.com with ESMTP; 14 Jun 2022 21:18:42 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Tue, 14 Jun 2022 21:18:42 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Tue, 14 Jun 2022 21:18:42 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.102)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Tue, 14 Jun 2022 21:18:41 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZEYf7DKPWjxNeF4bBm2oUO7/jS1Y3R6B3MqPHIki6U9CQRT8owKqhdsEEmUKCqKwQgFSxgLmCojtfwh/ZDY/x2gB5lilO4K5HaePudv13JItMdFqvh1iLBEnWPkMecIf7Tj2A4YpOKEUsXzyTWKD6xhFDKSnBqIF4mUYFEU4HjPeeB8KwXB9GUCd2uhYXf3h9DXv2lPqFfU1qKZiBFSGB6xbU3VKPJ+ceLMD8VR3WZiHHzCw0WBeETNPB8JipRCpx4esjgPuE1NewImWP8cCdx2vyyB2AiWaWwfn3J7UQRhi1NT6Fz/YZ1xvFkG2hR34J8DNNXZypB+fcos4jxxQ5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2oLI0mNN++8B0XG4z2vdLcOkCkJJUNpctykVgNfZ22g=;
- b=AnPzKpL+26UE01/mBLmkIB3qGHGtZvU0DYFwgw0cHtOpB9ODtRUzWgERgwKyOMJ42TKgI1jamNVJbfQ8D/W/B0YqmyM4m9J4nTnoM19RvfeKHAnbwDMDVRNTNvUdv8Stdgz/L50x3K73chJa9q3LpvFOjpe2G3dksDb2tWOvfJupB1h9rAyc29ph0HIxCNb4IfdrBpa7UzZlOIQXmVMN9G0RtA47IscQOH3xtHOKOmQDxwvB7ewZ07uzL6WPRuQu12q8GwpLP6YYLdNUO7kfIV03U37Nz1v8PfOIh78ORtL7wCuunq8ejkCYhv0LPS/RWOFUIHuXfmX3wQ5RSY6rGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB6311.namprd11.prod.outlook.com (2603:10b6:8:a6::21) by
- MN2PR11MB3632.namprd11.prod.outlook.com (2603:10b6:208:ec::24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5332.13; Wed, 15 Jun 2022 04:18:40 +0000
-Received: from DM4PR11MB6311.namprd11.prod.outlook.com
- ([fe80::d4e9:9ae1:29b2:90c]) by DM4PR11MB6311.namprd11.prod.outlook.com
- ([fe80::d4e9:9ae1:29b2:90c%5]) with mapi id 15.20.5332.020; Wed, 15 Jun 2022
- 04:18:40 +0000
-Date:   Tue, 14 Jun 2022 21:18:34 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Li, Ming" <ming4.li@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Alison Schofield" <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
+   d="scan'208";a="588897117"
+Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.41])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2022 22:08:09 -0700
+Date:   Tue, 14 Jun 2022 22:07:52 -0700
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     "Weiny, Ira" <ira.weiny@intel.com>
+Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Verma, Vishal L" <vishal.l.verma@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V11 3/8] PCI: Create PCI library functions in support of
- DOE mailboxes.
-Message-ID: <Yqldmmqdh0HU5/NP@iweiny-desk3>
-References: <20220610202259.3544623-1-ira.weiny@intel.com>
- <20220610202259.3544623-4-ira.weiny@intel.com>
- <d67f9d0f-e4c8-35e5-e115-745516655e3b@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <d67f9d0f-e4c8-35e5-e115-745516655e3b@intel.com>
-X-ClientProxiedBy: MWHPR19CA0006.namprd19.prod.outlook.com
- (2603:10b6:300:d4::16) To DM4PR11MB6311.namprd11.prod.outlook.com
- (2603:10b6:8:a6::21)
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] cxl/mbox: Add GET_POISON_LIST mailbox command support
+Message-ID: <20220615050752.GA1521419@alison-desk>
+References: <cover.1655250669.git.alison.schofield@intel.com>
+ <382a9c35ef43e89db85670637d88371f9197b7a2.1655250669.git.alison.schofield@intel.com>
+ <YqlQgbDUTJ6k9UBY@iweiny-desk3>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0a6d9d76-f9d2-4bb3-cd88-08da4e86206a
-X-MS-TrafficTypeDiagnostic: MN2PR11MB3632:EE_
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-Microsoft-Antispam-PRVS: <MN2PR11MB363252C2A32DBA366FE588DEF7AD9@MN2PR11MB3632.namprd11.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qtJ3zZrD4O3RALoZ1LFiMpRad23QxGYtvRBO15Qt6Yi6XBn9ybDFXneBLzbpswoGcbnIMLMc5SUOhOb+7FPLevY7Y5kS6S8Olr47TnH9iterAlvJ6759QATHQwQKllJAlToWWghmX7Mm96ynAHwOddF03Ifs6CTqVJC2G5vs7LJDJaKLWil6ddB5299cVIE5255i9Rlu/nLumPmkoJucToMp7nVZHbfNS9vb4Ax6PIrz4iIpyZWfzu2vXdsRRyaQFWKnBPp4z1yK2DNB00Ac04VQn1hZXz8V4PmW+rTWPQGoS4IvZoDtbtdSfW5JW6pYQ5rlHnbWI1UhW+qY/ODXKXxhQui1IScIf+VdVqflVia+ctkPYJZAnLcz2mh14aMzTd1dA8XPdt1J/ll6gy9F7XyzjSvojR2Q3iOiBknGExPuWFjI3/3oFXIzLf3U4EPnuD5yXNuaQMitKpRAhEYDJBcGRh7uUqCR+JspBawTo7I/a6fz9vNoupZ4vhwLm/eifo7+0WF1IJenyokpQmIj1VgCjl/u4bXzehuoKTsAqOzBGpCHTGZuhX5yIib2C6lfhEfxGRjK9nv3wBdWJ0Fe/24l/MChDDvFn1fp5G0cVXjMCu50xOYrmPvI1DSlSF1V3POuEfFg8/FOqH+icPFNZA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6311.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(7916004)(366004)(8936002)(6862004)(508600001)(82960400001)(5660300002)(44832011)(6636002)(54906003)(15650500001)(316002)(8676002)(66476007)(6486002)(4326008)(66946007)(66556008)(6506007)(53546011)(6666004)(9686003)(6512007)(83380400001)(186003)(86362001)(26005)(38100700002)(2906002)(33716001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?AVMD+GRDa3DZx5KJRucHEu+282m1v+LpeSm0EJ7RJHl5BmcId8/h9rbkh3hh?=
- =?us-ascii?Q?T4gLuX2W354+l9vbbWZFaMg8s1w8Jrro/7fH/LMAoc4TxLk3xSbjHKQMkPGL?=
- =?us-ascii?Q?/rbMKIXpXj4T7sfMsnFz/24mzqU+z2DY5PkV69YFhglj0MITmWxnznI59PSW?=
- =?us-ascii?Q?EAzeMOhjWzjaDlevcoDFbpASiIKbVE8xSSkgIFDCN5vEEm7m/uW/6+59QF0a?=
- =?us-ascii?Q?TnL8k60UW7AFmFxmuTX4xC8ICC1jyXIAACqIz9XEiExsrZ1DcuSVs6uIgrmI?=
- =?us-ascii?Q?rPW2+7HoIu9p8aIrMTtcWLDhTW7AM7tOXESJn0tzHtkHnX51AhQqYU005f6e?=
- =?us-ascii?Q?j3BWVEX2pbt+kJpRH8it2mBkNWfjPUszNewY+Xx5UAeDbqcim7osvAK46tl7?=
- =?us-ascii?Q?GWDtU1/N3BR6kXAMZ51k87ougYeTGK0QbMjwzo/lb+aY97LaGBfGxnAm5t1b?=
- =?us-ascii?Q?9HD+plbUaejj7MDSIm/kKTEYJ4LMDhtNqR01WOPVnAQSDgaBxeukC9mgiWJF?=
- =?us-ascii?Q?Ie38insrFBJwQEr8wwldYQLjFhjuRQ8TYB+TxQsMGoDtnXOHnyXWubd7K9hJ?=
- =?us-ascii?Q?WghNSEbpiYnru4mHG+TiwPEEknvQoZdkd3vgvJ764dpiYchDrEe7t5BFhCse?=
- =?us-ascii?Q?zxxFOwyXzW3NJz9xBrXmMuxDs9xGNy3zYpz4iCjM+UVhRgnDx/VN5M0LywuF?=
- =?us-ascii?Q?YPglLLT506JFTIrIUqS/W+jSbSr4RSIJyI+0BqXHsEDfcMyESqjVeVG+2Dh0?=
- =?us-ascii?Q?DdjM0op9QS3TWDVy49qVpUKMnSoFpI2JZRi3tZoRswa62EPyfZY+7t7c+7QI?=
- =?us-ascii?Q?+UYYglinfh5C0q1YL5sf7aJvnHKDYRP1Wy5KqILmBTcyQMszXS/DoO2+HT/g?=
- =?us-ascii?Q?dHPKE9T4jTLWqTzuThxCu0RPiZH+mnSGVvrkQHvDQTIbCQB4uOovCqdvz4T3?=
- =?us-ascii?Q?KJhlP4Hw1vI8ruqYiKIL1ZxhzLkKltOevalMuuAlzJNObol/8ylz/ib2Zp52?=
- =?us-ascii?Q?pmNpsM0HzuDQgSaO3GEKHk23DgnxsCivebg0xNO4oLyLatNY/eIODQljj9c5?=
- =?us-ascii?Q?MClk04KpigGuEOjVHb6pQU8Yq6FOhtxPob9uIgDgPUMewBtWAYYAudHUC21b?=
- =?us-ascii?Q?Ei0YIId1KbMT6DKvZr8Vjqn0e9qZtiU4bGH5fHRj2znjwzt39YcyU3xDgWsq?=
- =?us-ascii?Q?0feKFxlQLtgOYHQ0HGuSAED1WbMxJ5UNcgIEMTYRT0V3v/MFhyH9UFEljj6d?=
- =?us-ascii?Q?MWKkxjlMx2ALWu/GquxnWRjut+TwewoscX5+iNqrxKRiN2zAwx8xbmFPhNg8?=
- =?us-ascii?Q?TlZd4CgDu8rx5NZql5ZXs01axibKLI7MQ92uHnfOdcQ2pMGSGKPfrjYXhvfO?=
- =?us-ascii?Q?zYniOSw2ISDeBIPq2jyJP9Nb7qE//41mZfhnBBic2KaC/DelURZd2CmAeJow?=
- =?us-ascii?Q?cMc1uFVpKKy5IezhBnXiI/I/+Ah6CySHSbo7vhh3ZUwP7KQrxmWtBFZ1++cM?=
- =?us-ascii?Q?/uKB5seqmVLqI5mJ8YWBpNAl7lg40EieD5ODUH0K/aMdY83R3tlDmlzRfWxt?=
- =?us-ascii?Q?WPgSMlvAPWALSaZ29PmZxM58ZAJw+8tniN/kD42i3Tn9d1H6NISamcHyFYBH?=
- =?us-ascii?Q?wIUa4AI8tnMh8AOlof1dDWNtjlUXcGN+BEaD/ukUQLZNhS/X7l3zrRu3jc+5?=
- =?us-ascii?Q?EK/FHKu1eNnIYDep3G/vyKsIkvDbPZ5mTgndy8hWYU0a/tQhxMrVVL2cuaiM?=
- =?us-ascii?Q?POsJ5vTxgKlxzb20LGPRlTOYfi1ZVeM=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a6d9d76-f9d2-4bb3-cd88-08da4e86206a
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6311.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2022 04:18:40.4363
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: z1ppAwR2V5FaXmQZnbTZAp3epf82154rtqJPIhk9pNokEW/Yf70PuKQtb6wKHF/XSMlLHFvgmCohRVP92xyLbg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3632
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YqlQgbDUTJ6k9UBY@iweiny-desk3>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Jun 14, 2022 at 11:53:29AM +0800, Li, Ming wrote:
-> 
-> 
-> On 6/11/2022 4:22 AM, ira.weiny@intel.com wrote:
-> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On Tue, Jun 14, 2022 at 08:22:41PM -0700, Ira Weiny wrote:
+
+Thanks for the review Ira...
+
+> On Tue, Jun 14, 2022 at 05:10:27PM -0700, Alison Schofield wrote:
+> > From: Alison Schofield <alison.schofield@intel.com>
 > > 
 
-[snip]
+snip
 
-> > +
-> > +/**
-> > + * pci_doe_submit_task() - Submit a task to be processed by the state machine
-> > + *
-> > + * @doe_mb: DOE mailbox capability to submit to
-> > + * @task: task to be queued
-> > + *
-> > + * Submit a DOE task (request/response) to the DOE mailbox to be processed.
-> > + * Returns upon queueing the task object.  If the queue is full this function
-> > + * will sleep until there is room in the queue.
-> > + *
-> > + * task->complete will be called when the state machine is done processing this
-> > + * task.
-> > + *
-> > + * Excess data will be discarded.
-> > + *
-> > + * RETURNS: 0 when task has been successful queued, -ERRNO on error
-> > + */
-> > +int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
-> > +{
-> > +	if (!pci_doe_supports_prot(doe_mb, task->prot.vid, task->prot.type))
-> > +		return -EINVAL;
-> > +
-> > +	/* DOE requests must be a whole number of DW */
-> > +	if (task->request_pl_sz % sizeof(u32))
-> > +		return -EINVAL;
-> > +
-> > +again:
-> > +	spin_lock(&doe_mb->task_lock);
-> > +	if (doe_mb->cur_task) {
-> > +		spin_unlock(&doe_mb->task_lock);
-> > +		wait_event_interruptible(doe_mb->wq, doe_mb->cur_task == NULL);
-> Hi,
-> do we need to check the returned value of wait_event_interruptible() here? if the returned value is -ERESTARTSYS, I think we should not try it again, just return.
+> > 
+> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> > index 60d10ee1e7fc..29cf0459b44a 100644
+> > --- a/drivers/cxl/cxlmem.h
+> > +++ b/drivers/cxl/cxlmem.h
+> > @@ -174,6 +174,7 @@ struct cxl_endpoint_dvsec_info {
+> >   *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
+> >   * @lsa_size: Size of Label Storage Area
+> >   *                (CXL 2.0 8.2.9.5.1.1 Identify Memory Device)
+> > + * @poison_max_mer: maximum Media Error Records tracked in Poison List
 > 
+> Does not match the member name below.
+Got it! I intended to drop the _mer.
 
-I'm not 100% sure it is necessary.  However, I don't think there is a point in
-trying to continue if a system thread is interrupted.  So yea I think this is
-a good idea.
+> 
+> Ira
+> 
+> >   * @mbox_mutex: Mutex to synchronize mailbox access.
+> >   * @firmware_version: Firmware version for the memory device.
+> >   * @enabled_cmds: Hardware commands found enabled in CEL.
+> > @@ -204,6 +205,7 @@ struct cxl_dev_state {
+> >  
+> >  	size_t payload_size;
+> >  	size_t lsa_size;
+> > +	u32 poison_max;
+> >  	struct mutex mbox_mutex; /* Protects device mailbox and firmware */
+> >  	char firmware_version[0x10];
+> >  	DECLARE_BITMAP(enabled_cmds, CXL_MEM_COMMAND_ID_MAX);
 
-Ira
+snip
+
+> > +int cxl_mem_get_poison_list(struct device *dev)
+> > +{
+> > +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> > +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> > +	struct cxl_mbox_poison_payload_out *po;
+> > +	struct cxl_mbox_poison_payload_in pi;
+> > +	int nr_records = 0;
+> > +	int rc, i;
+> > +
+> > +	if (range_len(&cxlds->pmem_range)) {
+> > +		pi.offset = cpu_to_le64(cxlds->pmem_range.start);
+> > +		pi.length = cpu_to_le64(range_len(&cxlds->pmem_range));
+> > +	} else {
+> > +		return -ENXIO;
+> > +	}
+> > +
+> > +	po = kvmalloc(cxlds->payload_size, GFP_KERNEL);
+> > +	if (!po)
+> > +		return -ENOMEM;
+> > +
+> > +	do {
+> > +		rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_POISON, &pi,
+> > +				       sizeof(pi), po, cxlds->payload_size);
+> > +		if (rc)
+> > +			goto out;
+> > +
+> > +		if (po->flags & CXL_POISON_FLAG_OVERFLOW) {
+> > +			time64_t o_time = le64_to_cpu(po->overflow_timestamp);
+> > +
+> > +			dev_err(dev, "Poison list overflow at %ptTs UTC\n",
+> > +				&o_time);
+> > +			rc = -ENXIO;
+> > +			goto out;
+> 
+> I guess the idea is that this return will trigger something else will clear the list,
+> rebuild the list, and perform a scan media request?
+> 
+Per CXL Spec 8.2.9.5.4.1: The poison list may be incomplete when the list
+has overflowed. User can perform a Scan Media to try to clear and rebuild
+the list, with no guarantee that the overflow will not recur.
+
+So yes to what you are saying. This return value should indicate to
+user space that a Scan Media should be issued. Issuing the Scan Media
+to the device does lead the device to rebuild it's list, as you say.
+Also, when we get the Scan Media results, the device is able to report
+partial results and tell the host to collect the error records, and
+then restart the scan, get results again, and on and on until the scan
+is complete.
+
+Perhaps a clarification - there is not a logical pairing of Scan Media
+followed by Get Poison List.  Scan Media followed by Get Scan Media
+Results is the logical pairing. Get Poison List is getting a snapshot
+of the poison list at a point in time. The device adds DPAs to the list
+when the device detects poison, some devices run their own backround
+scans and add to the poison list, and then there are the user initiated
+actions (Scan Media and Poison Inject) that can affect the list.
+
+> I'm just wondering if this loop should continue to clear the list and then let
+> something else do the scan media request?
+
+It's not like the _MORE status where the device is telling the host to
+come back and gather more. I think the action of failing, and letting
+user initiated a Scan Media is correct course here.
+
+So, this response got kind of long winded. As you can see, especially
+if one looks in the spec as I know you are, there are additional
+commands that need to be implemented to complete the ARS feature set.
+And, of course, we'll offer user space tooling (NDCTL and libcxl).
+
+> 
+> Other than that question and the above typo.  Looks good!
+> 
+> Ira
+> 
+> > +		}
+> > +
+> > +		if (po->flags & CXL_POISON_FLAG_SCANNING) {
+> > +			dev_err(dev, "Scan Media in Progress\n");
+> > +			rc = -EBUSY;
+> > +			goto out;
+> > +		}
+> > +
+> > +		for (i = 0; i < le16_to_cpu(po->count); i++) {
+> > +			u64 addr = le64_to_cpu(po->record[i].address);
+> > +			u32 len = le32_to_cpu(po->record[i].length);
+> > +			int source = FIELD_GET(CXL_POISON_SOURCE_MASK, addr);
+> > +
+> > +			if (!CXL_POISON_SOURCE_VALID(source)) {
+> > +				dev_dbg(dev, "Invalid poison source %d",
+> > +					source);
+> > +				source = CXL_POISON_SOURCE_INVALID;
+> > +			}
+> > +
+> > +			trace_cxl_poison_list(dev, source, addr, len);
+> > +		}
+> > +
+> > +		/* Protect against an uncleared _FLAG_MORE */
+> > +		nr_records = nr_records + le16_to_cpu(po->count);
+> > +		if (nr_records >= cxlds->poison_max)
+> > +			goto out;
+> > +
+> > +	} while (po->flags & CXL_POISON_FLAG_MORE);
+> > +
+> > +out:
+> > +	kvfree(po);
+> > +	return rc;
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(cxl_mem_get_poison_list, CXL);
+> > +
+> >  struct cxl_dev_state *cxl_dev_state_create(struct device *dev)
+> >  {
+> >  	struct cxl_dev_state *cxlds;
+> > -- 
+> > 2.31.1
+> > 
