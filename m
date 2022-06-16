@@ -2,80 +2,43 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E4EC43334
-	for <linux-cxl@archiver.kernel.org>; Thu, 16 Jun 2022 22:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7EDC43334
+	for <linux-cxl@archiver.kernel.org>; Thu, 16 Jun 2022 23:15:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379297AbiFPW7p (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 16 Jun 2022 18:59:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36408 "EHLO
+        id S1379351AbiFPXPp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 16 Jun 2022 19:15:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379286AbiFPW7o (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Jun 2022 18:59:44 -0400
-Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3525962A1E;
-        Thu, 16 Jun 2022 15:59:42 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 987F7121DA9;
-        Thu, 16 Jun 2022 22:59:41 +0000 (UTC)
-Received: from pdx1-sub0-mail-a312.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 2039C121D8E;
-        Thu, 16 Jun 2022 22:59:41 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1655420381; a=rsa-sha256;
-        cv=none;
-        b=B85/YcjPapY22mVOAwMM4r5F6nEaSu94rVTx+MvJNpaOn5e+mDWFTOtZjWYyv8Jb3QyHun
-        W6bV216mtDytsG0qLvwtgcDDqefR0Rd2btmO0UAjLki/bxnYbaej9F436VvYumKyrbNQM2
-        Kjb0TMNvHXWlfAq7hUOj6wSVwqWqBwt20wiHr0q0dn9Bf/1nepthbfbPdNq5+TnRVWFtBy
-        d5nx5xULo24gALh0xB3uVnGBYItp4HzDu0Y5p68V1Mxd6Y7AWoTtX3j5MK3AA9b9g98ZLI
-        iNzxO+NLBY+EsDEyVj6wo7TrdNAEbVCTt6Okj4xnmDCNQZ4S9UFHu/e77sxetA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1655420381;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=KMUJjasGhtZ6xtzJgMJ6iOnVpbo7qM4ta3eH7kPU4uY=;
-        b=ybQzlj9KH9kXIUILAj32OwMxa1xTUg72X4S1bIGRT2v58P5an51znBQanqyB/zP/8ORgPr
-        6EiHW7fNYXMIhavRHnzncqLh3ShU/ReLluU2PTX/60WRuLvt2mMOrKPnCDD+x3ZWNwKDfk
-        xSzz13zX2Lnk9+Nte3cjamZWK1ldTf6PKb/JDrl92h9ul0Znkfot1Vaxvvo2sLbSzkTtRe
-        3bq314IJ91aQiBGJUnF96Nxr9dWvg3K03X53gFvGk1M+lWV7oB+X2UHq9h5m9fGXp1g91R
-        6AvDkJ8A44A+ejheaVFQ2sDGDMQwjVMd5gNGBiMm/7ZwZ9uWn2errQSyw//iig==
-ARC-Authentication-Results: i=1;
-        rspamd-786f5898df-9jkmw;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Duck-Turn: 14413558197c5ca4_1655420381448_582639351
-X-MC-Loop-Signature: 1655420381448:1891084837
-X-MC-Ingress-Time: 1655420381448
-Received: from pdx1-sub0-mail-a312.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.112.55.213 (trex/6.7.1);
-        Thu, 16 Jun 2022 22:59:41 +0000
-Received: from offworld (unknown [104.36.31.105])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a312.dreamhost.com (Postfix) with ESMTPSA id 4LPHgJ1P4szCY;
-        Thu, 16 Jun 2022 15:59:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1655420380;
-        bh=KMUJjasGhtZ6xtzJgMJ6iOnVpbo7qM4ta3eH7kPU4uY=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=JEO7plbhII07lJxR/lL+83K9pMnfPPGk9KxDsztsv1Rtb3c+hKRIJyPI0PQcp6moT
-         h2+oo9gkiQeIGFePYy0BTGhXWjbaRp3X2JIWEJco+mTW0DSvTtabSqQ7SQGbIrbdkC
-         os69Zfq2hA5I6jflJjXZIqwVhpqaGFRRZ0S5lxZzXxhLFfH2uUEuU5xN6qHpJQqNzs
-         tt6YEYRNptkbguHN5Tu4+SS/KWDty26C7Oz6XMCRecO2mvMfUV7fL6nG/AAAU00iYk
-         JGLM+HygCI4HJ3Bm3FLeqrjvxbJ5rLAvMpiQZ+Ohu6bzdT6WEzI4oIFNV0ddxbbdX/
-         YHziBk0rNi4Sg==
-Date:   Thu, 16 Jun 2022 15:45:25 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Alison Schofield <alison.schofield@intel.com>
+        with ESMTP id S231500AbiFPXPo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Jun 2022 19:15:44 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0247762A0A;
+        Thu, 16 Jun 2022 16:15:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655421343; x=1686957343;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Bm9Vb0LSbnkJ7TNyPuwbBBz6WhULyCYNAtvB1EzVugQ=;
+  b=fiPggnN5C5hqmotl01zdGdbaq+K7HhdKsw/7lQitFVjHU9KTmBQFWApb
+   VOly4cEvI0JrtA7uWQlIBNeY2hRmwyBym2owfhwplg3ng09oWDEMPe+in
+   ZaYIigP6AymKLlJXhodagZLd8s6yJ83T6eKBW0rv8NmKIAgJhUnPTPP4o
+   +LfuTzgUMxkPjaTdRdOvjZZExU8nlh0hTs7ZOHfE+dn0qdmB2R1C4BzXm
+   DLxOKjbKHJ8A8JXHtEh96w34fgTijEuNP1XITvsh7VfGhNKWcGAaNz1VK
+   4HSN66/a9f8QxVp03jWmDNbQOb2EDr3+XrFp3JHAA8rqmiUX90iTM8DIJ
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="259225680"
+X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
+   d="scan'208";a="259225680"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2022 16:15:43 -0700
+X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
+   d="scan'208";a="641767275"
+Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.41])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2022 16:15:43 -0700
+Date:   Thu, 16 Jun 2022 16:15:22 -0700
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>
 Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
         "Weiny, Ira" <ira.weiny@intel.com>,
         "Verma, Vishal L" <vishal.l.verma@intel.com>,
@@ -86,35 +49,44 @@ Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "a.manzanares@samsung.com" <a.manzanares@samsung.com>
 Subject: Re: [PATCH 2/3] cxl/mbox: Add GET_POISON_LIST mailbox command support
-Message-ID: <20220616224525.fufa4dnpw4vl344n@offworld>
+Message-ID: <20220616231522.GA1529779@alison-desk>
 References: <cover.1655250669.git.alison.schofield@intel.com>
  <382a9c35ef43e89db85670637d88371f9197b7a2.1655250669.git.alison.schofield@intel.com>
  <20220616194334.pvorvoozt4rrzr66@offworld>
  <20220616203400.GA1529208@alison-desk>
+ <20220616224525.fufa4dnpw4vl344n@offworld>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220616203400.GA1529208@alison-desk>
-User-Agent: NeoMutt/20220429
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220616224525.fufa4dnpw4vl344n@offworld>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 16 Jun 2022, Alison Schofield wrote:
+On Thu, Jun 16, 2022 at 03:45:25PM -0700, Davidlohr Bueso wrote:
+> On Thu, 16 Jun 2022, Alison Schofield wrote:
+> 
+> >cxl list --media-errors -m mem1
+> >	lists media errors for requested memdev
+> >
+> >cxl list --media-errors -r region#
+> 
+> A quick question on the tooling front: the above goes nicely with
+> cxl-list, but what about the rest of the poisoning cmds? Do you have
+> anything in mind? Do we want something specific for media and poison
+> management instead? Ie:
+> 
+> cxl media --list-errors <params>
+Not clear how this one differs. Seems like we can get any piece of 
+the list w cxl list.
 
->cxl list --media-errors -m mem1
->	lists media errors for requested memdev
->
->cxl list --media-errors -r region#
+> cxl media --inject-errors <params>
+> cxl media --clear-errors <params>
+For inject/clear I'd probably start w what ndctl does today.
+ndctl inject−error  <namespace> [<options>]
+where option -d --uninject performs the clear.
 
-A quick question on the tooling front: the above goes nicely with
-cxl-list, but what about the rest of the poisoning cmds? Do you have
-anything in mind? Do we want something specific for media and poison
-management instead? Ie:
-
-cxl media --list-errors <params>
-cxl media --inject-errors <params>
-cxl media --clear-errors <params>
-
-Thanks,
-Davidlohr
+> 
+> Thanks,
+> Davidlohr
