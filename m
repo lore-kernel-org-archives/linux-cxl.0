@@ -2,189 +2,145 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0453EC43334
-	for <linux-cxl@archiver.kernel.org>; Thu, 16 Jun 2022 19:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C20C43334
+	for <linux-cxl@archiver.kernel.org>; Thu, 16 Jun 2022 20:34:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378371AbiFPTqE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 16 Jun 2022 15:46:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35866 "EHLO
+        id S1378457AbiFPUeX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 16 Jun 2022 16:34:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229793AbiFPTqD (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Jun 2022 15:46:03 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 998EF58E47;
-        Thu, 16 Jun 2022 12:46:01 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id BCDED6C1EAE;
-        Thu, 16 Jun 2022 19:46:00 +0000 (UTC)
-Received: from pdx1-sub0-mail-a312.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id AF7996C18FE;
-        Thu, 16 Jun 2022 19:45:59 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1655408760; a=rsa-sha256;
-        cv=none;
-        b=LFI3oZzhp8nI4A9FAFyoAVY/uUhPvSCavYPFVjobzGzqLm68jeez/zMAGnfg53+3NWyXKd
-        l5CSBpeSb5V6Dl5pTZYi1dmC21CElt6JlT/eP8vYy8uVGFrV3Prs2iEl81e/cpKbJ/9xus
-        HvHBn2PoOmHLUQNt7Dba18HdIBywOZ88YTkC24vrEUcGHtdFBoQ4JZlIMGQvI29Uqo9e9G
-        HhewtdjHO6gtsG8tPFRT7fY4i3+x4HdnwuIYLa5LhnrlOmn8IA1CZx7KOzQnhRnxy5an2X
-        jy420Zya1i/Dr8D0SftYZyCwsfYUFOtc0jqpW3N2V0lxM4IhhN4BfSVhFSIZRA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1655408760;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=LtgRJbay2NJBh9NnnRVdPmX1G1OKRq+xJ0Jn94eAvOo=;
-        b=d6Fg37MmGo5c4qVumnPN+3sfwdD5cY7ofaAQBbT1IGr8l0j54Mc49SO2ct0g+1LP8uTbWF
-        +nEIYvGtjUWQjSasb3SgpDzyabdc6rIGLLrsOxNkjxVEtJHey0O5rpJ9nWP30B3Btfkqkf
-        E7ZYnYN8nFJwpTkdf2XbzRRyS+zyZvb5r8cmEI5DNGeWu3jZadaRIzpIC4FiFCGmi3FYrD
-        GilEy4cFqxjwKMosHrbFNi5M1WhZkwXYXhchM83/VNcVwYyg2hMW0z0tJXqFsYZdgyjgvt
-        EM6gpZ1ieDBFqvlaNGy1TipB912QsBY/nbTjxAN34FJmwXZCEpn/0JA/65Tuew==
-ARC-Authentication-Results: i=1;
-        rspamd-786f5898df-g7jcn;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Fumbling-Industry: 243f44d20affeaab_1655408760299_3844997658
-X-MC-Loop-Signature: 1655408760299:2357453851
-X-MC-Ingress-Time: 1655408760299
-Received: from pdx1-sub0-mail-a312.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.105.211.179 (trex/6.7.1);
-        Thu, 16 Jun 2022 19:46:00 +0000
-Received: from offworld (unknown [104.36.31.105])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a312.dreamhost.com (Postfix) with ESMTPSA id 4LPCMp3VjlzCd;
-        Thu, 16 Jun 2022 12:45:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1655408759;
-        bh=LtgRJbay2NJBh9NnnRVdPmX1G1OKRq+xJ0Jn94eAvOo=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=LAyVgVF+kNrFORxl+qJMPbk7y37I6M1Aay9bVKptc23dhb+aJLW4qRWnqWsGCIr/F
-         y5D1fON3vKZ0Ip/LDLaElrM3yKPJ4Ng5Ph6409mM+cxcmtf7YppNSURcVw7NnhiuJg
-         xhQmfA4EZNANXXlmBV0EMuOKDKESk+N89WheJE3rwV/Lun/lmlH5SZNEfYrjhfK4zf
-         6VRzeB9EPYHtEsYKWHJ4I+7CG/4to3vPSQzQ95v606VVhBaOy4yBjVo9QDfOVUpnXS
-         TphsXVBP3L9hPSFvWsZVHaGu+U85jfjxqybzVCrci5FnaHboE2iTFmIziddskfl77Y
-         v1wS2+k7oa9UQ==
-Date:   Thu, 16 Jun 2022 12:45:55 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     "alison.schofield@intel.com" <alison.schofield@intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
+        with ESMTP id S1378223AbiFPUeW (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Jun 2022 16:34:22 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B67185C758;
+        Thu, 16 Jun 2022 13:34:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655411661; x=1686947661;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6NPi5JN15DLj+hnNH4iONRsN3PsHwgvkpeMbdRdXc4Q=;
+  b=boAc/izsFt1FGUR2jyltC0JtUdJcq9Q0ziVHxG7XEdoYhPYogI7WVVUu
+   aq8MFdOWViQx8MRgKhTrSGj53Wx4mwzHNR67NAbU2WVMyWwJsQ9t5YVMn
+   FoHbauwJpjPneqlFxp6VXtsjZGneTcke2GU9KcnfeJjxdAK1lQ9pXsG1h
+   2msZrqR6g4Sa3l7dhU3erTCE3rxJ47GXY03aFV99DgTu4Ss0vuvpz+Vbu
+   n2Sb6JJtg9MQec62Pm1Pacv9xSH2wiGVn6fv96LzDE2cTMzY59wV6rI2Y
+   FDNBwQhh6pGzgcpa3nRLHBfiihiCnNK+Fl2/wi0VTsrn0atloAv426EHs
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="365698497"
+X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
+   d="scan'208";a="365698497"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2022 13:34:20 -0700
+X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
+   d="scan'208";a="589802054"
+Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.41])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2022 13:34:20 -0700
+Date:   Thu, 16 Jun 2022 13:34:00 -0700
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        "Verma, Vishal L" <vishal.l.verma@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, a.manzanares@samsung.com
-Subject: Re: [PATCH 1/3] trace, cxl: Introduce a TRACE_EVENT for CXL Poison
- Records
-Message-ID: <20220616194555.ps5ur2plizreqzwh@offworld>
+        Ingo Molnar <mingo@redhat.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "a.manzanares@samsung.com" <a.manzanares@samsung.com>
+Subject: Re: [PATCH 2/3] cxl/mbox: Add GET_POISON_LIST mailbox command support
+Message-ID: <20220616203400.GA1529208@alison-desk>
 References: <cover.1655250669.git.alison.schofield@intel.com>
- <32a761fe7046680a4d50762fc43988def24a4bcd.1655250669.git.alison.schofield@intel.com>
+ <382a9c35ef43e89db85670637d88371f9197b7a2.1655250669.git.alison.schofield@intel.com>
+ <20220616194334.pvorvoozt4rrzr66@offworld>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <32a761fe7046680a4d50762fc43988def24a4bcd.1655250669.git.alison.schofield@intel.com>
-User-Agent: NeoMutt/20220429
+In-Reply-To: <20220616194334.pvorvoozt4rrzr66@offworld>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 14 Jun 2022, alison.schofield@intel.com wrote:
+On Thu, Jun 16, 2022 at 12:43:34PM -0700, Davidlohr Bueso wrote:
+> On Tue, 14 Jun 2022, alison.schofield@intel.com wrote:
+> 
+> >From: Alison Schofield <alison.schofield@intel.com>
+> >
+> >CXL devices that support persistent memory maintain a list of locations
+> >that are poisoned or result in poison if the addresses are accessed by
+> >the host.
+> >
+> >Per the spec (CXL 2.0 8.2.8.5.4.1), the device returns this Poison
+> >list as a set of  Media Error Records that include the source of the
+> >error, the starting device physical address and length. The length is
+> >the number of adjacent DPAs in the record and is in units of 64 bytes.
+> >
+> >Retrieve the list and log each Media Error Record as a trace event of
+> >type cxl_poison_list.
+> >
+> >Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> >---
+> > drivers/cxl/cxlmem.h    | 43 +++++++++++++++++++++++
+> > drivers/cxl/core/mbox.c | 75 +++++++++++++++++++++++++++++++++++++++++
+> > 2 files changed, 118 insertions(+)
+> >
+snip
 
->From: Alison Schofield <alison.schofield@intel.com>
->
->Add a trace event for CXL Poison List Media Error Records that
->includes the starting DPA of the poison, the length, and the
->the source of the poison.
->
->This trace event will be used by the CXL_MEM driver to log the
->Media Errors returned by the GET_POISON_LIST Mailbox command.
->
->Signed-off-by: Alison Schofield <alison.schofield@intel.com>
->Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> >+int cxl_mem_get_poison_list(struct device *dev)
+> >+{
+> >+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> >+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> >+	struct cxl_mbox_poison_payload_out *po;
+> >+	struct cxl_mbox_poison_payload_in pi;
+> >+	int nr_records = 0;
+> >+	int rc, i;
+> >+
+> >+	if (range_len(&cxlds->pmem_range)) {
+> >+		pi.offset = cpu_to_le64(cxlds->pmem_range.start);
+> >+		pi.length = cpu_to_le64(range_len(&cxlds->pmem_range));
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+First off - you stopped at a bug here - that pi.length needs to be
+in units of 64 bytes.
+> 
+> Do you ever see this changing to not always use the full pmem DPA range
+> but allow arbitrary ones? I also assume this is the reason why you don't
+> check the range vs cxlds->ram_range to prevent any overlaps, no?
+> 
+> Thanks,
+> Davidlohr
 
->---
-> include/trace/events/cxl.h | 60 ++++++++++++++++++++++++++++++++++++++
-> 1 file changed, 60 insertions(+)
-> create mode 100644 include/trace/events/cxl.h
->
->diff --git a/include/trace/events/cxl.h b/include/trace/events/cxl.h
->new file mode 100644
->index 000000000000..17e707c3817e
->--- /dev/null
->+++ b/include/trace/events/cxl.h
->@@ -0,0 +1,60 @@
->+/* SPDX-License-Identifier: GPL-2.0 */
->+#undef TRACE_SYSTEM
->+#define TRACE_SYSTEM cxl
->+
->+#if !defined(_CXL_TRACE_H) ||  defined(TRACE_HEADER_MULTI_READ)
->+#define _CXL_TRACE_H
->+
->+#include <linux/tracepoint.h>
->+
->+TRACE_DEFINE_ENUM(CXL_POISON_SOURCE_UNKNOWN);
->+TRACE_DEFINE_ENUM(CXL_POISON_SOURCE_INTERNAL);
->+TRACE_DEFINE_ENUM(CXL_POISON_SOURCE_EXTERNAL);
->+TRACE_DEFINE_ENUM(CXL_POISON_SOURCE_INJECTED);
->+TRACE_DEFINE_ENUM(CXL_POISON_SOURCE_VENDOR);
->+TRACE_DEFINE_ENUM(CXL_POISON_SOURCE_INVALID);
->+
->+#define show_poison_source(source)					\
->+	__print_symbolic(source,					\
->+			{CXL_POISON_SOURCE_UNKNOWN,  "UNKNOWN"},	\
->+			{CXL_POISON_SOURCE_EXTERNAL, "EXTERNAL"},	\
->+			{CXL_POISON_SOURCE_INTERNAL, "INTERNAL"},	\
->+			{CXL_POISON_SOURCE_INJECTED, "INJECTED"},	\
->+			{CXL_POISON_SOURCE_VENDOR,   "VENDOR"},		\
->+			{CXL_POISON_SOURCE_INVALID,  "INVALID"})
->+
->+TRACE_EVENT(cxl_poison_list,
->+
->+	    TP_PROTO(struct device *dev,
->+		     int source,
->+		     unsigned long start,
->+		     unsigned int length),
->+
->+	    TP_ARGS(dev, source, start, length),
->+
->+	    TP_STRUCT__entry(
->+		__string(name, dev_name(dev))
->+		__field(int, source)
->+		__field(u64, start)
->+		__field(u32, length)
->+	    ),
->+
->+	    TP_fast_assign(
->+		__assign_str(name, dev_name(dev));
->+		__entry->source = source;
->+		__entry->start = start;
->+		__entry->length = length;
->+	    ),
->+
->+	    TP_printk("dev %s source %s start %llu length %u",
->+		__get_str(name),
->+		show_poison_source(__entry->source),
->+		__entry->start,
->+		__entry->length)
->+);
->+#endif /* _CXL_TRACE_H */
->+
->+/* This part must be outside protection */
->+#undef TRACE_INCLUDE_FILE
->+#define TRACE_INCLUDE_FILE cxl
->+#include <trace/define_trace.h>
->
->--
->2.31.1
->
+David - Great question!
+
+I'm headed in this direction -
+
+cxl list --media-errors -m mem1
+	lists media errors for requested memdev
+
+cxl list --media-errors -r region#
+	lists region errors with HPA addresses
+	(So here cxl tool will collect the poison for all the regions
+	 memdevs and do the DPA to HPA translation)
+
+To answer your question, I wasn't thinking of limiting
+the range within the memdev, but certainly could. And if we were
+taking in ranges, those ranges would need to be checked.
+
+$cxl list --media-errors -m mem1 --range-start=  --range-end|len=
+
+Now, if I left the sysfs inteface as is, the driver will read the 
+entire poison list for the memdev and then cxl tool will filter it
+for the range requested. 
+
+Or, maybe we should implement in libcxl (not sysfs), with memdev and
+range options and only collect from the device the range requested.
+
+Either one looks the same to the cxl tool user, but limiting the
+range we send to the device would certainly cut down on unwanted
+records being logged, retrieved, and examined.
+
+I'd like to hear more from you and other community members.
+
+Alison
+
+> > snip
+
