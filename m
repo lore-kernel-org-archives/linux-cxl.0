@@ -2,183 +2,108 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87ADDC433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 16 Jun 2022 15:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1288C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 16 Jun 2022 17:19:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377764AbiFPPET (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 16 Jun 2022 11:04:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43870 "EHLO
+        id S1378231AbiFPRTp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 16 Jun 2022 13:19:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377776AbiFPPET (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Jun 2022 11:04:19 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70828326E2;
-        Thu, 16 Jun 2022 08:04:17 -0700 (PDT)
-Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LP56Y73MVz67KsG;
-        Thu, 16 Jun 2022 23:04:05 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 16 Jun 2022 17:04:14 +0200
-Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 16 Jun
- 2022 16:04:14 +0100
-Date:   Thu, 16 Jun 2022 16:04:12 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <alison.schofield@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, <linux-cxl@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] cxl/core: Add sysfs attribute get_poison for list
- retrieval
-Message-ID: <20220616160412.00000c34@Huawei.com>
-In-Reply-To: <57644934bb7af8e1c692735f53c2c415a1ba16d1.1655250669.git.alison.schofield@intel.com>
-References: <cover.1655250669.git.alison.schofield@intel.com>
-        <57644934bb7af8e1c692735f53c2c415a1ba16d1.1655250669.git.alison.schofield@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S1378067AbiFPRTk (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Jun 2022 13:19:40 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EE8526E5
+        for <linux-cxl@vger.kernel.org>; Thu, 16 Jun 2022 10:19:39 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 63125215B1;
+        Thu, 16 Jun 2022 17:19:38 +0000 (UTC)
+Received: from pdx1-sub0-mail-a312.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id C62F821768;
+        Thu, 16 Jun 2022 17:19:37 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1655399977; a=rsa-sha256;
+        cv=none;
+        b=I0U5btCKevthhg6R2g5V8OuPPvH58BXFSYm6dRQcV7xE0MlkiAqcJq05yQ4wLJY2KVecYz
+        7Xv8098TjM96cjiQeRxRVuW0FTfnGjoDXQnoaZk1yU9KymCOA4TgCIWlu3pKgfFDR3YrdP
+        7u0NIN7nAIYgRPWKIlrdLe33X9xQABIFgNRYQQtMxLOplYdGWvmNnWJoUXpVvfdOhxdVRs
+        yUXENwVOt1D5Q6LQpitvML2i+o90mmipddKkbtoHQ2fIwZfUaelNfm5QIBt1PlX0Tcuy5N
+        XxBZ030lVY64nYKR611i1A3EdvElpkAnGBbo40DrxS8n1AXK8SsPn2E6a3AkxA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1655399977;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=PM8YyFKcDux8T7r4uQmprBX+qh5eaBPs2+cNusSpmaY=;
+        b=lN+UHemZxdYnin88rLZ167KA7igQp1XMJRrg3VLvIv6NPXcOTFs5wxBIjImL94TQJDoqOQ
+        vDDCFP75jteLfsWTD7cvwkwszDPWLdUm+TIH+wRjy+FtWQwTsdqReBHhdkRJoNa/ZKyJkF
+        rAoNQVuybvd1Am6W8oEJ86F00T2hJWn7vg5yKKzLcHnGn3f/yNTIyXGgouQUDI+KBgBqrJ
+        kFSiy1z1EWERFE+yubpyTJakEcxD1jKgC8dLdZXeocv5wzjGlvOhQE9oe+H1LOe0Dsewju
+        jDDIEXGpF4qIY9t0u+al6PMAclpzIc25ZNRx9Oa2+iUTVjWI0Ey58uOjGB5TJg==
+ARC-Authentication-Results: i=1;
+        rspamd-786f5898df-2dglm;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Cooperative-Eight: 0bbe6bc61730ad7c_1655399978114_2632739479
+X-MC-Loop-Signature: 1655399978114:2392080877
+X-MC-Ingress-Time: 1655399978114
+Received: from pdx1-sub0-mail-a312.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.105.211.178 (trex/6.7.1);
+        Thu, 16 Jun 2022 17:19:38 +0000
+Received: from offworld (unknown [104.36.31.105])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a312.dreamhost.com (Postfix) with ESMTPSA id 4LP86x16DTz4f;
+        Thu, 16 Jun 2022 10:19:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1655399977;
+        bh=PM8YyFKcDux8T7r4uQmprBX+qh5eaBPs2+cNusSpmaY=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=gn7T9g1ZnhykQLj74c5Gl0qhrfWi1W+D3at00J+fuEfI70PS9xs9+MtMfAbTpOsvH
+         VoT/KM+aIuMEl/VwTve102NEK2xP0xtDJKecp6EIsro9eEr340Eo9mqv4iUDd/9zsj
+         6JoPqSFCJGfHDdZvCAMvDm/2GxZ++z+0TFo/g8jv2sVAiXxO+uvFGRekx9vVmdFsST
+         8+wj4r/Xmx+bvRv0XkSxyAaNYq/z8/Fy/Y/Xzip3ZPkzGjrxHbXoN7bUV6+E2Vol+9
+         C4FQy8jbh7Qi3sFzxO3iRza3rak4vaJaZGuaeVWGQD0Eh2dX2VphZmkSuFWkzuPDY/
+         WrdZD6+ve896A==
+Date:   Thu, 16 Jun 2022 10:19:34 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Vishal Verma <vishal.l.verma@intel.com>
+Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+        Dan Williams <dan.j.williams@intel.com>,
+        Steven Garcia <steven.garcia@intel.com>
+Subject: Re: [PATCH] libcxl: fix a segfault when memdev->pmem is absent
+Message-ID: <20220616171934.s6m72nsh2kkvmciu@offworld>
+References: <20220602154427.462852-1-vishal.l.verma@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhreml723-chm.china.huawei.com (10.201.108.74) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20220602154427.462852-1-vishal.l.verma@intel.com>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 14 Jun 2022 17:10:28 -0700
-alison.schofield@intel.com wrote:
+On Thu, 02 Jun 2022, Vishal Verma wrote:
 
-> From: Alison Schofield <alison.schofield@intel.com>
-> 
-> The sysfs attribute, get_poison, allows user space to request the
-> retrieval of a CXL devices poison list for its persistent memory.
-> 
-> From Documentation/ABI/.../sysfs-bus-cxl
->         (WO) When a '1' is written to this attribute the memdev
->         driver retrieves the poison list from the device. The list
->         includes addresses that are poisoned or would result in
->         poison if accessed, and the source of the poison. This
->         attribute is only visible for devices supporting the
->         capability. The retrieved errors are logged as kernel
->         trace events with the label: cxl_poison_list.
-> 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+>A CXL memdev may not have any persistent capacity, and in this case it
+>is possible that a 'pmem' object never gets instantiated. Such a
+>scenario would cause free_pmem () to dereference a NULL pointer and
+>segfault.
+>
+>Fix this by only proceeding in free_pmem() if 'pmem' was valid.
+>
+>Fixes: cd1aed6cefe8 ("libcxl: add representation for an nvdimm bridge object")
+>Reported-by: Steven Garcia <steven.garcia@intel.com>
+>Cc: Dan Williams <dan.j.williams@intel.com>
+>Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+>Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
-Hi Alison,
-
-I'm planning to throw together QEMU support for this and test
-it. In meantime a few quick comments / suggestions inline.
-
-Thanks,
-
-Jonathan
-
-> ---
->  Documentation/ABI/testing/sysfs-bus-cxl | 13 ++++++++++
->  drivers/cxl/core/memdev.c               | 32 +++++++++++++++++++++++++
->  2 files changed, 45 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> index 7c2b846521f3..9d0c3988fdd2 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> @@ -163,3 +163,16 @@ Description:
->  		memory (type-3). The 'target_type' attribute indicates the
->  		current setting which may dynamically change based on what
->  		memory regions are activated in this decode hierarchy.
-> +
-> +What:		/sys/bus/cxl/devices/memX/get_poison
-> +Date:		June, 2022
-> +KernelVersion:	v5.20
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(WO) When a '1' is written to this attribute the memdev
-> +		driver retrieves the poison list from the device. The list
-> +		includes addresses that are poisoned or would result in
-> +		poison if accessed, and the source of the poison. This
-> +		attribute is only visible for devices supporting the
-> +		capability. The retrieved errors are logged as kernel
-> +		trace events with the label: cxl_poison_list.
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index f7cdcd33504a..5ef9ffaa934a 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -106,12 +106,34 @@ static ssize_t numa_node_show(struct device *dev, struct device_attribute *attr,
->  }
->  static DEVICE_ATTR_RO(numa_node);
->  
-> +static ssize_t get_poison_store(struct device *dev,
-> +				struct device_attribute *attr,
-> +				const char *buf, size_t len)
-> +
-> +{
-> +	int rc;
-> +
-> +	if (!sysfs_streq(buf, "1")) {
-
-Maybe kstrtobool?  If you do then fine to leave the documentation claiming
-it's tighter as that'll tell people who actually read it to expect to
-write a 1.
-
-> +		dev_err(dev, "%s: unknown value: %s\n", attr->attr.name, buf);
-
-Feels noisy when I'd expect -EINVAL to be enough info to indicate an invalid
-parameter.
-
-> +		return -EINVAL;
-> +	}
-> +
-> +	rc = cxl_mem_get_poison_list(dev);
-> +	if (rc) {
-> +		dev_err(dev, "Failed to retrieve poison list %d\n", rc);
-
-Here I'd expect the error code to returned on the write to probably be enough
-info so not sure this error print is useful either.
-
-> +		return rc;
-> +	}
-> +	return len;
-> +}
-> +static DEVICE_ATTR_WO(get_poison);
-> +
->  static struct attribute *cxl_memdev_attributes[] = {
->  	&dev_attr_serial.attr,
->  	&dev_attr_firmware_version.attr,
->  	&dev_attr_payload_max.attr,
->  	&dev_attr_label_storage_size.attr,
->  	&dev_attr_numa_node.attr,
-> +	&dev_attr_get_poison.attr,
->  	NULL,
->  };
->  
-> @@ -130,6 +152,16 @@ static umode_t cxl_memdev_visible(struct kobject *kobj, struct attribute *a,
->  {
->  	if (!IS_ENABLED(CONFIG_NUMA) && a == &dev_attr_numa_node.attr)
->  		return 0;
-> +
-> +	if (a == &dev_attr_get_poison.attr) {
-> +		struct device *dev = container_of(kobj, struct device, kobj);
-> +		struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> +		struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +
-> +		if (!test_bit(CXL_MEM_COMMAND_ID_GET_POISON,
-> +			      cxlds->enabled_cmds))
-			      to_cxl_memdev(dev)->enabled_cmds))
-and drop the local variable is shorter and I don't htink it loses
-any readability.
-
-> +			return 0;
-> +	}
->  	return a->mode;
->  }
->  
-
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
