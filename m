@@ -2,43 +2,43 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C20C43334
-	for <linux-cxl@archiver.kernel.org>; Thu, 16 Jun 2022 20:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BBCC433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 16 Jun 2022 20:40:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378457AbiFPUeX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 16 Jun 2022 16:34:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49992 "EHLO
+        id S1350793AbiFPUkM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 16 Jun 2022 16:40:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378223AbiFPUeW (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Jun 2022 16:34:22 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B67185C758;
-        Thu, 16 Jun 2022 13:34:21 -0700 (PDT)
+        with ESMTP id S229521AbiFPUkK (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Jun 2022 16:40:10 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26E7D5DE49;
+        Thu, 16 Jun 2022 13:40:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655411661; x=1686947661;
+  t=1655412010; x=1686948010;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=6NPi5JN15DLj+hnNH4iONRsN3PsHwgvkpeMbdRdXc4Q=;
-  b=boAc/izsFt1FGUR2jyltC0JtUdJcq9Q0ziVHxG7XEdoYhPYogI7WVVUu
-   aq8MFdOWViQx8MRgKhTrSGj53Wx4mwzHNR67NAbU2WVMyWwJsQ9t5YVMn
-   FoHbauwJpjPneqlFxp6VXtsjZGneTcke2GU9KcnfeJjxdAK1lQ9pXsG1h
-   2msZrqR6g4Sa3l7dhU3erTCE3rxJ47GXY03aFV99DgTu4Ss0vuvpz+Vbu
-   n2Sb6JJtg9MQec62Pm1Pacv9xSH2wiGVn6fv96LzDE2cTMzY59wV6rI2Y
-   FDNBwQhh6pGzgcpa3nRLHBfiihiCnNK+Fl2/wi0VTsrn0atloAv426EHs
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="365698497"
+  bh=3kyqj7rQYGnntBXVKFnHRuP3Q3HC8rJ+VtXx7y0r3mc=;
+  b=SlIUK2d7mfB28gMtqN/IJ+hj88Jvgj9kVBHq/h7tEI38NmGAF/2a0BIS
+   SRgYmceLYY6EdxVY8WAicJdtHuEI8yqGfDJhreV10WvLwgiplKnbVLdlo
+   6MDsELvNPSPyN4hnWE5sg4KSN63ii5rS4Yfozy297BZz1Dli/Q6u3KTqS
+   9aU80FhE+ztuQN1EUxRsl/6ndLUn6D8Z5yeoL6UTPe0AWaLLz9hUGWojE
+   kD5UnGR8VsnZuVVS6ngXqwR27QcYYT7SMGSehv0NjMX/quahiU/iAvUT+
+   7XR12WDK2k2UzEKKFkbtjgJetefzkx1KwJBenhwE/TOMuDfv9Q97ZwsG1
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="278143651"
 X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="365698497"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2022 13:34:20 -0700
+   d="scan'208";a="278143651"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2022 13:40:09 -0700
 X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="589802054"
+   d="scan'208";a="641719392"
 Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.41])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2022 13:34:20 -0700
-Date:   Thu, 16 Jun 2022 13:34:00 -0700
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2022 13:40:09 -0700
+Date:   Thu, 16 Jun 2022 13:39:49 -0700
 From:   Alison Schofield <alison.schofield@intel.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
         "Weiny, Ira" <ira.weiny@intel.com>,
         "Verma, Vishal L" <vishal.l.verma@intel.com>,
@@ -46,101 +46,98 @@ Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Ingo Molnar <mingo@redhat.com>,
         "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "a.manzanares@samsung.com" <a.manzanares@samsung.com>
-Subject: Re: [PATCH 2/3] cxl/mbox: Add GET_POISON_LIST mailbox command support
-Message-ID: <20220616203400.GA1529208@alison-desk>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] cxl/core: Add sysfs attribute get_poison for list
+ retrieval
+Message-ID: <20220616203949.GB1529208@alison-desk>
 References: <cover.1655250669.git.alison.schofield@intel.com>
- <382a9c35ef43e89db85670637d88371f9197b7a2.1655250669.git.alison.schofield@intel.com>
- <20220616194334.pvorvoozt4rrzr66@offworld>
+ <57644934bb7af8e1c692735f53c2c415a1ba16d1.1655250669.git.alison.schofield@intel.com>
+ <20220616160412.00000c34@Huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220616194334.pvorvoozt4rrzr66@offworld>
+In-Reply-To: <20220616160412.00000c34@Huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Jun 16, 2022 at 12:43:34PM -0700, Davidlohr Bueso wrote:
-> On Tue, 14 Jun 2022, alison.schofield@intel.com wrote:
+On Thu, Jun 16, 2022 at 08:04:12AM -0700, Jonathan Cameron wrote:
+> On Tue, 14 Jun 2022 17:10:28 -0700
+> alison.schofield@intel.com wrote:
 > 
-> >From: Alison Schofield <alison.schofield@intel.com>
-> >
-> >CXL devices that support persistent memory maintain a list of locations
-> >that are poisoned or result in poison if the addresses are accessed by
-> >the host.
-> >
-> >Per the spec (CXL 2.0 8.2.8.5.4.1), the device returns this Poison
-> >list as a set of  Media Error Records that include the source of the
-> >error, the starting device physical address and length. The length is
-> >the number of adjacent DPAs in the record and is in units of 64 bytes.
-> >
-> >Retrieve the list and log each Media Error Record as a trace event of
-> >type cxl_poison_list.
-> >
-> >Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> >---
-> > drivers/cxl/cxlmem.h    | 43 +++++++++++++++++++++++
-> > drivers/cxl/core/mbox.c | 75 +++++++++++++++++++++++++++++++++++++++++
-> > 2 files changed, 118 insertions(+)
-> >
-snip
-
-> >+int cxl_mem_get_poison_list(struct device *dev)
-> >+{
-> >+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> >+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> >+	struct cxl_mbox_poison_payload_out *po;
-> >+	struct cxl_mbox_poison_payload_in pi;
-> >+	int nr_records = 0;
-> >+	int rc, i;
-> >+
-> >+	if (range_len(&cxlds->pmem_range)) {
-> >+		pi.offset = cpu_to_le64(cxlds->pmem_range.start);
-> >+		pi.length = cpu_to_le64(range_len(&cxlds->pmem_range));
-
-First off - you stopped at a bug here - that pi.length needs to be
-in units of 64 bytes.
+> > From: Alison Schofield <alison.schofield@intel.com>
+> > 
+> > The sysfs attribute, get_poison, allows user space to request the
+> > retrieval of a CXL devices poison list for its persistent memory.
+> > 
+> > From Documentation/ABI/.../sysfs-bus-cxl
+> >         (WO) When a '1' is written to this attribute the memdev
+> >         driver retrieves the poison list from the device. The list
+> >         includes addresses that are poisoned or would result in
+> >         poison if accessed, and the source of the poison. This
+> >         attribute is only visible for devices supporting the
+> >         capability. The retrieved errors are logged as kernel
+> >         trace events with the label: cxl_poison_list.
+> > 
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 > 
-> Do you ever see this changing to not always use the full pmem DPA range
-> but allow arbitrary ones? I also assume this is the reason why you don't
-> check the range vs cxlds->ram_range to prevent any overlaps, no?
+> Hi Alison,
+> 
+> I'm planning to throw together QEMU support for this and test
+> it. In meantime a few quick comments / suggestions inline.
+
+Thanks Jonathan.
+I've tested with a test patch that returns contrived output payloads,
+and will look fwd to trying out w qemu,
+
 > 
 > Thanks,
-> Davidlohr
+> 
+> Jonathan
+> 
+> > ---
+snip
+> > +
+> > +	if (!sysfs_streq(buf, "1")) {
+> 
+> Maybe kstrtobool?  If you do then fine to leave the documentation claiming
+> it's tighter as that'll tell people who actually read it to expect to
+> write a 1.
+> 
+Got it.
 
-David - Great question!
+> > +		dev_err(dev, "%s: unknown value: %s\n", attr->attr.name, buf);
+> 
+> Feels noisy when I'd expect -EINVAL to be enough info to indicate an invalid
+> parameter.
+> 
+Got it.
 
-I'm headed in this direction -
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	rc = cxl_mem_get_poison_list(dev);
+> > +	if (rc) {
+> > +		dev_err(dev, "Failed to retrieve poison list %d\n", rc);
+> 
+> Here I'd expect the error code to returned on the write to probably be enough
+> info so not sure this error print is useful either.
+> 
+Got it.
 
-cxl list --media-errors -m mem1
-	lists media errors for requested memdev
+> > +
+snip
+> > +	if (a == &dev_attr_get_poison.attr) {
+> > +		struct device *dev = container_of(kobj, struct device, kobj);
+> > +		struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> > +		struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> > +
+> > +		if (!test_bit(CXL_MEM_COMMAND_ID_GET_POISON,
+> > +			      cxlds->enabled_cmds))
+> 			      to_cxl_memdev(dev)->enabled_cmds))
+> and drop the local variable is shorter and I don't htink it loses
+> any readability.
+> 
+Got it.
 
-cxl list --media-errors -r region#
-	lists region errors with HPA addresses
-	(So here cxl tool will collect the poison for all the regions
-	 memdevs and do the DPA to HPA translation)
-
-To answer your question, I wasn't thinking of limiting
-the range within the memdev, but certainly could. And if we were
-taking in ranges, those ranges would need to be checked.
-
-$cxl list --media-errors -m mem1 --range-start=  --range-end|len=
-
-Now, if I left the sysfs inteface as is, the driver will read the 
-entire poison list for the memdev and then cxl tool will filter it
-for the range requested. 
-
-Or, maybe we should implement in libcxl (not sysfs), with memdev and
-range options and only collect from the device the range requested.
-
-Either one looks the same to the cxl tool user, but limiting the
-range we send to the device would certainly cut down on unwanted
-records being logged, retrieved, and examined.
-
-I'd like to hear more from you and other community members.
-
-Alison
-
-> > snip
-
+Thanks Jonathan!
