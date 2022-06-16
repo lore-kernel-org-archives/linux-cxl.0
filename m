@@ -2,78 +2,78 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 748A2C433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 16 Jun 2022 19:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0453EC43334
+	for <linux-cxl@archiver.kernel.org>; Thu, 16 Jun 2022 19:46:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230467AbiFPTn4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 16 Jun 2022 15:43:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34786 "EHLO
+        id S1378371AbiFPTqE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 16 Jun 2022 15:46:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229953AbiFPTnz (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Jun 2022 15:43:55 -0400
-Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36C28580C2;
-        Thu, 16 Jun 2022 12:43:51 -0700 (PDT)
+        with ESMTP id S229793AbiFPTqD (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Jun 2022 15:46:03 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 998EF58E47;
+        Thu, 16 Jun 2022 12:46:01 -0700 (PDT)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id AD1986A137F;
-        Thu, 16 Jun 2022 19:43:47 +0000 (UTC)
+        by relay.mailchannels.net (Postfix) with ESMTP id BCDED6C1EAE;
+        Thu, 16 Jun 2022 19:46:00 +0000 (UTC)
 Received: from pdx1-sub0-mail-a312.dreamhost.com (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 19BA56A1081;
-        Thu, 16 Jun 2022 19:43:38 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1655408627; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id AF7996C18FE;
+        Thu, 16 Jun 2022 19:45:59 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1655408760; a=rsa-sha256;
         cv=none;
-        b=ZbOmTxb9kizxwZGOJqxuEvi/CzJiuyatvvpfSG050xGeikLDKJvU9kpBdH2Lkl375INDFU
-        IWILJnot3A3m0dukQ+v9omifK28xrgqpZCR2RIgZMj4/9ryHziFcoX1gUzsAwJgEHe/0nH
-        OU4ecUIhwLjrJKIKSPsCJLRUJ3S461FeBsIuf3Bi2sQwurv/0CXS1eikVFnSbYuoAxGegO
-        9fPzByYtcJZcp+D/hSM2p6+vWQx+RnowdS/6hhQgzz2EW0WIRMdUtWglkHwoL2DC0sd0ck
-        Qi7WAZNMPlTlvWAxZHM980HEUTYfDe96G9lE3F/fjcJiwjVL2Hs2blAorypRHA==
+        b=LFI3oZzhp8nI4A9FAFyoAVY/uUhPvSCavYPFVjobzGzqLm68jeez/zMAGnfg53+3NWyXKd
+        l5CSBpeSb5V6Dl5pTZYi1dmC21CElt6JlT/eP8vYy8uVGFrV3Prs2iEl81e/cpKbJ/9xus
+        HvHBn2PoOmHLUQNt7Dba18HdIBywOZ88YTkC24vrEUcGHtdFBoQ4JZlIMGQvI29Uqo9e9G
+        HhewtdjHO6gtsG8tPFRT7fY4i3+x4HdnwuIYLa5LhnrlOmn8IA1CZx7KOzQnhRnxy5an2X
+        jy420Zya1i/Dr8D0SftYZyCwsfYUFOtc0jqpW3N2V0lxM4IhhN4BfSVhFSIZRA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1655408627;
+        s=arc-2022; t=1655408760;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=APowBpXKlvkZTYp8d00UGVeluyopSqpyy/WS7dXz7QE=;
-        b=co1A+6+5JfACtmYqN+w6xJNeEFy0lomu0EHDxqevMXV97u6nMTU6TjQKgzG9t7jQNaWr+M
-        EAqD0CAaeIsyu59xKJEpDQ6+lt3z+8Ak7b1utrLf9EIhDgWNQMBxRXy5x+Y30immuubsH8
-        2pAqDzEBvuqrQyTjDh+pjbBajTkBaIio2dkO7hG/K9aDXLJvQFDMdLJ3QmiUF6waVO/7Xx
-        PtqTONRvSxZTerhSXSofBIEkwR3/Fafvyl8y/ZzwNO2yX/n7Fm4UC8IbjaXC78d4nSqzzG
-        dpT8gRK0il6/1ud2e1BccE3EMBq+VKcfKAX3f43ATTP9EB1ZBILODNqey0mIxQ==
+        bh=LtgRJbay2NJBh9NnnRVdPmX1G1OKRq+xJ0Jn94eAvOo=;
+        b=d6Fg37MmGo5c4qVumnPN+3sfwdD5cY7ofaAQBbT1IGr8l0j54Mc49SO2ct0g+1LP8uTbWF
+        +nEIYvGtjUWQjSasb3SgpDzyabdc6rIGLLrsOxNkjxVEtJHey0O5rpJ9nWP30B3Btfkqkf
+        E7ZYnYN8nFJwpTkdf2XbzRRyS+zyZvb5r8cmEI5DNGeWu3jZadaRIzpIC4FiFCGmi3FYrD
+        GilEy4cFqxjwKMosHrbFNi5M1WhZkwXYXhchM83/VNcVwYyg2hMW0z0tJXqFsYZdgyjgvt
+        EM6gpZ1ieDBFqvlaNGy1TipB912QsBY/nbTjxAN34FJmwXZCEpn/0JA/65Tuew==
 ARC-Authentication-Results: i=1;
-        rspamd-848669fb87-x5wm2;
+        rspamd-786f5898df-g7jcn;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Harbor-Abortive: 41da3f886441c637_1655408627505_2417365882
-X-MC-Loop-Signature: 1655408627505:3811859437
-X-MC-Ingress-Time: 1655408627505
+X-Fumbling-Industry: 243f44d20affeaab_1655408760299_3844997658
+X-MC-Loop-Signature: 1655408760299:2357453851
+X-MC-Ingress-Time: 1655408760299
 Received: from pdx1-sub0-mail-a312.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.125.123.1 (trex/6.7.1);
-        Thu, 16 Jun 2022 19:43:47 +0000
+        by 100.105.211.179 (trex/6.7.1);
+        Thu, 16 Jun 2022 19:46:00 +0000
 Received: from offworld (unknown [104.36.31.105])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a312.dreamhost.com (Postfix) with ESMTPSA id 4LPCK51KcczCY;
-        Thu, 16 Jun 2022 12:43:37 -0700 (PDT)
+        by pdx1-sub0-mail-a312.dreamhost.com (Postfix) with ESMTPSA id 4LPCMp3VjlzCd;
+        Thu, 16 Jun 2022 12:45:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1655408617;
-        bh=APowBpXKlvkZTYp8d00UGVeluyopSqpyy/WS7dXz7QE=;
+        s=dreamhost; t=1655408759;
+        bh=LtgRJbay2NJBh9NnnRVdPmX1G1OKRq+xJ0Jn94eAvOo=;
         h=Date:From:To:Cc:Subject:Content-Type;
-        b=bWnZP6fl+abY+VfCEhbJQEYKEpHuaS4vNwKdL9AO2ZiLI3vgOscBCfNuIO17+cyUx
-         tXvQqBoLqB9pbwQZgx/dlC4m3TqSCVq3L4nMYiRtnpRhSM6jwlIyHAWuTeRiX3sSOf
-         +F0KfcIsyGEuAwVHwyC8zF1ERSJolFHwxqDhB/xiMYAaEy1PJNeQBEptLtfz8HadGK
-         vtM5RQxGOXvDminsHZ8NojlqoQvFRa/6slhK8pfK2PjLKwrszDJrQa/H3uVyrU1zDm
-         xZu6dKZDbXY6318qqjHAMh+9Wm+1fB3po/SzXx26wh5KNWQODsmBkgjGXODLDMMaUO
-         Gul83z1rIBzTA==
-Date:   Thu, 16 Jun 2022 12:43:34 -0700
+        b=LAyVgVF+kNrFORxl+qJMPbk7y37I6M1Aay9bVKptc23dhb+aJLW4qRWnqWsGCIr/F
+         y5D1fON3vKZ0Ip/LDLaElrM3yKPJ4Ng5Ph6409mM+cxcmtf7YppNSURcVw7NnhiuJg
+         xhQmfA4EZNANXXlmBV0EMuOKDKESk+N89WheJE3rwV/Lun/lmlH5SZNEfYrjhfK4zf
+         6VRzeB9EPYHtEsYKWHJ4I+7CG/4to3vPSQzQ95v606VVhBaOy4yBjVo9QDfOVUpnXS
+         TphsXVBP3L9hPSFvWsZVHaGu+U85jfjxqybzVCrci5FnaHboE2iTFmIziddskfl77Y
+         v1wS2+k7oa9UQ==
+Date:   Thu, 16 Jun 2022 12:45:55 -0700
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     "alison.schofield@intel.com" <alison.schofield@intel.com>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
@@ -83,14 +83,15 @@ Cc:     Dan Williams <dan.j.williams@intel.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Ingo Molnar <mingo@redhat.com>, linux-cxl@vger.kernel.org,
         linux-kernel@vger.kernel.org, a.manzanares@samsung.com
-Subject: Re: [PATCH 2/3] cxl/mbox: Add GET_POISON_LIST mailbox command support
-Message-ID: <20220616194334.pvorvoozt4rrzr66@offworld>
+Subject: Re: [PATCH 1/3] trace, cxl: Introduce a TRACE_EVENT for CXL Poison
+ Records
+Message-ID: <20220616194555.ps5ur2plizreqzwh@offworld>
 References: <cover.1655250669.git.alison.schofield@intel.com>
- <382a9c35ef43e89db85670637d88371f9197b7a2.1655250669.git.alison.schofield@intel.com>
+ <32a761fe7046680a4d50762fc43988def24a4bcd.1655250669.git.alison.schofield@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <382a9c35ef43e89db85670637d88371f9197b7a2.1655250669.git.alison.schofield@intel.com>
+In-Reply-To: <32a761fe7046680a4d50762fc43988def24a4bcd.1655250669.git.alison.schofield@intel.com>
 User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
@@ -100,214 +101,89 @@ On Tue, 14 Jun 2022, alison.schofield@intel.com wrote:
 
 >From: Alison Schofield <alison.schofield@intel.com>
 >
->CXL devices that support persistent memory maintain a list of locations
->that are poisoned or result in poison if the addresses are accessed by
->the host.
+>Add a trace event for CXL Poison List Media Error Records that
+>includes the starting DPA of the poison, the length, and the
+>the source of the poison.
 >
->Per the spec (CXL 2.0 8.2.8.5.4.1), the device returns this Poison
->list as a set of  Media Error Records that include the source of the
->error, the starting device physical address and length. The length is
->the number of adjacent DPAs in the record and is in units of 64 bytes.
->
->Retrieve the list and log each Media Error Record as a trace event of
->type cxl_poison_list.
+>This trace event will be used by the CXL_MEM driver to log the
+>Media Errors returned by the GET_POISON_LIST Mailbox command.
 >
 >Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+>Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+
 >---
-> drivers/cxl/cxlmem.h    | 43 +++++++++++++++++++++++
-> drivers/cxl/core/mbox.c | 75 +++++++++++++++++++++++++++++++++++++++++
-> 2 files changed, 118 insertions(+)
+> include/trace/events/cxl.h | 60 ++++++++++++++++++++++++++++++++++++++
+> 1 file changed, 60 insertions(+)
+> create mode 100644 include/trace/events/cxl.h
 >
->diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
->index 60d10ee1e7fc..29cf0459b44a 100644
->--- a/drivers/cxl/cxlmem.h
->+++ b/drivers/cxl/cxlmem.h
->@@ -174,6 +174,7 @@ struct cxl_endpoint_dvsec_info {
->  *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
->  * @lsa_size: Size of Label Storage Area
->  *                (CXL 2.0 8.2.9.5.1.1 Identify Memory Device)
->+ * @poison_max_mer: maximum Media Error Records tracked in Poison List
->  * @mbox_mutex: Mutex to synchronize mailbox access.
->  * @firmware_version: Firmware version for the memory device.
->  * @enabled_cmds: Hardware commands found enabled in CEL.
->@@ -204,6 +205,7 @@ struct cxl_dev_state {
->
->	size_t payload_size;
->	size_t lsa_size;
->+	u32 poison_max;
->	struct mutex mbox_mutex; /* Protects device mailbox and firmware */
->	char firmware_version[0x10];
->	DECLARE_BITMAP(enabled_cmds, CXL_MEM_COMMAND_ID_MAX);
->@@ -317,6 +319,46 @@ struct cxl_mbox_set_partition_info {
->
-> #define  CXL_SET_PARTITION_IMMEDIATE_FLAG	BIT(0)
->
->+struct cxl_mbox_poison_payload_in {
->+	__le64 offset;
->+	__le64 length;
->+} __packed;
+>diff --git a/include/trace/events/cxl.h b/include/trace/events/cxl.h
+>new file mode 100644
+>index 000000000000..17e707c3817e
+>--- /dev/null
+>+++ b/include/trace/events/cxl.h
+>@@ -0,0 +1,60 @@
+>+/* SPDX-License-Identifier: GPL-2.0 */
+>+#undef TRACE_SYSTEM
+>+#define TRACE_SYSTEM cxl
 >+
->+struct cxl_mbox_poison_payload_out {
->+	u8 flags;
->+	u8 rsvd1;
->+	__le64 overflow_timestamp;
->+	__le16 count;
->+	u8 rsvd2[0x14];
->+	struct cxl_poison_record {
->+		__le64 address;
->+		__le32 length;
->+		__le32 rsvd;
->+	} __packed record[];
->+} __packed;
+>+#if !defined(_CXL_TRACE_H) ||  defined(TRACE_HEADER_MULTI_READ)
+>+#define _CXL_TRACE_H
 >+
->+/* CXL 8.2.9.5.4.1 Get Poison List: payload out flags: */
->+#define CXL_POISON_FLAG_MORE            BIT(0)
->+#define CXL_POISON_FLAG_OVERFLOW        BIT(1)
->+#define CXL_POISON_FLAG_SCANNING        BIT(2)
+>+#include <linux/tracepoint.h>
 >+
->+/* CXL 8.2.9.5.4.1 Get Poison List: Error is encoded in record.address[2:0] */
->+#define CXL_POISON_SOURCE_MASK		GENMASK(2, 0)
->+#define	CXL_POISON_SOURCE_UNKNOWN	0
->+#define	CXL_POISON_SOURCE_EXTERNAL	1
->+#define	CXL_POISON_SOURCE_INTERNAL	2
->+#define	CXL_POISON_SOURCE_INJECTED	3
->+#define	CXL_POISON_SOURCE_VENDOR	7
+>+TRACE_DEFINE_ENUM(CXL_POISON_SOURCE_UNKNOWN);
+>+TRACE_DEFINE_ENUM(CXL_POISON_SOURCE_INTERNAL);
+>+TRACE_DEFINE_ENUM(CXL_POISON_SOURCE_EXTERNAL);
+>+TRACE_DEFINE_ENUM(CXL_POISON_SOURCE_INJECTED);
+>+TRACE_DEFINE_ENUM(CXL_POISON_SOURCE_VENDOR);
+>+TRACE_DEFINE_ENUM(CXL_POISON_SOURCE_INVALID);
 >+
->+/* Software define */
->+#define	CXL_POISON_SOURCE_INVALID	99
->+#define CXL_POISON_SOURCE_VALID(x)		\
->+	(((x) == CXL_POISON_SOURCE_UNKNOWN)  ||	\
->+	 ((x) == CXL_POISON_SOURCE_EXTERNAL) ||	\
->+	 ((x) == CXL_POISON_SOURCE_INTERNAL) ||	\
->+	 ((x) == CXL_POISON_SOURCE_INJECTED) ||	\
->+	 ((x) == CXL_POISON_SOURCE_VENDOR))
+>+#define show_poison_source(source)					\
+>+	__print_symbolic(source,					\
+>+			{CXL_POISON_SOURCE_UNKNOWN,  "UNKNOWN"},	\
+>+			{CXL_POISON_SOURCE_EXTERNAL, "EXTERNAL"},	\
+>+			{CXL_POISON_SOURCE_INTERNAL, "INTERNAL"},	\
+>+			{CXL_POISON_SOURCE_INJECTED, "INJECTED"},	\
+>+			{CXL_POISON_SOURCE_VENDOR,   "VENDOR"},		\
+>+			{CXL_POISON_SOURCE_INVALID,  "INVALID"})
 >+
-> /**
->  * struct cxl_mem_command - Driver representation of a memory device command
->  * @info: Command information as it exists for the UAPI
->@@ -351,6 +393,7 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds);
-> struct cxl_dev_state *cxl_dev_state_create(struct device *dev);
-> void set_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
-> void clear_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
->+int cxl_mem_get_poison_list(struct device *dev);
-> #ifdef CONFIG_CXL_SUSPEND
-> void cxl_mem_active_inc(void);
-> void cxl_mem_active_dec(void);
->diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
->index 54f434733b56..c10c7020ebc2 100644
->--- a/drivers/cxl/core/mbox.c
->+++ b/drivers/cxl/core/mbox.c
->@@ -9,6 +9,9 @@
->
-> #include "core.h"
->
->+#define CREATE_TRACE_POINTS
->+#include <trace/events/cxl.h>
+>+TRACE_EVENT(cxl_poison_list,
 >+
-> static bool cxl_raw_allow_all;
->
-> /**
->@@ -755,6 +758,7 @@ int cxl_dev_state_identify(struct cxl_dev_state *cxlds)
-> {
->	/* See CXL 2.0 Table 175 Identify Memory Device Output Payload */
->	struct cxl_mbox_identify id;
->+	__le32 val = 0;
->	int rc;
->
->	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_IDENTIFY, NULL, 0, &id,
->@@ -783,6 +787,9 @@ int cxl_dev_state_identify(struct cxl_dev_state *cxlds)
->	cxlds->lsa_size = le32_to_cpu(id.lsa_size);
->	memcpy(cxlds->firmware_version, id.fw_revision, sizeof(id.fw_revision));
->
->+	memcpy(&val, id.poison_list_max_mer, 3);
->+	cxlds->poison_max = le32_to_cpu(val);
+>+	    TP_PROTO(struct device *dev,
+>+		     int source,
+>+		     unsigned long start,
+>+		     unsigned int length),
 >+
->	return 0;
-> }
-> EXPORT_SYMBOL_NS_GPL(cxl_dev_state_identify, CXL);
->@@ -826,6 +833,74 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds)
-> }
-> EXPORT_SYMBOL_NS_GPL(cxl_mem_create_range_info, CXL);
->
->+int cxl_mem_get_poison_list(struct device *dev)
->+{
->+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
->+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->+	struct cxl_mbox_poison_payload_out *po;
->+	struct cxl_mbox_poison_payload_in pi;
->+	int nr_records = 0;
->+	int rc, i;
+>+	    TP_ARGS(dev, source, start, length),
 >+
->+	if (range_len(&cxlds->pmem_range)) {
->+		pi.offset = cpu_to_le64(cxlds->pmem_range.start);
->+		pi.length = cpu_to_le64(range_len(&cxlds->pmem_range));
-
-Do you ever see this changing to not always use the full pmem DPA range
-but allow arbitrary ones? I also assume this is the reason why you don't
-check the range vs cxlds->ram_range to prevent any overlaps, no?
-
-Thanks,
-Davidlohr
-
->+	} else {
->+		return -ENXIO;
->+	}
+>+	    TP_STRUCT__entry(
+>+		__string(name, dev_name(dev))
+>+		__field(int, source)
+>+		__field(u64, start)
+>+		__field(u32, length)
+>+	    ),
 >+
->+	po = kvmalloc(cxlds->payload_size, GFP_KERNEL);
->+	if (!po)
->+		return -ENOMEM;
+>+	    TP_fast_assign(
+>+		__assign_str(name, dev_name(dev));
+>+		__entry->source = source;
+>+		__entry->start = start;
+>+		__entry->length = length;
+>+	    ),
 >+
->+	do {
->+		rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_POISON, &pi,
->+				       sizeof(pi), po, cxlds->payload_size);
->+		if (rc)
->+			goto out;
+>+	    TP_printk("dev %s source %s start %llu length %u",
+>+		__get_str(name),
+>+		show_poison_source(__entry->source),
+>+		__entry->start,
+>+		__entry->length)
+>+);
+>+#endif /* _CXL_TRACE_H */
 >+
->+		if (po->flags & CXL_POISON_FLAG_OVERFLOW) {
->+			time64_t o_time = le64_to_cpu(po->overflow_timestamp);
->+
->+			dev_err(dev, "Poison list overflow at %ptTs UTC\n",
->+				&o_time);
->+			rc = -ENXIO;
->+			goto out;
->+		}
->+
->+		if (po->flags & CXL_POISON_FLAG_SCANNING) {
->+			dev_err(dev, "Scan Media in Progress\n");
->+			rc = -EBUSY;
->+			goto out;
->+		}
->+
->+		for (i = 0; i < le16_to_cpu(po->count); i++) {
->+			u64 addr = le64_to_cpu(po->record[i].address);
->+			u32 len = le32_to_cpu(po->record[i].length);
->+			int source = FIELD_GET(CXL_POISON_SOURCE_MASK, addr);
->+
->+			if (!CXL_POISON_SOURCE_VALID(source)) {
->+				dev_dbg(dev, "Invalid poison source %d",
->+					source);
->+				source = CXL_POISON_SOURCE_INVALID;
->+			}
->+
->+			trace_cxl_poison_list(dev, source, addr, len);
->+		}
->+
->+		/* Protect against an uncleared _FLAG_MORE */
->+		nr_records = nr_records + le16_to_cpu(po->count);
->+		if (nr_records >= cxlds->poison_max)
->+			goto out;
->+
->+	} while (po->flags & CXL_POISON_FLAG_MORE);
->+
->+out:
->+	kvfree(po);
->+	return rc;
->+}
->+EXPORT_SYMBOL_NS_GPL(cxl_mem_get_poison_list, CXL);
->+
-> struct cxl_dev_state *cxl_dev_state_create(struct device *dev)
-> {
->	struct cxl_dev_state *cxlds;
+>+/* This part must be outside protection */
+>+#undef TRACE_INCLUDE_FILE
+>+#define TRACE_INCLUDE_FILE cxl
+>+#include <trace/define_trace.h>
 >
 >--
 >2.31.1
