@@ -2,43 +2,80 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D28DC43334
-	for <linux-cxl@archiver.kernel.org>; Thu, 16 Jun 2022 22:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2805EC433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 16 Jun 2022 22:35:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378589AbiFPWLH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 16 Jun 2022 18:11:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53020 "EHLO
+        id S232016AbiFPWfQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 16 Jun 2022 18:35:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbiFPWLH (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Jun 2022 18:11:07 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD03B61296;
-        Thu, 16 Jun 2022 15:11:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655417462; x=1686953462;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ulGVt/Fg7JPQd5zppcun4FREfJet3CM9109arLOZJME=;
-  b=bxS2j0+mKoMtEI7ywC4nvTG+a1fvh31T4pPQZbfSv5Pc18fb92WU8vFH
-   xZoqbnNGHYVMeIbETo5jTLPwj7P1xulgVGNHosPddQbM6PH/vTyF3EH13
-   wGyG9Ssna4541ZVXU8BQ+lLfMiwESr/8juxMtz97hGpeJ88pvMjFXBsKC
-   k123vh9bNTXEHr9RrDbQZ+m5gHhD77u+kN3+WXq4SOKsPPx3ROQgs0jQv
-   FojqWje4Sq+HY6P9bkf8o/pRZeZi26W0F3/86hL9us83ne+nHuBD8fqvk
-   isNFtDCFM3p/BtXAYMCFSf1RSUOf9kT2PXFC3MW7ITwIuVJwSHl7DXO9P
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="280396276"
-X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="280396276"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2022 15:11:02 -0700
-X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="831757106"
-Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.41])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2022 15:11:01 -0700
-Date:   Thu, 16 Jun 2022 15:10:41 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
+        with ESMTP id S1378518AbiFPWfP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Jun 2022 18:35:15 -0400
+Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86ACE6210E;
+        Thu, 16 Jun 2022 15:35:11 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 67CC8801DA3;
+        Thu, 16 Jun 2022 22:35:08 +0000 (UTC)
+Received: from pdx1-sub0-mail-a312.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id CE1CE801D9A;
+        Thu, 16 Jun 2022 22:35:07 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1655418908; a=rsa-sha256;
+        cv=none;
+        b=FtzwEnKqs5aM6EyTKVd89leR3AA+ANLRdP2N04mlZFnFmUbsbymSL8xEhaMXHSL7yC8pNz
+        CnpsmKLJQp9BOHfiiiSmkvAVxRSHKrgWgqe1QdJ9aSZoNM5bOM9wVhQID3mb1/IStu1GBa
+        qaGI2iVYWUnxXmGmFK9OL2mBVkxSw47h+ZOBVIk2R2FUl5+oEmDhKZoOd3+4fKJFRAX0iO
+        dZeAZGHi8HEBrKofzGz2OHd1P2WnUgorSxlfRTF6o1uVvLz02Gw3iTWy81m6Kgfl5GX31W
+        dWHXRvyt1IdtTkKt7rvj3GzBHSdIUrz/Chkt24rKVKO6s3DHhdK9RXXHucONtw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1655418908;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=FQDo/MRb129ADZX+XkIZfbp3tPlh05DubOmMkb1Pe3Y=;
+        b=q89F+FzLyhvA3ax7ebTOXmPU+tbx09HfLoxl67KeVBUWnibEeC/f8xpSmDdGVi6JGzVa3g
+        4SlQtY1VZsJcxF6pbKzF/YdicuQv49mZcJXgJfZW6DGYkDagWkXNB9vUJGJ/ydjm1debBn
+        FwHsPT4RysYYJ9GGxnsmoIs7oxu0ueM+VEo7Lcn7lXc4W1GMumEDmoLoDiaHHBHJ03fOGr
+        j3MMEC2ITMjxUhPJhNTW8/QRNaeIp6BDjYjUm4ZZjljR66tlH9AKbyOtHTkxfF0zarvq40
+        P2ob2kbptVOivWtwsf5P9ICYT93M0sp+FxVjhZTW/i5lTuZDehNV7EctqhrQSQ==
+ARC-Authentication-Results: i=1;
+        rspamd-786f5898df-9jkmw;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Vacuous-Share: 6d388d5b6917c99f_1655418908268_1620883124
+X-MC-Loop-Signature: 1655418908268:4216171093
+X-MC-Ingress-Time: 1655418908268
+Received: from pdx1-sub0-mail-a312.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.124.238.94 (trex/6.7.1);
+        Thu, 16 Jun 2022 22:35:08 +0000
+Received: from offworld (unknown [104.36.31.105])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a312.dreamhost.com (Postfix) with ESMTPSA id 4LPH6y33nPz4f;
+        Thu, 16 Jun 2022 15:35:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1655418907;
+        bh=FQDo/MRb129ADZX+XkIZfbp3tPlh05DubOmMkb1Pe3Y=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=drMCdu2uIo/NNLTErfkizhZZLstIA+O+Y5JfDGcJDYvDfMTcH1K0ieN0Wewm8plcb
+         cZcczrcEum5qndRzVn25IN2H2f2CiDsX2pGxze7Mx81O5by8ggHGbur+jwjVJ6+82e
+         gfUErX5aU5ku5WBd6OE/UDbC5TkrF4/jKvR2yw3i1N/ylvQjn+3w+3/nVEgDlYzQBn
+         NsIugDSst4LPCwCGLz8O7Qyq8Jo1qeIeS4WjeoZEQQ1mAjzuwoQwFKyEEfygzW8XkX
+         rbJ/cHYIfe7FoejX1cHJUoC1DgGAqNKSpVCHoaro6B04bA8JnMYo6i1TlMFj9k0fOi
+         CByL14JY01lNw==
+Date:   Thu, 16 Jun 2022 15:20:51 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Alison Schofield <alison.schofield@intel.com>
 Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
         "Weiny, Ira" <ira.weiny@intel.com>,
         "Verma, Vishal L" <vishal.l.verma@intel.com>,
@@ -49,76 +86,31 @@ Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "a.manzanares@samsung.com" <a.manzanares@samsung.com>
 Subject: Re: [PATCH 2/3] cxl/mbox: Add GET_POISON_LIST mailbox command support
-Message-ID: <20220616221041.GA1529592@alison-desk>
+Message-ID: <20220616222051.wzf4iokvhxnro56v@offworld>
 References: <cover.1655250669.git.alison.schofield@intel.com>
  <382a9c35ef43e89db85670637d88371f9197b7a2.1655250669.git.alison.schofield@intel.com>
  <20220616194334.pvorvoozt4rrzr66@offworld>
  <20220616203400.GA1529208@alison-desk>
  <20220616214740.7pyjagx3gosni7mw@offworld>
+ <20220616221041.GA1529592@alison-desk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20220616214740.7pyjagx3gosni7mw@offworld>
+In-Reply-To: <20220616221041.GA1529592@alison-desk>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-David - you make lots of good points, one quick comments at end...
+On Thu, 16 Jun 2022, Alison Schofield wrote:
+>> I wonder if the latter may be the better option considering that always
+>> scanning the entire memdev would cause unnecessary media scan wait times,
+>> specially for large capacities.
+>
+>This is not a Media Scan. This is only reading the existing Poison List.
 
-On Thu, Jun 16, 2022 at 02:47:40PM -0700, Davidlohr Bueso wrote:
-> On Thu, 16 Jun 2022, Alison Schofield wrote:
-> >I'm headed in this direction -
-> 
-> I like these interfaces, btw.
-> 
-> >cxl list --media-errors -m mem1
-> >	lists media errors for requested memdev
-> 
-> But in this patchset you're only listing for persistent configurations.
-> So if there is a volatile partion, or the whole device is volatile,
-> this would not consider that.
-> 
-> So unless I'm missing something, we need to consider ram_range as well.
-> 
-> >cxl list --media-errors -r region#
-> >	lists region errors with HPA addresses
-> >	(So here cxl tool will collect the poison for all the regions
-> >	 memdevs and do the DPA to HPA translation)
-> 
-> I was indeed thinking along these lines. But similar to the above,
-> the region driver also has plans to enumarate volatile regions
-> configured by BIOS.
-> 
-> >
-> >To answer your question, I wasn't thinking of limiting
-> >the range within the memdev, but certainly could. And if we were
-> >taking in ranges, those ranges would need to be checked.
-> 
-> My question was originally considering poisoning only within pmem DPA
-> ranges, but now I'm wondering if all this also applies equally to volatile
-> parts as well... Reading the spec I interpret both, but reading the
-> T3 Memory Device Software Guide '2.13.19' it only mentions persistent
-> capacity.
-> 
-> >
-> >$cxl list --media-errors -m mem1 --range-start=  --range-end|len=
-> 
-> I figure this kind of like the above with regions being very arbitrary
-> and dynamic.
-> 
-> >Now, if I left the sysfs interface as is, the driver will read the
-> >entire poison list for the memdev and then cxl tool will filter it
-> >for the range requested.
-> >
-> >Or, maybe we should implement in libcxl (not sysfs), with memdev and
-> >range options and only collect from the device the range requested.
-> 
-> I wonder if the latter may be the better option considering that always
-> scanning the entire memdev would cause unnecessary media scan wait times,
-> specially for large capacities.
+Right, but I was thinking we'd want a input similar interface passing the
+desidered range.
 
-This is not a Media Scan. This is only reading the existing Poison List.
-
-> 
-> Thanks,
-> Davidlohr
+Thanks,
+Davidlohr
