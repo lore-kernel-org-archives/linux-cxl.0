@@ -2,43 +2,80 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BBCC433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 16 Jun 2022 20:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127E1C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 16 Jun 2022 22:02:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350793AbiFPUkM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 16 Jun 2022 16:40:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55100 "EHLO
+        id S1378469AbiFPWCO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 16 Jun 2022 18:02:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229521AbiFPUkK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Jun 2022 16:40:10 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26E7D5DE49;
-        Thu, 16 Jun 2022 13:40:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655412010; x=1686948010;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3kyqj7rQYGnntBXVKFnHRuP3Q3HC8rJ+VtXx7y0r3mc=;
-  b=SlIUK2d7mfB28gMtqN/IJ+hj88Jvgj9kVBHq/h7tEI38NmGAF/2a0BIS
-   SRgYmceLYY6EdxVY8WAicJdtHuEI8yqGfDJhreV10WvLwgiplKnbVLdlo
-   6MDsELvNPSPyN4hnWE5sg4KSN63ii5rS4Yfozy297BZz1Dli/Q6u3KTqS
-   9aU80FhE+ztuQN1EUxRsl/6ndLUn6D8Z5yeoL6UTPe0AWaLLz9hUGWojE
-   kD5UnGR8VsnZuVVS6ngXqwR27QcYYT7SMGSehv0NjMX/quahiU/iAvUT+
-   7XR12WDK2k2UzEKKFkbtjgJetefzkx1KwJBenhwE/TOMuDfv9Q97ZwsG1
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="278143651"
-X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="278143651"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2022 13:40:09 -0700
-X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="641719392"
-Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.41])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2022 13:40:09 -0700
-Date:   Thu, 16 Jun 2022 13:39:49 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+        with ESMTP id S232277AbiFPWCN (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Jun 2022 18:02:13 -0400
+Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85F755F244;
+        Thu, 16 Jun 2022 15:02:00 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 0AD845A112B;
+        Thu, 16 Jun 2022 22:01:57 +0000 (UTC)
+Received: from pdx1-sub0-mail-a312.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 567C65A1148;
+        Thu, 16 Jun 2022 22:01:56 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1655416916; a=rsa-sha256;
+        cv=none;
+        b=gAlM3pEvYGb+PcujE0VemFbVMF7b9AI7F4yX8jjgxtg+p2s4dkNsteo/9Hgve8rZK+w5Jg
+        SoakfLY0MNysMbCRQ7QdmOMdT/KbClv9+KDu1xT1RSZ+jdiIFIFQowlLNLoOH7SDzbckKA
+        kWifN3WF4/d5Ok0RkFureOGRwiaOXZCHe8+7hLo0yMJcxgjoYjgt4CWIongQ17ET5ZmrBW
+        eCs7knRQ6nH1ovAAUigtBTpht/66aOwobLY7ptROXZvKkcmIS3/RArcVcCIyGVZySNET7f
+        N0TQt1dULZ0wIfLCzSE7PkO2QHq0jjchL0Wn4edi04g3KTAPMC3+hQTv04yo6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1655416916;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=jaV1cEWlUUbavbepQJk3fTL3IGGiH6h9qUmoQS9HXgc=;
+        b=XqtOTKf0Jl+v31ljUedtvGEON7VzggbiBDM992L29xZkqdXIJoEm4j3AZZ8755lkrr6VXm
+        +dfvOb2hQ2PivUh8OjKn91n+ErnXo8OLgoRjvdGoOOYVQ3izG0ETMvCpD7RaqbVBoc2gMo
+        aTGV9KuZqDq8aWbRts/zS3MEwDNd9/8pF1cYg5D7/zmmdU0GJIMHxWfX49d3e3mavGOBm8
+        2KO2ATWoXfhYgRKo8bmBPGGB2nWXvHZ+F+evdHjwPs3deDWUEs3bNiO7nbPCmvL51q5unK
+        0YM54a4fof3loVia+1IGxoKprrJPxX8EcDzd5EkrdHUtjdgt1eSh7kXkFrh8/w==
+ARC-Authentication-Results: i=1;
+        rspamd-848669fb87-bl2b8;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Lonely-Shoe: 2eaf72531c924813_1655416916834_3785307436
+X-MC-Loop-Signature: 1655416916834:136269040
+X-MC-Ingress-Time: 1655416916834
+Received: from pdx1-sub0-mail-a312.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.98.242.216 (trex/6.7.1);
+        Thu, 16 Jun 2022 22:01:56 +0000
+Received: from offworld (unknown [104.36.31.105])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a312.dreamhost.com (Postfix) with ESMTPSA id 4LPGNg2kWPzCY;
+        Thu, 16 Jun 2022 15:01:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1655416916;
+        bh=jaV1cEWlUUbavbepQJk3fTL3IGGiH6h9qUmoQS9HXgc=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=aqRmcH8KzSI7ZwcAWtBdznhQpmvxDDyeIXi2DuM4bW2swPLHqF53Q751KOqUOC1PC
+         zv0ih4Uk84EDRPvqObVwxs87fTA3bqoJnbTv6FOaQPwbIUWrhdRvkzRRIVnLzDePY1
+         7C+MWSFhYJ9sYRsDNIpBiE1YnJ7CA28xwt9LxKf/Dy2/Y3AZ3POE7nyo/GPswkla7M
+         cFjuSIJTh8wIpBjPi55yVACug6TqQqgUOLoM1JW9K+08CeNnD1SMTdBrfYsVhIsTyD
+         xzSWVg4xSM4QUnGl0yahe319uK5xsKYJhfviO7t04Upt5e3aQz/yf8T/+Ax9nLto8l
+         vE8UduBmSN/CA==
+Date:   Thu, 16 Jun 2022 14:47:40 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Alison Schofield <alison.schofield@intel.com>
 Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
         "Weiny, Ira" <ira.weiny@intel.com>,
         "Verma, Vishal L" <vishal.l.verma@intel.com>,
@@ -46,98 +83,73 @@ Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Ingo Molnar <mingo@redhat.com>,
         "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] cxl/core: Add sysfs attribute get_poison for list
- retrieval
-Message-ID: <20220616203949.GB1529208@alison-desk>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "a.manzanares@samsung.com" <a.manzanares@samsung.com>
+Subject: Re: [PATCH 2/3] cxl/mbox: Add GET_POISON_LIST mailbox command support
+Message-ID: <20220616214740.7pyjagx3gosni7mw@offworld>
 References: <cover.1655250669.git.alison.schofield@intel.com>
- <57644934bb7af8e1c692735f53c2c415a1ba16d1.1655250669.git.alison.schofield@intel.com>
- <20220616160412.00000c34@Huawei.com>
+ <382a9c35ef43e89db85670637d88371f9197b7a2.1655250669.git.alison.schofield@intel.com>
+ <20220616194334.pvorvoozt4rrzr66@offworld>
+ <20220616203400.GA1529208@alison-desk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20220616160412.00000c34@Huawei.com>
+In-Reply-To: <20220616203400.GA1529208@alison-desk>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Jun 16, 2022 at 08:04:12AM -0700, Jonathan Cameron wrote:
-> On Tue, 14 Jun 2022 17:10:28 -0700
-> alison.schofield@intel.com wrote:
-> 
-> > From: Alison Schofield <alison.schofield@intel.com>
-> > 
-> > The sysfs attribute, get_poison, allows user space to request the
-> > retrieval of a CXL devices poison list for its persistent memory.
-> > 
-> > From Documentation/ABI/.../sysfs-bus-cxl
-> >         (WO) When a '1' is written to this attribute the memdev
-> >         driver retrieves the poison list from the device. The list
-> >         includes addresses that are poisoned or would result in
-> >         poison if accessed, and the source of the poison. This
-> >         attribute is only visible for devices supporting the
-> >         capability. The retrieved errors are logged as kernel
-> >         trace events with the label: cxl_poison_list.
-> > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> 
-> Hi Alison,
-> 
-> I'm planning to throw together QEMU support for this and test
-> it. In meantime a few quick comments / suggestions inline.
+On Thu, 16 Jun 2022, Alison Schofield wrote:
+>I'm headed in this direction -
 
-Thanks Jonathan.
-I've tested with a test patch that returns contrived output payloads,
-and will look fwd to trying out w qemu,
+I like these interfaces, btw.
 
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-> > ---
-snip
-> > +
-> > +	if (!sysfs_streq(buf, "1")) {
-> 
-> Maybe kstrtobool?  If you do then fine to leave the documentation claiming
-> it's tighter as that'll tell people who actually read it to expect to
-> write a 1.
-> 
-Got it.
+>cxl list --media-errors -m mem1
+>	lists media errors for requested memdev
 
-> > +		dev_err(dev, "%s: unknown value: %s\n", attr->attr.name, buf);
-> 
-> Feels noisy when I'd expect -EINVAL to be enough info to indicate an invalid
-> parameter.
-> 
-Got it.
+But in this patchset you're only listing for persistent configurations.
+So if there is a volatile partion, or the whole device is volatile,
+this would not consider that.
 
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	rc = cxl_mem_get_poison_list(dev);
-> > +	if (rc) {
-> > +		dev_err(dev, "Failed to retrieve poison list %d\n", rc);
-> 
-> Here I'd expect the error code to returned on the write to probably be enough
-> info so not sure this error print is useful either.
-> 
-Got it.
+So unless I'm missing something, we need to consider ram_range as well.
 
-> > +
-snip
-> > +	if (a == &dev_attr_get_poison.attr) {
-> > +		struct device *dev = container_of(kobj, struct device, kobj);
-> > +		struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> > +		struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> > +
-> > +		if (!test_bit(CXL_MEM_COMMAND_ID_GET_POISON,
-> > +			      cxlds->enabled_cmds))
-> 			      to_cxl_memdev(dev)->enabled_cmds))
-> and drop the local variable is shorter and I don't htink it loses
-> any readability.
-> 
-Got it.
+>cxl list --media-errors -r region#
+>	lists region errors with HPA addresses
+>	(So here cxl tool will collect the poison for all the regions
+>	 memdevs and do the DPA to HPA translation)
 
-Thanks Jonathan!
+I was indeed thinking along these lines. But similar to the above,
+the region driver also has plans to enumarate volatile regions
+configured by BIOS.
+
+>
+>To answer your question, I wasn't thinking of limiting
+>the range within the memdev, but certainly could. And if we were
+>taking in ranges, those ranges would need to be checked.
+
+My question was originally considering poisoning only within pmem DPA
+ranges, but now I'm wondering if all this also applies equally to volatile
+parts as well... Reading the spec I interpret both, but reading the
+T3 Memory Device Software Guide '2.13.19' it only mentions persistent
+capacity.
+
+>
+>$cxl list --media-errors -m mem1 --range-start=  --range-end|len=
+
+I figure this kind of like the above with regions being very arbitrary
+and dynamic.
+
+>Now, if I left the sysfs interface as is, the driver will read the
+>entire poison list for the memdev and then cxl tool will filter it
+>for the range requested.
+>
+>Or, maybe we should implement in libcxl (not sysfs), with memdev and
+>range options and only collect from the device the range requested.
+
+I wonder if the latter may be the better option considering that always
+scanning the entire memdev would cause unnecessary media scan wait times,
+specially for large capacities.
+
+Thanks,
+Davidlohr
