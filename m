@@ -2,111 +2,155 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F8AC433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 17 Jun 2022 00:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A9DC43334
+	for <linux-cxl@archiver.kernel.org>; Fri, 17 Jun 2022 10:21:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378308AbiFQASE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 16 Jun 2022 20:18:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36502 "EHLO
+        id S235712AbiFQKVf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 17 Jun 2022 06:21:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229832AbiFQASC (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Jun 2022 20:18:02 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07A774BB91;
-        Thu, 16 Jun 2022 17:18:01 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id B2E24122176;
-        Fri, 17 Jun 2022 00:18:00 +0000 (UTC)
-Received: from pdx1-sub0-mail-a312.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 306D51220EC;
-        Fri, 17 Jun 2022 00:18:00 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1655425080; a=rsa-sha256;
-        cv=none;
-        b=IYdBI/5RpK5K4E2/HCuGO2w7sMuiDkTOY3eLWB1YZk0hs5oP5DalvJzWLqXvObPTb8rYCl
-        +Nr1NGAfcAFxJLu/wWUxi+vx4fhePmGJXPxiqIOEiqZJ6OWQ7pAmn+9i0mtePlPR+6l1/9
-        g2nQs8KaC74cR6G4OqMUhTIEC6twwr5cxU5Dt+EWUYtvGDXTXdfdIWRxBnfnKw+u/ZuILV
-        XJeWHRujTp19iB0t535YR2OoKjJ+trYpvcxXYLmzcBK4Sv/1nwURqYeyjoEWeSbAa+X7iv
-        JjZibJb3OG2WHbwK+H7gBaGD7fO8EiMTp7MnLdZiI/uJ1ZtPu0YkwjqIeiBIqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1655425080;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=+/SlzhiUqodCSKW9AbFuoqssPBdtJH4ycGuoP57nzQU=;
-        b=74C+fN6aHCGghFYtqVtgQfYjD1fm5oNPufc4VR12IZpaSwlAjIX5EjhH+BwCbCpczGCwvW
-        A5Ax6jc1hIBWYK556iO/66H0lzauR/8vq2qJ3BGp4AxuT9G9FGHPw48DhR9jwrsPFq5icC
-        kfwvMBt7GDUO399gCnyc15odb1JSfY/RhY0vaNEC87rQdVDmDLSMWvRm8uAH519o+nThdD
-        9tKcBU3RB+wCd4w/G/pVHCGTviemogyKCvNy4aCMLhFsNcziDztgBSjNbIhsINP5vF/FvW
-        NhQakH0AJ2hABazsLbLzXMHhV90sToiUeKycgjN/QKOoPg6AyvZxYIzbk6nkIw==
-ARC-Authentication-Results: i=1;
-        rspamd-786f5898df-lwnkt;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Hook-Snatch: 4f50e85e2d4e2031_1655425080490_3773561963
-X-MC-Loop-Signature: 1655425080490:986981797
-X-MC-Ingress-Time: 1655425080490
-Received: from pdx1-sub0-mail-a312.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.105.211.179 (trex/6.7.1);
-        Fri, 17 Jun 2022 00:18:00 +0000
-Received: from offworld (unknown [104.36.31.105])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a312.dreamhost.com (Postfix) with ESMTPSA id 4LPKPg1GcPzCY;
-        Thu, 16 Jun 2022 17:17:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1655425080;
-        bh=+/SlzhiUqodCSKW9AbFuoqssPBdtJH4ycGuoP57nzQU=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=Vt2UCbNl8bSDIPSI690QhD5DV9dIO/uaxT9gM3RbE7Oa8YAwRS0XiN0oglKSCJiY8
-         RFUL4Dtuf6ZzAnTBiHZfGT41ekm/sWDOtmUFXB+4vVYMgyFGeBUGLiwKZm7eT140VT
-         yFmxPpNlJx8sMhfs/RroLxkFgMxpRbflHwJBgVXXXlMIy687aeYdBUFsTRWugNOGg5
-         VMfI8EJWzimVQtbKT9HZuGcoeEvancPVBuKspnRRxAvLzzdDFw21AyTHzotzUxEY3k
-         WLCwsqpDZScPwt2yfWS+nhs5Hf+/lxGEdmq7j9yZRlxMxl2LA0JtpZe40H8F62m52J
-         zb+kmgon9uMOA==
-Date:   Thu, 16 Jun 2022 17:03:44 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     "Verma, Vishal L" <vishal.l.verma@intel.com>
-Cc:     "Schofield, Alison" <alison.schofield@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        with ESMTP id S235307AbiFQKVe (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 17 Jun 2022 06:21:34 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05E9E6A016;
+        Fri, 17 Jun 2022 03:21:31 -0700 (PDT)
+Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LPZm31CyTz67LSS;
+        Fri, 17 Jun 2022 18:19:47 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 17 Jun 2022 12:21:29 +0200
+Received: from localhost (10.81.209.131) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2375.24; Fri, 17 Jun
+ 2022 11:21:28 +0100
+Date:   Fri, 17 Jun 2022 11:21:24 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
         "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        "bwidawsk@kernel.org" <bwidawsk@kernel.org>,
-        "a.manzanares@samsung.com" <a.manzanares@samsung.com>
-Subject: Re: [PATCH 2/3] cxl/mbox: Add GET_POISON_LIST mailbox command support
-Message-ID: <20220617000309.padpkbqftftk37b4@offworld>
-References: <cover.1655250669.git.alison.schofield@intel.com>
- <382a9c35ef43e89db85670637d88371f9197b7a2.1655250669.git.alison.schofield@intel.com>
- <20220616194334.pvorvoozt4rrzr66@offworld>
- <20220616203400.GA1529208@alison-desk>
- <20220616224525.fufa4dnpw4vl344n@offworld>
- <20220616231522.GA1529779@alison-desk>
- <b708b1b0929317b9b087505c3177d830f69066d1.camel@intel.com>
+        <linux-pci@vger.kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        "ben@bwidawsk.net" <ben@bwidawsk.net>, <linuxarm@huawei.com>,
+        <lorenzo.pieralisi@arm.com>,
+        "Box, David E" <david.e.box@intel.com>,
+        "Chuck Lever" <chuck.lever@oracle.com>,
+        Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: (SPDM) Device attestation, secure channels from host to device
+ etc: Discuss at Plumbers?
+Message-ID: <20220617112124.00002296@Huawei.com>
+In-Reply-To: <YqICCSd/6Vxidu+v@iweiny-desk3>
+References: <20220609124702.000037b0@Huawei.com>
+        <YqICCSd/6Vxidu+v@iweiny-desk3>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <b708b1b0929317b9b087505c3177d830f69066d1.camel@intel.com>
-User-Agent: NeoMutt/20220429
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.81.209.131]
+X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 16 Jun 2022, Verma, Vishal L wrote:
->Yeah agreed with Alison that cxl inject-error <options> sounds good.
+On Thu, 9 Jun 2022 07:22:01 -0700
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-I agree as well, that's a much nicer interface.
+> On Thu, Jun 09, 2022 at 12:47:02PM +0100, Jonathan Cameron wrote:
+> > Hi All,
+> > 
+> > +CC list almost certainly misses people interested in this topic
+> >     so please forward as appropriate.
+> > 
+> > I'll start by saying I haven't moved forward much with the
+> > SPDM/CMA over Data Object Exchange proposal from the PoC that led to
+> > presenting it last year as part of the PCI etc uconf last year.
+> > https://lpc.events/event/11/contributions/1089/
+> > https://lore.kernel.org/all/20220303135905.10420-1-Jonathan.Cameron@huawei.com/
+> > I'm continuing to carry the QEMU emulation but not posted for a while
+> > as we are slowly working through a backlog of CXL stuff to merge.
+> > https://gitlab.com/jic23/qemu/-/commit/f989c8cf283302c70eb5b0b73625b5357c4eb44f
+> > On the plus side, Ira is driving the DOE support forwards so
+> > that will resolve one missing precursor.
+> > 
+> > We had a lot of open questions last year and many of them are
+> > still at least somewhat open; perhaps now is time to revisit?
+> > 
+> > In the meantime there has been discussion[1]:
+> > [1] https://lore.kernel.org/all/CAPcyv4jb7D5AKZsxGE5X0jon5suob5feggotdCZWrO_XNaer3A@mail.gmail.com/
+> > [2] https://lore.kernel.org/all/20220511191345.GA26623@wunner.de/
+> > [3] https://lore.kernel.org/all/CAPcyv4iWGb7baQSsjjLJFuT1E11X8cHYdZoGXsNd+B9GHtsxLw@mail.gmail.com/
+> > 
+> > Perhaps it is worth putting in a proposal for either a session in an
+> > appropriate uconf at plumbers, or maybe a BoF given it is a
+> > broader topic than either PCI or CXL?  
+> 
+> Yes, while this could work as part of the CXL uconf it is probably a more
+> general topic.
 
-Thanks,
-Davidlohr
+Maybe steal time from PCI given CXL uconf is going to be busy!
+(lets see if any of the PCI folk are reading this thread.. :)
+
+At the moment I'm not seeing enough interest to put in a proposal for
+anything 'officially scheduled', but there is a bit more time until
+the deadline so let's see if we get any other interest in that time.
+
+> 
+> > 
+> > We'll still need to dance around work in various standards bodies
+> > that we can't talk about yet, but it feels like it's worth
+> > some time hammering out a plan of attack on what we can
+> > discuss.
+> > 
+> > Rough topics:
+> > 
+> > * Use models. Without those hard to define the rest!
+> > * Policy.  What do we do if we can't establish a secure channel?
+> > * Transports of interest.  Single solution for MCTP vs
+> >   PCI/CMA or not?
+> > * Session setup etc in kernel / userspace / carefully curated hybrid
+> >   of the two (Dan mentioned this last one in one of the links above)
+> >   There may be similarities to the discussion around TLS (much simpler
+> >   though I think!)  
+> 
+> I think this is something which really does need some face to face (or virtual
+> face) time.  FWIW another idea from Christoph is kernel bundled userspace code.
+> 
+> 	https://lore.kernel.org/linux-cxl/YoT4C77Yem37NUUR@infradead.org/
+> 
+> I'm not sure any real implementation would be workable.
+
+Ah. I remembered to CC Christoph but not to actually link the relevant mail.
+
+That proposal is definitely interesting.
+
+> 
+> > * Key management
+> > * Potential to use github.com/dmtf/libSPDM - is it suitable for any solutions
+> >   (it's handy for emulation if nothing else!)
+> > * Measurement and what to do with it.
+> > * No public hardware yet, so what else should we emulate to enable
+> >   work in this area. (SPDM over MCTP over I2C is on my list as easy
+> >   to do in QEMU building on
+> >   https://lore.kernel.org/all/20220520170128.4436-1-Jonathan.Cameron@huawei.com/ 
+> > * Many other things I've forgotten about - please add!
+> > 
+> > So are people who care going to be at plumbers (in person or virtually)
+> > and if so, do we want to put forward a session proposal?  
+> 
+> I have submitted a non-CXL topic in the arch uconf and was hoping to go in
+> person but I'm unsure of travel budgets.  I will likely be virtual if I can't
+> attend in person.
+
+Cool. See you there in some fashion.  
+
+Jonathan
+
+> 
+> Ira
+
