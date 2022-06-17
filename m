@@ -2,75 +2,75 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAEBC43334
-	for <linux-cxl@archiver.kernel.org>; Fri, 17 Jun 2022 18:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84410C433EF
+	for <linux-cxl@archiver.kernel.org>; Fri, 17 Jun 2022 18:26:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346019AbiFQSEv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 17 Jun 2022 14:04:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40798 "EHLO
+        id S233117AbiFQS0Y (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 17 Jun 2022 14:26:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239096AbiFQSEu (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 17 Jun 2022 14:04:50 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AA2213F76;
-        Fri, 17 Jun 2022 11:04:49 -0700 (PDT)
+        with ESMTP id S231985AbiFQS0V (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 17 Jun 2022 14:26:21 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B366D3191A;
+        Fri, 17 Jun 2022 11:26:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655489089; x=1687025089;
+  t=1655490379; x=1687026379;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=x0vqz0kH9jT4NaYbM1nffXyyucHNjgNNfhx5AWrJ3eg=;
-  b=TUWyLJ+5dnh+TR5925EdNZZjHG0fJX5g+8fu1eZ/wd9wdRuNyNo9yhBF
-   RmY4LRq23R3q0ytB/FbpZuJB10RWCGSLimNAeNvxrf9qPaewopbyaG9pA
-   SMtLNtwIUyjGcLLp6WWap2b7RjDzcTguP414RTUYSOh2rr3LXtpgg9IWV
-   1tuIVIHSANK5eJi42111FMMf21Uvmyecym9uKVttGpRAKRy2gfGWk54+i
-   2Jpjf4vjM3IkTaMJzyFhNxxej6eF5pegFl3YvNtU0TxhN/v0E2IQ5BiJ2
-   c8RTBKtJcFqrRykvHco3esOp6zCdY42SZXEBV+lkAjl4H+FgG/nPquD8E
+  bh=Ld5j4dkK+HBGUFb7nP84S5Sg1cwWkcJ//9RQXH3iXfE=;
+  b=KLmCcNcaHc16O1H3os4OlwI0doDxUG6ngyi9cKzpnVpDEB2IC07DsDaD
+   Wc6BceBSFVKVnV6QfQSVRtKIHRpB9y1p1zgoq80Wl1up6VhokHcf8LBBA
+   5pxU9QvcNp3ph59Fo/0qZuEE9Ix2clOj1e+/Ilu47vA7JkaUl0asQiK82
+   tLeB2Gm6Sg7wS8KrZv8jxBZJERARQDHBKL/zvmPpKcgBRTHIkXmsTFhDC
+   IIR104Sp8E9o7+jGEyC8rleHxtb05IEUig7RYJZzixQNeogRid470OYE4
+   j4MaQ55zOJZurAYRzl0OBRvWy+xCwkJmBWnNWJMI3+WX7oMBJLAibEjD3
    Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="365879348"
+X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="278328790"
 X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="365879348"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2022 11:04:47 -0700
+   d="scan'208";a="278328790"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2022 11:26:19 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="536908158"
-Received: from fmsmsx605.amr.corp.intel.com ([10.18.126.85])
-  by orsmga003.jf.intel.com with ESMTP; 17 Jun 2022 11:04:47 -0700
-Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
- fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
+   d="scan'208";a="832134369"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmsmga006.fm.intel.com with ESMTP; 17 Jun 2022 11:26:19 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Fri, 17 Jun 2022 11:04:46 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ 15.1.2308.27; Fri, 17 Jun 2022 11:26:18 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Fri, 17 Jun 2022 11:04:46 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.42) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ 15.1.2308.27 via Frontend Transport; Fri, 17 Jun 2022 11:26:18 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.174)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Fri, 17 Jun 2022 11:04:45 -0700
+ 15.1.2308.27; Fri, 17 Jun 2022 11:26:18 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lv+IJQnPF3aI4+U/6DchHvm0RK92oCyq+SBRObp4UcJSra4Q/iWhJNe/iHaqeCBKVFqOH99NSrvzXaxBp39Ni/QNNrdJLxZGHuzQFRrQJvWP1fL4aKeqVvxKJ38opOQS/HlS0RDIhbmYKO+VZTIISo2fM0N4NuPT7R5OHxC8Cy2p/9YJWgRbdY3dWPN2heAylUMIB6rYju79tizb/PwQwy8tRPV8/xEigNuljDllm2semKLSvfL8pa8n1s9MqfAQSn9tkk5noWJbVmyiKkPBRhbAhrG7VQMonmEYROCxZReQUTEQQDYnrp6oz6IG8XroDovjufEvnw6Ph+adB9NmjQ==
+ b=JrZO5fDi7QyhZehOtwBiz/3MGqur8VCcd0NM7R8zG2cl7wjpXrDMX52SboQDvzP2Fz1Catm/ZBpvyCtrFwBIgu/wx2LJGNoxAYCN6KHND59jc1rj1sNclNH4c4Y2utgnzzLlXfExLZI63LjRJo7+4PG5Sb9LQI0zHczs/e4YVYiKFMLyn2e+n6THBb000vhZoZxZCf3CmRw5sYZOayH4B30x/eV28SLD3BGB/SvA5cH2riXshS/LOUp0jeL6e2idZyM1dzVHRdq9KhgwMGUpDntC6hcd7HMNfIm99gIq1gQNiltkpRZu6dtgkPQ2dCxNl8Jgh+49XZDwOiddSrcIqg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=svFPm1AmSz6zss4UBu4VSkFdr8aNaHsZR4WZ4mPCi60=;
- b=kHKMTA2BryFdH6MUHwnBzYCc3g00hxHAQr5oQVE8KQZL1LMCpcPJJ3tKKLOBGuzziZFPHWW0VvyWM+A7OsAIM/N4MAFSZqQggzSLZarPIpmo4AemcBDEqk/L0sgJF+YjGHmGggH3dUj/n6f6/Tp6MXCJjrcd/LVGjNk8R5CckrhIfmXjZhSnexuIlXrhgtOSXKg3B8Onidkes4BLlOLoPysa/jAWFImpRulODf3fB/KdMPgev6Zno3d+Yu9zcC3Ik9EFJ6Zc4qq1lv+YsMhMQmGF0MakK41aX3v55FgJJVPuOACsFRikuFz5AqctIcotBSiiqxlS8YwJd9Huc9rJxw==
+ bh=VoW4s+BOE9FchY2IKuoxu6fIyLAz905n/Jh+tBr98fw=;
+ b=EJ/x1vo63wRHpfrc2JiiQ1LR5UWKVn+oJfbuaNKtNgT4x78VxdA/JvTjmAmOJTjOimoH8yd2o67trxnldnNYeG90IqvYIc7+02/wGjOJx0dejTAdrF/KTeuFpUfKxO4hdFSUgRJb1Eb0ictd+w0vTDWo7watSZ6H8q7bYxKcFlTbcytWtGF9UUouDjRiGYRflOh2bX2PzR09e1Tid7qGQ8DzgQngc+T+Z4bf+n8NcuxFtbYXf7ZxfKdvDa/V0KDaw+hSOm8OzTZE75HPonzumOn176wwTGx5PkoYvJQVbN17dTFd7oPyLJIXHkVHiwunN7U39gahxfwXuG29sDiSOQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by SN6PR11MB2701.namprd11.prod.outlook.com
- (2603:10b6:805:54::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5332.13; Fri, 17 Jun
- 2022 18:04:43 +0000
+ (2603:10b6:301:50::20) by DM4PR11MB5503.namprd11.prod.outlook.com
+ (2603:10b6:5:39f::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5353.15; Fri, 17 Jun
+ 2022 18:26:17 +0000
 Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
  ([fe80::f50c:6e72:c8aa:8dbf]) by MWHPR1101MB2126.namprd11.prod.outlook.com
  ([fe80::f50c:6e72:c8aa:8dbf%7]) with mapi id 15.20.5332.023; Fri, 17 Jun 2022
- 18:04:43 +0000
-Date:   Fri, 17 Jun 2022 11:04:41 -0700
+ 18:26:17 +0000
+Date:   Fri, 17 Jun 2022 11:26:14 -0700
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     <alison.schofield@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
@@ -81,69 +81,68 @@ To:     <alison.schofield@intel.com>,
         "Ingo Molnar" <mingo@redhat.com>
 CC:     Alison Schofield <alison.schofield@intel.com>,
         <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/3] trace, cxl: Introduce a TRACE_EVENT for CXL Poison
- Records
-Message-ID: <62acc2396e6f9_81c5e294a@dwillia2-xfh.notmuch>
+Subject: RE: [PATCH 2/3] cxl/mbox: Add GET_POISON_LIST mailbox command support
+Message-ID: <62acc746d01d3_81c5e29441@dwillia2-xfh.notmuch>
 References: <cover.1655250669.git.alison.schofield@intel.com>
- <32a761fe7046680a4d50762fc43988def24a4bcd.1655250669.git.alison.schofield@intel.com>
+ <382a9c35ef43e89db85670637d88371f9197b7a2.1655250669.git.alison.schofield@intel.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <32a761fe7046680a4d50762fc43988def24a4bcd.1655250669.git.alison.schofield@intel.com>
-X-ClientProxiedBy: MW4PR04CA0204.namprd04.prod.outlook.com
- (2603:10b6:303:86::29) To MWHPR1101MB2126.namprd11.prod.outlook.com
+In-Reply-To: <382a9c35ef43e89db85670637d88371f9197b7a2.1655250669.git.alison.schofield@intel.com>
+X-ClientProxiedBy: MWHPR20CA0025.namprd20.prod.outlook.com
+ (2603:10b6:300:ed::11) To MWHPR1101MB2126.namprd11.prod.outlook.com
  (2603:10b6:301:50::20)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a8ff5283-4133-41d6-2822-08da508bdaec
-X-MS-TrafficTypeDiagnostic: SN6PR11MB2701:EE_
+X-MS-Office365-Filtering-Correlation-Id: aa8100a9-57bb-4dbb-3df2-08da508ede30
+X-MS-TrafficTypeDiagnostic: DM4PR11MB5503:EE_
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-Microsoft-Antispam-PRVS: <SN6PR11MB27015F63C438D3F8D32264DBC6AF9@SN6PR11MB2701.namprd11.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <DM4PR11MB550368B437989C70BE4DDE6EC6AF9@DM4PR11MB5503.namprd11.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: R7T/mHjKAETCw2st0tBB6tIuNHFyau3MZ1VyPp1lqlRfeTxLX01fH38nnpMAngSIKB0PdFHaajp9YkGXxiTw3rLQmaxRccbMqLy2npv7HAHNoxlGLFV4vnRUoKnl7rTOAWbv/3IR0qjwtAQgDVvW/iMZecVoTo7zC6e+zv9JeL1A2plb4Dz5ezXcaNNE9h5HK4EhQ8gdJnEz8loSFSQ/UI/CmYD2s/A2JSlqqZAjsP9z2jGReVOPtvgZAmIxmb1+PnQNcNJ0eZ/iiQaZ8LHrgDQfOy0KrX/vQsaLpoCIUJBbYGG5cJH5RgA9Xm36trTYiWvyF9KLPKlrGu0V+CWCwN8kU++/0dFH/0Dn0xUfW0e+fife9EakjFElKjYBJV4p0hivyT2ZIs8ZyJxqujAryZWuDU2W8ctfo+ETnfSIWJBdbmer10RU9o1E/XSChht+MzR2s7+29ORhBq2h6YttaRP+cAm/ZuOoo6omuqHy+XpEiDhkaHNuiVvQfvWUW0tL+gEyTnPJkumuUnoSzJLDySfAvtOtoljQ3Yy40uDaJtxEInXQSM6gv044vOb0WMjzrT4io+Blji3mzbLIcWP6BLsM3Ejj/g3FBNxr2/2zrdWUJEFGRUiULZqk3xtXqC7HwAx/rwXvkCY6ptMQS2W/UQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(366004)(66556008)(316002)(6506007)(110136005)(66476007)(4326008)(8676002)(83380400001)(5660300002)(6486002)(38100700002)(82960400001)(9686003)(186003)(66946007)(498600001)(2906002)(6512007)(8936002)(26005)(86362001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: zXvH23V6aOennBoD8N8S2KThOaE6aQi0UlYZcSTPfxTZIFT8MTC1Au4SDlusARjwThXBNRXOTcP2kUwHzN3/Fk7yY+ZvjaE9ij0cLUNtlh1tvn5vEBMERd8bgg9mARmMiepGPMqb1+rksH95/dIcNgKlgIjG/ot4AVv8VRCEcBwH13JuVgEnhpQB/PLtEMSgzIp2DDxd1DY3pwRDI0d2mSDw5Dm6TFTdUnIAMQ+ivBGaCpzgsh37WG/EAS2ZjH4491gDeEMungfcMtQj9+bQGCVeKkcc+tSlKzJ+P2lQQvxXZyDh5xTl6X0yY1y1OpQXG+pnWu7SqT3bbFoNkfK+HiNxAE+9lNCfn5YOeovF2HPjgPKNmlrnHO0cCGg4XzWdiY6HovGHOPOrpOXIdrp1kNQw/KajyIL898m1PdyKS++5ew+JG5JaZbsTxHa42DVNuwwxlNiiaQppbl46IiOpLt9TEe99t4fIkrIIJ1SQJBURWT9jEf+hebw7tp0YLzwlntLupR+4/9eu9IryuxFytZ1aIc2N3xSW9P9mnbaC6+NaogtDpEoBpqEct8J8x7xOzqxzeBcrdmuB+2W9o4jgs7cWW3MEdNuFwMVpuukoIttemgfMDaMnvsaeMziSxCBBnoHQTdw2xsEV0hm1kS6MjQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(366004)(186003)(82960400001)(110136005)(6666004)(316002)(38100700002)(83380400001)(86362001)(5660300002)(8676002)(8936002)(66476007)(2906002)(66946007)(15650500001)(66556008)(4326008)(9686003)(498600001)(6486002)(6512007)(26005)(6506007);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?sxxbgku/f3pDkvicbyGMceriA4ftV+vV1wgFFIzg+NVGmVDYB14T0FrTY9vp?=
- =?us-ascii?Q?lfYDrQUhtcdHjz7REOLWMmo3Nos/q3PYgVr+/4yLIyo2SRkEHMFma878ChC5?=
- =?us-ascii?Q?xe91Isf5SyzX3TkYV8fbEMgwz5RO/697Ti7S0wqkKz2HABH34CALwfAdoyDB?=
- =?us-ascii?Q?8VSukJLgle6nV+6gorfUK9FL0DfNnysPAOE02rk5jj5FeAIYag456uBfaN3I?=
- =?us-ascii?Q?11lFhxk1kd8xM+54SHJkZPgMRG5SI9XuLl10kWDaywNIyYFFKttZ2vzchqKM?=
- =?us-ascii?Q?6/ktNE1W85VwLNPtrHxsew58jwCD5uka9UJUWcdLLDNn9BMUR6gAAfiDbTiU?=
- =?us-ascii?Q?ndLDUfgiyJVvmr9AzuICVgpXEpomVJm6hKkQWQcZw4d3OFU4mHMbL5bebwrc?=
- =?us-ascii?Q?pPShnusTlSIkUyYov+/yabRuD1RZzS62bKdESbLGJzMHjxLERaGg8+WY1ORy?=
- =?us-ascii?Q?PfKEXgvWbBcZhoUSwwV1VvQhGz02tHz4v3ohSnBCLPdT1zi3OlS1X3a8iV+w?=
- =?us-ascii?Q?Kj+5iLsiQLvtUXyILXgKx0A1mdXuFLYSvuoncfKp7zDI28W79GFcFsECqZlH?=
- =?us-ascii?Q?rnx6qnC5VDijG3VaYKVhCmHqCJa+uwCBmA2fTIXlc731E+s8wMp7l+GCDjLo?=
- =?us-ascii?Q?aRmK9oT7qaiZrqZUsPGDTWmyz22d/83WDJRyfwlF0yZ1nWJQ2V53cN4Kf4eS?=
- =?us-ascii?Q?WJMJUDhbmEgbHxflXCq4OS0H1d5D+nk5T+Gbouh89hrQJnpwlwEUA36pfuK7?=
- =?us-ascii?Q?Is/HPu53cMfVKq+dD5Xke8u4hBn/09FDMTCqjdNf9F8DZ6Ak9uKhNLs4jIEW?=
- =?us-ascii?Q?bHcb8l53WGI/MY2gFfWcLHln2TrgWdnjRu44mAzfdNttHvfriAh5Gs9v9bAf?=
- =?us-ascii?Q?KUWZsg/zJ7YBhRElt9ZspZBdmwFPPQJcbFypw0F1odrQl0LuOJkOPyvG7zG6?=
- =?us-ascii?Q?TIDts76Vim3ZYveAgKtgCZMnOEu8P5TghalcazLIIhVWs/hM1XL2UOV/DPPj?=
- =?us-ascii?Q?j4kLas/uNpFQf1foI4kI2Ck03V+L+sph+oXMEkgZS0+5foO5ng3Y4qeeFter?=
- =?us-ascii?Q?o8kzZyjf0LdPY834w5wbLcr0X3czNzth1tCIt2kSQ41V7U13qs1sKBqH4nuw?=
- =?us-ascii?Q?0OqWEqI7VVm6Af+VHSWf0AR39s9a3tD5okZSjqdgTpt+EyjMoeBu0dQP4KRD?=
- =?us-ascii?Q?OHrBXYSHY97x3rDmKBmycIOBrxhn/Fq7U3WvdqcDBl8qNL+o2R3V4uRJqH21?=
- =?us-ascii?Q?jxn+nI+UiB3AYYridu0vSIuZIzg/4Brl9kUl1mb4F06uwf1HdPq6kPIlYM7g?=
- =?us-ascii?Q?fOkN6BqCdmLovRJhv+T6io4kIJiRjMpZ8+2joDmkB37X6hXrtNpuqhBlznKf?=
- =?us-ascii?Q?E1ZzzjixKhKEuz13KQlg6C5asZLZm6FyS/vbv6qVtx1L5I8yZzIais8k8cpP?=
- =?us-ascii?Q?Np3cyNf4XWsnEehP/nMOrhBoEFbV0q2B1uUsuapib6+7SgE/2mUfseJ0dRMy?=
- =?us-ascii?Q?iKYBRa7nZJYUQLpUBdL/qcAjeAZ1+6yci2agAWCCMGrt6ifAAtji4FlI8j5P?=
- =?us-ascii?Q?II36q3WF9g/roK2TM3nX+FloV1a5sUiUROOvYOZPeWaLd2MhmVNFiZcisenT?=
- =?us-ascii?Q?7eGvePnz8BQ9lOUiU+v+q9vEPuBnSyjB77qxElWtUscHpAm8xnbrl908905c?=
- =?us-ascii?Q?qqMjl4sG6G4TTaQy3ac963gWuc2S24KkLBmgRKbAr0ye+z29jZzovvYvzzP/?=
- =?us-ascii?Q?ymsfXL0jfwP6NF13Y/TjTzX3sbh1Fzc=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8ff5283-4133-41d6-2822-08da508bdaec
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?w0XthpPyP2NRCKNkuDzeEI5oqnrdJ2smOU/OUoCr3vTYD/COZ2nL2lZKxbDo?=
+ =?us-ascii?Q?lFS/JmhcemLH1Nhlr2DbXXHgkQlUFy1OTYmL1/NBEjth/XQBt8CaJ5pmdCVu?=
+ =?us-ascii?Q?LYg5ZA81ImCFfKoL5vRpVhfiuTrR5f+MpvAhwbrNjPitXYEJ1hA1c1qoR0qj?=
+ =?us-ascii?Q?VggeuHG/7/qAoRHWKFyG4I5/690kzbPtr6a0YxjHYTf9VqxZkVvwR30JnKXs?=
+ =?us-ascii?Q?nTevWC4zq4BqL2eWa7jUOYz8KIIzedTlWZ8mF7yWUVS6sHbNQs08rVzYZrEW?=
+ =?us-ascii?Q?4yvYVvc1FUPlrvV9tlQAiWAKYoXOhbA+RXaPTGBupjIv7sDbbwnZGnJ9oMe+?=
+ =?us-ascii?Q?pTq9HCIFkI98CYMgtI21mQg04cOqLTD6lnyEYumEeAQc7+qsl7PmLzji1u2w?=
+ =?us-ascii?Q?5mrs/3MtSQcZqzbgG323ASEhD9X6sbHpeAjSyLhONvKfts9Ad2Wd7JQstc4D?=
+ =?us-ascii?Q?G7Baovg1qbWqn776kWv+UYH/QiBma3JRX2SPmhfvuoZ65gpLwnbece7Z7hCz?=
+ =?us-ascii?Q?n3ToRGtUG+UVCn4mZwrqHVTsr6WH8OqiU8lQBSA12zYsWrKv96MYJ0VO6Umd?=
+ =?us-ascii?Q?N65V5K29ALQhDeI4lPmYq9ioIynjWiSgeOhSjgzjq5nXurosAD2fFHGNFSp+?=
+ =?us-ascii?Q?9cL7mJl895pfeN+v7JyPOYItUuKAc9N2UPYC8UQEDFnX9IAcIwXbmVJ3MjXq?=
+ =?us-ascii?Q?zZvuG4pTLU74qfvPBQxEJiyAFA2Kc/ySMYErtsB0PdKOqw8ERajt0q+AbNTr?=
+ =?us-ascii?Q?OFG4y5P5hLtrfsSqHBoMEyOpAjMRhLNO3C4dmQHeZlD34EEFYyff9vvadR10?=
+ =?us-ascii?Q?qWhauQQsFdTu97wHlv6KYNfO9/nQ1w/lX+LLDw6E1UqcfUZbWbqvXdhH5qbT?=
+ =?us-ascii?Q?nkEHY1EwSYcaAbLGr2e3dBGF46DH202k2BMIDYgOPsUxIxylz2wlbv/QrScm?=
+ =?us-ascii?Q?eoG91iH9RchYDYVlLLagEuNyVYsJPzjm0ICN9nHtag+EPPG5CCdpIbM3pXyc?=
+ =?us-ascii?Q?rwuaceWBXfdeSnNvTC63BsbltLs60Ebc1zEJiyNUYw/C8Qw0/jU/YePHQ8jx?=
+ =?us-ascii?Q?g5FFQBYX+t9Dyz6lhqrZ5fWU2yhe9Krz36vM5WLPokwvDipDqwA3OuRndsOR?=
+ =?us-ascii?Q?fWME3R38f0mF7flTfTOTGex2wnJkD6t9WiFm70bPZa8cu8xhKtX7i/SIRDtI?=
+ =?us-ascii?Q?VCGlttlfccKVPjMO0vtK6DzFXOUcdnL6MEAemYMbrBEgo7/r27y9rD67MsBf?=
+ =?us-ascii?Q?qobCHPJ0185lLapiB2pKT1YTzUC7f8VRwPcT8ZEHYbdolcttrM5/fz9y89bv?=
+ =?us-ascii?Q?382J2AT4xg1XMaeEdVfS8QdVDEOiHU+j6Z84KgyH6+Xjhd98r8iyh4O36pUf?=
+ =?us-ascii?Q?3X8CnkYfIThV8mfNJu7nrUxIWGUjx8kVJY6TayTidFiUFM5pgOP2VktLWul6?=
+ =?us-ascii?Q?szWmY+YUBB11+47Neb+Yl696GxZVSI3Mby2Unl2ahOHppOk5NuBAvcxzEzhp?=
+ =?us-ascii?Q?HNj3LZaOxmxKp/wzSPqZlppeeaCebLaUGX8j+ffdMHSVJK5szgSjhF+NwrQg?=
+ =?us-ascii?Q?RDx2/YHFntf0ijbqMFGY+oHeXgZTdyYdAEOrwRQov8xkVnhz3Z7kxFu55Emx?=
+ =?us-ascii?Q?X8el2g09zjoLxbCs7thTD8uL0+XeR1y04V8uZ8qzg0wv/2ecjjT2h8bKbSTm?=
+ =?us-ascii?Q?wCqcjTMyPA/wZCCkerHTMj5XtMR1NWghAGRZfdNNGDigTd7h4ULQKBcFzmWg?=
+ =?us-ascii?Q?+FcbjtYbIkb8AbP6ivgY4zrfCHL0/qM=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa8100a9-57bb-4dbb-3df2-08da508ede30
 X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2022 18:04:43.1026
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2022 18:26:17.2284
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PL+JmHTLQ84m7bZAdr0tYjesmRJhjcVRjD3UgM+rUqaOM3/gsZjdonaBRnciDXcK5xZc3w8lIgdbbsA2GOr2OVow46Flv3KTbtIsDX61lfM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2701
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6bAKw5m1YWVjq3fXt8CCXp97Z4IpiNUI5hfj43DzIL08ppcD3xXj9EU/u4tnxQF9we4+T2UyEmVUtkhdh+rjqCGHIvyXCeYnDU+00xAh7g0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5503
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
@@ -152,95 +151,241 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 alison.schofield@ wrote:
 > From: Alison Schofield <alison.schofield@intel.com>
 > 
-> Add a trace event for CXL Poison List Media Error Records that
-> includes the starting DPA of the poison, the length, and the
-> the source of the poison.
+> CXL devices that support persistent memory maintain a list of locations
+> that are poisoned or result in poison if the addresses are accessed by
+> the host.
 > 
-> This trace event will be used by the CXL_MEM driver to log the
-> Media Errors returned by the GET_POISON_LIST Mailbox command.
+> Per the spec (CXL 2.0 8.2.8.5.4.1), the device returns this Poison
+> list as a set of  Media Error Records that include the source of the
+> error, the starting device physical address and length. The length is
+> the number of adjacent DPAs in the record and is in units of 64 bytes.
+> 
+> Retrieve the list and log each Media Error Record as a trace event of
+> type cxl_poison_list.
 > 
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 > ---
->  include/trace/events/cxl.h | 60 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 include/trace/events/cxl.h
+>  drivers/cxl/cxlmem.h    | 43 +++++++++++++++++++++++
+>  drivers/cxl/core/mbox.c | 75 +++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 118 insertions(+)
 > 
-> diff --git a/include/trace/events/cxl.h b/include/trace/events/cxl.h
-> new file mode 100644
-> index 000000000000..17e707c3817e
-> --- /dev/null
-> +++ b/include/trace/events/cxl.h
-> @@ -0,0 +1,60 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM cxl
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 60d10ee1e7fc..29cf0459b44a 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -174,6 +174,7 @@ struct cxl_endpoint_dvsec_info {
+>   *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
+>   * @lsa_size: Size of Label Storage Area
+>   *                (CXL 2.0 8.2.9.5.1.1 Identify Memory Device)
+> + * @poison_max_mer: maximum Media Error Records tracked in Poison List
+>   * @mbox_mutex: Mutex to synchronize mailbox access.
+>   * @firmware_version: Firmware version for the memory device.
+>   * @enabled_cmds: Hardware commands found enabled in CEL.
+> @@ -204,6 +205,7 @@ struct cxl_dev_state {
+>  
+>  	size_t payload_size;
+>  	size_t lsa_size;
+> +	u32 poison_max;
+>  	struct mutex mbox_mutex; /* Protects device mailbox and firmware */
+>  	char firmware_version[0x10];
+>  	DECLARE_BITMAP(enabled_cmds, CXL_MEM_COMMAND_ID_MAX);
+> @@ -317,6 +319,46 @@ struct cxl_mbox_set_partition_info {
+>  
+>  #define  CXL_SET_PARTITION_IMMEDIATE_FLAG	BIT(0)
+>  
+> +struct cxl_mbox_poison_payload_in {
+> +	__le64 offset;
+> +	__le64 length;
+> +} __packed;
 > +
-> +#if !defined(_CXL_TRACE_H) ||  defined(TRACE_HEADER_MULTI_READ)
-> +#define _CXL_TRACE_H
+> +struct cxl_mbox_poison_payload_out {
+> +	u8 flags;
+> +	u8 rsvd1;
+> +	__le64 overflow_timestamp;
+> +	__le16 count;
+> +	u8 rsvd2[0x14];
+> +	struct cxl_poison_record {
+> +		__le64 address;
+> +		__le32 length;
+> +		__le32 rsvd;
+> +	} __packed record[];
+> +} __packed;
 > +
-> +#include <linux/tracepoint.h>
+> +/* CXL 8.2.9.5.4.1 Get Poison List: payload out flags: */
+> +#define CXL_POISON_FLAG_MORE            BIT(0)
+> +#define CXL_POISON_FLAG_OVERFLOW        BIT(1)
+> +#define CXL_POISON_FLAG_SCANNING        BIT(2)
 > +
-> +TRACE_DEFINE_ENUM(CXL_POISON_SOURCE_UNKNOWN);
-> +TRACE_DEFINE_ENUM(CXL_POISON_SOURCE_INTERNAL);
-> +TRACE_DEFINE_ENUM(CXL_POISON_SOURCE_EXTERNAL);
-> +TRACE_DEFINE_ENUM(CXL_POISON_SOURCE_INJECTED);
-> +TRACE_DEFINE_ENUM(CXL_POISON_SOURCE_VENDOR);
-> +TRACE_DEFINE_ENUM(CXL_POISON_SOURCE_INVALID);
+> +/* CXL 8.2.9.5.4.1 Get Poison List: Error is encoded in record.address[2:0] */
+> +#define CXL_POISON_SOURCE_MASK		GENMASK(2, 0)
+> +#define	CXL_POISON_SOURCE_UNKNOWN	0
+> +#define	CXL_POISON_SOURCE_EXTERNAL	1
+> +#define	CXL_POISON_SOURCE_INTERNAL	2
+> +#define	CXL_POISON_SOURCE_INJECTED	3
+> +#define	CXL_POISON_SOURCE_VENDOR	7
 > +
-> +#define show_poison_source(source)					\
-> +	__print_symbolic(source,					\
-> +			{CXL_POISON_SOURCE_UNKNOWN,  "UNKNOWN"},	\
-> +			{CXL_POISON_SOURCE_EXTERNAL, "EXTERNAL"},	\
-> +			{CXL_POISON_SOURCE_INTERNAL, "INTERNAL"},	\
-> +			{CXL_POISON_SOURCE_INJECTED, "INJECTED"},	\
-> +			{CXL_POISON_SOURCE_VENDOR,   "VENDOR"},		\
-> +			{CXL_POISON_SOURCE_INVALID,  "INVALID"})
+> +/* Software define */
+> +#define	CXL_POISON_SOURCE_INVALID	99
+> +#define CXL_POISON_SOURCE_VALID(x)		\
+> +	(((x) == CXL_POISON_SOURCE_UNKNOWN)  ||	\
+> +	 ((x) == CXL_POISON_SOURCE_EXTERNAL) ||	\
+> +	 ((x) == CXL_POISON_SOURCE_INTERNAL) ||	\
+> +	 ((x) == CXL_POISON_SOURCE_INJECTED) ||	\
+> +	 ((x) == CXL_POISON_SOURCE_VENDOR))
 > +
-> +TRACE_EVENT(cxl_poison_list,
+>  /**
+>   * struct cxl_mem_command - Driver representation of a memory device command
+>   * @info: Command information as it exists for the UAPI
+> @@ -351,6 +393,7 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds);
+>  struct cxl_dev_state *cxl_dev_state_create(struct device *dev);
+>  void set_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
+>  void clear_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
+> +int cxl_mem_get_poison_list(struct device *dev);
+>  #ifdef CONFIG_CXL_SUSPEND
+>  void cxl_mem_active_inc(void);
+>  void cxl_mem_active_dec(void);
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 54f434733b56..c10c7020ebc2 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -9,6 +9,9 @@
+>  
+>  #include "core.h"
+>  
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/cxl.h>
 > +
-> +	    TP_PROTO(struct device *dev,
+>  static bool cxl_raw_allow_all;
+>  
+>  /**
+> @@ -755,6 +758,7 @@ int cxl_dev_state_identify(struct cxl_dev_state *cxlds)
+>  {
+>  	/* See CXL 2.0 Table 175 Identify Memory Device Output Payload */
+>  	struct cxl_mbox_identify id;
+> +	__le32 val = 0;
+>  	int rc;
+>  
+>  	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_IDENTIFY, NULL, 0, &id,
+> @@ -783,6 +787,9 @@ int cxl_dev_state_identify(struct cxl_dev_state *cxlds)
+>  	cxlds->lsa_size = le32_to_cpu(id.lsa_size);
+>  	memcpy(cxlds->firmware_version, id.fw_revision, sizeof(id.fw_revision));
+>  
+> +	memcpy(&val, id.poison_list_max_mer, 3);
+> +	cxlds->poison_max = le32_to_cpu(val);
+> +
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_dev_state_identify, CXL);
+> @@ -826,6 +833,74 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_mem_create_range_info, CXL);
+>  
+> +int cxl_mem_get_poison_list(struct device *dev)
+> +{
+> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> +	struct cxl_mbox_poison_payload_out *po;
+> +	struct cxl_mbox_poison_payload_in pi;
+> +	int nr_records = 0;
+> +	int rc, i;
+> +
+> +	if (range_len(&cxlds->pmem_range)) {
+> +		pi.offset = cpu_to_le64(cxlds->pmem_range.start);
+> +		pi.length = cpu_to_le64(range_len(&cxlds->pmem_range));
+> +	} else {
+> +		return -ENXIO;
+> +	}
+> +
+> +	po = kvmalloc(cxlds->payload_size, GFP_KERNEL);
+> +	if (!po)
+> +		return -ENOMEM;
+> +
+> +	do {
+> +		rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_POISON, &pi,
+> +				       sizeof(pi), po, cxlds->payload_size);
+> +		if (rc)
+> +			goto out;
 
-The CXL memory device names need some decoding before other userspace
-RAS tools might know what they are. So in addition to
-dev_name(&cxlmd->dev) I think it would be useful to include
-dev_name(cxlmd->dev.parent), i.e. the host PCI device name.
+In this case, no need for a 'goto' when 'break' will do.
 
-Other than that, looks good to me.
+> +
+> +		if (po->flags & CXL_POISON_FLAG_OVERFLOW) {
+> +			time64_t o_time = le64_to_cpu(po->overflow_timestamp);
+> +
+> +			dev_err(dev, "Poison list overflow at %ptTs UTC\n",
+> +				&o_time);
 
-> +		     int source,
-> +		     unsigned long start,
-> +		     unsigned int length),
+This should be just another event type, not an error message.
+
+> +			rc = -ENXIO;
+
+No need to error out, the media error records are still valid.
+
+> +			goto out;
+> +		}
 > +
-> +	    TP_ARGS(dev, source, start, length),
+> +		if (po->flags & CXL_POISON_FLAG_SCANNING) {
+> +			dev_err(dev, "Scan Media in Progress\n");
+
+This isn't an error condition and it should be something the kernel is
+mediating in the first instance. For example if userspace did:
+
+echo 1 > trace_poison &
+echo 1 > trace_poison_cached
+
+I would expect the second echo to just block awaiting the completion of
+the scan media request. I.e. just prevent the possibility of these
+commands colliding outside of CONFIG_CXL_MEM_RAW_COMMANDS=y shenanigans,
+in which case userspace gets to keep the pieces.
+
+> +			rc = -EBUSY;
+> +			goto out;
+> +		}
 > +
-> +	    TP_STRUCT__entry(
-> +		__string(name, dev_name(dev))
-> +		__field(int, source)
-> +		__field(u64, start)
-> +		__field(u32, length)
-> +	    ),
+> +		for (i = 0; i < le16_to_cpu(po->count); i++) {
+> +			u64 addr = le64_to_cpu(po->record[i].address);
+> +			u32 len = le32_to_cpu(po->record[i].length);
+> +			int source = FIELD_GET(CXL_POISON_SOURCE_MASK, addr);
 > +
-> +	    TP_fast_assign(
-> +		__assign_str(name, dev_name(dev));
-> +		__entry->source = source;
-> +		__entry->start = start;
-> +		__entry->length = length;
-> +	    ),
+> +			if (!CXL_POISON_SOURCE_VALID(source)) {
+> +				dev_dbg(dev, "Invalid poison source %d",
+> +					source);
+
+Per above, just emit the raw field value and leave parsing values to
+userspace.
+
+> +				source = CXL_POISON_SOURCE_INVALID;
+> +			}
 > +
-> +	    TP_printk("dev %s source %s start %llu length %u",
-> +		__get_str(name),
-> +		show_poison_source(__entry->source),
-> +		__entry->start,
-> +		__entry->length)
-> +);
-> +#endif /* _CXL_TRACE_H */
+> +			trace_cxl_poison_list(dev, source, addr, len);
+> +		}
 > +
-> +/* This part must be outside protection */
-> +#undef TRACE_INCLUDE_FILE
-> +#define TRACE_INCLUDE_FILE cxl
-> +#include <trace/define_trace.h>
+> +		/* Protect against an uncleared _FLAG_MORE */
+> +		nr_records = nr_records + le16_to_cpu(po->count);
+> +		if (nr_records >= cxlds->poison_max)
+> +			goto out;
+
+This also feels like something that should have a Linux max as well,
+something like:
+
+"cxlds->poison_max = min(identify->poison_max, CXL_LIST_POISON_MAX)"
+
+...where CXL_LIST_POISON_MAX is a "reasonable" maximum for a cache of
+hardware media poison errors like 1024.
+
+> +
+> +	} while (po->flags & CXL_POISON_FLAG_MORE);
+> +
+> +out:
+> +	kvfree(po);
+> +	return rc;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_mem_get_poison_list, CXL);
+> +
+>  struct cxl_dev_state *cxl_dev_state_create(struct device *dev)
+>  {
+>  	struct cxl_dev_state *cxlds;
 > -- 
 > 2.31.1
 > 
-
 
