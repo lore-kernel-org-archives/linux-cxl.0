@@ -2,49 +2,45 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A9DC43334
-	for <linux-cxl@archiver.kernel.org>; Fri, 17 Jun 2022 10:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB986C43334
+	for <linux-cxl@archiver.kernel.org>; Fri, 17 Jun 2022 13:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235712AbiFQKVf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 17 Jun 2022 06:21:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41662 "EHLO
+        id S1382321AbiFQNBf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 17 Jun 2022 09:01:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235307AbiFQKVe (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 17 Jun 2022 06:21:34 -0400
+        with ESMTP id S1382224AbiFQNBe (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 17 Jun 2022 09:01:34 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05E9E6A016;
-        Fri, 17 Jun 2022 03:21:31 -0700 (PDT)
-Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LPZm31CyTz67LSS;
-        Fri, 17 Jun 2022 18:19:47 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3A5A56B00;
+        Fri, 17 Jun 2022 06:01:32 -0700 (PDT)
+Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LPfLQ5030z6GDCt;
+        Fri, 17 Jun 2022 21:01:18 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
+ fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 17 Jun 2022 12:21:29 +0200
+ 15.1.2375.24; Fri, 17 Jun 2022 15:01:30 +0200
 Received: from localhost (10.81.209.131) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2375.24; Fri, 17 Jun
- 2022 11:21:28 +0100
-Date:   Fri, 17 Jun 2022 11:21:24 +0100
+ 2022 14:01:29 +0100
+Date:   Fri, 17 Jun 2022 14:01:25 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        "ben@bwidawsk.net" <ben@bwidawsk.net>, <linuxarm@huawei.com>,
-        <lorenzo.pieralisi@arm.com>,
-        "Box, David E" <david.e.box@intel.com>,
-        "Chuck Lever" <chuck.lever@oracle.com>,
-        Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: (SPDM) Device attestation, secure channels from host to device
- etc: Discuss at Plumbers?
-Message-ID: <20220617112124.00002296@Huawei.com>
-In-Reply-To: <YqICCSd/6Vxidu+v@iweiny-desk3>
-References: <20220609124702.000037b0@Huawei.com>
-        <YqICCSd/6Vxidu+v@iweiny-desk3>
+To:     <alison.schofield@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, <linux-cxl@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] cxl/mbox: Add GET_POISON_LIST mailbox command
+ support
+Message-ID: <20220617140125.0000081e@Huawei.com>
+In-Reply-To: <382a9c35ef43e89db85670637d88371f9197b7a2.1655250669.git.alison.schofield@intel.com>
+References: <cover.1655250669.git.alison.schofield@intel.com>
+        <382a9c35ef43e89db85670637d88371f9197b7a2.1655250669.git.alison.schofield@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -58,99 +54,103 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 9 Jun 2022 07:22:01 -0700
-Ira Weiny <ira.weiny@intel.com> wrote:
+On Tue, 14 Jun 2022 17:10:27 -0700
+alison.schofield@intel.com wrote:
 
-> On Thu, Jun 09, 2022 at 12:47:02PM +0100, Jonathan Cameron wrote:
-> > Hi All,
-> > 
-> > +CC list almost certainly misses people interested in this topic
-> >     so please forward as appropriate.
-> > 
-> > I'll start by saying I haven't moved forward much with the
-> > SPDM/CMA over Data Object Exchange proposal from the PoC that led to
-> > presenting it last year as part of the PCI etc uconf last year.
-> > https://lpc.events/event/11/contributions/1089/
-> > https://lore.kernel.org/all/20220303135905.10420-1-Jonathan.Cameron@huawei.com/
-> > I'm continuing to carry the QEMU emulation but not posted for a while
-> > as we are slowly working through a backlog of CXL stuff to merge.
-> > https://gitlab.com/jic23/qemu/-/commit/f989c8cf283302c70eb5b0b73625b5357c4eb44f
-> > On the plus side, Ira is driving the DOE support forwards so
-> > that will resolve one missing precursor.
-> > 
-> > We had a lot of open questions last year and many of them are
-> > still at least somewhat open; perhaps now is time to revisit?
-> > 
-> > In the meantime there has been discussion[1]:
-> > [1] https://lore.kernel.org/all/CAPcyv4jb7D5AKZsxGE5X0jon5suob5feggotdCZWrO_XNaer3A@mail.gmail.com/
-> > [2] https://lore.kernel.org/all/20220511191345.GA26623@wunner.de/
-> > [3] https://lore.kernel.org/all/CAPcyv4iWGb7baQSsjjLJFuT1E11X8cHYdZoGXsNd+B9GHtsxLw@mail.gmail.com/
-> > 
-> > Perhaps it is worth putting in a proposal for either a session in an
-> > appropriate uconf at plumbers, or maybe a BoF given it is a
-> > broader topic than either PCI or CXL?  
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> Yes, while this could work as part of the CXL uconf it is probably a more
-> general topic.
-
-Maybe steal time from PCI given CXL uconf is going to be busy!
-(lets see if any of the PCI folk are reading this thread.. :)
-
-At the moment I'm not seeing enough interest to put in a proposal for
-anything 'officially scheduled', but there is a bit more time until
-the deadline so let's see if we get any other interest in that time.
-
+> CXL devices that support persistent memory maintain a list of locations
+> that are poisoned or result in poison if the addresses are accessed by
+> the host.
 > 
-> > 
-> > We'll still need to dance around work in various standards bodies
-> > that we can't talk about yet, but it feels like it's worth
-> > some time hammering out a plan of attack on what we can
-> > discuss.
-> > 
-> > Rough topics:
-> > 
-> > * Use models. Without those hard to define the rest!
-> > * Policy.  What do we do if we can't establish a secure channel?
-> > * Transports of interest.  Single solution for MCTP vs
-> >   PCI/CMA or not?
-> > * Session setup etc in kernel / userspace / carefully curated hybrid
-> >   of the two (Dan mentioned this last one in one of the links above)
-> >   There may be similarities to the discussion around TLS (much simpler
-> >   though I think!)  
+> Per the spec (CXL 2.0 8.2.8.5.4.1), the device returns this Poison
+> list as a set of  Media Error Records that include the source of the
+> error, the starting device physical address and length. The length is
+> the number of adjacent DPAs in the record and is in units of 64 bytes.
 > 
-> I think this is something which really does need some face to face (or virtual
-> face) time.  FWIW another idea from Christoph is kernel bundled userspace code.
+> Retrieve the list and log each Media Error Record as a trace event of
+> type cxl_poison_list.
 > 
-> 	https://lore.kernel.org/linux-cxl/YoT4C77Yem37NUUR@infradead.org/
-> 
-> I'm not sure any real implementation would be workable.
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> ---
+ 
+> +int cxl_mem_get_poison_list(struct device *dev)
+> +{
+> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> +	struct cxl_mbox_poison_payload_out *po;
+> +	struct cxl_mbox_poison_payload_in pi;
+> +	int nr_records = 0;
+> +	int rc, i;
+> +
+> +	if (range_len(&cxlds->pmem_range)) {
+> +		pi.offset = cpu_to_le64(cxlds->pmem_range.start);
+> +		pi.length = cpu_to_le64(range_len(&cxlds->pmem_range));
+> +	} else {
+> +		return -ENXIO;
+> +	}
+> +
+> +	po = kvmalloc(cxlds->payload_size, GFP_KERNEL);
+> +	if (!po)
+> +		return -ENOMEM;
+> +
+> +	do {
+> +		rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_POISON, &pi,
+> +				       sizeof(pi), po, cxlds->payload_size);
+> +		if (rc)
+> +			goto out;
+> +
+> +		if (po->flags & CXL_POISON_FLAG_OVERFLOW) {
+> +			time64_t o_time = le64_to_cpu(po->overflow_timestamp);
+> +
+> +			dev_err(dev, "Poison list overflow at %ptTs UTC\n",
+> +				&o_time);
+> +			rc = -ENXIO;
+> +			goto out;
+> +		}
+> +
+> +		if (po->flags & CXL_POISON_FLAG_SCANNING) {
+> +			dev_err(dev, "Scan Media in Progress\n");
+> +			rc = -EBUSY;
+> +			goto out;
+> +		}
+> +
+> +		for (i = 0; i < le16_to_cpu(po->count); i++) {
+> +			u64 addr = le64_to_cpu(po->record[i].address);
+> +			u32 len = le32_to_cpu(po->record[i].length);
+> +			int source = FIELD_GET(CXL_POISON_SOURCE_MASK, addr);
+> +
+> +			if (!CXL_POISON_SOURCE_VALID(source)) {
+> +				dev_dbg(dev, "Invalid poison source %d",
+> +					source);
+> +				source = CXL_POISON_SOURCE_INVALID;
+> +			}
+> +
+> +			trace_cxl_poison_list(dev, source, addr, len);
+> +		}
+> +
+> +		/* Protect against an uncleared _FLAG_MORE */
+> +		nr_records = nr_records + le16_to_cpu(po->count);
+> +		if (nr_records >= cxlds->poison_max)
 
-Ah. I remembered to CC Christoph but not to actually link the relevant mail.
+If this happens and _FLAG_MORE is set (it will occur anyway currently
+if we happen to have poison_max records - I hit this in QEMU because
+until now default of poison_max == 0)
+then we should spit out an error message as I think that means the
+hardware is broken.
 
-That proposal is definitely interesting.
 
-> 
-> > * Key management
-> > * Potential to use github.com/dmtf/libSPDM - is it suitable for any solutions
-> >   (it's handy for emulation if nothing else!)
-> > * Measurement and what to do with it.
-> > * No public hardware yet, so what else should we emulate to enable
-> >   work in this area. (SPDM over MCTP over I2C is on my list as easy
-> >   to do in QEMU building on
-> >   https://lore.kernel.org/all/20220520170128.4436-1-Jonathan.Cameron@huawei.com/ 
-> > * Many other things I've forgotten about - please add!
-> > 
-> > So are people who care going to be at plumbers (in person or virtually)
-> > and if so, do we want to put forward a session proposal?  
-> 
-> I have submitted a non-CXL topic in the arch uconf and was hoping to go in
-> person but I'm unsure of travel budgets.  I will likely be virtual if I can't
-> attend in person.
-
-Cool. See you there in some fashion.  
-
-Jonathan
-
-> 
-> Ira
+> +			goto out;
+> +
+> +	} while (po->flags & CXL_POISON_FLAG_MORE);
+> +
+> +out:
+> +	kvfree(po);
+> +	return rc;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_mem_get_poison_list, CXL);
+> +
+>  struct cxl_dev_state *cxl_dev_state_create(struct device *dev)
+>  {
+>  	struct cxl_dev_state *cxlds;
 
