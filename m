@@ -2,262 +2,358 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E14BC433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 17 Jun 2022 19:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC267C43334
+	for <linux-cxl@archiver.kernel.org>; Fri, 17 Jun 2022 20:43:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230075AbiFQTci (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 17 Jun 2022 15:32:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44706 "EHLO
+        id S1383614AbiFQUnF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 17 Jun 2022 16:43:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231304AbiFQTch (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 17 Jun 2022 15:32:37 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E26EA185;
-        Fri, 17 Jun 2022 12:32:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655494352; x=1687030352;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=3gzeJtqcX0o/BkQAq9o37TbkBECXFUGNTf+Benowf8I=;
-  b=g0ms45Ha6pI/xqOilC0Tl6K9r9KMAtusPCX1Um/9tSw5UlMJiQZtdK7C
-   Fsk2zWcUBTX7kL65OFJ9njB2pj85wgRPIZCuybq1ySCEhE6eLEcsxZAxf
-   Uj+YZZVd0Dc7twwkc/6J46qa2dCWF0ihw0Pt5avwpyUFiMqn26KAL3GDo
-   6LF7eEDAKBsXAYl5pKMNQqgI6fXTAH+1dIHgPcjfFwAcDN1nVSwj9f/G+
-   XLO3lT4fimUPjhYGIMOSAqCC65X9l9XiMROAedUndVAIXvZYeBIyfxH5h
-   724MIwhM2KCOU5b+Nim185B+keeiUauksBtQ7s0oROVt+1OCcu7QPXwwt
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="341255386"
-X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="341255386"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2022 12:32:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="912731828"
-Received: from fmsmsx604.amr.corp.intel.com ([10.18.126.84])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Jun 2022 12:32:32 -0700
-Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
- fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Fri, 17 Jun 2022 12:32:31 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Fri, 17 Jun 2022 12:32:31 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.44) by
- edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Fri, 17 Jun 2022 12:32:31 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oMcr5QkDY239IIa6J/l5jUTARJYJmqJ9QS92ciGBDJ8NZ1+QP9woAsZO1TpMhwlRvvB7RGvz2D7Xy7UBEYWB159bAtzaGgWmL3u9th27VHlkI1Fu7OzR2GRInu0NBK9oLn2sRRQ0qlH2HVUDaBDo0FWwdViUcy10U6ol17PuLTyhAjo0LINbnrAs/+pqK9wrRbR+1cCOzW4/GF76GfWoEXAgEQEncRjtC4jz3mmYCMf/uqcEshZ75OtrZ6YpU0HSr/+sxqtrUF0hgr6XcmZ1jYD8Jg06wIKu3J9kUHp6CoKftrfa/2tF+VFfOWsragavUYcK9/IRDLBay8H2+I4M5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PRMh9my0YNiucuTkpRvFn7oIV3z9+oVbQ1gDmDsoOeo=;
- b=DfXmdoWNScg3SG9hzgHXY24nUaQ3eOlj2UdQfqHBzmvH81gFpRXVdGUuu2oCBKLENrp388XtEcqW6+cB8FyCDX7tdoE0tfwTenPZYvxbjMnzT3R4C7sm3esrAbHUrnPuY+qrgYdEx2mSDUVMPBnRkZ9f9AriRfLJXNoHsh95LlGdfMXKwghUY02322eZkjCRwJhOQwm6W2EVbkL4AEmde7elfZMARuOJvEsJmjmbjAozdkjk2ysg4Z3v2nU6LgGfaLjYSZHKLNuIyTfmTcg3Hl4KyY/ki9+1vyMExk7vT/bxbKr17hGx/9Cs181aBC6n5VBF0uRkbXYtE56GQv4bhw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by BN9PR11MB5289.namprd11.prod.outlook.com
- (2603:10b6:408:136::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5353.15; Fri, 17 Jun
- 2022 19:32:30 +0000
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::f50c:6e72:c8aa:8dbf]) by MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::f50c:6e72:c8aa:8dbf%7]) with mapi id 15.20.5332.023; Fri, 17 Jun 2022
- 19:32:30 +0000
-Date:   Fri, 17 Jun 2022 12:32:28 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Alison Schofield <alison.schofield@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "Ben Widawsky" <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Ingo Molnar" <mingo@redhat.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] cxl/mbox: Add GET_POISON_LIST mailbox command support
-Message-ID: <62acd6cc72637_844b129463@dwillia2-xfh.notmuch>
-References: <cover.1655250669.git.alison.schofield@intel.com>
- <382a9c35ef43e89db85670637d88371f9197b7a2.1655250669.git.alison.schofield@intel.com>
- <20220617150508.0000266a@Huawei.com>
- <20220617162935.GA1532720@alison-desk>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20220617162935.GA1532720@alison-desk>
-X-ClientProxiedBy: MWHPR11CA0009.namprd11.prod.outlook.com
- (2603:10b6:301:1::19) To MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20)
+        with ESMTP id S1383611AbiFQUmv (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 17 Jun 2022 16:42:51 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DDE15DBCB;
+        Fri, 17 Jun 2022 13:40:52 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 9AC5D81C3D;
+        Fri, 17 Jun 2022 20:40:50 +0000 (UTC)
+Received: from pdx1-sub0-mail-a312.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id EC95481BD3;
+        Fri, 17 Jun 2022 20:40:49 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1655498450; a=rsa-sha256;
+        cv=none;
+        b=Tpd2yyDntqlMU2V3crqNRy7l32e+tOrYkOTu672CLdYmdsoRMG5tAdB+AZd5NormH7moWJ
+        4l1DLWwWf5oK1u4MfN6knukpTeluw0VpFle8IYOzmTbJDOsMyiMf6uJA/VNSgEU2/igfFO
+        L/U3sNXP+JOlTGr0WFpJdbv3+yluVYSfWOTnzWRgXg26i+0Lgg+x5hf83vzw50ZhoWnff+
+        Vzcm3pT9QqEsaPCDL1VFqzAWby+YY8fkn/lqz+AtabchRpNPhTXnUlZbbOiELOHB4EclbV
+        PULlOG3AnINgs30hB8Ff44aojerMmN0V/2KeOrTs3ztnvOtsMqsrGMX26yGB3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1655498450;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=lykkFNFOZt2FNRu8ye1JiltrQXiKX3YS6Z0KwMe5t+A=;
+        b=a4GUn6f89hPru0lAdg6fp0olXpgGOm2LHGdc80pJuKw4cT+sDqQa5eVXOtdCK47fW5bOA8
+        1YvjD6a68faw8UM92qx/eYAVv4sX/o5d5iIKaV8I+dbcAT7Bz1kFKKP5LWItlnPfyYGUTR
+        fhNVSIsKSmZMajs+28vY1GSL/m6/tJprtQI9nwTp3bn/cknWUwsUfwFnGME4Z8dQKYedRi
+        hlNEPVbGpAjOPc4ZgvCLEbZM1jOwVHa6JOo0sY33xs2a3+6CJu9WnlRaIN4eQD2RLA0aDu
+        B3w40CsJ4oyY47JRbKeYgDuUctzvIR9+iMjhh6uWSJOqBNqOugO6BsenbvpORQ==
+ARC-Authentication-Results: i=1;
+        rspamd-848669fb87-5ggpz;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Dime-Bubble: 075ab45a0c46bfcc_1655498450381_1563642052
+X-MC-Loop-Signature: 1655498450381:944370204
+X-MC-Ingress-Time: 1655498450381
+Received: from pdx1-sub0-mail-a312.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.115.45.51 (trex/6.7.1);
+        Fri, 17 Jun 2022 20:40:50 +0000
+Received: from offworld (unknown [104.36.31.105])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a312.dreamhost.com (Postfix) with ESMTPSA id 4LPrXc6zkPz23;
+        Fri, 17 Jun 2022 13:40:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1655498449;
+        bh=lykkFNFOZt2FNRu8ye1JiltrQXiKX3YS6Z0KwMe5t+A=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=hS7tj7gUaj5TRliMGlbeoU1+ope3BBKKY5DSoTT2PctnfK1AO16RI7XgznA2G8H0H
+         ru+BrpZSdfz2JWdMKXeaqDiVEHcCr7IbkMvHudjTx4blAIKUaSyskAtCdkRmu/P0yX
+         joOrhJ24RDAmqCFRdJVtEZfhDdFNfN8UrXZu9+ywIMUon1fFbKPck2Q6FJYns9IQEY
+         VjhhcPJnLwZJhdMN4WnIH4en1Winrd2fixTLhVcTKoa8/X7xHlxjQECIkV2YESeQxw
+         jcNBwxw2d7YrU4nDJbWeQL3pM7CahQD8p3lLV5JzxXUyfxi/ARt5yfEEfD6Nv10BMH
+         dhugcMvqb7Zbg==
+Date:   Fri, 17 Jun 2022 13:40:46 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     "ira.weiny@intel.com" <ira.weiny@intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org, a.manzanares@samsung.com
+Subject: Re: [PATCH v11 4/8] cxl/pci: Create PCI DOE mailbox's for memory
+ devices
+Message-ID: <20220617204046.qdkza6iemkfv2aze@offworld>
+References: <20220610202259.3544623-1-ira.weiny@intel.com>
+ <20220610202259.3544623-5-ira.weiny@intel.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6e5f4d13-27dd-4f75-f572-08da50981e3d
-X-MS-TrafficTypeDiagnostic: BN9PR11MB5289:EE_
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-Microsoft-Antispam-PRVS: <BN9PR11MB5289C675843CB3C27DA30473C6AF9@BN9PR11MB5289.namprd11.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5IdKRGjbzsTqmFGSQiH8r1pc4g3WgOXkij5evpfQ+DcgihEFEnWwU1u8Ik7QWQk5zXkJ5RZSW3Oryy4R7LY+SnFbC/CSjrgvJBkolNb0AEUdPnIalJXWBoCxjJU+uWTUsSxn8LXrtjYeg1K9LAOs1GMAKL6s13WYPJWP0MNn9asfmk7+ZQjC7/zJdCbRw+skFy94QpbazNS4UdW6KkN2zhFMSqqcrfawH+X/iuRnypYff2aJWNi4cj33t8+Mh6sRxaJ7et+qhZcuFJU5EXSgCk7PS6l92vwgz8RnUv/aTcILf44q6CWC/WPAUGs4Ij49iY0xM6YM525/l0yUePtaWfAOsiDgJ5sYeMxdkOE88mWTwS9d5qCHr66ltdgIACmgOieuN+Mbbs5Ac9tWtdjrA6WZEw7wW0MVqkWf8rsr6ODsDRtxmkgb2D03K8AUnCghDWOR/0ti0l4M/UfvLInHDmvdTvOhbv9wvBLzWHZMb8hiYmVSqU1z04IiACR4A7y3HqCL5HRZ7qXJJ3W1s7Kwx1tsqiBtEXwP+13HfWlolw3KFPvr4KzWrTQrdqGEL3BX1fGPr8ZpaklygzQj+/mwlbqcxvPQBaSGMq2GgFlzsEfZkeVJGMCKdBWYKbYWENgzrfLWPdk8XrCiXgGpn+mc/w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(366004)(186003)(498600001)(82960400001)(8676002)(66556008)(110136005)(5660300002)(9686003)(54906003)(6506007)(26005)(66946007)(83380400001)(4326008)(6512007)(38100700002)(2906002)(6486002)(86362001)(15650500001)(316002)(66476007)(8936002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?N2Cdqrcwzner7Ld3JMvYY8XowxYiGhuW2j+g6P0CVO4rZadsCqVOotnkM/Be?=
- =?us-ascii?Q?TgPXAt9nUT9Qm/xKCwxG+Qh8C12IXVa+gexhFz194zf0CucQT5xZZTDrG4iW?=
- =?us-ascii?Q?/lTYiUF9Ow+AEJMhYY8i6z9SeozkyuG4IZOtK9bxrSqzSbg7yqXW+Ibbp1bV?=
- =?us-ascii?Q?I6yqJ6C8yYJjNpwy8xU0Sny0C2c0GmlJk0HB4iPObHRn3SE47A5ESrHLv7lq?=
- =?us-ascii?Q?HXAFqYqYrZJmeCYVw5dXtFimx0FP/jvom94PGlcii1DH3YNRGZbhOJSY8vA1?=
- =?us-ascii?Q?JsMzQVZggGgPLePnAAnRTMpfCwNLZheYXJqXJNkwgGUWdj75JowCH9qEAFgr?=
- =?us-ascii?Q?qLdpi5JMeENOlXHZxEa6q9bCKc+CTN0oxNJS4flMellsIMSShRmVKfCz3vt0?=
- =?us-ascii?Q?Ak7aV0xhDKc6AmzINFkm9z1zy2/D/5Yl9+lXO3cVzmlrUwq5ZwFU2jV4YFfS?=
- =?us-ascii?Q?VTgFxIlmW9qQixyJae1uP+EP8EUQ5o1q+sZpDpIfEpF37b29Edwcfc6V/6PZ?=
- =?us-ascii?Q?IpNxT8kWZ01cuF93iJoOzIR33y5Av9cLizGQpBhlrz0PotZ8NT1l2loyS1T9?=
- =?us-ascii?Q?J/9yo+2sGU4NxJyWtFCBkDn+H969LesUs56jWIA7cunsdq8dJcIKB0KK09LJ?=
- =?us-ascii?Q?gcWJ3sSnUpL7WUpyQEbjTTWD8afYe01MUNMP6b5fRWQN/icDK4Thgvgwxpto?=
- =?us-ascii?Q?a19NtIdfdSzJilipQ5zWul5FkmHnbV9MEvRkXwLkWQjSwDNVaR1gHBF6p//B?=
- =?us-ascii?Q?h41OWV9KUxWp9ETelLBdRgQct5nWONCJ3IoKDbnFUMAJ+cVgMwGxYIOXR+Fy?=
- =?us-ascii?Q?hVj5c+eC9zvn91fGGDjSCxgshgo3gjXtJ+vM4xtWmayn0Bp8lfgKfyRLz+rD?=
- =?us-ascii?Q?NJi3Q0IUE43qmxaPlneE+GCDsW9tUWLMuvO7QOdDPPaIjnhElDzwIRnjOUz4?=
- =?us-ascii?Q?aaUIrcCIELkTq2d+wipMKinPEuJTcFfEJQ7zEKZb8O4vnyNPmHOMvk91wx+/?=
- =?us-ascii?Q?BmMkfPA6QjhciDvRsYhzzdRopUUFIsFPECkzDkTcCOZXZgOqBj6ipffPxQdS?=
- =?us-ascii?Q?1jB3yl+nCcpRaCFjvF2cSC83V7i+w4mPCaYjAYg6WBR/9zHw6d4Qx6JaIhC2?=
- =?us-ascii?Q?138WQtAuHZNCz9NUUJuGxNUbYqLn3DND294/lxccTyUcE3FUJ6gedWcz+sSK?=
- =?us-ascii?Q?DdaNLuim4ZPIpt42DS9bj4C7a6Wf6HjOtyeu6AnjvcTseFTY9UB6hOkX2fmx?=
- =?us-ascii?Q?FyfAFekEuEdAB5iefQDovly0qX4JYY3XdMGWKND83Jc7m76HpcXO3GSP9xOj?=
- =?us-ascii?Q?73KDMNQVw9VBUqq1yfiqEjOFEir57VUiNfdrDq1CNJjSF5Haj1AocTFxp2xz?=
- =?us-ascii?Q?nts2A0G5NuH076mRg4tNpO/cCta+q73++paBKDtWQTrku0LXXN5UxE8ZTrlR?=
- =?us-ascii?Q?xEHlHxpn8KDtxiOUPaM/ApDZB6obQt4J/VCLFeHW93zPanz/+GNDW9DxrFAU?=
- =?us-ascii?Q?AnCKilJQd9qUAr6AU8TaSAcaIm9S1amnxk7w8S912UE+d9pXPj+uwGjGnlXh?=
- =?us-ascii?Q?c8dWm0k99SlujOx4vtrFDTrxKYe5mFVHDYr4efCCaH2KwYy/TyfFnyBCRO+9?=
- =?us-ascii?Q?16FhrH3xJGu+98eMRJgKUkvrzVnCmwQ6IEbC82zfS5dzTFIiz+9UvhQumeWM?=
- =?us-ascii?Q?9KojM1W6ArIu0nbtEaT6XlUlPawlxwMlait/bG/WMSuMTb4PuHxREr5kOLKM?=
- =?us-ascii?Q?62KBo7+KbnemVbPP0pPh0hNPCtF2t74=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e5f4d13-27dd-4f75-f572-08da50981e3d
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2022 19:32:30.0224
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cdclxWAlWAfSIANMn/qEo+H4VP/mcpbQCYp/gX84+/jta4grupSW9blo82W4+QMxznXlRekXJ+RtT2qsYlVJuKjbo+tBtMKCXyZSe2aWdEA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR11MB5289
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20220610202259.3544623-5-ira.weiny@intel.com>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Alison Schofield wrote:
-> On Fri, Jun 17, 2022 at 07:05:08AM -0700, Jonathan Cameron wrote:
-> > On Tue, 14 Jun 2022 17:10:27 -0700
-> > alison.schofield@intel.com wrote:
-> > 
-> > > From: Alison Schofield <alison.schofield@intel.com>
-> > > 
-> > > CXL devices that support persistent memory maintain a list of locations
-> > > that are poisoned or result in poison if the addresses are accessed by
-> > > the host.
-> > > 
-> > > Per the spec (CXL 2.0 8.2.8.5.4.1), the device returns this Poison
-> > > list as a set of  Media Error Records that include the source of the
-> > > error, the starting device physical address and length. The length is
-> > > the number of adjacent DPAs in the record and is in units of 64 bytes.
-> > > 
-> > > Retrieve the list and log each Media Error Record as a trace event of
-> > > type cxl_poison_list.
-> > > 
-> > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > 
-> > A few more things inline.
-> > 
-> > Otherwise, can confirm it works with some hack QEMU code.
-> > I'll tidy that up and post soon.
-> > 
-> > > +int cxl_mem_get_poison_list(struct device *dev)
-> > > +{
-> snip
-> > > +
-> > > +			trace_cxl_poison_list(dev, source, addr, len);
-> > 
-> > Need to mask off the lower 6 bits of addr as they contain the source
-> > + a few reserved bits.
-> > 
-> > I was confused how you were geting better than 64 byte precision in your
-> > example.
-> >
-> Ah...got it. Thanks!
-> 
-> > > +		}
-> > > +
-> > > +		/* Protect against an uncleared _FLAG_MORE */
-> > > +		nr_records = nr_records + le16_to_cpu(po->count);
-> > > +		if (nr_records >= cxlds->poison_max)
-> > > +			goto out;
-> > > +
-> > > +	} while (po->flags & CXL_POISON_FLAG_MORE);
-> > So.. A conundrum here.  What happens if:
-> > 
-> > 1. We get an error mid way through a set of multiple reads
-> >    (something intermittent - maybe a software issue)
-> > 2. We will drop out of here fine and report the error.
-> > 3. We run this function again.
-> > 
-> > It will (I think) currently pick up where we left off, but we have
-> > no way of knowing that as there isn't a 'total records' count or
-> > any other form of index in the output payload.
-> 
-> Yes. That is sad. I'm assume it's by design and CXL devices never
-> intended to keep any totals.
-> 
-> > 
-> > So, software solutions I think should work (though may warrant a note
-> > to be added to the spec).
-> > 
-> > 1. Read whole thing twice. First time is just to ensure we get
-> >    to the end and flush out any prior half done reads.
-> > 2. Issue a read for a different region (perhaps length 0) first
-> >    and assume everything starts from scratch when we go back to
-> >    this region.
-> 
-> Can you tell me more about 2 ?
-> 
-> Also, Since posting this I have added protection to this path to ensure
-> only one reader of the poison list for this device. Like this:
-> 
-> if (!completion_done(&cxlds->read_poison_complete);
->               return -EBUSY;
-> wait_for_completion_interruptible(&cxlds->read_poison_complete);
-> 	...GET ALL THE POISON...
-> complete(&cxlds->read_poison_complete);
+On Fri, 10 Jun 2022, ira.weiny@intel.com wrote:
+>+++ b/drivers/cxl/cxlmem.h
+>@@ -191,6 +191,8 @@ struct cxl_endpoint_dvsec_info {
+>  * @component_reg_phys: register base of component registers
+>  * @info: Cached DVSEC information about the device.
+>  * @serial: PCIe Device Serial Number
 
-Since this runs in the context of the requester a completion feels out
-of place. What this probably wants is a mutex() protecting the state
-machine of the Media Error Record retrieval and the "more" flag.
+Missing doc:
 
-> 
-> And will add the error message on that unexpected _FLAG_MORE too.
-> 
-> Alison
-> > 
-> > Jonathan
-> > 
-> 
-> 
-> 
-> > > +
-> > > +out:
-> > > +	kvfree(po);
-> > > +	return rc;
-> > > +}
-> > > +EXPORT_SYMBOL_NS_GPL(cxl_mem_get_poison_list, CXL);
-> > > +
-> > >  struct cxl_dev_state *cxl_dev_state_create(struct device *dev)
-> > >  {
-> > >  	struct cxl_dev_state *cxlds;
-> > 
+@doe_use_irq: Use interrupt vectors for DOEs over polling.
 
+However introducing such flags is not pretty, and this is only used by
+devm_cxl_pci_create_doe(). Do we really need it? See below.
 
+>+ * @doe_mbs: PCI DOE mailbox array
+>+ * @num_mbs: Number of DOE mailboxes
+>  * @mbox_send: @dev specific transport for transmitting mailbox commands
+>  *
+>  * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
+>@@ -224,6 +226,10 @@ struct cxl_dev_state {
+>	resource_size_t component_reg_phys;
+>	u64 serial;
+>
+>+	bool doe_use_irq;
+>+	struct pci_doe_mb **doe_mbs;
+>+	int num_mbs;
+>+
+>	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
+> };
+>
+>diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+>index 5a0ae46d4989..72c7b535f5df 100644
+>--- a/drivers/cxl/pci.c
+>+++ b/drivers/cxl/pci.c
+>@@ -8,6 +8,7 @@
+> #include <linux/mutex.h>
+> #include <linux/list.h>
+> #include <linux/pci.h>
+>+#include <linux/pci-doe.h>
+> #include <linux/io.h>
+> #include "cxlmem.h"
+> #include "cxlpci.h"
+>@@ -386,6 +387,116 @@ static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+>	return rc;
+> }
+>
+>+static void cxl_pci_free_irq_vectors(void *data)
+>+{
+>+	pci_free_irq_vectors(data);
+>+}
+>+
+>+static void cxl_doe_destroy_mb(void *ds)
+>+{
+>+	struct cxl_dev_state *cxlds = ds;
+>+	int i;
+>+
+>+	for (i = 0; i < cxlds->num_mbs; i++) {
+>+		if (cxlds->doe_mbs[i])
+>+			pci_doe_destroy_mb(cxlds->doe_mbs[i]);
+>+	}
+>+}
+>+
+>+static void cxl_alloc_irq_vectors(struct cxl_dev_state *cxlds)
+>+{
+>+	struct device *dev = cxlds->dev;
+>+	struct pci_dev *pdev = to_pci_dev(dev);
+>+	int max_irqs = 0;
+>+	int off = 0;
+>+	int rc;
+>+
+>+	/* Account for all the DOE vectors needed */
+>+	pci_doe_for_each_off(pdev, off) {
+>+		int irq = pci_doe_get_irq_num(pdev, off);
+>+
+>+		if (irq < 0)
+>+			continue;
+>+		max_irqs = max(max_irqs, irq + 1);
+>+	}
+>+
+>+	if (!max_irqs)
+>+		return;
+>+
+>+	cxlds->doe_use_irq = false;
+
+Is this unnecessary, it should already be 0 per the devm_kzalloc().
+
+>+
+>+	/*
+>+	 * Allocate enough vectors for the DOE's
+>+	 */
+>+	rc = pci_alloc_irq_vectors(pdev, max_irqs, max_irqs, PCI_IRQ_MSI |
+>+							     PCI_IRQ_MSIX);
+>+	if (rc != max_irqs) {
+>+		pci_err(pdev, "Not enough interrupts; use polling\n");
+>+		/* Some got allocated; clean them up */
+>+		if (rc > 0)
+>+			cxl_pci_free_irq_vectors(pdev);
+>+		return;
+>+	}
+>+
+>+	rc = devm_add_action_or_reset(dev, cxl_pci_free_irq_vectors, pdev);
+>+	if (rc)
+>+		return;
+>+
+>+	cxlds->doe_use_irq = true;
+>+}
+>+
+>+/**
+>+ * devm_cxl_pci_create_doe - Scan and set up DOE mailboxes
+>+ *
+>+ * @cxlds: The CXL device state
+>+ */
+>+static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
+>+{
+>+	struct device *dev = cxlds->dev;
+>+	struct pci_dev *pdev = to_pci_dev(dev);
+>+	u16 off = 0;
+>+	int num_mbs = 0;
+>+	int rc;
+>+
+>+	pci_doe_for_each_off(pdev, off)
+>+		num_mbs++;
+>+
+>+	if (!num_mbs) {
+>+		pci_dbg(pdev, "0 DOE mailbox's found\n");
+>+		return;
+>+	}
+>+
+>+	cxlds->doe_mbs = devm_kcalloc(dev, num_mbs, sizeof(*cxlds->doe_mbs),
+>+				      GFP_KERNEL);
+>+	if (!cxlds->doe_mbs)
+>+		return;
+>+
+>+	pci_doe_for_each_off(pdev, off) {
+>+		struct pci_doe_mb *doe_mb;
+>+		int irq = -1;
+>+
+>+		if (cxlds->doe_use_irq)
+>+			irq = pci_doe_get_irq_num(pdev, off);
+>+
+>+		doe_mb = pci_doe_create_mb(pdev, off, irq);
+>+		if (IS_ERR(doe_mb)) {
+>+			pci_err(pdev,
+>+				"Failed to create MB object for MB @ %x\n",
+>+				off);
+>+			doe_mb = NULL;
+>+		}
+>+
+>+		cxlds->doe_mbs[cxlds->num_mbs] = doe_mb;
+>+		cxlds->num_mbs++;
+>+	}
+>+
+>+	rc = devm_add_action_or_reset(dev, cxl_doe_destroy_mb, cxlds);
+>+	if (rc)
+>+		return;
+>+
+>+	pci_info(pdev, "Configured %d DOE mailbox's\n", cxlds->num_mbs);
+>+}
+>+
+> static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> {
+>	struct cxl_register_map map;
+>@@ -434,6 +545,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>
+>	cxlds->component_reg_phys = cxl_regmap_to_base(pdev, &map);
+>
+>+	cxl_alloc_irq_vectors(cxlds);
+>+	devm_cxl_pci_create_doe(cxlds);
+
+Should cxl_alloc_irq_vectors() just be called directly from devm_cxl_pci_create_doe()
+instead? Also if devm_cxl_pci_create_doe() fails (say ENOMEM), why do we
+bother continuing the cxl_pci probing?
+
+Thanks,
+Davidlohr
+
+------
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index ce5b00f3ebcb..44098c785a8b 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -230,7 +230,6 @@ struct cxl_dev_state {
+	resource_size_t component_reg_phys;
+	u64 serial;
+
+-	bool doe_use_irq;
+	struct pci_doe_mb **doe_mbs;
+	int num_mbs;
+
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 72c7b535f5df..47c3741f7768 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -403,7 +403,7 @@ static void cxl_doe_destroy_mb(void *ds)
+	}
+  }
+
+-static void cxl_alloc_irq_vectors(struct cxl_dev_state *cxlds)
++static int cxl_alloc_irq_vectors(struct cxl_dev_state *cxlds)
+  {
+	struct device *dev = cxlds->dev;
+	struct pci_dev *pdev = to_pci_dev(dev);
+@@ -421,9 +421,7 @@ static void cxl_alloc_irq_vectors(struct cxl_dev_state *cxlds)
+	}
+
+	if (!max_irqs)
+-		return;
+-
+-	cxlds->doe_use_irq = false;
++		return -ENOMEM;
+
+	/*
+	 * Allocate enough vectors for the DOE's
+@@ -435,14 +433,10 @@ static void cxl_alloc_irq_vectors(struct cxl_dev_state *cxlds)
+		/* Some got allocated; clean them up */
+		if (rc > 0)
+			cxl_pci_free_irq_vectors(pdev);
+-		return;
++		return -ENOMEM;
+	}
+
+-	rc = devm_add_action_or_reset(dev, cxl_pci_free_irq_vectors, pdev);
+-	if (rc)
+-		return;
+-
+-	cxlds->doe_use_irq = true;
++	return devm_add_action_or_reset(dev, cxl_pci_free_irq_vectors, pdev);
+  }
+
+  /**
+@@ -457,6 +451,10 @@ static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
+	u16 off = 0;
+	int num_mbs = 0;
+	int rc;
++	bool doe_use_irq = false;
++
++	if (cxl_alloc_irq_vectors(cxlds))
++		doe_use_irq = true;
+
+	pci_doe_for_each_off(pdev, off)
+		num_mbs++;
+@@ -475,7 +473,7 @@ static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
+		struct pci_doe_mb *doe_mb;
+		int irq = -1;
+
+-		if (cxlds->doe_use_irq)
++		if (doe_use_irq)
+			irq = pci_doe_get_irq_num(pdev, off);
+
+		doe_mb = pci_doe_create_mb(pdev, off, irq);
+@@ -545,7 +543,6 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+
+	cxlds->component_reg_phys = cxl_regmap_to_base(pdev, &map);
+
+-	cxl_alloc_irq_vectors(cxlds);
+	devm_cxl_pci_create_doe(cxlds);
+
+	rc = cxl_pci_setup_mailbox(cxlds);
