@@ -2,46 +2,51 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E37EDC43334
-	for <linux-cxl@archiver.kernel.org>; Mon, 20 Jun 2022 10:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E5FC43334
+	for <linux-cxl@archiver.kernel.org>; Mon, 20 Jun 2022 10:53:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240136AbiFTKXl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 20 Jun 2022 06:23:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51438 "EHLO
+        id S240072AbiFTKxO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 20 Jun 2022 06:53:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240116AbiFTKXi (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 20 Jun 2022 06:23:38 -0400
+        with ESMTP id S234950AbiFTKxN (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 20 Jun 2022 06:53:13 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E80EADE9A;
-        Mon, 20 Jun 2022 03:23:34 -0700 (PDT)
-Received: from fraeml706-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LRQhb4GzDz688G2;
-        Mon, 20 Jun 2022 18:23:11 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66EDF657E;
+        Mon, 20 Jun 2022 03:53:12 -0700 (PDT)
+Received: from fraeml704-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LRRK20yrFz689SS;
+        Mon, 20 Jun 2022 18:51:18 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
+ fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.24; Mon, 20 Jun 2022 12:23:30 +0200
+ 15.1.2375.24; Mon, 20 Jun 2022 12:53:09 +0200
 Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 20 Jun
- 2022 11:23:30 +0100
-Date:   Mon, 20 Jun 2022 11:23:28 +0100
+ 2022 11:53:08 +0100
+Date:   Mon, 20 Jun 2022 11:53:07 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <ira.weiny@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        "Alison Schofield" <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
+CC:     Alison Schofield <alison.schofield@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        "Verma, Vishal L" <vishal.l.verma@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V11 3/8] PCI: Create PCI library functions in support of
- DOE mailboxes.
-Message-ID: <20220620112328.00004f63@Huawei.com>
-In-Reply-To: <62ad06a643ddf_844b1294f@dwillia2-xfh.notmuch>
-References: <20220610202259.3544623-1-ira.weiny@intel.com>
-        <20220610202259.3544623-4-ira.weiny@intel.com>
-        <62ad06a643ddf_844b1294f@dwillia2-xfh.notmuch>
+        "Steven Rostedt" <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "a.manzanares@samsung.com" <a.manzanares@samsung.com>
+Subject: Re: [PATCH 2/3] cxl/mbox: Add GET_POISON_LIST mailbox command
+ support
+Message-ID: <20220620115307.000037a2@Huawei.com>
+In-Reply-To: <62accfc892f74_81c5e29456@dwillia2-xfh.notmuch>
+References: <cover.1655250669.git.alison.schofield@intel.com>
+        <382a9c35ef43e89db85670637d88371f9197b7a2.1655250669.git.alison.schofield@intel.com>
+        <20220616194334.pvorvoozt4rrzr66@offworld>
+        <20220616203400.GA1529208@alison-desk>
+        <62accfc892f74_81c5e29456@dwillia2-xfh.notmuch>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -55,175 +60,128 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 17 Jun 2022 15:56:38 -0700
+On Fri, 17 Jun 2022 12:02:32 -0700
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> ira.weiny@ wrote:
-> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Alison Schofield wrote:
+> > On Thu, Jun 16, 2022 at 12:43:34PM -0700, Davidlohr Bueso wrote:  
+> > > On Tue, 14 Jun 2022, alison.schofield@intel.com wrote:
+> > >   
+> > > >From: Alison Schofield <alison.schofield@intel.com>
+> > > >
+> > > >CXL devices that support persistent memory maintain a list of locations
+> > > >that are poisoned or result in poison if the addresses are accessed by
+> > > >the host.
+> > > >
+> > > >Per the spec (CXL 2.0 8.2.8.5.4.1), the device returns this Poison
+> > > >list as a set of  Media Error Records that include the source of the
+> > > >error, the starting device physical address and length. The length is
+> > > >the number of adjacent DPAs in the record and is in units of 64 bytes.
+> > > >
+> > > >Retrieve the list and log each Media Error Record as a trace event of
+> > > >type cxl_poison_list.
+> > > >
+> > > >Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> > > >---
+> > > > drivers/cxl/cxlmem.h    | 43 +++++++++++++++++++++++
+> > > > drivers/cxl/core/mbox.c | 75 +++++++++++++++++++++++++++++++++++++++++
+> > > > 2 files changed, 118 insertions(+)
+> > > >  
+> > snip
+> >   
+> > > >+int cxl_mem_get_poison_list(struct device *dev)
+> > > >+{
+> > > >+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> > > >+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> > > >+	struct cxl_mbox_poison_payload_out *po;
+> > > >+	struct cxl_mbox_poison_payload_in pi;
+> > > >+	int nr_records = 0;
+> > > >+	int rc, i;
+> > > >+
+> > > >+	if (range_len(&cxlds->pmem_range)) {
+> > > >+		pi.offset = cpu_to_le64(cxlds->pmem_range.start);
+> > > >+		pi.length = cpu_to_le64(range_len(&cxlds->pmem_range));  
 > > 
-> > Introduced in a PCI r6.0, sec 6.30, DOE provides a config space based
-> > mailbox with standard protocol discovery.  Each mailbox is accessed
-> > through a DOE Extended Capability.
+> > First off - you stopped at a bug here - that pi.length needs to be
+> > in units of 64 bytes.  
+> > > 
+> > > Do you ever see this changing to not always use the full pmem DPA range
+> > > but allow arbitrary ones? I also assume this is the reason why you don't
+> > > check the range vs cxlds->ram_range to prevent any overlaps, no?
+> > > 
+> > > Thanks,
+> > > Davidlohr  
 > > 
-> > Each DOE mailbox must support the DOE discovery protocol in addition to
-> > any number of additional protocols.
+> > David - Great question!
 > > 
-> > Define core PCI functionality to manage a single PCI DOE mailbox at a
-> > defined config space offset.  Functionality includes iterating,
-> > creating, query of supported protocol, task submission, and destruction
-> > of the mailboxes.
+> > I'm headed in this direction -
 > > 
-> > If interrupts are desired, the interrupt number can be queried and
-> > passed to the create function.  Passing a negative value disables
-> > interrupts for that mailbox.  It is the callers responsibility to ensure  
-> 
-> s/callers/caller's/
-> 
-> > enough interrupt vectors are allocated.
+> > cxl list --media-errors -m mem1
+> > 	lists media errors for requested memdev
 > > 
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > cxl list --media-errors -r region#
+> > 	lists region errors with HPA addresses
+> > 	(So here cxl tool will collect the poison for all the regions
+> > 	 memdevs and do the DPA to HPA translation)
 > > 
-
-...
-
-> > + * @task_lock: Protect cur_task  
+> > To answer your question, I wasn't thinking of limiting
+> > the range within the memdev, but certainly could. And if we were
+> > taking in ranges, those ranges would need to be checked.
+> > 
+> > $cxl list --media-errors -m mem1 --range-start=  --range-end|len=
+> > 
+> > Now, if I left the sysfs inteface as is, the driver will read the 
+> > entire poison list for the memdev and then cxl tool will filter it
+> > for the range requested. 
+> > 
+> > Or, maybe we should implement in libcxl (not sysfs), with memdev and
+> > range options and only collect from the device the range requested.
+> > 
+> > Either one looks the same to the cxl tool user, but limiting the
+> > range we send to the device would certainly cut down on unwanted
+> > records being logged, retrieved, and examined.
+> > 
+> > I'd like to hear more from you and other community members.  
 > 
-> Protect what about cur_task? Assigning and clearing a pointer is atomic.
+> There is some history here that is relevant to this design. CXL Get
+> Poison List builds on lessons learned from the ACPI "Address Range
+> Scrub" mechanism that was deployed for ACPI described persistent memory
+> platform (See ACPI 6.4 9.20.7.2 "Address Range Scrubbing (ARS)
+> Overview"). In that case there was no expectation that the device
+> maintained a cached and coherent (with incoming poison writes) copy of
+> the media error list. CXL Get Poison List in comparison is meant to
+> obviate the need to perform Scan Media in most scenarios, and it is
+> lightweight enough that userspace need not have a mechanism to request
+> errors by range, in my opinion.
 > 
-> > + * @statemachine: Work item for the DOE state machine  
-> 
-> Why does the pci_doe_mb have a work item? I would expect a work item per
-> task. Then this gets a waitqueue for free to wait for task completion.
-> Otherwise I suspect this introduces complexity in the DOE implementation
-> to simulate per-task-work that a workqueue per DOE and a work item per
-> task gets you for free, and for recalling hardware context from one
-> firing of the state machine to the next. Just run the task work all
-> in-line in one context.
+> One of the design warts of drivers/acpi/nfit/ that I want to get away
+> from in the case of drivers/cxl/ is snooping the equivalent of ARS
+> command results to populate a kernel list of poison addresses and
+> instead put the onus on userspace to collect DPA events and optionally
+> inform the kernel of the HPA impacts.
 
-We went through a model that looked rather more like that.  Maybe
-I misunderstood your feedback at the time (way back around the first RFC)
-where you suggested using timeouts via delayed workqueue and limiting
-the access to the DOE to a single thread (explicitly by using a single
-work item). See description of changes in v2.
-https://lore.kernel.org/all/20210413160159.935663-3-Jonathan.Cameron@huawei.com/
+Can you give more info on why such an in kernel flow doesn't work
+well for this usecase (particularly for volatile memory)? I don't
+much like the flow differing from how we do DRAM patrol scrub based
+handling today. I'm not sure I like the requirement for userspace
+to be in the loop if we are dealing with volatile failures even if
+the detection is async.
 
-This logic has been fundamentally the same since around v2.
+> For example, DAX filesystems will
+> soon have the ability to do something useful with poison notifications
+> [1], but that support is limited to synchronously consumed poison
+> flagged by memory_failure(). When the cxl tool translates the poison
+> list to HPA it needs an ABI to turn around and notify the filesystem
+> about which blocks got clobbered.
 
-...
-
-> > +static irqreturn_t pci_doe_irq_handler(int irq, void *data)
-> > +{
-> > +	struct pci_doe_mb *doe_mb = data;
-> > +	struct pci_dev *pdev = doe_mb->pdev;
-> > +	int offset = doe_mb->cap_offset;
-> > +	u32 val;
-> > +
-> > +	pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
-> > +	if (FIELD_GET(PCI_DOE_STATUS_INT_STATUS, val)) {
-> > +		pci_write_config_dword(pdev, offset + PCI_DOE_STATUS,
-> > +					PCI_DOE_STATUS_INT_STATUS);
-> > +		mod_delayed_work(system_wq, &doe_mb->statemachine, 0);  
-> 
-> Wait, no, not system_wq. I expected this wants a dedicated / ordered queue
-> per doe and this likely wants a queue that can sleep while processing a
-> task and just not support overlapping tasks.
-> 
-> In that model the irq is just waking up any tasks in execution that are
-> awaiting a polling timeout. The irq handler does:
-> 
-> wake_up(&doe_mb->wait);
-> 
-> ...and then task that is executing in the queue continues what it was
-> doing.
-
-Sure that should work. 
-
-
-> 
-> > +		return IRQ_HANDLED;
-> > +	}
-> > +
-> > +	return IRQ_NONE;
-> > +}
-> > +
-> > +/*
-> > + * Only called when safe to directly access the DOE from
-> > + * doe_statemachine_work().  Outside access is not protected.  Users who
-> > + * perform such access are left with the pieces.  
-> 
-> What pieces, where? I expect the abort implementation would be something
-> like:
-> 
-> set_bit(ABORT_PENDING) <== blocks new task submissions until clear
-> flush_workqueue() <== make sure all in-flight tasks see the abort
-> do_doe_abort(...) <== do the abort
-> clear_bit(ABORT_PENDING) <== optionally restart the tasks that were
-> cancelled, or just expect them to be resubmitted.
-
-I think this is an artifact of trying to act on suggestion to only access
-the DOE from a single thread. Without that complexity something like you
-suggest should work.
-
-Fundamentally should still only be called from within the state machine
-though (as that's the only place it makes sense) and will need to
-interrupt work in flight (waiting for interrupt / polling for timeout etc).
-
-
-> > +static int pci_doe_abort(struct pci_doe_mb *doe_mb)
-> > +{
-> > +	reinit_completion(&doe_mb->abort_c);
-> > +	set_bit(PCI_DOE_FLAG_ABORT, &doe_mb->flags);
-> > +	schedule_delayed_work(&doe_mb->statemachine, 0);
-> > +	wait_for_completion(&doe_mb->abort_c);
-> > +
-> > +	if (test_bit(PCI_DOE_FLAG_DEAD, &doe_mb->flags))
-> > +		return -EIO;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int pci_doe_enable_irq(struct pci_doe_mb *doe_mb, unsigned int irq)
-> > +{
-> > +	struct pci_dev *pdev = doe_mb->pdev;
-> > +	int offset = doe_mb->cap_offset;
-> > +	int rc;
-> > +
-> > +	/*
-> > +	 * Enabling bus mastering is required for MSI/MSIx.  It is safe to call
-> > +	 * this multiple times and thus is called here to ensure that mastering
-> > +	 * is enabled even if the driver has done so.
-> > +	 */  
-> 
-> It is required for MSI/MSIx to work, yes, but if the caller that created
-> the doe object has not set it yet that's its prerogative.
-
-We went around this in one of the earlier threads, and I think consensus
-was that it made sense to have this in core code.
-
-> 
-> > +	pci_set_master(pdev);
-> > +	rc = pci_request_irq(pdev, irq, pci_doe_irq_handler, NULL, doe_mb,
-> > +			     "DOE[%d:%s]", irq, pci_name(pdev));  
-> 
-> If the DOE object creation is use devm_ then this wants to be
-> devm_request_irq(), although I now notice that devm_pci_doe_create()
-> only existed in the code comments, not the implementation.
-> 
-> Is there any need for the unmanaged version of this API?
-> 
-> > +	if (rc)
-> > +		return rc;
-> > +
-> > +	doe_mb->irq = irq;
-> > +	pci_write_config_dword(pdev, offset + PCI_DOE_CTRL,
-> > +			       PCI_DOE_CTRL_INT_EN);
-> > +	return 0;
-> > +}
-> > +
-
-Thanks,
-
+I'm not clear why it makes sense to do the DPA to HPA conversion in
+userspace. It should be a fairly trivial bit of code to do the reverse look
+up in kernel and then we just bolt into existing infrastructure.
 
 Jonathan
+
+> 
+> [1]: https://lore.kernel.org/all/20220616193157.2c2e963f3e7e38dfac554a28@linux-foundation.org/
+
+
+
