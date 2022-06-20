@@ -2,207 +2,299 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA11C433EF
-	for <linux-cxl@archiver.kernel.org>; Mon, 20 Jun 2022 11:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D20FC433EF
+	for <linux-cxl@archiver.kernel.org>; Mon, 20 Jun 2022 16:20:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241356AbiFTLaJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 20 Jun 2022 07:30:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51516 "EHLO
+        id S239244AbiFTQU5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 20 Jun 2022 12:20:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241723AbiFTLaJ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 20 Jun 2022 07:30:09 -0400
+        with ESMTP id S229906AbiFTQU5 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 20 Jun 2022 12:20:57 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D1FD1659C;
-        Mon, 20 Jun 2022 04:30:07 -0700 (PDT)
-Received: from fraeml734-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LRS7c6jg0z6H6mn;
-        Mon, 20 Jun 2022 19:28:12 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5331B6559
+        for <linux-cxl@vger.kernel.org>; Mon, 20 Jun 2022 09:20:55 -0700 (PDT)
+Received: from fraeml701-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LRZXt71vKz67MLx;
+        Tue, 21 Jun 2022 00:17:02 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml734-chm.china.huawei.com (10.206.15.215) with Microsoft SMTP Server
+ fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2375.24; Mon, 20 Jun 2022 18:20:52 +0200
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 20 Jun 2022 13:30:04 +0200
-Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 20 Jun
- 2022 12:30:04 +0100
-Date:   Mon, 20 Jun 2022 12:30:02 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <alison.schofield@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        "Steven Rostedt" <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, <linux-cxl@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] cxl/mbox: Add GET_POISON_LIST mailbox command
- support
-Message-ID: <20220620123002.000041be@Huawei.com>
-In-Reply-To: <62acd5aa94391_844b129490@dwillia2-xfh.notmuch>
-References: <cover.1655250669.git.alison.schofield@intel.com>
-        <382a9c35ef43e89db85670637d88371f9197b7a2.1655250669.git.alison.schofield@intel.com>
-        <20220617150508.0000266a@Huawei.com>
-        <62acd5aa94391_844b129490@dwillia2-xfh.notmuch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+ 15.1.2375.24; Mon, 20 Jun 2022 17:20:51 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <qemu-devel@nongnu.org>, <alison.schofield@intel.com>,
+        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>
+CC:     <shiju.jose@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>
+Subject: [RFC PATCH] hw/cxl: Initial poison injection support.
+Date:   Mon, 20 Jun 2022 17:20:56 +0100
+Message-ID: <20220620162056.16790-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhreml748-chm.china.huawei.com (10.201.108.198) To
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhreml738-chm.china.huawei.com (10.201.108.188) To
  lhreml710-chm.china.huawei.com (10.201.108.61)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 17 Jun 2022 12:27:38 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+Inject poison using qom-set to first set the poison_start
+and poison_length followed by writing to poison_inject to
+add to the poison list.
 
-> Jonathan Cameron wrote:
-> > On Tue, 14 Jun 2022 17:10:27 -0700
-> > alison.schofield@intel.com wrote:
-> >   
-> > > From: Alison Schofield <alison.schofield@intel.com>
-> > > 
-> > > CXL devices that support persistent memory maintain a list of locations
-> > > that are poisoned or result in poison if the addresses are accessed by
-> > > the host.
-> > > 
-> > > Per the spec (CXL 2.0 8.2.8.5.4.1), the device returns this Poison
-> > > list as a set of  Media Error Records that include the source of the
-> > > error, the starting device physical address and length. The length is
-> > > the number of adjacent DPAs in the record and is in units of 64 bytes.
-> > > 
-> > > Retrieve the list and log each Media Error Record as a trace event of
-> > > type cxl_poison_list.
-> > > 
-> > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>  
-> > 
-> > A few more things inline.
-> > 
-> > Otherwise, can confirm it works with some hack QEMU code.
-> > I'll tidy that up and post soon.
-> >   
-> > > +int cxl_mem_get_poison_list(struct device *dev)
-> > > +{
-> > > +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> > > +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> > > +	struct cxl_mbox_poison_payload_out *po;
-> > > +	struct cxl_mbox_poison_payload_in pi;
-> > > +	int nr_records = 0;
-> > > +	int rc, i;
-> > > +
-> > > +	if (range_len(&cxlds->pmem_range)) {
-> > > +		pi.offset = cpu_to_le64(cxlds->pmem_range.start);
-> > > +		pi.length = cpu_to_le64(range_len(&cxlds->pmem_range));
-> > > +	} else {
-> > > +		return -ENXIO;
-> > > +	}
-> > > +
-> > > +	po = kvmalloc(cxlds->payload_size, GFP_KERNEL);
-> > > +	if (!po)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	do {
-> > > +		rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_POISON, &pi,
-> > > +				       sizeof(pi), po, cxlds->payload_size);
-> > > +		if (rc)
-> > > +			goto out;
-> > > +
-> > > +		if (po->flags & CXL_POISON_FLAG_OVERFLOW) {
-> > > +			time64_t o_time = le64_to_cpu(po->overflow_timestamp);
-> > > +
-> > > +			dev_err(dev, "Poison list overflow at %ptTs UTC\n",
-> > > +				&o_time);
-> > > +			rc = -ENXIO;
-> > > +			goto out;
-> > > +		}
-> > > +
-> > > +		if (po->flags & CXL_POISON_FLAG_SCANNING) {
-> > > +			dev_err(dev, "Scan Media in Progress\n");
-> > > +			rc = -EBUSY;
-> > > +			goto out;
-> > > +		}
-> > > +
-> > > +		for (i = 0; i < le16_to_cpu(po->count); i++) {
-> > > +			u64 addr = le64_to_cpu(po->record[i].address);  
-> >   
-> > > +			u32 len = le32_to_cpu(po->record[i].length);  
-> > 
-> >   
-> > > +			int source = FIELD_GET(CXL_POISON_SOURCE_MASK, addr);
-> > > +
-> > > +			if (!CXL_POISON_SOURCE_VALID(source)) {
-> > > +				dev_dbg(dev, "Invalid poison source %d",
-> > > +					source);
-> > > +				source = CXL_POISON_SOURCE_INVALID;
-> > > +			}
-> > > +
-> > > +			trace_cxl_poison_list(dev, source, addr, len);  
-> > 
-> > Need to mask off the lower 6 bits of addr as they contain the source
-> > + a few reserved bits.
-> > 
-> > I was confused how you were geting better than 64 byte precision in your
-> > example.
-> >   
-> > > +		}
-> > > +
-> > > +		/* Protect against an uncleared _FLAG_MORE */
-> > > +		nr_records = nr_records + le16_to_cpu(po->count);
-> > > +		if (nr_records >= cxlds->poison_max)
-> > > +			goto out;
-> > > +
-> > > +	} while (po->flags & CXL_POISON_FLAG_MORE);  
-> > So.. A conundrum here.  What happens if:
-> > 
-> > 1. We get an error mid way through a set of multiple reads
-> >    (something intermittent - maybe a software issue)
-> > 2. We will drop out of here fine and report the error.
-> > 3. We run this function again.
-> > 
-> > It will (I think) currently pick up where we left off, but we have
-> > no way of knowing that as there isn't a 'total records' count or
-> > any other form of index in the output payload.
-> > 
-> > So, software solutions I think should work (though may warrant a note
-> > to be added to the spec).
-> > 
-> > 1. Read whole thing twice. First time is just to ensure we get
-> >    to the end and flush out any prior half done reads.
-> > 2. Issue a read for a different region (perhaps length 0) first
-> >    and assume everything starts from scratch when we go back to
-> >    this region.  
-> 
-> It would be nice if this was codified as *the* way to reset the
-> retrieval, but I worry that neither length==0 or length==1 can be used
-> for this purpose since the "more" bit is attached to the last passed in
-> *range*, not request. I.e. spec seems to allow for overlapping
-> retrievals, although I doubt any implementation gets that fancy.
-> 
-> I think it is sufficient to just include the "more" flag in the trace
-> event and if userspace suspects that it is getting "more" results from a
-> previous run it can reissue the scan. 
+For now, the poison is not returned CXL.mem reads, but only via
+the mailbox command Get Poison List.
 
-Meaning is a bit ugly if attached to an individual trace event, though
-I guess we could do something nicer like only have one that doesn't have
-MORE set, thus indicating that one trace event is the last one from a
-query.  i.e. fill in MORE for all the other events in the last GET_POISON_LIST
-reply. 
+See CXL 2.0, sec 8.2.9.5.4.1 Get Poison list (Opcode 4300h)
 
-> This is another reason that the
-> trace event should include the pid of the process that triggered the
-> results so it can delineate re-requests. Otherwise, the poison list
-> cache is opportunistic so I am not sure that missing records in this
-> corner case is fatal.
+Kernel patches to use this interface here:
+https://lore.kernel.org/linux-cxl/cover.1655250669.git.alison.schofield@intel.com
 
-Ok, for now let's document the limitation with an appropriate comment.
-In parallel I've started a thread in appropriate venue to discuss if
-we can clarify the spec and potentially do better in future.  So that
-discussion should shift over there.
+RFC for now as likely the implementation will change as
+support for mailbox based poison injection and media scanning are added.
 
-Thanks,
+To inject poison using the qemu monitor commands such as:
 
-Jonathan
+(qemu) qom-set /machine/unattached/device[61]/cxl.1/child[0]/root_port1/child[0] poison_start 0x500
+(qemu) qom-set /machine/unattached/device[61]/cxl.1/child[0]/root_port1/child[0] poison_length 0x200
+(qemu) qom-set /machine/unattached/device[61]/cxl.1/child[0]/root_port1/child[0] poison_inject 0x1
 
+Adjusted for the appropriate topology of your machine.
+
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+
+ hw/cxl/cxl-mailbox-utils.c  | 85 +++++++++++++++++++++++++++++++++++++
+ hw/mem/cxl_type3.c          | 30 +++++++++++++
+ include/hw/cxl/cxl_device.h | 14 ++++++
+ 3 files changed, 129 insertions(+)
+
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index bb66c765a5..487348c67d 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -59,6 +59,8 @@ enum {
+         #define GET_PARTITION_INFO     0x0
+         #define GET_LSA       0x2
+         #define SET_LSA       0x3
++    MEDIA_AND_POISON = 0x43,
++        #define GET_POISON_LIST        0x0
+ };
+ 
+ /* 8.2.8.4.5.1 Command Return Codes */
+@@ -296,6 +298,7 @@ static ret_code cmd_identify_memory_device(struct cxl_cmd *cmd,
+     id->total_capacity = size / (256 << 20);
+     id->persistent_capacity = size / (256 << 20);
+     id->lsa_size = cvc->get_lsa_size(ct3d);
++    id->poison_list_max_mer[1] = 0x1; /* 256 poison records */
+ 
+     *len = sizeof(*id);
+     return CXL_MBOX_SUCCESS;
+@@ -382,6 +385,86 @@ static ret_code cmd_ccls_set_lsa(struct cxl_cmd *cmd,
+     return CXL_MBOX_SUCCESS;
+ }
+ 
++/*
++ * This is very inefficient, but good enough for now!
++ * Also thed payload will always fit, so no need to handle the MORE flag and
++ * make this stateful.
++ */
++static ret_code cmd_media_get_poison_list(struct cxl_cmd *cmd,
++                                          CXLDeviceState *cxl_dstate,
++                                          uint16_t *len)
++{
++    struct get_poison_list_pl {
++        uint64_t pa;
++        uint64_t length;
++    } QEMU_PACKED;
++
++    struct get_poison_list_out_pl {
++        uint8_t flags;
++        uint8_t rsvd1;
++        uint64_t overflow_timestamp;
++        uint16_t count;
++        uint8_t rsvd2[0x14];
++        struct {
++            uint64_t addr;
++            uint32_t length;
++            uint32_t resv;
++        } QEMU_PACKED records[];
++    } QEMU_PACKED;
++
++    struct get_poison_list_pl *in = (void *)cmd->payload;
++    struct get_poison_list_out_pl *out = (void *)cmd->payload;
++    CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
++    CXLType3Class *cvc = CXL_TYPE3_GET_CLASS(ct3d);
++    uint16_t record_count = 0, i = 0;
++    uint64_t query_start = in->pa;
++    uint64_t query_length = in->length;
++    CXLPoisonList *poison_list;
++    CXLPoison *ent;
++    uint16_t out_pl_len;
++
++    poison_list = cvc->get_poison_list(ct3d);
++
++    QLIST_FOREACH(ent, poison_list, node) {
++        /* Check for no overlap */
++        if (ent->start >= query_start + query_length ||
++            ent->start + ent->length <= query_start) {
++            continue;
++        }
++        if (record_count == 256) {
++            /* For now just return 256 max */
++            break;
++        }
++        record_count++;
++    }
++    out_pl_len = sizeof(*out) + record_count * sizeof(out->records[0]);
++    assert(out_pl_len > CXL_MAILBOX_MAX_PAYLOAD_SIZE);
++
++    memset(out, 0, out_pl_len);
++    QLIST_FOREACH(ent, poison_list, node) {
++        uint64_t start, stop;
++
++        /* Check for no overlap */
++        if (ent->start >= query_start + query_length ||
++            ent->start + ent->length <= query_start) {
++            continue;
++        }
++        if (i == 256) {
++            break;
++        }
++        /* Deal with overlap */
++        start = MAX(ent->start & 0xffffffffffffffc0, query_start);
++        stop = MIN((ent->start & 0xffffffffffffffc0) + ent->length,
++                   query_start + query_length);
++        out->records[i].addr = start | 0x2; /* internal error */
++        out->records[i].length = (stop - start) / 64;
++        i++;
++    }
++    out->count = record_count;
++    *len = out_pl_len;
++    return CXL_MBOX_SUCCESS;
++}
++
+ #define IMMEDIATE_CONFIG_CHANGE (1 << 1)
+ #define IMMEDIATE_DATA_CHANGE (1 << 2)
+ #define IMMEDIATE_POLICY_CHANGE (1 << 3)
+@@ -409,6 +492,8 @@ static struct cxl_cmd cxl_cmd_set[256][256] = {
+     [CCLS][GET_LSA] = { "CCLS_GET_LSA", cmd_ccls_get_lsa, 0, 0 },
+     [CCLS][SET_LSA] = { "CCLS_SET_LSA", cmd_ccls_set_lsa,
+         ~0, IMMEDIATE_CONFIG_CHANGE | IMMEDIATE_DATA_CHANGE },
++    [MEDIA_AND_POISON][GET_POISON_LIST] = { "MEDIA_AND_POISON_GET_POISON_LIST",
++        cmd_media_get_poison_list, 16, 0 },
+ };
+ 
+ void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
+diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+index 3bf2869573..c02f3eb231 100644
+--- a/hw/mem/cxl_type3.c
++++ b/hw/mem/cxl_type3.c
+@@ -133,6 +133,19 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
+     return true;
+ }
+ 
++static void ct3_inject_poison(Object *obj, Visitor *v, const char *name,
++                              void *opaque, Error **errp)
++{
++    CXLType3Dev *ct3d = CXL_TYPE3(obj);
++    CXLPoison *p = g_new0(CXLPoison, 1);
++    /* should check if bool is true, but meh */
++
++    p->length = ct3d->poison_length;
++    p->start = ct3d->poison_start;
++
++    QLIST_INSERT_HEAD(&ct3d->poison_list, p, node);
++}
++
+ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+ {
+     CXLType3Dev *ct3d = CXL_TYPE3(pci_dev);
+@@ -141,6 +154,15 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+     MemoryRegion *mr = &regs->component_registers;
+     uint8_t *pci_conf = pci_dev->config;
+ 
++    object_property_add_uint64_ptr(OBJECT(pci_dev), "poison_start",
++                                   &ct3d->poison_start,
++                                   OBJ_PROP_FLAG_READ | OBJ_PROP_FLAG_WRITE);
++    object_property_add_uint64_ptr(OBJECT(pci_dev), "poison_length",
++                                   &ct3d->poison_length,
++                                   OBJ_PROP_FLAG_READ | OBJ_PROP_FLAG_WRITE);
++    object_property_add(OBJECT(pci_dev), "poison_inject", "bool", NULL,
++                        ct3_inject_poison, NULL, ct3d);
++
+     if (!cxl_setup_memory(ct3d, errp)) {
+         return;
+     }
+@@ -327,6 +349,12 @@ static void set_lsa(CXLType3Dev *ct3d, const void *buf, uint64_t size,
+      */
+ }
+ 
++static CXLPoisonList *get_poison_list(CXLType3Dev *ct3d)
++{
++    /* This will get more complex  - for now it's a bit pointless */
++    return &ct3d->poison_list;
++}
++
+ static void ct3_class_init(ObjectClass *oc, void *data)
+ {
+     DeviceClass *dc = DEVICE_CLASS(oc);
+@@ -348,6 +376,8 @@ static void ct3_class_init(ObjectClass *oc, void *data)
+     cvc->get_lsa_size = get_lsa_size;
+     cvc->get_lsa = get_lsa;
+     cvc->set_lsa = set_lsa;
++    cvc->get_poison_list = get_poison_list;
++
+ }
+ 
+ static const TypeInfo ct3d_info = {
+diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+index 1e141b6621..bbf1ce8736 100644
+--- a/include/hw/cxl/cxl_device.h
++++ b/include/hw/cxl/cxl_device.h
+@@ -230,6 +230,14 @@ REG64(CXL_MEM_DEV_STS, 0)
+     FIELD(CXL_MEM_DEV_STS, MBOX_READY, 4, 1)
+     FIELD(CXL_MEM_DEV_STS, RESET_NEEDED, 5, 3)
+ 
++typedef struct CXLPoison {
++    uint64_t start, length;
++    uint8_t type;
++    QLIST_ENTRY(CXLPoison) node;
++} CXLPoison;
++
++typedef QLIST_HEAD(, CXLPoison) CXLPoisonList;
++
+ struct CXLType3Dev {
+     /* Private */
+     PCIDevice parent_obj;
+@@ -242,6 +250,10 @@ struct CXLType3Dev {
+     AddressSpace hostmem_as;
+     CXLComponentState cxl_cstate;
+     CXLDeviceState cxl_dstate;
++
++    /* Poison Injection - cache */
++    uint64_t poison_start, poison_length;
++    CXLPoisonList poison_list;
+ };
+ 
+ #define TYPE_CXL_TYPE3 "cxl-type3"
+@@ -258,6 +270,8 @@ struct CXLType3Class {
+                         uint64_t offset);
+     void (*set_lsa)(CXLType3Dev *ct3d, const void *buf, uint64_t size,
+                     uint64_t offset);
++
++    CXLPoisonList* (*get_poison_list)(CXLType3Dev *ct3d);
+ };
+ 
+ MemTxResult cxl_type3_read(PCIDevice *d, hwaddr host_addr, uint64_t *data,
+-- 
+2.32.0
 
