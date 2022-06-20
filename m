@@ -2,48 +2,46 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE363C433EF
-	for <linux-cxl@archiver.kernel.org>; Mon, 20 Jun 2022 10:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA11C433EF
+	for <linux-cxl@archiver.kernel.org>; Mon, 20 Jun 2022 11:30:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240802AbiFTK4O (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 20 Jun 2022 06:56:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47146 "EHLO
+        id S241356AbiFTLaJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 20 Jun 2022 07:30:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240789AbiFTK4M (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 20 Jun 2022 06:56:12 -0400
+        with ESMTP id S241723AbiFTLaJ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 20 Jun 2022 07:30:09 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 642E8140FA;
-        Mon, 20 Jun 2022 03:56:10 -0700 (PDT)
-Received: from fraeml745-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LRRNS35Rzz684kT;
-        Mon, 20 Jun 2022 18:54:16 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D1FD1659C;
+        Mon, 20 Jun 2022 04:30:07 -0700 (PDT)
+Received: from fraeml734-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LRS7c6jg0z6H6mn;
+        Mon, 20 Jun 2022 19:28:12 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml745-chm.china.huawei.com (10.206.15.226) with Microsoft SMTP Server
+ fraeml734-chm.china.huawei.com (10.206.15.215) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 20 Jun 2022 12:56:08 +0200
+ 15.1.2375.24; Mon, 20 Jun 2022 13:30:04 +0200
 Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 20 Jun
- 2022 11:56:07 +0100
-Date:   Mon, 20 Jun 2022 11:56:05 +0100
+ 2022 12:30:04 +0100
+Date:   Mon, 20 Jun 2022 12:30:02 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Alison Schofield <alison.schofield@intel.com>
-CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "Ben Widawsky" <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Ingo Molnar" <mingo@redhat.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <alison.schofield@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        "Steven Rostedt" <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, <linux-cxl@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH 2/3] cxl/mbox: Add GET_POISON_LIST mailbox command
  support
-Message-ID: <20220620115605.00004440@Huawei.com>
-In-Reply-To: <20220617162935.GA1532720@alison-desk>
+Message-ID: <20220620123002.000041be@Huawei.com>
+In-Reply-To: <62acd5aa94391_844b129490@dwillia2-xfh.notmuch>
 References: <cover.1655250669.git.alison.schofield@intel.com>
         <382a9c35ef43e89db85670637d88371f9197b7a2.1655250669.git.alison.schofield@intel.com>
         <20220617150508.0000266a@Huawei.com>
-        <20220617162935.GA1532720@alison-desk>
+        <62acd5aa94391_844b129490@dwillia2-xfh.notmuch>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -57,10 +55,10 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 17 Jun 2022 09:29:35 -0700
-Alison Schofield <alison.schofield@intel.com> wrote:
+On Fri, 17 Jun 2022 12:27:38 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-> On Fri, Jun 17, 2022 at 07:05:08AM -0700, Jonathan Cameron wrote:
+> Jonathan Cameron wrote:
 > > On Tue, 14 Jun 2022 17:10:27 -0700
 > > alison.schofield@intel.com wrote:
 > >   
@@ -86,8 +84,59 @@ Alison Schofield <alison.schofield@intel.com> wrote:
 > > I'll tidy that up and post soon.
 > >   
 > > > +int cxl_mem_get_poison_list(struct device *dev)
-> > > +{  
-> snip
+> > > +{
+> > > +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> > > +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> > > +	struct cxl_mbox_poison_payload_out *po;
+> > > +	struct cxl_mbox_poison_payload_in pi;
+> > > +	int nr_records = 0;
+> > > +	int rc, i;
+> > > +
+> > > +	if (range_len(&cxlds->pmem_range)) {
+> > > +		pi.offset = cpu_to_le64(cxlds->pmem_range.start);
+> > > +		pi.length = cpu_to_le64(range_len(&cxlds->pmem_range));
+> > > +	} else {
+> > > +		return -ENXIO;
+> > > +	}
+> > > +
+> > > +	po = kvmalloc(cxlds->payload_size, GFP_KERNEL);
+> > > +	if (!po)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	do {
+> > > +		rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_POISON, &pi,
+> > > +				       sizeof(pi), po, cxlds->payload_size);
+> > > +		if (rc)
+> > > +			goto out;
+> > > +
+> > > +		if (po->flags & CXL_POISON_FLAG_OVERFLOW) {
+> > > +			time64_t o_time = le64_to_cpu(po->overflow_timestamp);
+> > > +
+> > > +			dev_err(dev, "Poison list overflow at %ptTs UTC\n",
+> > > +				&o_time);
+> > > +			rc = -ENXIO;
+> > > +			goto out;
+> > > +		}
+> > > +
+> > > +		if (po->flags & CXL_POISON_FLAG_SCANNING) {
+> > > +			dev_err(dev, "Scan Media in Progress\n");
+> > > +			rc = -EBUSY;
+> > > +			goto out;
+> > > +		}
+> > > +
+> > > +		for (i = 0; i < le16_to_cpu(po->count); i++) {
+> > > +			u64 addr = le64_to_cpu(po->record[i].address);  
+> >   
+> > > +			u32 len = le32_to_cpu(po->record[i].length);  
+> > 
+> >   
+> > > +			int source = FIELD_GET(CXL_POISON_SOURCE_MASK, addr);
+> > > +
+> > > +			if (!CXL_POISON_SOURCE_VALID(source)) {
+> > > +				dev_dbg(dev, "Invalid poison source %d",
+> > > +					source);
+> > > +				source = CXL_POISON_SOURCE_INVALID;
+> > > +			}
 > > > +
 > > > +			trace_cxl_poison_list(dev, source, addr, len);  
 > > 
@@ -96,9 +145,7 @@ Alison Schofield <alison.schofield@intel.com> wrote:
 > > 
 > > I was confused how you were geting better than 64 byte precision in your
 > > example.
-> >  
-> Ah...got it. Thanks!
-> 
+> >   
 > > > +		}
 > > > +
 > > > +		/* Protect against an uncleared _FLAG_MORE */
@@ -116,11 +163,7 @@ Alison Schofield <alison.schofield@intel.com> wrote:
 > > 
 > > It will (I think) currently pick up where we left off, but we have
 > > no way of knowing that as there isn't a 'total records' count or
-> > any other form of index in the output payload.  
-> 
-> Yes. That is sad. I'm assume it's by design and CXL devices never
-> intended to keep any totals.
-> 
+> > any other form of index in the output payload.
 > > 
 > > So, software solutions I think should work (though may warrant a note
 > > to be added to the spec).
@@ -131,46 +174,35 @@ Alison Schofield <alison.schofield@intel.com> wrote:
 > >    and assume everything starts from scratch when we go back to
 > >    this region.  
 > 
-> Can you tell me more about 2 ?
+> It would be nice if this was codified as *the* way to reset the
+> retrieval, but I worry that neither length==0 or length==1 can be used
+> for this purpose since the "more" bit is attached to the last passed in
+> *range*, not request. I.e. spec seems to allow for overlapping
+> retrievals, although I doubt any implementation gets that fancy.
+> 
+> I think it is sufficient to just include the "more" flag in the trace
+> event and if userspace suspects that it is getting "more" results from a
+> previous run it can reissue the scan. 
 
-2 relies on interpreting what the spec says for an unusual corner case.
-The concept of 'more available' is something I would assume you'd only
-get if you issued a repeat of the same request.  I don't think the
-spec actually covers this case - perhaps that's something we need to
-raise via the appropriate channels.
+Meaning is a bit ugly if attached to an individual trace event, though
+I guess we could do something nicer like only have one that doesn't have
+MORE set, thus indicating that one trace event is the last one from a
+query.  i.e. fill in MORE for all the other events in the last GET_POISON_LIST
+reply. 
+
+> This is another reason that the
+> trace event should include the pid of the process that triggered the
+> results so it can delineate re-requests. Otherwise, the poison list
+> cache is opportunistic so I am not sure that missing records in this
+> corner case is fatal.
+
+Ok, for now let's document the limitation with an appropriate comment.
+In parallel I've started a thread in appropriate venue to discuss if
+we can clarify the spec and potentially do better in future.  So that
+discussion should shift over there.
+
+Thanks,
 
 Jonathan
 
-
-
-> 
-> Also, Since posting this I have added protection to this path to ensure
-> only one reader of the poison list for this device. Like this:
-> 
-> if (!completion_done(&cxlds->read_poison_complete);
->               return -EBUSY;
-> wait_for_completion_interruptible(&cxlds->read_poison_complete);
-> 	...GET ALL THE POISON...
-> complete(&cxlds->read_poison_complete);
-> 
-> And will add the error message on that unexpected _FLAG_MORE too.
-> 
-> Alison
-> > 
-> > Jonathan
-> >   
-> 
-> 
-> 
-> > > +
-> > > +out:
-> > > +	kvfree(po);
-> > > +	return rc;
-> > > +}
-> > > +EXPORT_SYMBOL_NS_GPL(cxl_mem_get_poison_list, CXL);
-> > > +
-> > >  struct cxl_dev_state *cxl_dev_state_create(struct device *dev)
-> > >  {
-> > >  	struct cxl_dev_state *cxlds;  
-> >   
 
