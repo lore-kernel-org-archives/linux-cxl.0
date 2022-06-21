@@ -2,276 +2,343 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595E4CCA473
-	for <linux-cxl@archiver.kernel.org>; Tue, 21 Jun 2022 21:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31938CCA482
+	for <linux-cxl@archiver.kernel.org>; Tue, 21 Jun 2022 21:23:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355495AbiFUVJz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 21 Jun 2022 17:09:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58808 "EHLO
+        id S1355461AbiFUVXu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 21 Jun 2022 17:23:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357021AbiFUVJ1 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 21 Jun 2022 17:09:27 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E51DB3819D;
-        Tue, 21 Jun 2022 13:56:44 -0700 (PDT)
+        with ESMTP id S1355248AbiFUVXS (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 21 Jun 2022 17:23:18 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F8F331DE9;
+        Tue, 21 Jun 2022 14:14:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655845006; x=1687381006;
+  t=1655846069; x=1687382069;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=DMLu8GyqYFep9IZls6TVhw57TxeiDFtrj/EX+006c/U=;
-  b=TuPJT2wC5tsen/wlCE7JFZ6mSaoNkqDBzmupD+3RWMBfd0sdy4yC/nFc
-   JIUsNakjVn7UYdftfDfnmUeg4799skAfPphd/Md6lt+EOkKdcSCoUJI+T
-   TdwESxOe3dYHTBvLFueswdrwCHbE0TWNBulIJ/k4NDhWm/kKzvbDuvquj
-   kgmCLvmx/ztYLzdGjHKU0fpuGbSBTTaZHaiNkpaJmiHPGYeDY2Aazd7Pu
-   prCjTuFHM8C49sgRxa9msZbrfMokLjajhdcWPqC7YMgfAPIKxmTEVKpkX
-   2wMmvl5zaaZDWwlEr+ewR2OEfuJvhKC/3WMnx8alTIwBRMF+jL6yy5m5F
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10385"; a="344227227"
+  bh=+Lbz/7/r89zhmtBEhodW1I8Ne+iUMRr5TzGts3QoHoc=;
+  b=ZXKBC3WlIduP9P2602b2GqwbtRP9/TYUb6Bu9P+m+ejm1nc3NziEcuiN
+   HFqKRXFnZeMl4IcBbwVTa8ZIFpz/nQSh1WjVXhukFqOdbO+sFHpWLw3+Y
+   KqcjxwtRcheoE/7LV9wd5Q59UuNBSN04TFjIkygh1bYIM90PzdAD7G9Bg
+   KxRLMuz7TVB+BkiKCvtpkbAB6D5i98s8T1FdW/dW5SiDOGCxRwKd1E7Dh
+   bpVvcMu1mUv3+5Qcxa60QOa7+askpKEQfYMvAuaxb3+xpEpPk9FMAGOv0
+   kf2xzKalAAjRxagSFC9funIum7jksTjE94ZmL/MTsvkkqqI7P0jlmekFu
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10385"; a="260669716"
 X-IronPort-AV: E=Sophos;i="5.92,210,1650956400"; 
-   d="scan'208";a="344227227"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2022 13:56:44 -0700
+   d="scan'208";a="260669716"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2022 14:14:29 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.92,210,1650956400"; 
-   d="scan'208";a="715126024"
-Received: from orsmsx606.amr.corp.intel.com ([10.22.229.19])
-  by orsmga004.jf.intel.com with ESMTP; 21 Jun 2022 13:56:44 -0700
-Received: from orsmsx609.amr.corp.intel.com (10.22.229.22) by
- ORSMSX606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
+   d="scan'208";a="730013738"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmsmga001.fm.intel.com with ESMTP; 21 Jun 2022 14:14:28 -0700
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Tue, 21 Jun 2022 13:56:43 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx609.amr.corp.intel.com (10.22.229.22) with Microsoft SMTP Server
+ 15.1.2308.27; Tue, 21 Jun 2022 14:14:28 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Tue, 21 Jun 2022 13:56:43 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.108)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ 15.1.2308.27 via Frontend Transport; Tue, 21 Jun 2022 14:14:28 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.174)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Tue, 21 Jun 2022 13:56:43 -0700
+ 15.1.2308.27; Tue, 21 Jun 2022 14:14:28 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aenk+LltRzE9aoxtdCz+0+/Rb0OaAkI2128ZdiCb6aPwq3j7nyVS02TYrNIBET3Ix96JX5nGmEVkE7Fh+drGhcRlvce8kFdfXSE6kNgyJw/HWZ/pbhayPxiMTU5YuYH/O2P3/kbAB5anEh1e4jt+/aDoKKL6zsuvvoVY3rUSmEtwPAY9d506tS7y6ontQ4+VNbC85wupJbOADMhTYwrUhm2kgfnTwiALeK1CL6bzRe1LT/DSkGNsZJXO0+7Y8yWdl8XMa1HOzXPcZl9w53z/JugmQjaa8XDu8vyt/j1hEU211Dh0P1E+zzzU4NqPnDUl/2nAwatmAZUZNwdSpCB35w==
+ b=mRhWgZS2rBNPshTljEwffreMGymFr56ZkF/4P1e9LAqBruGE92vtF7Hv9YfaZ6jfrM86LgDgzfCmv/vaWyYQjyAXmK+LPuZjKHNhYUjtKh3bsDS+TyUedXDUCEKb4qYl4THNilZDPTtT4jXlh7Zida16ALXpueFjJ9Jo1AmLKYCcp+kbfA+2miLha67gXFGml+3A5z4lLAQFBsbJheK4wJ0WsOb7Lof7+daCuuhnDTDUwl0ojQR9FTfD3u+m1LbG3d24AwvZOQUbsl7TBeoBZE+7oms7o3aIXg5HERANhfB6xcwErSfDsvTzaulWU+vpxB1XmVLD1xacDnKVzR7gXw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Wc5sBW8uMpMgxsvLrUCy1GQwPNlNF2Ief29KI0eF0eI=;
- b=IBiGlWkpOmcymP/5qxKuVat6nhmrF5HkFCWd0C0gJ8JUO0Ng0vXXqoGPEso4WdPzilrqfrjDVLKiurAeQDmdyJf/oJCDrM2qx4g8qLX8K+jBzy3lbe+CKYz0TylZtSj8EP4pTTUhUubZG+VAO/tBYKV/0Dm+XwvGpTobzr5lJr101OAuOZHYWSUsx5agy/n9iQSVwfo1LGJnQeZDeTEYiMlZKlS5NrDzUJkKG284IKF3xhLoe3PPHWs0kS2oMr32BrW+NNawQBWI6Li2LfHqzWnOBHPK6t0hhLbSmE+j4hPnXdR5mT46RyX1kQSBZUIuqS77ywLU+u9sDSlNUmxV3w==
+ bh=i26OD8DWoHiKLrvc/nY2R9Xtjiz10rmXooEF/EYC0t4=;
+ b=j1F5CMK/TtYOFpYGA955qUVpAjoqOSOjFFTc58UMa2zWLOTbtO3GJExUoYpwTJMtZRGBmXjkE445aVq8BnagyFlVM8N//lCX3E764iRFm5HIP8jX5Vir2usGBekZuaTPNwM761Y1Wg7rI2cjzzLEQ3uVT1nevLOd6iiZbVelKvm3mv6HFTD76gDlUS6kazOxXlNJ3vjAT88SNdw+TtWvMF3XGYZt+7ErICisw62//awbmb4yMvR2DEJWmdZgsB9GCWF3qx1VitNyvwbopLkVs0mBe5Pq461DH5A+qAf2wqClI/x1IDQlUx6rljCAC531IjOVHVwoUdazdh2vU9Ezzg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by BL1PR11MB5254.namprd11.prod.outlook.com
- (2603:10b6:208:313::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5353.15; Tue, 21 Jun
- 2022 20:56:41 +0000
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::f50c:6e72:c8aa:8dbf]) by MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::f50c:6e72:c8aa:8dbf%7]) with mapi id 15.20.5353.022; Tue, 21 Jun 2022
- 20:56:41 +0000
-Date:   Tue, 21 Jun 2022 13:56:40 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>, <linux-cxl@vger.kernel.org>
-CC:     <dan.j.williams@intel.com>, <alison.schofield@intel.com>,
-        <bwidawsk@kernel.org>, <ira.weiny@intel.com>,
-        <vishal.l.verma@intel.com>, <a.manzanares@samsung.com>,
-        <dave@stgolabs.net>, <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] cxl/acpi: Verify CHBS consistency
-Message-ID: <62b230881a77_8920729456@dwillia2-xfh.notmuch>
-References: <20220621201259.1547474-1-dave@stgolabs.net>
+Received: from DM4PR11MB6311.namprd11.prod.outlook.com (2603:10b6:8:a6::21) by
+ DM4PR11MB6042.namprd11.prod.outlook.com (2603:10b6:8:61::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5353.15; Tue, 21 Jun 2022 21:14:21 +0000
+Received: from DM4PR11MB6311.namprd11.prod.outlook.com
+ ([fe80::f0ac:be8f:9429:d262]) by DM4PR11MB6311.namprd11.prod.outlook.com
+ ([fe80::f0ac:be8f:9429:d262%5]) with mapi id 15.20.5353.018; Tue, 21 Jun 2022
+ 21:14:21 +0000
+Date:   Tue, 21 Jun 2022 14:14:17 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH V11 5/8] cxl/port: Read CDAT table
+Message-ID: <YrI0qQrvM7MzKeLy@iweiny-desk3>
+References: <20220610202259.3544623-1-ira.weiny@intel.com>
+ <20220610202259.3544623-6-ira.weiny@intel.com>
+ <62ad1fb69d742_8920729490@dwillia2-xfh.notmuch>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20220621201259.1547474-1-dave@stgolabs.net>
-X-ClientProxiedBy: MWHPR10CA0008.namprd10.prod.outlook.com (2603:10b6:301::18)
- To MWHPR1101MB2126.namprd11.prod.outlook.com (2603:10b6:301:50::20)
+In-Reply-To: <62ad1fb69d742_8920729490@dwillia2-xfh.notmuch>
+X-ClientProxiedBy: SJ0PR13CA0030.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c0::35) To DM4PR11MB6311.namprd11.prod.outlook.com
+ (2603:10b6:8:a6::21)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6cfbc711-5061-4d8e-9c76-08da53c88af3
-X-MS-TrafficTypeDiagnostic: BL1PR11MB5254:EE_
+X-MS-Office365-Filtering-Correlation-Id: 112a6642-b627-436e-7226-08da53cb02c5
+X-MS-TrafficTypeDiagnostic: DM4PR11MB6042:EE_
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-Microsoft-Antispam-PRVS: <BL1PR11MB5254710E9D72A4C174563F75C6B39@BL1PR11MB5254.namprd11.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <DM4PR11MB6042030BD1E93161F5B8B64FF7B39@DM4PR11MB6042.namprd11.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: a07HkUCg609ztVNEMwAaF59PVRr1IhJm1a+NSdqJ2wBop/+su13lA4F+mV2izPh1GI3LOmB2vuIXRmTZBxOmAHYpexH6VXw6isv/ddVe8ccxbrzNTBMxiXQpNPcYHOjAXLkRTdmDEYdO4TrQ2kC40bGsRTos/hJi6hMnZbC3EBdamZHl1wN6UDLD6fAAx+pcNlxLuFg2/+tGpWv1gsiwiPt4vD7E1OT6DGbzjLpuDcbkkzVRFNPLIhKbI58OhDT3apmFZ5esfoZrGHqfqHKXbJZu5+U6E3iYR4OyaGBAK1Dmxtz9o70LqfhvrcigZkGhG4lVwFXWlyCnCldqC0aqdvVAEcKiaSXXj024lCFz6mQjVhV1xU6pOeQNMkwZPziVeBJZ1VFLTlezjLX86+utvFzX8Ig5yt/7ldVZTnGEmOm+iSQKAkr15YLEzCq8t2B2TMDFRP68cQqeDd0SbfZmn3ZxCY/sE38txWOkQdgT+XYZPKTEGd+AuOWpy5YpxDxq1YHV5RYWaPZnXLoBfOUzKkEencxm2wrrNWfRc2zAIWB6FxIkLELaHrYV18xIWbwgjW8Rxcj/vTj1nf2a9rV/BiuNg9FGTQWWEGkxRtAZbhuTYPr9IbeJ8cTN8wy/0E0maEv3GRaFzp7eJ68feKhD3w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(346002)(136003)(376002)(396003)(39860400002)(366004)(26005)(9686003)(8676002)(82960400001)(5660300002)(86362001)(41300700001)(6512007)(15650500001)(38100700002)(83380400001)(2906002)(478600001)(66946007)(186003)(6506007)(316002)(8936002)(4326008)(6486002)(66476007)(66556008);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: jQ0VEaNm+3PIcE82EjrAffkrnXI8qqtaKilA+0+FlLNhsbJq7rLOr4MO/NKQZMBuE1n7Y6lSuyKvQmF0QFd3y5RivhD1kxshbJmwbzRzyaI/C+E1ypLuXAg030IjyCVx4tkn0+ycPMxXCwJQz9/jjxHVkJ+ttugHQjAW9UGcZeucTwms+BUeEJildTHqyX+u7o1vq962J2+GIalkLYCETzUhFdP52aj4ZKzXuGOI5ZJ6RIl6/UA8co61bRft3y5pDYtgxiGIY0mGxsB1PLS6MttFBwy3bNpCRm9DdAu+n4WWdbTy87R8NIDX5BuqdhEOMFM85LnRgpu4o7mB09J9WtPb9an3kEsQu1qH0zg4rAv5gV8hfeU2KNHwLuVKoFogMuSN+pZ23vAB9HavwnEJCEK0zzV7EH6o3kPbWKErZLuE8bWYpOwaaCYpoDmC5TS5cg8G3DZp/TByxCc8n4pOhH/PSdYFykYmsOXH8HqPFjdu2DvWkFe/ez7I3qJsdcIPEuhbGdVo2mGS9051Y228MGnr7kdep+8S2Yy3tVING/fBjadYxjFP+DGdFtFi580lQpEgUJs42wEWi+rg5E3TV713uG0HPrbPN6WEcKUPoZ/kuFkrSKJdnEnRh2c5lmcEreQG2EoeaWyEDY3P+ZI+dQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6311.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(7916004)(136003)(376002)(346002)(396003)(366004)(39860400002)(2906002)(4326008)(66946007)(6486002)(38100700002)(6506007)(33716001)(9686003)(54906003)(6512007)(478600001)(66556008)(26005)(86362001)(6636002)(83380400001)(186003)(41300700001)(82960400001)(44832011)(66476007)(6862004)(8676002)(316002)(6666004)(5660300002)(8936002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?j6WEm/tFzQiTn6xDbOxTtbwd3aERToqzHCMvHymaJSqX2zYuMUOn0RgNX/9w?=
- =?us-ascii?Q?lWhpzE4OmhiGMZTgOAiOQA9Nsy/200Ijn5AF1ClPYTU9lnMWDAtc7JICRH+A?=
- =?us-ascii?Q?GwNjUmtafDtn7HeK1+v0AEIJbyv3JIpuVo2kaKE690gUjO5lmuYENyAXCN4S?=
- =?us-ascii?Q?UXmZLrAvwzibdJ5h9ntL8fRgWWiSqcY6AEnxwgl692k1uHGnuU54b6dUppRd?=
- =?us-ascii?Q?ba1jBVaL7LgQtQ9Irc3WP9NTOGGiptUy7DUEOwkEvd4jdm5XnfjAQ7Tqj17v?=
- =?us-ascii?Q?rrRBi4ehW59A32pfZcIiEekHczWv2RIiUV1fOHr6hLcZqjljs6fkWgF3QMrW?=
- =?us-ascii?Q?K2X6STcgTnFgfQ6rFzV1iLk4gnK3U6oIXpHGApd5lyxn4sAiQMAI4U/kDupf?=
- =?us-ascii?Q?WYa8Au0ROKwnop4vuyb/RGl7TsEQbjeo0nd5Kg905nozG0Vb1VZ/f0e/Zc69?=
- =?us-ascii?Q?u48V2lQWkFCxPm6WOGy+opZMYU6P6ZeiKj8cg2dK+w/TYMjXiwLTWSzp5/mj?=
- =?us-ascii?Q?9Zsc1BSFxaXHNJCUWR4PUJC+vI2Lj6xB7Qx1hPVds2lw96fHxp3nGEbS56aF?=
- =?us-ascii?Q?yemumaNPIpfmM2dEl91aHhFVYBoQ3k82lO5rtJzsaw0KwcLHfaLfOi35qTxo?=
- =?us-ascii?Q?T+fhcPytDuuJJPkPMWNA0+sfrFZwU0Ax6eDl8DAFhEBs2YsCqlKxF/baeohi?=
- =?us-ascii?Q?8P1DOlZfAwqTWxgNY9Ah4Cqf/mGFPJl3inBlu9LdVeH3/FxT7Lb49NDXVxxB?=
- =?us-ascii?Q?iOoNmcvbYhwvmzG/Z7MBGJSSywbfQVK/rxUyCzLZsOyaCaosDSuFM9mGX4F3?=
- =?us-ascii?Q?p4N3sYDlVrPZU1PTV9RpXt393zBVLAeXxLl22q3wJNv5i6+OPNcUZndNxgkQ?=
- =?us-ascii?Q?f7Idve71X5rABGWAcGQUyWjWeSMI4FKiZHz0iD4skYCWteughVjQfA1CN5vu?=
- =?us-ascii?Q?DtjhNNVSnKzE/SgAoSocpjvR55px98yTo6djFIBu79i4glz9XSzGm43Ma98d?=
- =?us-ascii?Q?8t35Sy7I5nnQrLk9uTN/IaCkq/Gq0Sa0kzn7s/b7X6P2tFh6ex8H2SQjnsu8?=
- =?us-ascii?Q?VeqjcviV+YERus9VFtRblWE5pTJAW6QeFC+Nj61uv2tx22YKIHRiGHwfhpUR?=
- =?us-ascii?Q?B56xXMPFGfdJSC7jcuVD42+6wj9CDR8shMS7MF6hu21O2AK+Zca9n9qi3lM1?=
- =?us-ascii?Q?Fjqh8Xk+PNlkbAlHhpPRn6UOVf9USp4iXwNxW4Af1D6thnVgpCrcO5janyfG?=
- =?us-ascii?Q?aaO7t7vYXT/wpgb/5STm5KOdcWG2iE8XCXwzjZILCsi3fM/fU++HgHgH0Hka?=
- =?us-ascii?Q?sAvDfqwwH/w1J8rgp2lwaV1KI9xGtWNFWs8qb3+uMW5Z932VLRM0SDAkFUVK?=
- =?us-ascii?Q?XETs65u7WhOop3khmYe6uIGTG9Un4j2qxW3nTBtIXwPc2+U810p/yr9Yti8a?=
- =?us-ascii?Q?DsPePwHMZ/1IpNPqt1CkOdqcy8JOlI/CjYxXwNAsBBAYAUNeqfP/yKjnE2Az?=
- =?us-ascii?Q?x6nNch5UrK095kCcQY5I6uWh+la8OF3iMRm8QrIKjl7ZnKHsKa25zbvLknY+?=
- =?us-ascii?Q?paGLtMCC5xucWzRLd0dJVLglgxma5VbRYO203ogmDuDr7WC2AdqHwc4aS8Ba?=
- =?us-ascii?Q?PRTdR3kQvpxQetkBGAfhQHhLCNy4UOzflOYZqxiB7Fe6rZxqCYU/TLSpBTDu?=
- =?us-ascii?Q?4PoOf74qrdPNAF4nCwxPudRAWZbYhOHkDIpw7KRryWcxX3FGptQSufLrHO5J?=
- =?us-ascii?Q?ZcRRwaz33vUjeBKg6lSSQslzRI6gRgw=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6cfbc711-5061-4d8e-9c76-08da53c88af3
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?PEMsxQEVtZqUfw3U3/O7d21jLU6hQUj0bI2X/hJBnY08PGPr7esbnEGe06pv?=
+ =?us-ascii?Q?zPHo9OpDi0Dkht1bUf8/7guBrlcK/pUoYOGzE0fes6jsSjjQXhjiVmdkurNL?=
+ =?us-ascii?Q?npkPIiSrADF5CkVfd2tkwR04OhN/kt8DVG+f6Zlog8yEpvEYf2HhRC9T1atY?=
+ =?us-ascii?Q?k9pXDzpm0hOnuf9uYpFo88zXNVLREZB/orRr6I61pQq6q1qrnzxNMX8mn8YS?=
+ =?us-ascii?Q?lEx7ISSxxoJlLavd41znOvnm3l/i2KHnGy+e0B+YJvNTjnsOft9R4erjesL/?=
+ =?us-ascii?Q?2FH/G31gVWMoAP/24j7beMdK+KmLvEL1t1rCS1y4JTLE66sV/GHbRVpmFigQ?=
+ =?us-ascii?Q?oahLjMzvmLRzLP6ev9tJhi/CEj/SZ8li8wMelpniLkP9dtVGWIHxt64LiTJ2?=
+ =?us-ascii?Q?Y+C0/K2T+4Tn+l+dNkAFE9v0kMMnceT8DkhQyPBwolYsMSBikmGQC7v5AS6V?=
+ =?us-ascii?Q?5zkurqoaolJviJzPuPDKiBTMk19l6usScDM3lkEcNxRpe7bE7iF6G89/UuiV?=
+ =?us-ascii?Q?3g1d3u0fi3hKz2TPUBrvEzGw1stnkp0G0lIEdeNqNBQccMgRiApeyOsRKNSa?=
+ =?us-ascii?Q?urauknjFXyLoN30rpO+KXSMul+mek9JQUyMp3yZ2YJiPXEyJK8/mhuVSFTCH?=
+ =?us-ascii?Q?SlVSqmRoitstaLUsLA8n+LS7Lvz8UQa/hm9j7XKqsYDYrb0YqVVO1EDOjREy?=
+ =?us-ascii?Q?//m/ZnjKsEueWNqh/V1ZCbPlnGI8155xv/wND1TYUhgp4REOCNi2kIZpzKqk?=
+ =?us-ascii?Q?GazRDTRHX3d49X7EsZae+9E/tPdeBnpvD/gXCxlchrW/x11qE9x7KEM/S3sB?=
+ =?us-ascii?Q?bOw828m18fgDwsOnk4aTROtRdezxPHF6gobPkqz34oaHNW8fw2qBy+UTHQwY?=
+ =?us-ascii?Q?Hn+OjvAU787W6X6BhbKZ7/CnXMb22BrJmFpO2kjbe6GiMvsnFjgnpgvcj4bo?=
+ =?us-ascii?Q?/MbqNfeC0RfMMZhCBQLHVtpsmWBSZG3Rw+dUgt8O7Cc9WimI+5y7lBzrUUhQ?=
+ =?us-ascii?Q?sN5uqCFKYC0s2sO5acDuhP1+3+6ecy33fqWmDuTzctsk/CzgRFa2vItYh9so?=
+ =?us-ascii?Q?gwoVKo8bDtwshQzair+rvefIgSAS3o/TXDJyGg3By+7YbOfkAI8QpuRhf8JZ?=
+ =?us-ascii?Q?x51dmKqjOOMJ1JNHhfBuEOq91uSI+DOP4bWGVxDIzU3+Vb7egoKasZKLzJSp?=
+ =?us-ascii?Q?pw0+oyM+Wx7VVVwLZA9oZ5GXgIRHatnfP1Caaoxou+1mTzpKjFf4YwThAbdK?=
+ =?us-ascii?Q?ksFNZZ55bxhyWYYNzxyfxEkAzAia3z0A3aw78mpEhBD4twjkYFN7uXg6yfEj?=
+ =?us-ascii?Q?4deMymaFQpWWZxv3U7nd2oO+M0qFZ+n42/jIJtc3PlS9l0w/NYvWKv5WrHBL?=
+ =?us-ascii?Q?cjw3z9SmjDLzdyNG7zaWfdtCzWnQ5Z3DCzF4S/1ytPf88eAAuc9A0SmXcL1v?=
+ =?us-ascii?Q?B8Zi16HS0vnJsSit3ECIVDUCQVEopVJgjuOND/Uq+8ZgFHcFo8FtS3lHvxfu?=
+ =?us-ascii?Q?AmJWISO4yFUzsTjLRH5JmhnAojnW2tYO4Hx3EgrBHgiMhXch1o6JhFUHuGut?=
+ =?us-ascii?Q?fWhX+dS7s9hT6i4UhcNQVP0TZZGaf8FzbKQy19L/vo34ymnsGOmkNVRYd9ZJ?=
+ =?us-ascii?Q?AGg/asSpVb4ju9IuHhwEbqkQESuZ68Xq/Ta5XJSp+v9r6tvBsabnGz8dFY1C?=
+ =?us-ascii?Q?NJzC7Bpg5tnVBLkDcbZzPFyYa1eVo18aV20C9lxhaZFH3kABRpI+ObxthFCL?=
+ =?us-ascii?Q?BIn4V3l+9Q=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 112a6642-b627-436e-7226-08da53cb02c5
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6311.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2022 20:56:41.7538
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2022 21:14:21.7400
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BJTTPDd96l013pPwhNPPhbyKI8BGeDL/L9mFwSsLDXnFmhC6KUuLxr5Ds1uQV4jiGUYXD2k+Gz4I9D6l5nc0P2jKPUX98ROM0p5n1mAzOC0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5254
+X-MS-Exchange-CrossTenant-UserPrincipalName: p7qH3VqYsNzfZxNqTk42HZfGDCEhz+jiu2fB4d6eF4aWsJgdY8hjdWlAfFf8lPGJKB78VxpJuwzeHc7wJ47dxA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6042
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Davidlohr Bueso wrote:
-> Similarly to verifying the cfwms, have a cxl_acpi_chbs_verify(),
-> as described by the CXL T3 Memory Device Software Guide
-> for CXL 2.0 platforms.
+On Fri, Jun 17, 2022 at 05:43:34PM -0700, Dan Williams wrote:
+> ira.weiny@ wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+
+[snip]
+
+> > +
+> > +/**
+> > + * read_cdat_data - Read the CDAT data on this port
+> > + * @port: Port to read data from
+> > + *
+> > + * This call will sleep waiting for responses from the DOE mailbox.
+> > + */
+> > +void read_cdat_data(struct cxl_port *port)
+> > +{
+> > +	static struct pci_doe_mb *cdat_mb;
+> > +	struct device *dev = &port->dev;
+> > +	struct device *uport = port->uport;
+> > +	size_t cdat_length;
+> > +	int ret;
+> > +
+> > +	/*
+> > +	 * Ensure a reference on the underlying uport device which has the
+> > +	 * mailboxes in it
+> > +	 */
+> > +	get_device(uport);
 > 
-> Also while at it, tuck the rc check for nvdimm bridge into
-> the pmem branch.
+> I had written up a long description grumbling about "just in case"
+> acquistions of device references, but then I lost that draft.
 > 
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> ---
+> So I'll do the shorter response, but give you more homework in the
+> process. How / Why is that get_device() needed? What are the guarantees that
+> ensure you that the last reference has not been dropped just before that
+> call? Hint: what context is this code running?
+
+I'll check it out.  I suspect there is some reference on uport already taken
+such that if port is valid uport must be valid.
+
 > 
->  drivers/cxl/acpi.c | 64 +++++++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 61 insertions(+), 3 deletions(-)
+> > +
+> > +	cdat_mb = find_cdat_mb(uport);
+> > +	if (!cdat_mb) {
+> > +		dev_dbg(dev, "No CDAT mailbox\n");
+> > +		goto out;
+> > +	}
+> > +
+> > +	if (cxl_cdat_get_length(dev, cdat_mb, &cdat_length)) {
+> > +		dev_dbg(dev, "No CDAT length\n");
+> > +		goto out;
+> > +	}
+> > +
+> > +	port->cdat.table = devm_kzalloc(dev, cdat_length, GFP_KERNEL);
+> > +	if (!port->cdat.table)
+> > +		goto out;
+> > +
+> > +	port->cdat.length = cdat_length;
+> > +	ret = cxl_cdat_read_table(dev, cdat_mb, &port->cdat);
+> > +	if (ret) {
+> > +		/* Don't leave table data allocated on error */
+> > +		devm_kfree(dev, port->cdat.table);
+> > +		port->cdat.table = NULL;
+> > +		port->cdat.length = 0;
+> > +		dev_err(dev, "CDAT data read error\n");
 > 
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index 40286f5df812..33b5f362c9f1 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -187,14 +187,65 @@ static int add_host_bridge_uport(struct device *match, void *arg)
->  struct cxl_chbs_context {
->  	struct device *dev;
->  	unsigned long long uid;
-> +	struct cxl_port *root_port;
->  	resource_size_t chbcr;
->  };
->  
-> +static inline bool range_overlaps(struct range *r1, struct range *r2)
-> +{
-> +	return r1->start <= r2->end && r2->start <= r1->end;
-> +}
-> +
-> +static int cxl_acpi_chbs_verify(struct cxl_chbs_context *cxt,
-> +				struct acpi_cedt_chbs *chbs)
-> +{
-> +	struct device *dev = cxt->dev;
-> +	struct cxl_dport *dport;
-> +	struct cxl_port *root_port = cxt->root_port;
-> +	struct range chbs_range = {
-> +		.start = chbs->base,
-> +		.end = chbs->base + chbs->length - 1,
-> +	};
-> +
-> +	if (chbs->cxl_version > 1) {
-> +		dev_err(dev, "CHBS Unsupported CXL Version\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11)
-> +		return 0;
-> +
-> +	if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL20 &&
-> +	    (chbs->length != ACPI_CEDT_CHBS_LENGTH_CXL20)) {
-> +		dev_err(dev, "Platform does not support CXL 2.0\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	device_lock(&root_port->dev);
-> +	list_for_each_entry(dport, &root_port->dports, list) {
-> +		struct range dport_range = {
-> +			.start = dport->component_reg_phys,
-> +			.end = dport->component_reg_phys +
-> +			CXL_COMPONENT_REG_BLOCK_SIZE - 1,
-> +		};
-> +
-> +		if (range_overlaps(&chbs_range, &dport_range)) {
-> +			device_unlock(&root_port->dev);
-> +			dev_err(dev, "CHBS overlapping Base and Length pair\n");
-> +			return -EINVAL;
-> +		}
+> Rather than a chatty / ephemeral error message I think this wants some
+> indication in userspace, likely the 0-length CDAT binary attribute, so
+> that userspace can debug why the kernel is picking sub-optimal QTG ids
+> for newly provisioned CXL regions.
 
-For cxl_port objects this happens "for free" as a side effect of the:
+I thought we agreed that 0-length or CDAT query failure would result in no
+sysfs entry?
 
-        crb = devm_cxl_iomap_block(dev, port->component_reg_phys,
-                                   CXL_COMPONENT_REG_BLOCK_SIZE);
+This message was to alert that a CDAT query was attempted but the read failed
+vs finding no mailbox with CDAT capabilities for example.
 
-...call in devm_cxl_setup_hdm(), where it tries to exclusively claim the
-component register block for that cxl_port driver instance.
+[snip]
 
-I.e. if the CHBS provides overlapping / duplicated ranges the failure is
-localized to the cxl_port_probe() event for that port, and can be
-debugged further by disabling one of the conflicts.
+> >  
+> > +static ssize_t cdat_read(struct file *filp, struct kobject *kobj,
+> > +			 struct bin_attribute *bin_attr, char *buf,
+> > +			 loff_t offset, size_t count)
+> > +{
+> > +	struct device *dev = kobj_to_dev(kobj);
+> > +	struct cxl_port *port = to_cxl_port(dev);
+> > +
+> > +	if (!port->cdat.table)
+> > +		return 0;
+> > +
+> > +	return memory_read_from_buffer(buf, count, &offset,
+> > +				       port->cdat.table,
+> > +				       port->cdat.length);
+> > +}
+> > +
+> > +static BIN_ATTR_RO(cdat, 0);
+> 
+> This should be BIN_ATTR_ADMIN_RO(), see:
+> 
+> 3022c6a1b4b7 driver-core: Introduce DEVICE_ATTR_ADMIN_{RO,RW}
 
-> +	}
-> +	device_unlock(&root_port->dev);
-> +
-> +	return 0;
-> +}
-> +
->  static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
->  			 const unsigned long end)
->  {
->  	struct cxl_chbs_context *ctx = arg;
->  	struct acpi_cedt_chbs *chbs;
-> +	int ret;
->  
->  	if (ctx->chbcr)
->  		return 0;
-> @@ -203,6 +254,11 @@ static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
->  
->  	if (ctx->uid != chbs->uid)
->  		return 0;
-> +
-> +	ret = cxl_acpi_chbs_verify(ctx, chbs);
-> +	if (ret)
-> +		return ret;
-> +
->  	ctx->chbcr = chbs->base;
->  
->  	return 0;
-> @@ -232,6 +288,7 @@ static int add_host_bridge_dport(struct device *match, void *arg)
->  	ctx = (struct cxl_chbs_context) {
->  		.dev = host,
->  		.uid = uid,
-> +		.root_port = root_port,
->  	};
->  	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CHBS, cxl_get_chbcr, &ctx);
->  
-> @@ -321,11 +378,12 @@ static int cxl_acpi_probe(struct platform_device *pdev)
->  	if (rc < 0)
->  		return rc;
->  
-> -	if (IS_ENABLED(CONFIG_CXL_PMEM))
-> +	if (IS_ENABLED(CONFIG_CXL_PMEM)) {
->  		rc = device_for_each_child(&root_port->dev, root_port,
->  					   add_root_nvdimm_bridge);
-> -	if (rc < 0)
-> -		return rc;
-> +		if (rc < 0)
-> +			return rc;
-> +	}
+Are you suggesting I add BIN_ATTR_ADMIN_* macros?
 
-No need to move this inside the "if (IS_ENABLED(CONFIG_CXL_PMEM))" that
-I can see.
+> 
+> > +
+> > +static umode_t cxl_port_bin_attr_is_visible(struct kobject *kobj,
+> > +					      struct bin_attribute *attr, int i)
+> > +{
+> > +	struct device *dev = kobj_to_dev(kobj);
+> > +	struct cxl_port *port = to_cxl_port(dev);
+> > +
+> > +	if ((attr == &bin_attr_cdat) && port->cdat.table)
+> > +		return 0400;
+> 
+> Per above change you only need to manage visibility and not permissions,
+
+But the permissions indicate visibility (In the kdoc for struct
+attribute_group).
+
+
+ *              ...  Must
+ *              return 0 if a binary attribute is not visible. The returned
+ *              value will replace static permissions defined in
+ *              struct bin_attribute.
+
+And the value returned overrides the mode.
+
+fs/sysfs/group.c:
+
+create_files()
+
+ 82                         if (grp->is_bin_visible) {
+ 83                                 mode = grp->is_bin_visible(kobj, *bin_attr, i);
+ 84                                 if (!mode)
+ 85                                         continue;
+ 86                         }
+ 87 
+ 88                         WARN(mode & ~(SYSFS_PREALLOC | 0664),
+ 89                              "Attribute %s: Invalid permissions 0%o\n",
+ 90                              (*bin_attr)->attr.name, mode);
+ 91 
+ 92                         mode &= SYSFS_PREALLOC | 0664;
+
+
+So I'm willing to add the macro but I'm not sure it is going to change anything
+in this case.  I think to make those _ADMIN_ macros work with is_visible()
+create_files() needs to be changed.  :-/  I'm not sure if the addition of
+DEVICE_ATTR_ADMIN_{RO,RW} intended for is_visible() to be able to override the
+mode?
+
+> also per the comment about the error message in the CDAT table read case
+> I think it makes sense to show an empty attribute. Only if the device
+> does not claim to have a CDAT should the attribute not be visible.
+
+Ok I can do that.
+
+Thanks for the review,
+Ira
+
+> 
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct bin_attribute *cxl_cdat_bin_attributes[] = {
+> > +	&bin_attr_cdat,
+> > +	NULL,
+> > +};
+> > +
+> > +static struct attribute_group cxl_cdat_attribute_group = {
+> > +	.name = "CDAT",
+> > +	.bin_attrs = cxl_cdat_bin_attributes,
+> > +	.is_bin_visible = cxl_port_bin_attr_is_visible,
+> > +};
+> > +
+> > +static const struct attribute_group *cxl_port_attribute_groups[] = {
+> > +	&cxl_cdat_attribute_group,
+> > +	NULL,
+> > +};
+> > +
+> >  static struct cxl_driver cxl_port_driver = {
+> >  	.name = "cxl_port",
+> >  	.probe = cxl_port_probe,
+> >  	.id = CXL_DEVICE_PORT,
+> > +	.drv = {
+> > +		.dev_groups = cxl_port_attribute_groups,
+> > +	},
+> >  };
+> >  
+> >  module_cxl_driver(cxl_port_driver);
+> > -- 
+> > 2.35.1
+> > 
+> 
+> 
