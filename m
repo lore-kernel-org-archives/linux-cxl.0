@@ -2,604 +2,425 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3425CC43334
-	for <linux-cxl@archiver.kernel.org>; Wed, 22 Jun 2022 12:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5640FC433EF
+	for <linux-cxl@archiver.kernel.org>; Wed, 22 Jun 2022 16:38:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236335AbiFVMUg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 22 Jun 2022 08:20:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56218 "EHLO
+        id S1359476AbiFVQio (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 22 Jun 2022 12:38:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234442AbiFVMUf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 22 Jun 2022 08:20:35 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4B1537007;
-        Wed, 22 Jun 2022 05:20:28 -0700 (PDT)
-Received: from fraeml739-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LSjBS51SNz6GDFj;
-        Wed, 22 Jun 2022 20:20:00 +0800 (CST)
-Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- fraeml739-chm.china.huawei.com (10.206.15.220) with Microsoft SMTP Server
+        with ESMTP id S229930AbiFVQio (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 22 Jun 2022 12:38:44 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30A563584F;
+        Wed, 22 Jun 2022 09:38:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655915920; x=1687451920;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=uXlGwFrT4vQgECdH2jDTmtQaiPrjDucZYl92Uxy0EAs=;
+  b=BMRB8iZws1szDMITe94sn2sVl97JnJ3uJ92FjNTSut6bNu3d1botjqmY
+   TjQKr2Q4om7f/Ige+UaB2hVGptbCRxBqGkrXyj43jX4XqeeiCuh5a0rND
+   rT3Nz1NtXxQkd/k3Kp+lEO+RnzS57mSYXuSZUIgnHeH4NEodvJYyAEZP1
+   WJe4EhHCEvCVF/rPt6TlKbT3BkO7a3eNhGgBe3QS3pWtl83OgAR8Pc/a4
+   DxtQhzxTRL5wXZuy4PkEEEXxfeh6+9AQkj4WzaZ8iBhC7xCVvbBVXqrPA
+   pCeRUkggRHrZ6DuCbaP6DS+AYyjoQ8ZVdYZ8KZM9SHrYuUg5VCg+sBAqG
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10386"; a="280516125"
+X-IronPort-AV: E=Sophos;i="5.92,212,1650956400"; 
+   d="scan'208";a="280516125"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2022 09:38:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,212,1650956400"; 
+   d="scan'208";a="592270732"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmsmga007.fm.intel.com with ESMTP; 22 Jun 2022 09:38:39 -0700
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 22 Jun 2022 14:20:26 +0200
-Received: from P_UKIT01-A7bmah.china.huawei.com (10.126.173.29) by
- lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
+ 15.1.2308.27; Wed, 22 Jun 2022 09:38:38 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 22 Jun 2022 13:20:25 +0100
-From:   <shiju.jose@huawei.com>
-To:     <linux-edac@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <mchehab@kernel.org>, <alison.schofield@intel.com>,
-        <dan.j.williams@intel.com>, <vishal.l.verma@intel.com>,
-        <ira.weiny@intel.com>, <ben.widawsky@intel.com>
-CC:     <jonathan.cameron@huawei.com>, <linuxarm@huawei.com>,
-        <tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
-        <shiju.jose@huawei.com>
-Subject: [RFC PATCH 1/1] rasdaemon: Add support for the CXL poison events
-Date:   Wed, 22 Jun 2022 13:20:21 +0100
-Message-ID: <20220622122021.1986-1-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
+ 15.1.2308.27 via Frontend Transport; Wed, 22 Jun 2022 09:38:38 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.175)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2308.27; Wed, 22 Jun 2022 09:38:38 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fqs98qP4Jt63+X8XP+Gs9XhsxAeMCqb2DMP0gnDlafe4T2moTeI18t+S99xZOMYl8MOgpEYssKMnszUKUMvXlhN4l6p9aOhs0sC1k4P/rO1kSeRgldfvN3xm5q2Pt6MTRaCeMuMFfuIZ9UXvdnmSaZQS4LXI9SEYOB3/sJXe6tzGyKN0yWcIz06GRobNbQVQvasxgPXC6014ULXtvq0NNPO6y5QfuotHSj0Q0IhFX17Z1AFuLq+cbTxO9vYI5KGrvIX2O5D2z2gPmTTNBLpklls7fYksaiVx/Qd/p/UwGSK8BEFyOvge6R5UqymMNnGQ0hZ5u4qAHqwR8YsIH+ewlA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3zUEVSuXYfEzbV/4TfwaAS9uB2oNb09mrfEPzHzayeQ=;
+ b=oPJbdoBIcX7egh6ji0NgOKH1BoxItBuH0e44HqDVQQYna0W2GDGrE85fAp+EaiN0iTRlU2/I3i03LS4RIum8cVnzYqA+7MoMjYNtVkEg9NY03h5dW6oJNbzlTo3ekfqF3xV9KW4SMZ/HKdErfQ+Jyg2IdnOeEGkDv3bMJZ/2EugJO6orbDcyEKB3982fSs4pEneDgpK66eKyKKJSYriWKBVPpvcgZSitamn9AVae0xloOVfj952ZYPBw0GKDPef/x7lGxAiU01BDgiMjI5/Pbm8rJyQClAkSRnqX/suPuK8bjPdmD/0nki8Z2KFOlmQD4MPHP3IVp8COEtyiyeDCHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM4PR11MB6311.namprd11.prod.outlook.com (2603:10b6:8:a6::21) by
+ BYAPR11MB3205.namprd11.prod.outlook.com (2603:10b6:a03:1e::32) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5353.17; Wed, 22 Jun 2022 16:38:37 +0000
+Received: from DM4PR11MB6311.namprd11.prod.outlook.com
+ ([fe80::f0ac:be8f:9429:d262]) by DM4PR11MB6311.namprd11.prod.outlook.com
+ ([fe80::f0ac:be8f:9429:d262%5]) with mapi id 15.20.5353.018; Wed, 22 Jun 2022
+ 16:38:37 +0000
+Date:   Wed, 22 Jun 2022 09:38:31 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Alison Schofield" <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH V11 3/8] PCI: Create PCI library functions in support of
+ DOE mailboxes.
+Message-ID: <YrNFh9CfwxmO+rsy@iweiny-desk3>
+References: <20220610202259.3544623-4-ira.weiny@intel.com>
+ <20220617224019.GA1208614@bhelgaas>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20220617224019.GA1208614@bhelgaas>
+X-ClientProxiedBy: MWHPR2001CA0007.namprd20.prod.outlook.com
+ (2603:10b6:301:15::17) To DM4PR11MB6311.namprd11.prod.outlook.com
+ (2603:10b6:8:a6::21)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.126.173.29]
-X-ClientProxiedBy: lhreml726-chm.china.huawei.com (10.201.108.77) To
- lhreml715-chm.china.huawei.com (10.201.108.66)
-X-CFilter-Loop: Reflected
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9c4b5d4b-aa08-4988-9a58-08da546da7cc
+X-MS-TrafficTypeDiagnostic: BYAPR11MB3205:EE_
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-Microsoft-Antispam-PRVS: <BYAPR11MB320502D8C7FD77DD54653083F7B29@BYAPR11MB3205.namprd11.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: C5CgF7SoSHn8jdsbXmzswmznIFjjLWZMsYsGHeDaSHQxWa/4CYUUPoE1QyT8+MsA/GSccpfU8GBQqQ6Yek1EmB0TlzYv/kNFyI9eM9b3EeHcBYUzv0kYEV+gHmmwV76S6IWNxLRrGBVrbOn/9IM2X1x0lJCpq7TpeCX6i1k1DZWL7cHN/ROFlE3XJrgPzvzBBJlSkVb8lL9R301LhEcFZvlrlKiIyOpWIM8fpc3XDj7+cuSlxn2gSuw5cTW2/6y2FctGneuWjJD2zhw9lYoLCDVH5lNIQU3yeq9E9AHNNv5RlRPO3wdZtwXtR6hFBbzV9jCvzS8JgHfoKK3khBwHUtb+l+F/OVH4fEA8i2tg/miiD2S7CZ+Fo/52zK1cLPTxz6wuo/RaK/JgrdwHx095Iiex0faePfBIJhUskkZtgdYx73ZQ8cs25QJ3p8d+580/Sf44RTWr8jbdfrGIq15upYJMwb9YMMkz6KIlOA+H59VoMP7zDVGf2pF28d3pP1D71g9BQ9N6qcjffmTKjEzMoJS/1aGV0ODUGOXJZASsIiYi+a7DLLIIubQ8RQBygQFLCwbwDfvw4yQ+12Q1GQILihnQlNbRWTXAn4NLCTiXfOtMis7aTCjbPfykSuAgVjQh09jihdsp1+n8R8Ow7Zl7GYjicUql9DGVaH+CSx4n9och5EXT7dmP8bhiS+76n3lW3LDbNp45JcZupopZJW4wXXPcFH+XbICk3+lD7JneKwyTjzm1F6D3FC3QeCHhkGOp
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6311.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(7916004)(366004)(39860400002)(376002)(136003)(346002)(396003)(15650500001)(44832011)(5660300002)(26005)(478600001)(8936002)(2906002)(9686003)(6512007)(4326008)(6506007)(6916009)(6486002)(66946007)(186003)(54906003)(66556008)(8676002)(66476007)(316002)(41300700001)(6666004)(86362001)(82960400001)(83380400001)(33716001)(38100700002)(67856001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?w3HRHB71Q87pMogP0F7VMMHQ27YDQSCH1/KooumO2/smCnH9RwYYeso5XqcF?=
+ =?us-ascii?Q?D2BRh7OmeLJMmNvak1cUGSWjTTBR3tPkIsq4+ePtKV6Fq+WrCKOPF42/2NQn?=
+ =?us-ascii?Q?XTcfg3KCoOuZ8WexRIA3IBtqWRDt6oWTLmyiqzzZgPvyRYNi5gahn+XKZ0UA?=
+ =?us-ascii?Q?oWyGEn/qjPvNe+2Bh4xJoo6yXnoatoB7TD52wYb9uGtG1+KHuuuHmxmASSLg?=
+ =?us-ascii?Q?7O+ZXcWIbGs307gv2vzxg+YaTyrAzRFRNWsdDw6KnhKXP3KeD5++j2ry2dm7?=
+ =?us-ascii?Q?SdiEefEVaFP4BfLxbeNe3/9TP91tDIgjUKuBA+yOAokL/0wCMoGHrJjSGo96?=
+ =?us-ascii?Q?z3n33ssKRfPoo+k2Oz7QKyZZA7DUKRNIcZg55RtdQfJufouRTGvX+61QtN6u?=
+ =?us-ascii?Q?AkuGb642rqzturqALw3M232B8tiRzdcghjomWhLrV03SH/i/Xsw+u7k4xbJ4?=
+ =?us-ascii?Q?eYMjsxMbh5Ty84OJTcBg7MzktjjAbSTkU9+Nhkxrzb8UBRqF0mwTIjYQYDWV?=
+ =?us-ascii?Q?FK4uwYF9laFIpAuUN54cHzGSeogVbAZv64wokcCzdSDAGdv4rTJN9A0EnFpP?=
+ =?us-ascii?Q?V6oz1HiNMrxaiNeXzDxFivCLrJYm3mFZ+wwmk1Uj79ACmzdHf5g6DDLn054Z?=
+ =?us-ascii?Q?TVvON//0ot5pxfBkN3B0PKtXEpPn9wlVC7oXVlPlyaJaoi5SpYWFNDG7navf?=
+ =?us-ascii?Q?DseUyC0SyPG96Dol5DnNPxeIuF/mZUVNusvFuPzzv8WwoRyUzncN5/aoJTJ5?=
+ =?us-ascii?Q?yu2mSc9HnkCXy1wdpdhHNPrZMBtj3N7QLo4f+iNMBEjLp8B7rwn32aqHlDnb?=
+ =?us-ascii?Q?rBO80osWchAD6a9C46R/OG17ZgmsjZFcxQzhPqOXtUH0qhF+gYsnwhoErkT3?=
+ =?us-ascii?Q?4qkAaAeQGZHZ+H/QiM8W3O9L6RryTuQElX5fBV9cVKtOGCutXLl5CPrruN8h?=
+ =?us-ascii?Q?2Fvv/p0PnrIloP4Ufl8vAwYV0YWOIyurfM0AQ+LtqEUky0ujz5tfXGnkpfMb?=
+ =?us-ascii?Q?LoTfGmpf0RkjfShMlgCyiBVxfA0bA1jqFU5nlgQrTr6Sbeq5f1LMtQgoVn3S?=
+ =?us-ascii?Q?tnEwgFAEAJogYWKbD/FpMpNXPoKHXUFbFgVYRTzZiL83zNHPUOfp+6j91dEF?=
+ =?us-ascii?Q?izgmK8+zA61uUox2AusYYWhtThiaD4GH6n66qkQoNxXDSOAkOH5l38tcIO+u?=
+ =?us-ascii?Q?UUcjqqNOcnMlulq9hFHyfb+sS8M4a3E/8RGJsdygGDr86h4mU8bPRa3xa0IB?=
+ =?us-ascii?Q?0ipIe8DSdH96p30zKzHasVdnd/6AEEwRSyp2O9+5TBhiBLd0FzkBcMBpgbjt?=
+ =?us-ascii?Q?0//b6zQreIYk02xAR1u+Z99O6rI1/Wu+YWUwpjHdlasFn6pLb0wr262y8Gpf?=
+ =?us-ascii?Q?De0VyGjXiRRmHJTr2VuMutRoXg3X4QC0f++OhFoucbQWk7/reTPsOfMiS1Ao?=
+ =?us-ascii?Q?hAXb+QzCDHzH05tT6CWyN8QGWxRDNetBFuVMC+/OsjYJCbPx1FD5nQPrbZE6?=
+ =?us-ascii?Q?U7zL65ahLUtDYtL5dALg0tR1hbfkR9fCK+a6JLqQrZEchzFX8cWOUgmIM+fH?=
+ =?us-ascii?Q?n5kooqQNzlOQHInZn+id4doFSH9csSzXYqO0nsznl4zGm7pVQEZHw39oD70O?=
+ =?us-ascii?Q?2qWGbGyfG/OXoMENZY//5wdm7GJsP5kWwALOrbkuE4SriduT/VLF9ZLmV+gs?=
+ =?us-ascii?Q?1cvyMBDJuCdYvEfzkcFgP1cvi1RE1XsrY05wTsOow1eBcu/mVfCcZVe4eRW8?=
+ =?us-ascii?Q?GvkhRiejiw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c4b5d4b-aa08-4988-9a58-08da546da7cc
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6311.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2022 16:38:37.1294
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZDx0MQ9KivVfIRBFFqFTcjfRSMKG1o0LL0fFm/maBhOvuxQIIs6/gtMXeh9Oa6t8y8F9TPbPnD0A9kEh/pJgkg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3205
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Shiju Jose <shiju.jose@huawei.com>
+On Fri, Jun 17, 2022 at 05:40:19PM -0500, Bjorn Helgaas wrote:
+> On Fri, Jun 10, 2022 at 01:22:54PM -0700, ira.weiny@intel.com wrote:
+> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > 
+> > Introduced in a PCI r6.0, sec 6.30, DOE provides a config space based
+> > mailbox with standard protocol discovery.  Each mailbox is accessed
+> > through a DOE Extended Capability.
+> 
+> > +/* Timeout of 1 second from 6.30.2 Operation, PCI Spec r6.0 */
+> 
+> s/PCI/PCIe/ (up in commit log, too, I guess :))
+> 
+> Not that there will ever be a conventional PCI r6.0 spec, but there
+> was a PCI r3.0 well as a PCIe r3.0, so might as well keep them
+> straight.
 
-Add support to handle the CXL poison kernel trace events.
+Done.
 
-The corresponding Kernel patches here:
-https://lore.kernel.org/linux-cxl/cover.1655250669.git.alison.schofield@intel.com
+> 
+> > +struct pci_doe_mb {
+> > +	struct pci_dev *pdev;
+> 
+> Trivial, but I would put cap_offset here next to pdev because the
+> (pdev, cap_offset) tuple is basically the identifier for the DOE
+> instance.
 
-Presently RFC draft version for logging, could be possible
-to extend for the DPA address translation and for the
-policy based recovery action for the frequently occurring
-poison events depending on the above kernel patches.
+Done.
 
-Suggested-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
----
- Makefile.am       |   8 +++-
- configure.ac      |  11 +++++
- ras-cxl-handler.c | 118 ++++++++++++++++++++++++++++++++++++++++++++++
- ras-cxl-handler.h |  25 ++++++++++
- ras-events.c      |  15 ++++++
- ras-events.h      |   1 +
- ras-record.c      |  69 +++++++++++++++++++++++++++
- ras-record.h      |  14 ++++++
- ras-report.c      |  70 +++++++++++++++++++++++++++
- ras-report.h      |   2 +
- 10 files changed, 332 insertions(+), 1 deletion(-)
- create mode 100644 ras-cxl-handler.c
- create mode 100644 ras-cxl-handler.h
+> 
+> > +	struct completion abort_c;
+> > +	int irq;
+> > +	struct pci_doe_protocol *prots;
+> > +	int num_prots;
+> > +	u16 cap_offset;
+> 
+> > +static void pci_doe_abort_start(struct pci_doe_mb *doe_mb)
+> > +{
+> > +	struct pci_dev *pdev = doe_mb->pdev;
+> > +	int offset = doe_mb->cap_offset;
+> > +	u32 val;
+> > +
+> > +	val = PCI_DOE_CTRL_ABORT;
+> > +	if (doe_mb->irq >= 0)
+> 
+> Is zero a valid IRQ?  In general, I don't think it is, but maybe this
+> is a special case.  Or maybe this is actually the "Interrupt Message
+> Number" mentioned in sec 6.30.3?  If so maybe something other than
+> "irq" would be a better name here.
 
-diff --git a/Makefile.am b/Makefile.am
-index a322b9a..4216370 100644
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -69,13 +69,19 @@ endif
- if WITH_AMP_NS_DECODE
-    rasdaemon_SOURCES += non-standard-ampere.c
- endif
-+
-+if WITH_CXL
-+   rasdaemon_SOURCES += ras-cxl-handler.c
-+endif
-+
- rasdaemon_LDADD = -lpthread $(SQLITE3_LIBS) libtrace/libtrace.a
- 
- include_HEADERS = config.h  ras-events.h  ras-logger.h  ras-mc-handler.h \
- 		  ras-aer-handler.h ras-mce-handler.h ras-record.h bitfield.h ras-report.h \
- 		  ras-extlog-handler.h ras-arm-handler.h ras-non-standard-handler.h \
- 		  ras-devlink-handler.h ras-diskerror-handler.h rbtree.h ras-page-isolation.h \
--		  non-standard-hisilicon.h non-standard-ampere.h ras-memory-failure-handler.h
-+		  non-standard-hisilicon.h non-standard-ampere.h ras-memory-failure-handler.h \
-+		  ras-cxl-handler.h
- 
- # This rule can't be called with more than one Makefile job (like make -j8)
- # I can't figure out a way to fix that
-diff --git a/configure.ac b/configure.ac
-index a77991f..c18a67d 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -161,6 +161,16 @@ AS_IF([test "x$enable_amp_ns_decode" = "xyes" || test "x$enable_all" == "xyes"],
- AM_CONDITIONAL([WITH_AMP_NS_DECODE], [test x$enable_amp_ns_decode = xyes || test x$enable_all == xyes])
- AM_COND_IF([WITH_AMP_NS_DECODE], [USE_AMP_NS_DECODE="yes"], [USE_AMP_NS_DECODE="no"])
- 
-+AC_ARG_ENABLE([cxl],
-+    AS_HELP_STRING([--enable-cxl], [enable CXL events (currently experimental)]))
-+
-+AS_IF([test "x$enable_cxl" = "xyes" || test "x$enable_all" == "xyes"], [
-+  AC_DEFINE(HAVE_CXL,1,"have CXL events collect")
-+  AC_SUBST([WITH_CXL])
-+])
-+AM_CONDITIONAL([WITH_CXL], [test x$enable_cxl = xyes || test x$enable_all == xyes])
-+AM_COND_IF([WITH_CXL], [USE_CXL="yes"], [USE_CXL="no"])
-+
- test "$sysconfdir" = '${prefix}/etc' && sysconfdir=/etc
- 
- CFLAGS="$CFLAGS -Wall -Wmissing-prototypes -Wstrict-prototypes"
-@@ -201,4 +211,5 @@ compile time options summary
-     Memory Failure      : $USE_MEMORY_FAILURE
-     Memory CE PFA       : $USE_MEMORY_CE_PFA
-     AMP RAS errors      : $USE_AMP_NS_DECODE
-+    CXL events          : $USE_CXL
- EOF
-diff --git a/ras-cxl-handler.c b/ras-cxl-handler.c
-new file mode 100644
-index 0000000..7e6b06f
---- /dev/null
-+++ b/ras-cxl-handler.c
-@@ -0,0 +1,123 @@
-+/*
-+ * Copyright (c) Huawei Technologies Co., Ltd. 2022. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include "libtrace/kbuffer.h"
-+#include "ras-cxl-handler.h"
-+#include "ras-record.h"
-+#include "ras-logger.h"
-+#include "ras-report.h"
-+
-+#define BUF_LEN	1024
-+
-+/* CXL poison - source types */
-+enum cxl_poison_source {
-+	CXL_POISON_SOURCE_UNKNOWN = 0,
-+	CXL_POISON_SOURCE_EXTERNAL = 1,
-+	CXL_POISON_SOURCE_INTERNAL = 2,
-+	CXL_POISON_SOURCE_INJECTED = 3,
-+	CXL_POISON_SOURCE_VENDOR = 7,
-+};
-+
-+int ras_cxl_poison_event_handler(struct trace_seq *s,
-+				 struct pevent_record *record,
-+				 struct event_format *event, void *context)
-+{
-+	int len;
-+	unsigned long long val;
-+	struct ras_events *ras = context;
-+	time_t now;
-+	struct tm *tm;
-+	struct ras_cxl_poison_event ev;
-+
-+	/*
-+	 * Given old kernels do not support this event, do we still need
-+	 * the following workaround for the timestamp?
-+	 */
-+
-+	/*
-+	 * Newer kernels (3.10-rc1 or upper) provide an uptime clock.
-+	 * On previous kernels, the way to properly generate an event would
-+	 * be to inject a fake one, measure its timestamp and diff it against
-+	 * gettimeofday. We won't do it here. Instead, let's use uptime,
-+	 * falling-back to the event report's time, if "uptime" clock is
-+	 * not available (legacy kernels).
-+	 */
-+
-+	if (ras->use_uptime)
-+		now = record->ts/user_hz + ras->uptime_diff;
-+	else
-+		now = time(NULL);
-+
-+	tm = localtime(&now);
-+	if (tm)
-+		strftime(ev.timestamp, sizeof(ev.timestamp),
-+			 "%Y-%m-%d %H:%M:%S %z", tm);
-+	trace_seq_printf(s, "%s ", ev.timestamp);
-+
-+	ev.dev_name = pevent_get_field_raw(s, event, "name",
-+					   record, &len, 1);
-+	if (!ev.dev_name)
-+		return -1;
-+	trace_seq_printf(s, "%s ", ev.dev_name);
-+
-+	if (pevent_get_field_val(s,  event, "source", record, &val, 1) < 0)
-+		return -1;
-+
-+	switch (val) {
-+	case CXL_POISON_SOURCE_UNKNOWN:
-+		ev.poison_source = "Unknown";
-+		break;
-+	case CXL_POISON_SOURCE_EXTERNAL:
-+		ev.poison_source = "External";
-+		break;
-+	case CXL_POISON_SOURCE_INTERNAL:
-+		ev.poison_source = "Internal";
-+		break;
-+	case CXL_POISON_SOURCE_INJECTED:
-+		ev.poison_source = "Injected";
-+		break;
-+	case CXL_POISON_SOURCE_VENDOR:
-+		ev.poison_source = "Vendor";
-+		break;
-+	default:
-+		ev.poison_source = "Invalid";
-+	}
-+	trace_seq_printf(s, "poison source: %s ", ev.poison_source);
-+
-+	if (pevent_get_field_val(s, event, "start", record, &val, 1) < 0)
-+		return -1;
-+	ev.poison_dpa_start = val;
-+	trace_seq_printf(s, "poison dpa start: 0x%llx ", (unsigned long long)ev.poison_dpa_start);
-+
-+	if (pevent_get_field_val(s, event, "length", record, &val, 1) < 0)
-+		return -1;
-+	ev.poison_length = val;
-+	trace_seq_printf(s, "poison length: %d\n", ev.poison_length);
-+
-+	/* Insert data into the SGBD */
-+#ifdef HAVE_SQLITE3
-+	ras_store_cxl_poison_event(ras, &ev);
-+#endif
-+
-+#ifdef HAVE_ABRT_REPORT
-+	/* Report event to ABRT */
-+	ras_report_cxl_poison_event(ras, &ev);
-+#endif
-+
-+	return 0;
-+}
-diff --git a/ras-cxl-handler.h b/ras-cxl-handler.h
-new file mode 100644
-index 0000000..ef3b95f
---- /dev/null
-+++ b/ras-cxl-handler.h
-@@ -0,0 +1,25 @@
-+/*
-+ * Copyright (c) Huawei Technologies Co., Ltd. 2022. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __RAS_CXL_POISON_HANDLER_H
-+#define __RAS_CXL_POISON_HANDLER_H
-+
-+#include "ras-events.h"
-+#include "libtrace/event-parse.h"
-+
-+int ras_cxl_poison_event_handler(struct trace_seq *s,
-+			 struct pevent_record *record,
-+			 struct event_format *event, void *context);
-+
-+#endif
-diff --git a/ras-events.c b/ras-events.c
-index 39cab20..730e2be 100644
---- a/ras-events.c
-+++ b/ras-events.c
-@@ -39,6 +39,7 @@
- #include "ras-devlink-handler.h"
- #include "ras-diskerror-handler.h"
- #include "ras-memory-failure-handler.h"
-+#include "ras-cxl-handler.h"
- #include "ras-record.h"
- #include "ras-logger.h"
- #include "ras-page-isolation.h"
-@@ -237,6 +238,10 @@ int toggle_ras_mc_event(int enable)
- 	rc |= __toggle_ras_mc_event(ras, "ras", "memory_failure_event", enable);
- #endif
- 
-+#ifdef HAVE_CXL
-+	rc |= __toggle_ras_mc_event(ras, "cxl", "cxl_poison_list", enable);
-+#endif
-+
- free_ras:
- 	free(ras);
- 	return rc;
-@@ -925,6 +930,16 @@ int handle_ras_events(int record_events)
- 		    "ras", "memory_failure_event");
- #endif
- 
-+#ifdef HAVE_CXL
-+	rc = add_event_handler(ras, pevent, page_size, "cxl", "cxl_poison_list",
-+			       ras_cxl_poison_event_handler, NULL, CXL_POISON_EVENT);
-+	if (!rc)
-+		num_events++;
-+	else
-+		log(ALL, LOG_ERR, "Can't get traces from %s:%s\n",
-+		    "ras", "cxl_poison_list");
-+#endif
-+
- 	if (!num_events) {
- 		log(ALL, LOG_INFO,
- 		    "Failed to trace all supported RAS events. Aborting.\n");
-diff --git a/ras-events.h b/ras-events.h
-index dfd690c..24f7ccc 100644
---- a/ras-events.h
-+++ b/ras-events.h
-@@ -39,6 +39,7 @@ enum {
- 	DEVLINK_EVENT,
- 	DISKERROR_EVENT,
- 	MF_EVENT,
-+	CXL_POISON_EVENT,
- 	NR_EVENTS
- };
- 
-diff --git a/ras-record.c b/ras-record.c
-index d845f81..ce27963 100644
---- a/ras-record.c
-+++ b/ras-record.c
-@@ -559,6 +559,55 @@ int ras_store_mf_event(struct ras_events *ras, struct ras_mf_event *ev)
- }
- #endif
- 
-+#ifdef HAVE_CXL
-+/*
-+ * Table and functions to handle cxl:cxl_poison
-+ */
-+static const struct db_fields cxl_poison_event_fields[] = {
-+	{ .name = "id",                   .type = "INTEGER PRIMARY KEY" },
-+	{ .name = "timestamp",            .type = "TEXT" },
-+	{ .name = "dev_name",             .type = "TEXT" },
-+	{ .name = "poison_source",        .type = "TEXT" },
-+	{ .name = "poison_dpa_start",     .type = "INTEGER" },
-+	{ .name = "poison_length",        .type = "INTEGER" },
-+};
-+
-+static const struct db_table_descriptor cxl_poison_event_tab = {
-+	.name = "cxl_poison_event",
-+	.fields = cxl_poison_event_fields,
-+	.num_fields = ARRAY_SIZE(cxl_poison_event_fields),
-+};
-+
-+int ras_store_cxl_poison_event(struct ras_events *ras, struct ras_cxl_poison_event *ev)
-+{
-+	int rc;
-+	struct sqlite3_priv *priv = ras->db_priv;
-+
-+	if (!priv || !priv->stmt_cxl_poison_event)
-+		return 0;
-+	log(TERM, LOG_INFO, "cxl_poison_event store: %p\n", priv->stmt_cxl_poison_event);
-+
-+	sqlite3_bind_text(priv->stmt_cxl_poison_event,  1, ev->timestamp, -1, NULL);
-+	sqlite3_bind_text(priv->stmt_cxl_poison_event,  2, ev->dev_name, -1, NULL);
-+	sqlite3_bind_text(priv->stmt_cxl_poison_event,  3, ev->poison_source, -1, NULL);
-+	sqlite3_bind_int64(priv->stmt_cxl_poison_event, 4,  ev->poison_dpa_start);
-+	sqlite3_bind_int(priv->stmt_cxl_poison_event, 5,  ev->poison_length);
-+
-+	rc = sqlite3_step(priv->stmt_cxl_poison_event);
-+	if (rc != SQLITE_OK && rc != SQLITE_DONE)
-+		log(TERM, LOG_ERR,
-+		    "Failed to do cxl_poison_event step on sqlite: error = %d\n", rc);
-+	rc = sqlite3_reset(priv->stmt_cxl_poison_event);
-+	if (rc != SQLITE_OK && rc != SQLITE_DONE)
-+		log(TERM, LOG_ERR,
-+		    "Failed reset cxl_poison_event on sqlite: error = %d\n",
-+		    rc);
-+	log(TERM, LOG_INFO, "register inserted at db\n");
-+
-+	return rc;
-+}
-+#endif
-+
- /*
-  * Generic code
-  */
-@@ -896,6 +945,16 @@ int ras_mc_event_opendb(unsigned cpu, struct ras_events *ras)
- 	}
- #endif
- 
-+#ifdef HAVE_CXL
-+	rc = ras_mc_create_table(priv, &cxl_poison_event_tab);
-+	if (rc == SQLITE_OK) {
-+		rc = ras_mc_prepare_stmt(priv, &priv->stmt_cxl_poison_event,
-+					 &cxl_poison_event_tab);
-+		if (rc != SQLITE_OK)
-+			goto error;
-+	}
-+#endif
-+
- 	ras->db_priv = priv;
- 	return 0;
- 
-@@ -1008,6 +1067,16 @@ int ras_mc_event_closedb(unsigned int cpu, struct ras_events *ras)
- 	}
- #endif
- 
-+#ifdef HAVE_CXL
-+	if (priv->stmt_cxl_poison_event) {
-+		rc = sqlite3_finalize(priv->stmt_cxl_poison_event);
-+		if (rc != SQLITE_OK)
-+			log(TERM, LOG_ERR,
-+			    "cpu %u: Failed to finalize cxl_poison_event sqlite: error = %d\n",
-+			    cpu, rc);
-+	}
-+#endif
-+
- 	rc = sqlite3_close_v2(db);
- 	if (rc != SQLITE_OK)
- 		log(TERM, LOG_ERR,
-diff --git a/ras-record.h b/ras-record.h
-index d9f7733..3d229df 100644
---- a/ras-record.h
-+++ b/ras-record.h
-@@ -111,6 +111,14 @@ struct ras_mf_event {
- 	const char *action_result;
- };
- 
-+struct ras_cxl_poison_event {
-+	char timestamp[64];
-+	const char *dev_name;
-+	const char *poison_source;
-+	uint64_t poison_dpa_start;
-+	uint32_t poison_length;
-+};
-+
- struct ras_mc_event;
- struct ras_aer_event;
- struct ras_extlog_event;
-@@ -120,6 +128,7 @@ struct mce_event;
- struct devlink_event;
- struct diskerror_event;
- struct ras_mf_event;
-+struct ras_cxl_poison_event;
- 
- #ifdef HAVE_SQLITE3
- 
-@@ -152,6 +161,9 @@ struct sqlite3_priv {
- #ifdef HAVE_MEMORY_FAILURE
- 	sqlite3_stmt	*stmt_mf_event;
- #endif
-+#ifdef HAVE_CXL
-+	sqlite3_stmt	*stmt_cxl_poison_event;
-+#endif
- };
- 
- struct db_fields {
-@@ -179,6 +191,7 @@ int ras_store_arm_record(struct ras_events *ras, struct ras_arm_event *ev);
- int ras_store_devlink_event(struct ras_events *ras, struct devlink_event *ev);
- int ras_store_diskerror_event(struct ras_events *ras, struct diskerror_event *ev);
- int ras_store_mf_event(struct ras_events *ras, struct ras_mf_event *ev);
-+int ras_store_cxl_poison_event(struct ras_events *ras, struct ras_cxl_poison_event *ev);
- 
- #else
- static inline int ras_mc_event_opendb(unsigned cpu, struct ras_events *ras) { return 0; };
-@@ -192,6 +205,7 @@ static inline int ras_store_arm_record(struct ras_events *ras, struct ras_arm_ev
- static inline int ras_store_devlink_event(struct ras_events *ras, struct devlink_event *ev) { return 0; };
- static inline int ras_store_diskerror_event(struct ras_events *ras, struct diskerror_event *ev) { return 0; };
- static inline int ras_store_mf_event(struct ras_events *ras, struct ras_mf_event *ev) { return 0; };
-+static inline int ras_store_cxl_poison_event(struct ras_events *ras, struct ras_cxl_poison_event *ev) { return 0; };
- 
- #endif
- 
-diff --git a/ras-report.c b/ras-report.c
-index ea3a9b6..e60ffc5 100644
---- a/ras-report.c
-+++ b/ras-report.c
-@@ -331,6 +331,30 @@ static int set_mf_event_backtrace(char *buf, struct ras_mf_event *ev)
- 	return 0;
- }
- 
-+static int set_cxl_poison_event_backtrace(char *buf, struct ras_cxl_poison_event *ev)
-+{
-+	char bt_buf[MAX_BACKTRACE_SIZE];
-+
-+	if (!buf || !ev)
-+		return -1;
-+
-+	sprintf(bt_buf, "BACKTRACE="	\
-+						"timestamp=%s\n"		\
-+						"dev_name=%s\n"			\
-+						"poison_source=%s\n"		\
-+						"poison_dpa_start=0x%lx\n"	\
-+						"poison_length=%d\n",		\
-+						ev->timestamp,			\
-+						ev->dev_name,			\
-+						ev->poison_source,		\
-+						ev->poison_dpa_start,		\
-+						ev->poison_length);
-+
-+	strcat(buf, bt_buf);
-+
-+	return 0;
-+}
-+
- static int commit_report_backtrace(int sockfd, int type, void *ev){
- 	char buf[MAX_BACKTRACE_SIZE];
- 	char *pbuf = buf;
-@@ -368,6 +392,9 @@ static int commit_report_backtrace(int sockfd, int type, void *ev){
- 	case MF_EVENT:
- 		rc = set_mf_event_backtrace(buf, (struct ras_mf_event *)ev);
- 		break;
-+	case CXL_POISON_EVENT:
-+		rc = set_cxl_poison_event_backtrace(buf, (struct ras_cxl_poison_event *)ev);
-+		break;
- 	default:
- 		return -1;
- 	}
-@@ -776,3 +803,46 @@ mf_fail:
- 	else
- 		return -1;
- }
-+
-+int ras_report_cxl_poison_event(struct ras_events *ras, struct ras_cxl_poison_event *ev){
-+	char buf[MAX_MESSAGE_SIZE];
-+	int sockfd = 0;
-+	int done = 0;
-+	int rc = -1;
-+
-+	memset(buf, 0, sizeof(buf));
-+
-+	sockfd = setup_report_socket();
-+	if (sockfd < 0)
-+		return -1;
-+
-+	rc = commit_report_basic(sockfd);
-+	if (rc < 0)
-+		goto cxl_poison_fail;
-+
-+	rc = commit_report_backtrace(sockfd, CXL_POISON_EVENT, ev);
-+	if (rc < 0)
-+		goto cxl_poison_fail;
-+
-+	sprintf(buf, "ANALYZER=%s", "rasdaemon-cxl-poison");
-+	rc = write(sockfd, buf, strlen(buf) + 1);
-+	if (rc < strlen(buf) + 1)
-+		goto cxl_poison_fail;
-+
-+	sprintf(buf, "REASON=%s", "CXL poison");
-+	rc = write(sockfd, buf, strlen(buf) + 1);
-+	if (rc < strlen(buf) + 1)
-+		goto cxl_poison_fail;
-+
-+	done = 1;
-+
-+cxl_poison_fail:
-+
-+	if (sockfd > 0)
-+		close(sockfd);
-+
-+	if (done)
-+		return 0;
-+	else
-+		return -1;
-+}
-diff --git a/ras-report.h b/ras-report.h
-index e605eb1..d1591ce 100644
---- a/ras-report.h
-+++ b/ras-report.h
-@@ -39,6 +39,7 @@ int ras_report_arm_event(struct ras_events *ras, struct ras_arm_event *ev);
- int ras_report_devlink_event(struct ras_events *ras, struct devlink_event *ev);
- int ras_report_diskerror_event(struct ras_events *ras, struct diskerror_event *ev);
- int ras_report_mf_event(struct ras_events *ras, struct ras_mf_event *ev);
-+int ras_report_cxl_poison_event(struct ras_events *ras, struct ras_cxl_poison_event *ev);
- 
- #else
- 
-@@ -50,6 +51,7 @@ static inline int ras_report_arm_event(struct ras_events *ras, struct ras_arm_ev
- static inline int ras_report_devlink_event(struct ras_events *ras, struct devlink_event *ev) { return 0; };
- static inline int ras_report_diskerror_event(struct ras_events *ras, struct diskerror_event *ev) { return 0; };
- static inline int ras_report_mf_event(struct ras_events *ras, struct ras_mf_event *ev) { return 0; };
-+static inline int ras_report_cxl_poison_event(struct ras_events *ras, struct ras_cxl_poison_event *ev) { return 0; };
- 
- #endif
- 
--- 
-2.25.1
+Yes I think irq is a bad name.  I think 0 is valid here because this is the
+Interrupt Message Number" from the DOE Capabilities Register (7.9.24.2).
 
+At least with Qemu 0 is returned for the 1st mailbox.  I'm not sure if that is
+valid or not but I think it is.
+
+But reading that in detail I think there is even more complexity than Jonathan
+or I realized with regard to MSI vs MSI-X.
+
+I'm going to leave the irq support in this layer (changing 'irq' to
+'irq_msg_num'?)  but I think the callers will need to resolve what support they
+enable.
+
+> 
+> Possibly relevant: a85a6c86c25b ("driver core: platform: Clarify that
+> IRQ 0 is invalid")
+> 
+> > +		pci_err(pdev,
+> > +			"DOE [%x] expected [VID, Protocol] = [%04x, %02x], got [%04x, %02x]\n",
+> 
+> Wouldn't make a big difference, but could consider something like this
+> for enforced consistency:
+> 
+>   #define dev_fmt(fmt) "DOE: " fmt
+
+Good idea.
+
+> 
+> > +	case DOE_WAIT_ABORT:
+> > +	case DOE_WAIT_ABORT_ON_ERR:
+> > +		prev_state = doe_mb->state;
+> > +
+> > +		pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
+> > +
+> > +		if (!FIELD_GET(PCI_DOE_STATUS_ERROR, val) &&
+> > +		    !FIELD_GET(PCI_DOE_STATUS_BUSY, val)) {
+> > +			doe_mb->state = DOE_IDLE;
+> > +			/* Back to normal state - carry on */
+> > +			retire_cur_task(doe_mb);
+> > +		} else if (time_after(jiffies, doe_mb->timeout_jiffies)) {
+> > +			/* Task has timed out and is dead - abort */
+> > +			pci_err(pdev, "DOE [%x] ABORT timed out\n",
+> > +				doe_mb->cap_offset);
+> > +			set_bit(PCI_DOE_FLAG_DEAD, &doe_mb->flags);
+> > +			retire_cur_task(doe_mb);
+> > +		}
+> > +
+> > +		/*
+> > +		 * For deliberately triggered abort, someone is
+> > +		 * waiting.
+> > +		 */
+> > +		if (prev_state == DOE_WAIT_ABORT) {
+> > +			if (task)
+> > +				signal_task_complete(task, -EFAULT);
+> > +			complete(&doe_mb->abort_c);
+> > +		}
+> > +
+> > +		return;
+> > +	}
+> 
+> The "return" in each case is perfectly correct, but it feels a little
+> more conventional to make them "break" and return once here after the
+> switch to make it clear that the only way to get to the labels is via
+> an error path "goto".
+
+Done.
+
+> 
+> > +err_abort:
+> > +	doe_mb->state = DOE_WAIT_ABORT_ON_ERR;
+> > +	pci_doe_abort_start(doe_mb);
+> > +err_busy:
+> > +	signal_task_complete(task, rc);
+> > +	if (doe_mb->state == DOE_IDLE)
+> > +		retire_cur_task(doe_mb);
+> > +}
+> 
+> > +	 * Enabling bus mastering is required for MSI/MSIx.  It is safe to call
+> 
+> s/MSIx/MSI-X/ (typical spelling in spec)
+> 
+> > +	 * this multiple times and thus is called here to ensure that mastering
+> > +	 * is enabled even if the driver has done so.
+> > +	 */
+> > +	pci_set_master(pdev);
+> > +	rc = pci_request_irq(pdev, irq, pci_doe_irq_handler, NULL, doe_mb,
+> > +			     "DOE[%d:%s]", irq, pci_name(pdev));
+> 
+> I assume the "DOE[%d:%s]" part appears in /proc/interrupts?
+
+Yes
+
+> Is it
+> redundant to include "irq", since /proc/interrupts already prints it,
+> or is there somewhere else where "irq" is useful?
+
+As you pointed out irq is the wrong name here.  This is just the message
+number.
+
+> 
+> How does the user associate this IRQ in /proc/interrupts with a
+> specific DOE capability?  Should we include the cap_offset along with
+> the pci_name()?
+
+Good idea, cap_offset is much more useful.  In my testing the irq's were all
+unique but as Dan pointed out I did not realize that the message number could
+be shared.
+
+> 
+> > + * pci_doe_get_irq_num() - Return the irq number for the mailbox at offset
+> > + *
+> > + * @pdev: The PCI device
+> > + * @offset: Offset of the DOE mailbox
+> > + *
+> > + * Returns: irq number on success
+> > + *	    -errno if irqs are not supported on this mailbox
+> 
+> I normally capitalize IRQ/IRQs in comments.  There are probably others
+> throughout the file.  I notice some are already capitalized but not all.
+
+Done.
+
+> 
+> > + */
+> > +int pci_doe_get_irq_num(struct pci_dev *pdev, int offset)
+> > +{
+> > +	u32 val;
+> > +
+> > +	pci_read_config_dword(pdev, offset + PCI_DOE_CAP, &val);
+> > +	if (!FIELD_GET(PCI_DOE_CAP_INT, val))
+> > +		return -EOPNOTSUPP;
+> > +
+> > +	return FIELD_GET(PCI_DOE_CAP_IRQ, val);
+> > +}
+> > +EXPORT_SYMBOL_GPL(pci_doe_get_irq_num);
+> 
+> Confusing function name (and comment) since PCI_DOE_CAP_IRQ is an
+> Interrupt Message Number that has nothing to do with Linux IRQ
+> numbers.
+
+Agreed.  Changed to pci_doe_get_irq_msg_num();  With corresponding fixups to
+the kdoc.
+
+> 
+> I see we already have PCI_EXP_FLAGS_IRQ, PCI_ERR_ROOT_AER_IRQ,
+> PCI_EXP_DPC_IRQ, so I guess you're in good company.
+> 
+> At least maybe update the comment to say "Interrupt Message Number"
+> instead of "irq".
+
+Yea I did that too.
+
+> 
+> > + * pci_doe_supports_prot() - Return if the DOE instance supports the given
+> > + *			     protocol
+> > + * @doe_mb: DOE mailbox capability to query
+> > + * @vid: Protocol Vendor ID
+> > + * @type: Protocol type
+> > + *
+> > + * RETURNS: True if the DOE mailbox supports the protocol specified
+> 
+> Is the typical use that the caller has a few specific protocols it
+> cares about?
+
+That is how CXL needs it right now yes.
+
+> There's no case where a caller might want to enumerate
+> them all?
+
+Not at this time.
+
+> I guess they're all in prots[], but that's supposed to be
+> opaque to users.
+
+Agreed.  Something else would be needed in that use case.
+
+> 
+> > + */
+> > +bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type)
+> > +{
+> > +	int i;
+> > +
+> > +	/* The discovery protocol must always be supported */
+> > +	if (vid == PCI_VENDOR_ID_PCI_SIG && type == PCI_DOE_PROTOCOL_DISCOVERY)
+> > +		return true;
+> > +
+> > +	for (i = 0; i < doe_mb->num_prots; i++)
+> > +		if ((doe_mb->prots[i].vid == vid) &&
+> > +		    (doe_mb->prots[i].type == type))
+> > +			return true;
+> > +
+> > +	return false;
+> > +}
+> > +EXPORT_SYMBOL_GPL(pci_doe_supports_prot);
+> 
+> > + * struct pci_doe_task - represents a single query/response
+> > + *
+> > + * @prot: DOE Protocol
+> > + * @request_pl: The request payload
+> > + * @request_pl_sz: Size of the request payload
+> 
+> Size is in dwords, not bytes, I guess?
+
+No.  Those are in bytes and the DOE layer takes care of the DW conversion.
+I'll update the kdoc to make that clear.
+
+Thanks again for the review,
+Ira
+
+> 
+> > + * @response_pl: The response payload
+> > + * @response_pl_sz: Size of the response payload
+> > + * @rv: Return value.  Length of received response or error
+> > + * @complete: Called when task is complete
+> > + * @private: Private data for the consumer
+> > + */
+> > +struct pci_doe_task {
+> > +	struct pci_doe_protocol prot;
+> > +	u32 *request_pl;
+> > +	size_t request_pl_sz;
+> > +	u32 *response_pl;
+> > +	size_t response_pl_sz;
+> > +	int rv;
+> > +	void (*complete)(struct pci_doe_task *task);
+> > +	void *private;
+> > +};
