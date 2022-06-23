@@ -2,50 +2,45 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE411C43334
-	for <linux-cxl@archiver.kernel.org>; Thu, 23 Jun 2022 10:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C426CC43334
+	for <linux-cxl@archiver.kernel.org>; Thu, 23 Jun 2022 15:09:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230111AbiFWKYQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 23 Jun 2022 06:24:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54078 "EHLO
+        id S230508AbiFWPJG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 23 Jun 2022 11:09:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229987AbiFWKYP (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 23 Jun 2022 06:24:15 -0400
+        with ESMTP id S230480AbiFWPJF (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 23 Jun 2022 11:09:05 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E57FE31391;
-        Thu, 23 Jun 2022 03:24:13 -0700 (PDT)
-Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LTGTs4XkFz686kD;
-        Thu, 23 Jun 2022 18:20:17 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6F91326C2
+        for <linux-cxl@vger.kernel.org>; Thu, 23 Jun 2022 08:09:02 -0700 (PDT)
+Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LTNrf3TJrz6H6hL;
+        Thu, 23 Jun 2022 23:06:58 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
+ fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 23 Jun 2022 12:24:11 +0200
+ 15.1.2375.24; Thu, 23 Jun 2022 17:09:00 +0200
 Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 23 Jun
- 2022 11:24:10 +0100
-Date:   Thu, 23 Jun 2022 11:24:08 +0100
+ 2022 16:08:59 +0100
+Date:   Thu, 23 Jun 2022 16:08:57 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Ben Widawsky <ben.widawsky@intel.com>, <linux-cxl@vger.kernel.org>,
+        <nvdimm@lists.linux.dev>, <patches@lists.linux.dev>,
         Alison Schofield <alison.schofield@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Ben Widawsky" <bwidawsk@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V11 3/8] PCI: Create PCI library functions in support of
- DOE mailboxes.
-Message-ID: <20220623112408.00006cd2@Huawei.com>
-In-Reply-To: <YrOy3vodu3FcRjUY@iweiny-desk3>
-References: <20220610202259.3544623-1-ira.weiny@intel.com>
-        <20220610202259.3544623-4-ira.weiny@intel.com>
-        <62ad06a643ddf_844b1294f@dwillia2-xfh.notmuch>
-        <YrObe+AdfziEPlYB@iweiny-desk3>
-        <62b39e5eead1_32f38a294b6@dwillia2-xfh.notmuch>
-        <YrOy3vodu3FcRjUY@iweiny-desk3>
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: Re: [RFC PATCH 00/15] Region driver
+Message-ID: <20220623160857.00005fe2@Huawei.com>
+In-Reply-To: <62b3fce0bde02_3baed529440@dwillia2-xfh.notmuch>
+References: <20220413183720.2444089-1-ben.widawsky@intel.com>
+        <20220520172325.000043d8@huawei.com>
+        <CAPcyv4hkP1iuBxCPTK_FeQ=+afmVOLAAfE6t0z2u2OGH+Crmag@mail.gmail.com>
+        <20220531132157.000022c7@huawei.com>
+        <62b3fce0bde02_3baed529440@dwillia2-xfh.notmuch>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -59,135 +54,164 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 22 Jun 2022 17:25:02 -0700
-Ira Weiny <ira.weiny@intel.com> wrote:
+On Wed, 22 Jun 2022 22:40:48 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-> On Wed, Jun 22, 2022 at 03:57:34PM -0700, Dan Williams wrote:
-> > Ira Weiny wrote:  
-> > > On Fri, Jun 17, 2022 at 03:56:38PM -0700, Dan Williams wrote:  
-> > [..]  
-> > > > > +static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u16 *vid,
-> > > > > +			     u8 *protocol)
-> > > > > +{
-> > > > > +	u32 request_pl = FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX,
-> > > > > +				    *index);
-> > > > > +	u32 response_pl;
-> > > > > +	DECLARE_COMPLETION_ONSTACK(c);
-> > > > > +	struct pci_doe_task task = {
-> > > > > +		.prot.vid = PCI_VENDOR_ID_PCI_SIG,
-> > > > > +		.prot.type = PCI_DOE_PROTOCOL_DISCOVERY,
-> > > > > +		.request_pl = &request_pl,
-> > > > > +		.request_pl_sz = sizeof(request_pl),
-> > > > > +		.response_pl = &response_pl,
-> > > > > +		.response_pl_sz = sizeof(response_pl),
-> > > > > +		.complete = pci_doe_task_complete,
-> > > > > +		.private = &c,
-> > > > > +	};
-> > > > > +	int ret;
-> > > > > +
-> > > > > +	ret = pci_doe_submit_task(doe_mb, &task);
-> > > > > +	if (ret < 0)
-> > > > > +		return ret;
-> > > > > +
-> > > > > +	wait_for_completion(&c);  
-> > > > 
-> > > > Another place where the need for a completion can be replaced with
-> > > > flush_work().  
+> Jonathan Cameron wrote:
+> > ....
+> >   
+> > > > Hi Ben,
+> > > >
+> > > > I finally got around to actually trying this out on top of Dan's recent fix set
+> > > > (I rebased it from the cxl/preview branch on kernel.org).
+> > > >
+> > > > I'm not having much luck actually bring up a region.
+> > > >
+> > > > The patch set refers to configuring the end point decoders, but all their
+> > > > sysfs attributes are read only.  Am I missing a dependency somewhere or
+> > > > is the intent that this series is part of the solution only?
+> > > >
+> > > > I'm confused!    
 > > > 
-> > > No not here.  While this call is internal it is actually acting like an
-> > > external caller.  This specific wait is for that response to get back.
+> > > There's a new series that's being reviewed internally before going to the list:
 > > > 
-> > > This pattern was specifically asked for by you.  Previously Jonathan had a
-> > > synchronous call which took care of this but you said let all callers just
-> > > handle it themselves.  So all callers submit a task and if they want to wait
-> > > for the response they have to do so themselves.  
+> > > https://gitlab.com/bwidawsk/linux/-/tree/cxl_region-redux3
+> > > 
+> > > Given the proximity to the merge window opening and the need to get
+> > > the "mem_enabled" series staged, I asked Ben to hold it back from the
+> > > list for now.
+> > > 
+> > > There are some changes I am folding into it, but I hope to send it out
+> > > in the next few days after "mem_enabled" is finalized.  
 > > 
-> > Ah, true I remember that. The nice thing about a doing your own
-> > wait_for_completion() like this is that you can make it
-> > wait_for_completion_interruptible() to give up on the DOE if it gets
-> > stalled. However, if you have a work item per-task and you're willing to
-> > do an uninterruptible sleep, then flush_work(&task->work) is identical.  
+> > Hi Dan,
+> > 
+> > I switched from an earlier version of the region code over to a rebase of the tree.
+> > Two issues below you may already have fixed.
+> > 
+> > The second is a carry over from an earlier set so I haven't tested
+> > without it but looks like it's still valid.
+> > 
+> > Anyhow, thought it might save some cycles to preempt you sending
+> > out the series if these issues are still present.
+> > 
+> > Minimal testing so far on these with 2 hb, 2 rp, 4 directly connected
+> > devices, but once you post I'll test more extensively.  I've not
+> > really thought about the below much, so might not be best way to fix.
+> > 
+> > Found a bug in QEMU code as well (missing write masks for the
+> > target list registers) - will post fix for that shortly.  
 > 
-> So when you mentioned a work item per task I really jumped on that idea.  But I
-> realize now that it is a bit more complicated than that.
+> Hi Jonathan,
 > 
-> Currently a work item is actually one step of the state machine.  The state
-> machine queues the next step of work as a new work item.
+> Tomorrow I'll post the tranche to the list, but wanted to let you and
+> others watching that that the 'preview' branch [1] now has the proposed
+> initial region support. Once the bots give the thumbs up I'll send it
+> along.
 > 
-> I'm going to have to change the state machine quite a bit.  I still agree with
-> the one work item per task but it is going to take a bit of work to get the
-> state machine to operate within that single task.
-> 
-> I don't like what might result if I layer a work queue on top of using the
-> system work queue for the individual steps of the state machine.  So stay
-> tuned.
+> To date I've only tested it with cxl_test and an internal test vehicle.
+> The cxl_test script I used to setup and teardown a x8 interleave across
+> x2 host bridges and x4 switches is:
 
-Yup.  I went through that (between RFC v1 and RFC v2) and it wasn't pretty
-- maybe it's worth a revisit though.
+Thanks.  Trivial feedback from a very quick play (busy day).
 
-To throw another view point in the mix. Note that I want a solution and
-in my view DOE is slow and never on a fast path + I don't see it being
-high churn code so needs to be fairly maintainable but not super simple
-or architecturally clean (at the level of state machines / work queues etc
-- interfaces need to be clean!)
+Bit odd that regionX/size is once write - get an error even if
+writing same value to it twice.
 
-If we go back to RFC v1, which IIRC was basically queue on a mutex, and
-consider it in the light of where we've ended up.  I wussed out on arguing much
-about this at the time because consensus + moving forward was more
-important to me than the chosen architecture.
+Also not debugged yet but on just got a null pointer dereference on
 
-Taking a slightly black and white view of requirements. I don't think
-we loose anything by using this list...
+echo decoder3.0 > target0
 
-1. Synchronous (if anyone needs async at level of caller, they can spin
-   a thread up).  Async is the corner case, not the common one.
-2. Small number (< 3 I'm guessing) of protocols per instance.
-3. Very rare there is significant contention.  Fairness doesn't matter.
-   Normally the only reason we'd get contention is userspace triggering
-   access to multiple protocols at a time - probably via sysfs or other slow
-   method.
-4. Per protocol ordering can be maintained by the protocol, not the DOE layer.
-5. DOE is basically a bus over which we are talking to different devices
-  - think of it like I2C but rather than address we have protocol IDs.
+Beyond a stacktrace pointing at store_targetN and dereference is of
+0x00008 no idea yet.
 
-That last analogy brings us back to how I think almost all slow buses are
-handled.
+I was testing with a slightly modified version of a nasty script
+I was using to test with Ben's code previously.  Might well be
+doing something wrong but obviously need to fix that crash anyway!
+Will move to your nicer script below at somepoint as I've been lazy
+enough I'm still hand editing a few lines depending on number on
+a particular run.
 
-At level of a bus, a lock is used for mutual exclusion (often also protecting
-bus controller register state etc). No workqueues or similar complexity
-- Underlying hardware typically doing DMA of result into a provided buffer
-with only one transaction in flight at that layer at anyone time.
-Note there is more complex handling for high perf cases, but in many cases
-its not really used.
-
-We have a bus lock that can ensure exclusion over sequences if necessary
-(there's one in SPI).
-
-If a given driver needs to ensure exclusion for RMW or similar sequences
-of operations it takes a driver specific mutex and holds it across these
-sequences of slow operations, which usually sleep, include interrupts and all
-sorts of fun.  Normally there is a completion in there somewhere to
-get from the 'done' interrupt on the bus controller back to the
-i2c_smbus_bus_read() etc that is waiting on the result.
-
-This model works, is super simple and layered.
-
-In case of no contention (perhaps 99% of time), it immediately runs the
-DOE/bus access in the thread that made the read/write request.
-So no overhead of going to a workqueue.  
-
-Implementation is one linear function, no state machine needed.
-
-Anyhow, to refer back to my initial comment.  I'm not that fussed on how
-we do this but it's a blocker on other work so quick solution is more
-important to me than perfect one.
+Should have some time tomorrow to debug, but definitely 'here be
+dragons' at the moment.
 
 Jonathan
 
-
-
-
-
 > 
-> Ira
+> ---
+> 
+> #!/bin/bash
+> modprobe cxl_test
+> udevadm settle
+> decoder=$(cxl list -b cxl_test -D -d root | jq -r ".[] |
+>           select(.pmem_capable == true) | 
+>           select(.nr_targets == 2) |
+>           .decoder")
+> 
+> readarray -t mem < <(cxl list -M -d $decoder | jq -r ".[].memdev")
+> readarray -t endpoint < <(cxl reserve-dpa -t pmem ${mem[*]} -s $((256<<20)) |
+>                           jq -r ".[] | .decoder.decoder")
+> region=$(cat /sys/bus/cxl/devices/$decoder/create_pmem_region)
+> echo $region > /sys/bus/cxl/devices/$decoder/create_pmem_region
+> uuidgen > /sys/bus/cxl/devices/$region/uuid
+> nr_targets=${#endpoint[@]}
+> echo $nr_targets > /sys/bus/cxl/devices/$region/interleave_ways
+> g=$(cat /sys/bus/cxl/devices/$decoder/interleave_granularity)
+> echo $g > /sys/bus/cxl/devices/$region/interleave_granularity
+> echo $((nr_targets * (256<<20))) > /sys/bus/cxl/devices/$region/size
+> port_dev0=$(cxl list -T -d $decoder | jq -r ".[] |
+>             .targets | .[] | select(.position == 0) | .target")
+> port_dev1=$(cxl list -T -d $decoder | jq -r ".[] |
+>             .targets | .[] | select(.position == 1) | .target")
+> readarray -t mem_sort0 < <(cxl list -M -p $port_dev0 | jq -r ".[] | .memdev")
+> readarray -t mem_sort1 < <(cxl list -M -p $port_dev1 | jq -r ".[] | .memdev")
+> mem_sort=()
+> mem_sort[0]=${mem_sort0[0]}
+> mem_sort[1]=${mem_sort1[0]}
+> mem_sort[2]=${mem_sort0[2]}
+> mem_sort[3]=${mem_sort1[2]}
+> mem_sort[4]=${mem_sort0[1]}
+> mem_sort[5]=${mem_sort1[1]}
+> mem_sort[6]=${mem_sort0[3]}
+> mem_sort[7]=${mem_sort1[3]}
+> 
+> #mem_sort[2]=${mem_sort0[0]}
+> #mem_sort[1]=${mem_sort1[0]}
+> #mem_sort[0]=${mem_sort0[2]}
+> #mem_sort[3]=${mem_sort1[2]}
+> #mem_sort[4]=${mem_sort0[1]}
+> #mem_sort[5]=${mem_sort1[1]}
+> #mem_sort[6]=${mem_sort0[3]}
+> #mem_sort[7]=${mem_sort1[3]}
+> 
+> endpoint=()
+> for i in ${mem_sort[@]}
+> do
+>         readarray -O ${#endpoint[@]} -t endpoint < <(cxl list -Di -d endpoint -m $i | jq -r ".[] |
+>                                                      select(.mode == \"pmem\") | .decoder")
+> done
+> pos=0
+> for i in ${endpoint[@]}
+> do
+>         echo $i > /sys/bus/cxl/devices/$region/target$pos
+>         pos=$((pos+1))
+> done
+> echo "$region added ${#endpoint[@]} targets: ${endpoint[@]}"
+> 
+> echo 1 > /sys/bus/cxl/devices/$region/commit
+> echo 0 > /sys/bus/cxl/devices/$region/commit
+> 
+> pos=0
+> for i in ${endpoint[@]}
+> do
+>         echo "" > /sys/bus/cxl/devices/$region/target$pos
+>         pos=$((pos+1))
+> done
+> readarray -t endpoint < <(cxl free-dpa -t pmem ${mem[*]} |
+>                           jq -r ".[] | .decoder.decoder")
+> echo "$region released ${#endpoint[@]} targets: ${endpoint[@]}"
+> 
+> ---
+> 
+> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/log/?h=preview
 
