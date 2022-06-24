@@ -2,168 +2,86 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7339EC43334
-	for <linux-cxl@archiver.kernel.org>; Fri, 24 Jun 2022 09:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60816C433EF
+	for <linux-cxl@archiver.kernel.org>; Fri, 24 Jun 2022 10:42:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229768AbiFXJIo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 24 Jun 2022 05:08:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54138 "EHLO
+        id S231615AbiFXKmg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 24 Jun 2022 06:42:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbiFXJIn (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Jun 2022 05:08:43 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C00554ECFA
-        for <linux-cxl@vger.kernel.org>; Fri, 24 Jun 2022 02:08:41 -0700 (PDT)
-Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LTrmD1S0sz686l0;
-        Fri, 24 Jun 2022 17:04:44 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 24 Jun 2022 11:08:39 +0200
-Received: from localhost (10.81.207.131) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 24 Jun
- 2022 10:08:38 +0100
-Date:   Fri, 24 Jun 2022 10:08:36 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Ben Widawsky <ben.widawsky@intel.com>, <linux-cxl@vger.kernel.org>,
-        <nvdimm@lists.linux.dev>, <patches@lists.linux.dev>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [RFC PATCH 00/15] Region driver
-Message-ID: <20220624100836.00004191@Huawei.com>
-In-Reply-To: <62b4a3f259aad_32f38a294ee@dwillia2-xfh.notmuch>
-References: <20220413183720.2444089-1-ben.widawsky@intel.com>
-        <20220520172325.000043d8@huawei.com>
-        <CAPcyv4hkP1iuBxCPTK_FeQ=+afmVOLAAfE6t0z2u2OGH+Crmag@mail.gmail.com>
-        <20220531132157.000022c7@huawei.com>
-        <62b3fce0bde02_3baed529440@dwillia2-xfh.notmuch>
-        <20220623160857.00005fe2@Huawei.com>
-        <62b4a3f259aad_32f38a294ee@dwillia2-xfh.notmuch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S231187AbiFXKme (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Jun 2022 06:42:34 -0400
+Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBBF67C862
+        for <linux-cxl@vger.kernel.org>; Fri, 24 Jun 2022 03:42:32 -0700 (PDT)
+Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-317a66d62dfso20556747b3.7
+        for <linux-cxl@vger.kernel.org>; Fri, 24 Jun 2022 03:42:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t+Byo1b4X9Vbz/m7CyDm8kInKMKO0y+GBykwADZ8WmE=;
+        b=TQ0l6TXsTnX4C3Z8K73saa/OV9zdzb7o1WStXBQDX6AadaryI4yw7JjhkrRJzqPNn6
+         mtTSkllyAcQej8hsdq+9lvQUDDX/0W3HzZv9haS+SqlE+J9aDUVx7r3EB5VxtfvdGmxo
+         ff9suaD1bYTOTTolUJg8suBUxodExgv0+BHwRuz6r+hJjIX0CZI/hHAN6PVN4EZYr3fr
+         W8nkqODphPaiYsarIRIxS5w0asNpt0T2JzMws4Zzb56ayJzDrR8ASK2fKfNclbi9Nddy
+         xuCKyve1c3NVQZs8mSDXx8HfzosVTzDzDWAiJlKqQWoRgN/EqGITmgPLijtXZeDNDW/F
+         8A4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t+Byo1b4X9Vbz/m7CyDm8kInKMKO0y+GBykwADZ8WmE=;
+        b=2ypDRGnfRdl2PkSOZL9w6cQn1vKmeW9xBhUAydL93qL3UPd4aMJSpey0P/jKQq5SSE
+         m11OtuUZnk9fA8rNPb/K3HvxjovFPHxmOQiTL3+q5OwobQnSE0wQeLJyM5S5xocT30ay
+         XHTiZzdC0+a9QdA4wlmM15Ux+2Bir6mRDXrDTdlrUTG2XoutE4zGL/CoYr6H6szBFUCc
+         nNBoaiYTJVWDPiyYjXPLykS1MXhP1/RHeK2hwMCi7xIolXGbCPL9sNmJVYC9oGqyheC+
+         LqGDdiPXddXehqeMSF83pgU78wFHG+RXSpSgYHFjEbQ0iQN1aABxTyNm4p1M5PyuZf9s
+         jQCg==
+X-Gm-Message-State: AJIora9K3P1kopQSUSeLpEIpnX9Ck6RQ1pXUm018A9IgCA9saAhjV4uz
+        FwNiMfj1NAqIKMbkBBEAF6NDNvP4hoVwwm74L+ZwwQ==
+X-Google-Smtp-Source: AGRyM1sq+/2VjBMF5dFg09mCn+s1Qdjq3iIBMrleMMhwNzQyYBgetjTSfEuoJKDinF7P8RioYadghPn+2sUqZUWqvaE=
+X-Received: by 2002:a0d:ca0f:0:b0:317:a2cc:aa2 with SMTP id
+ m15-20020a0dca0f000000b00317a2cc0aa2mr16667139ywd.347.1656067352203; Fri, 24
+ Jun 2022 03:42:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.207.131]
-X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <20220616141950.23374-1-Jonathan.Cameron@huawei.com> <20220616141950.23374-3-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20220616141950.23374-3-Jonathan.Cameron@huawei.com>
+From:   Peter Maydell <peter.maydell@linaro.org>
+Date:   Fri, 24 Jun 2022 11:41:54 +0100
+Message-ID: <CAFEAcA-rmDrMcq-s4X68dSSWwhwHcY=5m=20wFZSJ1qKm7gfjA@mail.gmail.com>
+Subject: Re: [PATCH v11 2/2] qtest/cxl: Add aarch64 virt test for CXL
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     qemu-devel@nongnu.org, alex.bennee@linaro.org, qemu-arm@nongnu.org,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, linux-cxl@vger.kernel.org,
+        linuxarm@huawei.com, Marcel Apfelbaum <marcel@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Markus Armbruster <armbru@redhat.com>,
+        Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        Tong Zhang <ztong0001@gmail.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 23 Jun 2022 10:33:38 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Thu, 16 Jun 2022 at 15:20, Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> Add a single complex case for aarch64 virt machine.
+>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  tests/qtest/cxl-test.c  | 48 +++++++++++++++++++++++++++++++++--------
+>  tests/qtest/meson.build |  1 +
+>  2 files changed, 40 insertions(+), 9 deletions(-)
+>
 
-> Jonathan Cameron wrote:
-> > On Wed, 22 Jun 2022 22:40:48 -0700
-> > Dan Williams <dan.j.williams@intel.com> wrote:
-> >   
-> > > Jonathan Cameron wrote:  
-> > > > ....
-> > > >     
-> > > > > > Hi Ben,
-> > > > > >
-> > > > > > I finally got around to actually trying this out on top of Dan's recent fix set
-> > > > > > (I rebased it from the cxl/preview branch on kernel.org).
-> > > > > >
-> > > > > > I'm not having much luck actually bring up a region.
-> > > > > >
-> > > > > > The patch set refers to configuring the end point decoders, but all their
-> > > > > > sysfs attributes are read only.  Am I missing a dependency somewhere or
-> > > > > > is the intent that this series is part of the solution only?
-> > > > > >
-> > > > > > I'm confused!      
-> > > > > 
-> > > > > There's a new series that's being reviewed internally before going to the list:
-> > > > > 
-> > > > > https://gitlab.com/bwidawsk/linux/-/tree/cxl_region-redux3
-> > > > > 
-> > > > > Given the proximity to the merge window opening and the need to get
-> > > > > the "mem_enabled" series staged, I asked Ben to hold it back from the
-> > > > > list for now.
-> > > > > 
-> > > > > There are some changes I am folding into it, but I hope to send it out
-> > > > > in the next few days after "mem_enabled" is finalized.    
-> > > > 
-> > > > Hi Dan,
-> > > > 
-> > > > I switched from an earlier version of the region code over to a rebase of the tree.
-> > > > Two issues below you may already have fixed.
-> > > > 
-> > > > The second is a carry over from an earlier set so I haven't tested
-> > > > without it but looks like it's still valid.
-> > > > 
-> > > > Anyhow, thought it might save some cycles to preempt you sending
-> > > > out the series if these issues are still present.
-> > > > 
-> > > > Minimal testing so far on these with 2 hb, 2 rp, 4 directly connected
-> > > > devices, but once you post I'll test more extensively.  I've not
-> > > > really thought about the below much, so might not be best way to fix.
-> > > > 
-> > > > Found a bug in QEMU code as well (missing write masks for the
-> > > > target list registers) - will post fix for that shortly.    
-> > > 
-> > > Hi Jonathan,
-> > > 
-> > > Tomorrow I'll post the tranche to the list, but wanted to let you and
-> > > others watching that that the 'preview' branch [1] now has the proposed
-> > > initial region support. Once the bots give the thumbs up I'll send it
-> > > along.
-> > > 
-> > > To date I've only tested it with cxl_test and an internal test vehicle.
-> > > The cxl_test script I used to setup and teardown a x8 interleave across
-> > > x2 host bridges and x4 switches is:  
-> > 
-> > Thanks.  Trivial feedback from a very quick play (busy day).
-> > 
-> > Bit odd that regionX/size is once write - get an error even if
-> > writing same value to it twice.  
-> 
-> Ah true, that should just silently succeed.
-> 
-> > Also not debugged yet but on just got a null pointer dereference on
-> > 
-> > echo decoder3.0 > target0
-> > 
-> > Beyond a stacktrace pointing at store_targetN and dereference is of
-> > 0x00008 no idea yet.  
-> 
-> The compiler unfortunately does a good job inlining the entirety of all the
-> leaf functions beneath store_targetN() so I have found myself needing to
-> sprinkle "noinline" to get better back traces.
-> 
-> > 
-> > I was testing with a slightly modified version of a nasty script
-> > I was using to test with Ben's code previously.  Might well be
-> > doing something wrong but obviously need to fix that crash anyway!  
-> 
-> Most definitely.
-> 
-> > Will move to your nicer script below at somepoint as I've been lazy
-> > enough I'm still hand editing a few lines depending on number on
-> > a particular run.
-> > 
-> > Should have some time tomorrow to debug, but definitely 'here be
-> > dragons' at the moment.  
-> 
-> Yes. Even before this posting I had shaken out a few crash scenarios just from
-> moving from my old QEMU baseline to "jic123/cxl-rework-draft-2" which did
-> things like collide PCI MMIO with cxl_test fake CXL ranges. By the way, is
-> there a "latest" tag I should be following to stay in sync with what you are
-> running for QEMU+CXL? 
+Reviewed-by: Peter Maydell <peter.maydell@linaro.org>
 
-For this particular feature should just be mainline QEMU now.
-Switch support was picked up a few days ago and I haven't pushed out a rebase
-on top of that yet. Famous last words, but I don't 'think' that anything
-that isn't yet in upstream QEMU should effect the region code.
-
-I am testing on ARM (which requires the arch and board support which is
-awaiting review) but doubt that causes this problem...
-
-> If only to reproduce the same crash scenarios.
-
+thanks
+-- PMM
