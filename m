@@ -2,113 +2,100 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9BFC433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 24 Jun 2022 15:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDA7C433EF
+	for <linux-cxl@archiver.kernel.org>; Fri, 24 Jun 2022 16:13:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229755AbiFXP7l (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 24 Jun 2022 11:59:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60930 "EHLO
+        id S231394AbiFXQNG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 24 Jun 2022 12:13:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbiFXP7k (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Jun 2022 11:59:40 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A030D52511
-        for <linux-cxl@vger.kernel.org>; Fri, 24 Jun 2022 08:59:39 -0700 (PDT)
-Received: from fraeml703-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LV1tQ0lVsz686Xk;
-        Fri, 24 Jun 2022 23:55:42 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.24; Fri, 24 Jun 2022 17:59:37 +0200
-Received: from localhost (10.81.207.131) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 24 Jun
- 2022 16:59:36 +0100
-Date:   Fri, 24 Jun 2022 16:59:32 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Peter Maydell <peter.maydell@linaro.org>
-CC:     <qemu-devel@nongnu.org>, <alex.bennee@linaro.org>,
-        <qemu-arm@nongnu.org>, "Michael S . Tsirkin" <mst@redhat.com>,
+        with ESMTP id S231220AbiFXQNF (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Jun 2022 12:13:05 -0400
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7392012757
+        for <linux-cxl@vger.kernel.org>; Fri, 24 Jun 2022 09:13:03 -0700 (PDT)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-31780ad7535so29329107b3.8
+        for <linux-cxl@vger.kernel.org>; Fri, 24 Jun 2022 09:13:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iC0gjzLo/+NeCxUooWDkYLGFZYMI378klxjabIannsQ=;
+        b=K8sEoSyBYqMDhct1wWQSdQ7WMnXZvT+3aFa9K5bLJJJzPfyK1oqKmuMAF0KxAD45t2
+         O3uTzQY6YSrgmvwB1scDkKuLCydIySEOGHkxd9qqL30Wnp7c4tFftfi6ZlSzGt+rt2Bi
+         RToOHE7mMRz232936in3xBirb7NNkRR44HLKKq/sYcbvYwdZisSQCsERJop5tHw/Sjxp
+         ziS25MryBgzJLNJ7HyFd4DMCJGUUcdPmurmvKU61wCC7ukkgRGfki/VtzXn9UCHyrquf
+         N9BJpNqBl4Ngd8jenkFlIJS1pw4vWQ7dlnJh74LYH9PTR5L9usuZXmMKqCYX/Q6ZKisP
+         oM7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iC0gjzLo/+NeCxUooWDkYLGFZYMI378klxjabIannsQ=;
+        b=JaGPt9yAIwUyzHxNLWqGxpeejeVnnOqGaYyfnJcZihOtihXJfqvQr/gGnsWElBtuTN
+         wU9Irpoe0y446NHcKQp3OeQuNnVpHcorV/2jd6DvpPyzUY7+LOZuvGJPKdp0HoLOTX1+
+         7Quw7ArtzENbkD09Jy9c6S2hzMo9ZuAr6Fx6zi9gn7DKmnUEGzHfQwCwfKFRlCgAnFe2
+         I3/46srJIo75ZTMn2loqxLWCSqoHr23ZtrM6Z/6hgGAfK32kpc0QUcVqjA76/XQQARmu
+         5EYCxoILFhIng5yqEPpUPgkK+zHR7XbgRCZPUGL2Glf7atO50MMIUwucqsx/ie35rXc7
+         osKQ==
+X-Gm-Message-State: AJIora97bA+GqEb5DzjeYBv39Giy9r0kcmf5KkXrzGcfd/GI14qs50tD
+        VHnb79USN+txBGJDQKLt7L65oYtdY2Bdw63HuSBkew==
+X-Google-Smtp-Source: AGRyM1uW1xfzgnRrf8c/H6yT0nn/HC62aGIxuPAVkf5Cn0RTTHUzwThcy5suDJhylW/v8KYTIsR93ohlCnSQmFR2Z3w=
+X-Received: by 2002:a81:8486:0:b0:317:a4af:4e0a with SMTP id
+ u128-20020a818486000000b00317a4af4e0amr17919466ywf.455.1656087182563; Fri, 24
+ Jun 2022 09:13:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220616141950.23374-1-Jonathan.Cameron@huawei.com> <20220616141950.23374-3-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20220616141950.23374-3-Jonathan.Cameron@huawei.com>
+From:   Peter Maydell <peter.maydell@linaro.org>
+Date:   Fri, 24 Jun 2022 17:12:25 +0100
+Message-ID: <CAFEAcA_tck3fG67qO=4QiTHY2ST3jvy7-w156XkMKMv38-aN9g@mail.gmail.com>
+Subject: Re: [PATCH v11 2/2] qtest/cxl: Add aarch64 virt test for CXL
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     qemu-devel@nongnu.org, alex.bennee@linaro.org, qemu-arm@nongnu.org,
+        "Michael S . Tsirkin" <mst@redhat.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
-        Marcel Apfelbaum <marcel@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, linux-cxl@vger.kernel.org,
+        linuxarm@huawei.com, Marcel Apfelbaum <marcel@redhat.com>,
         Igor Mammedov <imammedo@redhat.com>,
         Markus Armbruster <armbru@redhat.com>,
-        "Mark Cave-Ayland" <mark.cave-ayland@ilande.co.uk>,
+        Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
         Adam Manzanares <a.manzanares@samsung.com>,
         Tong Zhang <ztong0001@gmail.com>,
-        "Shameerali Kolothum Thodi" <shameerali.kolothum.thodi@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v11 1/2] hw/arm/virt: Basic CXL enablement on
- pci_expander_bridge instances pxb-cxl
-Message-ID: <20220624165932.00007ec0@Huawei.com>
-In-Reply-To: <CAFEAcA8MLTm9XwAV_JU_EPiT9wfaZed8B19-pL=HobKepJsnkg@mail.gmail.com>
-References: <20220616141950.23374-1-Jonathan.Cameron@huawei.com>
-        <20220616141950.23374-2-Jonathan.Cameron@huawei.com>
-        <CAFEAcA8U9oNDStfLpxOwodGm9MCTdLrt-WV+x_-rTGw9UpBGvA@mail.gmail.com>
-        <20220624133909.00005f6e@Huawei.com>
-        <CAFEAcA8GA+ZXr2eS9bVxnhZRtda17Wx0Ud8CfcA90T6yiaecew@mail.gmail.com>
-        <20220624150844.000005ec@Huawei.com>
-        <20220624155436.000047cb@Huawei.com>
-        <CAFEAcA8MLTm9XwAV_JU_EPiT9wfaZed8B19-pL=HobKepJsnkg@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.207.131]
-X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 24 Jun 2022 16:01:42 +0100
-Peter Maydell <peter.maydell@linaro.org> wrote:
+On Thu, 16 Jun 2022 at 15:20, Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> Add a single complex case for aarch64 virt machine.
+>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  tests/qtest/cxl-test.c  | 48 +++++++++++++++++++++++++++++++++--------
+>  tests/qtest/meson.build |  1 +
+>  2 files changed, 40 insertions(+), 9 deletions(-)
+>
+> diff --git a/tests/qtest/cxl-test.c b/tests/qtest/cxl-test.c
+> index 2133e973f4..1015d0e7c2 100644
+> --- a/tests/qtest/cxl-test.c
+> +++ b/tests/qtest/cxl-test.c
+> @@ -17,6 +17,11 @@
+>                        "-device pxb-cxl,id=cxl.1,bus=pcie.0,bus_nr=53 " \
+>                        "-M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.targets.1=cxl.1,cxl-fmw.0.size=4G "
+>
+> +#define QEMU_VIRT_2PXB_CMD "-machine virt,cxl=on "                      \
+> +                      "-device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52 "  \
+> +                      "-device pxb-cxl,id=cxl.1,bus=pcie.0,bus_nr=53 "  \
+> +                      "-M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.targets.1=cxl.1,cxl-fmw.0.size=4G "
+> +
 
-> On Fri, 24 Jun 2022 at 15:54, Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> > Just occurred to me there is another barrier to an approach that adds
-> > DT bindings.
-> > I fairly sure hw/pci-bridge/pci_expander_bridge.c (PXB)
-> > only works on ACPI platforms and is the only host bridge supported
-> > for CXL emulation in QEMU.  
-> 
-> Isn't it probeable like any other PCI device/bridge ?
+If CXL requires booting via UEFI, what does this test case do?
+It doesn't seem to be passing in a BIOS image.
 
-Nope - PXB is a really weird device. (I tested it quickly in case I was
-wrong and indeed, no sign of device on the downstream side without a
-suitable BIOS / ACPI)
-There is no driver support for it as such, rather it presents
-as two things.
-1) A EP on the main host bridge - which is used for interrupt routing
-   and possibly a few other things.  Linux has no idea that's what it
-   is though so attaches no driver to it.  lspci shows this as
-   Red Hat, Inc, QEMU PCIe Expander Bridge
-
-2) A host bridge with firmware described characteristics (bus number
-   range and similar).  Host bridges as defined in ACPI are a concept
-   rather than actual hardware and presented to the OS via firmware
-   descriptions (ACPI DSDT stuff in this case).
-
-You could probably add dt description via
-pci-host-ecam-generic bindings though but it would be an interesting
-late bit of dt addition in the virt_machine_done() function. Similar
-to the fw_cfg and ACPI stuff done at that stage to deal with PXB
-devices becoming visible.
-
-So gut feeling is PXB could be made to work with DT, but doesn't today.
-Give the main usecase for PXB is typically NUMA description I guess no one
-noticed on DT platforms.
-
-Jonathan
-
-
-
- 
-> 
-> -- PMM
-
+thanks
+-- PMM
