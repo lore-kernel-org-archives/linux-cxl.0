@@ -2,207 +2,241 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B63C433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 24 Jun 2022 10:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 380E3C433EF
+	for <linux-cxl@archiver.kernel.org>; Fri, 24 Jun 2022 11:08:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229632AbiFXKt1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 24 Jun 2022 06:49:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57666 "EHLO
+        id S230474AbiFXLIm convert rfc822-to-8bit (ORCPT
+        <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 24 Jun 2022 07:08:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbiFXKt1 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Jun 2022 06:49:27 -0400
-Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2521A77053
-        for <linux-cxl@vger.kernel.org>; Fri, 24 Jun 2022 03:49:26 -0700 (PDT)
-Received: by mail-yb1-xb2a.google.com with SMTP id o79so3862506ybc.4
-        for <linux-cxl@vger.kernel.org>; Fri, 24 Jun 2022 03:49:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tTgxQSojsqqrecCrzUc0iEgcyiEfOCu5J3t+FfJocXE=;
-        b=AxSGl1jhhnE+CUotMbw1YWPaRtN1y08fwVy5YuZs4B6B9ekEHJ4husIFzjM8Xcxba7
-         wvIz79fGifofTQyiIDQILEkXjCFdFN32MkGvQYXmS2izGb75HTMwnHHTIn/aBG8rNXwi
-         e+PO4eO7sADQgwtTO22aaG8DlT+tnGG3uRJ91434DgDdYLEUgg+P4ULSJJbfqTz6F/7d
-         XuUXgw2yIH/EhjoPUAqgfN7oO1aAk1/4itwyQyaBoe8cogESYOUvrwN2o2FSJ02BsA+G
-         Uf3mTQCw7BQdomDmDlzPhUCmBismVhKUkoL3dQyiEyOpq8acqTb+ynfJaJF19LowvKWx
-         /c2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tTgxQSojsqqrecCrzUc0iEgcyiEfOCu5J3t+FfJocXE=;
-        b=hC2ru84zR7gyhQSXnAb6dpQtyf4qfmZNt9tjy74Kk9gOoYaisqL5u+WZ5sjibvl2S5
-         zJmlcnVL5FeFLyRakl91Q3TYm4SVhYXHogzFNsOB3MjnekNEpRblwQt7O6K6927Szqv5
-         4lIV5P9GofGWEe0mAM/p04EYDdj97dguUJsVQ3k7sKwCvXf/MojdiYhCze79wm0vFOBL
-         EZrQW7zz87v1JHB9iBQyYnET4kvFgW5RiM1qq2nu/KFo+RkdM3Gutxnfi2X9q8JmVdxz
-         gV8Ac8PWSdf2aY0E/SsMWaEtn7/vlRoEeZb388nMX6lRN1NrjTe06AR90DFDznHP+pK1
-         rHTQ==
-X-Gm-Message-State: AJIora/UzmEjbd0bJAI/O4nX+LKcyImi6v8y28u1ca0PpTE49UrX11mX
-        EU6tYDKjQb+zO6O0oriQ2BL5P9KxOAexL46O9q5n+Q==
-X-Google-Smtp-Source: AGRyM1sUYkiGBpPdotZZsIU3TJPBkL2b1bO6wO7dkIBG9Xxvx5QFf+s/z8JmKjt1EmutWdqd7ugUvWhsQ7wI2g2TOVc=
-X-Received: by 2002:a25:810a:0:b0:669:9f30:7f1e with SMTP id
- o10-20020a25810a000000b006699f307f1emr11404152ybk.479.1656067765358; Fri, 24
- Jun 2022 03:49:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220616141950.23374-1-Jonathan.Cameron@huawei.com> <20220616141950.23374-2-Jonathan.Cameron@huawei.com>
-In-Reply-To: <20220616141950.23374-2-Jonathan.Cameron@huawei.com>
-From:   Peter Maydell <peter.maydell@linaro.org>
-Date:   Fri, 24 Jun 2022 11:48:47 +0100
-Message-ID: <CAFEAcA8U9oNDStfLpxOwodGm9MCTdLrt-WV+x_-rTGw9UpBGvA@mail.gmail.com>
-Subject: Re: [PATCH v11 1/2] hw/arm/virt: Basic CXL enablement on
- pci_expander_bridge instances pxb-cxl
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     qemu-devel@nongnu.org, alex.bennee@linaro.org, qemu-arm@nongnu.org,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, linux-cxl@vger.kernel.org,
-        linuxarm@huawei.com, Marcel Apfelbaum <marcel@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Markus Armbruster <armbru@redhat.com>,
-        Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
+        with ESMTP id S230425AbiFXLIm (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Jun 2022 07:08:42 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCA3954FB2;
+        Fri, 24 Jun 2022 04:08:38 -0700 (PDT)
+Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LTvQc4Wfnz67bcp;
+        Fri, 24 Jun 2022 19:04:40 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 24 Jun 2022 13:08:35 +0200
+Received: from localhost (10.81.207.131) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 24 Jun
+ 2022 12:08:34 +0100
+Date:   Fri, 24 Jun 2022 12:08:30 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Lukas Wunner <lukas@wunner.de>
+CC:     Ira Weiny <ira.weiny@intel.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, Christoph Hellwig <hch@infradead.org>,
         Adam Manzanares <a.manzanares@samsung.com>,
-        Tong Zhang <ztong0001@gmail.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>
+        "ben@bwidawsk.net" <ben@bwidawsk.net>, <linuxarm@huawei.com>,
+        <lorenzo.pieralisi@arm.com>,
+        "Box, David E" <david.e.box@intel.com>,
+        "Chuck Lever" <chuck.lever@oracle.com>,
+        Krzysztof Wilczy??ski <kw@linux.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>
+Subject: Re: (SPDM) Device attestation, secure channels from host to device
+ etc: Discuss at Plumbers?
+Message-ID: <20220624120830.00002eef@Huawei.com>
+In-Reply-To: <20220622124638.00004456@Huawei.com>
+References: <20220609124702.000037b0@Huawei.com>
+        <YqICCSd/6Vxidu+v@iweiny-desk3>
+        <20220617112124.00002296@Huawei.com>
+        <20220620165217.GA18451@wunner.de>
+        <20220622124638.00004456@Huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.81.207.131]
+X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 16 Jun 2022 at 15:20, Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> Code based on i386/pc enablement.
-> The memory layout places space for 16 host bridge register regions after
-> the GIC_REDIST2 in the extended memmap.
-> The CFMWs are placed above the extended memmap.
->
-> Only create the CEDT table if cxl=on set for the machine.
->
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On Wed, 22 Jun 2022 12:46:38 +0100
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-This seems to be missing code to advertise the new devices in the
-device tree.
+> On Mon, 20 Jun 2022 18:52:17 +0200
+> Lukas Wunner <lukas@wunner.de> wrote:
+> 
+> > On Fri, Jun 17, 2022 at 11:21:24AM +0100, Jonathan Cameron wrote:  
+> > > On Thu, 9 Jun 2022 07:22:01 -0700 Ira Weiny <ira.weiny@intel.com> wrote:    
+> > > > On Thu, Jun 09, 2022 at 12:47:02PM +0100, Jonathan Cameron wrote:    
+> > > > > I'll start by saying I haven't moved forward much with the
+> > > > > SPDM/CMA over Data Object Exchange proposal from the PoC that led to
+> > > > > presenting it last year as part of the PCI etc uconf last year.
+> > > > > https://lpc.events/event/11/contributions/1089/
+> > > > > https://lore.kernel.org/all/20220303135905.10420-1-Jonathan.Cameron@huawei.com/
+> > > > > I'm continuing to carry the QEMU emulation but not posted for a while
+> > > > > as we are slowly working through a backlog of CXL stuff to merge.    
+> > 
+> > So the SDPM series you posted in March is the latest version?  
+> 
+> Hi Lukas,
+> 
+> Yes and the March version is (more or less) a rebase of the proposal
+> used to drive the conversation at Plumbers PCI uconf last year.
+> I have some prototype measurement code but probably not a lot of
+> point in doing anything with that until the basic stuff is in place.
+> 
+> > 
+> > If you lack bandwidth to carry on with it, I would pick up the baton
+> > and rework that version based on the review feedback I've posted.
+> > (Unless someone else is eager to do that.)  
+> 
+> I'm always keen to leverage offers of help - I want the end result
+> and am more than happy if someone else drives it forwards. There is
+> plenty to keep lots of people busy in this space.
+> 
+> It wasn't so much bandwidth that was restricting my work on this, but
+> more precursors and open questions. Also 
+> 
+> * DOE is undergoing another rewrite after recent review of v11 from Dan.
+> * At the moment the in kernel solution is 'competing' with a proposal
+>   to do stuff in userspace that is currently words only and tied up
+>   with the somewhat similar stuff for TLS sessions setup.
+>   I see there is continuing work on inband NVME authentication posted.
+> 
+> Personally I diverted into putting as second transport in place so that
+> we are sure that layering is correct (MCTP) - however the way MCTP is
+> handled by the kernel is not that friendly to in kernel use - it might
+> be doable but there is a userspace part in that path (to configure the
+> mctp routing etc).
+> 
+> From point of view of the RFC, if you want to take that forwards that
+> would be fine by me.  Beyond responding to review feedback there are
+> some missing features we would need.
+> 
+> 1) Slot handling - right now it only uses the first slot.
+> 2) SPDM 1.2 support (maybe just move 1.2)
+> 3) Actually doing something useful beyond basic attestation.
+> 
+> For those, perhaps just shout if you are taking one on so that we don't
+> duplicate and I'll do the same if I get to one of them.
+> 
+> I have a side project to get SPDM over MCTP running as well to see
+> what that story looks like.  We may want to share infrastructure, but
+> it won't typically run on the same system so there is probably no
+> requirement to do so.
+> 
+> > 
+> >   
+> > > > Yes, while this could work as part of the CXL uconf it is probably a more
+> > > > general topic.    
+> > > 
+> > > Maybe steal time from PCI given CXL uconf is going to be busy!
+> > > (lets see if any of the PCI folk are reading this thread.. :)
+> > > 
+> > > At the moment I'm not seeing enough interest to put in a proposal for
+> > > anything 'officially scheduled', but there is a bit more time until
+> > > the deadline so let's see if we get any other interest in that time.    
+> > 
+> > How about a BoF session to discuss the status quo and any open issues?  
+> 
+> Ok. I'm not yet clear we have critical mass but I'll put an application
+> in the system. Can always pull it before the deadline if it looks like
+> we don't have enough interest to take up a slot.  We can schedule
+> something at another time if it doesn't work out, but Plumbers hopefully
+> has a critical mass of right people present to make rapid progress if
+> we can get some people in a room (with others online).
 
-Somebody else had better review the ACPI changes :-)
+I've put this in for now:
 
->  #define DEFINE_VIRT_MACHINE_LATEST(major, minor, latest) \
-> @@ -178,6 +181,7 @@ static const MemMapEntry base_memmap[] = {
->  static MemMapEntry extended_memmap[] = {
->      /* Additional 64 MB redist region (can contain up to 512 redistributors) */
->      [VIRT_HIGH_GIC_REDIST2] =   { 0x0, 64 * MiB },
-> +    [VIRT_CXL_HOST] =           { 0x0, 64 * KiB * 16 }, /* 16 UID */
+"
+Device attestation, secure channel setup / SPDM - how to make progress?
 
-Does this reshuffle the memory layout so that all the stuff after it
-moves up ? If so, that's an incompatible change and would need
-versioning somehow.
+In 2021, at the Plumbers VFIO/IOMMU/PCI micro-conference, we introduced
+device attestation of PCI devices via Component Measurement and
+Authentication (CMA) / Security Protocol and Data Model (DMTF - SPDM). 
+https://lpc.events/event/11/contributions/1089/ However, device
+attestation and SPDM is not a PCI specific topic and the decisions made
+for a Linux implementation need to take into account other transports 
+and use cases. Hence this proposal for a BoF rather than session in 
+either PCI or CXL uconf. Whilst the 2021 session was productive in 
+raising awareness of this important topic and finding others who had 
+short term requirements, it was new to many of those attending so 
+little progress was made on some of the open questions.
 
-More generally, should this new addition to the machine be
-versioned? What did we do for the pc machine types?
+Moving forwards a year, interest in this space has grown with the 
+side effect that the list of questions is getting ever longer and 
+fundamental disagreements have occurred that would benefit from 
+face to face discussion. As such, this BoF will assume the audience 
+are at least somewhat familiar with the topic and what has been 
+proposed and move rapidly onto plotting a path forwards.
 
->      [VIRT_HIGH_PCIE_ECAM] =     { 0x0, 256 * MiB },
->      /* Second PCIe window */
->      [VIRT_HIGH_PCIE_MMIO] =     { 0x0, 512 * GiB },
-> @@ -1525,6 +1529,16 @@ static void create_pcie(VirtMachineState *vms)
->      }
->  }
->
-> +static void create_cxl_host_reg_region(VirtMachineState *vms)
-> +{
-> +    MemoryRegion *sysmem = get_system_memory();
-> +    MemoryRegion *mr = &vms->cxl_devices_state.host_mr;
-> +
-> +    memory_region_init(mr, OBJECT(vms), "cxl_host_reg",
-> +                       vms->memmap[VIRT_CXL_HOST].size);
-> +    memory_region_add_subregion(sysmem, vms->memmap[VIRT_CXL_HOST].base, mr);
-> +}
+Current status
+- RFC for in kernel session establishment. March 2022
+https://lore.kernel.org/all/20220303135905.10420-1-Jonathan.Cameron@huawei.com/
+- Discussion threads:
+https://lore.kernel.org/all/CAPcyv4jb7D5AKZsxGE5X0jon5suob5feggotdCZWrO_XNaer3A@mail.gmail.com/
+https://lore.kernel.org/all/20220511191345.GA26623@wunner.de/
+https://lore.kernel.org/all/CAPcyv4iWGb7baQSsjjLJFuT1E11X8cHYdZoGXsNd+B9GHtsxLw@mail.gmail.com/
 
-> @@ -1779,6 +1799,20 @@ static void virt_set_memmap(VirtMachineState *vms, int pa_bits)
->          memory_region_init(&ms->device_memory->mr, OBJECT(vms),
->                             "device-memory", device_memory_size);
->      }
-> +
-> +    if (vms->cxl_devices_state.fixed_windows) {
-> +        GList *it;
-> +
-> +        base = ROUND_UP(base, 256 * MiB);
-> +        for (it = vms->cxl_devices_state.fixed_windows; it; it = it->next) {
-> +            CXLFixedWindow *fw = it->data;
-> +
-> +            fw->base = base;
-> +            memory_region_init_io(&fw->mr, OBJECT(vms), &cfmws_ops, fw,
-> +                                  "cxl-fixed-memory-region", fw->size);
+Major Proposed Topics:
+- Use models / transports. Need to enumerate these to understand if 
+  one solution or several needed.
+- Secure channel negotiation in kernel or in user-space (or novel
+  solutions). The recent discussions of TLS negotiation are somewhat 
+  related, though the necessary flows in SPDM are highly constrained 
+  and always host initiated, perhaps leading to a different decision. 
+  (TLS coverage on LWN https://lwn.net/Articles/896746/) There is not
+  a suitable user-space library / daemon today (discuss adaptation
+  of DMTF reference implementation)
+- Certificate management. Current proposal is simple but is it fine
+  grained enough?
+- Policy control. What is fall back if we can’t attest the device? 
+  Device driver specific, or more general?
+- Emulation requirements before commonly available hardware. QEMU 
+  support for the PCI/CMA transport is available, QEMU emulation 
+  MCTP over I2C PoC planned.
 
-Why is board model code having to init memory regions for this
-device? Shouldn't the device be creating the memory regions itself
-and then exposing them for the board code to map them ?
+People likely to be interested:
+- Security / attestation specialists
+- Those involved in the TLS work who may be able to advise on how to 
+  avoid pitfalls they have met.
+- PCI driver developers (for attestation and also Link Encryption key 
+  exchange)
+- CXL developers (attestation and Link Encryption)
+- USB? Others. SPDM is used on these transports, but not clear if OS 
+  level support needed.
+- Anyone who likes reading specifications.
+"
 
-> +            base += fw->size;
-> +        }
-> +    }
->  }
->
->  /*
-> @@ -2215,6 +2249,14 @@ static void machvirt_init(MachineState *machine)
->          memory_region_add_subregion(sysmem, machine->device_memory->base,
->                                      &machine->device_memory->mr);
->      }
-> +    if (vms->cxl_devices_state.fixed_windows) {
-> +        GList *it;
-> +        for (it = vms->cxl_devices_state.fixed_windows; it; it = it->next) {
-> +            CXLFixedWindow *fw = it->data;
-> +
-> +            memory_region_add_subregion(sysmem, fw->base, &fw->mr);
-> +        }
-> +    }
->
->      virt_flash_fdt(vms, sysmem, secure_sysmem ?: sysmem);
->
-> @@ -2241,6 +2283,7 @@ static void machvirt_init(MachineState *machine)
->      create_rtc(vms);
->
->      create_pcie(vms);
-> +    create_cxl_host_reg_region(vms);
->
->      if (has_ged && aarch64 && firmware_loaded && virt_is_acpi_enabled(vms)) {
->          vms->acpi_dev = create_acpi_ged(vms);
-> @@ -3070,6 +3113,7 @@ static void virt_instance_init(Object *obj)
->
->      vms->oem_id = g_strndup(ACPI_BUILD_APPNAME6, 6);
->      vms->oem_table_id = g_strndup(ACPI_BUILD_APPNAME8, 8);
-> +    cxl_machine_init(obj, &vms->cxl_devices_state);
->  }
->
->  static const TypeInfo virt_machine_info = {
-> diff --git a/include/hw/arm/virt.h b/include/hw/arm/virt.h
-> index 15feabac63..403c9107e5 100644
-> --- a/include/hw/arm/virt.h
-> +++ b/include/hw/arm/virt.h
-> @@ -35,6 +35,7 @@
->  #include "hw/boards.h"
->  #include "hw/arm/boot.h"
->  #include "hw/block/flash.h"
-> +#include "hw/cxl/cxl.h"
->  #include "sysemu/kvm.h"
->  #include "hw/intc/arm_gicv3_common.h"
->  #include "qom/object.h"
-> @@ -92,6 +93,7 @@ enum {
->  /* indices of IO regions located after the RAM */
->  enum {
->      VIRT_HIGH_GIC_REDIST2 =  VIRT_LOWMEMMAP_LAST,
-> +    VIRT_CXL_HOST,
->      VIRT_HIGH_PCIE_ECAM,
->      VIRT_HIGH_PCIE_MMIO,
->  };
-> @@ -176,6 +178,7 @@ struct VirtMachineState {
->      PCIBus *bus;
->      char *oem_id;
->      char *oem_table_id;
-> +    CXLState cxl_devices_state;
->  };
+I can edit this for a few more weeks - so all comments welcome!
 
-I just looked at the CXLState struct. Why isn't this a device object ?
+Please express interest in attending / helping to drive this discussion
+as we'll need critical mass to make good progress.
 
-thanks
--- PMM
+Thanks,
+
+Jonathan
+
+
+> 
+> 
+> > 
+> > (I'm not involved with CXL, hence probably belong to "PCI folk".)  
+> 
+> :)
+> 
+> > 
+> >   
+> > > > I [...] was hoping to go in person but I'm unsure of travel budgets.
+> > > > I will likely be virtual if I can't attend in person.    
+> > 
+> > Same.  
+> 
+> Hopefully see you there, space and travel budgets willing.
+> 
+> Jonathan
+> 
+
