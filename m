@@ -2,38 +2,38 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96244CCA486
-	for <linux-cxl@archiver.kernel.org>; Fri, 24 Jun 2022 04:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B0FCCA488
+	for <linux-cxl@archiver.kernel.org>; Fri, 24 Jun 2022 04:20:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229879AbiFXEUN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 24 Jun 2022 00:20:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57518 "EHLO
+        id S229699AbiFXEUO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 24 Jun 2022 00:20:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229584AbiFXEUL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Jun 2022 00:20:11 -0400
+        with ESMTP id S229755AbiFXEUM (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Jun 2022 00:20:12 -0400
 Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 292A44FC6A;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F83649CBE;
         Thu, 23 Jun 2022 21:20:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1656044411; x=1687580411;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=HUsFMVeTjVGLdCwrcUoS1fkV2YbMF30CWyhsa214UuI=;
-  b=HK1nvKK5EMTeGzdb72I6kVcmrTaQJu1M+XKeU+VVAehqrW+u8MxDbmo5
-   ytn2Y32wkgrSHww9tAV+G8xAHUf6oBzF2R3wURJvP/3N1Fo3vX+eUTglJ
-   9gsYkTkdjSTMV38c4z8AP6m0CDvPWt27JAarHUMqQHA8h7bVqgK5fBaK4
-   ObgQ77vDA6GvvM7QJBTUbDORLDeORWTreSh2vkjgctW/RXhpXWS8gwizv
-   4c53uqY/+24olRoW2vzfE7PmP35q3yQpUfrlbAT6zH0zNYVsru360Hr+b
-   BPZ9wPgyib5HcWDU29Sp6Z2KTme3moTUQzyVTaNhZDamaXcEPHc0xtML/
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10387"; a="367237998"
+  bh=Kf9CFFgXOGWToq/1lPLAO9HeAEErdsvWCZKaBOcE9Vo=;
+  b=m0J3fmfL0MEjY3i+cxbjvlW59rVYOA8B/BdKI4HaRYjVRbAEqtRfAchS
+   RRyWTY7oC3Vqf29jdY1BZpJv84KhVgmy6pkmUHBqTwGTEUp/MnzW8VzSC
+   7xb5L6KmD8/NRLxNYYPuPn6RVtP/1xSamH5uqjxqPQ3F6rH7vcEi3Z3qb
+   LgQLIMZuf93unOhKLKfnjDf7s8i2CkvWw56mvG1/6ZcuiPtOEDPIUB/OJ
+   APmJAGL+/5SQcmBTE1SDBJDRSXFc/UnkCt/j9fMETfkS8L++RvkhlrN4w
+   SQFJi3ofVgPiq3NFa2glSW5v2jI79ZlenvOdTmpRj9/CPmbbPqU3ZsFZ6
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10387"; a="367238003"
 X-IronPort-AV: E=Sophos;i="5.92,218,1650956400"; 
-   d="scan'208";a="367237998"
+   d="scan'208";a="367238003"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 21:20:10 -0700
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 21:20:11 -0700
 X-IronPort-AV: E=Sophos;i="5.92,218,1650956400"; 
-   d="scan'208";a="645092906"
+   d="scan'208";a="645092916"
 Received: from daharell-mobl2.amr.corp.intel.com (HELO dwillia2-xfh.intel.com) ([10.209.66.176])
   by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 21:20:10 -0700
 From:   Dan Williams <dan.j.williams@intel.com>
@@ -41,9 +41,9 @@ To:     linux-cxl@vger.kernel.org
 Cc:     nvdimm@lists.linux.dev, linux-pci@vger.kernel.org,
         patches@lists.linux.dev, hch@lst.de,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 29/46] cxl/port: Cache CXL host bridge data
-Date:   Thu, 23 Jun 2022 21:19:33 -0700
-Message-Id: <20220624041950.559155-4-dan.j.williams@intel.com>
+Subject: [PATCH 31/46] cxl/hdm: Initialize decoder type for memory expander devices
+Date:   Thu, 23 Jun 2022 21:19:35 -0700
+Message-Id: <20220624041950.559155-6-dan.j.williams@intel.com>
 X-Mailer: git-send-email 2.36.1
 In-Reply-To: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
 References: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
@@ -53,78 +53,51 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Region creation has need for checking host-bridge connectivity when
-adding endpoints to regions. Record, at port creation time, the
-host-bridge to provide a useful shortcut from any location in the
-topology to the most-significant ancestor.
+Unless and until accelerator (type-2) drivers start registering for
+CXL.mem mapping services from the CXL subsystem core, initialize idle
+HDM decoders to the "expander" type. I.e. the only CXL devices using the
+CXL core presently are those implementing the CXL 2.0 Type-3 memory
+expander device class code that the cxl_pci driver claims.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/port.c | 16 +++++++++++++++-
- drivers/cxl/cxl.h       |  2 ++
- 2 files changed, 17 insertions(+), 1 deletion(-)
+ drivers/cxl/core/hdm.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index d2f6898940fa..c48f217e689a 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -546,6 +546,7 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
- 	if (rc < 0)
- 		goto err;
- 	port->id = rc;
-+	port->uport = uport;
- 
- 	/*
- 	 * The top-level cxl_port "cxl_root" does not have a cxl_port as
-@@ -556,14 +557,27 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
- 	dev = &port->dev;
- 	if (parent_dport) {
- 		struct cxl_port *parent_port = parent_dport->port;
-+		struct cxl_port *iter;
- 
- 		port->depth = parent_port->depth + 1;
- 		port->parent_dport = parent_dport;
- 		dev->parent = &parent_port->dev;
-+		/*
-+		 * walk to the host bridge, or the first ancestor that knows
-+		 * the host bridge
-+		 */
-+		iter = port;
-+		while (!iter->host_bridge &&
-+		       !is_cxl_root(to_cxl_port(iter->dev.parent)))
-+			iter = to_cxl_port(iter->dev.parent);
-+		if (iter->host_bridge)
-+			port->host_bridge = iter->host_bridge;
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index 672bf3e97811..7b58f6911523 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -474,6 +474,17 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+ 		cxld->flags |= CXL_DECODER_F_ENABLE;
+ 		if (ctrl & CXL_HDM_DECODER0_CTRL_LOCK)
+ 			cxld->flags |= CXL_DECODER_F_LOCK;
++		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_TYPE, ctrl))
++			cxld->target_type = CXL_DECODER_EXPANDER;
 +		else
-+			port->host_bridge = iter->uport;
-+		dev_dbg(uport, "host-bridge: %s\n", dev_name(port->host_bridge));
- 	} else
- 		dev->parent = uport;
++			cxld->target_type = CXL_DECODER_ACCELERATOR;
++	} else {
++		/* unless / until type-2 drivers arrive, assume type-3 */
++		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_TYPE, ctrl) == 0) {
++			ctrl |= CXL_HDM_DECODER0_CTRL_TYPE;
++			writel(ctrl, hdm + CXL_HDM_DECODER0_CTRL_OFFSET(which));
++		}
++		cxld->target_type = CXL_DECODER_EXPANDER;
+ 	}
+ 	rc = cxl_to_ways(FIELD_GET(CXL_HDM_DECODER0_CTRL_IW_MASK, ctrl),
+ 			 &cxld->interleave_ways);
+@@ -488,11 +499,6 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+ 	if (rc)
+ 		return rc;
  
--	port->uport = uport;
- 	port->component_reg_phys = component_reg_phys;
- 	ida_init(&port->decoder_ida);
- 	port->dpa_end = -1;
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 8e2c1b393552..0211cf0d3574 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -331,6 +331,7 @@ struct cxl_nvdimm {
-  * @component_reg_phys: component register capability base address (optional)
-  * @dead: last ep has been removed, force port re-creation
-  * @depth: How deep this port is relative to the root. depth 0 is the root.
-+ * @host_bridge: Shortcut to the platform attach point for this port
-  */
- struct cxl_port {
- 	struct device dev;
-@@ -344,6 +345,7 @@ struct cxl_port {
- 	resource_size_t component_reg_phys;
- 	bool dead;
- 	unsigned int depth;
-+	struct device *host_bridge;
- };
- 
- static inline struct cxl_dport *cxl_dport_load(struct cxl_port *port,
+-	if (FIELD_GET(CXL_HDM_DECODER0_CTRL_TYPE, ctrl))
+-		cxld->target_type = CXL_DECODER_EXPANDER;
+-	else
+-		cxld->target_type = CXL_DECODER_ACCELERATOR;
+-
+ 	if (!cxled) {
+ 		target_list.value =
+ 			ioread64_hi_lo(hdm + CXL_HDM_DECODER0_TL_LOW(which));
 -- 
 2.36.1
 
