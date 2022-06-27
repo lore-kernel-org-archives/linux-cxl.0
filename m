@@ -2,127 +2,222 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 033C9C433EF
-	for <linux-cxl@archiver.kernel.org>; Mon, 27 Jun 2022 06:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7451C433EF
+	for <linux-cxl@archiver.kernel.org>; Mon, 27 Jun 2022 19:48:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232277AbiF0GEw convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 27 Jun 2022 02:04:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45946 "EHLO
+        id S240820AbiF0Tsa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 27 Jun 2022 15:48:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232220AbiF0GEv (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Jun 2022 02:04:51 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2116.outbound.protection.outlook.com [40.107.93.116])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCA7F2BD5
-        for <linux-cxl@vger.kernel.org>; Sun, 26 Jun 2022 23:04:49 -0700 (PDT)
+        with ESMTP id S240819AbiF0Ts3 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Jun 2022 15:48:29 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D016F1B7B1
+        for <linux-cxl@vger.kernel.org>; Mon, 27 Jun 2022 12:48:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1656359308; x=1687895308;
+  h=date:from:to:subject:message-id:references:in-reply-to:
+   mime-version;
+  bh=YMJ17URMlUh5GPTpLHV7vLSHZG+fZN/xOueH171xU0E=;
+  b=hs7uU+4zGxQksHzwgKRpxJFqjU3hrzqEGFVLTRVhdfxYuaT3axXPIfo+
+   kFli9bXBVJP54tOgaDM/AbXXNpfWadD0KHaoXcoKJC+jDTVEOt7tcgp85
+   Fz/nfnP1suUvx6DJMstaHZ+uzn46v5Ox7SjdvreX4eUpiYPYYlLt/1o4I
+   /Jp7KyBZUwysHQKKwh6J8kopJBmNcvmyZM7/UHF0HGf3rSl2McJrv4/ux
+   tV7LAOwvllob0F2nKuaqQqkZXm7S0EUzAZYzL7Fe3g4YQ5mv/8vPeMS09
+   qIxwtDidBnXF2XQkZUTYTYewD2xSe59lSR92HB+mJtoDAtazmE5Lt/yxo
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10391"; a="367862045"
+X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
+   d="scan'208";a="367862045"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 12:48:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
+   d="scan'208";a="540230946"
+Received: from orsmsx605.amr.corp.intel.com ([10.22.229.18])
+  by orsmga003.jf.intel.com with ESMTP; 27 Jun 2022 12:48:27 -0700
+Received: from orsmsx606.amr.corp.intel.com (10.22.229.19) by
+ ORSMSX605.amr.corp.intel.com (10.22.229.18) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Mon, 27 Jun 2022 12:48:27 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27 via Frontend Transport; Mon, 27 Jun 2022 12:48:27 -0700
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.40) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2308.27; Mon, 27 Jun 2022 12:48:26 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MBUKzMcaKHJnq5ZxdKiAZtnQbGDiUBKQwWFYFWefYAXjxDmhqwny5wYLdqdaqNY+ISkD/UN6r6R+p5TMtxifFhhR9rscGQErqeaj18cbdiu3dHi1TaN36ANalJsdIkrylICKqP0O6hl8MB6hTZG3RCHEgZapzYst4Z5fCGxVgXUDLjUT8DkY1T/dSBkWUBRpb6v1v2XdI2jFMIaQovGvA7fi4n7lR4vYT7dEWEKHgYlW14DR4eJU5d+heuS4CTpqLjyukBlmr1aHvxvw5M9iv/iPE+zgWmNh/22iToz8hnpz+/guU/fngP0zjD9p9fLuRu53WrDYlrNDqGqBx7zZiQ==
+ b=kAupAd4myY7RatS4x+K3DmB6+DsS3URJkbVGIk1ZrU5HlPQlShZSlUg1KDKDQDV0Xfr9rPcYZ68H4WM3bx53gyW8hieBfswDc88PcofYyRwtWsx+aNliiQR4qpMa18qh8IcQj4vkQ1ZFV156DQVYihlSKHioETTQEzJZlTta2Py8iW2/J2VcI1zrIdTIU/zoJag1TGohxXiXkk4oahh4rFgRA4XCkwFokUzhmOa9rtsXOUAnQc8JC/Z/w3pJ7UwrMSMmDuoq/+fkl4wtG+Ig7oSyKs6HIflMY24Z+7GVyKV8F0e2c/5sLaZCpk+qsQNwoMjO2k12CP2uGnxuZBDdCQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7HqN5xhJpjklv9ovCa5VxSGas7Pn5gE9raVeG4VlDVM=;
- b=BE/MFw2uG2eEjG+4vdUZpjdTnTcS0qZ8HIWX/eVLH1XsXE27RStE8vGLbV2Qn9LC7wOlCaqJB+UZ4IO9guB9BOsMIaoMKM+vtJktsZq7aDnen/wv7fCwZZw522zCmywLMooG/ZtA7Fn4TAHR10+UgSXdZ3Vr9FdfQ1CKVbzCdRnm4yuZK2t+lLWq1El4M5GZKn8wlsIjWBguIETB20ZTRMjAOX/agw3DUWdvLg+1BPQicoRwVTkyQr0Y+7z64HeeKx3rikt4odb0A7Xi7LECoXwPdGLfvBR7lsmzSKQKCdkMhpSfchJw1pai9Mzi0f0N7SLjpjLpWdg1NEveuWH5aw==
+ bh=Vz0qHHTGX2Cr+whOfMWW0IxUDS7ffsET8UP26Beh9JE=;
+ b=ZWvBoDK7zci9veu4/UulTUFdmAJwP+96zvcFKqrmSsQPRacXRWEAHDsjqVdve1VcVfYSC5CYw5+3nYOxQ1phuXTj4Y02k+rFIgrycGuLR/EHjJuJ0R29bhsjKN5Zkt62FT71W8kQmg9/gv00Bmwo6CMAf56RLc6yMDK+qLQAeelhqlupRyFLVBeZZ1edzFaSmxxhvhFHft34vA6v9tOXUAo6HaE0XcLv90+MZkHxOHL/+PJ2vPwuazYWsflq1E7iLKCkxisQWMzGO3kz7Ak3RezaiCCJ4RUgpC2uErPvDZdVqROX3x2IiDtspwjHeyBNRJdYxZ7uoOuihY46NKHJBQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=elastics.cloud; dmarc=pass action=none
- header.from=elastics.cloud; dkim=pass header.d=elastics.cloud; arc=none
-Received: from DS7PR12MB6007.namprd12.prod.outlook.com (2603:10b6:8:7e::13) by
- CY4PR12MB1301.namprd12.prod.outlook.com (2603:10b6:903:3e::17) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5373.17; Mon, 27 Jun 2022 06:04:47 +0000
-Received: from DS7PR12MB6007.namprd12.prod.outlook.com
- ([fe80::e9eb:55ac:62f3:f096]) by DS7PR12MB6007.namprd12.prod.outlook.com
- ([fe80::e9eb:55ac:62f3:f096%9]) with mapi id 15.20.5373.018; Mon, 27 Jun 2022
- 06:04:47 +0000
-From:   Mani Subramaniyan <mani.subramaniyan@elastics.cloud>
-To:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: DVSEC FLEX BUS CAP bit 3: MEM_HWINIT_MODE
-Thread-Topic: DVSEC FLEX BUS CAP bit 3: MEM_HWINIT_MODE
-Thread-Index: AdiJ62AvTeOmYwdPQKq/w7nxUnfXng==
-Date:   Mon, 27 Jun 2022 06:04:47 +0000
-Message-ID: <DS7PR12MB60074C18A01B242F165F68009CB99@DS7PR12MB6007.namprd12.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=elastics.cloud;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7a974ed0-507a-4498-2a45-08da5802f079
-x-ms-traffictypediagnostic: CY4PR12MB1301:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2QizL846QZyDjLLiywCVFsY2m9zviWozuUIHYr/3WcBW3db86RO3qoA+LzXeidQP4NdikvCaFNUZdE7k4ZYe/1cpUVzo6ynfBJjDMoen7jib0sHgbK3Ol/inVTIjX+e5srhq6YRhTCKDP6Zc4WdJ3P6e6Gpai+7Br2DRhipNBtClMPOK5tjU1j80PaEWCCpQtnvhqJy/rM2zTUX61qaXJu8MEFVQ02+IaagZMvhTbuew5hnIIlf/0SB4oDJKyws14dWh/qOOK02+zjyKNaDN/jkTJO3GvVALrxE0vIMUvFJBY/7ASIRZ9Gg9fycGYnIL0OQcmgmpoopGcW7CvY8GNiyp2nv5diJ3llnvXNd+2dIbDlLX4QBzZGRN1qJzyL3akIjOat2k/607hbjcT/qbPPh9ej4xuxssoHMXve2celAELW6SFQHqXn22RA5T3W98n/8fnZbnTelP+9KrWUjX+QKC+hVQ1uNBNoJ0s1u4m3gN2NEp2cFuC4+0knq0Q56Gf2vdecutPX5wsJwL2KzMPFQv6GO3QcDESNZobpxgvMIK2jVijXKqRFAPTRzUO5TzDTUlXR+gJwOPG0SxnoOWUUiXtCCfv+txhD9j8h07ASGXgV+Yu4BHuqSUVZxja/o7f7wBUtUUislj4ctPghQ34hhj7Q3Mx8rXbSBwQwcxC+LrzOxmPbC6vfFsSw3p2UPG/sq4nF2SozI0Tz/tVlk5BDuv+/zk4oSlKjQpQ66yrJscxhnq8VDtrAOuNgZ33gtljtHMm1rvfXLJyeOej8ycn7QGMISG5+vE3erogoLX9FM=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6007.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(39830400003)(396003)(136003)(366004)(346002)(376002)(66446008)(66476007)(76116006)(44832011)(66556008)(64756008)(478600001)(52536014)(8936002)(6916009)(316002)(66946007)(2906002)(55016003)(5660300002)(7696005)(122000001)(186003)(38070700005)(6506007)(71200400001)(38100700002)(41300700001)(83380400001)(9686003)(33656002)(8676002)(86362001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?xYSuqEVlV3j9cJZ36xfpECXesB6ujBi1N/MakgI0GMbtsfo6X0AMG334d9va?=
- =?us-ascii?Q?aHmi97J33hVbFbOhUSzpnxpiBSmu4+1fHFPRxBbWVTZC3a3svv47r3RIxD0U?=
- =?us-ascii?Q?8qYHrgJhZDd7G2XORBSIpAjJzNa5yq8bGAru7pNdaFW5u//3ChPVQvY4QVuQ?=
- =?us-ascii?Q?0kow3hHQj+aUEmaK+LTBkFG7+GAYvXljDprXbINrWbE8YLA6QuGfx2tRGypA?=
- =?us-ascii?Q?ybvQWdbmHB3sFnhW/8UdW3cESzq43CuV2EOOcfBFWL8Gal3VfAYR/wu/bX7z?=
- =?us-ascii?Q?nT3ZNUzwSH3TtpmRoR4Wz2mG1bb2ygisxWHMV/JJ3NuNS2bCAaLnxpHKVtPO?=
- =?us-ascii?Q?nKwC1hGALgWp0bi8vjqVUQ9m0O+vR33LnUDgqYdyw9dQn/6LA5hXooaoFc5Q?=
- =?us-ascii?Q?TkyB6zQUMvQoJlGIlZN9bfEIZaaI5RThdam/argHESfCfx1UdbcoYJ0twsYk?=
- =?us-ascii?Q?8H0wvL5IKDszH/n6tpl5AyXYuj8VJg0UQ9XahpFTEOrvDKQXqxccvDH9TjU8?=
- =?us-ascii?Q?8JZTk2UOjUcyfsaV8SkEVrRN30P6VEJ+SPLJHHk3X0O7oujFHMu8Ee1Fw4U4?=
- =?us-ascii?Q?gpRwJuAFlcsK5h5tWcRwRBlEUiELXXDyFt1llrPnkQt6gLxyvjGDuAGGnYBs?=
- =?us-ascii?Q?9dJq1WGX0r2ubAxpU6R0Q39wIpPNYWnjfxhet9/yQkE/QoNFguVbh9l/W0YQ?=
- =?us-ascii?Q?f1SNwYtLFDe6LeWcidH3T0hWvw6vfdwfhIFdvZVw91mKD07WAQozFO3jqPxb?=
- =?us-ascii?Q?VecNfuTFKOsNqPn50BuW1gg1kENCHcuAEGuttnpWRd8S8IFHfq4PKyqmfhrj?=
- =?us-ascii?Q?UoJT0PDh0O0qlOQu1Dz2iJ4hnNLlWb+vW+n3P9onM/0xZT6ATeI/lxbKEyQf?=
- =?us-ascii?Q?n0Z4Kh4M9FlE1i1ovjyx3fhHeKFM01YQp0Ryz1mna8d5NHBCcGl8o0UxICK7?=
- =?us-ascii?Q?nQWFQh88YEGRuW+BE8Zrpzs9KbM2QblGih/APs+PXhq3rDK9Xe8+5MV8vhz0?=
- =?us-ascii?Q?p0UVsV1JvLqQWa/zALuYor75mg2NGiLso80zJdUZECZbHvXkO/Dh+ROsW//e?=
- =?us-ascii?Q?Sgv7giK5ngkHbH7i8JxxpnrsKVIC85fc9HgHMANQtZ86wVCVFWSxEWulqwRE?=
- =?us-ascii?Q?ktDn/ilAm3+3yHl0vYjuL2ly9vW6KFI2oLd7OADjrKPiUg7Iag7twzmnHtA0?=
- =?us-ascii?Q?GGnkDNemTrWEnnTzUoKVI1Z4ABFAvFy8GeVThqMTT/kctZ/VZ4Jo4xl4OxvJ?=
- =?us-ascii?Q?feBFbqZg08yGncqgH5eI8WrWk+bbqJTTTAueIZscwwIrOFpDgyBzMZY7rQ0l?=
- =?us-ascii?Q?nwHVpobWi10FYEiJR0F6P8n5INnu0lxAbVRFgAUp3XUHfULNkOUNMpvbla8z?=
- =?us-ascii?Q?V//KJigLBD3ejZPF8wY930Yebl6rP3X4/emVd3ZyL1i/uzQavjN73VYcsywS?=
- =?us-ascii?Q?Av3An757ZEMhdo2WB2uc00rX2veP9BGrHIGo2ST6JD+OFBEwl5LMTwWR0tIN?=
- =?us-ascii?Q?9qNHgAAMTnIkeWxldR1XwzFeO8uFcihWVpljMYlMPd0qm+kk3V1Tl14Sk17D?=
- =?us-ascii?Q?wWQUxH4sDxBegeYLpLhS48Lt+O2pijRwv4e8FjIzPCM/5iNlglevNTHzlq1+?=
- =?us-ascii?Q?swyMCRBpJA9i8DYCxYxPDDf0+6913dxc94eVcA9GMd00y+pNNGlDxXHHzgPN?=
- =?us-ascii?Q?W9+aBuVXsNEAc4S25iD1+V1QKLc=3D?=
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20) by DM8PR11MB5574.namprd11.prod.outlook.com
+ (2603:10b6:8:39::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.15; Mon, 27 Jun
+ 2022 19:48:25 +0000
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::f50c:6e72:c8aa:8dbf]) by MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::f50c:6e72:c8aa:8dbf%7]) with mapi id 15.20.5373.018; Mon, 27 Jun 2022
+ 19:48:25 +0000
+Date:   Mon, 27 Jun 2022 12:48:23 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Mani Subramaniyan <mani.subramaniyan@elastics.cloud>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Subject: RE: DVSEC FLEX BUS CAP bit 3: MEM_HWINIT_MODE
+Message-ID: <62ba0987bc7cf_1134f9294f0@dwillia2-xfh.notmuch>
+References: <DS7PR12MB60074C18A01B242F165F68009CB99@DS7PR12MB6007.namprd12.prod.outlook.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Disposition: inline
+In-Reply-To: <DS7PR12MB60074C18A01B242F165F68009CB99@DS7PR12MB6007.namprd12.prod.outlook.com>
+X-ClientProxiedBy: MW4PR03CA0351.namprd03.prod.outlook.com
+ (2603:10b6:303:dc::26) To MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20)
 MIME-Version: 1.0
-X-OriginatorOrg: elastics.cloud
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1ef44fd7-941a-44ab-60ee-08da5875ffae
+X-MS-TrafficTypeDiagnostic: DM8PR11MB5574:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: V+PDP30h+OHi+vq0cws/eM4u/sKicH+7yPO+tCJsn43/Z9b4YzwbOkvAUtu0YMiJLKjvWN+6MfRSMyFeDzlk3bB9Pve9nSH2VdkZhc8cOcV9zDHs+uoLas3C7vDErQhMDbnerg37j8IiAgYMj8W+RJNZC4FR/NMxlMw4T7bBCMaR069MBvpVKIhzA4SaN8ySeSy8PhTK9DFpA0ta6oMjWHac60FjVblXWO/eJTozYrrc5pfI+X5ZW+pGnOFYpHfJENG2ksDbt6UEb8Za69XsnbBhT749UML1yjjFIZkX/nRVJdnIhK56TMVZ18iTPWjXCiuav1yETuQJZlWQgeS2977REbFp0bJvOQJkXH8QMUT8rJfpnWX/EKKyU6eUoqRbQHGPXTPG14OO0QdvuUm9/HFIcg8pIagd/UojDRC+943A19K1wFLTXT3pkAt4817/DfdljVBfNKkDsRlZlCWfwd5NH8K7n9pHXDTg2SRtwXBP9IQ5UElDMDREJsz7/Uk6uqix5K3JfYIKIaOdsRJEWynA1HQMdsWTANRy11bz3xAmHqAN+54e5e7rYSlF6pO7fUiSbDkhFJd26CwdMfCpa7nFVpnDVWQw18RcCsr23xsuJMdwrwlKkDeWpCormuihDF6KhHbrX7YLk6qDYwTxTBXZ+EvNR8ohgICCXLVBal8O3/tbmUhu3/55NNND8HmosBTPYAdCLXXfEsI4EYsudVr5vkfK8gyQHI8nZvmp5iovTAaM2b4E739GNZx1SE3rkqnctBmM0jrUaa3h+erHHA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(346002)(376002)(39860400002)(396003)(366004)(136003)(316002)(66476007)(26005)(38100700002)(41300700001)(8936002)(83380400001)(66556008)(6506007)(66946007)(110136005)(478600001)(86362001)(82960400001)(186003)(2906002)(6486002)(6512007)(966005)(5660300002)(8676002)(9686003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?nn50sX2bffxI8DA4/Xq5pV1jdvIxYqYCYDHpnvmvZ55HE7M+1No/u/49u2HV?=
+ =?us-ascii?Q?RAQNhZW0BQxQFyUGL+0RD7kGOjbsx3o4bx4TAGSxPu43v+YhBnHb9X2v0xFr?=
+ =?us-ascii?Q?dOyiMK6xW5LNCSf2cNXvgeUvuyP8WgO6EU6bKEuhX23d6vYAv3LIXcoGPZdF?=
+ =?us-ascii?Q?Iuk7NbgUwR6HYiPuH81cEUaK02OJIe5h1/ClDQNT/qfecfaz3efa8qi3xg0b?=
+ =?us-ascii?Q?A5EmkMRB68EyuIh7FPOsfdnuITvb+NycWQlyOwwo6bhurcMtwQHGfpHdAMfu?=
+ =?us-ascii?Q?SeSs+l5JM/2O776MlXwASx5KJbpGiIxYBGyd3uvGBi7btV3mDUy7JB6qdZZm?=
+ =?us-ascii?Q?X924dm7RHqUuEBVZfqWWFm/ePsRXc9+sE5dsRLnCQy1iVOjFTJ7lSwFOGo9p?=
+ =?us-ascii?Q?M01p1Cm+t7YTQ+ANxqRzTiCUnSwbXFdRY24HV4wvkgXbimITOUZ0dvTQafuN?=
+ =?us-ascii?Q?Rrs/jC0CKT1O13Z/9Q2w3ifRO8zPweIe0CuaHPGt7kSbfKXaLeWoyoDMrzW9?=
+ =?us-ascii?Q?jpvRfwZ6HzuyOMJzxkSUKZhLu+6W5vsnAj3M4AXgMxXr8XXmNWWSEy+Ow/tC?=
+ =?us-ascii?Q?JVtBn9emqY32WJoR8/Qp42qIL/+qHcvc3ZW40usaexendNarPDn2SpQtzOJl?=
+ =?us-ascii?Q?phmABcpSpeVBABi9zhjWJ4+FicjjWIydx8Lhr8tnK3+yKlstIBnx6hq6Biww?=
+ =?us-ascii?Q?CdTsslnVpIG8rVnELcOBK2sVqZObLAzPwxqNsieF2YloF4URJ98Y+t7OnmAm?=
+ =?us-ascii?Q?Zg9t4QP9axAA3Q50GCQw1W3I4LciWLpHHWfqp6pyXY1iIK1BeA25/zT+9Knf?=
+ =?us-ascii?Q?slp2L820YTN7JLqzRnC7ORcnJUVgQJDsT28VS3ttSHWQy0jNZWBEtAAZboAY?=
+ =?us-ascii?Q?ymmHv5dXEdIs3BHCknYIoHfYNdFdmYEnnes+Na2WxqHfWQgEgUMJar0ZhA6D?=
+ =?us-ascii?Q?poiI+cVcA02EjgC3/GiPefk9MAb+iLoyt7zmcFshbW4gU1f4iRAuM8IFQsP1?=
+ =?us-ascii?Q?qQp8IxSIB9bAnWB1E6Kdu23pNSDx4yPZnYKNIMDC4Tt7xzh/c46isRNH5Uho?=
+ =?us-ascii?Q?U0+6D0qDJi6SJb78r4WRhlNsFAAXyr8zl1HVTYHKQLBxBykggi9yhuR5zFcg?=
+ =?us-ascii?Q?3AQ/6YZfaySPmRPJV6Wf4fiYuQB0Ob2V7rML77E9cVQioiyM06GppC3qqtW2?=
+ =?us-ascii?Q?Uhe9UdZ9uVFvKN0Wzwt14MyoXp4tMCFlizwjV/DPlvYhmylR3xDk5e0eCU+U?=
+ =?us-ascii?Q?YOnm48mjC5PUyAxPJOHIT+IHWRwctdenKKlGaVn+CDLWo8j+AEx2dNcT4tzM?=
+ =?us-ascii?Q?MqhFqy7r3CsqDtawmuGwkn0D3KmHylHT+aJwTYwWvg2N24ES0+JopBCZgL+k?=
+ =?us-ascii?Q?n/gniEBtzxdoL2AzrRdCR1FIfN+WwjFNJwrIudNdtAm5M5FQMexyRsboSLiV?=
+ =?us-ascii?Q?dhRDMBbcI2zXnrFl5n+VPkDCWz+AVwpZZ0AnmIvNP7yc6dqmCjITUYrASYO6?=
+ =?us-ascii?Q?BMjvxYpeeT6k4V4EVluW0yxloPDAbmtUPf0UaFPrjjMpu1PG4hOQdj3Yzl6k?=
+ =?us-ascii?Q?pN51shnU5qh7VTzGhslkV7e3WcnsEkYiWH77ymdsEJcLKdHA1xW657lBoPAm?=
+ =?us-ascii?Q?sg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ef44fd7-941a-44ab-60ee-08da5875ffae
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6007.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a974ed0-507a-4498-2a45-08da5802f079
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2022 06:04:47.3786
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2022 19:48:25.1788
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 28558b47-528a-463d-9ef1-81068bcc77f9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YG6CWYsupABbIsuGqgyF6j7WMjABfWqwlinCie3Ou8Ecc+hQp6y+cE1cwFKXi0CiQuS3iWWagQnpH99+zqDyt5g/q7qyt/6XfmQ4CBWOKUia2OVqXReDpblGGPzrCUFg
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1301
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: w4oTkEtn80vDnCNwLjlPUDayDIMDkUuULv8Qes9d789hMBYe4+cA7o2WquWihXJlcGllUyf0LIWJww871kCm13E/TPJPXbww963xZiUOU/s=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR11MB5574
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-While reading the CXL spec (both 1.1 and 2.0), of the DVSEC Flex bus cap (offset 0ah, bit 3), I see this:
-"3 RO Mem_HwInit_Mode: If set, indicates this CXL.mem capable device initializes memory with assistance from hardware and firmware located on the device. If clear, indicates memory is initialized by host software such as device driver. This bit must be ignored if CXL.mem_Capable=0."
+Mani Subramaniyan wrote:
+> While reading the CXL spec (both 1.1 and 2.0), of the DVSEC Flex bus
+> cap (offset 0ah, bit 3), I see this: "3 RO Mem_HwInit_Mode: If set,
+> indicates this CXL.mem capable device initializes memory with
+> assistance from hardware and firmware located on the device. If clear,
+> indicates memory is initialized by host software such as device
+> driver. This bit must be ignored if CXL.mem_Capable=0."
 
-I figured that I would clear this bit so I can load my driver for the CXL type 3 device and also reset the memory active bit in the HDM entry (range low address bits). I was experimenting this on QEMU version 6.0.50 from Ben Widawsky (branch cxl2v4-doe), running an Ubuntu 64 bit Kernel ver 5.18.0.rc7. 
-Here is what I see in dmesg output: 
-[   62.234755] cxl_pci 0000:09:00.0: timeout awaiting memory active after 60 seconds
-[   62.235793] cxl_mem mem0: Media not active (-110)
-[   62.236447] cxl_mem: probe of mem0 failed with error -110
-[  123.674758] cxl_pci 0000:09:00.0: timeout awaiting memory active after 60 seconds
-[  123.675800] cxl_mem mem0: Media not active (-110)
-[  123.676450] cxl_mem: probe of mem0 failed with error -110
+Hmm, to me the specification does not indicate how OS drivers can initialize memory
+in the MEM_HWINIT_MODE=0 case. It says impossible things like the
+following in "9.11.5 CXL 1.1 device discovery":
 
-In spite of these error messages, I could use the CXL memory without any issues!
+    The OS device driver is responsible for setting Memory_Active after
+    memory initialization is complete. Any subsequent accesses to the HDM
+    memory are decoded and routed to the local memory by the device.
 
-My purpose is to load my driver on this device and then initialize and bring the memory on line or use the memory for my own software not giving it to general memory pool of Linux. 
+...which is impossible because Memory_Active is an RO bit. So yes, you
+have discovered a gap in the Linux handling of the MEM_HWINIT_MODE=0
+case, but I think it looks like a gap in the specification as well as
+what the OS can expect of memory readiness in that case.
 
-Since I am new to this alias, and not following the threads fully (did do a search though), can someone point me in the right direction/clues?
+> 
+> I figured that I would clear this bit so I can load my driver for the
+> CXL type 3 device and also reset the memory active bit in the HDM
+> entry (range low address bits). I was experimenting this on QEMU
+> version 6.0.50 from Ben Widawsky (branch cxl2v4-doe), running an
+> Ubuntu 64 bit Kernel ver 5.18.0.rc7.  Here is what I see in dmesg
+> output: 
+> [   62.234755] cxl_pci 0000:09:00.0: timeout awaiting memory active after 60 seconds
+> [   62.235793] cxl_mem mem0: Media not active (-110)
+> [   62.236447] cxl_mem: probe of mem0 failed with error -110
+> [  123.674758] cxl_pci 0000:09:00.0: timeout awaiting memory active after 60 seconds
+> [  123.675800] cxl_mem mem0: Media not active (-110)
+> [  123.676450] cxl_mem: probe of mem0 failed with error -110
+> 
+> In spite of these error messages, I could use the CXL memory without any issues!
 
-My questions are:
-1.	Shouldn't the Linux CXL code have looked at the MEM_HWINIT_MODE bit first and if that is not set, should not have complained about this mem active bit, assuming that the software/driver will initialize and then make the memory active at a later time ?
-2.	If a vendor driver loads, talks to the hardware to initialize and make the hardware change the memory active bit state, how does the vendor driver, if it wants to, gives the memory back to the kernel? Should there be a kernel call for that purpose or this is very similar to dax initialization and so there is no further need for a kernel call? 
+Sure, the driver has no role to play if something else has already
+programmed the HDM decoders.
 
-Thanks
-ManiS
+> My purpose is to load my driver on this device and then initialize and
+> bring the memory on line or use the memory for my own software not
+> giving it to general memory pool of Linux. 
+
+This is a flow that the native Linux driver will support. Memory will be
+assigned to the device-dax subsystem. From there it can either remain
+dedicated access through a device special file, or optionally shared
+with the general Linux memory pool. See the "persistent reconfiguration"
+section of this man page for examples of what this policy might look
+like (i.e. it's still a work in progress):
+
+https://github.com/pmem/ndctl/blob/main/Documentation/daxctl/daxctl-reconfigure-device.txt#L244
+
+
+> 
+> Since I am new to this alias, and not following the threads fully (did
+> do a search though), can someone point me in the right
+> direction/clues?
+> 
+> My questions are:
+> 1.	Shouldn't the Linux CXL code have looked at the MEM_HWINIT_MODE
+> bit first and if that is not set, should not have complained about
+> this mem active bit, assuming that the software/driver will initialize
+> and then make the memory active at a later time ?
+
+Perhaps, if there is clarity about the OS responsibilities in the
+MEM_HWINIT_MODE=0 case.
+
+> 2.	If a vendor driver loads,
+
+For generic memory devices expander device why is a vendor driver in the
+picture? For accelerators the expectation is that they can use some of
+the core CXL infrastructure to manage HDM, but we (upstream Linux
+community), are still awaiting the first use case to take advantage of
+those core APIs.
+
+> talks to the hardware to initialize and make the hardware change the
+> memory active bit state, how does the vendor driver, if it wants to,
+> gives the memory back to the kernel? Should there be a kernel call for
+> that purpose or this is very similar to dax initialization and so there
+> is no further need for a kernel call? 
+
+It's very similar to dax to the point that the shortest path to get what you
+want is just use dax and the generic driver, unless I am missing a
+reason why that is not possible?
