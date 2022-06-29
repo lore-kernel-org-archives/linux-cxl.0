@@ -2,107 +2,112 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF95C433EF
-	for <linux-cxl@archiver.kernel.org>; Tue, 28 Jun 2022 22:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9072EC43334
+	for <linux-cxl@archiver.kernel.org>; Wed, 29 Jun 2022 01:11:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230102AbiF1WBY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 28 Jun 2022 18:01:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59912 "EHLO
+        id S229511AbiF2BLB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 28 Jun 2022 21:11:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230101AbiF1WBW (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 28 Jun 2022 18:01:22 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C73C23BC6;
-        Tue, 28 Jun 2022 15:01:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656453681; x=1687989681;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=NbmPwvqMll5L108yNCJnt3K6AOKe4/adCY0m7n5Bi84=;
-  b=fLjXvUJFxGeb5/K2jqkPhKneB9TnMXNbpbI7B54Oz6kUrh1pVC87dkvT
-   H+os/DnjNI2NQ/SPe4TiYCi24A+axIpkbwqPkcmTK43Oe/rdhCfD0HVm4
-   krAv51p9kDVcueVkhBsiPP4MC7Wt/5IvqoOj2YE32dJWpoLHTXMbNqmsk
-   T884cP9zXBR6xJ8OaV59iD7BKT7u8kAKiUFj8enusTt1H/Sv+dllvtR14
-   oYlAXtxP22S3T4Jed0PNF6vGOpmRNCf20bxBw7YhKk9z73QqZKdFCUtyl
-   D88AdWWsGYkTmeabx69up1naHev9rwo4M+LxxfihPpR4awZK6WCMLIxzT
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10392"; a="281893711"
-X-IronPort-AV: E=Sophos;i="5.92,229,1650956400"; 
-   d="scan'208";a="281893711"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 15:01:21 -0700
-X-IronPort-AV: E=Sophos;i="5.92,229,1650956400"; 
-   d="scan'208";a="647098061"
-Received: from vrgatne-mobl.amr.corp.intel.com (HELO vverma7-desk1.intel.com) ([10.212.43.114])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 15:01:20 -0700
-From:   Vishal Verma <vishal.l.verma@intel.com>
-To:     <linux-cxl@vger.kernel.org>
-Cc:     <patches@lists.linux.dev>, Vishal Verma <vishal.l.verma@intel.com>,
-        stable@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+        with ESMTP id S229436AbiF2BLA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 28 Jun 2022 21:11:00 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2AA226138;
+        Tue, 28 Jun 2022 18:10:59 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A0BADB81E0A;
+        Wed, 29 Jun 2022 01:10:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16829C341C8;
+        Wed, 29 Jun 2022 01:10:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656465057;
+        bh=K3eCd7hCm8MhP8o3l+4ySC/WrN2F82RoNmx18R2IK8A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jZDcZmVZJzRaR8ixnK53OJdcmu7QYO4Os9OVfswG1aysoK+oyMnVt5oGWjynbPRxz
+         2WmA7j5tqklZGtXBzuUd0DbrpddJ4vjCJuWnucrycL3GBEe/pFnerKDx6C0zBhO6ne
+         ha3SrlL9Q0eK/HK2mxF8D6L0h2JGGVmvSG6nRsZuHTAmSIMmTWrSJu5nM6EllIQXKG
+         TXByYp89JmdD8EC92e/4y4Xvg2VmQEFIV5JzC/vDzZ2ojo3lEscSA9aSzMcZSm0HWn
+         Dn+ydymXwjCESKyMpzHXbWVQnlBtfxIMXhJ/TO24euy8cVSiiwyNZKpFglHHO1QYlD
+         qssHj3AsSEdzQ==
+Date:   Tue, 28 Jun 2022 20:10:55 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     ira.weiny@intel.com
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lukas Wunner <lukas@wunner.de>,
         Alison Schofield <alison.schofield@intel.com>,
-        Abhi Cs <abhi.cs@intel.com>
-Subject: [PATCH v2] cxl/mbox: Fix missing variable payload checks in cmd size validation
-Date:   Tue, 28 Jun 2022 16:01:09 -0600
-Message-Id: <20220628220109.633564-1-vishal.l.verma@intel.com>
-X-Mailer: git-send-email 2.36.1
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: [PATCH V12 5/9] driver-core: Introduce BIN_ATTR_ADMIN_{RO,RW}
+Message-ID: <20220629011055.GA1890289@bhelgaas>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1838; h=from:subject; bh=NbmPwvqMll5L108yNCJnt3K6AOKe4/adCY0m7n5Bi84=; b=owGbwMvMwCXGf25diOft7jLG02pJDEm7q1TbhTilbQq+72+0XrHppf+5HdOP7Vjp7ljkuqZi45rI KpGNHaUsDGJcDLJiiix/93xkPCa3PZ8nMMERZg4rE8gQBi5OAZhI1zaG/07vbD7+5emJDNlhMEHejf 9H2ZyTkitTfv47xFI3y/L3yo8M/4yu/xZ2L/tYszoviy1zn1dvp7GaPLezyOP8si4vjXU72AA=
-X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220628041527.742333-6-ira.weiny@intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The conversion of command sizes to unsigned missed a couple of checks
-against variable size payloads during command validation, which made all
-variable payload commands unconditionally fail. Add the checks back using
-the new CXL_VARIABLE_PAYLOAD scheme.
+[+cc Krzysztof]
 
-Fixes: 26f89535a5bb ("cxl/mbox: Use type __u32 for mailbox payload sizes")
-Cc: <stable@vger.kernel.org>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>
-Reported-by: Abhi Cs <abhi.cs@intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
----
+On Mon, Jun 27, 2022 at 09:15:23PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> Many binary attributes need to limit access to CAP_SYS_ADMIN only; ie
+> many binary attributes specify is_visible with 0400 or 0600.
+> 
+> Make setting the permissions of such attributes more explicit by
+> defining BIN_ATTR_ADMIN_{RO,RW}.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Since v1[1]:
-- Collect Reviewed-by tags
-- Don't use nested if statements, switch to a compount if () instead.
-  (Alison)
+FWIW, this looks a lot like this previous patch:
+  https://lore.kernel.org/all/20210416205856.3234481-7-kw@linux.com/
 
-[1]: https://lore.kernel.org/all/20220628200427.601714-1-vishal.l.verma@intel.com/
-
- drivers/cxl/core/mbox.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 40e3ccb2bf3e..16176b9278b4 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -355,11 +355,13 @@ static int cxl_to_mem_cmd(struct cxl_mem_command *mem_cmd,
- 		return -EBUSY;
- 
- 	/* Check the input buffer is the expected size */
--	if (info->size_in != send_cmd->in.size)
-+	if ((info->size_in != CXL_VARIABLE_PAYLOAD) &&
-+	    (info->size_in != send_cmd->in.size))
- 		return -ENOMEM;
- 
- 	/* Check the output buffer is at least large enough */
--	if (send_cmd->out.size < info->size_out)
-+	if ((info->size_out != CXL_VARIABLE_PAYLOAD) &&
-+	    (send_cmd->out.size < info->size_out))
- 		return -ENOMEM;
- 
- 	*mem_cmd = (struct cxl_mem_command) {
-
-base-commit: 1985cf58850562e4b960e19d46f0d8f19d6c7cbd
--- 
-2.36.1
-
+> ---
+> Changes from V11:
+> 	New Patch
+> ---
+>  include/linux/sysfs.h | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+> index e3f1e8ac1f85..fd3fe5c8c17f 100644
+> --- a/include/linux/sysfs.h
+> +++ b/include/linux/sysfs.h
+> @@ -235,6 +235,22 @@ struct bin_attribute bin_attr_##_name = __BIN_ATTR_WO(_name, _size)
+>  #define BIN_ATTR_RW(_name, _size)					\
+>  struct bin_attribute bin_attr_##_name = __BIN_ATTR_RW(_name, _size)
+>  
+> +
+> +#define __BIN_ATTR_ADMIN_RO(_name, _size) {					\
+> +	.attr	= { .name = __stringify(_name), .mode = 0400 },		\
+> +	.read	= _name##_read,						\
+> +	.size	= _size,						\
+> +}
+> +
+> +#define __BIN_ATTR_ADMIN_RW(_name, _size)					\
+> +	__BIN_ATTR(_name, 0600, _name##_read, _name##_write, _size)
+> +
+> +#define BIN_ATTR_ADMIN_RO(_name, _size)					\
+> +struct bin_attribute bin_attr_##_name = __BIN_ATTR_ADMIN_RO(_name, _size)
+> +
+> +#define BIN_ATTR_ADMIN_RW(_name, _size)					\
+> +struct bin_attribute bin_attr_##_name = __BIN_ATTR_ADMIN_RW(_name, _size)
+> +
+>  struct sysfs_ops {
+>  	ssize_t	(*show)(struct kobject *, struct attribute *, char *);
+>  	ssize_t	(*store)(struct kobject *, struct attribute *, const char *, size_t);
+> -- 
+> 2.35.3
+> 
