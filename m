@@ -2,189 +2,218 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A22DC43334
-	for <linux-cxl@archiver.kernel.org>; Wed, 29 Jun 2022 16:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 345F6C433EF
+	for <linux-cxl@archiver.kernel.org>; Wed, 29 Jun 2022 16:08:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233973AbiF2QC4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 29 Jun 2022 12:02:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40574 "EHLO
+        id S232295AbiF2QIt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 29 Jun 2022 12:08:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233829AbiF2QCk (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 29 Jun 2022 12:02:40 -0400
-Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D27383DA52;
-        Wed, 29 Jun 2022 09:02:04 -0700 (PDT)
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20220629160159usoutp0195aef3d891576469c34314f83fab9e0a~9ItEYhZw81476614766usoutp01V;
-        Wed, 29 Jun 2022 16:01:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20220629160159usoutp0195aef3d891576469c34314f83fab9e0a~9ItEYhZw81476614766usoutp01V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1656518519;
-        bh=tcYJ6cHRoPaK99gaiM2Fn2Barpu59KVVGgEcidot7eE=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=pbEedQV2nIliGVTv5KE6fPGzGACwGiB4DaPyrrAQDRtGY8StC41SyzCOGjfQIF+Gj
-         m1BYyrZHEjF49mi1EGQf/xLByxR3lEGaDVdIcWtLaJKoou8F76jBEHeDzpADiR6Rk9
-         dgZeS6kaeLK+lfxdmuaYQjYElwBHrVJvy7cSqco0=
-Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
-        [203.254.195.112]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20220629160158uscas1p2e07b706b38c70042e938c4759d087c07~9ItD8looI1125111251uscas1p26;
-        Wed, 29 Jun 2022 16:01:58 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-        ussmges3new.samsung.com (USCPEMTA) with SMTP id A6.2F.09749.6777CB26; Wed,
-        29 Jun 2022 12:01:58 -0400 (EDT)
-Received: from ussmgxs3new.samsung.com (u92.gpu85.samsung.co.kr
-        [203.254.195.92]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20220629160158uscas1p2b7fbbe3a311de793c08e19e6f3d9a779~9ItDi7Lc10630706307uscas1p2l;
-        Wed, 29 Jun 2022 16:01:58 +0000 (GMT)
-X-AuditID: cbfec370-a83ff70000002615-ee-62bc7776c417
-Received: from SSI-EX4.ssi.samsung.com ( [105.128.2.146]) by
-        ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id 40.74.52945.6777CB26; Wed,
-        29 Jun 2022 12:01:58 -0400 (EDT)
-Received: from SSI-EX3.ssi.samsung.com (105.128.2.228) by
-        SSI-EX4.ssi.samsung.com (105.128.2.229) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Wed, 29 Jun 2022 09:01:57 -0700
-Received: from SSI-EX3.ssi.samsung.com ([105.128.5.228]) by
-        SSI-EX3.ssi.samsung.com ([105.128.5.228]) with mapi id 15.01.2375.024; Wed,
-        29 Jun 2022 09:01:57 -0700
-From:   Adam Manzanares <a.manzanares@samsung.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-CC:     Lukas Wunner <lukas@wunner.de>, Ira Weiny <ira.weiny@intel.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "ben@bwidawsk.net" <ben@bwidawsk.net>,
-        "linuxarm@huawei.com" <linuxarm@huawei.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "Box, David E" <david.e.box@intel.com>,
-        "Chuck Lever" <chuck.lever@oracle.com>,
-        Krzysztof Wilczy??ski <kw@linux.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: (SPDM) Device attestation, secure channels from host to device
- etc: Discuss at Plumbers?
-Thread-Topic: (SPDM) Device attestation, secure channels from host to device
-        etc: Discuss at Plumbers?
-Thread-Index: AQHYhi3CI4u3mPMg/kOgHKynIq5wQa1e3nUAgAA0QYCAAATMgIAH9JUA
-Date:   Wed, 29 Jun 2022 16:01:57 +0000
-Message-ID: <20220629160149.GA1039216@bgt-140510-bm01>
-In-Reply-To: <20220624153241.000055e2@Huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <D57A0DB2AC729847B967819DD672713D@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S232392AbiF2QIs (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 29 Jun 2022 12:08:48 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43974205D7;
+        Wed, 29 Jun 2022 09:08:46 -0700 (PDT)
+Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LY5rT0GcFz67NYn;
+        Thu, 30 Jun 2022 00:04:41 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 29 Jun 2022 18:08:43 +0200
+Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2375.24; Wed, 29 Jun
+ 2022 17:08:43 +0100
+Date:   Wed, 29 Jun 2022 17:08:41 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <hch@infradead.org>,
+        <alison.schofield@intel.com>, <nvdimm@lists.linux.dev>,
+        <linux-pci@vger.kernel.org>, <patches@lists.linux.dev>
+Subject: Re: [PATCH 20/46] cxl/mem: Add a debugfs version of 'iomem' for
+ DPA, 'dpamem'
+Message-ID: <20220629170841.000078e5@Huawei.com>
+In-Reply-To: <165603885318.551046.8308248564880066726.stgit@dwillia2-xfh>
+References: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
+        <165603885318.551046.8308248564880066726.stgit@dwillia2-xfh>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.42]
+X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
 X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHKsWRmVeSWpSXmKPExsWy7djX87pl5XuSDGZNNLRoW7WPyWJJU4bF
-        /7vPmSymT73AaLFzLavF6QmLmCz2P33OYrFq4TU2i87ZG9gtGnp+s1qcn3WKxeLsvONsFoc3
-        nmGyePP7BbvFi+fSDvweTw7OY/JYM28No8eFxo2sHgs2lXq0HHnL6rF5hZbH4j0vmTyeXJnO
-        5PHx6S0Wj8+b5DxmtG9jDeCO4rJJSc3JLEst0rdL4Mo4cukqY8FEwYpFfddZGhhn8HUxcnJI
-        CJhITPh1mLWLkYtDSGAlo8TCjYuYIZxWJomGD3fYYarOXZrLCJFYyyjR1fWEHcL5BORMmg3l
-        LGOU+HVuIhNIC5uAgcTv4xuZQWwRASOJK8sOgo1iFnjLInGs0RfEFhZIl7j0ag0jRE2GxPZX
-        E4HqOYBsN4mbfxJAwiwCqhKnO/6ChXkFzCSuX7YHCXMKGEosaV4ENp1RQEzi+6k1TBDTxSVu
-        PZnPBHG0oMSi2XuYIWwxiX+7HrJB2IoS97+/hLpGR2LB7k9sELadxJb951ghbG2JZQtfg/Xy
-        As05OfMJC0SvpMTBFTdYQN6VENjNKfHp62mooS4Sy7feZYSwpSWmr7kMVdTOKPFhwj5WCGcC
-        o8Sdtz+hOqwl/nVeY5/AqDILyeWzkFw1C8lVs5BcNQvJVQsYWVcxipcWF+empxYb56WW6xUn
-        5haX5qXrJefnbmIEJsnT/w4X7GC8deuj3iFGJg7GQ4wSHMxKIrwLz+xMEuJNSaysSi3Kjy8q
-        zUktPsQozcGiJM67LHNDopBAemJJanZqakFqEUyWiYNTqoGp8i979puDIpdb719ROiT03+kf
-        l2YCC5thAtPLk7v/HNbL/qZotXrDfJO60t97u3Ok2g7zsySYi0Zndexb8KlthpyyqJr86jCe
-        4tcBtlZ3g59vY7QW3XeHVcPJLv6M95e5j6TdujZoCn5fd8uj7doKG1nG7DB5/s9cZQuuTdjb
-        zGNd/lMlSETq7OYtL8Q93iT8bF0aqsS8VWVfn26jHKOHoN+tsE33GhMY5t36oia6ZA3L/Iyt
-        6qIfBddeLo+4/2H7HNfNsZktJmdZuQ+skVjXd+ZYhaHJ721qh155heZdqmhzCj50K1P65bOL
-        qb8U7/T0iMYcFc+IC35zRvmcm9LZjQXnamrLFH+c7i3Rf6HEUpyRaKjFXFScCABFauaXAQQA
-        AA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmleLIzCtJLcpLzFFi42LJbGCapFtWvifJ4NluCYu2VfuYLJY0ZVj8
-        v/ucyWL61AuMFjvXslqcnrCIyWL/0+csFqsWXmOz6Jy9gd2ioec3q8X5WadYLM7OO85mcXjj
-        GSaLN79fsFu8eC7twO/x5OA8Jo8189Ywelxo3MjqsWBTqUfLkbesHptXaHks3vOSyePJlelM
-        Hh+f3mLx+LxJzmNG+zbWAO4oLpuU1JzMstQifbsErowjl64yFkwUrFjUd52lgXEGXxcjJ4eE
-        gInEuUtzGbsYuTiEBFYzSnR07mWCcD4xSqw7/gYqs4xR4t79TnaQFjYBA4nfxzcyg9giAkYS
-        V5YdZAcpYhZ4yyKxbMFlJpCEsEC6xKVXaxghijIk3p2fyNbFyAFku0nc/JMAEmYRUJU43fGX
-        GSTMK2Amcf2yPcSuNmaJi39Ogs3nFDCUWNK8CMxmFBCT+H5qDdh4ZgFxiVtP5jNBvCAgsWTP
-        eWYIW1Ti5eN/rBC2osT97y/ZIep1JBbs/sQGYdtJbNl/jhXC1pZYtvA1WC+vgKDEyZlPWCB6
-        JSUOrrjBMoFRYhaSdbOQjJqFZNQsJKNmIRm1gJF1FaN4aXFxbnpFsXFearlecWJucWleul5y
-        fu4mRmB6Of3vcMwOxnu3PuodYmTiYDzEKMHBrCTCu/DMziQh3pTEyqrUovz4otKc1OJDjNIc
-        LErivB6xE+OFBNITS1KzU1MLUotgskwcnFINTAK1ngcfMuQFdx451sZtdu7Gv+RL91NkVb8w
-        d37cp9p3Xqe31ery1qg575Xuz70ZW2omK3FMdkrC3ddJdmbeXB757lNVrHfc9vTTN7j6RLq2
-        Q877/qGehi9NO8PfiE3Zum//a3F/9dU79YREfussipkrsLP6hujdcPbmgu9bYkz7I/RjKwJK
-        Cp4wf1a7bSjrE+cxRz5g5vGAQzcXmD7r+POwvGptzNLE/jx1nQKnVUJiBsH/paSvLw0p+jz/
-        LI+R/VSjD298/ZQOzSnljlItWfY2+rmH1H4zLsHjXZvMa57yqujfUvs4ZWeYiWdkBvuCjD3n
-        0mIOL+e7JOCmNv10pqaBqono4fTcp9e4pMOVWIozEg21mIuKEwHMjjvMngMAAA==
-X-CMS-MailID: 20220629160158uscas1p2b7fbbe3a311de793c08e19e6f3d9a779
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20220624143249uscas1p1ae96e45ccb5b3b4f22a5b863c7a6fc9f
-References: <20220609124702.000037b0@Huawei.com>
-        <YqICCSd/6Vxidu+v@iweiny-desk3> <20220617112124.00002296@Huawei.com>
-        <20220620165217.GA18451@wunner.de> <20220622124638.00004456@Huawei.com>
-        <20220624120830.00002eef@Huawei.com> <20220624141531.GA32171@wunner.de>
-        <CGME20220624143249uscas1p1ae96e45ccb5b3b4f22a5b863c7a6fc9f@uscas1p1.samsung.com>
-        <20220624153241.000055e2@Huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Jun 24, 2022 at 03:32:41PM +0100, Jonathan Cameron wrote:
-> On Fri, 24 Jun 2022 16:15:31 +0200
-> Lukas Wunner <lukas@wunner.de> wrote:
->=20
-> > On Fri, Jun 24, 2022 at 12:08:30PM +0100, Jonathan Cameron wrote:
-> > > I've put this in for now: =20
-> >=20
-> > Perfect!  For me as a non-native English speaker, it would have been
-> > a lot more difficult to write up such an excellent description,
-> > so thanks for doing this.
->=20
-> It always feels a bit like cheating when you get to write these
-> things in your first language!
-> >=20
-> > > Hence this proposal for a BoF rather than session in=20
-> > > either PCI or CXL uconf. =20
-> >=20
+On Thu, 23 Jun 2022 19:47:33 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-I am planning to be attending plumbers in person and am quite interested in=
-=20
-this BOF.
+> Dump the device-physial-address map for a CXL expander in /proc/iomem
+> style format. E.g.:
+> 
+>   cat /sys/kernel/debug/cxl/mem1/dpamem
+>   00000000-0fffffff : ram
+>   10000000-1fffffff : pmem
 
+Nice in general, but...
 
-> > I think this has overlap with the Confidential Computing uconf as well,
-> > so that might be another potentially interested audience.
-> >=20
-> > (Link encryption is by its very nature "confidential computing",
-> > and attestation is explicitly mentioned on the CC uconf page:
-> > https://urldefense.com/v3/__https://protect2.fireeye.com/v1/url?k=3D103=
-69d39-71bd8872-10371676-74fe485fb305-1ce6f2197c6a68d6&q=3D1&e=3D6639a8eb-2d=
-66-432f-a3d9-760b3e8def9f&u=3Dhttps*3A*2F*2Flpc.events*2Fevent*2F16*2Fcontr=
-ibutions*2F1143*2F__;JSUlJSUlJSU!!EwVzqGoTKBqv-0DWAJBm!UGKGabNBEqfdQU-FrF-b=
-Enhwu9mRW4PRGa1LoMvehedU3XRfsZzuoHGUZUVWHVD3p26pNa-le6OwJPQwMs7wV4kiu9GUb9l=
-d$  )
-> >=20
-> > Thanks,
-> >=20
-> > Lukas
-> >=20
->=20
-> Good point. That is an area in which we need dance around what we
-> can an can't say (i.e. what is public from various standards orgs) but th=
-ey=20
-> may well still be interested.
->=20
-> Added=20
-> - Confidential compute community
-> to list of people who might be interested.
->=20
-> +CC Joerg so he knows this proposal exists and can perhaps drag in anyone
-> else who might be interested.
->=20
-> https://urldefense.com/v3/__https://lore.kernel.org/all/20220624120830.00=
-002eef@Huawei.com/__;!!EwVzqGoTKBqv-0DWAJBm!UGKGabNBEqfdQU-FrF-bEnhwu9mRW4P=
-RGa1LoMvehedU3XRfsZzuoHGUZUVWHVD3p26pNa-le6OwJPQwMs7wV4kiu68CJwlU$=20
-> for abstract.
->=20
-> Thanks,
->=20
-> Jonathan
-> =
+When I just checked what this looked like on my test setup. I'm 
+seeing
+00000000-0ffffff : pmem
+  00000000-0fffff : endpoint3
+
+Seems odd to see an endpoint nested below a pmem.  Wrong name somewhere
+in a later patch. I'd expect that to be a decoder rather than the endpoint...
+If I spot where that comes from whilst reviewing I'll call it out, but
+didn't want to forget to raise it.
+
+This patch is fine.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  drivers/cxl/core/core.h |    1 -
+>  drivers/cxl/core/hdm.c  |   23 +++++++++++++++++++++++
+>  drivers/cxl/core/port.c |    1 +
+>  drivers/cxl/cxlmem.h    |    4 ++++
+>  drivers/cxl/mem.c       |   23 +++++++++++++++++++++++
+>  5 files changed, 51 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index c242fa02d5e8..472ec9cb1018 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -24,7 +24,6 @@ int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
+>  resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled);
+>  resource_size_t cxl_dpa_resource(struct cxl_endpoint_decoder *cxled);
+>  
+> -struct dentry *cxl_debugfs_create_dir(const char *dir);
+>  int cxl_memdev_init(void);
+>  void cxl_memdev_exit(void);
+>  void cxl_mbox_init(void);
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index ceb4c28abc1b..c0164f9b2195 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+>  #include <linux/io-64-nonatomic-hi-lo.h>
+> +#include <linux/seq_file.h>
+>  #include <linux/device.h>
+>  #include <linux/delay.h>
+>  
+> @@ -248,6 +249,28 @@ static int cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+>  	return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
+>  }
+>  
+> +static void __cxl_dpa_debug(struct seq_file *file, struct resource *r, int depth)
+> +{
+> +	unsigned long long start = r->start, end = r->end;
+> +
+> +	seq_printf(file, "%*s%08llx-%08llx : %s\n", depth * 2, "", start, end,
+> +		   r->name);
+> +}
+> +
+> +void cxl_dpa_debug(struct seq_file *file, struct cxl_dev_state *cxlds)
+> +{
+> +	struct resource *p1, *p2;
+> +
+> +	down_read(&cxl_dpa_rwsem);
+> +	for (p1 = cxlds->dpa_res.child; p1; p1 = p1->sibling) {
+> +		__cxl_dpa_debug(file, p1, 0);
+> +		for (p2 = p1->child; p2; p2 = p2->sibling)
+> +			__cxl_dpa_debug(file, p2, 1);
+> +	}
+> +	up_read(&cxl_dpa_rwsem);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_dpa_debug, CXL);
+> +
+>  resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled)
+>  {
+>  	resource_size_t size = 0;
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index f02b7470c20e..4e4e26ca507c 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -1702,6 +1702,7 @@ struct dentry *cxl_debugfs_create_dir(const char *dir)
+>  {
+>  	return debugfs_create_dir(dir, cxl_debugfs);
+>  }
+> +EXPORT_SYMBOL_NS_GPL(cxl_debugfs_create_dir, CXL);
+>  
+>  static __init int cxl_core_init(void)
+>  {
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index b4e5ed9eabc9..db9c889f42ab 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -385,4 +385,8 @@ struct cxl_hdm {
+>  	unsigned int interleave_mask;
+>  	struct cxl_port *port;
+>  };
+> +
+> +struct seq_file;
+> +struct dentry *cxl_debugfs_create_dir(const char *dir);
+> +void cxl_dpa_debug(struct seq_file *file, struct cxl_dev_state *cxlds);
+>  #endif /* __CXL_MEM_H__ */
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index a979d0b484d5..7513bea55145 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+> +#include <linux/debugfs.h>
+>  #include <linux/device.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> @@ -56,10 +57,26 @@ static void enable_suspend(void *data)
+>  	cxl_mem_active_dec();
+>  }
+>  
+> +static void remove_debugfs(void *dentry)
+> +{
+> +	debugfs_remove_recursive(dentry);
+> +}
+> +
+> +static int cxl_mem_dpa_show(struct seq_file *file, void *data)
+> +{
+> +	struct device *dev = file->private;
+> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> +
+> +	cxl_dpa_debug(file, cxlmd->cxlds);
+> +
+> +	return 0;
+> +}
+> +
+>  static int cxl_mem_probe(struct device *dev)
+>  {
+>  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+>  	struct cxl_port *parent_port;
+> +	struct dentry *dentry;
+>  	int rc;
+>  
+>  	/*
+> @@ -73,6 +90,12 @@ static int cxl_mem_probe(struct device *dev)
+>  	if (work_pending(&cxlmd->detach_work))
+>  		return -EBUSY;
+>  
+> +	dentry = cxl_debugfs_create_dir(dev_name(dev));
+> +	debugfs_create_devm_seqfile(dev, "dpamem", dentry, cxl_mem_dpa_show);
+> +	rc = devm_add_action_or_reset(dev, remove_debugfs, dentry);
+> +	if (rc)
+> +		return rc;
+> +
+>  	rc = devm_cxl_enumerate_ports(cxlmd);
+>  	if (rc)
+>  		return rc;
+> 
+
