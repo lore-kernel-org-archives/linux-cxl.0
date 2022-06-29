@@ -2,140 +2,189 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA1FC433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 29 Jun 2022 16:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A22DC43334
+	for <linux-cxl@archiver.kernel.org>; Wed, 29 Jun 2022 16:02:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233631AbiF2QCz convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 29 Jun 2022 12:02:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40918 "EHLO
+        id S233973AbiF2QC4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 29 Jun 2022 12:02:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233577AbiF2QCe (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 29 Jun 2022 12:02:34 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2135.outbound.protection.outlook.com [40.107.223.135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA6C53DA41
-        for <linux-cxl@vger.kernel.org>; Wed, 29 Jun 2022 09:02:03 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bs25bLp8aSmsjQi1F+y4rrqC7edx5VdRN+USW8PN1PpsGaaFY0cbNNRhNlhZYh8R0lWkJA86mz+b7LYWGT1EmhvPcaNhvbh/GV3dJ1fOSVEea3jRp4q9h9S/93YKux/g4UgEUpeIhP5CNEgdMATeShKZC4DTvWsok5dpGYVkP8fGqN8UsYzvU03ogqhcv4Ex9bx9h5x5AoVac9n/yhu9UwElYHxw/8ug6EMbUrjdDGO5DwFqGvlFyZIPEBbOnnAPAbAdPJKl6H1+sdPlBPN/xs9kyEbrx6rCsV0RJIVf5vdLDjoSWUoDX7iR3WRh/iltHU6Dv5jw0taTvi+kEEN6PA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ytb+8HFakeNDWBBEbWXVx2c+TlaqQt9GTAkhiWvO3x0=;
- b=CIDnUHNfnTANbmxX3UZMoXwY/BBUMML+/1jTowi2oko4KGUYVpJAIxeRxRZw1FscDnuwzNlI8RWf2KoIEoiBhPoescsrH+JSWZcFfRQys0XEDSZYuVeDnz8IdER60txj9q6NKrXRB7GhzhKDDaRlldgk2eUd0VO6zhoHUYkua8TrEf91zhlSGbybxpkYtal95TJwhQO1fVe+989tNO9Ea6l94bAxXk05tQ9I3jbNxn4EMiPD53DRq5jjoecbz6KAvgJbKblmzaFdoKngCb8yh7x+r/MjT2pNhXy/3TzQyZZRO10zsNKHP8LKcaOxQ9f9BfUBSlYZ7UDrOf1F/d03YQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=elastics.cloud; dmarc=pass action=none
- header.from=elastics.cloud; dkim=pass header.d=elastics.cloud; arc=none
-Received: from DS7PR12MB6007.namprd12.prod.outlook.com (2603:10b6:8:7e::13) by
- MN2PR12MB4360.namprd12.prod.outlook.com (2603:10b6:208:266::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.17; Wed, 29 Jun
- 2022 16:02:00 +0000
-Received: from DS7PR12MB6007.namprd12.prod.outlook.com
- ([fe80::e9eb:55ac:62f3:f096]) by DS7PR12MB6007.namprd12.prod.outlook.com
- ([fe80::e9eb:55ac:62f3:f096%9]) with mapi id 15.20.5373.018; Wed, 29 Jun 2022
- 16:02:00 +0000
-From:   Mani Subramaniyan <mani.subramaniyan@elastics.cloud>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: RE: DVSEC FLEX BUS CAP bit 3: MEM_HWINIT_MODE
-Thread-Topic: DVSEC FLEX BUS CAP bit 3: MEM_HWINIT_MODE
-Thread-Index: AdiJ62AvTeOmYwdPQKq/w7nxUnfXngAc3vSAACgB2qAAClBaAAAqL7dQ
-Date:   Wed, 29 Jun 2022 16:02:00 +0000
-Message-ID: <DS7PR12MB60077FC4536970D4DFD2FEF79CBB9@DS7PR12MB6007.namprd12.prod.outlook.com>
-References: <DS7PR12MB60074C18A01B242F165F68009CB99@DS7PR12MB6007.namprd12.prod.outlook.com>
- <62ba0987bc7cf_1134f9294f0@dwillia2-xfh.notmuch>
- <DS7PR12MB60077E9A94B20ADAEE883F109CB89@DS7PR12MB6007.namprd12.prod.outlook.com>
- <62bb5b3ae75b7_1ab197294af@dwillia2-xfh.notmuch>
-In-Reply-To: <62bb5b3ae75b7_1ab197294af@dwillia2-xfh.notmuch>
+        with ESMTP id S233829AbiF2QCk (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 29 Jun 2022 12:02:40 -0400
+Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D27383DA52;
+        Wed, 29 Jun 2022 09:02:04 -0700 (PDT)
+Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
+        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20220629160159usoutp0195aef3d891576469c34314f83fab9e0a~9ItEYhZw81476614766usoutp01V;
+        Wed, 29 Jun 2022 16:01:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20220629160159usoutp0195aef3d891576469c34314f83fab9e0a~9ItEYhZw81476614766usoutp01V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1656518519;
+        bh=tcYJ6cHRoPaK99gaiM2Fn2Barpu59KVVGgEcidot7eE=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+        b=pbEedQV2nIliGVTv5KE6fPGzGACwGiB4DaPyrrAQDRtGY8StC41SyzCOGjfQIF+Gj
+         m1BYyrZHEjF49mi1EGQf/xLByxR3lEGaDVdIcWtLaJKoou8F76jBEHeDzpADiR6Rk9
+         dgZeS6kaeLK+lfxdmuaYQjYElwBHrVJvy7cSqco0=
+Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
+        [203.254.195.112]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20220629160158uscas1p2e07b706b38c70042e938c4759d087c07~9ItD8looI1125111251uscas1p26;
+        Wed, 29 Jun 2022 16:01:58 +0000 (GMT)
+Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
+        ussmges3new.samsung.com (USCPEMTA) with SMTP id A6.2F.09749.6777CB26; Wed,
+        29 Jun 2022 12:01:58 -0400 (EDT)
+Received: from ussmgxs3new.samsung.com (u92.gpu85.samsung.co.kr
+        [203.254.195.92]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20220629160158uscas1p2b7fbbe3a311de793c08e19e6f3d9a779~9ItDi7Lc10630706307uscas1p2l;
+        Wed, 29 Jun 2022 16:01:58 +0000 (GMT)
+X-AuditID: cbfec370-a83ff70000002615-ee-62bc7776c417
+Received: from SSI-EX4.ssi.samsung.com ( [105.128.2.146]) by
+        ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id 40.74.52945.6777CB26; Wed,
+        29 Jun 2022 12:01:58 -0400 (EDT)
+Received: from SSI-EX3.ssi.samsung.com (105.128.2.228) by
+        SSI-EX4.ssi.samsung.com (105.128.2.229) with Microsoft SMTP Server
+        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+        15.1.2375.24; Wed, 29 Jun 2022 09:01:57 -0700
+Received: from SSI-EX3.ssi.samsung.com ([105.128.5.228]) by
+        SSI-EX3.ssi.samsung.com ([105.128.5.228]) with mapi id 15.01.2375.024; Wed,
+        29 Jun 2022 09:01:57 -0700
+From:   Adam Manzanares <a.manzanares@samsung.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+CC:     Lukas Wunner <lukas@wunner.de>, Ira Weiny <ira.weiny@intel.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        "ben@bwidawsk.net" <ben@bwidawsk.net>,
+        "linuxarm@huawei.com" <linuxarm@huawei.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "Box, David E" <david.e.box@intel.com>,
+        "Chuck Lever" <chuck.lever@oracle.com>,
+        Krzysztof Wilczy??ski <kw@linux.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: (SPDM) Device attestation, secure channels from host to device
+ etc: Discuss at Plumbers?
+Thread-Topic: (SPDM) Device attestation, secure channels from host to device
+        etc: Discuss at Plumbers?
+Thread-Index: AQHYhi3CI4u3mPMg/kOgHKynIq5wQa1e3nUAgAA0QYCAAATMgIAH9JUA
+Date:   Wed, 29 Jun 2022 16:01:57 +0000
+Message-ID: <20220629160149.GA1039216@bgt-140510-bm01>
+In-Reply-To: <20220624153241.000055e2@Huawei.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=elastics.cloud;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a6950076-6867-446f-e0f3-08da59e8b370
-x-ms-traffictypediagnostic: MN2PR12MB4360:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fL9dVEWp9SPyI79zNIYPHYhx6DgplZ6LBuGVe6/Z2iF2m/CNULLypnvW3i7csYRp8857EayQdXG/izpkgrmP9MtoJG3txJfwIYC0wTZDuaCI189zwavNn5TuZNEym4x+oCyZUqe5+Orqta/Bo8rcjnmSWRX8xCF3tWOo3KX6id6WpT8AQCKPCT03NS3YwGKwRveRl5XeZJT8AdmkH32Z9pi5bZwufCJVtXgH9rhsfaXPHyX4+bOrsOnuKyeDCA+t8NkfXF5I+qlpqV8chXQodtgtaDozenUHE8zplagz7cLHjwXbcTN0iEBhNkwMNHd74EFNQwTlqn57EWnAb3QSOp9XLFyjhhdO8m3kyyJR2nJh2j9LCkUSzHx+iAhjJP0JL8mkFB4hr4RGABigU+ZmmjaWF1/+lFWZil/d3fuDbvr9mnKqNM2ZCA69CRrDktsFbizJrMyKSEBmjue3iBSHcLR17Ep/pVfR5QwUVchvz5xZr03vJTc7Nj2SdtNv2wtQMD9LujsiKI1P/tOxJIQP4opipfLBpt7W5hbnGVJTPwm/Oi6MxT02rVkHYvIoGhOkq+yt8jK1qZBuFsBVnVTlmq/LlCPUtkyoTYD/UjmZCDXPCvNEWPdt4BbaZaqpHCoQVXfnflxhQ5XG5D7tsRrZMsGrvFk6jQI9kMFpXgneM2dyohvVLAu6ivVvJUAXq75gHvzgifwZTG5XGJmvAko3HCkCqUSUlQQL8yGGm6fAL26JQb/BKvwCTVdSvlFgTBJmq9B5oxvHY65tmvbxMR48g7c2T9SN1S0Qp2WqmdzwHkhYvGGQRtJlu08nZQfuhYQSVIRRL0NOKfrJfcgq3f2bQg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6007.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(136003)(346002)(396003)(376002)(39830400003)(366004)(122000001)(86362001)(53546011)(316002)(33656002)(2906002)(44832011)(186003)(83380400001)(66556008)(76116006)(7696005)(55016003)(66946007)(64756008)(110136005)(8936002)(5660300002)(8676002)(71200400001)(6506007)(66476007)(9686003)(66446008)(38070700005)(38100700002)(52536014)(478600001)(41300700001)(71440200001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?81CG98YZBTywGu0iL7GlkqwnE3OsY2T9GoMF6rkJ9gbxNz9us1AcQKIiR6Jy?=
- =?us-ascii?Q?qMyNxBFwD+SdhokqFkJZey9HUKl/jnfUx7D/N24LVPE15j7W59IjvX8JsxoD?=
- =?us-ascii?Q?SNLJXUNEEaTOtOKeJPQVCIiwdPdRHDs1OGt2s/nYVNju19YxLHM74JkXaCO5?=
- =?us-ascii?Q?PvdFCxgo8tzo2qGuwmtKAZxh/sjHGpj3uv84hLSqf8YMdseYb4eWXaBv0N4G?=
- =?us-ascii?Q?xAFHHqjizqYO7Kmo55SdujOE1QvDYMSkFr+2P61BK5ZIptY4DwrLMW8fg3Ex?=
- =?us-ascii?Q?W3VjmEUDOK2Ju1iOLhKp8UvTajwgYquRAv1HiyuMwzIs+YTEGXKTmmBDFugo?=
- =?us-ascii?Q?nJZ9LKspdbNx2+TXOJFBQXmtzEtfspF88rGYHZg2U2+RzOQ+NCqimmHI/lW0?=
- =?us-ascii?Q?eHSJgIo5ntQkX4zep3tSLdxVi1b/1fSMf0jJU5GWKBtbOZ037Y8lixsneVlk?=
- =?us-ascii?Q?K8rBma1xfkyqrBUHWvGiLzvWWmz8FSrdy6ITz2gb69t2FOha4cRWUyK7q0sh?=
- =?us-ascii?Q?jBiayqrWTZ0bnJWBdqnoxI9jkxjaPN3ueTEORWTWpZ4narf6KYkc7Cqj+LGW?=
- =?us-ascii?Q?qT3Gj5e9qkClorXzfZr4cvNRlDbzjjWt/Vavp2GLOlaQMNpxr+4UqR0iRWEq?=
- =?us-ascii?Q?Zt8qo19BqmAHswUYjgnLun1BXsKHmSA9NCxtDnAeDRsp6TyRR+8K49sFttno?=
- =?us-ascii?Q?sYoU+haHIdp2CFigWobVxk1RQKvkupofP2x/DYh+pKjT2Hh4ojFSD1UQdrCx?=
- =?us-ascii?Q?oHF6LG4nW/Kcf4MkJU0N7GKRf3b313yr1grwlKlR+J0/O8WRVcY9dZJ9+ElE?=
- =?us-ascii?Q?YWNszwTHkt++o6dfJwV3tkmIeoNxuW3hF8jI1kRVvKSm63xHlAeXZoM/mYO5?=
- =?us-ascii?Q?0Zmwa02jcjTSiAlUHnajI1XV6pN3tbGoKBPws55wnScFhqRz2qRDRNTYznG3?=
- =?us-ascii?Q?qQtxwS3PqUqrRZk54PPzd1Yh/G7aXEEOGzzl4oM1Blqk9wewqBBQCOzX2U2d?=
- =?us-ascii?Q?qM8Be6rEnIFFuPuOtHUuizouyBrsOMkVYReAPq9qlfGEjEvlYl5rVRfR57NF?=
- =?us-ascii?Q?UiMO6tru4W+8gsqywrbrs1edzkVJ7LJ4f2A67Fy8xNOVTCwCOon4XLjh2s26?=
- =?us-ascii?Q?C6485IpwyT1aW18un3STZJZZMelH9Q6OxJo358fNP2YckHvsSw/K0LqFx9IV?=
- =?us-ascii?Q?e8HtR6Q3x5++GbG7a288bzQtLOwhAmajLCOd3cZo9ovANZG2f3a9Shox3gAo?=
- =?us-ascii?Q?cBHlI6cXPzMNm19IGO6tc9CHaaF//2/oa8uHabC46ZZoKyVkwTHicJvbaeRX?=
- =?us-ascii?Q?K6ugl91o6m7i3ps8uPgym5ugtyt0dqypeX+VLNG+7BMZ1WaT45pgXbKyCPhb?=
- =?us-ascii?Q?Vwo4fWNbajYtzzaVBu7iA7oj16DpU5qVucRlnMczcnkeOv0inOPtal4NQNhT?=
- =?us-ascii?Q?I7IDDrSXfcPP5zK+1oldDKkwvFdFAW20O15L+p+NgHbDMisI79rqlUIKvm1T?=
- =?us-ascii?Q?Nz1mx/hJMcvdY0/hWGshHnSt3lQan6J4PLrcNUtNztQvcU0Xgn9DnKfiZjk9?=
- =?us-ascii?Q?tOizD/JIh5ahxV0z+RkcwXJHH+h8Q4Yq5+jCKUcVCQMcNSsq0WuxRgIwcB4R?=
- =?us-ascii?Q?lbyS8jXDHSXvNmAu7U4KvNvFxpiuGbgqK07YfCJRdwhjNhHANoCJwSx/PVPG?=
- =?us-ascii?Q?ySMpPWTVV6QaQtWLs3gzM+wJmxQ=3D?=
+x-originating-ip: [105.128.2.176]
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-ID: <D57A0DB2AC729847B967819DD672713D@ssi.samsung.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: elastics.cloud
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6007.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6950076-6867-446f-e0f3-08da59e8b370
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2022 16:02:00.3838
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 28558b47-528a-463d-9ef1-81068bcc77f9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tMVeazWo7e3yn0IyAKffptQsohm4kMJDCP4uSfQxaF+ZiPy1wO84JzgZk8gLVMs27mD0XzfcwQrEttPHemA9+RpeWPdIKgC+sVVdkCrYFAtqPPv9BWKMuNxoapEq6O5k
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4360
+X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHKsWRmVeSWpSXmKPExsWy7djX87pl5XuSDGZNNLRoW7WPyWJJU4bF
+        /7vPmSymT73AaLFzLavF6QmLmCz2P33OYrFq4TU2i87ZG9gtGnp+s1qcn3WKxeLsvONsFoc3
+        nmGyePP7BbvFi+fSDvweTw7OY/JYM28No8eFxo2sHgs2lXq0HHnL6rF5hZbH4j0vmTyeXJnO
+        5PHx6S0Wj8+b5DxmtG9jDeCO4rJJSc3JLEst0rdL4Mo4cukqY8FEwYpFfddZGhhn8HUxcnJI
+        CJhITPh1mLWLkYtDSGAlo8TCjYuYIZxWJomGD3fYYarOXZrLCJFYyyjR1fWEHcL5BORMmg3l
+        LGOU+HVuIhNIC5uAgcTv4xuZQWwRASOJK8sOgo1iFnjLInGs0RfEFhZIl7j0ag0jRE2GxPZX
+        E4HqOYBsN4mbfxJAwiwCqhKnO/6ChXkFzCSuX7YHCXMKGEosaV4ENp1RQEzi+6k1TBDTxSVu
+        PZnPBHG0oMSi2XuYIWwxiX+7HrJB2IoS97+/hLpGR2LB7k9sELadxJb951ghbG2JZQtfg/Xy
+        As05OfMJC0SvpMTBFTdYQN6VENjNKfHp62mooS4Sy7feZYSwpSWmr7kMVdTOKPFhwj5WCGcC
+        o8Sdtz+hOqwl/nVeY5/AqDILyeWzkFw1C8lVs5BcNQvJVQsYWVcxipcWF+empxYb56WW6xUn
+        5haX5qXrJefnbmIEJsnT/w4X7GC8deuj3iFGJg7GQ4wSHMxKIrwLz+xMEuJNSaysSi3Kjy8q
+        zUktPsQozcGiJM67LHNDopBAemJJanZqakFqEUyWiYNTqoGp8i979puDIpdb719ROiT03+kf
+        l2YCC5thAtPLk7v/HNbL/qZotXrDfJO60t97u3Ok2g7zsySYi0Zndexb8KlthpyyqJr86jCe
+        4tcBtlZ3g59vY7QW3XeHVcPJLv6M95e5j6TdujZoCn5fd8uj7doKG1nG7DB5/s9cZQuuTdjb
+        zGNd/lMlSETq7OYtL8Q93iT8bF0aqsS8VWVfn26jHKOHoN+tsE33GhMY5t36oia6ZA3L/Iyt
+        6qIfBddeLo+4/2H7HNfNsZktJmdZuQ+skVjXd+ZYhaHJ721qh155heZdqmhzCj50K1P65bOL
+        qb8U7/T0iMYcFc+IC35zRvmcm9LZjQXnamrLFH+c7i3Rf6HEUpyRaKjFXFScCABFauaXAQQA
+        AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmleLIzCtJLcpLzFFi42LJbGCapFtWvifJ4NluCYu2VfuYLJY0ZVj8
+        v/ucyWL61AuMFjvXslqcnrCIyWL/0+csFqsWXmOz6Jy9gd2ioec3q8X5WadYLM7OO85mcXjj
+        GSaLN79fsFu8eC7twO/x5OA8Jo8189Ywelxo3MjqsWBTqUfLkbesHptXaHks3vOSyePJlelM
+        Hh+f3mLx+LxJzmNG+zbWAO4oLpuU1JzMstQifbsErowjl64yFkwUrFjUd52lgXEGXxcjJ4eE
+        gInEuUtzGbsYuTiEBFYzSnR07mWCcD4xSqw7/gYqs4xR4t79TnaQFjYBA4nfxzcyg9giAkYS
+        V5YdZAcpYhZ4yyKxbMFlJpCEsEC6xKVXaxghijIk3p2fyNbFyAFku0nc/JMAEmYRUJU43fGX
+        GSTMK2Amcf2yPcSuNmaJi39Ogs3nFDCUWNK8CMxmFBCT+H5qDdh4ZgFxiVtP5jNBvCAgsWTP
+        eWYIW1Ti5eN/rBC2osT97y/ZIep1JBbs/sQGYdtJbNl/jhXC1pZYtvA1WC+vgKDEyZlPWCB6
+        JSUOrrjBMoFRYhaSdbOQjJqFZNQsJKNmIRm1gJF1FaN4aXFxbnpFsXFearlecWJucWleul5y
+        fu4mRmB6Of3vcMwOxnu3PuodYmTiYDzEKMHBrCTCu/DMziQh3pTEyqrUovz4otKc1OJDjNIc
+        LErivB6xE+OFBNITS1KzU1MLUotgskwcnFINTAK1ngcfMuQFdx451sZtdu7Gv+RL91NkVb8w
+        d37cp9p3Xqe31ery1qg575Xuz70ZW2omK3FMdkrC3ddJdmbeXB757lNVrHfc9vTTN7j6RLq2
+        Q877/qGehi9NO8PfiE3Zum//a3F/9dU79YREfussipkrsLP6hujdcPbmgu9bYkz7I/RjKwJK
+        Cp4wf1a7bSjrE+cxRz5g5vGAQzcXmD7r+POwvGptzNLE/jx1nQKnVUJiBsH/paSvLw0p+jz/
+        LI+R/VSjD298/ZQOzSnljlItWfY2+rmH1H4zLsHjXZvMa57yqujfUvs4ZWeYiWdkBvuCjD3n
+        0mIOL+e7JOCmNv10pqaBqono4fTcp9e4pMOVWIozEg21mIuKEwHMjjvMngMAAA==
+X-CMS-MailID: 20220629160158uscas1p2b7fbbe3a311de793c08e19e6f3d9a779
+CMS-TYPE: 301P
+X-CMS-RootMailID: 20220624143249uscas1p1ae96e45ccb5b3b4f22a5b863c7a6fc9f
+References: <20220609124702.000037b0@Huawei.com>
+        <YqICCSd/6Vxidu+v@iweiny-desk3> <20220617112124.00002296@Huawei.com>
+        <20220620165217.GA18451@wunner.de> <20220622124638.00004456@Huawei.com>
+        <20220624120830.00002eef@Huawei.com> <20220624141531.GA32171@wunner.de>
+        <CGME20220624143249uscas1p1ae96e45ccb5b3b4f22a5b863c7a6fc9f@uscas1p1.samsung.com>
+        <20220624153241.000055e2@Huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Yes, my mistake. Only vendor drivers have to load and initialize when mem_hwinit_mode is 0.
+On Fri, Jun 24, 2022 at 03:32:41PM +0100, Jonathan Cameron wrote:
+> On Fri, 24 Jun 2022 16:15:31 +0200
+> Lukas Wunner <lukas@wunner.de> wrote:
+>=20
+> > On Fri, Jun 24, 2022 at 12:08:30PM +0100, Jonathan Cameron wrote:
+> > > I've put this in for now: =20
+> >=20
+> > Perfect!  For me as a non-native English speaker, it would have been
+> > a lot more difficult to write up such an excellent description,
+> > so thanks for doing this.
+>=20
+> It always feels a bit like cheating when you get to write these
+> things in your first language!
+> >=20
+> > > Hence this proposal for a BoF rather than session in=20
+> > > either PCI or CXL uconf. =20
+> >=20
 
-That said:
-1. The CXL code in linux has to look and take the right action for mem_hwinit_mode==0 case. It doesn't check it right now. When I can I will get around to proposing a patch for it here.
-2.  The CXL spec has to add some verbiage to clear this point. I will follow up on the consortium.
+I am planning to be attending plumbers in person and am quite interested in=
+=20
+this BOF.
 
-Thanks
-ManiS
 
------Original Message-----
-From: Dan Williams <dan.j.williams@intel.com> 
-Sent: Tuesday, June 28, 2022 12:49 PM
-To: Mani Subramaniyan <mani.subramaniyan@elastics.cloud>; Dan Williams <dan.j.williams@intel.com>; linux-cxl@vger.kernel.org
-Subject: RE: DVSEC FLEX BUS CAP bit 3: MEM_HWINIT_MODE
-
-Mani Subramaniyan wrote:
-> Thanks Dan for your answers!
-> As for MEM_HwInit_Mode, spec indicates that when it is set, hardware 
-> has to set memory active in the range low address bits within 100msec 
-> (it has to complete its internal initializations within that time).
-> 
-> This leads me to assume the following for a software initialization:
-> 1. Both mem_hwinit_mode and mem_active are set to 0 by hardware.
-> 2. OS loads a driver (either generic or vendor specific) that talks to 
-> the hardware and does the hardware initialization. Hardware, after 
-> completing the initialization, also changes the mem_active bit state 
-> to 1.
-
-If mem_hwinit_mode=0 then the device is using a custom memory initialization flow and the generic driver can not be used. This is because mem_hwinit_mode=0 implies a non-generic / non-standard initialization mechanism. So I think a device that sets
-mem_hwinit_mode=0 must either not specify the common class code and use a vendor driver, or it needs to make sure that the platform firmware has initialized the device before the generic OS driver attaches.
+> > I think this has overlap with the Confidential Computing uconf as well,
+> > so that might be another potentially interested audience.
+> >=20
+> > (Link encryption is by its very nature "confidential computing",
+> > and attestation is explicitly mentioned on the CC uconf page:
+> > https://urldefense.com/v3/__https://protect2.fireeye.com/v1/url?k=3D103=
+69d39-71bd8872-10371676-74fe485fb305-1ce6f2197c6a68d6&q=3D1&e=3D6639a8eb-2d=
+66-432f-a3d9-760b3e8def9f&u=3Dhttps*3A*2F*2Flpc.events*2Fevent*2F16*2Fcontr=
+ibutions*2F1143*2F__;JSUlJSUlJSU!!EwVzqGoTKBqv-0DWAJBm!UGKGabNBEqfdQU-FrF-b=
+Enhwu9mRW4PRGa1LoMvehedU3XRfsZzuoHGUZUVWHVD3p26pNa-le6OwJPQwMs7wV4kiu9GUb9l=
+d$  )
+> >=20
+> > Thanks,
+> >=20
+> > Lukas
+> >=20
+>=20
+> Good point. That is an area in which we need dance around what we
+> can an can't say (i.e. what is public from various standards orgs) but th=
+ey=20
+> may well still be interested.
+>=20
+> Added=20
+> - Confidential compute community
+> to list of people who might be interested.
+>=20
+> +CC Joerg so he knows this proposal exists and can perhaps drag in anyone
+> else who might be interested.
+>=20
+> https://urldefense.com/v3/__https://lore.kernel.org/all/20220624120830.00=
+002eef@Huawei.com/__;!!EwVzqGoTKBqv-0DWAJBm!UGKGabNBEqfdQU-FrF-bEnhwu9mRW4P=
+RGa1LoMvehedU3XRfsZzuoHGUZUVWHVD3p26pNa-le6OwJPQwMs7wV4kiu68CJwlU$=20
+> for abstract.
+>=20
+> Thanks,
+>=20
+> Jonathan
+> =
