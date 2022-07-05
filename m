@@ -2,203 +2,246 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C850C43334
-	for <linux-cxl@archiver.kernel.org>; Mon,  4 Jul 2022 06:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E037C43334
+	for <linux-cxl@archiver.kernel.org>; Tue,  5 Jul 2022 15:51:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232982AbiGDGpS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 4 Jul 2022 02:45:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52522 "EHLO
+        id S232251AbiGEPvE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 5 Jul 2022 11:51:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232847AbiGDGpR (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 4 Jul 2022 02:45:17 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BFF6389D;
-        Sun,  3 Jul 2022 23:45:16 -0700 (PDT)
-Received: from fraeml745-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Lbx5r1kW5z686XZ;
-        Mon,  4 Jul 2022 14:41:04 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml745-chm.china.huawei.com (10.206.15.226) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 4 Jul 2022 08:45:13 +0200
-Received: from localhost (10.81.220.224) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 4 Jul
- 2022 07:45:11 +0100
-Date:   Mon, 4 Jul 2022 07:45:08 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
+        with ESMTP id S232195AbiGEPur (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Jul 2022 11:50:47 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F04F1F2EB;
+        Tue,  5 Jul 2022 08:49:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657036180; x=1688572180;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=VBVT9Ztx2XudKWiVN7HOUP4CmCPftjOZnUwcR3SjwPU=;
+  b=iSt5ROuxUS5FXQSUCPFEok1KKHCiEooxBIf/LkBVUi4B7Jx6V0aJTJeQ
+   /s/ecOtfYIGejGtlFp+EbG/SIJVr1eTcVaamMihFe8M3rIC+xWMvR9geG
+   6kLAG2HH4uQPmX4SZr92wrYBlnXBGyQTgYK9AHaKSZpBoKJpeyGoACHhN
+   9HcBof+fU8boHQcI1BrHKQko/eRWfT/C3BwowthyRKQnQd/VTD5PwDE13
+   mzBDzeUJbfXaNjcOhBtxy70ExveliuvWc8YvH63vX+zFWXihnV0n6FOxu
+   5S9dZ/Xo0QYUz8bxGCU6QcTm+cf1WNHDmGI40OI82DTXwkrDurrrcIxaT
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10398"; a="308929215"
+X-IronPort-AV: E=Sophos;i="5.92,247,1650956400"; 
+   d="scan'208";a="308929215"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2022 08:49:39 -0700
+X-IronPort-AV: E=Sophos;i="5.92,247,1650956400"; 
+   d="scan'208";a="619879995"
+Received: from amangla-mobl.amr.corp.intel.com (HELO localhost) ([10.255.0.184])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2022 08:49:37 -0700
+From:   ira.weiny@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "Li, Ming" <ming4.li@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Lukas Wunner <lukas@wunner.de>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        "Dave Jiang" <dave.jiang@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, Kangkang Shen <kshen@futurewei.com>
-Subject: Re: [PATCH V12 3/9] PCI: Create PCIe library functions in support
- of DOE mailboxes.
-Message-ID: <20220704074508.00000cac@Huawei.com>
-In-Reply-To: <Yr9zroBeSLfWyp5U@iweiny-desk3>
-References: <20220628041527.742333-1-ira.weiny@intel.com>
-        <20220628041527.742333-4-ira.weiny@intel.com>
-        <20220628151626.00001c0f@Huawei.com>
-        <YrtGcNWcmzumj2gA@iweiny-desk3>
-        <20220629150947.000012be@Huawei.com>
-        <Yr0nysRl7x49me1K@iweiny-desk3>
-        <20220630162540.00002910@Huawei.com>
-        <Yr9zroBeSLfWyp5U@iweiny-desk3>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH V13 0/9] CXL: Read CDAT and DSMAS data
+Date:   Tue,  5 Jul 2022 08:49:23 -0700
+Message-Id: <20220705154932.2141021-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.35.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.220.224]
-X-ClientProxiedBy: lhreml727-chm.china.huawei.com (10.201.108.78) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 1 Jul 2022 15:22:38 -0700
-Ira Weiny <ira.weiny@intel.com> wrote:
-
-> On Thu, Jun 30, 2022 at 04:25:40PM +0100, Jonathan Cameron wrote:
-> > On Wed, 29 Jun 2022 21:34:18 -0700
-> > Ira Weiny <ira.weiny@intel.com> wrote:
-> >   
-> 
-> [snip]
-> 
-> I've dropped the IRQ support and was polishing things up.  Without the IRQ I
-> don't think any 'arming' makes sense.
-> 
-> However, in working through the sequence again I think I found another problem.
-> I _think_...  :-/
-> 
-> > > 
-> > > But we are only going to see this if some other entity is using the mailbox
-> > > right?  And I don't think that is going to be common, is it?  
-> > 
-> > BUSY on entry to doe_statemachine_work() is indeed only relevant if
-> > some other entity is trampling on us. It's best effort only.
-> > 
-> > BUSY during normal flow is the one I care about.
-> > In most cases it will go like (assuming we clear the int status in the handler as now)
-> > 
-> >              Send Object
-> > BUSY      ________|-----___________________
-> > PROC      ________|------------------______
-> > OBJ RDY   ___________________________-------
-> > Int Status______________-____________-_____  
-> 
-> So I did not realize that BUSY could clear like this.  I thought the point of
-> BUSY was to indicate someone else had an exchange in flight.
-
-Unfortunately the spec doesn't provide any way of indicating 'who' is using
-the DOE. All busy says is that right now the mailbox is not capable of receiving
-a new request.  Way back in one of the early posting we considered just dropping
-the 'best effort' wait that is there, but I think we concluded it was harmless
-and might make things a tiny bit more stable if there was something stale
-from before OS load.
-
-> 
-> What happens if another entity jumps in during the PROC time?  How does one
-> know that OBJ RDY is _our_ object ready and not someone else's?
-
-Absolutely.  The reality is that DOE isn't suitable for multi actor use.
-We need to put in some mediation.  One thing being neglected on my todo
-list is that we need a _DSM in ACPI or similar to negotiate access plus
-potentially some firmware interfaces to allow the OS to make firmware
-mediated calls.  Those firmware interfaces may be at the protocol level
-or even further up the stack.
-
-Not sure if we got to it, but this problem was in the slides for
-last years Plumbers uconf talk on DOE.
-
-> 
-> For example 'entity' issues a send, we see busy clear and also start a
-> send.  But the device is still processing the send from 'entity':
-> 
->             Send Object(entity) Send Object (Linux)
-> BUSY      ___|----_______________|---______________________________
-> PROC      ___|-----------------------------___|-----------------___
-> OBJ RDY   _________________________________-------______________---
-> Int Status________-__________________-_____-____________________-__
-> 
->                                           ^^^
-> 					  This...
-> 
-> ... is _not_ Linux's object!?!?!?!
-> 
-> Can that happen?
-
-yup.
-
-> 
-> If so this is entirely broken.  Even Polling OBJ RDY will break.  And worse yet
-> we will not even see BUSY being set in any 'abnormal' way.
-> 
-> > 
-> > where I've added PROC to mean the device is processing the data.
-> > Once it clears the input buffer on the device and hence the device can accept
-> > another protocol request BUSY will drop.  If device has some pipelining
-> > or runs multiple protocols in different threads, you can think of that busy
-> > period just being the time it needs to copy out the request to some protocol
-> > thread specific storage.  
-> 
-> BUSY was not at all doing what I thought it did.  I'm now concerned that it is
-> completely broken WRT to other entities even without IRQs.  Frankly I'm
-> confused why pci_doe_send_req() even checks for busy because it is unlikely
-> that we will ever see it set.  For sure we won't from our side because the
-> workqueue is going to process one task at a time.
-
-yup, we could drop it, but leave some comment in there that says the spec
-suggests checking it.
-
-> 
-> If Linux wanted to have multiple objects in flight I think we would need a much
-> more complex state machine than we had.  Maybe your original state machine
-> handled this.  If so, I apologize for missing this subtle point.
-
-It didn't.  I decided that it wasn't worth the effort :)
-
-> 
-> At this point I'm debating removing the check for BUSY as well because I don't
-> see the point.  (Other than maybe flagging some error to say that 'entity' may
-> be messing things up for us and bailing.)
-> 
-> Thoughts?
-
-I'm fine with replacing it with comments, or an error print to say that IIRC
-the spec says we should wait for it, but reality is that it doesn't work.
-
-Guess I should get on with proposing a _DSM interface to deal with this.
-It's a bit messy though as relies on reliable matching of PCI devices against
-firmware.  In theory, with the right 'no reenumeration' flags that has a high
-chance of working these days but requires some extra language to say that all
-bets are off if you reenumerate before figuring out the ACPI to PCI device mapping.
-I dropped the ball on getting that element in place.
-
-What fun ;)
-
-Jonathan
+From: Ira Weiny <ira.weiny@intel.com>
 
 
-> Ira
-> 
-> > 
-> > You won't see this in QEMU without extra hacks because we shorten the
-> > flow so that whole thing is instantaneous.
-> > 
-> > If those two interrupts per transfer occur well spread out they can result in
-> > your INT flag being set too often and some of the waits dropping through early.
-> > 
-> > It will 'work' I think though because you ultimately spin on Data object
-> > ready which won't be set until after the second interrupt.
-> >   
+Changes from V12:[9]
+	A couple of bug fixes in the new XArray stuff
+	Remove the IRQ support because I did not realize how that worked and it
+	was complicating things.
+	Remove busy retries and replace with an error as there is no good way
+	to ensure it will work.
+	Other code clean ups mentioned in the individual patches.
+
+CXL drivers need various data which are provided through generic DOE mailboxes
+as defined in the PCIe 6.0 spec.[1]
+
+One such data is the Coherent Device Atribute Table (CDAT).  CDAT data provides
+coherent information about the various devices in the system.  It was developed
+because systems no longer have a priori knowledge of all coherent devices
+within a system.  CDAT describes the coherent characteristics of the
+components on the CXL bus separate from system configurations.  The OS can
+then, for example, use this information to form correct interleave sets.
+
+To begin reading the CDAT the OS must have support to access the DOE mailboxes
+provided by the CXL devices.
+
+Because DOE is not specific to DOE but is provided within the PCI spec, the
+series adds PCI DOE capability library functions.  These functions allow for
+the iteration of the DOE capabilities on a device as well as creating
+pci_doe_mb structures which can control the operation of the DOE state machine.
+
+For now the iteration of and storage of the DOE mailboxes is done on memdev
+objects within the CXL stack.  When this is needed in more generic code this
+can be lifted later.
+
+This work was tested using qemu.
+
+[0] https://lore.kernel.org/linux-cxl/20211105235056.3711389-1-ira.weiny@intel.com/
+[1] https://pcisig.com/specifications
+[2] https://lore.kernel.org/qemu-devel/20210202005948.241655-1-ben.widawsky@intel.com/
+[3] https://lore.kernel.org/linux-cxl/20220201071952.900068-1-ira.weiny@intel.com/
+[4] https://lore.kernel.org/linux-cxl/20220330235920.2800929-1-ira.weiny@intel.com/
+[5] https://lore.kernel.org/linux-cxl/20220414203237.2198665-1-ira.weiny@intel.com/
+[6] https://lore.kernel.org/linux-cxl/20220531152632.1397976-1-ira.weiny@intel.com/
+[7] https://lore.kernel.org/linux-cxl/20220605005049.2155874-1-ira.weiny@intel.com/
+[8] https://lore.kernel.org/linux-cxl/20220610202259.3544623-1-ira.weiny@intel.com/
+[9] https://lore.kernel.org/linux-cxl/20220628041527.742333-1-ira.weiny@intel.com/
+
+
+Previous changes
+================
+
+Changes from V11:[8]
+	The major change in this version is to remove the workqueue from the
+	internal implementation of the state machine.  A single ordered
+	workqueue within each mailbox processes tasks submitted.  This
+	workqueue takes care of all locking and guarantees that tasks are
+	completed in the order submitted.  Any synchronization which is
+	required between tasks will need to be handled by the user of the
+	mailbox.  However, the user can depend on work items being completed in
+	the order they are submitted.  So a single thread submitter is
+	guaranteed to get all work items completed in order.  This also aids in
+	the support of a single mailbox supporting multiple protocols.  Each
+	protocol could have a separate thread submitting tasks for that
+	protocol.  The mailbox object will ensure that each protocol task is
+	complete before another task starts.  But multiple user threads can be
+	submitting tasks for different protocols all at the same time without
+	regard to other protocols being used.
+
+	XArrays are used throughout the series.
+
+	Other minor changes are noted in the individual patches.
+
+Changes from V10:[7]
+	Address Ben Widawsky's comments
+		Protect against potentially malicious devices.
+		Fix ownership issue of cdat_mb
+
+Changes from V9:[6]
+	Address feedback from
+		Lukas Wunner, Davidlohr Bueso, Jonathan Cameron,
+		Alison Schofield, and Ben Widawsky
+		Details in each individual patch.
+
+Changes from V8:[5]
+	For this version I've punted a bit to get it out and drop the auxiliary
+	bus functionality.  I like where Jonathan is going with the port driver
+	idea.  I think eventually the irq/mailbox creation will need to be more
+	generic in a PCI port driver.  I've modeled this version on such an
+	architecture but used the CXL port for the time being.
+
+	From Dan
+		Drop the auxiliary bus/device
+	From Jonathan
+		Cleanups
+	From Bjorn
+		Clean up commit messages
+		move pci-doe.c to doe.c
+		Clean up PCI spec references
+		Ensure all messages use pci_*()
+		Add offset to error messages to distinguish mailboxes
+			use hex for DOE offsets
+		Print 4 nibbles for Vendor ID and 2 for type.
+		s/irq/IRQ in comments
+		Fix long lines
+		Fix typos
+
+
+Changes from V7:[4]
+	Avoid code bloat by making pci-doe.c conditional on CONFIG_PCI_DOE
+		which is auto selected by the CXL_PCI config option.
+	Minor code clean ups
+	Fix bug in pci_doe_supports_prot()
+	Rebase to cxl-pending
+
+Changes from V6:[3]
+	The big change is the removal of the auxiliary bus code from the PCI
+	layer.  The auxiliary bus usage is now in the CXL layer.  The PCI layer
+	provides helpers for subsystems to utilize DOE mailboxes by creating a
+	pci_doe_mb object which controls a state machine for that mailbox
+	capability.  The CXL layer wraps this object in an auxiliary device and
+	driver which can then be used to determine if the kernel is controlling
+	the capability or it is available to be used by user space.  Reads from
+	user space via lspci are allowed.  Writes are allowed but flagged via a
+	tainting the kernel.
+
+	Feedback from Bjorn, Jonathan, and Dan
+		Details in each patch
+
+Changes from V5:[0]
+
+	Rework the patch set to split PCI vs CXL changes
+		Also make each change a bit more stand alone for easier review
+	Add cxl_cdat structure
+	Put CDAT related data structures in cdat.h
+	Clarify some device lifetimes with comments
+	Incorporate feedback from Jonathan, Bjorn and Dan
+		The bigest change is placing the DOE scanning code into the
+			pci_doe driver (part of the PCI codre).
+		Validate the CDAT when it is read rather than before DSMAS
+			parsing
+		Do not report DSMAS failure as an error, report a warning and
+			keep going.
+		Retry reading the table 1 time.
+	Update commit messages and this cover letter
+
+
+
+Ira Weiny (7):
+  PCI: Replace magic constant for PCI Sig Vendor ID
+  cxl/pci: Create PCI DOE mailbox's for memory devices
+  driver-core: Introduce BIN_ATTR_ADMIN_{RO,RW}
+  cxl/port: Read CDAT table
+  cxl/port: Introduce cxl_cdat_valid()
+  cxl/port: Retry reading CDAT on failure
+  cxl/port: Parse out DSMAS data from CDAT table
+
+Jonathan Cameron (2):
+  PCI: Add vendor ID for the PCI SIG
+  PCI: Create PCIe library functions in support of DOE mailboxes.
+
+ .clang-format                 |   1 +
+ drivers/cxl/Kconfig           |   1 +
+ drivers/cxl/cdat.h            | 125 ++++++++
+ drivers/cxl/core/pci.c        | 298 ++++++++++++++++++
+ drivers/cxl/cxl.h             |   7 +
+ drivers/cxl/cxlmem.h          |   7 +
+ drivers/cxl/cxlpci.h          |   2 +
+ drivers/cxl/mem.c             |   1 +
+ drivers/cxl/pci.c             |  44 +++
+ drivers/cxl/port.c            |  51 ++++
+ drivers/pci/Kconfig           |   3 +
+ drivers/pci/Makefile          |   1 +
+ drivers/pci/doe.c             | 552 ++++++++++++++++++++++++++++++++++
+ drivers/pci/probe.c           |   2 +-
+ include/linux/pci-doe.h       |  79 +++++
+ include/linux/pci_ids.h       |   1 +
+ include/linux/sysfs.h         |  16 +
+ include/uapi/linux/pci_regs.h |  29 +-
+ 18 files changed, 1218 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/cxl/cdat.h
+ create mode 100644 drivers/pci/doe.c
+ create mode 100644 include/linux/pci-doe.h
+
+
+base-commit: 34e37b4c432cd0f1842b352fde4b8878b4166888
+-- 
+2.35.3
 
