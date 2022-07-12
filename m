@@ -2,48 +2,47 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3BACCA47F
-	for <linux-cxl@archiver.kernel.org>; Tue, 12 Jul 2022 19:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A319C43334
+	for <linux-cxl@archiver.kernel.org>; Tue, 12 Jul 2022 19:32:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233300AbiGLTb5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 12 Jul 2022 15:31:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41406 "EHLO
+        id S233396AbiGLTcD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 12 Jul 2022 15:32:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232847AbiGLTbk (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 12 Jul 2022 15:31:40 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45451E4764
-        for <linux-cxl@vger.kernel.org>; Tue, 12 Jul 2022 12:07:37 -0700 (PDT)
+        with ESMTP id S230372AbiGLTbt (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 12 Jul 2022 15:31:49 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BF79F90C2
+        for <linux-cxl@vger.kernel.org>; Tue, 12 Jul 2022 12:07:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657652857; x=1689188857;
+  t=1657652863; x=1689188863;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=AeWJ82o6BwFn1NlqdqKUFKk+NqL3Dqc98exzk9j2WHE=;
-  b=bgSjKtaJGvospnPglgA9P3vFhzMEgsgqvpJSlcuZ5Ivi8kNwQsQiQCPF
-   jHU15wURvqaOqzi6TBHF+7ZiF2fD0+8oqNq/i72gQUnDdzRbhmDzqdXeh
-   8wFKh6ZB8Si9EaGdVdP/D4FjIzg/GfM3k2Zpz79WAygr1KEo5WZTQFXhG
-   axa/zvjZAvhxPvXGjrX3BSQmkaXcMsyOzYRpZpsExxuzorS8tm9ITty+V
-   3ky8FLU7aTyHXqQMZNsqAhZf/iBiR/lsI84eP1h9e9wD8E1fDVnMPA47R
-   15PUq6HFdJhQCIzZQI3fkAAUb1gePCvctfeHUB+shRetWIaxpzXgGwB9l
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10406"; a="310645995"
+  bh=mrnwLl55GJn/AdTFh1P9ioZWwwFqWv5sPXutL333B8w=;
+  b=WuEDVyOenj4ltIkiQWWRPVSZDVMQA59LHKm19DhRRJa3LoKeIp0/22XU
+   IcPSu7Wy1ifhFyZaDeFSDzjdulWia0K9+zc8SIwX/RwEf2Enmaz2debel
+   92VEuADgQQXr9eK/1BCk/DPzPV+qDTLOvdFusEdneJp3SRxf5mvCnfZCH
+   ZAVgZzVKWby8rtp2a+5sm9x3BxMv3EaFngxCbmVNuEf5OexMOwamLn6iU
+   bS6PlPbTMhg312pMDFh/dnGCgpw0bGuDADxlfYUk03Y5SSCoT5ABU/egH
+   80jczYaJmly311+PcAt1PNDeES44XnkEYHMUnYhyp6Eh63ZRaAhpiC051
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10406"; a="268058633"
 X-IronPort-AV: E=Sophos;i="5.92,266,1650956400"; 
-   d="scan'208";a="310645995"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2022 12:07:36 -0700
+   d="scan'208";a="268058633"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2022 12:07:42 -0700
 X-IronPort-AV: E=Sophos;i="5.92,266,1650956400"; 
-   d="scan'208";a="570316577"
+   d="scan'208";a="653039379"
 Received: from sheyting-mobl3.amr.corp.intel.com (HELO [192.168.1.117]) ([10.212.147.156])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2022 12:07:36 -0700
-Subject: [ndctl PATCH 02/11] cxl/list: Emit endpoint decoders filtered by
- memdev
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2022 12:07:42 -0700
+Subject: [ndctl PATCH 03/11] cxl/list: Hide 0s in disabled decoder listings
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     vishal.l.verma@intel.com
 Cc:     alison.schofield@intel.com, nvdimm@lists.linux.dev,
         linux-cxl@vger.kernel.org
-Date:   Tue, 12 Jul 2022 12:07:36 -0700
-Message-ID: <165765285600.435671.1816486143808105272.stgit@dwillia2-xfh>
+Date:   Tue, 12 Jul 2022 12:07:41 -0700
+Message-ID: <165765286159.435671.9172753303612160309.stgit@dwillia2-xfh>
 In-Reply-To: <165765284365.435671.13173937566404931163.stgit@dwillia2-xfh>
 References: <165765284365.435671.13173937566404931163.stgit@dwillia2-xfh>
 User-Agent: StGit/0.18-3-g996c
@@ -54,40 +53,52 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-For example, dump all the endpoint decoders from memdev 'mem8'.
-
-    cxl list -Di -m 8 -d endpoint
+Trim some redundant information from decoder listings when they are
+disabled.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- cxl/filter.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ cxl/json.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/cxl/filter.c b/cxl/filter.c
-index 66fd7420144a..2f88a9d2f398 100644
---- a/cxl/filter.c
-+++ b/cxl/filter.c
-@@ -428,7 +428,9 @@ util_cxl_decoder_filter_by_memdev(struct cxl_decoder *decoder,
- 				  const char *ident, const char *serial)
- {
- 	struct cxl_ctx *ctx = cxl_decoder_get_ctx(decoder);
-+	struct cxl_endpoint *endpoint;
- 	struct cxl_memdev *memdev;
-+	struct cxl_port *port;
+diff --git a/cxl/json.c b/cxl/json.c
+index fdc6f73a86c1..a213fdad55fd 100644
+--- a/cxl/json.c
++++ b/cxl/json.c
+@@ -442,7 +442,7 @@ struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
+ 	const char *devname = cxl_decoder_get_devname(decoder);
+ 	struct cxl_port *port = cxl_decoder_get_port(decoder);
+ 	struct json_object *jdecoder, *jobj;
+-	u64 val;
++	u64 val, size;
  
- 	if (!ident && !serial)
- 		return decoder;
-@@ -438,6 +440,12 @@ util_cxl_decoder_filter_by_memdev(struct cxl_decoder *decoder,
- 			continue;
- 		if (cxl_decoder_get_target_by_memdev(decoder, memdev))
- 			return decoder;
-+		port = cxl_decoder_get_port(decoder);
-+		if (!port || !cxl_port_is_endpoint(port))
-+			continue;
-+		endpoint = cxl_port_to_endpoint(port);
-+		if (cxl_endpoint_get_memdev(endpoint) == memdev)
-+			return decoder;
+ 	jdecoder = json_object_new_object();
+ 	if (!jdecoder)
+@@ -452,21 +452,21 @@ struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
+ 	if (jobj)
+ 		json_object_object_add(jdecoder, "decoder", jobj);
+ 
++	size = cxl_decoder_get_size(decoder);
+ 	val = cxl_decoder_get_resource(decoder);
+-	if (val < ULLONG_MAX) {
++	if (size && val < ULLONG_MAX) {
+ 		jobj = util_json_object_hex(val, flags);
+ 		if (jobj)
+ 			json_object_object_add(jdecoder, "resource", jobj);
  	}
  
- 	return NULL;
+-	val = cxl_decoder_get_size(decoder);
+-	if (val < ULLONG_MAX) {
+-		jobj = util_json_object_size(val, flags);
++	if (size && size < ULLONG_MAX) {
++		jobj = util_json_object_size(size, flags);
+ 		if (jobj)
+ 			json_object_object_add(jdecoder, "size", jobj);
+ 	}
+ 
+-	if (val == 0) {
++	if (size == 0) {
+ 		jobj = json_object_new_string("disabled");
+ 		if (jobj)
+ 			json_object_object_add(jdecoder, "state", jobj);
 
