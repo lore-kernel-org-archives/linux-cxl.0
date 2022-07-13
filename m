@@ -2,198 +2,199 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A30E2C43334
-	for <linux-cxl@archiver.kernel.org>; Wed, 13 Jul 2022 16:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100A5C433EF
+	for <linux-cxl@archiver.kernel.org>; Wed, 13 Jul 2022 18:50:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236216AbiGMQzS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 13 Jul 2022 12:55:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60330 "EHLO
+        id S232266AbiGMSu1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 13 Jul 2022 14:50:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235834AbiGMQzR (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Jul 2022 12:55:17 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA2DB29824
-        for <linux-cxl@vger.kernel.org>; Wed, 13 Jul 2022 09:55:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657731316; x=1689267316;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=dPfGW0UyqMe+1fiDDDGUfRIXpjrnn1BJ+nJMEw8I06g=;
-  b=FLu3Fh8ZFWsW0y54H6BG0gQZNQwGEjHR3+bQbe+NoXgXJpcaZTRkDf1G
-   qoyXxXfPWFUfn+hVaUWkZTjU98L6LztgnbW+jRDaHnfm2nKlIPiM85AVk
-   lJV49LQsdMpC5mjw0d42Qun+4F3uLgUozcAWUKCffrXKX5l752ZylGpFe
-   lhaNPnOrvmlRf64LrMpXp72cwuD/kSEt47lyKA6k4jlHtfWQPBr4SIbAj
-   ZhQxgNVlEKxihHMiZIqfIbNUisE5eLyLHxnChpGKr7EUid+rfBu3xYd/y
-   z1sqFEgm+3NCQ7w1IhPnd+1K9bbI055La/BstyefaC64VKyCU4B4wPScO
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10407"; a="285307521"
-X-IronPort-AV: E=Sophos;i="5.92,267,1650956400"; 
-   d="scan'208";a="285307521"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2022 09:55:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,267,1650956400"; 
-   d="scan'208";a="685237067"
-Received: from fmsmsx606.amr.corp.intel.com ([10.18.126.86])
-  by FMSMGA003.fm.intel.com with ESMTP; 13 Jul 2022 09:55:10 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Wed, 13 Jul 2022 09:55:09 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Wed, 13 Jul 2022 09:55:09 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Wed, 13 Jul 2022 09:55:09 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.175)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Wed, 13 Jul 2022 09:55:09 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F5oPhpIRAIn4CuP9f2nr6ZK3GOmeFaGP0PqpTd62Qe5mSBTBK9MX/GbLPsd5NQK+DNKCa3CP3ZgU4xqMm1oe24rNfjN+VKqrGetXlCgBJkCPs3pH6HKGv/UgKzcNJAc+E0v7mmT52KRA4HNft6Rqik1h26nqnXjBNbhxM0bAkVM2/KQFAPgCvJy9v4byR1J62WLUFcfrRA7XHi4SvA8c3mvTdF7EJdim7gulL8zbpSAQV2Ve73M5ceUe19T8QNNvcK4L7Fv1a73eo+K/t9XinN2Y+ekIm/1h+23XU3dcNS02eJwXRNL+RoxkbjWLZ3nGwYwVpGfKSfYzmNs72zgv3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xbBg3DgIshsWBzlYgO5BtSobz++pwUuQRyNzDdmJVYg=;
- b=cDIANRLxr0RL2fy+qszXMzyYpdFtxNgg0J3ADKrzj1fzUf8AJMnyBWhHMrvVOB6kK6Tt+Syf5UMp1pzeJdPaFrsZm15GktcEc8belEox3W6UjX5NlGVKIWwi3KdkcghRBFIXtHumUnoIBIy+/wsivyYBpuoTIeXYbdVEliVk1vztz5W9mIDDEN63GUzPlgnyRJexaMF4XD6FUaSJiKW+vHUUdnFwxBiGwhfgwskFsKLZEVnygWaI6dpZXB9/UB+EoxgzBVevBn5uTTzpVFFHaIY4eY/comFB/QdqtIEqFAPabMyTUQEOU7k/21e3TVC89A0uI2gNSSBTe2FhB49UnQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by SJ0PR11MB5021.namprd11.prod.outlook.com
- (2603:10b6:a03:2dc::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.12; Wed, 13 Jul
- 2022 16:55:07 +0000
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::6466:20a6:57b4:1edf]) by MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::6466:20a6:57b4:1edf%11]) with mapi id 15.20.5417.026; Wed, 13 Jul
- 2022 16:55:07 +0000
-Date:   Wed, 13 Jul 2022 09:55:05 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>
-CC:     "Schofield, Alison" <alison.schofield@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
-Subject: Re: [ndctl PATCH 09/11] cxl/memdev: Add {reserve,free}-dpa commands
-Message-ID: <62cef8e9e8ac6_156c6529454@dwillia2-xfh.jf.intel.com.notmuch>
-References: <165765284365.435671.13173937566404931163.stgit@dwillia2-xfh>
- <165765289554.435671.7351049564074120659.stgit@dwillia2-xfh>
- <cac1d3a7a7e6515b2db0ce7ee73db812686d3407.camel@intel.com>
- <62cee31e25d52_156c65294f1@dwillia2-xfh.jf.intel.com.notmuch>
- <e0e83c8e3a45b432ed1747b0b8442a7a11db8579.camel@intel.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e0e83c8e3a45b432ed1747b0b8442a7a11db8579.camel@intel.com>
-X-ClientProxiedBy: BYAPR11CA0099.namprd11.prod.outlook.com
- (2603:10b6:a03:f4::40) To MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20)
+        with ESMTP id S230479AbiGMSu0 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Jul 2022 14:50:26 -0400
+Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB41924F16
+        for <linux-cxl@vger.kernel.org>; Wed, 13 Jul 2022 11:50:24 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 53AB2821C6C;
+        Wed, 13 Jul 2022 18:50:23 +0000 (UTC)
+Received: from pdx1-sub0-mail-a228.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 9A5CF82174E;
+        Wed, 13 Jul 2022 18:50:22 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1657738222; a=rsa-sha256;
+        cv=none;
+        b=UUppOku8LPhamUxSGttkazOMuOwwff/Vbops76WRmTEDKgnhdq7/6EXUHcxvNYxcF3gL/U
+        FZhfS6Q6JRyi5i9GcmoDTlm+g6nZ7bGsm4p95/8Z8vXIvQtgBLzjY9nhy1dKan6SgRh+EP
+        oaG4G6vnYwnpv/UtzKDPJeXIYuui9r4Ea15ilReZVjxZgxlPW4z3DhasEjHnWvLAvP4bsm
+        8ZbNSnsglrRB68XzhBZ9fA9J6hPX6qU/91JEW9Qu/bFoOu0bNc86U4wqtGEZEaYXnLGSNM
+        kfnGuxhGuOwAf23wwdWvOuwe1IYnExmjb7NaaqGSSztH2LI+ySS+tyvPFP6MdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1657738222;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=C8AED1lF7dvJPm0lHK13/+6VUmfKS8/FA6eiL/czFBg=;
+        b=szmeFQ3sBRjb9B+gRlCKqitwiYRBMyba8jQq9Gw1cONt70AE98cAatRhEdd//4gOwEP7y1
+        Yk5Q02iQ60bajTJQcwuVZE2uHpVEMD6i0rfD1Vy2lAlZgnf6IhqZFz0TmmHEh9HF0G32oT
+        MFPdcMLmngFcmI+poHDtDaSo7QB35XBDdT9BqlDdvx5z0+xldl10LrgkTN/zyj4km3w0cU
+        VOzJG9c5IeTglABP+t+93TGgjaCqvcDT9z2RCKUCAYXBpGnd1s4M67x2RpSVw+QrNlxNWj
+        bJystH3wyYZ/Pzgjz1d9RST4cT1L8ZicQDY05znb1vSBH7yruxbk3aQW6SEs0w==
+ARC-Authentication-Results: i=1;
+        rspamd-689699966c-n77jc;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Thread-Harbor: 2afb5dd7407be59d_1657738222943_2799375809
+X-MC-Loop-Signature: 1657738222943:270843918
+X-MC-Ingress-Time: 1657738222943
+Received: from pdx1-sub0-mail-a228.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.98.67.142 (trex/6.7.1);
+        Wed, 13 Jul 2022 18:50:22 +0000
+Received: from offworld (unknown [104.36.25.13])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a228.dreamhost.com (Postfix) with ESMTPSA id 4Ljms952GfzBQ;
+        Wed, 13 Jul 2022 11:50:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1657738222;
+        bh=C8AED1lF7dvJPm0lHK13/+6VUmfKS8/FA6eiL/czFBg=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=VHKEhn0pnLY5mShx0PSGO+8AttmqNXQMGcBMJYbEtSYlDr3bQgfhUzs/wb0ID7u31
+         1OEhdcSKyOwTEXoh1kk7mPmLxarosKWoyWZ85SJNIpf8AZiXMzgf4957q1rvx9VGaI
+         0Xwq3znDl6+G1Dh9TBLmgHONbPTFTbUa/PVvbXQkK+FBdka2WK0BYJYLA1YP9uqs6n
+         3LEJhRbUtGPgxNGsHqMcIzeKZsEfYaXUTWMnaywCM7oAhNPpTHpfpsxZYNxavLBLtA
+         ZlV9bpM5mE2aJ2yJ4ZjtLCkSRv7hRnuGKaJeFT1uphht9lacyzbbunvY8MJV88ZwMr
+         KHuU4dFpSF/Bw==
+Date:   Wed, 13 Jul 2022 11:50:18 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Vishal Verma <vishal.l.verma@intel.com>
+Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+        Dan Williams <dan.j.williams@intel.com>,
+        a.manzanares@samsung.com
+Subject: Re: [ndctl PATCH] cxl/test: add a test to {read,write,zero}-labels
+Message-ID: <20220713185018.lfrq6uunaigpc6u2@offworld>
+References: <20220713075157.411479-1-vishal.l.verma@intel.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 33ff56c7-9ccc-4597-f653-08da64f070dd
-X-MS-TrafficTypeDiagnostic: SJ0PR11MB5021:EE_
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ig1Y3flTIqy86WqFurboP76XaCar36v3dIfViVIVevWTbcDphTQoL80qw3aPeOlKNLuH9suX9AllRnHaITi8otBAIMbLbot9sknfoeQHbUP/aJhK4hPo/hac0g6nyNR513azrbw3EiXDBuKlr+esJ++PMmRvR5Ibnnu7ZB4rNws67S23fOsneTJgLLhm+7/Vk0PI6lJg/RFlcKdPubrNaT1ND20l3NRkjRdqvartzUky5+T1cvtjtMiWh6QF9yagaenyZ9zYcwTZfJBrX2MFuTRhYs+JHybr0zsfX8kTOQMXlmQnDlUyuT5mgBUpLf+Xa8zAX3I+55pantl6fs4p5rS/6+VB7qDnSH8p9ysdhLg/Mpl5p2LsgEb7Jwa1zX/tmV8WXqvPLb2/acnLN/tBZgGqjEjYm8YeP0PIVMksE2xo4Va3ZatWsijWovtCuoRwwb/4zHNFbtdpgGfpix9o/HKSEGk/1dBKox0z5gLNTfUWrAgTc78d8PolGcjwGrEfpazasFqCJ5whN1qwb237u5K/u00zn3l0eChOD1UK2Tf9Eze62v/QQ5FoG+ywX3GS8QcfWmaeDyf2JBCado2XDA5UyRJAb6KBhLEdxNlOYA4KZtu8mrewrcuX+FPhRb+PAr4f+/EUpIK2zWHZNxYe7XdmpSv1bMdmG4Bt4CzhEb3tMQ9b2hEhnQhPMsSRpuvyqwoF9nk4xdZ5PlFiR+Cpip4m1kmobefvIkpfGU/6iFIxfd3hkdkqmi0HWraJczZseZBXYJMu4Cpyg8zhmOfPEw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(39860400002)(376002)(366004)(396003)(346002)(136003)(316002)(6506007)(110136005)(6486002)(54906003)(41300700001)(26005)(2906002)(66946007)(8676002)(66556008)(66476007)(4326008)(186003)(6512007)(9686003)(82960400001)(86362001)(83380400001)(8936002)(478600001)(5660300002)(38100700002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?IuVC17shMWDIr2nCNnQVyQY0PwOeQZTtznZftuX6N6f4hM/DUfNcJ8fw2i?=
- =?iso-8859-1?Q?/sJHZDgKAN8yG31YMf93NTl0tCfFHgwpqIZsje+j3AgeQa1hEYvBnIRpMh?=
- =?iso-8859-1?Q?SfXc6YlVHTMhb+sg9+Sm6lF8w9/TiYplvBizLHlJ4OPZ4fbgxXyITduQGs?=
- =?iso-8859-1?Q?oo8pVPWV/kZcU/v3/1bGFT+k0b7sRDep/C+5Pd0XlP/eio/5h2uW4Qb+uY?=
- =?iso-8859-1?Q?7vOYtnUvQBoS7AsbH5OIgMOfZbWainlaMC5M4XycXQlfCiB9tCiS7SB923?=
- =?iso-8859-1?Q?6g+dnl0LBbvzgkH5d7Z1aVLuz3DGgfaVCTCXFtm0XKnTlxgxYuFxIB+y02?=
- =?iso-8859-1?Q?0CzrKqquIRj+oBVW1j60su8OZaUe9E4n2fxjYpGQlrZFuJ/qTPv4WbtKXQ?=
- =?iso-8859-1?Q?zEvSsiXB7XTTpQRR/y5bXPd4micxLAjQl3EC0NjD5eGPlFcKrzG4Llpnq9?=
- =?iso-8859-1?Q?4RuhNbgss1PreM5vqJWVP7cBkbZ2lzsC/Mdnn35eEydoTp1zm6Mr69jbwd?=
- =?iso-8859-1?Q?1EixOr9vcH961yCAazsjbcqWGHD9qZN8iTnUZzwEKhlOfuOBeDyvt9VBWR?=
- =?iso-8859-1?Q?BtGMfTum10+l3FNxVGnzDozTTmggGu2LvUBfo2eiGbh5veZzWFtSgzPYA6?=
- =?iso-8859-1?Q?uQ/AA2nXAvgcqDnN/R2Ldj/5QA6zo+1Rle41DIh97+7yJoBQ4tgAcLf0Yg?=
- =?iso-8859-1?Q?3n+7epv9ENnVuAnlZ8CF5s3i5R4F0MMu1Oze3hIZ445jHJ+Jxn2CJv/twG?=
- =?iso-8859-1?Q?WYFcht02NzzjEngkTxXnskgQ+95ErrI0Si/34Fy9X8SZaPU6J8u51GigF3?=
- =?iso-8859-1?Q?0UMcf4vkVMCNSJ/CPvy8PN3I+203ZGvtljG1c7Uz+/DjNH8eQ6I/20Rb5Q?=
- =?iso-8859-1?Q?vhKUMv50KGQDggo8tjxp9G6AlpsN/UrEQPj9W0ubHrthFuLnAFWsrJZz77?=
- =?iso-8859-1?Q?F41ackjGNKGnFKP+4wQlDFOV9nSCJckqreojUx5oo/89z/FBpOhBmmtDA8?=
- =?iso-8859-1?Q?fke+LPiNMrsJApOh8eAAk2vCVlaYrMG/q4DjrjbUWOhdkHGX/eeq0OPFiy?=
- =?iso-8859-1?Q?4cZoGpm0KfwRD8KeDgFdNEOJkkrJT1ge0UZVXvAVMGgeQ1RIUyvrojNO0l?=
- =?iso-8859-1?Q?IQPGq1fZs7VFgeiNoNBDTUcUAswh7fc17wBgFjFl64+E0KAW4WRpSOBdCc?=
- =?iso-8859-1?Q?dtanQRx+2FKPTHxnYqu4F+T8ql9MOOY5RD331VZmBlorYMG1cF8YAYbX4r?=
- =?iso-8859-1?Q?1RVAtuKuvXthR4SZ/zr3ZsUn5tZwmuYSLPu6NEA04lIfcoudi9uOsryrCO?=
- =?iso-8859-1?Q?x0FjNURyxYkyloq8c6taKJLVxZv7RDiFVUueUUjc81mv3pG+XpETxcWpc0?=
- =?iso-8859-1?Q?EZh1FMWETmY2mnED821M6jmV/4Ihhp4XQpJOm2vhtDqNwJAcXvhJLsYWLD?=
- =?iso-8859-1?Q?K7GKh2Kcdf436nkwCuV7ujEolm5vPuqrZhpOppBPwEiw3Bs/cPftrIj8PE?=
- =?iso-8859-1?Q?K6KVEkOx453psMRaP7kGgvaVfdh7ZQuh59kiXWwF509gLJKkrt8ZNdc497?=
- =?iso-8859-1?Q?d7j9d7ZJBuyR+6xbrDslluTiC8qwyumFkbWLP9LNKoHg+HKO/EVej924Pm?=
- =?iso-8859-1?Q?H37BG1Qnig0c0itt4E6DoNAxk8Jw/GMjvrq8LruQFscW/zohpnr7+Jpg?=
- =?iso-8859-1?Q?=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 33ff56c7-9ccc-4597-f653-08da64f070dd
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2022 16:55:07.6275
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Xeqw8kM+xzin9J0ma65MMbRjHpDxT6LaPxWWIObPma/YNzA63PON4LnywF/qjghtTf61yYDGTu1n4tFOMA4dp0VVgEJDcVKCTx23Qe6eS3Y=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5021
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20220713075157.411479-1-vishal.l.verma@intel.com>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Verma, Vishal L wrote:
-> On Wed, 2022-07-13 at 08:22 -0700, Dan Williams wrote:
-> > Verma, Vishal L wrote:
-> > > On Tue, 2022-07-12 at 12:08 -0700, Dan Williams wrote:
-> > > 
-> > > > 
-> > > > +
-> > > > +       if (cxl_decoder_get_mode(target) != mode) {
-> > > > +               rc = cxl_decoder_set_dpa_size(target, 0);
-> > > > +               if (rc) {
-> > > > +                       log_err(&ml,
-> > > > +                               "%s: %s: failed to clear allocation to set mode\n",
-> > > > +                               devname, cxl_decoder_get_devname(target));
-> > > > +                       return rc;
-> > > > +               }
-> > > > +               rc = cxl_decoder_set_mode(target, mode);
-> > > > +               if (rc) {
-> > > > +                       log_err(&ml, "%s: %s: failed to set %s mode\n", devname,
-> > > > +                               cxl_decoder_get_devname(target),
-> > > > +                               mode == CXL_DECODER_MODE_PMEM ? "pmem" : "ram");
-> > > > +                       return rc;
-> > > > +               }
-> > > > +       }
-> > > > +
-> > > > +       rc = cxl_decoder_set_dpa_size(target, size);
-> > > > +       if (rc)
-> > > > +               log_err(&ml, "%s: %s: failed to set dpa allocation\n", devname,
-> > > 
-> > > This patch adds some >80 col lines, which is fine by me - maybe we
-> > > should update .clang-format to 100 to make it official?
-> > 
-> > .clang_format does not break up print format strings that span 80
-> > columns. Same as the kernel. So those are properly formatted as the
-> > non-format string portions of those print statements stay <= 80.
-> 
-> Oh sure - though I thought it would at least drop the " devname" to the
-> next line. (Just checked, looked like it does).
+On Wed, 13 Jul 2022, Vishal Verma wrote:
 
-Of course I only checked the 2 previous log_err() in the quote and not
-the one you directly commented on, will reflow.
+>Add a unit test to test writing, reading, and zeroing LSA aread for
+>cxl_test based memdevs using ndctl commands.
+>
+>Cc: Dan Williams <dan.j.williams@intel.com>
+>Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+>---
+> test/cxl-labels.sh | 53 ++++++++++++++++++++++++++++++++++++++++++++++
+> test/meson.build   |  2 ++
+> 2 files changed, 55 insertions(+)
+> create mode 100644 test/cxl-labels.sh
+>
+>diff --git a/test/cxl-labels.sh b/test/cxl-labels.sh
+>new file mode 100644
+>index 0000000..ce73963
+>--- /dev/null
+>+++ b/test/cxl-labels.sh
+>@@ -0,0 +1,53 @@
+>+#!/bin/bash
+>+# SPDX-License-Identifier: GPL-2.0
+>+# Copyright (C) 2022 Intel Corporation. All rights reserved.
+>+
+>+. $(dirname $0)/common
+>+
+>+rc=1
+>+
+>+set -ex
+>+
+>+trap 'err $LINENO' ERR
+>+
+>+check_prereq "jq"
+>+
+>+modprobe -r cxl_test
+>+modprobe cxl_test
+>+udevadm settle
+>+
+>+test_label_ops()
+>+{
+>+	nmem="$1"
+>+	lsa=$(mktemp /tmp/lsa-$nmem.XXXX)
+>+	lsa_read=$(mktemp /tmp/lsa-read-$nmem.XXXX)
+>+
+>+	# determine LSA size
+>+	"$NDCTL" read-labels -o "$lsa_read" "$nmem"
+>+	lsa_size=$(stat -c %s "$lsa_read")
+>+
+>+	dd "if=/dev/urandom" "of=$lsa" "bs=$lsa_size" "count=1"
+>+	"$NDCTL" write-labels -i "$lsa" "$nmem"
+>+	"$NDCTL" read-labels -o "$lsa_read" "$nmem"
+>+
+>+	# compare what was written vs read
+>+	diff "$lsa" "$lsa_read"
+>+
+>+	# zero the LSA and test
+>+	"$NDCTL" zero-labels "$nmem"
+>+	dd "if=/dev/zero" "of=$lsa" "bs=$lsa_size" "count=1"
+>+	"$NDCTL" read-labels -o "$lsa_read" "$nmem"
+>+	diff "$lsa" "$lsa_read"
+>+
+>+	# cleanup
+>+	rm "$lsa" "$lsa_read"
+>+}
+>+
+>+# find nmem devices corresponding to cxl memdevs
+>+readarray -t nmems < <("$NDCTL" list -b cxl_test -Di | jq -r '.[].dev')
 
-> 
-> There were some other non-string long lines as well, e.g.:
-> 
-> +static int action_reserve_dpa(struct cxl_memdev *memdev, struct action_context *actx)
+s/$NDCTL/$CXL
 
-Ok, will reflow that as well.
+Beyond sharing a repo, I would really avoid mixing and matching ndctl and cxl
+tooling and thereby keep them self sufficient. I understand that there are cases
+where pmem specific operations can can be done reusing relevant pmem/nvdimm/ndctl
+machinery and interfaces, but I don't see this as the case for something like lsa
+unit testing.
+
+Thanks,
+Davidlohr
+
+>+
+>+for nmem in ${nmems[@]}; do
+>+	test_label_ops "$nmem"
+>+done
+>+
+>+modprobe -r cxl_test
+>diff --git a/test/meson.build b/test/meson.build
+>index fbcfc08..687a71f 100644
+>--- a/test/meson.build
+>+++ b/test/meson.build
+>@@ -152,6 +152,7 @@ pfn_meta_errors = find_program('pfn-meta-errors.sh')
+> track_uuid = find_program('track-uuid.sh')
+> cxl_topo = find_program('cxl-topology.sh')
+> cxl_region = find_program('cxl-region-create.sh')
+>+cxl_labels = find_program('cxl-labels.sh')
+>
+> tests = [
+>   [ 'libndctl',               libndctl,		  'ndctl' ],
+>@@ -178,6 +179,7 @@ tests = [
+>   [ 'track-uuid.sh',          track_uuid,	  'ndctl' ],
+>   [ 'cxl-topology.sh',	      cxl_topo,		  'cxl'   ],
+>   [ 'cxl-region-create.sh',   cxl_region,	  'cxl'   ],
+>+  [ 'cxl-labels.sh',          cxl_labels,	  'cxl'   ],
+> ]
+>
+> if get_option('destructive').enabled()
+>--
+>2.36.1
+>
