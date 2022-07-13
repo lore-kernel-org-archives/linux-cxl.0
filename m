@@ -2,199 +2,153 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 100A5C433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 13 Jul 2022 18:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB63C433EF
+	for <linux-cxl@archiver.kernel.org>; Wed, 13 Jul 2022 18:52:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232266AbiGMSu1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 13 Jul 2022 14:50:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48868 "EHLO
+        id S236487AbiGMSwQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 13 Jul 2022 14:52:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230479AbiGMSu0 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Jul 2022 14:50:26 -0400
-Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB41924F16
-        for <linux-cxl@vger.kernel.org>; Wed, 13 Jul 2022 11:50:24 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 53AB2821C6C;
-        Wed, 13 Jul 2022 18:50:23 +0000 (UTC)
-Received: from pdx1-sub0-mail-a228.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 9A5CF82174E;
-        Wed, 13 Jul 2022 18:50:22 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1657738222; a=rsa-sha256;
-        cv=none;
-        b=UUppOku8LPhamUxSGttkazOMuOwwff/Vbops76WRmTEDKgnhdq7/6EXUHcxvNYxcF3gL/U
-        FZhfS6Q6JRyi5i9GcmoDTlm+g6nZ7bGsm4p95/8Z8vXIvQtgBLzjY9nhy1dKan6SgRh+EP
-        oaG4G6vnYwnpv/UtzKDPJeXIYuui9r4Ea15ilReZVjxZgxlPW4z3DhasEjHnWvLAvP4bsm
-        8ZbNSnsglrRB68XzhBZ9fA9J6hPX6qU/91JEW9Qu/bFoOu0bNc86U4wqtGEZEaYXnLGSNM
-        kfnGuxhGuOwAf23wwdWvOuwe1IYnExmjb7NaaqGSSztH2LI+ySS+tyvPFP6MdQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1657738222;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=C8AED1lF7dvJPm0lHK13/+6VUmfKS8/FA6eiL/czFBg=;
-        b=szmeFQ3sBRjb9B+gRlCKqitwiYRBMyba8jQq9Gw1cONt70AE98cAatRhEdd//4gOwEP7y1
-        Yk5Q02iQ60bajTJQcwuVZE2uHpVEMD6i0rfD1Vy2lAlZgnf6IhqZFz0TmmHEh9HF0G32oT
-        MFPdcMLmngFcmI+poHDtDaSo7QB35XBDdT9BqlDdvx5z0+xldl10LrgkTN/zyj4km3w0cU
-        VOzJG9c5IeTglABP+t+93TGgjaCqvcDT9z2RCKUCAYXBpGnd1s4M67x2RpSVw+QrNlxNWj
-        bJystH3wyYZ/Pzgjz1d9RST4cT1L8ZicQDY05znb1vSBH7yruxbk3aQW6SEs0w==
-ARC-Authentication-Results: i=1;
-        rspamd-689699966c-n77jc;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Thread-Harbor: 2afb5dd7407be59d_1657738222943_2799375809
-X-MC-Loop-Signature: 1657738222943:270843918
-X-MC-Ingress-Time: 1657738222943
-Received: from pdx1-sub0-mail-a228.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.98.67.142 (trex/6.7.1);
-        Wed, 13 Jul 2022 18:50:22 +0000
-Received: from offworld (unknown [104.36.25.13])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a228.dreamhost.com (Postfix) with ESMTPSA id 4Ljms952GfzBQ;
-        Wed, 13 Jul 2022 11:50:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1657738222;
-        bh=C8AED1lF7dvJPm0lHK13/+6VUmfKS8/FA6eiL/czFBg=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=VHKEhn0pnLY5mShx0PSGO+8AttmqNXQMGcBMJYbEtSYlDr3bQgfhUzs/wb0ID7u31
-         1OEhdcSKyOwTEXoh1kk7mPmLxarosKWoyWZ85SJNIpf8AZiXMzgf4957q1rvx9VGaI
-         0Xwq3znDl6+G1Dh9TBLmgHONbPTFTbUa/PVvbXQkK+FBdka2WK0BYJYLA1YP9uqs6n
-         3LEJhRbUtGPgxNGsHqMcIzeKZsEfYaXUTWMnaywCM7oAhNPpTHpfpsxZYNxavLBLtA
-         ZlV9bpM5mE2aJ2yJ4ZjtLCkSRv7hRnuGKaJeFT1uphht9lacyzbbunvY8MJV88ZwMr
-         KHuU4dFpSF/Bw==
-Date:   Wed, 13 Jul 2022 11:50:18 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Vishal Verma <vishal.l.verma@intel.com>
-Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-        Dan Williams <dan.j.williams@intel.com>,
-        a.manzanares@samsung.com
-Subject: Re: [ndctl PATCH] cxl/test: add a test to {read,write,zero}-labels
-Message-ID: <20220713185018.lfrq6uunaigpc6u2@offworld>
+        with ESMTP id S236132AbiGMSwO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Jul 2022 14:52:14 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 354C72F03A
+        for <linux-cxl@vger.kernel.org>; Wed, 13 Jul 2022 11:52:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657738331; x=1689274331;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=WrqdCA56F9P+MiiSDf7KC8IRKtlpMv0C5PZWaK/Z86A=;
+  b=axDaCPXNj4o9X2JJwitw606wDvb+b0fIEsg8qJAg+vDmU4WJYlVje7bg
+   p81fH980OzTgtORU2W00K2Wu78KSXA8VeZAtmmvoq8Q2BJFqZ13x/7pqt
+   wEDKTUlD9vsseGUKMxv+s/qtC5guRkUGfx7X0FZkJFlmXdl+2JSZADw1Z
+   tRFoAkYp8RyV3hzRrzb//DiUrfrUyq6R2KHsDd1SEd1MA5VD0ypKf7bdw
+   iDNTFrUC1jd5I4mOPeF4acqs0CWkFH06lXJJCuASLQkFN+ruLoz30UsrE
+   dVSHORr4YCpUmyqbCWhTlzEbOjk2vswUHv2gimfsbpLROi7/GSewwldtW
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10407"; a="286061483"
+X-IronPort-AV: E=Sophos;i="5.92,267,1650956400"; 
+   d="scan'208";a="286061483"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2022 11:52:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,267,1650956400"; 
+   d="scan'208";a="841872347"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmsmga006.fm.intel.com with ESMTP; 13 Jul 2022 11:52:10 -0700
+Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Wed, 13 Jul 2022 11:52:10 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Wed, 13 Jul 2022 11:52:09 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27 via Frontend Transport; Wed, 13 Jul 2022 11:52:09 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.170)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2308.27; Wed, 13 Jul 2022 11:52:09 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hf9kUjHIyHfTfGbV7VpJ69kzVpjLd6t48H8vLIWLUyr9c+QWQz/0p3woMLfU8avpOUfnk+x2Wm0ieW9iMEsdEOnIyz+TMCfVPSym9RZz601A4MsnuPKqLklRz6ctKDRAxLPbjZgEoBQKCrPZZgesPl5JyvD+cKdx2bIZUnOtU9gCmypWK7QBNYV57nJvvsDYro3LQI95FPtD5Hl0Vi4zWKqQTo08eBPDpr+TBwEXo5f5TTctUDG71OG2PDe9vXoF8FPJt8vT4dCL2f1dGGsaSKPnjJQae0cTCHV+wH85Q9cGBTu59I4EXMNw7Hcb0qB4iH2/L7ZkZrmkf+tHQSaMBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6v8+Y1rTnZunNtASVvm/IyVlqxFUiKYrHGmqs/rdM3M=;
+ b=jb2nMDSHpvbkCpb9gowpXILzGtCRmGbYbzhJISs5kiDZHKy+txwaIhP7DS3DQswISYZBCm0RxORzsWSdo7uCh/VZuePRlAleAHpk46O/e205KxDlf69gsjlho1uJb1XL8t7eBaPGs/5LSqP0RzaXJ9pOM5IbAx4l/Y6kQUVo7DYHFNQetX9V8Yk2xVWpKJBhPmIAoCKGcLcpq918YJX42lousxwi5KbS584LAkZveTOr0xlQC78CepiAN5vg1MwPJ++4dxdab1+NogLDujY2+fx2/zZtfB5T/3jqW881sCT0KtFIDOZf4F8JCuO4D/iiA/NVlAxtCMYvtGYfkZxeEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20) by BYAPR11MB2807.namprd11.prod.outlook.com
+ (2603:10b6:a02:c3::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.25; Wed, 13 Jul
+ 2022 18:52:07 +0000
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::6466:20a6:57b4:1edf]) by MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::6466:20a6:57b4:1edf%11]) with mapi id 15.20.5417.026; Wed, 13 Jul
+ 2022 18:52:07 +0000
+Date:   Wed, 13 Jul 2022 11:52:04 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Vishal Verma <vishal.l.verma@intel.com>,
+        <linux-cxl@vger.kernel.org>
+CC:     <nvdimm@lists.linux.dev>, Dan Williams <dan.j.williams@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>
+Subject: RE: [ndctl PATCH] cxl/test: add a test to {read,write,zero}-labels
+Message-ID: <62cf14544f000_1643dc29414@dwillia2-xfh.jf.intel.com.notmuch>
 References: <20220713075157.411479-1-vishal.l.verma@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
 In-Reply-To: <20220713075157.411479-1-vishal.l.verma@intel.com>
-User-Agent: NeoMutt/20220429
+X-ClientProxiedBy: BYAPR02CA0024.namprd02.prod.outlook.com
+ (2603:10b6:a02:ee::37) To MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2e2feba8-1e6b-42ad-6e72-08da6500c8c5
+X-MS-TrafficTypeDiagnostic: BYAPR11MB2807:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: VS67fXx8jWBosDth8T3TTKlbZ3nF0zSK3dhy1Nb3EoZ/M0ZCSMfscQeI4ItyMfEJ2fSiAXke4qyugsck74VznoTOAEs5O+WOuqSuTEim7YmXoRq0peWyZCtJ1xn58iHYzwlUA/V/sZnyGU0QpG334jO/Bwjel5tEf/BKdQ6I1q5BEUtly7Jl8CsV08EkQza1izpe78pdQkXB/cjJYYIufOT5VXxzEwplzp+nQclWZ0et1RkCclk28IZgFfip/nBNvu/K2LHdyydhWtDm24IgBkQk5BXDhJ6U5E+JeSOQLwdj4Pj4V6jiEVckFc48A2IqXFhYyqicVVAg/C5UQi0aGxYSrd8LOTsCC3+BwHBHQTF2AIK/Gja/HCXYEDQC8df/nFJuz/SacWtbDK6hlEHZDFiZJXvL5lc1h+wQm54lBhTm1cskaKFB0tF2Rdd445seSikcpyJ4paSF2BT7c60vKr2M3YLRIFYhISY8AaW4K4YZnp+KT0B1czm+R2fnKBfjguPnCHPB24WxfeaTBW/fFX87oIuQQsfndIAnrLPTnp21x8QiswsWBQDTQ6mLyze5q9h+k4515GZSpacBBiLJ+SxT7W0ok/0FQh/FHQPFeFSO9EAcWldkwDb/Kk1PS24AvPmvLahAbEcL8Nua7kcG2kRvLe91Qy1ocguwMQhkLZAfQa3dUG5F24hcCCyr2/1CvoXdQPWSAAL4r0Vwf37OhSXgZAdUJUd8tRcq4FYV3AQi7fc2k5RCjo6DwDms2FeVyHzilJnV2z64f1Mj4WT9UQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(366004)(39860400002)(396003)(346002)(136003)(376002)(54906003)(2906002)(107886003)(38100700002)(316002)(478600001)(5660300002)(82960400001)(186003)(4744005)(6486002)(86362001)(9686003)(41300700001)(6666004)(6512007)(66946007)(8676002)(66476007)(26005)(66556008)(6506007)(8936002)(4326008);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?nGudCxBEmoxcxrL2GCShaA9NAwvi+NXIygJX4mdHt+a3vhO/1GlFYcbNdAAV?=
+ =?us-ascii?Q?zydWShD2mNw9yoGAWed2au+19baaZjIteoEUk/EjnCfEi7zW2pcRGEtK1Ogg?=
+ =?us-ascii?Q?iyxo0r0F+AJzFAXOpq/Dh5fqWN28sYInan13fbd6ewev73k+ueeRGPQNpzKZ?=
+ =?us-ascii?Q?oYGPGIIcOhUnkCvKO6Jh4BcFK7sQSpPnp75bRvjX+3u/GW6+rh4wRH+o1joZ?=
+ =?us-ascii?Q?zq293lMPZlcdj3auOS7qsLGGAHPgRutgFMnvwzaZkjQUNJ3yG/wLz4psPBw7?=
+ =?us-ascii?Q?KIKP5kJcJpT9X52/f1FSyHmOoK5dnkuhdvrAoRksKrQwZSD+/N8tI9x0bXOD?=
+ =?us-ascii?Q?MczqCBsi8LQmEopN+Xh1jndi2wHMmhbvy4KByu9g7lhSCl2fDAFT/v64zhys?=
+ =?us-ascii?Q?5Dvpr2ibwBOoOiPNrRYL+uicshapHTuoaeKvJ4fy8NXbUY+4tlM3bKWvbBA7?=
+ =?us-ascii?Q?XTibysnSELXrwIJrBOsIvqbrJxKndMIe5b7xmwYDl1Soj7E+bUlD4MZVRb+E?=
+ =?us-ascii?Q?I5CFQ9iRoGlna4otrx0oWEJc81QH2n/D2GX4VqtDmgaZHMk1bU1yFN3qU/Xl?=
+ =?us-ascii?Q?69SEHkqdiX2sgxdMZZ8Zm4kWQJ5qZT9uaGMW6/8NheZyawGeN7a6kO3uUFXS?=
+ =?us-ascii?Q?+2I8pjH7z2d92ukwlwPjDBji4vvFsgIDs0ioQ/r29J9b5XFbfAOd3j19OCv7?=
+ =?us-ascii?Q?RWJQ7eZs7svZeWPh+6Z35qMr57WKSNt2HCuag2Sk/e/nVizX/WkrPEHC12DL?=
+ =?us-ascii?Q?iKcOChV6hnjnp/Gv61dD0+ZJw4RBOwe/dzerCXQEkE78p9boPFNlpOUaPmzp?=
+ =?us-ascii?Q?ElmpFohdeuPsoNSyR9PjqpPV734sz4kYsUavDhWYrvqr3HVFEXI731b3m5qk?=
+ =?us-ascii?Q?LBFYE5T4dEIPCYGTa6gep0NS08LEmmhzg5Esfa7NWzTQnz1okYeuKwqjX3RB?=
+ =?us-ascii?Q?QDjT30jb6Eo6B4YviHe8ZFuMC8PR3zDIdTvcJzWIEAOZzXUPEfjJyu7Trl+8?=
+ =?us-ascii?Q?wz03LKrxcDV3+/i3BcaK7vRLBEvsthBZfk8bvNDRj7NE4/Z3IvP55r0jwXfq?=
+ =?us-ascii?Q?OJte1hV86C7vjT/2N3iN6iqvuAVcjc69kua1wMJVeXiP6ue5s3dDuC5PYqT7?=
+ =?us-ascii?Q?GtC085gVPSGo2ErS6GK3Womt5LkOTht9+e3Orn15JbpgmDb13eyKfAPayMUK?=
+ =?us-ascii?Q?MxgrFxjg8DeF6elhgfD6917rf8mHoscAUhDNhOKvrXiy4xoGL0udwQLCLOKO?=
+ =?us-ascii?Q?tVZovpeKfjQlAEv9lhJ1KuJmFcy85mPrkO1QBh6M4m2SLl37cXAYf4YdlARA?=
+ =?us-ascii?Q?ErU8hlU8ItFfRsLZ3zNCoZ27Vdu1n4/ep7WozdE8jfstkMpZXAyGluSg+511?=
+ =?us-ascii?Q?OhEGpN9nvbLO+oFVhuax3R/nMls0l1LuDKjHzlnM4zpHj1TkX3p7Y9kS72dp?=
+ =?us-ascii?Q?kT1tnbpToxhOXInFr6DTHyeB2AGzkFPL8ZpDE/RtNxzb6XfM5k9dZrmOqsIN?=
+ =?us-ascii?Q?kY9s23SS4PxqXSbbMsFqZuyBdO28KyKI3zpqO5GhJHbaP5IPsudHFLcGkkQJ?=
+ =?us-ascii?Q?Q/635u1o4qjFnBlw/bLRrCgYx787e1/baxaVv0Jl20Tt6/a3B/HqrXZXjhFL?=
+ =?us-ascii?Q?dA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2e2feba8-1e6b-42ad-6e72-08da6500c8c5
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2022 18:52:07.0696
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gfBsKjJOm5QKPwt4pujEd82fLwp4TmZDDEjB0bq5FuToQRSU4IkLTjfEVAoTGI0XUD6JaiExMLeIwKwogJFmPVJMUiem+22TEVn9i2k6UUk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2807
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 13 Jul 2022, Vishal Verma wrote:
+Vishal Verma wrote:
+> Add a unit test to test writing, reading, and zeroing LSA aread for
+> cxl_test based memdevs using ndctl commands.
+> 
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 
->Add a unit test to test writing, reading, and zeroing LSA aread for
->cxl_test based memdevs using ndctl commands.
->
->Cc: Dan Williams <dan.j.williams@intel.com>
->Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
->---
-> test/cxl-labels.sh | 53 ++++++++++++++++++++++++++++++++++++++++++++++
-> test/meson.build   |  2 ++
-> 2 files changed, 55 insertions(+)
-> create mode 100644 test/cxl-labels.sh
->
->diff --git a/test/cxl-labels.sh b/test/cxl-labels.sh
->new file mode 100644
->index 0000000..ce73963
->--- /dev/null
->+++ b/test/cxl-labels.sh
->@@ -0,0 +1,53 @@
->+#!/bin/bash
->+# SPDX-License-Identifier: GPL-2.0
->+# Copyright (C) 2022 Intel Corporation. All rights reserved.
->+
->+. $(dirname $0)/common
->+
->+rc=1
->+
->+set -ex
->+
->+trap 'err $LINENO' ERR
->+
->+check_prereq "jq"
->+
->+modprobe -r cxl_test
->+modprobe cxl_test
->+udevadm settle
->+
->+test_label_ops()
->+{
->+	nmem="$1"
->+	lsa=$(mktemp /tmp/lsa-$nmem.XXXX)
->+	lsa_read=$(mktemp /tmp/lsa-read-$nmem.XXXX)
->+
->+	# determine LSA size
->+	"$NDCTL" read-labels -o "$lsa_read" "$nmem"
->+	lsa_size=$(stat -c %s "$lsa_read")
->+
->+	dd "if=/dev/urandom" "of=$lsa" "bs=$lsa_size" "count=1"
->+	"$NDCTL" write-labels -i "$lsa" "$nmem"
->+	"$NDCTL" read-labels -o "$lsa_read" "$nmem"
->+
->+	# compare what was written vs read
->+	diff "$lsa" "$lsa_read"
->+
->+	# zero the LSA and test
->+	"$NDCTL" zero-labels "$nmem"
->+	dd "if=/dev/zero" "of=$lsa" "bs=$lsa_size" "count=1"
->+	"$NDCTL" read-labels -o "$lsa_read" "$nmem"
->+	diff "$lsa" "$lsa_read"
->+
->+	# cleanup
->+	rm "$lsa" "$lsa_read"
->+}
->+
->+# find nmem devices corresponding to cxl memdevs
->+readarray -t nmems < <("$NDCTL" list -b cxl_test -Di | jq -r '.[].dev')
+Looks good to me:
 
-s/$NDCTL/$CXL
-
-Beyond sharing a repo, I would really avoid mixing and matching ndctl and cxl
-tooling and thereby keep them self sufficient. I understand that there are cases
-where pmem specific operations can can be done reusing relevant pmem/nvdimm/ndctl
-machinery and interfaces, but I don't see this as the case for something like lsa
-unit testing.
-
-Thanks,
-Davidlohr
-
->+
->+for nmem in ${nmems[@]}; do
->+	test_label_ops "$nmem"
->+done
->+
->+modprobe -r cxl_test
->diff --git a/test/meson.build b/test/meson.build
->index fbcfc08..687a71f 100644
->--- a/test/meson.build
->+++ b/test/meson.build
->@@ -152,6 +152,7 @@ pfn_meta_errors = find_program('pfn-meta-errors.sh')
-> track_uuid = find_program('track-uuid.sh')
-> cxl_topo = find_program('cxl-topology.sh')
-> cxl_region = find_program('cxl-region-create.sh')
->+cxl_labels = find_program('cxl-labels.sh')
->
-> tests = [
->   [ 'libndctl',               libndctl,		  'ndctl' ],
->@@ -178,6 +179,7 @@ tests = [
->   [ 'track-uuid.sh',          track_uuid,	  'ndctl' ],
->   [ 'cxl-topology.sh',	      cxl_topo,		  'cxl'   ],
->   [ 'cxl-region-create.sh',   cxl_region,	  'cxl'   ],
->+  [ 'cxl-labels.sh',          cxl_labels,	  'cxl'   ],
-> ]
->
-> if get_option('destructive').enabled()
->--
->2.36.1
->
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
