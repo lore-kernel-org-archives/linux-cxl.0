@@ -2,218 +2,253 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F4FC433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 13 Jul 2022 19:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F2EC43334
+	for <linux-cxl@archiver.kernel.org>; Wed, 13 Jul 2022 19:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231772AbiGMTpL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 13 Jul 2022 15:45:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57116 "EHLO
+        id S236934AbiGMTsI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 13 Jul 2022 15:48:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229685AbiGMTpK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Jul 2022 15:45:10 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D526220BC2
-        for <linux-cxl@vger.kernel.org>; Wed, 13 Jul 2022 12:45:08 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 6CBE780288C;
-        Wed, 13 Jul 2022 19:45:07 +0000 (UTC)
-Received: from pdx1-sub0-mail-a228.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 9E74080287F;
-        Wed, 13 Jul 2022 19:45:06 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1657741506; a=rsa-sha256;
-        cv=none;
-        b=oonhxDV/XBMU0ojUnPyUj4KotO0VeAnL6uj6bEbBdIDScbKzewWNzaXd6+w9gT1WHoCdzA
-        0NFP9/++oXKwkCb6sY9wPd4+CuykWfOumB8S7AygI0M+qhMuABVRavMbZ5YRSw6DqrbJRU
-        kNipMADNqDpzB7nj/3SALEXFud1cQWv11xACcbtd6UVMShdsBuINIhc9/usewvntxztWKC
-        ErX3UKd5kSfSBgVjC2SkqeqdlFjXPOm7AlVNzVVjgxJh5cb/Rf8fM+bkLF/RXzQnotmwFS
-        23MFCxQt2Uei5UD1PWBIbTRmQLpaPErlh9aP+Qe0pwWyJiPEO/wrO3afGo1soQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1657741506;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=BKJcAKAYgFFVR6R7YJ7Ru2So7qdtScj5Iynl6u8/l74=;
-        b=UdF9ww+3oZgJe3Dy/yQuauf1L1nzQo1ejZvemByE1pFKVj4pCK7XBJIvX0z62+klArcsZ2
-        +QHHSa0j9+NxwayLam8vs8cthsOYnsIJLZO9GC/Ho7SMpStHHHXmCcmbfH9jjUzWzFFmH/
-        3WXEEXbp84UYJ6D2qI8OiLN8RCZGpC1JK7UzruFvduf3qLGx+SMs/EQ1ctNbMuo1jxfF9h
-        px42XNqkZHzfU/uIZv2E8/MqHzDGdycSNQEsUhn7NNMCgKm8EbiNc/ppU/IEurSkkbGhhp
-        /HahXZZXHqNKbx0tp52KXJ+oxD9msTuDZhdXIvYBswGaUw/ob3U+PW7bMs2DGA==
-ARC-Authentication-Results: i=1;
-        rspamd-674ffb986c-8f98r;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Little-Scare: 7b9626277bcd6936_1657741507064_527217136
-X-MC-Loop-Signature: 1657741507064:692732304
-X-MC-Ingress-Time: 1657741507063
-Received: from pdx1-sub0-mail-a228.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.124.238.78 (trex/6.7.1);
-        Wed, 13 Jul 2022 19:45:07 +0000
-Received: from offworld (unknown [104.36.25.13])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a228.dreamhost.com (Postfix) with ESMTPSA id 4Ljp4K6tdLz7v;
-        Wed, 13 Jul 2022 12:45:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1657741506;
-        bh=BKJcAKAYgFFVR6R7YJ7Ru2So7qdtScj5Iynl6u8/l74=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=DNNVpLAQXeUiB04foAifoOjPeXersukz3c7ACyy/NP025SmnBo95rm20rvrPY7F7x
-         +Pk5gd72KX4YnpSomWGrW/XwPz2ILfXabgE2p/5VbNY1DL6nqNakerD+dSIx2ko7EP
-         +1UhS+9V39dh1/9wThTGIwFkxsZ1QFmNlJAoqIt/gvlkox8R5nfV1MHDspOF33F0M1
-         yCAEsvwyXSAiCmItuo9qSlvDGHdUJohcbOQXOpVLg5dRO/bqS6scttwPqk3Z64PQMB
-         g9W6WwalEFVb1gDjPAVDS3Ra2MrotOjlzjqIE0Jnej/giWr9gxtGb8USimrg7mNZhu
-         cXgiOwfIngtsA==
-Date:   Wed, 13 Jul 2022 12:45:02 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     vishal.l.verma@intel.com, alison.schofield@intel.com,
-        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-        a.manzanares@samsung.com
-Subject: Re: [PATCH 5/11] cxl/lib: Maintain decoders in id order
-Message-ID: <20220713194502.5hxf5jxpwzvsukx7@offworld>
-References: <165765284365.435671.13173937566404931163.stgit@dwillia2-xfh>
- <165765287277.435671.14320322485572083484.stgit@dwillia2-xfh>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+        with ESMTP id S236836AbiGMTsH (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Jul 2022 15:48:07 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA45E2FFED
+        for <linux-cxl@vger.kernel.org>; Wed, 13 Jul 2022 12:48:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657741684; x=1689277684;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=EB28zUaah4L5H4eLVl+0hPn4J3P1XZZ2HuNovFMA0eA=;
+  b=DvlGEP0RTjsd8OyGTplxj69IYJfNkyph23zzRebV6xzduI7mscnyOauO
+   gJwUDxcfe/BSVxedIRIOCXK8yqP/U2nqnfQLKaMSWSzH9c2cpAa+ttqXd
+   WNGKyIZfKXVk6GXuHCMjCWHaejELIxyQ4fwXGzZchlkiIlt+MRl+M1bKS
+   XjU780T/ALVfoq3M9TG0B7wlZqao16+nXC9Go4zMlJtlTXCi70Q7xFdSq
+   Htg6HlK4SklaPTP20ms1iSgsZgV2tpWp0uJaA+ELVHgaAZ7xqn+0uqR6O
+   6bSCMvzxC/tZMh64iyiIEbnixrfIM6k/TbXJzr/ynZXOBkm2oty0uj6mz
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10407"; a="268362884"
+X-IronPort-AV: E=Sophos;i="5.92,267,1650956400"; 
+   d="scan'208";a="268362884"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2022 12:48:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,267,1650956400"; 
+   d="scan'208";a="653544263"
+Received: from orsmsx604.amr.corp.intel.com ([10.22.229.17])
+  by fmsmga008.fm.intel.com with ESMTP; 13 Jul 2022 12:48:04 -0700
+Received: from orsmsx607.amr.corp.intel.com (10.22.229.20) by
+ ORSMSX604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Wed, 13 Jul 2022 12:48:03 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX607.amr.corp.intel.com (10.22.229.20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Wed, 13 Jul 2022 12:48:03 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27 via Frontend Transport; Wed, 13 Jul 2022 12:48:03 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.45) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2308.27; Wed, 13 Jul 2022 12:48:03 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VjUhZx6WMAPd7M4OwCtmA4RO508WRIowXPYksNf7mgFyLBH+yDU9I5Cn+EfLNlkyUJf4Yx8M31l9k6KPl8/m0Gn8D/tk0p/tEytcuHm5GhuVjXCBBuPbA5A5FnfMd7wcvtVn3p5zD6jrzOo+3s7B8ofRTs/Au5WvszZ0LX45AJ+HYIAJbBuTG8gZh63LYkNDl4BoRoq/+U70OY6TGk3Fn0cn0uULbOvSKarBuUdLSDVqK4FWFdbDrBirsksMxdIxu2qbR/xlXMXwoQ6Wtqs6rS8S9me6RJdj7lUKrubROE5o3z1KaIBcFywtejrJ42oogRr7RpH8zh4VWJIAKJTRag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Hkxu/vkfjRSrcQj3mxkdgg9T1dyFy+cVzv1A1Joncso=;
+ b=U9VbrwSMbwOAujBWsZrMNo+IwdI2nUb+U6MAygpg+8tVkH2mvYEzaJJ7wgW2z6s+eWPU9Er8EG21DWlvbju7LdlDeaTESCT444NctOZYjZBHdlHUWK0/FmVVs9SI/YF2yQAcWWH4DqOsTopK2UfQMV0y4QgpeBs2m83T+j45UxgGo7my39qPJ4HuMtTGFgEeIYn4umIKgfDD+GRJlQ7Zr+48x8Vf2k3tV05mrhxUen3jXjz0JA6jmUa5JhYrUOeHZ1y/Mx7faiPSEKF49GvT8POQHhFHswfA3p1uede98y43n8yW78g7vZtUTecznlemW7HB0DeJjdLA+Pg3x217Fw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20) by BN6PR11MB1795.namprd11.prod.outlook.com
+ (2603:10b6:404:101::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.12; Wed, 13 Jul
+ 2022 19:48:01 +0000
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::6466:20a6:57b4:1edf]) by MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::6466:20a6:57b4:1edf%11]) with mapi id 15.20.5417.026; Wed, 13 Jul
+ 2022 19:48:01 +0000
+Date:   Wed, 13 Jul 2022 12:47:59 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
+        "dave@stgolabs.net" <dave@stgolabs.net>
+CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+        "a.manzanares@samsung.com" <a.manzanares@samsung.com>
+Subject: Re: [ndctl PATCH] cxl/test: add a test to {read,write,zero}-labels
+Message-ID: <62cf216eec5d2_156c6529447@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20220713075157.411479-1-vishal.l.verma@intel.com>
+ <20220713185018.lfrq6uunaigpc6u2@offworld>
+ <bc5a8df2dc71ce95c852c64f0323f2f79cba1d29.camel@intel.com>
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
-In-Reply-To: <165765287277.435671.14320322485572083484.stgit@dwillia2-xfh>
-User-Agent: NeoMutt/20220429
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bc5a8df2dc71ce95c852c64f0323f2f79cba1d29.camel@intel.com>
+X-ClientProxiedBy: BY5PR17CA0024.namprd17.prod.outlook.com
+ (2603:10b6:a03:1b8::37) To MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b617350a-818c-4383-084b-08da650897dc
+X-MS-TrafficTypeDiagnostic: BN6PR11MB1795:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ZBN4PQgwB+TPZqF4pYLnawv2s8RgLoAGf9A8wphWnYGWQ4EBOmjXVffSgQKaGxSJAa9Mb9oZ1kvhARx2j61rynmPwEz8tp7EW3l5pvGoINOpXCsLWGrgF+MzMd4TdvwGMIZoMh7MLZhuXwGOglYKyB+Eis2DCkDWNxCJY0/j2ZP/o84dNfz9i213R+CDo7ZRVdTSB4DPdU/phoCyNhFacc39HHeN7719b3FhOTYbCp/u59uughrWSTM/TgVb4ihiXQUauBzvK/R8xMN/7Ce9fJ4KghRNgRPMaMaKPSZX4rVtAMWQqnCNYYUCH1kJ6yhAvzg73ZcVmtjjRq/06m89kcADFI8TlQGJS/j74is0QeTn48Oqtluf0sevP75AQdUjlMOqTIWeKd3cA28OhYB9IhOoIEvT7VE4zJv2DiIWa+8uBup3nzkjrZ3D8/ulJUG+nZSxCENp1y7ZZlYj2UPkcqEHkTIiGmJuOeCvIDCQc38ktrnrH+/zjdn17Sn72bxZjneY7NVDvi5ZoMps5G9w8m374z6qBT4fWAQOf32yXzm84WEsOyJ1QmNiPioJiPk5xbjxKwdgwJ1+tdGgOVkPL7Br58B/7DYywJRTdmYIbJ5IaaB19cb9jBI3Lw06MIow+jeyp8fgvoTqvT/kI7Tz5eZnncyqoS9BDEtphaWiyPzifKWWnkUjA0LFCtmEKt918SIfllKLPD+d2w4bVxO9ghzhgGUXRhfqZf2H9SpjkjKf+U94wAznQQH3aY47LlDvqSYNsiPwzwC8KKMZsuFZ+Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(136003)(366004)(396003)(39860400002)(346002)(376002)(2906002)(5660300002)(8936002)(4326008)(66476007)(66556008)(8676002)(66946007)(316002)(54906003)(110136005)(6486002)(41300700001)(478600001)(9686003)(6512007)(82960400001)(6506007)(186003)(86362001)(38100700002)(26005)(83380400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?bHU7Tl7Heboa+WKFYbBkGHuecrIhUVktICM/hcUvgoeMBdxc+GC4SFlGwQ?=
+ =?iso-8859-1?Q?Dz9BPP6B2tvn1StGIEa1hYJ5A8JyJ3hAAJ4KiLVB/AOBpheCEY1so2F4fN?=
+ =?iso-8859-1?Q?1SWrs2DMafSUui7/TJaqp1VW3+NZ7q+KnBOL5KmcqMRnBPofZkV78M/MVe?=
+ =?iso-8859-1?Q?fitoIypkvwJpomPANZkLkM3IlbFVLdljVdqgWyn3/+TaFmZKrOGXjgCOxA?=
+ =?iso-8859-1?Q?2rjXU2KRLJzYaq4qGpMNW6KK/+ofkgmFqGjehjdt9nSZ91I2mvPUGFW7Po?=
+ =?iso-8859-1?Q?js/cQ9fGMm9d/YioEXficgNs4a76iMqkZbyxKM8KwyVAMifzR4nE+X1gjQ?=
+ =?iso-8859-1?Q?0Cw9mvmtXjAMDVY2+Z6jF0QyDZnEdZ+V8U/QlkjQfacgyx68TH5VTDmCNl?=
+ =?iso-8859-1?Q?a3D5v0sln69O/FdXXOsS3tR5CzZkSZIkK7WPiJECTIFGsolstw1DI+SyUG?=
+ =?iso-8859-1?Q?wrww89k6zeGOYURqHiBh/zTArHuagG3ghgpuRTdiFaMiPtXN94I6ZM7ZIu?=
+ =?iso-8859-1?Q?lGmolG0hn9jKqaiHfoiULZ04xaFCrV7flpomZT1UHiz1oFvukR6Yoh2Hvn?=
+ =?iso-8859-1?Q?LLQiglR/HTX06rahlfnQCyk653d7obdyR0I4ydUWLwlhhgQvjqu+Pk7f8Q?=
+ =?iso-8859-1?Q?EJApt8R5Qwp5p8RPZoy8Klvaq/w6enxtABuajOzsSrejJ+gqHcaCPyi84b?=
+ =?iso-8859-1?Q?Xapiix0SiieSBa/F1qWek1l9BixdOJC4H+GqYDDreKVuzil9bMayLnaOiG?=
+ =?iso-8859-1?Q?3gYx3pnIuAhNZQe+qbtO0A/hcfULMQFHHZfdCSqJcxI044b1aKO4aeJiOf?=
+ =?iso-8859-1?Q?1AES/wR4UuJIe1TEiizovlaS/wFE4qgrfZib9uSvkstam041DvfT2mmajE?=
+ =?iso-8859-1?Q?ACeC8oTeOIu/JI7uueLhHWqJXO2O7ZtPcj9vguwCqqJ2KOQldGKsr9NtJY?=
+ =?iso-8859-1?Q?hkqyucfvr6iYlcdeXmHUpy3A41vClQ9WYv1FzuI+Nc46EIHiwU5yWI7DsI?=
+ =?iso-8859-1?Q?13p7YwMy84u9iaKRkMarnYQdltdwGG/f4mlZ7Fw9LMh+gfvFKYVjwZu2cb?=
+ =?iso-8859-1?Q?fLh35fflSW0P5ontvp4JI3G4ZPNZcOCY47NrdQhWyl7z1+aRUc0eJJPV9Z?=
+ =?iso-8859-1?Q?hrJR9oYk707PGAc2DyFmQu9ucnt5Blz8VpUishrattrPVqVgANUFI63UNo?=
+ =?iso-8859-1?Q?M75CBXrS30Iw5306ovvJbfzLtSoDO5er7b7RBkQpfpJtsBqAa/2DBH9apE?=
+ =?iso-8859-1?Q?8m33Up+WrVayGrolIxa5OPQtFq/BbUrzbRYJngQRawuPb1NY5tJeRDAXoG?=
+ =?iso-8859-1?Q?+Nx+Da1nMWAyJuEtEsGK74eDl+ZY/2metCqo9As/pIk7hFukqLRvfkd5N8?=
+ =?iso-8859-1?Q?TTsyE0N9+kmKbSbbz/7j0Y4ekX7Xgw93euoK8+E52Fd3+POXeb3YPOdiWU?=
+ =?iso-8859-1?Q?mpLcyoEsTy3OQyttH29BOnKTnfz2de9P739EsuG2t7IwuTak+xkM0yFprr?=
+ =?iso-8859-1?Q?yRsU+z2449OtVnzsgNXcXvNMnyYr6Jdj0Ym5aJO9ke2ERr4nUt6GB8bFrP?=
+ =?iso-8859-1?Q?pYpoGSuzOXDJRcRypLjsiF/x1RzFBxa9PNrYtUldGhcNfRQlCfS1AZLnoY?=
+ =?iso-8859-1?Q?1piFOR+Y+bj+foF4NNNpR5Xu3SBaJbrK9Op0W/j7Myk/hXbVoggNVW7g?=
+ =?iso-8859-1?Q?=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b617350a-818c-4383-084b-08da650897dc
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2022 19:48:00.9519
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4YisQ2DGAMa/3jKeTuLsYC1I61m+ekxRhXoSXItP6tlrPP3oDXGPwU4aigeBca+1I3czVATxIRoTlNajQ3byVT8l5AzbJ7LysG0tHldvj70=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1795
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 12 Jul 2022, Dan Williams wrote:
+Verma, Vishal L wrote:
+> On Wed, 2022-07-13 at 11:50 -0700, Davidlohr Bueso wrote:
+> > On Wed, 13 Jul 2022, Vishal Verma wrote:
+> > 
+> > > Add a unit test to test writing, reading, and zeroing LSA aread for
+> > > cxl_test based memdevs using ndctl commands.
+> > > 
+> > > Cc: Dan Williams <dan.j.williams@intel.com>
+> > > Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+> > > ---
+> > > test/cxl-labels.sh | 53 ++++++++++++++++++++++++++++++++++++++++++++++
+> > > test/meson.build   |  2 ++
+> > > 2 files changed, 55 insertions(+)
+> > > create mode 100644 test/cxl-labels.sh
+> > > 
+> > > diff --git a/test/cxl-labels.sh b/test/cxl-labels.sh
+> > > new file mode 100644
+> > > index 0000000..ce73963
+> > > --- /dev/null
+> > > +++ b/test/cxl-labels.sh
+> > > @@ -0,0 +1,53 @@
+> > > +#!/bin/bash
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +# Copyright (C) 2022 Intel Corporation. All rights reserved.
+> > > +
+> > > +. $(dirname $0)/common
+> > > +
+> > > +rc=1
+> > > +
+> > > +set -ex
+> > > +
+> > > +trap 'err $LINENO' ERR
+> > > +
+> > > +check_prereq "jq"
+> > > +
+> > > +modprobe -r cxl_test
+> > > +modprobe cxl_test
+> > > +udevadm settle
+> > > +
+> > > +test_label_ops()
+> > > +{
+> > > +       nmem="$1"
+> > > +       lsa=$(mktemp /tmp/lsa-$nmem.XXXX)
+> > > +       lsa_read=$(mktemp /tmp/lsa-read-$nmem.XXXX)
+> > > +
+> > > +       # determine LSA size
+> > > +       "$NDCTL" read-labels -o "$lsa_read" "$nmem"
+> > > +       lsa_size=$(stat -c %s "$lsa_read")
+> > > +
+> > > +       dd "if=/dev/urandom" "of=$lsa" "bs=$lsa_size" "count=1"
+> > > +       "$NDCTL" write-labels -i "$lsa" "$nmem"
+> > > +       "$NDCTL" read-labels -o "$lsa_read" "$nmem"
+> > > +
+> > > +       # compare what was written vs read
+> > > +       diff "$lsa" "$lsa_read"
+> > > +
+> > > +       # zero the LSA and test
+> > > +       "$NDCTL" zero-labels "$nmem"
+> > > +       dd "if=/dev/zero" "of=$lsa" "bs=$lsa_size" "count=1"
+> > > +       "$NDCTL" read-labels -o "$lsa_read" "$nmem"
+> > > +       diff "$lsa" "$lsa_read"
+> > > +
+> > > +       # cleanup
+> > > +       rm "$lsa" "$lsa_read"
+> > > +}
+> > > +
+> > > +# find nmem devices corresponding to cxl memdevs
+> > > +readarray -t nmems < <("$NDCTL" list -b cxl_test -Di | jq -r '.[].dev')
+> > 
+> > s/$NDCTL/$CXL
+> > 
+> > Beyond sharing a repo, I would really avoid mixing and matching ndctl and cxl
+> > tooling and thereby keep them self sufficient. I understand that there are cases
+> > where pmem specific operations can can be done reusing relevant pmem/nvdimm/ndctl
+> > machinery and interfaces, but I don't see this as the case for something like lsa
+> > unit testing.
+> > 
+> > Thanks,
+> > Davidlohr
+> > 
+> Hi David,
+> 
+> Thanks for the review - however this was intentional. cxl-cli may block
+> LSA write access because libnvdimm could 'own' the label space.
+> 
+>   cxl memdev: action_write: mem0: has active nvdimm bridge, abort label write
+> 
+> So the test has to use ndctl for label writes. Reads could be done with
+> 'cxl', but for now there isn't a good/predictable mapping between ndctl
+> 'nmemX' and cxl 'memX'. Once that is solved, either by a shared id
+> allocator, or by listings showing the nmem->mem mapping, I will at
+> least add another cxl read-labels here which would validate the same
+> LSA data through cxl-cli.
 
->Given that decoder instance order is fundamental to the DPA translation
->sequence for endpoint decoders, enforce that cxl_decoder_for_each() returns
->decoders in instance order. Otherwise, they show up in readddir() order
->which is not predictable.
->
->Add a list_add_sorted() to generically handle inserting into a sorted list.
+I do think this test should eventually do both to validate that the
+nvdimm passthrough and the native CXL operations are working. However,
+the native CXL case needs a bit more infrastructure to disconnect the
+memdev from nvdimm.  Something like:
 
-With the already available list_add_before ccan code nit already pointed out
-by Ira.
+    cxl disable-pmem mem0
+    cxl write-labels mem0 ...
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
-
->
->Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->---
-> cxl/lib/libcxl.c |    8 ++++++-
-> util/list.h      |   61 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-> 2 files changed, 68 insertions(+), 1 deletion(-)
->
->diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
->index f36edcfc735a..e4c5d3819e88 100644
->--- a/cxl/lib/libcxl.c
->+++ b/cxl/lib/libcxl.c
->@@ -19,6 +19,7 @@
-> #include <ccan/short_types/short_types.h>
->
-> #include <util/log.h>
->+#include <util/list.h>
-> #include <util/size.h>
-> #include <util/sysfs.h>
-> #include <util/bitmap.h>
->@@ -908,6 +909,11 @@ cxl_endpoint_get_memdev(struct cxl_endpoint *endpoint)
-> 	return NULL;
-> }
->
->+static int decoder_id_cmp(struct cxl_decoder *d1, struct cxl_decoder *d2)
->+{
->+	return d1->id - d2->id;
->+}
->+
-> static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
-> {
-> 	const char *devname = devpath_to_devname(cxldecoder_base);
->@@ -1049,7 +1055,7 @@ static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
-> 			return decoder_dup;
-> 		}
->
->-	list_add(&port->decoders, &decoder->list);
->+	list_add_sorted(&port->decoders, decoder, list, decoder_id_cmp);
->
-> 	free(path);
-> 	return decoder;
->diff --git a/util/list.h b/util/list.h
->index 1ea9c59b9f0c..c6584e3ec725 100644
->--- a/util/list.h
->+++ b/util/list.h
->@@ -37,4 +37,65 @@ static inline void list_add_after_(struct list_head *h,
-> 	(void)list_debug(h, abortstr);
-> }
->
->+/**
->+ * list_add_before - add an entry before the given node in the linked list.
->+ * @h: the list_head to add the node to
->+ * @l: the list_node before which to add to
->+ * @n: the list_node to add to the list.
->+ *
->+ * The list_node does not need to be initialized; it will be overwritten.
->+ * Example:
->+ *	struct child *child = malloc(sizeof(*child));
->+ *
->+ *	child->name = "geoffrey";
->+ *	list_add_before(&parent->children, &child1->list, &child->list);
->+ *	parent->num_children++;
->+ */
->+#define list_add_before(h, l, n) list_add_before_(h, l, n, LIST_LOC)
->+static inline void list_add_before_(struct list_head *h, struct list_node *l,
->+				    struct list_node *n, const char *abortstr)
->+{
->+	if (l->prev == &h->n) {
->+		/* l is the first element, this becomes a list_add */
->+		list_add(h, n);
->+		return;
->+	}
->+
->+	n->next = l;
->+	n->prev = l->prev;
->+	l->prev->next = n;
->+	l->prev = n;
->+}
->+
->+#define list_add_sorted(head, n, node, cmp)                                    \
->+	do {                                                                   \
->+		struct list_head *__head = (head);                             \
->+		typeof(n) __iter, __next;                                      \
->+		typeof(n) __new = (n);                                         \
->+                                                                               \
->+		if (list_empty(__head)) {                                      \
->+			list_add(__head, &__new->node);                        \
->+			break;                                                 \
->+		}                                                              \
->+                                                                               \
->+		list_for_each (__head, __iter, node) {                         \
->+			if (cmp(__new, __iter) < 0) {                          \
->+				list_add_before(__head, &__iter->node,         \
->+						&__new->node);                 \
->+				break;                                         \
->+			}                                                      \
->+			__next = list_next(__head, __iter, node);              \
->+			if (!__next) {                                         \
->+				list_add_after(__head, &__iter->node,          \
->+					       &__new->node);                  \
->+				break;                                         \
->+			}                                                      \
->+			if (cmp(__new, __next) < 0) {                          \
->+				list_add_before(__head, &__next->node,         \
->+						&__new->node);                 \
->+				break;                                         \
->+			}                                                      \
->+		}                                                              \
->+	} while (0)
->+
-> #endif /* _NDCTL_LIST_H_ */
->
+You can add a "cxl read-labels" test though since that is not blocked
+while the memdev is attached to nvdimm, only label writes.
