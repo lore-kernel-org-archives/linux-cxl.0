@@ -2,191 +2,140 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECB9C433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 14 Jul 2022 21:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23642C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 14 Jul 2022 23:16:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230225AbiGNV0Z (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 14 Jul 2022 17:26:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55312 "EHLO
+        id S240748AbiGNXQz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 14 Jul 2022 19:16:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240797AbiGNV0Y (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 14 Jul 2022 17:26:24 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF6206D9FC
-        for <linux-cxl@vger.kernel.org>; Thu, 14 Jul 2022 14:26:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657833983; x=1689369983;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=j/PAjhEc1Z3wULzt7nM7TKdI6hCJevlf6rU9kWhOgzc=;
-  b=DvvJSObM0r3NkAVBYCkQXU7iSaFROs7rgxCbtf4jeL+CgfBqVu3mtH1J
-   wX5ffe8RRyv1suUsDz9o1hTJhiZwQK2GZXeq1r92LQsXxiB+0wJhdQmhc
-   On5rUgPPC51Pe2q/5QXo8L7QI03wUEsZlpGvIp+fquY7HO9u989spOPyN
-   wmO1yxorlXK4e6PLestXV1qqlu4iscdJUGefLpI/EKqsaPJNMVbSVHUu5
-   QXNFE0STHqsZ+M4yFUAMDU7/Piycwl8/s615uwGmEWqGA1BUcwuKFfSrV
-   feALCVkIayc3cBRs32d+3NpsSZJ+FARDvvhVG5gPv1ZgO3ZYw7MYuE0Ud
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10408"; a="283191515"
-X-IronPort-AV: E=Sophos;i="5.92,272,1650956400"; 
-   d="scan'208";a="283191515"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 14:26:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,272,1650956400"; 
-   d="scan'208";a="663938988"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmsmga004.fm.intel.com with ESMTP; 14 Jul 2022 14:26:23 -0700
-Received: from orsmsx607.amr.corp.intel.com (10.22.229.20) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Thu, 14 Jul 2022 14:26:22 -0700
-Received: from orsmsx604.amr.corp.intel.com (10.22.229.17) by
- ORSMSX607.amr.corp.intel.com (10.22.229.20) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Thu, 14 Jul 2022 14:26:22 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Thu, 14 Jul 2022 14:26:22 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.108)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Thu, 14 Jul 2022 14:26:21 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F7WJjLTe1cmGIcSesoty0mhKOaQ8EVOprALhOEM3CqWKds7L8vmWOipM8oSR9HGigfrE8aoxJEtFA3MAT8Fb7j4jq+Uh2RizeJqtVy9RPc7khPqS1wXIznsLgPzSvCjizt2/XhO3pMOvvyCXo1/eBWN58C/COS58mzspygFRUsdQkRbu9+0ZvxM5k97ae2Z58otelsQvbDleevqheIDnbx2eACPAEgoCAGR1VjUYICVasIZgei6QzNsc+og6zflsSWhG9EV2uaJyaLcs2hHMOOdorxiskTva2kwIdmUSbyt7vOsBDRWHVJ66gwYPPsZboXW7NaI5kkmDNaTzREKy3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=j/PAjhEc1Z3wULzt7nM7TKdI6hCJevlf6rU9kWhOgzc=;
- b=iSHGESpMfeFkfdzq1eFoaDZkmb9BmoZBrSyzPS4BEm6HY0nbukl8G1jLwtJSPnGWGk/liOsG8HrU5JGZKtUtJbwOB3t7IP9Oyb5ILS5M0736K/HmBYhXbDkWV+v/vmulOvsB8bsOsaUPNQMHHQK9WFVfxnWTh9cgf2WmpEKlttTqUFb6r2K69QtymCAFk/BN/5zZbPK/K8zGy3oEhY57bFS+RbB90P1q2a1J5lnwCXdwjVUikBXfMWJ+OoO1YY0yZ7NrrFb4hTLNRYCE6OsTEncjfTF3AlHbAvUUHqoybonnbFpzTJmzU1SauxaV3LDsRK1HTyuzbun5V3o/PJBmZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MN2PR11MB3999.namprd11.prod.outlook.com (2603:10b6:208:154::32)
- by DM5PR1101MB2250.namprd11.prod.outlook.com (2603:10b6:4:4d::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.14; Thu, 14 Jul
- 2022 21:26:20 +0000
-Received: from MN2PR11MB3999.namprd11.prod.outlook.com
- ([fe80::61f9:fcc7:c6cb:7e17]) by MN2PR11MB3999.namprd11.prod.outlook.com
- ([fe80::61f9:fcc7:c6cb:7e17%5]) with mapi id 15.20.5438.014; Thu, 14 Jul 2022
- 21:26:19 +0000
-From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
-To:     "Williams, Dan J" <dan.j.williams@intel.com>
-CC:     "Schofield, Alison" <alison.schofield@intel.com>,
+        with ESMTP id S240630AbiGNXQy (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 14 Jul 2022 19:16:54 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EB3670E52
+        for <linux-cxl@vger.kernel.org>; Thu, 14 Jul 2022 16:16:53 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id o31-20020a17090a0a2200b001ef7bd037bbso4547203pjo.0
+        for <linux-cxl@vger.kernel.org>; Thu, 14 Jul 2022 16:16:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=0U4hhVqs2XR4EGw7i9A15ZtnFqXn5xHqzpWu8rdBRXQ=;
+        b=QTwTjlefrBuqy2BMDgdjp0mIxBocMbXhoHlpn7pYKIWdee558ap9B8I6D4gINjGDWZ
+         VhDCf9Pj4X7dquH0h1IgrCgmin3bzDsrQW4/xW/Rvpn7pueDufpMHkxjfAKMyeeJMVR1
+         VC4Sbm99NCuOb15242J+NNMl9sQHy/ED6HJ3FvoEmBcfMQ/ToBJp682oQsFCitekjWRq
+         +0mVdNJ/2+SD6msmKon1sKAPOvquoDf8M5h12+/9wjxy44fdOZ+4WE4WTTdeUjPE8zgj
+         6aVj78gf7m49wc94wOzlrz3GxMUAoQS+743g4D27oDGO7BnTTkFEF3bD8TSu8AlUKxvY
+         9KVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=0U4hhVqs2XR4EGw7i9A15ZtnFqXn5xHqzpWu8rdBRXQ=;
+        b=G9la0WHxd8y78UtfZ+01HUmkBiu5JD9O91JtAZpME0SFOAoYXO/Bm1LrimR8DabZmd
+         VHV7NtQLMzg78w4lKHFHmvk1DlYL2/zU7JUW8zY54+habBeYn3CzEhPGOk+wfv8iPnSz
+         LL0NJCIq+QYQFTLhXkNO90EKJgJLWAHqd8A16FddujlYZoIWDQ5HluNP0hE1O+ZCZDYM
+         4SLMwNf3UTWkVoAt6V93N01u8vAGY7fBgT6sL9rJOev1DaT/xPqCRKgEDkInov314kdV
+         kl9FyA9f0qkQCBS1Dq1uIE0eftQFqikXu0OjMfOzQHF/+Zhy1UqGvd7sKGLhO3q4DkDH
+         uRJA==
+X-Gm-Message-State: AJIora9OHKI01TlhJJOtNhEzNKZ19da4BEN5ICmtMSMttmnL+5iEXhsE
+        IaogYv2FgIXRGw2AjlItHqI=
+X-Google-Smtp-Source: AGRyM1v20eluAf47eDG4BGowBvU11p4wm1w2XSBjlm2hd7FAZFn4EmSR7QwxAE9cs/yAWXdaDh0ZsA==
+X-Received: by 2002:a17:902:b08a:b0:16c:68b6:311 with SMTP id p10-20020a170902b08a00b0016c68b60311mr9936361plr.166.1657840613057;
+        Thu, 14 Jul 2022 16:16:53 -0700 (PDT)
+Received: from MacBook-Pro-91.local (c-107-3-179-31.hsd1.ca.comcast.net. [107.3.179.31])
+        by smtp.gmail.com with ESMTPSA id w6-20020a17090a780600b001f09d9b6673sm1999509pjk.7.2022.07.14.16.16.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Jul 2022 16:16:52 -0700 (PDT)
+Date:   Thu, 14 Jul 2022 16:16:49 -0700
+From:   Matthew Ho <sunfishho12@gmail.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
         "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
-Subject: Re: [ndctl PATCH v2 12/12] cxl/test: Checkout region setup/teardown
-Thread-Topic: [ndctl PATCH v2 12/12] cxl/test: Checkout region setup/teardown
-Thread-Index: AQHYl6OW3WC/cACDGk64hZ3vjjgGka1+WNSAgAAFKACAAANyAA==
-Date:   Thu, 14 Jul 2022 21:26:19 +0000
-Message-ID: <df6582c3ab8dbdc8796e2e94725c161c31bc01ff.camel@intel.com>
-References: <165781810717.1555691.1411727384567016588.stgit@dwillia2-xfh.jf.intel.com>
-         <165781817516.1555691.3557156570639615515.stgit@dwillia2-xfh.jf.intel.com>
-         <43e12941e3ca6310f18ce8c336a7ad038a1a0a5e.camel@intel.com>
-         <62d08716674ca_1643dc29436@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <62d08716674ca_1643dc29436@dwillia2-xfh.jf.intel.com.notmuch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.44.3 (3.44.3-1.fc36) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d02054ad-b4ad-4255-e800-08da65df7e54
-x-ms-traffictypediagnostic: DM5PR1101MB2250:EE_
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IFLBSHjV2wCyNZzzsRkjNesHegBp/gFzwWQ/s4phFm10oz+PchMPONcRUe6YGfsOa/uejSYYbU0p7YQKhk0z5awSKJs045Q0p86YUAVgAEk7BHP+fx+8AQtq5nEFrguiJLaZ3HqoeZ8aL2qf/xF6G6cTaqHOiDvN6zKaS38hS6gbKctvNw4n3bQ8Lbs4lvX/hFYn9KVRyY6iPO9FzYOn/GL4rmRXk/jIsU/PrcRykyV7f+RiRN1rpZ0djuH1mjB39ff8nWQk5UW5kvGyAqsfGdfcchx/ynokQ+zgwhlrtAIWwYZytXzGctR0rb5xN6YPWhvLopRnfCc8477M/9AxRlXWolNBkfakWXH7BWtYnFnlhNNweNojnfr4wxA93+CRMH7cedlQTWoCYS7hTACKslyhp1efAUGlBqHQdxZUCxWBvrH6MNODfRk9are3af8VuJPk4UrO+oPufMs79rl+xMb6wtRTCqPObkXiP5472HCC03mHQT1NBVpdcjueWvw8PzEknSCyTmYhzb6NDoGiAZX6rZFvM/EJuVn5v3a7pmjhHBYzRzoXoSe7jO5Hb7PgGwdGFE8MPQkqzz8sEwtTc3pR71z6b9MtfLYSKUim4vvzeEE7c/QFFvaRkU/kEn0DhIjaNGKb9JD6T23Ei8DGDaj4SfcZ/IpQoJKdMUIA0C2VbYW7Ct2bbDo4b8sJwSUHElm7TR33HUmvtB+ForNi/4pIWO307WSg2vCkgTO6pCbN3SxY54L3meDHUgX3Lv2TqGYLRiYBEOo4ILjpSH5CHHJaEj6EON/kS15WG2m515eb9jxdBVqQEVySlRbjofvJ
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB3999.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(346002)(136003)(376002)(366004)(39860400002)(396003)(6862004)(2906002)(4326008)(8936002)(8676002)(5660300002)(64756008)(122000001)(83380400001)(86362001)(36756003)(71200400001)(38070700005)(478600001)(38100700002)(6486002)(76116006)(37006003)(66446008)(6636002)(316002)(82960400001)(54906003)(66946007)(91956017)(2616005)(66556008)(66476007)(6506007)(41300700001)(6512007)(26005)(186003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?dE5zOHJoUWVHb3NlZk9qZEhlL3FlY2oxSk1pblEvcWVFNG5WT1N2eC92QWM0?=
- =?utf-8?B?NGRJU1dncXVQZGE4OWdTYkNKS0ozZFg5UVM0elRwUk1Oak82eUp3QnZGUnYw?=
- =?utf-8?B?RmxOdWh6MEtpd3B2S0l0ODZFQy9Dcm1UcklrRnBLai9JRHNUb25vdzNQOW1t?=
- =?utf-8?B?NzByQzF0N1JIc2E3OFUxbGJTTkJsWnIvYzR4dEI4STNLL1hNaW1qMVk4VWIx?=
- =?utf-8?B?a0ltQnVLa3lpaU9jOStOQnhHZGlTbVJabXQ2WWV3N0dmTktzejhzejRyakRQ?=
- =?utf-8?B?L1NUdHQ1dFNLYU9MYUlXaDQzM2xZcmR0ZkYrY25meHdlL3AzWXgwaUU4aGhz?=
- =?utf-8?B?TUQ4WjZJV1N1WENpU0RHKzE4cWJTOFhSVm42dWUyVlhoUVphdVUyUmpXeWNO?=
- =?utf-8?B?cExkc21XSXpGRUN6c3NpMGo3TUZ4TXl0NEsrYnNqT3lUSHpVY0pZQ3lMUis2?=
- =?utf-8?B?TEVkb2VZUU93cElWOENOSnhuUVdISWxaNm0wZjYvM1JvelRnRmpidXYxaTVL?=
- =?utf-8?B?OXYwM0JzaU1URHZ2aWt1Y00zcExIc29aeEU5dll0a0VZMUI4dTB3cVhCWS9u?=
- =?utf-8?B?aDllemxNRHkxcDVRS1RGQ25KaWZzT3cvcm5MWU1HZUZsUVpyV0ZLOHhHczNh?=
- =?utf-8?B?VEJnUEdnSUpqVkthS1Bwc1BKUHlaMnhzY1Q0d3VpeXg1Q2s0WVdyQ0xlMzdm?=
- =?utf-8?B?bms5aWRza2p2VXI3eS9SeWcwR1crVnJPMEZFSmN4UXpyTGtmVUdYeE4ramxq?=
- =?utf-8?B?dFlBWlphSzhrcTdEc1RMQXJvNDdhZ21RRkJQUnhxV1FqQmRSTDN2K08zRlpU?=
- =?utf-8?B?alVubDhGcWFJNUt2aTNwaWZmVU0xNm1DaEF0UVhGZlFsclViaStKR3BEY0tV?=
- =?utf-8?B?bUtkTnprK2cvYjBHRFU3bXo5SHZoYS9wcWprZ2pNN2czNi9WYUlIMzJ1NFRi?=
- =?utf-8?B?ODVIUCtqS1VyNkdPSG9aUGlMV2F3b1BwM3JWMlNmdkFUQXI1T0hMZHZjYlFr?=
- =?utf-8?B?T1NkK3VqS0hIWExldXN3SUZRVXFKY0RYczlYajRUaDVXY1R0YS9NUWNqVmg0?=
- =?utf-8?B?Rmpsc296N3drZnkyMlk0VG8xSWU2eWZybTJON2JZWmkyUURqSkN3aTJLZ1Uv?=
- =?utf-8?B?K1NDcVcwbjh4ak1zbm0vSXI4YjdvSDRxbTVpL1VNZENQTElNS0JVK3FyWWNh?=
- =?utf-8?B?dEVzM1VjN2FIVUlvV0JVV3RRWkhKTWUxVnk5a1pKYjdkaTRwZmJzYXR4SEFp?=
- =?utf-8?B?ZkxDMUw3MmpRZzBOdE1Lbk5RcEpwTkRCekZubThPYjE1VUFCRFF0SExaRkR4?=
- =?utf-8?B?UWxaeXkwMDBReXd1WE9oWHhLSUxldWMvQUtpL1NVVFdtN29ZWTA0NW9pdjJt?=
- =?utf-8?B?VFFUVndaNmREaC9BeFhYREFjNFVxeXAxQXRBdjVTd24wc2JWUWNJSUFxcVZ6?=
- =?utf-8?B?MFpsVkhhWWI0NCtKN1ZWMmthT1ZFcWlrQlUxN2QvSkVIQVc3V2tndmd6clU5?=
- =?utf-8?B?RkM5U29ZTUVGQm5pNUNJMHRKY3hTN0t1VSsxdFM3NG1kZ2dPdzNnajZoeGRv?=
- =?utf-8?B?MVFaTmhEbGdlc1hWUEhsRWNXUE5tN3hxRGg3UnBOdTNHUmg4NlU3cjR4MTl2?=
- =?utf-8?B?aS9QdjZuTG5iOUYraXBQcWVrOThSdlZxc0Zjd0s2ZDRRYlQ2ZjNxV0lqclox?=
- =?utf-8?B?V3VvV3ZYbWJBanZIMzZHSEZwVXpiY1lGVHFuRVR3NlNQS2Nwa1MwYmN1WUJZ?=
- =?utf-8?B?SjRIaDB4TElBNUlTcU9oL2JhSTUxaVY5SzlUUHROdGcvbWh3WjhsdURCWENa?=
- =?utf-8?B?TzVERzNyU0xDamh3enkwbDRabkFVemc4cXk3TlN3Y3pDN1krc3FMSE1qNGZC?=
- =?utf-8?B?Q2NjM0J4SENLQ3ZnQytxazNkRGxlQXNkNkpMSy9oNUlMc3Y2Z1FzQXIzdHNK?=
- =?utf-8?B?SjVsWmVFWTlmQVRJZFppY0sxaXplaC80Q3o4R2l2M3J5NWZjN0RvN1JleUFI?=
- =?utf-8?B?djhqemJRbFJhbXRwYUNCQmoxMzFXZkpBVFZDZlhURjdodndPTG9YbWxjS0gz?=
- =?utf-8?B?bXgzUUJjUEJ6RHZtK3dKSllrenRndzA5UzV3R1Y3NS9LRjk1U0Vjay9XbHR5?=
- =?utf-8?B?TVJDU2E3SDhzMWJiVnNoVC9PaVBzQ1BGdlBpQk9YV2Y4RWpsNTRNdi9TVTdW?=
- =?utf-8?B?UFE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <302996125B2D404B95E5E6383388178A@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "a.manzanares@samsung.com" <a.manzanares@samsung.com>
+Subject: Re: [PATCH ndctl] cxl: Add list all option to the cxl command
+Message-ID: <YtCj4feLExxytkPt@MacBook-Pro-91.local>
+References: <20220714182737.60714-1-sunfishho12@gmail.com>
+ <8546b123eb6303db6b863a2670d64aa87434f196.camel@intel.com>
+ <20220714191521.sy45sjpkpxijdefr@offworld>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR11MB3999.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d02054ad-b4ad-4255-e800-08da65df7e54
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jul 2022 21:26:19.7327
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1CxWyxHHKSkVnp962qDDcGquPgx/5MVQ6KlojiPsB1ZdGKtxEV2SoWyfp+48P+MkOxZ+SvhjBo61otFpSTclGH0QXGV38tHH7XptvCYHfM0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1101MB2250
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220714191521.sy45sjpkpxijdefr@offworld>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-T24gVGh1LCAyMDIyLTA3LTE0IGF0IDE0OjEzIC0wNzAwLCBEYW4gV2lsbGlhbXMgd3JvdGU6DQo+
-IFZlcm1hLCBWaXNoYWwgTCB3cm90ZToNCj4gPiA+IA0KPiA+ID4gKyMgZ3JhYiB0aGUgbGlzdCBv
-ZiBtZW1kZXZzIGdyb3VwZWQgYnkgaG9zdC1icmlkZ2UgaW50ZXJsZWF2ZSBwb3NpdGlvbg0KPiA+
-ID4gK3BvcnRfZGV2MD0kKCRDWEwgbGlzdCAtVCAtZCAkZGVjb2RlciB8IGpxIC1yICIuW10gfA0K
-PiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgIC50YXJnZXRzIHwgLltdIHwgc2VsZWN0KC5wb3Np
-dGlvbiA9PSAwKSB8IC50YXJnZXQiKQ0KPiA+ID4gK3BvcnRfZGV2MT0kKCRDWEwgbGlzdCAtVCAt
-ZCAkZGVjb2RlciB8IGpxIC1yICIuW10gfA0KPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgIC50
-YXJnZXRzIHwgLltdIHwgc2VsZWN0KC5wb3NpdGlvbiA9PSAxKSB8IC50YXJnZXQiKQ0KPiA+IA0K
-PiA+IFdpdGggbXkgcGVuZGluZyB1cGRhdGUgdG8gbWFrZSBtZW1kZXZzIGFuZCByZWdpb25zIHRo
-ZSBkZWZhdWx0IGxpc3RpbmcNCj4gPiBpZiBubyBvdGhlciB0b3AgbGV2ZWwgb2JqZWN0IHNwZWNp
-ZmllZCwgdGhlIGFib3ZlIGxpc3RpbmcgYnJlYWtzIGFzIGl0DQo+ID4gY2FuJ3QgZGVhbCB3aXRo
-IHRoZSBleHRyYSBtZW1kZXZzIG5vdyBsaXN0ZWQuDQo+ID4gDQo+ID4gSSB0aGluayBpdCBtYXkg
-bWFrZSBzZW5zZSB0byBmaW5lIHR1bmUgdGhlIGRlZmF1bHRzIGEgYml0IC0gaS5lLiBpZg0KPiA+
-IGEgLWQgaXMgc3VwcGxpZWQsIGFzc3VtZSAtRCwgYnV0IG5vIG90aGVyIGRlZmF1bHQgdG9wLWxl
-dmVsIG9iamVjdHMuDQo+IA0KPiBZZXMsIHRoaXMgaXMgd2hhdCBJIHdvdWxkIGV4cGVjdC4NCj4g
-DQo+ID4gSG93ZXZlciBJIHRoaW5rIHRoaXMgd291bGQgYmUgbW9yZSByZXNpbGllbnQgcmVnYXJk
-bGVzcywgaWYgaXQNCj4gPiBleHBsaWNpdGx5IHNwZWNpZmllZCBhIC1EOg0KPiANCj4gVHJ1ZSwg
-YnV0IGl0J3MgYSBiaXQgcmVkdW5kYW50Lg0KPiANCj4gV2h5IGRvZXMgdGhlIC1STSBkZWZhdWx0
-IGJyZWFrOg0KPiANCj4gwqDCoCBjeGwgbGlzdCBbLVRdIC1kICRkZWNvZGVyDQo+IA0KPiAuLi4/
-IERvZXNuJ3QgdGhlIGZpbmFsICJudW1fbGlzdF9mbGFncygpID09IDAiIGNoZWNrIGNvbWUgYWZ0
-ZXI6DQo+IA0KPiDCoMKgIGlmIChwYXJhbS5kZWNvZGVyX2ZpbHRlcikNCj4gwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgcGFyYW0uZGVjb2RlcnMgPSB0cnVlOw0KPiANCj4gLi4uaGFzIHByZXZlbnRlZCB0
-aGUgZGVmYXVsdD8NCg0KQWggeWVzIEkgc2VlIHRoZSBwcm9ibGVtIC0gSSBhZGRlZCB0aGUgbmV3
-IGRlZmF1bHQgdW5jb25kaXRpb25hbGx5IGluDQp0aGUgZmlyc3QgcGFzcyBvZiBudW1fbGlzdF9m
-bGFncygpID09IDAsIHdoaWNoIHdhcyBhbHNvIGNoZWNraW5nIHRoZQ0KYWJvdmUgY29uZGl0aW9u
-Lg0KDQpJIGJhc2ljYWxseSBuZWVkIHRvIGxldCBpdCBydW4gdGhyb3VnaCB0aGUgbGlzdCBvZiAn
-aWYgLWQgdGhlbiAtRCcgdHlwZQ0Kc3R1ZmYsIHRoZW4gY2hlY2sgbnVtX2xpc3RfZmxhZ3MoKSBh
-Z2FpbiwgYW5kIGlmIDAsIG9ubHkgdGhlbiBlbmFibGUNCi1SIGFuZCAtTS4NCg0KV2lsbCBmaXgg
-dGhpcyBpbiBteSBwYXRjaCwgbm8gbmVlZCBmb3IgdGhlIC1EIGNoYW5nZSBhYm92ZS4NCg0K
+On Thu, Jul 14, 2022 at 12:15:21PM -0700, Davidlohr Bueso wrote:
+> On Thu, 14 Jul 2022, Verma, Vishal L wrote:
+> 
+> > On Thu, 2022-07-14 at 11:27 -0700, sunfishho12@gmail.com wrote:
+> > > From: Matthew Ho <sunfishho12@gmail.com>
+> > > 
+> > > This adds a new subcommand cxl list --all, which is equivalent to cxl
+> > > list -MBPEDTHIiu. This addition makes it easier to list all the CXL
+> > > devices at once, as one does not need to append a subcommand for each
+> > > device. --all is also easier to remember than -MBPEDTHIiu. When
+> > > region support is added, this will be updated to include it.
+> > > 
+> > > Reviewed-by: Adam Manzanares <a.manzanares@samsung.com>
+> > > Signed-off-by: Matthew Ho <sunfishho12@gmail.com>
+> > > ---
+> > >  cxl/filter.h |  1 +
+> > >  cxl/list.c   | 15 +++++++++++++++
+> > >  2 files changed, 16 insertions(+)
+> 
+> You also need to the manpage (which I also missed) via:
+> 
+>      Documentation/cxl/cxl-list.txt
+> 
+> and of course, same for Vishal's suggestions below.
+
+Ah, will add.
+
+> 
+> > 
+> > Hi Matthew, thanks for sending this - I agree it gets tedious trying to
+> > list multiple things.
+> > 
+> > However, I think we should do this similar to ndctl-list's --verbose
+> > options, where adding the number of 'v's adds in more and more detail.
+> 
+> Yeah I agree, and was not aware that ndctl has this. Furthermore perf
+> tooling also uses this.
+> 
+> > 
+> > For example:
+> > 
+> > cxl list (default) : Regions and memdevs (this isn't there today, but
+> > in a pending series I'm about to send out).
+> > 
+> > cxl list -v: -RMBDPT
+> > 
+> > cxl list -vv: -RMBDPTi
+> > 
+> > cxl list -vvv: -RMBDPTiHI
+> 
+> Makes sense to me.
+
+Sounds good, will implement it this way.
+
+> > 
+> > -u/--human can be excluded from the verbosity levels as that can be
+> > passed in if needed, and there may be use cases where it isn't desired
+> > (in scripts).
+> > 
+> > Thoughts on this - do you want to take a shot at implementing it this
+> > way?
+> 
+> Sounds good to me.
+
+Will do.
+
+Thanks for all of the feedback!
+
+Best,
+Matthew
