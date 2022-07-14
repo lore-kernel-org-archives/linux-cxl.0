@@ -2,47 +2,48 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE92C433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 14 Jul 2022 17:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36221C43334
+	for <linux-cxl@archiver.kernel.org>; Thu, 14 Jul 2022 17:03:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239941AbiGNRC7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 14 Jul 2022 13:02:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34744 "EHLO
+        id S240099AbiGNRDA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 14 Jul 2022 13:03:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240099AbiGNRC4 (ORCPT
+        with ESMTP id S240107AbiGNRC4 (ORCPT
         <rfc822;linux-cxl@vger.kernel.org>); Thu, 14 Jul 2022 13:02:56 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0A835C9EF
-        for <linux-cxl@vger.kernel.org>; Thu, 14 Jul 2022 10:02:50 -0700 (PDT)
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76D6A5E318
+        for <linux-cxl@vger.kernel.org>; Thu, 14 Jul 2022 10:02:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657818170; x=1689354170;
+  t=1657818171; x=1689354171;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ScYbThIZfT4n55eM8DUbm+cfiTaDRHUaL5wTJC8Cy8k=;
-  b=MKa4J3sSEOUMVbejXDqZhWSAF+qm2S9apugEX6DF+c54kLSCijlpuGhQ
-   56GBIk/y/dQ0JZG4stncpe+xUla1BlnVXuFLRUtxLmhDU9OP1Va5L12mz
-   t4mt/laPmxT0mH99+LjkOTxr2JqP2v51ic5uxC+y8K4A7m4tDL2+4IlHS
-   P+LwfH2Gzy1Tq5pRAAImLRw7YQCSX5hgdHi4ki/IqBUYZVrI+cCFcdqjF
-   x8JHA+rkbvqI2d+jwv7XYADg3Im1hKDp84dA4VMv3gOzOB78ln6oCF52G
-   UMIBRZQh+jiSI0QJSSuizwssC2+DizwQ4/hHiHgcp99zaPXbOl6XiVLZg
+  bh=AeWJ82o6BwFn1NlqdqKUFKk+NqL3Dqc98exzk9j2WHE=;
+  b=bhN0cjFnwTz8cee97uwZp7SVT8Adcd/XfzXO9xBUSBix8Y+npjbW2zHn
+   v0Qbp9qw2cnv1w+qs91NQAQZQn54DTcX2DSBWHLDvTcVo/YL36IwYMJD2
+   b7XGy/0bAqhjY5o9aBzHzdDwNMr9LmnBAeiHuLhCskT7VZ2pewEL0XQh+
+   /HKi0NnTMyqIMPYlg0Bbt2g4weky3OP8mdiCsW5DCPOcBFEeuXlzmB2EM
+   nhN7O0EoFChgV8LjYdVLo2jTHjfXW2btO9+5Ol3wqFnulHoQTmwJyVCoL
+   XQbwxQXNald6VUGLpvSIg5wxjg6s5ktDZuOK10wMDJp7Z+BD3U5VEJaYh
    g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10408"; a="286712672"
+X-IronPort-AV: E=McAfee;i="6400,9594,10408"; a="284331586"
 X-IronPort-AV: E=Sophos;i="5.92,271,1650956400"; 
-   d="scan'208";a="286712672"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 10:02:50 -0700
+   d="scan'208";a="284331586"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 10:01:59 -0700
 X-IronPort-AV: E=Sophos;i="5.92,271,1650956400"; 
-   d="scan'208";a="596163896"
+   d="scan'208";a="685643797"
 Received: from jlcone-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.2.90])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 10:02:49 -0700
-Subject: [ndctl PATCH v2 11/12] cxl/test: Update CXL memory parameters
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 10:01:58 -0700
+Subject: [ndctl PATCH v2 02/12] cxl/list: Emit endpoint decoders filtered by
+ memdev
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     vishal.l.verma@intel.com
 Cc:     alison.schofield@intel.com, nvdimm@lists.linux.dev,
         linux-cxl@vger.kernel.org
-Date:   Thu, 14 Jul 2022 10:02:49 -0700
-Message-ID: <165781816971.1555691.18362747345754213762.stgit@dwillia2-xfh.jf.intel.com>
+Date:   Thu, 14 Jul 2022 10:01:58 -0700
+Message-ID: <165781811836.1555691.1997564050287016121.stgit@dwillia2-xfh.jf.intel.com>
 In-Reply-To: <165781810717.1555691.1411727384567016588.stgit@dwillia2-xfh.jf.intel.com>
 References: <165781810717.1555691.1411727384567016588.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -53,80 +54,40 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-In support of testing CXL region configurations cxl_test changed the size
-of its root decoders and endpoints. Use the size of the first root decoder
-to determine if this is an updated kernel.
+For example, dump all the endpoint decoders from memdev 'mem8'.
+
+    cxl list -Di -m 8 -d endpoint
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- test/cxl-topology.sh |   32 +++++++++++++++++++++-----------
- 1 file changed, 21 insertions(+), 11 deletions(-)
+ cxl/filter.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/test/cxl-topology.sh b/test/cxl-topology.sh
-index ff11614f4f14..2583005fef26 100644
---- a/test/cxl-topology.sh
-+++ b/test/cxl-topology.sh
-@@ -64,14 +64,9 @@ switch[2]=$(jq -r ".[] | .[\"ports:${bridge[1]}\"] | $port_sort | .[0].host" <<<
- switch[3]=$(jq -r ".[] | .[\"ports:${bridge[1]}\"] | $port_sort | .[1].host" <<< $json)
+diff --git a/cxl/filter.c b/cxl/filter.c
+index 66fd7420144a..2f88a9d2f398 100644
+--- a/cxl/filter.c
++++ b/cxl/filter.c
+@@ -428,7 +428,9 @@ util_cxl_decoder_filter_by_memdev(struct cxl_decoder *decoder,
+ 				  const char *ident, const char *serial)
+ {
+ 	struct cxl_ctx *ctx = cxl_decoder_get_ctx(decoder);
++	struct cxl_endpoint *endpoint;
+ 	struct cxl_memdev *memdev;
++	struct cxl_port *port;
  
+ 	if (!ident && !serial)
+ 		return decoder;
+@@ -438,6 +440,12 @@ util_cxl_decoder_filter_by_memdev(struct cxl_decoder *decoder,
+ 			continue;
+ 		if (cxl_decoder_get_target_by_memdev(decoder, memdev))
+ 			return decoder;
++		port = cxl_decoder_get_port(decoder);
++		if (!port || !cxl_port_is_endpoint(port))
++			continue;
++		endpoint = cxl_port_to_endpoint(port);
++		if (cxl_endpoint_get_memdev(endpoint) == memdev)
++			return decoder;
+ 	}
  
--# check that all 8 cxl_test memdevs are enabled by default and have a
--# pmem size of 256M
--json=$($CXL list -b cxl_test -M)
--count=$(jq "map(select(.pmem_size == $((256 << 20)))) | length" <<< $json)
--((count == 8)) || err "$LINENO"
--
--
- # validate the expected properties of the 4 root decoders
-+# use the size of the first decoder to determine the cxl_test version /
-+# properties
- json=$($CXL list -b cxl_test -D -d root)
- port_id=${root:4}
- port_id_len=${#port_id}
-@@ -80,26 +75,41 @@ count=$(jq "[ $decoder_sort | .[0] |
- 	select(.volatile_capable == true) |
- 	select(.size == $((256 << 20))) |
- 	select(.nr_targets == 1) ] | length" <<< $json)
--((count == 1)) || err "$LINENO"
-+
-+if [ $count -eq 1 ]; then
-+	decoder_base_size=$((256 << 20))
-+	pmem_size=$((256 << 20))
-+else
-+	decoder_base_size=$((1 << 30))
-+	pmem_size=$((1 << 30))
-+fi
- 
- count=$(jq "[ $decoder_sort | .[1] |
- 	select(.volatile_capable == true) |
--	select(.size == $((512 << 20))) |
-+	select(.size == $((decoder_base_size * 2))) |
- 	select(.nr_targets == 2) ] | length" <<< $json)
- ((count == 1)) || err "$LINENO"
- 
- count=$(jq "[ $decoder_sort | .[2] |
- 	select(.pmem_capable == true) |
--	select(.size == $((256 << 20))) |
-+	select(.size == $decoder_base_size) |
- 	select(.nr_targets == 1) ] | length" <<< $json)
- ((count == 1)) || err "$LINENO"
- 
- count=$(jq "[ $decoder_sort | .[3] |
- 	select(.pmem_capable == true) |
--	select(.size == $((512 << 20))) |
-+	select(.size == $((decoder_base_size * 2))) |
- 	select(.nr_targets == 2) ] | length" <<< $json)
- ((count == 1)) || err "$LINENO"
- 
-+
-+# check that all 8 cxl_test memdevs are enabled by default and have a
-+# pmem size of 256M, or 1G
-+json=$($CXL list -b cxl_test -M)
-+count=$(jq "map(select(.pmem_size == $pmem_size)) | length" <<< $json)
-+((count == 8)) || err "$LINENO"
-+
-+
- # check that switch ports disappear after all of their memdevs have been
- # disabled, and return when the memdevs are enabled.
- for s in ${switch[@]}
+ 	return NULL;
 
