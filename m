@@ -2,92 +2,90 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F532C433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 15 Jul 2022 21:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 552C6C433EF
+	for <linux-cxl@archiver.kernel.org>; Fri, 15 Jul 2022 21:45:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229586AbiGOVZD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 15 Jul 2022 17:25:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32806 "EHLO
+        id S229499AbiGOVpj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 15 Jul 2022 17:45:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229532AbiGOVZB (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 15 Jul 2022 17:25:01 -0400
-Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D510943E68
-        for <linux-cxl@vger.kernel.org>; Fri, 15 Jul 2022 14:25:00 -0700 (PDT)
+        with ESMTP id S229497AbiGOVph (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 15 Jul 2022 17:45:37 -0400
+Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3924228E0C
+        for <linux-cxl@vger.kernel.org>; Fri, 15 Jul 2022 14:45:33 -0700 (PDT)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id C92F88224DD;
-        Fri, 15 Jul 2022 21:24:58 +0000 (UTC)
+        by relay.mailchannels.net (Postfix) with ESMTP id B720B8024FA;
+        Fri, 15 Jul 2022 21:45:28 +0000 (UTC)
 Received: from pdx1-sub0-mail-a220.dreamhost.com (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 431AB822466;
-        Fri, 15 Jul 2022 21:24:58 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1657920298; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id 69D0480229D;
+        Fri, 15 Jul 2022 21:45:28 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1657921528; a=rsa-sha256;
         cv=none;
-        b=FlG8tZVwa8kPTjOfSoZEjJMEvUuKKXYKd+5YQgWwAjdOSgnqaLKTT5UKD0KNyg9tj9WbIh
-        dEHMlYsfS/mueKmEHqWQ6eq3TvvCFZoFXDIJedPR29UYMcmwTD0Hf62EHM43vtzzyCrdwC
-        GC4p67mLQz+hzuVZNXBRcJvWDtJQJUh9yNcnhbx+YObNpN1b16dLvCpcgzDeAaxOPuiMvQ
-        8Bnjsv9V94JkjKA1Dn6OyVJj5XRH93w/nRoCJX/6W0N7W+NdlaPDimf1CExYds6L1Ienw7
-        uGLcr4pzP+4OC3cUL5yuOnRo8XR4Ch3E4yM0oAmUaID9GByPq1dZKMZX5UMSeQ==
+        b=7sXL5SLaeCuDFyejIaSteZjLbwXH14gvySMgdsxb93hoo5U0VqsPpk4vGas433B1M2Gm2J
+        al/kloHxO34PD59mWqdga9OuxuHAjyiA3V24qB/mD68twwRN5M4YUEAk2+zBVW+ggJDvEc
+        rzvqEo8jJtr9zvSX4kJmmmos/QW35tWjZuoIFzEhgU9SNATZFTRW3HuBgYB78vz0iySR/5
+        TVeSHmJPoOHu8o0WSjRj0KibV5FWBR9lYyqHhoQutAn//GEikYzNuj2IrDgqt+0AvoJMyw
+        ok9oBgJcqyW9zXSwpX0WSxxR+0BOXIaL6yxRSYfKpAdttsHoa7gM1cKrikrbXQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1657920298;
+        s=arc-2022; t=1657921528;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=Gca+rK/1/omRgEtGZGppY4fPcaCmjyddkV4hHPuKIyY=;
-        b=KbR0DA744voFhWCsATz/wgXd1kf2Mq2F6xZW5W3C5zkmuYTeg7/omyJR/mMSUzeJkHULyt
-        0XeeCYjHMURbcIZ57Rlj3zzvIXn1rEX2s6dSTRHhz1b/yxAah766CexOyW/R7ssYiGb92g
-        QK6Um4wm+3c2KksBHAA9tfp/5dVWWr5st7JC4s0iVn6Tu9JYY6OO4QQo+D2956HBPkSQFh
-        DUPTs9304n3YTbjOtCLJiQ7Fj7HVOQhZEYnQheIPnyZ3LpHvcQzjdu/dElSzeElu0dRc/s
-        JKiK+jlyPh9QMhv8CH1pm1m75oCSX4681raiIE9LZyAanFk8UsGvACabeNygrQ==
+        bh=WF7C0cUBKUw1YYlFEE5qqWdjciIJtgJTSiKieCZzeqM=;
+        b=QIsTjRz3avSWHsmvvsh//2LDOI/5de+wnZjOR+v7hHxlIF1ZpGlvU231my0soJx7QKr5z5
+        mmnhz7joXQNTnVTRYSMpO+K96TMolbsGG9Aqm/O6UBQoCvk03ck5nlHf+ErypVHpqEQTje
+        FIB9Hx8xsl8omgb6/V8B4wz5KjevQD7lxlm8KbSUPaYJCWGIhdnbPehyrDC5ZKpCzc37xs
+        l2HD4a6SnP1BvJdhl4FapE/U9dodlpB6RrG+PgqSYn/FPSAXuF6LM1Y0o3M8EKBUH23p3j
+        x8x6oMfhABl0bQz5iJxzgWakNjcaRTqYqw9i3L6MfPdqVLQUXbHiOoHqX/TMiA==
 ARC-Authentication-Results: i=1;
-        rspamd-689699966c-l28hj;
+        rspamd-674ffb986c-lzblc;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Wipe-Fumbling: 4b8c9124732fcad9_1657920298585_3064067684
-X-MC-Loop-Signature: 1657920298585:2481239309
-X-MC-Ingress-Time: 1657920298585
+X-Shoe-Dime: 578881220af2da91_1657921528573_685784994
+X-MC-Loop-Signature: 1657921528573:70460541
+X-MC-Ingress-Time: 1657921528573
 Received: from pdx1-sub0-mail-a220.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.116.106.85 (trex/6.7.1);
-        Fri, 15 Jul 2022 21:24:58 +0000
+        by 100.112.55.242 (trex/6.7.1);
+        Fri, 15 Jul 2022 21:45:28 +0000
 Received: from offworld (unknown [104.36.25.13])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a220.dreamhost.com (Postfix) with ESMTPSA id 4Ll4Bd2HZyz9g;
-        Fri, 15 Jul 2022 14:24:57 -0700 (PDT)
+        by pdx1-sub0-mail-a220.dreamhost.com (Postfix) with ESMTPSA id 4Ll4fG1DZHz9g;
+        Fri, 15 Jul 2022 14:45:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1657920298;
-        bh=Gca+rK/1/omRgEtGZGppY4fPcaCmjyddkV4hHPuKIyY=;
+        s=dreamhost; t=1657921526;
+        bh=WF7C0cUBKUw1YYlFEE5qqWdjciIJtgJTSiKieCZzeqM=;
         h=Date:From:To:Cc:Subject:Content-Type;
-        b=lzDJIS2jEWSIE8aTXDQbvygB8SdONXMlSw4N4kkNfqzzRWdVDRpFgzEMVHVOheWcD
-         gbLxgxsXY7AXG1Q8sSABqEautgFcarW6CmHmLpF5Vy/VC1dOCOD/DDQGF6bhCbx8nK
-         4rjVl3dTnCw859tGm9wzhRYuNqTFh2AEMO9POg/zKKO88jyLNcohLvl3Qpfxxf8WoG
-         ohMUKK3AghSiw84cF+nykGGROFo56vgBw8ASQSzmgnqilAMBaXdCDJ8b32/8iyBHSv
-         eBUkskWUk6p606b+hV026dhiRZHQbofE1SiiSrsFXrwBbEaQKgoirB5rR4vQTjvVid
-         1OH6Nhag3/f5w==
-Date:   Fri, 15 Jul 2022 14:09:04 -0700
+        b=TLCMmKAqZRogGH7+Cs9sFp2louIA0+kK2XpuET0SlaXaI6oP2snsm0kImN3yh+QF/
+         TIlJbiU1Y2ohLtWwrYQ8J4uurMI9NE6tuyewwXBK0Tfv4QNifgpSt94E0glZbes5uW
+         CQpw7qSJN+7so+I2BdbuL8Z94Jr7Ud29uSaY6xsL2K3rbUeUV79RuwRvGavx6r8iCs
+         Otqg5IxW40tIBPMHnLaClnz/IUSqhCHS/m6a+WS0SaLs8/AatHXKDgXIvsqQAD9qN1
+         5sUDaN9Sn8J3GtGFFZCgjQxJmZLK23pRMd7DiTGcHspgJ2xk4PW6gqPIL6UWfGNYkz
+         7CgM1IggyNBzg==
+Date:   Fri, 15 Jul 2022 14:29:33 -0700
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     Dave Jiang <dave.jiang@intel.com>
 Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
         dan.j.williams@intel.com, bwidawsk@kernel.org, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com
-Subject: Re: [PATCH RFC 01/15] cxl/pmem: Introduce nvdimm_security_ops with
- ->get_flags() operation
-Message-ID: <20220715210904.bwqbahyya7kwixim@offworld>
+Subject: Re: [PATCH RFC 00/15] Introduce security commands for CXL pmem device
+Message-ID: <20220715212933.yhg32x6vdlnpipas@offworld>
 References: <165791918718.2491387.4203738301057301285.stgit@djiang5-desk3.ch.intel.com>
- <165791931828.2491387.3280104860123759941.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <165791931828.2491387.3280104860123759941.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <165791918718.2491387.4203738301057301285.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
@@ -95,21 +93,7 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 On Fri, 15 Jul 2022, Dave Jiang wrote:
 
->+config CXL_PMEM_SECURITY
->+	tristate "CXL PMEM SECURITY: Persistent Memory Security Support"
->+	depends on CXL_PMEM
->+	default CXL_BUS
->+	help
->+	  CXL memory device "Persistent Memory Data-at-rest Security" command set
->+	  support. Support opcode 0x4500..0x4505. The commands supported are "Get
->+	  Security State", "Set Passphrase", "Disable Passphrase", "Unlock",
->+	  "Freeze Security State", and "Passphrase Secure Erase". Security operation
->+	  is done through nvdimm security_ops.
->+
->+	  See Chapter 8.2.9.5.6 in the CXL 2.0 specification for a detailed description
->+	  of the Persistent Memory Security.
->+
->+	  If unsure say 'm'.
+>This series is seeking comments on the implementation. It has not been fully
+>tested yet.
 
-Is there any fundamental reason why we need to add a new CXL Kconfig option
-instead of just tucking this under CXL_PMEM?
+Sorry if this is already somewhere, but how exactly does one test the mock device?
