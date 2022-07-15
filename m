@@ -2,140 +2,241 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23642C433EF
-	for <linux-cxl@archiver.kernel.org>; Thu, 14 Jul 2022 23:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105F1C43334
+	for <linux-cxl@archiver.kernel.org>; Fri, 15 Jul 2022 00:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240748AbiGNXQz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 14 Jul 2022 19:16:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41052 "EHLO
+        id S229556AbiGOAAo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 14 Jul 2022 20:00:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240630AbiGNXQy (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 14 Jul 2022 19:16:54 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EB3670E52
-        for <linux-cxl@vger.kernel.org>; Thu, 14 Jul 2022 16:16:53 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id o31-20020a17090a0a2200b001ef7bd037bbso4547203pjo.0
-        for <linux-cxl@vger.kernel.org>; Thu, 14 Jul 2022 16:16:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=0U4hhVqs2XR4EGw7i9A15ZtnFqXn5xHqzpWu8rdBRXQ=;
-        b=QTwTjlefrBuqy2BMDgdjp0mIxBocMbXhoHlpn7pYKIWdee558ap9B8I6D4gINjGDWZ
-         VhDCf9Pj4X7dquH0h1IgrCgmin3bzDsrQW4/xW/Rvpn7pueDufpMHkxjfAKMyeeJMVR1
-         VC4Sbm99NCuOb15242J+NNMl9sQHy/ED6HJ3FvoEmBcfMQ/ToBJp682oQsFCitekjWRq
-         +0mVdNJ/2+SD6msmKon1sKAPOvquoDf8M5h12+/9wjxy44fdOZ+4WE4WTTdeUjPE8zgj
-         6aVj78gf7m49wc94wOzlrz3GxMUAoQS+743g4D27oDGO7BnTTkFEF3bD8TSu8AlUKxvY
-         9KVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=0U4hhVqs2XR4EGw7i9A15ZtnFqXn5xHqzpWu8rdBRXQ=;
-        b=G9la0WHxd8y78UtfZ+01HUmkBiu5JD9O91JtAZpME0SFOAoYXO/Bm1LrimR8DabZmd
-         VHV7NtQLMzg78w4lKHFHmvk1DlYL2/zU7JUW8zY54+habBeYn3CzEhPGOk+wfv8iPnSz
-         LL0NJCIq+QYQFTLhXkNO90EKJgJLWAHqd8A16FddujlYZoIWDQ5HluNP0hE1O+ZCZDYM
-         4SLMwNf3UTWkVoAt6V93N01u8vAGY7fBgT6sL9rJOev1DaT/xPqCRKgEDkInov314kdV
-         kl9FyA9f0qkQCBS1Dq1uIE0eftQFqikXu0OjMfOzQHF/+Zhy1UqGvd7sKGLhO3q4DkDH
-         uRJA==
-X-Gm-Message-State: AJIora9OHKI01TlhJJOtNhEzNKZ19da4BEN5ICmtMSMttmnL+5iEXhsE
-        IaogYv2FgIXRGw2AjlItHqI=
-X-Google-Smtp-Source: AGRyM1v20eluAf47eDG4BGowBvU11p4wm1w2XSBjlm2hd7FAZFn4EmSR7QwxAE9cs/yAWXdaDh0ZsA==
-X-Received: by 2002:a17:902:b08a:b0:16c:68b6:311 with SMTP id p10-20020a170902b08a00b0016c68b60311mr9936361plr.166.1657840613057;
-        Thu, 14 Jul 2022 16:16:53 -0700 (PDT)
-Received: from MacBook-Pro-91.local (c-107-3-179-31.hsd1.ca.comcast.net. [107.3.179.31])
-        by smtp.gmail.com with ESMTPSA id w6-20020a17090a780600b001f09d9b6673sm1999509pjk.7.2022.07.14.16.16.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Jul 2022 16:16:52 -0700 (PDT)
-Date:   Thu, 14 Jul 2022 16:16:49 -0700
-From:   Matthew Ho <sunfishho12@gmail.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "a.manzanares@samsung.com" <a.manzanares@samsung.com>
-Subject: Re: [PATCH ndctl] cxl: Add list all option to the cxl command
-Message-ID: <YtCj4feLExxytkPt@MacBook-Pro-91.local>
-References: <20220714182737.60714-1-sunfishho12@gmail.com>
- <8546b123eb6303db6b863a2670d64aa87434f196.camel@intel.com>
- <20220714191521.sy45sjpkpxijdefr@offworld>
+        with ESMTP id S240895AbiGOAAn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 14 Jul 2022 20:00:43 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D431C27CFF;
+        Thu, 14 Jul 2022 17:00:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657843242; x=1689379242;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/igNN+MI/KQRdqq25+CgroKlBSV1jxojTVQDW5IfuHk=;
+  b=HU8XuwRWBywTOvNqLIEfyIC9p8MIIOmlrSzJyEMqCwH2c+nEgiZk3ynx
+   yzsM44sDG4DTGpjDGA3RMmL0IyOYvNFs5DQLfwW6oiQy2q4bIoCSUKZum
+   sF5n3e0yfuM8atOhaaMaBAuCLq1MDrJl/8CuIgHXvdxQKnnLXppAzEO7E
+   1hsqwODNQvJFAB2+p1qCFfPFtGxiNfFaKZj63n/fpmsUpnyAvWECpnFtP
+   P3PXoAe+AcshL0Hc5WEARfCIiJugyXIY+YQAyRHymDy0b6lg+npiT67DD
+   1cOvxgiz8akyCNHqxaTzREFWgmDhlZDwAEl0rt6VZG+v8fP0ASRU5jZ1A
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10408"; a="284417171"
+X-IronPort-AV: E=Sophos;i="5.92,272,1650956400"; 
+   d="scan'208";a="284417171"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 17:00:42 -0700
+X-IronPort-AV: E=Sophos;i="5.92,272,1650956400"; 
+   d="scan'208";a="923289979"
+Received: from jlcone-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.2.90])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 17:00:41 -0700
+Subject: [PATCH v2 00/28] CXL PMEM Region Provisioning
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     David Hildenbrand <david@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        nvdimm@lists.linux.dev, linux-pci@vger.kernel.org
+Date:   Thu, 14 Jul 2022 17:00:41 -0700
+Message-ID: <165784324066.1758207.15025479284039479071.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220714191521.sy45sjpkpxijdefr@offworld>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Jul 14, 2022 at 12:15:21PM -0700, Davidlohr Bueso wrote:
-> On Thu, 14 Jul 2022, Verma, Vishal L wrote:
-> 
-> > On Thu, 2022-07-14 at 11:27 -0700, sunfishho12@gmail.com wrote:
-> > > From: Matthew Ho <sunfishho12@gmail.com>
-> > > 
-> > > This adds a new subcommand cxl list --all, which is equivalent to cxl
-> > > list -MBPEDTHIiu. This addition makes it easier to list all the CXL
-> > > devices at once, as one does not need to append a subcommand for each
-> > > device. --all is also easier to remember than -MBPEDTHIiu. When
-> > > region support is added, this will be updated to include it.
-> > > 
-> > > Reviewed-by: Adam Manzanares <a.manzanares@samsung.com>
-> > > Signed-off-by: Matthew Ho <sunfishho12@gmail.com>
-> > > ---
-> > >  cxl/filter.h |  1 +
-> > >  cxl/list.c   | 15 +++++++++++++++
-> > >  2 files changed, 16 insertions(+)
-> 
-> You also need to the manpage (which I also missed) via:
-> 
->      Documentation/cxl/cxl-list.txt
-> 
-> and of course, same for Vishal's suggestions below.
+Changes since v1 [1]:
+- Move 19 patches that have received a Reviewed-by to the 'pending'
+  branch in cxl.git (Thanks Alison, Adam, and Jonathan!)
+- Improve the changelog and add more Cc's to "cxl/acpi: Track CXL
+  resources in iomem_resource" and highlight the new export of
+  insert_resource_expand_to_fit()
+- Switch all occurrences of the pattern "rc = -ECODE; if (condition)
+  goto err;" to "if (condition) { rc = -ECODE; goto err; }" (Jonathan)
+- Re-organize all the cxl_{root,switch,endpoint}_decoder() patches to
+  move the decoder-type-specific setup into the decoder-type-specific
+  allocation routines (Jonathan)
+- Add kdoc to clarify the behavior of add_cxl_resources() (Jonathan)
+- Add IORES_DESC_CXL for kernel components like EDAC to determine when
+  they might be dealing with a CXL address range (Tony)
+- Drop usage of dev_set_drvdata() for passing @cxl_res (Jonathan)
+- Drop @remove_action argument to __cxl_dpa_release(), make it behave
+  like any other devm_<free> helper (Jonathan)
+- Clarify 'skip' vs 'skipped' in DPA handling helpers (Jonathan)
+- Clarify why port teardown no proceeds under the lock with the
+  conversion from list to xarray (Jonathan)
+- Revert rename of cxl_find_dport_by_dev() (Jonathan)
+- Fold down_read() / up_write() mismatch fix to the patch that
+  introduced the problem (Jonathan)
+- Fix description of interleave_ways and interleave_granularity in the
+  sysfs ABI document
+- Clarify tangential cleanups in "resource: Introduce
+  alloc_free_mem_region()" (Jonathan)
+- Clarify rationale for the region creation / naming ABI (Jonathan)
+- Add SET_CXL_REGION_ATTR() to supplement CXL_REGION_ATTR() the former
+  is used to optionally added region attributes to an attribute list
+  (position independent) and the latter is used to retrieve a pointer to
+  the attribute in code.  (Jonathan)
+- For writes to region attributes allow the same value to be written
+  multiple times without error (Jonathan)
+- Clarify the actions performed by cxl_port_attach_region() (Jonathan)
+- Commit message spelling fixes (Alison and Jonathan)
+- Rename cxl_dpa_resource() => cxl_dpa_resource_start() (Jonathan)
+- Reword error message in cxl_parse_cfmws() (Adam)
+- Keep @expected_len signed in cxl_acpi_cfmws_verify() (Jonathan)
+- Miscellaneous formatting and doc fixes (Jonathan)
+- Rename port->dpa_end port->hdm_end (Jonathan)
+- Rename unregister_region() => unregister_nvdimm_region() (Jonathan)
 
-Ah, will add.
+[1]: https://lore.kernel.org/linux-cxl/165603869943.551046.3498980330327696732.stgit@dwillia2-xfh
 
-> 
-> > 
-> > Hi Matthew, thanks for sending this - I agree it gets tedious trying to
-> > list multiple things.
-> > 
-> > However, I think we should do this similar to ndctl-list's --verbose
-> > options, where adding the number of 'v's adds in more and more detail.
-> 
-> Yeah I agree, and was not aware that ndctl has this. Furthermore perf
-> tooling also uses this.
-> 
-> > 
-> > For example:
-> > 
-> > cxl list (default) : Regions and memdevs (this isn't there today, but
-> > in a pending series I'm about to send out).
-> > 
-> > cxl list -v: -RMBDPT
-> > 
-> > cxl list -vv: -RMBDPTi
-> > 
-> > cxl list -vvv: -RMBDPTiHI
-> 
-> Makes sense to me.
+---
 
-Sounds good, will implement it this way.
+Until the CXL 2.0 definition arrived there was little reason for OS
+drivers to care about CXL memory expanders. Similar to DDR they just
+implemented a physical address range that was described to the OS by
+platform firmware (EFI Memory Map + ACPI SRAT/SLIT/HMAT etc). The CXL
+2.0 definition adds support for PMEM, hotplug, switch topologies, and
+device-interleaving which exceeds the limits of what can be reasonably
+abstracted by EFI + ACPI mechanisms. As a result, Linux needs a native
+capability to provision new CXL regions.
 
-> > 
-> > -u/--human can be excluded from the verbosity levels as that can be
-> > passed in if needed, and there may be use cases where it isn't desired
-> > (in scripts).
-> > 
-> > Thoughts on this - do you want to take a shot at implementing it this
-> > way?
-> 
-> Sounds good to me.
+The term "region" is the same term that originated in the LIBNVDIMM
+implementation to describe a host physical / system physical address
+range. For PMEM a region is a persistent memory range that can be
+further sub-divided into namespaces. For CXL there are three
+classifications of regions:
+- PMEM: set up by CXL native tooling and persisted in CXL region labels
 
-Will do.
+- RAM: set up dynamically by CXL native tooling after hotplug events, or
+  leftover capacity not mapped by platform firmware. Any persistent
+  configuration would come from set up scripts / configuration files in
+  userspace.
 
-Thanks for all of the feedback!
+- System RAM: set up by platform firmware and described by EFI + ACPI
+  metadata, these regions are static.
 
-Best,
-Matthew
+For now, these patches implement just PMEM regions without region label
+support. Note though that the infrastructure routines like
+cxl_region_attach() and cxl_region_setup_targets() are building blocks
+for region-label support, provisioning RAM regions, and enumerating
+System RAM regions.
+
+The general flow for provisioning a CXL region is to:
+- Find a device or set of devices with available device-physical-address
+  (DPA) capacity
+
+- Find a platform CXL window that has free capacity to map a new region
+  and that is able to target the devices in the previous step.
+
+- Allocate DPA according to the CXL specification rules of sequential
+  enabling of decoders by id and when a device hosts multiple decoders
+  make sure that lower-id decoders map lower HPA and higher-id decoders
+  map higher HPA.
+
+- Assign endpoint decoders to a region and validate that the switching
+  topology supports the requested configuration. Recall that
+  interleaving is governed by modulo or xormap math that constrains which
+  device can support which positions in a given region interleave.
+
+- Program all the decoders an all endpoints and participating switches
+  to bring the new address range online.
+
+Once the range is online then existing drivers like LIBNVDIMM or
+device-dax can manage the memory range as if the ACPI BIOS had conveyed
+its parameters at boot.
+
+This patch kit is the result of significant amounts of path finding work
+[2] and long discussions with Ben. Thank you Ben for all that work!
+Where the patches in this kit go in a different design direction than
+the RFC, the authorship is changed and a Co-developed-by is added mainly
+so I get blamed for the bad decisions and not Ben. The major updates
+from that last posting are:
+
+- all CXL resources are reflected in full in iomem_resource
+
+- host-physical-address (HPA) range allocation moves to a
+  devm_request_free_mem_region() derivative
+
+- locking moves to two global rwsems, one for DPA / endpoint decoders
+  and one for HPA / regions.
+
+- the existing port scanning path is augmented to cache more topology
+  information rather than recreate it at region creation time
+
+[2]: https://lore.kernel.org/r/20220413183720.2444089-1-ben.widawsky@intel.com
+
+---
+
+Ben Widawsky (4):
+      cxl/hdm: Add sysfs attributes for interleave ways + granularity
+      cxl/region: Add region creation support
+      cxl/region: Add a 'uuid' attribute
+      cxl/region: Add interleave geometry attributes
+
+Dan Williams (24):
+      Documentation/cxl: Use a double line break between entries
+      cxl/core: Define a 'struct cxl_switch_decoder'
+      cxl/acpi: Track CXL resources in iomem_resource
+      cxl/core: Define a 'struct cxl_root_decoder'
+      cxl/core: Define a 'struct cxl_endpoint_decoder'
+      cxl/hdm: Enumerate allocated DPA
+      cxl/hdm: Add 'mode' attribute to decoder objects
+      cxl/hdm: Track next decoder to allocate
+      cxl/hdm: Add support for allocating DPA to an endpoint decoder
+      cxl/port: Record dport in endpoint references
+      cxl/port: Record parent dport when adding ports
+      cxl/port: Move 'cxl_ep' references to an xarray per port
+      cxl/port: Move dport tracking to an xarray
+      cxl/mem: Enumerate port targets before adding endpoints
+      resource: Introduce alloc_free_mem_region()
+      cxl/region: Allocate HPA capacity to regions
+      cxl/region: Enable the assignment of endpoint decoders to regions
+      cxl/acpi: Add a host-bridge index lookup mechanism
+      cxl/region: Attach endpoint decoders
+      cxl/region: Program target lists
+      cxl/hdm: Commit decoder state to hardware
+      cxl/region: Add region driver boiler plate
+      cxl/pmem: Fix offline_nvdimm_bus() to offline by bridge
+      cxl/region: Introduce cxl_pmem_region objects
+
+
+ Documentation/ABI/testing/sysfs-bus-cxl         |  213 +++
+ Documentation/driver-api/cxl/memory-devices.rst |   11 
+ drivers/cxl/Kconfig                             |    8 
+ drivers/cxl/acpi.c                              |  185 ++
+ drivers/cxl/core/Makefile                       |    1 
+ drivers/cxl/core/core.h                         |   49 +
+ drivers/cxl/core/hdm.c                          |  623 +++++++-
+ drivers/cxl/core/pmem.c                         |    4 
+ drivers/cxl/core/port.c                         |  669 ++++++--
+ drivers/cxl/core/region.c                       | 1830 +++++++++++++++++++++++
+ drivers/cxl/cxl.h                               |  263 +++
+ drivers/cxl/cxlmem.h                            |   18 
+ drivers/cxl/mem.c                               |   32 
+ drivers/cxl/pmem.c                              |  259 +++
+ drivers/nvdimm/region_devs.c                    |   28 
+ include/linux/ioport.h                          |    3 
+ include/linux/libnvdimm.h                       |    5 
+ kernel/resource.c                               |  185 ++
+ mm/Kconfig                                      |    5 
+ tools/testing/cxl/Kbuild                        |    1 
+ tools/testing/cxl/test/cxl.c                    |   75 +
+ 21 files changed, 4156 insertions(+), 311 deletions(-)
+ create mode 100644 drivers/cxl/core/region.c
+
+base-commit: b060edfd8cdd52bc8648392500bf152a8dd6d4c5
