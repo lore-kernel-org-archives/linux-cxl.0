@@ -2,40 +2,40 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0A9C433EF
-	for <linux-cxl@archiver.kernel.org>; Fri, 15 Jul 2022 06:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDC9C43334
+	for <linux-cxl@archiver.kernel.org>; Fri, 15 Jul 2022 06:26:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229698AbiGOG0M (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 15 Jul 2022 02:26:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38030 "EHLO
+        id S231176AbiGOG0O (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 15 Jul 2022 02:26:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231176AbiGOG0M (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 15 Jul 2022 02:26:12 -0400
+        with ESMTP id S231483AbiGOG0O (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 15 Jul 2022 02:26:14 -0400
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB5F33DBF8
-        for <linux-cxl@vger.kernel.org>; Thu, 14 Jul 2022 23:26:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF06940BFF
+        for <linux-cxl@vger.kernel.org>; Thu, 14 Jul 2022 23:26:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657866370; x=1689402370;
+  t=1657866373; x=1689402373;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=VScp0z0ULQqc/XnWR0snJ26/sWE9rhYK9NXAVkcwxTw=;
-  b=eJ5ptwkHV/x8XgXsFr7HtDVL2eBKk5b2f8bqHfhnetOGyJgI0ewp8zE0
-   5XLi+em9PRKICN/xuB3rxlWc959XqCHT0uxUxp+u5ASRqMdryzS0jwQ0o
-   OS1heKtw/xYb43jnjrDOmwI78w16AxMSCvIQPgDPShjqeph3sIYziDsf3
-   GgBniRDmKfqJulFHUpwBu0x6aGfJSz9sU/+9GEycWvZrGSVUqUGEL2ECr
-   BitNl+NPD5RU75lbe8mSzO4X4ad1M76fyAdkdGXGwC8xiJ9iP8yuogzF9
-   bbCpaTOk1JkRRcp+LCdNa7ReeqLDOGx/dESKQ56v7nS8jokJgkDWjtvOg
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10408"; a="286852214"
+  bh=S5a3PGV/30b+Wi+/xP9UhWhcgDtUE+LkL1rNQ9TXhIA=;
+  b=NRjHFj19FIdkHZdEaCX+4PULJXHUeWCKo/kFrE8FNsCSMekUKFUEGab4
+   wkW03V1IoJwFKBN6KBX5Pq6Jp+skiqKQVXFkzlwNXAb5KW+Mwhmz6VjWy
+   wXHTv/1iMaHnZIkucJPG3PDAjTjUtd/TYowp8Hr5edN3H77SeOjIxjG37
+   THYLQQv1zXSi112i0w558kyz591WXzcC+mhY0FZRGtF0EpS7NL2TvRndn
+   B05NBFSitdxYiCioi1dioEWW8lIC4w+nmCHVG3UXMCQbRF0uxlxvhPlsb
+   CrV9/YGoY1/uwyVSrQXQTLndD+ZRO10EZwitDmLrS5muwnLenxbbmwmSD
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10408"; a="286852220"
 X-IronPort-AV: E=Sophos;i="5.92,273,1650956400"; 
-   d="scan'208";a="286852214"
+   d="scan'208";a="286852220"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 23:26:10 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 23:26:12 -0700
 X-IronPort-AV: E=Sophos;i="5.92,273,1650956400"; 
-   d="scan'208";a="546544617"
+   d="scan'208";a="546544629"
 Received: from saseiper-mobl.amr.corp.intel.com (HELO vverma7-desk1.intel.com) ([10.212.71.32])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 23:26:10 -0700
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 23:26:12 -0700
 From:   Vishal Verma <vishal.l.verma@intel.com>
 To:     <linux-cxl@vger.kernel.org>
 Cc:     <nvdimm@lists.linux.dev>, Dan Williams <dan.j.williams@intel.com>,
@@ -43,531 +43,442 @@ Cc:     <nvdimm@lists.linux.dev>, Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [ndctl PATCH 4/8] cxl-cli: add region listing support
-Date:   Fri, 15 Jul 2022 00:25:46 -0600
-Message-Id: <20220715062550.789736-5-vishal.l.verma@intel.com>
+Subject: [ndctl PATCH 7/8] cxl: add commands to {enable,disable,destroy}-region
+Date:   Fri, 15 Jul 2022 00:25:49 -0600
+Message-Id: <20220715062550.789736-8-vishal.l.verma@intel.com>
 X-Mailer: git-send-email 2.36.1
 In-Reply-To: <20220715062550.789736-1-vishal.l.verma@intel.com>
 References: <20220715062550.789736-1-vishal.l.verma@intel.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=16100; h=from:subject; bh=VScp0z0ULQqc/XnWR0snJ26/sWE9rhYK9NXAVkcwxTw=; b=owGbwMvMwCXGf25diOft7jLG02pJDEkXOfLeWYvvteVQv3Vwy/HUfUyZXzbvfbg5pMepZcGy8ikN Kg+0OkpZGMS4GGTFFFn+7vnIeExuez5PYIIjzBxWJpAhDFycAjAR6zWMDP8s5CJtY9dy7hCU8E1SX9 HJfsPXYBK3ybrlpwJ57y+V2cPI8OYNk9EJCa+LsceXxtlPmMPy0XdGYknhzmKn+lP8f7YJsAIA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=11383; h=from:subject; bh=S5a3PGV/30b+Wi+/xP9UhWhcgDtUE+LkL1rNQ9TXhIA=; b=owGbwMvMwCXGf25diOft7jLG02pJDEkXOfJU9Q4eeOqUOu9dg7DvPHUe2Zqwdy/l7ZdoNUUfzBK7 xZreUcrCIMbFICumyPJ3z0fGY3Lb83kCExxh5rAygQxh4OIUgImYGDP8d3GwZTCT3XJhr6TsHsH28o XXl8glenqaX3rtPudq+q2XsowM/Y3cv7tuBVjtaZfMU/X2jvwzayH/+h0v7+5n2Gv5LF6RDQA=
 X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add cxl_region -> json and cxl_mapping -> json emitter helpers, and
-teach cxl_filter_walk about cxl_regions. With these in place, 'cxl-list'
-can now emit json objects for CXL regions. They can be top-level objects
-if requested by themselves, or nested under root-decoders, if listed
-along with decoders. Allow a plain 'cxl list' command to imply
-'--regions'.
+With a template from cxl-create-region in place, add its friends:
+
+  cxl enable-region
+  cxl disable-region
+  cxl destroy-region
 
 Cc: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
- Documentation/cxl/cxl-list.txt |  13 +++-
- cxl/filter.h                   |   4 ++
- cxl/json.h                     |   5 ++
- cxl/filter.c                   | 121 +++++++++++++++++++++++++++++---
- cxl/json.c                     | 123 +++++++++++++++++++++++++++++++++
- cxl/list.c                     |  25 ++++---
- 6 files changed, 265 insertions(+), 26 deletions(-)
+ Documentation/cxl/cxl-destroy-region.txt |  39 +++++
+ Documentation/cxl/cxl-disable-region.txt |  34 +++++
+ Documentation/cxl/cxl-enable-region.txt  |  34 +++++
+ Documentation/cxl/decoder-option.txt     |   6 +
+ cxl/builtin.h                            |   3 +
+ cxl/cxl.c                                |   3 +
+ cxl/region.c                             | 172 +++++++++++++++++++++++
+ Documentation/cxl/meson.build            |   4 +
+ 8 files changed, 295 insertions(+)
+ create mode 100644 Documentation/cxl/cxl-destroy-region.txt
+ create mode 100644 Documentation/cxl/cxl-disable-region.txt
+ create mode 100644 Documentation/cxl/cxl-enable-region.txt
+ create mode 100644 Documentation/cxl/decoder-option.txt
 
-diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
-index f6aba0c..2906c2f 100644
---- a/Documentation/cxl/cxl-list.txt
-+++ b/Documentation/cxl/cxl-list.txt
-@@ -309,8 +309,9 @@ OPTIONS
+diff --git a/Documentation/cxl/cxl-destroy-region.txt b/Documentation/cxl/cxl-destroy-region.txt
+new file mode 100644
+index 0000000..cf1a6fe
+--- /dev/null
++++ b/Documentation/cxl/cxl-destroy-region.txt
+@@ -0,0 +1,39 @@
++// SPDX-License-Identifier: GPL-2.0
++
++cxl-destroy-region(1)
++=====================
++
++NAME
++----
++cxl-destroy-region - destroy specified region(s).
++
++SYNOPSIS
++--------
++[verse]
++'cxl destroy-region <region> [<options>]'
++
++include::region-description.txt[]
++
++EXAMPLE
++-------
++----
++# cxl destroy-region all
++destroyed 2 regions
++----
++
++OPTIONS
++-------
++-f::
++--force::
++	Force a destroy operation even if the region is active.
++	This will attempt to disable the region first.
++
++include::decoder-option.txt[]
++
++include::debug-option.txt[]
++
++include::../copyright.txt[]
++
++SEE ALSO
++--------
++linkcxl:cxl-list[1], linkcxl:cxl-create-region[1]
+diff --git a/Documentation/cxl/cxl-disable-region.txt b/Documentation/cxl/cxl-disable-region.txt
+new file mode 100644
+index 0000000..2b13a1a
+--- /dev/null
++++ b/Documentation/cxl/cxl-disable-region.txt
+@@ -0,0 +1,34 @@
++// SPDX-License-Identifier: GPL-2.0
++
++cxl-disable-region(1)
++=====================
++
++NAME
++----
++cxl-disable-region - disable specified region(s).
++
++SYNOPSIS
++--------
++[verse]
++'cxl disable-region <region> [<options>]'
++
++include::region-description.txt[]
++
++EXAMPLE
++-------
++----
++# cxl disable-region all
++disabled 2 regions
++----
++
++OPTIONS
++-------
++include::decoder-option.txt[]
++
++include::debug-option.txt[]
++
++include::../copyright.txt[]
++
++SEE ALSO
++--------
++linkcxl:cxl-list[1], linkcxl:cxl-enable-region[1]
+diff --git a/Documentation/cxl/cxl-enable-region.txt b/Documentation/cxl/cxl-enable-region.txt
+new file mode 100644
+index 0000000..86e9aec
+--- /dev/null
++++ b/Documentation/cxl/cxl-enable-region.txt
+@@ -0,0 +1,34 @@
++// SPDX-License-Identifier: GPL-2.0
++
++cxl-enable-region(1)
++=====================
++
++NAME
++----
++cxl-enable-region - enable specified region(s).
++
++SYNOPSIS
++--------
++[verse]
++'cxl enable-region <region> [<options>]'
++
++include::region-description.txt[]
++
++EXAMPLE
++-------
++----
++# cxl enable-region all
++enabled 2 regions
++----
++
++OPTIONS
++-------
++include::decoder-option.txt[]
++
++include::debug-option.txt[]
++
++include::../copyright.txt[]
++
++SEE ALSO
++--------
++linkcxl:cxl-list[1], linkcxl:cxl-disable-region[1]
+diff --git a/Documentation/cxl/decoder-option.txt b/Documentation/cxl/decoder-option.txt
+new file mode 100644
+index 0000000..e638d6e
+--- /dev/null
++++ b/Documentation/cxl/decoder-option.txt
+@@ -0,0 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0
++
++-d::
++--decoder=::
++	The root decoder to limit the operation to. Only regions that are
++	children of the specified decoder will be acted upon.
+diff --git a/cxl/builtin.h b/cxl/builtin.h
+index 843bada..b28c221 100644
+--- a/cxl/builtin.h
++++ b/cxl/builtin.h
+@@ -19,4 +19,7 @@ int cmd_enable_port(int argc, const char **argv, struct cxl_ctx *ctx);
+ int cmd_set_partition(int argc, const char **argv, struct cxl_ctx *ctx);
+ int cmd_disable_bus(int argc, const char **argv, struct cxl_ctx *ctx);
+ int cmd_create_region(int argc, const char **argv, struct cxl_ctx *ctx);
++int cmd_enable_region(int argc, const char **argv, struct cxl_ctx *ctx);
++int cmd_disable_region(int argc, const char **argv, struct cxl_ctx *ctx);
++int cmd_destroy_region(int argc, const char **argv, struct cxl_ctx *ctx);
+ #endif /* _CXL_BUILTIN_H_ */
+diff --git a/cxl/cxl.c b/cxl/cxl.c
+index f0afcfe..dd1be7a 100644
+--- a/cxl/cxl.c
++++ b/cxl/cxl.c
+@@ -73,6 +73,9 @@ static struct cmd_struct commands[] = {
+ 	{ "set-partition", .c_fn = cmd_set_partition },
+ 	{ "disable-bus", .c_fn = cmd_disable_bus },
+ 	{ "create-region", .c_fn = cmd_create_region },
++	{ "enable-region", .c_fn = cmd_enable_region },
++	{ "disable-region", .c_fn = cmd_disable_region },
++	{ "destroy-region", .c_fn = cmd_destroy_region },
+ };
  
- -T::
- --targets::
--	Extend decoder listings with downstream port target information, and /
--	or port and bus listings with the downstream port information.
-+	Extend decoder listings with downstream port target information, port
-+	and bus listings with the downstream port information, and / or regions
-+	with mapping information.
- ----
- # cxl list -BTu -b ACPI.CXL
- {
-@@ -327,6 +328,14 @@ OPTIONS
- }
- ----
+ int main(int argc, const char **argv)
+diff --git a/cxl/region.c b/cxl/region.c
+index 9fe99b2..cb50558 100644
+--- a/cxl/region.c
++++ b/cxl/region.c
+@@ -45,6 +45,9 @@ struct parsed_params {
  
-+-R::
-+--regions::
-+	Include region objects in the listing.
-+
-+-r::
-+--region::
-+	Specify the region name to filter the emitted regions.
-+
- --debug::
- 	If the cxl tool was built with debug enabled, turn on debug
- 	messages.
-diff --git a/cxl/filter.h b/cxl/filter.h
-index c913daf..609433c 100644
---- a/cxl/filter.h
-+++ b/cxl/filter.h
-@@ -13,9 +13,11 @@ struct cxl_filter_params {
- 	const char *port_filter;
- 	const char *endpoint_filter;
- 	const char *decoder_filter;
-+	const char *region_filter;
- 	bool single;
- 	bool endpoints;
- 	bool decoders;
-+	bool regions;
- 	bool targets;
- 	bool memdevs;
- 	bool ports;
-@@ -33,6 +35,8 @@ struct cxl_memdev *util_cxl_memdev_filter(struct cxl_memdev *memdev,
- struct cxl_port *util_cxl_port_filter_by_memdev(struct cxl_port *port,
- 						const char *ident,
- 						const char *serial);
-+struct cxl_region *util_cxl_region_filter(struct cxl_region *region,
-+					    const char *__ident);
+ enum region_actions {
+ 	ACTION_CREATE,
++	ACTION_ENABLE,
++	ACTION_DISABLE,
++	ACTION_DESTROY,
+ };
  
- enum cxl_port_filter_mode {
- 	CXL_PF_SINGLE,
-diff --git a/cxl/json.h b/cxl/json.h
-index 9a5a845..eb7572b 100644
---- a/cxl/json.h
-+++ b/cxl/json.h
-@@ -15,6 +15,11 @@ struct json_object *util_cxl_endpoint_to_json(struct cxl_endpoint *endpoint,
- 					      unsigned long flags);
- struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
- 					     unsigned long flags);
-+struct json_object *util_cxl_region_to_json(struct cxl_region *region,
-+					     unsigned long flags);
-+void util_cxl_mappings_append_json(struct json_object *jregion,
-+				  struct cxl_region *region,
-+				  unsigned long flags);
- void util_cxl_targets_append_json(struct json_object *jdecoder,
- 				  struct cxl_decoder *decoder,
- 				  const char *ident, const char *serial,
-diff --git a/cxl/filter.c b/cxl/filter.c
-index e5fab19..ae95e2e 100644
---- a/cxl/filter.c
-+++ b/cxl/filter.c
-@@ -585,6 +585,41 @@ util_cxl_memdev_filter_by_port(struct cxl_memdev *memdev, const char *bus_ident,
- 	return NULL;
- }
+ static struct log_ctx rl;
+@@ -78,7 +81,22 @@ static const struct option create_options[] = {
+ 	OPT_END(),
+ };
  
-+struct cxl_region *util_cxl_region_filter(struct cxl_region *region,
-+					    const char *__ident)
-+{
-+	char *ident, *save;
-+	const char *name;
-+	int id;
-+
-+	if (!__ident)
-+		return region;
-+
-+	ident = strdup(__ident);
-+	if (!ident)
-+		return NULL;
-+
-+	for (name = strtok_r(ident, which_sep(__ident), &save); name;
-+	     name = strtok_r(NULL, which_sep(__ident), &save)) {
-+		if (strcmp(name, "all") == 0)
-+			break;
-+
-+		if ((sscanf(name, "%d", &id) == 1 ||
-+		     sscanf(name, "region%d", &id) == 1) &&
-+		    cxl_region_get_id(region) == id)
-+			break;
-+
-+		if (strcmp(name, cxl_region_get_devname(region)) == 0)
-+			break;
-+	}
-+
-+	free(ident);
-+	if (name)
-+		return region;
-+	return NULL;
-+
-+}
-+
- static unsigned long params_to_flags(struct cxl_filter_params *param)
- {
- 	unsigned long flags = 0;
-@@ -672,37 +707,79 @@ static struct json_object *pick_array(struct json_object *child,
- 	return NULL;
- }
++static const struct option enable_options[] = {
++	BASE_OPTIONS(),
++	OPT_END(),
++};
  
-+static void walk_regions(struct cxl_decoder *decoder,
-+			 struct json_object *jregions,
-+			 struct cxl_filter_params *p,
-+			 unsigned long flags)
-+{
-+	struct json_object *jregion;
-+	struct cxl_region *region;
++static const struct option disable_options[] = {
++	BASE_OPTIONS(),
++	OPT_END(),
++};
 +
-+	cxl_region_foreach(decoder, region) {
-+		if (!util_cxl_region_filter(region, p->region_filter))
-+			continue;
-+		if (!p->idle && !cxl_region_is_enabled(region))
-+			continue;
-+		jregion = util_cxl_region_to_json(region, flags);
-+		if (!jregion)
-+			continue;
-+		json_object_array_add(jregions, jregion);
-+	}
-+
-+	return;
-+}
-+
- static void walk_decoders(struct cxl_port *port, struct cxl_filter_params *p,
--			  struct json_object *jdecoders, unsigned long flags)
-+			  struct json_object *jdecoders,
-+			  struct json_object *jregions, unsigned long flags)
- {
- 	struct cxl_decoder *decoder;
++static const struct option destroy_options[] = {
++	BASE_OPTIONS(),
++	OPT_BOOLEAN('f', "force", &param.force,
++		    "destroy region even if currently active"),
++	OPT_END(),
++};
  
- 	cxl_decoder_foreach(port, decoder) {
-+		const char *devname = cxl_decoder_get_devname(decoder);
-+		struct json_object *jchildregions = NULL;
- 		struct json_object *jdecoder;
- 
-+		if (p->regions && p->decoders) {
-+			jchildregions = json_object_new_array();
-+			if (!jchildregions) {
-+				err(p, "failed to allocate region object\n");
-+				return;
-+			}
-+		}
-+
-+		if (p->regions && cxl_port_is_root(port))
-+			walk_regions(decoder,
-+				     pick_array(jchildregions, jregions),
-+				     p, flags);
- 		if (!p->decoders)
--			continue;
-+			goto put_continue;
- 		if (!util_cxl_decoder_filter(decoder, p->decoder_filter))
--			continue;
-+			goto put_continue;
- 		if (!util_cxl_decoder_filter_by_bus(decoder, p->bus_filter))
--			continue;
-+			goto put_continue;
- 		if (!util_cxl_decoder_filter_by_port(decoder, p->port_filter,
- 						     pf_mode(p)))
--			continue;
-+			goto put_continue;
- 		if (!util_cxl_decoder_filter_by_memdev(
- 			    decoder, p->memdev_filter, p->serial_filter))
--			continue;
-+			goto put_continue;
- 		if (!p->idle && cxl_decoder_get_size(decoder) == 0)
--			continue;
-+			goto put_continue;
- 		jdecoder = util_cxl_decoder_to_json(decoder, flags);
- 		if (!decoder) {
- 			dbg(p, "decoder object allocation failure\n");
--			continue;
-+			goto put_continue;
- 		}
- 		util_cxl_targets_append_json(jdecoder, decoder,
- 					     p->memdev_filter, p->serial_filter,
- 					     flags);
-+		cond_add_put_array_suffix(jdecoder, "regions", devname,
-+					  jchildregions);
- 		json_object_array_add(jdecoders, jdecoder);
-+		continue;
-+put_continue:
-+		json_object_put(jchildregions);
- 	}
+ static int parse_create_options(int argc, const char **argv,
+ 				struct parsed_params *p)
+@@ -495,11 +513,90 @@ err_delete:
+ 	return rc;
  }
  
-@@ -782,7 +859,7 @@ static void walk_endpoints(struct cxl_port *port, struct cxl_filter_params *p,
- 		if (!p->decoders)
- 			continue;
- 		walk_decoders(cxl_endpoint_get_port(endpoint), p,
--			      pick_array(jchilddecoders, jdecoders), flags);
-+			      pick_array(jchilddecoders, jdecoders), NULL, flags);
- 		cond_add_put_array_suffix(jendpoint, "decoders", devname,
- 					  jchilddecoders);
- 	}
-@@ -869,7 +946,8 @@ walk_children:
- 				       flags);
- 
- 		walk_decoders(port, p,
--			      pick_array(jchilddecoders, jportdecoders), flags);
-+			      pick_array(jchilddecoders, jportdecoders), NULL,
-+			      flags);
- 		walk_child_ports(port, p, pick_array(jchildports, jports),
- 				 pick_array(jchilddecoders, jportdecoders),
- 				 pick_array(jchildeps, jeps),
-@@ -894,6 +972,7 @@ int cxl_filter_walk(struct cxl_ctx *ctx, struct cxl_filter_params *p)
- 	struct json_object *jbusdecoders = NULL;
- 	struct json_object *jepdecoders = NULL;
- 	struct json_object *janondevs = NULL;
-+	struct json_object *jregions = NULL;
- 	struct json_object *jeps = NULL;
- 	struct cxl_memdev *memdev;
- 	int top_level_objs = 0;
-@@ -936,6 +1015,10 @@ int cxl_filter_walk(struct cxl_ctx *ctx, struct cxl_filter_params *p)
- 	if (!jepdecoders)
- 		goto err;
- 
-+	jregions = json_object_new_array();
-+	if (!jregions)
-+		goto err;
-+
- 	dbg(p, "walk memdevs\n");
- 	cxl_memdev_foreach(ctx, memdev) {
- 		struct json_object *janondev;
-@@ -964,6 +1047,7 @@ int cxl_filter_walk(struct cxl_ctx *ctx, struct cxl_filter_params *p)
- 		struct json_object *jchildports = NULL;
- 		struct json_object *jchilddevs = NULL;
- 		struct json_object *jchildeps = NULL;
-+		struct json_object *jchildregions = NULL;
- 		struct cxl_port *port = cxl_bus_get_port(bus);
- 		const char *devname = cxl_bus_get_devname(bus);
- 
-@@ -1021,11 +1105,20 @@ int cxl_filter_walk(struct cxl_ctx *ctx, struct cxl_filter_params *p)
- 					continue;
- 				}
- 			}
-+			if (p->regions && !p->decoders) {
-+				jchildregions = json_object_new_array();
-+				if (!jchildregions) {
-+					err(p,
-+					    "%s: failed to enumerate child regions\n",
-+					    devname);
-+					continue;
-+				}
-+			}
- 		}
- walk_children:
- 		dbg(p, "walk decoders\n");
- 		walk_decoders(port, p, pick_array(jchilddecoders, jbusdecoders),
--			      flags);
-+			      pick_array(jchildregions, jregions), flags);
- 
- 		dbg(p, "walk ports\n");
- 		walk_child_ports(port, p, pick_array(jchildports, jports),
-@@ -1038,6 +1131,8 @@ walk_children:
- 					  jchildeps);
- 		cond_add_put_array_suffix(jbus, "decoders", devname,
- 					  jchilddecoders);
-+		cond_add_put_array_suffix(jbus, "regions", devname,
-+					  jchildregions);
- 		cond_add_put_array_suffix(jbus, "memdevs", devname, jchilddevs);
- 	}
- 
-@@ -1057,6 +1152,8 @@ walk_children:
- 		top_level_objs++;
- 	if (json_object_array_length(jepdecoders))
- 		top_level_objs++;
-+	if (json_object_array_length(jregions))
-+		top_level_objs++;
- 
- 	splice_array(p, janondevs, jplatform, "anon memdevs", top_level_objs > 1);
- 	splice_array(p, jbuses, jplatform, "buses", top_level_objs > 1);
-@@ -1069,6 +1166,7 @@ walk_children:
- 		     top_level_objs > 1);
- 	splice_array(p, jepdecoders, jplatform, "endpoint decoders",
- 		     top_level_objs > 1);
-+	splice_array(p, jregions, jplatform, "regions", top_level_objs > 1);
- 
- 	util_display_json_array(stdout, jplatform, flags);
- 
-@@ -1082,6 +1180,7 @@ err:
- 	json_object_put(jbusdecoders);
- 	json_object_put(jportdecoders);
- 	json_object_put(jepdecoders);
-+	json_object_put(jregions);
- 	json_object_put(jplatform);
- 	return -ENOMEM;
- }
-diff --git a/cxl/json.c b/cxl/json.c
-index ae9c812..1508338 100644
---- a/cxl/json.c
-+++ b/cxl/json.c
-@@ -524,6 +524,129 @@ struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
- 	return jdecoder;
- }
- 
-+void util_cxl_mappings_append_json(struct json_object *jregion,
-+				  struct cxl_region *region,
-+				  unsigned long flags)
-+{
-+	struct json_object *jobj, *jmappings;
-+	struct cxl_memdev_mapping *mapping;
-+	unsigned int val, nr_mappings;
-+	const char *devname;
-+
-+	nr_mappings = cxl_region_get_interleave_ways(region);
-+	if (!nr_mappings || (nr_mappings == UINT_MAX))
-+		return;
-+
-+	if (!(flags & UTIL_JSON_TARGETS))
-+		return;
-+
-+	jmappings = json_object_new_array();
-+	if (!jmappings)
-+		return;
-+
-+	cxl_mapping_foreach(region, mapping) {
-+		struct json_object *jmapping;
-+		struct cxl_decoder *decoder;
-+		struct cxl_memdev *memdev;
-+
-+		jmapping = json_object_new_object();
-+		if (!jmapping)
-+			continue;
-+
-+		val = cxl_mapping_get_position(mapping);
-+		if (val < UINT_MAX) {
-+			jobj = json_object_new_int(val);
-+			if (jobj)
-+				json_object_object_add(jmapping, "position",
-+						       jobj);
-+		}
-+
-+		decoder = cxl_mapping_get_decoder(mapping);
-+		if (!decoder)
-+			continue;
-+
-+		memdev = cxl_ep_decoder_get_memdev(decoder);
-+		if (memdev) {
-+			devname = cxl_memdev_get_devname(memdev);
-+			jobj = json_object_new_string(devname);
-+			if (jobj)
-+				json_object_object_add(jmapping, "memdev", jobj);
-+		}
-+
-+		devname = cxl_decoder_get_devname(decoder);
-+		jobj = json_object_new_string(devname);
-+		if (jobj)
-+			json_object_object_add(jmapping, "decoder", jobj);
-+
-+		json_object_array_add(jmappings, jmapping);
-+	}
-+
-+	json_object_object_add(jregion, "mappings", jmappings);
-+}
-+
-+struct json_object *util_cxl_region_to_json(struct cxl_region *region,
-+					     unsigned long flags)
++static int destroy_region(struct cxl_region *region)
 +{
 +	const char *devname = cxl_region_get_devname(region);
-+	struct json_object *jregion, *jobj;
-+	u64 val;
++	unsigned int ways, i;
++	int rc;
 +
-+	jregion = json_object_new_object();
-+	if (!jregion)
-+		return NULL;
-+
-+	jobj = json_object_new_string(devname);
-+	if (jobj)
-+		json_object_object_add(jregion, "region", jobj);
-+
-+	val = cxl_region_get_resource(region);
-+	if (val < ULLONG_MAX) {
-+		jobj = util_json_object_hex(val, flags);
-+		if (jobj)
-+			json_object_object_add(jregion, "resource", jobj);
++	/* First, unbind/disable the region if needed */
++	if (cxl_region_is_enabled(region)) {
++		if (param.force) {
++			rc = cxl_region_disable(region);
++			if (rc) {
++				log_err(&rl, "%s: error disabling region: %s\n",
++					devname, strerror(-rc));
++				return rc;
++			}
++		} else {
++			log_err(&rl, "%s active. Disable it or use --force\n",
++				devname);
++			return -EBUSY;
++		}
 +	}
 +
-+	val = cxl_region_get_size(region);
-+	if (val < ULLONG_MAX) {
-+		jobj = util_json_object_size(val, flags);
-+		if (jobj)
-+			json_object_object_add(jregion, "size", jobj);
++	/* De-commit the region in preparation for removal */
++	rc = cxl_region_decommit(region);
++	if (rc) {
++		log_err(&rl, "%s: failed to decommit: %s\n", devname,
++			strerror(-rc));
++		return rc;
 +	}
 +
-+	val = cxl_region_get_interleave_ways(region);
-+	if (val < INT_MAX) {
-+		jobj = json_object_new_int(val);
-+		if (jobj)
-+			json_object_object_add(jregion,
-+					       "interleave_ways", jobj);
++	/* Reset all endpoint decoders and region targets */
++	ways = cxl_region_get_interleave_ways(region);
++	if (ways == 0 || ways == UINT_MAX) {
++		log_err(&rl, "%s: error getting interleave ways\n", devname);
++		return -ENXIO;
 +	}
 +
-+	val = cxl_region_get_interleave_granularity(region);
-+	if (val < INT_MAX) {
-+		jobj = json_object_new_int(val);
-+		if (jobj)
-+			json_object_object_add(jregion,
-+					       "interleave_granularity", jobj);
++	for (i = 0; i < ways; i++) {
++		struct cxl_decoder *ep_decoder;
++
++		ep_decoder = cxl_region_get_target_decoder(region, i);
++		if (!ep_decoder)
++			return -ENXIO;
++
++		rc = cxl_region_clear_target(region, i);
++		if (rc) {
++			log_err(&rl, "%s: clearing target%d failed: %s\n",
++				devname, i, strerror(abs(rc)));
++			return rc;
++		}
++
++		rc = cxl_decoder_set_dpa_size(ep_decoder, 0);
++		if (rc) {
++			log_err(&rl, "%s: set_dpa_size failed: %s\n",
++				cxl_decoder_get_devname(ep_decoder),
++				strerror(abs(rc)));
++			return rc;
++		}
 +	}
 +
-+	if (cxl_region_is_committed(region))
-+		jobj = json_object_new_boolean(true);
-+	else
-+		jobj = json_object_new_boolean(false);
-+	if (jobj)
-+		json_object_object_add(jregion, "committed", jobj);
-+
-+	if (!cxl_region_is_enabled(region)) {
-+		jobj = json_object_new_string("disabled");
-+		if (jobj)
-+			json_object_object_add(jregion, "state", jobj);
-+	}
-+
-+	util_cxl_mappings_append_json(jregion, region, flags);
-+
-+	return jregion;
++	/* Finally, delete the region */
++	return cxl_region_delete(region);
 +}
 +
- void util_cxl_targets_append_json(struct json_object *jdecoder,
- 				  struct cxl_decoder *decoder,
- 				  const char *ident, const char *serial,
-diff --git a/cxl/list.c b/cxl/list.c
-index 1b5f583..88ca9d9 100644
---- a/cxl/list.c
-+++ b/cxl/list.c
-@@ -41,7 +41,10 @@ static const struct option options[] = {
- 	OPT_BOOLEAN('D', "decoders", &param.decoders,
- 		    "include CXL decoder info"),
- 	OPT_BOOLEAN('T', "targets", &param.targets,
--		    "include CXL target data with decoders or ports"),
-+		    "include CXL target data with decoders, ports, or regions"),
-+	OPT_STRING('r', "region", &param.region_filter, "region name",
-+		   "filter by CXL region name(s)"),
-+	OPT_BOOLEAN('R', "regions", &param.regions, "include CXL regions"),
- 	OPT_BOOLEAN('i', "idle", &param.idle, "include disabled devices"),
- 	OPT_BOOLEAN('u', "human", &param.human,
- 		    "use human friendly number formats"),
-@@ -58,7 +61,7 @@ static const struct option options[] = {
- static int num_list_flags(void)
- {
- 	return !!param.memdevs + !!param.buses + !!param.ports +
--	       !!param.endpoints + !!param.decoders;
-+	       !!param.endpoints + !!param.decoders + !!param.regions;
- }
- 
- int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
-@@ -92,18 +95,14 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
- 			param.endpoints = true;
- 		if (param.decoder_filter)
- 			param.decoders = true;
--		if (num_list_flags() == 0) {
--			/*
--			 * TODO: We likely want to list regions by default if
--			 * nothing was explicitly asked for. But until we have
--			 * region support, print this error asking for devices
--			 * explicitly.  Once region support is added, this TODO
--			 * can be removed.
--			 */
--			error("please specify entities to list, e.g. using -m/-M\n");
--			usage_with_options(u, options);
--		}
- 		param.single = true;
-+		if (param.region_filter)
-+			param.regions = true;
++static int do_region_xable(struct cxl_region *region, enum region_actions action)
++{
++	switch (action) {
++	case ACTION_ENABLE:
++		return cxl_region_enable(region);
++	case ACTION_DISABLE:
++		return cxl_region_disable(region);
++	case ACTION_DESTROY:
++		return destroy_region(region);
++	default:
++		return -EINVAL;
 +	}
++}
 +
-+	/* List regions by default */
-+	if (num_list_flags() == 0) {
-+		param.regions = true;
+ static int region_action(int argc, const char **argv, struct cxl_ctx *ctx,
+ 			 enum region_actions action,
+ 			 const struct option *options, struct parsed_params *p,
+ 			 int *count, const char *u)
+ {
++	struct cxl_bus *bus;
+ 	int rc = -ENXIO;
+ 
+ 	log_init(&rl, "cxl region", "CXL_REGION_LOG");
+@@ -509,6 +606,45 @@ static int region_action(int argc, const char **argv, struct cxl_ctx *ctx,
+ 
+ 	if (action == ACTION_CREATE)
+ 		return create_region(ctx, count, p);
++
++	cxl_bus_foreach(ctx, bus) {
++		struct cxl_decoder *decoder;
++		struct cxl_port *port;
++
++		port = cxl_bus_get_port(bus);
++		if (!cxl_port_is_root(port))
++			continue;
++
++		cxl_decoder_foreach (port, decoder) {
++			struct cxl_region *region, *_r;
++
++			decoder = util_cxl_decoder_filter(decoder,
++							  param.root_decoder);
++			if (!decoder)
++				continue;
++			cxl_region_foreach_safe(decoder, region, _r)
++			{
++				int i, match = 0;
++
++				for (i = 0; i < p->num_targets; i++) {
++					if (util_cxl_region_filter(
++						    region, p->targets[i])) {
++						match = 1;
++						break;
++					}
++				}
++				if (!match)
++					continue;
++
++				rc = do_region_xable(region, action);
++				if (rc == 0)
++					*count += 1;
++				else
++					log_err(&rl, "%s: failed: %s\n",
++						cxl_region_get_devname(region),
++						strerror(-rc));
++			}
++		}
  	}
  
- 	log_init(&param.ctx, "cxl list", "CXL_LIST_LOG");
+ 	return rc;
+@@ -525,3 +661,39 @@ int cmd_create_region(int argc, const char **argv, struct cxl_ctx *ctx)
+ 	log_info(&rl, "created %d region%s\n", count, count == 1 ? "" : "s");
+ 	return rc == 0 ? 0 : EXIT_FAILURE;
+ }
++
++int cmd_enable_region(int argc, const char **argv, struct cxl_ctx *ctx)
++{
++	const char *u = "cxl enable-region <region0> ... [<options>]";
++	struct parsed_params p = { 0 };
++	int rc, count = 0;
++
++	rc = region_action(argc, argv, ctx, ACTION_ENABLE, enable_options, &p,
++			   &count, u);
++	log_info(&rl, "enabled %d region%s\n", count, count == 1 ? "" : "s");
++	return rc == 0 ? 0 : EXIT_FAILURE;
++}
++
++int cmd_disable_region(int argc, const char **argv, struct cxl_ctx *ctx)
++{
++	const char *u = "cxl disable-region <region0> ... [<options>]";
++	struct parsed_params p = { 0 };
++	int rc, count = 0;
++
++	rc = region_action(argc, argv, ctx, ACTION_DISABLE, disable_options, &p,
++			   &count, u);
++	log_info(&rl, "disabled %d region%s\n", count, count == 1 ? "" : "s");
++	return rc == 0 ? 0 : EXIT_FAILURE;
++}
++
++int cmd_destroy_region(int argc, const char **argv, struct cxl_ctx *ctx)
++{
++	const char *u = "cxl destroy-region <region0> ... [<options>]";
++	struct parsed_params p = { 0 };
++	int rc, count = 0;
++
++	rc = region_action(argc, argv, ctx, ACTION_DESTROY, destroy_options, &p,
++			   &count, u);
++	log_info(&rl, "destroyed %d region%s\n", count, count == 1 ? "" : "s");
++	return rc == 0 ? 0 : EXIT_FAILURE;
++}
+diff --git a/Documentation/cxl/meson.build b/Documentation/cxl/meson.build
+index 340cdee..147ea71 100644
+--- a/Documentation/cxl/meson.build
++++ b/Documentation/cxl/meson.build
+@@ -24,6 +24,7 @@ filedeps = [
+   'labels-options.txt',
+   'debug-option.txt',
+   'region-description.txt',
++  'decoder-option.txt',
+ ]
+ 
+ cxl_manpages = [
+@@ -41,6 +42,9 @@ cxl_manpages = [
+   'cxl-reserve-dpa.txt',
+   'cxl-free-dpa.txt',
+   'cxl-create-region.txt',
++  'cxl-disable-region.txt',
++  'cxl-enable-region.txt',
++  'cxl-destroy-region.txt',
+ ]
+ 
+ foreach man : cxl_manpages
 -- 
 2.36.1
 
