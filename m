@@ -2,815 +2,693 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CEBCCA480
-	for <linux-cxl@archiver.kernel.org>; Fri, 15 Jul 2022 06:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E863AC43334
+	for <linux-cxl@archiver.kernel.org>; Fri, 15 Jul 2022 18:35:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231483AbiGOG0P (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 15 Jul 2022 02:26:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38060 "EHLO
+        id S230154AbiGOSfg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 15 Jul 2022 14:35:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231482AbiGOG0O (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 15 Jul 2022 02:26:14 -0400
+        with ESMTP id S229751AbiGOSff (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 15 Jul 2022 14:35:35 -0400
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E31610FDF
-        for <linux-cxl@vger.kernel.org>; Thu, 14 Jul 2022 23:26:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22061747BE
+        for <linux-cxl@vger.kernel.org>; Fri, 15 Jul 2022 11:35:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657866372; x=1689402372;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=poA6ZaJBOfYtQ6CnNMxZjCMEMCnNsFcJ0jBBX1ZnPJw=;
-  b=WhIbn9wE8NWY4wVrHVaihujKf5ny61G91xK3aFpyk/y0pUl7qBMY11dO
-   j8k0Ps/g5y0Wq0tSkue6pLAifrwexh9g96To/Gg9mEucEc32r+5FRryR+
-   kAIJvAjFUObm+QfzLy0grIHNUauPu+nkV5nWv4yztTxLwsxxk+hEsHHq1
-   jmGp/8Jp/e8dbfSVCZ3Es/MFEWrnJQkeeTKxQuSd5G+0kTqQE6GThuZKz
-   9OFkxYyXpN/oG5nP6shKRAR2cCpycuKpatCG75MLERFMNq9RVpOGAj8HB
-   P8fKYRSrZbtVnEryz6/lAa/cX3locim05hHNJImQM7dPFYX9jw5Dk9hjw
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10408"; a="286852218"
-X-IronPort-AV: E=Sophos;i="5.92,273,1650956400"; 
-   d="scan'208";a="286852218"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 23:26:12 -0700
-X-IronPort-AV: E=Sophos;i="5.92,273,1650956400"; 
-   d="scan'208";a="546544625"
-Received: from saseiper-mobl.amr.corp.intel.com (HELO vverma7-desk1.intel.com) ([10.212.71.32])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 23:26:11 -0700
-From:   Vishal Verma <vishal.l.verma@intel.com>
-To:     <linux-cxl@vger.kernel.org>
-Cc:     <nvdimm@lists.linux.dev>, Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
+  t=1657910133; x=1689446133;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=N9NBIZYuYzM/aSFiIDvd8XEfPZWza8mvu6ffUggDh7A=;
+  b=lf6ejnQavG+/RJTKw4pLtYDGpxDMEN0gccoBd/7s2cwYc8f5m9ZvOwUH
+   Z53+Rol+pOqo6gCGiQHSZd8Mfcd6drn0bWK2+oJMNIIvF7Kq3fx98dyEI
+   5XF+NeqOwuR0PjRaRizqw5JOV08ndYfgg1w9o5OWYtSZMKDkdiX/OnPCt
+   NpnA69RTic3HEubnK514W5/j3PloDBXLp3Ma5LOD9Cvaj8oYWxuUp3h2x
+   2if6Q4BvnPtknuoBGb1XwCBficO53u4vu2VjxHNBSo5goqa9+wp+YLKy9
+   tm/07RgN9U7oroIf1StUjsV4ZTSg5XEwgUcar7knJ22S4L8PhGV849icA
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10409"; a="287013489"
+X-IronPort-AV: E=Sophos;i="5.92,274,1650956400"; 
+   d="scan'208";a="287013489"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2022 11:35:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,274,1650956400"; 
+   d="scan'208";a="686060027"
+Received: from fmsmsx606.amr.corp.intel.com ([10.18.126.86])
+  by FMSMGA003.fm.intel.com with ESMTP; 15 Jul 2022 11:35:29 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Fri, 15 Jul 2022 11:35:29 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27 via Frontend Transport; Fri, 15 Jul 2022 11:35:29 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.102)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2308.27; Fri, 15 Jul 2022 11:35:28 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RfC4GMLDNSiy/X5RXvR8bvQleHMMKk9+6PWF5RAkRjHZuEZmWD7tYeafYbQMbY1ZlR5S+Ah7poravNLTJTX8slVb72PHdoCr6aElUJwraz6BEcUdHcHuOs7oMGmDUXORYk7+pHLlbgRh13hxE8DuTP2Vs01ACwsdhA8fdLVUw/xXXxYi4Qaw+I40NEyXnHdzt+XLvI8px2MFZ1L4BheaTj3r1Z9Dt6x4oCForggqtaycOUwHUSB/W0SkUXFPxS3QhwRSWZW3lQVTjJEYA7wJeTutNqZjHvYlwrgXG2RZsZRZVwoY35WccN9S1WlPcezbhlPYFmQzVkiOEo/rlRHOvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JAefavJA1Z53KuaPFG2yS7J7/prtrRjtLswUeyAU+Pg=;
+ b=ByvE/jS3fdhdqJMIAwyDqnrJM8tPBfYDzZdKvAu1LKOO43l528xz4sa9jok79eR5kKa13MmniVwYRzJgOoydbaNtZ+RYMv3n9GtIAziycrEoVRTzXvSC807fic8U9qNrWn1LiyZn0BKDOfmS40jr1iu1fkCz6H6WLcramH+7UXmzBCglMDtCO4JJTxZXDx+Eicxba/2IVRE9lb94F0mEyTlGdczbFN01U+nJqgC5wr9XJdV8sYSoGyVT8BJrbesdbXOPP0VuLVd8gtik4AkwHhtoCYdW+kdpE4MzKWBSxNy9vwojNwTzesaZS8VzkFpPL7SahtNpM0T+mWBDx0z/NA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20) by SA2PR11MB4891.namprd11.prod.outlook.com
+ (2603:10b6:806:11e::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.20; Fri, 15 Jul
+ 2022 18:35:26 +0000
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::6466:20a6:57b4:1edf]) by MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::6466:20a6:57b4:1edf%11]) with mapi id 15.20.5438.018; Fri, 15 Jul
+ 2022 18:35:26 +0000
+Date:   Fri, 15 Jul 2022 11:35:24 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Vishal Verma <vishal.l.verma@intel.com>,
+        <linux-cxl@vger.kernel.org>
+CC:     <nvdimm@lists.linux.dev>, Dan Williams <dan.j.williams@intel.com>,
+        "Alison Schofield" <alison.schofield@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
+        "Dave Jiang" <dave.jiang@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [ndctl PATCH 6/8] cxl: add a 'create-region' command
-Date:   Fri, 15 Jul 2022 00:25:48 -0600
-Message-Id: <20220715062550.789736-7-vishal.l.verma@intel.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220715062550.789736-1-vishal.l.verma@intel.com>
+Subject: RE: [ndctl PATCH 4/8] cxl-cli: add region listing support
+Message-ID: <62d1b36c21061_242d294b3@dwillia2-xfh.jf.intel.com.notmuch>
 References: <20220715062550.789736-1-vishal.l.verma@intel.com>
+ <20220715062550.789736-5-vishal.l.verma@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20220715062550.789736-5-vishal.l.verma@intel.com>
+X-ClientProxiedBy: BYAPR11CA0096.namprd11.prod.outlook.com
+ (2603:10b6:a03:f4::37) To MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=20808; h=from:subject; bh=poA6ZaJBOfYtQ6CnNMxZjCMEMCnNsFcJ0jBBX1ZnPJw=; b=owGbwMvMwCXGf25diOft7jLG02pJDEkXOfJcl3/Lrjn70OV2viNv635pSQPnN5MkL/y6K6yldPe2 iYpgRykLgxgXg6yYIsvfPR8Zj8ltz+cJTHCEmcPKBDKEgYtTACZSdJiR4deXuTu3/z+492FMYtzsF7 16XVp+h388eSRzrPqlzmvJujWMDM2HbjRzH931IZ/L4oZc6ZKFaqtu3PdYFZ3y7mbRtnBPL2YA
-X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 860a99e9-23c3-4c36-2ec1-08da6690c947
+X-MS-TrafficTypeDiagnostic: SA2PR11MB4891:EE_
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: cI5E1fX5Ra6wksvIlYPtMkgytTY7/cuYgvwG7kHjE8OYa5DDPR8Y0QaeXNBtPauHEF6b8H2a6bMNDVb/72psbkpc6n5BlNNvsERdBYXUtlpde/B80SOYA3ZuJfHGbSHkHv1ynvg7npX8VgU8hSeoQqxvMmiay5HZ7O81eRAEl819hjW1g5Ebg4xLIsMM1KSIehMNlrHXJS2WrOak96eCjr8sI0lyslyxLZDT+r7tfcdJogdOIBgme4bzBbEX54BMs2uEGwmubopJ8I6y7eaDzKbTQ4kuzqKxQnjRE1HFPxlvkktgP873gLx3cIOOY9ChTMYr9yVDSJMAYkidGgScNBmVXYWj5SKmHuAkKr+2WIhxU85wg1nR8oSisIuwGparaZ8frrTSmyfk0z+a9Zw0PKEb2qW9kXl8HlVMIteE5qQ/NBS//wlxJTurtky05E7CZ2N9YqRFV3Kj8XH1kGu55+8Mbx40wDFRHiGlGq+5inoOqntka2+hOXahk/zMZystD3TVizYKWZgvbWq6012VwNz4pXKIStFSd13nYDVXKMR5YEzUeWO7zKk8l4W0JSAcVTun6zSq9l6ZujLZ3hn2VL9PHXPgEiX27YBfZDBYoI6SDlj8CyFu8lqlAD/OhERVDXdhkqPmQfSSQQo+7ZLIZAgrskPntaw6X3UqwBS1wdaOh4n7Lq19rZytX5KBFROmT/WJi3cRxGRe7S5BXvP9GNEO5bdDXBh7qxG5CJ/zpA+WOG17OuqBta9tN/MrcJeK57bB2q9dzzt+XOtpm/67Uq623V3Ab+lyUsdeTUtDdZXTTwrpoMvKLOhYyDLKz71t
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(39860400002)(346002)(376002)(396003)(366004)(136003)(83380400001)(82960400001)(6512007)(66946007)(8676002)(107886003)(6486002)(478600001)(8936002)(86362001)(186003)(9686003)(6506007)(54906003)(316002)(66476007)(38100700002)(4326008)(66556008)(30864003)(26005)(5660300002)(2906002)(41300700001)(309714004);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?4+RVxSBvSFhOKT0P4Wx5oNIZd6e2yZLoVMYLX4iylMH+4OVKwnNMQGp7yPuX?=
+ =?us-ascii?Q?+LqVOkEAu+1bhKyds+g/T1FlXeHTMK0xR5LXatnVYARCLk4ADGrpOqq4WK8r?=
+ =?us-ascii?Q?2rvSf+t7OCDs+WI8T9e0QBVNWsA+ue4m7/8jDZs+lhouN0C2Lqv6/UqSu3l+?=
+ =?us-ascii?Q?E2gPFv88pDtPB1gFndHEENN4oZOZDxHp+FUNfWElU00aMdWoLqNP7PFHMLRT?=
+ =?us-ascii?Q?hyHHZ4faHquScYUdSHu4Q87EK9EuQhGP5txglgmTqXtjudOqjV3sHcLhO3tw?=
+ =?us-ascii?Q?RLsvRyOUxedVy3Nfm3v0RAnTcktyJ1Q6jNMRcM83IOwAd3aE620himDcvBhN?=
+ =?us-ascii?Q?o9j1OmSSSWBFmoYjZxTNj5DbmdQVTW6oYgGMQa3nXfOIoF6ReMRp78BiWaCS?=
+ =?us-ascii?Q?HLOmgockstbpxHbHgI5fFlYD9fWWcRwFRy1vsjM4zwsR5BCDVH8IaGM0AUld?=
+ =?us-ascii?Q?CkvhtAIoqdTFNo1erz0g66y9bSxyHeQYpkSnZjihIXQXnEJfDi2RphTV/7oW?=
+ =?us-ascii?Q?DVhQh+RW1uQh0QB4zUPjs9taGiIdNcgCflrvJhQSyCOkDba6dTI/r4rkHs1R?=
+ =?us-ascii?Q?URfDtOVRtXiJqR4cAt82a4F0IsWVr/DcTUpIEp3drMdX3fR54KIXSqSVlufu?=
+ =?us-ascii?Q?CaZCBugtWKl0dpN99vpf8l+5p2aNAueq2Ox1kPOV9V3vsNZcAgOGl4PCiYey?=
+ =?us-ascii?Q?Akvc8MzVRmk4iJhl2zbk3+ApKzohqvV357BgKMi1/oXwYRwlQWuzlDMetYr5?=
+ =?us-ascii?Q?B8nwKvljE7k8/Eg8jjt/1W7YBkcD/3RvN81yWtqHUZBwVA/lxYXKSFnwS1b6?=
+ =?us-ascii?Q?G3WgJMjsVlcrPuSe04Mzd3NCmaMgC0e0C1GpqfT9r0DHp8XQN6EWVOZKwB5U?=
+ =?us-ascii?Q?cs9rROGIPJRnSzDBR9L79qpRMcgZ3wa4dz9SGUqirH32m3qe39XX8FuOQthv?=
+ =?us-ascii?Q?pKuENgUrnlHc19i3cek8jp4RQEsva5Cp+4Y+CxmFIuoeoeXzD801vMiocrqQ?=
+ =?us-ascii?Q?h5BWZR66Z8YzIzXhPo/IA5JyFq3zG+DpC9Ox24b8yHh7n02OqeYy/Iu+z6jC?=
+ =?us-ascii?Q?QzVbH/bXDIW91UAV2Gmb3GT8mXneF8fIuDWeP/HXvOhSdHVoTOVtVhNL5eG0?=
+ =?us-ascii?Q?cfxY3XRF7dLJEkNHJLbuIBTr9oWtsbsWuJlGV5Q7cgt3UIp1scN90fVuDOJT?=
+ =?us-ascii?Q?dDlsxelHmrpL+nqUeDIcauomaxYuyH5hLuCl4q+F1Bk0vD1vGboD7XcK3Dk5?=
+ =?us-ascii?Q?W1nQDt0JMZk/YHyWrw7m8ePgdbI0mEOvH7B5jLD/00Enng1Nr+VGU4DjfzPC?=
+ =?us-ascii?Q?J9RA4SV8jVgvU61i4ubLEbnQzhbD7VMSUgXZuLppP9HzzRrQ7WS8ux2a78OP?=
+ =?us-ascii?Q?615rhCo5tHCeNU+MMTTX17/HZpOocBwlZ/pgmRhIFpbCo+ZRfOxEMxQ6JZ9X?=
+ =?us-ascii?Q?vlcJ+HafkuKCQSIziv3+bxYQfzRri/bPap2TQsyUgttNRLo4tMuNDV0DO9eJ?=
+ =?us-ascii?Q?7imMz6CkCUKlLcRLiThN1egpQmdYTjzFS14wX31s5oywLTe/Nrrhc+KraFpJ?=
+ =?us-ascii?Q?M3mw/sRVUxV3m1j0ujvxo2+lndq5zjPR0qIQ99qRzMSWjrnHfi5rKZcCPFLE?=
+ =?us-ascii?Q?nw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 860a99e9-23c3-4c36-2ec1-08da6690c947
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2022 18:35:26.6899
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Y4aiXv30C6OFgmGHJgBUIj5bhA8MJBp0OSp9IfKL2z+7Lwkx9Lb6YhWM3vvW0tfUS2DbLZYW9tC7UYjcWEiyJLD8WtBtYC/G8FCsWi83Wcc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB4891
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add a 'create-region' command to cxl-cli that walks the platform's CXL
-hierarchy to find an appropriate root decoder based on any options
-provided, and uses libcxl APIs to create a 'region' that is comprehended
-by libnvdimm and ndctl.
+Vishal Verma wrote:
+> Add cxl_region -> json and cxl_mapping -> json emitter helpers, and
+> teach cxl_filter_walk about cxl_regions. With these in place, 'cxl-list'
+> can now emit json objects for CXL regions. They can be top-level objects
+> if requested by themselves, or nested under root-decoders, if listed
+> along with decoders. Allow a plain 'cxl list' command to imply
+> '--regions'.
+> 
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+> ---
+>  Documentation/cxl/cxl-list.txt |  13 +++-
+>  cxl/filter.h                   |   4 ++
+>  cxl/json.h                     |   5 ++
+>  cxl/filter.c                   | 121 +++++++++++++++++++++++++++++---
+>  cxl/json.c                     | 123 +++++++++++++++++++++++++++++++++
+>  cxl/list.c                     |  25 ++++---
+>  6 files changed, 265 insertions(+), 26 deletions(-)
+> 
+> diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
+> index f6aba0c..2906c2f 100644
+> --- a/Documentation/cxl/cxl-list.txt
+> +++ b/Documentation/cxl/cxl-list.txt
+> @@ -309,8 +309,9 @@ OPTIONS
+>  
+>  -T::
+>  --targets::
+> -	Extend decoder listings with downstream port target information, and /
+> -	or port and bus listings with the downstream port information.
+> +	Extend decoder listings with downstream port target information, port
+> +	and bus listings with the downstream port information, and / or regions
+> +	with mapping information.
+>  ----
+>  # cxl list -BTu -b ACPI.CXL
+>  {
+> @@ -327,6 +328,14 @@ OPTIONS
+>  }
+>  ----
+>  
+> +-R::
+> +--regions::
+> +	Include region objects in the listing.
+> +
+> +-r::
+> +--region::
+> +	Specify the region name to filter the emitted regions.
+> +
+>  --debug::
+>  	If the cxl tool was built with debug enabled, turn on debug
+>  	messages.
+> diff --git a/cxl/filter.h b/cxl/filter.h
+> index c913daf..609433c 100644
+> --- a/cxl/filter.h
+> +++ b/cxl/filter.h
+> @@ -13,9 +13,11 @@ struct cxl_filter_params {
+>  	const char *port_filter;
+>  	const char *endpoint_filter;
+>  	const char *decoder_filter;
+> +	const char *region_filter;
+>  	bool single;
+>  	bool endpoints;
+>  	bool decoders;
+> +	bool regions;
+>  	bool targets;
+>  	bool memdevs;
+>  	bool ports;
+> @@ -33,6 +35,8 @@ struct cxl_memdev *util_cxl_memdev_filter(struct cxl_memdev *memdev,
+>  struct cxl_port *util_cxl_port_filter_by_memdev(struct cxl_port *port,
+>  						const char *ident,
+>  						const char *serial);
+> +struct cxl_region *util_cxl_region_filter(struct cxl_region *region,
+> +					    const char *__ident);
+>  
+>  enum cxl_port_filter_mode {
+>  	CXL_PF_SINGLE,
+> diff --git a/cxl/json.h b/cxl/json.h
+> index 9a5a845..eb7572b 100644
+> --- a/cxl/json.h
+> +++ b/cxl/json.h
+> @@ -15,6 +15,11 @@ struct json_object *util_cxl_endpoint_to_json(struct cxl_endpoint *endpoint,
+>  					      unsigned long flags);
+>  struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
+>  					     unsigned long flags);
+> +struct json_object *util_cxl_region_to_json(struct cxl_region *region,
+> +					     unsigned long flags);
+> +void util_cxl_mappings_append_json(struct json_object *jregion,
+> +				  struct cxl_region *region,
+> +				  unsigned long flags);
+>  void util_cxl_targets_append_json(struct json_object *jdecoder,
+>  				  struct cxl_decoder *decoder,
+>  				  const char *ident, const char *serial,
+> diff --git a/cxl/filter.c b/cxl/filter.c
+> index e5fab19..ae95e2e 100644
+> --- a/cxl/filter.c
+> +++ b/cxl/filter.c
+> @@ -585,6 +585,41 @@ util_cxl_memdev_filter_by_port(struct cxl_memdev *memdev, const char *bus_ident,
+>  	return NULL;
+>  }
+>  
+> +struct cxl_region *util_cxl_region_filter(struct cxl_region *region,
+> +					    const char *__ident)
+> +{
+> +	char *ident, *save;
+> +	const char *name;
+> +	int id;
+> +
+> +	if (!__ident)
+> +		return region;
+> +
+> +	ident = strdup(__ident);
+> +	if (!ident)
+> +		return NULL;
+> +
+> +	for (name = strtok_r(ident, which_sep(__ident), &save); name;
+> +	     name = strtok_r(NULL, which_sep(__ident), &save)) {
+> +		if (strcmp(name, "all") == 0)
+> +			break;
+> +
+> +		if ((sscanf(name, "%d", &id) == 1 ||
+> +		     sscanf(name, "region%d", &id) == 1) &&
+> +		    cxl_region_get_id(region) == id)
+> +			break;
+> +
+> +		if (strcmp(name, cxl_region_get_devname(region)) == 0)
+> +			break;
+> +	}
+> +
+> +	free(ident);
+> +	if (name)
+> +		return region;
+> +	return NULL;
+> +
+> +}
+> +
+>  static unsigned long params_to_flags(struct cxl_filter_params *param)
+>  {
+>  	unsigned long flags = 0;
+> @@ -672,37 +707,79 @@ static struct json_object *pick_array(struct json_object *child,
+>  	return NULL;
+>  }
+>  
+> +static void walk_regions(struct cxl_decoder *decoder,
+> +			 struct json_object *jregions,
+> +			 struct cxl_filter_params *p,
+> +			 unsigned long flags)
+> +{
+> +	struct json_object *jregion;
+> +	struct cxl_region *region;
+> +
+> +	cxl_region_foreach(decoder, region) {
+> +		if (!util_cxl_region_filter(region, p->region_filter))
+> +			continue;
 
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
----
- Documentation/cxl/cxl-create-region.txt  | 111 +++++
- Documentation/cxl/region-description.txt |   7 +
- cxl/builtin.h                            |   1 +
- cxl/filter.h                             |   4 +-
- cxl/cxl.c                                |   1 +
- cxl/region.c                             | 527 +++++++++++++++++++++++
- Documentation/cxl/meson.build            |   2 +
- cxl/meson.build                          |   1 +
- 8 files changed, 653 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/cxl/cxl-create-region.txt
- create mode 100644 Documentation/cxl/region-description.txt
- create mode 100644 cxl/region.c
+Ah, this also wants util_cxl_region_filter_by_{bus,port,memdev,decoder},
+but that can be a follow-on patch.
 
-diff --git a/Documentation/cxl/cxl-create-region.txt b/Documentation/cxl/cxl-create-region.txt
-new file mode 100644
-index 0000000..d91d76a
---- /dev/null
-+++ b/Documentation/cxl/cxl-create-region.txt
-@@ -0,0 +1,111 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+cxl-create-region(1)
-+====================
-+
-+NAME
-+----
-+cxl-create-region - Assemble a CXL region by setting up attributes of its
-+constituent CXL memdevs.
-+
-+SYNOPSIS
-+--------
-+[verse]
-+'cxl create-region [<options>]'
-+
-+include::region-description.txt[]
-+
-+For create-region, a size can optionally be specified, but if not, the maximum
-+possible size for each memdev will be used up to the available decode capacity
-+in the system for the given memory type. For persistent regions a UUID can
-+optionally be specified, but if not, one will be generated.
-+
-+If the region-creation operation is successful, a region object will be
-+emitted on stdout in JSON format (see examples). If the specified arguments
-+cannot be satisfied with a legal configuration, then an appropriate error will
-+be emitted on stderr.
-+
-+EXAMPLE
-+-------
-+----
-+# cxl create-region -m -d decoder0.1 -w 2 -g 1024 mem0 mem1
-+{
-+  "region":"region0",
-+  "resource":"0xc90000000",
-+  "size":"512.00 MiB (536.87 MB)",
-+  "interleave_ways":2,
-+  "interleave_granularity":1024,
-+  "mappings":[
-+    {
-+      "position":1,
-+      "decoder":"decoder4.0"
-+    },
-+    {
-+      "position":0,
-+      "decoder":"decoder3.0"
-+    }
-+  ]
-+}
-+created 1 region
-+----
-+
-+OPTIONS
-+-------
-+<target(s)>::
-+The CXL targets that should be used to form the region. This is optional,
-+as they can be chosen automatically based on other options chosen. The number of
-+'target' arguments must match the '--interleave-ways' option (if provided). The
-+targets may be memdevs, or endpoints. The options below control what type of
-+targets are being used.
-+
-+-m::
-+--memdevs::
-+	Indicate that the non-option arguments for 'target(s)' refer to memdev
-+	names.
-+
-+-e::
-+--ep-decoders::
-+	Indicate that the non-option arguments for 'target(s)' refer to endpoint
-+	decoder names.
-+
-+-s::
-+--size=::
-+	Specify the total size for the new region. This is optional, and by
-+	default, the maximum possible size will be used.
-+
-+-t::
-+--type=::
-+	Specify the region type - 'pmem' or 'ram'. Defaults to 'pmem'.
-+
-+-U::
-+--uuid=::
-+	Specify a UUID for the new region. This shouldn't usually need to be
-+	specified, as one will be generated by default.
-+
-+-w::
-+--interleave-ways=::
-+	The number of interleave ways for the new region's interleave. This
-+	should be equal to the number of memdevs specified in --memdevs, if
-+	--memdevs is being supplied. If --memdevs is not specified, an
-+	appropriate number of memdevs will be chosen based on the number of
-+	interleave-ways specified.
-+
-+-g::
-+--interleave-granularity=::
-+	The interleave granularity, for the new region's interleave.
-+
-+-d::
-+--decoder=::
-+	The root decoder that the region should be created under. If not
-+	supplied, the first cross-host bridge (if available), decoder that
-+	supports the largest interleave will be chosen.
-+
-+include::human-option.txt[]
-+
-+include::debug-option.txt[]
-+
-+include::../copyright.txt[]
-+
-+SEE ALSO
-+--------
-+linkcxl:cxl-list[1],
-diff --git a/Documentation/cxl/region-description.txt b/Documentation/cxl/region-description.txt
-new file mode 100644
-index 0000000..d7e3077
---- /dev/null
-+++ b/Documentation/cxl/region-description.txt
-@@ -0,0 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+DESCRIPTION
-+-----------
-+A CXL region is composed of one or more slices of CXL memdevs, with configurable
-+interleave settings - both the number of interleave ways, and the interleave
-+granularity.
-diff --git a/cxl/builtin.h b/cxl/builtin.h
-index 9e6fc62..843bada 100644
---- a/cxl/builtin.h
-+++ b/cxl/builtin.h
-@@ -18,4 +18,5 @@ int cmd_disable_port(int argc, const char **argv, struct cxl_ctx *ctx);
- int cmd_enable_port(int argc, const char **argv, struct cxl_ctx *ctx);
- int cmd_set_partition(int argc, const char **argv, struct cxl_ctx *ctx);
- int cmd_disable_bus(int argc, const char **argv, struct cxl_ctx *ctx);
-+int cmd_create_region(int argc, const char **argv, struct cxl_ctx *ctx);
- #endif /* _CXL_BUILTIN_H_ */
-diff --git a/cxl/filter.h b/cxl/filter.h
-index 609433c..d22d8b1 100644
---- a/cxl/filter.h
-+++ b/cxl/filter.h
-@@ -35,8 +35,10 @@ struct cxl_memdev *util_cxl_memdev_filter(struct cxl_memdev *memdev,
- struct cxl_port *util_cxl_port_filter_by_memdev(struct cxl_port *port,
- 						const char *ident,
- 						const char *serial);
--struct cxl_region *util_cxl_region_filter(struct cxl_region *region,
-+struct cxl_decoder *util_cxl_decoder_filter(struct cxl_decoder *decoder,
- 					    const char *__ident);
-+struct cxl_region *util_cxl_region_filter(struct cxl_region *region,
-+					  const char *__ident);
- 
- enum cxl_port_filter_mode {
- 	CXL_PF_SINGLE,
-diff --git a/cxl/cxl.c b/cxl/cxl.c
-index ef4cda9..f0afcfe 100644
---- a/cxl/cxl.c
-+++ b/cxl/cxl.c
-@@ -72,6 +72,7 @@ static struct cmd_struct commands[] = {
- 	{ "enable-port", .c_fn = cmd_enable_port },
- 	{ "set-partition", .c_fn = cmd_set_partition },
- 	{ "disable-bus", .c_fn = cmd_disable_bus },
-+	{ "create-region", .c_fn = cmd_create_region },
- };
- 
- int main(int argc, const char **argv)
-diff --git a/cxl/region.c b/cxl/region.c
-new file mode 100644
-index 0000000..9fe99b2
---- /dev/null
-+++ b/cxl/region.c
-@@ -0,0 +1,527 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (C) 2020-2022 Intel Corporation. All rights reserved. */
-+#include <stdio.h>
-+#include <errno.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <limits.h>
-+#include <util/log.h>
-+#include <uuid/uuid.h>
-+#include <util/json.h>
-+#include <util/size.h>
-+#include <cxl/libcxl.h>
-+#include <json-c/json.h>
-+#include <util/parse-options.h>
-+#include <ccan/minmax/minmax.h>
-+#include <ccan/short_types/short_types.h>
-+
-+#include "filter.h"
-+#include "json.h"
-+
-+static struct region_params {
-+	const char *size;
-+	const char *ways;
-+	const char *granularity;
-+	const char *type;
-+	const char *root_decoder;
-+	const char *region;
-+	bool memdevs;
-+	bool ep_decoders;
-+	bool force;
-+	bool human;
-+	bool debug;
-+} param;
-+
-+struct parsed_params {
-+	u64 size;
-+	u64 ep_min_size;
-+	unsigned int ways;
-+	unsigned int granularity;
-+	const char **targets;
-+	int num_targets;
-+	struct cxl_decoder *root_decoder;
-+	enum cxl_decoder_mode mode;
-+};
-+
-+enum region_actions {
-+	ACTION_CREATE,
-+};
-+
-+static struct log_ctx rl;
-+
-+#define BASE_OPTIONS() \
-+OPT_STRING('d', "decoder", &param.root_decoder, "root decoder name", \
-+	   "Limit to / use the specified root decoder"), \
-+OPT_BOOLEAN(0, "debug", &param.debug, "turn on debug")
-+
-+#define CREATE_OPTIONS() \
-+OPT_STRING('s', "size", &param.size, \
-+	   "size in bytes or with a K/M/G etc. suffix", \
-+	   "total size desired for the resulting region."), \
-+OPT_STRING('w', "interleave-ways", &param.ways, \
-+	   "number of interleave ways", \
-+	   "number of memdevs participating in the regions interleave set"), \
-+OPT_STRING('g', "interleave-granularity", \
-+	   &param.granularity, "interleave granularity", \
-+	   "granularity of the interleave set"), \
-+OPT_STRING('t', "type", &param.type, \
-+	   "region type", "region type - 'pmem' or 'ram'"), \
-+OPT_BOOLEAN('m', "memdevs", &param.memdevs, \
-+	    "non-option arguments are memdevs"), \
-+OPT_BOOLEAN('e', "ep-decoders", &param.ep_decoders, \
-+	    "non-option arguments are endpoint decoders"), \
-+OPT_BOOLEAN('u', "human", &param.human, "use human friendly number formats")
-+
-+static const struct option create_options[] = {
-+	BASE_OPTIONS(),
-+	CREATE_OPTIONS(),
-+	OPT_END(),
-+};
-+
-+
-+
-+static int parse_create_options(int argc, const char **argv,
-+				struct parsed_params *p)
-+{
-+	int i;
-+
-+	if (!param.root_decoder) {
-+		log_err(&rl, "no root decoder specified\n");
-+		return -EINVAL;
-+	}
-+
-+	if (param.type) {
-+		if (strcmp(param.type, "ram") == 0)
-+			p->mode = CXL_DECODER_MODE_RAM;
-+		else if (strcmp(param.type, "volatile") == 0)
-+			p->mode = CXL_DECODER_MODE_RAM;
-+		else if (strcmp(param.type, "pmem") == 0)
-+			p->mode = CXL_DECODER_MODE_PMEM;
-+		else {
-+			log_err(&rl, "unsupported type: %s\n", param.type);
-+			return -EINVAL;
-+		}
-+	} else
-+		p->mode = CXL_DECODER_MODE_PMEM;
-+
-+	if (param.size) {
-+		p->size = parse_size64(param.size);
-+		if (p->size == ULLONG_MAX) {
-+			log_err(&rl, "Invalid size: %s\n", param.size);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	if (param.ways) {
-+		unsigned long ways = strtoul(param.ways, NULL, 0);
-+
-+		if (ways == ULONG_MAX || (int)ways <= 0) {
-+			log_err(&rl, "Invalid interleave ways: %s\n",
-+				param.ways);
-+			return -EINVAL;
-+		}
-+		p->ways = ways;
-+	} else if (argc) {
-+		p->ways = argc;
-+	} else {
-+		log_err(&rl,
-+			"couldn't determine interleave ways from options or arguments\n");
-+		return -EINVAL;
-+	}
-+
-+	if (param.granularity) {
-+		unsigned long granularity = strtoul(param.granularity, NULL, 0);
-+
-+		if (granularity == ULONG_MAX || (int)granularity <= 0) {
-+			log_err(&rl, "Invalid interleave granularity: %s\n",
-+				param.granularity);
-+			return -EINVAL;
-+		}
-+		p->granularity = granularity;
-+	}
-+
-+
-+	if (argc > (int)p->ways) {
-+		for (i = p->ways; i < argc; i++)
-+			log_err(&rl, "extra argument: %s\n", p->targets[i]);
-+		return -EINVAL;
-+	}
-+
-+	if (argc < (int)p->ways) {
-+		log_err(&rl,
-+			"too few target arguments (%d) for interleave ways (%u)\n",
-+			argc, p->ways);
-+		return -EINVAL;
-+	}
-+
-+	if (p->size && p->ways) {
-+		if (p->size % p->ways) {
-+			log_err(&rl,
-+				"size (%lu) is not an integral multiple of interleave-ways (%u)\n",
-+				p->size, p->ways);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int parse_region_options(int argc, const char **argv,
-+				struct cxl_ctx *ctx, enum region_actions action,
-+				const struct option *options,
-+				struct parsed_params *p, const char *usage)
-+{
-+	const char * const u[] = {
-+		usage,
-+		NULL
-+	};
-+
-+        argc = parse_options(argc, argv, options, u, 0);
-+	p->targets = argv;
-+	p->num_targets = argc;
-+
-+	if (param.debug) {
-+		cxl_set_log_priority(ctx, LOG_DEBUG);
-+		rl.log_priority = LOG_DEBUG;
-+	} else
-+		rl.log_priority = LOG_INFO;
-+
-+	switch(action) {
-+	case ACTION_CREATE:
-+		return parse_create_options(argc, argv, p);
-+	default:
-+		return 0;
-+	}
-+}
-+
-+static bool memdev_match_set_size(struct cxl_memdev *memdev, const char *target,
-+			    struct parsed_params *p)
-+{
-+	const char *devname = cxl_memdev_get_devname(memdev);
-+	u64 size = cxl_memdev_get_pmem_size(memdev);
-+
-+	if (strcmp(devname, target) != 0)
-+		return false;
-+
-+	size = cxl_memdev_get_pmem_size(memdev);
-+	if (!p->ep_min_size)
-+		p->ep_min_size = size;
-+	else
-+		p->ep_min_size = min(p->ep_min_size, size);
-+
-+	return true;
-+}
-+
-+static int validate_config_memdevs(struct cxl_ctx *ctx, struct parsed_params *p)
-+{
-+	unsigned int i, matched = 0;
-+
-+	for (i = 0; i < p->ways; i++) {
-+		struct cxl_memdev *memdev;
-+
-+		cxl_memdev_foreach(ctx, memdev)
-+			if (memdev_match_set_size(memdev, p->targets[i], p))
-+				matched++;
-+	}
-+	if (matched != p->ways) {
-+		log_err(&rl,
-+			"one or more memdevs not found in CXL topology\n");
-+		return -ENXIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static int validate_config_ep_decoders(struct cxl_ctx *ctx,
-+				   struct parsed_params *p)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < p->ways; i++) {
-+		struct cxl_decoder *decoder;
-+		struct cxl_memdev *memdev;
-+
-+		decoder = cxl_decoder_get_by_name(ctx, p->targets[i]);
-+		if (!decoder) {
-+			log_err(&rl, "%s not found in CXL topology\n",
-+				p->targets[i]);
-+			return -ENXIO;
-+		}
-+
-+		memdev = cxl_ep_decoder_get_memdev(decoder);
-+		if (!memdev) {
-+			log_err(&rl, "could not get memdev from %s\n",
-+				p->targets[i]);
-+			return -ENXIO;
-+		}
-+
-+		if (!memdev_match_set_size(memdev,
-+					   cxl_memdev_get_devname(memdev), p))
-+			return -ENXIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static int validate_decoder(struct cxl_decoder *decoder,
-+			    struct parsed_params *p)
-+{
-+	const char *devname = cxl_decoder_get_devname(decoder);
-+
-+	switch(p->mode) {
-+	case CXL_DECODER_MODE_RAM:
-+		if (!cxl_decoder_is_volatile_capable(decoder)) {
-+			log_err(&rl, "%s is not volatile capable\n", devname);
-+			return -EINVAL;
-+		}
-+		break;
-+	case CXL_DECODER_MODE_PMEM:
-+		if (!cxl_decoder_is_pmem_capable(decoder)) {
-+			log_err(&rl, "%s is not pmem capable\n", devname);
-+			return -EINVAL;
-+		}
-+		break;
-+	default:
-+		log_err(&rl, "unknown type: %s\n", param.type);
-+		return -EINVAL;
-+	}
-+
-+	/* TODO check if the interleave config is possible under this decoder */
-+
-+	return 0;
-+}
-+
-+static int create_region_validate_config(struct cxl_ctx *ctx,
-+					 struct parsed_params *p)
-+{
-+	struct cxl_bus *bus;
-+	int rc;
-+
-+	cxl_bus_foreach(ctx, bus) {
-+		struct cxl_decoder *decoder;
-+		struct cxl_port *port;
-+
-+		port = cxl_bus_get_port(bus);
-+		if (!cxl_port_is_root(port))
-+			continue;
-+
-+		cxl_decoder_foreach (port, decoder) {
-+			if (util_cxl_decoder_filter(decoder,
-+						    param.root_decoder)) {
-+				p->root_decoder = decoder;
-+				goto found;
-+			}
-+		}
-+	}
-+
-+found:
-+	if (p->root_decoder == NULL) {
-+		log_err(&rl, "%s not found in CXL topology\n",
-+			param.root_decoder);
-+		return -ENXIO;
-+	}
-+
-+	rc = validate_decoder(p->root_decoder, p);
-+	if (rc)
-+		return rc;
-+
-+	if (param.memdevs)
-+		return validate_config_memdevs(ctx, p);
-+
-+	return validate_config_ep_decoders(ctx, p);
-+}
-+
-+static struct cxl_decoder *
-+cxl_memdev_target_find_decoder(struct cxl_ctx *ctx, const char *memdev_name)
-+{
-+	struct cxl_endpoint *ep = NULL;
-+	struct cxl_decoder *decoder;
-+	struct cxl_memdev *memdev;
-+	struct cxl_port *port;
-+
-+	cxl_memdev_foreach(ctx, memdev) {
-+		const char *devname = cxl_memdev_get_devname(memdev);
-+
-+		if (strcmp(devname, memdev_name) != 0)
-+			continue;
-+
-+		ep = cxl_memdev_get_endpoint(memdev);
-+	}
-+
-+	if (!ep) {
-+		log_err(&rl, "could not get an endpoint for %s\n",
-+			memdev_name);
-+		return NULL;
-+	}
-+
-+	port = cxl_endpoint_get_port(ep);
-+	if (!port) {
-+		log_err(&rl, "could not get a port for %s\n",
-+			memdev_name);
-+		return NULL;
-+	}
-+
-+	cxl_decoder_foreach(port, decoder)
-+		if (cxl_decoder_get_size(decoder) == 0)
-+			return decoder;
-+
-+	log_err(&rl, "could not get a free decoder for %s\n", memdev_name);
-+	return NULL;
-+}
-+
-+#define try(prefix, op, dev, p) \
-+do { \
-+	int __rc = prefix##_##op(dev, p); \
-+	if (__rc) { \
-+		log_err(&rl, "%s: " #op " failed: %s\n", \
-+				prefix##_get_devname(dev), \
-+				strerror(abs(__rc))); \
-+		rc = __rc; \
-+		goto err_delete; \
-+	} \
-+} while (0)
-+
-+static int create_region(struct cxl_ctx *ctx, int *count,
-+			 struct parsed_params *p)
-+{
-+	unsigned long flags = UTIL_JSON_TARGETS;
-+	struct json_object *jregion;
-+	unsigned int i, granularity;
-+	struct cxl_region *region;
-+	const char *devname;
-+	uuid_t uuid;
-+	u64 size;
-+	int rc;
-+
-+	rc = create_region_validate_config(ctx, p);
-+	if (rc)
-+		return rc;
-+
-+	if (p->size) {
-+		size = p->size;
-+	} else if (p->ep_min_size) {
-+		size = p->ep_min_size * p->ways;
-+	} else {
-+		log_err(&rl, "%s: unable to determine region size\n", __func__);
-+		return -ENXIO;
-+	}
-+
-+	if (p->mode == CXL_DECODER_MODE_PMEM) {
-+		region = cxl_decoder_create_pmem_region(p->root_decoder);
-+		if (!region) {
-+			log_err(&rl, "failed to create region under %s\n",
-+				param.root_decoder);
-+			return -ENXIO;
-+		}
-+	} else {
-+		log_err(&rl, "region type '%s' not supported yet\n",
-+			param.type);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	devname = cxl_region_get_devname(region);
-+
-+	/* Default granularity will be the root decoder's granularity */
-+	granularity = cxl_decoder_get_interleave_granularity(p->root_decoder);
-+	if (granularity == 0 || granularity == UINT_MAX) {
-+		log_err(&rl, "%s: unable to determine root decoder granularity\n",
-+			devname);
-+		return -ENXIO;
-+	}
-+
-+	/* If the user supplied granularity was > the default, use it instead */
-+	if (p->granularity && (p->granularity > granularity))
-+		granularity = p->granularity;
-+
-+	uuid_generate(uuid);
-+	try(cxl_region, set_interleave_granularity, region, granularity);
-+	try(cxl_region, set_interleave_ways, region, p->ways);
-+	try(cxl_region, set_size, region, size);
-+	try(cxl_region, set_uuid, region, uuid);
-+
-+	for (i = 0; i < p->ways; i++) {
-+		struct cxl_decoder *ep_decoder = NULL;
-+
-+		if (param.ep_decoders) {
-+			ep_decoder =
-+				cxl_decoder_get_by_name(ctx, p->targets[i]);
-+		} else if (param.memdevs) {
-+			ep_decoder = cxl_memdev_target_find_decoder(
-+				ctx, p->targets[i]);
-+		}
-+		if (!ep_decoder) {
-+			rc = -ENXIO;
-+			goto err_delete;
-+		}
-+		if (cxl_decoder_get_mode(ep_decoder) != p->mode) {
-+			try(cxl_decoder, set_dpa_size, ep_decoder, 0);
-+			try(cxl_decoder, set_mode, ep_decoder, p->mode);
-+		}
-+		try(cxl_decoder, set_dpa_size, ep_decoder, size/p->ways);
-+		rc = cxl_region_set_target(region, i, ep_decoder);
-+		if (rc) {
-+			log_err(&rl, "%s: failed to set target%d to %s\n",
-+				devname, i, p->targets[i]);
-+			goto err_delete;
-+		}
-+	}
-+
-+	rc = cxl_region_commit(region);
-+	if (rc) {
-+		log_err(&rl, "%s: failed to commit: %s\n", devname,
-+			strerror(-rc));
-+		goto err_delete;
-+	}
-+
-+	rc = cxl_region_enable(region);
-+	if (rc) {
-+		log_err(&rl, "%s: failed to enable: %s\n", devname,
-+			strerror(-rc));
-+		goto err_delete;
-+	}
-+	*count = 1;
-+
-+	if (isatty(1))
-+		flags |= UTIL_JSON_HUMAN;
-+	jregion = util_cxl_region_to_json(region, flags);
-+	if (jregion)
-+		printf("%s\n", json_object_to_json_string_ext(jregion,
-+					JSON_C_TO_STRING_PRETTY));
-+
-+	return 0;
-+
-+err_delete:
-+	cxl_region_delete(region);
-+	return rc;
-+}
-+
-+static int region_action(int argc, const char **argv, struct cxl_ctx *ctx,
-+			 enum region_actions action,
-+			 const struct option *options, struct parsed_params *p,
-+			 int *count, const char *u)
-+{
-+	int rc = -ENXIO;
-+
-+	log_init(&rl, "cxl region", "CXL_REGION_LOG");
-+	rc = parse_region_options(argc, argv, ctx, action, options, p, u);
-+	if (rc)
-+		return rc;
-+
-+	if (action == ACTION_CREATE)
-+		return create_region(ctx, count, p);
-+	}
-+
-+	return rc;
-+}
-+
-+int cmd_create_region(int argc, const char **argv, struct cxl_ctx *ctx)
-+{
-+	const char *u = "cxl create-region <target0> ... [<options>]";
-+	struct parsed_params p = { 0 };
-+	int rc, count = 0;
-+
-+	rc = region_action(argc, argv, ctx, ACTION_CREATE, create_options, &p,
-+			   &count, u);
-+	log_info(&rl, "created %d region%s\n", count, count == 1 ? "" : "s");
-+	return rc == 0 ? 0 : EXIT_FAILURE;
-+}
-diff --git a/Documentation/cxl/meson.build b/Documentation/cxl/meson.build
-index 423be90..340cdee 100644
---- a/Documentation/cxl/meson.build
-+++ b/Documentation/cxl/meson.build
-@@ -23,6 +23,7 @@ filedeps = [
-   'memdev-option.txt',
-   'labels-options.txt',
-   'debug-option.txt',
-+  'region-description.txt',
- ]
- 
- cxl_manpages = [
-@@ -39,6 +40,7 @@ cxl_manpages = [
-   'cxl-set-partition.txt',
-   'cxl-reserve-dpa.txt',
-   'cxl-free-dpa.txt',
-+  'cxl-create-region.txt',
- ]
- 
- foreach man : cxl_manpages
-diff --git a/cxl/meson.build b/cxl/meson.build
-index d63dcb1..f2474aa 100644
---- a/cxl/meson.build
-+++ b/cxl/meson.build
-@@ -3,6 +3,7 @@ cxl_src = [
-   'list.c',
-   'port.c',
-   'bus.c',
-+  'region.c',
-   'memdev.c',
-   'json.c',
-   'filter.c',
--- 
-2.36.1
+> +		if (!p->idle && !cxl_region_is_enabled(region))
+> +			continue;
+> +		jregion = util_cxl_region_to_json(region, flags);
+> +		if (!jregion)
+> +			continue;
+> +		json_object_array_add(jregions, jregion);
+> +	}
+> +
+> +	return;
+> +}
+> +
+>  static void walk_decoders(struct cxl_port *port, struct cxl_filter_params *p,
+> -			  struct json_object *jdecoders, unsigned long flags)
+> +			  struct json_object *jdecoders,
+> +			  struct json_object *jregions, unsigned long flags)
+>  {
+>  	struct cxl_decoder *decoder;
+>  
+>  	cxl_decoder_foreach(port, decoder) {
+> +		const char *devname = cxl_decoder_get_devname(decoder);
+> +		struct json_object *jchildregions = NULL;
+>  		struct json_object *jdecoder;
+>  
+> +		if (p->regions && p->decoders) {
+> +			jchildregions = json_object_new_array();
+> +			if (!jchildregions) {
+> +				err(p, "failed to allocate region object\n");
+> +				return;
+> +			}
+> +		}
+> +
+> +		if (p->regions && cxl_port_is_root(port))
+> +			walk_regions(decoder,
+> +				     pick_array(jchildregions, jregions),
+> +				     p, flags);
+>  		if (!p->decoders)
+> -			continue;
+> +			goto put_continue;
 
+I think this wants to follow the same "walk_children" pattern as
+walk_child_ports() where once its determined that the decoder is not
+going to be emmitted jump to walk_children: and see if any children of
+the decoder are to be emitted. Then cond_add_put_array_suffix()
+automatically handles the "json_object_put(jchildregions)" if it ends up
+being empty.
+
+I.e. no need to change all these instances of 'continue' to
+'put_continue()'.
+
+>  		if (!util_cxl_decoder_filter(decoder, p->decoder_filter))
+> -			continue;
+> +			goto put_continue;
+>  		if (!util_cxl_decoder_filter_by_bus(decoder, p->bus_filter))
+> -			continue;
+> +			goto put_continue;
+>  		if (!util_cxl_decoder_filter_by_port(decoder, p->port_filter,
+>  						     pf_mode(p)))
+> -			continue;
+> +			goto put_continue;
+>  		if (!util_cxl_decoder_filter_by_memdev(
+>  			    decoder, p->memdev_filter, p->serial_filter))
+> -			continue;
+> +			goto put_continue;
+>  		if (!p->idle && cxl_decoder_get_size(decoder) == 0)
+> -			continue;
+> +			goto put_continue;
+>  		jdecoder = util_cxl_decoder_to_json(decoder, flags);
+>  		if (!decoder) {
+>  			dbg(p, "decoder object allocation failure\n");
+> -			continue;
+> +			goto put_continue;
+>  		}
+>  		util_cxl_targets_append_json(jdecoder, decoder,
+>  					     p->memdev_filter, p->serial_filter,
+>  					     flags);
+> +		cond_add_put_array_suffix(jdecoder, "regions", devname,
+> +					  jchildregions);
+>  		json_object_array_add(jdecoders, jdecoder);
+> +		continue;
+> +put_continue:
+> +		json_object_put(jchildregions);
+>  	}
+>  }
+>  
+> @@ -782,7 +859,7 @@ static void walk_endpoints(struct cxl_port *port, struct cxl_filter_params *p,
+>  		if (!p->decoders)
+>  			continue;
+>  		walk_decoders(cxl_endpoint_get_port(endpoint), p,
+> -			      pick_array(jchilddecoders, jdecoders), flags);
+> +			      pick_array(jchilddecoders, jdecoders), NULL, flags);
+>  		cond_add_put_array_suffix(jendpoint, "decoders", devname,
+>  					  jchilddecoders);
+>  	}
+> @@ -869,7 +946,8 @@ walk_children:
+>  				       flags);
+>  
+>  		walk_decoders(port, p,
+> -			      pick_array(jchilddecoders, jportdecoders), flags);
+> +			      pick_array(jchilddecoders, jportdecoders), NULL,
+> +			      flags);
+>  		walk_child_ports(port, p, pick_array(jchildports, jports),
+>  				 pick_array(jchilddecoders, jportdecoders),
+>  				 pick_array(jchildeps, jeps),
+> @@ -894,6 +972,7 @@ int cxl_filter_walk(struct cxl_ctx *ctx, struct cxl_filter_params *p)
+>  	struct json_object *jbusdecoders = NULL;
+>  	struct json_object *jepdecoders = NULL;
+>  	struct json_object *janondevs = NULL;
+> +	struct json_object *jregions = NULL;
+>  	struct json_object *jeps = NULL;
+>  	struct cxl_memdev *memdev;
+>  	int top_level_objs = 0;
+> @@ -936,6 +1015,10 @@ int cxl_filter_walk(struct cxl_ctx *ctx, struct cxl_filter_params *p)
+>  	if (!jepdecoders)
+>  		goto err;
+>  
+> +	jregions = json_object_new_array();
+> +	if (!jregions)
+> +		goto err;
+> +
+>  	dbg(p, "walk memdevs\n");
+>  	cxl_memdev_foreach(ctx, memdev) {
+>  		struct json_object *janondev;
+> @@ -964,6 +1047,7 @@ int cxl_filter_walk(struct cxl_ctx *ctx, struct cxl_filter_params *p)
+>  		struct json_object *jchildports = NULL;
+>  		struct json_object *jchilddevs = NULL;
+>  		struct json_object *jchildeps = NULL;
+> +		struct json_object *jchildregions = NULL;
+>  		struct cxl_port *port = cxl_bus_get_port(bus);
+>  		const char *devname = cxl_bus_get_devname(bus);
+>  
+> @@ -1021,11 +1105,20 @@ int cxl_filter_walk(struct cxl_ctx *ctx, struct cxl_filter_params *p)
+>  					continue;
+>  				}
+>  			}
+> +			if (p->regions && !p->decoders) {
+> +				jchildregions = json_object_new_array();
+> +				if (!jchildregions) {
+> +					err(p,
+> +					    "%s: failed to enumerate child regions\n",
+> +					    devname);
+> +					continue;
+> +				}
+> +			}
+>  		}
+>  walk_children:
+>  		dbg(p, "walk decoders\n");
+>  		walk_decoders(port, p, pick_array(jchilddecoders, jbusdecoders),
+> -			      flags);
+> +			      pick_array(jchildregions, jregions), flags);
+>  
+>  		dbg(p, "walk ports\n");
+>  		walk_child_ports(port, p, pick_array(jchildports, jports),
+> @@ -1038,6 +1131,8 @@ walk_children:
+>  					  jchildeps);
+>  		cond_add_put_array_suffix(jbus, "decoders", devname,
+>  					  jchilddecoders);
+> +		cond_add_put_array_suffix(jbus, "regions", devname,
+> +					  jchildregions);
+>  		cond_add_put_array_suffix(jbus, "memdevs", devname, jchilddevs);
+>  	}
+>  
+> @@ -1057,6 +1152,8 @@ walk_children:
+>  		top_level_objs++;
+>  	if (json_object_array_length(jepdecoders))
+>  		top_level_objs++;
+> +	if (json_object_array_length(jregions))
+> +		top_level_objs++;
+>  
+>  	splice_array(p, janondevs, jplatform, "anon memdevs", top_level_objs > 1);
+>  	splice_array(p, jbuses, jplatform, "buses", top_level_objs > 1);
+> @@ -1069,6 +1166,7 @@ walk_children:
+>  		     top_level_objs > 1);
+>  	splice_array(p, jepdecoders, jplatform, "endpoint decoders",
+>  		     top_level_objs > 1);
+> +	splice_array(p, jregions, jplatform, "regions", top_level_objs > 1);
+>  
+>  	util_display_json_array(stdout, jplatform, flags);
+>  
+> @@ -1082,6 +1180,7 @@ err:
+>  	json_object_put(jbusdecoders);
+>  	json_object_put(jportdecoders);
+>  	json_object_put(jepdecoders);
+> +	json_object_put(jregions);
+>  	json_object_put(jplatform);
+>  	return -ENOMEM;
+>  }
+> diff --git a/cxl/json.c b/cxl/json.c
+> index ae9c812..1508338 100644
+> --- a/cxl/json.c
+> +++ b/cxl/json.c
+> @@ -524,6 +524,129 @@ struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
+>  	return jdecoder;
+>  }
+>  
+> +void util_cxl_mappings_append_json(struct json_object *jregion,
+> +				  struct cxl_region *region,
+> +				  unsigned long flags)
+> +{
+> +	struct json_object *jobj, *jmappings;
+> +	struct cxl_memdev_mapping *mapping;
+> +	unsigned int val, nr_mappings;
+> +	const char *devname;
+> +
+> +	nr_mappings = cxl_region_get_interleave_ways(region);
+> +	if (!nr_mappings || (nr_mappings == UINT_MAX))
+> +		return;
+> +
+> +	if (!(flags & UTIL_JSON_TARGETS))
+> +		return;
+> +
+> +	jmappings = json_object_new_array();
+> +	if (!jmappings)
+> +		return;
+> +
+> +	cxl_mapping_foreach(region, mapping) {
+> +		struct json_object *jmapping;
+> +		struct cxl_decoder *decoder;
+> +		struct cxl_memdev *memdev;
+> +
+> +		jmapping = json_object_new_object();
+> +		if (!jmapping)
+> +			continue;
+> +
+> +		val = cxl_mapping_get_position(mapping);
+> +		if (val < UINT_MAX) {
+> +			jobj = json_object_new_int(val);
+> +			if (jobj)
+> +				json_object_object_add(jmapping, "position",
+> +						       jobj);
+> +		}
+> +
+> +		decoder = cxl_mapping_get_decoder(mapping);
+> +		if (!decoder)
+> +			continue;
+> +
+> +		memdev = cxl_ep_decoder_get_memdev(decoder);
+> +		if (memdev) {
+> +			devname = cxl_memdev_get_devname(memdev);
+> +			jobj = json_object_new_string(devname);
+> +			if (jobj)
+> +				json_object_object_add(jmapping, "memdev", jobj);
+> +		}
+> +
+> +		devname = cxl_decoder_get_devname(decoder);
+> +		jobj = json_object_new_string(devname);
+> +		if (jobj)
+> +			json_object_object_add(jmapping, "decoder", jobj);
+> +
+> +		json_object_array_add(jmappings, jmapping);
+> +	}
+> +
+> +	json_object_object_add(jregion, "mappings", jmappings);
+> +}
+> +
+> +struct json_object *util_cxl_region_to_json(struct cxl_region *region,
+> +					     unsigned long flags)
+> +{
+> +	const char *devname = cxl_region_get_devname(region);
+> +	struct json_object *jregion, *jobj;
+> +	u64 val;
+> +
+> +	jregion = json_object_new_object();
+> +	if (!jregion)
+> +		return NULL;
+> +
+> +	jobj = json_object_new_string(devname);
+> +	if (jobj)
+> +		json_object_object_add(jregion, "region", jobj);
+> +
+> +	val = cxl_region_get_resource(region);
+> +	if (val < ULLONG_MAX) {
+> +		jobj = util_json_object_hex(val, flags);
+> +		if (jobj)
+> +			json_object_object_add(jregion, "resource", jobj);
+> +	}
+> +
+> +	val = cxl_region_get_size(region);
+> +	if (val < ULLONG_MAX) {
+> +		jobj = util_json_object_size(val, flags);
+> +		if (jobj)
+> +			json_object_object_add(jregion, "size", jobj);
+> +	}
+> +
+> +	val = cxl_region_get_interleave_ways(region);
+> +	if (val < INT_MAX) {
+> +		jobj = json_object_new_int(val);
+> +		if (jobj)
+> +			json_object_object_add(jregion,
+> +					       "interleave_ways", jobj);
+> +	}
+> +
+> +	val = cxl_region_get_interleave_granularity(region);
+> +	if (val < INT_MAX) {
+> +		jobj = json_object_new_int(val);
+> +		if (jobj)
+> +			json_object_object_add(jregion,
+> +					       "interleave_granularity", jobj);
+> +	}
+> +
+> +	if (cxl_region_is_committed(region))
+> +		jobj = json_object_new_boolean(true);
+> +	else
+> +		jobj = json_object_new_boolean(false);
+> +	if (jobj)
+> +		json_object_object_add(jregion, "committed", jobj);
+> +
+> +	if (!cxl_region_is_enabled(region)) {
+> +		jobj = json_object_new_string("disabled");
+> +		if (jobj)
+> +			json_object_object_add(jregion, "state", jobj);
+
+This is more a comment about a future patch than something to change
+here...
+
+A region's relationship with being "disabled" is complicated. Because
+disabled regions can still be enabled in every practical sense. Think of
+BIOS enabled regions mapped into "System RAM". So I'm wondering if this
+listing should have a "fixed" flag for those cases and skip emitting
+"disabled" when a region is fixed.
+
+Similarly the p->idle check in walk_regions() would only apply to
+non-fixed regions, basically treat fixed regions as "never idle /
+disabled".
+
+> +	}
+> +
+> +	util_cxl_mappings_append_json(jregion, region, flags);
+> +
+> +	return jregion;
+> +}
+> +
+>  void util_cxl_targets_append_json(struct json_object *jdecoder,
+>  				  struct cxl_decoder *decoder,
+>  				  const char *ident, const char *serial,
+> diff --git a/cxl/list.c b/cxl/list.c
+> index 1b5f583..88ca9d9 100644
+> --- a/cxl/list.c
+> +++ b/cxl/list.c
+> @@ -41,7 +41,10 @@ static const struct option options[] = {
+>  	OPT_BOOLEAN('D', "decoders", &param.decoders,
+>  		    "include CXL decoder info"),
+>  	OPT_BOOLEAN('T', "targets", &param.targets,
+> -		    "include CXL target data with decoders or ports"),
+> +		    "include CXL target data with decoders, ports, or regions"),
+> +	OPT_STRING('r', "region", &param.region_filter, "region name",
+> +		   "filter by CXL region name(s)"),
+> +	OPT_BOOLEAN('R', "regions", &param.regions, "include CXL regions"),
+>  	OPT_BOOLEAN('i', "idle", &param.idle, "include disabled devices"),
+>  	OPT_BOOLEAN('u', "human", &param.human,
+>  		    "use human friendly number formats"),
+> @@ -58,7 +61,7 @@ static const struct option options[] = {
+>  static int num_list_flags(void)
+>  {
+>  	return !!param.memdevs + !!param.buses + !!param.ports +
+> -	       !!param.endpoints + !!param.decoders;
+> +	       !!param.endpoints + !!param.decoders + !!param.regions;
+>  }
+>  
+>  int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
+> @@ -92,18 +95,14 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
+>  			param.endpoints = true;
+>  		if (param.decoder_filter)
+>  			param.decoders = true;
+> -		if (num_list_flags() == 0) {
+> -			/*
+> -			 * TODO: We likely want to list regions by default if
+> -			 * nothing was explicitly asked for. But until we have
+> -			 * region support, print this error asking for devices
+> -			 * explicitly.  Once region support is added, this TODO
+> -			 * can be removed.
+> -			 */
+> -			error("please specify entities to list, e.g. using -m/-M\n");
+> -			usage_with_options(u, options);
+> -		}
+>  		param.single = true;
+
+Previously this only got set if numa_list_flags() had transitioned to
+non-zero. I don't think it matters for this patch, but it reminds me
+that I need to go move this under the "if (param.port_filter)" check.
+
+> +		if (param.region_filter)
+> +			param.regions = true;
+> +	}
+> +
+> +	/* List regions by default */
+> +	if (num_list_flags() == 0) {
+> +		param.regions = true;
+>  	}
+>  
+>  	log_init(&param.ctx, "cxl list", "CXL_LIST_LOG");
+> -- 
+> 2.36.1
+> 
