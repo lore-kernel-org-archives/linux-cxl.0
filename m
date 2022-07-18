@@ -2,93 +2,92 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C39DC43334
-	for <linux-cxl@archiver.kernel.org>; Mon, 18 Jul 2022 05:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57664C433EF
+	for <linux-cxl@archiver.kernel.org>; Mon, 18 Jul 2022 06:29:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230411AbiGRFgN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 18 Jul 2022 01:36:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47338 "EHLO
+        id S233490AbiGRG3T (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 18 Jul 2022 02:29:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229585AbiGRFgM (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 18 Jul 2022 01:36:12 -0400
+        with ESMTP id S233656AbiGRG3M (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 18 Jul 2022 02:29:12 -0400
 Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3934E003
-        for <linux-cxl@vger.kernel.org>; Sun, 17 Jul 2022 22:36:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F1561038
+        for <linux-cxl@vger.kernel.org>; Sun, 17 Jul 2022 23:29:08 -0700 (PDT)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 82C83122596;
-        Mon, 18 Jul 2022 05:30:44 +0000 (UTC)
+        by relay.mailchannels.net (Postfix) with ESMTP id A15FA81A99;
+        Mon, 18 Jul 2022 06:29:07 +0000 (UTC)
 Received: from pdx1-sub0-mail-a220.dreamhost.com (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id DC2C1122467;
-        Mon, 18 Jul 2022 05:30:43 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1658122244; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id 13DE18193C;
+        Mon, 18 Jul 2022 06:29:06 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1658125746; a=rsa-sha256;
         cv=none;
-        b=FAhL6ZPGK1e2fOwZ01Ni+EpN5qqOhnuoPBeHuz5coKnARC039mrWwKk/qfmpwHCjiyuYlL
-        S3CDKK/CZMS38GFIO78oJjudeKSs79YLvQTqk+MYkElffCHIDpHcNDQYauUfAAe/VthM2/
-        VYchx2xAbWs3t8E3897KH5Ojm22zpEq95tVV5Rj264Nea4aBJwn78xhxaqn3nih4i/DDF7
-        AiTw/WdeKpH1BfrPi8+VCmSpSH2sbI0sfNILwcmUn3gorCA7n3dXRamztnab2rvxGliibo
-        a3YVWHdP6f6CNgS1Yjp29rx5b/l/DXiAwZImSuyoiLRQYDck+QZm7apDFOBiFA==
+        b=9Xf8AyfaQEnWyhaP07RrJhZP28Uk0RMJXIcyJu76FnxcLpGgpIb1WYal2uTSSVfa83Y8Rb
+        PbDZJBD+/is5UKYLsMrsWu4xPhtHm90NGp2VN3yxmje4rjsXIc6uXdHreV3YOKe30lKeJA
+        Xr8pUH8JQHPlzOUKCZ+XH8KrCbcco8cwvyVij5kh24wjLn1w6+DW6EWsyNtJ5ysApQUJ7O
+        8Xm+xUby7vGMnj3MbFSaiCReDQt2nLj1KdZxrtZSY4dRt5Q8feFfpAZ0uqH4NeudT0OtKE
+        eK7cexq40O43ARb53y/klAf8DxQpRIb4yr4TPvwk55Maf6r6x64SwaouJPJ4aw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1658122244;
+        s=arc-2022; t=1658125746;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=ysrdnv4gsdJ38wTwlp+WPUAiE1WNg4OrORYUkATxBi0=;
-        b=6iIhVxsniIROCWt8gFxnAS5ay4cmt8HYBC68Buz0a2aA9IeDfaaQG2KNWljP4qIxbk8mW1
-        4WDZdoRFRuqA69FzGUjFJgao9Nxw2XH6IQFWepKbl9/lqDbKNTEdWjNO3vIp3heNWgRWL7
-        K4hNfEcMyG+ww+t8pBU9hncXa/YVAQeFwr37sfoBM/LplVng9r7K74TBz4oudXW92D9p7r
-        HGrl/BOfEGFWMNemvIsWXbnsOd09x/Fy6gTLbZDUU0pXkZan7wTKp83HYXZbRbrbsSjjYW
-        o+i8Rymv4K2dk67dLKdniouOKDsWftJXPuscJsJhwxGR7LloNiimRLswmbZWzw==
+        bh=xi6KAyVJ25K/T3eEYFHQUSX6q6bLKhuFf3IYvlWoVY8=;
+        b=pP9ogDpKjuF3R1ul2CmkE7+7vkfeWJtNjKKd8kwQVNJ6xjIFal9jDd0+QEnbFOE8VxBfJp
+        UDsYisX/MlDw5VAhvsq1kA185nhnsoSE6UBAKuK57vxvvI49mqixOMLZpR3O8UAuzvRGr+
+        wenk5OgR1Za+teEs83P6G80PbIN7e2aIY/BL11Jwq1sWVFgud3E3uc8zezaoPBFL/IJyt/
+        NiJdcIkb15EBwVO170AeQ45C28DCO3JoUFlOj19LfCz5OMaiIFyWB+q46zhMWJuGKBOODn
+        1iU/BtvIXL3djd6nIiqIm39CTuDu+gDx55WZqDxClNS2R8huR3wyoCexrJSosg==
 ARC-Authentication-Results: i=1;
-        rspamd-674ffb986c-8xzmz;
+        rspamd-689699966c-frzhf;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Celery-Bubble: 77d09f483179833c_1658122244279_2660748520
-X-MC-Loop-Signature: 1658122244279:4034585512
-X-MC-Ingress-Time: 1658122244278
+X-Left-Shade: 48165b596f844c0c_1658125746657_1363763677
+X-MC-Loop-Signature: 1658125746657:3530652602
+X-MC-Ingress-Time: 1658125746656
 Received: from pdx1-sub0-mail-a220.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.108.161.109 (trex/6.7.1);
-        Mon, 18 Jul 2022 05:30:44 +0000
+        by 100.98.242.215 (trex/6.7.1);
+        Mon, 18 Jul 2022 06:29:06 +0000
 Received: from offworld (unknown [104.36.25.13])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a220.dreamhost.com (Postfix) with ESMTPSA id 4LmVtB5pyQz4C;
-        Sun, 17 Jul 2022 22:30:42 -0700 (PDT)
+        by pdx1-sub0-mail-a220.dreamhost.com (Postfix) with ESMTPSA id 4LmX9Y2nqkz75;
+        Sun, 17 Jul 2022 23:29:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1658122243;
-        bh=ysrdnv4gsdJ38wTwlp+WPUAiE1WNg4OrORYUkATxBi0=;
+        s=dreamhost; t=1658125745;
+        bh=xi6KAyVJ25K/T3eEYFHQUSX6q6bLKhuFf3IYvlWoVY8=;
         h=Date:From:To:Cc:Subject:Content-Type;
-        b=kpHcPE32HA65ELmQA3M5EFyS76/k5jBdMLjQQnzfy7TEG76IlstRvIneyjcr5dfHu
-         Av2l8CYK3RTMEvPSDxrOYKJmBihoagcC/SbGeGK4zN7CqWPENW7RGG6qzR1bM1xu45
-         NXdLEo2J6iGKMdijai3HvIIqke3m/LvI7W+Noz6UP5ZclBeZ6d+R/MEtPGXgix9UeA
-         AkXMfJ1gERbp1w5YSp/aHURlgRSGU4PcQqTxhKb4P0ss11IyQEkKl0ZD/ZBHwUl5fC
-         sTHrJOMnh+U7cA078sqTyoPsMrSHUlvDW2DiZbhCX3LudrJYIsQTIkGBsWW/+hf9Zg
-         YIlM3bGsRDdZA==
-Date:   Sun, 17 Jul 2022 22:30:39 -0700
+        b=MUhCiA/OiYOdgT05w5P6njjSHpvsgrUURYaqhsbq4sVksMKSHypCA1als7KwRWMMY
+         N4PGu1gN8XfuOUTRmD15/9QaIF0NTgsgS5rJoVx5yFVo6lA48ymO7TrsJHwiu4oyE9
+         Ew/bIp1z3Y82z/aUfD1DAive3Kw46FqE6bhH/zlB7+wgJnhfYRKwSlS4FwnwpKZ8XF
+         Rn9FdF/2r9dISWqqr/w6qujy6KytHCxk5oxLDAsgzHySHVKNf0kRYsqDBMSQz3on0w
+         0LqxtZ1pHh7Bhwt0BtH9olPVkSZWDnvOUW4JH25d1QSc4Z9649nkDVVaa9vGNJkFYw
+         jt6BmTNbHabfw==
+Date:   Sun, 17 Jul 2022 23:29:02 -0700
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     Dave Jiang <dave.jiang@intel.com>
 Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
         dan.j.williams@intel.com, bwidawsk@kernel.org, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        Jonathan.Cameron@huawei.com, a.manzanares@samsung.com
-Subject: Re: [PATCH RFC 10/15] x86: add an arch helper function to invalidate
- all cache for nvdimm
-Message-ID: <20220718053039.5whjdcxynukildlo@offworld>
+        vishal.l.verma@intel.com, alison.schofield@intel.com
+Subject: Re: [PATCH RFC 2/15] tools/testing/cxl: Create context for cxl mock
+ device
+Message-ID: <20220718062902.i7pfbrej6hpwdvb4@offworld>
 References: <165791918718.2491387.4203738301057301285.stgit@djiang5-desk3.ch.intel.com>
- <165791937063.2491387.15277418618265930924.stgit@djiang5-desk3.ch.intel.com>
+ <165791932409.2491387.9065856569307593223.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <165791937063.2491387.15277418618265930924.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <165791932409.2491387.9065856569307593223.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
@@ -96,206 +95,90 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 On Fri, 15 Jul 2022, Dave Jiang wrote:
 
->The original implementation to flush all cache after unlocking the nvdimm
->resides in drivers/acpi/nfit/intel.c. This is a temporary stop gap until
->nvdimm with security operations arrives on other archs. With support CXL
->pmem supporting security operations, specifically "unlock" dimm, the need
->for an arch supported helper function to invalidate all CPU cache for
->nvdimm has arrived. Remove original implementation from acpi/nfit and add
->cross arch support for this operation.
+>Add context struct for mock device and move lsa under the context. This
+>allows additional information such as security status and other persistent
+>security data such as passphrase to be added for the emulated test device.
 >
->Add CONFIG_ARCH_HAS_NVDIMM_INVAL_CACHE Kconfig and allow x86_64 to opt in
->and provide the support via wbinvd_on_all_cpus() call.
 
-So the 8.2.9.5.5 bits will also need wbinvd - and I guess arm64 will need
-its own semantics (iirc there was a flush all call in the past). Cc'ing
-Jonathan as well.
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 
-Anyway, I think this call should not be defined in any place other than core
-kernel headers, and not in pat/nvdimm. I was trying to make it fit in smp.h,
-for example, but conviniently we might be able to hijack flush_cache_all()
-for our purposes as of course neither x86-64 arm64 uses it :)
-
-And I see this as safe (wrt not adding a big hammer on unaware drivers) as
-the 32bit archs that define the call are mostly contained thin their arch/,
-and the few in drivers/ are still specific to those archs.
-
-Maybe something like the below.
-
-Thanks,
-Davidlohr
-
-------8<----------------------------------------
-Subject: [PATCH] arch/x86: define flush_cache_all as global wbinvd
-
-With CXL security features, global CPU cache flushing nvdimm
-requirements are no longer specific to that subsystem, even
-beyond the scope of security_ops. CXL will need such semantics
-for features not necessarily limited to persistent memory.
-
-So use the flush_cache_all() for the wbinvd across all
-CPUs on x86. arm64, which is another platform to have CXL
-support can also define its own semantics here.
-
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
-  arch/x86/Kconfig                  |  1 -
-  arch/x86/include/asm/cacheflush.h |  5 +++++
-  arch/x86/mm/pat/set_memory.c      |  8 --------
-  drivers/acpi/nfit/intel.c         | 11 ++++++-----
-  drivers/cxl/security.c            |  5 +++--
-  include/linux/libnvdimm.h         |  9 ---------
-  6 files changed, 14 insertions(+), 25 deletions(-)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 8dbe89eba639..be0b95e51df6 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -83,7 +83,6 @@ config X86
-	select ARCH_HAS_MEMBARRIER_SYNC_CORE
-	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
-	select ARCH_HAS_PMEM_API		if X86_64
--	select ARCH_HAS_NVDIMM_INVAL_CACHE	if X86_64
-	select ARCH_HAS_PTE_DEVMAP		if X86_64
-	select ARCH_HAS_PTE_SPECIAL
-	select ARCH_HAS_UACCESS_FLUSHCACHE	if X86_64
-diff --git a/arch/x86/include/asm/cacheflush.h b/arch/x86/include/asm/cacheflush.h
-index b192d917a6d0..05c79021665d 100644
---- a/arch/x86/include/asm/cacheflush.h
-+++ b/arch/x86/include/asm/cacheflush.h
-@@ -10,4 +10,9 @@
-
-  void clflush_cache_range(void *addr, unsigned int size);
-
-+#define flush_cache_all()		\
-+do {					\
-+	wbinvd_on_all_cpus();		\
-+} while (0)
-+
-  #endif /* _ASM_X86_CACHEFLUSH_H */
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index e4cd1286deef..1abd5438f126 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -330,14 +330,6 @@ void arch_invalidate_pmem(void *addr, size_t size)
-  EXPORT_SYMBOL_GPL(arch_invalidate_pmem);
-  #endif
-
--#ifdef CONFIG_ARCH_HAS_NVDIMM_INVAL_CACHE
--void arch_invalidate_nvdimm_cache(void)
--{
--	wbinvd_on_all_cpus();
--}
--EXPORT_SYMBOL_GPL(arch_invalidate_nvdimm_cache);
--#endif
--
-  static void __cpa_flush_all(void *arg)
-  {
-	unsigned long cache = (unsigned long)arg;
-diff --git a/drivers/acpi/nfit/intel.c b/drivers/acpi/nfit/intel.c
-index 242d2e9203e9..1b0ecb4d67e6 100644
---- a/drivers/acpi/nfit/intel.c
-+++ b/drivers/acpi/nfit/intel.c
-@@ -1,6 +1,7 @@
-  // SPDX-License-Identifier: GPL-2.0
-  /* Copyright(c) 2018 Intel Corporation. All rights reserved. */
-  #include <linux/libnvdimm.h>
-+#include <linux/cacheflush.h>
-  #include <linux/ndctl.h>
-  #include <linux/acpi.h>
-  #include <asm/smp.h>
-@@ -226,7 +227,7 @@ static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
-	}
-
-	/* DIMM unlocked, invalidate all CPU caches before we read it */
--	arch_invalidate_nvdimm_cache();
-+	flush_cache_all();
-
-	return 0;
-  }
-@@ -296,7 +297,7 @@ static int __maybe_unused intel_security_erase(struct nvdimm *nvdimm,
-		return -ENOTTY;
-
-	/* flush all cache before we erase DIMM */
--	arch_invalidate_nvdimm_cache();
-+	flush_cache_all();
-	memcpy(nd_cmd.cmd.passphrase, key->data,
-			sizeof(nd_cmd.cmd.passphrase));
-	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
-@@ -316,7 +317,7 @@ static int __maybe_unused intel_security_erase(struct nvdimm *nvdimm,
-	}
-
-	/* DIMM erased, invalidate all CPU caches before we read it */
--	arch_invalidate_nvdimm_cache();
-+	flush_cache_all();
-	return 0;
-  }
-
-@@ -353,7 +354,7 @@ static int __maybe_unused intel_security_query_overwrite(struct nvdimm *nvdimm)
-	}
-
-	/* flush all cache before we make the nvdimms available */
--	arch_invalidate_nvdimm_cache();
-+	flush_cache_all();
-	return 0;
-  }
-
-@@ -379,7 +380,7 @@ static int __maybe_unused intel_security_overwrite(struct nvdimm *nvdimm,
-		return -ENOTTY;
-
-	/* flush all cache before we erase DIMM */
--	arch_invalidate_nvdimm_cache();
-+	flush_cache_all();
-	memcpy(nd_cmd.cmd.passphrase, nkey->data,
-			sizeof(nd_cmd.cmd.passphrase));
-	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
-diff --git a/drivers/cxl/security.c b/drivers/cxl/security.c
-index 3dc04b50afaf..e2977872bf2f 100644
---- a/drivers/cxl/security.c
-+++ b/drivers/cxl/security.c
-@@ -6,6 +6,7 @@
-  #include <linux/ndctl.h>
-  #include <linux/async.h>
-  #include <linux/slab.h>
-+#include <linux/cacheflush.h>
-  #include "cxlmem.h"
-  #include "cxl.h"
-
-@@ -137,7 +138,7 @@ static int cxl_pmem_security_unlock(struct nvdimm *nvdimm,
-		return rc;
-
-	/* DIMM unlocked, invalidate all CPU caches before we read it */
--	arch_invalidate_nvdimm_cache();
-+	flush_cache_all();
-	return 0;
-  }
-
-@@ -165,7 +166,7 @@ static int cxl_pmem_security_passphrase_erase(struct nvdimm *nvdimm,
-		return rc;
-
-	/* DIMM erased, invalidate all CPU caches before we read it */
--	arch_invalidate_nvdimm_cache();
-+	flush_cache_all();
-	return 0;
-  }
-
-diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-index 07e4e7572089..0769afb73380 100644
---- a/include/linux/libnvdimm.h
-+++ b/include/linux/libnvdimm.h
-@@ -309,13 +309,4 @@ static inline void arch_invalidate_pmem(void *addr, size_t size)
-  {
-  }
-  #endif
--
--#ifdef CONFIG_ARCH_HAS_NVDIMM_INVAL_CACHE
--void arch_invalidate_nvdimm_cache(void);
--#else
--static inline void arch_invalidate_nvdimm_cache(void)
--{
--}
--#endif
--
-  #endif /* __LIBNVDIMM_H__ */
---
-2.36.1
+>Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>---
+> tools/testing/cxl/test/mem.c |   29 +++++++++++++++++++++++------
+> 1 file changed, 23 insertions(+), 6 deletions(-)
+>
+>diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+>index 6b9239b2afd4..723378248321 100644
+>--- a/tools/testing/cxl/test/mem.c
+>+++ b/tools/testing/cxl/test/mem.c
+>@@ -9,6 +9,10 @@
+> #include <linux/bits.h>
+> #include <cxlmem.h>
+>
+>+struct mock_mdev_data {
+>+	void *lsa;
+>+};
+>+
+> #define LSA_SIZE SZ_128K
+> #define EFFECT(x) (1U << x)
+>
+>@@ -140,7 +144,8 @@ static int mock_id(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
+> static int mock_get_lsa(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
+> {
+> 	struct cxl_mbox_get_lsa *get_lsa = cmd->payload_in;
+>-	void *lsa = dev_get_drvdata(cxlds->dev);
+>+	struct mock_mdev_data *mdata = dev_get_drvdata(cxlds->dev);
+>+	void *lsa = mdata->lsa;
+> 	u32 offset, length;
+>
+> 	if (sizeof(*get_lsa) > cmd->size_in)
+>@@ -159,7 +164,8 @@ static int mock_get_lsa(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
+> static int mock_set_lsa(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
+> {
+> 	struct cxl_mbox_set_lsa *set_lsa = cmd->payload_in;
+>-	void *lsa = dev_get_drvdata(cxlds->dev);
+>+	struct mock_mdev_data *mdata = dev_get_drvdata(cxlds->dev);
+>+	void *lsa = mdata->lsa;
+> 	u32 offset, length;
+>
+> 	if (sizeof(*set_lsa) > cmd->size_in)
+>@@ -237,9 +243,12 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
+> 	return rc;
+> }
+>
+>-static void label_area_release(void *lsa)
+>+static void cxl_mock_drvdata_release(void *data)
+> {
+>-	vfree(lsa);
+>+	struct mock_mdev_data *mdata = data;
+>+
+>+	vfree(mdata->lsa);
+>+	vfree(mdata);
+> }
+>
+> static int cxl_mock_mem_probe(struct platform_device *pdev)
+>@@ -247,13 +256,21 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+> 	struct device *dev = &pdev->dev;
+> 	struct cxl_memdev *cxlmd;
+> 	struct cxl_dev_state *cxlds;
+>+	struct mock_mdev_data *mdata;
+> 	void *lsa;
+> 	int rc;
+>
+>+	mdata = vmalloc(sizeof(*mdata));
+>+	if (!mdata)
+>+		return -ENOMEM;
+>+
+> 	lsa = vmalloc(LSA_SIZE);
+>-	if (!lsa)
+>+	if (!lsa) {
+>+		vfree(mdata);
+> 		return -ENOMEM;
+>-	rc = devm_add_action_or_reset(dev, label_area_release, lsa);
+>+	}
+>+
+>+	rc = devm_add_action_or_reset(dev, cxl_mock_drvdata_release, mdata);
+> 	if (rc)
+> 		return rc;
+> 	dev_set_drvdata(dev, lsa);
+>
