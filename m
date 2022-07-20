@@ -2,297 +2,142 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0264C433EF
-	for <linux-cxl@archiver.kernel.org>; Wed, 20 Jul 2022 17:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCDEC433EF
+	for <linux-cxl@archiver.kernel.org>; Wed, 20 Jul 2022 17:42:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230400AbiGTRiz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 20 Jul 2022 13:38:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34876 "EHLO
+        id S230149AbiGTRmB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 20 Jul 2022 13:42:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232222AbiGTRix (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 20 Jul 2022 13:38:53 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F12A270E4A
-        for <linux-cxl@vger.kernel.org>; Wed, 20 Jul 2022 10:38:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658338728; x=1689874728;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=UjfLlFcx9askUaChpUiLM7L/nzE6n3G9Z7tIQRQ64Cc=;
-  b=gTa6fRWW3FXFSirqJ5xamUf4gMXV9zoNRehfqimXVwDQSyXbmvM91tyS
-   gTKPnHCnD1h4Rkes5LrumbvAkr9/HpeX5d2WDcK3jC4kstSY2vsLkUW21
-   93WPfdKcrmq7SU+HgzV2Zc+vUG6KJM7ezaycedcNNvTIydoPYvFt9Lh5D
-   Gu0iadT4d7rSFJ0VC4U8iLNGMkRI1m5vtGeyth/guCe1sHLfduCDd5Y31
-   HmENoEPKjGWUz11vGuvo+1aKtJwJsBDlgyw/bJcI1t3CHdJ/t05Y8WMI6
-   s+JcFcz/mTg+hTqw2PgpqmWOAReH10Khcj1RLqIMh5UacwM355HhMuw43
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10414"; a="273683075"
-X-IronPort-AV: E=Sophos;i="5.92,286,1650956400"; 
-   d="scan'208";a="273683075"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2022 10:38:39 -0700
-X-IronPort-AV: E=Sophos;i="5.92,286,1650956400"; 
-   d="scan'208";a="925316501"
-Received: from mwitcher-mobl.amr.corp.intel.com (HELO [10.212.89.37]) ([10.212.89.37])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2022 10:38:38 -0700
-Message-ID: <d595bc58-7305-7f27-4ec0-218eb6492fd3@intel.com>
-Date:   Wed, 20 Jul 2022 10:38:37 -0700
+        with ESMTP id S230042AbiGTRmA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 20 Jul 2022 13:42:00 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0253B3E77B;
+        Wed, 20 Jul 2022 10:41:58 -0700 (PDT)
+Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Lp2yy5SyYz67bMk;
+        Thu, 21 Jul 2022 01:40:10 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 20 Jul 2022 19:41:56 +0200
+Received: from localhost (10.81.205.121) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 20 Jul
+ 2022 18:41:55 +0100
+Date:   Wed, 20 Jul 2022 18:41:51 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <hch@lst.de>,
+        <nvdimm@lists.linux.dev>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 24/28] cxl/region: Program target lists
+Message-ID: <20220720184151.00005b85@Huawei.com>
+In-Reply-To: <165784337827.1758207.132121746122685208.stgit@dwillia2-xfh.jf.intel.com>
+References: <165784324066.1758207.15025479284039479071.stgit@dwillia2-xfh.jf.intel.com>
+        <165784337827.1758207.132121746122685208.stgit@dwillia2-xfh.jf.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH RFC 13/15] cxl/pmem: Add "Passphrase Secure Erase"
- security command support
-Content-Language: en-US
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-        dan.j.williams@intel.com, bwidawsk@kernel.org, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        a.manzanares@samsung.com
-References: <165791918718.2491387.4203738301057301285.stgit@djiang5-desk3.ch.intel.com>
- <165791938847.2491387.8701829648751368015.stgit@djiang5-desk3.ch.intel.com>
- <20220720061727.ufygesevkonmeelr@offworld>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20220720061727.ufygesevkonmeelr@offworld>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.81.205.121]
+X-ClientProxiedBy: lhreml754-chm.china.huawei.com (10.201.108.204) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Thu, 14 Jul 2022 17:02:58 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-On 7/19/2022 11:17 PM, Davidlohr Bueso wrote:
-> On Fri, 15 Jul 2022, Dave Jiang wrote:
->
->> Create callback function to support the nvdimm_security_ops() ->erase()
->> callback. Translate the operation to send "Passphrase Secure Erase"
->> security command for CXL memory device.
->>
->> When the mem device is secure erased, arch_invalidate_nvdimm_cache() is
->> called in order to invalidate all CPU caches before attempting to access
->> the mem device again.
->>
->> See CXL 2.0 spec section 8.2.9.5.6.6 for reference.
->
-> So something like the below is what I picture for 8.2.9.5.5.2
-> (I'm still thinking about the background command polling semantics
-> and corner cases for the overwrite/sanitize - also needed for
-> scan media - so I haven't implemented 8.2.9.5.5.1, but should
-> otherwise be straightforward).
->
-> The use cases here would be:
->
-> $> cxl sanitize --crypto-erase memN
-> $> cxl sanitize --overwrite memN
-> $> cxl sanitize --wait-overwrite memN
->
-> While slightly out of the scope of this series, it still might be
-> worth carrying as they are that unrelated unless there is something
-> fundamentally with my approach.
+> Once the region's interleave geometry (ways, granularity, size) is
+> established and all the endpoint decoder targets are assigned, the next
+> phase is to program all the intermediate decoders. Specifically, each
+> CXL switch in the path between the endpoint and its CXL host-bridge
+> (including the logical switch internal to the host-bridge) needs to have
+> its decoders programmed and the target list order assigned.
+> 
+> The difficulty in this implementation lies in determining which endpoint
+> decoder ordering combinations are valid. Consider the cxl_test case of 2
+> host bridges, each of those host-bridges attached to 2 switches, and
+> each of those switches attached to 2 endpoints for a potential 8-way
+> interleave. The x2 interleave at the host-bridge level requires that all
+> even numbered endpoint decoder positions be located on the "left" hand
+> side of the topology tree, and the odd numbered positions on the other.
+> The endpoints that are peers on the same switch need to have a position
+> that can be routed with a dedicated address bit per-endpoint. See
+> check_last_peer() for the details.
+> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Patch below is about what I had in mind for the secure erase command. 
-Looks good to me. The only thing I think it needs is to make sure the 
-mem devs are not "in use" before secure erase in addition to the 
-security check that's already there below. I was planning on working on 
-this after getting the current security commands series wrapped up. But 
-if you are already developing this then I'll defer.
+I'm less confident on this one than most the other patches (and I see I skipped
+reviewing it in v1) as I haven't closely checked the verification logic
+but except for one trivial comment inline it looks fine to me.
+I want to hit the whole series with a wide range of test cases (I'm sure you
+already have) to build that confidence, but won't have time to do that till early
+August. However, if there are gremlins hiding, I'd expect them to be minor.
 
-Also here's the latest code that I'm still going through testing if you 
-want to play with it. I still need to replace the x86 patch with your 
-version.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=cxl-security
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 8ac0c557f6aa..225340529fc3 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -485,6 +485,7 @@ static struct cxl_region_ref *alloc_region_ref(struct cxl_port *port,
+>  		return NULL;
+>  	cxl_rr->port = port;
+>  	cxl_rr->region = cxlr;
+> +	cxl_rr->nr_targets = 1;
+>  	xa_init(&cxl_rr->endpoints);
+>  
+>  	rc = xa_insert(&port->regions, (unsigned long)cxlr, cxl_rr, GFP_KERNEL);
+> @@ -525,10 +526,12 @@ static int cxl_rr_ep_add(struct cxl_region_ref *cxl_rr,
+>  	struct cxl_decoder *cxld = cxl_rr->decoder;
+>  	struct cxl_ep *ep = cxl_ep_load(port, cxled_to_memdev(cxled));
+>  
+> -	rc = xa_insert(&cxl_rr->endpoints, (unsigned long)cxled, ep,
+> -			 GFP_KERNEL);
+> -	if (rc)
+> -		return rc;
+> +	if (ep) {
+> +		rc = xa_insert(&cxl_rr->endpoints, (unsigned long)cxled, ep,
+> +			       GFP_KERNEL);
+> +		if (rc)
+> +			return rc;
+> +	}
+>  	cxl_rr->nr_eps++;
+>  
+>  	if (!cxld->region) {
+> @@ -565,7 +568,7 @@ static int cxl_port_attach_region(struct cxl_port *port,
+>  				  struct cxl_endpoint_decoder *cxled, int pos)
+>  {
+>  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> -	struct cxl_ep *ep = cxl_ep_load(port, cxlmd);
+> +	const struct cxl_ep *ep = cxl_ep_load(port, cxlmd);
+
+Why const now and not previously?  Feels like this should be in an earlier patch.
+Maybe I'm missing something though.
+
+>  	struct cxl_region_ref *cxl_rr = NULL, *iter;
+>  	struct cxl_region_params *p = &cxlr->params;
+>  	struct cxl_decoder *cxld = NULL;
+> @@ -649,6 +652,16 @@ static int cxl_port_attach_region(struct cxl_port *port,
+>  		goto out_erase;
+>  	}
+>  
+> +	dev_dbg(&cxlr->dev,
+> +		"%s:%s %s add: %s:%s @ %d next: %s nr_eps: %d nr_targets: %d\n",
+> +		dev_name(port->uport), dev_name(&port->dev),
+> +		dev_name(&cxld->dev), dev_name(&cxlmd->dev),
+> +		dev_name(&cxled->cxld.dev), pos,
+> +		ep ? ep->next ? dev_name(ep->next->uport) :
+> +				      dev_name(&cxlmd->dev) :
+> +			   "none",
+> +		cxl_rr->nr_eps, cxl_rr->nr_targets);
+> +
+>  	return 0;
+>  out_erase:
+>  	if (cxl_rr->nr_eps == 0)
 
 
->
-> Thanks,
-> Davidlohr
->
-> -----<8----------------------------------------------------
-> [PATCH 16/15] cxl/mbox: Add "Secure Erase" security command support
->
-> To properly support this feature, create a 'security' sysfs
-> file that when read will list the current pmem security state,
-> and when written to, perform the requested operation (only
-> secure erase is currently supported).
->
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> ---
->  Documentation/ABI/testing/sysfs-bus-cxl | 13 +++++++
->  drivers/cxl/core/mbox.c                 | 44 +++++++++++++++++++++
->  drivers/cxl/core/memdev.c               | 51 +++++++++++++++++++++++++
->  drivers/cxl/cxlmem.h                    |  3 ++
->  4 files changed, 111 insertions(+)
->
-> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl 
-> b/Documentation/ABI/testing/sysfs-bus-cxl
-> index 7c2b846521f3..ca5216b37bcf 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> @@ -52,6 +52,19 @@ Description:
->          host PCI device for this memory device, emit the CPU node
->          affinity for this device.
->
-> +What:        /sys/bus/cxl/devices/memX/security
-> +Date:        July, 2022
-> +KernelVersion:    v5.21
-> +Contact:    linux-cxl@vger.kernel.org
-> +Description:
-> +        Reading this file will display the security state for that
-> +        device. The following states are available: disabled, frozen,
-> +        locked and unlocked. When writing to the file, the following
-> +        command(s) are supported:
-> +        erase - Secure Erase user data by changing the media encryption
-> +            keys for all user data areas of the device. This causes
-> +            all CPU caches to be flushed.
-> +
->  What:        /sys/bus/cxl/devices/*/devtype
->  Date:        June, 2021
->  KernelVersion:    v5.14
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 54f434733b56..54b4aec615ee 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -787,6 +787,50 @@ int cxl_dev_state_identify(struct cxl_dev_state 
-> *cxlds)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_dev_state_identify, CXL);
->
-> +/**
-> + * cxl_mem_sanitize() - Send sanitation related commands to the device.
-> + * @cxlds: The device data for the operation
-> + * @cmd: The command opcode to send
-> + *
-> + * Return: 0 if the command was executed successfully, regardless of
-> + * whether or not the actual security operation is done in the 
-> background.
-> + * Upon error, return the result of the mailbox command or -EINVAL if
-> + * security requirements are not met.
-> + *
-> + * See CXL 2.0 @8.2.9.5.5 Sanitize.
-> + */
-> +int cxl_mem_sanitize(struct cxl_dev_state *cxlds, enum cxl_opcode cmd)
-> +{
-> +    int rc;
-> +    u32 sec_out;
-> +
-> +    /* TODO: CXL_MBOX_OP_SECURE_SANITIZE */
-> +    if (cmd != CXL_MBOX_OP_SECURE_ERASE)
-> +        return -EINVAL;
-> +
-> +    rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_SECURITY_STATE,
-> +                   NULL, 0, &sec_out, sizeof(sec_out));
-> +    if (rc)
-> +        return rc;
-> +    /*
-> +     * Prior to using these commands, any security applied to
-> +     * the user data areas of the device shall be DISABLED (or
-> +     * UNLOCKED for secure erase case).
-> +     */
-> +    if (sec_out & CXL_PMEM_SEC_STATE_USER_PASS_SET ||
-> +        sec_out & CXL_PMEM_SEC_STATE_LOCKED)
-> +        return -EINVAL;
-> +
-> +    rc = cxl_mbox_send_cmd(cxlds, cmd, NULL, 0, NULL, 0);
-> +    if (rc == 0) {
-> +        /* flush all CPU caches before we read it */
-> +        flush_cache_all();
-> +    }
-> +
-> +    return rc;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_mem_sanitize, CXL);
-> +
->  int cxl_mem_create_range_info(struct cxl_dev_state *cxlds)
->  {
->      int rc;
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index f7cdcd33504a..13563facfd62 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -106,12 +106,63 @@ static ssize_t numa_node_show(struct device 
-> *dev, struct device_attribute *attr,
->  }
->  static DEVICE_ATTR_RO(numa_node);
->
-> +#define CXL_SEC_CMD_SIZE 32
-> +
-> +static ssize_t security_show(struct device *dev,
-> +                 struct device_attribute *attr, char *buf)
-> +{
-> +    struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> +    struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +    u32 sec_out;
-> +    int rc;
-> +
-> +    rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_SECURITY_STATE,
-> +                   NULL, 0, &sec_out, sizeof(sec_out));
-> +    if (rc)
-> +        return rc;
-> +
-> +    if (!(sec_out & CXL_PMEM_SEC_STATE_USER_PASS_SET))
-> +        return sprintf(buf, "disabled\n");
-> +    if (sec_out & CXL_PMEM_SEC_STATE_FROZEN)
-> +        return sprintf(buf, "frozen\n");
-> +    if (sec_out & CXL_PMEM_SEC_STATE_LOCKED)
-> +        return sprintf(buf, "locked\n");
-> +    else
-> +        return sprintf(buf, "unlocked\n");
-> +}
-> +
-> +static ssize_t security_store(struct device *dev,
-> +                  struct device_attribute *attr,
-> +                  const char *buf, size_t len)
-> +{
-> +    struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> +    struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +    char cmd[CXL_SEC_CMD_SIZE+1];
-> +    ssize_t rc;
-> +
-> +    rc = sscanf(buf, "%"__stringify(CXL_SEC_CMD_SIZE)"s", cmd);
-> +    if (rc < 1)
-> +        return -EINVAL;
-> +
-> +    if (sysfs_streq(cmd, "erase")) {
-> +        dev_dbg(dev, "secure-erase\n");
-> +        rc = cxl_mem_sanitize(cxlds, CXL_MBOX_OP_SECURE_ERASE);
-> +    } else
-> +        rc = -EINVAL;
-> +
-> +    if (rc == 0)
-> +        rc = len;
-> +    return rc;
-> +}
-> +static DEVICE_ATTR_RW(security);
-> +
->  static struct attribute *cxl_memdev_attributes[] = {
->      &dev_attr_serial.attr,
->      &dev_attr_firmware_version.attr,
->      &dev_attr_payload_max.attr,
->      &dev_attr_label_storage_size.attr,
->      &dev_attr_numa_node.attr,
-> +    &dev_attr_security.attr,
->      NULL,
->  };
->
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index a375a69040d2..cd6650ff757f 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -250,6 +250,7 @@ enum cxl_opcode {
->      CXL_MBOX_OP_GET_SCAN_MEDIA_CAPS    = 0x4303,
->      CXL_MBOX_OP_SCAN_MEDIA        = 0x4304,
->      CXL_MBOX_OP_GET_SCAN_MEDIA    = 0x4305,
-> +    CXL_MBOX_OP_SECURE_ERASE        = 0x4401,
->      CXL_MBOX_OP_GET_SECURITY_STATE    = 0x4500,
->      CXL_MBOX_OP_SET_PASSPHRASE    = 0x4501,
->      CXL_MBOX_OP_DISABLE_PASSPHRASE    = 0x4502,
-> @@ -348,6 +349,8 @@ struct cxl_mem_command {
->  #define CXL_CMD_FLAG_FORCE_ENABLE BIT(0)
->  };
->
-> +int cxl_mem_sanitize(struct cxl_dev_state *cxlds, enum cxl_opcode cmd);
-> +
->  #define CXL_PMEM_SEC_STATE_USER_PASS_SET    0x01
->  #define CXL_PMEM_SEC_STATE_MASTER_PASS_SET    0x02
->  #define CXL_PMEM_SEC_STATE_LOCKED        0x04
