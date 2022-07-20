@@ -2,312 +2,70 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5312DC43334
-	for <linux-cxl@archiver.kernel.org>; Wed, 20 Jul 2022 06:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AC3C43334
+	for <linux-cxl@archiver.kernel.org>; Wed, 20 Jul 2022 10:00:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239278AbiGTGRi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 20 Jul 2022 02:17:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53400 "EHLO
+        id S230176AbiGTKAE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 20 Jul 2022 06:00:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230247AbiGTGRg (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 20 Jul 2022 02:17:36 -0400
-Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B44B51A24
-        for <linux-cxl@vger.kernel.org>; Tue, 19 Jul 2022 23:17:34 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 510038E149D;
-        Wed, 20 Jul 2022 06:17:34 +0000 (UTC)
-Received: from pdx1-sub0-mail-a292.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 530BF8E17D3;
-        Wed, 20 Jul 2022 06:17:33 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1658297853; a=rsa-sha256;
-        cv=none;
-        b=BQxR1FOAt32mzUZXlcBSZ3MsVIVMRhMHKmdBqkzO9KG11jMFLmyUyHLp17lBfMXkE3JhnO
-        0ns7sCD/JjVnuq+jXGNRXw+u0KK8AqoRTHFQVYAiYb9hji8SfFfiYTHs3UENgHovEsJndC
-        dWpDsLNjnzhkrAby4sw7G+NDFRr7p+DJGGgUmCePBY36Ge1zsSfb9nMjnixuRnQwh63xqe
-        0+AMWAKASHkqVgzZe3LHaDqld4N50igtD1ydWpKh0637vKm0oO/2bPf80mktx193AzGV1D
-        Uckwyfbs0mipd2reUmswRQiqQ0OkQzo1pYSBmf539+n8PJ8IeCqoMUaWy6IryA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1658297853;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=9E2GwWipJtnq7yt5QT1h0NzHwAVhNO0D38gMoXwy9rg=;
-        b=SkMoMRnDqT9ttGNGplaP+tQflwjxgmhdatZzleL+7/6ZiBxQe73ec98gC7SV7VsKoseeyT
-        QrchBdAvwwKhNeJls0y3ijccekKevBYkdV0h8C4v9cUNZwOx25NkZmTKao2NVLeRnUfYHb
-        jKM/4OrzIuUsCh6FOu/AD4C81aog9Ok3CY8LAdv0Y9aEUFMkGLTrgnktKYL0meBkZ4zxjl
-        K+WGG8b+Cw3ZcP8qVNYeIhsyJ/IYYA+Rn29zs1Pt1qDXxXcZvZAdhdVWhdIoewl+Ctmqcg
-        7uc6i+X9doNlso/ieN2J5igvdkQ3fK7QKiNbbIN6/UNV/FZpB/7C+akerTi12A==
-ARC-Authentication-Results: i=1;
-        rspamd-689699966c-jvtlh;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Oafish-Society: 218982665cd041b0_1658297853920_73675413
-X-MC-Loop-Signature: 1658297853920:935087253
-X-MC-Ingress-Time: 1658297853920
-Received: from pdx1-sub0-mail-a292.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.98.67.142 (trex/6.7.1);
-        Wed, 20 Jul 2022 06:17:33 +0000
-Received: from offworld (unknown [104.36.29.104])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a292.dreamhost.com (Postfix) with ESMTPSA id 4LnlqJ2RBsz2P;
-        Tue, 19 Jul 2022 23:17:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1658297852;
-        bh=9E2GwWipJtnq7yt5QT1h0NzHwAVhNO0D38gMoXwy9rg=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=dAno5u+9ZpKMJAkMJdfScCx5+4A0fZP4z/P/Ih7DegqZh4BnmxGtwpu9RyY439U4Q
-         Yg/hBpE6zsnZAx5MBd0fXdSUBqbok4NLumLHFSltYxhv7WWI+J/peRJ7IeaJvrXh9C
-         CFNahr0R1x93Snlvn0BQseTImVvl8jZZD2DvtsisKQ2SJXtKmDl0qzmsRQjZJnoiXG
-         TFREOwDtcMgulWjEUAwzbk3NCu09K034Od7z5inb3XAHz5PY2ITg5XDw4DhFKHSnQo
-         nyZJqOcIaHcV9ph+Tiklc1c5D1K9bG7BwQah8cSDuSKhMU/Rwif5+VlZTq7xU0oruM
-         v5ZRAEd4MTk/w==
-Date:   Tue, 19 Jul 2022 23:17:27 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-        dan.j.williams@intel.com, bwidawsk@kernel.org, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        a.manzanares@samsung.com
-Subject: Re: [PATCH RFC 13/15] cxl/pmem: Add "Passphrase Secure Erase"
- security command support
-Message-ID: <20220720061727.ufygesevkonmeelr@offworld>
-References: <165791918718.2491387.4203738301057301285.stgit@djiang5-desk3.ch.intel.com>
- <165791938847.2491387.8701829648751368015.stgit@djiang5-desk3.ch.intel.com>
+        with ESMTP id S229492AbiGTKAE (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 20 Jul 2022 06:00:04 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4516C12A84;
+        Wed, 20 Jul 2022 03:00:02 -0700 (PDT)
+Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Lnrh201lXz67bf9;
+        Wed, 20 Jul 2022 17:56:34 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 20 Jul 2022 11:59:59 +0200
+Received: from localhost (10.81.205.121) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 20 Jul
+ 2022 10:59:50 +0100
+Date:   Wed, 20 Jul 2022 10:59:46 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+        <linux-pci@vger.kernel.org>, <patches@lists.linux.dev>,
+        <hch@lst.de>, "Ben Widawsky" <bwidawsk@kernel.org>
+Subject: Re: [PATCH 36/46] cxl/region: Add interleave ways attribute
+Message-ID: <20220720105946.00007fc2@Huawei.com>
+In-Reply-To: <62d72cf43c74_11a1662945b@dwillia2-xfh.jf.intel.com.notmuch>
+References: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
+        <20220624041950.559155-11-dan.j.williams@intel.com>
+        <20220630144420.000005b5@Huawei.com>
+        <62cb6f9a74b33_3535162944e@dwillia2-xfh.notmuch>
+        <20220719154718.000077ec@Huawei.com>
+        <62d72cf43c74_11a1662945b@dwillia2-xfh.jf.intel.com.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <165791938847.2491387.8701829648751368015.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: NeoMutt/20220429
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.81.205.121]
+X-ClientProxiedBy: lhreml754-chm.china.huawei.com (10.201.108.204) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 15 Jul 2022, Dave Jiang wrote:
+On Tue, 19 Jul 2022 15:15:16 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
->Create callback function to support the nvdimm_security_ops() ->erase()
->callback. Translate the operation to send "Passphrase Secure Erase"
->security command for CXL memory device.
->
->When the mem device is secure erased, arch_invalidate_nvdimm_cache() is
->called in order to invalidate all CPU caches before attempting to access
->the mem device again.
->
->See CXL 2.0 spec section 8.2.9.5.6.6 for reference.
+> Jonathan Cameron wrote:
+> > > No, I would prefer that as far as the Linux implementation is concerned
+> > > the software-guide does not exist. In the sense that the Linux
+> > > implementation choices supersede and are otherwise a superset of what
+> > > the guide recommends.  
+> > 
+> > ah. I phrased that badly. I just meant lift the argument as a comment rather
+> > than a cross reference.  
+> 
+> Oh, you mean promote it to an actual rationale comment rather than just
+> parrot what the code is doing? Yeah, that's a good idea.
 
-So something like the below is what I picture for 8.2.9.5.5.2
-(I'm still thinking about the background command polling semantics
-and corner cases for the overwrite/sanitize - also needed for
-scan media - so I haven't implemented 8.2.9.5.5.1, but should
-otherwise be straightforward).
-
-The use cases here would be:
-
-$> cxl sanitize --crypto-erase memN
-$> cxl sanitize --overwrite memN
-$> cxl sanitize --wait-overwrite memN
-
-While slightly out of the scope of this series, it still might be
-worth carrying as they are that unrelated unless there is something
-fundamentally with my approach.
-
-Thanks,
-Davidlohr
-
------<8----------------------------------------------------
-[PATCH 16/15] cxl/mbox: Add "Secure Erase" security command support
-
-To properly support this feature, create a 'security' sysfs
-file that when read will list the current pmem security state,
-and when written to, perform the requested operation (only
-secure erase is currently supported).
-
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
-  Documentation/ABI/testing/sysfs-bus-cxl | 13 +++++++
-  drivers/cxl/core/mbox.c                 | 44 +++++++++++++++++++++
-  drivers/cxl/core/memdev.c               | 51 +++++++++++++++++++++++++
-  drivers/cxl/cxlmem.h                    |  3 ++
-  4 files changed, 111 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 7c2b846521f3..ca5216b37bcf 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -52,6 +52,19 @@ Description:
-  		host PCI device for this memory device, emit the CPU node
-  		affinity for this device.
-  
-+What:		/sys/bus/cxl/devices/memX/security
-+Date:		July, 2022
-+KernelVersion:	v5.21
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		Reading this file will display the security state for that
-+		device. The following states are available: disabled, frozen,
-+		locked and unlocked. When writing to the file, the following
-+		command(s) are supported:
-+		erase - Secure Erase user data by changing the media encryption
-+			keys for all user data areas of the device. This causes
-+			all CPU caches to be flushed.
-+
-  What:		/sys/bus/cxl/devices/*/devtype
-  Date:		June, 2021
-  KernelVersion:	v5.14
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 54f434733b56..54b4aec615ee 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -787,6 +787,50 @@ int cxl_dev_state_identify(struct cxl_dev_state *cxlds)
-  }
-  EXPORT_SYMBOL_NS_GPL(cxl_dev_state_identify, CXL);
-  
-+/**
-+ * cxl_mem_sanitize() - Send sanitation related commands to the device.
-+ * @cxlds: The device data for the operation
-+ * @cmd: The command opcode to send
-+ *
-+ * Return: 0 if the command was executed successfully, regardless of
-+ * whether or not the actual security operation is done in the background.
-+ * Upon error, return the result of the mailbox command or -EINVAL if
-+ * security requirements are not met.
-+ *
-+ * See CXL 2.0 @8.2.9.5.5 Sanitize.
-+ */
-+int cxl_mem_sanitize(struct cxl_dev_state *cxlds, enum cxl_opcode cmd)
-+{
-+	int rc;
-+	u32 sec_out;
-+
-+	/* TODO: CXL_MBOX_OP_SECURE_SANITIZE */
-+	if (cmd != CXL_MBOX_OP_SECURE_ERASE)
-+		return -EINVAL;
-+
-+	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_SECURITY_STATE,
-+			       NULL, 0, &sec_out, sizeof(sec_out));
-+	if (rc)
-+		return rc;
-+	/*
-+	 * Prior to using these commands, any security applied to
-+	 * the user data areas of the device shall be DISABLED (or
-+	 * UNLOCKED for secure erase case).
-+	 */
-+	if (sec_out & CXL_PMEM_SEC_STATE_USER_PASS_SET ||
-+	    sec_out & CXL_PMEM_SEC_STATE_LOCKED)
-+		return -EINVAL;
-+
-+	rc = cxl_mbox_send_cmd(cxlds, cmd, NULL, 0, NULL, 0);
-+	if (rc == 0) {
-+		/* flush all CPU caches before we read it */
-+		flush_cache_all();
-+	}
-+
-+	return rc;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_mem_sanitize, CXL);
-+
-  int cxl_mem_create_range_info(struct cxl_dev_state *cxlds)
-  {
-  	int rc;
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index f7cdcd33504a..13563facfd62 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -106,12 +106,63 @@ static ssize_t numa_node_show(struct device *dev, struct device_attribute *attr,
-  }
-  static DEVICE_ATTR_RO(numa_node);
-  
-+#define CXL_SEC_CMD_SIZE 32
-+
-+static ssize_t security_show(struct device *dev,
-+			     struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	u32 sec_out;
-+	int rc;
-+
-+	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_SECURITY_STATE,
-+			       NULL, 0, &sec_out, sizeof(sec_out));
-+	if (rc)
-+		return rc;
-+
-+	if (!(sec_out & CXL_PMEM_SEC_STATE_USER_PASS_SET))
-+		return sprintf(buf, "disabled\n");
-+	if (sec_out & CXL_PMEM_SEC_STATE_FROZEN)
-+		return sprintf(buf, "frozen\n");
-+	if (sec_out & CXL_PMEM_SEC_STATE_LOCKED)
-+		return sprintf(buf, "locked\n");
-+	else
-+		return sprintf(buf, "unlocked\n");
-+}
-+
-+static ssize_t security_store(struct device *dev,
-+			      struct device_attribute *attr,
-+			      const char *buf, size_t len)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	char cmd[CXL_SEC_CMD_SIZE+1];
-+	ssize_t rc;
-+
-+	rc = sscanf(buf, "%"__stringify(CXL_SEC_CMD_SIZE)"s", cmd);
-+	if (rc < 1)
-+		return -EINVAL;
-+
-+	if (sysfs_streq(cmd, "erase")) {
-+		dev_dbg(dev, "secure-erase\n");
-+		rc = cxl_mem_sanitize(cxlds, CXL_MBOX_OP_SECURE_ERASE);
-+	} else
-+		rc = -EINVAL;
-+
-+	if (rc == 0)
-+		rc = len;
-+	return rc;
-+}
-+static DEVICE_ATTR_RW(security);
-+
-  static struct attribute *cxl_memdev_attributes[] = {
-  	&dev_attr_serial.attr,
-  	&dev_attr_firmware_version.attr,
-  	&dev_attr_payload_max.attr,
-  	&dev_attr_label_storage_size.attr,
-  	&dev_attr_numa_node.attr,
-+	&dev_attr_security.attr,
-  	NULL,
-  };
-  
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index a375a69040d2..cd6650ff757f 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -250,6 +250,7 @@ enum cxl_opcode {
-  	CXL_MBOX_OP_GET_SCAN_MEDIA_CAPS	= 0x4303,
-  	CXL_MBOX_OP_SCAN_MEDIA		= 0x4304,
-  	CXL_MBOX_OP_GET_SCAN_MEDIA	= 0x4305,
-+	CXL_MBOX_OP_SECURE_ERASE        = 0x4401,
-  	CXL_MBOX_OP_GET_SECURITY_STATE	= 0x4500,
-  	CXL_MBOX_OP_SET_PASSPHRASE	= 0x4501,
-  	CXL_MBOX_OP_DISABLE_PASSPHRASE	= 0x4502,
-@@ -348,6 +349,8 @@ struct cxl_mem_command {
-  #define CXL_CMD_FLAG_FORCE_ENABLE BIT(0)
-  };
-  
-+int cxl_mem_sanitize(struct cxl_dev_state *cxlds, enum cxl_opcode cmd);
-+
-  #define CXL_PMEM_SEC_STATE_USER_PASS_SET	0x01
-  #define CXL_PMEM_SEC_STATE_MASTER_PASS_SET	0x02
-  #define CXL_PMEM_SEC_STATE_LOCKED		0x04
--- 
-2.36.1
+yup
