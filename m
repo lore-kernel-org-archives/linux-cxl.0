@@ -2,178 +2,171 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDC7C43334
-	for <linux-cxl@archiver.kernel.org>; Thu, 21 Jul 2022 18:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A96C433EF
+	for <linux-cxl@archiver.kernel.org>; Thu, 21 Jul 2022 19:25:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229498AbiGUSfE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 21 Jul 2022 14:35:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53184 "EHLO
+        id S232792AbiGUTZT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 21 Jul 2022 15:25:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232490AbiGUSfB (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 21 Jul 2022 14:35:01 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF38D8C8FA;
-        Thu, 21 Jul 2022 11:35:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658428500; x=1689964500;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=SeN6+jSQolvvYsH1u9ADEim0VcvzKRKtoYD4GQY09WA=;
-  b=ffwfHS46aIPuUl9iqTpRHy+fxomJj2p5PPwQ4p338vDl/v4FxxCTfBtA
-   osirkCryfQyA8qQDm+cacDM1dkQU+HIV8F6ERnX10sem93BnH1saAlx5n
-   X2tiS+g0pcuvzA2ERar+ZjxiH5JPHEvfOE7a3okVsYrZ+FME6tc6lOyxf
-   65VM8bbggUdFcVWiVGhj7aFws6xYYw/3ODL3YtJcF272pLNz4htpwnzQo
-   t+O7d+YmsCf4KMaXgcho0SQcMnAeE2FRiwG05wdVGEl4R74qsn6Htara2
-   VD3M93hT3qoTlI4prk0YR6YNez3wSAPZjyfVqz9KFE2ZYBVP8V8BFtrYB
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10415"; a="266918395"
-X-IronPort-AV: E=Sophos;i="5.93,183,1654585200"; 
-   d="scan'208";a="266918395"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2022 11:34:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,183,1654585200"; 
-   d="scan'208";a="573861621"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orsmga006.jf.intel.com with ESMTP; 21 Jul 2022 11:34:54 -0700
-Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.28; Thu, 21 Jul 2022 11:34:53 -0700
-Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
- fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.28; Thu, 21 Jul 2022 11:34:53 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.28 via Frontend Transport; Thu, 21 Jul 2022 11:34:53 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.171)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Thu, 21 Jul 2022 11:34:52 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hJPdsDIslsrJLs9LrKALgLST5/FtHiLgTTSexpHWOBPR37s/mF+IyUxMYubmt6l3V2rq+HlTxQL6lid4rbcDKC3xGKo51po4ZIE9mlE9bFfe4UXzbeQvd+Qj1BSITwciYhKv98bvp/WNjsriN8ij4z1EREkExQElmHYmMXd9mRq81GTN9+57skxMnz4ibENzTCxjuUYybGmJ+gcOlc++Jy97nWZbaCl46gzE2wiADkcaLbee2uELy2JZQpfq5kXV/5RspPw7A7Zag1xRjcFxpsaSnQxACmNkGWUJrTBfoDi7IKG0ygaZIhZvzOCKV4DifqHgbMnJOuTUSnaZLJKrww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oDdKQevU9UDje/xIqfJBqNLmZBOjJDq70i6z8xZjybk=;
- b=kaLspXhEUvgjSMqXqOQuWUKbf7RpSSH5ca0TITOFS9fcUhAXxdwB7EnTsbnKGeUYZZgIDgtM5B5QLhJLkO8ChkbvUAnDDTmgbFSrLCYjT72fn46EtuSS7YBs/5xtW25Jk6r5ZEk5n5n9XNAn7kMeEjnAu7Fne32i9kjeW0mPCfCLoscDSQZQbGMo+X1FUdnkuO4JHCuBD+ipbuwiBfqVzUtJ4r70/lsxVyt1A6pGNvPcRB+3wHK8cl7y25RquqqUIgNN52/XbvJoz11U1LCZryYd7X6DQU2MUDATLb32VhLnJeFvMId4FY1XOvfjN89RfdhQ8TfPR7oQ6TQa/OKnvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by CY4PR11MB1416.namprd11.prod.outlook.com
- (2603:10b6:903:2e::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.19; Thu, 21 Jul
- 2022 18:34:51 +0000
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::6466:20a6:57b4:1edf]) by MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::6466:20a6:57b4:1edf%11]) with mapi id 15.20.5458.019; Thu, 21 Jul
- 2022 18:34:51 +0000
-Date:   Thu, 21 Jul 2022 11:34:48 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, David Hildenbrand <david@redhat.com>,
-        "Tony Luck" <tony.luck@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        <nvdimm@lists.linux.dev>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v2 00/28] CXL PMEM Region Provisioning
-Message-ID: <62d99c4840614_17f3e8294c9@dwillia2-xfh.jf.intel.com.notmuch>
-References: <165784324066.1758207.15025479284039479071.stgit@dwillia2-xfh.jf.intel.com>
- <20220720191211.00000c86@Huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20220720191211.00000c86@Huawei.com>
-X-ClientProxiedBy: MW4P220CA0023.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:303:115::28) To MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20)
+        with ESMTP id S233354AbiGUTZP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 21 Jul 2022 15:25:15 -0400
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD2110BA
+        for <linux-cxl@vger.kernel.org>; Thu, 21 Jul 2022 12:25:11 -0700 (PDT)
+Received: by mail-pg1-x536.google.com with SMTP id bh13so2539191pgb.4
+        for <linux-cxl@vger.kernel.org>; Thu, 21 Jul 2022 12:25:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1STwQsTB1PZHATgXQqop8khz7uuK12LWLLiFe3xSTpE=;
+        b=b4tV+28IlyDkvv5AnhzOQt2ZrU3HOaWwS0D7O65Zq4xQhedbHSHWCtMzQ7YoRft+Ld
+         xa+HTW1zTPG3K+f8dVeSN1fecSb6OoICcWu8WqKt5bcMvx2cFCGnlXaVv+gTH32vr9AU
+         27tBnZ2qQvt/rE875ATehnoCwI8ISKRVldYq67qYg1GmoB7KeGahVsb+lG5DuymLThAk
+         wl1W9TJBm65cRUktm1ze1hod2hTduHv90lT6tWtwR9UrKp/9CGCSTn4sCKjVuHvsqj5l
+         /vSiOUlQr6QUySwmWYFcorm17HPQhOP9+0FvTFwZn57cUhLJXHeQkyoU8WTJnkLSKZ/q
+         4EIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1STwQsTB1PZHATgXQqop8khz7uuK12LWLLiFe3xSTpE=;
+        b=gQbnDJU2GiGg0qSkTLsfGYON5vnCNzLebh7xeTOs9uHMQ9BBZ8DBasSEsCyWoKrWRF
+         cLoDrNFGA+o7/965Yv8f3k0UUZ3cTicpz71anQW0DvMOVu6hPpIhZ8PhkDusAEFYH7Ia
+         3D3LFZTS2p8E/FaKYuz3mXMqj408ihyclKYlok+MEleq4cqsIFpWS7+teYdHCIBfEv8e
+         N6CVdzCMTB07UlYI/GohDKAyGKi+uN2UClcc6uen0nu872SbevJD0ZU3lOCmMvjxfEXF
+         29Qk6gNzy/NNLM7749j/8Sx4olHNqwHOD0h7iCYBMvQoh7oCr+H65RqVXHGdx1uLwz3o
+         L8ag==
+X-Gm-Message-State: AJIora+/dfnbPAP1yBlTKch+SSfGD9+UqE6OBrHrdvnrUC7l10DNmk0b
+        vKz9bgMOYHli5ru+S/sXzslYhYXcv4c=
+X-Google-Smtp-Source: AGRyM1tb871w4cwx/WPgul8QgKiV55mwlhI/gwiHxHDzBQa/ur2IcmC1nEklzMRyXovFNCYva/cyOA==
+X-Received: by 2002:a05:6a00:b8b:b0:51b:eefc:7fd2 with SMTP id g11-20020a056a000b8b00b0051beefc7fd2mr44788530pfj.74.1658431510598;
+        Thu, 21 Jul 2022 12:25:10 -0700 (PDT)
+Received: from localhost.localdomain (c-107-3-179-31.hsd1.ca.comcast.net. [107.3.179.31])
+        by smtp.gmail.com with ESMTPSA id x15-20020a170902ec8f00b0016b8746132esm2128794plg.105.2022.07.21.12.25.09
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 21 Jul 2022 12:25:10 -0700 (PDT)
+From:   sunfishho12@gmail.com
+To:     linux-cxl@vger.kernel.org
+Cc:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
+        dave@stgolabs.net, a.manzanares@samsung.com,
+        Matthew Ho <sunfishho12@gmail.com>
+Subject: [ndctl PATCH v2] cxl: Add list verbose option to the cxl command
+Date:   Thu, 21 Jul 2022 12:24:47 -0700
+Message-Id: <20220721192447.16958-1-sunfishho12@gmail.com>
+X-Mailer: git-send-email 2.32.0 (Apple Git-132)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b629bd64-79c0-4dc9-1fb5-08da6b47b285
-X-MS-TrafficTypeDiagnostic: CY4PR11MB1416:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: uSt0TDQk8HYxfLIBAMIy8uQoezS6zWWUNPPbz0DjFtA57tVwdYFUyaJE+fp27W26PTHzdqxYSB74F/8ar4ZQHA4jabGBZXqNea4cuG0FHOnnpSpjW+gGbmUfc2nvGfttf7JEyFodGQ3NJ3RUYNORF8mdfLny0vV5vm5JfazQ8WqbPHb8CBu04445S3daRneyPHZjLDPUiaCo4bh2JR563QQqfJ+FlW1lkIdGDxL8cmKD5BSRkl9l2/0Tpj9IxCppdP0PLm2/aPAhSUFavmZEo40JdWpMchmmS3dSGnECsOzrCNUeTL1ooEmd2EjNKQofn37g6FK37WT0zzjglle+DM4XnY5dFFGaoMFx9Pv60Tjx1u0737tW6h6HXP2KXPS5e/tmCrD8AzeiCYC6SRwNQRglXjw+3sr+L7aIrZjgNs7Abk/F9rSxi9NC2hLSNWEqPodsm+18ER7WM6c7KBFXZUBfBXwT6XS9j/LmAjlSKqph94bSIxsi68gc9RYkirscGq4159ci/PFvGjs4PivjvP/4yQ4JTvB9XnDalpJl02PoKXBQsjbRYlBnVTFaWXWeCYdAnP1/aOT9Y8vgmJqa/A1cjepnURdLU5veOzyZmeBWO6Rt8kuaewiHXm0eudTkeTVajmmd+txP497p8+N+Dn7UVN4L+lrbFI1+ffitljdw18zlCZ6VegHPqDCFUGveyx38x7KQTjS2LVWEmhkKL2bGRCHSWJVWLoqmNJuKXJiWlU0XioKVJ3aG25XOFb+BPb5sppo8iTcRou0esISnLw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(396003)(366004)(136003)(376002)(39860400002)(346002)(186003)(316002)(6666004)(6506007)(478600001)(26005)(9686003)(4744005)(5660300002)(966005)(83380400001)(86362001)(41300700001)(6512007)(6486002)(4326008)(8676002)(66556008)(8936002)(66476007)(38100700002)(7416002)(54906003)(82960400001)(110136005)(66946007)(2906002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?7PJzDGURhAadHO7YvtT2gJDfZfa38eqoWtUQ8LKT9DvuyhvKyJ2Q1/5D9E/R?=
- =?us-ascii?Q?utpDzTfPdZ4yFbfXSTPucBDwmnxQGMrjHVxr1e+FcN6IgVlsdRgJqT5BrMRj?=
- =?us-ascii?Q?Mfgo9Oa+jgBuyLRZLYWZ5hMbJt9Qi1ALiFnewT+ZoJ8l0VeiJFqNGs3K9IZF?=
- =?us-ascii?Q?mS6oBSTnZsT0kfBls2j3BoOhehooCEZIXFLV+efnQf8PQufPhaTFlDzUvm1M?=
- =?us-ascii?Q?2UF2fb+sXCsh+QtHWYIvhU0aTSSd8x0bR77Ovi0spOWEjx3wwV2uH0p3ThEJ?=
- =?us-ascii?Q?GrlUGJb/XvPNaMLDq3jdUdaej5HnRD+ichIwjoU481yoIVKKrWfH0zODbH33?=
- =?us-ascii?Q?CdvK5d3Ts7TF+DT68tz7qEKf0VSaHVPFExEtO5l9uaut+PxzSOeop/cOs869?=
- =?us-ascii?Q?j4vD95ZoXgzz8hCLDcp6T8/QQdFmIw30dSgjPxMLoOy7MwMVldPV2adiswF+?=
- =?us-ascii?Q?GUvyTjH/ZrDpkqYvPLO2BeAyWK1KxDjtKesuvcYCjqltT9WywK0aJfwhUgAG?=
- =?us-ascii?Q?UySpL2FS9lgCfZdqadVvGF5BFOHnq9Z6ZTtCgZUyLwSzuogi0+h/p+UEz8at?=
- =?us-ascii?Q?heM3hhNsiTLz6I3Afs4ngVZ1ulFyxxSli8MTXAqMLS/oSWz/k3t0dI3EfMz5?=
- =?us-ascii?Q?KSnygqGM7b5yujPJkAt57MWm1IxKtGZ1Ckg/0EVDv6GJJxmsGJILXHaKifHb?=
- =?us-ascii?Q?jI1A19Dy59g1h8SQZ9fklpJOg3BRwgDqXBC7Cdm1mA+iyhWOCdOu4uSeE1GI?=
- =?us-ascii?Q?6qkQRC9ASyJIchsIaMbBgCcmG0GHIjIhGInydD1DBYsTVCxIj7gbJMMZgbae?=
- =?us-ascii?Q?UtwRTM+dKHSJ4foPtnB38dtwn9diG2ph5602ya4WoHl+H82VtF9H/3YwIRy/?=
- =?us-ascii?Q?zslj5bvZKTqWb1NQmM5FqSYls+7P661nWiKxe2BbbVY0TxIICqs/4gfxqC4g?=
- =?us-ascii?Q?sXouVD6zeWKfZqv53U9r8TM3bgqsoR28mfyoVRnndkzoNDzBFoRxFVuT2K5g?=
- =?us-ascii?Q?+sAYxdxtsKoXjT063KxqV4CnW1Neq4JD+X6Cb73O/4jUqqcr26OradvdiriZ?=
- =?us-ascii?Q?/kcM5ibuMZu81U+x9yVJ/gf1TswzOr8Ah2Hd3WJo1q09Qv/Lry+Go8eJaKTN?=
- =?us-ascii?Q?+fHAXCvlcuShrgEDorguoc5j62DD8wdKRLzZkAR9uoi4q4aeGOtYALBLK4IV?=
- =?us-ascii?Q?ZUwrD1e32RvTzytsTUqZ6pJRp0z5CM2PA8YHoJ/UiYF5IiP7RTHGdE9qovoy?=
- =?us-ascii?Q?jhxLTxxUxhMgt3vvQc3vNEweyQOiIoalwJ6CQY2Ijce6CsjJCmc8LLB2A0iW?=
- =?us-ascii?Q?C6jmhWTpLgWyZJa1CCcp3SLXF/Rj8yFhodP+v85BG+kXXL2OIBO9i85hjdAQ?=
- =?us-ascii?Q?cd6nhNUdB/uFxe9Mwlsz80oBb8w4dIoD5zfgsT4lxwDixZVgNddNWvjNRBhc?=
- =?us-ascii?Q?CCJfsnQvn9VF/HrGeMtjHuegfMtulUGzYbB1deJ8+Cz/FDe3L0WIMXrvC82Y?=
- =?us-ascii?Q?gQYb+Y+zN7WxcZQVGrJ07Mbr8K7vYotRrRJLz3OOMkr/EHs0PByw+l9wgrYe?=
- =?us-ascii?Q?lZ3ukIjkbu5Wj/pAJM85azpc3W8E/vFyoB2WtpEG6Yhoiqoftb2u3SujGCEV?=
- =?us-ascii?Q?0g=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: b629bd64-79c0-4dc9-1fb5-08da6b47b285
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2022 18:34:50.9983
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hYz3bpWwNm6iP3sB5UKUKC4YAoYgMNU/AjIJbxO7Q8kwtmPINPBhAyGEiscY3XrwIdKOP9n1YO5Nsi9hEu5XO1IkplzN2KzRAOnM12asvww=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB1416
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Jonathan Cameron wrote:
-> 
-> 
-> Hi Dan,
-> 
-> As I mentioned in one of my reviews I'd love to run a bunch of test
-> cases against this,
+From: Matthew Ho <sunfishho12@gmail.com>
 
-Yes, Vishal and I are also looking to have a create-region permutation
-test in cxl_test to go beyond:
+This adds the new subcommands cxl list -v, cxl list -vv, and cxl list -vvv, and
+builds on this pending patch series that adds region listing support:
 
-https://lore.kernel.org/r/165781817516.1555691.3557156570639615515.stgit@dwillia2-xfh.jf.intel.com/
+https://lore.kernel.org/linux-cxl/20220715062550.789736-1-vishal.l.verma@intel.com/
 
-> but won't get to that until sometime in August.
-> For some of those tests on QEMU I'll need to add some minor features
-> (multiple HDM decoder support and handling of skip for example).
-> 
-> However, my limited testing of v1 was looking good and I doesn't seem
-> like there were any fundamental changes.
-> 
-> So personally I'd be happy with this going in this cycle and getting
-> additional testing later if you and anyone else who comments feels
-> that's the way to go.
+cxl list -v is now equivalent to cxl list -RMBDPT, cxl list -vv is
+equivalent to cxl list -RMBDPTi, and cxl list -vvv is equivalent to
+cxl list -RMBDPTiHI. These additions make it easier to list all of the CXL
+devices without having to remember which subcommand must be appended for each
+type of device.
 
-Thank you for being such a reliable partner on the review and picking up
-the torch on the QEMU work. It has significantly accelerated the
-development, and I appreciate it.
+Reviewed-by: Adam Manzanares <a.manzanares@samsung.com>
+Signed-off-by: Matthew Ho <sunfishho12@gmail.com>
+---
+
+Changes since v1 (previously titled "Add list all option to the cxl command"):
+ - cxl list -v, cxl list -vv, cxl list -vvv replace cxl list --all,
+ providing greater control over detail of the output. --human has been excluded
+ as it can be appended by the user.
+
+ Documentation/cxl/cxl-list.txt | 20 ++++++++++++++++++++
+ cxl/filter.h                   |  1 +
+ cxl/list.c                     | 17 +++++++++++++++++
+ 3 files changed, 38 insertions(+)
+
+diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
+index 2906c2f6ef4b..f069aee8c674 100644
+--- a/Documentation/cxl/cxl-list.txt
++++ b/Documentation/cxl/cxl-list.txt
+@@ -336,6 +336,26 @@ OPTIONS
+ --region::
+ 	Specify the region name to filter the emitted regions.
+
++-v::
++--verbose::
++	Increase verbosity of the output. This can be specified
++	multiple times to be even more verbose on the
++	informational and miscellaneous output, and can be used
++	to override omitted flags for showing specific
++	information. Note that cxl list --verbose --verbose is
++	equivalent to cxl list -vv, and likewise
++	cxl list --verbose --verbose --verbose is equivalent to
++	cxl list -vvv.
++	- *-v*
++	  Automatically enable --memdevs, --regions, --buses,
++	  --ports, --decoders, --targets.
++	- *-vv*
++	  Everything *-v* provides, plus automatically include
++	  disabled devices with --idle.
++	- *-vvv*
++	  Everything *-vv* provides, plus automatically enable
++	  --health and --partition.
++
+ --debug::
+ 	If the cxl tool was built with debug enabled, turn on debug
+ 	messages.
+diff --git a/cxl/filter.h b/cxl/filter.h
+index d22d8b1f798b..256df49c3d0c 100644
+--- a/cxl/filter.h
++++ b/cxl/filter.h
+@@ -26,6 +26,7 @@ struct cxl_filter_params {
+ 	bool human;
+ 	bool health;
+ 	bool partition;
++	int verbose;
+ 	struct log_ctx ctx;
+ };
+
+diff --git a/cxl/list.c b/cxl/list.c
+index 5f604ecddf3c..4763c7c36024 100644
+--- a/cxl/list.c
++++ b/cxl/list.c
+@@ -52,6 +52,8 @@ static const struct option options[] = {
+ 		    "include memory device health information"),
+ 	OPT_BOOLEAN('I', "partition", &param.partition,
+ 		    "include memory device partition information"),
++	OPT_INCR('v', "verbose", &param.verbose,
++		 "increase output detail"),
+ #ifdef ENABLE_DEBUG
+ 	OPT_BOOLEAN(0, "debug", &debug, "debug list walk"),
+ #endif
+@@ -106,6 +108,21 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
+ 		param.memdevs = true;
+ 	}
+
++	switch (param.verbose){
++	default:
++		break;
++	case 3:
++		param.health = true;
++		param.partition = true;
++	case 2:
++		param.idle = true;
++	case 1:
++		param.buses = true;
++		param.ports = true;
++		param.decoders = true;
++		param.targets = true;
++	}
++
+ 	log_init(&param.ctx, "cxl list", "CXL_LIST_LOG");
+ 	if (debug) {
+ 		cxl_set_log_priority(ctx, LOG_DEBUG);
+--
+2.34.1
+
