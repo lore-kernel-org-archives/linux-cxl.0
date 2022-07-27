@@ -2,48 +2,47 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9ED8C00144
-	for <linux-cxl@archiver.kernel.org>; Wed, 27 Jul 2022 01:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7512AC04A68
+	for <linux-cxl@archiver.kernel.org>; Wed, 27 Jul 2022 22:18:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239948AbiG0By5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 26 Jul 2022 21:54:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57962 "EHLO
+        id S234392AbiG0WSF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 27 Jul 2022 18:18:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239916AbiG0By4 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 26 Jul 2022 21:54:56 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7BC73AB33
-        for <linux-cxl@vger.kernel.org>; Tue, 26 Jul 2022 18:54:55 -0700 (PDT)
+        with ESMTP id S236969AbiG0WRs (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 27 Jul 2022 18:17:48 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19F9DDAA
+        for <linux-cxl@vger.kernel.org>; Wed, 27 Jul 2022 15:16:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658886895; x=1690422895;
+  t=1658960207; x=1690496207;
   h=subject:from:to:cc:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=yfz67Rq030FjtbmeRYJ14JQhwa2OzQCXKh/tNGKA/jk=;
-  b=EK9MaG5r174JuQWyuy9bMVVmVzruKpWFRZV/ARr827zO0bRvvwySVPkb
-   b9Q85Y2wR0YrZiYFeS195p0GPBk7bAZW07M0zjC9hJ+Cb/L0XydyxplJb
-   QdhB3GszEU2m6IUuyXzyA4q8kXYc4zTZxEUIpBvt64AT1mbpN/+AzsBNr
-   XdhG17UlYpHpof6XoHEORqW3IhVslXmHkdzpYFoIrOH/wo/oluz294MAV
-   2CtNhEkJtnna14WtgfRtKXenDl99qCdU2Ulsk5ztDHVe3ab1eHEl4zCIc
-   du1ag0AMQaG7j2+jBUBnLT7V222S/lqAovOd3Tewlcr7o42xxzzG8vDBt
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10420"; a="289313190"
-X-IronPort-AV: E=Sophos;i="5.93,194,1654585200"; 
-   d="scan'208";a="289313190"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2022 18:54:55 -0700
-X-IronPort-AV: E=Sophos;i="5.93,194,1654585200"; 
-   d="scan'208";a="742469886"
-Received: from lalitham-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.90.7])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2022 18:54:54 -0700
-Subject: [ndctl PATCH] cxl/list: Clarify "-B" vs "-P -p root"
+  bh=RfMJY+y5j4+BhKgteGY90p3DSKlYWAbwmsbh2Jtxu8Y=;
+  b=cKSkXJSI9wH25LyrSlQVbKPr7Np/84YjQff2SEBBHZ9yHhxs1FEaw8Nd
+   7kOPP/jc8sPjEu3aLgyYL2Wb7EV0BmFKLEVS3HCmwpHVKpzS4f9Wrstaw
+   c/e+ByzUtLPP5Y018EkybjdEv8yuhZi8OGtFK635WIzEPQ/XOWMANQ93g
+   p5vNmB0R6eThxpPZdBwb2+jhhBisRPPwKHHinCDikhy2BDa5LukGB/i9F
+   8wmk4+qi7gq0eyWCcrfkv5IOr5rfDIdg9O5cj6D7pj+bPe4gttn4wsVy1
+   /7n+uefIGoPBZPJIQkNkN4pg1iA6LeEePa5IogGOMv20DjK5poUUoWi60
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10421"; a="289129715"
+X-IronPort-AV: E=Sophos;i="5.93,196,1654585200"; 
+   d="scan'208";a="289129715"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2022 15:16:46 -0700
+X-IronPort-AV: E=Sophos;i="5.93,196,1654585200"; 
+   d="scan'208";a="628562623"
+Received: from jihernan-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.251.21.28])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2022 15:16:46 -0700
+Subject: [PATCH] cxl/hdm: Fix DPA reservation vs cxl_endpoint_decoder
+ lifetime
 From:   Dan Williams <dan.j.williams@intel.com>
-To:     vishal.l.verma@intel.com
-Cc:     Matthew Ho <sunfishho12@gmail.com>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        linux-cxl@vger.kernel.org
-Date:   Tue, 26 Jul 2022 18:54:54 -0700
-Message-ID: <165888675979.3375698.5785835464908538946.stgit@dwillia2-xfh.jf.intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Date:   Wed, 27 Jul 2022 15:16:46 -0700
+Message-ID: <165896020625.3546860.12390103413706292760.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -52,93 +51,73 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Matthew notes that 'cxl list' documentation claims that 'cxl list -B' and
-'cxl list -P -p root' are equivalent. Which they are not:
+After adding support for emulating platform firmware established DPA
+reservations, the cxl-topology.sh [1] unit test started crashing with
+the following signature:
 
+ general protection fault, probably for non-canonical address 0x6b6b6b6b6b6b6bc3: 0000 [#1] PREEMPT SMP
+ [..]
+ RIP: 0010:to_cxl_port+0x8/0x60 [cxl_core]
+ [..]
+ Call Trace:
+  <TASK>
+  __cxl_dpa_release+0x1b/0xd0 [cxl_core]
+  cxl_dpa_release+0x1d/0x30 [cxl_core]
+  release_nodes+0x63/0x90
+  devres_release_all+0x88/0xc0
 
-$ cxl list -B
-[
-  {
-    "bus":"root0",
-    "provider":"ACPI.CXL"
-  }
-]
+...i.e. a use after free of a 'struct cxl_endpoint_decoder' object. This
+results from the ordering of init_hdm_decoder() before add_hdm_decoder()
+where, at release time, the decoder is unregistered and released before
+the DPA reservation.
 
-$ cxl list -P -p root
-[
-  {
-    "bus":"root0",
-    "provider":"ACPI.CXL",
-    "ports:root0":[
-      {
-        "port":"port1",
-        "host":"ACPI0016:00"
-      }
-    ]
-  }
-]
+Fix this by extending the life of the object until all DPA reservations
+have been released which also preserves platform decoder settings being
+settled by the time the decoder is published in sysfs (KOBJ_ADD time).
 
-Clarify that '--single' needs to be appended to '-P -p root' to make it
-equivalent to 'cxl list -B'. This is due to the behavior that listing ports
-includes all descendants of a port that matches the filter. In the case of
-'-P -p root' that results in all enabled ports.
+Note that the @len == 0 case in __cxl_dpa_reserve() is avoided in
+practice as this function is only called for committed decoders and new
+non-zero DPA allocations.
 
-$ cxl list -P -p root -S
-[
-  {
-    "bus":"root0",
-    "provider":"ACPI.CXL"
-  }
-]
-
-Reported-by: Matthew Ho <sunfishho12@gmail.com>
-Cc: Adam Manzanares <a.manzanares@samsung.com>
+Link: https://github.com/pmem/ndctl/blob/pending/test/cxl-topology.sh [1]
+Fixes: 9c57cde0dcbd ("cxl/hdm: Enumerate allocated DPA")
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
-Matthew, Adam, from today's discussion, turns out the deeper
-documentation is not needed and the host bridge being included is by
-design of showing enabled descdendants in a -P listing. Here's the
-smaller doc fixup for that.
+ drivers/cxl/core/hdm.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
- Documentation/cxl/cxl-list.txt |   20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
-index f6aba0c5c1fa..088ea700c154 100644
---- a/Documentation/cxl/cxl-list.txt
-+++ b/Documentation/cxl/cxl-list.txt
-@@ -255,19 +255,27 @@ OPTIONS
- --port=::
- 	Specify CXL Port device name(s), device id(s), and or port type
- 	names to filter the listing. The supported port type names are "root"
--	and "switch". Note that since a bus object is also a port, the following
--	two syntaxes are equivalent:
-+	and "switch". Note that a bus object is also a port, so the
-+	following two syntaxes are equivalent:
- ----
- # cxl list -B
--# cxl list -P -p root
-+# cxl list -P -p root -S
- ----
--	Additionally, endpoint objects are also ports so the following commands
--	are also equivalent.
-+	...where the '-S/--single' is required since descendant ports are always
-+	included in a port listing and '-S/--single' stops after listing the
-+	bus.  Additionally, endpoint objects are ports so the following commands
-+	are equivalent, and no '-S/--single' is required as endpoint ports are
-+	terminal:
- ----
- # cxl list -E
- # cxl list -P -p endpoint
- ----
--	By default, only 'switch' ports are listed.
-+	By default, only 'switch' ports are listed, i.e.
-+----
-+# cxl list -P
-+# cxl list -P -p switch
-+----
-+	...are equivalent.
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index ee53e8ac5c96..8143e2615957 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -178,6 +178,7 @@ static void __cxl_dpa_release(struct cxl_endpoint_decoder *cxled)
+ 		__release_region(&cxlds->dpa_res, skip_start, cxled->skip);
+ 	cxled->skip = 0;
+ 	cxled->dpa_res = NULL;
++	put_device(&cxled->cxld.dev);
+ 	port->hdm_end--;
+ }
  
- -S::
- --single::
+@@ -214,7 +215,7 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+ 	lockdep_assert_held_write(&cxl_dpa_rwsem);
+ 
+ 	if (!len)
+-		return 0;
++		goto success;
+ 
+ 	if (cxled->dpa_res) {
+ 		dev_dbg(dev, "decoder%d.%d: existing allocation %pr assigned\n",
+@@ -266,8 +267,10 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+ 			cxled->cxld.id, cxled->dpa_res);
+ 		cxled->mode = CXL_DECODER_MIXED;
+ 	}
+-	port->hdm_end++;
+ 
++success:
++	port->hdm_end++;
++	get_device(&cxled->cxld.dev);
+ 	return 0;
+ }
+ 
 
