@@ -2,122 +2,91 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7512AC04A68
-	for <linux-cxl@archiver.kernel.org>; Wed, 27 Jul 2022 22:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F95DC00144
+	for <linux-cxl@archiver.kernel.org>; Fri, 29 Jul 2022 04:02:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234392AbiG0WSF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 27 Jul 2022 18:18:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60154 "EHLO
+        id S233519AbiG2ECF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 29 Jul 2022 00:02:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236969AbiG0WRs (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 27 Jul 2022 18:17:48 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19F9DDAA
-        for <linux-cxl@vger.kernel.org>; Wed, 27 Jul 2022 15:16:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658960207; x=1690496207;
-  h=subject:from:to:cc:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=RfMJY+y5j4+BhKgteGY90p3DSKlYWAbwmsbh2Jtxu8Y=;
-  b=cKSkXJSI9wH25LyrSlQVbKPr7Np/84YjQff2SEBBHZ9yHhxs1FEaw8Nd
-   7kOPP/jc8sPjEu3aLgyYL2Wb7EV0BmFKLEVS3HCmwpHVKpzS4f9Wrstaw
-   c/e+ByzUtLPP5Y018EkybjdEv8yuhZi8OGtFK635WIzEPQ/XOWMANQ93g
-   p5vNmB0R6eThxpPZdBwb2+jhhBisRPPwKHHinCDikhy2BDa5LukGB/i9F
-   8wmk4+qi7gq0eyWCcrfkv5IOr5rfDIdg9O5cj6D7pj+bPe4gttn4wsVy1
-   /7n+uefIGoPBZPJIQkNkN4pg1iA6LeEePa5IogGOMv20DjK5poUUoWi60
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10421"; a="289129715"
-X-IronPort-AV: E=Sophos;i="5.93,196,1654585200"; 
-   d="scan'208";a="289129715"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2022 15:16:46 -0700
-X-IronPort-AV: E=Sophos;i="5.93,196,1654585200"; 
-   d="scan'208";a="628562623"
-Received: from jihernan-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.251.21.28])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2022 15:16:46 -0700
-Subject: [PATCH] cxl/hdm: Fix DPA reservation vs cxl_endpoint_decoder
- lifetime
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Date:   Wed, 27 Jul 2022 15:16:46 -0700
-Message-ID: <165896020625.3546860.12390103413706292760.stgit@dwillia2-xfh.jf.intel.com>
-User-Agent: StGit/0.18-3-g996c
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        with ESMTP id S232238AbiG2ECE (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 29 Jul 2022 00:02:04 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B8367CB69;
+        Thu, 28 Jul 2022 21:02:02 -0700 (PDT)
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26T3pjbI008744;
+        Fri, 29 Jul 2022 04:01:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : content-type :
+ content-transfer-encoding : mime-version : subject : message-id : date :
+ cc : to; s=pp1; bh=kf1wklTtygav0QkVe3wbTRtARzqP/4c1qpoJs26j9CY=;
+ b=PYUEXQcFP9FxMdTjFaA1JLziEZ3JOZyDHKI0qWIVU++wA8/f97MQEIGIiqk5ZXC0aAz+
+ bTYEnt3Grtrftburb9qB82OB/ZK70WlqNMMngmElsJ1Yg82uAAjpTJUJg6+9l++ZPHt1
+ TdDFgioJSBhBU1WoGg2X/ZYpIJNHVubY9BXZTdGpPFiNvI5/DvOqxPL75GF7WvfmQ9Cg
+ xQutjlhRCmZSGhs4pSHYH4/hY6yR3x+C95r9XotqbjBCPcsH5R19JWkejAn+fF9sw46x
+ ElwGhYpJPpubZWCciq7UD1+JfrzTAefdwOCOQoQsUq3Sy13tycWycyHCftaFJrMbEkMl 5w== 
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3hm81287xc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 29 Jul 2022 04:01:49 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 26T3pw8g031268;
+        Fri, 29 Jul 2022 04:01:46 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03fra.de.ibm.com with ESMTP id 3hg95ydbm8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 29 Jul 2022 04:01:46 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 26T41i7h25428266
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 Jul 2022 04:01:44 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2E2054C04A;
+        Fri, 29 Jul 2022 04:01:44 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4643C4C040;
+        Fri, 29 Jul 2022 04:01:43 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.46.37])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 29 Jul 2022 04:01:43 +0000 (GMT)
+From:   Sachin Sant <sachinp@linux.ibm.com>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.100.31\))
+Subject: [linux-next] Build failure drivers/cxl/cxl_pmem (powerpc)
+Message-Id: <7FF6D18F-2F85-4FFC-96B8-D1B1E8D8D622@linux.ibm.com>
+Date:   Fri, 29 Jul 2022 09:31:42 +0530
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-next@vger.kernel.org
+To:     linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>
+X-Mailer: Apple Mail (2.3696.100.31)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: wfRyDm2Vup0VjLW_upUfefaR4N9g9Ee5
+X-Proofpoint-GUID: wfRyDm2Vup0VjLW_upUfefaR4N9g9Ee5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-07-28_06,2022-07-28_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 mlxscore=0 lowpriorityscore=0 clxscore=1011 malwarescore=0
+ impostorscore=0 adultscore=0 bulkscore=0 spamscore=0 suspectscore=0
+ mlxlogscore=904 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2206140000 definitions=main-2207290014
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-After adding support for emulating platform firmware established DPA
-reservations, the cxl-topology.sh [1] unit test started crashing with
-the following signature:
+Linux-next (5.19.0-rc8-next-20220728) fails to build on powerpc with
+following error:
 
- general protection fault, probably for non-canonical address 0x6b6b6b6b6b6b6bc3: 0000 [#1] PREEMPT SMP
- [..]
- RIP: 0010:to_cxl_port+0x8/0x60 [cxl_core]
- [..]
- Call Trace:
-  <TASK>
-  __cxl_dpa_release+0x1b/0xd0 [cxl_core]
-  cxl_dpa_release+0x1d/0x30 [cxl_core]
-  release_nodes+0x63/0x90
-  devres_release_all+0x88/0xc0
+ERROR: modpost: "memory_add_physaddr_to_nid" [drivers/cxl/cxl_pmem.ko] =
+undefined!
+make[1]: *** [scripts/Makefile.modpost:128: modules-only.symvers] Error =
+1
 
-...i.e. a use after free of a 'struct cxl_endpoint_decoder' object. This
-results from the ordering of init_hdm_decoder() before add_hdm_decoder()
-where, at release time, the decoder is unregistered and released before
-the DPA reservation.
+The code in question was last changed by following patch:
 
-Fix this by extending the life of the object until all DPA reservations
-have been released which also preserves platform decoder settings being
-settled by the time the decoder is published in sysfs (KOBJ_ADD time).
+commit 04ad63f086d1
+       cxl/region: Introduce cxl_pmem_region objects
 
-Note that the @len == 0 case in __cxl_dpa_reserve() is avoided in
-practice as this function is only called for committed decoders and new
-non-zero DPA allocations.
 
-Link: https://github.com/pmem/ndctl/blob/pending/test/cxl-topology.sh [1]
-Fixes: 9c57cde0dcbd ("cxl/hdm: Enumerate allocated DPA")
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/cxl/core/hdm.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index ee53e8ac5c96..8143e2615957 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -178,6 +178,7 @@ static void __cxl_dpa_release(struct cxl_endpoint_decoder *cxled)
- 		__release_region(&cxlds->dpa_res, skip_start, cxled->skip);
- 	cxled->skip = 0;
- 	cxled->dpa_res = NULL;
-+	put_device(&cxled->cxld.dev);
- 	port->hdm_end--;
- }
- 
-@@ -214,7 +215,7 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
- 	lockdep_assert_held_write(&cxl_dpa_rwsem);
- 
- 	if (!len)
--		return 0;
-+		goto success;
- 
- 	if (cxled->dpa_res) {
- 		dev_dbg(dev, "decoder%d.%d: existing allocation %pr assigned\n",
-@@ -266,8 +267,10 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
- 			cxled->cxld.id, cxled->dpa_res);
- 		cxled->mode = CXL_DECODER_MIXED;
- 	}
--	port->hdm_end++;
- 
-+success:
-+	port->hdm_end++;
-+	get_device(&cxled->cxld.dev);
- 	return 0;
- }
- 
-
+ - Sachin=
