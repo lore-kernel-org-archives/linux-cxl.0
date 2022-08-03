@@ -2,302 +2,195 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD77C19F28
-	for <linux-cxl@archiver.kernel.org>; Wed,  3 Aug 2022 17:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A27C19F2B
+	for <linux-cxl@archiver.kernel.org>; Wed,  3 Aug 2022 21:23:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238126AbiHCRhh convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 3 Aug 2022 13:37:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45854 "EHLO
+        id S236186AbiHCVXK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 3 Aug 2022 17:23:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236811AbiHCRhf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 3 Aug 2022 13:37:35 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4578411819;
-        Wed,  3 Aug 2022 10:37:34 -0700 (PDT)
-Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Lyf7p6KTNz682vm;
-        Thu,  4 Aug 2022 01:32:38 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
+        with ESMTP id S232909AbiHCVXI (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 3 Aug 2022 17:23:08 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0D842A43E
+        for <linux-cxl@vger.kernel.org>; Wed,  3 Aug 2022 14:23:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1659561787; x=1691097787;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=rS7dnjj1oDWrAkT4LZAY8Es/0eGpBvGawDTrP3RPlbc=;
+  b=kgzDmW1Zc6x12gVcvDUrxt75hr8tVGuy5yxqwWBiZtNgttaYUqlXbgWv
+   pcL+5W5mIBKviNLX+fOcdx2/6l8Yk+pZ+uwDMzJZ/shmklT/SqCtlMAii
+   ImnfQQ7qlq00mi5RP42jlg86B+aLJWaAO2LprnHxC0zbZJRcPg6KrF9YW
+   uvHP9JXxjDPSwRhjM5K6yxcqdai8uccGbHjLy/Al/Mfuj0+S0Lqqu8mG2
+   Y39ul80ddOeuIrERFlrjyQaAx34q3B3lj0kRId6fU9Q429F091IG+LFA3
+   Z0TnJulKLQIZOhixaAZsT8UYC70EyZPIGC+dDhOwOLHLK6HzEdcZGL/q4
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10428"; a="276698071"
+X-IronPort-AV: E=Sophos;i="5.93,214,1654585200"; 
+   d="scan'208";a="276698071"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2022 14:23:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,214,1654585200"; 
+   d="scan'208";a="599774736"
+Received: from orsmsx604.amr.corp.intel.com ([10.22.229.17])
+  by orsmga007.jf.intel.com with ESMTP; 03 Aug 2022 14:23:07 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 3 Aug 2022 19:37:31 +0200
-Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 3 Aug
- 2022 18:37:31 +0100
-Date:   Wed, 3 Aug 2022 18:37:29 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-CC:     Davidlohr Bueso <dave@stgolabs.net>, <linux-cxl@vger.kernel.org>,
-        <nvdimm@lists.linux.dev>, <dan.j.williams@intel.com>,
-        <bwidawsk@kernel.org>, <ira.weiny@intel.com>,
+ 15.1.2375.28; Wed, 3 Aug 2022 14:23:06 -0700
+Received: from orsmsx609.amr.corp.intel.com (10.22.229.22) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.28; Wed, 3 Aug 2022 14:23:06 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx609.amr.corp.intel.com (10.22.229.22) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.28 via Frontend Transport; Wed, 3 Aug 2022 14:23:06 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.43) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.28; Wed, 3 Aug 2022 14:23:06 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OxgdB9kja5J8o8zeQLK6C2Z6KZnPLCf22A05rk8bxNERPWlxsTAjrC2rwzo6NNHrpawGjqkHJuXy9hMnmElfLUXy8ItzmzAgrh6SYRP2D8UiMi5hOYQw7tAJQQ+bybOlrLO1Xtbi1fqxFLWA39EL+zuETQa7prJJG5S4CKF4W7e51Tnt9/3rukeXbkyXeNf6Z3N0ONjkOc8Qw+5Zbikdtkmc1JSpMmAQLpS55tyxt8sRCzs2N+eqReO/D3T0lpsLqyEax7XyzR4a/mfjkOiwr+xAUFv6gHxHWStSjFQpztbrj/gB5ZkpY+/krrGbFZUdCSwyideqK93V13qCSMYLRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fNA0xLhHjuSQ9WIz6EPtWqxg2dI3Af2n+n0RzBoMDjY=;
+ b=CHpiRQg5eRN6lswtAQuwL2kxHPKWmRuqHic7jfRXW0twiKcjZcpcVwdm3mnaKdGw4Tr2pa5wVPqky37OfCetPrXX7HnTrG7ivzu9Udewb5Oa9KYfmCH4bIt81uE9eKRXENFnJ4/zLI5tOn768N109rb4+cKmmyLosbjHNL3V29FfM76JtI1NsQaB6t7E/ZICJd909x5z+idYfMd/r/c0NdxIMlgp32mI2VXgF471oubz5tUcblU7BT8SFwjCa7EidhhSyvn/OxyypaDR37c+lMbELuZ/XCUIqpFZReh/goP91kruyOX62zCDAl/CVQv9nNJhl4GP8XrfNNJOjiDYcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM4PR11MB6311.namprd11.prod.outlook.com (2603:10b6:8:a6::21) by
+ BN8PR11MB3732.namprd11.prod.outlook.com (2603:10b6:408:83::31) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5482.14; Wed, 3 Aug 2022 21:22:59 +0000
+Received: from DM4PR11MB6311.namprd11.prod.outlook.com
+ ([fe80::b965:e89c:548f:d058]) by DM4PR11MB6311.namprd11.prod.outlook.com
+ ([fe80::b965:e89c:548f:d058%3]) with mapi id 15.20.5504.014; Wed, 3 Aug 2022
+ 21:22:58 +0000
+Date:   Wed, 3 Aug 2022 14:22:54 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, kernel test robot <lkp@intel.com>,
         <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-        <a.manzanares@samsung.com>, <linux-arch@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH RFC 10/15] x86: add an arch helper function to
- invalidate all cache for nvdimm
-Message-ID: <20220803183729.00002183@huawei.com>
-In-Reply-To: <4bedc81d-62fa-7091-029e-a2e56b4f8f7a@intel.com>
-References: <165791918718.2491387.4203738301057301285.stgit@djiang5-desk3.ch.intel.com>
-        <165791937063.2491387.15277418618265930924.stgit@djiang5-desk3.ch.intel.com>
-        <20220718053039.5whjdcxynukildlo@offworld>
-        <4bedc81d-62fa-7091-029e-a2e56b4f8f7a@intel.com>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        <dave.jiang@intel.com>
+Subject: Re: [PATCH 3/4] cxl/region: Fix port setup uninitialized variable
+ warnings
+Message-ID: <YurnLuV5Yin5JnkK@iweiny-desk3>
+References: <165951145706.967013.3023584411011908037.stgit@dwillia2-xfh.jf.intel.com>
+ <165951147487.967013.929590444907251028.stgit@dwillia2-xfh.jf.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <165951147487.967013.929590444907251028.stgit@dwillia2-xfh.jf.intel.com>
+X-ClientProxiedBy: BY3PR10CA0018.namprd10.prod.outlook.com
+ (2603:10b6:a03:255::23) To DM4PR11MB6311.namprd11.prod.outlook.com
+ (2603:10b6:8:a6::21)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhreml740-chm.china.huawei.com (10.201.108.190) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: bcdfe865-b827-445f-d903-08da759656b0
+X-MS-TrafficTypeDiagnostic: BN8PR11MB3732:EE_
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: KwBcMyC5clXKI8fX/yMlFsMn4h7CZuTKTTPwZFI4wiQENukLs5jVH/3dytA28n1gSO6pXB5MiWqiJUx2ymiltqv7FgKulY7jCf9h5IL5Pkk2iaY0G8kgmziQYBmlU+Qr/cPRjS/oJtQwg5rcBz12TO3FQbpun5cfpGbJgFkF9DcgKtssx5u/CcO3l2S56e7Vy5tUZpHQY/Fs0eW2mAVP+Fso6JVG8aRF/tnLvQSG54VvMoijpHd1xsx/a0F8RuYB9Te35ZSJW70lXn5x5CLg6lpZEI4XGc9jtyvUg3Mif31GirDwqp/Z5XJSF4dnugIXSFEi4zKray53hpGVZavPoTZ5RimGWShq8YkcnILSVOTBm91gRwFapvNaxr2QOwa55ffPb/7GW41zYcs8cypt25vlGyitpkx4lXEF3ZthV3AfAZ1rmgniGqKhoZCHOLZvcgUh126IdGHjgyMa6pviwKjZgtEQV8+PQf6kMOz3290tWfQc9+N6aEkPP5vgztFrPPuyv8BL4kENsom/YPpVmsf41q8LxJfDvmVl3a2TaxNz2/KReLAK8EYbJh5SR10qFqWEdZUC9b6id0FuyyYWj3qauxpiLWB+h2Pf0cIBCMcJrMA/7IV66yC0axGStM12dDjilvwfhoxo/O9iSTYJRyMCPqbpsJY/JT41RyDdr0V2gybJKT4mZqp/gWZvTYhJyDrwlq2U9K+Rb8TLvPvn97qPCPE4fJc//34WsCK6qB/x3T/x676LotSd7R0rKGv7
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6311.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(7916004)(136003)(346002)(396003)(376002)(366004)(39860400002)(26005)(478600001)(38100700002)(316002)(9686003)(6512007)(186003)(6486002)(6666004)(8936002)(6862004)(83380400001)(41300700001)(6506007)(33716001)(82960400001)(2906002)(8676002)(66556008)(66946007)(86362001)(66476007)(4326008)(6636002)(5660300002)(44832011)(107886003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?FATkgECPVvPPf16qjee0BoidAvs0DwRqtSxcRtQ8LgTQC7vxs//Ga5BWQKME?=
+ =?us-ascii?Q?GpUaWFQ7hK/eZfv9pVpeSxs9qodb2ucGG69/l0x2QxHsOxnXWUNpANbbf9ke?=
+ =?us-ascii?Q?WDbMSjIrUNpgWBiH/h5LEIZQHMmHftLbjRYY9s7l5CB3DvwVUwDAFgh5jQ1N?=
+ =?us-ascii?Q?0JBvIwy1Y1PUPfh5qvsKmpbFAtGOkKnkiEnO2s6qJJtZU3SKQ7S7T4L7oMKe?=
+ =?us-ascii?Q?qLgNC7ZsPDq81JSqZVKq2GsMuo5Qf7LPQ1DQSdEEm5VUU5o6qOZOZMF5h/Nl?=
+ =?us-ascii?Q?rG7MTeoApm+pizb70UqXB3lsK4dz1OPzcXTc9+frX07RLsGYCknrcd2MM54C?=
+ =?us-ascii?Q?ehG/olLuJoSg1oyRkvkCYkRwp6RL8kbdHYBNcH+sXblgz+uUvTVyeuLoghNc?=
+ =?us-ascii?Q?c/FWr3vgXrfTZmbmiKiGZNAJnnycRRT8X5FjrnTLXJxnYprElS0a+NEVLZR6?=
+ =?us-ascii?Q?trV+amf8khiIvaE7iEKuS4+l9kp2HEZjfol75Tpu6RJscKssyiz0qY035is3?=
+ =?us-ascii?Q?iqQ0wXiWeHgcKBo7O0ZQ/jn3NejiaIRqKirL4w+dB4FRxgZ5AFL4jjHsX/kQ?=
+ =?us-ascii?Q?mNDAcdJ46CbH07glT/r2CxvbMcPtYpEcptjchnn5IuB1NLWJ9wFg4zfhWeOW?=
+ =?us-ascii?Q?ff4DmKPJPFVY3ZN7/AfGAoR4rM8wQT6qK+ZeWEp4sTfSUO/qyG9NOd7yWnB2?=
+ =?us-ascii?Q?l1bwCJdvKPr761UHwjWcgTVZw/vVYtg8n0lNcM9LfI4b4TApCGIeMKpGc2vf?=
+ =?us-ascii?Q?kD/EqTQC7Kb5E8a+ucKm60dnSQ1Lu3lqoqqVkMYhLrl4fRiVuKazOexhRLle?=
+ =?us-ascii?Q?Wdxm4USw7fnJGgTfFuzFKI6DXlxaDzo2XhPP0ThzM/qUCvCof37wGajHj2r8?=
+ =?us-ascii?Q?S7ILqqYDl+8qK72ajfyOEbi9qLGtzfIxYUGUPoysVRLLCl5zY76KAL067sUc?=
+ =?us-ascii?Q?79aUyFwdWt8ATKGsRr/KHsAsFcpE1FMc6KuED3svYmZgv5yrJ5BnXj98TraU?=
+ =?us-ascii?Q?q1vbwv7zGyOI22XZp8ogIJveGWIXZK+p9S3mDwjWPIEb2KTmvSOm+4mbtUxG?=
+ =?us-ascii?Q?SJMNBZJozUmrW201a68DjX8babQ407dLf5+OYL1cbvHkWsT3gaBlifAUeVxO?=
+ =?us-ascii?Q?Q+Z0C5EHggJMI0HmR2S55NiRehs2Huzx9PHeQ5RNoOXbqDWKlybGWyOOhdJQ?=
+ =?us-ascii?Q?yZg0ZOQj5rCxSM0k/g2GiwAaxSaL06mwUoEtIehhcY4Abjj2ZH17mkPyETRF?=
+ =?us-ascii?Q?O4/lagCFBn1v5/uhEobvNyxLsKj8XFIaBPQAxFMnVYSudgir2lDB+SXuBDGn?=
+ =?us-ascii?Q?pwixP6zq6/oLy4iZvOCF/OYhHCdGyGpTCJmOx71zd2fsB23cc6O+uvhcx8eq?=
+ =?us-ascii?Q?g4FhGcQdyM+zmClm/PNMGEAn9c7Bm7aKnntPtJk0QiqI0Rrim2susLuh1ecD?=
+ =?us-ascii?Q?rf+CKYxhxjUXlL858zFTb6x1hMVpmS5EpjGdxik4BEOTeUvZ5cro5FsYFBaL?=
+ =?us-ascii?Q?fVZRFcJ2EZVa8wuw+7z45eshITKpk7+OX8tTiTb7AIALa1EgVtMn2l9U2+lW?=
+ =?us-ascii?Q?LMKZzrMNnnkh5ZaXnRcqgTsr8Iycjt09+lz4F2mE?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: bcdfe865-b827-445f-d903-08da759656b0
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6311.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2022 21:22:58.8202
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FHticsiSINvIZUZB6S98VB+bjY48jf7cKrggTD349dOe7/oNvgKNPFllpXOX7tWyifvepH0JPX8sJt/b1FweBg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR11MB3732
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 19 Jul 2022 12:07:03 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
-
-> On 7/17/2022 10:30 PM, Davidlohr Bueso wrote:
-> > On Fri, 15 Jul 2022, Dave Jiang wrote:
-> >  
-> >> The original implementation to flush all cache after unlocking the 
-> >> nvdimm
-> >> resides in drivers/acpi/nfit/intel.c. This is a temporary stop gap until
-> >> nvdimm with security operations arrives on other archs. With support CXL
-> >> pmem supporting security operations, specifically "unlock" dimm, the 
-> >> need
-> >> for an arch supported helper function to invalidate all CPU cache for
-> >> nvdimm has arrived. Remove original implementation from acpi/nfit and 
-> >> add
-> >> cross arch support for this operation.
-> >>
-> >> Add CONFIG_ARCH_HAS_NVDIMM_INVAL_CACHE Kconfig and allow x86_64 to 
-> >> opt in
-> >> and provide the support via wbinvd_on_all_cpus() call.  
-> >
-> > So the 8.2.9.5.5 bits will also need wbinvd - and I guess arm64 will need
-> > its own semantics (iirc there was a flush all call in the past). Cc'ing
-> > Jonathan as well.
-> >
-> > Anyway, I think this call should not be defined in any place other 
-> > than core
-> > kernel headers, and not in pat/nvdimm. I was trying to make it fit in 
-> > smp.h,
-> > for example, but conviniently we might be able to hijack 
-> > flush_cache_all()
-> > for our purposes as of course neither x86-64 arm64 uses it :)
-> >
-> > And I see this as safe (wrt not adding a big hammer on unaware 
-> > drivers) as
-> > the 32bit archs that define the call are mostly contained thin their 
-> > arch/,
-> > and the few in drivers/ are still specific to those archs.
-> >
-> > Maybe something like the below.  
+On Wed, Aug 03, 2022 at 12:24:34AM -0700, Dan Williams wrote:
+> 0day robot reports:
 > 
-> Ok. I'll replace my version with yours.
+> drivers/cxl/core/region.c:1068 cxl_port_setup_targets() error: uninitialized symbol 'eiw'.
+> drivers/cxl/core/region.c:1068 cxl_port_setup_targets() error: uninitialized symbol 'peig'.
+> drivers/cxl/core/region.c:1068 cxl_port_setup_targets() error: uninitialized symbol 'peiw'.
+> 
+> ...which are all valid reports. Add debug statement to consume the,
+> albeit unexpected, errors.
+> 
+> Fixes: 27b3f8d13830 ("cxl/region: Program target lists")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  drivers/cxl/core/region.c |   17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index a073f16355ca..5c931b6eb4e7 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -1059,8 +1059,21 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+>  		parent_iw = parent_cxld->interleave_ways;
+>  	}
+>  
+> -	granularity_to_cxl(parent_ig, &peig);
+> -	ways_to_cxl(parent_iw, &peiw);
+> +	rc = granularity_to_cxl(parent_ig, &peig);
+> +	if (rc) {
+> +		dev_dbg(&cxlr->dev, "%s:%s: invalid parent granularity: %d\n",
+> +			dev_name(parent_port->uport),
+> +			dev_name(&parent_port->dev), parent_ig);
+> +		return rc;
+> +	}
+> +
+> +	rc = ways_to_cxl(parent_iw, &peiw);
+> +	if (rc) {
+> +		dev_dbg(&cxlr->dev, "%s:%s: invalid parent interleave: %d\n",
+> +			dev_name(parent_port->uport),
+> +			dev_name(&parent_port->dev), parent_iw);
+> +		return rc;
+> +	}
+>  
+>  	iw = cxl_rr->nr_targets;
+>  	ways_to_cxl(iw, &eiw);
 
-Careful with flush_cache_all(). The stub version in 
-include/asm-generic/cacheflush.h has a comment above it that would
-need updating at very least (I think).  
-Note there 'was' a flush_cache_all() for ARM64, but:
-https://patchwork.kernel.org/project/linux-arm-kernel/patch/1429521875-16893-1-git-send-email-mark.rutland@arm.com/
+Do you need to do something here to fix the potential uninitialized use of eiw?
 
-Also, I'm far from sure it will be the right choice on all CXL supporting
-architectures.
-+CC linux-arch, linux-arm and Arnd.
+Ira
 
 > 
-> 
-> >
-> > Thanks,
-> > Davidlohr
-> >
-> > ------8<----------------------------------------
-> > Subject: [PATCH] arch/x86: define flush_cache_all as global wbinvd
-> >
-> > With CXL security features, global CPU cache flushing nvdimm
-> > requirements are no longer specific to that subsystem, even
-> > beyond the scope of security_ops. CXL will need such semantics
-> > for features not necessarily limited to persistent memory.
-> >
-> > So use the flush_cache_all() for the wbinvd across all
-> > CPUs on x86. arm64, which is another platform to have CXL
-> > support can also define its own semantics here.
-> >
-> > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> > ---
-> >  arch/x86/Kconfig                  |  1 -
-> >  arch/x86/include/asm/cacheflush.h |  5 +++++
-> >  arch/x86/mm/pat/set_memory.c      |  8 --------
-> >  drivers/acpi/nfit/intel.c         | 11 ++++++-----
-> >  drivers/cxl/security.c            |  5 +++--
-> >  include/linux/libnvdimm.h         |  9 ---------
-> >  6 files changed, 14 insertions(+), 25 deletions(-)
-> >
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index 8dbe89eba639..be0b95e51df6 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -83,7 +83,6 @@ config X86
-> >     select ARCH_HAS_MEMBARRIER_SYNC_CORE
-> >     select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
-> >     select ARCH_HAS_PMEM_API        if X86_64
-> > -    select ARCH_HAS_NVDIMM_INVAL_CACHE    if X86_64
-> >     select ARCH_HAS_PTE_DEVMAP        if X86_64
-> >     select ARCH_HAS_PTE_SPECIAL
-> >     select ARCH_HAS_UACCESS_FLUSHCACHE    if X86_64
-> > diff --git a/arch/x86/include/asm/cacheflush.h 
-> > b/arch/x86/include/asm/cacheflush.h
-> > index b192d917a6d0..05c79021665d 100644
-> > --- a/arch/x86/include/asm/cacheflush.h
-> > +++ b/arch/x86/include/asm/cacheflush.h
-> > @@ -10,4 +10,9 @@
-> >
-> >  void clflush_cache_range(void *addr, unsigned int size);
-> >
-> > +#define flush_cache_all()        \
-> > +do {                    \
-> > +    wbinvd_on_all_cpus();        \
-> > +} while (0)
-> > +
-> >  #endif /* _ASM_X86_CACHEFLUSH_H */
-> > diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-> > index e4cd1286deef..1abd5438f126 100644
-> > --- a/arch/x86/mm/pat/set_memory.c
-> > +++ b/arch/x86/mm/pat/set_memory.c
-> > @@ -330,14 +330,6 @@ void arch_invalidate_pmem(void *addr, size_t size)
-> >  EXPORT_SYMBOL_GPL(arch_invalidate_pmem);
-> >  #endif
-> >
-> > -#ifdef CONFIG_ARCH_HAS_NVDIMM_INVAL_CACHE
-> > -void arch_invalidate_nvdimm_cache(void)
-> > -{
-> > -    wbinvd_on_all_cpus();
-> > -}
-> > -EXPORT_SYMBOL_GPL(arch_invalidate_nvdimm_cache);
-> > -#endif
-> > -
-> >  static void __cpa_flush_all(void *arg)
-> >  {
-> >     unsigned long cache = (unsigned long)arg;
-> > diff --git a/drivers/acpi/nfit/intel.c b/drivers/acpi/nfit/intel.c
-> > index 242d2e9203e9..1b0ecb4d67e6 100644
-> > --- a/drivers/acpi/nfit/intel.c
-> > +++ b/drivers/acpi/nfit/intel.c
-> > @@ -1,6 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >  /* Copyright(c) 2018 Intel Corporation. All rights reserved. */
-> >  #include <linux/libnvdimm.h>
-> > +#include <linux/cacheflush.h>
-> >  #include <linux/ndctl.h>
-> >  #include <linux/acpi.h>
-> >  #include <asm/smp.h>
-> > @@ -226,7 +227,7 @@ static int __maybe_unused 
-> > intel_security_unlock(struct nvdimm *nvdimm,
-> >     }
-> >
-> >     /* DIMM unlocked, invalidate all CPU caches before we read it */
-> > -    arch_invalidate_nvdimm_cache();
-> > +    flush_cache_all();
-> >
-> >     return 0;
-> >  }
-> > @@ -296,7 +297,7 @@ static int __maybe_unused 
-> > intel_security_erase(struct nvdimm *nvdimm,
-> >         return -ENOTTY;
-> >
-> >     /* flush all cache before we erase DIMM */
-> > -    arch_invalidate_nvdimm_cache();
-> > +    flush_cache_all();
-> >     memcpy(nd_cmd.cmd.passphrase, key->data,
-> >             sizeof(nd_cmd.cmd.passphrase));
-> >     rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
-> > @@ -316,7 +317,7 @@ static int __maybe_unused 
-> > intel_security_erase(struct nvdimm *nvdimm,
-> >     }
-> >
-> >     /* DIMM erased, invalidate all CPU caches before we read it */
-> > -    arch_invalidate_nvdimm_cache();
-> > +    flush_cache_all();
-> >     return 0;
-> >  }
-> >
-> > @@ -353,7 +354,7 @@ static int __maybe_unused 
-> > intel_security_query_overwrite(struct nvdimm *nvdimm)
-> >     }
-> >
-> >     /* flush all cache before we make the nvdimms available */
-> > -    arch_invalidate_nvdimm_cache();
-> > +    flush_cache_all();
-> >     return 0;
-> >  }
-> >
-> > @@ -379,7 +380,7 @@ static int __maybe_unused 
-> > intel_security_overwrite(struct nvdimm *nvdimm,
-> >         return -ENOTTY;
-> >
-> >     /* flush all cache before we erase DIMM */
-> > -    arch_invalidate_nvdimm_cache();
-> > +    flush_cache_all();
-> >     memcpy(nd_cmd.cmd.passphrase, nkey->data,
-> >             sizeof(nd_cmd.cmd.passphrase));
-> >     rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
-> > diff --git a/drivers/cxl/security.c b/drivers/cxl/security.c
-> > index 3dc04b50afaf..e2977872bf2f 100644
-> > --- a/drivers/cxl/security.c
-> > +++ b/drivers/cxl/security.c
-> > @@ -6,6 +6,7 @@
-> >  #include <linux/ndctl.h>
-> >  #include <linux/async.h>
-> >  #include <linux/slab.h>
-> > +#include <linux/cacheflush.h>
-> >  #include "cxlmem.h"
-> >  #include "cxl.h"
-> >
-> > @@ -137,7 +138,7 @@ static int cxl_pmem_security_unlock(struct nvdimm 
-> > *nvdimm,
-> >         return rc;
-> >
-> >     /* DIMM unlocked, invalidate all CPU caches before we read it */
-> > -    arch_invalidate_nvdimm_cache();
-> > +    flush_cache_all();
-> >     return 0;
-> >  }
-> >
-> > @@ -165,7 +166,7 @@ static int 
-> > cxl_pmem_security_passphrase_erase(struct nvdimm *nvdimm,
-> >         return rc;
-> >
-> >     /* DIMM erased, invalidate all CPU caches before we read it */
-> > -    arch_invalidate_nvdimm_cache();
-> > +    flush_cache_all();
-> >     return 0;
-> >  }
-> >
-> > diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-> > index 07e4e7572089..0769afb73380 100644
-> > --- a/include/linux/libnvdimm.h
-> > +++ b/include/linux/libnvdimm.h
-> > @@ -309,13 +309,4 @@ static inline void arch_invalidate_pmem(void 
-> > *addr, size_t size)
-> >  {
-> >  }
-> >  #endif
-> > -
-> > -#ifdef CONFIG_ARCH_HAS_NVDIMM_INVAL_CACHE
-> > -void arch_invalidate_nvdimm_cache(void);
-> > -#else
-> > -static inline void arch_invalidate_nvdimm_cache(void)
-> > -{
-> > -}
-> > -#endif
-> > -
-> >  #endif /* __LIBNVDIMM_H__ */
-> > -- 
-> > 2.36.1
-> >  
-> 
-
