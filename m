@@ -2,40 +2,39 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F90AC19F29
-	for <linux-cxl@archiver.kernel.org>; Wed,  3 Aug 2022 16:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B30C19F28
+	for <linux-cxl@archiver.kernel.org>; Wed,  3 Aug 2022 16:17:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233932AbiHCQA2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 3 Aug 2022 12:00:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33474 "EHLO
+        id S235948AbiHCQRl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 3 Aug 2022 12:17:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234936AbiHCQA1 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 3 Aug 2022 12:00:27 -0400
+        with ESMTP id S235741AbiHCQRk (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 3 Aug 2022 12:17:40 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B93EB30
-        for <linux-cxl@vger.kernel.org>; Wed,  3 Aug 2022 09:00:24 -0700 (PDT)
-Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Lybzj1pyPz68967;
-        Wed,  3 Aug 2022 23:55:29 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA361C13E
+        for <linux-cxl@vger.kernel.org>; Wed,  3 Aug 2022 09:17:37 -0700 (PDT)
+Received: from fraeml710-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LycNN2nsYz67yKy;
+        Thu,  4 Aug 2022 00:13:24 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
+ fraeml710-chm.china.huawei.com (10.206.15.59) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 3 Aug 2022 18:00:22 +0200
+ 15.1.2375.24; Wed, 3 Aug 2022 18:17:34 +0200
 Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 3 Aug
- 2022 17:00:22 +0100
-Date:   Wed, 3 Aug 2022 17:00:20 +0100
+ 2022 17:17:34 +0100
+Date:   Wed, 3 Aug 2022 17:17:32 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
 CC:     <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 3/5] cxl/acpi: Minimize granularity for x1 interleaves
-Message-ID: <20220803170020.00000c81@huawei.com>
-In-Reply-To: <62e95fdf9f6e2_30440294e4@dwillia2-xfh.jf.intel.com.notmuch>
+Subject: Re: [PATCH 5/5] cxl/region: Constrain region granularity scaling
+ factor
+Message-ID: <20220803171732.0000482d@huawei.com>
+In-Reply-To: <165853778028.2430596.7493880465382850752.stgit@dwillia2-xfh.jf.intel.com>
 References: <165853775181.2430596.3054032756974329979.stgit@dwillia2-xfh.jf.intel.com>
-        <165853776917.2430596.16823264262010844458.stgit@dwillia2-xfh.jf.intel.com>
-        <20220802165627.00003464@huawei.com>
-        <62e95fdf9f6e2_30440294e4@dwillia2-xfh.jf.intel.com.notmuch>
+        <165853778028.2430596.7493880465382850752.stgit@dwillia2-xfh.jf.intel.com>
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
@@ -48,90 +47,165 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 2 Aug 2022 10:33:19 -0700
+On Fri, 22 Jul 2022 17:56:20 -0700
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> Jonathan Cameron wrote:
-> > On Fri, 22 Jul 2022 17:56:09 -0700
-> > Dan Williams <dan.j.williams@intel.com> wrote:
-> >   
-> > > The kernel enforces that region granularity is >= to the top-level
-> > > interleave-granularity for the given CXL window. However, when the CXL
-> > > window interleave is x1, i.e. non-interleaved at the host bridge level,
-> > > then the specified granularity does not matter. Override the window
-> > > specified granularity to the CXL minimum so that any valid region
-> > > granularity is >= to the root granularity.
-> > > 
-> > > Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>  
-> > 
-> > Hi Dan,
-> > 
-> > Debugging exactly why this is failing (from cxl.git/preview) for my test setup...
-> > (1 hb, 8 rp, 8 direct connected devices)
-> > 
-> > If I set the interleave granularity of a region to 256, I end
-> > up with 256 for the CFMWS which is fine, then 512 for the HB which
-> > is not - EP interleave granularity is expected 256.
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/tree/drivers/cxl/core/region.c?h=preview#n1070
-> > 
-> > Calculates the eig as address_bit - eiw + 1
-> > 
-> > iw = 8
-> > eiw = 3
-> > peig = 0 (pig = 256)
-> > peiw = 0 (piw = 1)
-> > (all as expected I think...)
-> > 
-> > So address_bit = s max(peig + peiw, eiw + peig) = max(0, 3)
-> > and eig = 3 - 3 + 1 = 1 (ig = 512) which is wrong.
-> > 
-> > I'm not 100% sure on the logic behind this maths, but would expect eig = 0 as the output for this
-> > setup..  
+> Consider the scenario where a platform provides for a x2 host-bridge
+> interleave at a granularity of 256 bytes.
+Hi Dan,
+
+Terminology not clear to me.  Is this interleave across 2 host bridges?
+
+I'm lost in the explanation.
+
+> The only permitted region
+> granularities for that configuration are 256 or 512. Anything larger
+> than 512 results in unmapped capacity within a given decoder. Also, if
+> the region granularity is 512 then the interleave_ways for the region
+> must be 4 to keep the scaling matched.
 > 
-> Yeah, the "+ 1" is not required when routing from the x1 HB level. I can
-> reproduce this config with cxl_test to validate.
+> Here are the translations for the first (4) 256-byte blocks where an
+> endpoint decoder is configured for a 512-byte granularity:
+> 
+> Block[0] => HB0 => DPA: 0
+> Block[1] => HB1 => DPA: 0
+> Block[2] => HB0 => DPA: 0
+> Block[3] => HB1 => DPA: 0
+> 
+> In order for those translations to not alias the region interleave ways
+> must be 4 resulting in:
+> 
+> Block[0] => HB0 => Dev0 => DPA: 0
+> Block[1] => HB1 => Dev1 => DPA: 0
+> Block[2] => HB0 => Dev2 => DPA: 0
+> Block[3] => HB1 => Dev3 => DPA: 0
 
-Other than this off by one, with the other fixes you posted everything now works for me
-with the particular test case above.
+Block[4] => HBA0 => Dev0 => DPA: 512 ?
 
-Thanks
-
-Jonathan
+which means we are only using alternate 256 blocks of the EP.  Does that make
+sense?
 
 > 
-> > Even with this hacked, qemu address decode is landing at wrong address in the backing files (but it
-> > is at least landing in the right file!)
-> > Curiously interleave ways = 1 for the EPs which is obviously wrong. (I'm not convinced the
-> > qemu address logic is right but it'll never work with that value).  I'm struggling to figure
-> > out where we actually set the interleave ways for an EP.  
+> ...not 2, resulting in:
 > 
-> Ugh, it is not set and I think I was blinded by some successful region
-> creation results and assumed they also ran cycles to validate the data
-> consistency. My expectation is that the EP interleave_ways is set here:
+> Block[0] => HB0 => Dev0 => DPA: 0
+> Block[1] => HB1 => Dev1 => DPA: 0
+> Block[2] => HB0 => Dev0 => DPA: 0 !
+> Block[3] => HB1 => Dev1 => DPA: 0 !
+
+> 
+> Given tooling is already being built around this ABI allow for
+> granularity and ways to be set in either order and validate the
+> combination once both are set.
+> 
+> Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+
+Typo inline.
+
+> ---
+>  drivers/cxl/core/region.c |   63 +++++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 60 insertions(+), 3 deletions(-)
 > 
 > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index cf5d5811fe4c..dd4035d92041 100644
+> index 05b6212e6399..a34e537e4cb2 100644
 > --- a/drivers/cxl/core/region.c
 > +++ b/drivers/cxl/core/region.c
-> @@ -1285,6 +1285,8 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+> @@ -348,6 +348,25 @@ static ssize_t interleave_ways_store(struct device *dev,
+>  		goto out;
+>  	}
 >  
->         p->targets[pos] = cxled;
->         cxled->pos = pos;
-> +       cxled->cxld.interleave_ways = p->interleave_ways;
-> +       cxled->cxld.interleave_granularity = p->interleave_granularity;
->         p->nr_targets++;
+> +	/*
+> +	 * If region granularity has been set and xHB interleave is active,
+> +	 * validate that granularity is compatible with specified ways.
+> +	 * Otherwise allow ways to be set now and depend on
+> +	 * interleave_granularity_store() to validate this constraint.
+> +	 */
+> +	if (cxld->interleave_ways > 1 &&
+> +	    p->interleave_granularity > cxld->interleave_granularity &&
+> +	    p->interleave_granularity / cxld->interleave_granularity !=
+> +		    val / cxld->interleave_ways) {
+> +		dev_dbg(dev,
+> +			"ways scaling factor %d mismatch with granularity %d\n",
+> +			val / cxld->interleave_ways,
+> +			p->interleave_granularity /
+> +				cxld->interleave_granularity);
+> +		rc = -EINVAL;
+> +		goto out;
+> +	}
+> +
+>  	save = p->interleave_ways;
+>  	p->interleave_ways = val;
+>  	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_target_group());
+> @@ -386,7 +405,7 @@ static ssize_t interleave_granularity_store(struct device *dev,
+>  	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
+>  	struct cxl_region *cxlr = to_cxl_region(dev);
+>  	struct cxl_region_params *p = &cxlr->params;
+> -	int rc, val;
+> +	int rc, val, ways;
+>  	u16 ig;
 >  
->         if (p->nr_targets == p->interleave_ways) {
+>  	rc = kstrtoint(buf, 0, &val);
+> @@ -403,9 +422,29 @@ static ssize_t interleave_granularity_store(struct device *dev,
+>  	 * granularity less than the root interleave result in needing
+>  	 * multiple endpoints to support a single slot in the
+>  	 * interleave.
+> +	 *
+> +	 * When the root interleave ways is 1 then the root granularity is a
+> +	 * don't care.
+> +	 *
+> +	 * Limit region granularity to cxld->interleave_granularity *
+> +	 * rounddown_pow_of_two(cxld->interleave_ways) otherwise holes result in
+> +	 * the decode at each endpoint. Note that rounddown_pow_of_two()
+> +	 * accounts for x3, x6, and x9 root intereleave.
+
+interleave
+
+>  	 */
+> -	if (val < cxld->interleave_granularity)
+> -		return -EINVAL;
+> +	ways = rounddown_pow_of_two(cxld->interleave_ways);
+> +	if (ways > 1) {
+> +		if (val < cxld->interleave_granularity) {
+> +			dev_dbg(dev, "granularity %d must be >= %d\n", val,
+> +				cxld->interleave_granularity);
+> +			return -EINVAL;
+> +		}
+> +
+> +		if (val > cxld->interleave_granularity * ways) {
+> +			dev_dbg(dev, "granularity %d must be <= %d\n", val,
+> +				cxld->interleave_granularity * ways);
+> +			return -EINVAL;
+> +		}
+> +	}
+>  
+>  	rc = down_write_killable(&cxl_region_rwsem);
+>  	if (rc)
+> @@ -415,6 +454,24 @@ static ssize_t interleave_granularity_store(struct device *dev,
+>  		goto out;
+>  	}
+>  
+> +	/*
+> +	 * If region ways has been set and xHB interleave is active, validate
+> +	 * that ways is compatible with specified granularity.  Otherwise allow
+> +	 * granularity to be set now and depend on interleave_ways_store() to
+> +	 * validate this constraint.
+> +	 */
+> +	if (cxld->interleave_ways > 1 && p->interleave_ways &&
+> +	    val > cxld->interleave_granularity &&
+> +	    p->interleave_ways / cxld->interleave_ways !=
+> +		    val / cxld->interleave_granularity) {
+> +		dev_dbg(dev,
+> +			"granularity scaling factor %d mismatch with ways %d\n",
+> +			val / cxld->interleave_granularity,
+> +			p->interleave_ways / cxld->interleave_ways);
+> +		rc = -EINVAL;
+> +		goto out;
+> +	}
+> +
+>  	p->interleave_granularity = val;
+>  out:
+>  	up_write(&cxl_region_rwsem);
 > 
 > 
-> > Also I'm not having much luck requesting a larger interleave granularity for the region (desirable perhaps
-> > because the devices give better performance with 1024 byte sequential reads)
-> > 
-> > Clearly going to be one of those bugs all the way down days. 
-> >   
-> 
-> Yes, the hunt continues, but I think the driver has some large ones the
-> squash first.
 
