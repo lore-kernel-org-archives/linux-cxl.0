@@ -2,42 +2,42 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45803C19F2B
-	for <linux-cxl@archiver.kernel.org>; Thu,  4 Aug 2022 09:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9759C19F2A
+	for <linux-cxl@archiver.kernel.org>; Thu,  4 Aug 2022 13:19:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229949AbiHDJcW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 4 Aug 2022 05:32:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53496 "EHLO
+        id S239625AbiHDNTK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 4 Aug 2022 09:19:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229720AbiHDJcV (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 4 Aug 2022 05:32:21 -0400
+        with ESMTP id S231807AbiHDNTJ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 4 Aug 2022 09:19:09 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22C0F3DF39
-        for <linux-cxl@vger.kernel.org>; Thu,  4 Aug 2022 02:32:20 -0700 (PDT)
-Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Lz3NG2b3Cz67ydF;
-        Thu,  4 Aug 2022 17:29:50 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C4F4D6D
+        for <linux-cxl@vger.kernel.org>; Thu,  4 Aug 2022 06:19:06 -0700 (PDT)
+Received: from fraeml734-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Lz8Mt3WyGz67HRc;
+        Thu,  4 Aug 2022 21:14:50 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
+ fraeml734-chm.china.huawei.com (10.206.15.215) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 4 Aug 2022 11:32:17 +0200
+ 15.1.2375.24; Thu, 4 Aug 2022 15:19:03 +0200
 Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 4 Aug
- 2022 10:32:17 +0100
-Date:   Thu, 4 Aug 2022 10:32:16 +0100
+ 2022 14:19:02 +0100
+Date:   Thu, 4 Aug 2022 14:19:01 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 3/5] cxl/acpi: Minimize granularity for x1 interleaves
-Message-ID: <20220804103216.000014a6@huawei.com>
-In-Reply-To: <62eaade383939_881482941d@dwillia2-xfh.jf.intel.com.notmuch>
-References: <165853775181.2430596.3054032756974329979.stgit@dwillia2-xfh.jf.intel.com>
-        <165853776917.2430596.16823264262010844458.stgit@dwillia2-xfh.jf.intel.com>
-        <20220802165627.00003464@huawei.com>
-        <62e95fdf9f6e2_30440294e4@dwillia2-xfh.jf.intel.com.notmuch>
-        <20220803170020.00000c81@huawei.com>
-        <62eaade383939_881482941d@dwillia2-xfh.jf.intel.com.notmuch>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+        <dan.j.williams@intel.com>, <bwidawsk@kernel.org>,
+        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+        <alison.schofield@intel.com>, <dave@stgolabs.net>
+Subject: Re: [PATCH RFC 11/15] cxl/pmem: Add "Unlock" security command
+ support
+Message-ID: <20220804141901.00005a2a@huawei.com>
+In-Reply-To: <165791937639.2491387.6281906434880014077.stgit@djiang5-desk3.ch.intel.com>
+References: <165791918718.2491387.4203738301057301285.stgit@djiang5-desk3.ch.intel.com>
+        <165791937639.2491387.6281906434880014077.stgit@djiang5-desk3.ch.intel.com>
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
@@ -50,73 +50,91 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 3 Aug 2022 10:18:27 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Fri, 15 Jul 2022 14:09:36 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-> Jonathan Cameron wrote:
-> > On Tue, 2 Aug 2022 10:33:19 -0700
-> > Dan Williams <dan.j.williams@intel.com> wrote:
-> >   
-> > > Jonathan Cameron wrote:  
-> > > > On Fri, 22 Jul 2022 17:56:09 -0700
-> > > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > > >     
-> > > > > The kernel enforces that region granularity is >= to the top-level
-> > > > > interleave-granularity for the given CXL window. However, when the CXL
-> > > > > window interleave is x1, i.e. non-interleaved at the host bridge level,
-> > > > > then the specified granularity does not matter. Override the window
-> > > > > specified granularity to the CXL minimum so that any valid region
-> > > > > granularity is >= to the root granularity.
-> > > > > 
-> > > > > Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>    
-> > > > 
-> > > > Hi Dan,
-> > > > 
-> > > > Debugging exactly why this is failing (from cxl.git/preview) for my test setup...
-> > > > (1 hb, 8 rp, 8 direct connected devices)
-> > > > 
-> > > > If I set the interleave granularity of a region to 256, I end
-> > > > up with 256 for the CFMWS which is fine, then 512 for the HB which
-> > > > is not - EP interleave granularity is expected 256.
-> > > > 
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/tree/drivers/cxl/core/region.c?h=preview#n1070
-> > > > 
-> > > > Calculates the eig as address_bit - eiw + 1
-> > > > 
-> > > > iw = 8
-> > > > eiw = 3
-> > > > peig = 0 (pig = 256)
-> > > > peiw = 0 (piw = 1)
-> > > > (all as expected I think...)
-> > > > 
-> > > > So address_bit = s max(peig + peiw, eiw + peig) = max(0, 3)
-> > > > and eig = 3 - 3 + 1 = 1 (ig = 512) which is wrong.
-> > > > 
-> > > > I'm not 100% sure on the logic behind this maths, but would expect eig = 0 as the output for this
-> > > > setup..    
-> > > 
-> > > Yeah, the "+ 1" is not required when routing from the x1 HB level. I can
-> > > reproduce this config with cxl_test to validate.  
-> > 
-> > Other than this off by one, with the other fixes you posted everything now works for me
-> > with the particular test case above.  
+> Create callback function to support the nvdimm_security_ops() ->unlock()
+> callback. Translate the operation to send "Unlock" security command for CXL
+> mem device.
 > 
-> Oh, you are hitting this path in your test? I misread the condition when
-> this triggers. It should be skipping the granularity increment when the
-> port's parent interleave is x1. I.e. in this case with devices directly
-> connected to a host-bridge where the host-bridge is not interleaved then
-> there is no need for an extra address bit to route the decode.
+> When the mem device is unlocked, arch_invalidate_nvdimm_cache() is called
+> in order to invalidate all CPU caches before attempting to access the mem
+> device.
 > 
+> See CXL 2.0 spec section 8.2.9.5.6.4 for reference.
+> 
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-I haven't chased down why, but definitely hitting it with resulting routing
-to wrong device. 
-Current test when setting interleave gran for the decoder1.0 (the HB in this case)
-is on the ways of decoder 1.0 which is 8.
-Maybe the test should be on the parent_rr nr_targets? (or parent_iw should work I think)
-That makes things 'work' for this particular test, but need to test on a wider range
-of setups.
+Hi Dave,
+
+One trivial thing inline.
+
+Thanks,
 
 Jonathan
 
+> ---
+>  drivers/cxl/cxlmem.h   |    1 +
+>  drivers/cxl/security.c |   21 +++++++++++++++++++++
+>  2 files changed, 22 insertions(+)
+> 
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index ced85be291f3..ae8ccd484491 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -253,6 +253,7 @@ enum cxl_opcode {
+>  	CXL_MBOX_OP_GET_SECURITY_STATE	= 0x4500,
+>  	CXL_MBOX_OP_SET_PASSPHRASE	= 0x4501,
+>  	CXL_MBOX_OP_DISABLE_PASSPHRASE	= 0x4502,
+> +	CXL_MBOX_OP_UNLOCK		= 0x4503,
+>  	CXL_MBOX_OP_FREEZE_SECURITY	= 0x4504,
+>  	CXL_MBOX_OP_MAX			= 0x10000
+>  };
+> diff --git a/drivers/cxl/security.c b/drivers/cxl/security.c
+> index 6399266a5908..d15520f280f0 100644
+> --- a/drivers/cxl/security.c
+> +++ b/drivers/cxl/security.c
+> @@ -114,11 +114,32 @@ static int cxl_pmem_security_freeze(struct nvdimm *nvdimm)
+>  	return cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_FREEZE_SECURITY, NULL, 0, NULL, 0);
+>  }
+>  
+> +static int cxl_pmem_security_unlock(struct nvdimm *nvdimm,
+> +				    const struct nvdimm_key_data *key_data)
+> +{
+> +	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
+> +	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
+> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> +	u8 pass[NVDIMM_PASSPHRASE_LEN];
+> +	int rc;
+> +
+> +	memcpy(pass, key_data->data, NVDIMM_PASSPHRASE_LEN);
+
+Why do we need a local copy?  I'd have thought we could just
+pass keydata->data in as the payload for cxl_mbox_send_cmd()
+There might be some value in making it easier to check by
+having a structure defined for this payload (obviously trivial)
+but given we are using an array of length defined by a non CXL
+define, I'm not sure there is any point in the copy.
+
+> +	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_UNLOCK,
+> +			       pass, NVDIMM_PASSPHRASE_LEN, NULL, 0);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	/* DIMM unlocked, invalidate all CPU caches before we read it */
+> +	arch_invalidate_nvdimm_cache();
+> +	return 0;
+> +}
+> +
+>  static const struct nvdimm_security_ops __cxl_security_ops = {
+>  	.get_flags = cxl_pmem_get_security_flags,
+>  	.change_key = cxl_pmem_security_change_key,
+>  	.disable = cxl_pmem_security_disable,
+>  	.freeze = cxl_pmem_security_freeze,
+> +	.unlock = cxl_pmem_security_unlock,
+>  };
+>  
+>  const struct nvdimm_security_ops *cxl_security_ops = &__cxl_security_ops;
+> 
+> 
 
