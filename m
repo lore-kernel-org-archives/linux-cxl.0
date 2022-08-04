@@ -2,42 +2,46 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9759C19F2A
-	for <linux-cxl@archiver.kernel.org>; Thu,  4 Aug 2022 13:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AFEAC3F6B0
+	for <linux-cxl@archiver.kernel.org>; Thu,  4 Aug 2022 13:33:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239625AbiHDNTK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 4 Aug 2022 09:19:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54642 "EHLO
+        id S239918AbiHDNdB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 4 Aug 2022 09:33:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231807AbiHDNTJ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 4 Aug 2022 09:19:09 -0400
+        with ESMTP id S239889AbiHDNcq (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 4 Aug 2022 09:32:46 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C4F4D6D
-        for <linux-cxl@vger.kernel.org>; Thu,  4 Aug 2022 06:19:06 -0700 (PDT)
-Received: from fraeml734-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Lz8Mt3WyGz67HRc;
-        Thu,  4 Aug 2022 21:14:50 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 710CC3E74D;
+        Thu,  4 Aug 2022 06:32:45 -0700 (PDT)
+Received: from fraeml739-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Lz8gd6dbpz67KSZ;
+        Thu,  4 Aug 2022 21:28:29 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml734-chm.china.huawei.com (10.206.15.215) with Microsoft SMTP Server
+ fraeml739-chm.china.huawei.com (10.206.15.220) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 4 Aug 2022 15:19:03 +0200
+ 15.1.2375.24; Thu, 4 Aug 2022 15:32:43 +0200
 Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 4 Aug
- 2022 14:19:02 +0100
-Date:   Thu, 4 Aug 2022 14:19:01 +0100
+ 2022 14:32:42 +0100
+Date:   Thu, 4 Aug 2022 14:32:41 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-        <dan.j.williams@intel.com>, <bwidawsk@kernel.org>,
-        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-        <alison.schofield@intel.com>, <dave@stgolabs.net>
-Subject: Re: [PATCH RFC 11/15] cxl/pmem: Add "Unlock" security command
- support
-Message-ID: <20220804141901.00005a2a@huawei.com>
-In-Reply-To: <165791937639.2491387.6281906434880014077.stgit@djiang5-desk3.ch.intel.com>
-References: <165791918718.2491387.4203738301057301285.stgit@djiang5-desk3.ch.intel.com>
-        <165791937639.2491387.6281906434880014077.stgit@djiang5-desk3.ch.intel.com>
+To:     Bagas Sanjaya <bagasdotme@gmail.com>
+CC:     <linux-doc@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-next@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Ben Widawsky" <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH 3/3] Documentation: cxl: remove dangling kernel-doc
+ reference
+Message-ID: <20220804143241.000065d7@huawei.com>
+In-Reply-To: <20220804075448.98241-4-bagasdotme@gmail.com>
+References: <20220804075448.98241-1-bagasdotme@gmail.com>
+        <20220804075448.98241-4-bagasdotme@gmail.com>
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
@@ -50,91 +54,40 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 15 Jul 2022 14:09:36 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Thu,  4 Aug 2022 14:54:48 +0700
+Bagas Sanjaya <bagasdotme@gmail.com> wrote:
 
-> Create callback function to support the nvdimm_security_ops() ->unlock()
-> callback. Translate the operation to send "Unlock" security command for CXL
-> mem device.
+> Sphinx reported kernel-doc failure warning, pointing to non-existent
+> drivers/cxl/region.h (which doesn't also exist throughout repo history):
 > 
-> When the mem device is unlocked, arch_invalidate_nvdimm_cache() is called
-> in order to invalidate all CPU caches before attempting to access the mem
-> device.
+> WARNING: kernel-doc './scripts/kernel-doc -rst -enable-lineno -sphinx-version 2.4.4 -no-doc-sections ./drivers/cxl/region.h' failed with return code 1
 > 
-> See CXL 2.0 spec section 8.2.9.5.6.4 for reference.
+> Above cause error message to be displayed on htmldocs output.
 > 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> Delete the reference.
+> 
+> Fixes: 779dd20cfb56c5 ("cxl/region: Add region creation support")
+> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+Ah. That went in some refactoring along the way.
 
-Hi Dave,
-
-One trivial thing inline.
-
-Thanks,
-
-Jonathan
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 > ---
->  drivers/cxl/cxlmem.h   |    1 +
->  drivers/cxl/security.c |   21 +++++++++++++++++++++
->  2 files changed, 22 insertions(+)
+>  Documentation/driver-api/cxl/memory-devices.rst | 3 ---
+>  1 file changed, 3 deletions(-)
 > 
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index ced85be291f3..ae8ccd484491 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -253,6 +253,7 @@ enum cxl_opcode {
->  	CXL_MBOX_OP_GET_SECURITY_STATE	= 0x4500,
->  	CXL_MBOX_OP_SET_PASSPHRASE	= 0x4501,
->  	CXL_MBOX_OP_DISABLE_PASSPHRASE	= 0x4502,
-> +	CXL_MBOX_OP_UNLOCK		= 0x4503,
->  	CXL_MBOX_OP_FREEZE_SECURITY	= 0x4504,
->  	CXL_MBOX_OP_MAX			= 0x10000
->  };
-> diff --git a/drivers/cxl/security.c b/drivers/cxl/security.c
-> index 6399266a5908..d15520f280f0 100644
-> --- a/drivers/cxl/security.c
-> +++ b/drivers/cxl/security.c
-> @@ -114,11 +114,32 @@ static int cxl_pmem_security_freeze(struct nvdimm *nvdimm)
->  	return cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_FREEZE_SECURITY, NULL, 0, NULL, 0);
->  }
+> diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
+> index 66ddc58a21b159..5149ecdc53c796 100644
+> --- a/Documentation/driver-api/cxl/memory-devices.rst
+> +++ b/Documentation/driver-api/cxl/memory-devices.rst
+> @@ -364,9 +364,6 @@ CXL Core
 >  
-> +static int cxl_pmem_security_unlock(struct nvdimm *nvdimm,
-> +				    const struct nvdimm_key_data *key_data)
-> +{
-> +	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
-> +	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	u8 pass[NVDIMM_PASSPHRASE_LEN];
-> +	int rc;
-> +
-> +	memcpy(pass, key_data->data, NVDIMM_PASSPHRASE_LEN);
-
-Why do we need a local copy?  I'd have thought we could just
-pass keydata->data in as the payload for cxl_mbox_send_cmd()
-There might be some value in making it easier to check by
-having a structure defined for this payload (obviously trivial)
-but given we are using an array of length defined by a non CXL
-define, I'm not sure there is any point in the copy.
-
-> +	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_UNLOCK,
-> +			       pass, NVDIMM_PASSPHRASE_LEN, NULL, 0);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	/* DIMM unlocked, invalidate all CPU caches before we read it */
-> +	arch_invalidate_nvdimm_cache();
-> +	return 0;
-> +}
-> +
->  static const struct nvdimm_security_ops __cxl_security_ops = {
->  	.get_flags = cxl_pmem_get_security_flags,
->  	.change_key = cxl_pmem_security_change_key,
->  	.disable = cxl_pmem_security_disable,
->  	.freeze = cxl_pmem_security_freeze,
-> +	.unlock = cxl_pmem_security_unlock,
->  };
+>  CXL Regions
+>  -----------
+> -.. kernel-doc:: drivers/cxl/region.h
+> -   :identifiers:
+> -
+>  .. kernel-doc:: drivers/cxl/core/region.c
+>     :doc: cxl core region
 >  
->  const struct nvdimm_security_ops *cxl_security_ops = &__cxl_security_ops;
-> 
-> 
 
