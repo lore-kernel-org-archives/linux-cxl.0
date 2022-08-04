@@ -2,150 +2,104 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F56C00144
-	for <linux-cxl@archiver.kernel.org>; Thu,  4 Aug 2022 04:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FAAC19F2D
+	for <linux-cxl@archiver.kernel.org>; Thu,  4 Aug 2022 07:55:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231843AbiHDExV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 4 Aug 2022 00:53:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47718 "EHLO
+        id S239284AbiHDHzR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 4 Aug 2022 03:55:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229824AbiHDExU (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 4 Aug 2022 00:53:20 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D382186FC;
-        Wed,  3 Aug 2022 21:53:19 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 9E3204C1B95;
-        Thu,  4 Aug 2022 04:53:18 +0000 (UTC)
-Received: from pdx1-sub0-mail-a254.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 22D024C198D;
-        Thu,  4 Aug 2022 04:53:18 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1659588798; a=rsa-sha256;
-        cv=none;
-        b=UzJ89vCEHfXrGxb4SG4j907x9I3S1kbJQGeF6ZdG/Qg4WkRaYdk0uXuFclrZY7Nv2Sgkpf
-        GvDy6VLDyRNxrpIto6xc2ywpKXeiWSbGzGOayqvrUZvNnwc3E+esJMjShq6UAS+JeY1Yiu
-        awpMnOfFiQGT4LuVB8OA6L8f9yGHSDJCmUIJRROT07i5bH7PRmwuSI2hXSQLn8cpN9Mm3y
-        Tt7O166p00csnFZcbBFTzUMXQHBgC99fwJPfB6f8JcXPR5eyG7VpOu5FXty+bxh2GTOWzm
-        1Z5GZCxQHACtkSCoyaJorWGXs9NuOsUEp+chSH9tTUGCs5ljx9Cbch7vx3mrsA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1659588798;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=CR0IilEjTmSBglJdVE7uE6gZjyN8Yc4w1VrpHAB9SKI=;
-        b=RUFzHgnn3guUieZkusMS6aeTqOrk+j6mRtLgiUOnhOxLmz917/MHkEFkRxmHGoZPnQNgTK
-        hmC2q6B/AuZS6OqjeFYInWGXVpGC3VQjvcIhhJqp2Xy6LfLhQx67j5m0R5ecN1umN9sF6Y
-        eKmkQG1bYOAO+OL30jTnHlWXJyvBlsuzVvOz3noNjpR4JSej34FUdXTr/T693e+PyVx+dW
-        QekXuKsYaMdZPpnaPShVAIwz1Xh3ls+kj9mR8WY4j5SgiL+As5acKrsijQKZoSqZpA+lJr
-        +44WwUPuQRqXOWbaFIUXLbisL3tXCZESX6Q2gtdk+Iy15fFn9ZHXgkbrnllL3w==
-ARC-Authentication-Results: i=1;
-        rspamd-7c478d8c66-lg758;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Absorbed-Unite: 5769d0a00ad3aa03_1659588798489_2908946806
-X-MC-Loop-Signature: 1659588798489:3535241750
-X-MC-Ingress-Time: 1659588798489
-Received: from pdx1-sub0-mail-a254.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.110.28.208 (trex/6.7.1);
-        Thu, 04 Aug 2022 04:53:18 +0000
-Received: from offworld (unknown [104.36.25.245])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a254.dreamhost.com (Postfix) with ESMTPSA id 4LyxF91s2Xz83;
-        Wed,  3 Aug 2022 21:53:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1659588797;
-        bh=CR0IilEjTmSBglJdVE7uE6gZjyN8Yc4w1VrpHAB9SKI=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=Lfu43C+ook7NEcJrRA+sgZLN8yzafbMbSLrolenUTCPndBEiEaGUuYX+GXis54iuz
-         2JovFM8Nyo4z527M5I9bk5atJQDtMfBCccdUsms32ysCCZ1aJ6qRJp1NgJRiYUp2KX
-         7xWLMt7Zc8M7wJy6ouuDSDfaIIUb516U3oHaARfEt17X5s2WVF7aQMjx03nVLxx7O1
-         KG1piapNDZ5MOr5pgI8jdN4uOC+9C/TxxkFDnddvtt//dsXNdwY0WpOfZtfAwsddbE
-         wXPuRkfb4nO9yqfo9ekm3zsrHpSKbnwaEXLyApVwrtzjgXMxrDBll04xg31jM7/6nN
-         /KKG1mJ7KnjIQ==
-Date:   Wed, 3 Aug 2022 21:36:19 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     linux-cxl@vger.kernel.org
-Cc:     dan.j.williams@intel.com, bwidawsk@kernel.org,
-        Jonathan.Cameron@huawei.com, ira.weiny@intel.com,
-        alison.schofield@intel.com, vishal.l.verma@intel.com,
-        a.manzanares@samsung.com, mcgrof@kernel.org,
-        linux-kernel@vger.kernel.org, dave.jiang@intel.com
-Subject: Re: [RFC PATCH 0/2] cxl: BG operations and device sanitation
-Message-ID: <20220804043619.ko5luhppbvcoh4s5@offworld>
-References: <20220804045029.2905056-1-dave@stgolabs.net>
+        with ESMTP id S239339AbiHDHzN (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 4 Aug 2022 03:55:13 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8178339C;
+        Thu,  4 Aug 2022 00:55:11 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id z187so8753284pfb.12;
+        Thu, 04 Aug 2022 00:55:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc;
+        bh=6Eo/VaBVywfJU01xr3jTASOO7w/sIGuJ4/Z7ZpDiOj8=;
+        b=UOuSg6wVrzSTjFGbuEtNUrcrCCr8bp5vtWloOxj3p7apkWak/NzWCtNt8COSPx1Y/7
+         MnPYwKzpsLA2cMnSHnkMT4MInV3QRwdrqwKuXAPB1YiH9ZwqT1b52ClCH8473URKpDKI
+         ZocDvO0ijdmPojnr9IhHTMvn8CL7gPMtdm/hxWllg6InGrRbGIhg8wiIFuHkulGbKsht
+         HtEfPK7UJJntsGyqeNAfUIx4hk+80x++HfpnieSfDQcbKOJO1niOXtphoniuQDeiWKpx
+         clh1+bj+60gcOUcuFQxIu32PqZ+JZeQI9wOsGJiRxPihIiHW+plR07i/MxhnS8m+rjm3
+         smHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
+        bh=6Eo/VaBVywfJU01xr3jTASOO7w/sIGuJ4/Z7ZpDiOj8=;
+        b=mEoPbOdsdVyjwRHKnE5K5yDRe9/A9FnLi1IxgHkp2p2TFTFq9paCC4O54mQpiFZ7VI
+         GMR08rXarsSzleFap+s0/2YCrU6G5k9UG1v6Kz9IFcDNHfbG0OrqYE2za4doyaYpWHOV
+         U1++0q+qamkEL7FWJli0oQfWfWcmzheEy7HxV8pmmvA6PNLL7ZHOGxHmXOIri9aPWZm2
+         OUuOx0WliO5KsgohTj3GcEQ+pyjdRkx2srWf0vpaTJXC9e8skw4Om1FkBFZTPbS6bGke
+         uvHOamlZa5MI/KwKucqJRxH+Yn9UKn7lhIed7Q9es6ByI/R8z+SPRJLLIZSnzf1DQhO3
+         GIiQ==
+X-Gm-Message-State: ACgBeo160zyhVcnwlCliY+8ffcnqooolQIWh8nSOR10cTp0WrOoQjj/e
+        blpMOO95jSddEDHuGntrsH0=
+X-Google-Smtp-Source: AA6agR770qyF7a49wJ+cWCkfQ9hc0Fq6/vp81cI+AIUFFu1uqEethgrcKYfBPmQKYywU1Nzn80zv2A==
+X-Received: by 2002:a63:6a89:0:b0:419:d863:321a with SMTP id f131-20020a636a89000000b00419d863321amr675348pgc.9.1659599710935;
+        Thu, 04 Aug 2022 00:55:10 -0700 (PDT)
+Received: from debian.me (subs02-180-214-232-23.three.co.id. [180.214.232.23])
+        by smtp.gmail.com with ESMTPSA id x13-20020a63b20d000000b0041a67913d5bsm506798pge.71.2022.08.04.00.55.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Aug 2022 00:55:10 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+        id 2EF99103A34; Thu,  4 Aug 2022 14:55:05 +0700 (WIB)
+From:   Bagas Sanjaya <bagasdotme@gmail.com>
+To:     linux-doc@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-next@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: [PATCH 2/3] cxl/region: describe targets and nr_targets members of cxl_region_params
+Date:   Thu,  4 Aug 2022 14:54:47 +0700
+Message-Id: <20220804075448.98241-3-bagasdotme@gmail.com>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20220804075448.98241-1-bagasdotme@gmail.com>
+References: <20220804075448.98241-1-bagasdotme@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20220804045029.2905056-1-dave@stgolabs.net>
-User-Agent: NeoMutt/20220429
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1125; i=bagasdotme@gmail.com; h=from:subject; bh=4WRYALTrUN77SAeI/OXcYTvEOCNaChDbrptGKeU1dXg=; b=owGbwMvMwCn83935mHOB8QHG02pJDEmvq93/rj/PwOkZ7d1176nTuhChrgTHzdt3FQra7eY5sWLN sc13O6ayMAhzMsiKKbK8qdwtxvFh5dH+4O+ZMHNYmUCGMHBxCsBEvk1lbFgsUTaV34dZYM6sl3/PJK WvUJ8Y+5Tvk8lzgbsbdnUnRPvqzLykX3no2Kx9SwRCZNr5bjI29DKlTN3W8jXynnjmUb19+btnb4v8 P3meSS1zRWjUb7PCqbOar6Rv4Fgv475g+/GYl4qdAA==
+X-Developer-Key: i=bagasdotme@gmail.com; a=openpgp; fpr=EC79BB1608F0A9C58F53F769FF4743C6437033C0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-*sigh* Cc Dave.
+Sphinx reported undescribed parameters in cxl_region_params struct:
 
-On Wed, 03 Aug 2022, Davidlohr Bueso wrote:
+./drivers/cxl/cxl.h:376: warning: Function parameter or member 'targets' not described in 'cxl_region_params'
+./drivers/cxl/cxl.h:376: warning: Function parameter or member 'nr_targets' not described in 'cxl_region_params'
 
->Hello,
->
->The following is a followup to some of the discussions around CXL device security
->and sanitation[0, 1]. It is marked as RFC mostly to see if the background handling
->will satisfy all users, not just sanitize/overwrite. For example there has been ideas
->to avoid command hogging the device and/or interleaving scan media regions instead
->of all in one, etc. More details in each patch, but:
->
->Patch 1 adds the required background cmd handling bits. While this is currently
->only polling, it would be good to know if there are any fundamental blockers for
->supporting irqs (beyond just background ops) between PCIe and CXL. For example,
->are there any requirements/difficulties that is not the standard MSI/MSI-X PCI
->vector allocation + devm_request_irq()? I have not looked at this into details but
->it the topic has come up in the past as delicate', iirc.
->
->Patch 2 implements the sanitation commands (overwrite and secure erase).
->
->As for testing, while I used the mock device to test the secure erase command, I
->ended up hacking up a prototype[2] for qemu to support overwrite and bg commands.
->So while the some of the paths this series introduces have been exercised, there
->is of course a lot more to do.
->
->Applies against Dave's cxl-security branch[2] which deals with the pmem-only bits.
->
->Thanks,
->Davidlohr
->
->[0]: https://lore.kernel.org/all/20220708172455.gi37dh3od4w5lqrd@offworld/
->[1]: https://lore.kernel.org/all/165791918718.2491387.4203738301057301285.stgit@djiang5-desk3.ch.intel.com/
->[2]: https://github.com/davidlohr/qemu/commit/64a93a5b824b59d3b547f06f7fbb1269fb4790ce
->[3]: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=cxl-security
->
->Davidlohr Bueso (2):
->  cxl/mbox: Add background operation handling machinery
->  cxl/mem: Support sanitation commands
->
-> Documentation/ABI/testing/sysfs-bus-cxl |  19 ++
-> drivers/cxl/core/core.h                 |   2 +-
-> drivers/cxl/core/mbox.c                 | 304 +++++++++++++++++++++++-
-> drivers/cxl/core/memdev.c               |  58 +++++
-> drivers/cxl/core/port.c                 |   9 +-
-> drivers/cxl/cxl.h                       |   8 +
-> drivers/cxl/cxlmem.h                    |  65 ++++-
-> drivers/cxl/pci.c                       |   3 +-
-> drivers/cxl/pmem.c                      |   5 +-
-> drivers/cxl/security.c                  |  13 +-
-> include/uapi/linux/cxl_mem.h            |   2 +
-> 11 files changed, 461 insertions(+), 27 deletions(-)
->
->--
->2.37.1
->
+Describe these members.
+
+Fixes: dd5ba0ebbdc414 ("cxl/region: Add a 'uuid' attribute")
+Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+---
+ drivers/cxl/cxl.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 75674400cc8d41..65aaf15aa17e29 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -362,6 +362,8 @@ enum cxl_config_state {
+  * @interleave_ways: number of endpoints in the region
+  * @interleave_granularity: capacity each endpoint contributes to a stripe
+  * @res: allocated iomem capacity for this region
++ * @targets: active ordered targets in current decoder configuration
++ * @nr_targets: number of targets
+  *
+  * State transitions are protected by the cxl_region_rwsem
+  */
+-- 
+An old man doll... just what I always wanted! - Clara
+
