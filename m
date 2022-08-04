@@ -2,123 +2,112 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B862C19F2A
-	for <linux-cxl@archiver.kernel.org>; Thu,  4 Aug 2022 18:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79830C19F21
+	for <linux-cxl@archiver.kernel.org>; Thu,  4 Aug 2022 20:24:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235499AbiHDSNb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 4 Aug 2022 14:13:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49362 "EHLO
+        id S239062AbiHDUYQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 4 Aug 2022 16:24:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232643AbiHDSNb (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 4 Aug 2022 14:13:31 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4467B4E860;
-        Thu,  4 Aug 2022 11:13:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1659636810; x=1691172810;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5iohXJB+yV4kt8wNo0jkqP6WbWM7sMLvLkA/LUccLFg=;
-  b=Wc83thVFd3rqV5OmPoGxwcRQX6Lt+sWn0+eoLVa33XYxCnvfg2NDoBTt
-   nWCmv0Ey6/bAqXGwyfopdvl2/r8bO+CBydRFSyKct7LSBfWMenH73T4/5
-   sGBuoRflt3DXIDp2n4+T84FhWyOv90XhdS33zXRdyp9wXDGX6vZd0woxl
-   Vz40TbPMHMfSB8BnanmGtmMxbMfiG5oqqWuQjqTRjRId26B9gCNIAPCLs
-   4h5sxcCk8tv/d7/2pBw3cbSHnkYZvl89jekAh70E4OyB7LAHuDuchQLoX
-   QdmC8brBV5VcBTA95yWcQvnaUUdE4VqRxOGlf5D+BvlWK3a9DtNLqWk3W
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10429"; a="270391801"
-X-IronPort-AV: E=Sophos;i="5.93,216,1654585200"; 
-   d="scan'208";a="270391801"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2022 11:13:21 -0700
-X-IronPort-AV: E=Sophos;i="5.93,216,1654585200"; 
-   d="scan'208";a="745566014"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.79.208]) ([10.212.79.208])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2022 11:13:21 -0700
-Message-ID: <bcbe1db2-cb8e-1889-2888-f4618d749bd4@intel.com>
-Date:   Thu, 4 Aug 2022 11:13:20 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.11.0
+        with ESMTP id S232290AbiHDUYP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 4 Aug 2022 16:24:15 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B47224F3F;
+        Thu,  4 Aug 2022 13:24:13 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id E01DF122197;
+        Thu,  4 Aug 2022 20:24:12 +0000 (UTC)
+Received: from pdx1-sub0-mail-a254.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 2DC311227E8;
+        Thu,  4 Aug 2022 20:24:12 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1659644652; a=rsa-sha256;
+        cv=none;
+        b=cl7Qi306JD1M0ooZ2n83zg5XhGq3ose6LdH/N6pAEKLMGt9049PXTz47jTIuXdgCPvpcBI
+        +V3nTs4sDkkZZF1LWLcB9XYYx1wi7oF8nAegMeRwsHE1wyysqxq0IUUXhYtoOnNMeUqPy+
+        kh1mdszt5beJKRnq0z4Ziw3iywO85u2+T+T7GE6f6qr/26lM6ifuIdv5Detmk5l/kzVcCh
+        hi+fVOMyt8euLYMUaWXkiomXRswqfmD4sqyK/mLpm7Fpi/+u4hnKrT96t26i32A521vgEN
+        T2jra7CHYJWNC51Zb7Jr1m0GLyT+q23sZeAYMHZEE/amqM/1W5ji3HUy14zwZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1659644652;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=WBRF0vnWoHurswMbrGOZUJC1PZRlXwdU/Hmmt/4Lf5E=;
+        b=FDDh8iF/kHbsoAE7t1rwhWb5YzJ42StawcWomDuP0d7/9H+7jNW7jNYk7SqyK9zroVwy2N
+        NUBz/aoEqqMcok8PG8AruMW/y5IVy7MEpd8SVwAZLm9DgFLoY2ma/0VDwXC6QAiWmbeYVP
+        6TbbYtTxrTI1yR8CVod446mRnx5WppOiW0V7SA08flk0GeAS4IhANvd63H7ER0SCF1cWKr
+        U8MRoby8MDWcTiDsYPv6g60y8u0XHCKlzO6cYkraS5auWKQ9Fvyr5ZaDQpB1odxOx1TiNz
+        nm8XcKrvSgejUSVmPveeeDu0n0dSvPTWrJ2RC1sp30CtVIP2nrzFHCXn86Gupg==
+ARC-Authentication-Results: i=1;
+        rspamd-7c478d8c66-lg758;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Cold-Continue: 2b799cd46d0807d6_1659644652677_1024255301
+X-MC-Loop-Signature: 1659644652677:361990002
+X-MC-Ingress-Time: 1659644652677
+Received: from pdx1-sub0-mail-a254.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.124.238.119 (trex/6.7.1);
+        Thu, 04 Aug 2022 20:24:12 +0000
+Received: from offworld (unknown [104.36.25.245])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a254.dreamhost.com (Postfix) with ESMTPSA id 4LzKvH1JsSz1B;
+        Thu,  4 Aug 2022 13:24:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1659644651;
+        bh=WBRF0vnWoHurswMbrGOZUJC1PZRlXwdU/Hmmt/4Lf5E=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=Ip5lZDCRX8hxmwjVXmWUCcvhmM20yBO1fIj5O4brfYYK28zflPCJT2yof6pXXzyWk
+         ACApQi0IRX6qUuQ0BaYx0eyfBkjhlJKDCGxG0pIZlSQp+PJbavnVymnH//O1eSmiAA
+         nau4jENL41DQL21LXg9qcVpr/Fr9s7y5naF7Qnk/dpgZJc/jqvIcZL2JQcewp04CG0
+         4369Sze7lxjT3PxxFwd2HV54sSPIj5GERxg0MYLQo5HJlCeHpbxWfFpviniwrGWRb7
+         /RE8rlgB62LIccMMPH9k9Z47B5J2cXJG9+TuqfYMVeHMV+VVIx92kZQdAysYC/RwjK
+         3/p7pP1S3f3OA==
+Date:   Thu, 4 Aug 2022 13:07:12 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
+        bwidawsk@kernel.org, Jonathan.Cameron@huawei.com,
+        ira.weiny@intel.com, alison.schofield@intel.com,
+        vishal.l.verma@intel.com, a.manzanares@samsung.com,
+        mcgrof@kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [RFC PATCH 0/2] cxl: BG operations and device sanitation
-Content-Language: en-US
-To:     Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org
-Cc:     dan.j.williams@intel.com, bwidawsk@kernel.org,
-        Jonathan.Cameron@huawei.com, ira.weiny@intel.com,
-        alison.schofield@intel.com, vishal.l.verma@intel.com,
-        a.manzanares@samsung.com, mcgrof@kernel.org,
-        linux-kernel@vger.kernel.org
+Message-ID: <20220804200712.gaiswmkjsa3pnkc5@offworld>
 References: <20220804045029.2905056-1-dave@stgolabs.net>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20220804045029.2905056-1-dave@stgolabs.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <bcbe1db2-cb8e-1889-2888-f4618d749bd4@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <bcbe1db2-cb8e-1889-2888-f4618d749bd4@intel.com>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Thu, 04 Aug 2022, Dave Jiang wrote:
 
-On 8/3/2022 9:50 PM, Davidlohr Bueso wrote:
-> Hello,
->
-> The following is a followup to some of the discussions around CXL device security
-> and sanitation[0, 1]. It is marked as RFC mostly to see if the background handling
-> will satisfy all users, not just sanitize/overwrite. For example there has been ideas
-> to avoid command hogging the device and/or interleaving scan media regions instead
-> of all in one, etc. More details in each patch, but:
->
-> Patch 1 adds the required background cmd handling bits. While this is currently
-> only polling, it would be good to know if there are any fundamental blockers for
-> supporting irqs (beyond just background ops) between PCIe and CXL. For example,
-> are there any requirements/difficulties that is not the standard MSI/MSI-X PCI
-> vector allocation + devm_request_irq()? I have not looked at this into details but
-> it the topic has come up in the past as delicate', iirc.
->
-> Patch 2 implements the sanitation commands (overwrite and secure erase).
->
-> As for testing, while I used the mock device to test the secure erase command, I
-> ended up hacking up a prototype[2] for qemu to support overwrite and bg commands.
-> So while the some of the paths this series introduces have been exercised, there
-> is of course a lot more to do.
->
-> Applies against Dave's cxl-security branch[2] which deals with the pmem-only bits.
+>From the operational sense everything looks good to me. As for the
+>polling delay on overwrite, with pre-CXL pmem on Optane, we've
+>discovered that overwrite can take a long time depending on the size.
+>Sometimes MANY hours if the size is really large. We just opted to
+>increment the polling interval as time went on [1] instead of based on
+>size.
 
- From the operational sense everything looks good to me. As for the 
-polling delay on overwrite, with pre-CXL pmem on Optane, we've 
-discovered that overwrite can take a long time depending on the size. 
-Sometimes MANY hours if the size is really large. We just opted to 
-increment the polling interval as time went on [1] instead of based on size.
+Thanks for having a look. Sure, we can do that, I have no particular attachment
+to doing it based on size (it's just the way it occured to me). I am curious,
+though: While regardless of size vs time based estimates, are the numbers
+expected to be similar for volatile regions? All these numbers being from
+nvdimm DSM docs.
 
-[1]: 
-https://elixir.bootlin.com/linux/v5.19/source/drivers/nvdimm/security.c#L434
-
-
-> Thanks,
-> Davidlohr
->
-> [0]: https://lore.kernel.org/all/20220708172455.gi37dh3od4w5lqrd@offworld/
-> [1]: https://lore.kernel.org/all/165791918718.2491387.4203738301057301285.stgit@djiang5-desk3.ch.intel.com/
-> [2]: https://github.com/davidlohr/qemu/commit/64a93a5b824b59d3b547f06f7fbb1269fb4790ce
-> [3]: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=cxl-security
->
-> Davidlohr Bueso (2):
->    cxl/mbox: Add background operation handling machinery
->    cxl/mem: Support sanitation commands
->
->   Documentation/ABI/testing/sysfs-bus-cxl |  19 ++
->   drivers/cxl/core/core.h                 |   2 +-
->   drivers/cxl/core/mbox.c                 | 304 +++++++++++++++++++++++-
->   drivers/cxl/core/memdev.c               |  58 +++++
->   drivers/cxl/core/port.c                 |   9 +-
->   drivers/cxl/cxl.h                       |   8 +
->   drivers/cxl/cxlmem.h                    |  65 ++++-
->   drivers/cxl/pci.c                       |   3 +-
->   drivers/cxl/pmem.c                      |   5 +-
->   drivers/cxl/security.c                  |  13 +-
->   include/uapi/linux/cxl_mem.h            |   2 +
->   11 files changed, 461 insertions(+), 27 deletions(-)
->
-> --
-> 2.37.1
->
+Thanks,
+Davidlohr
