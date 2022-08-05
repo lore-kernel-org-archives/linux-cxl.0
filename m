@@ -2,167 +2,239 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF29C25B08
-	for <linux-cxl@archiver.kernel.org>; Fri,  5 Aug 2022 00:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62218C19F2D
+	for <linux-cxl@archiver.kernel.org>; Fri,  5 Aug 2022 02:20:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233043AbiHEAt2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 4 Aug 2022 20:49:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53130 "EHLO
+        id S233821AbiHECUj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 4 Aug 2022 22:20:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230500AbiHEAt1 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 4 Aug 2022 20:49:27 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B28D50196;
-        Thu,  4 Aug 2022 17:49:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1659660566; x=1691196566;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=xCt8tVLkDXdDsM9H5nJJciDvVUnXT+SwV+SGzF3teMs=;
-  b=GX4tfKAuR5JYyR7wQ/zIh7yApaQugc0/2CFxNPBu4EFnplgA8KKE2L33
-   J/+4yLEkchBAgo/ND7sNHJCR2YpNfVUFFJe23uCxKT+stA1CkV+CarDIw
-   TH26SKpyGGNzrFogrQlypXdp6pRfaMVwW5afiC5yCSRi+0hZbCBayryWr
-   AipiwdBTYtmobDTCW0Bxjqv48JKeal1m2PP5u46gwxIGYkc+ojKVyUlBO
-   Vn31+YB7H1oochrlJE6C6OwW2QFUqfBRR+7xr60Fp3BQBKidl7pQ6yUsn
-   qNorNm9aQXUPeU5X7LE5JAkiTKsTxS8jEm9dHkB6OMOl+K2qIY/EzVuha
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10429"; a="376388188"
-X-IronPort-AV: E=Sophos;i="5.93,216,1654585200"; 
-   d="scan'208";a="376388188"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2022 17:48:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,216,1654585200"; 
-   d="scan'208";a="692838273"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by FMSMGA003.fm.intel.com with ESMTP; 04 Aug 2022 17:48:18 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.28; Thu, 4 Aug 2022 17:48:17 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.28; Thu, 4 Aug 2022 17:48:17 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.28 via Frontend Transport; Thu, 4 Aug 2022 17:48:17 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.171)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.28; Thu, 4 Aug 2022 17:48:17 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eAa1p/SNJNb345pmui5HNCNivQzB2MaGw32XX6DB73EN+wqveciV/vQLNgJWg2mpEfSLZK7Il38BN8vkvaxLA3sVFXxNtl8py4H664KJTwtO2+nsIi+m/nbUjHORERxiDkWwkJd1gB8SaA/JqYp0Pi5iwNk0K5Shq3uweQ9kASyM1VvJR84LNytMceQUwmfEzB0wy+m5eOxXbwo+41Bxz0QWySKMJG3GcBO1fuWjUvp5j/TBPXA/zaVSOzcDAKWI1f9it1qwZVjLarU60LXphwNaSuUxuVAYVjSzjspj4ENIVe+MRIbRCFGMLQYAWYtsSy3P7ItG2tvI5FEc3boMCA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tHnhwf0vbIQ0jZ45KqYVQMEWXNl7IxoN6z6xYmLP0fc=;
- b=RZ1HdF0bPgS/c+xhgNcVtms2bb+o9rakSg2r4obV5cRmUwHgF0+qm6Jpc9/R8tT8Z7vENGRO2PWJSNFgahWlI1xrWlvGhd9Asmi9Wql6nupMsya2IEsyx/x9j/xuGZ7hlSiYTKdvtXNcPsIiMw5U8+1kWkZEaDgfV/nYpW2ppPTuDhBDKlD5rKMsZONZk67gXIcrv/2u+MBpkPfL7Oene/rhEK3nR4MSlVXnuuAtfwlHxko6TqWN6gfMPJ6Tue+tBMyxx7jITnNm0OIDZGJ3m9VP2+JiQaHM/Iem+xg5G/AA3UEq6yQ1jIRNpKab3CPdseMi819I4U3khgcTuy61hw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by CY5PR11MB6209.namprd11.prod.outlook.com
- (2603:10b6:930:27::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.14; Fri, 5 Aug
- 2022 00:48:15 +0000
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::9847:345e:4c5b:ca12]) by MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::9847:345e:4c5b:ca12%6]) with mapi id 15.20.5504.014; Fri, 5 Aug 2022
- 00:48:15 +0000
-Date:   Thu, 4 Aug 2022 17:48:12 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Bagas Sanjaya <bagasdotme@gmail.com>, <linux-doc@vger.kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linux-next@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        "Alison Schofield" <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
-        Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: RE: [PATCH 0/3] cxl: documentation fixes
-Message-ID: <62ec68cc4acc0_12f2222941f@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20220804075448.98241-1-bagasdotme@gmail.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20220804075448.98241-1-bagasdotme@gmail.com>
-X-ClientProxiedBy: SJ0PR13CA0052.namprd13.prod.outlook.com
- (2603:10b6:a03:2c2::27) To MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20)
+        with ESMTP id S231175AbiHECUi (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 4 Aug 2022 22:20:38 -0400
+Received: from mail-ua1-x933.google.com (mail-ua1-x933.google.com [IPv6:2607:f8b0:4864:20::933])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FD8C32BB6
+        for <linux-cxl@vger.kernel.org>; Thu,  4 Aug 2022 19:20:37 -0700 (PDT)
+Received: by mail-ua1-x933.google.com with SMTP id z5so592590uav.0
+        for <linux-cxl@vger.kernel.org>; Thu, 04 Aug 2022 19:20:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc;
+        bh=6CIi8TuUSSPKCODNY7qeO7jYVS3W04YlqcW62/HfYsw=;
+        b=XhbJJFfvtA+xNZrUW8e+45rl/jicO0QW3PQBhsWAhXFwJFnqSHPu+W1lBImaW72Ryj
+         ZOnJbtZQi+tboG2QoIcooh+TpLJb5CzPxLy65dMm36DCObx1QjOTI5FyEQ958+LGC832
+         KNIsu9LyJMUzyAyuJzyTDpAn6vSMknlfITLs85Gkmxrghds+SGs4t3XLPq079b/emYfS
+         xWUJtzt9KBLb09GNRm/In1vG3UOcmBf6MJ80vh99U2YNabuZdEhxoQ12Sk98xPBX79Pt
+         C1zmWigg9MRvva98URZwGF2Z9NKzkPbbGWJP4SC7yDtUKv9FQoF1JeNFEbcxAaL5ylTV
+         37hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc;
+        bh=6CIi8TuUSSPKCODNY7qeO7jYVS3W04YlqcW62/HfYsw=;
+        b=4dVACSD7+FFu7tBQQDy2jFOX7ePGlcvLhEEeMeHq+md2ZtKZ801jYVt23Trq4PCtz3
+         KiNQmxiGaP3hcIv6/BibjhWqoggAptiR91GlPHmBTK83vS9hc7xMX7fhKvfh4HTulrYA
+         x2fzu0DkJRJ3zqjAGRB1adMB5Zlgvo51fw5IT9bEVTzovwC70ngb9swGww0+5TtmEiro
+         6C71X4SfsJMN66U5+VDbeIhoSECBh88OmQ2rfUaFF9xkEmNBo+MzlZt09IRfAsDQQcjR
+         uAgQBBHBuJY+VGYnmbrNYl3PUOGnq0wZbYPz9OJ2uGN6w0XWSPzYV9fpclR8jXLnl0c3
+         wRsg==
+X-Gm-Message-State: ACgBeo2qqIjFkV5djkskINtU/WLUVOTcFxN85SBjf4Ne5niUaqGImXxn
+        HGnJKEXC0bQdq0T8/VE8V/R/RjK2hnNO/T9/12Dr+2unD0N+vw==
+X-Google-Smtp-Source: AA6agR4JGvojI0kpQKdbVneRJbDmmpSP9PM+HBAmq6OzQ0rYLPaeFtA0SqTOCySuWe/VBZswIrCWXy//+h9c+zW4CNE=
+X-Received: by 2002:ab0:23ca:0:b0:384:e51b:372f with SMTP id
+ c10-20020ab023ca000000b00384e51b372fmr2392214uan.64.1659666036368; Thu, 04
+ Aug 2022 19:20:36 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ef6af5c3-ec76-485c-243f-08da767c2e17
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6209:EE_
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: o0NXM71/IkaZY+JoPBWppsmgpRaUKK77fgM1gSI+LmJ9eRAJ32x6JZTtvdl3voQp9jZfHz5yLn0SYvruTHpYxW+En+JyNLddx2SlNizuCRGachXSa08syHCySCoVCSzf0JQat6XF86Vr7UYkb6wZFoS+oHEuBZ6qzbJCTrqKU3a8nIW0END09uJrXV441B3YQhgE+/pAIxQMOkE5ny1jaHcSjfBUUOR17mxwPIIIssclyUxnAn1zmKmGbLdu46CwYMmF/FfRuvsf9yT2JXb36NzE41utSwbfc3Yg4UMPW6hKFmc2r8pl1XRQJfb/Rg7Pc7h0fFeCOkQ7xdC3jy9diAxjyPZKSrCSLczYLm91JEtl7u2pb2SfST/Karr34SpDFyTAhVfSfpruqlzLoq0FCEKDjC6olL5MwUu26NjGK8EoNmL3HZrfFK5dpNEfeSUmgXiA/Z3EpYzRE5s6s8XLrOROWi8yy0VkfLmccZfLZZt533qaqMt5hUnZDyDnWJVt8vPQEAWYUIgYrG7ijNRgntPaZ8OKAgvDMYgmJnHIzvnGh2ZuErelrtaAbh16NGYAsZ5wCEomZDqv+tvCMcu/tDIQ7syJa2iHjHSObjJw5pO0ggkSGKKTAczPkVY+QO51tk8Yb/8e/Kt1wG7jrb2p9FMlSoQOV2FGU3qKpYBp7xlQhNtBwxZVb2T5Bx0tRvHPE5sMylxmG+bjMl73IOgVU0giRuq8v7f6uuOwgVdZ72FJfGs5FBfffh67BsVj3Pr6
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(396003)(39860400002)(346002)(136003)(376002)(366004)(4744005)(478600001)(316002)(6512007)(86362001)(82960400001)(54906003)(2906002)(9686003)(6506007)(26005)(8676002)(41300700001)(8936002)(83380400001)(66946007)(66476007)(66556008)(186003)(38100700002)(6666004)(5660300002)(4326008)(6486002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?7VrwGI2Eh34ZtN9UyFfNNHBu+wb7XmCK1se7WslnvJg9BdPVbdS7oXb3QY/8?=
- =?us-ascii?Q?iZsYhc9c/7UjG3W5RkcEhCxa0bEegkpE70zPitDRgYFcLPNeexvlNqWbZ2JE?=
- =?us-ascii?Q?ec9HtIHb8ithUuxJTXm7YLN0I+32Q9lnb8ZyzTb8gy6FmurERRkorbothb04?=
- =?us-ascii?Q?nOqFCR96Yw37UbvEG7ic+C9u/OjLf5UEhuazFuuJvcN+AkTOWE8K7wqH3chR?=
- =?us-ascii?Q?ejGhQkEVHb/wKNT0aFRlce5ZE5H4zogDasdI2FawyDGmkT/S9/gDyPcudwrS?=
- =?us-ascii?Q?MLVk/eRkMXhDDgG9zrKwqOcf+++/1wqV/d8jbigZNrZxF/JWhiOnSkZgbqx2?=
- =?us-ascii?Q?Lt2+BnzZZGg0zYspz0HijoyEuP2sxGk0K0UYNao/yE39H6iWTLvt+zSYIh8S?=
- =?us-ascii?Q?had4xnQtGg776EPWT/u/ra0ExTjl6qbahVcBFPW0C2cwNK1OsyEKdSXuVtBE?=
- =?us-ascii?Q?wOyk+wXw5zD8buZOMoG/JjItXtYAlo9e4udG4YtuaVQXsVxpgvyksszZevDz?=
- =?us-ascii?Q?6wfNH0ghVIdRKZSOoEDBBArk3K/YgPynU2fGBgDsYJC5vWT/sTEtNrQtQnGl?=
- =?us-ascii?Q?xF0OQFLYFwSVRIPhAH/RBMPBGSvEb8IpYFZj7yk7FR8U5tRyBmkymPc3VbAg?=
- =?us-ascii?Q?DN3S72zGnfYOy/y6xIGbldWep8YnhdfC4sG9QVa9xDSfidKhbPCqESDwHTbc?=
- =?us-ascii?Q?DMaGNS85e4GO87WQoyZwqfskp46en2pXKB1DUSZoFvFXuj0OlqdkmxTnr11c?=
- =?us-ascii?Q?ZmLd7QedO3yyRgUiV2VqnZhoxBcvPoH0BifDXaSgM/zfGt0lhUYzV90ThseO?=
- =?us-ascii?Q?E0wlMg3qeuEMHaaR0NzACwcCnW8mJAuaXrf1y519x9aXw28pL5C5R1RJtnrF?=
- =?us-ascii?Q?luUhNsyMF9v3+g0rEDP5EYqrvqx/tM7psGs9OSqMNNc/T77fj7z3eIEahKfs?=
- =?us-ascii?Q?Rr4gFTAB544eN5Szhrj0Ho+Bj0rEiwvxeBpxikPygyxjtxuQUJmuabAO1uhU?=
- =?us-ascii?Q?VlM9Uri0h7gPd6AqURxpQZ3jsY475G86PzeO3LyRllBGYtPFt/1Gi/4uwZ5d?=
- =?us-ascii?Q?9w5sX0v+D1JntGP5zrQ7hpLONdJoId2q1jU7senVa0QZVSX98hAxNp989OKO?=
- =?us-ascii?Q?lu1eWo6Kx80YVwqMqwbbzQT/ydLp5HY1pGVNOfpN4ZvYCKRQidPCvAJvDFmf?=
- =?us-ascii?Q?WWwvCk2oFbQuetduP/ikEoZi1D4f9pScXI43rVBcUBB5Fn53v6+6YE20m0xV?=
- =?us-ascii?Q?lkNYw/ZvpQgox7eq1uwspQ8YXsjH3HEKMFlVJ+8Ay+39CBx6uKZyoW7C6tWe?=
- =?us-ascii?Q?5+6f2H131IYELmessIWE0QeMZRSMrRTqTbjAa+tIqIU9b0P/fVV/eCM9MOwG?=
- =?us-ascii?Q?ioSjJzLdEurSXcNaf9d630PvR2nyQU8TU/OGhFyaCLgtk7yOI3YO4PRto+I9?=
- =?us-ascii?Q?o6KdrnTX7660Q+GnkFfLgID4rlgOZm3cr9zA8K/L3FpcoAl0vHzbL2xJ+vfa?=
- =?us-ascii?Q?fYEMeXzV8ok1ibcu11gxwY9bm24/GAsq9J3YkbRaQATS+ME5UWVGykCVeJKH?=
- =?us-ascii?Q?HDZ5bk5B/9PI9NhMfKCI+7iLd7I3gMd8i5+1urDu933FsV3bLMcjmL0u910u?=
- =?us-ascii?Q?AA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef6af5c3-ec76-485c-243f-08da767c2e17
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Aug 2022 00:48:14.9668
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XfSdNW2fOZJViJStptvQK39BuJpZV0vFVbjIlan9+0uo3Lo8nh8wVYr7k1XUtFlQIcZwqiwiTrjmySWyBy94TImK7TfBY6dFe9N7w494CmQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6209
-X-OriginatorOrg: intel.com
+From:   Bobo WL <lmw.bobo@gmail.com>
+Date:   Fri, 5 Aug 2022 10:20:23 +0800
+Message-ID: <CAGr_yG0UrfJAMWta3EkR1F0JZ4j--sig74p6vKL3K6TZDx9YGA@mail.gmail.com>
+Subject: [BUG] cxl can not create region
+To:     linux-cxl@vger.kernel.org
+Cc:     qemu-devel@nongnu.org, qemu-arm@nongnu.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Bagas Sanjaya wrote:
-> Building htmldocs on next-20220803 (for which this series is based on),
-> there are new warnings on cxl subsystem. The fixes below are
-> self-explanatory.
-> 
-> Bagas Sanjaya (3):
->   cxl/regions: add padding for cxl_rr_ep_add nested lists
->   cxl/region: describe targets and nr_targets members of
->     cxl_region_params
->   Documentation: cxl: remove dangling kernel-doc reference
-> 
->  Documentation/driver-api/cxl/memory-devices.rst | 3 ---
->  drivers/cxl/core/region.c                       | 3 +++
->  drivers/cxl/cxl.h                               | 2 ++
->  3 files changed, 5 insertions(+), 3 deletions(-)
+Hi list
 
-Thanks, applied, and with Jonathan's Fixes: tag fixup.
+I want to test cxl functions in arm64, and found some problems I can't
+figure out.
+
+My test environment:
+
+1. build latest bios from https://github.com/tianocore/edk2.git master
+branch(cc2db6ebfb6d9d85ba4c7b35fba1fa37fffc0bc2)
+2. build latest qemu-system-aarch64 from git://git.qemu.org/qemu.git
+master branch(846dcf0ba4eff824c295f06550b8673ff3f31314). With cxl arm
+support patch: https://patchwork.kernel.org/project/cxl/cover/20220616141950.23374-1-Jonathan.Cameron@huawei.com/
+3. build Linux kernel from
+https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git preview
+branch(65fc1c3d26b96002a5aa1f4012fae4dc98fd5683)
+4. build latest ndctl tools from https://github.com/pmem/ndctl
+create_region branch(8558b394e449779e3a4f3ae90fae77ede0bca159)
+
+And my qemu test commands:
+sudo $QEMU_BIN -M virt,gic-version=3,cxl=on -m 4g,maxmem=8G,slots=8 \
+        -cpu max -smp 8 -nographic -no-reboot \
+        -kernel $KERNEL -bios $BIOS_BIN \
+        -drive if=none,file=$ROOTFS,format=qcow2,id=hd \
+        -device virtio-blk-pci,drive=hd -append 'root=/dev/vda1
+nokaslr dyndbg="module cxl* +p"' \
+        -object memory-backend-ram,size=4G,id=mem0 \
+        -numa node,nodeid=0,cpus=0-7,memdev=mem0 \
+        -net nic -net user,hostfwd=tcp::2222-:22 -enable-kvm \
+        -object
+memory-backend-file,id=cxl-mem0,share=on,mem-path=/tmp/cxltest.raw,size=256M
+\
+        -object
+memory-backend-file,id=cxl-mem1,share=on,mem-path=/tmp/cxltest1.raw,size=256M
+\
+        -object
+memory-backend-file,id=cxl-mem2,share=on,mem-path=/tmp/cxltest2.raw,size=256M
+\
+        -object
+memory-backend-file,id=cxl-mem3,share=on,mem-path=/tmp/cxltest3.raw,size=256M
+\
+        -object
+memory-backend-file,id=cxl-lsa0,share=on,mem-path=/tmp/lsa0.raw,size=256M
+\
+        -object
+memory-backend-file,id=cxl-lsa1,share=on,mem-path=/tmp/lsa1.raw,size=256M
+\
+        -object
+memory-backend-file,id=cxl-lsa2,share=on,mem-path=/tmp/lsa2.raw,size=256M
+\
+        -object
+memory-backend-file,id=cxl-lsa3,share=on,mem-path=/tmp/lsa3.raw,size=256M
+\
+        -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
+        -device cxl-rp,port=0,bus=cxl.1,id=root_port0,chassis=0,slot=0 \
+        -device cxl-upstream,bus=root_port0,id=us0 \
+        -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
+        -device
+cxl-type3,bus=swport0,memdev=cxl-mem0,lsa=cxl-lsa0,id=cxl-pmem0 \
+        -device cxl-downstream,port=1,bus=us0,id=swport1,chassis=0,slot=5 \
+        -device
+cxl-type3,bus=swport1,memdev=cxl-mem1,lsa=cxl-lsa1,id=cxl-pmem1 \
+        -device cxl-downstream,port=2,bus=us0,id=swport2,chassis=0,slot=6 \
+        -device
+cxl-type3,bus=swport2,memdev=cxl-mem2,lsa=cxl-lsa2,id=cxl-pmem2 \
+        -device cxl-downstream,port=3,bus=us0,id=swport3,chassis=0,slot=7 \
+        -device
+cxl-type3,bus=swport3,memdev=cxl-mem3,lsa=cxl-lsa3,id=cxl-pmem3 \
+        -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k
+
+And I have got two problems.
+1. When I want to create x1 region with command: "cxl create-region -d
+decoder0.0 -w 1 -g 4096 mem0", kernel crashed with null pointer
+reference. Crash log:
+
+[  534.697324] cxl_region region0: config state: 0
+[  534.697346] cxl_region region0: probe: -6
+[  534.697368] cxl_acpi ACPI0017:00: decoder0.0: created region0
+[  534.699115] cxl region0: mem0:endpoint3 decoder3.0 add:
+mem0:decoder3.0 @ 0 next: none nr_eps: 1 nr_targets: 1
+[  534.699149] cxl region0: 0000:0d:00.0:port2 decoder2.0 add:
+mem0:decoder3.0 @ 0 next: mem0 nr_eps: 1 nr_targets: 1
+[  534.699167] cxl region0: ACPI0016:00:port1 decoder1.0 add:
+mem0:decoder3.0 @ 0 next: 0000:0d:00.0 nr_eps: 1 nr_targets: 1
+[  534.699176] cxl region0: ACPI0016:00:port1 iw: 1 ig: 256
+[  534.699182] cxl region0: ACPI0016:00:port1 target[0] = 0000:0c:00.0
+for mem0:decoder3.0 @ 0
+[  534.699189] cxl region0: 0000:0d:00.0:port2 iw: 1 ig: 256
+[  534.699193] cxl region0: 0000:0d:00.0:port2 target[0] =
+0000:0e:00.0 for mem0:decoder3.0 @ 0
+[  534.699405] Unable to handle kernel NULL pointer dereference at
+virtual address 0000000000000000
+[  534.701474] Mem abort info:
+[  534.701994]   ESR = 0x0000000086000004
+[  534.702653]   EC = 0x21: IABT (current EL), IL = 32 bits
+[  534.703616]   SET = 0, FnV = 0
+[  534.704174]   EA = 0, S1PTW = 0
+[  534.704803]   FSC = 0x04: level 0 translation fault
+[  534.705694] user pgtable: 4k pages, 48-bit VAs, pgdp=000000010144a000
+[  534.706875] [0000000000000000] pgd=0000000000000000, p4d=0000000000000000
+[  534.709855] Internal error: Oops: 86000004 [#1] PREEMPT SMP
+[  534.710301] Modules linked in:
+[  534.710546] CPU: 7 PID: 331 Comm: cxl Not tainted
+5.19.0-rc3-00064-g65fc1c3d26b9-dirty #11
+[  534.715393] Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
+[  534.717179] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  534.719190] pc : 0x0
+[  534.719928] lr : commit_store+0x118/0x2cc
+[  534.721007] sp : ffff80000aec3c30
+[  534.721793] x29: ffff80000aec3c30 x28: ffff0000da62e740 x27: ffff0000c0c06b30
+[  534.723875] x26: 0000000000000000 x25: ffff0000c0a2a400 x24: ffff0000c0a29400
+[  534.725440] x23: 0000000000000003 x22: 0000000000000000 x21: ffff0000c0c06800
+[  534.727312] x20: 0000000000000000 x19: ffff0000c1559800 x18: 0000000000000000
+[  534.729138] x17: 0000000000000000 x16: 0000000000000000 x15: 0000ffffd41fe838
+[  534.731046] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[  534.732402] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[  534.734432] x8 : 0000000000000000 x7 : 0000000000000000 x6 : ffff0000c0906e80
+[  534.735921] x5 : 0000000000000000 x4 : 0000000000000000 x3 : ffff80000aec3bf0
+[  534.737437] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0000c155a000
+[  534.738878] Call trace:
+[  534.739368]  0x0
+[  534.739713]  dev_attr_store+0x1c/0x30
+[  534.740186]  sysfs_kf_write+0x48/0x58
+[  534.740961]  kernfs_fop_write_iter+0x128/0x184
+[  534.741872]  new_sync_write+0xdc/0x158
+[  534.742706]  vfs_write+0x1ac/0x2a8
+[  534.743440]  ksys_write+0x68/0xf0
+[  534.744328]  __arm64_sys_write+0x1c/0x28
+[  534.745180]  invoke_syscall+0x44/0xf0
+[  534.745989]  el0_svc_common+0x4c/0xfc
+[  534.746661]  do_el0_svc+0x60/0xa8
+[  534.747378]  el0_svc+0x2c/0x78
+[  534.748066]  el0t_64_sync_handler+0xb8/0x12c
+[  534.748919]  el0t_64_sync+0x18c/0x190
+[  534.749629] Code: bad PC value
+[  534.750169] ---[ end trace 0000000000000000 ]---
+
+2. When I want to create x4 region with command: "cxl create-region -d
+decoder0.0 -w 4 -g 4096 -m mem0 mem1 mem2 mem3". I got below errors:
+
+cxl region: create_region: region0: failed to set target3 to mem3
+cxl region: cmd_create_region: created 0 regions
+
+And kernel log as below:
+[   60.536663] cxl_region region0: config state: 0
+[   60.536675] cxl_region region0: probe: -6
+[   60.536696] cxl_acpi ACPI0017:00: decoder0.0: created region0
+[   60.538251] cxl region0: mem0:endpoint3 decoder3.0 add:
+mem0:decoder3.0 @ 0 next: none nr_eps: 1 nr_targets: 1
+[   60.538278] cxl region0: 0000:0d:00.0:port2 decoder2.0 add:
+mem0:decoder3.0 @ 0 next: mem0 nr_eps: 1 nr_targets: 1
+[   60.538295] cxl region0: ACPI0016:00:port1 decoder1.0 add:
+mem0:decoder3.0 @ 0 next: 0000:0d:00.0 nr_eps: 1 nr_targets: 1
+[   60.538647] cxl region0: mem1:endpoint4 decoder4.0 add:
+mem1:decoder4.0 @ 1 next: none nr_eps: 1 nr_targets: 1
+[   60.538663] cxl region0: 0000:0d:00.0:port2 decoder2.0 add:
+mem1:decoder4.0 @ 1 next: mem1 nr_eps: 2 nr_targets: 2
+[   60.538675] cxl region0: ACPI0016:00:port1 decoder1.0 add:
+mem1:decoder4.0 @ 1 next: 0000:0d:00.0 nr_eps: 2 nr_targets: 1
+[   60.539311] cxl region0: mem2:endpoint5 decoder5.0 add:
+mem2:decoder5.0 @ 2 next: none nr_eps: 1 nr_targets: 1
+[   60.539332] cxl region0: 0000:0d:00.0:port2 decoder2.0 add:
+mem2:decoder5.0 @ 2 next: mem2 nr_eps: 3 nr_targets: 3
+[   60.539343] cxl region0: ACPI0016:00:port1 decoder1.0 add:
+mem2:decoder5.0 @ 2 next: 0000:0d:00.0 nr_eps: 3 nr_targets: 1
+[   60.539711] cxl region0: mem3:endpoint6 decoder6.0 add:
+mem3:decoder6.0 @ 3 next: none nr_eps: 1 nr_targets: 1
+[   60.539723] cxl region0: 0000:0d:00.0:port2 decoder2.0 add:
+mem3:decoder6.0 @ 3 next: mem3 nr_eps: 4 nr_targets: 4
+[   60.539735] cxl region0: ACPI0016:00:port1 decoder1.0 add:
+mem3:decoder6.0 @ 3 next: 0000:0d:00.0 nr_eps: 4 nr_targets: 1
+[   60.539742] cxl region0: ACPI0016:00:port1 iw: 1 ig: 256
+[   60.539747] cxl region0: ACPI0016:00:port1 target[0] = 0000:0c:00.0
+for mem0:decoder3.0 @ 0
+[   60.539754] cxl region0: 0000:0d:00.0:port2 iw: 4 ig: 512
+[   60.539758] cxl region0: 0000:0d:00.0:port2 target[0] =
+0000:0e:00.0 for mem0:decoder3.0 @ 0
+[   60.539764] cxl region0: ACPI0016:00:port1: cannot host mem1:decoder4.0 at 1
+
+I have tried to write sysfs node manually, got same errors.
+
+Hope I can get some helps here.
+
+Bob
