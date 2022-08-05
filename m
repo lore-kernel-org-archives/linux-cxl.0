@@ -2,47 +2,48 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC42C00140
-	for <linux-cxl@archiver.kernel.org>; Fri,  5 Aug 2022 20:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D739DC00140
+	for <linux-cxl@archiver.kernel.org>; Fri,  5 Aug 2022 20:38:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237641AbiHEUiX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 5 Aug 2022 16:38:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54764 "EHLO
+        id S236727AbiHEUi3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 5 Aug 2022 16:38:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236727AbiHEUiV (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 5 Aug 2022 16:38:21 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 699BCDFA
-        for <linux-cxl@vger.kernel.org>; Fri,  5 Aug 2022 13:38:21 -0700 (PDT)
+        with ESMTP id S237607AbiHEUi1 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 5 Aug 2022 16:38:27 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41965E03
+        for <linux-cxl@vger.kernel.org>; Fri,  5 Aug 2022 13:38:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1659731901; x=1691267901;
+  t=1659731907; x=1691267907;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=fTkPZf5LUDV9uSdQ8Nq40J4VCpvD6Kql8fzcFn4kgVc=;
-  b=b+xaWp3MU9n99c3O5+Ck7mXRO1dvR3LWbnLNaQ/rUwVhn8fa0Rg6WWqd
-   zNDfKC2pXJOw78IixbgWtI7kz0uPSUixEsD065B2li1bs33vFcLMTZeVl
-   /mhFnP+PfOKtHxbTO+03fdbgHQGIWOpA5WIRMxSp5SiKEbqxJXF4qLG4X
-   k+D4D9YGvw1HkYiIVm2Vr1+diiFffWwB9uu7JxRCBb4E2KHEtB7xOHlxZ
-   qRjzlk5Ng18xZMP3en6+tfL8KtIvZeWCCIB/SXh/CRFQe6wuy+Ym2WEOU
-   G5wwZmwpwrH7zPuLUfThJVLck8CDQysAwgMg8I8vkZ0l8xCPQtZwtwGN/
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10430"; a="290293762"
+  bh=rWsllSkyx2RG5Grpr1DiiLPjziQsHokfjNNJ9pf0mqc=;
+  b=kSNV39Z9j1jx41ZSvXgrUkxYHZVswuluM27j11//j3LDTGN2+uCX7lsv
+   6oPTVc65ebF4QWOmm1CEU+ZbjwVR9s8ivPjHV/OhoJuhUzAa08Jpt8mgi
+   8t15MXruuSmb+JY5UGC/sjjqO008hDBrHmaHILKwVPFX4Q4bQo3d4a8RK
+   uUrrFD/QKx+DMPh809fqJs0khZPM3E9SmZPd0BytwlEwZL93oK02jpDkB
+   RXoq5NYF0BiYw54gfuzwwRiQdR5S19iENWB9f6QeTuibLSHzaD6Kfcfrs
+   JlxV20DR/eRsQW3oFtSJJBXR1yl0CBzBZ2aYhex3vAdYvfiWlSrcOKr0Y
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10430"; a="289044334"
 X-IronPort-AV: E=Sophos;i="5.93,216,1654585200"; 
-   d="scan'208";a="290293762"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2022 13:38:21 -0700
+   d="scan'208";a="289044334"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2022 13:38:27 -0700
 X-IronPort-AV: E=Sophos;i="5.93,216,1654585200"; 
-   d="scan'208";a="693118037"
+   d="scan'208";a="671815294"
 Received: from jivaldiv-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.255.228.201])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2022 13:38:20 -0700
-Subject: [ndctl PATCH 5/6] cxl/list: Add 'depth' to port listings
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2022 13:38:26 -0700
+Subject: [ndctl PATCH 6/6] cxl/test: Validate switch port settings in
+ cxl-region-sysfs.sh
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     vishal.l.verma@intel.com, dave.jiang@intel.com,
         ira.weiny@intel.com, alison.schofield@intel.com
-Date:   Fri, 05 Aug 2022 13:38:20 -0700
-Message-ID: <165973190022.1528532.6351628365510289908.stgit@dwillia2-xfh.jf.intel.com>
+Date:   Fri, 05 Aug 2022 13:38:26 -0700
+Message-ID: <165973190625.1528532.12244196912617964754.stgit@dwillia2-xfh.jf.intel.com>
 In-Reply-To: <165973187080.1528532.8097010788284626448.stgit@dwillia2-xfh.jf.intel.com>
 References: <165973187080.1528532.8097010788284626448.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -53,84 +54,56 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Simplify the task of determining how deep a port is in the hierarchy by
-just emitting what libcxl already counted. This is useful for validating
-interleave math.
+A recent kernel fix to add the missing update of endpoint decoder HPA range
+settings regressed switch decoder HPA range settings. Add validation for
+switch port settings to avoid regressions like that going forward.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- Documentation/cxl/lib/libcxl.txt |    1 +
- cxl/json.c                       |    4 ++++
- cxl/lib/libcxl.c                 |    5 +++++
- cxl/lib/libcxl.sym               |    1 +
- cxl/libcxl.h                     |    1 +
- 5 files changed, 12 insertions(+)
+ test/cxl-region-sysfs.sh |   32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
-index 72641699633b..5efa60124111 100644
---- a/Documentation/cxl/lib/libcxl.txt
-+++ b/Documentation/cxl/lib/libcxl.txt
-@@ -290,6 +290,7 @@ int cxl_port_is_enabled(struct cxl_port *port);
- bool cxl_port_is_root(struct cxl_port *port);
- bool cxl_port_is_switch(struct cxl_port *port);
- bool cxl_port_is_endpoint(struct cxl_port *port);
-+int cxl_port_get_depth(struct cxl_port *port);
- bool cxl_port_hosts_memdev(struct cxl_port *port, struct cxl_memdev *memdev);
- int cxl_port_get_nr_dports(struct cxl_port *port);
- ----
-diff --git a/cxl/json.c b/cxl/json.c
-index 82e3c552cdb1..7aefcadb0795 100644
---- a/cxl/json.c
-+++ b/cxl/json.c
-@@ -761,6 +761,10 @@ static struct json_object *__util_cxl_port_to_json(struct cxl_port *port,
- 	if (jobj)
- 		json_object_object_add(jport, "host", jobj);
+diff --git a/test/cxl-region-sysfs.sh b/test/cxl-region-sysfs.sh
+index 110e03709e39..ae0f55653814 100644
+--- a/test/cxl-region-sysfs.sh
++++ b/test/cxl-region-sysfs.sh
+@@ -112,6 +112,38 @@ do
+ 	[ $res -ne $region_base ] && err "$LINENO: decoder: $i base: $res region_base: $region_base"
+ done
  
-+	jobj = json_object_new_int(cxl_port_get_depth(port));
-+	if (jobj)
-+		json_object_object_add(jport, "depth", jobj);
++# validate all switch decoders have the correct settings
++nr_switches=$((nr_targets/2))
++nr_host_bridges=$((nr_switches/2))
++nr_switch_decoders=$((nr_switches + nr_host_bridges))
 +
- 	if (!cxl_port_is_enabled(port)) {
- 		jobj = json_object_new_string("disabled");
- 		if (jobj)
-diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index aec3671b1625..4b78ecc1d115 100644
---- a/cxl/lib/libcxl.c
-+++ b/cxl/lib/libcxl.c
-@@ -2309,6 +2309,11 @@ CXL_EXPORT bool cxl_port_is_endpoint(struct cxl_port *port)
- 	return port->type == CXL_PORT_ENDPOINT;
- }
++json=$($CXL list -D -r $region -d switch)
++readarray -t switch_decoders < <(echo $json | jq -r ".[].decoder")
++
++[ ${#switch_decoders[@]} -ne $nr_switch_decoders ] && err \
++"$LINENO: expected $nr_switch_decoders got ${#switch_decoders[@]} switch decoders"
++
++for i in ${switch_decoders[@]}
++do
++	decoder=$(echo $json | jq -r ".[] | select(.decoder == \"$i\")")
++	id=${i#decoder}
++	port_id=${id%.*}
++	depth=$($CXL list -p $port_id -S | jq -r ".[].depth")
++	iw=$(echo $decoder | jq -r ".interleave_ways")
++	ig=$(echo $decoder | jq -r ".interleave_granularity")
++
++	[ $iw -ne 2 ] && err "$LINENO: decoder: $i iw: $iw targets: 2"
++	[ $ig -ne $((r_ig << depth)) ] && err \
++	"$LINENO: decoder: $i ig: $ig switch_ig: $((r_ig << depth))"
++
++	res=$(echo $decoder | jq -r ".resource")
++	sz=$(echo $decoder | jq -r ".size")
++	[ $sz -ne $region_size ] && err \
++	"$LINENO: decoder: $i sz: $sz region_size: $region_size"
++	[ $res -ne $region_base ] && err \
++	"$LINENO: decoder: $i base: $res region_base: $region_base"
++done
++
+ # walk up the topology and commit all decoders
+ echo 1 > /sys/bus/cxl/devices/$region/commit
  
-+CXL_EXPORT int cxl_port_get_depth(struct cxl_port *port)
-+{
-+	return port->depth;
-+}
-+
- CXL_EXPORT struct cxl_bus *cxl_port_get_bus(struct cxl_port *port)
- {
- 	struct cxl_bus *bus;
-diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index 573fcdf532d6..7dc3eee8a63c 100644
---- a/cxl/lib/libcxl.sym
-+++ b/cxl/lib/libcxl.sym
-@@ -96,6 +96,7 @@ global:
- 	cxl_port_get_parent;
- 	cxl_port_is_root;
- 	cxl_port_is_switch;
-+	cxl_port_get_depth;
- 	cxl_port_to_bus;
- 	cxl_port_is_endpoint;
- 	cxl_port_to_endpoint;
-diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index 4b5490986a2a..aa0a89d91b30 100644
---- a/cxl/libcxl.h
-+++ b/cxl/libcxl.h
-@@ -89,6 +89,7 @@ int cxl_port_is_enabled(struct cxl_port *port);
- struct cxl_port *cxl_port_get_parent(struct cxl_port *port);
- bool cxl_port_is_root(struct cxl_port *port);
- bool cxl_port_is_switch(struct cxl_port *port);
-+int cxl_port_get_depth(struct cxl_port *port);
- struct cxl_bus *cxl_port_to_bus(struct cxl_port *port);
- bool cxl_port_is_endpoint(struct cxl_port *port);
- struct cxl_endpoint *cxl_port_to_endpoint(struct cxl_port *port);
 
