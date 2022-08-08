@@ -2,62 +2,145 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956E7C00140
-	for <linux-cxl@archiver.kernel.org>; Mon,  8 Aug 2022 12:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5F6C00140
+	for <linux-cxl@archiver.kernel.org>; Mon,  8 Aug 2022 15:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232981AbiHHMhd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 8 Aug 2022 08:37:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56518 "EHLO
+        id S243599AbiHHP6s (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 8 Aug 2022 11:58:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242531AbiHHMhd (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 8 Aug 2022 08:37:33 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55FE9BC14
-        for <linux-cxl@vger.kernel.org>; Mon,  8 Aug 2022 05:37:31 -0700 (PDT)
-Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4M1bLw110Wz67Qtq;
-        Mon,  8 Aug 2022 20:37:28 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
+        with ESMTP id S243674AbiHHP6r (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 8 Aug 2022 11:58:47 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA6DA1571D
+        for <linux-cxl@vger.kernel.org>; Mon,  8 Aug 2022 08:58:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1659974325; x=1691510325;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=ow0rgTDnZlB+35CfhODc41hRxwdjuDE3vRCVaclMr7g=;
+  b=V8ckGnHOu+bggv544q8VrRK9SglXWjYpHWl5w8FxFmEAaLBW62RF8g7f
+   /rMR22O30Wb/UOjoxvdtDIKvg+KfKxlZg2j9W0XG18XSTxCW6YJHtcdio
+   hN/E6ck9SLsvOPgOO5D13iLDoBhcv7opUNGZMdcyKOBGFixZZMz+QGoui
+   HBIcUBR5+mJzSbpZrRYxhbRdtVo14KbXnLbDHifBkbXlWoAnXhMpFzkfI
+   wZLhZau8g3fmTfHoslgDklzhG2HGQt1qNsEFV9I1sEdZGli+TEC877emw
+   imYz/qTPvbXhL2XBvac2O7GADzP4eYlYK+kBLXGRrLF74VSkoIDjBe+A2
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10433"; a="291864526"
+X-IronPort-AV: E=Sophos;i="5.93,222,1654585200"; 
+   d="scan'208";a="291864526"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2022 08:58:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,222,1654585200"; 
+   d="scan'208";a="780539417"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga005.jf.intel.com with ESMTP; 08 Aug 2022 08:58:45 -0700
+Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 8 Aug 2022 14:37:28 +0200
-Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 8 Aug
- 2022 13:37:28 +0100
-Date:   Mon, 8 Aug 2022 13:37:27 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Bobo WL <lmw.bobo@gmail.com>
-CC:     <linux-cxl@vger.kernel.org>, <qemu-devel@nongnu.org>,
-        <qemu-arm@nongnu.org>
-Subject: Re: [BUG] cxl can not create region
-Message-ID: <20220808133727.00001171@huawei.com>
-In-Reply-To: <CAGr_yG0UrfJAMWta3EkR1F0JZ4j--sig74p6vKL3K6TZDx9YGA@mail.gmail.com>
+ 15.1.2375.28; Mon, 8 Aug 2022 08:58:44 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.28 via Frontend Transport; Mon, 8 Aug 2022 08:58:44 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.176)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.28; Mon, 8 Aug 2022 08:58:44 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jnYi9VqLuC6d8pJETzdUojoDo+f/wXNe4UtJNvW0C505H/KR3DDYtjKY7Iz9cVcUrINy5h+JtICSk7/Lw3k7g/mMWx28zgtaqkAmatroqELXCBEC4CdGCvxjG77cb1H+5uFJSwOzcAWtO6oVhS90XYGQ/MzjBImKP+Ra6t5qzRNHal/g01BqStgdOoxOmva6EBZVGDjGG/NizmhTYJJGilW0fBIdlz8FJ59PiYepXIJIF6Wj7/Hk61UBJvj1yQjfOh6jTNUu/N7tGOIsRVg51l3DzKM87WagZKIIAednjJFJ3jV5tuJILZzY1GqfUXFaAvmeQLMKObuXvhgtvJBmWw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PVlBKI7tquWAdDb5N2l7qfhX1nQ2krw6mgJz4UVZjIo=;
+ b=lD/88lvH2ubh1qV+8PXhwQGF/myNt5K0j7xZ0bQ8kOF8TU8FXMBBUROYweaPMvRdlwP+C4VRn6+iK7hVuws4ffnmCrwjFOe93ZVif4NXhVNE/w630xn/nAWPG4X2gSqFBHUG8MJ/hDy74Lk12+30KBNpE2CBSur8EXCQBFEqL/j8Ezd09VMu+4FIFd7FQvOE2DlGjOFAmv/Uk65Dv87R4zvL14/7X+FMQ/7UQUBbz97zA1J3Lsm13ngNcrOdi84upM7e5l/Z4EFrTTwvapBE4oI7SHcWlu1iGkuRoGPem8GlVMOPOnyHrYeEjXX/cUaz9rhHds7Xf1COPF/1xauDqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20) by BN9PR11MB5321.namprd11.prod.outlook.com
+ (2603:10b6:408:136::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.14; Mon, 8 Aug
+ 2022 15:58:42 +0000
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::9847:345e:4c5b:ca12]) by MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::9847:345e:4c5b:ca12%6]) with mapi id 15.20.5504.020; Mon, 8 Aug 2022
+ 15:58:42 +0000
+Date:   Mon, 8 Aug 2022 08:58:38 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Bobo WL <lmw.bobo@gmail.com>, <linux-cxl@vger.kernel.org>
+CC:     <qemu-devel@nongnu.org>, <qemu-arm@nongnu.org>
+Subject: RE: [BUG] cxl can not create region
+Message-ID: <62f132aee401b_1b3c294c@dwillia2-xfh.jf.intel.com.notmuch>
 References: <CAGr_yG0UrfJAMWta3EkR1F0JZ4j--sig74p6vKL3K6TZDx9YGA@mail.gmail.com>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAGr_yG0UrfJAMWta3EkR1F0JZ4j--sig74p6vKL3K6TZDx9YGA@mail.gmail.com>
+X-ClientProxiedBy: BY3PR03CA0006.namprd03.prod.outlook.com
+ (2603:10b6:a03:39a::11) To MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 590d3521-7584-4a5b-b7fe-08da7956ddc7
+X-MS-TrafficTypeDiagnostic: BN9PR11MB5321:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /Arclw/rGWYfPjhWQ1+2TAm9N48tBpF1bS9I8DkaDfvtWkE4Rn3ozj2lHfDILNVyUtg7/q9x/vcFuZ+3qqYLrHrSQ1wSfXDfxhrzdfNeFpSyMDK3f8+1Vufz3nNMhcdhC0P1X3MkxEBsyP9+uBYSKA84N3tZqjQq0PE4+c8i8k4rYw6gRmml1/6kbAhZjkwWJIKmZjarydaZr4nWC1L4IxMHsFXuXqzGal4kGW+nJrH0zPeOP9Qvo/RTT6HK1NxBOHckVQlmHaG7++hk5x2xXH2SetMauJ2nvB9Rtin+7I3UluS/jmeWbt3iqgHf2fc9/yzMlQx7rgmtQtdJEnux4CR9/6/b54MJ0dR623hd5zY8DZHplFViZgFrhwJGrkwLt59PLAq1aQUuqMz7HMkggpBtTotCwTgXyWQKG4GpUDMq/HUY4+J6QvvJH5E7nSuxopIU8uLU3hMHNlaqiZYpbKANZLjPgvPJToUWWPELqncgHKOp1e1c83YjpHbKWGQSO/SGIhsRys2LjvLKsXgqpTr6VEuW4Od4FSfa9zSLT8me98OeYdOIveQPkmELPCPCgddBmVS2rTJW+PFHL2dj61CCHfaTl27sWr3BJc7Y7jnMk4maHisdDMnkTw7lthTryb8rTrKy4lDbrRFXGrjUciPF/7sCOXQ3suozbaWbonUsQpr+dbjixAd4N+I9uzdkP+XCNb2EtMmMDXUTmP34P89mdJdRI9qTdYUxJQ3gesr+EkuFK+sc8DGkiCw5n1lMnHPjmZfiQhFtislf7IKFBd3WJlb95ydPgfwNQB4xjjEvdT03oy0cNfPp2fFYioNy
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(396003)(136003)(39860400002)(366004)(376002)(346002)(38100700002)(82960400001)(45080400002)(186003)(83380400001)(316002)(9686003)(26005)(8676002)(6486002)(4326008)(5660300002)(478600001)(966005)(8936002)(2906002)(86362001)(66946007)(66476007)(6506007)(66556008)(6512007)(6666004)(41300700001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?B0S/94X6PSvpN+9bTPZuC0129i5Uzc9vTSTEfXHCmtyBAbZqlsv/0R/KQN1T?=
+ =?us-ascii?Q?nfXwUsVH1P7kaFGq+ph7PBNclCw0wKamuap9zXYytMyNHZNOR1gTMo0v1RiG?=
+ =?us-ascii?Q?T8jVNPSuksBFnfoO1B0IT1dSz2jp7WMWPfwCRKBQAjz81Ui7m3MmONW896w3?=
+ =?us-ascii?Q?w8JnOLzvMNfNxN8Frvq59SB3jsNOHiVVOYQQOzIKIYl4+LvQ8KoJds0hoi5b?=
+ =?us-ascii?Q?a0iQkvceUlJ2Jy+OMKb+nJnNDGwtQAqbfvWu2UMMQx//52nyYho0n3uBKJM7?=
+ =?us-ascii?Q?ODJ6SW3d74mO147xts5nqO+1n/fuNeEp645V0haIYK+hMk3gIHsqlg6s+rvY?=
+ =?us-ascii?Q?XxL/5MOsjjSZ655kA2eI5ORy5a/qI03d0J3MFSzbQWfGCL2QLB+e8McmNZTG?=
+ =?us-ascii?Q?Nt7euN1YDjmZOGyFWzGoNtJ9sEdUSqXv62IXhsqatR5cjLhmbGks+ptOxoEN?=
+ =?us-ascii?Q?FDwiR87h7WxI8OBzlAKioMXInblBnuRxtSkM86vQCirCWXxf2ZeurMvMiMZf?=
+ =?us-ascii?Q?mXQyJ5XR4/YSgx41nVKB8gmogTF8tCJKZ2rTUyn8wnD/J2ibnaaoay+TY4k3?=
+ =?us-ascii?Q?7YdxEivkn+Ji4nDCJNLVfiGkPZEagQ/gIu/vUij4DCoD9+q8P6mghekRF0fj?=
+ =?us-ascii?Q?XGlRkxEyaggqvTf8pK4Kc7DUUgrnrm5lNKCHaP1IhZXdeoI51/Q7oLga8M15?=
+ =?us-ascii?Q?Z5xmxKJRRgq43oKidg31pMQblgCjAJp5nq8P9793AJIu5d+N0szXAaVhqd8G?=
+ =?us-ascii?Q?R6Y9BxbogVwp3tGRMTgxWvILWfk/fdpwHr46XExZYjD+c1M2ofvKHqOT/dUM?=
+ =?us-ascii?Q?vJZK4ET9aG09GYEL3VZIxMS0dQBmbYORm9yPa+tUeUOBBTcvRzWGYLEdcyNs?=
+ =?us-ascii?Q?qQUv1nm8wi8ldkKKgfImdWnUvbcT2/IBc362UMJ6OUMPxoAMFDuQKLzmiCZP?=
+ =?us-ascii?Q?6dD2+1boBkbn2OHRZvoIBBEhGTrYuZNjtG8U5HqigMk7iLxFpmiT0AYg3Za3?=
+ =?us-ascii?Q?dV+M2YS0L9qUuT659uifSvYM2Svlid0c/HqWTcTRQh0dNfqXW/6mubpwtEiS?=
+ =?us-ascii?Q?/OXQkL2NAE1eC/ZUa1OMquy5Cxv/5/CUeeEMmzp8GDdPIicGQEckn55XMcgb?=
+ =?us-ascii?Q?WS1kTruK4KVmFfrgXzl/JwkhYsLWc5+SPV/OTWal8G20N1h0u9xzi0Ld9irC?=
+ =?us-ascii?Q?CwlXWxefKwrK72c9ElpDiqqdIPvfCC/xlrPGGd2kHlbO+PS2iARa19MFM81c?=
+ =?us-ascii?Q?fx12sXNlk4vIM/HkGOlNW51lReS46bJaGNH1G+mKsbsl36VXkKyYuNuQAAbd?=
+ =?us-ascii?Q?aW3qnahkayXVpYCjdV1EOicCzPVQHH5Kw/YeKIJVTjGjslJUh052wXwwHSDX?=
+ =?us-ascii?Q?U+Iac19m1hSn/4jg1w44qKsDxQJfjcaCxQTPk3Cs0Xn4NHeCdCFkOl6WP3oJ?=
+ =?us-ascii?Q?+pP9/F9PZwuxLuvMVi2qjiHQoP3H9nhMWsJXVckdAwfT/c7bDlkZv80f2AVt?=
+ =?us-ascii?Q?i727gSlT0WpLYqIgcoNmbvBuwGZsA2mmwxEl5/FFCdcWSoas0DWvTgAATvdd?=
+ =?us-ascii?Q?vtNO91qHuTRkn1PNLLRvuFYI5qaqzgmI2tjkegfDqNk4x1Y+UzFClvjytqsr?=
+ =?us-ascii?Q?Zw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 590d3521-7584-4a5b-b7fe-08da7956ddc7
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Aug 2022 15:58:42.4316
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sIv9+JzEaNIPwmL6vPV2EB6+Fzg1TtgQB/Uz8+VqtLKLsBRIv8dA/kIH6lgrRrd07ZobYf75pjtzCw8OLDeTOmUbnlC1nnQMmGTIgD0ySoQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR11MB5321
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 5 Aug 2022 10:20:23 +0800
-Bobo WL <lmw.bobo@gmail.com> wrote:
-
+Bobo WL wrote:
 > Hi list
 > 
 > I want to test cxl functions in arm64, and found some problems I can't
 > figure out.
-Hi Bob,
-
-Glad to see people testing this code.
-
 > 
 > My test environment:
 > 
@@ -108,16 +191,6 @@ Glad to see people testing this code.
 > \
 >         -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
 >         -device cxl-rp,port=0,bus=cxl.1,id=root_port0,chassis=0,slot=0 \
-
-Probably not related to your problem, but there is a disconnect in QEMU /
-kernel assumptionsaround the presence of an HDM decoder when a HB only
-has a single root port. Spec allows it to be provided or not as an implementation choice.
-Kernel assumes it isn't provide. Qemu assumes it is.
-
-The temporary solution is to throw in a second root port on the HB and not
-connect anything to it.  Longer term I may special case this so that the particular
-decoder defaults to pass through settings in QEMU if there is only one root port.
-
 >         -device cxl-upstream,bus=root_port0,id=us0 \
 >         -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
 >         -device
@@ -140,9 +213,6 @@ decoder defaults to pass through settings in QEMU if there is only one root port
 > 
 > [  534.697324] cxl_region region0: config state: 0
 > [  534.697346] cxl_region region0: probe: -6
-
-Seems odd this is up here.  But maybe fine.
-
 > [  534.697368] cxl_acpi ACPI0017:00: decoder0.0: created region0
 > [  534.699115] cxl region0: mem0:endpoint3 decoder3.0 add:
 > mem0:decoder3.0 @ 0 next: none nr_eps: 1 nr_targets: 1
@@ -202,7 +272,10 @@ Seems odd this is up here.  But maybe fine.
 > [  534.748919]  el0t_64_sync+0x18c/0x190
 > [  534.749629] Code: bad PC value
 > [  534.750169] ---[ end trace 0000000000000000 ]---
-> 
+
+What was the top kernel commit when you ran this test? What is the line
+number of "commit_store+0x118"?
+
 > 2. When I want to create x4 region with command: "cxl create-region -d
 > decoder0.0 -w 4 -g 4096 -m mem0 mem1 mem2 mem3". I got below errors:
 > 
@@ -241,40 +314,17 @@ Seems odd this is up here.  But maybe fine.
 > [   60.539747] cxl region0: ACPI0016:00:port1 target[0] = 0000:0c:00.0
 > for mem0:decoder3.0 @ 0
 > [   60.539754] cxl region0: 0000:0d:00.0:port2 iw: 4 ig: 512
-
-This looks like off by 1 that should be fixed in the below mentioned
-cxl/pending branch.  That ig should be 256.  Note the fix was
-for a test case with a fat HB and no switch, but certainly looks
-like this is the same issue.
-
 > [   60.539758] cxl region0: 0000:0d:00.0:port2 target[0] =
 > 0000:0e:00.0 for mem0:decoder3.0 @ 0
 > [   60.539764] cxl region0: ACPI0016:00:port1: cannot host mem1:decoder4.0 at 1
 > 
 > I have tried to write sysfs node manually, got same errors.
-When stepping through by hand, which sysfs write triggers the crash above?
-
-Not sure it's related, but I've just sent out a fix to the
-target register handling in QEMU. 
-
-https://lore.kernel.org/linux-cxl/20220808122051.14822-1-Jonathan.Cameron@huawei.com/T/#m47ff985412ce44559e6b04d677c302f8cd371330
-
-I did have one instance last week of triggering what looked to be a race condition but
-the stack trace doesn't looks related to what you've hit.
-
-It will probably be a few days before I have time to take a look at replicating
-what you have seen.
-
-If you have time, try using the kernel.org cxl/pending branch as there are
-a few additional fixes on there since you sent this email.  Optimistic to hope
-this is covered by one of those, but at least it will mean we are trying to replicate
-on same branch.
-
-Jonathan
-
-
 > 
 > Hope I can get some helps here.
-> 
-> Bob
 
+What is the output of:
+
+    cxl list -MDTu -d decoder0.0
+
+...? It might be the case that mem1 cannot be mapped by decoder0.0, or
+at least not in the specified order, or that validation check is broken.
