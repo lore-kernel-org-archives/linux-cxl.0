@@ -2,49 +2,48 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 720EFC00140
-	for <linux-cxl@archiver.kernel.org>; Mon,  8 Aug 2022 21:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BB2C00140
+	for <linux-cxl@archiver.kernel.org>; Mon,  8 Aug 2022 21:07:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238296AbiHHVHB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 8 Aug 2022 17:07:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42186 "EHLO
+        id S238305AbiHHVHG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 8 Aug 2022 17:07:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231742AbiHHVG7 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 8 Aug 2022 17:06:59 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8121213D19
-        for <linux-cxl@vger.kernel.org>; Mon,  8 Aug 2022 14:06:58 -0700 (PDT)
+        with ESMTP id S231742AbiHHVHD (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 8 Aug 2022 17:07:03 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6809013D19
+        for <linux-cxl@vger.kernel.org>; Mon,  8 Aug 2022 14:07:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1659992818; x=1691528818;
+  t=1659992823; x=1691528823;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=jXqGFMJZSj/Jpi/etgUjQTVM93znx9qzEIo7pFN6NdI=;
-  b=RX//2BawZ3snZ9Cbh5HEaAcbCGInAxcJViNi1Rbz6aBjbVAHMpFLb0w7
-   9gnW5JqFtv9oNiNGoSJxbaktdl0YDgODtS2SU/AnB/NJ1oUj9ZEbpZXB9
-   6BEMkeVVRUzUa2OYCc1gPXQJ2APoSTWQ+HAFa27oupYTVegivV/6rUD7P
-   09sxV54drChq+FIeYDgZQ9sAdmyilz5CbnSL7bauMmMvm+EEdFLIldPua
-   fdCEIOk8GFWX/f/Vjy1+oILeoLP3RGiKI2BtR7Lz52w1PVrRlxOp/j+/8
-   axaXc+3oGASOseX0q+HCTvoMQdJgFg2IXjur2Qr6ubPI8UqTz2kBbIt6a
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10433"; a="273742102"
+  bh=wRfMdynpyHtgzPN7sbP0/GpsoE7zm+/qTVu+XWbn+js=;
+  b=WjPPXLgNAAFKMxwFzZi0m1QhN3J2GEhiK7k+YmbdQ5ezP1KRbliC7LsU
+   W9EFq2qFEYzJaB4L4+cRT5w/dvs1/SotEOqAMwhCMjqwfxmmIc8MiK9vq
+   IAzJi34YJyH6fKythKjufFfDGmsvg7T5J4MoYy9u0A0Q0sJAJAORvWT9l
+   vH1h2qlpJdpS5kqJRa3RY1Uo+v1pKB2S4/jPl8pIAUyzCcO1iNDVwwTjm
+   Zgb2STS2AO5RfI66ReJzJA2Tf/bwNDetNGqQe+bHYoKDD3tZuSVKjypoB
+   Ko8Vfvf4e2fM6T7fPy4g+kOc2jeFuKdcV+QmtKIHP0pFQVN9wlkmBUDYq
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10433"; a="376984892"
 X-IronPort-AV: E=Sophos;i="5.93,222,1654585200"; 
-   d="scan'208";a="273742102"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2022 14:06:57 -0700
+   d="scan'208";a="376984892"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2022 14:07:02 -0700
 X-IronPort-AV: E=Sophos;i="5.93,222,1654585200"; 
-   d="scan'208";a="607977901"
+   d="scan'208";a="555080261"
 Received: from djiang5-desk4.jf.intel.com ([10.165.157.96])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2022 14:06:57 -0700
-Subject: [PATCH 1/3] cxl: Add check for result of interleave ways plus
- granularity combo
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2022 14:07:02 -0700
+Subject: [PATCH 2/3] cxl: Add CXL spec v3.0 interleave support
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
         ira.weiny@intel.com, alison.schofield@intel.com,
         Jonathan.Cameron@huawei.com
-Date:   Mon, 08 Aug 2022 14:06:57 -0700
-Message-ID: <165999281717.493131.1159254270127915425.stgit@djiang5-desk4.jf.intel.com>
+Date:   Mon, 08 Aug 2022 14:07:02 -0700
+Message-ID: <165999282258.493131.2782730417677035484.stgit@djiang5-desk4.jf.intel.com>
 In-Reply-To: <165999244272.493131.1975513183227389633.stgit@djiang5-desk4.jf.intel.com>
 References: <165999244272.493131.1975513183227389633.stgit@djiang5-desk4.jf.intel.com>
 User-Agent: StGit/1.4
@@ -55,126 +54,98 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add a helper function to check the combination of interleave ways and
-interleave granularity together is sane against the interleave mask from
-the HDM decoder. Add the check to cxl_region_attach() to make sure the
-region config is sane. Add the check to cxl_port_setup_targets() to make
-sure the port setup config is also sane.
+CXL spec v3.0 added 2 CAP bits to the CXL HDM Decoder Capability Register.
+CXL spec v3.0 8.2.4.19.1. Bit 11 indicates that 3, 6, and 12 way interleave
+is capable. Bit 12 indicates that 16 way interleave is capable.
 
-Calculation refers to CXL spec v3 8.2.4.19.13 implementation note #3.
+Add code to parse_hdm_decoder_caps() to cache those new bits. Add check in
+cxl_interleave_verify() call to make sure those CAP bits matches the passed
+in interleave value.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/core/region.c |   17 ++++++++++++++++-
- drivers/cxl/cxl.h         |   11 +++++++++++
- drivers/cxl/cxlmem.h      |   31 +++++++++++++++++++++++++++++++
- 3 files changed, 58 insertions(+), 1 deletion(-)
+ drivers/cxl/core/hdm.c |    4 ++++
+ drivers/cxl/cxl.h      |    2 ++
+ drivers/cxl/cxlmem.h   |   29 +++++++++++++++++++++++++++++
+ 3 files changed, 35 insertions(+)
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index cf5d5811fe4c..a209a8de31fd 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -1081,6 +1081,13 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 		return rc;
- 	}
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index 8143e2615957..50ff7387e425 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -80,6 +80,10 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
+ 		cxlhdm->interleave_mask |= GENMASK(11, 8);
+ 	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_14_12, hdm_cap))
+ 		cxlhdm->interleave_mask |= GENMASK(14, 12);
++	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_3_6_12_WAY, hdm_cap))
++		cxlhdm->interleave_3_6_12 = true;
++	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_16_WAY, hdm_cap))
++		cxlhdm->interleave_16 = true;
+ }
  
-+	rc = cxl_interleave_verify(port, iw, ig);
-+	if (rc) {
-+		dev_dbg(&cxlr->dev, "%s:%s: invalid interleave & granularity combo: %d\n",
-+			dev_name(port->uport), dev_name(&port->dev), rc);
-+		return rc;
-+	}
-+
- 	cxld->interleave_ways = iw;
- 	cxld->interleave_granularity = ig;
- 	dev_dbg(&cxlr->dev, "%s:%s iw: %d ig: %d\n", dev_name(port->uport),
-@@ -1218,6 +1225,15 @@ static int cxl_region_attach(struct cxl_region *cxlr,
- 		return -EBUSY;
- 	}
- 
-+	ep_port = cxled_to_port(cxled);
-+	rc = cxl_interleave_verify(ep_port, p->interleave_ways,
-+				   p->interleave_granularity);
-+	if (rc) {
-+		dev_dbg(&cxlr->dev, "%s: invalid interleave & granularity combo: %d\n",
-+			dev_name(&cxlmd->dev), rc);
-+		return rc;
-+	}
-+
- 	for (i = 0; i < p->interleave_ways; i++) {
- 		struct cxl_endpoint_decoder *cxled_target;
- 		struct cxl_memdev *cxlmd_target;
-@@ -1236,7 +1252,6 @@ static int cxl_region_attach(struct cxl_region *cxlr,
- 		}
- 	}
- 
--	ep_port = cxled_to_port(cxled);
- 	root_port = cxlrd_to_port(cxlrd);
- 	dport = cxl_find_dport_by_dev(root_port, ep_port->host_bridge);
- 	if (!dport) {
+ static void __iomem *map_hdm_decoder_regs(struct cxl_port *port,
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index bc604b7e44fb..275979fbd15a 100644
+index 275979fbd15a..db9631d09dd0 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -61,6 +61,17 @@
- #define CXL_HDM_DECODER0_SKIP_LOW(i) CXL_HDM_DECODER0_TL_LOW(i)
- #define CXL_HDM_DECODER0_SKIP_HIGH(i) CXL_HDM_DECODER0_TL_HIGH(i)
- 
-+enum {
-+	CXL_INTERLEAVE_1_WAY = 0,
-+	CXL_INTERLEAVE_2_WAY,
-+	CXL_INTERLEAVE_4_WAY,
-+	CXL_INTERLEAVE_8_WAY,
-+	CXL_INTERLEAVE_16_WAY,
-+	CXL_INTERLEAVE_3_WAY = 8,
-+	CXL_INTERLEAVE_6_WAY,
-+	CXL_INTERLEAVE_12_WAY
-+};
-+
- static inline int cxl_hdm_decoder_count(u32 cap_hdr)
- {
- 	int val = FIELD_GET(CXL_HDM_DECODER_COUNT_MASK, cap_hdr);
+@@ -42,6 +42,8 @@
+ #define   CXL_HDM_DECODER_TARGET_COUNT_MASK GENMASK(7, 4)
+ #define   CXL_HDM_DECODER_INTERLEAVE_11_8 BIT(8)
+ #define   CXL_HDM_DECODER_INTERLEAVE_14_12 BIT(9)
++#define   CXL_HDM_DECODER_INTERLEAVE_3_6_12_WAY BIT(11)
++#define   CXL_HDM_DECODER_INTERLEAVE_16_WAY BIT(12)
+ #define CXL_HDM_DECODER_CTRL_OFFSET 0x4
+ #define   CXL_HDM_DECODER_ENABLE BIT(1)
+ #define CXL_HDM_DECODER0_BASE_LOW_OFFSET(i) (0x20 * (i) + 0x10)
 diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 88e3a8e54b6a..d5f872ca62f9 100644
+index d5f872ca62f9..9b4b23b3b78a 100644
 --- a/drivers/cxl/cxlmem.h
 +++ b/drivers/cxl/cxlmem.h
-@@ -401,6 +401,37 @@ struct cxl_hdm {
+@@ -398,9 +398,35 @@ struct cxl_hdm {
+ 	unsigned int decoder_count;
+ 	unsigned int target_count;
+ 	unsigned int interleave_mask;
++	bool interleave_3_6_12;
++	bool interleave_16;
  	struct cxl_port *port;
  };
  
-+static inline int cxl_interleave_verify(struct cxl_port *port,
-+					int ways, int granularity)
++static inline bool valid_interleave(struct cxl_hdm *cxlhdm, u8 iw)
 +{
-+	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
-+	unsigned int addr_mask;
-+	u16 ig;
-+	u8 iw;
-+	int rc;
++	switch (iw) {
++	case CXL_INTERLEAVE_1_WAY:
++	case CXL_INTERLEAVE_2_WAY:
++	case CXL_INTERLEAVE_4_WAY:
++	case CXL_INTERLEAVE_8_WAY:
++		return true;
++	case CXL_INTERLEAVE_16_WAY:
++		if (!cxlhdm->interleave_16)
++			return false;
++		return true;
++	case CXL_INTERLEAVE_3_WAY:
++	case CXL_INTERLEAVE_6_WAY:
++	case CXL_INTERLEAVE_12_WAY:
++		if (!cxlhdm->interleave_3_6_12)
++			return false;
++		return true;
++	default:
++	};
 +
-+	rc = granularity_to_cxl(granularity, &ig);
-+	if (rc)
-+		return rc;
-+
-+	rc = ways_to_cxl(ways, &iw);
-+	if (rc)
-+		return rc;
-+
-+	if (iw == 0)
-+		return 0;
-+
-+	if (iw < CXL_INTERLEAVE_3_WAY)
-+		addr_mask = GENMASK(ig + 8 + iw - 1, ig + 8);
-+	else
-+		addr_mask = GENMASK((ig + iw) / 3 - 1, ig + 8);
-+
-+	if (~cxlhdm->interleave_mask & addr_mask)
-+		return -EINVAL;
-+
-+	return 0;
++	return false;
 +}
 +
- struct seq_file;
- struct dentry *cxl_debugfs_create_dir(const char *dir);
- void cxl_dpa_debug(struct seq_file *file, struct cxl_dev_state *cxlds);
+ static inline int cxl_interleave_verify(struct cxl_port *port,
+ 					int ways, int granularity)
+ {
+@@ -421,6 +447,9 @@ static inline int cxl_interleave_verify(struct cxl_port *port,
+ 	if (iw == 0)
+ 		return 0;
+ 
++	if (!valid_interleave(cxlhdm, iw))
++		return -EINVAL;
++
+ 	if (iw < CXL_INTERLEAVE_3_WAY)
+ 		addr_mask = GENMASK(ig + 8 + iw - 1, ig + 8);
+ 	else
 
 
