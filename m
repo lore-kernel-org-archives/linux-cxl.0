@@ -2,108 +2,91 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D10C19F2D
-	for <linux-cxl@archiver.kernel.org>; Tue,  9 Aug 2022 10:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE3CC19F2D
+	for <linux-cxl@archiver.kernel.org>; Tue,  9 Aug 2022 13:07:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242304AbiHIKS6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 9 Aug 2022 06:18:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36406 "EHLO
+        id S243189AbiHINHX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 9 Aug 2022 09:07:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242268AbiHIKSp (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 9 Aug 2022 06:18:45 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAA1623BE5
-        for <linux-cxl@vger.kernel.org>; Tue,  9 Aug 2022 03:18:43 -0700 (PDT)
-Received: from fraeml706-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4M289C3hyxz689Mk;
-        Tue,  9 Aug 2022 18:15:59 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.24; Tue, 9 Aug 2022 12:18:41 +0200
-Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 9 Aug
- 2022 11:18:40 +0100
-Date:   Tue, 9 Aug 2022 11:18:39 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <vishal.l.verma@intel.com>,
-        <ira.weiny@intel.com>, <alison.schofield@intel.com>,
-        <dave.jiang@intel.com>
-Subject: Re: [PATCH v2 2/3] cxl/region: Fix x1 interleave to greater than x1
- interleave routing
-Message-ID: <20220809111839.00003b43@huawei.com>
-In-Reply-To: <62f163e4227ea_1b3c2945@dwillia2-xfh.jf.intel.com.notmuch>
-References: <165973125417.1526540.14425647258796609596.stgit@dwillia2-xfh.jf.intel.com>
-        <165973126583.1526540.657948655360009242.stgit@dwillia2-xfh.jf.intel.com>
-        <20220808120306.00000847@huawei.com>
-        <62f163e4227ea_1b3c2945@dwillia2-xfh.jf.intel.com.notmuch>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S229653AbiHINHW (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 9 Aug 2022 09:07:22 -0400
+Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 006E76301
+        for <linux-cxl@vger.kernel.org>; Tue,  9 Aug 2022 06:07:20 -0700 (PDT)
+Received: by mail-vk1-xa2c.google.com with SMTP id bq26so2793972vkb.8
+        for <linux-cxl@vger.kernel.org>; Tue, 09 Aug 2022 06:07:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=UOAoK7IQMDEeEt2nG0iFjgejZbUhappL+ozDYl4kVTM=;
+        b=ndy6eHbL2RDYtNCD+/sq27rColzXawZxes8IjgNVhUO6x4qm8+PMTW3h8MaUEf43Nz
+         ZNPg9DX92h/XoRc35dnWEazbQJC0yVesA0XyrbhMfE2DJkLNdEwQ0yLzNzA7x+sW5K6a
+         RYK8p7qOjdd38JbF4Dpw4RSHR7haMzK0VVfcwNmQ6p7c4JFJbwTb22T5xgSlQM4wL8Xl
+         8pNdv97Yy8yOhFqT66OlwL5Z7pRwMfIokW27sVjJQ3hYsUY8JSsG6GS1kt2lJ+O+hg+1
+         CVDzciG7zpD9vZeXk5BTO8J92tSL31QH3YkBP1qQB+YxCbGTMqdk37AtpRp1VXBctP7V
+         RcQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=UOAoK7IQMDEeEt2nG0iFjgejZbUhappL+ozDYl4kVTM=;
+        b=oJYh5YdmJQYEMDFsEK3axm0OspzpUmDwS7ryj/DTCYhXsax/gfKzBP9skxpiuDGRMz
+         Zm3GUQNnOF+YTgaY0DeIN5hAJoqaJYbrog7DI6yhEkwATdfCl49UPBfpTZW1p8f0OfwC
+         2aCIzJHFzZYVr4w281dmnOBRVAAkDC6MClQvtD6+jgWGEwneNmcHxphJFtdfZRnSijs4
+         kWqtmYpGY83e/pzI2ze/6iVl1V+bMioI4ukomqSpNAlPCnLUAOeM88OsHO28wTRZ8wTW
+         zcwuuYz8puAGWaiKknqcrIrd18CUZMGbGDzDMCFiPhPzG4O+BTUpRhRzmHkjKuY0O3b0
+         YUrg==
+X-Gm-Message-State: ACgBeo0ijadm1NlW5DdYwpq1Jy5wMUHG8xgdcAu6XNlml2sqLq8XMpAB
+        cKscZ3DpuV1ogcLPqYxDXXCk5BgWM1K73avKOx8=
+X-Google-Smtp-Source: AA6agR472E+2KFImJQlAL0x3/55KMlHGSRENEhSuZ3A3EcI8Ht8WOBCnHy/ZGb6mOCJeC9u46+lajC/6kJQ48pTeoLs=
+X-Received: by 2002:a1f:da44:0:b0:377:2e13:1035 with SMTP id
+ r65-20020a1fda44000000b003772e131035mr9667902vkg.29.1660050439860; Tue, 09
+ Aug 2022 06:07:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+References: <CAGr_yG0UrfJAMWta3EkR1F0JZ4j--sig74p6vKL3K6TZDx9YGA@mail.gmail.com>
+ <20220808133727.00001171@huawei.com>
+In-Reply-To: <20220808133727.00001171@huawei.com>
+From:   Bobo WL <lmw.bobo@gmail.com>
+Date:   Tue, 9 Aug 2022 21:07:06 +0800
+Message-ID: <CAGr_yG36GSO8esyO9nn6OeOEN5zPSosEmBHbfYGwqNGiYOh9vw@mail.gmail.com>
+Subject: Re: [BUG] cxl can not create region
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, qemu-devel@nongnu.org,
+        qemu-arm@nongnu.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 8 Aug 2022 12:28:36 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+Hi Jonathan
 
-> Jonathan Cameron wrote:
-> > On Fri, 05 Aug 2022 13:27:45 -0700
-> > Dan Williams <dan.j.williams@intel.com> wrote:
-> >   
-> > > In cases where the decode fans out as it traverses downstream, the
-> > > interleave granularity needs to increment to identify the port selector
-> > > bits out of the remaining address bits. For example, recall that with an
-> > > x2 parent port intereleave (IW == 1), the downstream decode for children
-> > > of those ports will either see address bit IG+8 always set, or address
-> > > bit IG+8 always clear. So if the child port needs to select a downstream
-> > > port it can only use address bits starting at IG+9 (where IG and IW are
-> > > the CXL encoded values for interleave granularity (ilog2(ig) - 8) and
-> > > ways (ilog2(iw))).
-> > > 
-> > > When the parent port interleave is x1 no such masking occurs and the
-> > > child port can maintain the granularity that was routed to the parent
-> > > port.
-> > > 
-> > > Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>  
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> #via qemu  
-> 
-> Thanks Jonathan.
-> 
-> In the interests of being able to make a:
-> 
-> "these commits have appeared in Linux next with no known outstanding
-> issues"
-> 
-> ...I'd like to note these review and test tags in the merge message.
-> They will still be in the history just not in the commits directly.
-> Similar to what I did here:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git/tag/?h=libnvdimm-for-5.17
-> 
-> The current state of cxl/next hit linux-next last night. Let me know if
-> you have any heartburn about that.
+Thanks for your reply!
 
-Fine by me.
+On Mon, Aug 8, 2022 at 8:37 PM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> Probably not related to your problem, but there is a disconnect in QEMU /
+> kernel assumptionsaround the presence of an HDM decoder when a HB only
+> has a single root port. Spec allows it to be provided or not as an implementation choice.
+> Kernel assumes it isn't provide. Qemu assumes it is.
+>
+> The temporary solution is to throw in a second root port on the HB and not
+> connect anything to it.  Longer term I may special case this so that the particular
+> decoder defaults to pass through settings in QEMU if there is only one root port.
+>
 
-I normally don't even do that if I'm rushing something in. Just rely on
-the link to the thread in the actual patch description for anyone who cares.
-Maybe I'll start doing something like you are, though can be a pain to gather them
-up on a large pull request.
+You are right! After adding an extra HB in qemu, I can create a x1
+region successfully.
+But have some errors in Nvdimm:
 
-Jonathan
+[   74.925838] Unknown online node for memory at 0x10000000000, assuming node 0
+[   74.925846] Unknown target node for memory at 0x10000000000, assuming node 0
+[   74.927470] nd_region region0: nmem0: is disabled, failing probe
 
-> 
-> > Now this is resolved, I'll get qemu fix sent out (hopefully later today).  
-> 
-> Good to hear, thanks.
+And x4 region still failed with same errors, using latest cxl/preview
+branch don't work.
+I have picked "Two CXL emulation fixes" patches in qemu, still not working.
 
+Bob
