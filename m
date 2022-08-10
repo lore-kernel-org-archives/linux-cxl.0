@@ -2,152 +2,300 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F08C00140
-	for <linux-cxl@archiver.kernel.org>; Wed, 10 Aug 2022 21:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9716C25B06
+	for <linux-cxl@archiver.kernel.org>; Wed, 10 Aug 2022 23:09:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232194AbiHJVsg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 10 Aug 2022 17:48:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53424 "EHLO
+        id S233643AbiHJXJl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 10 Aug 2022 19:09:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229522AbiHJVsf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 10 Aug 2022 17:48:35 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 636E17B797;
-        Wed, 10 Aug 2022 14:48:34 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id C1C606C176F;
-        Wed, 10 Aug 2022 21:48:33 +0000 (UTC)
-Received: from pdx1-sub0-mail-a301.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id A8F856C1F1A;
-        Wed, 10 Aug 2022 21:48:32 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1660168113; a=rsa-sha256;
-        cv=none;
-        b=WYJMxqrkeP4XCTOieBVD2PSb5p6fs8JP3LLyF0OZ80zLtfrBHUZZvzwCyUFnGl2pyeYpFg
-        OSAky+QGuVZ4Bs2fbjFz1Uzh2vbJUcQZqSRIX8RTP8ZdigDjHfYM2ycaGOuZL7vKROGHC5
-        EIfXZDiz3XZ9E9PppwWKOHRM5C3mXO+53L1MFO2mw94J6NhUBuAtKnZo8dl1x6cQCopWJN
-        hCNV3v99/GrjoCFy6WMiLE62qvBo/oEBwdI5SfNQ1Z41usxp/WBUy0Y4qYgD0SM5HRnI9T
-        iybn/hUccU8mziu16/2OOfMxI+nchMsj4TCOlXSv/FHNyP2UzY4zT30NwBMscw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1660168113;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=jWp01Hcl4j0YiL9/n7IqCl4dh/n8uPqHFzk1dZ4hNj8=;
-        b=INNStFOlxSuXXOwUF/tkf8NmHL8KePZuDc2lWL2jv7EBB633F3vaq2ymNKkD80dnh5yNSo
-        bWl5PbePBYG/esel1y+16Svr16VzqJ6Q67KJw5B7kYk/UoXlMUPlc02xg4oFBhZIEZTd8W
-        u4VHk5T5P9E3piV41193RGytTWwCZUEl/g9ZtJ3R55Zmdz3QD3B13YHzmxHvj7lrORM6Xa
-        mPzwW8ebFpPbKEJLrF64kPLtD0bUx6uZy4pM9ndtbQ4BIamUmD2wRqraYIrDG8thApP2Mu
-        tee669SrSzwmLl2+9xpQD/11viUm79fr7zMSSOdoiDyfkicvGi9GGXvx3xSVmg==
-ARC-Authentication-Results: i=1;
-        rspamd-7c478d8c66-wmbcj;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Lonely-Unite: 2587f2a53c744ae3_1660168113268_3568757427
-X-MC-Loop-Signature: 1660168113268:3572167391
-X-MC-Ingress-Time: 1660168113267
-Received: from pdx1-sub0-mail-a301.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.112.55.239 (trex/6.7.1);
-        Wed, 10 Aug 2022 21:48:33 +0000
-Received: from offworld (unknown [104.36.25.245])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a301.dreamhost.com (Postfix) with ESMTPSA id 4M33Tq2F6MzMD;
-        Wed, 10 Aug 2022 14:48:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1660168112;
-        bh=jWp01Hcl4j0YiL9/n7IqCl4dh/n8uPqHFzk1dZ4hNj8=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=A6GKJe13/0xcGDk13MOtD/Lf29AjbXwG7DsGw8gAvvZtFwA3xgbgYPqjHxiN7iPDv
-         D5k7AqupovSKVi//+eIPG84PE3FCZMln9AyHay2+GllzOCv2EnHZOKou364UCxz+ib
-         j4O4AFEjnlRErLj1vowWcX+OiRmqciu1sZwW8N8XaFyB3sFZ1bgVkvEUzW2IUQint/
-         YCYxGvHeunNiEGk9FJ9ratMlpHkt03pT9eejxjNvh+nuAUgk0SWzgpQegOKqBnq1Gv
-         WvIb054m7ixCjZT6ReFxkDztcdkkfH6ZghMFTjtQ563pV9fRkX2U1CrCqwp5du+oFw
-         dg9dzgrWnGqqw==
-Date:   Wed, 10 Aug 2022 14:31:12 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
+        with ESMTP id S233628AbiHJXJh (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 10 Aug 2022 19:09:37 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D18E574CDF
+        for <linux-cxl@vger.kernel.org>; Wed, 10 Aug 2022 16:09:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1660172976; x=1691708976;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=J6sYu8I0Yi7O8OuAuofBxCfGkDn8ldS/h+uwJKUswds=;
+  b=WLKaF2HvgFZhsvrGUGJwfJQE6CaFzPnu3gRV8Ik1oG+DZGLELR2nYZ4G
+   yBag0ZAkQptHuk4xq4h1EPKFpDwzduyki+KsJ3zKQ6sJNdd/tmbuWZbR7
+   +4UATkDTANJNYXJeQ2ay/CqB4tSiMZzP+zvVl6e3rJIFamsbqCPrTKQP2
+   jQEKgA/Qe8qOvT0rCmKQ3iKjg1pE8J/TptX7VKOu+kKUXh9bQtgherD6j
+   +PfF2FxDZaYd5zOtYh+CmqUxn5gvtnLn/vxNXpUi24GBsreWy8Az3tJ8B
+   /AwRDAEUDIhzb2Xa42oCCjo5lQGnzAMxiPFGNXPCYgO3Is0CxczxEZdAR
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10435"; a="292005865"
+X-IronPort-AV: E=Sophos;i="5.93,228,1654585200"; 
+   d="scan'208";a="292005865"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2022 16:09:35 -0700
+X-IronPort-AV: E=Sophos;i="5.93,228,1654585200"; 
+   d="scan'208";a="581429465"
+Received: from maughenb-mobl.amr.corp.intel.com (HELO vverma7-desk1.intel.com) ([10.209.94.5])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2022 16:09:34 -0700
+From:   Vishal Verma <vishal.l.verma@intel.com>
+To:     <linux-cxl@vger.kernel.org>
+Cc:     <nvdimm@lists.linux.dev>, Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-        bwidawsk@kernel.org, ira.weiny@intel.com, vishal.l.verma@intel.com,
-        alison.schofield@intel.com, a.manzanares@samsung.com,
-        linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH RFC 10/15] x86: add an arch helper function to invalidate
- all cache for nvdimm
-Message-ID: <20220810213112.p4fdclh4zbd3vta6@offworld>
-References: <165791918718.2491387.4203738301057301285.stgit@djiang5-desk3.ch.intel.com>
- <165791937063.2491387.15277418618265930924.stgit@djiang5-desk3.ch.intel.com>
- <20220718053039.5whjdcxynukildlo@offworld>
- <4bedc81d-62fa-7091-029e-a2e56b4f8f7a@intel.com>
- <20220803183729.00002183@huawei.com>
- <9f3705e1-de21-0f3c-12af-fd011b6d613d@intel.com>
- <YvO8pP7NUOdH17MM@FVFF77S0Q05N>
- <62f40fba338af_3ce6829466@dwillia2-xfh.jf.intel.com.notmuch>
- <20220810211337.ha27cl24splm4wjh@offworld>
- <62f4238b5ce8a_3ce6829447@dwillia2-xfh.jf.intel.com.notmuch>
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: [ndctl PATCH v2 10/10] cxl/decoder: add a max_available_extent attribute
+Date:   Wed, 10 Aug 2022 17:09:14 -0600
+Message-Id: <20220810230914.549611-11-vishal.l.verma@intel.com>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20220810230914.549611-1-vishal.l.verma@intel.com>
+References: <20220810230914.549611-1-vishal.l.verma@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <62f4238b5ce8a_3ce6829447@dwillia2-xfh.jf.intel.com.notmuch>
-User-Agent: NeoMutt/20220429
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8248; h=from:subject; bh=J6sYu8I0Yi7O8OuAuofBxCfGkDn8ldS/h+uwJKUswds=; b=owGbwMvMwCXGf25diOft7jLG02pJDElfrGbe1bvZJd+p++qx2p6gZV3ltxqTws9t6Z+4um9z4OkY 8+XbO0pZGMS4GGTFFFn+7vnIeExuez5PYIIjzBxWJpAhDFycAjARBUNGhmNNn4xerg9euLf6RZrtih evrsifmawSadDkovkiK6i/lY3hf92WJY7Pcub8q9F5J3Sm4PH6LysWhCyN2j1VTOaG2SGxEA4A
+X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 10 Aug 2022, Dan Williams wrote:
+Add a max_available_extent attribute to cxl_decoder. In order to aid in
+its calculation, change the order of regions in the root decoder's list
+to be sorted by start HPA of the region.
 
->Davidlohr Bueso wrote:
->> On Wed, 10 Aug 2022, Dan Williams wrote:
->>
->> >I expect the interface would not be in the "flush_cache_" namespace
->> >since those functions are explicitly for virtually tagged caches that
->> >need maintenance on TLB operations that change the VA to PA association.
->> >In this case the cache needs maintenance because the data at the PA
->> >changes. That also means that putting it in the "nvdimm_" namespace is
->> >also wrong because there are provisions in the CXL spec where volatile
->> >memory ranges can also change contents at a given PA, for example caches
->> >might need to be invalidated if software resets the device, but not the
->> >platform.
->> >
->> >Something like:
->> >
->> >    region_cache_flush(resource_size_t base, resource_size_t n, bool nowait)
->> >
->> >...where internally that function can decide if it can rely on an
->> >instruction like wbinvd, use set / way based flushing (if set / way
->> >maintenance can be made to work which sounds like no for arm64), or map
->> >into VA space and loop. If it needs to fall back to that VA-based loop
->> >it might be the case that the caller would want to just fail the
->> >security op rather than suffer the loop latency.
->>
->> Yep, I was actually prototyping something similar, but want to still
->> reuse cacheflush.h machinery and just introduce cache_flush_region()
->> or whatever name, which returns any error. So all the logic would
->> just be per-arch, where x86 will do the wbinv and return 0, and arm64
->> can just do -EINVAL until VA-based is no longer the only way.
->
->cache_flush_region() works for me, but I wonder if there should be a
->cache_flush_region_capable() call to shut off dependent code early
->rather than discovering it at runtime? For example, even archs like x86,
->that have wbinvd, have scenarios where wbinvd is prohibited, or painful.
->TDX, and virtualization in general, comes to mind.
+Additionally, emit this attribute in decoder listings, and consult it
+for available space before creating a new region.
 
-Yeah I'm no fan of wbinv, but in these cases (cxl/nvdimm), at least from
-the performance angle, I am not worried: the user is explicity doing a
-security/cleaning specific op, probably decomisioning, so it's rare and
-should not expect better.
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+---
+ cxl/lib/private.h  |  1 +
+ cxl/lib/libcxl.c   | 86 +++++++++++++++++++++++++++++++++++++++++++++-
+ cxl/libcxl.h       |  3 ++
+ cxl/json.c         |  8 +++++
+ cxl/region.c       | 14 +++++++-
+ cxl/lib/libcxl.sym |  1 +
+ 6 files changed, 111 insertions(+), 2 deletions(-)
 
-Thanks,
-Davidlohr
+diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+index 8619bb1..8705e46 100644
+--- a/cxl/lib/private.h
++++ b/cxl/lib/private.h
+@@ -104,6 +104,7 @@ struct cxl_decoder {
+ 	u64 size;
+ 	u64 dpa_resource;
+ 	u64 dpa_size;
++	u64 max_available_extent;
+ 	void *dev_buf;
+ 	size_t buf_len;
+ 	char *dev_path;
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index b4d7890..3c1a2c3 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -446,6 +446,11 @@ CXL_EXPORT int cxl_region_delete(struct cxl_region *region)
+ 	return 0;
+ }
+ 
++static int region_start_cmp(struct cxl_region *r1, struct cxl_region *r2)
++{
++	return ((r1->start < r2->start) ? -1 : 1);
++}
++
+ static void *add_cxl_region(void *parent, int id, const char *cxlregion_base)
+ {
+ 	const char *devname = devpath_to_devname(cxlregion_base);
+@@ -528,7 +533,7 @@ static void *add_cxl_region(void *parent, int id, const char *cxlregion_base)
+ 			return region_dup;
+ 		}
+ 
+-	list_add(&decoder->regions, &region->list);
++	list_add_sorted(&decoder->regions, region, list, region_start_cmp);
+ 
+ 	return region;
+ err:
+@@ -1606,6 +1611,74 @@ cxl_endpoint_get_memdev(struct cxl_endpoint *endpoint)
+ 	return NULL;
+ }
+ 
++static int cxl_region_is_configured(struct cxl_region *region)
++{
++	if ((region->start == 0) && (region->size == 0) &&
++	    (region->decode_state == CXL_DECODE_RESET))
++		return 0;
++	return 1;
++}
++
++/**
++ * cxl_decoder_calc_max_available_extent() - calculate max available free space
++ * @decoder - the root decoder to calculate the free extents for
++ *
++ * The add_cxl_region() function  adds regions to the parent decoder's list
++ * sorted by the region's start HPAs. It can also be assumed that regions have
++ * no overlapped / aliased HPA space. Therefore, calculating each extent is as
++ * simple as walking the region list in order, and subtracting the previous
++ * region's end HPA from the next region's start HPA (and taking into account
++ * the decoder's start and end HPAs as well).
++ */
++static unsigned long long
++cxl_decoder_calc_max_available_extent(struct cxl_decoder *decoder)
++{
++	struct cxl_port *port = cxl_decoder_get_port(decoder);
++	struct cxl_ctx *ctx = cxl_decoder_get_ctx(decoder);
++	u64 prev_end = 0, max_extent = 0;
++	struct cxl_region *region;
++
++	if (!cxl_port_is_root(port)) {
++		err(ctx, "%s: not a root decoder\n",
++		    cxl_decoder_get_devname(decoder));
++		return ULLONG_MAX;
++	}
++
++	/*
++	 * Preload prev_end with decoder's start, so that the extent
++	 * calculation for the first region Just Works
++	 */
++	prev_end = decoder->start;
++
++	cxl_region_foreach(decoder, region) {
++		if (!cxl_region_is_configured(region))
++			continue;
++
++		/*
++		 * Note: Normally, end = (start + size - 1), but since
++		 * this is calculating extents between regions, it can
++		 * skip the '- 1'. For example, if a region ends at 0xfff,
++		 * and the next region immediately starts at 0x1000,
++		 * the 'extent' between them is 0, not 1. With
++		 * end = (start + size), this new 'adjusted' end for the
++		 * first region will have been calculated as 0x1000.
++		 * Subtracting the next region's start (0x1000) from this
++		 * correctly gets the extent size as 0.
++		 */
++		max_extent = max(max_extent, region->start - prev_end);
++		prev_end = region->start + region->size;
++	}
++
++	/*
++	 * Finally, consider the extent after the last region, up to the end
++	 * of the decoder's address space, if any. If there were no regions,
++	 * this simply reduces to decoder->size.
++	 */
++	max_extent = max(max_extent, decoder->start + decoder->size - prev_end);
++
++	return max_extent;
++}
++
+ static int decoder_id_cmp(struct cxl_decoder *d1, struct cxl_decoder *d2)
+ {
+ 	return d1->id - d2->id;
+@@ -1735,6 +1808,8 @@ static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
+ 			if (sysfs_read_attr(ctx, path, buf) == 0)
+ 				*(flag->flag) = !!strtoul(buf, NULL, 0);
+ 		}
++		decoder->max_available_extent =
++			cxl_decoder_calc_max_available_extent(decoder);
+ 		break;
+ 	}
+ 	}
+@@ -1899,6 +1974,12 @@ cxl_decoder_get_dpa_size(struct cxl_decoder *decoder)
+ 	return decoder->dpa_size;
+ }
+ 
++CXL_EXPORT unsigned long long
++cxl_decoder_get_max_available_extent(struct cxl_decoder *decoder)
++{
++	return decoder->max_available_extent;
++}
++
+ CXL_EXPORT int cxl_decoder_set_dpa_size(struct cxl_decoder *decoder,
+ 					unsigned long long size)
+ {
+@@ -2053,6 +2134,9 @@ cxl_decoder_create_pmem_region(struct cxl_decoder *decoder)
+ 		return NULL;
+ 	}
+ 
++	/* Force a re-init of regions so that the new one can be discovered */
++	free_regions(decoder);
++
+ 	/* create_region was successful, walk to the new region */
+ 	cxl_region_foreach(decoder, region) {
+ 		const char *devname = cxl_region_get_devname(region);
+diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+index 0b84977..6a23238 100644
+--- a/cxl/libcxl.h
++++ b/cxl/libcxl.h
+@@ -133,6 +133,9 @@ unsigned long long cxl_decoder_get_resource(struct cxl_decoder *decoder);
+ unsigned long long cxl_decoder_get_size(struct cxl_decoder *decoder);
+ unsigned long long cxl_decoder_get_dpa_resource(struct cxl_decoder *decoder);
+ unsigned long long cxl_decoder_get_dpa_size(struct cxl_decoder *decoder);
++unsigned long long
++cxl_decoder_get_max_available_extent(struct cxl_decoder *decoder);
++
+ enum cxl_decoder_mode {
+ 	CXL_DECODER_MODE_NONE,
+ 	CXL_DECODER_MODE_MIXED,
+diff --git a/cxl/json.c b/cxl/json.c
+index ad93413..28d9936 100644
+--- a/cxl/json.c
++++ b/cxl/json.c
+@@ -499,6 +499,14 @@ struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
+ 	}
+ 
+ 	if (cxl_port_is_root(port) && cxl_decoder_is_mem_capable(decoder)) {
++		size = cxl_decoder_get_max_available_extent(decoder);
++		if (size < ULLONG_MAX) {
++			jobj = util_json_object_hex(size, flags);
++			if (jobj)
++				json_object_object_add(jdecoder,
++						       "max_available_extent",
++						       jobj);
++		}
+ 		if (cxl_decoder_is_pmem_capable(decoder)) {
+ 			jobj = json_object_new_boolean(true);
+ 			if (jobj)
+diff --git a/cxl/region.c b/cxl/region.c
+index 3f83dd4..cc0f8bc 100644
+--- a/cxl/region.c
++++ b/cxl/region.c
+@@ -468,9 +468,9 @@ static int create_region(struct cxl_ctx *ctx, int *count,
+ 	struct json_object *jregion;
+ 	unsigned int i, granularity;
+ 	struct cxl_region *region;
++	u64 size, max_extent;
+ 	const char *devname;
+ 	uuid_t uuid;
+-	u64 size;
+ 	int rc;
+ 
+ 	rc = create_region_validate_config(ctx, p);
+@@ -485,6 +485,18 @@ static int create_region(struct cxl_ctx *ctx, int *count,
+ 		log_err(&rl, "%s: unable to determine region size\n", __func__);
+ 		return -ENXIO;
+ 	}
++	max_extent = cxl_decoder_get_max_available_extent(p->root_decoder);
++	if (max_extent == ULLONG_MAX) {
++		log_err(&rl, "%s: unable to determine max extent\n",
++			cxl_decoder_get_devname(p->root_decoder));
++		return -EINVAL;
++	}
++	if (size > max_extent) {
++		log_err(&rl,
++			"%s: region size %#lx exceeds max available space\n",
++			cxl_decoder_get_devname(p->root_decoder), size);
++		return -ENOSPC;
++	}
+ 
+ 	if (p->mode == CXL_DECODER_MODE_PMEM) {
+ 		region = cxl_decoder_create_pmem_region(p->root_decoder);
+diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+index 6bf3e91..454bfeb 100644
+--- a/cxl/lib/libcxl.sym
++++ b/cxl/lib/libcxl.sym
+@@ -213,4 +213,5 @@ global:
+ 	cxl_ep_decoder_get_memdev;
+ 	cxl_decoder_get_interleave_granularity;
+ 	cxl_decoder_get_interleave_ways;
++	cxl_decoder_get_max_available_extent;
+ } LIBCXL_2;
+-- 
+2.37.1
+
