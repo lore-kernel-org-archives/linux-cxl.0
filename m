@@ -2,151 +2,143 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3229BC32763
-	for <linux-cxl@archiver.kernel.org>; Fri, 12 Aug 2022 15:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6BCC00140
+	for <linux-cxl@archiver.kernel.org>; Fri, 12 Aug 2022 15:44:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238926AbiHLPOe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 12 Aug 2022 11:14:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35412 "EHLO
+        id S232082AbiHLPoJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 12 Aug 2022 11:44:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238989AbiHLPOY (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 12 Aug 2022 11:14:24 -0400
+        with ESMTP id S232527AbiHLPoI (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 12 Aug 2022 11:44:08 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AE0FA599C;
-        Fri, 12 Aug 2022 08:14:23 -0700 (PDT)
-Received: from fraeml745-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4M46Zp58GHz688mK;
-        Fri, 12 Aug 2022 23:11:30 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D62314033
+        for <linux-cxl@vger.kernel.org>; Fri, 12 Aug 2022 08:44:07 -0700 (PDT)
+Received: from fraeml703-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4M47JG4Lgpz688JN;
+        Fri, 12 Aug 2022 23:43:58 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml745-chm.china.huawei.com (10.206.15.226) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 12 Aug 2022 17:14:17 +0200
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 12 Aug 2022 16:14:17 +0100
+ fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2375.24; Fri, 12 Aug 2022 17:44:05 +0200
+Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 12 Aug
+ 2022 16:44:04 +0100
+Date:   Fri, 12 Aug 2022 16:44:03 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <linuxarm@huawei.com>, <linux-cxl@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <john.garry@huawei.com>, Peter Zijlstra <peterz@infradead.org>,
-        "Ingo Molnar" <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Alison Schofield" <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [RFC PATCH 4/4] docs: perf: Minimal introduction the the CXL PMU device and driver.
-Date:   Fri, 12 Aug 2022 16:12:14 +0100
-Message-ID: <20220812151214.2025-5-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220812151214.2025-1-Jonathan.Cameron@huawei.com>
-References: <20220812151214.2025-1-Jonathan.Cameron@huawei.com>
+To:     Jonathan Cameron via <qemu-devel@nongnu.org>
+CC:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bobo WL <lmw.bobo@gmail.com>, <linux-cxl@vger.kernel.org>,
+        <qemu-arm@nongnu.org>
+Subject: Re: [BUG] cxl can not create region
+Message-ID: <20220812164403.00001654@huawei.com>
+In-Reply-To: <20220811180857.00005e67@huawei.com>
+References: <CAGr_yG0UrfJAMWta3EkR1F0JZ4j--sig74p6vKL3K6TZDx9YGA@mail.gmail.com>
+        <20220808133727.00001171@huawei.com>
+        <CAGr_yG36GSO8esyO9nn6OeOEN5zPSosEmBHbfYGwqNGiYOh9vw@mail.gmail.com>
+        <20220809170825.00001b61@huawei.com>
+        <20220811180857.00005e67@huawei.com>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Very basic introduction to the device and the current driver support
-provided. I expect to expand on this in future versions of this patch
-set.
+On Thu, 11 Aug 2022 18:08:57 +0100
+Jonathan Cameron via <qemu-devel@nongnu.org> wrote:
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> On Tue, 9 Aug 2022 17:08:25 +0100
+> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> 
+> > On Tue, 9 Aug 2022 21:07:06 +0800
+> > Bobo WL <lmw.bobo@gmail.com> wrote:
+> >   
+> > > Hi Jonathan
+> > > 
+> > > Thanks for your reply!
+> > > 
+> > > On Mon, Aug 8, 2022 at 8:37 PM Jonathan Cameron
+> > > <Jonathan.Cameron@huawei.com> wrote:    
+> > > >
+> > > > Probably not related to your problem, but there is a disconnect in QEMU /
+> > > > kernel assumptionsaround the presence of an HDM decoder when a HB only
+> > > > has a single root port. Spec allows it to be provided or not as an implementation choice.
+> > > > Kernel assumes it isn't provide. Qemu assumes it is.
+> > > >
+> > > > The temporary solution is to throw in a second root port on the HB and not
+> > > > connect anything to it.  Longer term I may special case this so that the particular
+> > > > decoder defaults to pass through settings in QEMU if there is only one root port.
+> > > >      
+> > > 
+> > > You are right! After adding an extra HB in qemu, I can create a x1
+> > > region successfully.
+> > > But have some errors in Nvdimm:
+> > > 
+> > > [   74.925838] Unknown online node for memory at 0x10000000000, assuming node 0
+> > > [   74.925846] Unknown target node for memory at 0x10000000000, assuming node 0
+> > > [   74.927470] nd_region region0: nmem0: is disabled, failing probe    
+> > 
+> > Ah. I've seen this one, but not chased it down yet.  Was on my todo list to chase
+> > down. Once I reach this state I can verify the HDM Decode is correct which is what
+> > I've been using to test (Which wasn't true until earlier this week). 
+> > I'm currently testing via devmem, more for historical reasons than because it makes
+> > that much sense anymore.    
+> 
+> *embarassed cough*.  We haven't fully hooked the LSA up in qemu yet.
+> I'd forgotten that was still on the todo list. I don't think it will
+> be particularly hard to do and will take a look in next few days.
+> 
+> Very very indirectly this error is causing a driver probe fail that means that
+> we hit a code path that has a rather odd looking check on NDD_LABELING.
+> Should not have gotten near that path though - hence the problem is actually
+> when we call cxl_pmem_get_config_data() and it returns an error because
+> we haven't fully connected up the command in QEMU.
 
---
-RFC:
-- I'll post separately about this shortly, but it seems very odd
-  to me that there is no way to assign a parent to an event_sources
-  device.  As a result we get the messy approach of playing match
-  the name to figure out what the CPMU instance is connected to.
----
- Documentation/admin-guide/perf/cxl.rst   | 60 ++++++++++++++++++++++++
- Documentation/admin-guide/perf/index.rst |  1 +
- 2 files changed, 61 insertions(+)
+So a least one bug in QEMU. We were not supporting variable length payloads on mailbox
+inputs (but were on outputs).  That hasn't mattered until we get to LSA writes.
+We just need to relax condition on the supplied length.
 
-diff --git a/Documentation/admin-guide/perf/cxl.rst b/Documentation/admin-guide/perf/cxl.rst
-new file mode 100644
-index 000000000000..6ffc057591fb
---- /dev/null
-+++ b/Documentation/admin-guide/perf/cxl.rst
-@@ -0,0 +1,60 @@
-+======================================
-+CXL Performance Monitoring Unit (CPMU)
-+======================================
-+
-+The CXL rev 3.0 specification provides a definition of CXL Performance
-+Monitoring Unit in section 13.2: Performance Monitoring.
-+
-+CXL components (e.g. Root Port, Switch Upstream Port, End Point) may have
-+any number of CPMU instances. CPMU capabilities are fully discoverable from
-+the devices. The specification provides event definitions for all CXL protocol
-+message types and a set of additional events for things commonly counted on
-+CXL devices (e.g. DRAM events).
-+
-+CPMU driver
-+===========
-+
-+The CPMU driver register a perf PMU with the name cpmu<id> on the CXL bus.
-+
-+    /sys/bus/cxl/device/cpmu<id>
-+
-+The associated PMU is registered as
-+
-+   /sys/bus/event_sources/devices/cpmu<id>
-+
-+In common with other CXL bus devices, the id has no specific meaning and the
-+relationship to specific CXL device should be established via the device parent
-+of the device on the CXL bus.
-+
-+PMU driver provides description of available events and filter options in sysfs.
-+
-+The "format" directory describes all formats of the config (event vendor id,
-+group id and mask) config1 (threshold, filter enables) and config2 (filter
-+parameters) fields of the perf_event_attr structure.  The "events" directory
-+describes all documented events show in perf list.
-+
-+The events shown in perf list are the most fine grained events with a single
-+bit of the event mask set. More general events may be enable by setting
-+multiple mask bits in config. For example, all Device to Host Read Requests
-+may be captured on a single counter by setting the bits for all of
-+
-+* d2h_req_rdcurr
-+* d2h_req_rdown
-+* d2h_req_rdshared
-+* d2h_req_rdany
-+* d2h_req_rdownnodata
-+
-+Example of usage::
-+
-+  $#perf list
-+  cpmu0/clock_ticks/                                 [Kernel PMU event]
-+  cpmu0/d2h_req_itomwr/                              [Kernel PMU event]
-+  cpmu0/d2h_req_rdany/                               [Kernel PMU event]
-+  cpmu0/d2h_req_rdcurr/                              [Kernel PMU event]
-+  -----------------------------------------------------------
-+
-+  $# perf stat -e cpmu0/clock_ticks/ -e cpmu0/d2h_req_itowrm/
-+
-+The driver does not support sampling. So "perf record" and attaching to
-+a task are unsupported.
-+
-diff --git a/Documentation/admin-guide/perf/index.rst b/Documentation/admin-guide/perf/index.rst
-index 69b23f087c05..ff1ac52c37fb 100644
---- a/Documentation/admin-guide/perf/index.rst
-+++ b/Documentation/admin-guide/perf/index.rst
-@@ -17,3 +17,4 @@ Performance monitor support
-    xgene-pmu
-    arm_dsu_pmu
-    thunderx2-pmu
-+   cxl
--- 
-2.32.0
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index c352a935c4..fdda9529fe 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -510,7 +510,7 @@ void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
+     cxl_cmd = &cxl_cmd_set[set][cmd];
+     h = cxl_cmd->handler;
+     if (h) {
+-        if (len == cxl_cmd->in) {
++        if (len == cxl_cmd->in || !cxl_cmd->in) {
+             cxl_cmd->payload = cxl_dstate->mbox_reg_state +
+                 A_CXL_DEV_CMD_PAYLOAD;
+             ret = (*h)(cxl_cmd, cxl_dstate, &len);
+
+
+This lets the nvdimm/region probe fine, but I'm getting some issues with
+namespace capacity so I'll look at what is causing that next.
+Unfortunately I'm not that familiar with the driver/nvdimm side of things
+so it's take a while to figure out what kicks off what!
+
+Jonathan
+
+> 
+> Jonathan
+> 
+> 
+> >   
+> > > 
+> > > And x4 region still failed with same errors, using latest cxl/preview
+> > > branch don't work.
+> > > I have picked "Two CXL emulation fixes" patches in qemu, still not working.
+> > > 
+> > > Bob    
+> 
+> 
 
