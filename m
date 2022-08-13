@@ -2,40 +2,40 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2B0C25B0F
-	for <linux-cxl@archiver.kernel.org>; Sat, 13 Aug 2022 05:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3AFC3F6B0
+	for <linux-cxl@archiver.kernel.org>; Sat, 13 Aug 2022 05:32:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236835AbiHMFcx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 13 Aug 2022 01:32:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49208 "EHLO
+        id S237115AbiHMFcy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 13 Aug 2022 01:32:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234527AbiHMFcu (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 13 Aug 2022 01:32:50 -0400
+        with ESMTP id S233151AbiHMFcv (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 13 Aug 2022 01:32:51 -0400
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C286EDF9E;
-        Fri, 12 Aug 2022 22:32:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1C27EE0B;
+        Fri, 12 Aug 2022 22:32:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660368769; x=1691904769;
+  t=1660368770; x=1691904770;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=t1CKHupjLSzcqL9IntpBMboL/6n3rDuduL1KykS+0jI=;
-  b=jdkvSmV2lLvjPmOFfozgpEfmr0K9uWsdQwHecl0lkGHg7/LQMi0+KaA0
-   c/m24Rk/NnlAi+VSwPvhftaDV7uAQ8FYt69n6Jsh+PMBEIM3Ps+KBQ+1u
-   8W68luphinkOEVScxHPTIVkR9ds7pRQTvnJRe6vwNkZOaI+/GF1dYYdM0
-   nFPpdmSZr0w5FlkfRzoLdaaHH1qS2bVJLmltryLxewS7ZfWMP4ZAN8dhG
-   6R1bqV50AZZmdPGbgM48J7vMtkkY9O5lTbwe/SxMtf+ZTQ1xb7SeECkay
-   oj548oqqYdHUTmGzJDSIJT+cobtI2DJwrASy8AR9Pz0IfvAEgIbvOwrZq
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10437"; a="317706338"
+  bh=D6VnTO6wFUzvwPIr6RrrOgbRnQbphIg09pNi3QgmP+I=;
+  b=Esjb4z22AJXUC2nR1tSch/mbd7lGB/yoW0etkEhwIAlNa2ZG9Q+JL2We
+   OgBKKG9dizIisYXFFiZxb15xS4PxWvVgH/Go2MIRHCm3HeSWFiOE0L4xk
+   SIeq5pZTbEnOQQT/lbM1Elqh+qXtOuhNK0PSIre7eKclPSBRTLBMSxhqV
+   3KyJCyye3nLKOUAaut/9Tax7TmtezCaLU7p6JLPyz/Rn4SL/xkwAQS4Tk
+   M59LMZBNmMJLrVORNWOmNmN664j8kL6t6RE6hwojuJwXOYwmnyzrgV3VN
+   6relQe+GUk8y9nbT8ShdaLeCkTaz+JQlE5wgMRiNmiaQzEry/XpL8nCqe
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10437"; a="317706339"
 X-IronPort-AV: E=Sophos;i="5.93,233,1654585200"; 
-   d="scan'208";a="317706338"
+   d="scan'208";a="317706339"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2022 22:32:49 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2022 22:32:50 -0700
 X-IronPort-AV: E=Sophos;i="5.93,233,1654585200"; 
-   d="scan'208";a="609456059"
+   d="scan'208";a="609456066"
 Received: from jchen8-mobl.amr.corp.intel.com (HELO localhost) ([10.212.10.85])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2022 22:32:49 -0700
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2022 22:32:50 -0700
 From:   ira.weiny@intel.com
 To:     Dan Williams <dan.j.williams@intel.com>
 Cc:     Ira Weiny <ira.weiny@intel.com>,
@@ -46,9 +46,9 @@ Cc:     Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Davidlohr Bueso <dave@stgolabs.net>,
         linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-Subject: [RFC PATCH 4/9] cxl/mem: Trace General Media Event Record
-Date:   Fri, 12 Aug 2022 22:32:38 -0700
-Message-Id: <20220813053243.757363-5-ira.weiny@intel.com>
+Subject: [RFC PATCH 6/9] cxl/mem: Trace Memory Module Event Record
+Date:   Fri, 12 Aug 2022 22:32:40 -0700
+Message-Id: <20220813053243.757363-7-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.35.3
 In-Reply-To: <20220813053243.757363-1-ira.weiny@intel.com>
 References: <20220813053243.757363-1-ira.weiny@intel.com>
@@ -60,188 +60,178 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-CXL v3.0 section 8.2.9.2.1.1 defines the General Media Event Record.
+CXL v3.0 section 8.2.9.2.1.3 defines the Memory Module Event Record.
 
-Determine if the event read is a general media record and if so trace
-the record.
+Determine if the event read is memory module record and if so trace the
+record.
 
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
 ---
-A couple of specification questions I've had.
-
-1) The component id is not specified as a UUID or any particular
-format.  It is therefore reported as a byte array.  Is this intentional?
-
-2) This record has a very odd byte layout with a 16 bit field
-   (validity_flags) landing on a 3 byte boundary and a 3 byte bit field
-   (device) landing on a 7 byte boundary.
-
-I've made my best guess as to how the endianess of these fields should
-be resolved.  But I'm happy to hear from other folks if what I have done
-is wrong.
-
-struct cxl_evt_gen_media {
-	struct cxl_event_record_hdr hdr;
-	__le64 phys_addr;
-	u8 descriptor;
-	u8 type;
-	u8 transaction_type;
-	u16 validity_flags;			/* ??? */
-	u8 channel;
-	u8 rank;
-	u8 device[CXL_EVT_GEN_MED_DEV_SIZE];	/* ??? */
-	u8 component_id[CXL_EVT_GEN_MED_COMP_ID_SIZE];
-} __packed;
----
- drivers/cxl/core/mbox.c           |  30 ++++++-
- drivers/cxl/cxlmem.h              |  19 +++++
- include/trace/events/cxl-events.h | 125 ++++++++++++++++++++++++++++++
- 3 files changed, 172 insertions(+), 2 deletions(-)
+ drivers/cxl/core/mbox.c           |  16 +++
+ drivers/cxl/cxlmem.h              |  25 +++++
+ include/trace/events/cxl-events.h | 155 ++++++++++++++++++++++++++++++
+ 3 files changed, 196 insertions(+)
 
 diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 493f5ceb5d1c..0e433f072163 100644
+index 6414588a3c7b..99b09bfeaff5 100644
 --- a/drivers/cxl/core/mbox.c
 +++ b/drivers/cxl/core/mbox.c
-@@ -709,6 +709,32 @@ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, CXL);
+@@ -725,6 +725,14 @@ static const uuid_t dram_event_uuid =
+ 	UUID_INIT(0x601dcbb3, 0x9c06, 0x4eab,
+ 		  0xb8, 0xaf, 0x4e, 0x9b, 0xfb, 0x5c, 0x96, 0x24);
  
 +/*
-+ * General Media Event Record
-+ * CXL v3.0 Section 8.2.9.2.1.1; Table 8-43
++ * Memory Module Event Record
++ * CXL v3.0 section 8.2.9.2.1.3; Table 8-45
 + */
-+static const uuid_t gen_media_event_uuid =
-+	UUID_INIT(0xfbcd0a77, 0xc260, 0x417f,
-+		  0x85, 0xa9, 0x08, 0x8b, 0x16, 0x21, 0xeb, 0xa6);
++static const uuid_t mem_mod_event_uuid =
++	UUID_INIT(0xfe927475, 0xdd59, 0x4339,
++		  0xa5, 0x86, 0x79, 0xba, 0xb1, 0x13, 0xb7, 0x74);
 +
-+static void cxl_trace_event_record(const char *dev_name,
-+				   enum cxl_event_log_type type,
-+				   struct cxl_get_event_payload *payload)
-+{
-+	uuid_t *id = &payload->record.hdr.id;
+ static void cxl_trace_event_record(const char *dev_name,
+ 				   enum cxl_event_log_type type,
+ 				   struct cxl_get_event_payload *payload)
+@@ -747,6 +755,14 @@ static void cxl_trace_event_record(const char *dev_name,
+ 		return;
+ 	}
+ 
++	if (uuid_equal(id, &mem_mod_event_uuid)) {
++		struct cxl_evt_mem_mod_rec *rec =
++				(struct cxl_evt_mem_mod_rec *)&payload->record;
 +
-+	if (uuid_equal(id, &gen_media_event_uuid)) {
-+		struct cxl_evt_gen_media *rec =
-+				(struct cxl_evt_gen_media *)&payload->record;
-+
-+		trace_cxl_gen_media_event(dev_name, type, rec);
++		trace_cxl_mem_mod_event(dev_name, type, rec);
 +		return;
 +	}
 +
-+	/* For unknown record types print just the header */
-+	trace_cxl_event(dev_name, type, &payload->record);
-+}
-+
- static int cxl_clear_event_record(struct cxl_dev_state *cxlds,
- 				  enum cxl_event_log_type log,
- 				  __le16 handle)
-@@ -747,8 +773,8 @@ static int cxl_mem_get_records_log(struct cxl_dev_state *cxlds,
- 
- 		record_count = le16_to_cpu(payload.record_count);
- 		if (record_count > 0) {
--			trace_cxl_event(dev_name(cxlds->dev), type,
--					&payload.record);
-+			cxl_trace_event_record(dev_name(cxlds->dev), type,
-+					       &payload);
- 			cxl_clear_event_record(cxlds, type,
- 					       payload.record.hdr.handle);
- 		}
+ 	/* For unknown record types print just the header */
+ 	trace_cxl_event(dev_name, type, &payload->record);
+ }
 diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 5506e7210cf6..33669459ae4b 100644
+index 50536c0a7850..a02a41dfd988 100644
 --- a/drivers/cxl/cxlmem.h
 +++ b/drivers/cxl/cxlmem.h
-@@ -402,6 +402,25 @@ struct cxl_mbox_clear_event_payload {
- 	__le16 handle;
- };
+@@ -445,6 +445,31 @@ struct cxl_evt_dram_rec {
+ 	u8 correction_mask[CXL_EVT_DER_CORRECTION_MASK_SIZE];
+ } __packed;
  
 +/*
-+ * General Media Event Record
-+ * CXL v3.0 Section 8.2.9.2.1.1; Table 8-43
++ * Get Health Info Record
++ * CXL v3.0 section 8.2.9.8.3.1; Table 8-100
 + */
-+#define CXL_EVT_GEN_MED_DEV_SIZE	3
-+#define CXL_EVT_GEN_MED_COMP_ID_SIZE	0x10
-+struct cxl_evt_gen_media {
++struct cxl_get_health_info {
++	u8 health_status;
++	u8 media_status;
++	u8 add_status;
++	u8 life_used;
++	u16 device_temp;
++	u32 dirty_shutdown_cnt;
++	u32 cor_vol_err_cnt;
++	u32 cor_per_err_cnt;
++} __packed;
++
++/*
++ * Memory Module Event Record
++ * CXL v3.0 section 8.2.9.2.1.3; Table 8-45
++ */
++struct cxl_evt_mem_mod_rec {
 +	struct cxl_event_record_hdr hdr;
-+	__le64 phys_addr;
-+	u8 descriptor;
-+	u8 type;
-+	u8 transaction_type;
-+	u16 validity_flags;
-+	u8 channel;
-+	u8 rank;
-+	u8 device[CXL_EVT_GEN_MED_DEV_SIZE];
-+	u8 component_id[CXL_EVT_GEN_MED_COMP_ID_SIZE];
++	u8 event_type;
++	struct cxl_get_health_info info;
 +} __packed;
 +
  struct cxl_mbox_get_partition_info {
  	__le64 active_volatile_cap;
  	__le64 active_persistent_cap;
 diff --git a/include/trace/events/cxl-events.h b/include/trace/events/cxl-events.h
-index f4baeae66cf3..b51c51fd4e62 100644
+index db9b34ddd240..dbbe25fee25c 100644
 --- a/include/trace/events/cxl-events.h
 +++ b/include/trace/events/cxl-events.h
-@@ -119,6 +119,131 @@ TRACE_EVENT(cxl_event,
+@@ -358,6 +358,161 @@ TRACE_EVENT(cxl_dram_event,
  		)
  );
  
 +/*
-+ * General Media Event Record - GMER
-+ * CXL v2.0 Section 8.2.9.1.1.1; Table 154
++ * Memory Module Event Record - MMER
++ *
++ * CXL v2.0 section 8.2.9.1.1.3; Table 156, Table 181
++ *
++ * Device Health Information - DHI; Table 181
 + */
-+#define CXL_GMER_PHYS_ADDR_VOLATILE			BIT(0)
-+#define CXL_GMER_PHYS_ADDR_MASK				0x3f
-+
-+#define CXL_GMER_EVT_DESC_UNCORECTABLE_EVENT		BIT(0)
-+#define CXL_GMER_EVT_DESC_THRESHOLD_EVENT		BIT(1)
-+#define CXL_GMER_EVT_DESC_POISON_LIST_OVERFLOW		BIT(2)
-+#define show_event_desc_flags(flags)	__print_flags(flags, "|",		   \
-+	{ CXL_GMER_EVT_DESC_UNCORECTABLE_EVENT,		"Uncorrectable Event"	}, \
-+	{ CXL_GMER_EVT_DESC_THRESHOLD_EVENT,		"Threshold event"	}, \
-+	{ CXL_GMER_EVT_DESC_POISON_LIST_OVERFLOW,	"Poison List Overflow"	}  \
++#define CXL_MMER_HEALTH_STATUS_CHANGE		0x00
++#define CXL_MMER_MEDIA_STATUS_CHANGE		0x01
++#define CXL_MMER_LIFE_USED_CHANGE		0x02
++#define CXL_MMER_TEMP_CHANGE			0x03
++#define CXL_MMER_DATA_PATH_ERROR		0x04
++#define CXL_MMER_LAS_ERROR			0x05
++#define show_dev_evt_type(type)	__print_symbolic(type,			   \
++	{ CXL_MMER_HEALTH_STATUS_CHANGE,	"Health Status Change"	}, \
++	{ CXL_MMER_MEDIA_STATUS_CHANGE,		"Media Status Change"	}, \
++	{ CXL_MMER_LIFE_USED_CHANGE,		"Life Used Change"	}, \
++	{ CXL_MMER_TEMP_CHANGE,			"Temperature Change"	}, \
++	{ CXL_MMER_DATA_PATH_ERROR,		"Data Path Error"	}, \
++	{ CXL_MMER_LAS_ERROR,			"LSA Error"		}  \
 +)
 +
-+#define CXL_GMER_MEM_EVT_TYPE_ECC_ERROR			0x00
-+#define CXL_GMER_MEM_EVT_TYPE_INV_ADDR			0x01
-+#define CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR		0x02
-+#define show_mem_event_type(type)	__print_symbolic(type,			\
-+	{ CXL_GMER_MEM_EVT_TYPE_ECC_ERROR,		"ECC Error" },		\
-+	{ CXL_GMER_MEM_EVT_TYPE_INV_ADDR,		"Invalid Address" },	\
-+	{ CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR,	"Data Path Error" }	\
++#define CXL_DHI_HS_MAINTENANCE_NEEDED				BIT(0)
++#define CXL_DHI_HS_PERFORMANCE_DEGRADED				BIT(1)
++#define CXL_DHI_HS_HW_REPLACEMENT_NEEDED			BIT(2)
++#define show_health_status_flags(flags)	__print_flags(flags, "|",	   \
++	{ CXL_DHI_HS_MAINTENANCE_NEEDED,	"Maintenance Needed"	}, \
++	{ CXL_DHI_HS_PERFORMANCE_DEGRADED,	"Performance Degraded"	}, \
++	{ CXL_DHI_HS_HW_REPLACEMENT_NEEDED,	"Replacement Needed"	}  \
 +)
 +
-+#define CXL_GMER_TRANS_UNKNOWN				0x00
-+#define CXL_GMER_TRANS_HOST_READ			0x01
-+#define CXL_GMER_TRANS_HOST_WRITE			0x02
-+#define CXL_GMER_TRANS_HOST_SCAN_MEDIA			0x03
-+#define CXL_GMER_TRANS_HOST_INJECT_POISON		0x04
-+#define CXL_GMER_TRANS_INTERNAL_MEDIA_SCRUB		0x05
-+#define CXL_GMER_TRANS_INTERNAL_MEDIA_MANAGEMENT	0x06
-+#define show_trans_type(type)	__print_symbolic(type,					\
-+	{ CXL_GMER_TRANS_UNKNOWN,			"Unknown" },			\
-+	{ CXL_GMER_TRANS_HOST_READ,			"Host Read" },			\
-+	{ CXL_GMER_TRANS_HOST_WRITE,			"Host Write" },			\
-+	{ CXL_GMER_TRANS_HOST_SCAN_MEDIA,		"Host Scan Media" },		\
-+	{ CXL_GMER_TRANS_HOST_INJECT_POISON,		"Host Inject Poison" },		\
-+	{ CXL_GMER_TRANS_INTERNAL_MEDIA_SCRUB,		"Internal Media Scrub" },	\
-+	{ CXL_GMER_TRANS_INTERNAL_MEDIA_MANAGEMENT,	"Internal Media Management" }	\
++#define CXL_DHI_MS_NORMAL							0x00
++#define CXL_DHI_MS_NOT_READY							0x01
++#define CXL_DHI_MS_WRITE_PERSISTENCY_LOST					0x02
++#define CXL_DHI_MS_ALL_DATA_LOST						0x03
++#define CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_EVENT_POWER_LOSS			0x04
++#define CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_EVENT_SHUTDOWN			0x05
++#define CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_IMMINENT				0x06
++#define CXL_DHI_MS_WRITE_ALL_DATA_LOSS_EVENT_POWER_LOSS				0x07
++#define CXL_DHI_MS_WRITE_ALL_DATA_LOSS_EVENT_SHUTDOWN				0x08
++#define CXL_DHI_MS_WRITE_ALL_DATA_LOSS_IMMINENT					0x09
++#define show_media_status(ms)	__print_symbolic(ms,			   \
++	{ CXL_DHI_MS_NORMAL,						   \
++		"Normal"						}, \
++	{ CXL_DHI_MS_NOT_READY,						   \
++		"Not Ready"						}, \
++	{ CXL_DHI_MS_WRITE_PERSISTENCY_LOST,				   \
++		"Write Persistency Lost"				}, \
++	{ CXL_DHI_MS_ALL_DATA_LOST,					   \
++		"All Data Lost"						}, \
++	{ CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_EVENT_POWER_LOSS,		   \
++		"Write Persistency Loss in the Event of Power Loss"	}, \
++	{ CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_EVENT_SHUTDOWN,		   \
++		"Write Persistency Loss in Event of Shutdown"		}, \
++	{ CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_IMMINENT,			   \
++		"Write Persistency Loss Imminent"			}, \
++	{ CXL_DHI_MS_WRITE_ALL_DATA_LOSS_EVENT_POWER_LOSS,		   \
++		"All Data Loss in Event of Power Loss"			}, \
++	{ CXL_DHI_MS_WRITE_ALL_DATA_LOSS_EVENT_SHUTDOWN,		   \
++		"All Data loss in the Event of Shutdown"		}, \
++	{ CXL_DHI_MS_WRITE_ALL_DATA_LOSS_IMMINENT,			   \
++		"All Data Loss Imminent"				}  \
 +)
 +
-+#define CXL_GMER_VALID_CHANNEL				BIT(0)
-+#define CXL_GMER_VALID_RANK				BIT(1)
-+#define CXL_GMER_VALID_DEVICE				BIT(2)
-+#define CXL_GMER_VALID_COMPONENT			BIT(3)
-+#define show_valid_flags(flags)	__print_flags(flags, "|",		   \
-+	{ CXL_GMER_VALID_CHANNEL,			"CHANNEL"	}, \
-+	{ CXL_GMER_VALID_RANK,				"RANK"		}, \
-+	{ CXL_GMER_VALID_DEVICE,			"DEVICE"	}, \
-+	{ CXL_GMER_VALID_COMPONENT,			"COMPONENT"	}  \
++#define CXL_DHI_AS_NORMAL		0x0
++#define CXL_DHI_AS_WARNING		0x1
++#define CXL_DHI_AS_CRITICAL		0x2
++#define show_add_status(as) __print_symbolic(as,	   \
++	{ CXL_DHI_AS_NORMAL,		"Normal"	}, \
++	{ CXL_DHI_AS_WARNING,		"Warning"	}, \
++	{ CXL_DHI_AS_CRITICAL,		"Critical"	}  \
 +)
 +
-+TRACE_EVENT(cxl_gen_media_event,
++#define CXL_DHI_AS_LIFE_USED(as)			(as & 0x3)
++#define CXL_DHI_AS_DEV_TEMP(as)				((as & 0xC) >> 2)
++#define CXL_DHI_AS_COR_VOL_ERR_CNT(as)			((as & 0x10) >> 4)
++#define CXL_DHI_AS_COR_PER_ERR_CNT(as)			((as & 0x20) >> 5)
++
++TRACE_EVENT(cxl_mem_mod_event,
 +
 +	TP_PROTO(const char *dev_name, enum cxl_event_log_type log,
-+		 struct cxl_evt_gen_media *rec),
++		 struct cxl_evt_mem_mod_rec *rec),
 +
 +	TP_ARGS(dev_name, log, rec),
 +
@@ -255,16 +245,18 @@ index f4baeae66cf3..b51c51fd4e62 100644
 +		__field(u16, related_handle)
 +		__field(u64, timestamp)
 +
-+		/* General Media */
-+		__field(u64, phys_addr)
-+		__field(u8, descriptor)
-+		__field(u8, type)
-+		__field(u8, transaction_type)
-+		__field(u8, channel)
-+		__field(u32, device)
-+		__array(u8, comp_id, CXL_EVT_GEN_MED_COMP_ID_SIZE)
-+		__field(u16, validity_flags)
-+		__field(u8, rank) /* Out of order to pack trace record */
++		/* Memory Module Event */
++		__field(u8, event_type)
++
++		/* Device Health Info */
++		__field(u8, health_status)
++		__field(u8, media_status)
++		__field(u8, life_used)
++		__field(u32, dirty_shutdown_cnt)
++		__field(u32, cor_vol_err_cnt)
++		__field(u32, cor_per_err_cnt)
++		__field(s16, device_temp)
++		__field(u8, add_status)
 +	),
 +
 +	TP_fast_assign(
@@ -277,38 +269,41 @@ index f4baeae66cf3..b51c51fd4e62 100644
 +		__entry->related_handle = le16_to_cpu(rec->hdr.related_handle);
 +		__entry->timestamp = le64_to_cpu(rec->hdr.timestamp);
 +
-+		/* General Media */
-+		__entry->phys_addr = le64_to_cpu(rec->phys_addr);
-+		__entry->descriptor = rec->descriptor;
-+		__entry->type = rec->type;
-+		__entry->transaction_type = rec->transaction_type;
-+		__entry->channel = rec->channel;
-+		__entry->rank = rec->rank;
-+		__entry->device = rec->device[0] << 24 |
-+				  rec->device[1] << 16 |
-+				  rec->device[2] << 8; /* 3 byte LE ? */
-+		__entry->device = le32_to_cpu(__entry->device);
-+		memcpy(__entry->comp_id, &rec->component_id,
-+			CXL_EVT_GEN_MED_COMP_ID_SIZE);
-+		__entry->validity_flags = le16_to_cpu(rec->validity_flags);
++		/* Memory Module Event */
++		__entry->event_type = rec->event_type;
++
++		/* Device Health Info */
++		__entry->health_status = rec->info.health_status;
++		__entry->media_status = rec->info.media_status;
++		__entry->life_used = rec->info.life_used;
++		__entry->dirty_shutdown_cnt = le32_to_cpu(rec->info.dirty_shutdown_cnt);
++		__entry->cor_vol_err_cnt = le32_to_cpu(rec->info.cor_vol_err_cnt);
++		__entry->cor_per_err_cnt = le32_to_cpu(rec->info.cor_per_err_cnt);
++		__entry->device_temp = le16_to_cpu(rec->info.device_temp);
++		__entry->add_status = rec->info.add_status;
 +	),
 +
 +	TP_printk("%s: %s time=%llu id=%pUl handle=%x related_handle=%x hdr_flags='%s': " \
-+		  "phys_addr=%llx volatile=%s desc='%s' type='%s' trans_type='%s' channel=%u " \
-+		  "rank=%u device=%x comp_id=%s valid_flags='%s'",
++		  "evt_type='%s' health_status='%s' media_status='%s' as_life_used=%s " \
++		  "as_dev_temp=%s as_cor_vol_err_cnt=%s as_cor_per_err_cnt=%s " \
++		  "life_used=%u dev_temp=%d dirty_shutdown_cnt=%u cor_vol_err_cnt=%u " \
++		  "cor_per_err_cnt=%u",
 +		__get_str(dev_name), show_log_type(__entry->log),
 +		__entry->timestamp, __entry->id, __entry->handle,
 +		__entry->related_handle, show_hdr_flags(__entry->flags),
-+		__entry->phys_addr & ~CXL_GMER_PHYS_ADDR_MASK,
-+		(__entry->phys_addr & CXL_GMER_PHYS_ADDR_VOLATILE) ? "TRUE" : "FALSE",
-+		show_event_desc_flags(__entry->descriptor),
-+		show_mem_event_type(__entry->type),
-+		show_trans_type(__entry->transaction_type),
-+		__entry->channel, __entry->rank, __entry->device,
-+		__print_hex(__entry->comp_id, CXL_EVT_GEN_MED_COMP_ID_SIZE),
-+		show_valid_flags(__entry->validity_flags)
-+		)
++
++		show_dev_evt_type(__entry->event_type),
++		show_health_status_flags(__entry->health_status),
++		show_media_status(__entry->media_status),
++		show_add_status(CXL_DHI_AS_LIFE_USED(__entry->add_status)),
++		show_add_status(CXL_DHI_AS_DEV_TEMP(__entry->add_status)),
++		show_add_status(CXL_DHI_AS_COR_VOL_ERR_CNT(__entry->add_status)),
++		show_add_status(CXL_DHI_AS_COR_PER_ERR_CNT(__entry->add_status)),
++		__entry->life_used, __entry->device_temp,
++		__entry->dirty_shutdown_cnt, __entry->cor_vol_err_cnt,
++		__entry->cor_per_err_cnt)
 +);
++
 +
  #endif /* _CXL_TRACE_EVENTS_H */
  
