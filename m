@@ -2,38 +2,38 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BEBC3F6B0
-	for <linux-cxl@archiver.kernel.org>; Mon, 15 Aug 2022 21:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4771C00140
+	for <linux-cxl@archiver.kernel.org>; Mon, 15 Aug 2022 21:28:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232677AbiHOV17 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 15 Aug 2022 17:27:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48028 "EHLO
+        id S244039AbiHOV2L (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 15 Aug 2022 17:28:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347834AbiHOV0U (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 Aug 2022 17:26:20 -0400
+        with ESMTP id S1347812AbiHOV0T (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 Aug 2022 17:26:19 -0400
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E26E8334
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBEA5E8335
         for <linux-cxl@vger.kernel.org>; Mon, 15 Aug 2022 12:22:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1660591364; x=1692127364;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=hWdnQGSa5Du+Yzjo1XKDR7Gzv21wnxh5foUJXYJfm4I=;
-  b=S4yzr+5ELN2Es/t1TWQlYk1w4yeoBqwuJC/NfQv5JC7Xw0EjU9/NO449
-   Ts/CuWiDA5t+8DGJG3dJgq7qPXmufLkOhcOjwLQqkkB7BvtTt3RInYyPX
-   y7omoIUmf3mrJev0ke9TAQBL/GivsIZrKILOwWbo0+BCupPAAOz8Ks7OY
-   6PC5vp8wzNWe/Ko6ssp868aIfvkfE3qFOKg2N0IPMWIH9gHk1aGPwCqan
-   NiV4S2WrsQJH2vNn4sXPnXM0fhjUNdWAeueuxxjIR2cPbrK+U1kPj7BOs
-   DHtfT96vwsPMEfwH4YCZq3mYTg0OSA2nwM4yWWXJ13HVpEImL71pANv33
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10440"; a="293313123"
+  bh=7BFJRklHB9Q8+ZO+vRUd1gtiGtVTpF4CnQfiprfpVzs=;
+  b=OIGq20txxBMH2dMSjdtJ5jHbbYY5ydNwkWzJDQSoxZFUsKXDi9Jh+eQO
+   1+qxkfbbPFXxQ/+lCSFh8iMITth5pBf0dVAVIGle7KxHCjNhZoOk9Avg2
+   lTd+9VsHwyw5QUlc6WeDuW2Xln+gxCEoqFZXjVMY5swh2FdyjWHn2pJMU
+   1RvwsC2BMGNp0pFu9nHAaMxCenbwpucZKQ+D8SBUcRDExZGwpkKAS6Z9s
+   1dm7E+b2c5DYqMhXpV/cbzPXX4nHLCwAV9bKbp9K0vBxa8Hnyofvx6wCU
+   A0VY0GP1GEwDxgpR+P0NmY0LbSb2UXa0GuEgULNn/vlmUC+ApuGCmaHGl
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10440"; a="293313125"
 X-IronPort-AV: E=Sophos;i="5.93,239,1654585200"; 
-   d="scan'208";a="293313123"
+   d="scan'208";a="293313125"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 12:22:18 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 12:22:19 -0700
 X-IronPort-AV: E=Sophos;i="5.93,239,1654585200"; 
-   d="scan'208";a="606758243"
+   d="scan'208";a="606758246"
 Received: from smadiset-mobl1.amr.corp.intel.com (HELO vverma7-desk1.intel.com) ([10.209.5.99])
   by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 12:22:18 -0700
 From:   Vishal Verma <vishal.l.verma@intel.com>
@@ -43,92 +43,84 @@ Cc:     <nvdimm@lists.linux.dev>, Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [ndctl PATCH v3 02/11] cxl/port: Consolidate the debug option in cxl-port man pages
-Date:   Mon, 15 Aug 2022 13:22:05 -0600
-Message-Id: <20220815192214.545800-3-vishal.l.verma@intel.com>
+Subject: [ndctl PATCH v3 03/11] cxl/memdev: refactor decoder mode string parsing
+Date:   Mon, 15 Aug 2022 13:22:06 -0600
+Message-Id: <20220815192214.545800-4-vishal.l.verma@intel.com>
 X-Mailer: git-send-email 2.37.1
 In-Reply-To: <20220815192214.545800-1-vishal.l.verma@intel.com>
 References: <20220815192214.545800-1-vishal.l.verma@intel.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2436; h=from:subject; bh=hWdnQGSa5Du+Yzjo1XKDR7Gzv21wnxh5foUJXYJfm4I=; b=owGbwMvMwCXGf25diOft7jLG02pJDEm/5jy1T4txFP074dWHG/zNkyPcl98UsY4oOVsXqv59wvM1 YcoPOkpZGMS4GGTFFFn+7vnIeExuez5PYIIjzBxWJpAhDFycAjCR2ZMY/ofwVSRcrLCZ0bn+yvWWi/ euXZn6JiLbNubFxdqTvB2VvPMZGZZvenv6nCf35j+nd/Xm1BiWHe0+LlHXtn//9sLJ+qte2vECAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2080; h=from:subject; bh=7BFJRklHB9Q8+ZO+vRUd1gtiGtVTpF4CnQfiprfpVzs=; b=owGbwMvMwCXGf25diOft7jLG02pJDEm/5jztzCo/tKB8F+Oe5+LaT50fTJ5nyLgn7C/PpapJscbe woUCHaUsDGJcDLJiiix/93xkPCa3PZ8nMMERZg4rE8gQBi5OAZhIzSNGhvnHjP/td3yurSb19gZfwF zv53sPB9Xser2vwbrguZlAhCUjw4HGoFvpqmFTak///y/Iu6HmKHvfuv28/JEfiwUavs2ZzQMA
 X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-In preparation for additional commands that implement the --debug
-option, consolidate the option description from the cxl-port man pages
-into an include.
-
-The port man pages also mentioned the debug option requiring a build
-with debug enabled, which wasn't true - so remove that part.
+In preparation for create-region to use a similar decoder mode string
+to enum operation, break out the mode string parsing into its own inline
+helper in libcxl.h, and call it from memdev.c:__reserve_dpa().
 
 Cc: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
- Documentation/cxl/cxl-disable-port.txt | 5 +----
- Documentation/cxl/cxl-enable-port.txt  | 5 +----
- Documentation/cxl/debug-option.txt     | 4 ++++
- Documentation/cxl/meson.build          | 1 +
- 4 files changed, 7 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/cxl/debug-option.txt
+ cxl/libcxl.h | 13 +++++++++++++
+ cxl/memdev.c | 11 ++---------
+ 2 files changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/cxl/cxl-disable-port.txt b/Documentation/cxl/cxl-disable-port.txt
-index ac56f20..7a22efc 100644
---- a/Documentation/cxl/cxl-disable-port.txt
-+++ b/Documentation/cxl/cxl-disable-port.txt
-@@ -30,10 +30,7 @@ OPTIONS
- 	firmware and disabling an active device is akin to force removing memory
- 	from a running system.
+diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+index 33a216e..c1f8d14 100644
+--- a/cxl/libcxl.h
++++ b/cxl/libcxl.h
+@@ -4,6 +4,7 @@
+ #define _LIBCXL_H_
  
----debug::
--	If the cxl tool was built with debug disabled, turn on debug
--	messages.
--
-+include::debug-option.txt[]
+ #include <stdarg.h>
++#include <string.h>
+ #include <unistd.h>
+ #include <stdbool.h>
  
- include::../copyright.txt[]
+@@ -154,6 +155,18 @@ static inline const char *cxl_decoder_mode_name(enum cxl_decoder_mode mode)
+ 	return names[mode];
+ }
  
-diff --git a/Documentation/cxl/cxl-enable-port.txt b/Documentation/cxl/cxl-enable-port.txt
-index 9a37cef..50b53d1 100644
---- a/Documentation/cxl/cxl-enable-port.txt
-+++ b/Documentation/cxl/cxl-enable-port.txt
-@@ -31,10 +31,7 @@ OPTIONS
- 	memdev is only enabled after all CXL ports in its device topology
- 	ancestry are enabled.
- 
----debug::
--	If the cxl tool was built with debug enabled, turn on debug
--	messages.
--
-+include::debug-option.txt[]
- 
- include::../copyright.txt[]
- 
-diff --git a/Documentation/cxl/debug-option.txt b/Documentation/cxl/debug-option.txt
-new file mode 100644
-index 0000000..70b922f
---- /dev/null
-+++ b/Documentation/cxl/debug-option.txt
-@@ -0,0 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
++static inline enum cxl_decoder_mode
++cxl_decoder_mode_from_ident(const char *ident)
++{
++	if (strcmp(ident, "ram") == 0)
++		return CXL_DECODER_MODE_RAM;
++	else if (strcmp(ident, "volatile") == 0)
++		return CXL_DECODER_MODE_RAM;
++	else if (strcmp(ident, "pmem") == 0)
++		return CXL_DECODER_MODE_PMEM;
++	return CXL_DECODER_MODE_NONE;
++}
 +
-+--debug::
-+	Turn on additional debug messages including library debug.
-diff --git a/Documentation/cxl/meson.build b/Documentation/cxl/meson.build
-index d019dfc..423be90 100644
---- a/Documentation/cxl/meson.build
-+++ b/Documentation/cxl/meson.build
-@@ -22,6 +22,7 @@ filedeps = [
-   '../copyright.txt',
-   'memdev-option.txt',
-   'labels-options.txt',
-+  'debug-option.txt',
- ]
+ enum cxl_decoder_mode cxl_decoder_get_mode(struct cxl_decoder *decoder);
+ int cxl_decoder_set_mode(struct cxl_decoder *decoder,
+ 			 enum cxl_decoder_mode mode);
+diff --git a/cxl/memdev.c b/cxl/memdev.c
+index e42f554..0b3ad02 100644
+--- a/cxl/memdev.c
++++ b/cxl/memdev.c
+@@ -154,15 +154,8 @@ static int __reserve_dpa(struct cxl_memdev *memdev,
+ 	int rc;
  
- cxl_manpages = [
+ 	if (param.type) {
+-		if (strcmp(param.type, "ram") == 0)
+-			mode = CXL_DECODER_MODE_RAM;
+-		else if (strcmp(param.type, "volatile") == 0)
+-			mode = CXL_DECODER_MODE_RAM;
+-		else if (strcmp(param.type, "ram") == 0)
+-			mode = CXL_DECODER_MODE_RAM;
+-		else if (strcmp(param.type, "pmem") == 0)
+-			mode = CXL_DECODER_MODE_PMEM;
+-		else {
++		mode = cxl_decoder_mode_from_ident(param.type);
++		if (mode == CXL_DECODER_MODE_NONE) {
+ 			log_err(&ml, "%s: unsupported type: %s\n", devname,
+ 				param.type);
+ 			return -EINVAL;
 -- 
 2.37.1
 
