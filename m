@@ -2,40 +2,40 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E67C28B2B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DCAC28B2C
 	for <linux-cxl@archiver.kernel.org>; Mon, 15 Aug 2022 21:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245189AbiHOV2N (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 15 Aug 2022 17:28:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53758 "EHLO
+        id S1344484AbiHOV2R (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 15 Aug 2022 17:28:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347396AbiHOVZi (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 Aug 2022 17:25:38 -0400
+        with ESMTP id S1348192AbiHOV1C (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 Aug 2022 17:27:02 -0400
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E08D9E8333
-        for <linux-cxl@vger.kernel.org>; Mon, 15 Aug 2022 12:22:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0D72E97D9
+        for <linux-cxl@vger.kernel.org>; Mon, 15 Aug 2022 12:23:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660591363; x=1692127363;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=w2/nvlWPo1I8sog965RCSF4LJzuFIoHNQKsEdgarIfU=;
-  b=T3GScIX3jpMQ+36GebzRVOndLOUn4bmMfl0LaZknviLiVtk7h4qmtQXy
-   v56kXCFWl3FbWOwwqwCZuBM6Ls0HBp0Cw6hJhn8JWE20426vbXJUQ4g7U
-   Lbr63SehJGQBePkQ52OAjgt+EbWf+23PlPnQm8JHNJOmV4QtqjuiogfPA
-   81Dg1nAqlXdImPJmGX2wOp+JVRzAHLZBnQrcepQOFC8OcAtxIFQJ9yBxP
-   VQFYnRY/s4oDA706q9TUxm0bNFVbcGQmwXB0hiKNH3azskzMToq8fbt/t
-   Ern6TTbWzzJlO1r3dSZ+Qa25XTGYylC51mRCcpS/YSRe79etTiR3cqLtF
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10440"; a="293313119"
+  t=1660591380; x=1692127380;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=WDNXlB354Po247leSI7+Prye1anfCbOBQGC3r3VATvY=;
+  b=VoRvZGTKr0NDKax1pX1gC6SwytBOqhWuru/9+Udo5KSvhn6LjgGIkqS4
+   +3bqcjJH9gCBkZ8v+j/3Vpxbh9kpo/hq9f2xFhnaNio6+KS/cLuRqcxaI
+   sVflrWc8ZF4VFtEbPiYJgWN0mHv6qB839xlkqLYkkwGmXyXSxG9i9Jn2Y
+   wxmp0BuvS+0DaBnjEnyKe0b+byam/QAK+ufifBLhPC1QksUm2J6ee+BUh
+   1wTZwKS249Wcr4zLEpeRzVDXwZY3aeTNZezPnRNbEF3PNEQl6G3SDWCte
+   Z15yuFcRE/IYs5kkTdZE3cdAsU3OKogQPAbvpeEzkNvddHPoGOWekMZwD
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10440"; a="293313139"
 X-IronPort-AV: E=Sophos;i="5.93,239,1654585200"; 
-   d="scan'208";a="293313119"
+   d="scan'208";a="293313139"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 12:22:18 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 12:22:22 -0700
 X-IronPort-AV: E=Sophos;i="5.93,239,1654585200"; 
-   d="scan'208";a="606758236"
+   d="scan'208";a="606758272"
 Received: from smadiset-mobl1.amr.corp.intel.com (HELO vverma7-desk1.intel.com) ([10.209.5.99])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 12:22:17 -0700
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 12:22:22 -0700
 From:   Vishal Verma <vishal.l.verma@intel.com>
 To:     <linux-cxl@vger.kernel.org>
 Cc:     <nvdimm@lists.linux.dev>, Dan Williams <dan.j.williams@intel.com>,
@@ -43,140 +43,251 @@ Cc:     <nvdimm@lists.linux.dev>, Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [ndctl PATCH v3 00/11] cxl: add region management
-Date:   Mon, 15 Aug 2022 13:22:03 -0600
-Message-Id: <20220815192214.545800-1-vishal.l.verma@intel.com>
+Subject: [ndctl PATCH v3 11/11] cxl/decoder: add a max_available_extent attribute
+Date:   Mon, 15 Aug 2022 13:22:14 -0600
+Message-Id: <20220815192214.545800-12-vishal.l.verma@intel.com>
 X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20220815192214.545800-1-vishal.l.verma@intel.com>
+References: <20220815192214.545800-1-vishal.l.verma@intel.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5722; h=from:subject; bh=w2/nvlWPo1I8sog965RCSF4LJzuFIoHNQKsEdgarIfU=; b=owGbwMvMwCXGf25diOft7jLG02pJDEm/5lwRWiJdm6paMNFGesmM2YYWp5MPzVzwYe6LXZIz+A+s mDbrUUcpC4MYF4OsmCLL3z0fGY/Jbc/nCUxwhJnDygQyhIGLUwAmksbMyLA75OhXvkCdkHO8/wwk3h pq/cz9qxqbtmHt3ocllSU3Ei8z/OGNPP5grcfWGwbmq0XcHhedN4psYt6szHFnxY/Dmy+XCDMBAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7823; h=from:subject; bh=WDNXlB354Po247leSI7+Prye1anfCbOBQGC3r3VATvY=; b=owGbwMvMwCXGf25diOft7jLG02pJDEm/5jzb+sp1C/vBJVtiFa3rHVWTfxYeEhWNUPvxdsPi3CoB 3RqpjlIWBjEuBlkxRZa/ez4yHpPbns8TmOAIM4eVCWQIAxenAEzkFy/DX9HTc690bT3w/9bGmHcNrw XXSeYLnFnzQKnBfyuzVZRew1NGhrXLnxobKCfWbS1i/t/he4gn+efx3qWhCf7Ttwcs1Tl0mQcA
 X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Changes since v2[1]:
-- Collect review tags
-- Fix -r description in the cxl-list man page (Dan)
-- Fix typo + some wordsmithing in man libcxl(3) (Dan)
-- s/cxl_ep_decoder_get.../cxl_decoder_get.../ (Dan)
-- Move regions invalidation from patch 10 to patch 5 (Dan)
-- Consolidate mode string to enum in a common helper (Dan)
-- Fix a mid-series compile breakage with printing memdev json in the
-  region listing.
-- Remove the --ep-decoders option (Dan)
-- Use a decoder->stale_regions list for stashing duplicate regions
-  during region creation. Add the necessary helpers around freeing
-  these.
-- Don't free regions to invalidate them, use stale_regions instead (Dan)
-- Fix a couple of bugs in the create-region unit test where the regions
-  array wasn't used correctly leading to weird failures
-- Fix max_available_extent json listing to be a size instead of hex
-- Add an equals case to the region ordering compare helper (Dan)
-- Change the max extent calculations to explicitly add/subtract 1 as
-  needed (Dan)
+Add a max_available_extent attribute to cxl_decoder. In order to aid in
+its calculation, change the order of regions in the root decoder's list
+to be sorted by start HPA of the region.
 
+Additionally, emit this attribute in decoder listings, and consult it
+for available space before creating a new region.
 
-[1]: https://lore.kernel.org/linux-cxl/20220810230914.549611-1-vishal.l.verma@intel.com/
-
+Cc: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
+ cxl/lib/private.h  |  1 +
+ cxl/lib/libcxl.c   | 84 +++++++++++++++++++++++++++++++++++++++++++++-
+ cxl/libcxl.h       |  3 ++
+ cxl/json.c         |  8 +++++
+ cxl/region.c       | 14 +++++++-
+ cxl/lib/libcxl.sym |  1 +
+ 6 files changed, 109 insertions(+), 2 deletions(-)
 
-Introduce the first cut at a 'cxl create-region' command, which uses the
-ABI merged in the kernel in [2], and builds on the create-region foundation
-laid out in [3].
-
-This introduces libcxl objects for regions and their memdev mappings,
-adds listing support for them, and libcxl APIs to create, enable,
-disable, and destroy regions. These are consumed by respective cxl-cli
-commands to perform the same region management operations.
-
-The 'cxl create-region' command deserves a bit more detail. Its current
-version can be considered a fundamental 'plumbing' implementation. It
-allows, and in some cases, requires the user to specify the parameters
-for the region being created. Future enhancements to this will allow a
-simple 'cxl create-region' invocation to automatically pick suitable
-root decoders, memdev endpoints, and interleave settings to create a
-maximally sized and interleaved region.
-
-Today, the create-region command requires the following from the user:
-
-  -d <root decoder> : the root decoder (CFMWS window) under which to
-  create the region
-
-  <targets>: the memdev (-m) targets that will form the new region
-
-It can pick the following settings automatically (though the user can
-also override these if desired):
-
-  -w : interleave ways - picked based on the number of targets supplied
-
-  -g : interleave granularity - selects the interleave granularity
-  advertised by the root decoder
-
-  -t : type of region - defaults to pmem. The ram (volatile) type is not
-  supported yet.
-
-  -s : size of region - deduced based on sizes of the specified targets
-
-[2]: https://git.kernel.org/torvalds/c/c235698355fa94df7073b51befda7d4be00a0e23
-[3]: https://lore.kernel.org/linux-cxl/165781810717.1555691.1411727384567016588.stgit@dwillia2-xfh.jf.intel.com/
-
-
-Vishal Verma (11):
-  libcxl: add a depth attribute to cxl_port
-  cxl/port: Consolidate the debug option in cxl-port man pages
-  cxl/memdev: refactor decoder mode string parsing
-  libcxl: Introduce libcxl region and mapping objects
-  cxl-cli: add region listing support
-  libcxl: add low level APIs for region creation
-  cxl: add a 'create-region' command
-  cxl: add commands to {enable,disable,destroy}-region
-  cxl/list: make memdevs and regions the default listing
-  test: add a cxl-create-region test
-  cxl/decoder: add a max_available_extent attribute
-
- Documentation/cxl/bus-option.txt         |   5 +
- Documentation/cxl/cxl-create-region.txt  | 112 +++
- Documentation/cxl/cxl-destroy-region.txt |  41 ++
- Documentation/cxl/cxl-disable-port.txt   |   5 +-
- Documentation/cxl/cxl-disable-region.txt |  36 +
- Documentation/cxl/cxl-enable-port.txt    |   5 +-
- Documentation/cxl/cxl-enable-region.txt  |  36 +
- Documentation/cxl/cxl-list.txt           |  13 +-
- Documentation/cxl/debug-option.txt       |   4 +
- Documentation/cxl/decoder-option.txt     |   6 +
- Documentation/cxl/lib/libcxl.txt         |  69 ++
- Documentation/cxl/region-description.txt |   7 +
- cxl/lib/private.h                        |  39 +
- cxl/lib/libcxl.c                         | 902 ++++++++++++++++++++++-
- cxl/builtin.h                            |   4 +
- cxl/filter.h                             |   6 +
- cxl/json.h                               |   5 +
- cxl/libcxl.h                             |  80 +-
- cxl/cxl.c                                |   4 +
- cxl/filter.c                             | 158 +++-
- cxl/json.c                               | 131 ++++
- cxl/list.c                               |  26 +-
- cxl/memdev.c                             |  11 +-
- cxl/region.c                             | 753 +++++++++++++++++++
- .clang-format                            |   2 +
- Documentation/cxl/meson.build            |   7 +
- cxl/lib/libcxl.sym                       |  37 +
- cxl/meson.build                          |   1 +
- test/cxl-create-region.sh                | 125 ++++
- test/meson.build                         |   2 +
- 30 files changed, 2580 insertions(+), 52 deletions(-)
- create mode 100644 Documentation/cxl/bus-option.txt
- create mode 100644 Documentation/cxl/cxl-create-region.txt
- create mode 100644 Documentation/cxl/cxl-destroy-region.txt
- create mode 100644 Documentation/cxl/cxl-disable-region.txt
- create mode 100644 Documentation/cxl/cxl-enable-region.txt
- create mode 100644 Documentation/cxl/debug-option.txt
- create mode 100644 Documentation/cxl/decoder-option.txt
- create mode 100644 Documentation/cxl/region-description.txt
- create mode 100644 cxl/region.c
- create mode 100644 test/cxl-create-region.sh
-
+diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+index 8bc9620..437eade 100644
+--- a/cxl/lib/private.h
++++ b/cxl/lib/private.h
+@@ -104,6 +104,7 @@ struct cxl_decoder {
+ 	u64 size;
+ 	u64 dpa_resource;
+ 	u64 dpa_size;
++	u64 max_available_extent;
+ 	void *dev_buf;
+ 	size_t buf_len;
+ 	char *dev_path;
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index 2b1cf7e..a40b0e6 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -455,6 +455,16 @@ CXL_EXPORT int cxl_region_delete(struct cxl_region *region)
+ 	return 0;
+ }
+ 
++static int region_start_cmp(struct cxl_region *r1, struct cxl_region *r2)
++{
++	if (r1->start == r2->start)
++		return 0;
++	else if (r1->start < r2->start)
++		return -1;
++	else
++		return 1;
++}
++
+ static void *add_cxl_region(void *parent, int id, const char *cxlregion_base)
+ {
+ 	const char *devname = devpath_to_devname(cxlregion_base);
+@@ -539,7 +549,7 @@ static void *add_cxl_region(void *parent, int id, const char *cxlregion_base)
+ 			break;
+ 		}
+ 
+-	list_add(&decoder->regions, &region->list);
++	list_add_sorted(&decoder->regions, region, list, region_start_cmp);
+ 
+ 	return region;
+ err:
+@@ -1617,6 +1627,70 @@ cxl_endpoint_get_memdev(struct cxl_endpoint *endpoint)
+ 	return NULL;
+ }
+ 
++static bool cxl_region_is_configured(struct cxl_region *region)
++{
++	return region->size && (region->decode_state != CXL_DECODE_RESET);
++}
++
++/**
++ * cxl_decoder_calc_max_available_extent() - calculate max available free space
++ * @decoder - the root decoder to calculate the free extents for
++ *
++ * The add_cxl_region() function  adds regions to the parent decoder's list
++ * sorted by the region's start HPAs. It can also be assumed that regions have
++ * no overlapped / aliased HPA space. Therefore, calculating each extent is as
++ * simple as walking the region list in order, and subtracting the previous
++ * region's end HPA from the next region's start HPA (and taking into account
++ * the decoder's start and end HPAs as well).
++ */
++static unsigned long long
++cxl_decoder_calc_max_available_extent(struct cxl_decoder *decoder)
++{
++	u64 prev_end, decoder_end, cur_extent, max_extent = 0;
++	struct cxl_port *port = cxl_decoder_get_port(decoder);
++	struct cxl_ctx *ctx = cxl_decoder_get_ctx(decoder);
++	struct cxl_region *region;
++
++	if (!cxl_port_is_root(port)) {
++		err(ctx, "%s: not a root decoder\n",
++		    cxl_decoder_get_devname(decoder));
++		return ULLONG_MAX;
++	}
++
++	/*
++	 * Preload prev_end with an imaginary region that ends just before
++	 * the decoder's start, so that the extent calculation for the
++	 * first region Just Works
++	 */
++	prev_end = decoder->start - 1;
++
++	cxl_region_foreach(decoder, region) {
++		if (!cxl_region_is_configured(region))
++			continue;
++
++		/*
++		 * region->start - prev_end would get the difference in
++		 * addresses, but a difference of 1 in addresses implies
++		 * an extent of 0. Hence the '-1'.
++		 */
++		cur_extent = region->start - prev_end - 1;
++		max_extent = max(max_extent, cur_extent);
++		prev_end = region->start + region->size - 1;
++	}
++
++	/*
++	 * Finally, consider the extent after the last region, up to the end
++	 * of the decoder's address space, if any. If there were no regions,
++	 * this simply reduces to decoder->size.
++	 * Subtracting two addrs gets us a 'size' directly, no need for +/- 1.
++	 */
++	decoder_end = decoder->start + decoder->size - 1;
++	cur_extent = decoder_end - prev_end;
++	max_extent = max(max_extent, cur_extent);
++
++	return max_extent;
++}
++
+ static int decoder_id_cmp(struct cxl_decoder *d1, struct cxl_decoder *d2)
+ {
+ 	return d1->id - d2->id;
+@@ -1747,6 +1821,8 @@ static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
+ 			if (sysfs_read_attr(ctx, path, buf) == 0)
+ 				*(flag->flag) = !!strtoul(buf, NULL, 0);
+ 		}
++		decoder->max_available_extent =
++			cxl_decoder_calc_max_available_extent(decoder);
+ 		break;
+ 	}
+ 	}
+@@ -1911,6 +1987,12 @@ cxl_decoder_get_dpa_size(struct cxl_decoder *decoder)
+ 	return decoder->dpa_size;
+ }
+ 
++CXL_EXPORT unsigned long long
++cxl_decoder_get_max_available_extent(struct cxl_decoder *decoder)
++{
++	return decoder->max_available_extent;
++}
++
+ CXL_EXPORT int cxl_decoder_set_dpa_size(struct cxl_decoder *decoder,
+ 					unsigned long long size)
+ {
+diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+index 69d9c09..61c7fc4 100644
+--- a/cxl/libcxl.h
++++ b/cxl/libcxl.h
+@@ -134,6 +134,9 @@ unsigned long long cxl_decoder_get_resource(struct cxl_decoder *decoder);
+ unsigned long long cxl_decoder_get_size(struct cxl_decoder *decoder);
+ unsigned long long cxl_decoder_get_dpa_resource(struct cxl_decoder *decoder);
+ unsigned long long cxl_decoder_get_dpa_size(struct cxl_decoder *decoder);
++unsigned long long
++cxl_decoder_get_max_available_extent(struct cxl_decoder *decoder);
++
+ enum cxl_decoder_mode {
+ 	CXL_DECODER_MODE_NONE,
+ 	CXL_DECODER_MODE_MIXED,
+diff --git a/cxl/json.c b/cxl/json.c
+index 9dc99df..9cec58b 100644
+--- a/cxl/json.c
++++ b/cxl/json.c
+@@ -499,6 +499,14 @@ struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
+ 	}
+ 
+ 	if (cxl_port_is_root(port) && cxl_decoder_is_mem_capable(decoder)) {
++		size = cxl_decoder_get_max_available_extent(decoder);
++		if (size < ULLONG_MAX) {
++			jobj = util_json_object_size(size, flags);
++			if (jobj)
++				json_object_object_add(jdecoder,
++						       "max_available_extent",
++						       jobj);
++		}
+ 		if (cxl_decoder_is_pmem_capable(decoder)) {
+ 			jobj = json_object_new_boolean(true);
+ 			if (jobj)
+diff --git a/cxl/region.c b/cxl/region.c
+index b22d3c8..a30313c 100644
+--- a/cxl/region.c
++++ b/cxl/region.c
+@@ -438,9 +438,9 @@ static int create_region(struct cxl_ctx *ctx, int *count,
+ 	struct json_object *jregion;
+ 	unsigned int i, granularity;
+ 	struct cxl_region *region;
++	u64 size, max_extent;
+ 	const char *devname;
+ 	uuid_t uuid;
+-	u64 size;
+ 	int rc;
+ 
+ 	rc = create_region_validate_config(ctx, p);
+@@ -455,6 +455,18 @@ static int create_region(struct cxl_ctx *ctx, int *count,
+ 		log_err(&rl, "%s: unable to determine region size\n", __func__);
+ 		return -ENXIO;
+ 	}
++	max_extent = cxl_decoder_get_max_available_extent(p->root_decoder);
++	if (max_extent == ULLONG_MAX) {
++		log_err(&rl, "%s: unable to determine max extent\n",
++			cxl_decoder_get_devname(p->root_decoder));
++		return -EINVAL;
++	}
++	if (size > max_extent) {
++		log_err(&rl,
++			"%s: region size %#lx exceeds max available space\n",
++			cxl_decoder_get_devname(p->root_decoder), size);
++		return -ENOSPC;
++	}
+ 
+ 	if (p->mode == CXL_DECODER_MODE_PMEM) {
+ 		region = cxl_decoder_create_pmem_region(p->root_decoder);
+diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+index cb23a0b..549f88d 100644
+--- a/cxl/lib/libcxl.sym
++++ b/cxl/lib/libcxl.sym
+@@ -213,4 +213,5 @@ global:
+ 	cxl_decoder_get_memdev;
+ 	cxl_decoder_get_interleave_granularity;
+ 	cxl_decoder_get_interleave_ways;
++	cxl_decoder_get_max_available_extent;
+ } LIBCXL_2;
 -- 
 2.37.1
 
