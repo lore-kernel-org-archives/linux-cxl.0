@@ -2,300 +2,202 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0A6C00140
-	for <linux-cxl@archiver.kernel.org>; Mon, 15 Aug 2022 16:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6360C00140
+	for <linux-cxl@archiver.kernel.org>; Mon, 15 Aug 2022 17:04:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230312AbiHOQHP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 15 Aug 2022 12:07:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56442 "EHLO
+        id S229902AbiHOREu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 15 Aug 2022 13:04:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230264AbiHOQHP (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 Aug 2022 12:07:15 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABA401A82D;
-        Mon, 15 Aug 2022 09:07:13 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id D977B5A208E;
-        Mon, 15 Aug 2022 16:07:11 +0000 (UTC)
-Received: from pdx1-sub0-mail-a235.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 211355A2B8D;
-        Mon, 15 Aug 2022 16:07:11 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1660579631; a=rsa-sha256;
-        cv=none;
-        b=dwy35Dq6MGivfs7YD0SiCsx7o/lmefiDQXuFB6kuAoJ2GZ1w/zY7XZEeKhE+Buxp+kVpkV
-        aNKf3PQBZ5wknPxF9NEeQeDCkbavaCTKYZye7jnw1XTcDso5ufMiHrE5IFKw6Nd+ttCLE9
-        KX/KMm1eXiBNdt4I77PznODaZj21QQYckOhr5FPp7GdGvzl9N4fD7s/o1BzsoEj6b0f9em
-        kYTRMZCvvv3VOulYN/Whm9Y2ZXP9wIpsK6SwqI03lw/DXgAvgheaDrPjhujaNuSEyHr/yD
-        1Wd47BWWbRgbpUCEs/vCAtZjGUypu8J+JLQzZHwASPZ/V05rbGJG42bzesfLoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1660579631;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=SWrmCDYRRkOHcBepfHdfZ2+Ekw3l2pMf1Y2VMTMTM4I=;
-        b=h9RmqWmgiRegO2wOYKqT+5fUhLzOscKjonYh+kgeJvR7it3+DEXu9kbd/WCLhtp5U5Jojk
-        FmvtB+1dCF7govsF1ALK5Rjjy09uvZ9XjWSNWeMAdtK4Yiit18mpxoXfrmXvZxjCLKRqkc
-        zDdDGK3IupY43C8FD/m1HMDQ0csqOUwIqSTDb0QTeirLtrVdjxIw3FV0SztaBO6bqWxMpR
-        kCTyAf5lKhxaH4Ulg7/f2XSfJEQqZpJRrd2K4oDUgtLbNCiKYIImHoUmCSdVy6bNKcodMb
-        Ibx9AzWQxGe8Oto4CJGiNpzC3MteuQ7Y/fdlGOxA1IOdT7YVbLaXPCCTDnBpMQ==
-ARC-Authentication-Results: i=1;
-        rspamd-7586b5656-fgpvh;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Society-Power: 6a49d4b33abf0487_1660579631606_2197245223
-X-MC-Loop-Signature: 1660579631606:4165773123
-X-MC-Ingress-Time: 1660579631606
-Received: from pdx1-sub0-mail-a235.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.116.106.123 (trex/6.7.1);
-        Mon, 15 Aug 2022 16:07:11 +0000
-Received: from offworld (unknown [104.36.25.245])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a235.dreamhost.com (Postfix) with ESMTPSA id 4M5zgd4syVz3Y;
-        Mon, 15 Aug 2022 09:07:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1660579630;
-        bh=SWrmCDYRRkOHcBepfHdfZ2+Ekw3l2pMf1Y2VMTMTM4I=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=jj4Cc7GxvFJDCpbsnMc8Pcg+Do8obnFG2gpvaPsDG1OI3Rc42JwCEQnWBFu5hyDSw
-         YtFlOAuYS3RfC3dMKaSnF8M13SmlKJTy8sYwaB9tvs4Zjm4a+KW6A9n23diwYALWRm
-         IXdP7VzTupOvYWvscXcCMWON5ZtUxg+gXUOeL5wenY453KeK0L6gniUAZr0K0W+nAa
-         t2Odh8WClDC/AuBrNkm7pQ2H6Kp1YXdzofpoNNm73Kl1S9nbM3zIvDBYyMykPzFa42
-         wwREa30YKMa3Ty9HSKSVggOqOn+fcLq8qTYKwXwGp6p9wrGYmGAGUhUnSEuGZukwFe
-         uJfWwePvmuW2A==
-Date:   Mon, 15 Aug 2022 09:07:06 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-        bwidawsk@kernel.org, ira.weiny@intel.com, vishal.l.verma@intel.com,
-        alison.schofield@intel.com, a.manzanares@samsung.com,
-        linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel@lists.infradead.org, bp@alien8.de, x86@kernel.org,
-        linux-kernel@vger.kernel.org, dave@stgolabs.net
-Subject: [PATCH] arch/cacheflush: Introduce flush_all_caches()
-Message-ID: <20220815160706.tqd42dv24tgb7x7y@offworld>
-References: <165791918718.2491387.4203738301057301285.stgit@djiang5-desk3.ch.intel.com>
- <165791937063.2491387.15277418618265930924.stgit@djiang5-desk3.ch.intel.com>
- <20220718053039.5whjdcxynukildlo@offworld>
- <4bedc81d-62fa-7091-029e-a2e56b4f8f7a@intel.com>
- <20220803183729.00002183@huawei.com>
- <9f3705e1-de21-0f3c-12af-fd011b6d613d@intel.com>
- <YvO8pP7NUOdH17MM@FVFF77S0Q05N>
- <62f40fba338af_3ce6829466@dwillia2-xfh.jf.intel.com.notmuch>
+        with ESMTP id S229701AbiHOREu (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 Aug 2022 13:04:50 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 665B527CCC
+        for <linux-cxl@vger.kernel.org>; Mon, 15 Aug 2022 10:04:48 -0700 (PDT)
+Received: from fraeml737-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4M60xt6w5bz67Xcd;
+        Tue, 16 Aug 2022 01:04:34 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ fraeml737-chm.china.huawei.com (10.206.15.218) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 15 Aug 2022 19:04:45 +0200
+Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 15 Aug
+ 2022 18:04:45 +0100
+Date:   Mon, 15 Aug 2022 18:04:44 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Jonathan Cameron via <qemu-devel@nongnu.org>
+CC:     Bobo WL <lmw.bobo@gmail.com>, <linux-cxl@vger.kernel.org>,
+        <qemu-arm@nongnu.org>
+Subject: Re: [BUG] cxl can not create region
+Message-ID: <20220815180444.00006bdf@huawei.com>
+In-Reply-To: <20220812164403.00001654@huawei.com>
+References: <CAGr_yG0UrfJAMWta3EkR1F0JZ4j--sig74p6vKL3K6TZDx9YGA@mail.gmail.com>
+        <20220808133727.00001171@huawei.com>
+        <CAGr_yG36GSO8esyO9nn6OeOEN5zPSosEmBHbfYGwqNGiYOh9vw@mail.gmail.com>
+        <20220809170825.00001b61@huawei.com>
+        <20220811180857.00005e67@huawei.com>
+        <20220812164403.00001654@huawei.com>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <62f40fba338af_3ce6829466@dwillia2-xfh.jf.intel.com.notmuch>
-User-Agent: NeoMutt/20220429
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-With CXL security features, global CPU cache flushing nvdimm
-requirements are no longer specific to that subsystem, even
-beyond the scope of security_ops. CXL will need such semantics
-for features not necessarily limited to persistent memory.
+On Fri, 12 Aug 2022 16:44:03 +0100
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-While the scope of this is for physical address space, add a
-new flush_all_caches() in cacheflush headers such that each
-architecture can define it, when capable. For x86 just use the
-wbinvd hammer and prevent any other arch from being capable.
-While there can be performance penalties or delays response
-times, these calls are both rare and explicitly security
-related, and therefore become less important.
+> On Thu, 11 Aug 2022 18:08:57 +0100
+> Jonathan Cameron via <qemu-devel@nongnu.org> wrote:
+> 
+> > On Tue, 9 Aug 2022 17:08:25 +0100
+> > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> >   
+> > > On Tue, 9 Aug 2022 21:07:06 +0800
+> > > Bobo WL <lmw.bobo@gmail.com> wrote:
+> > >     
+> > > > Hi Jonathan
+> > > > 
+> > > > Thanks for your reply!
+> > > > 
+> > > > On Mon, Aug 8, 2022 at 8:37 PM Jonathan Cameron
+> > > > <Jonathan.Cameron@huawei.com> wrote:      
+> > > > >
+> > > > > Probably not related to your problem, but there is a disconnect in QEMU /
+> > > > > kernel assumptionsaround the presence of an HDM decoder when a HB only
+> > > > > has a single root port. Spec allows it to be provided or not as an implementation choice.
+> > > > > Kernel assumes it isn't provide. Qemu assumes it is.
+> > > > >
+> > > > > The temporary solution is to throw in a second root port on the HB and not
+> > > > > connect anything to it.  Longer term I may special case this so that the particular
+> > > > > decoder defaults to pass through settings in QEMU if there is only one root port.
+> > > > >        
+> > > > 
+> > > > You are right! After adding an extra HB in qemu, I can create a x1
+> > > > region successfully.
+> > > > But have some errors in Nvdimm:
+> > > > 
+> > > > [   74.925838] Unknown online node for memory at 0x10000000000, assuming node 0
+> > > > [   74.925846] Unknown target node for memory at 0x10000000000, assuming node 0
+> > > > [   74.927470] nd_region region0: nmem0: is disabled, failing probe      
+> > > 
+> > > Ah. I've seen this one, but not chased it down yet.  Was on my todo list to chase
+> > > down. Once I reach this state I can verify the HDM Decode is correct which is what
+> > > I've been using to test (Which wasn't true until earlier this week). 
+> > > I'm currently testing via devmem, more for historical reasons than because it makes
+> > > that much sense anymore.      
+> > 
+> > *embarassed cough*.  We haven't fully hooked the LSA up in qemu yet.
+> > I'd forgotten that was still on the todo list. I don't think it will
+> > be particularly hard to do and will take a look in next few days.
+> > 
+> > Very very indirectly this error is causing a driver probe fail that means that
+> > we hit a code path that has a rather odd looking check on NDD_LABELING.
+> > Should not have gotten near that path though - hence the problem is actually
+> > when we call cxl_pmem_get_config_data() and it returns an error because
+> > we haven't fully connected up the command in QEMU.  
+> 
+> So a least one bug in QEMU. We were not supporting variable length payloads on mailbox
+> inputs (but were on outputs).  That hasn't mattered until we get to LSA writes.
+> We just need to relax condition on the supplied length.
+> 
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index c352a935c4..fdda9529fe 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -510,7 +510,7 @@ void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
+>      cxl_cmd = &cxl_cmd_set[set][cmd];
+>      h = cxl_cmd->handler;
+>      if (h) {
+> -        if (len == cxl_cmd->in) {
+> +        if (len == cxl_cmd->in || !cxl_cmd->in) {
+Fix is wrong as we use ~0 as the placeholder for variable payload, not 0.
 
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
+With that fixed we hit new fun paths - after some errors we get the
+worrying - not totally sure but looks like a failure on an error cleanup.
+I'll chase down the error source, but even then this is probably triggerable by
+hardware problem or similar.  Some bonus prints in here from me chasing
+error paths, but it's otherwise just cxl/next + the fix I posted earlier today.
 
-After a few iterations I circled back to an interface without granularity.
-It just doesn't make sense right now to define a range if arm64 will not
-support this (won't do VA-based physical address space flushes) and, until
-it comes up with consistent caches, security operations will simply be
-unsupported.
+[   69.919877] nd_bus ndbus0: START: nd_region.probe(region0)
+[   69.920108] nd_region_probe
+[   69.920623] ------------[ cut here ]------------
+[   69.920675] refcount_t: addition on 0; use-after-free.
+[   69.921314] WARNING: CPU: 3 PID: 710 at lib/refcount.c:25 refcount_warn_saturate+0xa0/0x144
+[   69.926949] Modules linked in: cxl_pmem cxl_mem cxl_pci cxl_port cxl_acpi cxl_core
+[   69.928830] CPU: 3 PID: 710 Comm: kworker/u8:9 Not tainted 5.19.0-rc3+ #399
+[   69.930596] Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0 02/06/2015
+[   69.931482] Workqueue: events_unbound async_run_entry_fn
+[   69.932403] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   69.934023] pc : refcount_warn_saturate+0xa0/0x144
+[   69.935161] lr : refcount_warn_saturate+0xa0/0x144
+[   69.936541] sp : ffff80000890b960
+[   69.937921] x29: ffff80000890b960 x28: 0000000000000000 x27: 0000000000000000
+[   69.940917] x26: ffffa54a90d5cb10 x25: ffffa54a90809e98 x24: 0000000000000000
+[   69.942537] x23: ffffa54a91a3d8d8 x22: ffff0000c5254800 x21: ffff0000c5254800
+[   69.944013] x20: ffff0000ce924180 x19: ffff0000c5254800 x18: ffffffffffffffff
+[   69.946100] x17: ffff5ab66e5ef000 x16: ffff80000801c000 x15: 0000000000000000
+[   69.947585] x14: 0000000000000001 x13: 0a2e656572662d72 x12: 657466612d657375
+[   69.948670] x11: 203b30206e6f206e x10: 6f69746964646120 x9 : ffffa54a8f63d288
+[   69.950679] x8 : 206e6f206e6f6974 x7 : 69646461203a745f x6 : 00000000fffff31e
+[   69.952113] x5 : ffff0000ff61ba08 x4 : 00000000fffff31e x3 : ffff5ab66e5ef000
+root@debian:/sys/bus/cxl/devices/decoder0.0/region0# [   69.954752] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0000c512e740
+[   69.957098] Call trace:
+[   69.957959]  refcount_warn_saturate+0xa0/0x144
+[   69.958773]  get_ndd+0x5c/0x80
+[   69.959294]  nd_region_register_namespaces+0xe4/0xe90
+[   69.960253]  nd_region_probe+0x100/0x290
+[   69.960796]  nvdimm_bus_probe+0xf4/0x1c0
+[   69.962087]  really_probe+0x19c/0x3f0
+[   69.962620]  __driver_probe_device+0x11c/0x190
+[   69.963258]  driver_probe_device+0x44/0xf4
+[   69.963773]  __device_attach_driver+0xa4/0x140
+[   69.964471]  bus_for_each_drv+0x84/0xe0
+[   69.965068]  __device_attach+0xb0/0x1f0
+[   69.966101]  device_initial_probe+0x20/0x30
+[   69.967142]  bus_probe_device+0xa4/0xb0
+[   69.968104]  device_add+0x3e8/0x910
+[   69.969111]  nd_async_device_register+0x24/0x74
+[   69.969928]  async_run_entry_fn+0x40/0x150
+[   69.970725]  process_one_work+0x1dc/0x450
+[   69.971796]  worker_thread+0x154/0x450
+[   69.972700]  kthread+0x118/0x120
+[   69.974141]  ret_from_fork+0x10/0x20
+[   69.975141] ---[ end trace 0000000000000000 ]---
+[   70.117887] Into nd_namespace_pmem_set_resource()
 
-  arch/x86/include/asm/cacheflush.h |  3 +++
-  drivers/acpi/nfit/intel.c         | 41 ++++++++++++++-----------------
-  include/asm-generic/cacheflush.h  | 22 +++++++++++++++++
-  3 files changed, 43 insertions(+), 23 deletions(-)
+>              cxl_cmd->payload = cxl_dstate->mbox_reg_state +
+>                  A_CXL_DEV_CMD_PAYLOAD;
+>              ret = (*h)(cxl_cmd, cxl_dstate, &len);
+> 
+> 
+> This lets the nvdimm/region probe fine, but I'm getting some issues with
+> namespace capacity so I'll look at what is causing that next.
+> Unfortunately I'm not that familiar with the driver/nvdimm side of things
+> so it's take a while to figure out what kicks off what!
+> 
+> Jonathan
+> 
+> > 
+> > Jonathan
+> > 
+> >   
+> > >     
+> > > > 
+> > > > And x4 region still failed with same errors, using latest cxl/preview
+> > > > branch don't work.
+> > > > I have picked "Two CXL emulation fixes" patches in qemu, still not working.
+> > > > 
+> > > > Bob      
+> > 
+> >   
+> 
 
-diff --git a/arch/x86/include/asm/cacheflush.h b/arch/x86/include/asm/cacheflush.h
-index b192d917a6d0..ce2ec9556093 100644
---- a/arch/x86/include/asm/cacheflush.h
-+++ b/arch/x86/include/asm/cacheflush.h
-@@ -10,4 +10,7 @@
-
-  void clflush_cache_range(void *addr, unsigned int size);
-
-+#define flush_all_caches() \
-+	do { wbinvd_on_all_cpus(); } while(0)
-+
-  #endif /* _ASM_X86_CACHEFLUSH_H */
-diff --git a/drivers/acpi/nfit/intel.c b/drivers/acpi/nfit/intel.c
-index 8dd792a55730..f2f6c31e6ab7 100644
---- a/drivers/acpi/nfit/intel.c
-+++ b/drivers/acpi/nfit/intel.c
-@@ -4,6 +4,7 @@
-  #include <linux/ndctl.h>
-  #include <linux/acpi.h>
-  #include <asm/smp.h>
-+#include <linux/cacheflush.h>
-  #include "intel.h"
-  #include "nfit.h"
-
-@@ -190,8 +191,6 @@ static int intel_security_change_key(struct nvdimm *nvdimm,
-	}
-  }
-
--static void nvdimm_invalidate_cache(void);
--
-  static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
-		const struct nvdimm_key_data *key_data)
-  {
-@@ -210,6 +209,9 @@ static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
-	};
-	int rc;
-
-+	if (!flush_all_caches_capable())
-+		return -EINVAL;
-+
-	if (!test_bit(NVDIMM_INTEL_UNLOCK_UNIT, &nfit_mem->dsm_mask))
-		return -ENOTTY;
-
-@@ -228,7 +230,7 @@ static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
-	}
-
-	/* DIMM unlocked, invalidate all CPU caches before we read it */
--	nvdimm_invalidate_cache();
-+	flush_all_caches();
-
-	return 0;
-  }
-@@ -294,11 +296,14 @@ static int __maybe_unused intel_security_erase(struct nvdimm *nvdimm,
-		},
-	};
-
-+	if (!flush_all_caches_capable())
-+		return -EINVAL;
-+
-	if (!test_bit(cmd, &nfit_mem->dsm_mask))
-		return -ENOTTY;
-
-	/* flush all cache before we erase DIMM */
--	nvdimm_invalidate_cache();
-+	flush_all_caches();
-	memcpy(nd_cmd.cmd.passphrase, key->data,
-			sizeof(nd_cmd.cmd.passphrase));
-	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
-@@ -318,7 +323,7 @@ static int __maybe_unused intel_security_erase(struct nvdimm *nvdimm,
-	}
-
-	/* DIMM erased, invalidate all CPU caches before we read it */
--	nvdimm_invalidate_cache();
-+	flush_all_caches();
-	return 0;
-  }
-
-@@ -338,6 +343,9 @@ static int __maybe_unused intel_security_query_overwrite(struct nvdimm *nvdimm)
-		},
-	};
-
-+	if (!flush_all_caches_capable())
-+		return -EINVAL;
-+
-	if (!test_bit(NVDIMM_INTEL_QUERY_OVERWRITE, &nfit_mem->dsm_mask))
-		return -ENOTTY;
-
-@@ -355,7 +363,7 @@ static int __maybe_unused intel_security_query_overwrite(struct nvdimm *nvdimm)
-	}
-
-	/* flush all cache before we make the nvdimms available */
--	nvdimm_invalidate_cache();
-+	flush_all_caches();
-	return 0;
-  }
-
-@@ -377,11 +385,14 @@ static int __maybe_unused intel_security_overwrite(struct nvdimm *nvdimm,
-		},
-	};
-
-+	if (!flush_all_caches_capable())
-+		return -EINVAL;
-+
-	if (!test_bit(NVDIMM_INTEL_OVERWRITE, &nfit_mem->dsm_mask))
-		return -ENOTTY;
-
-	/* flush all cache before we erase DIMM */
--	nvdimm_invalidate_cache();
-+	flush_all_caches();
-	memcpy(nd_cmd.cmd.passphrase, nkey->data,
-			sizeof(nd_cmd.cmd.passphrase));
-	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
-@@ -401,22 +412,6 @@ static int __maybe_unused intel_security_overwrite(struct nvdimm *nvdimm,
-	}
-  }
-
--/*
-- * TODO: define a cross arch wbinvd equivalent when/if
-- * NVDIMM_FAMILY_INTEL command support arrives on another arch.
-- */
--#ifdef CONFIG_X86
--static void nvdimm_invalidate_cache(void)
--{
--	wbinvd_on_all_cpus();
--}
--#else
--static void nvdimm_invalidate_cache(void)
--{
--	WARN_ON_ONCE("cache invalidation required after unlock\n");
--}
--#endif
--
-  static const struct nvdimm_security_ops __intel_security_ops = {
-	.get_flags = intel_security_flags,
-	.freeze = intel_security_freeze,
-diff --git a/include/asm-generic/cacheflush.h b/include/asm-generic/cacheflush.h
-index 4f07afacbc23..f249142b4908 100644
---- a/include/asm-generic/cacheflush.h
-+++ b/include/asm-generic/cacheflush.h
-@@ -115,4 +115,26 @@ static inline void flush_cache_vunmap(unsigned long start, unsigned long end)
-	memcpy(dst, src, len)
-  #endif
-
-+/*
-+ * Flush the entire caches across all CPUs. It is considered
-+ * a big hammer (latency and performance). Unlike the APIs
-+ * above, this function can be defined on architectures which
-+ * have VIPT or PIPT caches, and thus is beyond the scope of
-+ * virtual to physical mappings/page tables changing.
-+ *
-+ * The limitation here is that the architectures that make
-+ * use of it must can actually comply with the semantics,
-+ * such as those which caches are in a consistent state. The
-+ * caller can verify the situation early on.
-+ */
-+#ifndef flush_all_caches
-+# define flush_all_caches_capable() false
-+static inline void flush_all_caches(void)
-+{
-+	WARN_ON_ONCE("cache invalidation required\n");
-+}
-+#else
-+# define flush_all_caches_capable() true
-+#endif
-+
-  #endif /* _ASM_GENERIC_CACHEFLUSH_H */
---
-2.37.2
