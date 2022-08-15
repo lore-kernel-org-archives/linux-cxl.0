@@ -2,40 +2,40 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DCAC28B2C
-	for <linux-cxl@archiver.kernel.org>; Mon, 15 Aug 2022 21:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8D7C25B08
+	for <linux-cxl@archiver.kernel.org>; Mon, 15 Aug 2022 21:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344484AbiHOV2R (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 15 Aug 2022 17:28:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47078 "EHLO
+        id S1344874AbiHOV2T (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 15 Aug 2022 17:28:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348192AbiHOV1C (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 Aug 2022 17:27:02 -0400
+        with ESMTP id S1348127AbiHOV05 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 Aug 2022 17:26:57 -0400
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0D72E97D9
-        for <linux-cxl@vger.kernel.org>; Mon, 15 Aug 2022 12:23:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 539B7E97E1
+        for <linux-cxl@vger.kernel.org>; Mon, 15 Aug 2022 12:22:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660591380; x=1692127380;
+  t=1660591374; x=1692127374;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=WDNXlB354Po247leSI7+Prye1anfCbOBQGC3r3VATvY=;
-  b=VoRvZGTKr0NDKax1pX1gC6SwytBOqhWuru/9+Udo5KSvhn6LjgGIkqS4
-   +3bqcjJH9gCBkZ8v+j/3Vpxbh9kpo/hq9f2xFhnaNio6+KS/cLuRqcxaI
-   sVflrWc8ZF4VFtEbPiYJgWN0mHv6qB839xlkqLYkkwGmXyXSxG9i9Jn2Y
-   wxmp0BuvS+0DaBnjEnyKe0b+byam/QAK+ufifBLhPC1QksUm2J6ee+BUh
-   1wTZwKS249Wcr4zLEpeRzVDXwZY3aeTNZezPnRNbEF3PNEQl6G3SDWCte
-   Z15yuFcRE/IYs5kkTdZE3cdAsU3OKogQPAbvpeEzkNvddHPoGOWekMZwD
+  bh=QCN9NP5pTAHuTKN2JVgW3vlfKGrx2QsnmrCfpoAXji8=;
+  b=Nro1O4KgqMhix4HtfdoqSUB1MrjiWnf0LWhISa78zVcxC9sVXYgkWweo
+   323UCnQoS4sjLkUdrPFLjf0NTyhPDDgzKIqsdVglmQZuo06PYyZ7YQU1M
+   jFm9gTMY6HFBsSOB6JfQzJg+UhrH1y1R8tb0UKoulB4rCgnuRVPci/4rM
+   lUHfCFbMa28ymoy5b5g1/CuYPwEtITPtcArAAsC4LhvpUi5DRP9FIxHIM
+   KfCLMNTOK3NjTHSbcIRt/JblNL62Mt7Aq06tBtZtklJEqyVNkBF/6HDId
+   MZkrLOzCaGVvVtP4rV/tJbE3g/YU1y68bcXZelpR6a2DCe+UviJqju+YW
    Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10440"; a="293313139"
+X-IronPort-AV: E=McAfee;i="6400,9594,10440"; a="293313133"
 X-IronPort-AV: E=Sophos;i="5.93,239,1654585200"; 
-   d="scan'208";a="293313139"
+   d="scan'208";a="293313133"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 12:22:22 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 12:22:20 -0700
 X-IronPort-AV: E=Sophos;i="5.93,239,1654585200"; 
-   d="scan'208";a="606758272"
+   d="scan'208";a="606758258"
 Received: from smadiset-mobl1.amr.corp.intel.com (HELO vverma7-desk1.intel.com) ([10.209.5.99])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 12:22:22 -0700
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 12:22:20 -0700
 From:   Vishal Verma <vishal.l.verma@intel.com>
 To:     <linux-cxl@vger.kernel.org>
 Cc:     <nvdimm@lists.linux.dev>, Dan Williams <dan.j.williams@intel.com>,
@@ -43,251 +43,840 @@ Cc:     <nvdimm@lists.linux.dev>, Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [ndctl PATCH v3 11/11] cxl/decoder: add a max_available_extent attribute
-Date:   Mon, 15 Aug 2022 13:22:14 -0600
-Message-Id: <20220815192214.545800-12-vishal.l.verma@intel.com>
+Subject: [ndctl PATCH v3 07/11] cxl: add a 'create-region' command
+Date:   Mon, 15 Aug 2022 13:22:10 -0600
+Message-Id: <20220815192214.545800-8-vishal.l.verma@intel.com>
 X-Mailer: git-send-email 2.37.1
 In-Reply-To: <20220815192214.545800-1-vishal.l.verma@intel.com>
 References: <20220815192214.545800-1-vishal.l.verma@intel.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7823; h=from:subject; bh=WDNXlB354Po247leSI7+Prye1anfCbOBQGC3r3VATvY=; b=owGbwMvMwCXGf25diOft7jLG02pJDEm/5jzb+sp1C/vBJVtiFa3rHVWTfxYeEhWNUPvxdsPi3CoB 3RqpjlIWBjEuBlkxRZa/ez4yHpPbns8TmOAIM4eVCWQIAxenAEzkFy/DX9HTc690bT3w/9bGmHcNrw XXSeYLnFnzQKnBfyuzVZRew1NGhrXLnxobKCfWbS1i/t/he4gn+efx3qWhCf7Ttwcs1Tl0mQcA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=23444; h=from:subject; bh=QCN9NP5pTAHuTKN2JVgW3vlfKGrx2QsnmrCfpoAXji8=; b=owGbwMvMwCXGf25diOft7jLG02pJDEm/5jzdaTjR1KP7gfWKg4JLt4a/NmFR2uqyUybCyVGbK/X0 +nS/jlIWBjEuBlkxRZa/ez4yHpPbns8TmOAIM4eVCWQIAxenAEzkaz8jQ0dI/Vth82s3J9fO7DuZsy joyaZF2gc5Xk3OmZ/LquRcYMnwT1tsl9Fh5+VnZlu76cvcKntetWebRpv27BWuD/c8etn9kBcA
 X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add a max_available_extent attribute to cxl_decoder. In order to aid in
-its calculation, change the order of regions in the root decoder's list
-to be sorted by start HPA of the region.
-
-Additionally, emit this attribute in decoder listings, and consult it
-for available space before creating a new region.
+Add a 'create-region' command to cxl-cli that walks the platform's CXL
+hierarchy to find an appropriate root decoder based on any options
+provided, and uses libcxl APIs to create a 'region' that is comprehended
+by libnvdimm and ndctl.
 
 Cc: Dan Williams <dan.j.williams@intel.com>
 Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
- cxl/lib/private.h  |  1 +
- cxl/lib/libcxl.c   | 84 +++++++++++++++++++++++++++++++++++++++++++++-
- cxl/libcxl.h       |  3 ++
- cxl/json.c         |  8 +++++
- cxl/region.c       | 14 +++++++-
- cxl/lib/libcxl.sym |  1 +
- 6 files changed, 109 insertions(+), 2 deletions(-)
+ Documentation/cxl/bus-option.txt         |   5 +
+ Documentation/cxl/cxl-create-region.txt  | 112 +++++
+ Documentation/cxl/region-description.txt |   7 +
+ cxl/builtin.h                            |   1 +
+ cxl/filter.h                             |   4 +-
+ cxl/cxl.c                                |   1 +
+ cxl/json.c                               |   9 +
+ cxl/region.c                             | 550 +++++++++++++++++++++++
+ Documentation/cxl/meson.build            |   2 +
+ cxl/meson.build                          |   1 +
+ 10 files changed, 691 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/cxl/bus-option.txt
+ create mode 100644 Documentation/cxl/cxl-create-region.txt
+ create mode 100644 Documentation/cxl/region-description.txt
+ create mode 100644 cxl/region.c
 
-diff --git a/cxl/lib/private.h b/cxl/lib/private.h
-index 8bc9620..437eade 100644
---- a/cxl/lib/private.h
-+++ b/cxl/lib/private.h
-@@ -104,6 +104,7 @@ struct cxl_decoder {
- 	u64 size;
- 	u64 dpa_resource;
- 	u64 dpa_size;
-+	u64 max_available_extent;
- 	void *dev_buf;
- 	size_t buf_len;
- 	char *dev_path;
-diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index 2b1cf7e..a40b0e6 100644
---- a/cxl/lib/libcxl.c
-+++ b/cxl/lib/libcxl.c
-@@ -455,6 +455,16 @@ CXL_EXPORT int cxl_region_delete(struct cxl_region *region)
- 	return 0;
- }
- 
-+static int region_start_cmp(struct cxl_region *r1, struct cxl_region *r2)
+diff --git a/Documentation/cxl/bus-option.txt b/Documentation/cxl/bus-option.txt
+new file mode 100644
+index 0000000..02e2f08
+--- /dev/null
++++ b/Documentation/cxl/bus-option.txt
+@@ -0,0 +1,5 @@
++// SPDX-License-Identifier: GPL-2.0
++
++-b::
++--bus=::
++	Restrict the operation to the specified bus.
+diff --git a/Documentation/cxl/cxl-create-region.txt b/Documentation/cxl/cxl-create-region.txt
+new file mode 100644
+index 0000000..6b740d5
+--- /dev/null
++++ b/Documentation/cxl/cxl-create-region.txt
+@@ -0,0 +1,112 @@
++// SPDX-License-Identifier: GPL-2.0
++
++cxl-create-region(1)
++====================
++
++NAME
++----
++cxl-create-region - Assemble a CXL region by setting up attributes of its
++constituent CXL memdevs.
++
++SYNOPSIS
++--------
++[verse]
++'cxl create-region [<options>]'
++
++include::region-description.txt[]
++
++For create-region, a size can optionally be specified, but if not, the maximum
++possible size for each memdev will be used up to the available decode capacity
++in the system for the given memory type. For persistent regions a UUID can
++optionally be specified, but if not, one will be generated.
++
++If the region-creation operation is successful, a region object will be
++emitted on stdout in JSON format (see examples). If the specified arguments
++cannot be satisfied with a legal configuration, then an appropriate error will
++be emitted on stderr.
++
++EXAMPLE
++-------
++----
++#cxl create - region - m - d decoder0 .1 - w 2 - g 1024 mem0 mem1
 +{
-+	if (r1->start == r2->start)
-+		return 0;
-+	else if (r1->start < r2->start)
-+		return -1;
-+	else
-+		return 1;
++  "region":"region0",
++  "resource":"0xc90000000",
++  "size":"512.00 MiB (536.87 MB)",
++  "interleave_ways":2,
++  "interleave_granularity":1024,
++  "mappings":[
++    {
++      "position":1,
++      "decoder":"decoder4.0"
++    },
++    {
++      "position":0,
++      "decoder":"decoder3.0"
++    }
++  ]
++}
++created 1 region
++----
++
++OPTIONS
++-------
++<target(s)>::
++The CXL targets that should be used to form the region. The number of
++'target' arguments must match the '--ways' option (if provided). The
++targets are memdev names such as 'mem0', 'mem1' etc.
++
++include::bus-option.txt[]
++
++-m::
++--memdevs::
++	Indicate that the non-option arguments for 'target(s)' refer to memdev
++	names. Currently this is the only option supported, and must be
++	specified.
++
++-s::
++--size=::
++	Specify the total size for the new region. This is optional, and by
++	default, the maximum possible size will be used. The maximum possible
++	size is gated by both the contiguous free HPA space remaining in the
++	root decoder, and the available DPA space in the component memdevs.
++
++-t::
++--type=::
++	Specify the region type - 'pmem' or 'ram'. Defaults to 'pmem'.
++
++-U::
++--uuid=::
++	Specify a UUID for the new region. This shouldn't usually need to be
++	specified, as one will be generated by default.
++
++-w::
++--ways=::
++	The number of interleave ways for the new region's interleave. This
++	should be equal to the number of memdevs specified in --memdevs, if
++	--memdevs is being supplied. If --ways is not specified, it will be
++	determined based on the number of memdev targets provided.
++
++-g::
++--granularity=::
++	The interleave granularity for the new region. Must match the selected
++	root decoder's (if provided) granularity. If the root decoder is
++	interleaved across more than one host-bridge then this value must match
++	that granularity. Otherwise, for non-interleaved decode windows, any
++	granularity can be specified as long as all devices support that setting.
++
++-d::
++--decoder=::
++	The root decoder that the region should be created under. If not
++	supplied, the first cross-host bridge (if available), decoder that
++	supports the largest interleave will be chosen.
++
++include::human-option.txt[]
++
++include::debug-option.txt[]
++
++include::../copyright.txt[]
++
++SEE ALSO
++--------
++linkcxl:cxl-list[1],
+diff --git a/Documentation/cxl/region-description.txt b/Documentation/cxl/region-description.txt
+new file mode 100644
+index 0000000..d7e3077
+--- /dev/null
++++ b/Documentation/cxl/region-description.txt
+@@ -0,0 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
++
++DESCRIPTION
++-----------
++A CXL region is composed of one or more slices of CXL memdevs, with configurable
++interleave settings - both the number of interleave ways, and the interleave
++granularity.
+diff --git a/cxl/builtin.h b/cxl/builtin.h
+index 9e6fc62..843bada 100644
+--- a/cxl/builtin.h
++++ b/cxl/builtin.h
+@@ -18,4 +18,5 @@ int cmd_disable_port(int argc, const char **argv, struct cxl_ctx *ctx);
+ int cmd_enable_port(int argc, const char **argv, struct cxl_ctx *ctx);
+ int cmd_set_partition(int argc, const char **argv, struct cxl_ctx *ctx);
+ int cmd_disable_bus(int argc, const char **argv, struct cxl_ctx *ctx);
++int cmd_create_region(int argc, const char **argv, struct cxl_ctx *ctx);
+ #endif /* _CXL_BUILTIN_H_ */
+diff --git a/cxl/filter.h b/cxl/filter.h
+index 609433c..d22d8b1 100644
+--- a/cxl/filter.h
++++ b/cxl/filter.h
+@@ -35,8 +35,10 @@ struct cxl_memdev *util_cxl_memdev_filter(struct cxl_memdev *memdev,
+ struct cxl_port *util_cxl_port_filter_by_memdev(struct cxl_port *port,
+ 						const char *ident,
+ 						const char *serial);
+-struct cxl_region *util_cxl_region_filter(struct cxl_region *region,
++struct cxl_decoder *util_cxl_decoder_filter(struct cxl_decoder *decoder,
+ 					    const char *__ident);
++struct cxl_region *util_cxl_region_filter(struct cxl_region *region,
++					  const char *__ident);
+ 
+ enum cxl_port_filter_mode {
+ 	CXL_PF_SINGLE,
+diff --git a/cxl/cxl.c b/cxl/cxl.c
+index ef4cda9..f0afcfe 100644
+--- a/cxl/cxl.c
++++ b/cxl/cxl.c
+@@ -72,6 +72,7 @@ static struct cmd_struct commands[] = {
+ 	{ "enable-port", .c_fn = cmd_enable_port },
+ 	{ "set-partition", .c_fn = cmd_set_partition },
+ 	{ "disable-bus", .c_fn = cmd_disable_bus },
++	{ "create-region", .c_fn = cmd_create_region },
+ };
+ 
+ int main(int argc, const char **argv)
+diff --git a/cxl/json.c b/cxl/json.c
+index 70cf286..9dc99df 100644
+--- a/cxl/json.c
++++ b/cxl/json.c
+@@ -547,6 +547,7 @@ void util_cxl_mappings_append_json(struct json_object *jregion,
+ 	cxl_mapping_foreach(region, mapping) {
+ 		struct json_object *jmapping;
+ 		struct cxl_decoder *decoder;
++		struct cxl_memdev *memdev;
+ 
+ 		jmapping = json_object_new_object();
+ 		if (!jmapping)
+@@ -564,6 +565,14 @@ void util_cxl_mappings_append_json(struct json_object *jregion,
+ 		if (!decoder)
+ 			continue;
+ 
++		memdev = cxl_decoder_get_memdev(decoder);
++		if (memdev) {
++			devname = cxl_memdev_get_devname(memdev);
++			jobj = json_object_new_string(devname);
++			if (jobj)
++				json_object_object_add(jmapping, "memdev", jobj);
++		}
++
+ 		devname = cxl_decoder_get_devname(decoder);
+ 		jobj = json_object_new_string(devname);
+ 		if (jobj)
+diff --git a/cxl/region.c b/cxl/region.c
+new file mode 100644
+index 0000000..2791ac9
+--- /dev/null
++++ b/cxl/region.c
+@@ -0,0 +1,550 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (C) 2020-2022 Intel Corporation. All rights reserved. */
++#include <stdio.h>
++#include <errno.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <limits.h>
++#include <util/log.h>
++#include <uuid/uuid.h>
++#include <util/json.h>
++#include <util/size.h>
++#include <cxl/libcxl.h>
++#include <json-c/json.h>
++#include <util/parse-options.h>
++#include <ccan/minmax/minmax.h>
++#include <ccan/short_types/short_types.h>
++
++#include "filter.h"
++#include "json.h"
++
++static struct region_params {
++	const char *bus;
++	const char *size;
++	const char *ways;
++	const char *granularity;
++	const char *type;
++	const char *root_decoder;
++	const char *region;
++	bool memdevs;
++	bool force;
++	bool human;
++	bool debug;
++} param;
++
++struct parsed_params {
++	u64 size;
++	u64 ep_min_size;
++	unsigned int ways;
++	unsigned int granularity;
++	const char **targets;
++	int num_targets;
++	struct cxl_decoder *root_decoder;
++	enum cxl_decoder_mode mode;
++};
++
++enum region_actions {
++	ACTION_CREATE,
++};
++
++static struct log_ctx rl;
++
++#define BASE_OPTIONS() \
++OPT_STRING('b', "bus", &param.bus, "bus name", \
++	   "Limit operation to the specified bus"), \
++OPT_STRING('d', "decoder", &param.root_decoder, "root decoder name", \
++	   "Limit to / use the specified root decoder"), \
++OPT_BOOLEAN(0, "debug", &param.debug, "turn on debug")
++
++#define CREATE_OPTIONS() \
++OPT_STRING('s', "size", &param.size, \
++	   "size in bytes or with a K/M/G etc. suffix", \
++	   "total size desired for the resulting region."), \
++OPT_STRING('w', "ways", &param.ways, \
++	   "number of interleave ways", \
++	   "number of memdevs participating in the regions interleave set"), \
++OPT_STRING('g', "granularity", \
++	   &param.granularity, "interleave granularity", \
++	   "granularity of the interleave set"), \
++OPT_STRING('t', "type", &param.type, \
++	   "region type", "region type - 'pmem' or 'ram'"), \
++OPT_BOOLEAN('m', "memdevs", &param.memdevs, \
++	    "non-option arguments are memdevs"), \
++OPT_BOOLEAN('u', "human", &param.human, "use human friendly number formats")
++
++static const struct option create_options[] = {
++	BASE_OPTIONS(),
++	CREATE_OPTIONS(),
++	OPT_END(),
++};
++
++
++
++static int parse_create_options(int argc, const char **argv,
++				struct parsed_params *p)
++{
++	int i;
++
++	if (!param.root_decoder) {
++		log_err(&rl, "no root decoder specified\n");
++		return -EINVAL;
++	}
++
++	if (param.type) {
++		p->mode = cxl_decoder_mode_from_ident(param.type);
++		if (p->mode == CXL_DECODER_MODE_NONE) {
++			log_err(&rl, "unsupported type: %s\n", param.type);
++			return -EINVAL;
++		}
++	} else {
++		p->mode = CXL_DECODER_MODE_PMEM;
++	}
++
++	if (param.size) {
++		p->size = parse_size64(param.size);
++		if (p->size == ULLONG_MAX) {
++			log_err(&rl, "Invalid size: %s\n", param.size);
++			return -EINVAL;
++		}
++	}
++
++	if (param.ways) {
++		unsigned long ways = strtoul(param.ways, NULL, 0);
++
++		if (ways == ULONG_MAX || (int)ways <= 0) {
++			log_err(&rl, "Invalid interleave ways: %s\n",
++				param.ways);
++			return -EINVAL;
++		}
++		p->ways = ways;
++	} else if (argc) {
++		p->ways = argc;
++	} else {
++		log_err(&rl,
++			"couldn't determine interleave ways from options or arguments\n");
++		return -EINVAL;
++	}
++
++	if (param.granularity) {
++		unsigned long granularity = strtoul(param.granularity, NULL, 0);
++
++		if (granularity == ULONG_MAX || (int)granularity <= 0) {
++			log_err(&rl, "Invalid interleave granularity: %s\n",
++				param.granularity);
++			return -EINVAL;
++		}
++		p->granularity = granularity;
++	}
++
++
++	if (argc > (int)p->ways) {
++		for (i = p->ways; i < argc; i++)
++			log_err(&rl, "extra argument: %s\n", p->targets[i]);
++		return -EINVAL;
++	}
++
++	if (argc < (int)p->ways) {
++		log_err(&rl,
++			"too few target arguments (%d) for interleave ways (%u)\n",
++			argc, p->ways);
++		return -EINVAL;
++	}
++
++	if (p->size && p->ways) {
++		if (p->size % p->ways) {
++			log_err(&rl,
++				"size (%lu) is not an integral multiple of interleave-ways (%u)\n",
++				p->size, p->ways);
++			return -EINVAL;
++		}
++	}
++
++	/*
++	 * For all practical purposes, -m is the default target type, but
++	 * hold off on actively making that decision until a second target
++	 * option is available.
++	 */
++	if (!param.memdevs) {
++		log_err(&rl,
++			"must specify option for target object types (-m)\n");
++		return -EINVAL;
++	}
++
++	return 0;
 +}
 +
- static void *add_cxl_region(void *parent, int id, const char *cxlregion_base)
- {
- 	const char *devname = devpath_to_devname(cxlregion_base);
-@@ -539,7 +549,7 @@ static void *add_cxl_region(void *parent, int id, const char *cxlregion_base)
- 			break;
- 		}
- 
--	list_add(&decoder->regions, &region->list);
-+	list_add_sorted(&decoder->regions, region, list, region_start_cmp);
- 
- 	return region;
- err:
-@@ -1617,6 +1627,70 @@ cxl_endpoint_get_memdev(struct cxl_endpoint *endpoint)
- 	return NULL;
- }
- 
-+static bool cxl_region_is_configured(struct cxl_region *region)
++static int parse_region_options(int argc, const char **argv,
++				struct cxl_ctx *ctx, enum region_actions action,
++				const struct option *options,
++				struct parsed_params *p, const char *usage)
 +{
-+	return region->size && (region->decode_state != CXL_DECODE_RESET);
++	const char * const u[] = {
++		usage,
++		NULL
++	};
++
++	argc = parse_options(argc, argv, options, u, 0);
++	p->targets = argv;
++	p->num_targets = argc;
++
++	if (param.debug) {
++		cxl_set_log_priority(ctx, LOG_DEBUG);
++		rl.log_priority = LOG_DEBUG;
++	} else
++		rl.log_priority = LOG_INFO;
++
++	switch(action) {
++	case ACTION_CREATE:
++		return parse_create_options(argc, argv, p);
++	default:
++		return 0;
++	}
 +}
 +
 +/**
-+ * cxl_decoder_calc_max_available_extent() - calculate max available free space
-+ * @decoder - the root decoder to calculate the free extents for
++ * validate_memdev() - match memdev with the target provided,
++ *                     and determine its size contribution
++ * @memdev: cxl_memdev being tested for a match against the named target
++ * @target: target memdev
++ * @p:      params structure
 + *
-+ * The add_cxl_region() function  adds regions to the parent decoder's list
-+ * sorted by the region's start HPAs. It can also be assumed that regions have
-+ * no overlapped / aliased HPA space. Therefore, calculating each extent is as
-+ * simple as walking the region list in order, and subtracting the previous
-+ * region's end HPA from the next region's start HPA (and taking into account
-+ * the decoder's start and end HPAs as well).
++ * This is called for each memdev in the system, and only returns 'true' if
++ * the memdev name matches the target argument being tested. Additionally,
++ * it sets an ep_min_size attribute that always contains the size of the
++ * smallest target in the provided list. This is used during the automatic
++ * size determination later, to ensure that all targets contribute equally
++ * to the region in case of unevenly sized memdevs.
 + */
-+static unsigned long long
-+cxl_decoder_calc_max_available_extent(struct cxl_decoder *decoder)
++static bool validate_memdev(struct cxl_memdev *memdev, const char *target,
++			    struct parsed_params *p)
 +{
-+	u64 prev_end, decoder_end, cur_extent, max_extent = 0;
-+	struct cxl_port *port = cxl_decoder_get_port(decoder);
-+	struct cxl_ctx *ctx = cxl_decoder_get_ctx(decoder);
-+	struct cxl_region *region;
++	const char *devname = cxl_memdev_get_devname(memdev);
++	u64 size;
 +
-+	if (!cxl_port_is_root(port)) {
-+		err(ctx, "%s: not a root decoder\n",
-+		    cxl_decoder_get_devname(decoder));
-+		return ULLONG_MAX;
-+	}
++	if (strcmp(devname, target) != 0)
++		return false;
 +
-+	/*
-+	 * Preload prev_end with an imaginary region that ends just before
-+	 * the decoder's start, so that the extent calculation for the
-+	 * first region Just Works
-+	 */
-+	prev_end = decoder->start - 1;
++	size = cxl_memdev_get_pmem_size(memdev);
++	if (!p->ep_min_size)
++		p->ep_min_size = size;
++	else
++		p->ep_min_size = min(p->ep_min_size, size);
 +
-+	cxl_region_foreach(decoder, region) {
-+		if (!cxl_region_is_configured(region))
-+			continue;
-+
-+		/*
-+		 * region->start - prev_end would get the difference in
-+		 * addresses, but a difference of 1 in addresses implies
-+		 * an extent of 0. Hence the '-1'.
-+		 */
-+		cur_extent = region->start - prev_end - 1;
-+		max_extent = max(max_extent, cur_extent);
-+		prev_end = region->start + region->size - 1;
-+	}
-+
-+	/*
-+	 * Finally, consider the extent after the last region, up to the end
-+	 * of the decoder's address space, if any. If there were no regions,
-+	 * this simply reduces to decoder->size.
-+	 * Subtracting two addrs gets us a 'size' directly, no need for +/- 1.
-+	 */
-+	decoder_end = decoder->start + decoder->size - 1;
-+	cur_extent = decoder_end - prev_end;
-+	max_extent = max(max_extent, cur_extent);
-+
-+	return max_extent;
++	return true;
 +}
 +
- static int decoder_id_cmp(struct cxl_decoder *d1, struct cxl_decoder *d2)
- {
- 	return d1->id - d2->id;
-@@ -1747,6 +1821,8 @@ static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
- 			if (sysfs_read_attr(ctx, path, buf) == 0)
- 				*(flag->flag) = !!strtoul(buf, NULL, 0);
- 		}
-+		decoder->max_available_extent =
-+			cxl_decoder_calc_max_available_extent(decoder);
- 		break;
- 	}
- 	}
-@@ -1911,6 +1987,12 @@ cxl_decoder_get_dpa_size(struct cxl_decoder *decoder)
- 	return decoder->dpa_size;
- }
- 
-+CXL_EXPORT unsigned long long
-+cxl_decoder_get_max_available_extent(struct cxl_decoder *decoder)
++static int validate_config_memdevs(struct cxl_ctx *ctx, struct parsed_params *p)
 +{
-+	return decoder->max_available_extent;
++	unsigned int i, matched = 0;
++
++	for (i = 0; i < p->ways; i++) {
++		struct cxl_memdev *memdev;
++
++		cxl_memdev_foreach(ctx, memdev)
++			if (validate_memdev(memdev, p->targets[i], p))
++				matched++;
++	}
++	if (matched != p->ways) {
++		log_err(&rl,
++			"one or more memdevs not found in CXL topology\n");
++		return -ENXIO;
++	}
++
++	return 0;
 +}
 +
- CXL_EXPORT int cxl_decoder_set_dpa_size(struct cxl_decoder *decoder,
- 					unsigned long long size)
- {
-diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index 69d9c09..61c7fc4 100644
---- a/cxl/libcxl.h
-+++ b/cxl/libcxl.h
-@@ -134,6 +134,9 @@ unsigned long long cxl_decoder_get_resource(struct cxl_decoder *decoder);
- unsigned long long cxl_decoder_get_size(struct cxl_decoder *decoder);
- unsigned long long cxl_decoder_get_dpa_resource(struct cxl_decoder *decoder);
- unsigned long long cxl_decoder_get_dpa_size(struct cxl_decoder *decoder);
-+unsigned long long
-+cxl_decoder_get_max_available_extent(struct cxl_decoder *decoder);
++static int validate_decoder(struct cxl_decoder *decoder,
++			    struct parsed_params *p)
++{
++	const char *devname = cxl_decoder_get_devname(decoder);
 +
- enum cxl_decoder_mode {
- 	CXL_DECODER_MODE_NONE,
- 	CXL_DECODER_MODE_MIXED,
-diff --git a/cxl/json.c b/cxl/json.c
-index 9dc99df..9cec58b 100644
---- a/cxl/json.c
-+++ b/cxl/json.c
-@@ -499,6 +499,14 @@ struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
- 	}
- 
- 	if (cxl_port_is_root(port) && cxl_decoder_is_mem_capable(decoder)) {
-+		size = cxl_decoder_get_max_available_extent(decoder);
-+		if (size < ULLONG_MAX) {
-+			jobj = util_json_object_size(size, flags);
-+			if (jobj)
-+				json_object_object_add(jdecoder,
-+						       "max_available_extent",
-+						       jobj);
++	switch(p->mode) {
++	case CXL_DECODER_MODE_RAM:
++		if (!cxl_decoder_is_volatile_capable(decoder)) {
++			log_err(&rl, "%s is not volatile capable\n", devname);
++			return -EINVAL;
 +		}
- 		if (cxl_decoder_is_pmem_capable(decoder)) {
- 			jobj = json_object_new_boolean(true);
- 			if (jobj)
-diff --git a/cxl/region.c b/cxl/region.c
-index b22d3c8..a30313c 100644
---- a/cxl/region.c
-+++ b/cxl/region.c
-@@ -438,9 +438,9 @@ static int create_region(struct cxl_ctx *ctx, int *count,
- 	struct json_object *jregion;
- 	unsigned int i, granularity;
- 	struct cxl_region *region;
-+	u64 size, max_extent;
- 	const char *devname;
- 	uuid_t uuid;
--	u64 size;
- 	int rc;
- 
- 	rc = create_region_validate_config(ctx, p);
-@@ -455,6 +455,18 @@ static int create_region(struct cxl_ctx *ctx, int *count,
- 		log_err(&rl, "%s: unable to determine region size\n", __func__);
- 		return -ENXIO;
- 	}
-+	max_extent = cxl_decoder_get_max_available_extent(p->root_decoder);
-+	if (max_extent == ULLONG_MAX) {
-+		log_err(&rl, "%s: unable to determine max extent\n",
-+			cxl_decoder_get_devname(p->root_decoder));
++		break;
++	case CXL_DECODER_MODE_PMEM:
++		if (!cxl_decoder_is_pmem_capable(decoder)) {
++			log_err(&rl, "%s is not pmem capable\n", devname);
++			return -EINVAL;
++		}
++		break;
++	default:
++		log_err(&rl, "unknown type: %s\n", param.type);
 +		return -EINVAL;
 +	}
-+	if (size > max_extent) {
-+		log_err(&rl,
-+			"%s: region size %#lx exceeds max available space\n",
-+			cxl_decoder_get_devname(p->root_decoder), size);
-+		return -ENOSPC;
++
++	/* TODO check if the interleave config is possible under this decoder */
++
++	return 0;
++}
++
++static int create_region_validate_config(struct cxl_ctx *ctx,
++					 struct parsed_params *p)
++{
++	struct cxl_bus *bus;
++	int rc;
++
++	cxl_bus_foreach(ctx, bus) {
++		struct cxl_decoder *decoder;
++		struct cxl_port *port;
++
++		if (!util_cxl_bus_filter(bus, param.bus))
++			continue;
++
++		port = cxl_bus_get_port(bus);
++		if (!cxl_port_is_root(port))
++			continue;
++
++		cxl_decoder_foreach (port, decoder) {
++			if (util_cxl_decoder_filter(decoder,
++						    param.root_decoder)) {
++				p->root_decoder = decoder;
++				goto found;
++			}
++		}
 +	}
++
++found:
++	if (p->root_decoder == NULL) {
++		log_err(&rl, "%s not found in CXL topology\n",
++			param.root_decoder);
++		return -ENXIO;
++	}
++
++	rc = validate_decoder(p->root_decoder, p);
++	if (rc)
++		return rc;
++
++	return validate_config_memdevs(ctx, p);
++}
++
++static struct cxl_decoder *
++cxl_memdev_target_find_decoder(struct cxl_ctx *ctx, const char *memdev_name)
++{
++	struct cxl_endpoint *ep = NULL;
++	struct cxl_decoder *decoder;
++	struct cxl_memdev *memdev;
++	struct cxl_port *port;
++
++	cxl_memdev_foreach(ctx, memdev) {
++		const char *devname = cxl_memdev_get_devname(memdev);
++
++		if (strcmp(devname, memdev_name) != 0)
++			continue;
++
++		ep = cxl_memdev_get_endpoint(memdev);
++	}
++
++	if (!ep) {
++		log_err(&rl, "could not get an endpoint for %s\n",
++			memdev_name);
++		return NULL;
++	}
++
++	port = cxl_endpoint_get_port(ep);
++	if (!port) {
++		log_err(&rl, "could not get a port for %s\n",
++			memdev_name);
++		return NULL;
++	}
++
++	cxl_decoder_foreach(port, decoder)
++		if (cxl_decoder_get_size(decoder) == 0)
++			return decoder;
++
++	log_err(&rl, "could not get a free decoder for %s\n", memdev_name);
++	return NULL;
++}
++
++#define try(prefix, op, dev, p) \
++do { \
++	int __rc = prefix##_##op(dev, p); \
++	if (__rc) { \
++		log_err(&rl, "%s: " #op " failed: %s\n", \
++				prefix##_get_devname(dev), \
++				strerror(abs(__rc))); \
++		rc = __rc; \
++		goto err_delete; \
++	} \
++} while (0)
++
++static int cxl_region_determine_granularity(struct cxl_region *region,
++					    struct parsed_params *p)
++{
++	const char *devname = cxl_region_get_devname(region);
++	unsigned int granularity, ways;
++
++	/* Default granularity will be the root decoder's granularity */
++	granularity = cxl_decoder_get_interleave_granularity(p->root_decoder);
++	if (granularity == 0 || granularity == UINT_MAX) {
++		log_err(&rl, "%s: unable to determine root decoder granularity\n",
++			devname);
++		return -ENXIO;
++	}
++
++	/* If no user-supplied granularity, just use the default */
++	if (!p->granularity)
++		return granularity;
++
++	ways = cxl_decoder_get_interleave_ways(p->root_decoder);
++	if (ways == 0 || ways == UINT_MAX) {
++		log_err(&rl, "%s: unable to determine root decoder ways\n",
++			devname);
++		return -ENXIO;
++	}
++
++	/* For ways == 1, any user-supplied granularity is fine */
++	if (ways == 1)
++		return p->granularity;
++
++	/*
++	 * For ways > 1, only allow the same granularity as the selected
++	 * root decoder
++	 */
++	if (p->granularity == granularity)
++		return granularity;
++
++	log_err(&rl,
++		"%s: For an x%d root, only root decoder granularity (%d) permitted\n",
++		devname, ways, granularity);
++	return -EINVAL;
++}
++
++static int create_region(struct cxl_ctx *ctx, int *count,
++			 struct parsed_params *p)
++{
++	unsigned long flags = UTIL_JSON_TARGETS;
++	struct json_object *jregion;
++	unsigned int i, granularity;
++	struct cxl_region *region;
++	const char *devname;
++	uuid_t uuid;
++	u64 size;
++	int rc;
++
++	rc = create_region_validate_config(ctx, p);
++	if (rc)
++		return rc;
++
++	if (p->size) {
++		size = p->size;
++	} else if (p->ep_min_size) {
++		size = p->ep_min_size * p->ways;
++	} else {
++		log_err(&rl, "%s: unable to determine region size\n", __func__);
++		return -ENXIO;
++	}
++
++	if (p->mode == CXL_DECODER_MODE_PMEM) {
++		region = cxl_decoder_create_pmem_region(p->root_decoder);
++		if (!region) {
++			log_err(&rl, "failed to create region under %s\n",
++				param.root_decoder);
++			return -ENXIO;
++		}
++	} else {
++		log_err(&rl, "region type '%s' not supported yet\n",
++			param.type);
++		return -EOPNOTSUPP;
++	}
++
++	devname = cxl_region_get_devname(region);
++
++	rc = cxl_region_determine_granularity(region, p);
++	if (rc < 0)
++		goto err_delete;
++	granularity = rc;
++
++	uuid_generate(uuid);
++	try(cxl_region, set_interleave_granularity, region, granularity);
++	try(cxl_region, set_interleave_ways, region, p->ways);
++	try(cxl_region, set_uuid, region, uuid);
++	try(cxl_region, set_size, region, size);
++
++	for (i = 0; i < p->ways; i++) {
++		struct cxl_decoder *ep_decoder = NULL;
++
++		ep_decoder = cxl_memdev_target_find_decoder(ctx, p->targets[i]);
++		if (!ep_decoder) {
++			rc = -ENXIO;
++			goto err_delete;
++		}
++		if (cxl_decoder_get_mode(ep_decoder) != p->mode) {
++			/*
++			 * The memdev_target_find_decoder() helper returns a free
++			 * decoder whose size has been checked for 0.
++			 * Thus it is safe to change the mode here if needed.
++			 */
++			try(cxl_decoder, set_dpa_size, ep_decoder, 0);
++			try(cxl_decoder, set_mode, ep_decoder, p->mode);
++		}
++		try(cxl_decoder, set_dpa_size, ep_decoder, size/p->ways);
++		rc = cxl_region_set_target(region, i, ep_decoder);
++		if (rc) {
++			log_err(&rl, "%s: failed to set target%d to %s\n",
++				devname, i, p->targets[i]);
++			goto err_delete;
++		}
++	}
++
++	rc = cxl_region_decode_commit(region);
++	if (rc) {
++		log_err(&rl, "%s: failed to commit decode: %s\n", devname,
++			strerror(-rc));
++		goto err_delete;
++	}
++
++	rc = cxl_region_enable(region);
++	if (rc) {
++		log_err(&rl, "%s: failed to enable: %s\n", devname,
++			strerror(-rc));
++		goto err_delete;
++	}
++	*count = 1;
++
++	if (isatty(1))
++		flags |= UTIL_JSON_HUMAN;
++	jregion = util_cxl_region_to_json(region, flags);
++	if (jregion)
++		printf("%s\n", json_object_to_json_string_ext(jregion,
++					JSON_C_TO_STRING_PRETTY));
++
++	return 0;
++
++err_delete:
++	cxl_region_delete(region);
++	return rc;
++}
++
++static int region_action(int argc, const char **argv, struct cxl_ctx *ctx,
++			 enum region_actions action,
++			 const struct option *options, struct parsed_params *p,
++			 int *count, const char *u)
++{
++	int rc = -ENXIO;
++
++	log_init(&rl, "cxl region", "CXL_REGION_LOG");
++	rc = parse_region_options(argc, argv, ctx, action, options, p, u);
++	if (rc)
++		return rc;
++
++	if (action == ACTION_CREATE)
++		return create_region(ctx, count, p);
++
++	return rc;
++}
++
++int cmd_create_region(int argc, const char **argv, struct cxl_ctx *ctx)
++{
++	const char *u = "cxl create-region <target0> ... [<options>]";
++	struct parsed_params p = { 0 };
++	int rc, count = 0;
++
++	rc = region_action(argc, argv, ctx, ACTION_CREATE, create_options, &p,
++			   &count, u);
++	log_info(&rl, "created %d region%s\n", count, count == 1 ? "" : "s");
++	return rc == 0 ? 0 : EXIT_FAILURE;
++}
+diff --git a/Documentation/cxl/meson.build b/Documentation/cxl/meson.build
+index 423be90..340cdee 100644
+--- a/Documentation/cxl/meson.build
++++ b/Documentation/cxl/meson.build
+@@ -23,6 +23,7 @@ filedeps = [
+   'memdev-option.txt',
+   'labels-options.txt',
+   'debug-option.txt',
++  'region-description.txt',
+ ]
  
- 	if (p->mode == CXL_DECODER_MODE_PMEM) {
- 		region = cxl_decoder_create_pmem_region(p->root_decoder);
-diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index cb23a0b..549f88d 100644
---- a/cxl/lib/libcxl.sym
-+++ b/cxl/lib/libcxl.sym
-@@ -213,4 +213,5 @@ global:
- 	cxl_decoder_get_memdev;
- 	cxl_decoder_get_interleave_granularity;
- 	cxl_decoder_get_interleave_ways;
-+	cxl_decoder_get_max_available_extent;
- } LIBCXL_2;
+ cxl_manpages = [
+@@ -39,6 +40,7 @@ cxl_manpages = [
+   'cxl-set-partition.txt',
+   'cxl-reserve-dpa.txt',
+   'cxl-free-dpa.txt',
++  'cxl-create-region.txt',
+ ]
+ 
+ foreach man : cxl_manpages
+diff --git a/cxl/meson.build b/cxl/meson.build
+index d63dcb1..f2474aa 100644
+--- a/cxl/meson.build
++++ b/cxl/meson.build
+@@ -3,6 +3,7 @@ cxl_src = [
+   'list.c',
+   'port.c',
+   'bus.c',
++  'region.c',
+   'memdev.c',
+   'json.c',
+   'filter.c',
 -- 
 2.37.1
 
