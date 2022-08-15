@@ -2,82 +2,133 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD1CC00140
-	for <linux-cxl@archiver.kernel.org>; Mon, 15 Aug 2022 18:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BEBC3F6B0
+	for <linux-cxl@archiver.kernel.org>; Mon, 15 Aug 2022 21:28:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231190AbiHOSMC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 15 Aug 2022 14:12:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57214 "EHLO
+        id S232677AbiHOV17 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 15 Aug 2022 17:27:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232326AbiHOSMA (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 Aug 2022 14:12:00 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5414622BF6
-        for <linux-cxl@vger.kernel.org>; Mon, 15 Aug 2022 11:12:00 -0700 (PDT)
+        with ESMTP id S1347834AbiHOV0U (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 Aug 2022 17:26:20 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E26E8334
+        for <linux-cxl@vger.kernel.org>; Mon, 15 Aug 2022 12:22:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660587120; x=1692123120;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
+  t=1660591364; x=1692127364;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=6EaW6u8QngBuh6zk7ZxPWQ4L5alvQ/apItGwG+3+9+E=;
-  b=coshhfV8hQlm075/W1KbDpxCc64c/AMN/p3PErPD5C4puwSPqSrMdr9o
-   KZviB6LWvwac4V0q4O7sO+6xQq2TpvvFvTKZhbJoSjoDUo0rxr7eMHV/Q
-   bWDs4lAQaY3nh53D6gnfUzAwrOGgTrl3imztUcbGyQBQkYDlQ1fyJPwI9
-   1rhabU3BlTKt4L2HIpasBNrurdKbDKI5R0eVHJJk+aFwmrDil4F7XhC/2
-   mNtDS/gDU9QW1jNm6JCahzEoMTJwWwqew3qNRKzjIbmhohVa5nBzLD2bE
-   X+YQhF/BzcunvGdZnbtCuIMlbUGmuMkgp8JY49FAA4QHTep99iOmwT1O9
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10440"; a="275081665"
-X-IronPort-AV: E=Sophos;i="5.93,238,1654585200"; 
-   d="scan'208";a="275081665"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 11:11:59 -0700
-X-IronPort-AV: E=Sophos;i="5.93,238,1654585200"; 
-   d="scan'208";a="674917875"
-Received: from djiang5-desk4.jf.intel.com ([10.165.157.96])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 11:11:59 -0700
-Subject: [PATCH v3 3/3] tools/testing/cxl: Add interleave check support to
- mock cxl port device
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
-        ira.weiny@intel.com, alison.schofield@intel.com,
-        Jonathan.Cameron@huawei.com
-Date:   Mon, 15 Aug 2022 11:11:59 -0700
-Message-ID: <166058711917.1520730.2606494810403472146.stgit@djiang5-desk4.jf.intel.com>
-In-Reply-To: <166058698949.1520730.1888371264289688061.stgit@djiang5-desk4.jf.intel.com>
-References: <166058698949.1520730.1888371264289688061.stgit@djiang5-desk4.jf.intel.com>
-User-Agent: StGit/1.4
+  bh=hWdnQGSa5Du+Yzjo1XKDR7Gzv21wnxh5foUJXYJfm4I=;
+  b=S4yzr+5ELN2Es/t1TWQlYk1w4yeoBqwuJC/NfQv5JC7Xw0EjU9/NO449
+   Ts/CuWiDA5t+8DGJG3dJgq7qPXmufLkOhcOjwLQqkkB7BvtTt3RInYyPX
+   y7omoIUmf3mrJev0ke9TAQBL/GivsIZrKILOwWbo0+BCupPAAOz8Ks7OY
+   6PC5vp8wzNWe/Ko6ssp868aIfvkfE3qFOKg2N0IPMWIH9gHk1aGPwCqan
+   NiV4S2WrsQJH2vNn4sXPnXM0fhjUNdWAeueuxxjIR2cPbrK+U1kPj7BOs
+   DHtfT96vwsPMEfwH4YCZq3mYTg0OSA2nwM4yWWXJ13HVpEImL71pANv33
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10440"; a="293313123"
+X-IronPort-AV: E=Sophos;i="5.93,239,1654585200"; 
+   d="scan'208";a="293313123"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 12:22:18 -0700
+X-IronPort-AV: E=Sophos;i="5.93,239,1654585200"; 
+   d="scan'208";a="606758243"
+Received: from smadiset-mobl1.amr.corp.intel.com (HELO vverma7-desk1.intel.com) ([10.209.5.99])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 12:22:18 -0700
+From:   Vishal Verma <vishal.l.verma@intel.com>
+To:     <linux-cxl@vger.kernel.org>
+Cc:     <nvdimm@lists.linux.dev>, Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: [ndctl PATCH v3 02/11] cxl/port: Consolidate the debug option in cxl-port man pages
+Date:   Mon, 15 Aug 2022 13:22:05 -0600
+Message-Id: <20220815192214.545800-3-vishal.l.verma@intel.com>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20220815192214.545800-1-vishal.l.verma@intel.com>
+References: <20220815192214.545800-1-vishal.l.verma@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2436; h=from:subject; bh=hWdnQGSa5Du+Yzjo1XKDR7Gzv21wnxh5foUJXYJfm4I=; b=owGbwMvMwCXGf25diOft7jLG02pJDEm/5jy1T4txFP074dWHG/zNkyPcl98UsY4oOVsXqv59wvM1 YcoPOkpZGMS4GGTFFFn+7vnIeExuez5PYIIjzBxWJpAhDFycAjCR2ZMY/ofwVSRcrLCZ0bn+yvWWi/ euXZn6JiLbNubFxdqTvB2VvPMZGZZvenv6nCf35j+nd/Xm1BiWHe0+LlHXtn//9sLJ+qte2vECAA==
+X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Attach the cxl mock hdm to the port device to allow cxl_interleave_verify()
-to check the interleave configuration. Set the interleave_mask as well
-to support the new verification code.
+In preparation for additional commands that implement the --debug
+option, consolidate the option description from the cxl-port man pages
+into an include.
 
+The port man pages also mentioned the debug option requiring a build
+with debug enabled, which wasn't true - so remove that part.
+
+Cc: Dan Williams <dan.j.williams@intel.com>
 Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
- tools/testing/cxl/test/cxl.c |    3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/cxl/cxl-disable-port.txt | 5 +----
+ Documentation/cxl/cxl-enable-port.txt  | 5 +----
+ Documentation/cxl/debug-option.txt     | 4 ++++
+ Documentation/cxl/meson.build          | 1 +
+ 4 files changed, 7 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/cxl/debug-option.txt
 
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index a072b2d3e726..3ce353a20b80 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -398,6 +398,9 @@ static struct cxl_hdm *mock_cxl_setup_hdm(struct cxl_port *port)
- 		return ERR_PTR(-ENOMEM);
+diff --git a/Documentation/cxl/cxl-disable-port.txt b/Documentation/cxl/cxl-disable-port.txt
+index ac56f20..7a22efc 100644
+--- a/Documentation/cxl/cxl-disable-port.txt
++++ b/Documentation/cxl/cxl-disable-port.txt
+@@ -30,10 +30,7 @@ OPTIONS
+ 	firmware and disabling an active device is akin to force removing memory
+ 	from a running system.
  
- 	cxlhdm->port = port;
-+	cxlhdm->interleave_mask = GENMASK(14, 8);
-+	cxlhdm->interleave_cap = CXL_HDM_INTERLEAVE_CAP_DEFAULT;
-+	dev_set_drvdata(&port->dev, cxlhdm);
- 	return cxlhdm;
- }
+---debug::
+-	If the cxl tool was built with debug disabled, turn on debug
+-	messages.
+-
++include::debug-option.txt[]
  
-
+ include::../copyright.txt[]
+ 
+diff --git a/Documentation/cxl/cxl-enable-port.txt b/Documentation/cxl/cxl-enable-port.txt
+index 9a37cef..50b53d1 100644
+--- a/Documentation/cxl/cxl-enable-port.txt
++++ b/Documentation/cxl/cxl-enable-port.txt
+@@ -31,10 +31,7 @@ OPTIONS
+ 	memdev is only enabled after all CXL ports in its device topology
+ 	ancestry are enabled.
+ 
+---debug::
+-	If the cxl tool was built with debug enabled, turn on debug
+-	messages.
+-
++include::debug-option.txt[]
+ 
+ include::../copyright.txt[]
+ 
+diff --git a/Documentation/cxl/debug-option.txt b/Documentation/cxl/debug-option.txt
+new file mode 100644
+index 0000000..70b922f
+--- /dev/null
++++ b/Documentation/cxl/debug-option.txt
+@@ -0,0 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0
++
++--debug::
++	Turn on additional debug messages including library debug.
+diff --git a/Documentation/cxl/meson.build b/Documentation/cxl/meson.build
+index d019dfc..423be90 100644
+--- a/Documentation/cxl/meson.build
++++ b/Documentation/cxl/meson.build
+@@ -22,6 +22,7 @@ filedeps = [
+   '../copyright.txt',
+   'memdev-option.txt',
+   'labels-options.txt',
++  'debug-option.txt',
+ ]
+ 
+ cxl_manpages = [
+-- 
+2.37.1
 
