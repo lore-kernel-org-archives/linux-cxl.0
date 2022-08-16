@@ -2,186 +2,471 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 502CBC3F6B0
-	for <linux-cxl@archiver.kernel.org>; Tue, 16 Aug 2022 14:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1A7C25B0E
+	for <linux-cxl@archiver.kernel.org>; Tue, 16 Aug 2022 16:39:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233540AbiHPO43 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 16 Aug 2022 10:56:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52422 "EHLO
+        id S235568AbiHPQj5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 16 Aug 2022 12:39:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231962AbiHPO41 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 16 Aug 2022 10:56:27 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F18F8305C;
-        Tue, 16 Aug 2022 07:56:27 -0700 (PDT)
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27GDdndu001659;
-        Tue, 16 Aug 2022 14:56:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : content-type : mime-version; s=corp-2022-7-12;
- bh=We5+j+//EueNJLzb6WiI5lJyYcsl0v7Tt5tlsZyRhRg=;
- b=bsFfpyr2XHwlqM3GHxw+NqrVhkvgsUi33d7gQjsOkfr3d7jeyeKnG3CJi/zBTlZCnJAP
- QoBBQsel9hE3QLl4zUUS4gHEfABVBB1dEpaWDprOO0lh4GaoyoxUyAZ8+LRz6u5le+mW
- hdMXmaVVr6g96PO9iu59qym1mlpFnV0fEMRffG6PNz8GEcD0G8Ge+HT8m7VGpSYOHsnQ
- gQyT7FkIcxnjKg9Uov7OsBK09iVllmEr3mRPsjveG9wmSfjo+tLol/4fbhkffEI3cJhT
- zRQ078OQZL5lVbZxpsz6fq8ENerwr4zqorWm0VRKKnaefxF4hJL3FQYIVRBARdIqMWe2 NQ== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3hx4gt635g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Aug 2022 14:56:11 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 27GCfe2l029234;
-        Tue, 16 Aug 2022 14:56:10 GMT
-Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam07lp2042.outbound.protection.outlook.com [104.47.51.42])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3hx2d2hqba-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Aug 2022 14:56:10 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YbBZlWqNtGw2hNy3xyQi5Zls+LqBm1BM5T8FPbBj6CtJ7JXsHYj2J9Nyfgjzl8dBgISlCQ0qpPYkVX9K8HhB2pM+9HviobmOMNEGuUbCtDqA8UBaSY7SUrrI3K2S+ucqtNt1YDbKAcBkpH04LpzrVZHkyF13PmAvsYa9aCGVaGYMDSjnynipZZFYtU4y/QfaxkWOvRXJQLYK3pYue3P+NMqSWW2hV1wTGnuBrsOjPOs9NwJcF8q62gZOjTXp4tZeg4635hCkZghydesov5QTh0BnjOgIlpyuyfe5/iQ+vDEIUJ2sOOq1eBD+7I2oZkAHGtkNEEaJCFGHU9+U1urNiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=We5+j+//EueNJLzb6WiI5lJyYcsl0v7Tt5tlsZyRhRg=;
- b=AAohiJocNmQsv1OipgwB5GGmbwodxII3vIrJBZrNTk2SRWdV2zdSsPeByhC5l4KpDkWbU61cL+4JWCeD9EBkauxN/hEA/SUjQQgX3Gwk5eZqFB9PmZZPUMFc4D/1yiZ3oiVUsW2HgXT1OctY2IBp80nEUu4gEHIHufE2jNJqr6VouMDSZG2lA7zfNp1u5DuV9p6Smxid2GZZhDKO0EmEu9nd7nRek9YlCUFJRXyhckZVt+kesgMZObjr47+/7XICnz1qgwHmwN64ZSp93a1hbDQCtKxTZF+Pvnywlk2DvuROSuuqsA2Q+TuMl/TCLN5u+WQc59sxhNvwctScXmdofA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=We5+j+//EueNJLzb6WiI5lJyYcsl0v7Tt5tlsZyRhRg=;
- b=JVpudhfMC4EAODH3esWZI+NZHlA0F2hWThrsrT1NIjJSQZeGEjnGTUNCXggdwRH/sPfZ9fqTVDJWRcH7crHB08hTUeZXO11LkCXcba7Oas5YrV/JakSuip0Tu2YhmSyU+BDUZLaD+rvQ2ayl8DfzieHThOoHNZZKo5glrdnzySM=
-Received: from MWHPR1001MB2365.namprd10.prod.outlook.com
- (2603:10b6:301:2d::28) by MN2PR10MB4286.namprd10.prod.outlook.com
- (2603:10b6:208:1d6::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5525.11; Tue, 16 Aug
- 2022 14:56:08 +0000
-Received: from MWHPR1001MB2365.namprd10.prod.outlook.com
- ([fe80::209e:de4d:68ea:c026]) by MWHPR1001MB2365.namprd10.prod.outlook.com
- ([fe80::209e:de4d:68ea:c026%3]) with mapi id 15.20.5504.028; Tue, 16 Aug 2022
- 14:56:08 +0000
-Date:   Tue, 16 Aug 2022 17:55:51 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
+        with ESMTP id S235798AbiHPQj4 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 16 Aug 2022 12:39:56 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DE2A7F10E;
+        Tue, 16 Aug 2022 09:39:53 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2E4186123A;
+        Tue, 16 Aug 2022 16:39:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EC04C433C1;
+        Tue, 16 Aug 2022 16:39:51 +0000 (UTC)
+Date:   Tue, 16 Aug 2022 12:39:58 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     ira.weiny@intel.com
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        linux-cxl@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] cxl/hdm: unlock on error in cxl_decoder_commit()
-Message-ID: <Yvuv9wQrtXBy4Ddr@kili>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-ClientProxiedBy: ZR0P278CA0099.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:23::14) To MWHPR1001MB2365.namprd10.prod.outlook.com
- (2603:10b6:301:2d::28)
+        Davidlohr Bueso <dave@stgolabs.net>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Subject: Re: [RFC PATCH 1/9] cxl/mem: Implement Get Event Records command
+Message-ID: <20220816123958.2b49674a@gandalf.local.home>
+In-Reply-To: <20220813053243.757363-2-ira.weiny@intel.com>
+References: <20220813053243.757363-1-ira.weiny@intel.com>
+        <20220813053243.757363-2-ira.weiny@intel.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f05f5b98-73b2-4297-0ce4-08da7f97722a
-X-MS-TrafficTypeDiagnostic: MN2PR10MB4286:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ksAfLLOjZkv0SgQ4iMoy39TrVBNEu/J67aa9zKG+2U4MXViZcgYF+ccayMEQTXrhWlQ/kIacJj9izMOpI/dhanS8zQiwZd4iGs6T4yanr8ckHNnUPPULIDJzNrM92Udb+fLPQkp1hfrv6jbS7nMqvKI27bHBBTlfVxIInOUh0ve25/vhIlFBL54/J3VX0kOzLZUIJ5zAAaNXfowaNlz7i/3V796jSfVZA0ScPY0ID9DSk13nzU6KVyjzXn+4XXluci1sLwXcLEFmsxU4pwUl85upmWoKIxS2xEGi2F9IiGIlgTJsxOUvZ2caan7Fs2LCHnHgdnkG3DQQ2cX30s0HXF3vndxng+DbZddz1ihgU/OOAUAeVAPdPGV7jJNnq7DHXWT6+wnik4fGkEDr7ZQaJcnzQDqGCAxJhuZpkgYAjN/4EyWSBk8+fa+G97mig3ZXDRXAKjhq4dSH/3AKO4kLOKq07s/puv7gMNeSDvHwWbz+ExeGe2vOkQMfQLa3opOwXxQGqpWtdqGLV+BeDP9n7cs149nkeNHLWk1xIExAGUhkcRCTZ8vpo+yMMLai3TowFlPzEC0e88sa9PRy0CpdREYMrcURfzZF+SHc/c+z0jXc+fhWVZIwXy8MW5s/EWRy7J+/GyI7fvBvdm01+QQw02nz+0wjJ/4uBgEACmKEkM0UCNeZ+V1oIUrg7Yo2v/29zYIDvrVnf7s4bBTHz5DHqR7wgbs0g7yu6LCJKeSFwaZeFgO2GaiXo0ggfJDY55+eSnBAWayr0a/89r+V0PLpGlxPYEwuwB+4pPpPb0xMw5Y=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2365.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(7916004)(396003)(346002)(39860400002)(366004)(376002)(136003)(2906002)(6486002)(44832011)(5660300002)(478600001)(66476007)(4744005)(66946007)(66556008)(38350700002)(8936002)(38100700002)(8676002)(86362001)(6506007)(6666004)(9686003)(26005)(186003)(6512007)(54906003)(52116002)(41300700001)(4326008)(33716001)(110136005)(83380400001)(316002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?DSoyTcVaHxO5OxIxqhp4YZ+t0nHKOv+3//EVKf/te/mfIfNI0agBFb7V8rlS?=
- =?us-ascii?Q?KZ1I/4C/P4Jq+qv2KF97xMP+QvcoNhM7lnzCZ2mluDkELKondbWdRUlYaJwb?=
- =?us-ascii?Q?bp0dFnwax8RjvKBsYHxakcSihNsR631e6r5dlO4cwKeJTFuDqfTerjZHm5d4?=
- =?us-ascii?Q?tu8C25V/7s/o/BXl/K/h+l2/5eSL6AWt3UYa+18HmHl9vfhY2zrsgeVrPnER?=
- =?us-ascii?Q?4MtJGLEtyVZKGSdR34FlJZ9/cW/w35aIRB1Xc1SLVRbZCPWRhoxksHkpA9UJ?=
- =?us-ascii?Q?e8dHiqbw1pMRV5Y15Oi3ad+9H6nC2s/Snu0oUYHYZEWB6MHLs1AlBmLROwLE?=
- =?us-ascii?Q?zIdlABjw5QKYnqCqsMBxV3eLMOTEPzunY9M11noWzaRV6YOlHfS41QZ/iAzL?=
- =?us-ascii?Q?b/Yc9wS98tsGxXls+CmR3E15wGGz478Y1g9+Z154Yi43i14HMXvag+B62AGV?=
- =?us-ascii?Q?fK1v3WkKkhTX0+wm0R2dmYOLawnVGqMiyRXB0HOQWJ9QNO9soBXd2+pRDQFh?=
- =?us-ascii?Q?m/Aivw4g+4xDXmb7Uvy4Mg+FAVMIvUFi9z9xD3SSLd+kdolhDD/jeZKEcGdD?=
- =?us-ascii?Q?Yk42l6F2qvDOYLoouTGvSCoWlcH1p0QN5fjdNQePLFFvmJGQb5khUrGo5rDf?=
- =?us-ascii?Q?hPpI8BfPOiq+KNX90HtTpr5F1HAwxC8qBKnRDHUNbPg1aeN51+U+M/we0kZ1?=
- =?us-ascii?Q?cSkxyB5lNOr2aQWq0M3Moj6/jbIRrsI8OgWMOJg8Yd7si5MbAOOKATPXI2BE?=
- =?us-ascii?Q?azldhXzM16oqNoe+/xPNRXUZnW7f1+BBxzgV1XFePK272PwhBwZst/H/fPZo?=
- =?us-ascii?Q?MwdcCGdeDkWE0vlmhY1s9qJOC9f1AO6frtBF7iwXNLDd7Soc3YDuAuOqhWOP?=
- =?us-ascii?Q?WxnaLFsIFjes0P2u0UYiCrFzoen4h3Pz+FFls5aEBVHDOhyCbiIB378k9H8S?=
- =?us-ascii?Q?WP2sY/tJCESVpkJCo0C3/U4mwujabpiJJu5aUcjZcU9aSlHQMc41HQnqN6xh?=
- =?us-ascii?Q?NkRNAXIcrvDJAWXk30toKF8eV8r7CvyMXiIREVQc2C8Ek3+z5g5UqO1GwIQl?=
- =?us-ascii?Q?w49AnlVork/HJ2Lr1NFdU//T6bF0sbPbn2tH/Gui82OpnqykE0neKLh4wqKh?=
- =?us-ascii?Q?uM1q1Ik8vuh1OrasNRKlRr4CtOdcAT7yVhz5jByEQvsicS2p3eMSd3gQS4VV?=
- =?us-ascii?Q?gqVWo3yz7NU/IWW0oevQjstxPqfZZ3AnBktAZtxt7GKLM/21dldWyWLMQ42r?=
- =?us-ascii?Q?IsQsBsDMYhXPP/ocJYzgVLj8r17JjDu+KTpoImbsKOaHjckEn07lF/XlDzfl?=
- =?us-ascii?Q?1tEPsSXoyyAPLV49aOmTe8ICctywpVqq0FuK+YJQt5uHtW9jERKgD0TG0C4L?=
- =?us-ascii?Q?Z6YuZo/Be5Ss+fOb+583tEjSCeCYhfFvf6zi9f/ucm1UAhs3XruX0KNVIVzR?=
- =?us-ascii?Q?0KyGw/ahZCX+7GdVg+0DM/UCNdZWTLUF4ugvsi2VIBZrcg9uz9orE2JPSfKh?=
- =?us-ascii?Q?LjGURHcwiHJwtXv5rNQkZeyC8LbtivurR6uLqgiqG8O+s9ZlFYCcttwSK9Bm?=
- =?us-ascii?Q?HtrObhMY80dvpISdu8pIZLu7iLOhgTUDz3CHtUlK?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?us-ascii?Q?DiKIDzkmOgwef13s29sRlHgd4vNto3hcaKxl3JPoBw+ZnbNhEruwQ6KR9omd?=
- =?us-ascii?Q?WYD7es5PBd1hHB1sowgNPrGzAx86qzqTOpQAsnGrnnrRm+Wj6o7lBcQ5JzwG?=
- =?us-ascii?Q?xWi8sBAhCRstV+8wEM8PF75AhmurBYpLjGLecSXz2LOlRqIoGS8UQvCZJsn0?=
- =?us-ascii?Q?SDen/Nr1rPJS/+TYzarADvjnTnrqGZ4vE9mKgtHptez6/ANyEYXOtoL+YOZ9?=
- =?us-ascii?Q?aWgt+vGhamHXVGgCjS3xmfsIYXe+tl4w0cwefX8m1hLJkNPtXLC8P4jHqDPI?=
- =?us-ascii?Q?jZjgX/zpjoC3P1E/c5N72pKu3DhHVV/0XnWPrBFUSp/y2KbLrBfz7OO2ufNF?=
- =?us-ascii?Q?vO/1wlEllyJcX7laROnos3O70cIrI6iGp4K6Z8fPWQNFjbb4Q4IG+XcFU/09?=
- =?us-ascii?Q?F7DfmY7Q+33GVrqlHcd+r/3Izg0cszZrrek34SU+kGWOeFwHmK8S3bhewKkT?=
- =?us-ascii?Q?jl7A846drEgaLCtSO8+fmcdXqmQQEsqOtAq519JsduA3kI87n49exUT+SxTx?=
- =?us-ascii?Q?CfrdEXq9zejVjPd4q+O2pt/yLwUmguHiKuxTProKaOayglggCyCbRzFRxP+b?=
- =?us-ascii?Q?exTzOhaSxePu68tpblebZpYnJfc2yTt9TSCllNXvzfvvlv/G2t0ujN1+Da0Z?=
- =?us-ascii?Q?7H15UsppG0OX1MpMKL3pr98D3YzzRvzLASm3zkuB6ZERogn/A3GEE9bqc2EU?=
- =?us-ascii?Q?WbfytTSaYBwcd0iu0yOU1zqqTC6yyXtchYHne8JWDlcmtr1wWpDseEApVRGq?=
- =?us-ascii?Q?0GemiV8VzVuiQ97FCSSJMp748PfMMXpeTlrlpmFHGOprfrhmCgOqTbFNLpUw?=
- =?us-ascii?Q?5ZJLOcYm7rp/1ZQd+R+QpsOnxY0Bvt9L3xSeyXxNGb9TGUwAQ1JLBHVM4/AI?=
- =?us-ascii?Q?MfANa0WZMuQurN2VJpBwDz6O/5F/wxgA1NuzuxSyyWWcRP0BgdV1D5fX+b5V?=
- =?us-ascii?Q?TUnRo+iomGagFiD2gSSwDGwF5XZFGhedVRm+VLwwj+MbSZlDCswpJ4Sc6h9q?=
- =?us-ascii?Q?lsOUZ8ymcF622254/J/nUvV9tojk0ei9K/vs4V0SsVG4TyU8YUcNz0Y4ptyJ?=
- =?us-ascii?Q?CDEhkfrRqFVcrbuT1gbQsM7+ysl0OqudZaGHS04iesC7ZO8dhWurgJ/Ef4jB?=
- =?us-ascii?Q?j9jBmesvechK679G8svBwLnZwS7lxLP6CdvOemUl8xjiCibHhCQ8yswCn1gq?=
- =?us-ascii?Q?RJkyodaVDYWweYARHZ9NeLNoZPRNzU3whY6bq+Kd61ol8W8UnOdSUXz5Nz3a?=
- =?us-ascii?Q?IAzpzD47kI/+yACP9MYl?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f05f5b98-73b2-4297-0ce4-08da7f97722a
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2365.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2022 14:56:08.1773
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uJKdjhxK45e+h9v4VdXp2jVQPeRxvC8ttbsWioWZis/UZ222MH5jE8s7tPJJ4yS4WTM7rkkLZ4v1MvUO5+QtYuHFAKPdE6LzU8XGvG7agWM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB4286
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-08-16_08,2022-08-16_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- phishscore=0 suspectscore=0 spamscore=0 mlxscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2207270000 definitions=main-2208160057
-X-Proofpoint-GUID: qWHlBFWuDocNubk3F0fl-kRZPE7NuEn6
-X-Proofpoint-ORIG-GUID: qWHlBFWuDocNubk3F0fl-kRZPE7NuEn6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Unlock on this error path before returning.
+On Fri, 12 Aug 2022 22:32:35 -0700
+ira.weiny@intel.com wrote:
 
-Fixes: 176baefb2eb5 ("cxl/hdm: Commit decoder state to hardware")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/cxl/core/hdm.c | 1 +
- 1 file changed, 1 insertion(+)
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> Event records are defined for CXL devices.  Each record is reported in
+> one event log.  Devices are required to support the storage of at least
+> one event record in each event log type.
+> 
+> Devices track event log overflow by incrementing a counter and tracking
+> the time of the first and last overflow event seen.
+> 
+> Software queries events via the Get Event Record mailbox command; CXL
+> v3.0 section 8.2.9.2.2.
+> 
+> Issue the Get Event Record mailbox command on driver load.  Trace each
+> record found, as well as any overflow conditions.  Only 1 event is
+> requested for each query.  Optimization of multiple record queries is
+> deferred.
+> 
+> This patch traces a raw event record only and leaves the specific event
+> record types to subsequent patches.
+> 
+> NOTE: checkpatch is not completely happy with the tracing part of this
+> patch but AFAICT it is correct.  I'm open to suggestions if I've done
+> something wrong.
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index d1d2caea5c62..873c07386064 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -605,6 +605,7 @@ static int cxl_decoder_commit(struct cxl_decoder *cxld)
- 
- 		rc = cxlsd_set_targets(cxlsd, &targets);
- 		if (rc) {
-+			up_read(&cxl_dpa_rwsem);
- 			dev_dbg(&port->dev, "%s: target configuration error\n",
- 				dev_name(&cxld->dev));
- 			goto err;
--- 
-2.35.1
+The include/trace/events/*.h files are all broken according to
+checkpatch.pl ;-) Don't worry about the formatting there. I need to update
+that script to detect that it's looking at TRACE_EVENT() that has different
+rules than normal macros.
+
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ---
+>  MAINTAINERS                       |   1 +
+>  drivers/cxl/core/mbox.c           |  60 ++++++++++++++
+>  drivers/cxl/cxlmem.h              |  66 ++++++++++++++++
+>  include/trace/events/cxl-events.h | 127 ++++++++++++++++++++++++++++++
+>  include/uapi/linux/cxl_mem.h      |   1 +
+>  5 files changed, 255 insertions(+)
+>  create mode 100644 include/trace/events/cxl-events.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 54fa6e2059de..1cb9cec31009 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5014,6 +5014,7 @@ M:	Dan Williams <dan.j.williams@intel.com>
+>  L:	linux-cxl@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/cxl/
+> +F:	include/trace/events/cxl*.h
+>  F:	include/uapi/linux/cxl_mem.h
+>  
+>  CONEXANT ACCESSRUNNER USB DRIVER
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 16176b9278b4..2cceed8608dc 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -7,6 +7,9 @@
+>  #include <cxlmem.h>
+>  #include <cxl.h>
+>  
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/cxl-events.h>
+> +
+>  #include "core.h"
+>  
+>  static bool cxl_raw_allow_all;
+> @@ -48,6 +51,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
+>  	CXL_CMD(RAW, CXL_VARIABLE_PAYLOAD, CXL_VARIABLE_PAYLOAD, 0),
+>  #endif
+>  	CXL_CMD(GET_SUPPORTED_LOGS, 0, CXL_VARIABLE_PAYLOAD, CXL_CMD_FLAG_FORCE_ENABLE),
+> +	CXL_CMD(GET_EVENT_RECORD, 1, CXL_VARIABLE_PAYLOAD, 0),
+>  	CXL_CMD(GET_FW_INFO, 0, 0x50, 0),
+>  	CXL_CMD(GET_PARTITION_INFO, 0, 0x20, 0),
+>  	CXL_CMD(GET_LSA, 0x8, CXL_VARIABLE_PAYLOAD, 0),
+> @@ -704,6 +708,62 @@ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, CXL);
+>  
+> +static int cxl_mem_get_records_log(struct cxl_dev_state *cxlds,
+> +				   enum cxl_event_log_type type)
+> +{
+> +	struct cxl_get_event_payload payload;
+> +
+> +	do {
+> +		u8 log_type = type;
+> +		u16 record_count;
+> +		int rc;
+> +
+> +		rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_EVENT_RECORD,
+> +				       &log_type, sizeof(log_type),
+> +				       &payload, sizeof(payload));
+> +		if (rc)
+> +			return rc;
+> +
+> +		record_count = le16_to_cpu(payload.record_count);
+> +		if (record_count > 0)
+> +			trace_cxl_event(dev_name(cxlds->dev), type,
+> +					&payload.record);
+> +
+> +		if (payload.flags & CXL_GET_EVENT_FLAG_OVERFLOW)
+> +			trace_cxl_event_overflow(dev_name(cxlds->dev), type,
+> +						 &payload);
+
+If you want to avoid the compare operations when the tracepoints are not
+enabled, you can add:
+
+		if (trace_cxl_event_enabled()) {
+			if (record_count > 0)
+				trace_cxl_event(dev_name(cxlds->dev), type,
+						&payload.record);
+		}
+
+		if (trace_cxl_event_overflow_enabled()) {
+			if (payload.flags & CXL_GET_EVENT_FLAG_OVERFLOW)
+				trace_cxl_event_overflow(dev_name(cxlds->dev), type,
+							 &payload);
+		}
+
+Those "<tracepoint>_enabled()" functions are static branches. Which means
+when not enabled it's a nop that skips this code, and when either is
+enabled, it turns into a jump to the contents of the if block.
+
+
+> +
+> +	} while (payload.flags & CXL_GET_EVENT_FLAG_MORE_RECORDS);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * cxl_mem_get_event_records - Get Event Records from the device
+> + * @cxlds: The device data for the operation
+> + *
+> + * Retrieve all event records available on the device and report them as trace
+> + * events.
+> + *
+> + * See CXL v3.0 @8.2.9.2.2 Get Event Records
+> + */
+> +void cxl_mem_get_event_records(struct cxl_dev_state *cxlds)
+> +{
+> +	struct device *dev = cxlds->dev;
+> +	enum cxl_event_log_type log_type;
+> +
+> +	for (log_type = CXL_EVENT_TYPE_INFO;
+> +	     log_type < CXL_EVENT_TYPE_MAX; log_type++) {
+> +		int rc;
+> +
+> +		rc = cxl_mem_get_records_log(cxlds, log_type);
+> +		if (rc)
+> +			dev_err(dev, "Failed to query %s Event Logs : %d",
+> +				cxl_event_log_type_str(log_type), rc);
+> +	}
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_mem_get_event_records, CXL);
+> +
+>  /**
+>   * cxl_mem_get_partition_info - Get partition info
+>   * @cxlds: The device data for the operation
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 88e3a8e54b6a..f83634f3bc8d 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -4,6 +4,7 @@
+>  #define __CXL_MEM_H__
+>  #include <uapi/linux/cxl_mem.h>
+>  #include <linux/cdev.h>
+> +#include <linux/uuid.h>
+>  #include "cxl.h"
+>  
+>  /* CXL 2.0 8.2.8.5.1.1 Memory Device Status Register */
+> @@ -253,6 +254,7 @@ struct cxl_dev_state {
+>  enum cxl_opcode {
+>  	CXL_MBOX_OP_INVALID		= 0x0000,
+>  	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
+> +	CXL_MBOX_OP_GET_EVENT_RECORD	= 0x0100,
+>  	CXL_MBOX_OP_GET_FW_INFO		= 0x0200,
+>  	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
+>  	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
+> @@ -322,6 +324,69 @@ struct cxl_mbox_identify {
+>  	u8 qos_telemetry_caps;
+>  } __packed;
+>  
+> +/*
+> + * Common Event Record Format
+> + * CXL v3.0 section 8.2.9.2.1; Table 8-42
+> + */
+> +struct cxl_event_record_hdr {
+> +	uuid_t id;
+> +	__le32 flags_length;
+> +	__le16 handle;
+> +	__le16 related_handle;
+> +	__le64 timestamp;
+> +	__le64 reserved1;
+> +	__le64 reserved2;
+> +} __packed;
+> +
+> +#define EVENT_RECORD_DATA_LENGTH 0x50
+> +struct cxl_event_record_raw {
+> +	struct cxl_event_record_hdr hdr;
+> +	u8 data[EVENT_RECORD_DATA_LENGTH];
+> +} __packed;
+> +
+> +/*
+> + * Get Event Records output payload
+> + * CXL v3.0 section 8.2.9.2.2; Table 8-50
+> + *
+> + * Space given for 1 record
+> + */
+> +#define CXL_GET_EVENT_FLAG_OVERFLOW		BIT(0)
+> +#define CXL_GET_EVENT_FLAG_MORE_RECORDS	BIT(1)
+> +struct cxl_get_event_payload {
+> +	u8 flags;
+> +	u8 reserved1;
+> +	__le16 overflow_err_count;
+> +	__le64 first_overflow_timestamp;
+> +	__le64 last_overflow_timestamp;
+> +	__le16 record_count;
+> +	u8 reserved2[0xa];
+> +	struct cxl_event_record_raw record;
+> +} __packed;
+> +
+> +enum cxl_event_log_type {
+> +	CXL_EVENT_TYPE_INFO = 0x00,
+> +	CXL_EVENT_TYPE_WARN,
+> +	CXL_EVENT_TYPE_FAIL,
+> +	CXL_EVENT_TYPE_FATAL,
+> +	CXL_EVENT_TYPE_MAX
+> +};
+> +static inline char *cxl_event_log_type_str(enum cxl_event_log_type type)
+> +{
+> +	switch (type) {
+> +	case CXL_EVENT_TYPE_INFO:
+> +		return "Informational";
+> +	case CXL_EVENT_TYPE_WARN:
+> +		return "Warning";
+> +	case CXL_EVENT_TYPE_FAIL:
+> +		return "Failure";
+> +	case CXL_EVENT_TYPE_FATAL:
+> +		return "Fatal";
+> +	default:
+> +		break;
+> +	}
+> +	return "<unknown>";
+> +}
+> +
+>  struct cxl_mbox_get_partition_info {
+>  	__le64 active_volatile_cap;
+>  	__le64 active_persistent_cap;
+> @@ -381,6 +446,7 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds);
+>  struct cxl_dev_state *cxl_dev_state_create(struct device *dev);
+>  void set_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
+>  void clear_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
+> +void cxl_mem_get_event_records(struct cxl_dev_state *cxlds);
+>  #ifdef CONFIG_CXL_SUSPEND
+>  void cxl_mem_active_inc(void);
+>  void cxl_mem_active_dec(void);
+> diff --git a/include/trace/events/cxl-events.h b/include/trace/events/cxl-events.h
+> new file mode 100644
+> index 000000000000..f4baeae66cf3
+> --- /dev/null
+> +++ b/include/trace/events/cxl-events.h
+> @@ -0,0 +1,127 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM cxl_events
+> +
+> +#if !defined(_CXL_TRACE_EVENTS_H) ||  defined(TRACE_HEADER_MULTI_READ)
+> +#define _CXL_TRACE_EVENTS_H
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +#define EVENT_LOGS					\
+> +	EM(CXL_EVENT_TYPE_INFO,		"Info")		\
+> +	EM(CXL_EVENT_TYPE_WARN,		"Warning")	\
+> +	EM(CXL_EVENT_TYPE_FAIL,		"Failure")	\
+> +	EM(CXL_EVENT_TYPE_FATAL,	"Fatal")	\
+> +	EMe(CXL_EVENT_TYPE_MAX,		"<undefined>")
+> +
+> +/*
+> + * First define the enums in the above macros to be exported to userspace via
+> + * TRACE_DEFINE_ENUM().
+> + */
+> +#undef EM
+> +#undef EMe
+> +#define EM(a, b)	TRACE_DEFINE_ENUM(a);
+> +#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
+> +
+> +EVENT_LOGS
+> +#define show_log_type(type) __print_symbolic(type, EVENT_LOGS)
+> +
+> +/*
+> + * Now redefine the EM and EMe macros to map the enums to the strings that will
+> + * be printed in the output
+> + */
+> +#undef EM
+> +#undef EMe
+> +#define EM(a, b)        {a, b},
+> +#define EMe(a, b)       {a, b}
+> +
+> +TRACE_EVENT(cxl_event_overflow,
+> +
+> +	TP_PROTO(const char *dev_name, enum cxl_event_log_type log,
+> +		 struct cxl_get_event_payload *payload),
+> +
+> +	TP_ARGS(dev_name, log, payload),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(dev_name, dev_name)
+> +		__field(int, log)
+> +		__field(u16, count)
+> +		__field(u64, first)
+> +		__field(u64, last)
+
+Because you have a dynamic string, you will save some bytes in the ring
+buffer if you have:
+
+		__string(dev_name, dev_name)
+		__field(int, log)
+		__field(u64, first)
+		__field(u64, last)
+		__field(u16, count)
+
+
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(dev_name, dev_name);
+> +		__entry->log = log;
+> +		__entry->count = le16_to_cpu(payload->overflow_err_count);
+> +		__entry->first = le64_to_cpu(payload->first_overflow_timestamp);
+> +		__entry->last = le64_to_cpu(payload->last_overflow_timestamp);
+> +	),
+> +
+> +	TP_printk("%s: EVENT LOG %s OVERFLOW %u records from %llu to %llu",
+> +		__get_str(dev_name), show_log_type(__entry->log),
+> +		__entry->count, __entry->first, __entry->last)
+> +
+> +);
+> +
+> +/*
+> + * Common Event Record Format
+> + * CXL v2.0 section 8.2.9.1.1; Table 153
+> + */
+> +#define CXL_EVENT_RECORD_FLAG_PERMANENT		BIT(2)
+> +#define CXL_EVENT_RECORD_FLAG_MAINT_NEEDED	BIT(3)
+> +#define CXL_EVENT_RECORD_FLAG_PERF_DEGRADED	BIT(4)
+> +#define CXL_EVENT_RECORD_FLAG_HW_REPLACE	BIT(5)
+> +#define show_hdr_flags(flags)	__print_flags(flags, " | ",			   \
+> +	{ CXL_EVENT_RECORD_FLAG_PERMANENT,	"Permanent Condition"		}, \
+> +	{ CXL_EVENT_RECORD_FLAG_MAINT_NEEDED,	"Maintanance Needed"		}, \
+> +	{ CXL_EVENT_RECORD_FLAG_PERF_DEGRADED,	"Performance Degraded"		}, \
+> +	{ CXL_EVENT_RECORD_FLAG_HW_REPLACE,	"Hardware Replacement Needed"	}  \
+> +)
+> +
+> +TRACE_EVENT(cxl_event,
+> +
+> +	TP_PROTO(const char *dev_name, enum cxl_event_log_type log,
+> +		 struct cxl_event_record_raw *rec),
+> +
+> +	TP_ARGS(dev_name, log, rec),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(dev_name, dev_name)
+> +		__field(int, log)
+> +		__array(u8, id, UUID_SIZE)
+> +		__field(u32, flags)
+> +		__field(u16, handle)
+> +		__field(u16, related_handle)
+> +		__field(u64, timestamp)
+> +		__array(u8, data, EVENT_RECORD_DATA_LENGTH)
+> +		__field(u8, length)
+
+The above looks good.
+
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(dev_name, dev_name);
+> +		memcpy(__entry->id, &rec->hdr.id, UUID_SIZE);
+> +		__entry->log = log;
+> +		__entry->flags = le32_to_cpu(rec->hdr.flags_length) >> 8;
+> +		__entry->length = le32_to_cpu(rec->hdr.flags_length) & 0xFF;
+> +		__entry->handle = le16_to_cpu(rec->hdr.handle);
+> +		__entry->related_handle = le16_to_cpu(rec->hdr.related_handle);
+> +		__entry->timestamp = le64_to_cpu(rec->hdr.timestamp);
+
+I wonder if I should add le64_to_cpu() and le32_to_cpu() to the functions
+that libtraceevent can parse, and then we could move that logic to the
+TP_printk(). That is, out of the fast path.
+
+-- Steve
+
+> +		memcpy(__entry->data, &rec->data, EVENT_RECORD_DATA_LENGTH);
+> +	),
+> +
+> +	TP_printk("%s: %s time=%llu id=%pUl handle=%x related_handle=%x hdr_flags='%s' " \
+> +		  ": %s",
+> +		__get_str(dev_name), show_log_type(__entry->log),
+> +		__entry->timestamp, __entry->id, __entry->handle,
+> +		__entry->related_handle, show_hdr_flags(__entry->flags),
+> +		__print_hex(__entry->data, EVENT_RECORD_DATA_LENGTH)
+> +		)
+> +);
+> +
+> +#endif /* _CXL_TRACE_EVENTS_H */
+> +
+> +/* This part must be outside protection */
+> +#undef TRACE_INCLUDE_FILE
+> +#define TRACE_INCLUDE_FILE cxl-events
+> +#include <trace/define_trace.h>
+> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+> index c71021a2a9ed..70459be5bdd4 100644
+> --- a/include/uapi/linux/cxl_mem.h
+> +++ b/include/uapi/linux/cxl_mem.h
+> @@ -24,6 +24,7 @@
+>  	___C(IDENTIFY, "Identify Command"),                               \
+>  	___C(RAW, "Raw device command"),                                  \
+>  	___C(GET_SUPPORTED_LOGS, "Get Supported Logs"),                   \
+> +	___C(GET_EVENT_RECORD, "Get Event Record"),                       \
+>  	___C(GET_FW_INFO, "Get FW Info"),                                 \
+>  	___C(GET_PARTITION_INFO, "Get Partition Information"),            \
+>  	___C(GET_LSA, "Get Label Storage Area"),                          \
 
