@@ -2,120 +2,445 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04669C25B08
-	for <linux-cxl@archiver.kernel.org>; Wed, 17 Aug 2022 21:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D28FC25B08
+	for <linux-cxl@archiver.kernel.org>; Wed, 17 Aug 2022 22:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241533AbiHQVWM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 17 Aug 2022 17:22:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59974 "EHLO
+        id S235858AbiHQWyU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 17 Aug 2022 18:54:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233026AbiHQVWK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 17 Aug 2022 17:22:10 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB7CDA5992
-        for <linux-cxl@vger.kernel.org>; Wed, 17 Aug 2022 14:22:09 -0700 (PDT)
+        with ESMTP id S241519AbiHQWyT (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 17 Aug 2022 18:54:19 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 627FB61DAB;
+        Wed, 17 Aug 2022 15:54:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660771329; x=1692307329;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/Qs+Fndfo4GMPthFtjTpWI6qxU2HSfduBs/vgpdS1SM=;
-  b=gz79qU4fYDeTTeIl1rm9qFEFNGx/hceR79n68qMsW0Z1Tghk+mgxE+w+
-   11HSFKbHgGvp4UBERLjy2cR7QHuQhwstVN5aGhrHutrXdGJr2j6rzJfWs
-   0y/r7p1Bbsv1bHLhxa+3shZyu/tNn7vaFKVnN60mEOu1ZOgB/rDbH/AGo
-   HY4p3NBc75al55e3MIlyI2C7kgmfCmLjBsnB94+Q/fIRDCmYLJEB5xp00
-   wLWiGjbg8cvF676U+/F3svORLxRZuA6Q6WZuU+7bttg7aaWit15ysrJTK
-   5u4A2Beg0sy5Ho+zXM3Q/oJ8hVI1kB3SszydUdvkSrzCkYLcjz0CKSeDw
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10442"; a="275657571"
+  t=1660776857; x=1692312857;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=BsRkWrKLDTQYpl3lOgjo6woSxLl+E0TOuMjP6luPvkk=;
+  b=mo/1Kv68owPtPy+HRzMxeQEYtQ/KO2LecNR4DjPYlZKzB+2RXDTIYewk
+   rtQwC7bmxZtGZKmuaI4h6Iw4yJ/7xSdwym0ar3i5WpXdWXjiv2VlsMhw9
+   U5yL3gUhuvVFw9hSRH8eXzJ/DD8ULcuhvqA6Fs3IyIMCN0CMIjmYqasME
+   /+sPEXg/HT/f9TyX6HtYgq6dQXHCuwgUJ2RtmWjwgc1WffcEyu/czDcak
+   YZJyXrPkCsECITCXp6HQqjrZsk1YFyVJxe2LLVO2zW2NGWVw76h+55wMH
+   sSGXc8VJeyz0or8lzptOAo9V6w9teWvd2Cs8mUwU66iXfoFZ25q9qhG6x
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10442"; a="293894901"
 X-IronPort-AV: E=Sophos;i="5.93,244,1654585200"; 
-   d="scan'208";a="275657571"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2022 14:22:09 -0700
+   d="scan'208";a="293894901"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2022 15:54:17 -0700
 X-IronPort-AV: E=Sophos;i="5.93,244,1654585200"; 
-   d="scan'208";a="733825843"
-Received: from djiang5-desk4.jf.intel.com ([10.165.157.96])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2022 14:22:09 -0700
-Subject: [PATCH v4 6/6] cxl: export intereleave capability as port sysfs
- attribute
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
-        ira.weiny@intel.com, alison.schofield@intel.com,
-        Jonathan.Cameron@huawei.com
-Date:   Wed, 17 Aug 2022 14:22:09 -0700
-Message-ID: <166077132912.1743055.6028619361637977647.stgit@djiang5-desk4.jf.intel.com>
-In-Reply-To: <166077102447.1743055.17158560277276060113.stgit@djiang5-desk4.jf.intel.com>
-References: <166077102447.1743055.17158560277276060113.stgit@djiang5-desk4.jf.intel.com>
-User-Agent: StGit/1.4
+   d="scan'208";a="636565510"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.57.57]) ([10.212.57.57])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2022 15:54:16 -0700
+Message-ID: <67c4e0da-87e3-44a1-1902-220dbc312700@intel.com>
+Date:   Wed, 17 Aug 2022 15:54:15 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.12.0
+Subject: Re: [RFC PATCH 1/9] cxl/mem: Implement Get Event Records command
+Content-Language: en-US
+To:     ira.weiny@intel.com, Dan Williams <dan.j.williams@intel.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+References: <20220813053243.757363-1-ira.weiny@intel.com>
+ <20220813053243.757363-2-ira.weiny@intel.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20220813053243.757363-2-ira.weiny@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Export the interleave capability as a sysfs attribute for a port. The
-exported mask is interpreted from the CXL HDM Decoder Capability Register
-(CXL spec v 8.2.4.19.1). Each bit in the mask represents the number of
-interleave ways the decoder supports. For example, CXL devices designed
-from CXL spec v2.0 supports 1, 2, 4, and 8 interleave ways. The exported
-mask would show 0x116. The exported sysfs attribute will help user region
-creation to do more valid configuration checking.
 
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- Documentation/ABI/testing/sysfs-bus-cxl |   13 +++++++++++++
- drivers/cxl/port.c                      |   10 ++++++++++
- 2 files changed, 23 insertions(+)
+On 8/12/2022 10:32 PM, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+>
+> Event records are defined for CXL devices.  Each record is reported in
+> one event log.  Devices are required to support the storage of at least
+> one event record in each event log type.
+>
+> Devices track event log overflow by incrementing a counter and tracking
+> the time of the first and last overflow event seen.
+>
+> Software queries events via the Get Event Record mailbox command; CXL
+> v3.0 section 8.2.9.2.2.
+>
+> Issue the Get Event Record mailbox command on driver load.  Trace each
+> record found, as well as any overflow conditions.  Only 1 event is
+> requested for each query.  Optimization of multiple record queries is
+> deferred.
+>
+> This patch traces a raw event record only and leaves the specific event
+> record types to subsequent patches.
+>
+> NOTE: checkpatch is not completely happy with the tracing part of this
+> patch but AFAICT it is correct.  I'm open to suggestions if I've done
+> something wrong.
+>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ---
+>   MAINTAINERS                       |   1 +
+>   drivers/cxl/core/mbox.c           |  60 ++++++++++++++
+>   drivers/cxl/cxlmem.h              |  66 ++++++++++++++++
+>   include/trace/events/cxl-events.h | 127 ++++++++++++++++++++++++++++++
+>   include/uapi/linux/cxl_mem.h      |   1 +
+>   5 files changed, 255 insertions(+)
+>   create mode 100644 include/trace/events/cxl-events.h
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 54fa6e2059de..1cb9cec31009 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5014,6 +5014,7 @@ M:	Dan Williams <dan.j.williams@intel.com>
+>   L:	linux-cxl@vger.kernel.org
+>   S:	Maintained
+>   F:	drivers/cxl/
+> +F:	include/trace/events/cxl*.h
+>   F:	include/uapi/linux/cxl_mem.h
+>   
+>   CONEXANT ACCESSRUNNER USB DRIVER
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 16176b9278b4..2cceed8608dc 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -7,6 +7,9 @@
+>   #include <cxlmem.h>
+>   #include <cxl.h>
+>   
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/cxl-events.h>
+> +
+>   #include "core.h"
+>   
+>   static bool cxl_raw_allow_all;
+> @@ -48,6 +51,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
+>   	CXL_CMD(RAW, CXL_VARIABLE_PAYLOAD, CXL_VARIABLE_PAYLOAD, 0),
+>   #endif
+>   	CXL_CMD(GET_SUPPORTED_LOGS, 0, CXL_VARIABLE_PAYLOAD, CXL_CMD_FLAG_FORCE_ENABLE),
+> +	CXL_CMD(GET_EVENT_RECORD, 1, CXL_VARIABLE_PAYLOAD, 0),
+>   	CXL_CMD(GET_FW_INFO, 0, 0x50, 0),
+>   	CXL_CMD(GET_PARTITION_INFO, 0, 0x20, 0),
+>   	CXL_CMD(GET_LSA, 0x8, CXL_VARIABLE_PAYLOAD, 0),
+> @@ -704,6 +708,62 @@ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds)
+>   }
+>   EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, CXL);
+>   
+> +static int cxl_mem_get_records_log(struct cxl_dev_state *cxlds,
+> +				   enum cxl_event_log_type type)
+> +{
+> +	struct cxl_get_event_payload payload;
+> +
+> +	do {
+> +		u8 log_type = type;
+> +		u16 record_count;
+> +		int rc;
+> +
+> +		rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_EVENT_RECORD,
+> +				       &log_type, sizeof(log_type),
+> +				       &payload, sizeof(payload));
+> +		if (rc)
+> +			return rc;
+> +
+> +		record_count = le16_to_cpu(payload.record_count);
+> +		if (record_count > 0)
+> +			trace_cxl_event(dev_name(cxlds->dev), type,
+> +					&payload.record);
+> +
+> +		if (payload.flags & CXL_GET_EVENT_FLAG_OVERFLOW)
+> +			trace_cxl_event_overflow(dev_name(cxlds->dev), type,
+> +						 &payload);
+> +
+> +	} while (payload.flags & CXL_GET_EVENT_FLAG_MORE_RECORDS);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * cxl_mem_get_event_records - Get Event Records from the device
+> + * @cxlds: The device data for the operation
+> + *
+> + * Retrieve all event records available on the device and report them as trace
+> + * events.
+> + *
+> + * See CXL v3.0 @8.2.9.2.2 Get Event Records
+> + */
+> +void cxl_mem_get_event_records(struct cxl_dev_state *cxlds)
+> +{
+> +	struct device *dev = cxlds->dev;
+> +	enum cxl_event_log_type log_type;
+> +
+> +	for (log_type = CXL_EVENT_TYPE_INFO;
+> +	     log_type < CXL_EVENT_TYPE_MAX; log_type++) {
+> +		int rc;
+> +
+> +		rc = cxl_mem_get_records_log(cxlds, log_type);
+> +		if (rc)
+> +			dev_err(dev, "Failed to query %s Event Logs : %d",
+> +				cxl_event_log_type_str(log_type), rc);
+> +	}
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_mem_get_event_records, CXL);
+> +
+>   /**
+>    * cxl_mem_get_partition_info - Get partition info
+>    * @cxlds: The device data for the operation
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 88e3a8e54b6a..f83634f3bc8d 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -4,6 +4,7 @@
+>   #define __CXL_MEM_H__
+>   #include <uapi/linux/cxl_mem.h>
+>   #include <linux/cdev.h>
+> +#include <linux/uuid.h>
+>   #include "cxl.h"
+>   
+>   /* CXL 2.0 8.2.8.5.1.1 Memory Device Status Register */
+> @@ -253,6 +254,7 @@ struct cxl_dev_state {
+>   enum cxl_opcode {
+>   	CXL_MBOX_OP_INVALID		= 0x0000,
+>   	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
+> +	CXL_MBOX_OP_GET_EVENT_RECORD	= 0x0100,
+>   	CXL_MBOX_OP_GET_FW_INFO		= 0x0200,
+>   	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
+>   	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
+> @@ -322,6 +324,69 @@ struct cxl_mbox_identify {
+>   	u8 qos_telemetry_caps;
+>   } __packed;
+>   
+> +/*
+> + * Common Event Record Format
+> + * CXL v3.0 section 8.2.9.2.1; Table 8-42
+> + */
+> +struct cxl_event_record_hdr {
+> +	uuid_t id;
+> +	__le32 flags_length;
+> +	__le16 handle;
+> +	__le16 related_handle;
+> +	__le64 timestamp;
+> +	__le64 reserved1;
+> +	__le64 reserved2;
+> +} __packed;
+> +
+> +#define EVENT_RECORD_DATA_LENGTH 0x50
+> +struct cxl_event_record_raw {
+> +	struct cxl_event_record_hdr hdr;
+> +	u8 data[EVENT_RECORD_DATA_LENGTH];
+> +} __packed;
+> +
+> +/*
+> + * Get Event Records output payload
+> + * CXL v3.0 section 8.2.9.2.2; Table 8-50
+> + *
+> + * Space given for 1 record
+> + */
+> +#define CXL_GET_EVENT_FLAG_OVERFLOW		BIT(0)
+> +#define CXL_GET_EVENT_FLAG_MORE_RECORDS	BIT(1)
+> +struct cxl_get_event_payload {
+> +	u8 flags;
+> +	u8 reserved1;
+> +	__le16 overflow_err_count;
+> +	__le64 first_overflow_timestamp;
+> +	__le64 last_overflow_timestamp;
+> +	__le16 record_count;
+> +	u8 reserved2[0xa];
+> +	struct cxl_event_record_raw record;
+> +} __packed;
+> +
+> +enum cxl_event_log_type {
+> +	CXL_EVENT_TYPE_INFO = 0x00,
+> +	CXL_EVENT_TYPE_WARN,
+> +	CXL_EVENT_TYPE_FAIL,
+> +	CXL_EVENT_TYPE_FATAL,
+> +	CXL_EVENT_TYPE_MAX
+> +};
+> +static inline char *cxl_event_log_type_str(enum cxl_event_log_type type)
+> +{
+> +	switch (type) {
+> +	case CXL_EVENT_TYPE_INFO:
+> +		return "Informational";
+> +	case CXL_EVENT_TYPE_WARN:
+> +		return "Warning";
+> +	case CXL_EVENT_TYPE_FAIL:
+> +		return "Failure";
+> +	case CXL_EVENT_TYPE_FATAL:
+> +		return "Fatal";
+> +	default:
+> +		break;
+> +	}
+> +	return "<unknown>";
+> +}
+> +
+>   struct cxl_mbox_get_partition_info {
+>   	__le64 active_volatile_cap;
+>   	__le64 active_persistent_cap;
+> @@ -381,6 +446,7 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds);
+>   struct cxl_dev_state *cxl_dev_state_create(struct device *dev);
+>   void set_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
+>   void clear_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
+> +void cxl_mem_get_event_records(struct cxl_dev_state *cxlds);
+>   #ifdef CONFIG_CXL_SUSPEND
+>   void cxl_mem_active_inc(void);
+>   void cxl_mem_active_dec(void);
+> diff --git a/include/trace/events/cxl-events.h b/include/trace/events/cxl-events.h
+> new file mode 100644
+> index 000000000000..f4baeae66cf3
+> --- /dev/null
+> +++ b/include/trace/events/cxl-events.h
+> @@ -0,0 +1,127 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM cxl_events
+> +
+> +#if !defined(_CXL_TRACE_EVENTS_H) ||  defined(TRACE_HEADER_MULTI_READ)
+> +#define _CXL_TRACE_EVENTS_H
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +#define EVENT_LOGS					\
+> +	EM(CXL_EVENT_TYPE_INFO,		"Info")		\
+> +	EM(CXL_EVENT_TYPE_WARN,		"Warning")	\
+> +	EM(CXL_EVENT_TYPE_FAIL,		"Failure")	\
+> +	EM(CXL_EVENT_TYPE_FATAL,	"Fatal")	\
+> +	EMe(CXL_EVENT_TYPE_MAX,		"<undefined>")
+> +
+> +/*
+> + * First define the enums in the above macros to be exported to userspace via
+> + * TRACE_DEFINE_ENUM().
+> + */
+> +#undef EM
+> +#undef EMe
+> +#define EM(a, b)	TRACE_DEFINE_ENUM(a);
+> +#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
+> +
+> +EVENT_LOGS
+> +#define show_log_type(type) __print_symbolic(type, EVENT_LOGS)
+> +
+> +/*
+> + * Now redefine the EM and EMe macros to map the enums to the strings that will
+> + * be printed in the output
+> + */
+> +#undef EM
+> +#undef EMe
+> +#define EM(a, b)        {a, b},
+> +#define EMe(a, b)       {a, b}
+> +
+> +TRACE_EVENT(cxl_event_overflow,
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index c6f533f47e50..5a13806a77ab 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -203,6 +203,19 @@ Description:
- 		Interleave Capable" bit and the "AA14to12 Interleave Capable" bits
- 		are set.
- 
-+What:		/sys/bus/cxl/devices/endpointX/interleave_cap
-+		/sys/bus/cxl/devices/portX/interleave_cap
-+Date:		Aug, 2020
-+KernelVersion:	v6.1
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(RO) Interleave capability mask from the HDM decoder attached to the
-+		port. Each bit in the mask represents the number of interleave ways
-+		the decoder supports. For CXL devices designed from CXL spec v2.0 or
-+		earlier, 1, 2, 4, and 8 interleave ways are supported. With CXL spec
-+		v3.0 or later, the capability register (CXL spec v3 8.2.4.19.1)
-+		indicates 3, 6, and 12 ways supported or 16 ways supported.
-+
- What:		/sys/bus/cxl/devices/decoderX.Y/mode
- Date:		May, 2022
- KernelVersion:	v5.20
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index 567f62fd4ded..f856a31bec65 100644
---- a/drivers/cxl/port.c
-+++ b/drivers/cxl/port.c
-@@ -132,8 +132,18 @@ static ssize_t interleave_mask_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(interleave_mask);
- 
-+static ssize_t interleave_cap_show(struct device *dev, struct device_attribute *attr,
-+				   char *buf)
-+{
-+	struct cxl_hdm *cxlhdm = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%#lx\n", cxlhdm->interleave_cap);
-+}
-+static DEVICE_ATTR_RO(interleave_cap);
-+
- static struct attribute *cxl_port_info_attributes[] = {
- 	&dev_attr_interleave_mask.attr,
-+	&dev_attr_interleave_cap.attr,
- 	NULL,
- };
- 
+Kind of a general comment for the event names. Maybe just "overflow" 
+instead of "cxl_event_overflow" since it shows up in sysfs under the 
+cxl_events directory and becomes redundant?
 
+- Dave
 
+> +
+> +	TP_PROTO(const char *dev_name, enum cxl_event_log_type log,
+> +		 struct cxl_get_event_payload *payload),
+> +
+> +	TP_ARGS(dev_name, log, payload),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(dev_name, dev_name)
+> +		__field(int, log)
+> +		__field(u16, count)
+> +		__field(u64, first)
+> +		__field(u64, last)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(dev_name, dev_name);
+> +		__entry->log = log;
+> +		__entry->count = le16_to_cpu(payload->overflow_err_count);
+> +		__entry->first = le64_to_cpu(payload->first_overflow_timestamp);
+> +		__entry->last = le64_to_cpu(payload->last_overflow_timestamp);
+> +	),
+> +
+> +	TP_printk("%s: EVENT LOG %s OVERFLOW %u records from %llu to %llu",
+> +		__get_str(dev_name), show_log_type(__entry->log),
+> +		__entry->count, __entry->first, __entry->last)
+> +
+> +);
+> +
+> +/*
+> + * Common Event Record Format
+> + * CXL v2.0 section 8.2.9.1.1; Table 153
+> + */
+> +#define CXL_EVENT_RECORD_FLAG_PERMANENT		BIT(2)
+> +#define CXL_EVENT_RECORD_FLAG_MAINT_NEEDED	BIT(3)
+> +#define CXL_EVENT_RECORD_FLAG_PERF_DEGRADED	BIT(4)
+> +#define CXL_EVENT_RECORD_FLAG_HW_REPLACE	BIT(5)
+> +#define show_hdr_flags(flags)	__print_flags(flags, " | ",			   \
+> +	{ CXL_EVENT_RECORD_FLAG_PERMANENT,	"Permanent Condition"		}, \
+> +	{ CXL_EVENT_RECORD_FLAG_MAINT_NEEDED,	"Maintanance Needed"		}, \
+> +	{ CXL_EVENT_RECORD_FLAG_PERF_DEGRADED,	"Performance Degraded"		}, \
+> +	{ CXL_EVENT_RECORD_FLAG_HW_REPLACE,	"Hardware Replacement Needed"	}  \
+> +)
+> +
+> +TRACE_EVENT(cxl_event,
+> +
+> +	TP_PROTO(const char *dev_name, enum cxl_event_log_type log,
+> +		 struct cxl_event_record_raw *rec),
+> +
+> +	TP_ARGS(dev_name, log, rec),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(dev_name, dev_name)
+> +		__field(int, log)
+> +		__array(u8, id, UUID_SIZE)
+> +		__field(u32, flags)
+> +		__field(u16, handle)
+> +		__field(u16, related_handle)
+> +		__field(u64, timestamp)
+> +		__array(u8, data, EVENT_RECORD_DATA_LENGTH)
+> +		__field(u8, length)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(dev_name, dev_name);
+> +		memcpy(__entry->id, &rec->hdr.id, UUID_SIZE);
+> +		__entry->log = log;
+> +		__entry->flags = le32_to_cpu(rec->hdr.flags_length) >> 8;
+> +		__entry->length = le32_to_cpu(rec->hdr.flags_length) & 0xFF;
+> +		__entry->handle = le16_to_cpu(rec->hdr.handle);
+> +		__entry->related_handle = le16_to_cpu(rec->hdr.related_handle);
+> +		__entry->timestamp = le64_to_cpu(rec->hdr.timestamp);
+> +		memcpy(__entry->data, &rec->data, EVENT_RECORD_DATA_LENGTH);
+> +	),
+> +
+> +	TP_printk("%s: %s time=%llu id=%pUl handle=%x related_handle=%x hdr_flags='%s' " \
+> +		  ": %s",
+> +		__get_str(dev_name), show_log_type(__entry->log),
+> +		__entry->timestamp, __entry->id, __entry->handle,
+> +		__entry->related_handle, show_hdr_flags(__entry->flags),
+> +		__print_hex(__entry->data, EVENT_RECORD_DATA_LENGTH)
+> +		)
+> +);
+> +
+> +#endif /* _CXL_TRACE_EVENTS_H */
+> +
+> +/* This part must be outside protection */
+> +#undef TRACE_INCLUDE_FILE
+> +#define TRACE_INCLUDE_FILE cxl-events
+> +#include <trace/define_trace.h>
+> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+> index c71021a2a9ed..70459be5bdd4 100644
+> --- a/include/uapi/linux/cxl_mem.h
+> +++ b/include/uapi/linux/cxl_mem.h
+> @@ -24,6 +24,7 @@
+>   	___C(IDENTIFY, "Identify Command"),                               \
+>   	___C(RAW, "Raw device command"),                                  \
+>   	___C(GET_SUPPORTED_LOGS, "Get Supported Logs"),                   \
+> +	___C(GET_EVENT_RECORD, "Get Event Record"),                       \
+>   	___C(GET_FW_INFO, "Get FW Info"),                                 \
+>   	___C(GET_PARTITION_INFO, "Get Partition Information"),            \
+>   	___C(GET_LSA, "Get Label Storage Area"),                          \
