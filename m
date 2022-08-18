@@ -2,166 +2,86 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CC9C00140
-	for <linux-cxl@archiver.kernel.org>; Thu, 18 Aug 2022 16:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 373C8C00140
+	for <linux-cxl@archiver.kernel.org>; Thu, 18 Aug 2022 16:42:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344325AbiHRQhu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 18 Aug 2022 12:37:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52238 "EHLO
+        id S1344382AbiHRQmT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 18 Aug 2022 12:42:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241954AbiHRQhs (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 18 Aug 2022 12:37:48 -0400
+        with ESMTP id S1343955AbiHRQmT (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 18 Aug 2022 12:42:19 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62380BD1FE
-        for <linux-cxl@vger.kernel.org>; Thu, 18 Aug 2022 09:37:45 -0700 (PDT)
-Received: from fraeml739-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4M7rCC35NDz688hZ;
-        Fri, 19 Aug 2022 00:37:27 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49BC7C2298
+        for <linux-cxl@vger.kernel.org>; Thu, 18 Aug 2022 09:42:18 -0700 (PDT)
+Received: from fraeml710-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4M7rF836ppz67KPP;
+        Fri, 19 Aug 2022 00:39:08 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml739-chm.china.huawei.com (10.206.15.220) with Microsoft SMTP Server
+ fraeml710-chm.china.huawei.com (10.206.15.59) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 18 Aug 2022 18:37:42 +0200
-Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 18 Aug
- 2022 17:37:42 +0100
-Date:   Thu, 18 Aug 2022 17:37:40 +0100
+ 15.1.2375.24; Thu, 18 Aug 2022 18:42:16 +0200
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 18 Aug 2022 17:42:15 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Bobo WL <lmw.bobo@gmail.com>, <linux-cxl@vger.kernel.org>,
-        <qemu-devel@nongnu.org>, <qemu-arm@nongnu.org>
-Subject: Re: [BUG] cxl can not create region
-Message-ID: <20220818173740.00007f02@huawei.com>
-In-Reply-To: <20220817171619.000021ca@huawei.com>
-References: <CAGr_yG0UrfJAMWta3EkR1F0JZ4j--sig74p6vKL3K6TZDx9YGA@mail.gmail.com>
-        <62f132aee401b_1b3c294c@dwillia2-xfh.jf.intel.com.notmuch>
-        <CAGr_yG389Bm_NL8CLgo_ZkGd4staocNENbtb-ULVA5vh_ywmcw@mail.gmail.com>
-        <62f27a8e9acb6_1f18b294e2@dwillia2-xfh.jf.intel.com.notmuch>
-        <62f5a2ffe8be0_3ce68294a4@dwillia2-xfh.jf.intel.com.notmuch>
-        <20220817171619.000021ca@huawei.com>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+To:     <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>
+CC:     <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+        <alison.schofield@intel.com>, <linuxarm@huawei.com>,
+        Bobo WL <lmw.bobo@gmail.com>
+Subject: [PATCH] cxl/region: Fix null pointer dereference due to pass through decoder commit
+Date:   Thu, 18 Aug 2022 17:42:10 +0100
+Message-ID: <20220818164210.2084-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 17 Aug 2022 17:16:19 +0100
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+Not all decoders have a commit callback.
 
-> On Thu, 11 Aug 2022 17:46:55 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
-> 
-> > Dan Williams wrote:  
-> > > Bobo WL wrote:    
-> > > > Hi Dan,
-> > > > 
-> > > > Thanks for your reply!
-> > > > 
-> > > > On Mon, Aug 8, 2022 at 11:58 PM Dan Williams <dan.j.williams@intel.com> wrote:    
-> > > > >
-> > > > > What is the output of:
-> > > > >
-> > > > >     cxl list -MDTu -d decoder0.0
-> > > > >
-> > > > > ...? It might be the case that mem1 cannot be mapped by decoder0.0, or
-> > > > > at least not in the specified order, or that validation check is broken.    
-> > > > 
-> > > > Command "cxl list -MDTu -d decoder0.0" output:    
-> > > 
-> > > Thanks for this, I think I know the problem, but will try some
-> > > experiments with cxl_test first.    
-> > 
-> > Hmm, so my cxl_test experiment unfortunately passed so I'm not
-> > reproducing the failure mode. This is the result of creating x4 region
-> > with devices directly attached to a single host-bridge:
-> > 
-> > # cxl create-region -d decoder3.5 -w 4 -m -g 256 mem{12,10,9,11} -s $((1<<30))
-> > {
-> >   "region":"region8",
-> >   "resource":"0xf1f0000000",
-> >   "size":"1024.00 MiB (1073.74 MB)",
-> >   "interleave_ways":4,
-> >   "interleave_granularity":256,
-> >   "decode_state":"commit",
-> >   "mappings":[
-> >     {
-> >       "position":3,
-> >       "memdev":"mem11",
-> >       "decoder":"decoder21.0"
-> >     },
-> >     {
-> >       "position":2,
-> >       "memdev":"mem9",
-> >       "decoder":"decoder19.0"
-> >     },
-> >     {
-> >       "position":1,
-> >       "memdev":"mem10",
-> >       "decoder":"decoder20.0"
-> >     },
-> >     {
-> >       "position":0,
-> >       "memdev":"mem12",
-> >       "decoder":"decoder22.0"
-> >     }
-> >   ]
-> > }
-> > cxl region: cmd_create_region: created 1 region
-> >   
-> > > Did the commit_store() crash stop reproducing with latest cxl/preview
-> > > branch?    
-> > 
-> > I missed the answer to this question.
-> > 
-> > All of these changes are now in Linus' tree perhaps give that a try and
-> > post the debug log again?  
-> 
-> Hi Dan,
-> 
-> I've moved onto looking at this one.
-> 1 HB, 2RP (to make it configure the HDM decoder in the QEMU HB, I'll tidy that up
-> at some stage), 1 switch, 4 downstream switch ports each with a type 3
-> 
-> I'm not getting a crash, but can't successfully setup a region.
-> Upon adding the final target
-> It's failing in check_last_peer() as pos < distance.
-> Seems distance is 4 which makes me think it's using the wrong level of the heirarchy for
-> some reason or that distance check is wrong.
-> Wasn't a good idea to just skip that step though as it goes boom - though
-> stack trace is not useful.
+The CXL specification allows a host bridge with a single root port to
+have no explicit HDM decoders. Currently we assumes there are none.
+As such we create a special pass through decoder instance without
+a commit callback.
 
-Turns out really weird corruption happens if you accidentally back two type3 devices
-with the same memory device. Who would have thought it :)
+Prior to this patch, the commit callback was called unconditionally.
+Thus a configuration with 1 Host Bridge, 1 Root Port, 1 switch with
+multiple downstream ports below which there are multiple CXL type 3
+devices results in a situation where committing the region causes
+a null pointer dereference.
 
-That aside ignoring the check_last_peer() failure seems to make everything work for this
-topology.  I'm not seeing the crash, so my guess is we fixed it somewhere along the way.
+Reported-by: Bobo WL <lmw.bobo@gmail.com>
+Fixes: 176baefb2eb5 ("cxl/hdm: Commit decoder state to hardware")
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
 
-Now for the fun one.  I've replicated the crash if we have
+We could fix this with a stub function perhaps as an alternative?
 
-1HB 1*RP 1SW, 4SW-DSP, 4Type3
+ drivers/cxl/core/region.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Now, I'd expect to see it not 'work' because the QEMU HDM decoder won't be programmed
-but the null pointer dereference isn't related to that.
-
-The bug is straight forward.  Not all decoders have commit callbacks... Will send out
-a possible fix shortly.
-
-Jonathan
-
-
-
-> 
-> Jonathan
-> 
-> 
-> 
-> 
-> 
-> 
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 401148016978..c49d9a5f1091 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -174,7 +174,8 @@ static int cxl_region_decode_commit(struct cxl_region *cxlr)
+ 		     iter = to_cxl_port(iter->dev.parent)) {
+ 			cxl_rr = cxl_rr_load(iter, cxlr);
+ 			cxld = cxl_rr->decoder;
+-			rc = cxld->commit(cxld);
++			if (cxld->commit)
++				rc = cxld->commit(cxld);
+ 			if (rc)
+ 				break;
+ 		}
+-- 
+2.32.0
 
