@@ -2,82 +2,166 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62400C32772
-	for <linux-cxl@archiver.kernel.org>; Thu, 18 Aug 2022 01:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CC9C00140
+	for <linux-cxl@archiver.kernel.org>; Thu, 18 Aug 2022 16:37:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242563AbiHRBXR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 17 Aug 2022 21:23:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33212 "EHLO
+        id S1344325AbiHRQhu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 18 Aug 2022 12:37:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242600AbiHRBXG (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 17 Aug 2022 21:23:06 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D23949FA8E
-        for <linux-cxl@vger.kernel.org>; Wed, 17 Aug 2022 18:23:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=m1c/7dgPgZmh95BH2HkKYjB3kfsbPA12W+wnkT9IoEQ=; b=mOm8BOTF42txzxFMLIy7rw9bJc
-        iBazSuaVC1QNSeS9uUg6jh9Setg7SD/DEh0FUwMvQ+GFuLFtb/OzyQKl1GedgnoViqMGmhlYqQ12D
-        wV6HccDIX/vmO5rgdd1eosc4lzv9ZzemQ4Aw+0fVi2L5/J8794/2b8IK/el4GqzCJ8A8QUBKrvzbb
-        NrRtba685E2VWN1SxWoSHNLbEH2j22iM32FDHsdqED2qq8IvvdDA9ZfyvFSMXtiXIL2C8Hk4BUxSJ
-        ro0XPcZyqwYvQ+2jFUgopfsGSTpednoSL8VvSOi5JPjAeN6FGx6IQu1bbj/qQryiWGB/p2KiJXvEp
-        bKEPLFAg==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oOUFU-00A4SO-6I; Thu, 18 Aug 2022 01:23:04 +0000
-Date:   Wed, 17 Aug 2022 18:23:04 -0700
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Cc:     mcgrof@kernel.org
-Subject: [ndctl PATCH] meson.build: be specific for library path
-Message-ID: <Yv2UeCIcA00lJC5j@bombadil.infradead.org>
+        with ESMTP id S241954AbiHRQhs (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 18 Aug 2022 12:37:48 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62380BD1FE
+        for <linux-cxl@vger.kernel.org>; Thu, 18 Aug 2022 09:37:45 -0700 (PDT)
+Received: from fraeml739-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4M7rCC35NDz688hZ;
+        Fri, 19 Aug 2022 00:37:27 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ fraeml739-chm.china.huawei.com (10.206.15.220) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 18 Aug 2022 18:37:42 +0200
+Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 18 Aug
+ 2022 17:37:42 +0100
+Date:   Thu, 18 Aug 2022 17:37:40 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Bobo WL <lmw.bobo@gmail.com>, <linux-cxl@vger.kernel.org>,
+        <qemu-devel@nongnu.org>, <qemu-arm@nongnu.org>
+Subject: Re: [BUG] cxl can not create region
+Message-ID: <20220818173740.00007f02@huawei.com>
+In-Reply-To: <20220817171619.000021ca@huawei.com>
+References: <CAGr_yG0UrfJAMWta3EkR1F0JZ4j--sig74p6vKL3K6TZDx9YGA@mail.gmail.com>
+        <62f132aee401b_1b3c294c@dwillia2-xfh.jf.intel.com.notmuch>
+        <CAGr_yG389Bm_NL8CLgo_ZkGd4staocNENbtb-ULVA5vh_ywmcw@mail.gmail.com>
+        <62f27a8e9acb6_1f18b294e2@dwillia2-xfh.jf.intel.com.notmuch>
+        <62f5a2ffe8be0_3ce68294a4@dwillia2-xfh.jf.intel.com.notmuch>
+        <20220817171619.000021ca@huawei.com>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.42]
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-If you run the typical configure script on a typical linux software
-project say with ./configure --prefix=/usr/ then the libdir defaults
-to /usr/lib/ however this is not true with meson.
+On Wed, 17 Aug 2022 17:16:19 +0100
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-With meson the current libdir path follows the one set by the prefix,
-and so with the current setup with prefix forced by default to /usr/
-we end up with libdir set to /usr/ as well and so libraries built
-and installed also placed into /usr/ as well, not /usr/lib/ as we
-would typically expect.
+> On Thu, 11 Aug 2022 17:46:55 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
+> 
+> > Dan Williams wrote:  
+> > > Bobo WL wrote:    
+> > > > Hi Dan,
+> > > > 
+> > > > Thanks for your reply!
+> > > > 
+> > > > On Mon, Aug 8, 2022 at 11:58 PM Dan Williams <dan.j.williams@intel.com> wrote:    
+> > > > >
+> > > > > What is the output of:
+> > > > >
+> > > > >     cxl list -MDTu -d decoder0.0
+> > > > >
+> > > > > ...? It might be the case that mem1 cannot be mapped by decoder0.0, or
+> > > > > at least not in the specified order, or that validation check is broken.    
+> > > > 
+> > > > Command "cxl list -MDTu -d decoder0.0" output:    
+> > > 
+> > > Thanks for this, I think I know the problem, but will try some
+> > > experiments with cxl_test first.    
+> > 
+> > Hmm, so my cxl_test experiment unfortunately passed so I'm not
+> > reproducing the failure mode. This is the result of creating x4 region
+> > with devices directly attached to a single host-bridge:
+> > 
+> > # cxl create-region -d decoder3.5 -w 4 -m -g 256 mem{12,10,9,11} -s $((1<<30))
+> > {
+> >   "region":"region8",
+> >   "resource":"0xf1f0000000",
+> >   "size":"1024.00 MiB (1073.74 MB)",
+> >   "interleave_ways":4,
+> >   "interleave_granularity":256,
+> >   "decode_state":"commit",
+> >   "mappings":[
+> >     {
+> >       "position":3,
+> >       "memdev":"mem11",
+> >       "decoder":"decoder21.0"
+> >     },
+> >     {
+> >       "position":2,
+> >       "memdev":"mem9",
+> >       "decoder":"decoder19.0"
+> >     },
+> >     {
+> >       "position":1,
+> >       "memdev":"mem10",
+> >       "decoder":"decoder20.0"
+> >     },
+> >     {
+> >       "position":0,
+> >       "memdev":"mem12",
+> >       "decoder":"decoder22.0"
+> >     }
+> >   ]
+> > }
+> > cxl region: cmd_create_region: created 1 region
+> >   
+> > > Did the commit_store() crash stop reproducing with latest cxl/preview
+> > > branch?    
+> > 
+> > I missed the answer to this question.
+> > 
+> > All of these changes are now in Linus' tree perhaps give that a try and
+> > post the debug log again?  
+> 
+> Hi Dan,
+> 
+> I've moved onto looking at this one.
+> 1 HB, 2RP (to make it configure the HDM decoder in the QEMU HB, I'll tidy that up
+> at some stage), 1 switch, 4 downstream switch ports each with a type 3
+> 
+> I'm not getting a crash, but can't successfully setup a region.
+> Upon adding the final target
+> It's failing in check_last_peer() as pos < distance.
+> Seems distance is 4 which makes me think it's using the wrong level of the heirarchy for
+> some reason or that distance check is wrong.
+> Wasn't a good idea to just skip that step though as it goes boom - though
+> stack trace is not useful.
 
-So you if you use today's defaults you end up with the libraries placed
-into /usr/ and then a simple error such as:
+Turns out really weird corruption happens if you accidentally back two type3 devices
+with the same memory device. Who would have thought it :)
 
-cxl: error while loading shared libraries: libcxl.so.1: cannot open shared object file: No such file or directory
+That aside ignoring the check_last_peer() failure seems to make everything work for this
+topology.  I'm not seeing the crash, so my guess is we fixed it somewhere along the way.
 
-Folks may have overlooked this as their old library is still usable.
+Now for the fun one.  I've replicated the crash if we have
 
-Fix this by forcing the default library path to /usr/lib, and so
-requiring users to set both prefix and libdir if they want to
-customize both.
+1HB 1*RP 1SW, 4SW-DSP, 4Type3
 
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- meson.build | 1 +
- 1 file changed, 1 insertion(+)
+Now, I'd expect to see it not 'work' because the QEMU HDM decoder won't be programmed
+but the null pointer dereference isn't related to that.
 
-diff --git a/meson.build b/meson.build
-index aecf461..802b38c 100644
---- a/meson.build
-+++ b/meson.build
-@@ -9,6 +9,7 @@ project('ndctl', 'c',
-   default_options : [
-     'c_std=gnu99',
-     'prefix=/usr',
-+    'libdir=/usr/lib',
-     'sysconfdir=/etc',
-     'localstatedir=/var',
-   ],
--- 
-2.35.1
+The bug is straight forward.  Not all decoders have commit callbacks... Will send out
+a possible fix shortly.
+
+Jonathan
+
+
+
+> 
+> Jonathan
+> 
+> 
+> 
+> 
+> 
+> 
 
