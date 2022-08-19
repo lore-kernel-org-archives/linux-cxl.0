@@ -2,536 +2,308 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9BFC25B0E
-	for <linux-cxl@archiver.kernel.org>; Fri, 19 Aug 2022 08:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21822C3F6B0
+	for <linux-cxl@archiver.kernel.org>; Fri, 19 Aug 2022 17:46:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346495AbiHSI5M (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 19 Aug 2022 04:57:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49776 "EHLO
+        id S1354609AbiHSRq3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 19 Aug 2022 13:46:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345863AbiHSI5K (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 19 Aug 2022 04:57:10 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89099EF9E0
-        for <linux-cxl@vger.kernel.org>; Fri, 19 Aug 2022 01:57:09 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id o7so3764807pfb.9
-        for <linux-cxl@vger.kernel.org>; Fri, 19 Aug 2022 01:57:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=TOSvb3CHSn2kFiUXMwbrDCQ/WOdUmMloOXyNnlQ7WZ4=;
-        b=ZCf7LSGuMnyGJrl4dEa78Ur3cSGfq+pY7J4eOSvbsPlkXC5z3i4c+e1z8jwsnrmE6b
-         Ev74RdR8+wq06LgVLRZ7v0kkG7E+8qBUJhCtU9g//qkvpTI/HS8o6LQYsxDNfkRFA4rX
-         b2esCfnf3RsDSYNaCVuCeyyyTO2FSVfQRQ6jCB/aEIbdrhj14E7l/baqvnU71jcYYoaY
-         4ygceG5CtLhoyKNzyTaW3ogpQp6GBvLlfYqFActi80Xhd+hAOfpyyonJglfDhl6Ehfr9
-         MGyXY9B3v/FRzuQ+0w7RVVONYZnTZwdIt8F5ZOZsozg9QQ21/LUi8WJN85ab+HI77cfr
-         rH+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=TOSvb3CHSn2kFiUXMwbrDCQ/WOdUmMloOXyNnlQ7WZ4=;
-        b=1O/XNAk6qmpu0vtDyVWNbQ7HMe6OfyPa6cBjePOgqZaRhR1LSFz9ZNBrf6XSoMt1bS
-         uPWGa6fJtxKRbrjG+7arNlysoBzZTw5utf2ZNdqQOro6Ppo+C1JPuzTqb82nes+9Z+DM
-         76FwxvdK+9kNUBe3JwZ0zQM6T2lA5qNoxrMllzEoTZcrTHv8rGg43vgOGfhjQYNwCEw0
-         7zUmPkvkBT9l/UtOnudlR1+EZDIOEWK0zWBinVaA8sQUTIgjkOAGjok0t+ilQdgTfA4A
-         NOLNVo3Zgo455Sc9JrpsWnb/2LztxiGpnY5lzHuLDO/Kb4H5uEeVXNE9a9SEeDqMs3v1
-         mbmQ==
-X-Gm-Message-State: ACgBeo1VBwJzkIdFxEzg3YBx5p5Pm3joew4mCMDA0GsOM1pDlWN5jnZo
-        rkc19Wr9UOb2ijoakNnfO5P2S9qASJs=
-X-Google-Smtp-Source: AA6agR7CQO2x11K34x+mWEI9rB17qzgzdvwJ8HGNdybBSH3zg0nDhLcbs/BtWmOUzVUumr/bku2zTQ==
-X-Received: by 2002:a63:4e56:0:b0:428:ee87:3791 with SMTP id o22-20020a634e56000000b00428ee873791mr5425882pgl.11.1660899428635;
-        Fri, 19 Aug 2022 01:57:08 -0700 (PDT)
-Received: from localhost.localdomain (c-107-3-179-31.hsd1.ca.comcast.net. [107.3.179.31])
-        by smtp.gmail.com with ESMTPSA id i123-20020a626d81000000b0052e7debb8desm2952392pfc.121.2022.08.19.01.57.07
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 19 Aug 2022 01:57:08 -0700 (PDT)
-From:   sunfishho12@gmail.com
-To:     linux-cxl@vger.kernel.org
-Cc:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
-        dave@stgolabs.net, a.manzanares@samsung.com,
-        Matthew Ho <sunfishho12@gmail.com>
-Subject: [ndctl PATCH 2/2] cxl: Add list image, image-from-file to CXL command
-Date:   Fri, 19 Aug 2022 01:57:01 -0700
-Message-Id: <b3efd743b296b3ef1d10363b505006bad8c1e7ef.1660895649.git.sunfishho12@gmail.com>
-X-Mailer: git-send-email 2.32.0 (Apple Git-132)
-In-Reply-To: <cover.1660895649.git.sunfishho12@gmail.com>
-References: <cover.1660895649.git.sunfishho12@gmail.com>
+        with ESMTP id S1354973AbiHSRpz (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 19 Aug 2022 13:45:55 -0400
+Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6216109759;
+        Fri, 19 Aug 2022 10:10:44 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 45A3C4C1D4C;
+        Fri, 19 Aug 2022 17:10:35 +0000 (UTC)
+Received: from pdx1-sub0-mail-a264.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 50A274C25EC;
+        Fri, 19 Aug 2022 17:10:34 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1660929034; a=rsa-sha256;
+        cv=none;
+        b=5cKO38w6HOtms0u9sQ3GepT4FM8gwF4I0LbfMs7RKCu3OuMusk7Uc3t8j0FEYniv6pFkXr
+        7HSOfE9O5gsHyFuNIxxozJYFa4tcCY72Sg7QSJuxqrsL1vS+drxzsKRWRzMf0xXpsvMm+N
+        J7YMYII+pGFI0EAAr8u0p/32bYsDRPSH47jpC3JuvyJOPyh/TLNEUU3EagVHPMzk6cNRzP
+        ZWAozXtHnjHSUoxrVTbTFPMh5kQsYH3b6Tma/JNL3qNLaCdYfLkhz84Xbv/cXUIJl/hAlF
+        Z/d2GlEg4JdxIrmg4JC9/zPSKl/5zgER42zneWoEoZhi6rEChrH4okhAK8uopA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1660929034;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:dkim-signature;
+        bh=WAH2Q04qOOZviyzR8Bbm7cthfCCUJ+xnXbB07gw5SSk=;
+        b=ZoINtC4u5TA72FcggARe2fDeATKzoUQxzfw5aHtodIHyz0LQwD2+B+ZhwaI/7FpPeGpxTz
+        gjOP+OmOxAvhS6RQArnqoyZhZvVpXtA7mvdiyeg0vqRBfUv3d8v8OZEjCf6GZjItsipOrj
+        s5Ry6dHP97cJy6FV/xgQs9zjFGG2K0vSdjMmWK7ujLMhED6IRmP7M9SFWpM0pD7g8VZUEn
+        CcdvJVZAm7wqMADxaEmz38wm9RX2+RIjURVoSUm2xVxnOI3csMC3eyCrmEl/ciz9owsSBA
+        VlowFAMhEl2jnhFucruQqtAVzwPgXK1bZZqSiIikCG5Qc5T6skhAsVi9H+agJg==
+ARC-Authentication-Results: i=1;
+        rspamd-79945fd77c-mwkdm;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Obese-Chemical: 0736d13c36e1a4a8_1660929035054_241875966
+X-MC-Loop-Signature: 1660929035054:962906012
+X-MC-Ingress-Time: 1660929035054
+Received: from pdx1-sub0-mail-a264.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.112.55.195 (trex/6.7.1);
+        Fri, 19 Aug 2022 17:10:35 +0000
+Received: from offworld.. (unknown [104.36.31.106])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a264.dreamhost.com (Postfix) with ESMTPSA id 4M8Stw3PRHz33;
+        Fri, 19 Aug 2022 10:10:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1660929033;
+        bh=WAH2Q04qOOZviyzR8Bbm7cthfCCUJ+xnXbB07gw5SSk=;
+        h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+        b=H2h3CfoxDs72tJyVbuC3+AuYHpXZSMGR3+CtYgVshT7Dyg/tQTNlTUX5W8/j3y+/0
+         oLeuWhBADjU9GVaJY0lB8/isl3M0MW04ighymDUsMsnqIfi/P5fnT+XSMXYD0zaMMb
+         zBWq/CAucu6GonWGiqxv6pUDqdOyGhmG8tBnS7Roi1qBg8EpVI7p2IgvzVSP97+WR9
+         lyjBHLtmUn5sDawDBwNFeMl4KHETGG7sUPSiTNMOf8WL6qvFu/xPZqnt2iVxoSdEKE
+         +9cRclOPvXUcAnla+INmBFLYzI9D1GG2k3Q7nqWou25V2TZNIUwmzMiV9eKMng3G+r
+         BqyhY/DNrw/0Q==
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     linux-arch@vger.kernel.org
+Cc:     dan.j.williams@intel.com, peterz@infradead.org,
+        mark.rutland@arm.com, dave.jiang@intel.com,
+        Jonathan.Cameron@huawei.com, a.manzanares@samsung.com,
+        bwidawsk@kernel.org, alison.schofield@intel.com,
+        ira.weiny@intel.com, linux-cxl@vger.kernel.org,
+        nvdimm@lists.linux.dev, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dave@stgolabs.net
+Subject: [PATCH v2] arch/cacheflush: Introduce flush_all_caches()
+Date:   Fri, 19 Aug 2022 10:10:24 -0700
+Message-Id: <20220819171024.1766857-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Matthew Ho <sunfishho12@gmail.com>
+With CXL security features, global CPU cache flushing nvdimm requirements
+are no longer specific to that subsystem, even beyond the scope of
+security_ops. CXL will need such semantics for features not necessarily
+limited to persistent memory.
 
-This adds the option of creating a diagram of a CXL topology.
-Use cxl list -vvv --image --output-file=topology.png to 
-generate a diagram in topology.png.
+The functionality this is enabling is to be able to instantaneously
+secure erase potentially terabytes of memory at once and the kernel
+needs to be sure that none of the data from before the secure is still
+present in the cache. It is also used when unlocking a memory device
+where speculative reads and firmware accesses could have cached poison
+from before the device was unlocked.
 
-Likewise, use cxl list --image-from-file=topology-txt
-to generate a diagram using topology.txt, where 
-topology.txt was generated by cxl list -vvv beforehand.
+This capability is typically only used once per-boot (for unlock), or
+once per bare metal provisioning event (secure erase), like when handing
+off the system to another tenant or decomissioning a device. That small
+scope plus the fact that none of this is available to a VM limits the
+potential damage.
 
-This addition makes it easier to visualize the CXL topology.
-Also, being able to choose to use an input text file 
-allows one to visualize the CXL topology while not having 
-access to CXL hardware, which may be convenient.
+While the scope of this is for physical address space, add a new
+flush_all_caches() in cacheflush headers such that each architecture
+can define it, when capable. For x86 just use the wbinvd hammer and
+prevent any other arch from being capable.
 
-Signed-off-by: Matthew Ho <sunfishho12@gmail.com>
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 ---
- Documentation/cxl/cxl-list.txt |  16 ++
- cxl/filter.c                   | 279 ++++++++++++++++++++++++++++++++-
- cxl/filter.h                   |   7 +
- cxl/list.c                     |  24 +++
- cxl/meson.build                |   1 +
- meson.build                    |   1 +
- 6 files changed, 327 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
-index 698f53b7a9e9..bd39889bbe3a 100644
---- a/Documentation/cxl/cxl-list.txt
-+++ b/Documentation/cxl/cxl-list.txt
-@@ -354,6 +354,22 @@ OPTIONS
- 	  Everything *-vv* provides, plus enable
- 	  --health and --partition.
+Changes from v1 (https://lore.kernel.org/all/20220815160706.tqd42dv24tgb7x7y@offworld/):
+- Added comments and improved changelog to reflect this is
+  routine should be avoided and not considered a general API (Peter, Dan).
+
+ arch/x86/include/asm/cacheflush.h |  4 +++
+ drivers/acpi/nfit/intel.c         | 41 ++++++++++++++-----------------
+ include/asm-generic/cacheflush.h  | 31 +++++++++++++++++++++++
+ 3 files changed, 53 insertions(+), 23 deletions(-)
+
+diff --git a/arch/x86/include/asm/cacheflush.h b/arch/x86/include/asm/cacheflush.h
+index b192d917a6d0..ac4d4fd4e508 100644
+--- a/arch/x86/include/asm/cacheflush.h
++++ b/arch/x86/include/asm/cacheflush.h
+@@ -10,4 +10,8 @@
  
-+--image::
-+-o::
-+--output-file::
-+	Create an image displaying the topology. One can specify an
-+	output with -o or --output-file, which supports outputting
-+	with file types .png, .jpg, or .jpeg. If -o is not specified,
-+	cxl list --image will by default create a new file topology.jpg
-+	to output to.
-+
-+--image-from-file::
-+	This subcommand has the same function as --image, except it
-+	requires an input text file to be specified that contains a
-+	json array outputted by cxl list. As with --image, one can
-+	use -o or --output-file to specify an output file, with the
-+	default behavior being to create and output to topology.jpg.
-+
- --debug::
- 	If the cxl tool was built with debug enabled, turn on debug
- 	messages.
-diff --git a/cxl/filter.c b/cxl/filter.c
-index 38ece5528794..0ebf62960336 100644
---- a/cxl/filter.c
-+++ b/cxl/filter.c
-@@ -8,6 +8,7 @@
- #include <util/json.h>
- #include <cxl/libcxl.h>
- #include <json-c/json.h>
-+#include <graphviz/gvc.h>
+ void clflush_cache_range(void *addr, unsigned int size);
  
- #include "filter.h"
- #include "json.h"
-@@ -1004,6 +1005,279 @@ walk_children:
++/* see comments in the stub version */
++#define flush_all_caches() \
++	do { wbinvd_on_all_cpus(); } while(0)
++
+ #endif /* _ASM_X86_CACHEFLUSH_H */
+diff --git a/drivers/acpi/nfit/intel.c b/drivers/acpi/nfit/intel.c
+index 8dd792a55730..f2f6c31e6ab7 100644
+--- a/drivers/acpi/nfit/intel.c
++++ b/drivers/acpi/nfit/intel.c
+@@ -4,6 +4,7 @@
+ #include <linux/ndctl.h>
+ #include <linux/acpi.h>
+ #include <asm/smp.h>
++#include <linux/cacheflush.h>
+ #include "intel.h"
+ #include "nfit.h"
+ 
+@@ -190,8 +191,6 @@ static int intel_security_change_key(struct nvdimm *nvdimm,
  	}
  }
  
-+static char *find_device_type(struct json_object *device)
-+{
-+	char *value;
-+
-+	json_object_object_foreach(device, property, value_json) {
-+		value = (char *)json_object_get_string(value_json);
-+		if (!strcmp(property, "bus") &&
-+		    !strcmp(value, "root0"))
-+			return "ACPI0017 Device";
-+		if (!strcmp(property, "host") &&
-+		    !strncmp(value, "ACPI0016", strlen("ACPI0016")))
-+			return "Host Bridge";
-+		if (!strcmp(property, "host"))
-+			return "Switch Port";
-+		if (!strcmp(property, "memdev"))
-+			return "Type 3 Memory Device";
-+		if (!strcmp(property, "dport"))
-+			return "dport";
-+		if (!strcmp(property, "decoder"))
-+			return "decoder";
-+	}
-+	return "unknown device";
-+}
-+
-+static bool check_device_type(struct json_object *device, char *type)
-+{
-+	return !strcmp(find_device_type(device), type);
-+}
-+
-+/* for labeling purposes */
-+static const char *find_device_ID(struct json_object *device)
-+{
-+	char *dev_type = find_device_type(device);
-+	json_object *ID = json_object_new_string("unknown");
-+
-+	if (!strcmp(dev_type, "ACPI0017 Device")) {
-+		json_object_put(ID);
-+		json_object_object_get_ex(device, "bus", &ID);
-+	}
-+
-+	if (!strcmp(dev_type, "Host Bridge") || !strcmp(dev_type, "Switch Port")) {
-+		json_object_put(ID);
-+		json_object_object_get_ex(device, "host", &ID);
-+	}
-+
-+	if (!strcmp(dev_type, "Type 3 Memory Device")) {
-+		json_object_put(ID);
-+		json_object_object_get_ex(device, "memdev", &ID);
-+	}
-+
-+	if (!strcmp(dev_type, "dport")) {
-+		json_object_put(ID);
-+		json_object_object_get_ex(device, "dport", &ID);
-+	}
-+
-+	return json_object_get_string(ID);
-+}
-+
-+static bool is_device(struct json_object *device)
-+{
-+	char *dev_type = find_device_type(device);
-+
-+	return (strcmp(dev_type, "dport") &&
-+		strcmp(dev_type, "decoder"));
-+}
-+
-+static char *label_device(struct json_object *device)
-+{
-+	char *label;
-+	const char *ID = find_device_ID(device);
-+	const char *devname = find_device_type(device);
-+
-+	asprintf(&label, "%s\nID: %s", devname, ID);
-+	if (!label)
-+		printf("Error: label allocation failed in %s\n",
-+			__func__);
-+	return label;
-+}
-+
-+/* for determining number of devices listed in a json array */
-+static size_t count_top_devices(struct json_object *top_array)
-+{
-+	size_t dev_counter = 0;
-+	size_t top_array_len = json_object_array_length(top_array);
-+
-+	for (size_t idx = 0; idx < top_array_len; idx++)
-+		if (is_device(json_object_array_get_idx(top_array, idx)))
-+			dev_counter++;
-+	return dev_counter;
-+}
-+
-+static void create_root_ports(struct json_object *host_bridge, Agraph_t *graph,
-+		       Agnode_t *hb)
-+{
-+	json_object *rps, *rp, *id_json;
-+	char *id, *rp_label;
-+	Agnode_t *rp_node;
-+	size_t nr_dports, idx;
-+
-+	assert(check_device_type(host_bridge, "Host Bridge"));
-+
-+	if (!json_object_object_get_ex(host_bridge, "dports", &rps))
-+		return;
-+
-+	nr_dports = json_object_array_length(rps);
-+
-+	for (idx = 0; idx < nr_dports; idx++) {
-+		rp = json_object_array_get_idx(rps, idx);
-+		json_object_object_get_ex(rp, "dport", &id_json);
-+		id = (char *)json_object_get_string(id_json);
-+		asprintf(&rp_label, "Root Port\nID: %s", id);
-+		if (!rp_label)
-+			printf("Error: label allocation failed when creating root port nodes\n");
-+		rp_node = agnode(graph, rp_label, 1);
-+		agedge(graph, hb, rp_node, 0, 1);
-+		free(rp_label);
-+	}
-+}
-+
-+static const char *find_root_port(struct json_object *device)
-+{
-+	json_object *rp;
-+
-+	if (json_object_object_get_ex(device, "root port", &rp))
-+		return json_object_get_string(rp);
-+	return NULL;
-+}
-+
-+static char *find_rp_label(struct json_object *device)
-+{
-+	char *rp_node_name;
-+	const char *id = find_root_port(device);
-+
-+	if (!id)
-+		return NULL;
-+	asprintf(&rp_node_name, "Root Port\nID: %s", id);
-+	if (!rp_node_name)
-+		printf("Error: asprintf failed in %s\n", __func__);
-+	return rp_node_name;
-+}
-+
-+static Agnode_t **draw_subtree(struct json_object *current_array,
-+			       Agraph_t *graph)
-+{
-+	size_t json_array_len, nr_top_devices, obj_idx;
-+	size_t idx, nr_sub_devs, nr_devs_connected;
-+	char *label, *rp_label;
-+	Agnode_t **top_devices, **sub_devs, *parent_node;
-+	bool is_hb;
-+	json_object *device, *subdev_arr, *subdev;
-+	json_object_iter subdev_iter;
-+
-+	json_array_len = json_object_array_length(current_array);
-+	nr_top_devices = count_top_devices(current_array);
-+
-+	if (!nr_top_devices)
-+		return NULL;
-+
-+	top_devices = malloc(nr_top_devices * sizeof(device));
-+	if (!top_devices)
-+		printf("Error: Unable to allocate memory for top_devices\n");
-+
-+	for (obj_idx = 0; obj_idx < json_array_len; obj_idx++) {
-+		device = json_object_array_get_idx(current_array,
-+						   obj_idx);
-+		if (!is_device(device))
-+			continue;
-+
-+		label = label_device(device);
-+		top_devices[obj_idx] = agnode(graph, label, 1);
-+
-+		agsafeset(top_devices[obj_idx], "shape", "box", "");
-+
-+		is_hb = check_device_type(device, "Host Bridge");
-+
-+		/* Create root port nodes if device is a host bridge */
-+		if (is_hb)
-+			create_root_ports(device, graph,
-+					  top_devices[obj_idx]);
-+
-+		free(label);
-+
-+		json_object_object_foreachC(device, subdev_iter) {
-+			subdev_arr = subdev_iter.val;
-+
-+			if (!json_object_is_type(subdev_arr, json_type_array))
-+				continue;
-+			nr_sub_devs = count_top_devices(subdev_arr);
-+			sub_devs = draw_subtree(subdev_arr, graph);
-+			if (!sub_devs)
-+				continue;
-+			if (!is_hb) {
-+				for (idx = 0; idx < nr_sub_devs; idx++)
-+					agedge(graph, top_devices[obj_idx],
-+					       sub_devs[idx], 0, 1);
-+				free(sub_devs);
-+				continue;
-+			}
-+
-+			nr_devs_connected = 0;
-+
-+			for (idx = 0;
-+			     idx < json_object_array_length(subdev_arr);
-+			     idx++) {
-+				subdev = json_object_array_get_idx(subdev_arr, idx);
-+				if (!is_device(subdev))
-+					continue;
-+
-+				rp_label = find_rp_label(subdev);
-+				if (!rp_label) {
-+					printf("Error: please use a cxl list output containing root port attributes\n");
-+					return NULL;
-+				}
-+				parent_node = agnode(graph, rp_label, 0);
-+				agedge(graph, parent_node,
-+				       sub_devs[nr_devs_connected], 0, 1);
-+				free(rp_label);
-+				nr_devs_connected++;
-+			}
-+			free(sub_devs);
-+		}
-+	}
-+	return top_devices;
-+}
-+
-+struct json_object *parse_json_text(const char *path)
-+{
-+	FILE *fp;
-+	char *json_as_string;
-+	size_t file_len;
-+	json_object *json;
-+
-+	fp = fopen(path, "r");
-+	if (!fp)
-+		printf("Error: could not read file\n");
-+	fseek(fp, 0, SEEK_END);
-+	file_len = ftell(fp);
-+	fseek(fp, 0, SEEK_SET);
-+	json_as_string = malloc(file_len + 1);
-+	if (!json_as_string ||
-+	    fread(json_as_string, 1, file_len, fp) != file_len) {
-+		free(json_as_string);
-+		printf("Error: could not read file %s\n", path);
-+	}
-+	json_as_string[file_len] = '\0';
-+	json = json_tokener_parse(json_as_string);
-+	return json;
-+}
-+
-+void create_image(const char *filename, json_object *platform)
-+{
-+	char *output_file = filename ? (char *)filename : "topology.jpg";
-+	GVC_t *gvc = gvContext();
-+	Agraph_t *graph = agopen("graph", Agdirected, 0);
-+	char *of_extension = strrchr(output_file, '.') + 1;
-+	Agnode_t **top_devices;
-+
-+	if (!of_extension || (strcmp(of_extension, "png") &&
-+			      strcmp(of_extension, "jpeg") &&
-+			      strcmp(of_extension, "jpg"))) {
-+		printf("Error: unacceptable output file type, please use .png, .jpeg, or .jpg");
-+		return;
-+	}
-+	top_devices = draw_subtree(platform, graph);
-+	free(top_devices);
-+	gvLayout(gvc, graph, "dot");
-+	/* Legality of the file extension is checked in list.c */
-+	gvRender(gvc, graph, strrchr(output_file, '.') + 1,
-+		 fopen(output_file, "w"));
-+	gvFreeLayout(gvc, graph);
-+	agclose(graph);
-+}
-+
- int cxl_filter_walk(struct cxl_ctx *ctx, struct cxl_filter_params *p)
+-static void nvdimm_invalidate_cache(void);
+-
+ static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
+ 		const struct nvdimm_key_data *key_data)
  {
- 	struct json_object *jdevs = NULL, *jbuses = NULL, *jports = NULL;
-@@ -1209,7 +1483,10 @@ walk_children:
- 		     top_level_objs > 1);
- 	splice_array(p, jregions, jplatform, "regions", top_level_objs > 1);
- 
--	util_display_json_array(stdout, jplatform, flags);
-+	if (p->image)
-+		create_image(p->output_file, jplatform);
-+	else
-+		util_display_json_array(stdout, jplatform, flags);
- 
- 	return 0;
- err:
-diff --git a/cxl/filter.h b/cxl/filter.h
-index 256df49c3d0c..aec7207aa885 100644
---- a/cxl/filter.h
-+++ b/cxl/filter.h
-@@ -5,6 +5,8 @@
- 
- #include <stdbool.h>
- #include <util/log.h>
-+#include <json-c/json.h>
-+#include <graphviz/gvc.h>
- 
- struct cxl_filter_params {
- 	const char *memdev_filter;
-@@ -14,6 +16,8 @@ struct cxl_filter_params {
- 	const char *endpoint_filter;
- 	const char *decoder_filter;
- 	const char *region_filter;
-+	const char *image_input_file;
-+	const char *output_file;
- 	bool single;
- 	bool endpoints;
- 	bool decoders;
-@@ -26,6 +30,7 @@ struct cxl_filter_params {
- 	bool human;
- 	bool health;
- 	bool partition;
-+	bool image;
- 	int verbose;
- 	struct log_ctx ctx;
- };
-@@ -38,6 +43,8 @@ struct cxl_port *util_cxl_port_filter_by_memdev(struct cxl_port *port,
- 						const char *serial);
- struct cxl_decoder *util_cxl_decoder_filter(struct cxl_decoder *decoder,
- 					    const char *__ident);
-+struct json_object *parse_json_text(const char *path);
-+void create_image(const char *filename, json_object *platform);
- struct cxl_region *util_cxl_region_filter(struct cxl_region *region,
- 					  const char *__ident);
- 
-diff --git a/cxl/list.c b/cxl/list.c
-index 8c48fbbaaec3..3cbc0de26b2b 100644
---- a/cxl/list.c
-+++ b/cxl/list.c
-@@ -52,6 +52,13 @@ static const struct option options[] = {
- 		    "include memory device health information"),
- 	OPT_BOOLEAN('I', "partition", &param.partition,
- 		    "include memory device partition information"),
-+	OPT_BOOLEAN(0, "image", &param.image,
-+		   "display CXL topology"),
-+	OPT_STRING(0, "image-from-file", &param.image_input_file,
-+		   "input file path for image",
-+		   "path to file containing a json array describing the topology"),
-+	OPT_STRING('o', "output-file", &param.output_file, "output file path",
-+		   "path to file to output diagram to"),
- 	OPT_INCR('v', "verbose", &param.verbose,
- 		 "increase output detail"),
- #ifdef ENABLE_DEBUG
-@@ -74,6 +81,9 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
+@@ -210,6 +209,9 @@ static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
  	};
- 	int i;
+ 	int rc;
  
-+	json_object *platform;
-+	const char *output_file_name;
++	if (!flush_all_caches_capable())
++		return -EINVAL;
 +
- 	argc = parse_options(argc, argv, options, u, 0);
- 	for (i = 0; i < argc; i++)
- 		error("unknown parameter \"%s\"\n", argv[i]);
-@@ -86,6 +96,20 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
- 		usage_with_options(u, options);
+ 	if (!test_bit(NVDIMM_INTEL_UNLOCK_UNIT, &nfit_mem->dsm_mask))
+ 		return -ENOTTY;
+ 
+@@ -228,7 +230,7 @@ static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
  	}
  
-+	if (param.output_file)
-+		output_file_name = param.output_file;
+ 	/* DIMM unlocked, invalidate all CPU caches before we read it */
+-	nvdimm_invalidate_cache();
++	flush_all_caches();
+ 
+ 	return 0;
+ }
+@@ -294,11 +296,14 @@ static int __maybe_unused intel_security_erase(struct nvdimm *nvdimm,
+ 		},
+ 	};
+ 
++	if (!flush_all_caches_capable())
++		return -EINVAL;
 +
-+	if (param.image_input_file) {
-+		if (access(param.image_input_file, R_OK)) {
-+			error("input file path is incorrect\n");
-+			return 0;
-+		}
-+		platform = parse_json_text(param.image_input_file);
-+		create_image(output_file_name, platform);
-+		return 0;
-+	}
+ 	if (!test_bit(cmd, &nfit_mem->dsm_mask))
+ 		return -ENOTTY;
+ 
+ 	/* flush all cache before we erase DIMM */
+-	nvdimm_invalidate_cache();
++	flush_all_caches();
+ 	memcpy(nd_cmd.cmd.passphrase, key->data,
+ 			sizeof(nd_cmd.cmd.passphrase));
+ 	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
+@@ -318,7 +323,7 @@ static int __maybe_unused intel_security_erase(struct nvdimm *nvdimm,
+ 	}
+ 
+ 	/* DIMM erased, invalidate all CPU caches before we read it */
+-	nvdimm_invalidate_cache();
++	flush_all_caches();
+ 	return 0;
+ }
+ 
+@@ -338,6 +343,9 @@ static int __maybe_unused intel_security_query_overwrite(struct nvdimm *nvdimm)
+ 		},
+ 	};
+ 
++	if (!flush_all_caches_capable())
++		return -EINVAL;
 +
+ 	if (!test_bit(NVDIMM_INTEL_QUERY_OVERWRITE, &nfit_mem->dsm_mask))
+ 		return -ENOTTY;
+ 
+@@ -355,7 +363,7 @@ static int __maybe_unused intel_security_query_overwrite(struct nvdimm *nvdimm)
+ 	}
+ 
+ 	/* flush all cache before we make the nvdimms available */
+-	nvdimm_invalidate_cache();
++	flush_all_caches();
+ 	return 0;
+ }
+ 
+@@ -377,11 +385,14 @@ static int __maybe_unused intel_security_overwrite(struct nvdimm *nvdimm,
+ 		},
+ 	};
+ 
++	if (!flush_all_caches_capable())
++		return -EINVAL;
 +
- 	if (num_list_flags() == 0) {
- 		if (param.memdev_filter || param.serial_filter)
- 			param.memdevs = true;
-diff --git a/cxl/meson.build b/cxl/meson.build
-index f2474aaa6e2e..2670d1e6e330 100644
---- a/cxl/meson.build
-+++ b/cxl/meson.build
-@@ -19,6 +19,7 @@ cxl_tool = executable('cxl',
-     kmod,
-     json,
-     versiondep,
-+    graphviz,
-   ],
-   install : true,
-   install_dir : rootbindir,
-diff --git a/meson.build b/meson.build
-index aecf461fc9ef..3c4f4fc006c3 100644
---- a/meson.build
-+++ b/meson.build
-@@ -141,6 +141,7 @@ kmod = dependency('libkmod')
- libudev = dependency('libudev')
- uuid = dependency('uuid')
- json = dependency('json-c')
-+graphviz = dependency('libgvc')
- if get_option('docs').enabled()
-   if get_option('asciidoctor').enabled()
-     asciidoc = find_program('asciidoctor', required : true)
+ 	if (!test_bit(NVDIMM_INTEL_OVERWRITE, &nfit_mem->dsm_mask))
+ 		return -ENOTTY;
+ 
+ 	/* flush all cache before we erase DIMM */
+-	nvdimm_invalidate_cache();
++	flush_all_caches();
+ 	memcpy(nd_cmd.cmd.passphrase, nkey->data,
+ 			sizeof(nd_cmd.cmd.passphrase));
+ 	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
+@@ -401,22 +412,6 @@ static int __maybe_unused intel_security_overwrite(struct nvdimm *nvdimm,
+ 	}
+ }
+ 
+-/*
+- * TODO: define a cross arch wbinvd equivalent when/if
+- * NVDIMM_FAMILY_INTEL command support arrives on another arch.
+- */
+-#ifdef CONFIG_X86
+-static void nvdimm_invalidate_cache(void)
+-{
+-	wbinvd_on_all_cpus();
+-}
+-#else
+-static void nvdimm_invalidate_cache(void)
+-{
+-	WARN_ON_ONCE("cache invalidation required after unlock\n");
+-}
+-#endif
+-
+ static const struct nvdimm_security_ops __intel_security_ops = {
+ 	.get_flags = intel_security_flags,
+ 	.freeze = intel_security_freeze,
+diff --git a/include/asm-generic/cacheflush.h b/include/asm-generic/cacheflush.h
+index 4f07afacbc23..89f310f92498 100644
+--- a/include/asm-generic/cacheflush.h
++++ b/include/asm-generic/cacheflush.h
+@@ -115,4 +115,35 @@ static inline void flush_cache_vunmap(unsigned long start, unsigned long end)
+ 	memcpy(dst, src, len)
+ #endif
+ 
++/*
++ * Flush the entire caches across all CPUs, however:
++ *
++ *       YOU DO NOT WANT TO USE THIS FUNCTION.
++ *
++ * It is considered a big hammer and can affect overall
++ * system performance and increase latency/response times.
++ * As such it is not for general usage, but for specific use
++ * cases involving instantaneously invalidating wide swaths
++ * of memory on bare metal.
++
++ * Unlike the APIs above, this function can be defined on
++ * architectures which have VIPT or PIPT caches, and thus is
++ * beyond the scope of virtual to physical mappings/page
++ * tables changing.
++ *
++ * The limitation here is that the architectures that make
++ * use of it must can actually comply with the semantics,
++ * such as those which caches are in a consistent state. The
++ * caller can verify the situation early on.
++ */
++#ifndef flush_all_caches
++# define flush_all_caches_capable() false
++static inline void flush_all_caches(void)
++{
++	WARN_ON_ONCE("cache invalidation required\n");
++}
++#else
++# define flush_all_caches_capable() true
++#endif
++
+ #endif /* _ASM_GENERIC_CACHEFLUSH_H */
 -- 
-2.34.1
+2.37.2
 
