@@ -2,59 +2,59 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E20DC25B0E
-	for <linux-cxl@archiver.kernel.org>; Fri, 19 Aug 2022 08:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9BFC25B0E
+	for <linux-cxl@archiver.kernel.org>; Fri, 19 Aug 2022 08:57:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347745AbiHSIyd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 19 Aug 2022 04:54:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44350 "EHLO
+        id S1346495AbiHSI5M (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 19 Aug 2022 04:57:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347833AbiHSIyb (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 19 Aug 2022 04:54:31 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61076CD501
-        for <linux-cxl@vger.kernel.org>; Fri, 19 Aug 2022 01:54:30 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id d10so3604547plr.6
-        for <linux-cxl@vger.kernel.org>; Fri, 19 Aug 2022 01:54:30 -0700 (PDT)
+        with ESMTP id S1345863AbiHSI5K (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 19 Aug 2022 04:57:10 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89099EF9E0
+        for <linux-cxl@vger.kernel.org>; Fri, 19 Aug 2022 01:57:09 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id o7so3764807pfb.9
+        for <linux-cxl@vger.kernel.org>; Fri, 19 Aug 2022 01:57:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=tW8DuGA74WY0qH3p2brrechg70mcLe4sk1dVqGA83DQ=;
-        b=QF70vfkluoHWHYsL/Fx25gpbjgQpXMMuxql8a0cgzTc5xnHs64D5EWa312B1T2mkVs
-         DVN4TNjxPtlKJATs9YDsce6j4idkowNpioqAW4K9I5cN6Q0zI7mS1JVVMUm5gEOQCkfS
-         V68nDo/bdCLRdIIdRmpOFmtBCcR+IPlVh3pd2lY4oHwBEpqsBvqd34X1Sz+0OKczXkuN
-         KncptZ53f3FyvNne21yvbOsWNjROpj74RkQw1Q97l0UsHin9goxRswmoQQdSJdymJYD2
-         k6/crICw6Ut3Ox8zULDW5p8Wg+z/Ng9OH2hHvY/gi9QlH90iP1rslysNaWZZGZJQvLso
-         rgig==
+        bh=TOSvb3CHSn2kFiUXMwbrDCQ/WOdUmMloOXyNnlQ7WZ4=;
+        b=ZCf7LSGuMnyGJrl4dEa78Ur3cSGfq+pY7J4eOSvbsPlkXC5z3i4c+e1z8jwsnrmE6b
+         Ev74RdR8+wq06LgVLRZ7v0kkG7E+8qBUJhCtU9g//qkvpTI/HS8o6LQYsxDNfkRFA4rX
+         b2esCfnf3RsDSYNaCVuCeyyyTO2FSVfQRQ6jCB/aEIbdrhj14E7l/baqvnU71jcYYoaY
+         4ygceG5CtLhoyKNzyTaW3ogpQp6GBvLlfYqFActi80Xhd+hAOfpyyonJglfDhl6Ehfr9
+         MGyXY9B3v/FRzuQ+0w7RVVONYZnTZwdIt8F5ZOZsozg9QQ21/LUi8WJN85ab+HI77cfr
+         rH+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=tW8DuGA74WY0qH3p2brrechg70mcLe4sk1dVqGA83DQ=;
-        b=ACTCJDN+u/XHrIsiiNJF410KWy6bilVShwokye3uIvGR3fkRK5BwXP05Xa36NP3M3x
-         d6sLO0akGQQWxSbbCv0qYtsi/Cj3ey9FtTAvCCdeOtmnbpPCsKKQ0m+VYJVNcW3z2/qM
-         rJkTESCjGCyCMGtQ0snqH6ikhxlG+my0j0KxJGbvNacoRaGceIBHwsgx3xcA3T69vEMN
-         bDz7TF+qAoaOtBG/BgQtOw7tKxAxC5Lukgenrp3Hi8rwckZ6hMu3SiJBJfBLiVDWhW3G
-         MNCfRED3fenPHmN0qaU82HOfrbMRfFfrgkkcQuylQjRXIUBFtfxrgUVmoAyUTvn4sbAd
-         KWmg==
-X-Gm-Message-State: ACgBeo0130/af+n25C3H+nEESn/cTQt5oc8y6UIuHzNvkyjaJ4NzwiYI
-        ZJPF+gnww7lOCLLa6DvpFCZGp0nAxrM=
-X-Google-Smtp-Source: AA6agR7Q5EKeADIzprclXEsQpFoEBQ1NTVZpD+plsjR0nxIbG0tY1uYgdiUe0r01BXDhSg34ysUaNg==
-X-Received: by 2002:a17:90b:4b04:b0:1f5:2da0:b2f6 with SMTP id lx4-20020a17090b4b0400b001f52da0b2f6mr7124941pjb.195.1660899269544;
-        Fri, 19 Aug 2022 01:54:29 -0700 (PDT)
+        bh=TOSvb3CHSn2kFiUXMwbrDCQ/WOdUmMloOXyNnlQ7WZ4=;
+        b=1O/XNAk6qmpu0vtDyVWNbQ7HMe6OfyPa6cBjePOgqZaRhR1LSFz9ZNBrf6XSoMt1bS
+         uPWGa6fJtxKRbrjG+7arNlysoBzZTw5utf2ZNdqQOro6Ppo+C1JPuzTqb82nes+9Z+DM
+         76FwxvdK+9kNUBe3JwZ0zQM6T2lA5qNoxrMllzEoTZcrTHv8rGg43vgOGfhjQYNwCEw0
+         7zUmPkvkBT9l/UtOnudlR1+EZDIOEWK0zWBinVaA8sQUTIgjkOAGjok0t+ilQdgTfA4A
+         NOLNVo3Zgo455Sc9JrpsWnb/2LztxiGpnY5lzHuLDO/Kb4H5uEeVXNE9a9SEeDqMs3v1
+         mbmQ==
+X-Gm-Message-State: ACgBeo1VBwJzkIdFxEzg3YBx5p5Pm3joew4mCMDA0GsOM1pDlWN5jnZo
+        rkc19Wr9UOb2ijoakNnfO5P2S9qASJs=
+X-Google-Smtp-Source: AA6agR7CQO2x11K34x+mWEI9rB17qzgzdvwJ8HGNdybBSH3zg0nDhLcbs/BtWmOUzVUumr/bku2zTQ==
+X-Received: by 2002:a63:4e56:0:b0:428:ee87:3791 with SMTP id o22-20020a634e56000000b00428ee873791mr5425882pgl.11.1660899428635;
+        Fri, 19 Aug 2022 01:57:08 -0700 (PDT)
 Received: from localhost.localdomain (c-107-3-179-31.hsd1.ca.comcast.net. [107.3.179.31])
-        by smtp.gmail.com with ESMTPSA id m15-20020a170902db0f00b0016d33b8a231sm2659004plx.270.2022.08.19.01.54.28
+        by smtp.gmail.com with ESMTPSA id i123-20020a626d81000000b0052e7debb8desm2952392pfc.121.2022.08.19.01.57.07
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 19 Aug 2022 01:54:29 -0700 (PDT)
+        Fri, 19 Aug 2022 01:57:08 -0700 (PDT)
 From:   sunfishho12@gmail.com
 To:     linux-cxl@vger.kernel.org
 Cc:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
         dave@stgolabs.net, a.manzanares@samsung.com,
         Matthew Ho <sunfishho12@gmail.com>
-Subject: [ndctl PATCH 1/2] cxl: Add root port attribute to cxl list output
-Date:   Fri, 19 Aug 2022 01:54:25 -0700
-Message-Id: <b8aa06d6518260e7110defbd7a7eca659b09f26f.1660895649.git.sunfishho12@gmail.com>
+Subject: [ndctl PATCH 2/2] cxl: Add list image, image-from-file to CXL command
+Date:   Fri, 19 Aug 2022 01:57:01 -0700
+Message-Id: <b3efd743b296b3ef1d10363b505006bad8c1e7ef.1660895649.git.sunfishho12@gmail.com>
 X-Mailer: git-send-email 2.32.0 (Apple Git-132)
 In-Reply-To: <cover.1660895649.git.sunfishho12@gmail.com>
 References: <cover.1660895649.git.sunfishho12@gmail.com>
@@ -66,195 +66,472 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Matthew Ho <sunfishho12@gmail.com>
 
-This adds a "root port" attribute to ports and type 3 memory devices
-located under a host bridge indicating which root port each device
-falls under. Previously, the cxl list command lists the various root
-ports as dports underneath each host bridge, and displays devices as
-being under a given host bridge, but did not indicate which specific
-root port corresponded to which device. Adding this information
-helps to map the CXL topology.
+This adds the option of creating a diagram of a CXL topology.
+Use cxl list -vvv --image --output-file=topology.png to 
+generate a diagram in topology.png.
+
+Likewise, use cxl list --image-from-file=topology-txt
+to generate a diagram using topology.txt, where 
+topology.txt was generated by cxl list -vvv beforehand.
+
+This addition makes it easier to visualize the CXL topology.
+Also, being able to choose to use an input text file 
+allows one to visualize the CXL topology while not having 
+access to CXL hardware, which may be convenient.
 
 Signed-off-by: Matthew Ho <sunfishho12@gmail.com>
 ---
- cxl/json.c         | 16 ++++++++++-
- cxl/lib/libcxl.c   | 66 ++++++++++++++++++++++++++++++++++++++++++++++
- cxl/lib/libcxl.sym |  3 ++-
- cxl/libcxl.h       |  2 ++
- 4 files changed, 85 insertions(+), 2 deletions(-)
+ Documentation/cxl/cxl-list.txt |  16 ++
+ cxl/filter.c                   | 279 ++++++++++++++++++++++++++++++++-
+ cxl/filter.h                   |   7 +
+ cxl/list.c                     |  24 +++
+ cxl/meson.build                |   1 +
+ meson.build                    |   1 +
+ 6 files changed, 327 insertions(+), 1 deletion(-)
 
-diff --git a/cxl/json.c b/cxl/json.c
-index 9cec58b482b6..ad82f37fc955 100644
---- a/cxl/json.c
-+++ b/cxl/json.c
-@@ -303,7 +303,7 @@ err_jobj:
- struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
- 		unsigned long flags)
- {
--	const char *devname = cxl_memdev_get_devname(memdev);
-+	const char *devname = cxl_memdev_get_devname(memdev), *rp;
- 	struct json_object *jdev, *jobj;
- 	unsigned long long serial;
- 	int numa_node;
-@@ -324,6 +324,13 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
- 	if (jobj)
- 		json_object_object_add(jdev, "ram_size", jobj);
+diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
+index 698f53b7a9e9..bd39889bbe3a 100644
+--- a/Documentation/cxl/cxl-list.txt
++++ b/Documentation/cxl/cxl-list.txt
+@@ -354,6 +354,22 @@ OPTIONS
+ 	  Everything *-vv* provides, plus enable
+ 	  --health and --partition.
  
-+	rp = cxl_memdev_get_root_port(memdev);
-+	if (rp) {
-+		jobj = json_object_new_string(rp);
-+		if (jobj)
-+			json_object_object_add(jdev, "root port", jobj);
-+	}
++--image::
++-o::
++--output-file::
++	Create an image displaying the topology. One can specify an
++	output with -o or --output-file, which supports outputting
++	with file types .png, .jpg, or .jpeg. If -o is not specified,
++	cxl list --image will by default create a new file topology.jpg
++	to output to.
 +
- 	if (flags & UTIL_JSON_HEALTH) {
- 		jobj = util_cxl_memdev_health_to_json(memdev, flags);
- 		if (jobj)
-@@ -727,6 +734,7 @@ static struct json_object *__util_cxl_port_to_json(struct cxl_port *port,
- 						   unsigned long flags)
- {
- 	const char *devname = cxl_port_get_devname(port);
-+	const char *rp = cxl_port_get_root_port(port);
- 	struct json_object *jport, *jobj;
- 
- 	jport = json_object_new_object();
-@@ -741,6 +749,12 @@ static struct json_object *__util_cxl_port_to_json(struct cxl_port *port,
- 	if (jobj)
- 		json_object_object_add(jport, "host", jobj);
- 
-+	if (rp != NULL) {
-+		jobj = json_object_new_string(rp);
-+		if (jobj)
-+			json_object_object_add(jport, "root port", jobj);
-+	}
++--image-from-file::
++	This subcommand has the same function as --image, except it
++	requires an input text file to be specified that contains a
++	json array outputted by cxl list. As with --image, one can
++	use -o or --output-file to specify an output file, with the
++	default behavior being to create and output to topology.jpg.
 +
- 	if (!cxl_port_is_enabled(port)) {
- 		jobj = json_object_new_string("disabled");
- 		if (jobj)
-diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index a40b0e6aee83..c5b8ff339eb8 100644
---- a/cxl/lib/libcxl.c
-+++ b/cxl/lib/libcxl.c
-@@ -1260,6 +1260,39 @@ CXL_EXPORT unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev)
- 	return memdev->ram_size;
+ --debug::
+ 	If the cxl tool was built with debug enabled, turn on debug
+ 	messages.
+diff --git a/cxl/filter.c b/cxl/filter.c
+index 38ece5528794..0ebf62960336 100644
+--- a/cxl/filter.c
++++ b/cxl/filter.c
+@@ -8,6 +8,7 @@
+ #include <util/json.h>
+ #include <cxl/libcxl.h>
+ #include <json-c/json.h>
++#include <graphviz/gvc.h>
+ 
+ #include "filter.h"
+ #include "json.h"
+@@ -1004,6 +1005,279 @@ walk_children:
+ 	}
  }
  
-+CXL_EXPORT const char *cxl_memdev_get_root_port(struct cxl_memdev *memdev)
++static char *find_device_type(struct json_object *device)
 +{
-+	char *rp_name = strdup(memdev->host_path), *save;
-+	const char *rp;
-+	bool host_bridge_found = false;
++	char *value;
 +
-+	if (!memdev->host_path)
-+		return NULL;
++	json_object_object_foreach(device, property, value_json) {
++		value = (char *)json_object_get_string(value_json);
++		if (!strcmp(property, "bus") &&
++		    !strcmp(value, "root0"))
++			return "ACPI0017 Device";
++		if (!strcmp(property, "host") &&
++		    !strncmp(value, "ACPI0016", strlen("ACPI0016")))
++			return "Host Bridge";
++		if (!strcmp(property, "host"))
++			return "Switch Port";
++		if (!strcmp(property, "memdev"))
++			return "Type 3 Memory Device";
++		if (!strcmp(property, "dport"))
++			return "dport";
++		if (!strcmp(property, "decoder"))
++			return "decoder";
++	}
++	return "unknown device";
++}
 +
-+	rp_name = strdup(memdev->host_path);
++static bool check_device_type(struct json_object *device, char *type)
++{
++	return !strcmp(find_device_type(device), type);
++}
 +
-+	if (!rp_name) {
-+		printf("Error: strdup failed in cxl_memdev_get_Root_port\n");
-+		return NULL;
++/* for labeling purposes */
++static const char *find_device_ID(struct json_object *device)
++{
++	char *dev_type = find_device_type(device);
++	json_object *ID = json_object_new_string("unknown");
++
++	if (!strcmp(dev_type, "ACPI0017 Device")) {
++		json_object_put(ID);
++		json_object_object_get_ex(device, "bus", &ID);
 +	}
 +
-+	rp = strtok_r(rp_name, "/", &save);
-+
-+	while (rp) {
-+		/* return the first substring after the host bridge */
-+
-+		if (host_bridge_found)
-+			return (char *)rp;
-+
-+		if (!strncmp(rp, "pci", strlen("pci")))
-+			host_bridge_found = true;
-+
-+		rp = strtok_r(NULL, "/", &save);
++	if (!strcmp(dev_type, "Host Bridge") || !strcmp(dev_type, "Switch Port")) {
++		json_object_put(ID);
++		json_object_object_get_ex(device, "host", &ID);
 +	}
++
++	if (!strcmp(dev_type, "Type 3 Memory Device")) {
++		json_object_put(ID);
++		json_object_object_get_ex(device, "memdev", &ID);
++	}
++
++	if (!strcmp(dev_type, "dport")) {
++		json_object_put(ID);
++		json_object_object_get_ex(device, "dport", &ID);
++	}
++
++	return json_object_get_string(ID);
++}
++
++static bool is_device(struct json_object *device)
++{
++	char *dev_type = find_device_type(device);
++
++	return (strcmp(dev_type, "dport") &&
++		strcmp(dev_type, "decoder"));
++}
++
++static char *label_device(struct json_object *device)
++{
++	char *label;
++	const char *ID = find_device_ID(device);
++	const char *devname = find_device_type(device);
++
++	asprintf(&label, "%s\nID: %s", devname, ID);
++	if (!label)
++		printf("Error: label allocation failed in %s\n",
++			__func__);
++	return label;
++}
++
++/* for determining number of devices listed in a json array */
++static size_t count_top_devices(struct json_object *top_array)
++{
++	size_t dev_counter = 0;
++	size_t top_array_len = json_object_array_length(top_array);
++
++	for (size_t idx = 0; idx < top_array_len; idx++)
++		if (is_device(json_object_array_get_idx(top_array, idx)))
++			dev_counter++;
++	return dev_counter;
++}
++
++static void create_root_ports(struct json_object *host_bridge, Agraph_t *graph,
++		       Agnode_t *hb)
++{
++	json_object *rps, *rp, *id_json;
++	char *id, *rp_label;
++	Agnode_t *rp_node;
++	size_t nr_dports, idx;
++
++	assert(check_device_type(host_bridge, "Host Bridge"));
++
++	if (!json_object_object_get_ex(host_bridge, "dports", &rps))
++		return;
++
++	nr_dports = json_object_array_length(rps);
++
++	for (idx = 0; idx < nr_dports; idx++) {
++		rp = json_object_array_get_idx(rps, idx);
++		json_object_object_get_ex(rp, "dport", &id_json);
++		id = (char *)json_object_get_string(id_json);
++		asprintf(&rp_label, "Root Port\nID: %s", id);
++		if (!rp_label)
++			printf("Error: label allocation failed when creating root port nodes\n");
++		rp_node = agnode(graph, rp_label, 1);
++		agedge(graph, hb, rp_node, 0, 1);
++		free(rp_label);
++	}
++}
++
++static const char *find_root_port(struct json_object *device)
++{
++	json_object *rp;
++
++	if (json_object_object_get_ex(device, "root port", &rp))
++		return json_object_get_string(rp);
 +	return NULL;
 +}
 +
-+
- CXL_EXPORT const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev)
- {
- 	return memdev->firmware_version;
-@@ -2405,6 +2438,39 @@ CXL_EXPORT const char *cxl_port_get_host(struct cxl_port *port)
- 	return devpath_to_devname(port->uport);
- }
- 
-+CXL_EXPORT const char *cxl_port_get_root_port(struct cxl_port *port)
++static char *find_rp_label(struct json_object *device)
 +{
-+	char *rp_name, *save;
-+	const char *rp;
-+	bool host_bridge_found = false;
++	char *rp_node_name;
++	const char *id = find_root_port(device);
 +
-+	if (!port->uport)
++	if (!id)
 +		return NULL;
-+
-+	rp_name = strdup(port->uport);
-+
-+	if (!rp_name) {
-+		printf("Error: strdup failed in %s\n", __func__);
-+		return NULL;
-+	}
-+
-+	rp = strtok_r(rp_name, "/", &save);
-+
-+	while (rp) {
-+		/* return the first substring after the host bridge */
-+
-+		if (host_bridge_found)
-+			return (char *)rp;
-+
-+		if (!strncmp(rp, "pci", strlen("pci")))
-+			host_bridge_found = true;
-+
-+		rp = strtok_r(NULL, "/", &save);
-+	}
-+	return NULL;
++	asprintf(&rp_node_name, "Root Port\nID: %s", id);
++	if (!rp_node_name)
++		printf("Error: asprintf failed in %s\n", __func__);
++	return rp_node_name;
 +}
 +
++static Agnode_t **draw_subtree(struct json_object *current_array,
++			       Agraph_t *graph)
++{
++	size_t json_array_len, nr_top_devices, obj_idx;
++	size_t idx, nr_sub_devs, nr_devs_connected;
++	char *label, *rp_label;
++	Agnode_t **top_devices, **sub_devs, *parent_node;
++	bool is_hb;
++	json_object *device, *subdev_arr, *subdev;
++	json_object_iter subdev_iter;
 +
- CXL_EXPORT bool cxl_port_hosts_memdev(struct cxl_port *port,
- 				      struct cxl_memdev *memdev)
++	json_array_len = json_object_array_length(current_array);
++	nr_top_devices = count_top_devices(current_array);
++
++	if (!nr_top_devices)
++		return NULL;
++
++	top_devices = malloc(nr_top_devices * sizeof(device));
++	if (!top_devices)
++		printf("Error: Unable to allocate memory for top_devices\n");
++
++	for (obj_idx = 0; obj_idx < json_array_len; obj_idx++) {
++		device = json_object_array_get_idx(current_array,
++						   obj_idx);
++		if (!is_device(device))
++			continue;
++
++		label = label_device(device);
++		top_devices[obj_idx] = agnode(graph, label, 1);
++
++		agsafeset(top_devices[obj_idx], "shape", "box", "");
++
++		is_hb = check_device_type(device, "Host Bridge");
++
++		/* Create root port nodes if device is a host bridge */
++		if (is_hb)
++			create_root_ports(device, graph,
++					  top_devices[obj_idx]);
++
++		free(label);
++
++		json_object_object_foreachC(device, subdev_iter) {
++			subdev_arr = subdev_iter.val;
++
++			if (!json_object_is_type(subdev_arr, json_type_array))
++				continue;
++			nr_sub_devs = count_top_devices(subdev_arr);
++			sub_devs = draw_subtree(subdev_arr, graph);
++			if (!sub_devs)
++				continue;
++			if (!is_hb) {
++				for (idx = 0; idx < nr_sub_devs; idx++)
++					agedge(graph, top_devices[obj_idx],
++					       sub_devs[idx], 0, 1);
++				free(sub_devs);
++				continue;
++			}
++
++			nr_devs_connected = 0;
++
++			for (idx = 0;
++			     idx < json_object_array_length(subdev_arr);
++			     idx++) {
++				subdev = json_object_array_get_idx(subdev_arr, idx);
++				if (!is_device(subdev))
++					continue;
++
++				rp_label = find_rp_label(subdev);
++				if (!rp_label) {
++					printf("Error: please use a cxl list output containing root port attributes\n");
++					return NULL;
++				}
++				parent_node = agnode(graph, rp_label, 0);
++				agedge(graph, parent_node,
++				       sub_devs[nr_devs_connected], 0, 1);
++				free(rp_label);
++				nr_devs_connected++;
++			}
++			free(sub_devs);
++		}
++	}
++	return top_devices;
++}
++
++struct json_object *parse_json_text(const char *path)
++{
++	FILE *fp;
++	char *json_as_string;
++	size_t file_len;
++	json_object *json;
++
++	fp = fopen(path, "r");
++	if (!fp)
++		printf("Error: could not read file\n");
++	fseek(fp, 0, SEEK_END);
++	file_len = ftell(fp);
++	fseek(fp, 0, SEEK_SET);
++	json_as_string = malloc(file_len + 1);
++	if (!json_as_string ||
++	    fread(json_as_string, 1, file_len, fp) != file_len) {
++		free(json_as_string);
++		printf("Error: could not read file %s\n", path);
++	}
++	json_as_string[file_len] = '\0';
++	json = json_tokener_parse(json_as_string);
++	return json;
++}
++
++void create_image(const char *filename, json_object *platform)
++{
++	char *output_file = filename ? (char *)filename : "topology.jpg";
++	GVC_t *gvc = gvContext();
++	Agraph_t *graph = agopen("graph", Agdirected, 0);
++	char *of_extension = strrchr(output_file, '.') + 1;
++	Agnode_t **top_devices;
++
++	if (!of_extension || (strcmp(of_extension, "png") &&
++			      strcmp(of_extension, "jpeg") &&
++			      strcmp(of_extension, "jpg"))) {
++		printf("Error: unacceptable output file type, please use .png, .jpeg, or .jpg");
++		return;
++	}
++	top_devices = draw_subtree(platform, graph);
++	free(top_devices);
++	gvLayout(gvc, graph, "dot");
++	/* Legality of the file extension is checked in list.c */
++	gvRender(gvc, graph, strrchr(output_file, '.') + 1,
++		 fopen(output_file, "w"));
++	gvFreeLayout(gvc, graph);
++	agclose(graph);
++}
++
+ int cxl_filter_walk(struct cxl_ctx *ctx, struct cxl_filter_params *p)
  {
-diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index 549f88dae6ff..4f61686a3aff 100644
---- a/cxl/lib/libcxl.sym
-+++ b/cxl/lib/libcxl.sym
-@@ -19,6 +19,7 @@ global:
- 	cxl_memdev_get_ctx;
- 	cxl_memdev_get_pmem_size;
- 	cxl_memdev_get_ram_size;
-+	cxl_memdev_get_root_port;
- 	cxl_memdev_get_firmware_verison;
- 	cxl_cmd_get_devname;
- 	cxl_cmd_new_raw;
-@@ -101,7 +102,7 @@ global:
- 	cxl_port_to_endpoint;
- 	cxl_port_get_bus;
- 	cxl_port_get_host;
--	cxl_port_get_bus;
-+	cxl_port_get_root_port;
- 	cxl_port_hosts_memdev;
- 	cxl_port_get_nr_dports;
- 	cxl_port_disable_invalidate;
-diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index 61c7fc4e39b8..9ffa640bc832 100644
---- a/cxl/libcxl.h
-+++ b/cxl/libcxl.h
-@@ -47,6 +47,7 @@ int cxl_memdev_get_minor(struct cxl_memdev *memdev);
- struct cxl_ctx *cxl_memdev_get_ctx(struct cxl_memdev *memdev);
- unsigned long long cxl_memdev_get_pmem_size(struct cxl_memdev *memdev);
- unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev);
-+const char *cxl_memdev_get_root_port(struct cxl_memdev *memdev);
- const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev);
- size_t cxl_memdev_get_label_size(struct cxl_memdev *memdev);
- int cxl_memdev_disable_invalidate(struct cxl_memdev *memdev);
-@@ -95,6 +96,7 @@ bool cxl_port_is_endpoint(struct cxl_port *port);
- struct cxl_endpoint *cxl_port_to_endpoint(struct cxl_port *port);
- struct cxl_bus *cxl_port_get_bus(struct cxl_port *port);
- const char *cxl_port_get_host(struct cxl_port *port);
-+const char *cxl_port_get_root_port(struct cxl_port *port);
- bool cxl_port_hosts_memdev(struct cxl_port *port, struct cxl_memdev *memdev);
- int cxl_port_get_nr_dports(struct cxl_port *port);
- int cxl_port_disable_invalidate(struct cxl_port *port);
+ 	struct json_object *jdevs = NULL, *jbuses = NULL, *jports = NULL;
+@@ -1209,7 +1483,10 @@ walk_children:
+ 		     top_level_objs > 1);
+ 	splice_array(p, jregions, jplatform, "regions", top_level_objs > 1);
+ 
+-	util_display_json_array(stdout, jplatform, flags);
++	if (p->image)
++		create_image(p->output_file, jplatform);
++	else
++		util_display_json_array(stdout, jplatform, flags);
+ 
+ 	return 0;
+ err:
+diff --git a/cxl/filter.h b/cxl/filter.h
+index 256df49c3d0c..aec7207aa885 100644
+--- a/cxl/filter.h
++++ b/cxl/filter.h
+@@ -5,6 +5,8 @@
+ 
+ #include <stdbool.h>
+ #include <util/log.h>
++#include <json-c/json.h>
++#include <graphviz/gvc.h>
+ 
+ struct cxl_filter_params {
+ 	const char *memdev_filter;
+@@ -14,6 +16,8 @@ struct cxl_filter_params {
+ 	const char *endpoint_filter;
+ 	const char *decoder_filter;
+ 	const char *region_filter;
++	const char *image_input_file;
++	const char *output_file;
+ 	bool single;
+ 	bool endpoints;
+ 	bool decoders;
+@@ -26,6 +30,7 @@ struct cxl_filter_params {
+ 	bool human;
+ 	bool health;
+ 	bool partition;
++	bool image;
+ 	int verbose;
+ 	struct log_ctx ctx;
+ };
+@@ -38,6 +43,8 @@ struct cxl_port *util_cxl_port_filter_by_memdev(struct cxl_port *port,
+ 						const char *serial);
+ struct cxl_decoder *util_cxl_decoder_filter(struct cxl_decoder *decoder,
+ 					    const char *__ident);
++struct json_object *parse_json_text(const char *path);
++void create_image(const char *filename, json_object *platform);
+ struct cxl_region *util_cxl_region_filter(struct cxl_region *region,
+ 					  const char *__ident);
+ 
+diff --git a/cxl/list.c b/cxl/list.c
+index 8c48fbbaaec3..3cbc0de26b2b 100644
+--- a/cxl/list.c
++++ b/cxl/list.c
+@@ -52,6 +52,13 @@ static const struct option options[] = {
+ 		    "include memory device health information"),
+ 	OPT_BOOLEAN('I', "partition", &param.partition,
+ 		    "include memory device partition information"),
++	OPT_BOOLEAN(0, "image", &param.image,
++		   "display CXL topology"),
++	OPT_STRING(0, "image-from-file", &param.image_input_file,
++		   "input file path for image",
++		   "path to file containing a json array describing the topology"),
++	OPT_STRING('o', "output-file", &param.output_file, "output file path",
++		   "path to file to output diagram to"),
+ 	OPT_INCR('v', "verbose", &param.verbose,
+ 		 "increase output detail"),
+ #ifdef ENABLE_DEBUG
+@@ -74,6 +81,9 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
+ 	};
+ 	int i;
+ 
++	json_object *platform;
++	const char *output_file_name;
++
+ 	argc = parse_options(argc, argv, options, u, 0);
+ 	for (i = 0; i < argc; i++)
+ 		error("unknown parameter \"%s\"\n", argv[i]);
+@@ -86,6 +96,20 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
+ 		usage_with_options(u, options);
+ 	}
+ 
++	if (param.output_file)
++		output_file_name = param.output_file;
++
++	if (param.image_input_file) {
++		if (access(param.image_input_file, R_OK)) {
++			error("input file path is incorrect\n");
++			return 0;
++		}
++		platform = parse_json_text(param.image_input_file);
++		create_image(output_file_name, platform);
++		return 0;
++	}
++
++
+ 	if (num_list_flags() == 0) {
+ 		if (param.memdev_filter || param.serial_filter)
+ 			param.memdevs = true;
+diff --git a/cxl/meson.build b/cxl/meson.build
+index f2474aaa6e2e..2670d1e6e330 100644
+--- a/cxl/meson.build
++++ b/cxl/meson.build
+@@ -19,6 +19,7 @@ cxl_tool = executable('cxl',
+     kmod,
+     json,
+     versiondep,
++    graphviz,
+   ],
+   install : true,
+   install_dir : rootbindir,
+diff --git a/meson.build b/meson.build
+index aecf461fc9ef..3c4f4fc006c3 100644
+--- a/meson.build
++++ b/meson.build
+@@ -141,6 +141,7 @@ kmod = dependency('libkmod')
+ libudev = dependency('libudev')
+ uuid = dependency('uuid')
+ json = dependency('json-c')
++graphviz = dependency('libgvc')
+ if get_option('docs').enabled()
+   if get_option('asciidoctor').enabled()
+     asciidoc = find_program('asciidoctor', required : true)
 -- 
 2.34.1
 
