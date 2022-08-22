@@ -2,93 +2,67 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0201EC00140
-	for <linux-cxl@archiver.kernel.org>; Mon, 22 Aug 2022 00:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5205FC28D13
+	for <linux-cxl@archiver.kernel.org>; Mon, 22 Aug 2022 06:38:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231322AbiHVAxH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 21 Aug 2022 20:53:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55630 "EHLO
+        id S233126AbiHVGiM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 22 Aug 2022 02:38:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232156AbiHVAxF (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 21 Aug 2022 20:53:05 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04E65205E8;
-        Sun, 21 Aug 2022 17:53:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661129582; x=1692665582;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=vAVd2DD6t9I+Xtmsril7vUCCDTiDliFF7Nj/PCNMHkc=;
-  b=fuP2Arglkj/rrQtGKf67SibUIet0qRKeKRn1TD4oBkD8ukzGnZjVHxtP
-   1LWFzd0CCmQApoh2H/SmvW4/q2yYAHS9SFPEKROTbaDiamkzO69jNlN+4
-   Qeu3ysQM1XhJ1BR8D5dCifbS+PPr+8UcZ8pZL7nssRxDC7+lOz823x8iB
-   R7/whcXs22UTrTEcPobKWyCXwIj9lza32H491S3dVBI89i/H+ihalysgC
-   AE0/CUmRPmh2J8O3dyFbCMNVFGMitTrULcvHkco//yZH8Anu2uc13xlyh
-   23B/EgkMVfNHEhrnAHWEOV0XC98I5U4zqdDYIxik00GTjYhy44PY+5laO
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10446"; a="294574753"
-X-IronPort-AV: E=Sophos;i="5.93,254,1654585200"; 
-   d="scan'208";a="294574753"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2022 17:53:01 -0700
-X-IronPort-AV: E=Sophos;i="5.93,254,1654585200"; 
-   d="scan'208";a="669297118"
-Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.213.163.128])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2022 17:52:39 -0700
-From:   ira.weiny@intel.com
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH 0/2] CXL: Taint user access to DOE mailbox config space
-Date:   Sun, 21 Aug 2022 20:52:35 -0400
-Message-Id: <20220822005237.540039-1-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.37.2
+        with ESMTP id S233112AbiHVGiL (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 22 Aug 2022 02:38:11 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C58E27FF6;
+        Sun, 21 Aug 2022 23:38:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=HBBcM9A/awFTGNV6DJENggodsApSG3Yqfk+2KouRytw=; b=2njf6YzoOY74vKtpZpZ6F9ctF7
+        ZN7kngU/R2cbNVb79v3SS1WbSehYORP54z1w/9AdtIqlVKeM1igPjVUu8UACXINb7lJJ1NeNARNe2
+        X/MGBj60eb8jRcdRkf38ucSaka943Je/6nwC+890otwlDxhUumx32O367UCUv5ttn6J6VvjC7CwVm
+        0xetAh0J5S0L7tbptmZ1s8mVzKv6YybnXLaSvik2rGNgdnRGirCxMUzCAEV1rSZF34sMRG4dJUZMr
+        c2SUlO47+rcHOthZFim6I6352/gCiUe9koyOFOrCQjqQhyyaIa9gQBBeGhm+vg0F0BvzFEfS/U3Au
+        9BgLXaQQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oQ14a-005WRv-J5; Mon, 22 Aug 2022 06:38:08 +0000
+Date:   Sun, 21 Aug 2022 23:38:08 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     linux-arch@vger.kernel.org, dan.j.williams@intel.com,
+        peterz@infradead.org, mark.rutland@arm.com, dave.jiang@intel.com,
+        Jonathan.Cameron@huawei.com, a.manzanares@samsung.com,
+        bwidawsk@kernel.org, alison.schofield@intel.com,
+        ira.weiny@intel.com, linux-cxl@vger.kernel.org,
+        nvdimm@lists.linux.dev, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] arch/cacheflush: Introduce flush_all_caches()
+Message-ID: <YwMkUMiKf3ZyMDDF@infradead.org>
+References: <20220819171024.1766857-1-dave@stgolabs.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220819171024.1766857-1-dave@stgolabs.net>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+On Fri, Aug 19, 2022 at 10:10:24AM -0700, Davidlohr Bueso wrote:
+> index b192d917a6d0..ac4d4fd4e508 100644
+> --- a/arch/x86/include/asm/cacheflush.h
+> +++ b/arch/x86/include/asm/cacheflush.h
+> @@ -10,4 +10,8 @@
+>  
+>  void clflush_cache_range(void *addr, unsigned int size);
+>  
+> +/* see comments in the stub version */
+> +#define flush_all_caches() \
+> +	do { wbinvd_on_all_cpus(); } while(0)
 
-PCI config space access from user space has traditionally been unrestricted
-with writes being an understood risk for device operation.
+Yikes.  This is just a horrible, horrible name and placement for a bad
+hack that should have no generic relevance.
 
-Unfortunately, device breakage or odd behavior from config writes lacks
-indicators that can leave driver writers confused when evaluating failures.
-This is especially true with the new PCIe Data Object Exchange (DOE) mailbox
-protocol where backdoor shenanigans from user space through things such as
-vendor defined protocols may affect device operation without complete breakage.
-
-Even though access should not be restricted it would be nice for driver writers
-to be able to flag critical parts of the config space such that interference
-from user space can be detected.
-
-Introduce pci_request_config_region_exclusive() and use it in the CXL driver
-for DOE config space.
-
-Ira Weiny (2):
-  PCI: Allow drivers to request exclusive config regions
-  cxl/doe: Request exclusive DOE access
-
- drivers/cxl/pci.c             |  5 +++++
- drivers/pci/pci-sysfs.c       |  6 ++++++
- drivers/pci/probe.c           |  6 ++++++
- include/linux/ioport.h        |  2 ++
- include/linux/pci.h           | 16 ++++++++++++++++
- include/uapi/linux/pci_regs.h |  1 +
- kernel/resource.c             | 13 ++++++++-----
- 7 files changed, 44 insertions(+), 5 deletions(-)
-
-
-base-commit: 1cd8a2537eb07751d405ab7e2223f20338a90506
--- 
-2.37.2
-
+Please fix up the naming to make it clear that this function is for a
+very specific nvdimm use case, and move it to a nvdimm-specific header
+file.
