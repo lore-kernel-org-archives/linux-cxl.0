@@ -2,169 +2,253 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF11C28D13
-	for <linux-cxl@archiver.kernel.org>; Mon, 22 Aug 2022 17:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 846F6C32774
+	for <linux-cxl@archiver.kernel.org>; Mon, 22 Aug 2022 17:10:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235953AbiHVRGA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 22 Aug 2022 13:06:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54354 "EHLO
+        id S236532AbiHVRKM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 22 Aug 2022 13:10:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235132AbiHVRF7 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 22 Aug 2022 13:05:59 -0400
-Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B24CA3ECD1;
-        Mon, 22 Aug 2022 10:05:56 -0700 (PDT)
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20220822170553usoutp0110887cd4535a13af7f67c00824a28d34~NuaRoeXj_2782127821usoutp01-;
-        Mon, 22 Aug 2022 17:05:53 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20220822170553usoutp0110887cd4535a13af7f67c00824a28d34~NuaRoeXj_2782127821usoutp01-
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1661187953;
-        bh=Bnxw5tMzchxMfhsqVWLqqRcZgO5MyayK/AJWfjtP/qo=;
-        h=From:To:CC:Subject:Date:References:From;
-        b=katzimIeGn2ViS84TTfFXch/X1YmrdG5+sQJwSFYoXK0QzodJV2/ERTu0VyX21W61
-         LztUHJAIluTTUF0tlNWPu9/1iuaUnOb6gyU3KYfuPz5tVKjuNBQ2Vyjs2bu2BN841l
-         hUANwiC2Ca/sE7VsgBtajPgwURSlSwVA6srBLT/s=
-Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
-        [203.254.195.109]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20220822170552uscas1p1be94269293097026847ed264b653c2d8~NuaRQQ--V2902129021uscas1p1A;
-        Mon, 22 Aug 2022 17:05:52 +0000 (GMT)
-Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-        ussmges1new.samsung.com (USCPEMTA) with SMTP id 71.2C.65516.077B3036; Mon,
-        22 Aug 2022 13:05:52 -0400 (EDT)
-Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
-        [203.254.195.89]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20220822170552uscas1p1b1ee530bf38a14806010d65d1b593ab0~NuaQ9bHrZ2964029640uscas1p1H;
-        Mon, 22 Aug 2022 17:05:52 +0000 (GMT)
-X-AuditID: cbfec36d-5b5ff7000000ffec-79-6303b770e120
-Received: from SSI-EX3.ssi.samsung.com ( [105.128.2.146]) by
-        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id F2.E3.59738.077B3036; Mon,
-        22 Aug 2022 13:05:52 -0400 (EDT)
-Received: from SSI-EX3.ssi.samsung.com (105.128.2.228) by
-        SSI-EX3.ssi.samsung.com (105.128.2.228) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Mon, 22 Aug 2022 10:05:51 -0700
-Received: from SSI-EX3.ssi.samsung.com ([105.128.5.228]) by
-        SSI-EX3.ssi.samsung.com ([105.128.5.228]) with mapi id 15.01.2375.024; Mon,
-        22 Aug 2022 10:05:51 -0700
-From:   Adam Manzanares <a.manzanares@samsung.com>
-To:     "alison.schofield@intel.com" <alison.schofield@intel.com>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        "widawsk@kernel.org" <widawsk@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
-CC:     "dave@stgolabs.net" <dave@stgolabs.net>,
-        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Adam Manzanares <a.manzanares@samsung.com>
-Subject: [PATCH] cxl: Replace HDM decoder granularity magic numbers
-Thread-Topic: [PATCH] cxl: Replace HDM decoder granularity magic numbers
-Thread-Index: AQHYtklu6j3UH4AVtU69YQX5WSmWHw==
-Date:   Mon, 22 Aug 2022 17:05:51 +0000
-Message-ID: <20220822170510.125082-1-a.manzanares@samsung.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S236446AbiHVRJy (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 22 Aug 2022 13:09:54 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83457CE3E;
+        Mon, 22 Aug 2022 10:09:17 -0700 (PDT)
+Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MBJfC2B57z67xMh;
+        Tue, 23 Aug 2022 01:05:55 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 22 Aug 2022 19:09:14 +0200
+Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 22 Aug
+ 2022 18:09:14 +0100
+Date:   Mon, 22 Aug 2022 18:09:12 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <linuxarm@huawei.com>, <linux-cxl@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <john.garry@huawei.com>, Peter Zijlstra <peterz@infradead.org>,
+        "Ingo Molnar" <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Alison Schofield" <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [RFC PATCH 2/4] cxl/pci: Find and register CXL PMU devices
+Message-ID: <20220822180852.000002f9@huawei.com>
+In-Reply-To: <20220812151214.2025-3-Jonathan.Cameron@huawei.com>
+References: <20220812151214.2025-1-Jonathan.Cameron@huawei.com>
+        <20220812151214.2025-3-Jonathan.Cameron@huawei.com>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.42]
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFKsWRmVeSWpSXmKPExsWy7djXc7oF25mTDfr+GlvcfXyBzWL61AuM
-        FqtvrmG02P/0OYvFqoXX2CzOzzrFYnF51xw2i1sTjjFZbH4wmcmB06PlyFtWj8V7XjJ5bFrV
-        yeYxdXa9x+dNcgGsUVw2Kak5mWWpRfp2CVwZb6/tYSl4wFfxqHstawPjNJ4uRk4OCQETiS0d
-        Pxm7GLk4hARWMkps2L6bHcJpZZJ43r+MBaZq8sQHUFVrGSV+vrvJBuF8YpQ4+OQcK4SzjFFi
-        48kedpAWNgEDid/HNzKD2CICnUwS3TckQWxmgUlMEjObs7oYOTiEBZwlfl1RhyjxkDg0/yYL
-        hK0nMen7NDYQm0VAVaJ97XewOK+AnUTb3seMIDajgJjE91NrmCBGikvcejKfCeJSQYlFs/cw
-        Q9hiEv92PWSDsBUl7n9/yQ5RrydxY+oUNghbW2LZwtfMEPMFJU7OfAL1saTEwRU3WED+khDY
-        wyGx5N9tVoiEi8SnLfehbGmJq9enMkMUtTNKfJiwjxXCmcAoceftT6jV1hL/Oq9BreaT+Pvr
-        ESPI9xICvBIdbUITGJVmIXliFpIDZyE5cBaSAxcwsqxiFC8tLs5NTy02zEst1ytOzC0uzUvX
-        S87P3cQITE6n/x3O3cG449ZHvUOMTByMhxglOJiVRHirLzIkC/GmJFZWpRblxxeV5qQWH2KU
-        5mBREuddlrkhUUggPbEkNTs1tSC1CCbLxMEp1cCUZ2Rk+eVoS/MG5Yf3Jmj2/tzyi/XBikyd
-        7x27n1+M35WkLr2rUWBDPs9v99QV09d1i8zk/Hx7qtsS3cTjS/7ppEv0x2wu4Df4JrV63aq4
-        wi45xbkJ1XOUxZ6mWRhlhb02D9ic7nhb/8OUJPbM2M8fF1/6vPEL64o/h6JXlDQ/WzHXr7nz
-        WcdtLwaLsqe3n/3l+RJ6Q1/S3FaX9f66eKEl/B6mKUu1zF+k8XTeOPXwgrie8aWUKP4DIrkb
-        zI4dTO74uz20XuoSg9tJi8Ccli1172vssoxPfRHJuRlkd1HshYNljOUZpTMvNzHpy/Lla0VU
-        bn3s9fh7d213+GnTyKnTVRubbgf4Gj48a3H90WwlluKMREMt5qLiRAB9nGCPvQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEIsWRmVeSWpSXmKPExsWS2cA0SbdgO3OyweUj8hZ3H19gs5g+9QKj
-        xeqbaxgt9j99zmKxauE1Novzs06xWFzeNYfN4taEY0wWmx9MZnLg9Gg58pbVY/Gel0wem1Z1
-        snlMnV3v8XmTXABrFJdNSmpOZllqkb5dAlfG22t7WAoe8FU86l7L2sA4jaeLkZNDQsBEYvLE
-        B4xdjFwcQgKrGSWetDUyQTifGCW23JgOlVnGKPGz9yUzSAubgIHE7+MbwWwRgU4mie4bkiA2
-        s8AkJomZzVldjBwcwgLOEr+uqEOUeEgcmn+TBcLWk5j0fRobiM0ioCrRvvY7WJxXwE6ibe9j
-        RhCbUUBM4vupNUwQI8Ulbj2ZzwRxqYDEkj3nmSFsUYmXj/+xQtiKEve/v2SHqNeTuDF1ChuE
-        rS2xbOFrZoj5ghInZz5hgaiXlDi44gbLBEbRWUhWzELSPgtJ+ywk7QsYWVYxipcWF+emVxQb
-        5qWW6xUn5haX5qXrJefnbmIERuPpf4cjdzAevfVR7xAjEwfjIUYJDmYlEd7qiwzJQrwpiZVV
-        qUX58UWlOanFhxilOViUxHmFXCfGCwmkJ5akZqemFqQWwWSZODilGphSAtx/LPet9Lhfk9Hh
-        wX+3kJlDwVE3W3f/U7ubs7oL70m3vHjitn/XnyU6IsKOfTV1+0rWCO2efEHawi19t131W/uT
-        97y51RI7WrQmnLt5f5HiARP7BK6jPre1Mm99v/T3qkOFRMOW/T93cfJ9+riHm7HiqHXoDCcV
-        TtmSj2UNV5pmRNSdPNokbjfTUWN171SFRYq/9Iz5EyftYz5WcePXa2cGl3nrpprd7f5vuXiy
-        9EErn/lp1r+0u32yTzLo71IR7z1Vertr6/KWBeEf3r/Zr1A2Xz5A4dmSy0pV93e/MLHxT7Iu
-        +MQ4d7n6y7if02z6bCfnzzbav/qWwVO72I5fdzukBWTPHD93X1HOTV2JpTgj0VCLuag4EQAB
-        HMF+NQMAAA==
-X-CMS-MailID: 20220822170552uscas1p1b1ee530bf38a14806010d65d1b593ab0
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20220822170552uscas1p1b1ee530bf38a14806010d65d1b593ab0
-References: <CGME20220822170552uscas1p1b1ee530bf38a14806010d65d1b593ab0@uscas1p1.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-When reviewing the CFMWS parsing code that deals with the HDM decoders,
-I noticed a couple of magic numbers. This commit replaces these magic numbe=
-rs
-with constants defined by the CXL 2.0 specification.
+On Fri, 12 Aug 2022 16:12:12 +0100
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-Signed-off-by: Adam Manzanares <a.manzanares@samsung.com>
----
- drivers/cxl/cxl.h | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+> CXL PMU devices can be found from entries in the Register
+> Locator DVSEC.
+> 
+> In order to register the minimum number of IRQ vectors necessary
+> to support all CPMUs found, separate the registration into two
+> steps.  First find the devices, and query the IRQs used and then
+> register the devices. Between these two steps, request the
+> IRQ vectors necessary and enable bus master support.
+> 
+> Future IRQ users for CXL type 3 devices (e.g. DOEs) will need to
+> follow a similar pattern the number of vectors necessary is known
+> before any parts of the driver stack rely on their availability.
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+A few bugs in here that the kernel test robot found.
 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index f680450f0b16..ba3a66b5b9cd 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -61,6 +61,10 @@
- #define CXL_HDM_DECODER0_SKIP_LOW(i) CXL_HDM_DECODER0_TL_LOW(i)
- #define CXL_HDM_DECODER0_SKIP_HIGH(i) CXL_HDM_DECODER0_TL_HIGH(i)
-=20
-+/* HDM decoder control register constants CXL 2.0 8.2.5.12.7 */
-+#define CXL_DECODER_MIN_GRANULARITY 256
-+#define CXL_DECODER_MAX_GRANULARITY_ORDER 6
-+
- static inline int cxl_hdm_decoder_count(u32 cap_hdr)
- {
- 	int val =3D FIELD_GET(CXL_HDM_DECODER_COUNT_MASK, cap_hdr);
-@@ -71,9 +75,9 @@ static inline int cxl_hdm_decoder_count(u32 cap_hdr)
- /* Encode defined in CXL 2.0 8.2.5.12.7 HDM Decoder Control Register */
- static inline int cxl_to_granularity(u16 ig, unsigned int *val)
- {
--	if (ig > 6)
-+	if (ig > CXL_DECODER_MAX_GRANULARITY_ORDER)
- 		return -EINVAL;
--	*val =3D 256 << ig;
-+	*val =3D CXL_DECODER_MIN_GRANULARITY << ig;
- 	return 0;
- }
-=20
-@@ -96,7 +100,7 @@ static inline int cxl_to_ways(u8 eniw, unsigned int *val=
-)
-=20
- static inline int granularity_to_cxl(int g, u16 *ig)
- {
--	if (g > SZ_16K || g < 256 || !is_power_of_2(g))
-+	if (g > SZ_16K || g < CXL_DECODER_MIN_GRANULARITY || !is_power_of_2(g))
- 		return -EINVAL;
- 	*ig =3D ilog2(g) - 8;
- 	return 0;
-@@ -248,7 +252,6 @@ enum cxl_decoder_type {
-  */
- #define CXL_DECODER_MAX_INTERLEAVE 16
-=20
--#define CXL_DECODER_MIN_GRANULARITY 256
-=20
- /**
-  * struct cxl_decoder - Common CXL HDM Decoder Attributes
---=20
-2.35.1
+I'll send a v2 shortly with those tidied up.
+
+One observation is that cxl/core/core.h dereferences
+a struct cxl_memdev element which means we have a header ordering
+dependency between that and cxl/cxlmem.h which we should find a clean
+way to fix.
+ 
+> 
+> ---
+> 
+> Open questions
+> 1) Is this IRQ vector 'count' / request then use approach flexible
+>    enough for other interrupt users on these devices.
+> 2) Does hanging the CPMU off the PCI device make sense. These can
+>    occur in Switch upstream ports as well.
+> 3) Naming.  It would be nice if the device naming indicated which
+>    EP these were associated with, but that wouldn't be inline
+>    with the rest of the CXL bus device naming.  What is best
+>    option here?
+> ---
+>  drivers/cxl/core/Makefile |  1 +
+>  drivers/cxl/core/core.h   |  3 ++
+>  drivers/cxl/core/cpmu.c   | 67 ++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/port.c   |  2 ++
+>  drivers/cxl/core/regs.c   | 29 +++++++++++++++
+>  drivers/cxl/cpmu.h        | 54 ++++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h         | 15 ++++++++
+>  drivers/cxl/cxlpci.h      |  1 +
+>  drivers/cxl/pci.c         | 76 ++++++++++++++++++++++++++++++++++++++-
+>  9 files changed, 247 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+> index 79c7257f4107..1318e8a6830f 100644
+> --- a/drivers/cxl/core/Makefile
+> +++ b/drivers/cxl/core/Makefile
+> @@ -10,4 +10,5 @@ cxl_core-y += memdev.o
+>  cxl_core-y += mbox.o
+>  cxl_core-y += pci.o
+>  cxl_core-y += hdm.o
+> +cxl_core-y += cpmu.o
+>  cxl_core-$(CONFIG_CXL_REGION) += region.o
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index 1d8f87be283f..d2b12cdfd61f 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -14,12 +14,14 @@ extern struct device_attribute dev_attr_create_pmem_region;
+>  extern struct device_attribute dev_attr_delete_region;
+>  extern struct device_attribute dev_attr_region;
+>  extern const struct device_type cxl_pmem_region_type;
+> +extern const struct device_type cxl_cpmu_type;
+>  extern const struct device_type cxl_region_type;
+>  void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled);
+>  #define CXL_REGION_ATTR(x) (&dev_attr_##x.attr)
+>  #define CXL_REGION_TYPE(x) (&cxl_region_type)
+>  #define SET_CXL_REGION_ATTR(x) (&dev_attr_##x.attr),
+>  #define CXL_PMEM_REGION_TYPE(x) (&cxl_pmem_region_type)
+> +#define CXL_CPMU_TYPE(x) (&cxl_cpmu_region_type)
+>  int cxl_region_init(void);
+>  void cxl_region_exit(void);
+>  #else
+> @@ -37,6 +39,7 @@ static inline void cxl_region_exit(void)
+>  #define CXL_REGION_TYPE(x) NULL
+>  #define SET_CXL_REGION_ATTR(x)
+>  #define CXL_PMEM_REGION_TYPE(x) NULL
+> +#define CXL_CPMU_TYPE(x) NULL
+>  #endif
+>  
+
+Side note, the presence of 
+cxl_ep_load() in here means anything including this header needs to include
+cxlmem.h which seems a bit of a violation of layering between the core
+headers and more driver specific ones.
+
+
+>  struct cxl_send_command;
+> diff --git a/drivers/cxl/core/cpmu.c b/drivers/cxl/core/cpmu.c
+> new file mode 100644
+> index 000000000000..2d17d4083c8f
+> --- /dev/null
+> +++ b/drivers/cxl/core/cpmu.c
+> @@ -0,0 +1,67 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright(c) 2022 Huawei. All rights reserved. */
+> +
+> +#include <linux/device.h>
+> +#include <linux/slab.h>
+> +#include <linux/idr.h>
+> +#include <cpmu.h>
+> +#include <cxl.h>
+> +
+> +static DEFINE_IDA(cpmu_ida);
+> +
+> +static void cxl_cpmu_release(struct device *dev)
+> +{
+> +	struct cxl_cpmu *cpmu = container_of(dev, struct cxl_cpmu, dev);
+> +
+> +	ida_free(&cpmu_ida, cpmu->id);
+> +	kfree(cpmu);
+> +}
+> +
+> +const struct device_type cxl_cpmu_type = {
+
+Should include core/core.h to avoid a should this be static warning.
+
+> +	.name = "cxl_cpmu",
+> +	.release = cxl_cpmu_release,
+> +};
+> +
+> +static void remove_dev(void *dev)
+> +{
+> +	device_del(dev);
+> +}
+> +
+
+
+> diff --git a/drivers/cxl/cpmu.h b/drivers/cxl/cpmu.h
+> new file mode 100644
+> index 000000000000..880077bf0b9f
+> --- /dev/null
+> +++ b/drivers/cxl/cpmu.h
+> @@ -0,0 +1,54 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright(c) 2022 Huawei
+> + * CXL Specification rev 3.0 Setion 8.2.7 (CPMU Register Interface)
+> + */
+> +#ifndef CXL_CPMU_H
+> +#define CXL_CPMU_H
+> +
+> +#define CPMU_CAP_REG			0x0
+> +#define   CPMU_CAP_NUM_COUNTERS_MSK		GENMASK_ULL(4, 0)
+> +#define   CPMU_CAP_COUNTER_WIDTH_MSK		GENMASK_ULL(15, 8)
+> +#define   CPMU_CAP_NUM_EVN_CAP_REG_SUP_MSK	GENMASK_ULL(24, 20)
+> +#define   CPMU_CAP_FILTERS_SUP_MSK		GENMASK_ULL(39, 32)
+> +#define   CPMU_CAP_MSI_N_MSK			GENMASK_ULL(47, 44)
+> +#define   CPMU_CAP_WRITEABLE_WHEN_FROZEN	BIT(48)
+> +#define   CPMU_CAP_FREEZE			BIT(49)
+> +#define   CPMU_CAP_INT				BIT(50)
+BIT_ULL() needed for these.
+
+> +#define   CPMU_CAP_VERSION_MSK			GENMASK_ULL(63, 60)
+> +
+> +#define CPMU_OVERFLOW_REG		0x10
+> +#define CPMU_FREEZE_REG			0x18
+> +#define CPMU_EVENT_CAP_REG(n)		(0x100 + 8 * (n))
+> +#define   CPMU_EVENT_CAP_SUPPORTED_EVENTS_MSK	GENMASK_ULL(31, 0)
+> +#define   CPMU_EVENT_CAP_GROUP_ID_MSK		GENMASK_ULL(47, 32)
+> +#define   CPMU_EVENT_CAP_VENDOR_ID_MSK		GENMASK_ULL(63, 48)
+> +
+> +#define CPMU_COUNTER_CFG_REG(n)		(0x200 + 8 * (n))
+> +#define   CPMU_COUNTER_CFG_TYPE_MSK		GENMASK_ULL(1, 0)
+> +#define     CPMU_COUNTER_CFG_TYPE_FREE_RUN	0
+> +#define     CPMU_COUNTER_CFG_TYPE_FIXED_FUN	1
+> +#define     CPMU_COUNTER_CFG_TYPE_CONFIGURABLE	2
+> +#define   CPMU_COUNTER_CFG_ENABLE		BIT(8)
+> +#define   CPMU_COUNTER_CFG_INT_ON_OVRFLW	BIT(9)
+> +#define   CPMU_COUNTER_CFG_FREEZE_ON_OVRFLW	BIT(10)
+> +#define   CPMU_COUNTER_CFG_EDGE			BIT(11)
+> +#define   CPMU_COUNTER_CFG_INVERT		BIT(12)
+> +#define   CPMU_COUNTER_CFG_THRESHOLD_MSK	GENMASK_ULL(23, 16)
+> +#define   CPMU_COUNTER_CFG_EVENTS_MSK		GENMASK_ULL(55, 24)
+> +#define   CPMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK	GENMASK_ULL(63, 59)
+> +
+> +#define CPMU_FILTER_CFG_REG(n, f)	(0x400 + 4 * ((f) + (n) * 8))
+> +#define   CPMU_FILTER_CFG_VALUE_MSK		GENMASK(15, 0)
+> +
+> +#define CPMU_COUNTER_REG(n)			(0xc00 + 8 * (n))
+> +
+> +#define CPMU_REGMAP_SIZE 0xe00 /* Table 8-32 CXL 3.0 specification */
+> +struct cxl_cpmu {
+> +	struct device dev;
+> +	void __iomem *base;
+> +	int id;
+> +};
+> +
+> +#define to_cxl_cpmu(dev) container_of(dev, struct cxl_cpmu, dev)
+> +#endif
