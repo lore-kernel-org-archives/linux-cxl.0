@@ -2,116 +2,232 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AC0C3F6B0
-	for <linux-cxl@archiver.kernel.org>; Sat, 20 Aug 2022 15:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFE0C32774
+	for <linux-cxl@archiver.kernel.org>; Mon, 22 Aug 2022 00:52:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232741AbiHTP2t (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 20 Aug 2022 11:28:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35388 "EHLO
+        id S232133AbiHVAwo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 21 Aug 2022 20:52:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229605AbiHTP2s (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 20 Aug 2022 11:28:48 -0400
-Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BFDF564C9;
-        Sat, 20 Aug 2022 08:28:45 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id F3E4781A20;
-        Sat, 20 Aug 2022 15:28:43 +0000 (UTC)
-Received: from pdx1-sub0-mail-a210.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 3ADB681ACC;
-        Sat, 20 Aug 2022 15:28:43 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1661009323; a=rsa-sha256;
-        cv=none;
-        b=7rvQN60sBIVjy7AkpTrUqnCxfXeG0cUm9Q/9sd1Zj2R90grliw+OmbQ7KTHcgllwcURX9O
-        kkyKxMktGnoni+i+yvHmP+47NfpTpzptRWjRdMgeNbJdgQFHt/pDMYyRDay24ZLsEjI/Gq
-        pH/CoCpevchzKufW/GWj+uNllY6UdMHyTXSGMoBXoWqO0ZP5CK7vmeHQS44feDXja2Ase/
-        PiYNDam0P+ubTGkvBgtAK8K6Lj7LlkUjGc3Nc1HlLf+XbzXO8rsUuykBvwOQWni727tvxH
-        VSs1MQwu14xqK95+wRNtdaxfG5N2+3vdJhHIoBz5thrzgRkIQC9FL0cxMhsFgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1661009323;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=SLgPsu0bpwJo2yzzcZFJyYYI3Z1xx8Vz41AtkGRgplE=;
-        b=rb7EuImPAXq73OTykiCXNYMC+LO4wwZjGaqci3/b6DHeCUzSBslV3IfGNSUs2idBMtNKWZ
-        6euvGi1VWNtu6we7M69JJYC+uBdsTQS4kCu4DG/eyBdvywS5O7dDkcUUs59UeIhkGEIqfb
-        IMSm/Mg3hXftm3R9HApHG/M7jUrpxdem7G1tbkBEak4uAc3jgJfrH186UuUnJvAmtC2JSU
-        uPkQwQZYLk2t+jBZVPau5Ls9KqnxuJSahcNmWc/mknYs321wcSwR7+C1EfYcpWtia0EnDt
-        oxRUo7ZoCSdXnltXTY0j6vcbjg7oLL6b/vJR0dxAiOKTcsALIFvXPLgc3XC4zw==
-ARC-Authentication-Results: i=1;
-        rspamd-769cfffc99-pl9xh;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Keen-Bitter: 287036c97cafc95e_1661009323837_324093453
-X-MC-Loop-Signature: 1661009323837:942968739
-X-MC-Ingress-Time: 1661009323837
-Received: from pdx1-sub0-mail-a210.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.115.45.14 (trex/6.7.1);
-        Sat, 20 Aug 2022 15:28:43 +0000
-Received: from offworld (unknown [104.36.31.106])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a210.dreamhost.com (Postfix) with ESMTPSA id 4M92Zy1C3XzH9;
-        Sat, 20 Aug 2022 08:28:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1661009323;
-        bh=SLgPsu0bpwJo2yzzcZFJyYYI3Z1xx8Vz41AtkGRgplE=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=fHxoD6rXRIqgJrjKNKsIW6+ui5Ph6YXviotJnFjL1rU6l5SMz+1mhqUe3TZ09rHeb
-         ONUC9V5T9h/dtCH0EdaNZ965uxF5+8bz76NV0MmxOURYn08zbfFNvOXfvacIb/iOY4
-         uPt5Zf1x/WK9RLPUbfC+Zbbc5K+9iqm6ueDFpbamNd0GdEnP209G1qumZEqdLjoNLV
-         F5Kj0bd94jYtdilG1Ay7kHm1F3ecmLmhKx+W5pnIS5Xn7c8jyLMiI2FwiWWeq0weUZ
-         R9dbOlabfh3KmSIwm7tUK3RXJxZhFAGthbN8QeInfkyJ43wc10+EBe7jGK3UMpzCaf
-         P0e+AkEa/m1vA==
-Date:   Sat, 20 Aug 2022 08:10:48 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-arch@vger.kernel.org, dan.j.williams@intel.com,
-        peterz@infradead.org, mark.rutland@arm.com, dave.jiang@intel.com,
-        Jonathan.Cameron@huawei.com, a.manzanares@samsung.com,
-        bwidawsk@kernel.org, alison.schofield@intel.com,
-        linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] arch/cacheflush: Introduce flush_all_caches()
-Message-ID: <20220820151048.cfpkqhut5z6wa6yk@offworld>
-References: <20220819171024.1766857-1-dave@stgolabs.net>
- <YwAo1Ec13hjiBOat@iweiny-desk3>
+        with ESMTP id S231737AbiHVAwn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sun, 21 Aug 2022 20:52:43 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E5DE201A8;
+        Sun, 21 Aug 2022 17:52:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661129561; x=1692665561;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=KRMFK8euqKd0hKEpWRu0McaFqhVEfZNscDKSRuU3Zb4=;
+  b=ildmUuhC21HNS58ecfiucA/1l71PRDR1RIWUwTAhGaDsOY9rlgFydw8w
+   3M/EvSQjsPeE0aOs19D4I0bs6UHrj7SKgGnOutWCMG00hNf/T+FA3xqem
+   HnuqkB625mqJ45PjCzScq7CccXNC0Ig32MvOcVcNCaYLt5pR/lEe+4e0x
+   lwDtcvW3b4PSpzOl19E6U2XUQmOGfwd+4SvQldcgwXpVfLG7Yrjt/qVO8
+   Fy+MdMM3lUzKW4ahKRUJpGhozXZeRwLEI2juDK6IuyMU54Rx9fKJrUvdz
+   uZEppp1AD/FbKwDgbaO9YIKLdlev0g/MqcY8KDkC4KsA6xgWndP0Wkh0R
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10446"; a="319325790"
+X-IronPort-AV: E=Sophos;i="5.93,254,1654585200"; 
+   d="scan'208";a="319325790"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2022 17:52:40 -0700
+X-IronPort-AV: E=Sophos;i="5.93,254,1654585200"; 
+   d="scan'208";a="854306711"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.213.163.128])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2022 17:52:39 -0700
+From:   ira.weiny@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH 1/2] PCI: Allow drivers to request exclusive config regions
+Date:   Sun, 21 Aug 2022 20:52:36 -0400
+Message-Id: <20220822005237.540039-2-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.37.2
+In-Reply-To: <20220822005237.540039-1-ira.weiny@intel.com>
+References: <20220822005237.540039-1-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <YwAo1Ec13hjiBOat@iweiny-desk3>
-User-Agent: NeoMutt/20220429
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 19 Aug 2022, Ira Weiny wrote:
+From: Ira Weiny <ira.weiny@intel.com>
 
->Did you mean "must"?
+PCI config space access from user space has traditionally been
+unrestricted with writes being an understood risk for device operation.
 
-Yep.
+Unfortunately, device breakage or odd behavior from config writes lacks
+indicators that can leave driver writers confused when evaluating
+failures.  This is especially true with the new PCIe Data Object
+Exchange (DOE) mailbox protocol where backdoor shenanigans from user
+space through things such as vendor defined protocols may affect device
+operation without complete breakage.
 
->> + * such as those which caches are in a consistent state. The
->> + * caller can verify the situation early on.
->> + */
->> +#ifndef flush_all_caches
->> +# define flush_all_caches_capable() false
->> +static inline void flush_all_caches(void)
->> +{
->> +	WARN_ON_ONCE("cache invalidation required\n");
->> +}
->
->With the addition of flush_all_caches_capable() will flush_all_caches() ever be
->called?
+A prior proposal restricted read and writes completely.[1]  Greg and
+Bjorn pointed out that proposal is flawed for a couple of reasons.
+First, lspci should always be allowed and should not interfere with any
+device operation.  Second, setpci is a valuable tool that is sometimes
+necessary and it should not be completely restricted.[2]  Finally
+methods exist for full lock of device access if required.
 
-No, it should not. Hence you get a splat if you call it bogusly.
+Even though access should not be restricted it would be nice for driver
+writers to be able to flag critical parts of the config space such that
+interference from user space can be detected.
+
+Introduce pci_request_config_region_exclusive() to mark exclusive config
+regions.  Such regions trigger a warning and kernel taint if accessed
+via user space.
+
+[1] https://lore.kernel.org/all/161663543465.1867664.5674061943008380442.stgit@dwillia2-desk3.amr.corp.intel.com/
+[2] https://lore.kernel.org/all/YF8NGeGv9vYcMfTV@kroah.com/
+
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+---
+Changes from[1]:
+	Change name to pci_request_config_region_exclusive()
+	Don't flag reads at all.
+	Allow writes with a warn and taint of the kernel.
+	Update commit message
+	Forward port to latest tree.
+---
+ drivers/pci/pci-sysfs.c |  6 ++++++
+ drivers/pci/probe.c     |  6 ++++++
+ include/linux/ioport.h  |  2 ++
+ include/linux/pci.h     | 16 ++++++++++++++++
+ kernel/resource.c       | 13 ++++++++-----
+ 5 files changed, 38 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index fc804e08e3cb..de41d761bdf5 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -755,6 +755,12 @@ static ssize_t pci_write_config(struct file *filp, struct kobject *kobj,
+ 	if (ret)
+ 		return ret;
+ 
++	if (resource_is_exclusive(&dev->config_resource, off,
++				  count)) {
++		pci_warn(dev, "Write to restricted range %llx detected", off);
++		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
++	}
++
+ 	if (off > dev->cfg_size)
+ 		return 0;
+ 	if (off + count > dev->cfg_size) {
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 6280e780a48c..d81d7457058b 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2303,6 +2303,12 @@ struct pci_dev *pci_alloc_dev(struct pci_bus *bus)
+ 	INIT_LIST_HEAD(&dev->bus_list);
+ 	dev->dev.type = &pci_dev_type;
+ 	dev->bus = pci_bus_get(bus);
++	dev->config_resource = (struct resource) {
++		.name = "PCI Config",
++		.start = 0,
++		.end = -1,
++	};
++
+ #ifdef CONFIG_PCI_MSI
+ 	raw_spin_lock_init(&dev->msi_lock);
+ #endif
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index 616b683563a9..cf1de55d14da 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -312,6 +312,8 @@ extern void __devm_release_region(struct device *dev, struct resource *parent,
+ 				  resource_size_t start, resource_size_t n);
+ extern int iomem_map_sanity_check(resource_size_t addr, unsigned long size);
+ extern bool iomem_is_exclusive(u64 addr);
++extern bool resource_is_exclusive(struct resource *resource, u64 addr,
++				  resource_size_t size);
+ 
+ extern int
+ walk_system_ram_range(unsigned long start_pfn, unsigned long nr_pages,
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 81a57b498f22..dde37bfa0ca5 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -409,6 +409,7 @@ struct pci_dev {
+ 	 */
+ 	unsigned int	irq;
+ 	struct resource resource[DEVICE_COUNT_RESOURCE]; /* I/O and memory regions + expansion ROMs */
++	struct resource config_resource;		 /* driver exclusive config ranges */
+ 
+ 	bool		match_driver;		/* Skip attaching driver */
+ 
+@@ -1406,6 +1407,21 @@ int pci_request_selected_regions(struct pci_dev *, int, const char *);
+ int pci_request_selected_regions_exclusive(struct pci_dev *, int, const char *);
+ void pci_release_selected_regions(struct pci_dev *, int);
+ 
++static inline __must_check struct resource *
++pci_request_config_region_exclusive(struct pci_dev *pdev, unsigned int offset,
++				    unsigned int len, const char *name)
++{
++	return __request_region(&pdev->config_resource, offset, len, name,
++				IORESOURCE_EXCLUSIVE);
++}
++
++static inline void pci_release_config_region(struct pci_dev *pdev,
++					     unsigned int offset,
++					     unsigned int len)
++{
++	__release_region(&pdev->config_resource, offset, len);
++}
++
+ /* drivers/pci/bus.c */
+ void pci_add_resource(struct list_head *resources, struct resource *res);
+ void pci_add_resource_offset(struct list_head *resources, struct resource *res,
+diff --git a/kernel/resource.c b/kernel/resource.c
+index 4c5e80b92f2f..82ed54cd1f0d 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -1707,18 +1707,15 @@ static int strict_iomem_checks;
+  *
+  * Returns true if exclusive to the kernel, otherwise returns false.
+  */
+-bool iomem_is_exclusive(u64 addr)
++bool resource_is_exclusive(struct resource *root, u64 addr, resource_size_t size)
+ {
+ 	const unsigned int exclusive_system_ram = IORESOURCE_SYSTEM_RAM |
+ 						  IORESOURCE_EXCLUSIVE;
+ 	bool skip_children = false, err = false;
+-	int size = PAGE_SIZE;
+ 	struct resource *p;
+ 
+-	addr = addr & PAGE_MASK;
+-
+ 	read_lock(&resource_lock);
+-	for_each_resource(&iomem_resource, p, skip_children) {
++	for_each_resource(root, p, skip_children) {
+ 		if (p->start >= addr + size)
+ 			break;
+ 		if (p->end < addr) {
+@@ -1757,6 +1754,12 @@ bool iomem_is_exclusive(u64 addr)
+ 	return err;
+ }
+ 
++bool iomem_is_exclusive(u64 addr)
++{
++	return resource_is_exclusive(&iomem_resource, addr & PAGE_MASK,
++				     PAGE_SIZE);
++}
++
+ struct resource_entry *resource_list_create_entry(struct resource *res,
+ 						  size_t extra_size)
+ {
+-- 
+2.37.2
+
