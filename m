@@ -2,161 +2,234 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDE2C28D13
-	for <linux-cxl@archiver.kernel.org>; Mon, 22 Aug 2022 17:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD64C28D13
+	for <linux-cxl@archiver.kernel.org>; Mon, 22 Aug 2022 18:16:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237071AbiHVRfM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 22 Aug 2022 13:35:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53942 "EHLO
+        id S237025AbiHVSQ3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 22 Aug 2022 14:16:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237061AbiHVRfL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 22 Aug 2022 13:35:11 -0400
-Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0D0540BC6;
-        Mon, 22 Aug 2022 10:35:07 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 535298E25E2;
-        Mon, 22 Aug 2022 17:35:03 +0000 (UTC)
-Received: from pdx1-sub0-mail-a277.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 713E78E0C8E;
-        Mon, 22 Aug 2022 17:35:02 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1661189702; a=rsa-sha256;
-        cv=none;
-        b=QCAl5xH3V3JdRF4LDIGoG/mm3ITqYi00GwJlCI/NfKiZThuyeQXhjjrcOFt0iVo0h2L2q7
-        VGvU/z4b6QHSdwkySQlQPjkdvZvRqKN1nJBQu0vNysq5wiGO6xdY44H/rNrtuuW0TUugHz
-        i6f1sfC/myz4jpm/05unIwjeBRHpt+liFz/vQRfq/E72xbmpo7UZNkkA6X55naogjNYeZV
-        1+/+P6X4D26Lb84/V1z14ZpC6Lp/SV73twFWDhe29KUm+tpyLyQRiOVgApRstUqG6/ZoOB
-        ayTqzrHuvjFnhINVQSP6T90/JnRieS+zs0QLTIovvrewtOaulrKyEFtb8hXl6w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1661189702;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=LZt4EKW2Klj6HswzcAhuLRqO+KGezqgdN643l6Y4ioE=;
-        b=z0IZxbGdIOluzPrYLkJroyVo8BpCEz0yNM2h+IdIFPvrm6PiqXxvXx+bJKsdHxWJAWjSoI
-        RCobVIsaenMkSuZhjTJLc+cmpkA/XxuKCzHCx6hBGkq1fL1nX3BEG+s9eNWrxr5Hfbdsz5
-        sb5x/W0jgkR2SB2T8vusMJc5yyfmKZaYravWLh46vYfGqiWmIp0pumJ6PIBm/+N6MzkDUn
-        bPNIMBejliodQMELpt9njDgfBRcdNoI3OsJQTZ03+nV8ASv9FmvnicWeWIbRrYoBIwPgRy
-        ZMFeWqBudF1HwuDOZ6cTlRz+pfpfPXzcZQvvID69YCkMbpC/NEmmZWSwzUsY2w==
-ARC-Authentication-Results: i=1;
-        rspamd-769cfffc99-7h8h8;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Desert-Battle: 64f1b0cf2bad831f_1661189702782_2177706590
-X-MC-Loop-Signature: 1661189702782:1915979762
-X-MC-Ingress-Time: 1661189702782
-Received: from pdx1-sub0-mail-a277.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.115.45.14 (trex/6.7.1);
-        Mon, 22 Aug 2022 17:35:02 +0000
-Received: from offworld (unknown [104.36.31.106])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a277.dreamhost.com (Postfix) with ESMTPSA id 4MBKHn5vY1z2m;
-        Mon, 22 Aug 2022 10:35:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1661189702;
-        bh=LZt4EKW2Klj6HswzcAhuLRqO+KGezqgdN643l6Y4ioE=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=l+fH5hxu/zaQqAJKbNMZ9Nf0CpAuK+rlYGBnom8QOROjy/XPzxtZlbeCVKhDLgNnV
-         sQLXQ2uPR+JtbbGQsQwn8GrQ37dGN+3omNW3QUBED8gzmMptjwUmr2PMTgjDqta9OL
-         1mbgdNU5xTc6QQnzDmW3EbVfruZEOjar1gL9KlJSbJm/9tgOaM6bo7rCqqMUN/gu3Y
-         DLlILDsEx5po5LGy/uyxI/gK0SMz7AMnPC1SqCvcK18dYmcdu+C2OYkr03vJPmk5WJ
-         sjhapDwHu92nTf3EsfreAUqm3wkySCtZRCyuBVcKWNYVZCqndmg4OANuWFjlw97QiV
-         nQpTCzIvtlYUA==
-Date:   Mon, 22 Aug 2022 10:17:03 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Adam Manzanares <a.manzanares@samsung.com>
-Cc:     "alison.schofield@intel.com" <alison.schofield@intel.com>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        "widawsk@kernel.org" <widawsk@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cxl: Replace HDM decoder granularity magic numbers
-Message-ID: <20220822171703.sfizbmn6retpxggi@offworld>
-References: <CGME20220822170552uscas1p1b1ee530bf38a14806010d65d1b593ab0@uscas1p1.samsung.com>
- <20220822170510.125082-1-a.manzanares@samsung.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+        with ESMTP id S231954AbiHVSQ2 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 22 Aug 2022 14:16:28 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B77F81DA7A;
+        Mon, 22 Aug 2022 11:16:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661192187; x=1692728187;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=9+6T541/iPdWZSxW3AxdY7Wknt3iExDekbSKIRCRZb8=;
+  b=UnD8VdWcTNmvH3wszDL5/4Cf79WH6FWVmjicchV19iW+pzW9Fo6O/PkN
+   hOVJjXhZ2fdAp0oLaBguMCwZHXlIkOpZb/PFDhe2OLEkWAexlIP5ooiFW
+   /asXUZLStkJWnYdN7G6cs+qBPCEedrwNFQDnwtBYs422KQg/6syxt1h+p
+   OtCq8aXNTXZTqcY+PUTHPGW4Xo9WyOPqMn3+XWfIS/I4UxykD4ZYTonPf
+   DZsClBYqRg2aHHzz0sp62Lbpubg2HrvSgf5hUIo5bBiFMkl3jdxg6Net/
+   flxpMYv5bc/CFRZMSW5xBLcWNsxQGpXnkyjwYNWD+qt7UBw+YRhAZjiq+
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10447"; a="294771620"
+X-IronPort-AV: E=Sophos;i="5.93,255,1654585200"; 
+   d="scan'208";a="294771620"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2022 11:16:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,255,1654585200"; 
+   d="scan'208";a="605386148"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orsmga007.jf.intel.com with ESMTP; 22 Aug 2022 11:16:27 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 22 Aug 2022 11:16:26 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 22 Aug 2022 11:16:26 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31 via Frontend Transport; Mon, 22 Aug 2022 11:16:26 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.107)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.31; Mon, 22 Aug 2022 11:16:25 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GlEtDKeDzUyIED94L9d/MCg0Xo5M4I99hiGQic+ZNcEK4H3nU6GOuCOlAq0VTJUKaM2lug9yP/W/GZ42IXnIMuRyFC7JHSz7r8/UnNDjiobz+fxPp7ovIw2tbD2tqEYnJsAMrhe0ZoooC44Em1EPDH0AEZCevt6e3wIGWZxNiOl42xX3W4gHJdHbBSkqCUOvqOXLQejbqJ7HYAYdTwF8g3kagVIw7NX+jx5mYLgK5UCbu6TiOZLfkfFW+1kjxbCVz3aAspQ04gOgh8zaidQIqrW26NhUtJ6BnLI/7vKFcQe+b0FQq1vivvfT/5yPWgTMIiaslr57rxYuPP5q9PmW0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NUbobgIeL/N+J+EW2JNzqR7VBpsA+C0Szxj4pQK7HcE=;
+ b=PFwgCzSoFYAfRj6iTVsWU7AUAUU+qZ3exeohnadxOzte9xd1nWCK/3rCu/95Krz6O/Y2gzHINmSPkG6qqR5tgWPH18r83aKxVhFaecnubCVl9hcQUtRPfXneENyBZ+reMzbKSayGo9RgHlONhesr9ydg+aaUy9Ltd1p9K6j3JIdZ3U9id3AhcqTgn9nlzV75tDbYiwrFnA8fdNf+YonPaE//uPTs1kA/1hPgYd6cJcMb/nQ2/DdluuQWrLbyYgOeX7DlwZfoogD934wpPL6eeLVGH/tGNvQMdRubLoDq6nK9vNVxF9EX5SVZ3MIbS1idIRZG0yVGSljvbt58fFvz2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20) by BL1PR11MB6052.namprd11.prod.outlook.com
+ (2603:10b6:208:394::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5525.10; Mon, 22 Aug
+ 2022 18:16:23 +0000
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::9847:345e:4c5b:ca12]) by MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::9847:345e:4c5b:ca12%6]) with mapi id 15.20.5546.024; Mon, 22 Aug 2022
+ 18:16:23 +0000
+Date:   Mon, 22 Aug 2022 11:16:20 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>,
+        Christoph Hellwig <hch@infradead.org>
+CC:     <linux-arch@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <peterz@infradead.org>, <mark.rutland@arm.com>,
+        <dave.jiang@intel.com>, <Jonathan.Cameron@huawei.com>,
+        <a.manzanares@samsung.com>, <bwidawsk@kernel.org>,
+        <alison.schofield@intel.com>, <ira.weiny@intel.com>,
+        <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+        <x86@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] arch/cacheflush: Introduce flush_all_caches()
+Message-ID: <6303c7f4bb650_1b322947f@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20220819171024.1766857-1-dave@stgolabs.net>
+ <YwMkUMiKf3ZyMDDF@infradead.org>
+ <20220822133736.roxmpj6sfo6gsij2@offworld>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20220822170510.125082-1-a.manzanares@samsung.com>
-User-Agent: NeoMutt/20220429
+In-Reply-To: <20220822133736.roxmpj6sfo6gsij2@offworld>
+X-ClientProxiedBy: SJ0PR13CA0174.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c7::29) To MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f61af3a2-0bcc-43f5-68e4-08da846a6bcc
+X-MS-TrafficTypeDiagnostic: BL1PR11MB6052:EE_
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zTJgDm9DNls3VHBzp5E9IQJlNwYS4sLaGWEnYg51C0A8a4w7yoIX7OvERlKPuDveVDPryW18kggxkTzhDVU/YXMaig9mFOY5VmtRkUFi+zumtjJ4SebZ7KbKWOc4/Vsvk5BThpdzL7bUf3Hp5863HDwb8WKSzC3X/lby1jtuUwB1AS4chTzoVdaAxSBZxN727YDPP6g1Zfqo0VeCBNRYF69jJRat2gi13+iwXWcMiam/n0zInXhoGyO377G6o892jm97TV51ETCQMCZDume+ShQKHY6qTXeuVpfgNu+WWjuuFsITDZeZkkAWKRKQa0yUkf9Fbd+3siXTpigHLk91Jo9Faee6OKNGIK4RBVdgT5yAyny/7gSpCIEOdASwjMvT8mZ63OE+2BVjgApcE8d3sgIZZJ1s/peT/ncI8+dbLVL1/iHc4wipxxUTkZ86fFvVPyox5coMB5ExqOlZaHOJGhzlzMH9VixyY8aZEY69Mgudbzyq/YmiP1wpic1oOhM6nnVR1H5aaZ3pSsyAEwpnp9e7/wuTA+S/6SNj/Ji3cW388e8TgUab6dtTrPlaeleziFtaFtGwb/ZglkYpcGyVbOk8943YTHnD17HRIxXDKSAud7Y0RnF6THKIyA7KfKfML9TmLC7LGlHBTrvFzHG5tM5GvS7YVZlvid95HKPWO2pj4psHPzvQyhr7nTM8HAuscgb0tEz/1DIo4/dJIXkp/N+HrCSQD7QsOeEHsrEdsRNBRup8seNseb2ZWW3DbqQ8
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(346002)(396003)(136003)(366004)(39860400002)(376002)(186003)(66946007)(66476007)(8676002)(4326008)(66556008)(478600001)(110136005)(6486002)(966005)(8936002)(5660300002)(83380400001)(7416002)(38100700002)(41300700001)(86362001)(2906002)(9686003)(26005)(6512007)(316002)(82960400001)(6506007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?WeudPZ1YHpGKtQ3LvlcFYk83UUWA/TamPRZS+1wbL4FNkmzutyfErq8JvMlB?=
+ =?us-ascii?Q?7T5g9TfK8UcOPdXm/7CMojwdA4CUOi7GF9rhy1P6ImJn33A4dmRfvyJ4wKAA?=
+ =?us-ascii?Q?K6wWlCej1XZ8oAuYKGTkgO4gmGU+7a6mYMOrQKEPk8Lh2+oSyK+75TGYC5TG?=
+ =?us-ascii?Q?sURRn+rTecl57Wo+CUMmVKpTC+kKCMY80+3tig41aqGXn0eIF+fITWhzgCqa?=
+ =?us-ascii?Q?bAIQoR65BO+QHw6Vsq9Yr169ECElrGa4BDaF3zpeUQgs6jzvxKqzn5ooog9E?=
+ =?us-ascii?Q?lJwk7uedc8tm08RNE0dVjhZmXwzipNbKgn7ZBOtFF4oOuroRiWluNj/8ykpj?=
+ =?us-ascii?Q?YUv+7y5cTGyGfoQe7rWV3SY2mBumVoPQs22LVaAyqKfR8Lp3yFqoO0pUHB4b?=
+ =?us-ascii?Q?a6WCNqTCPKBmEAfsiSfpqvj7kC/s/MWka7HujsMMhj9DnD32/N25qPdZeNCg?=
+ =?us-ascii?Q?nIyL8mHYz8rQ7l6fMp+9GkgKMOVkWPxJdnqHBBQ88uDID3s2VAUkb/pnGqNm?=
+ =?us-ascii?Q?nEPHTU8vYnFKbDYSf4sMv0KhSSWnVHcLZ8pjCZvhD6p476W1HNPeu0WIgx2t?=
+ =?us-ascii?Q?s2tzf+bR/U7GvwJ6FVcBlzar86UbY04lJhspYaRqUqy1QzmFK2jjD0l3PqNj?=
+ =?us-ascii?Q?crHtfZTofArjM2sa+pQJcjnFtvD1XnyamI1gcvqdUPj9Bz5yRb7TC5teUKKk?=
+ =?us-ascii?Q?WB/bJ+rSDItz0yQoWED3SbndlUf+ro7fkWmAURtZZ2Rrs2Xb5n3qv+vjT1s+?=
+ =?us-ascii?Q?XKJwS+77nQZqMRqeVJfJjrj5MQ8arnNg1tnAvRsUm57dH3vc2QJDESgNVTgW?=
+ =?us-ascii?Q?23c2S97z3dc6phJLKsDW7sXdg4oTmFJKeKmqNEEOgIiY5tZVz4peaah03nhP?=
+ =?us-ascii?Q?iuq/FNeRnM/I/6S/ne1Y/U73DaRN7ufwYndyMQb+EKT1grODJUA5/RS6zf6g?=
+ =?us-ascii?Q?YYV+IGxDqLFzryqgm1w9EyFjP3zxmBpb23EnrKEoRJ209DSnMqp8RHbrHONx?=
+ =?us-ascii?Q?DWyvvusB/Y+JxbIcFdteP/kbxmatPHKTfkmveSTPqIJKdA6AtR6BeaVRVTZs?=
+ =?us-ascii?Q?uhcvXILEwH7yAdjfjd2EkcsBWVyBLfYp3q2o3nTz4wzRfgn7H9NXTAO1s7f5?=
+ =?us-ascii?Q?ThIq0JmpgSl5f4c2X5kINOO+KvGWOxYl9z1/OblbiwbqmlgW96hPS9GbmB3v?=
+ =?us-ascii?Q?8ysxhEy5WWX+njzpgu15by5JqmLaGihQMyM01r0QbpG9Ex9dMv0gdYZwM502?=
+ =?us-ascii?Q?SaAIa7fmEFTZOACwGHUaU2Qa9B9ATHy+3fXqP/IWRUgo7uosE1eE1i7SFcP8?=
+ =?us-ascii?Q?ib5toeUIj5O5Z2/qOlcOThwML8tlpoP6+dMPSgkleG6hJGkH9/QNoElaxhBd?=
+ =?us-ascii?Q?n4g84R7jGAgDZMR5VWVIDbaDPHVI7DvXQIaWxuotfG3Fhty0FLcFUqaCSOh2?=
+ =?us-ascii?Q?os3pLd6vEVcp8SCf2b0jS1Wz21Tt6v57pchEmCkvuDuMbXLKpCWK5qL+Aygm?=
+ =?us-ascii?Q?TalCxoxScx+CxcXOEFviyaFLOq19jvnmVAHXmcpm9lbtk3VevZzTTzu5tI59?=
+ =?us-ascii?Q?V0EMFN5RVbIP1hc5ZBKe3dggHELn7cNmoV4HyYUAkKfz8AYM2dYVx38I7fQg?=
+ =?us-ascii?Q?Jg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: f61af3a2-0bcc-43f5-68e4-08da846a6bcc
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2022 18:16:23.7866
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gyieLoLnTL94ZtwPAV8j4WEFHE1WFSe6Dygx6qfHAPi8biEUdz6lDEoVweUyg/wZylalcd7hOzs2+iZnljzLVggtKDFGbYRHjkLQqI4aFls=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB6052
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 22 Aug 2022, Adam Manzanares wrote:
+Davidlohr Bueso wrote:
+> On Sun, 21 Aug 2022, Christoph Hellwig wrote:
+> 
+> >On Fri, Aug 19, 2022 at 10:10:24AM -0700, Davidlohr Bueso wrote:
+> >> index b192d917a6d0..ac4d4fd4e508 100644
+> >> --- a/arch/x86/include/asm/cacheflush.h
+> >> +++ b/arch/x86/include/asm/cacheflush.h
+> >> @@ -10,4 +10,8 @@
+> >>
+> >>  void clflush_cache_range(void *addr, unsigned int size);
+> >>
+> >> +/* see comments in the stub version */
+> >> +#define flush_all_caches() \
+> >> +	do { wbinvd_on_all_cpus(); } while(0)
+> >
+> >Yikes.  This is just a horrible, horrible name and placement for a bad
+> >hack that should have no generic relevance.
+> 
+> Why does this have no generic relevance? There's already been discussions
+> on how much wbinv is hated[0].
+> 
+> >Please fix up the naming to make it clear that this function is for a
+> >very specific nvdimm use case, and move it to a nvdimm-specific header
+> >file.
+> 
+> Do you have any suggestions for a name? And, as the changelog describes,
+> this is not nvdimm specific anymore, and the whole point of all this is
+> volatile memory components for cxl, hence nvdimm namespace is bogus.
+> 
+> [0] https://lore.kernel.org/all/Yvtc2u1J%2Fqip8za9@worktop.programming.kicks-ass.net/
 
->When reviewing the CFMWS parsing code that deals with the HDM decoders,
->I noticed a couple of magic numbers. This commit replaces these magic numbers
->with constants defined by the CXL 2.0 specification.
+While it is not nvdimm specific anymore, it's still specific to "memory
+devices that can bulk invalidate a physical address space". I.e. it's
+not as generic as its location in arch/x86/include/asm/cacheflush.h
+would imply. So, similar to arch_invalidate_pmem(), lets keep it in a
+device-driver-specific header file, because hch and peterz are right, we
+need to make this much more clear that it is not for general
+consumption.
 
-Please use 3.0 spec :)
+There is already include/linux/memregion.h for identifying memory regions
+with a common id across ACPI NFIT, DAX "soft reserved" regions, and CXL.
+So how about something like along the same lines as
+arch_invalidate_pmem():
 
-Actually the whole drivers/cxl/* could use updating the comments for 3.0.
+diff --git a/include/linux/memregion.h b/include/linux/memregion.h
+index c04c4fd2e209..0310135d7a42 100644
+--- a/include/linux/memregion.h
++++ b/include/linux/memregion.h
+@@ -21,3 +21,23 @@ static inline void memregion_free(int id)
+ }
+ #endif
+ #endif /* _MEMREGION_H_ */
++
++/*
++ * Device memory technologies like NVDIMM and CXL have events like
++ * secure erase and dynamic region provision that can invalidate an
++ * entire physical memory address range at once. Limit that
++ * functionality to architectures that have an efficient way to
++ * writeback and invalidate potentially terabytes of memory at once.
++ */
++#ifdef CONFIG_ARCH_HAS_MEMREGION_INVALIDATE
++void arch_flush_memregion(phys_addr_t phys, resource_size_t size);
++bool arch_has_flush_memregion(void);
++#else
++static inline bool arch_has_flush_memregion(void)
++{
++       return false;
++}
++static void arch_flush_memregion(phys_addr_t phys, resource_size_t size);
++{
++}
++#endif
 
->Signed-off-by: Adam Manzanares <a.manzanares@samsung.com>
->---
-> drivers/cxl/cxl.h | 11 +++++++----
-> 1 file changed, 7 insertions(+), 4 deletions(-)
->
->diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->index f680450f0b16..ba3a66b5b9cd 100644
->--- a/drivers/cxl/cxl.h
->+++ b/drivers/cxl/cxl.h
->@@ -61,6 +61,10 @@
-> #define CXL_HDM_DECODER0_SKIP_LOW(i) CXL_HDM_DECODER0_TL_LOW(i)
-> #define CXL_HDM_DECODER0_SKIP_HIGH(i) CXL_HDM_DECODER0_TL_HIGH(i)
->
->+/* HDM decoder control register constants CXL 2.0 8.2.5.12.7 */
+...where arch_has_flush_memregion() on x86 is:
 
-This now becomes 8.2.4.19.7.
+bool arch_has_flush_memregion(void)
+{
+	return !cpu_feature_enabled(X86_FEATURE_HYPERVISOR)
+}
 
->+#define CXL_DECODER_MIN_GRANULARITY 256
->+#define CXL_DECODER_MAX_GRANULARITY_ORDER 6
-
-Considering there is a single user, I don't think we need to add
-the CXL_DECODER_MAX_GRANULARITY_ORDER. And if a new one is added
-it would be better to keep symmetry (bytes) and just do
-CXL_DECODER_MAX_GRANULARITY, but that's probably the reason why
-it doesn't exist in the first place.
-
->+
-> static inline int cxl_hdm_decoder_count(u32 cap_hdr)
-> {
->	int val = FIELD_GET(CXL_HDM_DECODER_COUNT_MASK, cap_hdr);
->@@ -71,9 +75,9 @@ static inline int cxl_hdm_decoder_count(u32 cap_hdr)
-> /* Encode defined in CXL 2.0 8.2.5.12.7 HDM Decoder Control Register */
-> static inline int cxl_to_granularity(u16 ig, unsigned int *val)
-> {
->-	if (ig > 6)
->+	if (ig > CXL_DECODER_MAX_GRANULARITY_ORDER)
->		return -EINVAL;
->-	*val = 256 << ig;
->+	*val = CXL_DECODER_MIN_GRANULARITY << ig;
->	return 0;
-> }
->
->@@ -96,7 +100,7 @@ static inline int cxl_to_ways(u8 eniw, unsigned int *val)
->
-> static inline int granularity_to_cxl(int g, u16 *ig)
-> {
->-	if (g > SZ_16K || g < 256 || !is_power_of_2(g))
->+	if (g > SZ_16K || g < CXL_DECODER_MIN_GRANULARITY || !is_power_of_2(g))
-
-Looks good.
-
-Thanks,
-Davidlohr
+...to make it clear that this API is unavailable in virtual
+environments.
