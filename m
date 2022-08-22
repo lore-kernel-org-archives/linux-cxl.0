@@ -2,279 +2,169 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F67C32774
-	for <linux-cxl@archiver.kernel.org>; Mon, 22 Aug 2022 16:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF11C28D13
+	for <linux-cxl@archiver.kernel.org>; Mon, 22 Aug 2022 17:06:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236208AbiHVQSN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 22 Aug 2022 12:18:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33404 "EHLO
+        id S235953AbiHVRGA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 22 Aug 2022 13:06:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234679AbiHVQSK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 22 Aug 2022 12:18:10 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 328953AE62;
-        Mon, 22 Aug 2022 09:18:07 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id E10B74C248F;
-        Mon, 22 Aug 2022 16:18:06 +0000 (UTC)
-Received: from pdx1-sub0-mail-a277.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 208124C30AB;
-        Mon, 22 Aug 2022 16:18:06 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1661185086; a=rsa-sha256;
-        cv=none;
-        b=he+6pfStdmUtiqfFr7MpsEEKqlodSKxXS27hOGjoIxEm1s0DdiWXMw9ZOg5M7eMBWIm4KV
-        nEDhKJcEZrBO6MlzLBr1dvSKlzqSpIauxILzGKq9xB7V2AiquGDh+eqKtV+FmFllMx9uJH
-        MI1djFbYXbAkMy+ai8Or4KEx5QLrY+3xLKGJ4Hx7gKju6mPw5RdPkTjOJ3zfv7XVm8G6uo
-        8yq49ISAU+P2/xE9QwR4Q6aXeTj3GOtm+E6MYza85YGf7gVkxFArupPUFFYfGh2t3JzAbT
-        Pp3qxxwyu/m9yEI4lIUSb17ygoSXUWl5hRnjlIYJpOq2/RErmdofGxuL/wgd+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1661185086;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=6WTVl+O0uOXo5Sob6hcZzuOu9eJCgnmbOZgt8cwx8c4=;
-        b=mdghzveEMKbiCVY3D4osZG9FXyryXTONDjhm3U2a4clCvjAWR9a01Xvnp0VqokAwwfypfq
-        AUqB9Baksd5Wc/PtwYYd91s+O83pZooOr1QWJ26o8zPkb82uJTNwjuDFvSBEHKbZtd1+vC
-        GRMjn2HdsFYEhqWQBtrDL/gmLixFIYaVvo2eUHFoU5D+AigoC6bK/3MF6LPTcqk1cBhEgr
-        axgP3mIEpMMxkOUo1lekNb8Tom96uGlD+5wGecbImS9YOgC9t6HVHE0H5dE5acwuqJm7kP
-        dNHwlSNkq+GujL8EwdPw9aDkJ+1vVyliEjruOhUp+MIE0f29+hWdPBuc2/oXxg==
-ARC-Authentication-Results: i=1;
-        rspamd-79945fd77c-k4h86;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Decisive-Attack: 5bf7aeac017f5eb8_1661185086491_4271913256
-X-MC-Loop-Signature: 1661185086491:3361885017
-X-MC-Ingress-Time: 1661185086491
-Received: from pdx1-sub0-mail-a277.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.110.28.247 (trex/6.7.1);
-        Mon, 22 Aug 2022 16:18:06 +0000
-Received: from offworld (unknown [104.36.31.106])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a277.dreamhost.com (Postfix) with ESMTPSA id 4MBHb10qYWz2m;
-        Mon, 22 Aug 2022 09:18:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1661185085;
-        bh=6WTVl+O0uOXo5Sob6hcZzuOu9eJCgnmbOZgt8cwx8c4=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=IjeBNlAdvNsiUgUNnyuOGYPz/hn8cBrst79pooavCeMKw4M7B8CUOV957izl1hpSO
-         9AbQjYdX128EIQ666RHUEF/6auwXEPei37PdCeFEm7ju+IrIlE4O1E/xDCj9IFgnpc
-         83r8y+r4tF13YnZ1ZJgJJ4NSl/KpWFpGR3R2sbL9JBgZhrClS48yInWNLckQE9/Gev
-         Wj7bMiTzUMpYWcBMtB1TVptbrF0qknXsA8OIu3Af9ICpSUz1evWleZLjZmWz+czZTS
-         wt+vbaguInNMV6vJJyKiUG2w+8isqwbpQI7kkZiC5hlBazD8VqS9hEr6bSosVVQmcs
-         G+4BJ4ZLlfh8g==
-Date:   Mon, 22 Aug 2022 09:18:02 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     ira.weiny@intel.com
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        a.manzanares@samsung.com, linux-kernel@vger.kernel.org,
-        linux-cxl@vger.kernel.org
-Subject: Re: [RFC PATCH 0/9] CXL: Read and clear event logs
-Message-ID: <20220822161802.h47v7yfrqufeltqt@offworld>
-References: <20220813053243.757363-1-ira.weiny@intel.com>
+        with ESMTP id S235132AbiHVRF7 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 22 Aug 2022 13:05:59 -0400
+Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B24CA3ECD1;
+        Mon, 22 Aug 2022 10:05:56 -0700 (PDT)
+Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
+        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20220822170553usoutp0110887cd4535a13af7f67c00824a28d34~NuaRoeXj_2782127821usoutp01-;
+        Mon, 22 Aug 2022 17:05:53 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20220822170553usoutp0110887cd4535a13af7f67c00824a28d34~NuaRoeXj_2782127821usoutp01-
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1661187953;
+        bh=Bnxw5tMzchxMfhsqVWLqqRcZgO5MyayK/AJWfjtP/qo=;
+        h=From:To:CC:Subject:Date:References:From;
+        b=katzimIeGn2ViS84TTfFXch/X1YmrdG5+sQJwSFYoXK0QzodJV2/ERTu0VyX21W61
+         LztUHJAIluTTUF0tlNWPu9/1iuaUnOb6gyU3KYfuPz5tVKjuNBQ2Vyjs2bu2BN841l
+         hUANwiC2Ca/sE7VsgBtajPgwURSlSwVA6srBLT/s=
+Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
+        [203.254.195.109]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20220822170552uscas1p1be94269293097026847ed264b653c2d8~NuaRQQ--V2902129021uscas1p1A;
+        Mon, 22 Aug 2022 17:05:52 +0000 (GMT)
+Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
+        ussmges1new.samsung.com (USCPEMTA) with SMTP id 71.2C.65516.077B3036; Mon,
+        22 Aug 2022 13:05:52 -0400 (EDT)
+Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
+        [203.254.195.89]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20220822170552uscas1p1b1ee530bf38a14806010d65d1b593ab0~NuaQ9bHrZ2964029640uscas1p1H;
+        Mon, 22 Aug 2022 17:05:52 +0000 (GMT)
+X-AuditID: cbfec36d-5b5ff7000000ffec-79-6303b770e120
+Received: from SSI-EX3.ssi.samsung.com ( [105.128.2.146]) by
+        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id F2.E3.59738.077B3036; Mon,
+        22 Aug 2022 13:05:52 -0400 (EDT)
+Received: from SSI-EX3.ssi.samsung.com (105.128.2.228) by
+        SSI-EX3.ssi.samsung.com (105.128.2.228) with Microsoft SMTP Server
+        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+        15.1.2375.24; Mon, 22 Aug 2022 10:05:51 -0700
+Received: from SSI-EX3.ssi.samsung.com ([105.128.5.228]) by
+        SSI-EX3.ssi.samsung.com ([105.128.5.228]) with mapi id 15.01.2375.024; Mon,
+        22 Aug 2022 10:05:51 -0700
+From:   Adam Manzanares <a.manzanares@samsung.com>
+To:     "alison.schofield@intel.com" <alison.schofield@intel.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "ira.weiny@intel.com" <ira.weiny@intel.com>,
+        "widawsk@kernel.org" <widawsk@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
+CC:     "dave@stgolabs.net" <dave@stgolabs.net>,
+        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Adam Manzanares <a.manzanares@samsung.com>
+Subject: [PATCH] cxl: Replace HDM decoder granularity magic numbers
+Thread-Topic: [PATCH] cxl: Replace HDM decoder granularity magic numbers
+Thread-Index: AQHYtklu6j3UH4AVtU69YQX5WSmWHw==
+Date:   Mon, 22 Aug 2022 17:05:51 +0000
+Message-ID: <20220822170510.125082-1-a.manzanares@samsung.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [105.128.2.176]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20220813053243.757363-1-ira.weiny@intel.com>
-User-Agent: NeoMutt/20220429
+X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFKsWRmVeSWpSXmKPExsWy7djXc7oF25mTDfr+GlvcfXyBzWL61AuM
+        FqtvrmG02P/0OYvFqoXX2CzOzzrFYnF51xw2i1sTjjFZbH4wmcmB06PlyFtWj8V7XjJ5bFrV
+        yeYxdXa9x+dNcgGsUVw2Kak5mWWpRfp2CVwZb6/tYSl4wFfxqHstawPjNJ4uRk4OCQETiS0d
+        Pxm7GLk4hARWMkps2L6bHcJpZZJ43r+MBaZq8sQHUFVrGSV+vrvJBuF8YpQ4+OQcK4SzjFFi
+        48kedpAWNgEDid/HNzKD2CICnUwS3TckQWxmgUlMEjObs7oYOTiEBZwlfl1RhyjxkDg0/yYL
+        hK0nMen7NDYQm0VAVaJ97XewOK+AnUTb3seMIDajgJjE91NrmCBGikvcejKfCeJSQYlFs/cw
+        Q9hiEv92PWSDsBUl7n9/yQ5RrydxY+oUNghbW2LZwtfMEPMFJU7OfAL1saTEwRU3WED+khDY
+        wyGx5N9tVoiEi8SnLfehbGmJq9enMkMUtTNKfJiwjxXCmcAoceftT6jV1hL/Oq9BreaT+Pvr
+        ESPI9xICvBIdbUITGJVmIXliFpIDZyE5cBaSAxcwsqxiFC8tLs5NTy02zEst1ytOzC0uzUvX
+        S87P3cQITE6n/x3O3cG449ZHvUOMTByMhxglOJiVRHirLzIkC/GmJFZWpRblxxeV5qQWH2KU
+        5mBREuddlrkhUUggPbEkNTs1tSC1CCbLxMEp1cCUZ2Rk+eVoS/MG5Yf3Jmj2/tzyi/XBikyd
+        7x27n1+M35WkLr2rUWBDPs9v99QV09d1i8zk/Hx7qtsS3cTjS/7ppEv0x2wu4Df4JrV63aq4
+        wi45xbkJ1XOUxZ6mWRhlhb02D9ic7nhb/8OUJPbM2M8fF1/6vPEL64o/h6JXlDQ/WzHXr7nz
+        WcdtLwaLsqe3n/3l+RJ6Q1/S3FaX9f66eKEl/B6mKUu1zF+k8XTeOPXwgrie8aWUKP4DIrkb
+        zI4dTO74uz20XuoSg9tJi8Ccli1172vssoxPfRHJuRlkd1HshYNljOUZpTMvNzHpy/Lla0VU
+        bn3s9fh7d213+GnTyKnTVRubbgf4Gj48a3H90WwlluKMREMt5qLiRAB9nGCPvQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEIsWRmVeSWpSXmKPExsWS2cA0SbdgO3OyweUj8hZ3H19gs5g+9QKj
+        xeqbaxgt9j99zmKxauE1Novzs06xWFzeNYfN4taEY0wWmx9MZnLg9Gg58pbVY/Gel0wem1Z1
+        snlMnV3v8XmTXABrFJdNSmpOZllqkb5dAlfG22t7WAoe8FU86l7L2sA4jaeLkZNDQsBEYvLE
+        B4xdjFwcQgKrGSWetDUyQTifGCW23JgOlVnGKPGz9yUzSAubgIHE7+MbwWwRgU4mie4bkiA2
+        s8AkJomZzVldjBwcwgLOEr+uqEOUeEgcmn+TBcLWk5j0fRobiM0ioCrRvvY7WJxXwE6ibe9j
+        RhCbUUBM4vupNUwQI8Ulbj2ZzwRxqYDEkj3nmSFsUYmXj/+xQtiKEve/v2SHqNeTuDF1ChuE
+        rS2xbOFrZoj5ghInZz5hgaiXlDi44gbLBEbRWUhWzELSPgtJ+ywk7QsYWVYxipcWF+emVxQb
+        5qWW6xUn5haX5qXrJefnbmIERuPpf4cjdzAevfVR7xAjEwfjIUYJDmYlEd7qiwzJQrwpiZVV
+        qUX58UWlOanFhxilOViUxHmFXCfGCwmkJ5akZqemFqQWwWSZODilGphSAtx/LPet9Lhfk9Hh
+        wX+3kJlDwVE3W3f/U7ubs7oL70m3vHjitn/XnyU6IsKOfTV1+0rWCO2efEHawi19t131W/uT
+        97y51RI7WrQmnLt5f5HiARP7BK6jPre1Mm99v/T3qkOFRMOW/T93cfJ9+riHm7HiqHXoDCcV
+        TtmSj2UNV5pmRNSdPNokbjfTUWN171SFRYq/9Iz5EyftYz5WcePXa2cGl3nrpprd7f5vuXiy
+        9EErn/lp1r+0u32yTzLo71IR7z1Vertr6/KWBeEf3r/Zr1A2Xz5A4dmSy0pV93e/MLHxT7Iu
+        +MQ4d7n6y7if02z6bCfnzzbav/qWwVO72I5fdzukBWTPHD93X1HOTV2JpTgj0VCLuag4EQAB
+        HMF+NQMAAA==
+X-CMS-MailID: 20220822170552uscas1p1b1ee530bf38a14806010d65d1b593ab0
+CMS-TYPE: 301P
+X-CMS-RootMailID: 20220822170552uscas1p1b1ee530bf38a14806010d65d1b593ab0
+References: <CGME20220822170552uscas1p1b1ee530bf38a14806010d65d1b593ab0@uscas1p1.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 12 Aug 2022, ira.weiny@intel.com wrote:
+When reviewing the CFMWS parsing code that deals with the HDM decoders,
+I noticed a couple of magic numbers. This commit replaces these magic numbe=
+rs
+with constants defined by the CXL 2.0 specification.
 
->From: Ira Weiny <ira.weiny@intel.com>
->
->Event records inform the OS of various device events.  Events are not needed
->for any kernel operation but various user level software will want to track
->events.
->
->Add event reporting through the trace event mechanism.  On driver load read and
->clear all device events.
->
->Normally interrupts will trigger new events to be reported as they occur.
->Because the interrupt code is still being worked on this series provides a
->cxl-test mechanism to create a series of events and trigger the reporting of
->those events.
+Signed-off-by: Adam Manzanares <a.manzanares@samsung.com>
+---
+ drivers/cxl/cxl.h | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-Where is this irq code being worked on? I've asked about this for async mbox
-commands, and Jonathan has also posted some code for the PMU implementation.
-
-Could we not just start with an initial MSI/MSI-X support? Then gradually
-interested users can be added? So each "feature" would need to do implement
-it's "get message number" and to install the isr just do the standard:
-
-      irq = pci_irq_vector(pdev, num);
-      irq_name = devm_kasprintf(dev, GFP_KERNEL, "%s_%s\n", dev_name(dev),
-			       cxl_irq_cap_table[feature].name);
-      rc = devm_request_irq(dev, irq, isr_fn, IRQF_SHARED, irq_name, info);
-
-The only complexity I see for this is to know the number of vectors to request
-apriori, for which we'd have to get the larges value of all CXL features that
-can support interrupts. Something like the following? One thing I have not
-considered in this is the DOE stuff.
-
-Thanks,
-Davidlohr
-
-------
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 88e3a8e54b6a..b334d2f497c1 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -245,6 +245,8 @@ struct cxl_dev_state {
-	resource_size_t component_reg_phys;
-	u64 serial;
-
-+	int irq_type; /* MSI-X, MSI */
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index f680450f0b16..ba3a66b5b9cd 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -61,6 +61,10 @@
+ #define CXL_HDM_DECODER0_SKIP_LOW(i) CXL_HDM_DECODER0_TL_LOW(i)
+ #define CXL_HDM_DECODER0_SKIP_HIGH(i) CXL_HDM_DECODER0_TL_HIGH(i)
+=20
++/* HDM decoder control register constants CXL 2.0 8.2.5.12.7 */
++#define CXL_DECODER_MIN_GRANULARITY 256
++#define CXL_DECODER_MAX_GRANULARITY_ORDER 6
 +
-	struct xarray doe_mbs;
-
-	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
-diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-index eec597dbe763..95f4b91f43b1 100644
---- a/drivers/cxl/cxlpci.h
-+++ b/drivers/cxl/cxlpci.h
-@@ -53,15 +53,6 @@
-  #define	    CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK			GENMASK(15, 8)
-  #define     CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK		GENMASK(31, 16)
-
--/* Register Block Identifier (RBI) */
--enum cxl_regloc_type {
--	CXL_REGLOC_RBI_EMPTY = 0,
--	CXL_REGLOC_RBI_COMPONENT,
--	CXL_REGLOC_RBI_VIRT,
--	CXL_REGLOC_RBI_MEMDEV,
--	CXL_REGLOC_RBI_TYPES
--};
--
-  static inline resource_size_t cxl_regmap_to_base(struct pci_dev *pdev,
-						 struct cxl_register_map *map)
-  {
-@@ -75,4 +66,44 @@ int devm_cxl_port_enumerate_dports(struct cxl_port *port);
-  struct cxl_dev_state;
-  int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm);
-  void read_cdat_data(struct cxl_port *port);
-+
-+#define CXL_IRQ_CAPABILITY_TABLE				\
-+	C(ISOLATION, "isolation", NULL),			\
-+	C(PMU, "pmu_overflow", NULL), /* per pmu instance */	\
-+	C(MBOX, "mailbox", NULL), /* primary-only */		\
-+	C(EVENT, "event", NULL),
-+
-+#undef C
-+#define C(a, b, c) CXL_IRQ_CAPABILITY_##a
-+enum  { CXL_IRQ_CAPABILITY_TABLE };
-+#undef C
-+#define C(a, b, c) { b, c }
-+/**
-+ * struct cxl_irq_cap - CXL feature that is capable of receiving MSI/MSI-X irqs.
-+ *
-+ * @name: Name of the device generating this interrupt.
-+ * @get_max_msgnum: Get the feature's largest interrupt message number. In cases
-+ *                  where there is only one instance it also indicates which
-+ *                  MSI/MSI-X vector is used for the interrupt message generated
-+ *                  in association with the feature. If the feature does not
-+ *                  have the Interrupt Supported bit set, then return -1.
-+ */
-+struct cxl_irq_cap {
-+	const char *name;
-+	int (*get_max_msgnum)(struct cxl_dev_state *cxlds);
-+};
-+
-+static const
-+struct cxl_irq_cap cxl_irq_cap_table[] = { CXL_IRQ_CAPABILITY_TABLE };
-+#undef C
-+
-+/* Register Block Identifier (RBI) */
-+enum cxl_regloc_type {
-+	CXL_REGLOC_RBI_EMPTY = 0,
-+	CXL_REGLOC_RBI_COMPONENT,
-+	CXL_REGLOC_RBI_VIRT,
-+	CXL_REGLOC_RBI_MEMDEV,
-+	CXL_REGLOC_RBI_TYPES
-+};
-+
-  #endif /* __CXL_PCI_H__ */
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index faeb5d9d7a7a..c0fe78e0559b 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -387,6 +387,52 @@ static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
-	return rc;
-  }
-
-+static void cxl_pci_free_irq_vectors(void *data)
-+{
-+	pci_free_irq_vectors(data);
-+}
-+
-+static int cxl_pci_alloc_irq_vectors(struct cxl_dev_state *cxlds)
-+{
-+	struct device *dev = cxlds->dev;
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	int rc, i, vectors = -1;
-+
-+	for (i = 0; i < ARRAY_SIZE(cxl_irq_cap_table); i++) {
-+		int irq;
-+
-+		if (!cxl_irq_cap_table[i].get_max_msgnum)
-+			continue;
-+
-+		irq = cxl_irq_cap_table[i].get_max_msgnum(cxlds);
-+		vectors = max_t(int, irq, vectors);
-+	}
-+
-+	if (vectors == -1)
-+		return -EINVAL; /* no irq support whatsoever */
-+
-+	vectors++;
-+	rc = pci_alloc_irq_vectors(pdev, vectors, vectors, PCI_IRQ_MSIX);
-+	if (rc < 0) {
-+		rc = pci_alloc_irq_vectors(pdev, vectors, vectors, PCI_IRQ_MSI);
-+		if (rc < 0)
-+			return rc;
-+
-+		cxlds->irq_type = PCI_IRQ_MSI;
-+	} else {
-+		cxlds->irq_type = PCI_IRQ_MSIX;
-+	}
-+
-+	if (rc != vectors) {
-+		pci_err(pdev, "Not enough interrupts; use polling where supported\n");
-+		/* Some got allocated; clean them up */
-+		cxl_pci_free_irq_vectors(pdev);
-+		return -ENOSPC;
-+	}
-+
-+	return devm_add_action_or_reset(dev, cxl_pci_free_irq_vectors, pdev);
-+}
-+
-  static void cxl_pci_destroy_doe(void *mbs)
-  {
-	xa_destroy(mbs);
-@@ -476,6 +522,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-
-	cxlds->component_reg_phys = cxl_regmap_to_base(pdev, &map);
-
-+	if (cxl_pci_alloc_irq_vectors(cxlds))
-+		cxlds->irq_type = 0;
-+
-	devm_cxl_pci_create_doe(cxlds);
-
-	rc = cxl_pci_setup_mailbox(cxlds);
+ static inline int cxl_hdm_decoder_count(u32 cap_hdr)
+ {
+ 	int val =3D FIELD_GET(CXL_HDM_DECODER_COUNT_MASK, cap_hdr);
+@@ -71,9 +75,9 @@ static inline int cxl_hdm_decoder_count(u32 cap_hdr)
+ /* Encode defined in CXL 2.0 8.2.5.12.7 HDM Decoder Control Register */
+ static inline int cxl_to_granularity(u16 ig, unsigned int *val)
+ {
+-	if (ig > 6)
++	if (ig > CXL_DECODER_MAX_GRANULARITY_ORDER)
+ 		return -EINVAL;
+-	*val =3D 256 << ig;
++	*val =3D CXL_DECODER_MIN_GRANULARITY << ig;
+ 	return 0;
+ }
+=20
+@@ -96,7 +100,7 @@ static inline int cxl_to_ways(u8 eniw, unsigned int *val=
+)
+=20
+ static inline int granularity_to_cxl(int g, u16 *ig)
+ {
+-	if (g > SZ_16K || g < 256 || !is_power_of_2(g))
++	if (g > SZ_16K || g < CXL_DECODER_MIN_GRANULARITY || !is_power_of_2(g))
+ 		return -EINVAL;
+ 	*ig =3D ilog2(g) - 8;
+ 	return 0;
+@@ -248,7 +252,6 @@ enum cxl_decoder_type {
+  */
+ #define CXL_DECODER_MAX_INTERLEAVE 16
+=20
+-#define CXL_DECODER_MIN_GRANULARITY 256
+=20
+ /**
+  * struct cxl_decoder - Common CXL HDM Decoder Attributes
+--=20
+2.35.1
