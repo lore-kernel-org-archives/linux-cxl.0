@@ -2,237 +2,177 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAEDC32774
-	for <linux-cxl@archiver.kernel.org>; Tue, 23 Aug 2022 18:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FB7C32796
+	for <linux-cxl@archiver.kernel.org>; Tue, 23 Aug 2022 18:59:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233592AbiHWSQM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 23 Aug 2022 14:16:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51222 "EHLO
+        id S230225AbiHWS7N (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 23 Aug 2022 14:59:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234173AbiHWSPk (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 23 Aug 2022 14:15:40 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E99CF2AEC;
-        Tue, 23 Aug 2022 09:30:14 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id BE75A5009F1;
-        Tue, 23 Aug 2022 16:30:13 +0000 (UTC)
-Received: from pdx1-sub0-mail-a302.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id C7941500908;
-        Tue, 23 Aug 2022 16:30:12 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1661272213; a=rsa-sha256;
-        cv=none;
-        b=45EsG5hGptRVVciF7oayheOL9ijXVg9G/etAuC28lib6FEarS83fO3c94tL/krnPW/3gb5
-        BHkRtA7LPymO4D+ENOr5MxF+BczZMxJmNua87Mf+gq+xYIDMVUu3kpDEbqmusHAbjx9049
-        zOS924d9WX/GJ205iodf8tglf4KXubhVh+pyDk6Fm2h1BjqhHHBiF1sUBHItCpYi71wbL4
-        Q4wpgEebQyQsN7xTPKqkdlwYDTS91nHn94wbU3fPLpCUaINU7rcI9pyWkgRFT6Tx4D/ed+
-        YVgGUFpHxVQ6JsTeMzHdwopsaJ1Ivgxvpg54zxF0YyNo2f65wvnkPLrArOUbRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1661272213;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=uDD/E4CoF8RiYGRs7gzGC7gviushfq4mXW+ilp398lg=;
-        b=tkT1g3SufCo+GIXimGRmJeoPjgkSKRD5tPUUPocUaLIqB+BwjxulDvc4UT08EL4W0xM7pR
-        ZPi2v7uGxtfrXmZ+Hy6NOVruJ0h9DxZC3VZ20ugV821HaTpPWuuxZQg+eEd7guzgyE1MrP
-        tv/9pbzCSz/T1coUUwOTr4QXfMp/ewrYSkVjlrDm4ikFxPfXvtMNHHV6G4cm/aMnLPSLbI
-        gjUh1hlEf/WnkkdVFpEG4aVOUlo5ptpIHQiH3GupeZ9qRJswWVdbFReK+VF7OZMzl9bELB
-        MTZrihgYWOZpuRvpD+pZXkwbnnyT7MUe/nK2U920KEuaWDgqKPr1Hu9tJW8xyg==
-ARC-Authentication-Results: i=1;
-        rspamd-76867cc9c5-7mzwg;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Share-Tasty: 166b41da78db7f24_1661272213430_2395831673
-X-MC-Loop-Signature: 1661272213430:136564985
-X-MC-Ingress-Time: 1661272213430
-Received: from pdx1-sub0-mail-a302.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.98.142.74 (trex/6.7.1);
-        Tue, 23 Aug 2022 16:30:13 +0000
-Received: from offworld (unknown [104.36.31.106])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a302.dreamhost.com (Postfix) with ESMTPSA id 4MBvpW4B8Bz22Z;
-        Tue, 23 Aug 2022 09:30:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1661272212;
-        bh=uDD/E4CoF8RiYGRs7gzGC7gviushfq4mXW+ilp398lg=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=jEpT7t3/zdjo6ndvHXrH8tsguWjnEpDx4WSI8OOhTVb05E6+L/5uMrvPkDBs3t4GJ
-         WEtHhmv45OYz/nx9O7q5be/rIsfOyxnk7QYjxDRJZnp4C2P0UqD+/tbYfaOCyUvH13
-         YO07QLDO7hudIU915JkRk09YLrR6qhaaOwrm0qt56VlJRNPwFgLXfOq0Ylgp2PBhNL
-         EbWGA7EuK/nSamqBsH2D9sWRS+4wWiAZl7BKdVRzqrpHjUvZQYc+lZ5bV0n2H+yFFF
-         adyZpe96WXFhlUbPACgixF4mgMMLZFlFBxnAH/krvpgpatMA1dmUWrWU/5d8wi0abM
-         Lp6vWhKbSSjNg==
-Date:   Tue, 23 Aug 2022 09:12:08 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        a.manzanares@samsung.com, linux-kernel@vger.kernel.org,
-        linux-cxl@vger.kernel.org
-Subject: Re: [RFC PATCH 0/9] CXL: Read and clear event logs
-Message-ID: <20220823161208.hyiripnf7gy6r4ks@offworld>
-References: <20220813053243.757363-1-ira.weiny@intel.com>
- <20220822161802.h47v7yfrqufeltqt@offworld>
- <YwQJAqThYczUHhOB@iweiny-desk3>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+        with ESMTP id S233998AbiHWS66 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 23 Aug 2022 14:58:58 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CEE5786CB
+        for <linux-cxl@vger.kernel.org>; Tue, 23 Aug 2022 10:28:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661275696; x=1692811696;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=U1YsNeRgt9iQ3FPilR+Ki1vdLzFcFWWEmeP5DGTNPoE=;
+  b=PQNArN0bOQ4dVXx3eOXltiGZUquCwT48woR7f5/+OfqDHrqn2eGvar6J
+   fL2k4Yzaj6e5czXls+9FkCBRYb8V/L0qsg0eNk8hH9El0ozkjOBdOt5Zn
+   GReGH2KmxS5QoR7e4+IhRptN3nb2BGfUTacuSuaCN1/CCEl72QlhPWJ3/
+   CbZeg3eqjkr4Oa/QKZFEcKvO3BgS8gV1l5cCaSVdaq5595nOHPwDs+0wM
+   +iHORasQTL5x3UX2Zod1ProW0NCJm7eadr7KUWHQ9F5/ymvOW4tWVWRrn
+   wXtqzJdbHkaV40zhvCG4jQPSIj8zbaY1On94TOwQEXxGBRSZJ3VHuYF1O
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10448"; a="274139843"
+X-IronPort-AV: E=Sophos;i="5.93,258,1654585200"; 
+   d="scan'208";a="274139843"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2022 10:25:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,258,1654585200"; 
+   d="scan'208";a="638748060"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orsmga008.jf.intel.com with ESMTP; 23 Aug 2022 10:25:50 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 23 Aug 2022 10:25:50 -0700
+Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 23 Aug 2022 10:25:49 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31 via Frontend Transport; Tue, 23 Aug 2022 10:25:49 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.31; Tue, 23 Aug 2022 10:25:49 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cNaSD+cWr6LmjMKWmNvOKQxbW8jDVDDyTw1/jrdGlOhIkKHmJqImw3D2ZKGXM+7zJn6WkTKzUtqDqJkyWw0xdGY64c239KtDnfMKRFNu7w+ptDfkJOhlnB3M2XchPxj6SU3Otk+lXtosaRAzgktbA+t1IzdT60j1kgL9frF4Vn5Q+ocIBwxebpmaszcC376GK+vTl6upYhrwITFb26btq680t1ZdRF+cXODE13Aji6GW+uj0Znq38nhtgsuytODr/FBZTW6FrHVBwjJWt4rtP0Z4DOXtXWedRBX+kKOO1yCCmc4RLaVuhbrz2+IAegigwfqhUqm0+sfogGCozAHvFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gCom6PqvYzWg+1rFkPpzC3RbZeU4gUxPpGrKj/1RlNk=;
+ b=bVUzT/RFb0lQ17Xl4ITkj8MjAuwFp5YZszkcBVeFp05ada75QGF1jcDFh5Q8LCBMqIxdjBzel3akM+7Y707WEPd1C/OuITGZquv0/wQhhjUpghwICfUmXV2q1oz4LyKM6xDHwJjgl+zW77u1+HVWYrZ3uhlVbSL/v/gcC+SHRM2GOD7k3GU/9EjxjuM+FYnMWheIRZjRmmUglM7Kbsj1iV13WCIQp5Q0i2P9gqDZu2xn6YIMqHoFWgmx0+rB6tMy9BnA2ElIPKYrtXFK4R17IIk7/PJZNujzch2gfoGLyLySR2bDadheg4+dKKsekYyjhoGjX5eQGIIPXyPjnqUNxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20) by CH0PR11MB5332.namprd11.prod.outlook.com
+ (2603:10b6:610:bf::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.14; Tue, 23 Aug
+ 2022 17:25:47 +0000
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::9847:345e:4c5b:ca12]) by MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::9847:345e:4c5b:ca12%6]) with mapi id 15.20.5546.024; Tue, 23 Aug 2022
+ 17:25:47 +0000
+Date:   Tue, 23 Aug 2022 10:25:44 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Vishal Verma <vishal.l.verma@intel.com>,
+        <linux-cxl@vger.kernel.org>
+CC:     <nvdimm@lists.linux.dev>, Dan Williams <dan.j.williams@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>
+Subject: RE: [ndctl PATCH v2 1/3] cxl/region: fix a dereferecnce after NULL
+ check
+Message-ID: <63050d98a4c1e_18ed7294cc@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20220823074527.404435-1-vishal.l.verma@intel.com>
+ <20220823074527.404435-2-vishal.l.verma@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <YwQJAqThYczUHhOB@iweiny-desk3>
-User-Agent: NeoMutt/20220429
+In-Reply-To: <20220823074527.404435-2-vishal.l.verma@intel.com>
+X-ClientProxiedBy: SJ0PR03CA0208.namprd03.prod.outlook.com
+ (2603:10b6:a03:2ef::33) To MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: cd231133-55e5-4c71-744e-08da852c8412
+X-MS-TrafficTypeDiagnostic: CH0PR11MB5332:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TZyQAC0siHMtRaQeftQI9myEk5g56S+SfXU0SduGqGj2W07PDdFqY534sXCiaXvA/wTsp23wZX0OvgWEU/4LyVjkPuvmHKgYAXy4SI3eR2sFaowRM5hV9yU+3FqzSooOBlyWsJ5aIa6JHnZt4TahmoD16V/DNa+4DrD+vxNX6b+xQpwfwSAaIJLOCKe2oZhXLWvTL3OnVEU7cPjCB57+mebBOp4mY9w7z0Rec25qy4ms8fYZYNQrjQfv0m642yar0Phc/t6qpXWSrvl/YfRK/VbIOSvUooqFQwQKsnyFXk6R82JLhMskDCgA+60TPzW580fJcz5FxkvbXBFSLmWbAC4YQtytV81Kipw+gBND/RCe59HymAFgDJ72zJsSweTDew5a2vyS78jmJ1ldK7tbfG0qzkaJd0i7ZatV10RNFAzl/dTbLiVQkps+0Wy6SbYPG0xLTbLHbP/e3I0Op3n3sMczMVwtJ7j3DZOy6MGZ1ZJKMW7gsyDYiMrHp17aaCUXSE5bGtBCI3A1ojB5/c6jJVa4khOw8YCVcwqj/vXu0LhzFaW8wa/g6vsTbg4jE/GbF3IPt2u62/XULe4KYiIhYS9GvOOXy8/TQq3yGhR1ihrBDd6Jm6PPaZR79O1VnYda90Df/4Y+bDRhZLZgSsfcsgNJUjawYq9JtfDPNWKwb5YIed6v5+CmO5Ie4lK57oNC9gwlftyxUeztv6WIqBK/JQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(366004)(396003)(136003)(39860400002)(376002)(346002)(6486002)(316002)(5660300002)(478600001)(8936002)(82960400001)(41300700001)(66556008)(66476007)(4326008)(8676002)(6666004)(66946007)(54906003)(107886003)(6506007)(2906002)(6512007)(9686003)(26005)(38100700002)(86362001)(186003)(83380400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?EsuZf/zViiQ3x5YVPUJCm5045K2YVGcc/9uMqCOlMK183gQcf/ZC6trqHYT/?=
+ =?us-ascii?Q?NWAHu/yzxSYdvVYQLPdivuQvOLjRktq2/VyICSucd7wIVDk1Ohe40xgF85AI?=
+ =?us-ascii?Q?jSAp6EM04SDR1sy9GP4sC5nCIZUwoWSpjKPOwdPmaIO5/59ha3cWKnE+wGjO?=
+ =?us-ascii?Q?3sVGl+jLt47jGVT8lusPE3LmGnPabadtw7in93SqkaDbegfdOY4JbxPyZW/L?=
+ =?us-ascii?Q?xJmVeUkKembpRUkzqEs+h+IWilQjK3i/XAHhfWKfS/bRNk6MxpNkRTLyOizC?=
+ =?us-ascii?Q?7M/FeloveXkHxg3gk4I4RNfrCY60nnThz0Ejwi+C6NtK5J0k7IrcDdlYsIaV?=
+ =?us-ascii?Q?NJNg/Q6irsQNOvHd/wcqsWVIP9o3pdJmobkZSH6if4Ha3vPHjgP1qrh4QwOT?=
+ =?us-ascii?Q?CRiOoLkg3qiKzT5nKEp4FN+BL5WziUEg7sIJlEqOEbDLbHExems0UCj6WNYp?=
+ =?us-ascii?Q?KBqhoim/QB6669tLXg4QWYizzFrlux8AzQIkXPH8l/amwt1DHOYcQAz9sGkA?=
+ =?us-ascii?Q?RUStlxPmvbzPTXI1tx1TG+yVp6CjHb+1qZZxmllxoRTJR1/recr2Qk9OeOF+?=
+ =?us-ascii?Q?S33iNm9jufEQqKWe9rXyvlI8mx3tLACekPfW9FH5oKvmNV/8Y6KKXxWJKlt5?=
+ =?us-ascii?Q?jDHuxCAqnxen95Pwt0xoPfrV73lF3m2FulL/ji5ly2z12+hYOwbH1wUE6SMf?=
+ =?us-ascii?Q?Cez7vFjLj8i8KtW3ivdDH9zPP4dU205LLUJyzCQcLCa0hgqluAq4y4B8XmTB?=
+ =?us-ascii?Q?Q8+UT/ZXChaVSEHMws59v/G+ge2AHgHQfAgPiq0XjopnP98CYA9CNvoesRjn?=
+ =?us-ascii?Q?223vfp4IuaNzSjifZ4WE3oyolbXsXATWQqywsqUS4S5xBhr7FHY1lWwNHFQG?=
+ =?us-ascii?Q?oPvS8W8NW+Fx53PKvNSozqsys2bX2mBwxxLaTpdx0kGgkHjwgjEjOV2dLNR6?=
+ =?us-ascii?Q?Bi4wv5uaG/C/v5M0WjP5zSPfFBklNHC2SEBe/hIM+Z53kk6Y/VurvktiLQVa?=
+ =?us-ascii?Q?35D3lYxC6ECXwXWMX3Y4Mr1I/P3G5ceCgs9Cd/Gc7BYnfwIRH4rrp3KVCmgl?=
+ =?us-ascii?Q?pFZo0rDSDWDUeCVd3LONaZqFUEFMpkTxhJUXs4+GliSc6yezLX9gF/+hRPBp?=
+ =?us-ascii?Q?mK5it3E7uwvXY5DYDef7OXkU+yXmk0xtHicSu5oaybTdSmuNy+vcQZXHHF86?=
+ =?us-ascii?Q?6Xyi4YiVm3DHgDOR59A6Bjjg3VBCbDkDQp8YNHF6HNuRW53/Ahgw9Ds2V+fD?=
+ =?us-ascii?Q?OsXmKPaw2H9g1EhWfjbJtjVG9i/XztXcZtEqowa1hpfvrTwGDW9LyS0k0z1R?=
+ =?us-ascii?Q?BqibszprlhdhcZ3fpSkW6+Z5xdrtElu6SS2aALZPwNTZsx6SoxKce5GBsk4a?=
+ =?us-ascii?Q?stNMPYuhcaD9/nwC5YeUxnTbEPtIa2Nt3cDarS2v7xLXg+u+3pl/576NxGEB?=
+ =?us-ascii?Q?4J4Ug8BCvo29ZBscrKFTDWmHBbELSj//cCMAtRvL+5Ys05n0R3ZI6oOsS+rK?=
+ =?us-ascii?Q?p/gaCrIxVqlzXmZnlNgsF3l0Z/3pk8LT7bOclKHgVLkHe0vVVzhIczc51Jx/?=
+ =?us-ascii?Q?NjDExiMy6IMouiFBAI9+466UbChFY36wCByBUztluGEiUjgHBIpYXTv0qMPt?=
+ =?us-ascii?Q?XQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd231133-55e5-4c71-744e-08da852c8412
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Aug 2022 17:25:46.9390
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QSei4EP+NZQDYTghXeT2OtBgDB9LD95aTqd69RLpgnK1njwftmRTqsrfUhzP9LVWiTVd8kYli6I+2HZfrHxwGdmXNFwsKW/V8R7/3fJLdRE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB5332
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 22 Aug 2022, Ira Weiny wrote:
+Vishal Verma wrote:
+> A NULL check in region_action() implies that 'decoder' might be NULL, but
+> later we dereference it during cxl_decoder_foreach(). The NULL check is
+> valid because it was the filter result being checked, however, while
+> doing this, the original 'decoder' variable was being clobbered.
+> 
+> Check the filter results independently of the original decoder variable.
+> 
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+> ---
+>  cxl/region.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/cxl/region.c b/cxl/region.c
+> index a30313c..334fcc2 100644
+> --- a/cxl/region.c
+> +++ b/cxl/region.c
+> @@ -686,9 +686,8 @@ static int region_action(int argc, const char **argv, struct cxl_ctx *ctx,
+>  			continue;
+>  
+>  		cxl_decoder_foreach (port, decoder) {
+> -			decoder = util_cxl_decoder_filter(decoder,
+> -							  param.root_decoder);
+> -			if (!decoder)
+> +			if (!util_cxl_decoder_filter(decoder,
+> +						     param.root_decoder))
+>  				continue;
 
->Generally it seems ok but I have questions below.
->
->> One thing I have not
->> considered in this is the DOE stuff.
->
->I think this is the harder thing to support because of needing to allow both
->the PCI layer and the CXL layer to create irqs.  Potentially at different
->times.
+Looks good.
 
-I agree.
-
->> -/* Register Block Identifier (RBI) */
->> -enum cxl_regloc_type {
->> -	CXL_REGLOC_RBI_EMPTY = 0,
->> -	CXL_REGLOC_RBI_COMPONENT,
->> -	CXL_REGLOC_RBI_VIRT,
->> -	CXL_REGLOC_RBI_MEMDEV,
->> -	CXL_REGLOC_RBI_TYPES
->> -};
->
->Why move this?
-
-That was sloppy of me, sorry. I wanted to reuse struct cxlds forward declaration,
-no idea why that diff formed.
-
->> -
->>  static inline resource_size_t cxl_regmap_to_base(struct pci_dev *pdev,
->>						 struct cxl_register_map *map)
->>  {
->> @@ -75,4 +66,44 @@ int devm_cxl_port_enumerate_dports(struct cxl_port *port);
->>  struct cxl_dev_state;
->>  int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm);
->>  void read_cdat_data(struct cxl_port *port);
->> +
->> +#define CXL_IRQ_CAPABILITY_TABLE				\
->> +	C(ISOLATION, "isolation", NULL),			\
->> +	C(PMU, "pmu_overflow", NULL), /* per pmu instance */	\
->> +	C(MBOX, "mailbox", NULL), /* primary-only */		\
->> +	C(EVENT, "event", NULL),
->
->This is defining get_max_msgnum to NULL right?
-
-Yes. So untl there are any users everything's a nop.
-
->> +
->> +#undef C
->> +#define C(a, b, c) CXL_IRQ_CAPABILITY_##a
->> +enum  { CXL_IRQ_CAPABILITY_TABLE };
->> +#undef C
->> +#define C(a, b, c) { b, c }
->> +/**
->> + * struct cxl_irq_cap - CXL feature that is capable of receiving MSI/MSI-X irqs.
->> + *
->> + * @name: Name of the device generating this interrupt.
->> + * @get_max_msgnum: Get the feature's largest interrupt message number. In cases
->> + *                  where there is only one instance it also indicates which
->> + *                  MSI/MSI-X vector is used for the interrupt message generated
->> + *                  in association with the feature. If the feature does not
->> + *                  have the Interrupt Supported bit set, then return -1.
->> + */
->> +struct cxl_irq_cap {
->> +	const char *name;
->> +	int (*get_max_msgnum)(struct cxl_dev_state *cxlds);
->> +};
->> +
->> +static const
->> +struct cxl_irq_cap cxl_irq_cap_table[] = { CXL_IRQ_CAPABILITY_TABLE };
->> +#undef C
->
->Why all this macro magic?
-
-A nifty trick Dan likes, it avoids duplicating the fields (enums + the table).
-
->> +
->> +/* Register Block Identifier (RBI) */
->> +enum cxl_regloc_type {
->> +	CXL_REGLOC_RBI_EMPTY = 0,
->> +	CXL_REGLOC_RBI_COMPONENT,
->> +	CXL_REGLOC_RBI_VIRT,
->> +	CXL_REGLOC_RBI_MEMDEV,
->> +	CXL_REGLOC_RBI_TYPES
->> +};
->> +
->>  #endif /* __CXL_PCI_H__ */
->> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
->> index faeb5d9d7a7a..c0fe78e0559b 100644
->> --- a/drivers/cxl/pci.c
->> +++ b/drivers/cxl/pci.c
->> @@ -387,6 +387,52 @@ static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
->>	return rc;
->>  }
->>
->> +static void cxl_pci_free_irq_vectors(void *data)
->> +{
->> +	pci_free_irq_vectors(data);
->> +}
->> +
->> +static int cxl_pci_alloc_irq_vectors(struct cxl_dev_state *cxlds)
->> +{
->> +	struct device *dev = cxlds->dev;
->> +	struct pci_dev *pdev = to_pci_dev(dev);
->> +	int rc, i, vectors = -1;
->> +
->> +	for (i = 0; i < ARRAY_SIZE(cxl_irq_cap_table); i++) {
->> +		int irq;
->> +
->> +		if (!cxl_irq_cap_table[i].get_max_msgnum)
->> +			continue;
->> +
->> +		irq = cxl_irq_cap_table[i].get_max_msgnum(cxlds);
->> +		vectors = max_t(int, irq, vectors);
->> +	}
->> +
->> +	if (vectors == -1)
->> +		return -EINVAL; /* no irq support whatsoever */
->> +
->> +	vectors++;
->
->This is pretty much what earlier versions of the DOE code did with the
->exception of only have 1 get_max_msgnum() calls defined (for DOE).  But there
->was a lot of debate about how to share vectors with the PCI layer.  And
->eventually we got rid of it.  I'm still trying to figure it out.  Sorry for
->being slow.
-
-That makes sense, thanks for the explanation. And no not slow, it is _I_
-that needs to go re-read the DOE stuff with more attention. But while I
-knew this was the hardest part, all I really wanted was a basic irq
-support to add to the bg cmd handling series.
-
->Perhaps we do this for this series.  However, won't we have an issue if we want
->to support switch events?
-
-If possible, could you elaborate more on this?
-
-Thanks,
-Davidlohr
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
