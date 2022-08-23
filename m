@@ -2,77 +2,71 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35358C32774
-	for <linux-cxl@archiver.kernel.org>; Tue, 23 Aug 2022 07:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4361C32774
+	for <linux-cxl@archiver.kernel.org>; Tue, 23 Aug 2022 07:21:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240205AbiHWHTM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 23 Aug 2022 03:19:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53246 "EHLO
+        id S240648AbiHWHVV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 23 Aug 2022 03:21:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239169AbiHWHTM (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 23 Aug 2022 03:19:12 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 699CC61B17;
-        Tue, 23 Aug 2022 00:19:11 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 14E9CB81BDE;
-        Tue, 23 Aug 2022 07:19:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F621C433C1;
-        Tue, 23 Aug 2022 07:19:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1661239148;
-        bh=V375TAzPRg9BeBuHWxGCgFy2erOrU34+A80dlNEX2V0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UAR0Nn3W/bDHu9dpc9KR+5zJFUo2BGq5g0PcfGzu8DbbKLbioUkUmUBuRr4kHGySG
-         IqCRJCv9sQFPMPCI88DSginXtYNFI/sjKj4w6id1Q9YKexd4r1JDRnpcGBxQohsovx
-         /Bas05hvt7cmPWCoBZxwmTqm75hYI8VMV27l7m3c=
-Date:   Tue, 23 Aug 2022 09:19:06 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCI: Allow drivers to request exclusive config
- regions
-Message-ID: <YwR/apnh4bnBAnM2@kroah.com>
-References: <20220822005237.540039-1-ira.weiny@intel.com>
- <20220822005237.540039-2-ira.weiny@intel.com>
- <YwMktMqN0oFgCeZn@kroah.com>
- <6303dcb63e3e1_1b32294d9@dwillia2-xfh.jf.intel.com.notmuch>
- <YwPpLWgG37ObTMAP@iweiny-desk3>
- <6303f298ef92c_1b322944c@dwillia2-xfh.jf.intel.com.notmuch>
+        with ESMTP id S240547AbiHWHVU (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 23 Aug 2022 03:21:20 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9642C61D94
+        for <linux-cxl@vger.kernel.org>; Tue, 23 Aug 2022 00:21:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661239279; x=1692775279;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+bAm66mVTsrkUhFwkgCp2pQKGp1jx2WlAystbymshh8=;
+  b=iH4R4rx5vM+NT1hB4VaS6xFGcZW7H5zAGJOrak1Qj4qT4jjzQUfNdV+T
+   NPZZsHmqX2khvrFFA6b6ry7pKeIkNWNYliFm4fFeiv82zEAEp+Ys2y/Kj
+   iCfbVga+dc+dfrr5alBdvDR7vJkXZFeL/BgKWAc1KmWZBafCcVuvYFpww
+   DLg9DT33G+XuMIT1JVI+x3l1kZhBCfQMUkFQHyDuSx/eVePd5n67Dv86+
+   LuRukJMCqzogG9OfBSD6Hbe3+3H7keN9UeHhcxGKNQyW9uOo3bD4GuXzN
+   ygrQ0pWqIt95DQz6IGYvyrQrWslgYUx8SSl5Nv56m0SEGCjxu0HWClCs9
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10447"; a="273366243"
+X-IronPort-AV: E=Sophos;i="5.93,256,1654585200"; 
+   d="scan'208";a="273366243"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2022 00:21:10 -0700
+X-IronPort-AV: E=Sophos;i="5.93,256,1654585200"; 
+   d="scan'208";a="735388581"
+Received: from skummith-mobl1.amr.corp.intel.com (HELO vverma7-desk1.intel.com) ([10.212.54.206])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2022 00:21:10 -0700
+From:   Vishal Verma <vishal.l.verma@intel.com>
+To:     <linux-cxl@vger.kernel.org>
+Cc:     <nvdimm@lists.linux.dev>, Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: [ndctl PATCH 0/3] cxl: static analysis fixes
+Date:   Tue, 23 Aug 2022 01:21:03 -0600
+Message-Id: <20220823072106.398076-1-vishal.l.verma@intel.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6303f298ef92c_1b322944c@dwillia2-xfh.jf.intel.com.notmuch>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=494; h=from:subject; bh=+bAm66mVTsrkUhFwkgCp2pQKGp1jx2WlAystbymshh8=; b=owGbwMvMwCXGf25diOft7jLG02pJDMks9feMbG9M95mg8eJ8ivfWpEWCq/l/hjxYpMj4zZORNdb8 w26ejlIWBjEuBlkxRZa/ez4yHpPbns8TmOAIM4eVCWQIAxenAFxkJyPDscKi7mP1J24U3jzdIRZbZ/ MpWXbm4XOC9T/ExC+tVD/+meG/7/64OX4e/x5+OH8z35f9dLYXl8yZi27XV+Vd3rZm9U19PgA=
+X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp; fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Aug 22, 2022 at 02:18:17PM -0700, Dan Williams wrote:
-> Ira Weiny wrote:
-> > > Similar to CONFIG_IO_STRICT_DEVMEM, just turn this warning off if you
-> > > are a distribution kernel vendor who does not care about DOE vendor
-> > > tools affecting system state, and turn on CONFIG_LOCK_DOWN_KERNEL if you
-> > > are on the other end of the spectrum and want protection from such
-> > > things. The warn is middle-road option that I expect most distros would
-> > > use.
-> > 
-> > FWIW I did not add any Kconfig for the feature.  Should I?
-> 
-> I think so, especially as it is a distro configuration policy about what
-> user-mode PCI tooling it wants to support / warn about.
+Fix a small handful of issues reported by scan.coverity.com for the
+recent region management additions.
 
-No, no need for that, distros are forced to just "enable everything" as
-they don't want to make any policy decision like that.  So just make it
-always present, no one will turn it off.
+Vishal Verma (3):
+  cxl/region: fix a dereferecnce after NULL check
+  libcxl: fox a resource leak and a forward NULL check
+  cxl/filter: Fix an uninitialized pointer dereference
 
-thanks,
+ cxl/lib/libcxl.c | 3 ++-
+ cxl/filter.c     | 2 +-
+ cxl/region.c     | 2 --
+ 3 files changed, 3 insertions(+), 4 deletions(-)
 
-greg k-h
+
+base-commit: 9a993ce24fdd5de45774b65211570dd514cdf61d
+-- 
+2.37.2
+
