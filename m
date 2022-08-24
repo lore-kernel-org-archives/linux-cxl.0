@@ -2,148 +2,126 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4797C00140
-	for <linux-cxl@archiver.kernel.org>; Wed, 24 Aug 2022 10:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5751C00140
+	for <linux-cxl@archiver.kernel.org>; Wed, 24 Aug 2022 14:28:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234401AbiHXKiX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 24 Aug 2022 06:38:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55790 "EHLO
+        id S238421AbiHXO2s (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 24 Aug 2022 10:28:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229640AbiHXKiW (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Aug 2022 06:38:22 -0400
+        with ESMTP id S238046AbiHXO2q (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Aug 2022 10:28:46 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 239B9481F7;
-        Wed, 24 Aug 2022 03:38:21 -0700 (PDT)
-Received: from fraeml742-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MCMxl0VWFz68BcV;
-        Wed, 24 Aug 2022 18:38:03 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13E0257236
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Aug 2022 07:28:44 -0700 (PDT)
+Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MCT3P65Wjz683Pb;
+        Wed, 24 Aug 2022 22:28:17 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml742-chm.china.huawei.com (10.206.15.223) with Microsoft SMTP Server
+ fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 24 Aug 2022 12:38:19 +0200
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 24 Aug 2022 11:38:18 +0100
+ 15.1.2375.24; Wed, 24 Aug 2022 16:28:41 +0200
+Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 24 Aug
+ 2022 15:28:41 +0100
+Date:   Wed, 24 Aug 2022 15:28:40 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <linux-cxl@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <linuxarm@huawei.com>
-Subject: [RFC PATCH v2 4/4] docs: perf: Minimal introduction the the CXL PMU device and driver.
-Date:   Wed, 24 Aug 2022 11:36:17 +0100
-Message-ID: <20220824103617.21781-5-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220824103617.21781-1-Jonathan.Cameron@huawei.com>
-References: <20220824103617.21781-1-Jonathan.Cameron@huawei.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+        <alison.schofield@intel.com>
+Subject: Re: [PATCH v4 6/6] cxl: export intereleave capability as port sysfs
+ attribute
+Message-ID: <20220824152840.00002eb8@huawei.com>
+In-Reply-To: <166077132912.1743055.6028619361637977647.stgit@djiang5-desk4.jf.intel.com>
+References: <166077102447.1743055.17158560277276060113.stgit@djiang5-desk4.jf.intel.com>
+        <166077132912.1743055.6028619361637977647.stgit@djiang5-desk4.jf.intel.com>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.42]
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Very basic introduction to the device and the current driver support
-provided. I expect to expand on this in future versions of this patch
-set.
+On Wed, 17 Aug 2022 14:22:09 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Export the interleave capability as a sysfs attribute for a port. The
+> exported mask is interpreted from the CXL HDM Decoder Capability Register
+> (CXL spec v 8.2.4.19.1). Each bit in the mask represents the number of
 
---
-RFC:
-- I'll post separately about this shortly, but it seems very odd
-  to me that there is no way to assign a parent to an event_sources
-  device.  As a result we get the messy approach of playing match
-  the name to figure out what the CPMU instance is connected to.
----
- Documentation/admin-guide/perf/cxl.rst   | 60 ++++++++++++++++++++++++
- Documentation/admin-guide/perf/index.rst |  1 +
- 2 files changed, 61 insertions(+)
+State which spec in all references (this one is rev3.0)
 
-diff --git a/Documentation/admin-guide/perf/cxl.rst b/Documentation/admin-guide/perf/cxl.rst
-new file mode 100644
-index 000000000000..6ffc057591fb
---- /dev/null
-+++ b/Documentation/admin-guide/perf/cxl.rst
-@@ -0,0 +1,60 @@
-+======================================
-+CXL Performance Monitoring Unit (CPMU)
-+======================================
-+
-+The CXL rev 3.0 specification provides a definition of CXL Performance
-+Monitoring Unit in section 13.2: Performance Monitoring.
-+
-+CXL components (e.g. Root Port, Switch Upstream Port, End Point) may have
-+any number of CPMU instances. CPMU capabilities are fully discoverable from
-+the devices. The specification provides event definitions for all CXL protocol
-+message types and a set of additional events for things commonly counted on
-+CXL devices (e.g. DRAM events).
-+
-+CPMU driver
-+===========
-+
-+The CPMU driver register a perf PMU with the name cpmu<id> on the CXL bus.
-+
-+    /sys/bus/cxl/device/cpmu<id>
-+
-+The associated PMU is registered as
-+
-+   /sys/bus/event_sources/devices/cpmu<id>
-+
-+In common with other CXL bus devices, the id has no specific meaning and the
-+relationship to specific CXL device should be established via the device parent
-+of the device on the CXL bus.
-+
-+PMU driver provides description of available events and filter options in sysfs.
-+
-+The "format" directory describes all formats of the config (event vendor id,
-+group id and mask) config1 (threshold, filter enables) and config2 (filter
-+parameters) fields of the perf_event_attr structure.  The "events" directory
-+describes all documented events show in perf list.
-+
-+The events shown in perf list are the most fine grained events with a single
-+bit of the event mask set. More general events may be enable by setting
-+multiple mask bits in config. For example, all Device to Host Read Requests
-+may be captured on a single counter by setting the bits for all of
-+
-+* d2h_req_rdcurr
-+* d2h_req_rdown
-+* d2h_req_rdshared
-+* d2h_req_rdany
-+* d2h_req_rdownnodata
-+
-+Example of usage::
-+
-+  $#perf list
-+  cpmu0/clock_ticks/                                 [Kernel PMU event]
-+  cpmu0/d2h_req_itomwr/                              [Kernel PMU event]
-+  cpmu0/d2h_req_rdany/                               [Kernel PMU event]
-+  cpmu0/d2h_req_rdcurr/                              [Kernel PMU event]
-+  -----------------------------------------------------------
-+
-+  $# perf stat -e cpmu0/clock_ticks/ -e cpmu0/d2h_req_itowrm/
-+
-+The driver does not support sampling. So "perf record" and attaching to
-+a task are unsupported.
-+
-diff --git a/Documentation/admin-guide/perf/index.rst b/Documentation/admin-guide/perf/index.rst
-index 9c9ece88ce53..f12cfe76e1f0 100644
---- a/Documentation/admin-guide/perf/index.rst
-+++ b/Documentation/admin-guide/perf/index.rst
-@@ -18,3 +18,4 @@ Performance monitor support
-    xgene-pmu
-    arm_dsu_pmu
-    thunderx2-pmu
-+   cxl
--- 
-2.32.0
+Otherwise, whilst it's not a particularly intuitive interface, I guess it
+works reasonably well.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> interleave ways the decoder supports. For example, CXL devices designed
+> from CXL spec v2.0 supports 1, 2, 4, and 8 interleave ways. The exported
+> mask would show 0x116. The exported sysfs attribute will help user region
+> creation to do more valid configuration checking.
+> 
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  Documentation/ABI/testing/sysfs-bus-cxl |   13 +++++++++++++
+>  drivers/cxl/port.c                      |   10 ++++++++++
+>  2 files changed, 23 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index c6f533f47e50..5a13806a77ab 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -203,6 +203,19 @@ Description:
+>  		Interleave Capable" bit and the "AA14to12 Interleave Capable" bits
+>  		are set.
+>  
+> +What:		/sys/bus/cxl/devices/endpointX/interleave_cap
+> +		/sys/bus/cxl/devices/portX/interleave_cap
+> +Date:		Aug, 2020
+> +KernelVersion:	v6.1
+> +Contact:	linux-cxl@vger.kernel.org
+> +Description:
+> +		(RO) Interleave capability mask from the HDM decoder attached to the
+> +		port. Each bit in the mask represents the number of interleave ways
+> +		the decoder supports. For CXL devices designed from CXL spec v2.0 or
+> +		earlier, 1, 2, 4, and 8 interleave ways are supported. With CXL spec
+> +		v3.0 or later, the capability register (CXL spec v3 8.2.4.19.1)
+> +		indicates 3, 6, and 12 ways supported or 16 ways supported.
+> +
+>  What:		/sys/bus/cxl/devices/decoderX.Y/mode
+>  Date:		May, 2022
+>  KernelVersion:	v5.20
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index 567f62fd4ded..f856a31bec65 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -132,8 +132,18 @@ static ssize_t interleave_mask_show(struct device *dev,
+>  }
+>  static DEVICE_ATTR_RO(interleave_mask);
+>  
+> +static ssize_t interleave_cap_show(struct device *dev, struct device_attribute *attr,
+> +				   char *buf)
+> +{
+> +	struct cxl_hdm *cxlhdm = dev_get_drvdata(dev);
+> +
+> +	return sysfs_emit(buf, "%#lx\n", cxlhdm->interleave_cap);
+> +}
+> +static DEVICE_ATTR_RO(interleave_cap);
+> +
+>  static struct attribute *cxl_port_info_attributes[] = {
+>  	&dev_attr_interleave_mask.attr,
+> +	&dev_attr_interleave_cap.attr,
+>  	NULL,
+>  };
+>  
+> 
+> 
 
