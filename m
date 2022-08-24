@@ -2,48 +2,53 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03976C3F6B0
-	for <linux-cxl@archiver.kernel.org>; Wed, 24 Aug 2022 23:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6A7C04AA5
+	for <linux-cxl@archiver.kernel.org>; Wed, 24 Aug 2022 23:24:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229497AbiHXXKP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 24 Aug 2022 19:10:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54108 "EHLO
+        id S229894AbiHXXYy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 24 Aug 2022 19:24:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbiHXXKO (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Aug 2022 19:10:14 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0345A801
-        for <linux-cxl@vger.kernel.org>; Wed, 24 Aug 2022 16:10:13 -0700 (PDT)
+        with ESMTP id S229570AbiHXXYx (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Aug 2022 19:24:53 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F6224F31;
+        Wed, 24 Aug 2022 16:24:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661382613; x=1692918613;
+  t=1661383493; x=1692919493;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=VG2H/jyzfAXq2A25f2uUq50DnWPDZ33iXFfSEee0MpI=;
-  b=KRznJX8JMt8m/+Bv+rBS7mqRkPJ82rEAiGmDS/EqabArcYe2oKC2TXmY
-   /npLOTH8uXzYp7yyiQphW4W2zFsKhTmC2H7dMpL5gccwjMgCz/z6y4UHQ
-   C0plTJ5Ujre6c2d9eagEcH7s0wqm+5kj91clUOCYSrhJjqa5HjCPwxGuu
-   acGGUXLMbKib0H+LSqJ5keGIzNTrSbGxmJsmMOcjg3uhUcxn8EegH5qf6
-   /EsrCzXdWBBoZ0K4UXCgcYoz+ISnUckk9tV54da4hRqV++GfC5Bq+9ekV
-   TfckQYnf9OrLzkk+z2/iDsw7Dxc9jRv661sgeT19BpwPjJD8juEFct/4Z
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10449"; a="277120125"
+  bh=eJ8YUYE0KUuxnWEswmWESNkqPfeWZ5Rhr0ubNvs1qZs=;
+  b=KeKzEoJPdoq5gh4Lwedoeo5ThaxT9bN2fvHVSiLU/9reNibgHYsddA6D
+   +AG4wJrnrSP7bDQI2yJt116PhxyRvvDuf7Bn0SB0+vHM8xs55VNJmn1qm
+   NlZDs/EHcU2YkAiwptYWtxtIL8zzQBWwr7vEHyHqp9G6vkXuct94LcDB+
+   av8TIFmibhfuXGqT/PcoNiK/tiEVEGirxd0KQW/vqGFiEaxTg/naPKXJI
+   Gtia9W1nEGnz4nkBuArnHjjW4xCPUz6BhfPxQOxWHtHhs0l825ZePmkYJ
+   PWoCFlGfz08QQ4i69N45npuiN6xwnG+HBtOf5vhfT8s27xlpB8sWSTyaB
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10449"; a="380391307"
 X-IronPort-AV: E=Sophos;i="5.93,261,1654585200"; 
-   d="scan'208";a="277120125"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 16:10:13 -0700
+   d="scan'208";a="380391307"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 16:24:52 -0700
 X-IronPort-AV: E=Sophos;i="5.93,261,1654585200"; 
-   d="scan'208";a="639328510"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.128.158])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 16:10:08 -0700
-From:   alison.schofield@intel.com
-To:     Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Subject: [ndctl PATCH] cxl/test: Use interleave arithmetic to sort memdevs for a region
-Date:   Wed, 24 Aug 2022 16:09:58 -0700
-Message-Id: <20220824230958.125906-1-alison.schofield@intel.com>
+   d="scan'208";a="752265584"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.212.42.187])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 16:24:52 -0700
+From:   ira.weiny@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH V2 0/2] CXL: Taint user access to DOE mailbox config space
+Date:   Wed, 24 Aug 2022 16:24:48 -0700
+Message-Id: <20220824232450.723179-1-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -51,80 +56,42 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+From: Ira Weiny <ira.weiny@intel.com>
 
-Test cxl-region-sysfs.sh assumes Modulo arithmetic. XOR arithmetic
-is being introduced and requires a different ordering of the memdevs
-in the region.
+Changes from V1
+	Incorporate feedback from Dan and Greg.
 
-Update the test to sort the memdevs based on interleave arithmetic.
-If the interleave arithmetic attribute for the root decoder is not
-visible in sysfs, driver support for XOR math is not present. Default
-to Modulo sorting order.
+PCI config space access from user space has traditionally been unrestricted
+with writes being an understood risk for device operation.
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- test/cxl-region-sysfs.sh | 44 ++++++++++++++++++++++++++++++++--------
- 1 file changed, 36 insertions(+), 8 deletions(-)
+Unfortunately, device breakage or odd behavior from config writes lacks
+indicators that can leave driver writers confused when evaluating failures.
+This is especially true with the new PCIe Data Object Exchange (DOE) mailbox
+protocol where backdoor shenanigans from user space through things such as
+vendor defined protocols may affect device operation without complete breakage.
 
-diff --git a/test/cxl-region-sysfs.sh b/test/cxl-region-sysfs.sh
-index ae0f55653814..1af0ae7e632c 100644
---- a/test/cxl-region-sysfs.sh
-+++ b/test/cxl-region-sysfs.sh
-@@ -58,15 +58,43 @@ readarray -t mem_sort1 < <($CXL list -M -p $port_dev1 | jq -r ".[] | .memdev")
- 
- # TODO: add a cxl list option to list memdevs in valid region provisioning
- # order, hardcode for now.
-+
-+# Sort based on root decoder interleave arithmetic.
-+# Default to Modulo if the sysfs attribute is not emitted.
-+if [ ! -e /sys/bus/cxl/devices/$decoder/interleave_arithmetic ]; then
-+	ia="0"
-+else
-+	ia=$(cat /sys/bus/cxl/devices/$decoder/interleave_arithmetic)
-+fi
-+
- mem_sort=()
--mem_sort[0]=${mem_sort0[0]}
--mem_sort[1]=${mem_sort1[0]}
--mem_sort[2]=${mem_sort0[2]}
--mem_sort[3]=${mem_sort1[2]}
--mem_sort[4]=${mem_sort0[1]}
--mem_sort[5]=${mem_sort1[1]}
--mem_sort[6]=${mem_sort0[3]}
--mem_sort[7]=${mem_sort1[3]}
-+if [ $ia == "0" ]; then
-+	# Modulo Arithmetic
-+	mem_sort[0]=${mem_sort0[0]}
-+	mem_sort[1]=${mem_sort1[0]}
-+	mem_sort[2]=${mem_sort0[2]}
-+	mem_sort[3]=${mem_sort1[2]}
-+	mem_sort[4]=${mem_sort0[1]}
-+	mem_sort[5]=${mem_sort1[1]}
-+	mem_sort[6]=${mem_sort0[3]}
-+	mem_sort[7]=${mem_sort1[3]}
-+
-+elif [ $ia == "1" ]; then
-+	# XOR Arithmetic
-+	mem_sort[0]=${mem_sort1[0]}
-+	mem_sort[1]=${mem_sort0[0]}
-+	mem_sort[2]=${mem_sort1[2]}
-+	mem_sort[3]=${mem_sort0[2]}
-+	mem_sort[4]=${mem_sort1[1]}
-+	mem_sort[5]=${mem_sort0[1]}
-+	mem_sort[6]=${mem_sort1[3]}
-+	mem_sort[7]=${mem_sort0[3]}
-+else
-+	# Unknown Arithmetic
-+	echo "Unknown interleave arithmetic: $ia for $decoder"
-+	modprobe -r cxl-test
-+	exit 1
-+fi
- 
- # TODO: use this alternative memdev ordering to validate a negative test for
- # specifying invalid positions of memdevs
+Even though access should not be restricted it would be nice for driver writers
+to be able to flag critical parts of the config space such that interference
+from user space can be detected.
 
-base-commit: c9c9db39354ea0c3f737378186318e9b7908e3a7
+Introduce pci_request_config_region_exclusive() and use it in the CXL driver
+for DOE config space.
+
+Ira Weiny (2):
+  PCI: Allow drivers to request exclusive config regions
+  cxl/doe: Request exclusive DOE access
+
+ drivers/cxl/pci.c             |  5 +++++
+ drivers/pci/pci-sysfs.c       |  7 +++++++
+ drivers/pci/probe.c           |  6 ++++++
+ include/linux/ioport.h        |  2 ++
+ include/linux/pci.h           | 33 +++++++++++++++++++++++++--------
+ include/uapi/linux/pci_regs.h |  1 +
+ kernel/resource.c             | 13 ++++++++-----
+ 7 files changed, 54 insertions(+), 13 deletions(-)
+
+
+base-commit: 1cd8a2537eb07751d405ab7e2223f20338a90506
 -- 
-2.31.1
+2.37.2
 
