@@ -2,329 +2,178 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF9DC00140
-	for <linux-cxl@archiver.kernel.org>; Wed, 24 Aug 2022 16:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DC5C00140
+	for <linux-cxl@archiver.kernel.org>; Wed, 24 Aug 2022 16:17:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231451AbiHXQL1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 24 Aug 2022 12:11:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58534 "EHLO
+        id S231866AbiHXQRx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 24 Aug 2022 12:17:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238242AbiHXQLW (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Aug 2022 12:11:22 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BCD17D793;
-        Wed, 24 Aug 2022 09:11:17 -0700 (PDT)
-Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MCWKl1YHyz67xWY;
-        Thu, 25 Aug 2022 00:10:51 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
+        with ESMTP id S231451AbiHXQRw (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Aug 2022 12:17:52 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE99FBF6B;
+        Wed, 24 Aug 2022 09:17:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661357871; x=1692893871;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=wu0pu2sRmux9CIhgZacCdvxCgr9kVqbUM8Zmq1mT+qo=;
+  b=UocAChziyuL9MagDf4WaPke/Tm7jj7pFOqyX4nHxBEufV3RumLW8NApH
+   FMrJ/RlRRALjcC+ht7dF3iD0t3lZg1ruSiR0ohO4egjee944DTE7BKOkG
+   ahfwlYL1pvRZKEpsDGbVoHC9OUWUuwpwINmCVE4NoyBbgA9ptD1+2M9VP
+   i1YGppnA/gTinFEhM4R/ssORl0R1Qpcxs+nrhL1cCqnqq3U76aMXmomAP
+   O+dzOwjUmWLNohKzTDPsGuIwRUmog/nFjLo1M6LUTkONJUC62Vy5ydDdS
+   3WOQD7BmV2cNRxjD/L7SJAYyUCD0V0iZMywPLF6Gz8wMiCqZR0TdelaXR
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10449"; a="294011462"
+X-IronPort-AV: E=Sophos;i="5.93,260,1654585200"; 
+   d="scan'208";a="294011462"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 09:17:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,260,1654585200"; 
+   d="scan'208";a="670571785"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmsmga008.fm.intel.com with ESMTP; 24 Aug 2022 09:17:51 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 24 Aug 2022 18:11:15 +0200
-Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 24 Aug
- 2022 17:11:14 +0100
-Date:   Wed, 24 Aug 2022 17:11:13 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Ben Widawsky" <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [RFC PATCH 4/9] cxl/mem: Trace General Media Event Record
-Message-ID: <20220824171113.00006f80@huawei.com>
-In-Reply-To: <20220813053243.757363-5-ira.weiny@intel.com>
-References: <20220813053243.757363-1-ira.weiny@intel.com>
-        <20220813053243.757363-5-ira.weiny@intel.com>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+ 15.1.2375.31; Wed, 24 Aug 2022 09:17:50 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Wed, 24 Aug 2022 09:17:50 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31 via Frontend Transport; Wed, 24 Aug 2022 09:17:50 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.43) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.31; Wed, 24 Aug 2022 09:17:49 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Q2kokY1kbk25um/Sjt0aX7nnwKeeebabhxU3m4KJX0aJxqL3tzf5ixB3A6SY6qhB/rAxn0AM+HjYpmkpePURCnHik7qw3OPrncE30LkCpgFlR15aXJWkVMnDRz6OwM9kZWK2IBw8xfwhXX3dobtb6A4Xcr8gPXOV5ovo1SNfSTLZAto1iAxST7PfnOWagsmWDrQOjAk7Tpr/l+p1SQ0HyadgKV4ZSL7hN8lXy1KJN+ERWahvDo0DB54p1n/EVmZv62l0Brv+Ylo4YfBpGs09xlwm2HhU7Y8zjHLLFYAyvyGxArzLP6CQYmxl36ezRlAHRya+QFD5J2sbvP968tVPdg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6m8j2s9JjC8IVw5hL4bo9g9crbiQ9lifbEBqFDMiVRs=;
+ b=GLHu2VGAUqSnA2stStxlUhhLe+9TvKlRRi2UN+e0+fVjqQmzuJn2qeM19ErfGb3ZGycAvPZTmBvZxbb0iz/cBWp4p7J7GFizCLznK9Vhz7zZJejVPexIVSt5bKG/XuhdJYlkGx1FTUpKVLJCOM2st+gcDArOya7Hywiz2z2aOl0Ub+mUrwXuRBfaP+BVnvGGRaN4gqIrSweSudMbfIyGnIF44Yujx6Us5tn5C3oq1wmSVBfc8i5S0eRokuIC0oDcAvyXqdVvIxrspSvVWNgyjElKILK71oOnD3/P3pn1zT0tAUu/b9wMk1+cI1NYU/xxQGSiwcp/iuwx8tefurVvrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20) by CY4PR1101MB2311.namprd11.prod.outlook.com
+ (2603:10b6:910:23::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.14; Wed, 24 Aug
+ 2022 16:17:46 +0000
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::9847:345e:4c5b:ca12]) by MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::9847:345e:4c5b:ca12%6]) with mapi id 15.20.5546.024; Wed, 24 Aug 2022
+ 16:17:46 +0000
+Date:   Wed, 24 Aug 2022 09:17:44 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+CC:     Adam Manzanares <a.manzanares@samsung.com>,
+        "alison.schofield@intel.com" <alison.schofield@intel.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "ira.weiny@intel.com" <ira.weiny@intel.com>,
+        "widawsk@kernel.org" <widawsk@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cxl: Replace HDM decoder granularity magic numbers
+Message-ID: <63064f28720cf_1b3229490@dwillia2-xfh.jf.intel.com.notmuch>
+References: <CGME20220822170552uscas1p1b1ee530bf38a14806010d65d1b593ab0@uscas1p1.samsung.com>
+ <20220822170510.125082-1-a.manzanares@samsung.com>
+ <20220822171703.sfizbmn6retpxggi@offworld>
+ <20220824104401.00005cd4@huawei.com>
+ <20220824153122.2bgths6lnsxlolos@offworld>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20220824153122.2bgths6lnsxlolos@offworld>
+X-ClientProxiedBy: SJ0PR13CA0146.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c6::31) To MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0eaf3c64-f550-40e2-8b3b-08da85ec2e7a
+X-MS-TrafficTypeDiagnostic: CY4PR1101MB2311:EE_
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pomh2zPiiZqDNULs2NszDLCMzBMwpiKVBsY98Wj2RZKoo4IVKwCN3FxS9s4lkhakq0ggP/VCfu9/aSaVyzMrmI4ghJWcy4RkAfcXS59C4JoDQvAeUPs8aUx2xE0yCYgfRl1GLNi4lq1hXtMBWR3Ly02t88KnXLozKp5JkPFs7aQSFOJwUyf69W51Q4fPkAls2aIJN6LTbhfg7WxpviEJp6KzyupSYMZ1PdN1RfkORqFUG7wYTi9aaOwW/Au191YQzHNM019vw7BqwO/P11EIATtRAUPKjxEEyXGOeQHTHeufVD7GIRbxFpZ73dCLciXk1KwCji141BtyNtLdFwxTFxUCSuqFiGEV+oOUlnRlA+bWNuyihxSOgbHqaT9R2jbdHDFjCDHV7px6CjofZLW47sQ2fRrCjSTs5y2hRJ7UIEH7+P+M3LYe0xVU1AmGQcHIzM/iTs1O0Y0v6zfxq9dmYwABcFwm4faiZnbLnJdsh08PLYEhz0GbozBvBnsSLa95JTOzxUx7+URV+P1h3mi3wfXi/97Rs3Nus4C2d4cP8+7FDiUuvb/VZREd1J+ZgUxGGUxTrUCdb8G1Qo4QUUIQvpjV1ld0DO4NyWsXNTJMfQguHjAhQsiu1t+fa60itZjFiDQl1NixxX2e/s3JwlL4W+DM//qYn4HfZS5DlLkhxemEQv7vX8yMp+mBOUg3JQwKGYkX1Ne+SlEDH4F8e+lyjw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(366004)(396003)(376002)(136003)(39860400002)(346002)(26005)(6486002)(9686003)(6506007)(6512007)(83380400001)(478600001)(38100700002)(186003)(4744005)(2906002)(8936002)(5660300002)(41300700001)(66476007)(66556008)(54906003)(86362001)(8676002)(4326008)(110136005)(66946007)(82960400001)(316002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?9iVqrlf9mDzUsGne1n3LFxW0g4KcCzaNF+G1jUodmorx54JbGuYiciKa4JR5?=
+ =?us-ascii?Q?9XNAuJ8CgeLGepWUMMI8i+w7fpss0CQtuAwudMINwMUUINg0K+ZCJfvejL0c?=
+ =?us-ascii?Q?P6XO2M9L/iojFGuYygOrBMLpmVkzdk4kpxgZwpidHRh9/RyBB9StbrPmGZSr?=
+ =?us-ascii?Q?2zmvJ0d2FsXE0u4q058fL0UyBEiI1+CpwtKWPVGe+LK9e7now11pwIRApYaR?=
+ =?us-ascii?Q?YDLohMbKEmBATbnVvBD5wIjs90UtUndDmWxUw/ax0Ke+8FDztLQIgbRyZBPg?=
+ =?us-ascii?Q?ErP35UXd7Mya+OkALeMpym1HXJKEof1buSf7pM0WGBRrBNTfTwjbQB5Xhr9d?=
+ =?us-ascii?Q?lJshjpKhCYMPsF1VJKbVfWZhex6gBahCLoc0G6TD34Hvzypd6cXnOh7nT0pk?=
+ =?us-ascii?Q?ybPtG4wMjbQ7HMv11IGq3iBxYyjEJNhSrZKpP1qAJrD47ufrFoF6Ob4KJzEJ?=
+ =?us-ascii?Q?bXjrCZFkFp3DjlyyZWX7GH1y/hSWo2FGw4JMy98fhWX5UVRDqoMPva7ZWTjf?=
+ =?us-ascii?Q?R1AtFVkOPjo52yuvLnd4sN5MzMxb8qJcfb9iDuqq6pDxuOoNb8fEQhX43u6n?=
+ =?us-ascii?Q?bVpgUi+mKynENVG1AJU9k6H+YECjBdOcw9eneryrvhZIZjXjSBX8Qn66A1ZV?=
+ =?us-ascii?Q?f4Qweg3Cj4Ilf1BwOhwqFZLqyfpbf8iWu6D04FW5pOSeRhx7y6gCKADXpHos?=
+ =?us-ascii?Q?ZCnORcWiTFI28mlHltCfIZ+d4PZ6FWqCVmPA+7TcjRCY4I8OiSy/ARlzBTDk?=
+ =?us-ascii?Q?DMmhd+0U9FsuQJfK3OdhznrsYxZAo/43v2RfGjcXwMPlefo8OqN0BFcCcAwY?=
+ =?us-ascii?Q?hbzv1oXpWiF/wzmAXQ6yqCSYAGk8gSmDOzulOefG+BnHzkRbBC8NTEZzCtde?=
+ =?us-ascii?Q?TVPeclVG9ySoCQrPnZmBFgzEp3zSMQzgHiTORez9i/k1i8+Tr93G9Gj46b8H?=
+ =?us-ascii?Q?JiNbqSFlkZQ5vhLQUo/AxC0STjMlv34SyF+5lBWzeJb3umAko8S4G/b1ODai?=
+ =?us-ascii?Q?ga6sNNQ26AjhODCqFMHdGoUxUezDqvOsind37cdvefWTPLhglWnf4pXh0Y0x?=
+ =?us-ascii?Q?Htp3LLo8NOjqYKNh2NFDh46/bulVIHrFAMyyWgUSn+Wm4Veqt1oeuvg8l5nG?=
+ =?us-ascii?Q?xQHd6QP+xFU1ijN0dJJQahyjC8oMiOsNq/MMtrqoLhyYPWsfonyAUb8lRyLY?=
+ =?us-ascii?Q?X6JRPuQEDoXdCOCaRluawPwNQ4kBMG+3ibSgoP8JNypR6vxFLcyUiFWbIHBh?=
+ =?us-ascii?Q?fixqGpwvzt5R/0Kep3rh5BgeGD2R9+ZriTnv9w1mgGLwEg+arc3M8IcyA4eg?=
+ =?us-ascii?Q?Y+CsK31VcutqiknWW28/reO9cVeQ5BOpWYoBXwQdvYtzfHbBPkNFbPARX1Yx?=
+ =?us-ascii?Q?DSr2+KkYKiYGvO/wa18Ed9xDDXWGlcS18Eus/oJTv6OHtQpSyqRkXsA9vHJ7?=
+ =?us-ascii?Q?swG6gpZI2aAJ4X/FHZeoM4mdMOYs4Fxj5crelOhpVZx1cGZDTqKCWyOb+1xL?=
+ =?us-ascii?Q?GwijOUkkvh3l4vOWXrA+bVU8JRFUTy9cM+cbZgm9jtHOPZB2iTAZkgjpTVX1?=
+ =?us-ascii?Q?U4VnIPmhwh0DtQkeTfsaYPWFEcflDcdtNHOOEqnGgegoPi9gE9IiK/6aIzIC?=
+ =?us-ascii?Q?Ag=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0eaf3c64-f550-40e2-8b3b-08da85ec2e7a
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2022 16:17:46.6467
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7j59DCYzaLUwLv/5WCISJspbAJwR08a7M+VkM6L0ArzbwQRHITrdQi+2Hi4WD2TJiByq66Ql+xDdbemzDcQIutJ3CkXOj//4w4fIP4xrRRU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1101MB2311
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 12 Aug 2022 22:32:38 -0700
-ira.weiny@intel.com wrote:
-
-> From: Ira Weiny <ira.weiny@intel.com>
+Davidlohr Bueso wrote:
+> On Wed, 24 Aug 2022, Jonathan Cameron wrote:
 > 
-> CXL v3.0 section 8.2.9.2.1.1 defines the General Media Event Record.
+> >On Mon, 22 Aug 2022 10:17:03 -0700
+> >Davidlohr Bueso <dave@stgolabs.net> wrote:
 > 
-> Determine if the event read is a general media record and if so trace
-> the record.
+> >> Actually the whole drivers/cxl/* could use updating the comments for 3.0.
+> >
+> >Interesting point.  What do we want to do on this?  Most similar
+> >cases I've been involved on rely on referring to 'oldest' compatible spec.
+> >(this is true for ACPI stuff for example).
 > 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-A few trivial things inline...
-
+> I find it incredibly annoying to reference table or section numbers from old
+> specs mention in the code. Unless dealing with specific version things, why
+> use old specs at all?
 > 
-> ---
-> A couple of specification questions I've had.
-> 
-> 1) The component id is not specified as a UUID or any particular
-> format.  It is therefore reported as a byte array.  Is this intentional?
-Given spec gives "device specific" I'm guessing it's intentional.
+> The main drawback to this is obviously the constant need to update everything,
+> so...
 
-> 
-> 2) This record has a very odd byte layout with a 16 bit field
->    (validity_flags) landing on a 3 byte boundary and a 3 byte bit field
->    (device) landing on a 7 byte boundary.
+I think a happy medium is all new references being 3.0 and touching any
+old references and refresh them up to 3.0.
 
-oops. Guess 'we' weren't paying attention.  Stuck with it now.
-
-> 
-> I've made my best guess as to how the endianess of these fields should
-> be resolved.  But I'm happy to hear from other folks if what I have done
-> is wrong.
-
-Mailing list probably isn't the place to look for clarification on this.
-
-> 
-> struct cxl_evt_gen_media {
-> 	struct cxl_event_record_hdr hdr;
-> 	__le64 phys_addr;
-> 	u8 descriptor;
-> 	u8 type;
-> 	u8 transaction_type;
-> 	u16 validity_flags;			/* ??? */
-> 	u8 channel;
-> 	u8 rank;
-> 	u8 device[CXL_EVT_GEN_MED_DEV_SIZE];	/* ??? */
-> 	u8 component_id[CXL_EVT_GEN_MED_COMP_ID_SIZE];
-> } __packed;
-> ---
->  drivers/cxl/core/mbox.c           |  30 ++++++-
->  drivers/cxl/cxlmem.h              |  19 +++++
->  include/trace/events/cxl-events.h | 125 ++++++++++++++++++++++++++++++
->  3 files changed, 172 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 493f5ceb5d1c..0e433f072163 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -709,6 +709,32 @@ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, CXL);
->  
-> +/*
-> + * General Media Event Record
-> + * CXL v3.0 Section 8.2.9.2.1.1; Table 8-43
-> + */
-> +static const uuid_t gen_media_event_uuid =
-> +	UUID_INIT(0xfbcd0a77, 0xc260, 0x417f,
-> +		  0x85, 0xa9, 0x08, 0x8b, 0x16, 0x21, 0xeb, 0xa6);
-> +
-> +static void cxl_trace_event_record(const char *dev_name,
-> +				   enum cxl_event_log_type type,
-> +				   struct cxl_get_event_payload *payload)
-> +{
-> +	uuid_t *id = &payload->record.hdr.id;
-> +
-> +	if (uuid_equal(id, &gen_media_event_uuid)) {
-> +		struct cxl_evt_gen_media *rec =
-> +				(struct cxl_evt_gen_media *)&payload->record;
-> +
-> +		trace_cxl_gen_media_event(dev_name, type, rec);
-> +		return;
-> +	}
-> +
-> +	/* For unknown record types print just the header */
-> +	trace_cxl_event(dev_name, type, &payload->record);
-> +}
-> +
->  static int cxl_clear_event_record(struct cxl_dev_state *cxlds,
->  				  enum cxl_event_log_type log,
->  				  __le16 handle)
-> @@ -747,8 +773,8 @@ static int cxl_mem_get_records_log(struct cxl_dev_state *cxlds,
->  
->  		record_count = le16_to_cpu(payload.record_count);
->  		if (record_count > 0) {
-> -			trace_cxl_event(dev_name(cxlds->dev), type,
-> -					&payload.record);
-> +			cxl_trace_event_record(dev_name(cxlds->dev), type,
-> +					       &payload);
->  			cxl_clear_event_record(cxlds, type,
->  					       payload.record.hdr.handle);
->  		}
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 5506e7210cf6..33669459ae4b 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -402,6 +402,25 @@ struct cxl_mbox_clear_event_payload {
->  	__le16 handle;
->  };
->  
-> +/*
-> + * General Media Event Record
-> + * CXL v3.0 Section 8.2.9.2.1.1; Table 8-43
-> + */
-> +#define CXL_EVT_GEN_MED_DEV_SIZE	3
-> +#define CXL_EVT_GEN_MED_COMP_ID_SIZE	0x10
-> +struct cxl_evt_gen_media {
-> +	struct cxl_event_record_hdr hdr;
-> +	__le64 phys_addr;
-> +	u8 descriptor;
-> +	u8 type;
-> +	u8 transaction_type;
-> +	u16 validity_flags;
-> +	u8 channel;
-> +	u8 rank;
-> +	u8 device[CXL_EVT_GEN_MED_DEV_SIZE];
-> +	u8 component_id[CXL_EVT_GEN_MED_COMP_ID_SIZE];
-> +} __packed;
-> +
->  struct cxl_mbox_get_partition_info {
->  	__le64 active_volatile_cap;
->  	__le64 active_persistent_cap;
-> diff --git a/include/trace/events/cxl-events.h b/include/trace/events/cxl-events.h
-> index f4baeae66cf3..b51c51fd4e62 100644
-> --- a/include/trace/events/cxl-events.h
-> +++ b/include/trace/events/cxl-events.h
-> @@ -119,6 +119,131 @@ TRACE_EVENT(cxl_event,
->  		)
->  );
->  
-> +/*
-> + * General Media Event Record - GMER
-> + * CXL v2.0 Section 8.2.9.1.1.1; Table 154
-> + */
-> +#define CXL_GMER_PHYS_ADDR_VOLATILE			BIT(0)
-> +#define CXL_GMER_PHYS_ADDR_MASK				0x3f
-
-Inverse of mask is confusing. Just specify the full mask.
-
-> +
-> +#define CXL_GMER_EVT_DESC_UNCORECTABLE_EVENT		BIT(0)
-> +#define CXL_GMER_EVT_DESC_THRESHOLD_EVENT		BIT(1)
-> +#define CXL_GMER_EVT_DESC_POISON_LIST_OVERFLOW		BIT(2)
-> +#define show_event_desc_flags(flags)	__print_flags(flags, "|",		   \
-> +	{ CXL_GMER_EVT_DESC_UNCORECTABLE_EVENT,		"Uncorrectable Event"	}, \
-> +	{ CXL_GMER_EVT_DESC_THRESHOLD_EVENT,		"Threshold event"	}, \
-> +	{ CXL_GMER_EVT_DESC_POISON_LIST_OVERFLOW,	"Poison List Overflow"	}  \
-> +)
-> +
-> +#define CXL_GMER_MEM_EVT_TYPE_ECC_ERROR			0x00
-> +#define CXL_GMER_MEM_EVT_TYPE_INV_ADDR			0x01
-> +#define CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR		0x02
-> +#define show_mem_event_type(type)	__print_symbolic(type,			\
-> +	{ CXL_GMER_MEM_EVT_TYPE_ECC_ERROR,		"ECC Error" },		\
-> +	{ CXL_GMER_MEM_EVT_TYPE_INV_ADDR,		"Invalid Address" },	\
-> +	{ CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR,	"Data Path Error" }	\
-> +)
-> +
-> +#define CXL_GMER_TRANS_UNKNOWN				0x00
-> +#define CXL_GMER_TRANS_HOST_READ			0x01
-> +#define CXL_GMER_TRANS_HOST_WRITE			0x02
-> +#define CXL_GMER_TRANS_HOST_SCAN_MEDIA			0x03
-> +#define CXL_GMER_TRANS_HOST_INJECT_POISON		0x04
-> +#define CXL_GMER_TRANS_INTERNAL_MEDIA_SCRUB		0x05
-> +#define CXL_GMER_TRANS_INTERNAL_MEDIA_MANAGEMENT	0x06
-> +#define show_trans_type(type)	__print_symbolic(type,					\
-> +	{ CXL_GMER_TRANS_UNKNOWN,			"Unknown" },			\
-> +	{ CXL_GMER_TRANS_HOST_READ,			"Host Read" },			\
-> +	{ CXL_GMER_TRANS_HOST_WRITE,			"Host Write" },			\
-> +	{ CXL_GMER_TRANS_HOST_SCAN_MEDIA,		"Host Scan Media" },		\
-> +	{ CXL_GMER_TRANS_HOST_INJECT_POISON,		"Host Inject Poison" },		\
-> +	{ CXL_GMER_TRANS_INTERNAL_MEDIA_SCRUB,		"Internal Media Scrub" },	\
-> +	{ CXL_GMER_TRANS_INTERNAL_MEDIA_MANAGEMENT,	"Internal Media Management" }	\
-> +)
-> +
-> +#define CXL_GMER_VALID_CHANNEL				BIT(0)
-> +#define CXL_GMER_VALID_RANK				BIT(1)
-> +#define CXL_GMER_VALID_DEVICE				BIT(2)
-> +#define CXL_GMER_VALID_COMPONENT			BIT(3)
-> +#define show_valid_flags(flags)	__print_flags(flags, "|",		   \
-> +	{ CXL_GMER_VALID_CHANNEL,			"CHANNEL"	}, \
-> +	{ CXL_GMER_VALID_RANK,				"RANK"		}, \
-> +	{ CXL_GMER_VALID_DEVICE,			"DEVICE"	}, \
-> +	{ CXL_GMER_VALID_COMPONENT,			"COMPONENT"	}  \
-> +)
-> +
-> +TRACE_EVENT(cxl_gen_media_event,
-> +
-> +	TP_PROTO(const char *dev_name, enum cxl_event_log_type log,
-> +		 struct cxl_evt_gen_media *rec),
-> +
-> +	TP_ARGS(dev_name, log, rec),
-> +
-> +	TP_STRUCT__entry(
-> +		/* Common */
-> +		__string(dev_name, dev_name)
-> +		__field(int, log)
-> +		__array(u8, id, UUID_SIZE)
-> +		__field(u32, flags)
-> +		__field(u16, handle)
-> +		__field(u16, related_handle)
-> +		__field(u64, timestamp)
-> +
-> +		/* General Media */
-> +		__field(u64, phys_addr)
-> +		__field(u8, descriptor)
-> +		__field(u8, type)
-> +		__field(u8, transaction_type)
-> +		__field(u8, channel)
-> +		__field(u32, device)
-> +		__array(u8, comp_id, CXL_EVT_GEN_MED_COMP_ID_SIZE)
-> +		__field(u16, validity_flags)
-> +		__field(u8, rank) /* Out of order to pack trace record */
-> +	),
-> +
-> +	TP_fast_assign(
-> +		/* Common */
-> +		__assign_str(dev_name, dev_name);
-> +		memcpy(__entry->id, &rec->hdr.id, UUID_SIZE);
-> +		__entry->log = log;
-> +		__entry->flags = le32_to_cpu(rec->hdr.flags_length) >> 8;
-> +		__entry->handle = le16_to_cpu(rec->hdr.handle);
-> +		__entry->related_handle = le16_to_cpu(rec->hdr.related_handle);
-> +		__entry->timestamp = le64_to_cpu(rec->hdr.timestamp);
-> +
-> +		/* General Media */
-> +		__entry->phys_addr = le64_to_cpu(rec->phys_addr);
-> +		__entry->descriptor = rec->descriptor;
-> +		__entry->type = rec->type;
-> +		__entry->transaction_type = rec->transaction_type;
-> +		__entry->channel = rec->channel;
-> +		__entry->rank = rec->rank;
-> +		__entry->device = rec->device[0] << 24 |
-> +				  rec->device[1] << 16 |
-> +				  rec->device[2] << 8; /* 3 byte LE ? */
-> +		__entry->device = le32_to_cpu(__entry->device);
-> +		memcpy(__entry->comp_id, &rec->component_id,
-> +			CXL_EVT_GEN_MED_COMP_ID_SIZE);
-> +		__entry->validity_flags = le16_to_cpu(rec->validity_flags);
-> +	),
-> +
-> +	TP_printk("%s: %s time=%llu id=%pUl handle=%x related_handle=%x hdr_flags='%s': " \
-> +		  "phys_addr=%llx volatile=%s desc='%s' type='%s' trans_type='%s' channel=%u " \
-> +		  "rank=%u device=%x comp_id=%s valid_flags='%s'",
-> +		__get_str(dev_name), show_log_type(__entry->log),
-> +		__entry->timestamp, __entry->id, __entry->handle,
-> +		__entry->related_handle, show_hdr_flags(__entry->flags),
-> +		__entry->phys_addr & ~CXL_GMER_PHYS_ADDR_MASK,
-> +		(__entry->phys_addr & CXL_GMER_PHYS_ADDR_VOLATILE) ? "TRUE" : "FALSE",
-> +		show_event_desc_flags(__entry->descriptor),
-> +		show_mem_event_type(__entry->type),
-> +		show_trans_type(__entry->transaction_type),
-> +		__entry->channel, __entry->rank, __entry->device,
-> +		__print_hex(__entry->comp_id, CXL_EVT_GEN_MED_COMP_ID_SIZE),
-> +		show_valid_flags(__entry->validity_flags)
-
-Can we make the printing of fields with valid flags conditional?
-Been a while since I wrote a Trace point, but I think I recall doing that..
-
-> +		)
-> +);
-> +
->  #endif /* _CXL_TRACE_EVENTS_H */
->  
->  /* This part must be outside protection */
-
+That said if someone wants to do the work to refresh all of them, and
+someone else wants to review those updates I would take the patch.
