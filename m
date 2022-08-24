@@ -2,99 +2,129 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55710C3F6B0
-	for <linux-cxl@archiver.kernel.org>; Wed, 24 Aug 2022 21:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03976C3F6B0
+	for <linux-cxl@archiver.kernel.org>; Wed, 24 Aug 2022 23:10:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237608AbiHXVN5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 24 Aug 2022 17:13:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50404 "EHLO
+        id S229497AbiHXXKP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 24 Aug 2022 19:10:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236881AbiHXVN4 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Aug 2022 17:13:56 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C9067B2AD
-        for <linux-cxl@vger.kernel.org>; Wed, 24 Aug 2022 14:13:55 -0700 (PDT)
+        with ESMTP id S229452AbiHXXKO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Aug 2022 19:10:14 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0345A801
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Aug 2022 16:10:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661375635; x=1692911635;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=MZCR5t9kMwGt8i1e7Fnn6UKi1XS/kmrAImLDSqTijeo=;
-  b=ctETVGdMETqejP9mZhv+5cK85GlxXssL+eCt+bAb8SxjwnMvr7NgvsqW
-   Ehkhbmhh64uOeZsedoicCtF+8ZhHy8Wgr8vCaonc1o6I/vgc4nIwMgNnW
-   fZc4mViDFGAPnJhEMOKN8XgRA8fV3DBB0R6whCehQtf23do2wvGr601rl
-   ziOnEfvTWZzOLDb7F39NnO2RjfRjz1XQyBB90wvJgrHH2GP8i4mauugrq
-   PSxhdhaHdPTzWxos3o/zif2PYpYVklth88ZWnoTHYxr1ZN1kRLf2un/OV
-   qJIkjTtfgB4pXXNk+rhfB7z9UzXcMG7fQrcD+P2PEMd84wm2dSUmKvuAz
+  t=1661382613; x=1692918613;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=VG2H/jyzfAXq2A25f2uUq50DnWPDZ33iXFfSEee0MpI=;
+  b=KRznJX8JMt8m/+Bv+rBS7mqRkPJ82rEAiGmDS/EqabArcYe2oKC2TXmY
+   /npLOTH8uXzYp7yyiQphW4W2zFsKhTmC2H7dMpL5gccwjMgCz/z6y4UHQ
+   C0plTJ5Ujre6c2d9eagEcH7s0wqm+5kj91clUOCYSrhJjqa5HjCPwxGuu
+   acGGUXLMbKib0H+LSqJ5keGIzNTrSbGxmJsmMOcjg3uhUcxn8EegH5qf6
+   /EsrCzXdWBBoZ0K4UXCgcYoz+ISnUckk9tV54da4hRqV++GfC5Bq+9ekV
+   TfckQYnf9OrLzkk+z2/iDsw7Dxc9jRv661sgeT19BpwPjJD8juEFct/4Z
    Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10449"; a="273830654"
+X-IronPort-AV: E=McAfee;i="6500,9779,10449"; a="277120125"
 X-IronPort-AV: E=Sophos;i="5.93,261,1654585200"; 
-   d="scan'208";a="273830654"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 14:13:55 -0700
+   d="scan'208";a="277120125"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 16:10:13 -0700
 X-IronPort-AV: E=Sophos;i="5.93,261,1654585200"; 
-   d="scan'208";a="678199329"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.213.178.56]) ([10.213.178.56])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 14:13:54 -0700
-Message-ID: <a1f87adb-fe54-be84-5bdb-52dc27417474@intel.com>
-Date:   Wed, 24 Aug 2022 14:13:54 -0700
+   d="scan'208";a="639328510"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.128.158])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 16:10:08 -0700
+From:   alison.schofield@intel.com
+To:     Vishal Verma <vishal.l.verma@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+Subject: [ndctl PATCH] cxl/test: Use interleave arithmetic to sort memdevs for a region
+Date:   Wed, 24 Aug 2022 16:09:58 -0700
+Message-Id: <20220824230958.125906-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.12.0
-Subject: Re: [PATCH v4 3/6] tools/testing/cxl: Add interleave check support to
- mock cxl port device
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
-        vishal.l.verma@intel.com, ira.weiny@intel.com,
-        alison.schofield@intel.com
-References: <166077102447.1743055.17158560277276060113.stgit@djiang5-desk4.jf.intel.com>
- <166077131383.1743055.4589788759198107631.stgit@djiang5-desk4.jf.intel.com>
- <20220824155902.00007b3c@huawei.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20220824155902.00007b3c@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+From: Alison Schofield <alison.schofield@intel.com>
 
-On 8/24/2022 7:59 AM, Jonathan Cameron wrote:
-> On Wed, 17 Aug 2022 14:21:53 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
->
->> Attach the cxl mock hdm to the port device to allow cxl_interleave_verify()
-> I couldn't follow what was going on here, until I realized you've renamed
-> this function.  Now cxl_interleave_capable().
->
-> Are the tests broken (null dereference) between patch 1 and 3?
->
-> Seem like dev_set_drvdata() should move to patch 1.
-You are right. Will move.
->
->> to check the interleave configuration. Set the interleave_mask as well
->> to support the new verification code.
->>
->> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>   tools/testing/cxl/test/cxl.c |    3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
->> index a072b2d3e726..3ce353a20b80 100644
->> --- a/tools/testing/cxl/test/cxl.c
->> +++ b/tools/testing/cxl/test/cxl.c
->> @@ -398,6 +398,9 @@ static struct cxl_hdm *mock_cxl_setup_hdm(struct cxl_port *port)
->>   		return ERR_PTR(-ENOMEM);
->>   
->>   	cxlhdm->port = port;
->> +	cxlhdm->interleave_mask = GENMASK(14, 8);
->> +	cxlhdm->interleave_cap = CXL_HDM_INTERLEAVE_CAP_DEFAULT;
->> +	dev_set_drvdata(&port->dev, cxlhdm);
->>   	return cxlhdm;
->>   }
->>   
->>
->>
+Test cxl-region-sysfs.sh assumes Modulo arithmetic. XOR arithmetic
+is being introduced and requires a different ordering of the memdevs
+in the region.
+
+Update the test to sort the memdevs based on interleave arithmetic.
+If the interleave arithmetic attribute for the root decoder is not
+visible in sysfs, driver support for XOR math is not present. Default
+to Modulo sorting order.
+
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
+ test/cxl-region-sysfs.sh | 44 ++++++++++++++++++++++++++++++++--------
+ 1 file changed, 36 insertions(+), 8 deletions(-)
+
+diff --git a/test/cxl-region-sysfs.sh b/test/cxl-region-sysfs.sh
+index ae0f55653814..1af0ae7e632c 100644
+--- a/test/cxl-region-sysfs.sh
++++ b/test/cxl-region-sysfs.sh
+@@ -58,15 +58,43 @@ readarray -t mem_sort1 < <($CXL list -M -p $port_dev1 | jq -r ".[] | .memdev")
+ 
+ # TODO: add a cxl list option to list memdevs in valid region provisioning
+ # order, hardcode for now.
++
++# Sort based on root decoder interleave arithmetic.
++# Default to Modulo if the sysfs attribute is not emitted.
++if [ ! -e /sys/bus/cxl/devices/$decoder/interleave_arithmetic ]; then
++	ia="0"
++else
++	ia=$(cat /sys/bus/cxl/devices/$decoder/interleave_arithmetic)
++fi
++
+ mem_sort=()
+-mem_sort[0]=${mem_sort0[0]}
+-mem_sort[1]=${mem_sort1[0]}
+-mem_sort[2]=${mem_sort0[2]}
+-mem_sort[3]=${mem_sort1[2]}
+-mem_sort[4]=${mem_sort0[1]}
+-mem_sort[5]=${mem_sort1[1]}
+-mem_sort[6]=${mem_sort0[3]}
+-mem_sort[7]=${mem_sort1[3]}
++if [ $ia == "0" ]; then
++	# Modulo Arithmetic
++	mem_sort[0]=${mem_sort0[0]}
++	mem_sort[1]=${mem_sort1[0]}
++	mem_sort[2]=${mem_sort0[2]}
++	mem_sort[3]=${mem_sort1[2]}
++	mem_sort[4]=${mem_sort0[1]}
++	mem_sort[5]=${mem_sort1[1]}
++	mem_sort[6]=${mem_sort0[3]}
++	mem_sort[7]=${mem_sort1[3]}
++
++elif [ $ia == "1" ]; then
++	# XOR Arithmetic
++	mem_sort[0]=${mem_sort1[0]}
++	mem_sort[1]=${mem_sort0[0]}
++	mem_sort[2]=${mem_sort1[2]}
++	mem_sort[3]=${mem_sort0[2]}
++	mem_sort[4]=${mem_sort1[1]}
++	mem_sort[5]=${mem_sort0[1]}
++	mem_sort[6]=${mem_sort1[3]}
++	mem_sort[7]=${mem_sort0[3]}
++else
++	# Unknown Arithmetic
++	echo "Unknown interleave arithmetic: $ia for $decoder"
++	modprobe -r cxl-test
++	exit 1
++fi
+ 
+ # TODO: use this alternative memdev ordering to validate a negative test for
+ # specifying invalid positions of memdevs
+
+base-commit: c9c9db39354ea0c3f737378186318e9b7908e3a7
+-- 
+2.31.1
+
