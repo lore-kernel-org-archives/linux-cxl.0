@@ -2,318 +2,126 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4810CC00140
-	for <linux-cxl@archiver.kernel.org>; Wed, 24 Aug 2022 10:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C17C7C00140
+	for <linux-cxl@archiver.kernel.org>; Wed, 24 Aug 2022 10:36:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235175AbiHXKIM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 24 Aug 2022 06:08:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51462 "EHLO
+        id S236200AbiHXKgW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 24 Aug 2022 06:36:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236745AbiHXKIB (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Aug 2022 06:08:01 -0400
+        with ESMTP id S236101AbiHXKgV (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 Aug 2022 06:36:21 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46F444AD75;
-        Wed, 24 Aug 2022 03:07:59 -0700 (PDT)
-Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MCMGY35VKz6H76r;
-        Wed, 24 Aug 2022 18:07:33 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90AD3193DF;
+        Wed, 24 Aug 2022 03:36:19 -0700 (PDT)
+Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MCMvN5B7Fz689yL;
+        Wed, 24 Aug 2022 18:36:00 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
+ fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 24 Aug 2022 12:07:56 +0200
-Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 24 Aug
- 2022 11:07:56 +0100
-Date:   Wed, 24 Aug 2022 11:07:55 +0100
+ 15.1.2375.24; Wed, 24 Aug 2022 12:36:16 +0200
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 24 Aug 2022 11:36:16 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Davidlohr Bueso <dave@stgolabs.net>,
+To:     <linux-cxl@vger.kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        <a.manzanares@samsung.com>, <linux-kernel@vger.kernel.org>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/9] CXL: Read and clear event logs
-Message-ID: <20220824110755.00000c1e@huawei.com>
-In-Reply-To: <YwQJAqThYczUHhOB@iweiny-desk3>
-References: <20220813053243.757363-1-ira.weiny@intel.com>
-        <20220822161802.h47v7yfrqufeltqt@offworld>
-        <YwQJAqThYczUHhOB@iweiny-desk3>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        <linux-perf-users@vger.kernel.org>, Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <linuxarm@huawei.com>
+Subject: [RFC PATCH v2 0/4] CXL 3.0 Performance Monitoring Unit support
+Date:   Wed, 24 Aug 2022 11:36:13 +0100
+Message-ID: <20220824103617.21781-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 22 Aug 2022 15:53:54 -0700
-Ira Weiny <ira.weiny@intel.com> wrote:
+v2:
+ - Fix up various build issues, mostly 32bit related (BIT_ULL needed
+   in various places for example) found by kernel test robot <lkp@intel.com>
 
-> On Mon, Aug 22, 2022 at 09:18:02AM -0700, Davidlohr Bueso wrote:
-> > On Fri, 12 Aug 2022, ira.weiny@intel.com wrote:
-> >   
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > Event records inform the OS of various device events.  Events are not needed
-> > > for any kernel operation but various user level software will want to track
-> > > events.
-> > > 
-> > > Add event reporting through the trace event mechanism.  On driver load read and
-> > > clear all device events.
-> > > 
-> > > Normally interrupts will trigger new events to be reported as they occur.
-> > > Because the interrupt code is still being worked on this series provides a
-> > > cxl-test mechanism to create a series of events and trigger the reporting of
-> > > those events.  
-> > 
-> > Where is this irq code being worked on? I've asked about this for async mbox
-> > commands, and Jonathan has also posted some code for the PMU implementation.  
-> 
-> I'm still trying to work out how to share irq's between PCI and CXL.  Mainly
-> for DOE.
-> 
-> I thought that we could skip IRQ support for DOE completely and this would
-> support your proposal below.  But I just found that:
-> 
-> "A device may interrupt the host when CDAT content changes using the MSI
-> associated with this DOE Capability instance."
+The CXL rev 3.0 specification introduces a CXL Performance Monitoring
+Unit definition. CXL components may have any number of these blocks. The
+definition is highly flexible, but that does bring complexity in the
+driver.
 
-As of today that doesn't work because there is no status flag anywhere to let
-you know that was the interrupt source.
+Initially posted as an RFC for a number of reasons.
+1) The QEMU model against which this was developed needs tidying up and
+   review for correctness. I'll reply with a link to that thread once
+   the QEMU code has been posted for review.
+2) There are quite a lot of corner cases that will need working through
+   with variants of the model, or I'll have to design a pathological
+   set of CPMUs to hit all the corner cases in one go.
+3) I'm not sure it makes sense to hang this of the cxl/pci driver but
+   couldn't really figure out where else in the current structure we could
+   make it fit cleanly.
+4) The interrupt initialization code is something we talked about for DOE
+   but in the end DOE interrupt support was dropped (for now). It requires
+   the cxl/pci driver to do a small amount of parsing of registers otherwise
+   only relevant to the CPMU driver in order to establish what interrupt
+   vector the CPMU is using and hence ensure the cxl/pci driver requests
+   sufficient vectors. Given this effects how other interrupts will be
+   handled in cxl/pci, we need to confirm the handle in general enough
+   to not need a complete rewrite when we add another interrupt use case.
+5) I'm not sure how to expose to user space the sets of events that may
+   be summed (given by a mask in the Counter Event Capabilities registers).
+   For now the driver advertises the individual events. Each individual
+   event may form part of multiple overlapping groups for example.
+   It may be a case of these allowed combinations only being discoverable
+   by requesting a combination and checking for errors on start.
+6) Driver location. In past perf maintainers have requested perf drivers
+   for PCI etc be under drivers/perf. That would require moving some
+   CXL headers to be more generally visible, but is certainly possible
+   if there is agreement between CXL and perf maintainers on the correct
+   location.
+7) Documentation needs improving, but I didn't want to spend too much
+   time on that whilst we have so many open questions.  I'll separately
+   raise the question about pmu->dev parenting which is mentioned in the
+   Docs patch introduction.
 
-It's been raised in appropriate places, but I can't say anymore on that
-until stuff is published.
+CXL rev 3.0 specification available from https://www.computeexpresslink.org
 
-Hence I'd not worry about that corner for now.
+Jonathan Cameron (4):
+  cxl: Add function to count regblocks of a given type.
+  cxl/pci: Find and register CXL PMU devices
+  cxl: CXL Performance Monitoring Unit driver
+  docs: perf: Minimal introduction the the CXL PMU device and driver.
 
-> 
-> So I guess it needs to be supported at some point.
-> 
-> > 
-> > Could we not just start with an initial MSI/MSI-X support? Then gradually
-> > interested users can be added? So each "feature" would need to do implement
-> > it's "get message number" and to install the isr just do the standard:
-> > 
-> >      irq = pci_irq_vector(pdev, num);
-> >      irq_name = devm_kasprintf(dev, GFP_KERNEL, "%s_%s\n", dev_name(dev),
-> > 			       cxl_irq_cap_table[feature].name);
-> >      rc = devm_request_irq(dev, irq, isr_fn, IRQF_SHARED, irq_name, info);
-> > 
-> > The only complexity I see for this is to know the number of vectors to request
-> > apriori, for which we'd have to get the larges value of all CXL features that
-> > can support interrupts. Something like the following?  
-> 
-> Generally it seems ok but I have questions below.
-> 
-> > One thing I have not
-> > considered in this is the DOE stuff.  
-> 
-> I think this is the harder thing to support because of needing to allow both
-> the PCI layer and the CXL layer to create irqs.  Potentially at different
-> times.
+ Documentation/admin-guide/perf/cxl.rst   |  60 ++
+ Documentation/admin-guide/perf/index.rst |   1 +
+ drivers/cxl/Kconfig                      |  12 +
+ drivers/cxl/Makefile                     |   1 +
+ drivers/cxl/core/Makefile                |   1 +
+ drivers/cxl/core/core.h                  |   3 +
+ drivers/cxl/core/cpmu.c                  |  69 ++
+ drivers/cxl/core/pci.c                   |   2 +-
+ drivers/cxl/core/port.c                  |   4 +-
+ drivers/cxl/core/regs.c                  |  64 +-
+ drivers/cxl/cpmu.c                       | 945 +++++++++++++++++++++++
+ drivers/cxl/cpmu.h                       |  54 ++
+ drivers/cxl/cxl.h                        |  16 +
+ drivers/cxl/cxlpci.h                     |   1 +
+ drivers/cxl/pci.c                        |  78 +-
+ 15 files changed, 1304 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/admin-guide/perf/cxl.rst
+ create mode 100644 drivers/cxl/core/cpmu.c
+ create mode 100644 drivers/cxl/cpmu.c
+ create mode 100644 drivers/cxl/cpmu.h
 
-My reasoning on this is that IRQ creation has to be done by
-the PCI device driver.  That may result in some juggling and late starting
-or indeed restarting of DOE mailboxes once we can know the list of vectors.
-(e.g. query them by polling, then a later driver register can request enabling
-the DOE with an irq).
-Or it needs the ability to do dynamic increasing of the requested IRQ vectors.
-
-> 
-> > 
-> > Thanks,
-> > Davidlohr
-> > 
-> > ------
-> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > index 88e3a8e54b6a..b334d2f497c1 100644
-> > --- a/drivers/cxl/cxlmem.h
-> > +++ b/drivers/cxl/cxlmem.h
-> > @@ -245,6 +245,8 @@ struct cxl_dev_state {
-> > 	resource_size_t component_reg_phys;
-> > 	u64 serial;
-> > 
-> > +	int irq_type; /* MSI-X, MSI */
-> > +
-> > 	struct xarray doe_mbs;
-> > 
-> > 	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
-> > diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> > index eec597dbe763..95f4b91f43b1 100644
-> > --- a/drivers/cxl/cxlpci.h
-> > +++ b/drivers/cxl/cxlpci.h
-> > @@ -53,15 +53,6 @@
-> >  #define	    CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK			GENMASK(15, 8)
-> >  #define     CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK		GENMASK(31, 16)
-> > 
-> > -/* Register Block Identifier (RBI) */
-> > -enum cxl_regloc_type {
-> > -	CXL_REGLOC_RBI_EMPTY = 0,
-> > -	CXL_REGLOC_RBI_COMPONENT,
-> > -	CXL_REGLOC_RBI_VIRT,
-> > -	CXL_REGLOC_RBI_MEMDEV,
-> > -	CXL_REGLOC_RBI_TYPES
-> > -};  
-> 
-> Why move this?
-> 
-> > -
-> >  static inline resource_size_t cxl_regmap_to_base(struct pci_dev *pdev,
-> > 						 struct cxl_register_map *map)
-> >  {
-> > @@ -75,4 +66,44 @@ int devm_cxl_port_enumerate_dports(struct cxl_port *port);
-> >  struct cxl_dev_state;
-> >  int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm);
-> >  void read_cdat_data(struct cxl_port *port);
-> > +
-> > +#define CXL_IRQ_CAPABILITY_TABLE				\
-> > +	C(ISOLATION, "isolation", NULL),			\
-> > +	C(PMU, "pmu_overflow", NULL), /* per pmu instance */	\
-> > +	C(MBOX, "mailbox", NULL), /* primary-only */		\
-> > +	C(EVENT, "event", NULL),  
-> 
-> This is defining get_max_msgnum to NULL right?
-> 
-> > +
-> > +#undef C
-> > +#define C(a, b, c) CXL_IRQ_CAPABILITY_##a
-> > +enum  { CXL_IRQ_CAPABILITY_TABLE };
-> > +#undef C
-> > +#define C(a, b, c) { b, c }
-> > +/**
-> > + * struct cxl_irq_cap - CXL feature that is capable of receiving MSI/MSI-X irqs.
-> > + *
-> > + * @name: Name of the device generating this interrupt.
-> > + * @get_max_msgnum: Get the feature's largest interrupt message number. In cases
-> > + *                  where there is only one instance it also indicates which
-> > + *                  MSI/MSI-X vector is used for the interrupt message generated
-> > + *                  in association with the feature. If the feature does not
-> > + *                  have the Interrupt Supported bit set, then return -1.
-> > + */
-> > +struct cxl_irq_cap {
-> > +	const char *name;
-> > +	int (*get_max_msgnum)(struct cxl_dev_state *cxlds);
-> > +};
-> > +
-> > +static const
-> > +struct cxl_irq_cap cxl_irq_cap_table[] = { CXL_IRQ_CAPABILITY_TABLE };
-> > +#undef C  
-> 
-> Why all this macro magic?
-
-Agreed. I'm rarely persuaded it's a good idea to do this sort of trickery
-and it definitely isn't worth the readabilty problems unless there a
-large number of users.
-
-> 
-> > +
-> > +/* Register Block Identifier (RBI) */
-> > +enum cxl_regloc_type {
-> > +	CXL_REGLOC_RBI_EMPTY = 0,
-> > +	CXL_REGLOC_RBI_COMPONENT,
-> > +	CXL_REGLOC_RBI_VIRT,
-> > +	CXL_REGLOC_RBI_MEMDEV,
-> > +	CXL_REGLOC_RBI_TYPES
-> > +};
-> > +
-> >  #endif /* __CXL_PCI_H__ */
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index faeb5d9d7a7a..c0fe78e0559b 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
-> > @@ -387,6 +387,52 @@ static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
-> > 	return rc;
-> >  }
-> > 
-> > +static void cxl_pci_free_irq_vectors(void *data)
-> > +{
-> > +	pci_free_irq_vectors(data);
-> > +}
-> > +
-> > +static int cxl_pci_alloc_irq_vectors(struct cxl_dev_state *cxlds)
-> > +{
-> > +	struct device *dev = cxlds->dev;
-> > +	struct pci_dev *pdev = to_pci_dev(dev);
-> > +	int rc, i, vectors = -1;
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(cxl_irq_cap_table); i++) {
-> > +		int irq;
-> > +
-> > +		if (!cxl_irq_cap_table[i].get_max_msgnum)
-> > +			continue;
-> > +
-> > +		irq = cxl_irq_cap_table[i].get_max_msgnum(cxlds);
-> > +		vectors = max_t(int, irq, vectors);
-> > +	}
-> > +
-> > +	if (vectors == -1)
-> > +		return -EINVAL; /* no irq support whatsoever */
-> > +
-> > +	vectors++;  
-> 
-> This is pretty much what earlier versions of the DOE code did with the
-> exception of only have 1 get_max_msgnum() calls defined (for DOE).  But there
-> was a lot of debate about how to share vectors with the PCI layer.  And
-> eventually we got rid of it.  I'm still trying to figure it out.  Sorry for
-> being slow.
-
-I'm not yet setting huge advantage in wrapping this up. For now a set of
-linear calls to establish the max irq vector is more readable.  Sure
-down the line moving to this may make sense.
-
-> 
-> Perhaps we do this for this series.  However, won't we have an issue if we want
-> to support switch events?
-
-We 'could' extend existing stuff in the portdrv code (which is ultimately
-where this general approach was copied from ;) but I suspect doing that
-for non generic PCI stuff is going to be controversial.
-
-That whole infrastructure in PCI may need a rewrite.
-
-> 
-> Ira
-> 
-> > +	rc = pci_alloc_irq_vectors(pdev, vectors, vectors, PCI_IRQ_MSIX);
-> > +	if (rc < 0) {
-> > +		rc = pci_alloc_irq_vectors(pdev, vectors, vectors, PCI_IRQ_MSI);
-> > +		if (rc < 0)
-> > +			return rc;
-> > +
-> > +		cxlds->irq_type = PCI_IRQ_MSI;
-> > +	} else {
-> > +		cxlds->irq_type = PCI_IRQ_MSIX;
-> > +	}
-> > +
-> > +	if (rc != vectors) {
-> > +		pci_err(pdev, "Not enough interrupts; use polling where supported\n");
-> > +		/* Some got allocated; clean them up */
-> > +		cxl_pci_free_irq_vectors(pdev);
-> > +		return -ENOSPC;
-> > +	}
-> > +
-> > +	return devm_add_action_or_reset(dev, cxl_pci_free_irq_vectors, pdev);
-> > +}
-> > +
-> >  static void cxl_pci_destroy_doe(void *mbs)
-> >  {
-> > 	xa_destroy(mbs);
-> > @@ -476,6 +522,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> > 
-> > 	cxlds->component_reg_phys = cxl_regmap_to_base(pdev, &map);
-> > 
-> > +	if (cxl_pci_alloc_irq_vectors(cxlds))
-> > +		cxlds->irq_type = 0;
-> > +
-> > 	devm_cxl_pci_create_doe(cxlds);
-> > 
-> > 	rc = cxl_pci_setup_mailbox(cxlds);  
+-- 
+2.32.0
 
