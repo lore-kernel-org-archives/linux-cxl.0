@@ -2,30 +2,30 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 051B9C04AA5
-	for <linux-cxl@archiver.kernel.org>; Thu, 25 Aug 2022 10:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7B9C28D13
+	for <linux-cxl@archiver.kernel.org>; Thu, 25 Aug 2022 11:31:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240128AbiHYK6t (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 25 Aug 2022 06:58:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33596 "EHLO
+        id S240381AbiHYLb2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 25 Aug 2022 07:31:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229657AbiHYK6s (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 25 Aug 2022 06:58:48 -0400
+        with ESMTP id S240285AbiHYLbY (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 25 Aug 2022 07:31:24 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37D9CADCFA;
-        Thu, 25 Aug 2022 03:58:46 -0700 (PDT)
-Received: from fraeml745-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MD0Lm3qwsz67gNl;
-        Thu, 25 Aug 2022 18:58:24 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC76F760F8;
+        Thu, 25 Aug 2022 04:31:22 -0700 (PDT)
+Received: from fraeml735-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MD10n3TZLz67yhs;
+        Thu, 25 Aug 2022 19:27:53 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml745-chm.china.huawei.com (10.206.15.226) with Microsoft SMTP Server
+ fraeml735-chm.china.huawei.com (10.206.15.216) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 25 Aug 2022 12:58:43 +0200
+ 15.1.2375.24; Thu, 25 Aug 2022 13:31:20 +0200
 Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 25 Aug
- 2022 11:58:43 +0100
-Date:   Thu, 25 Aug 2022 11:58:42 +0100
+ 2022 12:31:20 +0100
+Date:   Thu, 25 Aug 2022 12:31:19 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <ira.weiny@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
@@ -35,289 +35,437 @@ CC:     Dan Williams <dan.j.williams@intel.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Davidlohr Bueso <dave@stgolabs.net>,
         <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [RFC PATCH 6/9] cxl/mem: Trace Memory Module Event Record
-Message-ID: <20220825115842.000049a0@huawei.com>
-In-Reply-To: <20220813053243.757363-7-ira.weiny@intel.com>
+Subject: Re: [RFC PATCH 7/9] cxl/test: Add generic mock events
+Message-ID: <20220825123119.00000705@huawei.com>
+In-Reply-To: <20220813053243.757363-8-ira.weiny@intel.com>
 References: <20220813053243.757363-1-ira.weiny@intel.com>
-        <20220813053243.757363-7-ira.weiny@intel.com>
+        <20220813053243.757363-8-ira.weiny@intel.com>
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 12 Aug 2022 22:32:40 -0700
+On Fri, 12 Aug 2022 22:32:41 -0700
 ira.weiny@intel.com wrote:
 
 > From: Ira Weiny <ira.weiny@intel.com>
 > 
-> CXL v3.0 section 8.2.9.2.1.3 defines the Memory Module Event Record.
+> Facilitate testing basic Get/Clear Event functionality by creating
+> multiple logs and generic events with made up UUID's.
 > 
-> Determine if the event read is memory module record and if so trace the
-> record.
+> Data is completely made up with data patterns which should be easy to
+> spot in trace output.
+Hi Ira,
+
+I'm tempted to hack the QEMU emulation for this in with appropriately
+complex interface to inject all the record types...
+Lots to do there though, so not sure where this fits in my priority list!
+
+> 
+> Test traces are easy to obtain with a small script such as this:
+> 
+> 	#!/bin/bash -x
+> 
+> 	devices=`find /sys/devices/platform -name cxl_mem*`
+> 
+> 	# Generate fake events if reset is passed in
+
+reset is rather unintuitive naming.
+
+fill_event_queue maybe or something more in that direction?
+
+> 	if [ "$1" == "reset" ]; then
+> 	        for device in $devices; do
+> 	                echo 1 > $device/mem*/event_reset
+> 	        done
+> 	fi
+> 
+> 	# Turn on tracing
+> 	echo "" > /sys/kernel/tracing/trace
+> 	echo 1 > /sys/kernel/tracing/events/cxl_events/enable
+> 	echo 1 > /sys/kernel/tracing/tracing_on
+> 
+> 	# Generate fake interrupt
+> 	for device in $devices; do
+> 	        echo 1 > $device/mem*/event_trigger
+> 	        # just trigger 1
+> 	        break;
+> 	done
+> 
+> 	# Turn off tracing and report events
+> 	echo 0 > /sys/kernel/tracing/tracing_on
+> 	cat /sys/kernel/tracing/trace
 > 
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Similar comments to on previous patches around using
-get_unaligned_le*()
-
 > ---
->  drivers/cxl/core/mbox.c           |  16 +++
->  drivers/cxl/cxlmem.h              |  25 +++++
->  include/trace/events/cxl-events.h | 155 ++++++++++++++++++++++++++++++
->  3 files changed, 196 insertions(+)
+>  tools/testing/cxl/test/mem.c | 291 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 291 insertions(+)
 > 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 6414588a3c7b..99b09bfeaff5 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -725,6 +725,14 @@ static const uuid_t dram_event_uuid =
->  	UUID_INIT(0x601dcbb3, 0x9c06, 0x4eab,
->  		  0xb8, 0xaf, 0x4e, 0x9b, 0xfb, 0x5c, 0x96, 0x24);
+> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+> index e2f5445d24ff..87196d62acf5 100644
+> --- a/tools/testing/cxl/test/mem.c
+> +++ b/tools/testing/cxl/test/mem.c
+> @@ -9,6 +9,8 @@
+>  #include <linux/bits.h>
+>  #include <cxlmem.h>
+>  
+> +#include <trace/events/cxl-events.h>
+> +
+>  #define LSA_SIZE SZ_128K
+>  #define DEV_SIZE SZ_2G
+>  #define EFFECT(x) (1U << x)
+> @@ -137,6 +139,287 @@ static int mock_partition_info(struct cxl_dev_state *cxlds,
+>  	return 0;
+>  }
 >  
 > +/*
-> + * Memory Module Event Record
-> + * CXL v3.0 section 8.2.9.2.1.3; Table 8-45
+> + * Mock Events
 > + */
-> +static const uuid_t mem_mod_event_uuid =
-> +	UUID_INIT(0xfe927475, 0xdd59, 0x4339,
-> +		  0xa5, 0x86, 0x79, 0xba, 0xb1, 0x13, 0xb7, 0x74);
+> +struct mock_event_log {
+> +	int cur_event;
+> +	int nr_events;
+> +	struct xarray events;
+
+I'm not convinced an xarray is appropriate here (I'd have used
+a fixed size array) but meh, I don't care that much and mocking
+code doesn't have to be quick or elegant :)
+
+> +};
 > +
->  static void cxl_trace_event_record(const char *dev_name,
->  				   enum cxl_event_log_type type,
->  				   struct cxl_get_event_payload *payload)
-> @@ -747,6 +755,14 @@ static void cxl_trace_event_record(const char *dev_name,
->  		return;
->  	}
->  
-> +	if (uuid_equal(id, &mem_mod_event_uuid)) {
-> +		struct cxl_evt_mem_mod_rec *rec =
-> +				(struct cxl_evt_mem_mod_rec *)&payload->record;
+> +struct mock_event_store {
+> +	struct cxl_dev_state *cxlds;
+> +	struct mock_event_log *mock_logs[CXL_EVENT_TYPE_MAX];
+
+Each entry isn't terribly big and there aren't that many of them.
+Make the code simpler by just embedding the instances here?
+
+> +};
 > +
-> +		trace_cxl_mem_mod_event(dev_name, type, rec);
+> +DEFINE_XARRAY(mock_cxlds_event_store);
+> +
+> +void delete_event_store(void *ds)
+> +{
+> +	xa_store(&mock_cxlds_event_store, (unsigned long)ds, NULL, GFP_KERNEL);
+> +}
+> +
+> +void store_event_store(struct mock_event_store *es)
+> +{
+> +	struct cxl_dev_state *cxlds = es->cxlds;
+> +
+> +	if (xa_insert(&mock_cxlds_event_store, (unsigned long)cxlds, es,
+> +		      GFP_KERNEL)) {
+> +		dev_err(cxlds->dev, "Event store not available for %s\n",
+> +			dev_name(cxlds->dev));
 > +		return;
 > +	}
 > +
->  	/* For unknown record types print just the header */
->  	trace_cxl_event(dev_name, type, &payload->record);
->  }
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 50536c0a7850..a02a41dfd988 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -445,6 +445,31 @@ struct cxl_evt_dram_rec {
->  	u8 correction_mask[CXL_EVT_DER_CORRECTION_MASK_SIZE];
->  } __packed;
->  
+> +	devm_add_action_or_reset(cxlds->dev, delete_event_store, cxlds);
+> +}
+> +
+> +struct mock_event_log *find_event_log(struct cxl_dev_state *cxlds, int log_type)
+> +{
+> +	struct mock_event_store *es = xa_load(&mock_cxlds_event_store,
+> +					      (unsigned long)cxlds);
+> +
+> +	if (!es || log_type >= CXL_EVENT_TYPE_MAX)
+> +		return NULL;
+> +	return es->mock_logs[log_type];
+> +}
+> +
+> +struct cxl_event_record_raw *get_cur_event(struct mock_event_log *log)
+> +{
+> +	return xa_load(&log->events, log->cur_event);
+> +}
+> +
+> +__le16 get_cur_event_handle(struct mock_event_log *log)
+> +{
+> +	return cpu_to_le16(log->cur_event);
+> +}
+> +
+> +static bool log_empty(struct mock_event_log *log)
+> +{
+> +	return log->cur_event == log->nr_events;
+> +}
+> +
+> +static int log_rec_left(struct mock_event_log *log)
+> +{
+> +	return log->nr_events - log->cur_event;
+> +}
+> +
+> +static void xa_events_destroy(void *l)
+> +{
+> +	struct mock_event_log *log = l;
+> +
+> +	xa_destroy(&log->events);
+> +}
+> +
+> +static void event_store_add_event(struct mock_event_store *es,
+> +				  enum cxl_event_log_type log_type,
+> +				  struct cxl_event_record_raw *event)
+> +{
+> +	struct mock_event_log *log;
+> +	struct device *dev = es->cxlds->dev;
+> +	int rc;
+> +
+> +	if (log_type >= CXL_EVENT_TYPE_MAX)
+> +		return;
+> +
+> +	log = es->mock_logs[log_type];
+> +	if (!log) {
+> +		log = devm_kzalloc(dev, sizeof(*log), GFP_KERNEL);
+
+As above, I'd just embed the logs directly in the containing structure
+rather than allocating on demand. init them all up front.
+
+> +		if (!log) {
+> +			dev_err(dev, "Failed to create %s log\n",
+> +				cxl_event_log_type_str(log_type));
+> +			return;
+> +		}
+> +		xa_init(&log->events);
+> +		devm_add_action(dev, xa_events_destroy, log);
+> +		es->mock_logs[log_type] = log;
+> +	}
+> +
+> +	rc = xa_insert(&log->events, log->nr_events, event, GFP_KERNEL);
+Not sure using an xa for a list really makes that much sense, but
+doesn't matter hugely. 
+> +	if (rc) {
+> +		dev_err(dev, "Failed to store event %s log\n",
+> +			cxl_event_log_type_str(log_type));
+> +		return;
+> +	}
+> +	log->nr_events++;
+
+Having an index into a static set of events is more complex.
+I'd either switch to a simple array of pointers, or actually add and
+remove events (or pointers to them anyway).
+
+> +}
+> +
 > +/*
-> + * Get Health Info Record
-> + * CXL v3.0 section 8.2.9.8.3.1; Table 8-100
+> + * Get and clear event only handle 1 record at a time as this is what is
+> + * currently implemented in the main code.
 > + */
-> +struct cxl_get_health_info {
-> +	u8 health_status;
-> +	u8 media_status;
-> +	u8 add_status;
-> +	u8 life_used;
-> +	u16 device_temp;
-
-As previous - even though they aren't aligned, I'd have thought
-__le16 etc will still work.  The unaligned accessors are fine
-taking __le16 * for example.
-
-> +	u32 dirty_shutdown_cnt;
-> +	u32 cor_vol_err_cnt;
-> +	u32 cor_per_err_cnt;
-> +} __packed;
+> +static int mock_get_event(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
+> +{
+> +	struct cxl_get_event_payload *pl;
+> +	struct mock_event_log *log;
+> +	u8 log_type;
+> +
+> +	/* Valid request? */
+> +	if (cmd->size_in != 1)
+> +		return -EINVAL;
+> +
+> +	log_type = *((u8 *)cmd->payload_in);
+> +	if (log_type >= CXL_EVENT_TYPE_MAX)
+> +		return -EINVAL;
+> +
+> +	log = find_event_log(cxlds, log_type);
+> +	if (!log || log_empty(log))
+> +		goto no_data;
+> +
+> +	/* Don't handle more than 1 record at a time */
+> +	if (cmd->size_out < sizeof(*pl))
+> +		return -EINVAL;
+> +
+> +	pl = cmd->payload_out;
+> +	memset(pl, 0, sizeof(*pl));
+> +
+> +	pl->record_count = cpu_to_le16(1);
+> +
+> +	if (log_rec_left(log) > 1)
+> +		pl->flags |= CXL_GET_EVENT_FLAG_MORE_RECORDS;
+> +
+> +	memcpy(&pl->record, get_cur_event(log), sizeof(pl->record));
+> +	pl->record.hdr.handle = get_cur_event_handle(log);
+> +	return 0;
+> +
+> +no_data:
+> +	/* Room for header? */
+> +	if (cmd->size_out < (sizeof(*pl) - sizeof(pl->record)))
+> +		return -EINVAL;
+> +
+> +	memset(cmd->payload_out, 0, cmd->size_out);
+> +	return 0;
+> +}
 > +
 > +/*
-> + * Memory Module Event Record
-> + * CXL v3.0 section 8.2.9.2.1.3; Table 8-45
+> + * Get and clear event only handle 1 record at a time as this is what is
+> + * currently implemented in the main code.
+
+Duplicating this comment seems unnecessary.
+ 
 > + */
-> +struct cxl_evt_mem_mod_rec {
-> +	struct cxl_event_record_hdr hdr;
-> +	u8 event_type;
-> +	struct cxl_get_health_info info;
-> +} __packed;
+> +static int mock_clear_event(struct cxl_dev_state *cxlds,
+> +			    struct cxl_mbox_cmd *cmd)
+> +{
+> +	struct cxl_mbox_clear_event_payload *pl = cmd->payload_in;
+> +	struct mock_event_log *log;
+> +	u8 log_type = pl->event_log;
 > +
->  struct cxl_mbox_get_partition_info {
->  	__le64 active_volatile_cap;
->  	__le64 active_persistent_cap;
-> diff --git a/include/trace/events/cxl-events.h b/include/trace/events/cxl-events.h
-> index db9b34ddd240..dbbe25fee25c 100644
-> --- a/include/trace/events/cxl-events.h
-> +++ b/include/trace/events/cxl-events.h
-> @@ -358,6 +358,161 @@ TRACE_EVENT(cxl_dram_event,
->  		)
->  );
+> +	/* Don't handle more than 1 record at a time */
+> +	if (pl->nr_recs != 1)
+> +		return -EINVAL;
+> +
+> +	if (log_type >= CXL_EVENT_TYPE_MAX)
+> +		return -EINVAL;
+> +
+> +	log = find_event_log(cxlds, log_type);
+> +	if (!log)
+> +		return 0; /* No mock data in this log */
+> +
+> +	/*
+> +	 * The current code clears events as they are read
+> +	 * Test that behavior; not clearning from the middle of the log
+> +	 */
+> +	if (log->cur_event != le16_to_cpu(pl->handle)) {
+> +		dev_err(cxlds->dev, "Clearing events out of order\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	log->cur_event++;
+> +	return 0;
+> +}
+> +
+> +static ssize_t event_reset_store(struct device *dev,
+> +				 struct device_attribute *attr,
+> +				 const char *buf, size_t count)
+> +{
+> +	struct cxl_memdev *cxlmd = container_of(dev, struct cxl_memdev, dev);
+> +	int i;
+> +
+> +	for (i = CXL_EVENT_TYPE_INFO; i < CXL_EVENT_TYPE_MAX; i++) {
+> +		struct mock_event_log *log;
+> +
+> +		log = find_event_log(cxlmd->cxlds, i);
+> +		if (log)
+> +			log->cur_event = 0;
+> +	}
+> +
+> +	return count;
+> +}
+> +static DEVICE_ATTR_WO(event_reset);
+> +
+> +static ssize_t event_trigger_store(struct device *dev,
+> +				   struct device_attribute *attr,
+> +				   const char *buf, size_t count)
+> +{
+> +	struct cxl_memdev *cxlmd = container_of(dev, struct cxl_memdev, dev);
+> +
+> +	cxl_mem_get_event_records(cxlmd->cxlds);
+> +
+> +	return count;
+> +}
+> +static DEVICE_ATTR_WO(event_trigger);
+> +
+> +static struct attribute *cxl_mock_event_attrs[] = {
+> +	&dev_attr_event_reset.attr,
+> +	&dev_attr_event_trigger.attr,
+> +	NULL
+> +};
+> +ATTRIBUTE_GROUPS(cxl_mock_event);
+> +
+> +void remove_mock_event_groups(void *dev)
+static 
+> +{
+> +	device_remove_groups(dev, cxl_mock_event_groups);
+> +}
+> +
+> +struct cxl_event_record_raw maint_needed = {
+> +	.hdr = {
+> +		.id = UUID_INIT(0xDEADBEEF, 0xCAFE, 0xBABE, 0xa5, 0x5a, 0xa5, 0x5a, 0xa5, 0xa5, 0x5a, 0xa5),
+> +		.flags_length = cpu_to_le32((CXL_EVENT_RECORD_FLAG_MAINT_NEEDED << 8) |
+> +					      sizeof(struct cxl_event_record_raw)),
+> +		/* .handle = Set dynamically */
+> +		.related_handle = cpu_to_le16(0xa5b6),
+> +	},
+> +	.data = { 0xDE, 0xAD, 0xBE, 0xEF },
+> +};
+> +
+> +struct cxl_event_record_raw hardware_replace = {
+static const?
+> +	.hdr = {
+> +		.id = UUID_INIT(0xBABECAFE, 0xBEEF, 0xDEAD, 0xa5, 0x5a, 0xa5, 0x5a, 0xa5, 0xa5, 0x5a, 0xa5),
+> +		.flags_length = cpu_to_le32((CXL_EVENT_RECORD_FLAG_HW_REPLACE << 8) |
+> +					     sizeof(struct cxl_event_record_raw)),
+> +		/* .handle = Set dynamically */
+> +		.related_handle = cpu_to_le16(0xb6a5),
+> +	},
+> +	.data = { 0xDE, 0xAD, 0xBE, 0xEF },
+> +};
+> +
+> +static void devm_cxl_mock_event_logs(struct cxl_memdev *cxlmd)
+> +{
+> +	struct device *dev = &cxlmd->dev;
+> +	struct mock_event_store *es;
+> +
+> +	/*
+> +	 * The memory device gets the sysfs attributes such that the cxlmd
+> +	 * pointer can be used to get to a cxlds pointer.
+> +	 */
+> +	if (device_add_groups(dev, cxl_mock_event_groups))
+
+Whilst it might not matter in a mocking driver, it's normal to jump through
+hoops to avoid doing this because it races with userspace notifications in
+all sorts of hideous ways.  It makes the sysfs maintainers very grumpy ;)
+To do it here, you would need to pass the group to devm_cxl_add_memdev()
+and have that slip it in before the cdev_device_add() call I think.
+That wouldn't be particular invasive though. 
+
+
+> +		return;
+> +	if (devm_add_action_or_reset(dev, remove_mock_event_groups, dev))
+> +		return;
+> +
+> +	/*
+> +	 * All the mock event data hangs off the device itself.
+
+Nitpick of the day: Single line comment syntax ;)
+
+> +	 */
+> +	es = devm_kzalloc(cxlmd->cxlds->dev, sizeof(*es), GFP_KERNEL);
+> +	if (!es)
+> +		return;
+> +	es->cxlds = cxlmd->cxlds;
+> +
+> +	event_store_add_event(es, CXL_EVENT_TYPE_INFO, &maint_needed);
+> +
+> +	event_store_add_event(es, CXL_EVENT_TYPE_FATAL, &hardware_replace);
+> +
+> +	store_event_store(es);
+> +}
+> +
+>  static int mock_get_lsa(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
+>  {
+>  	struct cxl_mbox_get_lsa *get_lsa = cmd->payload_in;
+> @@ -224,6 +507,12 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
+>  	case CXL_MBOX_OP_GET_PARTITION_INFO:
+>  		rc = mock_partition_info(cxlds, cmd);
+>  		break;
+> +	case CXL_MBOX_OP_GET_EVENT_RECORD:
+> +		rc = mock_get_event(cxlds, cmd);
+> +		break;
+> +	case CXL_MBOX_OP_CLEAR_EVENT_RECORD:
+> +		rc = mock_clear_event(cxlds, cmd);
+> +		break;
+>  	case CXL_MBOX_OP_SET_LSA:
+>  		rc = mock_set_lsa(cxlds, cmd);
+>  		break;
+> @@ -285,6 +574,8 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+>  	if (IS_ERR(cxlmd))
+>  		return PTR_ERR(cxlmd);
 >  
-> +/*
-> + * Memory Module Event Record - MMER
-> + *
-> + * CXL v2.0 section 8.2.9.1.1.3; Table 156, Table 181
-> + *
-> + * Device Health Information - DHI; Table 181
-> + */
-> +#define CXL_MMER_HEALTH_STATUS_CHANGE		0x00
-> +#define CXL_MMER_MEDIA_STATUS_CHANGE		0x01
-> +#define CXL_MMER_LIFE_USED_CHANGE		0x02
-> +#define CXL_MMER_TEMP_CHANGE			0x03
-> +#define CXL_MMER_DATA_PATH_ERROR		0x04
-> +#define CXL_MMER_LAS_ERROR			0x05
-> +#define show_dev_evt_type(type)	__print_symbolic(type,			   \
-> +	{ CXL_MMER_HEALTH_STATUS_CHANGE,	"Health Status Change"	}, \
-> +	{ CXL_MMER_MEDIA_STATUS_CHANGE,		"Media Status Change"	}, \
-> +	{ CXL_MMER_LIFE_USED_CHANGE,		"Life Used Change"	}, \
-> +	{ CXL_MMER_TEMP_CHANGE,			"Temperature Change"	}, \
-> +	{ CXL_MMER_DATA_PATH_ERROR,		"Data Path Error"	}, \
-> +	{ CXL_MMER_LAS_ERROR,			"LSA Error"		}  \
-> +)
+> +	devm_cxl_mock_event_logs(cxlmd);
 > +
-> +#define CXL_DHI_HS_MAINTENANCE_NEEDED				BIT(0)
-> +#define CXL_DHI_HS_PERFORMANCE_DEGRADED				BIT(1)
-> +#define CXL_DHI_HS_HW_REPLACEMENT_NEEDED			BIT(2)
-> +#define show_health_status_flags(flags)	__print_flags(flags, "|",	   \
-> +	{ CXL_DHI_HS_MAINTENANCE_NEEDED,	"Maintenance Needed"	}, \
-> +	{ CXL_DHI_HS_PERFORMANCE_DEGRADED,	"Performance Degraded"	}, \
-> +	{ CXL_DHI_HS_HW_REPLACEMENT_NEEDED,	"Replacement Needed"	}  \
-> +)
-> +
-> +#define CXL_DHI_MS_NORMAL							0x00
-> +#define CXL_DHI_MS_NOT_READY							0x01
-> +#define CXL_DHI_MS_WRITE_PERSISTENCY_LOST					0x02
-> +#define CXL_DHI_MS_ALL_DATA_LOST						0x03
-> +#define CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_EVENT_POWER_LOSS			0x04
-> +#define CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_EVENT_SHUTDOWN			0x05
-> +#define CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_IMMINENT				0x06
-> +#define CXL_DHI_MS_WRITE_ALL_DATA_LOSS_EVENT_POWER_LOSS				0x07
-> +#define CXL_DHI_MS_WRITE_ALL_DATA_LOSS_EVENT_SHUTDOWN				0x08
-> +#define CXL_DHI_MS_WRITE_ALL_DATA_LOSS_IMMINENT					0x09
-> +#define show_media_status(ms)	__print_symbolic(ms,			   \
-> +	{ CXL_DHI_MS_NORMAL,						   \
-> +		"Normal"						}, \
-> +	{ CXL_DHI_MS_NOT_READY,						   \
-> +		"Not Ready"						}, \
-> +	{ CXL_DHI_MS_WRITE_PERSISTENCY_LOST,				   \
-> +		"Write Persistency Lost"				}, \
-> +	{ CXL_DHI_MS_ALL_DATA_LOST,					   \
-> +		"All Data Lost"						}, \
-> +	{ CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_EVENT_POWER_LOSS,		   \
-> +		"Write Persistency Loss in the Event of Power Loss"	}, \
-> +	{ CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_EVENT_SHUTDOWN,		   \
-> +		"Write Persistency Loss in Event of Shutdown"		}, \
-> +	{ CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_IMMINENT,			   \
-> +		"Write Persistency Loss Imminent"			}, \
-> +	{ CXL_DHI_MS_WRITE_ALL_DATA_LOSS_EVENT_POWER_LOSS,		   \
-> +		"All Data Loss in Event of Power Loss"			}, \
-> +	{ CXL_DHI_MS_WRITE_ALL_DATA_LOSS_EVENT_SHUTDOWN,		   \
-> +		"All Data loss in the Event of Shutdown"		}, \
-> +	{ CXL_DHI_MS_WRITE_ALL_DATA_LOSS_IMMINENT,			   \
-> +		"All Data Loss Imminent"				}  \
-> +)
-> +
-> +#define CXL_DHI_AS_NORMAL		0x0
-> +#define CXL_DHI_AS_WARNING		0x1
-> +#define CXL_DHI_AS_CRITICAL		0x2
-> +#define show_add_status(as) __print_symbolic(as,	   \
-> +	{ CXL_DHI_AS_NORMAL,		"Normal"	}, \
-> +	{ CXL_DHI_AS_WARNING,		"Warning"	}, \
-> +	{ CXL_DHI_AS_CRITICAL,		"Critical"	}  \
-> +)
-> +
-> +#define CXL_DHI_AS_LIFE_USED(as)			(as & 0x3)
-> +#define CXL_DHI_AS_DEV_TEMP(as)				((as & 0xC) >> 2)
-> +#define CXL_DHI_AS_COR_VOL_ERR_CNT(as)			((as & 0x10) >> 4)
-> +#define CXL_DHI_AS_COR_PER_ERR_CNT(as)			((as & 0x20) >> 5)
-> +
-> +TRACE_EVENT(cxl_mem_mod_event,
-> +
-> +	TP_PROTO(const char *dev_name, enum cxl_event_log_type log,
-> +		 struct cxl_evt_mem_mod_rec *rec),
-> +
-> +	TP_ARGS(dev_name, log, rec),
-> +
-> +	TP_STRUCT__entry(
-> +		/* Common */
-> +		__string(dev_name, dev_name)
-> +		__field(int, log)
-> +		__array(u8, id, UUID_SIZE)
-> +		__field(u32, flags)
-> +		__field(u16, handle)
-> +		__field(u16, related_handle)
-> +		__field(u64, timestamp)
-> +
-> +		/* Memory Module Event */
-> +		__field(u8, event_type)
-> +
-> +		/* Device Health Info */
-> +		__field(u8, health_status)
-> +		__field(u8, media_status)
-> +		__field(u8, life_used)
-> +		__field(u32, dirty_shutdown_cnt)
-> +		__field(u32, cor_vol_err_cnt)
-> +		__field(u32, cor_per_err_cnt)
-> +		__field(s16, device_temp)
-> +		__field(u8, add_status)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		/* Common */
-> +		__assign_str(dev_name, dev_name);
-> +		memcpy(__entry->id, &rec->hdr.id, UUID_SIZE);
-> +		__entry->log = log;
-> +		__entry->flags = le32_to_cpu(rec->hdr.flags_length) >> 8;
-> +		__entry->handle = le16_to_cpu(rec->hdr.handle);
-> +		__entry->related_handle = le16_to_cpu(rec->hdr.related_handle);
-> +		__entry->timestamp = le64_to_cpu(rec->hdr.timestamp);
-> +
-> +		/* Memory Module Event */
-> +		__entry->event_type = rec->event_type;
-> +
-> +		/* Device Health Info */
-> +		__entry->health_status = rec->info.health_status;
-> +		__entry->media_status = rec->info.media_status;
-> +		__entry->life_used = rec->info.life_used;
-> +		__entry->dirty_shutdown_cnt = le32_to_cpu(rec->info.dirty_shutdown_cnt);
-> +		__entry->cor_vol_err_cnt = le32_to_cpu(rec->info.cor_vol_err_cnt);
-
-I've lost track, but my guess is some / all of these need the unaligned_get_le32()
-etc rather than aligned form.  Maybe just be lazy and use the unaligned versions
-even when things happen to be aligned - then we don't have to think about it
-when reviewing :)
-
-
-> +		__entry->cor_per_err_cnt = le32_to_cpu(rec->info.cor_per_err_cnt);
-> +		__entry->device_temp = le16_to_cpu(rec->info.device_temp);
-> +		__entry->add_status = rec->info.add_status;
-> +	),
-> +
-> +	TP_printk("%s: %s time=%llu id=%pUl handle=%x related_handle=%x hdr_flags='%s': " \
-> +		  "evt_type='%s' health_status='%s' media_status='%s' as_life_used=%s " \
-> +		  "as_dev_temp=%s as_cor_vol_err_cnt=%s as_cor_per_err_cnt=%s " \
-> +		  "life_used=%u dev_temp=%d dirty_shutdown_cnt=%u cor_vol_err_cnt=%u " \
-> +		  "cor_per_err_cnt=%u",
-> +		__get_str(dev_name), show_log_type(__entry->log),
-> +		__entry->timestamp, __entry->id, __entry->handle,
-> +		__entry->related_handle, show_hdr_flags(__entry->flags),
-> +
-> +		show_dev_evt_type(__entry->event_type),
-> +		show_health_status_flags(__entry->health_status),
-> +		show_media_status(__entry->media_status),
-> +		show_add_status(CXL_DHI_AS_LIFE_USED(__entry->add_status)),
-> +		show_add_status(CXL_DHI_AS_DEV_TEMP(__entry->add_status)),
-> +		show_add_status(CXL_DHI_AS_COR_VOL_ERR_CNT(__entry->add_status)),
-> +		show_add_status(CXL_DHI_AS_COR_PER_ERR_CNT(__entry->add_status)),
-> +		__entry->life_used, __entry->device_temp,
-> +		__entry->dirty_shutdown_cnt, __entry->cor_vol_err_cnt,
-> +		__entry->cor_per_err_cnt)
-> +);
-> +
-> +
->  #endif /* _CXL_TRACE_EVENTS_H */
+>  	cxl_mem_get_event_records(cxlds);
 >  
->  /* This part must be outside protection */
+>  	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM))
 
