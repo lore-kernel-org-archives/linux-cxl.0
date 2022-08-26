@@ -2,94 +2,100 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5444EECAAD4
-	for <linux-cxl@archiver.kernel.org>; Fri, 26 Aug 2022 22:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B925ECAAD4
+	for <linux-cxl@archiver.kernel.org>; Fri, 26 Aug 2022 22:48:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231808AbiHZWfn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 26 Aug 2022 18:35:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41070 "EHLO
+        id S1344817AbiHZWsu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 26 Aug 2022 18:48:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231216AbiHZWfl (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 26 Aug 2022 18:35:41 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D79A2DA8F;
-        Fri, 26 Aug 2022 15:35:41 -0700 (PDT)
+        with ESMTP id S1344711AbiHZWst (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 26 Aug 2022 18:48:49 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3928E9279;
+        Fri, 26 Aug 2022 15:48:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661553341; x=1693089341;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=O4cj6su9MdCY7mmHhaPZl5o9miyzRhe/xLoVYob78Vo=;
-  b=CurICu0lS+HRjy4eVrk351G6G/PYsD8C5k3MTYWS9Fn8AgAq5R9cPAlP
-   /acQvpxiYDfiUX9Za3WSbQrAOpBiVVBgfScgXvU/MO9f+FH5Cihz9n/yI
-   nstlHr/q/o/aLUfQ3Y9UQ7qL2iCertBrt+kGEemVJ03RqX7wI5JZSlsnA
-   oVC4nSnlQV0tzuAKp7J/7SzR38h7cplo9pCP3ZBwn2xtYwj9djcfZdEl2
-   R3h5eCLLKS9AaTNxB9W0blfljuHeZ1JuL615/qAYKcxPY3Z5ZZK/GfZSM
-   BhYy9XzTw+TkgH6rvFwK0EOidRZfIJYyouvxa5hb2Ay0h+5nR44FzEAXs
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10451"; a="320714912"
+  t=1661554128; x=1693090128;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=jMituVpkGi3k1+Nche8Hgl4KTD1RuXeor1WtiNrz3gA=;
+  b=MthOyyN3Q7OnkqIL6BFVe7g7tevOv7xATiiuP3ev3gcup6jLgxVh98pG
+   kWmZWIVfMsJJ1h4Rq7lTbZe+aBHhCgq5MZOwddPsFTxnSvyn9J0houJSx
+   7VBQGyR0vWKxJfNJk0twOEwaw2rt6bcAV8LcM3gi+SBR+hHNe0CiBOGqv
+   NpcNOIDqmnMUM4xIyftagOysXsTmYm/wXFIWpEojFudeKWcL2Koxr2Zk2
+   c+DjBuoSxaYGhNSlMud+U1avz+c9tFlm99jlRQ1Yd/qHVNXNXTegXAmkX
+   X1NI0ZuLOP9oD48E13IHvJ44NromcFd/HevScFN19Mv+NdOVK+MrchNC+
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10451"; a="292187442"
 X-IronPort-AV: E=Sophos;i="5.93,266,1654585200"; 
-   d="scan'208";a="320714912"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 15:35:21 -0700
+   d="scan'208";a="292187442"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 15:48:44 -0700
 X-IronPort-AV: E=Sophos;i="5.93,266,1654585200"; 
-   d="scan'208";a="753019198"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.82.226])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 15:35:20 -0700
-From:   alison.schofield@intel.com
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+   d="scan'208";a="587463787"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.32.23]) ([10.212.32.23])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 15:48:43 -0700
+Message-ID: <f543e2a4-1994-bd53-b60d-206c1e3c0726@intel.com>
+Date:   Fri, 26 Aug 2022 15:48:42 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.2.0
+Subject: Re: [PATCH] tracepoint: Allow trace events in modules with TAINT_TEST
+Content-Language: en-US
+To:     alison.schofield@intel.com, Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
         Ira Weiny <ira.weiny@intel.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH] tracepoint: Allow trace events in modules with TAINT_TEST
-Date:   Fri, 26 Aug 2022 15:35:11 -0700
-Message-Id: <20220826223511.170256-1-alison.schofield@intel.com>
-X-Mailer: git-send-email 2.37.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220826223511.170256-1-alison.schofield@intel.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20220826223511.170256-1-alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
 
-Commit 2852ca7fba9f ("panic: Taint kernel if tests are run")
-introduced a new taint type, TAINT_TEST, to signal that an
-in-kernel test has been run.
+On 8/26/2022 3:35 PM, alison.schofield@intel.com wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
+>
+> Commit 2852ca7fba9f ("panic: Taint kernel if tests are run")
+> introduced a new taint type, TAINT_TEST, to signal that an
+> in-kernel test has been run.
 
-TAINT_TEST taint type defaults into a 'bad_taint' list for
-kernel tracing and blocks the creation of trace events. This
-causes a problem for CXL testing where loading the cxl_test
-module makes all CXL modules out-of-tree, blocking any trace
-events.
+has been loaded?
 
-Trace events are in development for CXL at the moment and this
-issue was found in test with v6.0-rc1.
-
-Reported-by: Ira Weiny <ira.weiny@intel.com>
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- kernel/tracepoint.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
-index 64ea283f2f86..5f17378c9dc2 100644
---- a/kernel/tracepoint.c
-+++ b/kernel/tracepoint.c
-@@ -571,7 +571,8 @@ static void for_each_tracepoint_range(
- bool trace_module_has_bad_taint(struct module *mod)
- {
- 	return mod->taints & ~((1 << TAINT_OOT_MODULE) | (1 << TAINT_CRAP) |
--			       (1 << TAINT_UNSIGNED_MODULE));
-+			       (1 << TAINT_UNSIGNED_MODULE) |
-+			       (1 << TAINT_TEST));
- }
- 
- static BLOCKING_NOTIFIER_HEAD(tracepoint_notify_list);
-
-base-commit: 4c612826bec1441214816827979b62f84a097e91
--- 
-2.31.1
-
+>
+> TAINT_TEST taint type defaults into a 'bad_taint' list for
+> kernel tracing and blocks the creation of trace events. This
+> causes a problem for CXL testing where loading the cxl_test
+> module makes all CXL modules out-of-tree, blocking any trace
+> events.
+>
+> Trace events are in development for CXL at the moment and this
+> issue was found in test with v6.0-rc1.
+>
+> Reported-by: Ira Weiny <ira.weiny@intel.com>
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> ---
+>   kernel/tracepoint.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
+> index 64ea283f2f86..5f17378c9dc2 100644
+> --- a/kernel/tracepoint.c
+> +++ b/kernel/tracepoint.c
+> @@ -571,7 +571,8 @@ static void for_each_tracepoint_range(
+>   bool trace_module_has_bad_taint(struct module *mod)
+>   {
+>   	return mod->taints & ~((1 << TAINT_OOT_MODULE) | (1 << TAINT_CRAP) |
+> -			       (1 << TAINT_UNSIGNED_MODULE));
+> +			       (1 << TAINT_UNSIGNED_MODULE) |
+> +			       (1 << TAINT_TEST));
+>   }
+>   
+>   static BLOCKING_NOTIFIER_HEAD(tracepoint_notify_list);
+>
+> base-commit: 4c612826bec1441214816827979b62f84a097e91
