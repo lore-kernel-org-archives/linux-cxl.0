@@ -2,30 +2,30 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6D0ECAAD1
-	for <linux-cxl@archiver.kernel.org>; Wed, 31 Aug 2022 12:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFD0ECAAD1
+	for <linux-cxl@archiver.kernel.org>; Wed, 31 Aug 2022 12:16:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229510AbiHaML0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 31 Aug 2022 08:11:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49478 "EHLO
+        id S230280AbiHaMQk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 31 Aug 2022 08:16:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbiHaMLZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 Aug 2022 08:11:25 -0400
+        with ESMTP id S230034AbiHaMQj (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 Aug 2022 08:16:39 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E412BCC34;
-        Wed, 31 Aug 2022 05:11:23 -0700 (PDT)
-Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MHjgW01Khz67xv7;
-        Wed, 31 Aug 2022 20:10:47 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FB19CD520;
+        Wed, 31 Aug 2022 05:16:38 -0700 (PDT)
+Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MHjnV288Lz67tfn;
+        Wed, 31 Aug 2022 20:15:58 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
+ fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 31 Aug 2022 14:11:20 +0200
+ 15.1.2375.31; Wed, 31 Aug 2022 14:16:36 +0200
 Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 31 Aug
- 2022 13:11:20 +0100
-Date:   Wed, 31 Aug 2022 13:11:19 +0100
+ 2022 13:16:35 +0100
+Date:   Wed, 31 Aug 2022 13:16:34 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     Robert Richter <rrichter@amd.com>
 CC:     Alison Schofield <alison.schofield@intel.com>,
@@ -37,12 +37,12 @@ CC:     Alison Schofield <alison.schofield@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH 13/15] cxl/acpi: Rework devm_cxl_enumerate_ports() to
- support RCD mode
-Message-ID: <20220831131119.00002c7f@huawei.com>
-In-Reply-To: <20220831081603.3415-14-rrichter@amd.com>
+Subject: Re: [PATCH 14/15] cxl/acpi: Enumerate ports in RCD mode to enable
+ RCHs and RCDs
+Message-ID: <20220831131634.00007870@huawei.com>
+In-Reply-To: <20220831081603.3415-15-rrichter@amd.com>
 References: <20220831081603.3415-1-rrichter@amd.com>
-        <20220831081603.3415-14-rrichter@amd.com>
+        <20220831081603.3415-15-rrichter@amd.com>
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
@@ -55,130 +55,139 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 31 Aug 2022 10:16:01 +0200
+On Wed, 31 Aug 2022 10:16:02 +0200
 Robert Richter <rrichter@amd.com> wrote:
 
-> RCD mode has a different enumeration scheme other than in CXL VH mode.
-> An RCD is directly connected to an RCH without downstream and upstream
-> ports showing up in between in the PCI hierarchy. Due to the direct
-> connection of RCD and RCH, the host bridge is always the RCD's parent
-> instead of the grandparent. 
-Mentioned earlier, but that's not quite true.  There is a reference in
-the spec to allowing it to be under a root port (some sort of virtual structure
-- I'm not sure of 'why' you would that though.)(
-
-> Modify devm_cxl_enumerate_ports()
-> respectively.
-
-Don't line wrap above.
-
+> Do the plumbing of ports to enable RCD/RCH pairs.
 > 
-> Implement this by introducing a function to determine the device's
-> downstream port. The 'for' loop is adjusted for RCD mode and in this
-> case find_cxl_port() will always find the host's associated port and
-> the loop iteration stops.
+> Do this by enumerating all necessary ports an endpoint needs to
+> connect to. This includes:
+> 
+>  1) A CXL root port with dport links to the RCHs. The port links to
+>     the CXL root platform device for RCH mode.
+> 
+>  2) RCH ports with dport links to its endpoints. Port connects to the
+>     pci host bridge device.
+> 
+>  3) CXL device endpoint connected to the RCH.
+> 
+> The port creation for the endpoint (3) is already implemented and
+> works in RCD mode too. Thus, it is not scope of this patch. Only the
+> endpoints must be registered at the host bridge port.
+> 
+> Implement this by introducing the function cxl_enumerate_rch_ports().
+> It registers a CXL host at the CXL root device, creates the host's
+> port and registers the existing CXL memory device endpoint at it. The
+> port of the CXL root device is created with the first CXL host being
+> registered.
+> 
+> Once enumerated, CXL restricted hosts show up in sysfs with CXL
+> devices connected as endpoints to it.
 > 
 > Signed-off-by: Robert Richter <rrichter@amd.com>
+
+Hi Robert,
+
+A few things inline.
+
+Jonathan
+
 > ---
->  drivers/cxl/core/port.c | 36 ++++++++++++++++++++++++------------
->  1 file changed, 24 insertions(+), 12 deletions(-)
+>  drivers/cxl/acpi.c | 58 ++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 58 insertions(+)
 > 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 61e9915162d5..08b99423dbf8 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1084,6 +1084,22 @@ static struct device *grandparent(struct device *dev)
->  	return NULL;
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index 88bbd2bb61fc..56b2d222afcc 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -471,13 +471,52 @@ static int cxl_setup_component_reg(struct device *parent,
+>  	return 0;
 >  }
 >  
-> +static struct device *cxl_mem_dport_dev(struct cxl_memdev *cxlmd)
+> +static int cxl_enumerate_rch_ports(struct device *root_dev,
+> +				   struct cxl_port *cxl_root,
+> +				   struct pci_host_bridge *host,
+> +				   resource_size_t component_reg_phys,
+> +				   int port_id)
 > +{
-> +	struct device *dev = cxlmd->dev.parent;
-> +	struct pci_dev *pdev = to_pci_dev(cxlmd->dev.parent);
+> +	struct cxl_dport *dport;
+> +	struct cxl_port *port;
+> +	struct pci_dev *pdev;
+> +
+> +	dport = devm_cxl_add_dport(cxl_root, &host->dev, port_id,
+> +				   component_reg_phys);
+> +	if (IS_ERR(dport))
+> +		return PTR_ERR(dport);
+> +
+> +	port = devm_cxl_add_port(root_dev, &host->dev,
+> +				 component_reg_phys, dport);
+> +	if (IS_ERR(port))
+> +		return PTR_ERR(port);
+> +
+> +	pdev = pci_get_slot(host->bus, PCI_DEVFN(0, 0));
+> +	if (!pdev)
+> +		return -ENXIO;
+> +
+> +	/* Note: The endpoint provides the component reg base. */
 
-to_pci_dev(dev);
+I'm not sure what this comment means.  Which component reg base?
+
+> +	dport = devm_cxl_add_dport(port, &pdev->dev, 0,
+> +				   CXL_RESOURCE_NONE);
+
+Trivial: No need to wrap the above.
 
 > +
-> +	/*
-> +	 * An RCiEP is directly connected to the root bridge without
-> +	 * any PCI bridges/ports in between. Reduce the parent level
-> +	 * for those.
-> +	 */
-> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END)
-> +		return dev;
+> +	pci_dev_put(pdev);
 > +
-> +	return dev->parent;
-Switching from grandparent to this is a little confusing because it's
-done in two steps.  Perhaps use
-	return grandparent(cmlmd->dev);
-here to keep that connection and rename dev in this function to parent.
-
-Far too many devices in here with similar names for it to be easy
-to read.
-
-
+> +	if (IS_ERR(dport))
+> +		return PTR_ERR(dport);
+> +
+> +	return 0;
 > +}
 > +
->  static void delete_endpoint(void *data)
+>  static int __init cxl_restricted_host_probe(struct platform_device *pdev)
 >  {
->  	struct cxl_memdev *cxlmd = data;
-> @@ -1339,7 +1355,7 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
->  int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
->  {
->  	struct device *dev = &cxlmd->dev;
-> -	struct device *iter;
-> +	struct device *dport_dev;
+> +	struct device *root_dev = &pdev->dev;
+>  	struct pci_host_bridge *host = NULL;
+>  	struct acpi_device *adev;
+> +	struct cxl_port *cxl_root = NULL;
+>  	unsigned long long uid = ~0;
+>  	resource_size_t rcrb;
+>  	resource_size_t component_reg_phys;
+> +	int port_id = 0;
 >  	int rc;
 >  
->  	rc = devm_add_action_or_reset(&cxlmd->dev, cxl_detach_ep, cxlmd);
-> @@ -1352,25 +1368,21 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
->  	 * attempt fails.
->  	 */
->  retry:
-> -	for (iter = dev; iter; iter = grandparent(iter)) {
-> -		struct device *dport_dev = grandparent(iter);
-> +	for (dport_dev = cxl_mem_dport_dev(cxlmd); dport_dev;
-> +	     dport_dev = grandparent(dport_dev)) {
-
-I don't like looping for the RCD case as it relies a bit too
-much on subtle relationships between devices and parent.
-
-Perhaps better to factor out the contents of the loop, then handle
-the RCD case separately from the main loop.
-I haven't tried it, so perhaps that looks even less readable.
-
-
->  		struct device *uport_dev;
->  		struct cxl_dport *dport;
->  		struct cxl_port *port;
+>  	while ((host = cxl_find_next_rch(host)) != NULL) {
+> @@ -497,11 +536,30 @@ static int __init cxl_restricted_host_probe(struct platform_device *pdev)
 >  
-> -		if (!dport_dev)
-> -			return 0;
-> -
->  		uport_dev = dport_dev->parent;
->  		if (!uport_dev) {
-> -			dev_warn(dev, "at %s no parent for dport: %s\n",
-> -				 dev_name(iter), dev_name(dport_dev));
-> +			dev_warn(dev, "no parent for dport: %s\n",
-> +				 dev_name(dport_dev));
->  			return -ENXIO;
->  		}
+>  		dev_dbg(&host->dev, "RCRB found: 0x%08llx\n", (u64)rcrb);
 >  
-> -		dev_dbg(dev, "scan: iter: %s dport_dev: %s parent: %s\n",
-> -			dev_name(iter), dev_name(dport_dev),
-> -			dev_name(uport_dev));
-> +		dev_dbg(dev, "scan: dport_dev: %s parent: %s\n",
-> +			dev_name(dport_dev), dev_name(uport_dev));
->  		port = find_cxl_port(dport_dev, &dport);
->  		if (port) {
->  			dev_dbg(&cxlmd->dev,
-> @@ -1418,7 +1430,7 @@ EXPORT_SYMBOL_NS_GPL(devm_cxl_enumerate_ports, CXL);
->  struct cxl_port *cxl_mem_find_port(struct cxl_memdev *cxlmd,
->  				   struct cxl_dport **dport)
->  {
-> -	return find_cxl_port(grandparent(&cxlmd->dev), dport);
-> +	return find_cxl_port(cxl_mem_dport_dev(cxlmd), dport);
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_mem_find_port, CXL);
+> +		/*
+> +		 * For CXL 1.1 hosts we create a root device other
+> +		 * than the ACPI0017 device to hold the devm data and
+> +		 * the uport ref.
+> +		 */
+> +		if (!cxl_root) {
+> +			cxl_root = devm_cxl_add_port(root_dev, root_dev,
+> +						     CXL_RESOURCE_NONE, NULL);
+> +			if (IS_ERR(cxl_root)) {
+> +				rc = PTR_ERR(cxl_root);
+> +				goto fail;
+> +			}
+> +		}
+> +
+>  		component_reg_phys = cxl_get_component_reg_phys(rcrb);
+>  		rc = cxl_setup_component_reg(&host->dev, component_reg_phys);
+>  		if (rc)
+>  			goto fail;
+>  
+> +		rc = cxl_enumerate_rch_ports(root_dev, cxl_root, host,
+> +					     component_reg_phys, port_id++);
+> +		if (rc)
+> +			goto fail;
+> +
+>  		dev_info(&host->dev, "host supports CXL\n");
+>  	}
 >  
 
