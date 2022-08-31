@@ -2,43 +2,43 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4877ECAAD4
-	for <linux-cxl@archiver.kernel.org>; Wed, 31 Aug 2022 08:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A01C7ECAAD1
+	for <linux-cxl@archiver.kernel.org>; Wed, 31 Aug 2022 08:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231139AbiHaIRB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 31 Aug 2022 04:17:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36076 "EHLO
+        id S231381AbiHaIRC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 31 Aug 2022 04:17:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231315AbiHaIQ6 (ORCPT
+        with ESMTP id S231345AbiHaIQ6 (ORCPT
         <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 Aug 2022 04:16:58 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 718B5C58FF;
-        Wed, 31 Aug 2022 01:16:53 -0700 (PDT)
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2066.outbound.protection.outlook.com [40.107.237.66])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A23AC59EA;
+        Wed, 31 Aug 2022 01:16:51 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IZUQ2URG2av7/0fSBrg55uAQkfZSfM8oOZ4tigcZn4YlrowAKMiIGcbUOjkNYprS/EW8hoZkQyr46k+Ri6mx+loH6mi+HEJ99/YzO9WDjnnn613kIRs0yw+7nTH4K6lMmFQLqqkQ32hFCWX1cjpHsLWvDyksT0hKl9wqAs7XOWF94bIxoB4t4LQlDEToeDGsr7n6l04N3bz1lYVJdmQiLQOuT5AR6IzGKWGYzfjiFPyJ/BCI6y5+N4irGbKaZPlvco8ZoYTeaHr6LD8Mmj0+bCspDlorWMO2a9szJ/WNdr5BRD5McOC+M+MXQP4u9981Bm9ecrNqpflOwMYhp1j9dA==
+ b=XqKowGid0VCHW2HI06KFe5KIiWOuJeIQIT5jsE7XWw3M9wMwJcaeE/olyYmcZCKqDe2x9DsAHUN8cOxlnUjgA74NDBzwaQDQgfifNTwlZYxf8UgM6Bw3CydaHphoXGdkEyXUQD6AEqB17v5oNGSarJ822f8b58f4m2QJbtTPekBLnss5Pg42z0sDkQoGST+tmSQM3QMZLyer9pHr4SuOFzAr+8fhO7B80xURsQV91JTNFTMU9o9yn2d70+BfMxihJT7O8LolZnIGOOX5Za6UJaAMGfGf8VapI+cNJqlpCpmGBYHAjWovtOi3HX+Gk4WqefH/2EQKStRqwm5WFi3ggQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=w6nwYpwrohXVsCCquXQdqgxdR0LK6//seX9QT6C5AHc=;
- b=D4YXf4IOK99xKCHPVjc8Bm2EUI1hNBJJuGeW78r+Ukth9NpX2sLjR2mX9/DoXYcYvv8eYgp+4HmukTL/Xgm/VZlRrmGAcwr9ok/ipefhPErd7OwFgbtINY4rkSoAGT3fD40Ar9GqCwhAU1zQJmH2Wj9TKGB4DVCKgmcVjg8ZWDu0bzW3xa9Agj5Wdjb9+0HerdKOGMzjknxCPWNb13lxjOWZuMKakW7Yz2XUc8T+BAizWGgTEVNm+HLp2maurW748v7GihSboVrOmW3pf0jdRz+OgcpBfs4VlQLIbzb1ZYFzNx5ImBk0S11P/tKbUXd0bZDLls1M+smOzcQAPd5xwA==
+ bh=ej+pItJOBPaWy64t4W0XWbAdeK8lWkJUJ44Rq1Ur+vo=;
+ b=kHfQLEe8zjagZ+GMqDc9q+CFONOCZlLlwC4exOOEAHezu2sdInt7bM61Wb0tevVS21qypm/kaaU56ZdRLjbiuQgnCE+bcDd03arX4yZw+zRhL0MVsvP7kWTHXdp246Ro6YAboFiqaugAd3Y3ZnCo5yno9/R5mBgev8MK8YZ2OcuWrU/tX//JxJYv9sGoL5swA93PECRx2pGpJqTHmx/1gpeJTrKfnV7FE2VafHs4odhqcKrQ/8ReOU6N1J+8v2tp4xWswcLMGgJR8MEvytlJPepfb/kRZiw0SsMLmn+YKVwgKOxt3Xb2ZZl2R1zwXeeKIsqEGOI7+1fF5HkAJa5jmg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w6nwYpwrohXVsCCquXQdqgxdR0LK6//seX9QT6C5AHc=;
- b=EiFa6ZfAS6p9K9jda63gY2CySc4G60hNZUZ+P2awLSu7SnAFZWHCX1PQBQDAK6NnTIeFHPAeijn9m8KZ7RhUW0A6xD1aBCJWGUnDbcTlUVBRqsGpU6TCX6R8qwCTcSk6OKm71z9KcF6S61t5Vqy7x+u+IUM5ERwFM0tI4SeDmBI=
-Received: from MW4PR03CA0284.namprd03.prod.outlook.com (2603:10b6:303:b5::19)
- by BL1PR12MB5302.namprd12.prod.outlook.com (2603:10b6:208:31d::13) with
+ bh=ej+pItJOBPaWy64t4W0XWbAdeK8lWkJUJ44Rq1Ur+vo=;
+ b=YZuAl+5iC15Q4wfp68ZH8Z1xwjug57yBldkX25GSTGaz4M5cqXjHaV3IID0v4Eq1D7jhu3BGXPNK0ZNBurrEj641mfnAVu6NQsH5yBjbOx/2+Xwvp3ACsrqUY4/jbrEw3arLhv6J52JySSRnm/CBtQOtDUzTzhJ/au/oI0IUoXc=
+Received: from MW4PR03CA0279.namprd03.prod.outlook.com (2603:10b6:303:b5::14)
+ by DM6PR12MB4266.namprd12.prod.outlook.com (2603:10b6:5:21a::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.15; Wed, 31 Aug
- 2022 08:16:49 +0000
+ 2022 08:16:48 +0000
 Received: from CO1NAM11FT041.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:b5:cafe::ba) by MW4PR03CA0284.outlook.office365.com
- (2603:10b6:303:b5::19) with Microsoft SMTP Server (version=TLS1_2,
+ (2603:10b6:303:b5:cafe::78) by MW4PR03CA0279.outlook.office365.com
+ (2603:10b6:303:b5::14) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.10 via Frontend
- Transport; Wed, 31 Aug 2022 08:16:49 +0000
+ Transport; Wed, 31 Aug 2022 08:16:47 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,11 +48,11 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  CO1NAM11FT041.mail.protection.outlook.com (10.13.174.217) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5588.10 via Frontend Transport; Wed, 31 Aug 2022 08:16:49 +0000
+ 15.20.5588.10 via Frontend Transport; Wed, 31 Aug 2022 08:16:47 +0000
 Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Wed, 31 Aug
- 2022 03:16:47 -0500
+ 2022 03:16:41 -0500
 From:   Robert Richter <rrichter@amd.com>
 To:     Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
@@ -63,9 +63,9 @@ CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Len Brown <lenb@kernel.org>, Robert Richter <rrichter@amd.com>
-Subject: [PATCH 04/15] cxl: Unify debug messages when calling devm_cxl_add_dport()
-Date:   Wed, 31 Aug 2022 10:15:52 +0200
-Message-ID: <20220831081603.3415-5-rrichter@amd.com>
+Subject: [PATCH 02/15] cxl/core: Check physical address before mapping it in devm_cxl_iomap_block()
+Date:   Wed, 31 Aug 2022 10:15:50 +0200
+Message-ID: <20220831081603.3415-3-rrichter@amd.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220831081603.3415-1-rrichter@amd.com>
 References: <20220831081603.3415-1-rrichter@amd.com>
@@ -77,153 +77,50 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0c4d9b8f-28a6-4abc-29d4-08da8b292759
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5302:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1a524fb3-f5cf-429e-bada-08da8b29264b
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4266:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: JgPR/0I49GDnLeCskSwruLeHv+Q+Pi3BV1Twwk4iIXOVpA5MjYh0R6AamIGoHoF4zUiTxaaDt01Wpf6L0LkoP+7M6ba6w1X/98l7LfXrlCH4Vn4+CEHtOYixkL8ZCuFAPOceeR75NXJZExdx7ELQ6AQfqTIe1tIeZd/6/II9ePSYJjfSpFF2B6EbDzl/FIocPkgt5iHwdvRFciCKULEP6Y4gE5uoUFUq8i+t/E4+ikroFbI9T5tUcjH6aZahn52LTZ6Dya0FaIqNaJWkdZNZlYTnX52D5SvTvVkKAjc+j1MaUY0yOwkUY02M8fBNtk2lm3f3C0WUZHh+lAz6zc9ksExHqrdEKTeJrl3kK4FrsZD+Sac/POcoToUq5IjjB+Q+O4KXrGbHCbxCd5zghZ2TrDIAEdEt4O8V1mYy5JE7bmouhfTayaW3gYxC0zLImZl94huPmbhPcWBp9YBVJcJEQk84bnd1UyyKPms6+Inak/q623Wjfca8Bi1ldBH3/zyY4W/kluEF15YrWPGGKghCH8vErnhQpOsTpKuvu2LhbFtHPnL8abpKsu5GszKEN2T/seweLYDrqM+Kjk4kMySp1TJ5+usSl0uSYDkYnA2eaOtv3qLscUKXzY1kIiovuU3RhP6cDgsHqPOPNynuRBvZ0oAUEerZLo6sFzW0VFvJugy20scIbnqnWzLT9sUj9TM0M38K0h69T158fLmtAOg1riLjJBD/Jvcf6Hg8b++k2AGgdYA2di29QBOwz87jbuzj27+T37eM+cQJHoPWba60lFeCgnbjRFrVGkdQ81lFEzw=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(376002)(346002)(136003)(39860400002)(396003)(36840700001)(40470700004)(46966006)(5660300002)(41300700001)(478600001)(7416002)(2906002)(15650500001)(70206006)(6666004)(4326008)(26005)(47076005)(2616005)(426003)(8676002)(336012)(186003)(1076003)(8936002)(16526019)(83380400001)(40460700003)(82740400003)(356005)(70586007)(81166007)(36860700001)(40480700001)(36756003)(110136005)(54906003)(82310400005)(316002)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: FOBIN3QzXOpL+o11i7RHsCyH3xqLnq+makXie2cluk0Oev4fvU9sf7FbJEjVZ0neWFa93s/EitWPfmssYi5nja4Oq9grd9cpSh5EfmMfR3oZ/T9qYZA5PPWuaVY5PlCpOROQ5/OF+fDX9lg85VYvvfNPHs1G962VVAezxlaMdcRrs3/ziIXSkJUR05PH+m3kdQNEbxzrMWa2UhqFkgUf+KOZr63h6epST2ht8IN3Cy2wCF/9xP0J3AxCEv5334zohlixY2EdJsL70rcx7YyazdjHT4qlVdU6wpGYGN0opgLs3ogBWdFr5vmBowOhXFhGyY3q4S8zokpTBlo0cicJTKtAuxKaZLn+ps/BtuZHx9TSdfojAFZf1xlsShSCehRFZNO7oFrNCXkmXPbFCNt8iDapTo+8Ede0kJQt8dJWl3TjVTQrLNpC8mYys4ySA2nfthLhN0Kg1MvRYp5qqtAPFEIraVdoV8mfi2lReDWkka15rfdFI0n7q9cfrPWqwOXXT8UHnvk3U7/T3tx6I9aLjkwMGoRLetidet5x3kqquJ8wWUcXpKUaPmXzh6ACMCyUmeircQpPuDG5B9uMvnzQr+S9iKB8NF6hwlde8jcMmrqkfbXWsNV4Cw1KBl1xklA5Ql4VWN6roMV7+9W8BS64GPFlD4Y4oz83f/Jg42LIp5Zb+jo8LTzv/YgMXiZrt6CKF+tPMJaU7ozCP70L89qmeXTLp7IHpKwlyCH5J6iUVLFK1h1IvFDx3tULewz+JuZ1vw7x1pY5K5eqMwE7oOPAkQYvqwx4kv4v3wikB03ByE9WkRLwU/6/MYsLdeYPIvnq
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(346002)(396003)(376002)(136003)(46966006)(40470700004)(36840700001)(2906002)(82740400003)(82310400005)(6666004)(2616005)(426003)(47076005)(26005)(83380400001)(16526019)(36860700001)(40480700001)(336012)(110136005)(8676002)(70586007)(40460700003)(4326008)(70206006)(54906003)(4744005)(186003)(81166007)(316002)(1076003)(41300700001)(7416002)(356005)(8936002)(478600001)(36756003)(5660300002)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2022 08:16:49.4546
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2022 08:16:47.6888
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c4d9b8f-28a6-4abc-29d4-08da8b292759
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a524fb3-f5cf-429e-bada-08da8b29264b
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT041.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5302
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4266
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-CXL dports are added in a couple of code paths using
-devm_cxl_add_dport(). Debug messages are individually generated, but
-are incomplete and inconsistent. Change this by moving its generation
-to devm_cxl_add_dport(). This unifies the messages and reduces code
-duplication. Also, generate messages on failure.
+The physical base address of a CXL range can be invalid and is then
+set to CXL_RESOURCE_NONE. Early check this case before mapping a
+memory block in devm_cxl_iomap_block().
 
 Signed-off-by: Robert Richter <rrichter@amd.com>
 ---
- drivers/cxl/acpi.c           |  7 ++-----
- drivers/cxl/core/pci.c       |  2 --
- drivers/cxl/core/port.c      | 28 ++++++++++++++++++++--------
- tools/testing/cxl/test/cxl.c |  8 +-------
- 4 files changed, 23 insertions(+), 22 deletions(-)
+ drivers/cxl/core/regs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 767a91f44221..31e104f0210f 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -282,12 +282,9 @@ static int add_host_bridge_dport(struct device *match, void *arg)
- 	}
+diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+index 39a129c57d40..f216c017a474 100644
+--- a/drivers/cxl/core/regs.c
++++ b/drivers/cxl/core/regs.c
+@@ -165,6 +165,9 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
+ 	void __iomem *ret_val;
+ 	struct resource *res;
  
- 	dport = devm_cxl_add_dport(root_port, match, uid, ctx.chbcr);
--	if (IS_ERR(dport)) {
--		dev_err(host, "failed to add downstream port: %s\n",
--			dev_name(match));
-+	if (IS_ERR(dport))
- 		return PTR_ERR(dport);
--	}
--	dev_dbg(host, "add dport%llu: %s\n", uid, dev_name(match));
++	if (addr == CXL_RESOURCE_NONE)
++		return NULL;
 +
- 	return 0;
- }
- 
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 9240df53ed87..0dbbe8d39b07 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -62,8 +62,6 @@ static int match_add_dports(struct pci_dev *pdev, void *data)
- 	}
- 	ctx->count++;
- 
--	dev_dbg(&port->dev, "add dport%d: %s\n", port_num, dev_name(&pdev->dev));
--
- 	return 0;
- }
- 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 8604cda88787..61e9915162d5 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -914,12 +914,16 @@ struct cxl_dport *devm_cxl_add_dport(struct cxl_port *port,
- 	}
- 
- 	if (snprintf(link_name, CXL_TARGET_STRLEN, "dport%d", port_id) >=
--	    CXL_TARGET_STRLEN)
--		return ERR_PTR(-EINVAL);
-+	    CXL_TARGET_STRLEN) {
-+		rc = -EINVAL;
-+		goto err;
-+	}
- 
- 	dport = devm_kzalloc(host, sizeof(*dport), GFP_KERNEL);
--	if (!dport)
--		return ERR_PTR(-ENOMEM);
-+	if (!dport) {
-+		rc = -ENOMEM;
-+		goto err;
-+	}
- 
- 	dport->dport = dport_dev;
- 	dport->port_id = port_id;
-@@ -930,22 +934,30 @@ struct cxl_dport *devm_cxl_add_dport(struct cxl_port *port,
- 	rc = add_dport(port, dport);
- 	cond_cxl_root_unlock(port);
- 	if (rc)
--		return ERR_PTR(rc);
-+		goto err;
- 
- 	get_device(dport_dev);
- 	rc = devm_add_action_or_reset(host, cxl_dport_remove, dport);
- 	if (rc)
--		return ERR_PTR(rc);
-+		goto err;
- 
- 	rc = sysfs_create_link(&port->dev.kobj, &dport_dev->kobj, link_name);
- 	if (rc)
--		return ERR_PTR(rc);
-+		goto err;
- 
- 	rc = devm_add_action_or_reset(host, cxl_dport_unlink, dport);
- 	if (rc)
--		return ERR_PTR(rc);
-+		goto err;
-+
-+	dev_dbg(&port->dev, "added %s (%s) as dport of device %s\n",
-+		dev_name(&port->dev), link_name, dev_name(dport_dev));
- 
- 	return dport;
-+err:
-+	dev_dbg(&port->dev, "failed to add %s (%s) as dport of device %s: %d\n",
-+		dev_name(&port->dev), link_name, dev_name(dport_dev), rc);
-+
-+	return ERR_PTR(rc);
- }
- EXPORT_SYMBOL_NS_GPL(devm_cxl_add_dport, CXL);
- 
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index a072b2d3e726..c610625e8261 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -582,14 +582,8 @@ static int mock_cxl_port_enumerate_dports(struct cxl_port *port)
- 		dport = devm_cxl_add_dport(port, &pdev->dev, pdev->id,
- 					   CXL_RESOURCE_NONE);
- 
--		if (IS_ERR(dport)) {
--			dev_err(dev, "failed to add dport: %s (%ld)\n",
--				dev_name(&pdev->dev), PTR_ERR(dport));
-+		if (IS_ERR(dport))
- 			return PTR_ERR(dport);
--		}
--
--		dev_dbg(dev, "add dport%d: %s\n", pdev->id,
--			dev_name(&pdev->dev));
- 	}
- 
- 	return 0;
+ 	res = devm_request_mem_region(dev, addr, length, dev_name(dev));
+ 	if (!res) {
+ 		resource_size_t end = addr + length - 1;
 -- 
 2.30.2
 
