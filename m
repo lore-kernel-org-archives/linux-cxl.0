@@ -2,150 +2,165 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD11EECAAA1
-	for <linux-cxl@archiver.kernel.org>; Tue, 30 Aug 2022 18:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E0BECAAD1
+	for <linux-cxl@archiver.kernel.org>; Wed, 31 Aug 2022 08:16:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229826AbiH3SLL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 30 Aug 2022 14:11:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48214 "EHLO
+        id S229616AbiHaIQx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 31 Aug 2022 04:16:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232260AbiH3SLI (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 30 Aug 2022 14:11:08 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB3E278BEC
-        for <linux-cxl@vger.kernel.org>; Tue, 30 Aug 2022 11:11:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661883065; x=1693419065;
-  h=subject:from:to:cc:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=LXAFPY72XW6xQRTSp/0fWqf22YPEySpnW1R9UtF44SI=;
-  b=fgohhQsWERSzWvygZ70IDAH0+mCjCjMzDxkRtdgr40rS93B34HyBanQV
-   HieFGiz/bofwgidEV6oj8223ze4qds5CEwJ53PNt0L5hnxRYFQegqUVIb
-   gb7ixTlxFg0k0ExD4b02sTtlAlrMj3xqHVsCgHcKcp3DOBPS/fzEESFwn
-   E7RFu4Hk8fH1xf9wz3MIezENP1bb8+6egu3N3DxhEW0DrDd0cTWT3sIsA
-   HEVs24Lf3cMXgNmd2m/DC6Kor9PhNGRrkyRTfxKiI72mElZdwXd/fcxOZ
-   5VgTorFOyEquiYoYNt/goeEVIz1/GypKttyL9Mrv9PnDI0G6vuUmAxdE+
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10455"; a="296049563"
-X-IronPort-AV: E=Sophos;i="5.93,275,1654585200"; 
-   d="scan'208";a="296049563"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2022 11:11:05 -0700
-X-IronPort-AV: E=Sophos;i="5.93,275,1654585200"; 
-   d="scan'208";a="644937907"
-Received: from lehman1-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.212.188.127])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2022 11:11:05 -0700
-Subject: [ndctl PATCH] cxl/test: Skip tests in the absence of the cxl_test
- module
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     vishal.l.verma@intel.com
-Cc:     Yi Zhang <yi.zhang@redhat.com>, linux-cxl@vger.kernel.org
-Date:   Tue, 30 Aug 2022 11:11:05 -0700
-Message-ID: <166188306499.3409478.15310054338186313752.stgit@dwillia2-xfh.jf.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        with ESMTP id S230019AbiHaIQw (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 Aug 2022 04:16:52 -0400
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on20607.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e8b::607])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 699B5C651A;
+        Wed, 31 Aug 2022 01:16:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YnQJiX7sIOvksQ0E8ZJlW5IgsQ0GejSMkhOGIFbvukCatS5lyDXPJFwQuvfI/iWnQUVBu05XcaShk5HpOut6vsmr9F93kW3NMJ4P5YEaVLpFv/3pj7l6Lq9RBZA7inrShMVWiFrwPP0ogspqQ/I9pT38gYd4mS3aZQcN/pSCuyHvaXu+L4QxAwT/puML9ZjLseytp0xk0Ftxe+7jO6zYXqmQolhYnUlMmZUPGHdK6FaAKXR3nBsRYdpLb0tymVY2agUi50G72xIhQ6dj+yiFCZuabfGkYrnEUUxPKojqpANkcWbt/DZxPx0p9aaqCnld2x9F0reXWzRn/Z4rXoW3mg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ePtg2yg265Ys5IP7I/Y1ac/VXQeLMqm11rUj9BCck/w=;
+ b=CfSBg5k94O91wybP0MYbh5pVgSjSjCQRt2IdHxorhl693LEua5mdqGm8nJOpyS3SxjanU0u/vdTmvokN8811e1dde7cDpvt6HgsZnggglIN/FUPVjXhXn9yDW9SjNdDwAfwvkJzhe7rXRbhwVhhUcsRF8y2PiuEt+LT5QHCPLlDlNAjm0WLlLacIRzsC3CfZDNAO6Qhagc4IlYtVsYSlr+p5N6SoN0jOo1xr/n5ijlxaU2XDE/c4ZrH9tePFGebceu95zdd3MKRpYdqqDTbiiXFTa1FCaWraJ0At6elG8Zm+NQx07e4GNxXnWQjPAxZ5Cf6NY7/mD6hKVE1C1uxEJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ePtg2yg265Ys5IP7I/Y1ac/VXQeLMqm11rUj9BCck/w=;
+ b=SG7lRpMDrtEgfa+RGBnYEnOW0iSrveev0a21SVn8c3vi5VguMqzsxY2/Zf8EAvCsmLYFUx60kOeu9526B3WbjsGWR6C5r9N6e8g23U5DuOtIIj+4xr/uaK6UJp4p5wAg1XYABVVtl+uUuGdQ7sCWwxL4FdOJYIiwvPuGYQRE3fM=
+Received: from MW4PR03CA0295.namprd03.prod.outlook.com (2603:10b6:303:b5::30)
+ by IA1PR12MB6187.namprd12.prod.outlook.com (2603:10b6:208:3e5::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.21; Wed, 31 Aug
+ 2022 08:16:43 +0000
+Received: from CO1NAM11FT041.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:b5:cafe::bc) by MW4PR03CA0295.outlook.office365.com
+ (2603:10b6:303:b5::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.10 via Frontend
+ Transport; Wed, 31 Aug 2022 08:16:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT041.mail.protection.outlook.com (10.13.174.217) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5588.10 via Frontend Transport; Wed, 31 Aug 2022 08:16:42 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Wed, 31 Aug
+ 2022 03:16:35 -0500
+From:   Robert Richter <rrichter@amd.com>
+To:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>, Robert Richter <rrichter@amd.com>
+Subject: [PATCH 00/15] cxl: Add support for Restricted CXL hosts (RCD mode) 
+Date:   Wed, 31 Aug 2022 10:15:48 +0200
+Message-ID: <20220831081603.3415-1-rrichter@amd.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f3310d5f-1cdf-498e-ff73-08da8b292357
+X-MS-TrafficTypeDiagnostic: IA1PR12MB6187:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: AYXMlh9p/Ou3HO53jBlSjXpekVT4NosegcYO3czxdCQPSRzsDVUobZk361By+QT8mGxUmFwiWedxE/L0ErXLzbCsIQqZJIeydIEpS3XBi72A/oVWSXU1zoHONPsNa0xik5TutxOCF4yWuGP/3TYogchLPDsi/WJYcPNKDNzkEkJVqQacMH7VdNSR1OKS52heSsKrOLGgNJ/J51vVcN6dxaEw7WQnMAV4lB/yUfqyFeqas2YU2YN+yIrPet/RVsgpUQYzp3E8S5LrUgyOcLnDcVbJjaI1SfAM7fhAsEl1mZ/0rxaNEbNlLWA/s/V4bxG5oGxTqPTpbMoYOesSrXWtIFkrxtA12Co68aCYaQ5gyTeY5t2NCH3jbWXcXv6nPu9GyG0w0xNIgn8ExnKbFy4+jQHRBqK5EiywVT+/sOFr/Ja8rghMNjqxYG/BysqXWHyzWxAGSXWrnmGqKUvKitTeaLieG/wt36uZTKIgAa0dFFql4UGj0hADeLCK7nceNkzsqy+AhTl2S5G7d99pPRD8RIQc9hHdD0IzYGH2lwiIo8kPsispFh1iRqtSrTh0S32flFRckWBh6T0/iVxkyJAVBNRxlw9ljiJqmCHMGwrARir8SfM90nAJpo66TkdrI6K2vHk/n3eqsXRMZA3RkDKzzygybdzun+UcUtn5TTChADQOImSFChJ5JCln91S5s9qUt9bV8+pwZtRwF1P3QKyP+S6KYTi2L5mJiBJawhkQbh5xj3Bwrx3s9H4SUKO6EHGlmqiO1Soc3EPMLB3nuzjlFXefnBWlngV5IDH9GK+4IzoracWXNSy23VtAIXPedXmrhGRviudWryw+PIlj5H+bJw==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(136003)(346002)(39860400002)(376002)(396003)(46966006)(36840700001)(40470700004)(110136005)(8936002)(70206006)(8676002)(2906002)(4326008)(5660300002)(47076005)(36860700001)(70586007)(7416002)(54906003)(36756003)(2616005)(316002)(478600001)(6666004)(966005)(41300700001)(26005)(40480700001)(4743002)(426003)(82740400003)(82310400005)(81166007)(356005)(186003)(1076003)(16526019)(83380400001)(336012)(40460700003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2022 08:16:42.7361
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3310d5f-1cdf-498e-ff73-08da8b292357
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT041.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6187
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Similar to cases when nfit_test is missing, SKIP rather than FAIL the tests
-that depend on cxl_test.ko when it is missing.
+In Restricted CXL Device (RCD) mode (formerly referred to as CXL 1.1)
+the PCIe enumeration hierarchy is different from CXL VH Enumeration
+(formerly referred to as 2.0, for both modes see CXL spec 3.0: 9.11
+and 9.12, [1]). This series adds support for RCD mode. It implements
+the detection of Restricted CXL Hosts (RCHs) and its corresponding
+Restricted CXL Devices (RCDs). It does the necessary enumeration of
+ports and connects the endpoints. With all the plumbing an RCH/RCD
+pair is registered at the Linux CXL bus and becomes visible in sysfs
+in the same way as CXL VH hosts and devices do already. RCDs are
+brought up as CXL endpoints and bound to subsequent drivers such as
+cxl_mem.
 
-Link: https://github.com/pmem/ndctl/issues/221
-Reported-by: Yi Zhang <yi.zhang@redhat.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- test/cxl-create-region.sh |    3 ++-
- test/cxl-labels.sh        |    3 ++-
- test/cxl-region-sysfs.sh  |    3 ++-
- test/cxl-topology.sh      |    3 ++-
- 4 files changed, 8 insertions(+), 4 deletions(-)
+For CXL VH the host driver (cxl_acpi) starts host bridge discovery
+once the ACPI0017 CXL root device is detected and then searches for
+ACPI0016 host bridges to enable CXL. In RCD mode an ACPI0017 device
+might not necessarily exist and the host bridge can have a standard
+PCIe host bridge PNP0A08 ID, there aren't any CXL port or switches in
+the PCIe hierarchy visible. As such the RCD mode enumeration and host
+discovery is very different from CXL VH. See patch #5 for
+implementation details.
 
-diff --git a/test/cxl-create-region.sh b/test/cxl-create-region.sh
-index 66df38f41549..82aad3a7285a 100644
---- a/test/cxl-create-region.sh
-+++ b/test/cxl-create-region.sh
-@@ -4,7 +4,7 @@
- 
- . $(dirname $0)/common
- 
--rc=1
-+rc=77
- 
- set -ex
- 
-@@ -14,6 +14,7 @@ check_prereq "jq"
- 
- modprobe -r cxl_test
- modprobe cxl_test
-+rc=1
- udevadm settle
- 
- destroy_regions()
-diff --git a/test/cxl-labels.sh b/test/cxl-labels.sh
-index e782e2dec246..3bf1e6e995b6 100644
---- a/test/cxl-labels.sh
-+++ b/test/cxl-labels.sh
-@@ -4,7 +4,7 @@
- 
- . $(dirname $0)/common
- 
--rc=1
-+rc=77
- 
- set -ex
- 
-@@ -14,6 +14,7 @@ check_prereq "jq"
- 
- modprobe -r cxl_test
- modprobe cxl_test
-+rc=1
- udevadm settle
- 
- test_label_ops()
-diff --git a/test/cxl-region-sysfs.sh b/test/cxl-region-sysfs.sh
-index ae0f55653814..63186b60dfec 100644
---- a/test/cxl-region-sysfs.sh
-+++ b/test/cxl-region-sysfs.sh
-@@ -4,7 +4,7 @@
- 
- . $(dirname $0)/common
- 
--rc=1
-+rc=77
- 
- set -ex
- 
-@@ -14,6 +14,7 @@ check_prereq "jq"
- 
- modprobe -r cxl_test
- modprobe cxl_test
-+rc=1
- udevadm settle
- 
- # THEORY OF OPERATION: Create a x8 interleave across the pmem capacity
-diff --git a/test/cxl-topology.sh b/test/cxl-topology.sh
-index f7da83e60f7a..5148e6dd79f4 100644
---- a/test/cxl-topology.sh
-+++ b/test/cxl-topology.sh
-@@ -4,7 +4,7 @@
- 
- . $(dirname $0)/common
- 
--rc=1
-+rc=77
- 
- set -ex
- 
-@@ -14,6 +14,7 @@ check_prereq "jq"
- 
- modprobe -r cxl_test
- modprobe cxl_test
-+rc=1
- udevadm settle
- 
- # THEORY OF OPERATION: Validate the hard coded assumptions of the
+This implementation expects the host's downstream and upstream port
+RCRBs base address being reported by firmware using the optional CEDT
+CHBS entry of the host bridge (see CXL spec 3.0, 9.17.1.2).
+
+RCD mode does not support hot-plug, so host discovery is at boot time
+only.
+
+Patches #1 to #4 are prerequisites of the series with fixes needed and
+a rework of debug messages for port enumeration. Those are general
+patches and could be applied earlier and independently from the rest
+assuming there are no objections with them. Patches #5 to #15 contain
+the actual implementation of RCD mode support.
+
+[1] https://www.computeexpresslink.org/spec-landing
+
+Robert Richter (15):
+  cxl/core: Remove duplicate declaration of devm_cxl_iomap_block()
+  cxl/core: Check physical address before mapping it in
+    devm_cxl_iomap_block()
+  cxl: Unify debug messages when calling devm_cxl_add_port()
+  cxl: Unify debug messages when calling devm_cxl_add_dport()
+  cxl/acpi: Add probe function to detect restricted CXL hosts in RCD
+    mode
+  PCI/ACPI: Link host bridge to its ACPI fw node
+  cxl/acpi: Check RCH's PCIe Host Bridge ACPI ID
+  cxl/acpi: Check RCH's CXL DVSEC capabilities
+  cxl/acpi: Determine PCI host bridge's ACPI UID
+  cxl/acpi: Extract the RCH's RCRB base address from CEDT
+  cxl/acpi: Extract the host's component register base address from RCRB
+  cxl/acpi: Skip devm_cxl_port_enumerate_dports() when in RCD mode
+  cxl/acpi: Rework devm_cxl_enumerate_ports() to support RCD mode
+  cxl/acpi: Enumerate ports in RCD mode to enable RCHs and RCDs
+  cxl/acpi: Specify module load order dependency for the cxl_acpi module
+
+ drivers/acpi/pci_root.c      |   1 +
+ drivers/cxl/acpi.c           | 311 ++++++++++++++++++++++++++++++++++-
+ drivers/cxl/core/pci.c       |  22 ++-
+ drivers/cxl/core/port.c      | 103 ++++++++----
+ drivers/cxl/core/regs.c      |   3 +
+ drivers/cxl/cxl.h            |   2 -
+ drivers/cxl/mem.c            |   1 +
+ tools/testing/cxl/test/cxl.c |   8 +-
+ 8 files changed, 400 insertions(+), 51 deletions(-)
+
+-- 
+2.30.2
 
