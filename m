@@ -2,131 +2,197 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 582BDECAAD4
-	for <linux-cxl@archiver.kernel.org>; Wed, 31 Aug 2022 11:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D218ECAAD1
+	for <linux-cxl@archiver.kernel.org>; Wed, 31 Aug 2022 11:22:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229498AbiHaLM1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 31 Aug 2022 07:12:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51736 "EHLO
+        id S229720AbiHaLWa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 31 Aug 2022 07:22:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230313AbiHaLM0 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 Aug 2022 07:12:26 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FE8CD0235;
-        Wed, 31 Aug 2022 04:12:25 -0700 (PDT)
-Received: from fraeml709-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MHhMV0yCZz67xg5;
-        Wed, 31 Aug 2022 19:11:50 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 31 Aug 2022 13:12:23 +0200
-Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 31 Aug
- 2022 12:12:23 +0100
-Date:   Wed, 31 Aug 2022 12:12:22 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Robert Richter <rrichter@amd.com>
-CC:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH 08/15] cxl/acpi: Check RCH's CXL DVSEC capabilities
-Message-ID: <20220831121222.00000977@huawei.com>
-In-Reply-To: <20220831115224.00003afd@huawei.com>
-References: <20220831081603.3415-1-rrichter@amd.com>
-        <20220831081603.3415-9-rrichter@amd.com>
-        <20220831115224.00003afd@huawei.com>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S229498AbiHaLW3 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 Aug 2022 07:22:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48647B8A44
+        for <linux-cxl@vger.kernel.org>; Wed, 31 Aug 2022 04:22:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1661944947;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+WnYdnN9R8QTFDw/LsHaMNoGAq/c/xLynjoNZ/hHnyw=;
+        b=Cl92RjBOFuoTfGtTbQ2nUM7jTUoJkNP6xgoPN31e99twS9JlKM5Zd24GVv9zk5gdQ6773n
+        gKDJB6nyGZqmQ+P21Cm/o19Whgz2pxZotMYQi8+coOerCl6Wo8LWfCct2m0qdtG15l5vp+
+        ENYV/mj0UJ+3VzCNf/Y7HIt68ffui9k=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-358-tmzWAQSIMq2hzxRKtLGeuw-1; Wed, 31 Aug 2022 07:22:26 -0400
+X-MC-Unique: tmzWAQSIMq2hzxRKtLGeuw-1
+Received: by mail-ed1-f71.google.com with SMTP id t13-20020a056402524d00b0043db1fbefdeso9328801edd.2
+        for <linux-cxl@vger.kernel.org>; Wed, 31 Aug 2022 04:22:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=+WnYdnN9R8QTFDw/LsHaMNoGAq/c/xLynjoNZ/hHnyw=;
+        b=BTbRcXDKKl9zGVOplPFypxseAmZS1jR5KnhywfQ4aM52DTBoeVYNz+Q+WY53vNMgtP
+         NMHwtFDxHiMk7HoSMt1kva/wAwpXMA8bdKE0UZYlzMToId7yJeDutkY+z1DoUBkrNjhk
+         eiwhl2WDASvEatcPg83wotFunS5ffunadmcNJBtabkHw987AJ32xYWskf3bRk165i5Gx
+         z2yXiwkcnQZmpeHtXCI85h71nedVEigpLvAvRrMtiOlnGHfK+ISCKe69PTp2waLxspAR
+         +PTWmy2jwtqksysngCEbIjZjBXZHOutjObHTqEqoEFha0GRtyefZ5NUflAl/AhcPcs92
+         PS9w==
+X-Gm-Message-State: ACgBeo11wC0hbqaavj2G7djBhuAafqZ16yPRdXUAiUfcMk01tqo3ooQf
+        gC1h7pu3hEXqI4k2sLfo7yqWsV/KzGZGOieyagFp7V9nfr0OfBezUstcJCPr+ARox3toDKl8PkR
+        3AukD/155q6+peG8VNQU8CHtn41XNVzZXP9NW
+X-Received: by 2002:a17:907:6293:b0:73d:b27b:e594 with SMTP id nd19-20020a170907629300b0073db27be594mr20413101ejc.526.1661944945070;
+        Wed, 31 Aug 2022 04:22:25 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR5X1mRwimgHP1UnC7CsNAophUYAVVVjp1xmD2N38i6fLZrHumE1g/zMTTW9WG6KLPCbL94y8ClBlZ/HurzrsUc=
+X-Received: by 2002:a17:907:6293:b0:73d:b27b:e594 with SMTP id
+ nd19-20020a170907629300b0073db27be594mr20413088ejc.526.1661944944741; Wed, 31
+ Aug 2022 04:22:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+References: <166188306499.3409478.15310054338186313752.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <166188306499.3409478.15310054338186313752.stgit@dwillia2-xfh.jf.intel.com>
+From:   Yi Zhang <yi.zhang@redhat.com>
+Date:   Wed, 31 Aug 2022 19:22:12 +0800
+Message-ID: <CAHj4cs-ojsuqvEZwC0VK9nDPfDCtzoV34vkq0TSzEH7-vV6Lwg@mail.gmail.com>
+Subject: Re: [ndctl PATCH] cxl/test: Skip tests in the absence of the cxl_test module
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Vishal L Verma <vishal.l.verma@intel.com>,
+        linux-cxl@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 31 Aug 2022 11:52:24 +0100
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+Tested-by: Yi Zhang <yi.zhang@redhat.com>
 
-> On Wed, 31 Aug 2022 10:15:56 +0200
-> Robert Richter <rrichter@amd.com> wrote:
-> 
-> > An RCH has an RCiEP connected to it with CXL DVSEC capabilities
-> > present and the CXL PCIe DVSEC included. Check this.
-> > 
-> > Signed-off-by: Robert Richter <rrichter@amd.com>  
-> One comment inline. This looks good to me.
-> 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> > ---
-> >  drivers/cxl/acpi.c | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
-> > 
-> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> > index ffdf439adb87..f9cdf23a91a8 100644
-> > --- a/drivers/cxl/acpi.c
-> > +++ b/drivers/cxl/acpi.c
-> > @@ -322,6 +322,8 @@ struct pci_host_bridge *cxl_find_next_rch(struct pci_host_bridge *host)
-> >  {
-> >  	struct pci_bus *bus = host ? host->bus : NULL;
-> >  	struct acpi_device *adev;
-> > +	struct pci_dev *pdev;
-> > +	bool is_restricted_host;
-> >  
-> >  	while ((bus = pci_find_next_bus(bus)) != NULL) {
-> >  		host = bus ? to_pci_host_bridge(bus->bridge) : NULL;
-> > @@ -343,6 +345,20 @@ struct pci_host_bridge *cxl_find_next_rch(struct pci_host_bridge *host)
-> >  		dev_dbg(&host->dev, "PCI ACPI host found: %s\n",
-> >  			acpi_dev_name(adev));
-> >  
-> > +		/* Check CXL DVSEC of dev 0 func 0 */  
-> 
-> So assumption here is that the hostbridge has a one or more RCiEPs.
-> The spec (r3.0 9.11.4) allows for the EP to appear behind a root port
-> - that case always felt odd to me, so I'm fine with not supporting it until
-> we see a user.
-> 
-> > +		pdev = pci_get_slot(bus, PCI_DEVFN(0, 0));
-> > +		is_restricted_host = pdev
-> > +			&& (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END)
-> > +			&& pci_find_dvsec_capability(pdev,
-> > +						PCI_DVSEC_VENDOR_ID_CXL,
-> > +						CXL_DVSEC_PCIE_DEVICE);
+# meson test --suite cxl  -C build
+ninja: Entering directory `/root/ndctl/build'
+[1/44] Generating version.h with a custom command
+1/4 ndctl:cxl / cxl-topology.sh             SKIP             0.08s
+exit status 77
+2/4 ndctl:cxl / cxl-region-sysfs.sh         SKIP             0.08s
+exit status 77
+3/4 ndctl:cxl / cxl-labels.sh               SKIP             0.08s
+exit status 77
+4/4 ndctl:cxl / cxl-create-region.sh        SKIP             0.08s
+exit status 77
 
-Thinking a bit more on this.  I'm not sure this is sufficient.
-Nothing in CXL 2.0 or later prevents true RCiEP devices (there are a
-few references in CXL 3.0 e.g. 9.12.1 has RCDs or CXL RCiEPs - so just
-detecting that there is one on the host bridge might not be sufficient
-to distinguish this from a non RCH / RCB.
+Ok:                 0
+Expected Fail:      0
+Fail:               0
+Unexpected Pass:    0
+Skipped:            4
+Timeout:            0
 
-> > +		pci_dev_put(pdev);
-> > +
-> > +		if (!is_restricted_host)
-> > +			continue;
-> > +
-> > +		dev_dbg(&host->dev, "CXL restricted host found\n");
-> > +
-> >  		return host;
-> >  	}
-> >  
-> > @@ -354,6 +370,7 @@ static int __init cxl_restricted_host_probe(struct platform_device *pdev)
-> >  	struct pci_host_bridge *host = NULL;
-> >  
-> >  	while ((host = cxl_find_next_rch(host)) != NULL) {
-> > +		dev_info(&host->dev, "host supports CXL\n");
-> >  	}
-> >  
-> >  	return 0;  
-> 
+Full log written to /root/ndctl/build/meson-logs/testlog.txt
+
+On Wed, Aug 31, 2022 at 2:12 AM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> Similar to cases when nfit_test is missing, SKIP rather than FAIL the tests
+> that depend on cxl_test.ko when it is missing.
+>
+> Link: https://github.com/pmem/ndctl/issues/221
+> Reported-by: Yi Zhang <yi.zhang@redhat.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  test/cxl-create-region.sh |    3 ++-
+>  test/cxl-labels.sh        |    3 ++-
+>  test/cxl-region-sysfs.sh  |    3 ++-
+>  test/cxl-topology.sh      |    3 ++-
+>  4 files changed, 8 insertions(+), 4 deletions(-)
+>
+> diff --git a/test/cxl-create-region.sh b/test/cxl-create-region.sh
+> index 66df38f41549..82aad3a7285a 100644
+> --- a/test/cxl-create-region.sh
+> +++ b/test/cxl-create-region.sh
+> @@ -4,7 +4,7 @@
+>
+>  . $(dirname $0)/common
+>
+> -rc=1
+> +rc=77
+>
+>  set -ex
+>
+> @@ -14,6 +14,7 @@ check_prereq "jq"
+>
+>  modprobe -r cxl_test
+>  modprobe cxl_test
+> +rc=1
+>  udevadm settle
+>
+>  destroy_regions()
+> diff --git a/test/cxl-labels.sh b/test/cxl-labels.sh
+> index e782e2dec246..3bf1e6e995b6 100644
+> --- a/test/cxl-labels.sh
+> +++ b/test/cxl-labels.sh
+> @@ -4,7 +4,7 @@
+>
+>  . $(dirname $0)/common
+>
+> -rc=1
+> +rc=77
+>
+>  set -ex
+>
+> @@ -14,6 +14,7 @@ check_prereq "jq"
+>
+>  modprobe -r cxl_test
+>  modprobe cxl_test
+> +rc=1
+>  udevadm settle
+>
+>  test_label_ops()
+> diff --git a/test/cxl-region-sysfs.sh b/test/cxl-region-sysfs.sh
+> index ae0f55653814..63186b60dfec 100644
+> --- a/test/cxl-region-sysfs.sh
+> +++ b/test/cxl-region-sysfs.sh
+> @@ -4,7 +4,7 @@
+>
+>  . $(dirname $0)/common
+>
+> -rc=1
+> +rc=77
+>
+>  set -ex
+>
+> @@ -14,6 +14,7 @@ check_prereq "jq"
+>
+>  modprobe -r cxl_test
+>  modprobe cxl_test
+> +rc=1
+>  udevadm settle
+>
+>  # THEORY OF OPERATION: Create a x8 interleave across the pmem capacity
+> diff --git a/test/cxl-topology.sh b/test/cxl-topology.sh
+> index f7da83e60f7a..5148e6dd79f4 100644
+> --- a/test/cxl-topology.sh
+> +++ b/test/cxl-topology.sh
+> @@ -4,7 +4,7 @@
+>
+>  . $(dirname $0)/common
+>
+> -rc=1
+> +rc=77
+>
+>  set -ex
+>
+> @@ -14,6 +14,7 @@ check_prereq "jq"
+>
+>  modprobe -r cxl_test
+>  modprobe cxl_test
+> +rc=1
+>  udevadm settle
+>
+>  # THEORY OF OPERATION: Validate the hard coded assumptions of the
+>
+
+
+-- 
+Best Regards,
+  Yi Zhang
 
