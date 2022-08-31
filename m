@@ -2,30 +2,30 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98438ECAAD1
-	for <linux-cxl@archiver.kernel.org>; Wed, 31 Aug 2022 11:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 582BDECAAD4
+	for <linux-cxl@archiver.kernel.org>; Wed, 31 Aug 2022 11:12:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229616AbiHaLJQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 31 Aug 2022 07:09:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45954 "EHLO
+        id S229498AbiHaLM1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 31 Aug 2022 07:12:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229751AbiHaLJO (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 Aug 2022 07:09:14 -0400
+        with ESMTP id S230313AbiHaLM0 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 Aug 2022 07:12:26 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A386CE33C;
-        Wed, 31 Aug 2022 04:09:13 -0700 (PDT)
-Received: from fraeml703-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MHhHh25zkz6896k;
-        Wed, 31 Aug 2022 19:08:32 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FE8CD0235;
+        Wed, 31 Aug 2022 04:12:25 -0700 (PDT)
+Received: from fraeml709-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MHhMV0yCZz67xg5;
+        Wed, 31 Aug 2022 19:11:50 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.31; Wed, 31 Aug 2022 13:09:10 +0200
+ fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Wed, 31 Aug 2022 13:12:23 +0200
 Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 31 Aug
- 2022 12:09:10 +0100
-Date:   Wed, 31 Aug 2022 12:09:09 +0100
+ 2022 12:12:23 +0100
+Date:   Wed, 31 Aug 2022 12:12:22 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     Robert Richter <rrichter@amd.com>
 CC:     Alison Schofield <alison.schofield@intel.com>,
@@ -37,12 +37,12 @@ CC:     Alison Schofield <alison.schofield@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH 10/15] cxl/acpi: Extract the RCH's RCRB base address
- from CEDT
-Message-ID: <20220831120909.00004e49@huawei.com>
-In-Reply-To: <20220831081603.3415-11-rrichter@amd.com>
+Subject: Re: [PATCH 08/15] cxl/acpi: Check RCH's CXL DVSEC capabilities
+Message-ID: <20220831121222.00000977@huawei.com>
+In-Reply-To: <20220831115224.00003afd@huawei.com>
 References: <20220831081603.3415-1-rrichter@amd.com>
-        <20220831081603.3415-11-rrichter@amd.com>
+        <20220831081603.3415-9-rrichter@amd.com>
+        <20220831115224.00003afd@huawei.com>
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
@@ -55,92 +55,78 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 31 Aug 2022 10:15:58 +0200
-Robert Richter <rrichter@amd.com> wrote:
+On Wed, 31 Aug 2022 11:52:24 +0100
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-> The downstream and upstream port Root Complex Register Blocks (RCRBs)
-> are needed to control the ports and CXL devices connected to it. It
-> also includes the location of the RCH/RCD downstream and upstream port
-> component registers in MEMBAR0. Extract the RCRB from the host's CEDT
-> entry.
+> On Wed, 31 Aug 2022 10:15:56 +0200
+> Robert Richter <rrichter@amd.com> wrote:
 > 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-Hi Robert,
-
-One trivial comment inline.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> ---
->  drivers/cxl/acpi.c | 43 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
+> > An RCH has an RCiEP connected to it with CXL DVSEC capabilities
+> > present and the CXL PCIe DVSEC included. Check this.
+> > 
+> > Signed-off-by: Robert Richter <rrichter@amd.com>  
+> One comment inline. This looks good to me.
 > 
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index b3146b7ae922..439df9df2741 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -365,11 +365,48 @@ struct pci_host_bridge *cxl_find_next_rch(struct pci_host_bridge *host)
->  	return NULL;
->  }
->  
-> +static int __cxl_get_rcrb(union acpi_subtable_headers *header, void *arg,
-> +			  const unsigned long end)
-> +{
-> +	struct cxl_chbs_context *ctx = arg;
-> +	struct acpi_cedt_chbs *chbs;
-> +
-> +	if (ctx->chbcr)
-> +		return 0;
-> +
-> +	chbs = (struct acpi_cedt_chbs *)header;
-> +
-> +	if (ctx->uid != chbs->uid)
-> +		return 0;
-> +
-> +	if (chbs->cxl_version != ACPI_CEDT_CHBS_VERSION_CXL11)
-> +		return 0;
-> +
-> +	if (chbs->length != SZ_8K)
-> +		return 0;
-> +
-> +	ctx->chbcr = chbs->base;
-> +
-> +	return 0;
-> +}
-> +
-> +static resource_size_t cxl_get_rcrb(u32 uid)
-> +{
-> +	struct cxl_chbs_context ctx = {
-> +		.uid = uid,
-> +	};
-> +
-> +	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CHBS, __cxl_get_rcrb, &ctx);
-> +
-> +	return ctx.chbcr;
-> +}
-> +
->  static int __init cxl_restricted_host_probe(struct platform_device *pdev)
->  {
->  	struct pci_host_bridge *host = NULL;
->  	struct acpi_device *adev;
->  	unsigned long long uid = ~0;
-> +	resource_size_t rcrb;
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> > ---
+> >  drivers/cxl/acpi.c | 17 +++++++++++++++++
+> >  1 file changed, 17 insertions(+)
+> > 
+> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > index ffdf439adb87..f9cdf23a91a8 100644
+> > --- a/drivers/cxl/acpi.c
+> > +++ b/drivers/cxl/acpi.c
+> > @@ -322,6 +322,8 @@ struct pci_host_bridge *cxl_find_next_rch(struct pci_host_bridge *host)
+> >  {
+> >  	struct pci_bus *bus = host ? host->bus : NULL;
+> >  	struct acpi_device *adev;
+> > +	struct pci_dev *pdev;
+> > +	bool is_restricted_host;
+> >  
+> >  	while ((bus = pci_find_next_bus(bus)) != NULL) {
+> >  		host = bus ? to_pci_host_bridge(bus->bridge) : NULL;
+> > @@ -343,6 +345,20 @@ struct pci_host_bridge *cxl_find_next_rch(struct pci_host_bridge *host)
+> >  		dev_dbg(&host->dev, "PCI ACPI host found: %s\n",
+> >  			acpi_dev_name(adev));
+> >  
+> > +		/* Check CXL DVSEC of dev 0 func 0 */  
+> 
+> So assumption here is that the hostbridge has a one or more RCiEPs.
+> The spec (r3.0 9.11.4) allows for the EP to appear behind a root port
+> - that case always felt odd to me, so I'm fine with not supporting it until
+> we see a user.
+> 
+> > +		pdev = pci_get_slot(bus, PCI_DEVFN(0, 0));
+> > +		is_restricted_host = pdev
+> > +			&& (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END)
+> > +			&& pci_find_dvsec_capability(pdev,
+> > +						PCI_DVSEC_VENDOR_ID_CXL,
+> > +						CXL_DVSEC_PCIE_DEVICE);
 
-Some of these could be made local to the while loop to reduce their scope.
->  
->  	while ((host = cxl_find_next_rch(host)) != NULL) {
->  		adev = ACPI_COMPANION(&host->dev);
-> @@ -382,6 +419,12 @@ static int __init cxl_restricted_host_probe(struct platform_device *pdev)
->  		if (uid > U32_MAX)
->  			continue;
->  
-> +		rcrb = cxl_get_rcrb(uid);
-> +		if (!rcrb)
-> +			continue;
-> +
-> +		dev_dbg(&host->dev, "RCRB found: 0x%08llx\n", (u64)rcrb);
-> +
->  		dev_info(&host->dev, "host supports CXL\n");
->  	}
->  
+Thinking a bit more on this.  I'm not sure this is sufficient.
+Nothing in CXL 2.0 or later prevents true RCiEP devices (there are a
+few references in CXL 3.0 e.g. 9.12.1 has RCDs or CXL RCiEPs - so just
+detecting that there is one on the host bridge might not be sufficient
+to distinguish this from a non RCH / RCB.
+
+> > +		pci_dev_put(pdev);
+> > +
+> > +		if (!is_restricted_host)
+> > +			continue;
+> > +
+> > +		dev_dbg(&host->dev, "CXL restricted host found\n");
+> > +
+> >  		return host;
+> >  	}
+> >  
+> > @@ -354,6 +370,7 @@ static int __init cxl_restricted_host_probe(struct platform_device *pdev)
+> >  	struct pci_host_bridge *host = NULL;
+> >  
+> >  	while ((host = cxl_find_next_rch(host)) != NULL) {
+> > +		dev_info(&host->dev, "host supports CXL\n");
+> >  	}
+> >  
+> >  	return 0;  
+> 
 
