@@ -2,30 +2,30 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70268ECAAD1
-	for <linux-cxl@archiver.kernel.org>; Wed, 31 Aug 2022 10:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFDCECAAD1
+	for <linux-cxl@archiver.kernel.org>; Wed, 31 Aug 2022 10:52:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229625AbiHaKUl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 31 Aug 2022 06:20:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58394 "EHLO
+        id S229976AbiHaKw3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 31 Aug 2022 06:52:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229692AbiHaKUd (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 Aug 2022 06:20:33 -0400
+        with ESMTP id S229939AbiHaKw3 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 Aug 2022 06:52:29 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D1C1D33C;
-        Wed, 31 Aug 2022 03:20:31 -0700 (PDT)
-Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MHg7x5JrLz68BVJ;
-        Wed, 31 Aug 2022 18:16:45 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08CBE9E2C7;
+        Wed, 31 Aug 2022 03:52:28 -0700 (PDT)
+Received: from fraeml739-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MHgwM3trrz67ZXD;
+        Wed, 31 Aug 2022 18:51:47 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
+ fraeml739-chm.china.huawei.com (10.206.15.220) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 31 Aug 2022 12:20:29 +0200
+ 15.1.2375.31; Wed, 31 Aug 2022 12:52:25 +0200
 Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 31 Aug
- 2022 11:20:29 +0100
-Date:   Wed, 31 Aug 2022 11:20:28 +0100
+ 2022 11:52:25 +0100
+Date:   Wed, 31 Aug 2022 11:52:24 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     Robert Richter <rrichter@amd.com>
 CC:     Alison Schofield <alison.schofield@intel.com>,
@@ -37,94 +37,84 @@ CC:     Alison Schofield <alison.schofield@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH 07/15] cxl/acpi: Check RCH's PCIe Host Bridge ACPI ID
-Message-ID: <20220831112028.00002566@huawei.com>
-In-Reply-To: <20220831081603.3415-8-rrichter@amd.com>
+Subject: Re: [PATCH 08/15] cxl/acpi: Check RCH's CXL DVSEC capabilities
+Message-ID: <20220831115224.00003afd@huawei.com>
+In-Reply-To: <20220831081603.3415-9-rrichter@amd.com>
 References: <20220831081603.3415-1-rrichter@amd.com>
-        <20220831081603.3415-8-rrichter@amd.com>
+        <20220831081603.3415-9-rrichter@amd.com>
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 31 Aug 2022 10:15:55 +0200
+On Wed, 31 Aug 2022 10:15:56 +0200
 Robert Richter <rrichter@amd.com> wrote:
 
-> An RCH is a root bridge and has "PNP0A08" or "ACPI0016" ACPI ID set.
-> Check this.
+> An RCH has an RCiEP connected to it with CXL DVSEC capabilities
+> present and the CXL PCIe DVSEC included. Check this.
 > 
 > Signed-off-by: Robert Richter <rrichter@amd.com>
+One comment inline. This looks good to me.
 
-Hi Robert,
-
-I'm a little uncomfortable with repurposing acpi_device_id
-as you have done here.  Might be better to do the same
-as in pci_root.c where the matches are done more directly.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 > ---
->  drivers/cxl/acpi.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+>  drivers/cxl/acpi.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
 > 
 > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index a19e3154dd44..ffdf439adb87 100644
+> index ffdf439adb87..f9cdf23a91a8 100644
 > --- a/drivers/cxl/acpi.c
 > +++ b/drivers/cxl/acpi.c
-> @@ -312,9 +312,16 @@ static int add_root_nvdimm_bridge(struct device *match, void *data)
->  	return 1;
->  }
->  
-> +static const struct acpi_device_id cxl_host_ids[] = {
-> +	{ "ACPI0016", 0 },
-> +	{ "PNP0A08", 0 },
-> +	{ },
-
-Trivial but no comma after a null terminator.   Always good to make
-it harder for people to add things where they really shouldn't!
-
-pci_root.c avoids using an acpi_device_id table for similar matching.
-I think the point being to separate probe type use of this table
-from cases where we aren't using a normal device probe.
-So to remain consistent with that, I would just grab the hid
-and match it directly in this code.
-
-I don't feel that strongly about this if the ACPI maintainers are
-fine with reusing this infrastructure as you have it here.
-
-
-> +};
-> +
->  struct pci_host_bridge *cxl_find_next_rch(struct pci_host_bridge *host)
+> @@ -322,6 +322,8 @@ struct pci_host_bridge *cxl_find_next_rch(struct pci_host_bridge *host)
 >  {
 >  	struct pci_bus *bus = host ? host->bus : NULL;
-> +	struct acpi_device *adev;
+>  	struct acpi_device *adev;
+> +	struct pci_dev *pdev;
+> +	bool is_restricted_host;
 >  
 >  	while ((bus = pci_find_next_bus(bus)) != NULL) {
 >  		host = bus ? to_pci_host_bridge(bus->bridge) : NULL;
-> @@ -323,6 +330,19 @@ struct pci_host_bridge *cxl_find_next_rch(struct pci_host_bridge *host)
+> @@ -343,6 +345,20 @@ struct pci_host_bridge *cxl_find_next_rch(struct pci_host_bridge *host)
+>  		dev_dbg(&host->dev, "PCI ACPI host found: %s\n",
+>  			acpi_dev_name(adev));
 >  
->  		dev_dbg(&host->dev, "PCI bridge found\n");
->  
-> +		/* Must be a root bridge */
-> +		if (host->bus->parent)
+> +		/* Check CXL DVSEC of dev 0 func 0 */
+
+So assumption here is that the hostbridge has a one or more RCiEPs.
+The spec (r3.0 9.11.4) allows for the EP to appear behind a root port
+- that case always felt odd to me, so I'm fine with not supporting it until
+we see a user.
+
+> +		pdev = pci_get_slot(bus, PCI_DEVFN(0, 0));
+> +		is_restricted_host = pdev
+> +			&& (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END)
+> +			&& pci_find_dvsec_capability(pdev,
+> +						PCI_DVSEC_VENDOR_ID_CXL,
+> +						CXL_DVSEC_PCIE_DEVICE);
+> +		pci_dev_put(pdev);
+> +
+> +		if (!is_restricted_host)
 > +			continue;
 > +
-> +		dev_dbg(&host->dev, "PCI bridge is root bridge\n");
-> +
-> +		adev = ACPI_COMPANION(&host->dev);
-> +		if (acpi_match_device_ids(adev, cxl_host_ids))
-> +			continue;
-> +
-> +		dev_dbg(&host->dev, "PCI ACPI host found: %s\n",
-> +			acpi_dev_name(adev));
+> +		dev_dbg(&host->dev, "CXL restricted host found\n");
 > +
 >  		return host;
 >  	}
 >  
+> @@ -354,6 +370,7 @@ static int __init cxl_restricted_host_probe(struct platform_device *pdev)
+>  	struct pci_host_bridge *host = NULL;
+>  
+>  	while ((host = cxl_find_next_rch(host)) != NULL) {
+> +		dev_info(&host->dev, "host supports CXL\n");
+>  	}
+>  
+>  	return 0;
 
