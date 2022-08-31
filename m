@@ -2,144 +2,96 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DFFECAAD4
-	for <linux-cxl@archiver.kernel.org>; Wed, 31 Aug 2022 12:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDBEECAAD1
+	for <linux-cxl@archiver.kernel.org>; Wed, 31 Aug 2022 15:33:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229814AbiHaMXf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 31 Aug 2022 08:23:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37924 "EHLO
+        id S231809AbiHaPdo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 31 Aug 2022 11:33:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229761AbiHaMXe (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 Aug 2022 08:23:34 -0400
+        with ESMTP id S231815AbiHaPdj (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 Aug 2022 11:33:39 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CED6CCEB13;
-        Wed, 31 Aug 2022 05:23:32 -0700 (PDT)
-Received: from fraeml735-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MHjst0WWpz684wN;
-        Wed, 31 Aug 2022 20:19:46 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE72CBD751
+        for <linux-cxl@vger.kernel.org>; Wed, 31 Aug 2022 08:33:35 -0700 (PDT)
+Received: from fraeml701-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MHp591g8xz6813w;
+        Wed, 31 Aug 2022 23:29:49 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml735-chm.china.huawei.com (10.206.15.216) with Microsoft SMTP Server
+ fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2375.31; Wed, 31 Aug 2022 17:33:33 +0200
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 31 Aug 2022 14:23:30 +0200
-Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 31 Aug
- 2022 13:23:30 +0100
-Date:   Wed, 31 Aug 2022 13:23:29 +0100
+ 15.1.2375.24; Wed, 31 Aug 2022 16:33:33 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Robert Richter <rrichter@amd.com>
-CC:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH 00/15] cxl: Add support for Restricted CXL hosts (RCD
- mode)
-Message-ID: <20220831132329.00007c46@huawei.com>
-In-Reply-To: <20220831081603.3415-1-rrichter@amd.com>
-References: <20220831081603.3415-1-rrichter@amd.com>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+To:     <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>
+CC:     Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [RFC PATCH 0/3] CXL Performance Monitoring Unit QEMU emulation.
+Date:   Wed, 31 Aug 2022 16:33:33 +0100
+Message-ID: <20220831153336.16165-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 31 Aug 2022 10:15:48 +0200
-Robert Richter <rrichter@amd.com> wrote:
+CXL 3.0 introduces a CXL Performance Monitoring Unit.
+(13.2 Performance Monitoring)
+These unit may be present in any CXL component but for now the kernel
+code only supports them in Type 3 Memory devices.
 
-> In Restricted CXL Device (RCD) mode (formerly referred to as CXL 1.1)
-> the PCIe enumeration hierarchy is different from CXL VH Enumeration
-> (formerly referred to as 2.0, for both modes see CXL spec 3.0: 9.11
-> and 9.12, [1]). This series adds support for RCD mode. It implements
-> the detection of Restricted CXL Hosts (RCHs) and its corresponding
-> Restricted CXL Devices (RCDs). It does the necessary enumeration of
-> ports and connects the endpoints. With all the plumbing an RCH/RCD
-> pair is registered at the Linux CXL bus and becomes visible in sysfs
-> in the same way as CXL VH hosts and devices do already. RCDs are
-> brought up as CXL endpoints and bound to subsequent drivers such as
-> cxl_mem.
-> 
-> For CXL VH the host driver (cxl_acpi) starts host bridge discovery
-> once the ACPI0017 CXL root device is detected and then searches for
-> ACPI0016 host bridges to enable CXL. In RCD mode an ACPI0017 device
-> might not necessarily exist and the host bridge can have a standard
-> PCIe host bridge PNP0A08 ID, there aren't any CXL port or switches in
-> the PCIe hierarchy visible. As such the RCD mode enumeration and host
-> discovery is very different from CXL VH. See patch #5 for
-> implementation details.
-> 
-> This implementation expects the host's downstream and upstream port
-> RCRBs base address being reported by firmware using the optional CEDT
-> CHBS entry of the host bridge (see CXL spec 3.0, 9.17.1.2).
-> 
-> RCD mode does not support hot-plug, so host discovery is at boot time
-> only.
-> 
-> Patches #1 to #4 are prerequisites of the series with fixes needed and
-> a rework of debug messages for port enumeration. Those are general
-> patches and could be applied earlier and independently from the rest
-> assuming there are no objections with them. Patches #5 to #15 contain
-> the actual implementation of RCD mode support.
-> 
-> [1] https://www.computeexpresslink.org/spec-landing
+Add basic emulation of such units and instantiate 2 in each CXL Type 3 device.
 
-Hi Robert,
+Kernel driver was developed against this fairly minimal emulation.
+https://lore.kernel.org/linux-cxl/20220824103617.21781-1-Jonathan.Cameron@huawei.com/T/#t
 
-I'm curious on the aims of this work.  Given expectation for RCDs is often
-that the host firmware has set them up before the OS loads, what functionality
-do you want to gain by mapping these into the CXL 2.0+ focused infrastructure?
+For now, this RFC is both to seek general feedback on the approach used and to
+provide a platform for testing the kernel driver against.
 
-When I did some analysis a while back on CXL 1.1 I was pretty much assuming
-that there was no real reason to let the OS know about it because it
-couldn't do much of any use with the information.  There are some corners
-like RAS where it might be useful or perhaps to enable some of the CXL 3.0
-features that are allowed to be EP only and so could be relevant for
-an older host (e.g. CPMUs).
+Note that the CPMU definition is extremely flexible and configuring the
+available options via the QEMU command line may be impractical.
+To avoid that complexity, this configuration is currently fixed.
+This code provides a pair of identical CPMU instances on each CXL type 3
+device which were constructed to hit some of the corner cases in the
+enumeration code.
 
-With my QEMU hat on I wasn't planning to bother with anything pre 2.0
-but it might be worth considering to let us exercise this code...
+The counters themselves just get bigger in a fashion designed to overflow
+fairly quickly. Actual values are meaningless.  For now there is no
+control over the existence of CPMU instances.  Likely we will add at least
+an option to enable them or not.
 
-Jonathan
+Precursor patch to add MSI/MSIX support may well merge as part of a
+different series, but is needed to apply this to 7.1.
 
+Jonathan Cameron (3):
+  hw/mem/cxl-type3: Add MSI/MSIX support
+  hw/cxl: Switch to using an array for CXLRegisterLocator base
+    addresses.
+  hw/cxl: CXL Performance Monitoring Unit (CPMU) Emulation
 
-> 
-> Robert Richter (15):
->   cxl/core: Remove duplicate declaration of devm_cxl_iomap_block()
->   cxl/core: Check physical address before mapping it in
->     devm_cxl_iomap_block()
->   cxl: Unify debug messages when calling devm_cxl_add_port()
->   cxl: Unify debug messages when calling devm_cxl_add_dport()
->   cxl/acpi: Add probe function to detect restricted CXL hosts in RCD
->     mode
->   PCI/ACPI: Link host bridge to its ACPI fw node
->   cxl/acpi: Check RCH's PCIe Host Bridge ACPI ID
->   cxl/acpi: Check RCH's CXL DVSEC capabilities
->   cxl/acpi: Determine PCI host bridge's ACPI UID
->   cxl/acpi: Extract the RCH's RCRB base address from CEDT
->   cxl/acpi: Extract the host's component register base address from RCRB
->   cxl/acpi: Skip devm_cxl_port_enumerate_dports() when in RCD mode
->   cxl/acpi: Rework devm_cxl_enumerate_ports() to support RCD mode
->   cxl/acpi: Enumerate ports in RCD mode to enable RCHs and RCDs
->   cxl/acpi: Specify module load order dependency for the cxl_acpi module
-> 
->  drivers/acpi/pci_root.c      |   1 +
->  drivers/cxl/acpi.c           | 311 ++++++++++++++++++++++++++++++++++-
->  drivers/cxl/core/pci.c       |  22 ++-
->  drivers/cxl/core/port.c      | 103 ++++++++----
->  drivers/cxl/core/regs.c      |   3 +
->  drivers/cxl/cxl.h            |   2 -
->  drivers/cxl/mem.c            |   1 +
->  tools/testing/cxl/test/cxl.c |   8 +-
->  8 files changed, 400 insertions(+), 51 deletions(-)
-> 
+ hw/cxl/cxl-cpmu.c              | 295 +++++++++++++++++++++++++++++++++
+ hw/cxl/meson.build             |   1 +
+ hw/mem/cxl_type3.c             |  31 +++-
+ hw/pci-bridge/cxl_downstream.c |   4 +-
+ hw/pci-bridge/cxl_root_port.c  |   4 +-
+ hw/pci-bridge/cxl_upstream.c   |   4 +-
+ include/hw/cxl/cxl.h           |   1 +
+ include/hw/cxl/cxl_cpmu.h      |  99 +++++++++++
+ include/hw/cxl/cxl_device.h    |  31 +++-
+ include/hw/cxl/cxl_pci.h       |  15 +-
+ 10 files changed, 463 insertions(+), 22 deletions(-)
+ create mode 100644 hw/cxl/cxl-cpmu.c
+ create mode 100644 include/hw/cxl/cxl_cpmu.h
+
+-- 
+2.32.0
 
