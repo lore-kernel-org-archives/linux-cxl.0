@@ -2,43 +2,43 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A22CC64991
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Sep 2022 06:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9497ECAAD2
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Sep 2022 06:17:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232209AbiIAGBp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Sep 2022 02:01:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38942 "EHLO
+        id S233288AbiIAGRQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Sep 2022 02:17:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232785AbiIAGBn (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Sep 2022 02:01:43 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2074.outbound.protection.outlook.com [40.107.237.74])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE301E2C76;
-        Wed, 31 Aug 2022 23:01:42 -0700 (PDT)
+        with ESMTP id S233297AbiIAGRP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Sep 2022 02:17:15 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2062.outbound.protection.outlook.com [40.107.94.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F0D51195D7;
+        Wed, 31 Aug 2022 23:17:14 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L+ZQ/TtpEy+SPYqcY0/M9eJ7XAotxz5+Ouwo2i2TsO/GlEsRnuWVw+5ZDqGfFcK2hjKITXbfJRNxm40CtFrB6408IQawnlgQfgp2ShbbqKg0pwwkh3i9GhqWXGsdMw/v1yRTDqJfv92tLgiUuN+EYF/SFaQweO3FUHiqFK05LgJDwKPbtHVgzezqPRG+zHtAkeuvFEh329PJtgAcUYZh8qCkaBbd6XvgPqHz1mJ/DxRhPYs01SK0yQ3Wd/Pkmt9EgqMFd1MJtMbAw/tt6+ZSshZ1mLpVrBt1mw0591yxoucXax2erbC3MG3I3/2WUJ/q/Jtcq0KgTwfurRCxcFQmDQ==
+ b=c17D90JDcwqL51dt+3J3+tTP2Ubx5ZYFbCAWkBH4tp+iiYne5mDApMea87Ozo0K+ULDMvTKitiv5JKUs2UYBKzclaxwZgHwIF8h2NjrAbGZhyAXf/fbpJh+sbi9XYIhj7yueE56ANmk5U/GleZnocqg4E/HIQ36Gm0qhVAQmdSJCcf2p5dParO0qF1+i65beDyswLOySiAkndjdaOJwr3RmGuYDzQovjogay66gQy9sVdK73D55hjQs/AqzH2fcYEtbvEm/ckU6bIwj7grKlVDejQZePRg+Z9pzFGczbKVpa8vNGZhFFeVEt8tuUgVQPbYzed5CxMUljDN06gJWNUA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=c9/yf7Urz4ohspQzWVW630EJWoBHog91yWFmH94Xcic=;
- b=CO7Qw/vSXAxVt9cL6McWA9ZMBMRtHCy3lm0wyzoy5NKQpYwxtV3ZFGWZe2jP+fKHiicXCsx1SA2JUk86KjwZBri+bEknao6f0Mqco0dLsfIgJU4SB/oOlWDwegF0cRgBPo9+5H3UAXc/UcmHu5CYMf7D+ABqe6Eov14g9qrCsD81Pntjx7Q/Ef0br1RNdFbMP9yZfRp921MgJZUBXFah8KXohWFqU+VEeKkAFYKL7TqH6mQP71fc52tjLq9g4foMloxQamCCucKwqZZHOt6klvYCCCRh19YFayKq1gp0uVU1wFWvofBPPancgXoeNv4OAf6hPLfvA3gY/0fiHBhxYg==
+ bh=hCg3euqvwt8dOMemnKH/SMmIEr5uy1SwglZpQxzEqQQ=;
+ b=DNa+FDG7n46Aj3gMZghBiNnbPosb6eH4eC2pmO9JSOQ/Jwt0ipSSPLM6GkN0At0JlI3cVRigml8UladbNo6bGL5fYrQlaoe1VMgwei409rmvsMDwwtUzIngffcg4qnF3kMhZAbOTq4Op4naAWVcE5GAOVoWJukZx+HY34mM6F5/84m2OAdlyCtC/3PFY9EskdgcxDCX0b50Kk5ivV1QoBlgeVUglbv7ENXF+uzlmnXkyFG4CyF1EEQQ9c+8vEbl5euz5rCKJ0KfLsb090SKyhJZrBVxIzFiNLwL2Ov2C4ziShPGnLI3xyC0k3VVbwNgkzhjjUcUNrRQeR+W+kwpi9Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=huawei.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c9/yf7Urz4ohspQzWVW630EJWoBHog91yWFmH94Xcic=;
- b=OpaGG8D9gfl2vFj9Q4zybx+XEcacUVJeBsAdgcpVmUDTgeKatZwLLfdnABtJAos90Ym1r2fbwIZWquO0u6lJcsIIqh3awNVGumA913jEgkCoFOeGKWsx2PlGZz0S40KGuQjkvPB2GTTeA5vWBIiDJKesul0lIhLes9OmcWThI+o=
-Received: from MW4PR04CA0156.namprd04.prod.outlook.com (2603:10b6:303:85::11)
- by IA1PR12MB6436.namprd12.prod.outlook.com (2603:10b6:208:3ac::12) with
+ bh=hCg3euqvwt8dOMemnKH/SMmIEr5uy1SwglZpQxzEqQQ=;
+ b=D29OtgMeX/1D8F4EOCFpY37qU340Z48ZjSZWvfJeDwjBjI8zzulpoLEnon5r22BFg6Pyg6u9GeKXE2pPewCgruCAVGevR0G5ovKIDGC9sqO20z5FIkBjvVxrETa33rzfTecbjYqBe1OJhLbc5Au9otvuoFk7Yc+09+fofaQha+o=
+Received: from MW4P220CA0003.NAMP220.PROD.OUTLOOK.COM (2603:10b6:303:115::8)
+ by SN7PR12MB6789.namprd12.prod.outlook.com (2603:10b6:806:26b::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.10; Thu, 1 Sep
- 2022 06:01:40 +0000
-Received: from CO1NAM11FT054.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:85:cafe::38) by MW4PR04CA0156.outlook.office365.com
- (2603:10b6:303:85::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.12 via Frontend
- Transport; Thu, 1 Sep 2022 06:01:40 +0000
+ 2022 06:17:12 +0000
+Received: from CO1NAM11FT041.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:115:cafe::cf) by MW4P220CA0003.outlook.office365.com
+ (2603:10b6:303:115::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.15 via Frontend
+ Transport; Thu, 1 Sep 2022 06:17:12 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -46,14 +46,14 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT054.mail.protection.outlook.com (10.13.174.70) with Microsoft SMTP
+ CO1NAM11FT041.mail.protection.outlook.com (10.13.174.217) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5588.10 via Frontend Transport; Thu, 1 Sep 2022 06:01:39 +0000
+ 15.20.5588.10 via Frontend Transport; Thu, 1 Sep 2022 06:17:11 +0000
 Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Thu, 1 Sep
- 2022 01:01:34 -0500
-Date:   Thu, 1 Sep 2022 08:01:05 +0200
+ 2022 01:17:07 -0500
+Date:   Thu, 1 Sep 2022 08:16:52 +0200
 From:   Robert Richter <rrichter@amd.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 CC:     Alison Schofield <alison.schofield@intel.com>,
@@ -65,96 +65,72 @@ CC:     Alison Schofield <alison.schofield@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH 05/15] cxl/acpi: Add probe function to detect restricted
- CXL hosts in RCD mode
-Message-ID: <YxBKoT2zlUVgXIry@rric.localdomain>
+Subject: Re: [PATCH 07/15] cxl/acpi: Check RCH's PCIe Host Bridge ACPI ID
+Message-ID: <YxBOVH+irgYSbEIz@rric.localdomain>
 References: <20220831081603.3415-1-rrichter@amd.com>
- <20220831081603.3415-6-rrichter@amd.com>
- <20220831110804.00003812@huawei.com>
+ <20220831081603.3415-8-rrichter@amd.com>
+ <20220831112028.00002566@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20220831110804.00003812@huawei.com>
+In-Reply-To: <20220831112028.00002566@huawei.com>
 X-Originating-IP: [10.180.168.240]
 X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b518b3fe-3538-4bb7-34e0-08da8bdf6fee
-X-MS-TrafficTypeDiagnostic: IA1PR12MB6436:EE_
+X-MS-Office365-Filtering-Correlation-Id: 95bdca73-3cd8-4b5c-2149-08da8be19b23
+X-MS-TrafficTypeDiagnostic: SN7PR12MB6789:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: BHgBedyk/UvczAYaiA14wuB/B4DyULbIyh3pAc5zgV1PcEdQbYfgfiSXfj05XoSSjmiyZSiFd91Fil6I+bu0t1Ed6586HDJaiUjWTIIqDw/JDtKZbVdC2NscfkHA+NP3bh2YfXAVYBfejIlBwMrY+zxbI+oTnMP/wq7AL69uKyzcoooP/RG/hLlviMGMZE8aww5YeSiR1JgsdeeLoSfNVYucv7rYoazuSf6Cv6p7O+MP6HBxOYHBOuZCv19JS6qTp9uYcN2lOYmS/ipa4jmtf4CieWS/fZrwVtCUq+Mt2FYxFX+BYj8xY6BSkPBWriQO2NkkdRES8o7OcjwaPl22VZJAoR07HEKYyK+KvW78yBHTqgVtysdoM4PN27p/s/MCWXm14YSvKW0njt0Ts5rOty2Ovks6qHesnkO3R2aica9Ea1rNEyPGGdAZSSD0RdqHoqMo/n7M8RrIrJXNT2wcRD0udcA2stV81PJ77Yjx7XqdJBeczWEkc5pZOVdDVwMbCw1ENwrEqDZ9+D5mPPFcvB0uNoe+Ad1WramMBVXylAviqvJ5wZ18wR4bZIGOXTF+fvI0AijlWV+IRoDXWKVgm4/Cm77oQ6IdfpOqin2iCROQRCIS2lQCJm4eY/rTleiKcLhhkZRZqnGj2f6zVYVgEY8iMc3MM7MAcwrqgQh/At/FOZMjnhu2k+kRhDPPNWgrK7/U9u8Z7EKN3zJg93RTz1jkMuukpHi2drQF6ZnuSuw13NqP0Sl3blVHJnzGsinyVQ+CCXygV1I5uCQRkCD2C6B6zsuCDvnhyMePoKrZw1sDCe2aPF5zyRgaYGYhBDX5
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(396003)(136003)(376002)(346002)(39860400002)(40470700004)(46966006)(36840700001)(7416002)(6666004)(55016003)(2906002)(82740400003)(40480700001)(16526019)(336012)(54906003)(41300700001)(6916009)(47076005)(426003)(7696005)(316002)(83380400001)(40460700003)(81166007)(82310400005)(53546011)(356005)(4326008)(186003)(36860700001)(9686003)(8936002)(5660300002)(70206006)(26005)(478600001)(8676002)(70586007)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: 7ckIHSFUFHrzEu/YO+Bpz2LSlHupp6fIWXqXMbykZMyAfY1mEkzKqJ4x0NCWU/fwpscDPcDTcIX0P/qdcVKLqitfI6bkqtI7jPhOTGDNyohoioonIatudSSUFgLWg0DYO/33naV3RDc/jfpxodl4ycJhK1edWG/FW8Z18txzuClTbxnhDdR8F/aQCZ4yjhIYAconMk5z5qhVHf01V/Zho/W9jvIxJ8rQk/KMYifRydUT620vYWYUo5SI+iGWMe8bRHI5B4P7H81OlCNVopK0hA8VMI06ZCXcqUPREMwd1dogVkxZCO0nJ69DDgCd7ocfCAxVLulZGSHLsbC//Earw799RCSpGUYzNXwKpjycG2PSK/CDjIoC7Uvr/U4YgAYz4fD3gejebsdZxBdwr7C7sUg6+VzzCXhimkpEPtOp8vNwITzAu1gPsA7hg552/hIccMF+6lvYgfDNYbUxyrJOoL7uwRWxyzzt8yH/8U8D/PmcTz4P2A7oYoUMBZTWeDXJTpoT64Tc4FNu8dIysaEhWjzBsL3OJ1FncUNrxlc+Xbfj0FORJar1t7pabFUOJZCuRxHJKPI2RCae0bg5kGH+K8eYjRN1KusG2WCwiMV8WwjlptNOx4jyW27GZBEiM78+eU6sAjfLD0FHaE6p7G4742veWIPMokXQe3z0NkX8oed0Uyhi0+ZnV5cabpDX95S/MYFIoNsBNvjUwfeuEeBEGa4E+hiDmBM02wHXCvb5ga26+IVX8Zx01bCpG8NyOS6t+SRe5nmaq+EHeURVzr6b+LvFFEAzNJAHuByuO2xtH4iLLO5gkPe2P+YY0iMqIImj/8M64PbqqviyaKeFIt6VUg==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(136003)(376002)(346002)(396003)(36840700001)(40470700004)(46966006)(186003)(336012)(16526019)(70206006)(70586007)(6666004)(478600001)(8676002)(426003)(8936002)(4326008)(47076005)(83380400001)(40460700003)(41300700001)(7416002)(5660300002)(9686003)(82740400003)(356005)(26005)(81166007)(2906002)(54906003)(55016003)(36860700001)(7696005)(40480700001)(53546011)(82310400005)(316002)(6916009)(36900700001)(67856001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2022 06:01:39.6321
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2022 06:17:11.1144
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b518b3fe-3538-4bb7-34e0-08da8bdf6fee
+X-MS-Exchange-CrossTenant-Network-Message-Id: 95bdca73-3cd8-4b5c-2149-08da8be19b23
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT054.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT041.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6436
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6789
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 31.08.22 11:08:04, Jonathan Cameron wrote:
-> On Wed, 31 Aug 2022 10:15:53 +0200
-
+On 31.08.22 11:20:28, Jonathan Cameron wrote:
 > Robert Richter <rrichter@amd.com> wrote:
+
+> > +static const struct acpi_device_id cxl_host_ids[] = {
+> > +	{ "ACPI0016", 0 },
+> > +	{ "PNP0A08", 0 },
+> > +	{ },
 > 
-> > Restricted CXL device (RCD) mode (formerly CXL 1.1) uses a different
-> > enumeration scheme other than CXL VH (formerly CXL 2.0). In RCD mode a
-> > host/device (RCH-RCD) pair shows up as a legal PCIe hierarchy with an
-> > ACPI host bridge ("PNP0A08" or "ACPI0016" HID) and RCiEP connected to
-> > it with a description of the CXL device.
-> > 
-> > Add function cxl_restricted_host_probe() to probe RCD enumerated
-> > devices. The function implements a loop that detects all CXL capable
-> > ACPI PCI root bridges in the system (RCD mode only). The iterator
-> > function cxl_find_next_rch() is introduced to walk through all of the
-> > CXL hosts. The loop will then enable all CXL devices connected to the
-> > host. For now, only implement an empty loop with an iterator that
-> > returns all pci host bridges in the system.
-> > 
-> > The probe function is triggered by adding an own root device for RCHs.
-> > This is different to CXL VH where an ACPI "ACPI0017" root device
-> > exists. Its detection starts the CXL host detection. In RCD mode such
-> > a device does not necessarily exists, so solve this by creating a
-> > plain platform device that is not an ACPI device and is root only for
-> > RCHs.
-> 
-> If I read this correctly that platform device is created whether or not
-> there are any cxl devices in the system?
-> 
-> Can we create it only if we find some devices that will be placed
-> under it later?
+> Trivial but no comma after a null terminator.   Always good to make
+> it harder for people to add things where they really shouldn't!
 
-This would move the host detection from probe to init which I wanted
-to avoid to better control driver init order dependencies.
+Can do this.
 
-I could add a put_device() at the end of a probe so that it will be
-released in case no other references use it. This implies the refcount
-is maintained for parent devices. Or this needs to be added to. So if
-there are no children (hosts) attached to the root device after probe,
-it will disappear.
+> pci_root.c avoids using an acpi_device_id table for similar matching.
+> I think the point being to separate probe type use of this table
+> from cases where we aren't using a normal device probe.
+> So to remain consistent with that, I would just grab the hid
+> and match it directly in this code.
 
-> > @@ -531,7 +566,41 @@ static struct platform_driver cxl_acpi_driver = {
-> >  	.id_table = cxl_test_ids,
-> >  };
-> >  
-> > -module_platform_driver(cxl_acpi_driver);
-> > +static void cxl_acpi_device_release(struct device *dev) { }
-> 
-> Why the empty release?  Perhaps introduce this only when it
-> does something.
+Grabbing the hid only is actually a violation of the acpi spec as a
+cid could be used interchangeable. It must also work then.
 
-The core device driver requires this in device_release() to be setup.
+It is also not possible to use something like probe or a handler
+matching the ids because the hosts must be enabled with the already
+existing drivers and handlers. Suppose there are multiple handlers for
+the same ids, the first handler wins and all other never get called.
 
-There is nothing to do as the device is kept in a static struct.
-That's why it's empty.
+To me it looks sane and simple to use acpi_match_device_ids() here.
 
 -Robert
+
+> 
+> I don't feel that strongly about this if the ACPI maintainers are
+> fine with reusing this infrastructure as you have it here.
