@@ -2,660 +2,127 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4269ECAAD1
-	for <linux-cxl@archiver.kernel.org>; Wed, 31 Aug 2022 15:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BD2ECAAD1
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Sep 2022 05:22:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231768AbiHaPfM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 31 Aug 2022 11:35:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56800 "EHLO
+        id S232666AbiIAFWD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Sep 2022 01:22:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231804AbiHaPfL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 Aug 2022 11:35:11 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 443B12D1E5
-        for <linux-cxl@vger.kernel.org>; Wed, 31 Aug 2022 08:35:08 -0700 (PDT)
-Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MHpBc11Knz67mgD;
-        Wed, 31 Aug 2022 23:34:32 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 31 Aug 2022 17:35:06 +0200
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 31 Aug 2022 16:35:05 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>
-CC:     Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [RFC PATCH 3/3] hw/cxl: CXL Performance Monitoring Unit (CPMU) Emulation
-Date:   Wed, 31 Aug 2022 16:33:36 +0100
-Message-ID: <20220831153336.16165-4-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220831153336.16165-1-Jonathan.Cameron@huawei.com>
-References: <20220831153336.16165-1-Jonathan.Cameron@huawei.com>
+        with ESMTP id S229746AbiIAFWC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Sep 2022 01:22:02 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2046.outbound.protection.outlook.com [40.107.223.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 163941090B8;
+        Wed, 31 Aug 2022 22:22:01 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=foF5QJdG9GtjXhld/SJRGqEsrKxt1u34I7rc2Ea7vFcVUvQtaNW0Hhd7LOmZAAADVuSs6HffK8QWAakldMdJFZx2ZVFsRJeyEmgjMeqfEq6sk9yAYqA4M3QwAqJaLDIJVBcRHsFoipdoaN37BWo4xrKdH7asGjZCDD3L+8PPEpPcsog/KG/eZPLjq53iEK6FM6h0tby/R8yOsz3oPQCZnjBomTDJI/gK97/G2q1ACSoKHx4LVZQKZXHtZnJsvuJx0XHHoD4HvRAqQ1tn5ul/2yqMrjKLc5MuewF93lKQji5EfjHkywQ2VGONTiCtNKMy6b5naP9LVvXxgTowil04dg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9afL7A4o8QmlNpXj9AiVpdFF/g0WA0c7zIXWd3r7oD0=;
+ b=lzM93NtcN9bTELpcb80Itwg8eUx4pDp3oyRcwQyv9pBXsFfzaLPCJl1Bw7ox8oDn78jEV2tofG0dtgo/SBMN61ha0jKEQnu/1QP16KcqQjl0EHd8rMOavKhz1I1EGxMJ/m2ByL4Vt9qOGPcx7iT7Nc/TCP27yWGJCmqzJpmLvvkFQ9dTq1+MUTPWi8zPwj5vPhvslZ23oYUXb+C2zjLe3XTrBripDDLROc4vncylPJS2zXtjYd9czXiL1WHBSG4lWL0hBHGY+O4LO6Bs3mvFyM7OmNXiMioTqFj7bD+ZVHok1I2jzTSTo5RpabkHZc9TOdTU+JEzeea7lulsi2V+qg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=huawei.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9afL7A4o8QmlNpXj9AiVpdFF/g0WA0c7zIXWd3r7oD0=;
+ b=VmnGhLnL+0glVdbIhTnCtuWrEPRp+AneoJHWnv45nbG6Xn6S6zIv5WnarL99jBEe372Fcp1fcUevqnsGczDW1mHABb8eq4Y/sfqDR62GboELRY0caWwgIs7Ng5lL0YflxM4z5FQy98Bh4+Nspw4ZIhU25TEYe7EdwOquQEqjPwE=
+Received: from DM6PR02CA0047.namprd02.prod.outlook.com (2603:10b6:5:177::24)
+ by PH7PR12MB5855.namprd12.prod.outlook.com (2603:10b6:510:1d6::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.11; Thu, 1 Sep
+ 2022 05:21:57 +0000
+Received: from DM6NAM11FT033.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:177:cafe::6d) by DM6PR02CA0047.outlook.office365.com
+ (2603:10b6:5:177::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.11 via Frontend
+ Transport; Thu, 1 Sep 2022 05:21:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT033.mail.protection.outlook.com (10.13.172.221) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5588.10 via Frontend Transport; Thu, 1 Sep 2022 05:21:56 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Thu, 1 Sep
+ 2022 00:21:37 -0500
+Date:   Thu, 1 Sep 2022 07:21:33 +0200
+From:   Robert Richter <rrichter@amd.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+CC:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH 01/15] cxl/core: Remove duplicate declaration of
+ devm_cxl_iomap_block()
+Message-ID: <YxBAufysVG4WQgha@rric.localdomain>
+References: <20220831081603.3415-1-rrichter@amd.com>
+ <20220831081603.3415-2-rrichter@amd.com>
+ <20220831095458.0000454a@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20220831095458.0000454a@huawei.com>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8c01156a-63e0-45ea-3966-08da8bd9e343
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5855:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sTPtbACdsw4zP05/Tz9Jv8EacaqFnSt3Ri1XbzDjsc7/gHwBhQj3IRts8ZyFg/ZZ6S/Kzo3gd93r2tsh6mLOxaT3ZcUvw+nlCtMEymk8BSZp9hTlntxtWJgfJt6nXCknQOYEF9HU/+FceCX6IY0f/MlBKHcHlcWCd6FJURdtcuhq+imwIbJtNVUeQvtYYvyAi/2Pr0LGVVtI9O8byQTQuZROMXGnPrKfBpXrPqSWCnYD0t2PIf+z0WZma5a6bvQ2XeQuaHnW/YsyUtxU0+evqD7vEUw1akRjvZScVEFhtlcAGeZQflQQJCR+IfFucQwxMJwY9s2s2fyRkyct2eE1JwywgHb+SaqlJccCvfEpXeD4MwKLRABdSoyCvvz6gANBPe2Kx8hlp/cfbJzzeWtWw+uPB9wh3ymfCfhG80sfr69h2OvQwcKHyAQTq2Dw9JR9KuGlsmS0jbbP9Bygui7r7ZN6YQSQvYFZ/QCWWeycM+0i4qwqFA3G4N7I9Drf1lftM6dWfTqQpVKA5YjltXJ1pijTL3tAwkpzoUJ79M/ZFUG8BMFsudcyapxHidIpecAr7xzaJE4jY0wvvpqvwbS4EQiLctuprI/IUeut8Q7hWU6/nV6bpkEc4jIe05jyPrOQrDEAuryDPt4LFSJBAzccZ6UfxOSgzGC77qdioOFXJo5HbFVGkKpwwopti7VMzZwpN4dHc5si7SgjE7TdogmBQ6iuYZVeuF66AnwsAxtLx/55SWy1/MZmMpYJZppwhA2gXPWiP/L+BY35+5kjf4jRdAMDMpmYY9Wzp4B4x4l6Er5qZCIT/XUYE/1fQRGSFc7f
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(376002)(396003)(136003)(346002)(39860400002)(46966006)(36840700001)(40470700004)(83380400001)(9686003)(356005)(47076005)(426003)(16526019)(336012)(186003)(36860700001)(40460700003)(82740400003)(81166007)(8676002)(4326008)(70586007)(70206006)(40480700001)(55016003)(54906003)(6916009)(316002)(82310400005)(7416002)(4744005)(8936002)(5660300002)(2906002)(478600001)(7696005)(53546011)(41300700001)(6666004)(26005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2022 05:21:56.2250
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c01156a-63e0-45ea-3966-08da8bd9e343
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT033.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5855
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-CXL 3.0 introduces a CXL Performance Monitoring Unit.
-Add basic emulation of such units and instantiate 2 in
-CXL Type 3 devices.
+Thanks Jonathan for reviewing this series.
 
-Limitations:
- - Random selection of supported events.
- - Mixture of fixed purpose and configurable counters is intended
-   to hit some edge cases in the discovery code, not to make any
-   practical sense.
- - Currently no per CPMU configuration so the two instances are
-   currently identical. Not sure it's worth putting a configuration
-   interface in place as it would be very complex to use.
+On 31.08.22 09:54:58, Jonathan Cameron wrote:
+> On Wed, 31 Aug 2022 10:15:49 +0200
+> Robert Richter <rrichter@amd.com> wrote:
+> 
+> > The function devm_cxl_iomap_block() is only used in the core
+> > code. There are two declarations in header files of it, in
+> > drivers/cxl/core/core.h and drivers/cxl/cxl.h. Remove its unused
+> > declaration in drivers/cxl/cxl.h.
+> > 
+> > Signed-off-by: Robert Richter <rrichter@amd.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- hw/cxl/cxl-cpmu.c           | 295 ++++++++++++++++++++++++++++++++++++
- hw/cxl/meson.build          |   1 +
- hw/mem/cxl_type3.c          |  15 +-
- include/hw/cxl/cxl.h        |   1 +
- include/hw/cxl/cxl_cpmu.h   |  99 ++++++++++++
- include/hw/cxl/cxl_device.h |  31 +++-
- include/hw/cxl/cxl_pci.h    |   7 +-
- 7 files changed, 441 insertions(+), 8 deletions(-)
+There is this 0day test bot warning and I will need to either extend
+this patch or add another one to fix regs.c.
 
-diff --git a/hw/cxl/cxl-cpmu.c b/hw/cxl/cxl-cpmu.c
-new file mode 100644
-index 0000000000..ee647de607
---- /dev/null
-+++ b/hw/cxl/cxl-cpmu.c
-@@ -0,0 +1,295 @@
-+/*
-+ * CXL Performance Monitoring Unit
-+ *
-+ * Copyright(C) 2022 Jonathan Cameron - Huawei
-+ *
-+ * This work is licensed under the terms of the GNU GPL, version 2. See the
-+ * COPYING file in the top-level directory.
-+ */
-+
-+#include "qemu/osdep.h"
-+#include "qemu/log.h"
-+#include "hw/cxl/cxl.h"
-+
-+#include "hw/pci/msi.h"
-+#include "hw/pci/msix.h"
-+
-+static uint64_t cpmu_read(void *opaque, hwaddr offset, unsigned size)
-+{
-+    CPMUState *cpmu = opaque;
-+    uint64_t retval = 0;
-+    int index;
-+
-+    /* I'm lazy - lets assume 4 or 8 byte reads only - fix that up later. */
-+    switch (offset) {
-+    case A_CXL_CPMU_CAP:
-+        retval = FIELD_DP64(retval, CXL_CPMU_CAP,
-+                            NUM_COUNTERS, CPMU_NUM_COUNTERS - 1);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CAP, COUNTER_WIDTH, 48);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CAP,
-+                            NUM_EVENT_GROUPS, CPMU_NUM_EVENT_GROUPS - 1);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CAP, FILTERS_SUP, 1);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CAP, MSI_N, cpmu->msi_n);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CAP, WRITEABLE_WHEN_EN, 1);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CAP, FREEZE, 1);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CAP, INT, 1);
-+        break;
-+    case A_CXL_CPMU_OVERFLOW_STS:
-+        retval = cpmu->overflow_status_bm;
-+        break;
-+    case A_CXL_CPMU_FREEZE:
-+        retval = cpmu->freeze_status_bm;
-+        break;
-+    case A_CXL_CPMU_EVENT_CAP0:
-+        /* Event group 0, clock ticks */
-+        retval = FIELD_DP64(retval, CXL_CPMU_EVENT_CAP0, SUPPORTED_EVENTS, 1);
-+        retval = FIELD_DP64(retval, CXL_CPMU_EVENT_CAP0, EVENT_GROUP_ID, 0);
-+        retval = FIELD_DP64(retval, CXL_CPMU_EVENT_CAP0,
-+                            EVENT_VENDOR_ID, 0x1e98);
-+        break;
-+    case A_CXL_CPMU_EVENT_CAP1:
-+        /* Random mashup */
-+        retval = FIELD_DP64(retval, CXL_CPMU_EVENT_CAP1, SUPPORTED_EVENTS,
-+                            0xFF);
-+        retval = FIELD_DP64(retval, CXL_CPMU_EVENT_CAP1, EVENT_GROUP_ID, 0x10);
-+        retval = FIELD_DP64(retval, CXL_CPMU_EVENT_CAP1, EVENT_VENDOR_ID,
-+                            0x1e98);
-+        break;
-+    case A_CXL_CPMU_EVENT_CAP2:
-+        /* Random mashup */
-+        retval = FIELD_DP64(retval, CXL_CPMU_EVENT_CAP1, SUPPORTED_EVENTS,
-+                            0xFF);
-+        retval = FIELD_DP64(retval, CXL_CPMU_EVENT_CAP1, EVENT_GROUP_ID, 0x12);
-+        retval = FIELD_DP64(retval, CXL_CPMU_EVENT_CAP1, EVENT_VENDOR_ID,
-+                            0x1e98);
-+        break;
-+
-+    case A_CXL_CPMU_CNT0_CFG:
-+        /* Lets' make this a fixed function counter doing only the first set */
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT0_CFG, TYPE,
-+                            CXL_CPMU_CNT_CFG_TYPE_FIXED_FUN);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT0_CFG, ENABLE,
-+                            cpmu->counter_enable[0]);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT0_CFG, INT_ON_OVERFLOW,
-+                            cpmu->int_en[0]);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT0_CFG, FREEZE_ON_OVERFLOW,
-+                            cpmu->freeze_en[0]);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT0_CFG, EDGE, 0);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT0_CFG, INVERT, 0);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT0_CFG, THRESHOLD, 0);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT0_CFG, EVENTS, 1);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT0_CFG, EVENT_GROUP_ID_IDX, 0);
-+        break;
-+    case A_CXL_CPMU_CNT1_CFG:
-+    case A_CXL_CPMU_CNT2_CFG:
-+        /* A couple of configurable counters */
-+        index = (offset - A_CXL_CPMU_CNT0_CFG) / sizeof(uint64_t);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT1_CFG, TYPE,
-+                            CXL_CPMU_CNT_CFG_TYPE_CONFIGURABLE);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT1_CFG, ENABLE,
-+                            cpmu->counter_enable[index]);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT1_CFG, INT_ON_OVERFLOW,
-+                            cpmu->int_en[index]);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT1_CFG, FREEZE_ON_OVERFLOW,
-+                            cpmu->freeze_en[index]);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT1_CFG, EDGE, 0);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT1_CFG, INVERT, 0);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT1_CFG, THRESHOLD, 0);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT1_CFG, EVENTS, 0xFF);
-+        /* Fixme - perhaps make this flexible at somepoint */
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT1_CFG,
-+                            EVENT_GROUP_ID_IDX, 1);
-+        break;
-+    case A_CXL_CPMU_CNT3_CFG:
-+        /* Try to break my code! */
-+        index = (offset - A_CXL_CPMU_CNT0_CFG) / sizeof(uint64_t);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT3_CFG,
-+                            TYPE, CXL_CPMU_CNT_CFG_TYPE_FIXED_FUN);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT3_CFG,
-+                            ENABLE, cpmu->counter_enable[index]);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT3_CFG,
-+                            INT_ON_OVERFLOW, cpmu->int_en[index]);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT3_CFG,
-+                            FREEZE_ON_OVERFLOW, cpmu->freeze_en[index]);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT3_CFG, EDGE, 0);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT3_CFG, INVERT, 0);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT3_CFG, THRESHOLD, 0);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT3_CFG, EVENTS, 1 << 3);
-+        retval = FIELD_DP64(retval, CXL_CPMU_CNT3_CFG,
-+                            EVENT_GROUP_ID_IDX, 1);
-+        break;
-+    case A_CXL_CPMU_FILTER0_CNT0_CFG:
-+        retval = FIELD_DP64(retval, CXL_CPMU_FILTER0_CNT0_CFG, VALUE, 0xffff);
-+        break;
-+    case A_CXL_CPMU_FILTER0_CNT1_CFG:
-+        index = 1;
-+        retval = FIELD_DP64(retval, CXL_CPMU_FILTER0_CNT1_CFG, VALUE,
-+                            cpmu->filter_value[0][index]);
-+        break;
-+    case A_CXL_CPMU_FILTER0_CNT2_CFG:
-+        index = 2;
-+        retval = FIELD_DP64(retval, CXL_CPMU_FILTER0_CNT2_CFG, VALUE,
-+                            cpmu->filter_value[0][index]);
-+        break;
-+    case A_CXL_CPMU_FILTER0_CNT3_CFG:
-+        index = 3;
-+        retval = FIELD_DP64(retval, CXL_CPMU_FILTER0_CNT3_CFG, VALUE,
-+                            cpmu->filter_value[0][index]);
-+        break;
-+    case A_CXL_CPMU_CNT0:
-+    case A_CXL_CPMU_CNT1:
-+    case A_CXL_CPMU_CNT2:
-+    case A_CXL_CPMU_CNT3:
-+        index = (offset - A_CXL_CPMU_CNT0) / sizeof(uint64_t);
-+        retval = cpmu->counter[index] & 0xffffffffffff;
-+
-+        break;
-+    default:
-+        break;
-+    }
-+
-+    return retval;
-+}
-+
-+static void cpmu_write(void *opaque, hwaddr offset, uint64_t value,
-+                       unsigned size)
-+{
-+    CPMUState *cpmu = opaque;
-+    int index;
-+
-+    /* Lazy and assume correct size reads and writes for now  */
-+    switch (offset) {
-+    case 0:
-+        break;
-+    case 8:
-+        break;
-+    case A_CXL_CPMU_FREEZE:
-+        cpmu->freeze_status_bm = value;
-+        break;
-+    case A_CXL_CPMU_OVERFLOW_STS:
-+        cpmu->overflow_status_bm &= ~value;
-+        break;
-+    case A_CXL_CPMU_CNT0_CFG:
-+    case A_CXL_CPMU_CNT1_CFG:
-+    case A_CXL_CPMU_CNT2_CFG:
-+    case A_CXL_CPMU_CNT3_CFG:
-+        index = (offset - A_CXL_CPMU_CNT0_CFG) / sizeof(uint64_t);
-+        cpmu->int_en[index] =
-+            FIELD_EX32(value, CXL_CPMU_CNT0_CFG, INT_ON_OVERFLOW);
-+        cpmu->freeze_en[index] =
-+            FIELD_EX32(value, CXL_CPMU_CNT0_CFG, FREEZE_ON_OVERFLOW);
-+        cpmu->counter_enable[index] =
-+            FIELD_EX32(value, CXL_CPMU_CNT0_CFG, ENABLE);
-+        break;
-+    case A_CXL_CPMU_FILTER0_CNT1_CFG:
-+        index = 1;
-+        cpmu->filter_value[0][index] =
-+            FIELD_EX32(value, CXL_CPMU_FILTER0_CNT1_CFG, VALUE);
-+        break;
-+    case A_CXL_CPMU_FILTER0_CNT2_CFG:
-+        index = 2;
-+        break;
-+    case A_CXL_CPMU_FILTER0_CNT3_CFG:
-+        index = 3;
-+        cpmu->filter_value[0][index] =
-+            FIELD_EX32(value, CXL_CPMU_FILTER0_CNT1_CFG, VALUE);
-+        break;
-+    case A_CXL_CPMU_CNT0:
-+    case A_CXL_CPMU_CNT1:
-+    case A_CXL_CPMU_CNT2:
-+    case A_CXL_CPMU_CNT3:
-+        index = (offset - A_CXL_CPMU_CNT0) / sizeof(uint64_t);
-+        cpmu->counter[index] = value & 0xffffffffffff;
-+        break;
-+    }
-+
-+    return;
-+}
-+
-+static const MemoryRegionOps cpmu_ops = {
-+    .read = cpmu_read,
-+    .write = cpmu_write,
-+    .endianness = DEVICE_LITTLE_ENDIAN,
-+    .valid = {
-+        .min_access_size = 1,
-+        .max_access_size = 8,
-+        .unaligned = false,
-+    },
-+    .impl = {
-+        .min_access_size = 4,
-+        .max_access_size = 8,
-+    },
-+};
-+
-+
-+static void cpmu_counter_update(void *opaque)
-+{
-+    CPMUState *cpmu = opaque;
-+    CXLDeviceState *cxl_dstate = cpmu->private;
-+    bool interrupt_needed = false;
-+    int i;
-+
-+    timer_del(cpmu->timer);
-+
-+    for (i = 0; i < CPMU_NUM_COUNTERS; i++) {
-+        /*
-+         * TODO: check enabled, not frozen etc
-+         *
-+         * Hack to make the numbers get bigger!  Ideally for at least
-+         * some types of event we could hook it up to actual accesses.
-+         */
-+        uint64_t previous = cpmu->counter[i];
-+        if (cpmu->counter_enable[i]) {
-+            switch (i) {
-+            case 0:
-+                cpmu->counter[i] += (1ULL << 44) * 1 + 7;
-+                break;
-+            case 1:
-+                cpmu->counter[i] += (1ULL << 43) * 1 + 3;
-+                break;
-+            case 2:
-+                cpmu->counter[i] += (1ULL << 43) * 1 + 7;
-+                break;
-+            default:
-+                cpmu->counter[i] += 30;
-+                break;
-+            }
-+            if (cpmu->counter[i] / (1ULL << 48) != previous / (1ULL << 48)) {
-+                cpmu->overflow_status_bm |= (1 << i);
-+                if (cpmu->int_en[i]) {
-+                    interrupt_needed = true;
-+                }
-+            }
-+        }
-+    }
-+    timer_mod(cpmu->timer, qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL) + 100000000);
-+    if (interrupt_needed) {
-+        CXLType3Dev *dev = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
-+
-+        if (msix_enabled(&dev->parent_obj)) {
-+            msix_notify(&dev->parent_obj, cpmu->msi_n);
-+        } else if (msi_enabled(&dev->parent_obj)) {
-+            msi_notify(&dev->parent_obj, cpmu->msi_n);
-+        }
-+    }
-+}
-+
-+void cxl_cpmu_register_block_init(Object *obj, CXLDeviceState *cxl_dstate,
-+                                  int id, uint8_t msi_n)
-+{
-+    CPMUState *cpmu = &cxl_dstate->cpmu[id];
-+    MemoryRegion *registers = &cxl_dstate->cpmu_registers[id];
-+    g_autofree gchar *name = g_strdup_printf("cpmu%d-registers", id);
-+
-+    cpmu->msi_n = msi_n;
-+    cpmu->private = cxl_dstate;
-+    memory_region_init_io(registers, obj, &cpmu_ops, cpmu,
-+                          name, pow2ceil(CXL_CPMU_SIZE));
-+    cpmu->timer = timer_new_ns(QEMU_CLOCK_VIRTUAL, cpmu_counter_update,
-+                               &cxl_dstate->cpmu[id]);
-+    timer_mod(cpmu->timer, qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL) + 100000000);
-+
-+    /* Need to force 64k Alignment in the bar */
-+    memory_region_add_subregion(&cxl_dstate->device_registers,
-+                                CXL_CPMU_OFFSET(id), registers);
-+}
-diff --git a/hw/cxl/meson.build b/hw/cxl/meson.build
-index f117b99949..26ac763e8f 100644
---- a/hw/cxl/meson.build
-+++ b/hw/cxl/meson.build
-@@ -4,6 +4,7 @@ softmmu_ss.add(when: 'CONFIG_CXL',
-                    'cxl-device-utils.c',
-                    'cxl-mailbox-utils.c',
-                    'cxl-host.c',
-+                   'cxl-cpmu.c',
-                ),
-                if_false: files(
-                    'cxl-host-stubs.c',
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 5d29d2595c..9242290bfe 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -25,7 +25,9 @@
- static void build_dvsecs(CXLType3Dev *ct3d)
- {
-     CXLComponentState *cxl_cstate = &ct3d->cxl_cstate;
-+    CXLDVSECRegisterLocator *regloc_dvsec;
-     uint8_t *dvsec;
-+    int i;
- 
-     dvsec = (uint8_t *)&(CXLDVSECDevice){
-         .cap = 0x1e,
-@@ -42,16 +44,21 @@ static void build_dvsecs(CXLType3Dev *ct3d)
-                                PCIE_CXL_DEVICE_DVSEC,
-                                PCIE_CXL2_DEVICE_DVSEC_REVID, dvsec);
- 
--    dvsec = (uint8_t *)&(CXLDVSECRegisterLocator){
-+    regloc_dvsec = &(CXLDVSECRegisterLocator){
-         .rsvd         = 0,
-         .reg_base[0].lo = RBI_COMPONENT_REG | CXL_COMPONENT_REG_BAR_IDX,
-         .reg_base[0].hi = 0,
-         .reg_base[1].lo = RBI_CXL_DEVICE_REG | CXL_DEVICE_REG_BAR_IDX,
-         .reg_base[1].hi = 0,
-     };
-+    for (i = 0; i < CXL_NUM_CPMU_INSTANCES; i++) {
-+        regloc_dvsec->reg_base[2 + i].lo = CXL_CPMU_OFFSET(i) |
-+            RBI_CXL_CPMU_REG | CXL_DEVICE_REG_BAR_IDX;
-+        regloc_dvsec->reg_base[2 + i].hi = 0;
-+    }
-     cxl_component_create_dvsec(cxl_cstate, CXL2_TYPE3_DEVICE,
-                                REG_LOC_DVSEC_LENGTH, REG_LOC_DVSEC,
--                               REG_LOC_DVSEC_REVID, dvsec);
-+                               REG_LOC_DVSEC_REVID, (uint8_t *)regloc_dvsec);
-     dvsec = (uint8_t *)&(CXLDVSECDeviceGPF){
-         .phase2_duration = 0x603, /* 3 seconds */
-         .phase2_power = 0x33, /* 0x33 miliwatts */
-@@ -148,7 +155,7 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
-     ComponentRegisters *regs = &cxl_cstate->crb;
-     MemoryRegion *mr = &regs->component_registers;
-     uint8_t *pci_conf = pci_dev->config;
--    unsigned short msix_num = 1;
-+    unsigned short msix_num = 4;
-     int i;
- 
-     if (!cxl_setup_memory(ct3d, errp)) {
-@@ -180,6 +187,8 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
-         PCI_BASE_ADDRESS_SPACE_MEMORY | PCI_BASE_ADDRESS_MEM_TYPE_64, mr);
- 
-     cxl_device_register_block_init(OBJECT(pci_dev), &ct3d->cxl_dstate);
-+    cxl_cpmu_register_block_init(OBJECT(pci_dev), &ct3d->cxl_dstate, 0, 3);
-+    cxl_cpmu_register_block_init(OBJECT(pci_dev), &ct3d->cxl_dstate, 1, 3);
-     pci_register_bar(pci_dev, CXL_DEVICE_REG_BAR_IDX,
-                      PCI_BASE_ADDRESS_SPACE_MEMORY |
-                          PCI_BASE_ADDRESS_MEM_TYPE_64,
-diff --git a/include/hw/cxl/cxl.h b/include/hw/cxl/cxl.h
-index 38e0e271d5..97aa379d18 100644
---- a/include/hw/cxl/cxl.h
-+++ b/include/hw/cxl/cxl.h
-@@ -17,6 +17,7 @@
- #include "hw/pci/pci_host.h"
- #include "cxl_pci.h"
- #include "cxl_component.h"
-+#include "cxl_cpmu.h"
- #include "cxl_device.h"
- 
- #define CXL_COMPONENT_REG_BAR_IDX 0
-diff --git a/include/hw/cxl/cxl_cpmu.h b/include/hw/cxl/cxl_cpmu.h
-new file mode 100644
-index 0000000000..d68b15c965
---- /dev/null
-+++ b/include/hw/cxl/cxl_cpmu.h
-@@ -0,0 +1,99 @@
-+/*
-+ * QEMU CXL Performance Monitoring Unit
-+ *
-+ * Copyright (c) 2021 Jonathan Cameron - Huawei
-+ *
-+ * This work is licensed under the terms of the GNU GPL, version 2. See the
-+ * COPYING file in the top-level directory.
-+ */
-+
-+#include "hw/register.h"
-+
-+#ifndef _CXL_CPMU_H_
-+#define _CXL_CPMU_H_
-+
-+REG32(CXL_CPMU_CAP, 0)
-+    FIELD(CXL_CPMU_CAP, NUM_COUNTERS, 0, 6)
-+    FIELD(CXL_CPMU_CAP, COUNTER_WIDTH, 8, 8)
-+    FIELD(CXL_CPMU_CAP, NUM_EVENT_GROUPS, 20, 5)
-+    FIELD(CXL_CPMU_CAP, FILTERS_SUP, 32, 8)
-+    FIELD(CXL_CPMU_CAP, MSI_N, 44, 4)
-+    FIELD(CXL_CPMU_CAP, WRITEABLE_WHEN_EN, 48, 1)
-+    FIELD(CXL_CPMU_CAP, FREEZE, 49, 1)
-+    FIELD(CXL_CPMU_CAP, INT, 50, 1)
-+/* Register at offset 0x8 is reserved */
-+REG32(CXL_CPMU_OVERFLOW_STS, 0x10)
-+REG32(CXL_CPMU_FREEZE, 0x18)
-+/* Registers at offset 20 + reserved */
-+
-+#define CXL_CPMU_EVENT_CAP(n) \
-+    REG64(CXL_CPMU_EVENT_CAP##n, 0x100 + 8 * (n))               \
-+        FIELD(CXL_CPMU_EVENT_CAP##n, SUPPORTED_EVENTS, 0, 32)   \
-+        FIELD(CXL_CPMU_EVENT_CAP##n, EVENT_GROUP_ID, 32, 16)    \
-+        FIELD(CXL_CPMU_EVENT_CAP##n, EVENT_VENDOR_ID, 48, 16)
-+
-+CXL_CPMU_EVENT_CAP(0)
-+CXL_CPMU_EVENT_CAP(1)
-+CXL_CPMU_EVENT_CAP(2)
-+CXL_CPMU_EVENT_CAP(3)
-+
-+#define CXL_CPMU_CNT_CFG(n) \
-+    REG64(CXL_CPMU_CNT##n##_CFG, 0x200 + 8 * (n))                     \
-+        FIELD(CXL_CPMU_CNT##n##_CFG, TYPE, 0, 2)                      \
-+        FIELD(CXL_CPMU_CNT##n##_CFG, ENABLE, 8, 1)                    \
-+        FIELD(CXL_CPMU_CNT##n##_CFG, INT_ON_OVERFLOW, 9, 1)           \
-+        FIELD(CXL_CPMU_CNT##n##_CFG, FREEZE_ON_OVERFLOW, 10, 1)       \
-+        FIELD(CXL_CPMU_CNT##n##_CFG, EDGE, 11, 1)                     \
-+        FIELD(CXL_CPMU_CNT##n##_CFG, INVERT, 12, 1)                   \
-+        FIELD(CXL_CPMU_CNT##n##_CFG, THRESHOLD, 16, 8)                \
-+        FIELD(CXL_CPMU_CNT##n##_CFG, EVENTS, 24, 32)                  \
-+        FIELD(CXL_CPMU_CNT##n##_CFG, EVENT_GROUP_ID_IDX, 59, 5)
-+
-+#define CXL_CPMU_CNT_CFG_TYPE_FREE_RUN 0
-+#define CXL_CPMU_CNT_CFG_TYPE_FIXED_FUN 1
-+#define CXL_CPMU_CNT_CFG_TYPE_CONFIGURABLE 2
-+CXL_CPMU_CNT_CFG(0)
-+CXL_CPMU_CNT_CFG(1)
-+CXL_CPMU_CNT_CFG(2)
-+CXL_CPMU_CNT_CFG(3)
-+
-+#define CXL_CPMU_FILTER_CFG(n, f)                                       \
-+    REG64(CXL_CPMU_FILTER##f##_CNT##n##_CFG, 0x400 + 4 * ((f) + (n) * 8)) \
-+        FIELD(CXL_CPMU_FILTER##f##_CNT##n##_CFG, VALUE, 0, 16)
-+
-+/* Only HDM decoder filter suppored - no effect on first counter */
-+CXL_CPMU_FILTER_CFG(0, 0)
-+CXL_CPMU_FILTER_CFG(1, 0)
-+CXL_CPMU_FILTER_CFG(2, 0)
-+CXL_CPMU_FILTER_CFG(3, 0)
-+
-+#define CXL_CPMU_CNT(n)                     \
-+    REG64(CXL_CPMU_CNT##n, 0xc00 + 8 * (n))
-+
-+CXL_CPMU_CNT(0)
-+CXL_CPMU_CNT(1)
-+CXL_CPMU_CNT(2)
-+CXL_CPMU_CNT(3)
-+
-+typedef struct CPMUState {
-+#define CPMU_NUM_COUNTERS 4
-+#define CPMU_NUM_EVENT_GROUPS 3
-+#define CPMU_NUM_FILTERS 1
-+    bool counter_enable[CPMU_NUM_COUNTERS];
-+    bool int_en[CPMU_NUM_COUNTERS];
-+    bool freeze_en[CPMU_NUM_COUNTERS];
-+    bool filter_value[CPMU_NUM_FILTERS][CPMU_NUM_COUNTERS];
-+    uint64_t counter[CPMU_NUM_COUNTERS];
-+    uint64_t overflow_status_bm;
-+    uint64_t freeze_status_bm;
-+    uint8_t msi_n;
-+    QEMUTimer *timer;
-+    void *private;
-+} CPMUState;
-+
-+typedef struct cxl_device_state CXLDeviceState;
-+void cxl_cpmu_register_block_init(Object *obj,
-+                                  CXLDeviceState *cxl_dstate,
-+                                  int id, uint8_t msi_n);
-+
-+#endif
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index e4d221cdb3..84c7728a96 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -12,6 +12,7 @@
- 
- #include "hw/register.h"
- 
-+#include "hw/cxl/cxl_cpmu.h"
- /*
-  * The following is how a CXL device's Memory Device registers are laid out.
-  * The only requirement from the spec is that the capabilities array and the
-@@ -24,6 +25,16 @@
-  *
-  *                       +---------------------------------+
-  *                       |                                 |
-+ *                       |             CPMU1               |
-+ *                       |                                 |
-+ *                       +---------------------------------+
-+ *                       |                                 |
-+ *                       |             CPMU0               |
-+ *                       |                                 |
-+ *                       +---------------------------------+
-+ *                       |     Padding to 64k Aligned      |
-+ *                       +---------------------------------+
-+ *                       |                                 |
-  *                       |    Memory Device Registers      |
-  *                       |                                 |
-  * n + PAYLOAD_SIZE_MAX  -----------------------------------
-@@ -76,13 +87,26 @@
-     (CXL_MAILBOX_REGISTERS_OFFSET + CXL_MAILBOX_REGISTERS_LENGTH)
- #define CXL_MEMORY_DEVICE_REGISTERS_LENGTH 0x8
- 
-+#define CXL_NUM_CPMU_INSTANCES 2
-+#define CXL_CPMU_SIZE          0x8f8
-+#define CXL_CPMU_OFFSET(x)                                              \
-+    QEMU_ALIGN_UP(CXL_MEMORY_DEVICE_REGISTERS_OFFSET +                  \
-+                  CXL_MEMORY_DEVICE_REGISTERS_LENGTH +                  \
-+                  (x) * (1 << 16),                                      \
-+                  1 << 16)
-+
- #define CXL_MMIO_SIZE                                                   \
--    (CXL_DEVICE_CAP_REG_SIZE + CXL_DEVICE_STATUS_REGISTERS_LENGTH +     \
--     CXL_MAILBOX_REGISTERS_LENGTH + CXL_MEMORY_DEVICE_REGISTERS_LENGTH)
-+    QEMU_ALIGN_UP(CXL_DEVICE_CAP_REG_SIZE +                             \
-+                  CXL_DEVICE_STATUS_REGISTERS_LENGTH +                  \
-+                  CXL_MAILBOX_REGISTERS_LENGTH +                        \
-+                  CXL_MEMORY_DEVICE_REGISTERS_LENGTH +                  \
-+                  CXL_NUM_CPMU_INSTANCES * (1 << 16),                   \
-+                  (1 << 16))
- 
- typedef struct cxl_device_state {
-     MemoryRegion device_registers;
- 
-+    MemoryRegion cpmu_registers[CXL_NUM_CPMU_INSTANCES];
-     /* mmio for device capabilities array - 8.2.8.2 */
-     MemoryRegion device;
-     MemoryRegion memory_device;
-@@ -119,6 +143,9 @@ typedef struct cxl_device_state {
- 
-     /* memory region for persistent memory, HDM */
-     uint64_t pmem_size;
-+
-+    /* Move me later */
-+    CPMUState cpmu[CXL_NUM_CPMU_INSTANCES];
- } CXLDeviceState;
- 
- /* Initialize the register block for a device */
-diff --git a/include/hw/cxl/cxl_pci.h b/include/hw/cxl/cxl_pci.h
-index 8cbeb61142..b7b3620a9f 100644
---- a/include/hw/cxl/cxl_pci.h
-+++ b/include/hw/cxl/cxl_pci.h
-@@ -35,7 +35,7 @@
- #define PCIE_FLEXBUS_PORT_DVSEC_LENGTH_2_0 0x14
- #define PCIE_FLEXBUS_PORT_DVSEC_REVID_2_0  1
- 
--#define REG_LOC_DVSEC_LENGTH 0x24
-+#define REG_LOC_DVSEC_LENGTH 0x2c
- #define REG_LOC_DVSEC_REVID  0
- 
- enum {
-@@ -144,9 +144,9 @@ typedef struct CXLDVSECRegisterLocator {
-     struct {
-             uint32_t lo;
-             uint32_t hi;
--    } reg_base[3];
-+    } reg_base[4];
- } CXLDVSECRegisterLocator;
--QEMU_BUILD_BUG_ON(sizeof(CXLDVSECRegisterLocator) != 0x24);
-+QEMU_BUILD_BUG_ON(sizeof(CXLDVSECRegisterLocator) != 0x2C);
- 
- /* BAR Equivalence Indicator */
- #define BEI_BAR_10H 0
-@@ -161,5 +161,6 @@ QEMU_BUILD_BUG_ON(sizeof(CXLDVSECRegisterLocator) != 0x24);
- #define RBI_COMPONENT_REG  (1 << 8)
- #define RBI_BAR_VIRT_ACL   (2 << 8)
- #define RBI_CXL_DEVICE_REG (3 << 8)
-+#define RBI_CXL_CPMU_REG   (4 << 8)
- 
- #endif
--- 
-2.32.0
+-Robert
 
+> 
+> The wonders of code evolution leaving signs behind ;)
+> 
+> > ---
+> >  drivers/cxl/cxl.h | 2 --
+> >  1 file changed, 2 deletions(-)
