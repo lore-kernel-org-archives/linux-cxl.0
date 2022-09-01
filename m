@@ -2,30 +2,30 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03851ECAAD1
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Sep 2022 10:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2BBECAAD3
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Sep 2022 10:38:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234170AbiIAKYH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Sep 2022 06:24:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47978 "EHLO
+        id S233336AbiIAKiE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Sep 2022 06:38:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234144AbiIAKYD (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Sep 2022 06:24:03 -0400
+        with ESMTP id S232418AbiIAKiD (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Sep 2022 06:38:03 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81A93138582;
-        Thu,  1 Sep 2022 03:23:53 -0700 (PDT)
-Received: from fraeml739-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MJHDz37Fqz67xgN;
-        Thu,  1 Sep 2022 18:23:15 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EF541299CB;
+        Thu,  1 Sep 2022 03:38:02 -0700 (PDT)
+Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MJHTc4lJyz688nt;
+        Thu,  1 Sep 2022 18:34:12 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml739-chm.china.huawei.com (10.206.15.220) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 1 Sep 2022 12:23:50 +0200
+ fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2375.31; Thu, 1 Sep 2022 12:37:59 +0200
 Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 1 Sep
- 2022 11:23:50 +0100
-Date:   Thu, 1 Sep 2022 11:23:48 +0100
+ 2022 11:37:59 +0100
+Date:   Thu, 1 Sep 2022 11:37:57 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     Robert Richter <rrichter@amd.com>
 CC:     Alison Schofield <alison.schofield@intel.com>,
@@ -38,86 +38,116 @@ CC:     Alison Schofield <alison.schofield@intel.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Len Brown <lenb@kernel.org>
 Subject: Re: [PATCH 08/15] cxl/acpi: Check RCH's CXL DVSEC capabilities
-Message-ID: <20220901112348.000003f1@huawei.com>
-In-Reply-To: <YxBRmXOpc+ldConT@rric.localdomain>
+Message-ID: <20220901113757.00004193@huawei.com>
+In-Reply-To: <YxBTfD+4hDgo6Sah@rric.localdomain>
 References: <20220831081603.3415-1-rrichter@amd.com>
         <20220831081603.3415-9-rrichter@amd.com>
         <20220831115224.00003afd@huawei.com>
-        <YxBRmXOpc+ldConT@rric.localdomain>
+        <20220831121222.00000977@huawei.com>
+        <YxBTfD+4hDgo6Sah@rric.localdomain>
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 1 Sep 2022 08:30:49 +0200
+On Thu, 1 Sep 2022 08:38:52 +0200
 Robert Richter <rrichter@amd.com> wrote:
 
-> On 31.08.22 11:52:24, Jonathan Cameron wrote:
-> > On Wed, 31 Aug 2022 10:15:56 +0200
-> > Robert Richter <rrichter@amd.com> wrote:  
+> On 31.08.22 12:12:22, Jonathan Cameron wrote:
+> > > On Wed, 31 Aug 2022 10:15:56 +0200
+> > > Robert Richter <rrichter@amd.com> wrote:  
 > 
-> > > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> > > index ffdf439adb87..f9cdf23a91a8 100644
-> > > --- a/drivers/cxl/acpi.c
-> > > +++ b/drivers/cxl/acpi.c
-> > > @@ -322,6 +322,8 @@ struct pci_host_bridge *cxl_find_next_rch(struct pci_host_bridge *host)
-> > >  {
-> > >  	struct pci_bus *bus = host ? host->bus : NULL;
-> > >  	struct acpi_device *adev;
-> > > +	struct pci_dev *pdev;
-> > > +	bool is_restricted_host;
-> > >  
-> > >  	while ((bus = pci_find_next_bus(bus)) != NULL) {
-> > >  		host = bus ? to_pci_host_bridge(bus->bridge) : NULL;
-> > > @@ -343,6 +345,20 @@ struct pci_host_bridge *cxl_find_next_rch(struct pci_host_bridge *host)
-> > >  		dev_dbg(&host->dev, "PCI ACPI host found: %s\n",
-> > >  			acpi_dev_name(adev));
-> > >  
-> > > +		/* Check CXL DVSEC of dev 0 func 0 */  
+> > > > @@ -322,6 +322,8 @@ struct pci_host_bridge *cxl_find_next_rch(struct pci_host_bridge *host)
+> > > >  {
+> > > >  	struct pci_bus *bus = host ? host->bus : NULL;
+> > > >  	struct acpi_device *adev;
+> > > > +	struct pci_dev *pdev;
+> > > > +	bool is_restricted_host;
+> > > >  
+> > > >  	while ((bus = pci_find_next_bus(bus)) != NULL) {
+> > > >  		host = bus ? to_pci_host_bridge(bus->bridge) : NULL;
+> > > > @@ -343,6 +345,20 @@ struct pci_host_bridge *cxl_find_next_rch(struct pci_host_bridge *host)
+> > > >  		dev_dbg(&host->dev, "PCI ACPI host found: %s\n",
+> > > >  			acpi_dev_name(adev));
+> > > >  
+> > > > +		/* Check CXL DVSEC of dev 0 func 0 */    
+> > > 
+> > > So assumption here is that the hostbridge has a one or more RCiEPs.
+> > > The spec (r3.0 9.11.4) allows for the EP to appear behind a root port
+> > > - that case always felt odd to me, so I'm fine with not supporting it until
+> > > we see a user.
+> > >   
+> > > > +		pdev = pci_get_slot(bus, PCI_DEVFN(0, 0));
+> > > > +		is_restricted_host = pdev
+> > > > +			&& (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END)
+> > > > +			&& pci_find_dvsec_capability(pdev,
+> > > > +						PCI_DVSEC_VENDOR_ID_CXL,
+> > > > +						CXL_DVSEC_PCIE_DEVICE);  
 > > 
-> > So assumption here is that the hostbridge has a one or more RCiEPs.
-> > The spec (r3.0 9.11.4) allows for the EP to appear behind a root port
-> > - that case always felt odd to me, so I'm fine with not supporting it until
-> > we see a user.  
+> > Thinking a bit more on this.  I'm not sure this is sufficient.
+> > Nothing in CXL 2.0 or later prevents true RCiEP devices (there are a
+> > few references in CXL 3.0 e.g. 9.12.1 has RCDs or CXL RCiEPs - so just
+> > detecting that there is one on the host bridge might not be sufficient
+> > to distinguish this from a non RCH / RCB.  
 > 
-> The software view of an RCD is always the same, it shows up always as
-> an RCiEP. See figure 9-12 and 9-13 of the spec.
+> An RCD has its own host bridge created (software view, not the phys
+> topology). Host and device are paired in this case. Non-RCDs are
+> standard endpoints and not RCiEPs, they have their own host.
 
-Ah. I see I misread the following from CXL r3.0 9.11.4 
+I disagree. CXL spec does not exclude the possibility of real CXL
+RCiEPs. So a CXL 2.0+ device that talks CXL configuration for some
+reason but is part of the root complex itself (maybe a chiplet or
+something where there isn't necessarily a real CXL bus involved).
+Same reason we have RCiEPs in normal PCIe.
 
-"This ACPI Host Bridge spawns a legal PCIe hierarchy. All PCIe Endpoints located in the 
-RCD are children of this ACPI Host Bridge. These Endpoints may appear directly on the 
-Root bus number or may appear behind a Root Port located on the Root bus."
+Chasing references - there is only one I can find (CXL r3.0 9.12.1)
+"If a Host bridge is not associated with RCDs or CXL RCiEPs."
 
-I guess that is allowing 'additional' PCIe endpoints below a root port attached
-to the ACPI Host Bridge, but not dev 0 func 0.  That's a subtle distinction
-I missed.
+Both listed because they are different things.
+(I think it's fine to say here that this has been queried in
+appropriate place in the past and is something that is allowed).
 
+So I still don't think the above check is sufficient'. If you
+happen to have just one CXL 2.0+ RCiEP on a host bridge with
+not root ports, then the check will identify it as a restriced
+host.  Maybe I'm missing another check that wouldn't though....
+
+> There
+> cannot be both types connected to the same host.
+> 
+> Again, see figure 9-12 and 9-13.
+Examples - don't show all the crazy things people are allowed to 
+build - you would need an awful lot of diagrams to do that.
 
 > 
 > -Robert
 > 
 > >   
-> > > +		pdev = pci_get_slot(bus, PCI_DEVFN(0, 0));
-> > > +		is_restricted_host = pdev
-> > > +			&& (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END)
-> > > +			&& pci_find_dvsec_capability(pdev,
-> > > +						PCI_DVSEC_VENDOR_ID_CXL,
-> > > +						CXL_DVSEC_PCIE_DEVICE);
-> > > +		pci_dev_put(pdev);
-> > > +
-> > > +		if (!is_restricted_host)
-> > > +			continue;
-> > > +
-> > > +		dev_dbg(&host->dev, "CXL restricted host found\n");
-> > > +
-> > >  		return host;
-> > >  	}  
+> > > > +		pci_dev_put(pdev);
+> > > > +
+> > > > +		if (!is_restricted_host)
+> > > > +			continue;
+> > > > +
+> > > > +		dev_dbg(&host->dev, "CXL restricted host found\n");
+> > > > +
+> > > >  		return host;
+> > > >  	}
+> > > >  
+> > > > @@ -354,6 +370,7 @@ static int __init cxl_restricted_host_probe(struct platform_device *pdev)
+> > > >  	struct pci_host_bridge *host = NULL;
+> > > >  
+> > > >  	while ((host = cxl_find_next_rch(host)) != NULL) {
+> > > > +		dev_info(&host->dev, "host supports CXL\n");
+> > > >  	}
+> > > >  
+> > > >  	return 0;    
+> > >   
+> >   
 
