@@ -2,154 +2,392 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2481ECAAD5
-	for <linux-cxl@archiver.kernel.org>; Tue,  6 Sep 2022 12:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10614ECAAA1
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Sep 2022 13:25:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234037AbiIFL77 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 6 Sep 2022 07:59:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55140 "EHLO
+        id S232883AbiIFNZi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 6 Sep 2022 09:25:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234098AbiIFL7z (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Sep 2022 07:59:55 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20F2E3DF00;
-        Tue,  6 Sep 2022 04:59:54 -0700 (PDT)
-Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MMP3V693zz6HJTR;
-        Tue,  6 Sep 2022 19:55:50 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 6 Sep 2022 13:59:52 +0200
-Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 6 Sep
- 2022 12:59:51 +0100
-Date:   Tue, 6 Sep 2022 12:59:50 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Adam Manzanares <a.manzanares@samsung.com>
-CC:     Lukas Wunner <lukas@wunner.de>, Ira Weiny <ira.weiny@intel.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "ben@bwidawsk.net" <ben@bwidawsk.net>,
-        "linuxarm@huawei.com" <linuxarm@huawei.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "Box, David E" <david.e.box@intel.com>,
-        "Chuck Lever" <chuck.lever@oracle.com>,
-        Krzysztof Wilczy??ski <kw@linux.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        hchkuo <hchkuo@avery-design.com.tw>
-Subject: Re: (SPDM) Device attestation, secure channels from host to device
- etc: Discuss at Plumbers?
-Message-ID: <20220906125950.00006e4f@huawei.com>
-In-Reply-To: <20220629160149.GA1039216@bgt-140510-bm01>
-References: <20220609124702.000037b0@Huawei.com>
-        <YqICCSd/6Vxidu+v@iweiny-desk3>
-        <20220617112124.00002296@Huawei.com>
-        <20220620165217.GA18451@wunner.de>
-        <20220622124638.00004456@Huawei.com>
-        <20220624120830.00002eef@Huawei.com>
-        <20220624141531.GA32171@wunner.de>
-        <CGME20220624143249uscas1p1ae96e45ccb5b3b4f22a5b863c7a6fc9f@uscas1p1.samsung.com>
-        <20220624153241.000055e2@Huawei.com>
-        <20220629160149.GA1039216@bgt-140510-bm01>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S232700AbiIFNZh (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Sep 2022 09:25:37 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 848E27393D;
+        Tue,  6 Sep 2022 06:25:34 -0700 (PDT)
+Received: from [IPV6:2804:14c:483:908a:1c66:9ef:929:4647] (unknown [IPv6:2804:14c:483:908a:1c66:9ef:929:4647])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: rcardoso)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id D42896601F20;
+        Tue,  6 Sep 2022 14:25:30 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1662470732;
+        bh=+ZriZMWLnPcFAA8yevPphAKbkp3sSg99hbOE7/02Bw0=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=D2K/eHKAXAnzlQVUdlkKA648JG4aWPPa8tZTnDLTbusmmlGOAZoQA06QBGWul3sst
+         ZtdU29K12P7y9BKzeT2pnApGWW1NmzRcblHBgfMOhR0ag8LkEjs2jwNdkyKtaPSRJX
+         RlThirTmKhJz+HETMnllJokeUgzSujZeQQau4OOyEjmG9S27jieCTsCilkHHMH25In
+         tZXdVH6aRYibn6gVi10LHx3PUpx9Fgb6IdXRcXZ2ivKeFhJQDU1Vvxl/xtVZMElPPR
+         bEUT28Ce4PCKtrITL7zB4AUFCoPJlMMDcOn8pBz3tmXPCuUSJ3QXesOaRSwvWnGvQy
+         6jdKX4+aW8t+A==
+Message-ID: <21f184d4-40c1-4489-4df0-c31fbd2de90a@collabora.com>
+Date:   Tue, 6 Sep 2022 10:25:25 -0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v2 16/28] resource: Introduce alloc_free_mem_region()
+Content-Language: en-US
+To:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Christoph Hellwig <hch@lst.de>, nvdimm@lists.linux.dev,
+        linux-pci@vger.kernel.org
+References: <165784324066.1758207.15025479284039479071.stgit@dwillia2-xfh.jf.intel.com>
+ <165784333333.1758207.13703329337805274043.stgit@dwillia2-xfh.jf.intel.com>
+From:   Rogerio Alves <rogerio.cardoso@collabora.com>
+In-Reply-To: <165784333333.1758207.13703329337805274043.stgit@dwillia2-xfh.jf.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi All,
-
-The BoF has been accepted though not scheduled yet.
-https://lpc.events/event/16/contributions/1304/
-
-Updated RFC of kernel based cert handling with SPDM 1.2 support:
-https://lore.kernel.org/linux-pci/20220906111556.1544-1-Jonathan.Cameron@huawei.com/
-Applies cleanly to current mainline.  As it's an RFC I've been lazy
-in a few places, but it should convey what an in kernel only solution might
-look like.
-
-The old QEMU emulation should work fine with this (against new
-spdm-emu). https://gitlab.com/jic23/qemu/-/commits/cxl-next
-
-I might push out a rebased CXL QEMU tree with it on later this week if
-I get time and resist hacking too much on another plumbers related PoC :)
-
-Thanks all and look forward to talking to people about this next week.
-
-Jonathan
-
-p.s. Chris / Huai-Cheng Kuo.  I'd completely forgotten you were interested in this
-topic from emulation side of things.  Not sure if you care about what Linux does
-with it however but your QEMU work is still proving very useful.
-
-
-On Wed, 29 Jun 2022 16:01:57 +0000
-Adam Manzanares <a.manzanares@samsung.com> wrote:
-
-> On Fri, Jun 24, 2022 at 03:32:41PM +0100, Jonathan Cameron wrote:
-> > On Fri, 24 Jun 2022 16:15:31 +0200
-> > Lukas Wunner <lukas@wunner.de> wrote:
-> >   
-> > > On Fri, Jun 24, 2022 at 12:08:30PM +0100, Jonathan Cameron wrote:  
-> > > > I've put this in for now:    
-> > > 
-> > > Perfect!  For me as a non-native English speaker, it would have been
-> > > a lot more difficult to write up such an excellent description,
-> > > so thanks for doing this.  
-> > 
-> > It always feels a bit like cheating when you get to write these
-> > things in your first language!  
-> > >   
-> > > > Hence this proposal for a BoF rather than session in 
-> > > > either PCI or CXL uconf.    
-> > >   
+On 7/14/22 21:02, Dan Williams wrote:
+> The core of devm_request_free_mem_region() is a helper that searches for
+> free space in iomem_resource and performs __request_region_locked() on
+> the result of that search. The policy choices of the implementation
+> conform to what CONFIG_DEVICE_PRIVATE users want which is memory that is
+> immediately marked busy, and a preference to search for the first-fit
+> free range in descending order from the top of the physical address
+> space.
 > 
-> I am planning to be attending plumbers in person and am quite interested in 
-> this BOF.
+> CXL has a need for a similar allocator, but with the following tweaks:
 > 
+> 1/ Search for free space in ascending order
+> 
+> 2/ Search for free space relative to a given CXL window
+> 
+> 3/ 'insert' rather than 'request' the new resource given downstream
+>     drivers from the CXL Region driver (like the pmem or dax drivers) are
+>     responsible for request_mem_region() when they activate the memory
+>     range.
+> 
+> Rework __request_free_mem_region() into get_free_mem_region() which
+> takes a set of GFR_* (Get Free Region) flags to control the allocation
+> policy (ascending vs descending), and "busy" policy (insert_resource()
+> vs request_region()).
+> 
+> As part of the consolidation of the legacy GFR_REQUEST_REGION case with
+> the new default of just inserting a new resource into the free space
+> some minor cleanups like not checking for NULL before calling
+> devres_free() (which does its own check) is included.
+> 
+> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> Link: https://lore.kernel.org/linux-cxl/20220420143406.GY2120790@nvidia.com/
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>   include/linux/ioport.h |    2 +
+>   kernel/resource.c      |  178 +++++++++++++++++++++++++++++++++++++++---------
+>   mm/Kconfig             |    5 +
+>   3 files changed, 150 insertions(+), 35 deletions(-)
+> 
+> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+> index 79d1ad6d6275..616b683563a9 100644
+> --- a/include/linux/ioport.h
+> +++ b/include/linux/ioport.h
+> @@ -330,6 +330,8 @@ struct resource *devm_request_free_mem_region(struct device *dev,
+>   		struct resource *base, unsigned long size);
+>   struct resource *request_free_mem_region(struct resource *base,
+>   		unsigned long size, const char *name);
+> +struct resource *alloc_free_mem_region(struct resource *base,
+> +		unsigned long size, unsigned long align, const char *name);
+>   
+>   static inline void irqresource_disabled(struct resource *res, u32 irq)
+>   {
+> diff --git a/kernel/resource.c b/kernel/resource.c
+> index 53a534db350e..4c5e80b92f2f 100644
+> --- a/kernel/resource.c
+> +++ b/kernel/resource.c
+> @@ -489,8 +489,9 @@ int __weak page_is_ram(unsigned long pfn)
+>   }
+>   EXPORT_SYMBOL_GPL(page_is_ram);
+>   
+> -static int __region_intersects(resource_size_t start, size_t size,
+> -			unsigned long flags, unsigned long desc)
+> +static int __region_intersects(struct resource *parent, resource_size_t start,
+> +			       size_t size, unsigned long flags,
+> +			       unsigned long desc)
+>   {
+>   	struct resource res;
+>   	int type = 0; int other = 0;
+> @@ -499,7 +500,7 @@ static int __region_intersects(resource_size_t start, size_t size,
+>   	res.start = start;
+>   	res.end = start + size - 1;
+>   
+> -	for (p = iomem_resource.child; p ; p = p->sibling) {
+> +	for (p = parent->child; p ; p = p->sibling) {
+>   		bool is_type = (((p->flags & flags) == flags) &&
+>   				((desc == IORES_DESC_NONE) ||
+>   				 (desc == p->desc)));
+> @@ -543,7 +544,7 @@ int region_intersects(resource_size_t start, size_t size, unsigned long flags,
+>   	int ret;
+>   
+>   	read_lock(&resource_lock);
+> -	ret = __region_intersects(start, size, flags, desc);
+> +	ret = __region_intersects(&iomem_resource, start, size, flags, desc);
+>   	read_unlock(&resource_lock);
+>   
+>   	return ret;
+> @@ -1780,62 +1781,139 @@ void resource_list_free(struct list_head *head)
+>   }
+>   EXPORT_SYMBOL(resource_list_free);
+>   
+> -#ifdef CONFIG_DEVICE_PRIVATE
+> -static struct resource *__request_free_mem_region(struct device *dev,
+> -		struct resource *base, unsigned long size, const char *name)
+> +#ifdef CONFIG_GET_FREE_REGION
+> +#define GFR_DESCENDING		(1UL << 0)
+> +#define GFR_REQUEST_REGION	(1UL << 1)
+> +#define GFR_DEFAULT_ALIGN (1UL << PA_SECTION_SHIFT)
+> +
+> +static resource_size_t gfr_start(struct resource *base, resource_size_t size,
+> +				 resource_size_t align, unsigned long flags)
+> +{
+> +	if (flags & GFR_DESCENDING) {
+> +		resource_size_t end;
+> +
+> +		end = min_t(resource_size_t, base->end,
+> +			    (1ULL << MAX_PHYSMEM_BITS) - 1);
+> +		return end - size + 1;
+> +	}
+> +
+> +	return ALIGN(base->start, align);
+> +}
+> +
+> +static bool gfr_continue(struct resource *base, resource_size_t addr,
+> +			 resource_size_t size, unsigned long flags)
+> +{
+> +	if (flags & GFR_DESCENDING)
+> +		return addr > size && addr >= base->start;
+> +	/*
+> +	 * In the ascend case be careful that the last increment by
+> +	 * @size did not wrap 0.
+> +	 */
+> +	return addr > addr - size &&
+> +	       addr <= min_t(resource_size_t, base->end,
+> +			     (1ULL << MAX_PHYSMEM_BITS) - 1);
+> +}
+> +
+> +static resource_size_t gfr_next(resource_size_t addr, resource_size_t size,
+> +				unsigned long flags)
+> +{
+> +	if (flags & GFR_DESCENDING)
+> +		return addr - size;
+> +	return addr + size;
+> +}
+> +
+> +static void remove_free_mem_region(void *_res)
+> +{
+> +	struct resource *res = _res;
+> +
+> +	if (res->parent)
+> +		remove_resource(res);
+> +	free_resource(res);
+> +}
+> +
+> +static struct resource *
+> +get_free_mem_region(struct device *dev, struct resource *base,
+> +		    resource_size_t size, const unsigned long align,
+> +		    const char *name, const unsigned long desc,
+> +		    const unsigned long flags)
+>   {
+> -	resource_size_t end, addr;
+> +	resource_size_t addr;
+>   	struct resource *res;
+>   	struct region_devres *dr = NULL;
+>   
+> -	size = ALIGN(size, 1UL << PA_SECTION_SHIFT);
+> -	end = min_t(unsigned long, base->end, (1UL << MAX_PHYSMEM_BITS) - 1);
+> -	addr = end - size + 1UL;
+> +	size = ALIGN(size, align);
+>   
+>   	res = alloc_resource(GFP_KERNEL);
+>   	if (!res)
+>   		return ERR_PTR(-ENOMEM);
+>   
+> -	if (dev) {
+> +	if (dev && (flags & GFR_REQUEST_REGION)) {
+>   		dr = devres_alloc(devm_region_release,
+>   				sizeof(struct region_devres), GFP_KERNEL);
+>   		if (!dr) {
+>   			free_resource(res);
+>   			return ERR_PTR(-ENOMEM);
+>   		}
+> +	} else if (dev) {
+> +		if (devm_add_action_or_reset(dev, remove_free_mem_region, res))
+> +			return ERR_PTR(-ENOMEM);
+>   	}
+>   
+>   	write_lock(&resource_lock);
+> -	for (; addr > size && addr >= base->start; addr -= size) {
+> -		if (__region_intersects(addr, size, 0, IORES_DESC_NONE) !=
+> -				REGION_DISJOINT)
+> +	for (addr = gfr_start(base, size, align, flags);
+> +	     gfr_continue(base, addr, size, flags);
+> +	     addr = gfr_next(addr, size, flags)) {
+> +		if (__region_intersects(base, addr, size, 0, IORES_DESC_NONE) !=
+> +		    REGION_DISJOINT)
+>   			continue;
+>   
+> -		if (__request_region_locked(res, &iomem_resource, addr, size,
+> -						name, 0))
+> -			break;
+> +		if (flags & GFR_REQUEST_REGION) {
+> +			if (__request_region_locked(res, &iomem_resource, addr,
+> +						    size, name, 0))
+> +				break;
+>   
+> -		if (dev) {
+> -			dr->parent = &iomem_resource;
+> -			dr->start = addr;
+> -			dr->n = size;
+> -			devres_add(dev, dr);
+> -		}
+> +			if (dev) {
+> +				dr->parent = &iomem_resource;
+> +				dr->start = addr;
+> +				dr->n = size;
+> +				devres_add(dev, dr);
+> +			}
+>   
+> -		res->desc = IORES_DESC_DEVICE_PRIVATE_MEMORY;
+> -		write_unlock(&resource_lock);
+> +			res->desc = desc;
+> +			write_unlock(&resource_lock);
+> +
+> +
+> +			/*
+> +			 * A driver is claiming this region so revoke any
+> +			 * mappings.
+> +			 */
+> +			revoke_iomem(res);
+> +		} else {
+> +			res->start = addr;
+> +			res->end = addr + size - 1;
+> +			res->name = name;
+> +			res->desc = desc;
+> +			res->flags = IORESOURCE_MEM;
+> +
+> +			/*
+> +			 * Only succeed if the resource hosts an exclusive
+> +			 * range after the insert
+> +			 */
+> +			if (__insert_resource(base, res) || res->child)
+> +				break;
+> +
+> +			write_unlock(&resource_lock);
+> +		}
+>   
+> -		/*
+> -		 * A driver is claiming this region so revoke any mappings.
+> -		 */
+> -		revoke_iomem(res);
+>   		return res;
+>   	}
+>   	write_unlock(&resource_lock);
+>   
+> -	free_resource(res);
+> -	if (dr)
+> +	if (flags & GFR_REQUEST_REGION) {
+> +		free_resource(res);
+>   		devres_free(dr);
+> +	} else if (dev)
+> +		devm_release_action(dev, remove_free_mem_region, res);
+>
+
+Coverity is reporting a resource leak here. This may happens if we have 
+dev=NULL and flags=0 which seems it is the case when we call this 
+function using alloc_free_mem. However, I think this may be a false 
+positve since flags=0 means the default behavior aka GFR_ASCENDING | 
+GFR_INSERT_RESOURCE which seems fine. I just want to confirm if it is 
+possible that we have a corner case such as that.
 
 
+>   	return ERR_PTR(-ERANGE);
+>   }
+> @@ -1854,18 +1932,48 @@ static struct resource *__request_free_mem_region(struct device *dev,
+>   struct resource *devm_request_free_mem_region(struct device *dev,
+>   		struct resource *base, unsigned long size)
+>   {
+> -	return __request_free_mem_region(dev, base, size, dev_name(dev));
+> +	unsigned long flags = GFR_DESCENDING | GFR_REQUEST_REGION;
+> +
+> +	return get_free_mem_region(dev, base, size, GFR_DEFAULT_ALIGN,
+> +				   dev_name(dev),
+> +				   IORES_DESC_DEVICE_PRIVATE_MEMORY, flags);
+>   }
+>   EXPORT_SYMBOL_GPL(devm_request_free_mem_region);
+>   
+>   struct resource *request_free_mem_region(struct resource *base,
+>   		unsigned long size, const char *name)
+>   {
+> -	return __request_free_mem_region(NULL, base, size, name);
+> +	unsigned long flags = GFR_DESCENDING | GFR_REQUEST_REGION;
+> +
+> +	return get_free_mem_region(NULL, base, size, GFR_DEFAULT_ALIGN, name,
+> +				   IORES_DESC_DEVICE_PRIVATE_MEMORY, flags);
+>   }
+>   EXPORT_SYMBOL_GPL(request_free_mem_region);
+>   
+> -#endif /* CONFIG_DEVICE_PRIVATE */
+> +/**
+> + * alloc_free_mem_region - find a free region relative to @base
+> + * @base: resource that will parent the new resource
+> + * @size: size in bytes of memory to allocate from @base
+> + * @align: alignment requirements for the allocation
+> + * @name: resource name
+> + *
+> + * Buses like CXL, that can dynamically instantiate new memory regions,
+> + * need a method to allocate physical address space for those regions.
+> + * Allocate and insert a new resource to cover a free, unclaimed by a
+> + * descendant of @base, range in the span of @base.
+> + */
+> +struct resource *alloc_free_mem_region(struct resource *base,
+> +				       unsigned long size, unsigned long align,
+> +				       const char *name)
+> +{
+> +	/* Default of ascending direction and insert resource */
+> +	unsigned long flags = 0;
+> +
+> +	return get_free_mem_region(NULL, base, size, align, name,
+> +				   IORES_DESC_NONE, flags);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(alloc_free_mem_region, CXL);
+> +#endif /* CONFIG_GET_FREE_REGION */
+>   
+>   static int __init strict_iomem(char *str)
+>   {
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index 169e64192e48..a5b4fee2e3fd 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -994,9 +994,14 @@ config HMM_MIRROR
+>   	bool
+>   	depends on MMU
+>   
+> +config GET_FREE_REGION
+> +	depends on SPARSEMEM
+> +	bool
+> +
+>   config DEVICE_PRIVATE
+>   	bool "Unaddressable device memory (GPU memory, ...)"
+>   	depends on ZONE_DEVICE
+> +	select GET_FREE_REGION
+>   
+>   	help
+>   	  Allows creation of struct pages to represent unaddressable device
 > 
-> > > I think this has overlap with the Confidential Computing uconf as well,
-> > > so that might be another potentially interested audience.
-> > > 
-> > > (Link encryption is by its very nature "confidential computing",
-> > > and attestation is explicitly mentioned on the CC uconf page:
-> > > https://urldefense.com/v3/__https://protect2.fireeye.com/v1/url?k=10369d39-71bd8872-10371676-74fe485fb305-1ce6f2197c6a68d6&q=1&e=6639a8eb-2d66-432f-a3d9-760b3e8def9f&u=https*3A*2F*2Flpc.events*2Fevent*2F16*2Fcontributions*2F1143*2F__;JSUlJSUlJSU!!EwVzqGoTKBqv-0DWAJBm!UGKGabNBEqfdQU-FrF-bEnhwu9mRW4PRGa1LoMvehedU3XRfsZzuoHGUZUVWHVD3p26pNa-le6OwJPQwMs7wV4kiu9GUb9ld$  )
-> > > 
-> > > Thanks,
-> > > 
-> > > Lukas
-> > >   
-> > 
-> > Good point. That is an area in which we need dance around what we
-> > can an can't say (i.e. what is public from various standards orgs) but they 
-> > may well still be interested.
-> > 
-> > Added 
-> > - Confidential compute community
-> > to list of people who might be interested.
-> > 
-> > +CC Joerg so he knows this proposal exists and can perhaps drag in anyone
-> > else who might be interested.
-> > 
-> > https://urldefense.com/v3/__https://lore.kernel.org/all/20220624120830.00002eef@Huawei.com/__;!!EwVzqGoTKBqv-0DWAJBm!UGKGabNBEqfdQU-FrF-bEnhwu9mRW4PRGa1LoMvehedU3XRfsZzuoHGUZUVWHVD3p26pNa-le6OwJPQwMs7wV4kiu68CJwlU$ 
-> > for abstract.
-> > 
-> > Thanks,
-> > 
-> > Jonathan
-> >  
 
