@@ -2,82 +2,139 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA4BC38145
-	for <linux-cxl@archiver.kernel.org>; Wed,  7 Sep 2022 16:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0B7C38145
+	for <linux-cxl@archiver.kernel.org>; Wed,  7 Sep 2022 16:12:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230246AbiIGQHE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 7 Sep 2022 12:07:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38832 "EHLO
+        id S229780AbiIGQMO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 7 Sep 2022 12:12:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230233AbiIGQGk (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 7 Sep 2022 12:06:40 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 562F1A2DB7;
-        Wed,  7 Sep 2022 09:05:27 -0700 (PDT)
-Received: from nazgul.tnic (unknown [84.201.196.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E5A681EC068D;
-        Wed,  7 Sep 2022 18:05:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1662566722;
+        with ESMTP id S229686AbiIGQMO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 7 Sep 2022 12:12:14 -0400
+Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 932C18A1C4;
+        Wed,  7 Sep 2022 09:12:07 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id EC296122ECD;
+        Wed,  7 Sep 2022 16:12:03 +0000 (UTC)
+Received: from pdx1-sub0-mail-a211 (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 3800D123CE6;
+        Wed,  7 Sep 2022 16:12:03 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1662567123; a=rsa-sha256;
+        cv=none;
+        b=2uNEZDWe4TIJGnsPyzjOv1RYh99aA3v0uCxmyS2NAVhr5IusbxOCVKmBK5RCaoGF+VPrA2
+        xOFEAMZsExWsZy3ODj+gN/e4l5xWvIkvGjI1755wgl1YNkZVUsYwQJ3NvVkYTwIUWurcGQ
+        eUEhz9TNkBLpZ0PRjJKVJNMuU8QaicWarjTt3oLrXKBF3h1gGWMmREWmCQvRruILZgDuFm
+        5uagsr5xmpfPHVMNn3O6Ima0nx3Pv02NP+A/pao0W8r1wBaWaMqVugurzwphcHheJjsNA1
+        TAs+x5NdUuramHQGrThn5fORNYMn1lo0swYOgksNAK4ofVNr5cxb+27rhZsisg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1662567123;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=jgNWsBoBSXWNUzswLsLjK+/VN0ef25YJ6b11A0o0dh0=;
-        b=ANOb/YoU74sl6o8ATWokQlofsEAbLbhiPYAeFjTUgsqLPpTTN+Xg7YTj/sbMwziDtlHiLj
-        zkyzmsYH9Cf717QwJJ+jyGCZR1VrjQR5xhii4Q+XC2+xR9XraxBXtETsVI7ZOGqDBv4i+T
-        Vl4QrqyPsIM/ZmCvg2Dxrtx6hXRKJuU=
-Date:   Wed, 7 Sep 2022 18:05:31 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     dan.j.williams@intel.com, x86@kernel.org, nvdimm@lists.linux.dev,
-        linux-cxl@vger.kernel.org, peterz@infradead.org,
-        akpm@linux-foundation.org, dave.jiang@intel.com,
-        Jonathan.Cameron@huawei.com, vishal.l.verma@intel.com,
-        ira.weiny@intel.com, a.manzanares@samsung.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] memregion: Add arch_flush_memregion() interface
-Message-ID: <YxjBSxtoav7PQVei@nazgul.tnic>
-References: <20220829212918.4039240-1-dave@stgolabs.net>
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=W2V9eSI3mZWRJXTngbOpWmZz58iboKT1Gi/jZ1ryfTA=;
+        b=2qgZ1mW4zuTAb9UOZDRDTItVuIhIjCxTQzd/FM4nzLjdXCcpFPK8VYsDu7GoVcPLwuWsbI
+        EPnc2DhFXZ8IfyrEIfITwq7+7XR5t/yZVEPRjvHonSbFYjBvtc107H0Mj3JKg0FsILvHrc
+        YiNGJffzP0NN0ZJOuB7GB3NhN8Mwm2y9rk2dytKslXuF7VVD5a0EHc9TxOySMmQnn08rat
+        I4emMc/Fww4ryzY4zbx/Ew7hxA3y7Xi27zVVJe88y17WUo0A0MDgXG4X/KSbBbyh/kLkF0
+        pWUzRQBLTNEz3ECjoV5PF6Q9N+YK+QX5li3feqmxd2SHaXEU4eMytTExQhpZ5Q==
+ARC-Authentication-Results: i=1;
+        rspamd-686945db84-lvkj2;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Print-Abaft: 0cefe4c50e6b90bc_1662567123761_1002551623
+X-MC-Loop-Signature: 1662567123761:2011659655
+X-MC-Ingress-Time: 1662567123761
+Received: from pdx1-sub0-mail-a211 (pop.dreamhost.com [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.108.161.89 (trex/6.7.1);
+        Wed, 07 Sep 2022 16:12:03 +0000
+Received: from offworld (unknown [104.36.31.106])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a211 (Postfix) with ESMTPSA id 4MN6hd5bGGz2h;
+        Wed,  7 Sep 2022 09:12:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1662567122;
+        bh=W2V9eSI3mZWRJXTngbOpWmZz58iboKT1Gi/jZ1ryfTA=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=IW5xVG/HPYJX/1asrEtomOOIiTIfqgwIT9nRpQNfeEIDj78dMvMz0SUfjVJr67y42
+         g4QmMF6pYmVBs35ukkyy6P4OWxoYQcxl8DJvut7+hA44u8IA0Rgzi7GfpT0ME8h1PJ
+         lip/cnSufyf1zlOFhNako43ssVaHADvZw4negLUzJH8gEoiLcdhJQ0gCHoRvJAPDy3
+         X64aL/UXI+dhl4HMYaGfvdouUgPhjBGvZyuutkwmi/lmT99j8w4hS+Le6wJ1MyXdAR
+         aVFl505YmrLxQsApjU/+tvk0keGtDfjQWcy68kdv08fLiIa2bzi2rWXeQNL8sWCIdx
+         fVJfblG/ROPVQ==
+Date:   Wed, 7 Sep 2022 09:11:58 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Robert Richter <rrichter@amd.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH 1/15] cxl/core: Remove duplicate declaration of
+ devm_cxl_iomap_block()
+Message-ID: <20220907161158.iaqgvqkgvdwoc5l2@offworld>
+References: <20220831081603.3415-1-rrichter@amd.com>
+ <20220831081603.3415-2-rrichter@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20220829212918.4039240-1-dave@stgolabs.net>
+In-Reply-To: <20220831081603.3415-2-rrichter@amd.com>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Aug 29, 2022 at 02:29:18PM -0700, Davidlohr Bueso wrote:
-> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-> index 1abd5438f126..18463cb704fb 100644
-> --- a/arch/x86/mm/pat/set_memory.c
-> +++ b/arch/x86/mm/pat/set_memory.c
-> @@ -330,6 +330,20 @@ void arch_invalidate_pmem(void *addr, size_t size)
->  EXPORT_SYMBOL_GPL(arch_invalidate_pmem);
->  #endif
->  
-> +#ifdef CONFIG_ARCH_HAS_MEMREGION_INVALIDATE
-> +bool arch_has_flush_memregion(void)
-> +{
-> +	return !cpu_feature_enabled(X86_FEATURE_HYPERVISOR);
+On Wed, 31 Aug 2022, Robert Richter wrote:
 
-This looks really weird. Why does this need to care about HV at all?
+>The function devm_cxl_iomap_block() is only used in the core
+>code. There are two declarations in header files of it, in
+>drivers/cxl/core/core.h and drivers/cxl/cxl.h. Remove its unused
+>declaration in drivers/cxl/cxl.h.
+>
+>Signed-off-by: Robert Richter <rrichter@amd.com>
+>Reported-by: kernel test robot <lkp@intel.com>
+>Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Does that nfit stuff even run in guests?
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 
-> +EXPORT_SYMBOL(arch_has_flush_memregion);
+Does this want a
 
-...
+Fixes: d17d0540a0d (cxl/core/hdm: Add CXL standard decoder enumeration to the core)
 
-> +EXPORT_SYMBOL(arch_flush_memregion);
+tag?
 
-Why aren't those exports _GPL?
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+>---
+> drivers/cxl/cxl.h | 2 --
+> 1 file changed, 2 deletions(-)
+>
+>diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>index f680450f0b16..ac8998b627b5 100644
+>--- a/drivers/cxl/cxl.h
+>+++ b/drivers/cxl/cxl.h
+>@@ -218,8 +218,6 @@ int cxl_map_device_regs(struct pci_dev *pdev,
+> enum cxl_regloc_type;
+> int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+>		      struct cxl_register_map *map);
+>-void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
+>-				   resource_size_t length);
+>
+> #define CXL_RESOURCE_NONE ((resource_size_t) -1)
+> #define CXL_TARGET_STRLEN 20
+>
+>--
+>2.30.2
+>
