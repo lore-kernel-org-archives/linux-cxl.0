@@ -2,93 +2,56 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A37C6FA82
-	for <linux-cxl@archiver.kernel.org>; Wed,  7 Sep 2022 20:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A17EDC38145
+	for <linux-cxl@archiver.kernel.org>; Wed,  7 Sep 2022 22:30:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229547AbiIGUPQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 7 Sep 2022 16:15:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55846 "EHLO
+        id S229489AbiIGWaW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 7 Sep 2022 18:30:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbiIGUPP (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 7 Sep 2022 16:15:15 -0400
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFCF1796B5;
-        Wed,  7 Sep 2022 13:15:13 -0700 (PDT)
-Received: by mail-yb1-f179.google.com with SMTP id g5so23196848ybg.11;
-        Wed, 07 Sep 2022 13:15:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=1oJyEVeDSMEzU8mzJzLtsZkHAbB0NAogPRJviWs53mc=;
-        b=JaJuAW/zkO0BRLKkPQRVTpT8NHx5QbwjP/4m43UyXk75ppo+Oc2Qh0rC2Htsc5sUoX
-         Idf9iPLSfVfo2En4tOq0H2KTEhZxHYC/Is25vET9zxPlMSckP0zVnUkpIUjHsG2rpk1e
-         tiQSk2pLZ7AgFytWsJYNLi28PQp147TSF9VG+WTtnGu05packMeV5wm7ShvlCfheB3y5
-         m3BKGp9eLlOILOTrwDZS+nyI2rFaH4rz63EuibsrciCXPFRSnso/QU+UtLkTSqwFJCZA
-         4lr5jb4LmRX673b1zH9mcl8KJABEY/y3786nNw6Cu8UvgYKsVwPl64M/jqCFu2Nwerdp
-         RJaQ==
-X-Gm-Message-State: ACgBeo2js93oxAwrkLMVfxOwR2+vFFy1dpkV40fjQhYpLm/I0qmsexsh
-        hYkHNTnuEL03YSSM1ewwJyLDqC0uafFLpKSeNnpCW1It
-X-Google-Smtp-Source: AA6agR44k1MSykjRc0dv3X/leHDX8g+Y7u/O6ESkT5tUgej3zmngZDIeUCzr+Ye5tXhbkv5OnZ2zgWF0pQQbsH2s4GY=
-X-Received: by 2002:a25:2785:0:b0:69b:b1d2:fd05 with SMTP id
- n127-20020a252785000000b0069bb1d2fd05mr4364345ybn.81.1662581712858; Wed, 07
- Sep 2022 13:15:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220831081603.3415-7-rrichter@amd.com> <20220907183709.GA136851@bhelgaas>
-In-Reply-To: <20220907183709.GA136851@bhelgaas>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 7 Sep 2022 22:15:01 +0200
-Message-ID: <CAJZ5v0jvxJT4B8GQ0O5AcEkn_KUH2qh=vKOONVJ-cd+1r-KoCw@mail.gmail.com>
-Subject: Re: [PATCH 06/15] PCI/ACPI: Link host bridge to its ACPI fw node
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Robert Richter <rrichter@amd.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-cxl@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        with ESMTP id S229552AbiIGWaV (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 7 Sep 2022 18:30:21 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57BB554CA2;
+        Wed,  7 Sep 2022 15:30:20 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 11896B81F27;
+        Wed,  7 Sep 2022 22:30:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 495D9C433D6;
+        Wed,  7 Sep 2022 22:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+        s=korg; t=1662589817;
+        bh=icUrwow2CfL0XBxzTtlHd9U90jN+X9EkDzy9xW2u15w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=I8fEiVnYdONLg4RYOnaYni7CG0VvoCxIZn0T6K99IIfhvScjtIRaOt19syHlKmEil
+         t8eQLP01qbrGEqu2bL0WD40A1KOvexY13ymExhqqa3bh7c6D2qonaIVG5EYYhH1nsG
+         d1GHZ79kMApd+lcxU46r0rUc7wauR0AJL3bJiUf4=
+Date:   Wed, 7 Sep 2022 15:30:16 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     dan.j.williams@intel.com, x86@kernel.org, nvdimm@lists.linux.dev,
+        linux-cxl@vger.kernel.org, peterz@infradead.org, bp@alien8.de,
+        dave.jiang@intel.com, Jonathan.Cameron@huawei.com,
+        vishal.l.verma@intel.com, ira.weiny@intel.com,
+        a.manzanares@samsung.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] memregion: Add arch_flush_memregion() interface
+Message-Id: <20220907153016.f7cd4f42a337fedae8319f28@linux-foundation.org>
+In-Reply-To: <20220829212918.4039240-1-dave@stgolabs.net>
+References: <20220829212918.4039240-1-dave@stgolabs.net>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Sep 7, 2022 at 8:37 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Wed, Aug 31, 2022 at 10:15:54AM +0200, Robert Richter wrote:
-> > A lookup of a host bridge's corresponding acpi device (struct
-> > acpi_device) is not possible, for example:
-> >
-> >       adev = ACPI_COMPANION(&host_bridge->dev);
-> >
-> > This could be useful to find a host bridge's fwnode handle and to
-> > determine and call additional host bridge ACPI parameters and methods
-> > such as HID/CID or _UID.
-> >
-> > Make this work by linking the host bridge to its ACPI fw node.
->
-> s/acpi device/ACPI device/ to match other "ACPI" usage
-> s/fw node/fwnode/ (if it should match "fwnode handle" above)
->
-> I guess this patch makes ACPI_COMPANION() work where it didn't before,
-> right?  E.g., the two ACPI_COMPANION() uses added by this series
-> (cxl_find_next_rch() and cxl_restricted_host_probe()).
->
-> I'm not really clear on the strategy of when we should use acpi_device
-> vs acpi_handle,
+I really dislike the term "flush".  Sometimes it means writeback,
+sometimes it means invalidate.  Perhaps at other times it means
+both.
 
-acpi_handle should be used for interactions with the ACPICA code, like
-when AML is evaluated, and acpi_device for pretty much everything
-else.
-
-> but does this mean there's code in places like
-> pci_root.c that should be reworked to take advantage of this?  That
-> code evaluates _DSM and _OSC, but I think it currently uses
-> acpi_handle for that.
-
-That's fine.
+Can we please be very clear in comments and changelogs about exactly
+what this "flush" does.   With bonus points for being more specific in the 
+function naming?
