@@ -2,88 +2,93 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BAFC38145
-	for <linux-cxl@archiver.kernel.org>; Wed,  7 Sep 2022 19:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A37C6FA82
+	for <linux-cxl@archiver.kernel.org>; Wed,  7 Sep 2022 20:15:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229585AbiIGThK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 7 Sep 2022 15:37:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58136 "EHLO
+        id S229547AbiIGUPQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 7 Sep 2022 16:15:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229561AbiIGThJ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 7 Sep 2022 15:37:09 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9FDBBD4DF
-        for <linux-cxl@vger.kernel.org>; Wed,  7 Sep 2022 12:37:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description;
-        bh=+DO9PJ9PCaNVPZYQL7TZNd3HsSVUQ8mCFOzsLfBNxVE=; b=Ebb0M5q6tGt+wCnW3zhKTLH1SV
-        Yr0uhQaU8bjxVIXLMikL83acJ9ze5VDYKFryUm3eI0ADUPO69qYGhTlzgMRgjs/TGev7VqtpTrPL3
-        GtPpLhd15iqN0H/GobLc9loKxjQhgeu0K/DuuJgDjAPOua+8hKOip2rKVI+4kUquFFCucfOBS99XP
-        P1IreUaIIA85RG2c2g625/4dIDnfEfnIMgzMYNlf0dC8tmM/vqtWsZxE78gSqIxh1Neab86HYp8R7
-        fQOs86cbih699OBhLYTD5iMqrOHuJyd4sNBvpfuIEESGxvQy+8esepx8fFVSAUpY9Lkt2EmXS731L
-        bpD7DXdA==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oW0rB-00958O-Ay; Wed, 07 Sep 2022 19:37:05 +0000
-Date:   Wed, 7 Sep 2022 12:37:05 -0700
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     "Verma, Vishal L" <vishal.l.verma@intel.com>
-Cc:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
-Subject: Re: [ndctl PATCH] meson.build: be specific for library path
-Message-ID: <Yxjy4S7kP1m4HJUN@bombadil.infradead.org>
-References: <Yv2UeCIcA00lJC5j@bombadil.infradead.org>
- <d6139a6017284995cf1132934d3b61a47804d88d.camel@intel.com>
+        with ESMTP id S229445AbiIGUPP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 7 Sep 2022 16:15:15 -0400
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFCF1796B5;
+        Wed,  7 Sep 2022 13:15:13 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id g5so23196848ybg.11;
+        Wed, 07 Sep 2022 13:15:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=1oJyEVeDSMEzU8mzJzLtsZkHAbB0NAogPRJviWs53mc=;
+        b=JaJuAW/zkO0BRLKkPQRVTpT8NHx5QbwjP/4m43UyXk75ppo+Oc2Qh0rC2Htsc5sUoX
+         Idf9iPLSfVfo2En4tOq0H2KTEhZxHYC/Is25vET9zxPlMSckP0zVnUkpIUjHsG2rpk1e
+         tiQSk2pLZ7AgFytWsJYNLi28PQp147TSF9VG+WTtnGu05packMeV5wm7ShvlCfheB3y5
+         m3BKGp9eLlOILOTrwDZS+nyI2rFaH4rz63EuibsrciCXPFRSnso/QU+UtLkTSqwFJCZA
+         4lr5jb4LmRX673b1zH9mcl8KJABEY/y3786nNw6Cu8UvgYKsVwPl64M/jqCFu2Nwerdp
+         RJaQ==
+X-Gm-Message-State: ACgBeo2js93oxAwrkLMVfxOwR2+vFFy1dpkV40fjQhYpLm/I0qmsexsh
+        hYkHNTnuEL03YSSM1ewwJyLDqC0uafFLpKSeNnpCW1It
+X-Google-Smtp-Source: AA6agR44k1MSykjRc0dv3X/leHDX8g+Y7u/O6ESkT5tUgej3zmngZDIeUCzr+Ye5tXhbkv5OnZ2zgWF0pQQbsH2s4GY=
+X-Received: by 2002:a25:2785:0:b0:69b:b1d2:fd05 with SMTP id
+ n127-20020a252785000000b0069bb1d2fd05mr4364345ybn.81.1662581712858; Wed, 07
+ Sep 2022 13:15:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d6139a6017284995cf1132934d3b61a47804d88d.camel@intel.com>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+References: <20220831081603.3415-7-rrichter@amd.com> <20220907183709.GA136851@bhelgaas>
+In-Reply-To: <20220907183709.GA136851@bhelgaas>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 7 Sep 2022 22:15:01 +0200
+Message-ID: <CAJZ5v0jvxJT4B8GQ0O5AcEkn_KUH2qh=vKOONVJ-cd+1r-KoCw@mail.gmail.com>
+Subject: Re: [PATCH 06/15] PCI/ACPI: Link host bridge to its ACPI fw node
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Robert Richter <rrichter@amd.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-cxl@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Aug 19, 2022 at 06:26:46AM +0000, Verma, Vishal L wrote:
-> On Wed, 2022-08-17 at 18:23 -0700, Luis Chamberlain wrote:
-> > If you run the typical configure script on a typical linux software
-> > project say with ./configure --prefix=/usr/ then the libdir defaults
-> > to /usr/lib/ however this is not true with meson.
-> > 
-> > With meson the current libdir path follows the one set by the prefix,
-> > and so with the current setup with prefix forced by default to /usr/
-> > we end up with libdir set to /usr/ as well and so libraries built
-> > and installed also placed into /usr/ as well, not /usr/lib/ as we
-> > would typically expect.
-> > 
-> > So you if you use today's defaults you end up with the libraries
-> > placed
-> > into /usr/ and then a simple error such as:
-> > 
-> > cxl: error while loading shared libraries: libcxl.so.1: cannot open
-> > shared object file: No such file or directory
-> > 
-> > Folks may have overlooked this as their old library is still usable.
-> > 
-> > Fix this by forcing the default library path to /usr/lib, and so
-> > requiring users to set both prefix and libdir if they want to
-> > customize both.
-> > 
-> > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> > ---
-> >  meson.build | 1 +
-> >  1 file changed, 1 insertion(+)
-> 
-> Hi Luis,
-> 
-> This sounds reasonable, but I've not observed the behavior you
-> described unless I'm missing something in my quick test.
-> 
-> Both before and after this patch, the default path for the library for
-> me was /usr/lib64. This is on Fedora 36 with meson 0.62.2.
+On Wed, Sep 7, 2022 at 8:37 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Wed, Aug 31, 2022 at 10:15:54AM +0200, Robert Richter wrote:
+> > A lookup of a host bridge's corresponding acpi device (struct
+> > acpi_device) is not possible, for example:
+> >
+> >       adev = ACPI_COMPANION(&host_bridge->dev);
+> >
+> > This could be useful to find a host bridge's fwnode handle and to
+> > determine and call additional host bridge ACPI parameters and methods
+> > such as HID/CID or _UID.
+> >
+> > Make this work by linking the host bridge to its ACPI fw node.
+>
+> s/acpi device/ACPI device/ to match other "ACPI" usage
+> s/fw node/fwnode/ (if it should match "fwnode handle" above)
+>
+> I guess this patch makes ACPI_COMPANION() work where it didn't before,
+> right?  E.g., the two ACPI_COMPANION() uses added by this series
+> (cxl_find_next_rch() and cxl_restricted_host_probe()).
+>
+> I'm not really clear on the strategy of when we should use acpi_device
+> vs acpi_handle,
 
-FWIW, my results was with debian testing. I see this is now merged, great,
-thanks.
+acpi_handle should be used for interactions with the ACPICA code, like
+when AML is evaluated, and acpi_device for pretty much everything
+else.
 
-  Luis
+> but does this mean there's code in places like
+> pci_root.c that should be reworked to take advantage of this?  That
+> code evaluates _DSM and _OSC, but I think it currently uses
+> acpi_handle for that.
+
+That's fine.
