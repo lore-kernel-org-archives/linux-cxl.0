@@ -2,147 +2,81 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40027C38145
-	for <linux-cxl@archiver.kernel.org>; Wed,  7 Sep 2022 17:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EAF5C54EE9
+	for <linux-cxl@archiver.kernel.org>; Wed,  7 Sep 2022 18:23:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229925AbiIGRnS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 7 Sep 2022 13:43:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45196 "EHLO
+        id S229569AbiIGSWn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 7 Sep 2022 14:22:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229632AbiIGRnQ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 7 Sep 2022 13:43:16 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0578BB14DA;
-        Wed,  7 Sep 2022 10:43:13 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id B51C8224BB;
-        Wed,  7 Sep 2022 17:43:12 +0000 (UTC)
-Received: from pdx1-sub0-mail-a211 (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 8974C2222A;
-        Wed,  7 Sep 2022 17:43:11 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1662572592; a=rsa-sha256;
-        cv=none;
-        b=I+iIZ6ZpY/FLMWmO/0YhUwNX+WRTLi1cwr2jvdm00Qw7F2HCOBDvLaTu0AfPSA6FLY6KC/
-        0CYcZJ73VD8enIDhqevmtLIX4uI5W+2Khs9Vnx4NOxoUov21c+Wbk9kYKB2TMwcyZUK1Ul
-        B+AJNFpBHqqFTVsJ0cWRsl8cdheyVi8eo12r6v4a35GSPPvvBnIpw9zCXG7bw7AOzcy+at
-        l0RfCp9GXmsOrum69o2BsHOr+HZo8PGSxId8uYIuwJDZEVV/A+94vz6DNbcS6d3gmuRRrK
-        ifsJn+LnNe/R3iubYnvdeLP7JS7D6BOmkC323vLj4e0ppzBoI/815UAzPM8n1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1662572592;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=fVAuUmQIdD5h7Yfh/vTIXCwzEOFCdi4pLkzBHSezQjs=;
-        b=liAp8W1OAa5wRTmflRs8X08AIZLRuURqVf3g9yJrFHq69wYLMfXc68nksjMM+8t3vAO2MJ
-        KoQnAMonBYw+o0NoCYyt1qed2axuTU+79QXdzNcGf2dWovVC/UKPSM16fRwsilttSOsAX5
-        kU1EGwj+aajvr8V1qcvHyW4PggrTR+ZA5vjEb8gplwfv6mqyvkWaEJ7/tTGs1sRJ2SSOIl
-        EzB3bmclrGWb36ECDirmkCYMzaKf/E/S6tK3VvXPQ5ahpD56Qmh3/Z339uyaapfbMU7RrE
-        FuTaNOmHOQMpyu4UwInfd+Y8yebqmmBSeJE50YKq+2i5qvu00JBx+QXLDqkLJg==
-ARC-Authentication-Results: i=1;
-        rspamd-686945db84-gn4mw;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Whispering-Arithmetic: 5e0a509a18e6db61_1662572592564_2644287583
-X-MC-Loop-Signature: 1662572592564:2158350637
-X-MC-Ingress-Time: 1662572592563
-Received: from pdx1-sub0-mail-a211 (pop.dreamhost.com [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.121.210.155 (trex/6.7.1);
-        Wed, 07 Sep 2022 17:43:12 +0000
-Received: from offworld (unknown [104.36.31.106])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        with ESMTP id S229495AbiIGSWm (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 7 Sep 2022 14:22:42 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8F8CB6D3C;
+        Wed,  7 Sep 2022 11:22:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a211 (Postfix) with ESMTPSA id 4MN8jp1zm4z2h;
-        Wed,  7 Sep 2022 10:43:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1662572591;
-        bh=fVAuUmQIdD5h7Yfh/vTIXCwzEOFCdi4pLkzBHSezQjs=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=JtLQnms5e9XP7+PQATTL273KCVj8b9RO14Gcw9LpBQ+ddmnUEWNGlmj9H9UGO49M6
-         qhtENtbw/YP/44aC+YzW7GtMhIl/aGJc4s/O4gFHnWnWW+3V7ps7OEMYzk4xhnGNUa
-         +VHnIZY3O9FLCiOGPl4NfnCruXN9YRQqSFahLwuZ4BHhIwwydtHQmztws7obtYUM3W
-         YuYNnVWtoGv/gmlj1SPQNWxlH+441ppMkiTzk3IEodyh2eINWo+KhGsDdv4GW+uz9i
-         HnuPxmOZdxS5yozITGiBUUZidsHPvvuBlej4pm3+nGcB3tBnzr97HPZXABMDWNIy1X
-         RqrpMTFNkra/w==
-Date:   Wed, 7 Sep 2022 10:24:14 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-        peterz@infradead.org, akpm@linux-foundation.org,
-        dave.jiang@intel.com, Jonathan.Cameron@huawei.com,
-        vishal.l.verma@intel.com, ira.weiny@intel.com,
-        a.manzanares@samsung.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] memregion: Add arch_flush_memregion() interface
-Message-ID: <20220907172414.74mh75svoi6kkom3@offworld>
-References: <20220829212918.4039240-1-dave@stgolabs.net>
- <YxjBSxtoav7PQVei@nazgul.tnic>
- <20220907162245.5ddexpmibjbanrho@offworld>
- <6318cc415161f_166f2941e@dwillia2-xfh.jf.intel.com.notmuch>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E85CA619FC;
+        Wed,  7 Sep 2022 18:22:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21840C433D6;
+        Wed,  7 Sep 2022 18:22:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662574960;
+        bh=Pkr1VvhGYTg8QJDpcdOK6Hab6jKDX9QoWXLoxDwLXps=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Pf0ROvV8VgS0K2jblECNPhnHxkA09Cg+w+nZrcEdk+FC7o03qj7YRfJLQqvCvJ0jl
+         i9q/JgljJ3sXgmcEPVdZbjtOaYPoGHoHi5Qpc3hVh/+k298XtQmsAjlRhTPp6/0eAG
+         PLFejE8hcJ3JRmqNkBC0zr7ipdCXuEfkOadpl34rkgmrEV8w5PoLaO46ZFeuofMOHR
+         ATEAY9IrQWdIp+kS6VQBIKMUsBaVZVmDmjN5MKEtwwOsr/bISzBkb94DNKNCFvqRkY
+         ocdkTM1mKQPBqUXA+p5RLNvaJ9PmSnzi/WnyhSs6ViGJDLl0Gzh8pEZE6ibe7Ri7HF
+         wgm/YE4yFUmtw==
+Date:   Wed, 7 Sep 2022 13:22:38 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Robert Richter <rrichter@amd.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH 05/15] cxl/acpi: Add probe function to detect restricted
+ CXL hosts in RCD mode
+Message-ID: <20220907182238.GA134795@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6318cc415161f_166f2941e@dwillia2-xfh.jf.intel.com.notmuch>
-User-Agent: NeoMutt/20220429
+In-Reply-To: <20220831081603.3415-6-rrichter@amd.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 07 Sep 2022, Dan Williams wrote:
+On Wed, Aug 31, 2022 at 10:15:53AM +0200, Robert Richter wrote:
+> Restricted CXL device (RCD) mode (formerly CXL 1.1) uses a different
+> enumeration scheme other than CXL VH (formerly CXL 2.0). In RCD mode a
+> host/device (RCH-RCD) pair shows up as a legal PCIe hierarchy with an
+> ACPI host bridge ("PNP0A08" or "ACPI0016" HID) and RCiEP connected to
+> it with a description of the CXL device.
+> 
+> Add function cxl_restricted_host_probe() to probe RCD enumerated
+> devices. The function implements a loop that detects all CXL capable
+> ACPI PCI root bridges in the system (RCD mode only). The iterator
+> function cxl_find_next_rch() is introduced to walk through all of the
+> CXL hosts. The loop will then enable all CXL devices connected to the
+> host. For now, only implement an empty loop with an iterator that
+> returns all pci host bridges in the system.
+> 
+> The probe function is triggered by adding an own root device for RCHs.
+> This is different to CXL VH where an ACPI "ACPI0017" root device
+> exists. Its detection starts the CXL host detection. In RCD mode such
+> a device does not necessarily exists, so solve this by creating a
+> plain platform device that is not an ACPI device and is root only for
+> RCHs.
 
->Davidlohr Bueso wrote:
->> On Wed, 07 Sep 2022, Borislav Petkov wrote:
->>
->> >On Mon, Aug 29, 2022 at 02:29:18PM -0700, Davidlohr Bueso wrote:
->> >> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
->> >> index 1abd5438f126..18463cb704fb 100644
->> >> --- a/arch/x86/mm/pat/set_memory.c
->> >> +++ b/arch/x86/mm/pat/set_memory.c
->> >> @@ -330,6 +330,20 @@ void arch_invalidate_pmem(void *addr, size_t size)
->> >>  EXPORT_SYMBOL_GPL(arch_invalidate_pmem);
->> >>  #endif
->> >>
->> >> +#ifdef CONFIG_ARCH_HAS_MEMREGION_INVALIDATE
->> >> +bool arch_has_flush_memregion(void)
->> >> +{
->> >> +	return !cpu_feature_enabled(X86_FEATURE_HYPERVISOR);
->> >
->> >This looks really weird. Why does this need to care about HV at all?
->>
->> So the context here is:
->>
->> e2efb6359e62 ("ACPICA: Avoid cache flush inside virtual machines")
->>
->> >
->> >Does that nfit stuff even run in guests?
->>
->> No, nor does cxl. This was mostly in general a precautionary check such
->> that the api is unavailable in VMs.
->
->To be clear nfit stuff and CXL does run in guests, but they do not
->support secure-erase in a guest.
-
-Yes, I meant the feats this api enables.
-
->However, the QEMU CXL enabling is building the ability to do *guest
->physical* address space management, but in that case the driver can be
->paravirtualized to realize that it is not managing host-physical address
->space and does not need to flush caches. That will need some indicator
->to differentiate virtual CXL memory expanders from assigned devices. Is
->there such a thing as a PCIe-virtio extended capability to differentiate
->physical vs emulated devices?
-
-In any case such check would be specific to each user (cxl in this case),
-and outside the scope of _this_ particular api. Here we just really want to
-avoid the broken TDX guest bits.
-
-Thanks,
-Davidlohr
+Drive-by nitpicks: 
+s/PCI root bridges/PCI host bridges/ to match other uses
+s/pci host bridges/PCI host bridges/ to match other "PCI" uses
+s/does not necessarily exists/does not necessarily exist/
