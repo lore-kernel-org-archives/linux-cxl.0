@@ -2,110 +2,137 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC5EC54EE9
-	for <linux-cxl@archiver.kernel.org>; Wed,  7 Sep 2022 16:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BC0C38145
+	for <linux-cxl@archiver.kernel.org>; Wed,  7 Sep 2022 16:42:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229459AbiIGQ3R (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 7 Sep 2022 12:29:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51604 "EHLO
+        id S230372AbiIGQmT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 7 Sep 2022 12:42:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbiIGQ3R (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 7 Sep 2022 12:29:17 -0400
+        with ESMTP id S230371AbiIGQmO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 7 Sep 2022 12:42:14 -0400
 Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF671760FC;
-        Wed,  7 Sep 2022 09:29:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C030F75494;
+        Wed,  7 Sep 2022 09:41:47 -0700 (PDT)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 5CC19804255;
-        Wed,  7 Sep 2022 16:29:14 +0000 (UTC)
-Received: from pdx1-sub0-mail-a245 (unknown [127.0.0.6])
+        by relay.mailchannels.net (Postfix) with ESMTP id 1D9AF5C2956;
+        Wed,  7 Sep 2022 16:41:44 +0000 (UTC)
+Received: from pdx1-sub0-mail-a297.dreamhost.com (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 7880A804012;
-        Wed,  7 Sep 2022 16:29:13 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1662568153; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id 75A305C1F31;
+        Wed,  7 Sep 2022 16:41:43 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1662568903; a=rsa-sha256;
         cv=none;
-        b=dRUN5cEP9CLIglLhrroHgAtdBN/uYW9rdl5GWMMRTgSYkjZRxh2rtqOeEhlJpiX1K9Zilv
-        IYvGte4rg4zEOkSU6OAHwi+Fil1rxUYFrki/z9vmXnspaqySNy1LtY345QiWojDwgLgPQX
-        YbE38LuTs4LbqxKsj+xm+JSAj0e17mAcE3Lu/JKVqGHUFpmCrlZbXpslKs/TpqiQB9E8N+
-        GV5FWGBEMOelf7sQxSyg6tdZ9x9LMTVhb2u+CMtIKW+uej1Jd89+DlRYz/BtMJ4HdVFq1m
-        +Q3MivU3yKK2TP6tIICdnxlp2c76RVkHTK5R8cXNuyUItFWuMpQAGIalHqjAeQ==
+        b=oOmI+mRHBWHBsdyMUw3/ZrDkz3Nk04DF2PuXfl8emYb4plHEWDRuJjepAFId5dtaqfe60k
+        vl6f9n22T4C+wIdFYFOVoWlr3xkpDErSa1DrHt3nzDw9FLf8NpvqsleVl4S+/vUzQlYKbJ
+        faBx3uy2NV+53IQ+xasQln4mWlQ4jYDxe/0jd7fa3j6TCCFZmuuEWy2M79jYsok3niZue1
+        PGONYgP7CN6dC040dJj+agi9lG0Y6+8ns3T/fxtKqhcUWHYtBp0uRCZzkMH+/iFEGS0aGS
+        gUXaUtqEuAtV408aeS6jUzgLSa7GvTycWNiDaxTxzsOcsIESKTHNzBXueTJDcg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1662568153;
+        s=arc-2022; t=1662568903;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=XtVZRkL1gfzjQCH9ylYUzGOb/1yvXJoQCYJw5D5BDhM=;
-        b=1iqGTQZ9K0+oL6KxEWUkclPwZvyK2/wrAC2OMpXxVIMuwkEGwBlzDQf42kkOK8Ba7D02Ut
-        7RaR1mxgN7YURI1+W+pjzN98U03MQMuPKSS68LjgZ3MFtvsAWyQ/viJ2YTBVdzUm0wlYkC
-        oiY7bUg4V7U8cBch5jdykNxG/lQKcNGH72IIpg9mdj22u23dyZwr/bAIzyuVb67RX6JVI/
-        CCj6L/JlcrvW9Gq2GynuhNrFqwzlHk2S6LvyiIY+R3iqtDGIz1Cq2bcMjE/RMdn0VnNMhT
-        kcyjvneT+kYSkYTnv83UUScUGXWoy43X0RWz78bGdwhyF9eUWHlQgvI65O8LLQ==
+        bh=2wCa/Jt/3D2I+rbeGjg1PPoBnNjJ68RfVRRwxhzeg9s=;
+        b=SqoNYL95AcZJrikt4aFRLGw4mWLAXToI3JoJF25O2Ynd/nI0+v8GW3tdeUXEE1J+3Q3cgf
+        /Z3xJoNmhPk+FhqbqEepeVeRWsL96+B6hbq+45kE9RuTqXTbm4IhY/aGCPNM+4fJwzjbDf
+        ssreFhHF7sCoAmykkGcRR0fW6FV6PwL4SJF6C4AJucq+8D5OTuk3zQymX1W4EfnRuHZfHR
+        yu9AuYTD2praR/4rmTOCPGP9mHwM1Hy1KFxiXfp3SWHPJlJw7OuAWjlYAoON1aqyh8fx01
+        apEggOAGkUHDN9UqG0ykrO4IcqLATy68PcsNV2HjwIL04bktjUZ3dVdChQwxag==
 ARC-Authentication-Results: i=1;
-        rspamd-686945db84-gn4mw;
+        rspamd-f776c45b8-xnd69;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Tasty-Obese: 29ac9670587cf49c_1662568153816_2799369466
-X-MC-Loop-Signature: 1662568153816:2515784960
-X-MC-Ingress-Time: 1662568153816
-Received: from pdx1-sub0-mail-a245 (pop.dreamhost.com [64.90.62.162])
+X-Gusty-Fumbling: 7fe0e4a34c79e059_1662568903912_767146359
+X-MC-Loop-Signature: 1662568903912:3198609064
+X-MC-Ingress-Time: 1662568903912
+Received: from pdx1-sub0-mail-a297.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.108.161.89 (trex/6.7.1);
-        Wed, 07 Sep 2022 16:29:13 +0000
+        by 100.123.39.217 (trex/6.7.1);
+        Wed, 07 Sep 2022 16:41:43 +0000
 Received: from offworld (unknown [104.36.31.106])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a245 (Postfix) with ESMTPSA id 4MN74S54Gtz3d;
-        Wed,  7 Sep 2022 09:29:12 -0700 (PDT)
+        by pdx1-sub0-mail-a297.dreamhost.com (Postfix) with ESMTPSA id 4MN7Lr5fPNzFW;
+        Wed,  7 Sep 2022 09:41:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1662568153;
-        bh=XtVZRkL1gfzjQCH9ylYUzGOb/1yvXJoQCYJw5D5BDhM=;
+        s=dreamhost; t=1662568903;
+        bh=2wCa/Jt/3D2I+rbeGjg1PPoBnNjJ68RfVRRwxhzeg9s=;
         h=Date:From:To:Cc:Subject:Content-Type;
-        b=NLEgk7R+9gP+wCNXkZ1L/pdSppcFOpk4i+kznPAL8K9FCd611z2eqJDwV41WOt+pN
-         N8VtVyGLWr59ngAi4NOIYQjf4VejyUovf7sH7/9YKl3511CXUApXuBLZH6DdTkBN2I
-         VcDvr26KquOysi4RJ1UbpqMoprEd3htGqWJYEjwK17TgYEsMQ4nG1BvMgsLJlOs/mM
-         4KpJrxd/DngofuZeHxs6+4DMDwVBItzmmZcT46p6xjBQHYaC8P5HbW3Acvc1jkQ//K
-         eTapXWIc2a61D7bn9IcgEwU+UV6Zbnk3c7qsgmK/3xK+QkshGWuKWVXz1iZu39b6HF
-         RiA24K9xKmD9g==
-Date:   Wed, 7 Sep 2022 09:29:09 -0700
+        b=CxmwPOEIHGF6GhHFwaqiAV0i/CGO0vUy9SrwWioqRLNWsu7UDqUkf/t05zvlw4WId
+         uzHh2WlTA6BLxr5RPUGj6m8BaW58oYsLTnhqe33Ik4Yx2AOvcSIMSY2lMGRTO3yR2e
+         rp5uQcTQhhZc+VXsyx09X2vM2DTxLJd5aC9X5AiU/LaDs4qKtZMCcnERhFVo/20upA
+         D2l5NQEfGVvd/SXUiDTyO5Bzkg+3/QGT/vEDYkAj5vwR3KlCiy+zQBJtASYndOEzkK
+         OFNygZOz+42lYsGEg/VIifEr+LWZ0z3xm31lU5NgSa9Lc3/JIVLZ33bLwpaS9DATj6
+         qYpGmT8WRwpKw==
+Date:   Wed, 7 Sep 2022 09:22:45 -0700
 From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Robert Richter <rrichter@amd.com>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH 4/15] cxl: Unify debug messages when calling
- devm_cxl_add_dport()
-Message-ID: <20220907162909.sum6u2kb3rma3oxb@offworld>
-References: <20220831081603.3415-1-rrichter@amd.com>
- <20220831081603.3415-5-rrichter@amd.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     dan.j.williams@intel.com, x86@kernel.org, nvdimm@lists.linux.dev,
+        linux-cxl@vger.kernel.org, peterz@infradead.org,
+        akpm@linux-foundation.org, dave.jiang@intel.com,
+        Jonathan.Cameron@huawei.com, vishal.l.verma@intel.com,
+        ira.weiny@intel.com, a.manzanares@samsung.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] memregion: Add arch_flush_memregion() interface
+Message-ID: <20220907162245.5ddexpmibjbanrho@offworld>
+References: <20220829212918.4039240-1-dave@stgolabs.net>
+ <YxjBSxtoav7PQVei@nazgul.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20220831081603.3415-5-rrichter@amd.com>
+In-Reply-To: <YxjBSxtoav7PQVei@nazgul.tnic>
 User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 31 Aug 2022, Robert Richter wrote:
+On Wed, 07 Sep 2022, Borislav Petkov wrote:
 
->CXL dports are added in a couple of code paths using
->devm_cxl_add_dport(). Debug messages are individually generated, but
->are incomplete and inconsistent. Change this by moving its generation
->to devm_cxl_add_dport(). This unifies the messages and reduces code
->duplication. Also, generate messages on failure.
+>On Mon, Aug 29, 2022 at 02:29:18PM -0700, Davidlohr Bueso wrote:
+>> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+>> index 1abd5438f126..18463cb704fb 100644
+>> --- a/arch/x86/mm/pat/set_memory.c
+>> +++ b/arch/x86/mm/pat/set_memory.c
+>> @@ -330,6 +330,20 @@ void arch_invalidate_pmem(void *addr, size_t size)
+>>  EXPORT_SYMBOL_GPL(arch_invalidate_pmem);
+>>  #endif
+>>
+>> +#ifdef CONFIG_ARCH_HAS_MEMREGION_INVALIDATE
+>> +bool arch_has_flush_memregion(void)
+>> +{
+>> +	return !cpu_feature_enabled(X86_FEATURE_HYPERVISOR);
 >
->Signed-off-by: Robert Richter <rrichter@amd.com>
+>This looks really weird. Why does this need to care about HV at all?
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+So the context here is:
+
+e2efb6359e62 ("ACPICA: Avoid cache flush inside virtual machines")
+
+>
+>Does that nfit stuff even run in guests?
+
+No, nor does cxl. This was mostly in general a precautionary check such
+that the api is unavailable in VMs.
+
+>
+>> +EXPORT_SYMBOL(arch_has_flush_memregion);
+>
+>...
+>
+>> +EXPORT_SYMBOL(arch_flush_memregion);
+>
+>Why aren't those exports _GPL?
+
+Fine by me.
+
+Thanks,
+Davidlohr
