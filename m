@@ -2,45 +2,45 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0B7C38145
-	for <linux-cxl@archiver.kernel.org>; Wed,  7 Sep 2022 16:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4C3C54EE9
+	for <linux-cxl@archiver.kernel.org>; Wed,  7 Sep 2022 16:22:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229780AbiIGQMO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 7 Sep 2022 12:12:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54398 "EHLO
+        id S229495AbiIGQWM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 7 Sep 2022 12:22:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229686AbiIGQMO (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 7 Sep 2022 12:12:14 -0400
-Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 932C18A1C4;
-        Wed,  7 Sep 2022 09:12:07 -0700 (PDT)
+        with ESMTP id S229490AbiIGQWL (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 7 Sep 2022 12:22:11 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C236A8CCA;
+        Wed,  7 Sep 2022 09:22:09 -0700 (PDT)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id EC296122ECD;
-        Wed,  7 Sep 2022 16:12:03 +0000 (UTC)
-Received: from pdx1-sub0-mail-a211 (unknown [127.0.0.6])
+        by relay.mailchannels.net (Postfix) with ESMTP id ED51E24184;
+        Wed,  7 Sep 2022 16:22:08 +0000 (UTC)
+Received: from pdx1-sub0-mail-a202.dreamhost.com (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 3800D123CE6;
-        Wed,  7 Sep 2022 16:12:03 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1662567123; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id AF4DA24133;
+        Wed,  7 Sep 2022 16:22:07 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1662567728; a=rsa-sha256;
         cv=none;
-        b=2uNEZDWe4TIJGnsPyzjOv1RYh99aA3v0uCxmyS2NAVhr5IusbxOCVKmBK5RCaoGF+VPrA2
-        xOFEAMZsExWsZy3ODj+gN/e4l5xWvIkvGjI1755wgl1YNkZVUsYwQJ3NvVkYTwIUWurcGQ
-        eUEhz9TNkBLpZ0PRjJKVJNMuU8QaicWarjTt3oLrXKBF3h1gGWMmREWmCQvRruILZgDuFm
-        5uagsr5xmpfPHVMNn3O6Ima0nx3Pv02NP+A/pao0W8r1wBaWaMqVugurzwphcHheJjsNA1
-        TAs+x5NdUuramHQGrThn5fORNYMn1lo0swYOgksNAK4ofVNr5cxb+27rhZsisg==
+        b=Ru1TKPq+I/Q3zRgPOewdrZSK3VC4EnuUWWdADHPWd8WTM26avt0zpb6kw6xqcG4ajiqNJA
+        aNgAIThI9ySL6KYh30XexK5uG1zXCYpo6J2RSnDpJ8LsCtztnCSqpX3ykm4QEMOkYL4C8o
+        qFXu5e8/5HHsSlYbKJuYLJRj4XdCbDodu44/n4sWraiEwBuOJjijesRIBgxNtMZmk1LPvY
+        xF6NlnkBkNMKqSzsUPy4Pxt+4hSayi0iehHwbv4wsKdqUwBCHwACGXLjrIhTHv8s2karGv
+        lfHBnDbncccHWEdkbFXPOhvhmMVcRUMC8nHTHZ4Vvr0E9yVy2BsJM5/jMBEacQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1662567123;
+        s=arc-2022; t=1662567728;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=W2V9eSI3mZWRJXTngbOpWmZz58iboKT1Gi/jZ1ryfTA=;
-        b=2qgZ1mW4zuTAb9UOZDRDTItVuIhIjCxTQzd/FM4nzLjdXCcpFPK8VYsDu7GoVcPLwuWsbI
-        EPnc2DhFXZ8IfyrEIfITwq7+7XR5t/yZVEPRjvHonSbFYjBvtc107H0Mj3JKg0FsILvHrc
-        YiNGJffzP0NN0ZJOuB7GB3NhN8Mwm2y9rk2dytKslXuF7VVD5a0EHc9TxOySMmQnn08rat
-        I4emMc/Fww4ryzY4zbx/Ew7hxA3y7Xi27zVVJe88y17WUo0A0MDgXG4X/KSbBbyh/kLkF0
-        pWUzRQBLTNEz3ECjoV5PF6Q9N+YK+QX5li3feqmxd2SHaXEU4eMytTExQhpZ5Q==
+        bh=Q5I72zuM+lmKwUs/n+14smqnwrEutfmQnYvhJjxKvHQ=;
+        b=dMfFuhz9gSDutrNbqKt0ZS/ijg6LWhKRcFoksy6kFU4q57WM2FEqqDkH/2owRZLKFTWLT9
+        jJMlHjN35V8XWDrdME6ewOyaXRFcO3FCsPVn/ZvcsNGl5354fTNuz77eH1zjauwGV3DOKi
+        2a9lTfT8gYlNk2z2/m/tUa6CAIib0qIqGZ7GlRXbeyr5j6kqIDZ1Ry7tpMOVxOwRwbFklb
+        xpG98s0hQO07TmWrBaUsUNuJ0aqZDBb8bRHD4OcXCZY8lwrIDJo7IgQwkMAfzj9/oUHZSQ
+        mvQmRcq3llmwlfEco7gp5qX/+8Nonn9aZ4SppPL7koNeUT+HI9Woj4IbhsRM7Q==
 ARC-Authentication-Results: i=1;
         rspamd-686945db84-lvkj2;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
@@ -48,31 +48,32 @@ X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Print-Abaft: 0cefe4c50e6b90bc_1662567123761_1002551623
-X-MC-Loop-Signature: 1662567123761:2011659655
-X-MC-Ingress-Time: 1662567123761
-Received: from pdx1-sub0-mail-a211 (pop.dreamhost.com [64.90.62.162])
+X-Robust-Slimy: 32efb8e01087203f_1662567728265_1947120413
+X-MC-Loop-Signature: 1662567728265:2794685740
+X-MC-Ingress-Time: 1662567728265
+Received: from pdx1-sub0-mail-a202.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
         by 100.108.161.89 (trex/6.7.1);
-        Wed, 07 Sep 2022 16:12:03 +0000
+        Wed, 07 Sep 2022 16:22:08 +0000
 Received: from offworld (unknown [104.36.31.106])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a211 (Postfix) with ESMTPSA id 4MN6hd5bGGz2h;
-        Wed,  7 Sep 2022 09:12:01 -0700 (PDT)
+        by pdx1-sub0-mail-a202.dreamhost.com (Postfix) with ESMTPSA id 4MN6wG3Bx4z6r;
+        Wed,  7 Sep 2022 09:22:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1662567122;
-        bh=W2V9eSI3mZWRJXTngbOpWmZz58iboKT1Gi/jZ1ryfTA=;
+        s=dreamhost; t=1662567727;
+        bh=Q5I72zuM+lmKwUs/n+14smqnwrEutfmQnYvhJjxKvHQ=;
         h=Date:From:To:Cc:Subject:Content-Type;
-        b=IW5xVG/HPYJX/1asrEtomOOIiTIfqgwIT9nRpQNfeEIDj78dMvMz0SUfjVJr67y42
-         g4QmMF6pYmVBs35ukkyy6P4OWxoYQcxl8DJvut7+hA44u8IA0Rgzi7GfpT0ME8h1PJ
-         lip/cnSufyf1zlOFhNako43ssVaHADvZw4negLUzJH8gEoiLcdhJQ0gCHoRvJAPDy3
-         X64aL/UXI+dhl4HMYaGfvdouUgPhjBGvZyuutkwmi/lmT99j8w4hS+Le6wJ1MyXdAR
-         aVFl505YmrLxQsApjU/+tvk0keGtDfjQWcy68kdv08fLiIa2bzi2rWXeQNL8sWCIdx
-         fVJfblG/ROPVQ==
-Date:   Wed, 7 Sep 2022 09:11:58 -0700
+        b=hRrGO9ZE9txtfSu3RNhxninK/xIYDubR17SyPxJgngHVHIVorc2fFStCKvk4IQsTq
+         zUEsgWWJCOGMsFNdXgbMOc7roerkDQEKUvBrwrtZ7r7yu7NXo2IrDPxEBz9UkKezJm
+         gElGdMh8tgjhL1sbFSFC3fbKbggAG/jK+/uqg+WHFFTRP2l2zmnyHAEUm+7AT3qKag
+         H5qLTmEQqLjThgUPV1KoX/naxZioTYwd8FwZKPinDHNKSxCzO4cGdPk5sbAS+nQ3S+
+         SPbdPP3qO3pYb+GKpCTJ24Xv+kvSqPVQ86LTjM1T5cK2F0Js0KAsoWCf/NSOelvNPj
+         5XAvxgcZT4i8Q==
+Date:   Wed, 7 Sep 2022 09:21:58 -0700
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     Robert Richter <rrichter@amd.com>
 Cc:     Alison Schofield <alison.schofield@intel.com>,
@@ -84,15 +85,15 @@ Cc:     Alison Schofield <alison.schofield@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH 1/15] cxl/core: Remove duplicate declaration of
- devm_cxl_iomap_block()
-Message-ID: <20220907161158.iaqgvqkgvdwoc5l2@offworld>
+Subject: Re: [PATCH 3/15] cxl: Unify debug messages when calling
+ devm_cxl_add_port()
+Message-ID: <20220907162158.56jyjphzzzjgptxu@offworld>
 References: <20220831081603.3415-1-rrichter@amd.com>
- <20220831081603.3415-2-rrichter@amd.com>
+ <20220831081603.3415-4-rrichter@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20220831081603.3415-2-rrichter@amd.com>
+In-Reply-To: <20220831081603.3415-4-rrichter@amd.com>
 User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
@@ -100,41 +101,13 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 On Wed, 31 Aug 2022, Robert Richter wrote:
 
->The function devm_cxl_iomap_block() is only used in the core
->code. There are two declarations in header files of it, in
->drivers/cxl/core/core.h and drivers/cxl/cxl.h. Remove its unused
->declaration in drivers/cxl/cxl.h.
+>CXL ports are added in a couple of code paths using
+>devm_cxl_add_port(). Debug messages are individually generated, but
+>are incomplete and inconsistent. Change this by moving its generation
+>to devm_cxl_add_port(). This unifies the messages and reduces code
+>duplication. Also, generate messages on failure.
 >
 >Signed-off-by: Robert Richter <rrichter@amd.com>
->Reported-by: kernel test robot <lkp@intel.com>
 >Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
-
-Does this want a
-
-Fixes: d17d0540a0d (cxl/core/hdm: Add CXL standard decoder enumeration to the core)
-
-tag?
-
->---
-> drivers/cxl/cxl.h | 2 --
-> 1 file changed, 2 deletions(-)
->
->diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->index f680450f0b16..ac8998b627b5 100644
->--- a/drivers/cxl/cxl.h
->+++ b/drivers/cxl/cxl.h
->@@ -218,8 +218,6 @@ int cxl_map_device_regs(struct pci_dev *pdev,
-> enum cxl_regloc_type;
-> int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
->		      struct cxl_register_map *map);
->-void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
->-				   resource_size_t length);
->
-> #define CXL_RESOURCE_NONE ((resource_size_t) -1)
-> #define CXL_TARGET_STRLEN 20
->
->--
->2.30.2
->
