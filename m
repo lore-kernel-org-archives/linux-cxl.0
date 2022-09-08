@@ -2,103 +2,95 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 465BDC54EE9
-	for <linux-cxl@archiver.kernel.org>; Thu,  8 Sep 2022 13:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 411ADC38145
+	for <linux-cxl@archiver.kernel.org>; Thu,  8 Sep 2022 13:14:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231622AbiIHNGi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 8 Sep 2022 09:06:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57394 "EHLO
+        id S229954AbiIHNOP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 8 Sep 2022 09:14:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231766AbiIHNGh (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 8 Sep 2022 09:06:37 -0400
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B286A98D1;
-        Thu,  8 Sep 2022 06:06:36 -0700 (PDT)
-Received: by mail-yb1-f177.google.com with SMTP id b136so5592417yba.2;
-        Thu, 08 Sep 2022 06:06:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=3UXnKp6Go6PYoz7q4luoMbKTxeTdnrB40pbBHe3oIck=;
-        b=qYMkL/1GPIlupcop7SK2QFxw/xunYwZ+pifSxIdDfLe1YD0/DZwmA3C4Yj2BWLhLz7
-         DOGIY5RVQapCDzjxE7v5JNu3CRIEqt8MN4ZZLYIYMbEJKUPWSuF4EOWUlZro0QIFiLlD
-         BvW4YCb0s9sYzXdcrImKElImcXNTMFSuNqxvdrEDOSvK3GpeNXGUaNAAsiIaEHHNJKqu
-         QugkxUfjJxU2SvT5tZcxNzqLZOLts6XOKVF+Cu5odk2/8Pg0aHabfMM8vmZYgAxKnhbU
-         6eZUxE+mcDDYQUSnZ4WJlFA0RpNMGoHF6PHBc500emjFLyFswRx2gX8xIBUI4bvkTtqq
-         XUtg==
-X-Gm-Message-State: ACgBeo2hZYLVmM4wXIhg57QEcXIm8sv7Tguie0DxYRgVEXXZ8JyXIP/s
-        +DZDGpZvNXABVHbH99hmwgBA3g6n7FAi3JQl3LM=
-X-Google-Smtp-Source: AA6agR7JfxV2Yoj7H8PCx3cEMWJrgl/Qcf6liBySgxNOmF/gnXgvb7A+TyrlQZCVTQ+myxJvl0T6Vv6kpknuIu4njkI=
-X-Received: by 2002:a25:e64c:0:b0:6a9:89cf:155 with SMTP id
- d73-20020a25e64c000000b006a989cf0155mr6520399ybh.365.1662642395130; Thu, 08
- Sep 2022 06:06:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220831081603.3415-1-rrichter@amd.com> <20220831081603.3415-7-rrichter@amd.com>
- <63198617c7854_5801629450@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <63198617c7854_5801629450@dwillia2-xfh.jf.intel.com.notmuch>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 8 Sep 2022 15:06:16 +0200
-Message-ID: <CAJZ5v0iQNSNzO+mw7zqkvpniiYdipprTYnkzx-M7Jxq4_Cs8VQ@mail.gmail.com>
-Subject: Re: [PATCH 06/15] PCI/ACPI: Link host bridge to its ACPI fw node
+        with ESMTP id S229546AbiIHNON (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 8 Sep 2022 09:14:13 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F980D741B;
+        Thu,  8 Sep 2022 06:13:50 -0700 (PDT)
+Received: from fraeml703-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MNffn2sX8z67NB8;
+        Thu,  8 Sep 2022 21:12:17 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2375.31; Thu, 8 Sep 2022 15:13:20 +0200
+Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 8 Sep
+ 2022 14:13:20 +0100
+Date:   Thu, 8 Sep 2022 14:13:19 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Robert Richter <rrichter@amd.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-cxl@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Davidlohr Bueso <dave@stgolabs.net>, <x86@kernel.org>,
+        <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
+        <peterz@infradead.org>, <bp@alien8.de>, <dave.jiang@intel.com>,
+        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+        <a.manzanares@samsung.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] memregion: Add arch_flush_memregion() interface
+Message-ID: <20220908141319.00000f01@huawei.com>
+In-Reply-To: <631940536d040_2736529437@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20220829212918.4039240-1-dave@stgolabs.net>
+        <20220907153016.f7cd4f42a337fedae8319f28@linux-foundation.org>
+        <631940536d040_2736529437@dwillia2-xfh.jf.intel.com.notmuch>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.42]
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Sep 8, 2022 at 8:05 AM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> Robert Richter wrote:
-> > A lookup of a host bridge's corresponding acpi device (struct
-> > acpi_device) is not possible, for example:
-> >
-> >       adev = ACPI_COMPANION(&host_bridge->dev);
-> >
-> > This could be useful to find a host bridge's fwnode handle and to
-> > determine and call additional host bridge ACPI parameters and methods
-> > such as HID/CID or _UID.
->
-> When is this explicitly needed. "Could be useful" is interesting, but it
-> needs to have a practical need.
+On Wed, 7 Sep 2022 18:07:31 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-It is needed and it is present on x86 AFAICS (see my last reply in this thread).
+> Andrew Morton wrote:
+> > I really dislike the term "flush".  Sometimes it means writeback,
+> > sometimes it means invalidate.  Perhaps at other times it means
+> > both.
+> > 
+> > Can we please be very clear in comments and changelogs about exactly
+> > what this "flush" does.   With bonus points for being more specific in the 
+> > function naming?
+> >   
+> 
+> That's a good point, "flush" has been cargo-culted along in Linux's
+> cache management APIs to mean write-back-and-invalidate. In this case I
+> think this API is purely about invalidate. It just so happens that x86
+> has not historically had a global invalidate instruction readily
+> available which leads to the overuse of wbinvd.
+> 
+> It would be nice to make clear that this API is purely about
+> invalidating any data cached for a physical address impacted by address
+> space management event (secure erase / new region provision). Write-back
+> is an unnecessary side-effect.
+> 
+> So how about:
+> 
+> s/arch_flush_memregion/cpu_cache_invalidate_memregion/?
 
-This seems to be addressing an ARM64-specific issue.
+Want to indicate it 'might' write back perhaps?
+So could be invalidate or clean and invalidate (using arm ARM terms just to add
+to the confusion ;)
 
-> >
-> > Make this work by linking the host bridge to its ACPI fw node.
-> >
-> > Signed-off-by: Robert Richter <rrichter@amd.com>
-> > ---
-> >  drivers/acpi/pci_root.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> > index d57cf8454b93..846c979e4c29 100644
-> > --- a/drivers/acpi/pci_root.c
-> > +++ b/drivers/acpi/pci_root.c
-> > @@ -1083,6 +1083,7 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
-> >               goto out_release_info;
-> >
-> >       host_bridge = to_pci_host_bridge(bus->bridge);
-> > +     host_bridge->dev.fwnode = acpi_fwnode_handle(device);
-> >       if (!(root->osc_control_set & OSC_PCI_EXPRESS_NATIVE_HP_CONTROL))
-> >               host_bridge->native_pcie_hotplug = 0;
-> >       if (!(root->osc_control_set & OSC_PCI_SHPC_NATIVE_HP_CONTROL))
-> > --
-> > 2.30.2
-> >
->
->
+Feels like there will be potential race conditions where that matters as we might
+force stale data to be written back.
+
+Perhaps a comment is enough for that. Anyone have the "famous last words" feeling?
+
+Jonathan
+
+
+
+
