@@ -2,89 +2,112 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0541C38145
-	for <linux-cxl@archiver.kernel.org>; Thu,  8 Sep 2022 13:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C366CC54EE9
+	for <linux-cxl@archiver.kernel.org>; Thu,  8 Sep 2022 13:05:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231669AbiIHNAQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 8 Sep 2022 09:00:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43120 "EHLO
+        id S232102AbiIHNFR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 8 Sep 2022 09:05:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231467AbiIHNAP (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 8 Sep 2022 09:00:15 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AC115AC62;
-        Thu,  8 Sep 2022 06:00:14 -0700 (PDT)
-Received: from fraeml745-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MNfJ52X97z688pK;
-        Thu,  8 Sep 2022 20:56:05 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml745-chm.china.huawei.com (10.206.15.226) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 8 Sep 2022 15:00:12 +0200
-Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 8 Sep
- 2022 14:00:12 +0100
-Date:   Thu, 8 Sep 2022 14:00:11 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Borislav Petkov <bp@alien8.de>,
-        Davidlohr Bueso <dave@stgolabs.net>, <x86@kernel.org>,
-        <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
-        <peterz@infradead.org>, <akpm@linux-foundation.org>,
-        <dave.jiang@intel.com>, <vishal.l.verma@intel.com>,
-        <ira.weiny@intel.com>, <a.manzanares@samsung.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] memregion: Add arch_flush_memregion() interface
-Message-ID: <20220908140011.000003e8@huawei.com>
-In-Reply-To: <6319916ba0f9d_5801629437@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20220829212918.4039240-1-dave@stgolabs.net>
-        <YxjBSxtoav7PQVei@nazgul.tnic>
-        <20220907162245.5ddexpmibjbanrho@offworld>
-        <6318cc415161f_166f2941e@dwillia2-xfh.jf.intel.com.notmuch>
-        <YxlxAFgW65w8wgPy@nazgul.tnic>
-        <6319916ba0f9d_5801629437@dwillia2-xfh.jf.intel.com.notmuch>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S232091AbiIHNFQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 8 Sep 2022 09:05:16 -0400
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DF7F80F62;
+        Thu,  8 Sep 2022 06:05:11 -0700 (PDT)
+Received: by mail-yb1-f181.google.com with SMTP id f131so10724645ybf.7;
+        Thu, 08 Sep 2022 06:05:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=dKQHw3cShiawbp5azVRw7MLA3EmHUTNcOsfnUo5TI1A=;
+        b=MrrSwIjQwKZ2u+/yepICYkbLSDOMFjgwXLQNUwzQDOPRNkNAm72X+yGZ8r0wjJ8T1U
+         O6GJg9iYxBr+y91Enf6qMnIx2Qo88kSwBN/ykGNSCLcFgYNvX1EC3bMxMsGVLKljQQ/m
+         CRQYKqBiEgVzwPrTD59T3ZIXz7zya2kGtjROV8ga/gqm4wLJTKvoqbkePZO6H2UY6v/f
+         7m7/nBjU0yarNcbjY65FznyaDWdwqX5W/Nt4EpTLslYIsm0q+tDF8+PVDtefmI4Ee4SV
+         bz3fFC5c2O4RIEabOgfuSU3oE7iRpN6W/izpEJB6U3M8I0kMZB6gzYXe5f6vze+Z0WbF
+         ogkQ==
+X-Gm-Message-State: ACgBeo11tk5Gmq6tO/9mSR9Cp+fKi0sUadcAXThMH+7sJOTZ5ibs/4Uj
+        fauKJAECcUC5ufflMGmdUnPW7qBIphZgG9URMZs=
+X-Google-Smtp-Source: AA6agR7ou+ItJtnU73fnRGUngBp598ZcFFZFZ43LMueFbIG8QUCr5m6kkwg5LOMd0mz94UQkVUD8W8W/pDoaNwYz0cI=
+X-Received: by 2002:a25:ec09:0:b0:6ad:804f:5463 with SMTP id
+ j9-20020a25ec09000000b006ad804f5463mr5109866ybh.622.1662642310060; Thu, 08
+ Sep 2022 06:05:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+References: <20220831081603.3415-1-rrichter@amd.com> <20220831081603.3415-7-rrichter@amd.com>
+In-Reply-To: <20220831081603.3415-7-rrichter@amd.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 8 Sep 2022 15:04:51 +0200
+Message-ID: <CAJZ5v0gQqyFZHxe9fLX9WrMGBYhdna7Cpnx6bwTPFffy_koE5Q@mail.gmail.com>
+Subject: Re: [PATCH 06/15] PCI/ACPI: Link host bridge to its ACPI fw node
+To:     Robert Richter <rrichter@amd.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-cxl@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 7 Sep 2022 23:53:31 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Wed, Aug 31, 2022 at 10:17 AM Robert Richter <rrichter@amd.com> wrote:
+>
+> A lookup of a host bridge's corresponding acpi device (struct
+> acpi_device) is not possible, for example:
+>
+>         adev = ACPI_COMPANION(&host_bridge->dev);
 
-> Borislav Petkov wrote:
-> > On Wed, Sep 07, 2022 at 09:52:17AM -0700, Dan Williams wrote:  
-> > > To be clear nfit stuff and CXL does run in guests, but they do not
-> > > support secure-erase in a guest.
-> > > 
-> > > However, the QEMU CXL enabling is building the ability to do *guest
-> > > physical* address space management, but in that case the driver can be
-> > > paravirtualized to realize that it is not managing host-physical address
-> > > space and does not need to flush caches. That will need some indicator
-> > > to differentiate virtual CXL memory expanders from assigned devices.  
-> > 
-> > Sounds to me like that check should be improved later to ask
-> > whether the kernel is managing host-physical address space, maybe
-> > arch_flush_memregion() should check whether the address it is supposed
-> > to flush is host-physical and exit early if not...  
-> 
-> Even though I raised the possibility of guest passthrough of a CXL
-> memory expander, I do not think it could work in practice without it
-> being a gigantic security nightmare. So it is probably safe to just do
-> the hypervisor check and assume that there's no such thing as guest
-> management of host physical address space.
+Hmm.
 
-Agreed.  Other than occasional convenience of doing driver development
-in a VM (they reboot quickly ;) can't see why a product system would need
-to pass a CXL type 3 device through and as you say security would be 'interesting'
-if it were done.  Might be GPU usecases down the line but I'm doubtful on that
-as well.
+x86 has this code in pcibios_root_bridge_prepare():
 
-Jonathan
+    if (!bridge->dev.parent) {
+        struct pci_sysdata *sd = bridge->bus->sysdata;
+        ACPI_COMPANION_SET(&bridge->dev, sd->companion);
+    }
+
+which should set the ACPI companion for the host bridge.
+
+Moreover, on my x86 desktop /sys/devices/pci0000\:00/ (which is the
+host bridge AFAICS) has
+
+firmware_node -> ../LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00
+
+so clearly the ACPI companion is there.
+
+Are we talking about ARM64 here?
+
+> This could be useful to find a host bridge's fwnode handle and to
+> determine and call additional host bridge ACPI parameters and methods
+> such as HID/CID or _UID.
+>
+> Make this work by linking the host bridge to its ACPI fw node.
+>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> ---
+>  drivers/acpi/pci_root.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index d57cf8454b93..846c979e4c29 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -1083,6 +1083,7 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+>                 goto out_release_info;
+>
+>         host_bridge = to_pci_host_bridge(bus->bridge);
+> +       host_bridge->dev.fwnode = acpi_fwnode_handle(device);
+
+So this would be replacing the existing mechanism on x86, right?
+
+>         if (!(root->osc_control_set & OSC_PCI_EXPRESS_NATIVE_HP_CONTROL))
+>                 host_bridge->native_pcie_hotplug = 0;
+>         if (!(root->osc_control_set & OSC_PCI_SHPC_NATIVE_HP_CONTROL))
+> --
