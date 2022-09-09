@@ -2,128 +2,153 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE267ECAAD3
-	for <linux-cxl@archiver.kernel.org>; Fri,  9 Sep 2022 10:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 245D9ECAAA1
+	for <linux-cxl@archiver.kernel.org>; Fri,  9 Sep 2022 11:43:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230063AbiIIKii (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 9 Sep 2022 06:38:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54114 "EHLO
+        id S230107AbiIILnd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 9 Sep 2022 07:43:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229598AbiIIKig (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 9 Sep 2022 06:38:36 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2053.outbound.protection.outlook.com [40.107.93.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63CE5134C05;
-        Fri,  9 Sep 2022 03:38:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q9McqXzSdkTx2uFZkHvIFX25Hm9PwZjZ14Mmq3giveY2al7nhfplcnQUVaZVaB3ON59kTKJABlgSi1TJC+xSMlPuQtHaEhDZaBGee3PvfYrSW3EYgH0ueQ61O7OvMX9LbhvYCmnmrQSj2InOA6oNaGZN2iwLmNRUvN8HwTkhVWLhXDypX/J1egxS+rRzx2LxrMOfxAKGPz1Va8khZ967XNf5wNDIIf+zfoN/M/IQocBi0GpHDKuzlHJyw1uIH/Krv499+IvvjW7JLzyk8LrdLI0fi45MM3PPAOOWNqXzZUrutusUHHXZwrkjv1CMfPxlDsDib4e/e2uooLQlkc6+Tw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DPazzFm/14Sovur6+lmIGQo4cWvcrmUx1/Jfz+urxqY=;
- b=FpJfdPE0au078Xx6ZlJ1XgHtYJe9+7c4hwL9NMxlOOK20fuOq1cq0oAYp3z6i0j2L/xndFhX98VvZVFL8bZEpGpcWkERRYcZWBwSKgMm4baw1tUbaqg1AxPpSz7SHhSSEJGUVpGyvibFaY8nyaPNDkFf2153Aai/t6n4JQETY+pn9sofhoUp1dav+BW8DNANivZTNOnMkgEWjzjGHIvd7w48XM7cKmvt2yjo4Cp7XG5Len9qOiaTYoYvAyp2tsYBfjDz9+u7GCXwMpJBl4si69ND/26j3appW+YQc3BUOtwYQ9AKDDlL+cq3QYAvOdIYzj0ZONDNNIYAQLcINd+Ceg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DPazzFm/14Sovur6+lmIGQo4cWvcrmUx1/Jfz+urxqY=;
- b=2PlgY6PGO3eCbfbIEHSFx5uiq0z5CAnAp13LfziM2yVr8MCCCpInKscXw+wM51tWegWQz05P9Ea6F0PiwVdZza1ZgyrTr/bo5qAV0f4WjJH7l0k6jwMaGuLx5rOvMDRB6gH6NW+Rm0EIVGxlJa0CsvTiDfliHmHM5hHgHEJBNEo=
-Received: from MW4PR04CA0301.namprd04.prod.outlook.com (2603:10b6:303:82::6)
- by CH0PR12MB5171.namprd12.prod.outlook.com (2603:10b6:610:ba::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.14; Fri, 9 Sep
- 2022 10:38:33 +0000
-Received: from CO1NAM11FT019.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:82:cafe::e6) by MW4PR04CA0301.outlook.office365.com
- (2603:10b6:303:82::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.15 via Frontend
- Transport; Fri, 9 Sep 2022 10:38:33 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT019.mail.protection.outlook.com (10.13.175.57) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5612.13 via Frontend Transport; Fri, 9 Sep 2022 10:38:33 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Fri, 9 Sep
- 2022 05:38:30 -0500
-Date:   Fri, 9 Sep 2022 12:38:27 +0200
-From:   Robert Richter <rrichter@amd.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-CC:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH 1/15] cxl/core: Remove duplicate declaration of
- devm_cxl_iomap_block()
-Message-ID: <YxsXo09JCL8fbDBn@rric.localdomain>
-References: <20220831081603.3415-1-rrichter@amd.com>
- <20220831081603.3415-2-rrichter@amd.com>
- <20220907161158.iaqgvqkgvdwoc5l2@offworld>
+        with ESMTP id S229786AbiIILnc (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 9 Sep 2022 07:43:32 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC02B102D6B;
+        Fri,  9 Sep 2022 04:43:30 -0700 (PDT)
+Received: from fraeml742-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MPDcx4YM7z688y7;
+        Fri,  9 Sep 2022 19:42:41 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ fraeml742-chm.china.huawei.com (10.206.15.223) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 9 Sep 2022 13:43:28 +0200
+Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 9 Sep
+ 2022 12:43:27 +0100
+Date:   Fri, 9 Sep 2022 12:43:26 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Davidlohr Bueso <dave@stgolabs.net>, <x86@kernel.org>,
+        <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
+        <peterz@infradead.org>, <bp@alien8.de>, <dave.jiang@intel.com>,
+        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+        <a.manzanares@samsung.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] memregion: Add arch_flush_memregion() interface
+Message-ID: <20220909124326.00002c85@huawei.com>
+In-Reply-To: <631a7932c6eb5_166f2945d@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20220829212918.4039240-1-dave@stgolabs.net>
+        <20220907153016.f7cd4f42a337fedae8319f28@linux-foundation.org>
+        <631940536d040_2736529437@dwillia2-xfh.jf.intel.com.notmuch>
+        <20220908141319.00000f01@huawei.com>
+        <631a7206afc2_166f29413@dwillia2-xfh.jf.intel.com.notmuch>
+        <20220908160035.f030e3e533a996eadc04dbd5@linux-foundation.org>
+        <631a7932c6eb5_166f2945d@dwillia2-xfh.jf.intel.com.notmuch>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20220907161158.iaqgvqkgvdwoc5l2@offworld>
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT019:EE_|CH0PR12MB5171:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5c9e3a94-9aae-4be9-d5fc-08da924f719a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZUVNVrO9RlmYf1eXkMoqza1SxYLr4R3CkQlKiBy1D7Yl8CL9Ci0hEtmtQAMezB0DxfiK5x5XHp3+ZQgJInAxwt9ZRSciRsb1ARJGcOlIPQ0ZmnDyhdtsBJggbtzBTVH+7zkSYpaXlQf+HA0hWzJbEiW7HneBlWEig8/gEXcoTx3qe4FOYh/baHLuT30qS4gs4fcMlNe0vB/QqIx2E7E77q6lcsZfqphAA/HqMbz09jY7TyA4Z56KQCYJgcS1TX0e92sd/IFhSsEVb5/1jBJEZQqfrFj2FaaZok3iFBWPqW8oevidfUXAGqkzmoR/DtyJ026fqGq4H1rnCVUVtXNjcNqYVv7I4ymm2+uJvZroPLsigeML1EKrQYGLx0EAEp6cQzcsBW93VLSM9FLHXLn9i8DM/RadO10hPAmWAJNwwZPVFcfMY5JJNPXVJX8clqHluy95pr9czXSZYzoledeYPOXA0qMDiWV77VFf0USZrViVDfZHnK0NHy6xQUG7WNm1lQ2zbFQm8IaTK7pXqZm8SlvjyOo4a7RLGGSPDAZM9gi1/3DgrhxtjhdBYGE88q0WKVs/6hXs8vtZXU6pYUu2GICIeuHbIvFvhFwnbc9kw8dR5oMpFns11kW9H/CxLctdwaz44FKG812ThcID2XTb/YWEmkjNTgUkDXGYHhjFoQRfAYX3CVbfVAESJmOO+JMQmEggAOdLF3rkJJ+jcN6V9WLPkPXFI1hg4ypGEQWQIL64mAmAVHkA7u2Wq8IIsnc6XlPMjyc+sOGNMOT4GMIHyy7WRhRP7eLzVohyC1CCH2k70tynmo/cEENugkgxpqN1
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(136003)(39860400002)(346002)(376002)(396003)(40470700004)(36840700001)(46966006)(82310400005)(47076005)(41300700001)(426003)(186003)(16526019)(6666004)(9686003)(55016003)(478600001)(26005)(40480700001)(53546011)(336012)(7696005)(40460700003)(81166007)(356005)(82740400003)(83380400001)(5660300002)(70206006)(316002)(36860700001)(4326008)(70586007)(2906002)(8676002)(7416002)(8936002)(6916009)(4744005)(54906003)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2022 10:38:33.0672
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c9e3a94-9aae-4be9-d5fc-08da924f719a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT019.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5171
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.42]
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 07.09.22 09:11:58, Davidlohr Bueso wrote:
-> On Wed, 31 Aug 2022, Robert Richter wrote:
-> 
-> > The function devm_cxl_iomap_block() is only used in the core
-> > code. There are two declarations in header files of it, in
-> > drivers/cxl/core/core.h and drivers/cxl/cxl.h. Remove its unused
-> > declaration in drivers/cxl/cxl.h.
+On Thu, 8 Sep 2022 16:22:26 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
+
+> Andrew Morton wrote:
+> > On Thu, 8 Sep 2022 15:51:50 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
+> >   
+> > > Jonathan Cameron wrote:  
+> > > > On Wed, 7 Sep 2022 18:07:31 -0700
+> > > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > > >   
+> > > > > Andrew Morton wrote:  
+> > > > > > I really dislike the term "flush".  Sometimes it means writeback,
+> > > > > > sometimes it means invalidate.  Perhaps at other times it means
+> > > > > > both.
+> > > > > > 
+> > > > > > Can we please be very clear in comments and changelogs about exactly
+> > > > > > what this "flush" does.   With bonus points for being more specific in the 
+> > > > > > function naming?
+> > > > > >     
+> > > > > 
+> > > > > That's a good point, "flush" has been cargo-culted along in Linux's
+> > > > > cache management APIs to mean write-back-and-invalidate. In this case I
+> > > > > think this API is purely about invalidate. It just so happens that x86
+> > > > > has not historically had a global invalidate instruction readily
+> > > > > available which leads to the overuse of wbinvd.
+> > > > > 
+> > > > > It would be nice to make clear that this API is purely about
+> > > > > invalidating any data cached for a physical address impacted by address
+> > > > > space management event (secure erase / new region provision). Write-back
+> > > > > is an unnecessary side-effect.
+> > > > > 
+> > > > > So how about:
+> > > > > 
+> > > > > s/arch_flush_memregion/cpu_cache_invalidate_memregion/?  
+> > > > 
+> > > > Want to indicate it 'might' write back perhaps?
+> > > > So could be invalidate or clean and invalidate (using arm ARM terms just to add
+> > > > to the confusion ;)
+> > > > 
+> > > > Feels like there will be potential race conditions where that matters as we might
+> > > > force stale data to be written back.
+> > > > 
+> > > > Perhaps a comment is enough for that. Anyone have the "famous last words" feeling?  
+> > > 
+> > > Is "invalidate" not clear that write-back is optional? Maybe not.  
 > > 
-> > Signed-off-by: Robert Richter <rrichter@amd.com>
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Yes, I'd say that "invalidate" means "dirty stuff may of may not have
+> > been written back".  Ditto for invalidate_inode_pages2().
+> >   
+> > > Also, I realized that we tried to include the address range to allow for
+> > > the possibility of flushing by virtual address range, but that
+> > > overcomplicates the use. I.e. if someone issue secure erase and the
+> > > region association is not established does that mean that mean that the
+> > > cache invalidation is not needed? It could be the case that someone
+> > > disables a device, does the secure erase, and then reattaches to the
+> > > same region. The cache invalidation is needed, but at the time of the
+> > > secure erase the HPA was unknown.
+> > > 
+> > > All this to say that I feel the bikeshedding will need to continue until
+> > > morale improves.
+> > > 
+> > > I notice that the DMA API uses 'sync' to indicate, "make this memory
+> > > consistent/coherent for the CPU or the device", so how about an API like
+> > > 
+> > >     memregion_sync_for_cpu(int res_desc)
+> > > 
+> > > ...where the @res_desc would be IORES_DESC_CXL for all CXL and
+> > > IORES_DESC_PERSISTENT_MEMORY for the current nvdimm use case.  
+> > 
+> > "sync" is another of my pet peeves ;) In filesystem land, at least. 
+> > Does it mean "start writeback and return" or does it mean "start
+> > writeback, wait for its completion then return".    
 > 
-> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+> Ok, no "sync" :).
 > 
-> Does this want a
-> 
-> Fixes: d17d0540a0d (cxl/core/hdm: Add CXL standard decoder enumeration to the core)
-> 
-> tag?
+> /**
+>  * cpu_cache_invalidate_memregion - drop any CPU cached data for
+>  *     memregions described by @res_des
+>  * @res_desc: one of the IORES_DESC_* types
+>  *
+>  * Perform cache maintenance after a memory event / operation that
+>  * changes the contents of physical memory in a cache-incoherent manner.
+>  * For example, memory-device secure erase, or provisioning new CXL
+>  * regions. This routine may or may not write back any dirty contents
+>  * while performing the invalidation.
+>  *
+>  * Returns 0 on success or negative error code on a failure to perform
+>  * the cache maintenance.
+>  */
+> int cpu_cache_invalidate_memregion(int res_desc)
 
-Looks like a code cleanup to me, nothing worth to backport to stable
-which the fixes tag would trigger.
+lgtm
 
-Thanks for review.
+> 
+> ??
 
--Robert
