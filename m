@@ -2,237 +2,139 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EB5C54EE9
-	for <linux-cxl@archiver.kernel.org>; Thu,  8 Sep 2022 23:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D85D9ECAAD3
+	for <linux-cxl@archiver.kernel.org>; Fri,  9 Sep 2022 10:20:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229628AbiIHXWe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 8 Sep 2022 19:22:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35986 "EHLO
+        id S230267AbiIIKU5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 9 Sep 2022 06:20:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbiIHXWd (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 8 Sep 2022 19:22:33 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA491EA60F;
-        Thu,  8 Sep 2022 16:22:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662679352; x=1694215352;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=n2gov6i5G8opTeVhBPqbJyg5BRTGd36vOM/ghGHAkh0=;
-  b=Tjgjiex4CLQ1uqQ4ODQ77UH5HM1G0mTaXD8B+CAGL8M0kXO0M3pRmd1C
-   fXNAyLQVDp1Rdm4ka94ETGrd3ALw9yqjoPFkOsAbFgyFTPTXSL4ZWjW2S
-   lCFXJSs5Oaq8//gmilWTgqvjKu54QHJ8TnbXam+ENkSVcr+io6nvwhP+y
-   kwHhyvRXv2lgQpf6WTW9d/GWy4JYOEC67Mv7JZvkxti5yfXDiOvRvdfxj
-   RYf15cTNRLaMCePd+Tid2sDu5JXqy9gxJg/u4PkmZb4hKX18mCO7epYBM
-   gZL2p4FsSNWFlq5UUA7pLmokFLECWWLSO8/pAYpgSZ49r3LI2JLHX5PEF
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10464"; a="284367403"
-X-IronPort-AV: E=Sophos;i="5.93,300,1654585200"; 
-   d="scan'208";a="284367403"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2022 16:22:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,300,1654585200"; 
-   d="scan'208";a="645299843"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orsmga008.jf.intel.com with ESMTP; 08 Sep 2022 16:22:32 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 8 Sep 2022 16:22:31 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31 via Frontend Transport; Thu, 8 Sep 2022 16:22:31 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.170)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.31; Thu, 8 Sep 2022 16:22:31 -0700
+        with ESMTP id S230195AbiIIKU4 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 9 Sep 2022 06:20:56 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CA7795E72;
+        Fri,  9 Sep 2022 03:20:54 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h+CfDM4r51o/IWjKBYQDK73gqIVkUF8ISx9wvHYXE3ExeGhcOeDojAJqjxEwoxQ9oJyW9GiRgSUSnkFpx9fmBuo98wH7Dr893WRA1U/TtF/CXG6QEqjeoM3P3nmax3rdI1uG/MqqSI70LfJpsXhkwG3DIMVDPWOJAYXz6/xHmytzm1FNIhJmdlEfrEMXRcyAxU91fHdJPLLSk2Ef7Ooksjg4huKtlwtmObPdjoXo65PanLyssMMJLqhKBPXRjCYb1/62sSh31fCHhWQUJeyTYwEGDAoXlJx3wg1ioKNBGYcQrF6jvOxGFEl1bYHEzQq9pwQPxqzdEXouF3eWCIRDnQ==
+ b=bbH0h7ztAGpdzzNXQD7PYbxUgGpHmp1BD2RihDQ2+39XoJKof7v199xMAbd9O+8fAiUU+4ENf9Z/8/O+Lu7xmYfHVQvO9hKZB+ngaX0JcqXhh2KVEOyniByAbI6J8HWSWA6l5sVuTLooOqsqEC+caUJ/4hDbD63keq89WZnm3HkaJnu23azGXxcod73KhlZ2MWCIGXgWeHbCo9jYkzboBs8XyTr6HhYp7g9UbOLaRrFN8rej2jkx0x/BTjoOoPlNcRpFmBS6Ew/GUsJymvbc4Z8Xh9GO1yZ9Gxpkx6ZJdCBa9QlZH5JZbAgVYr6evXGBD23Xt3IsNvrTZKAx6+Z6ww==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RpINktswjx/hf60YFoBqLIQP6Q4cnqwtRBCw5HjWhLk=;
- b=CpMkVyX/uA4T6+a5MWGBcqEKCtfU64LF+n9HAuuW0A5q1GT74ocRgdFMtpwccWhGhDJjh2ldQMxXXsQ+Ujji5gEkUUjQJiGdIi/BXtjUi+2Pz87H0jFM7Cs1lXYu6ly+YwcOS/uVmHlly+/2iuhHoOIPYCeuX3evAk155v0NMI0dNoGr/jgvrZXr2884QkST6HbQkR8SsrOg1gKsiOx1EWkOJ9WbMCuW5mxoOQ1oy7gmzTux1phpAOvt+FEdrNvfMAlcqa70kfNyIdmoMdZXfo/6JFOnmKkWN4Zrdqzpl5PCTzPnsYSGKtJV09pR40WuEKisuiZhDT8APap537sXMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by DS7PR11MB6246.namprd11.prod.outlook.com
- (2603:10b6:8:99::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.16; Thu, 8 Sep
- 2022 23:22:29 +0000
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::9847:345e:4c5b:ca12]) by MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::9847:345e:4c5b:ca12%6]) with mapi id 15.20.5588.017; Thu, 8 Sep 2022
- 23:22:29 +0000
-Date:   Thu, 8 Sep 2022 16:22:26 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Davidlohr Bueso <dave@stgolabs.net>, <x86@kernel.org>,
-        <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
-        <peterz@infradead.org>, <bp@alien8.de>, <dave.jiang@intel.com>,
-        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-        <a.manzanares@samsung.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] memregion: Add arch_flush_memregion() interface
-Message-ID: <631a7932c6eb5_166f2945d@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20220829212918.4039240-1-dave@stgolabs.net>
- <20220907153016.f7cd4f42a337fedae8319f28@linux-foundation.org>
- <631940536d040_2736529437@dwillia2-xfh.jf.intel.com.notmuch>
- <20220908141319.00000f01@huawei.com>
- <631a7206afc2_166f29413@dwillia2-xfh.jf.intel.com.notmuch>
- <20220908160035.f030e3e533a996eadc04dbd5@linux-foundation.org>
+ bh=hnygmnmB6udOuEgYFLO9QEgwIAZUTJvVdYbFOfIh1EQ=;
+ b=KbTubCUTvjAFlxtmGdOuj6R2KHuy1cgfgryHDH2fQvmPpxyJ4RMSnJwX46xvz0Ck1KA3xR91MIN4oJCt2oVKXCXq+K3BAmBLL+iw/KVCOGFIeC24yxgCKvCPuf73V7BrPzn8dd6Bz+BduD7BRnrF9tq3Er5/Scf29QBK3CVpUGh3SIZYmaTwKNnwuRWPYerps6mUfuDzNxMg+/ZyG8OaMIl3NIf3Km6NfjElN6skLM8AL4sUqtA33wszcZRez6OktUHeGvrJl+idaIFb0hnCwFtamvkkl9kccZP7CMJ2nXTatq00I9mcsB3hB76gZtFmwRQl66JOI1BR9pSl/5Y4lQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hnygmnmB6udOuEgYFLO9QEgwIAZUTJvVdYbFOfIh1EQ=;
+ b=nqWEIPv6RHJD40L7SjCWtz6DLQe8+71/cdjoxlPrH5lXqAiLvlDgkuJyAH1PIwvmkYG0ww/hpfnS/tCSxXA0MRZ8H+aZEeu6QOkK8kdDHH1MCX+37cBjDnCzfX2c4auQeg+ZSFZaLlVFHrWfr0kEfyHwWoaCjmVzWSQJib/VfDY=
+Received: from DS7PR03CA0014.namprd03.prod.outlook.com (2603:10b6:5:3b8::19)
+ by DM4PR12MB5963.namprd12.prod.outlook.com (2603:10b6:8:6a::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5612.19; Fri, 9 Sep 2022 10:20:50 +0000
+Received: from DM6NAM11FT021.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:3b8:cafe::4c) by DS7PR03CA0014.outlook.office365.com
+ (2603:10b6:5:3b8::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.14 via Frontend
+ Transport; Fri, 9 Sep 2022 10:20:50 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT021.mail.protection.outlook.com (10.13.173.76) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5612.13 via Frontend Transport; Fri, 9 Sep 2022 10:20:50 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Fri, 9 Sep
+ 2022 05:20:47 -0500
+Date:   Fri, 9 Sep 2022 12:20:45 +0200
+From:   Robert Richter <rrichter@amd.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-cxl@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH 06/15] PCI/ACPI: Link host bridge to its ACPI fw node
+Message-ID: <YxsTfVdOgc9sOOVm@rric.localdomain>
+References: <20220831081603.3415-1-rrichter@amd.com>
+ <20220831081603.3415-7-rrichter@amd.com>
+ <63198617c7854_5801629450@dwillia2-xfh.jf.intel.com.notmuch>
+ <CAJZ5v0iQNSNzO+mw7zqkvpniiYdipprTYnkzx-M7Jxq4_Cs8VQ@mail.gmail.com>
+ <631a464c166cc_166f294d5@dwillia2-xfh.jf.intel.com.notmuch>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20220908160035.f030e3e533a996eadc04dbd5@linux-foundation.org>
-X-ClientProxiedBy: BY5PR04CA0023.namprd04.prod.outlook.com
- (2603:10b6:a03:1d0::33) To MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20)
-MIME-Version: 1.0
+In-Reply-To: <631a464c166cc_166f294d5@dwillia2-xfh.jf.intel.com.notmuch>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 826e5fa7-82e2-4677-3a8a-08da91f0ff8a
-X-MS-TrafficTypeDiagnostic: DS7PR11MB6246:EE_
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT021:EE_|DM4PR12MB5963:EE_
+X-MS-Office365-Filtering-Correlation-Id: d768d5e5-6fa5-4acc-ccb2-08da924cf845
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: OYeQxtY73yXAe+nsJ84cKEPmQO/QyLsXHx9d6gHsT+7ERWAlnbYSWbUIINFwkXRVSgkbw7rwnHcAyYmWpJmTxes3R1otYa6fIs9740RwrCYeZxlgnhZebGbRrOI1b+h1YWkzF5J/YOKM1qV7r4wjsjWCtWu+TRpnqnTZ1v0UZJOiwmh4H5RSFA0rkFhpMCIztDbYTouT1iOIy8z6W64nzHXeY92Zq8FBscO4hgQT79THomfjdTkNRvt8Sb2PJ2iSyXOVV+tUukqiD1mCBJSNBMJizhB+p3f0H/s5ta7uEoOFujDP2/72gv7F9+i8QaAS84iaP49yCdGw9Ssbqqamafs/2XvZhrBDNVbr5sPWpfrUzk4h7YSkgp9Ebo6OclTM3hlciPdc1bCSin9IlHbCStRm2lgXvOM2OxIKzXlh/LbA+BFLASaisOcVKnKee51g743h0ZWG4a3wI0YKBQ0fE/mwGnT63OizAj6iS21pJZhTH1b37r5SiXREyPLNSVlBO2oRKxTiKN40NqbLV3luwVnkaTRW0/hNOEa+tZ+Vgfs4eepJXxeS5RM7I9FJvvgi+h3wQy9AzQUVSVnvImqFFdU7dO16nNCJppUC4mzFwp/UzTHEz0iYGNQHEXcneDwVMQyu01LfuLII4P51oHS09tiVgrgLGVh8kojG0njzwDz8SdEUFeDieRvBJIuk3oVvR65v3W8PZEz8XcxTRW0gvw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(396003)(376002)(39860400002)(366004)(346002)(136003)(110136005)(6486002)(54906003)(82960400001)(478600001)(66946007)(8676002)(66476007)(4326008)(66556008)(38100700002)(7416002)(86362001)(6506007)(8936002)(41300700001)(6666004)(5660300002)(83380400001)(2906002)(316002)(186003)(26005)(9686003)(6512007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?GGO6ovaKxNMZuQQkti+DkX1JVvV3lRa7cfLYu9tDUzsrJg22EeYvVexm1ODV?=
- =?us-ascii?Q?7qlnpGdoaBIZEu6o+Ac1q2XEkecNX4gT1MJrq9HJJBzsnFpHuisTo/zcN+nm?=
- =?us-ascii?Q?7BZj4FRq3wvvDr7jOr3igZSHueBesxVkf2dgYodrr/XiJSwE6LNw5oXTME1a?=
- =?us-ascii?Q?8BiwTNfvPXHD/IvkVKxMDNgXa99ZniGjPYcarLW+g3ruTFmYSSpXybuC1MxS?=
- =?us-ascii?Q?4NLp5IwXf5q2YgkjFjj87V6a7qZj8rX15eyB5b6xvsRwkCWtTHwYlatDOxLP?=
- =?us-ascii?Q?LLI1wAp4dzG9CYCQ4MlTEC9T9/s0uPnx/L+iYWGt1ZYs6+/Q+q9ZeAmupJGQ?=
- =?us-ascii?Q?fcXIsrrpgyvq5CfnyMOtfVphUIRoAULB6bBazmQOFISt+B0Mjp2gVI3HcQO3?=
- =?us-ascii?Q?jpa2IJ4o9Jjvb1b2yDiBaYNWe9U7O93m/4bkVaDfWOLPD2/zAZItQp3gfmDI?=
- =?us-ascii?Q?o13VA81W8ZuqCefwOLbP4sbm4MMswbBWVgPXvseZlM6epGhV0Jkux5XHS8ok?=
- =?us-ascii?Q?Ub6PEWqmfCQklg/LdPmVxAlYB2F38f6Qii4VIfqfpAB+wR5WXXNPaBXN/8NM?=
- =?us-ascii?Q?J1qaolSnImKb+h+o4IrQh2PnAa0mdOW0Z8yijgYNR2MZYm4f49gIiJPNPodE?=
- =?us-ascii?Q?vlkXqL1XFkL+K9qbLSQCVkcHwvKj/+gV36ScgFedeFm54Nid0YuUzq3xpQX7?=
- =?us-ascii?Q?UPi2U0LXNJWdUAkD/3RXSrG6El6iNqIBDsh+H457xVg7BWnqIdnKMbV2OPh4?=
- =?us-ascii?Q?arKioGx7ejvxTOkbwWIxEKGZNVw587CRKLeopXFTHqE5CQhZOWu65BhTWC1C?=
- =?us-ascii?Q?dTosHP+rIgL2o4oQ8yMd0Kfss43Bh7SdRSGQ1F7Y5G/DYdPtjYPOgKWAeV3r?=
- =?us-ascii?Q?BL6bs1dr/nmZFqaJCUAJ5aY9XxxWM2ZRDx70pqtAu4atpoCjUDsaUQdppX0T?=
- =?us-ascii?Q?wJ1RPvQoQ68wY354CbWyiUmsWasaReiZkNiT59psID0AU5XauSL5NL6sIT65?=
- =?us-ascii?Q?B8FBtQkIOJqGU/UQTKNhUWj+AcQvezR6vcmSlJ5rflFbg/FvcBipAVXHOpED?=
- =?us-ascii?Q?YZpFFmQ1LudaDkzimNgYIbz0meWfRw2NyJQlFeB03LUTRE8zipzBvKY3+Ib9?=
- =?us-ascii?Q?tNooAWrbxK2KjljhMQsDkETjAT0O568Fm/+gOgYe35Lo095s1Nu4tXZ1dx6A?=
- =?us-ascii?Q?2cF0AgTdJ2Gy7chFttXa7xjgzWXU2VU1pGRoxnl3t3bNUrRZByxk4JLzlJxA?=
- =?us-ascii?Q?7ZdjiKu45S9NEcJSXWkVsFbQwWIpmX0GR/UnXEOv7ugt5/v6l8T+tDwiJBvN?=
- =?us-ascii?Q?CoGZLTnxwcFpbhFB+N0SDmn9fvnf5bTHmdCPu6l/IAqyvXrUBpg3ESPvy/jK?=
- =?us-ascii?Q?rEBrcbNESQdWOn2KaYODUwa2HJb0N1cLzmsLnVWzlju9NxInO/TKL64/SsDk?=
- =?us-ascii?Q?LFs5b7ChwvEdnFSyx6Rh8uZFUkVq/Qf2zPxmT/BeeOoEzEJjNbTUeG6iLBML?=
- =?us-ascii?Q?a2OcrF8ll6NDRYdvEinnOos+34Iyx1Oi4tIwtFQmcWFOPzH7f+JSE0iplcs0?=
- =?us-ascii?Q?QVF/EZHjA7MC7Sxo71GPbLrUmQkFoQFwZJq0jB45g4yWgsYNEmh+JQlx+HZl?=
- =?us-ascii?Q?ng=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 826e5fa7-82e2-4677-3a8a-08da91f0ff8a
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2022 23:22:29.3805
+X-Microsoft-Antispam-Message-Info: ZJQWwB+px6N5cgZLiUW33DU7igtpDoWgFlfZ1Upq1V3xc2gwv83VzQswoMCtMlTJRZpYUvCdxb6dmWbcdbMMlCOMC7zcBkShStDpIJOww0ky0ofJlKzWP8/3lQA/iecih3hKJYvYs/l2kgBzUN7FTSp82VobdXVt3OCzZHW+RYc3AKxBLPsNsvWlWiRZYl1VplfTjoSvwBqlUzDpxjmuxqBv+CmnEECyAOVEy2vR+Q1gLye65tcfgobHd8j65elrgTJPZOXklfMODBkxJhII2RWQ4mBYoCtz9F19EM8qRUi6NK3VfIE0Lfg4+PHKrwlo6rDNHYuqHLTAxI0qT9cCK2ES2R6Yn7dGv8h0Zc0ZTQgwEq9UvPyKxdsKCqksMO+rpvlFpK5sirr0LsIlW1gawCaR3PkqWhsalsUMRIYV9r6n0wGCBWkblwT13saNgcmk1ACZUSbVt9uMXsjMXUYv3igpYlxmVkAYaIKzEQT4R0+7xKDbTTFQkB+wk+A/6A5Ab7bO/mgMKZoHH08DiO+mLXnhj4VK3DMJBMmNVtLyuNU2hkltbBJ0Q/nthI/I9Etw/bSjFz7wSqIaCmbfLduZ1TYsTJDvLxV2GgTJSJBAby/g3H7+p2LXpn4QyaArxWKomPhHEOYBYg6tGrNa83tu/yyhdEKRIcteSSCoA07albn4BQz4jDZbKyylxVvzh99B1euo9gZgneSra8hZaiFVoZLYXX4OTUGJgAYOO1r4qPVaWccBMMJVpvN/8BIpeqmbJlkhJPwB34PsDZQAO1SLMaAvPFGF4mxbzdd3BfuiZs+2TXzmBtBA1ZeN/NSl1S4+
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(396003)(376002)(39860400002)(136003)(346002)(40470700004)(46966006)(36840700001)(40460700003)(2906002)(5660300002)(8936002)(40480700001)(55016003)(53546011)(26005)(9686003)(7416002)(7696005)(47076005)(70206006)(70586007)(41300700001)(4326008)(8676002)(36860700001)(6916009)(82310400005)(316002)(54906003)(16526019)(478600001)(82740400003)(186003)(81166007)(336012)(426003)(356005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2022 10:20:50.5746
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +s4aI2G0QA90/fGb44WrGNRd2r6gL0zxlXk4jbBeUyQ3zjKnE0h35SczFMQrh1Iv6nhj4S+CwlA/RdvjIWOGj51VwPUpuOaLeJFbJ3sqRMU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB6246
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d768d5e5-6fa5-4acc-ccb2-08da924cf845
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT021.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5963
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Andrew Morton wrote:
-> On Thu, 8 Sep 2022 15:51:50 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
+On 08.09.22 12:45:16, Dan Williams wrote:
+> Rafael J. Wysocki wrote:
+> > On Thu, Sep 8, 2022 at 8:05 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> > >
+> > > Robert Richter wrote:
+> > > > A lookup of a host bridge's corresponding acpi device (struct
+> > > > acpi_device) is not possible, for example:
+> > > >
+> > > >       adev = ACPI_COMPANION(&host_bridge->dev);
+> > > >
+> > > > This could be useful to find a host bridge's fwnode handle and to
+> > > > determine and call additional host bridge ACPI parameters and methods
+> > > > such as HID/CID or _UID.
+> > >
+> > > When is this explicitly needed. "Could be useful" is interesting, but it
+> > > needs to have a practical need.
+> > 
+> > It is needed and it is present on x86 AFAICS (see my last reply in this thread).
+> > 
+> > This seems to be addressing an ARM64-specific issue.
+> > 
 > 
-> > Jonathan Cameron wrote:
-> > > On Wed, 7 Sep 2022 18:07:31 -0700
-> > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > > 
-> > > > Andrew Morton wrote:
-> > > > > I really dislike the term "flush".  Sometimes it means writeback,
-> > > > > sometimes it means invalidate.  Perhaps at other times it means
-> > > > > both.
-> > > > > 
-> > > > > Can we please be very clear in comments and changelogs about exactly
-> > > > > what this "flush" does.   With bonus points for being more specific in the 
-> > > > > function naming?
-> > > > >   
-> > > > 
-> > > > That's a good point, "flush" has been cargo-culted along in Linux's
-> > > > cache management APIs to mean write-back-and-invalidate. In this case I
-> > > > think this API is purely about invalidate. It just so happens that x86
-> > > > has not historically had a global invalidate instruction readily
-> > > > available which leads to the overuse of wbinvd.
-> > > > 
-> > > > It would be nice to make clear that this API is purely about
-> > > > invalidating any data cached for a physical address impacted by address
-> > > > space management event (secure erase / new region provision). Write-back
-> > > > is an unnecessary side-effect.
-> > > > 
-> > > > So how about:
-> > > > 
-> > > > s/arch_flush_memregion/cpu_cache_invalidate_memregion/?
-> > > 
-> > > Want to indicate it 'might' write back perhaps?
-> > > So could be invalidate or clean and invalidate (using arm ARM terms just to add
-> > > to the confusion ;)
-> > > 
-> > > Feels like there will be potential race conditions where that matters as we might
-> > > force stale data to be written back.
-> > > 
-> > > Perhaps a comment is enough for that. Anyone have the "famous last words" feeling?
-> > 
-> > Is "invalidate" not clear that write-back is optional? Maybe not.
-> 
-> Yes, I'd say that "invalidate" means "dirty stuff may of may not have
-> been written back".  Ditto for invalidate_inode_pages2().
-> 
-> > Also, I realized that we tried to include the address range to allow for
-> > the possibility of flushing by virtual address range, but that
-> > overcomplicates the use. I.e. if someone issue secure erase and the
-> > region association is not established does that mean that mean that the
-> > cache invalidation is not needed? It could be the case that someone
-> > disables a device, does the secure erase, and then reattaches to the
-> > same region. The cache invalidation is needed, but at the time of the
-> > secure erase the HPA was unknown.
-> > 
-> > All this to say that I feel the bikeshedding will need to continue until
-> > morale improves.
-> > 
-> > I notice that the DMA API uses 'sync' to indicate, "make this memory
-> > consistent/coherent for the CPU or the device", so how about an API like
-> > 
-> >     memregion_sync_for_cpu(int res_desc)
-> > 
-> > ...where the @res_desc would be IORES_DESC_CXL for all CXL and
-> > IORES_DESC_PERSISTENT_MEMORY for the current nvdimm use case.
-> 
-> "sync" is another of my pet peeves ;) In filesystem land, at least. 
-> Does it mean "start writeback and return" or does it mean "start
-> writeback, wait for its completion then return".  
+> Ah, ok, thanks for pointing that out.
 
-Ok, no "sync" :).
+No, it is x86. And true, it is set. So this series is actually working
+without this patch. It can be dropped.
 
-/**
- * cpu_cache_invalidate_memregion - drop any CPU cached data for
- *     memregions described by @res_des
- * @res_desc: one of the IORES_DESC_* types
- *
- * Perform cache maintenance after a memory event / operation that
- * changes the contents of physical memory in a cache-incoherent manner.
- * For example, memory-device secure erase, or provisioning new CXL
- * regions. This routine may or may not write back any dirty contents
- * while performing the invalidation.
- *
- * Returns 0 on success or negative error code on a failure to perform
- * the cache maintenance.
- */
-int cpu_cache_invalidate_memregion(int res_desc)
+Now, I just checked my logs. The reason I was adding this is that
+during code development I modified the code to have bridge->dev.parent
+set. Then, the fwnode is not linked. I later dropped that change but
+kept this patch.
 
-??
+Thanks for catching this.
+
+-Robert
