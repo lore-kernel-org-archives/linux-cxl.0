@@ -2,201 +2,87 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1BBC54EE9
-	for <linux-cxl@archiver.kernel.org>; Tue, 13 Sep 2022 17:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 662D5ECAAD3
+	for <linux-cxl@archiver.kernel.org>; Wed, 14 Sep 2022 20:47:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232960AbiIMR1u (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 13 Sep 2022 13:27:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60774 "EHLO
+        id S229518AbiINUrx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 14 Sep 2022 16:47:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232964AbiIMR1S (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 13 Sep 2022 13:27:18 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A265191D24;
-        Tue, 13 Sep 2022 09:15:54 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id E35F8820A31;
-        Tue, 13 Sep 2022 16:15:46 +0000 (UTC)
-Received: from pdx1-sub0-mail-a250 (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id BEE0B820FC4;
-        Tue, 13 Sep 2022 16:15:45 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1663085746; a=rsa-sha256;
-        cv=none;
-        b=v/cbx8DJ+4lvFam+asAi7Iptj4LcSXnDsr4AZJ3nnGr7nydhBWRgFBlHXg9vpcm84F0GzL
-        NV1d2Giow2T0VGpw1Nr7+1YCqERAbMrmCv3aofUyv8hhSeAO/7bB6Z0CI9HIRRE6NNY4Yn
-        uULMSAwSQEqncey1YGaEp3d1CCA9FL7w567U1GKGnjsjaEUpBa0nlcj+rIyhzFH3UqauWO
-        PFng9cyhx8+7QXkUgzsczifIwq4SKZqywrQM3myFS/onoBLO9FR+vZjH1DCycjryOE4Q2+
-        ebI8EwjlHzUQPEvUevNR0dcXi5ZN3h7T4o32PKQmdlEI61Rpvl7CZw2mzkQKag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1663085746;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=ohm075s1m9Kp9Od2CHtG67wU33nUHIoZHydV6G2vhDY=;
-        b=QtS+WWWyDokWth6M9fe419i29RtMd1jMVq4scewBj5jqh86LONSeeJ6YXMvpd0khAOrNJl
-        MQBZ66+ej2pY5QcillVUaY5YpBrr7H+Bl6dSyOpyARU48b5fr5RbNv86QrPFtce1UXKCUo
-        SfJJasDi5momk9Csl3FXG6OEfi0L4r5iLk7olDnZF5EHpCSp9g+fAuC+H1hpPbOApHxIG5
-        zCjOurFa68fTT2DHTSec4X/jhPTHvT48fWJ54otqqslcksa0QvBVQzgOJR4QTA7L+oFkTd
-        qPHafYLSJqxutLYwTdZTcFxKj3rAajxHzIHsgaNXr0VX09YU3mA6F3jsaL6Zhw==
-ARC-Authentication-Results: i=1;
-        rspamd-f776c45b8-bftt8;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Attack-Company: 1f85ae8b2d6d1fd3_1663085746430_1702281768
-X-MC-Loop-Signature: 1663085746430:2199615271
-X-MC-Ingress-Time: 1663085746430
-Received: from pdx1-sub0-mail-a250 (pop.dreamhost.com [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.109.219.78 (trex/6.7.1);
-        Tue, 13 Sep 2022 16:15:46 +0000
-Received: from offworld (unknown [185.122.133.20])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a250 (Postfix) with ESMTPSA id 4MRpV4190jz2F;
-        Tue, 13 Sep 2022 09:15:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1663085745;
-        bh=ohm075s1m9Kp9Od2CHtG67wU33nUHIoZHydV6G2vhDY=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=oPJZbt3RwtuVu5vSAY3pT27Ir2YQitrznv+xxsn6vAlPvPdRVHomHa9SUnf3gwvKl
-         /KkV9My3lKDYsJ2u6bDVhi9ixnNTn0U8p/liDviDS9KvZ6JhIonbwEzXcKokWRD6jK
-         emicAUY+gA1+9SInNXMBYlaZRTzvN64aFlNpWCcLxu5i+yFEnNEcxpEA4psrODM2YC
-         N8n/rtlsYa2e8zCVmNJJ30+FeFHyduSp8SDjH0H0Z2UeB0bDwPp96M+VD8+zLC7lwi
-         66aI/IurgP0DioI6SogGrP1M/Jnd6benT9BTcFzB/uahRqYhVFmGt/r1dCiUUuVafN
-         if0tCIn8cOzFA==
-Date:   Tue, 13 Sep 2022 08:56:24 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-        peterz@infradead.org, bp@alien8.de, dave.jiang@intel.com,
-        vishal.l.verma@intel.com, ira.weiny@intel.com,
-        a.manzanares@samsung.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] memregion: Add arch_flush_memregion() interface
-Message-ID: <20220913155624.yx3dbab6x5uza2av@offworld>
-References: <20220829212918.4039240-1-dave@stgolabs.net>
- <20220907153016.f7cd4f42a337fedae8319f28@linux-foundation.org>
- <631940536d040_2736529437@dwillia2-xfh.jf.intel.com.notmuch>
- <20220908141319.00000f01@huawei.com>
- <631a7206afc2_166f29413@dwillia2-xfh.jf.intel.com.notmuch>
- <20220908160035.f030e3e533a996eadc04dbd5@linux-foundation.org>
- <631a7932c6eb5_166f2945d@dwillia2-xfh.jf.intel.com.notmuch>
- <20220909124326.00002c85@huawei.com>
+        with ESMTP id S229503AbiINUrw (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 14 Sep 2022 16:47:52 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB8016AA25
+        for <linux-cxl@vger.kernel.org>; Wed, 14 Sep 2022 13:47:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663188470; x=1694724470;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Wpw38cfRGWJN/U73lTt426j1tWNt+0dnnuNoc4lw4hY=;
+  b=HunmfLfN8XAa5A5tHcTUkFZAdJK57wwo3pRhvvPJ2rHuJZp74Y9n09lf
+   JQY1GPEWEnBpHTJCVpJ1U/BsqY0uXVeDy5M4E9upFANz0fdW4V4w7KY3R
+   DrX1CDOAJL+rro+08ISOz+RTBzPt1+h0hUTazJUsilzMnyiCJFR5ZNhGH
+   doA/EJcSWQXCKrJpPkPEQfB6RfM/YaFd18JynCptBl4KIMNbA/Ehw39K5
+   8tYMPBJSOz+WRVkViq4FE1XI6vLSm/qK95dNGMbqsc3LK5XjCxg3pRlTt
+   hRimO/Pn48S04jRditdZvNhwgj2INNSE/w1Y0aLbkY7SZIkQoEjOMtUJJ
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10470"; a="281570246"
+X-IronPort-AV: E=Sophos;i="5.93,315,1654585200"; 
+   d="scan'208";a="281570246"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2022 13:47:50 -0700
+X-IronPort-AV: E=Sophos;i="5.93,315,1654585200"; 
+   d="scan'208";a="568155163"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2022 13:47:49 -0700
+Subject: [PATCH 0/7] ndctl: cxl: add monitor support for trace events
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     alison.schofield@intel.com, vishal.l.verma@intel.com,
+        ira.weiny@intel.com, bwidawsk@kernel.org, dan.j.williams@intel.com
+Date:   Wed, 14 Sep 2022 13:47:49 -0700
+Message-ID: <166318836385.3087953.6809315284050736931.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/1.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20220909124326.00002c85@huawei.com>
-User-Agent: NeoMutt/20220429
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 09 Sep 2022, Jonathan Cameron wrote:
+This patch series for ndctl implements the monitor command for the cxl tool.
+The initial implementation will collect CXL trace events emitted by the
+kernel. libtraceevent and libtracefs will be used to parse the trace
+event buffer. The monitor will pend on an epoll fd and wait for new event
+entries to be posted. The output will be in json format. By default the events
+are emitted to stdio, but can also be logged to a file. Each event is converted
+to a JSON object and logged as such. All the fields exported are read by the
+monitor code and added to the JSON object.
 
->On Thu, 8 Sep 2022 16:22:26 -0700
->Dan Williams <dan.j.williams@intel.com> wrote:
->
->> Andrew Morton wrote:
->> > On Thu, 8 Sep 2022 15:51:50 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
->> >
->> > > Jonathan Cameron wrote:
->> > > > On Wed, 7 Sep 2022 18:07:31 -0700
->> > > > Dan Williams <dan.j.williams@intel.com> wrote:
->> > > >
->> > > > > Andrew Morton wrote:
->> > > > > > I really dislike the term "flush".  Sometimes it means writeback,
->> > > > > > sometimes it means invalidate.  Perhaps at other times it means
->> > > > > > both.
->> > > > > >
->> > > > > > Can we please be very clear in comments and changelogs about exactly
->> > > > > > what this "flush" does.   With bonus points for being more specific in the
->> > > > > > function naming?
->> > > > > >
->> > > > >
->> > > > > That's a good point, "flush" has been cargo-culted along in Linux's
->> > > > > cache management APIs to mean write-back-and-invalidate. In this case I
->> > > > > think this API is purely about invalidate. It just so happens that x86
->> > > > > has not historically had a global invalidate instruction readily
->> > > > > available which leads to the overuse of wbinvd.
->> > > > >
->> > > > > It would be nice to make clear that this API is purely about
->> > > > > invalidating any data cached for a physical address impacted by address
->> > > > > space management event (secure erase / new region provision). Write-back
->> > > > > is an unnecessary side-effect.
->> > > > >
->> > > > > So how about:
->> > > > >
->> > > > > s/arch_flush_memregion/cpu_cache_invalidate_memregion/?
->> > > >
->> > > > Want to indicate it 'might' write back perhaps?
->> > > > So could be invalidate or clean and invalidate (using arm ARM terms just to add
->> > > > to the confusion ;)
->> > > >
->> > > > Feels like there will be potential race conditions where that matters as we might
->> > > > force stale data to be written back.
->> > > >
->> > > > Perhaps a comment is enough for that. Anyone have the "famous last words" feeling?
->> > >
->> > > Is "invalidate" not clear that write-back is optional? Maybe not.
->> >
->> > Yes, I'd say that "invalidate" means "dirty stuff may of may not have
->> > been written back".  Ditto for invalidate_inode_pages2().
->> >
->> > > Also, I realized that we tried to include the address range to allow for
->> > > the possibility of flushing by virtual address range, but that
->> > > overcomplicates the use. I.e. if someone issue secure erase and the
->> > > region association is not established does that mean that mean that the
->> > > cache invalidation is not needed? It could be the case that someone
->> > > disables a device, does the secure erase, and then reattaches to the
->> > > same region. The cache invalidation is needed, but at the time of the
->> > > secure erase the HPA was unknown.
->> > >
->> > > All this to say that I feel the bikeshedding will need to continue until
->> > > morale improves.
->> > >
->> > > I notice that the DMA API uses 'sync' to indicate, "make this memory
->> > > consistent/coherent for the CPU or the device", so how about an API like
->> > >
->> > >     memregion_sync_for_cpu(int res_desc)
->> > >
->> > > ...where the @res_desc would be IORES_DESC_CXL for all CXL and
->> > > IORES_DESC_PERSISTENT_MEMORY for the current nvdimm use case.
->> >
->> > "sync" is another of my pet peeves ;) In filesystem land, at least.
->> > Does it mean "start writeback and return" or does it mean "start
->> > writeback, wait for its completion then return".
->>
->> Ok, no "sync" :).
->>
->> /**
->>  * cpu_cache_invalidate_memregion - drop any CPU cached data for
->>  *     memregions described by @res_des
->>  * @res_desc: one of the IORES_DESC_* types
->>  *
->>  * Perform cache maintenance after a memory event / operation that
->>  * changes the contents of physical memory in a cache-incoherent manner.
->>  * For example, memory-device secure erase, or provisioning new CXL
->>  * regions. This routine may or may not write back any dirty contents
->>  * while performing the invalidation.
->>  *
->>  * Returns 0 on success or negative error code on a failure to perform
->>  * the cache maintenance.
->>  */
->> int cpu_cache_invalidate_memregion(int res_desc)
->
->lgtm
+---
 
-Likewise, and I don't see anyone else objecting so I'll go ahead and send
-a new iteration.
+Dave Jiang (7):
+      ndctl: cxl: add helper function to parse trace event to json object
+      ndctl: cxl: add helper to parse through all current events
+      ndctl: cxl: add common function to enable event trace
+      ndctl: cxl: add common function to disable event trace
+      ndctl: cxl: add monitor function for event trace events
+      ndctl: cxl: add logging functions for monitor
+      ndctl: cxl: add monitor command to cxl
 
-Thanks,
-Davidlohr
+
+ cxl/builtin.h     |   1 +
+ cxl/cxl.c         |   1 +
+ cxl/event_trace.c | 236 ++++++++++++++++++++++++++++++++++++++++++++++
+ cxl/event_trace.h |  23 +++++
+ cxl/meson.build   |   4 +
+ cxl/monitor.c     | 235 +++++++++++++++++++++++++++++++++++++++++++++
+ meson.build       |   3 +
+ 7 files changed, 503 insertions(+)
+ create mode 100644 cxl/event_trace.c
+ create mode 100644 cxl/event_trace.h
+ create mode 100644 cxl/monitor.c
+
+--
+
