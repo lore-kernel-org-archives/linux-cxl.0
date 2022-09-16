@@ -2,165 +2,205 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBBEECAAD8
-	for <linux-cxl@archiver.kernel.org>; Fri, 16 Sep 2022 16:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73524ECAAD8
+	for <linux-cxl@archiver.kernel.org>; Fri, 16 Sep 2022 18:04:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229511AbiIPQ1q (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 16 Sep 2022 12:27:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44874 "EHLO
+        id S229932AbiIPSEa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 16 Sep 2022 14:04:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbiIPQ1q (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 16 Sep 2022 12:27:46 -0400
+        with ESMTP id S229923AbiIPSE3 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 16 Sep 2022 14:04:29 -0400
 Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE9BF8E440
-        for <linux-cxl@vger.kernel.org>; Fri, 16 Sep 2022 09:27:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B089E309;
+        Fri, 16 Sep 2022 11:04:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663345664; x=1694881664;
+  t=1663351467; x=1694887467;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=csfU7e4bennr+mK+W7ypjZE/jPf6/BeNjlTitYbPekY=;
-  b=EtM0Q41/PQQXi6FAfKCtpJBkjS09DabVp5htW8skDMIuR+ALw6b6l3Ko
-   a//ZOxRDK4U58BtjVVSSfC/VcUtLcYdgslGYDq+lvm95k/vKYz5VADvjT
-   RO617K9CDiLCb4eZfmWdM+2C87z3OG5TWEb0z92y9ssTtecaCEXlpWvM/
-   ruGsi5sWLuUAkffdunzePfjMvXYtlqg7XNUhdLLltiSAfBk/1sV08tr0r
-   Yf4RtdEDuEtr65PgwCahA5W5sXx4w9AS7gM3K8DVdseG6Oromnf2ZxDRK
-   WSZmHYqudTp1JjMO6IsbecaSaF9TzCmnEfuMKyFLvYeCtO3S1pzYfUo4c
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10472"; a="279409820"
+   in-reply-to:mime-version;
+  bh=GuuRbRtDpNheL0nTQBEk/Fq4HSKqT5XOvLHgbbQAUzE=;
+  b=oE9n12emsQ5NdqLNNHLf72zklrx9B2QTHw45fbW0pyUpy8Ve62s15fYV
+   QQt/auC2VPJryGsfg+MaXqe8sPnGo7fieYXa9fqWsoFf3wKffUulFCt8f
+   sb5DQlfs/YBQAE1BN4QWBIWb3MjA//cwKJqJfb7pV3RDZPsRZez2R8Ppo
+   MrG9kJgoAFRMlkyHWrCclu/9yhoNBKd8UCXNxC91Yy/Fb9sz3gWbgqDnG
+   lvoKp9r3CJsMll6VfRURnzNBHtoeiQTwe+Mc1d0JeukPtqAIgRhWlNcg3
+   oYM0Ji5rNN9Ln6BWBKvZkzrXmZpxx8GEIfrg2hpNjadgG1nEKVO3WZNlA
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10472"; a="279428512"
 X-IronPort-AV: E=Sophos;i="5.93,320,1654585200"; 
-   d="scan'208";a="279409820"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2022 09:26:51 -0700
+   d="scan'208";a="279428512"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2022 11:04:09 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,320,1654585200"; 
-   d="scan'208";a="595303940"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.54.10])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2022 09:26:50 -0700
-Date:   Fri, 16 Sep 2022 09:26:48 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
+   d="scan'208";a="568912982"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orsmga003.jf.intel.com with ESMTP; 16 Sep 2022 11:04:09 -0700
+Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 16 Sep 2022 11:04:08 -0700
+Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
+ fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 16 Sep 2022 11:04:08 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31 via Frontend Transport; Fri, 16 Sep 2022 11:04:08 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.107)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.31; Fri, 16 Sep 2022 11:04:06 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MaFrmMCLh4ui5fTvBItlx83bTqW1yC9IMncK1AlwYs3kfmytHhNaYtPJReq7tnxhm5XDTxN167PMIWIjCkVnv/MgiLmpq3ez1Wc34+KlVGFb4sSOvlm9GjTT1yPcvrUG5m0z+kVOBvJxoHpN2alnRqoDVBfuVgV/Yixqb7Ox5Nr724UhuQlSiZ4ipExmqXR+6zs9gq4f7n0RkI3MBM+brBjnhLo7s9xXdkDyQUW8/Yi1RoVA6kKchB+3kp1tqUhudGQVCilaZ2CsA7Id7Ra5k7edT8D24l16kO1bfzYXQSr37w2qsDVQJNdIjAzo377GthRGrarw2b450RWsbb8Xug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KfBjzvmwtCEQQxEJGjwjNkSbixaZIsjDBc0/rOFnXho=;
+ b=RcfFkF50f/lu6igbh4ltMBdjE6jQbGEHM4MHz+EPBRmuKvuNcxe5ZiexGcvAxFwPiDiVDCBA1x99y1QhPQkmoINhrYNbhE99a9ipt5vhMY7E5ZcTgEGqWcp+YdIBvoDEFV5oSQbOJPxkQsHAhs1iLga0xU6DVMynOESSp3hCUAiAaXfhhDrpimdzvtyxvjTG7JoGLc11RA6g8aLAeTrAUAxjlLp00iozIu595JBUb8aJRpiv6gE8LsZtQbnviGjT98R5VIaLPygmUfQ3cIXRkxIadOZudByC+YCAFu1+bebogDLuXm7CQqKipc/fwOcUqqy+Bsom6NdMDH7JnYqU/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20) by SJ1PR11MB6228.namprd11.prod.outlook.com
+ (2603:10b6:a03:459::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.12; Fri, 16 Sep
+ 2022 18:04:04 +0000
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::9847:345e:4c5b:ca12]) by MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::9847:345e:4c5b:ca12%6]) with mapi id 15.20.5632.016; Fri, 16 Sep 2022
+ 18:04:04 +0000
+Date:   Fri, 16 Sep 2022 11:04:01 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Robert Richter <rrichter@amd.com>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>
-Cc:     linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] cxl/acpi: Support CXL XOR Interleave Math (CXIMS)
-Message-ID: <YySjyPtc0Oges2zH@aschofie-mobl2>
-References: <cover.1663291370.git.alison.schofield@intel.com>
- <6cbe113e3aebc732d10cb77a316f547b581f22fa.1663291370.git.alison.schofield@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH 02/15] cxl/core: Check physical address before mapping it
+ in devm_cxl_iomap_block()
+Message-ID: <6324ba91a05cb_2a6ded29457@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20220831081603.3415-1-rrichter@amd.com>
+ <20220831081603.3415-3-rrichter@amd.com>
+ <6319824968fa7_580162946f@dwillia2-xfh.jf.intel.com.notmuch>
+ <YxsvPwzxoYBMnN2y@rric.localdomain>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <6cbe113e3aebc732d10cb77a316f547b581f22fa.1663291370.git.alison.schofield@intel.com>
+In-Reply-To: <YxsvPwzxoYBMnN2y@rric.localdomain>
+X-ClientProxiedBy: SJ0PR05CA0101.namprd05.prod.outlook.com
+ (2603:10b6:a03:334::16) To MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|SJ1PR11MB6228:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2fd79824-e755-45e5-56e2-08da980dd734
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: gZvKu41/CJu+N+XFVeNXtGd8fl59iirYNXGGEHguZb7HmS9qGzapP5OwR5TrjerZfwFhAtxO9LJqynfffVYITFczXAvIc9ikFJKjH/En7+hlDN5kbKV3oD7UF/HW+cilWQEe2ngqqzDSwnusU1gfXqMoo+hTOUjl+JtLxiB36xu2yo2R330omAJxfUgjkc5BXOhw4F301kOkDAzmflZ9an9NBwuGSWVnjxoZtaOCSPaFJYGnHdLdrnCSaTBlfkjFNCBDxZwLhNgWcxNJ8KLSJMBUM6Bxg20loqbDxAYdc3Bp2AVZD5axDytD7eiodat7craC3SPemq8tE0IUE3ftUeWm9R/yhXmaA1+edvSJGscxMjjqPMOJt1j2ERDgDKIcjqjfIiHL+23Oiu0SSjKU0se8bs+btAVZXqceeClYYaHxXzTcAhbO1G2UtvU6LzBMBk6pyoW2rg4O955KozbUQ1i1BX/gACSq4guSofWU3hSIUeiz7q+G8RQ2kuNUmY83F3LN4tPL8o8ASnyj2iTsTBDe79qVCgPhuQO7EUyf7m07iVUW4yHqINAeA8z7rs5rPWqtuBsYQA7d75PR2KCX/6BV6QLHwgWuvVDZno7FaCdNtcIdLLrfHmA7ipdNY9KP9fQgDcpDCjA4KWLiIT59YlNEhBxJe+qEC+voHL2YnSKpHzPmZGbrdh071rkAL0jgU+21ZHLONNhJaq+W8SSQ1A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(366004)(376002)(346002)(396003)(39860400002)(136003)(451199015)(6506007)(6666004)(6512007)(66556008)(53546011)(8676002)(4326008)(54906003)(66476007)(6486002)(110136005)(66946007)(9686003)(38100700002)(83380400001)(82960400001)(86362001)(186003)(8936002)(478600001)(316002)(26005)(41300700001)(5660300002)(2906002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?0ai8uvC7D9ActblvMOMXvYiSQd9DxR0UnLxfftobiD8GCGeRzHVbajjSnsz5?=
+ =?us-ascii?Q?FVtqPC74uc9kbWR0ZRO3u8rcQqgQ4bTs686Dz5BCkqgiqh1vqpeBHwD5sQJK?=
+ =?us-ascii?Q?RrMrZ6u4Sy4PaQnzv5tRZYE5V9b5trZ7t827631vU/Zgv4PiIMhVGnZIhXXk?=
+ =?us-ascii?Q?peypcfmIS/d2C4RlnLi4e0C65xq8WNKxf2ViZeKXcYjMplVBnRUFZ7vZ4Miz?=
+ =?us-ascii?Q?MQvc0iiSbWTgK4fFOqWGx323KDNp3ChIWM+Z6Ip+nQdZApW1QWuChxo6Kgf9?=
+ =?us-ascii?Q?P9V9sgy3y1PKq1cvJj+XRvLeKkMU+0SEXUYOpxtX9ZV2Dt7tj528ZXnpymbi?=
+ =?us-ascii?Q?F+R7XoYBxLX3++5kOAEHqac5ME81ehV5vw5fRMeamB6HlxOHx+7zTR3DXq3e?=
+ =?us-ascii?Q?3Q3KACf+2N2dexGKmKLFcWrksyGJWCncxxu2N3zB6WH8C7d7TDV5t0u0T5oN?=
+ =?us-ascii?Q?liVcGfuNnqUoH2nr3jdW5nNJPsAx+kLLwty7blF8rYy3skQ2OVxzsQ2mERl7?=
+ =?us-ascii?Q?2PlAFfchpSgz2MKT9vg2AYywCDt+Wn2Dy0Kh5nFBXcXh6jliLLlSAEhJvrox?=
+ =?us-ascii?Q?pOE+48HWACkZwKEhYNpn1dJlhWuBFkwa3lcOOKzYhRVhPj5x/CqqeipH2cs7?=
+ =?us-ascii?Q?Ic55t91pCOKsRdZ2w/pwJqWruVbk7FxkP2m+ojb0mnHXjh80DJY7JNqEB3yk?=
+ =?us-ascii?Q?7T7iWYywNkVuUN8cvmqhibgcSeApu7R15xA/f3sAcOFhEUzWFRMHGCK1Jzz5?=
+ =?us-ascii?Q?cMqlXK8DnMk0dLI8iqrfY/rnAEDVfGdKzJRJ+374Cha5tjLcjYvvTl+8XN2R?=
+ =?us-ascii?Q?Es0ihtwelxyHlZz3LEPLyGOOR40kc2FBMhayqAU52ZZciEmSrMwCidYNfGju?=
+ =?us-ascii?Q?G/lHrJHAY90PLakVwMyFRM7cFJYf8NJ2LCcIHCIkZFRDmGPGqgXYfeJIS7ef?=
+ =?us-ascii?Q?qe8/h6puFP3Ra3DbcwwXoZmYWROGK36OBDMfj9sMkAtTJhmFOeyGfCeWZxWY?=
+ =?us-ascii?Q?nvywl8AZGZSqzjB2VwDTw6gyFLZ/PU0Yd5hNjhM5aGvQW6Igf6vVyUK7ikkc?=
+ =?us-ascii?Q?vZTGsVXeXGvEYKryowEDN762F09zoLT40AKsGh8qJfV2W/mnLsH1o/EkAIE/?=
+ =?us-ascii?Q?u9aXvZ5XYtvla27V0lsL7JKwCUpHuI0cB6YNBiWjWNZHQupEVlYgOoiBi5Hd?=
+ =?us-ascii?Q?Fm9LcjjA+oxKLGnXqL0thSd14mitavkdQybi4x5dhZTfmYxF7B85I7qrkjnq?=
+ =?us-ascii?Q?ae3lCLxQfRlc4KN6vaGZ0B+evm3DEBm62gCCQkRO4Om+bSg19JVXnCXoGTaI?=
+ =?us-ascii?Q?W7Fe8aEoztAVAh7zaU2oC20Ot/26J1ibUWy/xzItJGR+ZSrlOYVZgdpfzc5q?=
+ =?us-ascii?Q?S0+elbm18x7mQtA0VS7OUn0ZBXgYuZlRQktV1QaJfmCEYK+m2ANQ75mXLXOz?=
+ =?us-ascii?Q?kcCr80TDaZEJGfH12yxt07xM5pVW70QDod+6iD38UiYjPw/vj0+rKQOcgBiA?=
+ =?us-ascii?Q?YBwIqWYBTQAGo3453YH6FXfx08FPZwnkTzVqEIoU48rHkUxPIXTzjxs9fRXc?=
+ =?us-ascii?Q?kAuv6UTbQx5SKBe4q+qkIUD06VRxk9dmC+OStEt5dh5jNOAVKi5gyOz0GQlv?=
+ =?us-ascii?Q?kQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fd79824-e755-45e5-56e2-08da980dd734
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2022 18:04:04.1843
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LietZGQoqsovSo1F40jg3FaTPiUTx7gAHKZaw2/kF8bizleyFPq7XuyK/Skaf3nS+F9sQMiswCRuyiXAf9X3BVG3Wxd319KCNrM13hTSDOY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR11MB6228
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Sep 15, 2022 at 06:30:23PM -0700, alison.schofield@intel.com wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
+Robert Richter wrote:
+> On 07.09.22 22:48:57, Dan Williams wrote:
+> > Robert Richter wrote:
+> > > The physical base address of a CXL range can be invalid and is then
+> > > set to CXL_RESOURCE_NONE. Early check this case before mapping a
+> > > memory block in devm_cxl_iomap_block().
+> > > 
+> > > Signed-off-by: Robert Richter <rrichter@amd.com>
+> > > ---
+> > >  drivers/cxl/core/regs.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > > 
+> > > diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> > > index 39a129c57d40..f216c017a474 100644
+> > > --- a/drivers/cxl/core/regs.c
+> > > +++ b/drivers/cxl/core/regs.c
+> > > @@ -165,6 +165,9 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
+> > >  	void __iomem *ret_val;
+> > >  	struct resource *res;
+> > >  
+> > > +	if (addr == CXL_RESOURCE_NONE)
+> > > +		return NULL;
+> > > +
+> > >  	res = devm_request_mem_region(dev, addr, length, dev_name(dev));
+> > >  	if (!res) {
+> > >  		resource_size_t end = addr + length - 1;
+> > > -- 
+> > > 2.30.2
+> > > 
+> > 
+> > devm_request_mem_region() succeeds for you when this happens? More
+> > details about the failure scenario please.
 > 
-> When the CFMWS is using XOR math, parse the corresponding
-> CXIMS structure and store the xormaps in the root decoder
-> structure. Use the xormaps in a new lookup, cxl_hb_xor(),
-> to find a targets entry in the host bridge interleave
-> target list.
+> No, CXL_RESOURCE_NONE (all FFs) is used as address. A broken range is
+> calculated that even overflows. I only vaguely remember the exact
+> error message.
 > 
-> Defined in CXL Specfication 3.0 Section: 9.17.1
+> This may happen e.g. if the Component Register Block is missing in the
+> DVSEC. cxl_find_regblock() may fail then and returns
+> CXL_RESOURCE_NONE. There are a couple of code paths there
+> component_reg_phys is set to CXL_RESOURCE_NONE without exiting
+> immediately.
 > 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> ---
->  drivers/cxl/cxl.h  |   2 +
->  drivers/cxl/acpi.c | 132 +++++++++++++++++++++++++++++++++++++++++++--
->  2 files changed, 129 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index f680450f0b16..0a17a7007bff 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -330,12 +330,14 @@ struct cxl_switch_decoder {
->   * @res: host / parent resource for region allocations
->   * @region_id: region id for next region provisioning event
->   * @calc_hb: which host bridge covers the n'th position by granularity
-> + * @platform_data: platform specific configuration data
->   * @cxlsd: base cxl switch decoder
->   */
->  struct cxl_root_decoder {
->  	struct resource *res;
->  	atomic_t region_id;
->  	struct cxl_dport *(*calc_hb)(struct cxl_root_decoder *cxlrd, int pos);
-> +	void *platform_data;
->  	struct cxl_switch_decoder cxlsd;
->  };
->  
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index fb649683dd3a..3ff0fd6e3e93 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -9,6 +9,106 @@
->  #include "cxlpci.h"
->  #include "cxl.h"
->  
-> +struct cxims_data {
-> +	int nr_maps;
-> +	u64 xormaps[];
-> +};
-> +
-> +/*
-> + * Find a targets entry (n) in the host bridge interleave list.
-> + * CXL Specfication 3.0 Table 9-22
-> + */
-> +static struct cxl_dport *cxl_hb_xor(struct cxl_root_decoder *cxlrd, int pos)
-> +{
-> +	struct cxl_switch_decoder *cxlsd = &cxlrd->cxlsd;
-> +	struct cxims_data *cximsd = cxlrd->platform_data;
-> +	struct cxl_decoder *cxld = &cxlsd->cxld;
-> +	int ig = cxld->interleave_granularity;
-> +	int iw = cxld->interleave_ways;
-> +	int i, eiw, n = 0;
-> +	u64 hpa, mask;
-> +
-> +	if (dev_WARN_ONCE(&cxld->dev,
-> +			  cxld->interleave_ways != cxlsd->nr_targets,
-> +			  "misconfigured root decoder\n"))
-> +		return NULL;
-> +
-> +	if (iw == 1)
-> +		/* Entry is always 0 for no interleave */
-> +		return cxlrd->cxlsd.target[0];
-> +
-> +	hpa = cxlrd->res->start + pos * ig;
-> +
-> +	if (iw == 3) {
-> +		/* Initialize 'i' for the modulo calc */
-> +		i = 0;
-> +		goto no_map;
-> +	}
-> +
-> +	/* IW: 2,4,6,8,12,16 begin building 'n' using xormaps */
-> +	for (i = 0; i < cximsd->nr_maps; i++)
-> +		n |= (hweight64(hpa & cximsd->xormaps[i]) & 1) << i;
-> +
-> +no_map:
-> +	/* IW: 3,6,12 add a modulo calculation to 'n' */
-> +	if (!is_power_of_2(iw)) {
-> +		eiw = ilog2(iw / 3) + 8;
-> +		mask = GENMASK(51, eiw + ig);
+> I saw it during code development, when I pre-inititalized a port with
+> component_reg_phys set to CXL_RESOURCE_NONE. Since that case can
+> generally happen, I think it must be checked.
 
-lkp i386 build warned:
->> drivers/cxl/acpi.c:56:10: warning: shift count is negative
-+[-Wshift-count-negative]
-                   mask = GENMASK(51, eiw + ig);
-                          ^~~~~~~~~~~~~~~~~~~~~
-
-Will change to GENMASK_ULL.
-
-> +		n |= (hpa & mask) % 3 << i;
-> +	}
-> +
-> +	return cxlrd->cxlsd.target[n];
-> +}
-
-snip
-
-> +
-> 
+I think Jonathan had it right when we posited that the code should
+probably have failed before getting to this point. For example, the
+scenarios where the driver looks for a component register block via the
+register locator DVSEC are not valid for RCDs in the first instance.
