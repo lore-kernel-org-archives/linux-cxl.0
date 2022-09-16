@@ -2,329 +2,197 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3634ECAAA1
-	for <linux-cxl@archiver.kernel.org>; Fri, 16 Sep 2022 23:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E65ECAAA1
+	for <linux-cxl@archiver.kernel.org>; Fri, 16 Sep 2022 23:16:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229804AbiIPXLs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 16 Sep 2022 19:11:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56666 "EHLO
+        id S229769AbiIPXQm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 16 Sep 2022 19:16:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229781AbiIPXLr (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 16 Sep 2022 19:11:47 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3CDF7C32C
-        for <linux-cxl@vger.kernel.org>; Fri, 16 Sep 2022 16:11:46 -0700 (PDT)
+        with ESMTP id S229851AbiIPXQl (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 16 Sep 2022 19:16:41 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0E5FBC81E;
+        Fri, 16 Sep 2022 16:16:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663369906; x=1694905906;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ueGRt4thWrbvzTif0qdSUiBRjX3AujplroxNnr6zkhA=;
-  b=OJdbZ3jRZZBUTkxSDUzEeApQQSiy0Nlx5HR8gFq/aMatt2cMbvuVuvfc
-   25368jhKYP2SHIDBUjhw1L37VsADD69pUr22gng3XOkBMjFcHM4XqFGry
-   UW6I7OFGSChIj8qj4kY11VTq69MIYHA1iV/9+O0pUO4FVAZTDrZg274Eb
-   n0O80B5IoxBOwbDZyewGDuqSDiThCgIKr3JP7KfglRnGXXapes84YKbCQ
-   Ivm21J76eqP+xO9xBGda1Qo/Bj8v6PqyKhCjwvwl3nSwbWvUj2sH7GZlW
-   iDq+Qt34Y6LkAH6U3l+dp6bXTAotESk3dlRftyV7dfbyOJYA/b9fOxIB0
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10472"; a="278825776"
+  t=1663370199; x=1694906199;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=eXKCNautQE7y3TkNYnlj/SCX2rCZpAS4S55QbICeuzU=;
+  b=KcIYcUFLRcR+sAUh/xDNXyjQlcHT5dZ/X5/V+uy0nyZnLV9RUYBLc5bA
+   El4n3g0FGV9m24JLgK4ZxU4dlLE5LyW8sxJE8HNy6wroBya3LhJApKPde
+   qxdO/acNP4wfRHTyUKKXLBPyxBbrKyKBpLqA44pQUcIoiV80Nxdl0X46Z
+   puxPdSgRyAxDcZ0Xj8VMIppPuHst6HCowlVB1+GgR3Ut7Mu450V1b8Ake
+   Zb/DrSsJPSGRiwESN1FCyvXkH704wonisvsj9a6CkIR4XtSgUqNgojnJh
+   5PMhQPJ4GOTfadK6IWD5OG4JOjr3E9j9BFhOWHCdfnPocBJ/X7jFlgdMD
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10472"; a="286139504"
 X-IronPort-AV: E=Sophos;i="5.93,321,1654585200"; 
-   d="scan'208";a="278825776"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2022 16:11:46 -0700
+   d="scan'208";a="286139504"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2022 16:16:39 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,321,1654585200"; 
-   d="scan'208";a="793254566"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2022 16:11:45 -0700
-Subject: [PATCH RFC v2 9/9] cxl/pci: Add (hopeful) error handling support
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     alison.schofield@intel.com, vishal.l.verma@intel.com,
-        bwidawsk@kernel.org, dan.j.williams@intel.com,
-        jonathan.cameron@huawei.com, shiju.jose@huawei.com,
-        rrichter@amd.com
-Date:   Fri, 16 Sep 2022 16:11:45 -0700
-Message-ID: <166336990544.3803215.2332306189095144106.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <166336972295.3803215.1047199449525031921.stgit@djiang5-desk3.ch.intel.com>
-References: <166336972295.3803215.1047199449525031921.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/1.4
+   d="scan'208";a="743498641"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orsmga004.jf.intel.com with ESMTP; 16 Sep 2022 16:16:39 -0700
+Received: from orsmsx608.amr.corp.intel.com (10.22.229.21) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 16 Sep 2022 16:16:39 -0700
+Received: from orsmsx608.amr.corp.intel.com (10.22.229.21) by
+ ORSMSX608.amr.corp.intel.com (10.22.229.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 16 Sep 2022 16:16:38 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx608.amr.corp.intel.com (10.22.229.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31 via Frontend Transport; Fri, 16 Sep 2022 16:16:38 -0700
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.175)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.31; Fri, 16 Sep 2022 16:16:37 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mtD5HTBVoe3u5wHlXknPwJh2Fc/TRsggkrKo566D5oOZrrQGZMr0x1xhDr7InkDhCKap3fmKjPB/2fq6AO+Q8huJvE1PyrMFcGFl6mLim2EB6q4thhfcw4MGLRbkj5rp8KwGJcJooUejTNhQDHU9sjhzKywUzBJnZeYNceHTIZ2HROvGmYdY4MZv28bHxaRlidq/dV7I9UFx8zmhdtNG/lUHx1OjMj7FjQDhDDrzurru7UFPCEnXqm9uBUlNBQy01wwGRnQw+P6C1zOR7QEF7toY//8NSkjTaJehjRW1o24mkHpL4hWwzLhmWGwrPkjgTVnH/0D1fJUdUCihI9Ydhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=N6DC5vBqiZgJ1LdzkKghf/i+Q3q+Woym5eMYbbH2JhI=;
+ b=SGfFgwLMc6XvrhRB10M7M8bb1sw3GBQWCmgZ8T3jAJci03Agie1NwH3D5v4Zm8EQu5hqw4o4eDh+Z85ZLXyz2q0zLIPHekaVE3p5DT1Bk0725+dmAuGNWckGvTBIS9G9wMM1qFCh+xtMDiG9TeUgNE9Ihjc96yBu6UA0QSZGQxjrVjP2fy0wClU9sDKnHvtQ2C5ZLP0D48HJk6AdtOfNsoE/yyfjkGHnJX3vnLJODJ0JXP3hrCWPRgTrI93eurtxgjnWwuU+Suu5RruaVJ996BxpCG8xfOrmW/Jcnd1CS43Jfd7opq2WaQ7+z94/2qx+77/RhdnIGXebSPCLfqctlg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20) by SA1PR11MB6568.namprd11.prod.outlook.com
+ (2603:10b6:806:253::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.22; Fri, 16 Sep
+ 2022 23:16:36 +0000
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::9847:345e:4c5b:ca12]) by MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::9847:345e:4c5b:ca12%6]) with mapi id 15.20.5632.016; Fri, 16 Sep 2022
+ 23:16:36 +0000
+Date:   Fri, 16 Sep 2022 16:16:33 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Robert Richter <rrichter@amd.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Ben Widawsky" <bwidawsk@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-cxl@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH 06/15] PCI/ACPI: Link host bridge to its ACPI fw node
+Message-ID: <632503d165627_2a6ded294c6@dwillia2-xfh.jf.intel.com.notmuch>
+References: <YxsTfVdOgc9sOOVm@rric.localdomain>
+ <20220914221154.GA710889@bhelgaas>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20220914221154.GA710889@bhelgaas>
+X-ClientProxiedBy: BY5PR16CA0020.namprd16.prod.outlook.com
+ (2603:10b6:a03:1a0::33) To MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|SA1PR11MB6568:EE_
+X-MS-Office365-Filtering-Correlation-Id: 871d2cd3-91ff-4915-773c-08da9839808e
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /eYoT706h7Z/2jnrWj/WVHXErcWSDzjnFCrI4M05hHY8zyVaeyZxeJgaAoSMlkx9giCOPlTl79GKovAxk7ajY/KnIePJv7k1990yJdbLov5U6KZCenV5xa0Q7iAK3dI1yVQ+egHKJW5WfSNbrAaN00yry187k/ROVjKpSmkGW7UDA1Ss/WiqHFHXhcxho8iqZ35vwep/uQsvtzmeNk9rPPlQ5erp9QgR0xrOM/Ivq6IQf7z5XhlbwBRuPoqWoiMOf6rNQo505XmqyRJlI1Ueo+S1KT2n7fNzjvlFIiAbrbYs/maGHCzBXl/g4FFO/zNuUEH3msVb3SZ3XYFRhBdt4YFYXH8EoXxBwIQkdUqnohkEL/nLFJkzxOkaxATVfrfnh+5fzz3JG33Az0e53dihlxWpZKXwtFkSHDpVsv4FAN/h+/hEwyLQdDBZ9PEMW2WoAbWvyI9Vg2LxJzdX+jf+JCvfZqh8S19Q/buKQhGyBc0ZvJyy1ILA4cuSAhyCYtOuw0zUqyY4l3W50d3+h1DIWSrCSKMKlJPsfbPOQo0WHzdMti+pyDjzmDQh3n71j6GU1OYxl5kzzFwmr7SF0CsQxFc7h2GVIULb8LC0XBtnkTLNCNy1bFQATwDJDBHWO8Y/AxqlC5OPHeC5uVUsK16cefDNSG9G6mpuDRpbePDUH1ubhsDUiUxM3ImFtwZlNh3mNR8LT5NMqRcf0fZHDk7Cvg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(39860400002)(136003)(376002)(366004)(396003)(451199015)(6506007)(110136005)(7416002)(66556008)(38100700002)(2906002)(41300700001)(5660300002)(9686003)(316002)(6512007)(6666004)(186003)(6486002)(8936002)(8676002)(82960400001)(478600001)(54906003)(86362001)(66946007)(4326008)(53546011)(26005)(66476007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?KbNZPLCxOFf3FXdSj44My/9lvXWtBdBIEJnEtPdI+odT2zbM3gWo1NAiDEkD?=
+ =?us-ascii?Q?+xq/L/tbl23cz6OS2/zRoQHfr7caESXtdxdoij+K2OnNgcA22J9WlYUS3VRV?=
+ =?us-ascii?Q?2WGDd/oX7liQmwF9GVViedoEjB6k7svWsB38EKgPH53wvrH6h5M1KycUzNEW?=
+ =?us-ascii?Q?CzR7QWt72IoD6WZMowZQbJdb4DytzpN50w4sQPM7pTyu/MXBuKDuEaIfQV8B?=
+ =?us-ascii?Q?in0r/FZKLOEWcDb0hjofyrAJHhC7AaBRb2Qdw99ctAiwGqVmrwOshvH1vXR9?=
+ =?us-ascii?Q?3T8FHdr1IO/878iA+2Fs7jelEt80ucER5/nV1dbh9djgr0LhA3NwDLhXATQD?=
+ =?us-ascii?Q?SyeFtD4EdxnSq8PPzGWwTl6WlzVIhowt0lhT2STalGkYZuG0MWWTd0h9xnGX?=
+ =?us-ascii?Q?FYvSg+4wAXXo0PWef8V92QoQC64DyVGhrA3MiWfI2nTDMsi7r7Lk16LcuWL4?=
+ =?us-ascii?Q?Km9GbZkATvyKgTi3GdahzYjWFwW7WgfNYKRlrh3QltTx5ozIHsMTpwIYQTtq?=
+ =?us-ascii?Q?1gmKlzEG3GE5+4VgWmRVl2e3tO0ZcP0X28BwEifURTfPmrZu7idUm7KsiUXu?=
+ =?us-ascii?Q?OGoUOSIyh3rWnVnVGjXn+uz5wMtSvWVGBq11N55f0RiVjwUHwwMFh3YipIyV?=
+ =?us-ascii?Q?jQ6v+NxP28pYl91i+9q/wh4OgVls623bS0uY0ar+GnNRKSlu9fJs8Jgj+OxR?=
+ =?us-ascii?Q?E/La4JJKqPCmwzLxjo+6MKnCjqzYmUPC+3gYHpN0tOINBglhvz4zoY4KnvSm?=
+ =?us-ascii?Q?ndK5R7GxNNI+Uj9V4l+frcu0Trlyavu53UQ41r2Y2kbgjN0KYOyviaud9HGt?=
+ =?us-ascii?Q?oLm5c8/YU7eACkswVUUudkAMPyD7L1L+Q75AA35buy3F3OlU0HNDVV4DG7Eq?=
+ =?us-ascii?Q?KJT3iBTjEQl4THuSkA4Go3qOdJhL7G4Ioawa9AcGzlHOqVusTjvTEMWgfA81?=
+ =?us-ascii?Q?BYnwLv6uufcJelqwN9KkprzbyNJ0Th4794TdZ51ktWEmYcqvMKcE2KhI7CeP?=
+ =?us-ascii?Q?DZVMKd6o39R3eBa6blyFRqIy1/1oNyz0E0QOgVU+qaHQ8rUSZven2y856Dgt?=
+ =?us-ascii?Q?y/aJKxayZVw6bC6T2xgm1TrE7giaFfJNCw77WUqtQwDcszxe27QZtNeSfdp8?=
+ =?us-ascii?Q?Yd4milLv/m3LHQnwxAgsVrxDCq2b6ZS9HR6fTjOFsRB7/eXKMRPzcGSPK+QG?=
+ =?us-ascii?Q?nGuS3ON9lms8aU9nHM0Gd+wG4RJ9YE8v3lGr2MHXUNLcPrCD0LyftNSG8uLJ?=
+ =?us-ascii?Q?IBT+81knKn9kA6qEqT9rmBVQhjYE0bMrlywPyyRkArpTEBMWUnsRXltaRWVP?=
+ =?us-ascii?Q?lNW7DEp6qAwZ5SM8F4LyP+XjAm7e4Gth5lWQPtZJIsS5tR8KTgrQjRkZ9Jpf?=
+ =?us-ascii?Q?uFaNNgV9ns3+zj6eqnSjVilPD1iwWzHMMFbKR8Zw6ZUecgBKPob9VOEJcZ8w?=
+ =?us-ascii?Q?4QJ5iSgZ5+Z9S3bB/6s9UDxwghOWcNU00I0Zr46EVKvXJW4Xt47bYoPOye6b?=
+ =?us-ascii?Q?CBW0aFpMWM7JmHVguT5C+20SApZz42vXT0ipogVSbLMONNvEX2LGOuR7qOoj?=
+ =?us-ascii?Q?1MwBtUF8OGbTspasj0w/pY2wdXqLnDmMSYfGVI1jTKUKg1Eg24WrLodszSf5?=
+ =?us-ascii?Q?2A=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 871d2cd3-91ff-4915-773c-08da9839808e
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2022 23:16:36.6068
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fJrXxZ7T+rO33LmpfC4dlfPUogXM5yGbcUztdWxIe2ziTclmUKFql9AAvd9diYYOkvZ+iudqAz5BgqKoBhtEk1AXN0uBuOQyJrZvIaS7FBM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6568
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
+Bjorn Helgaas wrote:
+> On Fri, Sep 09, 2022 at 12:20:45PM +0200, Robert Richter wrote:
+> > On 08.09.22 12:45:16, Dan Williams wrote:
+> > > Rafael J. Wysocki wrote:
+> > > > On Thu, Sep 8, 2022 at 8:05 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > >
+> > > > > Robert Richter wrote:
+> > > > > > A lookup of a host bridge's corresponding acpi device (struct
+> > > > > > acpi_device) is not possible, for example:
+> > > > > >
+> > > > > >       adev = ACPI_COMPANION(&host_bridge->dev);
+> > > > > >
+> > > > > > This could be useful to find a host bridge's fwnode handle and to
+> > > > > > determine and call additional host bridge ACPI parameters and methods
+> > > > > > such as HID/CID or _UID.
+> 
+> > ...
+> > No, it is x86. And true, it is set. So this series is actually working
+> > without this patch. It can be dropped.
+> > 
+> > Now, I just checked my logs. The reason I was adding this is that
+> > during code development I modified the code to have bridge->dev.parent
+> > set. Then, the fwnode is not linked. I later dropped that change but
+> > kept this patch.
+> 
+> If this patch does the same thing as the ACPI_COMPANION_SET() in
+> several pcibios_root_bridge_prepare() implementations, I would love to
+> keep this patch, which does it in a generic place, and drop the
+> corresponding code from those arch-specific functions.
+> 
+> But I don't understand the fwnode stuff well enough to know if this is
+> feasible.
 
-Add nominal error handling that tears down CXL.mem in response to error
-notifications that imply a device reset. Given some CXL.mem may be
-operating as System RAM, there is a high likelihood that these error
-events are fatal. However, if the system survives the notification the
-expectation is that the driver behavior is equivalent to a hot-unplug
-and re-plug of an endpoint.
+I took a brief look, but I could not convince myself that these lookups:
 
-Note that this does not change the mask values from the default. That
-awaits CXL _OSC support to determine whether platform firmware is in
-control of the mask registers.
+arch/ia64/pci/pci.c ((struct pci_controller *) bridge->bus->sysdata)->companion
+arch/loongarch/pci/acpi.c to_acpi_device(((struct pci_config_window *) bridge->bus->sysdata)->parent)
+arch/arm64/kernel/pci.c to_acpi_device(((struct pci_config_window *) bridge->bus->sysdata)->parent)
+arch/x86/pci/acpi.c ((struct pci_sysdata *) bridge->bus->sysdata)->companion
 
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/cxl/core/memdev.c |    1 
- drivers/cxl/cxl.h         |    2 +
- drivers/cxl/cxlmem.h      |    2 +
- drivers/cxl/pci.c         |  160 +++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 165 insertions(+)
-
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 20ce488a7754..a74a93310d26 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -344,6 +344,7 @@ struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
- 	 * needed as this is ordered with cdev_add() publishing the device.
- 	 */
- 	cxlmd->cxlds = cxlds;
-+	cxlds->cxlmd = cxlmd;
- 
- 	cdev = &cxlmd->cdev;
- 	rc = cdev_device_add(cdev, dev);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index ce17ccd8b125..35434b110a3b 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -132,7 +132,9 @@ static inline int ways_to_cxl(unsigned int ways, u8 *iw)
- #define CXL_RAS_CORRECTABLE_MASK_OFFSET 0x10
- #define   CXL_RAS_CORRECTABLE_MASK_MASK GENMASK(6, 0)
- #define CXL_RAS_CAP_CONTROL_OFFSET 0x14
-+#define CXL_RAS_CAP_CONTROL_FE_MASK GENMASK(5, 0)
- #define CXL_RAS_HEADER_LOG_OFFSET 0x18
-+#define CXL_RAX_HEADER_LOG_SIZE 512
- #define CXL_RAS_CAPABILITY_LENGTH 0x58
- 
- /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 88e3a8e54b6a..b3117fd67f42 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -186,6 +186,7 @@ struct cxl_endpoint_dvsec_info {
-  * Currently only memory devices are represented.
-  *
-  * @dev: The device associated with this CXL state
-+ * @cxlmd: The device representing the CXL.mem capabilities of @dev
-  * @regs: Parsed register blocks
-  * @cxl_dvsec: Offset to the PCIe device DVSEC
-  * @payload_size: Size of space for payload
-@@ -218,6 +219,7 @@ struct cxl_endpoint_dvsec_info {
-  */
- struct cxl_dev_state {
- 	struct device *dev;
-+	struct cxl_memdev *cxlmd;
- 
- 	struct cxl_regs regs;
- 	int cxl_dvsec;
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 357de704e42c..d51e34c4c87e 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -9,6 +9,7 @@
- #include <linux/list.h>
- #include <linux/pci.h>
- #include <linux/pci-doe.h>
-+#include <linux/aer.h>
- #include <linux/io.h>
- #include "cxlmem.h"
- #include "cxlpci.h"
-@@ -399,6 +400,11 @@ static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
- 	}
- }
- 
-+static void disable_aer(void *pdev)
-+{
-+	pci_disable_pcie_error_reporting(pdev);
-+}
-+
- static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	struct cxl_register_map map;
-@@ -420,6 +426,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	cxlds = cxl_dev_state_create(&pdev->dev);
- 	if (IS_ERR(cxlds))
- 		return PTR_ERR(cxlds);
-+	pci_set_drvdata(pdev, cxlds);
- 
- 	cxlds->serial = pci_get_dsn(pdev);
- 	cxlds->cxl_dvsec = pci_find_dvsec_capability(
-@@ -474,6 +481,14 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (IS_ERR(cxlmd))
- 		return PTR_ERR(cxlmd);
- 
-+	if (cxlds->regs.ras) {
-+		pci_enable_pcie_error_reporting(pdev);
-+		rc = devm_add_action_or_reset(&pdev->dev, disable_aer, pdev);
-+		if (rc)
-+			return rc;
-+	}
-+	pci_save_state(pdev);
-+
- 	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM))
- 		rc = devm_cxl_add_nvdimm(&pdev->dev, cxlmd);
- 
-@@ -487,10 +502,155 @@ static const struct pci_device_id cxl_mem_pci_tbl[] = {
- };
- MODULE_DEVICE_TABLE(pci, cxl_mem_pci_tbl);
- 
-+/* CXL spec rev3.0 8.2.4.16.1 */
-+#define DATA_HEADER_SIZE 16
-+#define FLIT_SIZE (64 + 2)
-+static int header_log_setup(struct cxl_dev_state *cxlds, u32 fe, u8 *log)
-+{
-+	void __iomem *addr;
-+
-+	addr = cxlds->regs.ras + CXL_RAS_HEADER_LOG_OFFSET;
-+
-+	if (fe & CXL_RAS_UC_CACHE_DATA_PARITY || fe & CXL_RAS_UC_CACHE_ADDR_PARITY ||
-+	    fe & CXL_RAS_UC_CACHE_BE_PARITY || fe & CXL_RAS_UC_CACHE_DATA_ECC ||
-+	    fe & CXL_RAS_UC_MEM_DATA_PARITY || fe & CXL_RAS_UC_MEM_ADDR_PARITY ||
-+	    fe & CXL_RAS_UC_MEM_BE_PARITY || fe & CXL_RAS_UC_MEM_DATA_ECC) {
-+		memcpy_fromio(log, addr, DATA_HEADER_SIZE);
-+		return DATA_HEADER_SIZE;
-+	}
-+
-+	if (fe & CXL_RAS_UC_RSVD_ENCODE) {
-+		memcpy_fromio(log, addr, FLIT_SIZE);
-+		return FLIT_SIZE;
-+	}
-+
-+	if (fe & CXL_RAS_UC_RECV_OVERFLOW) {
-+		*log = readb(addr);
-+		return sizeof(u8);
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * Log the state of the RAS status registers and prepare them to log the
-+ * next error status. Return 1 if reset needed.
-+ */
-+static bool cxl_report_and_clear(struct cxl_dev_state *cxlds)
-+{
-+	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-+	struct device *dev = &cxlmd->dev;
-+	void __iomem *addr;
-+	u32 status;
-+	bool ue = false;
-+
-+	if (!cxlds->regs.ras)
-+		return false;
-+
-+	addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
-+	status = le32_to_cpu(readl(addr));
-+	if (status & CXL_RAS_UNCORRECTABLE_STATUS_MASK) {
-+		u8 hl[CXL_RAX_HEADER_LOG_SIZE];
-+		u32 fe;
-+		int size;
-+
-+		writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
-+		ue = true;
-+
-+		/* If multiple errors, log header points to first error from ctrl reg */
-+		if (hweight32(status) > 1) {
-+			addr = cxlds->regs.ras + CXL_RAS_CAP_CONTROL_OFFSET;
-+			fe = BIT(le32_to_cpu(readl(addr)) & CXL_RAS_CAP_CONTROL_FE_MASK);
-+		} else {
-+			fe = status;
-+		}
-+
-+		size = header_log_setup(cxlds, fe, hl);
-+		trace_cxl_ras_uc(dev_name(dev), status, fe, hl, size);
-+	}
-+
-+	addr = cxlds->regs.ras + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
-+	status = le32_to_cpu(readl(addr));
-+	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
-+		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-+		trace_cxl_ras_ce(dev_name(dev), status);
-+	}
-+
-+	return ue;
-+}
-+
-+static pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
-+					   pci_channel_state_t state)
-+{
-+	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-+	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-+	struct device *dev = &cxlmd->dev;
-+	bool ue;
-+
-+	/*
-+	 * A frozen channel indicates an impending reset which is fatal to
-+	 * CXL.mem operation, and will likely crash the system. On the off
-+	 * chance the situation is recoverable dump the status of the RAS
-+	 * capability registers and bounce the active state of the memdev.
-+	 */
-+	ue = cxl_report_and_clear(cxlds);
-+
-+	switch (state) {
-+	case pci_channel_io_normal:
-+		if (ue) {
-+			device_release_driver(dev);
-+			return PCI_ERS_RESULT_NEED_RESET;
-+		}
-+		return PCI_ERS_RESULT_CAN_RECOVER;
-+	case pci_channel_io_frozen:
-+		dev_warn(&pdev->dev,
-+			 "%s: frozen state error detected, disable CXL.mem\n",
-+			 dev_name(dev));
-+		device_release_driver(dev);
-+		return PCI_ERS_RESULT_NEED_RESET;
-+	case pci_channel_io_perm_failure:
-+		dev_warn(&pdev->dev,
-+			 "failure state error detected, request disconnect\n");
-+		return PCI_ERS_RESULT_DISCONNECT;
-+	}
-+	return PCI_ERS_RESULT_NEED_RESET;
-+}
-+
-+static pci_ers_result_t cxl_slot_reset(struct pci_dev *pdev)
-+{
-+	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-+	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-+	struct device *dev = &cxlmd->dev;
-+
-+	dev_info(&pdev->dev, "%s: restart CXL.mem after slot reset\n",
-+		 dev_name(dev));
-+	pci_restore_state(pdev);
-+	if (device_attach(dev) <= 0)
-+		return PCI_ERS_RESULT_DISCONNECT;
-+	return PCI_ERS_RESULT_RECOVERED;
-+}
-+
-+static void cxl_error_resume(struct pci_dev *pdev)
-+{
-+	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-+	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-+	struct device *dev = &cxlmd->dev;
-+
-+	dev_info(&pdev->dev, "%s: error resume %s\n", dev_name(dev),
-+		 dev->driver ? "successful" : "failed");
-+}
-+
-+static const struct pci_error_handlers cxl_error_handlers = {
-+	.error_detected	= cxl_error_detected,
-+	.slot_reset	= cxl_slot_reset,
-+	.resume		= cxl_error_resume,
-+};
-+
- static struct pci_driver cxl_pci_driver = {
- 	.name			= KBUILD_MODNAME,
- 	.id_table		= cxl_mem_pci_tbl,
- 	.probe			= cxl_pci_probe,
-+	.err_handler		= &cxl_error_handlers,
- 	.driver	= {
- 		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
- 	},
-
-
+...are identical to what acpi_pci_root_add() used to create the
+acpi_pci_root.
