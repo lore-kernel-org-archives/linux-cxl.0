@@ -2,48 +2,48 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC8EC6FA8B
-	for <linux-cxl@archiver.kernel.org>; Mon, 19 Sep 2022 23:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB775C6FA8B
+	for <linux-cxl@archiver.kernel.org>; Mon, 19 Sep 2022 23:47:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230046AbiISXrV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 19 Sep 2022 19:47:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47760 "EHLO
+        id S230079AbiISXr3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 19 Sep 2022 19:47:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230036AbiISXrQ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 19 Sep 2022 19:47:16 -0400
+        with ESMTP id S230047AbiISXrV (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 19 Sep 2022 19:47:21 -0400
 Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5673850048
-        for <linux-cxl@vger.kernel.org>; Mon, 19 Sep 2022 16:47:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B8884F3B3
+        for <linux-cxl@vger.kernel.org>; Mon, 19 Sep 2022 16:47:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663631232; x=1695167232;
+  t=1663631237; x=1695167237;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=vnODmAgjnYx1nHlyVa13SsuAKaF4YhWKWtpWXZgWLj8=;
-  b=WPvCLHtsCN0Pe0xA7sI8styN+Jib0837MQE/G0sjF5I1zDSqknrAcRSD
-   mtzYXvNuXPJwe+RTfsgMzUYGDbqe69Tm0EOPBwu86V5DS8ou+s4HYElQA
-   MAP+kJ5eoE2L1UIBC8oUOMFNZ1HFHUpot8yhWqcV/JJRp56BXPdKuPACq
-   YNWUGt294CnqwBUtx15Bqh3OfPUtfQucgJXJA/6zOH1C9EehPAYviIJHh
-   VmAFqE3nHsQrBZeOoBwQgmthrkmp9Fp9aLNZriTroIT/zYzkZD4DXMx+H
-   DFQFs0IATJbQpPVavwMHI28drW/S1hDka2iV3d4E/KZUMpne4Qvwn3/AX
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10475"; a="279932288"
+  bh=PzR8Wb2kCaqO4zluutW6/HGGZBdN3ctdqpmX6wnyvNs=;
+  b=byQ+e8z5ivApo56udYDF4DJt3Tbq1Oi/w35CnCCJjNw/GzpYaH2pMoLi
+   B/O9RZYDAy2hSFbBS0mPZmyzxY70e7LLOawmE6G+u0L258PFfX1Zbra2Y
+   tKyfm2xUdJ7DsagZehp43sDyz/ChXwEmb1qu70lCLCjGiYuumBiNOl05v
+   n5antG9S5bwJXl0x7/hTCwp1gQfSp1oa0FyZR0c5MsFCpwzUGPCdofyCH
+   Pw8Z0F7wg7fS+Guxk1XAyARuHl3Df00xLqgGEu6abS0D6QDg3EEi+c0G5
+   nmeiUx5oOsAeJWlotCnI6RKDnd5nOGhdR73maNKo1j8TOc+ElRWhcF+dI
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10475"; a="279932327"
 X-IronPort-AV: E=Sophos;i="5.93,329,1654585200"; 
-   d="scan'208";a="279932288"
+   d="scan'208";a="279932327"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2022 16:47:10 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2022 16:47:16 -0700
 X-IronPort-AV: E=Sophos;i="5.93,329,1654585200"; 
-   d="scan'208";a="618690539"
+   d="scan'208";a="618690591"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2022 16:47:09 -0700
-Subject: [PATCH v2 6/9] cxl: add logging functions for monitor
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2022 16:47:15 -0700
+Subject: [PATCH v2 7/9] cxl: add monitor command to cxl
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     alison.schofield@intel.com, vishal.l.verma@intel.com,
         ira.weiny@intel.com, bwidawsk@kernel.org, dan.j.williams@intel.com,
         nafonten@amd.com, nvdimm@lists.linux.dev
-Date:   Mon, 19 Sep 2022 16:47:09 -0700
-Message-ID: <166363122964.3861186.7714736198829346130.stgit@djiang5-desk3.ch.intel.com>
+Date:   Mon, 19 Sep 2022 16:47:15 -0700
+Message-ID: <166363123540.3861186.1589822434454578520.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <166363103019.3861186.3067220004819656109.stgit@djiang5-desk3.ch.intel.com>
 References: <166363103019.3861186.3067220004819656109.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/1.4
@@ -54,49 +54,133 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Duplicate log functions from ndctl/monitor to use for stdout and file
-logging.
+Connect the monitoring functionality to the cxl monitor command. Add basic
+functionality to the cxl monitor command where it can be launched as a daemon
+and logging can be designated to stdout or a file.
 
-Signed-off-by: Dave Jiang <dave.jiang@gmail.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- cxl/monitor.c |   25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ cxl/builtin.h |    1 +
+ cxl/cxl.c     |    1 +
+ cxl/monitor.c |   75 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 77 insertions(+)
 
+diff --git a/cxl/builtin.h b/cxl/builtin.h
+index b28c2213993b..34c5cfb49051 100644
+--- a/cxl/builtin.h
++++ b/cxl/builtin.h
+@@ -22,4 +22,5 @@ int cmd_create_region(int argc, const char **argv, struct cxl_ctx *ctx);
+ int cmd_enable_region(int argc, const char **argv, struct cxl_ctx *ctx);
+ int cmd_disable_region(int argc, const char **argv, struct cxl_ctx *ctx);
+ int cmd_destroy_region(int argc, const char **argv, struct cxl_ctx *ctx);
++int cmd_monitor(int argc, const char **argv, struct cxl_ctx *ctx);
+ #endif /* _CXL_BUILTIN_H_ */
+diff --git a/cxl/cxl.c b/cxl/cxl.c
+index dd1be7a054a1..3be7026f43d3 100644
+--- a/cxl/cxl.c
++++ b/cxl/cxl.c
+@@ -76,6 +76,7 @@ static struct cmd_struct commands[] = {
+ 	{ "enable-region", .c_fn = cmd_enable_region },
+ 	{ "disable-region", .c_fn = cmd_disable_region },
+ 	{ "destroy-region", .c_fn = cmd_destroy_region },
++	{ "monitor", .c_fn = cmd_monitor },
+ };
+ 
+ int main(int argc, const char **argv)
 diff --git a/cxl/monitor.c b/cxl/monitor.c
-index 759246926e05..c241ed31584f 100644
+index c241ed31584f..e24200ea9d96 100644
 --- a/cxl/monitor.c
 +++ b/cxl/monitor.c
-@@ -39,6 +39,31 @@ static struct monitor {
+@@ -32,11 +32,15 @@
+ #include "event_trace.h"
+ 
+ static const char *cxl_system = "cxl";
++const char *default_log = "/var/log/cxl-monitor.log";
+ 
+ static struct monitor {
++	const char *log;
+ 	struct log_ctx ctx;
+ 	FILE *log_file;
  	bool human;
++	bool verbose;
++	bool daemon;
  } monitor;
  
-+static void log_standard(struct log_ctx *ctx, int priority, const char *file,
-+		int line, const char *fn, const char *format, va_list args)
+ static void log_standard(struct log_ctx *ctx, int priority, const char *file,
+@@ -162,3 +166,74 @@ epoll_err:
+ 	free(events);
+ 	return rc;
+ }
++
++int cmd_monitor(int argc, const char **argv, struct cxl_ctx *ctx)
 +{
-+	if (priority == 6)
-+		vfprintf(stdout, format, args);
++	const struct option options[] = {
++		OPT_FILENAME('l', "log", &monitor.log,
++				"<file> | standard",
++				"where to output the monitor's notification"),
++		OPT_BOOLEAN('\0', "daemon", &monitor.daemon,
++				"run cxl monitor as a daemon"),
++		OPT_BOOLEAN('u', "human", &monitor.human,
++				"use human friendly output formats"),
++		OPT_BOOLEAN('v', "verbose", &monitor.verbose,
++				"emit extra debug messages to log"),
++		OPT_END(),
++	};
++	const char * const u[] = {
++		"cxl monitor [<options>]",
++		NULL
++	};
++	const char *prefix ="./";
++	int rc = 0, i;
++
++	argc = parse_options_prefix(argc, argv, prefix, options, u, 0);
++	for (i = 0; i < argc; i++)
++		error("unknown parameter \"%s\"\n", argv[i]);
++	if (argc)
++		usage_with_options(u, options);
++
++	log_init(&monitor.ctx, "cxl/monitor", "CXL_MONITOR_LOG");
++	monitor.ctx.log_fn = log_standard;
++
++	if (monitor.verbose)
++		monitor.ctx.log_priority = LOG_DEBUG;
 +	else
-+		vfprintf(stderr, format, args);
-+}
++		monitor.ctx.log_priority = LOG_INFO;
 +
-+static void log_file(struct log_ctx *ctx, int priority, const char *file,
-+		int line, const char *fn, const char *format, va_list args)
-+{
-+	FILE *f = monitor.log_file;
++	if (monitor.log) {
++		if (strncmp(monitor.log, "./", 2) != 0)
++			fix_filename(prefix, (const char **)&monitor.log);
++		if (strncmp(monitor.log, "./standard", 10) == 0 && !monitor.daemon) {
++			monitor.ctx.log_fn = log_standard;
++		} else {
++			const char *log = monitor.log;
 +
-+	if (priority != LOG_NOTICE) {
-+		struct timespec ts;
-+
-+		clock_gettime(CLOCK_REALTIME, &ts);
-+		fprintf(f, "[%10ld.%09ld] [%d] ", ts.tv_sec, ts.tv_nsec, getpid());
++			if (!monitor.log)
++				log = default_log;
++			monitor.log_file = fopen(log, "a+");
++			if (!monitor.log_file) {
++				rc = -errno;
++				error("open %s failed: %d\n", monitor.log, rc);
++				goto out;
++			}
++			monitor.ctx.log_fn = log_file;
++		}
 +	}
 +
-+	vfprintf(f, format, args);
-+	fflush(f);
-+}
++	if (monitor.daemon) {
++		if (daemon(0, 0) != 0) {
++			err(&monitor, "daemon start failed\n");
++			goto out;
++		}
++		info(&monitor, "cxl monitor daemon started.\n");
++	}
 +
- static int monitor_event(struct cxl_ctx *ctx)
- {
- 	int fd, epollfd, rc = 0, timeout = -1;
++	rc = monitor_event(ctx);
++
++out:
++	if (monitor.log_file)
++		fclose(monitor.log_file);
++	return rc;
++}
 
 
