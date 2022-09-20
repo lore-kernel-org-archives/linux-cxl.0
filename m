@@ -2,148 +2,97 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC85C6FA82
-	for <linux-cxl@archiver.kernel.org>; Mon, 19 Sep 2022 23:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF27CC54EE9
+	for <linux-cxl@archiver.kernel.org>; Tue, 20 Sep 2022 15:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230035AbiISXrh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 19 Sep 2022 19:47:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47972 "EHLO
+        id S229472AbiITPjc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 20 Sep 2022 11:39:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230092AbiISXra (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 19 Sep 2022 19:47:30 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CECB44F3B3
-        for <linux-cxl@vger.kernel.org>; Mon, 19 Sep 2022 16:47:28 -0700 (PDT)
+        with ESMTP id S229760AbiITPjb (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 20 Sep 2022 11:39:31 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E35DBC4E
+        for <linux-cxl@vger.kernel.org>; Tue, 20 Sep 2022 08:39:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663631248; x=1695167248;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KSFZB3ntka+bSSvolTA/Uf4WdX3s1HtcDYCRMCLVZIU=;
-  b=LkD3K/8PFEGDaByf7SF5rYWlmy7/WMYnd+iRq4wmcfme71xrtuLCqd8l
-   BU+nIHOfygaHXoxmF9pjWxeQlLjyLZ9GNgZJxNJ68y2Tl22zap5pnRFQQ
-   X+FeDibxFN1tkUZ6SeGFKI1dYwXdaMT8krc+UnaaYiKX1ZVok1HRZUsbq
-   F1C0ah3i9E1Md9+mCHgWugdkU7+ihTrrP+xDSD0ZUAWOg1n+ARcWzYWm1
-   B7qC5u+wxHG76sm1MqicME6kUkhSpQvo4hjcSYEY6duVz4wiQj/uspaNf
-   gFJE5xVQpB9teRnZaJItji2JI+Aq4NgYdIb5Ia7NVmFM7m6GNbNXg3xK8
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10475"; a="297142215"
-X-IronPort-AV: E=Sophos;i="5.93,329,1654585200"; 
-   d="scan'208";a="297142215"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2022 16:47:28 -0700
-X-IronPort-AV: E=Sophos;i="5.93,329,1654585200"; 
-   d="scan'208";a="744305591"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2022 16:47:27 -0700
-Subject: [PATCH v2 9/9] cxl: add man page documentation for monitor
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     alison.schofield@intel.com, vishal.l.verma@intel.com,
-        ira.weiny@intel.com, bwidawsk@kernel.org, dan.j.williams@intel.com,
-        nafonten@amd.com, nvdimm@lists.linux.dev
-Date:   Mon, 19 Sep 2022 16:47:27 -0700
-Message-ID: <166363124742.3861186.7691291186058723572.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <166363103019.3861186.3067220004819656109.stgit@djiang5-desk3.ch.intel.com>
-References: <166363103019.3861186.3067220004819656109.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/1.4
+  t=1663688369; x=1695224369;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=dR+OUngDEbq5Sw5dXETSZjroyS68c4hTN5ho9O31vrM=;
+  b=AKH3g1c1Zg5y/qqb+n1G3tiEhhueccJJclWcYON1/mLxLGqogQI2yuHc
+   1TXpAzqYOOAStL4gK5Z7LY2MeCRoIbsW1MbHO5OFOQlwRxqiIeuudcVNN
+   TqHvf2ouoYLgky4Th72D7gK7lAaFOkatGpW323E6MBKLaYo3U94Z2dcYi
+   lbwmEtagx2t09r14AmZsckO0zFrfrpFJyK88XHCU3XQ5A0RrZIyJ4+Cai
+   PYQ0sTXE7QX8v1PPjb9uL6npAIsd7yXQF65NkBlUIkeVaecZsXVHl6nTB
+   F0EWWid9m7gdNwZXuR+K2ThW8P5qmBdQJfNILTHI7Fv5JhxIzEgn+SGsU
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10476"; a="301110854"
+X-IronPort-AV: E=Sophos;i="5.93,330,1654585200"; 
+   d="scan'208";a="301110854"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2022 08:39:29 -0700
+X-IronPort-AV: E=Sophos;i="5.93,330,1654585200"; 
+   d="scan'208";a="794302313"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.139.149])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2022 08:39:29 -0700
+From:   alison.schofield@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        linux-cxl@vger.kernel.org
+Subject: [PATCH v4 0/3] CXL XOR Interleave Arithmetic
+Date:   Tue, 20 Sep 2022 08:39:23 -0700
+Message-Id: <cover.1663687681.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add man page documentation to explain the usage of cxl monitor.
+From: Alison Schofield <alison.schofield@intel.com>
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- Documentation/cxl/cxl-monitor.txt |   77 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
- create mode 100644 Documentation/cxl/cxl-monitor.txt
+Changes in v4:
+- Use GENMASK_ULL to fix i386 arch build (0-day)
+- Use do_div to fix ARM arch build (0-day)
+- Update comments in ACPICA patch to reflect new state of the
+  ACPICA patch - pending again in github.
 
-diff --git a/Documentation/cxl/cxl-monitor.txt b/Documentation/cxl/cxl-monitor.txt
-new file mode 100644
-index 000000000000..43c2ece72220
---- /dev/null
-+++ b/Documentation/cxl/cxl-monitor.txt
-@@ -0,0 +1,77 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+cxl-monitor(1)
-+================
-+
-+NAME
-+----
-+cxl-monitor - Monitor the CXL kernel trace events
-+
-+SYNOPSIS
-+--------
-+[verse]
-+'cxl monitor' [<options>]
-+
-+DESCRIPTION
-+-----------
-+Cxl monitor is used for monitoring the CXL trace events emitted by
-+the kernel and convert them to json objects and dumping the json format
-+notifications to standard output or a logfile.
-+
-+Both, the values in configuration file and in options will work. If
-+there is a conflict, the values in options will override the values in
-+the configuration file. Any updated values in the configuration file will
-+take effect only after the monitor process is restarted.
-+
-+EXAMPLES
-+--------
-+
-+Run a monitor as a daemon to monitor events and output to a log file.
-+[verse]
-+cxl monitor --daemon --log=/var/log/cxl-monitor.log
-+
-+Run a monitor as a one-shot command and output the notifications to stdio.
-+[verse]
-+cxl monitor
-+
-+Run a monitor daemon as a system service
-+[verse]
-+systemctl start cxl-monitor.service
-+
-+OPTIONS
-+-------
-+-l::
-+--log=::
-+	Send log messages to the specified destination.
-+	- "<file>":
-+	  Send log messages to specified <file>. When fopen() is not able
-+	  to open <file>, log messages will be forwarded to syslog.
-+	- "standard":
-+	  Send messages to standard output.
-+
-+The default log destination is '/var/log/cxl-monitor.log' if "--daemon" is specified,
-+otherwise 'standard'. Note that standard and relative path for <file>
-+will not work if "--daemon" is specified.
-+
-+--daemon::
-+	Run a monitor as a daemon.
-+
-+-u::
-+--human::
-+	Output monitor notification as human friendly json format instead
-+	of the default machine friendly json format.
-+
-+-v::
-+--verbose::
-+	Emit extra debug messages to log.
-+
-+COPYRIGHT
-+---------
-+Copyright (c) 2022, Intel Corp. License GPLv2: GNU GPL version 2
-+<http://gnu.org/licenses/gpl.html>. This is free software: you are
-+free to change and redistribute it. There is NO WARRANTY, to the
-+extent permitted by law.
-+
-+SEE ALSO
-+--------
-+linkcxl:cxl-list[1]
+Changes in v3:
+- Fix the 3, 6, 12 way interleave (again).
+- Do not look for a CXIMS when not needed for x1 & x3 interleaves
+- New cxl_test patch: Add cxl_test module support for this feature
+- In a separate ndctl patch, cxl test: cxl_xor_region is added
 
+Changes in v2:
+- Use ilog2() of the decoded interleave ways to determine number
+  of xormaps, instead of using encoded ways directly. This fixes
+  3, 6, and 12 way interleaves. (Dan)
+
+Add support for the new 'XOR' Interleave Arithmetic as defined
+in the CXL 3.0 Specification:
+https://www.computeexpresslink.org/download-the-specification
+
+The prereq patch is: tools/testing/cxl: Add an x1 host-bridge with 4 devices
+
+Alison Schofield (3):
+  For ACPICA: Add the CXIMS structure definition to the CEDT table
+  cxl/acpi: Support CXL XOR Interleave Math (CXIMS)
+  tools/testing/cxl: Add XOR math support
+
+ drivers/cxl/cxl.h            |   2 +
+ include/acpi/actbl1.h        |  14 ++-
+ drivers/cxl/acpi.c           | 133 +++++++++++++++++++++++++++--
+ tools/testing/cxl/test/cxl.c | 161 ++++++++++++++++++++++++++++++++++-
+ 4 files changed, 300 insertions(+), 10 deletions(-)
+
+
+base-commit: 1cd8a2537eb07751d405ab7e2223f20338a90506
+prerequisite-patch-id: 7475f0a9ed0870e85bb4ba2b3eb25618325614bf
+-- 
+2.31.1
 
