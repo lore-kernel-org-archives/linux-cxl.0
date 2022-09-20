@@ -2,30 +2,30 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5778C54EE9
-	for <linux-cxl@archiver.kernel.org>; Tue, 20 Sep 2022 15:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7844FECAAD8
+	for <linux-cxl@archiver.kernel.org>; Tue, 20 Sep 2022 15:52:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231167AbiITPtM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 20 Sep 2022 11:49:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49642 "EHLO
+        id S229785AbiITPwu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 20 Sep 2022 11:52:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230253AbiITPtL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 20 Sep 2022 11:49:11 -0400
+        with ESMTP id S229512AbiITPwt (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 20 Sep 2022 11:52:49 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7AA869F59;
-        Tue, 20 Sep 2022 08:49:08 -0700 (PDT)
-Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MX5XD4x8Bz67KvJ;
-        Tue, 20 Sep 2022 23:47:24 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A24A6AA36;
+        Tue, 20 Sep 2022 08:52:48 -0700 (PDT)
+Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MX5Y03KNpz67mY5;
+        Tue, 20 Sep 2022 23:48:04 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
+ fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 20 Sep 2022 17:49:06 +0200
+ 15.1.2375.31; Tue, 20 Sep 2022 17:52:46 +0200
 Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 20 Sep
- 2022 16:49:05 +0100
-Date:   Tue, 20 Sep 2022 16:49:04 +0100
+ 2022 16:52:45 +0100
+Date:   Tue, 20 Sep 2022 16:52:44 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     Ira Weiny <ira.weiny@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
@@ -35,15 +35,13 @@ CC:     Dan Williams <dan.j.williams@intel.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Davidlohr Bueso <dave@stgolabs.net>,
         <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [RFC PATCH 1/9] cxl/mem: Implement Get Event Records command
-Message-ID: <20220920164904.00001be8@huawei.com>
-In-Reply-To: <Yxun42yjtZREEeRv@iweiny-desk3>
+Subject: Re: [RFC PATCH 4/9] cxl/mem: Trace General Media Event Record
+Message-ID: <20220920165244.0000581d@huawei.com>
+In-Reply-To: <Yx+03ZoI+zvylO40@iweiny-mobl>
 References: <20220813053243.757363-1-ira.weiny@intel.com>
-        <20220813053243.757363-2-ira.weiny@intel.com>
-        <20220824165058.00007d4f@huawei.com>
-        <Yxgd51zdrk9pEXE6@iweiny-mobl>
-        <20220908135240.00001217@huawei.com>
-        <Yxun42yjtZREEeRv@iweiny-desk3>
+        <20220813053243.757363-5-ira.weiny@intel.com>
+        <20220824171113.00006f80@huawei.com>
+        <Yx+03ZoI+zvylO40@iweiny-mobl>
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
@@ -56,115 +54,74 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 9 Sep 2022 13:53:55 -0700
+On Mon, 12 Sep 2022 15:38:21 -0700
 Ira Weiny <ira.weiny@intel.com> wrote:
 
-> On Thu, Sep 08, 2022 at 01:52:40PM +0100, Jonathan Cameron wrote:
+> On Wed, Aug 24, 2022 at 05:11:13PM +0100, Jonathan Cameron wrote:
+> > On Fri, 12 Aug 2022 22:32:38 -0700
+> > ira.weiny@intel.com wrote:
+> >   
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > CXL v3.0 section 8.2.9.2.1.1 defines the General Media Event Record.
+> > > 
+> > > Determine if the event read is a general media record and if so trace
+> > > the record.
+> > > 
+> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>  
+> > A few trivial things inline...
 > >   
 > 
 > [snip]
 > 
-> > > > > diff --git a/include/trace/events/cxl-events.h b/include/trace/events/cxl-events.h
-> > > > > new file mode 100644
-> > > > > index 000000000000..f4baeae66cf3
-> > > > > --- /dev/null
-> > > > > +++ b/include/trace/events/cxl-events.h
-> > > > > @@ -0,0 +1,127 @@
-> > > > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > > > +#undef TRACE_SYSTEM
-> > > > > +#define TRACE_SYSTEM cxl_events
-> > > > > +
-> > > > > +#if !defined(_CXL_TRACE_EVENTS_H) ||  defined(TRACE_HEADER_MULTI_READ)
-> > > > > +#define _CXL_TRACE_EVENTS_H
-> > > > > +
-> > > > > +#include <linux/tracepoint.h>
-> > > > > +
-> > > > > +#define EVENT_LOGS					\
-> > > > > +	EM(CXL_EVENT_TYPE_INFO,		"Info")		\
-> > > > > +	EM(CXL_EVENT_TYPE_WARN,		"Warning")	\
-> > > > > +	EM(CXL_EVENT_TYPE_FAIL,		"Failure")	\
-> > > > > +	EM(CXL_EVENT_TYPE_FATAL,	"Fatal")	\
-> > > > > +	EMe(CXL_EVENT_TYPE_MAX,		"<undefined>")    
-> > > > 
-> > > > Hmm. 4 is defined in CXL 3.0, but I'd assume we won't use tracepoints for
-> > > > dynamic capacity events so I guess it doesn't matter.    
-> > > 
-> > > I'm not sure why you would say that.  I anticipate some user space daemon
-> > > requiring these events to set things up.  
+> > > +/*
+> > > + * General Media Event Record - GMER
+> > > + * CXL v2.0 Section 8.2.9.1.1.1; Table 154
+> > > + */
+> > > +#define CXL_GMER_PHYS_ADDR_VOLATILE			BIT(0)
+> > > +#define CXL_GMER_PHYS_ADDR_MASK				0x3f  
 > > 
-> > Certainly a possible solution. I'd kind of expect a more hand shake based approach
-> > than a tracepoint.  Guess we'll see :)  
+> > Inverse of mask is confusing. Just specify the full mask.  
 > 
-> Yea I think we should wait an see.
+> Fixed
 > 
+> [snip]
+> 
+> > > +	TP_printk("%s: %s time=%llu id=%pUl handle=%x related_handle=%x hdr_flags='%s': " \
+> > > +		  "phys_addr=%llx volatile=%s desc='%s' type='%s' trans_type='%s' channel=%u " \
+> > > +		  "rank=%u device=%x comp_id=%s valid_flags='%s'",
+> > > +		__get_str(dev_name), show_log_type(__entry->log),
+> > > +		__entry->timestamp, __entry->id, __entry->handle,
+> > > +		__entry->related_handle, show_hdr_flags(__entry->flags),
+> > > +		__entry->phys_addr & ~CXL_GMER_PHYS_ADDR_MASK,
+> > > +		(__entry->phys_addr & CXL_GMER_PHYS_ADDR_VOLATILE) ? "TRUE" : "FALSE",
+> > > +		show_event_desc_flags(__entry->descriptor),
+> > > +		show_mem_event_type(__entry->type),
+> > > +		show_trans_type(__entry->transaction_type),
+> > > +		__entry->channel, __entry->rank, __entry->device,
+> > > +		__print_hex(__entry->comp_id, CXL_EVT_GEN_MED_COMP_ID_SIZE),
+> > > +		show_valid_flags(__entry->validity_flags)  
 > > 
-> >   
-> > > >     
-> > > > > +	{ CXL_EVENT_RECORD_FLAG_PERF_DEGRADED,	"Performance Degraded"		}, \
-> > > > > +	{ CXL_EVENT_RECORD_FLAG_HW_REPLACE,	"Hardware Replacement Needed"	}  \
-> > > > > +)
-> > > > > +
-> > > > > +TRACE_EVENT(cxl_event,
-> > > > > +
-> > > > > +	TP_PROTO(const char *dev_name, enum cxl_event_log_type log,
-> > > > > +		 struct cxl_event_record_raw *rec),
-> > > > > +
-> > > > > +	TP_ARGS(dev_name, log, rec),
-> > > > > +
-> > > > > +	TP_STRUCT__entry(
-> > > > > +		__string(dev_name, dev_name)
-> > > > > +		__field(int, log)
-> > > > > +		__array(u8, id, UUID_SIZE)
-> > > > > +		__field(u32, flags)
-> > > > > +		__field(u16, handle)
-> > > > > +		__field(u16, related_handle)
-> > > > > +		__field(u64, timestamp)
-> > > > > +		__array(u8, data, EVENT_RECORD_DATA_LENGTH)
-> > > > > +		__field(u8, length)    
-> > > > 
-> > > > Do we want the maintenance operation class added in Table 8-42 from CXL 3.0?
-> > > > (only noticed because I happen to have that spec revision open rather than 2.0).    
-> > > 
-> > > Yes done.
-> > > 
-> > > There is some discussion with Dan regarding not decoding anything and letting
-> > > user space take care of it all.  I think this shows a valid reason Dan
-> > > suggested this.  
-> > 
-> > I like being able to print tracepoints with out userspace tools.
-> > This also enforces structure and stability of interface which I like.  
+> > Can we make the printing of fields with valid flags conditional?
+> > Been a while since I wrote a Trace point, but I think I recall doing that..  
 > 
-> I tend to agree with you.
-> 
-> > 
-> > Maybe a raw tracepoint or variable length trailing buffer to pass
-> > on what we don't understand?  
-> 
-> I've already realized that we need to print all reserved fields for this
-> reason.  If there is something the kernel does not understand user space can
-> just figure it out on it's own.
-> 
-> Sound reasonable?
+> I'm not seeing a way right off.  But I can't say it is impossible...
 
-Hmm. Printing reserved fields would be unusual.  Not sure what is done for similar
-cases elsewhere, CPER records etc...
+Needs some helper code... Here's one I made earlier (and had almost entirely
+banished from my memory!)
 
-We could just print a raw array of the whole event as well as decode version, but
-that means logging most of the fields twice...
-
-Not nice either.
-
-I'm a bit inclined to say we should maybe just ignore stuff we don't know about or
-is there a version number we can use to decide between decoded vs decoded as much as
-possible + raw log?
-
-Jonathan
+https://lore.kernel.org/all/20191114133919.32290-2-Jonathan.Cameron@huawei.com/
 
 > 
+> I'll keep an eye out as I clean the series up,
 > Ira
 > 
-> > 
-> > Jonathan
-> > 
+> >   
+> > > +		)
+> > > +);
+> > > +
+> > >  #endif /* _CXL_TRACE_EVENTS_H */
+> > >  
+> > >  /* This part must be outside protection */  
 > >   
 
