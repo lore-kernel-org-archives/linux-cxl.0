@@ -2,198 +2,112 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E07C32771
-	for <linux-cxl@archiver.kernel.org>; Wed, 21 Sep 2022 21:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7A9C32771
+	for <linux-cxl@archiver.kernel.org>; Wed, 21 Sep 2022 22:09:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229551AbiIUVqi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 21 Sep 2022 17:46:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49596 "EHLO
+        id S230496AbiIUWJR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 21 Sep 2022 18:09:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229716AbiIUVqh (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 21 Sep 2022 17:46:37 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0857A6AFE
-        for <linux-cxl@vger.kernel.org>; Wed, 21 Sep 2022 14:46:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663796796; x=1695332796;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=UkjKU3jVRLd/tZJnumpL34VRkcM0G1YyRrePH+3xd5w=;
-  b=CEHfOTlIX1PqdpCD1IZGKxOgrkrJeV0IC4epqsHIvnJUPlcqvk9GLy/P
-   gxFtS5cZdfoRTU7mAVgTLP6/uZFoW4IWTkBtA/IquZtRXaKsFv2ohE+wY
-   zAmol4Pz07AfbVyij5LfojcSVSPrGhQpOkWOpyV9IQW3KtqcLUaFRoagq
-   vKTLHnUWZBu36uHP670uLXky3VJXsVAyhqk/w0w+B5Lk8Ol+ryRwANXTc
-   med4mZTtZ8BogRgjanBBzsZNkK4GvKSCfseKhJ/8tkWeq8v7hYso0KpiG
-   8RDB+gwUWEpCAyPIyLdIdnCsZ9YQuKNxORh1bRwmHfgjeE5zJi3j9c8+v
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10477"; a="280503720"
-X-IronPort-AV: E=Sophos;i="5.93,334,1654585200"; 
-   d="scan'208";a="280503720"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 14:46:36 -0700
-X-IronPort-AV: E=Sophos;i="5.93,334,1654585200"; 
-   d="scan'208";a="614969473"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.36.150]) ([10.212.36.150])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 14:46:35 -0700
-Message-ID: <762b2338-7e65-6462-cf88-9e9cc8dd8f83@intel.com>
-Date:   Wed, 21 Sep 2022 14:46:34 -0700
+        with ESMTP id S229523AbiIUWJQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 21 Sep 2022 18:09:16 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87432A7A85
+        for <linux-cxl@vger.kernel.org>; Wed, 21 Sep 2022 15:09:13 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 8F3A56E1DFB;
+        Wed, 21 Sep 2022 22:09:12 +0000 (UTC)
+Received: from pdx1-sub0-mail-a289 (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id D53056E1DF6;
+        Wed, 21 Sep 2022 22:09:11 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1663798152; a=rsa-sha256;
+        cv=none;
+        b=CGSHWCx7CCNESEV/LVL9Ptb41Uo4aK6rYZbTA7soMSZJArOM1FVDgKcnZRHMuTmlp0ZPD8
+        fVzMRCMg8fjUcYtcPFhAbnhHCSoNdDdqyV892jXXvJ6qltnvIA0VPiAG0kgcbg322/3ciX
+        5j7CzxfmmP6E2qhfmRExAcY0sjoKVGyhQGYi32e1c5TE5lDt8HUwETzlFqOAq+US2HxXEF
+        +GTrVaJjBdS/CwyuOLLkB78avAAWo08mC69rX7WSDf2X4tqaxw2t5yLVOPl7/uZGjTSZ2g
+        w2j4eZLhdXBREEqbqJv+J68I55V76VBNsT8C9KgMywVH6JgBF+QkgVJWhRmUrg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1663798152;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=JtTggid7JQonbp0T8/+SenAYkJ/aE36vGuOwqISTj64=;
+        b=BR2NLVoyspG7WuRfLoqyL77UY0SffwLB5QyUxUEH9HgNLffgN/xeBYomjXZJP+cbB0TdYH
+        a5OGADXA5lBe4i3kGdgV8Z1MJApY3/oIDhgKuDp8qXkvOE5ENkiI7mionbMEBTaumika3R
+        luyg9e1N3SF9b573kOFL2aO3Fmc7sIxwiCttsnqRSS4CVmsczsyQV0jeoMkny7bnfuLaO5
+        kDofP37mVnlwAWjRiODLx+04sdLfmIEv0+oLnprkcq4S7O6atFviQK0kAHXUybLULuRuHh
+        mAYOtGKiHdYvSUjRsVcQD04iJfkAtvl/LfBqzufMYMowUVSsntS728LaTY/RRA==
+ARC-Authentication-Results: i=1;
+        rspamd-686945db84-cnhwx;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Trouble-Power: 58653b532f96b8ee_1663798152212_3412653648
+X-MC-Loop-Signature: 1663798152212:3549851898
+X-MC-Ingress-Time: 1663798152212
+Received: from pdx1-sub0-mail-a289 (pop.dreamhost.com [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.120.38.177 (trex/6.7.1);
+        Wed, 21 Sep 2022 22:09:12 +0000
+Received: from offworld (ip-213-127-200-122.ip.prioritytelecom.net [213.127.200.122])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a289 (Postfix) with ESMTPSA id 4MXsyF1s75z82;
+        Wed, 21 Sep 2022 15:09:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1663798151;
+        bh=JtTggid7JQonbp0T8/+SenAYkJ/aE36vGuOwqISTj64=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=VTyItVBtdtYMptleQiuiPE6xF+2A4yAmtvcU8c3zLCFhK4HDY8hMh4zGYGUdfhRLq
+         B/I+9YdT+FTKV0KaxUyC6UHC0qP3vr+3hOAfeFlPz/2Ixqh6OyXMDSylSdjL33IV/l
+         9CCBgMVtSdKTXGTIeAk0byYoemRqAKtek8RSOWDepApEdlchxqeYigSpfq8GIixEcW
+         Dh9/KmKL4SoMsCIT3eVFch0IMS4XlMJrXpmKltLBsg2zgWvKZ8FjppwecoTX/9ft5X
+         7A8f38miz3RXyXrOim7H7LeAUcMSvXkCeANOyZQewdszGcPuGqPpSwp5URHaoLxSJg
+         4xYZgJJzCt1CQ==
+Date:   Wed, 21 Sep 2022 14:49:26 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+        dan.j.williams@intel.com, bwidawsk@kernel.org, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        Jonathan.Cameron@huawei.com
+Subject: Re: [PATCH v2 10/19] cxl/pmem: Add "Unlock" security command support
+Message-ID: <20220921214832.km2dkqdby2rk5kmh@offworld>
+References: <166377414787.430546.3863229455285366312.stgit@djiang5-desk3.ch.intel.com>
+ <166377434821.430546.18100037354899710663.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.2.2
-Subject: Re: [PATCH v2 2/9] cxl: add helper to parse through all current
- events
-Content-Language: en-US
-To:     Alison Schofield <alison.schofield@intel.com>
-Cc:     linux-cxl@vger.kernel.org, vishal.l.verma@intel.com,
-        ira.weiny@intel.com, bwidawsk@kernel.org, dan.j.williams@intel.com,
-        nafonten@amd.com, nvdimm@lists.linux.dev
-References: <166363103019.3861186.3067220004819656109.stgit@djiang5-desk3.ch.intel.com>
- <166363120598.3861186.12071132915910252601.stgit@djiang5-desk3.ch.intel.com>
- <Yyt9b99nWEaM5jEF@aschofie-mobl2>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <Yyt9b99nWEaM5jEF@aschofie-mobl2>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <166377434821.430546.18100037354899710663.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Wed, 21 Sep 2022, Dave Jiang wrote:
 
-On 9/21/2022 2:09 PM, Alison Schofield wrote:
-> On Mon, Sep 19, 2022 at 04:46:46PM -0700, Dave Jiang wrote:
->> Add common function to iterate through and extract the events in the
->> current trace buffer. The function uses tracefs_iterate_raw_events() from
->> libtracefs to go through all the events loaded into a tep_handle. A
->> callback is provided to the API call in order to parse the event. For cxl
->> monitor, an array of interested "systems" is provided in order to filter
->> for the interested events.
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>   cxl/event_trace.c |   33 +++++++++++++++++++++++++++++++++
->>   cxl/event_trace.h |    7 +++++++
->>   cxl/meson.build   |    1 +
->>   meson.build       |    2 ++
->>   4 files changed, 43 insertions(+)
->>
->> diff --git a/cxl/event_trace.c b/cxl/event_trace.c
->> index ffa2a9b9b036..430146ce66f5 100644
->> --- a/cxl/event_trace.c
->> +++ b/cxl/event_trace.c
->> @@ -16,6 +16,7 @@
->>   #include <libcxl.h>
->>   #include <uuid/uuid.h>
->>   #include <traceevent/event-parse.h>
->> +#include <tracefs/tracefs.h>
->>   #include "json.h"
->>   #include "event_trace.h"
->>   
->> @@ -164,3 +165,35 @@ err_jevent:
->>   	free(jnode);
->>   	return rc;
->>   }
->> +
->> +static int cxl_event_parse_cb(struct tep_event *event, struct tep_record *record,
->> +		int cpu, void *ctx)
->> +{
->> +	struct event_ctx *event_ctx = (struct event_ctx *)ctx;
->> +	int rc;
->> +
->> +	/* Filter out all the events that the caller isn't interested in. */
->> +	if (strcmp(event->system, event_ctx->system) != 0)
->> +		return 0;
->> +
-> While integrating w poison events, I find I'd like to filter on
-> tep_event->name == "cxl_poison" here.
+>Create callback function to support the nvdimm_security_ops() ->unlock()
+>callback. Translate the operation to send "Unlock" security command for CXL
+>mem device.
 >
-> Something like this:
->
-> +	if (event_ctx->name) {
-> +		if (strcmp(event->name, event_ctx->name) != 0)
-> +			return 0;
-> +	}
->   
-> along w this:
->
-> struct event_ctx {
->   	const char *system;
-> +	const char *name;
->   	struct list_head jlist_head;
->   };
+>When the mem device is unlocked, arch_invalidate_nvdimm_cache() is called
+>in order to invalidate all CPU caches before attempting to access the mem
+>device.
 
-Ok I can add that.
+s/arch_invalidate_nvdimm_cache/cpu_cache_invalidate_memregion
 
 >
-> I guess an all|1 option won't suffice for users wanting a subset.
-> See how that fits it w your needs for monitor command. I can always
-> filter after the fact if this type of change is not generally useful.
+>See CXL 2.0 spec section 8.2.9.5.6.4 for reference.
 >
-> Thanks,
-> Alison
->
->
->> +	rc = cxl_event_to_json_callback(event, record, &event_ctx->jlist_head);
->> +	if (rc < 0)
->> +		return rc;
->> +
->> +	return 0;
->> +}
->> +
->> +int cxl_parse_events(struct tracefs_instance *inst, struct event_ctx *ectx)
->> +{
->> +	struct tep_handle *tep;
->> +	int rc;
->> +
->> +	tep = tracefs_local_events(NULL);
->> +	if (!tep)
->> +		return -ENOMEM;
->> +
->> +	rc = tracefs_iterate_raw_events(tep, inst, NULL, 0,
->> +			cxl_event_parse_cb, ectx);
->> +	tep_free(tep);
->> +	return rc;
->> +}
->> diff --git a/cxl/event_trace.h b/cxl/event_trace.h
->> index 00975a0b5680..2fbefa1586d9 100644
->> --- a/cxl/event_trace.h
->> +++ b/cxl/event_trace.h
->> @@ -11,4 +11,11 @@ struct jlist_node {
->>   	struct list_node list;
->>   };
->>   
->> +struct event_ctx {
->> +	const char *system;
->> +	struct list_head jlist_head;
->> +};
->> +
->> +int cxl_parse_events(struct tracefs_instance *inst, struct event_ctx *ectx);
->> +
->>   #endif
->> diff --git a/cxl/meson.build b/cxl/meson.build
->> index 8c7733431613..c59876262e76 100644
->> --- a/cxl/meson.build
->> +++ b/cxl/meson.build
->> @@ -21,6 +21,7 @@ cxl_tool = executable('cxl',
->>       json,
->>       versiondep,
->>       traceevent,
->> +    tracefs,
->>     ],
->>     install : true,
->>     install_dir : rootbindir,
->> diff --git a/meson.build b/meson.build
->> index f611e0bdd7f3..c204c8ac52de 100644
->> --- a/meson.build
->> +++ b/meson.build
->> @@ -143,6 +143,8 @@ libudev = dependency('libudev')
->>   uuid = dependency('uuid')
->>   json = dependency('json-c')
->>   traceevent = dependency('libtraceevent')
->> +tracefs = dependency('libtracefs')
->> +
->>   if get_option('docs').enabled()
->>     if get_option('asciidoctor').enabled()
->>       asciidoc = find_program('asciidoctor', required : true)
->>
->>
+
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+
+>Signed-off-by: Dave Jiang <dave.jiang@intel.com>
