@@ -2,50 +2,50 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF611C6FA82
-	for <linux-cxl@archiver.kernel.org>; Wed, 21 Sep 2022 15:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77064ECAAD8
+	for <linux-cxl@archiver.kernel.org>; Wed, 21 Sep 2022 15:37:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230437AbiIUPhH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 21 Sep 2022 11:37:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58652 "EHLO
+        id S231266AbiIUPhJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 21 Sep 2022 11:37:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231199AbiIUPgu (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 21 Sep 2022 11:36:50 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4D7519C27
-        for <linux-cxl@vger.kernel.org>; Wed, 21 Sep 2022 08:33:14 -0700 (PDT)
+        with ESMTP id S229512AbiIUPgw (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 21 Sep 2022 11:36:52 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45BA83342C
+        for <linux-cxl@vger.kernel.org>; Wed, 21 Sep 2022 08:33:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663774394; x=1695310394;
+  t=1663774397; x=1695310397;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=07ZPPtjNGRRPAeJ6ByCNlodiwJ32TN9ANhK8apa+2uY=;
-  b=QYaUGei7tOr6+/7V+UGcH+Va9SQfZefyT3qT5lJUFDaZ0PHo3a1FzDwd
-   cJtca/HIKktqFjZDPgVFJS45Tg1FUqyvnLbPw5nfk1Zh+JbyNkRuBZtlW
-   CHK/T60Dp7jMi/OZWs+YbRdxwtPw0qmCZ2ziwpPN1jrrROSeC4osHdGOw
-   pyu4A18iur+hViMBi+GRu61MT5Mv4D+JWo4wEXCR8SeMePONE/n9pluXO
-   cuUdt2FnEC/ZiT5EEy4PplzH49pNcOlqyejFkrpDyluURyqgn748ylycO
-   cxZwYyV9eEuKIeXZ4UiLE91Y5q7UiHQcpXHChPJAcQfKoY3B7rEoO912/
+  bh=1nfD48fp2r0AfaA0ZGQ6qjOdAq8SksG/zOtMLOOpWO0=;
+  b=ViESSCP9wLrdMzRdTLFVGOqXZvUUFScvRO4rWuXieE9SnMsWDz56k09L
+   AegWEZBV2mAV6blOBrsousrxaceyg2l3tObGVGv8eWub5J3qL7mOqvHre
+   tAmhbiDRG2dg0ivs7kxHG/eDOt+ccIGHULW2CNXugpwA28XJTamJmhJe0
+   ETRXFtHoCBr3Sx+FHkSu/YnOe2+26aTFfA8YeOMarFp/cnfYKwdh3z43E
+   w0+DLQmVE3QeDIXDjOyj1NzAAsSiwKe8AxmJz6YEdFOeNjet3y7v4jYu4
+   BFt47KBySGzXjN8X0OhCziVBb47HEPevPtXyD+zT9uVdxSd8KqWKtZBD4
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10477"; a="300022067"
+X-IronPort-AV: E=McAfee;i="6500,9779,10477"; a="364012425"
 X-IronPort-AV: E=Sophos;i="5.93,333,1654585200"; 
-   d="scan'208";a="300022067"
+   d="scan'208";a="364012425"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 08:31:53 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 08:31:34 -0700
 X-IronPort-AV: E=Sophos;i="5.93,333,1654585200"; 
-   d="scan'208";a="652579051"
+   d="scan'208";a="652578872"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 08:31:51 -0700
-Subject: [PATCH v2 04/19] cxl/pmem: Add "Set Passphrase" security command
- support
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 08:31:33 -0700
+Subject: [PATCH v2 01/19] memregion: Add cpu_cache_invalidate_memregion()
+ interface
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     nvdimm@lists.linux.dev, dan.j.williams@intel.com,
         bwidawsk@kernel.org, ira.weiny@intel.com, vishal.l.verma@intel.com,
         alison.schofield@intel.com, dave@stgolabs.net,
         Jonathan.Cameron@huawei.com
-Date:   Wed, 21 Sep 2022 08:31:51 -0700
-Message-ID: <166377431129.430546.9754430497259586325.stgit@djiang5-desk3.ch.intel.com>
+Date:   Wed, 21 Sep 2022 08:31:33 -0700
+Message-ID: <166377429297.430546.18244091321001267098.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <166377414787.430546.3863229455285366312.stgit@djiang5-desk3.ch.intel.com>
 References: <166377414787.430546.3863229455285366312.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/1.4
@@ -56,123 +56,254 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Create callback function to support the nvdimm_security_ops ->change_key()
-callback. Translate the operation to send "Set Passphrase" security command
-for CXL memory device. The operation supports setting a passphrase for the
-CXL persistent memory device. It also supports the changing of the
-currently set passphrase. The operation allows manipulation of a user
-passphrase or a master passphrase.
+From: Davidlohr Bueso <dave@stgolabs.net>
 
-See CXL 2.0 spec section 8.2.9.5.6.2 for reference.
+With CXL security features, global CPU cache flushing nvdimm requirements
+are no longer specific to that subsystem, even beyond the scope of
+security_ops. CXL will need such semantics for features not necessarily
+limited to persistent memory.
 
-However, the spec leaves a gap WRT master passphrase usages. The spec does
-not define any ways to retrieve the status of if the support of master
-passphrase is available for the device, nor does the commands that utilize
-master passphrase will return a specific error that indicates master
-passphrase is not supported. If using a device does not support master
-passphrase and a command is issued with a master passphrase, the error
-message returned by the device will be ambiguos.
+The functionality this is enabling is to be able to instantaneously
+secure erase potentially terabytes of memory at once and the kernel
+needs to be sure that none of the data from before the erase is still
+present in the cache. It is also used when unlocking a memory device
+where speculative reads and firmware accesses could have cached poison
+from before the device was unlocked.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+This capability is typically only used once per-boot (for unlock), or
+once per bare metal provisioning event (secure erase), like when handing
+off the system to another tenant or decommissioning a device. It may
+also be used for dynamic CXL region provisioning.
+
+Users must first call cpu_cache_has_invalidate_memregion() to know whether
+this functionality is available on the architecture. Only enable it on
+x86-64 via the wbinvd() hammer. Hypervisors are not supported as TDX
+guests may trigger a virtualization exception and may need proper handling
+to recover. See:
+
+   e2efb6359e62 ("ACPICA: Avoid cache flush inside virtual machines")
+
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 ---
- drivers/cxl/core/mbox.c      |    1 +
- drivers/cxl/cxlmem.h         |   15 +++++++++++++++
- drivers/cxl/security.c       |   22 ++++++++++++++++++++++
- include/uapi/linux/cxl_mem.h |    1 +
- 4 files changed, 39 insertions(+)
+ arch/x86/Kconfig             |    1 +
+ arch/x86/mm/pat/set_memory.c |   15 +++++++++++++++
+ drivers/acpi/nfit/intel.c    |   41 ++++++++++++++++++-----------------------
+ include/linux/memregion.h    |   35 +++++++++++++++++++++++++++++++++++
+ lib/Kconfig                  |    3 +++
+ 5 files changed, 72 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 8f4be61a76b5..cc08383499e6 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -66,6 +66,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
- 	CXL_CMD(SCAN_MEDIA, 0x11, 0, 0),
- 	CXL_CMD(GET_SCAN_MEDIA, 0, CXL_VARIABLE_PAYLOAD, 0),
- 	CXL_CMD(GET_SECURITY_STATE, 0, 0x4, 0),
-+	CXL_CMD(SET_PASSPHRASE, 0x60, 0, 0),
- };
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index f9920f1341c8..94dc39911f92 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -69,6 +69,7 @@ config X86
+ 	select ARCH_ENABLE_THP_MIGRATION if X86_64 && TRANSPARENT_HUGEPAGE
+ 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
+ 	select ARCH_HAS_CACHE_LINE_SIZE
++	select ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION  if X86_64
+ 	select ARCH_HAS_CURRENT_STACK_POINTER
+ 	select ARCH_HAS_DEBUG_VIRTUAL
+ 	select ARCH_HAS_DEBUG_VM_PGTABLE	if !X86_PAE
+diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+index 1abd5438f126..4924d5a45950 100644
+--- a/arch/x86/mm/pat/set_memory.c
++++ b/arch/x86/mm/pat/set_memory.c
+@@ -330,6 +330,21 @@ void arch_invalidate_pmem(void *addr, size_t size)
+ EXPORT_SYMBOL_GPL(arch_invalidate_pmem);
+ #endif
  
- /*
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 25d1d8fa7d1e..725b08148524 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -274,6 +274,7 @@ enum cxl_opcode {
- 	CXL_MBOX_OP_SCAN_MEDIA		= 0x4304,
- 	CXL_MBOX_OP_GET_SCAN_MEDIA	= 0x4305,
- 	CXL_MBOX_OP_GET_SECURITY_STATE	= 0x4500,
-+	CXL_MBOX_OP_SET_PASSPHRASE	= 0x4501,
- 	CXL_MBOX_OP_MAX			= 0x10000
- };
- 
-@@ -380,6 +381,20 @@ struct cxl_mem_command {
- #define CXL_PMEM_SEC_STATE_USER_PLIMIT		0x10
- #define CXL_PMEM_SEC_STATE_MASTER_PLIMIT	0x20
- 
-+/* set passphrase input payload */
-+struct cxl_set_pass {
-+	u8 type;
-+	u8 reserved[31];
-+	/* CXL field using NVDIMM define, same length */
-+	u8 old_pass[NVDIMM_PASSPHRASE_LEN];
-+	u8 new_pass[NVDIMM_PASSPHRASE_LEN];
-+} __packed;
++#ifdef CONFIG_ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
++bool cpu_cache_has_invalidate_memregion(void)
++{
++	return !cpu_feature_enabled(X86_FEATURE_HYPERVISOR);
++}
++EXPORT_SYMBOL_GPL(cpu_cache_has_invalidate_memregion);
 +
-+enum {
-+	CXL_PMEM_SEC_PASS_MASTER = 0,
-+	CXL_PMEM_SEC_PASS_USER,
-+};
++int cpu_cache_invalidate_memregion(int res_desc)
++{
++	wbinvd_on_all_cpus();
++	return 0;
++}
++EXPORT_SYMBOL_GPL(cpu_cache_invalidate_memregion);
++#endif
 +
- int cxl_mbox_send_cmd(struct cxl_dev_state *cxlds, u16 opcode, void *in,
- 		      size_t in_size, void *out, size_t out_size);
- int cxl_dev_state_identify(struct cxl_dev_state *cxlds);
-diff --git a/drivers/cxl/security.c b/drivers/cxl/security.c
-index 806173084216..5365646230c3 100644
---- a/drivers/cxl/security.c
-+++ b/drivers/cxl/security.c
-@@ -49,8 +49,30 @@ static unsigned long cxl_pmem_get_security_flags(struct nvdimm *nvdimm,
- 	return security_flags;
+ static void __cpa_flush_all(void *arg)
+ {
+ 	unsigned long cache = (unsigned long)arg;
+diff --git a/drivers/acpi/nfit/intel.c b/drivers/acpi/nfit/intel.c
+index 8dd792a55730..b2bfbf5797da 100644
+--- a/drivers/acpi/nfit/intel.c
++++ b/drivers/acpi/nfit/intel.c
+@@ -3,6 +3,7 @@
+ #include <linux/libnvdimm.h>
+ #include <linux/ndctl.h>
+ #include <linux/acpi.h>
++#include <linux/memregion.h>
+ #include <asm/smp.h>
+ #include "intel.h"
+ #include "nfit.h"
+@@ -190,8 +191,6 @@ static int intel_security_change_key(struct nvdimm *nvdimm,
+ 	}
  }
  
-+static int cxl_pmem_security_change_key(struct nvdimm *nvdimm,
-+					const struct nvdimm_key_data *old_data,
-+					const struct nvdimm_key_data *new_data,
-+					enum nvdimm_passphrase_type ptype)
+-static void nvdimm_invalidate_cache(void);
+-
+ static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
+ 		const struct nvdimm_key_data *key_data)
+ {
+@@ -213,6 +212,9 @@ static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
+ 	if (!test_bit(NVDIMM_INTEL_UNLOCK_UNIT, &nfit_mem->dsm_mask))
+ 		return -ENOTTY;
+ 
++	if (!cpu_cache_has_invalidate_memregion())
++		return -EINVAL;
++
+ 	memcpy(nd_cmd.cmd.passphrase, key_data->data,
+ 			sizeof(nd_cmd.cmd.passphrase));
+ 	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
+@@ -228,7 +230,7 @@ static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
+ 	}
+ 
+ 	/* DIMM unlocked, invalidate all CPU caches before we read it */
+-	nvdimm_invalidate_cache();
++	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
+ 
+ 	return 0;
+ }
+@@ -297,8 +299,11 @@ static int __maybe_unused intel_security_erase(struct nvdimm *nvdimm,
+ 	if (!test_bit(cmd, &nfit_mem->dsm_mask))
+ 		return -ENOTTY;
+ 
++	if (!cpu_cache_has_invalidate_memregion())
++		return -EINVAL;
++
+ 	/* flush all cache before we erase DIMM */
+-	nvdimm_invalidate_cache();
++	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
+ 	memcpy(nd_cmd.cmd.passphrase, key->data,
+ 			sizeof(nd_cmd.cmd.passphrase));
+ 	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
+@@ -318,7 +323,7 @@ static int __maybe_unused intel_security_erase(struct nvdimm *nvdimm,
+ 	}
+ 
+ 	/* DIMM erased, invalidate all CPU caches before we read it */
+-	nvdimm_invalidate_cache();
++	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
+ 	return 0;
+ }
+ 
+@@ -341,6 +346,9 @@ static int __maybe_unused intel_security_query_overwrite(struct nvdimm *nvdimm)
+ 	if (!test_bit(NVDIMM_INTEL_QUERY_OVERWRITE, &nfit_mem->dsm_mask))
+ 		return -ENOTTY;
+ 
++	if (!cpu_cache_has_invalidate_memregion())
++		return -EINVAL;
++
+ 	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
+ 	if (rc < 0)
+ 		return rc;
+@@ -355,7 +363,7 @@ static int __maybe_unused intel_security_query_overwrite(struct nvdimm *nvdimm)
+ 	}
+ 
+ 	/* flush all cache before we make the nvdimms available */
+-	nvdimm_invalidate_cache();
++	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
+ 	return 0;
+ }
+ 
+@@ -380,8 +388,11 @@ static int __maybe_unused intel_security_overwrite(struct nvdimm *nvdimm,
+ 	if (!test_bit(NVDIMM_INTEL_OVERWRITE, &nfit_mem->dsm_mask))
+ 		return -ENOTTY;
+ 
++	if (!cpu_cache_has_invalidate_memregion())
++		return -EINVAL;
++
+ 	/* flush all cache before we erase DIMM */
+-	nvdimm_invalidate_cache();
++	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
+ 	memcpy(nd_cmd.cmd.passphrase, nkey->data,
+ 			sizeof(nd_cmd.cmd.passphrase));
+ 	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
+@@ -401,22 +412,6 @@ static int __maybe_unused intel_security_overwrite(struct nvdimm *nvdimm,
+ 	}
+ }
+ 
+-/*
+- * TODO: define a cross arch wbinvd equivalent when/if
+- * NVDIMM_FAMILY_INTEL command support arrives on another arch.
+- */
+-#ifdef CONFIG_X86
+-static void nvdimm_invalidate_cache(void)
+-{
+-	wbinvd_on_all_cpus();
+-}
+-#else
+-static void nvdimm_invalidate_cache(void)
+-{
+-	WARN_ON_ONCE("cache invalidation required after unlock\n");
+-}
+-#endif
+-
+ static const struct nvdimm_security_ops __intel_security_ops = {
+ 	.get_flags = intel_security_flags,
+ 	.freeze = intel_security_freeze,
+diff --git a/include/linux/memregion.h b/include/linux/memregion.h
+index c04c4fd2e209..f964193e4e2a 100644
+--- a/include/linux/memregion.h
++++ b/include/linux/memregion.h
+@@ -20,4 +20,39 @@ static inline void memregion_free(int id)
+ {
+ }
+ #endif
++
++/**
++ * cpu_cache_invalidate_memregion - drop any CPU cached data for
++ *     memregions described by @res_desc
++ * @res_desc: one of the IORES_DESC_* types
++ *
++ * Perform cache maintenance after a memory event / operation that
++ * changes the contents of physical memory in a cache-incoherent manner.
++ * For example, device memory technologies like NVDIMM and CXL have
++ * device secure erase, or dynamic region provision features where such
++ * semantics.
++ *
++ * Limit the functionality to architectures that have an efficient way
++ * to writeback and invalidate potentially terabytes of memory at once.
++ * Note that this routine may or may not write back any dirty contents
++ * while performing the invalidation.
++ *
++ * Returns 0 on success or negative error code on a failure to perform
++ * the cache maintenance.
++ */
++#ifdef CONFIG_ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
++int cpu_cache_invalidate_memregion(int res_desc);
++bool cpu_cache_has_invalidate_memregion(void);
++#else
++static inline bool cpu_cache_has_invalidate_memregion(void)
 +{
-+	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
-+	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_set_pass set_pass;
-+	int rc;
-+
-+	set_pass.type = ptype == NVDIMM_MASTER ?
-+		CXL_PMEM_SEC_PASS_MASTER : CXL_PMEM_SEC_PASS_USER;
-+	memcpy(set_pass.old_pass, old_data->data, NVDIMM_PASSPHRASE_LEN);
-+	memcpy(set_pass.new_pass, new_data->data, NVDIMM_PASSPHRASE_LEN);
-+
-+	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_SET_PASSPHRASE,
-+			       &set_pass, sizeof(set_pass), NULL, 0);
-+	return rc;
++	return false;
 +}
 +
- static const struct nvdimm_security_ops __cxl_security_ops = {
- 	.get_flags = cxl_pmem_get_security_flags,
-+	.change_key = cxl_pmem_security_change_key,
- };
++int cpu_cache_invalidate_memregion(int res_desc)
++{
++	WARN_ON_ONCE("CPU cache invalidation required");
++	return -EINVAL;
++}
++#endif
+ #endif /* _MEMREGION_H_ */
+diff --git a/lib/Kconfig b/lib/Kconfig
+index dc1ab2ed1dc6..6bb99da6011a 100644
+--- a/lib/Kconfig
++++ b/lib/Kconfig
+@@ -662,6 +662,9 @@ config ARCH_HAS_PMEM_API
+ config MEMREGION
+ 	bool
  
- const struct nvdimm_security_ops *cxl_security_ops = &__cxl_security_ops;
-diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-index cdc6049683ce..9da047e9b038 100644
---- a/include/uapi/linux/cxl_mem.h
-+++ b/include/uapi/linux/cxl_mem.h
-@@ -42,6 +42,7 @@
- 	___C(SCAN_MEDIA, "Scan Media"),                                   \
- 	___C(GET_SCAN_MEDIA, "Get Scan Media Results"),                   \
- 	___C(GET_SECURITY_STATE, "Get Security State"),			  \
-+	___C(SET_PASSPHRASE, "Set Passphrase"),				  \
- 	___C(MAX, "invalid / last command")
++config ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
++	bool
++
+ config ARCH_HAS_MEMREMAP_COMPAT_ALIGN
+ 	bool
  
- #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
 
 
