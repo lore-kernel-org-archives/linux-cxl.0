@@ -2,50 +2,50 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5809C6FA8E
-	for <linux-cxl@archiver.kernel.org>; Wed, 21 Sep 2022 15:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71717C6FA8E
+	for <linux-cxl@archiver.kernel.org>; Wed, 21 Sep 2022 15:39:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230527AbiIUPjH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 21 Sep 2022 11:39:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34042 "EHLO
+        id S229761AbiIUPjf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 21 Sep 2022 11:39:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229953AbiIUPit (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 21 Sep 2022 11:38:49 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BFE847BA5
-        for <linux-cxl@vger.kernel.org>; Wed, 21 Sep 2022 08:34:42 -0700 (PDT)
+        with ESMTP id S231296AbiIUPiL (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 21 Sep 2022 11:38:11 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4EDA9C2CA
+        for <linux-cxl@vger.kernel.org>; Wed, 21 Sep 2022 08:34:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663774483; x=1695310483;
+  t=1663774447; x=1695310447;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ukPqBYOuTgVnjKvlbKVtSBph+np5dqkXb2a4549PHJ4=;
-  b=HWkcYFJ2pDSvnr4yCKmGUWS3zcnwXDGopl+PrDgCNkRRehIOhtXmdYue
-   9ym0Sat9gDyYHpQhKgY53JoD1u5xwtZHaKWnaUoTllJvVcA813Pf3QIHe
-   2l4krBklKgepzSBCAj+ISf7buhHZVZl+En+hisvMcdialJDhswBHPGPEo
-   c20Qqf6XuohlGcSjiiuG0AiUaYDk3FFSrw/7YZ3GosLkAYDK6PPkDw6QP
-   Gd3u/Y3SuxFC8SRii4jiflkGzRxxwwxbXT7SzUUHusvhJXgVi5Art4z0v
-   7SSmiXDWeDJYtbC+7FhlKt03aZUzUkTc5O3U3dHuRY/Dwo83bBhcq8syr
+  bh=H1IkV4mJ7QzoLK2yUqSaO7cBp/erS0OV1wCnr6ymy6g=;
+  b=KQZU1XMa1jVHW/FmliihYGb+CKnmCOpJ/yRk0RCx6o+bAEEEOMmwwdgq
+   6uE3jKKLil+rHBuQ0lrDA+wzhtYgx0ak7EP82HeukD64a3Wl0z7l7eOBL
+   NarFb5QlwCJaXe1cIC4rvjg1DRvYwMXm88XwasBmx+I4VNcqwaCNMMMcj
+   egcemTmbYthptsOaY6RBPGacAJNkzEEUjz5Yq9ROIKvlwg2JwGwjLD698
+   3O1kHeOCq04QUU2Q/97eDiC9g8sBa69k149l4E7elffkoEw3uvCxS19UQ
+   dWCxkCMZy/75CQTcVCr75X9Q/tybkYSKrIfMdkXncvBuoe/DL9wavi8KW
    Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10477"; a="301438212"
+X-IronPort-AV: E=McAfee;i="6500,9779,10477"; a="280407773"
 X-IronPort-AV: E=Sophos;i="5.93,333,1654585200"; 
-   d="scan'208";a="301438212"
+   d="scan'208";a="280407773"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 08:32:23 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 08:33:10 -0700
 X-IronPort-AV: E=Sophos;i="5.93,333,1654585200"; 
-   d="scan'208";a="597034692"
+   d="scan'208";a="597034939"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 08:32:22 -0700
-Subject: [PATCH v2 09/19] tools/testing/cxl: Add "Freeze Security State"
- security opcode support
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 08:33:09 -0700
+Subject: [PATCH v2 17/19] cxl/pmem: add provider name to cxl pmem dimm
+ attribute group
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     nvdimm@lists.linux.dev, dan.j.williams@intel.com,
         bwidawsk@kernel.org, ira.weiny@intel.com, vishal.l.verma@intel.com,
         alison.schofield@intel.com, dave@stgolabs.net,
         Jonathan.Cameron@huawei.com
-Date:   Wed, 21 Sep 2022 08:32:22 -0700
-Message-ID: <166377434213.430546.16329545604946404040.stgit@djiang5-desk3.ch.intel.com>
+Date:   Wed, 21 Sep 2022 08:33:09 -0700
+Message-ID: <166377438921.430546.5550361331475412529.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <166377414787.430546.3863229455285366312.stgit@djiang5-desk3.ch.intel.com>
 References: <166377414787.430546.3863229455285366312.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/1.4
@@ -56,58 +56,41 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add support to emulate a CXL mem device support the "Freeze Security State"
-operation.
+Add provider name in order to associate cxl test dimm from cxl_test to the
+cxl pmem device when going through sysfs for security testing.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- tools/testing/cxl/test/mem.c |   27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ drivers/cxl/pmem.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 40dccbeb9f30..b24119b0ea76 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -290,6 +290,30 @@ static int mock_disable_passphrase(struct cxl_dev_state *cxlds, struct cxl_mbox_
- 	return 0;
+diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+index 9f34f8701b57..cb303edb925d 100644
+--- a/drivers/cxl/pmem.c
++++ b/drivers/cxl/pmem.c
+@@ -48,6 +48,15 @@ static void unregister_nvdimm(void *nvdimm)
+ 	cxl_nvd->bridge = NULL;
  }
  
-+static int mock_freeze_security(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
++static ssize_t provider_show(struct device *dev, struct device_attribute *attr, char *buf)
 +{
-+	struct cxl_mock_mem_pdata *mdata = dev_get_platdata(cxlds->dev);
++	struct nvdimm *nvdimm = to_nvdimm(dev);
++	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
 +
-+	if (cmd->size_in != 0)
-+		return -EINVAL;
-+
-+	if (cmd->size_out != 0)
-+		return -EINVAL;
-+
-+	if (mdata->security_state & CXL_PMEM_SEC_STATE_FROZEN) {
-+		cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
-+		return -ENXIO;
-+	}
-+
-+	if (!(mdata->security_state & CXL_PMEM_SEC_STATE_USER_PASS_SET)) {
-+		cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
-+		return -ENXIO;
-+	}
-+
-+	mdata->security_state |= CXL_PMEM_SEC_STATE_FROZEN;
-+	return 0;
++	return sysfs_emit(buf, "%s\n", dev_name(&cxl_nvd->dev));
 +}
++static DEVICE_ATTR_RO(provider);
 +
- static int mock_get_lsa(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
+ static ssize_t id_show(struct device *dev, struct device_attribute *attr, char *buf)
  {
- 	struct cxl_mbox_get_lsa *get_lsa = cmd->payload_in;
-@@ -392,6 +416,9 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
- 	case CXL_MBOX_OP_DISABLE_PASSPHRASE:
- 		rc = mock_disable_passphrase(cxlds, cmd);
- 		break;
-+	case CXL_MBOX_OP_FREEZE_SECURITY:
-+		rc = mock_freeze_security(cxlds, cmd);
-+		break;
- 	default:
- 		break;
- 	}
+ 	struct nvdimm *nvdimm = to_nvdimm(dev);
+@@ -61,6 +70,7 @@ static DEVICE_ATTR_RO(id);
+ 
+ static struct attribute *cxl_dimm_attributes[] = {
+ 	&dev_attr_id.attr,
++	&dev_attr_provider.attr,
+ 	NULL
+ };
+ 
 
 
