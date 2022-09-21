@@ -2,85 +2,113 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0553ECAAD8
-	for <linux-cxl@archiver.kernel.org>; Wed, 21 Sep 2022 21:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3381AC6FA8E
+	for <linux-cxl@archiver.kernel.org>; Wed, 21 Sep 2022 21:28:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230103AbiIUVXq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 21 Sep 2022 17:23:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52400 "EHLO
+        id S230137AbiIUV2U (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 21 Sep 2022 17:28:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229787AbiIUVXo (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 21 Sep 2022 17:23:44 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EC869A9E2
-        for <linux-cxl@vger.kernel.org>; Wed, 21 Sep 2022 14:23:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663795423; x=1695331423;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=j7IEyZ8mHXGZNhB2CbhcFqd8VtBwVACR0GYmCCQSVvA=;
-  b=dRscK/5uFUv7y5MM8q5fCMxFS+Nlp7o4buIEluXrO5hHxe+m+zTHJfxp
-   DYT9jStRQrMFegjp34JFF62o2xxUt6/cfJpz7TaOxbOax/iygJ7//vRLi
-   NOkIuEvEmaU9NbixFZHZLW1MalR48IU3Numx2nMgUQ8deuwFj0JR0uJas
-   l/Hkzhm0qy74qKahU5t4UUSPI086hQ3YD9s4tA1hsWLTAnHcezqY1Z0C/
-   KNksAbjj90jL6TPl2wElkppTDVLk48iGpgeSOkjvBR75Vrrtk4cfWDKY8
-   fxntiqDNeRZWWVBHG3aQLhBMdY7ckqF5mUdTJxsTNcOFId9DsQlTJaaQc
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10477"; a="297728374"
-X-IronPort-AV: E=Sophos;i="5.93,334,1654585200"; 
-   d="scan'208";a="297728374"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 14:23:42 -0700
-X-IronPort-AV: E=Sophos;i="5.93,334,1654585200"; 
-   d="scan'208";a="652705062"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.36.150]) ([10.212.36.150])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 14:23:41 -0700
-Message-ID: <27395834-da66-c3f7-3f8d-01a64431df25@intel.com>
-Date:   Wed, 21 Sep 2022 14:23:41 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.2.2
-Subject: Re: [PATCH v2 12/19] cxl/pmem: Add "Passphrase Secure Erase" security
- command support
-Content-Language: en-US
-To:     Davidlohr Bueso <dave@stgolabs.net>
+        with ESMTP id S230233AbiIUV1r (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 21 Sep 2022 17:27:47 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F7097CB79
+        for <linux-cxl@vger.kernel.org>; Wed, 21 Sep 2022 14:27:46 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 85F0D801AA9;
+        Wed, 21 Sep 2022 21:27:45 +0000 (UTC)
+Received: from pdx1-sub0-mail-a310.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id BBC4F802EE0;
+        Wed, 21 Sep 2022 21:27:44 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1663795665; a=rsa-sha256;
+        cv=none;
+        b=ceN0aTV8GChl6B0/r8LwsJ8cjBuUjih+Asl/FX5HRoR0xQI8fNPQJ7x2PZTY9UAx0Pg/cb
+        MijEujHP4OoC+oDSevUW8ZH86ejgu+JF23jRhvrQ+sSjtr95XHISyNuQL8h44c2ET+Drkn
+        r9Fbz5I1fBIIiw+yzIcHKTaW1irxrq637Z7MDQI6KyKA6tJ0EjA5U/kdG1i4WSVDqRF1U9
+        dsoPNcw9F/VjVNsCbHhInH++vQNbPi8h6mRSPQNVXNZN3rU82VTE7AJMYidsw3TrP61Gq2
+        2zihsL0HkplmEfNmMq1wMnDlBnYunVRIrjHoa3OVOdyNDdo7iBbP7Ce+hO2WKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1663795665;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=yGfkkVIZzvmBbglcyFtO5jLrAJHm6IVhMbw3wBg2HE0=;
+        b=avMAKmKsei3VprSlvYLt2nO+xfQ3uqeXZeNt1Otkaaz1GrcAPz2ZKJ8pjTUc2BiSO7v8f0
+        kLXbssNpNN9KKvDug0Oo8M/oLfLnFKQyHhloPmku8eQ4ZtqZQRYXmi5PaAgpKeVFoVQ7Ty
+        9nJfC1fedazi1cp6s9SBD7pdYw06MRhQqs/Aubmc3XbUUJxYQCCbMjkY6G7AsAOsGDrqMz
+        hQI6r5cN7JmLsr6RHx8Hsr9sWFBxwP8ksq5pZTt5z0k8WHo4rqucyQKtUHEWvWH9YZr3Yi
+        i4eDGsDp0wHHPEcgcIcYjgj3+pCDURaEOi4fmMubbNpQpdL42judD5MasQbKBA==
+ARC-Authentication-Results: i=1;
+        rspamd-686945db84-zznm7;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Imminent-Irritate: 3ebb68131532623a_1663795665284_650998431
+X-MC-Loop-Signature: 1663795665284:661351820
+X-MC-Ingress-Time: 1663795665284
+Received: from pdx1-sub0-mail-a310.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.121.28.250 (trex/6.7.1);
+        Wed, 21 Sep 2022 21:27:45 +0000
+Received: from offworld (ip-213-127-200-122.ip.prioritytelecom.net [213.127.200.122])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a310.dreamhost.com (Postfix) with ESMTPSA id 4MXs2P5LNkzlb;
+        Wed, 21 Sep 2022 14:27:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1663795664;
+        bh=yGfkkVIZzvmBbglcyFtO5jLrAJHm6IVhMbw3wBg2HE0=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=lceymlMQBx8ta6jtHO5kAFmrzAPUJWMERmqDMOQgNjC7jzn+DZTz+uzi8zSsNtU6+
+         6VeEIwNUOmaUDwMkGBs9MKRi8n6S7EushWj9JcLzfmbvMbEKYTF/TC279N1+g/P6DC
+         58WhddTrdQxyAv1wuCk5zuxm/+VoQmIoxSgbLxYw26JRN7CxzCb5ZUuEIbSjjvZWRs
+         uFHRs0W3XrI3w+MaVub6tDCAaJTdYc/g8Ae9uglWOcnHl/8rhUZKC00LvUpdNa8PKd
+         nI9Kj4ZIS+NcEn+NNbiZPHLr2AZqeJZLmRGjOJR4yZA9bbcYqQ9EX7sz/XC8dZKGVC
+         86Ckp8KbKvHMg==
+Date:   Wed, 21 Sep 2022 14:07:58 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Dave Jiang <dave.jiang@intel.com>
 Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
         dan.j.williams@intel.com, bwidawsk@kernel.org, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
         Jonathan.Cameron@huawei.com
+Subject: Re: [PATCH v2 02/19] cxl/pmem: Introduce nvdimm_security_ops with
+ ->get_flags() operation
+Message-ID: <20220921210758.6nmdv656zmpbhcla@offworld>
 References: <166377414787.430546.3863229455285366312.stgit@djiang5-desk3.ch.intel.com>
- <166377436014.430546.12077333298585882653.stgit@djiang5-desk3.ch.intel.com>
- <20220921201512.7tjaquhroo6qezfe@offworld>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20220921201512.7tjaquhroo6qezfe@offworld>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+ <166377429922.430546.3219384653732905207.stgit@djiang5-desk3.ch.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <166377429922.430546.3219384653732905207.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Wed, 21 Sep 2022, Dave Jiang wrote:
 
-On 9/21/2022 1:15 PM, Davidlohr Bueso wrote:
-> On Wed, 21 Sep 2022, Dave Jiang wrote:
+>Add nvdimm_security_ops support for CXL memory device with the introduction
+>of the ->get_flags() callback function. This is part of the "Persistent
+>Memory Data-at-rest Security" command set for CXL memory device support.
+>The ->get_flags() function provides the security state of the persistent
+>memory device defined by the CXL 2.0 spec section 8.2.9.5.6.1.
 >
->> +static int cxl_pmem_security_passphrase_erase(struct nvdimm *nvdimm,
->> +                          const struct nvdimm_key_data *key,
->> +                          enum nvdimm_passphrase_type ptype)
->> +{
->> +    struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
->> +    struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
->> +    struct cxl_dev_state *cxlds = cxlmd->cxlds;
->> +    struct cxl_pass_erase erase;
->> +    int rc;
->> +
->> +    if (!cpu_cache_has_invalidate_memregion())
->> +        return -EOPNOTSUPP;
+>The nvdimm_security_ops for CXL is configured as an build option toggled by
+>kernel configuration CONFIG_CXL_PMEM_SECURITY.
+
+This last part seems to be left over from v1.
+
 >
-> The error code should be the same as the nvdimm user. I went with 
-> EINVAL, but
-> don't really have strong preferences.
+>Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-
-EOPNOTSUPP seems more appropriate?
-
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
