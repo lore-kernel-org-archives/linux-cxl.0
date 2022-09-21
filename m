@@ -2,201 +2,118 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F58C6FA82
-	for <linux-cxl@archiver.kernel.org>; Wed, 21 Sep 2022 16:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43110C6FA82
+	for <linux-cxl@archiver.kernel.org>; Wed, 21 Sep 2022 20:26:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231445AbiIUQqN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 21 Sep 2022 12:46:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52048 "EHLO
+        id S230227AbiIUU0I (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 21 Sep 2022 16:26:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231352AbiIUQpv (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 21 Sep 2022 12:45:51 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 944623B5;
-        Wed, 21 Sep 2022 09:36:47 -0700 (PDT)
-Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MXkTD1jy5z682kB;
-        Thu, 22 Sep 2022 00:32:00 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 21 Sep 2022 18:36:44 +0200
-Received: from localhost (10.81.200.69) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 21 Sep
- 2022 17:36:43 +0100
-Date:   Wed, 21 Sep 2022 17:36:42 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Dave Jiang <dave.jiang@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [RFC PATCH 1/9] cxl/mem: Implement Get Event Records command
-Message-ID: <20220921173642.000050ee@huawei.com>
-In-Reply-To: <Yyo6Un8YmRM7aOLz@iweiny-desk3>
-References: <20220813053243.757363-1-ira.weiny@intel.com>
-        <20220813053243.757363-2-ira.weiny@intel.com>
-        <20220824165058.00007d4f@huawei.com>
-        <Yxgd51zdrk9pEXE6@iweiny-mobl>
-        <20220908135240.00001217@huawei.com>
-        <Yxun42yjtZREEeRv@iweiny-desk3>
-        <20220920164904.00001be8@huawei.com>
-        <afdac388-061e-a403-3b9e-1273cee98509@intel.com>
-        <Yyo6Un8YmRM7aOLz@iweiny-desk3>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S229876AbiIUU0G (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 21 Sep 2022 16:26:06 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 153E1A4053
+        for <linux-cxl@vger.kernel.org>; Wed, 21 Sep 2022 13:26:03 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 2BCEC82071C;
+        Wed, 21 Sep 2022 20:26:03 +0000 (UTC)
+Received: from pdx1-sub0-mail-a310.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 900B4820A4A;
+        Wed, 21 Sep 2022 20:26:02 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1663791962; a=rsa-sha256;
+        cv=none;
+        b=CcRjFwW1sdNyImL7tb/wuyqR1VD3j8Q/KxmXnR+6wbotshaDDMvrFJk2uLe/5De0OZOA+L
+        P03QxoL8BloUemS5IoORDcbCFXkJQOfansiivNQQDc0b7HlO1RzMqQouKmaWsdTCI2ONi6
+        Xo2/ILFVvF1hMJ5QPzfVOlQyXCrJvbzDmfLLd3BO07v98o5UUjfgPGfhtmBgLK2w20zykE
+        aDPf1qGn/QoQX4G6ECl/UgFPRJ2W4K+nqedzyacGDI9QfvyQcp2XZBUuzRoH8vrwzBj/K9
+        tzGk4glG4YdQrdvzGANIl5BzJwbzkMbOSn/ITzGEEnyi8Z4Lr9CriDmXZiICcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1663791962;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=1gNn9GXdaprldy68ck+nCSRssW19Ybt37ruPfMJr4rs=;
+        b=Z1z34qQWr8mwA8wVrh88UPZUtwZieqtDZdDDxlJ0NOQdvATOHqECcyk/rRqyqKfHiW9Qsj
+        cUvx7oKeC9Y+fqHvu8uTSRzawIKJLB+XZgng5u3Fg/DfBQE8yaw/wbJQKxgsrEBpBPOtTK
+        HT3154X1bM+i0mbniDuNsOjf9tD54QNGhs2t/D6k8bG7xJzBcrQAZhjgkRonP8sntF0bhx
+        +r9z5KGO4imtpYGVLVgj3Z96ZwifikHBX8XxdEPUZLo9sQ4iV+bpAnjB6YpwDy8A2UI/0B
+        LUcAMjJyEA3s8p7O4WVR/6lrMncb+Tx2GrzWxFZahCs/ybWXo97I9UwwQTV1xw==
+ARC-Authentication-Results: i=1;
+        rspamd-f776c45b8-ct74j;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Turn-Print: 6a4912b5315076dd_1663791962938_998667278
+X-MC-Loop-Signature: 1663791962938:2116262794
+X-MC-Ingress-Time: 1663791962938
+Received: from pdx1-sub0-mail-a310.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.119.144.146 (trex/6.7.1);
+        Wed, 21 Sep 2022 20:26:02 +0000
+Received: from offworld (ip-213-127-200-122.ip.prioritytelecom.net [213.127.200.122])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a310.dreamhost.com (Postfix) with ESMTPSA id 4MXqgC3kr8z2J;
+        Wed, 21 Sep 2022 13:25:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1663791962;
+        bh=1gNn9GXdaprldy68ck+nCSRssW19Ybt37ruPfMJr4rs=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=HEhwiaZ15wBMA42fBVOU+YxsZN0WZBGOUj5pOFV0T+ZV1tsmmf92iAE0eiCMn8LyV
+         HGA8sfLB3pZvirBg7q6BxvHoiI5T0fuW4iVTqR8kkARGvGS9m42QC6K8T/h1h/KfD0
+         T9GLaXWtmtHy69OUGt+Ex86A7Mu64f9P7C3tt40ebnP85Temt107OOBMtKbHx7V7yj
+         d4vEXWoQZHc8KrZ4URZHeGgQW8+UyRBM4yB0JoBZzWwJJFZOe04zZpNhxBZJoaDzNb
+         fQKiUeOUyNa87L7JT4iDmSrcgIZo1kyFUg+OJsmJHxbipLB1a6JRHUV7a74OkvsNFx
+         le3kiOmsVgZwg==
+Date:   Wed, 21 Sep 2022 13:06:16 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+        dan.j.williams@intel.com, bwidawsk@kernel.org, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        Jonathan.Cameron@huawei.com
+Subject: Re: [PATCH v2 04/19] cxl/pmem: Add "Set Passphrase" security command
+ support
+Message-ID: <20220921200616.wxp4babtpfc4sdyw@offworld>
+References: <166377414787.430546.3863229455285366312.stgit@djiang5-desk3.ch.intel.com>
+ <166377431129.430546.9754430497259586325.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.200.69]
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <166377431129.430546.9754430497259586325.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 20 Sep 2022 15:10:26 -0700
-Ira Weiny <ira.weiny@intel.com> wrote:
+On Wed, 21 Sep 2022, Dave Jiang wrote:
 
-> On Tue, Sep 20, 2022 at 01:23:29PM -0700, Jiang, Dave wrote:
-> > 
-> > On 9/20/2022 8:49 AM, Jonathan Cameron wrote:  
-> > > On Fri, 9 Sep 2022 13:53:55 -0700
-> > > Ira Weiny <ira.weiny@intel.com> wrote:
-> > >   
-> > > > On Thu, Sep 08, 2022 at 01:52:40PM +0100, Jonathan Cameron wrote:
-> > > > [snip]
-> > > >   
-> > > > > > > > diff --git a/include/trace/events/cxl-events.h b/include/trace/events/cxl-events.h
-> > > > > > > > new file mode 100644
-> > > > > > > > index 000000000000..f4baeae66cf3
-> > > > > > > > --- /dev/null
-> > > > > > > > +++ b/include/trace/events/cxl-events.h
-> > > > > > > > @@ -0,0 +1,127 @@
-> > > > > > > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > > > > > > +#undef TRACE_SYSTEM
-> > > > > > > > +#define TRACE_SYSTEM cxl_events
-> > > > > > > > +
-> > > > > > > > +#if !defined(_CXL_TRACE_EVENTS_H) ||  defined(TRACE_HEADER_MULTI_READ)
-> > > > > > > > +#define _CXL_TRACE_EVENTS_H
-> > > > > > > > +
-> > > > > > > > +#include <linux/tracepoint.h>
-> > > > > > > > +
-> > > > > > > > +#define EVENT_LOGS					\
-> > > > > > > > +	EM(CXL_EVENT_TYPE_INFO,		"Info")		\
-> > > > > > > > +	EM(CXL_EVENT_TYPE_WARN,		"Warning")	\
-> > > > > > > > +	EM(CXL_EVENT_TYPE_FAIL,		"Failure")	\
-> > > > > > > > +	EM(CXL_EVENT_TYPE_FATAL,	"Fatal")	\
-> > > > > > > > +	EMe(CXL_EVENT_TYPE_MAX,		"<undefined>")  
-> > > > > > > Hmm. 4 is defined in CXL 3.0, but I'd assume we won't use tracepoints for
-> > > > > > > dynamic capacity events so I guess it doesn't matter.  
-> > > > > > I'm not sure why you would say that.  I anticipate some user space daemon
-> > > > > > requiring these events to set things up.  
-> > > > > Certainly a possible solution. I'd kind of expect a more hand shake based approach
-> > > > > than a tracepoint.  Guess we'll see :)  
-> > > > Yea I think we should wait an see.
-> > > >   
-> > > > > > > > +	{ CXL_EVENT_RECORD_FLAG_PERF_DEGRADED,	"Performance Degraded"		}, \
-> > > > > > > > +	{ CXL_EVENT_RECORD_FLAG_HW_REPLACE,	"Hardware Replacement Needed"	}  \
-> > > > > > > > +)
-> > > > > > > > +
-> > > > > > > > +TRACE_EVENT(cxl_event,
-> > > > > > > > +
-> > > > > > > > +	TP_PROTO(const char *dev_name, enum cxl_event_log_type log,
-> > > > > > > > +		 struct cxl_event_record_raw *rec),
-> > > > > > > > +
-> > > > > > > > +	TP_ARGS(dev_name, log, rec),
-> > > > > > > > +
-> > > > > > > > +	TP_STRUCT__entry(
-> > > > > > > > +		__string(dev_name, dev_name)
-> > > > > > > > +		__field(int, log)
-> > > > > > > > +		__array(u8, id, UUID_SIZE)
-> > > > > > > > +		__field(u32, flags)
-> > > > > > > > +		__field(u16, handle)
-> > > > > > > > +		__field(u16, related_handle)
-> > > > > > > > +		__field(u64, timestamp)
-> > > > > > > > +		__array(u8, data, EVENT_RECORD_DATA_LENGTH)
-> > > > > > > > +		__field(u8, length)  
-> > > > > > > Do we want the maintenance operation class added in Table 8-42 from CXL 3.0?
-> > > > > > > (only noticed because I happen to have that spec revision open rather than 2.0).  
-> > > > > > Yes done.
-> > > > > > 
-> > > > > > There is some discussion with Dan regarding not decoding anything and letting
-> > > > > > user space take care of it all.  I think this shows a valid reason Dan
-> > > > > > suggested this.  
-> > > > > I like being able to print tracepoints with out userspace tools.
-> > > > > This also enforces structure and stability of interface which I like.  
-> > > > I tend to agree with you.
-> > > >   
-> > > > > Maybe a raw tracepoint or variable length trailing buffer to pass
-> > > > > on what we don't understand?  
-> > > > I've already realized that we need to print all reserved fields for this
-> > > > reason.  If there is something the kernel does not understand user space can
-> > > > just figure it out on it's own.
-> > > > 
-> > > > Sound reasonable?  
-> > > Hmm. Printing reserved fields would be unusual.  Not sure what is done for similar
-> > > cases elsewhere, CPER records etc...
-> > > 
-> > > We could just print a raw array of the whole event as well as decode version, but
-> > > that means logging most of the fields twice...
-> > > 
-> > > Not nice either.
-> > > 
-> > > I'm a bit inclined to say we should maybe just ignore stuff we don't know about or
-> > > is there a version number we can use to decide between decoded vs decoded as much as
-> > > possible + raw log?  
-> 
-> I'm not a fan of loging the raw + decoded versions.
-> 
-> > 
-> > libtraceevent can pull the trace event data structure fields directly. So
-> > the raw data can be pulled directly from the kernel.  
-> 
-> This raw data needs to be in a field though.  If the kernel does not save the
-> reserved fields in the TP_fast_assign() then the data won't be in a field to
-> access.
-> 
-> >
-> > And what gets printed
-> > to the trace buffer can be decoded data constructed from those fields by the
-> > kernel code. So with that you can have access both.
-> >   
-> 
-> Fast assigning the entire buffer + decoded versions will roughly double the
-> trace event size.
-> 
-> Thinking through this a bit more there is a sticking point.
-> 
-> The difficulty will be ensuring that any new field names are documented such
-> that when user space starts to look at them they can determine if that data
-> appears as a new field or as part of a reserved field.
-> 
-> For example if user space needs to access data in the reserved data now it can
-> simply decode it.  However, when that data becomes a field it no longer is part
-> of the reserved data.  So what user space would need to do is look for the
-> field first (ie know the field name) and then if it does not appear extract it
-> from the reserved data.
-> 
-> I'm now wondering if I've wasted my time decoding anything since the kernel
-> does not need to know anything about these fields.  Because the above scenario
-> means that user space may get ugly over time.
-> 
-> That said I don't think it will present any incompatibilities.  So perhaps we
-> are ok?
+>Create callback function to support the nvdimm_security_ops ->change_key()
+>callback. Translate the operation to send "Set Passphrase" security command
+>for CXL memory device. The operation supports setting a passphrase for the
+>CXL persistent memory device. It also supports the changing of the
+>currently set passphrase. The operation allows manipulation of a user
+>passphrase or a master passphrase.
+>
+>See CXL 2.0 spec section 8.2.9.5.6.2 for reference.
+>
+>However, the spec leaves a gap WRT master passphrase usages. The spec does
+>not define any ways to retrieve the status of if the support of master
+>passphrase is available for the device, nor does the commands that utilize
+>master passphrase will return a specific error that indicates master
+>passphrase is not supported. If using a device does not support master
+>passphrase and a command is issued with a master passphrase, the error
+>message returned by the device will be ambiguos.
+>
+>Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-I favor decoding current record in kernel and packing it appropriately.
-If that means we don't provide some new data from a future version then such
-is life - the kernel needs upgrading.  That information is unlikely to be
-crucial - it's probably just more detail.
-
-Jonathan
-
-> 
-> Ira
-
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
