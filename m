@@ -2,50 +2,50 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1543EECAAD8
-	for <linux-cxl@archiver.kernel.org>; Wed, 21 Sep 2022 15:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71144ECAAD8
+	for <linux-cxl@archiver.kernel.org>; Wed, 21 Sep 2022 15:38:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231148AbiIUPh7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 21 Sep 2022 11:37:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32908 "EHLO
+        id S231220AbiIUPiF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 21 Sep 2022 11:38:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229767AbiIUPhm (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 21 Sep 2022 11:37:42 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A25CD9FA93
-        for <linux-cxl@vger.kernel.org>; Wed, 21 Sep 2022 08:33:56 -0700 (PDT)
+        with ESMTP id S229741AbiIUPhs (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 21 Sep 2022 11:37:48 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FCB89FA83
+        for <linux-cxl@vger.kernel.org>; Wed, 21 Sep 2022 08:33:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663774436; x=1695310436;
+  t=1663774434; x=1695310434;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=4wv5a/tyuDgn4HEb0fGr/xRG1zKb2K8sXezWY10+beg=;
-  b=HwjiUmQxr5oEaek8f6S6K8HVFq50MQxlO9dKZiBXgKyVAi1N8KSl/a9E
-   vkdUyJ3AuBNeEFbD+yy3ZVOUkgjOrHYrHlZw6sa2e+kpHVMV9rnhxPweo
-   kJOaJ5Guo1wWnu+MjtG8ftMr05hCT3gZr9WWFn8c1dJF0A2SyF4GWA3uc
-   h8EgdNwjCtItw/HxivUF74gfpT2bz6x4gnnDNR2icTGFWP9j6i5rD8dO8
-   o1s+dJHzDN4zi6zgCJsZT7UG8EW4L77yXOgLDWMOokGQ8wtcP+PyD/ZNP
-   CRgaEzHR+MjzRq0y9ihW8IL5v02Kp2w9SxWa//lpNP4p1qOP4L6lEIBak
+  bh=qOBf68NIhQAT5PyjJOXO7fgFQKFdyT5NsanXRbfyJq4=;
+  b=SYceNlN6qgByJmV60pQGHPSrmIsMVY/fp478fHerqjMVhEBERsP41HtG
+   q/xZ73DqkRy1BzD63DmqeIB31D+Ty+3MJkJ/5CZ8AfpdbL9MZliIMBHbn
+   AU4xI4vVld+OTljfJb+FjQwg2Gx+2dv0p0CNEN3Z+2nnY4lhl8gJr5pjp
+   YSgjNDtkR4AJiNjtl/QW+zGkxypbTNclcIEmCWMqY/Lb+hwXyAIvMu4v3
+   694vo/p/fwh2R/hBAaUfPSrFbOlDMpgMavCQSTbh1b21pcAVe73IbEOtR
+   zb+7u2d8jVLtfGSZEtNiqyVbmX/9fBfoK8QpGDJtrtJe9BzX5n5r/MUc1
    A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10477"; a="386322748"
+X-IronPort-AV: E=McAfee;i="6500,9779,10477"; a="279761336"
 X-IronPort-AV: E=Sophos;i="5.93,333,1654585200"; 
-   d="scan'208";a="386322748"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 08:32:00 -0700
+   d="scan'208";a="279761336"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 08:32:41 -0700
 X-IronPort-AV: E=Sophos;i="5.93,333,1654585200"; 
-   d="scan'208";a="652579078"
+   d="scan'208";a="597034753"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 08:31:58 -0700
-Subject: [PATCH v2 05/19] tools/testing/cxl: Add "Set Passphrase" opcode
- support
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 08:32:40 -0700
+Subject: [PATCH v2 12/19] cxl/pmem: Add "Passphrase Secure Erase" security
+ command support
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     nvdimm@lists.linux.dev, dan.j.williams@intel.com,
         bwidawsk@kernel.org, ira.weiny@intel.com, vishal.l.verma@intel.com,
         alison.schofield@intel.com, dave@stgolabs.net,
         Jonathan.Cameron@huawei.com
-Date:   Wed, 21 Sep 2022 08:31:58 -0700
-Message-ID: <166377431828.430546.12996556155261310755.stgit@djiang5-desk3.ch.intel.com>
+Date:   Wed, 21 Sep 2022 08:32:40 -0700
+Message-ID: <166377436014.430546.12077333298585882653.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <166377414787.430546.3863229455285366312.stgit@djiang5-desk3.ch.intel.com>
 References: <166377414787.430546.3863229455285366312.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/1.4
@@ -56,116 +56,119 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add support to emulate a CXL mem device supporting the "Set Passphrase"
-operation. The operation supports setting of either a user or a master
-passphrase.
+Create callback function to support the nvdimm_security_ops() ->erase()
+callback. Translate the operation to send "Passphrase Secure Erase"
+security command for CXL memory device.
+
+When the mem device is secure erased, arch_invalidate_nvdimm_cache() is
+called in order to invalidate all CPU caches before attempting to access
+the mem device again.
+
+See CXL 2.0 spec section 8.2.9.5.6.6 for reference.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- tools/testing/cxl/test/mem.c       |   66 ++++++++++++++++++++++++++++++++++++
- tools/testing/cxl/test/mem_pdata.h |    6 +++
- 2 files changed, 72 insertions(+)
+ drivers/cxl/core/mbox.c      |    1 +
+ drivers/cxl/cxlmem.h         |    8 ++++++++
+ drivers/cxl/security.c       |   29 +++++++++++++++++++++++++++++
+ include/uapi/linux/cxl_mem.h |    1 +
+ 4 files changed, 39 insertions(+)
 
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 9002a3ae3ea5..86be5e183b5c 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -154,6 +154,69 @@ static int mock_get_security_state(struct cxl_dev_state *cxlds,
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 243b01e2de85..88538a7ccc83 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -70,6 +70,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
+ 	CXL_CMD(DISABLE_PASSPHRASE, 0x40, 0, 0),
+ 	CXL_CMD(FREEZE_SECURITY, 0, 0, 0),
+ 	CXL_CMD(UNLOCK, 0x20, 0, 0),
++	CXL_CMD(PASSPHRASE_ERASE, 0x40, 0, 0),
+ };
+ 
+ /*
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 4e6897e8eb7d..1266df3b2d3d 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -278,6 +278,7 @@ enum cxl_opcode {
+ 	CXL_MBOX_OP_DISABLE_PASSPHRASE	= 0x4502,
+ 	CXL_MBOX_OP_UNLOCK		= 0x4503,
+ 	CXL_MBOX_OP_FREEZE_SECURITY	= 0x4504,
++	CXL_MBOX_OP_PASSPHRASE_ERASE	= 0x4505,
+ 	CXL_MBOX_OP_MAX			= 0x10000
+ };
+ 
+@@ -400,6 +401,13 @@ struct cxl_disable_pass {
+ 	u8 pass[NVDIMM_PASSPHRASE_LEN];
+ } __packed;
+ 
++/* passphrase erase payload */
++struct cxl_pass_erase {
++	u8 type;
++	u8 reserved[31];
++	u8 pass[NVDIMM_PASSPHRASE_LEN];
++} __packed;
++
+ enum {
+ 	CXL_PMEM_SEC_PASS_MASTER = 0,
+ 	CXL_PMEM_SEC_PASS_USER,
+diff --git a/drivers/cxl/security.c b/drivers/cxl/security.c
+index 8bfdcb58d381..df4cf26e366a 100644
+--- a/drivers/cxl/security.c
++++ b/drivers/cxl/security.c
+@@ -128,12 +128,41 @@ static int cxl_pmem_security_unlock(struct nvdimm *nvdimm,
  	return 0;
  }
  
-+static int mock_set_passphrase(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
++static int cxl_pmem_security_passphrase_erase(struct nvdimm *nvdimm,
++					      const struct nvdimm_key_data *key,
++					      enum nvdimm_passphrase_type ptype)
 +{
-+	struct cxl_mock_mem_pdata *mdata = dev_get_platdata(cxlds->dev);
-+	struct cxl_set_pass *set_pass;
++	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
++	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++	struct cxl_pass_erase erase;
++	int rc;
 +
-+	if (cmd->size_in != sizeof(*set_pass))
-+		return -EINVAL;
++	if (!cpu_cache_has_invalidate_memregion())
++		return -EOPNOTSUPP;
 +
-+	if (cmd->size_out != 0)
-+		return -EINVAL;
++	erase.type = ptype == NVDIMM_MASTER ?
++		CXL_PMEM_SEC_PASS_MASTER : CXL_PMEM_SEC_PASS_USER;
++	memcpy(erase.pass, key->data, NVDIMM_PASSPHRASE_LEN);
++	/* Flush all cache before we erase mem device */
++	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
++	rc =  cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_PASSPHRASE_ERASE,
++				&erase, sizeof(erase), NULL, 0);
++	if (rc < 0)
++		return rc;
 +
-+	if (mdata->security_state & CXL_PMEM_SEC_STATE_FROZEN) {
-+		cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
-+		return -ENXIO;
-+	}
-+
-+	set_pass = cmd->payload_in;
-+	switch (set_pass->type) {
-+	case CXL_PMEM_SEC_PASS_MASTER:
-+		if (mdata->security_state & CXL_PMEM_SEC_STATE_MASTER_PLIMIT) {
-+			cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
-+			return -ENXIO;
-+		}
-+		/*
-+		 * CXL spec v2.0 8.2.9.5.6.2, The master pasphrase shall only be set in
-+		 * the security disabled state when the user passphrase is not set.
-+		 */
-+		if (mdata->security_state & CXL_PMEM_SEC_STATE_USER_PASS_SET) {
-+			cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
-+			return -ENXIO;
-+		}
-+		if (memcmp(mdata->master_pass, set_pass->old_pass, NVDIMM_PASSPHRASE_LEN)) {
-+			if (++mdata->master_limit == PASS_TRY_LIMIT)
-+				mdata->security_state |= CXL_PMEM_SEC_STATE_MASTER_PLIMIT;
-+			cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
-+			return -ENXIO;
-+		}
-+		memcpy(mdata->master_pass, set_pass->new_pass, NVDIMM_PASSPHRASE_LEN);
-+		mdata->security_state |= CXL_PMEM_SEC_STATE_MASTER_PASS_SET;
-+		return 0;
-+
-+	case CXL_PMEM_SEC_PASS_USER:
-+		if (mdata->security_state & CXL_PMEM_SEC_STATE_USER_PLIMIT) {
-+			cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
-+			return -ENXIO;
-+		}
-+		if (memcmp(mdata->user_pass, set_pass->old_pass, NVDIMM_PASSPHRASE_LEN)) {
-+			if (++mdata->user_limit == PASS_TRY_LIMIT)
-+				mdata->security_state |= CXL_PMEM_SEC_STATE_USER_PLIMIT;
-+			cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
-+			return -ENXIO;
-+		}
-+		memcpy(mdata->user_pass, set_pass->new_pass, NVDIMM_PASSPHRASE_LEN);
-+		mdata->security_state |= CXL_PMEM_SEC_STATE_USER_PASS_SET;
-+		return 0;
-+
-+	default:
-+		cmd->return_code = CXL_MBOX_CMD_RC_INPUT;
-+		return -EINVAL;
-+	}
++	/* mem device erased, invalidate all CPU caches before data is read */
++	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
 +	return 0;
 +}
 +
- static int mock_get_lsa(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
- {
- 	struct cxl_mbox_get_lsa *get_lsa = cmd->payload_in;
-@@ -250,6 +313,9 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
- 	case CXL_MBOX_OP_GET_SECURITY_STATE:
- 		rc = mock_get_security_state(cxlds, cmd);
- 		break;
-+	case CXL_MBOX_OP_SET_PASSPHRASE:
-+		rc = mock_set_passphrase(cxlds, cmd);
-+		break;
- 	default:
- 		break;
- 	}
-diff --git a/tools/testing/cxl/test/mem_pdata.h b/tools/testing/cxl/test/mem_pdata.h
-index 6a7b111147eb..8eb2dffc9156 100644
---- a/tools/testing/cxl/test/mem_pdata.h
-+++ b/tools/testing/cxl/test/mem_pdata.h
-@@ -5,6 +5,12 @@
- 
- struct cxl_mock_mem_pdata {
- 	u32 security_state;
-+	u8 user_pass[NVDIMM_PASSPHRASE_LEN];
-+	u8 master_pass[NVDIMM_PASSPHRASE_LEN];
-+	int user_limit;
-+	int master_limit;
+ static const struct nvdimm_security_ops __cxl_security_ops = {
+ 	.get_flags = cxl_pmem_get_security_flags,
+ 	.change_key = cxl_pmem_security_change_key,
+ 	.disable = cxl_pmem_security_disable,
+ 	.freeze = cxl_pmem_security_freeze,
+ 	.unlock = cxl_pmem_security_unlock,
++	.erase = cxl_pmem_security_passphrase_erase,
  };
  
-+#define PASS_TRY_LIMIT 3
-+
- #endif
+ const struct nvdimm_security_ops *cxl_security_ops = &__cxl_security_ops;
+diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+index 95dca8d4584f..6da25f2e1bf9 100644
+--- a/include/uapi/linux/cxl_mem.h
++++ b/include/uapi/linux/cxl_mem.h
+@@ -46,6 +46,7 @@
+ 	___C(DISABLE_PASSPHRASE, "Disable Passphrase"),			  \
+ 	___C(FREEZE_SECURITY, "Freeze Security"),			  \
+ 	___C(UNLOCK, "Unlock"),						  \
++	___C(PASSPHRASE_ERASE, "Passphrase Secure Erase"),		  \
+ 	___C(MAX, "invalid / last command")
+ 
+ #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
 
 
