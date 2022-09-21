@@ -2,50 +2,50 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C24E7C6FA90
-	for <linux-cxl@archiver.kernel.org>; Wed, 21 Sep 2022 15:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD1BC6FA91
+	for <linux-cxl@archiver.kernel.org>; Wed, 21 Sep 2022 15:38:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230472AbiIUPiq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 21 Sep 2022 11:38:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33912 "EHLO
+        id S229877AbiIUPir (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 21 Sep 2022 11:38:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229499AbiIUPi1 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 21 Sep 2022 11:38:27 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 830A29CCDC
-        for <linux-cxl@vger.kernel.org>; Wed, 21 Sep 2022 08:34:21 -0700 (PDT)
+        with ESMTP id S229738AbiIUPia (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 21 Sep 2022 11:38:30 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DBD39C2F9
+        for <linux-cxl@vger.kernel.org>; Wed, 21 Sep 2022 08:34:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663774461; x=1695310461;
+  t=1663774448; x=1695310448;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=4qjbB7qrrNMduiAlaEfkM/oScb+4kC9ooHVEGxNEn2E=;
-  b=LmJSx3VdSjAVHaBrBj0MoYA0Hi2ISJ6aSgD8WuLuBHxX4hggIJMLs4Uf
-   Y4gCHn68FvOem15n6Jl4J0eBYtKPC6w9BqJywRe2QfPKIoxouBvKoU/0N
-   ELvRvdYm4UE76tC9ry5IF0Q60v/7dUfzAIitjtuzw3VDTYU344HhSqOdU
-   dBl3HKIjqUuHE7OuTKFjWsy2omBM8MFKt9Laf3FJTSJfFHBJ/rOk3Ld1I
-   K3F+BRce2IMmUWO0XQmnqTwvE7KcpsR9HlVMAZFmkXgWKRw+FCgRWCZyR
-   lyXqYCri5x4E7ta4RaeO4YsY+SlJH3pg84TcBgj0EsAl1S9fXAZYdWkRo
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10477"; a="298753362"
+  bh=kldGzN2oeJ5eOYTeA77bCFuL1F9ndfSRRHY47jbc2gE=;
+  b=Yl1GMOLDInYDaDvYGiP0K6kVQyPz0ZR7iyufvmCjOc+NCo//QHiA3Ngl
+   /o4RI4p1MM/jUnWRX+P9/QYQQ4NZKmd1PcyCJqeC82F/hLVvR3Oizfvo4
+   isw8uvDlyMOQMuJunUR6xBtP69kLjlDsShtx9FzkKbqU9UlE1YOZT1L72
+   Mfok/lSR5LBiM45rr4BqPEgnxpFmd1/OZDRFBCBBantppYCO2TX3ySrRx
+   3IM8zsFQCqUXOmXZHVcWeEkwK4iP6/WrCURPu/Cp+sVpP0CXpZ5ofFlyz
+   ydt3OpUaQIfBsA3prrenL4xTqo3E7+s2erwe6BYZbC+PH8M9Oa1MLrYny
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10477"; a="326349557"
 X-IronPort-AV: E=Sophos;i="5.93,333,1654585200"; 
-   d="scan'208";a="298753362"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 08:33:16 -0700
+   d="scan'208";a="326349557"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 08:31:46 -0700
 X-IronPort-AV: E=Sophos;i="5.93,333,1654585200"; 
-   d="scan'208";a="723257340"
+   d="scan'208";a="652579011"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 08:33:15 -0700
-Subject: [PATCH v2 18/19] libnvdimm: Introduce CONFIG_NVDIMM_SECURITY_TEST
- flag
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 08:31:45 -0700
+Subject: [PATCH v2 03/19] tools/testing/cxl: Add "Get Security State" opcode
+ support
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     nvdimm@lists.linux.dev, dan.j.williams@intel.com,
         bwidawsk@kernel.org, ira.weiny@intel.com, vishal.l.verma@intel.com,
         alison.schofield@intel.com, dave@stgolabs.net,
         Jonathan.Cameron@huawei.com
-Date:   Wed, 21 Sep 2022 08:33:15 -0700
-Message-ID: <166377439534.430546.10690686781480251163.stgit@djiang5-desk3.ch.intel.com>
+Date:   Wed, 21 Sep 2022 08:31:45 -0700
+Message-ID: <166377430503.430546.4463791056925632016.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <166377414787.430546.3863229455285366312.stgit@djiang5-desk3.ch.intel.com>
 References: <166377414787.430546.3863229455285366312.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/1.4
@@ -56,128 +56,133 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-nfit_test overrode the security_show() sysfs attribute function in nvdimm
-dimm_devs in order to allow testing of security unlock. With the
-introduction of CXL security commands, the trick to override
-security_show() becomes significantly more complicated. By introdcing a
-security flag CONFIG_NVDIMM_SECURITY_TEST, libnvdimm can just toggle the
-check via a compile option. In addition the original override can can be
-removed from tools/testing/nvdimm/.
+Add the emulation support for handling "Get Security State" opcode for a
+CXL memory device for the cxl_test. The function will copy back device
+security state bitmask to the output payload.
 
+The security state data is added as platform_data for the mock mem device.
+
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/nvdimm/Kconfig           |    9 +++++++++
- drivers/nvdimm/dimm_devs.c       |    9 ++++++++-
- drivers/nvdimm/security.c        |    4 ++++
- tools/testing/nvdimm/Kbuild      |    1 -
- tools/testing/nvdimm/dimm_devs.c |   30 ------------------------------
- 5 files changed, 21 insertions(+), 32 deletions(-)
- delete mode 100644 tools/testing/nvdimm/dimm_devs.c
+ tools/testing/cxl/test/cxl.c       |   18 ++++++++++++++++++
+ tools/testing/cxl/test/mem.c       |   20 ++++++++++++++++++++
+ tools/testing/cxl/test/mem_pdata.h |   10 ++++++++++
+ 3 files changed, 48 insertions(+)
+ create mode 100644 tools/testing/cxl/test/mem_pdata.h
 
-diff --git a/drivers/nvdimm/Kconfig b/drivers/nvdimm/Kconfig
-index 5a29046e3319..fd336d138eda 100644
---- a/drivers/nvdimm/Kconfig
-+++ b/drivers/nvdimm/Kconfig
-@@ -114,4 +114,13 @@ config NVDIMM_TEST_BUILD
- 	  core devm_memremap_pages() implementation and other
- 	  infrastructure.
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index a072b2d3e726..6dd286a52839 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -10,6 +10,7 @@
+ #include <linux/mm.h>
+ #include <cxlmem.h>
+ #include "mock.h"
++#include "mem_pdata.h"
  
-+config NVDIMM_SECURITY_TEST
-+	bool "Nvdimm security test code toggle"
-+	depends on NVDIMM_KEYS
-+	help
-+	  Debug flag for security testing when using nfit_test or cxl_test
-+	  modules in tools/testing/.
-+
-+	  Select Y if using nfit_test or cxl_test for security testing.
-+
- endif
-diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
-index c7c980577491..1fc081dcf631 100644
---- a/drivers/nvdimm/dimm_devs.c
-+++ b/drivers/nvdimm/dimm_devs.c
-@@ -349,11 +349,18 @@ static ssize_t available_slots_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(available_slots);
+ #define NR_CXL_HOST_BRIDGES 2
+ #define NR_CXL_ROOT_PORTS 2
+@@ -629,8 +630,18 @@ static void mock_companion(struct acpi_device *adev, struct device *dev)
  
--__weak ssize_t security_show(struct device *dev,
-+ssize_t security_show(struct device *dev,
- 		struct device_attribute *attr, char *buf)
+ static __init int cxl_test_init(void)
  {
- 	struct nvdimm *nvdimm = to_nvdimm(dev);
++	struct cxl_mock_mem_pdata *mem_pdata;
+ 	int rc, i;
  
 +	/*
-+	 * For the test version we need to poll the "hardware" in order
-+	 * to get the updated status for unlock testing.
++	 * Only a zeroed copy of this data structure is needed since no
++	 * additional initialization is needed for initial state.
++	 * platform_device_add_data() will make a copy of this data.
 +	 */
-+	if (IS_ENABLED(CONFIG_NVDIMM_SECURITY_TEST))
-+		nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
++	mem_pdata = kzalloc(sizeof(*mem_pdata), GFP_KERNEL);
++	if (!mem_pdata)
++		return -ENOMEM;
 +
- 	if (test_bit(NVDIMM_SECURITY_OVERWRITE, &nvdimm->sec.flags))
- 		return sprintf(buf, "overwrite\n");
- 	if (test_bit(NVDIMM_SECURITY_DISABLED, &nvdimm->sec.flags))
-diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
-index c1c9d0feae9d..6ae924d8f2d7 100644
---- a/drivers/nvdimm/security.c
-+++ b/drivers/nvdimm/security.c
-@@ -177,6 +177,10 @@ static int __nvdimm_security_unlock(struct nvdimm *nvdimm)
- 			|| !nvdimm->sec.flags)
- 		return -EIO;
+ 	register_cxl_mock_ops(&cxl_mock_ops);
  
-+	/* While nfit_test does not need this, cxl_test does */
-+	if (IS_ENABLED(CONFIG_NVDIMM_SECURITY_TEST))
-+		nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
+ 	cxl_mock_pool = gen_pool_create(ilog2(SZ_2M), NUMA_NO_NODE);
+@@ -735,6 +746,12 @@ static __init int cxl_test_init(void)
+ 		pdev->dev.parent = &dport->dev;
+ 		set_dev_node(&pdev->dev, i % 2);
+ 
++		rc = platform_device_add_data(pdev, mem_pdata, sizeof(*mem_pdata));
++		if (rc) {
++			platform_device_put(pdev);
++			goto err_mem;
++		}
 +
- 	/* No need to go further if security is disabled */
- 	if (test_bit(NVDIMM_SECURITY_DISABLED, &nvdimm->sec.flags))
- 		return 0;
-diff --git a/tools/testing/nvdimm/Kbuild b/tools/testing/nvdimm/Kbuild
-index 5eb5c23b062f..8153251ea389 100644
---- a/tools/testing/nvdimm/Kbuild
-+++ b/tools/testing/nvdimm/Kbuild
-@@ -79,7 +79,6 @@ libnvdimm-$(CONFIG_BTT) += $(NVDIMM_SRC)/btt_devs.o
- libnvdimm-$(CONFIG_NVDIMM_PFN) += $(NVDIMM_SRC)/pfn_devs.o
- libnvdimm-$(CONFIG_NVDIMM_DAX) += $(NVDIMM_SRC)/dax_devs.o
- libnvdimm-$(CONFIG_NVDIMM_KEYS) += $(NVDIMM_SRC)/security.o
--libnvdimm-y += dimm_devs.o
- libnvdimm-y += libnvdimm_test.o
- libnvdimm-y += config_check.o
+ 		rc = platform_device_add(pdev);
+ 		if (rc) {
+ 			platform_device_put(pdev);
+@@ -785,6 +802,7 @@ static __init int cxl_test_init(void)
+ 	gen_pool_destroy(cxl_mock_pool);
+ err_gen_pool_create:
+ 	unregister_cxl_mock_ops(&cxl_mock_ops);
++	kfree(mem_pdata);
+ 	return rc;
+ }
  
-diff --git a/tools/testing/nvdimm/dimm_devs.c b/tools/testing/nvdimm/dimm_devs.c
-deleted file mode 100644
-index 57bd27dedf1f..000000000000
---- a/tools/testing/nvdimm/dimm_devs.c
-+++ /dev/null
-@@ -1,30 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/* Copyright Intel Corp. 2018 */
--#include <linux/init.h>
--#include <linux/module.h>
--#include <linux/moduleparam.h>
--#include <linux/nd.h>
--#include "pmem.h"
--#include "pfn.h"
--#include "nd.h"
--#include "nd-core.h"
--
--ssize_t security_show(struct device *dev,
--		struct device_attribute *attr, char *buf)
--{
--	struct nvdimm *nvdimm = to_nvdimm(dev);
--
--	/*
--	 * For the test version we need to poll the "hardware" in order
--	 * to get the updated status for unlock testing.
--	 */
--	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
--
--	if (test_bit(NVDIMM_SECURITY_DISABLED, &nvdimm->sec.flags))
--		return sprintf(buf, "disabled\n");
--	if (test_bit(NVDIMM_SECURITY_UNLOCKED, &nvdimm->sec.flags))
--		return sprintf(buf, "unlocked\n");
--	if (test_bit(NVDIMM_SECURITY_LOCKED, &nvdimm->sec.flags))
--		return sprintf(buf, "locked\n");
--	return -ENOTTY;
--}
+diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+index aa2df3a15051..9002a3ae3ea5 100644
+--- a/tools/testing/cxl/test/mem.c
++++ b/tools/testing/cxl/test/mem.c
+@@ -8,6 +8,7 @@
+ #include <linux/sizes.h>
+ #include <linux/bits.h>
+ #include <cxlmem.h>
++#include "mem_pdata.h"
+ 
+ #define LSA_SIZE SZ_128K
+ #define DEV_SIZE SZ_2G
+@@ -137,6 +138,22 @@ static int mock_partition_info(struct cxl_dev_state *cxlds,
+ 	return 0;
+ }
+ 
++static int mock_get_security_state(struct cxl_dev_state *cxlds,
++				   struct cxl_mbox_cmd *cmd)
++{
++	struct cxl_mock_mem_pdata *mdata = dev_get_platdata(cxlds->dev);
++
++	if (cmd->size_in)
++		return -EINVAL;
++
++	if (cmd->size_out != sizeof(u32))
++		return -EINVAL;
++
++	memcpy(cmd->payload_out, &mdata->security_state, sizeof(u32));
++
++	return 0;
++}
++
+ static int mock_get_lsa(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
+ {
+ 	struct cxl_mbox_get_lsa *get_lsa = cmd->payload_in;
+@@ -230,6 +247,9 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
+ 	case CXL_MBOX_OP_GET_HEALTH_INFO:
+ 		rc = mock_health_info(cxlds, cmd);
+ 		break;
++	case CXL_MBOX_OP_GET_SECURITY_STATE:
++		rc = mock_get_security_state(cxlds, cmd);
++		break;
+ 	default:
+ 		break;
+ 	}
+diff --git a/tools/testing/cxl/test/mem_pdata.h b/tools/testing/cxl/test/mem_pdata.h
+new file mode 100644
+index 000000000000..6a7b111147eb
+--- /dev/null
++++ b/tools/testing/cxl/test/mem_pdata.h
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef _MEM_PDATA_H_
++#define _MEM_PDATA_H_
++
++struct cxl_mock_mem_pdata {
++	u32 security_state;
++};
++
++#endif
 
 
