@@ -2,118 +2,159 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A927AC6FA82
-	for <linux-cxl@archiver.kernel.org>; Thu, 22 Sep 2022 14:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C61FC54EE9
+	for <linux-cxl@archiver.kernel.org>; Thu, 22 Sep 2022 16:23:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231276AbiIVOpc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 22 Sep 2022 10:45:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52858 "EHLO
+        id S231897AbiIVQXp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 22 Sep 2022 12:23:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231649AbiIVOpa (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 22 Sep 2022 10:45:30 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E0F8AF492
-        for <linux-cxl@vger.kernel.org>; Thu, 22 Sep 2022 07:45:29 -0700 (PDT)
+        with ESMTP id S232069AbiIVQXi (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 22 Sep 2022 12:23:38 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A225E722E
+        for <linux-cxl@vger.kernel.org>; Thu, 22 Sep 2022 09:23:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663857929; x=1695393929;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=20sb3Wjzl+N9vcq9tCuMImS7/O2aiJpn3n5hHt87sbY=;
-  b=gGSskBomzzI5uQPrTewjgUwE80S1j7GyytIiHy9Q+dagaVHLFcG6p8LI
-   OTbllG1DmCzqjyBpG4UKOz78bzgGrDwPsguxyc32bsjkiWSFvTAFxouNZ
-   Ng8toq/MDS5jX/aTJbqp6jhCB8/9+o+iitvfYcGPJEU2ckD/X4vpd9YEZ
-   zK93wY6GDmwLKYzj6Y7exbGV5UHuLQNgh2IzAtiJYFKBe74Hi2K0jdtYn
-   S9Kcp+f+p6RkHYoORAVkBmUSu2jGM4ewnASsJJw1MHrc8T4PK4SUCI20L
-   JHlVaTMLp66ly+YwrFqR7tuiUnZWACNvxLSztSnxzJQVVpPTP7IP2PhbM
+  t=1663863815; x=1695399815;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=HKMFCIBFwFaiRuekCSNkC8y/1WJbpXiJNOzwrgPgLWk=;
+  b=DXeyFnC0HEoEQRvW2dmTM+EgswTchTxDexi3uHviLhPiG9MIfSDXfj4a
+   NXl9UnPp/J2Q2sQ/2ELmBR8lfCxIZuy+GTv2Qw+rULXj7N/Up7L7pCjjP
+   Tbu27C7S/7LOxU7GMTMWL8OJhMj2tFuzrIPcBCa38sakKUN4Bjk4Z9adt
+   2AjqvTsvn5hDPlww9zlJwt/Ppz+Xb3pxgqtPcjqdaqaKKpB0vfO1DOX9d
+   aGgQEc1OGfuOdsDUDYo+p4d3sRUCKVUkxvAB+051xM4oTPK90ZVsRQvPW
+   uUBWOi55UZHrmPBmApPKYDY+kTefcgsfbPNF+XpDSh05J/f7eYPWwJ0Q8
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10478"; a="301162697"
+X-IronPort-AV: E=McAfee;i="6500,9779,10478"; a="280068922"
 X-IronPort-AV: E=Sophos;i="5.93,335,1654585200"; 
-   d="scan'208";a="301162697"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2022 07:45:28 -0700
+   d="scan'208";a="280068922"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2022 09:23:35 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,335,1654585200"; 
-   d="scan'208";a="682240195"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.80.137]) ([10.212.80.137])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2022 07:45:28 -0700
-Message-ID: <d1906809-1c14-f19b-018c-9a6ae1614b82@intel.com>
-Date:   Thu, 22 Sep 2022 07:45:27 -0700
+   d="scan'208";a="619857353"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orsmga002.jf.intel.com with ESMTP; 22 Sep 2022 09:23:34 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 22 Sep 2022 09:23:34 -0700
+Received: from orsmsx607.amr.corp.intel.com (10.22.229.20) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 22 Sep 2022 09:23:33 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx607.amr.corp.intel.com (10.22.229.20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31 via Frontend Transport; Thu, 22 Sep 2022 09:23:33 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.49) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.31; Thu, 22 Sep 2022 09:23:33 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cRRbeWd2VHG3Iq9FgtvKdOWGIgDY+lAdvfA+L5yZiVKb4Cfx2K903wWfZB4Mf0kMb14u/fdEEg9BtrMZ7TfuBK50PDmKBRaDrWCh2a+SuALvsDloLn1J06qiddbLOqW9ZgFeNkvTja0EI+KiSFGwSnlO9Oy7pLBMFje+liZwY6SUSSKmohP2VhbZe1Evx95owNCtK6QdCBRe7J4sUcnmmYTR6oAxvISKTnQJzYvwGTTkLWx3m+bKlJkR1p809e+0lgeKHDn7OkA9neLa+vqRp/SEh8uioEMvuAjtPiDthwTdgr22WpjM/quBWewugX+cx0Fi11ZXuqI8OmBGKFH5Sw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/Ex6Yqk+HhPPYmr6KwAvNvO2PLUekZ6hTMO11DFDbfc=;
+ b=Hv8kaZHCamQ0Fhy06m84GGnPriH27ZB5t+/YtGHBvXU+P+ufzZE0l/SICsRNIsN3G7YaHwFDmQPO1RWFt84wBYqQTTlbLmcyHUbk3o9BTwyqcWVVn/8JHd/Yzjj89aM606HRyDmZeTAE7HWnd8O5PsjdGFCskNYBlgKcpYFNdKuElcRUXLNp9z6LF5JopCyIQ21vjFU1T/iIRbIvMntrQWFu5HgMac7KSlFnvG9y5ceNgnSHIx7VnS15fD2oqVnTzjXDJGyoL1yzZQp3TY7GdT9J8cn5+l9rE8WU0pgFi7JJbZ3CkSpDPkeIcu9hRgDQjU1HBJl9CWJzaH2XQuOXUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20) by MW4PR11MB6957.namprd11.prod.outlook.com
+ (2603:10b6:303:22a::5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5654.19; Thu, 22 Sep
+ 2022 16:23:32 +0000
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::9847:345e:4c5b:ca12]) by MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::9847:345e:4c5b:ca12%6]) with mapi id 15.20.5654.017; Thu, 22 Sep 2022
+ 16:23:32 +0000
+Date:   Thu, 22 Sep 2022 09:23:29 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Vishal Verma <vishal.l.verma@intel.com>, <nvdimm@lists.linux.dev>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        <corsepiu@fedoraproject.org>, <linux-cxl@vger.kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: RE: [ndctl PATCH 0/2] misc RPM / release scripts fixes
+Message-ID: <632c8c0143d41_1ad229471@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20220829234157.101085-1-vishal.l.verma@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20220829234157.101085-1-vishal.l.verma@intel.com>
+X-ClientProxiedBy: SJ0PR05CA0146.namprd05.prod.outlook.com
+ (2603:10b6:a03:33d::31) To MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.2.2
-Subject: Re: [PATCH 0/7] ndctl: cxl: add monitor support for trace events
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, alison.schofield@intel.com,
-        vishal.l.verma@intel.com, ira.weiny@intel.com, bwidawsk@kernel.org,
-        dan.j.williams@intel.com
-References: <166318836385.3087953.6809315284050736931.stgit@djiang5-desk3.ch.intel.com>
- <20220922152154.00007386@huawei.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20220922152154.00007386@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|MW4PR11MB6957:EE_
+X-MS-Office365-Filtering-Correlation-Id: bf9e8e95-121e-4399-46f1-08da9cb6ca79
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5v/J2CzQqChxXNTlYvKF6ZOaKYuPTui17BX8I6ZLcS7XD1bSYBwRY4AlBavcUenZGbW0JcRkSpDv+aH/Qe3S9CvmC/R5sms1Lvbxj50HM2isd79RdS+VOlbJ6gszdo0aLgdK7kRQ/3nR3xbLzoiM0avclKyBPccs3DpTs7OEAOySw88j++XJ1hLHeLt6la+n+DHs85VeFLfCEOzTqQXbThenLDiOonSJ3Rc415F26ErxQ8yyApAjbx40X6jAYFpOZU1J6betEZp2ZeMykjylnNyvBDl05CaUFY4wCmwz4cxAPaMlKhSMMYqoTh5nvSdctK5whvki/FSma4Cj2Gx5nnmjV21HTNEdp3Y0XQI6iVQ73o9rXZl8n5+s7DV55puqgCF9SMOH7tBPyyo6DzZEMxTN4rNjfKRNxFEnx15XbssRYO3TsugGauomZhSyYnZF4AcINmd5ft+N9Fzg+imb3hwQFOVGYvsUl6habarDCyCovPL2RQE5aricVWPaayqYDCGGPFGu/aeMcEpHoDXmD+cDEP1QIfkam0Z1n8POFLIt5I+iqcNc5Aip2Wo+h2AaCn1QWeOUY9JbzwrSNuZaZrHwvyV7rOSXE4eTr9kBj1L1RdwvhbBUhXqp5qE48VdJE1dasN1ff2cuRFeOhcntUK2d6jWxTKzS1CDDCngO6KbP9gWZrsuSJL8Zek1yO/z/+nlJ1mrrG5KmcUv0LvItjw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(366004)(39860400002)(396003)(346002)(136003)(376002)(451199015)(4744005)(2906002)(186003)(41300700001)(6666004)(8936002)(6506007)(9686003)(6512007)(26005)(5660300002)(4326008)(107886003)(86362001)(83380400001)(38100700002)(82960400001)(316002)(54906003)(478600001)(6486002)(66946007)(8676002)(66476007)(66556008);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?jGmCQ9juihYwMtDdb5HB1NsJi3vThftaBzTYNC5/tY9t41phRrpEht/fvZrF?=
+ =?us-ascii?Q?pbcUk2gts1eDwk+c2kCr5kF1guTyO9vJeO6KaJWFhV61Njb+cnWasjx8t7nR?=
+ =?us-ascii?Q?v6ufGlJupsOviuI3IYGgAPCtT2I9GSX3NmP3a6+wgdAhQOOjk4UVgJPy1lXR?=
+ =?us-ascii?Q?6yR8j4Bjsa+hOH6J4KYm4p4HoK6nsn2lbDWWzlBvEcRmGuuyRqtbFm6Ui6WJ?=
+ =?us-ascii?Q?66dbra1LnSEF6545c+RKQH/JbQYv4ffA4iHCusYz7uqQQh1q8oq5DIL+BnNw?=
+ =?us-ascii?Q?alGVkBUYbgYWYIu+bj+p6LuX340s+GlzB7fJW1uX4kasXpnKisggXmevsHmm?=
+ =?us-ascii?Q?9ywE94s+fiQZ01fS5BlOfO2fDKrLmeH4GbII9+CMYVzVuaNe7HQ20AF6Sucw?=
+ =?us-ascii?Q?goyZGUIEIf9LfeVX9K0ohGCbnK9rp+j4iodTRXRpjsRKczTOcV5XtZRYdJCJ?=
+ =?us-ascii?Q?4rkcFY15mPEaaECNghfbSDDn+4W79rXqORjGk0SBe+1PpUnQxA2b3lfmUY0/?=
+ =?us-ascii?Q?8H/bME3crUajK9HLhOSFLtXphrXEs9jp6h3t9hI90l2VjfHKOHA+IXYprjRD?=
+ =?us-ascii?Q?Smb6+1T/+J5kvxGPkq/Y0nDjjeIzVplGtTN8Cx7GvwXtPytCKuTVues2yI6Y?=
+ =?us-ascii?Q?vfJdk5ehLCnny3PhI7PnWDagSyJhTafWFMzAqp9MKQ1eufOrio3oaH4nx48i?=
+ =?us-ascii?Q?KB7of3ADkuydqFg+eFDnhfNQmaRBoPlHl8cocmf4DXGlicS/KP81EEarmph/?=
+ =?us-ascii?Q?qVuMJpMAKalXDEA7tdfB/FWrtAbKRuYbit5JvhyYL3ecX+pVT/IAbgoq4Ern?=
+ =?us-ascii?Q?/hyv/37drkE2nRzEUc8ip0AW7GubS/eMSK80Gt9X1EO+hj4d8kkMrceYV9Qy?=
+ =?us-ascii?Q?qLe9zR+8/kUejYXtHeFVrb9DJhcFoqYyDzuwriiN27RiOzgZaKkvUQOa9TXR?=
+ =?us-ascii?Q?TcUrGkLy+WdEMH8iIWP8xIDKrU2+a2w41a35sBsC1ABiwCfjBrdmdspSH+mG?=
+ =?us-ascii?Q?q6zJUu2oEL5bn73yXEVNwNG7oLjbFFH+j4vDsZDxiT0KDJvmFlqJ5h60ZyT0?=
+ =?us-ascii?Q?g0oVFcGzoQ2uW9I1CWcHlC424grUEcCkMGlW6W6n04ry5DWfHoSz0D+JFaqJ?=
+ =?us-ascii?Q?0E0Bn4NXpgzqN9WxIJSwjb+d8X6aSok1rcMNeQ3E/Cjlg2JOjfqihYGumb5j?=
+ =?us-ascii?Q?J3Tw7zFjA1wn67tO9jbqBApekQ7S5d+9AvWPJ3iT1vZ5gUnVVWiMFxSipm7f?=
+ =?us-ascii?Q?zE9jpv9DiibVdF142c8ThchzMSEA2AdsOiSCyDHQfOB2sV5vXQ3thRqauNlm?=
+ =?us-ascii?Q?EbyFqk994+Ue2d8vLsxp1IWLSYJFylJMdU5Z54+vqnsNkAZSvYgAczBSNg4F?=
+ =?us-ascii?Q?Z4UxbXL5tpCqdWT9B7jGp9oHkorShHvkbeRPBftN3yyA+QI4vS5mX+badFKW?=
+ =?us-ascii?Q?XbSoM46cVLNQfxag5h6P1ZaaH5xeZfay6SqWozLErVj6dOPPHGdeh7eETmAv?=
+ =?us-ascii?Q?Hy34XO7FPHjRd4cQnjyxC9Yce5s6KOlO9IO1PZHhKeREz3+hdZmtaCj656vY?=
+ =?us-ascii?Q?7XxYXxfq4i4Ur1lhWsgC/AZ3WNZDiAJTtc0K6RNrPaCCRhc9tiG6UvQCEM+H?=
+ =?us-ascii?Q?NQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf9e8e95-121e-4399-46f1-08da9cb6ca79
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Sep 2022 16:23:32.3460
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: o3c/Vmp+Ww7jgmn0d/r9BUXktyr+2i9ga7A7vx7C4FnPGz/fSDt5gJHJwAa6H243qDsCfryJvGJWVEqKkv1FelujnWnFGymtxhSaL3V3mPo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6957
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+Vishal Verma wrote:
+> Add a couple of fixes to the RPM spec to correctly claim ownership of
+> config directories, and updates to release scripts for meson.
+> 
+> Vishal Verma (2):
+>   ndctl.spec.in: Address misc. packaging bugs (RHBZ#2100157)
+>   scripts: update release scripts for meson
+> 
+>  ndctl.spec.in              |  8 +++++++-
+>  scripts/do_abidiff         | 14 ++++++--------
+>  scripts/prepare-release.sh | 24 ++++++++++++------------
+>  3 files changed, 25 insertions(+), 21 deletions(-)
 
-On 9/22/2022 7:21 AM, Jonathan Cameron wrote:
-> On Wed, 14 Sep 2022 13:47:49 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
->
->> This patch series for ndctl implements the monitor command for the cxl tool.
->> The initial implementation will collect CXL trace events emitted by the
->> kernel. libtraceevent and libtracefs will be used to parse the trace
->> event buffer. The monitor will pend on an epoll fd and wait for new event
->> entries to be posted. The output will be in json format. By default the events
->> are emitted to stdio, but can also be logged to a file. Each event is converted
->> to a JSON object and logged as such. All the fields exported are read by the
->> monitor code and added to the JSON object.
-> Hi Dave,
->
-> FYI, I just wanted to mention that we will be aiming to duplicate a bunch
-> of this functionality in rasdaemon.
->
-> As that is handling the equivalent of many of these events on our systems
-> from other components we don't want to grab the data via alternative tooling
-> and then have to merge it later.
->
-> Absolutely not a problem to have it in this tool as well. I mostly wanted
-> to raise it because longer term we'll need to be careful to test with both
-> solutions if there are any changes to what they are being sent.
+Looks good to me:
 
-Thanks for the heads up Jonathan!
-
-
->
-> Thanks,
->
-> Jonathan
->
->> ---
->>
->> Dave Jiang (7):
->>        ndctl: cxl: add helper function to parse trace event to json object
->>        ndctl: cxl: add helper to parse through all current events
->>        ndctl: cxl: add common function to enable event trace
->>        ndctl: cxl: add common function to disable event trace
->>        ndctl: cxl: add monitor function for event trace events
->>        ndctl: cxl: add logging functions for monitor
->>        ndctl: cxl: add monitor command to cxl
->>
->>
->>   cxl/builtin.h     |   1 +
->>   cxl/cxl.c         |   1 +
->>   cxl/event_trace.c | 236 ++++++++++++++++++++++++++++++++++++++++++++++
->>   cxl/event_trace.h |  23 +++++
->>   cxl/meson.build   |   4 +
->>   cxl/monitor.c     | 235 +++++++++++++++++++++++++++++++++++++++++++++
->>   meson.build       |   3 +
->>   7 files changed, 503 insertions(+)
->>   create mode 100644 cxl/event_trace.c
->>   create mode 100644 cxl/event_trace.h
->>   create mode 100644 cxl/monitor.c
->>
->> --
->>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
