@@ -2,189 +2,78 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E02C6FA82
-	for <linux-cxl@archiver.kernel.org>; Fri, 23 Sep 2022 10:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E471C6FA82
+	for <linux-cxl@archiver.kernel.org>; Fri, 23 Sep 2022 16:19:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232124AbiIWK5L (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 23 Sep 2022 06:57:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60974 "EHLO
+        id S232190AbiIWQT4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 23 Sep 2022 12:19:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231320AbiIWK4u (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 23 Sep 2022 06:56:50 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 636F3248E0;
-        Fri, 23 Sep 2022 03:56:48 -0700 (PDT)
-Received: from fraeml709-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MYpqw6w0Pz682Wq;
-        Fri, 23 Sep 2022 18:51:56 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 23 Sep 2022 12:56:46 +0200
-Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 23 Sep
- 2022 11:56:46 +0100
-Date:   Fri, 23 Sep 2022 11:56:44 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Yicong Yang <yangyicong@huawei.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>, <yangyicong@hisilicon.com>,
-        "Shuai Xue" <xueshuai@linux.alibaba.com>, <will@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <rdunlap@infradead.org>,
-        <robin.murphy@arm.com>, <mark.rutland@arm.com>,
-        <baolin.wang@linux.alibaba.com>, <zhuo.song@linux.alibaba.com>,
-        <linux-pci@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v1 2/3] drivers/perf: add DesignWare PCIe PMU driver
-Message-ID: <20220923115644.00002c76@huawei.com>
-In-Reply-To: <6592c0a0-e976-2d3b-b7f3-12bc72d55e9b@huawei.com>
-References: <20220922173217.GA1316280@bhelgaas>
-        <6592c0a0-e976-2d3b-b7f3-12bc72d55e9b@huawei.com>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S231906AbiIWQTa (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 23 Sep 2022 12:19:30 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A36DE14A78D
+        for <linux-cxl@vger.kernel.org>; Fri, 23 Sep 2022 09:18:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663949885; x=1695485885;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=2j6YOJbRNidSzoxVdfG5XPyqHuoIKbKoyF3mn4CCIAg=;
+  b=UrPWxx1kGODWDxxRCgtjrHq+i1GPyJjiuJDqk/9hT6sx41MgIzplqUCr
+   ySCf89RYXLKJ6LyeH6YYLhS8qy/ZuJu2a2idOMeW+FQ/f97CJnPR02CUK
+   UtIBgHMpooDmZoSR4llxT2YibOCzbiP1zWiduSJywOig6AZAbAfpKFXPl
+   4p6eM1qNDD7Vu9XO3pA6crJmCRkD2PX69GDThmagRq+q0BFfd7oaXcsHz
+   xkKi0/s5UnBlTWoBsV6oc5gt8J7Zrf+8mVO4N184bVGYN36Cp5m7HoA+r
+   DFBluGNADuvbTZ9WyW829Qk0g1lpRFhNQMeW0tN6NYNLXuR39ccxMLXs3
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10479"; a="283725744"
+X-IronPort-AV: E=Sophos;i="5.93,339,1654585200"; 
+   d="scan'208";a="283725744"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2022 09:18:04 -0700
+X-IronPort-AV: E=Sophos;i="5.93,339,1654585200"; 
+   d="scan'208";a="682708390"
+Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.52.203]) ([10.212.52.203])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2022 09:18:04 -0700
+Message-ID: <ef36340d-6bd3-34f4-c728-d7f434f672c1@intel.com>
+Date:   Fri, 23 Sep 2022 09:18:03 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.3.0
+Subject: Re: [PATCH v2 19/19] cxl: add dimm_id support for __nvdimm_create()
+Content-Language: en-US
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+        dan.j.williams@intel.com, bwidawsk@kernel.org, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        Jonathan.Cameron@huawei.com
+References: <166377414787.430546.3863229455285366312.stgit@djiang5-desk3.ch.intel.com>
+ <166377440119.430546.15623409728442106946.stgit@djiang5-desk3.ch.intel.com>
+ <20220923103108.wt62gzebnyovpjjr@offworld>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20220923103108.wt62gzebnyovpjjr@offworld>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 23 Sep 2022 11:35:45 +0800
-Yicong Yang <yangyicong@huawei.com> wrote:
 
-> On 2022/9/23 1:32, Bjorn Helgaas wrote:
-> > On Thu, Sep 22, 2022 at 04:58:20PM +0100, Jonathan Cameron wrote:  
-> >> On Sat, 17 Sep 2022 20:10:35 +0800
-> >> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
-> >>  
-> >>> This commit adds the PCIe Performance Monitoring Unit (PMU) driver support
-> >>> for T-Head Yitian SoC chip. Yitian is based on the Synopsys PCI Express
-> >>> Core controller IP which provides statistics feature. The PMU is not a PCIe
-> >>> Root Complex integrated End Point(RCiEP) device but only register counters
-> >>> provided by each PCIe Root Port.
-> >>>
-> >>> To facilitate collection of statistics the controller provides the
-> >>> following two features for each Root Port:
-> >>>
-> >>> - Time Based Analysis (RX/TX data throughput and time spent in each
-> >>>   low-power LTSSM state)
-> >>> - Event counters (Error and Non-Error for lanes)
-> >>>
-> >>> Note, only one counter for each type.
-> >>>
-> >>> This driver add PMU devices for each PCIe Root Port. And the PMU device is
-> >>> named based the BDF of Root Port. For example,
-> >>>
-> >>>     10:00.0 PCI bridge: Device 1ded:8000 (rev 01)
-> >>>
-> >>> the PMU device name for this Root Port is pcie_bdf_100000.
-> >>>
-> >>> Example usage of counting PCIe RX TLP data payload (Units of 16 bytes)::
-> >>>
-> >>>     $# perf stat -a -e pcie_bdf_200/Rx_PCIe_TLP_Data_Payload/
-> >>>
-> >>> average RX bandwidth can be calculated like this:
-> >>>
-> >>>     PCIe TX Bandwidth = PCIE_TX_DATA * 16B / Measure_Time_Window
-> >>>
-> >>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>  
-> >>
-> >> +CC linux-pci list and Bjorn.  
-> > 
-> > Thanks, this is definitely of interest to linux-pci.
-> >   
-> >> Question in here which I've been meaning to address for other reasons
-> >> around how to register 'extra features' on pci ports.
-> >>
-> >> This particular PMU is in config space in a Vendor Specific Extended
-> >> Capability.
-> >>
-> >> I've focused on that aspect for this review rather than the perf parts.
-> >> We'll need to figure that story out first as doing this from a bus walk
-> >> makes triggered of a platform driver is not the way I'd expect to see
-> >> this work.  
-> >   
-> >>> +static int dwc_pcie_pmu_discover(struct dwc_pcie_pmu_priv *priv)
-> >>> +{
-> >>> +	int val, where, index = 0;
-> >>> +	struct pci_dev *pdev = NULL;
-> >>> +	struct dwc_pcie_info_table *pcie_info;
-> >>> +
-> >>> +	priv->pcie_table =
-> >>> +	    devm_kcalloc(priv->dev, RP_NUM_MAX, sizeof(*pcie_info), GFP_KERNEL);
-> >>> +	if (!priv->pcie_table)
-> >>> +		return -EINVAL;
-> >>> +
-> >>> +	pcie_info = priv->pcie_table;
-> >>> +	while ((pdev = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, pdev)) != NULL &&
-> >>> +	       index < RP_NUM_MAX) {  
-> >>
-> >> This having a driver than then walks the pci topology to find root ports and add
-> >> extra stuff to them is not a clean solution.
-> >>
-> >> The probing should be driven from the existing PCI driver topology.
-> >> There are a bunch of new features we need to add to ports in the near future
-> >> anyway - this would just be another one.
-> >> Same problem exists for CXL CPMU perf devices - so far we only support those
-> >> on end points, partly because we need a clean way to probe them on pci ports.
-> >>
-> >> Whatever we come up with there will apply here as well.  
-> > 
-> > I agree, I don't like to see more uses of pci_get_device() because it
-> > doesn't fit the driver model at all.  For one thing, it really screws
-> > up the hotplug model because this doesn't account for hot-added
-> > devices and there's no clear cleanup path for removal.
-> > 
-> > Hotplug is likely not an issue in this particular case, but it gets
-> > copied to places where it is an issue.
-> > 
-> > Maybe we need some kind of PCI core interface whereby drivers can
-> > register their interest in VSEC and/or DVSEC capabilities.
-
-
-Something along those lines works if the facility is constrained to just
-VSEC / DVSEC.
- * This one is.
- * CMA / SPDM / IDE all are - but with complexity of interrupts.
-   After the plumbers SPDM BoF the resulting plan would not fit in the
-   same model as this driver (need to be done earlier in PCI registration
-   flow I think).  I need to write up and share some notes on what we
-   are planning around that to get wider feedback - but might be a few
-   weeks!
-
-Others are less well confined.
- * CXL PMU uses registers in bar space - but is hanging off a DVSEC
-   description to tell you where to find it.
-
-> >   
-> 
-> Considering this PMU is related to each Root Port without real backup device. I'm
-> wondering whether we can extend the pcie port bus and make use of it (though it's
-> currently used by the standard services).
-
-I did that a few years back for our older PCI PMUs.  It wasn't pretty.
-https://lore.kernel.org/all/20181214131055.52253-2-Jonathan.Cameron@huawei.com/
-
-We never took that driver forwards - it was mostly useful to understand what
-might work for newer hardware - we went the RCiEP route at least partly to avoid
-software complexity (and because of hardware topology - counters shared by multiple
-RP)
-
-We could do something more generic along the same lines as the portdrv framework
- - that highlights some of the complexities however.
-There are some nasty potential ordering issues in registering interest caused
-by any attempt to make this work with modules.
-I'd want to see a solution that works just as well for all the components that
-might have DVSEC / VSEC entries - not just those covered by portdrv.
-
-+CC Dan Williams and linux-cxl as they may also be interested in this discussion.
-
-> 
-> Thanks.
-> 
-
+On 9/23/2022 3:31 AM, Davidlohr Bueso wrote:
+> On Wed, 21 Sep 2022, Dave Jiang wrote:
+>
+>> Set the cxlds->serial as the dimm_id to be fed to __nvdimm_create(). The
+>> security code uses that as the key description for the security key 
+>> of the
+>> memory device. The nvdimm unlock code cannot find the respective key
+>> without the dimm_id.
+>
+> Maybe I'm being daft but I don't see why cxlds->serial could not just be
+> used for __nvdimm_create() instead of adding a new member.
+>
+The reason is cxlds->serial is a u64 and __nvdimm_create() wants a 
+string for dimm_id. And also __nvdimm_create() just points to the 
+original string instead of duplicating it. So we need a string member 
+defined instead of creating a temp string derived from cxlds->serial for 
+__nvdimm_create().
