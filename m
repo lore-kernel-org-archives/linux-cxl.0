@@ -2,78 +2,120 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E471C6FA82
-	for <linux-cxl@archiver.kernel.org>; Fri, 23 Sep 2022 16:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BDCECAAD8
+	for <linux-cxl@archiver.kernel.org>; Fri, 23 Sep 2022 16:20:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232190AbiIWQT4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 23 Sep 2022 12:19:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41452 "EHLO
+        id S229600AbiIWQU2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 23 Sep 2022 12:20:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231906AbiIWQTa (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 23 Sep 2022 12:19:30 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A36DE14A78D
-        for <linux-cxl@vger.kernel.org>; Fri, 23 Sep 2022 09:18:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663949885; x=1695485885;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2j6YOJbRNidSzoxVdfG5XPyqHuoIKbKoyF3mn4CCIAg=;
-  b=UrPWxx1kGODWDxxRCgtjrHq+i1GPyJjiuJDqk/9hT6sx41MgIzplqUCr
-   ySCf89RYXLKJ6LyeH6YYLhS8qy/ZuJu2a2idOMeW+FQ/f97CJnPR02CUK
-   UtIBgHMpooDmZoSR4llxT2YibOCzbiP1zWiduSJywOig6AZAbAfpKFXPl
-   4p6eM1qNDD7Vu9XO3pA6crJmCRkD2PX69GDThmagRq+q0BFfd7oaXcsHz
-   xkKi0/s5UnBlTWoBsV6oc5gt8J7Zrf+8mVO4N184bVGYN36Cp5m7HoA+r
-   DFBluGNADuvbTZ9WyW829Qk0g1lpRFhNQMeW0tN6NYNLXuR39ccxMLXs3
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10479"; a="283725744"
-X-IronPort-AV: E=Sophos;i="5.93,339,1654585200"; 
-   d="scan'208";a="283725744"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2022 09:18:04 -0700
-X-IronPort-AV: E=Sophos;i="5.93,339,1654585200"; 
-   d="scan'208";a="682708390"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.52.203]) ([10.212.52.203])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2022 09:18:04 -0700
-Message-ID: <ef36340d-6bd3-34f4-c728-d7f434f672c1@intel.com>
-Date:   Fri, 23 Sep 2022 09:18:03 -0700
+        with ESMTP id S232000AbiIWQTq (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 23 Sep 2022 12:19:46 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F046F14C06D
+        for <linux-cxl@vger.kernel.org>; Fri, 23 Sep 2022 09:18:31 -0700 (PDT)
+Received: from fraeml704-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MYxz725JGz67PwL;
+        Sat, 24 Sep 2022 00:13:39 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2375.31; Fri, 23 Sep 2022 18:18:29 +0200
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 23 Sep 2022 17:18:29 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <linux-cxl@vger.kernel.org>, <qemu-devel@nongnu.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Ben Widawsky <bwidawsk@kernel.org>
+CC:     <linuxarm@huawei.com>
+Subject: [PATCH] mem/cxl-type3: Add sn option to provide serial number for PCI ecap
+Date:   Fri, 23 Sep 2022 17:18:35 +0100
+Message-ID: <20220923161835.9805-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.3.0
-Subject: Re: [PATCH v2 19/19] cxl: add dimm_id support for __nvdimm_create()
-Content-Language: en-US
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-        dan.j.williams@intel.com, bwidawsk@kernel.org, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        Jonathan.Cameron@huawei.com
-References: <166377414787.430546.3863229455285366312.stgit@djiang5-desk3.ch.intel.com>
- <166377440119.430546.15623409728442106946.stgit@djiang5-desk3.ch.intel.com>
- <20220923103108.wt62gzebnyovpjjr@offworld>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20220923103108.wt62gzebnyovpjjr@offworld>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+The Device Serial Number Extended Capability PCI r6.0 sec 7.9.3
+provides a standard way to provide a device serial number as
+an IEEE defined 64-bit extended unique identifier EUI-64.
 
-On 9/23/2022 3:31 AM, Davidlohr Bueso wrote:
-> On Wed, 21 Sep 2022, Dave Jiang wrote:
->
->> Set the cxlds->serial as the dimm_id to be fed to __nvdimm_create(). The
->> security code uses that as the key description for the security key 
->> of the
->> memory device. The nvdimm unlock code cannot find the respective key
->> without the dimm_id.
->
-> Maybe I'm being daft but I don't see why cxlds->serial could not just be
-> used for __nvdimm_create() instead of adding a new member.
->
-The reason is cxlds->serial is a u64 and __nvdimm_create() wants a 
-string for dimm_id. And also __nvdimm_create() just points to the 
-original string instead of duplicating it. So we need a string member 
-defined instead of creating a temp string derived from cxlds->serial for 
-__nvdimm_create().
+CXL 2.0 section 8.1.12.2 Memory Device PCIe Capabilities and
+Extended Capabilities requires this to be used to uniquely
+identify CXL memory devices.
+
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+
+This is the missing element to be able to use the Linux kernel
+support for PMEM region creation.  Without this you can create
+a region, but not remount it after reboot (as the label
+is not valid).
+
+ hw/mem/cxl_type3.c          | 14 +++++++++++++-
+ include/hw/cxl/cxl_device.h |  1 +
+ 2 files changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+index 3bf2869573..e0c1535b73 100644
+--- a/hw/mem/cxl_type3.c
++++ b/hw/mem/cxl_type3.c
+@@ -14,6 +14,12 @@
+ #include "sysemu/hostmem.h"
+ #include "hw/cxl/cxl.h"
+ 
++/*
++ * Null value of all Fs suggested by IEEE RA guidelines for use of
++ * EU, OUI and CID
++ */
++#define UI64_NULL ~(0ULL)
++
+ static void build_dvsecs(CXLType3Dev *ct3d)
+ {
+     CXLComponentState *cxl_cstate = &ct3d->cxl_cstate;
+@@ -149,7 +155,12 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+     pci_config_set_class(pci_conf, PCI_CLASS_MEMORY_CXL);
+ 
+     pcie_endpoint_cap_init(pci_dev, 0x80);
+-    cxl_cstate->dvsec_offset = 0x100;
++    if (ct3d->sn != UI64_NULL) {
++        pcie_dev_ser_num_init(pci_dev, 0x100, ct3d->sn);
++        cxl_cstate->dvsec_offset = 0x100 + 0x0c;
++    } else {
++        cxl_cstate->dvsec_offset = 0x100;
++    }
+ 
+     ct3d->cxl_cstate.pdev = pci_dev;
+     build_dvsecs(ct3d);
+@@ -275,6 +286,7 @@ static Property ct3_props[] = {
+                      HostMemoryBackend *),
+     DEFINE_PROP_LINK("lsa", CXLType3Dev, lsa, TYPE_MEMORY_BACKEND,
+                      HostMemoryBackend *),
++    DEFINE_PROP_UINT64("sn", CXLType3Dev, sn, UI64_NULL),
+     DEFINE_PROP_END_OF_LIST(),
+ };
+ 
+diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+index 1e141b6621..e4d221cdb3 100644
+--- a/include/hw/cxl/cxl_device.h
++++ b/include/hw/cxl/cxl_device.h
+@@ -237,6 +237,7 @@ struct CXLType3Dev {
+     /* Properties */
+     HostMemoryBackend *hostmem;
+     HostMemoryBackend *lsa;
++    uint64_t sn;
+ 
+     /* State */
+     AddressSpace hostmem_as;
+-- 
+2.32.0
+
