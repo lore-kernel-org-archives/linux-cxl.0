@@ -2,102 +2,189 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87164ECAAD8
-	for <linux-cxl@archiver.kernel.org>; Fri, 23 Sep 2022 10:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E02C6FA82
+	for <linux-cxl@archiver.kernel.org>; Fri, 23 Sep 2022 10:57:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231800AbiIWKvo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 23 Sep 2022 06:51:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55478 "EHLO
+        id S232124AbiIWK5L (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 23 Sep 2022 06:57:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231756AbiIWKvJ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 23 Sep 2022 06:51:09 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72F31131F4F
-        for <linux-cxl@vger.kernel.org>; Fri, 23 Sep 2022 03:51:06 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 737157E0B82;
-        Fri, 23 Sep 2022 10:51:05 +0000 (UTC)
-Received: from pdx1-sub0-mail-a225 (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 503677E0C47;
-        Fri, 23 Sep 2022 10:51:04 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1663930264; a=rsa-sha256;
-        cv=none;
-        b=n88g1YlXZBXB8Y+KiAlOPRX2Mmx3zMmgLyxTXXn2FZzlx5z/gPgaCeF2S78ZEv0lnmC3vz
-        fpPG+POVQeqK4xZPOwoMYsjMe/ncKZlxe+ll7qWIXUtxI+VOcsIKv1kg1/YW1wTVMxzVXV
-        yICsgMdt44D6bNKKCmKtylTaxSVx0OHtKbkvVc2ntBnFkHTvTixHHw6EI22rQW5mqmq91H
-        bPCS/hTejzzre8/mjFzzivCi79BWJRkKng4diM4tkYhMKLRQeNlOwOYshJNYtrH5y8vwLW
-        of3MpJqYxCzQAPYVfaPwQ/atzFwW+yB6pW+vsWg5++RSFHPz20xL5rkFDMs9fQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1663930264;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=Ie/dxT+MbEVYw2FyLT9+kDoEy97y+gsyEJxiGj8t83g=;
-        b=JI1nYgivhdrWehJrR1jYPRBMHX59mCrZp2ImKPauY+zY9rHwd0dyU5PhKHQhrTmlLfyQ2d
-        b850lzvtw7tTLe5rpo9bgjFNJ/AiJwnOLitNUf2FJyxNGCVAPRIS4jnsVOx2yXbMfm98Lm
-        Sez3qtJs6fYkBcG2d3Wbvvqf5QawLIAk/10fq9htCNJbDLXoWN1GWsy1/S5CqRNaUZPiKL
-        BfcjG0B9Wob0h8VutjcHuFCiqqwCclSNK7LyXcp4rZlj4DNl1+NdCx0XXpuC4bV4oKHN3K
-        T+ZJvOtylr51d7ayR67qPg48sK+MVFZBj6MPtJzgRg5mBl2jA+yP6flARMJQmQ==
-ARC-Authentication-Results: i=1;
-        rspamd-75d6d4d78d-m2zbr;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Soft-Abortive: 445758ee7525ae7b_1663930264810_1087246426
-X-MC-Loop-Signature: 1663930264810:318372154
-X-MC-Ingress-Time: 1663930264809
-Received: from pdx1-sub0-mail-a225 (pop.dreamhost.com [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.116.63.144 (trex/6.7.1);
-        Fri, 23 Sep 2022 10:51:04 +0000
-Received: from offworld (unknown [185.237.102.49])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a225 (Postfix) with ESMTPSA id 4MYppq6j9jz27;
-        Fri, 23 Sep 2022 03:50:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1663930263;
-        bh=Ie/dxT+MbEVYw2FyLT9+kDoEy97y+gsyEJxiGj8t83g=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=O5a/izc5JUvbKwY/3DSWwfY8zYPGxPOAyvLHmAl24GrpEkmVtMDmZO8F1AiPU6SzZ
-         jY6lLXuboyw5U+f2NfDzhTj0NNjV+Jqmd6QzFjZ6WGNj+4p7h6rdtV+cHo/Ekn11Vx
-         dU5eR1sr6WDlRpjGhLOpMB+9wqpoEQ1Lso8XuxQ2vtldPHMh0Ma69cAeAdlOOfHi3H
-         i2aC9x1hsNwhF+WEA8LCFKdw9qQ8a+DH8oAP+SVknI+YLL2TSFB8idvfRieZ6VCg1P
-         O5dWe5IMDL/3g3N3L339ImAQ2M/OnIeAQWmExu7vZRol8eLO0PG5AkHe0HtA+KVYQc
-         ov2FmfYiLBVEA==
-Date:   Fri, 23 Sep 2022 03:31:08 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-        dan.j.williams@intel.com, bwidawsk@kernel.org, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        Jonathan.Cameron@huawei.com
-Subject: Re: [PATCH v2 19/19] cxl: add dimm_id support for __nvdimm_create()
-Message-ID: <20220923103108.wt62gzebnyovpjjr@offworld>
-References: <166377414787.430546.3863229455285366312.stgit@djiang5-desk3.ch.intel.com>
- <166377440119.430546.15623409728442106946.stgit@djiang5-desk3.ch.intel.com>
+        with ESMTP id S231320AbiIWK4u (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 23 Sep 2022 06:56:50 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 636F3248E0;
+        Fri, 23 Sep 2022 03:56:48 -0700 (PDT)
+Received: from fraeml709-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MYpqw6w0Pz682Wq;
+        Fri, 23 Sep 2022 18:51:56 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 23 Sep 2022 12:56:46 +0200
+Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 23 Sep
+ 2022 11:56:46 +0100
+Date:   Fri, 23 Sep 2022 11:56:44 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Yicong Yang <yangyicong@huawei.com>
+CC:     Bjorn Helgaas <helgaas@kernel.org>, <yangyicong@hisilicon.com>,
+        "Shuai Xue" <xueshuai@linux.alibaba.com>, <will@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <rdunlap@infradead.org>,
+        <robin.murphy@arm.com>, <mark.rutland@arm.com>,
+        <baolin.wang@linux.alibaba.com>, <zhuo.song@linux.alibaba.com>,
+        <linux-pci@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v1 2/3] drivers/perf: add DesignWare PCIe PMU driver
+Message-ID: <20220923115644.00002c76@huawei.com>
+In-Reply-To: <6592c0a0-e976-2d3b-b7f3-12bc72d55e9b@huawei.com>
+References: <20220922173217.GA1316280@bhelgaas>
+        <6592c0a0-e976-2d3b-b7f3-12bc72d55e9b@huawei.com>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <166377440119.430546.15623409728442106946.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: NeoMutt/20220429
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.42]
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 21 Sep 2022, Dave Jiang wrote:
+On Fri, 23 Sep 2022 11:35:45 +0800
+Yicong Yang <yangyicong@huawei.com> wrote:
 
->Set the cxlds->serial as the dimm_id to be fed to __nvdimm_create(). The
->security code uses that as the key description for the security key of the
->memory device. The nvdimm unlock code cannot find the respective key
->without the dimm_id.
+> On 2022/9/23 1:32, Bjorn Helgaas wrote:
+> > On Thu, Sep 22, 2022 at 04:58:20PM +0100, Jonathan Cameron wrote:  
+> >> On Sat, 17 Sep 2022 20:10:35 +0800
+> >> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+> >>  
+> >>> This commit adds the PCIe Performance Monitoring Unit (PMU) driver support
+> >>> for T-Head Yitian SoC chip. Yitian is based on the Synopsys PCI Express
+> >>> Core controller IP which provides statistics feature. The PMU is not a PCIe
+> >>> Root Complex integrated End Point(RCiEP) device but only register counters
+> >>> provided by each PCIe Root Port.
+> >>>
+> >>> To facilitate collection of statistics the controller provides the
+> >>> following two features for each Root Port:
+> >>>
+> >>> - Time Based Analysis (RX/TX data throughput and time spent in each
+> >>>   low-power LTSSM state)
+> >>> - Event counters (Error and Non-Error for lanes)
+> >>>
+> >>> Note, only one counter for each type.
+> >>>
+> >>> This driver add PMU devices for each PCIe Root Port. And the PMU device is
+> >>> named based the BDF of Root Port. For example,
+> >>>
+> >>>     10:00.0 PCI bridge: Device 1ded:8000 (rev 01)
+> >>>
+> >>> the PMU device name for this Root Port is pcie_bdf_100000.
+> >>>
+> >>> Example usage of counting PCIe RX TLP data payload (Units of 16 bytes)::
+> >>>
+> >>>     $# perf stat -a -e pcie_bdf_200/Rx_PCIe_TLP_Data_Payload/
+> >>>
+> >>> average RX bandwidth can be calculated like this:
+> >>>
+> >>>     PCIe TX Bandwidth = PCIE_TX_DATA * 16B / Measure_Time_Window
+> >>>
+> >>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>  
+> >>
+> >> +CC linux-pci list and Bjorn.  
+> > 
+> > Thanks, this is definitely of interest to linux-pci.
+> >   
+> >> Question in here which I've been meaning to address for other reasons
+> >> around how to register 'extra features' on pci ports.
+> >>
+> >> This particular PMU is in config space in a Vendor Specific Extended
+> >> Capability.
+> >>
+> >> I've focused on that aspect for this review rather than the perf parts.
+> >> We'll need to figure that story out first as doing this from a bus walk
+> >> makes triggered of a platform driver is not the way I'd expect to see
+> >> this work.  
+> >   
+> >>> +static int dwc_pcie_pmu_discover(struct dwc_pcie_pmu_priv *priv)
+> >>> +{
+> >>> +	int val, where, index = 0;
+> >>> +	struct pci_dev *pdev = NULL;
+> >>> +	struct dwc_pcie_info_table *pcie_info;
+> >>> +
+> >>> +	priv->pcie_table =
+> >>> +	    devm_kcalloc(priv->dev, RP_NUM_MAX, sizeof(*pcie_info), GFP_KERNEL);
+> >>> +	if (!priv->pcie_table)
+> >>> +		return -EINVAL;
+> >>> +
+> >>> +	pcie_info = priv->pcie_table;
+> >>> +	while ((pdev = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, pdev)) != NULL &&
+> >>> +	       index < RP_NUM_MAX) {  
+> >>
+> >> This having a driver than then walks the pci topology to find root ports and add
+> >> extra stuff to them is not a clean solution.
+> >>
+> >> The probing should be driven from the existing PCI driver topology.
+> >> There are a bunch of new features we need to add to ports in the near future
+> >> anyway - this would just be another one.
+> >> Same problem exists for CXL CPMU perf devices - so far we only support those
+> >> on end points, partly because we need a clean way to probe them on pci ports.
+> >>
+> >> Whatever we come up with there will apply here as well.  
+> > 
+> > I agree, I don't like to see more uses of pci_get_device() because it
+> > doesn't fit the driver model at all.  For one thing, it really screws
+> > up the hotplug model because this doesn't account for hot-added
+> > devices and there's no clear cleanup path for removal.
+> > 
+> > Hotplug is likely not an issue in this particular case, but it gets
+> > copied to places where it is an issue.
+> > 
+> > Maybe we need some kind of PCI core interface whereby drivers can
+> > register their interest in VSEC and/or DVSEC capabilities.
 
-Maybe I'm being daft but I don't see why cxlds->serial could not just be
-used for __nvdimm_create() instead of adding a new member.
+
+Something along those lines works if the facility is constrained to just
+VSEC / DVSEC.
+ * This one is.
+ * CMA / SPDM / IDE all are - but with complexity of interrupts.
+   After the plumbers SPDM BoF the resulting plan would not fit in the
+   same model as this driver (need to be done earlier in PCI registration
+   flow I think).  I need to write up and share some notes on what we
+   are planning around that to get wider feedback - but might be a few
+   weeks!
+
+Others are less well confined.
+ * CXL PMU uses registers in bar space - but is hanging off a DVSEC
+   description to tell you where to find it.
+
+> >   
+> 
+> Considering this PMU is related to each Root Port without real backup device. I'm
+> wondering whether we can extend the pcie port bus and make use of it (though it's
+> currently used by the standard services).
+
+I did that a few years back for our older PCI PMUs.  It wasn't pretty.
+https://lore.kernel.org/all/20181214131055.52253-2-Jonathan.Cameron@huawei.com/
+
+We never took that driver forwards - it was mostly useful to understand what
+might work for newer hardware - we went the RCiEP route at least partly to avoid
+software complexity (and because of hardware topology - counters shared by multiple
+RP)
+
+We could do something more generic along the same lines as the portdrv framework
+ - that highlights some of the complexities however.
+There are some nasty potential ordering issues in registering interest caused
+by any attempt to make this work with modules.
+I'd want to see a solution that works just as well for all the components that
+might have DVSEC / VSEC entries - not just those covered by portdrv.
+
++CC Dan Williams and linux-cxl as they may also be interested in this discussion.
+
+> 
+> Thanks.
+> 
+
