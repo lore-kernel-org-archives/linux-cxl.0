@@ -2,49 +2,42 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C21C07E9D
-	for <linux-cxl@archiver.kernel.org>; Tue, 27 Sep 2022 13:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7580C6FA83
+	for <linux-cxl@archiver.kernel.org>; Tue, 27 Sep 2022 13:59:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231425AbiI0N4c (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 27 Sep 2022 09:56:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55596 "EHLO
+        id S233037AbiI0N7Z (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 27 Sep 2022 09:59:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231906AbiI0N4a (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 27 Sep 2022 09:56:30 -0400
+        with ESMTP id S233009AbiI0N6k (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 27 Sep 2022 09:58:40 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37ED989CF4;
-        Tue, 27 Sep 2022 06:56:27 -0700 (PDT)
-Received: from fraeml704-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4McLjX2qPPz68967;
-        Tue, 27 Sep 2022 21:55:12 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50C38146610;
+        Tue, 27 Sep 2022 06:58:39 -0700 (PDT)
+Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4McLm45ks9z688Z6;
+        Tue, 27 Sep 2022 21:57:24 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.31; Tue, 27 Sep 2022 15:56:24 +0200
+ fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 27 Sep 2022 15:58:37 +0200
 Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 27 Sep
- 2022 14:56:24 +0100
-Date:   Tue, 27 Sep 2022 14:56:23 +0100
+ 2022 14:58:37 +0100
+Date:   Tue, 27 Sep 2022 14:58:36 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [RFC PATCH 7/9] cxl/test: Add generic mock events
-Message-ID: <20220927145623.0000040d@huawei.com>
-In-Reply-To: <YzIcKFSRtXHiuG0+@iweiny-desk3>
-References: <20220813053243.757363-1-ira.weiny@intel.com>
-        <20220813053243.757363-8-ira.weiny@intel.com>
-        <20220825123119.00000705@huawei.com>
-        <YyN0qY5yaXwTwLDF@iweiny-desk3>
-        <20220920171748.00001260@huawei.com>
-        <YzIcKFSRtXHiuG0+@iweiny-desk3>
+To:     <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Ben Widawsky" <bwidawsk@kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH V3 2/2] cxl/doe: Request exclusive DOE access
+Message-ID: <20220927145836.0000572e@huawei.com>
+In-Reply-To: <20220926215711.2893286-3-ira.weiny@intel.com>
+References: <20220926215711.2893286-1-ira.weiny@intel.com>
+        <20220926215711.2893286-3-ira.weiny@intel.com>
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
@@ -57,52 +50,63 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 26 Sep 2022 14:39:52 -0700
-Ira Weiny <ira.weiny@intel.com> wrote:
+On Mon, 26 Sep 2022 14:57:11 -0700
+ira.weiny@intel.com wrote:
 
-> On Tue, Sep 20, 2022 at 09:17:48AM -0700, Jonathan Cameron wrote:
-> > On Thu, 15 Sep 2022 11:53:29 -0700
-> > Ira Weiny <ira.weiny@intel.com> wrote:
-> >   
-> > > On Thu, Aug 25, 2022 at 12:31:19PM +0100, Jonathan Cameron wrote:  
-> > > > On Fri, 12 Aug 2022 22:32:41 -0700
-> > > > ira.weiny@intel.com wrote:
-> > > >     
-> > > > > From: Ira Weiny <ira.weiny@intel.com>
-> > > > > 
-> > > > > Facilitate testing basic Get/Clear Event functionality by creating
-> > > > > multiple logs and generic events with made up UUID's.
-> > > > > 
-> > > > > Data is completely made up with data patterns which should be easy to
-> > > > > spot in trace output.    
-> > > > Hi Ira,
-> > > > 
-> > > > I'm tempted to hack the QEMU emulation for this in with appropriately
-> > > > complex interface to inject all the record types...    
-> > > 
-> > > Every time I look at the QEMU code it makes my head spin.  :-(  
-> > 
-> > You get used to it ;)`  
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> I'm trying...  :-/
+> The PCIE Data Object Exchange (DOE) mailbox is a protocol run over
+> configuration cycles.  It assumes one initiator at a time.  While the
+> kernel has control of the mailbox user space writes could interfere with
+> the kernel access.
 > 
-> Question though:
+> Mark DOE mailbox config space exclusive when iterated by the CXL driver.
 > 
-> Is there a call in qemu which is equivalent to cpu_to_leXX()?  The
-> exec/cpu-all.h is having compilation issues for me because the
-> TARGET_BIG_ENDIAN is not defined (it is defined in a meson generated header).
-> 
-> So I'm afraid that the tswapXX() calls are not what I'm supposed to use.  Is
-> this true?  Are those some sort of internal call?
-I'm confused.  There is cpu_to_le16 in "qemu/bswap.h"
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+I wonder a bit on whether the failure should be fatal given that something
+very odd would be required for it to fail.
 
-I suspect we've played a bit fast and loose with endianness in a few places in
-current qemu code and should probably check all that sometime.
+I'm not that bothered though.
 
-Jonathan
-
-
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 > 
-> Ira
+> ---
+> Changes from V2:
+> 	Jonathan:
+> 		s/PCI_DOE_CAP_SIZE/PCI_DOE_CAP_SIZEOF
+> 		Set PCI_DOE_CAP_SIZEOF directly
+> ---
+>  drivers/cxl/pci.c             | 5 +++++
+>  include/uapi/linux/pci_regs.h | 1 +
+>  2 files changed, 6 insertions(+)
+> 
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index faeb5d9d7a7a..621a0522b554 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -418,6 +418,11 @@ static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
+>  			continue;
+>  		}
+>  
+> +		if (!pci_request_config_region_exclusive(pdev, off,
+> +							 PCI_DOE_CAP_SIZEOF,
+> +							 dev_name(dev)))
+> +			pci_err(pdev, "Failed to exclude DOE registers\n");
+> +
+>  		if (xa_insert(&cxlds->doe_mbs, off, doe_mb, GFP_KERNEL)) {
+>  			dev_err(dev, "xa_insert failed to insert MB @ %x\n",
+>  				off);
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index 57b8e2ffb1dd..82a03ea954af 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -1119,6 +1119,7 @@
+>  #define  PCI_DOE_STATUS_DATA_OBJECT_READY	0x80000000  /* Data Object Ready */
+>  #define PCI_DOE_WRITE		0x10    /* DOE Write Data Mailbox Register */
+>  #define PCI_DOE_READ		0x14    /* DOE Read Data Mailbox Register */
+> +#define PCI_DOE_CAP_SIZEOF	0x18	/* Size of DOE register block */
+>  
+>  /* DOE Data Object - note not actually registers */
+>  #define PCI_DOE_DATA_OBJECT_HEADER_1_VID		0x0000ffff
 
