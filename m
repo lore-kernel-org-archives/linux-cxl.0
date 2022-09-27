@@ -2,109 +2,64 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 775BEC6FA82
-	for <linux-cxl@archiver.kernel.org>; Mon, 26 Sep 2022 21:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDB0C54EE9
+	for <linux-cxl@archiver.kernel.org>; Tue, 27 Sep 2022 07:03:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230365AbiIZV5Z (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 26 Sep 2022 17:57:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45812 "EHLO
+        id S229760AbiI0HDo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 27 Sep 2022 03:03:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229993AbiIZV5X (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 26 Sep 2022 17:57:23 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98596D1EA1;
-        Mon, 26 Sep 2022 14:57:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664229442; x=1695765442;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=7mhGF9QNeYv3EmWFVfkw9VlFnNtzfRGpHZffuH3vsgY=;
-  b=mmyZfrj+pb6XyazRf0pG/JwXTq+ytzxLJ0PfhViYZEfnC1zG+By23h41
-   o0B336wp3IhRVLtRQbDvAQZxh8TbJc2M5hkmdUp2yqHo052zVQrEaUca0
-   R/lw5vGHILEEySe0cghqRr1vYctxKvTFuqcQVKewvDuyrmp+7Dx1dArwR
-   qf/oKM3yH9mSITSNSTogglu8L/hpSqTF/yc5x/IvowUl2oeCZZ19rLQEi
-   mfdEJZbkLsmKLF2NBNdHRBby5IAUq12uiNIq1eMoasYk2uVjzcQWr4Flt
-   j6YDGpG8kTJ6xqmnsm+ztrlMhZaJD2i0snWNwFbawvvptqZ6SXm8yUawi
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="302057561"
-X-IronPort-AV: E=Sophos;i="5.93,347,1654585200"; 
-   d="scan'208";a="302057561"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 14:57:21 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="598911432"
-X-IronPort-AV: E=Sophos;i="5.93,347,1654585200"; 
-   d="scan'208";a="598911432"
-Received: from iweiny-desk3.amr.corp.intel.com (HELO localhost) ([10.209.75.159])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 14:57:21 -0700
-From:   ira.weiny@intel.com
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH V3 2/2] cxl/doe: Request exclusive DOE access
-Date:   Mon, 26 Sep 2022 14:57:11 -0700
-Message-Id: <20220926215711.2893286-3-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20220926215711.2893286-1-ira.weiny@intel.com>
-References: <20220926215711.2893286-1-ira.weiny@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        with ESMTP id S229582AbiI0HDn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 27 Sep 2022 03:03:43 -0400
+Received: from mail.nfschina.com (mail.nfschina.com [124.16.136.209])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 55B4B6A49F;
+        Tue, 27 Sep 2022 00:03:40 -0700 (PDT)
+Received: from localhost (unknown [127.0.0.1])
+        by mail.nfschina.com (Postfix) with ESMTP id C36601E80D70;
+        Tue, 27 Sep 2022 14:59:28 +0800 (CST)
+X-Virus-Scanned: amavisd-new at test.com
+Received: from mail.nfschina.com ([127.0.0.1])
+        by localhost (mail.nfschina.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id JY7Jg4ZAKV7K; Tue, 27 Sep 2022 14:59:26 +0800 (CST)
+Received: from localhost.localdomain (unknown [180.167.10.98])
+        (Authenticated sender: yuzhe@nfschina.com)
+        by mail.nfschina.com (Postfix) with ESMTPA id C59511E80D33;
+        Tue, 27 Sep 2022 14:59:24 +0800 (CST)
+From:   Yu Zhe <yuzhe@nfschina.com>
+To:     alison.schofield@intel.com, vishal.l.verma@intel.com,
+        ira.weiny@intel.com, bwidawsk@kernel.org, dan.j.williams@intel.com
+Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        liqiong@nfschina.com, kernel-janitors@vger.kernel.org,
+        Yu Zhe <yuzhe@nfschina.com>
+Subject: [PATCH] cxl/pmem: Use size_add() against integer overflow
+Date:   Tue, 27 Sep 2022 15:02:47 +0800
+Message-Id: <20220927070247.23148-1-yuzhe@nfschina.com>
+X-Mailer: git-send-email 2.11.0
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+"struct_size() + n" may cause a integer overflow,
+use size_add() to handle it.
 
-The PCIE Data Object Exchange (DOE) mailbox is a protocol run over
-configuration cycles.  It assumes one initiator at a time.  While the
-kernel has control of the mailbox user space writes could interfere with
-the kernel access.
-
-Mark DOE mailbox config space exclusive when iterated by the CXL driver.
-
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
+Signed-off-by: Yu Zhe <yuzhe@nfschina.com>
 ---
-Changes from V2:
-	Jonathan:
-		s/PCI_DOE_CAP_SIZE/PCI_DOE_CAP_SIZEOF
-		Set PCI_DOE_CAP_SIZEOF directly
----
- drivers/cxl/pci.c             | 5 +++++
- include/uapi/linux/pci_regs.h | 1 +
- 2 files changed, 6 insertions(+)
+ drivers/cxl/pmem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index faeb5d9d7a7a..621a0522b554 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -418,6 +418,11 @@ static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
- 			continue;
- 		}
+diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+index 7dc0a2fa1a6b..8c08aa009a56 100644
+--- a/drivers/cxl/pmem.c
++++ b/drivers/cxl/pmem.c
+@@ -148,7 +148,7 @@ static int cxl_pmem_set_config_data(struct cxl_dev_state *cxlds,
+ 		return -EINVAL;
  
-+		if (!pci_request_config_region_exclusive(pdev, off,
-+							 PCI_DOE_CAP_SIZEOF,
-+							 dev_name(dev)))
-+			pci_err(pdev, "Failed to exclude DOE registers\n");
-+
- 		if (xa_insert(&cxlds->doe_mbs, off, doe_mb, GFP_KERNEL)) {
- 			dev_err(dev, "xa_insert failed to insert MB @ %x\n",
- 				off);
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 57b8e2ffb1dd..82a03ea954af 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -1119,6 +1119,7 @@
- #define  PCI_DOE_STATUS_DATA_OBJECT_READY	0x80000000  /* Data Object Ready */
- #define PCI_DOE_WRITE		0x10    /* DOE Write Data Mailbox Register */
- #define PCI_DOE_READ		0x14    /* DOE Read Data Mailbox Register */
-+#define PCI_DOE_CAP_SIZEOF	0x18	/* Size of DOE register block */
+ 	/* 4-byte status follows the input data in the payload */
+-	if (struct_size(cmd, in_buf, cmd->in_length) + 4 > buf_len)
++	if (size_add(struct_size(cmd, in_buf, cmd->in_length), 4) > buf_len)
+ 		return -EINVAL;
  
- /* DOE Data Object - note not actually registers */
- #define PCI_DOE_DATA_OBJECT_HEADER_1_VID		0x0000ffff
+ 	set_lsa =
 -- 
-2.37.2
+2.11.0
 
