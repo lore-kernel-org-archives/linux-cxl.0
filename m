@@ -2,92 +2,107 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D400C6FA83
-	for <linux-cxl@archiver.kernel.org>; Tue, 27 Sep 2022 07:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C21C07E9D
+	for <linux-cxl@archiver.kernel.org>; Tue, 27 Sep 2022 13:56:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229582AbiI0H1W (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 27 Sep 2022 03:27:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37018 "EHLO
+        id S231425AbiI0N4c (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 27 Sep 2022 09:56:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230206AbiI0H1Q (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 27 Sep 2022 03:27:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 142525A839;
-        Tue, 27 Sep 2022 00:27:14 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A4BC661633;
-        Tue, 27 Sep 2022 07:27:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CAEAC433D6;
-        Tue, 27 Sep 2022 07:27:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1664263633;
-        bh=SI3kVzyecrOMD/bcba3UfKjYRRQPvyugPiizWjjNlW8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a7yA5+skaquN4y+vevefsEkQE6uigIxphkNMmk9rkL2DRmNXZJBAr6VWB+5frE/pV
-         V89bwhx2dfKLSUW5ZBhl68d4D/lrRYoWG3MbKOZwVAotK+6SqLhTSmbIRLhnIeNUyW
-         iqT6ETmIrMTZs2B4dGuajdB/iz8jr+eViHmhBIZw=
-Date:   Tue, 27 Sep 2022 09:27:10 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     ira.weiny@intel.com
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH V3 1/2] PCI: Allow drivers to request exclusive config
- regions
-Message-ID: <YzKlzp2/pSdYiOUf@kroah.com>
-References: <20220926215711.2893286-1-ira.weiny@intel.com>
- <20220926215711.2893286-2-ira.weiny@intel.com>
+        with ESMTP id S231906AbiI0N4a (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 27 Sep 2022 09:56:30 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37ED989CF4;
+        Tue, 27 Sep 2022 06:56:27 -0700 (PDT)
+Received: from fraeml704-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4McLjX2qPPz68967;
+        Tue, 27 Sep 2022 21:55:12 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2375.31; Tue, 27 Sep 2022 15:56:24 +0200
+Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 27 Sep
+ 2022 14:56:24 +0100
+Date:   Tue, 27 Sep 2022 14:56:23 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        "Verma, Vishal L" <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Subject: Re: [RFC PATCH 7/9] cxl/test: Add generic mock events
+Message-ID: <20220927145623.0000040d@huawei.com>
+In-Reply-To: <YzIcKFSRtXHiuG0+@iweiny-desk3>
+References: <20220813053243.757363-1-ira.weiny@intel.com>
+        <20220813053243.757363-8-ira.weiny@intel.com>
+        <20220825123119.00000705@huawei.com>
+        <YyN0qY5yaXwTwLDF@iweiny-desk3>
+        <20220920171748.00001260@huawei.com>
+        <YzIcKFSRtXHiuG0+@iweiny-desk3>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220926215711.2893286-2-ira.weiny@intel.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.42]
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Sep 26, 2022 at 02:57:10PM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> PCI config space access from user space has traditionally been
-> unrestricted with writes being an understood risk for device operation.
-> 
-> Unfortunately, device breakage or odd behavior from config writes lacks
-> indicators that can leave driver writers confused when evaluating
-> failures.  This is especially true with the new PCIe Data Object
-> Exchange (DOE) mailbox protocol where backdoor shenanigans from user
-> space through things such as vendor defined protocols may affect device
-> operation without complete breakage.
-> 
-> A prior proposal restricted read and writes completely.[1]  Greg and
-> Bjorn pointed out that proposal is flawed for a couple of reasons.
-> First, lspci should always be allowed and should not interfere with any
-> device operation.  Second, setpci is a valuable tool that is sometimes
-> necessary and it should not be completely restricted.[2]  Finally
-> methods exist for full lock of device access if required.
-> 
-> Even though access should not be restricted it would be nice for driver
-> writers to be able to flag critical parts of the config space such that
-> interference from user space can be detected.
-> 
-> Introduce pci_request_config_region_exclusive() to mark exclusive config
-> regions.  Such regions trigger a warning and kernel taint if accessed
-> via user space.
-> 
-> Create pci_warn_once() to restrict the user from spamming the log.
-> 
-> [1] https://lore.kernel.org/all/161663543465.1867664.5674061943008380442.stgit@dwillia2-desk3.amr.corp.intel.com/
-> [2] https://lore.kernel.org/all/YF8NGeGv9vYcMfTV@kroah.com/
-> 
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+On Mon, 26 Sep 2022 14:39:52 -0700
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> On Tue, Sep 20, 2022 at 09:17:48AM -0700, Jonathan Cameron wrote:
+> > On Thu, 15 Sep 2022 11:53:29 -0700
+> > Ira Weiny <ira.weiny@intel.com> wrote:
+> >   
+> > > On Thu, Aug 25, 2022 at 12:31:19PM +0100, Jonathan Cameron wrote:  
+> > > > On Fri, 12 Aug 2022 22:32:41 -0700
+> > > > ira.weiny@intel.com wrote:
+> > > >     
+> > > > > From: Ira Weiny <ira.weiny@intel.com>
+> > > > > 
+> > > > > Facilitate testing basic Get/Clear Event functionality by creating
+> > > > > multiple logs and generic events with made up UUID's.
+> > > > > 
+> > > > > Data is completely made up with data patterns which should be easy to
+> > > > > spot in trace output.    
+> > > > Hi Ira,
+> > > > 
+> > > > I'm tempted to hack the QEMU emulation for this in with appropriately
+> > > > complex interface to inject all the record types...    
+> > > 
+> > > Every time I look at the QEMU code it makes my head spin.  :-(  
+> > 
+> > You get used to it ;)`  
+> 
+> I'm trying...  :-/
+> 
+> Question though:
+> 
+> Is there a call in qemu which is equivalent to cpu_to_leXX()?  The
+> exec/cpu-all.h is having compilation issues for me because the
+> TARGET_BIG_ENDIAN is not defined (it is defined in a meson generated header).
+> 
+> So I'm afraid that the tswapXX() calls are not what I'm supposed to use.  Is
+> this true?  Are those some sort of internal call?
+I'm confused.  There is cpu_to_le16 in "qemu/bswap.h"
+
+I suspect we've played a bit fast and loose with endianness in a few places in
+current qemu code and should probably check all that sometime.
+
+Jonathan
+
+
+
+> 
+> Ira
+
