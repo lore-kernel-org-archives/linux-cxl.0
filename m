@@ -2,132 +2,185 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABFEC32771
-	for <linux-cxl@archiver.kernel.org>; Wed, 28 Sep 2022 09:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A64C04A95
+	for <linux-cxl@archiver.kernel.org>; Wed, 28 Sep 2022 10:28:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232112AbiI1Jtl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 28 Sep 2022 05:49:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60366 "EHLO
+        id S233407AbiI1K2l (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 28 Sep 2022 06:28:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229885AbiI1Jtj (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 28 Sep 2022 05:49:39 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F0E33C8EA;
-        Wed, 28 Sep 2022 02:49:38 -0700 (PDT)
-Received: from fraeml734-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4McsCb5Xmcz687t9;
-        Wed, 28 Sep 2022 17:49:31 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml734-chm.china.huawei.com (10.206.15.215) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 28 Sep 2022 11:49:36 +0200
-Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 28 Sep
- 2022 10:49:35 +0100
-Date:   Wed, 28 Sep 2022 10:49:34 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        "Verma, Vishal L" <vishal.l.verma@intel.com>,
+        with ESMTP id S233438AbiI1K2k (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 28 Sep 2022 06:28:40 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2051.outbound.protection.outlook.com [40.107.220.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC62FA284C;
+        Wed, 28 Sep 2022 03:28:38 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Q9seOEU/IaxfQenqYAc+ghZGyTYY6d1ADBB2LlgnlJW47IUK1ptMUQZBH6+m/gUhUufrnwEn9r08sNr0UuvyTaWpNHporrz6kBihtVCb6uqTIYm1zm9yDDNutDmSDuD3h8FVizdOAxz6v512FOcQIeseg1CR6tezdv5z+jV5sJ7GPwEnFc0edaK9m8CbDvKDODiNXAPYSd5X3PYsomA0u4oy3YnNL0yW5ibMl8iKaYgPyOPiMT+FfABHJfSAWCYW4hY6JboW3xSk5osQ33vbcfbAftJr/xl1E8yh38oaCw+8TNmczhQok8r6mZB8QQawtG7/tm8wB93XqQcfnqV/Mw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tuLugTyefMvj0HhlARpOMibJkuqHSWY56Oicmbe4Ba0=;
+ b=LhAA9Fvb/nZe3UFhJMmSXHE+BK0ty+RPuBvEpIf6rcygDWeGCHB5mecbcZAmTnzk/uHh3EAlBhQW0rms+XcDDXsDdxS+r++5gXHWMgD0KS/6zczqbgjgKZADOIvZUQ8vf9eh5wthpMBToD4RYRqTjteg63YzzOGSSp3L09XgmcbguQWTy/UVsBRkLmHGL4ufbOr9FuLgM0yu6Ack8yfdz6FJLbO40gwDsLgft/P8+C9KPhidDaX3Mqy+tR1cl8DPtjeZvlOpxivbAZI4QVueqs2GydCSG54m+BGZaJb+K+yR5jtHEeAd21Tq2QxKjxjzcmv82yHxmY1kDAQoHgtGoA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tuLugTyefMvj0HhlARpOMibJkuqHSWY56Oicmbe4Ba0=;
+ b=hU6yNchmdeRd48b8s/IJziRzOUzB4nfu6s+n7RYFGu6vCD468pVaHOE+7qij2/WvYzUXlPmXTRz0JJdCuXWjxrQHPSIUr82krD3Nmew+JfKkYebcW46hSnyvi0cJ60eCL9lLzYk3xqxe30RM69sd87wMpGE/Ql1ALmTxW5OUwBc=
+Received: from DS7PR03CA0158.namprd03.prod.outlook.com (2603:10b6:5:3b2::13)
+ by SA1PR12MB7293.namprd12.prod.outlook.com (2603:10b6:806:2b9::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5654.24; Wed, 28 Sep
+ 2022 10:28:37 +0000
+Received: from DM6NAM11FT070.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:3b2:cafe::42) by DS7PR03CA0158.outlook.office365.com
+ (2603:10b6:5:3b2::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.17 via Frontend
+ Transport; Wed, 28 Sep 2022 10:28:36 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT070.mail.protection.outlook.com (10.13.173.51) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5676.17 via Frontend Transport; Wed, 28 Sep 2022 10:28:36 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Wed, 28 Sep
+ 2022 05:28:34 -0500
+Date:   Wed, 28 Sep 2022 12:28:31 +0200
+From:   Robert Richter <rrichter@amd.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [RFC PATCH 7/9] cxl/test: Add generic mock events
-Message-ID: <20220928104934.00000f6a@huawei.com>
-In-Reply-To: <YzMhRh276QxjdZM4@iweiny-desk3>
-References: <20220813053243.757363-1-ira.weiny@intel.com>
-        <20220813053243.757363-8-ira.weiny@intel.com>
-        <20220825123119.00000705@huawei.com>
-        <YyN0qY5yaXwTwLDF@iweiny-desk3>
-        <20220920171748.00001260@huawei.com>
-        <YzIcKFSRtXHiuG0+@iweiny-desk3>
-        <20220927145623.0000040d@huawei.com>
-        <YzMhRh276QxjdZM4@iweiny-desk3>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH 02/15] cxl/core: Check physical address before mapping it
+ in devm_cxl_iomap_block()
+Message-ID: <YzQhz93rqX+1NAQH@rric.localdomain>
+References: <20220831081603.3415-1-rrichter@amd.com>
+ <20220831081603.3415-3-rrichter@amd.com>
+ <6319824968fa7_580162946f@dwillia2-xfh.jf.intel.com.notmuch>
+ <YxsvPwzxoYBMnN2y@rric.localdomain>
+ <6324ba91a05cb_2a6ded29457@dwillia2-xfh.jf.intel.com.notmuch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <6324ba91a05cb_2a6ded29457@dwillia2-xfh.jf.intel.com.notmuch>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT070:EE_|SA1PR12MB7293:EE_
+X-MS-Office365-Filtering-Correlation-Id: cd2a42f1-ade6-4fa9-e364-08daa13c3403
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: eW/iaRd/76bkrQ1Sh3/tCorBZDl8NvHKAA8FNh0S5zPSDQhs9UIVwPTl8MzAM0VEZGOIUWGG3ivMUg6QeJNo24Untlv3XjhQBN0TEJCKlRhAWApel6rLA88J1gfTuG3ZzHPOn3SG+YWjXFdIQ7Ju1o13irPyp/jmePNGEI3X3uMYTDU6CgpmBN9VqocVoL6Ln9p7UacCcIzrmVtxyUpoOpaMuro+eE1uxl5RTsoPMt5n7jXvzVHtcnyLZI1ahOTRfBKj7Gr/nN6NBzvzZs6SWr07IwYwqfrvt6EUdKMIc8bEryUVFx6slWjYr5+U3YT0GHNQne6qwCS2sa85ZHbz/YXiu79JIL8CFPlHfzU8kkwX6nbpjZ2pQvOAslGrOGd5AUZ/84v2F803yogIgOyWvZ3kT7Oznp3Y3tbz6wOIWUhCtNaYIx9Ko7WCmYc1WvB/5GnbsnGMHrgjG7Z9OO+7UbHhCFHBRL5ok3w+YUD1Cbpo5/qJ0fadIu88lvvO4OQIWufyZn0OvHKDb6pMQWopHOSzsx14D6DhrbKbvI4SmVuEekVUHDkEg0sK/qU3olk9lNVt3GvI9lc36WwR8r0QH2nqTDg/3crJPxD0HTgoh7uv9salUqoqcsmkMigRujkoqByUF+K8QP4rE2uITftigt8kELeJK8uzgsxP1u78zmc41Ltuw8lkxqKXekAajWF0T3974Muj55+Oy7n1BWcIwilRCggkrYWDx4Jw176NaKmMnKKAmvaRunLWCOW7B47AuLfcDOxdw+Wll6KHWbQ/Uz/dH3lp/tboJ4AnssjBU5gZzXfzrvmQIxXoDOT0HTVIwAtAFLojXJsScSVebctVBA==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(396003)(39860400002)(346002)(376002)(136003)(451199015)(36840700001)(46966006)(40470700004)(36860700001)(7416002)(5660300002)(40460700003)(8936002)(26005)(40480700001)(7696005)(9686003)(6916009)(54906003)(55016003)(82310400005)(478600001)(4326008)(6666004)(83380400001)(53546011)(186003)(16526019)(426003)(8676002)(316002)(336012)(70206006)(41300700001)(70586007)(47076005)(82740400003)(81166007)(2906002)(356005)(36900700001)(67856001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Sep 2022 10:28:36.7876
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd2a42f1-ade6-4fa9-e364-08daa13c3403
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT070.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7293
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 27 Sep 2022 09:13:58 -0700
-Ira Weiny <ira.weiny@intel.com> wrote:
-
-> On Tue, Sep 27, 2022 at 02:56:23PM +0100, Jonathan Cameron wrote:
-> > On Mon, 26 Sep 2022 14:39:52 -0700
-> > Ira Weiny <ira.weiny@intel.com> wrote:
-> >   
-> > > On Tue, Sep 20, 2022 at 09:17:48AM -0700, Jonathan Cameron wrote:  
-> > > > On Thu, 15 Sep 2022 11:53:29 -0700
-> > > > Ira Weiny <ira.weiny@intel.com> wrote:
-> > > >     
-> > > > > On Thu, Aug 25, 2022 at 12:31:19PM +0100, Jonathan Cameron wrote:    
-> > > > > > On Fri, 12 Aug 2022 22:32:41 -0700
-> > > > > > ira.weiny@intel.com wrote:
-> > > > > >       
-> > > > > > > From: Ira Weiny <ira.weiny@intel.com>
-> > > > > > > 
-> > > > > > > Facilitate testing basic Get/Clear Event functionality by creating
-> > > > > > > multiple logs and generic events with made up UUID's.
-> > > > > > > 
-> > > > > > > Data is completely made up with data patterns which should be easy to
-> > > > > > > spot in trace output.      
-> > > > > > Hi Ira,
-> > > > > > 
-> > > > > > I'm tempted to hack the QEMU emulation for this in with appropriately
-> > > > > > complex interface to inject all the record types...      
-> > > > > 
-> > > > > Every time I look at the QEMU code it makes my head spin.  :-(    
+On 16.09.22 11:04:01, Dan Williams wrote:
+> Robert Richter wrote:
+> > On 07.09.22 22:48:57, Dan Williams wrote:
+> > > Robert Richter wrote:
+> > > > The physical base address of a CXL range can be invalid and is then
+> > > > set to CXL_RESOURCE_NONE. Early check this case before mapping a
+> > > > memory block in devm_cxl_iomap_block().
 > > > > 
-> > > > You get used to it ;)`    
+> > > > Signed-off-by: Robert Richter <rrichter@amd.com>
+> > > > ---
+> > > >  drivers/cxl/core/regs.c | 3 +++
+> > > >  1 file changed, 3 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> > > > index 39a129c57d40..f216c017a474 100644
+> > > > --- a/drivers/cxl/core/regs.c
+> > > > +++ b/drivers/cxl/core/regs.c
+> > > > @@ -165,6 +165,9 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
+> > > >  	void __iomem *ret_val;
+> > > >  	struct resource *res;
+> > > >  
+> > > > +	if (addr == CXL_RESOURCE_NONE)
+> > > > +		return NULL;
+> > > > +
+> > > >  	res = devm_request_mem_region(dev, addr, length, dev_name(dev));
+> > > >  	if (!res) {
+> > > >  		resource_size_t end = addr + length - 1;
+> > > > -- 
+> > > > 2.30.2
+> > > > 
 > > > 
-> > > I'm trying...  :-/
-> > > 
-> > > Question though:
-> > > 
-> > > Is there a call in qemu which is equivalent to cpu_to_leXX()?  The
-> > > exec/cpu-all.h is having compilation issues for me because the
-> > > TARGET_BIG_ENDIAN is not defined (it is defined in a meson generated header).
-> > > 
-> > > So I'm afraid that the tswapXX() calls are not what I'm supposed to use.  Is
-> > > this true?  Are those some sort of internal call?  
-> > I'm confused.  There is cpu_to_le16 in "qemu/bswap.h"  
-> 
-> <sigh> I don't know how I missed it.  Sorry.
-> 
+> > > devm_request_mem_region() succeeds for you when this happens? More
+> > > details about the failure scenario please.
 > > 
-> > I suspect we've played a bit fast and loose with endianness in a few places in
-> > current qemu code and should probably check all that sometime.  
->  
-> Yea nothing in hw/cxl seems to use any swapping.  I suppose only little endian
-> hosts have been used thus far?
-
-Exactly and I'm not sure when we'll see any big endian emulated hosts.  We should fix that,
-but lots of other things on todo list, so it's not particularly high on the list
-+ getting a test environment up is going to be non trivial.
-
-J
-> 
-> I greped for 'ENDIAN' and found the tswap* calls.  I guess I should have
-> grepped for 'cpu_to'!  That found it right away!  :-/  :-D
-> 
-> Sorry for the distraction,
-> Ira
-> 
-> > Jonathan
+> > No, CXL_RESOURCE_NONE (all FFs) is used as address. A broken range is
+> > calculated that even overflows. I only vaguely remember the exact
+> > error message.
 > > 
+> > This may happen e.g. if the Component Register Block is missing in the
+> > DVSEC. cxl_find_regblock() may fail then and returns
+> > CXL_RESOURCE_NONE. There are a couple of code paths there
+> > component_reg_phys is set to CXL_RESOURCE_NONE without exiting
+> > immediately.
 > > 
-> >   
-> > > 
-> > > Ira  
-> >   
+> > I saw it during code development, when I pre-inititalized a port with
+> > component_reg_phys set to CXL_RESOURCE_NONE. Since that case can
+> > generally happen, I think it must be checked.
+> 
+> I think Jonathan had it right when we posited that the code should
+> probably have failed before getting to this point. For example, the
+> scenarios where the driver looks for a component register block via the
+> register locator DVSEC are not valid for RCDs in the first instance.
 
+I am ok having the code reviewed to prevent such situations. But the
+handling of component_reg_phys is by far not trivial as there are many
+locations it is initialized and others where it is used. Call chain is
+across multiple functions using various data sources for
+component_reg_phys, so it is hard to proof this may never happen.
+E.g. in add_port_attach_ep() I found this:
+
+	component_reg_phys = find_component_registers(uport_dev);
+	port = devm_cxl_add_port(&parent_port->dev, uport_dev,
+        	component_reg_phys, parent_dport);
+
+find_component_registers() and subsequent functions (e.g.
+cxl_regmap_to_base()) may return CXL_RESOURCE_NONE. But it is written
+to port without any further check in cxl_port_alloc():
+
+	port->component_reg_phys = component_reg_phys;
+
+It is then later directly used in devm_cxl_setup_hdm() to map io
+ranges with devm_cxl_iomap_block().
+
+Just an example, I did not go through other code paths.
+
+IMO, the check is cheap and prevents weird follow up errors and log
+messages. But I would be also ok, to just drop the patch. There are no
+dependencies to this change. What do you think?
+
+Thanks,
+
+-Robert
