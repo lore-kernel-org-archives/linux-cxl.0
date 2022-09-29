@@ -2,128 +2,90 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A52C32771
-	for <linux-cxl@archiver.kernel.org>; Wed, 28 Sep 2022 15:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F115CC07E9D
+	for <linux-cxl@archiver.kernel.org>; Thu, 29 Sep 2022 07:03:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233179AbiI1PpO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 28 Sep 2022 11:45:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48538 "EHLO
+        id S234255AbiI2HDo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 29 Sep 2022 03:03:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233659AbiI1PpL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 28 Sep 2022 11:45:11 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A0FB7C1F5;
-        Wed, 28 Sep 2022 08:45:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664379908; x=1695915908;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=L+jkqIsexqlzrYFOaFhwPJa/Gp1nFns+DyV2+D9NJWI=;
-  b=JOWulIuBsr+J0ADIGh2uwt9gyC1Ia35lVwj6a9pOXfRYX0q7cV0zdoFb
-   xmBgp5H4DRpeMrMmp/3+aFqCQv+tG83HrqZcoRdg5F7okr5nuJbSWD7d1
-   5STNRuN1ovj8xyo0rs1yNWCwPBGiOMPiIXwi4Ruz0dLI8Qo/cmvdY5QyZ
-   7AOe71HM2wDN2yUIIjgPbo2XnO+2xBOoYfxMtywAyesoilDcQJx5f28Ul
-   RT3pZ1AoSviOKK9IfsotnI0hnUMYpvfl8hWqTX+oy+K0ZSBWqf+wYocf+
-   P3jOOocKbwJ/fnPsoR/JNa8pSmfgyu8zkqqqPAGXTJsEBIbcrm+SDIcIz
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10484"; a="284769708"
-X-IronPort-AV: E=Sophos;i="5.93,352,1654585200"; 
-   d="scan'208";a="284769708"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2022 08:45:07 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10484"; a="684454239"
-X-IronPort-AV: E=Sophos;i="5.93,352,1654585200"; 
-   d="scan'208";a="684454239"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.108.153]) ([10.212.108.153])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2022 08:45:05 -0700
-Message-ID: <c53c4b89-45a9-a5e0-c162-43dc0a6e8ed6@intel.com>
-Date:   Wed, 28 Sep 2022 08:45:02 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.3.0
-Subject: Re: [PATCH v2] cxl: Replace HDM decoder granularity magic numbers
-Content-Language: en-US
-To:     Adam Manzanares <a.manzanares@samsung.com>,
-        "alison.schofield@intel.com" <alison.schofield@intel.com>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
+        with ESMTP id S235033AbiI2HDA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 29 Sep 2022 03:03:00 -0400
+Received: from mail.nfschina.com (unknown [124.16.136.209])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4A5BB5004D;
+        Thu, 29 Sep 2022 00:02:53 -0700 (PDT)
+Received: from localhost (unknown [127.0.0.1])
+        by mail.nfschina.com (Postfix) with ESMTP id 994891E80CAB;
+        Thu, 29 Sep 2022 14:58:24 +0800 (CST)
+X-Virus-Scanned: amavisd-new at test.com
+Received: from mail.nfschina.com ([127.0.0.1])
+        by localhost (mail.nfschina.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id gaVU_ioiiltU; Thu, 29 Sep 2022 14:58:21 +0800 (CST)
+Received: from [172.30.38.107] (unknown [180.167.10.98])
+        (Authenticated sender: yuzhe@nfschina.com)
+        by mail.nfschina.com (Postfix) with ESMTPA id 5B9AB1E80C7C;
+        Thu, 29 Sep 2022 14:58:21 +0800 (CST)
+Subject: Re: [PATCH] cxl/pmem: Use size_add() against integer overflow
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     "Schofield, Alison" <alison.schofield@intel.com>,
+        "Verma, Vishal L" <vishal.l.verma@intel.com>,
         "bwidawsk@kernel.org" <bwidawsk@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>,
-        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>
-Cc:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <CGME20220829220315uscas1p125d01bdd52a7aa6fd07c26bef7ead825@uscas1p1.samsung.com>
- <20220829220249.243888-1-a.manzanares@samsung.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20220829220249.243888-1-a.manzanares@samsung.com>
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "liqiong@nfschina.com" <liqiong@nfschina.com>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+References: <20220927070247.23148-1-yuzhe@nfschina.com>
+ <YzMjdXArM28bDsQf@iweiny-desk3>
+From:   Yu Zhe <yuzhe@nfschina.com>
+Message-ID: <eeec4e7f-01e1-a601-f89e-3dfa2611b039@nfschina.com>
+Date:   Thu, 29 Sep 2022 15:02:47 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
+MIME-Version: 1.0
+In-Reply-To: <YzMjdXArM28bDsQf@iweiny-desk3>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+在 2022年09月28日 00:23, Ira Weiny 写道:
 
-On 8/29/2022 3:03 PM, Adam Manzanares wrote:
-> When reviewing the CFMWS parsing code that deals with the HDM decoders,
-> I noticed a couple of magic numbers. This commit replaces these magic numbers
-> with constants defined by the CXL 3.0 specification.
+> On Tue, Sep 27, 2022 at 12:02:47AM -0700, Yu Zhe wrote:
+>> "struct_size() + n" may cause a integer overflow,
+>> use size_add() to handle it.
+>>
+>> Signed-off-by: Yu Zhe <yuzhe@nfschina.com>
+>> ---
+>>   drivers/cxl/pmem.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+>> index 7dc0a2fa1a6b..8c08aa009a56 100644
+>> --- a/drivers/cxl/pmem.c
+>> +++ b/drivers/cxl/pmem.c
+>> @@ -148,7 +148,7 @@ static int cxl_pmem_set_config_data(struct cxl_dev_state *cxlds,
+>>   		return -EINVAL;
+>>   
+>>   	/* 4-byte status follows the input data in the payload */
+>> -	if (struct_size(cmd, in_buf, cmd->in_length) + 4 > buf_len)
+>> +	if (size_add(struct_size(cmd, in_buf, cmd->in_length), 4) > buf_len)
+> I don't see any benefit here.
 >
-> v2:
->   - Change references to CXL 3.0 specification (David)
->   - CXL_DECODER_MAX_GRANULARITY_ORDER -> CXL_DECODER_MAX_ENCODED_IG (Dan)
+> struct_size() calls __ab_c_size() which already calls check_add_overflow()?  So
+> why wrap that in another check?
+"struct_size() + 4" still might cause overflow, so there need to use 
+"size_add" to check it.
+> Were you able to get this to fail with some user input?
 >
-> Signed-off-by: Adam Manzanares <a.manzanares@samsung.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-
-> ---
->   drivers/cxl/cxl.h | 11 +++++++----
->   1 file changed, 7 insertions(+), 4 deletions(-)
+> Ira
 >
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index f680450f0b16..3ab81ad9d2e5 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -61,6 +61,10 @@
->   #define CXL_HDM_DECODER0_SKIP_LOW(i) CXL_HDM_DECODER0_TL_LOW(i)
->   #define CXL_HDM_DECODER0_SKIP_HIGH(i) CXL_HDM_DECODER0_TL_HIGH(i)
->   
-> +/* HDM decoder control register constants CXL 3.0 8.2.5.19.7 */
-> +#define CXL_DECODER_MIN_GRANULARITY 256
-> +#define CXL_DECODER_MAX_ENCODED_IG 6
-> +
->   static inline int cxl_hdm_decoder_count(u32 cap_hdr)
->   {
->   	int val = FIELD_GET(CXL_HDM_DECODER_COUNT_MASK, cap_hdr);
-> @@ -71,9 +75,9 @@ static inline int cxl_hdm_decoder_count(u32 cap_hdr)
->   /* Encode defined in CXL 2.0 8.2.5.12.7 HDM Decoder Control Register */
->   static inline int cxl_to_granularity(u16 ig, unsigned int *val)
->   {
-> -	if (ig > 6)
-> +	if (ig > CXL_DECODER_MAX_ENCODED_IG)
->   		return -EINVAL;
-> -	*val = 256 << ig;
-> +	*val = CXL_DECODER_MIN_GRANULARITY << ig;
->   	return 0;
->   }
->   
-> @@ -96,7 +100,7 @@ static inline int cxl_to_ways(u8 eniw, unsigned int *val)
->   
->   static inline int granularity_to_cxl(int g, u16 *ig)
->   {
-> -	if (g > SZ_16K || g < 256 || !is_power_of_2(g))
-> +	if (g > SZ_16K || g < CXL_DECODER_MIN_GRANULARITY || !is_power_of_2(g))
->   		return -EINVAL;
->   	*ig = ilog2(g) - 8;
->   	return 0;
-> @@ -248,7 +252,6 @@ enum cxl_decoder_type {
->    */
->   #define CXL_DECODER_MAX_INTERLEAVE 16
->   
-> -#define CXL_DECODER_MIN_GRANULARITY 256
->   
->   /**
->    * struct cxl_decoder - Common CXL HDM Decoder Attributes
+>>   		return -EINVAL;
+>>   
+>>   	set_lsa =
+>> -- 
+>> 2.11.0
+>>
+>>
