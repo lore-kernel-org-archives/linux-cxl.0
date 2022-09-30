@@ -2,242 +2,448 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B0EC433FE
-	for <linux-cxl@archiver.kernel.org>; Fri, 30 Sep 2022 19:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB98C433F5
+	for <linux-cxl@archiver.kernel.org>; Fri, 30 Sep 2022 21:23:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231824AbiI3THf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 30 Sep 2022 15:07:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41908 "EHLO
+        id S230378AbiI3VXl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 30 Sep 2022 17:23:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231822AbiI3THe (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 30 Sep 2022 15:07:34 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 661141D7BC9;
-        Fri, 30 Sep 2022 12:07:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664564850; x=1696100850;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=BoSUJhCQzft5fI9d5SbRKdUfM6ezAoXtuzRb7WDpBoY=;
-  b=EYMNWZeQXfT2Nm1EPtv1gnRaQyutd92POCxEUm6mbneYXpn1XKuWqMt8
-   yk6pXOPuZPQ/+m/UDL/Hfbb0KF6EafqBYVqCP/hAsTNvSTkTrPTIWHftO
-   dhW05GwX8hI2/D0KfnucxtL/uU6/jk1n1UxVGqTEP6KbW8g3VKzg2Wyo7
-   98d0TcaKNt5GVDC3JGTtR1pOUdjckJ6VEenwS5s9cOOvf746CwYwJG/4D
-   391KpbtFM4TCmpTIxg/UgU2veDV4dVQvh0XstKtIYDYmixGvIj5FfxWug
-   xwt+mCc8ARZyOOHZSAhROmzwrNkUQ7DKBR0u/V4tMSk1RyLBbfl5NPJbM
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10486"; a="303180312"
-X-IronPort-AV: E=Sophos;i="5.93,358,1654585200"; 
-   d="scan'208";a="303180312"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2022 12:07:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10486"; a="656056947"
-X-IronPort-AV: E=Sophos;i="5.93,358,1654585200"; 
-   d="scan'208";a="656056947"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga001.jf.intel.com with ESMTP; 30 Sep 2022 12:07:26 -0700
-Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 30 Sep 2022 12:07:26 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31 via Frontend Transport; Fri, 30 Sep 2022 12:07:26 -0700
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.42) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.31; Fri, 30 Sep 2022 12:07:25 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UUPWCoKjUTDB2BFNVOTooi80+oHMmcrfjxCmP57h959F7taD8FWJrY9OxYcUcF8Ulh88e70NwZuAZL7TrhWu3Z+nKz+qcAIh3ZqO9+cW5Pjg6830Da65GU3NJz7BsauC4oOtMuAjgA96KrXQaAe8yyxaKtjWpVtriJH+nlfCM/8XHg8Nm9+KBEUBvUbibwSiuqekCiIdA4T4jN4dgZ4XzNkyCWp6Z9/WuI7Bbz+kK8jiokouLPP3JFSfaPMoSEN5FF7RqeNdBl8QV30V/EvuohXKtEtn9M3aIRjDt+jVNhpds782oPlhu/HLptQim6geJVDuWxN2kif28xoB9GIwgw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eDPCM6+8uJA/nT0yBeKW4NVdVfY+cYV4lV60cOzsPUA=;
- b=fmEELdH8JVhWyogdcEsOwOVRbx+1oAbzzXCgg0ucLBHpnfiF8ib+u5XX5CX7v+MDq/M2ZeVCh3JtPF7yXCZqz850nv5uutIWrHIzpUiMg5ngyXea3P2ZwhUXReC1Qxs9zt18A+k/OmZKu8pMmvPJPqEbgRkP1udzy3ZV8x/ObcyU1lHrju+61g2UC9m4++pk3DTWrwVQ886/8hvXy50mD4DREqffEPKDAIWoCUcsmkU+pY4ig4GLu+Vl8ZU0kLw7NFQYO9cd08m9tXqU2dvGV8OyTCBBPHRX6Y1tN5/IUx2ENLE/arv9ajQHbn7KbyYcdJ1PFonN+aOe+d5NJR3NAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by MN2PR11MB4712.namprd11.prod.outlook.com
- (2603:10b6:208:264::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.23; Fri, 30 Sep
- 2022 19:07:23 +0000
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::7d5a:684d:99f7:4e83]) by MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::7d5a:684d:99f7:4e83%12]) with mapi id 15.20.5676.023; Fri, 30 Sep
- 2022 19:07:23 +0000
-Date:   Fri, 30 Sep 2022 12:07:20 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Robert Richter <rrichter@amd.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH 02/15] cxl/core: Check physical address before mapping it
- in devm_cxl_iomap_block()
-Message-ID: <63373e684c3fd_795a629480@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20220831081603.3415-1-rrichter@amd.com>
- <20220831081603.3415-3-rrichter@amd.com>
- <6319824968fa7_580162946f@dwillia2-xfh.jf.intel.com.notmuch>
- <YxsvPwzxoYBMnN2y@rric.localdomain>
- <6324ba91a05cb_2a6ded29457@dwillia2-xfh.jf.intel.com.notmuch>
- <YzQhz93rqX+1NAQH@rric.localdomain>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <YzQhz93rqX+1NAQH@rric.localdomain>
-X-ClientProxiedBy: BYAPR08CA0051.namprd08.prod.outlook.com
- (2603:10b6:a03:117::28) To MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20)
+        with ESMTP id S231972AbiI3VXk (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 30 Sep 2022 17:23:40 -0400
+Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7860F1BC62F
+        for <linux-cxl@vger.kernel.org>; Fri, 30 Sep 2022 14:23:35 -0700 (PDT)
+Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
+        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20220930212330usoutp011b59bbbe8fd6a996c857efbb58b37a0b~ZwFV2zTJC1562815628usoutp01M;
+        Fri, 30 Sep 2022 21:23:30 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20220930212330usoutp011b59bbbe8fd6a996c857efbb58b37a0b~ZwFV2zTJC1562815628usoutp01M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1664573010;
+        bh=9eZYvlcDE0aaAQvv+KvXqFAK0TrWwL3+3s8LiBiTcJw=;
+        h=From:To:CC:Subject:Date:References:From;
+        b=vFSnirczZsutIBDj+1rO/cPRkqsZutzziJmEGLZAhuYZ9GEORd4p/7WV3iMtuxGvT
+         Q2CCC0mH8UK5nO8/tTm0oUYnw4Uz9SdY75zdUnDFJPbR16PNSHt12sbLyuF5Rezs7k
+         0ytMbQOIzi4f+GYSRNdZttgRdhkk309i/IKbahjU=
+Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
+        [203.254.195.111]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20220930212330uscas1p1acb3b65376e590918f3beff66a461ccf~ZwFVusYIw1869018690uscas1p11;
+        Fri, 30 Sep 2022 21:23:30 +0000 (GMT)
+Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
+        ussmges2new.samsung.com (USCPEMTA) with SMTP id 8F.37.18126.25E57336; Fri,
+        30 Sep 2022 17:23:30 -0400 (EDT)
+Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
+        [203.254.195.89]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20220930212330uscas1p1363cbba1dc87b5442317e74fa861ae9d~ZwFVaCYF10405604056uscas1p1B;
+        Fri, 30 Sep 2022 21:23:30 +0000 (GMT)
+X-AuditID: cbfec36f-fe1ff700000146ce-e9-63375e5288ab
+Received: from SSI-EX3.ssi.samsung.com ( [105.128.2.146]) by
+        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id CC.B4.19363.15E57336; Fri,
+        30 Sep 2022 17:23:30 -0400 (EDT)
+Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
+        SSI-EX3.ssi.samsung.com (105.128.2.228) with Microsoft SMTP Server
+        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+        15.1.2375.24; Fri, 30 Sep 2022 14:23:29 -0700
+Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
+        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Fri,
+        30 Sep 2022 14:23:29 -0700
+From:   Fan Ni <fan.ni@samsung.com>
+To:     "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>
+CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        "sunfishho12@gmail.com" <sunfishho12@gmail.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Subject: [fan.ni@samsung.com: Re: [ndctl PATCH 1/2] cxl: Add root port
+ attribute to cxl list output]
+Thread-Topic: [fan.ni@samsung.com: Re: [ndctl PATCH 1/2] cxl: Add root port
+        attribute to cxl list output]
+Thread-Index: AQHY1RLiQ3jQJ7khl0+IGdjzZ5ClOw==
+Date:   Fri, 30 Sep 2022 21:23:29 +0000
+Message-ID: <20220930212315.GA2896523@bgt-140510-bm03>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [105.128.2.176]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <3155ABECF7AA7A4A94CFF2F67E862D01@ssi.samsung.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|MN2PR11MB4712:EE_
-X-MS-Office365-Filtering-Correlation-Id: 13c8ffd1-dc7b-4176-ce9f-08daa317015e
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: eawv8BQWSsHWj5CgCU2Y/HO90l7buVfrh3fkiVefFBEm0LcpFXB271zqHxtJekyGArMFsFWPK4aYqCOhXUj6ooMjwbGkqz43XU007r4VIOx6xnlsLGaVYNcqc5mPIXyo50vWLW99Ag4UKdDlGU4Kv2WCHqGAPu5qpYFWyuJwWHYWRi/kmzeFCB9fvqx/UK1q3mVjlIhmecutDjW7Sj3HHPjXEKOjeFXtReg0tOfoYEjvIZMwhTZ39YxVGpZwT0Dy++aTY1CAOIbCyPfzd1flRJfXQtqgM6ln7NXAX77A6vYRx3/gL5IP3QaChv6X7/p2YZvs8mZSMd9OLg+8UxeJpG3zBr495+cnvZSZdrdb1gQhOb9a8Cn2qu/lj4Tt8Wn01bfd90Hso9+8gWyJC92QvFnWUblmCjSE1YOgC0lfRIVTLNmUHEfeuUUZW/7hCAE0EOtCdzcIqq6978vTHxdMdhYOgo/91eZD/A2IDUr9rmBcDH/IxiS9XRt5T/rIL/3lg3JTDgthCdZLmA9exaHASeyCHGP0TmkjHwlI3+Q/8MlpcxTFheK/n0K1RIkHwRcIfjCzP4v5Vvcrc1oRlY9ORvRpBWaDVl0vtEHbo6Y9CM2o4nhnnX6IQaG0GBaUFIHAQc1njLYjszcjufKyR1UMJcbaV7gXCCePsuP3/i9ZIPxNClYi2kEoHV/nBYRJk8uCFy6JTjbUBB9qe3h+2HTbkQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(396003)(366004)(346002)(39860400002)(376002)(451199015)(6486002)(478600001)(5660300002)(82960400001)(8676002)(9686003)(26005)(6512007)(2906002)(8936002)(86362001)(6506007)(4326008)(54906003)(110136005)(316002)(41300700001)(38100700002)(53546011)(66556008)(66476007)(66946007)(83380400001)(186003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?79SnO1cpkq31FCWsKzi6wyIb/nYGS98flIiYMrjv2Ih6bmvNBWUfvc+6GR/t?=
- =?us-ascii?Q?xDW+d8xNmwrkMMgnzTXlHG1j3E+epVGDlyC8WgIaQgLtkQFMKZcF5q1Vlpjd?=
- =?us-ascii?Q?DDYTnz8YoYEkFDvmfDx4fVz48kawbNe9DWDR3MCJZZfVanUY2HOpWQ96BRTb?=
- =?us-ascii?Q?BeaPcWrJWBHbDtBxXGSgbOpQ3q2AP2e5t+Gb+Po2JA1T4sjLKraTipB69UYz?=
- =?us-ascii?Q?K35vvWr2jjwUnrGLWvDDngd5jtKsVt66wPLCqsfBkZsWtJnxN2hryTRMTFpJ?=
- =?us-ascii?Q?Wcv8X/f2Xd6zUtb1jYpj1dIYjBM1mdebDCQ88CR+wEnLe/VLiGfCDM96ZB2J?=
- =?us-ascii?Q?7/JHlv2zZOcV6d1/la5rA+QvfNBc+6xRsYrSf+E/LI08dNcRDRpeN7uBzzD8?=
- =?us-ascii?Q?S3kC5lSGnNxvK92VcN4YwJZuaRJds3tFdHh+tJnpuvpz74XAMvE95bnf1740?=
- =?us-ascii?Q?eY6VGbdbKOmBwmWfVxrf68CkjCiR5CG760Sf2kM0lt8lt2th2mmF/6UJfAeq?=
- =?us-ascii?Q?Okzpcu3+y/EwZd8KbTmSTMy5LzcK7vFYQBIcbXWmSsc0cGqqfu+mXY/9wUvR?=
- =?us-ascii?Q?63a0X3OZes/LXcc6f83+s2HeSdMmjeqWI8Tbd1Cm+r/zVAkNDdKsOJMbJEXk?=
- =?us-ascii?Q?JMPHvDtLRgGP0BkAFHDvkwVk6TgR54scJNMtrTtTZVP6qrFJoUDV7RgKwHvj?=
- =?us-ascii?Q?BnfD8K1e9vl1aZkYTo0EckHd33RMo9vSu6YwakcBLj6+w/fezZbBxj0YJd9e?=
- =?us-ascii?Q?5M/YjtaPWulxe2m/snKlUr9ZskXPqmU4SA8quW9+eA251RF8ojRIE4l/uSCF?=
- =?us-ascii?Q?UfoE3BG0os2B2TN4obAH7QQkYYCKnlN979ls+Mjkm1Y9+LtFlToN1Cax6OD1?=
- =?us-ascii?Q?esVvnVF1LHIhdD/wTdgZe/q8b7UUkaHyd/4issmmXv1Up8iqtSaX/edIX0Sw?=
- =?us-ascii?Q?X96/IULxKX/eVPggtszNTaWxD93sy3efJd1R7SNA6Od3cRWGFw9OuqboLLO2?=
- =?us-ascii?Q?WfUJ4nGO1kSWNGyt+rzWnOq1M775Qo0ObimHTVozr5oPGRiPO7qklJ75wdn2?=
- =?us-ascii?Q?Zd0Cb+LjG9FRnmWgKldYSHlpTb/ef70p11Advq1BxVQ8DPXnATRI1mngDRM7?=
- =?us-ascii?Q?9dUH+srB5q9hiq5KODBVB9fYWM6YH+aS2Qup/2IY/vKbqdcCvWKn959Mga4v?=
- =?us-ascii?Q?CicFyT1d/qx1lWq7ghoL3WqVO+Xc2i04P0zCVwR4uae7u80a3ajAKWIqnZdy?=
- =?us-ascii?Q?kBimuMQaLTreHc7addD2w/t1MKVdZkODqZ5ziuXlJlFLRKY97lR1ydNnClnP?=
- =?us-ascii?Q?vT5tOrl1vOWkQsiOg2SZeU1N15as4skZ3D5NE/gahrQ2c39xGwODztYMoLPy?=
- =?us-ascii?Q?kCsF3DbU1ZfCX0S+B7TDe48j/06KcJbzsnmN2Tussj7iatxxjVhRBjy7nFD2?=
- =?us-ascii?Q?nYjWsBTSEdy+JU9pGmjCRRQ6CDlIpUFOlQSlP1dY8tOcDzspizuKARxIfHLC?=
- =?us-ascii?Q?wlgOR49a25B3wdOcxh4iLnzYXxvZ94OoGQMV4ltF6FcGUOlPE2Hytakx11t2?=
- =?us-ascii?Q?fEkUhyqR1fnLuWCLQyHFwRIW2ikXmaLAYivPxSzYIyAVPW1dx3JiOd9Qfxau?=
- =?us-ascii?Q?gQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 13c8ffd1-dc7b-4176-ce9f-08daa317015e
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2022 19:07:23.0631
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: L5/xhz7BnuBtoWWnbvTayjh/kJSu55ZmjXnqmDWoMSfEG4aflRtsCipypc+5CA0ABSe2oUC51l972/wGj+KYyOVbLGQEApwVUtiGwe65YJc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4712
-X-OriginatorOrg: intel.com
+X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHKsWRmVeSWpSXmKPExsWy7djXc7pBcebJBqfeCFlMn3qB0WL1zTWM
+        FudnnWKxaPy5iNHi1oRjTA6sHjtn3WX3WLznJZPH1Nn1Hp83yQWwRHHZpKTmZJalFunbJXBl
+        3P34j61gV1ZF+4rrrA2Mm6O6GDk5JARMJC7t38vUxcjFISSwklHi3ZvVzBBOK5PE2k3TWGGq
+        5p+cxg6RWMsoMf/1fkYI5xOjROfk3VCZZYwStw7eZANpYRNQlNjXtR3MFhGwlNj+bRsLSBGz
+        wD+gJfMeM4IkhAXSJJo3zWSBKMqW+HHrOFSDnsTJzh6gQzg4WARUJVZNsgAJ8wqYSfw4eBes
+        nFFATOL7qTVMIDazgLjErSfzmSBOFZRYNHsPM4QtJvFv10M2CFtR4v73l+wQ9XoSN6ZOYYOw
+        7SROXb/CCGFrSyxb+JoZYpegxMmZT1ggeiUlDq64AXa/hMBKDol1zy5ALXOR6Ft4GRpG0hJX
+        r0+FWlwtcabnHBNEQwujxKXGzVAJa4l/ndegruCT+PvrEeMERuVZSJ6YheTAWUgOnIXkwFlI
+        DlzAyLqKUby0uDg3PbXYKC+1XK84Mbe4NC9dLzk/dxMjMAmd/nc4fwfj9Vsf9Q4xMnEwHmKU
+        4GBWEuH15jVPFuJNSaysSi3Kjy8qzUktPsQozcGiJM4bNUMrWUggPbEkNTs1tSC1CCbLxMEp
+        1cC0/ijPZVPuNavDMkzzNsiGSk8pu2QbWHFiVrNc1N+5SybtmpvC8ub0kuN371/q//yt4f+3
+        R9fWLXt5W1Zt4g5OtizH6IZzj1/p61zmTHritnKJouKPFWUJX2LKnFKjim+X37znOWnXz5CN
+        J/32GLvLTUxhvThx54Nf56/krWM7M2tt+AW5+ZpBmZN2aT2+1HH4/IZQ+Y6rn+90aImcsznf
+        qmGTn/BR08zrdilrF+/OpA4+ZZHPfoY75zlUXLtv8+plVfeVrM5IvYWza/w/xZk/Pbkk6vR2
+        o5bPUW7z/jYWv2oxc3FpW7drabHjN0uTKO8yV/ZM3ndveDJUFBY+LD78bdt6jgMuR5z2qJ7c
+        JNujrMRSnJFoqMVcVJwIACwpZD6xAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEIsWRmVeSWpSXmKPExsWS2cA0STcozjzZ4Pc0RovpUy8wWqy+uYbR
+        4vysUywWjT8XMVrcmnCMyYHVY+esu+wei/e8ZPKYOrve4/MmuQCWKC6blNSczLLUIn27BK6M
+        ux//sRXsyqpoX3GdtYFxc1QXIyeHhICJxPyT09i7GLk4hARWM0qs6zzPCOF8YpRYf2MqC4Sz
+        jFFiZ9suVpAWNgFFiX1d29lAbBEBS4nt37aBFTEL/GOUaJs4mRkkISyQJtG8aSYLRFG2xIZ7
+        15ghbD2Jk509QDYHB4uAqsSqSRYgYV4BM4kfB++ClTMKiEl8P7WGCcRmFhCXuPVkPhPEqQIS
+        S/acZ4awRSVePv7HCmErStz//pIdol5P4sbUKWwQtp3EqetXGCFsbYllC18zQ+wSlDg58wkL
+        RK+kxMEVN1gmMIrNQrJuFpJRs5CMmoVk1CwkoxYwsq5iFC8tLs5Nryg2zEst1ytOzC0uzUvX
+        S87P3cQIjMbT/w5H7mA8euuj3iFGJg7GQ4wSHMxKIrzevObJQrwpiZVVqUX58UWlOanFhxil
+        OViUxHmFXCfGCwmkJ5akZqemFqQWwWSZODilGphkc80MmWO5TrlE3BWfLl5+7CG7/cJLZ7/H
+        /bjhYKq4dhGj96FXulxfboaE7dRZv3HNunXCvxPezlM+2xl3ztq04Ki1rpttwuG3M7Y/cuQs
+        EfI7pKLnekYjWn3pv/XXW/bpr9yivka9Qei1B+cBI17HKZb1oeohCyMbpBgzcpKj7+xj0vua
+        p+p88KzYSoXpUufEa9XNNi/9Jyn9SNmlNN2TcfFXl3tHrdjD/s1vrupYlhf2Yo3Kpz8Pd/5O
+        KoxY4xa+VE77jqOUvZqz8ovnew5JZif945mRzLTYTr0g+bDmjH1/6wp/Tdm7i8Fju+DdXUIx
+        z8wdVPi2Tyxu3zK973v4m4aXDR6Cs5+rf1z4sFeJpTgj0VCLuag4EQDpB2bUNQMAAA==
+X-CMS-MailID: 20220930212330uscas1p1363cbba1dc87b5442317e74fa861ae9d
+CMS-TYPE: 301P
+X-CMS-RootMailID: 20220930212330uscas1p1363cbba1dc87b5442317e74fa861ae9d
+References: <CGME20220930212330uscas1p1363cbba1dc87b5442317e74fa861ae9d@uscas1p1.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Robert Richter wrote:
-> On 16.09.22 11:04:01, Dan Williams wrote:
-> > Robert Richter wrote:
-> > > On 07.09.22 22:48:57, Dan Williams wrote:
-> > > > Robert Richter wrote:
-> > > > > The physical base address of a CXL range can be invalid and is then
-> > > > > set to CXL_RESOURCE_NONE. Early check this case before mapping a
-> > > > > memory block in devm_cxl_iomap_block().
-> > > > > 
-> > > > > Signed-off-by: Robert Richter <rrichter@amd.com>
-> > > > > ---
-> > > > >  drivers/cxl/core/regs.c | 3 +++
-> > > > >  1 file changed, 3 insertions(+)
-> > > > > 
-> > > > > diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> > > > > index 39a129c57d40..f216c017a474 100644
-> > > > > --- a/drivers/cxl/core/regs.c
-> > > > > +++ b/drivers/cxl/core/regs.c
-> > > > > @@ -165,6 +165,9 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
-> > > > >  	void __iomem *ret_val;
-> > > > >  	struct resource *res;
-> > > > >  
-> > > > > +	if (addr == CXL_RESOURCE_NONE)
-> > > > > +		return NULL;
-> > > > > +
-> > > > >  	res = devm_request_mem_region(dev, addr, length, dev_name(dev));
-> > > > >  	if (!res) {
-> > > > >  		resource_size_t end = addr + length - 1;
-> > > > > -- 
-> > > > > 2.30.2
-> > > > > 
-> > > > 
-> > > > devm_request_mem_region() succeeds for you when this happens? More
-> > > > details about the failure scenario please.
-> > > 
-> > > No, CXL_RESOURCE_NONE (all FFs) is used as address. A broken range is
-> > > calculated that even overflows. I only vaguely remember the exact
-> > > error message.
-> > > 
-> > > This may happen e.g. if the Component Register Block is missing in the
-> > > DVSEC. cxl_find_regblock() may fail then and returns
-> > > CXL_RESOURCE_NONE. There are a couple of code paths there
-> > > component_reg_phys is set to CXL_RESOURCE_NONE without exiting
-> > > immediately.
-> > > 
-> > > I saw it during code development, when I pre-inititalized a port with
-> > > component_reg_phys set to CXL_RESOURCE_NONE. Since that case can
-> > > generally happen, I think it must be checked.
-> > 
-> > I think Jonathan had it right when we posited that the code should
-> > probably have failed before getting to this point. For example, the
-> > scenarios where the driver looks for a component register block via the
-> > register locator DVSEC are not valid for RCDs in the first instance.
-> 
-> I am ok having the code reviewed to prevent such situations. But the
-> handling of component_reg_phys is by far not trivial as there are many
-> locations it is initialized and others where it is used. Call chain is
-> across multiple functions using various data sources for
-> component_reg_phys, so it is hard to proof this may never happen.
-> E.g. in add_port_attach_ep() I found this:
-> 
-> 	component_reg_phys = find_component_registers(uport_dev);
-> 	port = devm_cxl_add_port(&parent_port->dev, uport_dev,
->         	component_reg_phys, parent_dport);
-> 
-> find_component_registers() and subsequent functions (e.g.
-> cxl_regmap_to_base()) may return CXL_RESOURCE_NONE. But it is written
-> to port without any further check in cxl_port_alloc():
-> 
-> 	port->component_reg_phys = component_reg_phys;
-> 
-> It is then later directly used in devm_cxl_setup_hdm() to map io
-> ranges with devm_cxl_iomap_block().
-> 
-> Just an example, I did not go through other code paths.
-> 
-> IMO, the check is cheap and prevents weird follow up errors and log
-> messages. But I would be also ok, to just drop the patch. There are no
-> dependencies to this change. What do you think?
 
-Good points above...
 
-Yeah, the expectation is that only "broken hardware" fails to provide
-component registers, but the driver is currently deficient in that it
-assumes everything is CXL 2.0.
+On Fri, Sep 09, 2022 at 10:10:04PM +0000, Verma, Vishal L wrote:
 
-Now you have me thinking it should go a bit further and do a WARN_ONCE()
-when CXL_RESOURCE_NONE is passed, as those locations need better error
-handling than just handling it like an ioremap() failure.
+> On Fri, 2022-08-19 at 01:54 -0700, sunfishho12@gmail.com wrote:
+> > From: Matthew Ho <sunfishho12@gmail.com>
+> >=20
+> > This adds a "root port" attribute to ports and type 3 memory devices
+> > located under a host bridge indicating which root port each device
+> > falls under. Previously, the cxl list command lists the various root
+> > ports as dports underneath each host bridge, and displays devices as
+> > being under a given host bridge, but did not indicate which specific
+> > root port corresponded to which device. Adding this information
+> > helps to map the CXL topology.
+>=20
+> Hm is this patch actually needed - the json output can already list
+> port hierarchies. So would it instead be possible to have a 'walk to
+> root' helper that the graphing functions can instead call each time.
+>=20
+> A library helper to get to the root port each time would be better than
+> just adding it to the JSON output, as that seems redundant.
+>=20
+In current cxl list output, the dports and memdevs under a specific port ar=
+e
+put at the same level in the hierachy. As shown in the below example, dport=
+s=20
+and memdevs:port1 are put side by side at the same level under ports:root0 =
+in=20
+the json layout.
+With that being said, information showing which memdev is attached to which=
+=20
+dport is missing in current cxl list json output. If there is only one dpor=
+t,=20
+that is fine, but if there are multiple dports and memdevs under the same p=
+ort,=20
+with current json output we cannot figure out which memdev is attached to=20
+which dport directly.=20
+Adding root port info to the output can help users better understanding the=
+ cxl
+hierachy. In the patch, a new attribute "root port" is added to memdev and =
+port
+to track the info, if it is not desirable, we can try two alternate solutio=
+ns=20
+to achieve similar goal so we can plot the complete hierachy.
+1. add extra attribute "home path" for memdev and "uport" for port json obj=
+ect,
+	from where we can extract "root port" info.
+2. If we want to keep the current cxl list program flow intact as much as=20
+possible, we can create separate json objects with root port info=20
+for ploting hierachy purpose. However, with this apporach, we may have=20
+duplicate code snippets.
+
+Which approach do you prefer? Or you come up with something else?
+
+"ports:root0":[
+{
+	"port":"port1",
+		"host":"ACPI0016:00",
+		"depth":1,
+		"nr_dports":2,
+		"dports":[
+		{
+			"dport":"0000:de:00.0",
+			"id":"0"
+		},
+		{
+			"dport":"0000:de:01.0",
+			"id":"0x1"
+		}
+		],
+		"memdevs:port1":[
+		{
+			"memdev":"mem1",
+			"pmem_size":"256.00 MiB (268.44 MB)",
+			"ram_size":0,
+			"serial":"0",
+			"host":"0000:e0:00.0"
+		},
+		{
+			"memdev":"mem0",
+			"pmem_size":"256.00 MiB (268.44 MB)",
+			"ram_size":0,
+			"serial":"0",
+			"host":"0000:df:00.0"
+		}
+		]
+}
+
+	> Otherwise some general comments below:
+	>=20
+	> >=20
+	> > Signed-off-by: Matthew Ho <sunfishho12@gmail.com>
+	> > ---
+	> > =A0cxl/json.c=A0=A0=A0=A0=A0=A0=A0=A0 | 16 ++++++++++-
+	> > =A0cxl/lib/libcxl.c=A0=A0 | 66 +++++++++++++++++++++++++++++++++++++++=
++++++++
+	> > =A0cxl/lib/libcxl.sym |=A0 3 ++-
+	> > =A0cxl/libcxl.h=A0=A0=A0=A0=A0=A0 |=A0 2 ++
+> > =A04 files changed, 85 insertions(+), 2 deletions(-)
+	> >=20
+	> > diff --git a/cxl/json.c b/cxl/json.c
+	> > index 9cec58b482b6..ad82f37fc955 100644
+	> > --- a/cxl/json.c
+	> > +++ b/cxl/json.c
+	> > @@ -303,7 +303,7 @@ err_jobj:
+> > =A0struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memde=
+v,
+		> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0unsigned long flags)
+	> > =A0{
+> > -=A0=A0=A0=A0=A0=A0=A0const char *devname =3D cxl_memdev_get_devname(me=
+mdev);
+> > +=A0=A0=A0=A0=A0=A0=A0const char *devname =3D cxl_memdev_get_devname(me=
+mdev), *rp;
+> > =A0=A0=A0=A0=A0=A0=A0=A0struct json_object *jdev, *jobj;
+> > =A0=A0=A0=A0=A0=A0=A0=A0unsigned long long serial;
+> > =A0=A0=A0=A0=A0=A0=A0=A0int numa_node;
+> > @@ -324,6 +324,13 @@ struct json_object *util_cxl_memdev_to_json(struct=
+ cxl_memdev *memdev,
+> > =A0=A0=A0=A0=A0=A0=A0=A0if (jobj)
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0json_object_object_add(=
+jdev, "ram_size", jobj);
+> > =A0
+> > +=A0=A0=A0=A0=A0=A0=A0rp =3D cxl_memdev_get_root_port(memdev);
+> > +=A0=A0=A0=A0=A0=A0=A0if (rp) {
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0jobj =3D json_object_new_=
+string(rp);
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0if (jobj)
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0j=
+son_object_object_add(jdev, "root port", jobj);
+> > +=A0=A0=A0=A0=A0=A0=A0}
+> > +
+> > =A0=A0=A0=A0=A0=A0=A0=A0if (flags & UTIL_JSON_HEALTH) {
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0jobj =3D util_cxl_memde=
+v_health_to_json(memdev, flags);
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0if (jobj)
+> > @@ -727,6 +734,7 @@ static struct json_object *__util_cxl_port_to_json(=
+struct cxl_port *port,
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0 unsigned long flags)
+> > =A0{
+> > =A0=A0=A0=A0=A0=A0=A0=A0const char *devname =3D cxl_port_get_devname(po=
+rt);
+> > +=A0=A0=A0=A0=A0=A0=A0const char *rp =3D cxl_port_get_root_port(port);
+> > =A0=A0=A0=A0=A0=A0=A0=A0struct json_object *jport, *jobj;
+> > =A0
+> > =A0=A0=A0=A0=A0=A0=A0=A0jport =3D json_object_new_object();
+> > @@ -741,6 +749,12 @@ static struct json_object *__util_cxl_port_to_json=
+(struct cxl_port *port,
+> > =A0=A0=A0=A0=A0=A0=A0=A0if (jobj)
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0json_object_object_add(=
+jport, "host", jobj);
+> > =A0
+> > +=A0=A0=A0=A0=A0=A0=A0if (rp !=3D NULL) {
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0jobj =3D json_object_new_=
+string(rp);
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0if (jobj)
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0j=
+son_object_object_add(jport, "root port", jobj);
+> > +=A0=A0=A0=A0=A0=A0=A0}
+> > +
+> > =A0=A0=A0=A0=A0=A0=A0=A0if (!cxl_port_is_enabled(port)) {
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0jobj =3D json_object_ne=
+w_string("disabled");
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0if (jobj)
+> > diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+> > index a40b0e6aee83..c5b8ff339eb8 100644
+> > --- a/cxl/lib/libcxl.c
+> > +++ b/cxl/lib/libcxl.c
+> > @@ -1260,6 +1260,39 @@ CXL_EXPORT unsigned long long cxl_memdev_get_ram=
+_size(struct cxl_memdev *memdev)
+> > =A0=A0=A0=A0=A0=A0=A0=A0return memdev->ram_size;
+> > =A0}
+> > =A0
+> > +CXL_EXPORT const char *cxl_memdev_get_root_port(struct cxl_memdev *mem=
+dev)
+> > +{
+> > +=A0=A0=A0=A0=A0=A0=A0char *rp_name =3D strdup(memdev->host_path), *sav=
+e;
+> > +=A0=A0=A0=A0=A0=A0=A0const char *rp;
+> > +=A0=A0=A0=A0=A0=A0=A0bool host_bridge_found =3D false;
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0if (!memdev->host_path)
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0return NULL;
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0rp_name =3D strdup(memdev->host_path);
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0if (!rp_name) {
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0printf("Error: strdup fai=
+led in cxl_memdev_get_Root_port\n");
+>=20
+> As a general rule, only JSON formatted output goes to stdout.
+> Everything else goes to stderr, and use the logging helpers (e.g.
+> dbg(), err(), etc. ) for any output from libcxl, so that if logging is
+> being redirected to something other than stderr, everything stays
+> consistent.
+>=20
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0return NULL;
+> > +=A0=A0=A0=A0=A0=A0=A0}
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0rp =3D strtok_r(rp_name, "/", &save);
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0while (rp) {
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0/* return the first subst=
+ring after the host bridge */
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0if (host_bridge_found)
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0r=
+eturn (char *)rp;
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0if (!strncmp(rp, "pci", s=
+trlen("pci")))
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0h=
+ost_bridge_found =3D true;
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0rp =3D strtok_r(NULL, "/"=
+, &save);
+> > +=A0=A0=A0=A0=A0=A0=A0}
+> > +=A0=A0=A0=A0=A0=A0=A0return NULL;
+> > +}
+> > +
+> > +
+> > =A0CXL_EXPORT const char *cxl_memdev_get_firmware_verison(struct cxl_me=
+mdev *memdev)
+> > =A0{
+> > =A0=A0=A0=A0=A0=A0=A0=A0return memdev->firmware_version;
+> > @@ -2405,6 +2438,39 @@ CXL_EXPORT const char *cxl_port_get_host(struct =
+cxl_port *port)
+> > =A0=A0=A0=A0=A0=A0=A0=A0return devpath_to_devname(port->uport);
+> > =A0}
+> > =A0
+> > +CXL_EXPORT const char *cxl_port_get_root_port(struct cxl_port *port)
+> > +{
+> > +=A0=A0=A0=A0=A0=A0=A0char *rp_name, *save;
+> > +=A0=A0=A0=A0=A0=A0=A0const char *rp;
+> > +=A0=A0=A0=A0=A0=A0=A0bool host_bridge_found =3D false;
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0if (!port->uport)
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0return NULL;
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0rp_name =3D strdup(port->uport);
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0if (!rp_name) {
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0printf("Error: strdup fai=
+led in %s\n", __func__);
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0return NULL;
+> > +=A0=A0=A0=A0=A0=A0=A0}
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0rp =3D strtok_r(rp_name, "/", &save);
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0while (rp) {
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0/* return the first subst=
+ring after the host bridge */
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0if (host_bridge_found)
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0r=
+eturn (char *)rp;
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0if (!strncmp(rp, "pci", s=
+trlen("pci")))
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0h=
+ost_bridge_found =3D true;
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0rp =3D strtok_r(NULL, "/"=
+, &save);
+> > +=A0=A0=A0=A0=A0=A0=A0}
+> > +=A0=A0=A0=A0=A0=A0=A0return NULL;
+> > +}
+> > +
+> > +
+> > =A0CXL_EXPORT bool cxl_port_hosts_memdev(struct cxl_port *port,
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 struct cxl_memdev *memdev)
+> > =A0{
+> > diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+> > index 549f88dae6ff..4f61686a3aff 100644
+> > --- a/cxl/lib/libcxl.sym
+> > +++ b/cxl/lib/libcxl.sym
+> > @@ -19,6 +19,7 @@ global:
+> > =A0=A0=A0=A0=A0=A0=A0=A0cxl_memdev_get_ctx;
+> > =A0=A0=A0=A0=A0=A0=A0=A0cxl_memdev_get_pmem_size;
+> > =A0=A0=A0=A0=A0=A0=A0=A0cxl_memdev_get_ram_size;
+> > +=A0=A0=A0=A0=A0=A0=A0cxl_memdev_get_root_port;
+>=20
+> The way the symbol script works is that each release gets a new
+> 'section' for all the symbols that it adds. So v74's new symbols were
+> added to the 'LIBCXL_3' section. If this is targeting the next, v75
+> release, its new APIs will go into a new section - LIBCXL_4. If
+> LIBCXL_4 already existed on the pending branch, you can append into
+> that section at the bottom. But in this case since it doesn't exist,
+> you can create one, and add the new APIs in this patch there.
+>=20
+> > =A0=A0=A0=A0=A0=A0=A0=A0cxl_memdev_get_firmware_verison;
+> > =A0=A0=A0=A0=A0=A0=A0=A0cxl_cmd_get_devname;
+> > =A0=A0=A0=A0=A0=A0=A0=A0cxl_cmd_new_raw;
+> > @@ -101,7 +102,7 @@ global:
+> > =A0=A0=A0=A0=A0=A0=A0=A0cxl_port_to_endpoint;
+> > =A0=A0=A0=A0=A0=A0=A0=A0cxl_port_get_bus;
+> > =A0=A0=A0=A0=A0=A0=A0=A0cxl_port_get_host;
+> > -=A0=A0=A0=A0=A0=A0=A0cxl_port_get_bus;
+>=20
+> Was this deletion accidental?
+>=20
+> > +=A0=A0=A0=A0=A0=A0=A0cxl_port_get_root_port;
+>=20
+> Same as above regtarding the new section - there's no need to group
+> port things vs memdev things in this file.
+>=20
+> > =A0=A0=A0=A0=A0=A0=A0=A0cxl_port_hosts_memdev;
+> > =A0=A0=A0=A0=A0=A0=A0=A0cxl_port_get_nr_dports;
+> > =A0=A0=A0=A0=A0=A0=A0=A0cxl_port_disable_invalidate;
+> > diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+> > index 61c7fc4e39b8..9ffa640bc832 100644
+> > --- a/cxl/libcxl.h
+> > +++ b/cxl/libcxl.h
+> > @@ -47,6 +47,7 @@ int cxl_memdev_get_minor(struct cxl_memdev *memdev);
+> > =A0struct cxl_ctx *cxl_memdev_get_ctx(struct cxl_memdev *memdev);
+> > =A0unsigned long long cxl_memdev_get_pmem_size(struct cxl_memdev *memde=
+v);
+> > =A0unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev=
+);
+> > +const char *cxl_memdev_get_root_port(struct cxl_memdev *memdev);
+> > =A0const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memde=
+v);
+> > =A0size_t cxl_memdev_get_label_size(struct cxl_memdev *memdev);
+> > =A0int cxl_memdev_disable_invalidate(struct cxl_memdev *memdev);
+> > @@ -95,6 +96,7 @@ bool cxl_port_is_endpoint(struct cxl_port *port);
+> > =A0struct cxl_endpoint *cxl_port_to_endpoint(struct cxl_port *port);
+> > =A0struct cxl_bus *cxl_port_get_bus(struct cxl_port *port);
+> > =A0const char *cxl_port_get_host(struct cxl_port *port);
+> > +const char *cxl_port_get_root_port(struct cxl_port *port);
+> > =A0bool cxl_port_hosts_memdev(struct cxl_port *port, struct cxl_memdev =
+*memdev);
+> > =A0int cxl_port_get_nr_dports(struct cxl_port *port);
+> > =A0int cxl_port_disable_invalidate(struct cxl_port *port);
+>=20
+
+----- End forwarded message -----=
