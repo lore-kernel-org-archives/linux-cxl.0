@@ -2,131 +2,158 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F928C433F5
-	for <linux-cxl@archiver.kernel.org>; Fri,  7 Oct 2022 17:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BF3C433FE
+	for <linux-cxl@archiver.kernel.org>; Fri,  7 Oct 2022 18:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229505AbiJGRhW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 7 Oct 2022 13:37:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42224 "EHLO
+        id S229581AbiJGShU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 7 Oct 2022 14:37:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229805AbiJGRhV (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 7 Oct 2022 13:37:21 -0400
+        with ESMTP id S229542AbiJGShT (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 7 Oct 2022 14:37:19 -0400
 Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B5424C61C
-        for <linux-cxl@vger.kernel.org>; Fri,  7 Oct 2022 10:37:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C2633056A
+        for <linux-cxl@vger.kernel.org>; Fri,  7 Oct 2022 11:37:16 -0700 (PDT)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 3AE4140F11;
-        Fri,  7 Oct 2022 17:37:18 +0000 (UTC)
-Received: from pdx1-sub0-mail-a245 (unknown [127.0.0.6])
+        by relay.mailchannels.net (Postfix) with ESMTP id DE9636C13F3;
+        Fri,  7 Oct 2022 18:37:01 +0000 (UTC)
+Received: from pdx1-sub0-mail-a218 (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id B5C8940C06;
-        Fri,  7 Oct 2022 17:37:14 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1665164234; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id 217106C13AD;
+        Fri,  7 Oct 2022 18:37:00 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1665167820; a=rsa-sha256;
         cv=none;
-        b=FHtu83oSdXCDZDD4Z2wvp03vCOKi9d4x3wRsCeVR8CR7gC3+hSfCLtnhfCQn5P0Kd6kQdc
-        zVO64xj6T35MVBkHEKOsSLW0xda3CmdaCEqBpb6STT/8MfvHHk3sFqNjjdrZ1/AqGBJ+TR
-        D4v+YF8iG+BS+XU2dCJooOeMgdoxHEOQIuWt5DT9LKRA4W/eoD1uToiIhveFqk628bEUgn
-        mnNk/71K2W3tMRYc0gk2xxpYf/kXR4hEsjNJ4clcawdiYuvYlwIGPo/dFSOKYAxpYx5Xiu
-        /DSmsnX3Zh0aEnWvC3xfgm3oErsylEwLOHTQ+HYb2t54i/Ln50ZsVnyw634Zcg==
+        b=T8TTrLfsxub5Sldpq125VeHTJDg8NZkXdu/FtC4L9jOM2nc5cHlnHURgdZBHUrNVoM5tk8
+        D86xYJU70a90pOBAD8J46bqXgdbRpE+HyoVHUa1wngOaAg90hrQDipDWiYctb4N6CxG9u1
+        O/s8PUTghG9kQ3AiIwBTHssPeeyRMpFKMYqNOT9MlOjoT67OmK0hCndPHZ46vOcaq4F3aM
+        7YmgR0dUbYS2shBbfK0VWnoVxT4cwJNj3m2vs6fBBKhj+s3JUMJb+nxw+4hKYgBHbwIeQI
+        R0AH1p1Uldlfb1bSukdHctvb07g3nU2ECXu45qmgConLYRBEML2/XEkuGqEp2g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1665164234;
+        s=arc-2022; t=1665167820;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=x+MECLbchDnnXtnWCT/h9QTt+h/pBUOWL9FPfzdzFzs=;
-        b=oayIjTs38F5nGvmtankPdR3hJ+1VNAEelBmYOHQX5rs15NnypfZ3aK2ShtnkKTB0eLIDKM
-        Csfx81IoH+JUn1/gsKhELKvjKAwq+3KP24V2KED/l5nq1CY/aEK81IhX2082RZBQca3D13
-        ArQix25tcsa+svEU2gqlFfZw3QYdo/ZgsTF23cD30Uv9O7hQsTVRwfg/FdGoo0uoinC6Lc
-        VM7AJLs1Ra0IWQ9lJVHig5QbB7hwzCh+7/rbXNwGyBFIusN6mJKsMOqA84TVIolfOA9skv
-        gqV/3nKG9kN+ToDcPbXKGMGiJTUOaNxbvGXBRDhOWsBTcURL6nmxYbmLG1uMmQ==
+        bh=31cY904QFEvmfcAAsvwyeUqiZ/49j6nOzymPMZsDZ/s=;
+        b=sdKhZBWYSGrEUhaxtu0bjERQvF2MG+sePsa9LcLKPpf5M7RRrnar5LVkPQm5B/SyBIQ3wx
+        HPLAt10KZlNBmZW6zGTobqc/Z5tqEQhdkFGL1KYPoFGQ5irZENQFHDzEbRSLMBeMTbZ9en
+        YUsUoKJz56CJJQKoflG+YvBG639+YRgM3gmbfV+9EmqZKbe0vSuS5N1NBmtdbm4SamCN/n
+        uFJh8HjW8JL16L6P23LCx4+p9buXJ1B0txsecMCMRIqdMkoCErtViZudJTIjjO91AgO+nZ
+        wTaQn3SG0Abp+ePNFeNH9sxvTizF0f26SmefjcT2OXLTgXgqjsUA3FB2j1Io4w==
 ARC-Authentication-Results: i=1;
-        rspamd-7c485dd8cf-pkd76;
+        rspamd-755f899884-6m66d;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Illustrious-Blushing: 0555657c0b976e19_1665164235026_2779162955
-X-MC-Loop-Signature: 1665164235025:1003967718
-X-MC-Ingress-Time: 1665164235025
-Received: from pdx1-sub0-mail-a245 (pop.dreamhost.com [64.90.62.162])
+X-Battle-Bored: 58e986521b46a821_1665167820515_3553219686
+X-MC-Loop-Signature: 1665167820515:2070812966
+X-MC-Ingress-Time: 1665167820514
+Received: from pdx1-sub0-mail-a218 (pop.dreamhost.com [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.122.234.207 (trex/6.7.1);
-        Fri, 07 Oct 2022 17:37:15 +0000
+        by 100.97.34.80 (trex/6.7.1);
+        Fri, 07 Oct 2022 18:37:00 +0000
 Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a245 (Postfix) with ESMTPSA id 4Mkb955hL0z1G;
-        Fri,  7 Oct 2022 10:37:13 -0700 (PDT)
+        by pdx1-sub0-mail-a218 (Postfix) with ESMTPSA id 4MkcTx3pdkz63;
+        Fri,  7 Oct 2022 11:36:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1665164234;
-        bh=x+MECLbchDnnXtnWCT/h9QTt+h/pBUOWL9FPfzdzFzs=;
+        s=dreamhost; t=1665167814;
+        bh=MvStcbMf5Wa2KZtZXLZR3Fgd2EtzLBtlC8MvwUU2FvQ=;
         h=Date:From:To:Cc:Subject:Content-Type;
-        b=HBN4ZlSIUleyAJ+U9vHrdPMYyuPbrdamCzm4U1H+2+yAd6l5uiKOsQ1HqjUyQ18O1
-         bjolOCabxqgSPFZSWU6VbiDrFTBfS1Gz0KtxQfAD/PbrBxBZOP4ZRrAMTX/K6N3gyg
-         kE6i34ahm82PzHW0IPBZxZll9P0mtqo0OEFDdvrLL3uhcI0EwaSClf7aXdkhd2lNfW
-         LLShv8b751IujdXFl3NRyRSlkNoNOGcjHqb/z75HxwmFsqGlr+qoKqqpXzYKVBayEa
-         Z/2CZXfjKBQWYbqeGA4Xv3pkju7O8hw1R37Ujfue3WTXX7Rib0LquUkAPLdyT5Mb7x
-         J0pdsSOZ7gzbQ==
-Date:   Fri, 7 Oct 2022 10:16:39 -0700
+        b=jW21RdokcU00elsXYDpYfKEEy+1KN9iYT8St1GKwaIuJlJ9LN4bPbuIUHqCl0oWLz
+         W9MdalesJOofIqK+dpqBC20Y1vKAgL7n6MSZLYVvKAbfeGJJWba7jjnbANBmWBudkv
+         UMV78Ia7/DssL0B4xVVcnkKYKv0FuS/qOKrA88XRAYn0PMRVpZcDrZ70T27hT1LFiy
+         03ymSHGEgMogVSyFpmC1qi/Bz5mqr1ZdacT15MLH/xyL6s3MUAii8xlGFIgZABQ7WP
+         Hliy68DKPPY4tk+VGhNqMEFB/86AjWLyw7NLdzybdCp+m/W+1pW8E89xPo2Q3wZVCU
+         V0Wrp5DZ2H+zQ==
+Date:   Fri, 7 Oct 2022 11:16:19 -0700
 From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Gregory Price <gourry.memverge@gmail.com>
-Cc:     qemu-devel@nongnu.org, jonathan.cameron@huawei.com,
-        linux-cxl@vger.kernel.org, alison.schofield@intel.com,
-        a.manzanares@samsung.com, bwidawsk@kernel.org,
-        Gregory Price <gregory.price@memverge.com>
-Subject: Re: [PATCH 1/2] hw/cxl: set cxl-type3 device type to
- PCI_CLASS_MEMORY_CXL
-Message-ID: <20221007171639.ermnneauop2m6zau@offworld>
-References: <20221006233702.18532-1-gregory.price@memverge.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Gregory Price <gourry.memverge@gmail.com>, qemu-devel@nongnu.org,
+        linux-cxl@vger.kernel.org,
+        Alison Schofield <alison.schofield@intel.com>,
+        "a.manzanares@samsung.com" <a.manzanares@samsung.com>,
+        Ben Widawsky <bwidawsk@kernel.org>
+Subject: Re: [PATCH RFC] hw/cxl: type 3 devices can now present volatile or
+ persistent memory
+Message-ID: <20221007181619.gumcab46ftnvhwbi@offworld>
+References: <20221006000103.49542-1-gregory.price@memverge.com>
+ <20221006094557.000035ab@huawei.com>
+ <20221006095007.00001271@huawei.com>
+ <Yz75ppPOwYCvNamy@fedora>
+ <20221006174214.000059c7@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20221006233702.18532-1-gregory.price@memverge.com>
+In-Reply-To: <20221006174214.000059c7@huawei.com>
 User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 06 Oct 2022, Gregory Price wrote:
+On Thu, 06 Oct 2022, Jonathan Cameron wrote:
+>> 3) Upstream linux drivers haven't touched ram configurations yet.  I
+>> just configured this with Dan Williams yesterday on IRC.  My
+>> understanding is that it's been worked on but nothing has been
+>> upstreamed, in part because there are only a very small set of devices
+>> available to developers at the moment.
+>
+>There was an offer of similar volatile memory QEMU emulation in the
+>session on QEMU CXL at Linux Plumbers.  That will look something like you have
+>here and maybe reflects that someone has hardware as well...
 
->Current code sets to STORAGE_EXPRESS and then overrides it.
+Yeah, putting this back together was on my todo list, but happy to see
+patches are out. Recollecting my thoughts on this, my original approach
+was also to support only volatile or persistent capacities, but through
+two backends, and thus two address spaces. Afaik the last idea that was
+discussed on IRC in this regard was to do it with a single backend along
+with a pmem_offset=N boundary (0 or 100% for example for one type or the
+other) tunnable.
 
-Good catch.
+...
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+>> Seems a little odd to use two memory backends.  Of what use is it to the
+>> software developers, it should be completely transparent to them, right?
+>>
+>> The only thing I can think of is maybe reset mechanics for volatile
+>> regions being set differently than persistent regions, but even then it
+>> seems simple enough to just emulate the behavior and use a single
+>> backing device.
+>
+>It's a very convenient path as lets us define sizes and things from the
+>actual memdev rather than duplicating all the configuration in multiple
+>devices.  If it weren't for the ability to change the allocations at runtime
+>I'd definitely say this was the best path.  That corner makes it complex
+>but I'd still like the simplicity of you throw a backend at the device
+>and we set up all the description on basis that backend is what we want
+>to use.
 
->
->Signed-off-by: Gregory Price <gregory.price@memverge.com>
->---
-> hw/mem/cxl_type3.c | 3 +--
-> 1 file changed, 1 insertion(+), 2 deletions(-)
->
->diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
->index ada2108fac..1837c1c83a 100644
->--- a/hw/mem/cxl_type3.c
->+++ b/hw/mem/cxl_type3.c
->@@ -146,7 +146,6 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
->     }
->
->     pci_config_set_prog_interface(pci_conf, 0x10);
->-    pci_config_set_class(pci_conf, PCI_CLASS_MEMORY_CXL);
->
->     pcie_endpoint_cap_init(pci_dev, 0x80);
->     cxl_cstate->dvsec_offset = 0x100;
->@@ -335,7 +334,7 @@ static void ct3_class_init(ObjectClass *oc, void *data)
->
->     pc->realize = ct3_realize;
->     pc->exit = ct3_exit;
->-    pc->class_id = PCI_CLASS_STORAGE_EXPRESS;
->+    pc->class_id = PCI_CLASS_MEMORY_CXL;
->     pc->vendor_id = PCI_VENDOR_ID_INTEL;
->     pc->device_id = 0xd93; /* LVF for now */
->     pc->revision = 1;
->-- 
->2.37.3
->
+Agreed.
+
+...
+
+>> > > >  Example command lines
+>> > > >  ---------------------
+>> > > > -A very simple setup with just one directly attached CXL Type 3 device::
+>> > > > +A very simple setup with just one directly attached CXL Type 3 Persistent Memory device::
+>> > > >
+>> > > >    qemu-system-aarch64 -M virt,gic-version=3,cxl=on -m 4g,maxmem=8G,slots=8 -cpu max \
+>> > > >    ...
+>> > > > @@ -308,7 +308,18 @@ A very simple setup with just one directly attached CXL Type 3 device::
+>> > > >    -object memory-backend-file,id=cxl-lsa1,share=on,mem-path=/tmp/lsa.raw,size=256M \
+>> > > >    -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
+>> > > >    -device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
+>> > > > -  -device cxl-type3,bus=root_port13,memdev=cxl-mem1,lsa=cxl-lsa1,id=cxl-pmem0 \
+>> > > > +  -device cxl-type3,bus=root_port13,pmem=true,memdev=cxl-mem1,lsa=cxl-lsa1,id=cxl-pmem0 \
+
+So regardless of the interface we end up with, volatile and lsa parameters
+should be mutually exclusive.
+
+Thanks,
+Davidlohr
