@@ -2,318 +2,163 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FA1C433FE
-	for <linux-cxl@archiver.kernel.org>; Fri,  7 Oct 2022 21:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEE2C433FE
+	for <linux-cxl@archiver.kernel.org>; Mon, 10 Oct 2022 10:30:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229782AbiJGVSS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 7 Oct 2022 17:18:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60512 "EHLO
+        id S230499AbiJJKa2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 10 Oct 2022 06:30:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229785AbiJGVSN (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 7 Oct 2022 17:18:13 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31D36748D5;
-        Fri,  7 Oct 2022 14:17:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ejuzAXQkc0BlbN45fAgXkMC6WlFO5sG6kN4vU2ADZs0pYSn6wIF3gha+5AlMBP7FLziT541Qu84UFnlFt6F6ldzFF79bziDdE/N3qGx1fGcKMNSFuLYPx5JSHTuDiF+wV+s4kuUuRR5Q+yggUdTH1ZmhM+ik69V/QThtHcu0cIlmkcY9uB8f3+3w29LvyL9uk2RjgRNreSf5kf4xCfCxOUSPdZUQmV2xTkL5Vm+aiYMlrZSbiLVVuWbcDFI3PcqFsmFKShoS0W1myHzZ5I5xfn0X1nuhWix75gfWTiWzMe8WHeXzAc2i1pWiJZ8lrVb7WtCGSimIbICw/vIePXeupg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wqgIgG7eFAKdQN7WKusA92r6fEvTgZv9MIcqCXqScpA=;
- b=HGtufid1Vg+QWcql8N+6dEtUuMKFvnmN0TOpwG+HVerQoMUPR+jQF3eGVC1QXKC7Epo65/hwFmjrPnk2e6EQ41NGZGCiFLoaG14aJ5vt4rmzVK8AZv6KTe15wOHupUEdG+lXejUsx6j7ZgUz6VYjV2rhC2t8oPMEYt/5vfTx74mREu1jORnyD6E5OatV6kykFo5NDLMjCEgIxGkezHLZp+eVGgPZBKpM3BYrhAuNUwOPfsvFVVwtJiXzqIulKlmxJnf7wY+OhLeRrNFs0v9Q9HykhsNcfKAy2OV65DWH792f5fvQaibD0dUog9pZD7FUuajroLNeO5kKcvfz+pVrmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wqgIgG7eFAKdQN7WKusA92r6fEvTgZv9MIcqCXqScpA=;
- b=VCU+C/uO5nbg5CLRw96058OjZvH4aOvVWvGuvrU/2Ed/JD7HNkSxzqMlhyeVobgBe6aNCDTL9sV+eyNXs2LMIBIe59SnysnVifMg2EKq4BRN/3m+VbpBNnUUm8FkXU1z4poWE6+Q80Xo7hTHx2y/gIhIZVKhe7S4Q6ID5PpXeho=
-Received: from BN8PR04CA0028.namprd04.prod.outlook.com (2603:10b6:408:70::41)
- by BL1PR12MB5303.namprd12.prod.outlook.com (2603:10b6:208:317::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5709.15; Fri, 7 Oct
- 2022 21:17:29 +0000
-Received: from BN8NAM11FT090.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:70:cafe::fd) by BN8PR04CA0028.outlook.office365.com
- (2603:10b6:408:70::41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5709.15 via Frontend
- Transport; Fri, 7 Oct 2022 21:17:29 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT090.mail.protection.outlook.com (10.13.177.105) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5709.10 via Frontend Transport; Fri, 7 Oct 2022 21:17:29 +0000
-Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Fri, 7 Oct
- 2022 16:17:28 -0500
-From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-To:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
+        with ESMTP id S231853AbiJJKa1 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 10 Oct 2022 06:30:27 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1167012AE5
+        for <linux-cxl@vger.kernel.org>; Mon, 10 Oct 2022 03:30:23 -0700 (PDT)
+Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MmFXQ0Mymz6HHqk;
+        Mon, 10 Oct 2022 18:29:42 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 10 Oct 2022 12:30:20 +0200
+Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 10 Oct
+ 2022 11:30:20 +0100
+Date:   Mon, 10 Oct 2022 11:30:18 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Robert Richter" <rrichter@amd.com>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        "Terry Bowman" <terry.bowman@amd.com>,
-        Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Subject: [PATCH 1/2] efi/cper, cxl: Decode CXL Protocol Error Section
-Date:   Fri, 7 Oct 2022 21:17:13 +0000
-Message-ID: <20221007211714.71129-2-Smita.KoralahalliChannabasappa@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20221007211714.71129-1-Smita.KoralahalliChannabasappa@amd.com>
-References: <20221007211714.71129-1-Smita.KoralahalliChannabasappa@amd.com>
+        <linux-cxl@vger.kernel.org>,
+        Huai-Cheng Kuo <hchkuo@avery-design.com.tw>,
+        Chris Browy <cbrowy@avery-design.com>
+CC:     <ira.weiny@intel.com>
+Subject: Re: [PATCH v7 0/5] QEMU PCIe DOE for PCIe 4.0/5.0 and CXL 2.0
+Message-ID: <20221010112940.00003fc9@huawei.com>
+In-Reply-To: <20221007152156.24883-1-Jonathan.Cameron@huawei.com>
+References: <20221007152156.24883-1-Jonathan.Cameron@huawei.com>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT090:EE_|BL1PR12MB5303:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6e09a3de-cc06-4e6e-dc57-08daa8a9576c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9ayJSA04obPQqRVr40JW2XTN6dZagPLPP955XVyOuQH3e3Phj9fNsjHJpusZ1qkx98kxf5/k5ib1Ujbd9NbzqN22JGVE6UZKXOLFDoGLiHz0IVJbb3zs8GeIKPY6uBfNDNcUyWpNMN5h7ifg27JeY7zP8ND1cNTFe/wy5Z+gcOv7F09NhXlGqzYehdqetk9BrSvsFNvMYCmwkasRjC3AOrZR2FcFa0hISVAYKE8m1BCGrCq6sRPoTvWZ4haIQP00i3aseeabxqsseQctvtThbNvUzU+1JHmHA3d1fuDNa6vITDnAmymw2k2bTLCHPrFwWj3CYAywrZ8biz2Ezfw4ROqJsM2ZbI4f3+Uej9EJGpEMh0ZI/1J8hjqqGS6XJ0dz9qXTv8YB/BZfC3dk/LMt4YJA4XjVgvTI/c5iOn9mxxPbistGljPomTOgdLzZLwujVJbKkXWvIsKcagglvOREUtWax9QaX3+Jp7z418UUg5P7rJk8VgPSah+dvxDHrtZrcHhvS+5yJpOM7a18ZiaNtidWrrDGoQlgJzUuuu7aG3PelqTp5MHwaMy41lQJHTwl20UR/OADn9OfDTUUA4aOEGaI+hUbYq6KzUPCrO6QfYvtNdKzO94agEAsQBDkI4PqYBhfu3+710Gl0G2fL/+S4Cr0XOYGZl0mEyRVkcGDY7wsIhA5t0LysA9R2CfmbLKWkEyNG4DEw1b2/dMOaPhfWblHBHO2PZIFVTh/h+GsIcSI16GptE5Fbub4wOT3gSBw470MydJWSNBTYz8xwZ+NKYRuR679SFv1qL4dN641J4g=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(376002)(39860400002)(346002)(396003)(136003)(451199015)(36840700001)(46966006)(40470700004)(6666004)(54906003)(110136005)(86362001)(82310400005)(8936002)(36756003)(5660300002)(8676002)(478600001)(41300700001)(316002)(70586007)(70206006)(4326008)(36860700001)(2616005)(82740400003)(40460700003)(40480700001)(356005)(81166007)(26005)(7696005)(83380400001)(47076005)(336012)(186003)(426003)(1076003)(16526019)(2906002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Oct 2022 21:17:29.5569
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e09a3de-cc06-4e6e-dc57-08daa8a9576c
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT090.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5303
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.42]
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add support for decoding CXL Protocol Error Section as defined in UEFI 2.9
-Section N.2.13.
+On Fri, 7 Oct 2022 16:21:51 +0100
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-Do the section decoding in a new cper_cxl.c file. This new file will be
-used in the future for more CXL CPERs decode support. Add this to the
-existing UEFI_CPER config.
+> Whilst I have carried on Huai-Cheng Kuo's series version numbering and
+> naming, there have been very substantial changes since v6 so I would
+> suggest fresh review makes sense for anyone who has looked at this before.
+> In particularly if the Avery design folks could check I haven't broken
+> anything that would be great.
 
-Decode only the fields that are useful to parse the error.
+I forgot to run checkpatch on these and there is some white space that
+will need cleaning up and one instance of missing brackets.
+As that doesn't greatly affect review, I'll wait for a few days to see
+if there is other feedback to incorporate in v8.
 
-Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
----
- drivers/firmware/efi/Makefile   |  2 +-
- drivers/firmware/efi/cper.c     |  9 ++++
- drivers/firmware/efi/cper_cxl.c | 87 +++++++++++++++++++++++++++++++++
- drivers/firmware/efi/cper_cxl.h | 58 ++++++++++++++++++++++
- 4 files changed, 155 insertions(+), 1 deletion(-)
- create mode 100644 drivers/firmware/efi/cper_cxl.c
- create mode 100644 drivers/firmware/efi/cper_cxl.h
+Sorry for the resulting noise!
 
-diff --git a/drivers/firmware/efi/Makefile b/drivers/firmware/efi/Makefile
-index 8d151e332584..4f332de54173 100644
---- a/drivers/firmware/efi/Makefile
-+++ b/drivers/firmware/efi/Makefile
-@@ -19,7 +19,7 @@ endif
- obj-$(CONFIG_EFI_PARAMS_FROM_FDT)	+= fdtparams.o
- obj-$(CONFIG_EFI_ESRT)			+= esrt.o
- obj-$(CONFIG_EFI_VARS_PSTORE)		+= efi-pstore.o
--obj-$(CONFIG_UEFI_CPER)			+= cper.o
-+obj-$(CONFIG_UEFI_CPER)			+= cper.o cper_cxl.o
- obj-$(CONFIG_EFI_RUNTIME_MAP)		+= runtime-map.o
- obj-$(CONFIG_EFI_RUNTIME_WRAPPERS)	+= runtime-wrappers.o
- subdir-$(CONFIG_EFI_STUB)		+= libstub
-diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-index e4e5ea7ce910..181deb9af527 100644
---- a/drivers/firmware/efi/cper.c
-+++ b/drivers/firmware/efi/cper.c
-@@ -24,6 +24,7 @@
- #include <linux/bcd.h>
- #include <acpi/ghes.h>
- #include <ras/ras_event.h>
-+#include "cper_cxl.h"
+These are now available at
+https://gitlab.com/jic23/qemu/-/commits/cxl-2022-10-09
+along with a bunch of other CXL features:
+* Compliance DOE protocol
+* SPDM / CMA over DOE supprot
+* ARM64 support in general.
+* Various small emulation additions.
+* CPMU support
+
+I'll add a few more features to similarly named branches over the next
+week or so including initial support for standalone switch CCI mailboxes.
+
+Jonathan
  
- /*
-  * CPER record ID need to be unique even after reboot, because record
-@@ -595,6 +596,14 @@ cper_estatus_print_section(const char *pfx, struct acpi_hest_generic_data *gdata
- 			cper_print_fw_err(newpfx, gdata, fw_err);
- 		else
- 			goto err_section_too_small;
-+	} else if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR)) {
-+		struct cper_sec_prot_err *prot_err = acpi_hest_get_payload(gdata);
-+
-+		printk("%ssection_type: CXL Protocol Error\n", newpfx);
-+		if (gdata->error_data_length >= sizeof(*prot_err))
-+			cper_print_prot_err(newpfx, prot_err);
-+		else
-+			goto err_section_too_small;
- 	} else {
- 		const void *err = acpi_hest_get_payload(gdata);
- 
-diff --git a/drivers/firmware/efi/cper_cxl.c b/drivers/firmware/efi/cper_cxl.c
-new file mode 100644
-index 000000000000..e5f48f0de1a4
---- /dev/null
-+++ b/drivers/firmware/efi/cper_cxl.c
-@@ -0,0 +1,87 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * UEFI Common Platform Error Record (CPER) support for CXL Section.
-+ *
-+ * Copyright (C) 2022 Advanced Micro Devices, Inc.
-+ *
-+ * Author: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-+ */
-+
-+#include <linux/cper.h>
-+#include "cper_cxl.h"
-+
-+#define PROT_ERR_VALID_AGENT_TYPE		BIT_ULL(0)
-+#define PROT_ERR_VALID_AGENT_ADDRESS		BIT_ULL(1)
-+#define PROT_ERR_VALID_DEVICE_ID		BIT_ULL(2)
-+#define PROT_ERR_VALID_SERIAL_NUMBER		BIT_ULL(3)
-+#define PROT_ERR_VALID_CAPABILITY		BIT_ULL(4)
-+#define PROT_ERR_VALID_DVSEC			BIT_ULL(5)
-+
-+static const char * const prot_err_agent_type_strs[] = {
-+	"Restricted CXL Device",
-+	"Restricted CXL Host DP",
-+};
-+
-+enum {
-+	RCD,
-+	RCH_DP,
-+};
-+
-+void cper_print_prot_err(const char *pfx, const struct cper_sec_prot_err *prot_err)
-+{
-+	if (prot_err->valid_bits & PROT_ERR_VALID_AGENT_TYPE)
-+		pr_info("%s agent_type: %d, %s\n", pfx, prot_err->agent_type,
-+			prot_err->agent_type < ARRAY_SIZE(prot_err_agent_type_strs)
-+			? prot_err_agent_type_strs[prot_err->agent_type]
-+			: "unknown");
-+
-+	if (prot_err->valid_bits & PROT_ERR_VALID_AGENT_ADDRESS) {
-+		switch (prot_err->agent_type) {
-+		case RCD:
-+			pr_info("%s agent_address: %04x:%02x:%02x.%x\n",
-+				pfx, prot_err->segment, prot_err->bus,
-+				prot_err->device, prot_err->function);
-+			break;
-+		case RCH_DP:
-+			pr_info("%s rcrb_base_address: 0x%016llx\n", pfx,
-+				prot_err->agent_addr);
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+
-+	if (prot_err->valid_bits & PROT_ERR_VALID_DEVICE_ID) {
-+		const __u8 *class_code;
-+
-+		switch (prot_err->agent_type) {
-+		case RCD:
-+			pr_info("%s slot: %d\n", pfx,
-+				prot_err->device_id.slot >> CPER_PCIE_SLOT_SHIFT);
-+			pr_info("%s vendor_id: 0x%04x, device_id: 0x%04x\n",
-+				pfx, prot_err->device_id.vendor_id,
-+				prot_err->device_id.device_id);
-+			pr_info("%s sub_vendor_id: 0x%04x, sub_device_id: 0x%04x\n",
-+				pfx, prot_err->device_id.sub_vendor_id,
-+				prot_err->device_id.sub_device_id);
-+			class_code = prot_err->device_id.class_code;
-+			pr_info("%s class_code: %02x%02x\n", pfx,
-+				class_code[1], class_code[0]);
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+
-+	if (prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER) {
-+		switch (prot_err->agent_type) {
-+		case RCD:
-+			pr_info("%s lower_dw: 0x%08x, upper_dw: 0x%08x\n", pfx,
-+				prot_err->dev_serial_num.lower_dw,
-+				prot_err->dev_serial_num.upper_dw);
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+}
-diff --git a/drivers/firmware/efi/cper_cxl.h b/drivers/firmware/efi/cper_cxl.h
-new file mode 100644
-index 000000000000..f924d96e4bb2
---- /dev/null
-+++ b/drivers/firmware/efi/cper_cxl.h
-@@ -0,0 +1,58 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * UEFI Common Platform Error Record (CPER) support for CXL Section.
-+ *
-+ * Copyright (C) 2022 Advanced Micro Devices, Inc.
-+ *
-+ * Author: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-+ */
-+
-+#ifndef LINUX_CPER_CXL_H
-+#define LINUX_CPER_CXL_H
-+
-+/* CXL Protocol Error Section */
-+#define CPER_SEC_CXL_PROT_ERR						\
-+	GUID_INIT(0x80B9EFB4, 0x52B5, 0x4DE3, 0xA7, 0x77, 0x68, 0x78,	\
-+		  0x4B, 0x77, 0x10, 0x48)
-+
-+#pragma pack(1)
-+
-+/* Compute Express Link Protocol Error Section, UEFI v2.9 sec N.2.13 */
-+struct cper_sec_prot_err {
-+	u64			valid_bits;
-+	u8			agent_type;
-+	u8			reserved[7];
-+	union {
-+		u64		agent_addr;
-+		struct {
-+			u8	function;
-+			u8	device;
-+			u8	bus;
-+			u16	segment;
-+			u8	reserved_1[3];
-+		};
-+	};
-+	struct {
-+		u16		vendor_id;
-+		u16		device_id;
-+		u16		sub_vendor_id;
-+		u16		sub_device_id;
-+		u8		class_code[2];
-+		u16		slot;
-+		u8		reserved_1[4];
-+	}			device_id;
-+	struct {
-+		u32		lower_dw;
-+		u32		upper_dw;
-+	}			dev_serial_num;
-+	u8			capability[60];
-+	u16			dvsec_len;
-+	u16			err_len;
-+	u8			reserved_2[4];
-+};
-+
-+#pragma pack()
-+
-+void cper_print_prot_err(const char *pfx, const struct cper_sec_prot_err *prot_err);
-+
-+#endif //__CPER_CXL_
--- 
-2.17.1
+> 
+> For reference v6: QEMU PCIe DOE for PCIe 4.0/5.0 and CXL 2.0
+> https://lore.kernel.org/qemu-devel/1623330943-18290-1-git-send-email-cbrowy@avery-design.com/
+> 
+> Summary of changes:
+> 1) Linux headers definitions for DOE are now upstream so drop that patch.
+> 2) Add CDAT for switch upstream port.
+> 3) Generate 'plausible' default CDAT tables when a file is not provided.
+> 4) General refactoring to calculate the correct table sizes and allocate
+>    based on that rather than copying from a local static array.
+> 5) Changes from earlier reviews such as matching QEMU type naming style.
+> 6) Moved compliance and SPDM usecases to future patch sets.
+> 
+> Sign-offs on these are complex because the patches were originally developed
+> by Huai-Cheng Kuo, but posted by Chris Browy and then picked up by Jonathan
+> Cameron who made substantial changes.
+> 
+> Huai-Cheng Kuo / Chris Browy, please confirm you are still happy to maintain this
+> code as per the original MAINTAINERS entry.
+> 
+> What's here?
+> 
+> This series brings generic PCI Express Data Object Exchange support (DOE)
+> DOE is defined in the PCIe Base Spec r6.0. It consists of a mailbox in PCI
+> config space via a PCIe Extended Capability Structure.
+> The PCIe spec defines several protocols (including one to discover what
+> protocols a given DOE instance supports) and other specification such as
+> CXL define additional protocols using their own vendor IDs.
+> 
+> In this series we make use of the DOE to support the CXL spec defined
+> Table Access Protocol, specifically to provide access to CDAT - a
+> table specified in a specification that is hosted by the UEFI forum
+> and is used to provide runtime discoverability of the sort of information
+> that would otherwise be available in firmware tables (memory types,
+> latency and bandwidth information etc).
+> 
+> The Linux kernel gained support for DOE / CDAT on CXL type 3 EPs in 6.0.
+> The version merged did not support interrupts (earlier versions did
+> so that support in the emulation was tested a while back).
+> 
+> This series provides CDAT emulation for CXL switch upstream ports
+> and CXL type 3 memory devices. Note that to exercise the switch support
+> additional Linux kernel patches are needed.
+> https://lore.kernel.org/linux-cxl/20220503153449.4088-1-Jonathan.Cameron@huawei.com/
+> (I'll post a new version of that support shortly)
+> 
+> Additional protocols will be supported by follow on patch sets:
+> * CXL compliance protocol.
+> * CMA / SPDM device attestation.
+> (Old version at https://gitlab.com/jic23/qemu/-/commits/cxl-next - will refresh
+> that tree next week)
+> 
+> Huai-Cheng Kuo (3):
+>   hw/pci: PCIe Data Object Exchange emulation
+>   hw/cxl/cdat: CXL CDAT Data Object Exchange implementation
+>   hw/mem/cxl-type3: Add CXL CDAT Data Object Exchange
+> 
+> Jonathan Cameron (2):
+>   hw/mem/cxl-type3: Add MSIX support
+>   hw/pci-bridge/cxl-upstream: Add a CDAT table access DOE
+> 
+>  MAINTAINERS                    |   7 +
+>  hw/cxl/cxl-cdat.c              | 222 ++++++++++++++++++++
+>  hw/cxl/meson.build             |   1 +
+>  hw/mem/cxl_type3.c             | 236 +++++++++++++++++++++
+>  hw/pci-bridge/cxl_upstream.c   | 182 +++++++++++++++-
+>  hw/pci/meson.build             |   1 +
+>  hw/pci/pcie_doe.c              | 367 +++++++++++++++++++++++++++++++++
+>  include/hw/cxl/cxl_cdat.h      | 166 +++++++++++++++
+>  include/hw/cxl/cxl_component.h |   7 +
+>  include/hw/cxl/cxl_device.h    |   3 +
+>  include/hw/cxl/cxl_pci.h       |   1 +
+>  include/hw/pci/pci_ids.h       |   3 +
+>  include/hw/pci/pcie.h          |   1 +
+>  include/hw/pci/pcie_doe.h      | 123 +++++++++++
+>  include/hw/pci/pcie_regs.h     |   4 +
+>  15 files changed, 1323 insertions(+), 1 deletion(-)
+>  create mode 100644 hw/cxl/cxl-cdat.c
+>  create mode 100644 hw/pci/pcie_doe.c
+>  create mode 100644 include/hw/cxl/cxl_cdat.h
+>  create mode 100644 include/hw/pci/pcie_doe.h
+> 
 
