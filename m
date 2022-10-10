@@ -2,42 +2,46 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38180C433F5
-	for <linux-cxl@archiver.kernel.org>; Mon, 10 Oct 2022 16:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BABE2C433F5
+	for <linux-cxl@archiver.kernel.org>; Mon, 10 Oct 2022 16:21:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229773AbiJJQMB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 10 Oct 2022 12:12:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33466 "EHLO
+        id S229701AbiJJQVG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 10 Oct 2022 12:21:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229811AbiJJQMA (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 10 Oct 2022 12:12:00 -0400
+        with ESMTP id S229446AbiJJQVD (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 10 Oct 2022 12:21:03 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25C4E2CDF1
-        for <linux-cxl@vger.kernel.org>; Mon, 10 Oct 2022 09:11:59 -0700 (PDT)
-Received: from fraeml701-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MmP5Y1Vq0z67ykV;
-        Tue, 11 Oct 2022 00:10:25 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E513838A1B
+        for <linux-cxl@vger.kernel.org>; Mon, 10 Oct 2022 09:21:00 -0700 (PDT)
+Received: from fraeml701-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MmPJz5BkNz67qjY;
+        Tue, 11 Oct 2022 00:20:19 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
  fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.31; Mon, 10 Oct 2022 18:11:56 +0200
+ 15.1.2375.31; Mon, 10 Oct 2022 18:20:58 +0200
 Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 10 Oct
- 2022 17:11:56 +0100
-Date:   Mon, 10 Oct 2022 17:11:54 +0100
+ 2022 17:20:58 +0100
+Date:   Mon, 10 Oct 2022 17:20:57 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <vishal.l.verma@intel.com>,
-        <ira.weiny@intel.com>, <alison.schofield@intel.com>,
-        Bobo WL <lmw.bobo@gmail.com>
-Subject: Re: [PATCH] cxl/region: Fix null pointer dereference due to pass
- through decoder commit
-Message-ID: <20221010171132.000028f1@huawei.com>
-In-Reply-To: <20220819093133.00006c22@huawei.com>
-References: <20220818164210.2084-1-Jonathan.Cameron@huawei.com>
-        <62fedb421d71f_11e5e3294bd@dwillia2-xfh.jf.intel.com.notmuch>
-        <20220819093133.00006c22@huawei.com>
+To:     Jonathan Cameron via <qemu-devel@nongnu.org>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Bobo WL <lmw.bobo@gmail.com>, <linux-cxl@vger.kernel.org>,
+        <qemu-arm@nongnu.org>
+Subject: Re: [BUG] cxl can not create region
+Message-ID: <20221010172057.00001559@huawei.com>
+In-Reply-To: <20220819094655.000005ed@huawei.com>
+References: <CAGr_yG0UrfJAMWta3EkR1F0JZ4j--sig74p6vKL3K6TZDx9YGA@mail.gmail.com>
+        <62f132aee401b_1b3c294c@dwillia2-xfh.jf.intel.com.notmuch>
+        <CAGr_yG389Bm_NL8CLgo_ZkGd4staocNENbtb-ULVA5vh_ywmcw@mail.gmail.com>
+        <62f27a8e9acb6_1f18b294e2@dwillia2-xfh.jf.intel.com.notmuch>
+        <62f5a2ffe8be0_3ce68294a4@dwillia2-xfh.jf.intel.com.notmuch>
+        <20220817171619.000021ca@huawei.com>
+        <20220818173740.00007f02@huawei.com>
+        <20220819094655.000005ed@huawei.com>
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
@@ -50,99 +54,133 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 19 Aug 2022 09:31:33 +0100
+On Fri, 19 Aug 2022 09:46:55 +0100
 Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-> On Thu, 18 Aug 2022 17:37:22 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
+> On Thu, 18 Aug 2022 17:37:40 +0100
+> Jonathan Cameron via <qemu-devel@nongnu.org> wrote:
 > 
-> > Jonathan Cameron wrote:  
-> > > Not all decoders have a commit callback.
-> > > 
-> > > The CXL specification allows a host bridge with a single root port to
-> > > have no explicit HDM decoders. Currently we assumes there are none.
-> > > As such we create a special pass through decoder instance without
-> > > a commit callback.
-> > > 
-> > > Prior to this patch, the commit callback was called unconditionally.
-> > > Thus a configuration with 1 Host Bridge, 1 Root Port, 1 switch with
-> > > multiple downstream ports below which there are multiple CXL type 3
-> > > devices results in a situation where committing the region causes
-> > > a null pointer dereference.
-> > > 
-> > > Reported-by: Bobo WL <lmw.bobo@gmail.com>
-> > > Fixes: 176baefb2eb5 ("cxl/hdm: Commit decoder state to hardware")
-> > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > ---
-> > > 
-> > > We could fix this with a stub function perhaps as an alternative?    
-> > 
-> > How about keep the callback mandatory except for the passthrough switch
-> > case?  
-> 
-> Should work, but makes it messier if we do add support for HDM decoders
-> in the pass through case (which I'm 90% + sure we will have once actual
-> platforms appear - we regularly have PCIe host bridges that on a particular
-> platform have one RP and on other platforms expose multiple - it's just a
-> wiring question - I doubt we'll bother hiding the HDMs given the spec
-> allows for them to be there in this case and it adds complexity to the
-> design to hide them).
-> 
-> Keeping the cxlsd->nr_targets > 1 check in one place would be my preference
-> or adding a wrapper. e.g.
-> is_passthrough_decoder()
-> that we can change easily later.
-> 
-> Either way, focus now is getting fix in, can change how it's done
-> later.  So I'm fine with either fix.
-> 
-> Jonathan
-> 
-> 
-
-Hi Dan,
-
-I forgot to test your suggestion. Now done and it works as expected.
-
-One comment below.
-
-Given this is now your code, do you want to send the patch or is it
-easier if I do so?
- 
-> 
-> 
-> > 
-> > Something like this (untested):
-> > 
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index 401148016978..b1137f6dc2d1 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -172,11 +172,17 @@ static int cxl_region_decode_commit(struct cxl_region *cxlr)
-> >                 /* commit bottom up */
-> >                 for (iter = cxled_to_port(cxled); !is_cxl_root(iter);
-> >                      iter = to_cxl_port(iter->dev.parent)) {
-> > +                       struct cxl_switch_decoder *cxlsd = NULL;
-> > +
-> >                         cxl_rr = cxl_rr_load(iter, cxlr);
-> >                         cxld = cxl_rr->decoder;
-> > -                       rc = cxld->commit(cxld);
-> > -                       if (rc)
-> > -                               break;
-> > +                       if (is_switch_decoder(&cxld->dev))
-> > +                               cxlsd = to_cxl_switch_decoder(&cxld->dev);
-> > +                       if (cxld->commit || cxlsd && cxlsd->nr_targets > 1) {
-
-I'd add brackets around the (cxlsd && cxlsd->nr_targets > 1) 
-just to stop forgetful people like me having to check the precedence ordering..
- 
-> > +                               rc = cxld->commit(cxld);
-> > +                               if (rc)
-> > +                                       break;
-> > +                       }
-> >                 }
-> >  
-> >                 if (rc) {
+> > On Wed, 17 Aug 2022 17:16:19 +0100
+> > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 > >   
+> > > On Thu, 11 Aug 2022 17:46:55 -0700
+> > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > >     
+> > > > Dan Williams wrote:      
+> > > > > Bobo WL wrote:        
+> > > > > > Hi Dan,
+> > > > > > 
+> > > > > > Thanks for your reply!
+> > > > > > 
+> > > > > > On Mon, Aug 8, 2022 at 11:58 PM Dan Williams <dan.j.williams@intel.com> wrote:        
+> > > > > > >
+> > > > > > > What is the output of:
+> > > > > > >
+> > > > > > >     cxl list -MDTu -d decoder0.0
+> > > > > > >
+> > > > > > > ...? It might be the case that mem1 cannot be mapped by decoder0.0, or
+> > > > > > > at least not in the specified order, or that validation check is broken.        
+> > > > > > 
+> > > > > > Command "cxl list -MDTu -d decoder0.0" output:        
+> > > > > 
+> > > > > Thanks for this, I think I know the problem, but will try some
+> > > > > experiments with cxl_test first.        
+> > > > 
+> > > > Hmm, so my cxl_test experiment unfortunately passed so I'm not
+> > > > reproducing the failure mode. This is the result of creating x4 region
+> > > > with devices directly attached to a single host-bridge:
+> > > > 
+> > > > # cxl create-region -d decoder3.5 -w 4 -m -g 256 mem{12,10,9,11} -s $((1<<30))
+> > > > {
+> > > >   "region":"region8",
+> > > >   "resource":"0xf1f0000000",
+> > > >   "size":"1024.00 MiB (1073.74 MB)",
+> > > >   "interleave_ways":4,
+> > > >   "interleave_granularity":256,
+> > > >   "decode_state":"commit",
+> > > >   "mappings":[
+> > > >     {
+> > > >       "position":3,
+> > > >       "memdev":"mem11",
+> > > >       "decoder":"decoder21.0"
+> > > >     },
+> > > >     {
+> > > >       "position":2,
+> > > >       "memdev":"mem9",
+> > > >       "decoder":"decoder19.0"
+> > > >     },
+> > > >     {
+> > > >       "position":1,
+> > > >       "memdev":"mem10",
+> > > >       "decoder":"decoder20.0"
+> > > >     },
+> > > >     {
+> > > >       "position":0,
+> > > >       "memdev":"mem12",
+> > > >       "decoder":"decoder22.0"
+> > > >     }
+> > > >   ]
+> > > > }
+> > > > cxl region: cmd_create_region: created 1 region
+> > > >       
+> > > > > Did the commit_store() crash stop reproducing with latest cxl/preview
+> > > > > branch?        
+> > > > 
+> > > > I missed the answer to this question.
+> > > > 
+> > > > All of these changes are now in Linus' tree perhaps give that a try and
+> > > > post the debug log again?      
+> > > 
+> > > Hi Dan,
+> > > 
+> > > I've moved onto looking at this one.
+> > > 1 HB, 2RP (to make it configure the HDM decoder in the QEMU HB, I'll tidy that up
+> > > at some stage), 1 switch, 4 downstream switch ports each with a type 3
+> > > 
+> > > I'm not getting a crash, but can't successfully setup a region.
+> > > Upon adding the final target
+> > > It's failing in check_last_peer() as pos < distance.
+> > > Seems distance is 4 which makes me think it's using the wrong level of the heirarchy for
+> > > some reason or that distance check is wrong.
+> > > Wasn't a good idea to just skip that step though as it goes boom - though
+> > > stack trace is not useful.    
+> > 
+> > Turns out really weird corruption happens if you accidentally back two type3 devices
+> > with the same memory device. Who would have thought it :)
+> > 
+> > That aside ignoring the check_last_peer() failure seems to make everything work for this
+> > topology.  I'm not seeing the crash, so my guess is we fixed it somewhere along the way.
+> > 
+> > Now for the fun one.  I've replicated the crash if we have
+> > 
+> > 1HB 1*RP 1SW, 4SW-DSP, 4Type3
+> > 
+> > Now, I'd expect to see it not 'work' because the QEMU HDM decoder won't be programmed
+> > but the null pointer dereference isn't related to that.
+> > 
+> > The bug is straight forward.  Not all decoders have commit callbacks... Will send out
+> > a possible fix shortly.
+> >   
+> For completeness I'm carrying this hack because I haven't gotten my head
+> around the right fix for check_last_peer() failing on this test topology.
 > 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index c49d9a5f1091..275e143bd748 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -978,7 +978,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+>                                 rc = check_last_peer(cxled, ep, cxl_rr,
+>                                                      distance);
+>                                 if (rc)
+> -                                       return rc;
+> +                                       //      return rc;
+>                                 goto out_target_set;
+>                         }
+>                 goto add_target;
 
+I'm still carrying this hack and still haven't worked out the right fix.
+
+Suggestions welcome!  If not I'll hopefully get some time on this
+towards the end of the week.
+
+Jonathan
