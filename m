@@ -2,88 +2,102 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A58F2C433FE
-	for <linux-cxl@archiver.kernel.org>; Tue, 11 Oct 2022 15:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB95CC433FE
+	for <linux-cxl@archiver.kernel.org>; Tue, 11 Oct 2022 16:45:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229639AbiJKPvO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 11 Oct 2022 11:51:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56928 "EHLO
+        id S229468AbiJKQpm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 11 Oct 2022 12:45:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229808AbiJKPuk (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 11 Oct 2022 11:50:40 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9EAE26B
-        for <linux-cxl@vger.kernel.org>; Tue, 11 Oct 2022 08:46:09 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id n18-20020a17090ade9200b0020b0012097cso1813006pjv.0
-        for <linux-cxl@vger.kernel.org>; Tue, 11 Oct 2022 08:46:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rlTXHFhe0HKoNEa5fPIFMDAeUvr6Q820R5cRXfzpG6Q=;
-        b=VwILFHeo+EMz1mW/rR9QnsvWyuHMcqHwUFuwU4lB2GhsPHbAmXOfUxjiqGU4Vo8d+p
-         WlLwbDC97dMCHzs7PB6/zFVaFaTO7hKpa+XEzLeCGnPfjuxokSejcu+G7rpO3NpRZNtu
-         Gf/kJWLvxS0Hmv6po8NotJM2l/XyarIj6upNtlKetSVht7NRrcymyEgLVSNyEH3Iut+D
-         IREi03xDEzbSzoNwpU76bBRIK51/rHZfGn1GCc/CKG2uRsLfxpwnRd0lPdSP/V028ROX
-         tAIPBpaGZknVig1+FpNTkAD36SOIU6T14KrCcdUhVveZ6A8zJDIz77JmmjsIM4nraYwB
-         6Tew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rlTXHFhe0HKoNEa5fPIFMDAeUvr6Q820R5cRXfzpG6Q=;
-        b=A9uZhmsw5hMgY5kI0qAEAyoKIMd/mNbGYNe9ufz8sWuTxFX5Kr83tQIxD2BIvLxUeo
-         toPrIUq8689Bdycp3UoU5+u2pPMn+E+yU/+V5wQpi/9raBT2uPSWiwv9pTG6EP8UEZcb
-         sufqrIi4p9cQ+/RgchQRifZbC2nSL0aTZbOJPi9HprBbzCwuUQrWh7fEGPcvVR306B/Q
-         +crq2Zc9XqWyVd9z85kd5lpHNHc7ZSOw12LnDv05XZ+8RQ1NrwI9y6iOE4jBXYDcIUic
-         uoMKBTs5ypr6w2fV5TSexiOs+Kubr5dNhz0tDhlEW0VBdu2/tVYbz0pY/80BD8WxLHs1
-         CNdg==
-X-Gm-Message-State: ACrzQf1fPaAl4TqMdVgE612OwtNBF0jtUZgKSlhuXXXSkSK9VyRfHtAO
-        k5fjV/C3YDmPNpHQgim7I/6KDhmlgVPINRIGGyhRxA==
-X-Google-Smtp-Source: AMsMyM61cCjneqZQAFxHWbkMdOKyOoi/2Q648R5lt6yN0cWMNdtDceoNhBPBiBvclaklCXMGy4/u7j5R93Ob8AenNME=
-X-Received: by 2002:a17:902:aa8b:b0:178:8f1d:6936 with SMTP id
- d11-20020a170902aa8b00b001788f1d6936mr25088243plr.168.1665503169346; Tue, 11
- Oct 2022 08:46:09 -0700 (PDT)
+        with ESMTP id S229541AbiJKQpl (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 11 Oct 2022 12:45:41 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C75DA4B9B
+        for <linux-cxl@vger.kernel.org>; Tue, 11 Oct 2022 09:45:40 -0700 (PDT)
+Received: from fraeml744-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Mn1mV4DRVz688jH;
+        Wed, 12 Oct 2022 00:42:50 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ fraeml744-chm.china.huawei.com (10.206.15.225) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 11 Oct 2022 18:45:37 +0200
+Received: from localhost (10.81.205.66) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 11 Oct
+ 2022 17:45:37 +0100
+Date:   Tue, 11 Oct 2022 17:45:34 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <alison.schofield@intel.com>,
+        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+        <bwidawsk@kernel.org>, <dan.j.williams@intel.com>
+Subject: Re: [PATCH] cxl: check decoder count for end device
+Message-ID: <20221011174534.000072bb@huawei.com>
+In-Reply-To: <166326546707.3348078.8667496731861557941.stgit@djiang5-desk3.ch.intel.com>
+References: <166326546707.3348078.8667496731861557941.stgit@djiang5-desk3.ch.intel.com>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <20221010222944.3923556-1-ira.weiny@intel.com> <20221010222944.3923556-2-ira.weiny@intel.com>
- <CAFEAcA9yVKWCZ-PhCbHqpaEW7Tgtqoo=wSQLy6=U5yfq2uVfPA@mail.gmail.com> <05ed1f6a-0771-798c-408b-272fb57b4582@linaro.org>
-In-Reply-To: <05ed1f6a-0771-798c-408b-272fb57b4582@linaro.org>
-From:   Peter Maydell <peter.maydell@linaro.org>
-Date:   Tue, 11 Oct 2022 16:45:57 +0100
-Message-ID: <CAFEAcA-M_4Srp2=9OwG81DGCxo08fJRnxBY6+NEUn6j1idiB7Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/6] qemu/bswap: Add const_le64()
-To:     Richard Henderson <richard.henderson@linaro.org>
-Cc:     ira.weiny@intel.com, Michael Tsirkin <mst@redhat.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        qemu-devel@nongnu.org, linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.81.205.66]
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 11 Oct 2022 at 16:22, Richard Henderson
-<richard.henderson@linaro.org> wrote:
-> On 10/11/22 02:48, Peter Maydell wrote:
-> > This is kind of a weird API, because:
-> >   * it only exists for little-endian, not big-endian
-> >   * we use it in exactly two files (linux-user/elfload.c and
-> >     hw/input/virtio-input-hid.c)
-> >
-> > which leaves me wondering if there's a better way of doing
-> > it that I'm missing. But maybe it's just that we never filled
-> > out the missing bits of the API surface because we haven't
-> > needed them yet. Richard ?
->
-> It's piecemeal because, as you note, very few places require a version of byte swapping
-> that must be applicable to static data.  I certainly don't want to completely fill this
-> out and have most of it remain unused.
+On Thu, 15 Sep 2022 11:11:07 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-Makes sense. In that case, other than ordering the definitions
-64-32-16,
+> CXL spec rev3.0 8.2.4.19.1 added definition for up to 32 decoders. It also
+> indicates that for devices, only 10 decoders should be advertised. Add
+> check on number of decoders greater than 10 for devices and reset to 10 to
+> force spec compliance.
+> 
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Hi Dave
 
-Reviewed-by: Peter Maydell <peter.maydell@linaro.org>
+Seems reasonable.  I'm a bit curious to whether there is an actual problem if
+a device is spec non compliant and advertises more decoders?
 
-thanks
--- PMM
+Either way does no harm and might let us know something fishy is happening.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> ---
+>  drivers/cxl/core/hdm.c |   16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index d1d2caea5c62..1919d99d157e 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -71,9 +71,23 @@ EXPORT_SYMBOL_NS_GPL(devm_cxl_add_passthrough_decoder, CXL);
+>  static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
+>  {
+>  	u32 hdm_cap;
+> +	int decoder_count;
+> +	struct device *dev = &cxlhdm->port->dev;
+>  
+>  	hdm_cap = readl(cxlhdm->regs.hdm_decoder + CXL_HDM_DECODER_CAP_OFFSET);
+> -	cxlhdm->decoder_count = cxl_hdm_decoder_count(hdm_cap);
+> +	decoder_count = cxl_hdm_decoder_count(hdm_cap);
+> +	/*
+> +	 * CXL spec rev3.0 8.2.4.19.1 indicates CXL devices shall not advertise
+> +	 * more than 10 decoders. Switches and Host Bridges may advertise up to
+> +	 * 32 decoders. Set the decoders to 10 for devices if more than 10 are
+> +	 * found.
+> +	 */
+> +	if (is_cxl_endpoint(cxlhdm->port) && decoder_count > 10) {
+> +		dev_warn(dev, "Reset decoders count (%d) to 10, spec violation!\n",
+> +			 decoder_count);
+> +		decoder_count = 10;
+> +	}
+> +	cxlhdm->decoder_count = decoder_count;
+>  	cxlhdm->target_count =
+>  		FIELD_GET(CXL_HDM_DECODER_TARGET_COUNT_MASK, hdm_cap);
+>  	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_11_8, hdm_cap))
+> 
+> 
+
