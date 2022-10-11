@@ -2,141 +2,136 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 882D4C433F5
-	for <linux-cxl@archiver.kernel.org>; Tue, 11 Oct 2022 17:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46318C4332F
+	for <linux-cxl@archiver.kernel.org>; Tue, 11 Oct 2022 21:19:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229838AbiJKRdZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 11 Oct 2022 13:33:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45040 "EHLO
+        id S229508AbiJKVT4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 11 Oct 2022 17:19:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230029AbiJKRdE (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 11 Oct 2022 13:33:04 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D467E4D268
-        for <linux-cxl@vger.kernel.org>; Tue, 11 Oct 2022 10:30:07 -0700 (PDT)
-Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Mn2m004pbz6893p;
-        Wed, 12 Oct 2022 01:27:28 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 11 Oct 2022 19:29:01 +0200
-Received: from localhost (10.81.205.66) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 11 Oct
- 2022 18:29:00 +0100
-Date:   Tue, 11 Oct 2022 18:28:58 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Gregory Price <gregory.price@memverge.com>
-CC:     Davidlohr Bueso <dave@stgolabs.net>,
-        Gregory Price <gourry.memverge@gmail.com>,
-        <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        "a.manzanares@samsung.com" <a.manzanares@samsung.com>,
-        Ben Widawsky <bwidawsk@kernel.org>
-Subject: Re: [PATCH RFC] hw/cxl: type 3 devices can now present volatile or
- persistent memory
-Message-ID: <20221011182858.00005215@huawei.com>
-In-Reply-To: <Y0WmYNcVHhVHeyH+@memverge.com>
-References: <20221006094557.000035ab@huawei.com>
-        <20221006095007.00001271@huawei.com>
-        <Yz75ppPOwYCvNamy@fedora>
-        <20221006174214.000059c7@huawei.com>
-        <Yz8QlQ9yLFrWxWsN@fedora>
-        <CAD3UvdT1ZHJDaqj05C+n7t4rM7yhjZyM6fooXAfG12rAYnBqmw@mail.gmail.com>
-        <20221010161809.00006f8e@huawei.com>
-        <Y0Q5a2Wx3qFB2eKI@memverge.com>
-        <Y0TFg6198AHKjfux@memverge.com>
-        <20221011171438.fwlgobgaegns3p7t@offworld>
-        <Y0WmYNcVHhVHeyH+@memverge.com>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S229520AbiJKVTz (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 11 Oct 2022 17:19:55 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E8C21B9D1
+        for <linux-cxl@vger.kernel.org>; Tue, 11 Oct 2022 14:19:53 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id z18so9792722qvn.6
+        for <linux-cxl@vger.kernel.org>; Tue, 11 Oct 2022 14:19:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sINKuKOEiCIa2vTfT03+2MwDHadp410OQVmZv4nahEQ=;
+        b=JS6ro4eUzOk5m8PvhdpkI8lEQazk4kTsWazJK/19fHWcvoFvPqEQ9g/MsEbN3GSO1t
+         7LleBBuov8J0It2JsFh/80VOc7dmAhTQ/x5CfZjBwOQcrJe9AazjwsRNO5eAr/7jNc4B
+         y/RvNxKv5G1wtCQS9XwYLwWO+oPI6wkrv2/kNCzdLIo3MtCSgoqTQDCs6Kv6ZjYCmsnO
+         rNXO/8qtY52Ip2pdfRgUYw72K6TB3Rroayp5nCXAHjPze9rMuimyGUhGYDB0KvzIS6P2
+         aQcNZClR7d7Mp3bX9hWXj7wg5AifIrd4d7/yLtbKWp0yJcrqs8skoQ0f0N0SWmHD8F+b
+         CivQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sINKuKOEiCIa2vTfT03+2MwDHadp410OQVmZv4nahEQ=;
+        b=fVBEmz87l6LjbvL4i07GbyorN5k4wRi9Dd71Ge4olDq95gMA4J0nVg1Ux1dEfNjBQe
+         D1c7eNaBy7NqiV53tuyqFmI1g/KcrVaEIBUFbKy8ZI30L3smu2cgB0pqmA7Gzk0X4aBO
+         T3E+Rlvu94aURMmsMo6DA6Melmo9IF9LwtAkyFvjytpn3EfOeLBbQF6vf5cAOti6U+px
+         Ee6XBioELRUcAATKGTZd/eO7eAjbYYQ0tdX39IPhjWGHclZZ7s68UDLG7jOWXjBoAxIX
+         w+c7AR8NE5fxhR6OF9rGuU8Gq0NVlD62o0B7Aa+AUj4hJixuqvvxCOcpO8b8ZAvMYjhl
+         lWjQ==
+X-Gm-Message-State: ACrzQf093RXR+KgH9moR9j3Bk0lCKJz3W1zFfeIiTj4IeRbxMPYaSOWF
+        Io7lepAqyXxZApj7VjQytQ==
+X-Google-Smtp-Source: AMsMyM6xWK8SW1sM8jvBB7Dboe/AwAeyLQA71qPNTgf5hzfxjiqGycnQBoUoYzVPLczCY0lLZdqK1g==
+X-Received: by 2002:ad4:5e85:0:b0:4b1:ab8f:41d6 with SMTP id jl5-20020ad45e85000000b004b1ab8f41d6mr20799887qvb.73.1665523192821;
+        Tue, 11 Oct 2022 14:19:52 -0700 (PDT)
+Received: from fedora.mshome.net (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id y21-20020a05620a44d500b006b8f4ade2c9sm14493164qkp.19.2022.10.11.14.19.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Oct 2022 14:19:52 -0700 (PDT)
+From:   Gregory Price <gourry.memverge@gmail.com>
+X-Google-Original-From: Gregory Price <gregory.price@memverge.com>
+To:     jonathan.cameron@huawei.com
+Cc:     qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
+        alison.schofield@intel.com, dave@stgolabs.net,
+        a.manzanares@samsung.com, bwidawsk@kernel.org,
+        gregory.price@memverge.com, mst@redhat.com,
+        hchkuo@avery-design.com.tw, cbrowy@avery-design.com,
+        ira.weiny@intel.com
+Subject: [PATCH 0/5] Multi-Region and Volatile Memory support for CXL Type-3 Devices
+Date:   Tue, 11 Oct 2022 17:19:11 -0400
+Message-Id: <20221011211916.117552-1-gregory.price@memverge.com>
+X-Mailer: git-send-email 2.37.3
+In-Reply-To: <20221007152156.24883-1-Jonathan.Cameron@huawei.com>
+References: <20221007152156.24883-1-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.205.66]
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 11 Oct 2022 13:22:40 -0400
-Gregory Price <gregory.price@memverge.com> wrote:
+Summary of Changes:
+1) Correction of PCI_CLASS from STORAGE_EXPRESS to MEMORY_CXL on init
+2) Add CXL_CAPACITY_MULTIPLIER definition to replace magic numbers
+3) Refactor CDAT DSMAS Initialization for multi-region initialization
+4) Multi-Region and Volatile Memory support for CXL Type-3 Devices
+5) Test and Documentation updates
 
-> I'll push the patches to qemu-cxl and linux-cxl today or tomorrow, I
-> wanted to get them into a state on gitlab for Jonathan to rebase and
-> merge into his work.  He'll likely end up pushing the entire series at
-> the end of the day.
-> 
-> Will update the tests/docs accordingly.
-> 
-> re: changelog - i'm new to mailing list contributions, where would these
-> go exactly?
+Developed with input from Jonathan Cameron and Davidloh Bueso.
 
-Two places - in the cover letter, and under the ---
-in the individual patches.  
+This series brings 2 features to CXL Type-3 Devices:
+    1) Volatile Memory Region support
+    2) Multi-Region support (1 Volatile, 1 Persistent)
 
-At this stage I'm not super fussed by tests because there won't be
-anything visible beyond 'does it crash'.  Don't think we will be affecting
-the ACPI table test results for example.  Good to change to the proposed
-new command line for persistent memdev though.
+In this series we implement multi-region and volatile region support
+through 6 major changes to CXL devices
+    1) The HostMemoryBackend [hostmem] has been replaced by two
+       [hostvmem] and [hostpmem] to store volatile and persistent memory
+       respectively
+    2) The single AddressSpace has been replaced by two AddressSpaces
+       [hostvmem_as] and [hostpmem_as] to map respective memdevs.
+    3) Each memory region size and total region are stored separately
+    4) The CDAT and DVSEC memory map entries have been updated:
+       a) if vmem is present, vmem is mapped at DPA(0)
+       b) if pmem is present
+          i)  and vmem is present, pmem is mapped at DPA(vmem->size)
+          ii) else, pmem is mapped at DPA(0)
+       c) partitioning of pmem is not supported in this patch set but
+          has been discussed and this design should suffice.
+    5) Read/Write functions have been updated to access AddressSpaces
+       according to the mapping described in #4
+    6) cxl-mailbox has been updated to report the respective size of
+       volatile and persistent memory regions
 
-Definitely good to get some testing in place for this longer term but
-our whole strategy for that is a bit adhoc for now because tooling isn't
-yet commonly available in distros etc (and I for one haven't looked
-at what is is necessary yet!)
+CXL Spec (3.0) Section 8.2.9.8.2.0 - Get Partition Info
+  Active Volatile Memory
+    The device shall provide this volatile capacity starting at DPA 0
+  Active Persistent Memory
+    The device shall provide this persistent capacity starting at the
+    DPA immediately following the volatile capacity
 
-Was pointed out to me last week that the docs currently give arm64 examples
-and we don't have upstream arm64 support yet :( 
+Partitioning of Persistent Memory regions may be supported on following
+patch sets.
 
-The wonders of partial pickup of patch sets!
+Submitted as an extention to the CDAT emulation because the CDAT DSMAS
+entry concerns memory mapping and is required to successfully map memory
+regions correctly in bios/efi.
 
-Thanks,
+Gregory Price (5):
+  hw/cxl: set cxl-type3 device type to PCI_CLASS_MEMORY_CXL
+  hw/cxl: Add CXL_CAPACITY_MULTIPLIER definition
+  hw/mem/cxl_type: Generalize CDATDsmas initialization for Memory
+    Regions
+  hw/cxl: Multi-Region CXL Type-3 Devices (Volatile and Persistent)
+  cxl: update tests and documentation for new cxl properties
 
-Jonathan
+ docs/system/devices/cxl.rst |  53 ++++-
+ hw/cxl/cxl-mailbox-utils.c  |  23 +-
+ hw/mem/cxl_type3.c          | 449 +++++++++++++++++++++++-------------
+ include/hw/cxl/cxl_device.h |  11 +-
+ tests/qtest/cxl-test.c      |  81 ++++++-
+ 5 files changed, 416 insertions(+), 201 deletions(-)
 
-> 
-> 
-> On Tue, Oct 11, 2022 at 10:14:38AM -0700, Davidlohr Bueso wrote:
-> > On Mon, 10 Oct 2022, Gregory Price wrote:
-> >   
-> > > I've pushed 5 new commits to this branch here (@Jonathan I've also made
-> > > a merge request to pull them into your branch).
-> > > 
-> > > https://gitlab.com/gourry.memverge/qemu/-/commits/cxl-2022-10-09  
-> > 
-> > This series could perhaps be posted as a reply to the CDAT extensions
-> > cover letter. But regardless, at some point it should be in linux-cxl@.
-> >   
-> > > 
-> > > They're built on top of Jonathan's extensions for the CDAT since the
-> > > CDAT has memory region relevant entries and trying to do this separate
-> > > would be unwise.
-> > > 
-> > > 1/5: PCI_CLASS_MEMORY_CXL patch
-> > > 2/5: CXL_CAPACITY_MULTIPLIER pullout patch (@Davidlohr request)  
-> > 
-> > Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
-> > 
-> > However this needs a changelog; for however redundant it may be.
-> >   
-> > > 3/5: Generalizes CDATDsmas intialization ahead of multi-region  
-> >   
-> > > 4/5: Multi-region support w/ backward compatibility
-> > >     * Requires extra eyes for CDAT and Read/Write Change Validation*  
-> > 
-> > I'm still eyeballing this but it certainly looks much more complete now -
-> > at least with the minimal support I was hoping for.
-> >   
-> > > 5/5: Test and documentation update  
-> > 
-> > I think that there should two examples here with volatile and LSA usage.
-> > The first is without as it is quite unintuitive otherwise, then a
-> > second example with specifying the lba. Also in these cases you want
-> > id=cxl-vmem0. And the documentation should be updated to mention that
-> > memdev is deprecated and {persistent/volatile}-memdev should be used.
-> > 
-> > Thanks,
-> > Davidlohr  
+-- 
+2.37.3
 
