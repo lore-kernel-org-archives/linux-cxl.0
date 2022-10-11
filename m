@@ -2,134 +2,119 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A08C433F5
-	for <linux-cxl@archiver.kernel.org>; Tue, 11 Oct 2022 09:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C899C4332F
+	for <linux-cxl@archiver.kernel.org>; Tue, 11 Oct 2022 09:48:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229590AbiJKJkg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 11 Oct 2022 05:40:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60480 "EHLO
+        id S229538AbiJKJsX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 11 Oct 2022 05:48:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229745AbiJKJkO (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 11 Oct 2022 05:40:14 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06FC640BCB
-        for <linux-cxl@vger.kernel.org>; Tue, 11 Oct 2022 02:40:11 -0700 (PDT)
-Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MmrLz5LJvz6H75x;
-        Tue, 11 Oct 2022 17:38:35 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 11 Oct 2022 11:40:08 +0200
-Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 11 Oct
- 2022 10:40:07 +0100
-Date:   Tue, 11 Oct 2022 10:40:06 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Michael Tsirkin <mst@redhat.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, <qemu-devel@nongnu.org>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/6] QEMU CXL Provide mock CXL events and irq
- support
-Message-ID: <20221011104006.0000217f@huawei.com>
-In-Reply-To: <20221010222944.3923556-1-ira.weiny@intel.com>
-References: <20221010222944.3923556-1-ira.weiny@intel.com>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S229486AbiJKJsV (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 11 Oct 2022 05:48:21 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C470A8B2D3
+        for <linux-cxl@vger.kernel.org>; Tue, 11 Oct 2022 02:48:18 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id i3so3477420pfc.11
+        for <linux-cxl@vger.kernel.org>; Tue, 11 Oct 2022 02:48:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=OzApLwxIYuEtnBDrd0GiQ2Z/nulp+/dYzIs6PEq4pUE=;
+        b=D3ZzYlPZ112n+0eBJn7XFXREfMH2CIa0l4WQewkRNQK3RENuIbbdivEsnG+ynOCRPs
+         9FnMSIOXg3CF6Ud6sAjIylKWlnIn0L83VDLKnaxWCwsm8Uun1uWxeaZkINxoYanNyaib
+         PEUYfUqZcUMoMMDbO56rOs/Ye56in3nFLQ2XJBH/f8GxQox76x0mapx9+NBnjTDtt32O
+         OnswdJ4QCwWH2C1zbpFwROWr9AjDTh5gyBglHRrodL9emU9sbWmww+wAHfFztFbZFZKr
+         l/SUUEuYb/0c7Si1QFXHPI3VFPxFaDaqjo1X1i3T8ZhEVSc5w+ZrHoTi4/UPWStMEB/b
+         5gXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OzApLwxIYuEtnBDrd0GiQ2Z/nulp+/dYzIs6PEq4pUE=;
+        b=h1+J3RQvTEe6ELYHZuE+czr2f5c6WZYnzo4VuNBRCHEYNzvPrujW9q5RQNbTENUAbZ
+         QpLolzaI7avAWMl2IFYWQ7W8HhVRfElqL/leqjNQXh0N3cglKBWQt8sJGA3k5A2BizRn
+         pigeH8UF3zEVL02j0w5lGVNrdEHSpHNwDqETFo4N8p97Jvn7Bhz0EJoWd0qZzTnVvf/x
+         bS0ApX14NW+D3tVZSddtXjXkjlVqxQCDcnasiVg46ewVgqCvHP39XxGTsqpPd0tB3Eig
+         xilL3h0lxJ6us9v9x7AQVDi5u+KrblzBhm0F8S6GMTL4sGEqEcVVukOynTEGKukooDz4
+         kb/A==
+X-Gm-Message-State: ACrzQf3BtrT7TjK79BTj9+PzBh3CqMkepHgd9vTvS9Qo/eS7xeMafAym
+        IVCl3fuu98A3bLm3CobfE9a6KGTEfKTREWEDP+BlxA==
+X-Google-Smtp-Source: AMsMyM7KMEI5Tabse6Iws4nW+Os0RZ03aFqkiPQZx/oXEFUibmUqNHcnjzP3PxGiaKYa7RhWC7fpuyKsCsZ6Gw7g6v0=
+X-Received: by 2002:a63:9043:0:b0:458:6003:30ee with SMTP id
+ a64-20020a639043000000b00458600330eemr20999795pge.231.1665481698189; Tue, 11
+ Oct 2022 02:48:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+References: <20221010222944.3923556-1-ira.weiny@intel.com> <20221010222944.3923556-2-ira.weiny@intel.com>
+In-Reply-To: <20221010222944.3923556-2-ira.weiny@intel.com>
+From:   Peter Maydell <peter.maydell@linaro.org>
+Date:   Tue, 11 Oct 2022 10:48:06 +0100
+Message-ID: <CAFEAcA9yVKWCZ-PhCbHqpaEW7Tgtqoo=wSQLy6=U5yfq2uVfPA@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/6] qemu/bswap: Add const_le64()
+To:     ira.weiny@intel.com
+Cc:     Michael Tsirkin <mst@redhat.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
+        Richard Henderson <richard.henderson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 10 Oct 2022 15:29:38 -0700
-ira.weiny@intel.com wrote:
-
+On Mon, 10 Oct 2022 at 23:48, <ira.weiny@intel.com> wrote:
+>
 > From: Ira Weiny <ira.weiny@intel.com>
-> 
-> CXL Event records inform the OS of various CXL device events.  Thus far CXL
-> memory devices are emulated and therefore don't naturally have events which
-> will occur.
-> 
-> Add mock events and a HMP trigger mechanism to facilitate guest OS testing of
-> event support.
-> 
-> This support requires a follow on version of the event patch set.  The RFC was
-> submitted and discussed here:
-> 
-> 	https://lore.kernel.org/linux-cxl/20220813053243.757363-1-ira.weiny@intel.com/
-> 
-> I'll post the lore link to the new version shortly.
-> 
-> Instructions for running this test.
-> 
-> Add qmp option to qemu:
-> 
-> 	<host> $ qemu-system-x86_64 ... -qmp unix:/tmp/run_qemu_qmp_0,server,nowait ...
-> 
-> 	OR
-> 
-> 	<host> $ run_qemu.sh ... --qmp ...
-> 
-> Enable tracing of events within the guest:
-> 
-> 	<guest> $ echo "" > /sys/kernel/tracing/trace
-> 	<guest> $ echo 1 > /sys/kernel/tracing/events/cxl/enable
-> 	<guest> $ echo 1 > /sys/kernel/tracing/tracing_on
-> 
-> Trigger event generation and interrupts in the host:
-> 
-> 	<host> $ echo "cxl_event_inject cxl-devX" | qmp-shell -H /tmp/run_qemu_qmp_0
-> 
-> 	Where X == one of the memory devices; cxl-dev0 should work.
-> 
-> View events on the guest:
-> 
-> 	<guest> $ cat /sys/kernel/tracing/trace
+>
+> Gcc requires constant versions of cpu_to_le* calls.
+>
+> Add a 64 bit version.
+>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ---
+>  include/qemu/bswap.h | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/include/qemu/bswap.h b/include/qemu/bswap.h
+> index 346d05f2aab3..08e607821102 100644
+> --- a/include/qemu/bswap.h
+> +++ b/include/qemu/bswap.h
+> @@ -192,10 +192,20 @@ CPU_CONVERT(le, 64, uint64_t)
+>       (((_x) & 0x0000ff00U) <<  8) |              \
+>       (((_x) & 0x00ff0000U) >>  8) |              \
+>       (((_x) & 0xff000000U) >> 24))
+> +# define const_le64(_x)                          \
+> +    ((((_x) & 0x00000000000000ffU) << 56) |      \
+> +     (((_x) & 0x000000000000ff00U) << 40) |      \
+> +     (((_x) & 0x0000000000ff0000U) << 24) |      \
+> +     (((_x) & 0x00000000ff000000U) <<  8) |      \
+> +     (((_x) & 0x000000ff00000000U) >>  8) |      \
+> +     (((_x) & 0x0000ff0000000000U) >> 24) |      \
+> +     (((_x) & 0x00ff000000000000U) >> 40) |      \
+> +     (((_x) & 0xff00000000000000U) >> 56))
 
-Hi Ira,
+Can you add this in the right place, ie above the const_le32()
+definition, please ?
 
-Why is this an RFC rather than a patch set to apply?
+>  # define const_le16(_x)                          \
+>      ((((_x) & 0x00ff) << 8) |                    \
+>       (((_x) & 0xff00) >> 8))
+>  #else
+> +# define const_le64(_x) (_x)
+>  # define const_le32(_x) (_x)
+>  # define const_le16(_x) (_x)
+>  #endif
 
-It's useful to have that in the cover letter so we can focus on what
-you want comments on (rather than simply review).
+This is kind of a weird API, because:
+ * it only exists for little-endian, not big-endian
+ * we use it in exactly two files (linux-user/elfload.c and
+   hw/input/virtio-input-hid.c)
 
-Thanks,
+which leaves me wondering if there's a better way of doing
+it that I'm missing. But maybe it's just that we never filled
+out the missing bits of the API surface because we haven't
+needed them yet. Richard ?
 
-Jonathan
-
-> 
-> 
-> Ira Weiny (6):
->   qemu/bswap: Add const_le64()
->   qemu/uuid: Add UUID static initializer
->   hw/cxl/cxl-events: Add CXL mock events
->   hw/cxl/mailbox: Wire up get/clear event mailbox commands
->   hw/cxl/cxl-events: Add event interrupt support
->   hw/cxl/mailbox: Wire up Get/Set Event Interrupt policy
-> 
->  hmp-commands.hx             |  14 ++
->  hw/cxl/cxl-device-utils.c   |   1 +
->  hw/cxl/cxl-events.c         | 330 ++++++++++++++++++++++++++++++++++++
->  hw/cxl/cxl-host-stubs.c     |   5 +
->  hw/cxl/cxl-mailbox-utils.c  | 224 +++++++++++++++++++++---
->  hw/cxl/meson.build          |   1 +
->  hw/mem/cxl_type3.c          |   7 +-
->  include/hw/cxl/cxl_device.h |  22 +++
->  include/hw/cxl/cxl_events.h | 194 +++++++++++++++++++++
->  include/qemu/bswap.h        |  10 ++
->  include/qemu/uuid.h         |  12 ++
->  include/sysemu/sysemu.h     |   3 +
->  12 files changed, 802 insertions(+), 21 deletions(-)
->  create mode 100644 hw/cxl/cxl-events.c
->  create mode 100644 include/hw/cxl/cxl_events.h
-> 
-> 
-> base-commit: 6f7f81898e4437ea544ee4ca24bef7ec543b1f06
-
+thanks
+-- PMM
