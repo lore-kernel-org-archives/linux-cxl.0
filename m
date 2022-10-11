@@ -2,300 +2,213 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D9AC4332F
-	for <linux-cxl@archiver.kernel.org>; Tue, 11 Oct 2022 21:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15098C433FE
+	for <linux-cxl@archiver.kernel.org>; Tue, 11 Oct 2022 21:30:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229520AbiJKVUg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 11 Oct 2022 17:20:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36026 "EHLO
+        id S229489AbiJKVa5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 11 Oct 2022 17:30:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229612AbiJKVUf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 11 Oct 2022 17:20:35 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98A694F3AB
-        for <linux-cxl@vger.kernel.org>; Tue, 11 Oct 2022 14:20:33 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id i9so9792731qvu.1
-        for <linux-cxl@vger.kernel.org>; Tue, 11 Oct 2022 14:20:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J70hlX25E9ElY7Y0OLPVeghzHqgWbU0QsD3KrqAJXcA=;
-        b=XEwLdU7PToSL6K/C6Da+/gEmrPiWVBKDwNnv75ttnzW7AqBPftHO58T8hEmWan8R4N
-         cogE6vLVYvZhiB55FgKqjWoVjFnMgrjEbK1s+U1+hN66y4x0f1DywC6P2AJOTytG/vm4
-         5/l2ZKrVZBTGMSABORBPoubISv7JXKjxDrZgfbjb/NzdaIwGxgQSOoHLlqDLgvK0bzXF
-         FY2vMYfKRbo62IHK6l7tmMRnKoW4NcxFvLqbfQIYLXBveQB7T8r0Xe9Gi7hY7q6tCAQV
-         BqyOGaEMcSA9gMTqaelogYOABK+AiXTACYzii3Pvx/3Cv3R0z9Vzay7Xb7NXCV6WGbkm
-         pmLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J70hlX25E9ElY7Y0OLPVeghzHqgWbU0QsD3KrqAJXcA=;
-        b=E2Dkilu/Eu33aUTUZn5P9ZD1AMXwHKP2i1Xjc7mJFn0qrQVlpYGn+GWrRWpTnU6x0h
-         289HDiRWzVJmOW/46W9K1xldNMCwS0mpA2sXX09PraEOj8k6pMcWYPZJME3GrACcw+78
-         x3gm/xTUsqC7JOUEGCKnTuHmGXSaw5bJt8SbM0zKt3MJoP6Fs3UDDlPw/yVeHSagYWEu
-         ClQvnYzM7ZHoBqyQTHeLw1/m//o5r/rtzyh6rgtXj0ouxAGxmo1Dpmosy0iBsYmUia+j
-         k6gBhC9IFk0DpJi8/MCuMRM5Mb4Ej7rpQg0xEZnasoxM4cfY2rS32h1S9ABvB24o5qw1
-         lC9Q==
-X-Gm-Message-State: ACrzQf16mLMO7MR6Uf22aa8YJcwyzGl7PyrizjjokcMcctTiUjKB03Y+
-        96TI96zgyugmeap5gAxsKQ==
-X-Google-Smtp-Source: AMsMyM6e0/uUBi/TSGucpsZ08beHNefxsEt9v/RiauPWEaQTl6XMxfn/f6gsXAboSxfTB2QBWmXSjQ==
-X-Received: by 2002:a0c:f349:0:b0:4b1:a0f5:4a2f with SMTP id e9-20020a0cf349000000b004b1a0f54a2fmr20034188qvm.112.1665523232686;
-        Tue, 11 Oct 2022 14:20:32 -0700 (PDT)
-Received: from fedora.mshome.net (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id y21-20020a05620a44d500b006b8f4ade2c9sm14493164qkp.19.2022.10.11.14.20.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Oct 2022 14:20:32 -0700 (PDT)
-From:   Gregory Price <gourry.memverge@gmail.com>
-X-Google-Original-From: Gregory Price <gregory.price@memverge.com>
-To:     jonathan.cameron@huawei.com
-Cc:     qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
-        alison.schofield@intel.com, dave@stgolabs.net,
-        a.manzanares@samsung.com, bwidawsk@kernel.org,
-        gregory.price@memverge.com, mst@redhat.com,
-        hchkuo@avery-design.com.tw, cbrowy@avery-design.com,
-        ira.weiny@intel.com
-Subject: [PATCH 5/5] cxl: update tests and documentation for new cxl properties
-Date:   Tue, 11 Oct 2022 17:19:16 -0400
-Message-Id: <20221011211916.117552-6-gregory.price@memverge.com>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20221011211916.117552-1-gregory.price@memverge.com>
-References: <20221007152156.24883-1-Jonathan.Cameron@huawei.com>
- <20221011211916.117552-1-gregory.price@memverge.com>
+        with ESMTP id S229624AbiJKVa4 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 11 Oct 2022 17:30:56 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDDAB9081D
+        for <linux-cxl@vger.kernel.org>; Tue, 11 Oct 2022 14:30:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1665523854; x=1697059854;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=ymDMeAUFcKpIql04R1ecxRfVDwT8DymEFITTh3CBAmw=;
+  b=C7+CdEGUnyS8vEL3y6RordIv9gtMxWy022HJdb2xhV0O0VoF5Y+q6ePI
+   w0EsHF14p6l5XgM6ZcyUwPFdLnr1u86gQ/2GXfmT621v5ZgaPvIvUpnAB
+   M8Ia1XceCTBj48zWGEZt4dT5IiOPEFR1SJ3Ty0zUF+0s9g0y+ob3QNjTL
+   NTwtWjrS30meSoqoOYt2LviZOwJeChAK0w++mZhKvOCSY1Ob+ng1GAQYr
+   ee5OXkA7zSrlVJEKSvJbyj1xrPUCffVjRsCecHq+dTXNLH8Wi43bwKIck
+   HlkOoa35DC5j7dsSOzSAmRt4mArKphZmYfJd4mi/EwX2TcpfFfocUQFEZ
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10497"; a="303370794"
+X-IronPort-AV: E=Sophos;i="5.95,177,1661842800"; 
+   d="scan'208";a="303370794"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2022 14:30:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10497"; a="657517571"
+X-IronPort-AV: E=Sophos;i="5.95,177,1661842800"; 
+   d="scan'208";a="657517571"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orsmga008.jf.intel.com with ESMTP; 11 Oct 2022 14:30:53 -0700
+Received: from orsmsx608.amr.corp.intel.com (10.22.229.21) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 11 Oct 2022 14:30:53 -0700
+Received: from orsmsx607.amr.corp.intel.com (10.22.229.20) by
+ ORSMSX608.amr.corp.intel.com (10.22.229.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 11 Oct 2022 14:30:52 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx607.amr.corp.intel.com (10.22.229.20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31 via Frontend Transport; Tue, 11 Oct 2022 14:30:52 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.170)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.31; Tue, 11 Oct 2022 14:30:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NyniFxzvmHtyDfBHSVu7ActjHEX9MGapOepHduXXTzlmfvF+itZeSdzIVqXg7aR+FATAumgMSBfeTusdZ5vVUrQUMBWFzhFmSnNaTE+qc4Jgnzf7oG9psQBnzBbHMSyDEhEUXDNKc/ZTGBomkhZM9wKr8NbGeE7QU5Gn7hcoK4Ib+piibvj3BAiRBMBPM2LRy+AfvOeOOv1n2razL+hvCPI8vGjIx8uyN2Jcsf8E8Jb1P1GYvSGQlZXHF+cgLi/pdqkd8z6HPkFDLU5yvcq6aXKMj4ui0cPSPx3oQze6XULgPGfSAyDdnLlQ5mChFbvesq9LUCRVlqAxV2fLPwMdYg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bEEXHjRDGASym2BTH10P534P7WMjaJqGLw53+w920bs=;
+ b=c+6S9OLEz+GOBTyx75dlMtKEGuC5oPjkJy4VuQ5SBg1sbPoEiF+aJGBej0MqcACmJhT1IU4/5ki8Mys9F1/GcUJ6etLU91nNotwVtrI7Xl/tGLubR243etDHuL07Cra8ABb6V1MSXt7ySMEpGSw7EBm8mdM/tWypMcQVOGgWf0xa7qFwmB8pzrUWAijLEjXRjScXBjrXB+UVTHSkmPCuT+5TzlzX9N0Ous/OXYM7+TFdNDgi8J2DYbHMNTz9ZhxrdTf0Sbbt/IPqMwZ7v5ADeN32TyBW4zNNegBf1BAXJqa4dpzGNwebnmZZupqkZp2Z5/5r9MmrWbt/TlMoxCGqPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20) by PH0PR11MB5928.namprd11.prod.outlook.com
+ (2603:10b6:510:144::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5709.21; Tue, 11 Oct
+ 2022 21:30:49 +0000
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::7d5a:684d:99f7:4e83]) by MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::7d5a:684d:99f7:4e83%12]) with mapi id 15.20.5709.021; Tue, 11 Oct
+ 2022 21:30:49 +0000
+Date:   Tue, 11 Oct 2022 14:30:46 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <vishal.l.verma@intel.com>,
+        <ira.weiny@intel.com>, <alison.schofield@intel.com>,
+        Bobo WL <lmw.bobo@gmail.com>
+Subject: Re: [PATCH] cxl/region: Fix null pointer dereference due to pass
+ through decoder commit
+Message-ID: <6345e086e44d6_117adb294f3@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20220818164210.2084-1-Jonathan.Cameron@huawei.com>
+ <62fedb421d71f_11e5e3294bd@dwillia2-xfh.jf.intel.com.notmuch>
+ <20220819093133.00006c22@huawei.com>
+ <20221010171132.000028f1@huawei.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20221010171132.000028f1@huawei.com>
+X-ClientProxiedBy: BYAPR02CA0046.namprd02.prod.outlook.com
+ (2603:10b6:a03:54::23) To MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|PH0PR11MB5928:EE_
+X-MS-Office365-Filtering-Correlation-Id: a0c4a3b7-f91f-403c-e123-08daabcfdde3
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DsE4WcTXHB+Xb1sSgosa230AtMaBI8Hc8z2vHKCQVCkMVdv1dk1SY61RQQZFqk0hi2xTpTB9WjIe3hxZ2LFqlGBhUVWE5uJQVSbmYb32/ybur1rPyLgg0t6siku3CpjVb4zqpQM53Bstc3h9fawVSflLiKTIb2GkoYT2J9YMac69kAXGnsUz6Hh2SEIpzE9Xq4ehlRdvxm4Qp8+Leac2J52E7auNY9hhHMe2dCrNNQKfRnSPFCzoDMXYO6Ej+K6pKHykhBpwE95S4WrtkScQ8KxTYmXGEiv416R4jg33xVcnHvbuUziwwHBDfcUPA7SWg+wOL90eLkdNi7AQm9miS9uC9q521pWDmhfCXcsYQzChcZSq8TAFnVhnPvncsxf9YZJYoc4YxoDk+2WHORNxN3eZN+1KSu3LhD2Ms/cmOuqQFs0FulyTcT8y/StnadAUZxsjTT4zKLb1u3eBcBx64Ry8CFahbJFNRXrSwN54Fm/yzDcZgPCfkjqrIZqgR8eV+5yf1//OaiSx8a9rQhMPpyS3A3Su6fvuOYCQ2cwRqEiJt60SnZg1WBNSqGsxRn5GYeclwIlcGWR4bwsTq2i10qwU6vK7x3UcnXPDOSd3lrOq4MgVjrlEAoA6RofoQzgj8aAYC1GwhybfJq1VRPg43jNPIt6uUOHcwAF09Qlpnq3zE/OFOnwMLrQ5IL/d5TNuNOMI6c9Gkax6A6vbp8Sruw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(366004)(396003)(136003)(39860400002)(346002)(376002)(451199015)(9686003)(6512007)(110136005)(316002)(6486002)(478600001)(38100700002)(86362001)(82960400001)(66946007)(186003)(6506007)(6666004)(66476007)(66556008)(4326008)(8676002)(8936002)(5660300002)(2906002)(26005)(41300700001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?goOkmro/50xI7orK5Ka0nxepdpajZHsXBEhJQWW49glSLiVKB1cXmwPZuwOm?=
+ =?us-ascii?Q?qFc5dnvqK5bIHEjBzgjdzsIKin6X6vgb9FaWBqoyB/ohva23fz7/b8meEjbU?=
+ =?us-ascii?Q?LSqtQdWrcjDSapnfUzYGLnYzam3HiDZ6ON8SfHS+j/qM07I/Tz+9oA1eA5Ze?=
+ =?us-ascii?Q?/qSKrTP52A0znXJ6qsScihlNkQoP24Q5XQZT39aKywyefbeVN3fAWLKTLEY8?=
+ =?us-ascii?Q?mug+pHUYOqBypzYm9w9cNlKnr1kZOwigStDMzSV8JsUQEzPeis3CJ2jKU1RH?=
+ =?us-ascii?Q?9GxQF769+Cmx71yt3Ejm1J1ZK6SPYQbBSioA8Y8LDMlhNsbiQ8MqzCn2Y1Pw?=
+ =?us-ascii?Q?2R3n2x+Y8cbop1wy8UgRv1hY5JHTpDIueafPCYLv32hK/J4ejOnt9vVywA/6?=
+ =?us-ascii?Q?D3Wv3Jl80xZyN95oqT0VnDyzFaUdiAL6vijqBH/LTxHAbL7s2SUa2WR1RoSJ?=
+ =?us-ascii?Q?uvWsKlFtaYVvxi83Ed7Co/6Y15MZDq4DVcCH1rMUwMNKGP4rwNI9x6rR2MK7?=
+ =?us-ascii?Q?Vn1Te4iO1MCdAhgBdcCRllCtzZV8AchZpsXkl1Tj9T1JpAcYMrXxN1JjkNgJ?=
+ =?us-ascii?Q?ZeoiXVuGlOF5mYvQTOkWYa7yHWKuDhDFoPdPMK4I8XAoGLcREc32e6mwol7s?=
+ =?us-ascii?Q?QJDMtv7s9siFeKPGO1Ni9KFA53jhRu6ojFs0Z5HlX88wmW2cRGLdJpFlzGDF?=
+ =?us-ascii?Q?7+Z6frwp2lG/FyTYKNuMwd3OvbSDTJCyXMXYPt7bbgB1W5/F+H7qOgxAMH4H?=
+ =?us-ascii?Q?rB4P6XzJo3eSnu71C3k3PhNw15OHe1wVfWz3OyDMrkSbgUxStanasn6eakS8?=
+ =?us-ascii?Q?m4Ejvnq9GUwU0z1UBxjy/6XKDgs7fhbymlAWphbBqFOjbjy+ptYz8M38qUqa?=
+ =?us-ascii?Q?0Ik/yYqEZKv/yh2CsORehh6gh3hdOmmFwcv7HQ5n3xDKGKDCFbd6Fa9MYSJB?=
+ =?us-ascii?Q?W/BwVsW/+BjfMzVccnT1MwG0U3tV8KJnKxEfezqa+yctidwrgJOjPf6p5Fwy?=
+ =?us-ascii?Q?ZmJKXxy4b0ZUe8FetHVmOXvCL1uFjY9S43f9fxhCqo2kTeDuHAhdKY0Xs2Uy?=
+ =?us-ascii?Q?hUqHiuCsbcXN4nNZdxbceeZAKq6T63qvOeyY1S54VmM0Ywa7arhzo6vXqEkK?=
+ =?us-ascii?Q?BQ1xwTfJWbA77Tvt4ixpnxtEAu4Pc87v9bfV2kW5X7smNrgFVFLDPjT4ze0B?=
+ =?us-ascii?Q?cDze24hehvWp5IQvL+JVkAqKmRgwcm7wxt9wKOnfxYwPhCOXUkGRPylGFr6b?=
+ =?us-ascii?Q?qsJ7YGBF1rf6ujjD4PxqGH6I+ceZlfPMrDFHYLYR2i238ye+SWIKqVOsKZ2F?=
+ =?us-ascii?Q?MkEqVQCftIry4G0kZvaA23FdgPi52Xv1wV50Zdpr1Mog+YrNk0UT5s+fBEDd?=
+ =?us-ascii?Q?SprXWIPZtiezZwfwaq2XzdUm1eAjUt+cNs8qauzPcUe2i44jtQmwIb9T1ErC?=
+ =?us-ascii?Q?9gUqAk42ogVbmetM2yXreeRBo/V+UMaYJxqABiHz8MwmnRH+0QpGvQO7r1jT?=
+ =?us-ascii?Q?wuEVCmud4V8/rDhDEfQSCSwaDtJ7DipdZPSr12U3K7oUc6ExNlaYH3F/BDwL?=
+ =?us-ascii?Q?6H7KcoC15+pRpxG+jHTpACPogzLFYu/c6aoXjEITA59bQXan3AALmJOzm5h8?=
+ =?us-ascii?Q?eA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0c4a3b7-f91f-403c-e123-08daabcfdde3
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2022 21:30:49.7500
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5LJuJUL9lhvzHuTpvFlnZhTlQv9Ra7Lt8WkkzLk26almJLSrXoRohVEoYxc35yKThllIwHJN3SEOJWIsgXxlPNS3flBjciczdgzDRNoRNV0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5928
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Adds explicit examples for --persistent-memdev and --volatile-memdev
+Jonathan Cameron wrote:
+> On Fri, 19 Aug 2022 09:31:33 +0100
+> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> 
+> > On Thu, 18 Aug 2022 17:37:22 -0700
+> > Dan Williams <dan.j.williams@intel.com> wrote:
+> > 
+> > > Jonathan Cameron wrote:  
+> > > > Not all decoders have a commit callback.
+> > > > 
+> > > > The CXL specification allows a host bridge with a single root port to
+> > > > have no explicit HDM decoders. Currently we assumes there are none.
+> > > > As such we create a special pass through decoder instance without
+> > > > a commit callback.
+> > > > 
+> > > > Prior to this patch, the commit callback was called unconditionally.
+> > > > Thus a configuration with 1 Host Bridge, 1 Root Port, 1 switch with
+> > > > multiple downstream ports below which there are multiple CXL type 3
+> > > > devices results in a situation where committing the region causes
+> > > > a null pointer dereference.
+> > > > 
+> > > > Reported-by: Bobo WL <lmw.bobo@gmail.com>
+> > > > Fixes: 176baefb2eb5 ("cxl/hdm: Commit decoder state to hardware")
+> > > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > > ---
+> > > > 
+> > > > We could fix this with a stub function perhaps as an alternative?    
+> > > 
+> > > How about keep the callback mandatory except for the passthrough switch
+> > > case?  
+> > 
+> > Should work, but makes it messier if we do add support for HDM decoders
+> > in the pass through case (which I'm 90% + sure we will have once actual
+> > platforms appear - we regularly have PCIe host bridges that on a particular
+> > platform have one RP and on other platforms expose multiple - it's just a
+> > wiring question - I doubt we'll bother hiding the HDMs given the spec
+> > allows for them to be there in this case and it adds complexity to the
+> > design to hide them).
+> > 
+> > Keeping the cxlsd->nr_targets > 1 check in one place would be my preference
+> > or adding a wrapper. e.g.
+> > is_passthrough_decoder()
+> > that we can change easily later.
+> > 
+> > Either way, focus now is getting fix in, can change how it's done
+> > later.  So I'm fine with either fix.
+> > 
+> > Jonathan
+> > 
+> > 
+> 
+> Hi Dan,
+> 
+> I forgot to test your suggestion. Now done and it works as expected.
+> 
+> One comment below.
+> 
+> Given this is now your code, do you want to send the patch or is it
+> easier if I do so?
 
-Signed-off-by: Gregory Price <gregory.price@memverge.com>
----
- docs/system/devices/cxl.rst | 53 ++++++++++++++++++------
- tests/qtest/cxl-test.c      | 81 +++++++++++++++++++++++++++++++------
- 2 files changed, 110 insertions(+), 24 deletions(-)
-
-diff --git a/docs/system/devices/cxl.rst b/docs/system/devices/cxl.rst
-index f25783a4ec..9e165064c8 100644
---- a/docs/system/devices/cxl.rst
-+++ b/docs/system/devices/cxl.rst
-@@ -300,15 +300,36 @@ Example topology involving a switch::
- 
- Example command lines
- ---------------------
--A very simple setup with just one directly attached CXL Type 3 device::
-+A very simple setup with just one directly attached CXL Type 3 Persistent Memory device::
- 
-   qemu-system-aarch64 -M virt,gic-version=3,cxl=on -m 4g,maxmem=8G,slots=8 -cpu max \
-   ...
--  -object memory-backend-file,id=cxl-mem1,share=on,mem-path=/tmp/cxltest.raw,size=256M \
--  -object memory-backend-file,id=cxl-lsa1,share=on,mem-path=/tmp/lsa.raw,size=256M \
-+  -object memory-backend-file,pmem=true,id=pmem0,share=on,mem-path=/tmp/cxltest.raw,size=256M \
-+  -object memory-backend-file,pmem=true,id=cxl-lsa0,share=on,mem-path=/tmp/lsa.raw,size=256M \
-+  -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
-+  -device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
-+  -device cxl-type3,bus=root_port13,persistent-memdev=pmem0,lsa=cxl-lsa1,id=cxl-pmem0 \
-+  -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G
-+
-+A very simple setup with just one directly attached CXL Type 3 Volatile Memory device::
-+
-+  qemu-system-aarch64 -M virt,gic-version=3,cxl=on -m 4g,maxmem=8G,slots=8 -cpu max \
-+  ...
-+  -object memory-backend-ram,id=vmem0,share=on,size=256M \
-   -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
-   -device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
--  -device cxl-type3,bus=root_port13,memdev=cxl-mem1,lsa=cxl-lsa1,id=cxl-pmem0 \
-+  -device cxl-type3,bus=root_port13,volatile-memdev=vmem0,id=cxl-vmem0 \
-+  -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G
-+
-+The same volatile setup may optionally include an LSA region::
-+
-+  qemu-system-aarch64 -M virt,gic-version=3,cxl=on -m 4g,maxmem=8G,slots=8 -cpu max \
-+  ...
-+  -object memory-backend-ram,id=vmem0,share=on,size=256M \
-+  -object memory-backend-file,id=cxl-lsa0,share=on,mem-path=/tmp/lsa.raw,size=256M \
-+  -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
-+  -device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
-+  -device cxl-type3,bus=root_port13,volatile-memdev=vmem0,lsa=cxl-lsa0,id=cxl-vmem0 \
-   -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G
- 
- A setup suitable for 4 way interleave. Only one fixed window provided, to enable 2 way
-@@ -328,13 +349,13 @@ the CXL Type3 device directly attached (no switches).::
-   -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
-   -device pxb-cxl,bus_nr=222,bus=pcie.0,id=cxl.2 \
-   -device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
--  -device cxl-type3,bus=root_port13,memdev=cxl-mem1,lsa=cxl-lsa1,id=cxl-pmem0 \
-+  -device cxl-type3,bus=root_port13,persistent-memdev=cxl-mem1,lsa=cxl-lsa1,id=cxl-pmem0 \
-   -device cxl-rp,port=1,bus=cxl.1,id=root_port14,chassis=0,slot=3 \
--  -device cxl-type3,bus=root_port14,memdev=cxl-mem2,lsa=cxl-lsa2,id=cxl-pmem1 \
-+  -device cxl-type3,bus=root_port14,persistent-memdev=cxl-mem2,lsa=cxl-lsa2,id=cxl-pmem1 \
-   -device cxl-rp,port=0,bus=cxl.2,id=root_port15,chassis=0,slot=5 \
--  -device cxl-type3,bus=root_port15,memdev=cxl-mem3,lsa=cxl-lsa3,id=cxl-pmem2 \
-+  -device cxl-type3,bus=root_port15,persistent-memdev=cxl-mem3,lsa=cxl-lsa3,id=cxl-pmem2 \
-   -device cxl-rp,port=1,bus=cxl.2,id=root_port16,chassis=0,slot=6 \
--  -device cxl-type3,bus=root_port16,memdev=cxl-mem4,lsa=cxl-lsa4,id=cxl-pmem3 \
-+  -device cxl-type3,bus=root_port16,persistent-memdev=cxl-mem4,lsa=cxl-lsa4,id=cxl-pmem3 \
-   -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.targets.1=cxl.2,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=8k
- 
- An example of 4 devices below a switch suitable for 1, 2 or 4 way interleave::
-@@ -354,15 +375,23 @@ An example of 4 devices below a switch suitable for 1, 2 or 4 way interleave::
-   -device cxl-rp,port=1,bus=cxl.1,id=root_port1,chassis=0,slot=1 \
-   -device cxl-upstream,bus=root_port0,id=us0 \
-   -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
--  -device cxl-type3,bus=swport0,memdev=cxl-mem0,lsa=cxl-lsa0,id=cxl-pmem0,size=256M \
-+  -device cxl-type3,bus=swport0,persistent-memdev=cxl-mem0,lsa=cxl-lsa0,id=cxl-pmem0,size=256M \
-   -device cxl-downstream,port=1,bus=us0,id=swport1,chassis=0,slot=5 \
--  -device cxl-type3,bus=swport1,memdev=cxl-mem1,lsa=cxl-lsa1,id=cxl-pmem1,size=256M \
-+  -device cxl-type3,bus=swport1,persistent-memdev=cxl-mem1,lsa=cxl-lsa1,id=cxl-pmem1,size=256M \
-   -device cxl-downstream,port=2,bus=us0,id=swport2,chassis=0,slot=6 \
--  -device cxl-type3,bus=swport2,memdev=cxl-mem2,lsa=cxl-lsa2,id=cxl-pmem2,size=256M \
-+  -device cxl-type3,bus=swport2,persistent-memdev=cxl-mem2,lsa=cxl-lsa2,id=cxl-pmem2,size=256M \
-   -device cxl-downstream,port=3,bus=us0,id=swport3,chassis=0,slot=7 \
--  -device cxl-type3,bus=swport3,memdev=cxl-mem3,lsa=cxl-lsa3,id=cxl-pmem3,size=256M \
-+  -device cxl-type3,bus=swport3,persistent-memdev=cxl-mem3,lsa=cxl-lsa3,id=cxl-pmem3,size=256M \
-   -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k
- 
-+Deprecations
-+------------
-+
-+The Type 3 device [memdev] attribute has been deprecated in favor
-+of the [persistent-memdev] and [volatile-memdev] attributes. [memdev]
-+will default to a persistent memory device for backward compatibility
-+and is incapable of being used in combination with [persistent-memdev].
-+
- Kernel Configuration Options
- ----------------------------
- 
-diff --git a/tests/qtest/cxl-test.c b/tests/qtest/cxl-test.c
-index f0a8a4045d..1a7a25dc53 100644
---- a/tests/qtest/cxl-test.c
-+++ b/tests/qtest/cxl-test.c
-@@ -34,29 +34,44 @@
-                  "-device cxl-rp,id=rp2,bus=cxl.1,chassis=0,slot=2 " \
-                  "-device cxl-rp,id=rp3,bus=cxl.1,chassis=0,slot=3 "
- 
--#define QEMU_T3D "-object memory-backend-file,id=cxl-mem0,mem-path=%s,size=256M " \
--                 "-object memory-backend-file,id=lsa0,mem-path=%s,size=256M "    \
--                 "-device cxl-type3,bus=rp0,memdev=cxl-mem0,lsa=lsa0,id=cxl-pmem0 "
-+#define QEMU_T3D_DEPRECATED \
-+  "-object memory-backend-file,id=cxl-mem0,mem-path=%s,size=256M " \
-+  "-object memory-backend-file,id=lsa0,mem-path=%s,size=256M "    \
-+  "-device cxl-type3,bus=rp0,memdev=cxl-mem0,lsa=lsa0,id=cxl-pmem0 "
-+
-+#define QEMU_T3D_PMEM \
-+  "-object memory-backend-file,id=m0,mem-path=%s,size=256M " \
-+  "-object memory-backend-file,id=lsa0,mem-path=%s,size=256M " \
-+  "-device cxl-type3,bus=rp0,persistent-memdev=cxl-m0,lsa=lsa0,id=pmem0 "
-+
-+#define QEMU_T3D_VMEM \
-+  "-object memory-backend-ram,id=mem0,size=256M " \
-+  "-device cxl-type3,bus=rp0,volatile-memdev=mem0,id=mem0 "
-+
-+#define QEMU_T3D_VMEM_LSA \
-+  "-object memory-backend-ram,id=mem0,size=256M " \
-+  "-object memory-backend-file,id=lsa0,mem-path=%s,size=256M " \
-+  "-device cxl-type3,bus=rp0,volatile-memdev=mem0,lsa=lsa0,id=mem0 "
- 
- #define QEMU_2T3D "-object memory-backend-file,id=cxl-mem0,mem-path=%s,size=256M "    \
-                   "-object memory-backend-file,id=lsa0,mem-path=%s,size=256M "    \
--                  "-device cxl-type3,bus=rp0,memdev=cxl-mem0,lsa=lsa0,id=cxl-pmem0 " \
-+                  "-device cxl-type3,bus=rp0,persistent-memdev=cxl-mem0,lsa=lsa0,id=cxl-pmem0 " \
-                   "-object memory-backend-file,id=cxl-mem1,mem-path=%s,size=256M "    \
-                   "-object memory-backend-file,id=lsa1,mem-path=%s,size=256M "    \
--                  "-device cxl-type3,bus=rp1,memdev=cxl-mem1,lsa=lsa1,id=cxl-pmem1 "
-+                  "-device cxl-type3,bus=rp1,persistent-memdev=cxl-mem1,lsa=lsa1,id=cxl-pmem1 "
- 
- #define QEMU_4T3D "-object memory-backend-file,id=cxl-mem0,mem-path=%s,size=256M " \
-                   "-object memory-backend-file,id=lsa0,mem-path=%s,size=256M "    \
--                  "-device cxl-type3,bus=rp0,memdev=cxl-mem0,lsa=lsa0,id=cxl-pmem0 " \
-+                  "-device cxl-type3,bus=rp0,persistent-memdev=cxl-mem0,lsa=lsa0,id=cxl-pmem0 " \
-                   "-object memory-backend-file,id=cxl-mem1,mem-path=%s,size=256M "    \
-                   "-object memory-backend-file,id=lsa1,mem-path=%s,size=256M "    \
--                  "-device cxl-type3,bus=rp1,memdev=cxl-mem1,lsa=lsa1,id=cxl-pmem1 " \
-+                  "-device cxl-type3,bus=rp1,persistent-memdev=cxl-mem1,lsa=lsa1,id=cxl-pmem1 " \
-                   "-object memory-backend-file,id=cxl-mem2,mem-path=%s,size=256M "    \
-                   "-object memory-backend-file,id=lsa2,mem-path=%s,size=256M "    \
--                  "-device cxl-type3,bus=rp2,memdev=cxl-mem2,lsa=lsa2,id=cxl-pmem2 " \
-+                  "-device cxl-type3,bus=rp2,persistent-memdev=cxl-mem2,lsa=lsa2,id=cxl-pmem2 " \
-                   "-object memory-backend-file,id=cxl-mem3,mem-path=%s,size=256M "    \
-                   "-object memory-backend-file,id=lsa3,mem-path=%s,size=256M "    \
--                  "-device cxl-type3,bus=rp3,memdev=cxl-mem3,lsa=lsa3,id=cxl-pmem3 "
-+                  "-device cxl-type3,bus=rp3,persistent-memdev=cxl-mem3,lsa=lsa3,id=cxl-pmem3 "
- 
- static void cxl_basic_hb(void)
- {
-@@ -95,14 +110,53 @@ static void cxl_2root_port(void)
- }
- 
- #ifdef CONFIG_POSIX
--static void cxl_t3d(void)
-+static void cxl_t3d_deprecated(void)
-+{
-+    g_autoptr(GString) cmdline = g_string_new(NULL);
-+    g_autofree const char *tmpfs = NULL;
-+
-+    tmpfs = g_dir_make_tmp("cxl-test-XXXXXX", NULL);
-+
-+    g_string_printf(cmdline, QEMU_PXB_CMD QEMU_RP QEMU_T3D_DEPRECATED,
-+                    tmpfs, tmpfs);
-+
-+    qtest_start(cmdline->str);
-+    qtest_end();
-+}
-+
-+static void cxl_t3d_persistent(void)
-+{
-+    g_autoptr(GString) cmdline = g_string_new(NULL);
-+    g_autofree const char *tmpfs = NULL;
-+
-+    tmpfs = g_dir_make_tmp("cxl-test-XXXXXX", NULL);
-+
-+    g_string_printf(cmdline, QEMU_PXB_CMD QEMU_RP QEMU_T3D_PMEM,
-+                    tmpfs, tmpfs);
-+
-+    qtest_start(cmdline->str);
-+    qtest_end();
-+}
-+
-+static void cxl_t3d_volatile(void)
-+{
-+    g_autoptr(GString) cmdline = g_string_new(NULL);
-+
-+    g_string_printf(cmdline, QEMU_PXB_CMD QEMU_RP QEMU_T3D_VMEM);
-+
-+    qtest_start(cmdline->str);
-+    qtest_end();
-+}
-+
-+static void cxl_t3d_volatile_lsa(void)
- {
-     g_autoptr(GString) cmdline = g_string_new(NULL);
-     g_autofree const char *tmpfs = NULL;
- 
-     tmpfs = g_dir_make_tmp("cxl-test-XXXXXX", NULL);
- 
--    g_string_printf(cmdline, QEMU_PXB_CMD QEMU_RP QEMU_T3D, tmpfs, tmpfs);
-+    g_string_printf(cmdline, QEMU_PXB_CMD QEMU_RP QEMU_T3D_VMEM_LSA,
-+                    tmpfs);
- 
-     qtest_start(cmdline->str);
-     qtest_end();
-@@ -167,7 +221,10 @@ int main(int argc, char **argv)
-         qtest_add_func("/pci/cxl/rp", cxl_root_port);
-         qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
- #ifdef CONFIG_POSIX
--        qtest_add_func("/pci/cxl/type3_device", cxl_t3d);
-+        qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
-+        qtest_add_func("/pci/cxl/type3_device_pmem", cxl_t3d_persistent);
-+        qtest_add_func("/pci/cxl/type3_device_vmem", cxl_t3d_volatile);
-+        qtest_add_func("/pci/cxl/type3_device_vmem_lsa", cxl_t3d_volatile_lsa);
-         qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
-         qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4",
-                        cxl_2pxb_4rp_4t3d);
--- 
-2.37.3
-
+I will take your fix since it is easier to backport, and then follow-up
+with a helper to make the expectations clearer for multi-target
+decoders.
