@@ -2,53 +2,53 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B338DC43219
-	for <linux-cxl@archiver.kernel.org>; Wed, 12 Oct 2022 18:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1D1C433FE
+	for <linux-cxl@archiver.kernel.org>; Wed, 12 Oct 2022 18:22:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229665AbiJLSW0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S229507AbiJLSW0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Wed, 12 Oct 2022 14:22:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51698 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229922AbiJLSWH (ORCPT
+        with ESMTP id S229924AbiJLSWH (ORCPT
         <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Oct 2022 14:22:07 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE5C9102DC4
-        for <linux-cxl@vger.kernel.org>; Wed, 12 Oct 2022 11:21:37 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id a5so5981735qkl.6
-        for <linux-cxl@vger.kernel.org>; Wed, 12 Oct 2022 11:21:37 -0700 (PDT)
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AD743136A
+        for <linux-cxl@vger.kernel.org>; Wed, 12 Oct 2022 11:21:39 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id m6so5910926qkm.4
+        for <linux-cxl@vger.kernel.org>; Wed, 12 Oct 2022 11:21:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IktacSVymJ4XPCZWnpI70Qh+XpMKAyrOqOuaVfZ+z7M=;
-        b=HUtZZy4YLvJmCpi4B9LSnmhnuAcZIx3YxOg8+glBpEoRFKMbdTEAzLPoADuTODqkxs
-         d8MHJq7yZnOnh89QqA8rKcYYlhbm8HgFIXAPPQ8b5AYGPjBpY6tlrumHM1WuTq5KDitv
-         nGV0oFEt3aH4Dn2Pg3rXZLHn2VdvuewYalojXdAq3e5ZOL0s2F1y6w/2rWNY77Shpb69
-         c+yOXfSAGFrlYegQ0Jek5Ru1X62FY65RPlY8qoJ2tkd+W5DZbRZiyjnUp3ehQhJbCtNf
-         etpHuSmY1UkhhdBvP2N6oUJV4n5xMCf4r3VidBGvDTZvHWO7iBEzVc3fxqE60CU24jFG
-         KDCA==
+        bh=bNKsnJI2O2Dvzfe8afK4oFdeHHBtIjx3W5QyApq77ec=;
+        b=dFpKglfKpZgSGu7YqXw/Ag0jwAUHtRW93owL6zO7NjuoojiXdvfmN+7+YWQSnul9zq
+         VtMYjXjyRfKJPMiY3TywWuzR13g8Zt88PtWMN19b7fsEEfY1d+oh6IDPqJJrKmC/F858
+         3Uib2CFKQRpACJEaXYj1Cmz008jFHxc5nWWg9frcFbSR0ymIneKR1VfuyDKCNwITu2Br
+         VK6ahx3TM/PvuJ7+ToNIE6qWEj2BvyEgUn49eEQXuHykKaQRwcdcVUK2YdfBuF4+eCGE
+         R7M14gdAjWAMFHSpftqqRZRVtOBMRQ7lLBJq03fQkNuZbRFRkKAOOTv7JsLaX3TNsOIl
+         Lk8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IktacSVymJ4XPCZWnpI70Qh+XpMKAyrOqOuaVfZ+z7M=;
-        b=hg08+/y1JkTWSSaTSF7H5pO46m+kmy3ixayVcJIe6maly14AqXMOm4Eyvx3eXgXLGJ
-         ickPIyZRQoLQvUlXl96GyzbZx9EmC726s15hnZ67OLjLmz6KviRqV+2+bwXFCqWFm210
-         Zuz903j3DKOAOHFQjc+IFoEWzzqV1sRQyB1JPrTyE8QG7R/3j6MX5NJyMe41Fvgwm43n
-         Dj4GcIuebmAPTW05j1rUFTrN+jRzpFNht6cRQIvZwyB+kxH4ENB82nI1DvT/bHn7z5ka
-         uczm7xg8Y144QtZVqj7wP5hRBb4DKVi91gI0yYBOfiXAbLrCHj6s1D0NAtvaTbuydgz8
-         1HuA==
-X-Gm-Message-State: ACrzQf0/u5owHepp+XJcLkwu8hpkgQ/vMxNzJLtGIELVrBbCy08f9OUF
-        ZqCPj+oQ78hnV/h/6/aQaQ==
-X-Google-Smtp-Source: AMsMyM7A4eoyN5KwTtSExyVRSKfjjEUI0Mvu7mnNU+2q9jNGEXRo6WDFrbnysRtbs7Al87blAXeluQ==
-X-Received: by 2002:a05:620a:4694:b0:6ee:b286:281a with SMTP id bq20-20020a05620a469400b006eeb286281amr311258qkb.455.1665598895491;
-        Wed, 12 Oct 2022 11:21:35 -0700 (PDT)
+        bh=bNKsnJI2O2Dvzfe8afK4oFdeHHBtIjx3W5QyApq77ec=;
+        b=pxB6D7quzDikA0j29DNn5arC7tpMCEZxHjUefY8drFTvvtxVURZXFSXrTahTeG+GGG
+         17htv/DjKEpU2IP/TTP6sofcKLjj41ZBW/N7yxBXghKiRQhEwovO5viRIB2rFe+FpSyQ
+         Ocs5wRYaJsysVBGWwoAO3S8vWVDPu0XzhOjt8qZoK31yCrqIFP64WpIf8JTk0T7Trotg
+         51UlN3B9mbRrJi9izsO5rFWR7YCnJOYlIN3X0I0AEasDzNbuy9fa2qAz0kYUBxWBhx7W
+         OXljI07tX3/sGcxsEoV0i8vATNi/6KxlpqZmtOZSUguM5md5kDV23Sc8A5rwYG2jJfZB
+         G14A==
+X-Gm-Message-State: ACrzQf3WDKAN1d94dAuT8fAnPOs0ugI35m2YDQMgzAJf+3Tfyt0xmQM0
+        sSzafZPMU2hgEkPnW6hzaw==
+X-Google-Smtp-Source: AMsMyM7+lhEQBxC97aEvdrQqrRerFiBAjiYwBTHqxEF4uz6F3dwF2OA0MtzQne8RDkUnC1TVG9SOsA==
+X-Received: by 2002:a05:620a:1e5:b0:6ed:1061:5c6b with SMTP id x5-20020a05620a01e500b006ed10615c6bmr11550573qkn.34.1665598897918;
+        Wed, 12 Oct 2022 11:21:37 -0700 (PDT)
 Received: from fedora.mshome.net (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id bq40-20020a05620a46a800b006ee9d734479sm920228qkb.33.2022.10.12.11.21.34
+        by smtp.gmail.com with ESMTPSA id bq40-20020a05620a46a800b006ee9d734479sm920228qkb.33.2022.10.12.11.21.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Oct 2022 11:21:35 -0700 (PDT)
+        Wed, 12 Oct 2022 11:21:37 -0700 (PDT)
 From:   Gregory Price <gourry.memverge@gmail.com>
 X-Google-Original-From: Gregory Price <gregory.price@memverge.com>
 To:     jonathan.cameron@huawei.com
@@ -58,9 +58,9 @@ Cc:     qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
         gregory.price@memverge.com, mst@redhat.com,
         hchkuo@avery-design.com.tw, cbrowy@avery-design.com,
         ira.weiny@intel.com
-Subject: [PATCH 2/5] hw/mem/cxl_type3: Pull validation checks ahead of functional code
-Date:   Wed, 12 Oct 2022 14:21:17 -0400
-Message-Id: <20221012182120.174142-3-gregory.price@memverge.com>
+Subject: [PATCH 4/5] hw/mem/cxl_type3: Change the CDAT allocation/free strategy
+Date:   Wed, 12 Oct 2022 14:21:19 -0400
+Message-Id: <20221012182120.174142-5-gregory.price@memverge.com>
 X-Mailer: git-send-email 2.37.3
 In-Reply-To: <20221012182120.174142-1-gregory.price@memverge.com>
 References: <20221007152156.24883-5-Jonathan.Cameron@huawei.com>
@@ -71,221 +71,133 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-For style - pulling these validations ahead flattens the code.
+The existing code allocates a subtable for SLBIS entries, uses a
+local variable to avoid a g_autofree footgun, and the cleanup code
+causes heap corruption.
+
+Rather than allocate a table, explicitly allocate each individual entry
+and make the sub-table size static.
 
 Signed-off-by: Gregory Price <gregory.price@memverge.com>
 ---
- hw/mem/cxl_type3.c | 193 ++++++++++++++++++++++-----------------------
- 1 file changed, 96 insertions(+), 97 deletions(-)
+ hw/mem/cxl_type3.c | 49 ++++++++++++++++++++++++----------------------
+ 1 file changed, 26 insertions(+), 23 deletions(-)
 
 diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 94bc439d89..43b2b9e041 100644
+index 0e0ea70387..220b9f09a9 100644
 --- a/hw/mem/cxl_type3.c
 +++ b/hw/mem/cxl_type3.c
-@@ -32,107 +32,106 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table,
-     int dslbis_nonvolatile_num = 4;
+@@ -23,13 +23,14 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table,
+                                 void *priv)
+ {
+     g_autofree CDATDsmas *dsmas_nonvolatile = NULL;
+-    g_autofree CDATDslbis *dslbis_nonvolatile = NULL;
++    g_autofree CDATDslbis *dslbis_nonvolatile1 = NULL;
++    g_autofree CDATDslbis *dslbis_nonvolatile2 = NULL;
++    g_autofree CDATDslbis *dslbis_nonvolatile3 = NULL;
++    g_autofree CDATDslbis *dslbis_nonvolatile4 = NULL;
+     g_autofree CDATDsemts *dsemts_nonvolatile = NULL;
+     CXLType3Dev *ct3d = priv;
+-    int i = 0;
+     int next_dsmad_handle = 0;
+     int nonvolatile_dsmad = -1;
+-    int dslbis_nonvolatile_num = 4;
      MemoryRegion *mr;
  
-+    if (!ct3d->hostmem) {
-+        return len;
-+    }
-+
-+    mr = host_memory_backend_get_memory(ct3d->hostmem);
-+    if (!mr) {
-+        return -EINVAL;
-+    }
-+
+     if (!ct3d->hostmem) {
+@@ -48,10 +49,15 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table,
+ 
      /* Non volatile aspects */
--    if (ct3d->hostmem) {
--        dsmas_nonvolatile = g_malloc(sizeof(*dsmas_nonvolatile));
--        if (!dsmas_nonvolatile) {
--            return -ENOMEM;
--        }
--        nonvolatile_dsmad = next_dsmad_handle++;
--        mr = host_memory_backend_get_memory(ct3d->hostmem);
--        if (!mr) {
--            return -EINVAL;
--        }
--        *dsmas_nonvolatile = (CDATDsmas) {
--            .header = {
--                .type = CDAT_TYPE_DSMAS,
--                .length = sizeof(*dsmas_nonvolatile),
--            },
--            .DSMADhandle = nonvolatile_dsmad,
--            .flags = CDAT_DSMAS_FLAG_NV,
--            .DPA_base = 0,
--            .DPA_length = int128_get64(mr->size),
--        };
--        len++;
--
--        /* For now, no memory side cache, plausiblish numbers */
--        dslbis_nonvolatile =
--            g_malloc(sizeof(*dslbis_nonvolatile) * dslbis_nonvolatile_num);
--        if (!dslbis_nonvolatile) {
--            return -ENOMEM;
--        }
-+    dsmas_nonvolatile = g_malloc(sizeof(*dsmas_nonvolatile));
-+    if (!dsmas_nonvolatile) {
-+        return -ENOMEM;
-+    }
-+    nonvolatile_dsmad = next_dsmad_handle++;
-+    *dsmas_nonvolatile = (CDATDsmas) {
-+        .header = {
-+            .type = CDAT_TYPE_DSMAS,
-+            .length = sizeof(*dsmas_nonvolatile),
-+        },
-+        .DSMADhandle = nonvolatile_dsmad,
-+        .flags = CDAT_DSMAS_FLAG_NV,
-+        .DPA_base = 0,
-+        .DPA_length = int128_get64(mr->size),
-+    };
-+    len++;
+     dsmas_nonvolatile = g_malloc(sizeof(*dsmas_nonvolatile));
+-    dslbis_nonvolatile =
+-        g_malloc(sizeof(*dslbis_nonvolatile) * dslbis_nonvolatile_num);
++    dslbis_nonvolatile1 = g_malloc(sizeof(*dslbis_nonvolatile1));
++    dslbis_nonvolatile2 = g_malloc(sizeof(*dslbis_nonvolatile2));
++    dslbis_nonvolatile3 = g_malloc(sizeof(*dslbis_nonvolatile3));
++    dslbis_nonvolatile4 = g_malloc(sizeof(*dslbis_nonvolatile4));
+     dsemts_nonvolatile = g_malloc(sizeof(*dsemts_nonvolatile));
+-    if (!dsmas_nonvolatile || !dslbis_nonvolatile || !dsemts_nonvolatile) {
++
++    if (!dsmas_nonvolatile || !dsemts_nonvolatile ||
++        !dslbis_nonvolatile1 || !dslbis_nonvolatile2 ||
++        !dslbis_nonvolatile3 || !dslbis_nonvolatile4) {
+         g_free(*cdat_table);
+         *cdat_table = NULL;
+         return -ENOMEM;
+@@ -70,10 +76,10 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table,
+     };
  
--        dslbis_nonvolatile[0] = (CDATDslbis) {
--            .header = {
--                .type = CDAT_TYPE_DSLBIS,
--                .length = sizeof(*dslbis_nonvolatile),
--            },
--            .handle = nonvolatile_dsmad,
--            .flags = HMAT_LB_MEM_MEMORY,
--            .data_type = HMAT_LB_DATA_READ_LATENCY,
--            .entry_base_unit = 10000, /* 10ns base */
--            .entry[0] = 15, /* 150ns */
--        };
--        len++;
--
--        dslbis_nonvolatile[1] = (CDATDslbis) {
--            .header = {
--                .type = CDAT_TYPE_DSLBIS,
--                .length = sizeof(*dslbis_nonvolatile),
--            },
--            .handle = nonvolatile_dsmad,
--            .flags = HMAT_LB_MEM_MEMORY,
--            .data_type = HMAT_LB_DATA_WRITE_LATENCY,
--            .entry_base_unit = 10000,
--            .entry[0] = 25, /* 250ns */
--        };
--        len++;
--
--        dslbis_nonvolatile[2] = (CDATDslbis) {
--            .header = {
--                .type = CDAT_TYPE_DSLBIS,
--                .length = sizeof(*dslbis_nonvolatile),
--            },
--            .handle = nonvolatile_dsmad,
--            .flags = HMAT_LB_MEM_MEMORY,
--            .data_type = HMAT_LB_DATA_READ_BANDWIDTH,
--            .entry_base_unit = 1000, /* GB/s */
--            .entry[0] = 16,
--        };
--        len++;
--
--        dslbis_nonvolatile[3] = (CDATDslbis) {
--            .header = {
--                .type = CDAT_TYPE_DSLBIS,
--                .length = sizeof(*dslbis_nonvolatile),
--            },
--            .handle = nonvolatile_dsmad,
--            .flags = HMAT_LB_MEM_MEMORY,
--            .data_type = HMAT_LB_DATA_WRITE_BANDWIDTH,
--            .entry_base_unit = 1000, /* GB/s */
--            .entry[0] = 16,
--        };
--        len++;
--
--        mr = host_memory_backend_get_memory(ct3d->hostmem);
--        if (!mr) {
--            return -EINVAL;
--        }
--        dsemts_nonvolatile = g_malloc(sizeof(*dsemts_nonvolatile));
--        *dsemts_nonvolatile = (CDATDsemts) {
--            .header = {
--                .type = CDAT_TYPE_DSEMTS,
--                .length = sizeof(*dsemts_nonvolatile),
--            },
--            .DSMAS_handle = nonvolatile_dsmad,
--            /* Reserved - the non volatile from DSMAS matters */
--            .EFI_memory_type_attr = 2,
--            .DPA_offset = 0,
--            .DPA_length = int128_get64(mr->size),
--        };
--        len++;
-+    /* For now, no memory side cache, plausiblish numbers */
-+    dslbis_nonvolatile =
-+        g_malloc(sizeof(*dslbis_nonvolatile) * dslbis_nonvolatile_num);
-+    if (!dslbis_nonvolatile) {
-+        return -ENOMEM;
-     }
+     /* For now, no memory side cache, plausiblish numbers */
+-    dslbis_nonvolatile[0] = (CDATDslbis) {
++    *dslbis_nonvolatile1 = (CDATDslbis) {
+         .header = {
+             .type = CDAT_TYPE_DSLBIS,
+-            .length = sizeof(*dslbis_nonvolatile),
++            .length = sizeof(*dslbis_nonvolatile1),
+         },
+         .handle = nonvolatile_dsmad,
+         .flags = HMAT_LB_MEM_MEMORY,
+@@ -82,10 +88,10 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table,
+         .entry[0] = 15, /* 150ns */
+     };
  
-+    dslbis_nonvolatile[0] = (CDATDslbis) {
-+        .header = {
-+            .type = CDAT_TYPE_DSLBIS,
-+            .length = sizeof(*dslbis_nonvolatile),
-+        },
-+        .handle = nonvolatile_dsmad,
-+        .flags = HMAT_LB_MEM_MEMORY,
-+        .data_type = HMAT_LB_DATA_READ_LATENCY,
-+        .entry_base_unit = 10000, /* 10ns base */
-+        .entry[0] = 15, /* 150ns */
-+    };
-+    len++;
-+
-+    dslbis_nonvolatile[1] = (CDATDslbis) {
-+        .header = {
-+            .type = CDAT_TYPE_DSLBIS,
-+            .length = sizeof(*dslbis_nonvolatile),
-+        },
-+        .handle = nonvolatile_dsmad,
-+        .flags = HMAT_LB_MEM_MEMORY,
-+        .data_type = HMAT_LB_DATA_WRITE_LATENCY,
-+        .entry_base_unit = 10000,
-+        .entry[0] = 25, /* 250ns */
-+    };
-+    len++;
-+
-+    dslbis_nonvolatile[2] = (CDATDslbis) {
-+        .header = {
-+            .type = CDAT_TYPE_DSLBIS,
-+            .length = sizeof(*dslbis_nonvolatile),
-+        },
-+        .handle = nonvolatile_dsmad,
-+        .flags = HMAT_LB_MEM_MEMORY,
-+        .data_type = HMAT_LB_DATA_READ_BANDWIDTH,
-+        .entry_base_unit = 1000, /* GB/s */
-+        .entry[0] = 16,
-+    };
-+    len++;
-+
-+    dslbis_nonvolatile[3] = (CDATDslbis) {
-+        .header = {
-+            .type = CDAT_TYPE_DSLBIS,
-+            .length = sizeof(*dslbis_nonvolatile),
-+        },
-+        .handle = nonvolatile_dsmad,
-+        .flags = HMAT_LB_MEM_MEMORY,
-+        .data_type = HMAT_LB_DATA_WRITE_BANDWIDTH,
-+        .entry_base_unit = 1000, /* GB/s */
-+        .entry[0] = 16,
-+    };
-+    len++;
-+
-+    dsemts_nonvolatile = g_malloc(sizeof(*dsemts_nonvolatile));
-+    *dsemts_nonvolatile = (CDATDsemts) {
-+        .header = {
-+            .type = CDAT_TYPE_DSEMTS,
-+            .length = sizeof(*dsemts_nonvolatile),
-+        },
-+        .DSMAS_handle = nonvolatile_dsmad,
-+        /* Reserved - the non volatile from DSMAS matters */
-+        .EFI_memory_type_attr = 2,
-+        .DPA_offset = 0,
-+        .DPA_length = int128_get64(mr->size),
-+    };
-+    len++;
-+
-     *cdat_table = g_malloc0(len * sizeof(*cdat_table));
+-    dslbis_nonvolatile[1] = (CDATDslbis) {
++    *dslbis_nonvolatile2 = (CDATDslbis) {
+         .header = {
+             .type = CDAT_TYPE_DSLBIS,
+-            .length = sizeof(*dslbis_nonvolatile),
++            .length = sizeof(*dslbis_nonvolatile2),
+         },
+         .handle = nonvolatile_dsmad,
+         .flags = HMAT_LB_MEM_MEMORY,
+@@ -94,10 +100,10 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table,
+         .entry[0] = 25, /* 250ns */
+     };
+ 
+-    dslbis_nonvolatile[2] = (CDATDslbis) {
++    *dslbis_nonvolatile3 = (CDATDslbis) {
+         .header = {
+             .type = CDAT_TYPE_DSLBIS,
+-            .length = sizeof(*dslbis_nonvolatile),
++            .length = sizeof(*dslbis_nonvolatile3),
+         },
+         .handle = nonvolatile_dsmad,
+         .flags = HMAT_LB_MEM_MEMORY,
+@@ -106,10 +112,10 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table,
+         .entry[0] = 16,
+     };
+ 
+-    dslbis_nonvolatile[3] = (CDATDslbis) {
++    *dslbis_nonvolatile4 = (CDATDslbis) {
+         .header = {
+             .type = CDAT_TYPE_DSLBIS,
+-            .length = sizeof(*dslbis_nonvolatile),
++            .length = sizeof(*dslbis_nonvolatile4),
+         },
+         .handle = nonvolatile_dsmad,
+         .flags = HMAT_LB_MEM_MEMORY,
+@@ -131,15 +137,12 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table,
+     };
+ 
      /* Header always at start of structure */
-     if (dsmas_nonvolatile) {
+-    (*cdat_table)[i++] = g_steal_pointer(&dsmas_nonvolatile);
+-
+-    CDATDslbis *dslbis = g_steal_pointer(&dslbis_nonvolatile);
+-    int j;
+-    for (j = 0; j < dslbis_nonvolatile_num; j++) {
+-        (*cdat_table)[i++] = (CDATSubHeader *)&dslbis[j];
+-    }
+-
+-    (*cdat_table)[i++] = g_steal_pointer(&dsemts_nonvolatile);
++    (*cdat_table)[0] = g_steal_pointer(&dsmas_nonvolatile);
++    (*cdat_table)[1] = (CDATSubHeader *)g_steal_pointer(&dslbis_nonvolatile1);
++    (*cdat_table)[2] = (CDATSubHeader *)g_steal_pointer(&dslbis_nonvolatile2);
++    (*cdat_table)[3] = (CDATSubHeader *)g_steal_pointer(&dslbis_nonvolatile3);
++    (*cdat_table)[4] = (CDATSubHeader *)g_steal_pointer(&dslbis_nonvolatile4);
++    (*cdat_table)[5] = g_steal_pointer(&dsemts_nonvolatile);
+ 
+     return CT3_CDAT_SUBTABLE_SIZE;
+ }
 -- 
 2.37.3
 
