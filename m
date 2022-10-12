@@ -2,162 +2,122 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8272AC4321E
-	for <linux-cxl@archiver.kernel.org>; Wed, 12 Oct 2022 22:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC86C4332F
+	for <linux-cxl@archiver.kernel.org>; Wed, 12 Oct 2022 23:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229701AbiJLW6y (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 12 Oct 2022 18:58:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43208 "EHLO
+        id S229471AbiJLXgz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 12 Oct 2022 19:36:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229723AbiJLW60 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Oct 2022 18:58:26 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57C55125028;
-        Wed, 12 Oct 2022 15:57:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1665615470; x=1697151470;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5mkM7oTyO2MRfpvf1l/u8o+k5OX3BWVwOK+EAoeg1yE=;
-  b=m3t5az/gKhyQIjmllk/NnsdOVZbNLjFI8f+loy3OlGYZSm/232SebTxi
-   2HQ/xGHEnnmjNUk7exZmEfNuUaEv4q3vwqB4QSZwWdw468S1srTue7QVD
-   FjJYRlP8r7p9duBhAmIN2o1G2bkGy9uAW9vz809xWVZGyUaR9M1H2bMmu
-   ylF/X4hyPy0QNby+5C3NUbNmVyJSZ6CPfV24yHeaLC8aWsexOF8eZ83p8
-   0Xx+2jX8IopHMpQjW1dcGMOzqEJYJu5tPEei3aCBOIKuX1DUeqNR2Ba2y
-   DDWD8cl8HlH6h9d2rEPkoOmQXB7Ll2FWpG8J05ZcmqstnICJZ1ptjEJwM
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10498"; a="331425448"
-X-IronPort-AV: E=Sophos;i="5.95,180,1661842800"; 
-   d="scan'208";a="331425448"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2022 15:57:50 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10498"; a="604733048"
-X-IronPort-AV: E=Sophos;i="5.95,180,1661842800"; 
-   d="scan'208";a="604733048"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.71.30]) ([10.212.71.30])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2022 15:57:48 -0700
-Message-ID: <b155c6df-adb6-6136-c3b4-4a2c66110ecf@intel.com>
-Date:   Wed, 12 Oct 2022 15:57:48 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.3.1
+        with ESMTP id S229577AbiJLXgy (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Oct 2022 19:36:54 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 959D8FF20C;
+        Wed, 12 Oct 2022 16:36:53 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id DAC4754189B;
+        Wed, 12 Oct 2022 23:36:52 +0000 (UTC)
+Received: from pdx1-sub0-mail-a209.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 597B9540B50;
+        Wed, 12 Oct 2022 23:36:52 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1665617812; a=rsa-sha256;
+        cv=none;
+        b=jcGZdZPq2nwQIGD2dPYME/Up7ESkeMqRGQbXTxCHRbtiIYjxj2LY48F4MYSBLcwi7DDHuB
+        NODxBKFBxsnRHGsI/4dYleAPK6Dkz+QDjo/lnMhXfSsP87OedmuKawp7iMXdqagRdPAx2Y
+        zOKxuXkm4DRfLWY4EB0/Yv1E6VksMaIQq2QonGlWqPQ+hb0hnTQemXThCN4Hgh72x/6pvz
+        l9NtitGTUIlfjnjjZh1pmD6Uo/EopFQ/xefFTED3Hf38q++vFzy57+VMQitnIw03mMPsin
+        brCX0B+fN8ytGs/cv9YTwaK9ndgMje2Zx1HFAqYQru7RleHNz+nqVYEO7MET6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1665617812;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=4qwRk9Nneh+nLe+v7dhmpAnk8JzWpiHmd4ynUajwX2Q=;
+        b=AyyVSpYrP2rtvxQqe6qnW2vyinlyE0q8nASEQVxfQ1ajsjUhYcrXceizCiobeXd5/o+orU
+        ShtULpMeiAQuKqKvm6Rzw3RF/zrZGk8/S2GMbkYzQAd9LGXRwk5lTagOcGPhMY7SmcaoH2
+        UhPZjyRKvqOkyBYthpXtfDDFCKVgeJ0CzW12aaoHMQO6jzDMjo7cgC2HlGpr8z1Seea+Ag
+        70QntTeQJRfMdu81IeiJ7Qtz4UljibRLv/Iz/ATqUfDssmbm4GK5PR8mrhltqYKKdGvl0p
+        JJc7gZINC9Vvobbc8+r0NcqzV9qj4cbcFUg0z0kjltZUq23ITRw7VUEaVRuTDA==
+ARC-Authentication-Results: i=1;
+        rspamd-5798657bcf-wzs5h;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Tasty-Eight: 1986dbdc57fcd20d_1665617812681_383227744
+X-MC-Loop-Signature: 1665617812681:2244649294
+X-MC-Ingress-Time: 1665617812681
+Received: from pdx1-sub0-mail-a209.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.97.34.85 (trex/6.7.1);
+        Wed, 12 Oct 2022 23:36:52 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a209.dreamhost.com (Postfix) with ESMTPSA id 4Mnpvl2Wgqz3h;
+        Wed, 12 Oct 2022 16:36:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1665617812;
+        bh=4qwRk9Nneh+nLe+v7dhmpAnk8JzWpiHmd4ynUajwX2Q=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=EDhuqwXe27I4q8f0CxuofIbOUk1r3GlZsqguY4qfNhr3gQ1IyztjzV7419J7tMhay
+         3RPMccfJBE2H6ak3LEPIwkvlOwU9Ha36b2qlzJB5Rh7kiNUgfAMjAPre4JQR8+JtPg
+         19Jv5OH6HMTXtcv/kf7kJYjAf5YfZN5laaLrrqSfPP+ctCxn5QfdcX1fQFFpKDi4uc
+         DIF1MmGhvGrmv7qE46nQbAYtqPNdY01UgwIEJB9Im812Ih8fTPpNdAbKQtdzUV6TCB
+         5+P54XSMHmEUPvjpsWfNT9sue5m2WeJEHkNW6Bt9oK3UcoEg/f0lES5Soms5kvXv5x
+         ryUzikaY7Uazw==
+Date:   Wed, 12 Oct 2022 16:15:58 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
+        Jonathan.Cameron@huawei.com, alison.schofield@intel.com,
+        vishal.l.verma@intel.com, bwidawsk@kernel.org,
+        a.manzanares@samsung.com, linux-kernel@vger.kernel.org,
+        linux-cxl@vger.kernel.org
 Subject: Re: [PATCH] cxl: Add generic MSI/MSI-X interrupt support
-Content-Language: en-US
-To:     Davidlohr Bueso <dave@stgolabs.net>, dan.j.williams@intel.com
-Cc:     ira.weiny@intel.com, Jonathan.Cameron@huawei.com,
-        alison.schofield@intel.com, vishal.l.verma@intel.com,
-        bwidawsk@kernel.org, a.manzanares@samsung.com,
-        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Message-ID: <20221012231558.m3qhtsuagpvg22tt@offworld>
 References: <20221012180432.473373-1-dave@stgolabs.net>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20221012180432.473373-1-dave@stgolabs.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <b155c6df-adb6-6136-c3b4-4a2c66110ecf@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <b155c6df-adb6-6136-c3b4-4a2c66110ecf@intel.com>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Wed, 12 Oct 2022, Dave Jiang wrote:
 
-On 10/12/2022 11:04 AM, Davidlohr Bueso wrote:
-> Introduce a generic irq table for CXL components/features that can have
-> standard irq support - DOE requires dynamic vector sizing and is not
-> considered here.
 >
-> Create an infrastructure to query the max vectors required for the CXL
-> device.
+>On 10/12/2022 11:04 AM, Davidlohr Bueso wrote:
+>>Introduce a generic irq table for CXL components/features that can have
+>>standard irq support - DOE requires dynamic vector sizing and is not
+>>considered here.
+>>
+>>Create an infrastructure to query the max vectors required for the CXL
+>>device.
+>>
+>>Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 >
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+>LGTM. Although it would be nice to see the other half of the picture.
+>i.e. having the mailbox consuming the vector via request_irq() as an
+>example.
 
-LGTM. Although it would be nice to see the other half of the picture. 
-i.e. having the mailbox consuming the vector via request_irq() as an 
-example.
+Well Ira has already implemented the irq support for the events[0], and my
+plan is to send my mbox irq patches along with the async handling stuff
+once this patch lands.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-
-> ---
->   drivers/cxl/pci.c | 63 +++++++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 63 insertions(+)
 >
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index faeb5d9d7a7a..467f2d568e3e 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -428,6 +428,66 @@ static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
->   	}
->   }
->   
-> +/**
-> + * struct cxl_irq_cap - CXL feature that is capable of receiving MSI/MSI-X irqs.
-> + *
-> + * @name: Name of the device generating this interrupt.
-> + * @get_max_msgnum: Get the feature's largest interrupt message number.  If the
-> + *		    feature does not have the Interrupt Supported bit set, then
-> + *		    return -1.
-> + */
-> +struct cxl_irq_cap {
-> +	const char *name;
-> +	int (*get_max_msgnum)(struct cxl_dev_state *cxlds);
-> +};
-> +
-> +static const struct cxl_irq_cap cxl_irq_cap_table[] = {
-> +	{ "isolation", NULL },
-> +	{ "pmu_overflow", NULL },
-> +	{ "mailbox", NULL },
-> +	{ "event", NULL },
-> +};
-> +
-> +static void cxl_pci_free_irq_vectors(void *data)
-> +{
-> +	pci_free_irq_vectors(data);
-> +}
-> +
-> +static int cxl_pci_alloc_irq_vectors(struct cxl_dev_state *cxlds)
-> +{
-> +	struct device *dev = cxlds->dev;
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	int rc, i, vectors = -1;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(cxl_irq_cap_table); i++) {
-> +		int irq;
-> +
-> +		if (!cxl_irq_cap_table[i].get_max_msgnum)
-> +			continue;
-> +
-> +		irq = cxl_irq_cap_table[i].get_max_msgnum(cxlds);
-> +		vectors = max_t(int, irq, vectors);
-> +	}
-> +
-> +	if (vectors == -1)
-> +		return -EINVAL; /* no irq support whatsoever */
-> +
-> +	vectors++;
-> +	rc = pci_alloc_irq_vectors(pdev, vectors, vectors,
-> +				   PCI_IRQ_MSIX | PCI_IRQ_MSI);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	if (rc != vectors) {
-> +		dev_err(dev, "Not enough interrupts; use polling where supported\n");
-> +		/* Some got allocated; clean them up */
-> +		cxl_pci_free_irq_vectors(pdev);
-> +		return -ENOSPC;
-> +	}
-> +
-> +	return devm_add_action_or_reset(dev, cxl_pci_free_irq_vectors, pdev);
-> +}
-> +
->   static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->   {
->   	struct cxl_register_map map;
-> @@ -498,6 +558,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->   	if (IS_ERR(cxlmd))
->   		return PTR_ERR(cxlmd);
->   
-> +	/* TODO: When there are users, this return value must be checked */
-> +	cxl_pci_alloc_irq_vectors(cxlds);
-> +
->   	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM))
->   		rc = devm_cxl_add_nvdimm(&pdev->dev, cxlmd);
->   
+>Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+Thanks!
+
+[0] https://lore.kernel.org/linux-cxl/20221012180136.tc3ryjumquvnaqk2@offworld/T/#me42f5ff69bb78ac47ce94b647e6628fa3e841696
