@@ -2,206 +2,134 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F728C433FE
-	for <linux-cxl@archiver.kernel.org>; Tue, 11 Oct 2022 23:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F27C433FE
+	for <linux-cxl@archiver.kernel.org>; Wed, 12 Oct 2022 01:15:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229507AbiJKXR7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 11 Oct 2022 19:17:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38606 "EHLO
+        id S229484AbiJLBPJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 11 Oct 2022 21:15:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229462AbiJKXR6 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 11 Oct 2022 19:17:58 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9F0225D0;
-        Tue, 11 Oct 2022 16:17:56 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GPChHDLEadM/jqWLxSkiLHdJDEhjnBHIAFuHnf2Wi+9KNRZR42KUKPuLOO0xJLt15bFFojEGb+WblbWx9s1VexcuQgrzAmo9vSWDDV6To0XKUv88ByW+PUtJsDYnSYc2sypXDVMjGWOe+6TqX/YKcIi5ynAGEY6Q/8Z8qS6Gm2uMqppRBY16mCpSDKK0M+080Dmi6mJ9v/LZrEmjDqa2xAVIUZFJk7Il5ZnOWCIjJkyz/REYeZlL/ZB4CQTmGuQfsR4/vkAvcEktaUvhdgVBlPckUiIfqmb+CWVaqtQG6R8DyAkdP/mi5HZXH5A0qzKvDEtIStihhXFmzNgZm08RpA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uOcIWQIz4uoiY3JEzHyJAs8FJVmdg3ZTcgPUITVL/uU=;
- b=lSvzCB5chdXs37UPD6wvixIVawBpShOrwDnntXlbyRk9GdiKv6An8xW6RokhU0t2Y3fuUy8BI8G/PNDmYUIpdsLeeKkGU8EmiwOMJDBFooFHhMmvEY7yPT/uEB6LpHRjRoyNQZ71xIMjw1+e6jpo3qVyG/aHxrLekIKWs9EOeVkxDbe1H/lPBHSRfJxtE+JUCUkEEBD5h/XmtMqw+HAs3OvvJsf3E/60/7TgXBOU9Q0t6e5RFfdnb62yQSna+vq+uGoMaaqrZ4cKQ4pbC1pt6mHJEuw6mqQW4f+iEaMKXc4yocpwvk7YS22dGXJtqIKlUlo+NNoUe//bn4roGTtaAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uOcIWQIz4uoiY3JEzHyJAs8FJVmdg3ZTcgPUITVL/uU=;
- b=hdqcfTR9QTwyve4rcNkQyZ+4GRqr3op8l/eAkuI9tk/Na+wXBLu3UfIepXZd+L+kZKLN7uAQDWa9mzh9AaID8x/66VrsEQmXNzLRA1IbXNipmC2Ea2vv9GEW7N7p4xRFjivZVADtXJipMJSPHxv7U+QNLVxSDhjoLo4G4z9hYuQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BYAPR12MB2869.namprd12.prod.outlook.com (2603:10b6:a03:132::30)
- by CH2PR12MB4119.namprd12.prod.outlook.com (2603:10b6:610:aa::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5709.21; Tue, 11 Oct
- 2022 23:17:54 +0000
-Received: from BYAPR12MB2869.namprd12.prod.outlook.com
- ([fe80::2af1:f102:b108:13a1]) by BYAPR12MB2869.namprd12.prod.outlook.com
- ([fe80::2af1:f102:b108:13a1%3]) with mapi id 15.20.5709.021; Tue, 11 Oct 2022
- 23:17:54 +0000
-Message-ID: <ccecf5d8-0981-6fe0-fdea-bab0cb1f3ce1@amd.com>
-Date:   Tue, 11 Oct 2022 16:17:52 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH 2/2] efi/cper, cxl: Decode CXL Error Log
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Robert Richter <rrichter@amd.com>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Terry Bowman <terry.bowman@amd.com>
-References: <20221007211714.71129-1-Smita.KoralahalliChannabasappa@amd.com>
- <20221007211714.71129-3-Smita.KoralahalliChannabasappa@amd.com>
- <20221010153415.00004bc0@huawei.com>
-From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-In-Reply-To: <20221010153415.00004bc0@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR05CA0002.namprd05.prod.outlook.com
- (2603:10b6:a03:33b::7) To BYAPR12MB2869.namprd12.prod.outlook.com
- (2603:10b6:a03:132::30)
+        with ESMTP id S229545AbiJLBPH (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 11 Oct 2022 21:15:07 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B13417AB9
+        for <linux-cxl@vger.kernel.org>; Tue, 11 Oct 2022 18:15:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1665537305; x=1697073305;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3tbDKncOUDGkaO2ZBm2y6IHR9pEiLqFpZIpEhoVxqvA=;
+  b=ZylPDHKEdeDOqYxoz2izzEjgXRgoZFqNkrrxeOWcN0XPn94eXiwvMDvU
+   3zIztgZCVic4blipYAhZuJ1R8GBCgKVWpdnyPPNI7e9+0AlVMSYxovGLO
+   jQn1rPQKy3D0kDi/QPAtcDnc8nDsAIqmUqvsAiHHJqJI8BLlbYhxziHUG
+   Q7ajgXdBVw8DI72Lsu3SuSlnZEWqtsGQqOyTpVraLapAg8pWv7MO1QKVE
+   bmeux1VjeQFnUylazfAzY5tF/Vq+BJiwzGr/pEwGTKf8o9631ku9YjXVO
+   B/alEbquNJNiZAmiCJ246pdJwuVJISNYttD8reuT45na++W5wqJ3S1SJM
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10497"; a="303405578"
+X-IronPort-AV: E=Sophos;i="5.95,177,1661842800"; 
+   d="scan'208";a="303405578"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2022 18:15:04 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10497"; a="955558065"
+X-IronPort-AV: E=Sophos;i="5.95,177,1661842800"; 
+   d="scan'208";a="955558065"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.98.149])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2022 18:15:04 -0700
+Date:   Tue, 11 Oct 2022 18:15:02 -0700
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
+        ira.weiny@intel.com, vishal.l.verma@intel.com
+Subject: Re: [PATCH] cxl: update var names for interleave ways conversion
+ macros
+Message-ID: <Y0YVFqSAv4Pf10wi@aschofie-mobl2>
+References: <166552461397.1940763.17766745890158322847.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB2869:EE_|CH2PR12MB4119:EE_
-X-MS-Office365-Filtering-Correlation-Id: 19b6411a-eaad-4fa8-81c3-08daabded37d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: arEiMyMDE/SzA28G07187ySdCyePXlos48J5NaXGaeU+njX6tCXEOsWE9e5uv4y+cCyJ9cjXJm/VQa151XH0uhVC29dHTguSjHEWqKIYiQ4+UlctSh/Fo54oIZ02O75u70+DR2hLcysCZy6n0w92lehh1bQiC+mZ+viiTRMl5aQnAAIAjmckYuhpmo/jw1zk02dEmJGD/QxfsVnRJHxWUfpVfdwFU0D7LFPCG/3ygKFUnGE8iJUuJL40yFRLbhcMDsgZa6PkKABeM81vaJ98L6FPB3YVmvhvS0TaM0fGjswsQtG3NMS+dJZ02rCr8ZYoVONRV1gysin63jRtoV/+80yR63nc78RRp4w4GD04Gv4yXxM6lQP+U2V6i2ScpRqL9iILicdrXtXRLjU8ogFWMGyv6kwAjG+lZxzidKD+/di/3Wm1QHp71+caH/9EMGcD0fM6DFQSqpfNGkHOb314oJ8hZU/VMmYeleJq21RUCnJndXaGjAcEmNPZyI7WCe9x2A+DZ7bpUNGjyYzTlAQCHRpd0l1U2LjGM5JqAJsWlIA5EYGHLj1zib4hNITp65iypBIDCrLJMTTIHga8r7recOiGnLMvdW6M43fQ4j0F9pJDlZV8FFULMPUu6NHbqscuD8SFsdb1FrsprwzQNr5JQTzZxr4Z9/QZTBawCV7czZFgU2tCM6awUchiZYywMWHA2CNGPj50DTMxE25aCb05vRU8KLYrypQWqvw1y6UoY4bxf2Gg+J0xouAgZK5mhtMIW+vesC9aIV2WZdX+kj3J7TOxOWHnsLQ8yYGYd6sS5I4=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(376002)(136003)(39860400002)(366004)(396003)(451199015)(36756003)(38100700002)(6916009)(316002)(54906003)(8676002)(6486002)(86362001)(2906002)(8936002)(5660300002)(66556008)(66476007)(4326008)(66946007)(41300700001)(6506007)(53546011)(478600001)(31696002)(2616005)(186003)(26005)(6512007)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VE9DVEFNWFlmZG9jY04wNjBsMTNRSjlnY2diOGJNbytlZldsV1Bla3kzZlpi?=
- =?utf-8?B?YjNZamI2RjFQWmd0R1QrdWlyL1VGSFBZbEJMR1lyblgvN0s5MGl2cnN4TXlY?=
- =?utf-8?B?SHpMVHVaOE1EZVNaOVQ1TUlrckxzM1FMMVlpOVpzSFpZOVYxZitacmVPeGVN?=
- =?utf-8?B?TzBnOHdLL2p4aUNTVTcwcTRNZzdYVitSNUVZWTFObGU5bWMvdFRSQ3RNNFdX?=
- =?utf-8?B?cUxMYWVvakdsVkR1NnhvT3FnNDFYRGFVbWhIMTU2ZmJ3bnl2NUJDN3ZPMS94?=
- =?utf-8?B?MkwwUXZNa01EWVBwU3BMY0JsUlFBUTkxa0tLRExNU203aHgvR1JqVS8ra2M5?=
- =?utf-8?B?VnFTYUZGYWczb1FZK21PS2lja3N3Ti82QnN3ZnNmVVpIYS84eG53T0FwOVFP?=
- =?utf-8?B?K2pxcnczN056MzQ3SlpTbk1nVkdiTkdmL2dWTnJHK05hYVVuaWJjelFxR0ZT?=
- =?utf-8?B?WTBVMHhZZXBHUEpkT05rUlFnNjdOSG9nYXFyM1lXK2Y4UVR5Q2R0bDF1S3d1?=
- =?utf-8?B?R204YzNoeG45Sk5Qc0w3TldVSGxxM0x4eUFvSE80eDVIRFR6cTVQQThIZUkr?=
- =?utf-8?B?ZXdxTWJxUS84ZklWeFRHNlhFYzE0MGFZWjFPSWM0bkZPN2F1N3ZnWlhRTW5Z?=
- =?utf-8?B?WFZEa1orWHhYbHZQUXkwdDZsR3VKUFRzVDlvWWkwUFU3VlF6RUc3RzRuZDdP?=
- =?utf-8?B?RWtHb2hGU3ZlRi9laHVvbkhsVk94dS9vQk1PNURMZ0ZTUVhXNFVxVmFIVUFW?=
- =?utf-8?B?dmhrZHVqZHhIWEVzcTM2eXNNTXZWWnlBTXV6cjZ6a29kalBEd3pXSUNjMUNt?=
- =?utf-8?B?ZHh2UjF1dVpaUndmeFhsUFpvUTJTOVhrNkdId3hmV2plOEhaMjJDVGtPWXU4?=
- =?utf-8?B?Qm5XaGZTL0J1L3ZMemdzdTB5Sm41RmxsS2htV0JqRUZvaWRuaEZmYldMWXB4?=
- =?utf-8?B?Vk9ueDlOb1RxZ2lIUEFKZjB2eVg0S0xmZk9YQThCQkYzQVc3aXdkbGZheVRp?=
- =?utf-8?B?MGsrSVZBT2c3YjJLUGZTQ1VDMHJNNGxHeGQ2aVppU05ob1RuRVZFdVNNSncr?=
- =?utf-8?B?UmlJUDdlR2N1RUU5Mkk1dFUwVklpbkFzeEQwRS8zQmo3THJSaWthSFZseVE4?=
- =?utf-8?B?WXU5MHc0ZTM3VFpVSldaMUw1bDZ1T2xOLysxVDYweTM0TXdYT09pb28rb21I?=
- =?utf-8?B?TEh2UHM5UlUwOGR2ZGI0T2EzOGVXK0ZydS81R0IxREcrZ2ZISmtmTGNtam5w?=
- =?utf-8?B?OU9yVCtOVTB4OVh5a1RGbDQ5QkZoamxHblhnMGpkVW4xRGwwU3dnUTFBNnhr?=
- =?utf-8?B?azQvS1NSYjc5K1Z6OUdCeTdiaUdqTTZ6dTQrTllOdHRhUlgzVEVjeGw0WHUr?=
- =?utf-8?B?Y0pMTm1SYUdQOUJGU3BvdFhEcUVGTXQvOHhueEZOMzJWbDNXcHRDa2lZRWF4?=
- =?utf-8?B?bkhZSCtoN09Ib2d6ckFLZ0RhbzlIeEM0c0xmT0hpdVhFazNTaVZzUWxhalNE?=
- =?utf-8?B?eXlzSDA3elV6M0xmVVFEdUlXU0IzRnJKMGh4b0RJRDVsVVd0c3oxdVhFNDBa?=
- =?utf-8?B?enlObjdpRmpyZFBPZ1RVd2hVYVRiY3dIWTROTm9jczM0RG1lb2xTU3B2ZUJS?=
- =?utf-8?B?dlh0cWdtcDhOYVlOV1ZuQzJZRy9UTWplQWFPN3hSNEhERURVb2srbDE5Yita?=
- =?utf-8?B?VHE5dFJIVDJtQXZDYWc5Yzh3Mk5TQjNrYUF5V3JTTDhJM21EWjljN0lRMlB3?=
- =?utf-8?B?Z1BtMVN1U0h2QURDMVdoTzN6OEFmM0JqMWl3cFRML29qaGwybGtDdkt4R3dU?=
- =?utf-8?B?aTljR29LK05RK3puU0psRWhvajVUWmd3Z1Q3YzBUeWVaaFcvQ1pGc1dvbXQv?=
- =?utf-8?B?dlFjaVlrb0ZqSWt6aURHOG0xbGdOak5VTGFJWWhQVnVkbFF2emZTNGpOZmg5?=
- =?utf-8?B?a1RiUVFwUlVnSmdwWE5rbmhSckIxUUxkelpFN1pSTjZFQTJjQUp4SWFQUjkv?=
- =?utf-8?B?bTZ4RVByZ1p1YWJuaUt3ZkI4dm9JNnBnTG03akdGN0FldUR3MCtjVjJkUkQz?=
- =?utf-8?B?aS9meWxYR3o3Yy96WEFpblhpWEFqVDh3cVJVbVZ5U1lDbmZaNW9qSXdhZ0Ft?=
- =?utf-8?Q?FZxv1qQ7tvceCE2tSiowGcVje?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19b6411a-eaad-4fa8-81c3-08daabded37d
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2022 23:17:54.7216
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ajj81sm8lMRt0GkK6D5sSuhJ7oOaRMhWQbE6t2W3OldRk+MkQm/MLBfvvt4qiSzvQeO4A0ujVFpAuDwF33RD7w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4119
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <166552461397.1940763.17766745890158322847.stgit@djiang5-desk3.ch.intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 10/10/2022 7:34 AM, Jonathan Cameron wrote:
-> On Fri, 7 Oct 2022 21:17:14 +0000
-> Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com> wrote:
->
->
->> +
->> +	if (prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG) {
->> +		size_t size = sizeof(*prot_err) + prot_err->dvsec_len;
->> +		struct ras_capability_regs *cxl_ras;
->> +
->> +		pr_info("%s Error log length: 0x%04x\n", pfx, prot_err->err_len);
->> +
->> +		pr_info("%s CXL Error Log:\n", pfx);
->> +		cxl_ras = (struct ras_capability_regs *)((long)prot_err + size);
->> +		pr_info("%s cxl_ras_uncor_status: 0x%08x, cxl_ras_uncor_mask: 0x%08x\n",
->> +			pfx, cxl_ras->uncor_status, cxl_ras->uncor_mask);
-> Is it worth splitting these up, so that we get a human readable line with the
-> individual fields broken out?
+On Tue, Oct 11, 2022 at 02:43:33PM -0700, Dave Jiang wrote:
+> Change var names for interleave ways macros to clearly indicate which
+> variable is encoded and which is the actual ways value.
+> 
+> iw == interleave ways
+> eniw == encoded interleave ways
+> 
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/cxl/cxl.h |   22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 7a4f740d710c..c0d826084465 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -78,14 +78,14 @@ static inline int cxl_to_granularity(u16 enig, unsigned int *ig)
+>  }
+>  
+>  /* Encode defined in CXL ECN "3, 6, 12 and 16-way memory Interleaving" */
+> -static inline int cxl_to_ways(u8 eniw, unsigned int *val)
+> +static inline int cxl_to_ways(u8 eniw, unsigned int *iw)
 
-Will do.
+How about -
++static inline int cxl_eniw_to_ways(u8 eniw, unsigned int *ways)
++static inline int cxl_ways_to_eniw(unsigned int ways, u8 *eniw)
 
->
->> +		pr_info("%s cxl_ras_uncor_severity: 0x%08x\n", pfx,
->> +			cxl_ras->uncor_severity);
->> +		pr_info("%s cxl_ras_cor_status: 0x%08x, cxl_ras_cor_mask: 0x%08x\n",
->> +			pfx, cxl_ras->cor_status, cxl_ras->cor_mask);
-> Not outputting the cap_control register?  Some of that might be useful.
+and similarly for granularity.
 
-Will add.
+I think 'ways' (same with 'granularity') is used more in the drivers,
+although core/region.c uses iw often.
 
->
->> +		pr_info("%s Header Log Registers:\n", pfx);
->> +		print_hex_dump(pfx, "", DUMP_PREFIX_OFFSET, 16, 4, cxl_ras->header_log,
->> +			       sizeof(cxl_ras->header_log), 0);
->> +	}
->>   }
->> diff --git a/include/linux/cxl_err.h b/include/linux/cxl_err.h
->> new file mode 100644
->> index 000000000000..c89dbb6c286f
->> --- /dev/null
->> +++ b/include/linux/cxl_err.h
->> @@ -0,0 +1,21 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/*
->> + * Copyright (C) 2022 Advanced Micro Devices, Inc.
->> + *
->> + * Author: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
->> + */
->> +
->> +#ifndef LINUX_CXL_ERR_H
->> +#define LINUX_CXL_ERR_H
->> +
->> +struct ras_capability_regs {
-> CXL r3.0 Spec reference plus prefix it with cxl_
+What you have is certainly clearer, so just chiming in here.
 
-Okay.
+Alison
 
->
-> Agreed with your comment at the top. Some discussion needed on where to
-> put this - or whether to delay figuring that out until a later stage.
-
-Yes, more discussion needed here though!
-
-Thanks,
-Smita
-
->
->> +	u32 uncor_status;
->> +	u32 uncor_mask;
->> +	u32 uncor_severity;
->> +	u32 cor_status;
->> +	u32 cor_mask;
->> +	u32 cap_control;
->> +	u32 header_log[16];
->> +};
->> +
->> +#endif //__CXL_ERR_
-
-
+>  {
+>  	switch (eniw) {
+>  	case 0 ... 4:
+> -		*val = 1 << eniw;
+> +		*iw = 1 << eniw;
+>  		break;
+>  	case 8 ... 10:
+> -		*val = 3 << (eniw - 8);
+> +		*iw = 3 << (eniw - 8);
+>  		break;
+>  	default:
+>  		return -EINVAL;
+> @@ -102,20 +102,20 @@ static inline int granularity_to_cxl(int ig, u16 *enig)
+>  	return 0;
+>  }
+>  
+> -static inline int ways_to_cxl(unsigned int ways, u8 *iw)
+> +static inline int ways_to_cxl(unsigned int iw, u8 *eniw)
+>  {
+> -	if (ways > 16)
+> +	if (iw > 16)
+>  		return -EINVAL;
+> -	if (is_power_of_2(ways)) {
+> -		*iw = ilog2(ways);
+> +	if (is_power_of_2(iw)) {
+> +		*eniw = ilog2(iw);
+>  		return 0;
+>  	}
+> -	if (ways % 3)
+> +	if (iw % 3)
+>  		return -EINVAL;
+> -	ways /= 3;
+> -	if (!is_power_of_2(ways))
+> +	iw /= 3;
+> +	if (!is_power_of_2(iw))
+>  		return -EINVAL;
+> -	*iw = ilog2(ways) + 8;
+> +	*eniw = ilog2(iw) + 8;
+>  	return 0;
+>  }
+>  
+> 
+> 
