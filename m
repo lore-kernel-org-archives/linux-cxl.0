@@ -2,158 +2,162 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB033C433FE
-	for <linux-cxl@archiver.kernel.org>; Wed, 12 Oct 2022 21:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8272AC4321E
+	for <linux-cxl@archiver.kernel.org>; Wed, 12 Oct 2022 22:58:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229494AbiJLVq2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 12 Oct 2022 17:46:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41090 "EHLO
+        id S229701AbiJLW6y (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 12 Oct 2022 18:58:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229514AbiJLVq1 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Oct 2022 17:46:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE458FF208;
-        Wed, 12 Oct 2022 14:46:25 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5B704615F2;
-        Wed, 12 Oct 2022 21:46:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7649C43470;
-        Wed, 12 Oct 2022 21:46:22 +0000 (UTC)
-Date:   Wed, 12 Oct 2022 17:46:20 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     alison.schofield@intel.com
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] trace, cxl: Introduce a TRACE_EVENT for CXL
- poison records
-Message-ID: <20221012174620.7cd7d062@rorschach.local.home>
-In-Reply-To: <17ee0f309e4287510e4e68f2cbcfc9d111a6e69d.1665606782.git.alison.schofield@intel.com>
-References: <cover.1665606782.git.alison.schofield@intel.com>
-        <17ee0f309e4287510e4e68f2cbcfc9d111a6e69d.1665606782.git.alison.schofield@intel.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        with ESMTP id S229723AbiJLW60 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Oct 2022 18:58:26 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57C55125028;
+        Wed, 12 Oct 2022 15:57:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1665615470; x=1697151470;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=5mkM7oTyO2MRfpvf1l/u8o+k5OX3BWVwOK+EAoeg1yE=;
+  b=m3t5az/gKhyQIjmllk/NnsdOVZbNLjFI8f+loy3OlGYZSm/232SebTxi
+   2HQ/xGHEnnmjNUk7exZmEfNuUaEv4q3vwqB4QSZwWdw468S1srTue7QVD
+   FjJYRlP8r7p9duBhAmIN2o1G2bkGy9uAW9vz809xWVZGyUaR9M1H2bMmu
+   ylF/X4hyPy0QNby+5C3NUbNmVyJSZ6CPfV24yHeaLC8aWsexOF8eZ83p8
+   0Xx+2jX8IopHMpQjW1dcGMOzqEJYJu5tPEei3aCBOIKuX1DUeqNR2Ba2y
+   DDWD8cl8HlH6h9d2rEPkoOmQXB7Ll2FWpG8J05ZcmqstnICJZ1ptjEJwM
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10498"; a="331425448"
+X-IronPort-AV: E=Sophos;i="5.95,180,1661842800"; 
+   d="scan'208";a="331425448"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2022 15:57:50 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10498"; a="604733048"
+X-IronPort-AV: E=Sophos;i="5.95,180,1661842800"; 
+   d="scan'208";a="604733048"
+Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.71.30]) ([10.212.71.30])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2022 15:57:48 -0700
+Message-ID: <b155c6df-adb6-6136-c3b4-4a2c66110ecf@intel.com>
+Date:   Wed, 12 Oct 2022 15:57:48 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.3.1
+Subject: Re: [PATCH] cxl: Add generic MSI/MSI-X interrupt support
+Content-Language: en-US
+To:     Davidlohr Bueso <dave@stgolabs.net>, dan.j.williams@intel.com
+Cc:     ira.weiny@intel.com, Jonathan.Cameron@huawei.com,
+        alison.schofield@intel.com, vishal.l.verma@intel.com,
+        bwidawsk@kernel.org, a.manzanares@samsung.com,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+References: <20221012180432.473373-1-dave@stgolabs.net>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20221012180432.473373-1-dave@stgolabs.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 12 Oct 2022 14:28:17 -0700
-alison.schofield@intel.com wrote:
 
-> +TRACE_EVENT(cxl_poison,
+On 10/12/2022 11:04 AM, Davidlohr Bueso wrote:
+> Introduce a generic irq table for CXL components/features that can have
+> standard irq support - DOE requires dynamic vector sizing and is not
+> considered here.
+>
+> Create an infrastructure to query the max vectors required for the CXL
+> device.
+>
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+
+LGTM. Although it would be nice to see the other half of the picture. 
+i.e. having the mailbox consuming the vector via request_irq() as an 
+example.
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+
+> ---
+>   drivers/cxl/pci.c | 63 +++++++++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 63 insertions(+)
+>
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index faeb5d9d7a7a..467f2d568e3e 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -428,6 +428,66 @@ static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
+>   	}
+>   }
+>   
+> +/**
+> + * struct cxl_irq_cap - CXL feature that is capable of receiving MSI/MSI-X irqs.
+> + *
+> + * @name: Name of the device generating this interrupt.
+> + * @get_max_msgnum: Get the feature's largest interrupt message number.  If the
+> + *		    feature does not have the Interrupt Supported bit set, then
+> + *		    return -1.
+> + */
+> +struct cxl_irq_cap {
+> +	const char *name;
+> +	int (*get_max_msgnum)(struct cxl_dev_state *cxlds);
+> +};
 > +
-> +	    TP_PROTO(pid_t pid, const char *region, const char *memdev,
-> +		     const char *pcidev, u64 hpa, u64 dpa, u32 length,
-> +		     u8 source, u8 flags, u64 overflow_t),
+> +static const struct cxl_irq_cap cxl_irq_cap_table[] = {
+> +	{ "isolation", NULL },
+> +	{ "pmu_overflow", NULL },
+> +	{ "mailbox", NULL },
+> +	{ "event", NULL },
+> +};
 > +
-> +	    TP_ARGS(pid, region, memdev, pcidev, hpa, dpa,
-> +		    length, source, flags, overflow_t),
+> +static void cxl_pci_free_irq_vectors(void *data)
+> +{
+> +	pci_free_irq_vectors(data);
+> +}
 > +
-> +	    TP_STRUCT__entry(
-> +		__field(pid_t, pid)
-> +		__string(region, region ? region : "")
-> +		__string(memdev, memdev)
-> +		__string(pcidev, pcidev)
-> +		__field(u64, hpa)
-> +		__field(u64, dpa)
-> +		__field(u32, length)
-> +		__field(u8, source)
-> +		__field(u8, flags)
-> +		__field(u64, overflow_t)
-
-The above looks nice and compact.
-
-> +	    ),
+> +static int cxl_pci_alloc_irq_vectors(struct cxl_dev_state *cxlds)
+> +{
+> +	struct device *dev = cxlds->dev;
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	int rc, i, vectors = -1;
 > +
-> +	    TP_fast_assign(
-> +		__entry->pid = pid;
-> +		__assign_str(region, region ? region : "");
-> +		__assign_str(memdev, memdev);
-> +		__assign_str(pcidev, pcidev);
-> +		__entry->hpa = hpa;
-> +		__entry->dpa = dpa;
-> +		__entry->length = length;
-> +		__entry->source = source;
-> +		__entry->flags = flags;
-> +		__entry->overflow_t = overflow_t;
-
-But I wonder if it would be better to move the computation of patch 2
-here?
-
-That is, this:
-
-> +		for (i = 0; i < le16_to_cpu(po->count); i++) {
-> +			u32 len = le32_to_cpu(po->record[i].length) *
-> +					      CXL_POISON_LEN_MULT;
-> +			u64 addr = le64_to_cpu(po->record[i].address);
-> +			u8 source = addr & CXL_POISON_SOURCE_MASK;
-> +			u64 dpa = addr & CXL_POISON_START_MASK;
-> +			u64 hpa = 0;
+> +	for (i = 0; i < ARRAY_SIZE(cxl_irq_cap_table); i++) {
+> +		int irq;
 > +
-> +			trace_cxl_poison(current->pid, region_name,
-> +					 dev_name(&cxlmd->dev),
-> +					 dev_name(cxlds->dev), hpa, dpa, len,
-> +					 source, po->flags, overflow_t);
-> +		}
-
-As:
-
-// The trace_*_enabled() is a static branch which is true when the
-// tracepoint is enabled, and a nop when not (skipping the for block)
-
-		for (i = 0; trace_cxl_poison_enabled() && i < le16_to_cpu(po->count); i++)
-			trace_cxl_poison(region_name, cxlmd, cxlds, &po->record[i]);
-
-And then have:
-
-	    TP_fast_assign(
-		u32 len = le32_to_cpu(record->length) *
-				      CXL_POISON_LEN_MULT;
-		u64 addr = le64_to_cpu(record->address);
-		u8 source = addr & CXL_POISON_SOURCE_MASK;
-		u64 dpa = addr & CXL_POISON_START_MASK;
-		u64 hpa = 0;
-
-		__entry->pid = current->pid;
-
-{ the above isn't needed as the trace event will have common_pid = current->pid }
-
-		__assign_str(region, region ? region : "");
-		__assign_str(memdev, dev_name(&cxlmd->dev));
-		__assign_str(pcidev, dev_name(cxlds->dev));
-		__entry->hpa = hpa;
-		__entry->dpa = dpa;
-		__entry->length = length;
-		__entry->source = source;
-		__entry->flags = flags;
-		__entry->overflow_t = overflow_t;
-
-
-Or something similar. This will keep the work out of the code path.
-
--- Steve
-
-
-> +	    ),
+> +		if (!cxl_irq_cap_table[i].get_max_msgnum)
+> +			continue;
 > +
-> +	    TP_printk("pid:%d region:%s memdev:%s pcidev:%s hpa:0x%llx dpa:0x%llx length:0x%x source:%s flags:%s overflow_time:%llu",
-> +		__entry->pid,
-> +		__get_str(region),
-> +		__get_str(memdev),
-> +		__get_str(pcidev),
-> +		__entry->hpa,
-> +		__entry->dpa,
-> +		__entry->length,
-> +		show_poison_source(__entry->source),
-> +		show_poison_flags(__entry->flags),
-> +		__entry->overflow_t)
-> +);
-> +#endif /* _CXL_TRACE_H */
+> +		irq = cxl_irq_cap_table[i].get_max_msgnum(cxlds);
+> +		vectors = max_t(int, irq, vectors);
+> +	}
+> +
+> +	if (vectors == -1)
+> +		return -EINVAL; /* no irq support whatsoever */
+> +
+> +	vectors++;
+> +	rc = pci_alloc_irq_vectors(pdev, vectors, vectors,
+> +				   PCI_IRQ_MSIX | PCI_IRQ_MSI);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	if (rc != vectors) {
+> +		dev_err(dev, "Not enough interrupts; use polling where supported\n");
+> +		/* Some got allocated; clean them up */
+> +		cxl_pci_free_irq_vectors(pdev);
+> +		return -ENOSPC;
+> +	}
+> +
+> +	return devm_add_action_or_reset(dev, cxl_pci_free_irq_vectors, pdev);
+> +}
+> +
+>   static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>   {
+>   	struct cxl_register_map map;
+> @@ -498,6 +558,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>   	if (IS_ERR(cxlmd))
+>   		return PTR_ERR(cxlmd);
+>   
+> +	/* TODO: When there are users, this return value must be checked */
+> +	cxl_pci_alloc_irq_vectors(cxlds);
+> +
+>   	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM))
+>   		rc = devm_cxl_add_nvdimm(&pdev->dev, cxlmd);
+>   
