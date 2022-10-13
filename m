@@ -2,78 +2,77 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 464FEC4332F
-	for <linux-cxl@archiver.kernel.org>; Thu, 13 Oct 2022 18:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C8BC433FE
+	for <linux-cxl@archiver.kernel.org>; Thu, 13 Oct 2022 19:17:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231742AbiJMSMr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 13 Oct 2022 14:12:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38280 "EHLO
+        id S229547AbiJMTRq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 13 Oct 2022 15:17:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231759AbiJMSM2 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 13 Oct 2022 14:12:28 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83C0417C557;
-        Thu, 13 Oct 2022 11:09:04 -0700 (PDT)
+        with ESMTP id S229582AbiJMTRo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 13 Oct 2022 15:17:44 -0400
+Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9F3D42D60;
+        Thu, 13 Oct 2022 12:17:42 -0700 (PDT)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id F007D3C0F59;
-        Thu, 13 Oct 2022 17:57:59 +0000 (UTC)
-Received: from pdx1-sub0-mail-a274.dreamhost.com (unknown [127.0.0.6])
+        by relay.mailchannels.net (Postfix) with ESMTP id DD1D58C0EB1;
+        Thu, 13 Oct 2022 19:17:41 +0000 (UTC)
+Received: from pdx1-sub0-mail-a227 (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 624E23C1553;
-        Thu, 13 Oct 2022 17:57:59 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1665683879; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id 6707E8C0ED2;
+        Thu, 13 Oct 2022 19:17:41 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1665688661; a=rsa-sha256;
         cv=none;
-        b=U6onYoy7XR3J70lkTfxIAs1S6IdqvIVSzOnedy///kNItP05shtxMslPHncOtl07x9wG6b
-        kURGNBd5ttmALqy0FCbdO9RNerXZ9fsYE21DKr2oDAIbrQFio+sdC5hsCNMjDql6GpD38Y
-        9vptqxzkyjibN+a0DM5/kovzccmTEP/wOSETvqNxp2mZQI9gu3AnDC28UYyFVhhIVKK+V2
-        fEoANmDDeAiF0d1T6ASpl9Y0/GMS6bmI5UEvEaS6MiB/iHKt83proMVjKwTz4MUB+sJfLH
-        9Fgp3V3NXTk72R+hwgY/9zZsEwuE1LVRJFHEItwKQtMJpxgYxFyyjjKyksNgBA==
+        b=ev0Pa9JMgekliEN7jdWnJqydhqe8XrgaRKIiTJS8oJprPThRt/m9lrXNOjaR/PNylGZJq5
+        emMUBXYk5d7FEcAtAwUnpCN+SvzNFcJMEQZXmnZWYfGEAYRSO7/wPcS7mYiSmwlNyJWZtk
+        x4k8ws8QAJhHzBjCgTETEqyCvj8vA2EBOX9GrvF+bmaSoxmtYnIj+J9dUexQoaAzf/xSY9
+        Y9UYMZKJhcPYlaVKkeTysr33PfzKfuZcz1FzJYjVeKmAshK77Qp/nrvEXwVJm72u+AGHR1
+        pZbw2JvLueSurm2pYyBGffOsvlI1SzwqF16qkYLVttT3VySSgiap/uyPrKXUMg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1665683879;
+        s=arc-2022; t=1665688661;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=f3s8sWc25gq+eWj1L9Vy+NVlfDYvpw/32DiXoWykXFw=;
-        b=6PU3teq0ycQeqA+/PkchNnBuH863VS2HaZfyNB34/EUPon9TKDkqck6rD+GTShBjpyHWrM
-        gzbO3+wgTOWZkxCoaA78NlDwH/01MQFD6Z6psgl7cQw6KIFQ2AqGfyB1anRm9QiQjfB7P1
-        mqNXK2LiRNJ6Me5TVu9UqIAwYKeidk+UUULxL9aCiwjPn1iA2pn09clk5JKzTH3reLS+hp
-        1Qerz0dyHqiAgZtxwf+KQ6ool/Hsf7lHlhHMPrUc+2t6EDIBkBjDHmc1YEQ+Oqx76AmWd9
-        B+Q7YuMb9e06k9HhB0AdwRS0qnsiZM2xqDEaiO7AqizlItqZMGsHsbStU1splQ==
+        bh=WfiTZBhn2D40RpfvkE1jyCdsO1XGICdV9UctgBt+III=;
+        b=yUliAF/qmqUuUg4dyAY58nuX/w8B7nj0l2Zfftw7fKS+S8HLv8g1K4I7yb+GiWE5eoN5sN
+        PbexA5FCvYJCyqpBrJwpFWAT1Pl1pf+1BqGptbsAyWB+91+gaUDo02WQ2kXULTlhwXA6p2
+        OZdXe2rHHWvv+VPiImKcJnuqPAHjfqJODJdYb04irCr2lsXNvIOq7GYNNGHrK6Jxw5Z0nY
+        CkJNZ4NACsjDQf/Bv5j9Q2L9vbUSrgIc4MXHtjuGhcLhoEmVNpxbPaZmM5LL9mn2M8Qi0L
+        rTfO41wUbzn9ko/N1h8v056tSdftocOCYiboQXUlyacWroVjuKA7wTK5jZmefA==
 ARC-Authentication-Results: i=1;
-        rspamd-7c485dd8cf-fm5wb;
+        rspamd-7c485dd8cf-57msx;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Print-Cooperative: 3446745c4866d4cb_1665683879696_2429676045
-X-MC-Loop-Signature: 1665683879696:1358752125
-X-MC-Ingress-Time: 1665683879696
-Received: from pdx1-sub0-mail-a274.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
+X-Rock-Illegal: 117e215a45c686da_1665688661663_587694324
+X-MC-Loop-Signature: 1665688661663:1857888615
+X-MC-Ingress-Time: 1665688661663
+Received: from pdx1-sub0-mail-a227 (pop.dreamhost.com [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.122.234.207 (trex/6.7.1);
-        Thu, 13 Oct 2022 17:57:59 +0000
+        by 100.119.144.148 (trex/6.7.1);
+        Thu, 13 Oct 2022 19:17:41 +0000
 Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a274.dreamhost.com (Postfix) with ESMTPSA id 4MpHLG4kk8z4h;
-        Thu, 13 Oct 2022 10:57:58 -0700 (PDT)
+        by pdx1-sub0-mail-a227 (Postfix) with ESMTPSA id 4MpK6D2k4Nz8T;
+        Thu, 13 Oct 2022 12:17:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1665683879;
-        bh=Cp5oOM4plEZlxFu/1TUngUErBCLDH5+1REIPYMGr+ls=;
+        s=dreamhost; t=1665688661;
+        bh=WfiTZBhn2D40RpfvkE1jyCdsO1XGICdV9UctgBt+III=;
         h=Date:From:To:Cc:Subject:Content-Type;
-        b=gMqX1IfNm+/8OuopssrEqgr6X/AzhoG47GxacjrHLA3iFXG/zQ2RYjK8RMizeliVu
-         mCYb7o4kNYPb0AbI3CYIowhEAOAevuPR6O++bdw5dHk/AVKUaKprYF0otM+hdledj2
-         5JTtimNlKW12huWB5hgrfc0CQhdaiBsKIFr8zMZs9SC+QGQtP+9V9522JerI3ujNoQ
-         RBQw6rCPOEg2KK5x2/PpUFPONbkMO+Ve2V4DSlvFn8s5+vugvwM/lxjA7cG6tWiufM
-         Xw9AnJwcqHxFp2iXa0eLTRUNIPmFFqBy8BYMJ19r5M2LVu1T103jDMj9DcJEFCK/Ix
-         WDbp5WLdfbwBQ==
-Date:   Thu, 13 Oct 2022 10:37:03 -0700
+        b=RThk3Xt2HHFt/SjCqCtq6LkkpDUCR+KMPfK92d2NXqZxOd71OAzEKKYrTpolwJyc/
+         ztNm1i3drBOAfdjJe5PHBTJcqZYXuk5kl6w5BKprijjw8vGFb+795IjXx4RhdN/dhA
+         tZn79BNe6RgXTe+46uAu0z9ox/Qoqf4pgJXqOfmQ585S8y7unIaIvm9DZBk8BrEs/c
+         8z8W866EPJVRCEmel1saY0k6cRFga+3uaI6vXUjH+kDNXsl2JFPJaHnlwY7UP51XsG
+         XXfoGGIQtkHGpt3IhqXOt2OC5+fL3pEqZ+8vmCkGznAogUXCQ39DDFWoRfZuVaTKJZ
+         Qudox33ASHlXw==
+Date:   Thu, 13 Oct 2022 11:56:45 -0700
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
@@ -81,65 +80,26 @@ Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
         bwidawsk@kernel.org, a.manzanares@samsung.com,
         linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
 Subject: Re: [PATCH] cxl: Add generic MSI/MSI-X interrupt support
-Message-ID: <20221013173703.th54drzlafvj74oo@offworld>
+Message-ID: <20221013185645.p5rg6d7mhpnpze3h@offworld>
 References: <20221012180432.473373-1-dave@stgolabs.net>
  <20221013131913.0000038b@huawei.com>
+ <20221013173703.th54drzlafvj74oo@offworld>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20221013131913.0000038b@huawei.com>
+In-Reply-To: <20221013173703.th54drzlafvj74oo@offworld>
 User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Thanks for having a look.
+On Thu, 13 Oct 2022, Davidlohr Bueso wrote:
 
-On Thu, 13 Oct 2022, Jonathan Cameron wrote:
+>if (cxl_pci_alloc_irq_vectors(cxlds) > 0) {
 
->> +struct cxl_irq_cap {
->> +	const char *name;
->> +	int (*get_max_msgnum)(struct cxl_dev_state *cxlds);
->
->For the CPMU case I need to walk the register locator dvsec block so need
->the callback to take the pci_dev not the cxl_dev_state.
+bleh this should be == 0 of course.
 
-Hmm ok, however maybe I'm missing something, but given a pdev, do we have a
-way to get back to the cxlds?
-
-...
-
->>  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->>  {
->>  	struct cxl_register_map map;
->> @@ -498,6 +558,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->>  	if (IS_ERR(cxlmd))
->>  		return PTR_ERR(cxlmd);
->>
->> +	/* TODO: When there are users, this return value must be checked */
->> +	cxl_pci_alloc_irq_vectors(cxlds);
->> +
->
->Gut feeling is this will end up moving ahead of any of the sub device creation
->because many of them end up needing interrupts.
->
->Also check response from the start - can't see a reason to not do so as we
->won't be registering any at all if no callbacks provided.
->
->So I'd move it above the devm_cxl_add_memdev() call.
-
-Will do. In addition, are you ok with grouping the irq setup for each cxl
-feature/component, ie:
-
-if (cxl_pci_alloc_irq_vectors(cxlds) > 0) {
-    cxl_setup_mbox_irq();
-    cxl_setup_events_irq();
-    cxl_setup_pmu_irq();
-}
-
-I ask mostly from the mailbox perspective, in that we already have
-a mbox setup call and can certainly understand if people would prefer
-it there, but I tend to prefer the above (logically wrt irqs).
-
-Thanks,
-Davidlohr
+>   cxl_setup_mbox_irq();
+>   cxl_setup_events_irq();
+>   cxl_setup_pmu_irq();
+>}
