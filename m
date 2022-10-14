@@ -2,348 +2,110 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A63A0C4332F
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 Oct 2022 15:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB08AC4332F
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 Oct 2022 15:29:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229588AbiJNPNS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 14 Oct 2022 11:13:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40262 "EHLO
+        id S229891AbiJNP30 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 Oct 2022 11:29:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229997AbiJNPNR (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Oct 2022 11:13:17 -0400
+        with ESMTP id S229712AbiJNP3X (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Oct 2022 11:29:23 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B3771D3452
-        for <linux-cxl@vger.kernel.org>; Fri, 14 Oct 2022 08:13:15 -0700 (PDT)
-Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Mpqcl2Knkz67dBN;
-        Fri, 14 Oct 2022 23:12:23 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F01C71C8431
+        for <linux-cxl@vger.kernel.org>; Fri, 14 Oct 2022 08:29:19 -0700 (PDT)
+Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MpqyN2nctz67y8R;
+        Fri, 14 Oct 2022 23:27:40 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
+ fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 14 Oct 2022 17:13:13 +0200
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 14 Oct 2022 16:13:13 +0100
+ 15.1.2375.31; Fri, 14 Oct 2022 17:29:17 +0200
+Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 14 Oct
+ 2022 16:29:16 +0100
+Date:   Fri, 14 Oct 2022 16:29:15 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-cxl@vger.kernel.org>,
-        Huai-Cheng Kuo <hchkuo@avery-design.com.tw>,
-        Chris Browy <cbrowy@avery-design.com>,
-        "Gregory Price" <gregory.price@memverge.com>, <ira.weiny@intel.com>
-CC:     <linuxarm@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: [PATCH v9 5/5] hw/pci-bridge/cxl-upstream: Add a CDAT table access DOE
-Date:   Fri, 14 Oct 2022 16:10:45 +0100
-Message-ID: <20221014151045.24781-6-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20221014151045.24781-1-Jonathan.Cameron@huawei.com>
-References: <20221014151045.24781-1-Jonathan.Cameron@huawei.com>
+To:     Gregory Price <gregory.price@memverge.com>
+CC:     Gregory Price <gourry.memverge@gmail.com>, <qemu-devel@nongnu.org>,
+        <linux-cxl@vger.kernel.org>, <alison.schofield@intel.com>,
+        <dave@stgolabs.net>, <a.manzanares@samsung.com>,
+        <bwidawsk@kernel.org>, <mst@redhat.com>,
+        <hchkuo@avery-design.com.tw>, <cbrowy@avery-design.com>,
+        <ira.weiny@intel.com>
+Subject: Re: [PATCH 5/5] hw/mem/cxl_type3: Refactor CDAT sub-table entry
+ initialization into a function
+Message-ID: <20221014162915.0000187a@huawei.com>
+In-Reply-To: <Y0hpv8jdqi+r7f4r@memverge.com>
+References: <20221007152156.24883-5-Jonathan.Cameron@huawei.com>
+        <20221012182120.174142-1-gregory.price@memverge.com>
+        <20221012182120.174142-6-gregory.price@memverge.com>
+        <20221013114711.00005623@huawei.com>
+        <Y0hpv8jdqi+r7f4r@memverge.com>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.42]
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-This Data Object Exchange Mailbox allows software to query the
-latency and bandwidth between ports on the switch. For now
-only provide information on routes between the upstream port and
-each downstream port (not p2p).
+On Thu, 13 Oct 2022 15:40:47 -0400
+Gregory Price <gregory.price@memverge.com> wrote:
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > >      /* For now, no memory side cache, plausiblish numbers */
+> > > -    *dslbis_nonvolatile1 = (CDATDslbis) {
+> > > +    *dslbis1 = (CDATDslbis) {
+> > >          .header = {
+> > >              .type = CDAT_TYPE_DSLBIS,
+> > > -            .length = sizeof(*dslbis_nonvolatile1),
+> > > +            .length = sizeof(*dslbis1),
+> > >          },
+> > > -        .handle = nonvolatile_dsmad,
+> > > +        .handle = dsmad_handle,
+> > >          .flags = HMAT_LB_MEM_MEMORY,
+> > >          .data_type = HMAT_LB_DATA_READ_LATENCY,
+> > >          .entry_base_unit = 10000, /* 10ns base */
+> > >          .entry[0] = 15, /* 150ns */  
+> > 
+> > If we are going to wrap this up for volatile / non-volatile 
+> > we probably need to pass in a reasonable value for these.
+> > Whilst not technically always true, to test the Linux handling
+> > I'd want non-volatile to report as longer latency.
+> >   
+> 
+> Here's a good question
+> 
+> Do we want the base unit and entry to be adjustable for volatile and
+> nonvolatile regions for the purpose of testing?  Or should this simply
+> be a static value for each?
 
---
-Changes since v8: Mostly to match the type 3 equivalent
- - Move enum out of function and give it a more descriptive namespace.
----
- hw/pci-bridge/cxl_upstream.c | 195 ++++++++++++++++++++++++++++++++++-
- include/hw/cxl/cxl_cdat.h    |   1 +
- 2 files changed, 195 insertions(+), 1 deletion(-)
+We definitely want a 'default' value if nothing is provided.
+It might be useful to allow it to be adjusted, but lets add that when
+we have a use for it (perhaps testing some stuff in kernel where the
+values matter enough to make them controllable).
 
-diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
-index a83a3e81e4..9b8b57df9d 100644
---- a/hw/pci-bridge/cxl_upstream.c
-+++ b/hw/pci-bridge/cxl_upstream.c
-@@ -10,11 +10,12 @@
- 
- #include "qemu/osdep.h"
- #include "qemu/log.h"
-+#include "hw/qdev-properties.h"
- #include "hw/pci/msi.h"
- #include "hw/pci/pcie.h"
- #include "hw/pci/pcie_port.h"
- 
--#define CXL_UPSTREAM_PORT_MSI_NR_VECTOR 1
-+#define CXL_UPSTREAM_PORT_MSI_NR_VECTOR 2
- 
- #define CXL_UPSTREAM_PORT_MSI_OFFSET 0x70
- #define CXL_UPSTREAM_PORT_PCIE_CAP_OFFSET 0x90
-@@ -28,6 +29,7 @@ typedef struct CXLUpstreamPort {
- 
-     /*< public >*/
-     CXLComponentState cxl_cstate;
-+    DOECap doe_cdat;
- } CXLUpstreamPort;
- 
- CXLComponentState *cxl_usp_to_cstate(CXLUpstreamPort *usp)
-@@ -60,6 +62,9 @@ static void cxl_usp_dvsec_write_config(PCIDevice *dev, uint32_t addr,
- static void cxl_usp_write_config(PCIDevice *d, uint32_t address,
-                                  uint32_t val, int len)
- {
-+    CXLUpstreamPort *usp = CXL_USP(d);
-+
-+    pcie_doe_write_config(&usp->doe_cdat, address, val, len);
-     pci_bridge_write_config(d, address, val, len);
-     pcie_cap_flr_write_config(d, address, val, len);
-     pcie_aer_write_config(d, address, val, len);
-@@ -67,6 +72,18 @@ static void cxl_usp_write_config(PCIDevice *d, uint32_t address,
-     cxl_usp_dvsec_write_config(d, address, val, len);
- }
- 
-+static uint32_t cxl_usp_read_config(PCIDevice *d, uint32_t address, int len)
-+{
-+    CXLUpstreamPort *usp = CXL_USP(d);
-+    uint32_t val;
-+
-+    if (pcie_doe_read_config(&usp->doe_cdat, address, len, &val)) {
-+        return val;
-+    }
-+
-+    return pci_default_read_config(d, address, len);
-+}
-+
- static void latch_registers(CXLUpstreamPort *usp)
- {
-     uint32_t *reg_state = usp->cxl_cstate.crb.cache_mem_registers;
-@@ -119,6 +136,167 @@ static void build_dvsecs(CXLComponentState *cxl)
-                                REG_LOC_DVSEC_REVID, dvsec);
- }
- 
-+static bool cxl_doe_cdat_rsp(DOECap *doe_cap)
-+{
-+    CDATObject *cdat = &CXL_USP(doe_cap->pdev)->cxl_cstate.cdat;
-+    uint16_t ent;
-+    void *base;
-+    uint32_t len;
-+    CDATReq *req = pcie_doe_get_write_mbox_ptr(doe_cap);
-+    CDATRsp rsp;
-+
-+    cxl_doe_cdat_update(&CXL_USP(doe_cap->pdev)->cxl_cstate, &error_fatal);
-+    assert(cdat->entry_len);
-+
-+    /* Discard if request length mismatched */
-+    if (pcie_doe_get_obj_len(req) <
-+        DIV_ROUND_UP(sizeof(CDATReq), sizeof(uint32_t))) {
-+        return false;
-+    }
-+
-+    ent = req->entry_handle;
-+    base = cdat->entry[ent].base;
-+    len = cdat->entry[ent].length;
-+
-+    rsp = (CDATRsp) {
-+        .header = {
-+            .vendor_id = CXL_VENDOR_ID,
-+            .data_obj_type = CXL_DOE_TABLE_ACCESS,
-+            .reserved = 0x0,
-+            .length = DIV_ROUND_UP((sizeof(rsp) + len), sizeof(uint32_t)),
-+        },
-+        .rsp_code = CXL_DOE_TAB_RSP,
-+        .table_type = CXL_DOE_TAB_TYPE_CDAT,
-+        .entry_handle = (ent < cdat->entry_len - 1) ?
-+                        ent + 1 : CXL_DOE_TAB_ENT_MAX,
-+    };
-+
-+    memcpy(doe_cap->read_mbox, &rsp, sizeof(rsp));
-+        memcpy(doe_cap->read_mbox + DIV_ROUND_UP(sizeof(rsp), sizeof(uint32_t)),
-+           base, len);
-+
-+    doe_cap->read_mbox_len += rsp.header.length;
-+
-+    return true;
-+}
-+
-+static DOEProtocol doe_cdat_prot[] = {
-+    { CXL_VENDOR_ID, CXL_DOE_TABLE_ACCESS, cxl_doe_cdat_rsp },
-+    { }
-+};
-+
-+enum {
-+    CXL_USP_CDAT_SSLBIS_LAT,
-+    CXL_USP_CDAT_SSLBIS_BW,
-+    CXL_USP_CDAT_NUM_ENTRIES
-+};
-+
-+static int build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
-+{
-+    g_autofree CDATSslbis *sslbis_latency = NULL;
-+    g_autofree CDATSslbis *sslbis_bandwidth = NULL;
-+    CXLUpstreamPort *us = CXL_USP(priv);
-+    PCIBus *bus = &PCI_BRIDGE(us)->sec_bus;
-+    int devfn, sslbis_size, i;
-+    int count = 0;
-+    uint16_t port_ids[256];
-+
-+    for (devfn = 0; devfn < ARRAY_SIZE(bus->devices); devfn++) {
-+        PCIDevice *d = bus->devices[devfn];
-+        PCIEPort *port;
-+
-+        if (!d || !pci_is_express(d) || !d->exp.exp_cap) {
-+            continue;
-+        }
-+
-+        /*
-+         * Whilst the PCI express spec doesn't allow anything other than
-+         * downstream ports on this bus, let us be a little paranoid
-+         */
-+        if (!object_dynamic_cast(OBJECT(d), TYPE_PCIE_PORT)) {
-+            continue;
-+        }
-+
-+        port = PCIE_PORT(d);
-+        port_ids[count] = port->port;
-+        count++;
-+    }
-+
-+    /* May not yet have any ports - try again later */
-+    if (count == 0) {
-+        return 0;
-+    }
-+
-+    sslbis_size = sizeof(CDATSslbis) + sizeof(*sslbis_latency->sslbe) * count;
-+    sslbis_latency = g_malloc(sslbis_size);
-+    if (!sslbis_latency) {
-+        return -ENOMEM;
-+    }
-+    *sslbis_latency = (CDATSslbis) {
-+        .sslbis_header = {
-+            .header = {
-+                .type = CDAT_TYPE_SSLBIS,
-+                .length = sslbis_size,
-+            },
-+            .data_type = HMATLB_DATA_TYPE_ACCESS_LATENCY,
-+            .entry_base_unit = 10000,
-+        },
-+    };
-+
-+    for (i = 0; i < count; i++) {
-+        sslbis_latency->sslbe[i] = (CDATSslbe) {
-+            .port_x_id = CDAT_PORT_ID_USP,
-+            .port_y_id = port_ids[i],
-+            .latency_bandwidth = 15, /* 150ns */
-+        };
-+    }
-+
-+    sslbis_bandwidth = g_malloc(sslbis_size);
-+    if (!sslbis_bandwidth) {
-+        return 0;
-+    }
-+    *sslbis_bandwidth = (CDATSslbis) {
-+        .sslbis_header = {
-+            .header = {
-+                .type = CDAT_TYPE_SSLBIS,
-+                .length = sslbis_size,
-+            },
-+            .data_type = HMATLB_DATA_TYPE_ACCESS_BANDWIDTH,
-+            .entry_base_unit = 1000,
-+        },
-+    };
-+
-+    for (i = 0; i < count; i++) {
-+        sslbis_bandwidth->sslbe[i] = (CDATSslbe) {
-+            .port_x_id = CDAT_PORT_ID_USP,
-+            .port_y_id = port_ids[i],
-+            .latency_bandwidth = 16, /* 16 GB/s */
-+        };
-+    }
-+
-+    *cdat_table = g_malloc0(sizeof(*cdat_table) * CXL_USP_CDAT_NUM_ENTRIES);
-+    if (!*cdat_table) {
-+        return -ENOMEM;
-+    }
-+
-+    /* Header always at start of structure */
-+    (*cdat_table)[CXL_USP_CDAT_SSLBIS_LAT] = g_steal_pointer(&sslbis_latency);
-+    (*cdat_table)[CXL_USP_CDAT_SSLBIS_BW] = g_steal_pointer(&sslbis_bandwidth);
-+
-+    return CXL_USP_CDAT_NUM_ENTRIES;
-+}
-+
-+static void free_default_cdat_table(CDATSubHeader **cdat_table, int num,
-+                                    void *priv)
-+{
-+    int i;
-+
-+    for (i = 0; i < num; i++) {
-+        g_free(cdat_table[i]);
-+    }
-+    g_free(cdat_table);
-+}
-+
- static void cxl_usp_realize(PCIDevice *d, Error **errp)
- {
-     PCIEPort *p = PCIE_PORT(d);
-@@ -161,6 +339,14 @@ static void cxl_usp_realize(PCIDevice *d, Error **errp)
-                      PCI_BASE_ADDRESS_MEM_TYPE_64,
-                      component_bar);
- 
-+    pcie_doe_init(d, &usp->doe_cdat, cxl_cstate->dvsec_offset, doe_cdat_prot,
-+                  true, 1);
-+
-+    cxl_cstate->cdat.build_cdat_table = build_cdat_table;
-+    cxl_cstate->cdat.free_cdat_table = free_default_cdat_table;
-+    cxl_cstate->cdat.private = d;
-+    cxl_doe_cdat_init(cxl_cstate, errp);
-+
-     return;
- 
- err_cap:
-@@ -179,6 +365,11 @@ static void cxl_usp_exitfn(PCIDevice *d)
-     pci_bridge_exitfn(d);
- }
- 
-+static Property cxl_upstream_props[] = {
-+    DEFINE_PROP_STRING("cdat", CXLUpstreamPort, cxl_cstate.cdat.filename),
-+    DEFINE_PROP_END_OF_LIST()
-+};
-+
- static void cxl_upstream_class_init(ObjectClass *oc, void *data)
- {
-     DeviceClass *dc = DEVICE_CLASS(oc);
-@@ -186,6 +377,7 @@ static void cxl_upstream_class_init(ObjectClass *oc, void *data)
- 
-     k->is_bridge = true;
-     k->config_write = cxl_usp_write_config;
-+    k->config_read = cxl_usp_read_config;
-     k->realize = cxl_usp_realize;
-     k->exit = cxl_usp_exitfn;
-     k->vendor_id = 0x19e5; /* Huawei */
-@@ -194,6 +386,7 @@ static void cxl_upstream_class_init(ObjectClass *oc, void *data)
-     set_bit(DEVICE_CATEGORY_BRIDGE, dc->categories);
-     dc->desc = "CXL Switch Upstream Port";
-     dc->reset = cxl_usp_reset;
-+    device_class_set_props(dc, cxl_upstream_props);
- }
- 
- static const TypeInfo cxl_usp_info = {
-diff --git a/include/hw/cxl/cxl_cdat.h b/include/hw/cxl/cxl_cdat.h
-index 52c232e912..e9eda00142 100644
---- a/include/hw/cxl/cxl_cdat.h
-+++ b/include/hw/cxl/cxl_cdat.h
-@@ -131,6 +131,7 @@ typedef struct CDATSslbisHeader {
-     uint64_t entry_base_unit;
- } QEMU_PACKED CDATSslbisHeader;
- 
-+#define CDAT_PORT_ID_USP 0x100
- /* Switch Scoped Latency and Bandwidth Entry - CDAT Table 10 */
- typedef struct CDATSslbe {
-     uint16_t port_x_id;
--- 
-2.37.2
+> 
+> Since we need to pass in (is_pmem/is_nonvolatile) or whatever into the
+> cdat function, we could just use that to do one of a few options:
+>     1) Select from a static value
+>     2) Select a static value and apply a multiplier for nvmem
+>     3) Use a base/value provided by the use and apply a multiplier
+>     4) Make vmem and pmem have separately configurable latencies
+
+For now 1 is fine I think.
+
+I've just pushed out a doe-v9 tag and cxl-2022-10-14 branch to 
+gitlab.com/jic23/qemu  Also advanced the base tree to current QEMU mainline.
+
+Note that if anyone is playing with the switch cci device and mainline kernel
+you'll currently need to revert
+https://lore.kernel.org/linux-pci/20220905080232.36087-5-mika.westerberg@linux.intel.com/
+
+Jonathan
 
