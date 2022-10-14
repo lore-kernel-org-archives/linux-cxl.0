@@ -2,77 +2,77 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83520C43217
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 Oct 2022 16:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C004C433FE
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 Oct 2022 16:53:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229994AbiJNQue (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 14 Oct 2022 12:50:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43690 "EHLO
+        id S229818AbiJNQw7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 Oct 2022 12:52:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230356AbiJNQu2 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Oct 2022 12:50:28 -0400
+        with ESMTP id S229833AbiJNQwz (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Oct 2022 12:52:55 -0400
 Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47285537ED;
-        Fri, 14 Oct 2022 09:50:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1CAD1C69CE;
+        Fri, 14 Oct 2022 09:52:52 -0700 (PDT)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 9F6625C0E4B;
-        Fri, 14 Oct 2022 16:50:22 +0000 (UTC)
+        by relay.mailchannels.net (Postfix) with ESMTP id 5DC88640DE0;
+        Fri, 14 Oct 2022 16:52:51 +0000 (UTC)
 Received: from pdx1-sub0-mail-a285 (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 07A9B5C0E06;
-        Fri, 14 Oct 2022 16:50:22 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1665766222; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id B3CF9640CF1;
+        Fri, 14 Oct 2022 16:52:50 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1665766370; a=rsa-sha256;
         cv=none;
-        b=PVW9OxlRPuTwCht5xX5h+FflhnC3F1pGoDLNdclXjq1n3z4EiXiE/EgeHSai79mvqUNqZk
-        +9o0mI5gMaW3TY0HDMbF1w0tA0LJbePlXK51DLbFjbk8pzZXduy3lvY+8afu8Rj+L+/L3T
-        9i81zGuREZuE8wRZul3kjGGih28HKA/YqWLG5mINoeo7wsL7CJ1UCo6wLZYFvTeofjkB+f
-        LfAeByhJZ4G1Dzl0pxTYXXmH615APTLndyXZ6btlikNYWd9CauLTzZsatumrR8YSsmUZpv
-        IpQA/V/KX6nkSnP/T7IJUwr4qErh6XVWvFqymzKCY+VD+/pVRXOBqdzqihA2Uw==
+        b=Ph4KsOifQ7SYQHDdvIbChczNcag8o59StORM18dA9Qs3TqQfrodtH0IDxZH7uCc6Z441hs
+        7rxYLGfNRMBPPr4cL7x6Sj1K4ypa+sg7Ad6v+VoqVh669J+43P3mQXVqr5TK5AvUCT+k2p
+        tP5F/LRbrEhSSGWC4lAiKGJhkE8ohA4kjSg+h7SqTX5QICa8D2EM9rjJH+Q3pRSpXeWUAE
+        lSECKXiKDQ2LJwo85B/TglJkYmNJ75kWx8hC1gzxzKsohGTlxBh6fzpPk2rKwUSMjS/E68
+        HwFYU9qOf7SK4UCheMagGVlBKejk4EiYz8RNMBOXnm25sg4te33En4v2YR15gw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1665766222;
+        s=arc-2022; t=1665766370;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=StdcPcuJph/ZOvrjwwJyCvorBVN1vMRUf4MuKvd8X4E=;
-        b=Gcpplx/9pTU31T4hGs1zLKdX+AuWCSVkfdG2PdsPkOEoaB5ecRQI4CWTYF94nlyZCaq6+r
-        mwWamWaDLSp9/1bIkSDVfNBPXrW/UY63BrcQtGqt0X9Nk/qTmUdrC2+I3nvxaFvSsG1fCo
-        k6Ih1oYXJv4PBl4QXayc0dgNV2InFTmcLBURCVEu0JtOirsL6EWUc/7/a+Dof0zYghpI1b
-        vCGDK444huTc7+OhhcLXYvD79o+aAj8WoEy484QGkKchDytjET0h6Mkx1JaV3lclu+IwLE
-        t3pY/LJT4Rvpeqih1lKFLl1N/xQw/gHyu9d0m85urffIkn9NQ6P57YFrkphmiA==
+        bh=VXv+P71c4vzTRrfPraL5ddMtH2hCJErWbUesX0qQy3k=;
+        b=rbwN21pry0LZKmanvsCL17eM11Ej4pFRfIyfyE6nNg8rMcPaWLIJPvkqbtRYyQbfY2qewU
+        hQ4+qczYRkb8PPTVAelEA/SNO4fXhI3/6gyEhxZCGrS4rXy8LkGG4H06Yk67aK9R4Ydzvi
+        jdzxuPTAr2mXKgprCGiOAfKFrSVIhWQW/NKHt2pI1IhLauyMQtjHwlAS59Mi6mrfzHU7UW
+        Ayt3mu/7R4qCW8gVI8dkeYkNqlJMo6z8VFkrpjpzIKfOn8tTLrcOfGow++dmf5hca6UswB
+        5SW0TVK1ErBe0nnJptZdB1bYsw9VNfY0jga4jmTtwCROu9f9ltJSQ0LhiJNmuA==
 ARC-Authentication-Results: i=1;
-        rspamd-5798657bcf-rqdj4;
+        rspamd-5798657bcf-xqzdk;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Exultant-Gusty: 7745908f3c8b3220_1665766222440_2225553681
-X-MC-Loop-Signature: 1665766222440:394936268
-X-MC-Ingress-Time: 1665766222439
+X-Spot-Whistle: 5ccf444e1e30d890_1665766371169_77002921
+X-MC-Loop-Signature: 1665766371169:3588203213
+X-MC-Ingress-Time: 1665766371169
 Received: from pdx1-sub0-mail-a285 (pop.dreamhost.com [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.122.72.77 (trex/6.7.1);
-        Fri, 14 Oct 2022 16:50:22 +0000
+        by 100.97.34.85 (trex/6.7.1);
+        Fri, 14 Oct 2022 16:52:51 +0000
 Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a285 (Postfix) with ESMTPSA id 4Mpsnm2NfLz61;
-        Fri, 14 Oct 2022 09:50:20 -0700 (PDT)
+        by pdx1-sub0-mail-a285 (Postfix) with ESMTPSA id 4Mpsrb5XTMz1v;
+        Fri, 14 Oct 2022 09:52:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1665766221;
-        bh=StdcPcuJph/ZOvrjwwJyCvorBVN1vMRUf4MuKvd8X4E=;
+        s=dreamhost; t=1665766370;
+        bh=VXv+P71c4vzTRrfPraL5ddMtH2hCJErWbUesX0qQy3k=;
         h=Date:From:To:Cc:Subject:Content-Type;
-        b=oCT94T0zKkYkORrafjcKG0tXKF4PUteneNeYhHfEOteeCoUVordFBV9jokXuIU3tk
-         mmHi8EP4TpUTdcops7LsdX9LwtZ6ldwHjPUtL4vGtibhvMTM1hosbYhob2Z3Y3QAJh
-         2Lpw1vMacAwVwMXUYLTSO5fPqgFeCEQkOrSlZnV3WxK6XOnGRdVk2qPQVdtxsEqEJx
-         7+fzqp0pdk77GX6aCpzP1kx6FO37h3W3DIHDSa2RGlX3AdGgdMTjwYUzh3emF4KRvw
-         rORT7nszmioXsnvINYiSy6TgxBxodOTiMJWXHdE6/tTOajKeGqS7q5hfiHJbCuW81Y
-         HL6G2T8dN2QkQ==
-Date:   Fri, 14 Oct 2022 09:29:21 -0700
+        b=jqw1Ig0RQKHI6fW3PZ+Gic0mh9QeXiprzu5f4wP5ohFMnziQXOMPrPV4NyUBQRWxB
+         RTjNaOtZfAuQs1aaB9/KzBcA4vjwzXso0P08rTr9OgsHeAckkZkrXFruPQgWCETzaI
+         r49zPO0OnzzNVlG7qD/Bv90Bw26AoJ40OJr7QhJXlYz1AMjXFju95Sz8fwJq15v4cQ
+         YAaTnZkwzZz9effYu7Qt71HFam+y1zwmHzqTCj3p3gH3mP5joZEzhKJ/z+Mdu0lZLo
+         qjKkZVlCzsGccCG6w0ZW5PzpoM2lz8o1tg6JJ4Ja+umltQx+aKbBPMOyK6BLfkZWtk
+         tDZTXeIdR8LXg==
+Date:   Fri, 14 Oct 2022 09:31:49 -0700
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     ira.weiny@intel.com
 Cc:     Dan Williams <dan.j.williams@intel.com>,
@@ -83,58 +83,30 @@ Cc:     Dan Williams <dan.j.williams@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
 Subject: Re: [RFC V2 PATCH 01/11] cxl/mbox: Add debug of hardware error code
-Message-ID: <20221014162921.oth2ing7gv3ofuha@offworld>
+Message-ID: <20221014163149.6zwx6nrbzfbc5pps@offworld>
 References: <20221010224131.1866246-1-ira.weiny@intel.com>
  <20221010224131.1866246-2-ira.weiny@intel.com>
+ <20221014162921.oth2ing7gv3ofuha@offworld>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20221010224131.1866246-2-ira.weiny@intel.com>
+In-Reply-To: <20221014162921.oth2ing7gv3ofuha@offworld>
 User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 10 Oct 2022, ira.weiny@intel.com wrote:
+On Fri, 14 Oct 2022, Davidlohr Bueso wrote:
+>>-	if (mbox_cmd.return_code != CXL_MBOX_CMD_RC_SUCCESS)
+>>+	if (mbox_cmd.return_code != CXL_MBOX_CMD_RC_SUCCESS) {
+>>+		dev_dbg(cxlds->dev, "MB error : %s\n",
+>
+>Maybe s/MB/mbox?
 
->From: Ira Weiny <ira.weiny@intel.com>
->
->If a mailbox command fails the driver always reports ENXIO.  But this
->may not be enough information to understand why the hardware, or in my
->case Qemu, was failing.
->
->Add a debug print of the error code returned from the hardware.
+Actually 'Mailbox' seems to be the standard:
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
-
-with a nit below.
-
->
->Signed-off-by: Ira Weiny <ira.weiny@intel.com>
->---
-> drivers/cxl/core/mbox.c | 5 ++++-
-> 1 file changed, 4 insertions(+), 1 deletion(-)
->
->diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
->index 16176b9278b4..6c4d024ad0e8 100644
->--- a/drivers/cxl/core/mbox.c
->+++ b/drivers/cxl/core/mbox.c
->@@ -181,8 +181,11 @@ int cxl_mbox_send_cmd(struct cxl_dev_state *cxlds, u16 opcode, void *in,
->	if (rc)
->		return rc;
->
->-	if (mbox_cmd.return_code != CXL_MBOX_CMD_RC_SUCCESS)
->+	if (mbox_cmd.return_code != CXL_MBOX_CMD_RC_SUCCESS) {
->+		dev_dbg(cxlds->dev, "MB error : %s\n",
-
-Maybe s/MB/mbox?
-
->+			cxl_mbox_cmd_rc2str(&mbox_cmd));
->		return cxl_mbox_cmd_rc2errno(&mbox_cmd);
->+	}
->
->	/*
->	 * Variable sized commands can't be validated and so it's up to the
->--
->2.37.2
->
+core/regs.c:			dev_dbg(dev, "found Mailbox capability (0x%x)\n", offset);
+core/regs.c:			dev_dbg(dev, "found Secondary Mailbox capability (0x%x)\n", offset);
+pci.c:		dev_dbg(dev, "Mailbox operation had an error\n");
+pci.c:		dev_err(cxlds->dev, "Mailbox is too small (%zub)",
+pci.c:	dev_dbg(cxlds->dev, "Mailbox payload sized %zu",
