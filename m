@@ -2,375 +2,146 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523EDC4332F
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 Oct 2022 14:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C436C4332F
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 Oct 2022 15:10:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229498AbiJNOtG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 14 Oct 2022 10:49:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60994 "EHLO
+        id S229828AbiJNPKq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 Oct 2022 11:10:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229843AbiJNOtF (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Oct 2022 10:49:05 -0400
+        with ESMTP id S229673AbiJNPKo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Oct 2022 11:10:44 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79672252AA;
-        Fri, 14 Oct 2022 07:49:02 -0700 (PDT)
-Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Mpq4n5mgNz67Ybb;
-        Fri, 14 Oct 2022 22:48:09 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DFB81162CB
+        for <linux-cxl@vger.kernel.org>; Fri, 14 Oct 2022 08:10:42 -0700 (PDT)
+Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MpqYn6QHdz67KPP;
+        Fri, 14 Oct 2022 23:09:49 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
+ fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 14 Oct 2022 16:49:00 +0200
-Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 14 Oct
- 2022 15:48:59 +0100
-Date:   Fri, 14 Oct 2022 15:48:58 +0100
+ 15.1.2375.31; Fri, 14 Oct 2022 17:10:40 +0200
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 14 Oct 2022 16:10:39 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        "Chris Chiu" <chris.chiu@canonical.com>,
-        <linux-pci@vger.kernel.org>, <regressions@lists.linux.dev>,
-        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>
-Subject: Re: Regression: Re: [PATCH v2 4/6] PCI: Distribute available
- resources for root buses too
-Message-ID: <20221014154858.000079f2@huawei.com>
-In-Reply-To: <Y0lkeieF3WNV3P3Q@black.fi.intel.com>
-References: <20220905080232.36087-1-mika.westerberg@linux.intel.com>
-        <20220905080232.36087-5-mika.westerberg@linux.intel.com>
-        <20221014124553.0000696f@huawei.com>
-        <Y0lkeieF3WNV3P3Q@black.fi.intel.com>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        <linux-cxl@vger.kernel.org>,
+        Huai-Cheng Kuo <hchkuo@avery-design.com.tw>,
+        Chris Browy <cbrowy@avery-design.com>,
+        "Gregory Price" <gregory.price@memverge.com>, <ira.weiny@intel.com>
+CC:     <linuxarm@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: [PATCH v9 0/5] QEMU PCIe DOE for PCIe 4.0/5.0 and CXL 2.
+Date:   Fri, 14 Oct 2022 16:10:40 +0100
+Message-ID: <20221014151045.24781-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 14 Oct 2022 16:30:34 +0300
-Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+Changes since v8:
+ - Take the entry enums out of the functions and prefix them
+   appropriately.
+ - Use the visibility of *_NUM_ENTRIES to allocate the cdat_table
+ - Fix volatile_mr -> nonvolatile_mr
 
-> Hi,
-> 
-> On Fri, Oct 14, 2022 at 12:45:53PM +0100, Jonathan Cameron wrote:
-> > On Mon,  5 Sep 2022 11:02:30 +0300
-> > Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
-> >   
-> > > Currently we distribute the spare resources only upon hot-add so if
-> > > there are PCI devices connected already when the initial root bus scan
-> > > is done, and they have not been fully configured by the BIOS, we may end
-> > > up allocating resources just enough to cover only what is currently
-> > > there. If some of those devices are hotplug bridges themselves we do not
-> > > leave any additional resource space for future expansion.
-> > > 
-> > > For this reason distribute the available resources for root buses too to
-> > > make this work the same way we do in the normal hotplug case.
-> > > 
-> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=216000
-> > > Reported-by: Chris Chiu <chris.chiu@canonical.com>
-> > > Tested-by: Chris Chiu <chris.chiu@canonical.com>
-> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > ---  
-> > 
-> > Early days, but I have a regression that's bisecting to this patch
-> > after I did an optimistic checkout of mainline mid merge window.
-> > 
-> > Initial platform was QEMU emulation of CXL on arm64 with EDK2 / ACPI etc.
-> > That uses an extended version of the PCI eXpander Bus (PXB) with extended
-> > version of the emulated pci root ports.  Particular test was
-> > 
-> > 1 PXB, 2 RP, below first RP switch USP, with two functions (USP and
-> > a stand along switch CCI), below that 4 DSP each with a CXL type 3 device.
-> > 
-> > Clearly something wrong with the error handling in CXL code as it goes boom
-> > spectacularly.  I'll address that separately.  Anyhow, setup way to complex
-> > to debug easily. 
-> > 
-> > Anyhow to make this easier for others to poke I set up equivalent with pxb-pcie
-> > etc and it happens there.  Everything works with the exception of additional
-> > functions on USP.
-> > 
-> > Next up in minimal test case (could be more minimal but I'm lazy) is 
-> > 
-> > ../qemu/bin/native/aarch64-softmmu/qemu-system-aarch64 -M virt,nvdimm=on,gic-version=3,cxl=on -m 4g,maxmem=8G,slots=8 -cpu max -smp 4 \
-> >  -kernel Image \
-> >  -drive if=none,file=full.qcow2,format=qcow2,id=hd \
-> >  -device pcie-root-port,id=root_port1 -device virtio-blk-pci,drive=hd \
-> >  -netdev type=user,id=mynet,hostfwd=tcp::5555-:22 \
-> >  -device virtio-net-pci,netdev=mynet,id=bob \
-> >  -nographic -no-reboot -append 'earlycon root=/dev/vda2 fsck.mode=skip tp_printk maxcpus=4' \
-> >  -monitor telnet:127.0.0.1:1235,server,nowait -bios QEMU_EFI.fd \
-> >  -object memory-backend-ram,size=4G,id=mem0 \
-> >  -numa node,nodeid=0,cpus=0-3,memdev=mem0 \
-> > # Interesting part follows:
-> >  -device pcie-root-port,port=0,id=root_port13,chassis=0,slot=2 \
-> >  -device x3130-upstream,id=sw1,bus=root_port13,multifunction=on \
-> >  -device e1000,bus=root_port13,addr=0.1 \
-> >  -device xio3130-downstream,id=fun1,bus=sw1,chassis=0,slot=3\
-> >  -device e1000,bus=fun1
-> > 
-> > 
-> > Error message on failure to probe my switch integrated e1000 (who doesn't have one of
-> > those - lets pretend it's a more common switch PMU function or something like
-> > that) is :
-> >  e1000 0000:02:00.1: can't ioremap BAR 0: [??? 0x00000000 flags 0x0]
-> > 
-> > With this patch reverted it works as normal and the e1000 driver comes up.
-> > 
-> > Possibly useful stuff follows:
-> > 
-> > # lspci -tv
-> > -[0000:00]-+-00.0  Red Hat, Inc. QEMU PCIe Host bridge
-> >            +-01.0-[01]--
-> >            +-02.0  Red Hat, Inc. Virtio block device
-> >            +-03.0  Red Hat, Inc. Virtio network device
-> >            \-04.0-[02-04]--+-00.0-[03-04]----00.0-[04]----00.0  Intel Corporation 82540EM Gigabit Ethernet Controller
-> >                            \-00.1  Intel Corporation 82540EM Gigabit Ethernet Controller
-> > 
-> > with patch in place.
-> > //without patch
-> > Note I aligned by hand so may be errorr.
-> > 
-> > # dmesg | grep pci                                  
-> > pci_bus 0000:00: root bus resource [mem 0x10000000-0x3efeffff window]
-> > pci_bus 0000:00: root bus resource [io  0x0000-0xffff window]
-> > pci_bus 0000:00: root bus resource [mem 0x8000000000-0xffffffffff window]
-> > pci_bus 0000:00: root bus resource [bus 00-ff]
-> > pci 0000:00:00.0: [1b36:0008] type 00 class 0x060000
-> > pci 0000:00:01.0: [1b36:000c] type 01 class 0x060400
-> > pci 0000:00:01.0: reg 0x10: [mem 0x10643000-0x10643fff]
-> > pci 0000:00:02.0: [1af4:1001] type 00 class 0x010000
-> > pci 0000:00:02.0: reg 0x10: [io  0x2200-0x227f]
-> > pci 0000:00:02.0: reg 0x14: [mem 0x10642000-0x10642fff]
-> > pci 0000:00:02.0: reg 0x20: [mem 0x8000000000-0x8000003fff 64bit pref]
-> > pci 0000:00:03.0: [1af4:1000] type 00 class 0x020000
-> > pci 0000:00:03.0: reg 0x10: [io  0x2280-0x229f]
-> > pci 0000:00:03.0: reg 0x14: [mem 0x10641000-0x10641fff]
-> > pci 0000:00:03.0: reg 0x20: [mem 0x8000004000-0x8000007fff 64bit pref]
-> > pci 0000:00:03.0: reg 0x30: [mem 0xfffc0000-0xffffffff pref]
-> > pci 0000:00:04.0: [1b36:000c] type 01 class 0x060400
-> > pci 0000:00:04.0: reg 0x10: [mem 0x10640000-0x10640fff]
-> > pci 0000:02:00.0: [104c:8232] type 01 class 0x060400
-> > pci 0000:02:00.1: [8086:100e] type 00 class 0x020000
-> > pci 0000:02:00.1: reg 0x10: [mem 0x10200000-0x1021ffff]
-> > pci 0000:02:00.1: reg 0x14: [io  0x1000-0x103f]
-> > pci 0000:02:00.1: reg 0x30: [mem 0xfffc0000-0xffffffff pref]
-> > pci 0000:03:00.0: [104c:8233] type 01 class 0x060400
-> > pci 0000:04:00.0: [8086:100e] type 00 class 0x020000
-> > pci 0000:04:00.0: reg 0x10: [mem 0x10000000-0x1001ffff]
-> > pci 0000:04:00.0: reg 0x14: [io  0x0000-0x003f]
-> > pci 0000:04:00.0: reg 0x30: [mem 0xfffc0000-0xffffffff pref]
-> > pci 0000:00:01.0: bridge window [io  0x1000-0x0fff] to [bus 01] add_size 1000
-> > pci 0000:00:01.0: bridge window [mem 0x00100000-0x000fffff 64bit pref] to [bus 01] add_size 200000 add_align 100000
-> > pci 0000:00:01.0: bridge window [mem 0x00100000-0x000fffff] to [bus 01] add_size 200000 add_align 100000
-> > pci 0000:03:00.0: bridge window [mem 0x00100000-0x000fffff 64bit pref] to [bus 04] add_size 200000 add_align 100000
-> > pci 0000:03:00.0: bridge window [mem 0x00100000-0x001fffff] to [bus 04] add_size 100000 add_align 100000
-> > pci 0000:02:00.0: bridge window [mem 0x00100000-0x001fffff 64bit pref] to [bus 03-04] add_size 200000 add_align 100000
-> > pci 0000:02:00.0: bridge window [mem 0x00100000-0x001fffff] to [bus 03-04] add_size 100000 add_align 100000
-> > pci 0000:00:04.0: bridge window [mem 0x00100000-0x001fffff 64bit pref] to [bus 02-04] add_size 300000 add_align 100000
-> > pci 0000:00:04.0: bridge window [mem 0x00100000-0x002fffff] to [bus 02-04] add_size 100000 add_align 100000
-> > pci 0000:00:01.0: BAR 14: assigned [mem 0x10000000-0x101fffff]
-> > pci 0000:00:01.0: BAR 15: assigned [mem 0x8000000000-0x80001fffff 64bit pref]
-> > pci 0000:00:04.0: BAR 14: assigned [mem 0x10200000-0x103fffff]
-> > // pci 0000:00:04.0: BAR 14: assigned [mem 0x10200000-0x104fffff]
-> > pci 0000:00:04.0: BAR 15: assigned [mem 0x8000200000-0x80002fffff 64bit pref]
-> > // pci 0000:00:04.0: BAR 15: assigned [mem 0x8000200000-0x80005fffff 64bit pref]
-> > pci 0000:00:03.0: BAR 6: assigned [mem 0x10400000-0x1043ffff pref]
-> > // pci 0000:00:03.0: BAR 6: assigned [mem 0x10500000-0x1053ffff pref]
-> > pci 0000:00:02.0: BAR 4: assigned [mem 0x8000300000-0x8000303fff 64bit pref]
-> > //  pci 0000:00:02.0: BAR 4: assigned [mem 0x8000600000-0x8000603fff 64bit pref]
-> > pci 0000:00:03.0: BAR 4: assigned [mem 0x8000304000-0x8000307fff 64bit pref]
-> > //  pci 0000:00:03.0: BAR 4: assigned [mem 0x8000604000-0x8000607fff 64bit pref]
-> > pci 0000:00:01.0: BAR 0: assigned [mem 0x10440000-0x10440fff]
-> > //  pci 0000:00:01.0: BAR 0: assigned [mem 0x10540000-0x10540fff]
-> > pci 0000:00:01.0: BAR 13: assigned [io  0x1000-0x1fff]
-> > pci 0000:00:02.0: BAR 1: assigned [mem 0x10441000-0x10441fff]
-> > //  pci 0000:00:02.0: BAR 1: assigned [mem 0x10541000-0x10541fff]
-> > pci 0000:00:03.0: BAR 1: assigned [mem 0x10442000-0x10442fff]
-> > // pci 0000:00:03.0: BAR 1: assigned [mem 0x10542000-0x10542fff]
-> > pci 0000:00:04.0: BAR 0: assigned [mem 0x10443000-0x10443fff]
-> > // pci 0000:00:01.0: BAR 0: assigned [mem 0x10540000-0x10540fff]
-> > pci 0000:00:04.0: BAR 13: assigned [io  0x2000-0x3fff]
-> > pci 0000:00:02.0: BAR 0: assigned [io  0x4000-0x407f]
-> > pci 0000:00:03.0: BAR 0: assigned [io  0x4080-0x409f]
-> > pci 0000:00:01.0: PCI bridge to [bus 01]
-> > pci 0000:00:01.0:   bridge window [io  0x1000-0x1fff]
-> > pci 0000:00:01.0:   bridge window [mem 0x10000000-0x101fffff]
-> > pci 0000:00:01.0:   bridge window [mem 0x8000000000-0x80001fffff 64bit pref]
-> > pci 0000:02:00.0: BAR 14: assigned [mem 0x10200000-0x103fffff]
-> > pci 0000:02:00.0: BAR 15: assigned [mem 0x8000200000-0x80002fffff 64bit pref]
-> > // pci 0000:02:00.0: BAR 15: assigned [mem 0x8000200000-0x80004fffff 64bit pref]
-> > pci 0000:02:00.1: BAR 6: no space for [mem size 0x00040000 pref]
-> > pci 0000:02:00.1: BAR 6: failed to assign [mem size 0x00040000 pref]
-> > // pci 0000:02:00.1: BAR 6: assigned [mem 0x10400000-0x1043ffff pref]
-> > pci 0000:02:00.1: BAR 0: failed to assign [mem size 0x00020000]
-> > // pci 0000:02:00.1: BAR 0: assigned [mem 0x10440000-0x1045ffff]
-> > pci 0000:02:00.0: BAR 13: assigned [io  0x2000-0x3fff]
-> > pci 0000:02:00.1: BAR 1: no space for [io  size 0x0040]
-> > // pci 0000:02:00.1: BAR 1: assigned [io  0x3000-0x303f]
-> > pci 0000:02:00.1: BAR 1: failed to assign [io  size 0x0040]
-> > pci 0000:03:00.0: BAR 14: assigned [mem 0x10200000-0x103fffff]
-> > pci 0000:03:00.0: BAR 15: assigned [mem 0x8000200000-0x80002fffff 64bit pref]
-> > // pci 0000:03:00.0: BAR 15: assigned [mem 0x8000200000-0x80003fffff 64bit pref]
-> > pci 0000:03:00.0: BAR 13: assigned [io  0x2000-0x3fff]
-> > // pci 0000:03:00.0: BAR 13: assigned [io  0x2000-0x2fff]
-> > pci 0000:04:00.0: BAR 6: assigned [mem 0x10200000-0x1023ffff pref]
-> > pci 0000:04:00.0: BAR 0: assigned [mem 0x10240000-0x1025ffff]
-> > pci 0000:04:00.0: BAR 1: assigned [io  0x2000-0x203f]
-> > pci 0000:03:00.0: PCI bridge to [bus 04]
-> > pci 0000:03:00.0:   bridge window [io  0x2000-0x3fff]
-> > // pci 0000:03:00.0:   bridge window [io  0x2000-0x2fff]
-> > pci 0000:03:00.0:   bridge window [mem 0x10200000-0x103fffff]
-> > pci 0000:03:00.0:   bridge window [mem 0x8000200000-0x80002fffff 64bit pref]
-> > // pci 0000:03:00.0:   bridge window [mem 0x8000200000-0x80003fffff 64bit pref]
-> > pci 0000:02:00.0: PCI bridge to [bus 03-04]
-> > pci 0000:02:00.0:   bridge window [io  0x2000-0x3fff]
-> > // pci 0000:02:00.0:   bridge window [io  0x2000-0x2fff]
-> > pci 0000:02:00.0:   bridge window [mem 0x10200000-0x103fffff]
-> > pci 0000:02:00.0:   bridge window [mem 0x8000200000-0x80002fffff 64bit pref]
-> > // pci 0000:02:00.0:   bridge window [mem 0x8000200000-0x80004fffff 64bit pref]
-> > pci 0000:00:04.0: PCI bridge to [bus 02-04]
-> > pci 0000:00:04.0:   bridge window [io  0x2000-0x3fff]
-> > pci 0000:00:04.0:   bridge window [mem 0x10200000-0x103fffff]
-> > // pci 0000:00:04.0:   bridge window [mem 0x10200000-0x104fffff]
-> > pci 0000:00:04.0:   bridge window [mem 0x8000200000-0x80002fffff 64bit pref]
-> > // pci 0000:00:04.0:   bridge window [mem 0x8000200000-0x80005fffff 64bit pref]
-> > pci_bus 0000:00: Some PCI device resources are unassigned, try booting with pci=realloc
-> > // LINE NOT PRESENT
-> > pci_bus 0000:00: resource 4 [mem 0x10000000-0x3efeffff window]
-> > pci_bus 0000:00: resource 5 [io  0x0000-0xffff window]
-> > pci_bus 0000:00: resource 6 [mem 0x8000000000-0xffffffffff window]
-> > pci_bus 0000:01: resource 0 [io  0x1000-0x1fff]
-> > pci_bus 0000:01: resource 1 [mem 0x10000000-0x101fffff]
-> > pci_bus 0000:01: resource 2 [mem 0x8000000000-0x80001fffff 64bit pref]
-> > pci_bus 0000:02: resource 0 [io  0x2000-0x3fff]
-> > pci_bus 0000:02: resource 1 [mem 0x10200000-0x103fffff]
-> > // pci_bus 0000:02: resource 1 [mem 0x10200000-0x104fffff]
-> > pci_bus 0000:02: resource 2 [mem 0x8000200000-0x80002fffff 64bit pref]
-> > //  pci_bus 0000:02: resource 2 [mem 0x8000200000-0x80005fffff 64bit pref]
-> > pci_bus 0000:03: resource 0 [io  0x2000-0x3fff]
-> > // pci_bus 0000:03: resource 0 [io  0x2000-0x2fff]
-> > pci_bus 0000:03: resource 1 [mem 0x10200000-0x103fffff]
-> > pci_bus 0000:03: resource 2 [mem 0x8000200000-0x80002fffff 64bit pref]
-> > // pci_bus 0000:03: resource 2 [mem 0x8000200000-0x80004fffff 64bit pref]
-> > pci_bus 0000:04: resource 0 [io  0x2000-0x3fff]
-> > // pci_bus 0000:04: resource 0 [io  0x2000-0x2fff]
-> > pci_bus 0000:04: resource 1 [mem 0x10200000-0x103fffff]
-> > // pci_bus 0000:04: resource 1 [mem 0x10200000-0x103fffff]
-> > pci_bus 0000:04: resource 2 [mem 0x8000200000-0x80002fffff 64bit pref]
-> > // pci_bus 0000:04: resource 2 [mem 0x8000200000-0x80003fffff 64bit pref]
-> > pcieport 0000:00:01.0: PME: Signaling with IRQ 51
-> > pcieport 0000:00:01.0: AER: enabled with IRQ 51
-> > pcieport 0000:00:01.0: pciehp: Slot #0 AttnBtn+ PwrCtrl+ MRL- AttnInd+ PwrInd+ HotPlug+ Surprise+ Interlock+ NoCompl- IbPresDis- LLActRep+
-> > pcieport 0000:00:04.0: PME: Signaling with IRQ 52
-> > pcieport 0000:00:04.0: AER: enabled with IRQ 52
-> > pcieport 0000:00:04.0: pciehp: Slot #2 AttnBtn+ PwrCtrl+ MRL- AttnInd+ PwrInd+ HotPlug+ Surprise+ Interlock+ NoCompl- IbPresDis- LLActRep+
-> > pcieport 0000:03:00.0: pciehp: Slot #3 AttnBtn+ PwrCtrl+ MRL- AttnInd+ PwrInd+ HotPlug+ Surprise+ Interlock+ NoCompl- IbPresDis- LLActRep-
-> > virtio-pci 0000:00:02.0: enabling device (0000 -> 0003)
-> > virtio-pci 0000:00:03.0: enabling device (0000 -> 0003)
-> > 
-> > All suggestions of things to test and other useful info to provide welcome.  
-> 
-> Thanks for the detailed report! I wonder if you could try the below
-> patch and see if it changes anything?
-Thanks for the quick response.
+V7 Cover letter - lightly edited.
 
-Doesn't fix it unfortunately.
+Whilst I have carried on Huai-Cheng Kuo's series version numbering and
+naming, there have been very substantial changes since v6 so I would
+suggest fresh review makes sense for anyone who has looked at this before.
+In particularly if the Avery design folks could check I haven't broken
+anything that would be great.
 
-For reference with the extra prints and a bit of context (trivial fix below)
+For reference v6: QEMU PCIe DOE for PCIe 4.0/5.0 and CXL 2.0
+https://lore.kernel.org/qemu-devel/1623330943-18290-1-git-send-email-cbrowy@avery-design.com/
 
-pci 0000:0e:00.0: bridge window [mem 0x00100000-0x000fffff 64bit pref] to [bus 0f] add_size 200000 add_align 100000
-pci 0000:0e:00.0: bridge window [mem 0x00100000-0x001fffff] to [bus 0f] add_size 100000 add_align 100000
-pci 0000:0d:00.0: bridge window [mem 0x00100000-0x001fffff 64bit pref] to [bus 0e-0f] add_size 200000 add_align 100000
-pci 0000:0d:00.0: bridge window [mem 0x00100000-0x001fffff] to [bus 0e-0f] add_size 100000 add_align 100000
-pci 0000:0c:00.0: bridge window [mem 0x00100000-0x001fffff 64bit pref] to [bus 0d-0f] add_size 300000 add_align 100000
-pci 0000:0c:00.0: bridge window [mem 0x00100000-0x002fffff] to [bus 0d-0f] add_size 100000 add_align 100000
-pci 0000:0d:00.0: check [io  0x1000-0x1fff
-pci 0000:0d:00.0: check [mem 0x00100000-0x001fffff]
-pci 0000:0d:00.0: check [mem 0x00100000-0x001fffff 64bit pref]
-pci 0000:0c:00.0: BAR 14: assigned [mem 0x10400000-0x105fffff]
-pci 0000:0c:00.0: BAR 15: assigned [mem 0x10600000-0x106fffff 64bit pref]
-pci 0000:0c:00.0: BAR 0: assigned [mem 0x10740000-0x10740fff]
-pci 0000:0c:00.0: BAR 13: no space for [io  size 0x2000]
-pci 0000:0c:00.0: BAR 13: failed to assign [io  size 0x2000]
-pci 0000:0d:00.0: BAR 14: assigned [mem 0x10400000-0x105fffff]
-pci 0000:0d:00.0: BAR 15: assigned [mem 0x10600000-0x106fffff 64bit pref]      
+Summary of changes:
+1) Linux headers definitions for DOE are now upstream so drop that patch.
+2) Add CDAT for switch upstream port.
+3) Generate 'plausible' default CDAT tables when a file is not provided.
+4) General refactoring to calculate the correct table sizes and allocate
+   based on that rather than copying from a local static array.
+5) Changes from earlier reviews such as matching QEMU type naming style.
+6) Moved compliance and SPDM usecases to future patch sets.
 
-> I will be on vacation starting
-> tomorrow for the whole next week so if nothing else helps then I suppose
-> we should revert that commit for now.
-> 
-> I can look at this further after I come back.
+Sign-offs on these are complex because the patches were originally developed
+by Huai-Cheng Kuo, but posted by Chris Browy and then picked up by Jonathan
+Cameron who made substantial changes.
 
-Enjoy your vacation.  I might get time to dig a bit more whilst you are away
-though probably not :(
+Huai-Cheng Kuo confirmed they are happy to maintain this updated code.
 
-Jonathan
+What's here?
 
+This series brings generic PCI Express Data Object Exchange support (DOE)
+DOE is defined in the PCIe Base Spec r6.0. It consists of a mailbox in PCI
+config space via a PCIe Extended Capability Structure.
+The PCIe spec defines several protocols (including one to discover what
+protocols a given DOE instance supports) and other specification such as
+CXL define additional protocols using their own vendor IDs.
 
-> 
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index dc6a30ee6edf..637f1a1df409 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1939,7 +1939,7 @@ static void pci_bridge_distribute_available_resources(struct pci_dev *bridge,
->  					       available_mmio_pref);
->  }
->  
-> -static bool pci_bridge_resources_not_assigned(struct pci_dev *dev)
-> +static bool pci_bridge_resources_assigned(struct pci_dev *dev)
->  {
->  	const struct resource *r;
->  
-> @@ -1951,16 +1951,19 @@ static bool pci_bridge_resources_not_assigned(struct pci_dev *dev)
->  	 * in the same way we do with the normal hotplug case.
->  	 */
->  	r = &dev->resource[PCI_BRIDGE_IO_WINDOW];
-> -	if (!r->flags || !(r->flags & IORESOURCE_STARTALIGN))
-> -		return false;
-> +	dev_info(dev->dev, "check %pR\n", r);
+In this series we make use of the DOE to support the CXL spec defined
+Table Access Protocol, specifically to provide access to CDAT - a
+table specified in a specification that is hosted by the UEFI forum
+and is used to provide runtime discoverability of the sort of information
+that would otherwise be available in firmware tables (memory types,
+latency and bandwidth information etc).
 
-&dev->dev 
+The Linux kernel gained support for DOE / CDAT on CXL type 3 EPs in 6.0.
+The version merged did not support interrupts (earlier versions did
+so that support in the emulation was tested a while back).
 
-> +	if (r->flags && !(r->flags & IORESOURCE_STARTALIGN))
-> +		return true;
->  	r = &dev->resource[PCI_BRIDGE_MEM_WINDOW];
-> -	if (!r->flags || !(r->flags & IORESOURCE_STARTALIGN))
-> -		return false;
-> +	dev_info(dev->dev, "check %pR\n", r);
-> +	if (r->flags && !(r->flags & IORESOURCE_STARTALIGN))
-> +		return true;
->  	r = &dev->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
-> -	if (!r->flags || !(r->flags & IORESOURCE_STARTALIGN))
-> -		return false;
-> +	dev_info(dev->dev, "check %pR\n", r);
-> +	if (r->flags && !(r->flags & IORESOURCE_STARTALIGN))
-> +		return true;
->  
-> -	return true;
-> +	return false;
->  }
->  
->  static void pci_root_bus_distribute_available_resources(struct pci_bus *bus,
-> @@ -1979,7 +1982,7 @@ static void pci_root_bus_distribute_available_resources(struct pci_bus *bus,
->  		 * Need to check "bridge" here too because it is NULL
->  		 * in case of root bus.
->  		 */
-> -		if (bridge && pci_bridge_resources_not_assigned(dev)) {
-> +		if (bridge && !pci_bridge_resources_assigned(dev)) {
->  			pci_bridge_distribute_available_resources(bridge, add_list);
->  			/*
->  			 * There is only PCIe upstream port on the bus
-> 
-> 
+This series provides CDAT emulation for CXL switch upstream ports
+and CXL type 3 memory devices. Note that to exercise the switch support
+additional Linux kernel patches are needed.
+https://lore.kernel.org/linux-cxl/20220503153449.4088-1-Jonathan.Cameron@huawei.com/
+(I'll post a new version of that support shortly)
+
+Additional protocols will be supported by follow on patch sets:
+* CXL compliance protocol.
+* CMA / SPDM device attestation.
+(Old version at https://gitlab.com/jic23/qemu/-/commits/cxl-next - will refresh
+that tree next week)
+Huai-Cheng Kuo (3):
+  hw/pci: PCIe Data Object Exchange emulation
+  hw/cxl/cdat: CXL CDAT Data Object Exchange implementation
+  hw/mem/cxl-type3: Add CXL CDAT Data Object Exchange
+
+Jonathan Cameron (2):
+  hw/mem/cxl-type3: Add MSIX support
+  hw/pci-bridge/cxl-upstream: Add a CDAT table access DOE
+
+ MAINTAINERS                    |   7 +
+ hw/cxl/cxl-cdat.c              | 224 ++++++++++++++++++++
+ hw/cxl/meson.build             |   1 +
+ hw/mem/cxl_type3.c             | 264 ++++++++++++++++++++++++
+ hw/pci-bridge/cxl_upstream.c   | 195 +++++++++++++++++-
+ hw/pci/meson.build             |   1 +
+ hw/pci/pcie_doe.c              | 367 +++++++++++++++++++++++++++++++++
+ include/hw/cxl/cxl_cdat.h      | 166 +++++++++++++++
+ include/hw/cxl/cxl_component.h |   7 +
+ include/hw/cxl/cxl_device.h    |   3 +
+ include/hw/cxl/cxl_pci.h       |   1 +
+ include/hw/pci/pci_ids.h       |   3 +
+ include/hw/pci/pcie.h          |   1 +
+ include/hw/pci/pcie_doe.h      | 123 +++++++++++
+ include/hw/pci/pcie_regs.h     |   4 +
+ 15 files changed, 1366 insertions(+), 1 deletion(-)
+ create mode 100644 hw/cxl/cxl-cdat.c
+ create mode 100644 hw/pci/pcie_doe.c
+ create mode 100644 include/hw/cxl/cxl_cdat.h
+ create mode 100644 include/hw/pci/pcie_doe.h
+
+-- 
+2.37.2
 
