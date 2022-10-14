@@ -2,47 +2,42 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB08AC4332F
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 Oct 2022 15:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0173C433FE
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 Oct 2022 15:57:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229891AbiJNP30 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 14 Oct 2022 11:29:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55072 "EHLO
+        id S229796AbiJNP5B (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 Oct 2022 11:57:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229712AbiJNP3X (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Oct 2022 11:29:23 -0400
+        with ESMTP id S229556AbiJNP5A (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Oct 2022 11:57:00 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F01C71C8431
-        for <linux-cxl@vger.kernel.org>; Fri, 14 Oct 2022 08:29:19 -0700 (PDT)
-Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MpqyN2nctz67y8R;
-        Fri, 14 Oct 2022 23:27:40 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1342DD95;
+        Fri, 14 Oct 2022 08:56:57 -0700 (PDT)
+Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MprXk2v91z67Vhk;
+        Fri, 14 Oct 2022 23:53:58 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
+ fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 14 Oct 2022 17:29:17 +0200
+ 15.1.2375.31; Fri, 14 Oct 2022 17:56:54 +0200
 Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 14 Oct
- 2022 16:29:16 +0100
-Date:   Fri, 14 Oct 2022 16:29:15 +0100
+ 2022 16:56:54 +0100
+Date:   Fri, 14 Oct 2022 16:56:53 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Gregory Price <gregory.price@memverge.com>
-CC:     Gregory Price <gourry.memverge@gmail.com>, <qemu-devel@nongnu.org>,
-        <linux-cxl@vger.kernel.org>, <alison.schofield@intel.com>,
-        <dave@stgolabs.net>, <a.manzanares@samsung.com>,
-        <bwidawsk@kernel.org>, <mst@redhat.com>,
-        <hchkuo@avery-design.com.tw>, <cbrowy@avery-design.com>,
-        <ira.weiny@intel.com>
-Subject: Re: [PATCH 5/5] hw/mem/cxl_type3: Refactor CDAT sub-table entry
- initialization into a function
-Message-ID: <20221014162915.0000187a@huawei.com>
-In-Reply-To: <Y0hpv8jdqi+r7f4r@memverge.com>
-References: <20221007152156.24883-5-Jonathan.Cameron@huawei.com>
-        <20221012182120.174142-1-gregory.price@memverge.com>
-        <20221012182120.174142-6-gregory.price@memverge.com>
-        <20221013114711.00005623@huawei.com>
-        <Y0hpv8jdqi+r7f4r@memverge.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+CC:     <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+        <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+        <bwidawsk@kernel.org>, <a.manzanares@samsung.com>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH] cxl: Add generic MSI/MSI-X interrupt support
+Message-ID: <20221014165653.0000140e@huawei.com>
+In-Reply-To: <20221013173703.th54drzlafvj74oo@offworld>
+References: <20221012180432.473373-1-dave@stgolabs.net>
+        <20221013131913.0000038b@huawei.com>
+        <20221013173703.th54drzlafvj74oo@offworld>
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
@@ -55,57 +50,68 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 13 Oct 2022 15:40:47 -0400
-Gregory Price <gregory.price@memverge.com> wrote:
+On Thu, 13 Oct 2022 10:37:03 -0700
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-> > >      /* For now, no memory side cache, plausiblish numbers */
-> > > -    *dslbis_nonvolatile1 = (CDATDslbis) {
-> > > +    *dslbis1 = (CDATDslbis) {
-> > >          .header = {
-> > >              .type = CDAT_TYPE_DSLBIS,
-> > > -            .length = sizeof(*dslbis_nonvolatile1),
-> > > +            .length = sizeof(*dslbis1),
-> > >          },
-> > > -        .handle = nonvolatile_dsmad,
-> > > +        .handle = dsmad_handle,
-> > >          .flags = HMAT_LB_MEM_MEMORY,
-> > >          .data_type = HMAT_LB_DATA_READ_LATENCY,
-> > >          .entry_base_unit = 10000, /* 10ns base */
-> > >          .entry[0] = 15, /* 150ns */  
-> > 
-> > If we are going to wrap this up for volatile / non-volatile 
-> > we probably need to pass in a reasonable value for these.
-> > Whilst not technically always true, to test the Linux handling
-> > I'd want non-volatile to report as longer latency.
-> >   
+> Thanks for having a look.
 > 
-> Here's a good question
+> On Thu, 13 Oct 2022, Jonathan Cameron wrote:
 > 
-> Do we want the base unit and entry to be adjustable for volatile and
-> nonvolatile regions for the purpose of testing?  Or should this simply
-> be a static value for each?
+> >> +struct cxl_irq_cap {
+> >> +	const char *name;
+> >> +	int (*get_max_msgnum)(struct cxl_dev_state *cxlds);  
+> >
+> >For the CPMU case I need to walk the register locator dvsec block so need
+> >the callback to take the pci_dev not the cxl_dev_state.  
+> 
+> Hmm ok, however maybe I'm missing something, but given a pdev, do we have a
+> way to get back to the cxlds?
 
-We definitely want a 'default' value if nothing is provided.
-It might be useful to allow it to be adjusted, but lets add that when
-we have a use for it (perhaps testing some stuff in kernel where the
-values matter enough to make them controllable).
+I'd failed to register we can easily get from cxlds to pci dev.
+Had wrong mental model of what embedded what.
 
 > 
-> Since we need to pass in (is_pmem/is_nonvolatile) or whatever into the
-> cdat function, we could just use that to do one of a few options:
->     1) Select from a static value
->     2) Select a static value and apply a multiplier for nvmem
->     3) Use a base/value provided by the use and apply a multiplier
->     4) Make vmem and pmem have separately configurable latencies
+> ...
+> 
+> >>  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >>  {
+> >>  	struct cxl_register_map map;
+> >> @@ -498,6 +558,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >>  	if (IS_ERR(cxlmd))
+> >>  		return PTR_ERR(cxlmd);
+> >>
+> >> +	/* TODO: When there are users, this return value must be checked */
+> >> +	cxl_pci_alloc_irq_vectors(cxlds);
+> >> +  
+> >
+> >Gut feeling is this will end up moving ahead of any of the sub device creation
+> >because many of them end up needing interrupts.
+> >
+> >Also check response from the start - can't see a reason to not do so as we
+> >won't be registering any at all if no callbacks provided.
+> >
+> >So I'd move it above the devm_cxl_add_memdev() call.  
+> 
+> Will do. In addition, are you ok with grouping the irq setup for each cxl
+> feature/component, ie:
+> 
+> if (cxl_pci_alloc_irq_vectors(cxlds) > 0) {
+>     cxl_setup_mbox_irq();
+>     cxl_setup_events_irq();
+>     cxl_setup_pmu_irq();
+> }
+> 
+> I ask mostly from the mailbox perspective, in that we already have
+> a mbox setup call and can certainly understand if people would prefer
+> it there, but I tend to prefer the above (logically wrt irqs).
 
-For now 1 is fine I think.
-
-I've just pushed out a doe-v9 tag and cxl-2022-10-14 branch to 
-gitlab.com/jic23/qemu  Also advanced the base tree to current QEMU mainline.
-
-Note that if anyone is playing with the switch cci device and mainline kernel
-you'll currently need to revert
-https://lore.kernel.org/linux-pci/20220905080232.36087-5-mika.westerberg@linux.intel.com/
+I'd rather see it in each of the setup calls.  Out in pci.c we
+should just be doing minimum to find that max irq number.
+e.g. the CPMU driver will rewalk and find it's vector number directly
+from it's own register space.
 
 Jonathan
+> 
+> Thanks,
+> Davidlohr
 
