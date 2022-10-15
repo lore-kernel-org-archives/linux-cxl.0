@@ -2,122 +2,79 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C680C4332F
-	for <linux-cxl@archiver.kernel.org>; Sat, 15 Oct 2022 11:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE40C4332F
+	for <linux-cxl@archiver.kernel.org>; Sat, 15 Oct 2022 15:27:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229686AbiJOLdH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 15 Oct 2022 07:33:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38864 "EHLO
+        id S229602AbiJOP1p (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 15 Oct 2022 11:27:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229653AbiJOLdG (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 15 Oct 2022 07:33:06 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92EFB5508F;
-        Sat, 15 Oct 2022 04:33:05 -0700 (PDT)
+        with ESMTP id S229679AbiJOP1n (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 15 Oct 2022 11:27:43 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 984D63471F;
+        Sat, 15 Oct 2022 08:27:41 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id F27CAB80818;
-        Sat, 15 Oct 2022 11:33:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27358C433D6;
-        Sat, 15 Oct 2022 11:33:00 +0000 (UTC)
-Date:   Sat, 15 Oct 2022 07:32:57 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     ira.weiny@intel.com
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
+        by ams.source.kernel.org (Postfix) with ESMTPS id 811B4B8076B;
+        Sat, 15 Oct 2022 15:27:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10BB0C433D6;
+        Sat, 15 Oct 2022 15:27:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665847658;
+        bh=LjflNxGf7oZ5ML6azYmoPdLj/IgEioxaCcvyPF5qpbI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=gWZ217cSWYBBIBbC7/wgyMyQ2lq+LAcPitPlY6gtwayw9IikLNyH/4Nm+UjYhDLmJ
+         Dxz1QutX5L4amrEHu1kCQ+EIk89dUvT9pqhkn/s8mNrBxcUg47e/4m8hGRLmcqoZp7
+         ScLu5Q4rKvW+TCdf/XW2/hkGf2ImbUpTFVOG9Tqf89rduxixDf4RKpcssuTY5tFhx2
+         CI7eCjGQLO/5TCor8NWrBaZX+v43yphJHf5Abnm7w0UcgB7zu4lDk9lX1GUegHJoFZ
+         RCESO4vX8yBt/lToRJFT48jguep/Wd39S/JBlwRtQaFEGKujajYrcDjLrg8uH0jHn5
+         MCgBYb4dZMkZQ==
+Date:   Sat, 15 Oct 2022 10:27:36 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Chris Chiu <chris.chiu@canonical.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-Subject: Re: [RFC V2 PATCH 07/11] cxl/mem: Trace Memory Module Event Record
-Message-ID: <20221015073257.0fc057ee@rorschach.local.home>
-In-Reply-To: <20221010224131.1866246-8-ira.weiny@intel.com>
-References: <20221010224131.1866246-1-ira.weiny@intel.com>
-        <20221010224131.1866246-8-ira.weiny@intel.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Lukas Wunner <lukas@wunner.de>, linux-cxl@vger.kernel.org,
+        linuxarm@huawei.com
+Subject: [GIT PULL] PCI fixes for v6.1
+Message-ID: <20221015152736.GA3574429@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 10 Oct 2022 15:41:27 -0700
-ira.weiny@intel.com wrote:
+The following changes since commit 041bc24d867a2a577a06534d6d25e500b24a01ef:
 
-> +TRACE_EVENT(memory_module,
+  Merge tag 'pci-v6.1-changes' of git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci (2022-10-11 11:08:18 -0700)
 
-Make sure all your new events have the "cxl_" prefix. "cxl_memory_module".
+are available in the Git repository at:
 
-This goes for all events in this series.
+  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v6.1-fixes-1
 
-Thanks,
+for you to fetch changes up to 5632e2beaf9d5dda694c0572684dea783d8a9492:
 
--- Steve
+  Revert "PCI: Distribute available resources for root buses, too" (2022-10-14 14:27:58 -0500)
 
-> +
-> +	TP_PROTO(const char *dev_name, enum cxl_event_log_type log,
-> +		 struct cxl_event_mem_module *rec),
-> +
-> +	TP_ARGS(dev_name, log, rec),
-> +
-> +	TP_STRUCT__entry(
-> +		CXL_EVT_TP_entry
-> +
-> +		/* Memory Module Event */
-> +		__field(u8, event_type)
-> +
-> +		/* Device Health Info */
-> +		__field(u8, health_status)
-> +		__field(u8, media_status)
-> +		__field(u8, life_used)
-> +		__field(u32, dirty_shutdown_cnt)
-> +		__field(u32, cor_vol_err_cnt)
-> +		__field(u32, cor_per_err_cnt)
-> +		__field(s16, device_temp)
-> +		__field(u8, add_status)
-> +
-> +		__array(u8, reserved, CXL_EVENT_MEM_MOD_RES_SIZE)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		CXL_EVT_TP_fast_assign(dev_name, log, rec->hdr);
-> +
-> +		/* Memory Module Event */
-> +		__entry->event_type = rec->event_type;
-> +
-> +		/* Device Health Info */
-> +		__entry->health_status = rec->info.health_status;
-> +		__entry->media_status = rec->info.media_status;
-> +		__entry->life_used = rec->info.life_used;
-> +		__entry->dirty_shutdown_cnt = get_unaligned_le32(rec->info.dirty_shutdown_cnt);
-> +		__entry->cor_vol_err_cnt = get_unaligned_le32(rec->info.cor_vol_err_cnt);
-> +		__entry->cor_per_err_cnt = get_unaligned_le32(rec->info.cor_per_err_cnt);
-> +		__entry->device_temp = get_unaligned_le16(rec->info.device_temp);
-> +		__entry->add_status = rec->info.add_status;
-> +		memcpy(__entry->reserved, &rec->reserved,
-> +			CXL_EVENT_MEM_MOD_RES_SIZE);
-> +	),
-> +
-> +	CXL_EVT_TP_printk("evt_type='%s' health_status='%s' media_status='%s' " \
-> +		"as_life_used=%s as_dev_temp=%s as_cor_vol_err_cnt=%s " \
-> +		"as_cor_per_err_cnt=%s life_used=%u dev_temp=%d " \
-> +		"dirty_shutdown_cnt=%u cor_vol_err_cnt=%u cor_per_err_cnt=%u " \
-> +		"reserved=%s",
-> +		show_dev_evt_type(__entry->event_type),
-> +		show_health_status_flags(__entry->health_status),
-> +		show_media_status(__entry->media_status),
-> +		show_add_status(CXL_DHI_AS_LIFE_USED(__entry->add_status)),
-> +		show_add_status(CXL_DHI_AS_DEV_TEMP(__entry->add_status)),
-> +		show_add_status(CXL_DHI_AS_COR_VOL_ERR_CNT(__entry->add_status)),
-> +		show_add_status(CXL_DHI_AS_COR_PER_ERR_CNT(__entry->add_status)),
-> +		__entry->life_used, __entry->device_temp,
-> +		__entry->dirty_shutdown_cnt, __entry->cor_vol_err_cnt,
-> +		__entry->cor_per_err_cnt,
-> +		__print_hex(__entry->reserved, CXL_EVENT_MEM_MOD_RES_SIZE)
-> +		)
-> +);
-> +
-> +
+----------------------------------------------------------------
+
+- Revert the attempt to distribute spare resources to unconfigured hotplug
+  bridges at boot time.  This fixed some dock hot-add scenarios, but
+  Jonathan Cameron reported that it broke a topology with a multi-function
+  device where one function was a Switch Upstream Port and the other was an
+  Endpoint.
+
+----------------------------------------------------------------
+Bjorn Helgaas (1):
+      Revert "PCI: Distribute available resources for root buses, too"
+
+ drivers/pci/setup-bus.c | 62 +------------------------------------------------
+ 1 file changed, 1 insertion(+), 61 deletions(-)
