@@ -2,39 +2,54 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE40C4332F
-	for <linux-cxl@archiver.kernel.org>; Sat, 15 Oct 2022 15:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B843DC43219
+	for <linux-cxl@archiver.kernel.org>; Sun, 16 Oct 2022 00:15:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229602AbiJOP1p (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 15 Oct 2022 11:27:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56320 "EHLO
+        id S229695AbiJPAPo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 15 Oct 2022 20:15:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229679AbiJOP1n (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 15 Oct 2022 11:27:43 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 984D63471F;
-        Sat, 15 Oct 2022 08:27:41 -0700 (PDT)
+        with ESMTP id S229700AbiJPAPn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 15 Oct 2022 20:15:43 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D82BE3FA3A;
+        Sat, 15 Oct 2022 17:15:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 811B4B8076B;
-        Sat, 15 Oct 2022 15:27:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10BB0C433D6;
-        Sat, 15 Oct 2022 15:27:37 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 91359B80B47;
+        Sun, 16 Oct 2022 00:15:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3F9BAC433C1;
+        Sun, 16 Oct 2022 00:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665847658;
-        bh=LjflNxGf7oZ5ML6azYmoPdLj/IgEioxaCcvyPF5qpbI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=gWZ217cSWYBBIBbC7/wgyMyQ2lq+LAcPitPlY6gtwayw9IikLNyH/4Nm+UjYhDLmJ
-         Dxz1QutX5L4amrEHu1kCQ+EIk89dUvT9pqhkn/s8mNrBxcUg47e/4m8hGRLmcqoZp7
-         ScLu5Q4rKvW+TCdf/XW2/hkGf2ImbUpTFVOG9Tqf89rduxixDf4RKpcssuTY5tFhx2
-         CI7eCjGQLO/5TCor8NWrBaZX+v43yphJHf5Abnm7w0UcgB7zu4lDk9lX1GUegHJoFZ
-         RCESO4vX8yBt/lToRJFT48jguep/Wd39S/JBlwRtQaFEGKujajYrcDjLrg8uH0jHn5
-         MCgBYb4dZMkZQ==
-Date:   Sat, 15 Oct 2022 10:27:36 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        s=k20201202; t=1665879340;
+        bh=J70ZjdCmIKdmPSrWtliery7yD5P5VZbS3rv00eI3b/g=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=p2fHKXtDe04pnpp2KYtVqQKR1Qv8CAOe1V2zUve+P/g9mXRxifbx0aaCJK988y+Ua
+         4hMU3jaobdKZthCuMfwpurBtOMWO3HPERkdXH9uyVI+9M92czFHp5PXuETyOAyz3bu
+         RsuFe12MrYtzWbhp2ecC8ppV/FpN2afzivObCZqFt6eeOP4bfTmf3mftYURbPFmtuw
+         p3+Dijl8nlgthrvIIgBSifvLt0dugdKrbNKixPJhzm/L+W1pVBqAmcFg6vJgPhYPn5
+         IBFsuNHUv55L8IC9jIJGlRfqNsBciMW3XaxXWL+DBwBsMmR6cytp1ZSFJfaf9qzBow
+         yJQVZwFsqJX8g==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2B264E29F31;
+        Sun, 16 Oct 2022 00:15:40 +0000 (UTC)
+Subject: Re: [GIT PULL] PCI fixes for v6.1
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20221015152736.GA3574429@bhelgaas>
+References: <20221015152736.GA3574429@bhelgaas>
+X-PR-Tracked-List-Id: <linux-cxl.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20221015152736.GA3574429@bhelgaas>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v6.1-fixes-1
+X-PR-Tracked-Commit-Id: 5632e2beaf9d5dda694c0572684dea783d8a9492
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 41410965c3629367cbd0889dc0c8bddfb9e8a2d5
+Message-Id: <166587934016.18523.586383078430762257.pr-tracker-bot@kernel.org>
+Date:   Sun, 16 Oct 2022 00:15:40 +0000
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Chris Chiu <chris.chiu@canonical.com>,
@@ -43,38 +58,19 @@ Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Lukas Wunner <lukas@wunner.de>, linux-cxl@vger.kernel.org,
         linuxarm@huawei.com
-Subject: [GIT PULL] PCI fixes for v6.1
-Message-ID: <20221015152736.GA3574429@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The following changes since commit 041bc24d867a2a577a06534d6d25e500b24a01ef:
+The pull request you sent on Sat, 15 Oct 2022 10:27:36 -0500:
 
-  Merge tag 'pci-v6.1-changes' of git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci (2022-10-11 11:08:18 -0700)
+> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v6.1-fixes-1
 
-are available in the Git repository at:
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/41410965c3629367cbd0889dc0c8bddfb9e8a2d5
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v6.1-fixes-1
+Thank you!
 
-for you to fetch changes up to 5632e2beaf9d5dda694c0572684dea783d8a9492:
-
-  Revert "PCI: Distribute available resources for root buses, too" (2022-10-14 14:27:58 -0500)
-
-----------------------------------------------------------------
-
-- Revert the attempt to distribute spare resources to unconfigured hotplug
-  bridges at boot time.  This fixed some dock hot-add scenarios, but
-  Jonathan Cameron reported that it broke a topology with a multi-function
-  device where one function was a Switch Upstream Port and the other was an
-  Endpoint.
-
-----------------------------------------------------------------
-Bjorn Helgaas (1):
-      Revert "PCI: Distribute available resources for root buses, too"
-
- drivers/pci/setup-bus.c | 62 +------------------------------------------------
- 1 file changed, 1 insertion(+), 61 deletions(-)
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
