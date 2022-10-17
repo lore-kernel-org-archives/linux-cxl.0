@@ -2,131 +2,148 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7494C4332F
-	for <linux-cxl@archiver.kernel.org>; Mon, 17 Oct 2022 18:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0093FC4332F
+	for <linux-cxl@archiver.kernel.org>; Mon, 17 Oct 2022 23:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229913AbiJQSCJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 17 Oct 2022 14:02:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37822 "EHLO
+        id S229728AbiJQXoI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 17 Oct 2022 19:44:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230364AbiJQSCH (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 17 Oct 2022 14:02:07 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DDC863FFB;
-        Mon, 17 Oct 2022 11:02:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666029727; x=1697565727;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uYk0ndVVX1m8lJ1xXsSeXQNj8KaTwzcRPHZ/Ix74hRI=;
-  b=E5m/LTt/fXJnxQw6AcJzqFSxieiae+4ti1cl+kURbO+E6jw8/jwC3RA/
-   JE+o1MYoqvrpzaiZoDV8K2GeAZQkD1Dz0rFdHRmmLESqsF8rCfKe6WzrR
-   XGrAOfWBMdcQN2WLy5iH9TtHSZNMXix3VtlhbcHp820wlP2PgcpKFzr7u
-   aS2LgewQfJPxgw7+V4+VDckT3uv/kSnktlT2VeLqzcqxmtytOIjveFyL6
-   mWja1ez7GAqVUA0N0Z8thDWWmgm7FuHaNS9WGHLmYg5IR5oZwxhimJq+t
-   RZTc87ojqBzcUQwB2Nwu4fBbAVjfH/F1t4DlYRJOJat5G5Cl1upSkRheR
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10503"; a="367901327"
-X-IronPort-AV: E=Sophos;i="5.95,192,1661842800"; 
-   d="scan'208";a="367901327"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2022 11:01:56 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10503"; a="770855596"
-X-IronPort-AV: E=Sophos;i="5.95,192,1661842800"; 
-   d="scan'208";a="770855596"
-Received: from lingyaom-mobl.amr.corp.intel.com (HELO aschofie-mobl2) ([10.255.230.132])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2022 11:01:55 -0700
-Date:   Mon, 17 Oct 2022 11:01:53 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] cxl/region: Add trigger_poison_list sysfs
- attribute
-Message-ID: <Y02YkXawtM4IK7wL@aschofie-mobl2>
-References: <cover.1665606782.git.alison.schofield@intel.com>
- <b5e7787816326854b736c922f7fcf195fba71338.1665606782.git.alison.schofield@intel.com>
- <20221017144302.0000521c@huawei.com>
+        with ESMTP id S230260AbiJQXoH (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 17 Oct 2022 19:44:07 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 998D584E53
+        for <linux-cxl@vger.kernel.org>; Mon, 17 Oct 2022 16:44:06 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id i9so8401482qvo.0
+        for <linux-cxl@vger.kernel.org>; Mon, 17 Oct 2022 16:44:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sy9tv1vwouL5wVhECQge7xWZ+qNM1LObFiN/5x/fMFM=;
+        b=FIri2iF5j+kvwS6svlaLz2nUebvPOpilYZ79rghjpIxUpv9wvIhQR9M78yVUsLgDzN
+         tW7j+BG3oPV/a0ejDAbiq/2VuyhvfsjzEGHcOD5MQ6i+MsJon0t/LlVrd0PS5GQ5k5Sp
+         ysqotUx7w/D9n9KLea2dF8Q5PWbHuwSlgHN4oeYIbVD+T0fHzTS0/s1fZD0fs4BlKV9O
+         +EGyjvaaC+iyud7nmPho+MN1mCoj+drfD50YjVkTuE55nD7JoqhNy/B9DUUkKYd726SB
+         NqhVyTiBnlIAbQUG5majwejJhZ0nvmgmolDOEtOk2O6e58UHlt0h4YzAW2+Iq/PqujPU
+         cROQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sy9tv1vwouL5wVhECQge7xWZ+qNM1LObFiN/5x/fMFM=;
+        b=BDB+aKFIG3JJ0IYqgSkzhstOLc2AJ42ugdplLzMtIEuSOW6og4geyN1rZopPwXaq5a
+         74yIkZylK+VvZKCT5YS5wzHQgsL8eFkXn9FB7HAsv2ZdHSV3cjZypbN4OAbdSw2kHSk8
+         xq625AhbO6nWd5Zy0HsJYjJEes41wmEtpzpuo5NUR+dSq7l6d2D8zd9GbeW2iC/i3Jmi
+         FnPH79fgRVD4T0QpxHuD6F4ckeve/XXVBJmo3Q8su5zpTkcrBjXAr8CmuvEOBk5l2ja+
+         6BaecF7hjuHEeCTSPpnrzgJUybefy+NAv89/AZHO6HauJXIXR4vIRD9gqq03oOBFZiGN
+         uEsw==
+X-Gm-Message-State: ACrzQf3oZI7bUDX0ajvZAzv6I8po2V/0Zn1oBw1DBIPu3qoTFaW73hKK
+        b3Q+i0qNo03fp9Du/qEXOA==
+X-Google-Smtp-Source: AMsMyM4quy6AxXzTx9DblcWGeAySQBU3NbJ+ozk26GaG36plRJmcjSL3nf0X1bU37A8LksBdp+IoHg==
+X-Received: by 2002:ad4:5d68:0:b0:4af:af07:580b with SMTP id fn8-20020ad45d68000000b004afaf07580bmr37946qvb.14.1666050245643;
+        Mon, 17 Oct 2022 16:44:05 -0700 (PDT)
+Received: from fedora.mshome.net (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id m10-20020ac8444a000000b0039b03ac2f72sm790520qtn.46.2022.10.17.16.44.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Oct 2022 16:44:05 -0700 (PDT)
+From:   Gregory Price <gourry.memverge@gmail.com>
+X-Google-Original-From: Gregory Price <gregory.price@memverge.com>
+To:     qemu-devel@nongnu.org
+Cc:     mst@redhat.com, marcel.apfelbaum@gmail.com, imammedo@redhat.com,
+        ani@anisinha.ca, jonathan.cameron@huawei.com,
+        linux-cxl@vger.kernel.org, alison.schofield@intel.com,
+        dave@stgolabs.net, a.manzanares@samsung.com, bwidawsk@kernel.org,
+        gregory.price@memverge.com, hchkuo@avery-design.com.tw,
+        cbrowy@avery-design.com, ira.weiny@intel.com
+Subject: [BUG] hw/i386/pc.c: CXL Fixed Memory Window should not reserve e820 in bios
+Date:   Mon, 17 Oct 2022 19:40:02 -0400
+Message-Id: <20221017234001.53297-1-gregory.price@memverge.com>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221017144302.0000521c@huawei.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Oct 17, 2022 at 02:43:02PM +0100, Jonathan Cameron wrote:
-> On Wed, 12 Oct 2022 14:28:20 -0700
-> alison.schofield@intel.com wrote:
-> 
-> > From: Alison Schofield <alison.schofield@intel.com>
-> > 
-> > When a boolean 'true' is written to this attribute the region driver
-> > retrieves the poison list for the capacity each device contributes
-> > to this region. The list includes addresses that are poisoned, or
-> > would result in poison if accessed, and the source of the poison.
-> > The retrieved errors are logged as kernel trace events with the
-> > label 'cxl_poison'.
-> > 
-> > Devices not supporting the poison list capability are ignored.
-> > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> 
-> Hi Alison,
-> 
-> For some reason I don't have cxl_dpa_resource().
-> Should that be cxl_dpa_resource_start()?
+Early-boot e820 records will be inserted by the bios/efi/early boot
+software and be reported to the kernel via insert_resource.  Later, when
+CXL drivers iterate through the regions again, they will insert another
+resource and make the RESERVED memory area a child.
 
-Yes.
-> 
-> Looks like it got renamed in
-> cxl/hdm: Add support for allocating DPA to an endpoint decoder
-> cf880423b6a0599499c1f83542cab0b75daa29ba
+This RESERVED memory area causes the memory region to become unusable,
+and as a result attempting to create memory regions with
 
-Looks like it got renamed during the patches review. Not worth
-unravelling now. I will rebase in next version.
+    `cxl create-region ...`
 
-Sorry about that and thanks!
-Alison
+Will fail due to the RESERVED area intersecting with the CXL window.
 
-> 
-> Jonathan
-> 
-> > +static ssize_t trigger_poison_list_store(struct device *dev,
-> > +					 struct device_attribute *attr,
-> > +					 const char *buf, size_t len)
-> > +{
-> > +	struct cxl_region *cxlr = to_cxl_region(dev);
-> > +	struct cxl_region_params *p = &cxlr->params;
-> > +	struct cxl_endpoint_decoder *cxled;
-> > +	struct cxl_memdev *cxlmd;
-> > +	u64 offset, length;
-> > +	int rc, i;
-> > +	bool tmp;
-> > +
-> > +	if (kstrtobool(buf, &tmp))
-> > +		return -EINVAL;
-> > +
-> > +	for (i = 0; i <  p->nr_targets; i++) {
-> > +		cxled = p->targets[i];
-> > +		cxlmd = cxled_to_memdev(cxled);
-> > +		if (!test_bit(CXL_MEM_COMMAND_ID_GET_POISON,
-> > +			      cxlmd->cxlds->enabled_cmds))
-> > +			continue;
-> > +		offset = cxl_dpa_resource(cxled);
-> > +		length = cxl_dpa_size(cxled);
-> > +		rc = cxl_mem_get_poison(cxlmd, offset, length,
-> > +					dev_name(&cxlr->dev));
-> > +		if (rc)
-> > +			return rc;
-> > +	}
-> > +	return len;
-> > +}
-> > +static DEVICE_ATTR_WO(trigger_poison_list);
+
+During boot the following traceback is observed:
+
+0xffffffff81101650 in insert_resource_expand_to_fit ()
+0xffffffff83d964c5 in e820__reserve_resources_late ()
+0xffffffff83e03210 in pcibios_resource_survey ()
+0xffffffff83e04f4a in pcibios_init ()
+
+Which produces a call to reserve the CFMWS area:
+
+(gdb) p *new
+$54 = {start = 0x290000000, end = 0x2cfffffff, name = "Reserved",
+       flags = 0x200, desc = 0x7, parent = 0x0, sibling = 0x0,
+       child = 0x0}
+
+Later the Kernel parses ACPI tables and reserves the exact same area as
+the CXL Fixed Memory Window.  The use of `insert_resource_conflict`
+retains the RESERVED region and makes it a child of the new region.
+
+0xffffffff811016a4 in insert_resource_conflict ()
+                      insert_resource ()
+0xffffffff81a81389 in cxl_parse_cfmws ()
+0xffffffff818c4a81 in call_handler ()
+                      acpi_parse_entries_array ()
+
+(gdb) p/x *new
+$59 = {start = 0x290000000, end = 0x2cfffffff, name = "CXL Window 0",
+       flags = 0x200, desc = 0x0, parent = 0x0, sibling = 0x0,
+       child = 0x0}
+
+This produces the following output in /proc/iomem:
+
+590000000-68fffffff : CXL Window 0
+  590000000-68fffffff : Reserved
+
+This reserved area causes `get_free_mem_region()` to fail due to a check
+against `__region_intersects()`.  Due to this reserved area, the
+intersect check will only ever return REGION_INTERSECTS, which causes
+`cxl create-region` to always fail.
+
+Signed-off-by: Gregory Price <gregory.price@memverge.com>
+---
+ hw/i386/pc.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/hw/i386/pc.c b/hw/i386/pc.c
+index 566accf7e6..5bf5465a21 100644
+--- a/hw/i386/pc.c
++++ b/hw/i386/pc.c
+@@ -1061,7 +1061,6 @@ void pc_memory_init(PCMachineState *pcms,
+         hwaddr cxl_size = MiB;
+ 
+         cxl_base = pc_get_cxl_range_start(pcms);
+-        e820_add_entry(cxl_base, cxl_size, E820_RESERVED);
+         memory_region_init(mr, OBJECT(machine), "cxl_host_reg", cxl_size);
+         memory_region_add_subregion(system_memory, cxl_base, mr);
+         cxl_resv_end = cxl_base + cxl_size;
+@@ -1077,7 +1076,6 @@ void pc_memory_init(PCMachineState *pcms,
+                 memory_region_init_io(&fw->mr, OBJECT(machine), &cfmws_ops, fw,
+                                       "cxl-fixed-memory-region", fw->size);
+                 memory_region_add_subregion(system_memory, fw->base, &fw->mr);
+-                e820_add_entry(fw->base, fw->size, E820_RESERVED);
+                 cxl_fmw_base += fw->size;
+                 cxl_resv_end = cxl_fmw_base;
+             }
+-- 
+2.37.3
+
