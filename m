@@ -2,43 +2,43 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95DB5C433FE
-	for <linux-cxl@archiver.kernel.org>; Tue, 18 Oct 2022 13:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E70C4332F
+	for <linux-cxl@archiver.kernel.org>; Tue, 18 Oct 2022 13:26:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230419AbiJRNZi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 18 Oct 2022 09:25:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45584 "EHLO
+        id S230527AbiJRN0D (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 18 Oct 2022 09:26:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230453AbiJRNZL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 18 Oct 2022 09:25:11 -0400
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2060.outbound.protection.outlook.com [40.107.100.60])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B11215803;
-        Tue, 18 Oct 2022 06:24:31 -0700 (PDT)
+        with ESMTP id S230512AbiJRNZk (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 18 Oct 2022 09:25:40 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2064.outbound.protection.outlook.com [40.107.220.64])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25A8BC58A5;
+        Tue, 18 Oct 2022 06:25:04 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Gb4M5dxm1KN6Y2P4pJP6Hiv5gNvZLZ18wq4eMI+v1Kqy3UnKgdUTr7iKw/TGzhhEhGA2rOShRaP2G6cfX2BqRFlb258tVmOI3YG00kf4o4j79Is9MaMHQonU1X11P4jy8p0bmD1gJY0IgVVhuBKV7w8Vj3f20UbeKmum1vG4QC4aRkF5xLk90iNHTxjY6tPxGEP4g5U9NIh8XmTM9t0c8bYxOFV++5NK91dXJtlzFJA5aMxyCxLjYrCMs2rKYfocmDECyF9apuhDP5lomutYKG3ZsOABGokO55HtQXizw3GjJQin0nr7cP/4GvsuW1FKXCS+WrMyy9UcwX4sO8fdEQ==
+ b=QYzbO3ndLtkhbyTZNwPXLuK1JJyHDMcz9u0GiYRr2F97ePRlSBtUU8ZNIuZlwhlFGZerxtdtjUVKLb8+Y/7bAOTNvfyi33Mg9u3gLxgKkHlXxzuDgtDXwRbeaO1RAePBmWhN5G9pCbvUTNyeleI67hT+ALWruAeLrd2bOQjpoIHIUWVH/jblObEw53M6Tjbh51KO95SNa9hRyVKULwk5nWhUCe7+BBtCHMbPKN+rxZJrB9cWq+u3305tuU3rR+quFLx3p5QzIZ/8AbKEXyEnyzihsifGLmW0oU6lsOJQrj9tlau1ZXYGFDm0/ATf2atxOYTHib1nU2OV6EzipPmfpQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Jo2Lg1CBLmLriTl/NpqSzdE8UaXgVmfhgM1KORTc794=;
- b=MgD0cXLS/eFRzmhgHvDgJraPud2J9Sps6XDFpAKw6vovaqWUA8lNbE/RMXZM04xu3Ege0huayB/KRsRNkAY2zhuLT3iskl/e2suxAgEKELf+Z6xeQB+oTJxXMWP+fy8cOeNbXLszGYfj/sbiZ8K/RBxEeiPdsjhZoP8fbPyxEYk2sykLOAEmhr0LyvngKJxlJtzosvZJRaAcoBVnVK/zazaFdMgTPv9XS2THAzrEiG3jd1tPnnqZl6K3JBshGK6Af36l06ijbB9DHIAO54x5LrCfVuSY6aHiSaDmmGJPPvVnZSI30+GEodjyD9VJqM84VCyrDja0SdbfbM8S2TBA3A==
+ bh=165J/0jl3YniOXsSGugeLHpDY9z5jKXw9zLnBFsDvys=;
+ b=VXLiGJWadu4wGvN269dSRAYiwYoBv6cy6WzT7yLiZ86l/E19XKzkdMrrtVSxCTwvFpGYS5c6hoU1ME2coteDo9CbQVNc9tGvpUe1TbMPWq5aBIT3jq1vEe1W4FRLOxipll7+pQeQSxO3HjtR41DMGqxWkZDsxsR/DsqoHJTJRSBXR9qpC1rekWhpo7Ur2fE8B0E67ZHJsDWTrmzFSCjofxFk5W1u4zaPYucaA+sk0nPnWjYg2EkpLAcp8KM9ugTieLn3ZEAT0tJC1Fv7TbrIDqGvFcjoH9ERcEN6+2ZmkACWfo36mkQL8kUKUkGo4ev9TKKA7gq0TwBIZvc64jZe/A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Jo2Lg1CBLmLriTl/NpqSzdE8UaXgVmfhgM1KORTc794=;
- b=1rOGaMUdVSkp8q4sExtcMVTRObBz3nV03WBzDnoLNc0gs01RaLp2oF1QTDNPVxd7kLmdLfdLI9CBjJ6F+M3L3ZI1o9XYv46NwS5CQKkd7TseWUZdmyInf/zcdeXhkiV+1e41BFLqG/dGfUm14DFbj4mAeOVz+nC3Ryci9IcxizU=
-Received: from BN9PR03CA0860.namprd03.prod.outlook.com (2603:10b6:408:13d::25)
- by SA1PR12MB6773.namprd12.prod.outlook.com (2603:10b6:806:258::16) with
+ bh=165J/0jl3YniOXsSGugeLHpDY9z5jKXw9zLnBFsDvys=;
+ b=Q4FotHxSQAj+0WyqGqBou+zLC3uVczELIcdQfwDo7LYv8lBsIaIfx/DbcKNSbRbqAqql3Xt5FvPMcRugL5eS2tUd6RtTZYzAe9QMmbQBBRIyRRygVzfiNWy4PMKuGzjOnNgfld+u/h42zTPlBTPnmpMFFQqf/u2wp3ynevZQI5c=
+Received: from BN9PR03CA0590.namprd03.prod.outlook.com (2603:10b6:408:10d::25)
+ by DM4PR12MB7696.namprd12.prod.outlook.com (2603:10b6:8:100::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.33; Tue, 18 Oct
- 2022 13:24:28 +0000
-Received: from BN8NAM11FT086.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:13d:cafe::2e) by BN9PR03CA0860.outlook.office365.com
- (2603:10b6:408:13d::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.31 via Frontend
- Transport; Tue, 18 Oct 2022 13:24:28 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.29; Tue, 18 Oct
+ 2022 13:25:00 +0000
+Received: from BN8NAM11FT028.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:10d:cafe::f4) by BN9PR03CA0590.outlook.office365.com
+ (2603:10b6:408:10d::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.32 via Frontend
+ Transport; Tue, 18 Oct 2022 13:25:00 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -46,13 +46,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT086.mail.protection.outlook.com (10.13.176.220) with Microsoft SMTP
+ BN8NAM11FT028.mail.protection.outlook.com (10.13.176.225) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5723.20 via Frontend Transport; Tue, 18 Oct 2022 13:24:28 +0000
+ 15.20.5723.20 via Frontend Transport; Tue, 18 Oct 2022 13:25:00 +0000
 Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 18 Oct
- 2022 08:24:26 -0500
+ 2022 08:24:31 -0500
 From:   Robert Richter <rrichter@amd.com>
 To:     Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
@@ -66,9 +66,9 @@ CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         "Davidlohr Bueso" <dave@stgolabs.net>,
         Robert Richter <rrichter@amd.com>
-Subject: [PATCH v2 08/12] cxl: Factor out code in devm_cxl_enumerate_ports() to find_port_attach_ep()
-Date:   Tue, 18 Oct 2022 15:23:36 +0200
-Message-ID: <20221018132341.76259-9-rrichter@amd.com>
+Subject: [PATCH v2 10/12] cxl: Do not ignore PCI config read errors in match_add_dports()
+Date:   Tue, 18 Oct 2022 15:23:38 +0200
+Message-ID: <20221018132341.76259-11-rrichter@amd.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20221018132341.76259-1-rrichter@amd.com>
 References: <20221018132341.76259-1-rrichter@amd.com>
@@ -80,127 +80,54 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT086:EE_|SA1PR12MB6773:EE_
-X-MS-Office365-Filtering-Correlation-Id: c78db01a-9cc5-446e-4ee1-08dab10c15a6
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT028:EE_|DM4PR12MB7696:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8a992286-763e-4550-d5a8-08dab10c2887
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 05CNkMk0OF8A2mAbo+VxWEJOfJNQ+WHnKCRX54UjR+KpttCyOsvMKjzLFvFZIHS+5yR2tIvlvhjhSmU39GXWpDgUxsTOeP1D96xXH61pZ4BQyjcAptzAIFjZKK9gkd/LiXchPZLHB9vkL8ecK9/a7mV27wDBLqUoMeQrZO/ET29bhkL4mzq5YT+p+dxcspEqWrewpkKcs29If636NdIBYJID/OWkfN8HU+I1pa+F5BGbjoFq+Rzzxefcgybqh5vEmDqFVvUvbHeCu8AlOHjsuAZ+y2POACQ3sfg9hN6p8rqoO56bSrgrcOfjj1kpGT+FOzI/P538UHOPkQX+RJ9rEj76vo8y/tWVKdUOQxJn1hTC5tytb24G4aL8NEsAIMKF9QYauwOhB1uUOMpgjStuNiZUYmo5SIueIL0Q5dciPGkiXlBHqfVosOxPEWNe1iwu9h3nIt2bWRNQI4glGPaD0/AZD460Zq09x7fqXUYOAKV1gcRQQk/Q8Xsdrf4QzZHnykPcRmtlKsXqPXarxm/AF+ye3dTm8i+UG58wdpNRYS7bT8T8unDuyGo/2/ZLvtyy50N26iIlsv1CEQUcGGK6FOnX+tjWOolePB30qp5sLYiqE2WxPSX/6A+rL1dHmndPE+0xUa5iUgHMS8zbrImeJFEGckyOFgfmtSJqdprxstCOxChn+h+kqi6/3dzKWYSOc1m+BUsBJ+Rpdp/T8f1an82st0+zM6XFPX9b7JxNC0ABRUFts7PbYxJuOl7h+VVJt0h8w6jX5Osi0FYAEMCgg5pH57Knn4hk2jkeqdQFkFAL6WuL+GLrDxacXu4pGEuSsNJb4AdcZ1ydZRWuKtvmqA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(396003)(376002)(136003)(346002)(39860400002)(451199015)(40470700004)(46966006)(36840700001)(41300700001)(4326008)(40480700001)(83380400001)(110136005)(54906003)(70206006)(26005)(316002)(16526019)(186003)(7416002)(1076003)(81166007)(5660300002)(356005)(2616005)(82740400003)(8936002)(36756003)(336012)(426003)(40460700003)(70586007)(2906002)(6666004)(478600001)(47076005)(8676002)(82310400005)(36860700001)(37363002)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: h1Lbfk/ShqNgnXB3bi5ZoTgpkClfgdf0DJt/h3M/RWecx7h1t7vhr4GGiDYVwUEeA+nVT6PBOgWxPqd7k1C0S2DsNSmvpIvdAsOWfhK8dYi08UcNH5LrYtGx0Acs0yI4H41lSzXbsz5qwHpVBMz53BYHvgtpvEFGm0+SqGE34gkSGEMR4WThl7Msj0EP2fm48srlvM9vwpJbHLJ4t7qKxZoj8Fki6u9QquAkUwVZGu655qJfAgf/AmSfVxFxuBZSOcF1CT4F0r2tB+vuo0r1OGGRp4C9j3EsMoKpHMlHBgC2PvYKqv/jsLvWzs28DbbOiw/zHshsJzbQqqVC/TJh0mLEpwCUFiTKU/m/Cpe8ftvoAvk/l76/Zn7fY/YtAPqVdEeBZ/dukaNeDVSGU0nVD+5Dt1d7PrE/zOYibtwPjlHBHjXXLR5sEXEuQSSKpw7gNsjFeXa0tim6GQ+iHSFP7cfTh1nDxpVqOz1C12Bu5dIzy5zu2qTigy5Z5m/fNa/kBYLuQV97+hoYXp8BQvcJCjz0fIdT1EL6Lt0i2fTPyBPb3t6w4BUWIQVVRp02HKIUbt2WSs7fp9Ls/tLO17nGiPYItHDatxPCLUS95L/OCCdOarJyiTYPrleDVbyORHMXclUQxO+8rAF7vZ1UippOZ2ZbEAIvUFjagPpmTz8DrQMwNxTjZF7fJhtEfG8AloqVHWtekfln2GklKqkfBZyVhuiwLpTFnpx7Yh85+M6VTovlHEQkCOu+6jH4dE+Yx/9hjHsbmmvPTUou+TWwZzDfmQqchUMj9FSQnM6n/8ofhtI=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(376002)(346002)(39860400002)(396003)(136003)(451199015)(40470700004)(46966006)(36840700001)(478600001)(41300700001)(8936002)(4326008)(316002)(110136005)(54906003)(8676002)(36756003)(36860700001)(81166007)(356005)(40480700001)(40460700003)(186003)(82740400003)(2616005)(336012)(1076003)(16526019)(82310400005)(26005)(70206006)(83380400001)(47076005)(426003)(2906002)(70586007)(5660300002)(7416002)(4744005)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2022 13:24:28.6822
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2022 13:25:00.3592
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c78db01a-9cc5-446e-4ee1-08dab10c15a6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a992286-763e-4550-d5a8-08dab10c2887
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT086.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT028.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6773
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7696
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Factor out the code to attach an EP to an existing port. It will be
-reused to implement RCH discovery.
+The link capabilities of a PCI device are read when enumerating its
+dports. This is done by reading the PCI config space. If that fails
+port enumeration ignores that error. However, reading the PCI config
+space should reliably work.
+
+To reduce some complexity to the code flow when factoring out parts of
+the code in match_add_dports() for later reuse, change this to throw
+an error.
 
 Signed-off-by: Robert Richter <rrichter@amd.com>
 ---
- drivers/cxl/core/port.c | 66 +++++++++++++++++++++++++----------------
- 1 file changed, 41 insertions(+), 25 deletions(-)
+ drivers/cxl/core/pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 9af2d91db9bf..4b15481426f7 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1286,6 +1286,36 @@ static resource_size_t find_component_registers(struct device *dev)
- 	return cxl_regmap_to_base(pdev, &map);
- }
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index 0dbbe8d39b07..8271b8abde7a 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -47,7 +47,7 @@ static int match_add_dports(struct pci_dev *pdev, void *data)
+ 		return 0;
+ 	if (pci_read_config_dword(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCAP,
+ 				  &lnkcap))
+-		return 0;
++		return -ENXIO;
  
-+static int find_port_attach_ep(struct cxl_memdev *cxlmd,
-+			      struct device *uport_dev,
-+			      struct device *dport_dev,
-+			      struct device *origin)
-+{
-+	struct device *dev = &cxlmd->dev;
-+	struct cxl_dport *dport;
-+	struct cxl_port *port;
-+	int rc;
-+
-+	dev_dbg(dev, "scan: origin: %s dport_dev: %s parent: %s\n",
-+		dev_name(origin), dev_name(dport_dev),
-+		uport_dev ? dev_name(uport_dev) : "(null)");
-+
-+	port = find_cxl_port(dport_dev, &dport);
-+	if (!port)
-+		return 0;
-+
-+	dev_dbg(dev, "found already registered port %s:%s\n",
-+		dev_name(&port->dev), dev_name(port->uport));
-+
-+	rc = cxl_add_ep(dport, &cxlmd->dev);
-+	put_device(&port->dev);
-+	if (rc)
-+		return rc;
-+
-+	/* Continue to add more ports between this one and the root. */
-+	return 1;
-+}
-+
- static int add_port_attach_ep(struct cxl_memdev *cxlmd,
- 			      struct device *uport_dev,
- 			      struct device *dport_dev)
-@@ -1373,8 +1403,6 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
- 	for (iter = dev; iter; iter = grandparent(iter)) {
- 		struct device *dport_dev = grandparent(iter);
- 		struct device *uport_dev;
--		struct cxl_dport *dport;
--		struct cxl_port *port;
- 
- 		if (!dport_dev)
- 			return 0;
-@@ -1386,30 +1414,18 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
- 			return -ENXIO;
- 		}
- 
--		dev_dbg(dev, "scan: iter: %s dport_dev: %s parent: %s\n",
--			dev_name(iter), dev_name(dport_dev),
--			dev_name(uport_dev));
--		port = find_cxl_port(dport_dev, &dport);
--		if (port) {
--			dev_dbg(&cxlmd->dev,
--				"found already registered port %s:%s\n",
--				dev_name(&port->dev), dev_name(port->uport));
--			rc = cxl_add_ep(dport, &cxlmd->dev);
--			put_device(&port->dev);
--
--			/*
--			 * If the endpoint already exists in the port's list,
--			 * that's ok, it was added on a previous pass.
--			 * Otherwise, retry in add_port_attach_ep() after taking
--			 * the parent_port lock as the current port may be being
--			 * reaped.
--			 */
--			if (rc && rc != -EBUSY)
--				return rc;
--
--			/* Any more ports to add between this one and the root? */
-+		rc = find_port_attach_ep(cxlmd, uport_dev, dport_dev, iter);
-+		/*
-+		 * If the endpoint already exists in the port's list,
-+		 * that's ok, it was added on a previous pass.
-+		 * Otherwise, retry in add_port_attach_ep() after taking
-+		 * the parent_port lock as the current port may be being
-+		 * reaped.
-+		 */
-+		if (rc > 0 || rc == -EBUSY)
- 			continue;
--		}
-+		if (rc)
-+			return rc;
- 
- 		rc = add_port_attach_ep(cxlmd, uport_dev, dport_dev);
- 		/* port missing, try to add parent */
+ 	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
+ 	if (rc)
 -- 
 2.30.2
 
