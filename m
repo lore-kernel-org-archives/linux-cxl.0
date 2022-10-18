@@ -2,112 +2,100 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1DFC4332F
-	for <linux-cxl@archiver.kernel.org>; Tue, 18 Oct 2022 18:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73EBDC433FE
+	for <linux-cxl@archiver.kernel.org>; Tue, 18 Oct 2022 21:26:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229808AbiJRS5Q (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 18 Oct 2022 14:57:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51492 "EHLO
+        id S229592AbiJRV0q (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 18 Oct 2022 17:26:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229845AbiJRS5P (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 18 Oct 2022 14:57:15 -0400
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3974D2BF7;
-        Tue, 18 Oct 2022 11:57:14 -0700 (PDT)
-Received: by mail-qv1-f50.google.com with SMTP id mx8so9900918qvb.8;
-        Tue, 18 Oct 2022 11:57:14 -0700 (PDT)
+        with ESMTP id S229882AbiJRV0q (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 18 Oct 2022 17:26:46 -0400
+Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C9D1B5154
+        for <linux-cxl@vger.kernel.org>; Tue, 18 Oct 2022 14:26:44 -0700 (PDT)
+Received: by mail-qk1-x72b.google.com with SMTP id b25so9545498qkk.7
+        for <linux-cxl@vger.kernel.org>; Tue, 18 Oct 2022 14:26:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1APKT53JG/wq6o2jf11XrZ2this9jjAZ26YhgTsfr3Q=;
+        b=EJT5iaQECqnQH+RhOPioS0o9T6t4WM/Hn0BTupAHOI0GE+mpGwwAOZxUqRuNP43EVI
+         IfiaqPO2PXtbzj3omXIr9Mgl9rUPKndG22RG9+YislkQ8CzQHHhGcEE+50/aVc04SI4V
+         63FCiMiDgYTNN4qA0cPHNNXPYCJx6T72DhmWWs+FlWeq7gTKJOO85BqI2oyVtPZMhv9E
+         OivLHODRXfHD3xQC/NlWvq1T7Vrw23Bt+pJHAjVAQrA97HgBwu9KWbV5vy7Np+NOCkcm
+         c+Y1CT/Zth5nqwjJg+SPQTrDKCQpVUisGAfmJ/J6SYj40zuvsw1XyQdE/QRQbyqaHxqZ
+         nXhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xiQsRjGXuWnXqr7gb8d6177VY0t1MeeDA3Ggynp6mWo=;
-        b=Ibn1XWMLzBAVS6+LcEO/Y9f+LQXlRnWsjCnaoj0dUlnhtOmKLUBkZ4GTo3l5oDd7dC
-         w36sQm4hOV5cFrNdC3GEls8k1lpzdstjQJiDWqbBKO7qxW9iWZCobg4t8Oru2s+kMtTB
-         LfLjcjqSxxYNnfpp6KkKUiFgYOopMQJ/UT0nIaMxhTGZ1kyUx4PyR1ezWS/jyBQZ5g/x
-         0ZpM4/sraj6H5cWrSeSMd4gIfQ+ngbQB3bOhXBRuDW6CeRRaDoUauuFtnuiSsqDiTsjY
-         ganVd53y8M/sz/D9Q04q0+olKR3QsoydSHw2+GK6mRhGluiBVsB2P6Dv/JmiOXlUsldG
-         VfiQ==
-X-Gm-Message-State: ACrzQf1mnpmGwqbJ/WX0yZMvrjk1TqX3AjGKDV/Ai/pyrbi17TeALOil
-        0MA0ffrECNnF/CYTIyb7ffcXqbOccXnX/PWBysQ=
-X-Google-Smtp-Source: AMsMyM7HW/NQx1boi0LOOXMeKA3ucyRmwPce1/RNiR7Xp4r6wzsdtpqgGj2VHWrXzIokgWw3pdgCMpYr8rsEUX6p7BY=
-X-Received: by 2002:ad4:5d48:0:b0:4b4:12a4:8a2f with SMTP id
- jk8-20020ad45d48000000b004b412a48a2fmr3594352qvb.85.1666119433207; Tue, 18
- Oct 2022 11:57:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20221018132341.76259-1-rrichter@amd.com> <20221018132341.76259-7-rrichter@amd.com>
- <CAJZ5v0iweDu6imi_P3eRTTk0Xpzv-swB05fYxmTMAHAjCN2tiA@mail.gmail.com> <Y07wfi7XSxHWr7LD@rric.localdomain>
-In-Reply-To: <Y07wfi7XSxHWr7LD@rric.localdomain>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 18 Oct 2022 20:57:02 +0200
-Message-ID: <CAJZ5v0gtbzD9H9OEWS1X5OnFCntFTAnNbxwrU3FpZbnR5rQ6fQ@mail.gmail.com>
-Subject: Re: [PATCH v2 06/12] cxl/acpi: Extract component registers of
- restricted hosts from RCRB
-To:     Robert Richter <rrichter@amd.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Terry Bowman <terry.bowman@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1APKT53JG/wq6o2jf11XrZ2this9jjAZ26YhgTsfr3Q=;
+        b=E2NOHJPwtM6XnPmZWmJrSUHbl6aYd2ntOJiWr0NtBPzQCFbAUQfQZnsBouPLo3jsl4
+         RUrEQEHdUQB2DA8y7h9thIDUViYJxGsA8CrDBWe8a1P+AKE7/OYdSHIdSyZZncVewP7Y
+         2kbjlL/wlKFp9xxw6IECraF0aml8tzBLbe10jcYIu/wrGs90rs8UmAsj/+gvqx37kr0y
+         77UNOF7vlY/5hXpuKc8wYr9GAjM46UIvsX9q68fNdrbIEDmgsWVD1SCu4Kwutqck/P7Q
+         4uKqxCO1mYq9BAOFc/r4T/9OkU79rix+JeZt+DCqOQfQlZisvd6/AMoBbJIyIs5lQyY7
+         yiIA==
+X-Gm-Message-State: ACrzQf31OO+IFc2yq/K4d6mxwz4xcCXUfCizwPTVQmcX6pum3rqW5l5F
+        Tk28rZykzV5vtTcaYoQ0nCbEUw==
+X-Google-Smtp-Source: AMsMyM5zfVX7YK8H4zeLd4F13pSOxunbIXNTbw/a8/Opu24z/18MiYx7QGM781YEO+aBz3RKXKlIdw==
+X-Received: by 2002:a37:c13:0:b0:6ee:6ab3:8b9 with SMTP id 19-20020a370c13000000b006ee6ab308b9mr3291384qkm.664.1666128403760;
+        Tue, 18 Oct 2022 14:26:43 -0700 (PDT)
+Received: from smtpclient.apple (172-125-78-211.lightspeed.sntcca.sbcglobal.net. [172.125.78.211])
+        by smtp.gmail.com with ESMTPSA id cq10-20020a05622a424a00b0035cf0f50d7csm2657342qtb.52.2022.10.18.14.26.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Oct 2022 14:26:43 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
+Subject: Re: [External] CXL emulation in QEMU contribution
+From:   "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com>
+In-Reply-To: <20221013160902.00001c32@huawei.com>
+Date:   Tue, 18 Oct 2022 14:26:41 -0700
+Cc:     Adam Manzanares <a.manzanares@samsung.com>,
+        Cong Wang <cong.wang@bytedance.com>, qemu-devel@nongnu.org,
+        linux-cxl@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <2DECB41B-DB90-47DF-BA8E-BEE6869BADFD@bytedance.com>
+References: <20221011095228.00001546@huawei.com>
+ <31569DD4-6502-4188-8962-08E0A15B08FF@bytedance.com>
+ <20221013160902.00001c32@huawei.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+X-Mailer: Apple Mail (2.3696.120.41.1.1)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Oct 18, 2022 at 8:42 PM Robert Richter <rrichter@amd.com> wrote:
->
-> On 18.10.22 15:31:16, Rafael J. Wysocki wrote:
-> > On Tue, Oct 18, 2022 at 3:24 PM Robert Richter <rrichter@amd.com> wrote:
-> > >
-> > > A downstream port must be connected to a component register block.
-> > > For restricted hosts the base address is determined from the RCRB. The
-> > > RCRB is provided by the host's CEDT CHBS entry. Rework CEDT parser to
-> > > get the RCRB and add code to extract the component register block from
-> > > it.
-> > >
-> > > RCRB's BAR[0..1] point to the component block containing CXL subsystem
-> > > component registers. MEMBAR extraction follows the PCI base spec here,
-> > > esp. 64 bit extraction and memory range alignment (6.0, 7.5.1.2.1).
-> > >
-> > > Note: Right now the component register block is used for HDM decoder
-> > > capability only which is optional for RCDs. If unsupported by the RCD,
-> > > the HDM init will fail. It is future work to bypass it in this case.
-> > >
-> > > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> >
-> > What does this S-o-B mean?  If this person is your co-developer, you
-> > need to add a Co-developed-by tag to clarify that.
-> >
-> > > Signed-off-by: Robert Richter <rrichter@amd.com>
->
-> I picked up an early patch and modified it significantly, so I just
-> left the S-o-B.
+Hi Jonathan,
 
-In that case the right thing to do is to mention the original author
-in the changelog instead of retaining the S-o-b.
+> On Oct 13, 2022, at 8:09 AM, Jonathan Cameron =
+<Jonathan.Cameron@huawei.com> wrote:
+>=20
 
-> I could change this to a Co-developed-by tag.
+<skipped>
 
-Co-developed-by should be used in addition to and not instead of S-o-b
-when one of the authors is sending a patch.  However, all of the
-authors need to be familiar with the patch in the form in which it is
-being sent then.
+>> So, I would like to contribute to QEMU emulation of CXL memory
+>> support. And I would like to see a TODO list. I hope this list could
+>> be useful not only for me. As far as I can see, we can summarize:
+>=20
+> Absolutely agree on need for a TODO now there are multiple groups =
+involved
 
-> IMO, the S-o-B is ok, but could be wrong here.
+As far as I can see, Fabric Management looks like =E2=80=9Cuncharted =
+territory=E2=80=9D with a lot of work. I think it=E2=80=99s pretty =
+interesting direction for me to start. I can read Compute Express Link =
+Specification (Revision 3.0, Version 1.0). Could you recommend some =
+other docs or links to take a look?
 
-It isn't, at least not without a Co-developed-by tag.
+By the way, I see ARM64 support in TODO list. But nothing related to =
+RISC-V. Do we need to consider RISC-V too?
 
-There are 3 cases in which S-o-b is OK AFAICS:
+Thanks,
+Slava.
 
-1. When it matches the From: address.
-2. When there is a matching Co-developed-by.
-3. When maintainers pick up patches and add their own S-o-b.
 
-This case is none of the above.
+
