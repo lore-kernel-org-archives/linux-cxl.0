@@ -2,142 +2,227 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B185C4332F
-	for <linux-cxl@archiver.kernel.org>; Thu, 20 Oct 2022 16:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E080C4332F
+	for <linux-cxl@archiver.kernel.org>; Thu, 20 Oct 2022 17:02:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229583AbiJTQyP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 20 Oct 2022 12:54:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34446 "EHLO
+        id S229784AbiJTRCl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 20 Oct 2022 13:02:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229497AbiJTQyP (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 20 Oct 2022 12:54:15 -0400
+        with ESMTP id S229491AbiJTRCk (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 20 Oct 2022 13:02:40 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7233E1AE2B8
-        for <linux-cxl@vger.kernel.org>; Thu, 20 Oct 2022 09:54:13 -0700 (PDT)
-Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MtYYP0mrjz67XMQ;
-        Fri, 21 Oct 2022 00:52:25 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E201B1E5740
+        for <linux-cxl@vger.kernel.org>; Thu, 20 Oct 2022 10:02:38 -0700 (PDT)
+Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MtYjP4Gb2z67wqY;
+        Fri, 21 Oct 2022 00:59:21 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
+ fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 20 Oct 2022 18:54:11 +0200
+ 15.1.2375.31; Thu, 20 Oct 2022 19:02:37 +0200
 Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 20 Oct
- 2022 17:54:10 +0100
-Date:   Thu, 20 Oct 2022 17:54:09 +0100
+ 2022 18:02:36 +0100
+Date:   Thu, 20 Oct 2022 18:02:35 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     Dave Jiang <dave.jiang@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, <alison.schofield@intel.com>,
         <vishal.l.verma@intel.com>, <bwidawsk@kernel.org>,
         <dan.j.williams@intel.com>, <shiju.jose@huawei.com>,
-        <rrichter@amd.com>
-Subject: Re: [PATCH RFC v2 5/9] cxl/port: Limit the port driver to just the
- HDM Decoder Capability
-Message-ID: <20221020175409.0000370f@huawei.com>
-In-Reply-To: <166336988294.3803215.7334374806071251168.stgit@djiang5-desk3.ch.intel.com>
+        <rrichter@amd.com>, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC v2 8/9] cxl/pci: add tracepoint events for CXL RAS
+Message-ID: <20221020180235.00007320@huawei.com>
+In-Reply-To: <166336989980.3803215.5292431481210955312.stgit@djiang5-desk3.ch.intel.com>
 References: <166336972295.3803215.1047199449525031921.stgit@djiang5-desk3.ch.intel.com>
-        <166336988294.3803215.7334374806071251168.stgit@djiang5-desk3.ch.intel.com>
+        <166336989980.3803215.5292431481210955312.stgit@djiang5-desk3.ch.intel.com>
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 16 Sep 2022 16:11:22 -0700
+On Fri, 16 Sep 2022 16:11:39 -0700
 Dave Jiang <dave.jiang@intel.com> wrote:
 
-> From: Dan Williams <dan.j.williams@intel.com>
+> Add tracepoint events for recording the CXL uncorrectable and correctable
+> errors. For uncorrectable errors, there is additional data up to 512B from
+> the header log register (CXL spec rev3 8.2.4.16.7). The content of the
+> register depends on the Uncorrectable Errors (UC) register status (CXL spec
+> rev3 8.2.4.16.1).  This implementation supports the Receiver_Overflow error
+> where the definition is defined as first 3 bits of the Header Log data. The
+> trace event will intake a dynamic array that will dump the Header Log data
+> based on error. If multiple errors are set in the status register, then the
+> 'first error' field (CXL spec rev3 v8.2.4.16.6) is read from the Error
+> Capabilities and Control Register in order to determine the error.
 > 
-> Update the port driver to use cxl_map_component_registers() so that the
-> component register block can be shared between the cxl_pci driver and
-> the cxl_port driver. I.e. stop the port driver from reserving the entire
-> component register block for itself via request_region() when it only
-> needs the HDM Decoder Capability subset.
+> This implementation does not include CXL IDE Error details.
 > 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-Makes sense
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Given the useful review we've gotten on other race points seems wise to
+Cc Stephen.
+
+The overflow flags seems to be inconsistent wrt to spec.  They aren't flags
+as such in the spec.  However I note that isn't used anyway so maybe drop
+it for now?
+
+Jonathan
 
 > ---
->  drivers/cxl/core/hdm.c |   32 ++++++++++++++++++--------------
->  1 file changed, 18 insertions(+), 14 deletions(-)
+>  drivers/cxl/pci.c              |    2 +
+>  include/trace/events/cxl_ras.h |  117 ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 119 insertions(+)
+>  create mode 100644 include/trace/events/cxl_ras.h
 > 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index d1d2caea5c62..061551148cfe 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -82,18 +82,22 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
->  		cxlhdm->interleave_mask |= GENMASK(14, 12);
->  }
->  
-> -static void __iomem *map_hdm_decoder_regs(struct cxl_port *port,
-> -					  void __iomem *crb)
-> +static int map_hdm_decoder_regs(struct cxl_port *port, void __iomem *crb,
-> +				struct cxl_component_regs *regs)
->  {
-> -	struct cxl_component_reg_map map;
-> +	struct cxl_register_map map = {
-> +		.resource = port->component_reg_phys,
-> +		.base = crb,
-> +		.max_size = CXL_COMPONENT_REG_BLOCK_SIZE,
-> +	};
->  
-> -	cxl_probe_component_regs(&port->dev, crb, &map);
-> -	if (!map.hdm_decoder.valid) {
-> +	cxl_probe_component_regs(&port->dev, crb, &map.component_map);
-> +	if (!map.component_map.hdm_decoder.valid) {
->  		dev_err(&port->dev, "HDM decoder registers invalid\n");
-> -		return IOMEM_ERR_PTR(-ENXIO);
-> +		return -ENXIO;
->  	}
->  
-> -	return crb + map.hdm_decoder.offset;
-> +	return cxl_map_component_regs(&port->dev, regs, &map);
->  }
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 610b3a77f205..357de704e42c 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -13,6 +13,8 @@
+>  #include "cxlmem.h"
+>  #include "cxlpci.h"
+>  #include "cxl.h"
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/cxl_ras.h>
 >  
 >  /**
-> @@ -103,25 +107,25 @@ static void __iomem *map_hdm_decoder_regs(struct cxl_port *port,
->  struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port)
->  {
->  	struct device *dev = &port->dev;
-> -	void __iomem *crb, *hdm;
->  	struct cxl_hdm *cxlhdm;
-> +	void __iomem *crb;
-> +	int rc;
->  
->  	cxlhdm = devm_kzalloc(dev, sizeof(*cxlhdm), GFP_KERNEL);
->  	if (!cxlhdm)
->  		return ERR_PTR(-ENOMEM);
->  
->  	cxlhdm->port = port;
-> -	crb = devm_cxl_iomap_block(dev, port->component_reg_phys,
-> -				   CXL_COMPONENT_REG_BLOCK_SIZE);
-> +	crb = ioremap(port->component_reg_phys, CXL_COMPONENT_REG_BLOCK_SIZE);
->  	if (!crb) {
->  		dev_err(dev, "No component registers mapped\n");
->  		return ERR_PTR(-ENXIO);
->  	}
->  
-> -	hdm = map_hdm_decoder_regs(port, crb);
-> -	if (IS_ERR(hdm))
-> -		return ERR_CAST(hdm);
-> -	cxlhdm->regs.hdm_decoder = hdm;
-> +	rc = map_hdm_decoder_regs(port, crb, &cxlhdm->regs);
-> +	iounmap(crb);
-> +	if (rc)
-> +		return ERR_PTR(rc);
->  
->  	parse_hdm_decoder_caps(cxlhdm);
->  	if (cxlhdm->decoder_count == 0) {
+>   * DOC: cxl pci
+> diff --git a/include/trace/events/cxl_ras.h b/include/trace/events/cxl_ras.h
+> new file mode 100644
+> index 000000000000..6bb41c3b87c8
+> --- /dev/null
+> +++ b/include/trace/events/cxl_ras.h
+> @@ -0,0 +1,117 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM cxl_ras
+> +
+> +#if !defined(_CXL_RAS_EVENTS_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _CXL_RAS_EVENTS_H
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +#define CXL_RAS_UC_CACHE_DATA_PARITY	BIT(0)
+> +#define CXL_RAS_UC_CACHE_ADDR_PARITY	BIT(1)
+> +#define CXL_RAS_UC_CACHE_BE_PARITY	BIT(2)
+> +#define CXL_RAS_UC_CACHE_DATA_ECC	BIT(3)
+> +#define CXL_RAS_UC_MEM_DATA_PARITY	BIT(4)
+> +#define CXL_RAS_UC_MEM_ADDR_PARITY	BIT(5)
+> +#define CXL_RAS_UC_MEM_BE_PARITY	BIT(6)
+> +#define CXL_RAS_UC_MEM_DATA_ECC		BIT(7)
+> +#define CXL_RAS_UC_REINIT_THRESH	BIT(8)
+> +#define CXL_RAS_UC_RSVD_ENCODE		BIT(9)
+> +#define CXL_RAS_UC_POISON		BIT(10)
+> +#define CXL_RAS_UC_RECV_OVERFLOW	BIT(11)
+> +#define CXL_RAS_UC_INTERNAL_ERR		BIT(14)
+> +#define CXL_RAS_UC_IDE_TX_ERR		BIT(15)
+> +#define CXL_RAS_UC_IDE_RX_ERR		BIT(16)
+> +
+> +#define show_uc_errs(status)	__print_flags(status, " | ",		  \
+> +	{ CXL_RAS_UC_CACHE_DATA_PARITY, "Cache Data Parity Error" },	  \
+> +	{ CXL_RAS_UC_CACHE_ADDR_PARITY, "Cache Address Parity Error" },	  \
+> +	{ CXL_RAS_UC_CACHE_BE_PARITY, "Cache Byte Enable Parity Error" }, \
+> +	{ CXL_RAS_UC_CACHE_DATA_ECC, "Cache Data ECC Error" },		  \
+> +	{ CXL_RAS_UC_MEM_DATA_PARITY, "Memory Data Parity Error" },	  \
+> +	{ CXL_RAS_UC_MEM_ADDR_PARITY, "Memory Address Parity Error" },	  \
+> +	{ CXL_RAS_UC_MEM_BE_PARITY, "Memory Byte Enable Parity Error" },  \
+> +	{ CXL_RAS_UC_MEM_DATA_ECC, "Memory Data ECC Error" },		  \
+> +	{ CXL_RAS_UC_REINIT_THRESH, "REINIT Threshold Hit" },		  \
+> +	{ CXL_RAS_UC_RSVD_ENCODE, "Received Unrecognized Encoding" },	  \
+> +	{ CXL_RAS_UC_POISON, "Received Poison From Peer" },		  \
+> +	{ CXL_RAS_UC_RECV_OVERFLOW, "Receiver Overflow" },		  \
+> +	{ CXL_RAS_UC_INTERNAL_ERR, "Component Specific Error" },	  \
+> +	{ CXL_RAS_UC_IDE_TX_ERR, "IDE Tx Error" },			  \
+> +	{ CXL_RAS_UC_IDE_RX_ERR, "IDE Rx Error" }			  \
+> +)
+> +
+> +#define CXL_RAS_UC_OVFL_D2H_REQ		BIT(0)
+> +#define CXL_RAS_UC_OVFL_D2H_RSP		BIT(1)
+> +#define CXL_RAS_UC_OVFL_D2H_DATA	BIT(2)
+> +#define CXL_RAS_UC_OVFL_S2M_NDR		BIT(3)
+> +#define CXL_RAS_UC_OVFL_S2M_DRS		BIT(4)
+
+Why not align these with the values in the spec? 
+They aren't flags as such...  Mind you not used anyway so probably just
+drop it for now?
+
+> +
+> +#define show_uc_ovfl(hl)	__print_flags(hl, " | ",		\
+> +	{ CXL_RAS_UC_OVFL_D2H_REQ, "Receiver Overflow D2H Req" },	\
+> +	{ CXL_RAS_UC_OVFL_D2H_RSP, "Receiver Overflow D2H Rsp" },	\
+> +	{ CXL_RAS_UC_OVFL_D2H_DATA, "Receiver Overflow D2H Data" },	\
+> +	{ CXL_RAS_UC_OVFL_S2M_NDR, "Receiver Overflow S2M NDR" },	\
+> +	{ CXL_RAS_UC_OVFL_S2M_DRS, "Receiver Overflow S2M DRS" }	\
+> +)
+> +
+> +TRACE_EVENT(cxl_ras_uc,
+> +	TP_PROTO(const char *dev_name, u32 status, u32 fe, u8 *hl, int hl_len),
+> +	TP_ARGS(dev_name, status, fe, hl, hl_len),
+> +	TP_STRUCT__entry(
+> +		__string(dev_name, dev_name)
+> +		__field(u32, status)
+> +		__field(u32, first_error)
+> +		__dynamic_array(u8, header_log, hl_len)
+> +		__field(int, header_log_len)
+> +	),
+> +	TP_fast_assign(
+> +		__assign_str(dev_name, dev_name);
+> +		__entry->status = status;
+> +		__entry->first_error = fe;
+> +		memcpy(__get_dynamic_array(header_log), hl, hl_len);
+> +		__entry->header_log_len = hl_len;
+> +	),
+> +	TP_printk("%s: status: '%s' first_error: '%s' header log: %s",
+> +		  __get_str(dev_name), show_uc_errs(__entry->status),
+> +		  show_uc_errs(__entry->first_error),
+> +		  __print_array(__get_dynamic_array(header_log), __entry->header_log_len, 1)
+> +	)
+> +);
+> +
+> +#define CXL_RAS_CE_CACHE_DATA_ECC	BIT(0)
+> +#define CXL_RAS_CE_MEM_DATA_ECC		BIT(1)
+> +#define CXL_RAS_CE_CRC_THRESH		BIT(2)
+> +#define CXL_RAS_CE_CACHE_POISON		BIT(3)
+> +#define CXL_RAS_CE_MEM_POISON		BIT(4)
+> +#define CXL_RAS_CE_PHYS_LAYER_ERR	BIT(5)
+> +
+> +#define show_ce_errs(status)	__print_flags(status, " | ",			\
+> +	{ CXL_RAS_CE_CACHE_DATA_ECC, "Cache Data ECC Error" },			\
+> +	{ CXL_RAS_CE_MEM_DATA_ECC, "Memory Data Ecc Error" },			\
+> +	{ CXL_RAS_CE_CRC_THRESH, "CRC Threshold Hit" },				\
+> +	{ CXL_RAS_CE_CACHE_POISON, "Received Cache Poison From Peer" },		\
+> +	{ CXL_RAS_CE_MEM_POISON, "Received Memory Poison From Peer" },		\
+> +	{ CXL_RAS_CE_PHYS_LAYER_ERR, "Received Error From Physical Layer" }	\
+> +)
+> +
+> +TRACE_EVENT(cxl_ras_ce,
+> +	TP_PROTO(const char *dev_name, u32 status),
+> +	TP_ARGS(dev_name, status),
+> +	TP_STRUCT__entry(
+> +		__string(dev_name, dev_name)
+> +		__field(u32, status)
+> +	),
+> +	TP_fast_assign(
+> +		__assign_str(dev_name, dev_name);
+> +		__entry->status = status;
+> +	),
+> +	TP_printk("%s: status: '%s'",
+> +		  __get_str(dev_name), show_ce_errs(__entry->status)
+> +	)
+> +);
+> +
+> +#endif /* _CXL_RAS_EVENTS_H */
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
 > 
 > 
 
