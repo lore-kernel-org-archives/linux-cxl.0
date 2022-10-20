@@ -2,109 +2,113 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D590CC433FE
-	for <linux-cxl@archiver.kernel.org>; Wed, 19 Oct 2022 17:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5730CC43217
+	for <linux-cxl@archiver.kernel.org>; Thu, 20 Oct 2022 13:45:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229731AbiJSRil (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 19 Oct 2022 13:38:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41224 "EHLO
+        id S229729AbiJTNpp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 20 Oct 2022 09:45:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231407AbiJSRiZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 19 Oct 2022 13:38:25 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C975D33376
-        for <linux-cxl@vger.kernel.org>; Wed, 19 Oct 2022 10:38:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666201102; x=1697737102;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GSyQt2neY4uRPwwjB7xjUNm+eZPvPWRCzFVf/9hsjxM=;
-  b=QGeTRRc9BnIEw+lx4Bm59aZrPXDDj9S3PKmtfuIDTyWeevyoRZd6CVNR
-   +kjl9PrwHXOlYo1RCh1KN1O91KPAL80sBFFPr4bHHzZzYDrLSrBeU3I0g
-   sfIrlEBwDV+u98UkJJHHBnZHuc021igcP9CHuflQvIoja9tYIUuBF2n2S
-   mXRiz7W3RkqzxyCM+rKQp+Djgxgt42HVYyG7eQ28ddlqjQyidFx5nAvPg
-   k2x0BQ6SaTG/CqO1Rw6q+loJGUaBkgsRQO6BpwVs/l0FWnxTSao1rK9/0
-   tG4VczNneRZ7QvZEd6dFcvtnv9xKtkg00oeP3XjATmlsU5zxuT9kmwIEO
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10505"; a="305219169"
-X-IronPort-AV: E=Sophos;i="5.95,196,1661842800"; 
-   d="scan'208";a="305219169"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2022 10:38:17 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10505"; a="734334718"
-X-IronPort-AV: E=Sophos;i="5.95,196,1661842800"; 
-   d="scan'208";a="734334718"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.213.175.138]) ([10.213.175.138])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2022 10:38:15 -0700
-Message-ID: <ae8330db-ab77-7952-e846-de7dc527890c@intel.com>
-Date:   Wed, 19 Oct 2022 10:38:13 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.3.3
-Subject: Re: [PATCH RFC v2 0/9] cxl/pci: Add fundamental error handling
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, alison.schofield@intel.com,
-        vishal.l.verma@intel.com, bwidawsk@kernel.org,
-        dan.j.williams@intel.com, shiju.jose@huawei.com, rrichter@amd.com
+        with ESMTP id S229449AbiJTNpk (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 20 Oct 2022 09:45:40 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7696E52C1
+        for <linux-cxl@vger.kernel.org>; Thu, 20 Oct 2022 06:45:35 -0700 (PDT)
+Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MtTMl0GbXz686KW;
+        Thu, 20 Oct 2022 21:43:47 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 20 Oct 2022 15:45:32 +0200
+Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 20 Oct
+ 2022 14:45:32 +0100
+Date:   Thu, 20 Oct 2022 14:45:30 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <alison.schofield@intel.com>,
+        <vishal.l.verma@intel.com>, <bwidawsk@kernel.org>,
+        <dan.j.williams@intel.com>, <shiju.jose@huawei.com>,
+        <rrichter@amd.com>
+Subject: Re: [PATCH RFC v2 9/9] cxl/pci: Add (hopeful) error handling
+ support
+Message-ID: <20221020144530.00000201@huawei.com>
+In-Reply-To: <166336990544.3803215.2332306189095144106.stgit@djiang5-desk3.ch.intel.com>
 References: <166336972295.3803215.1047199449525031921.stgit@djiang5-desk3.ch.intel.com>
- <20221011151744.00005278@huawei.com>
- <1e4de3fa-4e80-cc99-7fbf-3f6669766648@intel.com>
- <20221011181915.000031a1@huawei.com> <20221019183012.00007201@huawei.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20221019183012.00007201@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        <166336990544.3803215.2332306189095144106.stgit@djiang5-desk3.ch.intel.com>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.42]
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Fri, 16 Sep 2022 16:11:45 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-On 10/19/2022 10:30 AM, Jonathan Cameron wrote:
-> On Tue, 11 Oct 2022 18:19:15 +0100
-> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
->
->> On Tue, 11 Oct 2022 08:18:34 -0700
->> Dave Jiang <dave.jiang@intel.com> wrote:
->>
->>> On 10/11/2022 7:17 AM, Jonathan Cameron wrote:
->>>> On Fri, 16 Sep 2022 16:10:53 -0700
->>>> Dave Jiang <dave.jiang@intel.com> wrote:
->>>>     
->>>>> Series set to RFC since there's no means to test. Would like to get opinion
->>>>> on whether going with using trace events as reporting mechanism is ok.
->>>>>
->>>>> Jonathan,
->>>>> We currently don't have any ways to test AER events. Do you have any plans
->>>>> to support AER events via QEMU emulation?
->>>> Sorry - missed this entirely as gotten a bit behind reading CXL emails.
-> Hi Dave,
->
-> Quick update.
->
-> Working QEMU emulation - but needs some/lots of cleanup. Particularly fun was
-> figuring out why I wasn't getting messages past the upstream switch port.
-> Turned out the serial number ECAP was on top of the AER ECAP. Oops - thankfully
-> that patch isn't upstream yet.
-> Also QEMU AER rooting seems to be based on some older PCIE spec
-> so needed some tweaks to get the device to actually issue ERR_FATAL etc.
->
-> Anyhow, should have something you can play with in a day or two.
+> From: Dan Williams <dan.j.williams@intel.com>
+> 
+> Add nominal error handling that tears down CXL.mem in response to error
+> notifications that imply a device reset. Given some CXL.mem may be
+> operating as System RAM, there is a high likelihood that these error
+> events are fatal. However, if the system survives the notification the
+> expectation is that the driver behavior is equivalent to a hot-unplug
+> and re-plug of an endpoint.
+> 
+> Note that this does not change the mask values from the default. That
+> awaits CXL _OSC support to determine whether platform firmware is in
+> control of the mask registers.
+> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-Awesome! Thanks! :)
+...
 
+> +/* CXL spec rev3.0 8.2.4.16.1 */
+> +#define DATA_HEADER_SIZE 16
+> +#define FLIT_SIZE (64 + 2)
+> +static int header_log_setup(struct cxl_dev_state *cxlds, u32 fe, u8 *log)
+> +{
+> +	void __iomem *addr;
+> +
+> +	addr = cxlds->regs.ras + CXL_RAS_HEADER_LOG_OFFSET;
+> +
+> +	if (fe & CXL_RAS_UC_CACHE_DATA_PARITY || fe & CXL_RAS_UC_CACHE_ADDR_PARITY ||
+> +	    fe & CXL_RAS_UC_CACHE_BE_PARITY || fe & CXL_RAS_UC_CACHE_DATA_ECC ||
+> +	    fe & CXL_RAS_UC_MEM_DATA_PARITY || fe & CXL_RAS_UC_MEM_ADDR_PARITY ||
+> +	    fe & CXL_RAS_UC_MEM_BE_PARITY || fe & CXL_RAS_UC_MEM_DATA_ECC) {
+> +		memcpy_fromio(log, addr, DATA_HEADER_SIZE);
+I'd forgotten his gremlin.
 
-> In meantime an example dump (not writing the header log yet!)
->
-> pcieport 0000:0c:00.0: AER: Uncorrected (Non-Fatal) error received: 0000:0f:00.0
-> cxl_pci 0000:0f:00.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
-> cxl_pci 0000:0f:00.0:   device [8086:0d93] error status/mask=00004000/00000000
-> cxl_pci 0000:0f:00.0:    [14] CmpltTO                (First)
-> cxl_ras_uc: mem3: status: 'Cache Data Parity Error' first_error: 'Cache Data Parity Error' header log: {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0}
-> cxl_pci 0000:0f:00.0: mem3: restart CXL.mem after slot reset
-> cxl_port endpoint6: No CMA mailbox
-> cxl_pci 0000:0f:00.0: mem3: error resume successful
-> pcieport 0000:0e:00.0: AER: device recovery successful
->
-> Jonathan
+You can't use memcpy_fromio() because on some architectures it will issue 8 byte
+reads and 8.2.4.16.7 states that the log shall be accessed as aligned 4-byte
+quantities.
+
+> +		return DATA_HEADER_SIZE;
+> +	}
+> +
+> +	if (fe & CXL_RAS_UC_RSVD_ENCODE) {
+> +		memcpy_fromio(log, addr, FLIT_SIZE);
+> +		return FLIT_SIZE;
+> +	}
+> +
+> +	if (fe & CXL_RAS_UC_RECV_OVERFLOW) {
+> +		*log = readb(addr);
+Also not valid for same reason.  Do a 32bit read and mask out the bottom byte.
+
+That was a pain to track down (and worst of all we hit the same thing for another
+bit of CXL last year I'd forgotten about it :(
+
+> +		return sizeof(u8);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
