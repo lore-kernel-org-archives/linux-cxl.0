@@ -2,141 +2,215 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2AFC4332F
-	for <linux-cxl@archiver.kernel.org>; Fri, 21 Oct 2022 09:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5941BC433FE
+	for <linux-cxl@archiver.kernel.org>; Fri, 21 Oct 2022 12:26:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230427AbiJUJAW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 21 Oct 2022 05:00:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40482 "EHLO
+        id S229535AbiJUM0T (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 21 Oct 2022 08:26:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230450AbiJUJAU (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 21 Oct 2022 05:00:20 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2068.outbound.protection.outlook.com [40.107.93.68])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4522C4D94;
-        Fri, 21 Oct 2022 02:00:15 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JAFrXSFvZg+6hN4w0yxDlxMxQPg5YwMvpjRPVBxyzBwiOhTxmd1P4MTDYF29A0rtRruYy7osss1mAAnrY23wqBd3U8h99Ycl1xh3PsvzHAsf5v7X+It0mjek+t9cl6oU9Tig9kmeXIYiD27ZTcrf4MWxzz9dOVUVJSFQnno7mbsBEOrYNfUMOwlvOG7XLdr+RMcZqWUJj+2os7t9nP6oapjX9Mpvfi4nfMf0etD/BPJt20voi8pvr9/pACWnMmDR6Mtk1U9WLqbKPeyl4PCJmjRndS+CG6NdgrG4QfXsiHZbWMI17vNxyn6vweGCTnELM6qVutp/y0NfHPjZAQ7QMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lgFZKHnVmrsxJ5kI1YvVoQay49t97/do1+G7pWsToIk=;
- b=eumU6p7jESOF6F8zToSl6H4TuGdZuAQLtyxl4RRLvb6xRALK+UaTv18ZhgsPhCxfxXcZ7Ii6ogdwm5O1FIJWQk4NMEB0LmHyKbcG/UA8yfQ42sFHllrskThSqeXDU1jBqljgACv+Oj+hzLdud/573Wk/by2kJDWa5INlSrCqP78eJubcAWIKpk8ESRFFqvzea0/WJav2vH0ZUFcV8/1apCmJo+tiGhdpsPxUEDdQN9tpEGim+dcS5uxZVcLfHspgEvAOFZN4IXi0/AaYEbnJkn9cQwKgiqdhUtKp+rW9lOb0i4OU8LuWMqd0TWX1oAhB+/+jSLF/NRn5Mwo4bXZoMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lgFZKHnVmrsxJ5kI1YvVoQay49t97/do1+G7pWsToIk=;
- b=n1eD3hshgBmQMDghhENVRu1EKJIjco6rD5rrda1V3SD3gw4FNsxblmKcnKmO/CIbHCTeRDEV7SmclFdb3yEZOdEkHJje4wQXobn90XniCk8viyeFqLnT4KAEQ2KIHzwMcsbJ6OKx1sH6YJw4JOEUg7Id4uqqABNrJdh9xkiKsS0=
-Received: from BN7PR02CA0029.namprd02.prod.outlook.com (2603:10b6:408:20::42)
- by DM4PR12MB7694.namprd12.prod.outlook.com (2603:10b6:8:102::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.29; Fri, 21 Oct
- 2022 09:00:14 +0000
-Received: from BN8NAM11FT030.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:20:cafe::1) by BN7PR02CA0029.outlook.office365.com
- (2603:10b6:408:20::42) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.35 via Frontend
- Transport; Fri, 21 Oct 2022 09:00:13 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT030.mail.protection.outlook.com (10.13.177.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5746.16 via Frontend Transport; Fri, 21 Oct 2022 09:00:13 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 21 Oct
- 2022 04:00:11 -0500
-Date:   Fri, 21 Oct 2022 11:00:09 +0200
-From:   Robert Richter <rrichter@amd.com>
+        with ESMTP id S229441AbiJUM0R (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 21 Oct 2022 08:26:17 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D99017EF0F
+        for <linux-cxl@vger.kernel.org>; Fri, 21 Oct 2022 05:26:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666355175; x=1697891175;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/xngK0uWFxK3krgPo55BKXlxheHtWXmPU9RQMETlkJU=;
+  b=CIam0aUl5uwgfIOFOo1B9UOyQGRc6AQLVLtQgVDbypMpaBvNfgUmwcqw
+   1oR4Zv283d9hTnrH+StHjqev6uNOQbg69ymvHhCGjhx7gsJRoX5jVJfMA
+   PNrE8QbSxrINm5c6LqEW1MN9BjIuw462fAK5BhytW+3x4HfTE6udzdmtP
+   e1m8AY+JzLhbiRmi2tdiksHbqZVO4qIdM0+bUnkB+7fWzfNldxdY8QG16
+   iZMc8AWBxw8Sk7BJBpmfIoJgPyoqnGW7gsRwsUktBK5O07MQmY0S+QdKn
+   dKtEcXhJ3YU7VuQo0bkZE/uwNwsp5Gk3lFSoqo7nLO+zJ18O/mb0o/Qkf
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="287393528"
+X-IronPort-AV: E=Sophos;i="5.95,200,1661842800"; 
+   d="scan'208";a="287393528"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 05:26:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="661581888"
+X-IronPort-AV: E=Sophos;i="5.95,200,1661842800"; 
+   d="scan'208";a="661581888"
+Received: from lkp-server02.sh.intel.com (HELO b6d29c1a0365) ([10.239.97.151])
+  by orsmga008.jf.intel.com with ESMTP; 21 Oct 2022 05:26:12 -0700
+Received: from kbuild by b6d29c1a0365 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1olr6J-0002aT-39;
+        Fri, 21 Oct 2022 12:26:11 +0000
+Date:   Fri, 21 Oct 2022 20:25:55 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
+Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Subject: Re: [PATCH v2 04/12] cxl: Unify debug messages when calling
- devm_cxl_add_dport()
-Message-ID: <Y1JfmXH43ODfdSFs@rric.localdomain>
-References: <20221018132341.76259-1-rrichter@amd.com>
- <20221018132341.76259-5-rrichter@amd.com>
- <6351e8bac4623_4da3294d0@dwillia2-xfh.jf.intel.com.notmuch>
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>
+Subject: [cxl:fixes] BUILD SUCCESS
+ f010c75c05299ecd65adfd31a7841eea3476ce1f
+Message-ID: <63528fd3.gxQfPZs7TqrKZ70h%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6351e8bac4623_4da3294d0@dwillia2-xfh.jf.intel.com.notmuch>
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT030:EE_|DM4PR12MB7694:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8d7c063f-eadd-44ba-1680-08dab342aa87
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1tAjRdMxEQl5eu3RwgpnCWxK4I3TrqvTzU//phHIA6h5cxks0ph9wjypeYlo9EGeME2k2c2UEKe6lAyQCwhP50AaFNe0sQZmYy64ZPVOPjYz5W4p0GcqS7wH8VwwEBloxS3aiW9nt7H0IYzZDpd47t6QVkZrneCvIbKZv4N0E83SBB/u5JRMGaxPi7HXGA6jLnHrMuRfSrXSjZq1mq7eB4QHIpSym6EbLVIU2zQcPvXH9CuEDuZYvGys3uhf2iLg4QbtYgKmeYCi2HI7yN9ooUxwXmqYRiG7suVMY7K5a/lIdWGFmzmiJx+9ewksY2wK3qBZeQ7uIFRZzH/l8rSZusW7v4DBQu+u6rvLl8PtJc+72zc+RI3IXOiqLzGoUc5hIHp4gRk59dOq+OkenEEX/BWtVuwO+xGWxsVeqrvz7afn8tSMEwFByxsnxW6/7gUWtBvJe/jJRZ1lC+aOn8b75o97R+HeqQbqmyt5270sIik7iR4OLkJV/laqnJg4HwOh7ubpnWK6f5XldTQWiWhBPCUaEe0iw1DhpHZpLR1WdFD7vp+ULn6IveRTx25RZV/5CjnADNIN772iU2iDXR7lVnnBUfo0UU79dzYq0viN6EjnS6a2ljaIO2rS6I1J7auutsnDiYS1I8EI6ZZN0S2+Q3wBR3XLqPY23LjCwpswJvP/NMqWzQ8ide1wkXz4Ze7fQxsxCISBWa0Wh/1a9un6LKdQ8gqIrWtviw8xQnJeJIuGYxayRjRgn3NMcsysU0Tlf4tLzbygAPasEEPjNlTeayze5FA5RgDEj7eV109X0jDYGUPEmpVdWe1sjmqXAxO6
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(396003)(346002)(376002)(136003)(39860400002)(451199015)(40470700004)(46966006)(36840700001)(2906002)(7416002)(4326008)(8676002)(316002)(5660300002)(82310400005)(70206006)(40460700003)(16526019)(36860700001)(82740400003)(8936002)(54906003)(70586007)(336012)(6916009)(186003)(478600001)(7696005)(53546011)(26005)(47076005)(83380400001)(81166007)(41300700001)(55016003)(426003)(40480700001)(9686003)(356005)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2022 09:00:13.5914
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d7c063f-eadd-44ba-1680-08dab342aa87
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT030.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7694
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 20.10.22 17:32:58, Dan Williams wrote:
-> Robert Richter wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git fixes
+branch HEAD: f010c75c05299ecd65adfd31a7841eea3476ce1f  cxl/pmem: Fix failure to account for 8 byte header for writes to the device LSA.
 
-> > diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> > index a072b2d3e726..c610625e8261 100644
-> > --- a/tools/testing/cxl/test/cxl.c
-> > +++ b/tools/testing/cxl/test/cxl.c
-> > @@ -582,14 +582,8 @@ static int mock_cxl_port_enumerate_dports(struct cxl_port *port)
-> >  		dport = devm_cxl_add_dport(port, &pdev->dev, pdev->id,
-> >  					   CXL_RESOURCE_NONE);
-> >  
-> > -		if (IS_ERR(dport)) {
-> > -			dev_err(dev, "failed to add dport: %s (%ld)\n",
-> > -				dev_name(&pdev->dev), PTR_ERR(dport));
-> > +		if (IS_ERR(dport))
-> >  			return PTR_ERR(dport);
-> > -		}
-> > -
-> > -		dev_dbg(dev, "add dport%d: %s\n", pdev->id,
-> > -			dev_name(&pdev->dev));
-> 
-> This hunk causes this new compile error:
-> 
-> tools/testing/cxl/test/cxl.c: In function ‘mock_cxl_port_enumerate_dports’:
-> tools/testing/cxl/test/cxl.c:559:24: error: unused variable ‘dev’ [-Werror=unused-variable]
->   559 |         struct device *dev = &port->dev;
->       |                        ^~~
-> cc1: all warnings being treated as errors
-> 
-> I fixed it up locally, but just double check that you are building
-> cxl_test if you touch tools/testing/cxl/:
-> 
->     make M=tools/testing/cxl
+elapsed time: 725m
 
-Right. Thanks for fixing. Will build test in the future.
+configs tested: 135
+configs skipped: 4
 
--Robert
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+um                             i386_defconfig
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+um                           x86_64_defconfig
+mips                             allyesconfig
+sh                               allmodconfig
+arc                                 defconfig
+s390                             allmodconfig
+alpha                               defconfig
+s390                                defconfig
+x86_64                          rhel-8.3-func
+i386                                defconfig
+openrisc                         alldefconfig
+x86_64                    rhel-8.3-kselftests
+s390                             allyesconfig
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+x86_64                           rhel-8.3-syz
+x86_64                        randconfig-a013
+x86_64                              defconfig
+m68k                             allmodconfig
+x86_64                         rhel-8.3-kunit
+x86_64                        randconfig-a011
+powerpc                       holly_defconfig
+arc                  randconfig-r043-20221019
+i386                          randconfig-a001
+x86_64                           rhel-8.3-kvm
+i386                          randconfig-a003
+arc                              allyesconfig
+x86_64                        randconfig-a006
+arc                  randconfig-r043-20221020
+x86_64                        randconfig-a015
+s390                 randconfig-r044-20221020
+alpha                            allyesconfig
+i386                          randconfig-a005
+riscv                randconfig-r042-20221020
+i386                             allyesconfig
+mips                       bmips_be_defconfig
+m68k                             allyesconfig
+x86_64                               rhel-8.3
+arm                                 defconfig
+x86_64                           allyesconfig
+arm64                            allyesconfig
+arm                              allyesconfig
+loongarch                           defconfig
+m68k                        mvme16x_defconfig
+powerpc                 linkstation_defconfig
+sparc                               defconfig
+arm                      integrator_defconfig
+arm64                               defconfig
+sh                             espt_defconfig
+arm                      footbridge_defconfig
+m68k                            q40_defconfig
+powerpc                     tqm8541_defconfig
+arm                           stm32_defconfig
+powerpc                      chrp32_defconfig
+ia64                             allmodconfig
+i386                          randconfig-c001
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+sh                ecovec24-romimage_defconfig
+sh                     magicpanelr2_defconfig
+arm                          gemini_defconfig
+mips                  maltasmvp_eva_defconfig
+m68k                         apollo_defconfig
+arc                        vdk_hs38_defconfig
+sh                           se7712_defconfig
+parisc                              defconfig
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+i386                          debian-10.3-kvm
+arc                  randconfig-r043-20221018
+s390                 randconfig-r044-20221018
+riscv                randconfig-r042-20221018
+nios2                               defconfig
+riscv                             allnoconfig
+mips                      loongson3_defconfig
+xtensa                generic_kc705_defconfig
+nios2                            alldefconfig
+riscv                    nommu_virt_defconfig
+i386                              debian-10.3
+riscv                    nommu_k210_defconfig
+arm                  randconfig-c002-20221019
+riscv                          rv32_defconfig
+x86_64                        randconfig-c001
+arm                     eseries_pxa_defconfig
+powerpc                  storcenter_defconfig
+parisc64                            defconfig
+mips                           ci20_defconfig
+m68k                        mvme147_defconfig
+openrisc                            defconfig
+arm                  randconfig-c002-20221020
+
+clang tested configs:
+arm                       mainstone_defconfig
+arm                  colibri_pxa300_defconfig
+i386                 randconfig-a011-20221017
+x86_64                        randconfig-a005
+riscv                randconfig-r042-20221019
+hexagon              randconfig-r041-20221020
+x86_64                        randconfig-a016
+hexagon              randconfig-r045-20221020
+i386                 randconfig-a013-20221017
+x86_64                        randconfig-a001
+hexagon              randconfig-r045-20221019
+x86_64                        randconfig-a012
+i386                 randconfig-a012-20221017
+x86_64                        randconfig-a003
+i386                          randconfig-a002
+hexagon              randconfig-r041-20221019
+i386                 randconfig-a014-20221017
+x86_64                        randconfig-a014
+i386                 randconfig-a016-20221017
+i386                          randconfig-a006
+s390                 randconfig-r044-20221019
+i386                          randconfig-a004
+i386                 randconfig-a015-20221017
+mips                           rs90_defconfig
+arm                           omap1_defconfig
+powerpc                 mpc8560_ads_defconfig
+arm                          ep93xx_defconfig
+arm                                 defconfig
+mips                          ath79_defconfig
+arm                         shannon_defconfig
+mips                     cu1830-neo_defconfig
+hexagon              randconfig-r045-20221018
+hexagon              randconfig-r041-20221018
+powerpc                 mpc836x_rdk_defconfig
+mips                      malta_kvm_defconfig
+powerpc                     tqm8560_defconfig
+powerpc                     kmeter1_defconfig
+x86_64                        randconfig-k001
+mips                       lemote2f_defconfig
+powerpc                    socrates_defconfig
+arm                         orion5x_defconfig
+arm                        magician_defconfig
+mips                          ath25_defconfig
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
