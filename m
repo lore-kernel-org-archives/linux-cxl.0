@@ -2,45 +2,45 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D92C433FE
-	for <linux-cxl@archiver.kernel.org>; Fri, 21 Oct 2022 16:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF10C433FE
+	for <linux-cxl@archiver.kernel.org>; Fri, 21 Oct 2022 17:23:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230488AbiJUQv3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 21 Oct 2022 12:51:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47222 "EHLO
+        id S229891AbiJURXh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 21 Oct 2022 13:23:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231137AbiJUQvN (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 21 Oct 2022 12:51:13 -0400
-Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 170E42892FF;
-        Fri, 21 Oct 2022 09:51:06 -0700 (PDT)
+        with ESMTP id S229506AbiJURXg (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 21 Oct 2022 13:23:36 -0400
+Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7710324FED3;
+        Fri, 21 Oct 2022 10:23:32 -0700 (PDT)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 5B7D25C154A;
-        Fri, 21 Oct 2022 16:42:20 +0000 (UTC)
+        by relay.mailchannels.net (Postfix) with ESMTP id 1368940CDE;
+        Fri, 21 Oct 2022 17:23:31 +0000 (UTC)
 Received: from pdx1-sub0-mail-a201 (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id A4C355C0D94;
-        Fri, 21 Oct 2022 16:42:19 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1666370539; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id 2EF7940B7F;
+        Fri, 21 Oct 2022 17:23:30 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1666373010; a=rsa-sha256;
         cv=none;
-        b=UE6llF/Nvv35jSXJEi7IvlfDkVYFb+0IfOJ3O83ZXAiiyRd9FNLQhuuv0yh77yg+2N8xv4
-        0hCfH9yaiiUayFBiyww++bLscz0/GduthzSCpgMN5qHClqKpVe+Ix2yG3U/IdAgA3BzMd8
-        i1phYNFC4Q4xuWh3XIq96m3kHfqWt+CRliK7IRmZx1UP0/7mKLtqCz67QEFK2Y/tTw0yZe
-        Xv8Gy17cT8ubxkf1VHjL7GPfplyF7ZlHarl6pt9ComBU2jqAsot1hXGSPIpTKEs6s7m0Iu
-        mE3PY/lo8VKZVhRg4pJsor6nEUsJY7oiVGFQZ7WFkMPsy0bPQiie+PHk504wyA==
+        b=mhVsLICrbM/2uD8fKQLF4Any+/Zawom9skfLzz1aYcCDAWpVUaXXhJsxCe2YafWPuWKFzT
+        IG5fc4aTw1hhmL3njGv5OOmjurN4r3K77NCNvgDr4LmIH7mYF6BonKLnFM72mYRJ9SJeO0
+        AfDg1LGhCB4GlxUVjNeJXVeCYS5njaj3TPHzlmShVw3B2ARW3GqzcSWdy7GOKa/1LdrW14
+        MP9atvcSFR6o36WzX/2vrDZwX6oNs9Kc+I4I74jVzTOa46GWLTdEpLvnWJ1E3elwiFrGSd
+        j7v8Mj1wkd+zB+CQd38HE+ZbKFuLonaYgyqX6nc1MrBRF64uNo3o3JlFEtARjA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1666370539;
+        s=arc-2022; t=1666373010;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=4OwkcN5POLEwtg8auuKqNVlwWE+94+S6v3JaLCq+AJc=;
-        b=tLoYGLcVkzqdm7NWfRQcODRYeDUrffqGr2SRp0tHPCF7Kqvf2MWrsq3iJk3gjOjh/shIIa
-        VpdF5ktAVyElscM67U6T4s64nNRcmx0ELfYU1ovnANmhxjm/jOsSq0qMIBuC/Zn1OyJLoK
-        0l9N0/IJ8S1Vzr/sxX4m8IyK7m+ScfDcz9Jki5VcwVSO7OF5SyFlN5SGodLCMZPvVUXjfv
-        Pbg+IobHvROPGwnPNI13MDQrKUnTRLWcT1ifKt3jA0lucR0YEWEHROEWoj59H6h6J/N1w8
-        ppV4sJzJ2nQZJ6bFR/5NJUq7VRR20/3mAT9Fc0ml091PcKx4QTaKbl8Nk7C98A==
+        bh=vI+VPrep3qSC3kePNmUTtZOOYUuCF9olRxVhCYVNr+A=;
+        b=IAVGkmNDXSqIeHt/6cCziLEqbmOXnlkCbwU2Xgrrw+MWI9Hgzwh1ks0GhTr6UuGSx9rsma
+        gdh1j5KK0jnvlQ+JGDZFKdt3rnywHwO5qVNHDG3VPrcWP4LEswqkT6SAiWnFrKRM0biV/m
+        /XtsMVNLKfk6eMmGCF0p7GOo6KwBiVgCRpMGo4xclMTS63Fzvn64JxsBR8bWQdur5Hx2DC
+        1WXbZjTRblxae8eYsN3mg2Jx9W+GsO54VqiOa8j/aJGYB2LATiGqEyxJX3ET0WmIFbdG4x
+        QjHIAlzMi0mK0nSY72ldip5DfiuVD9Q5RDi8aRmWZdbEc/725x5vKvir8XeZDA==
 ARC-Authentication-Results: i=1;
         rspamd-6955c7cd5b-vkcdq;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
@@ -48,168 +48,75 @@ X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Continue-Bottle: 36a6e867549300e2_1666370540027_107651071
-X-MC-Loop-Signature: 1666370540027:353579783
-X-MC-Ingress-Time: 1666370540026
+X-Relation-Drop: 7d83b8cd61140078_1666373010635_3304474967
+X-MC-Loop-Signature: 1666373010635:4041510918
+X-MC-Ingress-Time: 1666373010635
 Received: from pdx1-sub0-mail-a201 (pop.dreamhost.com [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.97.77.227 (trex/6.7.1);
-        Fri, 21 Oct 2022 16:42:20 +0000
+        by 100.120.183.105 (trex/6.7.1);
+        Fri, 21 Oct 2022 17:23:30 +0000
 Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a201 (Postfix) with ESMTPSA id 4Mv9HG40wyz2d;
-        Fri, 21 Oct 2022 09:42:18 -0700 (PDT)
+        by pdx1-sub0-mail-a201 (Postfix) with ESMTPSA id 4MvBBm1v1Dz2d;
+        Fri, 21 Oct 2022 10:23:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1666370539;
-        bh=4OwkcN5POLEwtg8auuKqNVlwWE+94+S6v3JaLCq+AJc=;
+        s=dreamhost; t=1666373009;
+        bh=vI+VPrep3qSC3kePNmUTtZOOYUuCF9olRxVhCYVNr+A=;
         h=Date:From:To:Cc:Subject:Content-Type;
-        b=AoUDkEQ/xfajJlhlQoP0eD/WZ0KA0RYPif0k+H9kxESARaCTexsiOkktwD2mAPeKP
-         Eu+HVY8PmPqqnIbqnu/DKFkAkQLfBW2SNQ6wIzeZxRRPNkOXjCQgSBSqjUJoXvX7jH
-         wNe/mB5BBKC3XoQ89wkVWBLmBbFWcCsgK0796Jp1WjESWNLh3d4CERN34t6Y45mQfV
-         uUuo0NqyFMzZ/exgsZvF6mZUkHscmvQPfWmUscqCPi2FpANBZzOvgnL6GPYiKnDCl3
-         ghCcKOYLYh9EcstV9R7Bvy4hvKgR2o/7IJkigybj/a17ig8PrrUwpU1YB0y1atqsYd
-         bnnHT7c6OpFbA==
-Date:   Fri, 21 Oct 2022 09:20:55 -0700
+        b=JoTs0WHeMSev4YpBj6Zp0eyrM30ArpEdcwK9B2FHaD52zUsHJU6i3T+oELX2WRwsD
+         3IdI0sVInLoBeAGfay6hJPFBLjPt18E1mhgD+MPBThNXro8T8KOcr5JM73TCyL5Iym
+         XF3KZ6x/naaerK0JuXuHfGPL2qCaTMLE8wkmK+sxKS1k7SqNFZiB/TAkMVtBuOiYMK
+         kSYW3tazcIJ8wx6Fre0LByPVVPXKPxtg+7wWrqmuh6qP7PG2ZYOb/Ck55xwQcuWrWE
+         6Tnxsr51GJCg0zGZumFsHy48d5eMaF2DmSGNDofFDOKoT6MbBT/ENbAfzaAq3lbcCD
+         L2QgY9ZApy6bA==
+Date:   Fri, 21 Oct 2022 10:23:24 -0700
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, dan.j.williams@intel.com,
+Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
         dave.jiang@intel.com, alison.schofield@intel.com,
         bwidawsk@kernel.org, vishal.l.verma@intel.com,
         a.manzanares@samsung.com, linux-cxl@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] cxl/pci: Add generic MSI-X/MSI irq support
-Message-ID: <20221021162055.nuxvfdrfhv42nlim@offworld>
+Subject: Re: [PATCH 2/2] cxl/mbox: Wire up irq support
+Message-ID: <20221021172324.efg7vzrguvd7m44r@offworld>
 References: <20221018030010.20913-1-dave@stgolabs.net>
- <20221018030010.20913-2-dave@stgolabs.net>
- <20221018103619.00004c39@huawei.com>
- <20221018115227.00002a4c@huawei.com>
- <20221020223125.hyrfpt2noiicisxa@offworld>
- <Y1Idsv0Nuu+V9aMj@iweiny-desk3>
- <20221021094931.0000795f@huawei.com>
+ <20221018030010.20913-3-dave@stgolabs.net>
+ <20221018103815.00003cb2@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20221021094931.0000795f@huawei.com>
+In-Reply-To: <20221018103815.00003cb2@huawei.com>
 User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 21 Oct 2022, Jonathan Cameron wrote:
+On Tue, 18 Oct 2022, Jonathan Cameron wrote:
 
->On Thu, 20 Oct 2022 21:18:58 -0700
->Ira Weiny <ira.weiny@intel.com> wrote:
->
->> On Thu, Oct 20, 2022 at 03:31:25PM -0700, Davidlohr Bueso wrote:
->> > On Tue, 18 Oct 2022, Jonathan Cameron wrote:
->> >
->> > > Reality is that it is cleaner to more or less ignore the infrastructure
->> > > proposed in this patch.
->> > >
->> > > 1. Query how many CPMU devices there are. Whilst there stash the maximim
->> > >   cpmu vector number in the cxlds.
->> > > 2. Run a stub in this infrastructure that does max(irq, cxlds->irq_num);
->> > > 3. Carry on as before.
->> > >
->> > > Thus destroying the point of this infrastructure for that usecase at least
->> > > and leaving an extra bit of state in the cxl_dev_state that is just
->> > > to squirt a value into the callback...
->> >
->> > If it doesn't fit, then it doesn't fit.
->> >
->> > However, while I was expecting pass one to be in the callback, I wasn't
->> > expecting that both pass 1 and 2 shared the cpmu_regs_array. If the array
->> > could be reconstructed during pass 2, then it would fit a bit better;
->> > albeit the extra allocation, cycles etc., but this is probing phase, so
->> > overhead isn't that important (and cpmu_count isn't big enough to matter).
->
->I thought about that approach, but it's really ugly to have to do
->
->1) For the IRQ number gathering.
->  a) Parse 1 to count CPMUs
->  b) Parse 2 to get the register maps - grab the irq numbers and unmap them again
->2) For the CPMU registration
->  a) Parse 3 to count CPMUs (we could stash the number of CPMUS form 1a) but
->     that's no advantage over stashing the max irq in current proposal.
->     Both are putting state where it's not relevant or wanted just to make it
->     available in a callback.  This way is even worse because it's getting
->     stashed as a side effect of a parse in a function doing something different.
->  b) Parse 4 to get the register maps and actually create the devices. Could have
->     stashed this earlier as well, but same 'side effects' argument applies.
->
->Sure, can move to this however with appropriate comments on why we are playing
->these games because otherwise I suspect a future 'cleanup' would remove double, double
->pass.
->
->To allow for an irq registration wrapper that turns a series of straight
->line calls into callbacks in an array.  The straight line calls aren't exactly
->complex in the first place.
->//find cpmu filling in cxl_cpmu_reg_maps.
->
->max_irq = -1
->rc = cxl_mailbox_get_irq()
->if (rc < 0)
->	return rc;
->max_irq = max(max_irq, rc);
->
->rc = cxl_events_get_irq()
->if (rc < 0)
->	return rc;
->max_irq = max(max_irq, rc);
->
->rc = cxl_cpmus_get_irq(cxl_cpmu_reg_maps);
->if (rc < 0)
->	return rc;
->max_irq = max(max_irq, rC);
->
->...
->
->if (irq > 0) {
->
->	pci_get...
->}
->
->//create all the devices...
+>Whilst I get the need for an example, I'd rather this didn't
+>go in until we have that background handler in place.
 
-Yes, this was sort of what I pictured if we go this way. It doesn't make
-my eyes sore.
+One of the reasons why the bg stuff hasn't been re-posted is
+because the only user currently is the sanitation work
+(and hopefully maybe scan media soon), which in turn depends
+on the cache-flushing thing to be picked up (unless someone
+starts ranting again against wbinvd). And that is in Dave's
+pmem security series which I'm hoping will be picked up for
+v6.3 at some point.
 
->
->> >
->> > But if we're going to go with a free-for-all approach, can we establish
->> > who goes for the initial pci_alloc_irq_vectors()? I think perhaps mbox
->> > since it's the most straightforward and with least requirements, I'm
->> > also unsure of the status yet to merge events and pmu, but regardless
->> > they are still larger patchsets. If folks agree I can send a new mbox-only
->> > patch.
->>
->> I think there needs to be some mechanism for all of the sub-device-functions to
->> report their max required vectors.
->>
->> I don't think that the mbox code is necessarily the code which should need to
->> know about all those other sub-device-thingys.  But it could certainly take
->> some 'max vectors' value that probe passed to it.
->>
->> I'm still not sure how dropping this infrastructure makes Jonathan's code
->> cleaner.  I still think there will need to be 2 passes over the number of
->> CPMU's.
->>
->
->Primarily that there is no need to stash anything about the CPMUs in the
->cxl_device_state (option 1) or repeat all the counting and discovery logic twice
->(option 2).
->
->I can live with it (it's what we have to do in pcie port for the equivalent)
->but the wrapped up version feels like a false optimization.
->
->Saves a few lines of code and adds a bunch of complexity elsewhere that looks to
->me to outweigh that saving.
+So I guess we're a while away from the irq thing. I was mostly
+suggesting sending an mbox-only just to layout the
+pci_alloc_irq_vectors if we're not using the common table,
+but per the above this might not be sooner than the pmu or
+events stuff...
 
-Yeah it's hard to justify the extra complexity here when the alternative isn't
-even that bad.
+>Unused infrastructure tends to rot or not be quite what is
+>needed.
+
+No arguing there.
 
 Thanks,
 Davidlohr
