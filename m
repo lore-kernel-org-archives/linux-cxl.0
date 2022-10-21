@@ -2,215 +2,174 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5941BC433FE
-	for <linux-cxl@archiver.kernel.org>; Fri, 21 Oct 2022 12:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 307C5C433FE
+	for <linux-cxl@archiver.kernel.org>; Fri, 21 Oct 2022 16:20:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229535AbiJUM0T (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 21 Oct 2022 08:26:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40254 "EHLO
+        id S230159AbiJUQUg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 21 Oct 2022 12:20:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbiJUM0R (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 21 Oct 2022 08:26:17 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D99017EF0F
-        for <linux-cxl@vger.kernel.org>; Fri, 21 Oct 2022 05:26:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666355175; x=1697891175;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=/xngK0uWFxK3krgPo55BKXlxheHtWXmPU9RQMETlkJU=;
-  b=CIam0aUl5uwgfIOFOo1B9UOyQGRc6AQLVLtQgVDbypMpaBvNfgUmwcqw
-   1oR4Zv283d9hTnrH+StHjqev6uNOQbg69ymvHhCGjhx7gsJRoX5jVJfMA
-   PNrE8QbSxrINm5c6LqEW1MN9BjIuw462fAK5BhytW+3x4HfTE6udzdmtP
-   e1m8AY+JzLhbiRmi2tdiksHbqZVO4qIdM0+bUnkB+7fWzfNldxdY8QG16
-   iZMc8AWBxw8Sk7BJBpmfIoJgPyoqnGW7gsRwsUktBK5O07MQmY0S+QdKn
-   dKtEcXhJ3YU7VuQo0bkZE/uwNwsp5Gk3lFSoqo7nLO+zJ18O/mb0o/Qkf
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="287393528"
-X-IronPort-AV: E=Sophos;i="5.95,200,1661842800"; 
-   d="scan'208";a="287393528"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 05:26:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="661581888"
-X-IronPort-AV: E=Sophos;i="5.95,200,1661842800"; 
-   d="scan'208";a="661581888"
-Received: from lkp-server02.sh.intel.com (HELO b6d29c1a0365) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 21 Oct 2022 05:26:12 -0700
-Received: from kbuild by b6d29c1a0365 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1olr6J-0002aT-39;
-        Fri, 21 Oct 2022 12:26:11 +0000
-Date:   Fri, 21 Oct 2022 20:25:55 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>
-Subject: [cxl:fixes] BUILD SUCCESS
- f010c75c05299ecd65adfd31a7841eea3476ce1f
-Message-ID: <63528fd3.gxQfPZs7TqrKZ70h%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S230392AbiJUQUH (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 21 Oct 2022 12:20:07 -0400
+Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9247856BA8;
+        Fri, 21 Oct 2022 09:19:45 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 6CC7A418E6;
+        Fri, 21 Oct 2022 16:19:44 +0000 (UTC)
+Received: from pdx1-sub0-mail-a201 (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id D1C3B40E67;
+        Fri, 21 Oct 2022 16:19:43 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1666369183; a=rsa-sha256;
+        cv=none;
+        b=z6nCKeO+lcnn3+aKluxACZRN/pPuT45Bb+SOwqOvxogbT0xwsM9ELMkhmFKLY0s0sQkAd8
+        XBAemYJvjZdpp5gkALeLixHfco219fSUvyl2cSZpLH7DKQ52dkxSqknC4DG5DxwVNgVrVx
+        dZvTmFHqwDCtOundqFfcB+G9bzCxtEOzKQ9at1VcNqLXC12x8nTJNbIgRo6vCsbUomwi6x
+        2n9TnLBumrdZ5XSUX79Zr22MbPGyBWouBz8SWqSuEPdBOBZmpyCvXT8JgNrW7c0JS9tn7I
+        WkOQRS++ZCMX9Ei3rxu/eD3rRwhty8awRve8N+deMV8jAYT7ns92Lfr3a5P06w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1666369183;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=NW6vJ8DeFyk7asXbesj79NddbzSxSYq+RveUfuG553Q=;
+        b=+AJBs71HI0T0gS65Tr2uUDf+M091WTaOoiYSrDJROzGvBGFgPtsXE08azLXNvQsVFjOwaK
+        z0YFBTG++HZasFvloHWCnn5L8hVw4iePqYwffNrRwUR+PGyiPifnENjEqb7GLeVwCtSWLH
+        64lUlynpvAzJ4p6mkcQTzNWCki4mmikJnZNZpKPXCcxwX0UQMJf5BeuOh6kgYJ7Nci+TdU
+        WwE3YGsBhkW6Su9JuZxCFBfvlx8CdH94nHHVbhQDKBijDi4qzIKVdq0YugOc9bQBiNI/ek
+        dEeUUAmXWLqrBInFMYA767Neri2TDQY9tPGzEMQTDsqjptX6k8W3KUb0qa5Rhw==
+ARC-Authentication-Results: i=1;
+        rspamd-6955c7cd5b-khjbw;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Chief-Wiry: 50cdf9746f680e89_1666369184189_97444717
+X-MC-Loop-Signature: 1666369184189:1827427503
+X-MC-Ingress-Time: 1666369184189
+Received: from pdx1-sub0-mail-a201 (pop.dreamhost.com [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.120.183.105 (trex/6.7.1);
+        Fri, 21 Oct 2022 16:19:44 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a201 (Postfix) with ESMTPSA id 4Mv8nB0rB2z2d;
+        Fri, 21 Oct 2022 09:19:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1666369182;
+        bh=NW6vJ8DeFyk7asXbesj79NddbzSxSYq+RveUfuG553Q=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=dX0PmMOhuURcIdOlni51tOvsbJYcE0F2poC8cjMTcF+0caw46mWq3ppZVEbLhNPdy
+         6b6NiNtaXMbz6GRXgwFI3GZ/v6Vajkr8F2l4fYg6U3YgmcEfFWWYCrxhNhyVMqYsdA
+         snAuQkG89oIRFdAs4vXmNGvLw/R7w/xPshMR7oFNNx2eViaXvKIfymku/FhzNKepJZ
+         5RCVWrCw0NBpYq7sgHHQ0qWvReRZnTTSdb+0N6Epb7M0OeMDhdikdj3uRsS0x11Thp
+         lHSapcKKj9pOsAfaIS6GGS1AG4ZrM7VP3BtOyEog3au/f2cE4YkkVkxDHKENzKUHjK
+         XOlChH0QY5g9Q==
+Date:   Fri, 21 Oct 2022 08:58:18 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, dan.j.williams@intel.com,
+        dave.jiang@intel.com, alison.schofield@intel.com,
+        bwidawsk@kernel.org, vishal.l.verma@intel.com,
+        a.manzanares@samsung.com, linux-cxl@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] cxl/pci: Add generic MSI-X/MSI irq support
+Message-ID: <20221021155818.rxp6e3x4lid7eume@offworld>
+References: <20221018030010.20913-1-dave@stgolabs.net>
+ <20221018030010.20913-2-dave@stgolabs.net>
+ <20221018103619.00004c39@huawei.com>
+ <20221018115227.00002a4c@huawei.com>
+ <Y1IcpaodrrVrkEcL@iweiny-desk3>
+ <20221021095818.00006ed1@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20221021095818.00006ed1@huawei.com>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git fixes
-branch HEAD: f010c75c05299ecd65adfd31a7841eea3476ce1f  cxl/pmem: Fix failure to account for 8 byte header for writes to the device LSA.
+On Fri, 21 Oct 2022, Jonathan Cameron wrote:
 
-elapsed time: 725m
+>> FWIW I did this for the event stuff and did not find it so distasteful...  :-/
+>>
+>> However the information I am stashing in the cxlds is all interrupt
+>> information.  So I think it is different from what I see in the CPMU stuff.
+>
+>Right now I'm just stashing the max interrupt number to squirt into a callback
+>a few lines later. That feels like a hack to get around parsing the structures
+>4 times.  If it's an acceptable hack then fair enough.
+>
+>>
+>> > 2. The callback below to find those numbers
+>> > 3. Registration of the cpmu devices.
+>> >
+>> > Reality is that it is cleaner to more or less ignore the infrastructure
+>> > proposed in this patch.
+>> >
+>> > 1. Query how many CPMU devices there are. Whilst there stash the maximim
+>> >    cpmu vector number in the cxlds.
+>> > 2. Run a stub in this infrastructure that does max(irq, cxlds->irq_num);
+>> > 3. Carry on as before.
+>> >
+>> > Thus destroying the point of this infrastructure for that usecase at least
+>> > and leaving an extra bit of state in the cxl_dev_state that is just
+>> > to squirt a value into the callback...
+>>
+>> I'm not sure I follow?  Do you mean this?
+>>
+>> static int cxl_cpmu_get_max_msgnum(struct cxl_dev_state *cxlds)
+>> {
+>>	return cxlds->cpmu_max_vector;
+>> }
+>
+>Yup. That state is no relevance to the cxl_dev_state outside of this tiny
+>block of code.  Hence I really don't like putting it in there.
 
-configs tested: 135
-configs skipped: 4
+Oh absolutely, this is ugly as sin. And if there is anything even worth stashing
+the max would only be mbox, as Ira suggested earlier in v1, iirc. So no,
+we should not be doing this sort of thing. And if pass one were done in the
+callback the need for this would disappear.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+>>
+>> >
+>> > So with that in mind I'm withdrawing the RB above.  This looks to be
+>> > an idea that with hindsight doesn't necessarily pan out.
+>> > Long hand equivalent with the specific handling needed for each case
+>> > is probably going to be neater than walking a table of much more
+>> > restricted callbacks.
+>>
+>> I'm not married to the idea of the array of callbacks but I'm not sure how this
+>> solves having to iterate on the CPMU devices twice?
+>
+>Laid that out in the other branch of the thread but basically either
+>1) We stash irrelevant information in cxl_dev_state just to get it into the callback
+>   It's not used for anything else and this makes a fiddly and non obvious tie
+>   up between different registration steps that appear somewhat independent.
 
-gcc tested configs:
-um                             i386_defconfig
-powerpc                           allnoconfig
-powerpc                          allmodconfig
-um                           x86_64_defconfig
-mips                             allyesconfig
-sh                               allmodconfig
-arc                                 defconfig
-s390                             allmodconfig
-alpha                               defconfig
-s390                                defconfig
-x86_64                          rhel-8.3-func
-i386                                defconfig
-openrisc                         alldefconfig
-x86_64                    rhel-8.3-kselftests
-s390                             allyesconfig
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-x86_64                           rhel-8.3-syz
-x86_64                        randconfig-a013
-x86_64                              defconfig
-m68k                             allmodconfig
-x86_64                         rhel-8.3-kunit
-x86_64                        randconfig-a011
-powerpc                       holly_defconfig
-arc                  randconfig-r043-20221019
-i386                          randconfig-a001
-x86_64                           rhel-8.3-kvm
-i386                          randconfig-a003
-arc                              allyesconfig
-x86_64                        randconfig-a006
-arc                  randconfig-r043-20221020
-x86_64                        randconfig-a015
-s390                 randconfig-r044-20221020
-alpha                            allyesconfig
-i386                          randconfig-a005
-riscv                randconfig-r042-20221020
-i386                             allyesconfig
-mips                       bmips_be_defconfig
-m68k                             allyesconfig
-x86_64                               rhel-8.3
-arm                                 defconfig
-x86_64                           allyesconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-loongarch                           defconfig
-m68k                        mvme16x_defconfig
-powerpc                 linkstation_defconfig
-sparc                               defconfig
-arm                      integrator_defconfig
-arm64                               defconfig
-sh                             espt_defconfig
-arm                      footbridge_defconfig
-m68k                            q40_defconfig
-powerpc                     tqm8541_defconfig
-arm                           stm32_defconfig
-powerpc                      chrp32_defconfig
-ia64                             allmodconfig
-i386                          randconfig-c001
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-sh                ecovec24-romimage_defconfig
-sh                     magicpanelr2_defconfig
-arm                          gemini_defconfig
-mips                  maltasmvp_eva_defconfig
-m68k                         apollo_defconfig
-arc                        vdk_hs38_defconfig
-sh                           se7712_defconfig
-parisc                              defconfig
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-i386                          debian-10.3-kvm
-arc                  randconfig-r043-20221018
-s390                 randconfig-r044-20221018
-riscv                randconfig-r042-20221018
-nios2                               defconfig
-riscv                             allnoconfig
-mips                      loongson3_defconfig
-xtensa                generic_kc705_defconfig
-nios2                            alldefconfig
-riscv                    nommu_virt_defconfig
-i386                              debian-10.3
-riscv                    nommu_k210_defconfig
-arm                  randconfig-c002-20221019
-riscv                          rv32_defconfig
-x86_64                        randconfig-c001
-arm                     eseries_pxa_defconfig
-powerpc                  storcenter_defconfig
-parisc64                            defconfig
-mips                           ci20_defconfig
-m68k                        mvme147_defconfig
-openrisc                            defconfig
-arm                  randconfig-c002-20221020
+Yeah anything _but_ this.
 
-clang tested configs:
-arm                       mainstone_defconfig
-arm                  colibri_pxa300_defconfig
-i386                 randconfig-a011-20221017
-x86_64                        randconfig-a005
-riscv                randconfig-r042-20221019
-hexagon              randconfig-r041-20221020
-x86_64                        randconfig-a016
-hexagon              randconfig-r045-20221020
-i386                 randconfig-a013-20221017
-x86_64                        randconfig-a001
-hexagon              randconfig-r045-20221019
-x86_64                        randconfig-a012
-i386                 randconfig-a012-20221017
-x86_64                        randconfig-a003
-i386                          randconfig-a002
-hexagon              randconfig-r041-20221019
-i386                 randconfig-a014-20221017
-x86_64                        randconfig-a014
-i386                 randconfig-a016-20221017
-i386                          randconfig-a006
-s390                 randconfig-r044-20221019
-i386                          randconfig-a004
-i386                 randconfig-a015-20221017
-mips                           rs90_defconfig
-arm                           omap1_defconfig
-powerpc                 mpc8560_ads_defconfig
-arm                          ep93xx_defconfig
-arm                                 defconfig
-mips                          ath79_defconfig
-arm                         shannon_defconfig
-mips                     cu1830-neo_defconfig
-hexagon              randconfig-r045-20221018
-hexagon              randconfig-r041-20221018
-powerpc                 mpc836x_rdk_defconfig
-mips                      malta_kvm_defconfig
-powerpc                     tqm8560_defconfig
-powerpc                     kmeter1_defconfig
-x86_64                        randconfig-k001
-mips                       lemote2f_defconfig
-powerpc                    socrates_defconfig
-arm                         orion5x_defconfig
-arm                        magician_defconfig
-mips                          ath25_defconfig
+>
+>2) We do the whole double parse twice (so 4 times in total) which is the right
+>   option to keep the layering if using this array of callbacks approach, but
+>   really ugly.  If we flatten it to straight line code there is no implication
+>   of layering and the state being parsed on is right there in a local variable.
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+If we are keeping this patch, then as mentioned before, I would prefer this. imo
+this is better than both 1 above and the open-coding approach.
+
+>I can live with it either way, but it's definitely not as pretty as it looks
+>for the mailbox case.
+
+Agreed.
+
+Thanks,
+Davidlohr
