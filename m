@@ -2,113 +2,226 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8669FA3740
-	for <linux-cxl@archiver.kernel.org>; Fri, 21 Oct 2022 17:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B711C433FE
+	for <linux-cxl@archiver.kernel.org>; Fri, 21 Oct 2022 17:28:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229933AbiJUR0y (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 21 Oct 2022 13:26:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46162 "EHLO
+        id S229891AbiJUR2s (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 21 Oct 2022 13:28:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230134AbiJUR0v (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 21 Oct 2022 13:26:51 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 828872498A7;
-        Fri, 21 Oct 2022 10:26:38 -0700 (PDT)
+        with ESMTP id S229916AbiJUR2s (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 21 Oct 2022 13:28:48 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59C5F45078
+        for <linux-cxl@vger.kernel.org>; Fri, 21 Oct 2022 10:28:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666373198; x=1697909198;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=wtXgXABX03UjxiDLcsHFgZveW+3WXgnLLx/+XNeHUEA=;
-  b=i5at2Zfxk0vwcRaTVp547ZxU1n6RFQD2k9KExrEfH1kvFbuWKFbpLrWX
-   NJOZm7wOfMDCR5EUVvK7DKo4kIeIpeNcPiCJDraJ4F8p6hTVA2ZUY/EvY
-   zVaqs5Y+KLT2F5cy7QJry7tVzoZv9cS2PyHqoCfvemL4uOMyl/gQ5kd+b
-   KbzpwMrrrLnzSEaLx3RylvzAAU5bo1TqkiU09Dttx7fTM/QBHUxSxc9qt
-   xu+Ne4X8u/CpNOWpfFZp4LfYoWfYRz8oDhcb/ofT0tLBSRrS4p/9OYfzX
-   GpEAssZJ/ZYlzJDXbybWDL0d9Nd+tes/Fzp/iVM/NfaFt5fdeHls9ncpE
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="369108970"
+  t=1666373327; x=1697909327;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/Cq/WlWWxRLwBfmHSiea1GNuNX2frrYwiQUuy+auVqE=;
+  b=V0/MNlBfhRvge/LesnSBRTtVXtlG5DNMl9ioJUEn18sxD1BpZO9yWD5W
+   EVwtqngeU8OKkF8uawyBVT7s4GB7fdSBNyrS1MZeAdqNgQwSZ5bamB3hL
+   IuI+PXLWW0VkNBgN+0He+fJImereIWjw5VoP+0e/CJF81FfK544CtdLcy
+   hvWl/GziD7H4RMgu/zxzEtcpyjz5F4UQSj6S49xJe9i82JBbkEwvRM4uP
+   PQPIn/JdO0Lw/cS/bHqRPda1HwhFmwWYLJQ00h/lsEErG6yiQm7+bVkas
+   Fh4+1y1uZf7p5Ed4tZqvCmDkZpeOXQYKIM4zfroLI87E31DMTmLwEkLTO
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="333636814"
 X-IronPort-AV: E=Sophos;i="5.95,202,1661842800"; 
-   d="scan'208";a="369108970"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 10:26:37 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="875770040"
+   d="scan'208";a="333636814"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 10:28:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="630582772"
 X-IronPort-AV: E=Sophos;i="5.95,202,1661842800"; 
-   d="scan'208";a="875770040"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.30.144]) ([10.212.30.144])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 10:26:36 -0700
-Message-ID: <d48acad7-9805-2f5e-842e-5af9afae00fa@intel.com>
-Date:   Fri, 21 Oct 2022 10:26:36 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.3.3
-Subject: Re: [RFC PATCH v2 2/4] cxl/pci: Find and register CXL PMU devices
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
+   d="scan'208";a="630582772"
+Received: from lkp-server02.sh.intel.com (HELO b6d29c1a0365) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 21 Oct 2022 10:28:44 -0700
+Received: from kbuild by b6d29c1a0365 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1olvp6-0002oW-08;
+        Fri, 21 Oct 2022 17:28:44 +0000
+Date:   Sat, 22 Oct 2022 01:27:53 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linuxarm@huawei.com
-References: <20220824103617.21781-1-Jonathan.Cameron@huawei.com>
- <20220824103617.21781-3-Jonathan.Cameron@huawei.com>
- <b3be74ca-aa5e-e3d7-5337-0254d5f42a84@intel.com>
- <20221018121900.00004ff8@huawei.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20221018121900.00004ff8@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>
+Subject: [cxl:rch] BUILD SUCCESS 2b76fc22aefd39820c0520255875f99b326ede99
+Message-ID: <6352d699.jbBXHFPfkC9muUrq%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git rch
+branch HEAD: 2b76fc22aefd39820c0520255875f99b326ede99  cxl/acpi: Improve debug messages in cxl_acpi_probe()
 
-On 10/18/2022 4:19 AM, Jonathan Cameron wrote:
-> On Thu, 1 Sep 2022 15:36:23 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
->
->> On 8/24/2022 3:36 AM, Jonathan Cameron wrote:
->>> CXL PMU devices can be found from entries in the Register
->>> Locator DVSEC.
->>>
->>> In order to register the minimum number of IRQ vectors necessary
->>> to support all CPMUs found, separate the registration into two
->>> steps.  First find the devices, and query the IRQs used and then
->>> register the devices. Between these two steps, request the
->>> IRQ vectors necessary and enable bus master support.
->>>
->>> Future IRQ users for CXL type 3 devices (e.g. DOEs) will need to
->>> follow a similar pattern the number of vectors necessary is known
->>> before any parts of the driver stack rely on their availability.
->>>
->>> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>>
->
->>> +static int cxl_alloc_irq_vectors(struct cxl_dev_state *cxlds, int vectors)
->>> +{
->>> +	struct device *dev = cxlds->dev;
->>> +	struct pci_dev *pdev = to_pci_dev(dev);
->>> +	int rc;
->>> +
->>> +	rc = pci_alloc_irq_vectors(pdev, vectors, vectors,
->>> +				   PCI_IRQ_MSI | PCI_IRQ_MSIX);
->>> +	if (rc < 0)
->>> +		return rc;
->>> +	if (rc != vectors) {
->> I don't think you'll hit here since you passed in vectors for min and
->> max. You'll get -ENOSPC and return from the earlier check.
->>
->> https://elixir.bootlin.com/linux/v6.0-rc3/source/drivers/pci/msi/msi.c#L1005
->>
->> DJ
->>
-> Good point.  This also applies to the version of the same function in
-> Davidlohr's patch set, so I've cut and paste your comment to there.
+elapsed time: 728m
 
-Somehow I totally missed that reviewing his set. Ooops. Thanks!
+configs tested: 146
+configs skipped: 5
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
->
-> Jonathan
+gcc tested configs:
+um                             i386_defconfig
+um                           x86_64_defconfig
+i386                          randconfig-a014
+nios2                         10m50_defconfig
+i386                          randconfig-a012
+i386                                defconfig
+i386                          randconfig-a016
+sh                           se7343_defconfig
+sh                           se7750_defconfig
+arc                                 defconfig
+alpha                               defconfig
+arm                                 defconfig
+x86_64                              defconfig
+i386                          randconfig-a001
+x86_64                        randconfig-a002
+x86_64                               rhel-8.3
+x86_64                        randconfig-a015
+i386                          randconfig-a003
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                          rhel-8.3-func
+i386                          randconfig-a005
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+arm                              allyesconfig
+m68k                       m5475evb_defconfig
+arm64                            allyesconfig
+arc                  randconfig-r043-20221020
+x86_64                           rhel-8.3-syz
+x86_64                           allyesconfig
+x86_64                        randconfig-a013
+x86_64                    rhel-8.3-kselftests
+m68k                             allmodconfig
+x86_64                        randconfig-a011
+x86_64                         rhel-8.3-kunit
+s390                                defconfig
+arm                          badge4_defconfig
+s390                 randconfig-r044-20221020
+x86_64                           rhel-8.3-kvm
+s390                             allmodconfig
+mips                             allyesconfig
+riscv                randconfig-r042-20221020
+arm                      integrator_defconfig
+sparc                            alldefconfig
+i386                             allyesconfig
+sh                             espt_defconfig
+xtensa                              defconfig
+s390                             allyesconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+sh                               allmodconfig
+ia64                             allmodconfig
+arm                      footbridge_defconfig
+m68k                             allyesconfig
+m68k                            q40_defconfig
+powerpc                     tqm8541_defconfig
+arm                           stm32_defconfig
+powerpc                      chrp32_defconfig
+powerpc                      ppc40x_defconfig
+loongarch                         allnoconfig
+loongarch                           defconfig
+loongarch                        allmodconfig
+openrisc                         alldefconfig
+powerpc                       holly_defconfig
+arm                     eseries_pxa_defconfig
+powerpc                  storcenter_defconfig
+arc                  randconfig-r043-20221019
+i386                          randconfig-c001
+i386                         debian-10.3-func
+i386                        debian-10.3-kunit
+i386                          debian-10.3-kvm
+mips                           ci20_defconfig
+m68k                        mvme147_defconfig
+openrisc                            defconfig
+m68k                         apollo_defconfig
+arc                        vdk_hs38_defconfig
+sh                           se7712_defconfig
+riscv                             allnoconfig
+arm                  randconfig-c002-20221019
+riscv                    nommu_virt_defconfig
+arc                  randconfig-r043-20221018
+s390                 randconfig-r044-20221018
+riscv                randconfig-r042-20221018
+riscv                    nommu_k210_defconfig
+parisc                              defconfig
+riscv                          rv32_defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+nios2                               defconfig
+x86_64                        randconfig-c001
+parisc64                            defconfig
+arm64                               defconfig
+powerpc                 linkstation_defconfig
+m68k                        mvme16x_defconfig
+arm                        oxnas_v6_defconfig
+csky                                defconfig
+sparc                               defconfig
+
+clang tested configs:
+i386                          randconfig-a013
+i386                          randconfig-a011
+i386                          randconfig-a015
+powerpc                     mpc512x_defconfig
+x86_64                        randconfig-a005
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a014
+hexagon              randconfig-r041-20221020
+i386                          randconfig-a002
+hexagon              randconfig-r045-20221020
+i386                          randconfig-a006
+arm                          pxa168_defconfig
+i386                          randconfig-a004
+arm                           omap1_defconfig
+x86_64                        randconfig-a016
+x86_64                        randconfig-a012
+arm                                 defconfig
+powerpc                      obs600_defconfig
+arm                            mmp2_defconfig
+mips                      malta_kvm_defconfig
+i386                 randconfig-a013-20221017
+i386                 randconfig-a015-20221017
+i386                 randconfig-a016-20221017
+i386                 randconfig-a011-20221017
+i386                 randconfig-a014-20221017
+i386                 randconfig-a012-20221017
+mips                          ath25_defconfig
+s390                 randconfig-r044-20221019
+hexagon              randconfig-r045-20221019
+riscv                randconfig-r042-20221019
+hexagon              randconfig-r041-20221019
+x86_64                        randconfig-k001
+powerpc                 mpc8560_ads_defconfig
+mips                           rs90_defconfig
+powerpc                     tqm8560_defconfig
+powerpc                     kmeter1_defconfig
+arm                       mainstone_defconfig
+powerpc                          allmodconfig
+arm                         s3c2410_defconfig
+mips                           ip28_defconfig
+mips                          ath79_defconfig
+arm                         shannon_defconfig
+mips                     cu1830-neo_defconfig
+powerpc                    gamecube_defconfig
+hexagon              randconfig-r045-20221018
+hexagon              randconfig-r041-20221018
+mips                       lemote2f_defconfig
+powerpc                    socrates_defconfig
+arm                         orion5x_defconfig
+arm                        magician_defconfig
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
