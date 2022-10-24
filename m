@@ -2,60 +2,83 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F628C38A2D
-	for <linux-cxl@archiver.kernel.org>; Mon, 24 Oct 2022 22:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F30ACC38A2D
+	for <linux-cxl@archiver.kernel.org>; Mon, 24 Oct 2022 23:05:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231217AbiJXWnm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 24 Oct 2022 18:43:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42744 "EHLO
+        id S230099AbiJXXFR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 24 Oct 2022 19:05:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231842AbiJXWnW (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Oct 2022 18:43:22 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on20601.outbound.protection.outlook.com [IPv6:2a01:111:f400:7eae::601])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF1A4B5FD3;
-        Mon, 24 Oct 2022 14:06:02 -0700 (PDT)
+        with ESMTP id S230015AbiJXXE7 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Oct 2022 19:04:59 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79F566E8AC;
+        Mon, 24 Oct 2022 14:26:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666646778; x=1698182778;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=RnL4UhgP1Iv3aA2lwc+M4ukFlyqBrBXbvDmeGjYc9R8=;
+  b=KLv2/IPNb4xlmQus0v/y/z9SZ+xPLGxP4Qul1uF3MQBTTKUE0we5wvY/
+   JWUZyVMUmtE7J8Pu8SBpeTbWuWnQqX+tgpoAwLsh8v2//Aj49npZw9JFi
+   bEgkT0/3ztXX685FfOTHl8oy0UZnoQDYTdmSRI/hqv6nwYo8dKlDuofqs
+   nik09M7yRXzAcIa+p8Dwq8JnoiFqnZ7xNyo2JqWGzzkB4cbbntgwZPQyT
+   reR6wEcmHP+b8if/mv5eKzhd7Kl0bz/lFjPTr7QEGrSKbTLVrkyvy7F1q
+   +uFEqHNA0ZQtZKmafguzo0KCpFIKG84lvpTvGiaIE9ykZeujsPbfqasyI
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="306257080"
+X-IronPort-AV: E=Sophos;i="5.95,210,1661842800"; 
+   d="scan'208";a="306257080"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 14:25:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="700304692"
+X-IronPort-AV: E=Sophos;i="5.95,210,1661842800"; 
+   d="scan'208";a="700304692"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmsmga004.fm.intel.com with ESMTP; 24 Oct 2022 14:25:00 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 24 Oct 2022 14:25:00 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 24 Oct 2022 14:24:59 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31 via Frontend Transport; Mon, 24 Oct 2022 14:24:59 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.31; Mon, 24 Oct 2022 14:24:59 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QdOV3AsM/nTbvhiPmBywfZMLEKEMqafvVgcz3RbM9Ev+Ttu8nGxM2x8ZKSoTw680kgkQaAipx0torlLUBHN7FMLkOm9w0+kIkQkIo0RFx1znnMj+12AGVNCu+7LZ1tVAcHdrV3HRT+HIukd2XQKed/4P98Ib3XVIU2rKeBO35WE1jlBZocgVr7LcMBoiRi8dXHSUsYpSRDXOneAk9mY1JFXs3GTfk94OlNnuz3IZCbNSslF+GTRgjF0Evbw9wpSkB42q5R6U6Hg87VgL7MvfDTLA8o8b3X7JeqD7zYMzC1/1KVS+biAMi/3sVksaeZO43uKNuf5MKAsvpQWtxnwIGQ==
+ b=Rf0k8zru2agVFIUt+Xs+pvM5y8ECADpPw1ZNsMvvzGK1lT14YNevPfts0c6Cq15yc5iWswIm+xkTU+9WeNaOkAWu1tv2AhyE2JoE2QUvLxRADrZqgvUefamW8DI+EicMVj0C3IOEuSy1a6Kd7HOE/sfyTtvEC4I40SOu/mZZuPYzLtbMm/m+3KdZkAEL+inE2RKpGKetjj+L+/l9/P77ZjhHIzbDD9kBVLwtmLNj31b2AUQpUY50Ui/01wlacX731LclPvx56JstbAee2XqtoolNsY10nirup/JAXAyoN56blEUUT20YlESygIsMrczxq0pECCBHXm6gooMwT/Mmig==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CcBksUrEDbt98zAkV7BZQkw2tz6NaOzRF2+CfN641Fc=;
- b=g882jRs6trGpVxPMRT/xCzHYr41ChPMdgrr1/aVYXGf8MXwy8lHasTVpsMb25RVcSMekezi8V3rVrSWmijDcLRq+81sE81OwrifJ8NyMjhSIm4u0dZrBT/pN3yVPiAs41RoOlOyegCowpUDNTx6X4MnIUZbflZAf73Y2R5rky9T0wYH0A1B3FZWAfc4ulTSXCtcCWzOGQkQbdZlXdM0OKVCpz8+8Jyy5I85RGU3HOFqi5UScPt2xXUQOH4RGAG5YXdCu7nsZjg6aSEOkEHAyrRVxZPlC2GqqBvcUq50wY1cFxDh3opBtA77pV5iLt9QpwTgJ27L0VXRDiRpzFh9gGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CcBksUrEDbt98zAkV7BZQkw2tz6NaOzRF2+CfN641Fc=;
- b=dllk8+R9lz5ZJ9BXLuMkPeJwhekQ9VVI/Hnn2UswJoo6kI0eP/qAKQP8fIYO9bPj+WFX6TjVN8/WZqyviqpoSNzBGfGb5O+ueRn4n/lwgT8e43I4M3QoRgcqvgPhVufJuHXzqAmiirHj4jU5jtozD/32+AlnfHZppXILLIpfcOg=
-Received: from DM6PR07CA0075.namprd07.prod.outlook.com (2603:10b6:5:337::8) by
- MN2PR12MB4256.namprd12.prod.outlook.com (2603:10b6:208:1d2::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.23; Mon, 24 Oct
- 2022 21:04:30 +0000
-Received: from DM6NAM11FT017.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:337:cafe::fe) by DM6PR07CA0075.outlook.office365.com
- (2603:10b6:5:337::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.27 via Frontend
- Transport; Mon, 24 Oct 2022 21:04:30 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT017.mail.protection.outlook.com (10.13.172.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5746.16 via Frontend Transport; Mon, 24 Oct 2022 21:04:30 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 24 Oct
- 2022 16:04:27 -0500
-Date:   Mon, 24 Oct 2022 23:04:24 +0200
-From:   Robert Richter <rrichter@amd.com>
-To:     Dan Williams <dan.j.williams@intel.com>
+ bh=mMQGMO3mwP6GYG6SyzIK3eVf+IBRcQ9pWzn51FwGTKs=;
+ b=aZCVe7Lwi+HBslZyDOBYoMU9cZ0dZAx/cQxGqNtwM+B9hFG0mkDpWirQgy87/1O8Mqu+pt61mcDT/i1ZD7kfJiAf9swi5R3vn64gaGNwsYYIBJem5w5lZDyoz0j9NGppVk02l6roFDU2VST02vfBOq3N+CYIj9HYoDFrDo7kWe9a32AmOgrGdNYZ1Ciak1cuNKdTqR7nI/h0G04CbI87MqP4vlB1FlhejqRo2wTbfSKgJ5UGB6v9jdMgFjJ76XjjXl9ECeSpasI7dwP4LtfAC48n2Q/CCkz/b5c0eRIM8ZC6ASXNHSV3xgrP/BZR7xAg0FxUEaisPUv5Bv84aOqj9w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20) by PH7PR11MB6452.namprd11.prod.outlook.com
+ (2603:10b6:510:1f3::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.33; Mon, 24 Oct
+ 2022 21:24:57 +0000
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::7d5a:684d:99f7:4e83]) by MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::7d5a:684d:99f7:4e83%12]) with mapi id 15.20.5746.023; Mon, 24 Oct
+ 2022 21:24:57 +0000
+Date:   Mon, 24 Oct 2022 14:24:54 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Robert Richter <rrichter@amd.com>,
+        Dan Williams <dan.j.williams@intel.com>
 CC:     Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
@@ -69,214 +92,169 @@ CC:     Alison Schofield <alison.schofield@intel.com>,
         Terry Bowman <terry.bowman@amd.com>
 Subject: Re: [PATCH v2 06/12] cxl/acpi: Extract component registers of
  restricted hosts from RCRB
-Message-ID: <Y1b92DF0c36/QDbo@rric.localdomain>
+Message-ID: <635702a652637_4da32941a@dwillia2-xfh.jf.intel.com.notmuch>
 References: <20221018132341.76259-1-rrichter@amd.com>
  <20221018132341.76259-7-rrichter@amd.com>
  <63522b53321e1_24ac29467@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-MIME-Version: 1.0
+ <Y1b92DF0c36/QDbo@rric.localdomain>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <63522b53321e1_24ac29467@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
+In-Reply-To: <Y1b92DF0c36/QDbo@rric.localdomain>
+X-ClientProxiedBy: MW4PR02CA0017.namprd02.prod.outlook.com
+ (2603:10b6:303:16d::24) To MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20)
+MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT017:EE_|MN2PR12MB4256:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4f584453-a3a8-4d1a-f22e-08dab6035821
+X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|PH7PR11MB6452:EE_
+X-MS-Office365-Filtering-Correlation-Id: f806e1b6-f9f3-45f7-5d90-08dab606330a
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dCsgRSsZ2XtHD1xOQP8+u8U29nOcgU1M76ZYWmBNzcJxETqD2OvEP8BdYwia40DtEyBicvQaOMxX2Tk8ItqNguhLzXftSDaBNlDOMJP3zQKTxEf0+QEJaql4rABIHuv8x9XOfRNcoZn64i2vSinSyC9YOWhkepABY1QY6frlZbCBebX9pdYyEVMi24jK8jQnh6XJ8Dsisc7j+7Yu4zsII4KzbqkP7K+syuZx9qGOzwzHio3+RSydoRBkuQ6z6kFi334RE68lZl+LUGXo9qX558BRqEreEWbXx7XfwWrfcrT11Jrf1PASjFF8pPMMs13v+k+3wQ03hdJip9M5OJpkwRTp6RGm5pSXcpdkrW/5lHwlbF2VLawuimMf4XNWqY2Il23Mu/8VDj8WcFnxQyBiN5IS9+k0Qrlkssi5fuEFZbjJrEny33nA9M3WL/JlwtyW3TR+0SgG1DczvqZPfUJqUrZqVN5nDvn7x2X22os00Bmag2AmCgLYmps0q+v6vOkQV4O70xn16ROTuQwxgsYtD8Y9HU4d0O9ESIJByey2JbNVKYQRmBvAVdq7p1CwlRkjoyplP17KTr2cD4+Vw0GE0vA9f9nhlL6gJngqRO2kF0/VQlR7bbPWdlHUCcDm41iykxPxqZrXtGeCem240RTBz7XbKHulHljEtUM9CHeHFqhiAp4LIbrqnrERbYm3W7TEQResgCbGHADmrYLrbXuj6ADOI/CvGlvjSPYCH0c4YPZmgjxWWfR/GNr+FeCxoAQ37SguWfgU03hZj9QOJIyA2vS6B76K7WAXTRtPuVXY63XzOWvHOLvp26C4+FB6VAarAgG4LaeRw8rhQp5D6HI6oA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(396003)(346002)(39860400002)(136003)(376002)(451199015)(46966006)(40470700004)(36840700001)(966005)(83380400001)(426003)(478600001)(53546011)(5660300002)(54906003)(6666004)(9686003)(4326008)(70586007)(7696005)(7416002)(26005)(41300700001)(8936002)(6916009)(8676002)(55016003)(336012)(47076005)(82310400005)(70206006)(40460700003)(186003)(16526019)(2906002)(36860700001)(81166007)(316002)(40480700001)(356005)(82740400003)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2022 21:04:30.5342
+X-Microsoft-Antispam-Message-Info: huWgU6BW6GMGf/blWmgjMlKKoZkNWSceLSrErlpWUz0Yts7/M7/75UgehYzAFBWA+/B1U60bWwbTHsRrlqIU6d+4ZcXsGtrDU7cm3e9oG8VOM1NExVopyFhdYlflieLs1WYOZiPFEIMg5elp9QhZOZpH0G7J82AcZnVAzrh23xgVtfkIQ0+F/T62zqeXOab4CTqxMgMfZAi1OYuS1dF+gG62ewum2+lScOmOcC5QChX7Xoo6Q8aRVNIlukKcfiK5NlF+S6LJXHyl+9IFk0G5qXiWIzfOl9htwCg199LOmLpF9aX+3juTgn7ggZJ4clnqG/SOZ0/dS33CWoghFN0Tc1mYsqAUmwcTveTNgCKF4TyLH9jwWG2WE3IUgJi+FLTBLvWy0KT+V7fxRRa8rKgZovaqoP3b20InR4hEJqoHYqf2aLswcjmyXUKrMzsyv1uTV36/rnvQFWxa2nr9AWOdrsqIPVYo/Yn05ZsysReFIUwQGDu7E2ElRaWVr9xLdU6nWUb0k137D3w8zv1p2ESAyoiPqOeLfMvd4zlAvmqDrItcQJ8NVnLYH5vax7gKAbsWqZFveFhbweRPabiJ8WNVYcfLnHu39XTCuTOVbLJF7Bp+wxDs1co0XcpYjRFrOsOyWFxbTYd6RsKse3qDPhSLqhflyLXAV72eeN2he/aL7mGVA+avJLjWdyoATrRkwZWMQOV4w8XdZHqaZHzQtXceTw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(346002)(366004)(39860400002)(136003)(376002)(451199015)(66946007)(9686003)(6486002)(26005)(53546011)(6512007)(38100700002)(8676002)(41300700001)(8936002)(82960400001)(5660300002)(83380400001)(66476007)(86362001)(478600001)(7416002)(110136005)(54906003)(186003)(6506007)(316002)(6666004)(2906002)(4326008)(66556008);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3FBwceKGxgSuXS2/vTGwyiUOOaHn6k6lnrTy/OMS46/VrXcY09OHhE8qlx/e?=
+ =?us-ascii?Q?/v1sepCUijcB7bEpYXj3NEq3aQIlY9IsgD9PfG5aT+eWu4iLyqicTZd4vdiM?=
+ =?us-ascii?Q?fYEFDrIiccSikKTrw67/22vMNHlCd2y5dR56QYdI4T6r6nueB1oaZiy6ZjRl?=
+ =?us-ascii?Q?/HvDmObXzfWauYcvovKpCq7KjATj9IRXyRt+bm+7MkZ0Lp1uwQQmhljx1T83?=
+ =?us-ascii?Q?O9gkSKJFhehrOUU2KnhrDWR9gMHXJDLQGuYl0Cq+zqLyoJdRbe+wnClEOVts?=
+ =?us-ascii?Q?wawqXCjTOJG57bAqC6GVqyUYptZWTHUYKlPalUmdkszk5+HKvyXpSX3x56Ou?=
+ =?us-ascii?Q?UaBVVrOcYOuksV69nfGY3nJ95H7fpKr0c4iivsPe39HX6U/rgNCQ5IO84q8m?=
+ =?us-ascii?Q?oOGHvKv8hhFuflgDlN3b3CifoSEmYWnG4t0jCdf8tSEY07cl4uAnjqpUpaJn?=
+ =?us-ascii?Q?wo57olWjUpq9gVnf4YemfQgCjt/H3zqPxMkvPwIV/9/6sbzP7Bi9MT4OXDXC?=
+ =?us-ascii?Q?x8XiaSnGuC1VEPJX/WyZKj4JaHXf6nsnTHvALSrdGtD0HTAgOgYlOCQGRuRe?=
+ =?us-ascii?Q?0g1+FSX+iYzQrQJQ5+NYRI6MyYN2ceC27el8yrOR0avQVVkNWsmbbJdQlRNM?=
+ =?us-ascii?Q?BkYBGNvDahPWAyJ4aJNi/D/CmJRN7G5nIUSmlYb5qdnRtvgvaTEUNPSAPK27?=
+ =?us-ascii?Q?l+xrY0v9Sq2VFE5TUSguAM1PNAeLsH6Y4oo6fTccmbAEmLGEHby2D0EZI/N7?=
+ =?us-ascii?Q?faV/rhObleWj2qEFH8w62PknLA5ddm8Zu6CHuz1P3EUZjEEMrlMnFQqqRxR9?=
+ =?us-ascii?Q?QT2UPzuzZNTKOM4JtD+IHuFdbb6jhKDhFFlYhfo7Qs/jUkuXucs6ngBbdTAT?=
+ =?us-ascii?Q?lWX3nSylkJg2hCmVTXDMQYWKJAcFlfIW6RhmIhsoIe5mKduJrqps2s8Vf5iE?=
+ =?us-ascii?Q?yFwqbcpSP3Vaz4hevlI1AOCAMM4bw6tESrqEiExTRN8SwRq5S/g2EEFIL/Jg?=
+ =?us-ascii?Q?D2XaZFjCSnusnAQpdv7HL5nL4PJqTZhCberSEBbC29znqH06HbYPWLEMqShL?=
+ =?us-ascii?Q?SBuoqiyt7k5VrEEoe9S74FcJJr3AvgtrHNgXB62Y1XqfavGpishKdfqIhUSv?=
+ =?us-ascii?Q?HIh25Sbi2L/J8Y4Q7FYOrhDlA118q2pMeACdV5nb+t+vXlaugpOmINrGxTYt?=
+ =?us-ascii?Q?5HcSP7xz4GxAO8cR9ql4H0dzSdN/GdXDuR7PnkIAJBgN03PeIxO6VDLBEbOr?=
+ =?us-ascii?Q?NZDenFFzzOnJ/MPW4m5Ak1ZqApfTM7t/PVow1q+lGAKDBmkBaZ8eTzdRwvM7?=
+ =?us-ascii?Q?wN+jic/58+S9C0jpg2Uff1Egw3lQQKob962zzrtpmd1FLuBtUFJF36ndeLM+?=
+ =?us-ascii?Q?u6HBYbKmp8j/aLcGWvYi8V1w2ChurZbgCId4bqXIWHPaGFT/ty9FvJD99uz7?=
+ =?us-ascii?Q?1zKMa5wbCI6fiU6lbf6PkDSHw+vi3egz34U4ZqPZMcOzi/pgQL3Ta0bf39za?=
+ =?us-ascii?Q?Hn3ttSJqz8n8+IQiahzQJ5nHB7CLcOyqzFOWDlVClerIf9JB3xvnICQIJjed?=
+ =?us-ascii?Q?Lxd5AKMAHUCxjVJU8FYLysFf/Xmm+IwLqjvyjADY63Tk+Q6DbZZ0vvv21U5q?=
+ =?us-ascii?Q?yQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: f806e1b6-f9f3-45f7-5d90-08dab606330a
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2022 21:24:57.0128
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f584453-a3a8-4d1a-f22e-08dab6035821
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT017.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4256
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RFLjSz+QAi9cvf4w3XPqTULAKfL89fSsTDmQFjmj6Yo4k8Om1bgEQafjktOXkI72VGmvDNbEORmf+7ndDP/e58yV/+05oQqUTcLGaC//HSg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6452
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 20.10.22 22:17:07, Dan Williams wrote:
-> Robert Richter wrote:
-> > A downstream port must be connected to a component register block.
-> > For restricted hosts the base address is determined from the RCRB. The
-> > RCRB is provided by the host's CEDT CHBS entry. Rework CEDT parser to
-> > get the RCRB and add code to extract the component register block from
-> > it.
+Robert Richter wrote:
+> On 20.10.22 22:17:07, Dan Williams wrote:
+> > Robert Richter wrote:
+> > > A downstream port must be connected to a component register block.
+> > > For restricted hosts the base address is determined from the RCRB. The
+> > > RCRB is provided by the host's CEDT CHBS entry. Rework CEDT parser to
+> > > get the RCRB and add code to extract the component register block from
+> > > it.
+> > > 
+> > > RCRB's BAR[0..1] point to the component block containing CXL subsystem
+> > > component registers. MEMBAR extraction follows the PCI base spec here,
+> > > esp. 64 bit extraction and memory range alignment (6.0, 7.5.1.2.1).
+> > > 
+> > > Note: Right now the component register block is used for HDM decoder
+> > > capability only which is optional for RCDs. If unsupported by the RCD,
+> > > the HDM init will fail. It is future work to bypass it in this case.
+> > > 
+> > > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> > > Signed-off-by: Robert Richter <rrichter@amd.com>
+> > > ---
+> > >  drivers/cxl/acpi.c | 79 ++++++++++++++++++++++++++++++++++++++++------
+> > >  1 file changed, 69 insertions(+), 10 deletions(-)
+> > > 
+> > > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > > index fb9f72813067..a92d5d7b7a92 100644
+> > > --- a/drivers/cxl/acpi.c
+> > > +++ b/drivers/cxl/acpi.c
+> > > @@ -9,6 +9,8 @@
+> > >  #include "cxlpci.h"
+> > >  #include "cxl.h"
+> > >  
+> > > +#define CXL_RCRB_SIZE	SZ_8K
+> > > +
+> > >  static unsigned long cfmws_to_decoder_flags(int restrictions)
+> > >  {
+> > >  	unsigned long flags = CXL_DECODER_F_ENABLE;
+> > > @@ -229,27 +231,82 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+> > >  struct cxl_chbs_context {
+> > >  	struct device *dev;
+> > >  	unsigned long long uid;
+> > > -	resource_size_t chbcr;
+> > > +	struct acpi_cedt_chbs chbs;
+> > >  };
+> > >  
+> > > -static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
+> > > -			 const unsigned long end)
+> > > +static int cxl_get_chbs(union acpi_subtable_headers *header, void *arg,
+> > > +			const unsigned long end)
+> > >  {
+> > >  	struct cxl_chbs_context *ctx = arg;
+> > >  	struct acpi_cedt_chbs *chbs;
+> > >  
+> > > -	if (ctx->chbcr)
+> > > +	if (ctx->chbs.base)
+> > >  		return 0;
+> > >  
+> > >  	chbs = (struct acpi_cedt_chbs *) header;
+> > >  
+> > >  	if (ctx->uid != chbs->uid)
+> > >  		return 0;
+> > > -	ctx->chbcr = chbs->base;
+> > > +	ctx->chbs = *chbs;
+> > >  
+> > >  	return 0;
+> > >  }
+> > >  
+> > > +static resource_size_t cxl_get_chbcr(struct cxl_chbs_context *ctx)
+> > > +{
 > > 
-> > RCRB's BAR[0..1] point to the component block containing CXL subsystem
-> > component registers. MEMBAR extraction follows the PCI base spec here,
-> > esp. 64 bit extraction and memory range alignment (6.0, 7.5.1.2.1).
+> > The core logic of this looks good, but this wants to be shared with the
+> > upstream port component register discovery.
 > > 
-> > Note: Right now the component register block is used for HDM decoder
-> > capability only which is optional for RCDs. If unsupported by the RCD,
-> > the HDM init will fail. It is future work to bypass it in this case.
+> > Full disclosure I am reconciling these patches with an attempt that Dave
+> > Jiang made at this topic. Since your series hit the list first I will
+> > let it take the lead, but then fill it in with comments and learnings
+> > from Dave's effort.
 > > 
-> > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> > Signed-off-by: Robert Richter <rrichter@amd.com>
-> > ---
-> >  drivers/cxl/acpi.c | 79 ++++++++++++++++++++++++++++++++++++++++------
-> >  1 file changed, 69 insertions(+), 10 deletions(-)
+> > So in this case Dave moved this into the drivers/cxl/core/regs.c with a
+> > function signature like:
 > > 
-> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> > index fb9f72813067..a92d5d7b7a92 100644
-> > --- a/drivers/cxl/acpi.c
-> > +++ b/drivers/cxl/acpi.c
-> > @@ -9,6 +9,8 @@
-> >  #include "cxlpci.h"
-> >  #include "cxl.h"
-> >  
-> > +#define CXL_RCRB_SIZE	SZ_8K
-> > +
-> >  static unsigned long cfmws_to_decoder_flags(int restrictions)
-> >  {
-> >  	unsigned long flags = CXL_DECODER_F_ENABLE;
-> > @@ -229,27 +231,82 @@ static int add_host_bridge_uport(struct device *match, void *arg)
-> >  struct cxl_chbs_context {
-> >  	struct device *dev;
-> >  	unsigned long long uid;
-> > -	resource_size_t chbcr;
-> > +	struct acpi_cedt_chbs chbs;
-> >  };
-> >  
-> > -static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
-> > -			 const unsigned long end)
-> > +static int cxl_get_chbs(union acpi_subtable_headers *header, void *arg,
-> > +			const unsigned long end)
-> >  {
-> >  	struct cxl_chbs_context *ctx = arg;
-> >  	struct acpi_cedt_chbs *chbs;
-> >  
-> > -	if (ctx->chbcr)
-> > +	if (ctx->chbs.base)
-> >  		return 0;
-> >  
-> >  	chbs = (struct acpi_cedt_chbs *) header;
-> >  
-> >  	if (ctx->uid != chbs->uid)
-> >  		return 0;
-> > -	ctx->chbcr = chbs->base;
-> > +	ctx->chbs = *chbs;
-> >  
-> >  	return 0;
-> >  }
-> >  
-> > +static resource_size_t cxl_get_chbcr(struct cxl_chbs_context *ctx)
-> > +{
+> > enum cxl_rcrb {
+> >        CXL_RCRB_DOWNSTREAM,
+> >        CXL_RCRB_UPSTREAM,
+> > };
+> > 
+> > resource_size_t cxl_rcrb_to_component(struct device *dev,
+> >                                       resource_size_t rcrb_base, int len,
+> >                                       enum cxl_rcrb which);
+> > 
+> > ...where @which alternates when called by cxl_acpi for the downstream
+> > case, or cxl_mem for the upstream case.
 > 
-> The core logic of this looks good, but this wants to be shared with the
-> upstream port component register discovery.
-> 
-> Full disclosure I am reconciling these patches with an attempt that Dave
-> Jiang made at this topic. Since your series hit the list first I will
-> let it take the lead, but then fill it in with comments and learnings
-> from Dave's effort.
-> 
-> So in this case Dave moved this into the drivers/cxl/core/regs.c with a
-> function signature like:
-> 
-> enum cxl_rcrb {
->        CXL_RCRB_DOWNSTREAM,
->        CXL_RCRB_UPSTREAM,
-> };
-> 
-> resource_size_t cxl_rcrb_to_component(struct device *dev,
->                                       resource_size_t rcrb_base, int len,
->                                       enum cxl_rcrb which);
-> 
-> ...where @which alternates when called by cxl_acpi for the downstream
-> case, or cxl_mem for the upstream case.
+> Ok, I see where to go here. Could you point me to Dave's postings you
+> are referring to? I checked linux-cxl and could not find anything
+> related to RCRB or that changes regs.c.
 
-Ok, I see where to go here. Could you point me to Dave's postings you
-are referring to? I checked linux-cxl and could not find anything
-related to RCRB or that changes regs.c.
+He was in the middle of tidying them when you posted your series, but I
+think it would not hurt to push them to a git tree so you can grab the
+bits and pieces you want.
 
-> 
-> 
-> > +	struct acpi_cedt_chbs *chbs = &ctx->chbs;
-> > +	resource_size_t component_reg_phys, rcrb;
-> > +	u32 bar0, bar1;
-> > +	void *addr;
-> > +
-> > +	if (!chbs->base)
-> > +		return CXL_RESOURCE_NONE;
-> > +
-> > +	if (chbs->cxl_version != ACPI_CEDT_CHBS_VERSION_CXL11)
-> > +		return chbs->base;
-> > +
-> > +	/* Extract RCRB */
-> > +
-> > +	if (chbs->length != CXL_RCRB_SIZE)
-> > +		return CXL_RESOURCE_NONE;
-> > +
-> > +	rcrb = chbs->base;
-> > +
-> > +	dev_dbg(ctx->dev, "RCRB found for UID %lld: 0x%08llx\n",
-> > +		ctx->uid, (u64)rcrb);
-> > +
-> > +	/*
-> > +	 * RCRB's BAR[0..1] point to component block containing CXL
-> > +	 * subsystem component registers. MEMBAR extraction follows
-> > +	 * the PCI Base spec here, esp. 64 bit extraction and memory
-> > +	 * ranges alignment (6.0, 7.5.1.2.1).
-> > +	 */
-> > +	addr = ioremap(rcrb, PCI_BASE_ADDRESS_0 + SZ_8);
-> 
-> No failure check? This also only needs to map 4K at a time.
-
-Right, will add that.
-
-> 
-> > +	bar0 = readl(addr + PCI_BASE_ADDRESS_0);
-> > +	bar1 = readl(addr + PCI_BASE_ADDRESS_1);
-> > +	iounmap(addr);
-> > +
-> > +	/* sanity check */
-> > +	if (bar0 & (PCI_BASE_ADDRESS_MEM_TYPE_1M | PCI_BASE_ADDRESS_SPACE_IO))
-> > +		return CXL_RESOURCE_NONE;
-> > +
-> > +	component_reg_phys = bar0 & PCI_BASE_ADDRESS_MEM_MASK;
-> > +	if (bar0 & PCI_BASE_ADDRESS_MEM_TYPE_64)
-> > +		component_reg_phys |= ((u64)bar1) << 32;
-> > +
-> > +	if (!component_reg_phys)
-> > +		return CXL_RESOURCE_NONE;
-> > +
-> > +	/*
-> > +	 * Must be 8k aligned (size of combined CXL 1.1 Downstream and
-> > +	 * Upstream Port RCRBs).
-> > +	 */
-> > +	if (component_reg_phys & (CXL_RCRB_SIZE - 1))
-> > +		return CXL_RESOURCE_NONE;
-> 
-> This is open-coding the IS_ALIGNED() macro. More importantly, why is it
-> using RCRB size for the component register block alignment? The
-> component lock is 64K, and at least for CXL 2.0 devices it is 64K
-> aligned (8.1.9.1 Register Block Offset Low), so I am not sure what this
-> check is for?
-
-True, this is a mistake and needs to be corrected. It is the component
-reg range which is 64k. Will also use IS_ALIGNED().
-
-> 
-> ---
-> 
-> Given that there are actual CXL RCH platforms in the wild I want this
-> topic branch to be the first thing queued for v6.2. To help us
-> coordinate I pushed:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/log/?h=rch
-> 
-> ...with the patches from this set accepted so far. You can use that as
-> the baseline for the next spin.
-
-Yes, thanks for that branch and applying the first part.
-
--Robert
+Dave?
