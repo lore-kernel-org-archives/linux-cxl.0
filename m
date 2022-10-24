@@ -2,45 +2,45 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB597FA3740
-	for <linux-cxl@archiver.kernel.org>; Mon, 24 Oct 2022 11:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED501FA3740
+	for <linux-cxl@archiver.kernel.org>; Mon, 24 Oct 2022 11:24:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230089AbiJXLNG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 24 Oct 2022 07:13:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35564 "EHLO
+        id S229929AbiJXLYz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 24 Oct 2022 07:24:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229947AbiJXLNF (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Oct 2022 07:13:05 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1562E3BC6E;
-        Mon, 24 Oct 2022 04:12:54 -0700 (PDT)
+        with ESMTP id S230164AbiJXLYy (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Oct 2022 07:24:54 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9830A29C8B;
+        Mon, 24 Oct 2022 04:24:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666609974; x=1698145974;
+  t=1666610693; x=1698146693;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=IDfM8jGZjDfRkbfYuPxY5RjqRTTZCt2OQ32W3baC7Dc=;
-  b=UwEGJkGgeLJmqQ31dTaoV2h9gdgbGVk73k4DeY8YVUDtjgvfGKlMoSU3
-   ryMoJGrWYuEvWvAjU3woTnFs9dUntjTcmOFd3Hm9dsSTNHP35aTWAwCaY
-   dHW720OfuFillBINz6ZkA0leRP1m5A+Au03XqAQphjYtHtMNgVa+QFGOP
-   n5a46vbczN92k1F03nNdwwnclLCA1fGNNOPqd6NuLRhgeslsEoWOlSQkw
-   270Xzg+wNGlwXFwZvb6ru/r9sHy2RqH1zzPKAxJvzfybNPzhCdPZkgZF2
-   sAqJyl5A0gWgBdd6mXGukboN6uGcrClS4Fj5uCnV0NbeJaYVbzpw1QyXY
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10509"; a="307380897"
+  bh=8WS9k6yY1h4VYlMCjfVXccX+U9VMX2rJ72saF3NwIgw=;
+  b=CQsoYfkI6dpwm53hpePSMtPEje5A/SgH/pLJZMi9u2hJ6S25khBUA4+4
+   ay+hmQ+LJZPn06OGkbVGefjIS1CzMbaZRwrpKRbMt/lbq4KIp6W/ZThHf
+   cxkTEVocUwkdShNZD42Ngl1IxivEFnC2CrFagcPtPM2bvZb+Mb40GL88M
+   SvEVnWYPt6RQTLtUFTcIRF/kIFy6UxJ3rjA3qa+Cl9dBW/davW8fVCN/A
+   +XPHckLWGJtJapIrr2HpfyxvhO/lIVaMNzmg28AJuY+dNUJmMrlPCwa1Z
+   bnapHU9VZPb8TXzx34uCtF4C5qPb9Lk3/8U/b5EIn9AIXECtJai/Rb+zn
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10509"; a="287111466"
 X-IronPort-AV: E=Sophos;i="5.95,209,1661842800"; 
-   d="scan'208";a="307380897"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 04:12:52 -0700
+   d="scan'208";a="287111466"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 04:24:53 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10509"; a="626038379"
+X-IronPort-AV: E=McAfee;i="6500,9779,10509"; a="664511203"
 X-IronPort-AV: E=Sophos;i="5.95,209,1661842800"; 
-   d="scan'208";a="626038379"
+   d="scan'208";a="664511203"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 24 Oct 2022 04:12:48 -0700
+  by orsmga001.jf.intel.com with ESMTP; 24 Oct 2022 04:24:50 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id A6EE1291; Mon, 24 Oct 2022 14:13:10 +0300 (EEST)
-Date:   Mon, 24 Oct 2022 14:13:10 +0300
+        id 5F887291; Mon, 24 Oct 2022 14:25:12 +0300 (EEST)
+Date:   Mon, 24 Oct 2022 14:25:12 +0300
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
@@ -52,51 +52,56 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         linux-cxl@vger.kernel.org, linuxarm@huawei.com
 Subject: Re: Regression: Re: [PATCH v2 4/6] PCI: Distribute available
  resources for root buses too
-Message-ID: <Y1ZzRmi9fL9yHf7I@black.fi.intel.com>
+Message-ID: <Y1Z2GGgfZyzC2d1N@black.fi.intel.com>
 References: <20220905080232.36087-1-mika.westerberg@linux.intel.com>
  <20220905080232.36087-5-mika.westerberg@linux.intel.com>
  <20221014124553.0000696f@huawei.com>
  <Y0lkeieF3WNV3P3Q@black.fi.intel.com>
  <20221014154858.000079f2@huawei.com>
+ <Y1ZzRmi9fL9yHf7I@black.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221014154858.000079f2@huawei.com>
+In-Reply-To: <Y1ZzRmi9fL9yHf7I@black.fi.intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi,
-
-On Fri, Oct 14, 2022 at 03:48:58PM +0100, Jonathan Cameron wrote:
-> > Thanks for the detailed report! I wonder if you could try the below
-> > patch and see if it changes anything?
-> Thanks for the quick response.
+On Mon, Oct 24, 2022 at 02:13:10PM +0300, Mika Westerberg wrote:
+> Hi,
 > 
-> Doesn't fix it unfortunately.
+> On Fri, Oct 14, 2022 at 03:48:58PM +0100, Jonathan Cameron wrote:
+> > > Thanks for the detailed report! I wonder if you could try the below
+> > > patch and see if it changes anything?
+> > Thanks for the quick response.
+> > 
+> > Doesn't fix it unfortunately.
+> 
+> I'm back now.
+> 
+> Trying to reproduce this with mainline kernel (arm64 defconfig) and the
+> following command line:
+> 
+> qemu-system-aarch64 \
+>         -M virt,nvdimm=on,gic-version=3 -m 4g,maxmem=8G,slots=8 -cpu max -smp 4 \
+>         -bios /usr/share/qemu-efi-aarch64/QEMU_EFI.fd \
+>         -nographic -no-reboot  \
+>         -kernel Image \
+>         -initrd rootfs.cpio.bz2 \
+>         -device pcie-root-port,port=0,id=root_port13,chassis=0,slot=2 \
+>         -device x3130-upstream,id=sw1,bus=root_port13,multifunction=on \
+>         -device e1000,bus=root_port13,addr=0.1 \
+>         -device xio3130-downstream,id=fun1,bus=sw1,chassis=0,slot=3 \
+>         -device e1000,bus=fun1
+> 
+> But the resulting PCIe topology is pretty flat:
+> 
+> # lspci
+> 00:00.0 Host bridge: Red Hat, Inc. QEMU PCIe Host bridge
+> 00:01.0 Ethernet controller: Red Hat, Inc. Virtio network device
+> 
+> I wonder what I'm missing here? Do I need to enable additional drivers
+> to get the topology to resemble yours?
 
-I'm back now.
-
-Trying to reproduce this with mainline kernel (arm64 defconfig) and the
-following command line:
-
-qemu-system-aarch64 \
-        -M virt,nvdimm=on,gic-version=3 -m 4g,maxmem=8G,slots=8 -cpu max -smp 4 \
-        -bios /usr/share/qemu-efi-aarch64/QEMU_EFI.fd \
-        -nographic -no-reboot  \
-        -kernel Image \
-        -initrd rootfs.cpio.bz2 \
-        -device pcie-root-port,port=0,id=root_port13,chassis=0,slot=2 \
-        -device x3130-upstream,id=sw1,bus=root_port13,multifunction=on \
-        -device e1000,bus=root_port13,addr=0.1 \
-        -device xio3130-downstream,id=fun1,bus=sw1,chassis=0,slot=3 \
-        -device e1000,bus=fun1
-
-But the resulting PCIe topology is pretty flat:
-
-# lspci
-00:00.0 Host bridge: Red Hat, Inc. QEMU PCIe Host bridge
-00:01.0 Ethernet controller: Red Hat, Inc. Virtio network device
-
-I wonder what I'm missing here? Do I need to enable additional drivers
-to get the topology to resemble yours?
+Nevermind, I was missing one \ in the command line ;-) Now I can see the
+topology similar to yours.
