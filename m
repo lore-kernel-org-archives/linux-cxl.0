@@ -2,81 +2,177 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E437C38A2D
-	for <linux-cxl@archiver.kernel.org>; Mon, 24 Oct 2022 18:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B45EC38A2D
+	for <linux-cxl@archiver.kernel.org>; Mon, 24 Oct 2022 18:26:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232531AbiJXSN1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 24 Oct 2022 14:13:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48104 "EHLO
+        id S231414AbiJXS0q (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 24 Oct 2022 14:26:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232673AbiJXSMx (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Oct 2022 14:12:53 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3445F26ED86
-        for <linux-cxl@vger.kernel.org>; Mon, 24 Oct 2022 09:54:41 -0700 (PDT)
+        with ESMTP id S231302AbiJXS00 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Oct 2022 14:26:26 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8880760CD
+        for <linux-cxl@vger.kernel.org>; Mon, 24 Oct 2022 10:07:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666630482; x=1698166482;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vuLfQ3gT2ojnUQGL80Fqo/IUaxiAjLUclp9WGHAyxoQ=;
-  b=VGS7SwzRdcp4nwnHVMwEjE9rlcwi/9oq8VyJxSan9NBq1Z2AMjLWF28Q
-   41aRmNBIWfsWYBsTJw2N48DCnFGjJUhNKH/F3IiQE6wx5fhaGmVybFzsM
-   1Gx4UmvHqC/KaUo9pIZ8isMdwdB7QSw2JRYbIVUer/W6y7yArOclIKjUp
-   m6C9E9jtovG/57ZHaq8Ybz8XUziXJlxeChLhKqOalyiZ59Xsgktkfmfve
-   CvwGKCpFPdL2MiRP0UmJK4VVcsHX4jaSD9BaqLxa44VhzuD0OV5AV/fwq
-   dsWxiZYDZnsVOLO7qc9U8Zy4/Gony4kHsFwa2fyDgsbga8Dq4z/X/utdK
+  t=1666631268; x=1698167268;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=yR7oZ0/eI478/Xeed+xLPQKTItcSXLE8pBe9bgQIJ1I=;
+  b=MupAyvqZ+pn1mv87yp9DsjYxvhrL1V1VOF8brVWcTJBTu8e/n7EW2vlh
+   9p7tOUilb5uHL0gUj0Ou4g/igEAI59awPc2VTm/HADfm3wRhx40CAviaG
+   6adc+aKGjQpu+VW9Tutl/NvlSQsiWZ2q37f3uKD/ALd/0MhCvZ34fV5v9
+   siwRyNVl60Yjzqna7DN/szUGuTcH55K3MxS5aoaUHSb3AXh/Pmss2rsSl
+   KS1GmX4SpYH9cBtTbxrB0kLcQC2a6GOVe78ZjE3Hky6NfkDf6U40rLaeB
+   HW38xBO4/Wyo9O/sycaWHwMDoplfEB3veOZOBhFFBfCA8FGI2xNb0vlNU
    Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="290756726"
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="371688312"
 X-IronPort-AV: E=Sophos;i="5.95,209,1661842800"; 
-   d="scan'208";a="290756726"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 08:49:21 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="582457603"
+   d="scan'208";a="371688312"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 09:54:52 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="720548909"
 X-IronPort-AV: E=Sophos;i="5.95,209,1661842800"; 
-   d="scan'208";a="582457603"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.92.195]) ([10.212.92.195])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 08:49:21 -0700
-Message-ID: <941ad4ec-57b8-72e5-f65d-2d714f53e16f@intel.com>
-Date:   Mon, 24 Oct 2022 08:49:20 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.4.0
-Subject: Re: [PATCH v2] cxl: update names for interleave granularity
- conversion macros
-Content-Language: en-US
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com
-References: <166559536239.2130185.18009064249679668239.stgit@djiang5-desk3.ch.intel.com>
- <20221013132135.000054cd@huawei.com>
- <63546550ac59c_14192949f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+   d="scan'208";a="720548909"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 09:54:52 -0700
+Subject: [PATCH v2] cxl: update names for interleave granularity conversion
+ macros
 From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <63546550ac59c_14192949f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     linux-cxl@vger.kernel.org
+Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        Jonathan.Cameron@huawei.com
+Date:   Mon, 24 Oct 2022 09:54:51 -0700
+Message-ID: <166663045135.483782.14419343939744575817.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/1.4
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+Change names for granularity macros to clearly indicate which
+variable is encoded and which is the actual granularity.
 
-On 10/22/2022 2:49 PM, Dan Williams wrote:
-> Jonathan Cameron wrote:
->> On Wed, 12 Oct 2022 10:23:23 -0700
->> Dave Jiang <dave.jiang@intel.com> wrote:
->>
->>> Change names for granularity macros to clearly indicate which
->>> variable is encoded and which is the actual granularity.
->>>
->>> granularity == interleave granularity
->>> enig == encoded interleave granularity
->> I'm not that bothered, but just wanted to note we have uses
->> of eig for this already.  Maybe better to pick either enig or
->> eig throughout ?
-> Yes, please 'eig' already exists for this purpose, and I would keep the
-> cxl_ prefix. Same on the 'eiw' patch.
+granularity == interleave granularity
+eig == encoded interleave granularity
 
-Ok I'll update those. Seems like my mail client ate Jonathan's response 
-on these. :(
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+
+v2:
+- Change enig to eig. (Jonathan, Dan)
+
+ drivers/cxl/acpi.c        |    2 +-
+ drivers/cxl/core/hdm.c    |    6 +++---
+ drivers/cxl/core/region.c |    6 +++---
+ drivers/cxl/cxl.h         |   12 ++++++------
+ 4 files changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index fb649683dd3a..9434f8333287 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -105,7 +105,7 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+ 	rc = cxl_to_ways(cfmws->interleave_ways, &ways);
+ 	if (rc)
+ 		return rc;
+-	rc = cxl_to_granularity(cfmws->granularity, &ig);
++	rc = eig_to_granularity(cfmws->granularity, &ig);
+ 	if (rc)
+ 		return rc;
+ 	for (i = 0; i < ways; i++)
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index d1d2caea5c62..a04ce9e6e186 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -492,7 +492,7 @@ static void cxld_set_interleave(struct cxl_decoder *cxld, u32 *ctrl)
+ 	if (WARN_ONCE(ways_to_cxl(cxld->interleave_ways, &eiw),
+ 		      "invalid interleave_ways: %d\n", cxld->interleave_ways))
+ 		return;
+-	if (WARN_ONCE(granularity_to_cxl(cxld->interleave_granularity, &eig),
++	if (WARN_ONCE(granularity_to_eig(cxld->interleave_granularity, &eig),
+ 		      "invalid interleave_granularity: %d\n",
+ 		      cxld->interleave_granularity))
+ 		return;
+@@ -744,8 +744,8 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+ 			 port->id, cxld->id, ctrl);
+ 		return rc;
+ 	}
+-	rc = cxl_to_granularity(FIELD_GET(CXL_HDM_DECODER0_CTRL_IG_MASK, ctrl),
+-				&cxld->interleave_granularity);
++	rc = eig_to_granularity(FIELD_GET(CXL_HDM_DECODER0_CTRL_IG_MASK, ctrl),
++				 &cxld->interleave_granularity);
+ 	if (rc)
+ 		return rc;
+ 
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 401148016978..df294a6fd2c9 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -390,7 +390,7 @@ static ssize_t interleave_granularity_store(struct device *dev,
+ 	if (rc)
+ 		return rc;
+ 
+-	rc = granularity_to_cxl(val, &ig);
++	rc = granularity_to_eig(val, &ig);
+ 	if (rc)
+ 		return rc;
+ 
+@@ -1002,7 +1002,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+ 		parent_iw = parent_cxld->interleave_ways;
+ 	}
+ 
+-	rc = granularity_to_cxl(parent_ig, &peig);
++	rc = granularity_to_eig(parent_ig, &peig);
+ 	if (rc) {
+ 		dev_dbg(&cxlr->dev, "%s:%s: invalid parent granularity: %d\n",
+ 			dev_name(parent_port->uport),
+@@ -1039,7 +1039,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+ 		eig = peig;
+ 	}
+ 
+-	rc = cxl_to_granularity(eig, &ig);
++	rc = eig_to_granularity(eig, &ig);
+ 	if (rc) {
+ 		dev_dbg(&cxlr->dev, "%s:%s: invalid interleave: %d\n",
+ 			dev_name(port->uport), dev_name(&port->dev),
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index f680450f0b16..dacb1d769dae 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -69,11 +69,11 @@ static inline int cxl_hdm_decoder_count(u32 cap_hdr)
+ }
+ 
+ /* Encode defined in CXL 2.0 8.2.5.12.7 HDM Decoder Control Register */
+-static inline int cxl_to_granularity(u16 ig, unsigned int *val)
++static inline int eig_to_granularity(u16 eig, unsigned int *granularity)
+ {
+-	if (ig > 6)
++	if (eig > 6)
+ 		return -EINVAL;
+-	*val = 256 << ig;
++	*granularity = 256 << eig;
+ 	return 0;
+ }
+ 
+@@ -94,11 +94,11 @@ static inline int cxl_to_ways(u8 eniw, unsigned int *val)
+ 	return 0;
+ }
+ 
+-static inline int granularity_to_cxl(int g, u16 *ig)
++static inline int granularity_to_eig(int granularity, u16 *eig)
+ {
+-	if (g > SZ_16K || g < 256 || !is_power_of_2(g))
++	if (granularity > SZ_16K || granularity < 256 || !is_power_of_2(granularity))
+ 		return -EINVAL;
+-	*ig = ilog2(g) - 8;
++	*eig = ilog2(granularity) - 8;
+ 	return 0;
+ }
+ 
+
 
