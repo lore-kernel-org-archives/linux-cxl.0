@@ -2,259 +2,188 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F30ACC38A2D
-	for <linux-cxl@archiver.kernel.org>; Mon, 24 Oct 2022 23:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0068DC67871
+	for <linux-cxl@archiver.kernel.org>; Mon, 24 Oct 2022 23:21:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230099AbiJXXFR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 24 Oct 2022 19:05:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54556 "EHLO
+        id S230478AbiJXXVB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 24 Oct 2022 19:21:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230015AbiJXXE7 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Oct 2022 19:04:59 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79F566E8AC;
-        Mon, 24 Oct 2022 14:26:18 -0700 (PDT)
+        with ESMTP id S230486AbiJXXUl (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Oct 2022 19:20:41 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 005D32E6482
+        for <linux-cxl@vger.kernel.org>; Mon, 24 Oct 2022 14:41:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666646778; x=1698182778;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=RnL4UhgP1Iv3aA2lwc+M4ukFlyqBrBXbvDmeGjYc9R8=;
-  b=KLv2/IPNb4xlmQus0v/y/z9SZ+xPLGxP4Qul1uF3MQBTTKUE0we5wvY/
-   JWUZyVMUmtE7J8Pu8SBpeTbWuWnQqX+tgpoAwLsh8v2//Aj49npZw9JFi
-   bEgkT0/3ztXX685FfOTHl8oy0UZnoQDYTdmSRI/hqv6nwYo8dKlDuofqs
-   nik09M7yRXzAcIa+p8Dwq8JnoiFqnZ7xNyo2JqWGzzkB4cbbntgwZPQyT
-   reR6wEcmHP+b8if/mv5eKzhd7Kl0bz/lFjPTr7QEGrSKbTLVrkyvy7F1q
-   +uFEqHNA0ZQtZKmafguzo0KCpFIKG84lvpTvGiaIE9ykZeujsPbfqasyI
+  t=1666647690; x=1698183690;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=c9OAJv9yrllrg46GrT7C8uf1bFGFgStzbtNQiJBa9lc=;
+  b=ixNqN9ODU4G1/GvGnxhcOy6QGLd5b6/yFnhmyI1Fmf1oFM79QY/Pipc3
+   EusHA76jK1kxkxl+OMUDEYE7GsvnPSJPVhYaILl3qtvnQKN0dLvoEJ5az
+   xNJ2ydDpJbIWnfbCrS/XE3XyiDzA6531iAaOY5DP3ZU6IstzfFKFqUqib
+   E6MAgGgIRrxM7/6iBl/AjhUdWORfL1uanUck/mF+1mcuq4Qk8UKPrP08J
+   R/rKCD4j5neGKWiTDsLtDAgikLboVuMsw5ak6+txMbxErk/FPe3loY6A3
+   a1foSbNa8l7mEY8pk0SVpjmr5lA2ZluBuSGEPiiRU1i16bSJhTMs+lpI1
    w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="306257080"
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="334120422"
 X-IronPort-AV: E=Sophos;i="5.95,210,1661842800"; 
-   d="scan'208";a="306257080"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 14:25:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="700304692"
+   d="scan'208";a="334120422"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 14:41:06 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="736570664"
 X-IronPort-AV: E=Sophos;i="5.95,210,1661842800"; 
-   d="scan'208";a="700304692"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga004.fm.intel.com with ESMTP; 24 Oct 2022 14:25:00 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 24 Oct 2022 14:25:00 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 24 Oct 2022 14:24:59 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31 via Frontend Transport; Mon, 24 Oct 2022 14:24:59 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.31; Mon, 24 Oct 2022 14:24:59 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Rf0k8zru2agVFIUt+Xs+pvM5y8ECADpPw1ZNsMvvzGK1lT14YNevPfts0c6Cq15yc5iWswIm+xkTU+9WeNaOkAWu1tv2AhyE2JoE2QUvLxRADrZqgvUefamW8DI+EicMVj0C3IOEuSy1a6Kd7HOE/sfyTtvEC4I40SOu/mZZuPYzLtbMm/m+3KdZkAEL+inE2RKpGKetjj+L+/l9/P77ZjhHIzbDD9kBVLwtmLNj31b2AUQpUY50Ui/01wlacX731LclPvx56JstbAee2XqtoolNsY10nirup/JAXAyoN56blEUUT20YlESygIsMrczxq0pECCBHXm6gooMwT/Mmig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mMQGMO3mwP6GYG6SyzIK3eVf+IBRcQ9pWzn51FwGTKs=;
- b=aZCVe7Lwi+HBslZyDOBYoMU9cZ0dZAx/cQxGqNtwM+B9hFG0mkDpWirQgy87/1O8Mqu+pt61mcDT/i1ZD7kfJiAf9swi5R3vn64gaGNwsYYIBJem5w5lZDyoz0j9NGppVk02l6roFDU2VST02vfBOq3N+CYIj9HYoDFrDo7kWe9a32AmOgrGdNYZ1Ciak1cuNKdTqR7nI/h0G04CbI87MqP4vlB1FlhejqRo2wTbfSKgJ5UGB6v9jdMgFjJ76XjjXl9ECeSpasI7dwP4LtfAC48n2Q/CCkz/b5c0eRIM8ZC6ASXNHSV3xgrP/BZR7xAg0FxUEaisPUv5Bv84aOqj9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by PH7PR11MB6452.namprd11.prod.outlook.com
- (2603:10b6:510:1f3::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.33; Mon, 24 Oct
- 2022 21:24:57 +0000
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::7d5a:684d:99f7:4e83]) by MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::7d5a:684d:99f7:4e83%12]) with mapi id 15.20.5746.023; Mon, 24 Oct
- 2022 21:24:57 +0000
-Date:   Mon, 24 Oct 2022 14:24:54 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Robert Richter <rrichter@amd.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v2 06/12] cxl/acpi: Extract component registers of
- restricted hosts from RCRB
-Message-ID: <635702a652637_4da32941a@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20221018132341.76259-1-rrichter@amd.com>
- <20221018132341.76259-7-rrichter@amd.com>
- <63522b53321e1_24ac29467@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <Y1b92DF0c36/QDbo@rric.localdomain>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <Y1b92DF0c36/QDbo@rric.localdomain>
-X-ClientProxiedBy: MW4PR02CA0017.namprd02.prod.outlook.com
- (2603:10b6:303:16d::24) To MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20)
+   d="scan'208";a="736570664"
+Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.92.195]) ([10.212.92.195])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 14:41:06 -0700
+Message-ID: <c763de54-eb7b-782d-e98f-6349ba738fce@intel.com>
+Date:   Mon, 24 Oct 2022 14:41:05 -0700
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|PH7PR11MB6452:EE_
-X-MS-Office365-Filtering-Correlation-Id: f806e1b6-f9f3-45f7-5d90-08dab606330a
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: huWgU6BW6GMGf/blWmgjMlKKoZkNWSceLSrErlpWUz0Yts7/M7/75UgehYzAFBWA+/B1U60bWwbTHsRrlqIU6d+4ZcXsGtrDU7cm3e9oG8VOM1NExVopyFhdYlflieLs1WYOZiPFEIMg5elp9QhZOZpH0G7J82AcZnVAzrh23xgVtfkIQ0+F/T62zqeXOab4CTqxMgMfZAi1OYuS1dF+gG62ewum2+lScOmOcC5QChX7Xoo6Q8aRVNIlukKcfiK5NlF+S6LJXHyl+9IFk0G5qXiWIzfOl9htwCg199LOmLpF9aX+3juTgn7ggZJ4clnqG/SOZ0/dS33CWoghFN0Tc1mYsqAUmwcTveTNgCKF4TyLH9jwWG2WE3IUgJi+FLTBLvWy0KT+V7fxRRa8rKgZovaqoP3b20InR4hEJqoHYqf2aLswcjmyXUKrMzsyv1uTV36/rnvQFWxa2nr9AWOdrsqIPVYo/Yn05ZsysReFIUwQGDu7E2ElRaWVr9xLdU6nWUb0k137D3w8zv1p2ESAyoiPqOeLfMvd4zlAvmqDrItcQJ8NVnLYH5vax7gKAbsWqZFveFhbweRPabiJ8WNVYcfLnHu39XTCuTOVbLJF7Bp+wxDs1co0XcpYjRFrOsOyWFxbTYd6RsKse3qDPhSLqhflyLXAV72eeN2he/aL7mGVA+avJLjWdyoATrRkwZWMQOV4w8XdZHqaZHzQtXceTw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(346002)(366004)(39860400002)(136003)(376002)(451199015)(66946007)(9686003)(6486002)(26005)(53546011)(6512007)(38100700002)(8676002)(41300700001)(8936002)(82960400001)(5660300002)(83380400001)(66476007)(86362001)(478600001)(7416002)(110136005)(54906003)(186003)(6506007)(316002)(6666004)(2906002)(4326008)(66556008);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3FBwceKGxgSuXS2/vTGwyiUOOaHn6k6lnrTy/OMS46/VrXcY09OHhE8qlx/e?=
- =?us-ascii?Q?/v1sepCUijcB7bEpYXj3NEq3aQIlY9IsgD9PfG5aT+eWu4iLyqicTZd4vdiM?=
- =?us-ascii?Q?fYEFDrIiccSikKTrw67/22vMNHlCd2y5dR56QYdI4T6r6nueB1oaZiy6ZjRl?=
- =?us-ascii?Q?/HvDmObXzfWauYcvovKpCq7KjATj9IRXyRt+bm+7MkZ0Lp1uwQQmhljx1T83?=
- =?us-ascii?Q?O9gkSKJFhehrOUU2KnhrDWR9gMHXJDLQGuYl0Cq+zqLyoJdRbe+wnClEOVts?=
- =?us-ascii?Q?wawqXCjTOJG57bAqC6GVqyUYptZWTHUYKlPalUmdkszk5+HKvyXpSX3x56Ou?=
- =?us-ascii?Q?UaBVVrOcYOuksV69nfGY3nJ95H7fpKr0c4iivsPe39HX6U/rgNCQ5IO84q8m?=
- =?us-ascii?Q?oOGHvKv8hhFuflgDlN3b3CifoSEmYWnG4t0jCdf8tSEY07cl4uAnjqpUpaJn?=
- =?us-ascii?Q?wo57olWjUpq9gVnf4YemfQgCjt/H3zqPxMkvPwIV/9/6sbzP7Bi9MT4OXDXC?=
- =?us-ascii?Q?x8XiaSnGuC1VEPJX/WyZKj4JaHXf6nsnTHvALSrdGtD0HTAgOgYlOCQGRuRe?=
- =?us-ascii?Q?0g1+FSX+iYzQrQJQ5+NYRI6MyYN2ceC27el8yrOR0avQVVkNWsmbbJdQlRNM?=
- =?us-ascii?Q?BkYBGNvDahPWAyJ4aJNi/D/CmJRN7G5nIUSmlYb5qdnRtvgvaTEUNPSAPK27?=
- =?us-ascii?Q?l+xrY0v9Sq2VFE5TUSguAM1PNAeLsH6Y4oo6fTccmbAEmLGEHby2D0EZI/N7?=
- =?us-ascii?Q?faV/rhObleWj2qEFH8w62PknLA5ddm8Zu6CHuz1P3EUZjEEMrlMnFQqqRxR9?=
- =?us-ascii?Q?QT2UPzuzZNTKOM4JtD+IHuFdbb6jhKDhFFlYhfo7Qs/jUkuXucs6ngBbdTAT?=
- =?us-ascii?Q?lWX3nSylkJg2hCmVTXDMQYWKJAcFlfIW6RhmIhsoIe5mKduJrqps2s8Vf5iE?=
- =?us-ascii?Q?yFwqbcpSP3Vaz4hevlI1AOCAMM4bw6tESrqEiExTRN8SwRq5S/g2EEFIL/Jg?=
- =?us-ascii?Q?D2XaZFjCSnusnAQpdv7HL5nL4PJqTZhCberSEBbC29znqH06HbYPWLEMqShL?=
- =?us-ascii?Q?SBuoqiyt7k5VrEEoe9S74FcJJr3AvgtrHNgXB62Y1XqfavGpishKdfqIhUSv?=
- =?us-ascii?Q?HIh25Sbi2L/J8Y4Q7FYOrhDlA118q2pMeACdV5nb+t+vXlaugpOmINrGxTYt?=
- =?us-ascii?Q?5HcSP7xz4GxAO8cR9ql4H0dzSdN/GdXDuR7PnkIAJBgN03PeIxO6VDLBEbOr?=
- =?us-ascii?Q?NZDenFFzzOnJ/MPW4m5Ak1ZqApfTM7t/PVow1q+lGAKDBmkBaZ8eTzdRwvM7?=
- =?us-ascii?Q?wN+jic/58+S9C0jpg2Uff1Egw3lQQKob962zzrtpmd1FLuBtUFJF36ndeLM+?=
- =?us-ascii?Q?u6HBYbKmp8j/aLcGWvYi8V1w2ChurZbgCId4bqXIWHPaGFT/ty9FvJD99uz7?=
- =?us-ascii?Q?1zKMa5wbCI6fiU6lbf6PkDSHw+vi3egz34U4ZqPZMcOzi/pgQL3Ta0bf39za?=
- =?us-ascii?Q?Hn3ttSJqz8n8+IQiahzQJ5nHB7CLcOyqzFOWDlVClerIf9JB3xvnICQIJjed?=
- =?us-ascii?Q?Lxd5AKMAHUCxjVJU8FYLysFf/Xmm+IwLqjvyjADY63Tk+Q6DbZZ0vvv21U5q?=
- =?us-ascii?Q?yQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f806e1b6-f9f3-45f7-5d90-08dab606330a
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2022 21:24:57.0128
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RFLjSz+QAi9cvf4w3XPqTULAKfL89fSsTDmQFjmj6Yo4k8Om1bgEQafjktOXkI72VGmvDNbEORmf+7ndDP/e58yV/+05oQqUTcLGaC//HSg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6452
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.4.0
+Subject: Re: [PATCH v2] cxl: update names for interleave granularity
+ conversion macros
+Content-Language: en-US
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        Jonathan.Cameron@huawei.com
+References: <166663045135.483782.14419343939744575817.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <166663045135.483782.14419343939744575817.stgit@djiang5-desk3.ch.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Robert Richter wrote:
-> On 20.10.22 22:17:07, Dan Williams wrote:
-> > Robert Richter wrote:
-> > > A downstream port must be connected to a component register block.
-> > > For restricted hosts the base address is determined from the RCRB. The
-> > > RCRB is provided by the host's CEDT CHBS entry. Rework CEDT parser to
-> > > get the RCRB and add code to extract the component register block from
-> > > it.
-> > > 
-> > > RCRB's BAR[0..1] point to the component block containing CXL subsystem
-> > > component registers. MEMBAR extraction follows the PCI base spec here,
-> > > esp. 64 bit extraction and memory range alignment (6.0, 7.5.1.2.1).
-> > > 
-> > > Note: Right now the component register block is used for HDM decoder
-> > > capability only which is optional for RCDs. If unsupported by the RCD,
-> > > the HDM init will fail. It is future work to bypass it in this case.
-> > > 
-> > > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> > > Signed-off-by: Robert Richter <rrichter@amd.com>
-> > > ---
-> > >  drivers/cxl/acpi.c | 79 ++++++++++++++++++++++++++++++++++++++++------
-> > >  1 file changed, 69 insertions(+), 10 deletions(-)
-> > > 
-> > > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> > > index fb9f72813067..a92d5d7b7a92 100644
-> > > --- a/drivers/cxl/acpi.c
-> > > +++ b/drivers/cxl/acpi.c
-> > > @@ -9,6 +9,8 @@
-> > >  #include "cxlpci.h"
-> > >  #include "cxl.h"
-> > >  
-> > > +#define CXL_RCRB_SIZE	SZ_8K
-> > > +
-> > >  static unsigned long cfmws_to_decoder_flags(int restrictions)
-> > >  {
-> > >  	unsigned long flags = CXL_DECODER_F_ENABLE;
-> > > @@ -229,27 +231,82 @@ static int add_host_bridge_uport(struct device *match, void *arg)
-> > >  struct cxl_chbs_context {
-> > >  	struct device *dev;
-> > >  	unsigned long long uid;
-> > > -	resource_size_t chbcr;
-> > > +	struct acpi_cedt_chbs chbs;
-> > >  };
-> > >  
-> > > -static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
-> > > -			 const unsigned long end)
-> > > +static int cxl_get_chbs(union acpi_subtable_headers *header, void *arg,
-> > > +			const unsigned long end)
-> > >  {
-> > >  	struct cxl_chbs_context *ctx = arg;
-> > >  	struct acpi_cedt_chbs *chbs;
-> > >  
-> > > -	if (ctx->chbcr)
-> > > +	if (ctx->chbs.base)
-> > >  		return 0;
-> > >  
-> > >  	chbs = (struct acpi_cedt_chbs *) header;
-> > >  
-> > >  	if (ctx->uid != chbs->uid)
-> > >  		return 0;
-> > > -	ctx->chbcr = chbs->base;
-> > > +	ctx->chbs = *chbs;
-> > >  
-> > >  	return 0;
-> > >  }
-> > >  
-> > > +static resource_size_t cxl_get_chbcr(struct cxl_chbs_context *ctx)
-> > > +{
-> > 
-> > The core logic of this looks good, but this wants to be shared with the
-> > upstream port component register discovery.
-> > 
-> > Full disclosure I am reconciling these patches with an attempt that Dave
-> > Jiang made at this topic. Since your series hit the list first I will
-> > let it take the lead, but then fill it in with comments and learnings
-> > from Dave's effort.
-> > 
-> > So in this case Dave moved this into the drivers/cxl/core/regs.c with a
-> > function signature like:
-> > 
-> > enum cxl_rcrb {
-> >        CXL_RCRB_DOWNSTREAM,
-> >        CXL_RCRB_UPSTREAM,
-> > };
-> > 
-> > resource_size_t cxl_rcrb_to_component(struct device *dev,
-> >                                       resource_size_t rcrb_base, int len,
-> >                                       enum cxl_rcrb which);
-> > 
-> > ...where @which alternates when called by cxl_acpi for the downstream
-> > case, or cxl_mem for the upstream case.
-> 
-> Ok, I see where to go here. Could you point me to Dave's postings you
-> are referring to? I checked linux-cxl and could not find anything
-> related to RCRB or that changes regs.c.
 
-He was in the middle of tidying them when you posted your series, but I
-think it would not hurt to push them to a git tree so you can grab the
-bits and pieces you want.
+On 10/24/2022 9:54 AM, Dave Jiang wrote:
+> Change names for granularity macros to clearly indicate which
+> variable is encoded and which is the actual granularity.
+>
+> granularity == interleave granularity
+> eig == encoded interleave granularity
+>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>
+> v2:
+> - Change enig to eig. (Jonathan, Dan)
 
-Dave?
+Sigh. This should be v3. And I need to pick up Jonathan's review tags 
+that I didn't see. Will send fixed.
+
+
+>
+>   drivers/cxl/acpi.c        |    2 +-
+>   drivers/cxl/core/hdm.c    |    6 +++---
+>   drivers/cxl/core/region.c |    6 +++---
+>   drivers/cxl/cxl.h         |   12 ++++++------
+>   4 files changed, 13 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index fb649683dd3a..9434f8333287 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -105,7 +105,7 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+>   	rc = cxl_to_ways(cfmws->interleave_ways, &ways);
+>   	if (rc)
+>   		return rc;
+> -	rc = cxl_to_granularity(cfmws->granularity, &ig);
+> +	rc = eig_to_granularity(cfmws->granularity, &ig);
+>   	if (rc)
+>   		return rc;
+>   	for (i = 0; i < ways; i++)
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index d1d2caea5c62..a04ce9e6e186 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -492,7 +492,7 @@ static void cxld_set_interleave(struct cxl_decoder *cxld, u32 *ctrl)
+>   	if (WARN_ONCE(ways_to_cxl(cxld->interleave_ways, &eiw),
+>   		      "invalid interleave_ways: %d\n", cxld->interleave_ways))
+>   		return;
+> -	if (WARN_ONCE(granularity_to_cxl(cxld->interleave_granularity, &eig),
+> +	if (WARN_ONCE(granularity_to_eig(cxld->interleave_granularity, &eig),
+>   		      "invalid interleave_granularity: %d\n",
+>   		      cxld->interleave_granularity))
+>   		return;
+> @@ -744,8 +744,8 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>   			 port->id, cxld->id, ctrl);
+>   		return rc;
+>   	}
+> -	rc = cxl_to_granularity(FIELD_GET(CXL_HDM_DECODER0_CTRL_IG_MASK, ctrl),
+> -				&cxld->interleave_granularity);
+> +	rc = eig_to_granularity(FIELD_GET(CXL_HDM_DECODER0_CTRL_IG_MASK, ctrl),
+> +				 &cxld->interleave_granularity);
+>   	if (rc)
+>   		return rc;
+>   
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 401148016978..df294a6fd2c9 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -390,7 +390,7 @@ static ssize_t interleave_granularity_store(struct device *dev,
+>   	if (rc)
+>   		return rc;
+>   
+> -	rc = granularity_to_cxl(val, &ig);
+> +	rc = granularity_to_eig(val, &ig);
+>   	if (rc)
+>   		return rc;
+>   
+> @@ -1002,7 +1002,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+>   		parent_iw = parent_cxld->interleave_ways;
+>   	}
+>   
+> -	rc = granularity_to_cxl(parent_ig, &peig);
+> +	rc = granularity_to_eig(parent_ig, &peig);
+>   	if (rc) {
+>   		dev_dbg(&cxlr->dev, "%s:%s: invalid parent granularity: %d\n",
+>   			dev_name(parent_port->uport),
+> @@ -1039,7 +1039,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+>   		eig = peig;
+>   	}
+>   
+> -	rc = cxl_to_granularity(eig, &ig);
+> +	rc = eig_to_granularity(eig, &ig);
+>   	if (rc) {
+>   		dev_dbg(&cxlr->dev, "%s:%s: invalid interleave: %d\n",
+>   			dev_name(port->uport), dev_name(&port->dev),
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index f680450f0b16..dacb1d769dae 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -69,11 +69,11 @@ static inline int cxl_hdm_decoder_count(u32 cap_hdr)
+>   }
+>   
+>   /* Encode defined in CXL 2.0 8.2.5.12.7 HDM Decoder Control Register */
+> -static inline int cxl_to_granularity(u16 ig, unsigned int *val)
+> +static inline int eig_to_granularity(u16 eig, unsigned int *granularity)
+>   {
+> -	if (ig > 6)
+> +	if (eig > 6)
+>   		return -EINVAL;
+> -	*val = 256 << ig;
+> +	*granularity = 256 << eig;
+>   	return 0;
+>   }
+>   
+> @@ -94,11 +94,11 @@ static inline int cxl_to_ways(u8 eniw, unsigned int *val)
+>   	return 0;
+>   }
+>   
+> -static inline int granularity_to_cxl(int g, u16 *ig)
+> +static inline int granularity_to_eig(int granularity, u16 *eig)
+>   {
+> -	if (g > SZ_16K || g < 256 || !is_power_of_2(g))
+> +	if (granularity > SZ_16K || granularity < 256 || !is_power_of_2(granularity))
+>   		return -EINVAL;
+> -	*ig = ilog2(g) - 8;
+> +	*eig = ilog2(granularity) - 8;
+>   	return 0;
+>   }
+>   
+>
+>
