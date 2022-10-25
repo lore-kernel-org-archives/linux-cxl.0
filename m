@@ -2,48 +2,48 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25744FA373E
-	for <linux-cxl@archiver.kernel.org>; Tue, 25 Oct 2022 20:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB986C38A2D
+	for <linux-cxl@archiver.kernel.org>; Tue, 25 Oct 2022 20:44:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232473AbiJYUnp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 25 Oct 2022 16:43:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47208 "EHLO
+        id S231937AbiJYUon (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 25 Oct 2022 16:44:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232359AbiJYUnn (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 25 Oct 2022 16:43:43 -0400
+        with ESMTP id S231602AbiJYUom (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 25 Oct 2022 16:44:42 -0400
 Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99B9210AC2E
-        for <linux-cxl@vger.kernel.org>; Tue, 25 Oct 2022 13:43:42 -0700 (PDT)
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29PJjfCB011628
-        for <linux-cxl@vger.kernel.org>; Tue, 25 Oct 2022 13:43:42 -0700
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC34E578A2
+        for <linux-cxl@vger.kernel.org>; Tue, 25 Oct 2022 13:44:41 -0700 (PDT)
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29PJjf5J028978
+        for <linux-cxl@vger.kernel.org>; Tue, 25 Oct 2022 13:44:41 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=s2048-2021-q4;
- bh=rFZ7IYqIrWVgDeyetSQpmznBNqUbt+SnQfjCYOWywZw=;
- b=HdgEF4h9qGcSobUfi2D6LbF1fsokaRzX8kTUQ9jG15x8i8D6g6INNGlh7LmZfMjN2Zpr
- jOWZDMYn63wSOfnhxDB6F1sw9wP7EyWUYcQ5WuDwAczytdkaClpiOsR61hWXDbsgYLC+
- 83MkSkHZlJK2DQxj9flz7WNefU8e+FkspB4A0SlnlBJhpGZ6if7Vw/k5F+wVjin5ILzI
- lMb43QrpeQGhMjyt68wgQcZjiNSMisLC6ojifZ8tY7csfgGHKRk97jP2B14XpkszrfN8
- mBale6pvqfG5zILtAZUh0G5azWKDsvwbAgcT4K9wHlk0kalbxt0UdL0BpdzYzwqPBWmv BQ== 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3kefbfdkug-1
+ bh=7ytum0hRlV6SbbsJqGTpU3I/ZAavdT2sbo70T2ibQt4=;
+ b=KWAz+ImzfPVzphkXsAbNzx1nJMB0E4CJNInCfAuiwL9h+uULz4lyEzO6j04zgLTVOWHE
+ z7mTa2shHt0R1B5PmZ1hH+j5D6z5zPnyju01EtLHWdxeGas0r4XFOy2rTY4bPHOoVWTT
+ aeY4s+444s8w1V2UUNnz7ttJv8lTZSXtjnbYpMCwHHsMM3tLbjpytUCdcC01HdEU0OmN
+ dJFZP9LoriM/FLEAkAmZ8fvcvc+HbR5UrqMpRQfyViX6KomkFDTVLMIhzbtw6nH21I+Q
+ 4bR/3NKt+BMjMJLao0aN34nfS7CMvR/4cwKfF7L4zKrvIXlFU6maLbxnhB3Z5naDsZFD Vw== 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3ke64gtatw-7
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-cxl@vger.kernel.org>; Tue, 25 Oct 2022 13:43:42 -0700
-Received: from twshared25017.14.frc2.facebook.com (2620:10d:c085:108::8) by
- mail.thefacebook.com (2620:10d:c085:21d::4) with Microsoft SMTP Server
+        for <linux-cxl@vger.kernel.org>; Tue, 25 Oct 2022 13:44:41 -0700
+Received: from twshared13931.24.frc3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 25 Oct 2022 13:43:41 -0700
+ 15.1.2375.31; Tue, 25 Oct 2022 13:43:48 -0700
 Received: by devvm7073.vll0.facebook.com (Postfix, from userid 175343)
-        id 9955124C5BFF; Tue, 25 Oct 2022 13:43:33 -0700 (PDT)
+        id AC64524C5C13; Tue, 25 Oct 2022 13:43:36 -0700 (PDT)
 From:   Jonathan Zhang <jonzhang@meta.com>
 To:     <linux-cxl@vger.kernel.org>, <vishal.l.verma@intel.com>,
         <wzhang@meta.com>
 CC:     Jonathan Zhang <jonzhang@fb.com>,
         Jonathan Zhang <jonzhang@meta.com>
-Subject: [ndctl PATCH V2 1/2] libcxl: add accessors for Get Alert Configuration CCI output
-Date:   Tue, 25 Oct 2022 13:43:19 -0700
-Message-ID: <20221025204320.290354-2-jonzhang@meta.com>
+Subject: [ndctl PATCH V2 2/2] cxl: display alert configuration fields
+Date:   Tue, 25 Oct 2022 13:43:20 -0700
+Message-ID: <20221025204320.290354-3-jonzhang@meta.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20221025204320.290354-1-jonzhang@meta.com>
 References: <20221025204320.290354-1-jonzhang@meta.com>
@@ -51,8 +51,8 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Proofpoint-GUID: 801g5K2xZhUaP8UU1u9GQy3Va8fJfpr4
-X-Proofpoint-ORIG-GUID: 801g5K2xZhUaP8UU1u9GQy3Va8fJfpr4
+X-Proofpoint-GUID: czw06QgGMbvpXy1alEIYWu1y8UseR14l
+X-Proofpoint-ORIG-GUID: czw06QgGMbvpXy1alEIYWu1y8UseR14l
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
  definitions=2022-10-25_13,2022-10-25_01,2022-06-22_01
@@ -62,382 +62,347 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Jonathan Zhang <jonzhang@fb.com>
 
-CXL 3.0 spec section 8.2.9.8.3.2 "Get Alert Configuration
-(Opcode 4201h) defines the get-alert-config command to
-retrieve the devices's critical alert and programmable
-warning configurations.
-
-Add the methods to issue the command and get the fields
-defined.
+CXL device's critical alert and programmable warning configurations
+are displayed when:
+* list command is issued.
+* "--alert-config" is issued.
 
 Signed-off-by: Jonathan Zhang <jonzhang@meta.com>
 ---
- Documentation/cxl/lib/libcxl.txt |   1 +
- cxl/lib/libcxl.c                 | 163 +++++++++++++++++++++++++++++++
- cxl/lib/libcxl.sym               |  23 +++++
- cxl/lib/private.h                |  38 +++++++
- cxl/libcxl.h                     |  35 +++++++
- 5 files changed, 260 insertions(+)
+ Documentation/cxl/cxl-list.txt |  33 ++++++
+ cxl/filter.c                   |   2 +
+ cxl/filter.h                   |   1 +
+ cxl/json.c                     | 185 +++++++++++++++++++++++++++++++++
+ cxl/list.c                     |   6 +-
+ util/json.h                    |   1 +
+ 6 files changed, 226 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/lib=
-cxl.txt
-index fd2962a..dec3641 100644
---- a/Documentation/cxl/lib/libcxl.txt
-+++ b/Documentation/cxl/lib/libcxl.txt
-@@ -121,6 +121,7 @@ information this call requires root / CAP_SYS_ADMIN.
- struct cxl_cmd *cxl_cmd_new_raw(struct cxl_memdev *memdev, int opcode);
- struct cxl_cmd *cxl_cmd_new_identify(struct cxl_memdev *memdev);
- struct cxl_cmd *cxl_cmd_new_get_health_info(struct cxl_memdev *memdev);
-+struct cxl_cmd *cxl_cmd_new_get_alert_config(struct cxl_memdev *memdev);
- struct cxl_cmd *cxl_cmd_new_read_label(struct cxl_memdev *memdev,
- 					unsigned int offset, unsigned int length);
- struct cxl_cmd *cxl_cmd_new_write_label(struct cxl_memdev *memdev, void =
-*buf,
-diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index e8c5d44..c604331 100644
---- a/cxl/lib/libcxl.c
-+++ b/cxl/lib/libcxl.c
-@@ -3140,6 +3140,169 @@ do {									\
- 	return !!(c->field & mask);					\
- } while(0)
+diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.=
+txt
+index 14a2b4b..c762368 100644
+--- a/Documentation/cxl/cxl-list.txt
++++ b/Documentation/cxl/cxl-list.txt
+@@ -219,6 +219,39 @@ OPTIONS
+   }
+ ]
+ ----
++-A::
++--alert::
++	Include alert configuration in the memdev listing. Example listing:
++----
++# cxl list -m mem0 -A
++[
++  {
++    "memdev":"mem0",
++    "pmem_size":0,
++    "ram_size":273535729664,
++    "alert":{
++      "life_used_prog_warn_threshold_valid":false,
++      "dev_over_temperature_prog_warn_threshold_valid":false,
++      "dev_under_temperature_prog_warn_threshold_valid":false,
++      "corrected_volatile_mem_err_prog_warn_threshold_valid":true,
++      "corrected_pmem_err_prog_warn_threshold_valid":false,
++      "life_used_prog_warn_threshold_writable":false,
++      "dev_over_temperature_prog_warn_threshold_writable":false,
++      "dev_under_temperature_prog_warn_threshold_writable":false,
++      "corrected_volatile_mem_err_prog_warn_threshold_writable":true,
++      "corrected_pmem_err_prog_warn_threshold_writable":false,
++      "life_used_crit_alert_threshold":0,
++      "life_used_prog_warn_threshold":0,
++      "dev_over_temperature_crit_alert_threshold":0,
++      "dev_under_temperature_crit_alert_threshold":0,
++      "dev_over_temperature_prog_warn_threshold":0,
++      "dev_under_temperature_prog_warn_threshold":0,
++      "corrected_volatile_mem_err_prog_warn_threshold":0,
++      "corrected_pmem_err_prog_warn_threshold":0
++    },
++  }
++]
++----
 =20
-+CXL_EXPORT struct cxl_cmd *
-+cxl_cmd_new_get_alert_config(struct cxl_memdev *memdev)
+ -B::
+ --buses::
+diff --git a/cxl/filter.c b/cxl/filter.c
+index 56c6599..beb64de 100644
+--- a/cxl/filter.c
++++ b/cxl/filter.c
+@@ -686,6 +686,8 @@ static unsigned long params_to_flags(struct cxl_filte=
+r_params *param)
+ 		flags |=3D UTIL_JSON_TARGETS;
+ 	if (param->partition)
+ 		flags |=3D UTIL_JSON_PARTITION;
++	if (param->alert_config)
++		flags |=3D UTIL_JSON_ALERT_CONFIG;
+ 	return flags;
+ }
+=20
+diff --git a/cxl/filter.h b/cxl/filter.h
+index 256df49..cd514c9 100644
+--- a/cxl/filter.h
++++ b/cxl/filter.h
+@@ -26,6 +26,7 @@ struct cxl_filter_params {
+ 	bool human;
+ 	bool health;
+ 	bool partition;
++	bool alert_config;
+ 	int verbose;
+ 	struct log_ctx ctx;
+ };
+diff --git a/cxl/json.c b/cxl/json.c
+index 63c1751..2f74452 100644
+--- a/cxl/json.c
++++ b/cxl/json.c
+@@ -185,6 +185,185 @@ err_jobj:
+ 	return NULL;
+ }
+=20
++static struct json_object *
++util_cxl_memdev_alert_config_to_json(struct cxl_memdev *memdev,
++				     unsigned long flags)
 +{
-+	return cxl_cmd_new_generic(memdev, CXL_MEM_COMMAND_ID_GET_ALERT_CONFIG)=
-;
-+}
++	struct json_object *jalert_config;
++	struct json_object *jobj;
++	struct cxl_cmd *cmd;
++	int rc;
 +
-+#define cmd_alert_get_valid_alerts_field(c, m)                          =
-       \
-+	cmd_get_field_u8_mask(c, get_alert_config, GET_ALERT_CONFIG,           =
-\
-+			      valid_alerts, m)
++	jalert_config =3D json_object_new_object();
++	if (!jalert_config)
++		return NULL;
++	if (!memdev)
++		goto err_jobj;
 +
-+CXL_EXPORT int
-+cxl_cmd_alert_config_life_used_prog_warn_threshold_valid(struct cxl_cmd =
-*cmd)
-+{
-+	cmd_alert_get_valid_alerts_field(
-+		cmd,
-+		CXL_CMD_ALERT_CONFIG_VALID_ALERTS_LIFE_USED_PROG_WARN_THRESHOLD_MASK);
-+}
++	cmd =3D cxl_cmd_new_get_alert_config(memdev);
++	if (!cmd)
++		goto err_jobj;
 +
-+CXL_EXPORT int
-+cxl_cmd_alert_config_dev_over_temperature_prog_warn_threshold_valid(
-+	struct cxl_cmd *cmd)
-+{
-+	cmd_alert_get_valid_alerts_field(
-+		cmd,
-+		CXL_CMD_ALERT_CONFIG_VALID_ALERTS_DEV_OVER_TEMPERATURE_PROG_WARN_THRES=
-HOLD_MASK);
-+}
++	rc =3D cxl_cmd_submit(cmd);
++	if (rc < 0)
++		goto err_cmd;
++	rc =3D cxl_cmd_get_mbox_status(cmd);
++	if (rc !=3D 0)
++		goto err_cmd;
 +
-+CXL_EXPORT int
-+cxl_cmd_alert_config_dev_under_temperature_prog_warn_threshold_valid(
-+	struct cxl_cmd *cmd)
-+{
-+	cmd_alert_get_valid_alerts_field(
-+		cmd,
-+		CXL_CMD_ALERT_CONFIG_VALID_ALERTS_DEV_UNDER_TEMPERATURE_PROG_WARN_THRE=
-SHOLD_MASK);
-+}
++	rc =3D cxl_cmd_alert_config_life_used_prog_warn_threshold_valid(cmd);
++	jobj =3D json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jalert_config,
++				       "life_used_prog_warn_threshold_valid",
++				       jobj);
 +
-+CXL_EXPORT int
-+cxl_cmd_alert_config_corrected_volatile_mem_err_prog_warn_threshold_vali=
++	rc =3D cxl_cmd_alert_config_dev_over_temperature_prog_warn_threshold_va=
+lid(
++		cmd);
++	jobj =3D json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(
++			jalert_config,
++			"dev_over_temperature_prog_warn_threshold_valid", jobj);
++
++	rc =3D cxl_cmd_alert_config_dev_under_temperature_prog_warn_threshold_v=
+alid(
++		cmd);
++	jobj =3D json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(
++			jalert_config,
++			"dev_under_temperature_prog_warn_threshold_valid",
++			jobj);
++
++	rc =3D cxl_cmd_alert_config_corrected_volatile_mem_err_prog_warn_thresh=
+old_valid(
++		cmd);
++	jobj =3D json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(
++			jalert_config,
++			"corr_volatile_mem_err_prog_warn_threshold_valid",
++			jobj);
++
++	rc =3D cxl_cmd_alert_config_corrected_pmem_err_prog_warn_threshold_vali=
 d(
-+	struct cxl_cmd *cmd)
-+{
-+	cmd_alert_get_valid_alerts_field(
-+		cmd,
-+		CXL_CMD_ALERT_CONFIG_VALID_ALERTS_CORR_VOLATILE_MEM_ERR_PROG_WARN_THRE=
-SHOLD_MASK);
-+}
++		cmd);
++	jobj =3D json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(
++			jalert_config,
++			"corr_pmem_err_prog_warn_threshold_valid", jobj);
 +
-+CXL_EXPORT int
-+cxl_cmd_alert_config_corrected_pmem_err_prog_warn_threshold_valid(
-+	struct cxl_cmd *cmd)
-+{
-+	cmd_alert_get_valid_alerts_field(
-+		cmd,
-+		CXL_CMD_ALERT_CONFIG_VALID_ALERTS_CORR_PMEM_ERR_PROG_WARN_THRESHOLD_MA=
-SK);
-+}
++	rc =3D cxl_cmd_alert_config_life_used_prog_warn_threshold_writable(cmd)=
+;
++	jobj =3D json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(jalert_config,
++				       "life_used_prog_warn_threshold_writable",
++				       jobj);
 +
-+#define cmd_alert_get_prog_alerts_field(c, m)                           =
-       \
-+	cmd_get_field_u8_mask(c, get_alert_config, GET_ALERT_CONFIG,           =
-\
-+			      programmable_alerts, m)
++	rc =3D cxl_cmd_alert_config_dev_over_temperature_prog_warn_threshold_wr=
+itable(
++		cmd);
++	jobj =3D json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(
++			jalert_config,
++			"dev_over_temperature_prog_warn_threshold_writable",
++			jobj);
 +
-+CXL_EXPORT int
-+cxl_cmd_alert_config_life_used_prog_warn_threshold_writable(struct cxl_c=
-md *cmd)
-+{
-+	cmd_alert_get_prog_alerts_field(
-+		cmd,
-+		CXL_CMD_ALERT_CONFIG_PROG_ALERTS_LIEF_USED_PROG_WARN_THRESHOLD_MASK);
-+}
++	rc =3D cxl_cmd_alert_config_dev_under_temperature_prog_warn_threshold_w=
+ritable(
++		cmd);
++	jobj =3D json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(
++			jalert_config,
++			"dev_under_temperature_prog_warn_threshold_writable",
++			jobj);
 +
-+CXL_EXPORT int
-+cxl_cmd_alert_config_dev_over_temperature_prog_warn_threshold_writable(
-+	struct cxl_cmd *cmd)
-+{
-+	cmd_alert_get_prog_alerts_field(
-+		cmd,
-+		CXL_CMD_ALERT_CONFIG_PROG_ALERTS_DEV_OVER_TEMPERATURE_PROG_WARN_THRESH=
-OLD_MASK);
-+}
++	rc =3D cxl_cmd_alert_config_corrected_volatile_mem_err_prog_warn_thresh=
+old_writable(
++		cmd);
++	jobj =3D json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(
++			jalert_config,
++			"corr_volatile_mem_err_prog_warn_threshold_writable",
++			jobj);
 +
-+CXL_EXPORT int
-+cxl_cmd_alert_config_dev_under_temperature_prog_warn_threshold_writable(
-+	struct cxl_cmd *cmd)
-+{
-+	cmd_alert_get_prog_alerts_field(
-+		cmd,
-+		CXL_CMD_ALERT_CONFIG_PROG_ALERTS_DEV_UNDER_TEMPERATURE_PROG_WARN_THRES=
-HOLD_MASK);
-+}
-+
-+CXL_EXPORT int
-+cxl_cmd_alert_config_corrected_volatile_mem_err_prog_warn_threshold_writ=
++	rc =3D cxl_cmd_alert_config_corrected_pmem_err_prog_warn_threshold_writ=
 able(
-+	struct cxl_cmd *cmd)
-+{
-+	cmd_alert_get_prog_alerts_field(
-+		cmd,
-+		CXL_CMD_ALERT_CONFIG_PROG_ALERTS_CORR_VOLATILE_MEM_ERR_PROG_WARN_THRES=
-HOLD_MASK);
-+}
++		cmd);
++	jobj =3D json_object_new_boolean(rc);
++	if (jobj)
++		json_object_object_add(
++			jalert_config,
++			"corr_pmem_err_prog_warn_threshold_writable", jobj);
 +
-+CXL_EXPORT int
-+cxl_cmd_alert_config_corrected_pmem_err_prog_warn_threshold_writable(
-+	struct cxl_cmd *cmd)
-+{
-+	cmd_alert_get_prog_alerts_field(
-+		cmd,
-+		CXL_CMD_ALERT_CONFIG_PROG_ALERTS_CORR_PMEM_ERR_PROG_WARN_THRESHOLD_MAS=
-K);
-+}
++	rc =3D cxl_cmd_alert_config_get_life_used_crit_alert_threshold(cmd);
++	jobj =3D json_object_new_int(rc);
++	if (jobj)
++		json_object_object_add(jalert_config,
++				       "life_used_crit_alert_threshold", jobj);
 +
-+CXL_EXPORT int
-+cxl_cmd_alert_config_get_life_used_crit_alert_threshold(struct cxl_cmd *=
-cmd)
-+{
-+	cmd_get_field_u8(cmd, get_alert_config, GET_ALERT_CONFIG,
-+			 life_used_crit_alert_threshold);
-+}
++	rc =3D cxl_cmd_alert_config_get_life_used_prog_warn_threshold(cmd);
++	jobj =3D json_object_new_int(rc);
++	if (jobj)
++		json_object_object_add(jalert_config,
++				       "life_used_prog_warn_threshold", jobj);
 +
-+CXL_EXPORT int
-+cxl_cmd_alert_config_get_life_used_prog_warn_threshold(struct cxl_cmd *c=
-md)
-+{
-+	cmd_get_field_u8(cmd, get_alert_config, GET_ALERT_CONFIG,
-+			 life_used_prog_warn_threshold);
-+}
++	rc =3D cxl_cmd_alert_config_get_dev_over_temperature_crit_alert_thresho=
+ld(
++		cmd);
++	jobj =3D json_object_new_int(rc);
++	if (jobj)
++		json_object_object_add(
++			jalert_config,
++			"dev_over_temperature_crit_alert_threshold", jobj);
 +
-+CXL_EXPORT int
-+cxl_cmd_alert_config_get_dev_over_temperature_crit_alert_threshold(
-+	struct cxl_cmd *cmd)
-+{
-+	cmd_get_field_u16(cmd, get_alert_config, GET_ALERT_CONFIG,
-+			  dev_over_temperature_crit_alert_threshold);
-+}
-+
-+CXL_EXPORT int
-+cxl_cmd_alert_config_get_dev_under_temperature_crit_alert_threshold(
-+	struct cxl_cmd *cmd)
-+{
-+	cmd_get_field_u16(cmd, get_alert_config, GET_ALERT_CONFIG,
-+			  dev_under_temperature_crit_alert_threshold);
-+}
-+
-+CXL_EXPORT int
-+cxl_cmd_alert_config_get_dev_over_temperature_prog_warn_threshold(
-+	struct cxl_cmd *cmd)
-+{
-+	cmd_get_field_u16(cmd, get_alert_config, GET_ALERT_CONFIG,
-+			  dev_over_temperature_prog_warn_threshold);
-+}
-+
-+CXL_EXPORT int
-+cxl_cmd_alert_config_get_dev_under_temperature_prog_warn_threshold(
-+	struct cxl_cmd *cmd)
-+{
-+	cmd_get_field_u16(cmd, get_alert_config, GET_ALERT_CONFIG,
-+			  dev_under_temperature_prog_warn_threshold);
-+}
-+
-+CXL_EXPORT int
-+cxl_cmd_alert_config_get_corrected_volatile_mem_err_prog_warn_threshold(
-+	struct cxl_cmd *cmd)
-+{
-+	cmd_get_field_u16(cmd, get_alert_config, GET_ALERT_CONFIG,
-+			  corrected_volatile_mem_err_prog_warn_threshold);
-+}
-+
-+CXL_EXPORT int cxl_cmd_alert_config_get_corrected_pmem_err_prog_warn_thr=
-eshold(
-+	struct cxl_cmd *cmd)
-+{
-+	cmd_get_field_u16(cmd, get_alert_config, GET_ALERT_CONFIG,
-+			  corrected_pmem_err_prog_warn_threshold);
-+}
-+
- CXL_EXPORT struct cxl_cmd *cxl_cmd_new_get_health_info(
- 		struct cxl_memdev *memdev)
- {
-diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index 8bb91e0..d63fde9 100644
---- a/cxl/lib/libcxl.sym
-+++ b/cxl/lib/libcxl.sym
-@@ -217,3 +217,26 @@ global:
- 	cxl_decoder_get_max_available_extent;
- 	cxl_decoder_get_region;
- } LIBCXL_2;
-+
-+LIBCXL_4 {
-+global:
-+	cxl_cmd_new_get_alert_config;
-+	cxl_cmd_alert_config_life_used_prog_warn_threshold_valid;
-+	cxl_cmd_alert_config_dev_over_temperature_prog_warn_threshold_valid;
-+	cxl_cmd_alert_config_dev_under_temperature_prog_warn_threshold_valid;
-+	cxl_cmd_alert_config_corrected_volatile_mem_err_prog_warn_threshold_val=
-id;
-+	cxl_cmd_alert_config_corrected_pmem_err_prog_warn_threshold_valid;
-+	cxl_cmd_alert_config_life_used_prog_warn_threshold_writable;
-+	cxl_cmd_alert_config_dev_over_temperature_prog_warn_threshold_writable;
-+	cxl_cmd_alert_config_dev_under_temperature_prog_warn_threshold_writable=
-;
-+	cxl_cmd_alert_config_corrected_volatile_mem_err_prog_warn_threshold_wri=
-table;
-+	cxl_cmd_alert_config_corrected_pmem_err_prog_warn_threshold_writable;
-+	cxl_cmd_alert_config_get_life_used_crit_alert_threshold;
-+	cxl_cmd_alert_config_get_life_used_prog_warn_threshold;
-+	cxl_cmd_alert_config_get_dev_over_temperature_crit_alert_threshold;
-+	cxl_cmd_alert_config_get_dev_under_temperature_crit_alert_threshold;
-+	cxl_cmd_alert_config_get_dev_over_temperature_prog_warn_threshold;
-+	cxl_cmd_alert_config_get_dev_under_temperature_prog_warn_threshold;
-+	cxl_cmd_alert_config_get_corrected_volatile_mem_err_prog_warn_threshold=
-;
-+	cxl_cmd_alert_config_get_corrected_pmem_err_prog_warn_threshold;
-+} LIBCXL_3;
-diff --git a/cxl/lib/private.h b/cxl/lib/private.h
-index 437eade..777c6f1 100644
---- a/cxl/lib/private.h
-+++ b/cxl/lib/private.h
-@@ -228,6 +228,44 @@ struct cxl_cmd_get_health_info {
- 	le32 pmem_errors;
- } __attribute__((packed));
-=20
-+/* CXL 3.0 8.2.9.8.3.2 Get Alert Configuration */
-+struct cxl_cmd_get_alert_config {
-+	u8 valid_alerts;
-+	u8 programmable_alerts;
-+	u8 life_used_crit_alert_threshold;
-+	u8 life_used_prog_warn_threshold;
-+	le16 dev_over_temperature_crit_alert_threshold;
-+	le16 dev_under_temperature_crit_alert_threshold;
-+	le16 dev_over_temperature_prog_warn_threshold;
-+	le16 dev_under_temperature_prog_warn_threshold;
-+	le16 corrected_volatile_mem_err_prog_warn_threshold;
-+	le16 corrected_pmem_err_prog_warn_threshold;
-+} __attribute__((packed));
-+
-+/* CXL 3.0 8.2.9.8.3.2 Get Alert Configuration Byte 0 Valid Alerts */
-+#define CXL_CMD_ALERT_CONFIG_VALID_ALERTS_LIFE_USED_PROG_WARN_THRESHOLD_=
-MASK   \
-+	BIT(0)
-+#define CXL_CMD_ALERT_CONFIG_VALID_ALERTS_DEV_OVER_TEMPERATURE_PROG_WARN=
-_THRESHOLD_MASK \
-+	BIT(1)
-+#define CXL_CMD_ALERT_CONFIG_VALID_ALERTS_DEV_UNDER_TEMPERATURE_PROG_WAR=
-N_THRESHOLD_MASK \
-+	BIT(2)
-+#define CXL_CMD_ALERT_CONFIG_VALID_ALERTS_CORR_VOLATILE_MEM_ERR_PROG_WAR=
-N_THRESHOLD_MASK \
-+	BIT(3)
-+#define CXL_CMD_ALERT_CONFIG_VALID_ALERTS_CORR_PMEM_ERR_PROG_WARN_THRESH=
-OLD_MASK \
-+	BIT(4)
-+
-+/* CXL 3.0 8.2.9.8.3.2 Get Alert Configuration Byte 1 Programmable Alert=
-s */
-+#define CXL_CMD_ALERT_CONFIG_PROG_ALERTS_LIEF_USED_PROG_WARN_THRESHOLD_M=
-ASK    \
-+	BIT(0)
-+#define CXL_CMD_ALERT_CONFIG_PROG_ALERTS_DEV_OVER_TEMPERATURE_PROG_WARN_=
-THRESHOLD_MASK \
-+	BIT(1)
-+#define CXL_CMD_ALERT_CONFIG_PROG_ALERTS_DEV_UNDER_TEMPERATURE_PROG_WARN=
-_THRESHOLD_MASK \
-+	BIT(2)
-+#define CXL_CMD_ALERT_CONFIG_PROG_ALERTS_CORR_VOLATILE_MEM_ERR_PROG_WARN=
-_THRESHOLD_MASK \
-+	BIT(3)
-+#define CXL_CMD_ALERT_CONFIG_PROG_ALERTS_CORR_PMEM_ERR_PROG_WARN_THRESHO=
-LD_MASK \
-+	BIT(4)
-+
- struct cxl_cmd_get_partition {
- 	le64 active_volatile;
- 	le64 active_persistent;
-diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index 9fe4e99..8b4b182 100644
---- a/cxl/libcxl.h
-+++ b/cxl/libcxl.h
-@@ -354,6 +354,41 @@ int cxl_cmd_health_info_get_temperature(struct cxl_c=
-md *cmd);
- int cxl_cmd_health_info_get_dirty_shutdowns(struct cxl_cmd *cmd);
- int cxl_cmd_health_info_get_volatile_errors(struct cxl_cmd *cmd);
- int cxl_cmd_health_info_get_pmem_errors(struct cxl_cmd *cmd);
-+struct cxl_cmd *cxl_cmd_new_get_alert_config(struct cxl_memdev *memdev);
-+int cxl_cmd_alert_config_life_used_prog_warn_threshold_valid(
-+	struct cxl_cmd *cmd);
-+int cxl_cmd_alert_config_dev_over_temperature_prog_warn_threshold_valid(
-+	struct cxl_cmd *cmd);
-+int cxl_cmd_alert_config_dev_under_temperature_prog_warn_threshold_valid=
-(
-+	struct cxl_cmd *cmd);
-+int cxl_cmd_alert_config_corrected_volatile_mem_err_prog_warn_threshold_=
-valid(
-+	struct cxl_cmd *cmd);
-+int cxl_cmd_alert_config_corrected_pmem_err_prog_warn_threshold_valid(
-+	struct cxl_cmd *cmd);
-+int cxl_cmd_alert_config_life_used_prog_warn_threshold_writable(
-+	struct cxl_cmd *cmd);
-+int cxl_cmd_alert_config_dev_over_temperature_prog_warn_threshold_writab=
-le(
-+	struct cxl_cmd *cmd);
-+int cxl_cmd_alert_config_dev_under_temperature_prog_warn_threshold_writa=
-ble(
-+	struct cxl_cmd *cmd);
-+int cxl_cmd_alert_config_corrected_volatile_mem_err_prog_warn_threshold_=
-writable(
-+	struct cxl_cmd *cmd);
-+int cxl_cmd_alert_config_corrected_pmem_err_prog_warn_threshold_writable=
-(
-+	struct cxl_cmd *cmd);
-+int cxl_cmd_alert_config_get_life_used_crit_alert_threshold(struct cxl_c=
-md *cmd);
-+int cxl_cmd_alert_config_get_life_used_prog_warn_threshold(struct cxl_cm=
-d *cmd);
-+int cxl_cmd_alert_config_get_dev_over_temperature_crit_alert_threshold(
-+	struct cxl_cmd *cmd);
-+int cxl_cmd_alert_config_get_dev_under_temperature_crit_alert_threshold(
-+	struct cxl_cmd *cmd);
-+int cxl_cmd_alert_config_get_dev_over_temperature_prog_warn_threshold(
-+	struct cxl_cmd *cmd);
-+int cxl_cmd_alert_config_get_dev_under_temperature_prog_warn_threshold(
-+	struct cxl_cmd *cmd);
-+int cxl_cmd_alert_config_get_corrected_volatile_mem_err_prog_warn_thresh=
++	rc =3D cxl_cmd_alert_config_get_dev_under_temperature_crit_alert_thresh=
 old(
-+	struct cxl_cmd *cmd);
-+int cxl_cmd_alert_config_get_corrected_pmem_err_prog_warn_threshold(
-+	struct cxl_cmd *cmd);
- struct cxl_cmd *cxl_cmd_new_read_label(struct cxl_memdev *memdev,
- 		unsigned int offset, unsigned int length);
- ssize_t cxl_cmd_read_label_get_payload(struct cxl_cmd *cmd, void *buf,
++		cmd);
++	jobj =3D json_object_new_int(rc);
++	if (jobj)
++		json_object_object_add(
++			jalert_config,
++			"dev_under_temperature_crit_alert_threshold", jobj);
++
++	rc =3D cxl_cmd_alert_config_get_dev_over_temperature_prog_warn_threshol=
+d(
++		cmd);
++	jobj =3D json_object_new_int(rc);
++	if (jobj)
++		json_object_object_add(
++			jalert_config,
++			"dev_over_temperature_prog_warn_threshold", jobj);
++
++	rc =3D cxl_cmd_alert_config_get_dev_under_temperature_prog_warn_thresho=
+ld(
++		cmd);
++	jobj =3D json_object_new_int(rc);
++	if (jobj)
++		json_object_object_add(
++			jalert_config,
++			"dev_under_temperature_prog_warn_threshold", jobj);
++
++	rc =3D cxl_cmd_alert_config_get_corrected_volatile_mem_err_prog_warn_th=
+reshold(
++		cmd);
++	jobj =3D json_object_new_int(rc);
++	if (jobj)
++		json_object_object_add(
++			jalert_config,
++			"corr_volatile_mem_err_prog_warn_threshold", jobj);
++
++	rc =3D cxl_cmd_alert_config_get_corrected_pmem_err_prog_warn_threshold(
++		cmd);
++	jobj =3D json_object_new_int(rc);
++	if (jobj)
++		json_object_object_add(jalert_config,
++				       "corr_pmem_err_prog_warn_threshold",
++				       jobj);
++
++	cxl_cmd_unref(cmd);
++	return jalert_config;
++
++err_cmd:
++	cxl_cmd_unref(cmd);
++err_jobj:
++	json_object_put(jalert_config);
++	return NULL;
++}
++
+ /*
+  * Present complete view of memdev partition by presenting fields from
+  * both GET_PARTITION_INFO and IDENTIFY mailbox commands.
+@@ -330,6 +509,12 @@ struct json_object *util_cxl_memdev_to_json(struct c=
+xl_memdev *memdev,
+ 			json_object_object_add(jdev, "health", jobj);
+ 	}
+=20
++	if (flags & UTIL_JSON_ALERT_CONFIG) {
++		jobj =3D util_cxl_memdev_alert_config_to_json(memdev, flags);
++		if (jobj)
++			json_object_object_add(jdev, "alert_config", jobj);
++	}
++
+ 	serial =3D cxl_memdev_get_serial(memdev);
+ 	if (serial < ULLONG_MAX) {
+ 		jobj =3D util_json_object_hex(serial, flags);
+diff --git a/cxl/list.c b/cxl/list.c
+index 8c48fbb..5dd76b9 100644
+--- a/cxl/list.c
++++ b/cxl/list.c
+@@ -52,8 +52,9 @@ static const struct option options[] =3D {
+ 		    "include memory device health information"),
+ 	OPT_BOOLEAN('I', "partition", &param.partition,
+ 		    "include memory device partition information"),
+-	OPT_INCR('v', "verbose", &param.verbose,
+-		 "increase output detail"),
++	OPT_BOOLEAN('A', "alert-config", &param.alert_config,
++		    "include alert configuration information"),
++	OPT_INCR('v', "verbose", &param.verbose, "increase output detail"),
+ #ifdef ENABLE_DEBUG
+ 	OPT_BOOLEAN(0, "debug", &debug, "debug list walk"),
+ #endif
+@@ -113,6 +114,7 @@ int cmd_list(int argc, const char **argv, struct cxl_=
+ctx *ctx)
+ 	case 3:
+ 		param.health =3D true;
+ 		param.partition =3D true;
++		param.alert_config =3D true;
+ 		/* fallthrough */
+ 	case 2:
+ 		param.idle =3D true;
+diff --git a/util/json.h b/util/json.h
+index 73bb9f0..ea370df 100644
+--- a/util/json.h
++++ b/util/json.h
+@@ -20,6 +20,7 @@ enum util_json_flags {
+ 	UTIL_JSON_HEALTH	=3D (1 << 10),
+ 	UTIL_JSON_TARGETS	=3D (1 << 11),
+ 	UTIL_JSON_PARTITION	=3D (1 << 12),
++	UTIL_JSON_ALERT_CONFIG	=3D (1 << 13),
+ };
+=20
+ void util_display_json_array(FILE *f_out, struct json_object *jarray,
 --=20
 2.30.2
 
