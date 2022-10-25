@@ -2,252 +2,169 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09377FA373D
-	for <linux-cxl@archiver.kernel.org>; Tue, 25 Oct 2022 23:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D305C38A2D
+	for <linux-cxl@archiver.kernel.org>; Tue, 25 Oct 2022 23:55:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232042AbiJYXZm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 25 Oct 2022 19:25:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41398 "EHLO
+        id S233035AbiJYXzh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 25 Oct 2022 19:55:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230345AbiJYXZk (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 25 Oct 2022 19:25:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A23767CB5C;
-        Tue, 25 Oct 2022 16:25:38 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3ECA361BE6;
-        Tue, 25 Oct 2022 23:25:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72E2FC433C1;
-        Tue, 25 Oct 2022 23:25:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666740337;
-        bh=JI9+G0utVnDISU3eKZ+IFSXABRRbK+KjVSsQJwwU+Lo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=URH91g8mS5F8lgKSVJTZwdFSqTsaEirhrMyXpLE/1JjH0I7JiaE01p5jDLPLhbMCm
-         Q6ubwSSAHOqaVtMS8RlD0bJoC5Vie9m7Ptokieonj+zdltycmoVosY+Cff9VjWkM8a
-         ul6Xy2vFGmfunP2ytWGsHxmvGl4NDyAbqIUqD2anu5N0JJ8xA5F4a0BjBX26+SKMCs
-         W1jSxoqhsZxYAmKo/YDBVKEHp0VGnVnhtfqSl88X5UHoO2iAYbYpFPYhBjaRW03oNj
-         ehbK3nsoNDLb7Mepg0K5IAt6yqpUlYeEik7K60k9ABN2f+KiYgOWZRjkc+HzjX1sG+
-         kee7PK3CqBO1A==
-Date:   Tue, 25 Oct 2022 18:25:35 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
+        with ESMTP id S232960AbiJYXze (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 25 Oct 2022 19:55:34 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2075.outbound.protection.outlook.com [40.107.223.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8804151A35;
+        Tue, 25 Oct 2022 16:55:33 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JohEjFNC0AltGTegJ4llLRzc+0Vi1LrX966+T+t/o8rR92fZodblCJZzQCf97uW6IE7KP7xWQppkkAmeVaXIwJK9h7S5O6DVcWfZiX3/ibOL3wmq2FVVCL4o0pbddNwm5ZHLPKZXyyhu2mlYRyYXL3xUOhDdgEkgiNbt2qBfom85F6TaEWEQg5ps3jRQfozV0F17jV64A3cWPhX2fRszjlOTRHREf9L+tt8a/cggJhyVGp5SfhBPm+ID4kZgIPMH9irUpo4F7E1MNTMzfRdwBY9hlpHyqYTZZ0a7xK/7oYT5x19lFgcbNwiHX+ZI5WQDn0D5k/Pja6+QMaID3GSrAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NhfvWRkfUq1BGBcalWKl5s7d4WBpxkPQFvx++oTpJto=;
+ b=A8+/jkcBKUT138YBitY4buKCcUFd5epDA1cCHAHy9NhjX5c8Ag1uC/knrFchkCBQqOb6f+567tz8jHRCZMuixUqS9qCzt5EJg58UaDsJU/AYHvqZ9ZK2IcVpbB28EeKLydfveAl9dfRRnX5C1G27slUMy7YUMw82y+uMu05jzmay84PqwrtDXCiW9KuLtLUgihr5SO1615hDPYRxM2euvsXhvn8B6GPdNZ1vomgbsNnJnZzRv2GgLuLpg8vH4un+X8xlj8mS87vwJcTA6IVmBeMP6E6hkBpv9vKnS6yPLif+RrgOZiCFp3LPMGfjWqCg3ri8WMIYtuQqvebhTQtT2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NhfvWRkfUq1BGBcalWKl5s7d4WBpxkPQFvx++oTpJto=;
+ b=iNJIWlByPRNVYjhJ/uzEStezuQIS6uYNn7Hhvtkwtg3t/nTHwAlEa2SMl3r0OikCCK99sL7yhCKmo4+5ThkUEmvP+c/9akCppdAiTZ37pTZlEf1cwJh+XFFutmQXHLXbmEE26S55lv1lZZL7WiGDPN9W2gHHNTDydMQsNqmhTlQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BYAPR12MB2869.namprd12.prod.outlook.com (2603:10b6:a03:132::30)
+ by MN2PR12MB4320.namprd12.prod.outlook.com (2603:10b6:208:15f::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.28; Tue, 25 Oct
+ 2022 23:55:30 +0000
+Received: from BYAPR12MB2869.namprd12.prod.outlook.com
+ ([fe80::ea23:1c31:9580:cca]) by BYAPR12MB2869.namprd12.prod.outlook.com
+ ([fe80::ea23:1c31:9580:cca%4]) with mapi id 15.20.5746.028; Tue, 25 Oct 2022
+ 23:55:30 +0000
+Message-ID: <151c093f-1e92-1c8e-957b-8781e488626a@amd.com>
+Date:   Tue, 25 Oct 2022 16:55:24 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 0/2] efi/cper, cxl: Decode CXL Protocol Errors CPER
+Content-Language: en-US
+To:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>, dave.jiang@intel.com,
-        alison.schofield@intel.com, bwidawsk@kernel.org,
-        vishal.l.verma@intel.com, a.manzanares@samsung.com,
-        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 1/2] cxl/pci: Add generic MSI-X/MSI irq support
-Message-ID: <20221025232535.GA579167@bhelgaas>
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Robert Richter <rrichter@amd.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Terry Bowman <terry.bowman@amd.com>,
+        Ard Biesheuvel <ardb@kernel.org>
+References: <20221007211714.71129-1-Smita.KoralahalliChannabasappa@amd.com>
+ <63531a9dd51b9_4da32946c@dwillia2-xfh.jf.intel.com.notmuch>
+From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+In-Reply-To: <63531a9dd51b9_4da32946c@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH0PR03CA0119.namprd03.prod.outlook.com
+ (2603:10b6:610:cd::34) To BYAPR12MB2869.namprd12.prod.outlook.com
+ (2603:10b6:a03:132::30)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221024133633.00000467@huawei.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2869:EE_|MN2PR12MB4320:EE_
+X-MS-Office365-Filtering-Correlation-Id: 67fe08bb-7494-4992-4b7c-08dab6e46581
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: CYwXLBqEbd7ZSCz42dNepz2GKKdSE1kZyhxFUv7GfxO12qoksUEgtU6M7oVeXWz57gqk4Ag5V/H7J1iNuAhSEKhRwnSyFRy0psvueBDYTxjojxiOicOtkw9eL5Y00ADQBvRV7i7n9COXaAuNUaS9r+epkxLLNSeRRogknQbYYyUl7qkA5wpFU0VDpYHLCvg/CU4qBPE+kdy5EvNMtneme+MCLYr/jU9D9cXjJVIRqHxrGLOrEk00K/vkTDDa0uD76276sHfT+d0++Pf0bP1aTN9QvpilHdeXUnGK6Ir65xsmbswEG3Zqv+P7bsyX/zODZBksC/CgbNEwjB5kJ9DGVZ9QIVfVVvrkDaaQZl+cMUz2abdSfTYhdQFgQFMf4vYM3/Hl4uokE4NB9EDcWBUqBgQgVDzBUp70owuSncx5MEc6Atuk4nX2B6ApcG9bD0nKZTNjYUe2JeGLCPKF3VjiEjbE+B02kCULm+k64PEHCRqccNKD+cjS8QhnVMhHZ7NeV6xKfP3QMEvFm7blofuXy+gIdCnVuvtZxRaAr00UcgYB0ybvzzmbNzt49UCJtgkcCmmR/hMinLKd9BQC9dG1TMa8Kialv1fMbsoJQ48GVNCvx0/nVqFw2gpoJ4PINZIs5Aq1JvEYdCEuvf4yTluT1Oj/Zxf1GGHQryG/CffpDuwcv26iv6P+x+cwOjHJ6zFiN9ae47grgwCE76BI83RfqoS/pxdJTvJeHFlZKDULn1Iztkl5c2qy22WwgPWSA4fBL6sR/GOBz5WG5OMysZhWlTFrtUsRS2CTdspJozowwiQ=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(376002)(39860400002)(396003)(366004)(136003)(346002)(451199015)(36756003)(83380400001)(186003)(2616005)(38100700002)(4326008)(66556008)(8676002)(66946007)(66476007)(8936002)(41300700001)(5660300002)(2906002)(316002)(31696002)(86362001)(54906003)(6666004)(478600001)(53546011)(6512007)(6506007)(6486002)(26005)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?N2NyWW16UDdUQTVYei9SMjA5Uk9wcEhmOHdVNGN2NHVEVUNRMWUxQmd4c3k5?=
+ =?utf-8?B?ZGMrSEZOaEMwQmxrazNoUFV4TnpMTVpQdXJXb3pmckozc1ZpN3plaXVYWXNw?=
+ =?utf-8?B?M2NFRzBKVG1WUEhpM3FBNU5CQ3ZqQ2ZZbDVzdW1VM0J3MWtPcTdhbmExa00r?=
+ =?utf-8?B?czVFUjQyRXFqRnNkeStJbStXc2xlL2w0ZUFNQ1FtUzdRd0pjWjVSbGFIUlZ4?=
+ =?utf-8?B?Nm94ZVpLYUVGd3V6SWhkTFZPWkFYQWcxSFpPVEw2QkVib2orcjVLYzVXTmRC?=
+ =?utf-8?B?WEViVTNBb3FrN0dpVXRERTNadExDaTlaMSs2bkVRV3hCb3haZ28wSk1mWkhW?=
+ =?utf-8?B?KzdNQ1Y4U3FnenRVRkdwa1NqRU1OZ3BaU1N3STdGeG9xa1RiZkFvUWhqOVE5?=
+ =?utf-8?B?cGlRTUFMQ3BKR2VoK0RpeC94UWxSUU85ajdmWE03Ly9NTkFvTzBtNGZxZXNB?=
+ =?utf-8?B?TFV1dHdmRFZudVNBeGJpczlwcFY0TCtBckZabU5sOFpkUzNVN1dGWG5ySnJy?=
+ =?utf-8?B?blhaZHJaUXM0Vjg4b1U5NWgxOXg2NjRSN2QzOURzQWtIenFnWjlMd0xSYjFh?=
+ =?utf-8?B?ZmZKUlBzVStjMnBEVCthNkIwQ1dBeDYxT2t2NW1jLzkxL25pMnJ5NUNpR1N1?=
+ =?utf-8?B?R1pHK0paRzQxQ1NPeWg1UGw5d2J0TkRBNDZhbUJJekoxbUU4S2NpdHZPTGs5?=
+ =?utf-8?B?VVBpampUenFtRUFaTW1LbWlmVUxkYUNEZXFSVTNRMURNYk5oMmRQSG1wOXNQ?=
+ =?utf-8?B?ZEhRWjIyL2FEeERySWp5VXBBa0lVeERnZithaVEvRUZtY2poSzlrU1FnWjNM?=
+ =?utf-8?B?N0NuZFZmTUx1My9RMEpJZkp6SkVxMFlCK3RWNWlSYkxLb1NmUEhkalMvK0dP?=
+ =?utf-8?B?aEFEN2pPNDFtaTh5ZFFpdEpnVXdBQmROV2JMd1JIQTVaTExPelhKcHFkSEEz?=
+ =?utf-8?B?Z1VKQlNCQWhQOEZhWWNtaXFqTDY4OGpLWXlidExIaTdCZ1F3UW9iRWRXcmFR?=
+ =?utf-8?B?eEpnS3hwS0RvN1REbnd2amNWVDhlSm1kejZlQk5KVGtKaG90UEtqY0RjOVFz?=
+ =?utf-8?B?S0hPUXpwa1BNdG9KSU5Salp4KzZoR05zMElZSkU0cUF6UVJxSHAwTHBrOXAv?=
+ =?utf-8?B?ZkorQzNQaG0zMVhBTE1GTjV6RzJQcWlkem1wLzhkd3JnZkptMG91UjdIUWVl?=
+ =?utf-8?B?Y3FuQXJmZ21yQVcxdVM3QnY0Y3FDT2g4ZnpQMWZwamtIM015QWIzdTNpNUZk?=
+ =?utf-8?B?bkJtUWZRWXdSM1BKTktHOFZEWmgwK2dhakZwSkMrQlRFN2sxSW5HRnhNZVMy?=
+ =?utf-8?B?d3h3WC9SZFR6YnZ2VzZZK0hoYjV4dXF0MFVOS2F6WVpBL3ZKUmh5THZpbnh5?=
+ =?utf-8?B?bWl0VTlMcGtPYk9QYWNjcDU0bzVaekZwaUJ4Vit5Nld5SDRBS1h5U1Vid0o3?=
+ =?utf-8?B?azVFbGpvWWJDZXpSN2dWTVFHUkMzQTFDaVBoeWZSbGkxS2J1ZUQvVUcraERJ?=
+ =?utf-8?B?L011WWNZc3l6aW9PWlhkZVRIM1czM21rZHFHSEJqMWpoSDE4cWliNmxoZnJI?=
+ =?utf-8?B?M2dhTFBJaTlVTG90dG8xZzJPVlJiRW5MZjBvemc2RXdhNnBWeDBYd2VjYzQv?=
+ =?utf-8?B?a1lhUXNrakJybUE2b0hFdDlxY3BNYXBJbHZmbFluYndDemJBL2J5dzV1QW5z?=
+ =?utf-8?B?aVlQejBjZGsybVFiWFBKZDZVYkFOV095YSszUDMzNGE5bWtnWkN3aVZiOWw3?=
+ =?utf-8?B?S0JUck5QT3NDVDdxSHhhc1crMUZDOWFtM0t6cHNEK2FVUFlUeU1Oc05GeGxU?=
+ =?utf-8?B?TWxXSXNXU05laDBiYnhvT04vSVlhUUZMeFNhNnhzdTRlQXUza29McEhnSmtB?=
+ =?utf-8?B?RG4rUFlpVHJ2L3dhdXhmbzArOWdOOE9pemZFeW13akpFNDA2SWNHOWxHZGlo?=
+ =?utf-8?B?SURiaGtTRUxyT3d2RFVQTUc1TU1lMCtycVVkbXhKVUVzd2NxR3Q2VmZZTmZU?=
+ =?utf-8?B?SlJOSFR4VmFob004L1lKRU9CcVJYejNzREZBNVhJQjArWjl5SlA0Z3RJSXIz?=
+ =?utf-8?B?NDV5VlBFUFIvN085dWk1eWh5bEtCU1JxVmlRMmZaR3BDV3RIZzljUlcyVVlU?=
+ =?utf-8?Q?ZUS9UIforbkvYJKvFlgCJYGRD?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 67fe08bb-7494-4992-4b7c-08dab6e46581
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2022 23:55:29.9523
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UX4L0azO91Rr1vvLmjiwPAhMk3k9T9NyZdzEKrWqc5OtgKUZp9y+Q4CVe/wfSDlYQP4+3GFLz5fML8Sx/HtFYw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4320
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-[+cc Christoph, beginning of thread https://lore.kernel.org/r/20221018030010.20913-2-dave@stgolabs.net]
+Hi Dan,
 
-On Mon, Oct 24, 2022 at 01:36:33PM +0100, Jonathan Cameron wrote:
-> On Sun, 23 Oct 2022 19:08:57 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
-> > Ira Weiny wrote:
-> > > On Sat, Oct 22, 2022 at 03:05:45PM -0700, Dan Williams wrote:  
-> > > > Davidlohr Bueso wrote:  
-> > > > > Introduce a generic irq table for CXL components/features that can have
-> > > > > standard irq support - DOE requires dynamic vector sizing and is not
-> > > > > considered here. For now the table is empty.
-> > > > > 
-> > > > > Create an infrastructure to query the max vectors required for the CXL
-> > > > > device. Upon successful allocation, users can plug in their respective isr
-> > > > > at any point thereafter, which is supported by a new cxlds->has_irq flag,
-> > > > > for example, if the irq setup is not done in the PCI driver, such as
-> > > > > the case of the CXL-PMU.
-> > > > > 
-> > > > > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> > > > > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> > > > > ---
-> > > > >  drivers/cxl/cxlmem.h |  3 ++
-> > > > >  drivers/cxl/pci.c    | 72 ++++++++++++++++++++++++++++++++++++++++++++
-> > > > >  2 files changed, 75 insertions(+)
-> > > > > 
-> > > > > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > > > > index 88e3a8e54b6a..72b69b003302 100644
-> > > > > --- a/drivers/cxl/cxlmem.h
-> > > > > +++ b/drivers/cxl/cxlmem.h
-> > > > > @@ -211,6 +211,7 @@ struct cxl_endpoint_dvsec_info {
-> > > > >   * @info: Cached DVSEC information about the device.
-> > > > >   * @serial: PCIe Device Serial Number
-> > > > >   * @doe_mbs: PCI DOE mailbox array
-> > > > > + * @has_irq: PCIe MSI-X/MSI support
-> > > > >   * @mbox_send: @dev specific transport for transmitting mailbox commands
-> > > > >   *
-> > > > >   * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
-> > > > > @@ -247,6 +248,8 @@ struct cxl_dev_state {
-> > > > >  
-> > > > >  	struct xarray doe_mbs;
-> > > > >  
-> > > > > +	bool has_irq;
-> > > > > +
-> > > > >  	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
-> > > > >  };
-> > > > >  
-> > > > > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > > > > index faeb5d9d7a7a..9c3e95ebaa26 100644
-> > > > > --- a/drivers/cxl/pci.c
-> > > > > +++ b/drivers/cxl/pci.c
-> > > > > @@ -428,6 +428,73 @@ static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
-> > > > >  	}
-> > > > >  }
-> > > > >  
-> > > > > +/**
-> > > > > + * struct cxl_irq_cap - CXL feature that is capable of receiving MSI-X/MSI irqs.
-> > > > > + *
-> > > > > + * @name: Name of the device/component generating this interrupt.
-> > > > > + * @get_max_msgnum: Get the feature's largest interrupt message number.  If the
-> > > > > + *		    feature does not have the Interrupt Supported bit set, then
-> > > > > + *		    return -1.
-> > > > > + */
-> > > > > +struct cxl_irq_cap {
-> > > > > +	const char *name;
-> > > > > +	int (*get_max_msgnum)(struct cxl_dev_state *cxlds);  
-> > > > 
-> > > > Why is this a callback, why not just have the features populate their
-> > > > irq numbers?  
-> > > 
-> > > I think we have decided to forgo the callback but I'm not sure what you mean by
-> > > 'populate their irq numbers'?
-> > >   
-> > > >   
-> > > > > +};
-> > > > > +
-> > > > > +static const struct cxl_irq_cap cxl_irq_cap_table[] = {
-> > > > > +	NULL
-> > > > > +};
-> > > > > +
-> > > > > +static void cxl_pci_free_irq_vectors(void *data)
-> > > > > +{
-> > > > > +	pci_free_irq_vectors(data);
-> > > > > +}
-> > > > > +
-> > > > > +/*
-> > > > > + * Attempt to allocate the largest amount of necessary vectors.
-> > > > > + *
-> > > > > + * Returns 0 upon a successful allocation of *all* vectors, or a
-> > > > > + * negative value otherwise.
-> > > > > + */
-> > > > > +static int cxl_pci_alloc_irq_vectors(struct cxl_dev_state *cxlds)
-> > > > > +{
-> > > > > +	struct device *dev = cxlds->dev;
-> > > > > +	struct pci_dev *pdev = to_pci_dev(dev);
-> > > > > +	int rc, i, vectors = -1;
-> > > > > +
-> > > > > +	for (i = 0; i < ARRAY_SIZE(cxl_irq_cap_table); i++) {
-> > > > > +		int irq;
-> > > > > +
-> > > > > +		if (!cxl_irq_cap_table[i].get_max_msgnum)
-> > > > > +			continue;
-> > > > > +
-> > > > > +		irq = cxl_irq_cap_table[i].get_max_msgnum(cxlds);
-> > > > > +		vectors = max_t(int, irq, vectors);
-> > > > > +	}  
-> > > > 
-> > > > Forgive me if I have missed something, I only look at interrupt enable
-> > > > code once every few years, and the APIs are always a bit different, but
-> > > > is this not too early to read the message number? The number is not
-> > > > stable until either MSI or MSI-X has been selected below at
-> > > > pci_alloc_irq_vectors() time?  
-> > >  
-> > > Well I keep getting wrapped around the axle on this one too.
-> > > 
-> > > This all started back when Jonathan originally attempted to
-> > > allocate the maximum number of vectors a device _could_
-> > > allocate.  But it was recommended that we determine the max
-> > > number first then allocate that number.
-> > > 
-> > > This seems like a chicken and egg issue.  How is the number not
-> > > stable before calling pci_alloc_irq_vectors() when you need the
-> > > max msg number in that call?  
-> > 
-> > Are we talking about the same thing? I am talking about the value in the
-> > "Interrupt Message Number" field. That depends on whether MSI or MSI-X
-> > gets enabled. The number of vectors the device can support is static.
-> > 
-> > Since CXL is such an a la carte spec I think this is situation to just
-> > specify a large number of amx vectors to pci_alloc_irq_vectors() and
-> > then find out after the fact if all of the interrupt generators that
-> > today's cxl_pci knows about in the device each got their own vector.
-> 
-> I'd misunderstood how this worked and not read the spec :( I wrongly
-> thought portdrv did the query first and allocated the vectors after,
-> but that's not the case.  It first allocates max entries, then frees
-> them all and then allocates the ones that we find present.  We
-> should probably look to do something similar to that though I'm not
-> sure even that code is always optimal.
-> 
-> https://elixir.bootlin.com/linux/v6.1-rc2/source/drivers/pci/pcie/portdrv_core.c#L101
-> 
-> In short that calls:
-> /* Allocate the maximum possible number of MSI/MSI-X vectors */
-> nr_entries = pci_alloc_irq_vectors(dev, 1, PCIE_PORT_MAX_MSI_ENTRIES,
-> 			PCI_IRQ_MSIX | PCI_IRQ_MSI);
-> 
-> /* See how many and which Interrupt Message Numbers we actually use */
-> nvec = pcie_message_numbers(dev, mask, &pme, &aer, &dpc);
-> 
-> if (nvec != nr_entries) {
-> 	pci_free_irq_vectors(dev);
-> 
-> 	nr_entries = pci_alloc_irq_vectors(dev, nvec, nvec,
-> 			PCI_IRQ_MSIX | PCI_IRQ_MSI);
-> }
-> 
-> My worry here is that the implicit assumption is that the vectors
-> won't move if we reduce the overall number of vectors we are asking
-> for...
-> 
-> However, imagine the case that we have a feature the driver doesn't
-> know about that was previously at a higher vector.  After reducing
-> the vectors allocated the hardware might decide that feature needs
-> its own vector whereas some others can be combined.  Hence we'd end
-> up with a less than ideal packing for the features we actually
-> support.
-> 
-> Could do something iterative to solve this if it actually matters
-> (increase number of vectors until the layout matches what we get
-> with max possible vectors).
+On 10/21/2022 3:18 PM, Dan Williams wrote:
+> Hi Smita,
+>
+> Smita Koralahalli wrote:
+>> This series adds decoding for the CXL Protocol Errors Common Platform
+>> Error Record.
+> Be sure to copy Ard Biesheuvel <ardb@kernel.org>, added, on
+> drivers/firmware/efi/ patches.
+>
+> Along those lines, drivers/cxl/ developers have an idea of what is
+> contained in the new CXL protocol error records and why Linux might want
+> to decode them, others from outside drivers/cxl/ might not. It always
+> helps to have a small summary of the benefit to end users of the
+> motivation to apply a patch set.
 
-Is this cxl code allocating vectors for devices that might also be
-claimed by portdrv?  I assume not because that sounds like a problem.
+Sure, will include in my v2.
 
-Ugh.  I always feel like the portdrv design must be sub-optimal
-because this seems so hard to do cleanly.
+>
+>> Smita Koralahalli (2):
+>>    efi/cper, cxl: Decode CXL Protocol Error Section
+>>    efi/cper, cxl: Decode CXL Error Log
+>>
+>>   drivers/firmware/efi/Makefile   |   2 +-
+>>   drivers/firmware/efi/cper.c     |   9 +++
+>>   drivers/firmware/efi/cper_cxl.c | 108 ++++++++++++++++++++++++++++++++
+>>   drivers/firmware/efi/cper_cxl.h |  58 +++++++++++++++++
+>>   include/linux/cxl_err.h         |  21 +++++++
+>>   5 files changed, 197 insertions(+), 1 deletion(-)
+> I notice no updates for the trace events in ghes_do_proc(), is that next
+> in your queue? That's ok to be a follow-on after v2.
 
-pci_alloc_irq_vectors() has a lot of magic inside it and is great for
-most drivers, but the PCIe service IRQs are definitely unusual and
-maybe it's not the best fit for this situation.
+Sorry, if I haven't understood this right. Are you implying about the 
+"handling"
+of cxl memory errors in ghes_do_proc() or is it just copying of CPER 
+entries to
+tracepoints?
 
-If I understand correctly, Interrupt Message Numbers for all these
-PCIe services (hotplug, AER, DPC, etc) are restricted to 0-31 for both
-MSI and MSI-X, and the reason we don't just allocate 32 vectors all
-the time is to avoid consuming too many IRQs.
+Thanks,
+Smita
 
-The MSI case is ugly because the Interrupt Message Number can change
-when we set Multiple Message Enable.  Maybe we can separate it out and
-have a less than optimal solution for this case, like allocating one
-or two vectors and polling if that's not enough.  I expect most
-devices will support MSI-X.
 
-For MSI-X, the vector table is in a BAR, so IIUC there's no resource
-pressure until we actually assign an IRQ to a vector.  Would it be
-feasible to always allocate vectors 0-31 of the MSI-X Table, and then
-selectively allocate IRQs for the services we need, so we might
-consume 32 MSI-X vectors but only a handful of IRQs?
-
-Bjorn
