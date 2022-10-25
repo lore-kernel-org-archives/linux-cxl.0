@@ -2,193 +2,252 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 883A3ECDFA1
-	for <linux-cxl@archiver.kernel.org>; Tue, 25 Oct 2022 22:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09377FA373D
+	for <linux-cxl@archiver.kernel.org>; Tue, 25 Oct 2022 23:25:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232731AbiJYWau (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 25 Oct 2022 18:30:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49822 "EHLO
+        id S232042AbiJYXZm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 25 Oct 2022 19:25:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232614AbiJYWat (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 25 Oct 2022 18:30:49 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79BD4444BC
-        for <linux-cxl@vger.kernel.org>; Tue, 25 Oct 2022 15:30:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1666737029;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=03WiWi24jZjT8M33f/iFpmzMcN+oScfZ3blTCs6cqtQ=;
-        b=NlmopP8kGkASU/rHlLSzq9FBHNk6jAOrb8HsnmCO5gYzBOYzZRfI1+m53z7bLbj9OGdBth
-        Ege6MXKMulLXMVlzz53nkwEDznz2AS4iEP+Qk+8pXt3YkHcO9x7rKn3HvOtrUgfaHiqPy+
-        LFGkSnZm46jPJNdbZNllnUhQ7zlAALA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-562-s7eD5uDLMiiY1GclK39fPg-1; Tue, 25 Oct 2022 18:30:27 -0400
-X-MC-Unique: s7eD5uDLMiiY1GclK39fPg-1
-Received: by mail-wm1-f71.google.com with SMTP id 133-20020a1c028b000000b003c5e6b44ebaso152371wmc.9
-        for <linux-cxl@vger.kernel.org>; Tue, 25 Oct 2022 15:30:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=03WiWi24jZjT8M33f/iFpmzMcN+oScfZ3blTCs6cqtQ=;
-        b=WagXIKVuB8aU3a3QCwQnz0NPAJrcLjWJTjWSnDCxeRNScam+Kmgjrrcghubq9JE5Yh
-         BX50WZ7qViz0l7lis8GdALT2HSYH1qXxumd9FLBKzxIjmkVGBNO5/QZA2T1EJ5n0wM0d
-         4EjRnffgmQIUXFS3AoxWNvS0gXDdkWbX6OI+ytvJJSJhSIXcuACztidzLyNEhvZCUvjM
-         wB4v7QqMwVjxqEUGWTEVYg76pKttsDMXFsdt/MRrOwGywlfkCnCqtOU402U5L/+23NtW
-         naKKGyXWcE2a8LG0+yCxAFY8q6q6XYToRFEXU+hpsBY/cTXnn/e33+r0bcmU7F4gNulq
-         wcbw==
-X-Gm-Message-State: ACrzQf1FK3oCSC/qo7OpqOpure6XsWxnHioXEumGcqCsqO9wkVy3xRz9
-        uJI5D9UmLlpNeUFtMrPzfEL4ofgZoYR9QaM+wM0aivFXARjh6r1dJeEBo1hChE86XS3c9PruPcM
-        4m1+9KnNIjQsu6nWRAxFd
-X-Received: by 2002:a5d:4409:0:b0:236:6dac:c644 with SMTP id z9-20020a5d4409000000b002366dacc644mr10189776wrq.390.1666737026730;
-        Tue, 25 Oct 2022 15:30:26 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM5f/LlmHrsG84VTDtWqe2/yMz82K80LURMGSlYxhL7teS6xi6yPrtyUo0QfI5n60mzaPcKgHQ==
-X-Received: by 2002:a5d:4409:0:b0:236:6dac:c644 with SMTP id z9-20020a5d4409000000b002366dacc644mr10189767wrq.390.1666737026450;
-        Tue, 25 Oct 2022 15:30:26 -0700 (PDT)
-Received: from redhat.com ([2.55.3.42])
-        by smtp.gmail.com with ESMTPSA id m12-20020a05600c3b0c00b003b47ff307e1sm173185wms.31.2022.10.25.15.30.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Oct 2022 15:30:25 -0700 (PDT)
-Date:   Tue, 25 Oct 2022 18:30:21 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
+        with ESMTP id S230345AbiJYXZk (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 25 Oct 2022 19:25:40 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A23767CB5C;
+        Tue, 25 Oct 2022 16:25:38 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3ECA361BE6;
+        Tue, 25 Oct 2022 23:25:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72E2FC433C1;
+        Tue, 25 Oct 2022 23:25:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666740337;
+        bh=JI9+G0utVnDISU3eKZ+IFSXABRRbK+KjVSsQJwwU+Lo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=URH91g8mS5F8lgKSVJTZwdFSqTsaEirhrMyXpLE/1JjH0I7JiaE01p5jDLPLhbMCm
+         Q6ubwSSAHOqaVtMS8RlD0bJoC5Vie9m7Ptokieonj+zdltycmoVosY+Cff9VjWkM8a
+         ul6Xy2vFGmfunP2ytWGsHxmvGl4NDyAbqIUqD2anu5N0JJ8xA5F4a0BjBX26+SKMCs
+         W1jSxoqhsZxYAmKo/YDBVKEHp0VGnVnhtfqSl88X5UHoO2iAYbYpFPYhBjaRW03oNj
+         ehbK3nsoNDLb7Mepg0K5IAt6yqpUlYeEik7K60k9ABN2f+KiYgOWZRjkc+HzjX1sG+
+         kee7PK3CqBO1A==
+Date:   Tue, 25 Oct 2022 18:25:35 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     qemu-devel@nongnu.org, Ben Widawsky <bwidawsk@kernel.org>,
-        linux-cxl@vger.kernel.org,
-        Huai-Cheng Kuo <hchkuo@avery-design.com.tw>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Gregory Price <gregory.price@memverge.com>, ira.weiny@intel.com
-Subject: Re: [PATCH v9 0/5] QEMU PCIe DOE for PCIe 4.0/5.0 and CXL 2.
-Message-ID: <20221025183007-mutt-send-email-mst@kernel.org>
-References: <20221014151045.24781-1-Jonathan.Cameron@huawei.com>
- <20221025230621.00006ccb@huawei.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>, dave.jiang@intel.com,
+        alison.schofield@intel.com, bwidawsk@kernel.org,
+        vishal.l.verma@intel.com, a.manzanares@samsung.com,
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 1/2] cxl/pci: Add generic MSI-X/MSI irq support
+Message-ID: <20221025232535.GA579167@bhelgaas>
 MIME-Version: 1.0
-In-Reply-To: <20221025230621.00006ccb@huawei.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20221024133633.00000467@huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Queued for next pull, thanks!
+[+cc Christoph, beginning of thread https://lore.kernel.org/r/20221018030010.20913-2-dave@stgolabs.net]
 
-On Tue, Oct 25, 2022 at 11:06:39PM +0100, Jonathan Cameron wrote:
+On Mon, Oct 24, 2022 at 01:36:33PM +0100, Jonathan Cameron wrote:
+> On Sun, 23 Oct 2022 19:08:57 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
+> > Ira Weiny wrote:
+> > > On Sat, Oct 22, 2022 at 03:05:45PM -0700, Dan Williams wrote:  
+> > > > Davidlohr Bueso wrote:  
+> > > > > Introduce a generic irq table for CXL components/features that can have
+> > > > > standard irq support - DOE requires dynamic vector sizing and is not
+> > > > > considered here. For now the table is empty.
+> > > > > 
+> > > > > Create an infrastructure to query the max vectors required for the CXL
+> > > > > device. Upon successful allocation, users can plug in their respective isr
+> > > > > at any point thereafter, which is supported by a new cxlds->has_irq flag,
+> > > > > for example, if the irq setup is not done in the PCI driver, such as
+> > > > > the case of the CXL-PMU.
+> > > > > 
+> > > > > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> > > > > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> > > > > ---
+> > > > >  drivers/cxl/cxlmem.h |  3 ++
+> > > > >  drivers/cxl/pci.c    | 72 ++++++++++++++++++++++++++++++++++++++++++++
+> > > > >  2 files changed, 75 insertions(+)
+> > > > > 
+> > > > > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> > > > > index 88e3a8e54b6a..72b69b003302 100644
+> > > > > --- a/drivers/cxl/cxlmem.h
+> > > > > +++ b/drivers/cxl/cxlmem.h
+> > > > > @@ -211,6 +211,7 @@ struct cxl_endpoint_dvsec_info {
+> > > > >   * @info: Cached DVSEC information about the device.
+> > > > >   * @serial: PCIe Device Serial Number
+> > > > >   * @doe_mbs: PCI DOE mailbox array
+> > > > > + * @has_irq: PCIe MSI-X/MSI support
+> > > > >   * @mbox_send: @dev specific transport for transmitting mailbox commands
+> > > > >   *
+> > > > >   * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
+> > > > > @@ -247,6 +248,8 @@ struct cxl_dev_state {
+> > > > >  
+> > > > >  	struct xarray doe_mbs;
+> > > > >  
+> > > > > +	bool has_irq;
+> > > > > +
+> > > > >  	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
+> > > > >  };
+> > > > >  
+> > > > > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > > > > index faeb5d9d7a7a..9c3e95ebaa26 100644
+> > > > > --- a/drivers/cxl/pci.c
+> > > > > +++ b/drivers/cxl/pci.c
+> > > > > @@ -428,6 +428,73 @@ static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
+> > > > >  	}
+> > > > >  }
+> > > > >  
+> > > > > +/**
+> > > > > + * struct cxl_irq_cap - CXL feature that is capable of receiving MSI-X/MSI irqs.
+> > > > > + *
+> > > > > + * @name: Name of the device/component generating this interrupt.
+> > > > > + * @get_max_msgnum: Get the feature's largest interrupt message number.  If the
+> > > > > + *		    feature does not have the Interrupt Supported bit set, then
+> > > > > + *		    return -1.
+> > > > > + */
+> > > > > +struct cxl_irq_cap {
+> > > > > +	const char *name;
+> > > > > +	int (*get_max_msgnum)(struct cxl_dev_state *cxlds);  
+> > > > 
+> > > > Why is this a callback, why not just have the features populate their
+> > > > irq numbers?  
+> > > 
+> > > I think we have decided to forgo the callback but I'm not sure what you mean by
+> > > 'populate their irq numbers'?
+> > >   
+> > > >   
+> > > > > +};
+> > > > > +
+> > > > > +static const struct cxl_irq_cap cxl_irq_cap_table[] = {
+> > > > > +	NULL
+> > > > > +};
+> > > > > +
+> > > > > +static void cxl_pci_free_irq_vectors(void *data)
+> > > > > +{
+> > > > > +	pci_free_irq_vectors(data);
+> > > > > +}
+> > > > > +
+> > > > > +/*
+> > > > > + * Attempt to allocate the largest amount of necessary vectors.
+> > > > > + *
+> > > > > + * Returns 0 upon a successful allocation of *all* vectors, or a
+> > > > > + * negative value otherwise.
+> > > > > + */
+> > > > > +static int cxl_pci_alloc_irq_vectors(struct cxl_dev_state *cxlds)
+> > > > > +{
+> > > > > +	struct device *dev = cxlds->dev;
+> > > > > +	struct pci_dev *pdev = to_pci_dev(dev);
+> > > > > +	int rc, i, vectors = -1;
+> > > > > +
+> > > > > +	for (i = 0; i < ARRAY_SIZE(cxl_irq_cap_table); i++) {
+> > > > > +		int irq;
+> > > > > +
+> > > > > +		if (!cxl_irq_cap_table[i].get_max_msgnum)
+> > > > > +			continue;
+> > > > > +
+> > > > > +		irq = cxl_irq_cap_table[i].get_max_msgnum(cxlds);
+> > > > > +		vectors = max_t(int, irq, vectors);
+> > > > > +	}  
+> > > > 
+> > > > Forgive me if I have missed something, I only look at interrupt enable
+> > > > code once every few years, and the APIs are always a bit different, but
+> > > > is this not too early to read the message number? The number is not
+> > > > stable until either MSI or MSI-X has been selected below at
+> > > > pci_alloc_irq_vectors() time?  
+> > >  
+> > > Well I keep getting wrapped around the axle on this one too.
+> > > 
+> > > This all started back when Jonathan originally attempted to
+> > > allocate the maximum number of vectors a device _could_
+> > > allocate.  But it was recommended that we determine the max
+> > > number first then allocate that number.
+> > > 
+> > > This seems like a chicken and egg issue.  How is the number not
+> > > stable before calling pci_alloc_irq_vectors() when you need the
+> > > max msg number in that call?  
+> > 
+> > Are we talking about the same thing? I am talking about the value in the
+> > "Interrupt Message Number" field. That depends on whether MSI or MSI-X
+> > gets enabled. The number of vectors the device can support is static.
+> > 
+> > Since CXL is such an a la carte spec I think this is situation to just
+> > specify a large number of amx vectors to pci_alloc_irq_vectors() and
+> > then find out after the fact if all of the interrupt generators that
+> > today's cxl_pci knows about in the device each got their own vector.
 > 
-> Hi Michael,
+> I'd misunderstood how this worked and not read the spec :( I wrongly
+> thought portdrv did the query first and allocated the vectors after,
+> but that's not the case.  It first allocates max entries, then frees
+> them all and then allocates the ones that we find present.  We
+> should probably look to do something similar to that though I'm not
+> sure even that code is always optimal.
 > 
-> Any chance of this making 7.2?  Gregory has identified a bug
-> in the Linux kernel support that we've reported (debug marking
-> related). I don't think there are any other queries outstanding on this.
+> https://elixir.bootlin.com/linux/v6.1-rc2/source/drivers/pci/pcie/portdrv_core.c#L101
 > 
-> I've been holding off on sending other features to focus on
-> getting this in, but given timing those will probably have to wait
-> for next cycle now along with Gregory's series for volatile support
-> (which we don't have OS support for yet anyway).
+> In short that calls:
+> /* Allocate the maximum possible number of MSI/MSI-X vectors */
+> nr_entries = pci_alloc_irq_vectors(dev, 1, PCIE_PORT_MAX_MSI_ENTRIES,
+> 			PCI_IRQ_MSIX | PCI_IRQ_MSI);
 > 
-> Thanks,
+> /* See how many and which Interrupt Message Numbers we actually use */
+> nvec = pcie_message_numbers(dev, mask, &pme, &aer, &dpc);
 > 
-> Jonathan
+> if (nvec != nr_entries) {
+> 	pci_free_irq_vectors(dev);
 > 
-> On Fri, 14 Oct 2022 16:10:40 +0100
-> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> 	nr_entries = pci_alloc_irq_vectors(dev, nvec, nvec,
+> 			PCI_IRQ_MSIX | PCI_IRQ_MSI);
+> }
 > 
-> > Changes since v8:
-> >  - Take the entry enums out of the functions and prefix them
-> >    appropriately.
-> >  - Use the visibility of *_NUM_ENTRIES to allocate the cdat_table
-> >  - Fix volatile_mr -> nonvolatile_mr
-> > 
-> > V7 Cover letter - lightly edited.
-> > 
-> > Whilst I have carried on Huai-Cheng Kuo's series version numbering and
-> > naming, there have been very substantial changes since v6 so I would
-> > suggest fresh review makes sense for anyone who has looked at this before.
-> > In particularly if the Avery design folks could check I haven't broken
-> > anything that would be great.
-> > 
-> > For reference v6: QEMU PCIe DOE for PCIe 4.0/5.0 and CXL 2.0
-> > https://lore.kernel.org/qemu-devel/1623330943-18290-1-git-send-email-cbrowy@avery-design.com/
-> > 
-> > Summary of changes:
-> > 1) Linux headers definitions for DOE are now upstream so drop that patch.
-> > 2) Add CDAT for switch upstream port.
-> > 3) Generate 'plausible' default CDAT tables when a file is not provided.
-> > 4) General refactoring to calculate the correct table sizes and allocate
-> >    based on that rather than copying from a local static array.
-> > 5) Changes from earlier reviews such as matching QEMU type naming style.
-> > 6) Moved compliance and SPDM usecases to future patch sets.
-> > 
-> > Sign-offs on these are complex because the patches were originally developed
-> > by Huai-Cheng Kuo, but posted by Chris Browy and then picked up by Jonathan
-> > Cameron who made substantial changes.
-> > 
-> > Huai-Cheng Kuo confirmed they are happy to maintain this updated code.
-> > 
-> > What's here?
-> > 
-> > This series brings generic PCI Express Data Object Exchange support (DOE)
-> > DOE is defined in the PCIe Base Spec r6.0. It consists of a mailbox in PCI
-> > config space via a PCIe Extended Capability Structure.
-> > The PCIe spec defines several protocols (including one to discover what
-> > protocols a given DOE instance supports) and other specification such as
-> > CXL define additional protocols using their own vendor IDs.
-> > 
-> > In this series we make use of the DOE to support the CXL spec defined
-> > Table Access Protocol, specifically to provide access to CDAT - a
-> > table specified in a specification that is hosted by the UEFI forum
-> > and is used to provide runtime discoverability of the sort of information
-> > that would otherwise be available in firmware tables (memory types,
-> > latency and bandwidth information etc).
-> > 
-> > The Linux kernel gained support for DOE / CDAT on CXL type 3 EPs in 6.0.
-> > The version merged did not support interrupts (earlier versions did
-> > so that support in the emulation was tested a while back).
-> > 
-> > This series provides CDAT emulation for CXL switch upstream ports
-> > and CXL type 3 memory devices. Note that to exercise the switch support
-> > additional Linux kernel patches are needed.
-> > https://lore.kernel.org/linux-cxl/20220503153449.4088-1-Jonathan.Cameron@huawei.com/
-> > (I'll post a new version of that support shortly)
-> > 
-> > Additional protocols will be supported by follow on patch sets:
-> > * CXL compliance protocol.
-> > * CMA / SPDM device attestation.
-> > (Old version at https://gitlab.com/jic23/qemu/-/commits/cxl-next - will refresh
-> > that tree next week)
-> > Huai-Cheng Kuo (3):
-> >   hw/pci: PCIe Data Object Exchange emulation
-> >   hw/cxl/cdat: CXL CDAT Data Object Exchange implementation
-> >   hw/mem/cxl-type3: Add CXL CDAT Data Object Exchange
-> > 
-> > Jonathan Cameron (2):
-> >   hw/mem/cxl-type3: Add MSIX support
-> >   hw/pci-bridge/cxl-upstream: Add a CDAT table access DOE
-> > 
-> >  MAINTAINERS                    |   7 +
-> >  hw/cxl/cxl-cdat.c              | 224 ++++++++++++++++++++
-> >  hw/cxl/meson.build             |   1 +
-> >  hw/mem/cxl_type3.c             | 264 ++++++++++++++++++++++++
-> >  hw/pci-bridge/cxl_upstream.c   | 195 +++++++++++++++++-
-> >  hw/pci/meson.build             |   1 +
-> >  hw/pci/pcie_doe.c              | 367 +++++++++++++++++++++++++++++++++
-> >  include/hw/cxl/cxl_cdat.h      | 166 +++++++++++++++
-> >  include/hw/cxl/cxl_component.h |   7 +
-> >  include/hw/cxl/cxl_device.h    |   3 +
-> >  include/hw/cxl/cxl_pci.h       |   1 +
-> >  include/hw/pci/pci_ids.h       |   3 +
-> >  include/hw/pci/pcie.h          |   1 +
-> >  include/hw/pci/pcie_doe.h      | 123 +++++++++++
-> >  include/hw/pci/pcie_regs.h     |   4 +
-> >  15 files changed, 1366 insertions(+), 1 deletion(-)
-> >  create mode 100644 hw/cxl/cxl-cdat.c
-> >  create mode 100644 hw/pci/pcie_doe.c
-> >  create mode 100644 include/hw/cxl/cxl_cdat.h
-> >  create mode 100644 include/hw/pci/pcie_doe.h
-> > 
+> My worry here is that the implicit assumption is that the vectors
+> won't move if we reduce the overall number of vectors we are asking
+> for...
+> 
+> However, imagine the case that we have a feature the driver doesn't
+> know about that was previously at a higher vector.  After reducing
+> the vectors allocated the hardware might decide that feature needs
+> its own vector whereas some others can be combined.  Hence we'd end
+> up with a less than ideal packing for the features we actually
+> support.
+> 
+> Could do something iterative to solve this if it actually matters
+> (increase number of vectors until the layout matches what we get
+> with max possible vectors).
 
+Is this cxl code allocating vectors for devices that might also be
+claimed by portdrv?  I assume not because that sounds like a problem.
+
+Ugh.  I always feel like the portdrv design must be sub-optimal
+because this seems so hard to do cleanly.
+
+pci_alloc_irq_vectors() has a lot of magic inside it and is great for
+most drivers, but the PCIe service IRQs are definitely unusual and
+maybe it's not the best fit for this situation.
+
+If I understand correctly, Interrupt Message Numbers for all these
+PCIe services (hotplug, AER, DPC, etc) are restricted to 0-31 for both
+MSI and MSI-X, and the reason we don't just allocate 32 vectors all
+the time is to avoid consuming too many IRQs.
+
+The MSI case is ugly because the Interrupt Message Number can change
+when we set Multiple Message Enable.  Maybe we can separate it out and
+have a less than optimal solution for this case, like allocating one
+or two vectors and polling if that's not enough.  I expect most
+devices will support MSI-X.
+
+For MSI-X, the vector table is in a BAR, so IIUC there's no resource
+pressure until we actually assign an IRQ to a vector.  Would it be
+feasible to always allocate vectors 0-31 of the MSI-X Table, and then
+selectively allocate IRQs for the services we need, so we might
+consume 32 MSI-X vectors but only a handful of IRQs?
+
+Bjorn
