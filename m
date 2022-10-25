@@ -2,50 +2,39 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F210C38A2D
-	for <linux-cxl@archiver.kernel.org>; Tue, 25 Oct 2022 11:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF2CC04A95
+	for <linux-cxl@archiver.kernel.org>; Tue, 25 Oct 2022 11:06:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230225AbiJYLDW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 25 Oct 2022 07:03:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38810 "EHLO
+        id S229613AbiJYLG3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 25 Oct 2022 07:06:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229729AbiJYLDU (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 25 Oct 2022 07:03:20 -0400
+        with ESMTP id S231357AbiJYLG2 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 25 Oct 2022 07:06:28 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6831D1413B7;
-        Tue, 25 Oct 2022 04:03:19 -0700 (PDT)
-Received: from fraeml702-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MxTX449tBz6H76c;
-        Tue, 25 Oct 2022 19:01:24 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D6E1183DAA
+        for <linux-cxl@vger.kernel.org>; Tue, 25 Oct 2022 04:06:28 -0700 (PDT)
+Received: from frapeml100004.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MxTbj3hfkz6H73Y;
+        Tue, 25 Oct 2022 19:04:33 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml702-chm.china.huawei.com (10.206.15.51) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.31; Tue, 25 Oct 2022 13:03:17 +0200
+ frapeml100004.china.huawei.com (7.182.85.167) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 25 Oct 2022 13:06:26 +0200
 Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 25 Oct
- 2022 12:03:16 +0100
-Date:   Tue, 25 Oct 2022 12:03:15 +0100
+ 2022 12:06:25 +0100
+Date:   Tue, 25 Oct 2022 12:06:24 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Li, Ming" <ming4.li@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alison Schofield <alison.schofield@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Ben Widawsky" <bwidawsk@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>,
-        Gregory Price <gregory.price@memverge.com>
-Subject: Re: [PATCH V16 3/6] PCI/DOE: Add DOE mailbox support functions
-Message-ID: <20221025120315.00006cc3@huawei.com>
-In-Reply-To: <20220719205249.566684-4-ira.weiny@intel.com>
-References: <20220719205249.566684-1-ira.weiny@intel.com>
-        <20220719205249.566684-4-ira.weiny@intel.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+        <alison.schofield@intel.com>
+Subject: Re: [PATCH] cxl: update eiw_to_ways() comment referring to cxl spec
+Message-ID: <20221025120624.00001516@huawei.com>
+In-Reply-To: <166664850753.511468.15931290944330812647.stgit@djiang5-desk3.ch.intel.com>
+References: <166664850753.511468.15931290944330812647.stgit@djiang5-desk3.ch.intel.com>
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
@@ -58,110 +47,34 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 19 Jul 2022 13:52:46 -0700
-ira.weiny@intel.com wrote:
+On Mon, 24 Oct 2022 14:55:07 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Change comment pointing to CLX ECN to the releveant released rev3 spec.
 > 
-> Introduced in a PCIe r6.0, sec 6.30, DOE provides a config space based
-> mailbox with standard protocol discovery.  Each mailbox is accessed
-> through a DOE Extended Capability.
+> Suggested-by: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Confirmed reference is correct.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> ---
+>  drivers/cxl/cxl.h |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Each DOE mailbox must support the DOE discovery protocol in addition to
-> any number of additional protocols.
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index e2a1a7523a2b..512ba28a6349 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -77,7 +77,7 @@ static inline int eig_to_granularity(u16 eig, unsigned int *granularity)
+>  	return 0;
+>  }
+>  
+> -/* Encode defined in CXL ECN "3, 6, 12 and 16-way memory Interleaving" */
+> +/* Encode defined in CXL rev3.0 8.2.4.19.7 CXL HDM Decoder n Control Register */
+>  static inline int eiw_to_ways(u8 eiw, unsigned int *ways)
+>  {
+>  	switch (eiw) {
 > 
-> Define core PCIe functionality to manage a single PCIe DOE mailbox at a
-> defined config space offset.  Functionality includes iterating,
-> creating, query of supported protocol, and task submission.  Destruction
-> of the mailboxes is device managed.
 > 
-> Cc: "Li, Ming" <ming4.li@intel.com>
-> Cc: Bjorn Helgaas <helgaas@kernel.org>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Acked-by: Bjorn Helgaas <helgaas@kernel.org>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-FYI. Gregory Price reported an an issue that I think
-is related to calling INIT_WORK() rather than INIT_WORK_ONSTACK()
-and associated debug options in his build.
-
-https://lore.kernel.org/linux-cxl/20221014151045.24781-1-Jonathan.Cameron@huawei.com/T/#m88a7f50dcce52f30c8bf5c3dcc06fa9843b54a2d
-
-I've highlighted one path to this below.
-
-> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> new file mode 100644
-> index 000000000000..e402f05068a5
-> --- /dev/null
-> +++ b/drivers/pci/doe.c
-> @@ -0,0 +1,536 @@
-
-
-> +static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u16 *vid,
-> +			     u8 *protocol)
-> +{
-> +	u32 request_pl = FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX,
-> +				    *index);
-> +	u32 response_pl;
-> +	DECLARE_COMPLETION_ONSTACK(c);
-> +	struct pci_doe_task task = {
-> +		.prot.vid = PCI_VENDOR_ID_PCI_SIG,
-> +		.prot.type = PCI_DOE_PROTOCOL_DISCOVERY,
-> +		.request_pl = &request_pl,
-> +		.request_pl_sz = sizeof(request_pl),
-> +		.response_pl = &response_pl,
-> +		.response_pl_sz = sizeof(response_pl),
-> +		.complete = pci_doe_task_complete,
-> +		.private = &c,
-> +	};
-This structure contains a work_struct and is on the stack.  However...
-
-> +	int rc;
-> +
-> +	rc = pci_doe_submit_task(doe_mb, &task);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	wait_for_completion(&c);
-> +
-> +	if (task.rv != sizeof(response_pl))
-> +		return -EIO;
-> +
-> +	*vid = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID, response_pl);
-> +	*protocol = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL,
-> +			      response_pl);
-> +	*index = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX,
-> +			   response_pl);
-> +
-> +	return 0;
-> +}
-
-...
-
-> +int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
-> +{
-> +	if (!pci_doe_supports_prot(doe_mb, task->prot.vid, task->prot.type))
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * DOE requests must be a whole number of DW and the response needs to
-> +	 * be big enough for at least 1 DW
-> +	 */
-> +	if (task->request_pl_sz % sizeof(u32) ||
-> +	    task->response_pl_sz < sizeof(u32))
-> +		return -EINVAL;
-> +
-> +	if (test_bit(PCI_DOE_FLAG_DEAD, &doe_mb->flags))
-> +		return -EIO;
-> +
-> +	task->doe_mb = doe_mb;
-> +	INIT_WORK(&task->work, doe_statemachine_work);
-
-Here we don't call the INIT_WORK_ONSTACK() Variant.
-
-> +	queue_work(doe_mb->work_queue, &task->work);
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_doe_submit_task);
