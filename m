@@ -2,183 +2,172 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FECC433FE
-	for <linux-cxl@archiver.kernel.org>; Wed, 26 Oct 2022 07:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF86C38A2D
+	for <linux-cxl@archiver.kernel.org>; Wed, 26 Oct 2022 08:38:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232802AbiJZHMi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 26 Oct 2022 03:12:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54782 "EHLO
+        id S232963AbiJZIi2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 26 Oct 2022 04:38:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233126AbiJZHMh (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 26 Oct 2022 03:12:37 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0107DBA266
-        for <linux-cxl@vger.kernel.org>; Wed, 26 Oct 2022 00:12:36 -0700 (PDT)
+        with ESMTP id S232954AbiJZIi1 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 26 Oct 2022 04:38:27 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16199B878A;
+        Wed, 26 Oct 2022 01:38:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666768356; x=1698304356;
+  t=1666773506; x=1698309506;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=gQzfSI09V3ZSYrLIPOlifwAxteAY9ldJwDezZ+mNKvE=;
-  b=MtxEGYF95KQFM7qoasFOH37AkEhaEgXFuRNqO5oST11tdipBuzO3xlb6
-   jqjYEA8SM313nN0n+WzIXFbTmKRfZJNYXxGJ3A9xlk2Hd4fvtqXyV0clX
-   EOkZTwPTRGS5JW6In4xORhBBa0st4PzLETrHYxDn8lVyzpa6m6iDirBdZ
-   4qztw59ECGvKXExFD4Pwjq5ZvTMqr0urIvLzJuwG9J48cOMSVRnpIKfgg
-   Mfa1STwX2eVmitdNUAXfmidEk1cs0JKLb7T8AhODa9hsSU4CMUytqRbyY
-   2Qe3STP+ZiAvzPF0Qb4YBnyt6GIBydd+Y2iwIMWFXGI2O/7bcOmVQZs1h
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10511"; a="306607824"
-X-IronPort-AV: E=Sophos;i="5.95,213,1661842800"; 
-   d="scan'208";a="306607824"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 00:12:36 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10511"; a="757206532"
-X-IronPort-AV: E=Sophos;i="5.95,213,1661842800"; 
-   d="scan'208";a="757206532"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.251.16.15])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 00:12:36 -0700
-Date:   Wed, 26 Oct 2022 00:12:34 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] cxl/acpi: Support CXL XOR Interleave Math (CXIMS)
-Message-ID: <Y1jd4mE5n4P1+Jtw@aschofie-mobl2>
-References: <cover.1663687681.git.alison.schofield@intel.com>
- <8c93daf7080f45ad4085d6e8556e4deac03f6322.1663687681.git.alison.schofield@intel.com>
- <635332e65ebec_4da329485@dwillia2-xfh.jf.intel.com.notmuch>
+  bh=G4Lc3lqjhLm2vHGA7odAfKTv5YXbVDc4UA8TyUelEHw=;
+  b=SWiPf/kOgizgTAlom3otvZ6FyP3UzcA03Th/KPUJ5yO/Ol6LHHqnlSF6
+   nlH6CEjHRI6kmlRblxQmE6GaHhNCiq/YhnhsJF3Xo14w8UI2zxdwAFSCa
+   Pxsz2siQaY8NTN6Mumz+WOJ/nYa4856uoDws0H3I0h/bHTv536s6B/M0u
+   SdtyYSohrJ/eq1gg/FNtFjdGzzdbIJe/2WpLNgPjAaPNEYduqM34r7JDz
+   FV4CVxK27RmpD8lqSr1XdaYODs9NBI0QjqHUK4zoudWLotJISWzQ4JZXk
+   4DwnfAzipzJkPriB0v6NGAgDJW7HsODpDExcJYUobagDgFrHTYOhfhPrS
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10511"; a="305508222"
+X-IronPort-AV: E=Sophos;i="5.95,214,1661842800"; 
+   d="scan'208";a="305508222"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 01:38:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10511"; a="695279571"
+X-IronPort-AV: E=Sophos;i="5.95,214,1661842800"; 
+   d="scan'208";a="695279571"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga008.fm.intel.com with ESMTP; 26 Oct 2022 01:38:10 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id B92763F9; Wed, 26 Oct 2022 11:38:32 +0300 (EEST)
+Date:   Wed, 26 Oct 2022 11:38:32 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Chris Chiu <chris.chiu@canonical.com>,
+        linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+        linux-cxl@vger.kernel.org, linuxarm@huawei.com
+Subject: Re: Regression: Re: [PATCH v2 4/6] PCI: Distribute available
+ resources for root buses too
+Message-ID: <Y1jyCHS2ka2rYEtN@black.fi.intel.com>
+References: <20220905080232.36087-1-mika.westerberg@linux.intel.com>
+ <20220905080232.36087-5-mika.westerberg@linux.intel.com>
+ <20221014124553.0000696f@huawei.com>
+ <Y0lkeieF3WNV3P3Q@black.fi.intel.com>
+ <20221014154858.000079f2@huawei.com>
+ <Y1ZzRmi9fL9yHf7I@black.fi.intel.com>
+ <Y1Z2GGgfZyzC2d1N@black.fi.intel.com>
+ <Y1fYNsjmUFZsvteT@black.fi.intel.com>
+ <20221025150500.000059ba@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <635332e65ebec_4da329485@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <20221025150500.000059ba@huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Oct 21, 2022 at 05:01:42PM -0700, Dan Williams wrote:
-> alison.schofield@ wrote:
-> > From: Alison Schofield <alison.schofield@intel.com>
+On Tue, Oct 25, 2022 at 03:05:00PM +0100, Jonathan Cameron wrote:
+> On Tue, 25 Oct 2022 15:36:06 +0300
+> Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+> 
+> > Hi,
 > > 
-> > When the CFMWS is using XOR math, parse the corresponding
-> > CXIMS structure and store the xormaps in the root decoder
-> > structure. Use the xormaps in a new lookup, cxl_hb_xor(),
-> > to find a targets entry in the host bridge interleave
-> > target list.
+> > On Mon, Oct 24, 2022 at 02:25:12PM +0300, Mika Westerberg wrote:
+> > > On Mon, Oct 24, 2022 at 02:13:10PM +0300, Mika Westerberg wrote:  
+> > > > Hi,
+> > > > 
+> > > > On Fri, Oct 14, 2022 at 03:48:58PM +0100, Jonathan Cameron wrote:  
+> > > > > > Thanks for the detailed report! I wonder if you could try the below
+> > > > > > patch and see if it changes anything?  
+> > > > > Thanks for the quick response.
+> > > > > 
+> > > > > Doesn't fix it unfortunately.  
+> > > > 
+> > > > I'm back now.
+> > > > 
+> > > > Trying to reproduce this with mainline kernel (arm64 defconfig) and the
+> > > > following command line:
+> > > > 
+> > > > qemu-system-aarch64 \
+> > > >         -M virt,nvdimm=on,gic-version=3 -m 4g,maxmem=8G,slots=8 -cpu max -smp 4 \
+> > > >         -bios /usr/share/qemu-efi-aarch64/QEMU_EFI.fd \
+> > > >         -nographic -no-reboot  \
+> > > >         -kernel Image \
+> > > >         -initrd rootfs.cpio.bz2 \
+> > > >         -device pcie-root-port,port=0,id=root_port13,chassis=0,slot=2 \
+> > > >         -device x3130-upstream,id=sw1,bus=root_port13,multifunction=on \
+> > > >         -device e1000,bus=root_port13,addr=0.1 \
+> > > >         -device xio3130-downstream,id=fun1,bus=sw1,chassis=0,slot=3 \
+> > > >         -device e1000,bus=fun1
+> > > > 
+> > > > But the resulting PCIe topology is pretty flat:
+> > > > 
+> > > > # lspci
+> > > > 00:00.0 Host bridge: Red Hat, Inc. QEMU PCIe Host bridge
+> > > > 00:01.0 Ethernet controller: Red Hat, Inc. Virtio network device
+> > > > 
+> > > > I wonder what I'm missing here? Do I need to enable additional drivers
+> > > > to get the topology to resemble yours?  
+> > > 
+> > > Nevermind, I was missing one \ in the command line ;-) Now I can see the
+> > > topology similar to yours.  
 > > 
-> > Defined in CXL Specfication 3.0 Section: 9.17.1
+> > I think I know what the problem is now - there is a multifunction device
+> > with the switch upstream port and the resource distribution code is not
+> > prepared to handle such (not sure how common this is in real hardware
+> > but allowed by the PCIe spec).
 > > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > ---
-> >  drivers/cxl/cxl.h  |   2 +
-> >  drivers/cxl/acpi.c | 133 +++++++++++++++++++++++++++++++++++++++++++--
-> >  2 files changed, 130 insertions(+), 5 deletions(-)
+> > Simple fix would be just ignore all resource distribution if we
+> > encounter such topologies but I think can still allow it, just by
+> > accounting the resources reserved for the multifunction device(s).
 > > 
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > index f680450f0b16..0a17a7007bff 100644
-> > --- a/drivers/cxl/cxl.h
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -330,12 +330,14 @@ struct cxl_switch_decoder {
-> >   * @res: host / parent resource for region allocations
-> >   * @region_id: region id for next region provisioning event
-> >   * @calc_hb: which host bridge covers the n'th position by granularity
-> > + * @platform_data: platform specific configuration data
-> >   * @cxlsd: base cxl switch decoder
-> >   */
-> >  struct cxl_root_decoder {
-> >  	struct resource *res;
-> >  	atomic_t region_id;
-> >  	struct cxl_dport *(*calc_hb)(struct cxl_root_decoder *cxlrd, int pos);
-> > +	void *platform_data;
-> >  	struct cxl_switch_decoder cxlsd;
-> >  };
-> >  
-> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> > index fb649683dd3a..51cd45d2ed98 100644
-> > --- a/drivers/cxl/acpi.c
-> > +++ b/drivers/cxl/acpi.c
-> > @@ -6,9 +6,110 @@
-> >  #include <linux/kernel.h>
-> >  #include <linux/acpi.h>
-> >  #include <linux/pci.h>
-> > +#include <asm/div64.h>
-> >  #include "cxlpci.h"
-> >  #include "cxl.h"
-> >  
-> > +struct cxims_data {
-> > +	int nr_maps;
-> > +	u64 xormaps[];
-> > +};
-> > +
-> > +/*
-> > + * Find a targets entry (n) in the host bridge interleave list.
-> > + * CXL Specfication 3.0 Table 9-22
-> > + */
-> > +static struct cxl_dport *cxl_hb_xor(struct cxl_root_decoder *cxlrd, int pos)
-> > +{
-> > +	struct cxl_switch_decoder *cxlsd = &cxlrd->cxlsd;
-> > +	struct cxims_data *cximsd = cxlrd->platform_data;
-> > +	struct cxl_decoder *cxld = &cxlsd->cxld;
-> > +	int ig = cxld->interleave_granularity;
-> > +	int iw = cxld->interleave_ways;
-> > +	int i, eiw, n = 0;
-> > +	u64 hpa;
-> > +
-> > +	if (dev_WARN_ONCE(&cxld->dev,
-> > +			  cxld->interleave_ways != cxlsd->nr_targets,
-> > +			  "misconfigured root decoder\n"))
-> > +		return NULL;
-> > +
-> > +	if (iw == 1)
-> > +		/* Entry is always 0 for no interleave */
-> > +		return cxlrd->cxlsd.target[0];
-> > +
-> > +	hpa = cxlrd->res->start + pos * ig;
-> > +
-> > +	if (iw == 3) {
-> > +		/* Initialize 'i' for the modulo calc */
-> > +		i = 0;
+> > Can you try on your side so that you revert this revert:
+> > 
+> >   5632e2beaf9d ("Revert "PCI: Distribute available resources for root buses, too"")
+> > 
+> > and then apply the below patch and see if the problem goes away? Thanks!
 > 
-> From cxl_acpi:
-> 
-> nr_maps = ilog2(cxld->interleave_ways / 3);
-> 
-> ...so cximsd->nr_maps is already 0 when iw is 3, so no need for a goto,
-> unless I missed something.
+> Looks good on my more complex setup that I originally hit this problem on.
 
-That'd be a NULL dereference. For x1 and x3, which don't use
-xormaps, no cximsd is saved. 
-
-I kept the goto, but moved the init to the declaration.
+Thanks for checking!
 
 > 
-> > +		goto no_map;
-> > +	}
-> > +
-> > +	/* IW: 2,4,6,8,12,16 begin building 'n' using xormaps */
-> > +	for (i = 0; i < cximsd->nr_maps; i++)
-> > +		n |= (hweight64(hpa & cximsd->xormaps[i]) & 1) << i;
-> > +
-> > +no_map:
-> > +	/* IW: 3,6,12 add a modulo calculation to 'n' */
-> > +	if (!is_power_of_2(iw)) {
-> > +		eiw = ilog2(iw / 3) + 8;
-> > +		hpa &= GENMASK_ULL(51, eiw + ig);
-> > +		n = do_div(hpa, 3) << i;
+> A comment on the comment inline.
 > 
-> I would just use "<< cxmisd->nr_maps" and move this before the
-> power-of-2 loop with its own early "return cxlrd->cxlsd.target[n];" in
-> the 'if ()' block. No need to force these 2 cases to have a common exit.
+> > 
+> > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> > index dc6a30ee6edf..a7ca3fecf259 100644
+> > --- a/drivers/pci/setup-bus.c
+> > +++ b/drivers/pci/setup-bus.c
+> > @@ -1833,10 +1833,65 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+> >  	 * bridges below.
+> >  	 */
+> >  	if (hotplug_bridges + normal_bridges == 1) {
+> > -		dev = list_first_entry(&bus->devices, struct pci_dev, bus_list);
+> > -		if (dev->subordinate)
+> > -			pci_bus_distribute_available_resources(dev->subordinate,
+> > -				add_list, io, mmio, mmio_pref);
+> > +		/* Upstream port must be the first */
+> > +		bridge = list_first_entry(&bus->devices, struct pci_dev, bus_list);
+> > +		if (!bridge->subordinate)
+> > +			return;
+> > +
+> > +		/*
+> > +		 * It is possible to have switch upstream port as a part
+> > +		 * of multifunction device, although not too common. For
+> > +		 * this reason reduce the resources occupied by the
+> > +		 * other functions before distributing the rest.
+> > +		 */
+> 
+> I 'think' it's quite common. I don't have one to hand but
+> drivers/pci/switches/switchtec.c has drivers for a management function that I
+> think are an additional function alongside the USP on a wide range of
+> switch chips.  It's possible those actually sit on their own port though or
+> pretend to be below a DSP.
 
-That makes sense based on what you see above, but the code is wrong.
-It should add that final calc to the 'n' that was started with the xormaps.
-Although x3 doesn't use any maps, x6 and x12 do.
-
-this:
-> +             n = do_div(hpa, 3) << i;
-it should be
- +             n |= do_div(hpa, 3) << i;
-
-
-
+I see. Okay, I will update the comment accordingly and submit as a formal
+patch along with the revert of the revert if no objections.
