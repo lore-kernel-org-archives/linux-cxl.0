@@ -2,59 +2,59 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2929BC433FE
-	for <linux-cxl@archiver.kernel.org>; Wed, 26 Oct 2022 20:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E2CC433FE
+	for <linux-cxl@archiver.kernel.org>; Wed, 26 Oct 2022 20:20:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235219AbiJZUPZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 26 Oct 2022 16:15:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56720 "EHLO
+        id S234535AbiJZUUv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 26 Oct 2022 16:20:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235209AbiJZUPY (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 26 Oct 2022 16:15:24 -0400
+        with ESMTP id S234804AbiJZUUu (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 26 Oct 2022 16:20:50 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 436A727B24
-        for <linux-cxl@vger.kernel.org>; Wed, 26 Oct 2022 13:15:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF2EE134DFB
+        for <linux-cxl@vger.kernel.org>; Wed, 26 Oct 2022 13:20:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1666815318;
+        s=mimecast20190719; t=1666815648;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=C6aKXfqD6s0UoSz0vncXrx2wqKFOtcB92mD1GSABeGg=;
-        b=QN+Xi2sPxNGPbs8owdaINdQ1icMYVZRBF3NBAgwSkCa7+u+gkVAzCmaEWE0215fYvwMEDU
-        XYaZXsdjCkO5QfhOJUIyJhMFMDfN9/w+gevb5rFcsfCJiorp+GN3/3R5YyAnmZCvK+3Aiv
-        84vWAAE3VnM/gPm2CpzrBUTnYBuDHGU=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=iMK9jr9zoAfLQlG2jo7i7WIctUibwX1/9pxN9jjJW9I=;
+        b=PPNqzb2uOdfOdjEYL7e5lrdaln7smz199GDMgLrvRs771A3O1ByIJ/9uYbldjMxoCHUZiu
+        CtkwfE/vtXBjPWgXm5a/8E44Lrv/ByNkDjf4N2TdX1INH1EGqIr/Pqou/A3h+3IqiLrWJE
+        SlByhMp7Lv7sM6ynm9tVD+96ezGYQwk=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-662-R-2s77T4MiG8KRwMSoul1Q-1; Wed, 26 Oct 2022 16:15:17 -0400
-X-MC-Unique: R-2s77T4MiG8KRwMSoul1Q-1
-Received: by mail-wm1-f72.google.com with SMTP id az35-20020a05600c602300b003c5273b79fdso1583518wmb.3
-        for <linux-cxl@vger.kernel.org>; Wed, 26 Oct 2022 13:15:16 -0700 (PDT)
+ us-mta-196-C9UHSEV5OiiaRkjNbqQrEA-1; Wed, 26 Oct 2022 16:20:47 -0400
+X-MC-Unique: C9UHSEV5OiiaRkjNbqQrEA-1
+Received: by mail-wr1-f71.google.com with SMTP id g4-20020adfbc84000000b0022fc417f87cso6399698wrh.12
+        for <linux-cxl@vger.kernel.org>; Wed, 26 Oct 2022 13:20:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=C6aKXfqD6s0UoSz0vncXrx2wqKFOtcB92mD1GSABeGg=;
-        b=vFTSctBQbBSEGxBguInugknfNSEmS/rEndbMVFBcRtKSRoFUdEqmzrhKF4e0l71K5d
-         KDL5lzw9phf7udKTp/0JYbtG+PlqneLMAI64IrtVzaNx6fLoaWs7Rxndyj4KD9VGp/Gk
-         5RcC6FqwiVMr8mv5HdeEvRMhxpFMycIoOmVp8GKiTcnmMm27kQZPyhika9vv/QaQEdA9
-         G2jG6itfx7mkCqvqxJHFOUtLaOzx9WLwQGuq2hoNSw0K4waeEtMy4pJWh13GAVDEYXfr
-         cPQLj4ddLkoVQdXdSUU/3IqtmxntNhw4MqCBSV4lMCNPRlcPXTZmV+dpsuQi2CWmUakS
-         Cbqw==
-X-Gm-Message-State: ACrzQf3rbXoDXHY/JW/pw1f4gtetkrc3bvCvXeOBWvnhwcL5FpilHP4s
-        HdLxy64N06qsKn2+bKTYsTGEK8yBSw8gApReot/94+1zyvJqp3rcUub54VeBAPfPfkRt7gTwn+w
-        /GclaQKfZG5m9ybdnicaz
-X-Received: by 2002:a05:600c:1d02:b0:3c3:e6f0:6e4b with SMTP id l2-20020a05600c1d0200b003c3e6f06e4bmr3657693wms.202.1666815316053;
-        Wed, 26 Oct 2022 13:15:16 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM6n9g7K37AGF98D05l1F42OXiQ/kJtsIJIccSH0DJYN2bOLugg65OdIRFynLqVZq0PJWSCffw==
-X-Received: by 2002:a05:600c:1d02:b0:3c3:e6f0:6e4b with SMTP id l2-20020a05600c1d0200b003c3e6f06e4bmr3657684wms.202.1666815315809;
-        Wed, 26 Oct 2022 13:15:15 -0700 (PDT)
+        bh=iMK9jr9zoAfLQlG2jo7i7WIctUibwX1/9pxN9jjJW9I=;
+        b=DEZKrvk9Or9eSv7PFQUHwJbceiWJ8GX5LsrWtWbAOnkJ0cdFcx+DnW3bclqmZ+3865
+         XJTImi8EeCMZhs6hkTfMuXGCBHyhwxtaD/XVzT6WS+3HxxFfkJ4ToiNtt6+MGUcUipjh
+         bRYHurAUALe2IC1BCH+M8XPoiZ+u+kyJs2XhdL0LkRBteg46F5tvNp9sJ+GZa7rJy7Uc
+         gKn6/HTngJFMRlVjSjsvmopmRWABc8HgUW/zZcBZHcJJKfnxaF7UUb6XUBcy+Tb5ZWM0
+         8Z1RQ/B2EO8EwB4GKrFSF+NMO7JZC3G0GR8FmOzYbCLkFAvbzrsfuUA7f3UR1TbLjQmk
+         hbFA==
+X-Gm-Message-State: ACrzQf2wR1hFbZCrnFRfrmVwS50B0rxqLs7OuLdxG88Wr0ltEaq/tA+g
+        Xsni0YffSLInjeHlNwaicR7Vm08kITxfu14wk8PIFljdHIaER1TyFXulD9HVNum93ca/PHVwySk
+        lK0zXueA6cw2S7oIZYxHc
+X-Received: by 2002:a05:6000:1882:b0:230:9595:4131 with SMTP id a2-20020a056000188200b0023095954131mr30793977wri.17.1666815645747;
+        Wed, 26 Oct 2022 13:20:45 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM6eHxrK+FeNK+3jt7r188S8PQKVbeNP7lC3PpzTCL3K4HydYehPuzJlOU6c/+K27YZdkuRp6Q==
+X-Received: by 2002:a05:6000:1882:b0:230:9595:4131 with SMTP id a2-20020a056000188200b0023095954131mr30793962wri.17.1666815645511;
+        Wed, 26 Oct 2022 13:20:45 -0700 (PDT)
 Received: from redhat.com ([2.52.15.7])
-        by smtp.gmail.com with ESMTPSA id s26-20020a05600c319a00b003a6a3595edasm2572130wmp.27.2022.10.26.13.15.13
+        by smtp.gmail.com with ESMTPSA id q16-20020a05600c46d000b003c6f426467fsm2815080wmo.40.2022.10.26.13.20.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Oct 2022 13:15:15 -0700 (PDT)
-Date:   Wed, 26 Oct 2022 16:15:10 -0400
+        Wed, 26 Oct 2022 13:20:44 -0700 (PDT)
+Date:   Wed, 26 Oct 2022 16:20:40 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     Gregory Price <gourry.memverge@gmail.com>
 Cc:     qemu-devel@nongnu.org, jonathan.cameron@huawei.com,
@@ -65,7 +65,7 @@ Cc:     qemu-devel@nongnu.org, jonathan.cameron@huawei.com,
         cbrowy@avery-design.com, ira.weiny@intel.com
 Subject: Re: [PATCH 0/4 v3] Multi-Region and Volatile Memory support for CXL
  Type-3 Devices
-Message-ID: <20221026161412-mutt-send-email-mst@kernel.org>
+Message-ID: <20221026161815-mutt-send-email-mst@kernel.org>
 References: <20221026004737.3646-1-gregory.price@memverge.com>
 MIME-Version: 1.0
 In-Reply-To: <20221026004737.3646-1-gregory.price@memverge.com>
@@ -81,11 +81,15 @@ On Tue, Oct 25, 2022 at 08:47:33PM -0400, Gregory Price wrote:
 > Submitted as an extention to the multi-feature branch maintained
 > by Jonathan Cameron at:
 > https://gitlab.com/jic23/qemu/-/tree/cxl-2022-10-24 
-
-BTW pls set subject prefix for all patches, and put it before the patch #.
--v parameter to format-patch will do this for you.
-
 > 
+
+I am not supposed to merge this patchset yet, right?
+That branch has a bunch of patches not yet posted for review.
+Pls add "RFC" in the subject when that is the case.
+
+Thanks!
+
+
 > Summary of Changes:
 > 1) E820 CFMW Bug fix.  
 > 2) Add CXL_CAPACITY_MULTIPLIER definition to replace magic numbers
