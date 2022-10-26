@@ -2,399 +2,291 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DDAC38A2D
-	for <linux-cxl@archiver.kernel.org>; Wed, 26 Oct 2022 18:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10ABBC38A2D
+	for <linux-cxl@archiver.kernel.org>; Wed, 26 Oct 2022 19:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233568AbiJZSRu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 26 Oct 2022 14:17:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59602 "EHLO
+        id S234782AbiJZTEF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 26 Oct 2022 15:04:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233362AbiJZSRt (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 26 Oct 2022 14:17:49 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE4B1BB39C
-        for <linux-cxl@vger.kernel.org>; Wed, 26 Oct 2022 11:17:47 -0700 (PDT)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1onkyD-0002pg-5h; Wed, 26 Oct 2022 20:17:41 +0200
-Message-ID: <c6f4839a-fb00-b2a1-eb30-084043627a65@leemhuis.info>
-Date:   Wed, 26 Oct 2022 20:17:40 +0200
-MIME-Version: 1.0
+        with ESMTP id S234516AbiJZTDU (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 26 Oct 2022 15:03:20 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on20615.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e88::615])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 542AC12E0CF;
+        Wed, 26 Oct 2022 12:01:43 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dRxS/aXj6TayVkIjl7KyEtr6U1NG/Q8sULgO2JuVC2yCP3v8jd9pKfE5y1R7Y/+lhznodzn6Ds1u5t/01gbNRt/XcuUjCpOc0CjWScqC5uEQsE8Dy2QJ6j9o6BrW+UmU8z72YqrhRbL8irqAeOdns/dxfjo1gh8dGgjhQvlVaX53/Ggwv5TlP5+p6LAVswqTDF/kAoE0CGT1aiIHmIK22Zo3GKImJxwsOEGTgn8PklL51qOiAdhN7S26lg2VMx/3GllArVuhC6nNncodWsIuKscckBAqUFBZweUzZx4wtpkwt39P6o2srcwvhc40MMXu620QT1iRF0T1FrwS6xAEEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PhVaxRkVk5NwkRBl/PSJL/Xojalux+SJE8ahF19numk=;
+ b=i0pp+vnJqsZjVbqmQyn4wKDiEPaicDhPjdLpF7e91cd1NCgipBpJPrN/t9wKQ/I8XjzK1s5/X15i89HuypOwyHxoqU/6CIVsBZ3fqfakB4iE7FbgELWOMM9k5E4FKwCcI+iAHnIHy0DNl9x2vhUUoGvmKxfnQDCUYMuyxkM7f/YFTiRZuDXrY1JvS+npHUKdgw9dt6g6lDvVjPSa7Gpa/WVHj2XQAXsx/ERWg89M99hj/1yE5oc6MljGK5dYO3PDYqvlqeUg6C4R5fbJ5tpoZ/6UQNAM+b2CB9sHhNffN0tE+vPpCApa7HP6vRmwjAzBY1nbdSTO8zQ/Uxv5xY0ldw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PhVaxRkVk5NwkRBl/PSJL/Xojalux+SJE8ahF19numk=;
+ b=OHFLeHSqMuvzKXqHxjEyDO3AvuSRlZ6qXhjGtLxzBN1ytugs9djq3v8k5MB32ZXFwPNJ7CXuz6OOywX4W9fvMeRzRluxNuDVAxxu809qThxEYxmiLnIzOtm8PlL3xk57RNcijocShXh33S0058AVYh/VzF7UV9CthIZGT1TWJpE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ BN9PR12MB5116.namprd12.prod.outlook.com (2603:10b6:408:119::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.26; Wed, 26 Oct
+ 2022 19:01:40 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::5a59:ed0d:be82:e15a]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::5a59:ed0d:be82:e15a%5]) with mapi id 15.20.5746.028; Wed, 26 Oct 2022
+ 19:01:40 +0000
+Message-ID: <6d35dceb-a414-7d3b-722c-5507d27b7ce4@amd.com>
+Date:   Wed, 26 Oct 2022 14:01:38 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: Regression: Re: [PATCH v2 4/6] PCI: Distribute available
- resources for root buses too #forregzbot
-To:     regressions@lists.linux.dev
-Cc:     linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org
-References: <20220905080232.36087-1-mika.westerberg@linux.intel.com>
- <20220905080232.36087-5-mika.westerberg@linux.intel.com>
- <20221014124553.0000696f@huawei.com>
-Content-Language: en-US, de-DE
-In-Reply-To: <20221014124553.0000696f@huawei.com>
+ Thunderbird/102.2.2
+Subject: Re: [PATCH 3/5] cxl/pci: Discover and cache pointer to RCD dport's
+ CXL RAS registers
+Content-Language: en-US
+To:     Dan Williams <dan.j.williams@intel.com>,
+        alison.schofield@intel.com, vishal.l.verma@intel.com,
+        dave.jiang@intel.com, ira.weiny@intel.com, bwidawsk@kernel.org
+Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, rafael@kernel.org, lenb@kernel.org,
+        Jonathan.Cameron@huawei.com, dave@stgolabs.net, rrichter@amd.com
+References: <20221021185615.605233-1-terry.bowman@amd.com>
+ <20221021185615.605233-4-terry.bowman@amd.com>
+ <6354725122f2c_141929457@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+From:   Terry Bowman <Terry.Bowman@amd.com>
+In-Reply-To: <6354725122f2c_141929457@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1666808267;ce508aaf;
-X-HE-SMSGID: 1onkyD-0002pg-5h
+X-ClientProxiedBy: CH2PR16CA0019.namprd16.prod.outlook.com
+ (2603:10b6:610:50::29) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|BN9PR12MB5116:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6605fc35-8ebc-408a-a1a3-08dab78483d4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ygUmKQak1zjNp5ZgEIDGlhWi/oFiXxFgGAnZwAbigIvUxR8Im0nJu3QsDNhrpkMgtl7GkWzg8xiFiy33XK6AZyo5o8qlJnQWK8GnYwZk2f1IoZI1gESMuZAz9S2oK5lNGCwvBzmcSQJhj0z4iqbvKB2oFK86Hm3Uow/+NUyuQ6249kWfYUTn3cSuKjRrr14LLIWvgc1xfcNqyzV9XoQVkH9a9yQ/+mpdxzzo/KOFxvzuJO0dgc46YsdfzI2+izDBQwp5ykGaaCnyiKAb24DyNXqJOTgQ/AM16WlbcwiRYPoew5CkMbV6h6pVoP5KOEVO+51XujwRE4yhWoMAC2t0gdtVBeG3xv2ROpk43gaRloJTd9EFErIAuNRZ1CvqDYYDo9w1GRHlkGn/EpFzXQl5KeruTB5dM+t5JC2G8HI5UC8Sj8lQ4DhFYfqjaZTbQQWN2ZDdooyDRet3l9i1J6au5p8stpbXEyw+VFcI2PGf4pgRvc1KJ2v49sKksfhaS70+zXGwwu9yYdmDt1rsvXfd7ssUzm4BIDY+r25Xk7CgS8pQDRPb2zgTTqAfhipmKJ0zhedcRhUZALzm4S0okWn/gb9VByAQmn6uNvPlnYdKMuYDg+QWpsKaMYswXLFmR5Uy22csJwx6RCA4MBxO2csacGPCm3TNWkZcRmxtDFHU771C3br35hNZjYGiCEEN7yFxtzZvOnu4SGRA+HuzC5m8hez7DoyuHv4uE05ZP8468IO2ZEN2Zd/+iP5lZEMYV6PAOrvtWoFx3nPg2sVwY5i8KLlGONPIwGVWFNLmaDLsAcMD4tqSiZ2emZ+EGT5u+csN
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(366004)(136003)(346002)(39860400002)(376002)(451199015)(31686004)(6486002)(316002)(6512007)(53546011)(8676002)(5660300002)(26005)(36756003)(66556008)(86362001)(8936002)(66946007)(4326008)(66476007)(41300700001)(31696002)(2906002)(45080400002)(478600001)(83380400001)(966005)(6506007)(38100700002)(7416002)(186003)(2616005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VUlvRlNoczZ1SFpPRzlOU3g2SDlqR2FEdndhZ29XWnd2OWhEWjFmUXhoMFVU?=
+ =?utf-8?B?MjIwZUh1UEExeWR1aS9CcXZKQmxwb2xFOVNmME9DRW1BRnFpdG82cmtvNkVD?=
+ =?utf-8?B?M1VaWkFpRzhwWlZHUzF3ZUtuSlY4UjU4WjVQczNNZ2xXYjMrT3ZJZVNsL1Bk?=
+ =?utf-8?B?bW5hanErSHEzY0dPYzhzekVwWm03dDNUYS9RUmIxdnVINEtYMWJVQTVFNDBo?=
+ =?utf-8?B?U1A5Z0hTNk9wZFE5VFZZRmxyc0k0WUdyR3Z6QklnMkZOekk4NlpIRCt2Tnc1?=
+ =?utf-8?B?V1RmZTJQai9PTnNYei9TZFd1VzRpVW9xcUlHWUJMZiszdVgySDMzYVZTajBL?=
+ =?utf-8?B?aW96emVlRjZuTERuKytyMGcwWmZYeitBdGlLd2FZM1pMN3k4WGZDSHNvcW96?=
+ =?utf-8?B?ZWVXSjdrQUFIV3RQaXZ1WStndVhmdkVBVm9PU2pGQTkzNmVmdjN0VWtuNmwr?=
+ =?utf-8?B?bDRUbFh2b3hseDMzellTb21QRzdKSFRKZVp3TFgzTHBpRDBJU3V1Vkt2QzBI?=
+ =?utf-8?B?QmVFb0s1cEdTOHcybEc3SFNOQnljVVpWM09WV21wVVFaelVEQ1ljdkZOUC9r?=
+ =?utf-8?B?S3J2QTgvNTdyeENVUVpMZDZCWkFkNzdlN0czNmdVVEcxcXc0YWFTS0krSXpQ?=
+ =?utf-8?B?eVIwY2NLTVY1Q1RzSW1WaHNnMjhTTjBDSlByMnFteVhRcHFwZ09zL1d4WGtp?=
+ =?utf-8?B?KzR1L3NxZ1I3cXFpUXpBU1orZjdGYlZXbGFuNTJabWx6SGxkaEc2L0FBRVRi?=
+ =?utf-8?B?ZWhldE1lOGdOOEl3QWNwRkF0M2xSclF3aGNwV2RiQjRvSXpVS3NMeWRDcjJQ?=
+ =?utf-8?B?cXdzaVdlZkttSnhpcWdQNUZ3SE5KTml5NVRVU3pRMTdiT0I3TE5wK3FDRVFy?=
+ =?utf-8?B?cWZsWDJTbm1TRmhwZ3JoR1FReHZvWEYxRjVIajJ2UTRHY0FreVpCR3EyNTdJ?=
+ =?utf-8?B?dmpuUld5bHV6eExWQXdhWjFSVTlNNk5mTGd4c2pqbGcxUWFDZ3R1S0NZQXFU?=
+ =?utf-8?B?SjY2cWJFS0lBVGZlUG4zeEg1dThNZEhmS1h5Qnp4QS9ydWRGVWhJSnl2K0sr?=
+ =?utf-8?B?NDBrN0pvdlJVSnlXNG80Z3BYcUVnclFZblVIR3BCUlI5c3NwZE5jQlUwcDlo?=
+ =?utf-8?B?MFk0aE9LMEUrWXdnbVNyRU1MTzhBa0tuNnFVMTlicGdkOXp1WTM0eWtoU0Vt?=
+ =?utf-8?B?bmplRHplYWpBYnp1c3ZGSnV5ZE9SK2N0WEtjL2xLZUxYYTl6WEV0OUptYUdW?=
+ =?utf-8?B?U1A0UVV1QVh3OTlXWlpwL1NTQWRzdW12MER2MXFKd3c4aUptL1pIWTdocEwv?=
+ =?utf-8?B?Y2toNjI2eUlOUTBvcHc2ZmlJMmduQm1jckRXMlZ5ZEpzYUpZOWZVckJsVCtZ?=
+ =?utf-8?B?dGNmYVBmM1VxNEZIQ0VrVEE4L0h1Q2NoRTRBMzFMd0dub00yR2o4QWI2Z1B6?=
+ =?utf-8?B?cVVKTnRma1k2RkFpTFlyYjdGZ3pYUmJQRUpUaDFUUUI3R0k1cHZtWlpGVEJX?=
+ =?utf-8?B?ajBOMUtQRUJCcGNDaGdtMnB6NFlHV1R4aEZGUmt5MkR2Nk01MDcxOFVJU05P?=
+ =?utf-8?B?UXl0NWk5Wm5KaUdHRC9ucGgyRWV0Zk9uQTI4cTJURWxOc3JWKzNldmNlOXEr?=
+ =?utf-8?B?eGgyTkFHbjlJREEwY2VYWnY1bHJiZWJLbkRjTkMrNnp0V1daSnVZRHZ2QVJr?=
+ =?utf-8?B?Z3BvZDZMRFh2MlBLNmVuV0tyY1RpT1RoTUtTbm1yajEwYmFxS2h0c1hTdm1V?=
+ =?utf-8?B?d0lleE5UYW9ORXpYeHUwa1ZtTkFsOWVjTGtaSC83UTF0N1VzWTZSeDJWcDBl?=
+ =?utf-8?B?S2JpTnNLVVA1cFd4cjdIejhXNHc2dHZWY3BsMnpFVEFxaTVzK2hOdGdKZG92?=
+ =?utf-8?B?ckJ3d1VxM3ljRGJNRHN1NysrMkIyS3lVZEMxMCt0Y0VpcXBERHpUcll6WW1M?=
+ =?utf-8?B?cWo0djB6Q1lwQzlxbXJrUE04YzBnRVJveVNScVhVSVVMdmpnQVoxakQwcFJY?=
+ =?utf-8?B?cjZIdS9hRGlWZy9ldGNLdW9KR3lma1VtS1Q4bCtlNTBKM0VudFdHZlBBeFcz?=
+ =?utf-8?B?amJRSUFzUUFLb2QyZjRNdW9JY0szL3QrNVhYTzBBaGdFQis4YmoybDYzS096?=
+ =?utf-8?Q?6MVC4jX3RD3S/KhJ1VP44YKYv?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6605fc35-8ebc-408a-a1a3-08dab78483d4
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2022 19:01:40.2756
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KpzqBqsoPZ0jZEZKltRB0A22J9d4rR07/GlN47EEV/4lcrNLgvchkOl6q48M+3VV/K2GH1Zp3e84LdY8ky/c8w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5116
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-[Note: this mail is primarily send for documentation purposes and/or for
-regzbot, my Linux kernel regression tracking bot. That's why I removed
-most or all folks from the list of recipients, but left any that looked
-like a mailing lists. These mails usually contain '#forregzbot' in the
-subject, to make them easy to spot and filter out.]
 
-[TLDR: I'm adding this regression report to the list of tracked
-regressions; all text from me you find below is based on a few templates
-paragraphs you might have encountered already already in similar form.]
 
-Hi, this is your Linux kernel regression tracker. Thanks for the report.
-To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced e96e27fc6f79
-#regzbot title pci: probe errors in qemu
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply -- ideally with also
-telling regzbot about it, as explained here:
-https://linux-regtracking.leemhuis.info/tracked-regression/
-
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report (the mail this one replies to), as explained for
-in the Linux kernel's documentation; above webpage explains why this is
-important for tracked regressions.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
-
-On 14.10.22 13:45, Jonathan Cameron wrote:
-> On Mon,  5 Sep 2022 11:02:30 +0300
-> Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
-> 
->> Currently we distribute the spare resources only upon hot-add so if
->> there are PCI devices connected already when the initial root bus scan
->> is done, and they have not been fully configured by the BIOS, we may end
->> up allocating resources just enough to cover only what is currently
->> there. If some of those devices are hotplug bridges themselves we do not
->> leave any additional resource space for future expansion.
+On 10/22/22 17:44, Dan Williams wrote:
+> Terry Bowman wrote:
+>> CXL RAS information resides in a RAS capability structure located in
+>> CXL.cache and CXL.mem registers.[1] The RAS capability provides CXL
+>> specific error information that can be helpful in debugging. This
+>> information is not currently logged but needs to be logged during PCIe AER
+>> error handling.
 >>
->> For this reason distribute the available resources for root buses too to
->> make this work the same way we do in the normal hotplug case.
+>> Update the CXL driver to find and cache a pointer to the CXL RAS
+>> capability. The RAS registers resides in the downport's component register
+>> block. Note:RAS registers are not in the upport. The component registers
+>> can be found by first using the RCRB to goto the downport. Next, the
+>> downport's 64-bit BAR[0] will point to the component register block.
 >>
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216000
->> Reported-by: Chris Chiu <chris.chiu@canonical.com>
->> Tested-by: Chris Chiu <chris.chiu@canonical.com>
->> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+>> [1] CXL3.0 Spec, '8.2.5 CXL.cache and CXL.mem Registers'
+>>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 >> ---
-> 
-> Early days, but I have a regression that's bisecting to this patch
-> after I did an optimistic checkout of mainline mid merge window.
-> 
-> Initial platform was QEMU emulation of CXL on arm64 with EDK2 / ACPI etc.
-> That uses an extended version of the PCI eXpander Bus (PXB) with extended
-> version of the emulated pci root ports.  Particular test was
-> 
-> 1 PXB, 2 RP, below first RP switch USP, with two functions (USP and
-> a stand along switch CCI), below that 4 DSP each with a CXL type 3 device.
-> 
-> Clearly something wrong with the error handling in CXL code as it goes boom
-> spectacularly.  I'll address that separately.  Anyhow, setup way to complex
-> to debug easily. 
-> 
-> Anyhow to make this easier for others to poke I set up equivalent with pxb-pcie
-> etc and it happens there.  Everything works with the exception of additional
-> functions on USP.
-> 
-> Next up in minimal test case (could be more minimal but I'm lazy) is 
-> 
-> ../qemu/bin/native/aarch64-softmmu/qemu-system-aarch64 -M virt,nvdimm=on,gic-version=3,cxl=on -m 4g,maxmem=8G,slots=8 -cpu max -smp 4 \
->  -kernel Image \
->  -drive if=none,file=full.qcow2,format=qcow2,id=hd \
->  -device pcie-root-port,id=root_port1 -device virtio-blk-pci,drive=hd \
->  -netdev type=user,id=mynet,hostfwd=tcp::5555-:22 \
->  -device virtio-net-pci,netdev=mynet,id=bob \
->  -nographic -no-reboot -append 'earlycon root=/dev/vda2 fsck.mode=skip tp_printk maxcpus=4' \
->  -monitor telnet:127.0.0.1:1235,server,nowait -bios QEMU_EFI.fd \
->  -object memory-backend-ram,size=4G,id=mem0 \
->  -numa node,nodeid=0,cpus=0-3,memdev=mem0 \
-> # Interesting part follows:
->  -device pcie-root-port,port=0,id=root_port13,chassis=0,slot=2 \
->  -device x3130-upstream,id=sw1,bus=root_port13,multifunction=on \
->  -device e1000,bus=root_port13,addr=0.1 \
->  -device xio3130-downstream,id=fun1,bus=sw1,chassis=0,slot=3\
->  -device e1000,bus=fun1
-> 
-> 
-> Error message on failure to probe my switch integrated e1000 (who doesn't have one of
-> those - lets pretend it's a more common switch PMU function or something like
-> that) is :
->  e1000 0000:02:00.1: can't ioremap BAR 0: [??? 0x00000000 flags 0x0]
-> 
-> With this patch reverted it works as normal and the e1000 driver comes up.
-> 
-> Possibly useful stuff follows:
-> 
-> # lspci -tv
-> -[0000:00]-+-00.0  Red Hat, Inc. QEMU PCIe Host bridge
->            +-01.0-[01]--
->            +-02.0  Red Hat, Inc. Virtio block device
->            +-03.0  Red Hat, Inc. Virtio network device
->            \-04.0-[02-04]--+-00.0-[03-04]----00.0-[04]----00.0  Intel Corporation 82540EM Gigabit Ethernet Controller
->                            \-00.1  Intel Corporation 82540EM Gigabit Ethernet Controller
-> 
-> with patch in place.
-> //without patch
-> Note I aligned by hand so may be errorr.
-> 
-> # dmesg | grep pci                                  
-> pci_bus 0000:00: root bus resource [mem 0x10000000-0x3efeffff window]
-> pci_bus 0000:00: root bus resource [io  0x0000-0xffff window]
-> pci_bus 0000:00: root bus resource [mem 0x8000000000-0xffffffffff window]
-> pci_bus 0000:00: root bus resource [bus 00-ff]
-> pci 0000:00:00.0: [1b36:0008] type 00 class 0x060000
-> pci 0000:00:01.0: [1b36:000c] type 01 class 0x060400
-> pci 0000:00:01.0: reg 0x10: [mem 0x10643000-0x10643fff]
-> pci 0000:00:02.0: [1af4:1001] type 00 class 0x010000
-> pci 0000:00:02.0: reg 0x10: [io  0x2200-0x227f]
-> pci 0000:00:02.0: reg 0x14: [mem 0x10642000-0x10642fff]
-> pci 0000:00:02.0: reg 0x20: [mem 0x8000000000-0x8000003fff 64bit pref]
-> pci 0000:00:03.0: [1af4:1000] type 00 class 0x020000
-> pci 0000:00:03.0: reg 0x10: [io  0x2280-0x229f]
-> pci 0000:00:03.0: reg 0x14: [mem 0x10641000-0x10641fff]
-> pci 0000:00:03.0: reg 0x20: [mem 0x8000004000-0x8000007fff 64bit pref]
-> pci 0000:00:03.0: reg 0x30: [mem 0xfffc0000-0xffffffff pref]
-> pci 0000:00:04.0: [1b36:000c] type 01 class 0x060400
-> pci 0000:00:04.0: reg 0x10: [mem 0x10640000-0x10640fff]
-> pci 0000:02:00.0: [104c:8232] type 01 class 0x060400
-> pci 0000:02:00.1: [8086:100e] type 00 class 0x020000
-> pci 0000:02:00.1: reg 0x10: [mem 0x10200000-0x1021ffff]
-> pci 0000:02:00.1: reg 0x14: [io  0x1000-0x103f]
-> pci 0000:02:00.1: reg 0x30: [mem 0xfffc0000-0xffffffff pref]
-> pci 0000:03:00.0: [104c:8233] type 01 class 0x060400
-> pci 0000:04:00.0: [8086:100e] type 00 class 0x020000
-> pci 0000:04:00.0: reg 0x10: [mem 0x10000000-0x1001ffff]
-> pci 0000:04:00.0: reg 0x14: [io  0x0000-0x003f]
-> pci 0000:04:00.0: reg 0x30: [mem 0xfffc0000-0xffffffff pref]
-> pci 0000:00:01.0: bridge window [io  0x1000-0x0fff] to [bus 01] add_size 1000
-> pci 0000:00:01.0: bridge window [mem 0x00100000-0x000fffff 64bit pref] to [bus 01] add_size 200000 add_align 100000
-> pci 0000:00:01.0: bridge window [mem 0x00100000-0x000fffff] to [bus 01] add_size 200000 add_align 100000
-> pci 0000:03:00.0: bridge window [mem 0x00100000-0x000fffff 64bit pref] to [bus 04] add_size 200000 add_align 100000
-> pci 0000:03:00.0: bridge window [mem 0x00100000-0x001fffff] to [bus 04] add_size 100000 add_align 100000
-> pci 0000:02:00.0: bridge window [mem 0x00100000-0x001fffff 64bit pref] to [bus 03-04] add_size 200000 add_align 100000
-> pci 0000:02:00.0: bridge window [mem 0x00100000-0x001fffff] to [bus 03-04] add_size 100000 add_align 100000
-> pci 0000:00:04.0: bridge window [mem 0x00100000-0x001fffff 64bit pref] to [bus 02-04] add_size 300000 add_align 100000
-> pci 0000:00:04.0: bridge window [mem 0x00100000-0x002fffff] to [bus 02-04] add_size 100000 add_align 100000
-> pci 0000:00:01.0: BAR 14: assigned [mem 0x10000000-0x101fffff]
-> pci 0000:00:01.0: BAR 15: assigned [mem 0x8000000000-0x80001fffff 64bit pref]
-> pci 0000:00:04.0: BAR 14: assigned [mem 0x10200000-0x103fffff]
-> // pci 0000:00:04.0: BAR 14: assigned [mem 0x10200000-0x104fffff]
-> pci 0000:00:04.0: BAR 15: assigned [mem 0x8000200000-0x80002fffff 64bit pref]
-> // pci 0000:00:04.0: BAR 15: assigned [mem 0x8000200000-0x80005fffff 64bit pref]
-> pci 0000:00:03.0: BAR 6: assigned [mem 0x10400000-0x1043ffff pref]
-> // pci 0000:00:03.0: BAR 6: assigned [mem 0x10500000-0x1053ffff pref]
-> pci 0000:00:02.0: BAR 4: assigned [mem 0x8000300000-0x8000303fff 64bit pref]
-> //  pci 0000:00:02.0: BAR 4: assigned [mem 0x8000600000-0x8000603fff 64bit pref]
-> pci 0000:00:03.0: BAR 4: assigned [mem 0x8000304000-0x8000307fff 64bit pref]
-> //  pci 0000:00:03.0: BAR 4: assigned [mem 0x8000604000-0x8000607fff 64bit pref]
-> pci 0000:00:01.0: BAR 0: assigned [mem 0x10440000-0x10440fff]
-> //  pci 0000:00:01.0: BAR 0: assigned [mem 0x10540000-0x10540fff]
-> pci 0000:00:01.0: BAR 13: assigned [io  0x1000-0x1fff]
-> pci 0000:00:02.0: BAR 1: assigned [mem 0x10441000-0x10441fff]
-> //  pci 0000:00:02.0: BAR 1: assigned [mem 0x10541000-0x10541fff]
-> pci 0000:00:03.0: BAR 1: assigned [mem 0x10442000-0x10442fff]
-> // pci 0000:00:03.0: BAR 1: assigned [mem 0x10542000-0x10542fff]
-> pci 0000:00:04.0: BAR 0: assigned [mem 0x10443000-0x10443fff]
-> // pci 0000:00:01.0: BAR 0: assigned [mem 0x10540000-0x10540fff]
-> pci 0000:00:04.0: BAR 13: assigned [io  0x2000-0x3fff]
-> pci 0000:00:02.0: BAR 0: assigned [io  0x4000-0x407f]
-> pci 0000:00:03.0: BAR 0: assigned [io  0x4080-0x409f]
-> pci 0000:00:01.0: PCI bridge to [bus 01]
-> pci 0000:00:01.0:   bridge window [io  0x1000-0x1fff]
-> pci 0000:00:01.0:   bridge window [mem 0x10000000-0x101fffff]
-> pci 0000:00:01.0:   bridge window [mem 0x8000000000-0x80001fffff 64bit pref]
-> pci 0000:02:00.0: BAR 14: assigned [mem 0x10200000-0x103fffff]
-> pci 0000:02:00.0: BAR 15: assigned [mem 0x8000200000-0x80002fffff 64bit pref]
-> // pci 0000:02:00.0: BAR 15: assigned [mem 0x8000200000-0x80004fffff 64bit pref]
-> pci 0000:02:00.1: BAR 6: no space for [mem size 0x00040000 pref]
-> pci 0000:02:00.1: BAR 6: failed to assign [mem size 0x00040000 pref]
-> // pci 0000:02:00.1: BAR 6: assigned [mem 0x10400000-0x1043ffff pref]
-> pci 0000:02:00.1: BAR 0: failed to assign [mem size 0x00020000]
-> // pci 0000:02:00.1: BAR 0: assigned [mem 0x10440000-0x1045ffff]
-> pci 0000:02:00.0: BAR 13: assigned [io  0x2000-0x3fff]
-> pci 0000:02:00.1: BAR 1: no space for [io  size 0x0040]
-> // pci 0000:02:00.1: BAR 1: assigned [io  0x3000-0x303f]
-> pci 0000:02:00.1: BAR 1: failed to assign [io  size 0x0040]
-> pci 0000:03:00.0: BAR 14: assigned [mem 0x10200000-0x103fffff]
-> pci 0000:03:00.0: BAR 15: assigned [mem 0x8000200000-0x80002fffff 64bit pref]
-> // pci 0000:03:00.0: BAR 15: assigned [mem 0x8000200000-0x80003fffff 64bit pref]
-> pci 0000:03:00.0: BAR 13: assigned [io  0x2000-0x3fff]
-> // pci 0000:03:00.0: BAR 13: assigned [io  0x2000-0x2fff]
-> pci 0000:04:00.0: BAR 6: assigned [mem 0x10200000-0x1023ffff pref]
-> pci 0000:04:00.0: BAR 0: assigned [mem 0x10240000-0x1025ffff]
-> pci 0000:04:00.0: BAR 1: assigned [io  0x2000-0x203f]
-> pci 0000:03:00.0: PCI bridge to [bus 04]
-> pci 0000:03:00.0:   bridge window [io  0x2000-0x3fff]
-> // pci 0000:03:00.0:   bridge window [io  0x2000-0x2fff]
-> pci 0000:03:00.0:   bridge window [mem 0x10200000-0x103fffff]
-> pci 0000:03:00.0:   bridge window [mem 0x8000200000-0x80002fffff 64bit pref]
-> // pci 0000:03:00.0:   bridge window [mem 0x8000200000-0x80003fffff 64bit pref]
-> pci 0000:02:00.0: PCI bridge to [bus 03-04]
-> pci 0000:02:00.0:   bridge window [io  0x2000-0x3fff]
-> // pci 0000:02:00.0:   bridge window [io  0x2000-0x2fff]
-> pci 0000:02:00.0:   bridge window [mem 0x10200000-0x103fffff]
-> pci 0000:02:00.0:   bridge window [mem 0x8000200000-0x80002fffff 64bit pref]
-> // pci 0000:02:00.0:   bridge window [mem 0x8000200000-0x80004fffff 64bit pref]
-> pci 0000:00:04.0: PCI bridge to [bus 02-04]
-> pci 0000:00:04.0:   bridge window [io  0x2000-0x3fff]
-> pci 0000:00:04.0:   bridge window [mem 0x10200000-0x103fffff]
-> // pci 0000:00:04.0:   bridge window [mem 0x10200000-0x104fffff]
-> pci 0000:00:04.0:   bridge window [mem 0x8000200000-0x80002fffff 64bit pref]
-> // pci 0000:00:04.0:   bridge window [mem 0x8000200000-0x80005fffff 64bit pref]
-> pci_bus 0000:00: Some PCI device resources are unassigned, try booting with pci=realloc
-> // LINE NOT PRESENT
-> pci_bus 0000:00: resource 4 [mem 0x10000000-0x3efeffff window]
-> pci_bus 0000:00: resource 5 [io  0x0000-0xffff window]
-> pci_bus 0000:00: resource 6 [mem 0x8000000000-0xffffffffff window]
-> pci_bus 0000:01: resource 0 [io  0x1000-0x1fff]
-> pci_bus 0000:01: resource 1 [mem 0x10000000-0x101fffff]
-> pci_bus 0000:01: resource 2 [mem 0x8000000000-0x80001fffff 64bit pref]
-> pci_bus 0000:02: resource 0 [io  0x2000-0x3fff]
-> pci_bus 0000:02: resource 1 [mem 0x10200000-0x103fffff]
-> // pci_bus 0000:02: resource 1 [mem 0x10200000-0x104fffff]
-> pci_bus 0000:02: resource 2 [mem 0x8000200000-0x80002fffff 64bit pref]
-> //  pci_bus 0000:02: resource 2 [mem 0x8000200000-0x80005fffff 64bit pref]
-> pci_bus 0000:03: resource 0 [io  0x2000-0x3fff]
-> // pci_bus 0000:03: resource 0 [io  0x2000-0x2fff]
-> pci_bus 0000:03: resource 1 [mem 0x10200000-0x103fffff]
-> pci_bus 0000:03: resource 2 [mem 0x8000200000-0x80002fffff 64bit pref]
-> // pci_bus 0000:03: resource 2 [mem 0x8000200000-0x80004fffff 64bit pref]
-> pci_bus 0000:04: resource 0 [io  0x2000-0x3fff]
-> // pci_bus 0000:04: resource 0 [io  0x2000-0x2fff]
-> pci_bus 0000:04: resource 1 [mem 0x10200000-0x103fffff]
-> // pci_bus 0000:04: resource 1 [mem 0x10200000-0x103fffff]
-> pci_bus 0000:04: resource 2 [mem 0x8000200000-0x80002fffff 64bit pref]
-> // pci_bus 0000:04: resource 2 [mem 0x8000200000-0x80003fffff 64bit pref]
-> pcieport 0000:00:01.0: PME: Signaling with IRQ 51
-> pcieport 0000:00:01.0: AER: enabled with IRQ 51
-> pcieport 0000:00:01.0: pciehp: Slot #0 AttnBtn+ PwrCtrl+ MRL- AttnInd+ PwrInd+ HotPlug+ Surprise+ Interlock+ NoCompl- IbPresDis- LLActRep+
-> pcieport 0000:00:04.0: PME: Signaling with IRQ 52
-> pcieport 0000:00:04.0: AER: enabled with IRQ 52
-> pcieport 0000:00:04.0: pciehp: Slot #2 AttnBtn+ PwrCtrl+ MRL- AttnInd+ PwrInd+ HotPlug+ Surprise+ Interlock+ NoCompl- IbPresDis- LLActRep+
-> pcieport 0000:03:00.0: pciehp: Slot #3 AttnBtn+ PwrCtrl+ MRL- AttnInd+ PwrInd+ HotPlug+ Surprise+ Interlock+ NoCompl- IbPresDis- LLActRep-
-> virtio-pci 0000:00:02.0: enabling device (0000 -> 0003)
-> virtio-pci 0000:00:03.0: enabling device (0000 -> 0003)
-> 
-> All suggestions of things to test and other useful info to provide welcome.
-> 
->>  drivers/pci/setup-bus.c | 62 ++++++++++++++++++++++++++++++++++++++++-
->>  1 file changed, 61 insertions(+), 1 deletion(-)
+>>  drivers/cxl/cxl.h    |  4 +++
+>>  drivers/cxl/cxlmem.h |  1 +
+>>  drivers/cxl/pci.c    | 72 ++++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 77 insertions(+)
 >>
->> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
->> index 3b981da0fb4e..df9fc974b313 100644
->> --- a/drivers/pci/setup-bus.c
->> +++ b/drivers/pci/setup-bus.c
->> @@ -1768,7 +1768,10 @@ static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
->>  	}
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index 7d507ab80a78..69b50131ad86 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -36,6 +36,10 @@
+>>  #define   CXL_CM_CAP_CAP_ID_HDM 0x5
+>>  #define   CXL_CM_CAP_CAP_HDM_VERSION 1
 >>  
->>  	res->end = res->start + new_size - 1;
->> -	remove_from_list(add_list, res);
+>> +/* CXL 3.0 8.2.4.2 CXL RAS Capability Header */
+>> +#define CXL_CM_CAP_ID_RAS 0x2
+>> +#define CXL_CM_CAP_SIZE_RAS 0x5C
 >> +
->> +	/* If the resource is part of the add_list remove it now */
->> +	if (add_list)
->> +		remove_from_list(add_list, res);
+>>  /* HDM decoders CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure */
+>>  #define CXL_HDM_DECODER_CAP_OFFSET 0x0
+>>  #define   CXL_HDM_DECODER_COUNT_MASK GENMASK(3, 0)
+>> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+>> index 079db2e15acc..515273e224ea 100644
+>> --- a/drivers/cxl/cxlmem.h
+>> +++ b/drivers/cxl/cxlmem.h
+>> @@ -243,6 +243,7 @@ struct cxl_dev_state {
+>>  	u64 next_persistent_bytes;
+>>  
+>>  	struct cxl_register_map aer_map;
+>> +	struct cxl_register_map ras_map;
+>>  
+>>  	resource_size_t component_reg_phys;
+>>  	u64 serial;
+>> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+>> index 2287b5225862..7f717fb47a36 100644
+>> --- a/drivers/cxl/pci.c
+>> +++ b/drivers/cxl/pci.c
+>> @@ -586,6 +586,78 @@ void cxl_pci_aer_init(struct cxl_memdev *cxlmd)
 >>  }
+>>  EXPORT_SYMBOL_NS_GPL(cxl_pci_aer_init, CXL);
 >>  
->>  static void pci_bus_distribute_available_resources(struct pci_bus *bus,
->> @@ -1923,6 +1926,8 @@ static void pci_bridge_distribute_available_resources(struct pci_dev *bridge,
->>  	if (!bridge->is_hotplug_bridge)
->>  		return;
->>  
->> +	pci_dbg(bridge, "distributing available resources\n");
->> +
->>  	/* Take the initial extra resources from the hotplug port */
->>  	available_io = bridge->resource[PCI_BRIDGE_IO_WINDOW];
->>  	available_mmio = bridge->resource[PCI_BRIDGE_MEM_WINDOW];
->> @@ -1934,6 +1939,59 @@ static void pci_bridge_distribute_available_resources(struct pci_dev *bridge,
->>  					       available_mmio_pref);
->>  }
->>  
->> +static bool pci_bridge_resources_not_assigned(struct pci_dev *dev)
+>> +static resource_size_t cxl_get_dport_ras_base(struct cxl_memdev *cxlmd)
 >> +{
->> +	const struct resource *r;
+>> +	resource_size_t component_reg_phys, offset = 0;
+>> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+>> +	void *cap_hdr_addr, *comp_reg_mapped;
+>> +	u32 cap_hdr, ras_cap_hdr;
+>> +	int cap_ndx;
+>> +
+>> +	comp_reg_mapped = ioremap(cxlds->component_reg_phys +
+>> +				  CXL_CM_OFFSET, CXL_COMPONENT_REG_BLOCK_SIZE);
+>> +	if (!comp_reg_mapped)
+>> +		return 0;
+>> +
+>> +	cap_hdr_addr = comp_reg_mapped;
+>> +	cap_hdr = readl(cap_hdr_addr);
+>> +	for (cap_ndx = 0;
+>> +	     cap_ndx < FIELD_GET(CXL_CM_CAP_HDR_ARRAY_SIZE_MASK, cap_hdr);
+>> +	     cap_ndx++) {
+>> +		ras_cap_hdr = readl(cap_hdr_addr + cap_ndx*sizeof(u32));
+>> +
+>> +		if (FIELD_GET(CXL_CM_CAP_HDR_ID_MASK, ras_cap_hdr) == CXL_CM_CAP_ID_RAS) {
+>> +			pr_debug("RAS cap header = %X @ %pa, cap_ndx = %d\n",
+>> +				 ras_cap_hdr, cap_hdr_addr, cap_ndx);
+>> +			break;
+>> +		}
+>> +	}
+>> +
+>> +	offset = CXL_CM_OFFSET + PCI_EXT_CAP_NEXT(ras_cap_hdr);
+>> +
+>> +	iounmap(comp_reg_mapped);
+>> +
+>> +	if (FIELD_GET(CXL_CM_CAP_HDR_ID_MASK, ras_cap_hdr) != CXL_CM_CAP_ID_RAS)
+>> +		return 0;
+>> +
+>> +	pr_debug("Found RAS capability @ %llX (%X)\n",
+>> +		 component_reg_phys + offset, *((u32 *)(comp_reg_mapped + offset)));
+>> +
+>> +	return component_reg_phys + offset;
+> 
+> For the RAS capability in the cxl_pci device this patch needs to be
+> reconciled with this effort:
+> 
+> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flinux-cxl%2F166336972295.3803215.1047199449525031921.stgit%40djiang5-desk3.ch.intel.com%2F&amp;data=05%7C01%7Cterry.bowman%40amd.com%7C33092f731a854d7a9a5b08dab47f1075%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C638020755070581692%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=84oOACCwh4XtndFKOUV%2FltpJjFnp4lsFQgw75UMphHQ%3D&amp;reserved=0
+> 
+> I think we will want RCD and VH RAS capability reporting to happen in
+> the same place, and that can not be cxl_pci because cxl_pci has no way
+> to find the RAS registers on its own. It needs the help from cxl_mem to
+> do the upstream cxl_port associtation first.
+> 
+> Given CXL switches will have their own RAS capabilities to report it
+> feels like the cxl_port driver is where all of this should be
+> centralized.
+> 
+> 
+
+I'm working on merging the patchsets now.
+
+I'm merging the following:
+  Dave Jiang's onto 6.1.0-rc1+, provides RAS mapping.
+  Roberts series ontop of Dave's, provides RCD discovery.
+  And this patchset ontop of Robert's, provides AER and RAS logging
+
+Regards,
+Terry
+
+>> +}
+>> +
+>> +static int cxl_setup_dport_ras(struct cxl_memdev *cxlmd, resource_size_t resource)
+>> +{
+>> +	struct cxl_register_map *map = &cxlmd->cxlds->ras_map;
+>> +	struct pci_dev *pdev = to_pci_dev(&cxlmd->dev);
+>> +
+>> +	if (!resource) {
+>> +		pr_err("%s():%d: RAS resource ptr is NULL\n", __func__, __LINE__);
+>> +		return  -EINVAL;
+>> +	}
+>> +
+>> +	map->base = devm_cxl_iomap_block(&pdev->dev, resource, CXL_CM_CAP_SIZE_RAS);
+>> +	if (!map->base)
+>> +		return -ENOMEM;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +void cxl_pci_ras_init(struct cxl_memdev *cxlmd)
+>> +{
+>> +	resource_size_t cap;
 >> +
 >> +	/*
->> +	 * Check the child device's resources and if they are not yet
->> +	 * assigned it means we are configuring them (not the boot
->> +	 * firmware) so we should be able to extend the upstream
->> +	 * bridge's (that's the hotplug downstream PCIe port) resources
->> +	 * in the same way we do with the normal hotplug case.
+>> +	 * TODO - CXL2.0 will need change to support PCI config space.
 >> +	 */
->> +	r = &dev->resource[PCI_BRIDGE_IO_WINDOW];
->> +	if (!r->flags || !(r->flags & IORESOURCE_STARTALIGN))
->> +		return false;
->> +	r = &dev->resource[PCI_BRIDGE_MEM_WINDOW];
->> +	if (!r->flags || !(r->flags & IORESOURCE_STARTALIGN))
->> +		return false;
->> +	r = &dev->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
->> +	if (!r->flags || !(r->flags & IORESOURCE_STARTALIGN))
->> +		return false;
+>> +	if (!is_rcd(cxlmd))
+>> +		return;
 >> +
->> +	return true;
+>> +	cap = cxl_get_dport_ras_base(cxlmd);
+>> +	cxl_setup_dport_ras(cxlmd, cap);
 >> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_pci_ras_init, CXL);
 >> +
->> +static void pci_root_bus_distribute_available_resources(struct pci_bus *bus,
->> +							struct list_head *add_list)
->> +{
->> +	struct pci_dev *dev, *bridge = bus->self;
->> +
->> +	for_each_pci_bridge(dev, bus) {
->> +		struct pci_bus *b;
->> +
->> +		b = dev->subordinate;
->> +		if (!b)
->> +			continue;
->> +
->> +		/*
->> +		 * Need to check "bridge" here too because it is NULL
->> +		 * in case of root bus.
->> +		 */
->> +		if (bridge && pci_bridge_resources_not_assigned(dev)) {
->> +			pci_bridge_distribute_available_resources(bridge, add_list);
->> +			/*
->> +			 * There is only PCIe upstream port on the bus
->> +			 * so we don't need to go futher.
->> +			 */
->> +			return;
->> +		}
->> +
->> +		pci_root_bus_distribute_available_resources(b, add_list);
->> +	}
->> +}
->> +
->>  /*
->>   * First try will not touch PCI bridge res.
->>   * Second and later try will clear small leaf bridge res.
->> @@ -1973,6 +2031,8 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
->>  	 */
->>  	__pci_bus_size_bridges(bus, add_list);
->>  
->> +	pci_root_bus_distribute_available_resources(bus, add_list);
->> +
->>  	/* Depth last, allocate resources and update the hardware. */
->>  	__pci_bus_assign_resources(bus, add_list, &fail_head);
->>  	if (add_list)
-> 
+>>  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>>  {
+>>  	struct cxl_register_map map;
+>> -- 
+>> 2.34.1
+>>
 > 
 > 
