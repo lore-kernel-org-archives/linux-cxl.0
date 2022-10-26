@@ -2,144 +2,125 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C08C38A2D
-	for <linux-cxl@archiver.kernel.org>; Wed, 26 Oct 2022 21:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DE3C433FE
+	for <linux-cxl@archiver.kernel.org>; Wed, 26 Oct 2022 21:08:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233788AbiJZVDC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 26 Oct 2022 17:03:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54866 "EHLO
+        id S233373AbiJZVID (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 26 Oct 2022 17:08:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233706AbiJZVDC (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 26 Oct 2022 17:03:02 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 452E853A5C
-        for <linux-cxl@vger.kernel.org>; Wed, 26 Oct 2022 14:03:01 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id s17so11653539qkj.12
-        for <linux-cxl@vger.kernel.org>; Wed, 26 Oct 2022 14:03:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=d7/73U88aWKwNDfroPuUtEdVueHFIV0vL1R64OOolus=;
-        b=MLL6rHHFzlTIlFjnX45D5dWzOTzb7hjWEd9LjdjkkrHD1PRnmPagXf7TnDurZkzP+U
-         R3WkGfgLWcI4nPWBgOLemAI3FG1PPLghS/ePBF9ai2JDHtHa+NAMYGoOlCdBSTyq/GVI
-         VNFj6aHyV6YOEtXGOx0MFELJVxwe8BxVQ7xutdCd+QmRajvnkIs5W8UjLnwUVW9Luk4+
-         i39pI6srbvm8ZEqUyi10qB0taIxmlR4gvM8Gu/npBJEjQo0lp20C4KTR3HQiBOldgJR0
-         QPlDhMbteAXrd4wS85xKctWJyW5QE35aK93gLx0jeBo9p3i+r+Z25bU5IHH4F82lE1HL
-         ql4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=d7/73U88aWKwNDfroPuUtEdVueHFIV0vL1R64OOolus=;
-        b=lrPs1TXH7+io/RaiFIXFXgfcxGtP2K04RLctxU7qpVz0o0R/ApI6OjoendDwxgi+ik
-         wvsXLg5gRtXVC+p9vDgq1yyb8zNBqccGpDTyV0knd3tA6PIXXB6+GuDhUhpIMJqIPTZU
-         b3T0zWQ2coMP0wSUWtX4mn7OfWNqIl5dexg8ukv3olVQycLy0SoUqODs2HKNfeKcwNzd
-         EHaLF/B6pMHlOprDL/JkVGI3qaHRAs/2rxWIghjtfk9N4E3PNoWcpHahpboVyMqijLIp
-         vqVyGx7uEaE6cFuMwcIus/T/Y/I7IJG0T38f7hvUuVkj1u/KJFFOQ8/kUuHt5dofKXMq
-         2WQA==
-X-Gm-Message-State: ACrzQf24dxfHXRYqZ/sn99L0sQ35lojF7oB05dh3xBrWioQxHgFf33TJ
-        8TSfjmE5Vbi8pqJq26/bygmdsG+frQ==
-X-Google-Smtp-Source: AMsMyM7VyTdk/Wn3qoOTlb9Al2zqipCfyiurRTHWSirl4Cd1LBW6/x+6OhstOtIN2i9JM0/p439LrQ==
-X-Received: by 2002:a05:620a:2587:b0:6cf:7ece:e1f9 with SMTP id x7-20020a05620a258700b006cf7ecee1f9mr31770925qko.182.1666818180277;
-        Wed, 26 Oct 2022 14:03:00 -0700 (PDT)
-Received: from fedora.mshome.net ([104.184.156.161])
-        by smtp.gmail.com with ESMTPSA id e12-20020ac8130c000000b003a4efd59754sm1325020qtj.12.2022.10.26.14.02.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Oct 2022 14:02:58 -0700 (PDT)
-From:   Gregory Price <gourry.memverge@gmail.com>
-X-Google-Original-From: Gregory Price <gregory.price@memverge.com>
-To:     qemu-devel@nongnu.org
-Cc:     mst@redhat.com, linux-cxl@vger.kernel.org,
-        jonathan.cameron@huawei.com, dave@stgolabs.net,
-        a.manzanares@samsung.com,
-        Gregory Price <gregory.price@memverge.com>
-Subject: [PATCH] hw/i386/pc.c: CXL Fixed Memory Window should not reserve e820 in bios
-Date:   Wed, 26 Oct 2022 16:59:13 -0400
-Message-Id: <20221026205912.8579-1-gregory.price@memverge.com>
-X-Mailer: git-send-email 2.37.3
+        with ESMTP id S233640AbiJZVIC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 26 Oct 2022 17:08:02 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2069.outbound.protection.outlook.com [40.107.244.69])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A127FAA54
+        for <linux-cxl@vger.kernel.org>; Wed, 26 Oct 2022 14:08:01 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XsrhHMTOTMA9HkZI9sma150G7Z+patwPhLYD2pd9k/CupX+oGPqOOoRDVdjWJ0q0EXOpL0za6dBv3p6mj5EUIchbc1ugGoaSssd2MX7h3I49i+16Pb0lRWls21xNdmF2tNkYU3zhzlYXY70KkQPq1A619wiXDZwKHmcgTx2a3F+6ydPr6Ri9ykVG/yqbek8UAr/LBZh3J5kLyxCb7UOZYhin811zmbniyfbTP15+j4tRqJFgyyTAj9aQnFNrYrC9Ye38uOXoru+hiRqFXCwKs5NjH1JCtbyxnc7RCQEVE0dT+UL9NVdxIbwoeBbMy8vb1Wwi3S8mHs6GW8b92jzrLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0tXLf/q2qomREGN1Cd3AyTjw4/EKaiTQznv0jifv50M=;
+ b=CDjhLdQsInnIKPC8/WRV+RhRi/mKqykYBzfqiiWmRaPdbh9yj3KK3vXSK++FJ9xFuRemjo9exiTNdJyArlRUEmMs3dEU4v7dkU1DJgbuSV0/zWkuZprk4uipPBYO4EXP94pgGn69n7MwZEj8a3IDYvH+zD2GQkYP3T9HlqbPbZJY0q/Z79dpG4YuDSEAh17nYR3k1jpwpW2ynQzabUQTSyXlH+jN+dM3st+SH9iWcVMMah1CTe48ayvI9GIo50JRxquzzFbYcF90f9MAZ4A9G/s/ybtsZ+w3ZvJz1Piz3zk3B+XlMpPSptnx1Du+n6CzFmZjyO18yGQ3N2b5gvtRmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0tXLf/q2qomREGN1Cd3AyTjw4/EKaiTQznv0jifv50M=;
+ b=cOXaxBxzuaNKVUiCX8+QO1U8lI3rTH8Lc5yX5YDTOslj2RP8l52y19sFDb+tlCFwPvbBd8i6D7veHgv7seLRxyV5AuAHSwJ5aAexnZ6G3UgkiEMLKt5ZuXerWORXpR1DHLxSLNyGuO+XhqS7SKcd4PKt+U/WxePKlVtZYTfNkt4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from BN6PR17MB3121.namprd17.prod.outlook.com (2603:10b6:405:7c::19)
+ by CH2PR17MB3927.namprd17.prod.outlook.com (2603:10b6:610:86::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.21; Wed, 26 Oct
+ 2022 21:07:58 +0000
+Received: from BN6PR17MB3121.namprd17.prod.outlook.com
+ ([fe80::138a:e3a2:9ec4:a18]) by BN6PR17MB3121.namprd17.prod.outlook.com
+ ([fe80::138a:e3a2:9ec4:a18%7]) with mapi id 15.20.5746.028; Wed, 26 Oct 2022
+ 21:07:58 +0000
+Date:   Wed, 26 Oct 2022 17:07:53 -0400
+From:   Gregory Price <gregory.price@memverge.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Gregory Price <gourry.memverge@gmail.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "alison.schofield@intel.com" <alison.schofield@intel.com>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        "a.manzanares@samsung.com" <a.manzanares@samsung.com>,
+        "bwidawsk@kernel.org" <bwidawsk@kernel.org>
+Subject: Re: [PATCH 1/2] hw/cxl: set cxl-type3 device type to
+ PCI_CLASS_MEMORY_CXL
+Message-ID: <Y1mhqcCirwpQU5lH@memverge.com>
+References: <20221006233702.18532-1-gregory.price@memverge.com>
+ <20221026160545-mutt-send-email-mst@kernel.org>
+ <BN6PR17MB312197C4CA958ED267BB576683309@BN6PR17MB3121.namprd17.prod.outlook.com>
+ <20221026161044-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221026161044-mutt-send-email-mst@kernel.org>
+X-ClientProxiedBy: SJ0PR13CA0208.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c3::33) To BN6PR17MB3121.namprd17.prod.outlook.com
+ (2603:10b6:405:7c::19)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN6PR17MB3121:EE_|CH2PR17MB3927:EE_
+X-MS-Office365-Filtering-Correlation-Id: a423e456-8f12-4ece-605c-08dab79628cd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vknjgLffcSoUOq7P5L/MwEVwQXMZsASsPtvFBrpI2b6Sko85nQdkINjkhPVwuESYzXRVReynJHo3kK7fg+qtqO2riUUeN32u4E1nwZmCalbaH+x3aoPVZvAT+G4XttOJts/Y5Y1yycRJ5hwPsf97B79KvYTKc0VmiQNHkeGn/TGbqOOOWGVMizHhSprlQDLpl5hxcpWkmnIXLtjLGPisIYh+5uH6yoT0D8vDGRaYnUqmKPIQJ26LUmszRIu00pDrQwOYLlGi6FbIJtNlkB83HkVMduRClETQRHEmYXaYF3vjYd6ij6+VcR4vSnvb05EFYrtxfM0q6d/PWHml7njrf0rwYyc4whkSLm600ph5GVYvFSIRiXLoquNZ3tho9MC+rFPlIQbviK64zE0YdxNjnh30c3Yp5XkV1uFeJcgOQ4gxH+8nRz/puVch74VxmAKC1aZWr1o+omrXZcfoecg7ZHSzlozLjnIgNVEafHZah6x/XOfbDZCb+bzwZSld1c0Tzvaaa7y9WBGVoTwczfOFaDOVyzbUhZ8BT+aK+AYlJoIS3pGwXUeh4TAgCAPEzX5ppez1FSfXZ1YS4fBmKj7nDhJN2fXnEuxUBmYuU9rnB9EqEyjup3aGKmtEAxJQ8MhvBC37HYUrvBAQZ1D8uomswEAfrjyps//EMj4fAfWh2E9Oj8NLfRKqclX9EzdyUPJa
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR17MB3121.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(366004)(376002)(346002)(396003)(39840400004)(451199015)(6486002)(2616005)(2906002)(186003)(8936002)(478600001)(5660300002)(44832011)(83380400001)(6512007)(26005)(558084003)(41300700001)(38100700002)(36756003)(4326008)(6916009)(54906003)(86362001)(66946007)(66556008)(66476007)(6506007)(316002)(8676002)(6666004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?5umm4O7ucVUpTD1YKmE7y+BTiFla5Wr9UiZGWnm5DMduwrZqpIrZ1FTLLLoM?=
+ =?us-ascii?Q?QZ+Lyh6bdE7EWs7gyzAd/7Ti2A34yjgAaeILN1eh4jftv4+wPsZAme1PSq7U?=
+ =?us-ascii?Q?Bcv+TKcacoy0dGhvpAbqqalTOPXG5ZMpPIMmkefNssbs3XmSYqBjt90MzaCd?=
+ =?us-ascii?Q?6rrTI6nodEodBi3SAVdppeb6Wh7HnR3ZxyH3MyueUZ2Ls4xyCFpaH2ExuYXe?=
+ =?us-ascii?Q?K6HabYGn3VcumsmcOEjYWjqBAzgU6Yzusxrhcc0/yMyxTk/ZlUDz0Au1mVKa?=
+ =?us-ascii?Q?uIrzPqOoPwqlL9wkZCVJoRbiN2IAZMbHdYPdgc+Aaf0YOoM5CinrtHXZ5lkf?=
+ =?us-ascii?Q?i5zyCZFbXSSxjZmhxOOC/B7xBPsn5V20dFxH2kEVuYoEfkK7f8PX9VBZvYxB?=
+ =?us-ascii?Q?DAQ12e/qeAcepId6cqyU/VYzmrKuymQMAM+id6FcPeqx1Th/0Tw+3yoleoSI?=
+ =?us-ascii?Q?QqPc6zjPlg7C79yrtqW8uBT2K1eJ5TEHn6DFaZE8aNYvxkNcdAkgDbwSSI8+?=
+ =?us-ascii?Q?EZtQfsC5Ro5XI/jbR05k7RSh15yK81VRYM70t6gddI2Vp6XIP84p56kbDDnU?=
+ =?us-ascii?Q?GVOgygniZn2vCXOt847f4pOBcoB7WXj/aiEZYqeqJ8N2+Ueb+10egaBaDQjz?=
+ =?us-ascii?Q?0bvWwsXn2rSNIe+cWiqRRwmcEDvNE4i8wrvp5UOGInDJEMWeTIAD+541bqvM?=
+ =?us-ascii?Q?xv72fQXjnxKgGeXvzjdFwqfONhpMWjIcnXEFenXpS/sU/qS+Jjc3e45TxKgL?=
+ =?us-ascii?Q?6P4O2AkxoDk+oAG4R+vF8uZwytgcNu7bSqLU+31pquj6wk+1JN3dhw4D2lmd?=
+ =?us-ascii?Q?zQ5z6usmUud4Yh2eHBLFXvD5CWKwr5qBC2qkHXo+LONUwoM1i5weq+4kc80A?=
+ =?us-ascii?Q?bzUh0Sh9hQmuVg5EU5IuF2SxfLgzAt5BmXVvDwPhTEN0QISJUAeuJWqRl/xX?=
+ =?us-ascii?Q?H40UqL+D2LK6AEe65pAXqVO/5D8PaUchQ5eLRurAdodqLeMF31aNO7X30+0L?=
+ =?us-ascii?Q?Zlw1Rp9aTklDmm4gLTUtx/hlzt7qIcsMnNdFIaPaFDwLmxPLLCvbj6Ie4B6t?=
+ =?us-ascii?Q?2fwBr3eoccXcAXEHsmCKbXkgfJenWDP8voGV8vGeT3rcH/gC3x8OzbxuhEBB?=
+ =?us-ascii?Q?RUKhw1iD5GjIgXeKsZjOw6568cqJaCRcAfOGJCgzaOroiE8YrJHD6UufyIdX?=
+ =?us-ascii?Q?ArLAjsPlN3TAWioK4wKC4yWFeKwLcDcc2TM79tpf4lKwTOn04xZOVcX3w86q?=
+ =?us-ascii?Q?V5ESjFVx9O8tCQOGGt14OD6dSXESf8cOUQINDUz1xqcPfLHtH4Nu/dG/K3Aw?=
+ =?us-ascii?Q?ivfthwAdq8MSNHm3d9A1WyVeqGmKTZ125JG2YJv+B3yxwHgHTHMLjy1iXbYH?=
+ =?us-ascii?Q?kSOkvmJH0Ia4bC/UM473MHQExA9csL1NMIHyZwhR7nsdiHVniTzH+xx4Y0dt?=
+ =?us-ascii?Q?6Q8CYUckV6xSnU6NU8Q3HTcCXJuVLyBwK9fHx1I5E7VGlb9D3rQrR6HrTgqh?=
+ =?us-ascii?Q?+jIlAF5RsasxuzhviBh9sOyh63aZ3ESmVuv7xjWyD3I6QIn+Nyuw0S3uaTjY?=
+ =?us-ascii?Q?y+vEpFkhBNK+VKdVyZ4WrPi6vbk5bN0tJwvYfJuO5zOD3d9TePe1fK0bqWQk?=
+ =?us-ascii?Q?gQ=3D=3D?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a423e456-8f12-4ece-605c-08dab79628cd
+X-MS-Exchange-CrossTenant-AuthSource: BN6PR17MB3121.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2022 21:07:58.5437
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XGF/1THz9cVZlTvItUPIX8NkZiWX4SF+fSFvOrenXcNPtbQc0ELNYNh78pJGMtodqnWTCMl4h8eYgZedGLGEk3wuyJdcVVs4lIQyn7K4k7M=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR17MB3927
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Early-boot e820 records will be inserted by the bios/efi/early boot
-software and be reported to the kernel via insert_resource.  Later, when
-CXL drivers iterate through the regions again, they will insert another
-resource and make the RESERVED memory area a child.
+On Wed, Oct 26, 2022 at 04:11:29PM -0400, Michael S. Tsirkin wrote:
+> He does but in the end he sends patches not pull requests.
+> I don't care really as long as someone will send it up.
+> 
 
-This RESERVED memory area causes the memory region to become unusable,
-and as a result attempting to create memory regions with
-
-    `cxl create-region ...`
-
-Will fail due to the RESERVED area intersecting with the CXL window.
-
-During boot the following traceback is observed:
-
-0xffffffff81101650 in insert_resource_expand_to_fit ()
-0xffffffff83d964c5 in e820__reserve_resources_late ()
-0xffffffff83e03210 in pcibios_resource_survey ()
-0xffffffff83e04f4a in pcibios_init ()
-
-Which produces a call to reserve the CFMWS area:
-
-(gdb) p *new
-$54 = {start = 0x290000000, end = 0x2cfffffff, name = "Reserved",
-       flags = 0x200, desc = 0x7, parent = 0x0, sibling = 0x0,
-       child = 0x0}
-
-Later the Kernel parses ACPI tables and reserves the exact same area as
-the CXL Fixed Memory Window:
-
-0xffffffff811016a4 in insert_resource_conflict ()
-                      insert_resource ()
-0xffffffff81a81389 in cxl_parse_cfmws ()
-0xffffffff818c4a81 in call_handler ()
-                      acpi_parse_entries_array ()
-
-(gdb) p/x *new
-$59 = {start = 0x290000000, end = 0x2cfffffff, name = "CXL Window 0",
-       flags = 0x200, desc = 0x0, parent = 0x0, sibling = 0x0,
-       child = 0x0}
-
-This produces the following output in /proc/iomem:
-
-590000000-68fffffff : CXL Window 0
-  590000000-68fffffff : Reserved
-
-This reserved area causes `get_free_mem_region()` to fail due to a check
-against `__region_intersects()`.  Due to this reserved area, the
-intersect check will only ever return REGION_INTERSECTS, which causes
-`cxl create-region` to always fail.
-
-Signed-off-by: Gregory Price <gregory.price@memverge.com>
----
- hw/i386/pc.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/hw/i386/pc.c b/hw/i386/pc.c
-index 768982ae9a..203c90fedb 100644
---- a/hw/i386/pc.c
-+++ b/hw/i386/pc.c
-@@ -1062,7 +1062,6 @@ void pc_memory_init(PCMachineState *pcms,
-         hwaddr cxl_size = MiB;
- 
-         cxl_base = pc_get_cxl_range_start(pcms);
--        e820_add_entry(cxl_base, cxl_size, E820_RESERVED);
-         memory_region_init(mr, OBJECT(machine), "cxl_host_reg", cxl_size);
-         memory_region_add_subregion(system_memory, cxl_base, mr);
-         cxl_resv_end = cxl_base + cxl_size;
-@@ -1078,7 +1077,6 @@ void pc_memory_init(PCMachineState *pcms,
-                 memory_region_init_io(&fw->mr, OBJECT(machine), &cfmws_ops, fw,
-                                       "cxl-fixed-memory-region", fw->size);
-                 memory_region_add_subregion(system_memory, fw->base, &fw->mr);
--                e820_add_entry(fw->base, fw->size, E820_RESERVED);
-                 cxl_fmw_base += fw->size;
-                 cxl_resv_end = cxl_fmw_base;
-             }
--- 
-2.37.3
-
+Jonathan will submit this, it's not a critical issue so it can wait for
+the larger feature set.
