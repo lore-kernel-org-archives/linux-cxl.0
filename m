@@ -2,52 +2,53 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E367DECDFA1
-	for <linux-cxl@archiver.kernel.org>; Wed, 26 Oct 2022 00:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E97C38A2D
+	for <linux-cxl@archiver.kernel.org>; Wed, 26 Oct 2022 00:49:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229544AbiJZAse (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 25 Oct 2022 20:48:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42618 "EHLO
+        id S229995AbiJZAtH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 25 Oct 2022 20:49:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230134AbiJZAsc (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 25 Oct 2022 20:48:32 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F614DFB43
-        for <linux-cxl@vger.kernel.org>; Tue, 25 Oct 2022 17:48:31 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id s17so9482285qkj.12
-        for <linux-cxl@vger.kernel.org>; Tue, 25 Oct 2022 17:48:31 -0700 (PDT)
+        with ESMTP id S231381AbiJZAtF (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 25 Oct 2022 20:49:05 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB420DFB46
+        for <linux-cxl@vger.kernel.org>; Tue, 25 Oct 2022 17:49:04 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id h24so8900748qta.7
+        for <linux-cxl@vger.kernel.org>; Tue, 25 Oct 2022 17:49:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9pRJ+Cja9hGKvP9Uv81zKjO1XrsOT/gV10dj8HPGULI=;
-        b=OUHzed6BTa1Vii+0mF+dyAQPkqwQz9PUyKz+jFraAJaz4Hlxa7WCTfOya5IHrXdMqQ
-         7y3RGAK/5x6lOppqxoGsJbDFmbBcPXvqv3Y+mjO/FuIDxKXUwq257dINXNW7nmI8iW3j
-         TQEQ0inBOEQYRsr4heEoCXskUHM2aY+PKSz2VXwKjdnc3oOsQ7V004oy7hJhvNGVRj3X
-         HNOMbNubbe4U+cgWu2MN6kJzIiIC+ZMKyMJGAi5ALcOXuYGhiz0uefjnEhUTfXSZy5t5
-         GJrNwMa3PPqBeE1a1Vs80syUSdLxzohFUK1dMBlbbr+7sTiw4gpKTSDtEqRWcV+m7t5g
-         fvaQ==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d7/73U88aWKwNDfroPuUtEdVueHFIV0vL1R64OOolus=;
+        b=FKmI7MFmg0vUcBItLfBUZyX5abdLhN+mCsU8k+WVfoqdr5hHERIc4Wvq3lZPrstRXg
+         UU/idLJ5EniJ8I8PEU5jOTkhYDuLRapTw3SvwHkTc47NGprU07JIINHnCgL6OS9KkR44
+         vjFhw/GBNtDqLloY8Y9yKrAMJL+N00be2BQVNo1P7bPZGnw8xBlVJt8Pzyyg0/NoXIJH
+         Z0aKwO26IYifO0lEu7wQCKDzIwVosxDU7NfS8uVYgVhO6YiRQ62OMeQNrv+hVNem51D5
+         VlMp54OW5qcLwmsyfB/Bz7PfKRfnLp72A6+FQUOCUXmIL+VJ8unKmOnEQPKTU/7vA68h
+         kd4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9pRJ+Cja9hGKvP9Uv81zKjO1XrsOT/gV10dj8HPGULI=;
-        b=DlPRBKUHQguB7Ilg58TtMkR/Ym4L1at36OuSYxq9tiPLXKaSUqUxPZ1e/mOtaAJwOT
-         I+ZsyzntzrEGuK+8/TN5BodcgEQM3/6Hc82xAo+opkPlBEf5wL7t0B6ncPx/ZOw7HVco
-         fmWnT7mYffE2Rp7682z2fx2GPARGddcgLDJM7/H57EVqGZJZ9ZcwxMgRlre3+bLOyM5y
-         d369VtUhu6DeUo3xO8zjRcbF5nA8cIKLrpfXe2H7ikoQ+mVv4/KW9yGepLnK6qqtm8Ic
-         vvgN8vD3NicAID/a0gmeoQ8lL95qfWVKCtpE3UxAzcphRE0G0DATFdP7W+THK9tuRT9u
-         RN3A==
-X-Gm-Message-State: ACrzQf0rXbXN5Q+3bjIAb9TJ36ldSfXNKK4a1bXA62jTo8oQVikYV7ws
-        DXrODWS7nO+mp7z1hZnwDA==
-X-Google-Smtp-Source: AMsMyM7/Q/kn4Ts0Em/8Uuw1vWpdkIYCyjwK4MQvuKnFzD3/UIcjSbYjIIFMYVBxnj909hHuPIZBeQ==
-X-Received: by 2002:a05:620a:c4f:b0:6cf:33cd:2bc9 with SMTP id u15-20020a05620a0c4f00b006cf33cd2bc9mr29455547qki.99.1666745310325;
-        Tue, 25 Oct 2022 17:48:30 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d7/73U88aWKwNDfroPuUtEdVueHFIV0vL1R64OOolus=;
+        b=txMlC0yhRMZU5+U4nmGsRsyUK+dkkyfXuGsSMIBGC5Kz+HMZtuevbRID0qw11z1Vmp
+         YcDihPLZN0I5lIZZhqxJXvWC9BhATDnjzNAp8dfY6dllxy9PsOnCKNepen50hjjDKVvC
+         vDKSajGiMw30+dbIGyI1e/8v6pzbIqgdTpg2MnVWs2ftWUls4WUJNti/K0rL9esMvury
+         +UMfvqtQNZ0EvD9Wa0Sdl/fa7Yxu8p1mk1CDYGD8yP3AWUusCWi+zD2eSzn8MnaJU+FV
+         qsqY1ECeNt29YdzVorCow50boTABTE6647CJz1NP5jgDgtH/SHAUi0cfRGGwg7Vh2p9K
+         VyKg==
+X-Gm-Message-State: ACrzQf3pBmAFVQnM8xYrjEn7F1a58Rda4Ah8qWfbRPLdtbRdCMpZ+zLZ
+        FQl31GJEozfsrTz070C2Ww==
+X-Google-Smtp-Source: AMsMyM6TE3OJhxhBREvSayYLxzwSr++OBb9psECz2cRe05REWMbChQNHncI+KtTroSDsIzP9zSKLZQ==
+X-Received: by 2002:ac8:7d0d:0:b0:39c:c5e0:37c0 with SMTP id g13-20020ac87d0d000000b0039cc5e037c0mr33442427qtb.537.1666745343935;
+        Tue, 25 Oct 2022 17:49:03 -0700 (PDT)
 Received: from fedora.mshome.net (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id j15-20020ac8550f000000b0039a610a04b1sm2408651qtq.37.2022.10.25.17.47.51
+        by smtp.gmail.com with ESMTPSA id j15-20020ac8550f000000b0039a610a04b1sm2408651qtq.37.2022.10.25.17.48.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Oct 2022 17:47:58 -0700 (PDT)
+        Tue, 25 Oct 2022 17:48:43 -0700 (PDT)
 From:   Gregory Price <gourry.memverge@gmail.com>
 X-Google-Original-From: Gregory Price <gregory.price@memverge.com>
 To:     qemu-devel@nongnu.org
@@ -57,102 +58,93 @@ Cc:     jonathan.cameron@huawei.com, linux-cxl@vger.kernel.org,
         a.manzanares@samsung.com, bwidawsk@kernel.org,
         gregory.price@memverge.com, hchkuo@avery-design.com.tw,
         cbrowy@avery-design.com, ira.weiny@intel.com
-Subject: [PATCH 0/4 v3] Multi-Region and Volatile Memory support for CXL Type-3 Devices
-Date:   Tue, 25 Oct 2022 20:47:33 -0400
-Message-Id: <20221026004737.3646-1-gregory.price@memverge.com>
+Subject: [PATCH 1/4] hw/i386/pc.c: CXL Fixed Memory Window should not reserve e820 in bios
+Date:   Tue, 25 Oct 2022 20:47:34 -0400
+Message-Id: <20221026004737.3646-2-gregory.price@memverge.com>
 X-Mailer: git-send-email 2.37.3
+In-Reply-To: <20221026004737.3646-1-gregory.price@memverge.com>
+References: <20221026004737.3646-1-gregory.price@memverge.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Submitted as an extention to the multi-feature branch maintained
-by Jonathan Cameron at:
-https://gitlab.com/jic23/qemu/-/tree/cxl-2022-10-24 
+Early-boot e820 records will be inserted by the bios/efi/early boot
+software and be reported to the kernel via insert_resource.  Later, when
+CXL drivers iterate through the regions again, they will insert another
+resource and make the RESERVED memory area a child.
 
+This RESERVED memory area causes the memory region to become unusable,
+and as a result attempting to create memory regions with
 
-Summary of Changes:
-1) E820 CFMW Bug fix.  
-2) Add CXL_CAPACITY_MULTIPLIER definition to replace magic numbers
-3) Multi-Region and Volatile Memory support for CXL Type-3 Devices
-4) CXL Type-3 SRAT Generation when NUMA node is attached to memdev
+    `cxl create-region ...`
 
+Will fail due to the RESERVED area intersecting with the CXL window.
 
-Regarding the E820 fix
-  * This bugfix is required for memory regions to work on x86
-  * input from Dan Williams and others suggest that E820 entry for
-    the CFMW should not exist, as it is expected to be dynamically
-    assigned at runtime.  If this entry exists, it instead blocks
-    region creation by nature of the memory region being marked as
-    reserved.
+During boot the following traceback is observed:
 
-Regarding Multi-Region and Volatile Memory
-  * Developed with input from Jonathan Cameron and Davidlohr Bueso.
+0xffffffff81101650 in insert_resource_expand_to_fit ()
+0xffffffff83d964c5 in e820__reserve_resources_late ()
+0xffffffff83e03210 in pcibios_resource_survey ()
+0xffffffff83e04f4a in pcibios_init ()
 
-Regarding SRAT Generation for Type-3 Devices
-  * Co-Developed by Davidlohr Bueso.  Built from his base patch and
-    extended to work with both volatile and persistent regions.
-  * This can be used to demonstrate static type-3 device mapping and
-    testing numa-access to type-3 device memory regions.
+Which produces a call to reserve the CFMWS area:
 
+(gdb) p *new
+$54 = {start = 0x290000000, end = 0x2cfffffff, name = "Reserved",
+       flags = 0x200, desc = 0x7, parent = 0x0, sibling = 0x0,
+       child = 0x0}
 
-This series brings 3 features to CXL Type-3 Devices:
-    1) Volatile Memory Region support
-    2) Multi-Region support (1 Volatile, 1 Persistent)
-    3) (optional) SRAT Entry generation for type-3 device regions
+Later the Kernel parses ACPI tables and reserves the exact same area as
+the CXL Fixed Memory Window:
 
-In this series we implement multi-region and volatile region support
-through 7 major changes to CXL devices
-    1) The HostMemoryBackend [hostmem] has been replaced by two
-       [hostvmem] and [hostpmem] to store volatile and persistent
-       memory respectively
-    2) The single AddressSpace has been replaced by two AddressSpaces
-       [hostvmem_as] and [hostpmem_as] to map respective memdevs.
-    3) Each memory region size and total region are stored separately
-    4) The CDAT and DVSEC memory map entries have been updated:
-       a) if vmem is present, vmem is mapped at DPA(0)
-       b) if pmem is present
-          i)  and vmem is present, pmem is mapped at DPA(vmem->size)
-          ii) else, pmem is mapped at DPA(0)
-       c) partitioning of pmem is not supported in this patch set but
-          has been discussed and this design should suffice.
-    5) Read/Write functions have been updated to access AddressSpaces
-       according to the mapping described in #4
-    6) cxl-mailbox has been updated to report the respective size of
-       volatile and persistent memory regions
-    7) SRAT entries may optionally be generated by manually assigning
-       memdevs to a cpuless numa node
+0xffffffff811016a4 in insert_resource_conflict ()
+                      insert_resource ()
+0xffffffff81a81389 in cxl_parse_cfmws ()
+0xffffffff818c4a81 in call_handler ()
+                      acpi_parse_entries_array ()
 
-To support the Device Physical Address (DPA) Mapping decisions, see
-CXL Spec (3.0) Section 8.2.9.8.2.0 - Get Partition Info:
-  Active Volatile Memory
-    The device shall provide this volatile capacity starting at DPA 0
-  Active Persistent Memory
-    The device shall provide this persistent capacity starting at the
-    DPA immediately following the volatile capacity
+(gdb) p/x *new
+$59 = {start = 0x290000000, end = 0x2cfffffff, name = "CXL Window 0",
+       flags = 0x200, desc = 0x0, parent = 0x0, sibling = 0x0,
+       child = 0x0}
 
-Partitioning of Persistent Memory regions may be supported on
-following patch sets.
+This produces the following output in /proc/iomem:
 
+590000000-68fffffff : CXL Window 0
+  590000000-68fffffff : Reserved
 
-Gregory Price (4):
-  hw/i386/pc.c: CXL Fixed Memory Window should not reserve e820 in bios
-  hw/cxl: Add CXL_CAPACITY_MULTIPLIER definition
-  hw/cxl: Multi-Region CXL Type-3 Devices (Volatile and Persistent)
-  hw/acpi/cxl.c: Fill in SRAT for vmem/pmem if NUMA node is assigned
+This reserved area causes `get_free_mem_region()` to fail due to a check
+against `__region_intersects()`.  Due to this reserved area, the
+intersect check will only ever return REGION_INTERSECTS, which causes
+`cxl create-region` to always fail.
 
- docs/system/devices/cxl.rst |  74 ++++++++--
- hw/acpi/cxl.c               |  67 +++++++++
- hw/cxl/cxl-mailbox-utils.c  |  23 +--
- hw/i386/acpi-build.c        |   4 +
- hw/i386/pc.c                |   2 -
- hw/mem/cxl_type3.c          | 274 +++++++++++++++++++++++++++---------
- include/hw/acpi/cxl.h       |   1 +
- include/hw/cxl/cxl_device.h |  11 +-
- tests/qtest/cxl-test.c      | 111 +++++++++++----
- 9 files changed, 443 insertions(+), 124 deletions(-)
+Signed-off-by: Gregory Price <gregory.price@memverge.com>
+---
+ hw/i386/pc.c | 2 --
+ 1 file changed, 2 deletions(-)
 
+diff --git a/hw/i386/pc.c b/hw/i386/pc.c
+index 768982ae9a..203c90fedb 100644
+--- a/hw/i386/pc.c
++++ b/hw/i386/pc.c
+@@ -1062,7 +1062,6 @@ void pc_memory_init(PCMachineState *pcms,
+         hwaddr cxl_size = MiB;
+ 
+         cxl_base = pc_get_cxl_range_start(pcms);
+-        e820_add_entry(cxl_base, cxl_size, E820_RESERVED);
+         memory_region_init(mr, OBJECT(machine), "cxl_host_reg", cxl_size);
+         memory_region_add_subregion(system_memory, cxl_base, mr);
+         cxl_resv_end = cxl_base + cxl_size;
+@@ -1078,7 +1077,6 @@ void pc_memory_init(PCMachineState *pcms,
+                 memory_region_init_io(&fw->mr, OBJECT(machine), &cfmws_ops, fw,
+                                       "cxl-fixed-memory-region", fw->size);
+                 memory_region_add_subregion(system_memory, fw->base, &fw->mr);
+-                e820_add_entry(fw->base, fw->size, E820_RESERVED);
+                 cxl_fmw_base += fw->size;
+                 cxl_resv_end = cxl_fmw_base;
+             }
 -- 
 2.37.3
 
