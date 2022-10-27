@@ -2,126 +2,163 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 414EAFA3740
-	for <linux-cxl@archiver.kernel.org>; Thu, 27 Oct 2022 14:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9A2ECAAA1
+	for <linux-cxl@archiver.kernel.org>; Thu, 27 Oct 2022 16:18:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235486AbiJ0OwR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 27 Oct 2022 10:52:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44256 "EHLO
+        id S236236AbiJ0QSS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 27 Oct 2022 12:18:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233403AbiJ0OwQ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 27 Oct 2022 10:52:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBB39D73D1;
-        Thu, 27 Oct 2022 07:52:15 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8890F6236D;
-        Thu, 27 Oct 2022 14:52:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98A22C433D6;
-        Thu, 27 Oct 2022 14:52:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666882334;
-        bh=A1ZewOAYS+gc7csPzzBZUQX7V5JzEpABRbRsJocpbFc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=h832vFkjHAKdQNycljM0b4YURQasQy1dlYbrF9lgAURFxGlKgYSwtRIQJsSRwAc8/
-         tTKBc6i8kyyqZQXYgyYCLOqU2xynh3At17UbWQ65FZLCMbISSfI8432UDJZ79E2s1x
-         CNU1ywtsSmn/laVFQOaw/Y1d7LZIFK+j7B/GOXIsLtkyll+ahuwNBZrlM15enUaSGz
-         2qGXC6bj1bdcVtYUB/9UaxDn/FRoYet42AHLp0dzg/eXsJrDIcy3piPCPJ26CEr351
-         xlRENrYMEzyDN8iXooZvoJJFe2gnIaleGbFAakYTO9PNmrTacbmdMtgiZDqOjtaE98
-         Z8VeXdAED6qGA==
-Date:   Thu, 27 Oct 2022 09:52:13 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Terry Bowman <terry.bowman@amd.com>
-Cc:     alison.schofield@intel.com, vishal.l.verma@intel.com,
-        dave.jiang@intel.com, ira.weiny@intel.com, bwidawsk@kernel.org,
-        dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bhelgaas@google.com,
-        rafael@kernel.org, lenb@kernel.org, Jonathan.Cameron@huawei.com,
-        dave@stgolabs.net, rrichter@amd.com
-Subject: Re: [PATCH 2/5] cxl/pci: Discover and cache pointer to RCD dport's
- PCIe AER capability
-Message-ID: <20221027145213.GA828055@bhelgaas>
+        with ESMTP id S236472AbiJ0QSR (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 27 Oct 2022 12:18:17 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEF3F18C945;
+        Thu, 27 Oct 2022 09:18:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666887496; x=1698423496;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=mio/fM7+F8nVUXn2ZcQlynlshnIvyeSjm66BSTRpQzQ=;
+  b=aKH/5ICmP5ZNbEdQ3c8/0I9ZMwuEXLVfYpMWr7N+rEzKZfBjs2gT0GrP
+   i/zGkjjZJVif5B9UwhammT5C7e0ypbZSo70kHsKp0ahcSLVrCp1GssW0m
+   73mTTBuAANCgm1rVe+diKuuUdrFKpn/IvyQhd+Zg58zjpa1K+MZdzBxHe
+   Zax4j6/rwgcItzNl0cSC3sw0CS/Wx8XvwWENV2tczFMt45LapmNZdjBmO
+   3ns1ogX9xu564hG3POUoONbJ9PgnUJUVzHfVSI/97Gw+xRYLPRdmFA+sU
+   YiS7TGAZxgimk2J6B5nC+BRKETbXSz+QBGblkgdEstsbhspmUwPIkWPZI
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10513"; a="287985806"
+X-IronPort-AV: E=Sophos;i="5.95,218,1661842800"; 
+   d="scan'208";a="287985806"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2022 09:18:16 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10513"; a="701401909"
+X-IronPort-AV: E=Sophos;i="5.95,218,1661842800"; 
+   d="scan'208";a="701401909"
+Received: from vstelter-mobl.amr.corp.intel.com (HELO [10.212.214.108]) ([10.212.214.108])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2022 09:18:15 -0700
+Message-ID: <3ce6ef93-2f47-eda3-f974-0cfea7f43766@intel.com>
+Date:   Thu, 27 Oct 2022 09:18:13 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221021185615.605233-3-terry.bowman@amd.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH v4] memregion: Add cpu_cache_invalidate_memregion()
+ interface
+Content-Language: en-US
+To:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>, nvdimm@lists.linux.dev,
+        linux-kernel@vger.kernel.org
+References: <166672803035.2801111.9244172033971411169.stgit@dwillia2-xfh.jf.intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <166672803035.2801111.9244172033971411169.stgit@dwillia2-xfh.jf.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Oct 21, 2022 at 01:56:12PM -0500, Terry Bowman wrote:
-> CXL downport PCIe AER information needs to be logged during error handling.
-> The RCD downport/upport does not have a BDF and is not PCI enumerable. As a
-> result the CXL PCIe driver is not aware of the AER in 'PCI Express'
-> capability located in the RCRB downport/upport. Logic must be introduced to
-> use the downport/upport AER information.
+On 10/25/22 13:05, Dan Williams wrote:
+> Users must first call cpu_cache_has_invalidate_memregion() to know whether
+> this functionality is available on the architecture. Only enable it on
+> x86-64 via the wbinvd() hammer. Hypervisors are not supported as TDX
+> guests may trigger a virtualization exception and may need proper handling
+> to recover. See:
+That sentence doesn't quite parse correctly.  Does it need to be "and
+may trigger..."?
 
-I assume "downport" is the same as "dport" in "cxl_dport" and means
-"Downstream Port".  Might be nice to reduce the number of variations
-if feasible.
+> This global cache invalidation facility,
+> cpu_cache_invalidate_memregion(), is exported to modules since NVDIMM
+> and CXL support can be built as a module. However, the intent is that
+> this facility is not available outside of specific "device-memory" use
+> cases. To that end the API is scoped to a new "DEVMEM" module namespace
+> that only applies to the NVDIMM and CXL subsystems.
 
-> +static resource_size_t cxl_get_dport_cap(struct cxl_memdev *cxlmd, int cap_id)
+Oh, thank $DEITY you're trying to limit the amount of code that has
+access to this thing.
+
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 67745ceab0db..b68661d0633b 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -69,6 +69,7 @@ config X86
+>  	select ARCH_ENABLE_THP_MIGRATION if X86_64 && TRANSPARENT_HUGEPAGE
+>  	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
+>  	select ARCH_HAS_CACHE_LINE_SIZE
+> +	select ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION  if X86_64
+
+What is 64-bit only about this?
+
+I don't expect to have a lot of NVDIMMs or CXL devices on 32-bit
+kernels, but it would be nice to remove this if it's not strictly
+needed.  Or, to add a changelog nugget that says:
+
+	Restrict this to X86_64 kernels.  It would probably work on 32-
+	bit, but there is no practical reason to use 32-bit kernels and
+	no one is testing them.
+
+>  	select ARCH_HAS_CURRENT_STACK_POINTER
+>  	select ARCH_HAS_DEBUG_VIRTUAL
+>  	select ARCH_HAS_DEBUG_VM_PGTABLE	if !X86_PAE
+> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+> index 97342c42dda8..8650bb6481a8 100644
+> --- a/arch/x86/mm/pat/set_memory.c
+> +++ b/arch/x86/mm/pat/set_memory.c
+> @@ -330,6 +330,21 @@ void arch_invalidate_pmem(void *addr, size_t size)
+>  EXPORT_SYMBOL_GPL(arch_invalidate_pmem);
+>  #endif
+>  
+> +#ifdef CONFIG_ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+> +bool cpu_cache_has_invalidate_memregion(void)
 > +{
-> +	resource_size_t offset, rcrb;
-> +	void *rcrb_mapped;
-> +	u32 cap_hdr;
+> +	return !cpu_feature_enabled(X86_FEATURE_HYPERVISOR);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cpu_cache_has_invalidate_memregion, DEVMEM);
 > +
-> +	rcrb = cxl_get_rcrb(cxlmd);
-> +	if (!rcrb)
-> +		return 0;
-> +
-> +	rcrb_mapped = ioremap(rcrb, SZ_4K);
-> +	if (!rcrb_mapped)
-> +		return 0;
-> +
-> +	offset = readl(rcrb_mapped + PCI_CAPABILITY_LIST);
-> +	cap_hdr = readl(rcrb_mapped + offset);
-> +
-> +	while (PCI_CAP_ID(cap_hdr)) {
-> +		if (PCI_CAP_ID(cap_hdr) == cap_id)
-> +			break;
-> +
-> +		offset = PCI_CAP_NEXT(cap_hdr);
-> +		if (offset == 0)
-> +			break;
-> +
-> +		cap_hdr = readl(rcrb_mapped + offset);
-> +	}
-> +	iounmap((void *)rcrb_mapped);
-> +
-> +	if (PCI_CAP_ID(cap_hdr) != cap_id)
-> +		return 0;
-> +
-> +	pr_debug("Found capability %X @ %llX (%X)\n",
-> +		 cap_id, rcrb + offset, cap_hdr);
-
-Would be nice to use dev_dbg() if possible here.
-
-Is "%X" (upper-case hex) the convention in CXL?  Most places in Linux
-seem to use "%x".  Also consider "%#x" (or "%#X") so it's obvious
-these are hex.
-
-> +void cxl_pci_aer_init(struct cxl_memdev *cxlmd)
+> +int cpu_cache_invalidate_memregion(int res_desc)
 > +{
-> +	resource_size_t cap_base;
-> +
-> +	/* CXL2.0 is enumerable and will use AER attached to `struct pci_dev` */
-> +	if (!is_rcd(cxlmd))
-> +		return;
-> +
-> +	/*
-> +	 * Read base address of the PCI express cap. Cache the cap's
-> +	 * PCI_EXP_DEVCTL and PCI_EXP_DEVSTA for AER control and status.
-> +	 */
-> +	cap_base = cxl_get_dport_cap(cxlmd, PCI_CAP_ID_EXP);
-> +	cxl_setup_dport_aer(cxlmd, cap_base);
+> +	wbinvd_on_all_cpus();
+> +	return 0;
+> +}
 
-I don't see anything about PCI_EXP_DEVCTL and PCI_EXP_DEVSTA in
-cxl_get_dport_cap() or cxl_setup_dport_aer().  And I don't see any
-caching, except for setting map->base in cxl_setup_dport_aer().
+Does this maybe also deserve a:
 
-Caching those registers, especially PCI_EXP_DEVSTA, doesn't seem like
-it would make much sense anyway since bits there are set by hardware
-when things happen.
+	WARN_ON_ONCE(!cpu_cache_has_invalidate_memregion());
+
+in case one of the cpu_cache_invalidate_memregion() paths missed a
+cpu_cache_has_invalidate_memregion() check?
+
+> +/**
+> + * cpu_cache_invalidate_memregion - drop any CPU cached data for
+> + *     memregions described by @res_desc
+> + * @res_desc: one of the IORES_DESC_* types
+> + *
+> + * Perform cache maintenance after a memory event / operation that
+> + * changes the contents of physical memory in a cache-incoherent manner.
+> + * For example, device memory technologies like NVDIMM and CXL have
+> + * device secure erase, or dynamic region provision features where such
+> + * semantics.
+
+s/where/with/ ?
+
+> + * Limit the functionality to architectures that have an efficient way
+> + * to writeback and invalidate potentially terabytes of memory at once.
+> + * Note that this routine may or may not write back any dirty contents
+> + * while performing the invalidation. It is only exported for the
+> + * explicit usage of the NVDIMM and CXL modules in the 'DEVMEM' symbol
+> + * namespace.
+> + *
+> + * Returns 0 on success or negative error code on a failure to perform
+> + * the cache maintenance.
+> + */
+
+WBINVD is a scary beast.  But, there's also no better alternative in the
+architecture.  I don't think any of my comments above are deal breakers,
+so from the x86 side:
+
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
