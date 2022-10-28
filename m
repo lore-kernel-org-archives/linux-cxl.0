@@ -2,209 +2,118 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 031B8ECAAA1
-	for <linux-cxl@archiver.kernel.org>; Fri, 28 Oct 2022 20:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C332ECAAA1
+	for <linux-cxl@archiver.kernel.org>; Fri, 28 Oct 2022 20:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230000AbiJ1UFm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 28 Oct 2022 16:05:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42140 "EHLO
+        id S230157AbiJ1UKh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 28 Oct 2022 16:10:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229936AbiJ1UFl (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 28 Oct 2022 16:05:41 -0400
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 601AB25EA8
-        for <linux-cxl@vger.kernel.org>; Fri, 28 Oct 2022 13:05:38 -0700 (PDT)
-Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20221028200535usoutp023b9026fca45aa4dc28cb22c0bc443e2c~iVFTqp-mm1275812758usoutp02g;
-        Fri, 28 Oct 2022 20:05:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20221028200535usoutp023b9026fca45aa4dc28cb22c0bc443e2c~iVFTqp-mm1275812758usoutp02g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1666987535;
-        bh=evhKpQm02W65IPpn2uee2isjKeENNQtkM/CqF20u86o=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=e2XA3EzHYWFM+NK9OxwvIX9VpcbORHt3EmaJbpMp12W5TLQVSjiRc0WL+AtZp/JG0
-         T/RHVFOTx5xr2G5rh5pTXIfDTGgMIn7dsjoacjfWDXGHK43fQ2DtIM8CZQz1In6+gg
-         oRFab8CItcjDAY4t4ybRK8euEqLXzrV3kOxZljeY=
-Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
-        [203.254.195.111]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20221028200535uscas1p25b59a8f946877a017b68e2d539e37c59~iVFTam8Bw0488804888uscas1p23;
-        Fri, 28 Oct 2022 20:05:35 +0000 (GMT)
-Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-        ussmges2new.samsung.com (USCPEMTA) with SMTP id B8.EE.18126.F063C536; Fri,
-        28 Oct 2022 16:05:35 -0400 (EDT)
-Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
-        [203.254.195.89]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20221028200535uscas1p1c538de7521884c6bc56429f80f517ca3~iVFTLN62v1585415854uscas1p1b;
-        Fri, 28 Oct 2022 20:05:35 +0000 (GMT)
-X-AuditID: cbfec36f-fe1ff700000146ce-39-635c360fdb94
-Received: from SSI-EX2.ssi.samsung.com ( [105.128.2.146]) by
-        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id 1E.84.19363.E063C536; Fri,
-        28 Oct 2022 16:05:35 -0400 (EDT)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Fri, 28 Oct 2022 13:05:34 -0700
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Fri,
-        28 Oct 2022 13:05:34 -0700
-From:   Fan Ni <fan.ni@samsung.com>
-To:     "Verma, Vishal L" <vishal.l.verma@intel.com>
-CC:     Adam Manzanares <a.manzanares@samsung.com>,
-        Davidlohr Bueso <d.bueso@samsung.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
-Subject: Re: [ndctl PATCH] cxl: Fix some naming typos
-Thread-Topic: [ndctl PATCH] cxl: Fix some naming typos
-Thread-Index: AQHY6vcF3+3pzDpW2kC/Zp5jFYLl5K4kNcqAgAB64YA=
-Date:   Fri, 28 Oct 2022 20:05:34 +0000
-Message-ID: <20221028200526.GA29212@bgt-140510-bm03>
-In-Reply-To: <54c31beb1bc124f5cb2e79660d311453760fcf1e.camel@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <6FC11D7AE421A64E8697693C45A1B9BD@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S230164AbiJ1UKe (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 28 Oct 2022 16:10:34 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A590E2CE2A;
+        Fri, 28 Oct 2022 13:10:10 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c6CI7kV+JcA9Sly+ZKI5xdl2xlAYaCobSBZIINtlt6nDxwA4fT+X0D4omJQPTvVrMl/ooaVMJA162HT3wu+Wi3hDZC5oIQ8udCoKXZ4m3TjQLLqPkzqCRdvF45XJILD+BJZNkaw097PSjMjFh6GjnETfLtv3CUAOqcyMKW1QY6TvPutErqsTB/6+yt0BFFtVy66bGHh3YB9Ctek9bN5MxAiMnYc+a0yTX0UPaZGgrIe/4yFiGaP8C+jmR9FMO7Ref/HoeFkPCVmpTAnFPIyzr5QgYRak5gNA5UUbA6DKU4XvHow47r6hC07X3jOMgehlw+VtMiWhg4fQrm67vjz8DA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MygrOwVMvfC6rz/QahgIOS76j6h797FQHiN0qT9IhZU=;
+ b=hV3GP88LIWjT08PhDi++cbTcHFn8U2d0WKpCi9jXYbb5qmrbCwW4Uw4g0YcR3FRsqLgkV9vmS5BBX+kh3kT8GTecrQ4lGKoYuSknol25BKSDgk98C5mRzZ6G7bhUxGECJfbACharxCtz9DJdNw2oP/adFKsrdL826QNXGfz01jxGWhNJtGvKwDDhgsU1+jAscL4oSnI7Yois6kyFo3dU0sBWVBz597Ot1wDvwozHH6CxEuEJHDI8ijFoZfvjJS1PI6+OUY2BGu0JttiKWHLddA22NtLbBjssrgi7GL3zmZqpkUA2dhxR6LRyi8Cu+7aWewTv6bsaYz6xJautSxPYtg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MygrOwVMvfC6rz/QahgIOS76j6h797FQHiN0qT9IhZU=;
+ b=qQOKTw4jNlpfHKBcV1xq8I5gNve3F16lYdDUUBRbobp4MKR9/TgU4KIjKdVIgjIb8fvVkheqrvwonSbh+ld4iv5RvKK/q/sXElC9CHQ8kpJBi7+jpjhQVc0JE+dssFKh5XGvS0NWUO2cs0HqdlUk8Ks0tAH7MXl9rL4Zm84vfLk=
+Received: from BN1PR10CA0008.namprd10.prod.outlook.com (2603:10b6:408:e0::13)
+ by DM4PR12MB6399.namprd12.prod.outlook.com (2603:10b6:8:b7::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.30; Fri, 28 Oct
+ 2022 20:10:08 +0000
+Received: from BN8NAM11FT084.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:e0:cafe::2e) by BN1PR10CA0008.outlook.office365.com
+ (2603:10b6:408:e0::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5769.15 via Frontend
+ Transport; Fri, 28 Oct 2022 20:10:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT084.mail.protection.outlook.com (10.13.176.169) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5769.14 via Frontend Transport; Fri, 28 Oct 2022 20:10:08 +0000
+Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 28 Oct
+ 2022 15:10:07 -0500
+From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+To:     <linux-efi@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Ard Biesheuvel <ardb@kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Ira Weiny" <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
+        Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Subject: [PATCH v2 0/2] efi/cper, cxl: Decode CXL Protocol Errors CPER
+Date:   Fri, 28 Oct 2022 20:09:48 +0000
+Message-ID: <20221028200950.67505-1-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupkleLIzCtJLcpLzFFi42LZduzrOV1+s5hkg3XPJC2mT73AaHF+1ikW
-        i1sTjjE5MHss3vOSyePzJrkApigum5TUnMyy1CJ9uwSujGevFrAXdCtWPGpQbmBcLtPFyMkh
-        IWAiMWfifpYuRi4OIYGVjBIr/h1jh3BamSSWrdjHAlf1eA0riC0ksJZR4v13fQj7E6PE8mna
-        EA3LGCVWHZzJBpJgE1CU2Ne1HcwWETCQ2D5rLSNIEbPAaUaJ5u5tYAlhAVOJKTtesUAUmUl0
-        PH/PBGFbSbz+/hOshkVAVeLqtE6wzbxAV1xqmQZmcwq4S5xrusgOYjMKiEl8P7UGrJdZQFzi
-        1pP5TBBXC0osmr2HGcIWk/i36yEbhK0ocf/7S3aIej2JG1OnsEHYdhInr26EmqMtsWzha2aI
-        vYISJ2c+gYaEpMTBFTfA4SUhsJBD4tX9LVAJF4k3W9uglklLXL0+FcquljjTc44JoqGFUeJS
-        42aohLXEv85r7BMYVWYhOXwWkqNmITlqFpKjZiE5agEj6ypG8dLi4tz01GKjvNRyveLE3OLS
-        vHS95PzcTYzA1HL63+H8HYzXb33UO8TIxMF4iFGCg1lJhLf+bHSyEG9KYmVValF+fFFpTmrx
-        IUZpDhYlcd6oGVrJQgLpiSWp2ampBalFMFkmDk6pBiZnX6FERq997GLFlufuiW29b5jeErsn
-        MCn7a/BTFYOQm6fWsQrK/bOx+berYddX16nb3ge0Hv9jWb5RtTNr5xWtP3U26XX2ZXE9n29G
-        /frlMHHXzdUyL58XKNm/u7lX2fEm29GWSOemeW9uu1dPCncSnLUgevbS2EONb2fyfkl5tH7d
-        R7t3soFOR2yMX53ZffrjTZZPhl1NSzXK8zPXB705b/ZJg/9xkoeoVlbNwSrGgrJDt++eXVu4
-        fK1724TrnXPtZG2365qEhTBfOrP5/pLU/g33whau0GOY/vir2ZllIgI/prPPct9lcOt2maTz
-        Q37vd//qjFdVWCxVc1+/ZgNj17VZM7pm/lGf9XR6AMceJZbijERDLeai4kQAKKBmhJwDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBIsWRmVeSWpSXmKPExsWS2cA0SZffLCbZYOpqdovpUy8wWpyfdYrF
-        4taEY0wOzB6L97xk8vi8SS6AKYrLJiU1J7MstUjfLoEr49mrBewF3YoVjxqUGxiXy3QxcnJI
-        CJhIzHm8hrWLkYtDSGA1o8TT7Z8YIZxPjBLn/25hgXCWMUq8XrWBEaSFTUBRYl/XdjYQW0TA
-        QGL7rLVgHcwCpxklmru3gSWEBUwlpux4xQJRZCbR8fw9E4RtJfH6+0+wGhYBVYmr0zpZQWxe
-        oDsutUyDuuMEo8T7RfPBGjgF3CXONV1kB7EZBcQkvp9aAxZnFhCXuPUEokZCQEBiyZ7zzBC2
-        qMTLx/9YIWxFifvfX7JD1OtJ3Jg6hQ3CtpM4eXUj1BxtiWULXzNDHCEocXLmExaIXkmJgytu
-        sExglJiFZN0sJKNmIRk1C8moWUhGLWBkXcUoXlpcnJteUWyYl1quV5yYW1yal66XnJ+7iREY
-        maf/HY7cwXj01ke9Q4xMHIyHGCU4mJVEeOvPRicL8aYkVlalFuXHF5XmpBYfYpTmYFES5xVy
-        nRgvJJCeWJKanZpakFoEk2Xi4JRqYLrJunL11DlcFzYwr70dVGr04uHyxqf5fxdq+R5ucvez
-        NJxe9n6FvPpU5zkf7PgCKs/vXenyN96O76dzlYJy90U57q3pMh9c5kXy3pH4Kpm/9dk3c5aP
-        sYZvkhP/rVv06VDhuwnZPQ9ub948P9uBjfmA9saHCTrbH/va1b3g+xO3WmXlzUdiE6sjAh5e
-        v/NAxfj72TXVTn8Cty6q7z+/d/dlhmnO1k9Mn3Hf/lh7yuNuiBwzQ7WuVLPIFLljDy78XPz8
-        v1oNs3W2C+cL+de3sxMex1q8q3xm+caj914g/zOX9s5JKzaEbSh5zHWCMah/5Y/rHYcUfgnJ
-        89fPs9M3PL90aZS/xu+vfa+XTtyb/O20EktxRqKhFnNRcSIAp5z/tzsDAAA=
-X-CMS-MailID: 20221028200535uscas1p1c538de7521884c6bc56429f80f517ca3
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20221028175929uscas1p1c78e5cd1b684f0b9a79302b8bc769a4f
-References: <CGME20221028175929uscas1p1c78e5cd1b684f0b9a79302b8bc769a4f@uscas1p1.samsung.com>
-        <20221028175752.27879-1-fan.ni@samsung.com>
-        <54c31beb1bc124f5cb2e79660d311453760fcf1e.camel@intel.com>
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT084:EE_|DM4PR12MB6399:EE_
+X-MS-Office365-Filtering-Correlation-Id: ebbd2b37-36f0-4b01-abe1-08dab9206970
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Bkpg3zxGVmkoUbY+GLZkPrZwYf9zBSWeKHx++yYhYV+H0hLJdBrH/sM0J1vhujxVEkBUKIcrxRTdD2rcEZJzsvMnPiy3PEyWSCj5qiBYVGHl9W2ub9XRwicqObcNY6WhQ9ygpUcLIFT/RS5Wjb0BoQ/ktf3k/C2Xdfip//L+PPMILwJTlYgRiy4RuZeDdoKe/Xi9smM83sGE01lcJbaB9dufZxodAPg/u/T+zlWL2cw8/TfEYelqwxeyKyn0BKmiXV2WJnf+LiQG+8LEPpJKitNhLsCryLI1FmG+GwZ2BR9+8noC6KeHoTrLyxtTFrXvZXkx4rm9rw/Ppz7h9vCV3TyZpCi8q/6r9OzXU5DoO68IP0kYXfa0O9bt66ZPLL9prDsKHJ8Vb25WJ1YVjy4mrfra2uwqOVVOICQEPPVKXW/ls2I+xVX+k7qsESEuDO+/KUXAbKJ2PdE5mtQsnoAVJULnjUc0Q88LDmgQ9z0k4CuoP0EHQ3xZ1Mo6jH+zbnsyh/pGaY+9TWhtOxU+RwfHsJQPJhQjU9CCiu5pMkOYWn6XLVZ9zRgPypH7UfgIjL0R21KfHze1aWhcLL/mVWpi2t2SSaW8W24XMXDiHpVbzwKwpp63+ic7e8DhlXRJo7qlCyEZAR+RYqsA9/Y6Amji25zq9mRKsy2v2rJDZC7YCMLZdRsUpy3bBlI08/3qg+kgHNuPlmNJ2V1tTqatVi13UZG4pAcZHyOBHj112YvOiGcgGnYWPDmFWT8UvLQbOSeDTP3tpE2GdXpU11b5BZdy9jEAaczy8QO8g8a7aoDf8fvGOYHPCogSTMAdqk6B60cJ
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(136003)(376002)(346002)(396003)(451199015)(40470700004)(46966006)(36840700001)(70206006)(4326008)(8676002)(40460700003)(7696005)(110136005)(54906003)(36756003)(70586007)(316002)(6666004)(83380400001)(82740400003)(81166007)(356005)(36860700001)(8936002)(5660300002)(40480700001)(26005)(41300700001)(86362001)(2616005)(2906002)(426003)(336012)(82310400005)(7416002)(4744005)(47076005)(16526019)(186003)(1076003)(478600001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2022 20:10:08.4961
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ebbd2b37-36f0-4b01-abe1-08dab9206970
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT084.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6399
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Oct 28, 2022 at 07:45:42PM +0000, Verma, Vishal L wrote:
+This series adds decoding for the CXL Protocol Errors Common Platform
+Error Record.
 
-> On Fri, 2022-10-28 at 17:59 +0000, Fan Ni wrote:
-> > The function for retrieving firmware version is named
-> > `cxl_memdev_get_firmware_verison`, updated to `cxl_memdev_get_firmware_=
-version'.
-> >=20
-> > Signed-off-by: Fan Ni <fan.ni@samsung.com>
-> > ---
-> > =A0Documentation/cxl/lib/libcxl.txt | 2 +-
-> > =A0cxl/lib/libcxl.c=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 | 2=
- +-
-> > =A0cxl/lib/libcxl.sym=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 | 2 +-
-> > =A0cxl/libcxl.h=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0 | 2 +-
-> > =A04 files changed, 4 insertions(+), 4 deletions(-)
->=20
-> Hi Fan,
->=20
-> Thanks for catching this. However since the typo is in an exported API,
-> we can't simply change it to the right spelling, as that would break
-> library compatibility, cause an soname bump (which we try to avoid).
->=20
-> A solution would be to /add/ the fixed spelling version of the api
-> alongside the misspelled one. Would you like to take a crack at doing
-> that instead?
->=20
-> Note that for the new API, the libcxl.sym addition will need to go into
-> a new section at the bottom instead of alongside the old one.
->=20
+Smita Koralahalli (2):
+  efi/cper, cxl: Decode CXL Protocol Error Section
+  efi/cper, cxl: Decode CXL Error Log
 
-Sure. I will fix as you suggested and send out a new patch for review.
-Thanks.
+ drivers/firmware/efi/Makefile   |   2 +-
+ drivers/firmware/efi/cper.c     |   9 ++
+ drivers/firmware/efi/cper_cxl.c | 179 ++++++++++++++++++++++++++++++++
+ drivers/firmware/efi/cper_cxl.h |  66 ++++++++++++
+ include/linux/cxl_err.h         |  22 ++++
+ 5 files changed, 277 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/firmware/efi/cper_cxl.c
+ create mode 100644 drivers/firmware/efi/cper_cxl.h
+ create mode 100644 include/linux/cxl_err.h
 
-> >=20
-> > diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/l=
-ibcxl.txt
-> > index fd2962a..edc852d 100644
-> > --- a/Documentation/cxl/lib/libcxl.txt
-> > +++ b/Documentation/cxl/lib/libcxl.txt
-> > @@ -68,7 +68,7 @@ int cxl_memdev_get_major(struct cxl_memdev *memdev);
-> > =A0int cxl_memdev_get_minor(struct cxl_memdev *memdev);
-> > =A0unsigned long long cxl_memdev_get_pmem_size(struct cxl_memdev *memde=
-v);
-> > =A0unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev=
-);
-> > -const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev)=
-;
-> > +const char *cxl_memdev_get_firmware_version(struct cxl_memdev *memdev)=
-;
-> > =A0size_t cxl_memdev_get_label_size(struct cxl_memdev *memdev);
-> > =A0int cxl_memdev_nvdimm_bridge_active(struct cxl_memdev *memdev);
-> > =A0int cxl_memdev_get_numa_node(struct cxl_memdev *memdev);
-> > diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-> > index e8c5d44..b7ad263 100644
-> > --- a/cxl/lib/libcxl.c
-> > +++ b/cxl/lib/libcxl.c
-> > @@ -1262,7 +1262,7 @@ CXL_EXPORT unsigned long long cxl_memdev_get_ram_=
-size(struct cxl_memdev *memdev)
-> > =A0=A0=A0=A0=A0=A0=A0=A0return memdev->ram_size;
-> > =A0}
-> > =A0
-> > -CXL_EXPORT const char *cxl_memdev_get_firmware_verison(struct cxl_memd=
-ev *memdev)
-> > +CXL_EXPORT const char *cxl_memdev_get_firmware_version(struct cxl_memd=
-ev *memdev)
-> > =A0{
-> > =A0=A0=A0=A0=A0=A0=A0=A0return memdev->firmware_version;
-> > =A0}
-> > diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-> > index 8bb91e0..febbca6 100644
-> > --- a/cxl/lib/libcxl.sym
-> > +++ b/cxl/lib/libcxl.sym
-> > @@ -19,7 +19,7 @@ global:
-> > =A0=A0=A0=A0=A0=A0=A0=A0cxl_memdev_get_ctx;
-> > =A0=A0=A0=A0=A0=A0=A0=A0cxl_memdev_get_pmem_size;
-> > =A0=A0=A0=A0=A0=A0=A0=A0cxl_memdev_get_ram_size;
-> > -=A0=A0=A0=A0=A0=A0=A0cxl_memdev_get_firmware_verison;
-> > +=A0=A0=A0=A0=A0=A0=A0cxl_memdev_get_firmware_version;
-> > =A0=A0=A0=A0=A0=A0=A0=A0cxl_cmd_get_devname;
-> > =A0=A0=A0=A0=A0=A0=A0=A0cxl_cmd_new_raw;
-> > =A0=A0=A0=A0=A0=A0=A0=A0cxl_cmd_set_input_payload;
-> > diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-> > index 9fe4e99..c3c99b8 100644
-> > --- a/cxl/libcxl.h
-> > +++ b/cxl/libcxl.h
-> > @@ -47,7 +47,7 @@ int cxl_memdev_get_minor(struct cxl_memdev *memdev);
-> > =A0struct cxl_ctx *cxl_memdev_get_ctx(struct cxl_memdev *memdev);
-> > =A0unsigned long long cxl_memdev_get_pmem_size(struct cxl_memdev *memde=
-v);
-> > =A0unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev=
-);
-> > -const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev)=
-;
-> > +const char *cxl_memdev_get_firmware_version(struct cxl_memdev *memdev)=
-;
-> > =A0size_t cxl_memdev_get_label_size(struct cxl_memdev *memdev);
-> > =A0int cxl_memdev_disable_invalidate(struct cxl_memdev *memdev);
-> > =A0int cxl_memdev_enable(struct cxl_memdev *memdev);
-> =
+-- 
+2.17.1
+
