@@ -2,200 +2,212 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEFEFA3740
-	for <linux-cxl@archiver.kernel.org>; Thu, 27 Oct 2022 21:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61601FA373D
+	for <linux-cxl@archiver.kernel.org>; Fri, 28 Oct 2022 03:07:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234947AbiJ0VaR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 27 Oct 2022 17:30:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58090 "EHLO
+        id S233867AbiJ1DHv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 27 Oct 2022 23:07:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235869AbiJ0VaQ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 27 Oct 2022 17:30:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A67414E635;
-        Thu, 27 Oct 2022 14:30:13 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B7ED862502;
-        Thu, 27 Oct 2022 21:30:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAC74C433C1;
-        Thu, 27 Oct 2022 21:30:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666906212;
-        bh=l3fIpRXljQEvqf+6oNMQQggxOWliUf7OCRru66C9w+o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=K0lrezsupKUjvCBZKwUvrC5aMYWr/fHwTJPhauAcNH1gEPx9jmeMlfW8+Y9CZyUVt
-         Oq5uUWLvZxjAph26l/t2Jc/TsYUwGHkwOzjtOxn6DsnyL7fDfkrmQcA8vqsA+Zni4j
-         pdDaoliguOJVaY7vDCz7Y4N/BTH6R66jclGhYPi1z+o02IaBJwLq4WjuHLpyXYz3eR
-         nzFOqm0G/SI7iYl5j2AYAcsawmtC8g5EEfO4XRlbOYZ+KdIA9NgpQihVc9dk/T4/oN
-         YQy/f+hizNiQTcLFpWCX0GKYSEwRVvhxgnp1TsakArnnIj9JhpWJKw6co3K+96jEMO
-         LmZFT4Cb1Rg2Q==
-Date:   Thu, 27 Oct 2022 16:30:10 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Terry Bowman <terry.bowman@amd.com>
-Cc:     alison.schofield@intel.com, vishal.l.verma@intel.com,
-        dave.jiang@intel.com, ira.weiny@intel.com, bwidawsk@kernel.org,
-        dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bhelgaas@google.com,
-        rafael@kernel.org, lenb@kernel.org, Jonathan.Cameron@huawei.com,
-        dave@stgolabs.net, rrichter@amd.com
-Subject: Re: [PATCH 5/5] cxl/pci: Log CXL device's PCIe AER and CXL RAS error
- information
-Message-ID: <20221027213010.GA827560@bhelgaas>
+        with ESMTP id S235368AbiJ1DHs (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 27 Oct 2022 23:07:48 -0400
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E390EAE845;
+        Thu, 27 Oct 2022 20:07:45 -0700 (PDT)
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29RMnBoI023106;
+        Thu, 27 Oct 2022 20:07:45 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : mime-version; s=s2048-2021-q4;
+ bh=05qkL3iaWPB16Ks+QE3MqFd9s3Sj749SWFbKCEevBxo=;
+ b=Z7qrbTeaRlRFT9Ju1P/JHAho4mQLAQ+YNgNgRM8kQyqpH93JYyqTaYOFMChoKKKI9rL6
+ gLyGR/Zu0/uKkEYZs6Pt8DbUGI2gBZL2DwQWUSYrsD3o3aAL71Q1bSu9FmY+gqwcMGHZ
+ /m9HOJiBGzthPvzfRO1ehPtRz1W1F0lk+A7m1HprPMELMFk4xPm37j+13q89G3U4CYiW
+ HgN4bE625Bbza2Oo4PuC8kRJM+OJh/xUtY2VLAScXwKmLd7+sWn8rTB/a9C3Ztc5n/Om
+ uCwpCcatom1bJtwTDToVl5J6Sx+sfmE8+EfImQUfmpka4sLtdY4S2usUadyMK8Op9Ha/ 2Q== 
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
+        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3kg23yjjjb-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Oct 2022 20:07:45 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=f1D19k57Oe+9IIknxhjR/vLm5JNgboDnvX2ao0Aa27P3wYlLS1KbJaYKq5XWG8yDtqwol+42ju6G2rxHKzlo3qOv4FpmkXUlFLvF/JnidZ94LpZ+ktzsdmAuIPQi+bFQ9w06nz7T++8nX328zsT3JGM3cJJu66WECKx2fwaZB/MdJ4lW7Pw4rm5tnv3rGl46/6hFSFoT4sjEw7E4wrk1cEcDcyoPyiRreC4ZU3VxEAh78f40Y8WG1F0m5BZBA5n05u13ei8UVInj/W5hJRrktMNXxbzqM9j+txB2yAmK/o+4dS6FsZ24fMbdR3K5dIK8X9Qas1mCTqJoBGTYL6Tx6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=05qkL3iaWPB16Ks+QE3MqFd9s3Sj749SWFbKCEevBxo=;
+ b=CgTetSSq8uDUmVJ/IcDadzxzBMpS0dLdQReAsthbVAt1b+P6DIH+OArgbGZ7wOuOJv+U/2pgsAXZuPBneFWYQWvYVMucAQ1IKtPveLtltaHbWfqewma63FJFUnMTJvqgM84To85uWF1Z5P4k0f+n0gwOBiSCzdJD+HeVpuZymxKmjmGirS28kb66U+3cszp//KHJ+PCx4/RRecwq1qCNyac4ByXXWVjTtjuespTWnjHK4lQ4TxMODFr0KUpUlatug55ea5apqtg0Pu/XI61gol+tR3LDxxLdTyPiRFazVG3cIaXJ2ySw5bMoncd1QHCqIQPlERqVaBjfy75m60sVJQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=meta.com; dmarc=pass action=none header.from=meta.com;
+ dkim=pass header.d=meta.com; arc=none
+Received: from CO1PR15MB4969.namprd15.prod.outlook.com (2603:10b6:303:e4::23)
+ by DM6PR15MB2553.namprd15.prod.outlook.com (2603:10b6:5:1a8::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.21; Fri, 28 Oct
+ 2022 03:07:41 +0000
+Received: from CO1PR15MB4969.namprd15.prod.outlook.com
+ ([fe80::f484:212f:e766:d1f5]) by CO1PR15MB4969.namprd15.prod.outlook.com
+ ([fe80::f484:212f:e766:d1f5%5]) with mapi id 15.20.5746.028; Fri, 28 Oct 2022
+ 03:07:41 +0000
+From:   "Jonathan Zhang (Infra)" <jonzhang@meta.com>
+To:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Robert Richter <rrichter@amd.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Terry Bowman <terry.bowman@amd.com>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH 0/2] efi/cper, cxl: Decode CXL Protocol Errors CPER
+Thread-Topic: [PATCH 0/2] efi/cper, cxl: Decode CXL Protocol Errors CPER
+Thread-Index: AQHY2pI/27foXU1qhE2+ZZlknLVcfa4ZgNaAgAZkhACAAAReAIABRD4AgAIRxgA=
+Date:   Fri, 28 Oct 2022 03:07:41 +0000
+Message-ID: <D9381C12-A585-4089-873B-3707C17823D3@fb.com>
+References: <20221007211714.71129-1-Smita.KoralahalliChannabasappa@amd.com>
+ <63531a9dd51b9_4da32946c@dwillia2-xfh.jf.intel.com.notmuch>
+ <151c093f-1e92-1c8e-957b-8781e488626a@amd.com>
+ <63587b16dbb3_14192944c@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <69a14ac2-510e-fd8f-0854-60805a150663@amd.com>
+In-Reply-To: <69a14ac2-510e-fd8f-0854-60805a150663@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3696.120.41.1.1)
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CO1PR15MB4969:EE_|DM6PR15MB2553:EE_
+x-ms-office365-filtering-correlation-id: d181e877-f643-4e91-ba27-08dab89193a4
+x-fb-source: Internal
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tSu4TZcchA1mkzjAYQdIILSacNx5jzUycXojBsSip1+/bDkyGRrC11Aejtj3hj8OjNRHOpuzC/CNeblpnJQelDxKQnnlp1LmD1SBKgPk4Uxx8RHhloQfg6inkfZKntsCaN0lTielhsHDZARM2MkpmKosuSLtmmhv08JW8P/oYYK7skvV0i7nV6iT1CAAOjxOOQ/5LJJtm7X4h31KP/pbv5yE2eJT+8BRuuA1p+EaSUq3PfELMYiHeOTJlPZCwLNYmMDJc9Vd1cZIBK0Q5uUEbTn6957q96PLai0DhqIrBj4OSQ7p+TF7YAPc2gHahqF3U6roOJbzUTCjZKrJUwffLkMVoO4YTnEdQmTfjXtRlhhCiOsOnQvTUplvxymARyAjQj5idxcvd2Ophexgth4/lUywYB14GIxZ6+zuMCxYmniZPTZWxIP0YH9yLIrZ3ZfV6XdZmTa0K0LDABLQrorovyfk3zojYg7xkuXeLW9OVHVp0CRq8YDW+HPbEaxryzb4RAc/EsDDt77gBq/zZz7y4LYMwvRh063OaSwpkeRCR85ASAcqSPZaMKOiijwSH4vT5sHmv4HdBv9C2WV/ZDqNz8oGBBGhtMaXcQNpllMzfPOQs1qQcMM4FkUVxs5TSM2hjPf5Ey1Xy96RB899hnWmtkwmYo25fe5upqB2ozZxaIpMzO9t5S05Gg4gXkALgCrPwrHQ4TyAlOsJxpJxNSRHQGHgo7JShvURAUFsSkZ2PgLcyyINAf9gqfG8JNlq+7djMIMGe3h8pv/8TuX+8AY2Sw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR15MB4969.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(376002)(346002)(366004)(396003)(39860400002)(136003)(451199015)(5660300002)(76116006)(83380400001)(2906002)(38070700005)(186003)(38100700002)(122000001)(54906003)(7416002)(478600001)(86362001)(8936002)(71200400001)(6506007)(66556008)(41300700001)(66946007)(91956017)(66446008)(8676002)(6916009)(53546011)(9686003)(64756008)(4326008)(316002)(6512007)(36756003)(33656002)(66476007)(6486002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?x5wxEvQw7/xUFEu3lGuvpAbOPChQBdbrY6b7qeTyZGYnZmh80YZvk4Wwsnbk?=
+ =?us-ascii?Q?dHCnbI4LQQKHI699CljGvv/KUZ6ODb7Hhw3QWJf2F+O5XiflcDvltIMtrBib?=
+ =?us-ascii?Q?KSBNSbGYs58FuMl+yQVfkAikqP1GBBipa5CfzoHUuidRKDGKLn/9wj4vtFXd?=
+ =?us-ascii?Q?ypTeY8pE1kQddgR/0a5HUUUhZcMj1vXhBqltc1RjVbyLcrGPpWPvjysHrFMp?=
+ =?us-ascii?Q?6lx04ZVnWCK95RJBEcDM20zKwf3bh/RqmvXUXZP3hsVGdktWJAp/kdQaV3jU?=
+ =?us-ascii?Q?j6ySS+Bs3p6oh8IXucwZV0ubYnRShU1qW/bLBbV0ttr9mXQlWiQ/Dsq8v4oB?=
+ =?us-ascii?Q?XFo/dS9bg8FLSRDR0Gd7nNwRSu6HCpjYdpl5w6GqC4LjCGrHcqLkqonFCFyn?=
+ =?us-ascii?Q?+LCfDdl7zt8YKkejDLNp50JKeS0pLgNcYDH23SELMJXH7kvQj3MerfGnin+m?=
+ =?us-ascii?Q?lwcdvYfbnSr2Mo1QB+Cf/bhjH8EZpgI1Azp4clYtYFFYhcs27bfTcozugqS+?=
+ =?us-ascii?Q?uJ03DKTQgQpMuuBQDFXxeoJxhxIDZamzCCbATn8HzVFcCbCAthItoQvuN9v+?=
+ =?us-ascii?Q?oq6+fjXkZMdmOg3cg0uh6vYivAzJJ/UJ1JhqygZMKvMlZi1WzKUijNdmY+V+?=
+ =?us-ascii?Q?xpzUv3nCco2r9zrpZ/N/c+aWrh4LjWn5S8P8FpFWlP3Zvo3+crwX6DlTcYJ4?=
+ =?us-ascii?Q?tf2nVm2ukmxiYXQRNA8NmFHDz10IQkU8hfcb0q12Q3btte8P5AovXa79cCH3?=
+ =?us-ascii?Q?2coXg+t4zggnrDg+idaCStbR1PLxk/iNv8dB5owCG9WiirYq1mMhK0HnMrCo?=
+ =?us-ascii?Q?pF74zLBCQFP86CfMdDqJCLFsUcVf3sgBXgHIEhE6s46vCUZ7BzcjDYSH/KiR?=
+ =?us-ascii?Q?42ai4Nxmb5aQNZk1bP8vuT8O5O1Z0AvLMlaAP7hqIhf+HAgAWFGLYYgH+xZV?=
+ =?us-ascii?Q?pv4pxv1C+iR2NZHgsuSZ60FxTVbXIoMq5FhReqoft/hr4DI+z9p1nX1ay2yu?=
+ =?us-ascii?Q?ldZiDUFzziBo26fNkk6fFZMlmC/eY0L8VxCHIc32rKFGT55mpON3FvEpNCZY?=
+ =?us-ascii?Q?R0YfnewF1cAeaFLbP78b2N19gTyonHLGwNRQEb+2e3hjKV/IKbd5aAX19RTx?=
+ =?us-ascii?Q?GpNLu8yapeZmLoi6PUZrBB5s8fsWw/jtXQ3Z/8mrNduFymh2LtF09waDzZc5?=
+ =?us-ascii?Q?X6lCpoLiQOwh8L5nZPFFkuGzPg7LidhNcIhyIMcsbNo+6NPESjAoQR1jwtjQ?=
+ =?us-ascii?Q?Ij58+YUSVwJhUyja5alNoXu+roCQmNLCRHNmvQ1EqwEIhaO6StFUdRfNW/uB?=
+ =?us-ascii?Q?qBcxehT8+AVyMSTvS90T97c1U73mRRCGa3JqkkewhUL3892MCrOtSCHu0gQM?=
+ =?us-ascii?Q?+EHysAPDlJkKon8/8qsqrPbSR/6jxPoW/ddjxxD2iQaGrSE/lJ9iYq+XmHXX?=
+ =?us-ascii?Q?jqBkhQsxQs8jlB1eU01KwO/DvJKdqiiUHlzwifDNV5ZCtlTEom6r6Fnd+rYZ?=
+ =?us-ascii?Q?fxgGp72mYmgMkGzGthuENCNes9WrjEWdbPiwmfIfxNnz6f0KBQGkh8cJE0Md?=
+ =?us-ascii?Q?eLRmsstA3i6gtFROhjmBjzAOk1Vmu8WiSz3Pec8021EoMns8WC2TnSeFHjYs?=
+ =?us-ascii?Q?ixfRBLmS5x2fNbsm0v3INPo=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <AA7BBDF738DC084498A3F6A7CB66E069@namprd15.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221021185615.605233-6-terry.bowman@amd.com>
+X-OriginatorOrg: meta.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR15MB4969.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d181e877-f643-4e91-ba27-08dab89193a4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2022 03:07:41.2692
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: EyXGqlC49jzT5H2rPqiMYLWOYadfJWz+Yw0bDEyrxpyiORHXNfXLMKfJf9PFefy4WlG+VdTMEy8lrC2x0lNAfg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR15MB2553
+X-Proofpoint-GUID: PQPFcz1zDgSkalnBTi8ef8mWeeINXwZS
+X-Proofpoint-ORIG-GUID: PQPFcz1zDgSkalnBTi8ef8mWeeINXwZS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-10-27_07,2022-10-27_01,2022-06-22_01
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Oct 21, 2022 at 01:56:15PM -0500, Terry Bowman wrote:
-> The CXL downport PCIe AER and CXL RAS capability information needs to be
-> logged during PCIe AER error handling.
+
+
+> On Oct 26, 2022, at 12:31 PM, Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com> wrote:
 > 
-> The existing PCIe AER error handler logs native AER errors but does not
-> log upport/downport AER capability residing in the RCRB. The CXL1.1
-> RCRB does not have a BDF and is not enunmerable. The existing error handler
-> logic does not display CXL RAS details either.
-
-s/enunmerable/enumerable/
-
-The patch itself doesn't seem to reference RCRB.  What's the
-connection?
-
-Is this specific to CXL?  The base PCIe spec also documents an RCRB,
-though I don't think Linux does anything with it.
-
-I guess at least the RCRB discovery must be CXL-specific, since I have
-no idea how to find a generic PCIe RCRB.
-
-> +static void cxl_error_report(struct cxl_memdev *cxlmd)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(cxlmd->cxlds->dev);
-> +	struct aer_capability_regs *aer_cap;
-> +	struct ras_cap *ras_cap;
-> +
-> +	aer_cap = (struct aer_capability_regs *)cxlmd->cxlds->aer_map.base;
-> +	ras_cap = (struct ras_cap *)cxlmd->cxlds->ras_map.base;
-
-I don't think you need casts since .base is void *.
-
-> +	pci_err(pdev, "CXL Error Report\n");
-> +	pci_err(pdev, "AER Errors:\n");
-> +	if (aer_cap) {
-> +		cxl_print_aer(pdev, AER_CORRECTABLE, aer_cap);
-> +		cxl_print_aer(pdev, AER_NONFATAL, aer_cap);
-> +		cxl_print_aer(pdev, AER_FATAL, aer_cap);
-> +	}
-> +
-> +	pci_err(pdev, "RAS Errors:\n");
-> +	if (ras_cap) {
-> +		pci_err(pdev, "RAS: uc_error_status = %X\n", readl(&ras_cap->uc_error_status));
-
-"%X" will look a lot different than what cper_print_aer() logged
-above.  No "0x", upper-case vs lower-case, "=" vs ":", etc.  Maybe
-there should be a hint to connect RAS with CXL (maybe there's already
-a dev_fmt somewhere that I missed)?
-
-> +static void cxl_error_detected(struct pci_dev *pdev)
-> +{
-> +	struct cxl_memdev *cxlmd;
-> +
-> +	if (!is_cxl_memdev(&pdev->dev)) {
-> +		pci_err(pdev, "CXL memory device is invalid\n");
-> +		return;
-> +	}
-> +
-> +	cxlmd = dev_get_drvdata(&pdev->dev);
-> +	if (!cxlmd) {
-> +		pci_err(pdev, "CXL memory device is NULL\n");
-> +		return;
-> +	}
-> +
-> +	if (!cxlmd->cxlds) {
-> +		pci_err(pdev, "CXL device state object is NULL\n");
-> +		return;
-> +	}
-
-Would these NULL pointers indicate a programming error, or do they
-indicate lack of an optional feature?  If the former, I generally
-prefer to just take the NULL pointer dereference oops instead of just
-printing an easily-missed message.  But maybe the CXL style is to be
-more defensive.
-
-> +void cxl_print_aer(struct pci_dev *dev, int aer_severity,
-> +		    struct aer_capability_regs *aer)
-> +{
-> +	cper_print_aer(dev, aer_severity, aer);
-
-What is the purpose of this wrapper?  I guess you need an exported
-symbol for some reason?
-
-> +}
-> +EXPORT_SYMBOL_GPL(cxl_print_aer);
-
-> +static void report_cxl_errors(struct aer_rpc *rpc,
-> +			      struct aer_err_source *e_src)
-> +{
-> +	struct pci_dev *pdev = rpc->rpd;
-> +	struct aer_err_info e_info;
-> +	u32 uncor_status, cor_status;
-> +
-> +	pci_read_config_dword(pdev, pdev->aer_cap + PCI_ERR_UNCOR_STATUS, &uncor_status);
-> +	pci_read_config_dword(pdev, pdev->aer_cap + PCI_ERR_COR_STATUS, &cor_status);
-
-I think it's kind of an existing defect that we don't have a single
-place to read these registers.  I think they should be read either in
-firmware (for firmware-first error handling, where Linux basically
-gets a package of these register contents) or in Linux (for native
-handling).  Ideally I think these paths would converge right after
-Linux reads them.
-
-Anyway, I don't think we should read these registers *again* for CXL.
-And I assume firmware-first error handling should work for CXL as well
-as for base PCIe?  That would imply that we wouldn't read them at all
-here for the firmware-first case.
-
-> +	if (!uncor_status && !cor_status)
-> +		return;
-> +
-> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_EC)
-> +		pcie_walk_rcec(pdev, report_cxl_errors_iter, &e_info);
-> +	else
-> +		pci_walk_bus(pdev->subordinate, report_cxl_errors_iter, &e_info);
-> +
-> +	pci_write_config_dword(pdev, pdev->aer_cap + PCI_ERR_UNCOR_STATUS, uncor_status);
-> +	pci_write_config_dword(pdev, pdev->aer_cap + PCI_ERR_COR_STATUS, cor_status);
-
-Shouldn't this clearing be somehow contingent on pcie_aer_is_native()?
-
-> +++ b/include/linux/pci.h
-> @@ -827,6 +827,10 @@ enum pci_ers_result {
->  
->  /* PCI bus error event callbacks */
->  struct pci_error_handlers {
-> +
-> +	/* CXL error detected on this device */
-
-Nit on the comment: calling this function doesn't imply that a CXL
-error was detected; we *always* call it.  Apparently it's just an
-opportunity to log any CXL-specific errors that may have occurred?
-
-I think we need a comment about why this couldn't be done in the
-existing .error_detected() callback.  I gather it might be related to
-AER_CORRECTABLE errors, for which we don't call .error_detected()?
-
-If the purpose is only to learn about correctable errors, maybe the
-callback doesn't need to be CXL-specific and could be called at the
-point where we test for AER_CORRECTABLE?
-
-> +	void (*cxl_error_detected)(struct pci_dev *dev);
-> +
->  	/* PCI bus error detected on this device */
->  	pci_ers_result_t (*error_detected)(struct pci_dev *dev,
->  					   pci_channel_state_t error);
-> -- 
-> 2.34.1
+> On 10/25/2022 5:11 PM, Dan Williams wrote:
+>> Smita Koralahalli wrote:
+>>> Hi Dan,
+>>> 
+>>> On 10/21/2022 3:18 PM, Dan Williams wrote:
+>>>> Hi Smita,
+>>>> 
+>>>> Smita Koralahalli wrote:
+>>>>> This series adds decoding for the CXL Protocol Errors Common Platform
+>>>>> Error Record.
+>>>> Be sure to copy Ard Biesheuvel <ardb@kernel.org>, added, on
+>>>> drivers/firmware/efi/ patches.
+>>>> 
+>>>> Along those lines, drivers/cxl/ developers have an idea of what is
+>>>> contained in the new CXL protocol error records and why Linux might want
+>>>> to decode them, others from outside drivers/cxl/ might not. It always
+>>>> helps to have a small summary of the benefit to end users of the
+>>>> motivation to apply a patch set.
+>>> Sure, will include in my v2.
+>>> 
+>>>>> Smita Koralahalli (2):
+>>>>>    efi/cper, cxl: Decode CXL Protocol Error Section
+>>>>>    efi/cper, cxl: Decode CXL Error Log
+>>>>> 
+>>>>>   drivers/firmware/efi/Makefile   |   2 +-
+>>>>>   drivers/firmware/efi/cper.c     |   9 +++
+>>>>>   drivers/firmware/efi/cper_cxl.c | 108 ++++++++++++++++++++++++++++++++
+>>>>>   drivers/firmware/efi/cper_cxl.h |  58 +++++++++++++++++
+>>>>>   include/linux/cxl_err.h         |  21 +++++++
+>>>>>   5 files changed, 197 insertions(+), 1 deletion(-)
+>>>> I notice no updates for the trace events in ghes_do_proc(), is that next
+>>>> in your queue? That's ok to be a follow-on after v2.
+>>> Sorry, if I haven't understood this right. Are you implying about the
+>>> "handling"
+>>> of cxl memory errors in ghes_do_proc() or is it just copying of CPER
+>>> entries to
+>>> tracepoints?
+>> Right now ghes_do_proc() will let the CXL CPER records fall through to
+>> log_non_standard_event(). Are you planning to add trace event decode
+>> there for CPER_SEC_CXL_PROT_ERR records?
 > 
+> Thanks! Yeah its a good idea to add. I did not think about this before.
+> I will send this as a separate patchset after v2.
+> 
+> I think with this cxl cper trace event support and Ira's patchset which traces
+> specific event record types via Get Event Record, we can start the userspace
+> handling probably in rasdaemon?
+Yes, I think this makes sense. rasdaemon could aggregate data and provide user
+with full picture:
+* Memory errors from both processor attached memory and CXL memory.
+* CXL protocol errors.
+* CXL device errors.
+Such errors may be handled either firmware first or OS first.
+
+> 
+>> 
+>> I am not sure if the CXL CPER to trace record conversion belongs there,
+>> or somewhere closer to trace_aer_event() invocations since the CXL
+>> protocol errors are effectively an extenstion of PCI AER events.
+> 
+> Right, I will keep it simple in v1 and get the comments about the placement..
+> 
+> Thanks,
+> Smita
+> 
+> 
+> 
+
