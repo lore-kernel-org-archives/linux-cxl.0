@@ -2,57 +2,94 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE63C38A02
-	for <linux-cxl@archiver.kernel.org>; Sun, 30 Oct 2022 08:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47596C38A02
+	for <linux-cxl@archiver.kernel.org>; Mon, 31 Oct 2022 07:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229642AbiJ3Iip (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 30 Oct 2022 04:38:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36952 "EHLO
+        id S229681AbiJaHkM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 31 Oct 2022 03:40:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbiJ3Iio (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 30 Oct 2022 04:38:44 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE6DDA0;
-        Sun, 30 Oct 2022 01:38:43 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id E56E968AFE; Sun, 30 Oct 2022 09:38:38 +0100 (CET)
-Date:   Sun, 30 Oct 2022 09:38:38 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
+        with ESMTP id S229915AbiJaHjy (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 31 Oct 2022 03:39:54 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD1287650;
+        Mon, 31 Oct 2022 00:39:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667201986; x=1698737986;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KunlMGY2/up5IfEsZKl1WSD35WH5qKwT2d8FLbQiDMc=;
+  b=kgoShoEO8pwJlXTG2Xg/BCP7RqFinXEhUET0AYEPHgY9jNT7I1Y7y55d
+   wcb7aAVwMKrStifsAXfVjFnD5y3LTuqZqJynY18NIYVOld+/b/JT4Zc5A
+   NnAt0NLFKJS8f+K6u3UszpFDliFq9rFtq6YizwS15zB37ngo/zvVNFItf
+   kT50dUDNFzoOHlVxyOPtzyIs/IY6eoZn6AgYrGbh8pEexZbKeTSbp/GFX
+   Cmhdew7JJdidtQsLYnCiB/YlyTr5WOlvayzBELW5yCEFrxA2lxOkrOCh3
+   CSDV0zb1haT35RcxuosNTRxPuXyZr9Na1yQv7vlOx6t8CLj6At0CMx1H6
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10516"; a="373049496"
+X-IronPort-AV: E=Sophos;i="5.95,227,1661842800"; 
+   d="scan'208";a="373049496"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2022 00:39:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10516"; a="758749258"
+X-IronPort-AV: E=Sophos;i="5.95,227,1661842800"; 
+   d="scan'208";a="758749258"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 31 Oct 2022 00:39:43 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 76B54155; Mon, 31 Oct 2022 09:40:06 +0200 (EET)
+Date:   Mon, 31 Oct 2022 09:40:06 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>, dave.jiang@intel.com,
-        alison.schofield@intel.com, bwidawsk@kernel.org,
-        vishal.l.verma@intel.com, a.manzanares@samsung.com,
-        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 1/2] cxl/pci: Add generic MSI-X/MSI irq support
-Message-ID: <20221030083838.GD4949@lst.de>
-References: <20221024133633.00000467@huawei.com> <20221025232535.GA579167@bhelgaas>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Chris Chiu <chris.chiu@canonical.com>,
+        linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+        linux-cxl@vger.kernel.org, linuxarm@huawei.com
+Subject: Re: Regression: Re: [PATCH v2 4/6] PCI: Distribute available
+ resources for root buses too
+Message-ID: <Y1971qnaq6BJObDl@black.fi.intel.com>
+References: <20220905080232.36087-1-mika.westerberg@linux.intel.com>
+ <20220905080232.36087-5-mika.westerberg@linux.intel.com>
+ <20221014124553.0000696f@huawei.com>
+ <Y0lkeieF3WNV3P3Q@black.fi.intel.com>
+ <20221014154858.000079f2@huawei.com>
+ <Y1ZzRmi9fL9yHf7I@black.fi.intel.com>
+ <Y1Z2GGgfZyzC2d1N@black.fi.intel.com>
+ <Y1fYNsjmUFZsvteT@black.fi.intel.com>
+ <Y1fjT6eyV8KVlNRp@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221025232535.GA579167@bhelgaas>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <Y1fjT6eyV8KVlNRp@smile.fi.intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Oct 25, 2022 at 06:25:35PM -0500, Bjorn Helgaas wrote:
-> Is this cxl code allocating vectors for devices that might also be
-> claimed by portdrv?  I assume not because that sounds like a problem.
+Hi Andy,
+
+On Tue, Oct 25, 2022 at 04:23:27PM +0300, Andy Shevchenko wrote:
+> On Tue, Oct 25, 2022 at 03:36:06PM +0300, Mika Westerberg wrote:
+> > On Mon, Oct 24, 2022 at 02:25:12PM +0300, Mika Westerberg wrote:
 > 
-> Ugh.  I always feel like the portdrv design must be sub-optimal
-> because this seems so hard to do cleanly.
+> Just for the record in case this code will formally go out
+> 
+> ...
+> 
+> > +			for (i = 0; i < PCI_ROM_RESOURCE; i++) {
+> > +				const struct resource *dev_res = &dev->resource[i];
+> 
+> I believe this is a good candidate to have
+> 
+> #define for_each_pci_dev_resource(dev, res)			\
+> 	for (unsigned int i = 0;				\
+> 	     res = &(dev)->resource[i], i < PCI_ROM_RESOURCE;	\
+> 	     i++)
+> 
+> Since we have many places in the kernel with such a snippet.
 
-Yes, portdrv is a mess.  And I fear we really need to bite the bullet
-rather sooner than later to sort much of this out by lifting all the
-logic to the core and just keep the "drivers" around for sysfs
-pretence.
-
-And I think CXL is trying to run into a similar (but not quiete as bad)
-mess with it's overly modular approach.  In either case the right
-thing would be to do anough early setup to find the requird number of
-interrupts and highest interrupt number and just request that once.
+Sure makes sense, but I think that should be a separate patch series.
