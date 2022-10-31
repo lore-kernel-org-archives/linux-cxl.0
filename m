@@ -2,128 +2,393 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F06EECAAA1
-	for <linux-cxl@archiver.kernel.org>; Mon, 31 Oct 2022 17:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F2DFA3741
+	for <linux-cxl@archiver.kernel.org>; Mon, 31 Oct 2022 18:50:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229948AbiJaRri (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 31 Oct 2022 13:47:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47706 "EHLO
+        id S229475AbiJaSuO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 31 Oct 2022 14:50:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229907AbiJaRrh (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 31 Oct 2022 13:47:37 -0400
-Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E97C81021
-        for <linux-cxl@vger.kernel.org>; Mon, 31 Oct 2022 10:47:35 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id CF8BB42520;
-        Mon, 31 Oct 2022 17:47:31 +0000 (UTC)
-Received: from pdx1-sub0-mail-a225 (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 30EA34250B;
-        Mon, 31 Oct 2022 17:47:31 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1667238451; a=rsa-sha256;
-        cv=none;
-        b=zcZ7NRCl4slPD0UawGeJ160DVXOC5t5lPgQ22siFk3OfNZMGh0wUigYAc3S3ULCdRh9MaI
-        0pa4nk++WGDCaJV7n9U3AWlDi5FoqCeKjjg0zC83xozZIIJsJRsqqK1wMCyrSdGGiVjWrZ
-        C1uQVSqEDPgIqh9OxktHm+kJ/l5Y7cwv5LxOAbuGqfzGwSReXWAioHAnqMdz3L52Gaqh4S
-        xcADyZfgIOIes4xN2o4Cuf4si8GleZ+yPm+3739w4gY8WFOTSi6JN7bgy4vhvjnLE2VC4g
-        NlI65cH4+e9RMHhZlJdzoM0dKCy2Hp4nkDCNjc9747fXmCB425k8qHlzg/36ag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1667238451;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=Bir2SJB8dGo7+XamxtZow5M/3jyuDb4RWRrNyzVDip4=;
-        b=ww91rQQ6h9AP3SxkZ908PrJ0gGSv5LD5cfRqkUfMtyOn8VDDrW5BoGuIPSBqqkzbqFpyDR
-        OK6adXvrQbLBFDyJDgrNZ1Rii0gSmxy1ac94Pu+mLX6BL0n/o7WuqxqeHC4bg7pJGs2zaO
-        /41wq/A/TLczxlmmTrlpLPVKBfddNPrmHsB43whzrwWqZUHrYv281tF+qzC5+AXMMk+pfG
-        y2O6K4LgasSFC/d76gpV9iXCU+mfJUEtSvRsKAGT2vZvbcap2lzrT9CJKdtsXxkw/S58Us
-        m/ZISTqkyf7t0i28y7sEw4KS6fNCmET/Xp+/plY0c+7Ml6p3uFanZMJiw0MLeA==
-ARC-Authentication-Results: i=1;
-        rspamd-7b8dfb6d4c-m262b;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Harbor-Thoughtful: 184aa1c6280e4263_1667238451626_3884422489
-X-MC-Loop-Signature: 1667238451626:627654579
-X-MC-Ingress-Time: 1667238451626
-Received: from pdx1-sub0-mail-a225 (pop.dreamhost.com [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.119.144.184 (trex/6.7.1);
-        Mon, 31 Oct 2022 17:47:31 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a225 (Postfix) with ESMTPSA id 4N1LFt0hVNz8k;
-        Mon, 31 Oct 2022 10:47:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1667238450;
-        bh=Bir2SJB8dGo7+XamxtZow5M/3jyuDb4RWRrNyzVDip4=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=p0Jm3SzyiEsfD006waFiEMddCk7I7Ck8XBLHxJuZmHeYlQwElMOWlQ7QNGMeAPkzu
-         gtlwPrKeMF0FaGhFeamdnObteYFyT9ySnYQ7jWX3AR0po1oDzl+ANVdcpu6vrPbHGB
-         EjoYwOx0fl/aBmUx7w1K2fdZOp0W7pj5hZYlRqULRqyqNFXGN7oYFgoVqcjaayM9tY
-         93dczT70umTZiSj8QkeHUUnS8yvbSPhYzCddWICuhw4/msGi0r5b16bdskuAkvcd1J
-         s9GwGfN2UC0N2UvG8tUUE8/uUiA7D1Q4MWrJVqCpG5cdvmyCzuoJ9+3LHkXPX0gIBe
-         T4tlDcbal6kxg==
-Date:   Mon, 31 Oct 2022 10:25:30 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Fan Ni <fan.ni@samsung.com>
-Cc:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        Davidlohr Bueso <d.bueso@samsung.com>
-Subject: Re: [ndctl PATCH] Adding cxl_memdev_get_firmware_version
-Message-ID: <20221031172530.jnywmbtjayfambb2@offworld>
-References: <CGME20221028235751uscas1p1f5e84bab0e196e19610ec68373e09e4b@uscas1p1.samsung.com>
- <20221028235705.32890-1-fan.ni@samsung.com>
+        with ESMTP id S229477AbiJaSuL (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 31 Oct 2022 14:50:11 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 062F3D2C8
+        for <linux-cxl@vger.kernel.org>; Mon, 31 Oct 2022 11:50:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667242209; x=1698778209;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=779mBtFJmCjjLuWfzBvJTBT9YcqQfClfBfK8EqOo84w=;
+  b=LZ9CxCI3tBSB9UhN5s/kE81CB9sx2WqQ7oUinDCMvtfyr2N0adFbHJwk
+   Hxe6ERQ5LtKu+ThzGT7l1ABRsWV6f3E/bhhLs7D/CBWZa7Wg8AN6R2kmP
+   j1Ajobqph/7qrPWwOyB8Cjl7H2SBs4LyEGH5NBdtS1kC5XyQit7qkaVL3
+   /aN1hpPmNeFncZV9Xv/VLQXgkN9YcoRqTLRmMo/iZg6HyVCNxCFer6eGF
+   GU+ELnzPYBtbeACtrAHBxxMatrYmuRwp+jzd6XO+l8PRfGJD/+WiLBhc9
+   s/HvtrFKAQyhhU+rkH6kfsgqCa2rjBDyPlqmGnZLJWvrZ5JUp2hHMOm1x
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10517"; a="373186813"
+X-IronPort-AV: E=Sophos;i="5.95,228,1661842800"; 
+   d="scan'208";a="373186813"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2022 11:50:09 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10517"; a="584757681"
+X-IronPort-AV: E=Sophos;i="5.95,228,1661842800"; 
+   d="scan'208";a="584757681"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.58.216])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2022 11:50:09 -0700
+Date:   Mon, 31 Oct 2022 11:50:07 -0700
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Jonathan Zhang <jonzhang@meta.com>
+Cc:     linux-cxl@vger.kernel.org, vishal.l.verma@intel.com,
+        wzhang@meta.com, Jonathan Zhang <jonzhang@fb.com>
+Subject: Re: [ndctl PATCH V2 2/2] cxl: display alert configuration fields
+Message-ID: <Y2AY3372iFJvY2lX@aschofie-mobl2>
+References: <20221025204320.290354-1-jonzhang@meta.com>
+ <20221025204320.290354-3-jonzhang@meta.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221028235705.32890-1-fan.ni@samsung.com>
-User-Agent: NeoMutt/20220429
+In-Reply-To: <20221025204320.290354-3-jonzhang@meta.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 28 Oct 2022, Fan Ni wrote:
+On Tue, Oct 25, 2022 at 01:43:20PM -0700, Jonathan Zhang wrote:
+> From: Jonathan Zhang <jonzhang@fb.com>
+> 
+> CXL device's critical alert and programmable warning configurations
+> are displayed when:
+> * list command is issued.
+> * "--alert-config" is issued.
+> 
 
->The function for retrieving firmware version is named
->`cxl_memdev_get_firmware_verison`, updated to
->`cxl_memdev_get_firmware_version'.
->keeping `cxl_memdev_get_firmware_verison` for library compatibility.
->
+Hi Jonathan,
 
-Yikes, good catch!
+The change from 'alert' to 'alert-config' in the cmdline needs to carry
+through to the JSON output and the man page example too.
 
-While at it there are a few other typos (not abi, fortunately :)
+Alison
 
-diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
-index fd2962ad78b5..66c1d14ec5e9 100644
---- a/Documentation/cxl/lib/libcxl.txt
-+++ b/Documentation/cxl/lib/libcxl.txt
-@@ -110,7 +110,7 @@ may appear in the topology that were not previously enumerable.
 
-  NOTE: cxl_memdev_disable_invalidate() will force disable the memdev
-  regardless of whether the memory provided by the device is in active use
--by the operating system. Callers take responisbility for assuring that
-+by the operating system. Callers take responsibility for assuring that
-  it is safe to disable the memory device. Otherwise, this call can be as
-  destructive as ripping a DIMM out of a running system. Like all other
-  libcxl calls that mutate the system state or divulge security sensitive
-@@ -327,7 +327,7 @@ const char *cxl_dport_get_physical_node(struct cxl_dport *dport);
-  int cxl_dport_get_id(struct cxl_dport *dport);
-  bool cxl_dport_maps_memdev(struct cxl_dport *dport, struct cxl_memdev *memdev);
-  ----
--The id of a dport is the hardware idenfifier used by an upstream port to
-+The id of a dport is the hardware identifier used by an upstream port to
-  reference a downstream port. The physical node of a dport is only
-  available for platform firmware defined downstream ports and alias the
-  companion object, like a PCI host bridge, in the PCI device hierarchy.
+> Signed-off-by: Jonathan Zhang <jonzhang@meta.com>
+> ---
+>  Documentation/cxl/cxl-list.txt |  33 ++++++
+>  cxl/filter.c                   |   2 +
+>  cxl/filter.h                   |   1 +
+>  cxl/json.c                     | 185 +++++++++++++++++++++++++++++++++
+>  cxl/list.c                     |   6 +-
+>  util/json.h                    |   1 +
+>  6 files changed, 226 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
+> index 14a2b4b..c762368 100644
+> --- a/Documentation/cxl/cxl-list.txt
+> +++ b/Documentation/cxl/cxl-list.txt
+> @@ -219,6 +219,39 @@ OPTIONS
+>    }
+>  ]
+>  ----
+> +-A::
+> +--alert::
+> +	Include alert configuration in the memdev listing. Example listing:
+> +----
+> +# cxl list -m mem0 -A
+> +[
+> +  {
+> +    "memdev":"mem0",
+> +    "pmem_size":0,
+> +    "ram_size":273535729664,
+> +    "alert":{
+> +      "life_used_prog_warn_threshold_valid":false,
+> +      "dev_over_temperature_prog_warn_threshold_valid":false,
+> +      "dev_under_temperature_prog_warn_threshold_valid":false,
+> +      "corrected_volatile_mem_err_prog_warn_threshold_valid":true,
+> +      "corrected_pmem_err_prog_warn_threshold_valid":false,
+> +      "life_used_prog_warn_threshold_writable":false,
+> +      "dev_over_temperature_prog_warn_threshold_writable":false,
+> +      "dev_under_temperature_prog_warn_threshold_writable":false,
+> +      "corrected_volatile_mem_err_prog_warn_threshold_writable":true,
+> +      "corrected_pmem_err_prog_warn_threshold_writable":false,
+> +      "life_used_crit_alert_threshold":0,
+> +      "life_used_prog_warn_threshold":0,
+> +      "dev_over_temperature_crit_alert_threshold":0,
+> +      "dev_under_temperature_crit_alert_threshold":0,
+> +      "dev_over_temperature_prog_warn_threshold":0,
+> +      "dev_under_temperature_prog_warn_threshold":0,
+> +      "corrected_volatile_mem_err_prog_warn_threshold":0,
+> +      "corrected_pmem_err_prog_warn_threshold":0
+> +    },
+> +  }
+> +]
+> +----
+>  
+>  -B::
+>  --buses::
+> diff --git a/cxl/filter.c b/cxl/filter.c
+> index 56c6599..beb64de 100644
+> --- a/cxl/filter.c
+> +++ b/cxl/filter.c
+> @@ -686,6 +686,8 @@ static unsigned long params_to_flags(struct cxl_filter_params *param)
+>  		flags |= UTIL_JSON_TARGETS;
+>  	if (param->partition)
+>  		flags |= UTIL_JSON_PARTITION;
+> +	if (param->alert_config)
+> +		flags |= UTIL_JSON_ALERT_CONFIG;
+>  	return flags;
+>  }
+>  
+> diff --git a/cxl/filter.h b/cxl/filter.h
+> index 256df49..cd514c9 100644
+> --- a/cxl/filter.h
+> +++ b/cxl/filter.h
+> @@ -26,6 +26,7 @@ struct cxl_filter_params {
+>  	bool human;
+>  	bool health;
+>  	bool partition;
+> +	bool alert_config;
+>  	int verbose;
+>  	struct log_ctx ctx;
+>  };
+> diff --git a/cxl/json.c b/cxl/json.c
+> index 63c1751..2f74452 100644
+> --- a/cxl/json.c
+> +++ b/cxl/json.c
+> @@ -185,6 +185,185 @@ err_jobj:
+>  	return NULL;
+>  }
+>  
+> +static struct json_object *
+> +util_cxl_memdev_alert_config_to_json(struct cxl_memdev *memdev,
+> +				     unsigned long flags)
+> +{
+> +	struct json_object *jalert_config;
+> +	struct json_object *jobj;
+> +	struct cxl_cmd *cmd;
+> +	int rc;
+> +
+> +	jalert_config = json_object_new_object();
+> +	if (!jalert_config)
+> +		return NULL;
+> +	if (!memdev)
+> +		goto err_jobj;
+> +
+> +	cmd = cxl_cmd_new_get_alert_config(memdev);
+> +	if (!cmd)
+> +		goto err_jobj;
+> +
+> +	rc = cxl_cmd_submit(cmd);
+> +	if (rc < 0)
+> +		goto err_cmd;
+> +	rc = cxl_cmd_get_mbox_status(cmd);
+> +	if (rc != 0)
+> +		goto err_cmd;
+> +
+> +	rc = cxl_cmd_alert_config_life_used_prog_warn_threshold_valid(cmd);
+> +	jobj = json_object_new_boolean(rc);
+> +	if (jobj)
+> +		json_object_object_add(jalert_config,
+> +				       "life_used_prog_warn_threshold_valid",
+> +				       jobj);
+> +
+> +	rc = cxl_cmd_alert_config_dev_over_temperature_prog_warn_threshold_valid(
+> +		cmd);
+> +	jobj = json_object_new_boolean(rc);
+> +	if (jobj)
+> +		json_object_object_add(
+> +			jalert_config,
+> +			"dev_over_temperature_prog_warn_threshold_valid", jobj);
+> +
+> +	rc = cxl_cmd_alert_config_dev_under_temperature_prog_warn_threshold_valid(
+> +		cmd);
+> +	jobj = json_object_new_boolean(rc);
+> +	if (jobj)
+> +		json_object_object_add(
+> +			jalert_config,
+> +			"dev_under_temperature_prog_warn_threshold_valid",
+> +			jobj);
+> +
+> +	rc = cxl_cmd_alert_config_corrected_volatile_mem_err_prog_warn_threshold_valid(
+> +		cmd);
+> +	jobj = json_object_new_boolean(rc);
+> +	if (jobj)
+> +		json_object_object_add(
+> +			jalert_config,
+> +			"corr_volatile_mem_err_prog_warn_threshold_valid",
+> +			jobj);
+> +
+> +	rc = cxl_cmd_alert_config_corrected_pmem_err_prog_warn_threshold_valid(
+> +		cmd);
+> +	jobj = json_object_new_boolean(rc);
+> +	if (jobj)
+> +		json_object_object_add(
+> +			jalert_config,
+> +			"corr_pmem_err_prog_warn_threshold_valid", jobj);
+> +
+> +	rc = cxl_cmd_alert_config_life_used_prog_warn_threshold_writable(cmd);
+> +	jobj = json_object_new_boolean(rc);
+> +	if (jobj)
+> +		json_object_object_add(jalert_config,
+> +				       "life_used_prog_warn_threshold_writable",
+> +				       jobj);
+> +
+> +	rc = cxl_cmd_alert_config_dev_over_temperature_prog_warn_threshold_writable(
+> +		cmd);
+> +	jobj = json_object_new_boolean(rc);
+> +	if (jobj)
+> +		json_object_object_add(
+> +			jalert_config,
+> +			"dev_over_temperature_prog_warn_threshold_writable",
+> +			jobj);
+> +
+> +	rc = cxl_cmd_alert_config_dev_under_temperature_prog_warn_threshold_writable(
+> +		cmd);
+> +	jobj = json_object_new_boolean(rc);
+> +	if (jobj)
+> +		json_object_object_add(
+> +			jalert_config,
+> +			"dev_under_temperature_prog_warn_threshold_writable",
+> +			jobj);
+> +
+> +	rc = cxl_cmd_alert_config_corrected_volatile_mem_err_prog_warn_threshold_writable(
+> +		cmd);
+> +	jobj = json_object_new_boolean(rc);
+> +	if (jobj)
+> +		json_object_object_add(
+> +			jalert_config,
+> +			"corr_volatile_mem_err_prog_warn_threshold_writable",
+> +			jobj);
+> +
+> +	rc = cxl_cmd_alert_config_corrected_pmem_err_prog_warn_threshold_writable(
+> +		cmd);
+> +	jobj = json_object_new_boolean(rc);
+> +	if (jobj)
+> +		json_object_object_add(
+> +			jalert_config,
+> +			"corr_pmem_err_prog_warn_threshold_writable", jobj);
+> +
+> +	rc = cxl_cmd_alert_config_get_life_used_crit_alert_threshold(cmd);
+> +	jobj = json_object_new_int(rc);
+> +	if (jobj)
+> +		json_object_object_add(jalert_config,
+> +				       "life_used_crit_alert_threshold", jobj);
+> +
+> +	rc = cxl_cmd_alert_config_get_life_used_prog_warn_threshold(cmd);
+> +	jobj = json_object_new_int(rc);
+> +	if (jobj)
+> +		json_object_object_add(jalert_config,
+> +				       "life_used_prog_warn_threshold", jobj);
+> +
+> +	rc = cxl_cmd_alert_config_get_dev_over_temperature_crit_alert_threshold(
+> +		cmd);
+> +	jobj = json_object_new_int(rc);
+> +	if (jobj)
+> +		json_object_object_add(
+> +			jalert_config,
+> +			"dev_over_temperature_crit_alert_threshold", jobj);
+> +
+> +	rc = cxl_cmd_alert_config_get_dev_under_temperature_crit_alert_threshold(
+> +		cmd);
+> +	jobj = json_object_new_int(rc);
+> +	if (jobj)
+> +		json_object_object_add(
+> +			jalert_config,
+> +			"dev_under_temperature_crit_alert_threshold", jobj);
+> +
+> +	rc = cxl_cmd_alert_config_get_dev_over_temperature_prog_warn_threshold(
+> +		cmd);
+> +	jobj = json_object_new_int(rc);
+> +	if (jobj)
+> +		json_object_object_add(
+> +			jalert_config,
+> +			"dev_over_temperature_prog_warn_threshold", jobj);
+> +
+> +	rc = cxl_cmd_alert_config_get_dev_under_temperature_prog_warn_threshold(
+> +		cmd);
+> +	jobj = json_object_new_int(rc);
+> +	if (jobj)
+> +		json_object_object_add(
+> +			jalert_config,
+> +			"dev_under_temperature_prog_warn_threshold", jobj);
+> +
+> +	rc = cxl_cmd_alert_config_get_corrected_volatile_mem_err_prog_warn_threshold(
+> +		cmd);
+> +	jobj = json_object_new_int(rc);
+> +	if (jobj)
+> +		json_object_object_add(
+> +			jalert_config,
+> +			"corr_volatile_mem_err_prog_warn_threshold", jobj);
+> +
+> +	rc = cxl_cmd_alert_config_get_corrected_pmem_err_prog_warn_threshold(
+> +		cmd);
+> +	jobj = json_object_new_int(rc);
+> +	if (jobj)
+> +		json_object_object_add(jalert_config,
+> +				       "corr_pmem_err_prog_warn_threshold",
+> +				       jobj);
+> +
+> +	cxl_cmd_unref(cmd);
+> +	return jalert_config;
+> +
+> +err_cmd:
+> +	cxl_cmd_unref(cmd);
+> +err_jobj:
+> +	json_object_put(jalert_config);
+> +	return NULL;
+> +}
+> +
+>  /*
+>   * Present complete view of memdev partition by presenting fields from
+>   * both GET_PARTITION_INFO and IDENTIFY mailbox commands.
+> @@ -330,6 +509,12 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+>  			json_object_object_add(jdev, "health", jobj);
+>  	}
+>  
+> +	if (flags & UTIL_JSON_ALERT_CONFIG) {
+> +		jobj = util_cxl_memdev_alert_config_to_json(memdev, flags);
+> +		if (jobj)
+> +			json_object_object_add(jdev, "alert_config", jobj);
+> +	}
+> +
+>  	serial = cxl_memdev_get_serial(memdev);
+>  	if (serial < ULLONG_MAX) {
+>  		jobj = util_json_object_hex(serial, flags);
+> diff --git a/cxl/list.c b/cxl/list.c
+> index 8c48fbb..5dd76b9 100644
+> --- a/cxl/list.c
+> +++ b/cxl/list.c
+> @@ -52,8 +52,9 @@ static const struct option options[] = {
+>  		    "include memory device health information"),
+>  	OPT_BOOLEAN('I', "partition", &param.partition,
+>  		    "include memory device partition information"),
+> -	OPT_INCR('v', "verbose", &param.verbose,
+> -		 "increase output detail"),
+> +	OPT_BOOLEAN('A', "alert-config", &param.alert_config,
+> +		    "include alert configuration information"),
+> +	OPT_INCR('v', "verbose", &param.verbose, "increase output detail"),
+>  #ifdef ENABLE_DEBUG
+>  	OPT_BOOLEAN(0, "debug", &debug, "debug list walk"),
+>  #endif
+> @@ -113,6 +114,7 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
+>  	case 3:
+>  		param.health = true;
+>  		param.partition = true;
+> +		param.alert_config = true;
+>  		/* fallthrough */
+>  	case 2:
+>  		param.idle = true;
+> diff --git a/util/json.h b/util/json.h
+> index 73bb9f0..ea370df 100644
+> --- a/util/json.h
+> +++ b/util/json.h
+> @@ -20,6 +20,7 @@ enum util_json_flags {
+>  	UTIL_JSON_HEALTH	= (1 << 10),
+>  	UTIL_JSON_TARGETS	= (1 << 11),
+>  	UTIL_JSON_PARTITION	= (1 << 12),
+> +	UTIL_JSON_ALERT_CONFIG	= (1 << 13),
+>  };
+>  
+>  void util_display_json_array(FILE *f_out, struct json_object *jarray,
+> -- 
+> 2.30.2
+> 
