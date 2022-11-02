@@ -2,145 +2,185 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17686C43219
-	for <linux-cxl@archiver.kernel.org>; Wed,  2 Nov 2022 16:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A77BBC4332F
+	for <linux-cxl@archiver.kernel.org>; Wed,  2 Nov 2022 17:37:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230509AbiKBQus (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 2 Nov 2022 12:50:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53634 "EHLO
+        id S230311AbiKBRhh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 2 Nov 2022 13:37:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232038AbiKBQu3 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Nov 2022 12:50:29 -0400
-Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 401796395
-        for <linux-cxl@vger.kernel.org>; Wed,  2 Nov 2022 09:50:20 -0700 (PDT)
-Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20221102165019usoutp012859815ebd7b5a95569ae66d528ae477~j0pO9vuxJ0037600376usoutp01H;
-        Wed,  2 Nov 2022 16:50:19 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20221102165019usoutp012859815ebd7b5a95569ae66d528ae477~j0pO9vuxJ0037600376usoutp01H
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1667407819;
-        bh=9MDQVYw3nc+LRbTfBlifywbwPY7H0kn9zGVnSieAN8o=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=Q+SytlJD6znlZLnl/THRWcupSlc/b/4uVuPLeDACmwBl5cXFpWgDKV9cf+B23Rzt/
-         VeGgw3Q+gGvW+n8tHkJKluW/91kvGHRk1sgECo5tRJAcklCe8qcK4njHob76MXHx89
-         2wz0oETZVxvvhztp9fgUVNX6Go3wD68s8p6HuwAk=
-Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
-        [203.254.195.112]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20221102165018uscas1p25efe75e66c628ca9b8d815db54f67cd1~j0pO0isER0303403034uscas1p2w;
-        Wed,  2 Nov 2022 16:50:18 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-        ussmges3new.samsung.com (USCPEMTA) with SMTP id C0.38.35398.ACF92636; Wed, 
-        2 Nov 2022 12:50:18 -0400 (EDT)
-Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
-        [203.254.195.89]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20221102165018uscas1p1c27244ee88cc21dbabb7cc2656187e40~j0pOnPA5h0501505015uscas1p1s;
-        Wed,  2 Nov 2022 16:50:18 +0000 (GMT)
-X-AuditID: cbfec370-817ff70000028a46-f3-63629fca2d47
-Received: from SSI-EX1.ssi.samsung.com ( [105.128.2.145]) by
-        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id D4.97.19363.ACF92636; Wed, 
-        2 Nov 2022 12:50:18 -0400 (EDT)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Wed, 2 Nov 2022 09:50:17 -0700
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Wed,
-        2 Nov 2022 09:50:17 -0700
-From:   Fan Ni <fan.ni@samsung.com>
-To:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>
-CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>,
-        Fan Ni <fan.ni@samsung.com>
-Subject: [PATCH 2/2] libcxl: Fix typos
-Thread-Topic: [PATCH 2/2] libcxl: Fix typos
-Thread-Index: AQHY7tsvBzqgBNLMekOH8hjsI1vNsg==
-Date:   Wed, 2 Nov 2022 16:50:17 +0000
-Message-ID: <20221102165004.171776-3-fan.ni@samsung.com>
-In-Reply-To: <20221102165004.171776-1-fan.ni@samsung.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229772AbiKBRhe (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Nov 2022 13:37:34 -0400
+Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF21E2E68F;
+        Wed,  2 Nov 2022 10:37:32 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id C6A126C2042;
+        Wed,  2 Nov 2022 17:37:31 +0000 (UTC)
+Received: from pdx1-sub0-mail-a225 (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 03C5D6C2376;
+        Wed,  2 Nov 2022 17:37:31 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1667410651; a=rsa-sha256;
+        cv=none;
+        b=mBvmOt9b5IL2+BiX++E+PCamD+0uUOEMHu8lz+YXwplwzdj7dpuHj0FVjM6pKOKQrMNlaw
+        eGRXsP+C5C3jRY3ElmGUWkiX4JP9O8uaWXgOKGQlII1FeS5l1/Bii5+N/gEOJyDM7F/qQx
+        Jzmq4/32+8da6bL7TQT0jRMHLenOhFeCuZ70ZCXkagcyx6mGgv29/r43C95PcMNzNOkvqn
+        ql3HGAQiRdojVXuWVVoRkpwzEVCLZF+y34dzHuLONgyng1uaudByw2HewNOAFMYNMoX1m8
+        15ixnsX6N52veQKsbhO/AmuxMftt8pMkF0hDcqOMeL5dk+xbhfEPTJ1Lzf52lg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1667410651;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=2NoUxIpLTDZ8lDvlY/HWORKVP66zScBnVQ1cm5Vtqow=;
+        b=IJB+2OLKVm96s8NQVB30fV5hQnH8qRLk+c2r2zoQ5X0c+cYE4pDUBE4JGM3ZNdYGzQqQ0F
+        WFIVoVMoZ7sdrz5Lnrfw2W0cdpmQuS3MqA1ssGEUkoqax6CcPJvZ+XZENPWCOjblzmC02y
+        wopm1Kgz/NXw55yCQSkBUh8vnunMV5W8UNyWL/hqdd1+qjJBD3jyPt6aoDxAB3jaipzdhE
+        9vXAykISYYsFJKNMRxDCkPJMPS18AKuTSDCFwErZ6JMz4fpFHukgaqnu6ZY7epY5N+BuMj
+        B8oLunfRTzb+7088r9aTvlVJ4iiQpmnZ/hzMmB1pJ0+9bG5zbckE9oEk4e7fiw==
+ARC-Authentication-Results: i=1;
+        rspamd-7fb88f4dd5-nc5q9;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Power-Versed: 79a5dbd969deb7c1_1667410651472_1928156444
+X-MC-Loop-Signature: 1667410651472:1870974050
+X-MC-Ingress-Time: 1667410651472
+Received: from pdx1-sub0-mail-a225 (pop.dreamhost.com [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.105.95.137 (trex/6.7.1);
+        Wed, 02 Nov 2022 17:37:31 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a225 (Postfix) with ESMTPSA id 4N2YxP2pmYz3C;
+        Wed,  2 Nov 2022 10:37:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1667410650;
+        bh=2NoUxIpLTDZ8lDvlY/HWORKVP66zScBnVQ1cm5Vtqow=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=HZ0t0e+BBK8h4WOCCysLyhqnMvrxvtvAxGyesobxPJKRAwEwT/uwQ3jTQN1NvxPWL
+         Woyjd/N2j4pIiiNJMYInalM1fV2MVLDYR4UkdB5Mt1nUBaf+G+X4YL58hkCUQCqIel
+         5iQTKMvqAFI5S9RSa5dYyZfnZZbYzuZ77gulwm6aeb4W7oITQjaS0c7bRtyenaA//x
+         avr1psxPYFyTJtdf+mXzUyiKyF3Xn4fpb2TOQyaOS2DiYbTmDb8g2v8bazdoy3c8oW
+         hAH7/WWOtWb2WjTMa7dGoAqfa7qRk4WRk9rk6sewbzfPnZx9JsAFmY4mSnZ1XtoN1i
+         /jpmxtsRIXZFA==
+Date:   Wed, 2 Nov 2022 10:15:24 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, dave.jiang@intel.com,
+        alison.schofield@intel.com, bwidawsk@kernel.org,
+        vishal.l.verma@intel.com, a.manzanares@samsung.com,
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 1/2] cxl/pci: Add generic MSI-X/MSI irq support
+Message-ID: <20221102171524.thsz2kwtirhxn7ee@offworld>
+References: <20221024133633.00000467@huawei.com>
+ <20221025232535.GA579167@bhelgaas>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgleLIzCtJLcpLzFFi42LZduzred1T85OSDaZeMrSYPvUCo8Xqm2sY
-        Lc7POsVicWvCMSYHFo/Fe14yeUydXe/xeZNcAHMUl01Kak5mWWqRvl0CV8blI/OYCibyVrxb
-        7tjA+J+ri5GTQ0LARGLG+1fMXYxcHEICKxkl7p34wg7htDJJvNnUww5Ttb77JFTVWkaJ8+82
-        QDkfGSUa5razQjhLGSWWPJ4G1sImoCixr2s7G4gtIlAkcX3zXLAOZoGNjBL3r11hBEkIC6hJ
-        LFi1mxGiSFviwr2vzBC2nsTjG9PAbBYBFYmdl6aC1fAKWEhsW9gAFucUsJTovbifBcRmFBCT
-        +H5qDROIzSwgLnHryXwmiLsFJRbN3sMMYYtJ/Nv1kA3CVpS4//0lO0S9nsSNqVPYIGxtiWUL
-        XzND7BKUODnzCQtEvaTEwRU3WEAekBCYyyFx484vRoiEi8S9hnXQQJKWuHp9KtSyaokzPeeY
-        IBpaGCUuNW6GSlhL/Ou8BrWZT+Lvr0eMExiVZyE5fBaSo2YhOWoWkqMWMLKsYhQvLS7OTU8t
-        Ns5LLdcrTswtLs1L10vOz93ECEwsp/8dLtjBeOvWR71DjEwcjIcYJTiYlUR4689GJwvxpiRW
-        VqUW5ccXleakFh9ilOZgURLnjZqhlSwkkJ5YkpqdmlqQWgSTZeLglGpgWq6zp/mibhDP3sMB
-        MrFW6bOkUpcd+HtiRuHe71anWb6zdKjPesAb9kVn5YM5gteDbh5jYnDQNeO21mH3ep8h4sO6
-        bFfwqhmsQdGbtI5nmgmauE/7pX4xf7IDh91jia2pqpvSmjltPTR3PRT/stlQae+mtRs/vRdV
-        TWT5pvBA4tr229qTZN/qSq3iDP26quOJTMdVvQmrBd1vPrns4XLxxZnJP3yjo96Fb1h78J53
-        5HuT0w+uFryJskmcwGY+/dN5BV+lWbH7uVJe8P1ImHm3U0lyrtCD+AtJZUsaDtrGzIveF+Fr
-        vbiPLTjuxpFFNnsF3/5jEik65HxbqnH7r8OabHLC7q4He9aXiM523Offp8RSnJFoqMVcVJwI
-        AHxfTw2bAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsWS2cA0UffU/KRkg+13lCymT73AaLH65hpG
-        i/OzTrFY3JpwjMmBxWPxnpdMHlNn13t83iQXwBzFZZOSmpNZllqkb5fAlXH5yDymgom8Fe+W
-        OzYw/ufqYuTkkBAwkVjffZK5i5GLQ0hgNaPEhWWT2CGcj4wSS9Z3MEI4Sxklft3azAjSwiag
-        KLGvazsbiC0iUCRxffNcsHZmgY2MEvevXQErEhZQk1iwajcjRJG2xIV7X5khbD2Jxzemgdks
-        AioSOy9NBavhFbCQ2LawASwuBGQfe/sFLM4pYCnRe3E/C4jNKCAm8f3UGiYQm1lAXOLWk/lM
-        ED8ISCzZc54ZwhaVePn4HyuErShx//tLdoh6PYkbU6ewQdjaEssWvmaG2CsocXLmExaIekmJ
-        gytusExgFJ+FZMUsJO2zkLTPQtK+gJFlFaN4aXFxbnpFsWFearlecWJucWleul5yfu4mRmDk
-        nf53OHIH49FbH/UOMTJxMB5ilOBgVhLhrT8bnSzEm5JYWZValB9fVJqTWnyIUZqDRUmcV8h1
-        YryQQHpiSWp2ampBahFMlomDU6qBaauPZeB+tthExx0nHeb7G9TdaN5jM2Xz5H13bGaac3Xt
-        0FF5InFjvkS6/IyJGvdY2Gu+7XDW8pkxI1ut7pyAq8oxdTl2bt6z3s93utRx/xQ4uFhMPfVC
-        1YH4RQeMl2z/FH/FxVrRmv1Y6bqbi3vkdb387yeezdgrcPnvOeeTwmuDVeblLeo747ZoDc/X
-        rNUz9CdEyK1vcDDdKM6cIymSmNygXXT//ITe+Bi7I+prfXXiGlbr5Jw4eOO/F+PuGUlPS+Ry
-        X7zLWL/qyq2U8D/aFxK+nFJq5lrxRuXn1CdPlI7ISe0S28h6iEX0gOfBJyyM6lLygge+LV40
-        bcPxwLV/OQUiDRzya6Oqo55MvMawRomlOCPRUIu5qDgRAEc4OcwrAwAA
-X-CMS-MailID: 20221102165018uscas1p1c27244ee88cc21dbabb7cc2656187e40
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20221102165018uscas1p1c27244ee88cc21dbabb7cc2656187e40
-References: <20221102165004.171776-1-fan.ni@samsung.com>
-        <CGME20221102165018uscas1p1c27244ee88cc21dbabb7cc2656187e40@uscas1p1.samsung.com>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20221025232535.GA579167@bhelgaas>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Fix typos caught by Davidhohr Bueso in Documentation/cxl/lib/libcxl.txt.
+On Tue, 25 Oct 2022, Bjorn Helgaas wrote:
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
-Signed-off-by: Fan Ni <fan.ni@samsung.com>
----
- Documentation/cxl/lib/libcxl.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+>> In short that calls:
+>> /* Allocate the maximum possible number of MSI/MSI-X vectors */
+>> nr_entries = pci_alloc_irq_vectors(dev, 1, PCIE_PORT_MAX_MSI_ENTRIES,
+>>			PCI_IRQ_MSIX | PCI_IRQ_MSI);
+>>
+>> /* See how many and which Interrupt Message Numbers we actually use */
+>> nvec = pcie_message_numbers(dev, mask, &pme, &aer, &dpc);
+>>
+>> if (nvec != nr_entries) {
+>>	pci_free_irq_vectors(dev);
+>>
+>>	nr_entries = pci_alloc_irq_vectors(dev, nvec, nvec,
+>>			PCI_IRQ_MSIX | PCI_IRQ_MSI);
+>> }
+>>
+>> My worry here is that the implicit assumption is that the vectors
+>> won't move if we reduce the overall number of vectors we are asking
+>> for...
 
-diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcx=
-l.txt
-index edc852d..7404efa 100644
---- a/Documentation/cxl/lib/libcxl.txt
-+++ b/Documentation/cxl/lib/libcxl.txt
-@@ -110,7 +110,7 @@ may appear in the topology that were not previously enu=
-merable.
-=20
- NOTE: cxl_memdev_disable_invalidate() will force disable the memdev
- regardless of whether the memory provided by the device is in active use
--by the operating system. Callers take responisbility for assuring that
-+by the operating system. Callers take responsibility for assuring that
- it is safe to disable the memory device. Otherwise, this call can be as
- destructive as ripping a DIMM out of a running system. Like all other
- libcxl calls that mutate the system state or divulge security sensitive
-@@ -327,7 +327,7 @@ const char *cxl_dport_get_physical_node(struct cxl_dpor=
-t *dport);
- int cxl_dport_get_id(struct cxl_dport *dport);
- bool cxl_dport_maps_memdev(struct cxl_dport *dport, struct cxl_memdev *mem=
-dev);
- ----
--The id of a dport is the hardware idenfifier used by an upstream port to
-+The id of a dport is the hardware identifier used by an upstream port to
- reference a downstream port. The physical node of a dport is only
- available for platform firmware defined downstream ports and alias the
- companion object, like a PCI host bridge, in the PCI device hierarchy.
---=20
-2.25.1
+This would also apply to what is currently in portdrv machinery, no?
+
+>>
+>> However, imagine the case that we have a feature the driver doesn't
+>> know about that was previously at a higher vector.  After reducing
+>> the vectors allocated the hardware might decide that feature needs
+>> its own vector whereas some others can be combined.  Hence we'd end
+>> up with a less than ideal packing for the features we actually
+>> support.
+>>
+>> Could do something iterative to solve this if it actually matters
+>> (increase number of vectors until the layout matches what we get
+>> with max possible vectors).
+
+Maybe do a bounded retry loop until we get stable value?
+
+retry = 1;
+do {
+	pci_alloc_irq_vectors(1, 32);
+	nvecs = get_max_msgnum(); // max(pmu, events, mbox, isolation)
+	pci_free_irq_vectors();
+
+	pci_alloc_irq_vectors(nvecs, nvecs);
+	new_nvecs = get_max_msgnum();
+
+	if (likely(new_nvecs == nvecs))
+		return 0;
+
+	pci_free_irq_vectors();
+}  while (retry--);
+
+return -1; // no irq support
+
+But yeah I'm not sure how much we actually care about this. But if so,
+it  also might be worth re-visiting the generic table thing, as if
+nothing else it can standalone co-exist and avoid allocating any irqs
+altogether if we know a-priori that there is no irq support.
+
+>
+>Is this cxl code allocating vectors for devices that might also be
+>claimed by portdrv?  I assume not because that sounds like a problem.
+>
+>Ugh.  I always feel like the portdrv design must be sub-optimal
+>because this seems so hard to do cleanly.
+>
+>pci_alloc_irq_vectors() has a lot of magic inside it and is great for
+>most drivers, but the PCIe service IRQs are definitely unusual and
+>maybe it's not the best fit for this situation.
+>
+>If I understand correctly, Interrupt Message Numbers for all these
+>PCIe services (hotplug, AER, DPC, etc) are restricted to 0-31 for both
+>MSI and MSI-X, and the reason we don't just allocate 32 vectors all
+>the time is to avoid consuming too many IRQs.
+
+Most CXL features that can have irqs will normally use only the first 16,
+with the exception of isolation (cxl 3.0), which per the spec is up to 32.
+
+>The MSI case is ugly because the Interrupt Message Number can change
+>when we set Multiple Message Enable.  Maybe we can separate it out and
+>have a less than optimal solution for this case, like allocating one
+>or two vectors and polling if that's not enough.  I expect most
+>devices will support MSI-X.
+
+Would only supporting MSI-X be so terrible?
+
+Thanks,
+Davidlohr
