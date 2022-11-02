@@ -2,149 +2,70 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B78C433FE
-	for <linux-cxl@archiver.kernel.org>; Wed,  2 Nov 2022 21:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 378B5C4332F
+	for <linux-cxl@archiver.kernel.org>; Wed,  2 Nov 2022 22:54:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230497AbiKBVVH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 2 Nov 2022 17:21:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58016 "EHLO
+        id S231208AbiKBWyc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 2 Nov 2022 18:54:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231165AbiKBVVD (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Nov 2022 17:21:03 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC25DE90
-        for <linux-cxl@vger.kernel.org>; Wed,  2 Nov 2022 14:21:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667424062; x=1698960062;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KSFZB3ntka+bSSvolTA/Uf4WdX3s1HtcDYCRMCLVZIU=;
-  b=Zhpi2uJLGfXj0ozfQ09ttgWrPQFBK2DURyJigWUYR9c72bgPv3N5oDi5
-   m8v6F0l9O5zqz+q3Y259Tb9NihzNB1aIwiniXdyYBiehA7OqtKC2IkaSL
-   V0SyTru4rSwSVPe0A0t+L9Bztyr9/yXZtYM5s0/jtEFBqqskhPZrX8KYr
-   Bls19gHZ3pAbaS1F3uwE6PGN9ZgzQ9ydwgX9deIf47LIbcNllvIY+ujK9
-   BjgnMCmO8eVxLrbbHj29taO7pgc0NGq6oJ6YkNc64brN5a0f+s/KPHT3P
-   B3SCaT3f8AGAqr/Fvt907L4QJvNaUX8/GdcFDynr0nv0erIqu332Iw7Lg
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10519"; a="395830873"
-X-IronPort-AV: E=Sophos;i="5.95,235,1661842800"; 
-   d="scan'208";a="395830873"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2022 14:21:02 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10519"; a="634418752"
-X-IronPort-AV: E=Sophos;i="5.95,235,1661842800"; 
-   d="scan'208";a="634418752"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2022 14:21:01 -0700
-Subject: [PATCH v3 10/10] cxl: add man page documentation for monitor
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        rostedt@goodmis.org
-Date:   Wed, 02 Nov 2022 14:21:01 -0700
-Message-ID: <166742406119.2654617.6459404446929986268.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <166742389426.2654617.4404053893427481848.stgit@djiang5-desk3.ch.intel.com>
-References: <166742389426.2654617.4404053893427481848.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/1.4
+        with ESMTP id S230242AbiKBWyJ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Nov 2022 18:54:09 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD455DED9;
+        Wed,  2 Nov 2022 15:54:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7590061C63;
+        Wed,  2 Nov 2022 22:54:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9370BC433C1;
+        Wed,  2 Nov 2022 22:54:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667429647;
+        bh=szbfqZa0C5YWU/D4uudQpUJ6fj3QVdxllMIIA78eON8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=lkNj5+hEJDf00QkTXN+DBNDh7TmU5jfOLeok5fAbOqwLKGigs6IKnvUL+PJRPKDf9
+         PDbiTtTL2nak0UwFZ7ENPKw9oYvOCKJpowuvNMVaAMBN1OKAagRvr895wDmV0MWWDt
+         XaVFRHLFaNzKL+bXBp6fG2q/bNDq+W142o8DfuitPUqjf50wmf9YqkQvP1yoIlGYts
+         3N91VWuMA0SW+BpNcSs8CpsIzzZdi1cYp1PWVUf5+S1boFCXmCNymLFIAuHaZf8j/7
+         HOhmrNb3Mn9twFdjXcYy6A5+1tBF9X4wwppm63fzoC6Vuo3UkiYGRthngB1a9L9uEw
+         WFs8FGmKnGD4A==
+Date:   Wed, 2 Nov 2022 17:54:06 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, dave.jiang@intel.com,
+        alison.schofield@intel.com, bwidawsk@kernel.org,
+        vishal.l.verma@intel.com, a.manzanares@samsung.com,
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 1/2] cxl/pci: Add generic MSI-X/MSI irq support
+Message-ID: <20221102225406.GA5803@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221102171524.thsz2kwtirhxn7ee@offworld>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add man page documentation to explain the usage of cxl monitor.
+On Wed, Nov 02, 2022 at 10:15:24AM -0700, Davidlohr Bueso wrote:
+> On Tue, 25 Oct 2022, Bjorn Helgaas wrote:
+> ...
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- Documentation/cxl/cxl-monitor.txt |   77 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
- create mode 100644 Documentation/cxl/cxl-monitor.txt
+> > The MSI case is ugly because the Interrupt Message Number can change
+> > when we set Multiple Message Enable.  Maybe we can separate it out and
+> > have a less than optimal solution for this case, like allocating one
+> > or two vectors and polling if that's not enough.  I expect most
+> > devices will support MSI-X.
+> 
+> Would only supporting MSI-X be so terrible?
 
-diff --git a/Documentation/cxl/cxl-monitor.txt b/Documentation/cxl/cxl-monitor.txt
-new file mode 100644
-index 000000000000..43c2ece72220
---- /dev/null
-+++ b/Documentation/cxl/cxl-monitor.txt
-@@ -0,0 +1,77 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+cxl-monitor(1)
-+================
-+
-+NAME
-+----
-+cxl-monitor - Monitor the CXL kernel trace events
-+
-+SYNOPSIS
-+--------
-+[verse]
-+'cxl monitor' [<options>]
-+
-+DESCRIPTION
-+-----------
-+Cxl monitor is used for monitoring the CXL trace events emitted by
-+the kernel and convert them to json objects and dumping the json format
-+notifications to standard output or a logfile.
-+
-+Both, the values in configuration file and in options will work. If
-+there is a conflict, the values in options will override the values in
-+the configuration file. Any updated values in the configuration file will
-+take effect only after the monitor process is restarted.
-+
-+EXAMPLES
-+--------
-+
-+Run a monitor as a daemon to monitor events and output to a log file.
-+[verse]
-+cxl monitor --daemon --log=/var/log/cxl-monitor.log
-+
-+Run a monitor as a one-shot command and output the notifications to stdio.
-+[verse]
-+cxl monitor
-+
-+Run a monitor daemon as a system service
-+[verse]
-+systemctl start cxl-monitor.service
-+
-+OPTIONS
-+-------
-+-l::
-+--log=::
-+	Send log messages to the specified destination.
-+	- "<file>":
-+	  Send log messages to specified <file>. When fopen() is not able
-+	  to open <file>, log messages will be forwarded to syslog.
-+	- "standard":
-+	  Send messages to standard output.
-+
-+The default log destination is '/var/log/cxl-monitor.log' if "--daemon" is specified,
-+otherwise 'standard'. Note that standard and relative path for <file>
-+will not work if "--daemon" is specified.
-+
-+--daemon::
-+	Run a monitor as a daemon.
-+
-+-u::
-+--human::
-+	Output monitor notification as human friendly json format instead
-+	of the default machine friendly json format.
-+
-+-v::
-+--verbose::
-+	Emit extra debug messages to log.
-+
-+COPYRIGHT
-+---------
-+Copyright (c) 2022, Intel Corp. License GPLv2: GNU GPL version 2
-+<http://gnu.org/licenses/gpl.html>. This is free software: you are
-+free to change and redistribute it. There is NO WARRANTY, to the
-+extent permitted by law.
-+
-+SEE ALSO
-+--------
-+linkcxl:cxl-list[1]
+My gut feeling is that polling when MSI-X isn't supported wouldn't be
+terrible, but I have no data on how common devices that only support
+MSI are.
 
-
+Bjorn
