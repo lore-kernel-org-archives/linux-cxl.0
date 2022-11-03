@@ -2,57 +2,57 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBFEC43219
-	for <linux-cxl@archiver.kernel.org>; Thu,  3 Nov 2022 16:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6289BC4321E
+	for <linux-cxl@archiver.kernel.org>; Thu,  3 Nov 2022 16:30:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231418AbiKCQWE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 3 Nov 2022 12:22:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48064 "EHLO
+        id S232005AbiKCQav (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 3 Nov 2022 12:30:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231539AbiKCQWC (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 3 Nov 2022 12:22:02 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 445731ADB3
-        for <linux-cxl@vger.kernel.org>; Thu,  3 Nov 2022 09:22:02 -0700 (PDT)
+        with ESMTP id S231910AbiKCQat (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 3 Nov 2022 12:30:49 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58C071BEB0
+        for <linux-cxl@vger.kernel.org>; Thu,  3 Nov 2022 09:30:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667492522; x=1699028522;
+  t=1667493032; x=1699029032;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=LZ276zq3+c0DOeZUupbq4QkESeiWIYfu69H13blWtC4=;
-  b=RV+YlbPqtAiRe5+FAyxAeH2utfyHsTSRs7bIfZoMXU+UAZtiJT7V8cgN
-   1emtgzrZjdzZIWG83Ktj7iKyEZtm1jhomKfxHySy6Hp7qVE7nuzPvbmcG
-   xXrQTROjT/FgctlGnq8ufBI0wvn/arnDs8sRPEb7M0dn+7AADr+EbkC7X
-   Ouq+1Mz5QyT7Af5F/RbwLWLOP416L+iEsGNBsX/N6QYVmRpKKDXh0XEOH
-   lJ1NCSNdG5ZFnFocMDCwADJmQI/ec5s1f7mdRTr4KJfYW9tM3b3pxb4LR
-   00NVo5OrnxyX7XO4iCDenB542xsRjR9Xe2j/ttiRzgdOMgXhDEimWcv87
+  bh=FCTP7Cd4re5CxUgAW7gUoEv7ewc3cXXYWgqL+6zOWP0=;
+  b=EmHOjxSmQP5SXYgGRj4gxJqLFpyRrfCJ+xr4ky8MKNN8LpjDxeUq4WpX
+   zJZGZY0glsixLzf9TNn6GAt1rWK4rvz+IlLLwVsXyp5+xfe1Yw/qUbQTL
+   6lEw5l/SqqQgf9avmLvJkaHbzZrWiqlprHOPoD4Bt1bM5ZuoA3cjTgT0P
+   +WIqafqOkasls2JZDXZG57br7ZaeEXuUP7OsYPz2Gp7vt+ZJMfv+GA0Ll
+   elP0XeWq10lVZpL6Uq17qhz2hFn3qzDuCfzS5LgyCzHiGlqioIUeSQYFY
+   ot+fWvvlRNOddN6o7FSoGYHr25MUA/Xk51ivQmVQ/DehOShSctMQSpQ/1
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="371834385"
+X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="307351018"
 X-IronPort-AV: E=Sophos;i="5.96,134,1665471600"; 
-   d="scan'208";a="371834385"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2022 09:21:57 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="879944572"
+   d="scan'208";a="307351018"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2022 09:30:32 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="740256435"
 X-IronPort-AV: E=Sophos;i="5.96,134,1665471600"; 
-   d="scan'208";a="879944572"
+   d="scan'208";a="740256435"
 Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.56.14]) ([10.212.56.14])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2022 09:21:53 -0700
-Message-ID: <f84551dc-73e6-c1b2-eba7-2718e0472318@intel.com>
-Date:   Thu, 3 Nov 2022 09:21:52 -0700
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2022 09:30:30 -0700
+Message-ID: <98ad856c-1671-7ae8-652f-1ce9b2ed7c68@intel.com>
+Date:   Thu, 3 Nov 2022 09:30:30 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.4.1
-Subject: Re: [PATCH v3 03/10] cxl: add common function to enable event trace
+Subject: Re: [PATCH v3 04/10] cxl: add common function to disable event trace
 Content-Language: en-US
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
         ira.weiny@intel.com, vishal.l.verma@intel.com,
         alison.schofield@intel.com
 References: <166742389426.2654617.4404053893427481848.stgit@djiang5-desk3.ch.intel.com>
- <166742402130.2654617.9308255604215496136.stgit@djiang5-desk3.ch.intel.com>
- <20221103020032.47cb3da7@rorschach.local.home>
+ <166742402697.2654617.15955710715103932892.stgit@djiang5-desk3.ch.intel.com>
+ <20221103020234.63fd7ab2@rorschach.local.home>
 From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20221103020032.47cb3da7@rorschach.local.home>
+In-Reply-To: <20221103020234.63fd7ab2@rorschach.local.home>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -61,71 +61,54 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 
 
-On 11/2/2022 11:00 PM, Steven Rostedt wrote:
-> On Wed, 02 Nov 2022 14:20:21 -0700
+On 11/2/2022 11:02 PM, Steven Rostedt wrote:
+> On Wed, 02 Nov 2022 14:20:26 -0700
 > Dave Jiang <dave.jiang@intel.com> wrote:
 > 
->> Add a common function for cxl command to enable event tracing for the
->> instance created. The interested "systems" will be enabled for tracing
->> as well.
+>> Add a common function for cxl command that disables the event trace for the
+>> instance created.
 >>
 >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 >> ---
->>   cxl/event_trace.c |   21 +++++++++++++++++++++
+>>   cxl/event_trace.c |    8 ++++++++
 >>   cxl/event_trace.h |    1 +
->>   2 files changed, 22 insertions(+)
+>>   2 files changed, 9 insertions(+)
 >>
 >> diff --git a/cxl/event_trace.c b/cxl/event_trace.c
->> index cf63d2346f6e..d59e54c33df6 100644
+>> index d59e54c33df6..bcd4f8b2968e 100644
 >> --- a/cxl/event_trace.c
 >> +++ b/cxl/event_trace.c
->> @@ -200,3 +200,24 @@ int cxl_parse_events(struct tracefs_instance *inst, struct event_ctx *ectx)
->>   	tep_free(tep);
->>   	return rc;
+>> @@ -221,3 +221,11 @@ int cxl_event_tracing_enable(struct tracefs_instance *inst, const char *system)
+>>   	tracefs_trace_on(inst);
+>>   	return 0;
 >>   }
 >> +
->> +int cxl_event_tracing_enable(struct tracefs_instance *inst, const char *system)
+>> +int cxl_event_tracing_disable(struct tracefs_instance *inst)
 >> +{
->> +	int rc;
->> +	char *path;
->> +
->> +	rc = asprintf(&path, "events/%s/enable", system);
->> +	if (rc == -1)
->> +		return -errno;
->> +
->> +	rc = tracefs_instance_file_write(inst, path, "1");
->> +	free(path);
->> +	if (rc == -1)
->> +		return -errno;
+>> +	if (!tracefs_trace_is_on(inst))
+>> +		return 0;
 > 
-> Latest libtracefs has:
-> 
-> 	tracefs_event_enable(inst, system, NULL);
-> 
-> That enables all events for a system in the instance "inst".
+> Why bother checking if tracing is on or not. It's not any more
+> efficient. You're not eliminating a system call. You are actually
+> adding another one.
 
-Great. Thanks! I will switch to that.
-
+Ok, will remove.
 > 
 > -- Steve
 > 
 > 
 >> +
->> +	if (tracefs_trace_is_on(inst))
->> +		return 0;
->> +
->> +	tracefs_trace_on(inst);
->> +	return 0;
+>> +	return tracefs_trace_off(inst);
 >> +}
 >> diff --git a/cxl/event_trace.h b/cxl/event_trace.h
->> index 582882c1eb35..0258b8dc65a3 100644
+>> index 0258b8dc65a3..17d922f922c1 100644
 >> --- a/cxl/event_trace.h
 >> +++ b/cxl/event_trace.h
->> @@ -20,5 +20,6 @@ struct event_ctx {
->>   };
+>> @@ -21,5 +21,6 @@ struct event_ctx {
 >>   
 >>   int cxl_parse_events(struct tracefs_instance *inst, struct event_ctx *ectx);
->> +int cxl_event_tracing_enable(struct tracefs_instance *inst, const char *system);
+>>   int cxl_event_tracing_enable(struct tracefs_instance *inst, const char *system);
+>> +int cxl_event_tracing_disable(struct tracefs_instance *inst);
 >>   
 >>   #endif
 >>
