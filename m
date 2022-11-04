@@ -2,52 +2,51 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB340C4332F
-	for <linux-cxl@archiver.kernel.org>; Fri,  4 Nov 2022 00:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C056C4332F
+	for <linux-cxl@archiver.kernel.org>; Fri,  4 Nov 2022 00:31:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230465AbiKDAa6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 3 Nov 2022 20:30:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45220 "EHLO
+        id S230491AbiKDAbE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 3 Nov 2022 20:31:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230415AbiKDAa5 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 3 Nov 2022 20:30:57 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C103111C29;
-        Thu,  3 Nov 2022 17:30:56 -0700 (PDT)
+        with ESMTP id S230456AbiKDAbD (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 3 Nov 2022 20:31:03 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4859822B2E
+        for <linux-cxl@vger.kernel.org>; Thu,  3 Nov 2022 17:31:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667521856; x=1699057856;
+  t=1667521862; x=1699057862;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=CVIg1ieRaMXaBaGZSbJHKNIDEl4g/LxVeDiKTiaxnGo=;
-  b=mYUfhJLCCK8QVtRkDdn6w2aWwM5c4e6k/RKe+SER7vT2RwjxDj/OEuCR
-   jsIvfkt8GT91hGjxV91Z/Ypo4cOxgoHq7FrA0s42yRhwsQy8qHtegATW/
-   w3fK/3T+NbKmqnlmuvu8o5j/ZUhJjtr3Pya36jYSgi211/iad31Ywk8EH
-   yQWe+8V4MvYBxxy1aYaTwEEm4NyH00dTOs4my5rfS7z6OPji7ZaoX8nbV
-   BIn/dZyn985u5n06/5gzn+UA4ZIo7opO0dtSkZeGDbqcGgaVxJwx0Be1N
-   5Uk6O1Dd95dPIlxKh+tnkXxdYPR0eOb+lScp/AI/8U42bXKzm9a1Du7nm
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="311577250"
+  bh=QDJ8IrHIuM4ehXzADp5KlaQhWKqCayOWZCrsPYJYhjM=;
+  b=ie2uQCYei4RqJlAK0qZ/8ifT4ULNB+0mscA9S+t2BpSe8JEHC8ULGvsM
+   sGZy6gzqbMZi3/VMLOA/yjrYg3aHhtSHflHjGnwwdmn3RfWw9E8ng24z4
+   1pc9BKtC649sVWNJDDH8hdsGNde4RE37mXEP6OIiY9+jEtrGA9Q28INwV
+   UOsQYKpKeAL+a6bCp+nVT5qY4hpM0fmRwV7QNof0oTS0RfzLcPdv8KhK5
+   NZUhV5D/GsiPn8y4crrTDVxPgoG0R5GFbzvJQm/cDSbHeFWbHOGEEmTpo
+   xo7neBVsDJ86tb5k3nCVAjUnXSocD1Efqs53XfFDYawiLhGPJ/ykvU1G0
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="293165327"
 X-IronPort-AV: E=Sophos;i="5.96,135,1665471600"; 
-   d="scan'208";a="311577250"
+   d="scan'208";a="293165327"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2022 17:30:55 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="964151843"
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2022 17:31:01 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="964151895"
 X-IronPort-AV: E=Sophos;i="5.96,135,1665471600"; 
-   d="scan'208";a="964151843"
+   d="scan'208";a="964151895"
 Received: from arunvasu-mobl2.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.53.48])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2022 17:30:54 -0700
-Subject: [PATCH 6/7] cxl/region: Fix 'distance' calculation with passthrough
- ports
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2022 17:31:01 -0700
+Subject: [PATCH 7/7] cxl/region: Recycle region ids
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     stable@vger.kernel.org, Bobo WL <lmw.bobo@gmail.com>,
+Cc:     Ben Widawsky <bwidawsk@kernel.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         vishal.l.verma@intel.com, vishal.l.verma@intel.com,
         alison.schofield@intel.com, ira.weiny@intel.com,
         dave.jiang@intel.com
-Date:   Thu, 03 Nov 2022 17:30:54 -0700
-Message-ID: <166752185440.947915.6617495912508299445.stgit@dwillia2-xfh.jf.intel.com>
+Date:   Thu, 03 Nov 2022 17:31:00 -0700
+Message-ID: <166752186062.947915.13200195701224993317.stgit@dwillia2-xfh.jf.intel.com>
 In-Reply-To: <166752181697.947915.744835334283138352.stgit@dwillia2-xfh.jf.intel.com>
 References: <166752181697.947915.744835334283138352.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -58,112 +57,66 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-When programming port decode targets, the algorithm wants to ensure that
-two devices are compatible to be programmed as peers beneath a given
-port. A compatible peer is a target that shares the same dport, and
-where that target's interleave position also routes it to the same
-dport. Compatibility is determined by the device's interleave position
-being >= to distance. For example, if a given dport can only map every
-Nth position then positions less than N away from the last target
-programmed are incompatible.
+At region creation time the next region-id is atomically cached so that
+there is predictability of region device names. If that region is
+destroyed and then a new one is created the region id increments. That
+ends up looking like a memory leak, or is otherwise surprising that
+identifiers roll forward even after destroying all previously created
+regions.
 
-The @distance for the host-bridge-cxl_port a simple dual-ported
-host-bridge configuration with 2 direct-attached devices is 1. An x2
-region divded by 2 dports to reach 2 region targets.
+Try to reuse rather than free old region ids at region release time.
 
-An x4 region under an x2 host-bridge would need 2 intervening switches
-where the @distance at the host bridge level is 2 (x4 region divided by
-2 switches to reach 4 devices).
+While this fixes a cosmetic issue, the needlessly advancing memory
+region-id gives the appearance of a memory leak, hence the "Fixes" tag,
+but no "Cc: stable" tag.
 
-However, the distance between peers underneath a single ported
-host-bridge is always zero because there is no limit to the number of
-devices that can be mapped. In other words, there are no decoders to
-program in a passthrough, all descendants are mapped and distance only
-starts matters for the intervening descendant ports of the passthrough
-port.
-
-Add tracking for the number of dports mapped to a port, and use that to
-detect the passthrough case for calculating @distance.
-
-Cc: <stable@vger.kernel.org>
-Reported-by: Bobo WL <lmw.bobo@gmail.com>
-Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Link: http://lore.kernel.org/r/20221010172057.00001559@huawei.com
-Fixes: 27b3f8d13830 ("cxl/region: Program target lists")
+Cc: Ben Widawsky <bwidawsk@kernel.org>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 779dd20cfb56 ("cxl/region: Add region creation support")
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/port.c   |   11 +++++++++--
- drivers/cxl/core/region.c |    9 ++++++++-
- drivers/cxl/cxl.h         |    2 ++
- 3 files changed, 19 insertions(+), 3 deletions(-)
+ drivers/cxl/core/region.c |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index bffde862de0b..e7556864ea80 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -811,6 +811,7 @@ static struct cxl_dport *find_dport(struct cxl_port *port, int id)
- static int add_dport(struct cxl_port *port, struct cxl_dport *new)
- {
- 	struct cxl_dport *dup;
-+	int rc;
- 
- 	device_lock_assert(&port->dev);
- 	dup = find_dport(port, new->port_id);
-@@ -821,8 +822,14 @@ static int add_dport(struct cxl_port *port, struct cxl_dport *new)
- 			dev_name(dup->dport));
- 		return -EBUSY;
- 	}
--	return xa_insert(&port->dports, (unsigned long)new->dport, new,
--			 GFP_KERNEL);
-+
-+	rc = xa_insert(&port->dports, (unsigned long)new->dport, new,
-+		       GFP_KERNEL);
-+	if (rc)
-+		return rc;
-+
-+	port->nr_dports++;
-+	return 0;
- }
- 
- /*
 diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index c52465e09f26..c0253de74945 100644
+index c0253de74945..f9ae5ad284ff 100644
 --- a/drivers/cxl/core/region.c
 +++ b/drivers/cxl/core/region.c
-@@ -990,7 +990,14 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 	if (cxl_rr->nr_targets_set) {
- 		int i, distance;
+@@ -1534,9 +1534,24 @@ static const struct attribute_group *region_groups[] = {
  
--		distance = p->nr_targets / cxl_rr->nr_targets;
-+		/*
-+		 * Passthrough ports impose no distance requirements between
-+		 * peers
-+		 */
-+		if (port->nr_dports == 1)
-+			distance = 0;
-+		else
-+			distance = p->nr_targets / cxl_rr->nr_targets;
- 		for (i = 0; i < cxl_rr->nr_targets_set; i++)
- 			if (ep->dport == cxlsd->target[i]) {
- 				rc = check_last_peer(cxled, ep, cxl_rr,
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 1164ad49f3d3..ac75554b5d76 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -457,6 +457,7 @@ struct cxl_pmem_region {
-  * @regions: cxl_region_ref instances, regions mapped by this port
-  * @parent_dport: dport that points to this port in the parent
-  * @decoder_ida: allocator for decoder ids
-+ * @nr_dports: number of entries in @dports
-  * @hdm_end: track last allocated HDM decoder instance for allocation ordering
-  * @commit_end: cursor to track highest committed decoder for commit ordering
-  * @component_reg_phys: component register capability base address (optional)
-@@ -475,6 +476,7 @@ struct cxl_port {
- 	struct xarray regions;
- 	struct cxl_dport *parent_dport;
- 	struct ida decoder_ida;
-+	int nr_dports;
- 	int hdm_end;
- 	int commit_end;
- 	resource_size_t component_reg_phys;
+ static void cxl_region_release(struct device *dev)
+ {
++	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev->parent);
+ 	struct cxl_region *cxlr = to_cxl_region(dev);
++	int id = atomic_read(&cxlrd->region_id);
++
++	/*
++	 * Try to reuse the recently idled id rather than the cached
++	 * next id to prevent the region id space from increasing
++	 * unnecessarily.
++	 */
++	if (cxlr->id < id)
++		if (atomic_try_cmpxchg(&cxlrd->region_id, &id, cxlr->id)) {
++			memregion_free(id);
++			goto out;
++		}
+ 
+ 	memregion_free(cxlr->id);
++out:
++	put_device(dev->parent);
+ 	kfree(cxlr);
+ }
+ 
+@@ -1598,6 +1613,11 @@ static struct cxl_region *cxl_region_alloc(struct cxl_root_decoder *cxlrd, int i
+ 	device_initialize(dev);
+ 	lockdep_set_class(&dev->mutex, &cxl_region_key);
+ 	dev->parent = &cxlrd->cxlsd.cxld.dev;
++	/*
++	 * Keep root decoder pinned through cxl_region_release to fixup
++	 * region id allocations
++	 */
++	get_device(dev->parent);
+ 	device_set_pm_not_required(dev);
+ 	dev->bus = &cxl_bus_type;
+ 	dev->type = &cxl_region_type;
 
