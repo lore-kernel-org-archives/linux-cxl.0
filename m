@@ -2,232 +2,345 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF898C4332F
-	for <linux-cxl@archiver.kernel.org>; Fri,  4 Nov 2022 18:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFE4C433FE
+	for <linux-cxl@archiver.kernel.org>; Fri,  4 Nov 2022 18:59:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229645AbiKDS5G (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 4 Nov 2022 14:57:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41306 "EHLO
+        id S229516AbiKDS7k (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 4 Nov 2022 14:59:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229662AbiKDS47 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 4 Nov 2022 14:56:59 -0400
+        with ESMTP id S229471AbiKDS7j (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 4 Nov 2022 14:59:39 -0400
 Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CE2A5986F
-        for <linux-cxl@vger.kernel.org>; Fri,  4 Nov 2022 11:56:59 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E08BA26ADD;
+        Fri,  4 Nov 2022 11:59:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667588219; x=1699124219;
+  t=1667588377; x=1699124377;
   h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=EHBGm4PLVhmoggY6gK/yA2obzr6UVLP6Gey8gzsFFKc=;
-  b=BOMVfNgV9vdY/in3bjKvfzTzy604uXKbk0oZbJ0FVm1g6w6OqR9hFq/t
-   lazFXFuPMX3DHGBchwWN0s5Yac1fni0c3XMth+IDUE4X6/OWMF+UPbtM4
-   v5GJ0a2mEq8pp0Gk+FJUzfuB9EOas3FRN0EWbyVqRmEwMXNJqt/9eKoBJ
-   XKodUaKJAMBXaurddD1cupV0eclYN5EbS3O6MSrww8jW7Tu9UiwBgSXRj
-   c5ZcXvTexm/RpnEB1q1jIhyAa7Cv6RtCik+chZDSLJ8CCmT+naKPhd1nq
-   xjm/hTJxsTvyVTszPjFDACP0SqgfGJFh4gkOReBMDWRzWn1xFb54fIp1V
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10521"; a="310043688"
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=SJytII6Ep7Y+7kIn7zePquYujtKLVgs8d6DX9X5/DXw=;
+  b=fzjHNVXRRP00u9nQAZxNonDjHwrRC/8ahdIV/epGoqE9kLA+ybeIUpQl
+   w8atY/36Y3g60CeJrLWmBq6nf4FaMTJ3V4z3VquPDOVlsmvGaIKeV7eAV
+   konHNqfFUm9s+CuB0Mcrw3KLnO58MO3mgDWRaUF8jJXu/FqXxq3B8NUDT
+   d5tdvHEjs9Eh3ghJmw9MVmZ/cWKjUO2Mfp5PiCQAn5KYWq63Vx8zDgPDo
+   s96CNnsfmoPv6JEJ5w2a0hSFbJkF9SG0hn3YI0J6try6AFZDhoDC/GMkv
+   Pql/l0x2lvIlPoJqLUCcisHG6qx8rsIbBJeKTWyBa7uPAWVJ4sG3Q8VkH
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10521"; a="310044374"
 X-IronPort-AV: E=Sophos;i="5.96,138,1665471600"; 
-   d="scan'208";a="310043688"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2022 11:56:59 -0700
+   d="scan'208";a="310044374"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2022 11:59:37 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10521"; a="740730383"
+X-IronPort-AV: E=McAfee;i="6500,9779,10521"; a="666470606"
 X-IronPort-AV: E=Sophos;i="5.96,138,1665471600"; 
-   d="scan'208";a="740730383"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga002.fm.intel.com with ESMTP; 04 Nov 2022 11:56:58 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+   d="scan'208";a="666470606"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga008.jf.intel.com with ESMTP; 04 Nov 2022 11:59:37 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 4 Nov 2022 11:56:58 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ 15.1.2375.31; Fri, 4 Nov 2022 11:59:36 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 4 Nov 2022 11:56:58 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31 via Frontend Transport; Fri, 4 Nov 2022 11:56:58 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.172)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ 15.1.2375.31 via Frontend Transport; Fri, 4 Nov 2022 11:59:36 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.175)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.31; Fri, 4 Nov 2022 11:56:57 -0700
+ 15.1.2375.31; Fri, 4 Nov 2022 11:59:36 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e9zkFHSorWLwKQyYtjsSYcUtPAjmjingcxB5HqBw57S4Kt9Is1wZFcWAnru6+IrZ8WyUNdi0pA2DJJqwERSzR3RPZF7kMX680nvvK1ObqMmw7GOwjNUbge2f9DO/QPEIejKwpf7BR99m3hU8uOUCoZ3+ELe6TntzGdCYJlCJGuhHlG6ZnQu8bvY8edeuzsv1STdaM2CEWaWNvaJO2mjPRJNuMcSLuwXh3H9Pw2QZVYcRj+0re9DDudwhOF8coMTKjhICcIQJw8uYp+NiK0SHkONxSOsdtehIfiilhq2iAkxZxQjJqlVgiCFkoV6hdJvPcWPD7FacYp7auM7B2lzsRA==
+ b=mVNNcVuJQ7Gg2/1d+s/vnngz6rhTvKYBpyBCwwPfAQJFK8q40n1HszBpMhiPVCJKtegHEyd+eKCMyu40d+Ia3vlYBkShq+pb1z9SV3UAc/Md7PflllEWYybKAfJ4quwZ9f/IPpEAPW1NUefwNfsGoP2onIuGFjTWCvvi/GpUo8dgxIVK9ETTLFZjZaeOo9iaQDJxCb2iJdMSFe9E7V5jLyjEzHixQdohEwuGNvcKjOIauw7iZnTuCImRTR/188FqxkInGBUk1t1etuuNnc4zVKSXF6nrTYonL9J4Vc5190re5JosNOqM2rNwZqugQywY73w/MrQRv0mESS9zUeslRA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=s0qfUrHFe0ObAFFS65wtuXEeYFzFclPRZrc4glMVEy4=;
- b=KN2hL08FsRngmL2BCIoEBfTj6cS55F75KmmIIe1frRIgddy7DJk1u0dhVfRN79e/uoEfuJG1SeEURpot9DB+4hVkPuPaSJnrrQf18TCbpQCQBkCVqOL5FtdIUCy5NNR0pIyQlFFkBdNYy0mwsunOrXPWyrbJybwAolmot3imdXzeXYmHpkgy3ArpUQ285DB4/hd9joDmu0Xl44IGlj48RVjW2uo7UaKhByT+hBRWepdPA5CSEArXqT5hJ4lwJX18zhdxOgukDWEShBL326vfyke/moKsOCFW4+24Q1ayHTCFYkH5B+EWYF2LBeCIS9CBzZE8+cnUU+hjbxN/S72PEQ==
+ bh=zHXvi4FjXS8RBKIXfddc0LN83iWFIebu1UgjpzGkqHw=;
+ b=mjF0ICJotcSJw0+t5GgdL5dX6udENwBZhSCM1XqTXFml56MfBtqOvX1C3i50QjxRws33CPZE/9lKijDHJpQ79hlO68mklUmkNQxMjANpl78t46f4ULF24m8yGUdNiG6bLgSx8IpY6iKaYiRhesb9Tvfwkpz2hDVg5kfECfuj8apkh4+ta8WKsOFQqQM4A+AW3m3x7fU7KL7/FL1WrrcjPdpw4cLpjfsteEqLbVC3SGg+XrI1o/pbFbZoYI01633c/8ID1blpkjCBtLXCi6UKzctwXj12m2m93IO7sc1aYGl5quZXOUqp3nfJ+w8LrIjZEgMhgxTdfIYZWcT/fC3Fjw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by DM4PR11MB5971.namprd11.prod.outlook.com (2603:10b6:8:5e::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5791.22; Fri, 4 Nov 2022 18:56:50 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::5236:c530:cc10:68f]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::5236:c530:cc10:68f%4]) with mapi id 15.20.5791.022; Fri, 4 Nov 2022
- 18:56:50 +0000
-Date:   Fri, 4 Nov 2022 11:56:46 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-CC:     Steven Rostedt <rostedt@goodmis.org>, <linux-cxl@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <vishal.l.verma@intel.com>,
-        <alison.schofield@intel.com>
-Subject: Re: [PATCH v3 01/10] cxl: add helper function to parse trace event
- to json object
-Message-ID: <Y2Vgbl/5Gudpa4bP@iweiny-desk3>
-References: <166742389426.2654617.4404053893427481848.stgit@djiang5-desk3.ch.intel.com>
- <166742400990.2654617.4918438509154032997.stgit@djiang5-desk3.ch.intel.com>
- <20221103014834.10d126bc@rorschach.local.home>
- <27786f64-b35a-ef82-0e93-55ee608f64ca@intel.com>
-Content-Type: text/plain; charset="us-ascii"
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20) by DM4PR11MB5389.namprd11.prod.outlook.com
+ (2603:10b6:5:394::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5769.15; Fri, 4 Nov
+ 2022 18:59:31 +0000
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::7194:47de:c1b1:2f63]) by MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::7194:47de:c1b1:2f63%12]) with mapi id 15.20.5791.022; Fri, 4 Nov 2022
+ 18:59:31 +0000
+Date:   Fri, 4 Nov 2022 11:59:29 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+CC:     "Schofield, Alison" <alison.schofield@intel.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "lmw.bobo@gmail.com" <lmw.bobo@gmail.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>
+Subject: Re: [PATCH 6/7] cxl/region: Fix 'distance' calculation with
+ passthrough ports
+Message-ID: <63656110eb4eb_f52ac2941e@dwillia2-xfh.jf.intel.com.notmuch>
+References: <166752181697.947915.744835334283138352.stgit@dwillia2-xfh.jf.intel.com>
+ <166752185440.947915.6617495912508299445.stgit@dwillia2-xfh.jf.intel.com>
+ <fa869572ab3190e0dacba8f5f133f750e9b30676.camel@intel.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <27786f64-b35a-ef82-0e93-55ee608f64ca@intel.com>
-X-ClientProxiedBy: SJ0PR05CA0016.namprd05.prod.outlook.com
- (2603:10b6:a03:33b::21) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fa869572ab3190e0dacba8f5f133f750e9b30676.camel@intel.com>
+X-ClientProxiedBy: SJ0PR03CA0023.namprd03.prod.outlook.com
+ (2603:10b6:a03:33a::28) To MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|DM4PR11MB5971:EE_
-X-MS-Office365-Filtering-Correlation-Id: f9943f54-909d-4be6-ede5-08dabe9654c6
+X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|DM4PR11MB5389:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7225a0a9-3dcf-4725-e253-08dabe96b48f
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Bpt0uP+8WIaoxipTzxPR6aQI81uJHlqHdqLJW1YkBz99MO3p/83YQ1SVTNhXz6ZdTnAygoUT4kfGZm5BZuN5fmNh3NM7nfWE2JphxQQXHWEp+dXlT1viOmtRBr1Anhwh17qQNgwVZzfhAQ7UF1SLPVVEHHBXXNtFKDHKyLv1Qu/RXHmHrxlDQP49ABEsy2hzG/w79kIuvKrhee5P40xkLld7zLjP3iRkSiZFVgu7ssw79OyQ79sjrNKA8MQxnQdwzozTM7F3TSA+N6mN5JhcRuSf5HpASZpyn1xh6ZrRxVKLpfg5Wia00tsV/3LSijY1uj74wm+dKc4Vmwu/WkZVKPzdLsmEIu0PnCsCp5uGpNfx7PhU8JvRFcRvnDveuZwdwaqiC9fO2/Ye8SFxX02CxQGNz0n4xgE20OXGn/ulAiF13F+Pq3Cvd/9bE87tHiRgRoTJUzFtB5BeFoyHXP2eaHgbxvRO93WBWZeSAqx61adRp95v2Pt2I5zojdnRdjLY2JVxw2ggKIJAtVhodsk/3lCH7bExHRJyP59mNcHKpyHz7tGvd2bl1JM/9gusNAKPKvncDIaMkED+j8s+5+MGLVqTjdYjFCu2ypyqOqbpkRhLgZ1dpof8jlvUWqCesLVoxH7lEpK5g05u5KS/aWQMwYIhPHjr4kfJkVKDZhjEuFY2gpam21waksyP1ByvsgZumVt9Mk3Rj5zmsrhKESet9Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(7916004)(396003)(136003)(366004)(376002)(346002)(39860400002)(451199015)(5660300002)(8676002)(107886003)(53546011)(33716001)(86362001)(26005)(38100700002)(82960400001)(6506007)(4326008)(6666004)(6862004)(8936002)(66556008)(6512007)(6486002)(6636002)(316002)(478600001)(9686003)(44832011)(66476007)(66946007)(41300700001)(186003)(2906002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: XliibZACmx6l/u3yw72Y0pPh/N+JiBz2/G5GgUDJnY72pZ9HEwT8yzpMJMxKA9J2shCpfq102+8qVH1vLnNahkin/BKymzJ+qF540hCWjCtd+bY4WQbIPzjSvwkLDGtGxJM9w7v85s43T39LIjrRYsOpBQLr532tLM81a935XD963fYAgmxDSlwa3ie9xfVhq4vat5dYIzYsUgk2KPSxErXZQaOjzcLkKOazvM4lrmWhvDVF5LLMyQEfO6/pSwt63O2KLPpVfZLaOafe0VHozJAg36/bpOsDg4K+XINq8yAQt9uZoWx45pIYm2VsdETA6INE3H4Izh3bCMqbxxZgAAnjMDBb7tkYzz1loPZBcJTa+Uu2YSXa9Ipe1dV/7tYJGyLTe2kAac4k3bxQXZ5UFafQuoOYHXrwexUMCPTmAzlQcGOz8qAzscKjkpD0ONlmSTGibXc4C1dR1OmGjI5wLfyT3bQWH37qKnMsVi/nZx/ctpFERM08Tim0SDgr/iIouPPr+hU7GK+cn0qsASX2CbdjjOZHyyvIe2JAxJ4vsBT+4/OZMpgfRjmH8hj3WrWlOgeItIHfSGY0uyY82AZtaOxAcTKPuwxGX3nZXox0q8b1QZGgLi9AG+qYFWg2LrimsOobc8Bj3Up4Irc8vjUXKGt7ak6ysCJEaV0j3lerCKCJ1o0o1doXMGScoK0aFj4lJQmARbpDPP5bZyXdekNVyoCloPjlHb+XwLHaJOcF48Czd9JM/8pyOtxSJS3ScQf9
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(366004)(39860400002)(376002)(136003)(346002)(451199015)(83380400001)(38100700002)(82960400001)(86362001)(2906002)(8936002)(6506007)(107886003)(186003)(26005)(9686003)(316002)(6512007)(966005)(110136005)(66946007)(5660300002)(66556008)(41300700001)(66476007)(478600001)(54906003)(4326008)(8676002)(6486002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?oIL3skuX9vD972afMpHzabzXoZ56c2E8e5Xat7bt0rvw6jJpjI+iw0jMhNdw?=
- =?us-ascii?Q?gwi4C2kBQs12LdkrjtGbwZd/Yie3GqkjSJWB3jTH/kLSC1d1Tpy4eoexVXC1?=
- =?us-ascii?Q?58kIFj+9yZFsWeLadm2s/9aeEUXZpOZ2wmx/4AGOB1LtE21zHkLIEMeu+ZE5?=
- =?us-ascii?Q?vqmEYHJ6grSzSE76XiU/OXGFE6NBLXCFzDwnm0id/kWTag0DF/6TP01XXYvT?=
- =?us-ascii?Q?tRZMxB3RxpoKydGM1dSzjp6u/QW+wv4W3CJm3nL/w7W9SbsXtnFWgQ9Ef9dl?=
- =?us-ascii?Q?xt0MX8V/wVYnujrYaJyhkHp5ljqhxnGfA4LNtyIoxTBIsz3IjW0P0Mu3rs2r?=
- =?us-ascii?Q?nVusD7yRLJ7hmExZSXRzCY/iX51OfV9oE/3haShDtm/X4BsvetnishVudcFq?=
- =?us-ascii?Q?FlN1+ufcP/I2+vE4SQ+eg72a2nsL8yhyKfGbPv+j0DcShh3YUl2AHu6yK8lb?=
- =?us-ascii?Q?ymGU0ljm/2phdDCxJfjvpZmbTHfxntftlqcLJJ119+tPZ6+aECNh5khkabbq?=
- =?us-ascii?Q?HeX+JgP6iRYn/G8p48T44KItUer8NPD2us74xeoBBFJbQ4TGmlhhrQKZIfqC?=
- =?us-ascii?Q?Bv5cjXyJnea1XZkwMrzdAGJHUK7yAVGxOq0P4VoVxz88G73Xb57GBtvMEFMD?=
- =?us-ascii?Q?I0AIMHNB6gRT4eeJHrGrM7C4PDNkyYNgOMWySiSb/B9XONyafsvj1+Dyj9gs?=
- =?us-ascii?Q?ULfptafsuJQMOxGDU0CSxJytXnsh6veYtr0cN2K+lv2cmjQUV9Y+AbOXF+nS?=
- =?us-ascii?Q?GZfE2p886Avq/D4ljybOAfz109SuqUpkuGpckjhvOcMRXNH8cl2iD9/jyF/2?=
- =?us-ascii?Q?YFQmgyWh97yZSVxSoAf4QAFcWuRPKjGMobRvW0qHdbjNyz41Dn/PYrTvOkfe?=
- =?us-ascii?Q?2AgKVIjyIuX/8CcHZ8GU1I3bAJUr5//btO5QiX0IsmX9nOTNi0imIHZrIM2I?=
- =?us-ascii?Q?sKVTbGh64vPoUIPPxf2HJnm3sQFbRvikgweZd0QPlXWm+jGlHuxiXjDMraOK?=
- =?us-ascii?Q?ho+yyuhKj6bue6bq738GdIyZ8Jz+wam0XSBJ8X3bbRlhjObxtlgB9SPSqZ6+?=
- =?us-ascii?Q?9RVl6nlHQlpe186E2pzqhwbncFUoQMjvwUYlxl7wvpo91pCxYh7/AQCNf8Pd?=
- =?us-ascii?Q?OmII1SQR0uz2Jx2GaR0WgyiNG33T3m7bhXbs4QQAXB3idTVbhdZRl8DRpQlF?=
- =?us-ascii?Q?1OV7oLeP74OklCtW7lYCXEXu0ja51TRuRu/Rp/FDoQjflSuh8vz7ieJo5NYQ?=
- =?us-ascii?Q?5TfAskzk8MCspPwZNaXQqf6rebBc4eXdGcT2eiqe885YONehY4Mfi1a6O+oC?=
- =?us-ascii?Q?t28s7rCqAB9AM3VuuToEOLcuk2tAm6Bypj6BSMn4D9tTiZf6gK7crATmjM7o?=
- =?us-ascii?Q?TsSXrM+MTGTkLjQ63IpcuZmJbzFEnqa6ACEfsl3c66HFqlm9h+E58bC8A2SM?=
- =?us-ascii?Q?VE5XxM5CSJJzvLhI3wXUbvuTgdFZozvZCWYHz5b+h9hZ5yYstfXjWTZlQ5hC?=
- =?us-ascii?Q?7MD05NUotUgYO53/WA7VwIYL05F8emDpDLvAV99gfdKelbt7wrtoWHCAhfzY?=
- =?us-ascii?Q?PMhTk4XO5IIZ05K1WJh1Pg8bTK317zPutTXpPjcm?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9943f54-909d-4be6-ede5-08dabe9654c6
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RWl6dkZ3QjRuenl4MTZVSWFWdkJxQXVmWTMvM2gxTVlRMlJtbVY3NXBVTWta?=
+ =?utf-8?B?bHYwZUFtMDl0WHRZMEhNZlhhcU5LLzNkVGJ3dFI3UlNlci92amMvei9IblUz?=
+ =?utf-8?B?c3prZklDeGNtTjZPeVcvT0xzenVtN25qOGU2MUdhL2ZDOHdEMDJkUzlreTN4?=
+ =?utf-8?B?QTZ5M1VaZWxPTXhvbEh2alZ5N2RDaDFvaVlkWTh2SjZ2dm1XWE4xREhHSk5m?=
+ =?utf-8?B?TGFhendDOGI1Y2dKa3BkR0Z5SzY5Y1h5L255VXFacGUwb1VUd0pKczFPN2ZT?=
+ =?utf-8?B?Z1pRSVNoeURkV0FJaGJmcExzZE5NenVGY3pNZlhjdlhOM3JLRERoaExzSEx6?=
+ =?utf-8?B?emROOVRsWGNaTktnUFJCRlZMN1lDdmVKNHNxMGR2Q2NLVVgrVTVGNzRHVGNv?=
+ =?utf-8?B?OE95bFUrOU5Bd0FTVWhtbUFMQVFTK0tWd2pTbCtVWkJQU2djNDRtWXVkUXpl?=
+ =?utf-8?B?SjhaUk9EcUFkTmkxWCtNS2xib0cySmZaeFMxazBwWiswZzVpTW1jN2xtQkZJ?=
+ =?utf-8?B?RDlHeHdmY0NTTGx2UElpWkFRVGpBZTNyVHFjM2Z1cWozNG1rVUlmajVIRnBp?=
+ =?utf-8?B?MHdiNlYwaU9xdTdGVFNrVllzY2IwU05yVHNIMTVHNHFvakdxTUt5SHNaQXdy?=
+ =?utf-8?B?L2c4ZHRpN1F2TWRGYUV3ejI5SmNEQzg1cmVLTEN6ZVhkV2VwLzFvNTVpcDRp?=
+ =?utf-8?B?UmFhMFZFTVhmVEJUOVVFVlk4TXdhMVlPcCs3azJpNFN3aDlIeVdDRWMzd3Zu?=
+ =?utf-8?B?NTQrNG5nRzVMdVdYcWs3SUJ3alpoRTZnbHVKaCtVMGFRU3RXc2UyOVBUbHM4?=
+ =?utf-8?B?c3Q3UUpSM2tjc1VzanA2bzJHaC9ycWUvQThHRFpvR3VBM1A2ZjhCU0ZZOFFV?=
+ =?utf-8?B?Z2E1dFMxdGRHUGNMRUdkUXRxVkVmRHFsVlVWRy9qdWFLL3p0U3pKdTlpQlNi?=
+ =?utf-8?B?eHUzaGJxN0x0Q0JUWTBlNEQvWGVsSytBZlhabFBEWk1kZStPaVh2M0ZHTEdh?=
+ =?utf-8?B?b3J1RVhoQkRtNkl4ZTZSbTNFN2hQa3h4cFJZK0Jha2ZKNEVhRkdPQnhoU0Zk?=
+ =?utf-8?B?TzJMZ1BUaHhGL2p1NERvZWIrSEJRK1pxZjlWNGpvVG1mSVVleUJtdEhNazBn?=
+ =?utf-8?B?MzRyMDlZUlZHMDc1cmJORWU0cFd2Qy9ROGVPRUNCTmh5WW9ta1p5NHliNExy?=
+ =?utf-8?B?S3VMWkllTnljamh2ajVxTFVwL1RHclk4LzZSajZiUzk0UEUyYm5wTW83MndJ?=
+ =?utf-8?B?WTBxa1ZLaHZVb010R2JLTkJnMDI3bGs2M0NvWmpxNFkrdnBkNEh6cWZJVlEr?=
+ =?utf-8?B?SzdQdmRMcUxjdUtaZy80Tk45bE9UM1dEaXBDRy9jRlJqQklOZ1J3NGdGTGhK?=
+ =?utf-8?B?QUVOOC81cmJXUkRsQWlHaFRzQllReExSR2pyTGV0RDQwankwU1I0YTlkLzMr?=
+ =?utf-8?B?MlhmWnNQRExja0h0WHVQc1A5TEtaYnRkQjZqbkF0SXpieHFWaTdsYU1BaGJT?=
+ =?utf-8?B?YzdIV0tpSmdMTDAvRUtiSmxWekRzS21ucGpSNVpxVHJhWFYzcU92bWY1b01z?=
+ =?utf-8?B?V2VOQjFWd1ozRlEybjYwR0hLZzRnMEc2V2F4R25JekIwZGlZT2xCc25NSkd5?=
+ =?utf-8?B?eEVITUFFTmVHa0U2bDJMWGNrRVlMRTNwMjdveTNNRmdEMURBcVpFUzRJcTVm?=
+ =?utf-8?B?ZlAveUZjT0JXVk5jOWVSVXpwN1ArUmhVWkxJVGEwQlRjZ1d1dVlSVi9UaUtk?=
+ =?utf-8?B?d0cvbCthSmovMTk5WnJ4dWV1aHlzK01BL2dvTzRVdXV2NWxINXZ5eHcxd1Rh?=
+ =?utf-8?B?WWtkRjRoZlZNM2c5TXdMdjJoUnJJQ1NZYnpFOE5zZUZHUmwxM1NBQjk2Y213?=
+ =?utf-8?B?bU1QclNuZWhhbkVYbTNyakxoOWtFeThmSDVDVVc3M2pFMDlKSXFjTGtMeDZi?=
+ =?utf-8?B?cFdiYzEyU1RSbGdoQVRjVzBmZ3NtUTY0MU1hVHJuNlpyNjg3dlVYWUYraHUy?=
+ =?utf-8?B?RGNrTEN3OFBtQVFiUzllNm8wbkx0aDhkQlJwUlRzYTZsUExQdmRzdHhmaS8x?=
+ =?utf-8?B?c0liUGJEMjBsVFJZb2lXTzJkRDQxNW50cUxiV212YzN4SlpSQWRJdHBGSGNF?=
+ =?utf-8?B?TFBhRmZhd2JQd2tKSzZrVzg2NE5TRm8yS2dEUjhoa09Fd0dMTlgyV0NWc3VH?=
+ =?utf-8?B?dnc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7225a0a9-3dcf-4725-e253-08dabe96b48f
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Nov 2022 18:56:50.4915
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Nov 2022 18:59:31.1921
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mg++ZB3eyePp4GlK1h6YG1m3ORjInqwXy27MUT1IgYHyyaF5YiW5wIv8UeDRUIdxLNzeKfmpJ0TWnxodJpzMYg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5971
+X-MS-Exchange-CrossTenant-UserPrincipalName: GycixIacYKuksNGeDC2LIy1/whdX6kpyygnw81FL1997zvUIKArTAolGcLSB+PCJrmmjoNnapyiZ9GE4FNGKhD8e8cX3/34uJEnIZm06CF8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5389
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Nov 03, 2022 at 09:15:03AM -0700, Jiang, Dave wrote:
-> 
-> 
-> On 11/2/2022 10:48 PM, Steven Rostedt wrote:
-> > On Wed, 02 Nov 2022 14:20:09 -0700
-> > Dave Jiang <dave.jiang@intel.com> wrote:
+Verma, Vishal L wrote:
+> On Thu, 2022-11-03 at 17:30 -0700, Dan Williams wrote:
+> > When programming port decode targets, the algorithm wants to ensure that
+> > two devices are compatible to be programmed as peers beneath a given
+> > port. A compatible peer is a target that shares the same dport, and
+> > where that target's interleave position also routes it to the same
+> > dport. Compatibility is determined by the device's interleave position
+> > being >= to distance. For example, if a given dport can only map every
+> > Nth position then positions less than N away from the last target
+> > programmed are incompatible.
 > > 
-> > > Add the helper function that parses a trace event captured by
-> > > libtraceevent in a tep handle. All the parsed fields are added to a json
-> > > object. The json object is added to the provided list in the input parameter.
-> > > 
-> > > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> > > ---
-> > >   cxl/event_trace.c |  166 +++++++++++++++++++++++++++++++++++++++++++++++++++++
-> > >   cxl/event_trace.h |   14 ++++
+> > The @distance for the host-bridge-cxl_port a simple dual-ported
+>                                    ^
+> Is this meant to be "the distance for the host-bridge to a cxl_port"?
 
-[snip]
+No, but I will preface this explanation by admitting "distance" may not
+be the best term for what this value is describing. CXL decode routes to
+targets in a round robin fashion per-port. Take the diagram below:
 
-> > > +		} else { /* single number */
-> > > +			unsigned char *data;
-> > > +
-> > > +			data = tep_get_field_raw(NULL, event, f->name, record, &len, 0);
-> > > +			if (!data)
-> > > +				continue;
-> > > +
-> > > +			/* check to see if we have a UUID */
-> > > +			tmp = strcasestr(f->type, "uuid_t");
+ ┌───────────────────────────────────┬──┐
+ │WINDOW0                            │x2│
+ └─────────┬─────────────────┬───────┴──┘
+           │                 │
+ ┌─────────▼────┬──┐  ┌──────▼───────┬──┐
+ │HB0           │x2│  │HB1           │x2│
+ └──┬────────┬──┴──┘  └─┬─────────┬──┴──┘
+    │        │          │         │
+ ┌──▼─┬──┐ ┌─▼──┬──┐  ┌─▼──┬──┐ ┌─▼──┬──┐
+ │DEV0│x4│ │DEV1│x4│  │DEV2│x4│ │DEV3│x4│
+ └────┴──┘ └────┴──┘  └────┴──┘ └────┴──┘
+    0         2          1         3
+
+...where an x4 region is being established, and all the xN values are
+the interleave-ways settings for those ports/devices. The @distance
+value for that "HB0" port is 2. I.e. in order for 2 devices in that
+region to be mapped under HB0 they must be at position X and X+2 in the
+region.  The algorithm needs to be flexible to also allow this
+configuration:
+
+ ┌───────────────────────────────────┬──┐
+ │WINDOW0                            │x2│
+ └─────────┬─────────────────┬───────┴──┘
+           │                 │
+ ┌─────────▼────┬──┐  ┌──────▼───────┬──┐
+ │HB0           │x2│  │HB1           │x2│
+ └──┬────────┬──┴──┘  └─┬─────────┬──┴──┘
+    │        │          │         │
+ ┌──▼─┬──┐ ┌─▼──┬──┐  ┌─▼──┬──┐ ┌─▼──┬──┐
+ │DEV3│x4│ │DEV2│x4│  │DEV1│x4│ │DEV0│x4│
+ └────┴──┘ └────┴──┘  └────┴──┘ └────┴──┘
+    3         1          2         0
+
+...and the algorithm can not know that a device is in the wrong position
+until trying to map the peer (like DEV0 and DEV1 are peers) into the
+decode. So "The @distance for the host-bridge-cxl_port" is referring to
+the value "2" for host-bridge-cxl_port:HB0 and host-bridge-cxl_port:HB1
+in the diagram.
+
+> Also missing '/in/ a simple dual-ported..'?
+
+Yes to this fixup though.
+
+> 
+> > host-bridge configuration with 2 direct-attached devices is 1. An x2
+> > region divded by 2 dports to reach 2 region targets.
+> 
+> The second sentence seems slightly incomprehensible too.
+
+Oh, I think I meant that to be s/. An/, i.e. an/:
+
+"...host-bridge configuration with 2 direct-attached devices is 1, i.e.
+an x2 region divded by 2 dports to reach 2 region positions"
+
+
 > > 
-> > I didn't even know event fields for uuid existed.
+> > An x4 region under an x2 host-bridge would need 2 intervening switches
+> > where the @distance at the host bridge level is 2 (x4 region divided by
+> > 2 switches to reach 4 devices).
+> > 
+> > However, the distance between peers underneath a single ported
+> > host-bridge is always zero because there is no limit to the number of
+> > devices that can be mapped. In other words, there are no decoders to
+> > program in a passthrough, all descendants are mapped and distance only
+> > starts matters for the intervening descendant ports of the passthrough
 > 
-> Ira figured out that you can you can use __field_struct() to accommodate
-> uuid_t. Here's what he changed below:
+> starts to matter?
 
-I guess this is a hack.  I looked into creating a new entry specifier and saw
-that __field_struct did what I needed.
-
-It all seems to work fine until Alison pointed out this morning that trace-cmd
-can't seem to parse this.
-
-:-/
-
-So now I'm not sure what is technically correct.  I've never used trace-cmd
-before and this all works fine on the cmd line and with this monitor command.
-
-Is this messing up trace-cmd?
-
-Ira
+s/starts matters/matters/
 
 > 
-> diff --git a/include/trace/events/cxl.h b/include/trace/events/cxl.h
-> index 6777a1119e68..22fcd677b6d0 100644
-> --- a/include/trace/events/cxl.h
-> +++ b/include/trace/events/cxl.h
-> @@ -68,7 +68,7 @@ TRACE_EVENT(cxl_overflow,
-> #define CXL_EVT_TP_entry                                       \
->         __string(dev_name, dev_name)                            \
->         __field(int, log)                                       \
-> -       __array(u8, hdr_uuid, UUID_SIZE)                        \
-> +       __field_struct(uuid_t, hdr_uuid)                        \
->         __field(u32, hdr_flags)                                 \
->         __field(u16, hdr_handle)                                \
->         __field(u16, hdr_related_handle)                        \
-> @@ -79,7 +79,7 @@ TRACE_EVENT(cxl_overflow,
-> #define CXL_EVT_TP_fast_assign(dname, l, hdr)                   \
->         __assign_str(dev_name, (dname));                        \
->         __entry->log = (l);                                     \
-> -       memcpy(__entry->hdr_uuid, &(hdr).id, UUID_SIZE);        \
-> +       memcpy(&__entry->hdr_uuid, &(hdr).id, sizeof(uuid_t));  \
->         __entry->hdr_length = (hdr).length;                     \
->         __entry->hdr_flags = get_unaligned_le24((hdr).flags);   \
->         __entry->hdr_handle = le16_to_cpu((hdr).handle);        \
-> @@ -93,7 +93,7 @@ TRACE_EVENT(cxl_overflow,
->                 "handle=%x related_handle=%x maint_op_class=%u" \
->                 " : " fmt,                                      \
->                __get_str(dev_name),cxl_event_log_type_str(__entry->log), \
-> -               __entry->hdr_timestamp, __entry->hdr_uuid,
-> __entry->hdr_length, \
-> +               __entry->hdr_timestamp, &__entry->hdr_uuid,
-> __entry->hdr_length,        \
->                 show_hdr_flags(__entry->hdr_flags), __entry->hdr_handle,
-> \
->                 __entry->hdr_related_handle, __entry->hdr_maint_op_class,
-> \
->                 ##__VA_ARGS__)
+> > port.
+> > 
+> > Add tracking for the number of dports mapped to a port, and use that to
+> > detect the passthrough case for calculating @distance.
+> > 
+> > Cc: <stable@vger.kernel.org>
+> > Reported-by: Bobo WL <lmw.bobo@gmail.com>
+> > Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Link: http://lore.kernel.org/r/20221010172057.00001559@huawei.com
+> > Fixes: 27b3f8d13830 ("cxl/region: Program target lists")
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  drivers/cxl/core/port.c   |   11 +++++++++--
+> >  drivers/cxl/core/region.c |    9 ++++++++-
+> >  drivers/cxl/cxl.h         |    2 ++
+> >  3 files changed, 19 insertions(+), 3 deletions(-)
 > 
+> Other than the above, looks good,
+> 
+> Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
+> 
+> > 
+> > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> > index bffde862de0b..e7556864ea80 100644
+> > --- a/drivers/cxl/core/port.c
+> > +++ b/drivers/cxl/core/port.c
+> > @@ -811,6 +811,7 @@ static struct cxl_dport *find_dport(struct cxl_port *port, int id)
+> >  static int add_dport(struct cxl_port *port, struct cxl_dport *new)
+> >  {
+> >         struct cxl_dport *dup;
+> > +       int rc;
+> >  
+> >         device_lock_assert(&port->dev);
+> >         dup = find_dport(port, new->port_id);
+> > @@ -821,8 +822,14 @@ static int add_dport(struct cxl_port *port, struct cxl_dport *new)
+> >                         dev_name(dup->dport));
+> >                 return -EBUSY;
+> >         }
+> > -       return xa_insert(&port->dports, (unsigned long)new->dport, new,
+> > -                        GFP_KERNEL);
+> > +
+> > +       rc = xa_insert(&port->dports, (unsigned long)new->dport, new,
+> > +                      GFP_KERNEL);
+> > +       if (rc)
+> > +               return rc;
+> > +
+> > +       port->nr_dports++;
+> > +       return 0;
+> >  }
+> >  
+> >  /*
+> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> > index c52465e09f26..c0253de74945 100644
+> > --- a/drivers/cxl/core/region.c
+> > +++ b/drivers/cxl/core/region.c
+> > @@ -990,7 +990,14 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+> >         if (cxl_rr->nr_targets_set) {
+> >                 int i, distance;
+> >  
+> > -               distance = p->nr_targets / cxl_rr->nr_targets;
+> > +               /*
+> > +                * Passthrough ports impose no distance requirements between
+> > +                * peers
+> > +                */
+> > +               if (port->nr_dports == 1)
+> > +                       distance = 0;
+> > +               else
+> > +                       distance = p->nr_targets / cxl_rr->nr_targets;
+> >                 for (i = 0; i < cxl_rr->nr_targets_set; i++)
+> >                         if (ep->dport == cxlsd->target[i]) {
+> >                                 rc = check_last_peer(cxled, ep, cxl_rr,
+> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> > index 1164ad49f3d3..ac75554b5d76 100644
+> > --- a/drivers/cxl/cxl.h
+> > +++ b/drivers/cxl/cxl.h
+> > @@ -457,6 +457,7 @@ struct cxl_pmem_region {
+> >   * @regions: cxl_region_ref instances, regions mapped by this port
+> >   * @parent_dport: dport that points to this port in the parent
+> >   * @decoder_ida: allocator for decoder ids
+> > + * @nr_dports: number of entries in @dports
+> >   * @hdm_end: track last allocated HDM decoder instance for allocation ordering
+> >   * @commit_end: cursor to track highest committed decoder for commit ordering
+> >   * @component_reg_phys: component register capability base address (optional)
+> > @@ -475,6 +476,7 @@ struct cxl_port {
+> >         struct xarray regions;
+> >         struct cxl_dport *parent_dport;
+> >         struct ida decoder_ida;
+> > +       int nr_dports;
+> >         int hdm_end;
+> >         int commit_end;
+> >         resource_size_t component_reg_phys;
+> > 
+> 
+
+
+
