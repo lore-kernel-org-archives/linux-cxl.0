@@ -2,67 +2,111 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B8FC433FE
-	for <linux-cxl@archiver.kernel.org>; Sun,  6 Nov 2022 21:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD62C4332F
+	for <linux-cxl@archiver.kernel.org>; Sun,  6 Nov 2022 23:46:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230003AbiKFV4h (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 6 Nov 2022 16:56:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49660 "EHLO
+        id S229932AbiKFXqs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 6 Nov 2022 18:46:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230249AbiKFV4g (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 6 Nov 2022 16:56:36 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26276DF77;
-        Sun,  6 Nov 2022 13:56:34 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A239D60DCC;
-        Sun,  6 Nov 2022 21:56:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 751CEC433D6;
-        Sun,  6 Nov 2022 21:56:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667771793;
-        bh=RDp3Fh3LdL7f8EPSyE35maQPSfI7HU8AJRy1PbW+2dw=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=DRzgbedKWOl+W/92naT00wmCWsbazrNya8KA82Jx9REiKmj2VO9gKY78ipFVNfROn
-         QPArMqpm39YiKwTd7mVyRGysZOSjYHp7xOm2HY8bV2fZwGFrnTc5XMyltfOvAW/D8c
-         vdFR3hmfwzHWNaE8xRy7i64iqWlnMDviTAr9oi622Z/eRS1w+gZRC8HnshehAGzofL
-         cRZTs40oFrUbRINITRH7ASyyXSyPVkHVjTjFz9plI7r588gchSKvRhi+9tDNjYvuB5
-         QxpGUMFvqrTmMyVLeM91aWp5odlyye85OVnj5+891oA3kqRo2nR9ACWhnvFLEhH+61
-         e60cTwoz9g0WQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 62DBDE270DD;
-        Sun,  6 Nov 2022 21:56:33 +0000 (UTC)
-Subject: Re: [GIT PULL] CXL fixes for v6.1-rc4
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <6367f8419c601_35f43294c0@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <6367f8419c601_35f43294c0@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-PR-Tracked-List-Id: <linux-cxl.vger.kernel.org>
-X-PR-Tracked-Message-Id: <6367f8419c601_35f43294c0@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-fixes-for-6.1-rc4
-X-PR-Tracked-Commit-Id: 8f401ec1c8975eabfe4c089de91cbe058deabf71
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 16c7a368c8ba9aba3b0e0ae5ec0a64be9fb45665
-Message-Id: <166777179339.27970.9157117891390962367.pr-tracker-bot@kernel.org>
-Date:   Sun, 06 Nov 2022 21:56:33 +0000
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     torvalds@linux-foundation.org, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        with ESMTP id S229756AbiKFXqr (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sun, 6 Nov 2022 18:46:47 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71021D2C8
+        for <linux-cxl@vger.kernel.org>; Sun,  6 Nov 2022 15:46:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667778406; x=1699314406;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=uHK2YYam8c0ncpmQvoPPHnkfE14o3EJbSBCJT0s93Ak=;
+  b=f+r70VwIGw1MuPI/dEqBuLovhgbbN+PV+VDWVF5VNcx3ZqMMATTxfr1l
+   XzbtvCnB6izLIWKA1rC60T/eDCKPR8sM+QI2qw2L183HCPqCEPSqMpxSa
+   sXd8I7vfyylqQnEu0GFCkbUlvBWeRQIjUaF8wVIMygZosMQA8MRPAlnh5
+   jXcAcBCaZylpvdQgnXxFFKyyjSGA90mg6nreVa/iXBUQUsMiXdO2uGYC0
+   buANjHlH1c/tkzlScQ7KH4/fOz3g/FpSumFXk2HVPEgYJgt+VxGDcvrvO
+   Fi8pCX5wpc/C37clAVZORxaOUiSHbOEKptzXpBkXi4sZqnwcMtTnyIzp0
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10523"; a="337007897"
+X-IronPort-AV: E=Sophos;i="5.96,143,1665471600"; 
+   d="scan'208";a="337007897"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2022 15:46:46 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10523"; a="638172114"
+X-IronPort-AV: E=Sophos;i="5.96,143,1665471600"; 
+   d="scan'208";a="638172114"
+Received: from durgasin-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.212.240.219])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2022 15:46:45 -0800
+Subject: [ndctl PATCH 00/15] cxl-cli test and usability updates
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     vishal.l.verma@intel.com
+Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
+Date:   Sun, 06 Nov 2022 15:46:45 -0800
+Message-ID: <166777840496.1238089.5601286140872803173.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The pull request you sent on Sun, 6 Nov 2022 10:09:05 -0800:
+The v6.1-rc4 kernel picks up new cxl_test infrastructure for a switch
+attached to a single-port host-bridge. While extending the region
+creation and topology tests for that change, some additional updates
+were identified. The main one is the ability to elide the "ways"
+"memdevs" arguments to 'cxl create-region'. Those parameters are now
+derived by the result of a topology walk under the given root decoder.
+I.e.:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-fixes-for-6.1-rc4
+    cxl create-region -d decoder3.4
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/16c7a368c8ba9aba3b0e0ae5ec0a64be9fb45665
+...will internally perform a:
 
-Thank you!
+    cxl list -M -d decoder3.4
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+...operation and use those memdevs as region targets.
+
+This also updates 'create-region' size detection to be maximum free
+extent in the decoder, or the available capacity in the target memdevs,
+whichever is smaller.
+
+Some miscellaneous fixes and updates are included as well.
+
+---
+
+Dan Williams (15):
+      ndctl/test: Move firmware-update.sh to the 'descructive' set
+      ndctl/test: Add kernel backtrace detection to some dax tests
+      ndctl/clang-format: Move minimum version to 6
+      ndctl/clang-format: Fix space after for_each macros
+      cxl/list: Always attempt to collect child objects
+      cxl/list: Skip emitting pmem_size when it is zero
+      cxl/filter: Return json-c topology
+      cxl/list: Record cxl objects in json objects
+      cxl/region: Make ways an integer argument
+      cxl/region: Make granularity an integer argument
+      cxl/region: Use cxl_filter_walk() to gather create-region targets
+      cxl/region: Trim region size by max available extent
+      cxl/region: Default to memdev mode for create with no arguments
+      cxl/test: Extend cxl-topology.sh for a single root-port host-bridge
+      cxl/test: Test single-port host-bridge region creation
+
+
+ .clang-format             |   38 ++---
+ cxl/filter.c              |   36 +----
+ cxl/filter.h              |   22 +++
+ cxl/json.c                |   29 +++-
+ cxl/list.c                |    7 +
+ cxl/region.c              |  346 +++++++++++++++++++++++++++------------------
+ test/common               |   10 +
+ test/cxl-create-region.sh |   28 ++++
+ test/cxl-region-sysfs.sh  |    4 -
+ test/cxl-topology.sh      |   53 ++++---
+ test/dax.sh               |    2 
+ test/daxdev-errors.sh     |    2 
+ test/meson.build          |    2 
+ test/multi-dax.sh         |    2 
+ 14 files changed, 363 insertions(+), 218 deletions(-)
+
+base-commit: 1d4dbf6ff6eb988864d154792aaa098a2b11a244
