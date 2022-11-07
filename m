@@ -2,158 +2,97 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8ABC433FE
-	for <linux-cxl@archiver.kernel.org>; Mon,  7 Nov 2022 15:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0E7C4332F
+	for <linux-cxl@archiver.kernel.org>; Mon,  7 Nov 2022 15:58:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232322AbiKGP5F (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 7 Nov 2022 10:57:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51696 "EHLO
+        id S232374AbiKGP6d (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 7 Nov 2022 10:58:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231355AbiKGP5D (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Nov 2022 10:57:03 -0500
+        with ESMTP id S232518AbiKGP6c (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Nov 2022 10:58:32 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1636A1A3BA
-        for <linux-cxl@vger.kernel.org>; Mon,  7 Nov 2022 07:57:02 -0800 (PST)
-Received: from fraeml701-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4N5bQs0Xgfz6HJTs;
-        Mon,  7 Nov 2022 23:55:01 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27B631FFAA
+        for <linux-cxl@vger.kernel.org>; Mon,  7 Nov 2022 07:58:28 -0800 (PST)
+Received: from frapeml500002.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4N5bSG3Bxbz687Gp;
+        Mon,  7 Nov 2022 23:56:14 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.31; Mon, 7 Nov 2022 16:56:59 +0100
+ frapeml500002.china.huawei.com (7.182.85.205) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 7 Nov 2022 16:58:26 +0100
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 7 Nov
- 2022 15:56:59 +0000
-Date:   Mon, 7 Nov 2022 15:56:58 +0000
+ 2022 15:58:25 +0000
+Date:   Mon, 7 Nov 2022 15:58:24 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dave Jiang <dave.jiang@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
         <dan.j.williams@intel.com>, <bwidawsk@kernel.org>,
         <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
         <alison.schofield@intel.com>, <dave@stgolabs.net>
-Subject: Re: [PATCH v2 16/19] tools/testing/cxl: add mechanism to lock mem
- device for testing
-Message-ID: <20221107155658.000048d0@Huawei.com>
-In-Reply-To: <166377438336.430546.14222889528313880160.stgit@djiang5-desk3.ch.intel.com>
+Subject: Re: [PATCH v2 17/19] cxl/pmem: add provider name to cxl pmem dimm
+ attribute group
+Message-ID: <20221107155824.000043c5@Huawei.com>
+In-Reply-To: <166377438921.430546.5550361331475412529.stgit@djiang5-desk3.ch.intel.com>
 References: <166377414787.430546.3863229455285366312.stgit@djiang5-desk3.ch.intel.com>
-        <166377438336.430546.14222889528313880160.stgit@djiang5-desk3.ch.intel.com>
+        <166377438921.430546.5550361331475412529.stgit@djiang5-desk3.ch.intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 21 Sep 2022 08:33:03 -0700
+On Wed, 21 Sep 2022 08:33:09 -0700
 Dave Jiang <dave.jiang@intel.com> wrote:
 
-> The mock cxl mem devs needs a way to go into "locked" status to simulate
-> when the platform is rebooted. Add a sysfs mechanism so the device security
-> state is set to "locked" and the frozen state bits are cleared.
+> Add provider name in order to associate cxl test dimm from cxl_test to the
+> cxl pmem device when going through sysfs for security testing.
+
+sysfs ABI docs update?
+
 > 
 > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Hi Dave
-
-A few minor comments below.
-
 > ---
->  tools/testing/cxl/test/cxl.c |   52 ++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 50 insertions(+), 2 deletions(-)
+>  drivers/cxl/pmem.c |   10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index 6dd286a52839..7f76f494a0d4 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -628,6 +628,45 @@ static void mock_companion(struct acpi_device *adev, struct device *dev)
->  #define SZ_512G (SZ_64G * 8)
->  #endif
+> diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+> index 9f34f8701b57..cb303edb925d 100644
+> --- a/drivers/cxl/pmem.c
+> +++ b/drivers/cxl/pmem.c
+> @@ -48,6 +48,15 @@ static void unregister_nvdimm(void *nvdimm)
+>  	cxl_nvd->bridge = NULL;
+>  }
 >  
-> +static ssize_t security_lock_show(struct device *dev,
-> +				  struct device_attribute *attr, char *buf)
+> +static ssize_t provider_show(struct device *dev, struct device_attribute *attr, char *buf)
 > +{
-> +	struct cxl_mock_mem_pdata *mdata = dev_get_platdata(dev);
+> +	struct nvdimm *nvdimm = to_nvdimm(dev);
+> +	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
 > +
-> +	return sysfs_emit(buf, "%s\n", mdata->security_state & CXL_PMEM_SEC_STATE_LOCKED ?
-> +			  "locked" : "unlocked");
-
-It's called lock. So 1 or 0 seems sufficient to me rather than needing strings.
-Particularly when you use an int to lock it.
-
+> +	return sysfs_emit(buf, "%s\n", dev_name(&cxl_nvd->dev));
 > +}
+> +static DEVICE_ATTR_RO(provider);
 > +
-> +static ssize_t security_lock_store(struct device *dev, struct device_attribute *attr,
-> +				   const char *buf, size_t count)
-> +{
-> +	struct cxl_mock_mem_pdata *mdata = dev_get_platdata(dev);
-> +	u32 mask = CXL_PMEM_SEC_STATE_FROZEN | CXL_PMEM_SEC_STATE_USER_PLIMIT |
-> +		   CXL_PMEM_SEC_STATE_MASTER_PLIMIT;
-> +	int val;
-> +
-> +	if (kstrtoint(buf, 0, &val) < 0)
-> +		return -EINVAL;
-> +
-> +	if (val == 1) {
-> +		if (!(mdata->security_state & CXL_PMEM_SEC_STATE_USER_PASS_SET))
-> +			return -ENXIO;
-> +		mdata->security_state |= CXL_PMEM_SEC_STATE_LOCKED;
-> +		mdata->security_state &= ~mask;
-> +	} else {
-> +		return -EINVAL;
-> +	}
-> +	return count;
-> +}
-> +
-> +static DEVICE_ATTR_RW(security_lock);
-> +
-> +static struct attribute *cxl_mock_mem_attrs[] = {
-> +	&dev_attr_security_lock.attr,
-> +	NULL
-> +};
-> +ATTRIBUTE_GROUPS(cxl_mock_mem);
-> +
->  static __init int cxl_test_init(void)
+>  static ssize_t id_show(struct device *dev, struct device_attribute *attr, char *buf)
 >  {
->  	struct cxl_mock_mem_pdata *mem_pdata;
-> @@ -757,6 +796,11 @@ static __init int cxl_test_init(void)
->  			platform_device_put(pdev);
->  			goto err_mem;
->  		}
-> +
-> +		rc = device_add_groups(&pdev->dev, cxl_mock_mem_groups);
-
-Can we just set pdev->dev.groups? and avoid dynamic part of this or need to
-remove them manually?   I can't immediately find an example of this for
-a platform_device but it's done for lots of other types.
-
-
-> +		if (rc)
-> +			goto err_mem;
-> +
->  		cxl_mem[i] = pdev;
->  	}
+>  	struct nvdimm *nvdimm = to_nvdimm(dev);
+> @@ -61,6 +70,7 @@ static DEVICE_ATTR_RO(id);
 >  
-> @@ -811,8 +855,12 @@ static __exit void cxl_test_exit(void)
->  	int i;
+>  static struct attribute *cxl_dimm_attributes[] = {
+>  	&dev_attr_id.attr,
+> +	&dev_attr_provider.attr,
+>  	NULL
+>  };
 >  
->  	platform_device_unregister(cxl_acpi);
-> -	for (i = ARRAY_SIZE(cxl_mem) - 1; i >= 0; i--)
-> -		platform_device_unregister(cxl_mem[i]);
-> +	for (i = ARRAY_SIZE(cxl_mem) - 1; i >= 0; i--) {
-> +		struct platform_device *pdev = cxl_mem[i];
-> +
-> +		device_remove_groups(&pdev->dev, cxl_mock_mem_groups);
-> +		platform_device_unregister(pdev);
-> +	}
->  	for (i = ARRAY_SIZE(cxl_switch_dport) - 1; i >= 0; i--)
->  		platform_device_unregister(cxl_switch_dport[i]);
->  	for (i = ARRAY_SIZE(cxl_switch_uport) - 1; i >= 0; i--)
 > 
 > 
 
