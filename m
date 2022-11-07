@@ -2,142 +2,154 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA13C4332F
-	for <linux-cxl@archiver.kernel.org>; Mon,  7 Nov 2022 16:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5689C433FE
+	for <linux-cxl@archiver.kernel.org>; Mon,  7 Nov 2022 18:31:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232744AbiKGQFa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 7 Nov 2022 11:05:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57494 "EHLO
+        id S232741AbiKGSbz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 7 Nov 2022 13:31:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232665AbiKGQFX (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Nov 2022 11:05:23 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79532205F4
-        for <linux-cxl@vger.kernel.org>; Mon,  7 Nov 2022 08:05:10 -0800 (PST)
-Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4N5bc02Wsmz68BrB;
-        Tue,  8 Nov 2022 00:02:56 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.31; Mon, 7 Nov 2022 17:05:07 +0100
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 7 Nov
- 2022 16:05:07 +0000
-Date:   Mon, 7 Nov 2022 16:05:06 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-        <dan.j.williams@intel.com>, <bwidawsk@kernel.org>,
-        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-        <alison.schofield@intel.com>, <dave@stgolabs.net>
-Subject: Re: [PATCH v2 19/19] cxl: add dimm_id support for __nvdimm_create()
-Message-ID: <20221107160506.00007b8d@Huawei.com>
-In-Reply-To: <166377440119.430546.15623409728442106946.stgit@djiang5-desk3.ch.intel.com>
-References: <166377414787.430546.3863229455285366312.stgit@djiang5-desk3.ch.intel.com>
-        <166377440119.430546.15623409728442106946.stgit@djiang5-desk3.ch.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S232699AbiKGSbx (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Nov 2022 13:31:53 -0500
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8CBF1F9E9
+        for <linux-cxl@vger.kernel.org>; Mon,  7 Nov 2022 10:31:51 -0800 (PST)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 6DBD4541A98;
+        Mon,  7 Nov 2022 18:31:49 +0000 (UTC)
+Received: from pdx1-sub0-mail-a282 (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id B8F6F5421D7;
+        Mon,  7 Nov 2022 18:31:48 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1667845909; a=rsa-sha256;
+        cv=none;
+        b=L8hDvy0NPDoPqGGOatYo3MdQS2UIplmhSj+El0dT+8CTnlOwXs+XnXodzen82+5vfgba6D
+        H1pvTnLq04LUp/Kd84dDBpio1eU3CtJrK0QcuUlwX2y1luTmJJAj84oDdyFggJYZTIgILz
+        uaTJwbD8gh7tPQtSqY6NdAIxG9Ym8UJYEF8SOUGQ5ykaheBJCdUQ057a/umDXnmm5V6Zhj
+        OGBoenR/EYOmzfWPM/f282kjJR/ubgZJhqzooSGxo9ldW0zUM1Z2mlfi58H63+hL4jY6Xl
+        T3T2I/4Y/wAYfYoVFu/L+2hLQzCjPrG9kYkTDgEB2XBlBhlVtnsvyCLYHdwe4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1667845909;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:dkim-signature;
+        bh=vvvSV3j86QKkTx8cOKSuOi44fpjajXBwkUWf7K/nmTk=;
+        b=LG1Jsk1VF5Sk2daj5Q7/5hqE+O6cIaPP9skqUdFfKRyZx55oJAmVedhfpurPJq3fApF+oi
+        12pecBc2zp8064Vw+AwzjMjq/NDB+Wurso+om7oHe6cN3wiucpBhtuW7yoSxTR5gL60INX
+        SidiHZwjb9ako7gcZonRc+1vPbE6haOQAIbP36/uQ945MoEmBW4Holj0FZNcJkZJFg6BTD
+        DZ5+hkPt3YR26roKhSnbPJPv9Cqs9trXiiVnF1qwSwy8ofw98lD4EBw39Z6VC4WeJdaexV
+        KdLdO0R8sk0c73jVQw1dpDskn+5kvpJ3D24jaEABTv5wPk5nNUxRDTFZJL8kkg==
+ARC-Authentication-Results: i=1;
+        rspamd-5cb65d95c4-8pxgs;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Fumbling-Arithmetic: 4a16206f1279a68a_1667845909226_1453098664
+X-MC-Loop-Signature: 1667845909225:1472000495
+X-MC-Ingress-Time: 1667845909225
+Received: from pdx1-sub0-mail-a282 (pop.dreamhost.com [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.105.95.137 (trex/6.7.1);
+        Mon, 07 Nov 2022 18:31:49 +0000
+Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a282 (Postfix) with ESMTPSA id 4N5fvm218Cz3V;
+        Mon,  7 Nov 2022 10:31:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1667845908;
+        bh=vvvSV3j86QKkTx8cOKSuOi44fpjajXBwkUWf7K/nmTk=;
+        h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+        b=Ry7v9d/0wxN1jdUAfBREbHmutvXf3dhM3/ocsEhR891V8RezSQtsgc4+AYlpb0aTm
+         meLZo0CiFzTpMAAipr9hkkacUO+FqjmW7CE7rOdU8Vehr511+J3E1A/czNc7bcGPTP
+         ekC/o/WMHAwUktZvgPFMelg4d0d9WJipNwzpJ4uPGum/K7G9cYOeydabeZ9hv6ZzwD
+         j92ghVDwoWm4ghUnsOyiaXEyT6JlD/JRhaYoD7xQ80G94i5959IOI12c4MOUVoAVAe
+         mmX1enoOmgmTCqkSxpfrL+abnng4JmmTBmD1t4sZB1UmkeTnyebs84bl9qrZ3XpSLj
+         QCU3tQ732vAnA==
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     jonathan.cameron@huawei.com, mst@redhat.com
+Cc:     qemu-devel@nongnu.org, linux-cxl@vger.kernel.org, dave@stgolabs.net
+Subject: [PATCH] docs/cxl: Fix some typos
+Date:   Mon,  7 Nov 2022 10:09:23 -0800
+Message-Id: <20221107180923.27072-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.38.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 21 Sep 2022 08:33:21 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+Found while reading the doc.
 
-> Set the cxlds->serial as the dimm_id to be fed to __nvdimm_create(). The
-> security code uses that as the key description for the security key of the
-> memory device. The nvdimm unlock code cannot find the respective key
-> without the dimm_id.
-> 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Seems reasonable.
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ docs/system/devices/cxl.rst | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> ---
->  drivers/cxl/cxlmem.h         |    3 +++
->  drivers/cxl/pci.c            |    4 ++++
->  drivers/cxl/pmem.c           |    4 +++-
->  tools/testing/cxl/test/mem.c |    4 ++++
->  4 files changed, 14 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 1266df3b2d3d..24d1c66a30ed 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -178,6 +178,8 @@ struct cxl_endpoint_dvsec_info {
->  	struct range dvsec_range[2];
->  };
->  
-> +#define CXL_DEV_ID_LEN 32
-> +
->  /**
->   * struct cxl_dev_state - The driver device state
->   *
-> @@ -244,6 +246,7 @@ struct cxl_dev_state {
->  
->  	resource_size_t component_reg_phys;
->  	u64 serial;
-> +	u8 dev_id[CXL_DEV_ID_LEN]; /* for nvdimm, string of 'serial' */
->  
->  	struct xarray doe_mbs;
->  
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index faeb5d9d7a7a..de5f37e0fe6f 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -451,6 +451,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  		return PTR_ERR(cxlds);
->  
->  	cxlds->serial = pci_get_dsn(pdev);
-> +	rc = snprintf(cxlds->dev_id, CXL_DEV_ID_LEN, "%llu", cxlds->serial);
-> +	if (rc <= 0)
-> +		return -ENXIO;
-> +
->  	cxlds->cxl_dvsec = pci_find_dvsec_capability(
->  		pdev, PCI_DVSEC_VENDOR_ID_CXL, CXL_DVSEC_PCIE_DEVICE);
->  	if (!cxlds->cxl_dvsec)
-> diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-> index cb303edb925d..444f18c09848 100644
-> --- a/drivers/cxl/pmem.c
-> +++ b/drivers/cxl/pmem.c
-> @@ -113,9 +113,11 @@ static int cxl_nvdimm_probe(struct device *dev)
->  	set_bit(ND_CMD_GET_CONFIG_SIZE, &cmd_mask);
->  	set_bit(ND_CMD_GET_CONFIG_DATA, &cmd_mask);
->  	set_bit(ND_CMD_SET_CONFIG_DATA, &cmd_mask);
-> +
->  	nvdimm = __nvdimm_create(cxl_nvb->nvdimm_bus, cxl_nvd,
->  				 cxl_dimm_attribute_groups, flags,
-> -				 cmd_mask, 0, NULL, NULL, cxl_security_ops, NULL);
-> +				 cmd_mask, 0, NULL, cxlds->dev_id,
-> +				 cxl_security_ops, NULL);
->  	if (!nvdimm) {
->  		rc = -ENOMEM;
->  		goto out;
-> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> index a0a58156c15a..ca1d8f2fc6a4 100644
-> --- a/tools/testing/cxl/test/mem.c
-> +++ b/tools/testing/cxl/test/mem.c
-> @@ -556,6 +556,10 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
->  		return PTR_ERR(cxlds);
->  
->  	cxlds->serial = pdev->id;
-> +	rc = snprintf(cxlds->dev_id, CXL_DEV_ID_LEN, "%llu", cxlds->serial);
-> +	if (rc <= 0)
-> +		return -ENXIO;
-> +
->  	cxlds->mbox_send = cxl_mock_mbox_send;
->  	cxlds->payload_size = SZ_4K;
->  
-> 
-> 
+diff --git a/docs/system/devices/cxl.rst b/docs/system/devices/cxl.rst
+index abf7c1f24305..891bbd65d9d8 100644
+--- a/docs/system/devices/cxl.rst
++++ b/docs/system/devices/cxl.rst
+@@ -83,7 +83,7 @@ CXL Fixed Memory Windows (CFMW)
+ A CFMW consists of a particular range of Host Physical Address space
+ which is routed to particular CXL Host Bridges.  At time of generic
+ software initialization it will have a particularly interleaving
+-configuration and associated Quality of Serice Throtling Group (QTG).
++configuration and associated Quality of Service Throttling Group (QTG).
+ This information is available to system software, when making
+ decisions about how to configure interleave across available CXL
+ memory devices.  It is provide as CFMW Structures (CFMWS) in
+@@ -98,7 +98,7 @@ specification defined register interface called CXL Host Bridge
+ Component Registers (CHBCR). The location of this CHBCR MMIO
+ space is described to system software via a CXL Host Bridge
+ Structure (CHBS) in the CEDT ACPI table.  The actual interfaces
+-are identical to those used for other parts of the CXL heirarchy
++are identical to those used for other parts of the CXL hierarchy
+ as CXL Component Registers in PCI BARs.
+ 
+ Interfaces provided include:
+@@ -111,7 +111,7 @@ Interfaces provided include:
+ 
+ CXL Root Ports (CXL RP)
+ ~~~~~~~~~~~~~~~~~~~~~~~
+-A CXL Root Port servers te same purpose as a PCIe Root Port.
++A CXL Root Port servers the same purpose as a PCIe Root Port.
+ There are a number of CXL specific Designated Vendor Specific
+ Extended Capabilities (DVSEC) in PCIe Configuration Space
+ and associated component register access via PCI bars.
+@@ -143,7 +143,7 @@ CXL Memory Devices - Type 3
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ CXL type 3 devices use a PCI class code and are intended to be supported
+ by a generic operating system driver. They have HDM decoders
+-though in these EP devices, the decoder is reponsible not for
++though in these EP devices, the decoder is responsible not for
+ routing but for translation of the incoming host physical address (HPA)
+ into a Device Physical Address (DPA).
+ 
+@@ -209,7 +209,7 @@ Notes:
+     ranges of the system physical address map.  Each CFMW has
+     particular interleave setup across the CXL Host Bridges (HB)
+     CFMW0 provides uninterleaved access to HB0, CFW2 provides
+-    uninterleaved acess to HB1. CFW1 provides interleaved memory access
++    uninterleaved access to HB1. CFW1 provides interleaved memory access
+     across HB0 and HB1.
+ 
+ (2) **Two CXL Host Bridges**. Each of these has 2 CXL Root Ports and
+@@ -282,7 +282,7 @@ Example topology involving a switch::
+             ---------------------------------------------------
+            |    Switch 0  USP as PCI 0d:00.0                   |
+            |    USP has HDM decoder which direct traffic to    |
+-           |    appropiate downstream port                     |
++           |    appropriate downstream port                    |
+            |    Switch BUS appears as 0e                       |
+            |x__________________________________________________|
+             |                  |               |              |
+-- 
+2.38.0
 
