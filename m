@@ -2,48 +2,48 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8B3C4332F
-	for <linux-cxl@archiver.kernel.org>; Mon,  7 Nov 2022 23:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 529F5C4332F
+	for <linux-cxl@archiver.kernel.org>; Mon,  7 Nov 2022 23:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232650AbiKGXqO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 7 Nov 2022 18:46:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60426 "EHLO
+        id S232630AbiKGXqf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 7 Nov 2022 18:46:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232608AbiKGXqL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Nov 2022 18:46:11 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B191A20BEA
-        for <linux-cxl@vger.kernel.org>; Mon,  7 Nov 2022 15:46:10 -0800 (PST)
+        with ESMTP id S232707AbiKGXqc (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Nov 2022 18:46:32 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 424FB21247
+        for <linux-cxl@vger.kernel.org>; Mon,  7 Nov 2022 15:46:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667864770; x=1699400770;
+  t=1667864791; x=1699400791;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=+JiNF6qNCWiqq5Gl/6YJHcjYthV66OU4XJXxB9QDo30=;
-  b=QB8imTGGoKDzo9Yq7xkh7Eaoo1Nv8S99jAPe+69bf2J766EuzIVXc4eS
-   hnkuEhZibqnEPzl37g7QkV6/7j27YFWzaQRL0rUtIZ48i7TsVn8epZGZw
-   PGyflbqxVZUmFkYrWWazQ/QKEm9YB7y3+2Ay59NZAwhX50t9wVD1z3Z/n
-   550z86iIqTxDCWJ/9PKws1jOuczf6GP1ScddzPLqb6ApKW74J6xJrwlYD
-   +6U5tFY4GLl281CZY4yrw/+RIT0rAd6FNrhqoEQWIGsFTF8vnkrLlcku8
-   5P/WOfEOBZDmd69px0UMCyQBxS6pSpfRLHzUy6xYk338cgXTCiUM5HuNb
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="374825042"
+  bh=UHyCzYnsoG4p5IiHmuB7OkrqtYurFGZe+Hv87a3j1xk=;
+  b=M5ZQRLPVnkg9u9ljUxDW/I1oa79as5bG/fFekkfRbIeEdkPyYWBwIjNq
+   pwOjmANfb//W3LVtqB+wALd+XZUmnCYvkccUoF7OajsxgwGVxhrLX8TTj
+   m/kSJ5eM4XzLcH8lpDyibiqoGdX3UfvTEgG4+1mP8HxpeI8Y4VELvM0R0
+   oQ8UQN8b8Yo/KIzM8xQP0yiB60wDkD3fYQq2CL4Uqmw1K0DXJW6O2LtsW
+   3qAv0j/CgEVrnvzLyz7WvDbpi7K6qj2hxTodyhXgyvIXUsK9aXB/cyibc
+   Jpww5g7AOK9UA10zXij8mzy1KmbL+csgME4yIyYA0RmOSPfzUKBb548hx
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="290275045"
 X-IronPort-AV: E=Sophos;i="5.96,145,1665471600"; 
-   d="scan'208";a="374825042"
+   d="scan'208";a="290275045"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2022 15:46:10 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="630670087"
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2022 15:46:30 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="630670182"
 X-IronPort-AV: E=Sophos;i="5.96,145,1665471600"; 
-   d="scan'208";a="630670087"
+   d="scan'208";a="630670182"
 Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.213.168.235]) ([10.213.168.235])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2022 15:46:09 -0800
-Message-ID: <634216b7-93af-11f0-534e-24341aef81c0@intel.com>
-Date:   Mon, 7 Nov 2022 15:46:08 -0800
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2022 15:46:30 -0800
+Message-ID: <88e62c8a-bf56-3a9d-dd73-1809f94e0709@intel.com>
+Date:   Mon, 7 Nov 2022 15:46:29 -0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.4.1
-Subject: Re: [PATCH v2 17/19] cxl/pmem: add provider name to cxl pmem dimm
- attribute group
+Subject: Re: [PATCH v2 18/19] libnvdimm: Introduce CONFIG_NVDIMM_SECURITY_TEST
+ flag
 Content-Language: en-US
 To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
@@ -51,10 +51,10 @@ Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
         dave@stgolabs.net
 References: <166377414787.430546.3863229455285366312.stgit@djiang5-desk3.ch.intel.com>
- <166377438921.430546.5550361331475412529.stgit@djiang5-desk3.ch.intel.com>
- <20221107155824.000043c5@Huawei.com>
+ <166377439534.430546.10690686781480251163.stgit@djiang5-desk3.ch.intel.com>
+ <20221107160124.00005223@Huawei.com>
 From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20221107155824.000043c5@Huawei.com>
+In-Reply-To: <20221107160124.00005223@Huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -63,52 +63,52 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 
 
-On 11/7/2022 7:58 AM, Jonathan Cameron wrote:
-> On Wed, 21 Sep 2022 08:33:09 -0700
+On 11/7/2022 8:01 AM, Jonathan Cameron wrote:
+> On Wed, 21 Sep 2022 08:33:15 -0700
 > Dave Jiang <dave.jiang@intel.com> wrote:
 > 
->> Add provider name in order to associate cxl test dimm from cxl_test to the
->> cxl pmem device when going through sysfs for security testing.
-> 
-> sysfs ABI docs update?
-
-Should be an entry for nvdimm bus. But seems like there isn't one. Will 
-add one in Documentation/ABI/testing/sysfs-bus-nvdimm
-> 
+>> nfit_test overrode the security_show() sysfs attribute function in nvdimm
+>> dimm_devs in order to allow testing of security unlock. With the
+>> introduction of CXL security commands, the trick to override
+>> security_show() becomes significantly more complicated. By introdcing a
+>> security flag CONFIG_NVDIMM_SECURITY_TEST, libnvdimm can just toggle the
+>> check via a compile option. In addition the original override can can be
+>> removed from tools/testing/nvdimm/.
 >>
 >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 >> ---
->>   drivers/cxl/pmem.c |   10 ++++++++++
->>   1 file changed, 10 insertions(+)
+>>   drivers/nvdimm/Kconfig           |    9 +++++++++
+>>   drivers/nvdimm/dimm_devs.c       |    9 ++++++++-
+>>   drivers/nvdimm/security.c        |    4 ++++
+>>   tools/testing/nvdimm/Kbuild      |    1 -
+>>   tools/testing/nvdimm/dimm_devs.c |   30 ------------------------------
+>>   5 files changed, 21 insertions(+), 32 deletions(-)
+>>   delete mode 100644 tools/testing/nvdimm/dimm_devs.c
 >>
->> diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
->> index 9f34f8701b57..cb303edb925d 100644
->> --- a/drivers/cxl/pmem.c
->> +++ b/drivers/cxl/pmem.c
->> @@ -48,6 +48,15 @@ static void unregister_nvdimm(void *nvdimm)
->>   	cxl_nvd->bridge = NULL;
->>   }
+>> diff --git a/drivers/nvdimm/Kconfig b/drivers/nvdimm/Kconfig
+>> index 5a29046e3319..fd336d138eda 100644
+>> --- a/drivers/nvdimm/Kconfig
+>> +++ b/drivers/nvdimm/Kconfig
+>> @@ -114,4 +114,13 @@ config NVDIMM_TEST_BUILD
+>>   	  core devm_memremap_pages() implementation and other
+>>   	  infrastructure.
 >>   
->> +static ssize_t provider_show(struct device *dev, struct device_attribute *attr, char *buf)
->> +{
->> +	struct nvdimm *nvdimm = to_nvdimm(dev);
->> +	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
+>> +config NVDIMM_SECURITY_TEST
+>> +	bool "Nvdimm security test code toggle"
+>> +	depends on NVDIMM_KEYS
+>> +	help
+>> +	  Debug flag for security testing when using nfit_test or cxl_test
+>> +	  modules in tools/testing/.
 >> +
->> +	return sysfs_emit(buf, "%s\n", dev_name(&cxl_nvd->dev));
->> +}
->> +static DEVICE_ATTR_RO(provider);
+>> +	  Select Y if using nfit_test or cxl_test for security testing.
+> 
+> Probably want to say it if has any unfortunate side effects when not doing
+> such testing.  Distros will want guidance on whether to enable.
+
+Ok will add.
+> 
+> Jonathan
+> 
 >> +
->>   static ssize_t id_show(struct device *dev, struct device_attribute *attr, char *buf)
->>   {
->>   	struct nvdimm *nvdimm = to_nvdimm(dev);
->> @@ -61,6 +70,7 @@ static DEVICE_ATTR_RO(id);
->>   
->>   static struct attribute *cxl_dimm_attributes[] = {
->>   	&dev_attr_id.attr,
->> +	&dev_attr_provider.attr,
->>   	NULL
->>   };
->>   
->>
->>
+> 
 > 
