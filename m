@@ -2,50 +2,50 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58399C433FE
-	for <linux-cxl@archiver.kernel.org>; Tue,  8 Nov 2022 17:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE932C43219
+	for <linux-cxl@archiver.kernel.org>; Tue,  8 Nov 2022 17:25:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234125AbiKHRZu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 8 Nov 2022 12:25:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58178 "EHLO
+        id S233901AbiKHRZx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 8 Nov 2022 12:25:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234556AbiKHRZi (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 8 Nov 2022 12:25:38 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E934D5C4
-        for <linux-cxl@vger.kernel.org>; Tue,  8 Nov 2022 09:25:38 -0800 (PST)
+        with ESMTP id S234405AbiKHRZq (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 8 Nov 2022 12:25:46 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51C43E58
+        for <linux-cxl@vger.kernel.org>; Tue,  8 Nov 2022 09:25:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667928338; x=1699464338;
+  t=1667928345; x=1699464345;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=HIzLYkSJOaz2vYcR0Jw7JJ1mMfwUqK5vzf+nNcTzjZM=;
-  b=liDQBwXbMmxTJZ6+YENdWyyQKXpbfIB3/mPLoW2JNmM4iBpBPf0KeATN
-   A0Qe4Z/Y9pwPXQLGPB1gY05ySBGMyTOVZ9QJRprXNE/VeusCGnLEhiVHd
-   TeCy1unbtFF1ECgEqnQ9UE/HTqjCkvY0LXpOCwRe8W0UcEpzQBF7XTZb3
-   YJUug6MSUNdrLMDYmN8hFIclx2WrtL93jhjyhHzz6qqPxxSl2rjxS/1pX
-   vcTtjPHmFHAFFyMjrXjGh4Kui+12Ax+I9W4nYTHmScLvm8k+RoWKr4Meq
-   +myCVrcUQtSXwd0hl+FDY+z2l7wht+wtPfGk3mtyiVQVNQNvLFDTryMud
+  bh=f5YG+uIWnLHJyHDG0GXZgolJd39mYA+YNYTqCRa+xMU=;
+  b=nnuV0AibBMzjVpgU9ERx8+2xEw2DzPnacORu0ot11uKKykC8yu91kN6U
+   aUdt2OhwRnsf25JUdTBr4s6ZovGm+6MAm5+cSBoIN+AQv09Z+1WCFfn++
+   W/RlckLveEsLoa6t2UpH72q1jUj6qMYa6TVoR03U8l1YU802nRWTfvxIM
+   oT/j552eFCEjTKvVMiSyFYJ+o4IPvt/kQRru57Zw/EAHhLFyOPa8zWbxr
+   Mz115BPgmvykuzU4hFGFf7eMkd6e1fSLHR0spk+3IdCBDqwQSY7eJg2yO
+   sVVaWCvJf5nFDoOc8rF8IXH27bF3jUYDeHu4241kRsOWcn7ni/ejyL7A0
    w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="308377748"
+X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="291144257"
 X-IronPort-AV: E=Sophos;i="5.96,148,1665471600"; 
-   d="scan'208";a="308377748"
+   d="scan'208";a="291144257"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2022 09:25:33 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="742038782"
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2022 09:25:45 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="742038814"
 X-IronPort-AV: E=Sophos;i="5.96,148,1665471600"; 
-   d="scan'208";a="742038782"
+   d="scan'208";a="742038814"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2022 09:25:33 -0800
-Subject: [PATCH v3 02/18] tools/testing/cxl: Add "Get Security State" opcode
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2022 09:25:44 -0800
+Subject: [PATCH v3 04/18] tools/testing/cxl: Add "Set Passphrase" opcode
  support
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
 Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
         Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Date:   Tue, 08 Nov 2022 10:25:32 -0700
-Message-ID: <166792833292.3767969.13949713086525232999.stgit@djiang5-desk3.ch.intel.com>
+Date:   Tue, 08 Nov 2022 10:25:44 -0700
+Message-ID: <166792834432.3767969.4537105791663118664.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <166792815961.3767969.2621677491424623673.stgit@djiang5-desk3.ch.intel.com>
 References: <166792815961.3767969.2621677491424623673.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/1.4
@@ -56,134 +56,133 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add the emulation support for handling "Get Security State" opcode for a
-CXL memory device for the cxl_test. The function will copy back device
-security state bitmask to the output payload.
+Add support to emulate a CXL mem device supporting the "Set Passphrase"
+operation. The operation supports setting of either a user or a master
+passphrase.
 
-The security state data is added as platform_data for the mock mem device.
-
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- tools/testing/cxl/test/cxl.c       |   18 ++++++++++++++++++
- tools/testing/cxl/test/mem.c       |   20 ++++++++++++++++++++
- tools/testing/cxl/test/mem_pdata.h |   10 ++++++++++
- 3 files changed, 48 insertions(+)
- create mode 100644 tools/testing/cxl/test/mem_pdata.h
+ tools/testing/cxl/test/mem.c       |   81 ++++++++++++++++++++++++++++++++++++
+ tools/testing/cxl/test/mem_pdata.h |    6 +++
+ 2 files changed, 87 insertions(+)
 
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index a072b2d3e726..6dd286a52839 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -10,6 +10,7 @@
- #include <linux/mm.h>
- #include <cxlmem.h>
- #include "mock.h"
-+#include "mem_pdata.h"
- 
- #define NR_CXL_HOST_BRIDGES 2
- #define NR_CXL_ROOT_PORTS 2
-@@ -629,8 +630,18 @@ static void mock_companion(struct acpi_device *adev, struct device *dev)
- 
- static __init int cxl_test_init(void)
- {
-+	struct cxl_mock_mem_pdata *mem_pdata;
- 	int rc, i;
- 
-+	/*
-+	 * Only a zeroed copy of this data structure is needed since no
-+	 * additional initialization is needed for initial state.
-+	 * platform_device_add_data() will make a copy of this data.
-+	 */
-+	mem_pdata = kzalloc(sizeof(*mem_pdata), GFP_KERNEL);
-+	if (!mem_pdata)
-+		return -ENOMEM;
-+
- 	register_cxl_mock_ops(&cxl_mock_ops);
- 
- 	cxl_mock_pool = gen_pool_create(ilog2(SZ_2M), NUMA_NO_NODE);
-@@ -735,6 +746,12 @@ static __init int cxl_test_init(void)
- 		pdev->dev.parent = &dport->dev;
- 		set_dev_node(&pdev->dev, i % 2);
- 
-+		rc = platform_device_add_data(pdev, mem_pdata, sizeof(*mem_pdata));
-+		if (rc) {
-+			platform_device_put(pdev);
-+			goto err_mem;
-+		}
-+
- 		rc = platform_device_add(pdev);
- 		if (rc) {
- 			platform_device_put(pdev);
-@@ -785,6 +802,7 @@ static __init int cxl_test_init(void)
- 	gen_pool_destroy(cxl_mock_pool);
- err_gen_pool_create:
- 	unregister_cxl_mock_ops(&cxl_mock_ops);
-+	kfree(mem_pdata);
- 	return rc;
- }
- 
 diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index aa2df3a15051..9002a3ae3ea5 100644
+index 9002a3ae3ea5..0fac0ca81290 100644
 --- a/tools/testing/cxl/test/mem.c
 +++ b/tools/testing/cxl/test/mem.c
-@@ -8,6 +8,7 @@
- #include <linux/sizes.h>
- #include <linux/bits.h>
- #include <cxlmem.h>
-+#include "mem_pdata.h"
- 
- #define LSA_SIZE SZ_128K
- #define DEV_SIZE SZ_2G
-@@ -137,6 +138,22 @@ static int mock_partition_info(struct cxl_dev_state *cxlds,
+@@ -154,6 +154,84 @@ static int mock_get_security_state(struct cxl_dev_state *cxlds,
  	return 0;
  }
  
-+static int mock_get_security_state(struct cxl_dev_state *cxlds,
-+				   struct cxl_mbox_cmd *cmd)
++static void master_plimit_check(struct cxl_mock_mem_pdata *mdata)
++{
++	if (mdata->master_limit == PASS_TRY_LIMIT)
++		return;
++	mdata->master_limit++;
++	if (mdata->master_limit == PASS_TRY_LIMIT)
++		mdata->security_state |= CXL_PMEM_SEC_STATE_MASTER_PLIMIT;
++}
++
++static void user_plimit_check(struct cxl_mock_mem_pdata *mdata)
++{
++	if (mdata->user_limit == PASS_TRY_LIMIT)
++		return;
++	mdata->user_limit++;
++	if (mdata->user_limit == PASS_TRY_LIMIT)
++		mdata->security_state |= CXL_PMEM_SEC_STATE_USER_PLIMIT;
++}
++
++static int mock_set_passphrase(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
 +{
 +	struct cxl_mock_mem_pdata *mdata = dev_get_platdata(cxlds->dev);
++	struct cxl_set_pass *set_pass;
 +
-+	if (cmd->size_in)
++	if (cmd->size_in != sizeof(*set_pass))
 +		return -EINVAL;
 +
-+	if (cmd->size_out != sizeof(u32))
++	if (cmd->size_out != 0)
 +		return -EINVAL;
 +
-+	memcpy(cmd->payload_out, &mdata->security_state, sizeof(u32));
++	if (mdata->security_state & CXL_PMEM_SEC_STATE_FROZEN) {
++		cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
++		return -ENXIO;
++	}
 +
-+	return 0;
++	set_pass = cmd->payload_in;
++	switch (set_pass->type) {
++	case CXL_PMEM_SEC_PASS_MASTER:
++		if (mdata->security_state & CXL_PMEM_SEC_STATE_MASTER_PLIMIT) {
++			cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
++			return -ENXIO;
++		}
++		/*
++		 * CXL spec rev3.0 8.2.9.8.6.2, The master pasphrase shall only be set in
++		 * the security disabled state when the user passphrase is not set.
++		 */
++		if (mdata->security_state & CXL_PMEM_SEC_STATE_USER_PASS_SET) {
++			cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
++			return -ENXIO;
++		}
++		if (memcmp(mdata->master_pass, set_pass->old_pass, NVDIMM_PASSPHRASE_LEN)) {
++			master_plimit_check(mdata);
++			cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
++			return -ENXIO;
++		}
++		memcpy(mdata->master_pass, set_pass->new_pass, NVDIMM_PASSPHRASE_LEN);
++		mdata->security_state |= CXL_PMEM_SEC_STATE_MASTER_PASS_SET;
++		return 0;
++
++	case CXL_PMEM_SEC_PASS_USER:
++		if (mdata->security_state & CXL_PMEM_SEC_STATE_USER_PLIMIT) {
++			cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
++			return -ENXIO;
++		}
++		if (memcmp(mdata->user_pass, set_pass->old_pass, NVDIMM_PASSPHRASE_LEN)) {
++			user_plimit_check(mdata);
++			cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
++			return -ENXIO;
++		}
++		memcpy(mdata->user_pass, set_pass->new_pass, NVDIMM_PASSPHRASE_LEN);
++		mdata->security_state |= CXL_PMEM_SEC_STATE_USER_PASS_SET;
++		return 0;
++
++	default:
++		cmd->return_code = CXL_MBOX_CMD_RC_INPUT;
++	}
++	return -EINVAL;
 +}
 +
  static int mock_get_lsa(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
  {
  	struct cxl_mbox_get_lsa *get_lsa = cmd->payload_in;
-@@ -230,6 +247,9 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
- 	case CXL_MBOX_OP_GET_HEALTH_INFO:
- 		rc = mock_health_info(cxlds, cmd);
+@@ -250,6 +328,9 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
+ 	case CXL_MBOX_OP_GET_SECURITY_STATE:
+ 		rc = mock_get_security_state(cxlds, cmd);
  		break;
-+	case CXL_MBOX_OP_GET_SECURITY_STATE:
-+		rc = mock_get_security_state(cxlds, cmd);
++	case CXL_MBOX_OP_SET_PASSPHRASE:
++		rc = mock_set_passphrase(cxlds, cmd);
 +		break;
  	default:
  		break;
  	}
 diff --git a/tools/testing/cxl/test/mem_pdata.h b/tools/testing/cxl/test/mem_pdata.h
-new file mode 100644
-index 000000000000..6a7b111147eb
---- /dev/null
+index 6a7b111147eb..8eb2dffc9156 100644
+--- a/tools/testing/cxl/test/mem_pdata.h
 +++ b/tools/testing/cxl/test/mem_pdata.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
+@@ -5,6 +5,12 @@
+ 
+ struct cxl_mock_mem_pdata {
+ 	u32 security_state;
++	u8 user_pass[NVDIMM_PASSPHRASE_LEN];
++	u8 master_pass[NVDIMM_PASSPHRASE_LEN];
++	int user_limit;
++	int master_limit;
+ };
+ 
++#define PASS_TRY_LIMIT 3
 +
-+#ifndef _MEM_PDATA_H_
-+#define _MEM_PDATA_H_
-+
-+struct cxl_mock_mem_pdata {
-+	u32 security_state;
-+};
-+
-+#endif
+ #endif
 
 
