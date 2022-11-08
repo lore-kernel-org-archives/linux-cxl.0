@@ -2,49 +2,49 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE69C433FE
-	for <linux-cxl@archiver.kernel.org>; Tue,  8 Nov 2022 18:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E8EC4332F
+	for <linux-cxl@archiver.kernel.org>; Tue,  8 Nov 2022 18:30:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230079AbiKHSaa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 8 Nov 2022 13:30:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45938 "EHLO
+        id S230142AbiKHSah (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 8 Nov 2022 13:30:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230001AbiKHSaa (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 8 Nov 2022 13:30:30 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ABC51E72F
-        for <linux-cxl@vger.kernel.org>; Tue,  8 Nov 2022 10:30:29 -0800 (PST)
+        with ESMTP id S230001AbiKHSag (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 8 Nov 2022 13:30:36 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B1353F05E
+        for <linux-cxl@vger.kernel.org>; Tue,  8 Nov 2022 10:30:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667932229; x=1699468229;
+  t=1667932235; x=1699468235;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=geA5FvpKwrTuUY42W1nUPqEFsiD3A9hLebU6OboB/Qc=;
-  b=ht2V4PIr3Ofxo+JqJhYPaAbb1Nhm0y9HxrD/rbv8UvwX0uHf/Z62Ffwv
-   D01JIJuNGurXBWprtnZ4eDwbr77XKKd6tK2lbHS53uChLzgvdV0PSN42V
-   ilNBN+cC3GKaZRwIc17A+iba4JMdHsFRNCnX8AN2VbI8Ai/gvbktj8Whu
-   qSvBscYtCy6XoCOwIB+XWw8iin4r/Nbyp9qiOKPLpt4Xh4C+vxJ1VdJDU
-   uKjdcDmmKY2ivW7oAXZ38v4H3D+JpbVabLstogO1Zr5Hh67afrgozc5SF
-   TBtIs3IzgiQLU3HT50r+Rvf8MWiYJ9EzMV9QbhDX7LDDvzG+BgOPthh4H
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="291159797"
+  bh=Av6IyuHvGJr8brfWMPwuS8wabZmI7DOSQJTHBSYC2l0=;
+  b=XRBFkobl2K4mbiUfw68JMlfVn/JSwxDOw3VEQ4xY02VWWytCT3bbjSq0
+   z1TcSMW0LK0SgnedhN6IO7ZOj/P0AljU+ywjUNuNjKah0stBtL6SNf7d/
+   7jUHEln9lEszL4oklcr8LjJgxj00f0y3NFl7H5WqllRrQXhcb0yBVCk9a
+   r7tbDZrTfnex7RJDEKrbmvZknw7gEh9oK4+UUHpp/T5nMoI+cb1W1l1ca
+   BZdSE3+oU6QdUtWdJeyJhnXY96o9KNOzQ0X1IHrBZrerRp4spAW5TZwrF
+   MA9W8dLju8i4tl+r/5Y6sGdZDRy/ApxI14UwCgHqUr5pQZw6HSsl0c7rm
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="294143783"
 X-IronPort-AV: E=Sophos;i="5.96,148,1665471600"; 
-   d="scan'208";a="291159797"
+   d="scan'208";a="294143783"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2022 10:30:29 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="705400112"
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2022 10:30:35 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="705400144"
 X-IronPort-AV: E=Sophos;i="5.96,148,1665471600"; 
-   d="scan'208";a="705400112"
+   d="scan'208";a="705400144"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2022 10:30:28 -0800
-Subject: [PATCH v4 07/10] cxl: add monitor command to cxl
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2022 10:30:34 -0800
+Subject: [PATCH v4 08/10] cxl: add an optional pid check to event parsing
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
         rostedt@goodmis.org
-Date:   Tue, 08 Nov 2022 11:30:28 -0700
-Message-ID: <166793222841.3768752.2390044444606875734.stgit@djiang5-desk3.ch.intel.com>
+Date:   Tue, 08 Nov 2022 11:30:34 -0700
+Message-ID: <166793223408.3768752.4466685754838805704.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <166793212765.3768752.4370741471494095451.stgit@djiang5-desk3.ch.intel.com>
 References: <166793212765.3768752.4370741471494095451.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/1.4
@@ -55,133 +55,52 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Connect the monitoring functionality to the cxl monitor command. Add basic
-functionality to the cxl monitor command where it can be launched as a daemon
-and logging can be designated to stdout or a file.
+From: Alison Schofield <alison.schofield@intel.com>
 
+When parsing CXL events, callers may only be interested in events
+that originate from the current process. Introduce an optional
+argument to the event trace context: event_pid. When event_pid is
+present, only include events with a matching pid in the returned
+JSON list. It is not a failure to see other, non matching results.
+Simply skip those.
+
+The initial use case for this is the listing of media errors,
+where only the media-errors requested by this process are wanted.
+
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- cxl/builtin.h |    1 +
- cxl/cxl.c     |    1 +
- cxl/monitor.c |   75 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 77 insertions(+)
+ cxl/event_trace.c |    5 +++++
+ cxl/event_trace.h |    1 +
+ 2 files changed, 6 insertions(+)
 
-diff --git a/cxl/builtin.h b/cxl/builtin.h
-index b28c2213993b..34c5cfb49051 100644
---- a/cxl/builtin.h
-+++ b/cxl/builtin.h
-@@ -22,4 +22,5 @@ int cmd_create_region(int argc, const char **argv, struct cxl_ctx *ctx);
- int cmd_enable_region(int argc, const char **argv, struct cxl_ctx *ctx);
- int cmd_disable_region(int argc, const char **argv, struct cxl_ctx *ctx);
- int cmd_destroy_region(int argc, const char **argv, struct cxl_ctx *ctx);
-+int cmd_monitor(int argc, const char **argv, struct cxl_ctx *ctx);
- #endif /* _CXL_BUILTIN_H_ */
-diff --git a/cxl/cxl.c b/cxl/cxl.c
-index dd1be7a054a1..3be7026f43d3 100644
---- a/cxl/cxl.c
-+++ b/cxl/cxl.c
-@@ -76,6 +76,7 @@ static struct cmd_struct commands[] = {
- 	{ "enable-region", .c_fn = cmd_enable_region },
- 	{ "disable-region", .c_fn = cmd_disable_region },
- 	{ "destroy-region", .c_fn = cmd_destroy_region },
-+	{ "monitor", .c_fn = cmd_monitor },
+diff --git a/cxl/event_trace.c b/cxl/event_trace.c
+index 490c30e1dbfc..89c9c2db26a3 100644
+--- a/cxl/event_trace.c
++++ b/cxl/event_trace.c
+@@ -215,6 +215,11 @@ static int cxl_event_parse_cb(struct tep_event *event, struct tep_record *record
+ 			return 0;
+ 	}
+ 
++	if (event_ctx->event_pid) {
++		if (event_ctx->event_pid != tep_data_pid(event->tep, record))
++			return 0;
++	}
++
+ 	if (event_ctx->parse_event)
+ 		return event_ctx->parse_event(event, record, &event_ctx->jlist_head);
+ 
+diff --git a/cxl/event_trace.h b/cxl/event_trace.h
+index 89e98cafb320..e72b4347175e 100644
+--- a/cxl/event_trace.h
++++ b/cxl/event_trace.h
+@@ -15,6 +15,7 @@ struct event_ctx {
+ 	const char *system;
+ 	struct list_head jlist_head;
+ 	const char *event_name;					/* optional */
++	int event_pid;						/* optional */
+ 	int (*parse_event)(struct tep_event *event, struct tep_record *record,
+ 			   struct list_head *jlist_head);	/* optional */
  };
- 
- int main(int argc, const char **argv)
-diff --git a/cxl/monitor.c b/cxl/monitor.c
-index 518d8142e40d..d8e498392ed7 100644
---- a/cxl/monitor.c
-+++ b/cxl/monitor.c
-@@ -32,11 +32,15 @@
- #include "event_trace.h"
- 
- static const char *cxl_system = "cxl";
-+const char *default_log = "/var/log/cxl-monitor.log";
- 
- static struct monitor {
-+	const char *log;
- 	struct log_ctx ctx;
- 	FILE *log_file;
- 	bool human;
-+	bool verbose;
-+	bool daemon;
- } monitor;
- 
- static void log_standard(struct log_ctx *ctx, int priority, const char *file,
-@@ -163,3 +167,74 @@ epoll_err:
- 	free(events);
- 	return rc;
- }
-+
-+int cmd_monitor(int argc, const char **argv, struct cxl_ctx *ctx)
-+{
-+	const struct option options[] = {
-+		OPT_FILENAME('l', "log", &monitor.log,
-+				"<file> | standard",
-+				"where to output the monitor's notification"),
-+		OPT_BOOLEAN('\0', "daemon", &monitor.daemon,
-+				"run cxl monitor as a daemon"),
-+		OPT_BOOLEAN('u', "human", &monitor.human,
-+				"use human friendly output formats"),
-+		OPT_BOOLEAN('v', "verbose", &monitor.verbose,
-+				"emit extra debug messages to log"),
-+		OPT_END(),
-+	};
-+	const char * const u[] = {
-+		"cxl monitor [<options>]",
-+		NULL
-+	};
-+	const char *prefix ="./";
-+	int rc = 0, i;
-+
-+	argc = parse_options_prefix(argc, argv, prefix, options, u, 0);
-+	for (i = 0; i < argc; i++)
-+		error("unknown parameter \"%s\"\n", argv[i]);
-+	if (argc)
-+		usage_with_options(u, options);
-+
-+	log_init(&monitor.ctx, "cxl/monitor", "CXL_MONITOR_LOG");
-+	monitor.ctx.log_fn = log_standard;
-+
-+	if (monitor.verbose)
-+		monitor.ctx.log_priority = LOG_DEBUG;
-+	else
-+		monitor.ctx.log_priority = LOG_INFO;
-+
-+	if (monitor.log) {
-+		if (strncmp(monitor.log, "./", 2) != 0)
-+			fix_filename(prefix, (const char **)&monitor.log);
-+		if (strncmp(monitor.log, "./standard", 10) == 0 && !monitor.daemon) {
-+			monitor.ctx.log_fn = log_standard;
-+		} else {
-+			const char *log = monitor.log;
-+
-+			if (!monitor.log)
-+				log = default_log;
-+			monitor.log_file = fopen(log, "a+");
-+			if (!monitor.log_file) {
-+				rc = -errno;
-+				error("open %s failed: %d\n", monitor.log, rc);
-+				goto out;
-+			}
-+			monitor.ctx.log_fn = log_file;
-+		}
-+	}
-+
-+	if (monitor.daemon) {
-+		if (daemon(0, 0) != 0) {
-+			err(&monitor, "daemon start failed\n");
-+			goto out;
-+		}
-+		info(&monitor, "cxl monitor daemon started.\n");
-+	}
-+
-+	rc = monitor_event(ctx);
-+
-+out:
-+	if (monitor.log_file)
-+		fclose(monitor.log_file);
-+	return rc;
-+}
 
 
