@@ -2,36 +2,36 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7940C4332F
-	for <linux-cxl@archiver.kernel.org>; Wed,  9 Nov 2022 23:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4B7C4332F
+	for <linux-cxl@archiver.kernel.org>; Wed,  9 Nov 2022 23:36:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232159AbiKIXMC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 9 Nov 2022 18:12:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59426 "EHLO
+        id S230334AbiKIXgH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 9 Nov 2022 18:36:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231786AbiKIXLf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Nov 2022 18:11:35 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38A5B30F5B;
-        Wed,  9 Nov 2022 15:11:29 -0800 (PST)
+        with ESMTP id S231611AbiKIXgG (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Nov 2022 18:36:06 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15DB11900A;
+        Wed,  9 Nov 2022 15:36:01 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DD240B8203E;
-        Wed,  9 Nov 2022 23:11:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B15DC433C1;
-        Wed,  9 Nov 2022 23:11:26 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A58FD61D26;
+        Wed,  9 Nov 2022 23:36:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC6D9C433D7;
+        Wed,  9 Nov 2022 23:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668035486;
-        bh=gTQxZ1egZZFdLRU5hjINvNkzMgHAG+RtZvuMob2tT+Y=;
+        s=k20201202; t=1668036960;
+        bh=xDaxbcsvS5ooeLilCDV2eAZ/B+4PrNvT4W6swBS6lEY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=tqp2zijGCjx3e4LT1ETg9ytMhBiwUXmObb7RMccEFfWgPld6SmHjyXCkNGpr2hxnZ
-         lUiRLwEmN7sHGdtxqfDFPR9+XUtyKUhSpszIx13n8USwk/9KXP9fdxW3RhzKFh/IDz
-         DSUWAWXG5WSdDOIHi6wESaYN+FRNs8Bm9IBOwsSVkPokWV4j8DpU6W+iUfU2Wux3cO
-         t2mHxjL+XydD8mus/sUQ+8mj21cz//Uy0gIO+tsyf6wxMpPpni6BWwCxC4EB6+UyVU
-         jVDAH1wJUgW548yPkLhhQWdNSBVGyps755sr8zU2cMiR7rQxVS73TZf+TI2tWZJA1I
-         aBsOlPl4IzHEQ==
-Date:   Wed, 9 Nov 2022 17:11:24 -0600
+        b=eksR+SPp/aGE7EDrxbFI7LiRn8uucTy4DAXqhXbf9V9fZPcCwI97bPBuJXIdtOMeF
+         QqQOm7DP4m/jQGkp/XAW8Lb9WCx+xtkjKiIOMbAC0jJbbIxNXrW3YIIEK7MpP3+Tw/
+         afsdoIB/DmF26A79pJuqmFKDwjD3wHuWEfQb7J9vK0+s4OcZqFlhqhIkebE8XA0z4h
+         49nIyMh/XfhqplAV+RAxzA/35BexnLw35iUkzUjPAJNDiSRtFRCyIxHANlD8i/8ZiR
+         5HVmAu6vcpq1nVdqDmtA2ZdsMNWNIuZOVUocI9YXXwBgIQQj+/8k4thDAcFg2H94Mz
+         80rcoY+RtBRlA==
+Date:   Wed, 9 Nov 2022 17:35:58 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Robert Richter <rrichter@amd.com>
 Cc:     Alison Schofield <alison.schofield@intel.com>,
@@ -39,65 +39,68 @@ Cc:     Alison Schofield <alison.schofield@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-cxl@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH v3 1/9] cxl/acpi: Register CXL host ports by bridge device
-Message-ID: <20221109231124.GA581464@bhelgaas>
+        Dave Jiang <dave.jiang@intel.com>,
+        Terry Bowman <terry.bowman@amd.com>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v3 9/9] cxl/acpi: Set ACPI's CXL _OSC to indicate CXL1.1
+ support
+Message-ID: <20221109233558.GA581582@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221109104059.766720-2-rrichter@amd.com>
+In-Reply-To: <20221109104059.766720-10-rrichter@amd.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Nov 09, 2022 at 11:40:51AM +0100, Robert Richter wrote:
-> A port of a CXL host bridge links to the bridge's acpi device
+On Wed, Nov 09, 2022 at 11:40:59AM +0100, Robert Richter wrote:
+> From: Terry Bowman <terry.bowman@amd.com>
+> 
+> ACPI includes a CXL _OSC support procedure to communicate the available
+> CXL support to FW. The CXL support _OSC includes a field to indicate
+> CXL1.1 RCH RCD support. The OS sets this bit to 1 if it supports access
+> to RCD and RCH Port registers.[1] FW can potentially change it's operation
 
-s/acpi/ACPI/ to match usage below.
+s/it's/its/
 
-> (&adev->dev) with its corresponding uport/dport device (uport_dev and
-> dport_dev respectively). The device is not a direct parent device in
-> the PCI topology as pdev->dev.parent points to a PCI bridge's (struct
-> pci_host_bridge) device. The following CXL memory device hierarchy
-> would be valid for an endpoint once an RCD EP would be enabled (note
-> this will be done in a later patch):
+> depending on the _OSC support setting reported by the OS.
 > 
-> VH mode:
+> The ACPI driver does not currently set the ACPI _OSC support to indicate
+> CXL1.1 RCD RCH support. Change the capability reported to include CXL1.1.
+
+Eight instances of "support" above seems like it might be more than
+necessary.
+
+I don't know the history, but OSC_CXL_1_1_PORT_REG_ACCESS_SUPPORT and
+OSC_CXL_2_0_PORT_DEV_REG_ACCESS_SUPPORT seem like sort of weird names
+since they don't match the spec at all ("RCD and RCH Port Register
+Access Supported" and "CXL VH Register Access Supported").
+
+> [1] CXL3.0 Table 9-26 'Interpretation of CXL _OSC Support Field'
 > 
->  cxlmd->dev.parent->parent
->         ^^^\^^^^^^\ ^^^^^^\
->             \      \       pci_dev (Type 1, Downstream Port)
->              \      pci_dev (Type 0, PCI Express Endpoint)
->               cxl mem device
-> 
-> RCD mode:
-> 
->  cxlmd->dev.parent->parent
->         ^^^\^^^^^^\ ^^^^^^\
->             \      \       pci_host_bridge
->              \      pci_dev (Type 0, RCiEP)
->               cxl mem device
-> 
-> In VH mode a downstream port is created by port enumeration and thus
-> always exists.
-> 
-> Now, in RCD mode the host bridge also already exists but it references
-> to an ACPI device. A port lookup by the PCI device's parent device
-> will fail as a direct link to the registered port is missing. The ACPI
-> device of the bridge must be determined first.
-> 
-> To prevent this, change port registration of a CXL host to use the
-> bridge device instead. Do this also for the VH case as port topology
-> will better reflect the PCI topology then.
-> 
-> If a mock device is registered by a test driver, the bridge pointer
-> can be NULL. Keep using the matching ACPI device (&adev->dev) as a
-> fallback in this case.
-> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 > Signed-off-by: Robert Richter <rrichter@amd.com>
+> ---
+>  drivers/acpi/pci_root.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index c8385ef54c37..094a59b216ae 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -492,6 +492,7 @@ static u32 calculate_cxl_support(void)
+>  	u32 support;
+>  
+>  	support = OSC_CXL_2_0_PORT_DEV_REG_ACCESS_SUPPORT;
+> +	support |= OSC_CXL_1_1_PORT_REG_ACCESS_SUPPORT;
+>  	if (pci_aer_available())
+>  		support |= OSC_CXL_PROTOCOL_ERR_REPORTING_SUPPORT;
+>  	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
+> -- 
+> 2.30.2
+> 
