@@ -2,100 +2,123 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E68C4332F
-	for <linux-cxl@archiver.kernel.org>; Wed,  9 Nov 2022 12:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE30C433FE
+	for <linux-cxl@archiver.kernel.org>; Wed,  9 Nov 2022 14:33:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229795AbiKIMWT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 9 Nov 2022 07:22:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52472 "EHLO
+        id S229447AbiKIOd3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 9 Nov 2022 09:33:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229629AbiKIMWS (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Nov 2022 07:22:18 -0500
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7E6A250;
-        Wed,  9 Nov 2022 04:22:17 -0800 (PST)
-Received: by mail-qt1-f173.google.com with SMTP id l2so10197183qtq.11;
-        Wed, 09 Nov 2022 04:22:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XvBiFkolKGUNT/T8gjXpcXzeHtarJfPAvEGuDLN1G0E=;
-        b=s99MiDBO7eAhnWAxeDGGJrdHdVOtxlXxWPC30w1PgFXr+XY1nxBUuhLPQ5k5yuMZgG
-         o7RtW/JkcS92aszpKWr7KK5GGz7Vcn+c+897dgp9LLUlxK9YGCfsGuYNh1JQPQGm/Lvw
-         ziqJQ6UmtPQ2XoDEx0/1N+i0DcwjGe9K3gSew7HNnAmxEDw5tUtayrjkTR4r8ZKtrDAH
-         QEE0AqC3gH64ZqO9lwmKwKt0P28Szt+9XCdH7g9gEEoQi93rIqVshoUKGiRae8k9wp2i
-         iwCcqEXJlpdANWflmo95Cd/uV+M1sU8DoMOlDW2HHylRXJ4cmpFL8EO8Nrc3wZ+n7Vka
-         sclw==
-X-Gm-Message-State: ACrzQf0/LR6gDuCyTHN5wxPfpNy5Uy4YhWMzRkJ94UFhQu4dqo5QBeFT
-        gY6vsJF0B4TlLOUaCgsYSFQCP6AkX7gs0DrJKBc=
-X-Google-Smtp-Source: AMsMyM4poJGku7VUKnTRBml+VyWLtEWGUgmc0O+LQC5DfNjZ/VebWumF69asi53wkVrHRzyK/tfGHFQwOBzNriOpPS8=
-X-Received: by 2002:ac8:7d15:0:b0:3a5:449:87c3 with SMTP id
- g21-20020ac87d15000000b003a5044987c3mr47257311qtb.357.1667996536769; Wed, 09
- Nov 2022 04:22:16 -0800 (PST)
+        with ESMTP id S231329AbiKIOd2 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Nov 2022 09:33:28 -0500
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2057.outbound.protection.outlook.com [40.107.95.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3734C278;
+        Wed,  9 Nov 2022 06:33:25 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=odDWdPj2P0/sB+XmILtX0guIrMk9lBEUtq6fpz9wkkBkUMpndwKtmwt5r8uolteSgfqmK++LSLOpDBMjSMgg+C0HuTtRFDYAfWCSF5DbYvOfdryU352RPL/S9MaXJ6VoJ/w5tCzjC2q4fGD9bkM+vP7x2ho859Ci3hwB3IzQb+FqbBMcgbbeSZTGhHDVjHO+s9AkSLMyikynybSXaiyp209bqbmI/0tSXC06CJO2q1Iobl8D6sDXNw0Fq7Ijolb8Db5cCghXHbh60xuzc3Fr1Y7q3LuG0nO8K+LYOaIEkvA4zRYiPbV375P/cH+jfs6DZSGJlO03H7Qs5ZKkDFnfLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KKgQ6iJyANVMJgIf5TzSYl3F1CQ1ZNtBrS76tEfr43A=;
+ b=UvvhU7pEwZkQA4vaYagd4UeePd+ILOaY6VzOs0Lxo2g1UfzEV8j0GLMy01NEZrrw5lGF6/7BAD/FdUAUCMD+5fFzMCPz/5ezTA1rQEoVuEMm9yiFoghXJZEbB9ldh89k2bsVZfIfjp3HSbKsSRxcZmIHyeNziuaCMDv5cnHvTUexDbqoA2gev9Y5QrE3nUmc1hYXXityXh1Z75KPMo/jndN1Yb7yGOkSQ6+hBxhBKdMHTvrbzXIeHVFkqEJXVSe3lnLF0aI0s31v48BMDkATnUaB4fUQtCqUg5F5Wp110enMen5H7O1B4suxXrnXG5u9cX1rUBJgr/sajNRFkp15Wg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KKgQ6iJyANVMJgIf5TzSYl3F1CQ1ZNtBrS76tEfr43A=;
+ b=UoIxT9buvPMbfvUNT/1Ms1fy8GllfUAeHt1o4iSfpxKbQ4Cd8Cn/MrCmsij66YFm7ru+qYJS6aNrnI/QYhnWIgmd4z72Ftk60EtsdlsqrcP7qkdrsYK51ZwHWuOjidsnTOr/CB/LEHn2yVdpL/7vvyiK+tQta2ykNFTVzhObxIk=
+Received: from MW4PR04CA0217.namprd04.prod.outlook.com (2603:10b6:303:87::12)
+ by CY8PR12MB7242.namprd12.prod.outlook.com (2603:10b6:930:59::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5769.19; Wed, 9 Nov
+ 2022 14:33:23 +0000
+Received: from CO1NAM11FT115.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:87:cafe::d6) by MW4PR04CA0217.outlook.office365.com
+ (2603:10b6:303:87::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.27 via Frontend
+ Transport; Wed, 9 Nov 2022 14:33:23 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT115.mail.protection.outlook.com (10.13.174.211) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5813.12 via Frontend Transport; Wed, 9 Nov 2022 14:33:23 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 9 Nov
+ 2022 08:33:20 -0600
+Date:   Wed, 9 Nov 2022 15:33:17 +0100
+From:   Robert Richter <rrichter@amd.com>
+To:     "Verma, Vishal L" <vishal.l.verma@intel.com>
+CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        "bwidawsk@kernel.org" <bwidawsk@kernel.org>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "rafael@kernel.org" <rafael@kernel.org>
+Subject: Re: [PATCH v2 07/12] cxl: Remove dev_is_cxl_root_child() check in
+ devm_cxl_enumerate_ports()
+Message-ID: <Y2u6La0znt7Jky9D@rric.localdomain>
+References: <20221018132341.76259-1-rrichter@amd.com>
+ <20221018132341.76259-8-rrichter@amd.com>
+ <6352303b266c_24ac29423@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <552e105ca749fae4517ef053b0439cb3eecd1e4c.camel@intel.com>
 MIME-Version: 1.0
-References: <20221109104059.766720-1-rrichter@amd.com> <20221109104059.766720-10-rrichter@amd.com>
-In-Reply-To: <20221109104059.766720-10-rrichter@amd.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 9 Nov 2022 13:22:05 +0100
-Message-ID: <CAJZ5v0i-RcsjMhoZymcTTR8P-WteHpxYgZ+aLEeQSpWVQRXF0g@mail.gmail.com>
-Subject: Re: [PATCH v3 9/9] cxl/acpi: Set ACPI's CXL _OSC to indicate CXL1.1 support
-To:     Robert Richter <rrichter@amd.com>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Terry Bowman <terry.bowman@amd.com>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <552e105ca749fae4517ef053b0439cb3eecd1e4c.camel@intel.com>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT115:EE_|CY8PR12MB7242:EE_
+X-MS-Office365-Filtering-Correlation-Id: 197573b0-56b3-4096-6b7a-08dac25f5b27
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: KWsjtorf6nYg5cP0+N4cuTNY2TM+gOXluZXyJuktpMEzGJt/4MBzOqLSPlOECK/uEmRXGLA+0+8S1hddRPbAbjkR9TAI/qbzUQFqF4TTVGJ3p4vKtUneO1ObALl78NxwvSokIAT/F4rnX7wItjBfRMvVpAA5yGwJvgBZ0jkN9sviQQQx9Y+Hcm5TZKJdV86zOcIsRXkALo+l2n6nU6WInrOz/QBeBNoTGp7s886xOXT3WfHytUE6jUG4Kk6CbcGSxYb7ncCl8YMy/H7lw7vwI2PnPWhry2O/RNn6nU+kgwB/hrQepQ2Ix0UxwBzVT7rjDhLQzfrU/9+2Srz5y6Uwvi2+mBVqovyeHDcsxReMxyXtl8tny2aPSQ/TRAX54VFR6j8QPcMO5apLoIAcbg73QQDmb9p39YzC8+qdYGXSKLaWgjdUwNrE7ZYsgD06VaitvaC4uit5nHhA3rWIGtuvXMvVtFpO7oNuEKdi6ULD0AMw9YkeKOIJ6DP+0yYp+Qmk3grD7SyJxoi9vTAMWToR8q2B5KNsH70b8No5iP5CU5fT285wFFOcnUgmczEW04mIXmKDFTqlWJsCkIqH8848P3MqVYVc7pUSLjLF/MTE9c7WR7EUqaIrl1q0Dyr7v0jhOsmZ/zlH5nbybpeXfbYn3V1lcOMznuiEx0h3P98uGwknPhbJU500sIehn42Bd/t9s2+TCHBYIa+S405UllxHi8rRHG5GrUPGfK0P++rkLsgcX66urK45MkPnpTkSQRDzBaAFDUX1rqjmM+qC/yp7HJ7zkiA0OULtgM5oH4ehVyJAfjFhivcp3hmkSALmluUFT/wa9+dRqPxMB5YRwwya0w==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(396003)(136003)(39860400002)(346002)(376002)(451199015)(36840700001)(40470700004)(46966006)(2906002)(4744005)(82310400005)(7696005)(70586007)(5660300002)(7416002)(186003)(55016003)(426003)(16526019)(54906003)(47076005)(41300700001)(6916009)(8936002)(8676002)(966005)(478600001)(316002)(36860700001)(9686003)(356005)(336012)(40460700003)(40480700001)(6666004)(4326008)(26005)(53546011)(81166007)(82740400003)(70206006)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Nov 2022 14:33:23.1775
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 197573b0-56b3-4096-6b7a-08dac25f5b27
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT115.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7242
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Nov 9, 2022 at 11:41 AM Robert Richter <rrichter@amd.com> wrote:
->
-> From: Terry Bowman <terry.bowman@amd.com>
->
-> ACPI includes a CXL _OSC support procedure to communicate the available
-> CXL support to FW. The CXL support _OSC includes a field to indicate
-> CXL1.1 RCH RCD support. The OS sets this bit to 1 if it supports access
-> to RCD and RCH Port registers.[1] FW can potentially change it's operation
-> depending on the _OSC support setting reported by the OS.
->
-> The ACPI driver does not currently set the ACPI _OSC support to indicate
-> CXL1.1 RCD RCH support. Change the capability reported to include CXL1.1.
->
-> [1] CXL3.0 Table 9-26 'Interpretation of CXL _OSC Support Field'
->
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Robert Richter <rrichter@amd.com>
+Vishal,
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 21.10.22 06:32:33, Verma, Vishal L wrote:
+> I was waiting to post the cxl-cli patches for this until the kernel
+> discussion settles - but maybe this topology layout is settled enough?
+> 
+> In the meanwhile I've pushed a branch with these fixups here:
+> https://github.com/pmem/ndctl/tree/vv/rch-support
 
-> ---
->  drivers/acpi/pci_root.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index c8385ef54c37..094a59b216ae 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -492,6 +492,7 @@ static u32 calculate_cxl_support(void)
->         u32 support;
->
->         support = OSC_CXL_2_0_PORT_DEV_REG_ACCESS_SUPPORT;
-> +       support |= OSC_CXL_1_1_PORT_REG_ACCESS_SUPPORT;
->         if (pci_aer_available())
->                 support |= OSC_CXL_PROTOCOL_ERR_REPORTING_SUPPORT;
->         if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
-> --
-> 2.30.2
->
+I sent out the v3 series today, patch #1 contains the change of the
+port's reference device. You need to adopt the ndctl patches for this.
+To find the alias in sysfs, you need to lookup the firmware_node
+instead of the physical_node. I would suggest to change the
+implemenation to just check for both entries.
+
+Thanks,
+
+-Robert
