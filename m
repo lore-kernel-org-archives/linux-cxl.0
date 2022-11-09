@@ -2,124 +2,95 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CDDC4332F
-	for <linux-cxl@archiver.kernel.org>; Wed,  9 Nov 2022 23:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74885C43217
+	for <linux-cxl@archiver.kernel.org>; Wed,  9 Nov 2022 23:10:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232239AbiKIXBv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 9 Nov 2022 18:01:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54212 "EHLO
+        id S231956AbiKIXKH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 9 Nov 2022 18:10:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232154AbiKIXBY (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Nov 2022 18:01:24 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E603E31FBD
-        for <linux-cxl@vger.kernel.org>; Wed,  9 Nov 2022 15:00:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668034858; x=1699570858;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=dvLozgdK2yC0JYQldz8QPvOo3Tr3cNqnlXeLIl7c5SY=;
-  b=BGupLPmkl1pmGkvS/I44YSLAaW08yeYraBVi0TwqCREKbK1+WBLxnNGE
-   hDHqxISa3IP7i6lzecyNKB0nLkn2FJhaIhjlHwnOj8dvLOJ8AMkdXUWrZ
-   Vh25JZzOJitn/RLe5WMDO4B6WJPbsfW1yhoofL9u4i22OTNfdee/8Ib4+
-   3baocInuSo3R+G6qlfkPc4xNicLqWpnB+zzA+5TLyMIhv6BW1dGDZCI63
-   BwFPhSa480VA8AEa4IUgRAIIEQdqHweOIrDaBD5tVfkA4hY+Z6i53QJFe
-   927hnIR+qF2vuvKIl5uRj2HHt5WeOy8LTIYdOhvbPJxRcjKInq0usrgjG
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10526"; a="312269138"
-X-IronPort-AV: E=Sophos;i="5.96,151,1665471600"; 
-   d="scan'208";a="312269138"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2022 14:44:46 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10526"; a="587940244"
-X-IronPort-AV: E=Sophos;i="5.96,151,1665471600"; 
-   d="scan'208";a="587940244"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.115.29]) ([10.212.115.29])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2022 14:44:45 -0800
-Message-ID: <1db1628e-247a-4d84-ae29-45e4d0d2654a@intel.com>
-Date:   Wed, 9 Nov 2022 15:44:43 -0700
+        with ESMTP id S231366AbiKIXJ7 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Nov 2022 18:09:59 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CE112A40E;
+        Wed,  9 Nov 2022 15:09:59 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9503461D1F;
+        Wed,  9 Nov 2022 23:09:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA487C43470;
+        Wed,  9 Nov 2022 23:09:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668035398;
+        bh=jr17mFKpsW2i8xVCNI4y+k87mzG/8DXMLZLvqNoTp4c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=QFLVSPjBGWRiiGUTDBSelwI+hMsi0aVHrecfBsmwLUwev0zISa/qzDC0PAL2dJtpr
+         MRhpQ+RO1LjpXcMxcyqr8OY1/dMM2prjLH8F0BkLr/Bc0/8pv1uiK8cbDla0C5Id6B
+         cjcWfc5DUWLYYY6wtFqlfik8OtezMYz6Pp9ro7qfkR9/dXzGrChXA+XuCG3mO/zqNW
+         YXzajQH3gOzFpJNPOIyP5W8No6CTLwtPwBJBdZoomF3zmEPuq+CI4ZNkGRU5ggN/N4
+         5E7v32djTDtkLiIEHJ2wb4vnosAxkXWxkzMv+Bqs+Dg3U+sb5GAnyTm9maXWftH3ez
+         6giGSOKIamf7Q==
+Date:   Wed, 9 Nov 2022 17:09:56 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Robert Richter <rrichter@amd.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v3 6/9] cxl/pci: Do not ignore PCI config read errors in
+ match_add_dports()
+Message-ID: <20221109230956.GA581201@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.4.1
-Subject: Re: [PATCH v4 08/10] cxl: add an optional pid check to event parsing
-Content-Language: en-US
-To:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "Weiny, Ira" <ira.weiny@intel.com>
-References: <166793212765.3768752.4370741471494095451.stgit@djiang5-desk3.ch.intel.com>
- <166793223408.3768752.4466685754838805704.stgit@djiang5-desk3.ch.intel.com>
- <7668b03a0b6fd5b92128446654833f643ada90ce.camel@intel.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <7668b03a0b6fd5b92128446654833f643ada90ce.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221109104059.766720-7-rrichter@amd.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-
-
-On 11/8/2022 4:48 PM, Verma, Vishal L wrote:
-> On Tue, 2022-11-08 at 11:30 -0700, Dave Jiang wrote:
->> From: Alison Schofield <alison.schofield@intel.com>
->>
->> When parsing CXL events, callers may only be interested in events
->> that originate from the current process. Introduce an optional
->> argument to the event trace context: event_pid. When event_pid is
->> present, only include events with a matching pid in the returned
->> JSON list. It is not a failure to see other, non matching results.
->> Simply skip those.
->>
->> The initial use case for this is the listing of media errors,
->> where only the media-errors requested by this process are wanted.
->>
->> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>   cxl/event_trace.c |    5 +++++
->>   cxl/event_trace.h |    1 +
->>   2 files changed, 6 insertions(+)
+On Wed, Nov 09, 2022 at 11:40:56AM +0100, Robert Richter wrote:
+> The link capabilities of a PCI device are read when enumerating its
+> dports. This is done by reading the PCI config space. If that fails
+> port enumeration ignores that error. However, reading the PCI config
+> space should reliably work.
 > 
-> I might be missing something - but this patch is added at then end,
-> without subsequently using the event_pid in cxl-monitor? So why not
-> leave this to be part of the media errors patches?
-
-Alison, you want to move this to your series?
-
+> To reduce some complexity to the code flow when factoring out parts of
+> the code in match_add_dports() for later reuse, change this to throw
+> an error.
 > 
->>
->> diff --git a/cxl/event_trace.c b/cxl/event_trace.c
->> index 490c30e1dbfc..89c9c2db26a3 100644
->> --- a/cxl/event_trace.c
->> +++ b/cxl/event_trace.c
->> @@ -215,6 +215,11 @@ static int cxl_event_parse_cb(struct tep_event *event, struct tep_record *record
->>                          return 0;
->>          }
->>   
->> +       if (event_ctx->event_pid) {
->> +               if (event_ctx->event_pid != tep_data_pid(event->tep, record))
->> +                       return 0;
->> +       }
->> +
->>          if (event_ctx->parse_event)
->>                  return event_ctx->parse_event(event, record, &event_ctx->jlist_head);
->>   
->> diff --git a/cxl/event_trace.h b/cxl/event_trace.h
->> index 89e98cafb320..e72b4347175e 100644
->> --- a/cxl/event_trace.h
->> +++ b/cxl/event_trace.h
->> @@ -15,6 +15,7 @@ struct event_ctx {
->>          const char *system;
->>          struct list_head jlist_head;
->>          const char *event_name;                                 /* optional */
->> +       int event_pid;                                          /* optional */
->>          int (*parse_event)(struct tep_event *event, struct tep_record *record,
->>                             struct list_head *jlist_head);       /* optional */
->>   };
->>
->>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> ---
+>  drivers/cxl/core/pci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 0dbbe8d39b07..8271b8abde7a 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -47,7 +47,7 @@ static int match_add_dports(struct pci_dev *pdev, void *data)
+>  		return 0;
+>  	if (pci_read_config_dword(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCAP,
+>  				  &lnkcap))
+
+You didn't change this, but I recommend using
+pcie_capability_read_dword() when reading the PCIe Capability.  It
+takes care of some annoying corner cases like devices that don't
+implement Link Cap and the different versions of the PCIe Capability.
+
+> -		return 0;
+> +		return -ENXIO;
+>  
+>  	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
+>  	if (rc)
+> -- 
+> 2.30.2
 > 
