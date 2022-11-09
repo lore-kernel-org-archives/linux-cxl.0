@@ -2,180 +2,100 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DA0C43217
-	for <linux-cxl@archiver.kernel.org>; Wed,  9 Nov 2022 10:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E68C4332F
+	for <linux-cxl@archiver.kernel.org>; Wed,  9 Nov 2022 12:22:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231183AbiKIKmB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 9 Nov 2022 05:42:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55736 "EHLO
+        id S229795AbiKIMWT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 9 Nov 2022 07:22:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231186AbiKIKl4 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Nov 2022 05:41:56 -0500
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2065.outbound.protection.outlook.com [40.107.102.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D3A1222A2;
-        Wed,  9 Nov 2022 02:41:48 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Skqh2ro1lyYt/n/IT5XzZ92Cb/KdU5qOxprqrC1z+2kKGfPTYHFjgnVlIDBWylfU+eht2K3jSu0Fd/JQMf+bCrvgNOuhwy2LrvzN+C4IvkYpiH1kJ+34wTm4OcU+e0j+VW1oD3g8vSHSBSds+kQRKqqUi08xqML39EWI5ljiEm1em9pQHiJbiEKMNjISpqgn2yWIfbY0lUyCakq+jYZAXSt5NiPJ+3yfKsF9d/gXM52r2NgP6bSoHb2stjyy1KvF0HlpdBsotvE6Ap01MfFhxdwiPsauf3PwrBGvCpOQ74RTyBmXsmy/HnQDLCDWNF5hBdT7jij7RqXw31fp8Ew79A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WSlDXWGvidoCnzrNcuYQ6HS9PF/UoFr07bBjgjNrfXs=;
- b=FqOr4sSUl9yS2KZx8xfdPkUo8+Pftp7K0RlMiifiewqkN+nFSZJqZ885OfZ7I6hdEdsASbcAYvI2pU2bNjw5OR5JTyqt8Aq2WTk2qjSVeTGOR+3k9BNJO6EziaIArnd+/82kTZh58O4vDdzVivVd7eEbfv9ftbhBVUqj6tg8MIKuOe2rO9lViHcsKkLaPXlstmBM2AargCWwYx90aYaaoKjea7U1Q803aeIh2Uloc6RSOH+s4tgwC5uNTE2FALGewyOR2ft7XSYvNBTrvM7SYtVxAuaDBiCTPVWsGTAzdMmnIo6QwtCeVIJxYdPUK7Lg4J1YAI3KvfVOcfN1M2YNdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WSlDXWGvidoCnzrNcuYQ6HS9PF/UoFr07bBjgjNrfXs=;
- b=uvGKs8Gxtarg4rtxIMvXQQRMOX/VcLw61lVGHH3vRoS0Oq4hYFvvUV8Q59yJW4EX8iwIJAUDTB5UBbdp149Nc23TTpPB2KW6j3jKfrMhAaPBEPLI+FX2Ds3FA0OLVpyVEFlzHlRDG8hBiHhYY5AjfZI+HiQvCBfU8TQnMIo+2eU=
-Received: from BN0PR04CA0088.namprd04.prod.outlook.com (2603:10b6:408:ea::33)
- by DM6PR12MB4481.namprd12.prod.outlook.com (2603:10b6:5:2af::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.27; Wed, 9 Nov
- 2022 10:41:45 +0000
-Received: from BN8NAM11FT031.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:ea:cafe::cb) by BN0PR04CA0088.outlook.office365.com
- (2603:10b6:408:ea::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.27 via Frontend
- Transport; Wed, 9 Nov 2022 10:41:44 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT031.mail.protection.outlook.com (10.13.177.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5813.12 via Frontend Transport; Wed, 9 Nov 2022 10:41:44 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 9 Nov
- 2022 04:41:41 -0600
-From:   Robert Richter <rrichter@amd.com>
-To:     Alison Schofield <alison.schofield@intel.com>,
+        with ESMTP id S229629AbiKIMWS (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Nov 2022 07:22:18 -0500
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7E6A250;
+        Wed,  9 Nov 2022 04:22:17 -0800 (PST)
+Received: by mail-qt1-f173.google.com with SMTP id l2so10197183qtq.11;
+        Wed, 09 Nov 2022 04:22:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XvBiFkolKGUNT/T8gjXpcXzeHtarJfPAvEGuDLN1G0E=;
+        b=s99MiDBO7eAhnWAxeDGGJrdHdVOtxlXxWPC30w1PgFXr+XY1nxBUuhLPQ5k5yuMZgG
+         o7RtW/JkcS92aszpKWr7KK5GGz7Vcn+c+897dgp9LLUlxK9YGCfsGuYNh1JQPQGm/Lvw
+         ziqJQ6UmtPQ2XoDEx0/1N+i0DcwjGe9K3gSew7HNnAmxEDw5tUtayrjkTR4r8ZKtrDAH
+         QEE0AqC3gH64ZqO9lwmKwKt0P28Szt+9XCdH7g9gEEoQi93rIqVshoUKGiRae8k9wp2i
+         iwCcqEXJlpdANWflmo95Cd/uV+M1sU8DoMOlDW2HHylRXJ4cmpFL8EO8Nrc3wZ+n7Vka
+         sclw==
+X-Gm-Message-State: ACrzQf0/LR6gDuCyTHN5wxPfpNy5Uy4YhWMzRkJ94UFhQu4dqo5QBeFT
+        gY6vsJF0B4TlLOUaCgsYSFQCP6AkX7gs0DrJKBc=
+X-Google-Smtp-Source: AMsMyM4poJGku7VUKnTRBml+VyWLtEWGUgmc0O+LQC5DfNjZ/VebWumF69asi53wkVrHRzyK/tfGHFQwOBzNriOpPS8=
+X-Received: by 2002:ac8:7d15:0:b0:3a5:449:87c3 with SMTP id
+ g21-20020ac87d15000000b003a5044987c3mr47257311qtb.357.1667996536769; Wed, 09
+ Nov 2022 04:22:16 -0800 (PST)
+MIME-Version: 1.0
+References: <20221109104059.766720-1-rrichter@amd.com> <20221109104059.766720-10-rrichter@amd.com>
+In-Reply-To: <20221109104059.766720-10-rrichter@amd.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 9 Nov 2022 13:22:05 +0100
+Message-ID: <CAJZ5v0i-RcsjMhoZymcTTR8P-WteHpxYgZ+aLEeQSpWVQRXF0g@mail.gmail.com>
+Subject: Re: [PATCH v3 9/9] cxl/acpi: Set ACPI's CXL _OSC to indicate CXL1.1 support
+To:     Robert Richter <rrichter@amd.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-cxl@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Davidlohr Bueso" <dave@stgolabs.net>,
+        Davidlohr Bueso <dave@stgolabs.net>,
         Dave Jiang <dave.jiang@intel.com>,
-        Robert Richter <rrichter@amd.com>
-Subject: [PATCH v3 8/9] cxl/pci: Extend devm_cxl_port_enumerate_dports() to support restricted hosts (RCH)
-Date:   Wed, 9 Nov 2022 11:40:58 +0100
-Message-ID: <20221109104059.766720-9-rrichter@amd.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221109104059.766720-1-rrichter@amd.com>
-References: <20221109104059.766720-1-rrichter@amd.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT031:EE_|DM6PR12MB4481:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0287038a-b35f-4394-b974-08dac23eff06
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: lEsqxFwAYunNQNz5kz9lhhq6GukyPJ3BoB8+i+cC4Cj6HdX9JooaRTJzpNM68r71lXzVK5knrM7mHI5gvK9fAEY6jTYu5EaEvBbxLirPm/kDmIkFywkhcAkX6pmgahWPdvKcW3XFlY5YGk3pvN+pJZibRe2KycBFOwJM0+Osi9hrPxafkZ7V34fMMbTJVLRS15vdy3e8yS3n3gb0nAvrExpycrkS/zOm8NYtY86goCj2LDO5yIyM3HX/sMqj1N71xGhSYgJtA3tYvXvPNiVNaF4HSvcbCSDlWlsTwxvJco7WwcGL6vdvLRAAKP5Ki5pPWz81TPHHiQKn0XKHb2Vg8QRVstfxXmVVzNRW4Mdhuusog/JYdRlzI7Z/3zGZ+3jUWIL24j2muQ5oPZj5C+nOlgvxCWpvC4lcgs48sfBlMhB7ZEI2/hxCKVundMtrH3x/JyoBC4+hM/wm1VjfRdmM5V7U7zRx0uYCTAOjLTcM0MhUrRLQ6XXsIiG4nGzveATg/PSb403XhVXRrEP0VGvpbpFUTTq/KN0uHpLKxvAs7yU7ur2Z1cJs5z0mWfPl45Y+5gAeTJZma9eNLyzIJWl5LSSDyFQOxal1sL6Wmed4c/PdsrnyNcHwywuCQx9V/S2oVWd7DtCuQ0pDwH1LcKmIsVyYCGnIH7+hIZeESh3JI6Z67xjvYESUvGn1snDcPwRL6gvfR/VxOZTHBoQzHt1XXycnDNOVHcQ+ebrVr2Y3DuVTbjnM0HWfvSe9o8Pi++xjrIJovv3zwpB4Y6KiqQ/U2c5siCTuwAVnosZKMCQdWAa/vhDblSFFg0JsQYir+WdG
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(376002)(346002)(39860400002)(136003)(396003)(451199015)(40470700004)(36840700001)(46966006)(83380400001)(47076005)(426003)(40480700001)(2906002)(478600001)(81166007)(356005)(40460700003)(36756003)(82740400003)(336012)(82310400005)(36860700001)(26005)(1076003)(186003)(2616005)(16526019)(4326008)(70586007)(316002)(8676002)(70206006)(41300700001)(54906003)(6666004)(8936002)(7416002)(110136005)(5660300002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Nov 2022 10:41:44.8269
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0287038a-b35f-4394-b974-08dac23eff06
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT031.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4481
+        Terry Bowman <terry.bowman@amd.com>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The PCIe Software View of an RCH and RCD is different to VH mode. An
-RCD is paired with an RCH and shows up as RCiEP. Its downstream and
-upstream ports are hidden to the PCI hierarchy. This different PCI
-topology requires a different handling of RCHs.
+On Wed, Nov 9, 2022 at 11:41 AM Robert Richter <rrichter@amd.com> wrote:
+>
+> From: Terry Bowman <terry.bowman@amd.com>
+>
+> ACPI includes a CXL _OSC support procedure to communicate the available
+> CXL support to FW. The CXL support _OSC includes a field to indicate
+> CXL1.1 RCH RCD support. The OS sets this bit to 1 if it supports access
+> to RCD and RCH Port registers.[1] FW can potentially change it's operation
+> depending on the _OSC support setting reported by the OS.
+>
+> The ACPI driver does not currently set the ACPI _OSC support to indicate
+> CXL1.1 RCD RCH support. Change the capability reported to include CXL1.1.
+>
+> [1] CXL3.0 Table 9-26 'Interpretation of CXL _OSC Support Field'
+>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
 
-Extend devm_cxl_port_enumerate_dports() to support restricted hosts
-(RCH). If an RCH is detected, register its port as dport to the
-device. An RCH is found if the host's dev 0 func 0 devices is an RCiEP
-with an existing PCIe DVSEC for CXL Devices (ID 0000h).
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Signed-off-by: Robert Richter <rrichter@amd.com>
----
- drivers/cxl/core/pci.c | 37 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 36 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 667de4f125f6..a6b1a1501db3 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -48,6 +48,37 @@ static int pci_dev_add_dport(struct pci_dev *pdev, struct cxl_port *port,
- 	return 0;
- }
- 
-+static int restricted_host_enumerate_dport(struct cxl_port *port,
-+					   struct pci_bus *bus)
-+{
-+	struct pci_dev *pdev;
-+	bool is_restricted_host;
-+	int rc;
-+
-+	/* Check CXL DVSEC of dev 0 func 0 */
-+	pdev = pci_get_slot(bus, PCI_DEVFN(0, 0));
-+
-+	is_restricted_host = pdev
-+		&& (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END)
-+		&& pci_find_dvsec_capability(pdev,
-+					PCI_DVSEC_VENDOR_ID_CXL,
-+					CXL_DVSEC_PCIE_DEVICE);
-+	if (is_restricted_host)
-+		rc = pci_dev_add_dport(pdev, port, CXL_RESOURCE_NONE);
-+
-+	pci_dev_put(pdev);
-+
-+	if (!is_restricted_host)
-+		return 0;
-+
-+	dev_dbg(bus->bridge, "CXL restricted host found\n");
-+
-+	if (rc)
-+		return rc;
-+
-+	return 1;
-+}
-+
- static int match_add_dports(struct pci_dev *pdev, void *data)
- {
- 	struct cxl_walk_context *ctx = data;
-@@ -91,11 +122,15 @@ int devm_cxl_port_enumerate_dports(struct cxl_port *port)
- {
- 	struct pci_bus *bus = cxl_port_to_pci_bus(port);
- 	struct cxl_walk_context ctx;
--	int type;
-+	int type, count;
- 
- 	if (!bus)
- 		return -ENXIO;
- 
-+	count = restricted_host_enumerate_dport(port, bus);
-+	if (count)
-+		return count;
-+
- 	if (pci_is_root_bus(bus))
- 		type = PCI_EXP_TYPE_ROOT_PORT;
- 	else
--- 
-2.30.2
-
+> ---
+>  drivers/acpi/pci_root.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index c8385ef54c37..094a59b216ae 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -492,6 +492,7 @@ static u32 calculate_cxl_support(void)
+>         u32 support;
+>
+>         support = OSC_CXL_2_0_PORT_DEV_REG_ACCESS_SUPPORT;
+> +       support |= OSC_CXL_1_1_PORT_REG_ACCESS_SUPPORT;
+>         if (pci_aer_available())
+>                 support |= OSC_CXL_PROTOCOL_ERR_REPORTING_SUPPORT;
+>         if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
+> --
+> 2.30.2
+>
