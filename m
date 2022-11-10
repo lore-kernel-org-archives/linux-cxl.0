@@ -2,41 +2,41 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB6CC4332F
-	for <linux-cxl@archiver.kernel.org>; Thu, 10 Nov 2022 19:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A3DC43217
+	for <linux-cxl@archiver.kernel.org>; Thu, 10 Nov 2022 19:06:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231434AbiKJTGX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 10 Nov 2022 14:06:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48160 "EHLO
+        id S231665AbiKJTGZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 10 Nov 2022 14:06:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230328AbiKJTFm (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Nov 2022 14:05:42 -0500
+        with ESMTP id S231455AbiKJTFo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Nov 2022 14:05:44 -0500
 Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3754051C25;
-        Thu, 10 Nov 2022 11:05:25 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4696A53EC6;
+        Thu, 10 Nov 2022 11:05:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668107124; x=1699643124;
+  t=1668107128; x=1699643128;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=VhFVGs3QRvbnc3UKsViEoHMcikbBuSWQojXM0XggZ5g=;
-  b=MPllkcjQTGe5i/v9esf2R2+NF1Ikf6uDbAKyijAR1h0ARyPw/MGJKhyE
-   A4vxC84TGC9khWsuc8xKyKatZEW8QSqyCL0MKh/FHxc4J4ycbd3oSLIVG
-   Hirn5/0W1J38SH8dvUNOm9wp+RR7FC9bAoo83kPfQ8kOKRtwZoqdmLmEl
-   ltUIp6dSw+vsiQMpMC2E8jk58XJpQwRAN0463k2r+iMQXXKoBmAuwAR96
-   TGiRfuQT0LSfegzidxvCQzvleKD4toTETdy9g4Wu0NbO1djaraRnyuXpI
-   Uc2PWnZ3wGdbMIeTy5+/gqrWmB7FsEKSWTFPh+sWNE5r1jM1YRlkZIL2S
+  bh=rXCfHgqEwojyPNUhIvBOVf4I3jSPcxkWsQv6Y0z9kg4=;
+  b=RBLf0vx+dv5EZmRWyQX5FaJJQWLautpHz9WFNg4HixrVB2ZaHnT5SatK
+   B65FXyvdzmLrGV15SxxjTCciPxpPFaRWo7vvpa10zeMD3UsuLl7ayXORZ
+   t67JrqjlumzmYq6Bnhmpmn6+7bDt3NXxM0tZSy2txv493oI3fPLdIMK+F
+   QtlOykKzbg+8sFU/cf55dH7mamk46xS3iW6JKm0kOZMHv8kgfqJ3zb6Cy
+   VIRFg2h555zX6av8ARqXSid3LDPl9V5UcpIJ8XaqQJeQKw/LK6Pa/dAoF
+   4WWNJCtu1KfC4c3p/Li+ZDoXgyn8o+rtKEYqoN7JvgmRN/TRYzSJyVhXA
    Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="375662112"
+X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="375662151"
 X-IronPort-AV: E=Sophos;i="5.96,154,1665471600"; 
-   d="scan'208";a="375662112"
+   d="scan'208";a="375662151"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 10:58:09 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="882473438"
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 10:58:11 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="882473459"
 X-IronPort-AV: E=Sophos;i="5.96,154,1665471600"; 
-   d="scan'208";a="882473438"
+   d="scan'208";a="882473459"
 Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.212.6.223])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 10:58:08 -0800
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 10:58:11 -0800
 From:   ira.weiny@intel.com
 To:     Dan Williams <dan.j.williams@intel.com>
 Cc:     Ira Weiny <ira.weiny@intel.com>,
@@ -47,9 +47,9 @@ Cc:     Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Davidlohr Bueso <dave@stgolabs.net>,
         linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-Subject: [PATCH 07/11] cxl/mem: Trace Memory Module Event Record
-Date:   Thu, 10 Nov 2022 10:57:54 -0800
-Message-Id: <20221110185758.879472-8-ira.weiny@intel.com>
+Subject: [PATCH 10/11] cxl/test: Add specific events
+Date:   Thu, 10 Nov 2022 10:57:57 -0800
+Message-Id: <20221110185758.879472-11-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20221110185758.879472-1-ira.weiny@intel.com>
 References: <20221110185758.879472-1-ira.weiny@intel.com>
@@ -61,270 +61,112 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-CXL rev 3.0 section 8.2.9.2.1.3 defines the Memory Module Event Record.
+Each type of event has different trace point outputs.
 
-Determine if the event read is memory module record and if so trace the
-record.
+Add mock General Media Event, DRAM event, and Memory Module Event
+records to the mock list of events returned.
 
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 ---
-Changes from RFC v2:
-	Ensure field names match TP_print output
-	Steven
-		prefix TRACE_EVENT with 'cxl_'
-	Jonathan
-		Remove reserved field
-		Define a 1bit and 2 bit status decoder
-		Fix paren alignment
-
 Changes from RFC:
-	Clean up spec reference
-	Add reserved data
-	Use new CXL header macros
-	Jonathan
-		Use else if
-		Use get_unaligned_le*() for unaligned fields
-	Dave Jiang
-		s/cxl_mem_mod_event/memory_module
-		s/cxl_evt_mem_mod_rec/cxl_event_mem_module
+	Adjust for struct changes
+	adjust for unaligned fields
 ---
- drivers/cxl/core/mbox.c    |  17 ++++-
- drivers/cxl/cxlmem.h       |  26 +++++++
- include/trace/events/cxl.h | 144 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 186 insertions(+), 1 deletion(-)
+ tools/testing/cxl/test/events.c | 70 +++++++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index b03d7b856f3d..879b228a98a0 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -725,11 +725,20 @@ static const uuid_t dram_event_uuid =
- 	UUID_INIT(0x601dcbb3, 0x9c06, 0x4eab,
- 		  0xb8, 0xaf, 0x4e, 0x9b, 0xfb, 0x5c, 0x96, 0x24);
+diff --git a/tools/testing/cxl/test/events.c b/tools/testing/cxl/test/events.c
+index a4816f230bb5..8693f3fb9cbb 100644
+--- a/tools/testing/cxl/test/events.c
++++ b/tools/testing/cxl/test/events.c
+@@ -186,6 +186,70 @@ struct cxl_event_record_raw hardware_replace = {
+ 	.data = { 0xDE, 0xAD, 0xBE, 0xEF },
+ };
  
-+/*
-+ * Memory Module Event Record
-+ * CXL rev 3.0 section 8.2.9.2.1.3; Table 8-45
-+ */
-+static const uuid_t mem_mod_event_uuid =
-+	UUID_INIT(0xfe927475, 0xdd59, 0x4339,
-+		  0xa5, 0x86, 0x79, 0xba, 0xb1, 0x13, 0xb7, 0x74);
++struct cxl_event_gen_media gen_media = {
++	.hdr = {
++		.id = UUID_INIT(0xfbcd0a77, 0xc260, 0x417f,
++				0x85, 0xa9, 0x08, 0x8b, 0x16, 0x21, 0xeb, 0xa6),
++		.length = sizeof(struct cxl_event_gen_media),
++		.flags[0] = CXL_EVENT_RECORD_FLAG_PERMANENT,
++		/* .handle = Set dynamically */
++		.related_handle = cpu_to_le16(0),
++	},
++	.phys_addr = cpu_to_le64(0x2000),
++	.descriptor = CXL_GMER_EVT_DESC_UNCORECTABLE_EVENT,
++	.type = CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR,
++	.transaction_type = CXL_GMER_TRANS_HOST_WRITE,
++	.validity_flags = { CXL_GMER_VALID_CHANNEL |
++			    CXL_GMER_VALID_RANK, 0 },
++	.channel = 1,
++	.rank = 30
++};
 +
- static bool cxl_event_tracing_enabled(void)
++struct cxl_event_dram dram = {
++	.hdr = {
++		.id = UUID_INIT(0x601dcbb3, 0x9c06, 0x4eab,
++				0xb8, 0xaf, 0x4e, 0x9b, 0xfb, 0x5c, 0x96, 0x24),
++		.length = sizeof(struct cxl_event_dram),
++		.flags[0] = CXL_EVENT_RECORD_FLAG_PERF_DEGRADED,
++		/* .handle = Set dynamically */
++		.related_handle = cpu_to_le16(0),
++	},
++	.phys_addr = cpu_to_le64(0x8000),
++	.descriptor = CXL_GMER_EVT_DESC_THRESHOLD_EVENT,
++	.type = CXL_GMER_MEM_EVT_TYPE_INV_ADDR,
++	.transaction_type = CXL_GMER_TRANS_INTERNAL_MEDIA_SCRUB,
++	.validity_flags = { CXL_DER_VALID_CHANNEL |
++			    CXL_DER_VALID_BANK_GROUP |
++			    CXL_DER_VALID_BANK |
++			    CXL_DER_VALID_COLUMN, 0 },
++	.channel = 1,
++	.bank_group = 5,
++	.bank = 2,
++	.column = { 0xDE, 0xAD},
++};
++
++struct cxl_event_mem_module mem_module = {
++	.hdr = {
++		.id = UUID_INIT(0xfe927475, 0xdd59, 0x4339,
++				0xa5, 0x86, 0x79, 0xba, 0xb1, 0x13, 0xb7, 0x74),
++		.length = sizeof(struct cxl_event_mem_module),
++		/* .handle = Set dynamically */
++		.related_handle = cpu_to_le16(0),
++	},
++	.event_type = CXL_MMER_TEMP_CHANGE,
++	.info = {
++		.health_status = CXL_DHI_HS_PERFORMANCE_DEGRADED,
++		.media_status = CXL_DHI_MS_ALL_DATA_LOST,
++		.add_status = (CXL_DHI_AS_CRITICAL << 2) |
++			      (CXL_DHI_AS_WARNING << 4) |
++			      (CXL_DHI_AS_WARNING << 5),
++		.device_temp = { 0xDE, 0xAD},
++		.dirty_shutdown_cnt = { 0xde, 0xad, 0xbe, 0xef },
++		.cor_vol_err_cnt = { 0xde, 0xad, 0xbe, 0xef },
++		.cor_per_err_cnt = { 0xde, 0xad, 0xbe, 0xef },
++	}
++};
++
+ u32 cxl_mock_add_event_logs(struct cxl_dev_state *cxlds)
  {
- 	return trace_cxl_generic_event_enabled() ||
- 	       trace_cxl_general_media_enabled() ||
--	       trace_cxl_dram_enabled();
-+	       trace_cxl_dram_enabled() ||
-+	       trace_cxl_memory_module_enabled();
- }
- 
- static void cxl_trace_event_record(const char *dev_name,
-@@ -749,6 +758,12 @@ static void cxl_trace_event_record(const char *dev_name,
- 
- 		trace_cxl_dram(dev_name, type, rec);
- 		return;
-+	} else if (uuid_equal(id, &mem_mod_event_uuid)) {
-+		struct cxl_event_mem_module *rec =
-+				(struct cxl_event_mem_module *)record;
-+
-+		trace_cxl_memory_module(dev_name, type, rec);
-+		return;
+ 	struct device *dev = cxlds->dev;
+@@ -204,9 +268,15 @@ u32 cxl_mock_add_event_logs(struct cxl_dev_state *cxlds)
  	}
  
- 	/* For unknown record types print just the header */
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 87c877f0940d..03da4f8f74d3 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -454,6 +454,32 @@ struct cxl_event_dram {
- 	u8 reserved[0x17];
- } __packed;
+ 	event_store_add_event(mes, CXL_EVENT_TYPE_INFO, &maint_needed);
++	event_store_add_event(mes, CXL_EVENT_TYPE_INFO,
++			      (struct cxl_event_record_raw *)&gen_media);
++	event_store_add_event(mes, CXL_EVENT_TYPE_INFO,
++			      (struct cxl_event_record_raw *)&mem_module);
+ 	mes->ev_status |= CXLDEV_EVENT_STATUS_INFO;
  
-+/*
-+ * Get Health Info Record
-+ * CXL rev 3.0 section 8.2.9.8.3.1; Table 8-100
-+ */
-+struct cxl_get_health_info {
-+	u8 health_status;
-+	u8 media_status;
-+	u8 add_status;
-+	u8 life_used;
-+	u8 device_temp[2];
-+	u8 dirty_shutdown_cnt[4];
-+	u8 cor_vol_err_cnt[4];
-+	u8 cor_per_err_cnt[4];
-+} __packed;
-+
-+/*
-+ * Memory Module Event Record
-+ * CXL rev 3.0 section 8.2.9.2.1.3; Table 8-45
-+ */
-+struct cxl_event_mem_module {
-+	struct cxl_event_record_hdr hdr;
-+	u8 event_type;
-+	struct cxl_get_health_info info;
-+	u8 reserved[0x3d];
-+} __packed;
-+
- struct cxl_mbox_get_partition_info {
- 	__le64 active_volatile_cap;
- 	__le64 active_persistent_cap;
-diff --git a/include/trace/events/cxl.h b/include/trace/events/cxl.h
-index 37bbe59905af..05437e13a882 100644
---- a/include/trace/events/cxl.h
-+++ b/include/trace/events/cxl.h
-@@ -335,6 +335,150 @@ TRACE_EVENT(cxl_dram,
- 	)
- );
+ 	event_store_add_event(mes, CXL_EVENT_TYPE_FATAL, &hardware_replace);
++	event_store_add_event(mes, CXL_EVENT_TYPE_FATAL,
++			      (struct cxl_event_record_raw *)&dram);
+ 	mes->ev_status |= CXLDEV_EVENT_STATUS_FATAL;
  
-+/*
-+ * Memory Module Event Record - MMER
-+ *
-+ * CXL res 3.0 section 8.2.9.2.1.3; Table 8-45
-+ */
-+#define CXL_MMER_HEALTH_STATUS_CHANGE		0x00
-+#define CXL_MMER_MEDIA_STATUS_CHANGE		0x01
-+#define CXL_MMER_LIFE_USED_CHANGE		0x02
-+#define CXL_MMER_TEMP_CHANGE			0x03
-+#define CXL_MMER_DATA_PATH_ERROR		0x04
-+#define CXL_MMER_LAS_ERROR			0x05
-+#define show_dev_evt_type(type)	__print_symbolic(type,			   \
-+	{ CXL_MMER_HEALTH_STATUS_CHANGE,	"Health Status Change"	}, \
-+	{ CXL_MMER_MEDIA_STATUS_CHANGE,		"Media Status Change"	}, \
-+	{ CXL_MMER_LIFE_USED_CHANGE,		"Life Used Change"	}, \
-+	{ CXL_MMER_TEMP_CHANGE,			"Temperature Change"	}, \
-+	{ CXL_MMER_DATA_PATH_ERROR,		"Data Path Error"	}, \
-+	{ CXL_MMER_LAS_ERROR,			"LSA Error"		}  \
-+)
-+
-+/*
-+ * Device Health Information - DHI
-+ *
-+ * CXL res 3.0 section 8.2.9.8.3.1; Table 8-100
-+ */
-+#define CXL_DHI_HS_MAINTENANCE_NEEDED				BIT(0)
-+#define CXL_DHI_HS_PERFORMANCE_DEGRADED				BIT(1)
-+#define CXL_DHI_HS_HW_REPLACEMENT_NEEDED			BIT(2)
-+#define show_health_status_flags(flags)	__print_flags(flags, "|",	   \
-+	{ CXL_DHI_HS_MAINTENANCE_NEEDED,	"Maintenance Needed"	}, \
-+	{ CXL_DHI_HS_PERFORMANCE_DEGRADED,	"Performance Degraded"	}, \
-+	{ CXL_DHI_HS_HW_REPLACEMENT_NEEDED,	"Replacement Needed"	}  \
-+)
-+
-+#define CXL_DHI_MS_NORMAL							0x00
-+#define CXL_DHI_MS_NOT_READY							0x01
-+#define CXL_DHI_MS_WRITE_PERSISTENCY_LOST					0x02
-+#define CXL_DHI_MS_ALL_DATA_LOST						0x03
-+#define CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_EVENT_POWER_LOSS			0x04
-+#define CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_EVENT_SHUTDOWN			0x05
-+#define CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_IMMINENT				0x06
-+#define CXL_DHI_MS_WRITE_ALL_DATA_LOSS_EVENT_POWER_LOSS				0x07
-+#define CXL_DHI_MS_WRITE_ALL_DATA_LOSS_EVENT_SHUTDOWN				0x08
-+#define CXL_DHI_MS_WRITE_ALL_DATA_LOSS_IMMINENT					0x09
-+#define show_media_status(ms)	__print_symbolic(ms,			   \
-+	{ CXL_DHI_MS_NORMAL,						   \
-+		"Normal"						}, \
-+	{ CXL_DHI_MS_NOT_READY,						   \
-+		"Not Ready"						}, \
-+	{ CXL_DHI_MS_WRITE_PERSISTENCY_LOST,				   \
-+		"Write Persistency Lost"				}, \
-+	{ CXL_DHI_MS_ALL_DATA_LOST,					   \
-+		"All Data Lost"						}, \
-+	{ CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_EVENT_POWER_LOSS,		   \
-+		"Write Persistency Loss in the Event of Power Loss"	}, \
-+	{ CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_EVENT_SHUTDOWN,		   \
-+		"Write Persistency Loss in Event of Shutdown"		}, \
-+	{ CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_IMMINENT,			   \
-+		"Write Persistency Loss Imminent"			}, \
-+	{ CXL_DHI_MS_WRITE_ALL_DATA_LOSS_EVENT_POWER_LOSS,		   \
-+		"All Data Loss in Event of Power Loss"			}, \
-+	{ CXL_DHI_MS_WRITE_ALL_DATA_LOSS_EVENT_SHUTDOWN,		   \
-+		"All Data loss in the Event of Shutdown"		}, \
-+	{ CXL_DHI_MS_WRITE_ALL_DATA_LOSS_IMMINENT,			   \
-+		"All Data Loss Imminent"				}  \
-+)
-+
-+#define CXL_DHI_AS_NORMAL		0x0
-+#define CXL_DHI_AS_WARNING		0x1
-+#define CXL_DHI_AS_CRITICAL		0x2
-+#define show_two_bit_status(as) __print_symbolic(as,	   \
-+	{ CXL_DHI_AS_NORMAL,		"Normal"	}, \
-+	{ CXL_DHI_AS_WARNING,		"Warning"	}, \
-+	{ CXL_DHI_AS_CRITICAL,		"Critical"	}  \
-+)
-+#define show_one_bit_status(as) __print_symbolic(as,	   \
-+	{ CXL_DHI_AS_NORMAL,		"Normal"	}, \
-+	{ CXL_DHI_AS_WARNING,		"Warning"	}  \
-+)
-+
-+#define CXL_DHI_AS_LIFE_USED(as)			(as & 0x3)
-+#define CXL_DHI_AS_DEV_TEMP(as)				((as & 0xC) >> 2)
-+#define CXL_DHI_AS_COR_VOL_ERR_CNT(as)			((as & 0x10) >> 4)
-+#define CXL_DHI_AS_COR_PER_ERR_CNT(as)			((as & 0x20) >> 5)
-+
-+TRACE_EVENT(cxl_memory_module,
-+
-+	TP_PROTO(const char *dev_name, enum cxl_event_log_type log,
-+		 struct cxl_event_mem_module *rec),
-+
-+	TP_ARGS(dev_name, log, rec),
-+
-+	TP_STRUCT__entry(
-+		CXL_EVT_TP_entry
-+
-+		/* Memory Module Event */
-+		__field(u8, event_type)
-+
-+		/* Device Health Info */
-+		__field(u8, health_status)
-+		__field(u8, media_status)
-+		__field(u8, life_used)
-+		__field(u32, dirty_shutdown_cnt)
-+		__field(u32, cor_vol_err_cnt)
-+		__field(u32, cor_per_err_cnt)
-+		__field(s16, device_temp)
-+		__field(u8, add_status)
-+	),
-+
-+	TP_fast_assign(
-+		CXL_EVT_TP_fast_assign(dev_name, log, rec->hdr);
-+
-+		/* Memory Module Event */
-+		__entry->event_type = rec->event_type;
-+
-+		/* Device Health Info */
-+		__entry->health_status = rec->info.health_status;
-+		__entry->media_status = rec->info.media_status;
-+		__entry->life_used = rec->info.life_used;
-+		__entry->dirty_shutdown_cnt = get_unaligned_le32(rec->info.dirty_shutdown_cnt);
-+		__entry->cor_vol_err_cnt = get_unaligned_le32(rec->info.cor_vol_err_cnt);
-+		__entry->cor_per_err_cnt = get_unaligned_le32(rec->info.cor_per_err_cnt);
-+		__entry->device_temp = get_unaligned_le16(rec->info.device_temp);
-+		__entry->add_status = rec->info.add_status;
-+	),
-+
-+	CXL_EVT_TP_printk("event_type='%s' health_status='%s' media_status='%s' " \
-+		"as_life_used=%s as_dev_temp=%s as_cor_vol_err_cnt=%s " \
-+		"as_cor_per_err_cnt=%s life_used=%u device_temp=%d " \
-+		"dirty_shutdown_cnt=%u cor_vol_err_cnt=%u cor_per_err_cnt=%u",
-+		show_dev_evt_type(__entry->event_type),
-+		show_health_status_flags(__entry->health_status),
-+		show_media_status(__entry->media_status),
-+		show_two_bit_status(CXL_DHI_AS_LIFE_USED(__entry->add_status)),
-+		show_two_bit_status(CXL_DHI_AS_DEV_TEMP(__entry->add_status)),
-+		show_one_bit_status(CXL_DHI_AS_COR_VOL_ERR_CNT(__entry->add_status)),
-+		show_one_bit_status(CXL_DHI_AS_COR_PER_ERR_CNT(__entry->add_status)),
-+		__entry->life_used, __entry->device_temp,
-+		__entry->dirty_shutdown_cnt, __entry->cor_vol_err_cnt,
-+		__entry->cor_per_err_cnt
-+	)
-+);
-+
-+
- #endif /* _CXL_TRACE_EVENTS_H */
- 
- /* This part must be outside protection */
+ 	return mes->ev_status;
 -- 
 2.37.2
 
