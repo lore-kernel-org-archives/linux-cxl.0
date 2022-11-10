@@ -2,105 +2,130 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4B7C4332F
-	for <linux-cxl@archiver.kernel.org>; Wed,  9 Nov 2022 23:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 534C0C43219
+	for <linux-cxl@archiver.kernel.org>; Thu, 10 Nov 2022 00:07:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230334AbiKIXgH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 9 Nov 2022 18:36:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41928 "EHLO
+        id S230472AbiKJAHc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 9 Nov 2022 19:07:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231611AbiKIXgG (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Nov 2022 18:36:06 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15DB11900A;
-        Wed,  9 Nov 2022 15:36:01 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A58FD61D26;
-        Wed,  9 Nov 2022 23:36:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC6D9C433D7;
-        Wed,  9 Nov 2022 23:35:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668036960;
-        bh=xDaxbcsvS5ooeLilCDV2eAZ/B+4PrNvT4W6swBS6lEY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=eksR+SPp/aGE7EDrxbFI7LiRn8uucTy4DAXqhXbf9V9fZPcCwI97bPBuJXIdtOMeF
-         QqQOm7DP4m/jQGkp/XAW8Lb9WCx+xtkjKiIOMbAC0jJbbIxNXrW3YIIEK7MpP3+Tw/
-         afsdoIB/DmF26A79pJuqmFKDwjD3wHuWEfQb7J9vK0+s4OcZqFlhqhIkebE8XA0z4h
-         49nIyMh/XfhqplAV+RAxzA/35BexnLw35iUkzUjPAJNDiSRtFRCyIxHANlD8i/8ZiR
-         5HVmAu6vcpq1nVdqDmtA2ZdsMNWNIuZOVUocI9YXXwBgIQQj+/8k4thDAcFg2H94Mz
-         80rcoY+RtBRlA==
-Date:   Wed, 9 Nov 2022 17:35:58 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Robert Richter <rrichter@amd.com>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Terry Bowman <terry.bowman@amd.com>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v3 9/9] cxl/acpi: Set ACPI's CXL _OSC to indicate CXL1.1
- support
-Message-ID: <20221109233558.GA581582@bhelgaas>
+        with ESMTP id S229974AbiKJAHb (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 9 Nov 2022 19:07:31 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D62A15FF2
+        for <linux-cxl@vger.kernel.org>; Wed,  9 Nov 2022 16:07:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668038849; x=1699574849;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Nxd/PbylXCL9ZSk1tC2GClE+RNDCGz/YGjWjymwPubM=;
+  b=FXZFLggYLsGbh2/9I7yDrx4kW1faLqpA8B/haulwwRgWgahbdLSNXs7c
+   wD7HCtzkRbgO3uzJiVY1lu3SwcnrmBUYnBygsDiBRl6ZoxCNBHc6i3XAb
+   gmq2Q5BWkRi1e+Y3MlulspYzbhGAl5naQdcKojnmkbP2SleTZvMG49YMj
+   BTNRjHGb/ySJMAXeKCGQ5PsKRhUiXyrEB1xt+Gf+kvmyGECXQoMAL891N
+   fX7hpFwOmVR9Wq1oZosaZYN+O1b8mEgIYuCqQI5GXSDSZGghY27fiUJnn
+   6K/SWkfZEUyLWENEAvr6V5khmeeSn/QQYYjQEfQeNh6AnreihMmlYYtAU
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10526"; a="397455730"
+X-IronPort-AV: E=Sophos;i="5.96,152,1665471600"; 
+   d="scan'208";a="397455730"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2022 16:07:29 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10526"; a="631442490"
+X-IronPort-AV: E=Sophos;i="5.96,152,1665471600"; 
+   d="scan'208";a="631442490"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2022 16:07:28 -0800
+Subject: [PATCH v5 0/7] ndctl: cxl: add monitor support for trace events
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
+Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        rostedt@goodmis.org
+Date:   Wed, 09 Nov 2022 17:07:28 -0700
+Message-ID: <166803877747.145141.11853418648969334939.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/1.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221109104059.766720-10-rrichter@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Nov 09, 2022 at 11:40:59AM +0100, Robert Richter wrote:
-> From: Terry Bowman <terry.bowman@amd.com>
-> 
-> ACPI includes a CXL _OSC support procedure to communicate the available
-> CXL support to FW. The CXL support _OSC includes a field to indicate
-> CXL1.1 RCH RCD support. The OS sets this bit to 1 if it supports access
-> to RCD and RCH Port registers.[1] FW can potentially change it's operation
+This patch series for ndctl implements the monitor command for the cxl tool.
+The initial implementation will collect CXL trace events emitted by the
+kernel. libtraceevent and libtracefs will be used to parse the trace
+event buffer. The monitor will pend on an epoll fd and wait for new event
+entries to be posted. The output will be in json format. By default the events
+are emitted to stdio, but can also be logged to a file. Each event is converted
+to a JSON object and logged as such. All the fields exported are read by the
+monitor code and added to the JSON object.
 
-s/it's/its/
+v5:
+- Remove unneeded header includes. (Vishal)
+- Reformat using git clang-format. (Vishal)
+- Change uuid string to 40 bytes allocation. (Vishal)
+- Change cxl_event_to_json_callback() to cxl_event_to_json(). (Vishal)
+- Change cxl_event_parse_cb() to cxl_event_parse(). (Vishal)
+- Squash patch 3 & 4. (Vishal)
+- Move common logging helper to util/log.c. (Vishal)
+- Squash patch 5 & 7. (Vishal)
+- Drop Alison's pid patch. (Vishal)
+- Fixup man page. (Vishal)
 
-> depending on the _OSC support setting reported by the OS.
-> 
-> The ACPI driver does not currently set the ACPI _OSC support to indicate
-> CXL1.1 RCD RCH support. Change the capability reported to include CXL1.1.
+v4:
+- Fix num_to_json for less than int size (Ira)
+- Use TEP_FIELD flags to determine data type. (Steve)
+- Use tracefs_event_enable() instad of directly toggle sysfs via lib calls (Steve)
+- Remove tracefs_trace_is_on() in disable() call (Steve)
+- Update to use tep_data_pid() (Steve)
 
-Eight instances of "support" above seems like it might be more than
-necessary.
+v3:
+- Change uuid parsing from u8[] to uuid_t (Alison)
+- Add event_name to event_ctx for filtering (Alison)
+- Add event_pid to event_ctx for filtering (Alison)
+- Add parse_event callback to event_ctx for filtering (Alison)
 
-I don't know the history, but OSC_CXL_1_1_PORT_REG_ACCESS_SUPPORT and
-OSC_CXL_2_0_PORT_DEV_REG_ACCESS_SUPPORT seem like sort of weird names
-since they don't match the spec at all ("RCD and RCH Port Register
-Access Supported" and "CXL VH Register Access Supported").
+v2:
+- Simplify logging functions (Nathan)
+- Drop ndctl prefix (Vishal)
+- Reduce to single trace event system (Alison)
+- Add systemd startup file
+- Add man page
 
-> [1] CXL3.0 Table 9-26 'Interpretation of CXL _OSC Support Field'
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> ---
->  drivers/acpi/pci_root.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index c8385ef54c37..094a59b216ae 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -492,6 +492,7 @@ static u32 calculate_cxl_support(void)
->  	u32 support;
->  
->  	support = OSC_CXL_2_0_PORT_DEV_REG_ACCESS_SUPPORT;
-> +	support |= OSC_CXL_1_1_PORT_REG_ACCESS_SUPPORT;
->  	if (pci_aer_available())
->  		support |= OSC_CXL_PROTOCOL_ERR_REPORTING_SUPPORT;
->  	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
-> -- 
-> 2.30.2
-> 
+---
+
+Dave Jiang (7):
+      ndctl: cxl: add helper function to parse trace event to json object
+      ndctl: cxl: add helper to parse through all current events
+      ndctl: cxl: add common function to enable/disable event trace
+      ndctl: move common logging functions from ndctl/monitor.c to util/log.c
+      ndctl: cxl: add monitor command for event trace events
+      ndctl: cxl: add systemd service for monitor
+      ndctl: cxl: add man page documentation for monitor
+
+
+ Documentation/cxl/cxl-monitor.txt |  62 ++++++++
+ Documentation/cxl/meson.build     |   1 +
+ cxl/builtin.h                     |   1 +
+ cxl/cxl-monitor.service           |   9 ++
+ cxl/cxl.c                         |   1 +
+ cxl/event_trace.c                 | 251 ++++++++++++++++++++++++++++++
+ cxl/event_trace.h                 |  27 ++++
+ cxl/meson.build                   |   8 +
+ cxl/monitor.c                     | 215 +++++++++++++++++++++++++
+ meson.build                       |   3 +
+ ndctl.spec.in                     |   1 +
+ ndctl/monitor.c                   |  41 +----
+ util/log.c                        |  34 ++++
+ util/log.h                        |   8 +-
+ 14 files changed, 624 insertions(+), 38 deletions(-)
+ create mode 100644 Documentation/cxl/cxl-monitor.txt
+ create mode 100644 cxl/cxl-monitor.service
+ create mode 100644 cxl/event_trace.c
+ create mode 100644 cxl/event_trace.h
+ create mode 100644 cxl/monitor.c
+
+--
+
