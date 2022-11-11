@@ -2,84 +2,137 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC6CC4332F
-	for <linux-cxl@archiver.kernel.org>; Fri, 11 Nov 2022 02:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC302C433FE
+	for <linux-cxl@archiver.kernel.org>; Fri, 11 Nov 2022 03:12:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232989AbiKKCg6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 10 Nov 2022 21:36:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47944 "EHLO
+        id S232108AbiKKDMw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 10 Nov 2022 22:12:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232913AbiKKCgc (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Nov 2022 21:36:32 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AE066AED8;
-        Thu, 10 Nov 2022 18:35:06 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9C89661E8D;
-        Fri, 11 Nov 2022 02:35:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20771C4314A;
-        Fri, 11 Nov 2022 02:35:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668134105;
-        bh=/Z0Bemj1H9MnS0zOk4yHg8sMtqY+q2/C+h6e8CTgJjI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CICV55IHYBrfC6ZkBoazSS8nWGXaBnNzjGTYGkugPRWSsOXt7O+Z6G22EePE2wAop
-         GlAEyNQ8lYWiYJQB71hG1D09OOHaLzAZFvp+erKKi1NEa+3WZDCw2kgW106gN3Dzlg
-         lqV3LC4oDJVm5PbZTi59DXnWaLI/TUA79fTmX7GG9uiv0T6VXLh63XI/XsCX2AMeQX
-         H3YWD5yc9HjBXgUqZcbUksL8eIG1+iAe1qAkR1Q5SBixFZz5kOHkpm7qr30RmqbzqB
-         r0PPbw1w72atpJkEOQEwFAFnMGv9Qc7GN1AkW0pRDmhFdUH/HS2oZLz6+O89wPagTw
-         FWB+xuSkdDbHQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yu Zhe <yuzhe@nfschina.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sasha Levin <sashal@kernel.org>, alison.schofield@intel.com,
-        vishal.l.verma@intel.com, ira.weiny@intel.com, bwidawsk@kernel.org,
-        linux-cxl@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.0 27/30] cxl/pmem: Use size_add() against integer overflow
-Date:   Thu, 10 Nov 2022 21:33:35 -0500
-Message-Id: <20221111023340.227279-27-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221111023340.227279-1-sashal@kernel.org>
-References: <20221111023340.227279-1-sashal@kernel.org>
+        with ESMTP id S229675AbiKKDMv (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Nov 2022 22:12:51 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CCF72F002;
+        Thu, 10 Nov 2022 19:12:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668136370; x=1699672370;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WgsIHQ7cBq3X+wX4cmKs6enEa7opFzpuRhwIqRJdRRg=;
+  b=btgw4n/4pDKkNQvSScmH++zYlua0QFtlewSpC4Vbg3JsdaMLPRlS+iUv
+   GShrdckHbs7MkJ1WXVgW9UEZtUxcBFeqo6C7/UP4dHyVbzTZR+cXWr5W2
+   FVDMdcbCtJhCfWXAKwMLV9z/C4kXvhoDybRZyIZFOFcIir7wjTuQCmQSm
+   ZQ9razrkbLYQ+r2IrncFtw9PCTXgMzSEv8Yl1WEgwAG4zQwgTDlcuDaZl
+   aBqGmpcJVwqhffi9uRZzQ5ExYzboEqO54WP4K0tirCKDt8ZSo+ODv2Wus
+   Pf7GKNGwMixkqAsVGnpQJb1DacdP3PNSG4ALAoHVB1niOBlBpQoI4FqaI
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="310224393"
+X-IronPort-AV: E=Sophos;i="5.96,155,1665471600"; 
+   d="scan'208";a="310224393"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 19:12:49 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="812296037"
+X-IronPort-AV: E=Sophos;i="5.96,155,1665471600"; 
+   d="scan'208";a="812296037"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.161.45])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 19:12:48 -0800
+From:   alison.schofield@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/6] CXL Poison List Retrieval & Tracing
+Date:   Thu, 10 Nov 2022 19:12:38 -0800
+Message-Id: <cover.1668115235.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Yu Zhe <yuzhe@nfschina.com>
+From: Alison Schofield <alison.schofield@intel.com>
 
-[ Upstream commit 4f1aa35f1fb7d51b125487c835982af792697ecb ]
+Add support for retrieving device poison lists and store the returned
+error records as kernel trace events.
 
-"struct_size() + n" may cause a integer overflow,
-use size_add() to handle it.
+The handling of the poison list is guided by the CXL 3.0 Specification
+Section 8.2.9.8.4.1. [1] 
 
-Signed-off-by: Yu Zhe <yuzhe@nfschina.com>
-Link: https://lore.kernel.org/r/20220927070247.23148-1-yuzhe@nfschina.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/cxl/pmem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Example, triggered by memdev:
+$ echo 1 > /sys/bus/cxl/devices/mem3/trigger_poison_list
+cxl_poison: memdev=mem3 pcidev=cxl_mem.3 region= region_uuid=00000000-0000-0000-0000-000000000000 dpa=0x0 length=0x40 source=Internal flags= overflow_time=0
 
-diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-index 7dc0a2fa1a6b..8c08aa009a56 100644
---- a/drivers/cxl/pmem.c
-+++ b/drivers/cxl/pmem.c
-@@ -148,7 +148,7 @@ static int cxl_pmem_set_config_data(struct cxl_dev_state *cxlds,
- 		return -EINVAL;
- 
- 	/* 4-byte status follows the input data in the payload */
--	if (struct_size(cmd, in_buf, cmd->in_length) + 4 > buf_len)
-+	if (size_add(struct_size(cmd, in_buf, cmd->in_length), 4) > buf_len)
- 		return -EINVAL;
- 
- 	set_lsa =
+Example, triggered by region:
+$ echo 1 > /sys/bus/cxl/devices/region5/trigger_poison_list
+cxl_poison: memdev=mem0 pcidev=cxl_mem.0 region=region5 region_uuid=bfcb7a29-890e-4a41-8236-fe22221fc75c dpa=0x0 length=0x40 source=Internal flags= overflow_time=0
+cxl_poison: memdev=mem1 pcidev=cxl_mem.1 region=region5 region_uuid=bfcb7a29-890e-4a41-8236-fe22221fc75c dpa=0x0 length=0x40 source=Internal flags= overflow_time=0
+
+Changes in v3:
+- Rebase to 6.1-rc4
+- Rebase picked up cxl_dpa_resource_start() (Jonathan)
+- Move poison source defines to cxlmem.h from events/cxl.h
+- TRACE_printk helper macros display 'Reserved' for illegal poison sources
+  rather than failing to parse.
+- Add region uuid to the trace event.
+- Always get poison, but only parse records if tracing is enabled.(Steve)
+  There was a little foresight on not moving the calcs to the event
+  definition itself, as Steve also suggested. The DPA->HPA translation
+  is coming, and that work seems better kept in the driver itself.
+- Remove unused hpa trace field. Add back when hpa is available.
+- Remove pid from cxl_poison event. Find in common event field. (Steve)
+- cxl_test: Add mock support for get poison
+
+Changes in v2:
+- Added per region poison collection 
+- Protect poison list w mutex
+- Replace range usage w resource
+- S/poison_max_mer/poison_max in cxl_dev_state kdoc (Ira)
+- Renamed sysfs attribute to 'trigger_poison_list'
+- _store() rm chatty dev_err() msgs (Jonathan, Dan)
+- _store() use kstrtobool (Jonathan, Dan)
+- _store() simplify return (Jonathan)
+- cxl_memdev_visible() skip local vars on way enabled_cmds (Jonathan)
+- cxl_memdev_visible() use kobj_to_dev() helper (Dan)
+- Misc name shortenings and cleanups.
+- Replace goto w break in cxl_mem_get_poison() do-while loop.
+- Don't error out on FLAGS, record in trace event.
+- Add kernel CXL_POISON__LIST_MAX (64) and guard against exceeding (Dan)
+- Add current->pid to trace  (Dan)
+- Return the poison length as multiple of 64 per spec (Jonathan)
+- Mask starting address from record->address (Jonathan)
+- Move range selection to sysfs_store and make cxl_mem_get_poison() accept it.
+- Get both the volatile & persistent ranges per memdev.
+- Add pci device name to trace (Dan)
+
+[1]: https://www.computeexpresslink.org/download-the-specification
+
+Alison Schofield (6):
+  trace, cxl: Introduce a TRACE_EVENT for CXL poison records
+  cxl/mbox: Add GET_POISON_LIST mailbox command
+  cxl/memdev: Add trigger_poison_list sysfs attribute
+  cxl/region: Add trigger_poison_list sysfs attribute
+  tools/testing/cxl: Mock the max err records field of Identify cmd
+  tools/testing/cxl: Mock the Get Poison List mbox command
+
+ Documentation/ABI/testing/sysfs-bus-cxl | 28 +++++++++
+ drivers/cxl/core/mbox.c                 | 81 +++++++++++++++++++++++++
+ drivers/cxl/core/memdev.c               | 41 +++++++++++++
+ drivers/cxl/core/region.c               | 33 ++++++++++
+ drivers/cxl/cxlmem.h                    | 51 ++++++++++++++++
+ include/trace/events/cxl.h              | 80 ++++++++++++++++++++++++
+ tools/testing/cxl/test/mem.c            | 35 +++++++++++
+ 7 files changed, 349 insertions(+)
+ create mode 100644 include/trace/events/cxl.h
+
+
+base-commit: f0c4d9fc9cc9462659728d168387191387e903cc
 -- 
-2.35.1
+2.37.3
 
