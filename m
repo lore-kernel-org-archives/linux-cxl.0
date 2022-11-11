@@ -2,46 +2,48 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE32BC433FE
-	for <linux-cxl@archiver.kernel.org>; Fri, 11 Nov 2022 02:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC6CC4332F
+	for <linux-cxl@archiver.kernel.org>; Fri, 11 Nov 2022 02:37:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232077AbiKKCdr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 10 Nov 2022 21:33:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46430 "EHLO
+        id S232989AbiKKCg6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 10 Nov 2022 21:36:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229688AbiKKCdq (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Nov 2022 21:33:46 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56F3C64FE;
-        Thu, 10 Nov 2022 18:33:46 -0800 (PST)
+        with ESMTP id S232913AbiKKCgc (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Nov 2022 21:36:32 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AE066AED8;
+        Thu, 10 Nov 2022 18:35:06 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 19CAAB82364;
-        Fri, 11 Nov 2022 02:33:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B52AC433D6;
-        Fri, 11 Nov 2022 02:33:42 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9C89661E8D;
+        Fri, 11 Nov 2022 02:35:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20771C4314A;
+        Fri, 11 Nov 2022 02:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668134023;
-        bh=1KI/XL3dP3u5ToDBRNRYqK7q6h6denR/AjAnQMzJ4B4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AxNj5VBuVspHERXLrhdqy653AqOAJIKhzYD7LdEjONniezapUt7h+WQhygMbH7qHg
-         7sgjm6E02pkr+JZOo61RpSy1TLAvygB1L+PssjTmssA8aNBKQb5lB0XxkogsPj9Qg+
-         jLLsk72vMNgLqu9jogiFny+ufxxF+3shyYe8OO1mE4Yx+G9rgnxgNm8r5Zf9j6n9SZ
-         pSxNTcXwLbYD04V8ZTHffYMRiQXVezdDgZPuaAtxMrRaiB4azIX2RypU04zBS4JmJg
-         l/BelpS2VOrDDopnQhg9ezEiVyU+VJwYT2Ym6lg9F30zriGFzXkFSQLjRfoTbn4kAl
-         +I8aU4Y1n91uw==
+        s=k20201202; t=1668134105;
+        bh=/Z0Bemj1H9MnS0zOk4yHg8sMtqY+q2/C+h6e8CTgJjI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CICV55IHYBrfC6ZkBoazSS8nWGXaBnNzjGTYGkugPRWSsOXt7O+Z6G22EePE2wAop
+         GlAEyNQ8lYWiYJQB71hG1D09OOHaLzAZFvp+erKKi1NEa+3WZDCw2kgW106gN3Dzlg
+         lqV3LC4oDJVm5PbZTi59DXnWaLI/TUA79fTmX7GG9uiv0T6VXLh63XI/XsCX2AMeQX
+         H3YWD5yc9HjBXgUqZcbUksL8eIG1+iAe1qAkR1Q5SBixFZz5kOHkpm7qr30RmqbzqB
+         r0PPbw1w72atpJkEOQEwFAFnMGv9Qc7GN1AkW0pRDmhFdUH/HS2oZLz6+O89wPagTw
+         FWB+xuSkdDbHQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+Cc:     Yu Zhe <yuzhe@nfschina.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Sasha Levin <sashal@kernel.org>, alison.schofield@intel.com,
         vishal.l.verma@intel.com, ira.weiny@intel.com, bwidawsk@kernel.org,
-        dave@stgolabs.net, linux-cxl@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.0 01/30] cxl/mbox: Add a check on input payload size
-Date:   Thu, 10 Nov 2022 21:33:09 -0500
-Message-Id: <20221111023340.227279-1-sashal@kernel.org>
+        linux-cxl@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.0 27/30] cxl/pmem: Use size_add() against integer overflow
+Date:   Thu, 10 Nov 2022 21:33:35 -0500
+Message-Id: <20221111023340.227279-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20221111023340.227279-1-sashal@kernel.org>
+References: <20221111023340.227279-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -50,35 +52,34 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+From: Yu Zhe <yuzhe@nfschina.com>
 
-[ Upstream commit cf00b33058b196b4db928419dde68993b15a975b ]
+[ Upstream commit 4f1aa35f1fb7d51b125487c835982af792697ecb ]
 
-A bug in the LSA code resulted in transfers slightly larger
-than the mailbox size. Let us make it easier to catch similar
-issues in future by adding a low level check.
+"struct_size() + n" may cause a integer overflow,
+use size_add() to handle it.
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Link: https://lore.kernel.org/r/20220815154044.24733-2-Jonathan.Cameron@huawei.com
+Signed-off-by: Yu Zhe <yuzhe@nfschina.com>
+Link: https://lore.kernel.org/r/20220927070247.23148-1-yuzhe@nfschina.com
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cxl/core/mbox.c | 2 +-
+ drivers/cxl/pmem.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 16176b9278b4..0c90f13870a4 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -174,7 +174,7 @@ int cxl_mbox_send_cmd(struct cxl_dev_state *cxlds, u16 opcode, void *in,
- 	};
- 	int rc;
+diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+index 7dc0a2fa1a6b..8c08aa009a56 100644
+--- a/drivers/cxl/pmem.c
++++ b/drivers/cxl/pmem.c
+@@ -148,7 +148,7 @@ static int cxl_pmem_set_config_data(struct cxl_dev_state *cxlds,
+ 		return -EINVAL;
  
--	if (out_size > cxlds->payload_size)
-+	if (in_size > cxlds->payload_size || out_size > cxlds->payload_size)
- 		return -E2BIG;
+ 	/* 4-byte status follows the input data in the payload */
+-	if (struct_size(cmd, in_buf, cmd->in_length) + 4 > buf_len)
++	if (size_add(struct_size(cmd, in_buf, cmd->in_length), 4) > buf_len)
+ 		return -EINVAL;
  
- 	rc = cxlds->mbox_send(cxlds, &mbox_cmd);
+ 	set_lsa =
 -- 
 2.35.1
 
